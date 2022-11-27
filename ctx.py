@@ -59,5 +59,5 @@ class ContextStack:
     return None
 
 
-ctx = ContextStack()
+
 
