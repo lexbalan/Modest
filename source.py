@@ -1,6 +1,5 @@
 
 
-
 class Source:
   def __init__(self, filename):
     self.f = open(filename, "r")
@@ -48,6 +47,4 @@ class Source:
     c = self.f.read(n)
     self.setpos(pos)
     return c
-
-
 
