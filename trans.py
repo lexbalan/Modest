@@ -8,14 +8,16 @@ import type
 
 enumUid = 0
 
-cfunc = None
 
+ctx = None  # context
 
+cfunc = None  # current function
 
-ctx = ContextStack()
 
 
 def init():
+  global ctx
+  ctx = ContextStack()
   ctx.add_type('Unit', type.typeUnit)
   ctx.add_type('Int', type.typeInt)
   ctx.add_type('Nat', type.typeNat)
@@ -35,6 +37,7 @@ def do_field(x):
   f = {'isa': 'field'}
   f['id'] = x['id']
   f['type'] = do_type(x['type'])
+  f['ti'] = x['ti']
   if f['type'] == None:
     return None
   return f
@@ -67,13 +70,24 @@ def do_type(t):
   
   elif k == 'record':
     fields = []
+    record = {
+      'isa': 'type',
+      'kind': 'record',
+      'fields': fields,
+      'att': [],
+      'ti': t['ti']
+    }
     i = 0
     while i < len(t['fields']):
       f = do_field(t['fields'][i])
+      f_exist = type.record_field_get(record, f['id'])
+      if f_exist != None:
+        error("redefinition of '%s'" % f['id'], f['ti'])
+        f = None
       if f != None:
         fields.append(f)
       i = i + 1
-    return {'isa': 'type', 'kind': 'record', 'att': [], 'fields': fields, 'ti': t['ti']}
+    return record
   
   elif k == 'enum':
     global enumUid
@@ -104,10 +118,7 @@ def do_type(t):
 def cast(v, t):
   if v == None or t == None:
     return None
-  
-  #if not 'ti' in v:
-  #  print("NOT TI: " + str(v))
-  
+
   return {'isa': 'value', 'kind': 'to', 'value': v, 'type': t, 'att': [], 'ti': v['ti']}
 
 
@@ -161,7 +172,7 @@ def do_value_expr_bin(v):
   t = l['type']
   if k in ['eq', 'ne', 'lt', 'gt', 'le', 'ge']:
     t = type.typeNat1
-    
+
   # for generic
   if type.is_generic_numeric(l['type']) and type.is_generic_numeric(r['type']):
     if not 'num' in l:
@@ -185,8 +196,7 @@ def do_value_expr_bin(v):
       'mod': lambda a, b: a % b,
     }[k](l['num'], r['num'])
     return {'isa': 'value', 'kind': 'num', 'type': t, 'num': num, 'att': []}
-  
-  
+
   return {'isa': 'value', 'kind': v['kind'], 'left': l, 'right': r, 'type': t, 'att': []}
 
 
@@ -522,7 +532,7 @@ def do_stmt_var(x):
     error("value with unspecified type", v['ti'])
     return None"""
   
-  vx = {'isa': 'value', 'kind': 'var', 'id': id, 'type': t}
+  vx = {'isa': 'value', 'kind': 'var', 'id': id, 'type': t, 'ti': x['ti']}
   ctx.add_value(id, vx)
   return {'isa': 'stmt', 'kind': 'defvar', 'id': id, 'type': t, 'value': v}
 
@@ -541,7 +551,7 @@ def do_stmt_let(x):
     return None
   
   #
-  vx = {'isa': 'value', 'kind': 'const', 'id': id, 'type': v['type']}
+  vx = {'isa': 'value', 'kind': 'const', 'id': id, 'type': v['type'], 'ti': x['ti']}
   ctx.add_value(id, vx)
   
   return {'isa': 'stmt', 'kind': 'let', 'id': id, 'value': v}
@@ -634,6 +644,7 @@ def do_const(x):
   ctx.add_value(id, y)
   return {'isa': 'constdef', 'id': id, 'value': v}
 
+
 def do_typedef(x):
   id = x['id']
   t = do_type(x['type'])
@@ -653,28 +664,30 @@ def do_typedef(x):
       ctx.add_value(id, y)
   
   return {'isa': 'typedef', 'id': x['id'], 'type': t}
-  
 
 
 def do_var(x):
   f = do_field(x['field'])
   if f == None:
     return None
-  v = {'isa': 'value', 'kind': 'var', 'id': f['id'], 'type': f['type']}
+  v = {'isa': 'value', 'kind': 'var', 'id': f['id'], 'type': f['type'], 'ti': x['ti']}
   ctx.add_value(x['field']['id'], v)
   return {'isa': 'vardef', 'field': f, 'ti': x['ti']}
 
+
 def do_funcdef(x):
   global cfunc
+  func_ti = x['ti']
   func_id = x['id']
   func_type = do_type(x['type'])
   
+  old_cfunc = cfunc
   cfunc = {
     'isa': 'value',
     'kind': 'func',
     'id': func_id,
     'type': func_type,
-    'ti': x['ti']
+    'ti': func_ti
   }
   
   ctx.push()  # params context (!)
@@ -683,23 +696,34 @@ def do_funcdef(x):
   while i < len(func_type['params']):
     param = func_type['params'][i]
     param_id = param['id']
-    y = {'isa': 'value', 'kind': 'const', 'id': param_id, 'type': param['type']}
+    param_ti = param['ti']
+    y = {
+      'isa': 'value',
+      'kind': 'const',
+      'id': param_id,
+      'type': param['type'],
+      'ti': param_ti
+    }
     ctx.add_value(param_id, y)
     i = i + 1
   
-  cfunc['stmt'] = do_stmt_block(x['stmt'])
+  func_stmt = do_stmt_block(x['stmt'])
+  cfunc['stmt'] = func_stmt
   
   ctx.pop()  # params context (!)
   
-  ctx.add_value(x['id'], cfunc)
+  ctx.add_value(func_id, cfunc)
   
-  return {
+  funcdef = {
     'isa': 'funcdef',
     'id': func_id,
     'type': func_type,
-    'stmt': cfunc['stmt'],
-    'ti': x['ti']
+    'stmt': func_stmt,
+    'ti': func_ti
   }
+
+  cfunc = old_cfunc
+  return funcdef
 
 
 def do_exist(x):
@@ -713,6 +737,7 @@ def do_exist(x):
   #return {'isa': 'exist', 'field': f}
 
 
+
 def translate(srcname):
   p = Parser()
   xx = p.parse(srcname)
@@ -720,7 +745,6 @@ def translate(srcname):
   module = []
   for x in xx:
     isa = x['isa']
-    #print("DO: %s" % isa)
     if isa == 'import':
       y = do_import(x)
     elif isa == 'var':
@@ -742,17 +766,4 @@ def translate(srcname):
   
   return module
 
-
-
-"""
-outname = "out.c"
-
-
-module = translate("main2.cm")
-if errcnt == 0:
-  printx(module, outname)
-else:
-  print(OKCYAN + "[fatal error]" + ENDC)
-  exit(1)
-  """
 
