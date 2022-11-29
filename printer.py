@@ -164,61 +164,61 @@ def print_value_expr_to(v):
   o(")")
   print_value(v['value'])
   o(")")
-  
+
+
+def print_value_composite(v):
+  #o("<value:composite>")
+  o("(")
+  print_type(v['type'])
+  o(")")
+  o("{")
+  for i in v['items']:
+    o(".%s=" % i['id'])
+    print_value(i['value'])
+    o(",")
+  o("}")
+
 
 def print_value(v):
-  # binary
-  if v['kind'] in bin_ops:
+  k = v['kind']
+  
+  if k in bin_ops:
     print_value_expr_bin(v)
-  
-  elif v['kind'] in un_ops:
+  elif k in un_ops:
     print_value_expr_un(v)
-  
+  elif k == 'num':
+    o("%s" % v['num'])
+  elif k in ['func', 'const', 'var']:
+    o("%s" % v['id'])
+  elif k == 'str':
+    o("\"%s\"" % v['str'])
+  elif k == 'composite':
+    print_value_composite(v)
   else:
-  
-    k = v['kind']
-    if k == 'num':
-      o("%s" % v['num'])
-    elif k in ['func', 'const', 'var']:
-      o("%s" % v['id'])
-    elif k == 'str':
-      o("\"%s\"" % v['str'])
-    elif k == 'composite':
-      #o("<value:composite>")
-      o("(")
-      print_type(v['type'])
+    if k == 'call':
+      print_value_expr_call(v)
+    elif k == 'index':
+      print_value_expr_index(v)
+    elif k == 'access':
+      print_value_expr_access(v)
+    elif k == 'access2':
+      print_value_expr_access2(v)
+    elif k == 'to':
+      print_value_expr_to(v)
+    elif k == 'sizeof':
+      o("sizeof(")
+      print_type(v['of'])
       o(")")
-      o("{")
-      for i in v['items']:
-        o(".%s=" % i['id'])
-        print_value(i['value'])
-        o(",")
-      o("}")
-    else:
-      if k == 'call':
-        print_value_expr_call(v)
-      elif k == 'index':
-        print_value_expr_index(v)
-      elif k == 'access':
-        print_value_expr_access(v)
-      elif k == 'access2':
-        print_value_expr_access2(v)
-      elif k == 'to':
-        print_value_expr_to(v)
-      elif k == 'sizeof':
-        o("sizeof(")
-        print_type(v['of'])
+      """elif k == 'ld_id':
+        o("LD_ID(")
+        print_value(v['value'])
         o(")")
-        """elif k == 'ld_id':
-          o("LD_ID(")
-          print_value(v['value'])
-          o(")")
-        elif k == 'ld_ptr':
-          o("LD_PTR(")
-          print_value(v['value'])
-          o(")")"""
-      else:
-        o("<%s>" % k)
+      elif k == 'ld_ptr':
+        o("LD_PTR(")
+        print_value(v['value'])
+        o(")")"""
+    else:
+      o("<%s>" % k)
 
 
 def print_stmt_if(x):
