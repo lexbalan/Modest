@@ -309,6 +309,33 @@ class Parser:
     return self.parse_value_term()
   
   
+
+  def parse_value_term_comp(self, id, ti):
+    ti2 = self.ti()
+    self.need("{")
+    items = []
+    while not self.match("}"):
+      item_ti = self.ti()
+      field_id = self.identifier()
+      self.need("=")
+      field_value = self.expr_value()
+      self.match(",")
+      item = {
+        'isa': 'item',
+        'id': field_id,
+        'value': field_value,
+        'ti': item_ti
+      }
+      items.append(item)
+    return {
+      'isa': 'value',
+      'kind': 'composite',
+      'type': {'isa': 'type', 'kind': 'id', 'id': id, 'ti': ti},
+      'items': items,
+      'ti': ti2
+    }
+
+
   def parse_value_term(self):
     ti = self.ti()
     if self.ctok_class() == 'id':
@@ -316,29 +343,7 @@ class Parser:
       if id[0].islower():
         return {'isa': 'value', 'kind': 'id', 'id': id, 'ti': ti}
       else:
-        ti2 = self.ti()
-        self.need("{")
-        items = []
-        while not self.match("}"):
-          item_ti = self.ti()
-          field_id = self.identifier()
-          self.need("=")
-          field_value = self.expr_value()
-          self.match(",")
-          item = {
-            'isa': 'item',
-            'id': field_id,
-            'value': field_value,
-            'ti': item_ti
-          }
-          items.append(item)
-        return {
-          'isa': 'value',
-          'kind': 'composite',
-          'type': {'isa': 'type', 'kind': 'id', 'id': id, 'ti': ti},
-          'items': items,
-          'ti': ti2
-        }
+        return self.parse_value_term_comp(id, ti)
           
     elif self.ctok_class() == 'num':
       num = self.gettok()
