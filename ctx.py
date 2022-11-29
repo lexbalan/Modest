@@ -1,4 +1,5 @@
 
+from error import error
 
 class ContextStack:
   def __init__(self):
@@ -33,10 +34,18 @@ class ContextStack:
     return None
   
   def add_type(self, id, t):
+    t0 = self.get_type(id)
+    if t0 != None:
+      error("redefinition of '%s'" % id, t['ti'])
+
     self.ctxs_type[self.cctx][id] = t
     return t
     
   def add_value(self, id, v):
+    v0 = self.get_value(id)
+    if v0 != None:
+      error("redefinition of '%s'" % id, v['ti'])
+
     self.ctxs_value[self.cctx][id] = v
     return v
     
@@ -57,7 +66,5 @@ class ContextStack:
         return ctx[id]
       i = i - 1
     return None
-
-
 
 
