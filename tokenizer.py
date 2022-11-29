@@ -24,4 +24,3 @@ class Tokenizer:
     return None
 
 
-
