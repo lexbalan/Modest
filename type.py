@@ -125,6 +125,7 @@ def is_undefined_array(t):
 
 # can implicit cast a -> b ?
 def resolve(a, b):
+  # GenericInt -> Int
   if 'generic' in a['att']:
     if 'numeric' in a['att']:
       if 'numeric' in b['att']:
@@ -143,8 +144,7 @@ def resolve(a, b):
     # *[n]Any -> *[]Any
     if is_defined_array(a['to']) and is_undefined_array(b['to']):
       return True
-      
-  
+
   return False
 
 
@@ -153,7 +153,6 @@ def check(a, b, ti):
   if not res:
     error("type error", ti)
   return res
-
 
 
 def record_field_get(typ, field_id):
