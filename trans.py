@@ -207,7 +207,13 @@ def do_value_expr_un(v):
   
   t = val['type']
   if v['kind'] == 'deref':
-    t = t['to']
+    to = t['to']
+    # you can't deref pointer to function
+    # and pointer to undefined array
+    if type.is_func(to) or type.is_undefined_array(to):
+      error("unsuitable type", v['value']['ti'])
+
+    t = to
     
   if v['kind'] == 'ref':
     t = type.typePointer(t, ti=v['ti'])
