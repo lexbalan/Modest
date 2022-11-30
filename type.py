@@ -112,6 +112,9 @@ def is_pointer(t):
 def is_array(t):
   return t['kind'] == 'array'
 
+def is_func(t):
+  return t['kind'] == 'func'
+
 def is_defined_array(t):
   if t['kind'] == 'array':
     return t['size'] != None
