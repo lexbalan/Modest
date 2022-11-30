@@ -18,7 +18,7 @@ class Parser:
     return self.ctoken >= (len(self.tokens) - 1)
   
   def is_blank(self, c):
-    return c == ' ' or c == '\t' or c == '\n'# and self.skipnl)
+    return c == ' ' or c == '\t' or c == '\n' and self.skipnl
   
   def skip(self):
     if self.ctoken < (len(self.tokens) - 1):
@@ -375,12 +375,20 @@ class Parser:
       s = self.stmt_if()
     elif self.match('while'):
       s = self.stmt_while()
-    elif self.match('return'):
+    elif self.look('return'):
       s = self.stmt_return()
     elif self.match('var'):
       s = self.stmt_var()
     else:
+
+      old_skipnl = self.skipnl
+      self.skipnl = False
+
       s = self.stmt_expr_value()
+      self.need("\n")
+
+      self.skipnl = old_skipnl
+
       
     if s != None:
       if not 'ti' in s:
@@ -423,7 +431,18 @@ class Parser:
   
   
   def stmt_return(self):
-    v = self.expr_value()
+    old_skipnl = self.skipnl
+    self.skipnl = False
+
+    self.skip() # skip 'return' keyword
+
+    v = None
+    if not self.match("\n"):
+      v = self.expr_value()
+      self.need("\n")
+
+    self.skipnl = old_skipnl
+
     return {'isa': 'stmt', 'kind': 'return', 'value': v}
   
   
