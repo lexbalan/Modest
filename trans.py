@@ -508,7 +508,7 @@ def do_stmt_return(x):
   global cfunc
   
   v = None
-  if 'value' in x:
+  if x['value'] != None:
     v = do_value(x['value'])
     if v == None:
       return None
