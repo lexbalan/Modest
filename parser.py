@@ -7,6 +7,7 @@
 from lexer import Lexer
 from error import warning, error
 
+
 class Parser:
   def __init__(self):
     self.lex = Lexer()
@@ -62,13 +63,32 @@ class Parser:
     if not yes:
       error("expected '%s' token" % token, ti)
     return yes
-  
-  
+
   
   def identifier(self):
     return self.gettok()
   
   
+  def open_sep(self):
+    old_skipnl = self.skipnl
+    self.skipnl = False
+    return old_skipnl
+
+
+  def close_sep(self, old_skipnl, stoppers=['}']):
+    separator_ti = self.ti()
+    if self.ctok() == '\n' or self.ctok() == ';':
+      self.skipnl = old_skipnl
+      while self.ctok() == '\n' or self.ctok() == ';':
+        self.skip()
+    elif self.ctok() in stoppers:
+      pass
+    else:
+      error("expected separator", separator_ti)
+
+    self.skipnl = old_skipnl
+
+
   #
   # Parse Type
   #
@@ -98,8 +118,9 @@ class Parser:
       self.need("{")
       fields = []
       while not self.match("}"):
+        old_skipnl = self.open_sep()
         f = self.parse_field()
-        self.match(",")
+        self.close_sep(old_skipnl)
         fields.append(f)
       return {'isa': 'type', 'kind': 'record', 'fields': fields, 'ti': ti}
     
@@ -380,14 +401,9 @@ class Parser:
     elif self.match('var'):
       s = self.stmt_var()
     else:
-
-      old_skipnl = self.skipnl
-      self.skipnl = False
-
+      old_skipnl = self.open_sep()
       s = self.stmt_expr_value()
-      self.need("\n")
-
-      self.skipnl = old_skipnl
+      self.close_sep(old_skipnl)
 
       
     if s != None:
@@ -431,17 +447,15 @@ class Parser:
   
   
   def stmt_return(self):
-    old_skipnl = self.skipnl
-    self.skipnl = False
+    old_skipnl = self.open_sep()
 
-    self.skip() # skip 'return' keyword
+    self.skip()  # skip 'return' keyword
 
     v = None
-    if not self.match("\n"):
+    if not (self.look("\n") or self.look(";") or self.look("}")):
       v = self.expr_value()
-      self.need("\n")
 
-    self.skipnl = old_skipnl
+    self.close_sep(old_skipnl)
 
     return {'isa': 'stmt', 'kind': 'return', 'value': v}
   
