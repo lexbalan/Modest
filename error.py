@@ -4,7 +4,9 @@ warncnt = 0
 errcnt = 0
 
 
-def getline(file, lineno):
+def getline(ti):
+  file = ti['file']
+  lineno = ti['line']
   f = open(file, 'r')
   lin = f.read().split("\n")[lineno - 1]
   f.close()
@@ -33,7 +35,7 @@ def error(s, ti):
   print(pre + '\033[91m' + 'error: ' + '\033[0m' + s)
   
   if ti != None:
-    lin = getline(ti['file'], ti['line'])
+    lin = getline(ti)
     print(lin)
     highlight(ti['pos'])
   

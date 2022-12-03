@@ -5,7 +5,7 @@
 # https://habr.com/ru/post/693562/
 
 from lexer import Lexer
-from error import warning, error
+from error import warning, error, getline
 
 
 class Parser:
@@ -77,10 +77,9 @@ class Parser:
 
   def close_sep(self, old_skipnl, stoppers=['}']):
     separator_ti = self.ti()
-    if self.ctok() == '\n' or self.ctok() == ';':
+    if self.look("\n") or self.look(";"):
       self.skipnl = old_skipnl
-      while self.ctok() == '\n' or self.ctok() == ';':
-        self.skip()
+      self.skip()
     elif self.ctok() in stoppers:
       pass
     else:
@@ -333,6 +332,10 @@ class Parser:
 
   def parse_value_term_comp(self, id, ti):
     ti2 = self.ti()
+
+    old_skipnl = self.skipnl
+    self.skipnl = True
+
     self.need("{")
     items = []
     while not self.match("}"):
@@ -348,6 +351,9 @@ class Parser:
         'ti': item_ti
       }
       items.append(item)
+
+    self.skipnl = old_skipnl
+
     return {
       'isa': 'value',
       'kind': 'composite',
@@ -378,7 +384,8 @@ class Parser:
     else:
       cl = self.ctok_class()
       x = self.gettok()
-      error("unexpected token", ti)
+      tokstr = self.ctok()
+      error("unexpected token '%s'" % tokstr, ti)
       self.skip()
       #print("BAD TOKEN " + x + ", class= "+ cl)
       return {'isa': 'value', 'kind': 'bad', 'ti': ti}
@@ -390,20 +397,38 @@ class Parser:
     ti = self.ti()
     t = self.ctok()
 
+    old_skipnl = self.open_sep()
+
+    # skip nl's before
+    while self.match("\n"):
+      pass
+
+    """print ("\n#stmt:")
+    lin = getline(ti)
+    print(lin)
+    print("t="+self.ctok())
+    input()"""
+
     if self.match('let'):
+      #print("stmt_let")
       s = self.stmt_let()
     elif self.match('if'):
+      #print("stmt_if")
       s = self.stmt_if()
     elif self.match('while'):
+      #print("stmt_while")
       s = self.stmt_while()
     elif self.look('return'):
+      #print("stmt_return")
       s = self.stmt_return()
     elif self.match('var'):
+      #print("stmt_var")
       s = self.stmt_var()
     else:
-      old_skipnl = self.open_sep()
+      #print("stmt_expr/assign")
       s = self.stmt_expr_value()
-      self.close_sep(old_skipnl)
+
+    self.close_sep(old_skipnl)
 
       
     if s != None:
@@ -447,7 +472,7 @@ class Parser:
   
   
   def stmt_return(self):
-    old_skipnl = self.open_sep()
+#    old_skipnl = self.open_sep()
 
     self.skip()  # skip 'return' keyword
 
@@ -455,7 +480,7 @@ class Parser:
     if not (self.look("\n") or self.look(";") or self.look("}")):
       v = self.expr_value()
 
-    self.close_sep(old_skipnl)
+#    self.close_sep(old_skipnl)
 
     return {'isa': 'stmt', 'kind': 'return', 'value': v}
   
@@ -463,10 +488,12 @@ class Parser:
   def stmt_expr_value(self):
     v = self.expr_value()
     
+    # stmt expr
     assign_ti = self.ti()
     if not (self.match(":=") or self.match("<-")):
       return {'isa': 'stmt', 'kind': 'value', 'value': v}
     
+    # stmt assign
     r = self.expr_value()
     return {'isa': 'stmt', 'kind': 'assign', 'left': v, 'right': r, 'ti': assign_ti}
   
