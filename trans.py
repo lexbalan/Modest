@@ -176,7 +176,9 @@ def do_value_expr_bin(v):
   # for generic
   if type.is_generic_numeric(l['type']) and type.is_generic_numeric(r['type']):
     if not 'num' in l:
-      print(l)
+      print("not #num in " + str(l))
+    if not 'num' in r:
+      print("not #num in " + str(r))
     num = {
       'or': lambda a, b: a or b,
       'and': lambda a, b: a and b,
@@ -514,6 +516,9 @@ def do_stmt_return(x):
       return None
     v = cast_implicit(v, cfunc['type']['to'])
     type.check(v['type'], cfunc['type']['to'], x['value']['ti'])
+  else:
+    if not type.eq(cfunc['type']['to'], type.typeUnit):
+      error("expected return value", x['ti'])
 
   return {'isa': 'stmt', 'kind': 'return', 'value': v}
 
@@ -641,13 +646,9 @@ def do_import(x):
 def do_const(x):
   id = x['id']
   v = do_value(x['value'])
-  if v == None:
-    print("????")
-    print(x['value'])
-    exit(1)
-    return None
-  y = {'isa': 'value', 'kind': 'const', 'id': id, 'type': v['type'], 'att': [], 'ti': x['ti']}
-  ctx.add_value(id, y)
+
+  """y = {'isa': 'value', 'kind': 'const', 'id': id, 'type': v['type'], 'att': [], 'ti': x['ti']}"""
+  ctx.add_value(id, v)
   return {'isa': 'constdef', 'id': id, 'value': v}
 
 

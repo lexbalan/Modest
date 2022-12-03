@@ -16,10 +16,6 @@ def ind():
   global indent
   f.write("\t" * indent)
 
-def oi(s):
-  #ind()
-  f.write(s)
-
 
 typealiases = {
   'Unit': 'void',
@@ -70,6 +66,10 @@ def print_type(t, print_aka=True):
     o("\n}")
   elif k == 'pointer':
     print_type(t['to'])
+    if t['to']['kind'] != 'array':
+      o("*")
+  elif k == 'array':
+    print_type(t['of'])
     o("*")
   elif k == 'func':
     o("void")
