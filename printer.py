@@ -61,7 +61,7 @@ def print_type(t, print_aka=True):
     while i < len(items):
       item = items[i]
       o("\n")
-      o("\t%s," % item['id'])
+      o("\t%s," % item['id']['str'])
       i = i + 1
     o("\n}")
   elif k == 'pointer':
@@ -143,12 +143,12 @@ def print_value_expr_index(v):
 
 def print_value_expr_access(v):
   print_value(v['record'])
-  o(".%s" % v['field']['id'])
+  o(".%s" % v['field']['id']['str'])
 
 
 def print_value_expr_access2(v):
   print_value(v['record'])
-  o("->%s" % v['field']['id'])
+  o("->%s" % v['field']['id']['str'])
 
 
 def print_value_expr_to(v):
@@ -173,7 +173,7 @@ def print_value_composite(v):
   o(")")
   o("{")
   for i in v['items']:
-    o(".%s=" % i['id'])
+    o(".%s=" % i['id']['str'])
     print_value(i['value'])
     o(",")
   o("}")
@@ -189,7 +189,7 @@ def print_value(v):
   elif k == 'num':
     o("%s" % v['num'])
   elif k in ['func', 'const', 'var']:
-    o("%s" % v['id'])
+    o("%s" % v['id']['str'])
   elif k == 'str':
     o("\"%s\"" % v['str'])
   elif k == 'composite':
@@ -349,7 +349,7 @@ def print_func_signature(id, typ):
 
 def print_funcdef(x):
   o("\n")
-  print_func_signature(x['id'], x['type'])
+  print_func_signature(x['id']['str'], x['type'])
   o(" ")
   print_stmt_block(x['stmt'])
 
@@ -360,7 +360,7 @@ def print_exist_extern(x, extern=False):
   if extern:
     o("extern ")
   if f['type']['kind'] == 'func':
-    print_func_signature(f['id'], f['type'])
+    print_func_signature(f['id']['str'], f['type'])
   else:
     print_field(f)
   o(";")
@@ -378,7 +378,7 @@ def print_typedef(x):
   
   o("typedef ")
   print_type(x['type'], print_aka=False)
-  o(" %s;" % x['id'])
+  o(" %s;" % x['id']['str'])
   
 
 
@@ -410,7 +410,7 @@ def print_field(x):
   print_type(t)
   o(" ")
   o("*" * ptr_level)
-  o("%s" % (x['id']))
+  o("%s" % (x['id']['str']))
   if is_array:
     o("[")
     if array_size != None:
@@ -475,7 +475,7 @@ def printx(module, outname):
     elif isa == 'vardef':
       print_vardef(x)
     elif isa == 'constdef':
-      o("#define %s  (" % x['id'])
+      o("#define %s  (" % x['id']['str'])
       print_value(x['value'])
       o(")")
     elif isa == 'funcdef':

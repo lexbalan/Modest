@@ -171,7 +171,7 @@ def record_field_get(typ, field_id):
   i = 0
   while i < len(typ['fields']):
     f = typ['fields'][i]
-    if f['id'] == field_id:
+    if f['id']['str'] == field_id:
       field = f
       break
     i = i + 1

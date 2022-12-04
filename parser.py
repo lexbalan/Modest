@@ -66,7 +66,10 @@ class Parser:
 
   
   def identifier(self):
-    return self.gettok()
+    ti = self.ti()
+    s = self.gettok()
+    return {'isa': 'id', 'str': s, 'ti': ti}
+
   
   
   def open_sep(self):
@@ -367,7 +370,7 @@ class Parser:
     ti = self.ti()
     if self.ctok_class() == 'id':
       id = self.identifier()
-      if id[0].islower():
+      if id['str'][0].islower():
         return {'isa': 'value', 'kind': 'id', 'id': id, 'ti': ti}
       else:
         return self.parse_value_term_comp(id, ti)

@@ -48,9 +48,9 @@ def do_type(t):
   k = t['kind']
   
   if k == 'id':
-    tx = ctx.get_type(t['id'])
+    tx = ctx.get_type(t['id']['str'])
     if tx == None:
-      error("undeclared type %s" % t['id'], t['ti'])
+      error("undeclared type %s" % t['id']['str'], t['ti'])
       return None #{'isa': 'type', 'kind': 'bad', 'ti': t['ti']}
     return tx #{'isa': 'type', 'kind': 'id', 'id': t['id'], 'type': tx}
   
@@ -80,9 +80,9 @@ def do_type(t):
     i = 0
     while i < len(t['fields']):
       f = do_field(t['fields'][i])
-      f_exist = type.record_field_get(record, f['id'])
+      f_exist = type.record_field_get(record, f['id']['str'])
       if f_exist != None:
-        error("redefinition of '%s'" % f['id'], f['ti'])
+        error("redefinition of '%s'" % f['id']['str'], f['ti'])
         f = None
       if f != None:
         fields.append(f)
@@ -355,11 +355,11 @@ def do_value_expr_access(v):
     error("expected record or pointer to record", v['ti'])
     return None
   
-  field = type.record_field_get(typ, field_id)
+  field = type.record_field_get(typ, field_id['str'])
   
   # field not found
   if field == None:
-    error("field %s not exist" % field_id, v['ti'])
+    error("field %s not exist" % field_id['str'], v['ti'])
     return None
   
   return {'isa': 'value', 'kind': k, 'record': r, 'field': field, 'type': field['type'], 'meta': [], 'ti': v['ti']}
@@ -387,9 +387,9 @@ def do_value_num(num, type=type.genericInt, ti=None):
   }
 
 def do_value_expr_id(v):
-  vx = ctx.get_value(v['id'])
+  vx = ctx.get_value(v['id']['str'])
   if vx == None:
-    error("undeclared value '%s'" % v['id'], v['ti'])
+    error("undeclared value '%s'" % v['id']['str'], v['ti'])
     return None # {'isa': 'value', 'kind': 'bad', 'value': v, 'type': type.typeBad(v['ti']), 'meta': [], 'ti': v['ti']}
 
   return vx
@@ -406,7 +406,7 @@ def do_value_expr_composite(v):
   items = []
   for i in v['items']:
     id = i['id']
-    field = type.record_field_get(t, id)
+    field = type.record_field_get(t, id['str'])
     vi = do_value(i['value'])
     vi = cast_implicit(vi, field['type'])
     if vi != None:
@@ -544,7 +544,7 @@ def do_stmt_var(x):
     return None"""
   
   vx = {'isa': 'value', 'kind': 'var', 'id': id, 'type': t, 'meta': [], 'ti': x['ti']}
-  ctx.add_value(id, vx)
+  ctx.add_value(id['str'], vx)
   return {'isa': 'stmt', 'kind': 'defvar', 'id': id, 'type': t, 'value': v}
 
 
@@ -558,12 +558,12 @@ def do_stmt_let(x):
   # let x = 10
   # не нужно генерить стейтмент, просто создаем константу тут
   if type.is_generic(v['type']):
-    ctx.add_value(id, v)
+    ctx.add_value(id['str'], v)
     return None
   
   #
   vx = {'isa': 'value', 'kind': 'const', 'id': id, 'type': v['type'], 'meta': [], 'ti': x['ti']}
-  ctx.add_value(id, vx)
+  ctx.add_value(id['str'], vx)
   
   return {'isa': 'stmt', 'kind': 'let', 'id': id, 'value': v}
 
@@ -648,7 +648,7 @@ def do_const(x):
   v = do_value(x['value'])
 
   """y = {'isa': 'value', 'kind': 'const', 'id': id, 'type': v['type'], 'meta': [], 'ti': x['ti']}"""
-  ctx.add_value(id, v)
+  ctx.add_value(id['str'], v)
   return {'isa': 'constdef', 'id': id, 'value': v}
 
 
@@ -659,8 +659,8 @@ def do_typedef(x):
   if t == None:
     return None
 
-  nt = type.create_alias(id, t, x['ti'])
-  ctx.add_type(id, nt)
+  nt = type.create_alias(id['str'], t, id['ti'])
+  ctx.add_type(id['str'], nt)
   
   # ENUM
   if type.is_enum(t):
@@ -670,7 +670,7 @@ def do_typedef(x):
         continue
       #print("ex enum item " + id)
       y = {'isa': 'value', 'kind': 'const', 'id': id, 'type': t, 'value': do_value_num(item['number']), 'meta': [], 'ti': item['ti']}
-      ctx.add_value(id, y)
+      ctx.add_value(id['str'], y)
   
   return {'isa': 'typedef', 'id': x['id'], 'type': t}
 
@@ -680,7 +680,7 @@ def do_var(x):
   if f == None:
     return None
   v = {'isa': 'value', 'kind': 'var', 'id': f['id'], 'type': f['type'], 'meta': [], 'ti': x['ti']}
-  ctx.add_value(x['field']['id'], v)
+  ctx.add_value(x['field']['id']['str'], v)
   return {'isa': 'vardef', 'field': f, 'ti': x['ti']}
 
 
@@ -715,7 +715,7 @@ def do_funcdef(x):
       'meta': [],
       'ti': param_ti
     }
-    ctx.add_value(param_id, y)
+    ctx.add_value(param_id['str'], y)
     i = i + 1
   
   func_stmt = do_stmt_block(x['stmt'])
@@ -723,7 +723,7 @@ def do_funcdef(x):
   
   ctx.pop()  # params context (!)
   
-  ctx.add_value(func_id, cfunc)
+  ctx.add_value(func_id['str'], cfunc)
   
   funcdef = {
     'isa': 'funcdef',
@@ -741,9 +741,9 @@ def do_exist(x):
   f = do_field(x['field'])
   if f == None:
     return None
-  f['type']['arghack'] = f['id'] == 'printf'
+  f['type']['arghack'] = f['id']['str'] == 'printf'
   
-  ctx.add_value(f['id'], {'isa': 'value', 'kind': 'func', 'id': f['id'], 'type': f['type'], 'meta': [], 'ti': x['field']['ti']})
+  ctx.add_value(f['id']['str'], {'isa': 'value', 'kind': 'func', 'id': f['id'], 'type': f['type'], 'meta': [], 'ti': x['field']['ti']})
   return None
   #return {'isa': 'exist', 'field': f}
 
