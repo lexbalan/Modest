@@ -8,9 +8,11 @@ indent = 0
 def o(s):
   f.write(s)
 
+
 def lo(s):
   f.write('\n')
   f.write(s)
+
 
 def ind():
   global indent
@@ -73,7 +75,6 @@ def print_type(t, print_aka=True):
     o("*")
   elif k == 'func':
     o("void")
-    
   else:
     o("<type:%s>" % k)
   
@@ -94,8 +95,7 @@ un_ops = {
 }
 
 def print_value_expr_un(v):
-  o(un_ops[v['kind']])
-  print_value(v['value'])
+  o(un_ops[v['kind']]); print_value(v['value'])
 
 
 def print_value_expr_call(v):
@@ -135,20 +135,15 @@ def print_value_expr_call(v):
 
 
 def print_value_expr_index(v):
-  print_value(v['array'])
-  o("[")
-  print_value(v['index'])
-  o("]")
+  print_value(v['array']); o("["); print_value(v['index']); o("]")
 
 
 def print_value_expr_access(v):
-  print_value(v['record'])
-  o(".%s" % v['field']['id']['str'])
+  print_value(v['record']); o(".%s" % v['field']['id']['str'])
 
 
 def print_value_expr_access2(v):
-  print_value(v['record'])
-  o("->%s" % v['field']['id']['str'])
+  print_value(v['record']); o("->%s" % v['field']['id']['str'])
 
 
 def print_value_expr_to(v):
@@ -167,7 +162,6 @@ def print_value_expr_to(v):
 
 
 def print_value_composite(v):
-  #o("<value:composite>")
   o("(")
   print_type(v['type'])
   o(")")
@@ -272,8 +266,7 @@ def print_stmt(x):
     o("\n")
     ind()
     if k == 'value':
-      print_value(x['value'])
-      o(";")
+      print_value(x['value']); o(";")
     elif k == 'assign':
       print_value(x['left'])
       o(" = ")
@@ -291,7 +284,6 @@ def print_stmt(x):
       print_stmt_let(x)
     else:
       lo("<stmt %s>" % str(x))
-  
 
 
 def print_stmt_block(s):
@@ -304,7 +296,6 @@ def print_stmt_block(s):
   o("\n")
   ind()
   o("}")
-  
 
 
 def print_func_signature(id, typ):
@@ -354,7 +345,6 @@ def print_funcdef(x):
   print_stmt_block(x['stmt'])
 
 
-
 def print_exist_extern(x, extern=False):
   f = x['field']
   if extern:
@@ -364,9 +354,11 @@ def print_exist_extern(x, extern=False):
   else:
     print_field(f)
   o(";")
-  
+
+
 def print_exist(x):
   print_exist_extern(x)
+
 
 def print_extern(x):
   print_exist_extern(x, extern=True)
@@ -382,7 +374,7 @@ def print_typedef(x):
   
 
 
-# из за того что с C типы через жопу
+# из за того что с C типы записваются через жопу
 # приходится печатать типы ptr, arr & func вместе с именем поля
 def print_field(x):
   t = x['type']
@@ -420,10 +412,7 @@ def print_field(x):
 
 
 def print_vardef(x):
-  print_field(x['field'])
-  o(";")
-
-
+  print_field(x['field']); o(";")
 
 
 def printx(module, outname):
@@ -431,14 +420,6 @@ def printx(module, outname):
   
   f = open(outname, "w")
 
-  """
-  import yaml
-  yy = yaml.dump(x)
-  print(yy)
-  print("END.")
-  """
-  
-  o("/* Cm foundation */")
   lo("#include <stdint.h>")
   
   """lo("#ifndef __TYPE_STR__")
@@ -462,9 +443,7 @@ def printx(module, outname):
       if not isa in ['funcdef', 'typedef']:
         o("\n")
       isa_prev = isa
-    
-    
-    #print("PRINT: %s" % isa)
+
     if isa == 'import':
       s = x['str'] + '.h'
       if x['local']:
@@ -492,8 +471,6 @@ def printx(module, outname):
     lo("#endif /* %s */" % guardname)"""
   o("\n")
   f.close()
-
-
 
 
 
