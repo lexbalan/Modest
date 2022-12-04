@@ -197,9 +197,9 @@ def do_value_expr_bin(v):
       'div': lambda a, b: int(a / b),
       'mod': lambda a, b: a % b,
     }[k](l['num'], r['num'])
-    return {'isa': 'value', 'kind': 'num', 'type': t, 'num': num, 'att': []}
+    return {'isa': 'value', 'kind': 'num', 'type': t, 'num': num, 'att': [], 'ti': v['ti']}
 
-  return {'isa': 'value', 'kind': v['kind'], 'left': l, 'right': r, 'type': t, 'att': []}
+  return {'isa': 'value', 'kind': v['kind'], 'left': l, 'right': r, 'type': t, 'att': [], 'ti': v['ti']}
 
 
 def do_value_expr_un(v):
@@ -226,7 +226,7 @@ def do_value_expr_un(v):
       'minus': lambda a: -a,
       'not': lambda a: not a,
     }[k](val['num'])
-    return {'isa': 'value', 'kind': 'num', 'type': t, 'num': num, 'att': []}
+    return {'isa': 'value', 'kind': 'num', 'type': t, 'num': num, 'att': [], 'ti': v['ti']}
   
   return {
     'isa': 'value',
@@ -452,7 +452,7 @@ def do_value(v):
         rv = do_value_expr_to(v)
       elif k == 'sizeof':
         tx = do_type(v['type'])
-        rv = {'isa': 'value', 'kind': 'sizeof', 'of': tx, 'type': type.typeNat, 'att': []}
+        rv = {'isa': 'value', 'kind': 'sizeof', 'of': tx, 'type': type.typeNat, 'att': [], 'ti': v['ti']}
       else:
         rv = None #{'isa': 'value', 'kind': 'bad', 'value': v, 'att': []}
     
@@ -543,7 +543,7 @@ def do_stmt_var(x):
     error("value with unspecified type", v['ti'])
     return None"""
   
-  vx = {'isa': 'value', 'kind': 'var', 'id': id, 'type': t, 'ti': x['ti']}
+  vx = {'isa': 'value', 'kind': 'var', 'id': id, 'type': t, 'att': [], 'ti': x['ti']}
   ctx.add_value(id, vx)
   return {'isa': 'stmt', 'kind': 'defvar', 'id': id, 'type': t, 'value': v}
 
@@ -562,7 +562,7 @@ def do_stmt_let(x):
     return None
   
   #
-  vx = {'isa': 'value', 'kind': 'const', 'id': id, 'type': v['type'], 'ti': x['ti']}
+  vx = {'isa': 'value', 'kind': 'const', 'id': id, 'type': v['type'], 'att': [], 'ti': x['ti']}
   ctx.add_value(id, vx)
   
   return {'isa': 'stmt', 'kind': 'let', 'id': id, 'value': v}
@@ -677,7 +677,7 @@ def do_var(x):
   f = do_field(x['field'])
   if f == None:
     return None
-  v = {'isa': 'value', 'kind': 'var', 'id': f['id'], 'type': f['type'], 'ti': x['ti']}
+  v = {'isa': 'value', 'kind': 'var', 'id': f['id'], 'type': f['type'], 'att': [], 'ti': x['ti']}
   ctx.add_value(x['field']['id'], v)
   return {'isa': 'vardef', 'field': f, 'ti': x['ti']}
 
@@ -694,6 +694,7 @@ def do_funcdef(x):
     'kind': 'func',
     'id': func_id,
     'type': func_type,
+    'att': [],
     'ti': func_ti
   }
   
@@ -709,6 +710,7 @@ def do_funcdef(x):
       'kind': 'const',
       'id': param_id,
       'type': param['type'],
+      'att': [],
       'ti': param_ti
     }
     ctx.add_value(param_id, y)
@@ -739,7 +741,7 @@ def do_exist(x):
     return None
   f['type']['arghack'] = f['id'] == 'printf'
   
-  ctx.add_value(f['id'], {'isa': 'value', 'kind': 'func', 'id': f['id'], 'type': f['type']})
+  ctx.add_value(f['id'], {'isa': 'value', 'kind': 'func', 'id': f['id'], 'type': f['type'], 'att': [], 'ti': x['field']['ti']})
   return None
   #return {'isa': 'exist', 'field': f}
 
