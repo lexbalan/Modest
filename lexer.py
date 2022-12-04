@@ -156,11 +156,13 @@ def dolcom(src):
 
   s = []
   while True:
-    c = src.getc()
+    # we dont need to eat NL because it will be used by lexer (!)
+    c = src.lookup(1)
     if c == '\n':
       line = line + 1
       pos = 1
       break
+    src.getc()
     s.append(c)
   
   token = ''.join(s)
