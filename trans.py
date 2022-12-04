@@ -74,7 +74,7 @@ def do_type(t):
       'isa': 'type',
       'kind': 'record',
       'fields': fields,
-      'att': [],
+      'meta': [],
       'ti': t['ti']
     }
     i = 0
@@ -98,7 +98,7 @@ def do_type(t):
       items.append({'isa': 'item', 'id': identifier['id'], 'number': i, 'ti': identifier['ti']})
       i = i + 1
     enumUid = enumUid + 1
-    return {'isa': 'type', 'kind': 'enum', 'items': items, 'uid': enumUid, 'att': [], 'ti': t['ti']}
+    return {'isa': 'type', 'kind': 'enum', 'items': items, 'uid': enumUid, 'meta': [], 'ti': t['ti']}
   
   elif k == 'func':
     params = []
@@ -109,9 +109,9 @@ def do_type(t):
         params.append(param)
       i = i + 1
     to = do_type(t['to'])
-    return {'isa': 'type', 'kind': 'func', 'params': params, 'to': to, 'att': [], 'ti': t['ti']}
+    return {'isa': 'type', 'kind': 'func', 'params': params, 'to': to, 'meta': [], 'ti': t['ti']}
   
-  return None #{'isa': 'type', 'kind': 'bad', 'type': t, 'att': []}
+  return None #{'isa': 'type', 'kind': 'bad', 'type': t, 'meta': []}
   
 
 
@@ -119,7 +119,7 @@ def cast(v, t):
   if v == None or t == None:
     return None
 
-  return {'isa': 'value', 'kind': 'to', 'value': v, 'type': t, 'att': [], 'ti': v['ti']}
+  return {'isa': 'value', 'kind': 'to', 'value': v, 'type': t, 'meta': [], 'ti': v['ti']}
 
 
 def cast_implicit(v, t):
@@ -197,9 +197,9 @@ def do_value_expr_bin(v):
       'div': lambda a, b: int(a / b),
       'mod': lambda a, b: a % b,
     }[k](l['num'], r['num'])
-    return {'isa': 'value', 'kind': 'num', 'type': t, 'num': num, 'att': [], 'ti': v['ti']}
+    return {'isa': 'value', 'kind': 'num', 'type': t, 'num': num, 'meta': [], 'ti': v['ti']}
 
-  return {'isa': 'value', 'kind': v['kind'], 'left': l, 'right': r, 'type': t, 'att': [], 'ti': v['ti']}
+  return {'isa': 'value', 'kind': v['kind'], 'left': l, 'right': r, 'type': t, 'meta': [], 'ti': v['ti']}
 
 
 def do_value_expr_un(v):
@@ -226,14 +226,14 @@ def do_value_expr_un(v):
       'minus': lambda a: -a,
       'not': lambda a: not a,
     }[k](val['num'])
-    return {'isa': 'value', 'kind': 'num', 'type': t, 'num': num, 'att': [], 'ti': v['ti']}
+    return {'isa': 'value', 'kind': 'num', 'type': t, 'num': num, 'meta': [], 'ti': v['ti']}
   
   return {
     'isa': 'value',
     'kind': v['kind'],
     'value': val,
     'type': t,
-    'att': [],
+    'meta': [],
     'ti': v['ti']
   }
 
@@ -246,10 +246,10 @@ def do_value_expr_call(v):
   ftype = f['type']
   
   # pointer to function?
-  if ftype['kind'] == 'pointer':
+  if type.is_pointer(ftype):
     ftype = ftype['to']
   
-  if ftype['kind'] != 'func':
+  if not type.is_func(ftype):
     error("expected function", v['ti'])
   
   params = ftype['params']
@@ -298,7 +298,7 @@ def do_value_expr_call(v):
     'left': f,
     'args': args,
     'type': ftype['to'],
-    'att': [],
+    'meta': [],
     'ti': v['ti']
   }
 
@@ -314,7 +314,7 @@ def do_value_expr_index(v):
     typ = typ['to']
   
   # check if is record
-  if typ['kind'] != 'array':
+  if not type.is_array(typ):
     error("expected array or pointer to array", v['ti'])
     return None
   
@@ -331,7 +331,7 @@ def do_value_expr_index(v):
     'array': a,
     'index': i,
     'type': typ['of'],
-    'att': [],
+    'meta': [],
     'ti': v['ti']
   }
 
@@ -351,7 +351,7 @@ def do_value_expr_access(v):
     typ = r['type']['to']
   
   # check if is record 
-  if typ['kind'] != 'record':
+  if not type.is_record(typ):
     error("expected record or pointer to record", v['ti'])
     return None
   
@@ -362,7 +362,7 @@ def do_value_expr_access(v):
     error("field %s not exist" % field_id, v['ti'])
     return None
   
-  return {'isa': 'value', 'kind': k, 'record': r, 'field': field, 'type': field['type'], 'att': [], 'ti': v['ti']}
+  return {'isa': 'value', 'kind': k, 'record': r, 'field': field, 'type': field['type'], 'meta': [], 'ti': v['ti']}
 
   
 def do_value_expr_to(v):
@@ -382,7 +382,7 @@ def do_value_num(num, type=type.genericInt, ti=None):
     'kind': 'num',
     'num': num,
     'type': type,
-    'att': [],
+    'meta': [],
     'ti': ti
   }
 
@@ -390,7 +390,7 @@ def do_value_expr_id(v):
   vx = ctx.get_value(v['id'])
   if vx == None:
     error("undeclared value '%s'" % v['id'], v['ti'])
-    return None # {'isa': 'value', 'kind': 'bad', 'value': v, 'type': type.typeBad(v['ti']), 'att': [], 'ti': v['ti']}
+    return None # {'isa': 'value', 'kind': 'bad', 'value': v, 'type': type.typeBad(v['ti']), 'meta': [], 'ti': v['ti']}
 
   return vx
   #return {'isa': 'value', 'kind': 'id', 'object': vx, 'type': vx['type'], 'ti': v['ti']}
@@ -398,7 +398,7 @@ def do_value_expr_id(v):
 
 def do_value_expr_str(v):
   str = v['str']
-  return {'isa': 'value', 'kind': 'str', 'str': str, 'type': type.genericStr, 'att': [], 'ti': v['ti']}
+  return {'isa': 'value', 'kind': 'str', 'str': str, 'type': type.genericStr, 'meta': [], 'ti': v['ti']}
 
 
 def do_value_expr_composite(v):
@@ -417,7 +417,7 @@ def do_value_expr_composite(v):
     'kind': 'composite',
     'type': t,
     'items': items,
-    'att': [],
+    'meta': [],
     'ti': v['ti']
   }
 
@@ -452,9 +452,9 @@ def do_value(v):
         rv = do_value_expr_to(v)
       elif k == 'sizeof':
         tx = do_type(v['type'])
-        rv = {'isa': 'value', 'kind': 'sizeof', 'of': tx, 'type': type.typeNat, 'att': [], 'ti': v['ti']}
+        rv = {'isa': 'value', 'kind': 'sizeof', 'of': tx, 'type': type.typeNat, 'meta': [], 'ti': v['ti']}
       else:
-        rv = None #{'isa': 'value', 'kind': 'bad', 'value': v, 'att': []}
+        rv = None #{'isa': 'value', 'kind': 'bad', 'value': v, 'meta': []}
     
   if rv != None:
     rv['ti'] = v['ti']
@@ -539,11 +539,11 @@ def do_stmt_var(x):
   if t == None:
     t = v['type']
   
-  """if 'generic' in v['type']['att']:
+  """if 'generic' in v['type']['meta']:
     error("value with unspecified type", v['ti'])
     return None"""
   
-  vx = {'isa': 'value', 'kind': 'var', 'id': id, 'type': t, 'att': [], 'ti': x['ti']}
+  vx = {'isa': 'value', 'kind': 'var', 'id': id, 'type': t, 'meta': [], 'ti': x['ti']}
   ctx.add_value(id, vx)
   return {'isa': 'stmt', 'kind': 'defvar', 'id': id, 'type': t, 'value': v}
 
@@ -562,7 +562,7 @@ def do_stmt_let(x):
     return None
   
   #
-  vx = {'isa': 'value', 'kind': 'const', 'id': id, 'type': v['type'], 'att': [], 'ti': x['ti']}
+  vx = {'isa': 'value', 'kind': 'const', 'id': id, 'type': v['type'], 'meta': [], 'ti': x['ti']}
   ctx.add_value(id, vx)
   
   return {'isa': 'stmt', 'kind': 'let', 'id': id, 'value': v}
@@ -647,9 +647,10 @@ def do_const(x):
   id = x['id']
   v = do_value(x['value'])
 
-  """y = {'isa': 'value', 'kind': 'const', 'id': id, 'type': v['type'], 'att': [], 'ti': x['ti']}"""
+  """y = {'isa': 'value', 'kind': 'const', 'id': id, 'type': v['type'], 'meta': [], 'ti': x['ti']}"""
   ctx.add_value(id, v)
   return {'isa': 'constdef', 'id': id, 'value': v}
+
 
 
 def do_typedef(x):
@@ -657,17 +658,18 @@ def do_typedef(x):
   t = do_type(x['type'])
   if t == None:
     return None
-  t['aka'] = id
-  ctx.add_type(x['id'], t)
+
+  nt = type.create_alias(id, t, x['ti'])
+  ctx.add_type(id, nt)
   
   # ENUM
-  if t['kind'] == 'enum':
+  if type.is_enum(t):
     for item in t['items']:
       id = item['id']
       if id == None:
         continue
       #print("ex enum item " + id)
-      y = {'isa': 'value', 'kind': 'const', 'id': id, 'type': t, 'value': do_value_num(item['number']), 'att': [], 'ti': item['ti']}
+      y = {'isa': 'value', 'kind': 'const', 'id': id, 'type': t, 'value': do_value_num(item['number']), 'meta': [], 'ti': item['ti']}
       ctx.add_value(id, y)
   
   return {'isa': 'typedef', 'id': x['id'], 'type': t}
@@ -677,7 +679,7 @@ def do_var(x):
   f = do_field(x['field'])
   if f == None:
     return None
-  v = {'isa': 'value', 'kind': 'var', 'id': f['id'], 'type': f['type'], 'att': [], 'ti': x['ti']}
+  v = {'isa': 'value', 'kind': 'var', 'id': f['id'], 'type': f['type'], 'meta': [], 'ti': x['ti']}
   ctx.add_value(x['field']['id'], v)
   return {'isa': 'vardef', 'field': f, 'ti': x['ti']}
 
@@ -694,7 +696,7 @@ def do_funcdef(x):
     'kind': 'func',
     'id': func_id,
     'type': func_type,
-    'att': [],
+    'meta': [],
     'ti': func_ti
   }
   
@@ -710,7 +712,7 @@ def do_funcdef(x):
       'kind': 'const',
       'id': param_id,
       'type': param['type'],
-      'att': [],
+      'meta': [],
       'ti': param_ti
     }
     ctx.add_value(param_id, y)
@@ -741,7 +743,7 @@ def do_exist(x):
     return None
   f['type']['arghack'] = f['id'] == 'printf'
   
-  ctx.add_value(f['id'], {'isa': 'value', 'kind': 'func', 'id': f['id'], 'type': f['type'], 'att': [], 'ti': x['field']['ti']})
+  ctx.add_value(f['id'], {'isa': 'value', 'kind': 'func', 'id': f['id'], 'type': f['type'], 'meta': [], 'ti': x['field']['ti']})
   return None
   #return {'isa': 'exist', 'field': f}
 

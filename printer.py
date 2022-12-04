@@ -153,9 +153,9 @@ def print_value_expr_access2(v):
 
 def print_value_expr_to(v):
   # Чтобы не приводить тип в выражениях типа ((int32_t)0), etc.
-  if 'numeric' in v['type']['att']:
-    if 'generic' in v['value']['type']['att']:
-      if 'numeric' in v['value']['type']['att']:
+  if 'numeric' in v['type']['meta']:
+    if 'generic' in v['value']['type']['meta']:
+      if 'numeric' in v['value']['type']['meta']:
         print_value(v['value'])
         return
   

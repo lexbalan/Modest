@@ -1,24 +1,24 @@
 
 from error import error
 
-def typeInteger(aka, att=[]):
-  return {'isa': 'type', 'kind': 'base', 'aka': aka, 'att': ['numeric'] + att, 'ti': None}
+def typeInteger(aka, meta=[]):
+  return {'isa': 'type', 'kind': 'base', 'aka': aka, 'meta': ['numeric'] + meta, 'ti': None}
 
-def typePointer(to, att=[], ti=None):
-  return {'isa': 'type', 'kind': 'pointer', 'to': to, 'att': att, 'ti': ti}
+def typePointer(to, meta=[], ti=None):
+  return {'isa': 'type', 'kind': 'pointer', 'to': to, 'meta': meta, 'ti': ti}
 
-def typeArray(of, size=None, att=[], ti=None):
-  return {'isa': 'type', 'kind': 'array', 'of': of, 'size': size, 'att': att, 'ti': ti}
+def typeArray(of, size=None, meta=[], ti=None):
+  return {'isa': 'type', 'kind': 'array', 'of': of, 'size': size, 'meta': meta, 'ti': ti}
 
 def typeBad(ti):
-  return {'isa': 'type', 'kind': 'bad', 'att': [], 'ti': ti}
+  return {'isa': 'type', 'kind': 'bad', 'meta': [], 'ti': ti}
 
 typeUnit = {
   'isa': 'type',
   'kind': 'enum',
   'aka': 'void',
   'items': [],
-  'att': [],
+  'meta': [],
   'uid': 0,   #!
   'ti': None
 }
@@ -41,7 +41,7 @@ genericInt = {
   'isa': 'type',
   'kind': 'base',
   'aka': '<generic:int>',
-  'att': ['generic', 'numeric'],
+  'meta': ['generic', 'numeric'],
   'ti': None
 }
 
@@ -97,13 +97,13 @@ def eq(a, b):
 
 
 def is_generic(t):
-  return 'generic' in t['att']
+  return 'generic' in t['meta']
 
 def is_numeric(t):
-  return 'numeric' in t['att']
+  return 'numeric' in t['meta']
 
 def is_generic_numeric(t):
-  return 'generic' in t['att'] and 'numeric' in t['att']
+  return 'generic' in t['meta'] and 'numeric' in t['meta']
 
 
 def is_pointer(t):
@@ -126,12 +126,19 @@ def is_undefined_array(t):
   return False
 
 
+def is_enum(t):
+  return t['kind'] == 'enum'
+
+def is_record(t):
+  return t['kind'] == 'record'
+
+
 # can implicit cast a -> b ?
 def resolve(a, b):
   # GenericInt -> Int
-  if 'generic' in a['att']:
-    if 'numeric' in a['att']:
-      if 'numeric' in b['att']:
+  if 'generic' in a['meta']:
+    if 'numeric' in a['meta']:
+      if 'numeric' in b['meta']:
         return True
   
   # *Type -> *Type
@@ -170,5 +177,15 @@ def record_field_get(typ, field_id):
     i = i + 1
   return field
 
+
+
+def create_alias(id, t, ti):
+  import copy
+  nt = copy.copy(t)
+  nt['aka'] = id
+  nt['meta'].append('alias')
+  nt['aliasof'] = t
+  nt['ti'] = ti
+  return nt
 
 
