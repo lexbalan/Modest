@@ -34,13 +34,20 @@ def init():
 
 
 def do_field(x):
-  f = {'isa': 'field'}
-  f['id'] = x['id']
-  f['type'] = do_type(x['type'])
-  f['ti'] = x['ti']
-  if f['type'] == None:
+  if x == None:
     return None
-  return f
+
+  t = do_type(x['type'])
+
+  if t == None:
+    return None
+
+  return {
+    'isa': 'field',
+    'id': x['id'],
+    'type': t,
+    'ti': x['ti']
+  }
 
 
 
@@ -80,12 +87,13 @@ def do_type(t):
     i = 0
     while i < len(t['fields']):
       f = do_field(t['fields'][i])
-      f_exist = type.record_field_get(record, f['id']['str'])
-      if f_exist != None:
-        error("redefinition of '%s'" % f['id']['str'], f['ti'])
-        f = None
       if f != None:
-        fields.append(f)
+        f_exist = type.record_field_get(record, f['id']['str'])
+        if f_exist != None:
+          error("redefinition of '%s'" % f['id']['str'], f['ti'])
+          f = None
+        if f != None:
+          fields.append(f)
       i = i + 1
     return record
   
@@ -359,7 +367,7 @@ def do_value_expr_access(v):
   
   # field not found
   if field == None:
-    error("field %s not exist" % field_id['str'], v['ti'])
+    error("field '%s' not exist" % field_id['str'], v['ti'])
     return None
   
   return {'isa': 'value', 'kind': k, 'record': r, 'field': field, 'type': field['type'], 'meta': [], 'ti': v['ti']}
@@ -407,11 +415,14 @@ def do_value_expr_composite(v):
   for i in v['items']:
     id = i['id']
     field = type.record_field_get(t, id['str'])
-    vi = do_value(i['value'])
-    vi = cast_implicit(vi, field['type'])
-    if vi != None:
-      type.check(field['type'], vi['type'], i['ti'])
-      items.append({'id': id, 'value': vi})
+    if field == None:
+      error("undefined field '%s'" % id['str'], id['ti'])
+    else:
+      vi = do_value(i['value'])
+      vi = cast_implicit(vi, field['type'])
+      if vi != None:
+        type.check(field['type'], vi['type'], i['ti'])
+        items.append({'id': id, 'value': vi})
   return {
     'isa': 'value',
     'kind': 'composite',
@@ -545,7 +556,7 @@ def do_stmt_var(x):
   
   vx = {'isa': 'value', 'kind': 'var', 'id': id, 'type': t, 'meta': [], 'ti': x['ti']}
   ctx.add_value(id['str'], vx)
-  return {'isa': 'stmt', 'kind': 'defvar', 'id': id, 'type': t, 'value': v}
+  return {'isa': 'stmt', 'kind': 'asg_stmt_def_var', 'id': id, 'type': t, 'value': v}
 
 
 def do_stmt_let(x):
@@ -565,7 +576,7 @@ def do_stmt_let(x):
   vx = {'isa': 'value', 'kind': 'const', 'id': id, 'type': v['type'], 'meta': [], 'ti': x['ti']}
   ctx.add_value(id['str'], vx)
   
-  return {'isa': 'stmt', 'kind': 'let', 'id': id, 'value': v}
+  return {'isa': 'stmt', 'kind': 'asg_stmt_def_let', 'id': id, 'value': v}
 
 
 def do_stmt_assign(x):
@@ -643,17 +654,15 @@ def do_import(x):
   return {'isa': 'import', 'str': s, 'local': loc}
 
 
-def do_const(x):
+def def_const(x):
   id = x['id']
   v = do_value(x['value'])
-
-  """y = {'isa': 'value', 'kind': 'const', 'id': id, 'type': v['type'], 'meta': [], 'ti': x['ti']}"""
   ctx.add_value(id['str'], v)
-  return {'isa': 'constdef', 'id': id, 'value': v}
+  return {'isa': 'asg_def_const', 'id': id, 'value': v}
 
 
 
-def do_typedef(x):
+def def_type(x):
   id = x['id']
   t = do_type(x['type'])
   if t == None:
@@ -672,19 +681,19 @@ def do_typedef(x):
       y = {'isa': 'value', 'kind': 'const', 'id': id, 'type': t, 'value': do_value_num(item['number']), 'meta': [], 'ti': item['ti']}
       ctx.add_value(id['str'], y)
   
-  return {'isa': 'typedef', 'id': x['id'], 'type': t}
+  return {'isa': 'asg_def_type', 'id': x['id'], 'type': t}
 
 
-def do_var(x):
+def def_var(x):
   f = do_field(x['field'])
   if f == None:
     return None
   v = {'isa': 'value', 'kind': 'var', 'id': f['id'], 'type': f['type'], 'meta': [], 'ti': x['ti']}
   ctx.add_value(x['field']['id']['str'], v)
-  return {'isa': 'vardef', 'field': f, 'ti': x['ti']}
+  return {'isa': 'asg_def_var', 'field': f, 'ti': x['ti']}
 
 
-def do_funcdef(x):
+def def_func(x):
   global cfunc
   func_ti = x['ti']
   func_id = x['id']
@@ -707,15 +716,15 @@ def do_funcdef(x):
     param = func_type['params'][i]
     param_id = param['id']
     param_ti = param['ti']
-    y = {
+    p = {
       'isa': 'value',
       'kind': 'const',
       'id': param_id,
       'type': param['type'],
-      'meta': [],
+      'meta': ['param', 'readonly'],
       'ti': param_ti
     }
-    ctx.add_value(param_id['str'], y)
+    ctx.add_value(param_id['str'], p)
     i = i + 1
   
   func_stmt = do_stmt_block(x['stmt'])
@@ -726,7 +735,7 @@ def do_funcdef(x):
   ctx.add_value(func_id['str'], cfunc)
   
   funcdef = {
-    'isa': 'funcdef',
+    'isa': 'asg_def_func',
     'id': func_id,
     'type': func_type,
     'stmt': func_stmt,
@@ -737,7 +746,7 @@ def do_funcdef(x):
   return funcdef
 
 
-def do_exist(x):
+def def_exist(x):
   f = do_field(x['field'])
   if f == None:
     return None
@@ -758,18 +767,18 @@ def translate(srcname):
     isa = x['isa']
     if isa == 'import':
       y = do_import(x)
-    elif isa == 'var':
-      y = do_var(x)
-    elif isa == 'const':
-      y = do_const(x)
-    elif isa == 'func':
-      y = do_funcdef(x)
-    elif isa == 'type':
-      y = do_typedef(x)
-    elif isa == 'exist':
-      y = do_exist(x)
+    elif isa == 'ast_def_var':
+      y = def_var(x)
+    elif isa == 'ast_def_const':
+      y = def_const(x)
+    elif isa == 'ast_def_func':
+      y = def_func(x)
+    elif isa == 'ast_def_type':
+      y = def_type(x)
+    elif isa == 'ast_def_exist':
+      y = def_exist(x)
       
-    """elif isa == 'extern':
+    """elif isa == 'def_extern':
       do_extern(x)"""
     
     if y != None:

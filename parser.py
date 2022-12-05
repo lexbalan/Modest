@@ -8,6 +8,9 @@ from lexer import Lexer
 from error import warning, error, getline
 
 
+top_level_stoppers = ['type', 'const', 'var', 'func']
+
+
 class Parser:
   def __init__(self):
     self.lex = Lexer()
@@ -67,9 +70,12 @@ class Parser:
   
   def identifier(self):
     ti = self.ti()
+    if self.ctok_class() != 'id':
+      self.skip()
+      error("expected identifier", ti)
+      return None
     s = self.gettok()
     return {'isa': 'id', 'str': s, 'ti': ti}
-
   
   
   def open_sep(self):
@@ -78,9 +84,10 @@ class Parser:
     return old_skipnl
 
 
-  def close_sep(self, old_skipnl, stoppers=['}']):
+  def close_sep(self, old_skipnl, separators=['\n', ';'], stoppers=['}']):
     separator_ti = self.ti()
-    if self.look("\n") or self.look(";"):
+    #if self.look("\n") or self.look(";"):
+    if self.ctok() in separators:
       self.skipnl = old_skipnl
       self.skip()
     elif self.ctok() in stoppers:
@@ -103,7 +110,6 @@ class Parser:
         f = self.parse_field()
         self.match(",")
         fields.append(f)
-      #r = {'isa': 'type', 'kind': 'record', 'fields': fields}
   
       if self.match("->"):
         t = self.expr_type()
@@ -122,7 +128,7 @@ class Parser:
       while not self.match("}"):
         old_skipnl = self.open_sep()
         f = self.parse_field()
-        self.close_sep(old_skipnl)
+        self.close_sep(old_skipnl, separators=['\n', ','])
         fields.append(f)
       return {'isa': 'type', 'kind': 'record', 'fields': fields, 'ti': ti}
     
@@ -522,7 +528,15 @@ class Parser:
   def parse_field(self):
     ti = self.ti()
     id = self.identifier()
-    self.need(":")
+
+    if id == None:
+      self.restore(['\n', ','])
+      return None
+
+    if not self.need(":"):
+      self.restore(['\n', ','])
+      return None
+
     t = self.expr_type()
     return {'isa': 'field', 'id': id, 'type': t, 'ti': ti}
   
@@ -540,12 +554,12 @@ class Parser:
   
   def decl_exist(self):
     f = self.parse_field()
-    return {'isa': 'exist', 'field': f, 'ti': f['ti']}
+    return {'isa': 'ast_def_exist', 'field': f, 'ti': f['ti']}
   
   
   def decl_extern(self):
     f = self.parse_field()
-    return {'isa': 'extern', 'field': f, 'ti': f['ti']}
+    return {'isa': 'ast_def_extern', 'field': f, 'ti': f['ti']}
   
   
   def def_func(self):
@@ -553,7 +567,7 @@ class Parser:
     id = self.identifier()
     t = self.expr_type()
     s = self.stmt_block()
-    return {'isa': 'func', 'id': id, 'type': t, 'stmt': s, 'ti': ti}
+    return {'isa': 'ast_def_func', 'id': id, 'type': t, 'stmt': s, 'ti': ti}
     
   
   def def_const(self):
@@ -561,19 +575,19 @@ class Parser:
     id = self.identifier()
     self.need('=')
     v = self.expr_value()
-    return {'isa': 'const', 'id': id, 'value': v, 'ti': ti}
+    return {'isa': 'ast_def_const', 'id': id, 'value': v, 'ti': ti}
   
   
   def def_var(self):
     f = self.parse_field()
-    return {'isa': 'var', 'field': f, 'ti': f['ti']}
+    return {'isa': 'ast_def_var', 'field': f, 'ti': f['ti']}
   
   
   def def_type(self):
     ti = self.ti()
     id = self.identifier()
     t = self.expr_type()
-    return {'isa': 'type', 'id': id, 'type': t, 'ti': ti}
+    return {'isa': 'ast_def_type', 'id': id, 'type': t, 'ti': ti}
   
   
   def parse(self, filename):
@@ -608,4 +622,10 @@ class Parser:
     return xx
 
 
+
+  def restore(self, stoppers):
+    while not self.ctok() in stoppers:
+      if self.ctok() == '':
+        return
+      self.skip()
 

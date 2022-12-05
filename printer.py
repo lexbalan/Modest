@@ -174,6 +174,10 @@ def print_value_composite(v):
 
 
 def print_value(v):
+  # bad value
+  if v == None:
+    return
+
   k = v['kind']
   
   if k in bin_ops:
@@ -278,9 +282,9 @@ def print_stmt(x):
       print_stmt_if(x)
     elif k == 'while':
       print_stmt_while(x)
-    elif k == 'defvar':
+    elif k == 'asg_stmt_def_var':
       print_stmt_defvar(x)
-    elif k == 'let':
+    elif k == 'asg_stmt_def_let':
       print_stmt_let(x)
     else:
       lo("<stmt %s>" % str(x))
@@ -415,6 +419,22 @@ def print_vardef(x):
   print_field(x['field']); o(";")
 
 
+def print_constdef(x):
+  o("#define %s  (" % x['id']['str'])
+  print_value(x['value'])
+  o(")")
+
+
+def print_import(x):
+  s = x['str'] + '.h'
+  if x['local']:
+    s = '"' + s + '"'
+  else:
+    s = '<' + s + '>'
+  o("#include %s" % s)
+
+
+
 def printx(module, outname):
   global f
   
@@ -439,31 +459,25 @@ def printx(module, outname):
   for x in module:
     o("\n")
     isa = x['isa']
+
     if isa_prev != isa:
-      if not isa in ['funcdef', 'typedef']:
+      if not isa in ['asg_def_func', 'asg_def_type']:
         o("\n")
       isa_prev = isa
 
     if isa == 'import':
-      s = x['str'] + '.h'
-      if x['local']:
-        s = '"' + s + '"'
-      else:
-        s = '<' + s + '>'
-      o("#include %s" % s)
-    elif isa == 'vardef':
+      print_import(x)
+    elif isa == 'asg_def_var':
       print_vardef(x)
-    elif isa == 'constdef':
-      o("#define %s  (" % x['id']['str'])
-      print_value(x['value'])
-      o(")")
-    elif isa == 'funcdef':
+    elif isa == 'asg_def_const':
+      print_constdef(x)
+    elif isa == 'asg_def_func':
       print_funcdef(x)
-    elif isa == 'typedef':
+    elif isa == 'asg_def_type':
       print_typedef(x)
-    elif isa == 'exist':
+    elif isa == 'asg_def_exist':
       print_exist(x)
-    elif isa == 'extern':
+    elif isa == 'asg_def_extern':
       print_extern(x)
 
   o("\n")
