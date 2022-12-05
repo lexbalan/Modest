@@ -766,6 +766,29 @@ def def_exist(x):
   return None
 
 
+# принимает на вход сущность верхнего уровня
+# обрабатывает ее в соответствии с контекстом
+# (который в свою очредь тоже может изменяться в процессе)
+# возвращает сущность верхнего уровня для печати
+def process(x):
+  isa = x['isa']
+  y = None
+  if isa == 'import':
+    y = do_import(x)
+  elif isa == 'ast_def_type':
+    y = def_type(x)
+  elif isa == 'ast_def_func':
+    y = def_func(x)
+  elif isa == 'ast_def_const':
+    y = def_const(x)
+  elif isa == 'ast_def_var':
+    y = def_var(x)
+  elif isa == 'ast_def_exist':
+    y = def_exist(x)
+  """elif isa == 'def_extern':
+    do_extern(x)"""
+  return y
+
 
 def translate(srcname):
   p = Parser()
@@ -773,23 +796,7 @@ def translate(srcname):
 
   module = []
   for x in xx:
-    isa = x['isa']
-    if isa == 'import':
-      y = do_import(x)
-    elif isa == 'ast_def_var':
-      y = def_var(x)
-    elif isa == 'ast_def_const':
-      y = def_const(x)
-    elif isa == 'ast_def_func':
-      y = def_func(x)
-    elif isa == 'ast_def_type':
-      y = def_type(x)
-    elif isa == 'ast_def_exist':
-      y = def_exist(x)
-      
-    """elif isa == 'def_extern':
-      do_extern(x)"""
-    
+    y = process(x)
     if y != None:
       module.append(y)
   
