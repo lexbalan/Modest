@@ -750,11 +750,20 @@ def def_exist(x):
   f = do_field(x['field'])
   if f == None:
     return None
+
+  # TODO: add arghack pragma
   f['type']['arghack'] = f['id']['str'] == 'printf'
   
-  ctx.add_value(f['id']['str'], {'isa': 'value', 'kind': 'func', 'id': f['id'], 'type': f['type'], 'meta': [], 'ti': x['field']['ti']})
+  fval = {
+    'isa': 'value',
+    'kind': 'func',
+    'id': f['id'],
+    'type': f['type'],
+    'meta': [],
+    'ti': x['field']['ti']
+  }
+  ctx.add_value(f['id']['str'], fval)
   return None
-  #return {'isa': 'exist', 'field': f}
 
 
 
