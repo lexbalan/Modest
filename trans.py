@@ -55,6 +55,10 @@ def do_field(x):
   }
 
 
+#
+# Do Type
+#
+
 def do_type(t):
   k = t['kind']
   
@@ -72,9 +76,7 @@ def do_type(t):
   elif k == 'array':
     tx = {'isa': 'type', 'kind': 'array', 'size': None, 'ti': t['ti']}
     tx['of'] = do_type(t['of'])
-    
-    if not 'size' in t:
-      print(t)
+
     if t['size'] != None:
       tx['size'] = do_value(t['size'])
     return tx
@@ -171,6 +173,10 @@ def cast_explicit(v, t):
   return cast(v, t)
 
 
+#
+# Do Statement
+#
+
 
 bin_ops = [
   'or', 'xor', 'and', 'shl', 'shr',
@@ -246,8 +252,8 @@ def do_value_expr_un(v):
   val = do_value(v['value'])
   if val == None:
     return None
-  
   t = val['type']
+
   if v['kind'] == 'deref':
     to = t['to']
     # you can't deref pointer to function
@@ -259,8 +265,7 @@ def do_value_expr_un(v):
 
   if v['kind'] == 'ref':
     t = type.typePointer(t, ti=v['ti'])
-  
-  
+
   if type.is_generic_numeric(val['type']):
     num = {
       'minus': lambda a: -a,
@@ -419,14 +424,13 @@ def do_value_expr_access(v):
     'ti': v['ti']
   }
 
-  
+
 def do_value_expr_to(v):
   t = do_type(v['type'])
   v = do_value(v['value'])
   if v == None or t == None:
     return None
   return cast_explicit(v, t)
-
 
 
 def do_value_num(num, type=type.genericInt, ti=None):
@@ -446,7 +450,6 @@ def do_value_expr_id(v):
     error("undeclared value '%s'" % v['id']['str'], v['ti'])
     return None
   return vx
-
 
 
 def do_value_expr_str(v):
@@ -522,8 +525,11 @@ def do_value(v):
     rv['ti'] = v['ti']
   
   return rv
-    
-    
+
+
+#
+# Do Statement
+#
 
 
 def do_stmt_if(x):
@@ -883,7 +889,8 @@ def process(x):
 
 
 
-def ast2asg(ast):
+def translate(srcname):
+  ast = parser.parse(srcname)
   output = []
   ctx.push()
   for a in ast:
@@ -892,12 +899,6 @@ def ast2asg(ast):
       output.append(y)
   ctx.pop()
   return output
-
-
-def translate(srcname):
-  ast = parser.parse(srcname)
-  asg = ast2asg(ast)
-  return asg
 
 
 

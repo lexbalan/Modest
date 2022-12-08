@@ -2,8 +2,6 @@
 #                            PARSER                                 #
 #####################################################################
 
-# https://habr.com/ru/post/693562/
-
 from lexer import Lexer
 from error import warning, error, getline
 
@@ -12,28 +10,35 @@ top_level_stoppers = ['type', 'const', 'var', 'func']
 
 
 class Parser:
+
   def __init__(self):
     self.lex = Lexer()
     self.skipnl = True
-    
+
+
   def is_end(self):
     if self.tokens[self.ctoken][1] == '':
       return True
     return self.ctoken >= (len(self.tokens) - 1)
   
+
   def is_blank(self, c):
     return c == ' ' or c == '\t' or c == '\n' and self.skipnl
   
+
   def skip(self):
     if self.ctoken < (len(self.tokens) - 1):
       self.ctoken = self.ctoken + 1
   
+
   def ctok_class(self):
     return self.tokens[self.ctoken][0]
   
+
   def ctok(self):
     return self.tokens[self.ctoken][1]
   
+
   def ti(self):
     try:
       return self.tokens[self.ctoken][2]
@@ -46,20 +51,24 @@ class Parser:
     self.skip()
     return t
   
+
   def skip_blanks(self):
     while self.is_blank(self.ctok()):
       self.skip()
   
+
   def look(self, token):
     self.skip_blanks()
     return self.ctok() == token
   
+
   def match(self, token):
     yes = self.look(token)
     if yes:
       self.skip()
     return yes
   
+
   def need(self, token):
     ti = self.ti()
     yes = self.match(token)

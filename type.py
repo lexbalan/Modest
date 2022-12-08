@@ -1,6 +1,7 @@
 
 from error import error
 
+
 def typeInteger(aka, meta=[]):
   return {'isa': 'type', 'kind': 'base', 'aka': aka, 'meta': ['numeric'] + meta, 'ti': None}
 
@@ -23,15 +24,15 @@ typeUnit = {
   'ti': None
 }
 
-typeInt8  = typeInteger("int8_t")
-typeInt16 = typeInteger("int16_t")
-typeInt32 = typeInteger("int32_t")
-typeInt64 = typeInteger("int64_t")
+typeInt8  = typeInteger("int8_t", meta=['signed'])
+typeInt16 = typeInteger("int16_t", meta=['signed'])
+typeInt32 = typeInteger("int32_t", meta=['signed'])
+typeInt64 = typeInteger("int64_t", meta=['signed'])
 
-typeNat8  = typeInteger("uint8_t")
-typeNat16 = typeInteger("uint16_t")
-typeNat32 = typeInteger("uint32_t")
-typeNat64 = typeInteger("uint64_t")
+typeNat8  = typeInteger("uint8_t", meta=['unsigned'])
+typeNat16 = typeInteger("uint16_t", meta=['unsigned'])
+typeNat32 = typeInteger("uint32_t", meta=['unsigned'])
+typeNat64 = typeInteger("uint64_t", meta=['unsigned'])
 
 typeChar = typeNat8
 typeStr = typePointer(typeArray(typeChar))

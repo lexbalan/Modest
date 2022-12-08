@@ -7,6 +7,7 @@ class Source:
     self.pos = 0
     self.line = 1
   
+
   # считать очередной символ
   def getc(self):
     x = self.f.read(1)
@@ -17,6 +18,7 @@ class Source:
       self.pos = self.pos + 1
     return x
   
+
   # считать n следующих символов
   def getn(self, n):
     s = []
@@ -27,19 +29,23 @@ class Source:
       i = i + 1
     return "".join(s)
   
+
   # получить позицию в файле
   def getpos(self):
     x = self.f.tell()
     return (x, self.line, self.pos)
   
+
   # установить позицию в файле
   def setpos(self, pos):
     self.line = pos[1]
     self.pos = pos[2]
     self.f.seek(pos[0], 0)
+
     
   def get_ti(self):
     return {'file': self.filename, 'line': self.line, 'pos': self.pos}
+
 
   # посмотреть n символов вперед
   def lookup(self, n):
@@ -47,4 +53,5 @@ class Source:
     c = self.f.read(n)
     self.setpos(pos)
     return c
+
 
