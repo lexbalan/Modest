@@ -6,7 +6,6 @@ from printer import printx
 #from llvm import printx
 
 
-
 def main():
   trans.init()
   module = trans.translate("main.cm")
