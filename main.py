@@ -1,19 +1,16 @@
 
-from error import errcnt
+import error
 import trans
-
-from printer import printx
-#from llvm import printx
+import printer
 
 
 def main():
   trans.init()
   module = trans.translate("main.cm")
-  if errcnt == 0:
-    outname = "out.c"
-    printx(module, outname)
-  else:
+  if error.errcnt > 0:
     exit(1)
+  outname = "out.c"
+  printer.printx(module, outname)
 
 
 if __name__ == '__main__':
