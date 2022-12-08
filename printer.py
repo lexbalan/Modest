@@ -56,6 +56,7 @@ def print_type(t, print_aka=True):
       o(";")
       i = i + 1
     o("\n}")
+
   elif k == 'enum':
     o("enum {")
     items = t['items']
@@ -66,15 +67,19 @@ def print_type(t, print_aka=True):
       o("\t%s," % item['id']['str'])
       i = i + 1
     o("\n}")
+
   elif k == 'pointer':
     print_type(t['to'])
     if t['to']['kind'] != 'array':
       o("*")
+
   elif k == 'array':
     print_type(t['of'])
     o("*")
+
   elif k == 'func':
     o("void")
+
   else:
     o("<type:%s>" % k)
   

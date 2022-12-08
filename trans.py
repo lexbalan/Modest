@@ -1,23 +1,27 @@
 
-from parser import Parser
-from printer import printx
-from error import *
-from ctx import ContextStack
 
+from error import *
+from parser import Parser
+from ctx import ContextStack
+from printer import printx
 import type
 
 enumUid = 0
 
+
+parser = None
 
 ctx = None  # context
 
 cfunc = None  # current function
 
 
-
 def init():
+  global parser
+  parser = Parser()
   global ctx
   ctx = ContextStack()
+  # init built-in context
   ctx.add_type('Unit', type.typeUnit)
   ctx.add_type('Int', type.typeInt)
   ctx.add_type('Nat', type.typeNat)
@@ -31,6 +35,7 @@ def init():
   ctx.add_type('Nat32', type.typeNat32)
   ctx.add_type('Nat64', type.typeNat64)
   ctx.add_type('Str', type.typeStr)
+
 
 
 def do_field(x):
@@ -48,7 +53,6 @@ def do_field(x):
     'type': t,
     'ti': x['ti']
   }
-
 
 
 def do_type(t):
@@ -106,7 +110,14 @@ def do_type(t):
       items.append({'isa': 'item', 'id': identifier['id'], 'number': i, 'ti': identifier['ti']})
       i = i + 1
     enumUid = enumUid + 1
-    return {'isa': 'type', 'kind': 'enum', 'items': items, 'uid': enumUid, 'meta': [], 'ti': t['ti']}
+    return {
+      'isa': 'type',
+      'kind': 'enum',
+      'items': items,
+      'uid': enumUid,
+      'meta': [],
+      'ti': t['ti']
+    }
   
   elif k == 'func':
     params = []
@@ -117,17 +128,30 @@ def do_type(t):
         params.append(param)
       i = i + 1
     to = do_type(t['to'])
-    return {'isa': 'type', 'kind': 'func', 'params': params, 'to': to, 'meta': [], 'ti': t['ti']}
+    return {
+      'isa': 'type',
+      'kind': 'func',
+      'params': params,
+      'to': to,
+      'meta': [],
+      'ti': t['ti']
+    }
   
   return None #{'isa': 'type', 'kind': 'bad', 'type': t, 'meta': []}
   
-
 
 def cast(v, t):
   if v == None or t == None:
     return None
 
-  return {'isa': 'value', 'kind': 'to', 'value': v, 'type': t, 'meta': [], 'ti': v['ti']}
+  return {
+    'isa': 'value',
+    'kind': 'to',
+    'value': v,
+    'type': t,
+    'meta': [],
+    'ti': v['ti']
+  }
 
 
 def cast_implicit(v, t):
@@ -137,36 +161,30 @@ def cast_implicit(v, t):
   if not type.eq(v['type'], t):  #!
     if type.resolve(v['type'], t):
       return cast(v, t)
+
   return v
 
 
 def cast_explicit(v, t):
   if v == None or t == None:
     return None
-  
   return cast(v, t)
 
 
 
+bin_ops = [
+  'or', 'xor', 'and', 'shl', 'shr',
+  'eq', 'ne', 'lt', 'gt', 'le', 'ge',
+  'add', 'sub', 'mul', 'div', 'mod'
+]
 
-bin_ops = {
-  'or': '|', 'xor': '^', 'and': '&', 'shl': '<<', 'shr': '>>',
-  'eq': '==', 'ne': '!=',
-  'lt': '<', 'gt': '>', 'le': '<=', 'ge': '>=',
-  'add': '+', 'sub': '-', 'mul': '*', 'div': '/', 'mod': '%'
-}
-
-un_ops = {
-  'ref': '&', 'deref': '*', 'plus': '+', 'minus': '-', 'not': '~'
-}
-
+un_ops = ['ref', 'deref', 'plus', 'minus', 'not']
 
 
 def do_value_expr_bin(v):
   k = v['kind']
   l = do_value(v['left'])
   r = do_value(v['right'])
-  
   if l == None or r == None:
     return None
   
@@ -183,11 +201,7 @@ def do_value_expr_bin(v):
 
   # for generic
   if type.is_generic_numeric(l['type']) and type.is_generic_numeric(r['type']):
-    if not 'num' in l:
-      print("not #num in " + str(l))
-    if not 'num' in r:
-      print("not #num in " + str(r))
-    num = {
+    ops = {
       'or': lambda a, b: a or b,
       'and': lambda a, b: a and b,
       'xor': lambda a, b: (a and not b) or (not a and b),
@@ -204,10 +218,28 @@ def do_value_expr_bin(v):
       'mul': lambda a, b: a * b,
       'div': lambda a, b: int(a / b),
       'mod': lambda a, b: a % b,
-    }[k](l['num'], r['num'])
-    return {'isa': 'value', 'kind': 'num', 'type': t, 'num': num, 'meta': [], 'ti': v['ti']}
+    }
 
-  return {'isa': 'value', 'kind': v['kind'], 'left': l, 'right': r, 'type': t, 'meta': [], 'ti': v['ti']}
+    val = ops[k](l['num'], r['num'])
+
+    return {
+      'isa': 'value',
+      'kind': 'num',
+      'type': t,
+      'num': val,
+      'meta': [],
+      'ti': v['ti']
+    }
+
+  return {
+    'isa': 'value',
+    'kind': v['kind'],
+    'left': l,
+    'right': r,
+    'type': t,
+    'meta': [],
+    'ti': v['ti']
+  }
 
 
 def do_value_expr_un(v):
@@ -224,7 +256,7 @@ def do_value_expr_un(v):
       error("unsuitable type", v['value']['ti'])
 
     t = to
-    
+
   if v['kind'] == 'ref':
     t = type.typePointer(t, ti=v['ti'])
   
@@ -234,7 +266,14 @@ def do_value_expr_un(v):
       'minus': lambda a: -a,
       'not': lambda a: not a,
     }[k](val['num'])
-    return {'isa': 'value', 'kind': 'num', 'type': t, 'num': num, 'meta': [], 'ti': v['ti']}
+    return {
+      'isa': 'value',
+      'kind': 'num',
+      'type': t,
+      'num': num,
+      'meta': [],
+      'ti': v['ti']
+    }
   
   return {
     'isa': 'value',
@@ -370,16 +409,22 @@ def do_value_expr_access(v):
     error("field '%s' not exist" % field_id['str'], v['ti'])
     return None
   
-  return {'isa': 'value', 'kind': k, 'record': r, 'field': field, 'type': field['type'], 'meta': [], 'ti': v['ti']}
+  return {
+    'isa': 'value',
+    'kind': k,
+    'record': r,
+    'field': field,
+    'type': field['type'],
+    'meta': [],
+    'ti': v['ti']
+  }
 
   
 def do_value_expr_to(v):
   t = do_type(v['type'])
   v = do_value(v['value'])
-  
   if v == None or t == None:
     return None
-  
   return cast_explicit(v, t)
 
 
@@ -394,19 +439,25 @@ def do_value_num(num, type=type.genericInt, ti=None):
     'ti': ti
   }
 
+
 def do_value_expr_id(v):
   vx = ctx.get_value(v['id']['str'])
   if vx == None:
     error("undeclared value '%s'" % v['id']['str'], v['ti'])
-    return None # {'isa': 'value', 'kind': 'bad', 'value': v, 'type': type.typeBad(v['ti']), 'meta': [], 'ti': v['ti']}
-
+    return None
   return vx
-  #return {'isa': 'value', 'kind': 'id', 'object': vx, 'type': vx['type'], 'ti': v['ti']}
+
 
 
 def do_value_expr_str(v):
-  str = v['str']
-  return {'isa': 'value', 'kind': 'str', 'str': str, 'type': type.genericStr, 'meta': [], 'ti': v['ti']}
+  return {
+    'isa': 'value',
+    'kind': 'str',
+    'str': v['str'],
+    'type': type.genericStr,
+    'meta': [],
+    'ti': v['ti']
+  }
 
 
 def do_value_expr_composite(v):
@@ -531,7 +582,11 @@ def do_stmt_return(x):
     if not type.eq(cfunc['type']['to'], type.typeUnit):
       error("expected return value", x['ti'])
 
-  return {'isa': 'stmt', 'kind': 'return', 'value': v}
+  return {
+    'isa': 'stmt',
+    'kind': 'return',
+    'value': v
+  }
 
 
 def do_stmt_var(x):
@@ -554,9 +609,23 @@ def do_stmt_var(x):
     error("value with unspecified type", v['ti'])
     return None"""
   
-  vx = {'isa': 'value', 'kind': 'var', 'id': id, 'type': t, 'meta': [], 'ti': x['ti']}
+  vx = {
+    'isa': 'value',
+    'kind': 'var',
+    'id': id,
+    'type': t,
+    'meta': [],
+    'ti': x['ti']
+  }
   ctx.add_value(id['str'], vx)
-  return {'isa': 'stmt', 'kind': 'asg_stmt_def_var', 'id': id, 'type': t, 'value': v}
+
+  return {
+    'isa': 'stmt',
+    'kind': 'asg_stmt_def_var',
+    'id': id,
+    'type': t,
+    'value': v
+  }
 
 
 def do_stmt_let(x):
@@ -573,7 +642,14 @@ def do_stmt_let(x):
     return None
   
   #
-  vx = {'isa': 'value', 'kind': 'const', 'id': id, 'type': v['type'], 'meta': [], 'ti': x['ti']}
+  vx = {
+    'isa': 'value',
+    'kind': 'const',
+    'id': id,
+    'type': v['type'],
+    'meta': [],
+    'ti': x['ti']
+  }
   ctx.add_value(id['str'], vx)
   
   return {'isa': 'stmt', 'kind': 'asg_stmt_def_let', 'id': id, 'value': v}
@@ -678,8 +754,16 @@ def def_type(x):
       if id == None:
         continue
       #print("ex enum item " + id)
-      y = {'isa': 'value', 'kind': 'const', 'id': id, 'type': t, 'value': do_value_num(item['number']), 'meta': [], 'ti': item['ti']}
-      ctx.add_value(id['str'], y)
+      v = {
+        'isa': 'value',
+        'kind': 'const',
+        'id': id,
+        'type': t,
+        'value': do_value_num(item['number']),
+        'meta': [],
+        'ti': item['ti']
+      }
+      ctx.add_value(id['str'], v)
   
   return {'isa': 'asg_def_type', 'id': x['id'], 'type': t}
 
@@ -688,7 +772,14 @@ def def_var(x):
   f = do_field(x['field'])
   if f == None:
     return None
-  v = {'isa': 'value', 'kind': 'var', 'id': f['id'], 'type': f['type'], 'meta': [], 'ti': x['ti']}
+  v = {
+    'isa': 'value',
+    'kind': 'var',
+    'id': f['id'],
+    'type': f['type'],
+    'meta': [],
+    'ti': x['ti']
+  }
   ctx.add_value(x['field']['id']['str'], v)
   return {'isa': 'asg_def_var', 'field': f, 'ti': x['ti']}
 
@@ -766,6 +857,7 @@ def def_exist(x):
   return None
 
 
+
 # принимает на вход сущность верхнего уровня
 # обрабатывает ее в соответствии с контекстом
 # (который в свою очредь тоже может изменяться в процессе)
@@ -790,16 +882,22 @@ def process(x):
   return y
 
 
-def translate(srcname):
-  p = Parser()
-  xx = p.parse(srcname)
 
-  module = []
-  for x in xx:
-    y = process(x)
+def ast2asg(ast):
+  output = []
+  ctx.push()
+  for a in ast:
+    y = process(a)
     if y != None:
-      module.append(y)
-  
-  return module
+      output.append(y)
+  ctx.pop()
+  return output
+
+
+def translate(srcname):
+  ast = parser.parse(srcname)
+  asg = ast2asg(ast)
+  return asg
+
 
 

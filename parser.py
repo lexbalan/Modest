@@ -156,8 +156,9 @@ class Parser:
       return {'isa': 'type', 'kind': 'id', 'id': id, 'ti': ti}
     
 
-  
-  
+  #
+  # Parse Value
+  #
   
   def expr_value(self):
     return self.expr_value_0()
@@ -172,6 +173,7 @@ class Parser:
     else:
       return v
   
+
   def expr_value_1(self):
     v = self.expr_value_2()
     ti = self.ti()
@@ -181,6 +183,7 @@ class Parser:
     else:
       return v
   
+
   def expr_value_2(self):
     v = self.expr_value_3()
     ti = self.ti()
@@ -190,6 +193,7 @@ class Parser:
     else:
       return v
   
+
   def expr_value_3(self):
     v = self.expr_value_4()
     while True:
@@ -203,6 +207,7 @@ class Parser:
       else:
         break
     return v
+
 
   def expr_value_4(self):
     v = self.expr_value_5()
@@ -223,7 +228,8 @@ class Parser:
       else:
         break
     return v
-        
+
+
   def expr_value_5(self):
     v = self.expr_value_6()
     while True:
@@ -238,6 +244,7 @@ class Parser:
         break
     return v
   
+
   def expr_value_6(self):
     v = self.expr_value_7()
     while True:
@@ -252,6 +259,7 @@ class Parser:
         break
     return v
   
+
   def expr_value_7(self):
     v = self.expr_value_8()
     while True:
@@ -269,6 +277,7 @@ class Parser:
         break
     return v
   
+
   def expr_value_8(self):
     v = self.expr_value_9()
     #while True:
@@ -276,7 +285,6 @@ class Parser:
     if self.match("to"):
       t = self.expr_type()
       v = {'isa': 'value', 'kind': 'to', 'value': v, 'type': t, 'ti': ti}
-
     return v
   
   
@@ -336,8 +344,7 @@ class Parser:
       self.need(")")
       return v
     return self.parse_value_term()
-  
-  
+
 
   def parse_value_term_comp(self, id, ti):
     ti2 = self.ti()
@@ -384,23 +391,27 @@ class Parser:
     elif self.ctok_class() == 'num':
       num = self.gettok()
       return {'isa': 'value', 'kind': 'num', 'num': num, 'ti': ti}
+
     elif self.ctok_class() == 'str':
       str = self.gettok()
       return {'isa': 'value', 'kind': 'str', 'str': str, 'ti': ti}
+
     elif self.ctok_class() == 'sym':
       num = self.gettok()
       return {'isa': 'value', 'kind': 'sym', 'sym': num, 'ti': ti}
+
     else:
       cl = self.ctok_class()
       x = self.gettok()
       tokstr = self.ctok()
       error("unexpected token '%s'" % tokstr, ti)
       self.skip()
-      #print("BAD TOKEN " + x + ", class= "+ cl)
       return {'isa': 'value', 'kind': 'bad', 'ti': ti}
   
   
-
+  #
+  # Parse Statement
+  #
   
   def stmt(self):
     ti = self.ti()
@@ -438,7 +449,6 @@ class Parser:
       s = self.stmt_expr_value()
 
     self.close_sep(old_skipnl)
-
       
     if s != None:
       if not 'ti' in s:
@@ -481,15 +491,11 @@ class Parser:
   
   
   def stmt_return(self):
-#    old_skipnl = self.open_sep()
-
     self.skip()  # skip 'return' keyword
 
     v = None
     if not (self.look("\n") or self.look(";") or self.look("}")):
       v = self.expr_value()
-
-#    self.close_sep(old_skipnl)
 
     return {'isa': 'stmt', 'kind': 'return', 'value': v}
   
