@@ -263,6 +263,10 @@ def do_value_expr_un(v):
   t = val['type']
 
   if v['kind'] == 'deref':
+    if not type.is_pointer(t):
+      error("expected pointer", v['value']['ti'])
+      return None
+
     to = t['to']
     # you can't deref pointer to function
     # and pointer to undefined array
@@ -422,13 +426,18 @@ def do_value_expr_access(v):
     error("field '%s' not exist" % field_id['str'], v['ti'])
     return None
   
+  meta = []
+  if not ptr_access:
+    if 'immutable' in r['meta']:
+      meta.append('immutable')
+
   return {
     'isa': 'value',
     'kind': k,
     'record': r,
     'field': field,
     'type': field['type'],
-    'meta': [],
+    'meta': meta,
     'ti': v['ti']
   }
 
@@ -498,11 +507,25 @@ def do_value_expr_array(v):
 def do_value_expr_record(v):
   #print("do_value_expr_record")
 
+  record_fields = []
   items = []
-  for i in v['items']:
-    id = i['id']
-    vi = do_value(i['value'])
+  for item in v['items']:
+    id = item['id']
+    vi = do_value(item['value'])
     items.append({'id': id, 'value': vi})
+
+    field = {
+      'isa': 'field',
+      'id': id,
+      'type': vi['type'],
+      'ti': item['ti'],
+    }
+    record_fields.append(field)
+
+
+
+
+
 
   return {
     'isa': 'value',
@@ -510,7 +533,7 @@ def do_value_expr_record(v):
     'type': {
       'isa': 'type',
       'kind': 'record',
-      'fields': [],
+      'fields': record_fields,
       'meta': ['generic'],
       'ti': v['ti']
     },
@@ -688,7 +711,7 @@ def do_stmt_let(x):
     'kind': 'const',
     'id': id,
     'type': v['type'],
-    'meta': [],
+    'meta': ['immutable'],
     'ti': x['ti']
   }
   ctx.add_value(id['str'], vx)
@@ -703,6 +726,10 @@ def do_stmt_assign(x):
   if l == None or r == None:
     return None
   
+  # left is var?
+  if 'immutable' in l['meta']:
+    error("immutable value", l['ti'])
+
   # left is var?
   #if l['kind'] != 'var':
   #  error("expected var", x['left']['ti'])
