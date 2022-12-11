@@ -133,14 +133,31 @@ def is_enum(t):
 def is_record(t):
   return t['kind'] == 'record'
 
+def is_generic(t):
+  return 'generic' in t['meta']
+
+def is_numeric(t):
+  return 'numeric' in t['meta']
+
 
 # can implicit cast a -> b ?
 def resolve(a, b):
-  # GenericInt -> Int
-  if 'generic' in a['meta']:
-    if 'numeric' in a['meta']:
-      if 'numeric' in b['meta']:
-        return True
+
+  # Generic -> Specific
+  if is_generic(a):
+
+    #GenericNumeric -> Numeric
+    if is_numeric(a):
+      return is_numeric(b)
+
+    # GenericArray -> Array
+    if is_array(a):
+      return is_array(b)
+
+    # GenericRecord -> Record
+    if is_record(a):
+      return is_record(b)
+
   
   # *Type -> *Type
   if is_pointer(a) and is_pointer(b):

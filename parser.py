@@ -38,6 +38,11 @@ class Parser:
   def ctok(self):
     return self.tokens[self.ctoken][1]
   
+  def nextok(self):
+    if self.ctoken + 1 > len(self.tokens):
+      pass # TODO
+    return self.tokens[self.ctoken + 1][1]
+
 
   def ti(self):
     try:
@@ -293,7 +298,7 @@ class Parser:
     ti = self.ti()
     if self.match("to"):
       t = self.expr_type()
-      v = {'isa': 'value', 'kind': 'to', 'value': v, 'type': t, 'ti': ti}
+      v = {'isa': 'value', 'kind': 'cast', 'value': v, 'type': t, 'ti': ti}
     return v
   
   
@@ -355,7 +360,30 @@ class Parser:
     return self.parse_value_term()
 
 
-  def parse_value_term_comp(self, id, ti):
+  def parse_value_term_arr(self, ti):
+    #print("parse_value_term_arr")
+    ti2 = self.ti()
+    old_skipnl = self.skipnl
+    self.skipnl = True
+    self.need("[")
+
+    items = []
+    while not self.match("]"):
+      field_value = self.expr_value()
+      items.append(field_value)
+      self.match(",")
+
+    self.skipnl = old_skipnl
+
+    return {
+      'isa': 'value',
+      'kind': 'array',
+      'items': items,
+      'ti': ti2
+    }
+
+
+  def parse_value_term_rec(self, ti):
     ti2 = self.ti()
 
     old_skipnl = self.skipnl
@@ -365,8 +393,10 @@ class Parser:
     items = []
     while not self.match("}"):
       item_ti = self.ti()
+      #if self.ctok_class == 'id' and self.nextok()[] == '=':
       field_id = self.identifier()
       self.need("=")
+
       field_value = self.expr_value()
       self.match(",")
       item = {
@@ -381,8 +411,8 @@ class Parser:
 
     return {
       'isa': 'value',
-      'kind': 'composite',
-      'type': {'isa': 'type', 'kind': 'id', 'id': id, 'ti': ti},
+      'kind': 'record',
+      #'type': {'isa': 'type', 'kind': 'id', 'id': id, 'ti': ti},
       'items': items,
       'ti': ti2
     }
@@ -390,12 +420,11 @@ class Parser:
 
   def parse_value_term(self):
     ti = self.ti()
+
     if self.ctok_class() == 'id':
       id = self.identifier()
       if id['str'][0].islower():
         return {'isa': 'value', 'kind': 'id', 'id': id, 'ti': ti}
-      else:
-        return self.parse_value_term_comp(id, ti)
           
     elif self.ctok_class() == 'num':
       num = self.gettok()
@@ -408,6 +437,15 @@ class Parser:
     elif self.ctok_class() == 'sym':
       num = self.gettok()
       return {'isa': 'value', 'kind': 'sym', 'sym': num, 'ti': ti}
+
+    elif self.match("@"):
+      #t = self.parse_type()
+      if self.look("{"):
+        return self.parse_value_term_rec(ti)
+      if self.look("["):
+        return self.parse_value_term_arr(ti)
+
+
 
     else:
       cl = self.ctok_class()
@@ -595,7 +633,10 @@ class Parser:
   
   def def_var(self):
     f = self.parse_field()
-    return {'isa': 'ast_def_var', 'field': f, 'ti': f['ti']}
+    iv = None
+    if self.match("<-"):
+      iv = self.expr_value()
+    return {'isa': 'ast_def_var', 'field': f, 'init': iv, 'ti': f['ti']}
   
   
   def def_type(self):

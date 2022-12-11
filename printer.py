@@ -75,7 +75,10 @@ def print_type(t, print_aka=True):
 
   elif k == 'array':
     print_type(t['of'])
-    o("*")
+    if t['size'] != None:
+      o("["); print_value(t['size']); o("]")
+    else:
+      o("*")
 
   elif k == 'func':
     o("void")
@@ -166,15 +169,27 @@ def print_value_expr_to(v):
   o(")")
 
 
-def print_value_composite(v):
-  o("(")
-  print_type(v['type'])
-  o(")")
+def print_value_array(v):
   o("{")
-  for i in v['items']:
-    o(".%s=" % i['id']['str'])
-    print_value(i['value'])
-    o(",")
+  i = 0
+  while i < len(v['items']):
+    if i > 0:
+      o(",")
+    print_value(v['items'][i])
+    i = i + 1
+  o("}")
+
+
+def print_value_record(v):
+  o("{")
+  i = 0
+  while i < len(v['items']):
+    item = v['items'][i]
+    if i > 0:
+      o(",")
+    o(".%s=" % item['id']['str'])
+    print_value(item['value'])
+    i = i + 1
   o("}")
 
 
@@ -195,8 +210,10 @@ def print_value(v):
     o("%s" % v['id']['str'])
   elif k == 'str':
     o("\"%s\"" % v['str'])
-  elif k == 'composite':
-    print_value_composite(v)
+  elif k == 'record':
+    print_value_record(v)
+  elif k == 'array':
+    print_value_array(v)
   else:
     if k == 'call':
       print_value_expr_call(v)
@@ -421,7 +438,13 @@ def print_field(x):
 
 
 def print_vardef(x):
-  print_field(x['field']); o(";")
+  print_field(x['field']);
+
+  if x['init'] != None:
+    o(" = ")
+    print_value(x['init'])
+
+  o(";")
 
 
 def print_constdef(x):

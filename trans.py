@@ -74,7 +74,7 @@ def do_type(t):
     return type.typePointer(to, ti=t['ti'])
   
   elif k == 'array':
-    tx = {'isa': 'type', 'kind': 'array', 'size': None, 'ti': t['ti']}
+    tx = {'isa': 'type', 'kind': 'array', 'size': None, 'meta': [], 'ti': t['ti']}
     tx['of'] = do_type(t['of'])
 
     if t['size'] != None:
@@ -145,6 +145,14 @@ def do_type(t):
 def cast(v, t):
   if v == None or t == None:
     return None
+
+  if v['kind'] == 'array':
+    #print("cast array")
+    pass
+
+  if v['kind'] == 'record':
+    #print("cast record")
+    pass
 
   return {
     'isa': 'value',
@@ -463,24 +471,49 @@ def do_value_expr_str(v):
   }
 
 
-def do_value_expr_composite(v):
-  t = do_type(v['type'])
+def do_value_expr_array(v):
+  #print("do_value_expr_array")
+  items = []
+  for i in v['items']:
+    vi = do_value(i)
+    items.append(vi)
+
+  return {
+    'isa': 'value',
+    'kind': 'array',
+    'type': {
+      'isa': 'type',
+      'kind': 'array',
+      'size': len(v['items']),
+      'of': items[0]['type'],
+      'meta': ['generic'],
+      'ti': v['ti']
+    },
+    'items': items,
+    'meta': [],
+    'ti': v['ti']
+  }
+
+
+def do_value_expr_record(v):
+  #print("do_value_expr_record")
+
   items = []
   for i in v['items']:
     id = i['id']
-    field = type.record_field_get(t, id['str'])
-    if field == None:
-      error("undefined field '%s'" % id['str'], id['ti'])
-    else:
-      vi = do_value(i['value'])
-      vi = cast_implicit(vi, field['type'])
-      if vi != None:
-        type.check(field['type'], vi['type'], i['ti'])
-        items.append({'id': id, 'value': vi})
+    vi = do_value(i['value'])
+    items.append({'id': id, 'value': vi})
+
   return {
     'isa': 'value',
-    'kind': 'composite',
-    'type': t,
+    'kind': 'record',
+    'type': {
+      'isa': 'type',
+      'kind': 'record',
+      'fields': [],
+      'meta': ['generic'],
+      'ti': v['ti']
+    },
     'items': items,
     'meta': [],
     'ti': v['ti']
@@ -504,8 +537,10 @@ def do_value(v):
       rv = do_value_expr_id(v)
     elif k == 'str':
       rv = do_value_expr_str(v)
-    elif k == 'composite':
-      rv = do_value_expr_composite(v)
+    elif k == 'record':
+      rv = do_value_expr_record(v)
+    elif k == 'array':
+      rv = do_value_expr_array(v)
     else:
       if k == 'call':
         rv = do_value_expr_call(v)
@@ -513,7 +548,7 @@ def do_value(v):
         rv = do_value_expr_index(v)
       elif k == 'access':
         rv = do_value_expr_access(v)
-      elif k == 'to':
+      elif k == 'cast':
         rv = do_value_expr_to(v)
       elif k == 'sizeof':
         tx = do_type(v['type'])
@@ -776,18 +811,27 @@ def def_type(x):
 
 def def_var(x):
   f = do_field(x['field'])
+
   if f == None:
     return None
+
+  iv = None
+  if x['init'] != None:
+    iv = do_value(x['init'])
+    iv = cast_implicit(iv, f['type'])
+    type.check(iv['type'], f['type'], x['init']['ti'])
+
   v = {
     'isa': 'value',
     'kind': 'var',
     'id': f['id'],
     'type': f['type'],
+    'init': iv,
     'meta': [],
     'ti': x['ti']
   }
   ctx.add_value(x['field']['id']['str'], v)
-  return {'isa': 'asg_def_var', 'field': f, 'ti': x['ti']}
+  return {'isa': 'asg_def_var', 'field': f, 'init': iv, 'ti': x['ti']}
 
 
 def def_func(x):
