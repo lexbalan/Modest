@@ -1,23 +1,5 @@
 
-
-f = None
-
-indent = 0
-
-
-def o(s):
-  f.write(s)
-
-
-def lo(s):
-  f.write('\n')
-  f.write(s)
-
-
-def ind():
-  global indent
-  f.write("\t" * indent)
-
+from printer_common import *
 
 typealiases = {
   'Unit': 'void',
@@ -283,7 +265,6 @@ def print_stmt_let(x):
 
 
 def print_stmt(x):
-  global indent
   
   k = x['kind']
   if k == 'block':
@@ -313,12 +294,11 @@ def print_stmt(x):
 
 
 def print_stmt_block(s):
-  global indent
-  indent = indent + 1
+  indent_up()
   o("{")
   for stmt in s['stmts']:
     print_stmt(stmt)
-  indent = indent - 1
+  indent_down()
   o("\n")
   ind()
   o("}")
@@ -464,9 +444,8 @@ def print_import(x):
 
 
 def printx(module, outname):
-  global f
   
-  f = open(outname, "w")
+  printer_open(outname)
 
   lo("#include <stdint.h>")
   
@@ -512,7 +491,7 @@ def printx(module, outname):
   """if is_header:
     lo("#endif /* %s */" % guardname)"""
   o("\n")
-  f.close()
+  printer_close()
 
 
 

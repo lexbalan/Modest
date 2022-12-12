@@ -351,7 +351,7 @@ def do_value_expr_call(v):
     if a == None:
       i = i + 1
       continue
-      
+
     a = cast_implicit(a, type.typeInt)
     args.append(a)
     i = i + 1
@@ -719,6 +719,9 @@ def do_stmt_let(x):
   return {'isa': 'stmt', 'kind': 'asg_stmt_def_let', 'id': id, 'value': v}
 
 
+def value_is_immutable(x):
+  return 'immutable' in x['meta']
+
 def do_stmt_assign(x):
   l = do_value(x['left'])
   r = do_value(x['right'])
@@ -727,12 +730,14 @@ def do_stmt_assign(x):
     return None
   
   # left is var?
-  if 'immutable' in l['meta']:
-    error("immutable value", l['ti'])
+  if l['kind'] in ['var', 'deref', 'access', 'index']:
+    if value_is_immutable(l):
+      error("immutable value", l['ti'])
+      return None
+  else:
+    error("illegal left", x['left']['ti'])
+    return None
 
-  # left is var?
-  #if l['kind'] != 'var':
-  #  error("expected var", x['left']['ti'])
   
   # type check
   r = cast_implicit(r, l['type'])

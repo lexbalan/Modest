@@ -24,15 +24,15 @@ typeUnit = {
   'ti': None
 }
 
-typeInt8  = typeInteger("int8_t", meta=['signed'])
-typeInt16 = typeInteger("int16_t", meta=['signed'])
-typeInt32 = typeInteger("int32_t", meta=['signed'])
-typeInt64 = typeInteger("int64_t", meta=['signed'])
+typeInt8  = typeInteger("Int8", meta=['signed'])
+typeInt16 = typeInteger("Int16", meta=['signed'])
+typeInt32 = typeInteger("Int32", meta=['signed'])
+typeInt64 = typeInteger("Int64", meta=['signed'])
 
-typeNat8  = typeInteger("uint8_t", meta=['unsigned'])
-typeNat16 = typeInteger("uint16_t", meta=['unsigned'])
-typeNat32 = typeInteger("uint32_t", meta=['unsigned'])
-typeNat64 = typeInteger("uint64_t", meta=['unsigned'])
+typeNat8  = typeInteger("Nat8", meta=['unsigned'])
+typeNat16 = typeInteger("Nat16", meta=['unsigned'])
+typeNat32 = typeInteger("Nat32", meta=['unsigned'])
+typeNat64 = typeInteger("Nat64", meta=['unsigned'])
 
 typeChar = typeNat8
 typeStr = typePointer(typeArray(typeChar))
