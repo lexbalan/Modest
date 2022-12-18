@@ -678,7 +678,7 @@ def do_stmt_var(x):
     'kind': 'var',
     'id': id,
     'type': t,
-    'meta': [],
+    'meta': ['local'],
     'ti': x['ti']
   }
   ctx.add_value(id['str'], vx)
@@ -695,23 +695,23 @@ def do_stmt_var(x):
 def do_stmt_let(x):
   id = x['id']
   v = do_value(x['value'])
-  
   if v == None:
     return None
-  
-  # let x = 10
-  # не нужно генерить стейтмент, просто создаем константу тут
+
+  # compile-time let
+  # не нужно генерить стейтмент,
+  # просто связываем константное значение с идентификатором
   if type.is_generic(v['type']):
     ctx.add_value(id['str'], v)
     return None
   
-  #
+  # runtime let
   vx = {
     'isa': 'value',
     'kind': 'const',
     'id': id,
     'type': v['type'],
-    'meta': ['immutable'],
+    'meta': ['local', 'immutable'],
     'ti': x['ti']
   }
   ctx.add_value(id['str'], vx)
@@ -721,6 +721,7 @@ def do_stmt_let(x):
 
 def value_is_immutable(x):
   return 'immutable' in x['meta']
+
 
 def do_stmt_assign(x):
   l = do_value(x['left'])

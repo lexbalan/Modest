@@ -2,6 +2,7 @@
 import error
 import trans
 import printer
+import llvm
 
 
 def main():
@@ -10,7 +11,7 @@ def main():
   if error.errcnt > 0:
     exit(1)
   outname = "out.c"
-  printer.printx(module, outname)
+  llvm.printx(module, outname)
 
 
 if __name__ == '__main__':
