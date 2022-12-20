@@ -1,9 +1,32 @@
 
 from printer_common import *
-
+import type
 
 
 func_context = None
+
+
+def locals_push():
+  func_context['locals'].append({})
+
+def locals_pop():
+  func_context['locals'].pop()
+
+def locals_add(id, llval):
+  func_context['locals'][-1][id] = llval
+
+def locals_get(id):
+  # идем по стеку контекстов вглубь в поиске id
+  i = len(func_context['locals'])
+  while i > 0:
+    c = func_context['locals'][i - 1]
+    if id in c:
+      return c[id]
+    i = i - 1
+  return None
+
+
+
 
 
 TYPE_BOOL = 'i1'
@@ -16,9 +39,12 @@ def lot(x):
 free_reg = 0
 
 def reg_get():
-  global free_reg
-  free_reg = free_reg + 1
-  reg = free_reg
+  global func_context
+  if func_context == None:
+    print("reg_get outside function body")
+    return 100
+  reg = func_context['free_reg']
+  func_context['free_reg'] = func_context['free_reg'] + 1
   return reg
 
 
@@ -35,11 +61,14 @@ def operation_with_type(op, t):
 
 
 
-def llvm_print_value(x):
+def print_value(x):
   if x == None:
     o("<None>")
   elif x['kind'] in ['reg', 'adr']:
-    o('%%%d' % x['reg'])
+    if 'id' in x:
+      o(x['id'])
+    else:
+      o('%%%d' % x['reg'])
   elif x['kind'] in ['num']:
     o(str(x['num']))
   elif x['kind'] in ['id']:
@@ -71,6 +100,7 @@ def ll_unary(op, v):
 """
 
 typealiases = {
+  '<generic:int>': 'i64',
   'Unit': 'i1',
   'Int': 'int',
   'Int8': 'i8',
@@ -120,9 +150,7 @@ def print_type(t, print_aka=True):
     o("\n}")
 
   elif k == 'pointer':
-    print_type(t['to'])
-    if t['to']['kind'] != 'array':
-      o("*")
+    print_type(t['to']); o("*")
 
   elif k == 'array':
     o("[")
@@ -142,17 +170,43 @@ def print_type(t, print_aka=True):
     o("<type:%s>" % k)
 
 
+# получает на вход llvm_value
+# и если оно adr то загружает его в регистр
+# в любом другом случае просто возвращает исходное значение
+def do_ld(x):
+
+  if x['kind'] == 'adr':
+    regno = operation('load');
+    print_type(x['type'])
+    comma()
+    print_type(x['type'])
+    o("* ")
+    print_value (x)
+    return {'isa': 'llvm_value', 'kind': 'reg', 'reg': regno}
+
+  return x
+
+
 def do_eval_expr_bin(v):
-  l = do_eval(v['left'])
-  r = do_eval(v['right'])
-  regno = operation_with_type (v['kind'], v['left']['type'])
-  space (); llvm_print_value (l); comma(); llvm_print_value (r)
+  l = do_ld(do_eval(v['left']))
+  r = do_ld(do_eval(v['right']))
+
+  op = v['kind']
+
+  if op in ['eq', 'ne', 'lt', 'gt', 'le', 'ge']:
+    sign_prefix = 's' if 'signed' in v['left']['type']['meta'] else 'u'
+    op = 'icmp ' + sign_prefix + op
+
+  regno = operation_with_type (op, v['left']['type'])
+  space (); print_value (l); comma(); print_value (r)
   return {'isa': 'llvm_value', 'kind': 'reg', 'reg': regno}
 
 
 def do_eval_expr_un(v):
-  y = do_eval(v['value'])
-  reg = operation(v['kind']); space(); llvm_print_value(y)
+  #if v['kind'] == 'ref':
+
+  y = do_ld(do_eval(v['value']))
+  reg = operation(v['kind']); space(); print_value(y)
   return {'isa': 'llvm_value', 'kind': 'reg', 'reg': reg}
 
 
@@ -160,49 +214,57 @@ def do_eval_expr_call(v):
   # eval all args
   args = []
   for a in v['args']:
-    args.append(do_eval(a))
+    args.append(do_ld(do_eval(a)))
 
   # eval func
   f = do_eval(v['left'])
 
   # do call
   reg = operation("call")
-  llvm_print_value(f)
-  o(" ("); print_list_by(args, llvm_print_value); o(")")
+
+  #%Int32(%Str, ...)
+  print_type(v['left']['type']['to'])
+  o("(")
+  params = v['left']['type']['params']
+  print_list_by(params, lambda par: print_type(par['type']))
+  o(") ")
+
+  print_value(f)
+  o(" ("); print_list_by(args, print_value); o(")")
   return {'isa': 'llvm_value', 'kind': 'reg', 'reg': reg}
 
 
 def do_eval_expr_index(v):
-  a = do_eval(v['array'])
-  i = do_eval(v['index'])
+  a = do_ld(do_eval(v['array']))
+  i = do_ld(do_eval(v['index']))
   reg = operation("index")
-  llvm_print_value(a); comma(); llvm_print_value(i);
+  print_value(a); comma(); print_value(i);
   return {'isa': 'llvm_value', 'kind': 'adr', 'reg': reg}
 
 
 def do_eval_expr_access(v):
-  rec = do_eval(v['record'])
-  reg = operation("access"); llvm_print_value(rec)
+  rec = do_ld(do_eval(v['record']))
+  reg = operation("access"); print_value(rec)
   o(" .%s" % v['field']['id']['str'])
   return {'isa': 'llvm_value', 'kind': 'adr', 'reg': reg}
 
 
 def do_eval_expr_access2(v):
-  rec = do_eval(v['record'])
-  reg = operation("access"); llvm_print_value(rec)
+  rec = do_ld(do_eval(v['record']))
+  reg = operation("access"); print_value(rec)
   o(" .%s" % v['field']['id']['str'])
   return {'isa': 'llvm_value', 'kind': 'adr', 'reg': reg}
 
 
 def do_eval_expr_to(v):
-  y = do_eval(v['value'])
-  reg = operation("cast")
-  o("(")
-  llvm_print_value(y)
+  y = do_ld(do_eval(v['value']))
+  # = bitcast %Nat8* %4 to %Void*
+  reg = operation("bitcast")
+  print_type(v['value']['type'])
+  o(" ")
+  print_value(y)
   o(" to ")
   print_type(v['type'])
-  o(")")
-
   return {'isa': 'llvm_value', 'kind': 'reg', 'reg': reg}
 
 
@@ -257,9 +319,17 @@ def do_eval(v):
   elif k in ['func', 'const', 'var']:
     if 'local' in v['meta']:
       localname = v['id']['str']
-      return func_context['locals'][localname]
+      return locals_get(localname) # func_context['locals'][localname]
 
-    return {'isa': 'llvm_value', 'kind': 'id', 'id': v['id']['str']}
+    if k == 'var':
+      return {
+        'isa': 'llvm_value',
+        'kind': 'adr',
+        'type': v['type'],  # need for load/store, because it is 'adr'
+        'id': '@' + v['id']['str'],
+      }
+
+    return {'isa': 'llvm_value', 'kind': 'id', 'id': '@' + v['id']['str']}
 
   elif k == 'str':
     return {'isa': 'llvm_value', 'kind': 'str', 'str': v['str']}
@@ -297,7 +367,14 @@ def do_eval(v):
 def print_stmt_assign(x):
   r = do_eval(x['right'])
   l = do_eval(x['left'])
-  lot("store "); llvm_print_value(l); comma(); llvm_print_value(r);
+  lot("store ");
+  print_type(x['right']['type'])
+  o(" ")
+  print_value(r)
+  comma()
+  print_type(x['right']['type'])
+  o("* ")
+  print_value(l);
 
 
 def print_base_block():
@@ -305,29 +382,46 @@ def print_base_block():
 
 
 
+def ll_br(x, then_label, else_label):
+  o("\n  br %s" % TYPE_BOOL)
+  print_value(x)
+  o(" , label %%%s, label %%%s" % (then_label, else_label))
 
-def ll_br(x):
-  o("\n  br %s " % TYPE_BOOL)
-  #print_type(x['value']['type'])
-  #o(" ")
-  llvm_print_value(x)
+def op_goto(label):
+  o("\n  br label %%%s" % label)
+
+def set_label(label):
+  o("\n%s:" % label)
 
 
 def print_stmt_if(x):
   global func_context
   if_id = func_context['if_no']
   func_context['if_no'] = func_context['if_no'] + 1
-  cv = do_eval(x['cond'])
-  ll_br (cv)
-  o(", label %%then_%d, label %%else_%d" % (if_id, if_id))
-  o("\nthen_%d:" % if_id)
-  print_stmt (x['then'])
-  o("\n  br label %%endif_%d" % if_id)
-  o("\nelse_%d:" % if_id)
+  cv = do_ld(do_eval(x['cond']))
+
+  then_label = 'then_%d' % if_id
+  else_label = 'else_%d' % if_id
+  endif_label = 'endif_%d' % if_id
+
+  if x['else'] == None:
+    else_label = endif_label
+
+  ll_br(cv, then_label, else_label)
+
+  # then block
+  set_label(then_label)
+  print_stmt(x['then'])
+  op_goto(endif_label)
+
+  # else block
   if x['else'] != None:
-    print_stmt (x['else'])
-  o("\n  br label %%endif_%d" % if_id)
-  o("\nendif_%d:" % if_id)
+    set_label(else_label)
+    print_stmt(x['else'])
+    op_goto(endif_label)
+
+  # endif label
+  set_label(endif_label)
 
 
 def print_stmt_while(x):
@@ -336,47 +430,76 @@ def print_stmt_while(x):
   func_context['while_no'] = func_context['while_no'] + 1
   cur_while_id = func_context['while_no']
   func_context['cur_while_id'] = cur_while_id
-  o("\n  br label %%again_%d" % cur_while_id)
-  o("\nagain_%d:" % cur_while_id)
-  cv = do_eval(x['cond'])
-  ll_br (cv)
-  o(", label %%body_%d, label %%break_%d" % (cur_while_id, cur_while_id))
-  o("\nbody_%d:" % cur_while_id)
-  print_stmt (x['stmt'])
-  o("\n  br label %%again_%d" % cur_while_id)
-  o("\nbreak_%d:" % cur_while_id)
+
+  again_label = 'again_%d' % cur_while_id
+  break_label = 'break_%d' % cur_while_id
+  body_label = 'body_%d' % cur_while_id
+
+  op_goto(again_label)
+  set_label(again_label)
+  cv = do_ld(do_eval(x['cond']))
+  ll_br(cv, body_label, break_label)
+  set_label(body_label)
+  print_stmt(x['stmt'])
+  op_goto(again_label)
+  set_label(break_label)
   func_context['cur_while_id'] = old_while_id
 
 
+def print_stmt_again():
+  global func_context
+  cur_while_id = func_context['cur_while_id']
+  op_goto('again_%d' % cur_while_id)
+  reg_get()  # for LLVM
+
+
+def print_stmt_break():
+  global func_context
+  cur_while_id = func_context['cur_while_id']
+  op_goto('break_%d' % cur_while_id)
+  reg_get()  # for LLVM
+
+
 def print_stmt_return(x):
-  if x['value'] == None:
-    o("ret")
-    return
+  v = None
+  if x['value'] != None:
+    v = do_ld(do_eval(x['value']))
 
-  v = do_eval(x['value'])
-  lot("ret "); llvm_print_value(v)
+  lot("ret ")
+
+  if v != None:
+    print_type(x['value']['type'])
+    o(" ")
+    print_value(v)
+  else:
+    o("void")
+
+  reg_get()  # for LLVM
 
 
-def print_stmt_defvar(x):
+
+def print_stmt_vardef(x):
   global func_context
 
-  reg = operation("alloca")
+  id = '%' + x['id']['str']
+  #reg = reg_get()
+  lo("  %s = alloca " % id)
+
   print_type(x['type'])
-  val = {'isa': 'llvm_value', 'kind': 'adr', 'reg': reg}
+  val = {'isa': 'llvm_value', 'kind': 'adr', 'type': x['type'], 'id': id}
 
   if x['value'] != None:
-    r = do_eval(x['value'])
-    lot("st "); llvm_print_value(val); comma(); llvm_print_value(r);
+    r = do_ld(do_eval(x['value']))
+    lot("st "); print_value(val); comma(); print_value(r);
 
-  func_context['locals'][x['id']['str']] = val
+  locals_add(x['id']['str'], val)
   return None
 
 
 def print_stmt_let(x):
   global func_context
-  lo("  ; let")
-  v = do_eval(x['value'])
-  func_context['locals'][x['id']['str']] = v
+  v = do_ld(do_eval(x['value']))
+  locals_add(x['id']['str'], v)
   return None
 
 
@@ -397,16 +520,22 @@ def print_stmt(x):
   elif k == 'while':
     print_stmt_while(x)
   elif k == 'asg_stmt_def_var':
-    print_stmt_defvar(x)
+    print_stmt_vardef(x)
   elif k == 'asg_stmt_def_let':
     print_stmt_let(x)
+  elif k == 'break':
+    print_stmt_break()
+  elif k == 'again':
+    print_stmt_again()
   else:
     lo("<stmt %s>" % str(x))
 
 
 def print_stmt_block(s):
+  locals_push()
   for stmt in s['stmts']:
     print_stmt(stmt)
+  locals_pop()
 
 
 def print_func_signature(id, typ):
@@ -459,9 +588,11 @@ def print_funcdef(x):
     'while_no': 0,
     'cur_while_id': 0,
 
+    'free_reg': 0,
+
     # map for local lets & vars
     # <id> => <llvm_value>
-    'locals': {}
+    'locals': [{}]
   }
 
   o("\ndefine ")
@@ -473,17 +604,29 @@ def print_funcdef(x):
   params_len = len(params)
   i = 0
   while i < params_len:
+    param = params[i]
+    id = '%' + param['id']['str']
     if i > 0:
       o(", ")
-    print_type(params[i]['type'])
+    print_type(param['type'])
     space()
-    o('%' + params[i]['id']['str'])
+    o(id)
+
+    #reg = reg_get()
+    vv = {'isa': 'llvm_value', 'kind': 'reg', 'id': id}
+    locals_add(param['id']['str'], vv)
     i = i + 1
   o(")")
+
+  # 0, 1, 2 - params; 3 - entry label, 4 - first free register
+  entry_label = reg_get()  # (!)
 
   #print_func_signature(x['id']['str'], x['type'])
   o(" {")
   print_stmt_block(x['stmt'])
+
+  if type.eq(x['type']['to'], type.typeUnit):
+    lo("  ret void")
   lo("}")
 
   func_context = old_func_context
@@ -558,7 +701,7 @@ def print_field(x):
 """def print_val_with_type(x):
   print_type(x['type'])
   o(" ")
-  llvm_print_value(x['value'])"""
+  print_value(x['value'])"""
 
 
 def print_vardef(x):
@@ -592,10 +735,9 @@ def print_import(x):
 
 
 def printx(module, outname):
-
+  outname = outname + '.ll'
   printer_open(outname)
 
-  lo("#include <stdint.h>")
 
   """lo("#ifndef __TYPE_STR__")
   lo("#define __TYPE_STR__")

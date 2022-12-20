@@ -653,6 +653,13 @@ def do_stmt_return(x):
   }
 
 
+def do_stmt_again(x):
+  return {'isa': 'stmt', 'kind': 'again'}
+
+def do_stmt_break(x):
+  return {'isa': 'stmt', 'kind': 'break'}
+
+
 def do_stmt_var(x):
   id = x['id']
   
@@ -780,6 +787,10 @@ def do_stmt(x):
     s = do_stmt_while(x)
   elif k == 'var':
     s = do_stmt_var(x)
+  elif k == 'again':
+    s = do_stmt_again(x)
+  elif k == 'break':
+    s = do_stmt_break(x)
     
   return s
   
@@ -895,7 +906,7 @@ def def_func(x):
       'kind': 'const',
       'id': param_id,
       'type': param['type'],
-      'meta': ['param', 'readonly'],
+      'meta': ['param', 'local', 'readonly'],
       'ti': param_ti
     }
     ctx.add_value(param_id['str'], p)

@@ -477,22 +477,20 @@ class Parser:
     input()"""
 
     if self.match('let'):
-      #print("stmt_let")
       s = self.stmt_let()
     elif self.match('if'):
-      #print("stmt_if")
       s = self.stmt_if()
     elif self.match('while'):
-      #print("stmt_while")
       s = self.stmt_while()
     elif self.look('return'):
-      #print("stmt_return")
       s = self.stmt_return()
     elif self.match('var'):
-      #print("stmt_var")
       s = self.stmt_var()
+    elif self.match('again'):
+      s = self.stmt_again()
+    elif self.match('break'):
+      s = self.stmt_break()
     else:
-      #print("stmt_expr/assign")
       s = self.stmt_expr_value()
 
     self.close_sep(old_skipnl)
@@ -519,7 +517,6 @@ class Parser:
 
 
   def stmt_if(self):
-    #print("stmt_if")
     c = self.expr_value()
     t = self.stmt_block()
     e = None
@@ -546,6 +543,11 @@ class Parser:
 
     return {'isa': 'stmt', 'kind': 'return', 'value': v}
   
+  def stmt_again(self):
+    return {'isa': 'stmt', 'kind': 'again'}
+
+  def stmt_break(self):
+    return {'isa': 'stmt', 'kind': 'break'}
   
   def stmt_expr_value(self):
     v = self.expr_value()

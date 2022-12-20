@@ -10,7 +10,7 @@ def main():
   module = trans.translate("main.cm")
   if error.errcnt > 0:
     exit(1)
-  outname = "out.c"
+  outname = "out"
   llvm.printx(module, outname)
 
 
