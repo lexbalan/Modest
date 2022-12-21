@@ -123,7 +123,7 @@ class Parser:
       while not self.match(")"):
         f = self.parse_field()
         self.match(",")
-        fields.append(f)
+        fields.extend(f)
   
       if self.match("->"):
         t = self.expr_type()
@@ -143,7 +143,8 @@ class Parser:
         old_skipnl = self.open_sep()
         f = self.parse_field()
         self.close_sep(old_skipnl, separators=['\n', ','])
-        fields.append(f)
+        fields.extend(f)
+
       return {'isa': 'type', 'kind': 'record', 'fields': fields, 'ti': ti}
     
     elif self.match("enum"):
@@ -494,6 +495,10 @@ class Parser:
       s = self.stmt_expr_value()
 
     self.close_sep(old_skipnl)
+
+    # переменные могут быть объявлены списком
+    if isinstance(s, list):
+      return s
       
     if s != None:
       if not 'ti' in s:
@@ -504,16 +509,34 @@ class Parser:
   
   def stmt_var(self):
     ti = self.ti()
-    id = self.identifier()
     
+    ids = []
+    while True:
+      id = self.identifier()
+      ids.append(id)
+      if not self.match(','):
+        break
+
+
     t = None
     v = None
     if self.match(":"):
       t = self.expr_type()
     if self.match("<-"):
       v = self.expr_value()
-    
-    return {'isa': 'stmt', 'kind': 'var', 'id': id, 'type': t, 'value': v}
+
+    stmts = []
+    for id in ids:
+      stmt_var = {
+        'isa': 'stmt',
+        'kind': 'var',
+        'id': id,
+        'type': t,
+        'value': v,
+        'ti': id['ti']
+      }
+      stmts.append(stmt_var)
+    return stmts
 
 
   def stmt_if(self):
@@ -576,15 +599,36 @@ class Parser:
     stmts = []
     while not self.match("}"):
       s = self.stmt()
-      stmts.append(s)
+      if isinstance(s, list):
+        stmts.extend(s)
+      else:
+        stmts.append(s)
     return {'isa': 'stmt', 'kind': 'block', 'stmts': stmts, 'ti': ti}
   
   
+
+
+
+
+
+
+
+
+
+
   def parse_field(self):
     ti = self.ti()
-    id = self.identifier()
 
-    if id == None:
+    ids = []
+    while True:
+      id = self.identifier()
+      if id == None:
+        break
+      ids.append(id)
+      if not self.match(','):
+        break
+
+    if ids == []:
       self.restore(['\n', ','])
       return None
 
@@ -593,7 +637,14 @@ class Parser:
       return None
 
     t = self.expr_type()
-    return {'isa': 'field', 'id': id, 'type': t, 'ti': ti}
+
+    fields = []
+    for id in ids:
+      field = {'isa': 'field', 'id': id, 'type': t, 'ti': id['ti']}
+      fields.append(field)
+
+    return fields
+
   
   
   #
@@ -635,6 +686,7 @@ class Parser:
   
   def def_var(self):
     f = self.parse_field()
+    f = f[0]
     iv = None
     if self.match("<-"):
       iv = self.expr_value()
