@@ -219,8 +219,14 @@ def do_eval_expr_call(v):
   # eval func
   f = do_eval(v['left'])
 
+  to_unit = type.eq(v['left']['type']['to'], type.typeUnit)
+
   # do call
-  reg = operation("call")
+  reg = 0
+  if to_unit:
+    lot("call ")
+  else:
+    reg = operation("call")
 
   #%Int32(%Str, ...)
   print_type(v['left']['type']['to'])
@@ -510,7 +516,7 @@ def print_stmt(x):
   if k == 'block':
     print_stmt_block(x)
   elif k == 'value':
-    do_eval(x['value']); o(";")
+    do_eval(x['value'])
   elif k == 'assign':
     print_stmt_assign(x)
   elif k == 'return':
@@ -563,13 +569,14 @@ def print_func_signature(id, typ):
   o(" " + "*" * ptr_level)
   o("%s(" % id)
 
-  i = 0
+  print_list_by(params, print_field)
+  """i = 0
   while i < len(params):
     param = params[i]
     print_field(param)
     i = i + 1
     if i < len(params):
-      o(", ")
+      o(", ")"""
 
   if 'arghack' in typ:
     if typ['arghack']:
@@ -738,19 +745,6 @@ def printx(module, outname):
   outname = outname + '.ll'
   printer_open(outname)
 
-
-  """lo("#ifndef __TYPE_STR__")
-  lo("#define __TYPE_STR__")
-  lo("typedef char * Str;")
-  lo("#endif /* __TYPE_STR__ */\n")"""
-
-  """
-    guardname = outname[:-2].upper() + '_H'
-    if is_header:
-      lo("#ifndef %s" % guardname)
-      lo("#define %s\n" % guardname)
-  """
-
   isa_prev = None
 
   for x in module:
@@ -777,10 +771,7 @@ def printx(module, outname):
     elif isa == 'asg_def_extern':
       print_extern(x)
 
-  o("\n")
-  """if is_header:
-    lo("#endif /* %s */" % guardname)"""
-  o("\n")
+  o("\n\n")
   printer_close()
 
 
