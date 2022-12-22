@@ -74,7 +74,7 @@ def print_value(x):
   elif x['kind'] in ['id']:
     o(x['id'])
   elif x['kind'] in ['str']:
-    o("\"%s\"" % x['str'])
+    o("%%Str bitcast ([%d x i8]* @%s to %%Str)" % (x['len'], x['id']))
   else:
     o("<unknown_value::%s>" % x['kind'])
 
@@ -338,7 +338,7 @@ def do_eval(v):
     return {'isa': 'llvm_value', 'kind': 'id', 'id': '@' + v['id']['str']}
 
   elif k == 'str':
-    return {'isa': 'llvm_value', 'kind': 'str', 'str': v['str']}
+    return {'isa': 'llvm_value', 'kind': 'str', 'len': v['len'], 'id': v['id']}
 
   elif k == 'record':
     return {'isa': 'llvm_value', 'kind': 'record'}
@@ -741,11 +741,17 @@ def print_import(x):
 
 
 
-def printx(module, outname):
+def printx(module, strs, outname):
   outname = outname + '.ll'
   printer_open(outname)
 
+  lo("%Str = type [0 x i8]*")
+
   isa_prev = None
+
+  #@str1 = constant [4 x i8] c"Hi!\00"
+  for s in strs:
+    lo("@%s = constant [%d x i8] c\"%s\\00\"" % (s, len(strs[s]) + 1, strs[s]))
 
   for x in module:
     o("\n")

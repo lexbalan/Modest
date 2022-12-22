@@ -11,7 +11,7 @@ def main():
   if error.errcnt > 0:
     exit(1)
   outname = "out"
-  llvm.printx(module, outname)
+  llvm.printx(module, trans.strpool, outname)
 
 
 if __name__ == '__main__':

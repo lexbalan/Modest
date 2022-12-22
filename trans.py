@@ -3,7 +3,6 @@
 from error import *
 from parser import Parser
 from ctx import ContextStack
-from printer import printx
 import type
 
 enumUid = 0
@@ -469,11 +468,21 @@ def do_value_expr_id(v):
   return vx
 
 
+
+strno = 0
+strpool = {}
+
 def do_value_expr_str(v):
+  s = v['str']
+  strid = 'str_%d' % strno
+  strpool[strid] = s
+  length = len(s) + 1
   return {
     'isa': 'value',
     'kind': 'str',
-    'str': v['str'],
+    'str': s,
+    'id': strid,
+    'len': length,
     'type': type.genericStr,
     'meta': [],
     'ti': v['ti']
@@ -936,6 +945,23 @@ def def_exist(x):
   if f == None:
     return None
 
+  fval = {
+    'isa': 'value',
+    'kind': 'func',
+    'id': f['id'],
+    'type': f['type'],
+    'meta': [],
+    'ti': x['field']['ti']
+  }
+  ctx.add_value(f['id']['str'], fval)
+  return None
+
+
+def def_extern(x):
+  f = do_field(x['field'])
+  if f == None:
+    return None
+
   # TODO: add arghack pragma
   f['type']['arghack'] = f['id']['str'] == 'printf'
   
@@ -948,7 +974,16 @@ def def_exist(x):
     'ti': x['field']['ti']
   }
   ctx.add_value(f['id']['str'], fval)
-  return None
+
+  return {
+    'isa': 'asg_def_extern',
+    'field': f,
+    #'id': f['id'],
+    #'type': f['type'],
+    'meta': [],
+    'ti': x['field']['ti']
+  }
+
 
 
 
@@ -971,8 +1006,8 @@ def process(x):
     y = def_var(x)
   elif isa == 'ast_def_exist':
     y = def_exist(x)
-  """elif isa == 'def_extern':
-    do_extern(x)"""
+  elif isa == 'ast_def_extern':
+    y = def_extern(x)
   return y
 
 

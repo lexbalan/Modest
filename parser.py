@@ -659,13 +659,21 @@ class Parser:
   
   
   def decl_exist(self):
-    f = self.parse_field()
-    return {'isa': 'ast_def_exist', 'field': f, 'ti': f['ti']}
+    fields = self.parse_field()
+    exist_list = []
+    for field in fields:
+      f = {'isa': 'ast_def_exist', 'field': field, 'ti': field['ti']}
+      exist_list.append(f)
+    return exist_list
   
   
   def decl_extern(self):
-    f = self.parse_field()
-    return {'isa': 'ast_def_extern', 'field': f, 'ti': f['ti']}
+    fields = self.parse_field()
+    exist_list = []
+    for field in fields:
+      f = {'isa': 'ast_def_extern', 'field': field, 'ti': field['ti']}
+      exist_list.append(f)
+    return exist_list
   
   
   def def_func(self):
@@ -727,7 +735,10 @@ class Parser:
         x = self.decl_extern()
       
       if x != None:
-        xx.append(x)
+        if isinstance(x, list):
+          xx.extend(x)
+        else:
+          xx.append(x)
     
     return xx
 
