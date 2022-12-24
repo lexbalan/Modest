@@ -325,7 +325,7 @@ def do_value_expr_call(v):
     return None
   
   if nargs > npars:
-    if not ftype['arghack']:
+    if not 'arghack' in ftype['meta']:
       error("too many args", v['ti'])
       return None
   
@@ -472,17 +472,40 @@ def do_value_expr_id(v):
 strno = 0
 strpool = {}
 
+def str_sym(x):
+  if x == 'n':
+    return '\n'
+  return 0
+
+
 def do_value_expr_str(v):
   s = v['str']
   strid = 'str_%d' % strno
-  strpool[strid] = s
-  length = len(s) + 1
+
+  str_len = 0
+  new_s = ''
+  i = 0
+  while i < len(s):
+    sym = s[i]
+    if sym == '\\':
+      str_len = str_len + 1
+      i = i + 1
+      if s[i] == 'n':
+        new_s = new_s + '\\0A'
+    else:
+      new_s = new_s + sym
+
+    str_len = str_len + 1
+    i = i + 1
+
+  string = ''.join(new_s)
+  strpool[strid] = {'str': string, 'len': str_len}
   return {
     'isa': 'value',
     'kind': 'str',
-    'str': s,
+    'str': string,
     'id': strid,
-    'len': length,
+    'len': str_len,
     'type': type.genericStr,
     'meta': [],
     'ti': v['ti']
@@ -963,7 +986,8 @@ def def_extern(x):
     return None
 
   # TODO: add arghack pragma
-  f['type']['arghack'] = f['id']['str'] == 'printf'
+  if f['id']['str'] == 'printf':
+    f['type']['meta'].append('arghack')
   
   fval = {
     'isa': 'value',

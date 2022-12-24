@@ -60,6 +60,12 @@ def operation_with_type(op, t):
   return reg
 
 
+def print_value_with_type(x):
+  if not 'type' in x:
+    print(x)
+  print_type(x['type'])
+  o(" ")
+  print_value(x)
 
 def print_value(x):
   if x == None:
@@ -74,7 +80,8 @@ def print_value(x):
   elif x['kind'] in ['id']:
     o(x['id'])
   elif x['kind'] in ['str']:
-    o("%%Str bitcast ([%d x i8]* @%s to %%Str)" % (x['len'], x['id']))
+    # TODO: llvm_value/local_bitcast
+    o("bitcast ([%d x i8]* @%s to %%Str)" % (x['len'], x['id']))
   else:
     o("<unknown_value::%s>" % x['kind'])
 
@@ -182,24 +189,63 @@ def do_ld(x):
     print_type(x['type'])
     o("* ")
     print_value (x)
-    return {'isa': 'llvm_value', 'kind': 'reg', 'reg': regno}
+    return {'isa': 'llvm_value', 'kind': 'reg', 'reg': regno, 'type': x['type']}
 
   return x
 
 
-def do_eval_expr_bin(v):
-  l = do_ld(do_eval(v['left']))
-  r = do_ld(do_eval(v['right']))
+REL_OPS = ['eq', 'ne', 'lt', 'gt', 'le', 'ge']
 
-  op = v['kind']
 
-  if op in ['eq', 'ne', 'lt', 'gt', 'le', 'ge']:
-    sign_prefix = 's' if 'signed' in v['left']['type']['meta'] else 'u'
-    op = 'icmp ' + sign_prefix + op
+def get_bin_opcode(op, t):
+  opcode = "<unknown opcode '%s'>" % op
+  if op in ['eq', 'ne']:
+    opcode = get_bin_opcode_f('icmp ' + k, 'fcmp ' + k, x)
+  elif op in ['add', 'sub', 'mul']:
+    opcode = get_bin_opcode_f(op, 'f' + op, t)
+  elif op in ['and', 'or', 'xor', 'shl']:
+    opcode = do_eval_binary(k, t)
+  elif op in ['div', 'mod']:
+    if op == 'mod':
+      op = 'rem'
+    opcode = get_bin_opcode_suf('s' + op, 'u' + op, 'f' + op, t)
+  elif op in ['lt', 'gt', 'le', 'ge']:
+    opcode = get_bin_opcode_suf('icmp s' + op, 'icmp u' + op, 'fcmp u' + op, t)
 
-  regno = operation_with_type (op, v['left']['type'])
+  return opcode
+
+
+def get_bin_opcode_f (op, fop, t): # ["sdiv", "udiv", "fdiv", x]
+  if 'float' in t['meta']:
+    return fop
+  return op
+
+
+def get_bin_opcode_su (sop, uop, t): # ["icmp slt", "icmp ult", x]
+  if 'unsigned' in t['meta']:
+    return uop
+  return sop
+
+
+def get_bin_opcode_suf (sop, uop, fop, t): # ["sdiv", "udiv", "fdiv", x]
+  if 'float' in t['meta']:
+    return fop
+  return get_bin_opcode_su(sop, uop, t)
+
+
+
+
+def do_eval_binary (op, x): # ["add", "fadd", x]
+  l = do_ld(do_eval(x['left']))
+  r = do_ld(do_eval(x['right']))
+  regno = operation_with_type (op, x['left']['type'])
   space (); print_value (l); comma(); print_value (r)
   return {'isa': 'llvm_value', 'kind': 'reg', 'reg': regno}
+
+
+def do_eval_expr_bin(x):
+  opcode = get_bin_opcode(x['kind'], x['type'])
+  return do_eval_binary(opcode, x)
 
 
 def do_eval_expr_un(v):
@@ -216,10 +262,12 @@ def do_eval_expr_call(v):
   for a in v['args']:
     args.append(do_ld(do_eval(a)))
 
+  ftype = v['left']['type']
+
   # eval func
   f = do_eval(v['left'])
 
-  to_unit = type.eq(v['left']['type']['to'], type.typeUnit)
+  to_unit = type.eq(ftype['to'], type.typeUnit)
 
   # do call
   reg = 0
@@ -229,14 +277,18 @@ def do_eval_expr_call(v):
     reg = operation("call")
 
   #%Int32(%Str, ...)
-  print_type(v['left']['type']['to'])
+  print_type(ftype['to'])
   o("(")
-  params = v['left']['type']['params']
+  params = ftype['params']
   print_list_by(params, lambda par: print_type(par['type']))
+  if 'arghack' in ftype['meta']:
+    o(", ...")
   o(") ")
 
   print_value(f)
-  o(" ("); print_list_by(args, print_value); o(")")
+  o(" (")
+  print_list_by(args, print_value_with_type)
+  o(")")
   return {'isa': 'llvm_value', 'kind': 'reg', 'reg': reg}
 
 
@@ -306,12 +358,25 @@ bin_ops = [
 
 un_ops = ['ref', 'deref', 'plus', 'minus', 'not']
 
-def do_eval(v):
+
+def do_eval(x):
+  # bad value
+  if x == None:
+    return None
+
+  v = do_eval_x(x)
+  v['type'] = x['type']
+
+  return v
+
+
+def do_eval_x(v):
   # bad value
   if v == None:
-    return
+    return None
 
   k = v['kind']
+
 
   if k in bin_ops:
     return do_eval_expr_bin(v)
@@ -547,40 +612,14 @@ def print_stmt_block(s):
 def print_func_signature(id, typ):
   params = typ['params']
   to = typ['to']
-  t = to
 
-  # возврат является масссивом?
-  is_array = t['kind'] == 'array'
-  array_size = None
-  if is_array:
-    array_size = t['size']
-    t = t['of']
+  print_type(to)
+  o(" @%s(" % id)
 
-  # поле является указателем?
-  ptr_level = 0
-  while t['kind'] == 'pointer':
-    ptr_level = ptr_level + 1
-    t = t['to']
-    # *[] or *[n] -> just *
-    if t['kind'] == 'array':
-      t = t['of']
+  print_list_by(params, lambda field: print_type(field['type']))
 
-  print_type(t)
-  o(" " + "*" * ptr_level)
-  o("%s(" % id)
-
-  print_list_by(params, print_field)
-  """i = 0
-  while i < len(params):
-    param = params[i]
-    print_field(param)
-    i = i + 1
-    if i < len(params):
-      o(", ")"""
-
-  if 'arghack' in typ:
-    if typ['arghack']:
-      o(", ...")
+  if 'arghack' in typ['meta']:
+    o(", ...")
 
   o(")")
 
@@ -641,10 +680,12 @@ def print_funcdef(x):
 
 def print_exist_extern(x, extern=False):
   f = x['field']
-  if extern:
-    o("extern ")
+  #  if extern:
+  #    o("extern ")
   if f['type']['kind'] == 'func':
+    o("declare ")
     print_func_signature(f['id']['str'], f['type'])
+    #declare %Int32 @printf (%Str, ...)
   else:
     print_field(f)
   o(";")
@@ -751,7 +792,9 @@ def printx(module, strs, outname):
 
   #@str1 = constant [4 x i8] c"Hi!\00"
   for s in strs:
-    lo("@%s = constant [%d x i8] c\"%s\\00\"" % (s, len(strs[s]) + 1, strs[s]))
+    string = strs[s]
+
+    lo("@%s = constant [%d x i8] c\"%s\\00\"" % (s, string['len'], string['str']))
 
   for x in module:
     o("\n")
