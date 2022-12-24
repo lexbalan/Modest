@@ -138,15 +138,15 @@ def print_type(t, print_aka=True):
     o("\n}")
 
   elif k == 'enum':
-    o("enum {")
-    items = t['items']
+    o("i32")
+    """items = t['items']
     i = 0
     while i < len(items):
       item = items[i]
       o("\n")
       o("\t%s," % item['id']['str'])
       i = i + 1
-    o("\n}")
+    o("\n}")"""
 
   elif k == 'pointer':
     print_type(t['to']); o("*")
@@ -192,7 +192,7 @@ REL_OPS = ['eq', 'ne', 'lt', 'gt', 'le', 'ge']
 def get_bin_opcode(op, t):
   opcode = "<unknown opcode '%s'>" % op
   if op in ['eq', 'ne']:
-    opcode = get_bin_opcode_f('icmp ' + k, 'fcmp ' + k, x)
+    opcode = get_bin_opcode_f('icmp ' + op, 'fcmp ' + op, t)
   elif op in ['add', 'sub', 'mul']:
     opcode = get_bin_opcode_f(op, 'f' + op, t)
   elif op in ['and', 'or', 'xor', 'shl']:

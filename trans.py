@@ -400,6 +400,13 @@ def do_value_expr_index(v):
 
 
 def do_value_expr_access(v):
+
+  if v['left']['kind'] == 'Id':
+    print("GOGOGOGOGOO")
+    t = get_type(v['left']['kind']['id']['str'])
+    if t != None:
+      print("GOGOGOGOGOO")
+
   r = do_value(v['left'])
   if r == None:
     return None
@@ -467,6 +474,30 @@ def do_value_expr_id(v):
     return None
   return vx
 
+
+def do_value_expr_ns(v):
+  tx = ctx.get_type(v['ids'][0]['str'])
+  if tx != None:
+    if tx['kind'] == 'enum':
+      items = tx['items']
+      for item in items:
+        if v['ids'][1]['str'] == item['id']['str']:
+          enum_uid = tx['uid']
+          num = item['number']
+          #print("ENUM_ITEM %d %d" % (enum_uid, num))
+          return {
+            'isa': 'value',
+            'kind': 'num',
+            'num': enum_uid * 1000 + num,
+            'type': tx,
+            'meta': [],
+            'ti': v['ids'][1]['ti']
+          }
+
+  if tx == None:
+    error("undeclared value '%s'" % v['id']['str'], v['ti'])
+    return None
+  return vx
 
 
 strno = 0
@@ -591,6 +622,8 @@ def do_value(v):
       rv = do_value_num(num, ti=v['ti'])
     elif k == 'id':
       rv = do_value_expr_id(v)
+    elif k == 'ns':
+      rv = do_value_expr_ns(v)
     elif k == 'str':
       rv = do_value_expr_str(v)
     elif k == 'record':

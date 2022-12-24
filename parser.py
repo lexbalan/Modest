@@ -419,13 +419,35 @@ class Parser:
     }
 
 
+  def parse_name(self):
+    ti = self.ti()
+    ids = []
+
+    id = self.identifier()
+    ids.append(id)
+
+    while self.match("::"):
+      id = self.identifier()
+      ids.append(id)
+
+    return {'isa': 'name', 'ids': ids, 'ti': ti}
+
+
+
   def parse_value_term(self):
     ti = self.ti()
 
     if self.ctok_class() == 'id':
       id = self.identifier()
-      if id['str'][0].islower():
-        return {'isa': 'value', 'kind': 'id', 'id': id, 'ti': ti}
+
+      if self.match("::"):
+        id2 = self.identifier()
+        return {'isa': 'value', 'kind': 'ns', 'ids': [id, id2], 'ti': ti}
+
+      #if id['str'][0].islower():
+      return {'isa': 'value', 'kind': 'id', 'id': id, 'ti': ti}
+      #else:
+      #  return {'isa': 'value', 'kind': 'id', 'id': id, 'ti': ti}
           
     elif self.ctok_class() == 'num':
       num = self.gettok()

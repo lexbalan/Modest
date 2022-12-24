@@ -53,7 +53,11 @@ typeFreePtr = typePointer(typeUnit)
 
 
 def eq(a, b):
-  k = a['kind']
+  k = None
+  try:
+    k = a['kind']
+  except:
+    print(a)
   
   if a['kind'] != b['kind']:
     return False
