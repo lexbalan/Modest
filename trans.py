@@ -490,7 +490,8 @@ def do_value_expr_str(v):
     if sym == '\\':
       str_len = str_len + 1
       i = i + 1
-      if s[i] == 'n':
+      sym = s[i]
+      if sym == 'n':
         new_s = new_s + '\\0A'
     else:
       new_s = new_s + sym
