@@ -134,14 +134,15 @@ def print_type(t, print_aka=True):
       return
 
   if k == 'record':
-    o("type {")
+    o("{")
     fields = t['fields']
     i = 0
     while i < len(fields):
       field = fields[i]
-      o("\n")
-      o("\t"); print_type(field['type'])
-      o(";")
+      if i > 0:
+        comma()
+      o("\n\t"); print_type(field['type'])
+
       i = i + 1
     o("\n}")
 
@@ -703,9 +704,8 @@ def print_typedef(x):
   if x['type']['kind'] in ['record', 'enum']:
     o("\n")
 
-  o("typedef ")
+  o("%%%s = type " % x['id']['str'])
   print_type(x['type'], print_aka=False)
-  o(" %s;" % x['id']['str'])
 
 
 
