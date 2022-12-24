@@ -106,20 +106,6 @@ def ll_unary(op, v):
   return {'isa': 'llvm_value', 'kind': 'reg', 'reg': regno}
 """
 
-typealiases = {
-  '<generic:int>': 'i64',
-  'Unit': 'i1',
-  'Int': 'int',
-  'Int8': 'i8',
-  'Int16': 'i16',
-  'Int32': 'i32',
-  'Int64': 'i64',
-  'Nat8': 'i8',
-  'Nat16': 'i16',
-  'Nat32': 'i32',
-  'Nat64': 'i64',
-  'Nat1': 'i1',
-}
 
 def print_type(t, print_aka=True):
   k = t['kind']
@@ -127,10 +113,15 @@ def print_type(t, print_aka=True):
   if print_aka:
     if 'aka' in t:
       id = t['aka']
-      if id in typealiases:
-        o(typealiases[id])
-      else:
-        o(id)
+
+      if id == '<generic:int>':
+        id = 'Int'
+
+      if id == 'Void':
+        o("void")
+        return
+
+      o('%' + id)
       return
 
   if k == 'record':
@@ -786,7 +777,30 @@ def printx(module, strs, outname):
   outname = outname + '.ll'
   printer_open(outname)
 
+  lo("%Bool= type i1")
+  lo("%Void = type i1")
+  lo("%Nil = type i1*")
+  lo("%Unit = type i1")
   lo("%Str = type [0 x i8]*")
+
+  lo("%Nat1 = type i1")
+
+  lo("%Nat8 = type i8")
+  lo("%Nat16 = type i16")
+  lo("%Nat32 = type i32")
+  lo("%Nat64 = type i64")
+
+  lo("%Int = type i64")
+
+  lo("%Int8 = type i8")
+  lo("%Int16 = type i16")
+  lo("%Int32 = type i32")
+  lo("%Int64 = type i64")
+
+  lo("%Float16 = type half")
+  lo("%Float32 = type float")
+  lo("%Float64 = type double")
+  lo("%Float128 = type fp128")
 
   isa_prev = None
 

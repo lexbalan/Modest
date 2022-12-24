@@ -17,7 +17,7 @@ def typeBad(ti):
 typeUnit = {
   'isa': 'type',
   'kind': 'enum',
-  'aka': 'void',
+  'aka': 'Void',
   'items': [],
   'meta': [],
   'uid': 0,   #!
