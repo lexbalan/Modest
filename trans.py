@@ -205,7 +205,7 @@ def do_value_expr_bin(v):
   r = cast_implicit(r, l['type'])
   
   if not type.eq(l['type'], r['type']):
-    error("type error2", v['ti'])
+    error("type error", v['ti'])
     return None
   
   t = l['type']
@@ -488,7 +488,7 @@ def do_value_expr_ns(v):
           return {
             'isa': 'value',
             'kind': 'num',
-            'num': enum_uid * 1000 + num,
+            'num': num,
             'type': tx,
             'meta': [],
             'ti': v['ids'][1]['ti']

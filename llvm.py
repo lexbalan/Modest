@@ -131,7 +131,7 @@ def print_type(t, print_aka=True):
     while i < len(fields):
       field = fields[i]
       if i > 0:
-        comma()
+        o(',')
       o("\n\t"); print_type(field['type'])
 
       i = i + 1
