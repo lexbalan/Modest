@@ -51,6 +51,10 @@ class ContextStack:
   def add_value(self, id, v):
     v0 = self.get_value(id)
     if v0 != None:
+      if v0['kind'] == 'func':
+        if 'undefined' in v0['meta']:
+          self.ctxs_value[self.cctx][id] = v
+          return
       error("redefinition of '%s'" % id, v['ti'])
 
     self.ctxs_value[self.cctx][id] = v

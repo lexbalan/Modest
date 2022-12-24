@@ -974,7 +974,7 @@ def def_exist(x):
     'kind': 'func',
     'id': f['id'],
     'type': f['type'],
-    'meta': [],
+    'meta': ['undefined'],
     'ti': x['field']['ti']
   }
   ctx.add_value(f['id']['str'], fval)
