@@ -510,8 +510,10 @@ def str_sym(x):
 
 
 def do_value_expr_str(v):
+  global strno
   s = v['str']
   strid = 'str_%d' % strno
+  strno = strno + 1
 
   str_len = 0
   new_s = ''

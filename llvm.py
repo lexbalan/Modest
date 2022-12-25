@@ -61,29 +61,30 @@ def operation_with_type(op, t):
 
 
 def print_value_with_type(x):
-  if not 'type' in x:
-    print(x)
-  print_type(x['type'])
+  """if not 'proto' in x:
+    print("NOT PROTO IN " + str(x))
+  if not 'type' in x['proto']:
+    print("NOT TYPE IN " + str(x))"""
+  print_type(x['proto']['type'])
   o(" ")
   print_value(x)
 
+
 def print_value(x):
-  if x == None:
-    o("<None>")
-  elif x['kind'] in ['reg', 'adr']:
-    if 'id' in x:
-      o(x['id'])
-    else:
-      o('%%%d' % x['reg'])
-  elif x['kind'] in ['num']:
-    o(str(x['num']))
-  elif x['kind'] in ['id']:
-    o(x['id'])
-  elif x['kind'] in ['str']:
-    # TODO: llvm_value/local_bitcast
+  c = x['class']
+  if c == 'reg':
+    o('%%%d' % x['reg'])
+  elif c == 'stk':
+    o('%%%s' % x['id'])
+  elif c == 'mem':
+    o('@%s' % x['id'])
+  elif c == 'imm':
+    o(str(x['imm']))
+  elif c == 'str':
     o("bitcast ([%d x i8]* @%s to %%Str)" % (x['len'], x['id']))
   else:
-    o("<unknown_value::%s>" % x['kind'])
+    o("<unknown_value::%s>" % c)
+
 
 
 def print_list_by(lst, method):
@@ -174,14 +175,21 @@ def print_type(t, print_aka=True):
 # в любом другом случае просто возвращает исходное значение
 def do_ld(x):
 
-  if x['kind'] == 'adr':
+  if x['level'] == 'adr':
     regno = operation('load');
-    print_type(x['type'])
+    typ = x['proto']['type']
+    print_type(typ)
     comma()
-    print_type(x['type'])
+    print_type(typ)
     o("* ")
     print_value (x)
-    return {'isa': 'llvm_value', 'kind': 'reg', 'reg': regno, 'type': x['type']}
+    return {
+      'isa': 'llvm_value',
+      'class': 'reg',
+      'level': 'value',
+      'reg': regno,
+      'proto': x
+    }
 
   return x
 
@@ -232,7 +240,13 @@ def do_eval_binary (op, x): # ["add", "fadd", x]
   r = do_ld(do_eval(x['right']))
   regno = operation_with_type (op, x['left']['type'])
   space (); print_value (l); comma(); print_value (r)
-  return {'isa': 'llvm_value', 'kind': 'reg', 'reg': regno}
+  return {
+    'isa': 'llvm_value',
+    'class': 'reg',
+    'level': 'value',
+    'reg': regno,
+    'proto': x
+  }
 
 
 def do_eval_expr_bin(x):
@@ -240,12 +254,59 @@ def do_eval_expr_bin(x):
   return do_eval_binary(opcode, x)
 
 
-def do_eval_expr_un(v):
-  #if v['kind'] == 'ref':
 
-  y = do_ld(do_eval(v['value']))
-  reg = operation(v['kind']); space(); print_value(y)
-  return {'isa': 'llvm_value', 'kind': 'reg', 'reg': reg}
+
+
+"""if not local {
+    return vx
+  }
+
+  // Работа с константным указателем
+  if vx.storage.class == #ClassImm {
+    return LLVM_Value [
+      storage=[class=#ClassImm, level=#LevelAddress], type=vx.type, int=vx.int
+    ]
+  }
+
+  // Не константные указатели оказываются после eval в регистре
+  // просто меняем его уровень с #LevelValue на #LevelAddress
+  return LLVM_Value [
+    storage=[class=#ClassReg, level=#LevelAddress], type=x.type, reg=vx.reg
+  ]"""
+
+
+def do_eval_expr_un(v):
+
+  ve = do_eval(v['value'])
+
+  if v['kind'] == 'ref':
+
+    ve['level'] = 'value'
+    ve['proto'] = v  # for type
+
+    return ve
+
+
+  vx = do_ld(ve)  #!
+
+
+  if v['kind'] == 'deref':
+
+    vx['level'] = 'adr'
+    vx['proto'] = v  # for type
+
+    return vx
+
+
+  reg = operation(v['kind']); space(); print_value(vx)
+
+  return {
+    'isa': 'llvm_value',
+    'class': 'reg',
+    'level': 'value',
+    'reg': reg,
+    'proto': v
+  }
 
 
 def do_eval_expr_call(v):
@@ -281,7 +342,13 @@ def do_eval_expr_call(v):
   o(" (")
   print_list_by(args, print_value_with_type)
   o(")")
-  return {'isa': 'llvm_value', 'kind': 'reg', 'reg': reg}
+  return {
+    'isa': 'llvm_value',
+    'class': 'reg',
+    'level': 'value',
+    'reg': reg,
+    'proto': v
+  }
 
 
 def do_eval_expr_index(v):
@@ -289,21 +356,39 @@ def do_eval_expr_index(v):
   i = do_ld(do_eval(v['index']))
   reg = operation("index")
   print_value(a); comma(); print_value(i);
-  return {'isa': 'llvm_value', 'kind': 'adr', 'reg': reg}
+  return {
+    'isa': 'llvm_value',
+    'class': 'reg',
+    'level': 'adr',
+    'reg': reg,
+    'proto': v
+  }
 
 
 def do_eval_expr_access(v):
   rec = do_ld(do_eval(v['record']))
   reg = operation("access"); print_value(rec)
   o(" .%s" % v['field']['id']['str'])
-  return {'isa': 'llvm_value', 'kind': 'adr', 'reg': reg}
+  return {
+    'isa': 'llvm_value',
+    'class': 'reg',
+    'level': 'adr',
+    'reg': reg,
+    'proto': v
+  }
 
 
 def do_eval_expr_access2(v):
   rec = do_ld(do_eval(v['record']))
   reg = operation("access"); print_value(rec)
   o(" .%s" % v['field']['id']['str'])
-  return {'isa': 'llvm_value', 'kind': 'adr', 'reg': reg}
+  return {
+    'isa': 'llvm_value',
+    'class': 'reg',
+    'level': 'adr',
+    'reg': reg,
+    'proto': v
+  }
 
 
 def do_eval_expr_to(v):
@@ -315,10 +400,16 @@ def do_eval_expr_to(v):
   print_value(y)
   o(" to ")
   print_type(v['type'])
-  return {'isa': 'llvm_value', 'kind': 'reg', 'reg': reg}
+  return {
+    'isa': 'llvm_value',
+    'class': 'reg',
+    'level': 'value',
+    'reg': reg,
+    'proto': v
+  }
 
 
-def do_eval_array(v):
+"""def do_eval_array(v):
   o("{")
   i = 0
   while i < len(v['items']):
@@ -326,7 +417,7 @@ def do_eval_array(v):
       comma()
     print_value(do_eval(v['items'][i]))
     i = i + 1
-  o("}")
+  o("}")"""
 
 
 def do_eval_record(v):
@@ -377,7 +468,13 @@ def do_eval_x(v):
     return do_eval_expr_un(v)
 
   elif k == 'num':
-    return {'isa': 'llvm_value', 'kind': 'num', 'num': v['num']}
+    return {
+      'isa': 'llvm_value',
+      'class': 'imm',
+      'level': 'value',
+      'imm': v['num'],
+      'proto': v
+    }
 
   elif k in ['func', 'const', 'var']:
     if 'local' in v['meta']:
@@ -387,15 +484,29 @@ def do_eval_x(v):
     if k == 'var':
       return {
         'isa': 'llvm_value',
-        'kind': 'adr',
-        'type': v['type'],  # need for load/store, because it is 'adr'
-        'id': '@' + v['id']['str'],
+        'class': 'mem',
+        'level': 'adr',
+        'id': v['id']['str'],
+        'proto': v,  # need for load/store, because it is 'adr'
       }
 
-    return {'isa': 'llvm_value', 'kind': 'id', 'id': '@' + v['id']['str']}
+    return {
+      'isa': 'llvm_value',
+      'class': 'mem',
+      'level': 'value',
+      'id': v['id']['str'],
+      'proto': v
+    }
 
   elif k == 'str':
-    return {'isa': 'llvm_value', 'kind': 'str', 'len': v['len'], 'id': v['id']}
+    return {
+      'isa': 'llvm_value',
+      'class': 'str',
+      'level': 'value',
+      'len': v['len'],
+      'id': v['id'],
+      'proto': v
+    }
 
   elif k == 'record':
     return {'isa': 'llvm_value', 'kind': 'record'}
@@ -417,10 +528,20 @@ def do_eval_x(v):
     elif k == 'to':
       return do_eval_expr_to(v)
     elif k == 'sizeof':
-      return {'isa': 'llvm_value', 'kind': 'num', 'num': 0}
+      return {
+        'isa': 'llvm_value',
+        'kind': 'imm',
+        'imm': 0,
+        'proto': v
+      }
     else:
       o("<%s>" % k)
-      return {'isa': 'llvm_value', 'kind': 'num', 'num': 0}
+      return {
+        'isa': 'llvm_value',
+        'kind': 'imm',
+        'imm': 0,
+        'proto': v
+      }
 
 #
 #
@@ -428,7 +549,7 @@ def do_eval_x(v):
 
 
 def print_stmt_assign(x):
-  r = do_eval(x['right'])
+  r = do_ld(do_eval(x['right']))
   l = do_eval(x['left'])
   lot("store ");
   print_type(x['right']['type'])
@@ -544,12 +665,18 @@ def print_stmt_return(x):
 def print_stmt_vardef(x):
   global func_context
 
-  id = '%' + x['id']['str']
+  id = x['id']['str']
   #reg = reg_get()
-  lo("  %s = alloca " % id)
+  lo("  %%%s = alloca " % id)
 
   print_type(x['type'])
-  val = {'isa': 'llvm_value', 'kind': 'adr', 'type': x['type'], 'id': id}
+  val = {
+    'isa': 'llvm_value',
+    'class': 'stk',
+    'level': 'adr',
+    'id': id,
+    'proto': x,
+  }
 
   if x['value'] != None:
     r = do_ld(do_eval(x['value']))
@@ -643,15 +770,21 @@ def print_funcdef(x):
   i = 0
   while i < params_len:
     param = params[i]
-    id = '%' + param['id']['str']
+    id = param['id']['str']
     if i > 0:
       o(", ")
     print_type(param['type'])
     space()
-    o(id)
+    o('%' + id)
 
     #reg = reg_get()
-    vv = {'isa': 'llvm_value', 'kind': 'reg', 'id': id}
+    vv = {
+      'isa': 'llvm_value',
+      'class': 'stk',
+      'level': 'value',
+      'id': id,
+      'proto': param
+    }
     locals_add(param['id']['str'], vv)
     i = i + 1
   o(")")
