@@ -274,6 +274,16 @@ def do_value_expr_un(v):
 
     t = to
 
+    return {
+      'isa': 'value',
+      'kind': v['kind'],
+      'value': val,
+      'type': t,
+      'meta': ['adr'],
+      'ti': v['ti']
+    }
+
+
   if v['kind'] == 'ref':
     t = type.typePointer(t, ti=v['ti'])
 
@@ -394,19 +404,12 @@ def do_value_expr_index(v):
     'array': a,
     'index': i,
     'type': typ['of'],
-    'meta': [],
+    'meta': ['adr'],
     'ti': v['ti']
   }
 
 
 def do_value_expr_access(v):
-
-  if v['left']['kind'] == 'Id':
-    print("GOGOGOGOGOO")
-    t = get_type(v['left']['kind']['id']['str'])
-    if t != None:
-      print("GOGOGOGOGOO")
-
   r = do_value(v['left'])
   if r == None:
     return None
@@ -432,7 +435,7 @@ def do_value_expr_access(v):
     error("field '%s' not exist" % field_id['str'], v['ti'])
     return None
   
-  meta = []
+  meta = ['adr']
   if not ptr_access:
     if 'immutable' in r['meta']:
       meta.append('immutable')
@@ -753,7 +756,7 @@ def do_stmt_var(x):
     'kind': 'var',
     'id': id,
     'type': t,
-    'meta': ['local'],
+    'meta': ['adr', 'local'],
     'ti': x['ti']
   }
   ctx.add_value(id['str'], vx)
@@ -806,7 +809,7 @@ def do_stmt_assign(x):
     return None
   
   # left is var?
-  if l['kind'] in ['var', 'deref', 'access', 'index']:
+  if 'adr' in l['meta']:
     if value_is_immutable(l):
       error("immutable value", l['ti'])
       return None
@@ -939,7 +942,7 @@ def def_var(x):
     'id': f['id'],
     'type': f['type'],
     'init': iv,
-    'meta': [],
+    'meta': ['adr', 'var'],
     'ti': x['ti']
   }
   ctx.add_value(x['field']['id']['str'], v)
