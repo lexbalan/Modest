@@ -60,14 +60,27 @@ def operation_with_type(op, t):
   return reg
 
 
-def print_value_with_type(x):
-  """if not 'proto' in x:
-    print("NOT PROTO IN " + str(x))
-  if not 'type' in x['proto']:
-    print("NOT TYPE IN " + str(x))"""
-  print_type(x['proto']['type'])
+
+def ll_create_value_imm(t, imm):
+  return {
+  'isa': 'llvm_value',
+  'class': 'imm',
+  'level': 'value',
+  'imm': imm,
+  'type': t,
+  'proto': None
+}
+
+
+ll_value_zero = ll_create_value_imm(type.typeInt32, 0)
+
+
+
+
+def print_type_value(llvm_value):
+  print_type(llvm_value['type'])
   o(" ")
-  print_value(x)
+  print_value(llvm_value)
 
 
 def print_value(x):
@@ -94,8 +107,6 @@ def print_list_by(lst, method):
       comma()
     method(lst[i])
     i = i + 1
-
-
 
 
 def print_type(t, print_aka=True):
@@ -146,7 +157,7 @@ def print_type(t, print_aka=True):
     o("[")
     array_size = t['size']
     if array_size != None:
-      do_eval(array_size)
+      print_value(do_eval(array_size))
     else:
       o("0")
     o(" x ")
@@ -167,7 +178,7 @@ def do_ld(x):
 
   if x['level'] == 'adr':
     regno = operation('load');
-    typ = x['proto']['type']
+    typ = x['type']
     print_type(typ)
     comma()
     print_type(typ)
@@ -178,6 +189,7 @@ def do_ld(x):
       'class': 'reg',
       'level': 'value',
       'reg': regno,
+      'type': x['type'],
       'proto': x
     }
 
@@ -235,6 +247,7 @@ def do_eval_binary (op, x): # ["add", "fadd", x]
     'class': 'reg',
     'level': 'value',
     'reg': regno,
+    'type': x['type'],
     'proto': x
   }
 
@@ -244,25 +257,6 @@ def do_eval_expr_bin(x):
   return do_eval_binary(opcode, x)
 
 
-
-
-
-"""if not local {
-    return vx
-  }
-
-  // Работа с константным указателем
-  if vx.storage.class == #ClassImm {
-    return LLVM_Value [
-      storage=[class=#ClassImm, level=#LevelAddress], type=vx.type, int=vx.int
-    ]
-  }
-
-  // Не константные указатели оказываются после eval в регистре
-  // просто меняем его уровень с #LevelValue на #LevelAddress
-  return LLVM_Value [
-    storage=[class=#ClassReg, level=#LevelAddress], type=x.type, reg=vx.reg
-  ]"""
 
 
 def do_eval_expr_un(v):
@@ -295,6 +289,7 @@ def do_eval_expr_un(v):
     'class': 'reg',
     'level': 'value',
     'reg': reg,
+    'type': v['type'],
     'proto': v
   }
 
@@ -330,58 +325,26 @@ def do_eval_expr_call(v):
 
   print_value(f)
   o(" (")
-  print_list_by(args, print_value_with_type)
+  print_list_by(args, print_type_value)
   o(")")
   return {
     'isa': 'llvm_value',
     'class': 'reg',
     'level': 'value',
     'reg': reg,
+    'type': v['type'],
     'proto': v
   }
 
 
 
 
-def do_eval_expr_index(v):
-  a = do_ld(do_eval(v['array']))
-  i = do_ld(do_eval(v['index']))
-  reg = operation("index")
-  print_value(a); comma(); print_value(i);
-  return {
-    'isa': 'llvm_value',
-    'class': 'reg',
-    'level': 'adr',
-    'reg': reg,
-    'proto': v
-  }
 
 
-def do_eval_expr_access(v):
-  rec = do_ld(do_eval(v['record']))
-  reg = operation("access"); print_value(rec)
-  o(" .%s" % v['field']['id']['str'])
-  return {
-    'isa': 'llvm_value',
-    'class': 'reg',
-    'level': 'adr',
-    'reg': reg,
-    'proto': v
-  }
 
-
-def do_eval_expr_access2(v):
-  rec = do_ld(do_eval(v['record']))
-
-  t = v['record']['type']['to']
-
-  field_index = {
-    'isa': 'llvm_value',
-    'class': 'imm',
-    'level': 'value',
-    'imm': v['field']['no'],
-  }
-
+# индекс не может быть i64 (!) (а только i32)
+# t - тип самой записи или массива (без указателя)
+def llvm_getelementptr(rec, t, indexes):
   # Прикол в том что индекс (i) структуры
   # не может быть i64 (!) (а только i32)
   reg = operation_with_type ("getelementptr inbounds", t)
@@ -390,25 +353,45 @@ def do_eval_expr_access2(v):
   o("* ")
   print_value(rec)
   comma()
-  o("i1 0, i32 ")
-  print_value(field_index)
+  print_list_by(indexes, print_type_value)
 
   return {
     'isa': 'llvm_value',
     'class': 'reg',
     'level': 'adr',
     'reg': reg,
-    'proto': v
+    'type': t,
+    #'proto': v
   }
 
 
-  return {
-    'isa': 'llvm_value',
-    'class': 'reg',
-    'level': 'adr',
-    'reg': reg,
-    'proto': v
-  }
+# by var
+def do_eval_expr_index(v):
+  array = do_eval(v['array'])
+  index = do_ld(do_eval(v['index']))
+  t = array['type']
+
+  return llvm_getelementptr(array, t, (ll_value_zero, index))
+
+
+# by var
+def do_eval_expr_access(v):
+  rec = do_eval(v['record'])
+  t = v['record']['type']
+
+  field_index = ll_create_value_imm(type.typeInt32, v['field']['no'])
+  return llvm_getelementptr(rec, t, (ll_value_zero, field_index))
+
+
+# by ptr
+def do_eval_expr_access2(v):
+  rec = do_ld(do_eval(v['record']))
+  t = v['record']['type']['to']
+
+  field_index = ll_create_value_imm(type.typeInt32, v['field']['no'])
+  return llvm_getelementptr(rec, t, (ll_value_zero, field_index))
+
+
 
 
 def do_eval_expr_to(v):
@@ -425,6 +408,7 @@ def do_eval_expr_to(v):
     'class': 'reg',
     'level': 'value',
     'reg': reg,
+    'type': v['type'],
     'proto': v
   }
 
@@ -493,6 +477,7 @@ def do_eval_x(v):
       'class': 'imm',
       'level': 'value',
       'imm': v['num'],
+      'type': v['type'],
       'proto': v
     }
 
@@ -507,6 +492,7 @@ def do_eval_x(v):
         'class': 'mem',
         'level': 'adr',
         'id': v['id']['str'],
+        'type': v['type'],
         'proto': v,  # need for load/store, because it is 'adr'
       }
 
@@ -515,6 +501,7 @@ def do_eval_x(v):
       'class': 'mem',
       'level': 'value',
       'id': v['id']['str'],
+      'type': v['type'],
       'proto': v
     }
 
@@ -525,6 +512,7 @@ def do_eval_x(v):
       'level': 'value',
       'len': v['len'],
       'id': v['id'],
+      'type': v['type'],
       'proto': v
     }
 
@@ -695,6 +683,7 @@ def print_stmt_vardef(x):
     'class': 'stk',
     'level': 'adr',
     'id': id,
+    'type': x['type'],
     'proto': x,
   }
 
@@ -803,6 +792,7 @@ def print_funcdef(x):
       'class': 'stk',
       'level': 'value',
       'id': id,
+      'type': param['type'],
       'proto': param
     }
     locals_add(param['id']['str'], vv)
