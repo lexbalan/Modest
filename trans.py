@@ -98,6 +98,7 @@ def do_type(t):
           error("redefinition of '%s'" % f['id']['str'], f['ti'])
           f = None
         if f != None:
+          f['no'] = i
           fields.append(f)
       i = i + 1
     return record

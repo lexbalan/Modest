@@ -96,16 +96,6 @@ def print_list_by(lst, method):
     i = i + 1
 
 
-"""def ll_binary(op, a, b):
-  regno = operation_with_type (op, a['type'])
-  space (); do_eval (a); comma (); do_eval (b)
-  return {'isa': 'llvm_value', 'kind': 'reg', 'reg': regno}
-
-def ll_unary(op, v):
-  regno = operation_with_type (op, a['type'])
-  space (); do_eval (v);
-  return {'isa': 'llvm_value', 'kind': 'reg', 'reg': regno}
-"""
 
 
 def print_type(t, print_aka=True):
@@ -351,6 +341,8 @@ def do_eval_expr_call(v):
   }
 
 
+
+
 def do_eval_expr_index(v):
   a = do_ld(do_eval(v['array']))
   i = do_ld(do_eval(v['index']))
@@ -380,8 +372,36 @@ def do_eval_expr_access(v):
 
 def do_eval_expr_access2(v):
   rec = do_ld(do_eval(v['record']))
-  reg = operation("access"); print_value(rec)
-  o(" .%s" % v['field']['id']['str'])
+
+  t = v['record']['type']['to']
+
+  field_index = {
+    'isa': 'llvm_value',
+    'class': 'imm',
+    'level': 'value',
+    'imm': v['field']['no'],
+  }
+
+  # Прикол в том что индекс (i) структуры
+  # не может быть i64 (!) (а только i32)
+  reg = operation_with_type ("getelementptr inbounds", t)
+  comma()
+  print_type(t)
+  o("* ")
+  print_value(rec)
+  comma()
+  o("i1 0, i32 ")
+  print_value(field_index)
+
+  return {
+    'isa': 'llvm_value',
+    'class': 'reg',
+    'level': 'adr',
+    'reg': reg,
+    'proto': v
+  }
+
+
   return {
     'isa': 'llvm_value',
     'class': 'reg',
