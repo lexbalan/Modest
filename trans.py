@@ -439,7 +439,7 @@ def do_value_expr_access(v):
   k = 'access'
   ptr_access = typ['kind'] == 'pointer'
   if ptr_access:
-    k = 'access2'
+    k = 'access'
     typ = r['type']['to']
   
   # check if is record 

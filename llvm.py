@@ -368,36 +368,78 @@ def llvm_getelementptr(rec, t, indexes):
 # by var
 def do_eval_expr_index(v):
   array = do_eval(v['array'])
-  index = do_ld(do_eval(v['index']))
+
   t = array['type']
 
+  if v['array']['type']['kind'] == 'pointer':
+    # pointer to array needs additional load
+    array = do_ld(array)
+    t = t['to']
+
+  index = do_ld(do_eval(v['index']))
   return llvm_getelementptr(array, t, (ll_value_zero, index))
 
 
-# by var
 def do_eval_expr_access(v):
   rec = do_eval(v['record'])
   t = v['record']['type']
 
-  field_index = ll_create_value_imm(type.typeInt32, v['field']['no'])
-  return llvm_getelementptr(rec, t, (ll_value_zero, field_index))
-
-
-# by ptr
-def do_eval_expr_access2(v):
-  rec = do_ld(do_eval(v['record']))
-  t = v['record']['type']['to']
+  if v['record']['type']['kind'] == 'pointer':
+    # pointer to record needs additional load
+    rec = do_ld(rec)
+    t = t['to']
 
   field_index = ll_create_value_imm(type.typeInt32, v['field']['no'])
   return llvm_getelementptr(rec, t, (ll_value_zero, field_index))
 
+
+
+"""
+‘trunc .. to’ Instruction
+‘zext .. to’ Instruction
+‘sext .. to’ Instruction
+‘fptrunc .. to’ Instruction
+‘fpext .. to’ Instruction
+‘fptoui .. to’ Instruction
+‘fptosi .. to’ Instruction
+‘uitofp .. to’ Instruction
+‘sitofp .. to’ Instruction
+‘ptrtoint .. to’ Instruction
+‘inttoptr .. to’ Instruction
+‘bitcast .. to’ Instruction
+‘addrspacecast .. to’ Instruction
+"""
+
+def opcast(a, b):
+  if not 'size' in a:
+    print("a without size: " + str(a))
+  if not 'size' in b:
+    print("b without size: " + str(b))
+
+  signed = 'signed' in b['meta']
+
+  if a['kind'] == 'base':
+    if b['kind'] == 'base':
+      if a['size'] < b['size']:
+        if signed:
+          return 'sext'
+        else:
+          return 'zext'
+      elif a['size'] > b['size']:
+        return 'trunc'
+      else:
+        return 'bitcast'
+
+  return 'uncast'
 
 
 
 def do_eval_expr_to(v):
   y = do_ld(do_eval(v['value']))
-  # = bitcast %Nat8* %4 to %Void*
-  reg = operation("bitcast")
+
+  opcode = opcast(v['value']['type'], v['type'])
+
+  reg = operation(opcode)
   print_type(v['value']['type'])
   o(" ")
   print_value(y)
@@ -531,8 +573,6 @@ def do_eval_x(v):
       return do_eval_expr_index(v)
     elif k == 'access':
       return do_eval_expr_access(v)
-    elif k == 'access2':
-      return do_eval_expr_access2(v)
     elif k == 'to':
       return do_eval_expr_to(v)
     elif k == 'sizeof':
