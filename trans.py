@@ -15,6 +15,24 @@ ctx = None  # context
 cfunc = None  # current function
 
 
+
+def get_value(id):
+  if cfunc != None:
+    v = cfunc['ctx'].get_value(id)
+    if v != None:
+      return v
+  return ctx.get_value(id)
+
+
+def get_type(id):
+  if cfunc != None:
+    t = cfunc['ctx'].get_type(id)
+    if t != None:
+      return t
+  return ctx.get_type(id)
+
+
+
 def init():
   global parser
   parser = Parser()
@@ -62,7 +80,7 @@ def do_type(t):
   k = t['kind']
   
   if k == 'id':
-    tx = ctx.get_type(t['id']['str'])
+    tx = get_type(t['id']['str'])
     if tx == None:
       error("undeclared type %s" % t['id']['str'], t['ti'])
       return None #{'isa': 'type', 'kind': 'bad', 'ti': t['ti']}
@@ -471,8 +489,10 @@ def do_value_num(num, type=type.genericInt, ti=None):
   }
 
 
+
+
 def do_value_expr_id(v):
-  vx = ctx.get_value(v['id']['str'])
+  vx = get_value(v['id']['str'])
   if vx == None:
     error("undeclared value '%s'" % v['id']['str'], v['ti'])
     return None
@@ -480,7 +500,7 @@ def do_value_expr_id(v):
 
 
 def do_value_expr_ns(v):
-  tx = ctx.get_type(v['ids'][0]['str'])
+  tx = get_type(v['ids'][0]['str'])
   if tx != None:
     if tx['kind'] == 'enum':
       items = tx['items']
@@ -760,7 +780,7 @@ def do_stmt_var(x):
     'meta': ['adr', 'local'],
     'ti': x['ti']
   }
-  ctx.add_value(id['str'], vx)
+  cfunc['ctx'].add_value(id['str'], vx)
 
   return {
     'isa': 'stmt',
@@ -781,7 +801,7 @@ def do_stmt_let(x):
   # не нужно генерить стейтмент,
   # просто связываем константное значение с идентификатором
   if type.is_generic(v['type']):
-    ctx.add_value(id['str'], v)
+    cfunc['ctx'].add_value(id['str'], v)
     return None
   
   # runtime let
@@ -793,7 +813,7 @@ def do_stmt_let(x):
     'meta': ['local', 'immutable'],
     'ti': x['ti']
   }
-  ctx.add_value(id['str'], vx)
+  cfunc['ctx'].add_value(id['str'], vx)
   
   return {'isa': 'stmt', 'kind': 'asg_stmt_def_let', 'id': id, 'value': v}
 
@@ -869,14 +889,14 @@ def do_stmt(x):
 
 
 def do_stmt_block(s):
-  global ctx
-  ctx.push()
+  global cfunc
+  cfunc['ctx'].push()
   stmts = []
   for stmt in s['stmts']:
     s = do_stmt(stmt)
     if s != None:
       stmts.append(s)
-  ctx.pop()
+  cfunc['ctx'].pop()
   return {'isa': 'stmt', 'kind': 'block', 'stmts': stmts}
   
 
@@ -956,17 +976,21 @@ def def_func(x):
   func_id = x['id']
   func_type = do_type(x['type'])
   
+
+  local_ctx = ContextStack()
+
   old_cfunc = cfunc
   cfunc = {
     'isa': 'value',
     'kind': 'func',
     'id': func_id,
     'type': func_type,
+    'ctx': local_ctx,
     'meta': [],
     'ti': func_ti
   }
   
-  ctx.push()  # params context (!)
+  cfunc['ctx'].push()  # params context (!)
   
   i = 0
   while i < len(func_type['params']):
@@ -981,13 +1005,13 @@ def def_func(x):
       'meta': ['param', 'local', 'readonly'],
       'ti': param_ti
     }
-    ctx.add_value(param_id['str'], p)
+    cfunc['ctx'].add_value(param_id['str'], p)
     i = i + 1
   
   func_stmt = do_stmt_block(x['stmt'])
   cfunc['stmt'] = func_stmt
   
-  ctx.pop()  # params context (!)
+  cfunc['ctx'].pop()  # params context (!)
   
   ctx.add_value(func_id['str'], cfunc)
   

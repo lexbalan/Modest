@@ -901,9 +901,10 @@ def print_vardef(x):
 
 
 def print_constdef(x):
-  o("#define %s  (" % x['id']['str'])
-  do_eval(x['value'])
-  o(")")
+  #o("#define %s  (" % x['id']['str'])
+  #do_eval(x['value'])
+  #o(")")
+  pass
 
 
 def print_import(x):
