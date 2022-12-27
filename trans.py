@@ -545,16 +545,16 @@ def do_value_expr_str(v):
   while i < len(s):
     sym = s[i]
     if sym == '\\':
-      str_len = str_len + 1
       i = i + 1
       sym = s[i]
       if sym == 'n':
-        new_s = new_s + '\\0A'
-    else:
-      new_s = new_s + sym
+        sym = '\\0A'
 
+    new_s = new_s + sym
     str_len = str_len + 1
     i = i + 1
+
+  str_len = str_len + 1
 
   string = ''.join(new_s)
   strpool[strid] = {'str': string, 'len': str_len}
