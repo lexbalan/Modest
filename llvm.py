@@ -165,7 +165,10 @@ def print_type(t, print_aka=True):
     o("]")
 
   elif k == 'func':
-    o("void")
+    print_type(t['to'])
+    o("(")
+    print_list_by(t['params'], lambda f: print_type(f['type']))
+    o(")")
 
   else:
     o("<type:%s>" % k)
@@ -305,6 +308,11 @@ def do_eval_expr_call(v):
   # eval func
   f = do_eval(v['left'])
 
+  if ftype['kind'] == 'pointer':
+    # pointer to array needs additional load
+    f = do_ld(f)
+    ftype = ftype['to']
+
   to_unit = type.eq(ftype['to'], type.typeUnit)
 
   # do call
@@ -371,7 +379,7 @@ def do_eval_expr_index(v):
 
   t = array['type']
 
-  if v['array']['type']['kind'] == 'pointer':
+  if t['kind'] == 'pointer':
     # pointer to array needs additional load
     array = do_ld(array)
     t = t['to']
@@ -384,7 +392,7 @@ def do_eval_expr_access(v):
   rec = do_eval(v['record'])
   t = v['record']['type']
 
-  if v['record']['type']['kind'] == 'pointer':
+  if t['kind'] == 'pointer':
     # pointer to record needs additional load
     rec = do_ld(rec)
     t = t['to']
