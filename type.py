@@ -87,7 +87,7 @@ def eq(a, b):
     if len(a['params']) != len(b['params']):
       return False
     for ax, bx in zip(a['params'], b['params']):
-      if ax['id'] != bx['id']:
+      if ax['id']['str'] != bx['id']['str']:
         return False
       if not eq(ax['type'], bx['type']):
         return False
