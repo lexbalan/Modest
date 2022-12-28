@@ -419,7 +419,7 @@ class Parser:
     }
 
 
-  def parse_name(self):
+  """def parse_name(self):
     ti = self.ti()
     ids = []
 
@@ -430,13 +430,10 @@ class Parser:
       id = self.identifier()
       ids.append(id)
 
-    return {'isa': 'name', 'ids': ids, 'ti': ti}
-
-
+    return {'isa': 'name', 'ids': ids, 'ti': ti}"""
 
 
   def parse_value_term_str(self, s, ti):
-
       str_len = 0
       new_s = ''
       i = 0
@@ -450,8 +447,9 @@ class Parser:
           i = i + 1
           sym = s[i]
 
+          # '\xCODE' ?
           is_num = sym.isdigit()
-          is_hex = sym == 'x'  # '\xCODE'
+          is_hex = sym == 'x'
 
           if is_num or is_hex:
             asciicode = ''
