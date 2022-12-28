@@ -434,6 +434,83 @@ class Parser:
 
 
 
+
+  def parse_value_term_str(self, s, ti):
+
+      str_len = 0
+      new_s = ''
+      i = 0
+      while i < len(s):
+        sym = s[i]
+
+        if sym == '\\':
+          code = 0
+
+          # nexsym
+          i = i + 1
+          sym = s[i]
+
+          is_num = sym.isdigit()
+          is_hex = sym == 'x'  # '\xCODE'
+
+          if is_num or is_hex:
+            asciicode = ''
+
+            if is_hex:
+              i = i + 1
+              sym = s[i]
+              asciicode = '0x'
+
+            hexsyms = [
+              'a', 'b', 'c', 'd', 'e', 'f',
+              'A', 'B', 'C', 'D', 'E', 'F',
+            ]
+            while True:
+              asciicode = asciicode + sym
+              if i == len(s) - 1:
+                break
+              i = i + 1
+              sym = s[i]
+              if not sym.isdigit() or (is_hex and sym in hexsyms):
+                i = i - 1
+                break
+
+            base = 10
+            if is_hex:
+              base = 16
+
+            code = int(asciicode, base)
+
+          elif sym == 't':
+            code = 9
+          elif sym == 'n':
+            code = 10
+          elif sym == 'r':
+            code = 13
+          elif sym == '"':
+            code = '34'
+          elif sym == '\\':
+            code = 92
+
+          sym = chr(code)
+
+        new_s = new_s + sym
+        str_len = str_len + 1
+        i = i + 1
+
+      str_len = str_len + 1
+      string = ''.join(new_s)
+
+      return {
+        'isa': 'value',
+        'kind': 'str',
+        'len': str_len,
+        'str': string,
+        'ti': ti
+      }
+
+
+
   def parse_value_term(self):
     ti = self.ti()
 
@@ -454,8 +531,8 @@ class Parser:
       return {'isa': 'value', 'kind': 'num', 'num': num, 'ti': ti}
 
     elif self.ctok_class() == 'str':
-      str = self.gettok()
-      return {'isa': 'value', 'kind': 'str', 'str': str, 'ti': ti}
+      s = self.gettok()
+      return self.parse_value_term_str(s, ti)
 
     elif self.ctok_class() == 'sym':
       num = self.gettok()

@@ -533,31 +533,14 @@ def str_sym(x):
   return 0
 
 
-def do_value_expr_str(v):
+def do_value_expr_str(x):
   global strno
-  s = v['str']
   strid = 'str_%d' % strno
   strno = strno + 1
-
-  str_len = 0
-  new_s = ''
-  i = 0
-  while i < len(s):
-    sym = s[i]
-    if sym == '\\':
-      i = i + 1
-      sym = s[i]
-      if sym == 'n':
-        sym = '\\0A'
-
-    new_s = new_s + sym
-    str_len = str_len + 1
-    i = i + 1
-
-  str_len = str_len + 1
-
-  string = ''.join(new_s)
+  string = x['str']
+  str_len = x['len']
   strpool[strid] = {'str': string, 'len': str_len}
+
   return {
     'isa': 'value',
     'kind': 'str',
@@ -566,7 +549,7 @@ def do_value_expr_str(v):
     'len': str_len,
     'type': type.genericStr,
     'meta': [],
-    'ti': v['ti']
+    'ti': x['ti']
   }
 
 
