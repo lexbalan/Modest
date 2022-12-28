@@ -716,6 +716,8 @@ class Parser:
   
   def def_var(self):
     f = self.parse_field()
+    if f == None:
+      return None
     f = f[0]
     iv = None
     if self.match("<-"):
