@@ -560,13 +560,14 @@ def do_value_expr_array(v):
     vi = do_value(i)
     items.append(vi)
 
+  size = do_value_num(len(v['items']), ti=v['ti'])
   return {
     'isa': 'value',
     'kind': 'array',
     'type': {
       'isa': 'type',
       'kind': 'array',
-      'size': len(v['items']),
+      'size': size,
       'of': items[0]['type'],
       'meta': ['generic'],
       'ti': v['ti']

@@ -95,6 +95,10 @@ def print_value(x):
     o(str(x['imm']))
   elif c == 'str':
     o("bitcast ([%d x i8]* @%s to %%Str)" % (x['len'], x['id']))
+  elif c == 'array':
+    o("{")
+    print_list_by(x['items'], print_type_value)
+    o("}")
   else:
     o("<unknown_value::%s>" % c)
 
@@ -448,7 +452,10 @@ def do_eval_expr_to(v):
   opcode = opcast(v['value']['type'], v['type'])
 
   reg = operation(opcode)
-  print_type(v['value']['type'])
+  try:
+    print_type(v['value']['type'])
+  except:
+    print("EXC: " + str(v['value']['type']))
   o(" ")
   print_value(y)
   o(" to ")
@@ -571,7 +578,18 @@ def do_eval_x(v):
     #do_eval_record(v)
 
   elif k == 'array':
-    return {'isa': 'llvm_value', 'kind': 'array'}
+    llvalues = []
+    for item in v['items']:
+      i = do_ld(do_eval(item))
+      llvalues.append(i)
+
+    return {
+      'isa': 'llvm_value',
+      'class': 'array',
+      'level': 'value',
+      'items': llvalues,
+      'proto': v
+    }
     #do_eval_array(v)
 
   else:
