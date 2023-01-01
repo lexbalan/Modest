@@ -21,6 +21,10 @@ def warning(s, ti):
   global warncnt
   warncnt = warncnt + 1
   print('\033[93m' + 'warning: ' + '\033[0m' + s)
+  if ti != None:
+    lin = getline(ti)
+    print(lin)
+    highlight(ti['pos'])
 
 
 def error(s, ti):

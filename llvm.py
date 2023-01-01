@@ -83,6 +83,24 @@ def print_type_value(llvm_value):
   print_value(llvm_value)
 
 
+def insertvalue(v, x, pos):
+  #%5 = insertvalue %Type24 zeroinitializer, %Int32 1, 0
+  reg = operation('insertvalue')
+  print_type_value(v)
+  comma()
+  print_type_value(x)
+  comma()
+  o('%d' % pos)
+  return {
+    'isa': 'llvm_value',
+    'class': 'reg',
+    'level': 'value',
+    'reg': reg,
+    'type': v['type'],
+    'proto': v['proto']
+  }
+
+
 def print_value(x):
   c = x['class']
   if c == 'reg':
@@ -96,9 +114,13 @@ def print_value(x):
   elif c == 'str':
     o("bitcast ([%d x i8]* @%s to %%Str)" % (x['len'], x['id']))
   elif c == 'array':
-    o("{")
+    o("[")
     print_list_by(x['items'], print_type_value)
-    o("}")
+    o("]")
+
+
+  elif c == 'zero':
+    o("zeroinitializer")
   else:
     o("<unknown_value::%s>" % c)
 
@@ -578,18 +600,46 @@ def do_eval_x(v):
     #do_eval_record(v)
 
   elif k == 'array':
+    # сперва вычисляем все элементы массива в регистры
+    # (кроме констант, они едут до последнего)
     llvalues = []
     for item in v['items']:
-      i = do_ld(do_eval(item))
+      iv = do_eval(item)
+      i = do_ld(iv)
       llvalues.append(i)
 
-    return {
+    if func_context == None:  # global
+      return {
+        'isa': 'llvm_value',
+        'class': 'array',
+        'level': 'value',
+        'items': llvalues,
+        'proto': v
+      }
+
+    # local
+
+    # если мы локальны то создадим иммутабельную структуру
+    # с массивом (insertvalue)
+    #%5 = insertvalue %Type24 zeroinitializer, %Int32 1, 0
+    xv = {
       'isa': 'llvm_value',
-      'class': 'array',
+      'class': 'zero',
       'level': 'value',
-      'items': llvalues,
-      'proto': v
+      'type': v['type'],
+      'proto': v,
     }
+
+    # набиваем структуру
+    i = 0
+    while i < len(llvalues):
+      xv = insertvalue(xv, llvalues[i], i)
+      i = i + 1
+
+    return xv
+
+
+
     #do_eval_array(v)
 
   else:
@@ -961,7 +1011,7 @@ def print_vardef(x):
   print_type(x['field']['type'])
   if x['init'] != None:
     o(" ")
-    do_eval(x['init'])
+    print_value(do_eval(x['init']))
   else:
     o(" zeroinitializer")
 

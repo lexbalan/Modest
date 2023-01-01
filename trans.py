@@ -158,45 +158,84 @@ def do_type(t):
     }
   
   return None #{'isa': 'type', 'kind': 'bad', 'type': t, 'meta': []}
-  
 
-def cast(v, t):
-  if v == None or t == None:
-    return None
 
-  if v['kind'] == 'array':
-    #print("cast array")
-    pass
 
-  if v['kind'] == 'record':
-    #print("cast record")
-    pass
 
+def cast_to_array(v, t, ti):
+  # приведение значения-массива с generic типом к конкретному типу
+  # cast all items
+  items2 = []
+  for item in v['items']:
+    print("item['type'] = " + str(item['type']))
+    casted_item = cast(item, t['of'], item['ti'])
+    type.check(t['of'], casted_item['type'], item['ti'])
+    items2.append(casted_item)
+
+  return {
+    'isa': 'value',
+    'kind': 'array',
+    'items': items2,
+    'type': t,
+    'meta': [],
+    'ti': ti
+  }
+
+
+def do_cast_runtime(v, t, ti):
   return {
     'isa': 'value',
     'kind': 'to',
     'value': v,
     'type': t,
     'meta': [],
-    'ti': v['ti']
+    'ti': ti
   }
 
 
-def cast_implicit(v, t):
+def cast_to_base(v, t, ti):
+  if v['type']['kind'] == 'base':
+    if 'generic' in v['type']['meta']:
+      v['type'] = t
+      return v
+
+  return do_cast_runtime(v, t, ti)
+
+
+
+def cast(v, t, ti):
+  if v == None or t == None:
+    return None
+
+  if t['kind'] == 'base':
+    return cast_to_base(v, t, ti)
+
+  elif t['kind'] == 'array':
+    return cast_to_array(v, t, ti)
+
+  elif t['kind'] == 'record':
+    #print("cast record")
+    pass
+
+  return do_cast_runtime(v, t, ti)
+
+
+
+def cast_implicit(v, t, ti):
   if v == None or t == None:
     return None
   
   if not type.eq(v['type'], t):  #!
     if type.resolve(v['type'], t):
-      return cast(v, t)
+      return cast(v, t, ti)
 
   return v
 
 
-def cast_explicit(v, t):
+def cast_explicit(v, t, ti):
   if v == None or t == None:
     return None
-  return cast(v, t)
+  return cast(v, t, ti)
 
 
 #
@@ -220,8 +259,8 @@ def do_value_expr_bin(v):
   if l == None or r == None:
     return None
   
-  l = cast_implicit(l, r['type'])
-  r = cast_implicit(r, l['type'])
+  l = cast_implicit(l, r['type'], l['ti'])
+  r = cast_implicit(r, l['type'], r['ti'])
   
   if not type.eq(l['type'], r['type']):
     error("type error", v['ti'])
@@ -365,7 +404,7 @@ def do_value_expr_call(v):
   while i < npars:
     p = params[i]
     a = do_value(v['args'][i])
-    a = cast_implicit(a, p['type'])
+    a = cast_implicit(a, p['type'], a['ti'])
     if a == None:
       i = i + 1
       continue
@@ -380,7 +419,7 @@ def do_value_expr_call(v):
       i = i + 1
       continue
 
-    a = cast_implicit(a, type.typeInt)
+    a = cast_implicit(a, type.typeInt, a['ti'])
     args.append(a)
     i = i + 1
   
@@ -415,7 +454,7 @@ def do_value_expr_index(v):
   if i == None:
     return None
   
-  i = cast_implicit(i, type.typeInt)
+  i = cast_implicit(i, type.typeInt, i['ti'])
   
   return {
     'isa': 'value',
@@ -672,7 +711,7 @@ def do_stmt_if(x):
   if c == None or t == None:
     return None
   
-  c = cast_implicit(c, type.typeNat1)
+  c = cast_implicit(c, type.typeNat1, c['ti'])
   type.check(c['type'], type.typeNat1, x['cond']['ti'])
   
   e = None
@@ -696,7 +735,7 @@ def do_stmt_while(x):
   if c == None or s == None:
     return None
   
-  c = cast_implicit(c, type.typeNat1)
+  c = cast_implicit(c, type.typeNat1, c['ti'])
   if not type.check(c['type'], type.typeNat1, x['cond']['ti']):
     return None
   
@@ -716,7 +755,7 @@ def do_stmt_return(x):
     v = do_value(x['value'])
     if v == None:
       return None
-    v = cast_implicit(v, cfunc['type']['to'])
+    v = cast_implicit(v, cfunc['type']['to'], v['ti'])
     type.check(v['type'], cfunc['type']['to'], x['value']['ti'])
   else:
     if not type.eq(cfunc['type']['to'], type.typeUnit):
@@ -824,7 +863,7 @@ def do_stmt_assign(x):
 
   
   # type check
-  r = cast_implicit(r, l['type'])
+  r = cast_implicit(r, l['type'], r['ti'])
   type.check(l['type'], r['type'], x['ti'])
 
   return {
@@ -938,7 +977,7 @@ def def_var(x):
   iv = None
   if x['init'] != None:
     iv = do_value(x['init'])
-    iv = cast_implicit(iv, f['type'])
+    iv = cast_implicit(iv, f['type'], iv['ti'])
     type.check(iv['type'], f['type'], x['init']['ti'])
 
   v = {
