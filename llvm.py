@@ -444,6 +444,7 @@ def do_eval_expr_access(v):
 ‘addrspacecast .. to’ Instruction
 """
 
+# cast type a to type b
 def opcast(a, b):
   if not 'size' in a:
     print("a without size: " + str(a))

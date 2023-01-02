@@ -164,10 +164,9 @@ def do_type(t):
 
 def cast_to_array(v, t, ti):
   # приведение значения-массива с generic типом к конкретному типу
-  # cast all items
+  # cast all items to target array item type
   items2 = []
   for item in v['items']:
-    print("item['type'] = " + str(item['type']))
     casted_item = cast(item, t['of'], item['ti'])
     type.check(t['of'], casted_item['type'], item['ti'])
     items2.append(casted_item)
@@ -202,20 +201,35 @@ def cast_to_base(v, t, ti):
   return do_cast_runtime(v, t, ti)
 
 
+def cast_to_pointer(v, t, ti):
+  if t['to'] == 'func':
+    if v['type']['kind'] == 'pointer':
+      if v['type']['to']['kind'] == 'func':
+        pass
+
+
 
 def cast(v, t, ti):
   if v == None or t == None:
     return None
 
+  if type.eq(v['type'], t):
+    info("nocast", ti)
+    return v
+
   if t['kind'] == 'base':
     return cast_to_base(v, t, ti)
 
+  # cast generic array to array
   elif t['kind'] == 'array':
     return cast_to_array(v, t, ti)
 
   elif t['kind'] == 'record':
     #print("cast record")
     pass
+
+  elif t['kind'] == 'pointer':
+    return cast_to_pointer(v, t, ti)
 
   return do_cast_runtime(v, t, ti)
 
