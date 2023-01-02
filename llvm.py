@@ -673,17 +673,21 @@ def do_eval_x(v):
 #
 
 
-def print_stmt_assign(x):
-  r = do_ld(do_eval(x['right']))
-  l = do_eval(x['left'])
+def ll_assign(l, r):
   lot("store ");
-  print_type(x['right']['type'])
+  print_type(r['type'])
   o(" ")
   print_value(r)
   comma()
-  print_type(x['right']['type'])
+  print_type(r['type'])
   o("* ")
-  print_value(l);
+  print_value(l)
+
+
+def print_stmt_assign(x):
+  r = do_ld(do_eval(x['right']))
+  l = do_eval(x['left'])
+  ll_assign(l, r)
 
 
 def print_base_block():
@@ -791,7 +795,6 @@ def print_stmt_vardef(x):
   global func_context
 
   id = x['id']['str']
-  #reg = reg_get()
   lo("  %%%s = alloca " % id)
 
   print_type(x['type'])
@@ -806,9 +809,9 @@ def print_stmt_vardef(x):
 
   if x['value'] != None:
     r = do_ld(do_eval(x['value']))
-    lot("st "); print_value(val); comma(); print_value(r);
+    ll_assign(val, r)
 
-  locals_add(x['id']['str'], val)
+  locals_add(id, val)
   return None
 
 

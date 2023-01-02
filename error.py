@@ -45,9 +45,6 @@ def error(s, ti):
 
 
 def info(s, ti):
-  global errcnt
-  errcnt = errcnt + 1
-
   pre = ''
   if ti != None:
     if not 'file' in ti:
