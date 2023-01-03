@@ -95,7 +95,7 @@ def do_type(t):
     tx['of'] = do_type(t['of'])
 
     if t['size'] != None:
-      tx['size'] = do_value(t['size'])
+      tx['size'] = do_value(t['size'])['num']
     return tx
   
   elif k == 'record':
@@ -163,22 +163,26 @@ def do_type(t):
 
 
 def cast_to_array(v, t, ti):
-  # приведение значения-массива с generic типом к конкретному типу
-  # cast all items to target array item type
-  items2 = []
-  for item in v['items']:
-    casted_item = cast(item, t['of'], item['ti'])
-    type.check(t['of'], casted_item['type'], item['ti'])
-    items2.append(casted_item)
+  if v['kind'] == 'array':
+    #info('cast_arr_to_arr', ti)
+    # приведение значения-массива с generic типом к конкретному типу
+    # cast all items to target array item type
+    items2 = []
+    for item in v['items']:
+      casted_item = cast(item, t['of'], item['ti'])
+      type.check(t['of'], casted_item['type'], item['ti'])
+      items2.append(casted_item)
 
-  return {
-    'isa': 'value',
-    'kind': 'array',
-    'items': items2,
-    'type': t,
-    'meta': [],
-    'ti': ti
-  }
+    return {
+      'isa': 'value',
+      'kind': 'array',
+      'items': items2,
+      'type': t,
+      'meta': [],
+      'ti': ti
+    }
+  else:
+    error("cannot cast '%s' value to '%s'" % (v['type']['kind'], t['kind']))
 
 
 def do_cast_runtime(v, t, ti):
@@ -201,11 +205,11 @@ def cast_to_base(v, t, ti):
   return do_cast_runtime(v, t, ti)
 
 
+
 def cast_to_pointer(v, t, ti):
-  if t['to'] == 'func':
-    if v['type']['kind'] == 'pointer':
-      if v['type']['to']['kind'] == 'func':
-        pass
+  if v['type']['kind'] != 'pointer':
+    error("cast not pointer to pointer error", ti)
+    return v
 
 
 
@@ -214,7 +218,7 @@ def cast(v, t, ti):
     return None
 
   if type.eq(v['type'], t):
-    info("nocast", ti)
+    #info("nocast", ti)
     return v
 
   if t['kind'] == 'base':
@@ -528,7 +532,7 @@ def do_value_expr_to(v):
   v = do_value(v['value'])
   if v == None or t == None:
     return None
-  return cast_explicit(v, t)
+  return cast_explicit(v, t, v['ti'])
 
 
 def do_value_num(num, type=type.genericInt, ti=None):
@@ -620,7 +624,7 @@ def do_value_expr_array(v):
     'type': {
       'isa': 'type',
       'kind': 'array',
-      'size': size,
+      'size': size['num'],
       'of': items[0]['type'],
       'meta': ['generic'],
       'ti': v['ti']

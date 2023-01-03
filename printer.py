@@ -58,7 +58,7 @@ def print_type(t, print_aka=True):
   elif k == 'array':
     print_type(t['of'])
     if t['size'] != None:
-      o("["); print_value(t['size']); o("]")
+      o("["); o(str(t['size'])); o("]")
     else:
       o("*")
 

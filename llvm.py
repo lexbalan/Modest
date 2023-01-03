@@ -182,11 +182,11 @@ def print_type(t, print_aka=True):
   elif k == 'array':
     o("[")
     array_size = t['size']
+    sz = 0
     if array_size != None:
-      print_value(do_eval(array_size))
-    else:
-      o("0")
-    o(" x ")
+      sz = array_size
+
+    o("%d x " % sz)
     print_type(t['of'])
     o("]")
 
