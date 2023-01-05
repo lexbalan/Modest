@@ -15,6 +15,7 @@ ctx = None  # context
 cfunc = None  # current function
 
 
+typeSizeEnum = 2
 
 def get_value(id):
   if cfunc != None:
@@ -104,6 +105,7 @@ def do_type(t):
       'isa': 'type',
       'kind': 'record',
       'fields': fields,
+      'size': 0,
       'meta': [],
       'ti': t['ti']
     }
@@ -134,6 +136,7 @@ def do_type(t):
       'isa': 'type',
       'kind': 'enum',
       'items': items,
+      'size': typeSizeEnum,
       'uid': enumUid,
       'meta': [],
       'ti': t['ti']
@@ -181,8 +184,9 @@ def cast_to_array(v, t, ti):
       'meta': [],
       'ti': ti
     }
+
   else:
-    error("cannot cast '%s' value to '%s'" % (v['type']['kind'], t['kind']))
+    error("cannot cast '%s' to '%s'" % (v['type']['kind'], t['kind']), ti)
 
 
 def do_cast_runtime(v, t, ti):
@@ -202,13 +206,16 @@ def cast_to_base(v, t, ti):
       v['type'] = t
       return v
 
-  return do_cast_runtime(v, t, ti)
+    return do_cast_runtime(v, t, ti)
+
+  error("cast error", ti)
+  return v
 
 
 
 def cast_to_pointer(v, t, ti):
   if v['type']['kind'] != 'pointer':
-    error("cast not pointer to pointer error", ti)
+    error("cast not #pointer to #pointer", ti)
     return v
 
 
@@ -235,7 +242,8 @@ def cast(v, t, ti):
   elif t['kind'] == 'pointer':
     return cast_to_pointer(v, t, ti)
 
-  return do_cast_runtime(v, t, ti)
+  error('illegal type cast', ti)
+  return v #do_cast_runtime(v, t, ti)
 
 
 
@@ -270,10 +278,10 @@ bin_ops = [
 un_ops = ['ref', 'deref', 'plus', 'minus', 'not']
 
 
-def do_value_expr_bin(v):
-  k = v['kind']
-  l = do_value(v['left'])
-  r = do_value(v['right'])
+def do_value_expr_bin(x):
+  k = x['kind']
+  l = do_value(x['left'])
+  r = do_value(x['right'])
   if l == None or r == None:
     return None
   
@@ -281,7 +289,7 @@ def do_value_expr_bin(v):
   r = cast_implicit(r, l['type'], r['ti'])
   
   if not type.eq(l['type'], r['type']):
-    error("type error", v['ti'])
+    error("type error", x['ti'])
     return None
   
   t = l['type']
@@ -322,46 +330,46 @@ def do_value_expr_bin(v):
 
   return {
     'isa': 'value',
-    'kind': v['kind'],
+    'kind': x['kind'],
     'left': l,
     'right': r,
     'type': t,
     'meta': [],
-    'ti': v['ti']
+    'ti': x['ti']
   }
 
 
-def do_value_expr_un(v):
-  val = do_value(v['value'])
+def do_value_expr_un(x):
+  val = do_value(x['value'])
   if val == None:
     return None
   t = val['type']
 
-  if v['kind'] == 'deref':
+  if x['kind'] == 'deref':
     if not type.is_pointer(t):
-      error("expected pointer", v['value']['ti'])
+      error("expected pointer", val['ti'])
       return None
 
     to = t['to']
     # you can't deref pointer to function
     # and pointer to undefined array
     if type.is_func(to) or type.is_undefined_array(to):
-      error("unsuitable type", v['value']['ti'])
+      error("unsuitable type", val['ti'])
 
     t = to
 
     return {
       'isa': 'value',
-      'kind': v['kind'],
+      'kind': x['kind'],
       'value': val,
       'type': t,
       'meta': ['adr'],
-      'ti': v['ti']
+      'ti': x['ti']
     }
 
 
-  if v['kind'] == 'ref':
-    t = type.typePointer(t, ti=v['ti'])
+  if x['kind'] == 'ref':
+    t = type.typePointer(t, ti=x['ti'])
 
   if type.is_generic_numeric(val['type']):
     num = {
@@ -374,21 +382,21 @@ def do_value_expr_un(v):
       'type': t,
       'num': num,
       'meta': [],
-      'ti': v['ti']
+      'ti': x['ti']
     }
   
   return {
     'isa': 'value',
-    'kind': v['kind'],
+    'kind': x['kind'],
     'value': val,
     'type': t,
     'meta': [],
-    'ti': v['ti']
+    'ti': x['ti']
   }
 
 
-def do_value_expr_call(v):
-  f = do_value(v['left'])
+def do_value_expr_call(x):
+  f = do_value(x['left'])
   if f == None:
     return None
   
@@ -399,20 +407,20 @@ def do_value_expr_call(v):
     ftype = ftype['to']
   
   if not type.is_func(ftype):
-    error("expected function", v['ti'])
+    error("expected function", x['ti'])
   
   params = ftype['params']
   
   npars = len(params)
-  nargs = len(v['args'])
+  nargs = len(x['args'])
   
   if nargs < npars:
-    error("not enough args", v['ti'])
+    error("not enough args", x['ti'])
     return None
   
   if nargs > npars:
     if not 'arghack' in ftype['meta']:
-      error("too many args", v['ti'])
+      error("too many args", x['ti'])
       return None
   
   args = []
@@ -421,18 +429,18 @@ def do_value_expr_call(v):
   i = 0
   while i < npars:
     p = params[i]
-    a = do_value(v['args'][i])
+    a = do_value(x['args'][i])
     a = cast_implicit(a, p['type'], a['ti'])
     if a == None:
       i = i + 1
       continue
-    type.check(p['type'], a['type'], v['args'][i]['ti'])
+    type.check(p['type'], a['type'], x['args'][i]['ti'])
     args.append(a)
     i = i + 1
   
   # arghack rest args
   while i < nargs:
-    a = do_value(v['args'][i])
+    a = do_value(x['args'][i])
     if a == None:
       i = i + 1
       continue
@@ -448,12 +456,12 @@ def do_value_expr_call(v):
     'args': args,
     'type': ftype['to'],
     'meta': [],
-    'ti': v['ti']
+    'ti': x['ti']
   }
 
 
-def do_value_expr_index(v):
-  a = do_value(v['left'])
+def do_value_expr_index(x):
+  a = do_value(x['left'])
   if a == None:
     return None
   typ = a['type']
@@ -464,10 +472,10 @@ def do_value_expr_index(v):
   
   # check if is record
   if not type.is_array(typ):
-    error("expected array or pointer to array", v['ti'])
+    error("expected array or pointer to array", x['ti'])
     return None
   
-  i = do_value(v['index'])
+  i = do_value(x['index'])
   
   if i == None:
     return None
@@ -481,16 +489,16 @@ def do_value_expr_index(v):
     'index': i,
     'type': typ['of'],
     'meta': ['adr'],
-    'ti': v['ti']
+    'ti': x['ti']
   }
 
 
-def do_value_expr_access(v):
-  r = do_value(v['left'])
+def do_value_expr_access(x):
+  r = do_value(x['left'])
   if r == None:
     return None
   
-  field_id = v['field']
+  field_id = x['field']
   
   typ = r['type']
   k = 'access'
@@ -501,14 +509,14 @@ def do_value_expr_access(v):
   
   # check if is record 
   if not type.is_record(typ):
-    error("expected record or pointer to record", v['ti'])
+    error("expected record or pointer to record", x['ti'])
     return None
   
   field = type.record_field_get(typ, field_id['str'])
   
   # field not found
   if field == None:
-    error("field '%s' not exist" % field_id['str'], v['ti'])
+    error("field '%s' not exist" % field_id['str'], x['ti'])
     return None
   
   meta = ['adr']
@@ -523,19 +531,19 @@ def do_value_expr_access(v):
     'field': field,
     'type': field['type'],
     'meta': meta,
-    'ti': v['ti']
+    'ti': x['ti']
   }
 
 
-def do_value_expr_to(v):
-  t = do_type(v['type'])
-  v = do_value(v['value'])
+def do_value_expr_to(x):
+  t = do_type(x['type'])
+  v = do_value(x['value'])
   if v == None or t == None:
     return None
-  return cast_explicit(v, t, v['ti'])
+  return cast_explicit(v, t, x['ti'])
 
 
-def do_value_num(num, type=type.genericInt, ti=None):
+def create_value_num(num, type=type.genericInt, ti=None):
   return {
     'isa': 'value',
     'kind': 'num',
@@ -548,21 +556,21 @@ def do_value_num(num, type=type.genericInt, ti=None):
 
 
 
-def do_value_expr_id(v):
-  vx = get_value(v['id']['str'])
+def do_value_expr_id(x):
+  vx = get_value(x['id']['str'])
   if vx == None:
-    error("undeclared value '%s'" % v['id']['str'], v['ti'])
+    error("undeclared value '%s'" % x['id']['str'], x['ti'])
     return None
   return vx
 
 
-def do_value_expr_ns(v):
-  tx = get_type(v['ids'][0]['str'])
+def do_value_expr_ns(x):
+  tx = get_type(x['ids'][0]['str'])
   if tx != None:
     if tx['kind'] == 'enum':
       items = tx['items']
       for item in items:
-        if v['ids'][1]['str'] == item['id']['str']:
+        if x['ids'][1]['str'] == item['id']['str']:
           enum_uid = tx['uid']
           num = item['number']
           #print("ENUM_ITEM %d %d" % (enum_uid, num))
@@ -572,7 +580,7 @@ def do_value_expr_ns(v):
             'num': num,
             'type': tx,
             'meta': [],
-            'ti': v['ids'][1]['ti']
+            'ti': x['ids'][1]['ti']
           }
 
   if tx == None:
@@ -610,37 +618,37 @@ def do_value_expr_str(x):
   }
 
 
-def do_value_expr_array(v):
+def do_value_expr_array(x):
   #print("do_value_expr_array")
   items = []
-  for i in v['items']:
+  for i in x['items']:
     vi = do_value(i)
     items.append(vi)
 
-  size = do_value_num(len(v['items']), ti=v['ti'])
+  size = len(x['items'])
   return {
     'isa': 'value',
     'kind': 'array',
     'type': {
       'isa': 'type',
       'kind': 'array',
-      'size': size['num'],
+      'size': size,
       'of': items[0]['type'],
       'meta': ['generic'],
-      'ti': v['ti']
+      'ti': x['ti']
     },
     'items': items,
     'meta': [],
-    'ti': v['ti']
+    'ti': x['ti']
   }
 
 
-def do_value_expr_record(v):
+def do_value_expr_record(x):
   #print("do_value_expr_record")
 
   record_fields = []
   items = []
-  for item in v['items']:
+  for item in x['items']:
     id = item['id']
     vi = do_value(item['value'])
     items.append({'id': id, 'value': vi})
@@ -653,11 +661,6 @@ def do_value_expr_record(v):
     }
     record_fields.append(field)
 
-
-
-
-
-
   return {
     'isa': 'value',
     'kind': 'record',
@@ -666,54 +669,53 @@ def do_value_expr_record(v):
       'kind': 'record',
       'fields': record_fields,
       'meta': ['generic'],
-      'ti': v['ti']
+      'ti': x['ti']
     },
     'items': items,
     'meta': [],
-    'ti': v['ti']
+    'ti': x['ti']
   }
 
 
-def do_value(v):
-  k = v['kind']
+def do_value(x):
+  k = x['kind']
   
   rv = None
   
   if k in bin_ops:
-    rv = do_value_expr_bin(v)
+    rv = do_value_expr_bin(x)
   elif k in un_ops:
-    rv = do_value_expr_un(v)
+    rv = do_value_expr_un(x)
   else:
     if k == 'num':
-      num = int(v['num'])
-      rv = do_value_num(num, ti=v['ti'])
+      rv = create_value_num(int(x['num']), ti=x['ti'])
     elif k == 'id':
-      rv = do_value_expr_id(v)
+      rv = do_value_expr_id(x)
     elif k == 'ns':
-      rv = do_value_expr_ns(v)
+      rv = do_value_expr_ns(x)
     elif k == 'str':
-      rv = do_value_expr_str(v)
+      rv = do_value_expr_str(x)
     elif k == 'record':
-      rv = do_value_expr_record(v)
+      rv = do_value_expr_record(x)
     elif k == 'array':
-      rv = do_value_expr_array(v)
+      rv = do_value_expr_array(x)
     else:
       if k == 'call':
-        rv = do_value_expr_call(v)
+        rv = do_value_expr_call(x)
       elif k == 'index':
-        rv = do_value_expr_index(v)
+        rv = do_value_expr_index(x)
       elif k == 'access':
-        rv = do_value_expr_access(v)
+        rv = do_value_expr_access(x)
       elif k == 'cast':
-        rv = do_value_expr_to(v)
+        rv = do_value_expr_to(x)
       elif k == 'sizeof':
-        tx = do_type(v['type'])
-        rv = {'isa': 'value', 'kind': 'sizeof', 'of': tx, 'type': type.typeNat, 'meta': [], 'ti': v['ti']}
+        tx = do_type(x['type'])
+        rv = {'isa': 'value', 'kind': 'sizeof', 'of': tx, 'type': type.typeNat, 'meta': [], 'ti': x['ti']}
       else:
         rv = None #{'isa': 'value', 'kind': 'bad', 'value': v, 'meta': []}
     
   if rv != None:
-    rv['ti'] = v['ti']
+    rv['ti'] = x['ti']
   
   return rv
 
@@ -721,7 +723,6 @@ def do_value(v):
 #
 # Do Statement
 #
-
 
 def do_stmt_if(x):
   c = do_value(x['cond'])
@@ -977,7 +978,7 @@ def def_type(x):
         'kind': 'const',
         'id': id,
         'type': t,
-        'value': do_value_num(item['number']),
+        'value': create_value_num(item['number']),
         'meta': [],
         'ti': item['ti']
       }

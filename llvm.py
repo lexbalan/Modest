@@ -166,15 +166,7 @@ def print_type(t, print_aka=True):
     o("\n}")
 
   elif k == 'enum':
-    o("i32")
-    """items = t['items']
-    i = 0
-    while i < len(items):
-      item = items[i]
-      o("\n")
-      o("\t%s," % item['id']['str'])
-      i = i + 1
-    o("\n}")"""
+    o("i16")
 
   elif k == 'pointer':
     print_type(t['to']); o("*")
