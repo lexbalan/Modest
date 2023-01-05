@@ -619,7 +619,7 @@ class Parser:
     v = None
     if self.match(":"):
       t = self.expr_type()
-    if self.match("<-"):
+    if self.match("<-") or self.match(":="):
       v = self.expr_value()
 
     stmts = []
@@ -795,7 +795,7 @@ class Parser:
       return None
     f = f[0]
     iv = None
-    if self.match("<-"):
+    if self.match("<-") or self.match(":="):
       iv = self.expr_value()
     return {'isa': 'ast_def_var', 'field': f, 'init': iv, 'ti': f['ti']}
   
