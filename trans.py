@@ -1071,7 +1071,7 @@ def def_func(x):
   return funcdef
 
 
-def def_exist(x):
+def def_exist_value(x):
   f = do_field(x['field'])
   if f == None:
     return None
@@ -1086,6 +1086,21 @@ def def_exist(x):
   }
   ctx.add_value(f['id']['str'], fval)
   return None
+
+
+
+def def_exist_type(x):
+  id = x['id']
+  nt = {
+    'isa': 'type',
+    'kind': 'opaque',
+    'aka': id['str'],
+    'meta': [],
+    'ti': id['ti'],
+  }
+  ctx.add_type(id['str'], nt)
+  return {'isa': 'asg_def_type', 'id': x['id'], 'type': nt}
+
 
 
 def def_extern(x):
@@ -1135,8 +1150,10 @@ def process(x):
     y = def_const(x)
   elif isa == 'ast_def_var':
     y = def_var(x)
-  elif isa == 'ast_def_exist':
-    y = def_exist(x)
+  elif isa == 'ast_def_exist_value':
+    y = def_exist_value(x)
+  elif isa == 'ast_def_exist_type':
+    y = def_exist_type(x)
   elif isa == 'ast_def_extern':
     y = def_extern(x)
   return y
