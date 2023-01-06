@@ -2,6 +2,8 @@
 from error import error
 
 
+typePointerSize = 4
+
 def typeInteger(aka, size, meta=[]):
   return {
     'isa': 'type',
@@ -14,7 +16,14 @@ def typeInteger(aka, size, meta=[]):
 
 
 def typePointer(to, meta=[], ti=None):
-  return {'isa': 'type', 'kind': 'pointer', 'to': to, 'meta': meta, 'ti': ti}
+  return {
+    'isa': 'type',
+    'kind': 'pointer',
+    'to': to,
+    'size': typePointerSize,
+    'meta': meta,
+    'ti': ti
+  }
 
 def typeArray(of, size=None, meta=[], ti=None):
   return {'isa': 'type', 'kind': 'array', 'of': of, 'size': size, 'meta': meta, 'ti': ti}

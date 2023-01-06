@@ -467,6 +467,10 @@ def opcast(a, b):
       else:
         return 'bitcast'
 
+  if a['kind'] == 'pointer':
+    if b['kind'] == 'pointer':
+      return 'bitcast'
+
   return 'uncast'
 
 

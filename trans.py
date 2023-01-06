@@ -217,7 +217,7 @@ def cast_to_pointer(v, t, ti):
   if v['type']['kind'] != 'pointer':
     error("cast not #pointer to #pointer", ti)
     return v
-
+  return do_cast_runtime(v, t, ti)
 
 
 def cast(v, t, ti):
