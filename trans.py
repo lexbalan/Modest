@@ -946,7 +946,9 @@ def do_stmt_block(s):
 def do_import(x):
   loc = x['local']
   s = x['str']
-  return {'isa': 'import', 'str': s, 'local': loc}
+  ast = parser.parse(s + '.cm')
+  asg = proc(ast)
+  return asg #{'isa': 'import', 'str': s, 'local': loc}
 
 
 def def_const(x):
@@ -1124,12 +1126,11 @@ def def_extern(x):
 def process(x):
   isa = x['isa']
   y = None
-  if isa == 'import':
-    y = do_import(x)
+
+  if isa == 'ast_def_func':
+    y = def_func(x)
   elif isa == 'ast_def_type':
     y = def_type(x)
-  elif isa == 'ast_def_func':
-    y = def_func(x)
   elif isa == 'ast_def_const':
     y = def_const(x)
   elif isa == 'ast_def_var':
@@ -1142,16 +1143,28 @@ def process(x):
 
 
 
-def translate(srcname):
-  ast = parser.parse(srcname)
+def proc(ast):
   output = []
-  ctx.push()
+
   for a in ast:
+    if a['isa'] == 'import':
+      y = do_import(a)
+      output.extend(y)
+      continue
+
     y = process(a)
     if y != None:
       output.append(y)
-  ctx.pop()
+
   return output
+
+
+def translate(srcname):
+  ast = parser.parse(srcname)
+  ctx.push()
+  asg = proc(ast)
+  ctx.pop()
+  return asg
 
 
 

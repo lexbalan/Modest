@@ -169,6 +169,10 @@ def print_type(t, print_aka=True):
     o("i16")
 
   elif k == 'pointer':
+    if t['to']['kind'] == 'enum':
+      if t['to']['aka'] == 'Void':
+        o("i8*")
+        return
     print_type(t['to']); o("*")
 
   elif k == 'array':
@@ -188,6 +192,9 @@ def print_type(t, print_aka=True):
     print_list_by(t['params'], lambda f: print_type(f['type']))
     o(")")
 
+  elif k == 'base':
+    print(t)
+    o('%' + t['aka'])
   else:
     o("<type:%s>" % k)
 
@@ -1034,7 +1041,7 @@ def printx(module, strs, outname):
   printer_open(outname)
 
   lo("%Bool= type i1")
-  lo("%Void = type i1")
+  #lo("%Void = type i1")
   lo("%Nil = type i1*")
   lo("%Unit = type i1")
   lo("%Str = type [0 x i8]*")
