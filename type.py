@@ -106,6 +106,9 @@ def eq(a, b):
   elif k == 'enum':
     return a['uid'] == b['uid']  # by UID?
   
+  elif k == 'opaque':
+    return a['aka'] == b['aka']  # by UID?
+
   return False
 
 
