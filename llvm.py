@@ -194,6 +194,10 @@ def print_type(t, print_aka=True):
 
   elif k == 'base':
     o('%' + t['aka'])
+
+  elif k == 'opaque':
+    o('opaque')
+
   else:
     o("<type:%s>" % k)
 

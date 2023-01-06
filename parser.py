@@ -762,10 +762,24 @@ class Parser:
   
   
   def decl_exist(self):
+    # exist type
+    if self.match('type'):
+      id = self.identifier()
+      return {
+        'isa': 'ast_def_exist_type',
+        'id': id,
+        'ti': id['ti']
+      }
+
+    # exist value
     fields = self.parse_field()
     exist_list = []
     for field in fields:
-      f = {'isa': 'ast_def_exist', 'field': field, 'ti': field['ti']}
+      f = {
+        'isa': 'ast_def_exist_value',
+        'field': field,
+        'ti': field['ti']
+      }
       exist_list.append(f)
     return exist_list
   
