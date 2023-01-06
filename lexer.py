@@ -51,7 +51,7 @@ def donum(src):
     return False
   ti = get_ti(src)
   ishex = False
-  if len(c) > 2:
+  if len(c) > 1:
     ishex = c[1] == 'x'
   
   s = []

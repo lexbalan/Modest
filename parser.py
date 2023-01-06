@@ -523,10 +523,16 @@ class Parser:
       return {'isa': 'value', 'kind': 'id', 'id': id, 'ti': ti}
       #else:
       #  return {'isa': 'value', 'kind': 'id', 'id': id, 'ti': ti}
-          
+
     elif self.ctok_class() == 'num':
-      num = self.gettok()
-      return {'isa': 'value', 'kind': 'num', 'num': num, 'ti': ti}
+      numstr = self.gettok()
+      #print("NUM: " + str(num))
+      base = 10
+      if len(numstr) > 2:
+        if numstr[1] == 'x':
+          base = 16
+      numval = int(numstr, base)
+      return {'isa': 'value', 'kind': 'num', 'num': numval, 'ti': ti}
 
     elif self.ctok_class() == 'str':
       s = self.gettok()
@@ -809,6 +815,7 @@ class Parser:
   
   def parse(self, filename):
     self.tokens = self.lex.tokenize(filename)
+    #print("ENDLEX: " + filename)
     self.ctoken = 0
 
     xx = []
@@ -816,7 +823,7 @@ class Parser:
     while self.match('import'):
       x = self.doimport()
       xx.append(x)
-      
+
     while not self.is_end():
       export = self.match('export')
       x = None

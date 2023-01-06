@@ -193,7 +193,6 @@ def print_type(t, print_aka=True):
     o(")")
 
   elif k == 'base':
-    print(t)
     o('%' + t['aka'])
   else:
     o("<type:%s>" % k)

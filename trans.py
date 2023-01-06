@@ -688,7 +688,7 @@ def do_value(x):
     rv = do_value_expr_un(x)
   else:
     if k == 'num':
-      rv = create_value_num(int(x['num']), ti=x['ti'])
+      rv = create_value_num(x['num'], ti=x['ti'])
     elif k == 'id':
       rv = do_value_expr_id(x)
     elif k == 'ns':
