@@ -7,7 +7,7 @@ typePointerSize = 4
 def typeInteger(aka, size, meta=[]):
   return {
     'isa': 'type',
-    'kind': 'base',
+    'kind': 'integer',
     'aka': aka,
     'meta': ['numeric'] + meta,
     'size': size,
@@ -57,7 +57,7 @@ genericStr = typeStr
 
 genericInt = {
   'isa': 'type',
-  'kind': 'base',
+  'kind': 'integer',
   'aka': '<generic:int>',
   'meta': ['generic', 'numeric'],
   'size': 8,
@@ -80,7 +80,7 @@ def eq(a, b):
   if a['kind'] != b['kind']:
     return False
   
-  if k == 'base':
+  if k == 'integer':
     return a['aka'] == b['aka']
   
   elif k == 'pointer':

@@ -192,7 +192,7 @@ def print_type(t, print_aka=True):
     print_list_by(t['params'], lambda f: print_type(f['type']))
     o(")")
 
-  elif k == 'base':
+  elif k == 'integer':
     o('%' + t['aka'])
 
   elif k == 'opaque':
@@ -455,8 +455,8 @@ def opcast(a, b):
 
   signed = 'signed' in b['meta']
 
-  if a['kind'] == 'base':
-    if b['kind'] == 'base':
+  if a['kind'] in ['integer', 'enum']:
+    if b['kind'] in ['integer', 'enum']:
       if a['size'] < b['size']:
         if signed:
           return 'sext'
@@ -696,8 +696,8 @@ def print_stmt_assign(x):
   ll_assign(l, r)
 
 
-def print_base_block():
-  o("<base block>")
+def print_integer_block():
+  o("<integer block>")
 
 
 

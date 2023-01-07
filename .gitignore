@@ -5,3 +5,4 @@
 *.h
 a.out
 *.ll
+/examples/*

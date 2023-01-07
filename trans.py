@@ -200,17 +200,29 @@ def do_cast_runtime(v, t, ti):
   }
 
 
-def cast_to_base(v, t, ti):
-  if v['type']['kind'] == 'base':
+def cast_to_integer(v, t, ti):
+  if v['type']['kind'] == 'integer':
     if 'generic' in v['type']['meta']:
       v['type'] = t
       return v
 
     return do_cast_runtime(v, t, ti)
 
+  # enum -> integer
+  elif v['type']['kind'] == 'enum':
+    return do_cast_runtime(v, t, ti)
+
   error("cast error", ti)
   return v
 
+
+def cast_to_enum(v, t, ti):
+  # integer -> enum
+  if v['type']['kind'] == 'integer':
+    return do_cast_runtime(v, t, ti)
+
+  error("cast error", ti)
+  return v
 
 
 def cast_to_pointer(v, t, ti):
@@ -228,8 +240,8 @@ def cast(v, t, ti):
     #info("nocast", ti)
     return v
 
-  if t['kind'] == 'base':
-    return cast_to_base(v, t, ti)
+  if t['kind'] == 'integer':
+    return cast_to_integer(v, t, ti)
 
   # cast generic array to array
   elif t['kind'] == 'array':
@@ -241,6 +253,9 @@ def cast(v, t, ti):
 
   elif t['kind'] == 'pointer':
     return cast_to_pointer(v, t, ti)
+
+  elif t['kind'] == 'enum':
+    return cast_to_enum(v, t, ti)
 
   error('illegal type cast', ti)
   return v #do_cast_runtime(v, t, ti)
