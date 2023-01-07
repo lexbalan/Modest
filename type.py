@@ -48,8 +48,8 @@ typeInt64 = typeInteger("Int64", 8, meta=['signed'])
 
 typeNat8  = typeInteger("Nat8", 1, meta=['unsigned'])
 typeNat16 = typeInteger("Nat16", 2, meta=['unsigned'])
-typeNat32 = typeInteger("Nat32", 3, meta=['unsigned'])
-typeNat64 = typeInteger("Nat64", 4, meta=['unsigned'])
+typeNat32 = typeInteger("Nat32", 4, meta=['unsigned'])
+typeNat64 = typeInteger("Nat64", 8, meta=['unsigned'])
 
 typeChar = typeNat8
 typeStr = typePointer(typeArray(typeChar))
