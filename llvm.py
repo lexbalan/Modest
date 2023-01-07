@@ -237,13 +237,17 @@ def get_bin_opcode(op, t):
   elif op in ['add', 'sub', 'mul']:
     opcode = get_bin_opcode_f(op, 'f' + op, t)
   elif op in ['and', 'or', 'xor', 'shl']:
-    opcode = do_eval_binary(k, t)
+    opcode = op
   elif op in ['div', 'mod']:
     if op == 'mod':
       op = 'rem'
     opcode = get_bin_opcode_suf('s' + op, 'u' + op, 'f' + op, t)
   elif op in ['lt', 'gt', 'le', 'ge']:
     opcode = get_bin_opcode_suf('icmp s' + op, 'icmp u' + op, 'fcmp u' + op, t)
+  elif op == 'shr':
+    opcode = 'lshr'
+    if 'signed' in t['meta']:
+      opcode = 'ashr'
 
   return opcode
 
@@ -453,7 +457,7 @@ def opcast(a, b):
   if not 'size' in b:
     print("b without size: " + str(b))
 
-  signed = 'signed' in b['meta']
+  signed = 'signed' in a['meta']
 
   if a['kind'] in ['integer', 'enum']:
     if b['kind'] in ['integer', 'enum']:
