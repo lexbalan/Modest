@@ -46,6 +46,7 @@ typeInt16 = typeInteger("Int16", 2, meta=['signed'])
 typeInt32 = typeInteger("Int32", 4, meta=['signed'])
 typeInt64 = typeInteger("Int64", 8, meta=['signed'])
 
+typeNat1 = typeInteger("Nat1", 1, meta=['unsigned'])
 typeNat8  = typeInteger("Nat8", 1, meta=['unsigned'])
 typeNat16 = typeInteger("Nat16", 2, meta=['unsigned'])
 typeNat32 = typeInteger("Nat32", 4, meta=['unsigned'])
@@ -64,7 +65,7 @@ genericInt = {
   'ti': None
 }
 
-typeNat1 = typeNat8
+
 typeInt = typeInt64
 typeNat = typeNat64
 typeFreePtr = typePointer(typeUnit)

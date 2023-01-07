@@ -340,7 +340,7 @@ def do_value_expr_bin(x):
       'type': t,
       'num': val,
       'meta': [],
-      'ti': v['ti']
+      'ti': x['ti']
     }
 
   return {
