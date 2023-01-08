@@ -599,7 +599,7 @@ def do_value_expr_ns(x):
           }
 
   if tx == None:
-    error("undeclared value '%s'" % v['id']['str'], v['ti'])
+    error("undeclared value '%s'" % x['id']['str'], x['ti'])
     return None
   return vx
 
