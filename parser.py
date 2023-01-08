@@ -526,7 +526,6 @@ class Parser:
 
     elif self.ctok_class() == 'num':
       numstr = self.gettok()
-      #print("NUM: " + str(num))
       base = 10
       if len(numstr) > 2:
         if numstr[1] == 'x':
