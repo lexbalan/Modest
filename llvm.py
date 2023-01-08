@@ -101,6 +101,7 @@ def insertvalue(v, x, pos):
   }
 
 
+
 def print_value(x):
   c = x['class']
   if c == 'reg':
@@ -423,13 +424,30 @@ def do_eval_expr_index(v):
 def do_eval_expr_access(v):
   rec = do_eval(v['record'])
   t = v['record']['type']
+  pos = v['field']['no']
+
+  # сама запись находится в регистре, (let rec = get_rec())
+  if rec['type']['kind'] == 'record' and rec['class'] == 'reg':
+    reg = operation('extractvalue')
+    print_type_value(rec)
+    comma()
+    o('%d' % pos)
+    return {
+      'isa': 'llvm_value',
+      'class': 'reg',
+      'level': 'value',
+      'reg': reg,
+      'type': v['type'],
+      'proto': v
+    }
+
 
   if t['kind'] == 'pointer':
     # pointer to record needs additional load
     rec = do_ld(rec)
     t = t['to']
 
-  field_index = ll_create_value_imm(type.typeInt32, v['field']['no'])
+  field_index = ll_create_value_imm(type.typeInt32, pos)
   return llvm_getelementptr(rec, t, (ll_value_zero, field_index))
 
 
