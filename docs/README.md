@@ -1,9 +1,9 @@
 
 - Definitions
   * [type definition](./def/type.md)
-  * constant definition
-  * variable definition
-  * function definition
+  * [constant definition](./def/const.md)
+  * [variable definition](./def/var.md)
+  * [function definition](./def/func.md)
 
 - Statements
   * variable definiiton statement
