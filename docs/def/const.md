@@ -1,4 +1,4 @@
-# Const Definition
+# Constant Definition
 
 ```golang
 // the 'const' directive creates an alias for value expression result
