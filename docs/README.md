@@ -1,6 +1,6 @@
 
 - Definitions
-  * type definition
+  * [type definition](def_type.md)
   * constant definition
   * variable definition
   * function definition
