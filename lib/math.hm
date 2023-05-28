@@ -1,0 +1,120 @@
+// math.hm
+
+type Long Int32
+type LongLong Int64
+
+type LongInt Long
+type LongLongInt LongLong
+
+type Float Float32
+type Double Float64
+type LongDouble Float64
+
+
+const M_PI = 3.141592653589793238462643383279502884
+const M_E =  2.718281828459045235360287471352662498
+
+
+/*
+ * ANSI/POSIX
+ */
+extern func acos (x : Double) -> Double
+extern func asin (x : Double) -> Double
+extern func atan (x : Double) -> Double
+extern func atan2 (a : Double, b : Double) -> Double
+extern func cos (x : Double) -> Double
+extern func sin (x : Double) -> Double
+extern func tan (x : Double) -> Double
+
+extern func cosh (x : Double) -> Double
+extern func sinh (x : Double) -> Double
+extern func tanh (x : Double) -> Double
+
+extern func exp (x : Double) -> Double
+extern func frexp (a : Double, i : *Int) -> Double
+extern func ldexp (a : Double, i : Int) -> Double
+extern func log (x : Double) -> Double
+extern func log10 (x : Double) -> Double
+extern func modf (a : Double, b : *Double) -> Double
+
+extern func pow (a : Double, b : Double) -> Double
+extern func sqrt (x : Double) -> Double
+
+extern func ceil (x : Double) -> Double
+extern func fabs (x : Double) -> Double
+extern func floor (x : Double) -> Double
+extern func fmod (a : Double, b : Double) -> Double
+
+
+
+/*
+ * Long double versions of C99 functions
+ */
+extern func acosl (x : LongDouble) -> LongDouble
+extern func asinl (x : LongDouble) -> LongDouble
+extern func atanl (x : LongDouble) -> LongDouble
+extern func atan2l (a : LongDouble, b : LongDouble) -> LongDouble
+extern func cosl (x : LongDouble) -> LongDouble
+extern func sinl (x : LongDouble) -> LongDouble
+extern func tanl (x : LongDouble) -> LongDouble
+
+extern func acoshl (x : LongDouble) -> LongDouble
+extern func asinhl (x : LongDouble) -> LongDouble
+extern func atanhl (x : LongDouble) -> LongDouble
+extern func coshl (x : LongDouble) -> LongDouble
+extern func sinhl (x : LongDouble) -> LongDouble
+extern func tanhl (x : LongDouble) -> LongDouble
+
+extern func expl (x : LongDouble) -> LongDouble
+extern func exp2l (x : LongDouble) -> LongDouble
+extern func expm1l (x : LongDouble) -> LongDouble
+extern func frexpl (a : LongDouble, i : *Int) -> LongDouble
+extern func ilogbl (x : LongDouble) -> Int
+extern func ldexpl (a : LongDouble, i : Int) -> LongDouble
+extern func logl (x : LongDouble) -> LongDouble
+extern func log10l (x : LongDouble) -> LongDouble
+extern func log1pl (x : LongDouble) -> LongDouble
+extern func log2l (x : LongDouble) -> LongDouble
+extern func logbl (x : LongDouble) -> LongDouble
+extern func modfl (a : LongDouble, b : *LongDouble) -> LongDouble
+extern func scalbnl (a : LongDouble, i : Int) -> LongDouble
+extern func scalblnl (a : LongDouble, i : LongInt) -> LongDouble
+
+extern func cbrtl (x : LongDouble) -> LongDouble
+extern func fabsl (x : LongDouble) -> LongDouble
+extern func hypotl (a : LongDouble, b : LongDouble) -> LongDouble
+extern func powl (a : LongDouble, b : LongDouble) -> LongDouble
+extern func sqrtl (x : LongDouble) -> LongDouble
+
+extern func erfl (x : LongDouble) -> LongDouble
+extern func erfcl (x : LongDouble) -> LongDouble
+extern func lgammal (x : LongDouble) -> LongDouble
+extern func tgammal (x : LongDouble) -> LongDouble
+
+extern func ceill (x : LongDouble) -> LongDouble
+extern func floorl (x : LongDouble) -> LongDouble
+extern func nearbyintl (x : LongDouble) -> LongDouble
+extern func rintl (x : LongDouble) -> LongDouble
+extern func lrintl (x : LongDouble) -> LongInt
+extern func llrintl (x : LongDouble) -> LongLongInt
+extern func roundl (x : LongDouble) -> LongDouble
+extern func lroundl (x : LongDouble) -> LongInt
+extern func llroundl (x : LongDouble) -> LongLongInt
+extern func truncl (x : LongDouble) -> LongDouble
+
+extern func fmodl (a : LongDouble, b : LongDouble) -> LongDouble
+extern func remainderl (a : LongDouble, b : LongDouble) -> LongDouble
+extern func remquol (a : LongDouble, b : LongDouble, i : *Int) -> LongDouble
+
+extern func copysignl (a : LongDouble, b : LongDouble) -> LongDouble
+extern func nanl (x : Str) -> LongDouble
+extern func nextafterl (a : LongDouble, b : LongDouble) -> LongDouble
+extern func nexttowardl (a : LongDouble, b : LongDouble) -> LongDouble
+
+extern func fdiml (a : LongDouble, b : LongDouble) -> LongDouble
+extern func fmaxl (a : LongDouble, b : LongDouble) -> LongDouble
+extern func fminl (a : LongDouble, b : LongDouble) -> LongDouble
+
+extern func fmal (a : LongDouble, b : LongDouble, c : LongDouble) -> LongDouble
+
+

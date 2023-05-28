@@ -1,0 +1,136 @@
+// libc.hm
+
+/*!
+c_include("stdint.h")
+c_include("stdio.h")
+c_include("stdlib.h")
+c_include("string.h")
+c_include("fcntl.h")     # open
+c_include("unistd.h")    # write
+c_include("sys/stat.h")  # fstat
+*/
+
+/*!
+if settings_check('backend', 'c'):
+  #print("NO EMIT")
+  #no_emit = True
+  pass
+*/
+
+//!attribute('no-c-print', glob=True)
+
+type DevT Nat16      /* holds (major|minor) device pair */
+type InoT Nat32      /* i-node number (or Nat32) */
+type BlkCntT Nat32   /* count of file blocks (or Nat32) */
+type OffT Int32      /* offset within a file (or Nat32) */
+type NlinkT Int16    /* number of links to a file (Int16) */
+type ModeT Nat32     /* file type and permissions bits */
+type UIDT Nat16      /* user id */
+type GIDT Int8       /* group id */
+type BlkSizeT Int16  /* used for block sizes */
+type TimeT Int32     /* time in seconds since 1970 */
+type SizeT Nat32
+
+
+//type Stat record {
+//  dev : DevT          /* устройство */
+//  ino : InoT          /* inode */
+//  mode : ModeT        /* режим доступа */
+//  nlink : NlinkT      /* количество жестких ссылок */
+//  uid : UIDT          /* идентификатор пользователя-владельца */
+//  gid : GIDT          /* идентификатор группы-владельца */
+//  rdev : DevT         /* тип устройства (если это устройство) */
+//  size : OffT         /* общий размер в байтах */
+//  blksize : BlkSizeT  /* размер блока ввода-вывода в файловой системе */
+//  blocks : BlkCntT    /* количество выделенных блоков */
+//  atime : TimeT       /* время последнего доступа */ // st_atime!!!???
+//  mtime : TimeT       /* время последней модификации */
+//  ctime : TimeT       /* время последнего изменения */
+//}
+
+
+extern type FILE
+extern type DIR
+
+
+extern func malloc (size : Nat32) -> *Unit
+extern func memset (mem : *Unit, c : Nat8, n : SizeT) -> *Unit
+extern func memcpy (dst : *Unit, src : *Unit, len : SizeT) -> *Unit
+extern func memcmp (ptr1 : *Unit, ptr2 : *Unit, num : SizeT) -> Int
+extern func free   (ptr : *Unit) -> Unit
+
+extern func putchar (char : Int8) -> Int32
+
+extern func strncmp (s1 : Str, s2 : Str, n : SizeT) -> Int
+extern func strcmp  (s1: Str, s2 : Str) -> Int
+extern func strcpy  (dst : Str, src : Str) -> *Nat8
+extern func strlen  (s : Str) -> SizeT
+
+
+const c_SEEK_SET = 0
+const c_SEEK_CUR = 1
+const c_SEEK_END = 2
+
+
+//!attribute('arghack', glob=True)
+extern func printf  (s : Str) -> Int32
+extern func scanf   (s : Str) -> Int
+extern func sscanf  (buf : *Unit, format : Str) -> Int
+extern func sprintf (buf : *Unit, format : Str) -> Int
+//!attribute_off('arghack')
+
+extern func chdir (dir : Str) -> Int
+
+//extern func mkdir (path : Str, mode : Mode_T) -> Int
+
+extern func fopen  (fname : Str, mode : Str) -> *FILE
+extern func fclose (f : *FILE) -> Int
+
+//!attribute('arghack', glob=True)
+extern func fprintf (stream : *FILE, format : Str) -> Int
+//!attribute_off('arghack')
+
+extern func fseek  (stream : *FILE, offset : Int64, whence : Int) -> Int
+extern func ftruncate (fd : Int, size : OffT) -> Int
+
+extern func fwrite (buf : *Unit, size : SizeT, count : SizeT, stream : *FILE) -> SizeT
+extern func fread (buf : *Unit, size : SizeT, count : SizeT, stream : *FILE) -> SizeT
+
+
+const c_O_RDONLY = 0x0000  // open for reading only
+const c_O_WRONLY = 0x0001  // open for writing only
+const c_O_RDWR   = 0x0002  // open for reading and writing
+
+const o_CREAT = 0x0200
+const o_TRUNC = 0x0400     // trunc to zero len
+const o_WRONLY = 0x0001
+
+const o_RDONLY = 00
+const o_RDWR = 02
+
+const s_IRUSR = 0x0000100  // R for owner
+const s_IWUSR = 0x0000080  // W for owner
+const s_IXUSR = 0x0000040  // X for owner
+
+
+extern func creat (path : Str, mode : ModeT) -> Int
+extern func open  (path : Str, oflags : Int) -> Int
+extern func read  (fd : Int, buf : *Nat8, len : Nat32) -> Int
+extern func write (fd : Int, buf : *Nat8, len : Nat32) -> Int
+extern func lseek (fd : Int, offset : OffT, whence : Int) -> OffT
+extern func close (fd : Int) -> Int
+extern func exit  (rc : Int) -> Unit
+extern func fstat (fd : Int, buf : *Stat) -> Int
+
+
+
+extern func opendir  (name : Str) -> *DIR
+extern func closedir (dirp : *DIR) -> Int
+
+// current working directory
+extern func getcwd (buf : Str, size : SizeT) -> Str
+
+extern func getenv (name : Str) -> Str
+
+
+//!attribute_off('no-c-print')
