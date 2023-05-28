@@ -1,3 +1,4 @@
+# Installation
 
 1. Download repository into your home folder
 ```
