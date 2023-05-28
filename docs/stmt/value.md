@@ -1,4 +1,4 @@
-# Value Statement
+# Value evaluation statement
 
 #### Common view
 
