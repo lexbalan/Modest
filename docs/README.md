@@ -1,11 +1,12 @@
+# Minor language documentation
 
-- Definitions
+- [Definitions](./def/README.md)
   * [type definition](./def/type.md)
   * [constant definition](./def/const.md)
   * [variable definition](./def/var.md)
   * [function definition](./def/func.md)
 
-- Statements
+- [Statements](./stmt/README.md)
   * [variable definiiton statement](./stmt/var.md)
   * [constant definiiton statement](./stmt/const.md)
   * [value expression statement](./stmt/value.md)
@@ -15,14 +16,14 @@
   * [return statement](./stmt/return.md)
 
 
-- Type Expressions
+- [Type Expressions](./expr/type/README.md)
   * [pointer type expression](./expr/type/pointer.md)
   * [array type expression](./expr/type/array.md)
   * [function type expression](./expr/type/func.md)
   * [record type expression](./expr/type/record.md)
 
 
-- Value Expression
+- [Value Expression](./expr/value/README.md)
   * [numeric value expression](./expr/value/numeric.md)
   * [string value expression](./expr/value/string.md)
   * [binary value expression](./expr/value/binary.md)
