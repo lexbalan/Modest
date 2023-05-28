@@ -1,6 +1,6 @@
 # Definitions
 
-[back](../README.md)
+[go back](../README.md)
 
   * [type definition](./type.md)
   * [constant definition](./const.md)
