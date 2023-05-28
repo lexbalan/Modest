@@ -11,7 +11,6 @@
 #### Examples
 
 ```golang
-var a : Int32
 
 func main () -> Unit {
   var a : Int32
