@@ -1,6 +1,6 @@
 # Installation
 
-0. Firstly install Python3 & Clang
+0. *Firstly install Python3 & Clang*
 
 1. Download repository into your home folder
 ```
