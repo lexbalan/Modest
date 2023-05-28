@@ -1,4 +1,4 @@
-# ../mcc -omain6 -bir -funsafe main6.cm && clang main6.ll && ./a.out
+# USAGE: mcc -omain -bir -funsafe main.cm && clang main.ll && ./a.out
 
 python3 ./src/main.py $@
 
