@@ -17,6 +17,10 @@ func main () -> Unit {
   
   p := {x=10, y=10}
   
+  // or
+  // p.x := 10
+  // p.y := 10
+  
   printf("p.x = %d\n", p.x)
   printf("p.y = %d\n", p.y)
 }
