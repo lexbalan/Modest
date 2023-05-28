@@ -12,6 +12,9 @@ git clone https://github.com/lexbalan/Modest.git
 ```
 export MODEST_DIR=~/Modest
 export MODEST_LIB=$MODEST_DIR/lib/
+
+echo "export MODEST_DIR=~/Modest" >> ~/.bashrc
+echo "export MODEST_LIB=$MODEST_DIR/lib/" >> ~/.bashrc
 ```
 
 3. Compile example
