@@ -9,7 +9,7 @@
 #### Examples
 
 ```golang
-func main () -> Int32 {
+func main () -> Unit {
   var a : Int32
   var p : *Int32
   a := 0
