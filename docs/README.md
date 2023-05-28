@@ -23,13 +23,13 @@
 
 
 - Value Expression
-  * numeric value expression
-  * string value expression
-  * binary value expression
-  * unary value expression
-  * call value expression
-  * index value expression
-  * access value expression
-  * cast value expression
-  * sizeof value expression
+  * [numeric value expression](./expr/value/numeric.md)
+  * [string value expression](./expr/value/string.md)
+  * [binary value expression](./expr/value/binary.md)
+  * [unary value expression](./expr/value/unary.md)
+  * [call value expression](./expr/value/call.md)
+  * [index value expression](./expr/value/index.md)
+  * [access value expression](./expr/value/access.md)
+  * [cast value expression](./expr/value/cast.md)
+  * [sizeof value expression](./expr/value/sizeof.md)
 
