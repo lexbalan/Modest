@@ -3,7 +3,7 @@
 #### Common view
 
 ```golang
-  *Int32  // type pointer to Int32
+  *Int32  // type 'pointer to Int32'
 ```
 
 #### Examples
