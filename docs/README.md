@@ -16,10 +16,10 @@
 
 
 - Type Expressions
-  * pointer type expression
-  * array type expression
-  * function type expression
-  * record type expression
+  * [pointer type expression](./expr/type/pointer.md)
+  * [array type expression](./expr/type/array.md)
+  * [function type expression](./expr/type/func.md)
+  * [record type expression](./expr/type/record.md)
 
 
 - Value Expression
