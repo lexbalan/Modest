@@ -120,7 +120,7 @@ extern func write (fd : Int, buf : *Nat8, len : Nat32) -> Int
 extern func lseek (fd : Int, offset : OffT, whence : Int) -> OffT
 extern func close (fd : Int) -> Int
 extern func exit  (rc : Int) -> Unit
-extern func fstat (fd : Int, buf : *Stat) -> Int
+//extern func fstat (fd : Int, buf : *Stat) -> Int
 
 
 

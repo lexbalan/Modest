@@ -1075,21 +1075,29 @@ def do_import(x):
   no_emit = settings_check('backend', 'c') and import_c
 
   s = x['str']
-  local = s[0:2] == './'
+  local = s[0:2] == './' or s[0:3] == '../'
 
   s2 = s
   if local:
     path = settings_get('path')
-    s2 = path + s[1:]
+    s2 = path + '/' + s[1:]
+  else:
+    # GLOBAL
+    path_lib = settings_get('library')
+    f = path_lib + '/' + s
+    print("F = %s" % f)
+    if os.path.exists(f):
+      s2 = f
 
   # import guard
   abspath = os.path.abspath(s2)
+  #print("abspath = " + abspath)
   if abspath in import_guard_paths:
     return None  # already imported
   import_guard_paths.append(abspath)
-  #print("abspath = " + abspath)
 
-  ast = parser.parse(s2)# + '.hm')
+
+  ast = parser.parse(s2)
 
   asg = proc(ast)
 

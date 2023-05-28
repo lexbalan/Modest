@@ -32,7 +32,15 @@ args = parser.parse_args()
 def main():
   global src_dirname
 
+  print(os.getcwd())
+
+  path_lib = os.getenv('MODEST_LIB')
+  #print("path_lib = %s" % path_lib)
+  if path_lib == None:
+    fatal("MODEST_LIB required")
+
   # set default settings
+  trans.settings_set('library', path_lib)
   trans.settings_set('backend', 'printer_ll')
   trans.settings_set('enum_size', 2)
 
@@ -42,9 +50,10 @@ def main():
     k, v = mod.split('=')
     trans.settings_set(k, v)
 
-  # parse features (-funsafe)
-  for feature in args.feature:
-    trans.features_set(feature)
+  # parse features (ex. -funsafe)
+  if args.feature != None:
+    for feature in args.feature:
+      trans.features_set(feature)
 
   src_name = args.filename
 

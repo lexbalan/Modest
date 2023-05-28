@@ -1,0 +1,40 @@
+
+//!imp_c(True)
+import "libc.hm"
+
+
+func main () -> Int {
+  printf("Float test\n")
+
+  var f : Float64
+  var g : Float64
+
+  f := 1.52
+  g := 2.22
+
+  printf("f = %f\n\r", f)
+  printf("g = %f\n\r", g)
+
+  let sum = f + g
+  printf("sum = %f\n\r", sum)
+
+  let dif = f - g
+  printf("dif = %f\n\r", dif)
+
+  let div = f / g
+  printf("div = %f\n\r", div)
+
+  let mul = f * g
+  printf("mul = %f\n\r", mul)
+
+  if f < g {
+    printf("f < g\n")
+  } else if f > g {
+    printf("f < g\n")
+  } else {
+    printf("f == g\n")
+  }
+
+  return 0
+}
+

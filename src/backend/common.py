@@ -1,4 +1,5 @@
 
+import os
 
 f = None
 
@@ -33,6 +34,7 @@ def ind():
 
 def printer_open(fname):
   global f
+  os.makedirs(os.path.dirname(fname), exist_ok=True)
   f = open(fname, "w")
 
 

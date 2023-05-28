@@ -1,0 +1,10 @@
+
+//!imp_c(True)
+import "libc.hm"
+
+
+func main () -> Int {
+	printf("Hello World!\n")
+	return 0
+}
+
