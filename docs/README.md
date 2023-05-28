@@ -9,7 +9,7 @@
 - [Statements](./stmt/README.md)
   * [variable definiiton statement](./stmt/var.md)
   * [constant definiiton statement](./stmt/const.md)
-  * [value expression statement](./stmt/value.md)
+  * [value evaluation statement](./stmt/eval.md)
   * [variable assignation statement](./stmt/assign.md)
   * [if statement](./stmt/if.md)
   * [while statement](./stmt/while.md)
