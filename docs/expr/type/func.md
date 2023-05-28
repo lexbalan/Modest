@@ -14,4 +14,10 @@
 func sum32 (a : Int32, b : Int32) -> Int32 {
   return a + b
 }
+
+func main () -> Unit {
+  let x = sum32 (1, 2)
+  printf("sum32 (1, 2) = %d\n", x)
+}
+
 ```
