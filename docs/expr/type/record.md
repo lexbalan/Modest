@@ -16,6 +16,7 @@ type Point record {
 func main () -> Unit {
   var p : Point
   
+  // we can initialize record with 'literal record value'
   p := {x=10, y=10}
   
   // or
