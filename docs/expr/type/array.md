@@ -3,7 +3,7 @@
 #### Common view
 
 ```golang
-  [10]Int32
+  [10]Int32  // array of 10 Int32
 ```
 
 #### Examples
