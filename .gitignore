@@ -3,6 +3,7 @@
 *.hm
 *.c
 *.h
-a.out
+*.o
 *.ll
-/examples/*
+a.out
+
