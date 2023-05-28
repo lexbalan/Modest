@@ -3,7 +3,7 @@
 #### Common view
 
 ```golang
-  var p : *Int32
+  *Int32
 ```
 
 #### Examples
