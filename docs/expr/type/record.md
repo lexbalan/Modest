@@ -1,7 +1,7 @@
 # Record type expression
 
 ```pascal
-record {x : Int32, y : Int32}  // type 'record with two fields 'x' & 'y' with type Int32'
+record {x : Int32, y : Int32}  // type 'record with two fields x & y with type Int32'
 ```
 
 #### Examples
