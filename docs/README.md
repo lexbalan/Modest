@@ -6,13 +6,13 @@
   * [function definition](./def/func.md)
 
 - Statements
-  * variable definiiton statement
-  * constant definiiton statement
-  * value expression statement
-  * variable assignation statement
-  * if statement
-  * while statement
-  * return statement
+  * [variable definiiton statement](./stmt/var.md)
+  * [constant definiiton statement](./stmt/const.md)
+  * [value expression statement](./stmt/value.md)
+  * [variable assignation statement](./stmt/assign.md)
+  * [if statement](./stmt/if.md)
+  * [while statement](./stmt/while.md)
+  * [return statement](./stmt/return.md)
 
 
 - Type Expressions
