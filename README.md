@@ -7,3 +7,5 @@
 [Usage](./docs/USAGE.md)
 
 [Language documentation](./docs/README.md)
+
+[Examples](./examples/README.md)
