@@ -12,6 +12,7 @@ type Point record {
   y : Int32
 }
 
+
 func main () -> Unit {
   var p : Point
   
