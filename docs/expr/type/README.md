@@ -1,6 +1,6 @@
 # Type expressions
 
-[go back](../README.md)
+[go back](../../README.md)
 
   * [pointer type expression](./pointer.md)
   * [array type expression](./array.md)
