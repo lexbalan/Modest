@@ -6,15 +6,6 @@
   * [variable definition](./def/var.md)
   * [function definition](./def/func.md)
 
-- [Statements](./stmt/README.md)
-  * [variable definiiton statement](./stmt/var.md)
-  * [constant definiiton statement](./stmt/const.md)
-  * [value evaluation statement](./stmt/eval.md)
-  * [variable assignation statement](./stmt/assign.md)
-  * [if statement](./stmt/if.md)
-  * [while statement](./stmt/while.md)
-  * [return statement](./stmt/return.md)
-
 
 - [Type Expressions](./expr/type/README.md)
   * [pointer type expression](./expr/type/pointer.md)
@@ -34,3 +25,14 @@
   * [cast value expression](./expr/value/cast.md)
   * [sizeof value expression](./expr/value/sizeof.md)
 
+
+- [Statements](./stmt/README.md)
+  * [variable definiiton statement](./stmt/var.md)
+  * [constant definiiton statement](./stmt/const.md)
+  * [value evaluation statement](./stmt/eval.md)
+  * [variable assignation statement](./stmt/assign.md)
+  * [if statement](./stmt/if.md)
+  * [while statement](./stmt/while.md)
+  * [return statement](./stmt/return.md)
+
+-
