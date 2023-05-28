@@ -1,4 +1,4 @@
 # ../mcc -omain6 -bir -funsafe main6.cm && clang main6.ll && ./a.out
 
-python3 ../main.py $@
+python3 ./src/main.py $@
 
