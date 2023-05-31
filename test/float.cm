@@ -16,21 +16,21 @@ func main () -> Int {
   printf("g = %f\n\r", g)
 
   let sum = f + g
-  printf("sum = %f\n\r", sum)
+  printf("f + g = %f\n\r", sum)
 
   let dif = f - g
-  printf("dif = %f\n\r", dif)
-
-  let div = f / g
-  printf("div = %f\n\r", div)
+  printf("f - g = %f\n\r", dif)
 
   let mul = f * g
-  printf("mul = %f\n\r", mul)
+  printf("f * g = %f\n\r", mul)
+
+  let div = f / g
+  printf("f / g = %f\n\r", div)
 
   if f < g {
     printf("f < g\n")
   } else if f > g {
-    printf("f < g\n")
+    printf("f > g\n")
   } else {
     printf("f == g\n")
   }
