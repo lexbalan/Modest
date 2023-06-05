@@ -1,0 +1,28 @@
+
+//!imp_c(True)
+import "libc.hm"
+
+
+func main () -> Int {
+  printf("if statement test\n")
+
+  var a : Int64
+  var b : Int64
+
+  printf("a = ")
+  scanf("%d", &a)
+
+  printf("b = ")
+  scanf("%d", &b)
+
+  if a < b {
+    printf("a < b\n")
+  } else if a > b {
+    printf("a > b\n")
+  } else {
+    printf("a == b\n")
+  }
+
+  return 0
+}
+

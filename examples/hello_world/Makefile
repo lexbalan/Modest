@@ -10,6 +10,10 @@ LLVMPREFIX = $(OUTDIR)/llvm/
 # mcc translator
 MCC=../../mcc
 
+
+all: LLVM
+
+
 CM:
 	$(MCC) -o $(CMPREFIX)main -mbackend=cm $(INDIR)/main.cm
 

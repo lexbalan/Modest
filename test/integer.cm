@@ -1,0 +1,43 @@
+
+//!imp_c(True)
+import "libc.hm"
+
+
+func main () -> Int {
+  printf("Integers test\n")
+
+  var a : Int64
+  var b : Int64
+
+  a := 222
+  b := 152
+
+  printf("a = %d\n\r", a)
+  printf("b = %d\n\r", b)
+
+  let sum = a + b
+  printf("a + b = %d\n\r", sum)
+
+  let dif = a - b
+  printf("a - b = %d\n\r", dif)
+
+  let mul = a * b
+  printf("a * b = %d\n\r", mul)
+
+  let div = a / b
+  printf("a / b = %d\n\r", div)
+
+  let rem = a % b
+  printf("a % b = %d\n\r", rem)
+
+  if a < b {
+    printf("a < b\n")
+  } else if a > b {
+    printf("a > b\n")
+  } else {
+    printf("a == b\n")
+  }
+
+  return 0
+}
+
