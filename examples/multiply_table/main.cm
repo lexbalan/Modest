@@ -1,0 +1,24 @@
+
+//!attribute('no-c-include')
+import "libc.hm"
+
+
+func mtab (n : Nat32) -> Unit {
+  var m : Nat32
+  m := 1
+  while i < 10 {
+    let nm = n * m
+    printf("%d * %d = %d\n", n, m, nm)
+    m := m + 1
+  }
+}
+
+
+func main () -> Int {
+	printf("Hello World!\n")
+
+  mtab(2)
+
+	return 0
+}
+

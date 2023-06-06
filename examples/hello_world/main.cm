@@ -1,5 +1,8 @@
 
-//!imp_c(True)
+// не генерировать код  ('no-c-print')
+// не генерировать инклуд
+
+//!attribute('no-c-include')
 import "libc.hm"
 
 
