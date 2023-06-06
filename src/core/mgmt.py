@@ -27,13 +27,15 @@ def attribute_off(x):
     global_attributes.remove(x)
 
 
-def attribute_check(x):
+def attribute_get(x):
   global local_attributes
   global global_attributes
+
   if x in local_attributes:
     return True
   elif x in global_attributes:
     return True
+
   return False
 
 

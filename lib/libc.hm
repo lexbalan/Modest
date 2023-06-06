@@ -1,20 +1,14 @@
 // libc.hm
 
 /*!
-c_include("stdint.h")
-c_include("stdio.h")
-c_include("stdlib.h")
-c_include("string.h")
-c_include("fcntl.h")     # open
-c_include("unistd.h")    # write
-c_include("sys/stat.h")  # fstat
-*/
-
-/*!
-if settings_check('backend', 'c'):
-  #print("NO EMIT")
-  #no_emit = True
-  pass
+global output
+output.append(c_include("stdint.h"))
+output.append(c_include("stdio.h"))
+output.append(c_include("stdlib.h"))
+output.append(c_include("string.h"))
+output.append(c_include("fcntl.h"))      # open
+output.append(c_include("unistd.h"))     # write
+#output.append(c_include("sys/stat.h"))  # fstat
 */
 
 //!attribute('no-c-print', glob=True)
@@ -29,7 +23,7 @@ type UIDT Nat16      /* user id */
 type GIDT Int8       /* group id */
 type BlkSizeT Int16  /* used for block sizes */
 type TimeT Int32     /* time in seconds since 1970 */
-type SizeT Nat32
+type SizeT Nat32     /* */
 
 
 //type Stat record {
@@ -134,3 +128,4 @@ extern func getenv (name : Str) -> Str
 
 
 //!attribute_off('no-c-print')
+

@@ -19,17 +19,7 @@ parser = None
 cfunc = None  # current function
 
 
-import_c = False
-
-# когда обрабатываем заголовок .hm в C, не нужно генерировать код (!)
-no_emit = False
-
-
-# special for metadirs
-def imp_c(x):
-  global import_c
-  import_c = x
-
+output = []
 
 
 
@@ -1069,10 +1059,7 @@ def do_stmt_block(x):
 
 import_guard_paths = []
 def do_import(x):
-  global import_c
-  global no_emit
-
-  no_emit = settings_check('backend', 'c') and import_c
+  global import_guard_paths
 
   s = x['str']
   local = s[0:2] == './' or s[0:3] == '../'
@@ -1085,7 +1072,7 @@ def do_import(x):
     # GLOBAL
     path_lib = settings_get('library')
     f = path_lib + '/' + s
-    print("F = %s" % f)
+    #print("F = %s" % f)
     if os.path.exists(f):
       s2 = f
 
@@ -1101,21 +1088,26 @@ def do_import(x):
 
   asg = proc(ast)
 
-  if no_emit:
-    import_c = False
-    no_emit = False
-    return [{
-      'isa': 'directive',
-      'kind': 'include',
-      'str': s[:-1],
-      'local': True
-    }]
+  # если не нужно печатать сожержимое заголовка
+  # а просто напечатать #include "someheader.h"
+  if attribute_get('no-c-include'):
+    attribute_off('no-c-include')
+  else:
+    return [
+      {
+        'isa': 'directive',
+        'kind': 'include',
+        'str': s[:-1],
+        'local': True
+      }
+    ]
 
   return asg
 
 
 
 def c_include(s):
+  #print("c_include %s" % s)
   local = s[0:2] == './'
   return {'isa': 'directive', 'kind': 'include', 'str': s, 'local': local}
 
@@ -1138,7 +1130,7 @@ def def_const(x):
   value_attribute_add(v, 'const')
   ctx.add_value(id['str'], v)
 
-  if attribute_check('no-c-print'):
+  if attribute_get('no-c-print'):
     if settings_check('backend', 'c'):
       return None
 
@@ -1163,13 +1155,9 @@ def def_type(x):
   nt = type.create_alias(id['str'], t, id['ti'])
   nt2 = ctx.add_type(id['str'], nt)
 
-  if attribute_check('no-c-print'):
+  if attribute_get('no-c-print'):
     if settings_check('backend', 'c'):
       return None
-
-  global no_emit
-  if no_emit:
-    return None
 
   return {
     'isa': 'definition',
@@ -1280,10 +1268,6 @@ def def_func(x):
 
   cfunc = old_cfunc
 
-  global no_emit
-  if no_emit:
-    return None
-
   return funcdef
 
 
@@ -1300,7 +1284,7 @@ def decl_type(x):
   }
   nt = ctx.add_type(id['str'], nt)
 
-  if attribute_check('no-c-print'):
+  if attribute_get('no-c-print'):
     if settings_check('backend', 'c'):
       return None
 
@@ -1322,7 +1306,7 @@ def decl_func(x):
   id = x['id']
   ftyp = do_type(x['type'])
 
-  if attribute_check('arghack'):
+  if attribute_get('arghack'):
     type.type_attribute_add(ftyp, 'arghack')
 
   fval = {
@@ -1336,7 +1320,7 @@ def decl_func(x):
   }
   ctx.add_value(id['str'], fval)
 
-  if attribute_check('no-c-print'):
+  if attribute_get('no-c-print'):
     if settings_check('backend', 'c'):
       return None
 
@@ -1355,8 +1339,9 @@ def decl_func(x):
 
 
 def proc(ast):
-  global local_attributes
+  global output, local_attributes
 
+  old_output = output
   output = []
 
   for x in ast:
@@ -1390,6 +1375,12 @@ def proc(ast):
     elif isa == 'ast_directive':
       if kind == 'metadir':
         exec(x['text'])
+        """print(o)
+        if o != None:
+          if isinstance(o, list):
+            output.extend(o)
+          else:
+            output.append(o)"""
         continue
 
       # импорт изменяет контекст, и продуцирует аутпут
@@ -1407,7 +1398,9 @@ def proc(ast):
 
     output.append(y)
 
-  return output
+  o = output
+  output = old_output
+  return o
 
 
 
