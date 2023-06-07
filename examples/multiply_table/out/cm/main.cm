@@ -1,82 +1,22 @@
 
 
+import "libc.h"
 
 
-
-
-
-
-
-type DevT Nat16
-type InoT Nat32
-type BlkCntT Nat32
-type OffT Int32
-type NlinkT Int16
-type ModeT Nat32
-type UIDT Nat16
-type GIDT Int8
-type BlkSizeT Int16
-type TimeT Int32
-type SizeT Nat32
-
-type FILE
-type DIR
-
-extern func malloc (size : Nat32) -> *Void
-extern func memset (mem : *Void, c : Nat8, n : Nat32) -> *Void
-extern func memcpy (dst : *Void, src : *Void, len : Nat32) -> *Void
-extern func memcmp (ptr1 : *Void, ptr2 : *Void, num : Nat32) -> Int64
-extern func free (ptr : *Void) -> Void
-extern func putchar (char : Int8) -> Int32
-extern func strncmp (s1 : *[]Nat8, s2 : *[]Nat8, n : Nat32) -> Int64
-extern func strcmp (s1 : *[]Nat8, s2 : *[]Nat8) -> Int64
-extern func strcpy (dst : *[]Nat8, src : *[]Nat8) -> *Nat8
-extern func strlen (s : *[]Nat8) -> Nat32
-
-const c_SEEK_SET = 0
-const c_SEEK_CUR = 1
-const c_SEEK_END = 2
-
-extern func printf (s : *[]Nat8) -> Int32
-extern func scanf (s : *[]Nat8) -> Int64
-extern func sscanf (buf : *Void, format : *[]Nat8) -> Int64
-extern func sprintf (buf : *Void, format : *[]Nat8) -> Int64
-extern func chdir (dir : *[]Nat8) -> Int64
-extern func fopen (fname : *[]Nat8, mode : *[]Nat8) -> *FILE
-extern func fclose (f : *FILE) -> Int64
-extern func fprintf (stream : *FILE, format : *[]Nat8) -> Int64
-extern func fseek (stream : *FILE, offset : Int64, whence : Int64) -> Int64
-extern func ftruncate (fd : Int64, size : Int32) -> Int64
-extern func fwrite (buf : *Void, size : Nat32, count : Nat32, stream : *FILE) -> Nat32
-extern func fread (buf : *Void, size : Nat32, count : Nat32, stream : *FILE) -> Nat32
-
-const c_O_RDONLY = 0x0
-const c_O_WRONLY = 0x1
-const c_O_RDWR = 0x2
-const o_CREAT = 0x200
-const o_TRUNC = 0x400
-const o_WRONLY = 0x1
-const o_RDONLY = 0
-const o_RDWR = 2
-const s_IRUSR = 0x100
-const s_IWUSR = 0x80
-const s_IXUSR = 0x40
-
-extern func creat (path : *[]Nat8, mode : Nat32) -> Int64
-extern func open (path : *[]Nat8, oflags : Int64) -> Int64
-extern func read (fd : Int64, buf : *Nat8, len : Nat32) -> Int64
-extern func write (fd : Int64, buf : *Nat8, len : Nat32) -> Int64
-extern func lseek (fd : Int64, offset : Int32, whence : Int64) -> Int32
-extern func close (fd : Int64) -> Int64
-extern func exit (rc : Int64) -> Void
-extern func opendir (name : *[]Nat8) -> *DIR
-extern func closedir (dirp : *DIR) -> Int64
-extern func getcwd (buf : *[]Nat8, size : Nat32) -> *[]Nat8
-extern func getenv (name : *[]Nat8) -> *[]Nat8
+func mtab (n : Nat32) -> Void {
+	var m : Nat32
+	m := 1
+	while m < 10 {
+		let nm = n * m
+		printf("%d * %d = %d\n", n, m, nm)
+		m := m + 1
+	}
+}
 
 
 func main () -> Int64 {
 	printf("Hello World!\n")
+	mtab(2)
 	return 0
 }
 
