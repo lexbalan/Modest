@@ -1090,17 +1090,24 @@ def do_import(x):
 
   # если не нужно печатать сожержимое заголовка
   # а просто напечатать #include "someheader.h"
+
+
+  import_directive = [
+    {
+      'isa': 'directive',
+      'kind': 'include',
+      'str': s[:-1],
+      'local': True
+    }
+  ]
+
+  if settings_check('backend', 'cm'):
+    return import_directive
+
   if attribute_get('no-c-include'):
     attribute_off('no-c-include')
   else:
-    return [
-      {
-        'isa': 'directive',
-        'kind': 'include',
-        'str': s[:-1],
-        'local': True
-      }
-    ]
+    return import_directive
 
   return asg
 
