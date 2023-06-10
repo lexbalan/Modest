@@ -952,10 +952,11 @@ def do_stmt_let(x):
   # (по крайней мере те что не полностью константны)
   # А для compile-time let не нужно генерить стейтмент,
   # просто связываем константное значение с идентификатором
-  if value_is_immediate(v):
-    if not (type.is_record(vtype) or type.is_array(vtype)):
-      ctx.add_value(id['str'], v)
-      return stmt_create_bad()
+  if settings_check('backend', 'llvm'):
+    if value_is_immediate(v):
+      if not (type.is_record(vtype) or type.is_array(vtype)):
+        ctx.add_value(id['str'], v)
+        return stmt_create_bad()
 
   # runtime let
   const_value = {
