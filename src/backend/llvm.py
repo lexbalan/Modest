@@ -327,6 +327,10 @@ def do_eval_binary (op, x): # ["add", "fadd", x]
 
 
 def do_eval_expr_bin(x):
+  # if folded bin
+  if 'num' in x:
+    return ll_create_value_num(x['type'], x['num'])
+
   opcode = get_bin_opcode(x['kind'], x['left']['type'])
   return do_eval_binary(opcode, x)
 

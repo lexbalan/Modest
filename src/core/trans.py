@@ -283,6 +283,7 @@ def value_bin_fold(op, l, r, t, ti):
     num_val = ops[op](value_num_get(l), value_num_get(r))
     return value_create_int(num_val, typ=l['type'], ti=ti)
 
+
 def do_value_expr_bin(x):
   k = x['kind']
   l = do_value(x['left'])
@@ -362,17 +363,17 @@ def do_value_expr_bin(x):
     t = type.typeNat1
 
 
+  nv = value_create_bin(x['kind'], l, r, t, ti)
+
+  # if left & right are immediate, we can fold const
+  # and append field 'num' to nv
   if value_is_immediate(l) and value_is_immediate(r):
     folded = value_bin_fold(k, l, r, t, ti)
-    if settings_check('backend', 'llvm'):
-      return folded
-    else:
-      vn = value_create_bin(x['kind'], l, r, t, ti)
-      value_attribute_add(vn, 'immediate')
-      vn['num'] = folded['num']
-      return vn
+    value_attribute_add(nv, 'immediate')
+    nv['num'] = folded['num']
+    return nv
 
-  return value_create_bin(x['kind'], l, r, t, ti)
+  return nv
 
 
 
