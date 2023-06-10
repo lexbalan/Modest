@@ -15,7 +15,7 @@ func mtab (n : Nat32) -> Void {
 
 
 func main () -> Int64 {
-	let n = 1 + 1
+	let n = 2
 	printf("multiply table for %d\n", n)
 	mtab(n)
 	return 0

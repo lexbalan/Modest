@@ -947,19 +947,22 @@ def do_stmt_let(x):
 
   vtype = v['type']
 
+  # отключено, см ниже про механизм 'locals'
   # let это не всегда константа, чаще всего это immutable переменная
   # вычисляемая в runtime;
   # Композитные generic значения все же следует вычислять по месту
   # (по крайней мере те что не полностью константны)
   # А для compile-time let не нужно генерить стейтмент,
   # просто связываем константное значение с идентификатором
-  if settings_check('backend', 'llvm'):
+  """if settings_check('backend', 'llvm'):
     if value_is_immediate(v):
       if not (type.is_record(vtype) or type.is_array(vtype)):
         ctx.add_value(id['str'], v)
-        return stmt_create_bad()
+        return stmt_create_bad()"""
 
-  # runtime let
+
+  # если это immediate константа, то она подставится принтером llvm
+  # через механизм 'locals_' (!а здесь само значение не идет)
   const_value = {
     'isa': 'value',
     'kind': 'var',
@@ -969,6 +972,7 @@ def do_stmt_let(x):
     'properties': {},
     'ti': x['ti']
   }
+
   ctx.add_value(id['str'], const_value)
 
   return {
