@@ -389,10 +389,10 @@ def do_value_expr_un(x):
   if value_is_immediate(val):
     num = value_num_get(val)
     if x['kind'] == 'not':
-      num = ~num
+      val['num'] = ~num
     elif x['kind'] == 'minus':
-      num = -num
-    return value_create_int(num, typ=t, ti=x['ti'])
+      val['num'] = -num
+    return val
 
 
   if x['kind'] == 'deref':
