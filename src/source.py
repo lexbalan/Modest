@@ -45,6 +45,7 @@ class Source:
     
   def get_ti(self):
     return {
+      'isa': 'ti',
       'file': self.filename,
       'line': self.line,
       'pos': self.pos
