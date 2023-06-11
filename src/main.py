@@ -70,7 +70,10 @@ def main():
   trans.settings_set('path', src_dirname)
 
   trans.init()
-  module = trans.translate(src_name)
+
+  m = trans.translate(src_name)
+  text = m['text']
+  symbols = m['symbols']
 
   if error.errcnt > 0:
     #error.fatal("%d errors occurred" % error.errcnt)
@@ -87,7 +90,7 @@ def main():
     outname = splittded_name[0]
 
 
-  backend.run(module, trans.strpool, outname)
+  backend.run(text, trans.strpool, outname)
 
 
 

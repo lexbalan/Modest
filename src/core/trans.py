@@ -1093,9 +1093,11 @@ def do_import(x):
   import_guard_paths.append(abspath)
 
 
-  ast = parser.parse(s2)
+  m = translate(s2)
+  asg = m['text']
+  sym = m['symbols']
 
-  asg = proc(ast)
+  symtab.merge(sym)
 
   # если не нужно печатать сожержимое заголовка
   # а просто напечатать #include "someheader.h"
@@ -1358,10 +1360,15 @@ def decl_func(x):
 
 
 def proc(ast):
-  global output, local_attributes
+  global symtab, output, local_attributes
 
+  # создаем новый аутпут буфер
   old_output = output
   output = []
+
+  # создаем новую таблицу символов
+  # (ответвляем ее от основной с bui)
+  symtab = symtab.branch()
 
   for x in ast:
     isa = x['isa']
@@ -1417,15 +1424,24 @@ def proc(ast):
 
     output.append(y)
 
-  o = output
+  module_output = output
   output = old_output
-  return o
+
+  module_symtab = symtab
+  symtab = symtab.parent_get()
+
+  return (module_output, module_symtab)
 
 
 
 def translate(srcname):
   ast = parser.parse(srcname)
-  asg = proc(ast)
-  return asg
+  text, symbols = proc(ast)
+  return {
+    'isa': 'module',
+    'src': srcname,
+    'text': text,
+    'symbols': symbols
+  }
 
 
