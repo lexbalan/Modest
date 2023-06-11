@@ -77,6 +77,15 @@ def ll_create_value_zero(t):
     'proto': None
   }
 
+def ll_create_value_null(t):
+  return {
+    'isa': 'llvm_value',
+    'class': 'null',
+    'level': 'value',
+    'type': t,
+    'proto': None
+  }
+
 ll_value_zero = ll_create_value_num(type.typeInt32, 0)
 
 
@@ -152,6 +161,8 @@ def print_value(x):
     o(")")
   elif c == 'zero':
     o("zeroinitializer")
+  elif c == 'null':
+    o("null")
   else:
     o("<unknown_value::%s>" % c)
     info("???", x['ti'])
@@ -430,7 +441,6 @@ def do_eval_expr_call(v):
 
 
 
-
 # индекс не может быть i64 (!) (а только i32)
 # t - тип самой записи или массива (без указателя)
 def llvm_getelementptr(rec, rt, indexes, vt):
@@ -623,7 +633,7 @@ def do_eval_expr_to(v):
   if 'num' in value:
     if value['num'] == 0:
       if type.is_free_pointer(from_type):
-        return ll_create_value_zero(to_type)
+        return ll_create_value_null(to_type)
 
 
   y = do_ld(do_eval(value))
@@ -645,6 +655,28 @@ def do_eval_expr_to(v):
 
 
 
+
+
+def do_eval_sizeof(x):
+  # thx:
+  # stackoverflow.com/questions/14608250/how-can-i-find-the-size-of-a-type
+  #%Size = getelementptr %T* null, i32 1
+  #%SizeI = ptrtoint %T* %Size to i32
+  t = x['of']
+  reg0 = operation("getelementptr ")
+  print_type(t); o(", ")
+  print_type(t); o("* null, i32 1")
+  reg1 = operation("ptrtoint ")
+  print_type(t); o("* %%%s to i64" % reg0)
+
+  return {
+    'isa': 'llvm_value',
+    'class': 'reg',
+    'level': 'value',
+    'reg': reg1,
+    'type': type.typeInt32,
+    'proto': x
+  }
 
 bin_ops = [
   'or', 'xor', 'and', 'shl', 'shr',
@@ -791,7 +823,7 @@ def do_eval_x(x):
     elif k == 'index': return do_eval_expr_index(x)
     elif k == 'access': return do_eval_expr_access(x)
     elif k == 'cast': return do_eval_expr_to(x)
-    elif k == 'sizeof': return ll_create_value_num(x['type'], 0)
+    elif k == 'sizeof': return do_eval_sizeof(x)
     else:
       o("<%s>" % k)
       return ll_create_value_num(x['type'], 0)
