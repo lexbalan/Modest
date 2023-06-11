@@ -141,33 +141,35 @@ typeFreePtr['attributes'].append('generic')  #!
 def eq_integer(a, b):
   return a['name'] == b['name']
 
+
+def eq_pointer(a, b):
+  return eq(a['to'], b['to'])
+
+
 def eq_array(a, b):
   if a['size'] == b['size']:
-      return eq(a['of'], b['of'])
+    return eq(a['of'], b['of'])
   return False
 
 
 def eq_func(a, b):
-  if not eq(a['to'], b['to']):
-    return False
-  if len(a['params']) != len(b['params']):
-    return False
+  if not eq(a['to'], b['to']): return False
+  if len(a['params']) != len(b['params']): return False
+
   for ax, bx in zip(a['params'], b['params']):
-    if ax['id']['str'] != bx['id']['str']:
-      return False
-    if not eq(ax['type'], bx['type']):
-      return False
+    if ax['id']['str'] != bx['id']['str']: return False
+    if not eq(ax['type'], bx['type']): return False
+
   return True
 
 
 def eq_record(a, b):
-  if len(a['fields']) != len(b['fields']):
-    return False
+  if len(a['fields']) != len(b['fields']): return False
+
   for ax, bx in zip(a['fields'], b['fields']):
-    if ax['id'] != bx['id']:
-      return False
-    if not eq(ax['type'], bx['type']):
-      return False
+    if ax['id'] != bx['id']: return False
+    if not eq(ax['type'], bx['type']): return False
+
   return True
 
 
@@ -185,41 +187,31 @@ def eq_enum(a, b):
 
 
 def eq_float(a, b):
-  #print("EQ_FLOAT %s %s" % (a['name'], b['name']))
   return a['name'] == b['name']
 
 
+def eq_opaque(a, b):
+  return a['name'] == b['name']  # maybe by UID?
+
+
 def eq(a, b):
-  k = None
+  # fast checking
+  if a == b: return True
+  if a['kind'] == 'bad': return True
+  if b['kind'] == 'bad': return True
+  if a['kind'] != b['kind']: return False
 
-  if a == b:
-    return True
-
-  if a['kind'] == 'bad' or b['kind'] == 'bad':
-    return True
-
-  if a['kind'] != b['kind']:
-    return False
-
-  # by uid?
-  """if 'uid' in a and not 'uid' in b:
-    return False
-  elif not 'uid' in a and 'uid' in b:
-    return False
-  elif 'uid' in a and 'uid' in b:
-    return a['uid'] == b['uid']"""
-
+  # normal checking
   k = a['kind']
-
   if k == 'integer': return eq_integer(a, b)
   elif k == 'unit': return True
-  elif k == 'pointer': return eq(a['to'], b['to'])
+  elif k == 'pointer': return eq_pointer(a, b)
   elif k == 'array': return eq_array(a, b)
   elif k == 'func': return eq_func(a, b)
   elif k == 'record': return eq_record(a, b)
   elif k == 'enum': return eq_enum(a, b)
   elif k == 'float': return eq_float(a, b)
-  elif k == 'opaque': return a['name'] == b['name']  # by UID?
+  elif k == 'opaque': return eq_opaque(a, b)
 
   return False
 
