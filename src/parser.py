@@ -959,10 +959,8 @@ class Parser:
         x = self.def_metadir()
       elif self.token_class_is('line-comment'):
         x = self.def_metadir()
-
       elif self.match('import'):
         x = self.do_import()
-        xx.append(x)
 
       else:
         error("unexpected token", self.ti())

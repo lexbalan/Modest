@@ -1094,6 +1094,7 @@ def do_import(x):
   global import_guard_paths
 
   impline = x['str']
+  #print("do_import " + impline)
   abspath = import_abspath(impline)
 
   if abspath == None:
