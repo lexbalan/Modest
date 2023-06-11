@@ -562,7 +562,7 @@ def do_eval_expr_access(v):
 """
 
 # cast type a to type b
-def opcast(a, b):
+def select_cast_operator(a, b):
 
   signed = type.is_signed(a)
 
@@ -615,20 +615,31 @@ def opcast(a, b):
 
 
 def do_eval_expr_to(v):
-  y = do_ld(do_eval(v['value']))
-  opcode = opcast(v['value']['type'], v['type'])
+  value = v['value']
+  from_type = value['type']
+  to_type = v['type']
+
+  # (STUB?) nil -> zeroinitializer
+  if 'num' in value:
+    if value['num'] == 0:
+      if type.is_free_pointer(from_type):
+        return ll_create_value_zero(to_type)
+
+
+  y = do_ld(do_eval(value))
+  opcode = select_cast_operator(from_type, to_type)
   reg = operation(opcode)
-  print_type(v['value']['type'])
+  print_type(from_type)
   o(" ")
   print_value(y)
   o(" to ")
-  print_type(v['type'])
+  print_type(to_type)
   return {
     'isa': 'llvm_value',
     'class': 'reg',
     'level': 'value',
     'reg': reg,
-    'type': v['type'],
+    'type': to_type,
     'proto': v
   }
 

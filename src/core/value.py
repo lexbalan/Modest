@@ -37,6 +37,8 @@ def value_create_int(num, typ=type.genericInt, ti=None):
   }
 
 
+valueNil = value_create_int(0, typ=type.typeFreePtr)
+
 def value_create_float(num, typ=type.genericFloat, ti=None):
   # вообще с флотом непонятно можно ли понять какого он Generic типа
   # тк есть числа которые вообще никак не запишешь
@@ -334,6 +336,9 @@ def value_cons_pointer(v, t, ti, method):
           y['attributes'].append('string')
 
         return y
+
+  if type.is_free_pointer(from_type) and type.is_pointer(t):
+    return do_cast_runtime(v, t, ti)
 
   return None
 

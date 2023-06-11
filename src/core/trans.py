@@ -48,6 +48,8 @@ def init():
   symtab.type_add('Float64', type.typeFloat64)
   symtab.type_add('Str', type.typeStr)
 
+  symtab.value_add('nil', valueNil)
+
 
 
 def do_field(x):

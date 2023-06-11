@@ -134,6 +134,7 @@ typeInt = copy.copy(typeInt64)
 typeInt['c_alias'] = 'int'
 typeNat = copy.copy(typeNat64)
 typeFreePtr = typePointer(typeUnit)
+typeFreePtr['attributes'].append('generic')  #!
 
 
 
@@ -261,6 +262,9 @@ def is_generic_numeric(t):
 def is_generic_integer(t):
   return 'generic' in t['attributes'] and 'integer' in t['attributes']
 
+
+def is_unit(t):
+  return t['kind'] == 'unit'
 
 def is_enum(t):
   return t['kind'] == 'enum'
