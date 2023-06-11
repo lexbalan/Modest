@@ -6,14 +6,14 @@ class Symtab:
     self.values = {}
 
 
-  def value_add(self, id, v):
-    self.values[id] = v
-    return v
-
-
   def type_add(self, id, t):
     self.types[id] = t
     return t
+
+
+  def value_add(self, id, v):
+    self.values[id] = v
+    return v
 
 
   def type_get(self, id):
