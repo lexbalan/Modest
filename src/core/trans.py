@@ -57,7 +57,7 @@ def do_field(x):
     t = type.type_bad(x['type']['ti'])
 
   if type.is_forbidden(t):
-    error("unsuitable type", x['type']['ti'])
+    error("unsuitable type", x['type'])
 
   return {
     'isa': 'field',
@@ -75,7 +75,7 @@ def do_field(x):
 def do_type_id(t):
   tx = symtab.type_get(t['id']['str'])
   if tx == None:
-    error("undeclared type %s" % t['id']['str'], t['ti'])
+    error("undeclared type %s" % t['id']['str'], t)
     return type.type_bad()
   return tx #{'isa': 'type', 'kind': 'id', 'id': t['id'], 'type': tx}
 
@@ -125,7 +125,7 @@ def do_type_record(t):
 
     f_exist = type.record_field_get(record, f['id']['str'])
     if f_exist != None:
-      error("redefinition of '%s'" % f['id']['str'], f['ti'])
+      error("redefinition of '%s'" % f['id']['str'], f)
       continue
 
     fields.append(f)
@@ -235,10 +235,10 @@ def type_select(n):
 def do_value_shift(op, l, r, ti):
 
   if not type.is_numeric(l['type']):
-    error("type error", l['ti'])
+    error("type error", l)
 
   if not type.is_numeric(r['type']):
-    error("type error", r['ti'])
+    error("type error", r)
 
 
   # const folding
@@ -255,7 +255,7 @@ def do_value_shift(op, l, r, ti):
 
   if type.is_generic(l['type']):
     #if value.is_immediate(r['type']):
-    error("required type", l['ti'])
+    error("required type", l)
 
   return value_create_bin(op, l, r, l['type'], ti)
 
@@ -344,9 +344,9 @@ def do_value_expr_bin(x):
   if not k in ['eq', 'ne']:
     if not k in ['add', 'sub']:  # add, sub, for *Unit pointers
       if not type_attribute_check(l['type'], 'numeric'):
-        error("type error", x['left']['ti'])
+        error("type error", x['left'])
       if not type_attribute_check(r['type'], 'numeric'):
-        error("type error", x['right']['ti'])
+        error("type error", x['right'])
 
 
   if not (p_and_n or n_and_p):
@@ -356,9 +356,9 @@ def do_value_expr_bin(x):
   # < > <= >= only for values with 'ordered' type
   if k in ['lt', 'gt', 'le', 'ge']:
     if not type_attribute_check(l['type'], 'ordered'):
-      error("expected value with ordered type", l['ti'])
+      error("expected value with ordered type", l)
     if not type_attribute_check(r['type'], 'ordered'):
-      error("expected value with ordered type", r['ti'])
+      error("expected value with ordered type", r)
 
   t = l['type']
   if k in ['eq', 'ne', 'lt', 'gt', 'le', 'ge']:
@@ -399,14 +399,14 @@ def do_value_expr_un(x):
 
   if x['kind'] == 'deref':
     if not type.is_pointer(t):
-      error("expected pointer", val['ti'])
+      error("expected pointer", val)
       return value_create_bad(x['ti'])
 
     to = t['to']
     # you can't deref pointer to function
     # and pointer to undefined array
     if type.is_func(to) or type.is_undefined_array(to):
-      error("unsuitable type", val['ti'])
+      error("unsuitable type", val)
 
     t = to
 
@@ -422,7 +422,7 @@ def do_value_expr_un(x):
 
   if x['kind'] == 'ref':
     if value_is_immutable(val):
-      error("cannot get pointer to immutable value", x['ti'])
+      error("cannot get pointer to immutable value", x)
     t = type.typePointer(t, ti=x['ti'])
 
 
@@ -451,7 +451,7 @@ def do_value_expr_call(x):
     ftype = ftype['to']
 
   if not type.is_func(ftype):
-    error("expected function", x['ti'])
+    error("expected function", x)
 
   params = ftype['params']
 
@@ -459,12 +459,12 @@ def do_value_expr_call(x):
   nargs = len(x['args'])
 
   if nargs < npars:
-    error("not enough args", x['ti'])
+    error("not enough args", x)
     return value_create_bad(x['ti'])
 
   if nargs > npars:
     if not type_attribute_check(ftype, 'arghack'):
-      error("too many args", x['ti'])
+      error("too many args", x)
       return value_create_bad(x['ti'])
 
   args = []
@@ -521,7 +521,7 @@ def do_value_expr_index(x):
 
   # check if is record
   if not type.is_array(typ):
-    error("expected array or pointer to array", x['ti'])
+    error("expected array or pointer to array", x)
     return value_create_bad(x['left']['ti'])
 
   i = do_value(x['index'])
@@ -533,7 +533,7 @@ def do_value_expr_index(x):
   if i['kind'] == 'int':
     if typ['size'] != None:
       if value_num_get(i) >= typ['size']:
-        error("array index out of bounds", x['index']['ti'])
+        error("array index out of bounds", x['index'])
 
   i = value_cast_implicit(i, type.typeInt, i['ti'])
 
@@ -567,14 +567,14 @@ def do_value_expr_access(x):
 
   # check if is record
   if not type.is_record(record_type):
-    error("expected record or pointer to record", x['ti'])
+    error("expected record or pointer to record", x)
     return value_create_bad(x['left']['ti'])
 
   field = type.record_field_get(record_type, field_id['str'])
 
   # if field not found
   if field == None:
-    error("undefined field '%s'" % field_id['str'], x['ti'])
+    error("undefined field '%s'" % field_id['str'], x)
     return value_create_bad(x['right']['ti'])
 
   if type.is_bad(field['type']):
@@ -611,7 +611,7 @@ def do_value_expr_to(x):
 def do_value_expr_id(x):
   vx = symtab.value_get(x['id']['str'])
   if vx == None:
-    error("undeclared value '%s'" % x['id']['str'], x['ti'])
+    error("undeclared value '%s'" % x['id']['str'], x)
     return value_create_bad(x['ti'])
 
   # for TI чтобы не переписать у самого определения
@@ -629,7 +629,7 @@ def do_value_expr_ns(x):
   tx = symtab.type_get(ns_name)
 
   if tx == None:
-    error("unknown namespace '%s'" % ns_id['str'], ns_id['ti'])
+    error("unknown namespace '%s'" % ns_id['str'], ns_id)
     return value_create_bad(ns_id['ti'])
 
   """if tx['kind'] == 'enum':
@@ -875,7 +875,7 @@ def do_stmt_return(x):
     type.check(v['type'], cfunc['type']['to'], x['value']['ti'])
   else:
     if not type.eq(cfunc['type']['to'], type.typeUnit):
-      error("expected return value", x['ti'])
+      error("expected return value", x)
 
   return {
     'isa': 'stmt',
@@ -913,7 +913,7 @@ def do_stmt_var(x):
     return stmt_create_bad()
 
   if type.is_forbidden(t):
-    error("unsuitable type", x['type']['ti'])
+    error("unsuitable type", x['type'])
 
 
   if t == None:
@@ -996,11 +996,11 @@ def do_stmt_assign(x):
 
   # left is var?
   if not value_attribute_check(l, 'adr'):
-    error("illegal left", x['left']['ti'])
+    error("illegal left", x['left'])
     return stmt_create_bad()
 
   if value_is_immutable(l):
-    error("immutable value", l['ti'])
+    error("immutable value", l)
     return stmt_create_bad()
 
   # type check
@@ -1098,7 +1098,7 @@ def do_import(x):
   abspath = import_abspath(impline)
 
   if abspath == None:
-    error("module not found", x['ti'])
+    error("module not found", x)
     return None
 
   if abspath in import_guard_paths:
@@ -1207,7 +1207,7 @@ def def_var(x):
     return None
 
   if f['type']['kind'] == 'opaque':
-    error("cannot create variable with undefined type", x['type']['ti'])
+    error("cannot create variable with undefined type", x['type'])
     return None
 
   iv = None

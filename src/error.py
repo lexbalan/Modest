@@ -59,6 +59,10 @@ def warning(s, ti):
   warncnt = warncnt + 1
   print('\033[95m' + 'warning: ' + '\033[0m' + s)
   if ti != None:
+    if ti['isa'] != 'ti':
+      if 'ti' in ti:
+        ti = ti['ti']
+
     lin = getline(ti)
     print(lin)
     highlight(ti, 95)
@@ -70,9 +74,14 @@ def error(s, ti):
   
   pre = ''
   if ti != None:
+    if ti['isa'] != 'ti':
+      if 'ti' in ti:
+        ti = ti['ti']
+
     if not 'file' in ti:
       print("NOT FILE IN TI: " + str(ti))
     pre = '%s:%d:%d: ' % (ti['file'], ti['line'], ti['pos'])
+
   print(pre + '\033[91m' + 'error: ' + '\033[0m' + s)
   
   if ti != None:
@@ -84,6 +93,10 @@ def error(s, ti):
 def info(s, ti):
   pre = ''
   if ti != None:
+    if ti['isa'] != 'ti':
+      if 'ti' in ti:
+        ti = ti['ti']
+
     if not 'file' in ti:
       print("NOT FILE IN TI: " + str(ti))
     pre = '%s:%d:%d: ' % (ti['file'], ti['line'], ti['pos'])

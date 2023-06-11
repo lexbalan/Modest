@@ -190,7 +190,7 @@ def value_cons_record_from_generic_record(v, t, ti, method):
     item_value = value_cast_implicit(item_value, field_type, ti=None)
 
     if not type.eq(item_value['type'], field_type):
-      error("field type cast error", item_value['ti'])
+      error("field type cast error", item_value)
 
     items.append({
       'isa': 'item',
