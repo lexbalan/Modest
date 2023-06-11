@@ -13,32 +13,32 @@ class Symtab:
     return self.parent
 
 
-  def add_value(self, id, v):
+  def value_add(self, id, v):
     self.values[id] = v
     return v
 
 
-  def add_type(self, id, t):
+  def type_add(self, id, t):
     self.types[id] = t
     return t
 
 
-  def get_type(self, id):
+  def type_get(self, id):
     if id in self.types:
       return self.types[id]
 
     if self.parent != None:
-      return self.parent.get_type(id)
+      return self.parent.type_get(id)
 
     return None
 
 
-  def get_value(self, id):
+  def value_get(self, id):
     if id in self.values:
       return self.values[id]
 
     if self.parent != None:
-      return self.parent.get_value(id)
+      return self.parent.value_get(id)
 
     return None
 
