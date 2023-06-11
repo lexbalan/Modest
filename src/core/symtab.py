@@ -5,13 +5,6 @@ class Symtab:
     self.types = {}
     self.values = {}
 
-  # creates new symtab where #parent links to this symtab
-  def branch(self):
-    return Symtab(self)
-
-  def parent_get(self):
-    return self.parent
-
 
   def value_add(self, id, v):
     self.values[id] = v
@@ -41,5 +34,14 @@ class Symtab:
       return self.parent.value_get(id)
 
     return None
+
+
+  # creates new symtab where #parent links to this symtab
+  def branch(self):
+    return Symtab(self)
+
+
+  def parent_get(self):
+    return self.parent
 
 
