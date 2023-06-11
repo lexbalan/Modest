@@ -1066,48 +1066,56 @@ def do_stmt_block(x):
 
 
 
+
+# получает строку импорта (и неявно глобальный контекст)
+# и возвращает полный путь к модулю
+def import_abspath(s):
+  is_local = s[0:2] == './' or s[0:3] == '../'
+
+  f = ''
+  if is_local:
+    local_path = settings_get('path')
+    f = local_path + '/' + s #[1:]
+
+  else: # (global)
+    path_lib = settings_get('library')
+    f = path_lib + '/' + s
+
+  if not os.path.exists(f):
+    return None
+
+  return os.path.abspath(f)
+
+
+
+
 import_guard_paths = []
 def do_import(x):
   global import_guard_paths
 
-  s = x['str']
-  local = s[0:2] == './' or s[0:3] == '../'
+  impline = x['str']
+  abspath = import_abspath(impline)
 
-  s2 = s
-  if local:
-    path = settings_get('path')
-    s2 = path + '/' + s[1:]
-  else:
-    # GLOBAL
-    path_lib = settings_get('library')
-    f = path_lib + '/' + s
-    #print("F = %s" % f)
-    if os.path.exists(f):
-      s2 = f
+  if abspath == None:
+    error("module not found", x['ti'])
+    return None
 
-  # import guard
-  abspath = os.path.abspath(s2)
-  #print("abspath = " + abspath)
   if abspath in import_guard_paths:
     return None  # already imported
   import_guard_paths.append(abspath)
 
+  m = translate(abspath)
 
-  m = translate(s2)
-  asg = m['text']
-  sym = m['symbols']
-
-  symtab.merge(sym)
+  # расширяем нашу таблицу символов таблицей импорта
+  symtab.merge(m['symbols'])
 
   # если не нужно печатать сожержимое заголовка
   # а просто напечатать #include "someheader.h"
-
-
   import_directive = [
     {
       'isa': 'directive',
       'kind': 'include',
-      'str': s[:-1],
+      'str': impline[:-1],  # .hm -> .h
       'local': True
     }
   ]
@@ -1120,7 +1128,7 @@ def do_import(x):
   else:
     return import_directive
 
-  return asg
+  return m['text']
 
 
 
