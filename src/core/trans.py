@@ -1179,10 +1179,16 @@ def def_type(x):
   if type.is_bad(t):
     return def_bad()
 
-  already = symtab.type_get(id['str'])
+  exist = symtab.type_get(id['str'])
+  already_defined = exist != None
 
-  nt = type.create_alias(id['str'], t, id['ti'])
-  nt2 = symtab.type_add(id['str'], nt)
+  if already_defined:
+    exist.update(t)  # just overwrite existed 'oaque' type (for records)
+  else:
+    # create new type alias
+    nt = type.create_alias(id['str'], t, id['ti'])
+    nt2 = symtab.type_add(id['str'], nt)
+
 
   if attribute_get('no-c-print'):
     if settings_check('backend', 'c'):
@@ -1192,7 +1198,7 @@ def def_type(x):
     'isa': 'definition',
     'kind': 'type',
     'id': x['id'],
-    'afterdef': already != None,
+    'afterdef': already_defined,
     'type': t,
     'comment': ''
   }
