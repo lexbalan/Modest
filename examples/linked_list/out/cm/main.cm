@@ -1,0 +1,31 @@
+
+
+import "libc.h"
+
+type Node
+
+type Node record {
+	next : *Node
+	prev : *Node
+}
+
+type List record {
+	head : *Node
+	tail : *Node
+	size : Nat32
+}
+
+
+func linked_list_create () -> *List {
+	let list = malloc(sizeof(List) to Nat32) to *List
+	list.head := 0
+	list.tail := 0
+	return list
+}
+
+
+func main () -> Int64 {
+	printf("linked list example\n")
+	return 0
+}
+

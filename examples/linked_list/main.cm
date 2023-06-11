@@ -1,0 +1,73 @@
+
+//!attribute('no-c-include')
+import "libc.hm"
+
+
+type Node
+
+type Node record {
+  next : *Node
+  prev : *Node
+  link : *Unit
+}
+
+type List record {
+  head : *Node
+  tail : *Node
+  size : Nat32
+}
+
+
+func linked_list_node_create () -> *Node {
+  let node = malloc(sizeof(Node) to Nat32) to *Node
+  node.prev := nil
+  node.next := nil
+  node.link := nil
+  return node
+}
+
+
+func linked_list_create () -> *List {
+  let list = malloc(sizeof(List) to Nat32) to *List
+  list.head := nil
+  list.tail := nil
+  return list
+}
+
+
+func linked_list_insert (list : *List, object : *Unit) -> Unit {
+  let node = linked_list_node_create()
+
+  node.link := object
+  list.tail.next := nil
+  list.tail.prev := nil
+
+  if list.head == nil {
+    list.head := node
+  }
+
+  if list.tail != nil {
+    list.tail.next := node
+    node.prev := list.tail
+  }
+
+  list.tail := node
+
+  list.size := list.size + 1
+}
+
+
+func main () -> Int {
+  printf("linked list example\n")
+
+  let list = linked_list_create()
+  printf("list = 0x%llx\n", list)
+  if list == nil {
+    printf("error: cannot create list")
+    return 1
+  }
+
+
+	return 0
+}
+
