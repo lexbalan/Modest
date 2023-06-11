@@ -6,12 +6,14 @@ from error import *
 from .mgmt import *
 from .value import *
 from .stmt import *
-import core.ctx as ctx
 import core.type as type
 from core.type import type_attribute_check, type_print
 from parser import Parser
+from core.symtab import Symtab
 
 
+# current symbol table
+symtab = Symtab()
 
 
 parser = None
@@ -29,22 +31,22 @@ def init():
   parser = Parser()
 
   # init built-in context
-  ctx.add_type('Unit', type.typeUnit)
-  ctx.add_type('Int', type.typeInt)
-  ctx.add_type('Nat', type.typeNat)
-  ctx.add_type('Int8', type.typeInt8)
-  ctx.add_type('Int16', type.typeInt16)
-  ctx.add_type('Int32', type.typeInt32)
-  ctx.add_type('Int64', type.typeInt64)
-  ctx.add_type('Nat1', type.typeNat1)
-  ctx.add_type('Nat8', type.typeNat8)
-  ctx.add_type('Nat16', type.typeNat16)
-  ctx.add_type('Nat32', type.typeNat32)
-  ctx.add_type('Nat64', type.typeNat64)
-  ctx.add_type('Float16', type.typeFloat16)
-  ctx.add_type('Float32', type.typeFloat32)
-  ctx.add_type('Float64', type.typeFloat64)
-  ctx.add_type('Str', type.typeStr)
+  symtab.add_type('Unit', type.typeUnit)
+  symtab.add_type('Int', type.typeInt)
+  symtab.add_type('Nat', type.typeNat)
+  symtab.add_type('Int8', type.typeInt8)
+  symtab.add_type('Int16', type.typeInt16)
+  symtab.add_type('Int32', type.typeInt32)
+  symtab.add_type('Int64', type.typeInt64)
+  symtab.add_type('Nat1', type.typeNat1)
+  symtab.add_type('Nat8', type.typeNat8)
+  symtab.add_type('Nat16', type.typeNat16)
+  symtab.add_type('Nat32', type.typeNat32)
+  symtab.add_type('Nat64', type.typeNat64)
+  symtab.add_type('Float16', type.typeFloat16)
+  symtab.add_type('Float32', type.typeFloat32)
+  symtab.add_type('Float64', type.typeFloat64)
+  symtab.add_type('Str', type.typeStr)
 
 
 
@@ -71,7 +73,7 @@ def do_field(x):
 #
 
 def do_type_id(t):
-  tx = ctx.get_type(t['id']['str'])
+  tx = symtab.get_type(t['id']['str'])
   if tx == None:
     error("undeclared type %s" % t['id']['str'], t['ti'])
     return type.type_bad()
@@ -155,7 +157,7 @@ def do_type_enum(t):
 
     # add enum item to global context
     item_val = value_create_int(i, typ=enum_type, ti=id['ti'])
-    ctx.add_value(id['id']['str'], item_val)
+    symtab.add_value(id['id']['str'], item_val)
 
     i = i + 1
 
@@ -607,7 +609,7 @@ def do_value_expr_to(x):
 
 
 def do_value_expr_id(x):
-  vx = ctx.get_value(x['id']['str'])
+  vx = symtab.get_value(x['id']['str'])
   if vx == None:
     error("undeclared value '%s'" % x['id']['str'], x['ti'])
     return value_create_bad(x['ti'])
@@ -624,7 +626,7 @@ def do_value_expr_ns(x):
   _id = x['ids'][1]
 
   ns_name = ns_id['str']
-  tx = ctx.get_type(ns_name)
+  tx = symtab.get_type(ns_name)
 
   if tx == None:
     error("unknown namespace '%s'" % ns_id['str'], ns_id['ti'])
@@ -926,7 +928,7 @@ def do_stmt_var(x):
     'properties': {},
     'ti': x['ti']
   }
-  ctx.add_value(id['str'], var_value)
+  symtab.add_value(id['str'], var_value)
 
   return {
     'isa': 'stmt',
@@ -957,7 +959,7 @@ def do_stmt_let(x):
   """if settings_check('backend', 'llvm'):
     if value_is_immediate(v):
       if not (type.is_record(vtype) or type.is_array(vtype)):
-        ctx.add_value(id['str'], v)
+        symtab.add_value(id['str'], v)
         return stmt_create_bad()"""
 
 
@@ -973,7 +975,7 @@ def do_stmt_let(x):
     'ti': x['ti']
   }
 
-  ctx.add_value(id['str'], const_value)
+  symtab.add_value(id['str'], const_value)
 
   return {
     'isa': 'stmt',
@@ -1044,7 +1046,8 @@ def do_stmt(x):
 
 def do_stmt_block(x):
 
-  ctx.push()
+  global symtab
+  symtab = symtab.branch()
 
   stmts = []
   for stmt in x['stmts']:
@@ -1052,7 +1055,7 @@ def do_stmt_block(x):
     if not stmt_is_bad(s):
       stmts.append(s)
 
-  ctx.pop()
+  symtab = symtab.parent_get()
 
   return {
     'isa': 'stmt',
@@ -1141,7 +1144,7 @@ def def_const(x):
 
   v['id'] = id
   value_attribute_add(v, 'const')
-  ctx.add_value(id['str'], v)
+  symtab.add_value(id['str'], v)
 
   if attribute_get('no-c-print'):
     if settings_check('backend', 'c'):
@@ -1163,10 +1166,10 @@ def def_type(x):
   if type.is_bad(t):
     return def_bad()
 
-  already = ctx.get_type(id['str'])
+  already = symtab.get_type(id['str'])
 
   nt = type.create_alias(id['str'], t, id['ti'])
-  nt2 = ctx.add_type(id['str'], nt)
+  nt2 = symtab.add_type(id['str'], nt)
 
   if attribute_get('no-c-print'):
     if settings_check('backend', 'c'):
@@ -1212,7 +1215,7 @@ def def_var(x):
     'properties': {},
     'ti': x['ti']
   }
-  ctx.add_value(x['field']['id']['str'], var_value)
+  symtab.add_value(x['field']['id']['str'], var_value)
 
   return {
     'isa': 'definition',
@@ -1230,7 +1233,9 @@ def def_func(x):
   func_id = x['id']
   func_type = do_type(x['type'])
 
-  ctx.push()  # params context (!)
+  # params context (!)
+  global symtab
+  symtab = symtab.branch()
 
   global cfunc
   old_cfunc = cfunc
@@ -1258,15 +1263,16 @@ def def_func(x):
       'properties': {},
       'ti': param_ti
     }
-    ctx.add_value(param_id['str'], p)
+    symtab.add_value(param_id['str'], p)
     i = i + 1
 
   func_stmt = do_stmt_block(x['stmt'])
   cfunc['stmt'] = func_stmt
 
-  ctx.pop()  # params context (!)
+  # params context (!)
+  symtab = symtab.parent_get()
 
-  ctx.add_value(func_id['str'], cfunc)
+  symtab.add_value(func_id['str'], cfunc)
 
 
   funcdef = {
@@ -1295,7 +1301,7 @@ def decl_type(x):
     'attributes': [],
     'ti': id['ti'],
   }
-  nt = ctx.add_type(id['str'], nt)
+  nt = symtab.add_type(id['str'], nt)
 
   if attribute_get('no-c-print'):
     if settings_check('backend', 'c'):
@@ -1331,7 +1337,7 @@ def decl_func(x):
     'properties': {},
     'ti': x['ti']
   }
-  ctx.add_value(id['str'], fval)
+  symtab.add_value(id['str'], fval)
 
   if attribute_get('no-c-print'):
     if settings_check('backend', 'c'):
