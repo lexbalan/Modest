@@ -663,20 +663,21 @@ def do_eval_sizeof(x):
   #%Size = getelementptr %T* null, i32 1
   #%SizeI = ptrtoint %T* %Size to i32
   t = x['of']
-  reg0 = operation("getelementptr ")
+  r0 = operation("getelementptr ")
   print_type(t); o(", ")
   print_type(t); o("* null, i32 1")
-  reg1 = operation("ptrtoint ")
-  print_type(t); o("* %%%s to i64" % reg0)
+  r1 = operation("ptrtoint ")
+  print_type(t); o("* %%%s to i64" % r0)
 
   return {
     'isa': 'llvm_value',
     'class': 'reg',
     'level': 'value',
-    'reg': reg1,
+    'reg': r1,
     'type': type.typeInt32,
     'proto': x
   }
+
 
 bin_ops = [
   'or', 'xor', 'and', 'shl', 'shr',
