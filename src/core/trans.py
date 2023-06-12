@@ -1109,6 +1109,13 @@ def do_import(x):
 
   m = translate(abspath)
 
+  """print("IMPORT: " + impline)
+  for symbol in m['symbols'].types:
+    print(" # " + symbol)
+
+  for symbol in m['symbols'].values:
+    print(" * " + symbol)"""
+
   # расширяем нашу таблицу символов таблицей импорта
   symtab.merge(m['symbols'])
 
@@ -1126,10 +1133,13 @@ def do_import(x):
   if settings_check('backend', 'cm'):
     return import_directive
 
-  if attribute_get('no-c-include'):
+  no_c_inc = attribute_get('no-c-include')
+  if no_c_inc:
     attribute_off('no-c-include')
-  else:
-    return import_directive
+
+  if settings_check('backend', 'c'):
+    if not no_c_inc:
+      return import_directive
 
   return m['text']
 
