@@ -23,7 +23,7 @@ typedef struct {
 
 List *linked_list_create() {
 	List *list = malloc((uint32_t)(sizeof(List)));
-	if (list == NULL) {
+	if(list == NULL) {
 		return NULL;
 	}
 	list->head = NULL;
@@ -33,7 +33,7 @@ List *linked_list_create() {
 
 Node *linked_list_node_create() {
 	Node *node = malloc((uint32_t)(sizeof(Node)));
-	if (node == NULL) {
+	if(node == NULL) {
 		return NULL;
 	}
 	node->prev = NULL;
@@ -43,13 +43,13 @@ Node *linked_list_node_create() {
 }
 
 Node *linked_list_insert_node(List *list, Node *new_node) {
-	if (list == NULL || new_node == NULL) {
+	if(list == NULL || new_node == NULL) {
 		return NULL;
 	}
-	if (list->head == NULL) {
+	if(list->head == NULL) {
 		list->head = new_node;
 	}
-	if (list->tail != NULL) {
+	if(list->tail != NULL) {
 		Node *old_tail = list->tail;
 		old_tail->next = new_node;
 		new_node->prev = old_tail;
@@ -60,16 +60,16 @@ Node *linked_list_insert_node(List *list, Node *new_node) {
 }
 
 Node *linked_list_insert(List *list, void *link) {
-	if (list == NULL || link == NULL) {
+	if(list == NULL || link == NULL) {
 		return NULL;
 	}
 	Node *new_node = linked_list_node_create();
-	if (new_node == NULL) {
+	if(new_node == NULL) {
 		return NULL;
 	}
 	new_node->link = link;
 	Node *node = linked_list_insert_node(list, new_node);
-	if (node == NULL) {
+	if(node == NULL) {
 		free(new_node);
 	}
 	return node;
@@ -84,7 +84,7 @@ void nat64_list_insert(List *list, uint64_t x) {
 void list_print_forward(List *list) {
 	printf("list_print_forward:\n");
 	Node *pn = list->head;
-	while (pn != NULL) {
+	while(pn != NULL) {
 		uint32_t *x = pn->link;
 		printf("v = %d\n", *x);
 		pn = pn->next;
@@ -94,7 +94,7 @@ void list_print_forward(List *list) {
 void list_print_backward(List *list) {
 	printf("list_print_backward:\n");
 	Node *pn = list->tail;
-	while (pn != NULL) {
+	while(pn != NULL) {
 		uint32_t *x = pn->link;
 		printf("v = %d\n", *x);
 		pn = pn->prev;
@@ -104,7 +104,7 @@ void list_print_backward(List *list) {
 int main() {
 	printf("linked list example\n");
 	List *list = linked_list_create();
-	if (list == NULL) {
+	if(list == NULL) {
 		printf("error: cannot create list");
 		return 1;
 	}

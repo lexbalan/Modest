@@ -408,7 +408,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 
 
 def print_stmt_if(x):
-  o("if (")
+  o("if(")
   print_value(x['cond'])
   o(")")
   print_stmt_block(x['then'])
@@ -425,7 +425,7 @@ def print_stmt_if(x):
 
 
 def print_stmt_while(x):
-  o("while (")
+  o("while(")
   print_value(x['cond'])
   o(")")
   print_stmt_block(x['stmt'])
