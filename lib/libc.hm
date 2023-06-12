@@ -47,7 +47,7 @@ extern type FILE
 extern type DIR
 
 
-extern func malloc (size : Nat32) -> *Unit
+extern func malloc (size : SizeT) -> *Unit
 extern func memset (mem : *Unit, c : Nat8, n : SizeT) -> *Unit
 extern func memcpy (dst : *Unit, src : *Unit, len : SizeT) -> *Unit
 extern func memcmp (ptr1 : *Unit, ptr2 : *Unit, num : SizeT) -> Int
