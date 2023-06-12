@@ -1,12 +1,7 @@
 
 #include <stdint.h>
 
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <fcntl.h>
-#include <unistd.h>
+#include "libc.h"
 
 // type declaration Node
 struct Node;
@@ -27,34 +22,34 @@ typedef struct {
 } List;
 
 List *linked_list_create() {
-	List *list = (List*)(malloc((uint32_t)(sizeof(List))));
-	if ((void*)list == NULL) {
-		return (List*)(NULL);
+	List *list = malloc((uint32_t)(sizeof(List)));
+	if (list == NULL) {
+		return NULL;
 	}
-	list->head = (Node*)(NULL);
-	list->tail = (Node*)(NULL);
+	list->head = NULL;
+	list->tail = NULL;
 	return list;
 }
 
 Node *linked_list_node_create() {
-	Node *node = (Node*)(malloc((uint32_t)(sizeof(Node))));
-	if ((void*)node == NULL) {
-		return (Node*)(NULL);
+	Node *node = malloc((uint32_t)(sizeof(Node)));
+	if (node == NULL) {
+		return NULL;
 	}
-	node->prev = (Node*)(NULL);
-	node->next = (Node*)(NULL);
+	node->prev = NULL;
+	node->next = NULL;
 	node->link = NULL;
 	return node;
 }
 
 Node *linked_list_insert_node(List *list, Node *new_node) {
-	if ((void*)list == NULL || (void*)new_node == NULL) {
-		return (Node*)(NULL);
+	if (list == NULL || new_node == NULL) {
+		return NULL;
 	}
-	if ((void*)(list->head) == NULL) {
+	if (list->head == NULL) {
 		list->head = new_node;
 	}
-	if ((void*)(list->tail) != NULL) {
+	if (list->tail != NULL) {
 		Node *old_tail = list->tail;
 		old_tail->next = new_node;
 		new_node->prev = old_tail;
@@ -65,32 +60,32 @@ Node *linked_list_insert_node(List *list, Node *new_node) {
 }
 
 Node *linked_list_insert(List *list, void *link) {
-	if ((void*)list == NULL || link == NULL) {
-		return (Node*)(NULL);
+	if (list == NULL || link == NULL) {
+		return NULL;
 	}
 	Node *new_node = linked_list_node_create();
-	if ((void*)new_node == NULL) {
-		return (Node*)(NULL);
+	if (new_node == NULL) {
+		return NULL;
 	}
 	new_node->link = link;
 	Node *node = linked_list_insert_node(list, new_node);
-	if ((void*)node == NULL) {
-		free((void*)new_node);
+	if (node == NULL) {
+		free(new_node);
 	}
 	return node;
 }
 
 void nat64_list_insert(List *list, uint64_t x) {
-	uint64_t *p_nat64 = (uint64_t*)(malloc((uint32_t)(sizeof(uint64_t))));
+	uint64_t *p_nat64 = malloc((uint32_t)(sizeof(uint64_t)));
 	*p_nat64 = x;
-	linked_list_insert(list, (void*)p_nat64);
+	linked_list_insert(list, p_nat64);
 }
 
 void list_print_forward(List *list) {
 	printf("list_print_forward:\n");
 	Node *pn = list->head;
-	while ((void*)pn != NULL) {
-		uint32_t *x = (uint32_t*)(pn->link);
+	while (pn != NULL) {
+		uint32_t *x = pn->link;
 		printf("v = %d\n", *x);
 		pn = pn->next;
 	}
@@ -99,8 +94,8 @@ void list_print_forward(List *list) {
 void list_print_backward(List *list) {
 	printf("list_print_backward:\n");
 	Node *pn = list->tail;
-	while ((void*)pn != NULL) {
-		uint32_t *x = (uint32_t*)(pn->link);
+	while (pn != NULL) {
+		uint32_t *x = pn->link;
 		printf("v = %d\n", *x);
 		pn = pn->prev;
 	}
@@ -109,7 +104,7 @@ void list_print_backward(List *list) {
 int main() {
 	printf("linked list example\n");
 	List *list = linked_list_create();
-	if ((void*)list == NULL) {
+	if (list == NULL) {
 		printf("error: cannot create list");
 		return 1;
 	}

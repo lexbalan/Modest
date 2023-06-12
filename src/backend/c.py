@@ -246,17 +246,32 @@ def print_cast(t, v, ctx=[]):
 
 
 def print_value_expr_cast(v, ctx):
+  from_type = v['value']['type']
+  to_type = v['type']
+
+  # NO need cast ptr to *void
+  if type.is_pointer(from_type):
+    if type.is_free_pointer(to_type):
+      print_value(v['value'])
+      return
+
+  # NO need cast *void to ptr
+  if type.is_free_pointer(from_type):
+    if type.is_pointer(to_type):
+      print_value(v['value'])
+      return
+
 
   # Чтобы не приводить тип в выражениях типа ((int32_t)0), etc.
-  if type.is_numeric(v['type']):
-    if type.is_generic(v['value']['type']):
-      if type.is_numeric(v['value']['type']):
+  if type.is_numeric(to_type):
+    if type.is_generic(from_type):
+      if type.is_numeric(from_type):
         print_value(v['value'])
         return
 
   # не приводим тип строки к uint8_t * тк в си это куча ворнингов
   if value_attribute_check(v, 'string'):
-    if type.eq(type.typeStr, v['type']):
+    if type.eq(type.typeStr, to_type):
       print_value(v['value'])
       return
 
@@ -266,7 +281,7 @@ def print_value_expr_cast(v, ctx):
   if need_wrap:
     o('(')
 
-  print_cast(v['type'], v['value'], ctx)
+  print_cast(to_type, v['value'], ctx)
 
   if need_wrap:
     o(')')
