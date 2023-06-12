@@ -1,4 +1,5 @@
 
+import copy
 from .common import *
 from error import info
 import core.type as type
@@ -39,7 +40,6 @@ free_reg = 0
 
 def reg_get():
   global func_context
-  assert(func_context != None, "reg_get outside function body")
   reg = func_context['free_reg']
   func_context['free_reg'] = func_context['free_reg'] + 1
   return str(reg)
@@ -263,29 +263,33 @@ def print_type(t, print_aka=True):
     o("<type:%s>" % k)
 
 
+
+
 # получает на вход llvm_value
 # и если оно adr то загружает его в регистр
 # в любом другом случае просто возвращает исходное значение
 def do_ld(x):
+  if x['level'] != 'adr':
+    return x
 
-  if x['level'] == 'adr':
-    reg = operation('load');
-    typ = x['type']
-    print_type(typ)
-    comma()
-    print_type(typ)
-    o("* ")
-    print_value (x)
-    return {
-      'isa': 'llvm_value',
-      'class': 'reg',
-      'level': 'value',
-      'reg': reg,
-      'type': x['type'],
-      'proto': x
-    }
+  # load when value#level == #adr
+  reg = operation('load');
+  typ = x['type']
+  print_type(typ)
+  comma()
+  print_type(typ)
+  o("* ")
+  print_value (x)
+  return {
+    'isa': 'llvm_value',
+    'class': 'reg',
+    'level': 'value',
+    'reg': reg,
+    'type': x['type'],
+    'proto': x
+  }
 
-  return x
+
 
 
 REL_OPS = ['eq', 'ne', 'lt', 'gt', 'le', 'ge']
@@ -366,22 +370,19 @@ def do_eval_expr_un(v):
   ve = do_eval(v['value'])
 
   if v['kind'] == 'ref':
-
-    ve['level'] = 'value'
-    ve['proto'] = v  # for type
-
-    return ve
+    nv = copy.copy(ve)
+    nv['level'] = 'value'
+    nv['proto'] = v  # for type
+    return nv
 
 
   vx = do_ld(ve)  #!
 
-
   if v['kind'] == 'deref':
-
-    vx['level'] = 'adr'
-    vx['proto'] = v  # for type
-
-    return vx
+    nv = copy.copy(vx)
+    nv['level'] = 'adr'
+    nv['proto'] = v  # for type
+    return nv
 
   reg = None
   if v['kind'] == 'not':
