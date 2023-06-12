@@ -329,6 +329,10 @@ def print_value_str(x, ctx):
 def print_value_expr_num(x, ctx):
   if value_attribute_check(x, 'hexadecimal'):
     o("0x%X" % x['num'])
+  elif type.is_pointer(x['type']):
+    if x['num'] == 0:
+      o("NULL")
+      return
   else:
     o(str(x['num']))
 
