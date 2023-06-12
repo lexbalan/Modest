@@ -22,7 +22,7 @@ typedef struct {
 } List;
 
 List *linked_list_create() {
-	List *list = malloc((uint32_t)(sizeof(List)));
+	List *list = malloc(sizeof(List));
 	if(list == NULL) {
 		return NULL;
 	}
@@ -32,7 +32,7 @@ List *linked_list_create() {
 }
 
 Node *linked_list_node_create() {
-	Node *node = malloc((uint32_t)(sizeof(Node)));
+	Node *node = malloc(sizeof(Node));
 	if(node == NULL) {
 		return NULL;
 	}
@@ -76,7 +76,7 @@ Node *linked_list_insert(List *list, void *link) {
 }
 
 void nat64_list_insert(List *list, uint64_t x) {
-	uint64_t *p_nat64 = malloc((uint32_t)(sizeof(uint64_t)));
+	uint64_t *p_nat64 = malloc(sizeof(uint64_t));
 	*p_nat64 = x;
 	linked_list_insert(list, p_nat64);
 }
