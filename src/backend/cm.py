@@ -128,7 +128,7 @@ def print_type(t, print_aka=True):
 
 
 bin_ops = {
-  'or': '|', 'xor': '^', 'and': '&', 'shl': '<<', 'shr': '>>',
+  'or': 'or', 'xor': 'xor', 'and': 'and', 'shl': '<<', 'shr': '>>',
   'eq': '==', 'ne': '!=', 'lt': '<', 'gt': '>', 'le': '<=', 'ge': '>=',
   'add': '+', 'sub': '-', 'mul': '*', 'div': '/', 'mod': '%',
   'logic_and': 'and', 'logic_or': 'or'
@@ -314,6 +314,10 @@ def print_value_str(x, ctx):
 def print_value_expr_num(x, ctx):
   if value_attribute_check(x, 'hexadecimal'):
     o("0x%X" % x['num'])
+  elif type.is_pointer(x['type']):
+    if x['num'] == 0:
+      o("nil")
+      return
   else:
     o(str(x['num']))
 
