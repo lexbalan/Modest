@@ -337,7 +337,10 @@ def value_cons_pointer(v, t, ti, method):
 
         return y
 
+  # *Unit & AnyPtr, AnyPtr & *Unit
   if type.is_free_pointer(from_type) and type.is_pointer(t):
+    return do_cast_runtime(v, t, ti)
+  if type.is_free_pointer(t) and type.is_pointer(from_type):
     return do_cast_runtime(v, t, ti)
 
   return None

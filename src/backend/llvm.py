@@ -127,6 +127,16 @@ def double_to_hex(f):
     return hex(struct.unpack('<Q', struct.pack('<d', f))[0])
 
 
+
+def inline_cast(op, from_type, to_type, val):
+  o("%s (" % op)
+  print_type(from_type)
+  space()
+  print_value(val)
+  o(" to ")
+  print_type(to_type)
+  o(")")
+
 def print_value(x):
   c = x['class']
   if c == 'reg':
@@ -139,6 +149,13 @@ def print_value(x):
     num = x['num']
     if type.is_integer(x['type']):
       o(str(num))
+    elif type.is_pointer(x['type']):
+      if x['num'] == 0:
+        o("null")
+        return
+
+      v = ll_create_value_num(type.typeNat64, x['num'])
+      inline_cast('inttoptr', v['type'], x['type'], v)
     else:
       #o(str(f'{num:f}'))
       o(str(double_to_hex(num)))
@@ -151,14 +168,10 @@ def print_value(x):
   elif c == 'cast':
     #o("bitcast ([%d x i8]* @%s to %%Str)" % (x['len'], x['id']))
     v = x['value']
+    from_type = v['type']
     to_type = x['type']
-    o("bitcast (")
-    print_type(v['type'])
-    space()
-    print_value(v)
-    o(" to ")
-    print_type(to_type)
-    o(")")
+    inline_cast('bitcast', from_type, to_type, v)
+
   elif c == 'zero':
     o("zeroinitializer")
   elif c == 'null':
@@ -630,9 +643,9 @@ def do_eval_expr_to(v):
   to_type = v['type']
 
   # (STUB?) nil -> zeroinitializer
-  if 'num' in value:
-    if value['num'] == 0:
-      if type.is_free_pointer(from_type):
+  if type.is_free_pointer(from_type):
+    if 'num' in value:
+      if value['num'] == 0:
         return ll_create_value_null(to_type)
 
 
