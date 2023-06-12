@@ -18,6 +18,6 @@ func main () -> Int {
   let n = 2
   printf("multiply table for %d\n", n)
   mtab(n)
-	return 0
+  return 0
 }
 
