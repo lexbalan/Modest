@@ -1,0 +1,14 @@
+
+
+type Long Int32
+type LongLong Int64
+
+type LongInt Long
+type LongLongInt LongLong
+
+type Float Float32
+type Double Float64
+type LongDouble Float64
+
+type SizeT Nat32
+

@@ -1,14 +1,7 @@
 // math.hm
 
-type Long Int32
-type LongLong Int64
-
-type LongInt Long
-type LongLongInt LongLong
-
-type Float Float32
-type Double Float64
-type LongDouble Float64
+//!attribute('no-c-include')
+import "ctypes.hm"
 
 
 const M_PI = 3.141592653589793238462643383279502884
