@@ -19,7 +19,7 @@ type List record {
 
 
 func linked_list_create () -> *List {
-  let list = malloc(sizeof(List) to Nat32) to *List
+  let list = malloc(sizeof(List)) to *List
 
   if list == nil {
     return nil
@@ -33,7 +33,7 @@ func linked_list_create () -> *List {
 
 
 func linked_list_node_create () -> *Node {
-  let node = malloc(sizeof(Node) to Nat32) to *Node
+  let node = malloc(sizeof(Node)) to *Node
 
   if node == nil {
     return nil
@@ -93,7 +93,7 @@ func linked_list_insert (list : *List, link : *Unit) -> *Node {
 // wrap around linked list for Nat64
 func nat64_list_insert (list : *List, x : Nat64) -> Unit {
   // alloc memory for Nat64 value
-  let p_nat64 = malloc(sizeof(Nat64) to Nat32) to *Nat64
+  let p_nat64 = malloc(sizeof(Nat64)) to *Nat64
   *p_nat64 := x
   linked_list_insert(list, p_nat64)
 }
