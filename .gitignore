@@ -1,6 +1,4 @@
 .DS_Store
-#*.c
-#*.h
 *.o
 *.ll
 a.out
