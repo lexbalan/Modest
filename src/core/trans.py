@@ -16,7 +16,7 @@ parser = Parser()
 
 cfunc = None  # current function
 
-main_symtab = None
+root_symtab = None
 
 module = None
 
@@ -35,29 +35,29 @@ def import_add(id, m):
 
 
 def init():
-  global main_symtab
+  global root_symtab
   # init main symtab
-  main_symtab = Symtab()
-  main_symtab.type_add('Unit', type.typeUnit)
-  main_symtab.type_add('Int', type.typeInt)
-  main_symtab.type_add('Nat', type.typeNat)
-  main_symtab.type_add('Int8', type.typeInt8)
-  main_symtab.type_add('Int16', type.typeInt16)
-  main_symtab.type_add('Int32', type.typeInt32)
-  main_symtab.type_add('Int64', type.typeInt64)
-  main_symtab.type_add('Nat1', type.typeNat1)
-  main_symtab.type_add('Nat8', type.typeNat8)
-  main_symtab.type_add('Nat16', type.typeNat16)
-  main_symtab.type_add('Nat32', type.typeNat32)
-  main_symtab.type_add('Nat64', type.typeNat64)
-  main_symtab.type_add('Float16', type.typeFloat16)
-  main_symtab.type_add('Float32', type.typeFloat32)
-  main_symtab.type_add('Float64', type.typeFloat64)
-  main_symtab.type_add('Str', type.typeStr)
+  root_symtab = Symtab()
+  root_symtab.type_add('Unit', type.typeUnit)
+  root_symtab.type_add('Int', type.typeInt)
+  root_symtab.type_add('Nat', type.typeNat)
+  root_symtab.type_add('Int8', type.typeInt8)
+  root_symtab.type_add('Int16', type.typeInt16)
+  root_symtab.type_add('Int32', type.typeInt32)
+  root_symtab.type_add('Int64', type.typeInt64)
+  root_symtab.type_add('Nat1', type.typeNat1)
+  root_symtab.type_add('Nat8', type.typeNat8)
+  root_symtab.type_add('Nat16', type.typeNat16)
+  root_symtab.type_add('Nat32', type.typeNat32)
+  root_symtab.type_add('Nat64', type.typeNat64)
+  root_symtab.type_add('Float16', type.typeFloat16)
+  root_symtab.type_add('Float32', type.typeFloat32)
+  root_symtab.type_add('Float64', type.typeFloat64)
+  root_symtab.type_add('Str', type.typeStr)
 
-  main_symtab.value_add('nil', valueNil)
-  main_symtab.value_add('true', valueTrue)
-  main_symtab.value_add('false', valueFalse)
+  root_symtab.value_add('nil', valueNil)
+  root_symtab.value_add('true', valueTrue)
+  root_symtab.value_add('false', valueFalse)
 
 
 
@@ -1428,7 +1428,7 @@ def proc(ast):
     'id': "<>",
     #'path': srcname,
     'imports': {},
-    'symtab': main_symtab.branch(),
+    'symtab': root_symtab.branch(),
     'text': []
   }
 
@@ -1497,7 +1497,7 @@ def proc(ast):
 def translate(srcname):
   #print("translate!")
   #module['symtab'].show_tables()
-  #main_symtab.show_tables()
+  #root_symtab.show_tables()
   ast = parser.parse(srcname)
   m = proc(ast)
   return m
