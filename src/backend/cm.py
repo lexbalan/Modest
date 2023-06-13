@@ -507,13 +507,13 @@ def print_def_const(x):
   print_value(x['value'], ctx=['oneline'], print_just_id=False)
 
 
-def print_import(x):
+def print_import(dirname, x):
   s = x['str']
   if x['local']:
     s = '"' + s + '"'
   else:
     s = '<' + s + '>'
-  o("import %s" % s)
+  o("%s %s" % (dirname, s))
 
 
 def run(module, strs, outname):
@@ -556,7 +556,8 @@ def run(module, strs, outname):
       if k == 'func': print_decl_func(x)
       elif k == 'type': print_decl_type(x)
     elif isa == 'directive':
-      if k == 'include': print_import(x)
+      if k == 'include': print_import('include', x)
+      if k == 'import': print_import('import', x)
 
   o("\n\n")
 

@@ -1,6 +1,6 @@
 
 
-import "libc.h"
+include "libc.h"
 
 type Node
 

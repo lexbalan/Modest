@@ -1,6 +1,6 @@
 
 //!attribute('no-c-include')
-import "libc.hm"
+include "libc.hm"
 
 
 func main () -> Int {

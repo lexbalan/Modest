@@ -1,7 +1,7 @@
 // libc.hm
 
 //!attribute('no-c-include')
-import "ctypes.hm"
+include "ctypes.hm"
 
 /*!
 global output

@@ -1090,10 +1090,10 @@ def import_abspath(s):
 
 
 
-
-import_guard_paths = []
-def do_import(x):
-  global import_guard_paths
+# include аналог from xxx import *
+include_guard_paths = []
+def do_include(x):
+  global include_guard_paths
 
   impline = x['str']
   #print("do_import " + impline)
@@ -1103,35 +1103,29 @@ def do_import(x):
     error("module not found", x)
     return None
 
-  if abspath in import_guard_paths:
+  if abspath in include_guard_paths:
     return None  # already imported
-  import_guard_paths.append(abspath)
+  include_guard_paths.append(abspath)
+
 
   m = translate(abspath)
 
-  """print("IMPORT: " + impline)
+  print("\nINCLUDE: " + impline)
   for symbol in m['symbols'].types:
     print(" # " + symbol)
 
   for symbol in m['symbols'].values:
-    print(" * " + symbol)"""
+    print(" * " + symbol)
 
   # расширяем нашу таблицу символов таблицей импорта
   symtab.merge(m['symbols'])
 
   # если не нужно печатать сожержимое заголовка
   # а просто напечатать #include "someheader.h"
-  import_directive = [
-    {
-      'isa': 'directive',
-      'kind': 'include',
-      'str': impline[:-1],  # .hm -> .h
-      'local': True
-    }
-  ]
+  return_include_directive = False
 
   if settings_check('backend', 'cm'):
-    return import_directive
+    return_include_directive = True
 
   no_c_inc = attribute_get('no-c-include')
   if no_c_inc:
@@ -1139,9 +1133,23 @@ def do_import(x):
 
   if settings_check('backend', 'c'):
     if not no_c_inc:
-      return import_directive
+      return_include_directive = True
+
+
+  if return_include_directive:
+    return [
+      {
+        'isa': 'directive',
+        'kind': 'include',
+        'str': impline[:-1],  # .hm -> .h
+        'local': True
+      }
+    ]
 
   return m['text']
+
+
+
 
 
 
@@ -1439,6 +1447,11 @@ def proc(ast):
       # импорт изменяет контекст, и продуцирует аутпут
       elif kind == 'import':
         y = do_import(x)
+        if y != None:
+          output.extend(y)
+        continue
+      elif kind == 'include':
+        y = do_include(x)
         if y != None:
           output.extend(y)
         continue

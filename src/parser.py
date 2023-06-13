@@ -801,6 +801,11 @@ class Parser:
     str = self.gettok()
     return {'isa': 'ast_directive', 'kind': 'import', 'str': str, 'ti': ti}
 
+  def do_include(self):
+    ti = self.ti()
+    str = self.gettok()
+    return {'isa': 'ast_directive', 'kind': 'include', 'str': str, 'ti': ti}
+
   
   def decl_extern(self):
     if self.match('type'):
@@ -961,6 +966,8 @@ class Parser:
         x = self.def_metadir()
       elif self.match('import'):
         x = self.do_import()
+      elif self.match('include'):
+        x = self.do_include()
 
       else:
         error("unexpected token", self.ti())
