@@ -38,6 +38,8 @@ def value_create_int(num, typ=type.genericInt, ti=None):
 
 
 valueNil = value_create_int(0, typ=type.typeFreePtr)
+valueTrue = value_create_int(1, typ=type.typeNat1)
+valueFalse = value_create_int(0, typ=type.typeNat1)
 
 def value_create_float(num, typ=type.genericFloat, ti=None):
   # вообще с флотом непонятно можно ли понять какого он Generic типа

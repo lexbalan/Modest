@@ -18,13 +18,7 @@ cfunc = None  # current function
 
 main_symtab = None
 
-module = {
-  'id': "main",
-  'imports': {},
-  'symtab': None,
-  'text': []
-}
-
+module = None
 
 
 # used in metadirs
@@ -62,6 +56,8 @@ def init():
   main_symtab.type_add('Str', type.typeStr)
 
   main_symtab.value_add('nil', valueNil)
+  main_symtab.value_add('true', valueTrue)
+  main_symtab.value_add('false', valueFalse)
 
 
 
