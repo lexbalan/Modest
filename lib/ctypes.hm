@@ -1,10 +1,7 @@
-
+// ctypes.hm
 
 type Long Int64
 type LongLong Int64
-
-type LongInt Long
-type LongLongInt LongLong
 
 type Float Float32
 type Double Float64
