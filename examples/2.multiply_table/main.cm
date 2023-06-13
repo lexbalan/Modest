@@ -1,5 +1,5 @@
 
-//!attribute('no-c-include')
+
 include "libc.hm"
 
 
