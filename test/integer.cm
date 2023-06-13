@@ -1,5 +1,5 @@
 
-//!imp_c(True)
+
 import "libc.hm"
 
 
