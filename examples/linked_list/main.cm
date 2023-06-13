@@ -1,7 +1,8 @@
 
 //!attribute('no-c-include')
 
-import "ctypes.hm"
+//import "ctypes.hm"
+
 include "libc.hm"
 
 

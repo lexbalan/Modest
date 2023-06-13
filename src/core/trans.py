@@ -12,31 +12,27 @@ from parser import Parser
 from core.symtab import Symtab
 
 
-# current symbol table
-symtab = Symtab()
-
-
 parser = Parser()
 
 cfunc = None  # current function
 
+main_symtab = None
 
-output = []
+module = {
+  'id': "main",
+  'imports': {},
+  'symtab': None,
+  'text': []
+}
 
 
+
+# used in metadirs
 def c_include(s):
   #print("c_include %s" % s)
   local = s[0:2] == './'
   return {'isa': 'directive', 'kind': 'include', 'str': s, 'local': local}
 
-
-
-module = {
-  'id': "main",
-  'imports': {},
-  'symtab': Symtab(),
-  'text': []
-}
 
 
 def import_add(id, m):
@@ -45,25 +41,27 @@ def import_add(id, m):
 
 
 def init():
-  # init built-in context
-  symtab.type_add('Unit', type.typeUnit)
-  symtab.type_add('Int', type.typeInt)
-  symtab.type_add('Nat', type.typeNat)
-  symtab.type_add('Int8', type.typeInt8)
-  symtab.type_add('Int16', type.typeInt16)
-  symtab.type_add('Int32', type.typeInt32)
-  symtab.type_add('Int64', type.typeInt64)
-  symtab.type_add('Nat1', type.typeNat1)
-  symtab.type_add('Nat8', type.typeNat8)
-  symtab.type_add('Nat16', type.typeNat16)
-  symtab.type_add('Nat32', type.typeNat32)
-  symtab.type_add('Nat64', type.typeNat64)
-  symtab.type_add('Float16', type.typeFloat16)
-  symtab.type_add('Float32', type.typeFloat32)
-  symtab.type_add('Float64', type.typeFloat64)
-  symtab.type_add('Str', type.typeStr)
+  global main_symtab
+  # init main symtab
+  main_symtab = Symtab()
+  main_symtab.type_add('Unit', type.typeUnit)
+  main_symtab.type_add('Int', type.typeInt)
+  main_symtab.type_add('Nat', type.typeNat)
+  main_symtab.type_add('Int8', type.typeInt8)
+  main_symtab.type_add('Int16', type.typeInt16)
+  main_symtab.type_add('Int32', type.typeInt32)
+  main_symtab.type_add('Int64', type.typeInt64)
+  main_symtab.type_add('Nat1', type.typeNat1)
+  main_symtab.type_add('Nat8', type.typeNat8)
+  main_symtab.type_add('Nat16', type.typeNat16)
+  main_symtab.type_add('Nat32', type.typeNat32)
+  main_symtab.type_add('Nat64', type.typeNat64)
+  main_symtab.type_add('Float16', type.typeFloat16)
+  main_symtab.type_add('Float32', type.typeFloat32)
+  main_symtab.type_add('Float64', type.typeFloat64)
+  main_symtab.type_add('Str', type.typeStr)
 
-  symtab.value_add('nil', valueNil)
+  main_symtab.value_add('nil', valueNil)
 
 
 
@@ -90,7 +88,7 @@ def do_field(x):
 #
 
 def do_type_id(t):
-  tx = symtab.type_get(t['id']['str'])
+  tx = module['symtab'].type_get(t['id']['str'])
   if tx == None:
     error("undeclared type %s" % t['id']['str'], t)
     return type.type_bad()
@@ -174,7 +172,7 @@ def do_type_enum(t):
 
     # add enum item to global context
     item_val = value_create_int(i, typ=enum_type, ti=id['ti'])
-    symtab.value_add(id['id']['str'], item_val)
+    module['symtab'].value_add(id['id']['str'], item_val)
 
     i = i + 1
 
@@ -626,7 +624,7 @@ def do_value_expr_to(x):
 
 
 def do_value_expr_id(x):
-  vx = symtab.value_get(x['id']['str'])
+  vx = module['symtab'].value_get(x['id']['str'])
   if vx == None:
     error("undeclared value '%s'" % x['id']['str'], x)
     return value_create_bad(x['ti'])
@@ -643,7 +641,7 @@ def do_value_expr_ns(x):
   _id = x['ids'][1]
 
   ns_name = ns_id['str']
-  tx = symtab.type_get(ns_name)
+  tx = module['symtab'].type_get(ns_name)
 
   if tx == None:
     error("unknown namespace '%s'" % ns_id['str'], ns_id)
@@ -945,7 +943,7 @@ def do_stmt_var(x):
     'properties': {},
     'ti': x['ti']
   }
-  symtab.value_add(id['str'], var_value)
+  module['symtab'].value_add(id['str'], var_value)
 
   return {
     'isa': 'stmt',
@@ -976,7 +974,7 @@ def do_stmt_let(x):
   """if settings_check('backend', 'llvm'):
     if value_is_immediate(v):
       if not (type.is_record(vtype) or type.is_array(vtype)):
-        symtab.value_add(id['str'], v)
+        module['symtab'].value_add(id['str'], v)
         return stmt_create_bad()"""
 
 
@@ -992,7 +990,7 @@ def do_stmt_let(x):
     'ti': x['ti']
   }
 
-  symtab.value_add(id['str'], const_value)
+  module['symtab'].value_add(id['str'], const_value)
 
   return {
     'isa': 'stmt',
@@ -1063,8 +1061,7 @@ def do_stmt(x):
 
 def do_stmt_block(x):
 
-  global symtab
-  symtab = symtab.branch()
+  module['symtab'] = module['symtab'].branch()
 
   stmts = []
   for stmt in x['stmts']:
@@ -1072,7 +1069,7 @@ def do_stmt_block(x):
     if not stmt_is_bad(s):
       stmts.append(s)
 
-  symtab = symtab.parent_get()
+  module['symtab'] = module['symtab'].parent_get()
 
   return {
     'isa': 'stmt',
@@ -1126,10 +1123,12 @@ def do_include(x):
   m = translate(abspath)
 
   #print("\nINCLUDE: " + impline)
-  #m['symbols'].show_tables()
+  #m['symtab'].show_tables()
 
   # расширяем нашу таблицу символов таблицей импорта
-  symtab.merge(m['symbols'])
+  if m['symtab'] == None:
+    print(m)
+  module['symtab'].merge(m['symtab'])
 
 
   # если не нужно печатать сожержимое заголовка
@@ -1174,7 +1173,7 @@ def do_import(x):
   m = translate(abspath)
 
   print("\nIMPORT: " + impline)
-  m['symbols'].show_tables()
+  m['symtab'].show_tables()
 
   return m
 
@@ -1200,7 +1199,7 @@ def def_const(x):
 
   v['id'] = id
   value_attribute_add(v, 'const')
-  symtab.value_add(id['str'], v)
+  module['symtab'].value_add(id['str'], v)
 
   if attribute_get('no-c-print'):
     if settings_check('backend', 'c'):
@@ -1222,7 +1221,7 @@ def def_type(x):
   if type.is_bad(t):
     return def_bad()
 
-  exist = symtab.type_get(id['str'])
+  exist = module['symtab'].type_get(id['str'])
   already_defined = exist != None
 
   if already_defined:
@@ -1230,7 +1229,7 @@ def def_type(x):
   else:
     # create new type alias
     nt = type.create_alias(id['str'], t, id['ti'])
-    nt2 = symtab.type_add(id['str'], nt)
+    nt2 = module['symtab'].type_add(id['str'], nt)
 
 
   if attribute_get('no-c-print'):
@@ -1277,7 +1276,7 @@ def def_var(x):
     'properties': {},
     'ti': x['ti']
   }
-  symtab.value_add(x['field']['id']['str'], var_value)
+  module['symtab'].value_add(x['field']['id']['str'], var_value)
 
   return {
     'isa': 'definition',
@@ -1296,8 +1295,7 @@ def def_func(x):
   func_type = do_type(x['type'])
 
   # params context (!)
-  global symtab
-  symtab = symtab.branch()
+  module['symtab'] = module['symtab'].branch()
 
   global cfunc
   old_cfunc = cfunc
@@ -1325,16 +1323,16 @@ def def_func(x):
       'properties': {},
       'ti': param_ti
     }
-    symtab.value_add(param_id['str'], p)
+    module['symtab'].value_add(param_id['str'], p)
     i = i + 1
 
   func_stmt = do_stmt_block(x['stmt'])
   cfunc['stmt'] = func_stmt
 
   # params context (!)
-  symtab = symtab.parent_get()
+  module['symtab'] = module['symtab'].parent_get()
 
-  symtab.value_add(func_id['str'], cfunc)
+  module['symtab'].value_add(func_id['str'], cfunc)
 
 
   funcdef = {
@@ -1363,7 +1361,7 @@ def decl_type(x):
     'attributes': [],
     'ti': id['ti'],
   }
-  nt = symtab.type_add(id['str'], nt)
+  nt = module['symtab'].type_add(id['str'], nt)
 
   if attribute_get('no-c-print'):
     if settings_check('backend', 'c'):
@@ -1399,7 +1397,7 @@ def decl_func(x):
     'properties': {},
     'ti': x['ti']
   }
-  symtab.value_add(id['str'], fval)
+  module['symtab'].value_add(id['str'], fval)
 
   if attribute_get('no-c-print'):
     if settings_check('backend', 'c'):
@@ -1420,15 +1418,19 @@ def decl_func(x):
 
 
 def proc(ast):
-  global symtab, output, local_attributes
+  global local_attributes
 
-  # создаем новый аутпут буфер
-  old_output = output
-  output = []
+  global module
+  old_module = module
 
-  # создаем новую таблицу символов
-  # (ответвляем ее от основной с bui)
-  symtab = symtab.branch()
+  module = {
+    'id': "<>",
+    #'path': srcname,
+    'imports': {},
+    'symtab': Symtab(main_symtab),
+    'text': []
+  }
+
 
   for x in ast:
     isa = x['isa']
@@ -1443,11 +1445,11 @@ def proc(ast):
         # в LLVM если делаем func definition нельзя писать func declaration
         # поэтому удалим все сделаные ранее декларации (если они есть)
         if settings_check('backend', 'llvm'):
-          for x in output:
+          for x in module['text']:
             if x['isa'] == 'declaration':
               if x['kind'] == 'func':
                 if x['id']['str'] == y['id']['str']:
-                  output.remove(x)
+                  module['text'].remove(x)
                   break
 
       elif kind == 'type': y = def_type(x)
@@ -1468,12 +1470,12 @@ def proc(ast):
         m = do_import(x)
         import_add(x['str'], m)
         #if y != None:
-        #  output.append(m)
+        #  module['text'].append(m)
         continue
       elif kind == 'include':
         y = do_include(x)
         if y != None:
-          output.extend(y)
+          module['text'].extend(y)
         continue
 
 
@@ -1482,26 +1484,24 @@ def proc(ast):
     if y == None:
       continue
 
-    output.append(y)
+    module['text'].append(y)
 
-  module_output = output
-  output = old_output
+  m = module
+  module = old_module
 
-  module_symtab = symtab
-  symtab = symtab.parent_get()
-
-  return (module_output, module_symtab)
+  return m
 
 
 
 def translate(srcname):
   ast = parser.parse(srcname)
-  text, symbols = proc(ast)
-  return {
-    'isa': 'module',
-    'src': srcname,
-    'text': text,
-    'symbols': symbols
-  }
+
+  #print("translate!")
+  #main_symtab.show_tables()
+  #module['symtab'].show_tables()
+  m = proc(ast)
+
+  return m
+
 
 
