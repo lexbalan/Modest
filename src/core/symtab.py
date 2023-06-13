@@ -50,3 +50,19 @@ class Symtab:
     return self.parent
 
 
+  # печатает только указанную таблицу символов
+  def show_table(table):
+    for symbol in table.types:
+      print(" # " + symbol)
+
+    for symbol in table.values:
+      print(" * " + symbol)
+
+
+  # печатает весь стек таблиц символов
+  def show_tables(self):
+    print()
+    self.show_table()
+    if self.parent != None:
+      self.parent.show_tables()
+

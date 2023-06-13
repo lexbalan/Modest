@@ -24,6 +24,24 @@ cfunc = None  # current function
 output = []
 
 
+def c_include(s):
+  #print("c_include %s" % s)
+  local = s[0:2] == './'
+  return {'isa': 'directive', 'kind': 'include', 'str': s, 'local': local}
+
+
+
+module = {
+  'id': "main"
+  'imports': {}
+  'symtab': Symtab()
+  'text': []
+}
+
+
+def import_add(id, m):
+  print("import_add: " + id)
+  module['imports'].update({id: m})
 
 
 def init():
@@ -1096,7 +1114,7 @@ def do_include(x):
   global include_guard_paths
 
   impline = x['str']
-  #print("do_import " + impline)
+  #print("do_include " + impline)
   abspath = import_abspath(impline)
 
   if abspath == None:
@@ -1110,12 +1128,8 @@ def do_include(x):
 
   m = translate(abspath)
 
-  print("\nINCLUDE: " + impline)
-  for symbol in m['symbols'].types:
-    print(" # " + symbol)
-
-  for symbol in m['symbols'].values:
-    print(" * " + symbol)
+  #print("\nINCLUDE: " + impline)
+  #m['symbols'].show_tables()
 
   # расширяем нашу таблицу символов таблицей импорта
   symtab.merge(m['symbols'])
@@ -1151,12 +1165,26 @@ def do_include(x):
 
 
 
+def do_import(x):
+  impline = x['str']
+  #print("do_import " + impline)
+  abspath = import_abspath(impline)
+
+  if abspath == None:
+    error("module not found", x)
+    return None
+
+  m = translate(abspath)
+
+  print("\nIMPORT: " + impline)
+  m['symbols'].show_tables()
+
+  return m
 
 
-def c_include(s):
-  #print("c_include %s" % s)
-  local = s[0:2] == './'
-  return {'isa': 'directive', 'kind': 'include', 'str': s, 'local': local}
+
+
+
 
 
 
@@ -1436,19 +1464,14 @@ def proc(ast):
     elif isa == 'ast_directive':
       if kind == 'metadir':
         exec(x['text'])
-        """print(o)
-        if o != None:
-          if isinstance(o, list):
-            output.extend(o)
-          else:
-            output.append(o)"""
         continue
 
       # импорт изменяет контекст, и продуцирует аутпут
       elif kind == 'import':
-        y = do_import(x)
-        if y != None:
-          output.extend(y)
+        m = do_import(x)
+        import_add(x['str'], m)
+        #if y != None:
+        #  output.append(m)
         continue
       elif kind == 'include':
         y = do_include(x)
