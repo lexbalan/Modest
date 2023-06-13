@@ -16,7 +16,7 @@ from core.symtab import Symtab
 symtab = Symtab()
 
 
-parser = None
+parser = Parser()
 
 cfunc = None  # current function
 
@@ -32,9 +32,9 @@ def c_include(s):
 
 
 module = {
-  'id': "main"
-  'imports': {}
-  'symtab': Symtab()
+  'id': "main",
+  'imports': {},
+  'symtab': Symtab(),
   'text': []
 }
 
@@ -45,9 +45,6 @@ def import_add(id, m):
 
 
 def init():
-  global parser
-  parser = Parser()
-
   # init built-in context
   symtab.type_add('Unit', type.typeUnit)
   symtab.type_add('Int', type.typeInt)
