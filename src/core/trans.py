@@ -1428,7 +1428,7 @@ def proc(ast):
     'id': "<>",
     #'path': srcname,
     'imports': {},
-    'symtab': Symtab(main_symtab),
+    'symtab': main_symtab.branch(),
     'text': []
   }
 
@@ -1495,13 +1495,11 @@ def proc(ast):
 
 
 def translate(srcname):
-  ast = parser.parse(srcname)
-
   #print("translate!")
-  #main_symtab.show_tables()
   #module['symtab'].show_tables()
+  #main_symtab.show_tables()
+  ast = parser.parse(srcname)
   m = proc(ast)
-
   return m
 
 
