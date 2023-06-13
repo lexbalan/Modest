@@ -1,7 +1,6 @@
 
-//!attribute('no-c-include')
-include "libc.hm"
 
+include "libc.hm"
 
 func main () -> Int {
   printf("Hello World!\n")

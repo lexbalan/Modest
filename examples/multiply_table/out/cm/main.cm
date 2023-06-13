@@ -1,6 +1,6 @@
 
 
-import "libc.h"
+include "libc.h"
 
 
 func mtab (n : Nat32) -> Void {

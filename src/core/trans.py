@@ -638,14 +638,19 @@ def do_value_expr_id(x):
 
 def do_value_expr_ns(x):
   ns_id = x['ids'][0]
-  _id = x['ids'][1]
+  id = x['ids'][1]
 
-  ns_name = ns_id['str']
-  tx = module['symtab'].type_get(ns_name)
+  ns_id_str = ns_id['str']
+  if not ns_id_str in module['imports']:
+    error("namespace nof found", ns_id)
 
-  if tx == None:
-    error("unknown namespace '%s'" % ns_id['str'], ns_id)
-    return value_create_bad(ns_id['ti'])
+  return value_create_bad(ns_id['ti'])
+
+  #tx = module['symtab'].type_get(ns_name)
+
+  #if tx == None:
+  #  error("unknown namespace '%s'" % ns_id['str'], ns_id)
+  #  return value_create_bad(ns_id['ti'])
 
   """if tx['kind'] == 'enum':
     items = tx['items']
@@ -805,7 +810,7 @@ def do_value(x):
     if k == 'int': rv = do_value_expr_int(x)
     elif k == 'float': rv = do_value_expr_float(x)
     elif k == 'id': rv = do_value_expr_id(x)
-    elif k == 'ns': rv = do_value_expr_ns(x)
+#    elif k == 'ns': rv = do_value_expr_ns(x)
     elif k == 'str': rv = do_value_expr_str(x)
     elif k == 'record': rv = do_value_expr_record(x)
     elif k == 'array': rv = do_value_expr_array(x)

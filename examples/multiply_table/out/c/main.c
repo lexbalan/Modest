@@ -1,7 +1,11 @@
 
 #include <stdint.h>
 
-#include "libc.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 void mtab(uint32_t n) {
 	uint32_t m;
