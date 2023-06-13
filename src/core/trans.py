@@ -1120,6 +1120,7 @@ def do_include(x):
   # расширяем нашу таблицу символов таблицей импорта
   symtab.merge(m['symbols'])
 
+
   # если не нужно печатать сожержимое заголовка
   # а просто напечатать #include "someheader.h"
   return_include_directive = False
@@ -1127,14 +1128,13 @@ def do_include(x):
   if settings_check('backend', 'cm'):
     return_include_directive = True
 
-  no_c_inc = attribute_get('no-c-include')
-  if no_c_inc:
-    attribute_off('no-c-include')
-
   if settings_check('backend', 'c'):
-    if not no_c_inc:
+    if attribute_get('c-just-include'):
+      attribute_off('c-just-include')
       return_include_directive = True
-
+    if attribute_get('c-no-print'):
+      attribute_off('c-no-print')
+      return []
 
   if return_include_directive:
     return [

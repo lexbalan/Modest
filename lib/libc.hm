@@ -1,11 +1,10 @@
 // libc.hm
 
-//!attribute('no-c-include')
+//!attribute('c-no-print')
 include "ctypes.hm"
 
 /*!
 global output
-output.append(c_include("stdint.h"))
 output.append(c_include("stdio.h"))
 output.append(c_include("stdlib.h"))
 output.append(c_include("string.h"))

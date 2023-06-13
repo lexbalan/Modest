@@ -1,7 +1,11 @@
 
 #include <stdint.h>
 
-#include "libc.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 // type declaration Node
 struct Node;
