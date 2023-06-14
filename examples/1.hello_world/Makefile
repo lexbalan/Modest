@@ -15,7 +15,7 @@ all: LLVM
 
 
 CM:
-	$(MCC) -o $(CMPREFIX)main -mbackend=cm $(INDIR)/main.cm
+	$(MCC) -o $(CMPREFIX)/main -mbackend=cm $(INDIR)/main.cm
 
 
 LLVM:
