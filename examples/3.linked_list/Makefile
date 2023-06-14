@@ -19,7 +19,7 @@ CM:
 
 
 LLVM:
-	$(MCC) -o $(LLVMPREFIX)/main -mbackend=llvm -funsafe $(INDIR)/main.cm
+	$(MCC) -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.cm
 	
 	# translate IR to .o
 	clang -c $(LLVMPREFIX)/main.ll
