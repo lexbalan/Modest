@@ -11,9 +11,11 @@ git clone https://github.com/lexbalan/Modest.git
 2. Add environment variables:
 ```
 export MODEST_DIR=~/Modest
+export PATH=$PATH:$MODEST_DIR
 export MODEST_LIB=$MODEST_DIR/lib/
 
 echo "export MODEST_DIR=~/Modest" >> ~/.bashrc
+echo "export PATH=$PATH:$MODEST_DIR" >> ~/.bashrc
 echo "export MODEST_LIB=$MODEST_DIR/lib/" >> ~/.bashrc
 ```
 

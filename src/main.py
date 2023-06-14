@@ -9,7 +9,7 @@ import error
 import core.trans as trans
 
 
-backend = None
+DEFAULT_BACKEND = 'llvm'
 
 src_dirname = ""
 
@@ -41,14 +41,14 @@ def main():
 
   # set default settings
   trans.settings_set('library', path_lib)
-  trans.settings_set('backend', 'printer_ll')
-  trans.settings_set('enum_size', 2)
+  trans.settings_set('backend', DEFAULT_BACKEND)
 
   # parse modifiers (-mbackend=c)
   # and change default settings
-  for mod in args.m:
-    k, v = mod.split('=')
-    trans.settings_set(k, v)
+  if args.m != None:
+    for mod in args.m:
+      k, v = mod.split('=')
+      trans.settings_set(k, v)
 
   # parse features (ex. -funsafe)
   if args.feature != None:

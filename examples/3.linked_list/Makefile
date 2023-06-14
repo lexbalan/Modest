@@ -8,7 +8,7 @@ CPREFIX=$(OUTDIR)/c/
 LLVMPREFIX = $(OUTDIR)/llvm/
 
 # mcc translator
-MCC=../../mcc
+MCC=mcc
 
 
 all: LLVM

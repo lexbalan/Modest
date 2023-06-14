@@ -1470,8 +1470,6 @@ def proc(ast):
       elif kind == 'import':
         m = do_import(x)
         import_add(x['str'], m)
-        #if y != None:
-        #  module['text'].append(m)
         continue
       elif kind == 'include':
         y = do_include(x)

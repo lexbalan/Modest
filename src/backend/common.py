@@ -34,7 +34,9 @@ def ind():
 
 def printer_open(fname):
   global f
-  os.makedirs(os.path.dirname(fname), exist_ok=True)
+  dirname = os.path.dirname(fname)
+  if dirname != '':
+    os.makedirs(dirname, exist_ok=True)
   f = open(fname, "w")
 
 
