@@ -1,0 +1,3 @@
+// lib.hm
+
+func lib_func () -> Unit

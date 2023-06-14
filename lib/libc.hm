@@ -15,8 +15,6 @@ module['text'].append(c_include("unistd.h"))     # write
 
 //!attribute('no-c-print', glob=True)
 
-// attribute('no-c-include')
-
 
 type DevT Nat16      /* holds (major|minor) device pair */
 type InoT Nat32      /* i-node number (or Nat32) */
@@ -123,7 +121,7 @@ extern func exit  (rc : Int) -> Unit
 
 
 extern func opendir  (name : Str) -> *DIR
-extern func closedir (dirp : *DIR) -> Int
+extern func closedir (dir : *DIR) -> Int
 
 // current working directory
 extern func getcwd (buf : Str, size : SizeT) -> Str

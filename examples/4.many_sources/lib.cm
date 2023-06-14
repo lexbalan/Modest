@@ -1,0 +1,8 @@
+// lib.cm
+
+include "libc.hm"
+
+func lib_func () -> Unit {
+	printf("hello from lib_func\n")
+}
+

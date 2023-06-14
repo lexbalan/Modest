@@ -1,0 +1,12 @@
+
+include "libc.hm"
+
+//!attribute('c-just-include')
+include "./lib.hm"
+
+func main () -> Int {
+	printf("hello from main\n")
+	lib_func()
+	return 0
+}
+
