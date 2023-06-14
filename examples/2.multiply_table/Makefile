@@ -33,3 +33,5 @@ C:
 	CC $(CPREFIX)/main.c
 
 
+clean:
+	rm *.o
