@@ -1,8 +1,8 @@
 # Installation
 
-0. *Firstly install Python3 & Clang*
+0. **Firstly you need to install Python3 & Clang** *(Clang optionally)*
 
-1. Download repository into your home folder:
+1. Download the repository into your home (or another) folder:
 ```
 cd ~
 git clone https://github.com/lexbalan/Modest.git
@@ -22,8 +22,14 @@ echo "export MODEST_LIB=$MODEST_DIR/lib/" >> ~/.bashrc
 3. Compile example:
 ```
 cd ~/Modest/examples/hello_world
-make LLVM
+make
 ```
+
+Default target is LLVM, but you can get C output
+```
+make C
+```
+
 
 4. Run result:
 ```
