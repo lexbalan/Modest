@@ -1,4 +1,4 @@
 
 
-func lib_func () -> Int64
+func lib_func () -> Unit
 

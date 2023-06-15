@@ -56,7 +56,7 @@ def typeBad(ti):
 typeUnit = {
   'isa': 'type',
   'kind': 'unit',
-  'name': 'Void',
+  'name': 'Unit',
   'c_alias': 'void',
   'llvm_alias': 'void',
   'items': [],
@@ -433,8 +433,8 @@ def type_print(t, print_aka=True):
       if id == '<generic:int>':
         id = 'Int'
 
-      if id == 'Void':
-        print("void", end='')
+      if id == 'Unit':
+        print("Unit", end='')
         return
 
       if is_generic(t):
