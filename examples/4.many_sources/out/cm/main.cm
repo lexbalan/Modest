@@ -1,0 +1,12 @@
+
+
+include "libc.h"
+include "./lib.h"
+
+
+func main () -> Int64 {
+	printf("hello from main\n")
+	lib_func()
+	return 0
+}
+

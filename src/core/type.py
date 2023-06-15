@@ -327,10 +327,23 @@ def is_unsigned(t):
   return 'unsigned' in t['attributes']
 
 
+
 # cannot create variable with type
-def is_forbidden(t):
+def is_forbidden_var(t):
   k = t['kind']
-  return k == 'opaque' or k == 'unit'
+  if k == 'opaque' or k == 'unit':
+    return True
+
+  # [0]Int, []Int
+  if is_array(t):
+    if t['size'] == None:
+      return True
+
+    if t['size'] == 0:
+      return True
+
+
+  return False
 
 
 def is_alias(t):

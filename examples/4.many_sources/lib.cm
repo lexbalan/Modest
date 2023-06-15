@@ -2,6 +2,8 @@
 
 include "libc.hm"
 
+include "./lib.hm"
+
 func lib_func () -> Unit {
 	printf("hello from lib_func\n")
 }

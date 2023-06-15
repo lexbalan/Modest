@@ -1,0 +1,9 @@
+
+
+include "libc.h"
+
+
+func lib_func () -> Void {
+	printf("hello from lib_func\n")
+}
+

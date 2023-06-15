@@ -7,31 +7,32 @@ CMPREFIX=$(OUTDIR)/cm/
 CPREFIX=$(OUTDIR)/c/
 LLVMPREFIX = $(OUTDIR)/llvm/
 
-# mcc translator
-MCC=mcc
-
 
 all: LLVM
 
 
 CM:
-	$(MCC) -o $(CMPREFIX)/main -mbackend=cm -funsafe $(INDIR)/main.cm
+	mcc -o $(CMPREFIX)/main -mbackend=cm $(INDIR)/main.cm
+	mcc -o $(CMPREFIX)/lib -mbackend=cm $(INDIR)/lib.hm
+	mcc -o $(CMPREFIX)/lib -mbackend=cm $(INDIR)/lib.cm
+  
 
 
 LLVM:
-	$(MCC) -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.cm
+	mcc -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.cm
+	mcc -o $(LLVMPREFIX)/lib -mbackend=llvm $(INDIR)/lib.cm
 	
 	# translate IR to .o
-	clang -c $(LLVMPREFIX)/main.ll
+	clang -c $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/lib.ll
 	
 	# compile .o files to a.out
-	CC main.o -o a.out
+	CC main.o lib.o -o a.out
 
 
 C:
-	$(MCC) -o $(CPREFIX)/main -mbackend=c $(INDIR)/main.cm
-	$(MCC) -o $(CPREFIX)/lib -mbackend=c $(INDIR)/lib.hm
-	$(MCC) -o $(CPREFIX)/lib -mbackend=c $(INDIR)/lib.cm
+	mcc -o $(CPREFIX)/main -mbackend=c $(INDIR)/main.cm
+	mcc -o $(CPREFIX)/lib -mbackend=c $(INDIR)/lib.hm
+	mcc -o $(CPREFIX)/lib -mbackend=c $(INDIR)/lib.cm
 	CC $(CPREFIX)/main.c $(CPREFIX)/lib.c
 
 

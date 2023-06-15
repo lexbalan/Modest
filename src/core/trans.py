@@ -67,7 +67,7 @@ def do_field(x):
   if type.is_bad(t):
     t = type.type_bad(x['type']['ti'])
 
-  if type.is_forbidden(t):
+  if type.is_forbidden_var(t):
     error("unsuitable type", x['type'])
 
   return {
@@ -928,7 +928,7 @@ def do_stmt_var(x):
   if type.is_bad(t):
     return stmt_create_bad()
 
-  if type.is_forbidden(t):
+  if type.is_forbidden_var(t):
     error("unsuitable type", x['type'])
 
 
@@ -1295,7 +1295,16 @@ def def_func(x):
   func_id = x['id']
   func_type = do_type(x['type'])
 
-  # params context (!)
+
+  # if function already declared/defined, check it
+  already = module['symtab'].value_get(func_id['str'])
+  if already != None:
+    if not type.eq(already['type'], func_type):
+      error("func redefinition", x['ti'])
+      info("firstly declared here", already['ti'])
+
+
+  # create params symtab
   module['symtab'] = module['symtab'].branch()
 
   global cfunc
@@ -1327,12 +1336,15 @@ def def_func(x):
     module['symtab'].value_add(param_id['str'], p)
     i = i + 1
 
+
   func_stmt = do_stmt_block(x['stmt'])
   cfunc['stmt'] = func_stmt
 
-  # params context (!)
+
+  # remove params symtab
   module['symtab'] = module['symtab'].parent_get()
 
+  # add function to global symtab
   module['symtab'].value_add(func_id['str'], cfunc)
 
 
@@ -1398,6 +1410,7 @@ def decl_func(x):
     'properties': {},
     'ti': x['ti']
   }
+  print("func decl: " + id['str'])
   module['symtab'].value_add(id['str'], fval)
 
   if attribute_get('no-c-print'):
