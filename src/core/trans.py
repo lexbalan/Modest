@@ -1410,7 +1410,7 @@ def decl_func(x):
     'properties': {},
     'ti': x['ti']
   }
-  print("func decl: " + id['str'])
+
   module['symtab'].value_add(id['str'], fval)
 
   if attribute_get('no-c-print'):
