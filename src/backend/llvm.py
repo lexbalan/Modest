@@ -1086,7 +1086,7 @@ def print_func_signature(id, typ):
 def print_decl_func(x):
   #if x['extern']:
   #print("LLVM_DECL_FUNC " + x['id']['str'])
-  o("declare ")
+  o("\ndeclare ")
   print_func_signature(x['id']['str'], x['type'])
 
 
@@ -1175,14 +1175,14 @@ def print_def_func(x):
 def print_decl_type(x):
   # LLVM не печатает, но C печатает (!)
   if x['extern']:
-    o("%%%s = type opaque" % x['id']['str'])
+    o("\n%%%s = type opaque" % x['id']['str'])
 
 
 def print_def_type(x):
   if type.is_record(x['type']):
     o("\n")
 
-  o("%%%s = type " % x['id']['str'])
+  o("\n%%%s = type " % x['id']['str'])
   print_type(x['type'], print_aka=False)
 
 
@@ -1254,31 +1254,6 @@ def run(module, strs, outname):
   outname = outname + '.ll'
   printer_open(outname)
 
-  if False:  #!
-    lo("%Bool= type i1")
-    #lo("%Void = type i1")
-    lo("%Nil = type i1*")
-    lo("%Unit = type i1")
-    lo("%Str = type [0 x i8]*")
-
-    lo("%Nat1 = type i1")
-
-    lo("%Nat8 = type i8")
-    lo("%Nat16 = type i16")
-    lo("%Nat32 = type i32")
-    lo("%Nat64 = type i64")
-
-    lo("%Int = type i64")
-
-    lo("%Int8 = type i8")
-    lo("%Int16 = type i16")
-    lo("%Int32 = type i32")
-    lo("%Int64 = type i64")
-
-    lo("%Float16 = type half")
-    lo("%Float32 = type float")
-    lo("%Float64 = type double")
-    lo("%Float128 = type fp128")
 
   isa_prev = None
 
@@ -1302,7 +1277,6 @@ def run(module, strs, outname):
     lo("@%s = private constant [%d x i8] c\"%s\\00\"" % (s, slen, ss))
 
   for x in module:
-    o("\n")
     isa = x['isa']
     k = x['kind']
 
