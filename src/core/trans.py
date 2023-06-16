@@ -39,8 +39,6 @@ def init():
   # init main symtab
   root_symtab = Symtab()
   root_symtab.type_add('Unit', type.typeUnit)
-  root_symtab.type_add('Int', type.typeInt)
-  root_symtab.type_add('Nat', type.typeNat)
   root_symtab.type_add('Int8', type.typeInt8)
   root_symtab.type_add('Int16', type.typeInt16)
   root_symtab.type_add('Int32', type.typeInt32)
@@ -1215,9 +1213,11 @@ def def_const(x):
   }
 
 
+no_type_alias = False
 
 def def_type(x):
   id = x['id']
+  #print('def_type: ' + id['str'])
   t = do_type(x['type'])
   if type.is_bad(t):
     return def_bad()
@@ -1228,10 +1228,18 @@ def def_type(x):
   if already_defined:
     exist.update(t)  # just overwrite existed 'oaque' type (for records)
   else:
-    # create new type alias
-    nt = type.create_alias(id['str'], t, id['ti'])
-    nt2 = module['symtab'].type_add(id['str'], nt)
+    global no_type_alias
+    nt = None
+    if no_type_alias != False:
+      if no_type_alias == 'once':
+        no_type_alias = False
+      nt = t
+    else:
+      # create new type alias
+      nt = type.create_alias(id['str'], t, id['ti'])
 
+
+    nt2 = module['symtab'].type_add(id['str'], nt)
 
   if attribute_get('no-c-print'):
     if settings_check('backend', 'c'):

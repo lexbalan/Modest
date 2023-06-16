@@ -4,6 +4,6 @@
 
 #include <stdint.h>
 
-int lib_func();
+void lib_func();
 
 #endif  /* LIB_H */

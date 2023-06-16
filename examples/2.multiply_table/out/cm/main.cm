@@ -3,7 +3,7 @@
 include "libc.h"
 
 
-func mtab (n : Nat32) -> Void {
+func mtab (n : Nat32) -> Unit {
 	var m : Nat32
 	m := 1
 	while m < 10 {
@@ -14,7 +14,7 @@ func mtab (n : Nat32) -> Void {
 }
 
 
-func main () -> Int64 {
+func main () -> Int32 {
 	let n = 2
 	printf("multiply table for %d\n", n)
 	mtab(n)

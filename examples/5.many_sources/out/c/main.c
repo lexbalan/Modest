@@ -6,8 +6,11 @@
 #include <string.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include "./lib.h"
 
-void lib_func() {
-	printf("hello from lib_func\n");
+int32_t main() {
+	printf("hello from main\n");
+	lib_func();
+	return 0;
 }
 

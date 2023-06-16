@@ -1,11 +1,2 @@
-// ctypes.hm
 
-type Long Int64
-type LongLong Int64
-
-type Float Float32
-type Double Float64
-type LongDouble Float64
-
-type SizeT Nat64
-
+include "ctypes64.hm"

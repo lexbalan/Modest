@@ -1,6 +1,8 @@
 
 
+// import Int and printf from here
 include "libc.hm"
+
 
 func main () -> Int {
   printf("Hello World!\n")

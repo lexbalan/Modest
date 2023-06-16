@@ -375,6 +375,7 @@ def record_field_get(typ, field_id):
 
 
 def create_alias(id, t, ti):
+  #print('type.create_alias ' + id)
   nt = copy.copy(t)
 
   nt['c_alias'] = id
@@ -432,10 +433,6 @@ def type_print(t, print_aka=True):
 
       if id == '<generic:int>':
         id = 'Int'
-
-      if id == 'Unit':
-        print("Unit", end='')
-        return
 
       if is_generic(t):
         print('Generic', end='')

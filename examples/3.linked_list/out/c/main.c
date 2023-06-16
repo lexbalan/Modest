@@ -105,7 +105,7 @@ void list_print_backward(List *list) {
 	}
 }
 
-int main() {
+int32_t main() {
 	printf("linked list example\n");
 	List *list = linked_list_create();
 	if(list == NULL) {

@@ -17,7 +17,7 @@ void mtab(uint32_t n) {
 	}
 }
 
-int main() {
+int32_t main() {
 	Int n = 2;
 	printf("multiply table for %d\n", n);
 	mtab(n);

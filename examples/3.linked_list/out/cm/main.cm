@@ -7,7 +7,7 @@ type Node
 type Node record {
 	next : *Node
 	prev : *Node
-	link : *Void
+	link : *Unit
 }
 
 type List record {
@@ -58,7 +58,7 @@ func linked_list_insert_node (list : *List, new_node : *Node) -> *Node {
 }
 
 
-func linked_list_insert (list : *List, link : *Void) -> *Node {
+func linked_list_insert (list : *List, link : *Unit) -> *Node {
 	if list == nil or link == nil {
 		return nil
 	}
@@ -75,14 +75,14 @@ func linked_list_insert (list : *List, link : *Void) -> *Node {
 }
 
 
-func nat64_list_insert (list : *List, x : Nat64) -> Void {
+func nat64_list_insert (list : *List, x : Nat64) -> Unit {
 	let p_nat64 = malloc(sizeof(Nat64)) to *Nat64
 	*p_nat64 := x
 	linked_list_insert(list, p_nat64)
 }
 
 
-func list_print_forward (list : *List) -> Void {
+func list_print_forward (list : *List) -> Unit {
 	printf("list_print_forward:\n")
 	var pn : *Node := list.head
 	while pn != nil {
@@ -93,7 +93,7 @@ func list_print_forward (list : *List) -> Void {
 }
 
 
-func list_print_backward (list : *List) -> Void {
+func list_print_backward (list : *List) -> Unit {
 	printf("list_print_backward:\n")
 	var pn : *Node := list.tail
 	while pn != nil {
@@ -104,7 +104,7 @@ func list_print_backward (list : *List) -> Void {
 }
 
 
-func main () -> Int64 {
+func main () -> Int32 {
 	printf("linked list example\n")
 	let list = linked_list_create()
 	if list == nil {

@@ -3,7 +3,7 @@
 include "libc.h"
 
 
-func main () -> Int64 {
+func main () -> Int32 {
 	printf("Hello World!\n")
 	return 0
 }
