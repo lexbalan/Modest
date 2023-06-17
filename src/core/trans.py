@@ -1108,9 +1108,9 @@ def import_abspath(s):
 
 
 # include аналог from xxx import *
-include_guard_paths = []
+included_modules = {}
 def do_include(x):
-  global include_guard_paths
+  global included_modules
 
   impline = x['str']
   #print("do_include " + impline)
@@ -1120,12 +1120,12 @@ def do_include(x):
     error("module not found", x)
     return None
 
-  if abspath in include_guard_paths:
+  if abspath in included_modules:
     return None  # already imported
-  include_guard_paths.append(abspath)
 
 
   m = translate(abspath)
+  included_modules[abspath] = m
 
   #print("\nINCLUDE: " + impline)
   #m['symtab'].show_tables()
@@ -1526,9 +1526,9 @@ def translate(srcname):
 
   # выставляем директорию текущего файла
   # (будет использоваться в релативных инклудах)
-  global include_guard_paths
-  old_include_guard_paths = include_guard_paths
-  include_guard_paths = []
+  global included_modules
+  old_included_modules = included_modules
+  included_modules = {}
 
   global env_cfdir
   old_env_cfdir = env_cfdir
@@ -1546,7 +1546,7 @@ def translate(srcname):
 
   env_cfdir = old_env_cfdir
 
-  include_guard_paths = old_include_guard_paths
+  included_modules = old_included_modules
   return m
 
 
