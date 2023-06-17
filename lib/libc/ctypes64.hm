@@ -3,9 +3,6 @@
 // do not create type alias object, just replace type
 //!global no_type_alias; no_type_alias = True
 
-// do not product text instructions, just modify context
-//!attribute('c-no-print', glob=True)
-
 type Char Int8
 type ConstChar Char
 type SignedChar Int8
@@ -31,7 +28,5 @@ type LongDouble Float64
 type SizeT Nat64
 type SSizeT Int64
 
-
-//!attribute_off('c-no-print')
 //!global no_type_alias; no_type_alias = False
 

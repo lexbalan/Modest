@@ -1203,6 +1203,8 @@ def def_const(x):
 no_type_alias = False
 
 def def_type(x):
+  global no_type_alias
+
   id = x['id']
   #print('def_type: ' + id['str'])
   t = do_type(x['type'])
@@ -1212,21 +1214,25 @@ def def_type(x):
   exist = module['symtab'].type_get(id['str'])
   already_defined = exist != None
 
+
   if already_defined:
     exist.update(t)  # just overwrite existed 'oaque' type (for records)
   else:
-    global no_type_alias
+
     nt = None
-    if no_type_alias != False:
-      if no_type_alias == 'once':
-        no_type_alias = False
-      nt = t
-    else:
+    if no_type_alias == False:
       # create new type alias
       nt = type.create_alias(id['str'], t, id['ti'])
-
+    else:
+      nt = t
 
     nt2 = module['symtab'].type_add(id['str'], nt)
+
+
+  if no_type_alias != False:
+    if no_type_alias == 'once':
+        no_type_alias = False
+    return None
 
   if attribute_get('c-no-print'):
     if settings_check('backend', 'c'):

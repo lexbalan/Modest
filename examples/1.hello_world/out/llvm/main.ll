@@ -1,26 +1,6 @@
 
 @str_0 = private constant [14 x i8] c"Hello World!\0A\00"
 
-%Char = type i8
-%ConstChar = type i8
-%SignedChar = type i8
-%UnsignedChar = type i8
-%Short = type i16
-%UnsignedShort = type i16
-%Int = type i32
-%UnsignedInt = type i32
-%LongInt = type i64
-%UnsignedLongInt = type i64
-%Long = type i64
-%UnsignedLong = type i64
-%LongLong = type i64
-%UnsignedLongLong = type i64
-%Float = type float
-%Double = type double
-%LongDouble = type double
-%SizeT = type i64
-%SSizeT = type i64
-
 
 %FposT = type opaque
 %FILE = type opaque
