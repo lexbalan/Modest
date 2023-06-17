@@ -1,5 +1,4 @@
 .DS_Store
 *.o
-*.ll
 a.out
 test/
