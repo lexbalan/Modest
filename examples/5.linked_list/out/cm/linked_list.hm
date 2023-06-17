@@ -1,0 +1,16 @@
+
+
+type List
+type Node
+
+func linked_list_create () -> *List
+func linked_list_size_get (list : *List) -> Nat32
+func linked_list_first_get (list : *List) -> *Node
+func linked_list_last_get (list : *List) -> *Node
+func linked_list_node_create () -> *Node
+func linked_list_node_prev_get (node : *Node) -> *Node
+func linked_list_node_next_get (node : *Node) -> *Node
+func linked_list_node_link_get (node : *Node) -> *Unit
+func linked_list_insert_node (list : *List, new_node : *Node) -> *Node
+func linked_list_insert (list : *List, link : *Unit) -> *Node
+

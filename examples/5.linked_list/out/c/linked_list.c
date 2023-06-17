@@ -6,10 +6,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdio.h>
-
-struct Node;
-typedef struct Node Node;
-
+#include "./linked_list.h"
 
 struct Node {
 	Node *next;
@@ -18,11 +15,11 @@ struct Node {
 };
 
 
-typedef struct {
+struct List {
 	Node *head;
 	Node *tail;
 	uint32_t size;
-} List;
+};
 
 
 List *linked_list_create() {
@@ -35,6 +32,27 @@ List *linked_list_create() {
 	return list;
 }
 
+uint32_t linked_list_size_get(List *list) {
+	if(list == NULL) {
+		return 0;
+	}
+	return list->size;
+}
+
+Node *linked_list_first_get(List *list) {
+	if(list == NULL) {
+		return NULL;
+	}
+	return list->head;
+}
+
+Node *linked_list_last_get(List *list) {
+	if(list == NULL) {
+		return NULL;
+	}
+	return list->tail;
+}
+
 Node *linked_list_node_create() {
 	Node * const node = malloc(sizeof(Node));
 	if(node == NULL) {
@@ -44,6 +62,27 @@ Node *linked_list_node_create() {
 	node->next = NULL;
 	node->link = NULL;
 	return node;
+}
+
+Node *linked_list_node_next_get(Node *node) {
+	if(node == NULL) {
+		return NULL;
+	}
+	return node->next;
+}
+
+Node *linked_list_node_prev_get(Node *node) {
+	if(node == NULL) {
+		return NULL;
+	}
+	return node->prev;
+}
+
+void *linked_list_node_link_get(Node *node) {
+	if(node == NULL) {
+		return NULL;
+	}
+	return node->link;
 }
 
 Node *linked_list_insert_node(List *list, Node *new_node) {
@@ -77,55 +116,5 @@ Node *linked_list_insert(List *list, void *link) {
 		free(new_node);
 	}
 	return node;
-}
-
-void nat64_list_insert(List *list, uint64_t x) {
-	uint64_t * const p_nat64 = malloc(sizeof(uint64_t));
-	*p_nat64 = x;
-	linked_list_insert(list, p_nat64);
-}
-
-void list_print_forward(List *list) {
-	printf("list_print_forward:\n");
-	Node *pn = list->head;
-	while(pn != NULL) {
-		uint32_t * const x = pn->link;
-		printf("v = %d\n", *x);
-		pn = pn->next;
-	}
-}
-
-void list_print_backward(List *list) {
-	printf("list_print_backward:\n");
-	Node *pn = list->tail;
-	while(pn != NULL) {
-		uint32_t * const x = pn->link;
-		printf("v = %d\n", *x);
-		pn = pn->prev;
-	}
-}
-
-int32_t main() {
-	printf("linked list example\n");
-	List * const list = linked_list_create();
-	if(list == NULL) {
-		printf("error: cannot create list");
-		return 1;
-	}
-	nat64_list_insert(list, 0);
-	nat64_list_insert(list, 10);
-	nat64_list_insert(list, 20);
-	nat64_list_insert(list, 30);
-	nat64_list_insert(list, 40);
-	nat64_list_insert(list, 50);
-	nat64_list_insert(list, 60);
-	nat64_list_insert(list, 70);
-	nat64_list_insert(list, 80);
-	nat64_list_insert(list, 90);
-	nat64_list_insert(list, 100);
-	printf("linked list size: %d\n", list->size);
-	list_print_forward(list);
-	list_print_backward(list);
-	return 0;
 }
 

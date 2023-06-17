@@ -1,0 +1,60 @@
+
+
+include "libc/libc.h"
+include "./linked_list.h"
+
+
+func nat64_list_insert (list : *List, x : Nat64) -> Unit {
+	let p_nat64 = malloc(sizeof(Nat64)) to *Nat64
+	*p_nat64 := x
+	linked_list_insert(list, p_nat64)
+}
+
+
+func list_print_forward (list : *List) -> Unit {
+	printf("list_print_forward:\n")
+	var pn : *Node := linked_list_first_get(list)
+	while pn != nil {
+		let x = linked_list_node_link_get(pn) to *Nat32
+		printf("v = %d\n", *x)
+		pn := linked_list_node_next_get(pn)
+	}
+}
+
+
+func list_print_backward (list : *List) -> Unit {
+	printf("list_print_backward:\n")
+	var pn : *Node := linked_list_last_get(list)
+	while pn != nil {
+		let x = linked_list_node_link_get(pn) to *Nat32
+		printf("v = %d\n", *x)
+		pn := linked_list_node_prev_get(pn)
+	}
+}
+
+
+func main () -> Int32 {
+	printf("linked list example\n")
+	let list = linked_list_create()
+	if list == nil {
+		printf("error: cannot create list")
+		return 1
+	}
+	nat64_list_insert(list, 0)
+	nat64_list_insert(list, 10)
+	nat64_list_insert(list, 20)
+	nat64_list_insert(list, 30)
+	nat64_list_insert(list, 40)
+	nat64_list_insert(list, 50)
+	nat64_list_insert(list, 60)
+	nat64_list_insert(list, 70)
+	nat64_list_insert(list, 80)
+	nat64_list_insert(list, 90)
+	nat64_list_insert(list, 100)
+	let list_size = linked_list_size_get(list)
+	printf("linked list size: %d\n", list_size)
+	list_print_forward(list)
+	list_print_backward(list)
+	return 0
+}
+

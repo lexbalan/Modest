@@ -1,11 +1,4 @@
 
-@str_0 = private constant [21 x i8] c"list_print_forward:\0A\00"
-@str_1 = private constant [8 x i8] c"v = %d\0A\00"
-@str_2 = private constant [22 x i8] c"list_print_backward:\0A\00"
-@str_3 = private constant [8 x i8] c"v = %d\0A\00"
-@str_4 = private constant [21 x i8] c"linked list example\0A\00"
-@str_5 = private constant [26 x i8] c"error: cannot create list\00"
-@str_6 = private constant [22 x i8] c"linked list size: %d\0A\00"
 
 
 %FposT = type opaque
@@ -119,6 +112,45 @@ endif_0:
   ret %List* %4
 }
 
+define i32 @linked_list_size_get(%List* %list) {
+  %1 = bitcast %List* %list to i8*
+  %2 = icmp eq i8* %1, null
+  br i1 %2 , label %then_0, label %endif_0
+then_0:
+  ret i32 0
+  br label %endif_0
+endif_0:
+  %4 = getelementptr inbounds %List, %List* %list, i32 0, i32 2
+  %5 = load i32, i32* %4
+  ret i32 %5
+}
+
+define %Node* @linked_list_first_get(%List* %list) {
+  %1 = bitcast %List* %list to i8*
+  %2 = icmp eq i8* %1, null
+  br i1 %2 , label %then_0, label %endif_0
+then_0:
+  ret %Node* null
+  br label %endif_0
+endif_0:
+  %4 = getelementptr inbounds %List, %List* %list, i32 0, i32 0
+  %5 = load %Node*, %Node** %4
+  ret %Node* %5
+}
+
+define %Node* @linked_list_last_get(%List* %list) {
+  %1 = bitcast %List* %list to i8*
+  %2 = icmp eq i8* %1, null
+  br i1 %2 , label %then_0, label %endif_0
+then_0:
+  ret %Node* null
+  br label %endif_0
+endif_0:
+  %4 = getelementptr inbounds %List, %List* %list, i32 0, i32 1
+  %5 = load %Node*, %Node** %4
+  ret %Node* %5
+}
+
 define %Node* @linked_list_node_create() {
   %1 = getelementptr  %Node, %Node* null, i32 1
   %2 = ptrtoint  %Node* %1 to i64
@@ -138,6 +170,45 @@ endif_0:
   %10 = getelementptr inbounds %Node, %Node* %4, i32 0, i32 2
   store i8* null, i8** %10
   ret %Node* %4
+}
+
+define %Node* @linked_list_node_next_get(%Node* %node) {
+  %1 = bitcast %Node* %node to i8*
+  %2 = icmp eq i8* %1, null
+  br i1 %2 , label %then_0, label %endif_0
+then_0:
+  ret %Node* null
+  br label %endif_0
+endif_0:
+  %4 = getelementptr inbounds %Node, %Node* %node, i32 0, i32 0
+  %5 = load %Node*, %Node** %4
+  ret %Node* %5
+}
+
+define %Node* @linked_list_node_prev_get(%Node* %node) {
+  %1 = bitcast %Node* %node to i8*
+  %2 = icmp eq i8* %1, null
+  br i1 %2 , label %then_0, label %endif_0
+then_0:
+  ret %Node* null
+  br label %endif_0
+endif_0:
+  %4 = getelementptr inbounds %Node, %Node* %node, i32 0, i32 1
+  %5 = load %Node*, %Node** %4
+  ret %Node* %5
+}
+
+define i8* @linked_list_node_link_get(%Node* %node) {
+  %1 = bitcast %Node* %node to i8*
+  %2 = icmp eq i8* %1, null
+  br i1 %2 , label %then_0, label %endif_0
+then_0:
+  ret i8* null
+  br label %endif_0
+endif_0:
+  %4 = getelementptr inbounds %Node, %Node* %node, i32 0, i32 2
+  %5 = load i8*, i8** %4
+  ret i8* %5
 }
 
 define %Node* @linked_list_insert_node(%List* %list, %Node* %new_node) {
@@ -215,110 +286,6 @@ then_2:
   br label %endif_2
 endif_2:
   ret %Node* %11
-}
-
-define void @nat64_list_insert(%List* %list, i64 %x) {
-  %1 = getelementptr  i64, i64* null, i32 1
-  %2 = ptrtoint  i64* %1 to i64
-  %3 = call i8*(i64) @malloc (i64 %2)
-  %4 = bitcast i8* %3 to i64*
-  store i64 %x, i64* %4
-  %5 = bitcast i64* %4 to i8*
-  %6 = call %Node*(%List*, i8*) @linked_list_insert (%List* %list, i8* %5)
-  ret void
-}
-
-define void @list_print_forward(%List* %list) {
-  %1 = bitcast [21 x i8]* @str_0 to %ConstCharStr
-  %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %1)
-  %3 = getelementptr inbounds %List, %List* %list, i32 0, i32 0
-  %pn = alloca %Node*
-  %4 = load %Node*, %Node** %3
-  store %Node* %4, %Node** %pn
-  br label %again_1
-again_1:
-  %5 = load %Node*, %Node** %pn
-  %6 = bitcast %Node* %5 to i8*
-  %7 = icmp ne i8* %6, null
-  br i1 %7 , label %body_1, label %break_1
-body_1:
-  %8 = load %Node*, %Node** %pn
-  %9 = getelementptr inbounds %Node, %Node* %8, i32 0, i32 2
-  %10 = load i8*, i8** %9
-  %11 = bitcast i8* %10 to i32*
-  %12 = bitcast [8 x i8]* @str_1 to %ConstCharStr
-  %13 = load i32, i32* %11
-  %14 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %12, i32 %13)
-  %15 = load %Node*, %Node** %pn
-  %16 = getelementptr inbounds %Node, %Node* %15, i32 0, i32 0
-  %17 = load %Node*, %Node** %16
-  store %Node* %17, %Node** %pn
-  br label %again_1
-break_1:
-  ret void
-}
-
-define void @list_print_backward(%List* %list) {
-  %1 = bitcast [22 x i8]* @str_2 to %ConstCharStr
-  %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %1)
-  %3 = getelementptr inbounds %List, %List* %list, i32 0, i32 1
-  %pn = alloca %Node*
-  %4 = load %Node*, %Node** %3
-  store %Node* %4, %Node** %pn
-  br label %again_1
-again_1:
-  %5 = load %Node*, %Node** %pn
-  %6 = bitcast %Node* %5 to i8*
-  %7 = icmp ne i8* %6, null
-  br i1 %7 , label %body_1, label %break_1
-body_1:
-  %8 = load %Node*, %Node** %pn
-  %9 = getelementptr inbounds %Node, %Node* %8, i32 0, i32 2
-  %10 = load i8*, i8** %9
-  %11 = bitcast i8* %10 to i32*
-  %12 = bitcast [8 x i8]* @str_3 to %ConstCharStr
-  %13 = load i32, i32* %11
-  %14 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %12, i32 %13)
-  %15 = load %Node*, %Node** %pn
-  %16 = getelementptr inbounds %Node, %Node* %15, i32 0, i32 1
-  %17 = load %Node*, %Node** %16
-  store %Node* %17, %Node** %pn
-  br label %again_1
-break_1:
-  ret void
-}
-
-define i32 @main() {
-  %1 = bitcast [21 x i8]* @str_4 to %ConstCharStr
-  %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %1)
-  %3 = call %List*() @linked_list_create ()
-  %4 = bitcast %List* %3 to i8*
-  %5 = icmp eq i8* %4, null
-  br i1 %5 , label %then_0, label %endif_0
-then_0:
-  %6 = bitcast [26 x i8]* @str_5 to %ConstCharStr
-  %7 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %6)
-  ret i32 1
-  br label %endif_0
-endif_0:
-  call void(%List*, i64) @nat64_list_insert (%List* %3, i64 0)
-  call void(%List*, i64) @nat64_list_insert (%List* %3, i64 10)
-  call void(%List*, i64) @nat64_list_insert (%List* %3, i64 20)
-  call void(%List*, i64) @nat64_list_insert (%List* %3, i64 30)
-  call void(%List*, i64) @nat64_list_insert (%List* %3, i64 40)
-  call void(%List*, i64) @nat64_list_insert (%List* %3, i64 50)
-  call void(%List*, i64) @nat64_list_insert (%List* %3, i64 60)
-  call void(%List*, i64) @nat64_list_insert (%List* %3, i64 70)
-  call void(%List*, i64) @nat64_list_insert (%List* %3, i64 80)
-  call void(%List*, i64) @nat64_list_insert (%List* %3, i64 90)
-  call void(%List*, i64) @nat64_list_insert (%List* %3, i64 100)
-  %9 = bitcast [22 x i8]* @str_6 to %ConstCharStr
-  %10 = getelementptr inbounds %List, %List* %3, i32 0, i32 2
-  %11 = load i32, i32* %10
-  %12 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %9, i32 %11)
-  call void(%List*) @list_print_forward (%List* %3)
-  call void(%List*) @list_print_backward (%List* %3)
-  ret i32 0
 }
 
 
