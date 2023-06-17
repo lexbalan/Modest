@@ -6,20 +6,17 @@ global module
 module['text'].append(c_include("stdio.h"))
 module['text'].append(c_include("stdlib.h"))
 module['text'].append(c_include("string.h"))
-module['text'].append(c_include("fcntl.h"))      # open
-module['text'].append(c_include("unistd.h"))     # write
+module['text'].append(c_include("fcntl.h"))
+module['text'].append(c_include("unistd.h"))
 #output.append(c_include("sys/stat.h"))  # fstat
 */
 
 
 include "./stdio.hm"
 
-//!attribute('c-no-print')
+//!attribute('c-no-print', glob=True)
 include "./ctypes.hm"
 
-
-
-//!attribute('no-c-print', glob=True)
 
 
 type DevT Nat16      /* holds (major|minor) device pair */
@@ -53,6 +50,7 @@ type TimeT Int32     /* time in seconds since 1970 */
 
 
 extern type DIR
+
 
 extern func malloc (size : SizeT) -> *Unit
 extern func memset (mem : *Unit, c : Int, n : SizeT) -> *Unit
@@ -104,6 +102,5 @@ extern func getcwd (buf : Str, size : SizeT) -> Str
 
 extern func getenv (name : Str) -> Str
 
-
-//!attribute_off('no-c-print')
+//!attribute_off('c-no-print')
 

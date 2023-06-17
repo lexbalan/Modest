@@ -583,7 +583,7 @@ def print_def_func(x):
 
 def print_decl_type(x):
   name = x['id']['str']
-  o("// type declaration %s\n" % name)
+  #o("// type declaration %s\n" % name)
   o("struct %s;\n" % name)
   o("typedef struct %s %s;\n" % (name, name))
 
@@ -595,7 +595,7 @@ def print_def_type(x):
 
   # !
   if x['afterdef']:
-    print('afterdef')
+    #print('afterdef')
     if type.is_record(x['type']):
       print_type_record(x['type'], label=x['id']['str'])
       o(";\n")

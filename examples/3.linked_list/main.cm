@@ -1,7 +1,6 @@
 
 
-//include "libc/libc.hm"
-include "libc/stdio.hm"
+
 include "libc/libc.hm"
 
 

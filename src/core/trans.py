@@ -13,6 +13,7 @@ from core.symtab import Symtab
 
 
 # current file directory
+env_cfabs = ""
 env_cfdir = ""
 
 parser = Parser()
@@ -1083,26 +1084,6 @@ def do_stmt_block(x):
 
 
 
-# получает строку импорта (и неявно глобальный контекст)
-# и возвращает полный путь к модулю
-def import_abspath(s):
-  is_local = s[0:2] == './' or s[0:3] == '../'
-
-  f = ''
-  if is_local:
-    #local_path = settings_get('path')
-    local_path = env_cfdir
-    f = local_path + '/' + s #[1:]
-
-  else: # (global)
-    path_lib = settings_get('library')
-    f = path_lib + '/' + s
-
-  if not os.path.exists(f):
-    return None
-
-  return os.path.abspath(f)
-
 
 
 
@@ -1110,17 +1091,19 @@ def import_abspath(s):
 # include аналог from xxx import *
 included_modules = {}
 def do_include(x):
-  global included_modules
-
   impline = x['str']
-  #print("do_include " + impline)
-  abspath = import_abspath(impline)
+  #print("do_include: " + impline)
 
+  # get abspath
+  abspath = import_abspath(impline)
   if abspath == None:
     error("module not found", x)
     return None
 
+
+  global included_modules
   if abspath in included_modules:
+    m = included_modules[abspath]
     return None  # already imported
 
 
@@ -1131,8 +1114,6 @@ def do_include(x):
   #m['symtab'].show_tables()
 
   # расширяем нашу таблицу символов таблицей импорта
-  if m['symtab'] == None:
-    print(m)
   module['symtab'].merge(m['symtab'])
 
 
@@ -1206,7 +1187,7 @@ def def_const(x):
   value_attribute_add(v, 'const')
   module['symtab'].value_add(id['str'], v)
 
-  if attribute_get('no-c-print'):
+  if attribute_get('c-no-print'):
     if settings_check('backend', 'c'):
       return None
 
@@ -1247,7 +1228,7 @@ def def_type(x):
 
     nt2 = module['symtab'].type_add(id['str'], nt)
 
-  if attribute_get('no-c-print'):
+  if attribute_get('c-no-print'):
     if settings_check('backend', 'c'):
       return None
 
@@ -1390,7 +1371,7 @@ def decl_type(x):
   }
   nt = module['symtab'].type_add(id['str'], nt)
 
-  if attribute_get('no-c-print'):
+  if attribute_get('c-no-print'):
     if settings_check('backend', 'c'):
       return None
 
@@ -1427,7 +1408,7 @@ def decl_func(x):
 
   module['symtab'].value_add(id['str'], fval)
 
-  if attribute_get('no-c-print'):
+  if attribute_get('c-no-print'):
     if settings_check('backend', 'c'):
       return None
 
@@ -1501,6 +1482,14 @@ def proc(ast):
       elif kind == 'include':
         y = do_include(x)
         if y != None:
+          """print("EXTEND " + env_cfabs)
+          print("(%d)" % len(y))
+          for yy in y:
+            if 'id' in yy:
+              print("+ @" + yy['id']['str'])
+            else:
+              print("+ #" + yy['kind'])"""
+
           module['text'].extend(y)
         continue
 
@@ -1519,6 +1508,27 @@ def proc(ast):
 
 
 
+
+# получает строку импорта (и неявно глобальный контекст)
+# и возвращает полный путь к модулю
+def import_abspath(s):
+  is_local = s[0:2] == './' or s[0:3] == '../'
+
+  f = ''
+  if is_local:
+    f = env_cfdir + '/' + s #[1:]
+
+  else: # (global)
+    path_lib = settings_get('library')
+    f = path_lib + '/' + s
+
+  if not os.path.exists(f):
+    return None
+
+  return os.path.abspath(f)
+
+
+
 def translate(srcname):
   #print("translate!")
   #module['symtab'].show_tables()
@@ -1526,27 +1536,38 @@ def translate(srcname):
 
   # выставляем директорию текущего файла
   # (будет использоваться в релативных инклудах)
-  global included_modules
-  old_included_modules = included_modules
-  included_modules = {}
+  #global included_modules
+  #old_included_modules = included_modules
+  #included_modules = {}
 
+  #srcname = import_abspath(srcname)
+  if srcname == None:
+    return None
+
+  global env_cfabs
   global env_cfdir
   old_env_cfdir = env_cfdir
+  old_env_cfabs = env_cfabs
+
   absp = os.path.abspath(srcname)
+  env_cfabs = absp
   fdir = os.path.dirname(absp)
   env_cfdir = fdir
   #print("ABS: " + absp)
   #print("FDIR: " + fdir)
 
-  if not os.path.exists(srcname):
+  if not os.path.exists(absp):
     return None
 
-  ast = parser.parse(srcname)
+  ast = parser.parse(absp)
+  #print("process %s" % absp)
   m = proc(ast)
+  #print("end process %s" % absp)
 
+  env_cfabs = old_env_cfabs
   env_cfdir = old_env_cfdir
 
-  included_modules = old_included_modules
+  #included_modules = old_included_modules
   return m
 
 
