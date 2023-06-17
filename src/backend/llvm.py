@@ -209,10 +209,8 @@ def print_type(t, print_aka=True):
     i = 0
     while i < len(fields):
       field = fields[i]
-      if i > 0:
-        o(',')
+      if i > 0: o(',')
       o("\n\t"); print_type(field['type'])
-
       i = i + 1
     o("\n}")
 
@@ -1166,7 +1164,7 @@ def print_def_func(x):
 
   if type.eq(x['type']['to'], type.typeUnit):
     lo("  ret void")
-  lo("}")
+  lo("}\n")
 
   func_context = old_func_context
 
@@ -1179,11 +1177,10 @@ def print_decl_type(x):
 
 
 def print_def_type(x):
-  if type.is_record(x['type']):
-    o("\n")
-
   o("\n%%%s = type " % x['id']['str'])
   print_type(x['type'], print_aka=False)
+  if type.is_record(x['type']):
+    o("\n")
 
 
 

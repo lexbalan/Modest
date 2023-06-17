@@ -88,7 +88,6 @@ declare i32 @closedir(%DIR*)
 declare [0 x i8]* @getcwd([0 x i8]*, i64)
 declare [0 x i8]* @getenv([0 x i8]*)
 
-
 %Node = type {
 	%Node*,
 	%Node*,
@@ -100,6 +99,7 @@ declare [0 x i8]* @getenv([0 x i8]*)
 	%Node*,
 	i32
 }
+
 define %List* @linked_list_create() {
   %1 = getelementptr  %List, %List* null, i32 1
   %2 = ptrtoint  %List* %1 to i64
@@ -118,6 +118,7 @@ endif_0:
   store %Node* null, %Node** %9
   ret %List* %4
 }
+
 define %Node* @linked_list_node_create() {
   %1 = getelementptr  %Node, %Node* null, i32 1
   %2 = ptrtoint  %Node* %1 to i64
@@ -138,6 +139,7 @@ endif_0:
   store i8* null, i8** %10
   ret %Node* %4
 }
+
 define %Node* @linked_list_insert_node(%List* %list, %Node* %new_node) {
   %1 = bitcast %List* %list to i8*
   %2 = icmp eq i8* %1, null
@@ -182,6 +184,7 @@ endif_2:
   store i32 %23, i32* %24
   ret %Node* %new_node
 }
+
 define %Node* @linked_list_insert(%List* %list, i8* %link) {
   %1 = bitcast %List* %list to i8*
   %2 = icmp eq i8* %1, null
@@ -213,6 +216,7 @@ then_2:
 endif_2:
   ret %Node* %11
 }
+
 define void @nat64_list_insert(%List* %list, i64 %x) {
   %1 = getelementptr  i64, i64* null, i32 1
   %2 = ptrtoint  i64* %1 to i64
@@ -223,6 +227,7 @@ define void @nat64_list_insert(%List* %list, i64 %x) {
   %6 = call %Node*(%List*, i8*) @linked_list_insert (%List* %list, i8* %5)
   ret void
 }
+
 define void @list_print_forward(%List* %list) {
   %1 = bitcast [21 x i8]* @str_0 to %ConstCharStr
   %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %1)
@@ -252,6 +257,7 @@ body_1:
 break_1:
   ret void
 }
+
 define void @list_print_backward(%List* %list) {
   %1 = bitcast [22 x i8]* @str_2 to %ConstCharStr
   %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %1)
@@ -281,6 +287,7 @@ body_1:
 break_1:
   ret void
 }
+
 define i32 @main() {
   %1 = bitcast [21 x i8]* @str_4 to %ConstCharStr
   %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %1)
@@ -313,4 +320,5 @@ endif_0:
   call void(%List*) @list_print_backward (%List* %3)
   ret i32 0
 }
+
 
