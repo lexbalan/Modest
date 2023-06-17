@@ -1,6 +1,6 @@
 
 
-include "libc.hm"
+include "libc/stdio.hm"
 
 
 func mtab (n : Nat32) -> Unit {

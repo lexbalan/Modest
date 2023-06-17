@@ -1,6 +1,6 @@
 // main.cm
 
-include "libc.hm"
+include "libc/stdio.hm"
 
 //!attribute('c-just-include')
 include "./lib.hm"

@@ -1,20 +1,23 @@
 // libc.hm
 
 
-include "./stdio.hm"
-
-//!attribute('c-no-print')
-include "./ctypes.hm"
-
-
 /*!
 global module
+module['text'].append(c_include("stdio.h"))
 module['text'].append(c_include("stdlib.h"))
 module['text'].append(c_include("string.h"))
 module['text'].append(c_include("fcntl.h"))      # open
 module['text'].append(c_include("unistd.h"))     # write
 #output.append(c_include("sys/stat.h"))  # fstat
 */
+
+
+include "./stdio.hm"
+
+//!attribute('c-no-print')
+include "./ctypes.hm"
+
+
 
 //!attribute('no-c-print', glob=True)
 

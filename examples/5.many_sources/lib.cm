@@ -1,6 +1,6 @@
 // lib.cm
 
-include "libc.hm"
+include "libc/stdio.hm"
 
 include "./lib.hm"
 

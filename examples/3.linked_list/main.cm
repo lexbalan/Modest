@@ -1,6 +1,6 @@
 
 
-include "libc.hm"
+include "libc/libc.hm"
 
 
 type Node

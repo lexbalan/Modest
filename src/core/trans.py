@@ -1527,17 +1527,20 @@ def translate(srcname):
   # выставляем директорию текущего файла
   # (будет использоваться в релативных инклудах)
   global env_cfdir
+  old_env_cfdir = env_cfdir
   absp = os.path.abspath(srcname)
   fdir = os.path.dirname(absp)
   env_cfdir = fdir
   #print("ABS: " + absp)
-  print("FDIR: " + fdir)
+  #print("FDIR: " + fdir)
 
   if not os.path.exists(srcname):
     return None
 
   ast = parser.parse(srcname)
   m = proc(ast)
+
+  env_cfdir = old_env_cfdir
   return m
 
 

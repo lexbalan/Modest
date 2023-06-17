@@ -7,6 +7,8 @@ global module
 module['text'].append(c_include("stdio.h"))
 */
 
+//!attribute('no-c-print', glob=True)
+
 extern type FposT
 extern type FILE
 
@@ -70,5 +72,5 @@ extern func ungetc(char : Int, f : *FILE) -> Int
 extern func perror(str : ConstCharStr) -> Unit
 
 
-
+//!attribute_off('no-c-print')
 
