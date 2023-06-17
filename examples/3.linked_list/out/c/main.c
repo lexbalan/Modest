@@ -24,6 +24,7 @@ typedef struct {
 	uint32_t size;
 } List;
 
+
 List *linked_list_create() {
 	List *list = malloc(sizeof(List));
 	if(list == NULL) {

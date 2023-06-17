@@ -610,10 +610,10 @@ def print_def_type(x):
     print_type(x['type'])#, print_aka=False)
   o(" %s" % x['id']['str'])
   if defined_array:
-    o("[")
-    print_value(x['type']['size_expr'])
-    o("]")
+    o("["); print_value(x['type']['size_expr']); o("]")
   o(";")
+  if x['type']['kind'] in ['record', 'enum']:
+    o("\n")
 
 
 
