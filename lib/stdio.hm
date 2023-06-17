@@ -1,0 +1,74 @@
+
+
+include "ctypes.hm"
+
+/*!
+global module
+module['text'].append(c_include("stdio.h"))
+*/
+
+extern type FposT
+extern type FILE
+
+type CharStr Str
+type ConstCharStr Str
+
+
+extern func fclose (f : *FILE) -> Int
+extern func feof (f : *FILE) -> Int
+extern func ferror (f : *FILE) -> Int
+extern func fflush (f : *FILE) -> Int
+extern func fgetpos (f : *FILE, pos : *FposT) -> Int
+extern func fopen (fname : ConstCharStr, mode : ConstCharStr) -> *FILE
+extern func fread (buf : *Unit, size : SizeT, count : SizeT, f : *FILE) -> SizeT
+extern func fwrite (buf : *Unit, size : SizeT, count : SizeT, f : *FILE) -> SizeT
+extern func freopen(filename : ConstCharStr, mode : ConstCharStr, f : *FILE) -> *FILE
+
+extern func fseek  (stream : *FILE, offset : LongInt, whence : Int) -> Int
+
+extern func fsetpos (f : *FILE, pos : *FposT) -> Int
+extern func ftell (f : *FILE) -> LongInt
+extern func remove (filename : ConstCharStr) -> Int
+extern func rename (old_filename : ConstCharStr, new_filename : ConstCharStr) -> Int
+extern func rewind (f : *FILE) -> Unit
+extern func setbuf (f : *FILE, buffer : CharStr) -> Unit
+//int setvbuf(FILE *stream, char *buffer, int mode, size_t size)
+extern func setvbuf (f : *FILE, buffer : CharStr, mode : Int, size : SizeT) -> Int
+extern func tmpfile() -> *FILE
+extern func tmpnam(str : CharStr) -> CharStr
+
+//!attribute('arghack', glob=True)
+extern func fprintf (stream : *FILE, format : Str) -> Int
+//!attribute_off('arghack')
+
+
+//!attribute('arghack', glob=True)
+extern func printf  (s : ConstCharStr) -> Int
+extern func scanf   (s : ConstCharStr) -> Int
+extern func fscanf (f : *FILE, format : ConstCharStr) -> Int
+extern func sscanf  (buf : ConstCharStr, format : ConstCharStr) -> Int
+extern func sprintf (buf : CharStr, format : ConstCharStr) -> Int
+//!attribute_off('arghack')
+
+//extern func vfprintf (f : *FILE, format : ConstCharStr, arg : VaList) -> Int
+//extern func vprintf (format : ConstCharStr, arg : VaList) -> Int
+//extern func vsprintf (str : CharStr, format : ConstCharStr, arg : VaList) -> Int
+
+extern func fgetc (f : *FILE) -> Int
+extern func fputc (char : Int, f : *FILE) -> Int
+
+extern func fgets (str : CharStr, n : Int, f : *FILE) -> CharStr
+extern func fputs (str : ConstCharStr, f : *FILE) -> Int
+
+extern func getc (f : *FILE) -> Int
+extern func getchar () -> Int
+extern func gets (str : CharStr) -> CharStr
+extern func putc (char : Int, f : *FILE) -> Int
+extern func putchar (char : Int) -> Int
+extern func puts (str : ConstCharStr) -> Int
+extern func ungetc(char : Int, f : *FILE) -> Int
+extern func perror(str : ConstCharStr) -> Unit
+
+
+
+

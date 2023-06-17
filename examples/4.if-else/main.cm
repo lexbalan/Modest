@@ -1,6 +1,7 @@
 
 
-include "libc.hm"
+//include "libc/libc.hm"
+include "stdio.hm"
 
 
 func main () -> Int {

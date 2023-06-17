@@ -3,6 +3,7 @@
 //!global no_type_alias; no_type_alias = True
 
 type Char Int8
+type ConstChar Char
 type SignedChar Int8
 type UnsignedChar Nat8
 
@@ -24,6 +25,7 @@ type Double Float64
 type LongDouble Float64
 
 type SizeT Nat64
+type SSizeT Int64
 
 //!global no_type_alias; no_type_alias = False
 
