@@ -47,6 +47,42 @@ declare i32 @puts(%ConstCharStr)
 declare i32 @ungetc(i32, %FILE*)
 declare void @perror(%ConstCharStr)
 
+%DevT = type i16
+%InoT = type i32
+%BlkCntT = type i32
+%OffT = type i32
+%NlinkT = type i16
+%ModeT = type i32
+%UIDT = type i16
+%GIDT = type i8
+%BlkSizeT = type i16
+%TimeT = type i32
+
+%DIR = type opaque
+declare i8* @malloc(i64)
+declare i8* @memset(i8*, i32, i64)
+declare i8* @memcpy(i8*, i8*, i64)
+declare i32 @memcmp(i8*, i8*, i64)
+declare void @free(i8*)
+declare i32 @strncmp(i8*, i8*, i64)
+declare i32 @strcmp(i8*, i8*)
+declare i8* @strcpy(i8*, i8*)
+declare i64 @strlen(i8*)
+declare i32 @ftruncate(i32, %OffT)
+
+
+declare i32 @creat([0 x i8]*, %ModeT)
+declare i32 @open([0 x i8]*, i32)
+declare i32 @read(i32, i8*, i32)
+declare i32 @write(i32, i8*, i32)
+declare %OffT @lseek(i32, %OffT, i32)
+declare i32 @close(i32)
+declare void @exit(i32)
+declare %DIR* @opendir([0 x i8]*)
+declare i32 @closedir(%DIR*)
+declare [0 x i8]* @getcwd([0 x i8]*, i64)
+declare [0 x i8]* @getenv([0 x i8]*)
+
 define void @mtab(i32 %n) {
   %m = alloca i32
   store i32 1, i32* %m
@@ -68,10 +104,12 @@ body_1:
 break_1:
   ret void
 }
+
 define i32 @main() {
   %1 = bitcast [23 x i8]* @str_1 to %ConstCharStr
   %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %1, i64 2)
   call void(i32) @mtab (i32 2)
   ret i32 0
 }
+
 

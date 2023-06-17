@@ -26,7 +26,7 @@ typedef struct {
 
 
 List *linked_list_create() {
-	List *list = malloc(sizeof(List));
+	List * const list = malloc(sizeof(List));
 	if(list == NULL) {
 		return NULL;
 	}
@@ -36,7 +36,7 @@ List *linked_list_create() {
 }
 
 Node *linked_list_node_create() {
-	Node *node = malloc(sizeof(Node));
+	Node * const node = malloc(sizeof(Node));
 	if(node == NULL) {
 		return NULL;
 	}
@@ -54,7 +54,7 @@ Node *linked_list_insert_node(List *list, Node *new_node) {
 		list->head = new_node;
 	}
 	if(list->tail != NULL) {
-		Node *old_tail = list->tail;
+		Node * const old_tail = list->tail;
 		old_tail->next = new_node;
 		new_node->prev = old_tail;
 	}
@@ -67,12 +67,12 @@ Node *linked_list_insert(List *list, void *link) {
 	if(list == NULL || link == NULL) {
 		return NULL;
 	}
-	Node *new_node = linked_list_node_create();
+	Node * const new_node = linked_list_node_create();
 	if(new_node == NULL) {
 		return NULL;
 	}
 	new_node->link = link;
-	Node *node = linked_list_insert_node(list, new_node);
+	Node * const node = linked_list_insert_node(list, new_node);
 	if(node == NULL) {
 		free(new_node);
 	}
@@ -80,7 +80,7 @@ Node *linked_list_insert(List *list, void *link) {
 }
 
 void nat64_list_insert(List *list, uint64_t x) {
-	uint64_t *p_nat64 = malloc(sizeof(uint64_t));
+	uint64_t * const p_nat64 = malloc(sizeof(uint64_t));
 	*p_nat64 = x;
 	linked_list_insert(list, p_nat64);
 }
@@ -89,7 +89,7 @@ void list_print_forward(List *list) {
 	printf("list_print_forward:\n");
 	Node *pn = list->head;
 	while(pn != NULL) {
-		uint32_t *x = pn->link;
+		uint32_t * const x = pn->link;
 		printf("v = %d\n", *x);
 		pn = pn->next;
 	}
@@ -99,7 +99,7 @@ void list_print_backward(List *list) {
 	printf("list_print_backward:\n");
 	Node *pn = list->tail;
 	while(pn != NULL) {
-		uint32_t *x = pn->link;
+		uint32_t * const x = pn->link;
 		printf("v = %d\n", *x);
 		pn = pn->prev;
 	}
@@ -107,7 +107,7 @@ void list_print_backward(List *list) {
 
 int32_t main() {
 	printf("linked list example\n");
-	List *list = linked_list_create();
+	List * const list = linked_list_create();
 	if(list == NULL) {
 		printf("error: cannot create list");
 		return 1;

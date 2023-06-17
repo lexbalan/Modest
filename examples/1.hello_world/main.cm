@@ -1,4 +1,4 @@
-
+// examples/hello_world/main.cm
 
 // import Int and printf from here
 include "libc/stdio.hm"

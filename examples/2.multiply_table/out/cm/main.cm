@@ -1,6 +1,6 @@
 
 
-include "libc/stdio.h"
+include "libc/libc.h"
 
 
 func mtab (n : Nat32) -> Unit {

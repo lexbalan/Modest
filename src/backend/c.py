@@ -455,7 +455,7 @@ def print_stmt_defvar(x):
 
 def print_stmt_let(x):
   f = {'isa': 'field', 'id': x['id'], 'type': x['value']['type']}
-  print_field(f); o(" = "); print_value(x['value']); o(";")
+  print_field(f, const=True); o(" = "); print_value(x['value']); o(";")
 
 
 def print_stmt_assign(x):
@@ -624,7 +624,7 @@ def print_def_type(x):
 
 # из за того что с C типы записваются через жопу
 # приходится печатать типы ptr, arr & func вместе с именем поля
-def print_field(x):
+def print_field(x, const=False):
   t = x['type']
 
   if 'aka' in x:
@@ -653,9 +653,14 @@ def print_field(x):
       if t['kind'] == 'array':
         t = t['of']
 
+  if ptr_level == 0 and const:
+    o("const ")
   print_type(t)
   o(" ")
   o("*" * ptr_level)
+  if ptr_level > 0 and const:
+    o(" const ")
+
   o("%s" % (x['id']['str']))
   if is_array:
     o("[")

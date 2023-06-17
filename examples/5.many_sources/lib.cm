@@ -1,4 +1,4 @@
-// lib.cm
+// examples/many_sources/lib.cm
 
 include "libc/stdio.hm"
 

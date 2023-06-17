@@ -1,5 +1,4 @@
-
-
+// examples/linked_list/main.cm
 
 include "libc/libc.hm"
 

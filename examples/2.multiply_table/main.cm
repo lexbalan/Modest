@@ -1,5 +1,6 @@
+// examples/multiply_table/main.cm
 
-
+include "libc/libc.hm"
 include "libc/stdio.hm"
 
 
