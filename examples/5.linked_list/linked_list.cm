@@ -125,7 +125,7 @@ func linked_list_insert_node (list : *List, new_node : *Node) -> *Node {
 
 
 func linked_list_insert (list : *List, link : *Unit) -> *Node {
-  if list == nil or link == nil {
+  if list == nil {
     return nil
   }
 
@@ -143,3 +143,4 @@ func linked_list_insert (list : *List, link : *Unit) -> *Node {
 
   return node
 }
+
