@@ -1526,6 +1526,10 @@ def translate(srcname):
 
   # выставляем директорию текущего файла
   # (будет использоваться в релативных инклудах)
+  global include_guard_paths
+  old_include_guard_paths = include_guard_paths
+  include_guard_paths = []
+
   global env_cfdir
   old_env_cfdir = env_cfdir
   absp = os.path.abspath(srcname)
@@ -1541,6 +1545,8 @@ def translate(srcname):
   m = proc(ast)
 
   env_cfdir = old_env_cfdir
+
+  include_guard_paths = old_include_guard_paths
   return m
 
 
