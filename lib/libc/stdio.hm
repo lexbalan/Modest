@@ -1,6 +1,6 @@
 
 
-include "ctypes.hm"
+include "./ctypes.hm"
 
 /*!
 global module

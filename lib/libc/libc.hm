@@ -1,10 +1,10 @@
 // libc.hm
 
 
-include "stdio.hm"
+include "./stdio.hm"
 
 //!attribute('c-no-print')
-include "ctypes.hm"
+include "./ctypes.hm"
 
 
 /*!

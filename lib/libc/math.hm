@@ -1,7 +1,7 @@
 // math.hm
 
 //!attribute('no-c-include')
-include "ctypes.hm"
+include "./ctypes.hm"
 
 
 const M_PI = 3.141592653589793238462643383279502884

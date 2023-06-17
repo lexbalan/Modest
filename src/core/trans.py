@@ -12,6 +12,9 @@ from parser import Parser
 from core.symtab import Symtab
 
 
+# current file directory
+env_cfdir = ""
+
 parser = Parser()
 
 cfunc = None  # current function
@@ -1087,7 +1090,8 @@ def import_abspath(s):
 
   f = ''
   if is_local:
-    local_path = settings_get('path')
+    #local_path = settings_get('path')
+    local_path = env_cfdir
     f = local_path + '/' + s #[1:]
 
   else: # (global)
@@ -1098,6 +1102,8 @@ def import_abspath(s):
     return None
 
   return os.path.abspath(f)
+
+
 
 
 
@@ -1517,6 +1523,19 @@ def translate(srcname):
   #print("translate!")
   #module['symtab'].show_tables()
   #root_symtab.show_tables()
+
+  # выставляем директорию текущего файла
+  # (будет использоваться в релативных инклудах)
+  global env_cfdir
+  absp = os.path.abspath(srcname)
+  fdir = os.path.dirname(absp)
+  env_cfdir = fdir
+  #print("ABS: " + absp)
+  print("FDIR: " + fdir)
+
+  if not os.path.exists(srcname):
+    return None
+
   ast = parser.parse(srcname)
   m = proc(ast)
   return m
