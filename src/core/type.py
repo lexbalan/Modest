@@ -116,7 +116,7 @@ genericInt = {
   'isa': 'type',
   'kind': 'integer',
   'name': 'Int',
-  'attributes': ['generic', 'numeric', 'ordered'],
+  'attributes': ['generic', 'numeric', 'integer', 'ordered'],
   'size': 0,
   'ti': None
 }

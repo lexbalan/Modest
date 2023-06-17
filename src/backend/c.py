@@ -96,6 +96,11 @@ def print_type_enum(t):
 def print_type(t, print_aka=True):
   k = t['kind']
 
+  # hotfix for let generic value problem (let x = 1)
+  if type.is_generic_integer(t):
+    o("int")
+    return
+
   if print_aka:
     if 'c_alias' in t:
       o(t['c_alias'])
