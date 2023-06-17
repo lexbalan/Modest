@@ -1,23 +1,17 @@
 // libc.hm
 
-
 /*!
 global module
-module['text'].append(c_include("stdio.h"))
 module['text'].append(c_include("stdlib.h"))
 module['text'].append(c_include("string.h"))
 module['text'].append(c_include("fcntl.h"))
 module['text'].append(c_include("unistd.h"))
-#output.append(c_include("sys/stat.h"))  # fstat
 */
 
-
 include "./stdio.hm"
-
-//!attribute('c-no-print', glob=True)
 include "./ctypes.hm"
 
-
+//!attribute('c-no-print', glob=True)
 
 type DevT Nat16      /* holds (major|minor) device pair */
 type InoT Nat32      /* i-node number (or Nat32) */
@@ -29,7 +23,6 @@ type UIDT Nat16      /* user id */
 type GIDT Int8       /* group id */
 type BlkSizeT Int16  /* used for block sizes */
 type TimeT Int32     /* time in seconds since 1970 */
-
 
 
 //type Stat record {
