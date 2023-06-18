@@ -1,4 +1,4 @@
-// math.hm
+// libc/math.hm
 
 //!attribute('no-c-include')
 include "./ctypes.hm"
@@ -37,7 +37,6 @@ extern func ceil (x : Double) -> Double
 extern func fabs (x : Double) -> Double
 extern func floor (x : Double) -> Double
 extern func fmod (a : Double, b : Double) -> Double
-
 
 
 /*

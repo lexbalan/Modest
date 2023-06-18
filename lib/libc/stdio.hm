@@ -1,4 +1,4 @@
-
+// libc/stdio.hm
 
 include "./ctypes.hm"
 
@@ -9,8 +9,8 @@ module['text'].append(c_include("stdio.h"))
 
 //!attribute('c-no-print', glob=True)
 
-extern type FposT
-extern type FILE
+type FposT
+type FILE
 
 type CharStr Str
 type ConstCharStr Str
