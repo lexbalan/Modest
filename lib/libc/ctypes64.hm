@@ -1,4 +1,4 @@
-// ctypes64.hm
+// libc/ctypes64.hm
 
 // do not create type alias object, just replace type
 //!global no_type_alias; no_type_alias = True

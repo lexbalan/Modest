@@ -1,4 +1,4 @@
-// libc.hm
+// libc/libc.hm
 
 /*!
 global module
@@ -42,7 +42,7 @@ type TimeT Int32     /* time in seconds since 1970 */
 //}
 
 
-extern type DIR
+type DIR
 
 
 extern func malloc (size : SizeT) -> *Unit
