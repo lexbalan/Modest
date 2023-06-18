@@ -11,10 +11,10 @@ def nbits_for_int(x):
 
 
 def nbytes_for_bits(x):
-  required_bytes = x // 8
-  if x % 8:
-    required_bytes = required_bytes * 2
-  return required_bytes
+  aligned_bits = 8
+  while aligned_bits < x:
+    aligned_bits = aligned_bits * 2
+  return aligned_bits // 8
 
 
 def nbytes_for_int(num, signed=True):
@@ -24,7 +24,9 @@ def nbytes_for_int(num, signed=True):
     if num < 0:
       nn = nn + 1
 
-  return nbytes_for_bits(nn)
+  y = nbytes_for_bits(nn)
+  #print("nbytes_for_int %d -> %d (%d)" % (num, nn, y))
+  return y
 
 
 

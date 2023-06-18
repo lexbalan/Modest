@@ -24,6 +24,9 @@ root_symtab = None
 
 module = None
 
+# не создавать алиас типа, а просто подставлять тип по месту
+no_type_alias = False
+
 
 # used in metadirs
 def c_include(s):
@@ -223,24 +226,6 @@ bin_ops = [
 ]
 
 un_ops = ['ref', 'deref', 'plus', 'minus', 'not']
-
-
-
-
-def type_select(n):
-  """if n <= 8 : return type.typeNat8
-  elif n <= 16 : return type.typeNat16
-  elif n <= 32 : return type.typeNat32
-  elif n <= 64 : return type.typeNat64
-  else: return type.typeNat64"""
-  return {
-    'isa': 'type',
-    'kind': 'integer',
-    'name': '<generic:int>',
-    'attributes': ['generic', 'numeric', 'ordered'],
-    'size': n / 8,
-    'ti': None
-  }
 
 
 
@@ -1211,7 +1196,6 @@ def module_text_remove_decl(kind, id_str):
           break
 
 
-no_type_alias = False
 
 def def_type(x):
   global no_type_alias

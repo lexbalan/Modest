@@ -98,7 +98,12 @@ def print_type(t, print_aka=True):
 
   # hotfix for let generic value problem (let x = 1)
   if type.is_generic_integer(t):
-    o("int")
+    sz = t['size']
+    #print("SZ=%d" % t['size'])
+    if sz == 0:
+      o("int")
+    else:
+      o("int%d_t" % (sz * 8))
     return
 
   if print_aka:

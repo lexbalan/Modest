@@ -6,6 +6,7 @@ from .util import nbytes_for_int, nbytes_for_float
 from error import error, info
 
 
+
 def value_create_zero(t):
   if type.is_numeric(t):
     return value_create_int(0, t)
@@ -16,8 +17,12 @@ def value_create_zero(t):
 
 
 
-def value_create_int(num, typ=type.genericInt, ti=None):
+def value_create_int(num, typ=None, ti=None):
+
   required_bytes = nbytes_for_int(num)
+
+  if typ == None:
+    typ = type.type_generic_int_for(required_bytes)
 
   if required_bytes > typ['size']:
     # extend if generic or error

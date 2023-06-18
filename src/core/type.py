@@ -11,7 +11,7 @@ def typeInteger(aka, size, attributes=[]):
     'isa': 'type',
     'kind': 'integer',
     'name': aka,
-    'attributes': ['numeric', 'ordered'] + attributes,
+    'attributes': ['numeric', 'integer', 'ordered'] + attributes,
     'size': size,
     'ti': None
   }
@@ -22,7 +22,7 @@ def typeFloat(aka, size, attributes=[]):
     'isa': 'type',
     'kind': 'float',
     'name': aka,
-    'attributes': ['numeric', 'ordered'] + attributes,
+    'attributes': ['numeric', 'float', 'ordered'] + attributes,
     'size': size,
     'ti': None
   }
@@ -421,6 +421,13 @@ def type_bad(ti=None):
     'attributes': [],
     'ti': ti
   }
+
+
+def type_generic_int_for(n):
+  gen_int_type = copy.copy(genericInt)
+  gen_int_type['size'] = n
+  return gen_int_type
+
 
 
 
