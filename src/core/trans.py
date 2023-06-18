@@ -1206,7 +1206,7 @@ def module_text_remove_decl(kind, id_str):
     if x['isa'] == 'declaration':
       if x['kind'] == kind:
         if x['id']['str'] == id_str:
-          print("REMOVE: " + id_str)
+          #print("REMOVE: " + id_str)
           module['text'].remove(x)
           break
 
@@ -1381,7 +1381,7 @@ def def_func(x):
 
 def decl_type(x):
   id = x['id']
-  print("decl_type " + id['str'])
+  #print("decl_type " + id['str'])
 
   nt = {
     'isa': 'type',
