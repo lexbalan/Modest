@@ -87,6 +87,8 @@ declare %DIR* @opendir([0 x i8]*)
 declare i32 @closedir(%DIR*)
 declare [0 x i8]* @getcwd([0 x i8]*, i64)
 declare [0 x i8]* @getenv([0 x i8]*)
+%List = type opaque
+%Node = type opaque
 declare %List* @linked_list_create()
 declare i32 @linked_list_size_get(%List*)
 declare %Node* @linked_list_first_get(%List*)

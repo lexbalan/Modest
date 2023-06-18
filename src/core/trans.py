@@ -1200,6 +1200,17 @@ def def_const(x):
   }
 
 
+
+def module_text_remove_decl(kind, id_str):
+  for x in module['text']:
+    if x['isa'] == 'declaration':
+      if x['kind'] == kind:
+        if x['id']['str'] == id_str:
+          print("REMOVE: " + id_str)
+          module['text'].remove(x)
+          break
+
+
 no_type_alias = False
 
 def def_type(x):
@@ -1216,7 +1227,10 @@ def def_type(x):
 
 
   if already_defined:
-    exist.update(t)  # just overwrite existed 'oaque' type (for records)
+    # just overwrite existed 'opaque' type (for records)
+    exist.update(t)
+    # and find and remove declaration instruction
+    module_text_remove_decl('type', id['str'])
   else:
 
     nt = None
@@ -1367,6 +1381,7 @@ def def_func(x):
 
 def decl_type(x):
   id = x['id']
+  print("decl_type " + id['str'])
 
   nt = {
     'isa': 'type',
@@ -1460,12 +1475,7 @@ def proc(ast):
         # в LLVM если делаем func definition нельзя писать func declaration
         # поэтому удалим все сделаные ранее декларации (если они есть)
         if settings_check('backend', 'llvm'):
-          for x in module['text']:
-            if x['isa'] == 'declaration':
-              if x['kind'] == 'func':
-                if x['id']['str'] == y['id']['str']:
-                  module['text'].remove(x)
-                  break
+          module_text_remove_decl('func', y['id']['str'])
 
       elif kind == 'type': y = def_type(x)
       elif kind == 'const': y = def_const(x)
