@@ -6,10 +6,10 @@ from error import *
 from .mgmt import *
 from .value import *
 from .stmt import *
-import core.type as type
-from core.type import type_attribute_check, type_print
 from parser import Parser
 from core.symtab import Symtab
+import core.type as type
+from core.type import type_attribute_check, type_print
 
 
 # current file directory

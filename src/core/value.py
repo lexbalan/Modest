@@ -2,7 +2,7 @@
 import copy
 import core.type as type
 from .mgmt import features_get
-from .util import nbytes_for_int, nbytes_for_float
+from .type import nbits_for_int, nbytes_for_bits
 from error import error, info
 
 
@@ -19,7 +19,8 @@ def value_create_zero(t):
 
 def value_create_int(num, typ=None, ti=None):
 
-  required_bytes = nbytes_for_int(num)
+  nbits = nbits_for_int(num) #!_
+  required_bytes = nbytes_for_bits(nbits)
 
   if typ == None:
     typ = type.type_generic_int_for(required_bytes)
@@ -27,7 +28,7 @@ def value_create_int(num, typ=None, ti=None):
   if required_bytes > typ['size']:
     # extend if generic or error
     if type.is_generic(typ):
-      typ = type.typeInteger('Int', required_bytes, attributes=['generic'])
+      typ = type.typeInteger('Int', nbits, attributes=['generic'])
     else:
       error("integer oferflow", ti)
 

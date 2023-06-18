@@ -7,6 +7,7 @@ from core.type import type_attribute_check
 from core.value import value_attribute_check
 
 
+
 func_context = None
 
 
@@ -1339,4 +1340,5 @@ def create_local_srtuct(typ, llvalues):
   lo("; -- end fill struct")
 
   return xv
+
 

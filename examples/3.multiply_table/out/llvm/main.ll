@@ -104,7 +104,7 @@ body_1:
 break_1:
   ret void
 }
-@n = global i32 zeroinitializer
+
 define i32 @main() {
   %1 = bitcast [23 x i8]* @str_1 to %ConstCharStr
   %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %1, i64 2)

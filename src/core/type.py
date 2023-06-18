@@ -6,13 +6,44 @@ from error import error
 
 typePointerSize = 4
 
-def typeInteger(aka, size, attributes=[]):
+
+
+def nbits_for_int(x):
+  n = 1
+  y = 1
+  while x > y:
+    y = (y << 1) | 1
+    n = n + 1
+  return n
+
+
+def nbytes_for_bits(x):
+  aligned_bits = 8
+  while aligned_bits < x:
+    aligned_bits = aligned_bits * 2
+  return aligned_bits // 8
+
+
+"""def nbytes_for_bits(bits, signed=True):
+  nn = bits
+
+  if signed:
+    if num < 0:
+      nn = nn + 1
+
+  y = nbytes_for_bits(nn)
+  #print("nbytes_for_int %d -> %d (%d)" % (num, nn, y))
+  return y"""
+
+
+def typeInteger(aka, power, attributes=[]):
   return {
     'isa': 'type',
     'kind': 'integer',
     'name': aka,
     'attributes': ['numeric', 'integer', 'ordered'] + attributes,
-    'size': size,
+    'power': power,
+    'size': nbytes_for_bits(power),
     'ti': None
   }
 
@@ -64,32 +95,32 @@ typeUnit = {
   'ti': None
 }
 
-typeInt8  = typeInteger("Int8", 1, attributes=['signed'])
+typeInt8  = typeInteger("Int8", 8, attributes=['signed'])
 typeInt8['c_alias'] = 'int8_t'
 typeInt8['llvm_alias'] = 'i8'
-typeInt16 = typeInteger("Int16", 2, attributes=['signed'])
+typeInt16 = typeInteger("Int16", 16, attributes=['signed'])
 typeInt16['c_alias'] = 'int16_t'
 typeInt16['llvm_alias'] = 'i16'
-typeInt32 = typeInteger("Int32", 4, attributes=['signed'])
+typeInt32 = typeInteger("Int32", 32, attributes=['signed'])
 typeInt32['c_alias'] = 'int32_t'
 typeInt32['llvm_alias'] = 'i32'
-typeInt64 = typeInteger("Int64", 8, attributes=['signed'])
+typeInt64 = typeInteger("Int64", 64, attributes=['signed'])
 typeInt64['c_alias'] = 'int64_t'
 typeInt64['llvm_alias'] = 'i64'
 
 typeNat1 = typeInteger("Nat1", 1, attributes=['unsigned'])
 typeNat1['c_alias'] = 'uint8_t'
 typeNat1['llvm_alias'] = 'i1'
-typeNat8  = typeInteger("Nat8", 1, attributes=['unsigned'])
+typeNat8  = typeInteger("Nat8", 8, attributes=['unsigned'])
 typeNat8['c_alias'] = 'uint8_t'
 typeNat8['llvm_alias'] = 'i8'
-typeNat16 = typeInteger("Nat16", 2, attributes=['unsigned'])
+typeNat16 = typeInteger("Nat16", 16, attributes=['unsigned'])
 typeNat16['c_alias'] = 'uint16_t'
 typeNat16['llvm_alias'] = 'i16'
-typeNat32 = typeInteger("Nat32", 4, attributes=['unsigned'])
+typeNat32 = typeInteger("Nat32", 32, attributes=['unsigned'])
 typeNat32['c_alias'] = 'uint32_t'
 typeNat32['llvm_alias'] = 'i32'
-typeNat64 = typeInteger("Nat64", 8, attributes=['unsigned'])
+typeNat64 = typeInteger("Nat64", 64, attributes=['unsigned'])
 typeNat64['c_alias'] = 'uint64_t'
 typeNat64['llvm_alias'] = 'i64'
 
@@ -427,6 +458,11 @@ def type_generic_int_for(n):
   gen_int_type = copy.copy(genericInt)
   gen_int_type['size'] = n
   return gen_int_type
+
+
+
+
+
 
 
 
