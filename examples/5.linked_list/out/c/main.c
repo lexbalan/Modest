@@ -53,6 +53,7 @@ int32_t main() {
 	nat64_list_insert(list, 90);
 	nat64_list_insert(list, 100);
 	const uint32_t list_size = linked_list_size_get(list);
+	int32_t list_size;
 	printf("linked list size: %d\n", list_size);
 	list_print_forward(list);
 	list_print_backward(list);

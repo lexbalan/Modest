@@ -921,6 +921,12 @@ def do_stmt_var(x):
   if t == None:
     t = v['type']
 
+  # check if identifier is free
+  already = module['symtab'].value_get(id['str'], 'local')
+  if already != None:
+    error("local id redefinition", x['id']['ti'])
+
+
   var_value = {
     'isa': 'value',
     'kind': 'var',
@@ -977,6 +983,7 @@ def do_stmt_let(x):
     'ti': x['ti']
   }
 
+  # check if identifier is free
   already = module['symtab'].value_get(id['str'], 'local')
   if already != None:
     error("local id redefinition", x['id']['ti'])
