@@ -103,7 +103,7 @@ Node *linked_list_insert_node(List *list, Node *new_node) {
 }
 
 Node *linked_list_insert(List *list, void *link) {
-	if(list == NULL || link == NULL) {
+	if(list == NULL) {
 		return NULL;
 	}
 	Node * const new_node = linked_list_node_create();

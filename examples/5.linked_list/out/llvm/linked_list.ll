@@ -259,33 +259,31 @@ endif_2:
 define %Node* @linked_list_insert(%List* %list, i8* %link) {
   %1 = bitcast %List* %list to i8*
   %2 = icmp eq i8* %1, null
-  %3 = icmp eq i8* %link, null
-  %4 = or i1 %2, %3
-  br i1 %4 , label %then_0, label %endif_0
+  br i1 %2 , label %then_0, label %endif_0
 then_0:
   ret %Node* null
   br label %endif_0
 endif_0:
-  %6 = call %Node*() @linked_list_node_create ()
-  %7 = bitcast %Node* %6 to i8*
-  %8 = icmp eq i8* %7, null
-  br i1 %8 , label %then_1, label %endif_1
+  %4 = call %Node*() @linked_list_node_create ()
+  %5 = bitcast %Node* %4 to i8*
+  %6 = icmp eq i8* %5, null
+  br i1 %6 , label %then_1, label %endif_1
 then_1:
   ret %Node* null
   br label %endif_1
 endif_1:
-  %10 = getelementptr inbounds %Node, %Node* %6, i32 0, i32 2
-  store i8* %link, i8** %10
-  %11 = call %Node*(%List*, %Node*) @linked_list_insert_node (%List* %list, %Node* %6)
-  %12 = bitcast %Node* %11 to i8*
-  %13 = icmp eq i8* %12, null
-  br i1 %13 , label %then_2, label %endif_2
+  %8 = getelementptr inbounds %Node, %Node* %4, i32 0, i32 2
+  store i8* %link, i8** %8
+  %9 = call %Node*(%List*, %Node*) @linked_list_insert_node (%List* %list, %Node* %4)
+  %10 = bitcast %Node* %9 to i8*
+  %11 = icmp eq i8* %10, null
+  br i1 %11 , label %then_2, label %endif_2
 then_2:
-  %14 = bitcast %Node* %6 to i8*
-  call void(i8*) @free (i8* %14)
+  %12 = bitcast %Node* %4 to i8*
+  call void(i8*) @free (i8* %12)
   br label %endif_2
 endif_2:
-  ret %Node* %11
+  ret %Node* %9
 }
 
 
