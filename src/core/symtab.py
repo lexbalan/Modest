@@ -27,7 +27,7 @@ class Symtab:
     return None
 
 
-  def value_get(self, id, domain='global'):
+  def value_get(self, id, domain='global', recursive=True):
     if domain == 'local':
       if self.domain != 'local':
         return None
@@ -35,8 +35,9 @@ class Symtab:
     if id in self.values:
       return self.values[id]
 
-    if self.parent != None:
-      return self.parent.value_get(id, domain)
+    if recursive:
+      if self.parent != None:
+        return self.parent.value_get(id, domain)
 
     return None
 
