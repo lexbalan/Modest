@@ -229,7 +229,6 @@ un_ops = ['ref', 'deref', 'plus', 'minus', 'not']
 
 
 
-
 def do_value_shift(op, l, r, ti):
 
   if not type.is_numeric(l['type']):
@@ -978,6 +977,10 @@ def do_stmt_let(x):
     'ti': x['ti']
   }
 
+  already = module['symtab'].value_get(id['str'], 'local')
+  if already != None:
+    error("local id redefinition", x['id']['ti'])
+
   module['symtab'].value_add(id['str'], const_value)
 
   return {
@@ -1049,7 +1052,7 @@ def do_stmt(x):
 
 def do_stmt_block(x):
 
-  module['symtab'] = module['symtab'].branch()
+  module['symtab'] = module['symtab'].branch(domain='local')
 
   stmts = []
   for stmt in x['stmts']:
@@ -1304,7 +1307,7 @@ def def_func(x):
 
 
   # create params symtab
-  module['symtab'] = module['symtab'].branch()
+  module['symtab'] = module['symtab'].branch(domain='local')
 
   global cfunc
   old_cfunc = cfunc

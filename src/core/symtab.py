@@ -1,9 +1,10 @@
 
 class Symtab:
-  def __init__(self, parent=None):
+  def __init__(self, parent=None, domain='global'):
     self.parent = parent
     self.types = {}
     self.values = {}
+    self.domain = domain
 
 
   def type_add(self, id, t):
@@ -26,19 +27,24 @@ class Symtab:
     return None
 
 
-  def value_get(self, id):
+  def value_get(self, id, domain='global'):
+    if domain == 'local':
+      if self.domain != 'local':
+        return None
+
     if id in self.values:
       return self.values[id]
 
     if self.parent != None:
-      return self.parent.value_get(id)
+      return self.parent.value_get(id, domain)
 
     return None
 
 
   # creates new symtab where #parent links to this symtab
-  def branch(self):
-    return Symtab(self)
+  def branch(self, domain='global'):
+    return Symtab(self, domain=domain)
+
 
   # extend this symtab with types & values from another symtab
   def merge(self, symtab):
