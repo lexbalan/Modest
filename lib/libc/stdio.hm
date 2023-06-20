@@ -15,6 +15,9 @@ type FILE
 type CharStr Str
 type ConstCharStr Str
 
+const SEEK_SET = 0
+const SEEK_CUR = 1
+const SEEK_END = 2
 
 extern func fclose (f : *FILE) -> Int
 extern func feof (f : *FILE) -> Int
