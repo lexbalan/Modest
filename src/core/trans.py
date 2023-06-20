@@ -910,6 +910,11 @@ def do_stmt_var(x):
   if t == None and v == None:
     return stmt_create_bad()
 
+  if t != None and v != None:
+    # type check
+    v = value_cast_implicit(v, t, v['ti'])
+    type.check(t, v['type'], v['ti'])
+
 
   if type.is_bad(t):
     return stmt_create_bad()
