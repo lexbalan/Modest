@@ -497,6 +497,7 @@ def print_field(x):
 
 
 def print_def_var(x):
+  o("var ")
   print_field(x['field']);
   if x['init'] != None:
     o(" := "); print_value(x['init'])

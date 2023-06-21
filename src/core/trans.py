@@ -526,7 +526,7 @@ def do_value_expr_index(x):
   i = do_value(x['index'])
 
   if value_is_bad(i):
-    return value_create_bad(x['right']['ti'])
+    return value_create_bad(x['index']['ti'])
 
   # check if index out-of-bounds
   if i['kind'] == 'int':
