@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-int32_t main() {
+int main() {
 	printf("if-else example\n");
 	int32_t a;
 	int32_t b;

@@ -25,7 +25,7 @@ void read_example() {
 	}
 	printf("file '%s' contains: ", filename);
 	while(1) {
-		const int32_t ch = fgetc(fp);
+		const int ch = fgetc(fp);
 		if(ch == EOF) {
 			break;
 		}
@@ -34,7 +34,7 @@ void read_example() {
 	fclose(fp);
 }
 
-int32_t main() {
+int main() {
 	printf("text_file example\n");
 	write_example();
 	read_example();
