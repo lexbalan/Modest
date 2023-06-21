@@ -2,7 +2,7 @@
 
 import copy
 from error import error
-
+from .mgmt import features_get
 
 typePointerSize = 4
 
@@ -360,7 +360,7 @@ def is_unsigned(t):
 
 
 # cannot create variable with type
-def is_forbidden_var(t):
+def is_forbidden_var(t, zero_array_forbidden=True):
   k = t['kind']
   if k == 'opaque' or k == 'unit':
     return True
@@ -370,8 +370,9 @@ def is_forbidden_var(t):
     if t['size'] == None:
       return True
 
-    if t['size'] == 0:
-      return True
+    if zero_array_forbidden or not features_get('unsafe'):
+      if t['size'] == 0:
+        return True
 
 
   return False
@@ -454,13 +455,11 @@ def type_bad(ti=None):
   }
 
 
-def type_generic_int_for(n):
+def type_generic_int_for_bits(n):
   gen_int_type = copy.copy(genericInt)
-  gen_int_type['size'] = n
+  gen_int_type['power'] = n
+  gen_int_type['size'] = nbytes_for_bits(n)
   return gen_int_type
-
-
-
 
 
 
