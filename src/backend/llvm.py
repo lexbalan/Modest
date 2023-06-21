@@ -200,6 +200,12 @@ def print_type(t, print_aka=True):
       o(t['llvm_alias'])
       return
 
+    # иногда сюда залетают дженерики например в to левое:
+    # let p = 0x12345678 to *Nat32
+    if type.is_generic_integer(t):
+      o("i%d" % t['power'])
+      return
+
     if 'name' in t:
       o('%' + t['name'])
       return

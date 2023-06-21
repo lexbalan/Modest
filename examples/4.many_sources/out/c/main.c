@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "./lib.h"
 
-int32_t main() {
+int main() {
 	printf("hello from main\n");
 	lib_func();
 	return 0;

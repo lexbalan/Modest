@@ -34,7 +34,7 @@ void list_print_backward(List *list) {
 	}
 }
 
-int32_t main() {
+int main() {
 	printf("linked list example\n");
 	List * const list = linked_list_create();
 	if(list == NULL) {
