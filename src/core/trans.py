@@ -27,12 +27,23 @@ module = None
 # не создавать алиас типа, а просто подставлять тип по месту
 no_type_alias = False
 
+# создать тип со следующим c_alias
+type_c_alias = None
+
 
 # used in metadirs
 def c_include(s):
   #print("c_include %s" % s)
   local = s[0:2] == './'
   return {'isa': 'directive', 'kind': 'include', 'str': s, 'local': local}
+
+
+
+def set_c_alias(alias):
+  global type_c_alias
+  type_c_alias = alias
+
+
 
 
 
@@ -1242,6 +1253,15 @@ def def_type(x):
       nt = type.create_alias(id['str'], t, id['ti'])
     else:
       nt = t
+
+
+    #
+    global type_c_alias
+    if type_c_alias != None:
+      nt = copy.copy(nt)
+      nt['c_alias'] = type_c_alias
+      type_c_alias = None
+
 
     nt2 = module['symtab'].type_add(id['str'], nt)
 

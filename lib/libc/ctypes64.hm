@@ -3,29 +3,53 @@
 // do not create type alias object, just replace type
 //!global no_type_alias; no_type_alias = True
 
+//!set_c_alias("char")
 type Char Int8
+//!set_c_alias("const char")
 type ConstChar Char
+//!set_c_alias("signed char")
 type SignedChar Int8
+//!set_c_alias("unsigned char")
 type UnsignedChar Nat8
 
+
+//!set_c_alias("short")
 type Short Int16
+//!set_c_alias("unsigned short")
 type UnsignedShort Nat16
 
+
+//!set_c_alias("int")
 type Int Int32
+//!set_c_alias("unsigned int")
 type UnsignedInt Nat32
+//!set_c_alias("long int")
 type LongInt Int64
+//!set_c_alias("unsigned long int")
 type UnsignedLongInt Nat64
 
+
+//!set_c_alias("long")
 type Long Int64
+//!set_c_alias("unsigned long")
 type UnsignedLong Nat64
+//!set_c_alias("long long")
 type LongLong Int64
+//!set_c_alias("unsigned long long")
 type UnsignedLongLong Nat64
 
+
+//!set_c_alias("float")
 type Float Float32
+//!set_c_alias("double")
 type Double Float64
+//!set_c_alias("long double")
 type LongDouble Float64
 
+
+//!set_c_alias("size_t")
 type SizeT Nat64
+//!set_c_alias("ssize_t")
 type SSizeT Int64
 
 //!global no_type_alias; no_type_alias = False
