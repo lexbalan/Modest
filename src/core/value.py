@@ -3,7 +3,7 @@ import copy
 import core.type as type
 from .mgmt import features_get
 from .type import nbits_for_int, nbytes_for_bits
-from error import error, info
+from error import error, warning, info
 
 
 
@@ -379,13 +379,16 @@ def value_cast_implicit(v, t, ti):
   if value_is_bad(v) or type.is_bad(t):
     return value_create_bad(ti)
 
+  from_type = v['type']
+
   # implisit cast possible only for:
   # 1. Generic -> NonGeneric  ('nil' are GenericPointer)
   # 2. *[n]T -> *[]T
-  from_generic = type.is_generic(v['type'])
-  from_ptr_def_arr_to_undef = type.is_pointer_to_defined_array(v['type']) and type.is_pointer_to_undefined_array(t)
+  from_generic = type.is_generic(from_type)
 
-  if not (from_generic or from_ptr_def_arr_to_undef):
+  ptr_def_arr_to_undef_arr = type.is_pointer_to_defined_array(from_type) and type.is_pointer_to_undefined_array(t)
+
+  if not (from_generic or ptr_def_arr_to_undef_arr):
     return v
 
   c = value_cons(v, t, ti, method='implicit')
@@ -397,6 +400,10 @@ def value_cast_implicit(v, t, ti):
 def value_cast_explicit(v, t, ti):
   if value_is_bad(v) or type.is_bad(t):
     return value_create_bad(ti)
+
+  if type.eq(v['type'], t):
+    warning("explicit cast to same type", ti)
+    return v
 
   c = value_cons(v, t, ti, method='explicit')
   if c == None:

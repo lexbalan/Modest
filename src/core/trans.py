@@ -1099,10 +1099,6 @@ def do_stmt_block(x):
 
 
 
-
-
-
-
 # include аналог from xxx import *
 included_modules = {}
 def do_include(x):
@@ -1177,11 +1173,6 @@ def do_import(x):
   m['symtab'].show_tables()
 
   return m
-
-
-
-
-
 
 
 
