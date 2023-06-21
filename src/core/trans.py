@@ -65,14 +65,15 @@ def init():
   root_symtab.value_add('false', valueFalse)
 
 
-
-def do_field(x):
+# last fiels of record can be zero size array (!)
+# (only with -funsafe key)
+def do_field(x, is_last=False):
   t = do_type(x['type'])
 
   if type.is_bad(t):
     t = type.type_bad(x['type']['ti'])
 
-  if type.is_forbidden_var(t):
+  if type.is_forbidden_var(t, zero_array_forbidden=not is_last):
     error("unsuitable type", x['type'])
 
   return {
@@ -133,9 +134,10 @@ def do_type_record(t):
     'ti': t['ti']
   }
 
+  nfields = len(t['fields'])
   i = 0
-  while i < len(t['fields']):
-    f = do_field(t['fields'][i])
+  while i < nfields:
+    f = do_field(t['fields'][i], is_last=i==(nfields-1))
     f['no'] = i
     i = i + 1
 

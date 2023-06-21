@@ -19,13 +19,13 @@ def value_create_zero(t):
 
 def value_create_int(num, typ=None, ti=None):
 
-  nbits = nbits_for_int(num) #!_
-  required_bytes = nbytes_for_bits(nbits)
+  nbits = nbits_for_int(num)
 
   if typ == None:
-    typ = type.type_generic_int_for(required_bytes)
+    typ = type.type_generic_int_for_bits(nbits)
+  
 
-  if required_bytes > typ['size']:
+  if nbytes_for_bits(nbits) > typ['size']:
     # extend if generic or error
     if type.is_generic(typ):
       typ = type.typeInteger('Int', nbits, attributes=['generic'])
@@ -47,18 +47,10 @@ valueNil = value_create_int(0, typ=type.typeFreePtr)
 valueTrue = value_create_int(1, typ=type.typeNat1)
 valueFalse = value_create_int(0, typ=type.typeNat1)
 
+
 def value_create_float(num, typ=type.genericFloat, ti=None):
   # вообще с флотом непонятно можно ли понять какого он Generic типа
   # тк есть числа которые вообще никак не запишешь
-  """required_bytes = nbytes_for_float(num)
-
-  if required_bytes > typ['size']:
-    # extend if generic or error
-    if type.is_generic(typ):
-      typ = type.typeFloat('Float', required_bytes, attributes=['generic'])
-    else:
-      error("float oferflow", ti)"""
-
   return {
     'isa': 'value',
     'kind': 'num',
