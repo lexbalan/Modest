@@ -13,7 +13,7 @@ type FposT
 type FILE
 
 type CharStr Str
-type ConstCharStr Str
+type ConstCharStr CharStr
 
 
 const EOF = -1

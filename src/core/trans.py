@@ -619,10 +619,18 @@ def do_value_expr_to(x):
 
 
 def do_value_expr_id(x):
-  vx = module['symtab'].value_get(x['id']['str'])
+  id_str = x['id']['str']
+  vx = module['symtab'].value_get(id_str)
   if vx == None:
     error("undeclared value '%s'" % x['id']['str'], x)
+
+    # чтобы не генерил ошибки дальше
+    # создадим bad value и пропишем его
+    v = value_create_bad(x['ti'])
+    value_attribute_add(v, 'unknown')
+    module['symtab'].value_add(id_str, v)
     return value_create_bad(x['ti'])
+
 
   # for TI чтобы не переписать у самого определения
   vx = copy.copy(vx)
@@ -1246,11 +1254,11 @@ def def_type(x):
       nt = t
 
 
-    #
     global type_c_alias
     if type_c_alias != None:
       nt = copy.copy(nt)
       nt['c_alias'] = type_c_alias
+      nt['ti'] = id['ti']
       type_c_alias = None
 
 
