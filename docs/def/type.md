@@ -7,6 +7,13 @@
 type MyInt Int64
 ```
 
+Type declaration
+```
+// type declared, but not defined
+// such types are called 'opaque'
+type MyOpaqueType
+```
+
 #### Examples
 
 ```golang
@@ -20,3 +27,8 @@ func main () -> Unit {
   printf("x = %d\n", x)
 }
 ```
+
+
+
+
+
