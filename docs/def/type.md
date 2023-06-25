@@ -8,7 +8,7 @@ type MyInt Int64
 ```
 
 Type declaration
-```
+```golang
 // type declared, but not defined
 // such types are called 'opaque'
 type MyOpaqueType
