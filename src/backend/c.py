@@ -19,7 +19,7 @@ aprecedence = [
   ['shl', 'shr'], #5
   ['add', 'sub'], #6
   ['mul', 'div', 'mod'], #7
-  ['plus', 'minus', 'not', 'cast', 'ref', 'deref', 'sizeof'], #8
+  ['plus', 'minus', 'not', 'to', 'ref', 'deref', 'sizeof'], #8
   ['call', 'index', 'access'], #9
   ['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #10
 ]
