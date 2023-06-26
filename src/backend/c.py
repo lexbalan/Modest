@@ -285,15 +285,15 @@ def print_value_expr_cast(v, ctx):
       return
 
 
-  need_wrap = precedence(v['value']['kind']) > precedence('to')
+  #need_wrap = precedence(v['value']['kind']) > precedence('to')
 
-  if need_wrap:
-    o('(')
+  #if need_wrap:
+  #  o('(')
 
   print_cast(to_type, v['value'], ctx)
 
-  if need_wrap:
-    o(')')
+  #if need_wrap:
+  #  o(')')
 
 
 
