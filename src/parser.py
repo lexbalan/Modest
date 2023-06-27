@@ -923,6 +923,12 @@ class Parser:
     return {'isa': 'ast_directive', 'kind': 'metadir', 'text': x, 'ti': ti}
 
 
+  def def_dir(self):
+    ti = self.ti()
+    x = self.gettok()
+    return {'isa': 'ast_directive2', 'kind': 'metadir', 'text': x, 'ti': ti}
+
+
   def parse(self, filename):
     self.tokens = self.lex.tokenize(filename)
     #print("ENDLEX: " + filename)
@@ -964,6 +970,8 @@ class Parser:
         x = self.def_metadir()
       elif self.token_class_is('line-comment'):
         x = self.def_metadir()
+      elif self.token_class_is('directive'):
+        x = self.def_dir()
       elif self.match('import'):
         x = self.do_import()
       elif self.match('include'):

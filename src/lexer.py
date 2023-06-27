@@ -151,6 +151,35 @@ def dostr(src):
   return ('str', token, ti)
 
 
+def dodir(src):
+  global line, pos
+
+  s = src.lookup(1)
+  if not s == '@':
+    return False
+
+  ti = src.get_ti()
+
+  # skip '@'
+  src.getc()
+
+  text = ""
+  while True:
+    # we dont need to eat NL because it will be used by lexer (!)
+    c = src.lookup(1)
+    if c == '\n':
+      line = line + 1
+      pos = 1
+      break
+    else:
+      text += c
+    src.getc()
+
+  return ('directive', text, ti)
+
+
+
+
 def dolcom(src):
   global line, pos
 
@@ -272,6 +301,7 @@ class Lexer:
       doop2,
       doop1,
       dostr,
+      dodir,
       dobadsym,
     )
     
