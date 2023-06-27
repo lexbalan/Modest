@@ -3,6 +3,7 @@ import copy
 import core.type as type
 from .mgmt import features_get
 from .type import nbits_for_int, nbytes_for_bits
+from .trans import is_local_context
 from error import error, warning, info
 
 
@@ -133,10 +134,16 @@ def value_cons_array_from_generic_array(v, t, ti, method):
     'kind': 'array',
     'items': casted_items,
     'type': t,
-    'attributes': ['generic-casted'],
+    'attributes': [],
     'properties': {},
     'ti': ti
   }
+
+  # 'generic-casted' - нужен для принтера C
+  # чтобы он добавил явное приведение к Локальному (!) массиву
+  # (uint32_t[3]){0, 1, 2}
+  if is_local_context():
+    vx['attributes'].append('generic-casted')
 
   # если это не сделать то принтер C не сможет сослаться
   # на именованную константу и станет печатать ее по месту
@@ -200,16 +207,22 @@ def value_cons_record_from_generic_record(v, t, ti, method):
       'value': item_value,
     })
 
-  # 'generic-casted' - нужен для принтера C чтобы он
   vx = {
     'isa': 'value',
     'kind': 'record',
     'items': items,
     'type': t,
-    'attributes': ['generic-casted'],
+    'attributes': [],
     'properties': {},
     'ti': ti
   }
+
+
+  # 'generic-casted' - нужен для принтера C
+  # чтобы он добавил явное приведение к Локальной (!) структуре
+  # (Point){.x=0, .y=0}
+  if is_local_context():
+    vx['attributes'].append('generic-casted')
 
   # если это не сделать то принтер C не сможет сослаться
   # на именованную константу и станет печатать ее по месту
