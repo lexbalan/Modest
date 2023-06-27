@@ -1507,6 +1507,10 @@ def proc(ast):
       if kind == 'func': y = decl_func(x)
       elif kind == 'type': y = decl_type(x)
 
+    elif isa == 'ast_directive2':
+      exec(x['text'])
+      continue
+
     elif isa == 'ast_directive':
       if kind == 'metadir':
         exec(x['text'])

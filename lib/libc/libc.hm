@@ -11,7 +11,7 @@ module['text'].append(c_include("unistd.h"))
 include "./stdio.hm"
 include "./ctypes.hm"
 
-//!attribute('c-no-print', glob=True)
+@attribute('c-no-print', glob=True)
 
 type DevT Nat16      /* holds (major|minor) device pair */
 type InoT Nat32      /* i-node number (or Nat32) */
@@ -95,5 +95,5 @@ extern func getcwd (buf : Str, size : SizeT) -> Str
 
 extern func getenv (name : Str) -> Str
 
-//!attribute_off('c-no-print')
+@attribute_off('c-no-print')
 
