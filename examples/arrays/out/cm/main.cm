@@ -1,0 +1,41 @@
+
+
+include "libc/stdio.h"
+
+const arraySize = 10
+
+var array : [arraySize]Nat32 := [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+
+func arrayExample () -> Unit {
+	printf("array example\n")
+	var i : Nat32 := 0
+	while i < arraySize {
+		printf("array[%d] = %d\n", i, array[i])
+		i := i + 1
+	}
+}
+
+var arrayOfArrays : [3][3]Nat32 := [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+
+
+func arrayOfArraysExample () -> Unit {
+	printf("array of arrays example\n")
+	var m : Nat32 := 0
+	while m < 3 {
+		var n : Nat32 := 0
+		while n < 3 {
+			printf("arr[%d][%d] = %d\n", m, n, arrayOfArrays[m][n])
+			n := n + 1
+		}
+		m := m + 1
+	}
+}
+
+
+func main () -> Int32 {
+	arrayExample()
+	arrayOfArraysExample()
+	return 0
+}
+
