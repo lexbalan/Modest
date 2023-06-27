@@ -7,19 +7,16 @@ CMPREFIX=$(OUTDIR)/cm/
 CPREFIX=$(OUTDIR)/c/
 LLVMPREFIX = $(OUTDIR)/llvm/
 
-# mcc translator
-MCC=mcc
-
 
 all: LLVM
 
 
 CM:
-	$(MCC) -o $(CMPREFIX)/main -mbackend=cm $(INDIR)/main.cm
+	mcc -o $(CMPREFIX)/main -mbackend=cm $(INDIR)/main.cm
 
 
 LLVM:
-	$(MCC) -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.cm
+	mcc -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.cm
 	
 	# translate IR to .o
 	clang -c $(LLVMPREFIX)/main.ll
@@ -29,7 +26,7 @@ LLVM:
 
 
 C:
-	$(MCC) -o $(CPREFIX)/main -mbackend=c $(INDIR)/main.cm
+	mcc -o $(CPREFIX)/main -mbackend=c $(INDIR)/main.cm
 	CC $(CPREFIX)/main.c
 
 

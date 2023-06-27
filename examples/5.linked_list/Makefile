@@ -7,24 +7,21 @@ CMPREFIX=$(OUTDIR)/cm/
 CPREFIX=$(OUTDIR)/c/
 LLVMPREFIX = $(OUTDIR)/llvm/
 
-# mcc translator
-MCC=mcc
-
 
 all: LLVM
 
 
 CM:
-	$(MCC) -o $(CMPREFIX)/main -funsafe -mbackend=cm $(INDIR)/main.cm
-	$(MCC) -o $(CMPREFIX)/linked_list -mbackend=cm $(INDIR)/linked_list.hm
-	$(MCC) -o $(CMPREFIX)/linked_list -mbackend=cm $(INDIR)/linked_list.cm
+	mcc -o $(CMPREFIX)/main -funsafe -mbackend=cm $(INDIR)/main.cm
+	mcc -o $(CMPREFIX)/linked_list -mbackend=cm $(INDIR)/linked_list.hm
+	mcc -o $(CMPREFIX)/linked_list -mbackend=cm $(INDIR)/linked_list.cm
 
 
 
 LLVM:
   # 1. CM -> LLVM/IR
-	$(MCC) -o $(LLVMPREFIX)/main -funsafe -mbackend=llvm $(INDIR)/main.cm
-	$(MCC) -o $(LLVMPREFIX)/linked_list -mbackend=llvm $(INDIR)/linked_list.cm
+	mcc -o $(LLVMPREFIX)/main -funsafe -mbackend=llvm $(INDIR)/main.cm
+	mcc -o $(LLVMPREFIX)/linked_list -mbackend=llvm $(INDIR)/linked_list.cm
 	
 	# 2. LLVM/IR -> *.o
 	clang -c $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/linked_list.ll
@@ -35,9 +32,9 @@ LLVM:
 
 
 C:
-	$(MCC) -o $(CPREFIX)/main -funsafe -mbackend=c $(INDIR)/main.cm
-	$(MCC) -o $(CPREFIX)/linked_list -mbackend=c $(INDIR)/linked_list.hm
-	$(MCC) -o $(CPREFIX)/linked_list -mbackend=c $(INDIR)/linked_list.cm
+	mcc -o $(CPREFIX)/main -funsafe -mbackend=c $(INDIR)/main.cm
+	mcc -o $(CPREFIX)/linked_list -mbackend=c $(INDIR)/linked_list.hm
+	mcc -o $(CPREFIX)/linked_list -mbackend=c $(INDIR)/linked_list.cm
 	CC $(CPREFIX)/main.c $(CPREFIX)/linked_list.c
 
 
