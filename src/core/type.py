@@ -365,14 +365,19 @@ def is_forbidden_var(t, zero_array_forbidden=True):
   if k == 'opaque' or k == 'unit':
     return True
 
-  # [0]Int, []Int
+  # [0]Int, []Int, [n]<Forbidden>
   if is_array(t):
+    # is undefined array?
     if t['size'] == None:
       return True
 
+    # is defined array;
+    # It can't be 0 sized (can only with 'unsafe' compiler flag)
     if zero_array_forbidden or not features_get('unsafe'):
       if t['size'] == 0:
         return True
+
+    return is_forbidden_var(t['of'])
 
 
   return False
