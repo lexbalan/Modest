@@ -540,9 +540,9 @@ def print_func_signature(id, typ):
 
   # возврат является масссивом?
   #is_array = t['kind'] == 'array'
-  #array_size = None
+  #array_dims = None
   #if is_array:
-    #array_size = t['size']
+    #array_dims = t['size']
     #t = t['of']
 
   # поле является указателем?
@@ -639,10 +639,15 @@ def print_field(x, const=False):
 
   # поле является масссивом?
   is_array = t['kind'] == 'array'
-  array_size = None
+  array_dims = None
   if is_array:
-    array_size = t['size_expr']
+    array_dims = []
+    array_dims.append(t['size_expr'])
     t = t['of']
+    while t['kind'] == 'array':
+      array_dims.append(t['size_expr'])
+      t = t['of']
+
 
   # поле является указателем?
   ptr_level = 0
@@ -667,11 +672,9 @@ def print_field(x, const=False):
 
   o("%s" % (x['id']['str']))
   if is_array:
-    o("[")
-    if array_size != None:
-      #o("%d" % array_size)
-      print_value(array_size)
-    o("]")
+    if array_dims != None:
+      for dim in array_dims:
+        o("["); print_value(dim); o("]")
 
 
 
