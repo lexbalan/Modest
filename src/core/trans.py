@@ -41,7 +41,7 @@ type_c_alias = None
 
 # used in metadirs
 def c_include(s):
-  print("c_include %s" % s)
+  #print("c_include %s" % s)
   global module
   local = s[0:2] == './'
   inc = {'isa': 'directive', 'kind': 'include', 'str': s, 'local': local}
@@ -1138,6 +1138,7 @@ def do_include(x):
   global included_modules
   if abspath in included_modules:
     m = included_modules[abspath]
+    module['symtab'].merge(m['symtab'])  #!
     return None  # already imported
 
 
