@@ -3,20 +3,20 @@
 // do not create type alias object, just replace type
 //!global no_type_alias; no_type_alias = True
 
-@c_alias('char')
+@c_alias("char")
 type Char Int8
 
-@c_alias('const char')
+@c_alias("const char")
 type ConstChar Char
 
-@c_alias('signed char')
+@c_alias("signed char")
 type SignedChar Int8
 
-@c_alias('unsigned char')
+@c_alias("unsigned char")
 type UnsignedChar Nat8
 
 
-@c_alias('short')
+@c_alias("short")
 type Short Int16
 
 @c_alias("unsigned short")
