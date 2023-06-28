@@ -41,12 +41,14 @@ type_c_alias = None
 
 # used in metadirs
 def c_include(s):
-  #print("c_include %s" % s)
+  print("c_include %s" % s)
+  global module
   local = s[0:2] == './'
-  return {'isa': 'directive', 'kind': 'include', 'str': s, 'local': local}
+  inc = {'isa': 'directive', 'kind': 'include', 'str': s, 'local': local}
+  module['text'].append(inc)
 
 
-
+# used in metadirs
 def set_c_alias(alias):
   global type_c_alias
   type_c_alias = alias

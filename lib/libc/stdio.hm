@@ -2,10 +2,8 @@
 
 include "./ctypes.hm"
 
-/*!
-global module
-module['text'].append(c_include("stdio.h"))
-*/
+
+@c_include("stdio.h")
 
 @attribute('c-no-print', glob=True)
 
