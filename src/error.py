@@ -89,6 +89,9 @@ def error(s, ti):
     print(lin)
     highlight(ti, 91)
 
+  if errcnt >= 10:
+    exit(-1)
+
 
 def info(s, ti):
   pre = ''
