@@ -1,0 +1,59 @@
+
+
+include "libc/math.h"
+include "libc/stdio.h"
+
+type Point record {
+	x : Float64
+	y : Float64
+}
+
+type Line record {
+	a : Point
+	b : Point
+}
+
+var line : Line := {
+	a={
+		x=0.0,
+		y=0.0
+	},
+	b={
+		x=1.0,
+		y=1.0
+	}
+}
+
+
+func max (a : Float64, b : Float64) -> Float64 {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+
+func min (a : Float64, b : Float64) -> Float64 {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+
+func lineLength (line : Line) -> Float64 {
+	let dx = max(line.a.x, line.b.x) - min(line.a.x, line.b.x)
+	let dy = max(line.a.y, line.b.y) - min(line.a.y, line.b.y)
+	let dx2 = pow(dx, 2.0)
+	let dy2 = pow(dy, 2.0)
+	let len = sqrt(dx2 + dy2)
+	return len
+}
+
+
+func main () -> Int32 {
+	let len = lineLength(line)
+	printf("line length = %f\n", len)
+	return 0
+}
+

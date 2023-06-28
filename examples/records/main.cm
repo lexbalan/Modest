@@ -1,0 +1,54 @@
+// examples/records/main.cm
+
+include "libc/math.hm"
+include "libc/stdio.hm"
+
+
+type Point record {
+  x : Float
+  y : Float
+}
+
+type Line record {
+  a : Point
+  b : Point
+}
+
+
+var line : Line := {a={x=0,y=0}, b={x=1, y=1}}
+
+
+
+func max (a : Float, b : Float) -> Float {
+  if a > b {
+    return a
+  }
+  return b
+}
+
+
+func min (a : Float, b : Float) -> Float {
+  if a < b {
+    return a
+  }
+  return b
+}
+
+
+// Pythagorean theorem
+func lineLength (line : Line) -> Float {
+  let dx = max(line.a.x, line.b.x) - min(line.a.x, line.b.x)
+  let dy = max(line.a.y, line.b.y) - min(line.a.y, line.b.y)
+  let dx2 = pow(dx, 2)
+  let dy2 = pow(dy, 2)
+  let len = sqrt(dx2 + dy2)
+  return len
+}
+
+
+func main () -> Int {
+  let len = lineLength(line)
+  printf("line length = %f\n", len)
+  return 0
+}
+
