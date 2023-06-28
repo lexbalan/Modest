@@ -111,8 +111,13 @@ def do_field(x, is_last=False):
 def do_type_id(t):
   tx = module['symtab'].type_get(t['id']['str'])
   if tx == None:
-    error("undeclared type %s" % t['id']['str'], t)
-    return type.type_bad()
+    id = t['id']['str']
+    error("undeclared type %s" % id, t)
+    # create fake alias for unknown type
+    tx = type.type_bad()
+    nt = type.create_alias(id, tx, t['ti'])
+    root_symtab.type_add(id, nt)
+    return nt
   return tx #{'isa': 'type', 'kind': 'id', 'id': t['id'], 'type': tx}
 
 
