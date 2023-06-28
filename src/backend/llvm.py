@@ -165,7 +165,9 @@ def print_value(x):
   elif c == 'array':
     o("["); print_list_by(x['items'], print_type_value); o("]")
   elif c == 'record':
-    o("{"); print_list_by(x['items'], print_type_value); o("}")
+    def print_type_value_value(llvm_value):
+      print_type_value(llvm_value['value'])
+    o("{"); print_list_by(x['items'], print_type_value_value); o("}")
   elif c == 'cast':
     #o("bitcast ([%d x i8]* @%s to %%Str)" % (x['len'], x['id']))
     v = x['value']
