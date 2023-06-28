@@ -49,7 +49,7 @@ def c_include(s):
 
 
 # used in metadirs
-def set_c_alias(alias):
+def c_alias(alias):
   global type_c_alias
   type_c_alias = alias
 
