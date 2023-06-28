@@ -4,6 +4,10 @@
 include "./ctypes.hm"
 
 
+@c_include("math.h")
+
+@attribute('c-no-print', glob=True)
+
 const M_PI = 3.141592653589793238462643383279502884
 const M_E =  2.718281828459045235360287471352662498
 
@@ -99,7 +103,7 @@ extern func remainderl (a : LongDouble, b : LongDouble) -> LongDouble
 extern func remquol (a : LongDouble, b : LongDouble, i : *Int) -> LongDouble
 
 extern func copysignl (a : LongDouble, b : LongDouble) -> LongDouble
-extern func nanl (x : Str) -> LongDouble
+extern func nanl (x : *ConstChar) -> LongDouble
 extern func nextafterl (a : LongDouble, b : LongDouble) -> LongDouble
 extern func nexttowardl (a : LongDouble, b : LongDouble) -> LongDouble
 
@@ -109,4 +113,4 @@ extern func fminl (a : LongDouble, b : LongDouble) -> LongDouble
 
 extern func fmal (a : LongDouble, b : LongDouble, c : LongDouble) -> LongDouble
 
-
+@attribute_off('c-no-print')

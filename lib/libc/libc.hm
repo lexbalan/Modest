@@ -1,12 +1,11 @@
 // libc/libc.hm
 
-/*!
-global module
-module['text'].append(c_include("stdlib.h"))
-module['text'].append(c_include("string.h"))
-module['text'].append(c_include("fcntl.h"))
-module['text'].append(c_include("unistd.h"))
-*/
+
+@c_include("stdlib.h")
+@c_include("string.h")
+@c_include("fcntl.h")
+@c_include("unistd.h")
+
 
 include "./stdio.hm"
 include "./ctypes.hm"
