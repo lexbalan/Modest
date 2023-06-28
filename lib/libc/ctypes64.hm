@@ -48,6 +48,12 @@ type LongLong Int64
 @set_c_alias("unsigned long long")
 type UnsignedLongLong Nat64
 
+@set_c_alias("long long int")
+type LongLongInt Int64
+
+@set_c_alias("unsigned long long int")
+type UnsignedLongLongInt Nat64
+
 
 @set_c_alias("float")
 type Float Float32
