@@ -5,7 +5,7 @@ include "./ctypes.hm"
 
 @c_include("stdio.h")
 
-@attribute('c-no-print', glob=True)
+@attribute("c-no-print", glob=True)
 
 type FposT
 type FILE
@@ -45,7 +45,7 @@ extern func tmpfile() -> *FILE
 extern func tmpnam(str : CharStr) -> CharStr
 
 
-@attribute('arghack', glob=True)
+@attribute("arghack", glob=True)
 
 extern func printf  (s : ConstCharStr) -> Int
 extern func scanf   (s : ConstCharStr) -> Int
@@ -54,7 +54,7 @@ extern func fscanf (f : *FILE, format : ConstCharStr) -> Int
 extern func sscanf  (buf : ConstCharStr, format : ConstCharStr) -> Int
 extern func sprintf (buf : CharStr, format : ConstCharStr) -> Int
 
-@attribute_off('arghack')
+@attribute_off("arghack")
 
 
 //extern func vfprintf (f : *FILE, format : ConstCharStr, arg : VaList) -> Int
@@ -76,5 +76,5 @@ extern func puts (str : ConstCharStr) -> Int
 extern func ungetc(char : Int, f : *FILE) -> Int
 extern func perror(str : ConstCharStr) -> Unit
 
-@attribute_off('c-no-print')
+@attribute_off("c-no-print")
 
