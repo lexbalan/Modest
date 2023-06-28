@@ -56,7 +56,7 @@ type UnsignedLongLongInt Nat64
 
 
 @set_c_alias("float")
-type Float Float32
+type Float Float64
 
 @set_c_alias("double")
 type Double Float64
