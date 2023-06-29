@@ -640,7 +640,7 @@ def do_value_expr_id(x):
     error("undeclared value '%s'" % x['id']['str'], x)
 
     # чтобы не генерил ошибки дальше
-    # создадим bad value и пропишем его
+    # создадим bad value и пропишем его глобально
     v = value_create_bad(x['ti'])
     value_attribute_add(v, 'unknown')
     module['symtab'].value_add(id_str, v)
@@ -944,6 +944,7 @@ def do_stmt_var(x):
     v = do_value(x['value'])
 
   if t == None and v == None:
+    module['symtab'].value_add(id['str'], value_create_bad())
     return stmt_create_bad()
 
   if t != None and v != None:
@@ -953,6 +954,7 @@ def do_stmt_var(x):
 
 
   if type.is_bad(t):
+    module['symtab'].value_add(id['str'], value_create_bad())
     return stmt_create_bad()
 
   if type.is_forbidden_var(t):
@@ -995,6 +997,7 @@ def do_stmt_let(x):
   id = x['id']
   v = do_value(x['value'])
   if value_is_bad(v):
+    module['symtab'].value_add(id['str'], value_create_bad())
     return stmt_create_bad()
 
   vtype = v['type']
