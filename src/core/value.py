@@ -24,9 +24,8 @@ def value_create_int(num, typ=None, ti=None):
 
   if typ == None:
     typ = type.type_generic_int_for_bits(nbits)
-  
 
-  if nbytes_for_bits(nbits) > typ['size']:
+  if nbits > typ['power']:
     # extend if generic or error
     if type.is_generic(typ):
       typ = type.typeInteger('Int', nbits, attributes=['generic'])
@@ -272,7 +271,7 @@ def value_cons_integer(v, t, ti, method):
     if type.is_generic(v['type']):
       # GenericInt -> Int
       if type.is_numeric(t):
-        if v['type']['size'] > t['size']:
+        if v['type']['power'] > t['power']:
           return None
 
       return do_cast_generic(v, t, ti)

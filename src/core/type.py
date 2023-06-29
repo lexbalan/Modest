@@ -65,16 +65,18 @@ def typePointer(to, attributes=[], ti=None):
     'kind': 'pointer',
     'to': to,
     'size': typePointerSize,
+    'power': typePointerSize * 8,
     'attributes': attributes,
     'ti': ti
   }
+
 
 def typeArray(of, size=None, attributes=[], ti=None):
   return {
     'isa': 'type',
     'kind': 'array',
     'of': of,
-    'size': size,
+    'size': size,  #TODO: not 'size', use 'volume' or something better (!)
     'attributes': attributes,
     'ti': ti
   }
@@ -90,6 +92,8 @@ typeUnit = {
   'name': 'Unit',
   'c_alias': 'void',
   'llvm_alias': 'void',
+  'size': 0,
+  'power': 0,
   'items': [],
   'attributes': [],
   'ti': None
@@ -149,6 +153,7 @@ genericInt = {
   'name': 'Int',
   'attributes': ['generic', 'numeric', 'integer', 'ordered'],
   'size': 0,
+  'power': 0,
   'ti': None
 }
 
@@ -158,6 +163,7 @@ genericFloat = {
   'name': 'Float',
   'attributes': ['generic', 'numeric', 'ordered', 'float'],
   'size': 0,
+  'power': 0,
   'ti': None
 }
 
@@ -487,7 +493,7 @@ def type_print(t, print_aka=True):
       print(id, end='')
 
       if is_generic(t):
-        print('%d' % (t['size'] * 8), end='')
+        print('%d' % (t['power']), end='')
 
       return
 
@@ -531,7 +537,7 @@ def type_print(t, print_aka=True):
   elif k == 'integer':
     print('%' + t['name'], end='')
     if is_generic(t):
-      print('%d' % t['size'], end='')
+      print('%d' % t['power'], end='')
 
   elif k == 'opaque':
     print('opaque', end='')
