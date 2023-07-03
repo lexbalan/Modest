@@ -1091,10 +1091,9 @@ def print_func_signature(id, typ):
 
 
 def print_decl_func(x):
-  #if x['extern']:
-  #print("LLVM_DECL_FUNC " + x['id']['str'])
   o("\ndeclare ")
-  print_func_signature(x['id']['str'], x['type'])
+  func = x['func']
+  print_func_signature(func['id']['str'], func['type'])
 
 
 def print_def_func(x):

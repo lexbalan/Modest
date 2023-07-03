@@ -461,10 +461,11 @@ def print_stmt_block(s):
 
 
 def print_decl_func(x):
-  if x['extern']:
+  if 'extern' in x['attributes']:
     o("extern ")
-  o('func %s ' % x['id']['str'])
-  print_type(x['type'])
+  func = x['func']
+  o('func %s ' % func['id']['str'])
+  print_type(func['type'])
 
 
 def print_def_func(x):

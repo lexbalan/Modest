@@ -575,15 +575,20 @@ def print_func_signature(id, typ):
 
 
 def print_decl_func(x):
-  if x['extern']:
+  if 'extern' in x['attributes']:
     o("extern ")
-  print_func_signature(x['id']['str'], x['type'])
+  func = x['func']
+  print_func_signature(func['id']['str'], func['type'])
   o(";")
 
 
 def print_def_func(x):
   if not was_separated_by_new_line:
     o("\n")
+
+  if 'comment' in x['func']:
+    if x['func']['comment'] != '':
+      o("// %s\n" % x['func']['comment'])
 
   print_func_signature(x['id']['str'], x['type'])
   print_stmt_block(x['stmt'])
@@ -739,6 +744,10 @@ def run(module, strs, outname):
       o("\n")
     global was_separated_by_new_line
     was_separated_by_new_line = separation
+
+    if 'comment' in x:
+      if x['comment'] != '':
+        o("// " + x['comment'])
 
     if isa == 'definition':
       if k == 'var': print_def_var(x)

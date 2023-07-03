@@ -32,9 +32,6 @@ root_symtab = None
 
 module = None
 
-# не создавать алиас типа, а просто подставлять тип по месту
-no_type_alias = False
-
 
 # used in metadirs
 def c_include(s):
@@ -47,12 +44,39 @@ def c_include(s):
 
 properties = {}
 
+
 # used in metadirs
 # add 'properties' to entity descriptor
 def property(id, value):
   global properties
   properties[id] = value
 
+
+attributes = []
+
+def __attribute(id):
+  global attributes
+  attributes.append(id)
+
+
+
+# опциии компилятора, либо включена, либо выклчена
+# впрочем может иметь и значение отлитчное от True
+options = {}
+
+def option(id, value=True):
+  global options
+  options[id] = value
+
+def option_off(id):
+  global options
+  options[id] = False
+
+def option_get(id):
+  global options
+  if not id in options:
+    return None
+  return options[id]
 
 
 
@@ -1219,30 +1243,32 @@ def def_const(x):
     if settings_check('backend', 'c'):
       return None
 
+  global attributes
+  v['attributes'].extend(attributes)
+  attributes = []
+
   return {
     'isa': 'definition',
     'kind': 'const',
+    'const': v,
     'id': id,
     'value': v,
     'comment': ''
   }
 
 
-
+# удаляет декларацию по имени
 def module_text_remove_decl(kind, id_str):
   for x in module['text']:
     if x['isa'] == 'declaration':
       if x['kind'] == kind:
-        if x['id']['str'] == id_str:
+        if x[kind]['id']['str'] == id_str:
           #print("REMOVE: " + id_str)
           module['text'].remove(x)
           break
 
 
-
 def def_type(x):
-  global no_type_alias
-
   id = x['id']
   #print('def_type: ' + id['str'])
   t = do_type(x['type'])
@@ -1258,16 +1284,20 @@ def def_type(x):
     exist.update(t)
     # and find and remove declaration instruction
     module_text_remove_decl('type', id['str'])
-  else:
 
+    #return None
+  else:
     nt = None
-    if no_type_alias == False:
+    if not option_get("no_type_alias"):
       # create new type alias
       nt = type.create_alias(id['str'], t, id['ti'])
     else:
       nt = copy.copy(t)
       nt['ti'] = id['ti']
 
+    global attributes
+    nt['attributes'].extend(attributes)
+    attributes = []
 
     # extend new type descriptor with properties
     # (directive '@property')
@@ -1278,10 +1308,11 @@ def def_type(x):
     module['symtab'].type_add(id['str'], nt)
 
 
-  if no_type_alias != False:
-    if no_type_alias == 'once':
-        no_type_alias = False
-    return None
+    if option_get("no_type_alias"):
+      if option_get("no_type_alias") == 'once':
+        option_off("no_type_alias")
+      return None
+
 
   if attribute_get('c-no-print'):
     if settings_check('backend', 'c'):
@@ -1290,9 +1321,9 @@ def def_type(x):
   return {
     'isa': 'definition',
     'kind': 'type',
+    'type': t,  # именно t!
     'id': x['id'],
     'afterdef': already_declared,
-    'type': t,
     'comment': ''
   }
 
@@ -1317,7 +1348,7 @@ def def_var(x):
     iv = value_cast_implicit(iv, f['type'], iv['ti'])
     type.check(iv['type'], f['type'], x['init']['ti'])
 
-  var_value = {
+  var = {
     'isa': 'value',
     'kind': 'var',
     'id': f['id'],
@@ -1327,17 +1358,22 @@ def def_var(x):
     'ti': x['ti']
   }
 
+  global attributes
+  var['attributes'].extend(attributes)
+  attributes = []
+
   # extend var descriptor with properties
   # (directive '@property')
   global properties
-  var_value.update(properties)
+  var.update(properties)
   properties = {}
 
-  module['symtab'].value_add(x['field']['id']['str'], var_value)
+  module['symtab'].value_add(x['field']['id']['str'], var)
 
   return {
     'isa': 'definition',
     'kind': 'var',
+    'var': var,
     'field': f,
     'init': iv,
     'comment': '',
@@ -1373,6 +1409,10 @@ def def_func(x):
     'attributes': [],
     'ti': func_ti
   }
+
+  global attributes
+  cfunc['attributes'].extend(attributes)
+  attributes = []
 
   # extend function descriptor with properties
   # (directive '@property')
@@ -1411,6 +1451,7 @@ def def_func(x):
   funcdef = {
     'isa': 'definition',
     'kind': 'func',
+    'func': cfunc,
     'id': func_id,
     'type': func_type,
     'stmt': func_stmt,
@@ -1432,6 +1473,7 @@ def decl_type(x):
     'isa': 'type',
     'kind': 'opaque',
     'name': id['str'],
+    'id': id,
     'attributes': [],
     'ti': id['ti'],
   }
@@ -1442,15 +1484,19 @@ def decl_type(x):
       return None
 
   # С не печатает opaque, но LLVM печатает (!)
-  return {
+  instr = {
     'isa': 'declaration',
     'kind': 'type',
-    'id': x['id'],
     'type': nt,
-    'extern': x['extern'],
+    'id': x['id'],
     'attributes': ['undefined'],
     'comment': '',
   }
+
+  if x['extern']:
+    instr['attributes'].append('extern')
+
+  return instr
 
 
 
@@ -1462,7 +1508,7 @@ def decl_func(x):
   if attribute_get('arghack'):
     type.type_attribute_add(ftyp, 'arghack')
 
-  fval = {
+  func = {
     'isa': 'value',
     'kind': 'func',
     'id': id,
@@ -1471,24 +1517,25 @@ def decl_func(x):
     'ti': x['ti']
   }
 
-  module['symtab'].value_add(id['str'], fval)
+  module['symtab'].value_add(id['str'], func)
 
   if attribute_get('c-no-print'):
     if settings_check('backend', 'c'):
       return None
 
-  return {
+  instr = {
     'isa': 'declaration',
     'kind': 'func',
-    'id': id,
-    'type': ftyp,
-    'stmt': None,
-    'extern': x['extern'],
+    'func': func,
     'attributes': ['undefined'],
     'comment': '',
     'ti': x['ti']
   }
 
+  if x['extern']:
+    instr['attributes'].append('extern')
+
+  return instr
 
 
 def proc(ast):
