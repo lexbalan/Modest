@@ -1302,7 +1302,7 @@ def def_type(x):
     'isa': 'definition',
     'kind': 'type',
     'id': x['id'],
-    'afterdef': already_defined,
+    'afterdef': already_declared,
     'type': t,
     'comment': ''
   }
