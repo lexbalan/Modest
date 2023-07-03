@@ -33,9 +33,39 @@ func arrayOfArraysExample () -> Unit {
 }
 
 
+func fillArray () -> Unit {
+	var i : Int32 := 0
+	while i < arraySize {
+		printf("arr[%d] = ", i)
+		scanf("%d", &array[i])
+		i := i + 1
+	}
+}
+
+
+func sortBubble (arr : *[]Nat32, len : Nat32) -> Unit {
+	var end : Nat1 := 0
+	while notend {
+		end := 1
+		var i : Nat32 := 0
+		while i < len - 1 {
+			let a = arr[i]
+			let b = arr[i + 1]
+			if a > b {
+				arr[i] := b
+				arr[i + 1] := a
+				end := 0
+			}
+			i := i + 1
+		}
+	}
+}
+
+
 func main () -> Int32 {
+	fillArray()
+	sortBubble(&array, 10)
 	arrayExample()
-	arrayOfArraysExample()
 	return 0
 }
 

@@ -31,9 +31,37 @@ void arrayOfArraysExample() {
 	}
 }
 
+void fillArray() {
+	int i = 0;
+	while(i < arraySize) {
+		printf("arr[%d] = ", i);
+		scanf("%d", &array[i]);
+		i = i + 1;
+	}
+}
+
+void sortBubble(uint32_t *arr, uint32_t len) {
+	uint8_t end = 0;
+	while(!end) {
+		end = 1;
+		uint32_t i = 0;
+		while(i < len - 1) {
+			const uint32_t a = arr[i];
+			const uint32_t b = arr[i + 1];
+			if(a > b) {
+				arr[i] = b;
+				arr[i + 1] = a;
+				end = 0;
+			}
+			i = i + 1;
+		}
+	}
+}
+
 int main() {
+	fillArray();
+	sortBubble((uint32_t*)&array[0], 10);
 	arrayExample();
-	arrayOfArraysExample();
 	return 0;
 }
 

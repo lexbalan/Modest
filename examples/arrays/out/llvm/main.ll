@@ -3,6 +3,8 @@
 @str_1 = private constant [16 x i8] c"array[%d] = %d\0A\00"
 @str_2 = private constant [25 x i8] c"array of arrays example\0A\00"
 @str_3 = private constant [18 x i8] c"arr[%d][%d] = %d\0A\00"
+@str_4 = private constant [11 x i8] c"arr[%d] = \00"
+@str_5 = private constant [3 x i8] c"%d\00"
 
 
 %FposT = type opaque
@@ -115,9 +117,84 @@ break_1:
   ret void
 }
 
+define void @fillArray() {
+  %i = alloca i32
+  store i32 0, i32* %i
+  br label %again_1
+again_1:
+  %1 = load i32, i32* %i
+  %2 = icmp slt i32 %1, 10
+  br i1 %2 , label %body_1, label %break_1
+body_1:
+  %3 = bitcast [11 x i8]* @str_4 to %ConstCharStr
+  %4 = load i32, i32* %i
+  %5 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %3, i32 %4)
+  %6 = bitcast [3 x i8]* @str_5 to %ConstCharStr
+  %7 = load i32, i32* %i
+  %8 = getelementptr inbounds [10 x i32], [10 x i32]* @array, i32 0, i32 %7
+  %9 = call i32(%ConstCharStr, ...) @scanf (%ConstCharStr %6, i32* %8)
+  %10 = load i32, i32* %i
+  %11 = add i32 %10, 1
+  store i32 %11, i32* %i
+  br label %again_1
+break_1:
+  ret void
+}
+
+define void @sortBubble([0 x i32]* %arr, i32 %len) {
+  %end = alloca i1
+  store i1 0, i1* %end
+  br label %again_1
+again_1:
+  %1 = load i1, i1* %end
+  %2 = xor  i1 %1, -1
+  br i1 %2 , label %body_1, label %break_1
+body_1:
+  store i1 1, i1* %end
+  %i = alloca i32
+  store i32 0, i32* %i
+  br label %again_2
+again_2:
+  %3 = load i32, i32* %i
+  %4 = sub i32 %len, 1
+  %5 = icmp ult i32 %3, %4
+  br i1 %5 , label %body_2, label %break_2
+body_2:
+  %6 = load i32, i32* %i
+  %7 = getelementptr inbounds [0 x i32], [0 x i32]* %arr, i32 0, i32 %6
+  %8 = load i32, i32* %7
+  %9 = load i32, i32* %i
+  %10 = add i32 %9, 1
+  %11 = getelementptr inbounds [0 x i32], [0 x i32]* %arr, i32 0, i32 %10
+  %12 = load i32, i32* %11
+  %13 = icmp ugt i32 %8, %12
+  br i1 %13 , label %then_0, label %endif_0
+then_0:
+  %14 = load i32, i32* %i
+  %15 = getelementptr inbounds [0 x i32], [0 x i32]* %arr, i32 0, i32 %14
+  store i32 %12, i32* %15
+  %16 = load i32, i32* %i
+  %17 = add i32 %16, 1
+  %18 = getelementptr inbounds [0 x i32], [0 x i32]* %arr, i32 0, i32 %17
+  store i32 %8, i32* %18
+  store i1 0, i1* %end
+  br label %endif_0
+endif_0:
+  %19 = load i32, i32* %i
+  %20 = add i32 %19, 1
+  store i32 %20, i32* %i
+  br label %again_2
+break_2:
+  br label %again_1
+break_1:
+  ret void
+}
+
 define i32 @main() {
+  call void() @fillArray ()
+  %1 = bitcast [10 x i32]* @array to [0 x i32]*
+  call void([0 x i32]*, i32) @sortBubble ([0 x i32]* %1, i32 10)
   call void() @arrayExample ()
-  call void() @arrayOfArraysExample ()
   ret i32 0
 }
 

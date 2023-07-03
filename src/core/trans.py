@@ -440,7 +440,6 @@ def do_value_expr_un(x):
       'value': val,
       'type': t,
       'attributes': ['adr'],
-      'properties': {},
       'ti': x['ti']
     }
 
@@ -456,7 +455,6 @@ def do_value_expr_un(x):
     'value': val,
     'type': t,
     'attributes': [],
-    'properties': {},
     'ti': x['ti']
   }
 
@@ -525,7 +523,6 @@ def do_value_expr_call(x):
     'args': args,
     'type': ftype['to'],
     'attributes': [],
-    'properties': {},
     'ti': x['ti']
   }
 
@@ -568,7 +565,6 @@ def do_value_expr_index(x):
     'index': i,
     'type': typ['of'],
     'attributes': ['adr'],
-    'properties': {},
     'ti': x['ti']
   }
 
@@ -617,7 +613,6 @@ def do_value_expr_access(x):
     'record_type': record_type,
     'type': field['type'],
     'attributes': attributes,
-    'properties': {},
     'ti': x['ti']
   }
 
@@ -708,7 +703,6 @@ def do_value_expr_str(x):
     'len': str_len,
     'type': t,
     'attributes': ['string'],
-    'properties': {},
     'ti': x['ti']
   }
 
@@ -746,7 +740,6 @@ def do_value_expr_array(x):
     },
     'items': items,
     'attributes': [],
-    'properties': {},
     'ti': x['ti']
   }
 
@@ -784,7 +777,6 @@ def do_value_expr_record(x):
     },
     'items': items,
     'attributes': [],
-    'properties': {},
     'ti': x['ti']
   }
 
@@ -810,7 +802,6 @@ def do_value_expr_sizeof(x):
     'of': tx,
     'type': type.typeNat,
     'attributes': [],
-    'properties': {},
     'ti': x['ti']
   }
 
@@ -976,7 +967,6 @@ def do_stmt_var(x):
     'id': id,
     'type': t,
     'attributes': ['adr', 'local'],
-    'properties': {},
     'ti': x['ti']
   }
   module['symtab'].value_add(id['str'], var_value)
@@ -1023,7 +1013,6 @@ def do_stmt_let(x):
     'id': id,
     'type': v['type'],
     'attributes': ['local', 'immutable'],
-    'properties': {},
     'ti': x['ti']
   }
 
@@ -1335,7 +1324,6 @@ def def_var(x):
     'type': f['type'],
     'init': iv,
     'attributes': ['adr', 'var'],
-    'properties': {},
     'ti': x['ti']
   }
 
@@ -1383,7 +1371,6 @@ def def_func(x):
     'id': func_id,
     'type': func_type,
     'attributes': [],
-    'properties': {},
     'ti': func_ti
   }
 
@@ -1404,7 +1391,6 @@ def def_func(x):
       'id': param_id,
       'type': param['type'],
       'attributes': ['param', 'local', 'immutable'],
-      'properties': {},
       'ti': param_ti
     }
     module['symtab'].value_add(param_id['str'], p)
@@ -1482,7 +1468,6 @@ def decl_func(x):
     'id': id,
     'type': ftyp,
     'attributes': ['undefined'],
-    'properties': {},
     'ti': x['ti']
   }
 
