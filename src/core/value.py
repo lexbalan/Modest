@@ -99,9 +99,9 @@ def value_attribute_check(v, a):
   return a in v['attributes']
 
 
-
 def value_is_immutable(x):
   return 'immutable' in x['attributes']
+
 
 def value_is_immediate(x):
   return 'immediate' in x['attributes']
@@ -270,6 +270,8 @@ def value_cons_integer(v, t, ti, method):
     # Int -> Int
     if type.is_generic(v['type']):
       # GenericInt -> Int
+
+      # check size
       if type.is_numeric(t):
         if v['type']['power'] > t['power']:
           return None

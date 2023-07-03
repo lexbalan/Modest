@@ -35,9 +35,6 @@ module = None
 # не создавать алиас типа, а просто подставлять тип по месту
 no_type_alias = False
 
-# создать тип со следующим c_alias
-type_c_alias = None
-
 
 # used in metadirs
 def c_include(s):
@@ -48,11 +45,13 @@ def c_include(s):
   module['text'].append(inc)
 
 
-# used in metadirs
-def c_alias(alias):
-  global type_c_alias
-  type_c_alias = alias
+properties = {}
 
+# used in metadirs
+# add 'properties' to entity descriptor
+def property(id, value):
+  global properties
+  properties[id] = value
 
 
 
@@ -1218,6 +1217,13 @@ def def_const(x):
 
   v['id'] = id
   value_attribute_add(v, 'const')
+
+  # extend const value descriptor with properties
+  # (directive '@property')
+  global properties
+  v.update(properties)
+  properties = {}
+
   module['symtab'].value_add(id['str'], v)
 
   if attribute_get('c-no-print'):
@@ -1255,10 +1261,10 @@ def def_type(x):
     return def_bad()
 
   exist = module['symtab'].type_get(id['str'])
-  already_defined = exist != None
+  already_declared = exist != None
 
 
-  if already_defined:
+  if already_declared:
     # just overwrite existed 'opaque' type (for records)
     exist.update(t)
     # and find and remove declaration instruction
@@ -1270,18 +1276,17 @@ def def_type(x):
       # create new type alias
       nt = type.create_alias(id['str'], t, id['ti'])
     else:
-      nt = t
-
-
-    global type_c_alias
-    if type_c_alias != None:
-      nt = copy.copy(nt)
-      nt['c_alias'] = type_c_alias
+      nt = copy.copy(t)
       nt['ti'] = id['ti']
-      type_c_alias = None
 
 
-    nt2 = module['symtab'].type_add(id['str'], nt)
+    # extend new type descriptor with properties
+    # (directive '@property')
+    global properties
+    nt.update(properties)
+    properties = {}
+
+    module['symtab'].type_add(id['str'], nt)
 
 
   if no_type_alias != False:
@@ -1333,6 +1338,13 @@ def def_var(x):
     'properties': {},
     'ti': x['ti']
   }
+
+  # extend var descriptor with properties
+  # (directive '@property')
+  global properties
+  var_value.update(properties)
+  properties = {}
+
   module['symtab'].value_add(x['field']['id']['str'], var_value)
 
   return {
@@ -1374,6 +1386,12 @@ def def_func(x):
     'properties': {},
     'ti': func_ti
   }
+
+  # extend function descriptor with properties
+  # (directive '@property')
+  global properties
+  cfunc.update(properties)
+  properties = {}
 
   i = 0
   while i < len(func_type['params']):
