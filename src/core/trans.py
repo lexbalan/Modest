@@ -28,7 +28,7 @@ parser = Parser()
 
 cfunc = None  # current function
 
-root_symtab = None
+root_context = None
 
 module = None
 
@@ -86,27 +86,27 @@ def import_add(id, m):
 
 
 def init():
-  global root_symtab
-  # init main symtab
-  root_symtab = Symtab()
-  root_symtab.type_add('Unit', type.typeUnit)
-  root_symtab.type_add('Int8', type.typeInt8)
-  root_symtab.type_add('Int16', type.typeInt16)
-  root_symtab.type_add('Int32', type.typeInt32)
-  root_symtab.type_add('Int64', type.typeInt64)
-  root_symtab.type_add('Nat1', type.typeNat1)
-  root_symtab.type_add('Nat8', type.typeNat8)
-  root_symtab.type_add('Nat16', type.typeNat16)
-  root_symtab.type_add('Nat32', type.typeNat32)
-  root_symtab.type_add('Nat64', type.typeNat64)
-  root_symtab.type_add('Float16', type.typeFloat16)
-  root_symtab.type_add('Float32', type.typeFloat32)
-  root_symtab.type_add('Float64', type.typeFloat64)
-  root_symtab.type_add('Str', type.typeStr)
+  global root_context
+  # init main context
+  root_context = Symtab()
+  root_context.type_add('Unit', type.typeUnit)
+  root_context.type_add('Int8', type.typeInt8)
+  root_context.type_add('Int16', type.typeInt16)
+  root_context.type_add('Int32', type.typeInt32)
+  root_context.type_add('Int64', type.typeInt64)
+  root_context.type_add('Nat1', type.typeNat1)
+  root_context.type_add('Nat8', type.typeNat8)
+  root_context.type_add('Nat16', type.typeNat16)
+  root_context.type_add('Nat32', type.typeNat32)
+  root_context.type_add('Nat64', type.typeNat64)
+  root_context.type_add('Float16', type.typeFloat16)
+  root_context.type_add('Float32', type.typeFloat32)
+  root_context.type_add('Float64', type.typeFloat64)
+  root_context.type_add('Str', type.typeStr)
 
-  root_symtab.value_add('nil', valueNil)
-  root_symtab.value_add('true', valueTrue)
-  root_symtab.value_add('false', valueFalse)
+  root_context.value_add('nil', valueNil)
+  root_context.value_add('true', valueTrue)
+  root_context.value_add('false', valueFalse)
 
 
 # last fiels of record can be zero size array (!)
@@ -134,14 +134,14 @@ def do_field(x, is_last=False):
 #
 
 def do_type_id(t):
-  tx = module['symtab'].type_get(t['id']['str'])
+  tx = module['context'].type_get(t['id']['str'])
   if tx == None:
     id = t['id']['str']
     error("undeclared type %s" % id, t)
     # create fake alias for unknown type
     tx = type.type_bad()
     nt = type.create_alias(id, tx, t['ti'])
-    root_symtab.type_add(id, nt)
+    root_context.type_add(id, nt)
     return nt
   return tx #{'isa': 'type', 'kind': 'id', 'id': t['id'], 'type': tx}
 
@@ -224,7 +224,7 @@ def do_type_enum(t):
 
     # add enum item to global context
     item_val = value_create_int(i, typ=enum_type, ti=id['ti'])
-    module['symtab'].value_add(id['id']['str'], item_val)
+    module['context'].value_add(id['id']['str'], item_val)
 
     i = i + 1
 
@@ -653,7 +653,7 @@ def do_value_expr_to(x):
 
 def do_value_expr_id(x):
   id_str = x['id']['str']
-  vx = module['symtab'].value_get(id_str)
+  vx = module['context'].value_get(id_str)
   if vx == None:
     error("undeclared value '%s'" % x['id']['str'], x)
 
@@ -661,7 +661,7 @@ def do_value_expr_id(x):
     # создадим bad value и пропишем его глобально
     v = value_create_bad(x['ti'])
     value_attribute_add(v, 'unknown')
-    module['symtab'].value_add(id_str, v)
+    module['context'].value_add(id_str, v)
     return value_create_bad(x['ti'])
 
 
@@ -682,7 +682,7 @@ def do_value_expr_ns(x):
 
   return value_create_bad(ns_id['ti'])
 
-  #tx = module['symtab'].type_get(ns_name)
+  #tx = module['context'].type_get(ns_name)
 
   #if tx == None:
   #  error("unknown namespace '%s'" % ns_id['str'], ns_id)
@@ -958,7 +958,7 @@ def do_stmt_var(x):
     v = do_value(x['value'])
 
   if t == None and v == None:
-    module['symtab'].value_add(id['str'], value_create_bad())
+    module['context'].value_add(id['str'], value_create_bad())
     return stmt_create_bad()
 
   if t != None and v != None:
@@ -968,7 +968,7 @@ def do_stmt_var(x):
 
 
   if type.is_bad(t):
-    module['symtab'].value_add(id['str'], value_create_bad())
+    module['context'].value_add(id['str'], value_create_bad())
     return stmt_create_bad()
 
   if type.is_forbidden_var(t):
@@ -979,7 +979,7 @@ def do_stmt_var(x):
     t = v['type']
 
   # check if identifier is free (in current block)
-  already = module['symtab'].value_get(id['str'], recursive=False)
+  already = module['context'].value_get(id['str'], recursive=False)
   if already != None:
     error("local id redefinition", x['id']['ti'])
     return stmt_create_bad()
@@ -993,7 +993,7 @@ def do_stmt_var(x):
     'attributes': ['adr', 'local'],
     'ti': x['ti']
   }
-  module['symtab'].value_add(id['str'], var_value)
+  module['context'].value_add(id['str'], var_value)
 
   return {
     'isa': 'stmt',
@@ -1010,7 +1010,7 @@ def do_stmt_let(x):
   id = x['id']
   v = do_value(x['value'])
   if value_is_bad(v):
-    module['symtab'].value_add(id['str'], value_create_bad())
+    module['context'].value_add(id['str'], value_create_bad())
     return stmt_create_bad()
 
   vtype = v['type']
@@ -1025,7 +1025,7 @@ def do_stmt_let(x):
   """if settings_check('backend', 'llvm'):
     if value_is_immediate(v):
       if not (type.is_record(vtype) or type.is_array(vtype)):
-        module['symtab'].value_add(id['str'], v)
+        module['context'].value_add(id['str'], v)
         return stmt_create_bad()"""
 
 
@@ -1041,12 +1041,12 @@ def do_stmt_let(x):
   }
 
   # check if identifier is free (in current block)
-  already = module['symtab'].value_get(id['str'], recursive=False)
+  already = module['context'].value_get(id['str'], recursive=False)
   if already != None:
     error("local id redefinition", x['id']['ti'])
     return stmt_create_bad()
 
-  module['symtab'].value_add(id['str'], const_value)
+  module['context'].value_add(id['str'], const_value)
 
   return {
     'isa': 'stmt',
@@ -1092,14 +1092,19 @@ def do_stmt_value(x):
   v = do_value(x['value'])
   if value_is_bad(v):
     return stmt_create_bad()
-  return {'isa': 'stmt', 'kind': 'value', 'value': v, 'ti': x['ti']}
+  return {
+    'isa': 'stmt',
+    'kind': 'value',
+    'value': v,
+    'ti': x['ti']
+  }
 
 
 
 def do_stmt(x):
   k = x['kind']
 
-  s = stmt_create_bad()
+  s = None
   if k == 'let': s = do_stmt_let(x)
   elif k == 'block': s = do_stmt_block(x)
   elif k == 'value': s = do_stmt_value(x)
@@ -1110,14 +1115,14 @@ def do_stmt(x):
   elif k == 'var': s = do_stmt_var(x)
   elif k == 'again': s = do_stmt_again(x)
   elif k == 'break': s = do_stmt_break(x)
+  else: s = stmt_create_bad()
 
   return s
 
 
 
 def do_stmt_block(x):
-
-  module['symtab'] = module['symtab'].branch(domain='local')
+  module['context'] = module['context'].branch(domain='local')
 
   stmts = []
   for stmt in x['stmts']:
@@ -1125,7 +1130,7 @@ def do_stmt_block(x):
     if not stmt_is_bad(s):
       stmts.append(s)
 
-  module['symtab'] = module['symtab'].parent_get()
+  module['context'] = module['context'].parent_get()
 
   return {
     'isa': 'stmt',
@@ -1153,7 +1158,7 @@ def do_include(x):
   global included_modules
   if abspath in included_modules:
     m = included_modules[abspath]
-    module['symtab'].merge(m['symtab'])  #!
+    module['context'].merge(m['context'])  #!
     return None  # already imported
 
 
@@ -1161,10 +1166,10 @@ def do_include(x):
   included_modules[abspath] = m
 
   #print("\nINCLUDE: " + impline)
-  #m['symtab'].show_tables()
+  #m['context'].show_tables()
 
   # расширяем нашу таблицу символов таблицей импорта
-  module['symtab'].merge(m['symtab'])
+  module['context'].merge(m['context'])
 
 
   # если не нужно печатать сожержимое заголовка
@@ -1209,7 +1214,7 @@ def do_import(x):
   m = translate(abspath)
 
   print("\nIMPORT: " + impline)
-  m['symtab'].show_tables()
+  m['context'].show_tables()
 
   return m
 
@@ -1237,7 +1242,7 @@ def def_const(x):
   v.update(properties)
   properties = {}
 
-  module['symtab'].value_add(id['str'], v)
+  module['context'].value_add(id['str'], v)
 
   if attribute_get('c-no-print'):
     if settings_check('backend', 'c'):
@@ -1247,15 +1252,15 @@ def def_const(x):
   v['attributes'].extend(attributes)
   attributes = []
 
-  return {
+  definition = {
     'isa': 'definition',
     'kind': 'const',
     'const': v,
     'id': id,
     'value': v,
-    'comment': ''
   }
 
+  return definition
 
 # удаляет декларацию по имени
 def module_text_remove_decl(kind, id_str):
@@ -1275,7 +1280,7 @@ def def_type(x):
   if type.is_bad(t):
     return def_bad()
 
-  exist = module['symtab'].type_get(id['str'])
+  exist = module['context'].type_get(id['str'])
   already_declared = exist != None
 
 
@@ -1305,7 +1310,7 @@ def def_type(x):
     nt.update(properties)
     properties = {}
 
-    module['symtab'].type_add(id['str'], nt)
+    module['context'].type_add(id['str'], nt)
 
 
     if option_get("no_type_alias"):
@@ -1318,14 +1323,15 @@ def def_type(x):
     if settings_check('backend', 'c'):
       return None
 
-  return {
+  definition = {
     'isa': 'definition',
     'kind': 'type',
     'type': t,  # именно t!
     'id': x['id'],
     'afterdef': already_declared,
-    'comment': ''
   }
+
+  return definition
 
 
 
@@ -1342,11 +1348,11 @@ def def_var(x):
     error("cannot create variable with undefined type", x['type'])
     return None
 
-  iv = None
+  init_value = None
   if x['init'] != None:
-    iv = do_value(x['init'])
-    iv = value_cast_implicit(iv, f['type'], iv['ti'])
-    type.check(iv['type'], f['type'], x['init']['ti'])
+    init_value = do_value(x['init'])
+    init_value = value_cast_implicit(iv, f['type'], iv['ti'])
+    type.check(init_value['type'], f['type'], x['init']['ti'])
 
   var = {
     'isa': 'value',
@@ -1368,17 +1374,17 @@ def def_var(x):
   var.update(properties)
   properties = {}
 
-  module['symtab'].value_add(x['field']['id']['str'], var)
+  module['context'].value_add(x['field']['id']['str'], var)
 
-  return {
+  definition = {
     'isa': 'definition',
     'kind': 'var',
     'var': var,
-    'field': f,
-    'init': iv,
-    'comment': '',
+    'init': init_value,
     'ti': x['ti']
   }
+
+  return definition
 
 
 
@@ -1387,17 +1393,15 @@ def def_func(x):
   func_id = x['id']
   func_type = do_type(x['type'])
 
-
   # if function already declared/defined, check it
-  already = module['symtab'].value_get(func_id['str'])
+  already = module['context'].value_get(func_id['str'])
   if already != None:
     if not type.eq(already['type'], func_type):
       error("func redefinition", x['ti'])
       info("firstly declared here", already['ti'])
 
-
-  # create params symtab
-  module['symtab'] = module['symtab'].branch(domain='local')
+  # create params context
+  module['context'] = module['context'].branch(domain='local')
 
   global cfunc
   old_cfunc = cfunc
@@ -1420,48 +1424,46 @@ def def_func(x):
   cfunc.update(properties)
   properties = {}
 
+  params = func_type['params']
   i = 0
-  while i < len(func_type['params']):
-    param = func_type['params'][i]
-    param_id = param['id']
-    param_ti = param['ti']
-    p = {
+  while i < len(params):
+    p = params[i]
+    p_id = p['id']
+    param = {
       'isa': 'value',
       'kind': 'var',
-      'id': param_id,
-      'type': param['type'],
+      'id': p_id,
+      'type': p['type'],
       'attributes': ['param', 'local', 'immutable'],
-      'ti': param_ti
+      'ti': p['ti']
     }
-    module['symtab'].value_add(param_id['str'], p)
+    module['context'].value_add(p_id['str'], param)
     i = i + 1
 
 
-  func_stmt = do_stmt_block(x['stmt'])
-  cfunc['stmt'] = func_stmt
+  cfunc['stmt'] = do_stmt_block(x['stmt'])
 
+  # remove params context
+  module['context'] = module['context'].parent_get()
 
-  # remove params symtab
-  module['symtab'] = module['symtab'].parent_get()
+  # add function to global context
+  module['context'].value_add(func_id['str'], cfunc)
 
-  # add function to global symtab
-  module['symtab'].value_add(func_id['str'], cfunc)
-
-
-  funcdef = {
+  definition = {
     'isa': 'definition',
     'kind': 'func',
     'func': cfunc,
-    'id': func_id,
-    'type': func_type,
-    'stmt': func_stmt,
-    'comment': '',
     'ti': func_ti
   }
 
   cfunc = old_cfunc
 
-  return funcdef
+  # в LLVM если делаем func definition нельзя писать func declaration
+  # поэтому удалим все сделаные ранее декларации (если они есть)
+  if settings_check('backend', 'llvm'):
+    module_text_remove_decl('func', func_id['str'])
+
+  return definition
 
 
 
@@ -1477,65 +1479,63 @@ def decl_type(x):
     'attributes': [],
     'ti': id['ti'],
   }
-  nt = module['symtab'].type_add(id['str'], nt)
+  nt = module['context'].type_add(id['str'], nt)
 
   if attribute_get('c-no-print'):
     if settings_check('backend', 'c'):
       return None
 
   # С не печатает opaque, но LLVM печатает (!)
-  instr = {
+  declaration = {
     'isa': 'declaration',
     'kind': 'type',
     'type': nt,
-    'id': x['id'],
     'attributes': ['undefined'],
-    'comment': '',
+    'id': x['id']
   }
 
   if x['extern']:
-    instr['attributes'].append('extern')
+    declaration['attributes'].append('extern')
 
-  return instr
+  return declaration
 
 
 
 def decl_func(x):
   global attributes
   id = x['id']
-  ftyp = do_type(x['type'])
+  functype = do_type(x['type'])
 
   if attribute_get('arghack'):
-    type.type_attribute_add(ftyp, 'arghack')
+    type.type_attribute_add(functype, 'arghack')
 
   func = {
     'isa': 'value',
     'kind': 'func',
     'id': id,
-    'type': ftyp,
+    'type': functype,
     'attributes': ['undefined'],
     'ti': x['ti']
   }
 
-  module['symtab'].value_add(id['str'], func)
+  module['context'].value_add(id['str'], func)
 
   if attribute_get('c-no-print'):
     if settings_check('backend', 'c'):
       return None
 
-  instr = {
+  declaration = {
     'isa': 'declaration',
     'kind': 'func',
     'func': func,
     'attributes': ['undefined'],
-    'comment': '',
     'ti': x['ti']
   }
 
   if x['extern']:
-    instr['attributes'].append('extern')
+    declaration['attributes'].append('extern')
 
-  return instr
+  return declaration
 
 
 def proc(ast):
@@ -1548,7 +1548,7 @@ def proc(ast):
     'id': "<>",
     #'path': srcname,
     'imports': {},
-    'symtab': root_symtab.branch(),
+    'context': root_context.branch(),
     'text': []
   }
 
@@ -1560,20 +1560,13 @@ def proc(ast):
     y = None
 
     if isa == 'ast_definition':
-      if kind == 'func':
-        y = def_func(x)
-
-        # в LLVM если делаем func definition нельзя писать func declaration
-        # поэтому удалим все сделаные ранее декларации (если они есть)
-        if settings_check('backend', 'llvm'):
-          module_text_remove_decl('func', y['id']['str'])
-
-      elif kind == 'type': y = def_type(x)
+      if   kind == 'func':  y = def_func(x)
+      elif kind == 'type':  y = def_type(x)
       elif kind == 'const': y = def_const(x)
-      elif kind == 'var': y = def_var(x)
+      elif kind == 'var':   y = def_var(x)
 
     elif isa == 'ast_declaration':
-      if kind == 'func': y = decl_func(x)
+      if   kind == 'func': y = decl_func(x)
       elif kind == 'type': y = decl_type(x)
 
     elif isa == 'ast_directive2':
@@ -1583,26 +1576,18 @@ def proc(ast):
     elif isa == 'ast_directive':
       if kind == 'metadir':
         exec(x['text'])
-        continue
 
       # импорт изменяет контекст, и продуцирует аутпут
       elif kind == 'import':
         m = do_import(x)
         import_add(x['str'], m)
-        continue
+
       elif kind == 'include':
         y = do_include(x)
         if y != None:
-          """print("EXTEND " + env_cfabs)
-          print("(%d)" % len(y))
-          for yy in y:
-            if 'id' in yy:
-              print("+ @" + yy['id']['str'])
-            else:
-              print("+ #" + yy['kind'])"""
-
           module['text'].extend(y)
-        continue
+
+      continue
 
 
     local_attributes = []
@@ -1642,8 +1627,8 @@ def import_abspath(s):
 
 def translate(srcname):
   #print("translate!")
-  #module['symtab'].show_tables()
-  #root_symtab.show_tables()
+  #module['context'].show_tables()
+  #root_context.show_tables()
 
   # выставляем директорию текущего файла
   # (будет использоваться в релативных инклудах)

@@ -590,8 +590,9 @@ def print_def_func(x):
     if x['func']['comment'] != '':
       o("// %s\n" % x['func']['comment'])
 
-  print_func_signature(x['id']['str'], x['type'])
-  print_stmt_block(x['stmt'])
+  func = x['func']
+  print_func_signature(func['id']['str'], func['type'])
+  print_stmt_block(func['stmt'])
 
 
 

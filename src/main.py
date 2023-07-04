@@ -73,7 +73,7 @@ def main():
 
   m = trans.translate(src_name)
   text = m['text']
-  symtab = m['symtab']
+  context = m['context']
 
   if error.errcnt > 0:
     #error.fatal("%d errors occurred" % error.errcnt)

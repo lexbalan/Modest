@@ -1113,16 +1113,17 @@ def print_def_func(x):
     'locals': [{}]
   }
 
+  func = x['func']
   o("\ndefine ")
-  print_type(x['type']['to'])
-  o(" @%s" % x['id']['str'])
+  print_type(func['type']['to'])
+  o(" @%s" % func['id']['str'])
   o("(")
 
   # список параметров которые следует разместить на стеке
   # (массивы передаваемые по значению)
   reloc = []
 
-  params = x['type']['params']
+  params = func['type']['params']
   params_len = len(params)
   i = 0
   while i < params_len:
@@ -1168,9 +1169,9 @@ def print_def_func(x):
     lo("  ; reloc " + r['id'])
     ll_alloca(r['id'], r['type'], r)
 
-  print_stmt_block(x['stmt'])
+  print_stmt_block(func['stmt'])
 
-  if type.eq(x['type']['to'], type.typeUnit):
+  if type.eq(func['type']['to'], type.typeUnit):
     lo("  ret void")
   lo("}\n")
 

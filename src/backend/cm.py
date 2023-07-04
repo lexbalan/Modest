@@ -472,8 +472,9 @@ def print_def_func(x):
   if not was_separated_by_new_line:
     o("\n")
 
-  o('\nfunc %s ' % x['id']['str']); print_type(x['type'])
-  print_stmt_block(x['stmt'])
+  func = x['func']
+  o('\nfunc %s ' % func['id']['str']); print_type(func['type'])
+  print_stmt_block(func['stmt'])
 
 
 
