@@ -263,9 +263,9 @@ def type_attribute_check(t, a):
 
 
 
-def is_bad(x):
-  assert x != None
-  return x['kind'] == 'bad'
+def is_bad(t):
+  assert t != None
+  return t['kind'] == 'bad'
 
 
 def is_generic(t):

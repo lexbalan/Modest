@@ -38,7 +38,13 @@ def c_include(s):
   #print("c_include %s" % s)
   global module
   local = s[0:2] == './'
-  inc = {'isa': 'directive', 'kind': 'include', 'str': s, 'local': local}
+  inc = {
+    'isa': 'directive',
+    'kind': 'include',
+    'str': s,
+    'local': local,
+    'attributes': [],
+  }
   module['text'].append(inc)
 
 
@@ -967,12 +973,13 @@ def do_stmt_var(x):
     type.check(t, v['type'], v['ti'])
 
 
-  if type.is_bad(t):
-    module['context'].value_add(id['str'], value_create_bad())
-    return stmt_create_bad()
+  if t != None:
+    if type.is_bad(t):
+      module['context'].value_add(id['str'], value_create_bad())
+      return stmt_create_bad()
 
-  if type.is_forbidden_var(t):
-    error("unsuitable type", x['type'])
+    if type.is_forbidden_var(t):
+      error("unsuitable type", x['type'])
 
 
   if t == None:
@@ -1183,19 +1190,26 @@ def do_include(x):
     if attribute_get('c-just-include'):
       attribute_off('c-just-include')
       return_include_directive = True
-    if attribute_get('c-no-print'):
-      attribute_off('c-no-print')
-      return []
+
 
   if return_include_directive:
-    return [
-      {
-        'isa': 'directive',
-        'kind': 'include',
-        'str': impline[:-1],  # .hm -> .h
-        'local': True
-      }
-    ]
+    directive = {
+      'isa': 'directive',
+      'kind': 'include',
+      'str': impline[:-1],  # .hm -> .h
+      'attributes': [],
+      'local': True
+    }
+
+    if attribute_get('c-no-print'):
+      attribute_off('c-no-print')
+      directive['attributes'].append('c-no-print')
+
+    #if attribute_get('c-just-include'):
+    # attribute_off('c-just-include')
+    #  directive['attributes'].append('c-just-include')
+
+    return [directive]
 
   return m['text']
 
@@ -1244,9 +1258,7 @@ def def_const(x):
 
   module['context'].value_add(id['str'], v)
 
-  if attribute_get('c-no-print'):
-    if settings_check('backend', 'c'):
-      return None
+
 
   global attributes
   v['attributes'].extend(attributes)
@@ -1257,8 +1269,12 @@ def def_const(x):
     'kind': 'const',
     'const': v,
     'id': id,
+    'attributes': [],
     'value': v,
   }
+
+  if attribute_get('c-no-print'):
+    definition['attributes'].append('c-no-print')
 
   return definition
 
@@ -1319,17 +1335,17 @@ def def_type(x):
       return None
 
 
-  if attribute_get('c-no-print'):
-    if settings_check('backend', 'c'):
-      return None
-
   definition = {
     'isa': 'definition',
     'kind': 'type',
     'type': t,  # именно t!
     'id': x['id'],
+    'attributes': [],
     'afterdef': already_declared,
   }
+
+  if attribute_get('c-no-print'):
+    definition['attributes'].append('c-no-print')
 
   return definition
 
@@ -1381,6 +1397,7 @@ def def_var(x):
     'kind': 'var',
     'var': var,
     'init': init_value,
+    'attributes': [],
     'ti': x['ti']
   }
 
@@ -1453,6 +1470,7 @@ def def_func(x):
     'isa': 'definition',
     'kind': 'func',
     'func': cfunc,
+    'attributes': [],
     'ti': func_ti
   }
 
@@ -1481,10 +1499,6 @@ def decl_type(x):
   }
   nt = module['context'].type_add(id['str'], nt)
 
-  if attribute_get('c-no-print'):
-    if settings_check('backend', 'c'):
-      return None
-
   # С не печатает opaque, но LLVM печатает (!)
   declaration = {
     'isa': 'declaration',
@@ -1497,6 +1511,9 @@ def decl_type(x):
   if x['extern']:
     declaration['attributes'].append('extern')
 
+  if attribute_get('c-no-print'):
+    declaration['attributes'].append('c-no-print')
+
   return declaration
 
 
@@ -1506,7 +1523,7 @@ def decl_func(x):
   id = x['id']
   functype = do_type(x['type'])
 
-  if attribute_get('arghack'):
+  if option_get("arghack"):
     type.type_attribute_add(functype, 'arghack')
 
   func = {
@@ -1520,9 +1537,6 @@ def decl_func(x):
 
   module['context'].value_add(id['str'], func)
 
-  if attribute_get('c-no-print'):
-    if settings_check('backend', 'c'):
-      return None
 
   declaration = {
     'isa': 'declaration',
@@ -1531,6 +1545,9 @@ def decl_func(x):
     'attributes': ['undefined'],
     'ti': x['ti']
   }
+
+  if attribute_get('c-no-print'):
+    declaration['attributes'].append('c-no-print')
 
   if x['extern']:
     declaration['attributes'].append('extern')

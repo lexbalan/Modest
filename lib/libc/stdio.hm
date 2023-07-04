@@ -45,16 +45,14 @@ extern func tmpfile() -> *FILE
 extern func tmpnam(str : CharStr) -> CharStr
 
 
-@attribute("arghack", glob=True)
-
+@option("arghack")
 extern func printf  (s : ConstCharStr) -> Int
 extern func scanf   (s : ConstCharStr) -> Int
 extern func fprintf (stream : *FILE, format : Str) -> Int
 extern func fscanf (f : *FILE, format : ConstCharStr) -> Int
 extern func sscanf  (buf : ConstCharStr, format : ConstCharStr) -> Int
 extern func sprintf (buf : CharStr, format : ConstCharStr) -> Int
-
-@attribute_off("arghack")
+@option_off("arghack")
 
 
 //extern func vfprintf (f : *FILE, format : ConstCharStr, arg : VaList) -> Int

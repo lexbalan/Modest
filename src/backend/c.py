@@ -732,6 +732,9 @@ def run(module, strs, outname):
   prev_ik = ('', '')
 
   for x in module:
+    if 'c-no-print' in x['attributes']:
+      continue
+
     o("\n")
 
     isa = x['isa']
