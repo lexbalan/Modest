@@ -1,48 +1,71 @@
 
 
 
+%Char = type i8
+%ConstChar = type %Char
+%SignedChar = type i8
+%UnsignedChar = type i8
+%Short = type i16
+%UnsignedShort = type i16
+%Int = type i32
+%UnsignedInt = type i32
+%LongInt = type i64
+%UnsignedLongInt = type i64
+%Long = type i64
+%UnsignedLong = type i64
+%LongLong = type i64
+%UnsignedLongLong = type i64
+%LongLongInt = type i64
+%UnsignedLongLongInt = type i64
+%Float = type double
+%Double = type double
+%LongDouble = type double
+%SizeT = type i64
+%SSizeT = type i64
+
+
 %FposT = type opaque
 %FILE = type opaque
 
 %CharStr = type [0 x i8]*
 %ConstCharStr = type [0 x i8]*
 
-declare i32 @fclose(%FILE*)
-declare i32 @feof(%FILE*)
-declare i32 @ferror(%FILE*)
-declare i32 @fflush(%FILE*)
-declare i32 @fgetpos(%FILE*, %FposT*)
+declare %Int @fclose(%FILE*)
+declare %Int @feof(%FILE*)
+declare %Int @ferror(%FILE*)
+declare %Int @fflush(%FILE*)
+declare %Int @fgetpos(%FILE*, %FposT*)
 declare %FILE* @fopen(%ConstCharStr, %ConstCharStr)
-declare i64 @fread(i8*, i64, i64, %FILE*)
-declare i64 @fwrite(i8*, i64, i64, %FILE*)
+declare %SizeT @fread(i8*, %SizeT, %SizeT, %FILE*)
+declare %SizeT @fwrite(i8*, %SizeT, %SizeT, %FILE*)
 declare %FILE* @freopen(%ConstCharStr, %ConstCharStr, %FILE*)
-declare i32 @fseek(%FILE*, i64, i32)
-declare i32 @fsetpos(%FILE*, %FposT*)
-declare i64 @ftell(%FILE*)
-declare i32 @remove(%ConstCharStr)
-declare i32 @rename(%ConstCharStr, %ConstCharStr)
+declare %Int @fseek(%FILE*, %LongInt, %Int)
+declare %Int @fsetpos(%FILE*, %FposT*)
+declare %LongInt @ftell(%FILE*)
+declare %Int @remove(%ConstCharStr)
+declare %Int @rename(%ConstCharStr, %ConstCharStr)
 declare void @rewind(%FILE*)
 declare void @setbuf(%FILE*, %CharStr)
-declare i32 @setvbuf(%FILE*, %CharStr, i32, i64)
+declare %Int @setvbuf(%FILE*, %CharStr, %Int, %SizeT)
 declare %FILE* @tmpfile()
 declare %CharStr @tmpnam(%CharStr)
-declare i32 @printf(%ConstCharStr, ...)
-declare i32 @scanf(%ConstCharStr, ...)
-declare i32 @fprintf(%FILE*, [0 x i8]*, ...)
-declare i32 @fscanf(%FILE*, %ConstCharStr, ...)
-declare i32 @sscanf(%ConstCharStr, %ConstCharStr, ...)
-declare i32 @sprintf(%CharStr, %ConstCharStr, ...)
-declare i32 @fgetc(%FILE*)
-declare i32 @fputc(i32, %FILE*)
-declare %CharStr @fgets(%CharStr, i32, %FILE*)
-declare i32 @fputs(%ConstCharStr, %FILE*)
-declare i32 @getc(%FILE*)
-declare i32 @getchar()
+declare %Int @printf(%ConstCharStr, ...)
+declare %Int @scanf(%ConstCharStr, ...)
+declare %Int @fprintf(%FILE*, [0 x i8]*, ...)
+declare %Int @fscanf(%FILE*, %ConstCharStr, ...)
+declare %Int @sscanf(%ConstCharStr, %ConstCharStr, ...)
+declare %Int @sprintf(%CharStr, %ConstCharStr, ...)
+declare %Int @fgetc(%FILE*)
+declare %Int @fputc(%Int, %FILE*)
+declare %CharStr @fgets(%CharStr, %Int, %FILE*)
+declare %Int @fputs(%ConstCharStr, %FILE*)
+declare %Int @getc(%FILE*)
+declare %Int @getchar()
 declare %CharStr @gets(%CharStr)
-declare i32 @putc(i32, %FILE*)
-declare i32 @putchar(i32)
-declare i32 @puts(%ConstCharStr)
-declare i32 @ungetc(i32, %FILE*)
+declare %Int @putc(%Int, %FILE*)
+declare %Int @putchar(%Int)
+declare %Int @puts(%ConstCharStr)
+declare %Int @ungetc(%Int, %FILE*)
 declare void @perror(%ConstCharStr)
 
 %DevT = type i16
@@ -57,28 +80,28 @@ declare void @perror(%ConstCharStr)
 %TimeT = type i32
 
 %DIR = type opaque
-declare i8* @malloc(i64)
-declare i8* @memset(i8*, i32, i64)
-declare i8* @memcpy(i8*, i8*, i64)
-declare i32 @memcmp(i8*, i8*, i64)
+declare i8* @malloc(%SizeT)
+declare i8* @memset(i8*, %Int, %SizeT)
+declare i8* @memcpy(i8*, i8*, %SizeT)
+declare %Int @memcmp(i8*, i8*, %SizeT)
 declare void @free(i8*)
-declare i32 @strncmp(i8*, i8*, i64)
-declare i32 @strcmp(i8*, i8*)
-declare i8* @strcpy(i8*, i8*)
-declare i64 @strlen(i8*)
-declare i32 @ftruncate(i32, %OffT)
+declare %Int @strncmp(%ConstChar*, %ConstChar*, %SizeT)
+declare %Int @strcmp(%ConstChar*, %ConstChar*)
+declare %Char* @strcpy(%Char*, %ConstChar*)
+declare %SizeT @strlen(%ConstChar*)
+declare %Int @ftruncate(%Int, %OffT)
 
 
-declare i32 @creat([0 x i8]*, %ModeT)
-declare i32 @open([0 x i8]*, i32)
-declare i32 @read(i32, i8*, i32)
-declare i32 @write(i32, i8*, i32)
-declare %OffT @lseek(i32, %OffT, i32)
-declare i32 @close(i32)
-declare void @exit(i32)
+declare %Int @creat([0 x i8]*, %ModeT)
+declare %Int @open([0 x i8]*, %Int)
+declare %Int @read(%Int, i8*, i32)
+declare %Int @write(%Int, i8*, i32)
+declare %OffT @lseek(%Int, %OffT, %Int)
+declare %Int @close(%Int)
+declare void @exit(%Int)
 declare %DIR* @opendir([0 x i8]*)
-declare i32 @closedir(%DIR*)
-declare [0 x i8]* @getcwd([0 x i8]*, i64)
+declare %Int @closedir(%DIR*)
+declare [0 x i8]* @getcwd([0 x i8]*, %SizeT)
 declare [0 x i8]* @getenv([0 x i8]*)
 
 %Node = type {
@@ -96,7 +119,7 @@ declare [0 x i8]* @getenv([0 x i8]*)
 define %List* @linked_list_create() {
   %1 = getelementptr  %List, %List* null, i32 1
   %2 = ptrtoint  %List* %1 to i64
-  %3 = call i8*(i64) @malloc (i64 %2)
+  %3 = call i8*(%SizeT) @malloc (i64 %2)
   %4 = bitcast i8* %3 to %List*
   %5 = bitcast %List* %4 to i8*
   %6 = icmp eq i8* %5, null
@@ -154,7 +177,7 @@ endif_0:
 define %Node* @linked_list_node_create() {
   %1 = getelementptr  %Node, %Node* null, i32 1
   %2 = ptrtoint  %Node* %1 to i64
-  %3 = call i8*(i64) @malloc (i64 %2)
+  %3 = call i8*(%SizeT) @malloc (i64 %2)
   %4 = bitcast i8* %3 to %Node*
   %5 = bitcast %Node* %4 to i8*
   %6 = icmp eq i8* %5, null

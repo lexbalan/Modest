@@ -2,7 +2,7 @@
 
 include "libc/libc.hm"
 
-//!attribute('c-just-include')
+@option('c-just-include')
 include "./linked_list.hm"
 
 
@@ -19,7 +19,7 @@ func nat64_list_insert (list : *List, x : Nat64) -> Unit {
 // show list conent from first item to last
 func list_print_forward(list : *List) -> Unit {
   printf("list_print_forward:\n")
-  var pn : *Node := linked_list_first_get(list)
+  var pn := linked_list_first_get(list)
   while pn != nil {
     let x = linked_list_node_link_get(pn) to *Nat32
     printf("v = %d\n", *x)
@@ -31,7 +31,7 @@ func list_print_forward(list : *List) -> Unit {
 // show list conent from last item to first
 func list_print_backward(list : *List) -> Unit {
   printf("list_print_backward:\n")
-  var pn : *Node := linked_list_last_get(list)
+  var pn := linked_list_last_get(list)
   while pn != nil {
     let x = linked_list_node_link_get(pn) to *Nat32
     printf("v = %d\n", *x)

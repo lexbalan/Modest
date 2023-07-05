@@ -23,8 +23,8 @@ void write_example() {
 		return;
 	}
 	Chunk chunk;
-	strcpy((int8_t*)(&chunk.id[0]), (int8_t*)("id"));
-	strcpy((int8_t*)(&chunk.data[0]), (int8_t*)("data"));
+	strcpy((char*)&chunk.id[0], (char*)"id");
+	strcpy((char*)&chunk.data[0], (char*)"data");
 	fwrite(&chunk, sizeof(Chunk), 1, fp);
 	fclose(fp);
 }
@@ -44,7 +44,7 @@ void read_example() {
 	fclose(fp);
 }
 
-int32_t main() {
+int main() {
 	printf("text_file example\n");
 	write_example();
 	read_example();

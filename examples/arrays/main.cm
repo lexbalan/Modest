@@ -18,7 +18,6 @@ func arrayExample () -> Unit {
 }
 
 
-
 var arrayOfArrays : [3][3]Nat32 := [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
 
 
@@ -49,6 +48,20 @@ func fillArray () -> Unit {
   }
 }
 
+
+func sortBubble (arr : *[]Nat32, len : Nat32) -> Unit
+
+func main () -> Int {
+  //arrayExample()
+  //arrayOfArraysExample()
+  fillArray()
+  sortBubble(&array, 10)
+  arrayExample()
+  return 0
+}
+
+
+@property("comment", "bubble sort")
 func sortBubble (arr : *[]Nat32, len : Nat32) -> Unit {
   var end : Nat1 := false
   while not end {
@@ -65,15 +78,5 @@ func sortBubble (arr : *[]Nat32, len : Nat32) -> Unit {
       i := i + 1
     }
   }
-}
-
-
-func main () -> Int {
-  //arrayExample()
-  //arrayOfArraysExample()
-  fillArray()
-  sortBubble(&array, 10)
-  arrayExample()
-  return 0
 }
 

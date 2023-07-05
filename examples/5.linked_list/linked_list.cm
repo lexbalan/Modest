@@ -2,7 +2,7 @@
 
 include "libc/libc.hm"
 
-//!attribute('c-just-include')
+@option('c-just-include')
 include "./linked_list.hm"
 
 

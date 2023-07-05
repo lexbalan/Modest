@@ -40,6 +40,16 @@ void fillArray() {
 	}
 }
 
+void sortBubble(uint32_t *arr, uint32_t len);
+
+int main() {
+	fillArray();
+	sortBubble((uint32_t*)&array[0], 10);
+	arrayExample();
+	return 0;
+}
+
+// bubble sort
 void sortBubble(uint32_t *arr, uint32_t len) {
 	uint8_t end = 0;
 	while(!end) {
@@ -56,12 +66,5 @@ void sortBubble(uint32_t *arr, uint32_t len) {
 			i = i + 1;
 		}
 	}
-}
-
-int main() {
-	fillArray();
-	sortBubble((uint32_t*)&array[0], 10);
-	arrayExample();
-	return 0;
 }
 
