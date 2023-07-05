@@ -500,7 +500,8 @@ def print_field(x):
 
 def print_def_var(x):
   o("var ")
-  print_field(x['field']);
+  f = {'isa': 'field', 'id': x['var']['id'], 'type': x['var']['type']}
+  print_field(f)
   if x['init'] != None:
     o(" := "); print_value(x['init'])
 

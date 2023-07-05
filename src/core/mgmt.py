@@ -1,45 +1,5 @@
 
 #
-# Attributes
-#
-
-# глобальные аттрибуты, юзаются для того чтобы metadir могла
-# добавлять/убирать аттрибуты объектов
-local_attributes = []
-global_attributes = []
-
-
-def attribute(x, glob=False):
-  global local_attributes
-  global global_attributes
-  if glob:
-    if not x in global_attributes:
-      global_attributes.append(x)
-  else:
-    if not x in local_attributes:
-      local_attributes.append(x)
-
-
-def attribute_off(x):
-  if x in local_attributes:
-    local_attributes.remove(x)
-  if x in global_attributes:
-    global_attributes.remove(x)
-
-
-def attribute_get(x):
-  global local_attributes
-  global global_attributes
-
-  if x in local_attributes:
-    return True
-  elif x in global_attributes:
-    return True
-
-  return False
-
-
-#
 #  Features
 #
 

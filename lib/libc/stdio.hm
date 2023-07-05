@@ -5,7 +5,7 @@ include "./ctypes.hm"
 
 @c_include("stdio.h")
 
-@attribute("c-no-print", glob=True)
+@attribute("c-no-print")
 
 type FposT
 type FILE

@@ -60,10 +60,17 @@ def property(id, value):
 
 attributes = []
 
-def __attribute(id):
+def attribute(id):
   global attributes
   attributes.append(id)
 
+def attribute_off(id):
+  global attributes
+  i = 0
+  while i < len(attributes):
+    if attributes[i] == id:
+      del attributes[i]
+    i = i + 1
 
 
 # опциии компилятора, либо включена, либо выклчена
@@ -132,7 +139,6 @@ def do_field(x, is_last=False):
     'type': t,
     'ti': x['ti']
   }
-
 
 
 #
@@ -1187,8 +1193,8 @@ def do_include(x):
     return_include_directive = True
 
   if settings_check('backend', 'c'):
-    if attribute_get('c-just-include'):
-      attribute_off('c-just-include')
+    if option_get('c-just-include'):
+      option_off('c-just-include')
       return_include_directive = True
 
 
@@ -1201,9 +1207,7 @@ def do_include(x):
       'local': True
     }
 
-    if attribute_get('c-no-print'):
-      attribute_off('c-no-print')
-      directive['attributes'].append('c-no-print')
+    directive['attributes'].extend(attributes)
 
     #if attribute_get('c-just-include'):
     # attribute_off('c-just-include')
@@ -1262,7 +1266,6 @@ def def_const(x):
 
   global attributes
   v['attributes'].extend(attributes)
-  attributes = []
 
   definition = {
     'isa': 'definition',
@@ -1273,8 +1276,7 @@ def def_const(x):
     'value': v,
   }
 
-  if attribute_get('c-no-print'):
-    definition['attributes'].append('c-no-print')
+  definition['attributes'].extend(attributes)
 
   return definition
 
@@ -1318,7 +1320,6 @@ def def_type(x):
 
     global attributes
     nt['attributes'].extend(attributes)
-    attributes = []
 
     # extend new type descriptor with properties
     # (directive '@property')
@@ -1344,8 +1345,7 @@ def def_type(x):
     'afterdef': already_declared,
   }
 
-  if attribute_get('c-no-print'):
-    definition['attributes'].append('c-no-print')
+  definition['attributes'].extend(attributes)
 
   return definition
 
@@ -1366,7 +1366,7 @@ def def_var(x):
 
   init_value = None
   if x['init'] != None:
-    init_value = do_value(x['init'])
+    iv = do_value(x['init'])
     init_value = value_cast_implicit(iv, f['type'], iv['ti'])
     type.check(init_value['type'], f['type'], x['init']['ti'])
 
@@ -1382,7 +1382,6 @@ def def_var(x):
 
   global attributes
   var['attributes'].extend(attributes)
-  attributes = []
 
   # extend var descriptor with properties
   # (directive '@property')
@@ -1433,7 +1432,6 @@ def def_func(x):
 
   global attributes
   cfunc['attributes'].extend(attributes)
-  attributes = []
 
   # extend function descriptor with properties
   # (directive '@property')
@@ -1511,8 +1509,7 @@ def decl_type(x):
   if x['extern']:
     declaration['attributes'].append('extern')
 
-  if attribute_get('c-no-print'):
-    declaration['attributes'].append('c-no-print')
+  declaration['attributes'].extend(attributes)
 
   return declaration
 
@@ -1546,8 +1543,7 @@ def decl_func(x):
     'ti': x['ti']
   }
 
-  if attribute_get('c-no-print'):
-    declaration['attributes'].append('c-no-print')
+  declaration['attributes'].extend(attributes)
 
   if x['extern']:
     declaration['attributes'].append('extern')
@@ -1607,7 +1603,7 @@ def proc(ast):
       continue
 
 
-    local_attributes = []
+    #local_attributes = []
 
     if y == None:
       continue

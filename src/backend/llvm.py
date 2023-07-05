@@ -1233,9 +1233,9 @@ def print_def_var(x):
   mods = ['external', 'global', 'constant']
   mod = 'global'
   o("@")
-  o(x['field']['id']['str'])
+  o(x['var']['id']['str'])
   o(" = %s " % mod)
-  print_type(x['field']['type'])
+  print_type(x['var']['type'])
   if x['init'] != None:
     o(" ")
     print_value(do_eval(x['init']))

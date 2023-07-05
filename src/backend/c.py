@@ -133,6 +133,7 @@ bin_ops = {
   'logic_and': '&&', 'logic_or': '||'
 }
 
+
 def print_value_expr_bin(v, ctx):
   op = v['kind']
   left = v['left']
@@ -209,8 +210,7 @@ def print_value_expr_call(v, ctx):
       i = i + 1
       if i < n:
         o(", ")
-    o(")")
-    o(")")
+    o("))")
     print_value(left)
     o(")")
 
@@ -284,17 +284,7 @@ def print_value_expr_cast(v, ctx):
       print_value(v['value'])
       return
 
-
-  #need_wrap = precedence(v['value']['kind']) > precedence('to')
-
-  #if need_wrap:
-  #  o('(')
-
   print_cast(to_type, v['value'], ctx)
-
-  #if need_wrap:
-  #  o(')')
-
 
 
 
@@ -417,9 +407,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 
 
 def print_stmt_if(x):
-  o("if(")
-  print_value(x['cond'])
-  o(")")
+  o("if("); print_value(x['cond']); o(")")
   print_stmt_block(x['then'])
 
   e = x['else']
@@ -434,9 +422,7 @@ def print_stmt_if(x):
 
 
 def print_stmt_while(x):
-  o("while(")
-  print_value(x['cond'])
-  o(")")
+  o("while("); print_value(x['cond']); o(")")
   print_stmt_block(x['stmt'])
 
 
@@ -449,8 +435,7 @@ def print_stmt_return(x):
 
 
 def print_stmt_defvar(x):
-  f = {'isa': 'field', 'id': x['id'], 'type': x['type']}
-  print_field(f)
+  print_field({'isa': 'field', 'id': x['id'], 'type': x['type']})
   if x['value'] != None:
     o(" = ")
     print_value(x['value'])
@@ -466,7 +451,6 @@ def print_stmt_assign(x):
   # в си нельзя просто так присвоить массив
   if type.is_array(x['right']['type']):
     o("// array assignation")
-    #i = 0
     for i in range(x['right']['type']['size']):
       o("\n")
       ind()
@@ -685,7 +669,8 @@ def print_field(x, const=False):
 
 
 def print_def_var(x):
-  print_field(x['field']);
+  f = {'isa': 'field', 'id': x['var']['id'], 'type': x['var']['type']}
+  print_field(f)
   if x['init'] != None:
     o(" = "); print_value(x['init'])
   o(";")

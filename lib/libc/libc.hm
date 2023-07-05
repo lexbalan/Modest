@@ -10,7 +10,7 @@
 include "./stdio.hm"
 include "./ctypes.hm"
 
-@attribute("c-no-print", glob=True)
+@attribute("c-no-print")
 
 
 @property("c_alias", "dev_t")
