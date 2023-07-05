@@ -1263,7 +1263,6 @@ def def_const(x):
   module['context'].value_add(id['str'], v)
 
 
-
   global attributes
   v['attributes'].extend(attributes)
 
@@ -1275,6 +1274,8 @@ def def_const(x):
     'attributes': [],
     'value': v,
   }
+
+  v['definition'] = definition
 
   definition['attributes'].extend(attributes)
 
@@ -1293,7 +1294,6 @@ def module_text_remove_decl(kind, id_str):
 
 def def_type(x):
   id = x['id']
-  #print('def_type: ' + id['str'])
   t = do_type(x['type'])
   if type.is_bad(t):
     return def_bad()
@@ -1301,39 +1301,31 @@ def def_type(x):
   exist = module['context'].type_get(id['str'])
   already_declared = exist != None
 
+  nt = type.create_alias(id['str'], t, id['ti'])
+
+  # extend new type descriptor with properties
+  # (directive '@property')
+  global properties
+  nt.update(properties)
+  properties = {}
+
+  global attributes
+  nt['attributes'].extend(attributes)
+
 
   if already_declared:
     # just overwrite existed 'opaque' type (for records)
-    exist.update(t)
+    exist.update(nt)
     # and find and remove declaration instruction
     module_text_remove_decl('type', id['str'])
-
-    #return None
   else:
-    nt = None
-    if not option_get("no_type_alias"):
-      # create new type alias
-      nt = type.create_alias(id['str'], t, id['ti'])
-    else:
-      nt = copy.copy(t)
-      nt['ti'] = id['ti']
-
-    global attributes
-    nt['attributes'].extend(attributes)
-
-    # extend new type descriptor with properties
-    # (directive '@property')
-    global properties
-    nt.update(properties)
-    properties = {}
-
     module['context'].type_add(id['str'], nt)
 
 
-    if option_get("no_type_alias"):
-      if option_get("no_type_alias") == 'once':
-        option_off("no_type_alias")
-      return None
+  if option_get("no_type_alias"):
+    if option_get("no_type_alias") == 'once':
+      option_off("no_type_alias")
+    return None
 
 
   definition = {
@@ -1344,6 +1336,8 @@ def def_type(x):
     'attributes': [],
     'afterdef': already_declared,
   }
+
+  nt['definition'] = definition
 
   definition['attributes'].extend(attributes)
 
@@ -1399,6 +1393,8 @@ def def_var(x):
     'attributes': [],
     'ti': x['ti']
   }
+
+  var['definition'] = definition
 
   return definition
 
@@ -1472,6 +1468,8 @@ def def_func(x):
     'ti': func_ti
   }
 
+  cfunc['definition'] = definition
+
   cfunc = old_cfunc
 
   # в LLVM если делаем func definition нельзя писать func declaration
@@ -1495,7 +1493,8 @@ def decl_type(x):
     'attributes': [],
     'ti': id['ti'],
   }
-  nt = module['context'].type_add(id['str'], nt)
+
+  module['context'].type_add(id['str'], nt)
 
   # С не печатает opaque, но LLVM печатает (!)
   declaration = {
@@ -1505,6 +1504,8 @@ def decl_type(x):
     'attributes': ['undefined'],
     'id': x['id']
   }
+
+  nt['declaration'] = declaration
 
   if x['extern']:
     declaration['attributes'].append('extern')
@@ -1542,6 +1543,8 @@ def decl_func(x):
     'attributes': ['undefined'],
     'ti': x['ti']
   }
+
+  func['declaration'] = declaration
 
   declaration['attributes'].extend(attributes)
 
