@@ -1,8 +1,7 @@
 // libc/ctypes64.hm
 
-// do not create type alias object, just replace type
-@option("no_type_alias")
 
+@attribute("c-no-print")
 
 @property("c_alias", "char")
 type Char Int8
@@ -72,6 +71,5 @@ type SizeT Nat64
 @property("c_alias", "ssize_t")
 type SSizeT Int64
 
-
-@option_off("no_type_alias")
+@attribute_off("c-no-print")
 
