@@ -2,8 +2,8 @@
 import os
 import copy
 
+from opt import *
 from error import *
-from .mgmt import *
 
 
 def is_local_context():
@@ -363,7 +363,7 @@ def do_value_expr_bin(x):
   n_and_p = type.is_numeric(l['type']) and type.is_free_pointer(r['type'])
 
   if k in ['add', 'sub']:
-    if features_get('unsafe'):
+    if 'unsafe' in features:
       if p_and_n or n_and_p:
         if value_is_immediate(l) and value_is_immediate(r):
           typ = None

@@ -1,8 +1,10 @@
 
+from opt import *
 from error import info
 from .common import *
 import core.type as type
 from core.value import value_attribute_check
+
 
 # красивости
 # если сущность была уже отделена новой строкой
@@ -695,8 +697,7 @@ def print_include(x):
 
 def run(module, strs, outname):
 
-  from core.mgmt import features_get
-  is_header = features_get('header')
+  is_header = 'header' in features
 
   if is_header:
     outname = outname + '.h'

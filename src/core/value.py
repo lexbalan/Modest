@@ -1,7 +1,7 @@
 
 import copy
+from opt import *
 import core.type as type
-from .mgmt import features_get
 from .type import nbits_for_int, nbytes_for_bits
 from .trans import is_local_context
 from error import error, warning, info
@@ -325,7 +325,7 @@ def value_cons_pointer(v, t, ti, method):
   from_type = v['type']
 
   #if method == 'explicit':
-  if features_get('unsafe'):
+  if 'unsafe' in features:
     ### UNSAFE ###
 
     if method == 'explicit':

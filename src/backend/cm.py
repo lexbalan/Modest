@@ -1,4 +1,5 @@
 
+from opt import *
 import core.type as type
 from error import info
 from .common import *
@@ -521,9 +522,7 @@ def print_import(dirname, x):
 
 
 def run(module, strs, outname):
-
-  from core.mgmt import features_get
-  is_header = features_get('header')
+  is_header = 'header' in features
 
   if is_header:
     outname = outname + '.hm'

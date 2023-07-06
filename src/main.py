@@ -5,6 +5,7 @@
 import os
 import argparse
 import importlib
+from opt import *
 import error
 import core.trans as trans
 
@@ -40,15 +41,15 @@ def main():
     fatal("MODEST_LIB required")
 
   # set default settings
-  trans.settings_set('library', path_lib)
-  trans.settings_set('backend', DEFAULT_BACKEND)
+  settings_set('library', path_lib)
+  settings_set('backend', DEFAULT_BACKEND)
 
   # parse modifiers (-mbackend=c)
   # and change default settings
   if args.m != None:
     for mod in args.m:
       k, v = mod.split('=')
-      trans.settings_set(k, v)
+      settings_set(k, v)
 
   # parse features (ex. -funsafe)
   if args.feature != None:
@@ -67,7 +68,7 @@ def main():
   src_dirname = os.path.dirname(src_abspath)
   #print("DIR: " + src_dirname)
 
-  trans.settings_set('path', src_dirname)
+  settings_set('path', src_dirname)
 
   trans.init()
 

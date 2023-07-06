@@ -1,8 +1,8 @@
 
 
 import copy
+from opt import *
 from error import error
-from .mgmt import features_get
 
 typePointerSize = 4
 

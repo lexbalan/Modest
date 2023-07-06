@@ -1,9 +1,4 @@
 
-#
-#  Features
-#
-
-
 features = []
 
 
@@ -18,10 +13,6 @@ def features_get(feature):
 
 
 
-#
-# Settings
-#
-
 
 settings = {}
 
@@ -33,13 +24,11 @@ def settings_set(key, value):
 
 def settings_get(key):
   global settings
+  if not key in settings:
+    return None
   return settings[key]
 
 
 def settings_check(key, value):
-  global settings
   return settings_get(key) == value
-
-
-
 
