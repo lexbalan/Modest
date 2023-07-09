@@ -44,6 +44,11 @@ def main():
   settings_set('library', path_lib)
   settings_set('backend', DEFAULT_BACKEND)
 
+  # parse features (ex. -funsafe)
+  if args.feature != None:
+    for feature in args.feature:
+      trans.features_set(feature)
+
   # parse modifiers (-mbackend=c)
   # and change default settings
   if args.m != None:
@@ -51,10 +56,6 @@ def main():
       k, v = mod.split('=')
       settings_set(k, v)
 
-  # parse features (ex. -funsafe)
-  if args.feature != None:
-    for feature in args.feature:
-      trans.features_set(feature)
 
   src_name = args.filename
 

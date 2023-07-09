@@ -1237,6 +1237,12 @@ def do_import(x):
   return m
 
 
+# form directive '@property'
+def extend_props(x):
+  global properties
+  x.update(properties)
+  properties = {}
+
 
 def def_const(x):
   id = x['id']
@@ -1253,15 +1259,9 @@ def def_const(x):
 
   v['id'] = id
   value_attribute_add(v, 'const')
-
-  # extend const value descriptor with properties
-  # (directive '@property')
-  global properties
-  v.update(properties)
-  properties = {}
+  extend_props(v)
 
   module['context'].value_add(id['str'], v)
-
 
   global attributes
   v['attributes'].extend(attributes)
@@ -1303,11 +1303,7 @@ def def_type(x):
 
   nt = type.create_alias(id['str'], t, id['ti'])
 
-  # extend new type descriptor with properties
-  # (directive '@property')
-  global properties
-  nt.update(properties)
-  properties = {}
+  extend_props(nt)
 
   global attributes
   nt['attributes'].extend(attributes)
@@ -1377,11 +1373,7 @@ def def_var(x):
   global attributes
   var['attributes'].extend(attributes)
 
-  # extend var descriptor with properties
-  # (directive '@property')
-  global properties
-  var.update(properties)
-  properties = {}
+  extend_props(var)
 
   module['context'].value_add(x['field']['id']['str'], var)
 
@@ -1429,11 +1421,7 @@ def def_func(x):
   global attributes
   cfunc['attributes'].extend(attributes)
 
-  # extend function descriptor with properties
-  # (directive '@property')
-  global properties
-  cfunc.update(properties)
-  properties = {}
+  extend_props(cfunc)
 
   params = func_type['params']
   i = 0
