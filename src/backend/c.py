@@ -508,9 +508,24 @@ def print_stmt(x):
   else: o("<stmt %s>" % str(x))
 
 
-def print_stmt_block(s):
+def print_arrays(arrays):
+  for array in arrays:
+    o("\n"); ind()
+    array['value'] = None
+    print_stmt_defvar(array)
+    o("\n"); ind()
+    dst = array['id']['str']
+    src = array['id']['str']
+    len = type.get_size(array['type'])
+    o("memcpy(%s, _%s, %d);" % (dst, src, len))
+
+
+
+def print_stmt_block(s, arrays=None):
   o(" {")
   indent_up()
+  if arrays != None:
+    print_arrays(arrays)
   for stmt in s['stmts']:
     print_stmt(stmt)
   indent_down()
@@ -523,6 +538,11 @@ def print_func_signature(id, typ):
   params = typ['params']
   to = typ['to']
   t = to
+
+  # возвращает список аргументов с типом массив (!)
+  # для того чтобы print_stmt мог их пропечатать как локаоьные
+  # и скопировать
+  arrays = []
 
   # возврат является масссивом?
   #is_array = t['kind'] == 'array'
@@ -547,16 +567,25 @@ def print_func_signature(id, typ):
   i = 0
   while i < len(params):
     param = params[i]
-    print_field(param)
+
+    field_prefix = ""
+    if type.is_array(param['type']):
+      arrays.append(param)
+      field_prefix = "_"
+
+    print_field(param, prefix=field_prefix)
     i = i + 1
     if i < len(params):
       o(", ")
+
 
   if 'arghack' in typ:
     if typ['arghack']:
       o(", ...")
 
   o(")")
+
+  return arrays
 
 
 
@@ -577,8 +606,8 @@ def print_def_func(x):
       o("// %s\n" % x['func']['comment'])
 
   func = x['func']
-  print_func_signature(func['id']['str'], func['type'])
-  print_stmt_block(func['stmt'])
+  arrays = print_func_signature(func['id']['str'], func['type'])
+  print_stmt_block(func['stmt'], arrays=arrays)
 
 
 
@@ -620,12 +649,14 @@ def print_def_type(x):
 
 # из за того что с C типы записваются через жопу
 # приходится печатать типы ptr, arr & func вместе с именем поля
-def print_field(x, const=False):
+def print_field(x, const=False, prefix=None):
   t = x['type']
 
   if 'aka' in x:
     print_type(t)
     o(" ")
+    if prefix != None:
+      o(prefix)
     o("%s" % (x['id']['str']))
     return
 
@@ -662,6 +693,8 @@ def print_field(x, const=False):
   if ptr_level > 0 and const:
     o(" const ")
 
+  if prefix != None:
+    o(prefix)
   o("%s" % (x['id']['str']))
   if is_array:
     if array_dims != None:
@@ -714,6 +747,7 @@ def run(module, strs, outname):
     lo("#define %s\n" % guardname)
 
   lo("#include <stdint.h>")
+  lo("#include <string.h>")  # for memcpy
 
   prev_ik = ('', '')
 

@@ -385,6 +385,9 @@ def is_forbidden_var(t, zero_array_forbidden=True):
 
     return is_forbidden_var(t['of'])
 
+  if is_func(t):
+    return True
+
 
   return False
 
@@ -474,6 +477,13 @@ def type_generic_int_for_bits(n):
 
 
 
+def get_size(t):
+  k = t['kind']
+  if k == 'integer':
+    return t['size']
+  elif k == 'array':
+    # t['volume] TODO!
+    return t['size'] * get_size(t['of'])
 
 
 
