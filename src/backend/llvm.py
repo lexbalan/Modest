@@ -98,6 +98,13 @@ def print_type_value(llvm_value):
   print_value(llvm_value)
 
 
+def print_type_value_param(llvm_value):
+  print_type(llvm_value['type'], arr_as_ptr_to_arr=True)
+  o(" ")
+  print_value(llvm_value)
+
+
+
 def insertvalue(v, x, pos):
   #%5 = insertvalue %Type24 zeroinitializer, %Int32 1, 0
   reg = operation('insertvalue')
@@ -194,7 +201,10 @@ def print_list_by(lst, method):
     i = i + 1
 
 
-def print_type(t, print_aka=True):
+# функция может получать только указатель на массив
+# если же в CM она получает массив то тут и в СИ она получает
+# указатель на него, и потом копирует его во внутренний массив
+def print_type(t, print_aka=True, arr_as_ptr_to_arr=False):
   k = t['kind']
 
   if print_aka:
@@ -243,11 +253,13 @@ def print_type(t, print_aka=True):
     o("%d x " % sz)
     print_type(t['of'])
     o("]")
+    if arr_as_ptr_to_arr:
+      o("*")
 
   elif type.is_func(t):
     print_type(t['to'])
     o("(")
-    print_list_by(t['params'], lambda f: print_type(f['type']))
+    print_list_by(t['params'], lambda f: print_type(f['type'], arr_as_ptr_to_arr=True))
     o(")")
 
   elif type.is_integer(t):
@@ -442,14 +454,14 @@ def do_eval_expr_call(v):
   print_type(ftype['to'])
   o("(")
   params = ftype['params']
-  print_list_by(params, lambda par: print_type(par['type']))
+  print_list_by(params, lambda par: print_type(par['type'], arr_as_ptr_to_arr=True))
   if type_attribute_check(ftype, 'arghack'):
     o(", ...")
   o(") ")
 
   print_value(f)
   o(" (")
-  print_list_by(args, print_type_value)
+  print_list_by(args, print_type_value_param)
   o(")")
   return {
     'isa': 'llvm_value',
@@ -487,6 +499,8 @@ def llvm_getelementptr(rec, rt, indexes, vt):
 
 
 def do_eval_expr_index(v):
+
+  #print(v['array']['type']['kind'])
   array = do_eval(v['array'])
 
   t = array['type']
@@ -777,6 +791,10 @@ def do_eval(x):
 
   v = do_eval_x(x)
 
+  if v == None:
+    print("do_eval_x(x) == None")
+    print(x)
+
   assert(v != None)
 
   v['type'] = x['type']
@@ -803,7 +821,8 @@ def do_eval_x(x):
   elif k in ['func', 'const', 'var']:
     if value_attribute_check(x, 'local'):
       localname = x['id']['str']
-      return locals_get(localname)
+      y = locals_get(localname)
+      return y
 
     if k == 'var':
       return {
@@ -1026,14 +1045,14 @@ def ll_alloca(id, typ, init_value):
 
 
 
-def print_stmt_vardef(x):
+def print_stmt_def_var(x):
   id = x['id']['str']
   val = ll_alloca(id, x['type'], do_eval(x['value']))
   locals_add(id, val)
   return None
 
 
-def print_stmt_let(x):
+def print_stmt_def_let(x):
   v = do_ld(do_eval(x['value']))
   locals_add(x['id']['str'], v)
   return None
@@ -1056,9 +1075,9 @@ def print_stmt(x):
   elif k == 'while':
     print_stmt_while(x)
   elif k == 'asg_stmt_def_var':
-    print_stmt_vardef(x)
+    print_stmt_def_var(x)
   elif k == 'asg_stmt_def_let':
-    print_stmt_let(x)
+    print_stmt_def_let(x)
   elif k == 'break':
     print_stmt_break()
   elif k == 'again':
@@ -1067,8 +1086,33 @@ def print_stmt(x):
     lo("<stmt %s>" % str(x))
 
 
-def print_stmt_block(s):
+
+def print_arrays(arrays):
+  for array in arrays:
+
+    id = array['id']['str']
+    iv = ll_create_value_zero(array['type'])
+    val = ll_alloca(id, array['type'], None)
+    o("\n  ; --")
+    #locals_add(id, val)
+
+    """o("\n"); ind()
+    array['value'] = None
+    print_stmt_defvar(array)
+    o("\n"); ind()
+    dst = array['id']['str']
+    src = array['id']['str']
+    len = type.get_size(array['type'])
+    o("memcpy(%s, _%s, %d);" % (dst, src, len))"""
+
+
+def print_stmt_block(s, arrays=None):
   locals_push()
+
+  # arrays - arguments
+  if arrays != None:
+    print_arrays(arrays)
+
   for stmt in s['stmts']:
     print_stmt(stmt)
   locals_pop()
@@ -1123,17 +1167,28 @@ def print_def_func(x):
   # (массивы передаваемые по значению)
   reloc = []
 
+  arrays = []  # параметры-массивы
+
   params = func['type']['params']
   params_len = len(params)
   i = 0
   while i < params_len:
     param = params[i]
+    param_is_arr = type.is_array(param['type'])
+    # array param gets _ prefix
+    prefix = ""
+    if param_is_arr:
+      arrays.append(param)
+      prefix = "_"
+
     id = param['id']['str']
     if i > 0:
       o(", ")
     print_type(param['type'])
+    if param_is_arr:
+      o("*")
     space()
-    o('%' + id)
+    o('%%%s%s' % (prefix, id))
 
     #reg = reg_get()
     vv = {
@@ -1169,13 +1224,14 @@ def print_def_func(x):
     lo("  ; reloc " + r['id'])
     ll_alloca(r['id'], r['type'], r)
 
-  print_stmt_block(func['stmt'])
+  print_stmt_block(func['stmt'], arrays=arrays)
 
   if type.eq(func['type']['to'], type.typeUnit):
     lo("  ret void")
   lo("}\n")
 
   func_context = old_func_context
+
 
 
 
@@ -1338,8 +1394,6 @@ def create_local_srtuct(typ, llvalues):
     # получаем позицию поля в структуре
     field_target = type.record_get_field_by_id(v['type'], llvalue['id']['str'])
 
-    if not 'no' in field_target:
-      print(field_target)
 
     pos = field_target['no']
     # запаковываем значение в структуру
