@@ -50,8 +50,8 @@ def print_type_integer(t):
 
 def print_type_array(t):
   o("[")
-  if t['size'] != None:
-    print_value(t['size_expr'])
+  if t['volume'] != None:
+    print_value(t['volume'])
   o("]")
   print_type(t['of'])
 
@@ -187,7 +187,7 @@ def print_value_expr_un(v, ctx):
 
 
 def print_value_expr_call(v, ctx):
-  left = v['left']
+  left = v['func']
   if left['type']['kind'] == 'pointer':
     t = left['type']['to']
     # вызов через указатель
@@ -462,7 +462,7 @@ def print_stmt_block(s):
 
 
 def print_decl_func(x):
-  if 'extern' in x['attributes']:
+  if 'extern' in x['att']:
     o("extern ")
   func = x['func']
   o('func %s ' % func['id']['str'])

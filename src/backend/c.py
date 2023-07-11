@@ -49,8 +49,8 @@ def print_type_numeric(t):
 
 def print_type_array(t):
   print_type(t['of'])
-  if t['size'] != None:
-    o("["); print_value(t['size_expr']); o("]")
+  if t['volume'] != None:
+    o("["); print_value(t['volume']); o("]")
   else:
     o("*")
 
@@ -195,7 +195,7 @@ def print_value_expr_un(v, ctx):
 
 
 def print_value_expr_call(v, ctx):
-  left = v['left']
+  left = v['func']
   if left['type']['kind'] == 'pointer':
     t = left['type']['to']
     # вызов через указатель
@@ -238,15 +238,17 @@ def print_value_expr_index(v, ctx):
   o("["); print_value(index); o("]")
 
 
+
 def print_value_expr_access(v, ctx):
   left = v['record']
-
-  op = '.'
-  if left['type']['kind'] == 'pointer':
-    op = '->'
-
   need_wrap = precedence(left['kind']) < precedence('access')
-  print_value(left, need_wrap); o(op); o(v['field']['id']['str'])
+  print_value(left, need_wrap); o('.'); o(v['field']['id']['str'])
+
+
+def print_value_expr_access_ptr(v, ctx):
+  left = v['pointer']
+  need_wrap = precedence(left['kind']) < precedence('access')
+  print_value(left, need_wrap); o("->"); o(v['field']['id']['str'])
 
 
 
@@ -394,6 +396,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
     if k == 'call': print_value_expr_call(x, ctx)
     elif k == 'index': print_value_expr_index(x, ctx)
     elif k == 'access': print_value_expr_access(x, ctx)
+    elif k == 'access_ptr': print_value_expr_access_ptr(x, ctx)
     elif k == 'cast': print_value_expr_cast(x, ctx)
     elif k == 'sizeof': o("sizeof("); print_type(x['of']); o(")")
     else: o("<%s>" % k)
@@ -590,7 +593,7 @@ def print_func_signature(id, typ):
 
 
 def print_decl_func(x):
-  if 'extern' in x['attributes']:
+  if 'extern' in x['att']:
     o("extern ")
   func = x['func']
   print_func_signature(func['id']['str'], func['type'])
@@ -640,7 +643,7 @@ def print_def_type(x):
     print_type(x['type'])#, print_aka=False)
   o(" %s" % x['id']['str'])
   if defined_array:
-    o("["); print_value(x['type']['size_expr']); o("]")
+    o("["); print_value(x['type']['volume']); o("]")
   o(";")
   if x['type']['kind'] in ['record', 'enum']:
     o("\n")
@@ -665,10 +668,10 @@ def print_field(x, const=False, prefix=None):
   array_dims = None
   if is_array:
     array_dims = []
-    array_dims.append(t['size_expr'])
+    array_dims.append(t['volume'])
     t = t['of']
     while t['kind'] == 'array':
-      array_dims.append(t['size_expr'])
+      array_dims.append(t['volume'])
       t = t['of']
 
 
@@ -752,7 +755,7 @@ def run(module, strs, outname):
   prev_ik = ('', '')
 
   for x in module:
-    if 'c-no-print' in x['attributes']:
+    if 'c-no-print' in x['att']:
       continue
 
     o("\n")

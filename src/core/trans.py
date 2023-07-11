@@ -18,6 +18,7 @@ from core.symtab import Symtab
 import core.type as type
 from core.type import type_attribute_check, type_print
 
+from .hlir import *
 
 
 # current file directory
@@ -43,7 +44,7 @@ def c_include(s):
     'kind': 'include',
     'str': s,
     'local': local,
-    'attributes': [],
+    'att': [],
   }
   module['text'].append(inc)
 
@@ -83,6 +84,7 @@ def option(id, value=True):
 
 def option_off(id):
   global options
+  print("option_off %s" % id)
   options[id] = False
 
 def option_get(id):
@@ -161,24 +163,19 @@ def do_type_id(t):
 
 def do_type_pointer(t):
   to = do_type(t['to'])
-  return type.typePointer(to, ti=t['ti'])
+  return hlir_type_pointer(to, ti=t['ti'])
 
 
 
 def do_type_array(t):
-  tx = {
-    'isa': 'type',
-    'kind': 'array',
-    'size': None,
-    'attributes': [],
-    'ti': t['ti']
-  }
-  tx['of'] = do_type(t['of'])
+  of = do_type(t['of'])
+
+  tx = hlir_type_array(of)
 
   if t['size'] != None:
     size_expr = do_value(t['size'])
-    tx['size_expr'] = size_expr
-    tx['size'] = value_num_get(size_expr)
+    tx['volume'] = size_expr
+    #tx['volume'] = value_num_get(size_expr)
 
   return tx
 
@@ -186,14 +183,6 @@ def do_type_array(t):
 
 def do_type_record(t):
   fields = []
-  record = {
-    'isa': 'type',
-    'kind': 'record',
-    'fields': fields,
-    'size': 0,
-    'attributes': [],
-    'ti': t['ti']
-  }
 
   nfields = len(t['fields'])
   i = 0
@@ -202,14 +191,14 @@ def do_type_record(t):
     f['no'] = i
     i = i + 1
 
-    f_exist = type.record_field_get(record, f['id']['str'])
+    f_exist = None #TODO!/ type.record_field_get(record, f['id']['str'])
     if f_exist != None:
       error("redefinition of '%s'" % f['id']['str'], f)
       continue
 
     fields.append(f)
 
-  return record
+  return hlir_type_record(fields, ti=t['ti'])
 
 
 
@@ -220,7 +209,7 @@ def do_type_enum(t):
     'kind': 'enum',
     'items': [],
     'size': settings_get('enum_size'),
-    'attributes': [],
+    'att': [],
     'ti': t['ti']
   }
 
@@ -235,7 +224,7 @@ def do_type_enum(t):
     })
 
     # add enum item to global context
-    item_val = value_create_int(i, typ=enum_type, ti=id['ti'])
+    item_val = hlir_value_int(i, typ=enum_type, ti=id['ti'])
     module['context'].value_add(id['id']['str'], item_val)
 
     i = i + 1
@@ -254,14 +243,11 @@ def do_type_func(t):
 
   to = do_type(t['to'])
 
-  return {
-    'isa': 'type',
-    'kind': 'func',
-    'params': params,
-    'to': to,
-    'attributes': [],
-    'ti': t['ti']
-  }
+  tx = hlir_type_func(params, to, att=[])
+  #if 'arghack' in tx['att']:
+  #  print("OOPOOPOOPP")
+  return tx
+
 
 
 def do_type(t):
@@ -310,7 +296,7 @@ def do_value_shift(op, l, r, ti):
 
       t = l['type']
 
-      return value_create_int(xv, typ=t, ti=ti)
+      return hlir_value_int(xv, typ=t, ti=ti)
 
 
   if type.is_generic(l['type']):
@@ -343,7 +329,7 @@ def value_bin_fold(op, l, r, t, ti):
     }
 
     num_val = ops[op](value_num_get(l), value_num_get(r))
-    return value_create_int(num_val, typ=l['type'], ti=ti)
+    return hlir_value_int(num_val, typ=l['type'], ti=ti)
 
 
 def do_value_expr_bin(x):
@@ -378,7 +364,7 @@ def do_value_expr_bin(x):
           elif k == 'sub':
             num = value_num_get(l) - value_num_get(r)
 
-          return value_create_int(num, typ=typ, ti=ti)
+          return hlir_value_int(num, typ=typ, ti=ti)
 
         pass
 
@@ -475,14 +461,14 @@ def do_value_expr_un(x):
       'kind': x['kind'],
       'value': val,
       'type': t,
-      'attributes': ['adr'],
+      'att': ['adr'],
       'ti': x['ti']
     }
 
   if x['kind'] == 'ref':
     if value_is_immutable(val):
       error("cannot get pointer to immutable value", x)
-    t = type.typePointer(t, ti=x['ti'])
+    t = hlir_type_pointer(t, ti=x['ti'])
 
 
   return {
@@ -490,7 +476,7 @@ def do_value_expr_un(x):
     'kind': x['kind'],
     'value': val,
     'type': t,
-    'attributes': [],
+    'att': [],
     'ti': x['ti']
   }
 
@@ -552,15 +538,7 @@ def do_value_expr_call(x):
     i = i + 1
 
 
-  return {
-    'isa': 'value',
-    'kind': 'call',
-    'left': f,
-    'args': args,
-    'type': ftype['to'],
-    'attributes': [],
-    'ti': x['ti']
-  }
+  return hlir_value_call(f, args, ti=x['ti'])
 
 
 
@@ -594,16 +572,20 @@ def do_value_expr_index(x):
 
   i = value_cast_implicit(i, type.typeInt, i['ti'])
 
-  return {
-    'isa': 'value',
-    'kind': 'index',
-    'array': a,
-    'index': i,
-    'type': typ['of'],
-    'attributes': ['adr'],
-    'ti': x['ti']
-  }
+  if ptr_access:
+    return hlir_value_index_ptr_array(a, i, ti=x['ti'])
+  else:
+    return hlir_value_index_array(a, i, ti=x['ti'])
 
+
+
+
+"""def do_value_expr_access_ptr(x):
+  ptr_record = do_value(x['left'])
+  field_id = x['field']
+  record_type = r['type']['to']
+  field = type.record_field_get(record_type, field_id['str'])
+  """
 
 
 def do_value_expr_access(x):
@@ -641,16 +623,10 @@ def do_value_expr_access(x):
     if value_is_immutable(r):
       attributes.append('immutable')
 
-  return {
-    'isa': 'value',
-    'kind': 'access',
-    'record': r,
-    'field': field,
-    'record_type': record_type,
-    'type': field['type'],
-    'attributes': attributes,
-    'ti': x['ti']
-  }
+  if ptr_access:
+    return hlir_value_access_ptr_record(r, field, ti=x['ti'])
+  else:
+    return hlir_value_access_record(r, field, ti=x['ti'])
 
 
 
@@ -711,7 +687,7 @@ def do_value_expr_ns(x):
           'kind': 'num',
           'num': num,
           'type': tx,
-          'attributes': ['immediate'],
+          'att': ['immediate'],
           'ti': x['ids'][1]['ti']
         }"""
 
@@ -726,10 +702,11 @@ def do_value_expr_str(x):
   string = x['str']
   str_len = x['len']
   strpool[strid] = {'str': string, 'len': str_len}
+  vol = hlir_value_int(str_len)
 
   # type of any string is *[x]typeChar
-  ta = type.typeArray(type.typeChar, size=str_len, attributes=[], ti=x['ti'])
-  t = type.typePointer(ta)
+  ta = hlir_type_array(type.typeChar, volume=vol, ti=x['ti'])
+  t = hlir_type_pointer(ta)
 
   return {
     'isa': 'value',
@@ -738,7 +715,7 @@ def do_value_expr_str(x):
     'strid': strid,
     'len': str_len,
     'type': t,
-    'attributes': ['string'],
+    'att': ['string'],
     'ti': x['ti']
   }
 
@@ -762,22 +739,12 @@ def do_value_expr_array(x):
     items.append(vi)
 
   size = len(x['items'])
-  return {
-    'isa': 'value',
-    'kind': 'array',
-    'type': {
-      'isa': 'type',
-      'kind': 'array',
-      'size': size,
-      'size_expr': value_create_int(size),
-      'of': select_type(items[0]),
-      'attributes': ['generic'],
-      'ti': x['ti']
-    },
-    'items': items,
-    'attributes': [],
-    'ti': x['ti']
-  }
+
+  of = select_type(items[0])
+  vol = hlir_value_int(size)
+  type = hlir_type_array(of, volume=vol, att=['generic'], ti=x['ti'])
+  return hlir_value_array(type, items, ti=x['ti'])
+
 
 
 
@@ -786,8 +753,18 @@ def do_value_expr_record(x):
   fields = []
   for item in x['items']:
     id = item['id']
+
+    #print("K = " + item['value']['kind'])
     val = do_value(item['value'])
+
+    """if isinstance(val['type'], list):
+      for i in val['type']:
+        print()
+        print(i)"""
+
     items.append({'id': id, 'value': val})
+
+
 
     # создаем поле для типа generic записи
     field = {
@@ -798,27 +775,13 @@ def do_value_expr_record(x):
     }
     fields.append(field)
 
-  return {
-    'isa': 'value',
-    'kind': 'record',
-    'type': {
-      'isa': 'type',
-      'kind': 'record',
-      # не создаем поля, тк мы не можем знать их реальной последовательности
-      # в generic структуре
-      # нет, создаем, но последовательность в generic не учитваем;
-      'fields': fields,
-      'attributes': ['generic'],
-      'ti': x['ti']
-    },
-    'items': items,
-    'attributes': [],
-    'ti': x['ti']
-  }
+  typ = hlir_type_record(fields, att=['generic'], ti=x['ti'])
+  return hlir_value_record(typ, items, ti=x['ti'])
+
 
 
 def do_value_expr_int(x):
-  rv = value_create_int(x['num'], ti=x['ti'])
+  rv = hlir_value_int(x['num'], ti=x['ti'])
 
   if 'hexadecimal' in x['att']:
     value_attribute_add(rv, 'hexadecimal')
@@ -827,7 +790,7 @@ def do_value_expr_int(x):
 
 
 def do_value_expr_float(x):
-  return value_create_float(x['num'], ti=x['ti'])
+  return hlir_value_float(x['num'], ti=x['ti'])
 
 
 def do_value_expr_sizeof(x):
@@ -837,7 +800,7 @@ def do_value_expr_sizeof(x):
     'kind': 'sizeof',
     'of': tx,
     'type': type.typeNat,
-    'attributes': [],
+    'att': [],
     'ti': x['ti']
   }
 
@@ -998,14 +961,8 @@ def do_stmt_var(x):
     return stmt_create_bad()
 
 
-  var_value = {
-    'isa': 'value',
-    'kind': 'var',
-    'id': id,
-    'type': t,
-    'attributes': ['adr', 'local'],
-    'ti': x['ti']
-  }
+  var_value = hlir_value_var(id, t, att=['adr', 'local'], ti=x['ti'])
+
   module['context'].value_add(id['str'], var_value)
 
   return {
@@ -1044,14 +1001,7 @@ def do_stmt_let(x):
 
   # если это immediate константа, то она подставится принтером llvm
   # через механизм 'locals_' (!а здесь само значение не идет)
-  const_value = {
-    'isa': 'value',
-    'kind': 'var',
-    'id': id,
-    'type': v['type'],
-    'attributes': ['local', 'immutable'],
-    'ti': x['ti']
-  }
+  const_value = hlir_value_var(id, v['type'], init=None, att=['local', 'immutable'], ti=x['ti'])
 
   # check if identifier is free (in current block)
   already = module['context'].value_get(id['str'], recursive=False)
@@ -1203,15 +1153,15 @@ def do_include(x):
       'isa': 'directive',
       'kind': 'include',
       'str': impline[:-1],  # .hm -> .h
-      'attributes': [],
+      'att': [],
       'local': True
     }
 
-    directive['attributes'].extend(attributes)
+    directive['att'].extend(attributes)
 
     #if attribute_get('c-just-include'):
     # attribute_off('c-just-include')
-    #  directive['attributes'].append('c-just-include')
+    #  directive['att'].append('c-just-include')
 
     return [directive]
 
@@ -1264,20 +1214,20 @@ def def_const(x):
   module['context'].value_add(id['str'], v)
 
   global attributes
-  v['attributes'].extend(attributes)
+  v['att'].extend(attributes)
 
   definition = {
     'isa': 'definition',
     'kind': 'const',
     'const': v,
     'id': id,
-    'attributes': [],
+    'att': [],
     'value': v,
   }
 
   v['definition'] = definition
 
-  definition['attributes'].extend(attributes)
+  definition['att'].extend(attributes)
 
   return definition
 
@@ -1306,7 +1256,7 @@ def def_type(x):
   extend_props(nt)
 
   global attributes
-  nt['attributes'].extend(attributes)
+  nt['att'].extend(attributes)
 
 
   if already_declared:
@@ -1329,13 +1279,13 @@ def def_type(x):
     'kind': 'type',
     'type': t,  # именно t!
     'id': x['id'],
-    'attributes': [],
+    'att': [],
     'afterdef': already_declared,
   }
 
   nt['definition'] = definition
 
-  definition['attributes'].extend(attributes)
+  definition['att'].extend(attributes)
 
   return definition
 
@@ -1360,18 +1310,10 @@ def def_var(x):
     init_value = value_cast_implicit(iv, f['type'], iv['ti'])
     type.check(init_value['type'], f['type'], x['init']['ti'])
 
-  var = {
-    'isa': 'value',
-    'kind': 'var',
-    'id': f['id'],
-    'type': f['type'],
-    'init': iv,
-    'attributes': ['adr', 'var'],
-    'ti': x['ti']
-  }
+  var = hlir_value_var(f['id'], f['type'], init=init_value)
 
   global attributes
-  var['attributes'].extend(attributes)
+  var['att'].extend(attributes)
 
   extend_props(var)
 
@@ -1382,7 +1324,7 @@ def def_var(x):
     'kind': 'var',
     'var': var,
     'init': init_value,
-    'attributes': [],
+    'att': [],
     'ti': x['ti']
   }
 
@@ -1409,17 +1351,11 @@ def def_func(x):
 
   global cfunc
   old_cfunc = cfunc
-  cfunc = {
-    'isa': 'value',
-    'kind': 'func',
-    'id': func_id,
-    'type': func_type,
-    'attributes': [],
-    'ti': func_ti
-  }
+
+  cfunc = hlir_value_func(func_id, func_type, att=[], ti=func_ti)
 
   global attributes
-  cfunc['attributes'].extend(attributes)
+  cfunc['att'].extend(attributes)
 
   extend_props(cfunc)
 
@@ -1428,14 +1364,8 @@ def def_func(x):
   while i < len(params):
     p = params[i]
     p_id = p['id']
-    param = {
-      'isa': 'value',
-      'kind': 'var',
-      'id': p_id,
-      'type': p['type'],
-      'attributes': ['param', 'local', 'immutable'],
-      'ti': p['ti']
-    }
+    param = hlir_value_var(p_id, p['type'], att=['param', 'local', 'immutable'])
+
     module['context'].value_add(p_id['str'], param)
     i = i + 1
 
@@ -1452,7 +1382,7 @@ def def_func(x):
     'isa': 'definition',
     'kind': 'func',
     'func': cfunc,
-    'attributes': [],
+    'att': [],
     'ti': func_ti
   }
 
@@ -1478,7 +1408,7 @@ def decl_type(x):
     'kind': 'opaque',
     'name': id['str'],
     'id': id,
-    'attributes': [],
+    'att': [],
     'ti': id['ti'],
   }
 
@@ -1489,16 +1419,16 @@ def decl_type(x):
     'isa': 'declaration',
     'kind': 'type',
     'type': nt,
-    'attributes': ['undefined'],
+    'att': ['undefined'],
     'id': x['id']
   }
 
   nt['declaration'] = declaration
 
   if x['extern']:
-    declaration['attributes'].append('extern')
+    declaration['att'].append('extern')
 
-  declaration['attributes'].extend(attributes)
+  declaration['att'].extend(attributes)
 
   return declaration
 
@@ -1509,35 +1439,27 @@ def decl_func(x):
   id = x['id']
   functype = do_type(x['type'])
 
-  if option_get("arghack"):
-    type.type_attribute_add(functype, 'arghack')
+  if option_get("arghack") == True:
+    functype['att'].append('arghack')
 
-  func = {
-    'isa': 'value',
-    'kind': 'func',
-    'id': id,
-    'type': functype,
-    'attributes': ['undefined'],
-    'ti': x['ti']
-  }
+  func = hlir_value_func(id, functype, att=['undefined'], ti=x['ti'])
 
   module['context'].value_add(id['str'], func)
-
 
   declaration = {
     'isa': 'declaration',
     'kind': 'func',
     'func': func,
-    'attributes': ['undefined'],
+    'att': ['undefined'],
     'ti': x['ti']
   }
 
   func['declaration'] = declaration
 
-  declaration['attributes'].extend(attributes)
+  declaration['att'].extend(attributes)
 
   if x['extern']:
-    declaration['attributes'].append('extern')
+    declaration['att'].append('extern')
 
   return declaration
 

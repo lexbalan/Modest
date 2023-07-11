@@ -4,86 +4,8 @@ import copy
 from opt import *
 from error import error
 
-typePointerSize = 4
+from .hlir import *
 
-
-
-def nbits_for_int(x):
-  n = 1
-  y = 1
-  while x > y:
-    y = (y << 1) | 1
-    n = n + 1
-  return n
-
-
-def nbytes_for_bits(x):
-  aligned_bits = 8
-  while aligned_bits < x:
-    aligned_bits = aligned_bits * 2
-  return aligned_bits // 8
-
-
-"""def nbytes_for_bits(bits, signed=True):
-  nn = bits
-
-  if signed:
-    if num < 0:
-      nn = nn + 1
-
-  y = nbytes_for_bits(nn)
-  #print("nbytes_for_int %d -> %d (%d)" % (num, nn, y))
-  return y"""
-
-
-def typeInteger(aka, power, attributes=[]):
-  return {
-    'isa': 'type',
-    'kind': 'integer',
-    'name': aka,
-    'attributes': ['numeric', 'integer', 'ordered'] + attributes,
-    'power': power,
-    'size': nbytes_for_bits(power),
-    'ti': None
-  }
-
-
-def typeFloat(aka, size, attributes=[]):
-  return {
-    'isa': 'type',
-    'kind': 'float',
-    'name': aka,
-    'attributes': ['numeric', 'float', 'ordered'] + attributes,
-    'size': size,
-    'ti': None
-  }
-
-
-def typePointer(to, attributes=[], ti=None):
-  return {
-    'isa': 'type',
-    'kind': 'pointer',
-    'to': to,
-    'size': typePointerSize,
-    'power': typePointerSize * 8,
-    'attributes': attributes,
-    'ti': ti
-  }
-
-
-def typeArray(of, size=None, attributes=[], ti=None):
-  return {
-    'isa': 'type',
-    'kind': 'array',
-    'of': of,
-    'size': size,  #TODO: not 'size', use 'volume' or something better (!)
-    'attributes': attributes,
-    'ti': ti
-  }
-
-
-def typeBad(ti):
-  return {'isa': 'type', 'kind': 'bad', 'attributes': [], 'ti': ti}
 
 
 typeUnit = {
@@ -95,47 +17,46 @@ typeUnit = {
   'size': 0,
   'power': 0,
   'items': [],
-  'attributes': [],
+  'att': [],
   'ti': None
 }
 
-typeInt8  = typeInteger("Int8", 8, attributes=['signed'])
+typeInt8  = hlir_type_integer("Int8", 8, att=['signed'])
 typeInt8['c_alias'] = 'int8_t'
 typeInt8['llvm_alias'] = 'i8'
-typeInt16 = typeInteger("Int16", 16, attributes=['signed'])
+typeInt16 = hlir_type_integer("Int16", 16, att=['signed'])
 typeInt16['c_alias'] = 'int16_t'
 typeInt16['llvm_alias'] = 'i16'
-typeInt32 = typeInteger("Int32", 32, attributes=['signed'])
+typeInt32 = hlir_type_integer("Int32", 32, att=['signed'])
 typeInt32['c_alias'] = 'int32_t'
 typeInt32['llvm_alias'] = 'i32'
-typeInt64 = typeInteger("Int64", 64, attributes=['signed'])
+typeInt64 = hlir_type_integer("Int64", 64, att=['signed'])
 typeInt64['c_alias'] = 'int64_t'
 typeInt64['llvm_alias'] = 'i64'
 
-typeNat1 = typeInteger("Nat1", 1, attributes=['unsigned'])
+typeNat1 = hlir_type_integer("Nat1", 1, att=['unsigned'])
 typeNat1['c_alias'] = 'uint8_t'
 typeNat1['llvm_alias'] = 'i1'
-typeNat8  = typeInteger("Nat8", 8, attributes=['unsigned'])
+typeNat8  = hlir_type_integer("Nat8", 8, att=['unsigned'])
 typeNat8['c_alias'] = 'uint8_t'
 typeNat8['llvm_alias'] = 'i8'
-typeNat16 = typeInteger("Nat16", 16, attributes=['unsigned'])
+typeNat16 = hlir_type_integer("Nat16", 16, att=['unsigned'])
 typeNat16['c_alias'] = 'uint16_t'
 typeNat16['llvm_alias'] = 'i16'
-typeNat32 = typeInteger("Nat32", 32, attributes=['unsigned'])
+typeNat32 = hlir_type_integer("Nat32", 32, att=['unsigned'])
 typeNat32['c_alias'] = 'uint32_t'
 typeNat32['llvm_alias'] = 'i32'
-typeNat64 = typeInteger("Nat64", 64, attributes=['unsigned'])
+typeNat64 = hlir_type_integer("Nat64", 64, att=['unsigned'])
 typeNat64['c_alias'] = 'uint64_t'
 typeNat64['llvm_alias'] = 'i64'
 
-
-typeFloat16 = typeFloat('Float16', 2, attributes=[])
+typeFloat16 = hlir_type_float('Float16', 2)
 typeFloat16['c_alias'] = 'half'
 typeFloat16['llvm_alias'] = 'half'
-typeFloat32 = typeFloat('Float32', 4, attributes=[])
+typeFloat32 = hlir_type_float('Float32', 4)
 typeFloat32['c_alias'] = 'float'
 typeFloat32['llvm_alias'] = 'float'
-typeFloat64 = typeFloat('Float64', 8, attributes=[])
+typeFloat64 = hlir_type_float('Float64', 8)
 typeFloat64['c_alias'] = 'double'
 typeFloat64['llvm_alias'] = 'double'
 
@@ -143,35 +64,16 @@ typeFloat64['llvm_alias'] = 'double'
 typeChar = copy.copy(typeNat8)
 typeChar['c_alias'] = 'char'
 typeChar['llvm_alias'] = 'i8'
-typeStr = typePointer(typeArray(typeChar))
-typeStr['attributes'].append('str')
+typeStr = hlir_type_pointer(hlir_type_array(typeChar))
+typeStr['att'].append('str')
 genericStr = typeStr
 
-genericInt = {
-  'isa': 'type',
-  'kind': 'integer',
-  'name': 'Int',
-  'attributes': ['generic', 'numeric', 'integer', 'ordered'],
-  'size': 0,
-  'power': 0,
-  'ti': None
-}
-
-genericFloat = {
-  'isa': 'type',
-  'kind': 'float',
-  'name': 'Float',
-  'attributes': ['generic', 'numeric', 'ordered', 'float'],
-  'size': 0,
-  'power': 0,
-  'ti': None
-}
 
 typeInt = copy.copy(typeInt64)
 typeInt['c_alias'] = 'int'
 typeNat = copy.copy(typeNat64)
-typeFreePtr = typePointer(typeUnit)
-typeFreePtr['attributes'].append('generic')  #!
+typeFreePtr = hlir_type_pointer(typeUnit)
+typeFreePtr['att'].append('generic')  #!
 
 
 
@@ -184,9 +86,13 @@ def eq_pointer(a, b):
 
 
 def eq_array(a, b):
-  if a['size'] == b['size']:
-    return eq(a['of'], b['of'])
-  return False
+  if not eq(a['of'], b['of']):
+    return False
+
+  if a['volume'] != None and b['volume'] != None:
+    return a['volume']['num'] == b['volume']['num']
+
+  return a['volume'] == None and b['volume'] == None
 
 
 def eq_func(a, b):
@@ -255,11 +161,11 @@ def eq(a, b):
 
 
 def type_attribute_add(t, a):
-  t['attributes'].append(a)
+  t['att'].append(a)
 
 
 def type_attribute_check(t, a):
-  return a in t['attributes']
+  return a in t['att']
 
 
 
@@ -268,12 +174,9 @@ def is_bad(t):
   return t['kind'] == 'bad'
 
 
-def is_generic(t):
-  return 'generic' in t['attributes']
-
 
 def is_numeric(t):
-  return 'numeric' in t['attributes']
+  return 'numeric' in t['att']
 
 
 def is_integer(t):
@@ -285,11 +188,11 @@ def is_float(t):
 
 
 def is_generic_numeric(t):
-  return 'generic' in t['attributes'] and 'numeric' in t['attributes']
+  return 'generic' in t['att'] and 'numeric' in t['att']
 
 
 def is_generic_integer(t):
-  return 'generic' in t['attributes'] and 'integer' in t['attributes']
+  return 'generic' in t['att'] and 'integer' in t['att']
 
 
 def is_unit(t):
@@ -323,13 +226,13 @@ def is_opaque(t):
 
 def is_defined_array(t):
   if t['kind'] == 'array':
-    return t['size'] != None
+    return t['volume'] != None
   return False
 
 
 def is_undefined_array(t):
   if t['kind'] == 'array':
-    return t['size'] == None
+    return t['volume'] == None
   return False
 
 
@@ -350,18 +253,18 @@ def is_record(t):
 
 
 def is_generic(t):
-  return 'generic' in t['attributes']
+  return 'generic' in t['att']
 
 
 def is_numeric(t):
-  return 'numeric' in t['attributes']
+  return 'numeric' in t['att']
 
 
 def is_signed(t):
-  return 'signed' in t['attributes']
+  return 'signed' in t['att']
 
 def is_unsigned(t):
-  return 'unsigned' in t['attributes']
+  return 'unsigned' in t['att']
 
 
 
@@ -374,13 +277,13 @@ def is_forbidden_var(t, zero_array_forbidden=True):
   # [0]Int, []Int, [n]<Forbidden>
   if is_array(t):
     # is undefined array?
-    if t['size'] == None:
+    if t['volume'] == None:
       return True
 
     # is defined array;
     # It can't be 0 sized (can only with 'unsafe' compiler flag)
     if zero_array_forbidden or not features_get('unsafe'):
-      if t['size'] == 0:
+      if t['volume'] == 0:
         return True
 
     return is_forbidden_var(t['of'])
@@ -393,7 +296,7 @@ def is_forbidden_var(t, zero_array_forbidden=True):
 
 
 def is_alias(t):
-  return 'alias' in t['attributes']
+  return 'alias' in t['att']
 
 
 def check(a, b, ti):
@@ -430,7 +333,7 @@ def create_alias(id, t, ti):
   if not 'name' in nt:
     nt['name'] = id
 
-  nt['attributes'].append('alias')
+  nt['att'].append('alias')
   nt['aliasof'] = t
   nt['ti'] = ti
   return nt
@@ -445,7 +348,7 @@ def create_newtype(id, t, ti):
   newtypeID = newtypeID + 1
   nt['uid'] = newtypeID
 
-  nt['attributes'].append('newtype')
+  nt['att'].append('newtype')
   nt['derived'] = t
   nt['ti'] = ti
   return nt
@@ -464,16 +367,9 @@ def type_bad(ti=None):
   return {
     'isa': 'type',
     'kind': 'bad',
-    'attributes': [],
+    'att': [],
     'ti': ti
   }
-
-
-def type_generic_int_for_bits(n):
-  gen_int_type = copy.copy(genericInt)
-  gen_int_type['power'] = n
-  gen_int_type['size'] = nbytes_for_bits(n)
-  return gen_int_type
 
 
 
@@ -482,8 +378,7 @@ def get_size(t):
   if k == 'integer':
     return t['size']
   elif k == 'array':
-    # t['volume] TODO!
-    return t['size'] * get_size(t['of'])
+    return t['volume']['num'] * get_size(t['of'])
 
 
 

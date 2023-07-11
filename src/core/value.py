@@ -2,64 +2,26 @@
 import copy
 from opt import *
 import core.type as type
-from .type import nbits_for_int, nbytes_for_bits
 from .trans import is_local_context
 from error import error, warning, info
-
+from .hlir import *
 
 
 def value_create_zero(t):
   if type.is_numeric(t):
-    return value_create_int(0, t)
+    return hlir_value_int(0, t)
 
   # stub (!)
   # todo: struct, array
-  return value_create_int(0, t)
+  return hlir_value_int(0, t)
 
 
 
-def value_create_int(num, typ=None, ti=None):
 
-  nbits = nbits_for_int(num)
+valueNil = hlir_value_int(0, typ=type.typeFreePtr)
+valueTrue = hlir_value_int(1, typ=type.typeNat1)
+valueFalse = hlir_value_int(0, typ=type.typeNat1)
 
-  if typ == None:
-    typ = type.type_generic_int_for_bits(nbits)
-
-  if nbits > typ['power']:
-    # extend if generic or error
-    if type.is_generic(typ):
-      typ = type.typeInteger('Int', nbits, attributes=['generic'])
-    else:
-      error("integer oferflow", ti)
-
-  return {
-    'isa': 'value',
-    'kind': 'num',
-    'num': num,
-    'type': typ,
-    'attributes': ['immediate'],
-    'properties': {},
-    'ti': ti
-  }
-
-
-valueNil = value_create_int(0, typ=type.typeFreePtr)
-valueTrue = value_create_int(1, typ=type.typeNat1)
-valueFalse = value_create_int(0, typ=type.typeNat1)
-
-
-def value_create_float(num, typ=type.genericFloat, ti=None):
-  # вообще с флотом непонятно можно ли понять какого он Generic типа
-  # тк есть числа которые вообще никак не запишешь
-  return {
-    'isa': 'value',
-    'kind': 'num',
-    'num': num,
-    'type': typ,
-    'attributes': ['immediate'],
-    'properties': {},
-    'ti': ti
-  }
 
 
 def value_create_bin(op, l, r, t, ti):
@@ -69,8 +31,7 @@ def value_create_bin(op, l, r, t, ti):
     'left': l,
     'right': r,
     'type': t,
-    'attributes': [],
-    'properties': {},
+    'att': [],
     'ti': ti
   }
 
@@ -80,8 +41,7 @@ def value_create_bad(ti=None):
     'isa': 'value',
     'kind': 'bad',
     'type': type.type_bad(),
-    'attributes': [],
-    'properties': {},
+    'att': [],
     'ti': ti
   }
 
@@ -93,18 +53,18 @@ def value_is_bad(x):
 
 
 def value_attribute_add(v, a):
-  v['attributes'].append(a)
+  v['att'].append(a)
 
 def value_attribute_check(v, a):
-  return a in v['attributes']
+  return a in v['att']
 
 
 def value_is_immutable(x):
-  return 'immutable' in x['attributes']
+  return 'immutable' in x['att']
 
 
 def value_is_immediate(x):
-  return 'immediate' in x['attributes']
+  return 'immediate' in x['att']
 
 
 def value_num_get(x):
@@ -114,7 +74,7 @@ def value_num_get(x):
 
 
 def value_cons_array_from_generic_array(v, t, ti, method):
-  if len(v['items']) > t['size']:
+  if len(v['items']) > t['volume']['num']:
     info("too many items", v['ti'])
     return None
 
@@ -133,8 +93,7 @@ def value_cons_array_from_generic_array(v, t, ti, method):
     'kind': 'array',
     'items': casted_items,
     'type': t,
-    'attributes': [],
-    'properties': {},
+    'att': [],
     'ti': ti
   }
 
@@ -142,7 +101,7 @@ def value_cons_array_from_generic_array(v, t, ti, method):
   # чтобы он добавил явное приведение к Локальному (!) массиву
   # (uint32_t[3]){0, 1, 2}
   if is_local_context():
-    vx['attributes'].append('generic-casted')
+    vx['att'].append('generic-casted')
 
   # если это не сделать то принтер C не сможет сослаться
   # на именованную константу и станет печатать ее по месту
@@ -211,8 +170,8 @@ def value_cons_record_from_generic_record(v, t, ti, method):
     'kind': 'record',
     'items': items,
     'type': t,
-    'attributes': [],
-    'properties': {},
+    'att': [],
+
     'ti': ti
   }
 
@@ -221,7 +180,7 @@ def value_cons_record_from_generic_record(v, t, ti, method):
   # чтобы он добавил явное приведение к Локальной (!) структуре
   # (Point){.x=0, .y=0}
   if is_local_context():
-    vx['attributes'].append('generic-casted')
+    vx['att'].append('generic-casted')
 
   # если это не сделать то принтер C не сможет сослаться
   # на именованную константу и станет печатать ее по месту
@@ -239,19 +198,6 @@ def value_cons_record(v, t, ti, method):
 
   return None
 
-
-
-
-def do_cast_runtime(v, t, ti):
-  return {
-    'isa': 'value',
-    'kind': 'cast',
-    'value': v,
-    'type': t,
-    'attributes': [],
-    'properties': {},
-    'ti': ti
-  }
 
 
 
@@ -280,11 +226,11 @@ def value_cons_integer(v, t, ti, method):
 
     # cast non-generic integer to integer
     if method == 'explicit':
-      return do_cast_runtime(v, t, ti)
+      return hlir_value_cast(v, t, ti=ti)
 
   elif type.is_float(v['type']):
     if method == 'explicit':
-      return do_cast_runtime(v, t, ti)
+      return hlir_value_cast(v, t, ti=ti)
 
 
   return None
@@ -309,12 +255,12 @@ def value_cons_float(v, t, ti, method):
     elif type.is_integer(vt):
       # Int -> Float
       if method == 'explicit':
-        return do_cast_runtime(v, t, ti)
+        return hlir_value_cast(v, t, ti=ti)
 
     elif type.is_float(vt):
       # Float -> Float
       if method == 'explicit':
-        return do_cast_runtime(v, t, ti)
+        return hlir_value_cast(v, t, ti=ti)
 
     return None
 
@@ -331,31 +277,31 @@ def value_cons_pointer(v, t, ti, method):
     if method == 'explicit':
       # Int -> Ptr
       if type.is_generic_integer(from_type):
-        return do_cast_runtime(v, t, ti) # @!!
+        return hlir_value_cast(v, t, ti=ti) # @!!
 
       # Ptr -> Ptr
       if type.is_pointer(from_type):
-        return do_cast_runtime(v, t, ti)
+        return hlir_value_cast(v, t, ti=ti)
 
   # *[n]X -> *[]X  (например строковой литерал к типу Str)
   if type.is_pointer_to_defined_array(from_type):
     if type.is_pointer_to_undefined_array(t):
       if type.eq(from_type['to']['of'], t['to']['of']):
-        y = do_cast_runtime(v, t, ti)
+        y = hlir_value_cast(v, t, ti=ti)
 
         # кароче это стаб - си хочет печатать runtime приведение строки
         # к char *, что излишне; по этому атрибуту он понимает
         # что делать так не надо; Это временное решение (!)
-        if 'string' in v['attributes']:
-          y['attributes'].append('string')
+        if 'string' in v['att']:
+          y['att'].append('string')
 
         return y
 
   # *Unit & AnyPtr, AnyPtr & *Unit
   if type.is_free_pointer(from_type) and type.is_pointer(t):
-    return do_cast_runtime(v, t, ti)
+    return hlir_value_cast(v, t, ti=ti)
   if type.is_free_pointer(t) and type.is_pointer(from_type):
-    return do_cast_runtime(v, t, ti)
+    return hlir_value_cast(v, t, ti=ti)
 
   return None
 

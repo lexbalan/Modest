@@ -5,7 +5,7 @@ from error import info
 import core.type as type
 from core.type import type_attribute_check
 from core.value import value_attribute_check
-
+from core.hlir import hlir_type_pointer, hlir_value_int
 
 
 func_context = None
@@ -245,10 +245,10 @@ def print_type(t, print_aka=True, arr_as_ptr_to_arr=False):
 
   elif type.is_array(t):
     o("[")
-    array_size = t['size']
+    array_size = t['volume']
     sz = 0
     if array_size != None:
-      sz = array_size
+      sz = array_size['num']
 
     o("%d x " % sz)
     print_type(t['of'])
@@ -429,12 +429,16 @@ def do_eval_expr_call(v):
   # eval all args
   args = []
   for a in v['args']:
-    args.append(do_ld(do_eval(a)))
+    arg = do_eval(a)
+    # do not load arrays (because arrays passed by pointer inside)
+    if not type.is_array(arg['type']):
+      arg = do_ld(arg)
+    args.append(arg)
 
-  ftype = v['left']['type']
+  ftype = v['func']['type']
 
   # eval func
-  f = do_eval(v['left'])
+  f = do_eval(v['func'])
 
   if type.is_pointer(ftype):
     # pointer to array needs additional load
@@ -479,7 +483,7 @@ def do_eval_expr_call(v):
 def llvm_getelementptr(rec, rt, indexes, vt):
   # Прикол в том что индекс (i) структуры
   # не может быть i64 (!) (а только i32)
-  reg = operation_with_type ("getelementptr inbounds", rt)
+  reg = operation_with_type("getelementptr inbounds", rt)
   comma()
   print_type(rt)
   o("* ")
@@ -508,7 +512,7 @@ def do_eval_expr_index(v):
   index = do_ld(do_eval(v['index']))
 
   """#путает указатель на массив с массивом
-  if t['kind'] == 'array' and 'param' in v['array']['attributes']:
+  if t['kind'] == 'array' and 'param' in v['array']['att']:
     reg = operation('extractvalue')
     print_type_value(array)
     comma()
@@ -583,10 +587,15 @@ def do_eval_expr_access(v):
   rec = do_eval(v['record'])
   rt = v['record']['type']
   pos = v['field']['no']
-  #field = type.record_field_get(v['record_type'], v['field']['id']['str'])
-  #pos = field['no']
   return do_eval_access(rec, rt, pos, v['type'])
 
+
+def do_eval_expr_access_ptr(v):
+  print("do_eval_expr_access_ptr")
+  ptr = do_ld(do_eval(v['pointer']))
+  rt = ptr['type']['to']
+  pos = v['field']['no']
+  return do_eval_access_ptr(ptr, rt, pos, v['type'])
 
 
 
@@ -863,6 +872,7 @@ def do_eval_x(x):
     if k == 'call': return do_eval_expr_call(x)
     elif k == 'index': return do_eval_expr_index(x)
     elif k == 'access': return do_eval_expr_access(x)
+    elif k == 'access_ptr': return do_eval_expr_access_ptr(x)
     elif k == 'cast': return do_eval_expr_to(x)
     elif k == 'sizeof': return do_eval_sizeof(x)
     else:
@@ -1087,23 +1097,115 @@ def print_stmt(x):
 
 
 
+
+
 def print_arrays(arrays):
   for array in arrays:
 
     id = array['id']['str']
     iv = ll_create_value_zero(array['type'])
     val = ll_alloca(id, array['type'], None)
-    o("\n  ; --")
-    #locals_add(id, val)
+    locals_add('_' + id, val)
 
-    """o("\n"); ind()
-    array['value'] = None
-    print_stmt_defvar(array)
-    o("\n"); ind()
-    dst = array['id']['str']
-    src = array['id']['str']
-    len = type.get_size(array['type'])
-    o("memcpy(%s, _%s, %d);" % (dst, src, len))"""
+    #from core.trans import value_create_int
+
+    memcpy_type = {
+      'isa': 'type',
+      'kind': 'func',
+      'params': [
+        {
+          'isa': 'field',
+          'id': {'isa': 'id', 'str': "dst", 'ti': None},
+          'type': type.typeFreePtr,
+          'ti': None
+        },
+
+        {
+          'isa': 'field',
+          'id': {'isa': 'id', 'str': "src", 'ti': None},
+          'type': type.typeFreePtr,
+          'ti': None
+        },
+
+        {
+          'isa': 'field',
+          'id': {'isa': 'id', 'str': "len", 'ti': None},
+          'type': type.typeInt64,
+          'ti': None
+        },
+
+      ],
+
+      'to': type.typeFreePtr,
+      'att': [],
+      'ti': None
+    }
+
+
+    fmemcpy = {
+      'isa': 'value',
+      'kind': 'func',
+      'id': {'isa': 'id', 'str': "memcpy", 'ti': None},
+      'type': memcpy_type,
+      'att': [],
+      'ti': None
+    }
+
+
+    args = [
+      {
+        'isa': 'value',
+        'kind': 'cast',
+
+        'value': {
+          'isa': 'value',
+          'kind': 'var',
+          'id': {'isa': 'id', 'str': val['id'], 'ti': None},
+          'type': hlir_type_pointer(val['type']),
+          'att': ['local', 'immutable'],
+          'ti': None
+        },
+
+        'type': type.typeFreePtr,
+      },
+
+      {
+        'isa': 'value',
+        'kind': 'cast',
+
+        'value': {
+          'isa': 'value',
+          'kind': 'var',
+          'id': {'isa': 'id', 'str': '_' + val['id'], 'ti': None},
+          'type': hlir_type_pointer(val['type']),
+          'att': ['local', 'immutable'],
+          'ti': None
+        },
+
+        'type': type.typeFreePtr,
+      },
+
+      {
+        'isa': 'value',
+        'kind': 'cast',
+        'value': hlir_value_int(type.get_size(val['type'])),
+        'type': type.typeInt64,
+      }
+    ]
+
+    op = {
+      'isa': 'value',
+      'kind': 'call',
+      'func': fmemcpy,
+      'args': args,
+      'type': memcpy_type['to'],
+      'att': [],
+      'ti': None
+    }
+
+    do_eval(op)
+
+
 
 
 def print_stmt_block(s, arrays=None):
@@ -1200,6 +1302,9 @@ def print_def_func(x):
       'proto': param
     }
 
+    if param_is_arr:
+      vv['type'] = hlir_type_pointer(vv['type'])
+
     #param_id = param['id']['str']
 
     #if param['type']['kind'] == 'array':
@@ -1257,7 +1362,7 @@ def print_field(x):
   # поле является масссивом?
   array_size = None
   if type.is_array(t):
-    array_size = t['size']
+    array_size = t['volume']
     t = t['of']
 
   # поле является указателем?
@@ -1337,6 +1442,11 @@ def run(module, strs, outname):
     ss = ss.replace("\'", "\\27")
 
     lo("@%s = private constant [%d x i8] c\"%s\\00\"" % (s, slen, ss))
+
+
+  # memcpy for arrays copyng (!)
+  # redefinition problem!
+#  lo("declare i8* @memcpy(i8*, i8*, i64)")
 
   for x in module:
     isa = x['isa']

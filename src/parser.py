@@ -70,6 +70,7 @@ class Parser:
       self.skip()
     return yes
 
+
   def token_class_is(self, clas):
     c = self.ctok_class()
     if c == clas:
