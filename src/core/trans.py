@@ -649,7 +649,6 @@ def do_value_expr_ns(x):
 
 
 
-
 def do_value_expr_str(x):
   string = x['str']
   length = x['len']
@@ -1000,7 +999,7 @@ def do_include(x):
   # get abspath
   abspath = import_abspath(impline)
   if abspath == None:
-    error("module not found", x)
+    fatal("module not found", x)
     return None
 
 
@@ -1062,7 +1061,7 @@ def do_import(x):
   abspath = import_abspath(impline)
 
   if abspath == None:
-    error("module not found", x)
+    fatal("module not found", x)
     return None
 
   m = translate(abspath)

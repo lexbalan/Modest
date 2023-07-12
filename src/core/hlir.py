@@ -339,7 +339,7 @@ def hlir_value_sizeof(of, type, ti=None):
     'of': of,
     'type': type,
     'att': [],
-    'ti': x['ti']
+    'ti': ti
   }
 
 

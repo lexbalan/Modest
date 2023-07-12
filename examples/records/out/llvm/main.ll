@@ -1,6 +1,6 @@
 
-@str_0 = private constant [15 x i8] c"point(%f, %f)\0A\00"
-@str_1 = private constant [18 x i8] c"line length = %f\0A\00"
+@str_1 = private constant [15 x i8] c"point(%f, %f)\0A\00"
+@str_2 = private constant [18 x i8] c"line length = %f\0A\00"
 
 %Char = type i8
 %ConstChar = type %Char
@@ -249,9 +249,11 @@ define %Float @lineLength(%Line %line) {
 }
 @ptr_p = global %Point* zeroinitializer
 define void @ptr_example() {
+; 1---
   %1 = getelementptr  %Point, %Point* null, i32 1
   %2 = ptrtoint  %Point* %1 to i64
   %3 = call i8*(%SizeT) @malloc (i64 %2)
+; 2---
   %4 = bitcast i8* %3 to %Point*
   store %Point* %4, %Point** @ptr_p
   %5 = load %Point*, %Point** @ptr_p
@@ -260,7 +262,9 @@ define void @ptr_example() {
   %7 = load %Point*, %Point** @ptr_p
   %8 = getelementptr inbounds %Point, %Point* %7, i32 0, i32 1
   store %Float 0x4034000000000000, %Float* %8
-  %9 = bitcast [15 x i8]* @str_0 to %ConstCharStr
+; 1---
+; 2---
+  %9 = bitcast [15 x i8]* @str_1 to %ConstCharStr
   %10 = load %Point*, %Point** @ptr_p
   %11 = getelementptr inbounds %Point, %Point* %10, i32 0, i32 0
   %12 = load %Float, %Float* %11
@@ -274,7 +278,9 @@ define void @ptr_example() {
 define %Int @main() {
   %1 = load %Line, %Line* @line
   %2 = call %Float(%Line) @lineLength (%Line %1)
-  %3 = bitcast [18 x i8]* @str_1 to %ConstCharStr
+; 1---
+; 2---
+  %3 = bitcast [18 x i8]* @str_2 to %ConstCharStr
   %4 = call %Int(%ConstCharStr, ...) @printf (%ConstCharStr %3, %Float %2)
   call void() @ptr_example ()
   ret %Int 0

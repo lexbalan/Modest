@@ -422,7 +422,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 
 
 def print_stmt_if(x):
-  o("if("); print_value(x['cond']); o(")")
+  o("if("); print_value(x['cond']); o(") ")
   print_stmt_block(x['then'])
 
   e = x['else']
@@ -431,13 +431,13 @@ def print_stmt_if(x):
       o(" else ")
       print_stmt_if(e)
     else:
-      o(" else")
+      o(" else ")
       print_stmt_block(e)
 
 
 
 def print_stmt_while(x):
-  o("while("); print_value(x['cond']); o(")")
+  o("while("); print_value(x['cond']); o(") ")
   print_stmt_block(x['stmt'])
 
 
@@ -536,7 +536,7 @@ def print_arrays(arrays):
 
 
 def print_stmt_block(s, arrays=None):
-  o(" {")
+  o("{")
   indent_up()
   if arrays != None:
     print_arrays(arrays)
@@ -621,6 +621,7 @@ def print_def_func(x):
 
   func = x['func']
   arrays = print_func_signature(func['id']['str'], func['type'])
+  o("\n")
   print_stmt_block(func['stmt'], arrays=arrays)
 
 

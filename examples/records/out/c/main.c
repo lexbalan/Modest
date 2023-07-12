@@ -32,21 +32,24 @@ Line line = {
 	}
 };
 
-float max(float a, float b) {
+float max(float a, float b)
+{
 	if(a > b) {
 		return a;
 	}
 	return b;
 }
 
-float min(float a, float b) {
+float min(float a, float b)
+{
 	if(a < b) {
 		return a;
 	}
 	return b;
 }
 
-float lineLength(Line line) {
+float lineLength(Line line)
+{
 	const float dx = max(line.a.x, line.b.x) - min(line.a.x, line.b.x);
 	const float dy = max(line.a.y, line.b.y) - min(line.a.y, line.b.y);
 	const double dx2 = pow(dx, 2.0);
@@ -57,13 +60,19 @@ float lineLength(Line line) {
 
 Point *ptr_p;
 
-int main() {
-	const float len = lineLength(line);
-	printf("line length = %f\n", len);
+void ptr_example()
+{
 	ptr_p = malloc(sizeof(Point));
 	ptr_p->x = 10.0;
 	ptr_p->y = 20.0;
 	printf("point(%f, %f)\n", ptr_p->x, ptr_p->y);
+}
+
+int main()
+{
+	const float len = lineLength(line);
+	printf("line length = %f\n", len);
+	ptr_example();
 	return 0;
 }
 
