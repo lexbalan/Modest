@@ -13,8 +13,24 @@ def nbytes_for_bits(x):
 
 
 
+
 def hlir_type_bad(att=[], ti=None):
   return {'isa': 'type', 'kind': 'bad', 'att': [], 'ti': ti}
+
+
+def hlir_type_unit():
+  return {
+    'isa': 'type',
+    'kind': 'unit',
+    'name': 'Unit',
+    'c_alias': 'void',
+    'llvm_alias': 'void',
+    'size': 0,
+    'power': 0,
+    'items': [],
+    'att': [],
+    'ti': None
+  }
 
 
 def hlir_type_integer(name, power=0, att=[], ti=None):
@@ -319,6 +335,10 @@ def hlir_value_sizeof(of, type, ti=None):
 
 
 
+
+
+def hlir_stmt_bad(ti=None):
+  return {'isa': 'stmt', 'kind': 'bad', 'ti': ti}
 
 
 def hlir_stmt_block(stmts, ti=None):

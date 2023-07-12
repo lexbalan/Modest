@@ -12,7 +12,6 @@ def is_local_context():
 
 
 from .value import *
-from .stmt import *
 from parser import Parser
 from core.symtab import Symtab
 import core.type as type
@@ -99,6 +98,12 @@ def is_valid_lvalue(x):
   return x['kind'] in [
     'var', 'access', 'access_ptr', 'index', 'index_ptr', 'deref'
   ]
+
+
+def stmt_is_bad(x):
+  assert x != None
+  return x['kind'] == 'bad'
+
 
 
 
@@ -275,16 +280,6 @@ def do_type(t):
 #
 # Do Statement
 #
-
-
-bin_ops = [
-  'or', 'xor', 'and', 'shl', 'shr',
-  'eq', 'ne', 'lt', 'gt', 'le', 'ge',
-  'add', 'sub', 'mul', 'div', 'mod'
-]
-
-un_ops = ['ref', 'deref', 'plus', 'minus', 'not']
-
 
 
 def do_value_shift(op, l, r, ti):
@@ -752,6 +747,15 @@ def do_value_expr_sizeof(x):
 
 
 
+bin_ops = [
+  'or', 'xor', 'and', 'shl', 'shr',
+  'eq', 'ne', 'lt', 'gt', 'le', 'ge',
+  'add', 'sub', 'mul', 'div', 'mod'
+]
+
+un_ops = ['ref', 'deref', 'plus', 'minus', 'not']
+
+
 def do_value(x):
   k = x['kind']
 
@@ -792,7 +796,7 @@ def do_stmt_if(x):
   t = do_stmt(x['then'])
 
   if value_is_bad(c) or stmt_is_bad(t):
-    return stmt_create_bad()
+    return hlir_stmt_bad()
 
   c = value_cast_implicit(c, type.typeNat1, c['ti'])
   type.check(c['type'], type.typeNat1, x['cond']['ti'])
@@ -801,7 +805,7 @@ def do_stmt_if(x):
   if x['else'] != None:
     e = do_stmt(x['else'])
     if stmt_is_bad(e):
-      return stmt_create_bad()
+      return hlir_stmt_bad()
 
   return hlir_stmt_if(c, t, e, ti=x['ti'])
 
@@ -811,11 +815,11 @@ def do_stmt_while(x):
   c = do_value(x['cond'])
   s = do_stmt(x['stmt'])
   if value_is_bad(c) or stmt_is_bad(s):
-    return stmt_create_bad()
+    return hlir_stmt_bad()
 
   c = value_cast_implicit(c, type.typeNat1, c['ti'])
   if not type.check(c['type'], type.typeNat1, x['cond']['ti']):
-    return stmt_create_bad()
+    return hlir_stmt_bad()
 
   return hlir_stmt_while(c, s, ti=x['ti'])
 
@@ -829,7 +833,7 @@ def do_stmt_return(x):
   if x['value'] != None:
     v = do_value(x['value'])
     if value_is_bad(v):
-      return stmt_create_bad()
+      return hlir_stmt_bad()
 
     v = value_cast_implicit(v, cfunc['type']['to'], v['ti'])
     type.check(v['type'], cfunc['type']['to'], x['value']['ti'])
@@ -862,7 +866,7 @@ def do_stmt_var(x):
 
   if t == None and v == None:
     module['context'].value_add(id['str'], hlir_value_bad())
-    return stmt_create_bad()
+    return hlir_stmt_bad()
 
   if t != None and v != None:
     # type check
@@ -873,7 +877,7 @@ def do_stmt_var(x):
   if t != None:
     if type.is_bad(t):
       module['context'].value_add(id['str'], hlir_value_bad())
-      return stmt_create_bad()
+      return hlir_stmt_bad()
 
     if type.is_forbidden_var(t):
       error("unsuitable type", x['type'])
@@ -886,7 +890,7 @@ def do_stmt_var(x):
   already = module['context'].value_get(id['str'], recursive=False)
   if already != None:
     error("local id redefinition", x['id']['ti'])
-    return stmt_create_bad()
+    return hlir_stmt_bad()
 
 
   var_value = hlir_value_var(id, t, att=['local'], ti=x['ti'])
@@ -902,7 +906,7 @@ def do_stmt_let(x):
   v = do_value(x['value'])
   if value_is_bad(v):
     module['context'].value_add(id['str'], hlir_value_bad())
-    return stmt_create_bad()
+    return hlir_stmt_bad()
 
   vtype = v['type']
 
@@ -917,7 +921,7 @@ def do_stmt_let(x):
     if value_is_immediate(v):
       if not (type.is_record(vtype) or type.is_array(vtype)):
         module['context'].value_add(id['str'], v)
-        return stmt_create_bad()"""
+        return hlir_stmt_bad()"""
 
 
   # если это immediate константа, то она подставится принтером llvm
@@ -928,7 +932,7 @@ def do_stmt_let(x):
   already = module['context'].value_get(id['str'], recursive=False)
   if already != None:
     error("local id redefinition", x['id']['ti'])
-    return stmt_create_bad()
+    return hlir_stmt_bad()
 
   module['context'].value_add(id['str'], const_value)
 
@@ -943,15 +947,15 @@ def do_stmt_assign(x):
   r = do_value(x['right'])
 
   if value_is_bad(l) or value_is_bad(r):
-    return stmt_create_bad()
+    return hlir_stmt_bad()
 
   if not is_valid_lvalue(l):
     error("illegal left", x['left'])
-    return stmt_create_bad()
+    return hlir_stmt_bad()
 
   if value_is_immutable(l):
     error("immutable value", l)
-    return stmt_create_bad()
+    return hlir_stmt_bad()
 
   # type check
   r = value_cast_implicit(r, l['type'], r['ti'])
@@ -965,7 +969,7 @@ def do_stmt_assign(x):
 def do_stmt_value(x):
   v = do_value(x['value'])
   if value_is_bad(v):
-    return stmt_create_bad()
+    return hlir_stmt_bad()
   return hlir_stmt_value(v, ti=x['ti'])
 
 
@@ -984,7 +988,7 @@ def do_stmt(x):
   elif k == 'var': s = do_stmt_var(x)
   elif k == 'again': s = do_stmt_again(x)
   elif k == 'break': s = do_stmt_break(x)
-  else: s = stmt_create_bad()
+  else: s = hlir_stmt_bad()
 
   return s
 

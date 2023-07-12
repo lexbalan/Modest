@@ -7,19 +7,7 @@ from error import error
 from .hlir import *
 
 
-
-typeUnit = {
-  'isa': 'type',
-  'kind': 'unit',
-  'name': 'Unit',
-  'c_alias': 'void',
-  'llvm_alias': 'void',
-  'size': 0,
-  'power': 0,
-  'items': [],
-  'att': [],
-  'ti': None
-}
+typeUnit = hlir_type_unit()
 
 typeInt8  = hlir_type_integer("Int8", 8, att=['signed'])
 typeInt8['c_alias'] = 'int8_t'
@@ -152,7 +140,7 @@ def eq(a, b):
   elif k == 'array': return eq_array(a, b)
   elif k == 'func': return eq_func(a, b)
   elif k == 'record': return eq_record(a, b)
-  elif k == 'enum': return eq_enum(a, b)
+  #elif k == 'enum': return eq_enum(a, b)
   elif k == 'float': return eq_float(a, b)
   elif k == 'opaque': return eq_opaque(a, b)
 
