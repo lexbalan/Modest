@@ -3,6 +3,8 @@ import os
 
 f = None
 
+INDENT_SYMBOL = " " * 4
+
 indent = 0
 
 
@@ -29,7 +31,7 @@ def lo(s):
 
 def ind():
   global indent
-  f.write("\t" * indent)
+  f.write(INDENT_SYMBOL * indent)
 
 
 def printer_open(fname):
