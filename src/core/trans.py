@@ -1293,6 +1293,8 @@ def decl_func(x):
 
   func = hlir_value_func(id, functype, att=['undefined'], ti=x['ti'])
 
+  extend_props(func)
+
   module['context'].value_add(id['str'], func)
 
   declaration = hlir_decl_func(func, ti=x['ti'])

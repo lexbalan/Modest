@@ -19,7 +19,14 @@ type Line record {
 var line : Line := {a={x=0,y=0}, b={x=1, y=1}}
 
 
+@property("c_prefix", "static inline")
+func max (a : Float, b : Float) -> Float
 
+@property("c_prefix", "static inline")
+func min (a : Float, b : Float) -> Float
+
+
+@property("c_prefix", "static inline")
 func max (a : Float, b : Float) -> Float {
   if a > b {
     return a
@@ -27,7 +34,7 @@ func max (a : Float, b : Float) -> Float {
   return b
 }
 
-
+@property("c_prefix", "static inline")
 func min (a : Float, b : Float) -> Float {
   if a < b {
     return a
@@ -47,7 +54,10 @@ func lineLength (line : Line) -> Float {
 }
 
 
+
+@property("c_prefix", "static")
 var ptr_p : *Point
+
 
 func ptr_example () -> Unit {
   // by pointer (!)

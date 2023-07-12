@@ -607,6 +607,8 @@ def print_decl_func(x):
   if 'extern' in x['att']:
     o("extern ")
   func = x['func']
+  if 'c_prefix' in func:
+    o("%s " % func['c_prefix'])
   print_func_signature(func['id']['str'], func['type'])
   o(";")
 
@@ -615,11 +617,14 @@ def print_def_func(x):
   if not was_separated_by_new_line:
     o("\n")
 
-  if 'comment' in x['func']:
-    if x['func']['comment'] != '':
-      o("// %s\n" % x['func']['comment'])
-
   func = x['func']
+  if 'comment' in func:
+    if func['comment'] != '':
+      o("// %s\n" % func['comment'])
+
+  if 'c_prefix' in func:
+    o("%s " % func['c_prefix'])
+
   arrays = print_func_signature(func['id']['str'], func['type'])
   o("\n")
   print_stmt_block(func['stmt'], arrays=arrays)
@@ -719,8 +724,9 @@ def print_field(x, const=False, prefix=None):
 
 
 def print_def_var(x):
-  f = {'isa': 'field', 'id': x['var']['id'], 'type': x['var']['type']}
-  print_field(f)
+  if 'c_prefix' in x['var']:
+      o("%s " % x['var']['c_prefix'])
+  print_field(x['var'])
   if x['init'] != None:
     o(" = "); print_value(x['init'])
   o(";")

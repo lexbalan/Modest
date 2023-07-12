@@ -32,7 +32,9 @@ Line line = {
 	}
 };
 
-float max(float a, float b)
+static inline float max(float a, float b);
+
+static inline float max(float a, float b)
 {
 	if(a > b) {
 		return a;
@@ -40,7 +42,7 @@ float max(float a, float b)
 	return b;
 }
 
-float min(float a, float b)
+static inline float min(float a, float b)
 {
 	if(a < b) {
 		return a;
@@ -58,7 +60,7 @@ float lineLength(Line line)
 	return len;
 }
 
-Point *ptr_p;
+static Point *ptr_p;
 
 void ptr_example()
 {
