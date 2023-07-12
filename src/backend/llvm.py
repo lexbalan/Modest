@@ -503,37 +503,19 @@ def llvm_getelementptr(rec, rt, indexes, vt):
 
 
 def do_eval_expr_index(v):
-
-  #print(v['array']['type']['kind'])
   array = do_eval(v['array'])
-
-  t = array['type']
-
+  array_type = array['type']
+  result_type = v['type']
   index = do_ld(do_eval(v['index']))
-
-  """#путает указатель на массив с массивом
-  if t['kind'] == 'array' and 'param' in v['array']['att']:
-    reg = operation('extractvalue')
-    print_type_value(array)
-    comma()
-    print_type_value(index)
-    return {
-      'isa': 'llvm_value',
-      'class': 'reg',
-      'level': 'value',
-      'reg': reg,
-      'type': v['type'],
-      'proto': v
-    }"""
-
-  if type.is_pointer(t):
-    # pointer to array needs additional load
-    array = do_ld(array)
-    t = t['to']
+  return llvm_getelementptr(array, array_type, (ll_value_zero, index), result_type)
 
 
-  return llvm_getelementptr(array, t, (ll_value_zero, index), v['type'])
-
+def do_eval_expr_index_ptr(v):
+  pointer = do_eval(v['pointer'])
+  array_type = pointer['type']['to']
+  result_type = v['type']
+  index = do_ld(do_eval(v['index']))
+  return llvm_getelementptr(pointer, array_type, (ll_value_zero, index), result_type)
 
 
 # получает укзаатель на структуру x
@@ -679,7 +661,9 @@ def do_eval_expr_to(v):
         return ll_create_value_null(to_type)
 
 
+  lo("; 1---")
   y = do_ld(do_eval(value))
+  lo("; 2---")
   opcode = select_cast_operator(from_type, to_type)
   reg = operation(opcode)
   print_type(from_type)
@@ -870,6 +854,7 @@ def do_eval_x(x):
   else:
     if k == 'call': return do_eval_expr_call(x)
     elif k == 'index': return do_eval_expr_index(x)
+    elif k == 'index_ptr': return do_eval_expr_index_ptr(x)
     elif k == 'access': return do_eval_expr_access(x)
     elif k == 'access_ptr': return do_eval_expr_access_ptr(x)
     elif k == 'cast': return do_eval_expr_to(x)

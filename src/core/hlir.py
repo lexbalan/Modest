@@ -101,7 +101,7 @@ def hlir_value_bad(ti=None):
   return {
     'isa': 'value',
     'kind': 'bad',
-    'type': type.type_bad(),
+    'type': hlir_type_bad(),
     'att': [],
     'ti': ti
   }
@@ -259,13 +259,13 @@ def hlir_value_index_array(array, index, att=[], ti=None):
   }
 
 
-def hlir_value_index_ptr_array(ptr2arr, index, att=[], ti=None):
+def hlir_value_index_array_by_ptr(ptr, index, att=[], ti=None):
   return {
     'isa': 'value',
-    'kind': 'index',
-    'array': ptr2arr,
+    'kind': 'index_ptr',
+    'pointer': ptr,
     'index': index,
-    'type': ptr2arr['type']['to']['of'],
+    'type': ptr['type']['to']['of'],
     'att': ['adr'] + att,
     'ti': ti
   }
@@ -284,7 +284,7 @@ def hlir_value_access_record(record, field, att=[], ti=None):
   }
 
 
-def hlir_value_access_ptr_record(record, field, att=[], ti=None):
+def hlir_value_access_record_by_ptr(record, field, att=[], ti=None):
   return {
     'isa': 'value',
     'kind': 'access_ptr',

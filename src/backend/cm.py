@@ -231,11 +231,22 @@ def print_value_expr_index(v, ctx):
   o("["); print_value(index); o("]")
 
 
+def print_value_expr_index_ptr(v, ctx):
+  array = v['pointer']
+  index = v['index']
+  need_wrap = precedence(array['kind']) < precedence('index')
+  print_value(array, need_wrap)
+  o("["); print_value(index); o("]")
+
+
 def print_value_expr_access(v, ctx):
   left = v['record']
   need_wrap = precedence(left['kind']) < precedence('access')
   print_value(left, need_wrap); o("."); o(v['field']['id']['str'])
 
+
+def print_value_expr_access_ptr(v, ctx):
+  print_value_expr_access(v, ctx)
 
 
 def print_cast(t, v, ctx=[]):
@@ -362,7 +373,9 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
   else:
     if k == 'call': print_value_expr_call(x, ctx)
     elif k == 'index': print_value_expr_index(x, ctx)
+    elif k == 'index_ptr': print_value_expr_index_ptr(x, ctx)
     elif k == 'access': print_value_expr_access(x, ctx)
+    elif k == 'access_ptr': print_value_expr_access_ptr(x, ctx)
     elif k == 'cast': print_value_expr_cast(x, ctx)
     elif k == 'sizeof': o("sizeof("); print_type(x['of']); o(")")
     else: o("<%s>" % k)

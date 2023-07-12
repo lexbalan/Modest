@@ -237,6 +237,8 @@ def do_type_func(t):
 
   for param in t['params']:
     param = do_field(param)
+    if type.is_array(param['type']):
+      error("function parameter cannot be an array", param)
     if param != None:
       params.append(param)
 
@@ -559,19 +561,10 @@ def do_value_expr_index(x):
   i = value_cast_implicit(i, type.typeInt, i['ti'])
 
   if ptr_access:
-    return hlir_value_index_ptr_array(a, i, ti=x['ti'])
+    return hlir_value_index_array_by_ptr(a, i, ti=x['ti'])
   else:
     return hlir_value_index_array(a, i, ti=x['ti'])
 
-
-
-
-"""def do_value_expr_access_ptr(x):
-  ptr_record = do_value(x['left'])
-  field_id = x['field']
-  record_type = r['type']['to']
-  field = type.record_field_get(record_type, field_id['str'])
-  """
 
 
 def do_value_expr_access(x):
@@ -610,7 +603,7 @@ def do_value_expr_access(x):
       attributes.append('immutable')
 
   if ptr_access:
-    return hlir_value_access_ptr_record(r, field, ti=x['ti'])
+    return hlir_value_access_record_by_ptr(r, field, ti=x['ti'])
   else:
     return hlir_value_access_record(r, field, ti=x['ti'])
 
