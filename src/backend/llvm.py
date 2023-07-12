@@ -1401,22 +1401,15 @@ def print_import(x):
   o("#include %s" % s)
 
 
-def run(module, outname):
-
-  text = module['text']
-  strs = module['strings']
-
-  outname = outname + '.ll'
-  printer_open(outname)
 
 
-  isa_prev = None
+def print_strings(strings):
+  strno = 0
+  for string in strings:
+    strno = strno + 1
+    strid = 'str_%d' % strno
+    string['strid'] = strid
 
-  #@str1 = private constant [4 x i8] c"Hi!\00"
-  for s in strs:
-    string = strs[s]
-
-    slen = string['len']
     ss = string['str']
 
     ss = ss.replace("\a", "\\07")
@@ -1429,13 +1422,23 @@ def run(module, outname):
     ss = ss.replace("\"", "\\22")
     ss = ss.replace("\'", "\\27")
 
-    lo("@%s = private constant [%d x i8] c\"%s\\00\"" % (s, slen, ss))
+    slen = string['len']
+
+    #ex: @str_1 = private constant [4 x i8] c"Hi!\00"
+    lo("@%s = private constant [%d x i8] c\"%s\\00\"" % (strid, slen, ss))
 
 
-  # memcpy for arrays copyng (!)
-  # redefinition problem!
-#  lo("declare i8* @memcpy(i8*, i8*, i64)")
 
+
+def run(module, outname):
+  outname = outname + '.ll'
+  printer_open(outname)
+
+  print_strings(module['strings'])
+
+
+  text = module['text']
+  isa_prev = None
   for x in text:
     isa = x['isa']
     k = x['kind']

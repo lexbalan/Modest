@@ -651,8 +651,6 @@ def do_value_expr_ns(x):
 
 
 
-strno = 0
-strpool = {}
 
 def do_value_expr_str(x):
   string = x['str']
@@ -663,15 +661,8 @@ def do_value_expr_str(x):
   ta = hlir_type_array(type.typeChar, volume=vol, ti=x['ti'])
   stype = hlir_type_pointer(ta)
 
-  # вынеси это, это нужно только LLVM принтеру,
-  # вот пусть он сам это и делает
-  global strno
-  strno = strno + 1
-  strid = 'str_%d' % strno
-
   s =  hlir_value_cstr(string, length, stype, ti=x['ti'])
-  s['strid'] = strid
-  strpool[strid] = s
+  module['strings'].append(s)
   return s
 
 
@@ -1421,7 +1412,7 @@ def proc(ast):
     'id': "<>",
     #'path': srcname,
     'imports': {},
-    'strings': strpool,
+    'strings': [],
     'context': root_context.branch(),
     'text': []
   }
