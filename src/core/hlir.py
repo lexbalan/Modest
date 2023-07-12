@@ -95,6 +95,18 @@ def hlir_type_record(fields=[], att=[], ti=None):
 
 
 
+
+
+def hlir_value_bad(ti=None):
+  return {
+    'isa': 'value',
+    'kind': 'bad',
+    'type': type.type_bad(),
+    'att': [],
+    'ti': ti
+  }
+
+
 def hlir_value_int(num, typ=None, att=[], ti=None):
   def nbits_for_int(x):
     n = 1
@@ -144,6 +156,39 @@ def hlir_value_float(num, att=[], ti=None):
     'ti': ti
   }
 
+
+def hlir_value_cstr(string, length, type, att=[], ti=None):
+  return {
+    'isa': 'value',
+    'kind': 'str',
+    'str': string,
+    'len': length,
+    'type': type,
+    'att': ['string'],
+    'ti': ti
+  }
+
+
+def hlir_value_un(k, value, type, att=[], ti=None):
+  return {
+    'isa': 'value',
+    'kind': k,
+    'value': value,
+    'type': type,
+    'att': att,
+    'ti': ti
+  }
+
+def hlir_value_bin(op, l, r, t, ti):
+  return {
+    'isa': 'value',
+    'kind': op,
+    'left': l,
+    'right': r,
+    'type': t,
+    'att': [],
+    'ti': ti
+  }
 
 def hlir_value_func(id, type, att=[], ti=None):
   return {
@@ -263,5 +308,14 @@ def hlir_value_cast(value, type, att=[], ti=None):
   }
 
 
+def hlir_value_sizeof(of, type, ti=None):
+  return {
+    'isa': 'value',
+    'kind': 'sizeof',
+    'of': of,
+    'type': type,
+    'att': [],
+    'ti': x['ti']
+  }
 
 

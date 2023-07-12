@@ -731,7 +731,10 @@ def print_include(x):
 
 
 
-def run(module, strs, outname):
+def run(module, outname):
+
+  text = module['text']
+  strs = module['strings']
 
   is_header = 'header' in features
 
@@ -754,7 +757,7 @@ def run(module, strs, outname):
 
   prev_ik = ('', '')
 
-  for x in module:
+  for x in text:
     if 'c-no-print' in x['att']:
       continue
 

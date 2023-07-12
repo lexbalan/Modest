@@ -7,6 +7,7 @@ from error import error, warning, info
 from .hlir import *
 
 
+#TODO: value #kind=zero
 def value_create_zero(t):
   if type.is_numeric(t):
     return hlir_value_int(0, t)
@@ -23,27 +24,6 @@ valueTrue = hlir_value_int(1, typ=type.typeNat1)
 valueFalse = hlir_value_int(0, typ=type.typeNat1)
 
 
-
-def value_create_bin(op, l, r, t, ti):
-  return {
-    'isa': 'value',
-    'kind': op,
-    'left': l,
-    'right': r,
-    'type': t,
-    'att': [],
-    'ti': ti
-  }
-
-
-def value_create_bad(ti=None):
-  return {
-    'isa': 'value',
-    'kind': 'bad',
-    'type': type.type_bad(),
-    'att': [],
-    'ti': ti
-  }
 
 
 def value_is_bad(x):

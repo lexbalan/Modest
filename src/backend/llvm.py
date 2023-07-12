@@ -591,7 +591,6 @@ def do_eval_expr_access(v):
 
 
 def do_eval_expr_access_ptr(v):
-  print("do_eval_expr_access_ptr")
   ptr = do_ld(do_eval(v['pointer']))
   rt = ptr['type']['to']
   pos = v['field']['no']
@@ -1417,7 +1416,11 @@ def print_import(x):
   o("#include %s" % s)
 
 
-def run(module, strs, outname):
+def run(module, outname):
+
+  text = module['text']
+  strs = module['strings']
+
   outname = outname + '.ll'
   printer_open(outname)
 
@@ -1448,7 +1451,7 @@ def run(module, strs, outname):
   # redefinition problem!
 #  lo("declare i8* @memcpy(i8*, i8*, i64)")
 
-  for x in module:
+  for x in text:
     isa = x['isa']
     k = x['kind']
 

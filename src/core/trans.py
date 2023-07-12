@@ -84,7 +84,6 @@ def option(id, value=True):
 
 def option_off(id):
   global options
-  print("option_off %s" % id)
   options[id] = False
 
 def option_get(id):
@@ -303,7 +302,7 @@ def do_value_shift(op, l, r, ti):
     #if value.is_immediate(r['type']):
     error("required type", l)
 
-  return value_create_bin(op, l, r, l['type'], ti)
+  return hlir_value_bin(op, l, r, l['type'], ti)
 
 
 
@@ -339,7 +338,7 @@ def do_value_expr_bin(x):
   ti = x['ti']
 
   if value_is_bad(l) or value_is_bad(r):
-    return value_create_bad(ti)
+    return hlir_value_bad(ti)
 
   if k in ['shl', 'shr']:
     return do_value_shift(k, l, r, ti)
@@ -374,13 +373,13 @@ def do_value_expr_bin(x):
   if p_and_n:
     lnat = do_cast_runtime(l, type.typeNat, ti)
     xr = value_cast_implicit(r, lnat['type'], ti)
-    result = value_create_bin(x['kind'], lnat, xr, xr['type'], ti)
+    result = hlir_value_bin(x['kind'], lnat, xr, xr['type'], ti)
     return do_cast_runtime(result, l['type'], ti)
 
   if n_and_p:
     rnat = do_cast_runtime(r, type.typeNat, ti)
     xl = value_cast_implicit(l, rnat['type'], ti)
-    result = value_create_bin(x['kind'], rnat, xl, xl['type'], ti)
+    result = hlir_value_bin(x['kind'], rnat, xl, xl['type'], ti)
     return do_cast_runtime(result, r['type'], ti)
 
 
@@ -397,7 +396,7 @@ def do_value_expr_bin(x):
 
   if not (p_and_n or n_and_p):
     if not type.check(l['type'], r['type'], x['ti']):
-      return value_create_bad(x['ti'])
+      return hlir_value_bad(x['ti'])
 
   # < > <= >= only for values with 'ordered' type
   if k in ['lt', 'gt', 'le', 'ge']:
@@ -411,7 +410,7 @@ def do_value_expr_bin(x):
     t = type.typeNat1
 
 
-  nv = value_create_bin(x['kind'], l, r, t, ti)
+  nv = hlir_value_bin(x['kind'], l, r, t, ti)
 
   # if left & right are immediate, we can fold const
   # and append field 'num' to nv
@@ -429,7 +428,7 @@ def do_value_expr_un(x):
   val = do_value(x['value'])
 
   if value_is_bad(val):
-    return value_create_bad(x['ti'])
+    return hlir_value_bad(x['ti'])
 
   t = val['type']
 
@@ -446,7 +445,7 @@ def do_value_expr_un(x):
   if x['kind'] == 'deref':
     if not type.is_pointer(t):
       error("expected pointer", val)
-      return value_create_bad(x['ti'])
+      return hlir_value_bad(x['ti'])
 
     to = t['to']
     # you can't deref pointer to function
@@ -456,14 +455,8 @@ def do_value_expr_un(x):
 
     t = to
 
-    return {
-      'isa': 'value',
-      'kind': x['kind'],
-      'value': val,
-      'type': t,
-      'att': ['adr'],
-      'ti': x['ti']
-    }
+    return hlir_value_un(x['kind'], val, t, att=['adr'], ti=x['ti'])
+
 
   if x['kind'] == 'ref':
     if value_is_immutable(val):
@@ -471,14 +464,7 @@ def do_value_expr_un(x):
     t = hlir_type_pointer(t, ti=x['ti'])
 
 
-  return {
-    'isa': 'value',
-    'kind': x['kind'],
-    'value': val,
-    'type': t,
-    'att': [],
-    'ti': x['ti']
-  }
+  return hlir_value_un(x['kind'], val, t, att=[], ti=x['ti'])
 
 
 
@@ -486,7 +472,7 @@ def do_value_expr_call(x):
   f = do_value(x['left'])
 
   if value_is_bad(f):
-    return value_create_bad(x['ti'])
+    return hlir_value_bad(x['ti'])
 
   ftype = f['type']
 
@@ -504,12 +490,12 @@ def do_value_expr_call(x):
 
   if nargs < npars:
     error("not enough args", x)
-    return value_create_bad(x['ti'])
+    return hlir_value_bad(x['ti'])
 
   if nargs > npars:
     if not type_attribute_check(ftype, 'arghack'):
       error("too many args", x)
-      return value_create_bad(x['ti'])
+      return hlir_value_bad(x['ti'])
 
   args = []
 
@@ -546,7 +532,7 @@ def do_value_expr_index(x):
   a = do_value(x['left'])
 
   if value_is_bad(a):
-    return value_create_bad(x['ti'])
+    return hlir_value_bad(x['ti'])
 
   typ = a['type']
 
@@ -557,12 +543,12 @@ def do_value_expr_index(x):
   # check if is record
   if not type.is_array(typ):
     error("expected array or pointer to array", x)
-    return value_create_bad(x['left']['ti'])
+    return hlir_value_bad(x['left']['ti'])
 
   i = do_value(x['index'])
 
   if value_is_bad(i):
-    return value_create_bad(x['index']['ti'])
+    return hlir_value_bad(x['index']['ti'])
 
   # check if index out-of-bounds
   if i['kind'] == 'int':
@@ -592,7 +578,7 @@ def do_value_expr_access(x):
   r = do_value(x['left'])
 
   if value_is_bad(r):
-    return value_create_bad(x['ti'])
+    return hlir_value_bad(x['ti'])
 
   field_id = x['field']
 
@@ -606,17 +592,17 @@ def do_value_expr_access(x):
   # check if is record
   if not type.is_record(record_type):
     error("expected record or pointer to record", x)
-    return value_create_bad(x['left']['ti'])
+    return hlir_value_bad(x['left']['ti'])
 
   field = type.record_field_get(record_type, field_id['str'])
 
   # if field not found
   if field == None:
     error("undefined field '%s'" % field_id['str'], x)
-    return value_create_bad(x['right']['ti'])
+    return hlir_value_bad(x['right']['ti'])
 
   if type.is_bad(field['type']):
-    return value_create_bad(x['right']['ti'])
+    return hlir_value_bad(x['right']['ti'])
 
   attributes = ['adr']
   if not ptr_access:
@@ -634,7 +620,7 @@ def do_value_expr_to(x):
   t = do_type(x['type'])
   v = do_value(x['value'])
   if value_is_bad(v) or type.is_bad(t):
-    return value_create_bad(x['ti'])
+    return hlir_value_bad(x['ti'])
   return value_cast_explicit(v, t, x['ti'])
 
 
@@ -647,10 +633,10 @@ def do_value_expr_id(x):
 
     # чтобы не генерил ошибки дальше
     # создадим bad value и пропишем его глобально
-    v = value_create_bad(x['ti'])
+    v = hlir_value_bad(x['ti'])
     value_attribute_add(v, 'unknown')
     module['context'].value_add(id_str, v)
-    return value_create_bad(x['ti'])
+    return hlir_value_bad(x['ti'])
 
 
   # for TI чтобы не переписать у самого определения
@@ -668,57 +654,32 @@ def do_value_expr_ns(x):
   if not ns_id_str in module['imports']:
     error("namespace nof found", ns_id)
 
-  return value_create_bad(ns_id['ti'])
+  return hlir_value_bad(ns_id['ti'])
 
-  #tx = module['context'].type_get(ns_name)
-
-  #if tx == None:
-  #  error("unknown namespace '%s'" % ns_id['str'], ns_id)
-  #  return value_create_bad(ns_id['ti'])
-
-  """if tx['kind'] == 'enum':
-    items = tx['items']
-    for item in items:
-      if x['ids'][1]['str'] == item['id']['str']:
-        num = item['number']
-        #print("ENUM_ITEM %d" % (num))
-        return {
-          'isa': 'value',
-          'kind': 'num',
-          'num': num,
-          'type': tx,
-          'att': ['immediate'],
-          'ti': x['ids'][1]['ti']
-        }"""
 
 
 strno = 0
 strpool = {}
 
 def do_value_expr_str(x):
-  global strno
-  strid = 'str_%d' % strno
-  strno = strno + 1
   string = x['str']
-  str_len = x['len']
-  strpool[strid] = {'str': string, 'len': str_len}
-  vol = hlir_value_int(str_len)
+  length = x['len']
 
-  # type of any string is *[x]typeChar
+  # type of any C string is *[x]typeChar
+  vol = hlir_value_int(length)
   ta = hlir_type_array(type.typeChar, volume=vol, ti=x['ti'])
-  t = hlir_type_pointer(ta)
+  stype = hlir_type_pointer(ta)
 
-  return {
-    'isa': 'value',
-    'kind': 'str',
-    'str': string,
-    'strid': strid,
-    'len': str_len,
-    'type': t,
-    'att': ['string'],
-    'ti': x['ti']
-  }
+  # вынеси это, это нужно только LLVM принтеру,
+  # вот пусть он сам это и делает
+  global strno
+  strno = strno + 1
+  strid = 'str_%d' % strno
 
+  s =  hlir_value_cstr(string, length, stype, ti=x['ti'])
+  s['strid'] = strid
+  strpool[strid] = s
+  return s
 
 
 # select type for value x
@@ -794,15 +755,8 @@ def do_value_expr_float(x):
 
 
 def do_value_expr_sizeof(x):
-  tx = do_type(x['type'])
-  return {
-    'isa': 'value',
-    'kind': 'sizeof',
-    'of': tx,
-    'type': type.typeNat,
-    'att': [],
-    'ti': x['ti']
-  }
+  of = do_type(x['type'])
+  return hlir_value_sizeof(of, type.typeNat, ti=x['ti'])
 
 
 
@@ -829,7 +783,7 @@ def do_value(x):
       elif k == 'sizeof': rv = do_value_expr_sizeof(x)
 
   if rv == None:
-    rv = value_create_bad(x['ti'])
+    rv = hlir_value_bad(x['ti'])
 
   assert('ti' in rv)
 
@@ -933,7 +887,7 @@ def do_stmt_var(x):
     v = do_value(x['value'])
 
   if t == None and v == None:
-    module['context'].value_add(id['str'], value_create_bad())
+    module['context'].value_add(id['str'], hlir_value_bad())
     return stmt_create_bad()
 
   if t != None and v != None:
@@ -944,7 +898,7 @@ def do_stmt_var(x):
 
   if t != None:
     if type.is_bad(t):
-      module['context'].value_add(id['str'], value_create_bad())
+      module['context'].value_add(id['str'], hlir_value_bad())
       return stmt_create_bad()
 
     if type.is_forbidden_var(t):
@@ -980,7 +934,7 @@ def do_stmt_let(x):
   id = x['id']
   v = do_value(x['value'])
   if value_is_bad(v):
-    module['context'].value_add(id['str'], value_create_bad())
+    module['context'].value_add(id['str'], hlir_value_bad())
     return stmt_create_bad()
 
   vtype = v['type']
@@ -1474,6 +1428,7 @@ def proc(ast):
     'id': "<>",
     #'path': srcname,
     'imports': {},
+    'strings': strpool,
     'context': root_context.branch(),
     'text': []
   }

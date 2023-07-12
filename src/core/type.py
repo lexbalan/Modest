@@ -37,7 +37,7 @@ typeInt64['llvm_alias'] = 'i64'
 typeNat1 = hlir_type_integer("Nat1", 1, att=['unsigned'])
 typeNat1['c_alias'] = 'uint8_t'
 typeNat1['llvm_alias'] = 'i1'
-typeNat8  = hlir_type_integer("Nat8", 8, att=['unsigned'])
+typeNat8 = hlir_type_integer("Nat8", 8, att=['unsigned'])
 typeNat8['c_alias'] = 'uint8_t'
 typeNat8['llvm_alias'] = 'i8'
 typeNat16 = hlir_type_integer("Nat16", 16, att=['unsigned'])
@@ -61,7 +61,7 @@ typeFloat64['c_alias'] = 'double'
 typeFloat64['llvm_alias'] = 'double'
 
 
-typeChar = copy.copy(typeNat8)
+typeChar = hlir_type_integer("Nat8", 8, att=['unsigned'])
 typeChar['c_alias'] = 'char'
 typeChar['llvm_alias'] = 'i8'
 typeStr = hlir_type_pointer(hlir_type_array(typeChar))

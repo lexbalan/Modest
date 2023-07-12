@@ -5,14 +5,13 @@
 import os
 import argparse
 import importlib
-from opt import *
+
 import error
+from opt import *
 import core.trans as trans
 
 
 DEFAULT_BACKEND = 'llvm'
-
-src_dirname = ""
 
 
 parser = argparse.ArgumentParser(
@@ -31,12 +30,9 @@ args = parser.parse_args()
 
 
 def main():
-  global src_dirname
-
-  print(os.getcwd())
+  #print(os.getcwd())
 
   path_lib = os.getenv('MODEST_LIB')
-  #print("path_lib = %s" % path_lib)
   if path_lib == None:
     fatal("MODEST_LIB required")
 
@@ -47,7 +43,7 @@ def main():
   # parse features (ex. -funsafe)
   if args.feature != None:
     for feature in args.feature:
-      trans.features_set(feature)
+      features_set(feature)
 
   # parse modifiers (-mbackend=c)
   # and change default settings
@@ -62,27 +58,23 @@ def main():
   # is header?
   splittded_name = src_name.split(".")
   if splittded_name[-1] == 'hm':
-    trans.features_set('header')
+    features_set('header')
 
   src_abspath = os.path.abspath(src_name)
-  #print("ABS: " + src_abspath)
   src_dirname = os.path.dirname(src_abspath)
-  #print("DIR: " + src_dirname)
 
   settings_set('path', src_dirname)
 
   trans.init()
 
-  m = trans.translate(src_name)
-  text = m['text']
-  context = m['context']
+  module = trans.translate(src_name)
 
   if error.errcnt > 0:
     #error.fatal("%d errors occurred" % error.errcnt)
     exit(1)
 
   # loading backend
-  backend_name = trans.settings_get('backend')
+  backend_name = settings_get('backend')
   backend = importlib.import_module("backend." + backend_name)
 
   # print output
@@ -91,8 +83,7 @@ def main():
   else:
     outname = splittded_name[0]
 
-
-  backend.run(text, trans.strpool, outname)
+  backend.run(module, outname)
 
 
 

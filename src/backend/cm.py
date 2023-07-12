@@ -521,7 +521,11 @@ def print_import(dirname, x):
   o("%s %s" % (dirname, s))
 
 
-def run(module, strs, outname):
+def run(module, outname):
+
+  text = module['text']
+  strs = module['strings']
+
   is_header = 'header' in features
 
   if is_header:
@@ -534,7 +538,7 @@ def run(module, strs, outname):
 
   prev_ik = ('', '')
 
-  for x in module:
+  for x in text:
     o("\n")
 
     isa = x['isa']
