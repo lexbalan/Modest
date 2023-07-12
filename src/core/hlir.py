@@ -1,9 +1,7 @@
 
 
 import copy
-
-
-typePointerSize = 4
+from opt import settings_get
 
 
 def nbytes_for_bits(x):
@@ -43,12 +41,13 @@ def hlir_type_float(aka, size=0, att=[], ti=None):
 
 
 def hlir_type_pointer(to, att=[], ti=None):
+  pointer_size = settings_get('pointer_size')
   return {
     'isa': 'type',
     'kind': 'pointer',
     'to': to,
-    'size': typePointerSize,
-    'power': typePointerSize * 8,
+    'size': pointer_size,
+    'power': pointer_size * 8,
     'att': att,
     'ti': ti
   }

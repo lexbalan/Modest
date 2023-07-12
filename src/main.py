@@ -1,17 +1,18 @@
 #
 # ../mcc -o main -mbackend=printer_c -mopt=speed -funsafe main.cm
 #
-
 import os
 import argparse
 import importlib
 
-import error
 from opt import *
+
+settings_set('pointer_size', 8)
+settings_set('backend', 'llvm')
+
+
+import error
 import core.trans as trans
-
-
-DEFAULT_BACKEND = 'llvm'
 
 
 parser = argparse.ArgumentParser(
@@ -38,7 +39,7 @@ def main():
 
   # set default settings
   settings_set('library', path_lib)
-  settings_set('backend', DEFAULT_BACKEND)
+
 
   # parse features (ex. -funsafe)
   if args.feature != None:
