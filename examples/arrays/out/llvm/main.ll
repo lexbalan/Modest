@@ -1,10 +1,10 @@
 
-@str_0 = private constant [15 x i8] c"array example\0A\00"
-@str_1 = private constant [16 x i8] c"array[%d] = %d\0A\00"
-@str_2 = private constant [25 x i8] c"array of arrays example\0A\00"
-@str_3 = private constant [18 x i8] c"arr[%d][%d] = %d\0A\00"
-@str_4 = private constant [11 x i8] c"arr[%d] = \00"
-@str_5 = private constant [3 x i8] c"%d\00"
+@str_1 = private constant [15 x i8] c"array example\0A\00"
+@str_2 = private constant [14 x i8] c"arr[%d] = %d\0A\00"
+@str_3 = private constant [25 x i8] c"array of arrays example\0A\00"
+@str_4 = private constant [18 x i8] c"arr[%d][%d] = %d\0A\00"
+@str_5 = private constant [11 x i8] c"arr[%d] = \00"
+@str_6 = private constant [3 x i8] c"%d\00"
 
 %Char = type i8
 %ConstChar = type %Char
@@ -73,21 +73,25 @@ declare %Int @puts(%ConstCharStr)
 declare %Int @ungetc(%Int, %FILE*)
 declare void @perror(%ConstCharStr)
 @array = global [10 x i32] [i32 0, i32 1, i32 2, i32 3, i32 4, i32 5, i32 6, i32 7, i32 8, i32 9]
-define void @arrayExample() {
-  %1 = bitcast [15 x i8]* @str_0 to %ConstCharStr
+define void @arrayPrint([0 x i32]* %arr, i32 %len) {
+; 1---
+; 2---
+  %1 = bitcast [15 x i8]* @str_1 to %ConstCharStr
   %2 = call %Int(%ConstCharStr, ...) @printf (%ConstCharStr %1)
   %i = alloca i32
   store i32 0, i32* %i
   br label %again_1
 again_1:
   %3 = load i32, i32* %i
-  %4 = icmp ult i32 %3, 10
+  %4 = icmp ult i32 %3, %len
   br i1 %4 , label %body_1, label %break_1
 body_1:
-  %5 = bitcast [16 x i8]* @str_1 to %ConstCharStr
+; 1---
+; 2---
+  %5 = bitcast [14 x i8]* @str_2 to %ConstCharStr
   %6 = load i32, i32* %i
   %7 = load i32, i32* %i
-  %8 = getelementptr inbounds [10 x i32], [10 x i32]* @array, i32 0, i32 %7
+  %8 = getelementptr inbounds [0 x i32], [0 x i32]* %arr, i32 0, i32 %7
   %9 = load i32, i32* %8
   %10 = call %Int(%ConstCharStr, ...) @printf (%ConstCharStr %5, i32 %6, i32 %9)
   %11 = load i32, i32* %i
@@ -99,7 +103,9 @@ break_1:
 }
 @arrayOfArrays = global [3 x [3 x i32]] [[3 x i32] [i32 1, i32 2, i32 3], [3 x i32] [i32 4, i32 5, i32 6], [3 x i32] [i32 7, i32 8, i32 9]]
 define void @arrayOfArraysExample() {
-  %1 = bitcast [25 x i8]* @str_2 to %ConstCharStr
+; 1---
+; 2---
+  %1 = bitcast [25 x i8]* @str_3 to %ConstCharStr
   %2 = call %Int(%ConstCharStr, ...) @printf (%ConstCharStr %1)
   %m = alloca i32
   store i32 0, i32* %m
@@ -117,7 +123,9 @@ again_2:
   %6 = icmp ult i32 %5, 3
   br i1 %6 , label %body_2, label %break_2
 body_2:
-  %7 = bitcast [18 x i8]* @str_3 to %ConstCharStr
+; 1---
+; 2---
+  %7 = bitcast [18 x i8]* @str_4 to %ConstCharStr
   %8 = load i32, i32* %m
   %9 = load i32, i32* %n
   %10 = load i32, i32* %m
@@ -148,10 +156,14 @@ again_1:
   %2 = icmp slt %Int %1, 10
   br i1 %2 , label %body_1, label %break_1
 body_1:
-  %3 = bitcast [11 x i8]* @str_4 to %ConstCharStr
+; 1---
+; 2---
+  %3 = bitcast [11 x i8]* @str_5 to %ConstCharStr
   %4 = load %Int, %Int* %i
   %5 = call %Int(%ConstCharStr, ...) @printf (%ConstCharStr %3, %Int %4)
-  %6 = bitcast [3 x i8]* @str_5 to %ConstCharStr
+; 1---
+; 2---
+  %6 = bitcast [3 x i8]* @str_6 to %ConstCharStr
   %7 = load %Int, %Int* %i
   %8 = getelementptr inbounds [10 x i32], [10 x i32]* @array, i32 0, %Int %7
   %9 = call %Int(%ConstCharStr, ...) @scanf (%ConstCharStr %6, i32* %8)
@@ -164,10 +176,18 @@ break_1:
 }
 
 define %Int @main() {
+  %arrx = alloca [10 x i16]
+  %1 = getelementptr inbounds [10 x i16], [10 x i16]* %arrx, i32 0, i64 0
+  store i16 10, i16* %1
   call void() @fillArray ()
-  %1 = bitcast [10 x i32]* @array to [0 x i32]*
-  call void([0 x i32]*, i32) @sortBubble ([0 x i32]* %1, i32 10)
-  call void() @arrayExample ()
+; 1---
+; 2---
+  %2 = bitcast [10 x i32]* @array to [0 x i32]*
+  call void([0 x i32]*, i32) @sortBubble ([0 x i32]* %2, i32 10)
+; 1---
+; 2---
+  %3 = bitcast [10 x i32]* @array to [0 x i32]*
+  call void([0 x i32]*, i32) @arrayPrint ([0 x i32]* %3, i32 10)
   ret %Int 0
 }
 

@@ -1,5 +1,6 @@
 
 #include <stdint.h>
+#include <string.h>
 
 #include <stdio.h>
 
@@ -7,11 +8,11 @@
 
 uint32_t array[arraySize] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
-void arrayExample() {
+void arrayPrint(uint32_t *arr, uint32_t len) {
 	printf("array example\n");
 	uint32_t i = 0;
-	while(i < arraySize) {
-		printf("array[%d] = %d\n", i, array[i]);
+	while(i < len) {
+		printf("arr[%d] = %d\n", i, arr[i]);
 		i = i + 1;
 	}
 }
@@ -43,9 +44,11 @@ void fillArray() {
 void sortBubble(uint32_t *arr, uint32_t len);
 
 int main() {
+	uint16_t arrx[10];
+	arrx[0] = 10;
 	fillArray();
 	sortBubble((uint32_t*)&array[0], 10);
-	arrayExample();
+	arrayPrint((uint32_t*)&array[0], 10);
 	return 0;
 }
 

@@ -7,11 +7,11 @@ const arraySize = 10
 var array : [arraySize]Nat32 := [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 
-func arrayExample () -> Unit {
+func arrayPrint (arr : *[]Nat32, len : Nat32) -> Unit {
 	printf("array example\n")
 	var i : Nat32 := 0
-	while i < arraySize {
-		printf("array[%d] = %d\n", i, array[i])
+	while i < len {
+		printf("arr[%d] = %d\n", i, arr[i])
 		i := i + 1
 	}
 }
@@ -46,9 +46,11 @@ func sortBubble (arr : *[]Nat32, len : Nat32) -> Unit
 
 
 func main () -> Int32 {
+	var arrx : [10]Nat16
+	arrx[0] := 10
 	fillArray()
 	sortBubble(&array, 10)
-	arrayExample()
+	arrayPrint(&array, 10)
 	return 0
 }
 

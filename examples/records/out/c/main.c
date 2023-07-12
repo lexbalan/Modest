@@ -1,8 +1,13 @@
 
 #include <stdint.h>
+#include <string.h>
 
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 typedef struct {
 	float x;
@@ -50,9 +55,15 @@ float lineLength(Line line) {
 	return len;
 }
 
+Point *ptr_p;
+
 int main() {
 	const float len = lineLength(line);
 	printf("line length = %f\n", len);
+	ptr_p = malloc(sizeof(Point));
+	ptr_p->x = 10.0;
+	ptr_p->y = 20.0;
+	printf("point(%f, %f)\n", ptr_p->x, ptr_p->y);
 	return 0;
 }
 

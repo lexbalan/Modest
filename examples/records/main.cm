@@ -2,6 +2,7 @@
 
 include "libc/math.hm"
 include "libc/stdio.hm"
+include "libc/libc.hm"
 
 
 type Point record {
@@ -46,9 +47,27 @@ func lineLength (line : Line) -> Float {
 }
 
 
+var ptr_p : *Point
+
+func ptr_example () -> Unit {
+  // by pointer (!)
+  ptr_p := malloc(sizeof(Point)) to *Point
+
+  ptr_p.x := 10
+  ptr_p.y := 20
+
+  printf("point(%f, %f)\n", ptr_p.x, ptr_p.y)
+}
+
+
 func main () -> Int {
+  // by value
   let len = lineLength(line)
   printf("line length = %f\n", len)
+
+
+  ptr_example()
+
   return 0
 }
 

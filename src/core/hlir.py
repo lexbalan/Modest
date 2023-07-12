@@ -207,7 +207,7 @@ def hlir_value_var(id, type, init=None, att=[], ti=None):
     'id': id,
     'type': type,
     'init': init,
-    'att': ['adr', 'var'] + att,
+    'att': ['var'] + att,
     'ti': ti
   }
 
@@ -254,7 +254,7 @@ def hlir_value_index_array(array, index, att=[], ti=None):
     'array': array,
     'index': index,
     'type': array['type']['of'],
-    'att': ['adr'] + att,
+    'att': att,
     'ti': ti
   }
 
@@ -266,7 +266,7 @@ def hlir_value_index_array_by_ptr(ptr, index, att=[], ti=None):
     'pointer': ptr,
     'index': index,
     'type': ptr['type']['to']['of'],
-    'att': ['adr'] + att,
+    'att': att,
     'ti': ti
   }
 
@@ -279,7 +279,7 @@ def hlir_value_access_record(record, field, att=[], ti=None):
     'field': field,
     'record_type': record['type'],
     'type': field['type'],
-    'att': ['adr'] + att,
+    'att': att,
     'ti': ti
   }
 
@@ -292,7 +292,7 @@ def hlir_value_access_record_by_ptr(record, field, att=[], ti=None):
     'field': field,
     'record_type': record['type']['to'],
     'type': field['type'],
-    'att': ['adr'] + att,
+    'att': att,
     'ti': ti
   }
 

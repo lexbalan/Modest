@@ -457,7 +457,7 @@ def do_value_expr_un(x):
 
     t = to
 
-    return hlir_value_un(x['kind'], val, t, att=['adr'], ti=x['ti'])
+    return hlir_value_un(x['kind'], val, t, att=[], ti=x['ti'])
 
 
   if x['kind'] == 'ref':
@@ -597,7 +597,7 @@ def do_value_expr_access(x):
   if type.is_bad(field['type']):
     return hlir_value_bad(x['right']['ti'])
 
-  attributes = ['adr']
+  attributes = []
   if not ptr_access:
     if value_is_immutable(r):
       attributes.append('immutable')
@@ -899,7 +899,7 @@ def do_stmt_var(x):
     return stmt_create_bad()
 
 
-  var_value = hlir_value_var(id, t, att=['adr', 'local'], ti=x['ti'])
+  var_value = hlir_value_var(id, t, att=['local'], ti=x['ti'])
 
   module['context'].value_add(id['str'], var_value)
 
@@ -958,6 +958,10 @@ def do_stmt_let(x):
   }
 
 
+def is_lvalue(x):
+  return x['kind'] in [
+    'var', 'access', 'access_ptr', 'index', 'index_ptr', 'deref'
+  ]
 
 def do_stmt_assign(x):
   l = do_value(x['left'])
@@ -967,7 +971,7 @@ def do_stmt_assign(x):
     return stmt_create_bad()
 
   # left is var?
-  if not value_attribute_check(l, 'adr'):
+  if not is_lvalue(l):
     error("illegal left", x['left'])
     return stmt_create_bad()
 

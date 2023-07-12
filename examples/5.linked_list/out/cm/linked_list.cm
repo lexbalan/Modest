@@ -17,12 +17,12 @@ type List record {
 
 
 func linked_list_create () -> *List {
-	let list = malloc(sizeof(List)) to *List
+	let list = malloc(sizeof(List))
 	if list == nil {
 		return nil
 	}
-	list.head := nil
-	list.tail := nil
+	<access_ptr> := nil
+	<access_ptr> := nil
 	return list
 }
 
@@ -31,7 +31,7 @@ func linked_list_size_get (list : *List) -> Nat32 {
 	if list == nil {
 		return 0
 	}
-	return list.size
+	return <access_ptr>
 }
 
 
@@ -39,7 +39,7 @@ func linked_list_first_get (list : *List) -> *Node {
 	if list == nil {
 		return nil
 	}
-	return list.head
+	return <access_ptr>
 }
 
 
@@ -47,18 +47,18 @@ func linked_list_last_get (list : *List) -> *Node {
 	if list == nil {
 		return nil
 	}
-	return list.tail
+	return <access_ptr>
 }
 
 
 func linked_list_node_create () -> *Node {
-	let node = malloc(sizeof(Node)) to *Node
+	let node = malloc(sizeof(Node))
 	if node == nil {
 		return nil
 	}
-	node.prev := nil
-	node.next := nil
-	node.link := nil
+	<access_ptr> := nil
+	<access_ptr> := nil
+	<access_ptr> := nil
 	return node
 }
 
@@ -67,7 +67,7 @@ func linked_list_node_next_get (node : *Node) -> *Node {
 	if node == nil {
 		return nil
 	}
-	return node.next
+	return <access_ptr>
 }
 
 
@@ -75,7 +75,7 @@ func linked_list_node_prev_get (node : *Node) -> *Node {
 	if node == nil {
 		return nil
 	}
-	return node.prev
+	return <access_ptr>
 }
 
 
@@ -83,7 +83,7 @@ func linked_list_node_link_get (node : *Node) -> *Unit {
 	if node == nil {
 		return nil
 	}
-	return node.link
+	return <access_ptr>
 }
 
 
@@ -91,16 +91,16 @@ func linked_list_insert_node (list : *List, new_node : *Node) -> *Node {
 	if list == nil or new_node == nil {
 		return nil
 	}
-	if list.head == nil {
-		list.head := new_node
+	if <access_ptr> == nil {
+		<access_ptr> := new_node
 	}
-	if list.tail != nil {
-		let old_tail = list.tail
-		old_tail.next := new_node
-		new_node.prev := old_tail
+	if <access_ptr> != nil {
+		let old_tail = <access_ptr>
+		<access_ptr> := new_node
+		<access_ptr> := old_tail
 	}
-	list.tail := new_node
-	list.size := list.size + 1
+	<access_ptr> := new_node
+	<access_ptr> := <access_ptr> + 1
 	return new_node
 }
 
@@ -113,7 +113,7 @@ func linked_list_insert (list : *List, link : *Unit) -> *Node {
 	if new_node == nil {
 		return nil
 	}
-	new_node.link := link
+	<access_ptr> := link
 	let node = linked_list_insert_node(list, new_node)
 	if node == nil {
 		free(new_node)

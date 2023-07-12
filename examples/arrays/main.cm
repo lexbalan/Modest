@@ -8,11 +8,11 @@ const arraySize = 10
 var array : [arraySize]Nat32 := [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 
-func arrayExample () -> Unit {
+func arrayPrint (arr : *[]Nat32, len : Nat32) -> Unit {
   printf("array example\n")
   var i : Nat32 := 0
-  while i < arraySize {
-    printf("array[%d] = %d\n", i, array[i])
+  while i < len {
+    printf("arr[%d] = %d\n", i, arr[i])
     i := i + 1
   }
 }
@@ -35,8 +35,6 @@ func arrayOfArraysExample () -> Unit {
 }
 
 
-
-
 func fillArray () -> Unit {
   //let arr = array
 
@@ -50,13 +48,24 @@ func fillArray () -> Unit {
 
 
 func sortBubble (arr : *[]Nat32, len : Nat32) -> Unit
+//func sortBubble2 (arr : [10]Nat32, len : Nat32) -> Unit
+
+// 1. массивы при передаче не загружаются (см call)
+// 2. массивы в парам листе идут как указатели на массивы
+// 3. внутри функции создается сам массив,
+// в него коприуем то что идет по полученной ссылке
 
 func main () -> Int {
-  //arrayExample()
+  var arrx : [10]Nat16
+  arrx[0] := 10
+  //arrayPrint()
   //arrayOfArraysExample()
+  //var local_array : [10]Nat32
   fillArray()
+  //sortBubble2(array, 10)
+  //arrayPrint(&array, 10)
   sortBubble(&array, 10)
-  arrayExample()
+  arrayPrint(&array, 10)
   return 0
 }
 
@@ -79,4 +88,26 @@ func sortBubble (arr : *[]Nat32, len : Nat32) -> Unit {
     }
   }
 }
+
+
+
+
+/*
+func sortBubble2 (arr : [10]Nat32, len : Nat32) -> Unit {
+  var end : Nat1 := false
+  while not end {
+    end := true
+    var i : Nat32 := 0
+    while i < (len - 1) {
+      let a = arr[i]
+      let b = arr[i+1]
+      if a > b {
+        arr[i] := b
+        arr[i+1] := a
+        end := 0
+      }
+      i := i + 1
+    }
+  }
+}*/
 

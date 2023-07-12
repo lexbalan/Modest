@@ -1,5 +1,6 @@
 
-@str_0 = private constant [18 x i8] c"line length = %f\0A\00"
+@str_0 = private constant [15 x i8] c"point(%f, %f)\0A\00"
+@str_1 = private constant [18 x i8] c"line length = %f\0A\00"
 
 %Char = type i8
 %ConstChar = type %Char
@@ -150,6 +151,43 @@ declare %Int @puts(%ConstCharStr)
 declare %Int @ungetc(%Int, %FILE*)
 declare void @perror(%ConstCharStr)
 
+
+%DevT = type i16
+%InoT = type i32
+%BlkCntT = type i32
+%OffT = type i32
+%NlinkT = type i16
+%ModeT = type i32
+%UIDT = type i16
+%GIDT = type i8
+%BlkSizeT = type i16
+%TimeT = type i32
+
+%DIR = type opaque
+declare i8* @malloc(%SizeT)
+declare i8* @memset(i8*, %Int, %SizeT)
+declare i8* @memcpy(i8*, i8*, %SizeT)
+declare %Int @memcmp(i8*, i8*, %SizeT)
+declare void @free(i8*)
+declare %Int @strncmp(%ConstChar*, %ConstChar*, %SizeT)
+declare %Int @strcmp(%ConstChar*, %ConstChar*)
+declare %Char* @strcpy(%Char*, %ConstChar*)
+declare %SizeT @strlen(%ConstChar*)
+declare %Int @ftruncate(%Int, %OffT)
+
+
+declare %Int @creat([0 x i8]*, %ModeT)
+declare %Int @open([0 x i8]*, %Int)
+declare %Int @read(%Int, i8*, i32)
+declare %Int @write(%Int, i8*, i32)
+declare %OffT @lseek(%Int, %OffT, %Int)
+declare %Int @close(%Int)
+declare void @exit(%Int)
+declare %DIR* @opendir([0 x i8]*)
+declare %Int @closedir(%DIR*)
+declare [0 x i8]* @getcwd([0 x i8]*, %SizeT)
+declare [0 x i8]* @getenv([0 x i8]*)
+
 %Point = type {
 	%Float,
 	%Float
@@ -209,12 +247,36 @@ define %Float @lineLength(%Line %line) {
   %26 = call %Double(%Double) @sqrt (%Double %25)
   ret %Double %26
 }
+@ptr_p = global %Point* zeroinitializer
+define void @ptr_example() {
+  %1 = getelementptr  %Point, %Point* null, i32 1
+  %2 = ptrtoint  %Point* %1 to i64
+  %3 = call i8*(%SizeT) @malloc (i64 %2)
+  %4 = bitcast i8* %3 to %Point*
+  store %Point* %4, %Point** @ptr_p
+  %5 = load %Point*, %Point** @ptr_p
+  %6 = getelementptr inbounds %Point, %Point* %5, i32 0, i32 0
+  store %Float 0x4024000000000000, %Float* %6
+  %7 = load %Point*, %Point** @ptr_p
+  %8 = getelementptr inbounds %Point, %Point* %7, i32 0, i32 1
+  store %Float 0x4034000000000000, %Float* %8
+  %9 = bitcast [15 x i8]* @str_0 to %ConstCharStr
+  %10 = load %Point*, %Point** @ptr_p
+  %11 = getelementptr inbounds %Point, %Point* %10, i32 0, i32 0
+  %12 = load %Float, %Float* %11
+  %13 = load %Point*, %Point** @ptr_p
+  %14 = getelementptr inbounds %Point, %Point* %13, i32 0, i32 1
+  %15 = load %Float, %Float* %14
+  %16 = call %Int(%ConstCharStr, ...) @printf (%ConstCharStr %9, %Float %12, %Float %15)
+  ret void
+}
 
 define %Int @main() {
   %1 = load %Line, %Line* @line
   %2 = call %Float(%Line) @lineLength (%Line %1)
-  %3 = bitcast [18 x i8]* @str_0 to %ConstCharStr
+  %3 = bitcast [18 x i8]* @str_1 to %ConstCharStr
   %4 = call %Int(%ConstCharStr, ...) @printf (%ConstCharStr %3, %Float %2)
+  call void() @ptr_example ()
   ret %Int 0
 }
 

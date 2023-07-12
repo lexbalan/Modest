@@ -3,6 +3,7 @@
 #define LINKED_LIST_H
 
 #include <stdint.h>
+#include <string.h>
 
 struct List;
 typedef struct List List;
