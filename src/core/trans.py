@@ -94,6 +94,14 @@ def option_get(id):
 
 
 
+
+def is_valid_lvalue(x):
+  return x['kind'] in [
+    'var', 'access', 'access_ptr', 'index', 'index_ptr', 'deref'
+  ]
+
+
+
 def import_add(id, m):
   print("import_add: " + id)
   module['imports'].update({id: m})
@@ -795,14 +803,7 @@ def do_stmt_if(x):
     if stmt_is_bad(e):
       return stmt_create_bad()
 
-  return {
-    'isa': 'stmt',
-    'kind': 'if',
-    'cond': c,
-    'then': t,
-    'else': e,
-    'ti': x['ti']
-  }
+  return hlir_stmt_if(c, t, e, ti=x['ti'])
 
 
 
@@ -816,13 +817,7 @@ def do_stmt_while(x):
   if not type.check(c['type'], type.typeNat1, x['cond']['ti']):
     return stmt_create_bad()
 
-  return {
-    'isa': 'stmt',
-    'kind': 'while',
-    'cond': c,
-    'stmt': s,
-    'ti': x['ti']
-  }
+  return hlir_stmt_while(c, s, ti=x['ti'])
 
 
 
@@ -842,20 +837,15 @@ def do_stmt_return(x):
     if not type.eq(cfunc['type']['to'], type.typeUnit):
       error("expected return value", x)
 
-  return {
-    'isa': 'stmt',
-    'kind': 'return',
-    'value': v,
-    'ti': x['ti']
-  }
+  return hlir_stmt_return(v, ti=x['ti'])
 
 
 def do_stmt_again(x):
-  return {'isa': 'stmt', 'kind': 'again', 'ti': x['ti']}
+  return hlir_stmt_again(x['ti'])
 
 
 def do_stmt_break(x):
-  return {'isa': 'stmt', 'kind': 'break', 'ti': x['ti']}
+  return hlir_stmt_break(x['ti'])
 
 
 def do_stmt_var(x):
@@ -903,14 +893,7 @@ def do_stmt_var(x):
 
   module['context'].value_add(id['str'], var_value)
 
-  return {
-    'isa': 'stmt',
-    'kind': 'asg_stmt_def_var',
-    'id': id,
-    'type': t,
-    'value': v,
-    'ti': x['ti']
-  }
+  return hlir_stmt_def_var(id, t, v, ti=x['ti'])
 
 
 
@@ -949,19 +932,11 @@ def do_stmt_let(x):
 
   module['context'].value_add(id['str'], const_value)
 
-  return {
-    'isa': 'stmt',
-    'kind': 'asg_stmt_def_let',
-    'id': id,
-    'value': v,
-    'ti': x['ti']
-  }
+  return hlir_stmt_def_const(id, v, ti=x['ti'])
 
 
-def is_lvalue(x):
-  return x['kind'] in [
-    'var', 'access', 'access_ptr', 'index', 'index_ptr', 'deref'
-  ]
+
+
 
 def do_stmt_assign(x):
   l = do_value(x['left'])
@@ -970,8 +945,7 @@ def do_stmt_assign(x):
   if value_is_bad(l) or value_is_bad(r):
     return stmt_create_bad()
 
-  # left is var?
-  if not is_lvalue(l):
+  if not is_valid_lvalue(l):
     error("illegal left", x['left'])
     return stmt_create_bad()
 
@@ -983,13 +957,8 @@ def do_stmt_assign(x):
   r = value_cast_implicit(r, l['type'], r['ti'])
   type.check(l['type'], r['type'], r['ti'])
 
-  return {
-    'isa': 'stmt',
-    'kind': 'assign',
-    'left': l,
-    'right': r,
-    'ti': x['ti']
-  }
+  return hlir_stmt_assign(l, r, ti=x['ti'])
+
 
 
 
@@ -997,12 +966,7 @@ def do_stmt_value(x):
   v = do_value(x['value'])
   if value_is_bad(v):
     return stmt_create_bad()
-  return {
-    'isa': 'stmt',
-    'kind': 'value',
-    'value': v,
-    'ti': x['ti']
-  }
+  return hlir_stmt_value(v, ti=x['ti'])
 
 
 
@@ -1037,12 +1001,7 @@ def do_stmt_block(x):
 
   module['context'] = module['context'].parent_get()
 
-  return {
-    'isa': 'stmt',
-    'kind': 'block',
-    'stmts': stmts,
-    'ti': x['ti']
-  }
+  return hlir_stmt_block(stmts, ti=x['ti'])
 
 
 
