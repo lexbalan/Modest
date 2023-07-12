@@ -829,19 +829,25 @@ def do_stmt_return(x):
   global cfunc
   assert(cfunc != None)
 
-  v = None  # если у return нет значения вернем Null в поле #value
-  if x['value'] != None:
-    v = do_value(x['value'])
-    if value_is_bad(v):
-      return hlir_stmt_bad()
+  no_ret_func = type.eq(cfunc['type']['to'], type.typeUnit)
 
-    v = value_cast_implicit(v, cfunc['type']['to'], v['ti'])
-    type.check(v['type'], cfunc['type']['to'], x['value']['ti'])
-  else:
-    if not type.eq(cfunc['type']['to'], type.typeUnit):
+  if x['value'] == None:
+    if not no_ret_func:
       error("expected return value", x)
+    return hlir_stmt_return(ti=x['ti'])
+
+  if no_ret_func:
+    error("unexpected return value", x)
+
+  v = do_value(x['value'])
+  if value_is_bad(v):
+    return hlir_stmt_bad()
+
+  v = value_cast_implicit(v, cfunc['type']['to'], v['ti'])
+  type.check(v['type'], cfunc['type']['to'], x['value']['ti'])
 
   return hlir_stmt_return(v, ti=x['ti'])
+
 
 
 def do_stmt_again(x):
@@ -892,9 +898,8 @@ def do_stmt_var(x):
     error("local id redefinition", x['id']['ti'])
     return hlir_stmt_bad()
 
-
+  #
   var_value = hlir_value_var(id, t, att=['local'], ti=x['ti'])
-
   module['context'].value_add(id['str'], var_value)
 
   return hlir_stmt_def_var(id, t, v, ti=x['ti'])
@@ -909,20 +914,6 @@ def do_stmt_let(x):
     return hlir_stmt_bad()
 
   vtype = v['type']
-
-  # отключено, см ниже про механизм 'locals'
-  # let это не всегда константа, чаще всего это immutable переменная
-  # вычисляемая в runtime;
-  # Композитные generic значения все же следует вычислять по месту
-  # (по крайней мере те что не полностью константны)
-  # А для compile-time let не нужно генерить стейтмент,
-  # просто связываем константное значение с идентификатором
-  """if settings_check('backend', 'llvm'):
-    if value_is_immediate(v):
-      if not (type.is_record(vtype) or type.is_array(vtype)):
-        module['context'].value_add(id['str'], v)
-        return hlir_stmt_bad()"""
-
 
   # если это immediate константа, то она подставится принтером llvm
   # через механизм 'locals_' (!а здесь само значение не идет)

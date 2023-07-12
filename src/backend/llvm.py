@@ -1068,9 +1068,9 @@ def print_stmt(x):
     print_stmt_if(x)
   elif k == 'while':
     print_stmt_while(x)
-  elif k == 'asg_stmt_def_var':
+  elif k == 'def_var':
     print_stmt_def_var(x)
-  elif k == 'asg_stmt_def_let':
+  elif k == 'def_let':
     print_stmt_def_let(x)
   elif k == 'break':
     print_stmt_break()

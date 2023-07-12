@@ -353,7 +353,7 @@ def hlir_stmt_block(stmts, ti=None):
 def hlir_stmt_def_var(id, type, init_value=None, ti=None):
   return {
     'isa': 'stmt',
-    'kind': 'asg_stmt_def_var',
+    'kind': 'def_var',
     'id': id,
     'type': type,
     'value': init_value,
@@ -364,7 +364,7 @@ def hlir_stmt_def_var(id, type, init_value=None, ti=None):
 def hlir_stmt_def_const(id, value, ti=None):
   return {
     'isa': 'stmt',
-    'kind': 'asg_stmt_def_let',
+    'kind': 'def_let',
     'id': id,
     'value': value,
     'ti': ti
