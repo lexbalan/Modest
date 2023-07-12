@@ -521,6 +521,7 @@ def print_stmt(x):
   else: o("<stmt %s>" % str(x))
 
 
+# not works
 def print_arrays(arrays):
   for array in arrays:
     o("\n"); ind()

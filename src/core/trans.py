@@ -147,12 +147,7 @@ def do_field(x, is_last=False):
   if type.is_forbidden_var(t, zero_array_forbidden=not is_last):
     error("unsuitable type", x['type'])
 
-  return {
-    'isa': 'field',
-    'id': x['id'],
-    'type': t,
-    'ti': x['ti']
-  }
+  return hlir_field(x['id'], t, ti=x['ti'])
 
 
 #
@@ -715,12 +710,7 @@ def do_value_expr_record(x):
 
 
     # создаем поле для типа generic записи
-    field = {
-      'isa': 'field',
-      'id': id,
-      'type': select_type(val),
-      'ti': val['ti']
-    }
+    field = hlir_field(id, select_type(val), ti=val['ti'])
     fields.append(field)
 
   typ = hlir_type_record(fields, att=['generic'], ti=x['ti'])
@@ -1112,17 +1102,8 @@ def def_const(x):
   global attributes
   v['att'].extend(attributes)
 
-  definition = {
-    'isa': 'definition',
-    'kind': 'const',
-    'const': v,
-    'id': id,
-    'att': [],
-    'value': v,
-  }
-
+  definition = hlir_def_const(id, v, ti=x['ti'])
   v['definition'] = definition
-
   definition['att'].extend(attributes)
 
   return definition
@@ -1170,14 +1151,7 @@ def def_type(x):
     return None
 
 
-  definition = {
-    'isa': 'definition',
-    'kind': 'type',
-    'type': t,  # именно t!
-    'id': x['id'],
-    'att': [],
-    'afterdef': already_declared,
-  }
+  definition = hlir_def_type(x['id'], t, already_declared, ti=x['ti'])
 
   nt['definition'] = definition
 
@@ -1215,15 +1189,8 @@ def def_var(x):
 
   module['context'].value_add(x['field']['id']['str'], var)
 
-  definition = {
-    'isa': 'definition',
-    'kind': 'var',
-    'var': var,
-    'init': init_value,
-    'att': [],
-    'ti': x['ti']
-  }
 
+  definition = hlir_def_var(var, init_value, ti=x['ti'])
   var['definition'] = definition
 
   return definition
@@ -1274,14 +1241,7 @@ def def_func(x):
   # add function to global context
   module['context'].value_add(func_id['str'], cfunc)
 
-  definition = {
-    'isa': 'definition',
-    'kind': 'func',
-    'func': cfunc,
-    'att': [],
-    'ti': func_ti
-  }
-
+  definition = hlir_def_func(cfunc, ti=func_ti)
   cfunc['definition'] = definition
 
   cfunc = old_cfunc
@@ -1311,13 +1271,7 @@ def decl_type(x):
   module['context'].type_add(id['str'], nt)
 
   # С не печатает opaque, но LLVM печатает (!)
-  declaration = {
-    'isa': 'declaration',
-    'kind': 'type',
-    'type': nt,
-    'att': ['undefined'],
-    'id': x['id']
-  }
+  declaration = hlir_decl_type(x['id'], nt, ti=x['ti'])
 
   nt['declaration'] = declaration
 
@@ -1342,16 +1296,8 @@ def decl_func(x):
 
   module['context'].value_add(id['str'], func)
 
-  declaration = {
-    'isa': 'declaration',
-    'kind': 'func',
-    'func': func,
-    'att': ['undefined'],
-    'ti': x['ti']
-  }
-
+  declaration = hlir_decl_func(func, ti=x['ti'])
   func['declaration'] = declaration
-
   declaration['att'].extend(attributes)
 
   if x['extern']:
@@ -1366,7 +1312,9 @@ def proc(ast):
   global module
   old_module = module
 
+
   module = {
+    'isa': 'module',
     'id': "<>",
     #'path': srcname,
     'imports': {},

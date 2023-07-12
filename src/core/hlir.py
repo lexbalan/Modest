@@ -81,6 +81,26 @@ def hlir_type_array(of, volume=None, att=[], ti=None):
   }
 
 
+def hlir_field(id, type, ti=None):
+  return {
+    'isa': 'field',
+    'id': id,
+    'type': type,
+    'ti': ti
+  }
+
+
+def hlir_type_record(fields=[], att=[], ti=None):
+  return {
+    'isa': 'type',
+    'kind': 'record',
+    'fields': fields,
+    'size': 0,
+    'att': att,
+    'ti': ti
+  }
+
+
 # дефолт аргумент не работает!!!!
 def hlir_type_func(params, to, att=[], ti=None):
   tt = {
@@ -95,17 +115,6 @@ def hlir_type_func(params, to, att=[], ti=None):
   #if 'arghack' in att:
   #  print("OOPOOPOOPP22")
   return tt
-
-
-def hlir_type_record(fields=[], att=[], ti=None):
-  return {
-    'isa': 'type',
-    'kind': 'record',
-    'fields': fields,
-    'size': 0,
-    'att': att,
-    'ti': ti
-  }
 
 
 
@@ -426,4 +435,73 @@ def hlir_stmt_return(value=None, ti=None):
     'value': value,
     'ti': ti
   }
+
+
+
+
+
+
+def hlir_decl_type(id, type, ti=None):
+  return {
+    'isa': 'declaration',
+    'kind': 'type',
+    'id': id,
+    'type': type,
+    'att': ['undefined'],
+  }
+
+
+def hlir_decl_func(func, ti=None):
+  return {
+    'isa': 'declaration',
+    'kind': 'func',
+    'func': func,
+    'att': ['undefined'],
+    'ti': ti
+  }
+
+
+def hlir_def_type(id, type, already_declared=False, ti=None):
+  return {
+    'isa': 'definition',
+    'kind': 'type',
+    'id': id,
+    'type': type,  # именно t!
+    'att': [],
+    'afterdef': already_declared,
+    'ti': ti
+  }
+
+
+def hlir_def_const(id, value, ti=None):
+  return {
+    'isa': 'definition',
+    'kind': 'const',
+    'const': value,
+    'value': value,
+    'id': id,
+    'att': [],
+  }
+
+
+def hlir_def_var(var, init, ti=None):
+  return {
+    'isa': 'definition',
+    'kind': 'var',
+    'var': var,
+    'init': init,
+    'att': [],
+    'ti': ti
+  }
+
+
+def hlir_def_func(func, ti=None):
+  return {
+    'isa': 'definition',
+    'kind': 'func',
+    'func': func,
+    'att': [],
+    'ti': ti
+  }
+
 
