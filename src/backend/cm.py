@@ -246,7 +246,9 @@ def print_value_expr_access(v, ctx):
 
 
 def print_value_expr_access_ptr(v, ctx):
-  print_value_expr_access(v, ctx)
+  left = v['pointer']
+  need_wrap = precedence(left['kind']) < precedence('access')
+  print_value(left, need_wrap); o("."); o(v['field']['id']['str'])
 
 
 def print_cast(t, v, ctx=[]):
@@ -546,7 +548,7 @@ def run(module, outname):
   else:
     outname = outname + '.cm'
 
-  printer_open(outname)
+  output_open(outname)
 
 
   prev_ik = ('', '')
@@ -581,7 +583,7 @@ def run(module, outname):
 
   o("\n\n")
 
-  printer_close()
+  output_close()
 
 
 

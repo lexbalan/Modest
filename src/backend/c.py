@@ -761,7 +761,7 @@ def run(module, outname):
   else:
     outname = outname + '.c'
 
-  printer_open(outname)
+  output_open(outname)
 
   guardname = ''
   if is_header:
@@ -813,7 +813,7 @@ def run(module, outname):
     lo("#endif  /* %s */" % guardname)
   o("\n")
 
-  printer_close()
+  output_close()
 
 
 

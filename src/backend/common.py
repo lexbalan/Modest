@@ -18,6 +18,12 @@ def indent_down():
   indent = indent - 1
 
 
+def ind():
+  global indent
+  f.write(INDENT_SYMBOL * indent)
+
+
+
 def o(s):
   global f
   f.write(s)
@@ -29,12 +35,7 @@ def lo(s):
   f.write(s)
 
 
-def ind():
-  global indent
-  f.write(INDENT_SYMBOL * indent)
-
-
-def printer_open(fname):
+def output_open(fname):
   global f
   dirname = os.path.dirname(fname)
   if dirname != '':
@@ -42,13 +43,11 @@ def printer_open(fname):
   f = open(fname, "w")
 
 
-def printer_close():
+def output_close():
   global f
   f.close()
 
-def comma():
-  o(", ")
 
-def space():
-  o(" ")
+
+
 

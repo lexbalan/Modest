@@ -109,9 +109,9 @@ def insertvalue(v, x, pos):
   #%5 = insertvalue %Type24 zeroinitializer, %Int32 1, 0
   reg = operation('insertvalue')
   print_type_value(v)
-  comma()
+  o(", ")
   print_type_value(x)
-  comma()
+  o(", ")
   o('%d' % pos)
   return {
     'isa': 'llvm_value',
@@ -139,7 +139,7 @@ def double_to_hex(f):
 def inline_cast(op, from_type, to_type, val):
   o("%s (" % op)
   print_type(from_type)
-  space()
+  o(" ")
   print_value(val)
   o(" to ")
   print_type(to_type)
@@ -196,7 +196,7 @@ def print_list_by(lst, method):
   i = 0
   while i < len(lst):
     if i > 0:
-      comma()
+      o(", ")
     method(lst[i])
     i = i + 1
 
@@ -295,7 +295,7 @@ def do_ld(x):
   reg = operation('load');
   typ = x['type']
   print_type(typ)
-  comma()
+  o(", ")
   print_type(typ)
   o("* ")
   print_value (x)
@@ -361,7 +361,7 @@ def do_eval_binary (op, x): # ["add", "fadd", x]
   r = do_ld(do_eval(x['right']))
 
   reg = operation_with_type (op, x['left']['type'])
-  space (); print_value (l); comma(); print_value (r)
+  o(" "); print_value (l); o(", "); print_value (r)
 
   return {
     'isa': 'llvm_value',
@@ -407,13 +407,13 @@ def do_eval_expr_un(v):
   if v['kind'] == 'not':
     #%10 = xor i32 %9, -1
     reg = operation('xor');
-    space();
+    o(" ");
     print_type(v['type'])
-    space();
+    o(" ");
     print_value(vx)
     o(", -1")
   else:
-    reg = operation(v['kind']); space(); print_value(vx)
+    reg = operation(v['kind']); o(" "); print_value(vx)
 
   return {
     'isa': 'llvm_value',
@@ -484,11 +484,11 @@ def llvm_getelementptr(rec, rt, indexes, vt):
   # Прикол в том что индекс (i) структуры
   # не может быть i64 (!) (а только i32)
   reg = operation_with_type("getelementptr inbounds", rt)
-  comma()
+  o(", ")
   print_type(rt)
   o("* ")
   print_value(rec)
-  comma()
+  o(", ")
   print_list_by(indexes, print_type_value)
 
   return {
@@ -875,7 +875,7 @@ def ll_store(l, r):
   print_type(r['type'])
   o(" ")
   print_value(r)
-  comma()
+  o(", ")
   print_type(r['type'])
   o("* ")
   print_value(l)
@@ -1273,7 +1273,7 @@ def print_def_func(x):
     print_type(param['type'])
     if param_is_arr:
       o("*")
-    space()
+    o(" ")
     o('%%%s%s' % (prefix, id))
 
     #reg = reg_get()
@@ -1432,7 +1432,7 @@ def print_strings(strings):
 
 def run(module, outname):
   outname = outname + '.ll'
-  printer_open(outname)
+  output_open(outname)
 
   print_strings(module['strings'])
 
@@ -1462,7 +1462,7 @@ def run(module, outname):
       elif k == 'type': print_def_type(x)
 
   o("\n\n")
-  printer_close()
+  output_close()
 
 
 
