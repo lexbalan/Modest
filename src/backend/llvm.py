@@ -1146,7 +1146,7 @@ def print_arrays(arrays):
           'kind': 'var',
           'id': {'isa': 'id', 'str': val['id'], 'ti': None},
           'type': hlir_type_pointer(val['type']),
-          'att': ['local', 'immutable'],
+          'att': ['local'],
           'ti': None
         },
 
@@ -1162,7 +1162,7 @@ def print_arrays(arrays):
           'kind': 'var',
           'id': {'isa': 'id', 'str': '_' + val['id'], 'ti': None},
           'type': hlir_type_pointer(val['type']),
-          'att': ['local', 'immutable'],
+          'att': ['local'],
           'ti': None
         },
 

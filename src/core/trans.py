@@ -94,10 +94,6 @@ def option_get(id):
 
 
 
-def is_valid_lvalue(x):
-  return x['kind'] in [
-    'var', 'access', 'access_ptr', 'index', 'index_ptr', 'deref'
-  ]
 
 
 def stmt_is_bad(x):
@@ -596,9 +592,9 @@ def do_value_expr_access(x):
     return hlir_value_bad(x['right']['ti'])
 
   attributes = []
-  if not ptr_access:
-    if value_is_immutable(r):
-      attributes.append('immutable')
+  #if not ptr_access:
+  #  if value_is_immutable(r):
+  #    attributes.append('immutable')  # 'immutable' is obsolete
 
   if ptr_access:
     return hlir_value_access_record_by_ptr(r, field, ti=x['ti'])
@@ -905,7 +901,7 @@ def do_stmt_let(x):
 
   # если это immediate константа, то она подставится принтером llvm
   # через механизм 'locals_' (!а здесь само значение не идет)
-  const_value = hlir_value_var(id, v['type'], init=None, att=['local', 'immutable'], ti=x['ti'])
+  const_value = hlir_value_const(id, v['type'], init=None, att=['local'], ti=x['ti'])
 
   # check if identifier is free (in current block)
   already = module['context'].value_get(id['str'], recursive=False)
@@ -928,12 +924,8 @@ def do_stmt_assign(x):
   if value_is_bad(l) or value_is_bad(r):
     return hlir_stmt_bad()
 
-  if not is_valid_lvalue(l):
-    error("illegal left", x['left'])
-    return hlir_stmt_bad()
-
   if value_is_immutable(l):
-    error("immutable value", l)
+    error("immutable left", x['left'])
     return hlir_stmt_bad()
 
   # type check
@@ -1225,9 +1217,10 @@ def def_func(x):
   while i < len(params):
     p = params[i]
     p_id = p['id']
-    param = hlir_value_var(p_id, p['type'], att=['param', 'local', 'immutable'])
 
+    param = hlir_value_const(p_id, p['type'], att=['local'])
     module['context'].value_add(p_id['str'], param)
+
     i = i + 1
 
 
@@ -1310,7 +1303,7 @@ def decl_func(x):
 
 def comm_line(x):
   #return None
-  print("ast_comment-line")
+  #print("ast_comment-line")
   y = {
     'isa': 'comment',
     'kind': 'comment-line',
@@ -1323,8 +1316,8 @@ def comm_line(x):
 
 
 def comm_block(x):
-  return None
-  print("ast_comment-block")
+  #return None
+  #print("ast_comment-block")
   y = {
     'isa': 'comment',
     'kind': 'comment-block',

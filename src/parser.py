@@ -725,6 +725,13 @@ class Parser:
     elif self.match('break'):
       s = self.stmt_break()
     else:
+
+      # comment?
+      cl = self.ctok_class()
+      if cl in ['line-comment', 'block-comment']:
+        self.skip()
+        return None
+
       s = self.stmt_expr_value()
 
     if s == None:

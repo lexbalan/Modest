@@ -224,6 +224,7 @@ def hlir_value_func(id, type, att=[], ti=None):
     'ti': ti
   }
 
+
 def hlir_value_var(id, type, init=None, att=[], ti=None):
   return {
     'isa': 'value',
@@ -232,6 +233,20 @@ def hlir_value_var(id, type, init=None, att=[], ti=None):
     'type': type,
     'init': init,
     'att': ['var'] + att,
+    'ti': ti
+  }
+
+
+# hlir_const is an immutable value
+# (even if it is implemented as runtime variable)
+def hlir_value_const(id, type, init=None, att=[], ti=None):
+  return {
+    'isa': 'value',
+    'kind': 'const',
+    'id': id,
+    'type': type,
+    'init': init,
+    'att': [] + att,
     'ti': ti
   }
 

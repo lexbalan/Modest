@@ -396,7 +396,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
   if k in bin_ops: print_value_expr_bin(x, ctx)
   elif k in un_ops: print_value_expr_un(x, ctx)
   elif k == 'num': print_value_expr_num(x, ctx)
-  elif k in ['func', 'var']: print_value_by_id(x, ctx)
+  elif k in ['func', 'var', 'const']: print_value_by_id(x, ctx)
   elif k == 'str': print_value_str(x, ctx)
   elif k == 'record': print_value_record(x, ctx)
   elif k == 'array': print_value_array(x, ctx)
