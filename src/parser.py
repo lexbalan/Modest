@@ -918,16 +918,22 @@ class Parser:
       self.skip()
 
 
-  def def_metadir(self):
+  def def_comment_line(self):
     ti = self.ti()
     x = self.gettok()
-    return {'isa': 'ast_directive', 'kind': 'metadir', 'text': x, 'ti': ti}
+    return {'isa': 'ast_comment', 'kind': 'line', 'text': x, 'ti': ti}
+
+
+  def def_comment_block(self):
+    ti = self.ti()
+    x = self.gettok()
+    return {'isa': 'ast_comment', 'kind': 'block', 'lines': x, 'ti': ti}
 
 
   def def_dir(self):
     ti = self.ti()
     x = self.gettok()
-    return {'isa': 'ast_directive2', 'kind': 'metadir', 'text': x, 'ti': ti}
+    return {'isa': 'ast_directive', 'kind': 'pragma', 'text': x, 'ti': ti}
 
 
   def parse(self, filename):
@@ -968,9 +974,9 @@ class Parser:
         x = self.decl_extern()
 
       elif self.token_class_is('block-comment'):
-        x = self.def_metadir()
+        x = self.def_comment_block()
       elif self.token_class_is('line-comment'):
-        x = self.def_metadir()
+        x = self.def_comment_line()
       elif self.token_class_is('directive'):
         x = self.def_dir()
       elif self.match('import'):

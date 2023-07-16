@@ -61,11 +61,11 @@ def print_type_pointer(t):
     o("*")
 
 
-def print_type_record(t, label=""):
+def print_type_record(t, tag=""):
   o("struct ")
 
-  if label != "":
-    o("%s " % label)
+  if tag != "":
+    o("%s " % tag)
 
   o("{")
   indent_up()
@@ -117,7 +117,7 @@ def print_type(t, print_aka=True):
       return
 
   if type.is_numeric(t): print_type_numeric(t)
-  elif type.is_record(t): print_type_record(t)
+  elif type.is_record(t): print_type_record(t) #, tag=t['id']['str'])
   elif type.is_enum(t): print_type_enum(t)
   elif type.is_pointer(t): print_type_pointer(t)
   elif type.is_array(t): print_type_array(t)
@@ -422,7 +422,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 
 
 def print_stmt_if(x):
-  o("if("); print_value(x['cond']); o(") ")
+  o("if ("); print_value(x['cond']); o(") ")
   print_stmt_block(x['then'])
 
   e = x['else']
@@ -437,7 +437,7 @@ def print_stmt_if(x):
 
 
 def print_stmt_while(x):
-  o("while("); print_value(x['cond']); o(") ")
+  o("while ("); print_value(x['cond']); o(") ")
   print_stmt_block(x['stmt'])
 
 
@@ -645,9 +645,8 @@ def print_def_type(x):
 
   # !
   if x['afterdef']:
-    #print('afterdef')
     if type.is_record(x['type']):
-      print_type_record(x['type'], label=x['id']['str'])
+      print_type_record(x['type'], tag=x['id']['str'])
       o(";\n")
       return;
 
@@ -748,6 +747,21 @@ def print_include(x):
 
 
 
+def print_comment_line(x):
+  o("\n//%s" % x['text'])
+
+
+def print_comment_block(x):
+  lines = x['lines']
+
+  o("/*\n")
+
+  for line in lines:
+    o("%s\n" % (line))
+
+  o(" */")
+
+
 
 def run(module, outname):
 
@@ -807,6 +821,10 @@ def run(module, outname):
       elif k == 'type': print_decl_type(x)
     elif isa == 'directive':
       if k == 'include': print_include(x)
+    elif isa == 'comment':
+      if k == 'comment-line': print_comment_line(x)
+      if k == 'comment-block': print_comment_block(x)
+
 
   o("\n")
   if is_header:

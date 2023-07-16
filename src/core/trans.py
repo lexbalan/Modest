@@ -696,7 +696,6 @@ def do_value_expr_record(x):
   for item in x['items']:
     id = item['id']
 
-    #print("K = " + item['value']['kind'])
     val = do_value(item['value'])
 
     """if isinstance(val['type'], list):
@@ -1307,6 +1306,37 @@ def decl_func(x):
   return declaration
 
 
+
+
+def comm_line(x):
+  return None
+  print("ast_comment-line")
+  y = {
+    'isa': 'comment',
+    'kind': 'comment-line',
+    'text': x['text'],
+    'att': []
+  }
+
+  y['att'].extend(attributes)
+  return y
+
+
+def comm_block(x):
+  return None
+  print("ast_comment-block")
+  y = {
+    'isa': 'comment',
+    'kind': 'comment-block',
+    'lines': x['lines'],
+    'att': []
+  }
+
+  y['att'].extend(attributes)
+  return y
+
+
+
 def proc(ast):
   global local_attributes
 
@@ -1341,12 +1371,13 @@ def proc(ast):
       if   kind == 'func': y = decl_func(x)
       elif kind == 'type': y = decl_type(x)
 
-    elif isa == 'ast_directive2':
-      exec(x['text'])
-      continue
+
+    elif isa == 'ast_comment':
+      if kind == 'line': y = comm_line(x)
+      elif kind == 'block': y = comm_block(x)
 
     elif isa == 'ast_directive':
-      if kind == 'metadir':
+      if kind == 'pragma':
         exec(x['text'])
 
       # импорт изменяет контекст, и продуцирует аутпут
