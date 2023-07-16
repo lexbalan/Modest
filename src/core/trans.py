@@ -491,9 +491,10 @@ def do_value_expr_call(x):
     error("expected function", x)
 
   params = ftype['params']
+  args = x['args']
 
   npars = len(params)
-  nargs = len(x['args'])
+  nargs = len(args)
 
   if nargs < npars:
     error("not enough args", x)
@@ -509,27 +510,26 @@ def do_value_expr_call(x):
   # normal args
   i = 0
   while i < npars:
-    p = params[i]
-    a = do_value(x['args'][i])
+    param = params[i]
+    arg = do_value(x['args'][i])
 
-    if not value_is_bad(a):
-      a = value_cast_implicit(a, p['type'], a['ti'])
-      e = type.check(p['type'], a['type'], x['args'][i]['ti'])
-      args.append(a)
+    if not value_is_bad(arg):
+      arg = value_cast_implicit(arg, param['type'], arg['ti'])
+      type.check(param['type'], arg['type'], arg['ti'])
+      args.append(arg)
 
     i = i + 1
 
 
   # arghack rest args
   while i < nargs:
-    a = do_value(x['args'][i])
+    arg = do_value(x['args'][i])
 
-    if not value_is_bad(a):
-      a = value_cast_implicit(a, type.typeInt, a['ti'])
-      args.append(a)
+    if not value_is_bad(arg):
+      arg = value_cast_implicit(arg, type.typeInt, arg['ti'])
+      args.append(arg)
 
     i = i + 1
-
 
   return hlir_value_call(f, args, ti=x['ti'])
 
