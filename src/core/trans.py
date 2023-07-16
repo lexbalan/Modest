@@ -420,47 +420,58 @@ def do_value_expr_bin(x):
 
 
 
+
+def do_value_expr_un_not(val, t, ti):
+  if value_is_immediate(val):
+    num = value_num_get(val)
+    return hlir_value_int(~num, typ=val['type'], att=[], ti=ti)
+
+  return hlir_value_un('not', val, t, att=[], ti=ti)
+
+
+def do_value_expr_un_minus(val, t, ti):
+  if value_is_immediate(val):
+    num = value_num_get(val)
+    return hlir_value_int(-num, typ=val['type'], att=[], ti=ti)
+
+  return hlir_value_un('minus', val, t, att=[], ti=ti)
+
+
+def do_value_expr_un_deref(val, t, ti):
+  if not type.is_pointer(t):
+    error("expected pointer", val)
+    return hlir_value_bad(ti)
+
+  to = t['to']
+  # you can't deref pointer to function
+  # and pointer to undefined array
+  if type.is_func(to) or type.is_undefined_array(to):
+    error("unsuitable type", val)
+
+  return hlir_value_un('deref', val, to, att=[], ti=ti)
+
+
+def do_value_expr_un_ref(val, t, ti):
+  if value_is_immutable(val):
+      error("cannot get pointer to immutable value", ti)
+  vt = hlir_type_pointer(t, ti=ti)
+  return hlir_value_un('ref', val, vt, att=[], ti=ti)
+
+
 def do_value_expr_un(x):
   val = do_value(x['value'])
+  ti = x['ti']
 
   if value_is_bad(val):
-    return hlir_value_bad(x['ti'])
+    return val
 
   t = val['type']
 
-  # Immediate value
-  if value_is_immediate(val):
-    num = value_num_get(val)
-    if x['kind'] == 'not':
-      val['num'] = ~num
-    elif x['kind'] == 'minus':
-      val['num'] = -num
-    return val
+  if x['kind'] == 'not': return do_value_expr_un_not(val, t, ti)
+  elif x['kind'] == 'minus': return do_value_expr_un_minus(val, t, ti)
+  elif x['kind'] == 'deref': return do_value_expr_un_deref(val, t, ti)
+  elif x['kind'] == 'ref': return do_value_expr_un_ref(val, t, ti)
 
-
-  if x['kind'] == 'deref':
-    if not type.is_pointer(t):
-      error("expected pointer", val)
-      return hlir_value_bad(x['ti'])
-
-    to = t['to']
-    # you can't deref pointer to function
-    # and pointer to undefined array
-    if type.is_func(to) or type.is_undefined_array(to):
-      error("unsuitable type", val)
-
-    t = to
-
-    return hlir_value_un(x['kind'], val, t, att=[], ti=x['ti'])
-
-
-  if x['kind'] == 'ref':
-    if value_is_immutable(val):
-      error("cannot get pointer to immutable value", x)
-    t = hlir_type_pointer(t, ti=x['ti'])
-
-
-  return hlir_value_un(x['kind'], val, t, att=[], ti=x['ti'])
 
 
 
@@ -555,9 +566,13 @@ def do_value_expr_index(x):
   i = value_cast_implicit(i, type.typeInt, i['ti'])
 
   if ptr_access:
-    return hlir_value_index_array_by_ptr(a, i, ti=x['ti'])
+    v = hlir_value_index_array_by_ptr(a, i, ti=x['ti'])
   else:
-    return hlir_value_index_array(a, i, ti=x['ti'])
+    v = hlir_value_index_array(a, i, ti=x['ti'])
+    if value_is_immutable(a):
+      v['att'].append('immutable')
+
+  return v
 
 
 
@@ -591,15 +606,15 @@ def do_value_expr_access(x):
   if type.is_bad(field['type']):
     return hlir_value_bad(x['right']['ti'])
 
-  attributes = []
-  #if not ptr_access:
-  #  if value_is_immutable(r):
-  #    attributes.append('immutable')  # 'immutable' is obsolete
 
   if ptr_access:
-    return hlir_value_access_record_by_ptr(r, field, ti=x['ti'])
+    v = hlir_value_access_record_by_ptr(r, field, ti=x['ti'])
   else:
-    return hlir_value_access_record(r, field, ti=x['ti'])
+    v = hlir_value_access_record(r, field, ti=x['ti'])
+    if value_is_immutable(r):
+      v['att'].append('immutable')
+
+  return v
 
 
 

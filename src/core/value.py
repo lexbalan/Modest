@@ -39,13 +39,19 @@ def value_attribute_check(v, a):
   return a in v['att']
 
 
+
 def value_is_mutable(x):
+  if 'immutable' in x['att']:
+    return False
+
   return x['kind'] in [
     'var', 'access', 'access_ptr', 'index', 'index_ptr', 'deref'
   ]
 
+
 def value_is_immutable(x):
   return not value_is_mutable(x)
+
 
 
 def value_is_immediate(x):

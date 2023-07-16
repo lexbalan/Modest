@@ -112,8 +112,6 @@ def hlir_type_func(params, to, att=[], ti=None):
     'ti': ti
   }
 
-  #if 'arghack' in att:
-  #  print("OOPOOPOOPP22")
   return tt
 
 
@@ -232,7 +230,7 @@ def hlir_value_var(id, type, init=None, att=[], ti=None):
     'id': id,
     'type': type,
     'init': init,
-    'att': ['var'] + att,
+    'att': att,
     'ti': ti
   }
 
@@ -246,7 +244,7 @@ def hlir_value_const(id, type, init=None, att=[], ti=None):
     'id': id,
     'type': type,
     'init': init,
-    'att': [] + att,
+    'att': att,
     'ti': ti
   }
 
