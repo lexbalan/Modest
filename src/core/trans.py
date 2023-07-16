@@ -1309,12 +1309,12 @@ def decl_func(x):
 
 
 def comm_line(x):
-  return None
+  #return None
   print("ast_comment-line")
   y = {
     'isa': 'comment',
     'kind': 'comment-line',
-    'text': x['text'],
+    'lines': x['lines'],
     'att': []
   }
 

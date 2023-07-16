@@ -193,26 +193,37 @@ def dolcom(src):
   src.getc()
   src.getc()
 
+  lines = []
+
   commtext = ""
 
-  #exc = src.lookup(1) == '!'
-  #if exc:
-  #  src.getc()
-
   while True:
+
     # we dont need to eat NL because it will be used by lexer (!)
     c = src.lookup(1)
     if c == '\n':
+      src.getc()
       line = line + 1
       pos = 1
+      lines.append({'str': commtext})
+
+      s = src.lookup(2)
+      if s == '//':
+        # skip '//'
+        src.getc()
+        src.getc()
+        commtext = ""
+        continue
+
       break
     else:
       commtext += c
+
     src.getc()
   
   #if exc:
-  ti['len'] = len(commtext)
-  return ('line-comment', commtext, ti)
+  ti['len'] = 0
+  return ('line-comment', lines, ti)
 
   return None
 
@@ -261,7 +272,7 @@ def dobcom(src):
     elif s == '\n':
       line = line + 1
       pos = 1
-      lines.append(xline)
+      lines.append({'str': xline})
       xline = ""
     elif s == '':
       print("unexpected end of file")
@@ -269,7 +280,7 @@ def dobcom(src):
     else:
       xline += s
 
-
+  ti['len'] = 0 #!
   return ('block-comment', lines, ti)
 
 

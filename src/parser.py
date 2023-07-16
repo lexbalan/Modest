@@ -921,7 +921,7 @@ class Parser:
   def def_comment_line(self):
     ti = self.ti()
     x = self.gettok()
-    return {'isa': 'ast_comment', 'kind': 'line', 'text': x, 'ti': ti}
+    return {'isa': 'ast_comment', 'kind': 'line', 'lines': x, 'ti': ti}
 
 
   def def_comment_block(self):
@@ -943,17 +943,6 @@ class Parser:
 
     xx = []
 
-    """while True:
-      if self.match('import'):
-        x = self.do_import()
-        xx.append(x)
-      elif self.match('include'):
-        x = self.do_include()
-        xx.append(x)
-      elif self.match('\n'):
-        pass
-      else:
-        break"""
 
     while not self.is_end():
 

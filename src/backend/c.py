@@ -748,7 +748,9 @@ def print_include(x):
 
 
 def print_comment_line(x):
-  o("\n//%s" % x['text'])
+  lines = x['lines']
+  for line in lines:
+    o("\n//%s" % line['str'])
 
 
 def print_comment_block(x):
@@ -757,7 +759,7 @@ def print_comment_block(x):
   o("/*\n")
 
   for line in lines:
-    o("%s\n" % (line))
+    o("%s\n" % (line['str']))
 
   o(" */")
 
