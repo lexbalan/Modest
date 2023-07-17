@@ -129,6 +129,16 @@ def hlir_value_bad(ti=None):
   }
 
 
+def hlir_value_zero(type, ti=None):
+  return {
+    'isa': 'value',
+    'kind': 'zero',
+    'type': type,
+    'att': [],
+    'ti': ti
+  }
+
+
 def hlir_value_int(num, typ=None, att=[], ti=None):
   def nbits_for_int(x):
     n = 1

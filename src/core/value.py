@@ -138,7 +138,9 @@ def value_cons_record_from_generic_record(v, t, ti, method):
       item_value = item['value']
     else:
       # нет такого поля, создаем нулевую затычку
-      item_value = value_create_zero(field_type)
+
+      #value_create_zero(field_type)
+      item_value = hlir_value_zero(field_type, ti=None)
 
       if method == 'implicit':
         info("expected field '%s'" % field_name, v['ti'])

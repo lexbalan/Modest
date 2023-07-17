@@ -336,6 +336,13 @@ def print_value_expr_num(x, ctx):
     o(str(x['num']))
 
 
+def print_value_expr_zero(x, ctx):
+  t = x['type']
+  if type.is_array(t): o("[]")
+  elif type.is_record(t): o("{}")
+  else: o("0")
+
+
 def print_value_expr_enum(x, ctx):
   o("%s" % (x['id']['str']))
 
@@ -372,6 +379,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
   elif k == 'str': print_value_str(x, ctx)
   elif k == 'record': print_value_record(x, ctx)
   elif k == 'array': print_value_array(x, ctx)
+  elif k == 'zero': print_value_expr_zero(x, ctx)
   else:
     if k == 'call': print_value_expr_call(x, ctx)
     elif k == 'index': print_value_expr_index(x, ctx)

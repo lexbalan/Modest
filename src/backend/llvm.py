@@ -716,6 +716,10 @@ un_ops = ['ref', 'deref', 'plus', 'minus', 'not']
 
 
 
+def do_eval_zero(x):
+  print("do_eval_zero")
+  return ll_create_value_zero(x['type'])
+
 
 def do_eval_array(v):
   # сперва вычисляем все элементы массива в регистры
@@ -851,6 +855,7 @@ def do_eval_x(x):
 
   elif k == 'record': return do_eval_record(x)
   elif k == 'array': return do_eval_array(x)
+  elif k == 'zero': return do_eval_zero(x)
   else:
     if k == 'call': return do_eval_expr_call(x)
     elif k == 'index': return do_eval_expr_index(x)
