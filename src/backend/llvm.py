@@ -237,11 +237,11 @@ def print_type(t, print_aka=True, arr_as_ptr_to_arr=False):
     o("i16")
 
   elif type.is_pointer(t):
-    if t['to']['kind'] == 'unit':
+    if type.is_free_pointer(t):
       o("i8*")
-      return
+    else:
+      print_type(t['to']); o("*")
 
-    print_type(t['to']); o("*")
 
   elif type.is_array(t):
     o("[")

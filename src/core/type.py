@@ -60,7 +60,7 @@ genericStr = typeStr
 typeInt = copy.copy(typeInt64)
 typeInt['c_alias'] = 'int'
 typeNat = copy.copy(typeNat64)
-typeFreePtr = hlir_type_pointer(typeUnit)
+typeFreePtr = hlir_type_free_pointer()
 typeFreePtr['att'].append('generic')  #!
 
 
@@ -191,13 +191,11 @@ def is_enum(t):
 
 
 def is_pointer(t):
-  return t['kind'] == 'pointer'
+  return t['kind'] == 'pointer'  or t['kind'] == 'free_pointer'
 
 
 def is_free_pointer(t):
-  if t['kind'] != 'pointer':
-    return False
-  return eq(t['to'], typeUnit)
+  return t['kind'] == 'free_pointer'
 
 
 def is_array(t):

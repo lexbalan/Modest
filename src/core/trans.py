@@ -126,6 +126,7 @@ def init():
   root_context.type_add('Float32', type.typeFloat32)
   root_context.type_add('Float64', type.typeFloat64)
   root_context.type_add('Str', type.typeStr)
+  root_context.type_add('Ptr', type.typeFreePtr)
 
   root_context.value_add('nil', valueNil)
   root_context.value_add('true', valueTrue)

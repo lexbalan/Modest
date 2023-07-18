@@ -330,7 +330,7 @@ def value_cons(v, t, ti, method):
 
 def value_cast_implicit(v, t, ti):
   if value_is_bad(v) or type.is_bad(t):
-    return value_create_bad(ti)
+    return hlir_value_bad(ti)
 
   from_type = v['type']
 
@@ -352,7 +352,7 @@ def value_cast_implicit(v, t, ti):
 
 def value_cast_explicit(v, t, ti):
   if value_is_bad(v) or type.is_bad(t):
-    return value_create_bad(ti)
+    return hlir_value_bad(ti)
 
   if type.eq(v['type'], t):
     warning("explicit cast to same type", ti)
@@ -361,7 +361,7 @@ def value_cast_explicit(v, t, ti):
   c = value_cons(v, t, ti, method='explicit')
   if c == None:
     error("cast error", ti)
-    return value_create_bad(ti)
+    return hlir_value_bad(ti)
   return c
 
 
