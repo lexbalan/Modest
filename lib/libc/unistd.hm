@@ -14,7 +14,7 @@ const SEEK_END = 2
 
 extern func access (*ConstChar, Int) -> Int
 extern func alarm (UnsignedInt) -> UnsignedInt
-extern func brk (*Unit) -> Int
+extern func brk (Ptr) -> Int
 extern func chdir (*ConstChar) -> Int
 extern func chroot (*ConstChar) -> Int  // (LEGACY)
 extern func chown (*ConstChar, UidT, GidT) -> Int
@@ -68,13 +68,13 @@ extern func nice (Int) -> Int
 extern func pathconf (*ConstChar, Int) -> LongInt
 extern func pause () -> Int
 extern func pipe ([2]Int) -> Int
-extern func pread (Int, *Unit, SizeT, OffT) -> SSizeT
+extern func pread (Int, Ptr, SizeT, OffT) -> SSizeT
 extern func pthread_atfork (void  (*) (), void  (*) (), void (*) ()) -> Int
-extern func pwrite (Int, const *Unit, SizeT, OffT) -> SSizeT
-extern func read (Int, *Unit, SizeT) -> SSizeT
+extern func pwrite (Int, const Ptr, SizeT, OffT) -> SSizeT
+extern func read (Int, Ptr, SizeT) -> SSizeT
 extern func readlink (*ConstChar, *Char, SizeT) -> Int
 extern func rmdir (*ConstChar) -> Int
-extern func sbrk (Intptr_t) -> *Unit
+extern func sbrk (Intptr_t) -> Ptr
 extern func setgid (GidT) -> Int
 extern func setpgid (PidT, PidT) -> Int
 extern func setpgrp () -> PidT
@@ -83,7 +83,7 @@ extern func setreuid (UidT, UidT) -> Int
 extern func setsid () -> PidT
 extern func setuid (UidT) -> Int
 extern func sleep (UnsignedInt) -> UnsignedInt
-extern func swab (const *Unit, *Unit, SSizeT) -> Unit
+extern func swab (const Ptr, Ptr, SSizeT) -> Unit
 extern func symlink (*ConstChar, *ConstChar) -> Int
 extern func sync () -> Unit
 extern func sysconf (Int) -> LongInt
@@ -96,5 +96,5 @@ extern func ualarm (USecondsT, USecondsT) -> USecondsT
 extern func unlink (*ConstChar) -> Int
 extern func usleep (USecondsT) -> Int
 extern func vfork () -> PidT
-extern func write (Int, const *Unit, SizeT) -> SSizeT
+extern func write (Int, const Ptr, SizeT) -> SSizeT
 
