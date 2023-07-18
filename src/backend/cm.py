@@ -58,7 +58,7 @@ def print_type_array(t):
 
 def print_type_pointer(t):
   if type.is_free_pointer(t):
-    o("Ptr")
+    o("Pointer")
     return
   o("*"); print_type(t['to'])
 
