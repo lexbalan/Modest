@@ -304,7 +304,7 @@ def print_value_record(v, ctx):
     if multiline: ind()
 
     o("%s=" % item['id']['str'])
-    print_value(item['value'])
+    print_value(item['value'], ctx)
     if i < (nitems - 1):
       o(",")
       if not multiline: o(" ")
