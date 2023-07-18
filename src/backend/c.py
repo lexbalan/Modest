@@ -56,6 +56,10 @@ def print_type_array(t):
 
 
 def print_type_pointer(t):
+  if type.is_free_pointer(t):
+    o("void *")
+    return
+
   print_type(t['to'])
   if t['to']['kind'] != 'array':
     o("*")
@@ -327,7 +331,7 @@ def print_value_record(v, ctx):
       ind()
 
     o(".%s=" % item['id']['str'])
-    print_value(item['value'])
+    print_value(item['value'], ctx)
     if i < (nitems - 1):
       o(",")
       if not multiline:
@@ -340,6 +344,7 @@ def print_value_record(v, ctx):
     indent_down()
     ind()
   o("}")
+
 
 
 
@@ -743,6 +748,7 @@ def print_def_var(x):
 def print_def_const(x):
   o("#define %s  " % x['id']['str'])
   need_wrap = precedence(x['value']['kind']) < precedenceMax
+  print("define " + x['id']['str'])
   print_value(x['value'], ctx=['oneline'], need_wrap=need_wrap, print_just_id=False)
 
 
