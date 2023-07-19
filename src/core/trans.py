@@ -126,6 +126,7 @@ def init():
   root_context.type_add('Float32', type.typeFloat32)
   root_context.type_add('Float64', type.typeFloat64)
   root_context.type_add('Str', type.typeStr)
+  root_context.type_add('Pointer', type.typeFreePtr)
 
   root_context.value_add('nil', valueNil)
   root_context.value_add('true', valueTrue)
@@ -1098,17 +1099,26 @@ def def_const(x):
   # если оно сворачиваемое то может иметь поле num
   # так его сможет распечатать как LLVM так и C принтер
 
-  v['id'] = id
-  value_attribute_add(v, 'const')
-  extend_props(v)
 
-  module['context'].value_add(id['str'], v)
+
+  nv = copy.copy(v)
+
+  # выражение значения из которого он создан
+  # юзается принтером при печати напр #define <id> <value>
+  nv['value'] = v
+
+  nv['id'] = id
+  value_attribute_add(nv, 'const')
+
+  extend_props(nv)
 
   global attributes
-  v['att'].extend(attributes)
+  nv['att'].extend(attributes)
 
-  definition = hlir_def_const(id, v, ti=x['ti'])
-  v['definition'] = definition
+  module['context'].value_add(id['str'], nv)
+
+  definition = hlir_def_const(id, nv, ti=x['ti'])
+  nv['definition'] = definition
   definition['att'].extend(attributes)
 
   return definition

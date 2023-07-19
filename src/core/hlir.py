@@ -64,10 +64,20 @@ def hlir_type_pointer(to, att=[], ti=None):
     'to': to,
     'size': pointer_size,
     'power': pointer_size * 8,
-    'att': att,
+    'att': ['generic'] + att,
     'ti': ti
   }
 
+def hlir_type_free_pointer(ti=None):
+  pointer_size = settings_get('pointer_size')
+  return {
+    'isa': 'type',
+    'kind': 'free_pointer',
+    'size': pointer_size,
+    'power': pointer_size * 8,
+    'att': [],
+    'ti': ti
+  }
 
 # size - always hlir_value (!)
 def hlir_type_array(of, volume=None, att=[], ti=None):

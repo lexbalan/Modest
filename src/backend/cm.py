@@ -57,6 +57,9 @@ def print_type_array(t):
 
 
 def print_type_pointer(t):
+  if type.is_free_pointer(t):
+    o("Pointer")
+    return
   o("*"); print_type(t['to'])
 
 
@@ -301,7 +304,7 @@ def print_value_record(v, ctx):
     if multiline: ind()
 
     o("%s=" % item['id']['str'])
-    print_value(item['value'])
+    print_value(item['value'], ctx)
     if i < (nitems - 1):
       o(",")
       if not multiline: o(" ")

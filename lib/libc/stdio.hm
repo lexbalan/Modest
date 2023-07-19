@@ -27,8 +27,8 @@ extern func ferror (f : *FILE) -> Int
 extern func fflush (f : *FILE) -> Int
 extern func fgetpos (f : *FILE, pos : *FposT) -> Int
 extern func fopen (fname : ConstCharStr, mode : ConstCharStr) -> *FILE
-extern func fread (buf : *Unit, size : SizeT, count : SizeT, f : *FILE) -> SizeT
-extern func fwrite (buf : *Unit, size : SizeT, count : SizeT, f : *FILE) -> SizeT
+extern func fread (buf : Pointer, size : SizeT, count : SizeT, f : *FILE) -> SizeT
+extern func fwrite (buf : Pointer, size : SizeT, count : SizeT, f : *FILE) -> SizeT
 extern func freopen(filename : ConstCharStr, mode : ConstCharStr, f : *FILE) -> *FILE
 
 extern func fseek  (stream : *FILE, offset : LongInt, whence : Int) -> Int

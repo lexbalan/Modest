@@ -64,11 +64,11 @@ type TimeT Int32     /* time in seconds since 1970 */
 type DIR
 
 
-extern func malloc (size : SizeT) -> *Unit
-extern func memset (mem : *Unit, c : Int, n : SizeT) -> *Unit
-extern func memcpy (dst : *Unit, src : *Unit, len : SizeT) -> *Unit
-extern func memcmp (ptr1 : *Unit, ptr2 : *Unit, num : SizeT) -> Int
-extern func free   (ptr : *Unit) -> Unit
+extern func malloc (size : SizeT) -> Pointer
+extern func memset (mem : Pointer, c : Int, n : SizeT) -> Pointer
+extern func memcpy (dst : Pointer, src : Pointer, len : SizeT) -> Pointer
+extern func memcmp (ptr1 : Pointer, ptr2 : Pointer, num : SizeT) -> Int
+extern func free   (ptr : Pointer) -> Unit
 
 extern func strncmp (s1 : *ConstChar, s2 : *ConstChar, n : SizeT) -> Int
 extern func strcmp  (s1 : *ConstChar, s2 : *ConstChar) -> Int

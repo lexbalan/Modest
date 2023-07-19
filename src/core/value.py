@@ -137,15 +137,15 @@ def value_cons_record_from_generic_record(v, t, ti, method):
     if item != None:
       item_value = item['value']
     else:
-      # нет такого поля, создаем нулевую затычку
+      # no field, create zero value stub
 
       #value_create_zero(field_type)
       item_value = hlir_value_zero(field_type, ti=None)
 
       if method == 'implicit':
+        # implicit cast требует наличия всех полей
         info("expected field '%s'" % field_name, v['ti'])
-        # это cast, а cast не выдает ошибки
-        return None
+        return None  # это cast, а cast не выдает ошибки
 
     item_value = value_cast_implicit(item_value, field_type, ti=None)
 
@@ -163,7 +163,7 @@ def value_cons_record_from_generic_record(v, t, ti, method):
     'kind': 'record',
     'items': items,
     'type': t,
-    'att': [],
+    'att': ['generic-casted'],
 
     'ti': ti
   }
@@ -330,7 +330,7 @@ def value_cons(v, t, ti, method):
 
 def value_cast_implicit(v, t, ti):
   if value_is_bad(v) or type.is_bad(t):
-    return value_create_bad(ti)
+    return hlir_value_bad(ti)
 
   from_type = v['type']
 
@@ -352,7 +352,7 @@ def value_cast_implicit(v, t, ti):
 
 def value_cast_explicit(v, t, ti):
   if value_is_bad(v) or type.is_bad(t):
-    return value_create_bad(ti)
+    return hlir_value_bad(ti)
 
   if type.eq(v['type'], t):
     warning("explicit cast to same type", ti)
@@ -361,7 +361,7 @@ def value_cast_explicit(v, t, ti):
   c = value_cons(v, t, ti, method='explicit')
   if c == None:
     error("cast error", ti)
-    return value_create_bad(ti)
+    return hlir_value_bad(ti)
   return c
 
 
