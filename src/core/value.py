@@ -164,16 +164,14 @@ def value_cons_record_from_generic_record(v, t, ti, method):
     'items': items,
     'type': t,
     'att': ['generic-casted'],
-
     'ti': ti
   }
 
-
   # 'generic-casted' - нужен для принтера C
-  # чтобы он добавил явное приведение к Локальной (!) структуре
-  # (Point){.x=0, .y=0}
-  if is_local_context():
-    vx['att'].append('generic-casted')
+  # чтобы он добавил явное приведение к типу
+  # example: (Point){.x=0, .y=0}
+#  if is_local_context():
+#    vx['att'].append('generic-casted')
 
   # если это не сделать то принтер C не сможет сослаться
   # на именованную константу и станет печатать ее по месту

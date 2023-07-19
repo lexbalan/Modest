@@ -769,9 +769,9 @@ def print_def_var(x):
 
 
 def print_def_const(x):
+  #print("print_def_const " + str(x['id']['str']))
   o("#define %s  " % x['id']['str'])
   need_wrap = precedence(x['value']['kind']) < precedenceMax
-  print("define " + x['id']['str'])
   print_value(x['value']['value'], ctx=['screening'], need_wrap=need_wrap, print_just_id=True)
 
 

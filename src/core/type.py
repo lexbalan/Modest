@@ -104,7 +104,7 @@ def eq_record(a, b):
   return True
 
 
-def eq_enum(a, b):
+"""def eq_enum(a, b):
   aitems = a['items']
   bitems = b['items']
   if len(aitems) != len(bitems):
@@ -114,7 +114,7 @@ def eq_enum(a, b):
       return False
     if aitem['number'] != bitem['number']:
       return False
-  return True
+  return True"""
 
 
 def eq_float(a, b):
@@ -148,6 +148,18 @@ def eq(a, b):
 
 
 
+def check(a, b, ti):
+  res = eq(a, b)
+  if not res:
+    error("type error", ti)
+    type_print(a)
+    print(" & ", end='')
+    type_print(b)
+    print()
+  return res
+
+
+
 def type_attribute_add(t, a):
   t['att'].append(a)
 
@@ -156,11 +168,9 @@ def type_attribute_check(t, a):
   return a in t['att']
 
 
-
 def is_bad(t):
   assert t != None
   return t['kind'] == 'bad'
-
 
 
 def is_numeric(t):
@@ -185,6 +195,7 @@ def is_generic_integer(t):
 
 def is_unit(t):
   return t['kind'] == 'unit'
+
 
 def is_enum(t):
   return t['kind'] == 'enum'
@@ -285,28 +296,16 @@ def is_alias(t):
   return 'alias' in t['att']
 
 
-def check(a, b, ti):
-  res = eq(a, b)
-  if not res:
-    error("type error", ti)
-    type_print(a)
-    print(" & ", end='')
-    type_print(b)
-    print()
-  return res
 
 
-def record_field_get(typ, field_id):
-  # search field
-  field = None
-  i = 0
-  while i < len(typ['fields']):
-    f = typ['fields'][i]
-    if f['id']['str'] == field_id:
-      field = f
-      break
-    i = i + 1
-  return field
+# ищем поле с таким id в типе record
+def record_field_get(t, id):
+  for field in t['fields']:
+    if field['id']['str'] == id:
+      return field
+  return None
+
+
 
 
 def create_alias(id, t, ti):
@@ -323,39 +322,6 @@ def create_alias(id, t, ti):
   nt['aliasof'] = t
   nt['ti'] = ti
   return nt
-
-
-newtypeID = 0
-def create_newtype(id, t, ti):
-  global newtypeID
-  nt = copy.copy(t)
-  nt['name'] = id
-
-  newtypeID = newtypeID + 1
-  nt['uid'] = newtypeID
-
-  nt['att'].append('newtype')
-  nt['derived'] = t
-  nt['ti'] = ti
-  return nt
-
-
-# ищем поле с таким id в типе к которому приводим
-def record_get_field_by_id(t, id):
-  for field in t['fields']:
-    if field['id']['str'] == id:
-      return field
-  return None
-
-
-# create type bad
-def type_bad(ti=None):
-  return {
-    'isa': 'type',
-    'kind': 'bad',
-    'att': [],
-    'ti': ti
-  }
 
 
 

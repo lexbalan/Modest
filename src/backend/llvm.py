@@ -1498,7 +1498,7 @@ def create_local_srtuct(typ, llvalues):
   while i < len(llvalues):
     llvalue = llvalues[i]
     # получаем позицию поля в структуре
-    field_target = type.record_get_field_by_id(v['type'], llvalue['id']['str'])
+    field_target = type.record_field_get(v['type'], llvalue['id']['str'])
 
 
     pos = field_target['no']
