@@ -64,7 +64,7 @@ def hlir_type_pointer(to, att=[], ti=None):
     'to': to,
     'size': pointer_size,
     'power': pointer_size * 8,
-    'att': att,
+    'att': ['generic'] + att,
     'ti': ti
   }
 
