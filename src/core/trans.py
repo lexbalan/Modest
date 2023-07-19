@@ -161,14 +161,12 @@ def do_type_id(t):
     nt = type.create_alias(id, tx, t['ti'])
     root_context.type_add(id, nt)
     return nt
-  return tx #{'isa': 'type', 'kind': 'id', 'id': t['id'], 'type': tx}
-
+  return tx
 
 
 def do_type_pointer(t):
   to = do_type(t['to'])
   return hlir_type_pointer(to, ti=t['ti'])
-
 
 
 def do_type_array(t):
@@ -182,7 +180,6 @@ def do_type_array(t):
     #tx['volume'] = value_num_get(size_expr)
 
   return tx
-
 
 
 def do_type_record(t):
@@ -203,7 +200,6 @@ def do_type_record(t):
     fields.append(f)
 
   return hlir_type_record(fields, ti=t['ti'])
-
 
 
 def do_type_enum(t):
@@ -236,7 +232,6 @@ def do_type_enum(t):
   return enum_type
 
 
-
 def do_type_func(t):
   params = []
 
@@ -249,15 +244,13 @@ def do_type_func(t):
 
   to = do_type(t['to'])
 
-  tx = hlir_type_func(params, to, att=[])
-  #if 'arghack' in tx['att']:
-  #  print("OOPOOPOOPP")
-  return tx
+  return hlir_type_func(params, to, att=[])
 
 
 
 def do_type(t):
   k = t['kind']
+
   if k == 'id': return do_type_id(t)
   elif k == 'pointer': return do_type_pointer(t)
   elif k == 'array': return do_type_array(t)
@@ -265,7 +258,7 @@ def do_type(t):
   elif k == 'enum': return do_type_enum(t)
   elif k == 'func': return do_type_func(t)
 
-  return bad_type()
+  return bad_type(t['ti'])
 
 
 
@@ -282,17 +275,13 @@ def do_value_shift(op, l, r, ti):
   if not type.is_numeric(r['type']):
     error("type error", r)
 
-
   # const folding
   if not settings_check('backend', 'c'):
     if value_is_immediate(l) and value_is_immediate(r):
       xv = 0
       if op == 'shl': xv = value_num_get(l) << value_num_get(r)
       elif op == 'shr': xv = value_num_get(l) >> value_num_get(r)
-
-      t = l['type']
-
-      return hlir_value_int(xv, typ=t, ti=ti)
+      return hlir_value_int(xv, typ=l['type'], ti=ti)
 
 
   if type.is_generic(l['type']):
@@ -300,7 +289,6 @@ def do_value_shift(op, l, r, ti):
     error("required type", l)
 
   return hlir_value_bin(op, l, r, l['type'], ti)
-
 
 
 
@@ -355,10 +343,8 @@ def do_value_expr_bin(x):
             typ = r['type']
 
           num = 0
-          if k == 'add':
-            num = value_num_get(l) + value_num_get(r)
-          elif k == 'sub':
-            num = value_num_get(l) - value_num_get(r)
+          if k == 'add': num = value_num_get(l) + value_num_get(r)
+          elif k == 'sub': num = value_num_get(l) - value_num_get(r)
 
           return hlir_value_int(num, typ=typ, ti=ti)
 
@@ -422,7 +408,7 @@ def do_value_expr_bin(x):
 
 
 
-def do_value_expr_un_not(val, t, ti):
+def do_value_expr_not(val, t, ti):
   if value_is_immediate(val):
     num = value_num_get(val)
     return hlir_value_int(~num, typ=val['type'], att=[], ti=ti)
@@ -430,7 +416,7 @@ def do_value_expr_un_not(val, t, ti):
   return hlir_value_un('not', val, t, att=[], ti=ti)
 
 
-def do_value_expr_un_minus(val, t, ti):
+def do_value_expr_minus(val, t, ti):
   if value_is_immediate(val):
     num = value_num_get(val)
     return hlir_value_int(-num, typ=val['type'], att=[], ti=ti)
@@ -438,7 +424,7 @@ def do_value_expr_un_minus(val, t, ti):
   return hlir_value_un('minus', val, t, att=[], ti=ti)
 
 
-def do_value_expr_un_deref(val, t, ti):
+def do_value_expr_deref(val, t, ti):
   if not type.is_pointer(t):
     error("expected pointer", val)
     return hlir_value_bad(ti)
@@ -452,7 +438,7 @@ def do_value_expr_un_deref(val, t, ti):
   return hlir_value_un('deref', val, to, att=[], ti=ti)
 
 
-def do_value_expr_un_ref(val, t, ti):
+def do_value_expr_ref(val, t, ti):
   if value_is_immutable(val):
       error("cannot get pointer to immutable value", ti)
   vt = hlir_type_pointer(t, ti=ti)
@@ -468,11 +454,10 @@ def do_value_expr_un(x):
 
   t = val['type']
 
-  if x['kind'] == 'not': return do_value_expr_un_not(val, t, ti)
-  elif x['kind'] == 'minus': return do_value_expr_un_minus(val, t, ti)
-  elif x['kind'] == 'deref': return do_value_expr_un_deref(val, t, ti)
-  elif x['kind'] == 'ref': return do_value_expr_un_ref(val, t, ti)
-
+  if x['kind'] == 'not': return do_value_expr_not(val, t, ti)
+  elif x['kind'] == 'minus': return do_value_expr_minus(val, t, ti)
+  elif x['kind'] == 'deref': return do_value_expr_deref(val, t, ti)
+  elif x['kind'] == 'ref': return do_value_expr_ref(val, t, ti)
 
 
 
@@ -641,7 +626,6 @@ def do_value_expr_id(x):
     module['context'].value_add(id_str, v)
     return hlir_value_bad(x['ti'])
 
-
   # for TI чтобы не переписать у самого определения
   vx = copy.copy(vx)
   vx['ti'] = x['ti']
@@ -701,7 +685,6 @@ def do_value_expr_array(x):
 
 
 
-
 def do_value_expr_record(x):
   items = []
   fields = []
@@ -709,15 +692,7 @@ def do_value_expr_record(x):
     id = item['id']
 
     val = do_value(item['value'])
-
-    """if isinstance(val['type'], list):
-      for i in val['type']:
-        print()
-        print(i)"""
-
     items.append({'id': id, 'value': val})
-
-
 
     # создаем поле для типа generic записи
     field = hlir_field(id, select_type(val), ti=val['ti'])
@@ -1051,10 +1026,6 @@ def do_include(x):
 
     directive['att'].extend(attributes)
 
-    #if attribute_get('c-just-include'):
-    # attribute_off('c-just-include')
-    #  directive['att'].append('c-just-include')
-
     return [directive]
 
   return m['text']
@@ -1073,7 +1044,7 @@ def do_import(x):
 
   m = translate(abspath)
 
-  print("\nIMPORT: " + impline)
+  #print("\nIMPORT: " + impline)
   m['context'].show_tables()
 
   return m
@@ -1099,8 +1070,6 @@ def def_const(x):
   # если оно сворачиваемое то может иметь поле num
   # так его сможет распечатать как LLVM так и C принтер
 
-
-
   nv = copy.copy(v)
 
   # выражение значения из которого он создан
@@ -1122,6 +1091,7 @@ def def_const(x):
   definition['att'].extend(attributes)
 
   return definition
+
 
 # удаляет декларацию по имени
 def module_text_remove_decl(kind, id_str):
@@ -1159,18 +1129,9 @@ def def_type(x):
   else:
     module['context'].type_add(id['str'], nt)
 
-
-  if option_get("no_type_alias"):
-    if option_get("no_type_alias") == 'once':
-      option_off("no_type_alias")
-    return None
-
-
   definition = hlir_def_type(x['id'], t, already_declared, ti=x['ti'])
-
-  nt['definition'] = definition
-
   definition['att'].extend(attributes)
+  nt['definition'] = definition
 
   return definition
 
@@ -1203,7 +1164,6 @@ def def_var(x):
   extend_props(var)
 
   module['context'].value_add(x['field']['id']['str'], var)
-
 
   definition = hlir_def_var(var, init_value, ti=x['ti'])
   var['definition'] = definition
@@ -1327,7 +1287,6 @@ def decl_func(x):
 
 
 def comm_line(x):
-  #return None
   #print("ast_comment-line")
   y = {
     'isa': 'comment',
@@ -1341,7 +1300,6 @@ def comm_line(x):
 
 
 def comm_block(x):
-  #return None
   #print("ast_comment-block")
   y = {
     'isa': 'comment',
@@ -1356,11 +1314,8 @@ def comm_block(x):
 
 
 def proc(ast):
-  global local_attributes
-
   global module
   old_module = module
-
 
   module = {
     'isa': 'module',
@@ -1380,15 +1335,14 @@ def proc(ast):
     y = None
 
     if isa == 'ast_definition':
-      if   kind == 'func':  y = def_func(x)
+      if kind == 'func':  y = def_func(x)
       elif kind == 'type':  y = def_type(x)
       elif kind == 'const': y = def_const(x)
       elif kind == 'var':   y = def_var(x)
 
     elif isa == 'ast_declaration':
-      if   kind == 'func': y = decl_func(x)
+      if kind == 'func': y = decl_func(x)
       elif kind == 'type': y = decl_type(x)
-
 
     elif isa == 'ast_comment':
       if kind == 'line': y = comm_line(x)
@@ -1398,7 +1352,6 @@ def proc(ast):
       if kind == 'pragma':
         exec(x['text'])
 
-      # импорт изменяет контекст, и продуцирует аутпут
       elif kind == 'import':
         m = do_import(x)
         import_add(x['str'], m)
@@ -1410,8 +1363,6 @@ def proc(ast):
 
       continue
 
-
-    #local_attributes = []
 
     if y == None:
       continue

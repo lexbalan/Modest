@@ -104,19 +104,6 @@ def eq_record(a, b):
   return True
 
 
-"""def eq_enum(a, b):
-  aitems = a['items']
-  bitems = b['items']
-  if len(aitems) != len(bitems):
-    return False
-  for aitem, bitem in zip(aitems, bitems):
-    if aitem['id']['str'] != bitem['id']['str']:
-      return False
-    if aitem['number'] != bitem['number']:
-      return False
-  return True"""
-
-
 def eq_float(a, b):
   return a['name'] == b['name']
 
@@ -136,11 +123,10 @@ def eq(a, b):
   k = a['kind']
   if k == 'integer': return eq_integer(a, b)
   elif k == 'unit': return True
-  elif k == 'pointer': return eq_pointer(a, b)
-  elif k == 'array': return eq_array(a, b)
   elif k == 'func': return eq_func(a, b)
   elif k == 'record': return eq_record(a, b)
-  #elif k == 'enum': return eq_enum(a, b)
+  elif k == 'pointer': return eq_pointer(a, b)
+  elif k == 'array': return eq_array(a, b)
   elif k == 'float': return eq_float(a, b)
   elif k == 'opaque': return eq_opaque(a, b)
 
