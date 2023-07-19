@@ -306,6 +306,12 @@ def print_value_expr_cast(v, ctx):
 
 
 def print_value_array(v, ctx):
+
+  if not type.is_generic(v['type']):
+    o("(")
+    print_type(v['type'])
+    o(")")
+
   o("{")
   i = 0
   while i < len(v['items']):
@@ -316,11 +322,14 @@ def print_value_array(v, ctx):
 
 
 def print_value_record(v, ctx):
-  multiline = not 'oneline' in ctx
+  multiline = True #not 'oneline' in ctx
+  screening = 'screening' in ctx
 
   o("{")
   i = 0
   if multiline:
+    if screening:
+      o("\t\\")
     o("\n")
     indent_up()
   nitems = len(v['items'])
@@ -337,6 +346,8 @@ def print_value_record(v, ctx):
       if not multiline:
         o(" ")
     if multiline:
+      if screening:
+        o("\t\\")
       o("\n")
 
     i = i + 1
@@ -476,40 +487,52 @@ def print_stmt_let(x):
   print_field(f, const=True); o(" = "); print_value(x['value']); o(";")
 
 
-def print_stmt_assign(x):
-  # в си нельзя просто так присвоить массив
-  if type.is_array(x['right']['type']):
-    o("// array assignation")
-    for i in range(x['right']['type']['size']):
-      o("\n")
-      ind()
-      print_value(x['left']);
-      o("[%s] = " % i)
-      print_value(x['right']);
-      o("[%s];" % i)
-      i = i + 1
-    return
 
+def assign_array_by_items(x):
+  o("// array assignation")
+  for i in range(x['right']['type']['size']):
+    o("\n")
+    ind()
+    print_value(x['left']);
+    o("[%s] = " % i)
+    print_value(x['right']);
+    o("[%s];" % i)
+    i = i + 1
+
+
+def assign_record_by_fields(x):
   # в си нельзя просто так присвоить запись
-  if type.is_record(x['right']['type']):
-    o("// record assignation")
-    for f in x['right']['type']['fields']:
-      o("\n")
-      ind()
-      print_value(x['left']);
-      o(".%s = " % f['id']['str'])
-      print_value(x['right']);
-      o(".%s;" % f['id']['str'])
-    return
+  #print("assign_record_by_fields " + x['right']['kind'])
+  o("// record assignation")
+  for f in x['right']['type']['fields']:
+    o("\n")
+    ind()
+    print_value(x['left']);
+    o(".%s = " % f['id']['str'])
+    print_value(x['right']);
+    o(".%s;" % f['id']['str'])
+
+
+def print_stmt_assign(x):
+  # в си нельзя просто так присвоить массив // или структуру
+  if x['right']['kind'] == 'var':
+    if type.is_array(x['right']['type']):
+      assign_array_by_items(x)
+      return
+
+#  if x['right']['kind'] == 'var':
+#    if type.is_record(x['right']['type']):
+#      assign_record_by_fields(x)
+#      return
 
   print_value(x['left'])
   o(" = ")
   # В си можно просто присвоить литерал структуры глоб переменной
   # но вот локальной - нельзя, нужно явно привести его е треб типу
-  if (type.is_record(x['right']['type'])):
-    print_cast(x['right']['type'], x['right'])
-  else:
-    print_value(x['right'])
+#  if (type.is_record(x['right']['type'])):
+#    print_cast(x['right']['type'], x['right'])
+#  else:
+  print_value(x['right'])
 
   o(";")
 
@@ -749,7 +772,7 @@ def print_def_const(x):
   o("#define %s  " % x['id']['str'])
   need_wrap = precedence(x['value']['kind']) < precedenceMax
   print("define " + x['id']['str'])
-  print_value(x['value'], ctx=['oneline'], need_wrap=need_wrap, print_just_id=False)
+  print_value(x['value']['value'], ctx=['screening'], need_wrap=need_wrap, print_just_id=True)
 
 
 def print_include(x):
