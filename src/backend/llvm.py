@@ -873,7 +873,6 @@ def do_eval_x(x):
   elif k in bin_ops: return do_eval_expr_bin(x)
   elif k in un_ops: return do_eval_expr_un(x)
   elif k in ['func', 'const', 'var']: return func_const_var(x)
-  elif k == 'zero': return do_eval_zero(x)
   elif k == 'call': return do_eval_expr_call(x)
   elif k == 'index': return do_eval_expr_index(x)
   elif k == 'index_ptr': return do_eval_expr_index_ptr(x)
@@ -881,6 +880,7 @@ def do_eval_x(x):
   elif k == 'access_ptr': return do_eval_expr_access_ptr(x)
   elif k == 'cast': return do_eval_expr_to(x)
   elif k == 'sizeof': return do_eval_sizeof(x)
+  elif k == 'zero': return do_eval_zero(x)
   else:
     o("<%s>" % k)
     return ll_create_value_num(x['type'], 0)
@@ -888,7 +888,6 @@ def do_eval_x(x):
 #
 #
 #
-
 
 
 # сохр простых значений

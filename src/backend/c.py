@@ -433,7 +433,6 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
   elif k in bin_ops: print_value_bin(x, ctx)
   elif k in un_ops: print_value_un(x, ctx)
   elif k in ['func', 'var', 'const']: print_value_by_id(x, ctx)
-  elif k == 'zero': print_value_zero(x, ctx)
   elif k == 'call': print_value_call(x, ctx)
   elif k == 'index': print_value_index(x, ctx)
   elif k == 'index_ptr': print_value_index_ptr(x, ctx)
@@ -441,6 +440,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
   elif k == 'access_ptr': print_value_access_ptr(x, ctx)
   elif k == 'cast': print_value_cast(x, ctx)
   elif k == 'sizeof': o("sizeof("); print_type(x['of']); o(")")
+  elif k == 'zero': print_value_zero(x, ctx)
   else: o("<%s>" % k)
 
   if need_wrap:
