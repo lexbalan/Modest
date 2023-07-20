@@ -399,7 +399,7 @@ def do_value_expr_bin(x):
   # and append field 'num' to nv
   if value_is_immediate(l) and value_is_immediate(r):
     folded = value_bin_fold(k, l, r, t, ti)
-    value_attribute_add(nv, 'immediate')
+    #value_attribute_add(nv, 'immediate')
     nv['num'] = folded['num']
     return nv
 

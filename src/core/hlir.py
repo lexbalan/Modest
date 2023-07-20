@@ -180,7 +180,7 @@ def hlir_value_int(num, typ=None, att=[], ti=None):
     'kind': 'immediate',
     'num': num,
     'type': typ,
-    'att': ['immediate'] + att,
+    'att': att,
     'ti': ti
   }
 
@@ -194,7 +194,7 @@ def hlir_value_float(num, att=[], ti=None):
     'kind': 'immediate',
     'num': num,
     'type': typ,
-    'att': ['immediate'] + att,
+    'att': att,
     'ti': ti
   }
 

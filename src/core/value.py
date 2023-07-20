@@ -55,7 +55,9 @@ def value_is_immutable(x):
 
 
 def value_is_immediate(x):
-  return 'immediate' in x['att']
+  if 'immediate' in x['att']:
+    return True
+  return x['kind'] == 'immediate'
 
 
 def value_num_get(x):
@@ -140,7 +142,9 @@ def value_cons_record_from_generic_record(v, t, ti, method):
       # no field, create zero value stub
 
       #value_create_zero(field_type)
+
       item_value = hlir_value_zero(field_type, ti=None)
+
 
       if method == 'implicit':
         # implicit cast требует наличия всех полей
