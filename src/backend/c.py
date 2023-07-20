@@ -140,7 +140,7 @@ bin_ops = {
 }
 
 
-def print_value_expr_bin(v, ctx):
+def print_value_bin(v, ctx):
   op = v['kind']
   left = v['left']
   right = v['right']
@@ -177,7 +177,7 @@ un_ops = {
 }
 
 
-def print_value_expr_un(v, ctx):
+def print_value_un(v, ctx):
   op = v['kind']
   value = v['value']
 
@@ -198,7 +198,7 @@ def print_value_expr_un(v, ctx):
       o("[0]")
 
 
-def print_value_expr_call(v, ctx):
+def print_value_call(v, ctx):
   left = v['func']
   if left['type']['kind'] == 'pointer':
     t = left['type']['to']
@@ -235,7 +235,7 @@ def print_value_expr_call(v, ctx):
 
 
 
-def print_value_expr_index(v, ctx):
+def print_value_index(v, ctx):
   array = v['array']
   index = v['index']
   need_wrap = precedence(array['kind']) < precedence('index')
@@ -243,7 +243,7 @@ def print_value_expr_index(v, ctx):
   o("["); print_value(index); o("]")
 
 
-def print_value_expr_index_ptr(v, ctx):
+def print_value_index_ptr(v, ctx):
   array = v['pointer']
   index = v['index']
   need_wrap = precedence(array['kind']) < precedence('index')
@@ -252,13 +252,13 @@ def print_value_expr_index_ptr(v, ctx):
 
 
 
-def print_value_expr_access(v, ctx):
+def print_value_access(v, ctx):
   left = v['record']
   need_wrap = precedence(left['kind']) < precedence('access')
   print_value(left, need_wrap); o('.'); o(v['field']['id']['str'])
 
 
-def print_value_expr_access_ptr(v, ctx):
+def print_value_access_ptr(v, ctx):
   left = v['pointer']
   need_wrap = precedence(left['kind']) < precedence('access')
   print_value(left, need_wrap); o("->"); o(v['field']['id']['str'])
@@ -271,7 +271,7 @@ def print_cast(t, v, ctx=[]):
   print_value(v, ctx=ctx, need_wrap=need_wrap)
 
 
-def print_value_expr_cast(v, ctx):
+def print_value_cast(v, ctx):
   from_type = v['value']['type']
   to_type = v['type']
 
@@ -369,7 +369,7 @@ def print_value_str(x, ctx):
   o("\"")
 
 
-def print_value_expr_num(x, ctx):
+def print_value_num(x, ctx):
   if value_attribute_check(x, 'hexadecimal'):
     o("0x%X" % x['num'])
   elif type.is_pointer(x['type']):
@@ -380,7 +380,7 @@ def print_value_expr_num(x, ctx):
     o(str(x['num']))
 
 
-def print_value_expr_zero(x, ctx):
+def print_value_zero(x, ctx):
   t = x['type']
   if type.is_array(t) or type.is_record(t):
     o("{0}")
@@ -388,7 +388,7 @@ def print_value_expr_zero(x, ctx):
     o("0")
 
 
-def print_value_expr_enum(x, ctx):
+def print_value_enum(x, ctx):
   o("%s" % (x['id']['str']))
 
 
@@ -397,13 +397,14 @@ def print_value_by_id(x, ctx):
 
 
 def print_value_imm(x, ctx):
-  if type.is_integer(x['type']): print_value_expr_num(x, ctx)
-  elif type.is_float(x['type']): print_value_expr_num(x, ctx)
-  elif type.is_record(x['type']): print_value_record(x, ctx)
-  elif type.is_array(x['type']): print_value_array(x, ctx)
-  elif type.is_string(x['type']): print_value_str(x, ctx)
-  elif type.is_free_pointer(x['type']): o("NULL")
-  elif type.is_pointer(x['type']): print_value_expr_num(x, ctx)
+  t = x['type']
+  if type.is_integer(t): print_value_num(x, ctx)
+  elif type.is_float(t): print_value_num(x, ctx)
+  elif type.is_record(t): print_value_record(x, ctx)
+  elif type.is_array(t): print_value_array(x, ctx)
+  elif type.is_string(t): print_value_str(x, ctx)
+  elif type.is_free_pointer(t): o("NULL")
+  elif type.is_pointer(t): print_value_num(x, ctx)
 
 
 
@@ -428,17 +429,17 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 
   k = x['kind']
 
-  if k in bin_ops: print_value_expr_bin(x, ctx)
-  elif k in un_ops: print_value_expr_un(x, ctx)
+  if k in bin_ops: print_value_bin(x, ctx)
+  elif k in un_ops: print_value_un(x, ctx)
   elif k == 'immediate': print_value_imm(x, ctx)
   elif k in ['func', 'var', 'const']: print_value_by_id(x, ctx)
-  elif k == 'zero': print_value_expr_zero(x, ctx)
-  elif k == 'call': print_value_expr_call(x, ctx)
-  elif k == 'index': print_value_expr_index(x, ctx)
-  elif k == 'index_ptr': print_value_expr_index_ptr(x, ctx)
-  elif k == 'access': print_value_expr_access(x, ctx)
-  elif k == 'access_ptr': print_value_expr_access_ptr(x, ctx)
-  elif k == 'cast': print_value_expr_cast(x, ctx)
+  elif k == 'zero': print_value_zero(x, ctx)
+  elif k == 'call': print_value_call(x, ctx)
+  elif k == 'index': print_value_index(x, ctx)
+  elif k == 'index_ptr': print_value_index_ptr(x, ctx)
+  elif k == 'access': print_value_access(x, ctx)
+  elif k == 'access_ptr': print_value_access_ptr(x, ctx)
+  elif k == 'cast': print_value_cast(x, ctx)
   elif k == 'sizeof': o("sizeof("); print_type(x['of']); o(")")
   else: o("<%s>" % k)
 
