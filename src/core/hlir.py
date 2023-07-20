@@ -245,6 +245,7 @@ def hlir_value_un(k, value, type, att=[], ti=None):
     'ti': ti
   }
 
+
 def hlir_value_bin(op, l, r, t, ti):
   return {
     'isa': 'value',
@@ -255,6 +256,7 @@ def hlir_value_bin(op, l, r, t, ti):
     'att': [],
     'ti': ti
   }
+
 
 def hlir_value_func(id, type, att=[], ti=None):
   return {
@@ -379,7 +381,6 @@ def hlir_value_sizeof(of, type, ti=None):
 
 
 
-
 def hlir_stmt_bad(ti=None):
   return {'isa': 'stmt', 'kind': 'bad', 'ti': ti}
 
@@ -469,8 +470,6 @@ def hlir_stmt_return(value=None, ti=None):
     'value': value,
     'ti': ti
   }
-
-
 
 
 
