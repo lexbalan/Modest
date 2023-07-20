@@ -139,11 +139,13 @@ def hlir_value_bad(ti=None):
   }
 
 
-def hlir_value_zero(type, ti=None):
+def hlir_value_zero(t, ti=None):
   return {
     'isa': 'value',
-    'kind': 'zero',
-    'type': type,
+    'kind': 'immediate',
+    'type': t,
+    'num': 0,
+    'items': [],
     'att': [],
     'ti': ti
   }
@@ -180,7 +182,7 @@ def hlir_value_int(num, typ=None, att=[], ti=None):
     'kind': 'immediate',
     'num': num,
     'type': typ,
-    'att': att,
+    'att': [],
     'ti': ti
   }
 

@@ -396,7 +396,6 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
   elif k == 'access_ptr': print_value_access_ptr(x, ctx)
   elif k == 'cast': print_value_cast(x, ctx)
   elif k == 'sizeof': o("sizeof("); print_type(x['of']); o(")")
-  elif k == 'zero': print_value_zero(x, ctx)
   else: o("<%s>" % k)
 
   if need_wrap:

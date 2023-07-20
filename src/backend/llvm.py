@@ -548,7 +548,15 @@ def do_eval_access(rec, rt, pos, vt):
   # поле value ссылается при этом на уже вычисленное значение поля
   # ex: let p = {x=0, y=0};  p.x  // <--
   if 'items' in rec:
-    return rec['items'][pos]['value']
+    try:
+      return rec['items'][pos]['value']
+    except:
+      # если это например пустая структура ({})
+      # вернем пустышку
+      # это опасное решение, но пока не знаю другого
+      # (если структура из которой конструировали была пуста)
+      return ll_create_value_zero(vt)
+
 
   # если сама запись находится в регистре: (let rec = get_rec())
   if type.is_record(rec['type']) and rec['level'] == 'value':
@@ -880,7 +888,6 @@ def do_eval_x(x):
   elif k == 'access_ptr': return do_eval_expr_access_ptr(x)
   elif k == 'cast': return do_eval_expr_to(x)
   elif k == 'sizeof': return do_eval_sizeof(x)
-  elif k == 'zero': return do_eval_zero(x)
   else:
     o("<%s>" % k)
     return ll_create_value_num(x['type'], 0)

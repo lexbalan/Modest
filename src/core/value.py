@@ -164,7 +164,7 @@ def value_cons_record_from_generic_record(v, t, ti, method):
 
   vx = {
     'isa': 'value',
-    'kind': 'record',
+    'kind': 'immediate',
     'items': items,
     'type': t,
     'att': ['generic-casted'],
