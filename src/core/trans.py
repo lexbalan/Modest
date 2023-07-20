@@ -1077,7 +1077,6 @@ def def_const(x):
   nv['value'] = v
 
   nv['id'] = id
-  value_attribute_add(nv, 'const')
 
   extend_props(nv)
 
@@ -1086,7 +1085,7 @@ def def_const(x):
 
   module['context'].value_add(id['str'], nv)
 
-  definition = hlir_def_const(id, nv, ti=x['ti'])
+  definition = hlir_def_const(id, nv, v, ti=x['ti'])
   nv['definition'] = definition
   definition['att'].extend(attributes)
 

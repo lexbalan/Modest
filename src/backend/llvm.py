@@ -717,7 +717,7 @@ un_ops = ['ref', 'deref', 'plus', 'minus', 'not']
 
 
 def do_eval_zero(x):
-  print("do_eval_zero")
+  #print("do_eval_zero")
   return ll_create_value_zero(x['type'])
 
 
@@ -844,6 +844,13 @@ def do_eval_x(x):
     }
 
   elif k == 'str':
+
+    # проблема строковых констант и strid
+    if not 'strid' in x:
+      if 'value' in x:
+        return do_eval_x(x['value'])
+
+
     return {
       'isa': 'llvm_value',
       'class': 'mem',

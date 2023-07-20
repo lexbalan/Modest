@@ -506,12 +506,12 @@ def hlir_def_type(id, type, already_declared=False, ti=None):
   }
 
 
-def hlir_def_const(id, value, ti=None):
+def hlir_def_const(id, const_value, orig_value, ti=None):
   return {
     'isa': 'definition',
     'kind': 'const',
-    'const': value,
-    'value': value,
+    'const': const_value,
+    'value': orig_value,
     'id': id,
     'att': [],
   }
