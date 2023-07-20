@@ -870,7 +870,7 @@ def do_eval_x(x):
   k = x['kind']
 
   if k == 'immediate': return do_eval_imm(x)
-  if k in bin_ops: return do_eval_expr_bin(x)
+  elif k in bin_ops: return do_eval_expr_bin(x)
   elif k in un_ops: return do_eval_expr_un(x)
   elif k in ['func', 'const', 'var']: return func_const_var(x)
   elif k == 'zero': return do_eval_zero(x)
