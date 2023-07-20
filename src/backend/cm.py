@@ -354,6 +354,17 @@ def print_value_by_id(x, ctx):
   o("%s" % x['id']['str'])
 
 
+def print_value_imm(x, ctx):
+  if type.is_integer(x['type']): print_value_expr_num(x, ctx)
+  elif type.is_float(x['type']): print_value_expr_num(x, ctx)
+  elif type.is_record(x['type']): print_value_record(x, ctx)
+  elif type.is_array(x['type']): print_value_array(x, ctx)
+  elif type.is_string(x['type']): print_value_str(x, ctx)
+  elif type.is_free_pointer(x['type']): o("NULL")
+  elif type.is_pointer(x['type']): print_value_expr_num(x, ctx)
+
+
+
 def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
   # если у значения есть свойство 'id' то печатаем просто id
   # (используется для печати имени констант а не просто их значения)
@@ -376,22 +387,17 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 
   if k in bin_ops: print_value_expr_bin(x, ctx)
   elif k in un_ops: print_value_expr_un(x, ctx)
-  elif k == 'num': print_value_expr_num(x, ctx)
-  elif k == 'enum': print_value_expr_enum(x, ctx)
+  elif k == 'immediate': print_value_imm(x, ctx)
   elif k in ['func', 'var']: print_value_by_id(x, ctx)
-  elif k == 'str': print_value_str(x, ctx)
-  elif k == 'record': print_value_record(x, ctx)
-  elif k == 'array': print_value_array(x, ctx)
   elif k == 'zero': print_value_expr_zero(x, ctx)
-  else:
-    if k == 'call': print_value_expr_call(x, ctx)
-    elif k == 'index': print_value_expr_index(x, ctx)
-    elif k == 'index_ptr': print_value_expr_index_ptr(x, ctx)
-    elif k == 'access': print_value_expr_access(x, ctx)
-    elif k == 'access_ptr': print_value_expr_access_ptr(x, ctx)
-    elif k == 'cast': print_value_expr_cast(x, ctx)
-    elif k == 'sizeof': o("sizeof("); print_type(x['of']); o(")")
-    else: o("<%s>" % k)
+  elif k == 'call': print_value_expr_call(x, ctx)
+  elif k == 'index': print_value_expr_index(x, ctx)
+  elif k == 'index_ptr': print_value_expr_index_ptr(x, ctx)
+  elif k == 'access': print_value_expr_access(x, ctx)
+  elif k == 'access_ptr': print_value_expr_access_ptr(x, ctx)
+  elif k == 'cast': print_value_expr_cast(x, ctx)
+  elif k == 'sizeof': o("sizeof("); print_type(x['of']); o(")")
+  else: o("<%s>" % k)
 
   if need_wrap:
     o(")")

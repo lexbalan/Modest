@@ -798,54 +798,8 @@ def do_eval(x):
   return v
 
 
-
-def do_eval_x(x):
-  if x == None:
-    return None
-
-  k = x['kind']
-
-  if k in bin_ops:
-    return do_eval_expr_bin(x)
-
-  elif k in un_ops:
-    return do_eval_expr_un(x)
-
-  elif k == 'num':
-    return ll_create_value_num(x['type'], x['num'])
-
-  elif k in ['func', 'const', 'var']:
-    if value_attribute_check(x, 'local'):
-      localname = x['id']['str']
-      y = locals_get(localname)
-      return y
-
-    if k == 'var':
-      return {
-        'isa': 'llvm_value',
-        'class': 'mem',
-        'level': 'adr',
-        'id': x['id']['str'],
-        'type': x['type'],
-        'proto': x,  # need for load/store, because it is 'adr'
-      }
-
-    if k == 'const':
-      return do_eval(x['value'])
-
-
-    return {
-      'isa': 'llvm_value',
-      'class': 'mem',
-      'level': 'value',
-      'id': x['id']['str'],
-      'type': x['type'],
-      'proto': x
-    }
-
-  elif k == 'str':
-
-    # проблема строковых констант и strid
+def do_eval_str(x):
+  # проблема строковых констант и strid
     if not 'strid' in x:
       if 'value' in x:
         return do_eval_x(x['value'])
@@ -860,20 +814,76 @@ def do_eval_x(x):
       'proto': x
     }
 
-  elif k == 'record': return do_eval_record(x)
-  elif k == 'array': return do_eval_array(x)
+
+def do_eval_imm(x):
+  if type.is_integer(x['type']):
+    return ll_create_value_num(x['type'], x['num'])
+  elif type.is_float(x['type']):
+    return ll_create_value_num(x['type'], x['num'])
+  elif type.is_record(x['type']):
+    return do_eval_record(x)
+  elif type.is_array(x['type']):
+    return do_eval_array(x)
+  elif type.is_string(x['type']):
+    return do_eval_str(x)
+  elif type.is_free_pointer(x['type']):
+    return ll_create_value_num(x['type'], x['num'])
+  elif type.is_pointer(x['type']):
+    return ll_create_value_num(x['type'], x['num'])
+
+
+def func_const_var(x):
+  k = x['kind']
+  if value_attribute_check(x, 'local'):
+    localname = x['id']['str']
+    y = locals_get(localname)
+    return y
+
+  if k == 'var':
+    return {
+      'isa': 'llvm_value',
+      'class': 'mem',
+      'level': 'adr',
+      'id': x['id']['str'],
+      'type': x['type'],
+      'proto': x,  # need for load/store, because it is 'adr'
+    }
+
+  if k == 'const':
+    return do_eval(x['value'])
+
+
+  return {
+    'isa': 'llvm_value',
+    'class': 'mem',
+    'level': 'value',
+    'id': x['id']['str'],
+    'type': x['type'],
+    'proto': x
+  }
+
+
+def do_eval_x(x):
+  if x == None:
+    return None
+
+  k = x['kind']
+
+  if k == 'immediate': return do_eval_imm(x)
+  if k in bin_ops: return do_eval_expr_bin(x)
+  elif k in un_ops: return do_eval_expr_un(x)
+  elif k in ['func', 'const', 'var']: return func_const_var(x)
   elif k == 'zero': return do_eval_zero(x)
+  elif k == 'call': return do_eval_expr_call(x)
+  elif k == 'index': return do_eval_expr_index(x)
+  elif k == 'index_ptr': return do_eval_expr_index_ptr(x)
+  elif k == 'access': return do_eval_expr_access(x)
+  elif k == 'access_ptr': return do_eval_expr_access_ptr(x)
+  elif k == 'cast': return do_eval_expr_to(x)
+  elif k == 'sizeof': return do_eval_sizeof(x)
   else:
-    if k == 'call': return do_eval_expr_call(x)
-    elif k == 'index': return do_eval_expr_index(x)
-    elif k == 'index_ptr': return do_eval_expr_index_ptr(x)
-    elif k == 'access': return do_eval_expr_access(x)
-    elif k == 'access_ptr': return do_eval_expr_access_ptr(x)
-    elif k == 'cast': return do_eval_expr_to(x)
-    elif k == 'sizeof': return do_eval_sizeof(x)
-    else:
-      o("<%s>" % k)
-      return ll_create_value_num(x['type'], 0)
+    o("<%s>" % k)
+    return ll_create_value_num(x['type'], 0)
 
 #
 #

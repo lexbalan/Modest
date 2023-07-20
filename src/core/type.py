@@ -171,6 +171,18 @@ def is_float(t):
   return t['kind'] == 'float'
 
 
+def is_string(t):
+  if 'str' in t['att']:
+    return True
+  #!
+  if t['kind'] == 'pointer':
+    if t['to']['kind'] == 'array':
+      if eq(t['to']['of'], typeChar):
+        return True
+
+  return False
+
+
 def is_generic_numeric(t):
   return 'generic' in t['att'] and 'numeric' in t['att']
 

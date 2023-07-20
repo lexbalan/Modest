@@ -177,7 +177,7 @@ def hlir_value_int(num, typ=None, att=[], ti=None):
 
   return {
     'isa': 'value',
-    'kind': 'num',
+    'kind': 'immediate',
     'num': num,
     'type': typ,
     'att': ['immediate'] + att,
@@ -191,7 +191,7 @@ def hlir_value_float(num, att=[], ti=None):
   typ = hlir_type_float('Float', att=['generic'])
   return {
     'isa': 'value',
-    'kind': 'num',
+    'kind': 'immediate',
     'num': num,
     'type': typ,
     'att': ['immediate'] + att,
@@ -202,13 +202,37 @@ def hlir_value_float(num, att=[], ti=None):
 def hlir_value_cstr(string, length, type, att=[], ti=None):
   return {
     'isa': 'value',
-    'kind': 'str',
+    'kind': 'immediate',
     'str': string,
     'len': length,
     'type': type,
     'att': ['string'],
     'ti': ti
   }
+
+
+def hlir_value_array(type, items, att=[], ti=None):
+  return {
+    'isa': 'value',
+    'kind': 'immediate',
+    'type': type,
+    'items': items,
+    'att': att,
+    'ti': ti
+  }
+
+
+def hlir_value_record(typ, items=[], att=[], ti=None):
+  return {
+    'isa': 'value',
+    'kind': 'immediate',
+    'type': typ,
+    'items': items,
+    'att': [],
+    'ti': ti
+  }
+
+
 
 
 def hlir_value_un(k, value, type, att=[], ti=None):
@@ -265,29 +289,6 @@ def hlir_value_const(id, type, init=None, att=[], ti=None):
     'type': type,
     'init': init,
     'att': att,
-    'ti': ti
-  }
-
-
-def hlir_value_array(type, items, att=[], ti=None):
-  return {
-    'isa': 'value',
-    'kind': 'array',
-    'type': type,
-    'items': items,
-    'att': att,
-    'ti': ti
-  }
-
-
-
-def hlir_value_record(typ, items=[], att=[], ti=None):
-  return {
-    'isa': 'value',
-    'kind': 'record',
-    'type': typ,
-    'items': items,
-    'att': [],
     'ti': ti
   }
 
