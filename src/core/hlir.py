@@ -64,7 +64,7 @@ def hlir_type_pointer(to, att=[], ti=None):
     'to': to,
     'size': pointer_size,
     'power': pointer_size * 8,
-    'att': ['generic'] + att,
+    'att': [] + att,
     'ti': ti
   }
 
@@ -284,7 +284,7 @@ def hlir_value_var(id, type, init=None, att=[], ti=None):
 
 
 # hlir_const is an immutable value
-# (even if it is implemented as runtime variable)
+# (not necessary immediate)
 def hlir_value_const(id, type, init=None, att=[], ti=None):
   return {
     'isa': 'value',

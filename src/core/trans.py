@@ -1061,6 +1061,9 @@ def def_const(x):
   id = x['id']
   v = do_value(x['value'])
 
+  if not value_is_immediate(v):
+    error("expected immediate value", v)
+
   # (!) в дефиницию идет сам v;
   # а в контекст - значение-конатснта с id (нужно при C печати);
   # так же, в него идет поле value ссылающееся на v
@@ -1075,7 +1078,6 @@ def def_const(x):
   # выражение значения из которого он создан
   # юзается принтером при печати напр #define <id> <value>
   nv['value'] = v
-
   nv['id'] = id
 
   extend_props(nv)
