@@ -113,13 +113,6 @@ def value_cons_array(v, t, ti, method):
 
 
 
-def search_in_items_by_id(items, id):
-  for item in items:
-    if item['id']['str'] == id:
-      return item
-  return None
-
-
 def value_cons_record_from_generic_record(v, t, ti, method):
   # 1. проходим по порядку определения по всем полям типа t (целевого)
   # 2. если поля с таким именеи нет в v:
@@ -128,39 +121,32 @@ def value_cons_record_from_generic_record(v, t, ti, method):
   # 3. делаем implicit_cast() для поля из v к соотв полю из t
   # 4. проверяем тип
   # 5. пакуем
-  items = []
+  items = {}
   for field in t['fields']:
     field_name = field['id']['str']
     field_type = field['type']
 
     # получаем элемент с соотв именем из исходного значения
     item_value = None
-    item = search_in_items_by_id(v['items'], field_name)
-    if item != None:
-      item_value = item['value']
-    else:
+    if field_name in v['items']:
+      item_value = v['items'][field_name]
+
+
+    if item_value == None:
       # no field, create zero value stub
-
-      #value_create_zero(field_type)
-
       item_value = hlir_value_zero(field_type, ti=None)
-
-
       if method == 'implicit':
         # implicit cast требует наличия всех полей
         info("expected field '%s'" % field_name, v['ti'])
         return None  # это cast, а cast не выдает ошибки
+
 
     item_value = value_cast_implicit(item_value, field_type, ti=None)
 
     if not type.eq(item_value['type'], field_type):
       error("field type cast error", item_value)
 
-    items.append({
-      'isa': 'item',
-      'id': {'isa': 'id', 'str': field_name, 'ti': None},
-      'value': item_value,
-    })
+    items[field_name] = item_value
 
   vx = {
     'isa': 'value',

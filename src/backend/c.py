@@ -334,13 +334,17 @@ def print_value_imm_record(v, ctx):
     indent_up()
   nitems = len(v['items'])
   while i < nitems:
-    item = v['items'][i]
+    item = v['type']['fields'][i]
 
     if multiline:
       ind()
 
-    o(".%s=" % item['id']['str'])
-    print_value(item['value'], ctx)
+    field_str = item['id']['str']
+    o(".%s=" % field_str)
+    if not isinstance(v['items'], dict):
+      print(v['items'])
+      exit(1)
+    print_value(v['items'][field_str], ctx)
     if i < (nitems - 1):
       o(",")
       if not multiline:

@@ -224,7 +224,7 @@ def hlir_value_array(type, items, att=[], ti=None):
   }
 
 
-def hlir_value_record(typ, items=[], att=[], ti=None):
+def hlir_value_record(typ, items={}, att=[], ti=None):
   return {
     'isa': 'value',
     'kind': 'immediate',

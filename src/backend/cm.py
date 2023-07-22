@@ -540,7 +540,13 @@ def print_def_var(x):
 
 def print_def_const(x):
   o("const %s = " % x['id']['str'])
-  print_value(x['value'], ctx=['oneline'], print_just_id=False)
+  v = x['value']
+
+  # если есть оригинальное выражение, внутри, печатаем его
+  if 'value' in v:
+    v = v['value']
+
+  print_value(v, ctx=['oneline'], print_just_id=False)
 
 
 def print_import(dirname, x):

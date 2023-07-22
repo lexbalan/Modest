@@ -316,7 +316,7 @@ def value_bin_fold(op, l, r, t, ti):
     return hlir_value_int(num_val, typ=l['type'], ti=ti)
 
 
-def do_value_expr_bin(x):
+def do_value_bin(x):
   k = x['kind']
   l = do_value(x['left'])
   r = do_value(x['right'])
@@ -408,7 +408,7 @@ def do_value_expr_bin(x):
 
 
 
-def do_value_expr_not(val, t, ti):
+def do_value_not(val, t, ti):
   if value_is_immediate(val):
     num = value_num_get(val)
     return hlir_value_int(~num, typ=val['type'], att=[], ti=ti)
@@ -416,7 +416,7 @@ def do_value_expr_not(val, t, ti):
   return hlir_value_un('not', val, t, att=[], ti=ti)
 
 
-def do_value_expr_minus(val, t, ti):
+def do_value_minus(val, t, ti):
   if value_is_immediate(val):
     num = value_num_get(val)
     return hlir_value_int(-num, typ=val['type'], att=[], ti=ti)
@@ -424,7 +424,7 @@ def do_value_expr_minus(val, t, ti):
   return hlir_value_un('minus', val, t, att=[], ti=ti)
 
 
-def do_value_expr_deref(val, t, ti):
+def do_value_deref(val, t, ti):
   if not type.is_pointer(t):
     error("expected pointer", val)
     return hlir_value_bad(ti)
@@ -438,14 +438,14 @@ def do_value_expr_deref(val, t, ti):
   return hlir_value_un('deref', val, to, att=[], ti=ti)
 
 
-def do_value_expr_ref(val, t, ti):
+def do_value_ref(val, t, ti):
   if value_is_immutable(val):
       error("cannot get pointer to immutable value", ti)
   vt = hlir_type_pointer(t, ti=ti)
   return hlir_value_un('ref', val, vt, att=[], ti=ti)
 
 
-def do_value_expr_un(x):
+def do_value_un(x):
   val = do_value(x['value'])
   ti = x['ti']
 
@@ -454,14 +454,14 @@ def do_value_expr_un(x):
 
   t = val['type']
 
-  if x['kind'] == 'not': return do_value_expr_not(val, t, ti)
-  elif x['kind'] == 'minus': return do_value_expr_minus(val, t, ti)
-  elif x['kind'] == 'deref': return do_value_expr_deref(val, t, ti)
-  elif x['kind'] == 'ref': return do_value_expr_ref(val, t, ti)
+  if x['kind'] == 'not': return do_value_not(val, t, ti)
+  elif x['kind'] == 'minus': return do_value_minus(val, t, ti)
+  elif x['kind'] == 'deref': return do_value_deref(val, t, ti)
+  elif x['kind'] == 'ref': return do_value_ref(val, t, ti)
 
 
 
-def do_value_expr_call(x):
+def do_value_call(x):
   f = do_value(x['left'])
 
   if value_is_bad(f):
@@ -521,7 +521,7 @@ def do_value_expr_call(x):
 
 
 
-def do_value_expr_index(x):
+def do_value_index(x):
   a = do_value(x['left'])
 
   if value_is_bad(a):
@@ -543,6 +543,9 @@ def do_value_expr_index(x):
   if value_is_bad(i):
     return hlir_value_bad(x['index']['ti'])
 
+  if not type.is_integer(i['type']):
+    error("expected integer value", x['index'])
+
   # check if index out-of-bounds
   if i['kind'] == 'int':
     if typ['size'] != None:
@@ -550,6 +553,11 @@ def do_value_expr_index(x):
         error("array index out of bounds", x['index'])
 
   i = value_cast_implicit(i, type.typeInt, i['ti'])
+
+  # immediate index (!)
+  if value_is_immediate(a):
+    if value_is_immediate(i):
+      return a['items'][i['num']]
 
   if ptr_access:
     v = hlir_value_index_array_by_ptr(a, i, ti=x['ti'])
@@ -562,7 +570,7 @@ def do_value_expr_index(x):
 
 
 
-def do_value_expr_access(x):
+def do_value_access(x):
   r = do_value(x['left'])
 
   if value_is_bad(r):
@@ -592,6 +600,14 @@ def do_value_expr_access(x):
   if type.is_bad(field['type']):
     return hlir_value_bad(x['right']['ti'])
 
+  # immediate access (!)
+  if value_is_immediate(r):
+    field_id_str = field_id['str']
+    v = r['items'][field_id_str]
+    nv = copy.copy(v)
+    nv['value'] = hlir_value_access_record(r, field, ti=x['ti'])
+    return nv
+
 
   if ptr_access:
     v = hlir_value_access_record_by_ptr(r, field, ti=x['ti'])
@@ -604,7 +620,7 @@ def do_value_expr_access(x):
 
 
 
-def do_value_expr_to(x):
+def do_value_to(x):
   t = do_type(x['type'])
   v = do_value(x['value'])
   if value_is_bad(v) or type.is_bad(t):
@@ -613,7 +629,7 @@ def do_value_expr_to(x):
 
 
 
-def do_value_expr_id(x):
+def do_value_id(x):
   id_str = x['id']['str']
   vx = module['context'].value_get(id_str)
   if vx == None:
@@ -633,7 +649,7 @@ def do_value_expr_id(x):
 
 
 
-def do_value_expr_ns(x):
+def do_value_ns(x):
   ns_id = x['ids'][0]
   id = x['ids'][1]
 
@@ -645,7 +661,7 @@ def do_value_expr_ns(x):
 
 
 
-def do_value_expr_str(x):
+def do_value_str(x):
   string = x['str']
   length = x['len']
 
@@ -670,7 +686,7 @@ def select_type(x):
 
 
 
-def do_value_expr_array(x):
+def do_value_array(x):
   items = []
   for i in x['items']:
     vi = do_value(i)
@@ -685,14 +701,14 @@ def do_value_expr_array(x):
 
 
 
-def do_value_expr_record(x):
-  items = []
+def do_value_record(x):
+  items = {}
   fields = []
   for item in x['items']:
     id = item['id']
 
     val = do_value(item['value'])
-    items.append({'id': id, 'value': val})
+    items[id['str']] = val
 
     # создаем поле для типа generic записи
     field = hlir_field(id, select_type(val), ti=val['ti'])
@@ -703,7 +719,7 @@ def do_value_expr_record(x):
 
 
 
-def do_value_expr_int(x):
+def do_value_int(x):
   rv = hlir_value_int(x['num'], ti=x['ti'])
 
   if 'hexadecimal' in x['att']:
@@ -712,11 +728,11 @@ def do_value_expr_int(x):
   return rv
 
 
-def do_value_expr_float(x):
+def do_value_float(x):
   return hlir_value_float(x['num'], ti=x['ti'])
 
 
-def do_value_expr_sizeof(x):
+def do_value_sizeof(x):
   of = do_type(x['type'])
   return hlir_value_sizeof(of, type.typeNat, ti=x['ti'])
 
@@ -736,22 +752,22 @@ def do_value(x):
 
   rv = None
 
-  if k in bin_ops: rv = do_value_expr_bin(x)
-  elif k in un_ops: rv = do_value_expr_un(x)
+  if k in bin_ops: rv = do_value_bin(x)
+  elif k in un_ops: rv = do_value_un(x)
   else:
-    if k == 'int': rv = do_value_expr_int(x)
-    elif k == 'float': rv = do_value_expr_float(x)
-    elif k == 'id': rv = do_value_expr_id(x)
-#    elif k == 'ns': rv = do_value_expr_ns(x)
-    elif k == 'str': rv = do_value_expr_str(x)
-    elif k == 'record': rv = do_value_expr_record(x)
-    elif k == 'array': rv = do_value_expr_array(x)
+    if k == 'int': rv = do_value_int(x)
+    elif k == 'float': rv = do_value_float(x)
+    elif k == 'id': rv = do_value_id(x)
+#    elif k == 'ns': rv = do_value_ns(x)
+    elif k == 'str': rv = do_value_str(x)
+    elif k == 'record': rv = do_value_record(x)
+    elif k == 'array': rv = do_value_array(x)
     else:
-      if k == 'call': rv = do_value_expr_call(x)
-      elif k == 'index': rv = do_value_expr_index(x)
-      elif k == 'access': rv = do_value_expr_access(x)
-      elif k == 'cast': rv = do_value_expr_to(x)
-      elif k == 'sizeof': rv = do_value_expr_sizeof(x)
+      if k == 'call': rv = do_value_call(x)
+      elif k == 'index': rv = do_value_index(x)
+      elif k == 'access': rv = do_value_access(x)
+      elif k == 'cast': rv = do_value_to(x)
+      elif k == 'sizeof': rv = do_value_sizeof(x)
 
   if rv == None:
     rv = hlir_value_bad(x['ti'])
