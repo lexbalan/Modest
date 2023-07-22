@@ -83,7 +83,7 @@ def value_cons_array_from_generic_array(v, t, ti, method):
 
   vx = {
     'isa': 'value',
-    'kind': 'array',
+    'kind': 'immediate',
     'items': casted_items,
     'type': t,
     'att': [],
