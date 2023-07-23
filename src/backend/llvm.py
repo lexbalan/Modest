@@ -145,6 +145,21 @@ def inline_cast(op, from_type, to_type, val):
   print_type(to_type)
   o(")")
 
+
+def print_value_array(x):
+  if len(x['items']) > 0:
+    o("["); print_list_by(x['items'], print_type_value); o("]")
+  else:
+    o("zeroinitializer")
+
+def print_value_record(x):
+  def print_type_value_value(llvm_value):
+    print_type_value(llvm_value['value'])
+  if len(x['items']) > 0:
+    o("{"); print_list_by(x['items'], print_type_value_value); o("}")
+  else:
+    o("zeroinitializer")
+
 def print_value(x):
   c = x['class']
   if c == 'reg':
@@ -157,6 +172,7 @@ def print_value(x):
     num = x['num']
     if type.is_integer(x['type']):
       o(str(num))
+
     elif type.is_pointer(x['type']):
       if x['num'] == 0:
         o("null")
@@ -164,17 +180,20 @@ def print_value(x):
 
       v = ll_create_value_num(type.typeNat64, x['num'])
       inline_cast('inttoptr', v['type'], x['type'], v)
+
     else:
       #o(str(f'{num:f}'))
       o(str(double_to_hex(num)))
+
   elif c == 'str':
     o("@%s" % x['id'])
+
   elif c == 'array':
-    o("["); print_list_by(x['items'], print_type_value); o("]")
+    print_value_array(x)
+
   elif c == 'record':
-    def print_type_value_value(llvm_value):
-      print_type_value(llvm_value['value'])
-    o("{"); print_list_by(x['items'], print_type_value_value); o("}")
+    print_value_record(x)
+
   elif c == 'cast':
     #o("bitcast ([%d x i8]* @%s to %%Str)" % (x['len'], x['id']))
     v = x['value']
@@ -184,8 +203,10 @@ def print_value(x):
 
   elif c == 'zero':
     o("zeroinitializer")
+
   elif c == 'null':
     o("null")
+
   else:
     o("<unknown_value::%s>" % c)
     info("???", x['ti'])

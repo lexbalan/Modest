@@ -692,10 +692,13 @@ def do_value_array(x):
     vi = do_value(i)
     items.append(vi)
 
-  size = len(x['items'])
+  n = len(x['items'])
 
-  of = select_type(items[0])
-  vol = hlir_value_int(size)
+  of = None
+  if n > 0:
+    of = items[0]['type']
+
+  vol = hlir_value_int(n)
   type = hlir_type_array(of, volume=vol, att=['generic'], ti=x['ti'])
   return hlir_value_array(type, items, ti=x['ti'])
 

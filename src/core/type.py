@@ -74,13 +74,25 @@ def eq_pointer(a, b):
 
 
 def eq_array(a, b):
-  if not eq(a['of'], b['of']):
+
+  if a['volume'] == None and b['volume'] == None:
+    return eq(a['of'], b['of'])
+
+  if a['volume'] == None or b['volume'] == None:
     return False
 
-  if a['volume'] != None and b['volume'] != None:
-    return a['volume']['num'] == b['volume']['num']
+  if a['volume']['num'] != b['volume']['num']:
+    return False
 
-  return a['volume'] == None and b['volume'] == None
+  if a['of'] == None and b['of'] == None:
+    return True
+
+  if a['of'] == None or b['of'] == None:
+    return False
+
+  return eq(a['of'], b['of'])
+
+
 
 
 def eq_func(a, b):
