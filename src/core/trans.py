@@ -698,9 +698,17 @@ def do_value_array(x):
   if n > 0:
     of = items[0]['type']
 
+  # implicit cast array items to 'of' type
+  items2 = items
+  if of != None:
+    items2 = []
+    for item in items:
+      i2 = value_cast_implicit(item, of, item['ti'])
+      items2.append(i2)
+
   vol = hlir_value_int(n)
   type = hlir_type_array(of, volume=vol, att=['generic'], ti=x['ti'])
-  return hlir_value_array(type, items, ti=x['ti'])
+  return hlir_value_array(type, items2, ti=x['ti'])
 
 
 

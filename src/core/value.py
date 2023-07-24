@@ -65,8 +65,10 @@ def value_num_get(x):
 
 
 
-
+# TODO: массив может НЕЯВНО быть построен только из
+# полного или из пустого дженерик массива
 def value_cons_array_from_generic_array(v, t, ti, method):
+  #print("value_cons_array_from_generic_array")
   if len(v['items']) > t['volume']['num']:
     info("too many items", v['ti'])
     return None
@@ -105,6 +107,7 @@ def value_cons_array_from_generic_array(v, t, ti, method):
 
 
 def value_cons_array(v, t, ti, method):
+  #print("value_cons_array")
   # GenericArray -> Array
   if type.is_array(v['type']) and type.is_generic(v['type']):
     return value_cons_array_from_generic_array(v, t, ti, method)
@@ -182,7 +185,6 @@ def value_cons_record(v, t, ti, method):
 
 
 
-
 def do_cast_generic(v, t, ti):
   x = copy.deepcopy(v)
   x['type'] = t
@@ -192,7 +194,6 @@ def do_cast_generic(v, t, ti):
 
 
 def value_cons_integer(v, t, ti, method):
-
   if type.is_integer(v['type']):
     # Int -> Int
     if type.is_generic(v['type']):
@@ -212,7 +213,6 @@ def value_cons_integer(v, t, ti, method):
   elif type.is_float(v['type']):
     if method == 'explicit':
       return hlir_value_cast(v, t, ti=ti)
-
 
   return None
 
@@ -278,9 +278,11 @@ def value_cons_pointer(v, t, ti, method):
 
         return y
 
-  # *Unit & AnyPtr, AnyPtr & *Unit
+  # Pointer & *X
   if type.is_free_pointer(from_type) and type.is_pointer(t):
     return hlir_value_cast(v, t, ti=ti)
+
+  # *X & Pointer
   if type.is_free_pointer(t) and type.is_pointer(from_type):
     return hlir_value_cast(v, t, ti=ti)
 
