@@ -274,12 +274,13 @@ def value_cons_pointer(v, t, ti, method):
 
         return y
 
-  # Pointer & *X
+  # Pointer -> *X
   if type.is_free_pointer(from_type) and type.is_pointer(t):
     return hlir_value_cast(v, t, ti=ti)
 
-  # *X & Pointer
-  if type.is_free_pointer(t) and type.is_pointer(from_type):
+  # *X -> Pointer
+  if type.is_pointer(from_type) and type.is_free_pointer(t):
+    print("*X -> Pointer")
     return hlir_value_cast(v, t, ti=ti)
 
   return None
@@ -319,6 +320,16 @@ def value_cast_implicit(v, t, ti):
     return hlir_value_bad(ti)
 
   from_type = v['type']
+
+
+  # Pointer -> *X
+  if type.is_free_pointer(from_type) and type.is_pointer(t):
+    return hlir_value_cast(v, t, ti=ti)
+
+  # *X -> Pointer
+  if type.is_pointer(from_type) and type.is_free_pointer(t):
+    return hlir_value_cast(v, t, ti=ti)
+
 
   # implisit cast possible only for:
   # 1. Generic -> NonGeneric  ('nil' are GenericPointer)
