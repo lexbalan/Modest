@@ -5,7 +5,7 @@ from error import info
 import core.type as type
 from core.type import type_attribute_check
 from core.value import value_attribute_check
-from core.hlir import hlir_type_pointer, hlir_value_int
+from core.hlir import hlir_type_pointer, hlir_value_int, hlir_value_num_get
 
 
 func_context = None
@@ -169,16 +169,16 @@ def print_value(x):
   elif c == 'mem':
     o('@%s' % x['id'])
   elif c == 'num':
-    num = x['num']
+    num = hlir_value_num_get(x)
     if type.is_integer(x['type']):
       o(str(num))
 
     elif type.is_pointer(x['type']):
-      if x['num'] == 0:
+      if hlir_value_num_get(x) == 0:
         o("null")
         return
 
-      v = ll_create_value_num(type.typeNat64, x['num'])
+      v = ll_create_value_num(type.typeNat64, hlir_value_num_get(x))
       inline_cast('inttoptr', v['type'], x['type'], v)
 
     else:
@@ -397,7 +397,7 @@ def do_eval_binary (op, x): # ["add", "fadd", x]
 def do_eval_expr_bin(x):
   # if folded bin
   if 'num' in x:
-    return ll_create_value_num(x['type'], x['num'])
+    return ll_create_value_num(x['type'], hlir_value_num_get(x))
 
   opcode = get_bin_opcode(x['kind'], x['left']['type'])
   return do_eval_binary(opcode, x)
@@ -793,9 +793,10 @@ def do_eval_record(v):
   # (кроме констант, ведь они едут до последнего)
 
   items = []
-  for item in v['items']:
-    iv = do_ld(do_eval(item['value']))
-    items.append({'id': item['id'], 'value': iv})
+  for k in v['items']:
+    item = v['items'][k]
+    iv = do_ld(do_eval(item))
+    items.append({'id': k, 'value': iv})
 
   return {
     'isa': 'llvm_value',
@@ -846,9 +847,9 @@ def do_eval_str(x):
 
 def do_eval_imm(x):
   if type.is_integer(x['type']):
-    return ll_create_value_num(x['type'], x['num'])
+    return ll_create_value_num(x['type'], hlir_value_num_get(x))
   elif type.is_float(x['type']):
-    return ll_create_value_num(x['type'], x['num'])
+    return ll_create_value_num(x['type'], hlir_value_num_get(x))
   elif type.is_record(x['type']):
     return do_eval_record(x)
   elif type.is_array(x['type']):
@@ -856,9 +857,9 @@ def do_eval_imm(x):
   elif type.is_string(x['type']):
     return do_eval_str(x)
   elif type.is_free_pointer(x['type']):
-    return ll_create_value_num(x['type'], x['num'])
+    return ll_create_value_num(x['type'], hlir_value_num_get(x))
   elif type.is_pointer(x['type']):
-    return ll_create_value_num(x['type'], x['num'])
+    return ll_create_value_num(x['type'], hlir_value_num_get(x))
 
 
 def func_const_var(x):

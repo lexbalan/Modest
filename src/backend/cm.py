@@ -5,7 +5,7 @@ from error import info
 from .common import *
 from core.type import type_attribute_check
 from core.value import value_attribute_check
-
+from core.hlir import hlir_value_num_get
 
 # красивости
 # если сущность была уже отделена новой строкой
@@ -298,13 +298,14 @@ def print_value_imm_record(v, ctx):
     o("\n")
     indent_up()
   nitems = len(v['items'])
-  while i < nitems:
-    item = v['items'][i]
+  #while i < nitems:
+  for k in v['items']:
+    item = v['items'][k]
 
     if multiline: ind()
 
-    o("%s=" % item['id']['str'])
-    print_value(item['value'], ctx)
+    o("%s=" % k)
+    print_value(item, ctx)
     if i < (nitems - 1):
       o(",")
       if not multiline: o(" ")
@@ -330,13 +331,13 @@ def print_value_imm_str(x, ctx):
 
 def print_value_imm_num(x, ctx):
   if value_attribute_check(x, 'hexadecimal'):
-    o("0x%X" % x['num'])
+    o("0x%X" % hlir_value_num_get(x))
   elif type.is_pointer(x['type']):
-    if x['num'] == 0:
+    if hlir_value_num_get(x) == 0:
       o("nil")
       return
   else:
-    o(str(x['num']))
+    o(str(hlir_value_num_get(x)))
 
 
 def print_value_zero(x, ctx):

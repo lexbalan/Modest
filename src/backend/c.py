@@ -4,7 +4,7 @@ from error import info
 from .common import *
 import core.type as type
 from core.value import value_attribute_check
-
+from core.hlir import hlir_value_num_get
 
 # красивости
 # если сущность была уже отделена новой строкой
@@ -374,24 +374,24 @@ def print_value_imm_str(x, ctx):
 
 def print_value_imm_int(x, ctx):
   if value_attribute_check(x, 'hexadecimal'):
-    o("0x%X" % x['num'])
+    o("0x%X" % hlir_value_num_get(x))
   else:
-    o(str(x['num']))
+    o(str(hlir_value_num_get(x)))
 
 
 def print_value_imm_flt(x, ctx):
-  o(str(x['num']))
+  o(str(hlir_value_num_get(x)))
 
 
 def print_value_imm_num(x, ctx):
   if value_attribute_check(x, 'hexadecimal'):
-    o("0x%X" % x['num'])
+    o("0x%X" % hlir_value_num_get(x))
   elif type.is_pointer(x['type']):
-    if x['num'] == 0:
+    if hlir_value_num_get(x) == 0:
       o("NULL")
       return
   else:
-    o(str(x['num']))
+    o(str(hlir_value_num_get(x)))
 
 
 
@@ -399,7 +399,7 @@ def print_value_imm_ptr(x, ctx):
   if type.is_free_pointer(x['type']):
     o("NULL")
   else:
-    o("0x%X" % x['num'])
+    o("0x%X" % hlir_value_num_get(x))
 
 
 def print_value_imm(x, ctx):
