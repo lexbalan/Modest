@@ -332,13 +332,13 @@ def value_cast_implicit(v, t, ti):
 
 
   # implisit cast possible only for:
-  # 1. Generic -> NonGeneric  ('nil' are GenericPointer)
+  # 1. Generic -> NonGeneric
   # 2. *[n]T -> *[]T
-  from_generic = type.is_generic(from_type)
+  cons_from_generic = type.is_generic(from_type)
 
   ptr_def_arr_to_undef_arr = type.is_pointer_to_defined_array(from_type) and type.is_pointer_to_undefined_array(t)
 
-  if not (from_generic or ptr_def_arr_to_undef_arr):
+  if not (cons_from_generic or ptr_def_arr_to_undef_arr):
     return v
 
   c = value_cons(v, t, ti, method='implicit')

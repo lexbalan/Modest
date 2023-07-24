@@ -102,6 +102,9 @@ class Parser:
         self.skip()
     elif self.ctok() in stoppers:
       pass
+    elif self.ctok_class() in ['line-comment', 'block-comment']:
+      self.skip()
+      pass
     else:
       error("expected separator", self.ti())
 
