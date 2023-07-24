@@ -60,16 +60,12 @@ def value_is_immediate(x):
   return x['kind'] == 'immediate'
 
 
-def value_num_get(x):
-  return x['num']
-
-
 
 # TODO: массив может НЕЯВНО быть построен только из
 # полного или из пустого дженерик массива
 def value_cons_array_from_generic_array(v, t, ti, method):
   #print("value_cons_array_from_generic_array")
-  if len(v['items']) > t['volume']['num']:
+  if len(v['items']) > hlir_value_num_get(t['volume']):
     info("too many items", v['ti'])
     return None
 

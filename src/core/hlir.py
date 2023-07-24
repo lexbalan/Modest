@@ -235,6 +235,10 @@ def hlir_value_record(typ, items={}, att=[], ti=None):
   }
 
 
+def hlir_value_num_get(x):
+  return x['num']
+
+
 
 
 def hlir_value_un(k, value, type, att=[], ti=None):

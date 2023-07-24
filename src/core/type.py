@@ -81,7 +81,7 @@ def eq_array(a, b):
   if a['volume'] == None or b['volume'] == None:
     return False
 
-  if a['volume']['num'] != b['volume']['num']:
+  if hlir_value_num_get(a['volume']) != hlir_value_num_get(b['volume']):
     return False
 
   if a['of'] == None and b['of'] == None:
@@ -384,11 +384,16 @@ def type_print(t, print_aka=True):
     print("*", end=''); type_print(t['to'])
 
   elif k == 'array':
+    if t['of'] == None:
+      print("EmptyArray")
+      return
+
+
     print("[", end='')
-    array_size = t['size']
+    array_size = t['volume']
     sz = 0
     if array_size != None:
-      sz = array_size
+      sz = hlir_value_num_get(array_size)
 
     print("%d" % sz, end='')
     print("]", end='')

@@ -177,7 +177,7 @@ def do_type_array(t):
   if t['size'] != None:
     size_expr = do_value(t['size'])
     tx['volume'] = size_expr
-    #tx['volume'] = value_num_get(size_expr)
+    #tx['volume'] = hlir_value_num_get(size_expr)
 
   return tx
 
@@ -279,8 +279,8 @@ def do_value_shift(op, l, r, ti):
   if not settings_check('backend', 'c'):
     if value_is_immediate(l) and value_is_immediate(r):
       xv = 0
-      if op == 'shl': xv = value_num_get(l) << value_num_get(r)
-      elif op == 'shr': xv = value_num_get(l) >> value_num_get(r)
+      if op == 'shl': xv = hlir_value_num_get(l) << hlir_value_num_get(r)
+      elif op == 'shr': xv = hlir_value_num_get(l) >> hlir_value_num_get(r)
       return hlir_value_int(xv, typ=l['type'], ti=ti)
 
 
@@ -312,7 +312,7 @@ def value_bin_fold(op, l, r, t, ti):
       'mod': lambda a, b: a % b,
     }
 
-    num_val = ops[op](value_num_get(l), value_num_get(r))
+    num_val = ops[op](hlir_value_num_get(l), hlir_value_num_get(r))
     return hlir_value_int(num_val, typ=l['type'], ti=ti)
 
 
@@ -343,8 +343,8 @@ def do_value_bin(x):
             typ = r['type']
 
           num = 0
-          if k == 'add': num = value_num_get(l) + value_num_get(r)
-          elif k == 'sub': num = value_num_get(l) - value_num_get(r)
+          if k == 'add': num = hlir_value_num_get(l) + hlir_value_num_get(r)
+          elif k == 'sub': num = hlir_value_num_get(l) - hlir_value_num_get(r)
 
           return hlir_value_int(num, typ=typ, ti=ti)
 
@@ -410,7 +410,7 @@ def do_value_bin(x):
 
 def do_value_not(val, t, ti):
   if value_is_immediate(val):
-    num = value_num_get(val)
+    num = hlir_value_num_get(val)
     return hlir_value_int(~num, typ=val['type'], att=[], ti=ti)
 
   return hlir_value_un('not', val, t, att=[], ti=ti)
@@ -418,7 +418,7 @@ def do_value_not(val, t, ti):
 
 def do_value_minus(val, t, ti):
   if value_is_immediate(val):
-    num = value_num_get(val)
+    num = hlir_value_num_get(val)
     return hlir_value_int(-num, typ=val['type'], att=[], ti=ti)
 
   return hlir_value_un('minus', val, t, att=[], ti=ti)
@@ -549,7 +549,7 @@ def do_value_index(x):
   # check if index out-of-bounds
   if i['kind'] == 'int':
     if typ['size'] != None:
-      if value_num_get(i) >= typ['size']:
+      if hlir_value_num_get(i) >= typ['size']:
         error("array index out of bounds", x['index'])
 
   i = value_cast_implicit(i, type.typeInt, i['ti'])
