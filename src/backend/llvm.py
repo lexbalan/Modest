@@ -148,15 +148,39 @@ def inline_cast(op, from_type, to_type, val):
 
 def print_value_array(x):
   if len(x['items']) > 0:
-    o("["); print_list_by(x['items'], print_type_value); o("]")
+    o("[\n")
+    indent_up()
+    n = len(x['items'])
+    i = 0
+    while i < n:
+      item = x['items'][i]
+      if i > 0:
+        o(",\n")
+      ind(); print_type_value(item);
+      i = i + 1
+    indent_down()
+    o("\n"); ind(); o("]")
   else:
     o("zeroinitializer")
 
+
 def print_value_record(x):
-  def print_type_value_value(llvm_value):
-    print_type_value(llvm_value['value'])
+  #def print_type_value_value(llvm_value):
+  #  print_type_value(llvm_value['value'])
   if len(x['items']) > 0:
-    o("{"); print_list_by(x['items'], print_type_value_value); o("}")
+    #o("{"); print_list_by(x['items'], print_type_value_value); o("}")
+    o("{\n")
+    indent_up()
+    n = len(x['items'])
+    i = 0
+    while i < n:
+      item = x['items'][i]
+      if i > 0:
+        o(",\n")
+      ind(); print_type_value(item['value']);
+      i = i + 1
+    indent_down()
+    o("\n"); ind(); o("}")
   else:
     o("zeroinitializer")
 
@@ -754,6 +778,17 @@ def do_eval_array(v):
   for item in v['items']:
     iv = do_ld(do_eval(item))
     items.append(iv)
+
+
+  # теперь добавим паддинг нулевыми значениями
+  fulllen = v['type']['volume']['num']
+  n_pad = fulllen - len(items)
+  i = 0
+  while i < n_pad:
+    z = ll_create_value_zero(v['type']['of'])
+    items.append(z)
+    i = i + 1
+
 
   # global?
   # глобальный массив распечатает print_value как литерал

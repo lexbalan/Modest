@@ -289,7 +289,7 @@ def print_value_imm_array(v, ctx):
     print_value(v['items'][i])
     i = i + 1
   indent_down()
-  o("\n]")
+  o("\n"); ind(); o("]")
 
 
 def print_value_imm_record(v, ctx):
