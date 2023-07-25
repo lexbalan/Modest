@@ -1430,7 +1430,7 @@ def print_field(x):
 def print_def_var(x):
   mods = ['external', 'global', 'constant']
   mod = 'global'
-  o("@")
+  o("\n@")
   o(x['var']['id']['str'])
   o(" = %s " % mod)
   print_type(x['var']['type'])
