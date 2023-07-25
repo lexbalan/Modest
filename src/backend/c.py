@@ -313,12 +313,15 @@ def print_value_imm_array(v, ctx):
 #    o(")")
 
   o("{")
+  indent_up()
   i = 0
   while i < len(v['items']):
-    if i > 0: o(", ")
+    if i > 0: o(",")
+    o("\n"); ind()
     print_value(v['items'][i])
     i = i + 1
-  o("}")
+  indent_down()
+  o("\n}")
 
 
 def print_value_imm_record(v, ctx):
