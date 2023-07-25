@@ -53,11 +53,20 @@ def value_is_immutable(x):
   return not value_is_mutable(x)
 
 
+# то что определено директивой let
+def value_is_const_imm(x):
+  if x['kind'] == 'const':
+    if 'num' in x:
+      return True
+  return False
 
 def value_is_immediate(x):
   if 'immediate' in x['att']:
     return True
-  return x['kind'] == 'immediate'
+  if x['kind'] == 'immediate':
+    return True
+
+  return value_is_const_imm(x)
 
 
 

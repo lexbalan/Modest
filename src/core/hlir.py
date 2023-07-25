@@ -2,7 +2,7 @@
 
 import copy
 from opt import settings_get
-
+import core.type as type
 
 def nbytes_for_bits(x):
   aligned_bits = 8

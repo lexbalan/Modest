@@ -177,7 +177,6 @@ def do_type_array(t):
   if t['size'] != None:
     size_expr = do_value(t['size'])
     tx['volume'] = size_expr
-    #tx['volume'] = hlir_value_num_get(size_expr)
 
   return tx
 
@@ -401,10 +400,11 @@ def do_value_bin(x):
     folded = value_bin_fold(k, l, r, t, ti)
     #value_attribute_add(nv, 'immediate')
     nv['num'] = folded['num']
+    nv['type'] = folded['type']
     return nv
 
-  return nv
 
+  return nv
 
 
 
@@ -915,11 +915,14 @@ def do_stmt_let(x):
     module['context'].value_add(id['str'], hlir_value_bad())
     return hlir_stmt_bad()
 
-  vtype = v['type']
-
-  # если это immediate константа, то она подставится принтером llvm
-  # через механизм 'locals_' (!а здесь само значение не идет)
   const_value = hlir_value_const(id, v['type'], init=None, att=['local'], ti=x['ti'])
+
+
+  if value_is_immediate(v):
+    if 'num' in v:
+      # for LLVM (!) e.g. array volume
+      const_value['num'] = v['num']
+
 
   # check if identifier is free (in current block)
   already = module['context'].value_get(id['str'], recursive=False)
