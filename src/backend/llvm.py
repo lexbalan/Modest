@@ -820,6 +820,7 @@ def do_eval(x):
   if v == None:
     print("do_eval_x(x) == None")
     print(x)
+    exit(-1)
 
   assert(v != None)
 
@@ -864,6 +865,11 @@ def do_eval_imm(x):
 
 def func_const_var(x):
   k = x['kind']
+
+  if k == 'const':
+    if 'num' in x:
+      return ll_create_value_num(x['type'], x['num'])
+
   if value_attribute_check(x, 'local'):
     localname = x['id']['str']
     y = locals_get(localname)
