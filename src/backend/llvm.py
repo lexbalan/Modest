@@ -689,10 +689,7 @@ def do_eval_expr_to(v):
       if value['num'] == 0:
         return ll_create_value_null(to_type)
 
-
-  lo("; 1---")
   y = do_ld(do_eval(value))
-  lo("; 2---")
   opcode = select_cast_operator(from_type, to_type)
   reg = operation(opcode)
   print_type(from_type)
