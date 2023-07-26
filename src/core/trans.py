@@ -424,6 +424,23 @@ def do_value_minus(val, t, ti):
   return hlir_value_un('minus', val, t, att=[], ti=ti)
 
 
+
+
+# string literal dereference ` * "Hello World!" `
+# returns array of chars
+def do_value_deref_string(val, t, ti):
+  # разыменование строки это особый случай
+  # поскольку она хоть и числится указателем на массив,
+  # но она в себе несет поля str и len
+  # и после разыменования мы должны получить массив элементов
+  items = []
+  for c in val['str']:
+    cc = hlir_value_int(ord(c), typ=type.typeChar, att=[], ti=None)
+    items.append(cc)
+  return hlir_value_array(t['to'], items, att=[], ti=ti)
+
+
+
 def do_value_deref(val, t, ti):
   if not type.is_pointer(t):
     error("expected pointer", val)
@@ -434,6 +451,14 @@ def do_value_deref(val, t, ti):
   # and pointer to undefined array
   if type.is_func(to) or type.is_undefined_array(to):
     error("unsuitable type", val)
+
+
+  # string literal dereference
+  if value_is_immediate(val):
+    if 'string' in val['att']:
+      return do_value_deref_string(val, t, ti)
+
+
 
   return hlir_value_un('deref', val, to, att=[], ti=ti)
 

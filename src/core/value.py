@@ -78,13 +78,13 @@ def value_cons_array_from_generic_array(v, t, ti, method):
     info("too many items", v['ti'])
     return None
 
-  cast_method = value_cast_implicit
-  if method == 'explicit':
-    cast_method = value_cast_explicit
+  #cast_method = value_cast_implicit
+  #if method == 'explicit':
+  #  cast_method = value_cast_explicit
 
   casted_items = []
   for item in v['items']:
-    casted_item = cast_method(item, t['of'], item['ti'])
+    casted_item = value_cast_implicit(item, t['of'], item['ti'])
     type.check(t['of'], casted_item['type'], item['ti'])
     casted_items.append(casted_item)
 
@@ -111,11 +111,54 @@ def value_cons_array_from_generic_array(v, t, ti, method):
   return vx
 
 
+# TODO: only for immediate array (!)
+def value_cons_array_from_array(v, t, ti, method):
+  print("value_cons_array_from_array")
+
+  # нельзя построить массив из массива другого типа
+  if not type.eq(v['type']['of'], t['of']):
+    return None
+
+  # нельзя построить меньший массив из большего
+  n_from = hlir_value_num_get(v['type']['volume'])
+  n_to = hlir_value_num_get(t['volume'])
+  if n_from > n_to:
+    return None
+
+  if value_is_immediate(v):
+    n = n_to - n_from
+    # будем менять значение (его тип) потому неглубоко копируем значение
+    nv = copy.copy(v)
+    # будем менять тип (его размер) потому неглубоко копируем тип
+    nv['type'] = copy.copy(nv['type'])
+
+    nv['type']['volume'] = t['volume']
+
+    # extend array with zero items
+    i = 0
+    padding = []
+    while i < n:
+      padding.append(hlir_value_zero(t['of'], ti=None))
+      i = i + 1
+
+    nv['items'].extend(padding)
+    nv['att'] = []
+
+    return nv
+
+
+
+  print("#")
+  return None
+
+
 def value_cons_array(v, t, ti, method):
   #print("value_cons_array")
   # GenericArray -> Array
-  if type.is_array(v['type']) and type.is_generic(v['type']):
-    return value_cons_array_from_generic_array(v, t, ti, method)
+  if type.is_array(v['type']):
+    if type.is_generic(v['type']):
+      return value_cons_array_from_generic_array(v, t, ti, method)
+    return value_cons_array_from_array(v, t, ti, method)
 
   return None
 
@@ -151,8 +194,7 @@ def value_cons_record_from_generic_record(v, t, ti, method):
 
     item_value = value_cast_implicit(item_value, field_type, ti=None)
 
-    if not type.eq(item_value['type'], field_type):
-      error("field type cast error", item_value)
+    type.check(field_type, item_value['type'], item_value)
 
     items[field_name] = item_value
 
