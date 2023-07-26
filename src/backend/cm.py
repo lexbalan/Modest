@@ -284,7 +284,7 @@ def print_value_imm_array(v, ctx):
   indent_up()
   i = 0
   while i < len(v['items']):
-    if i > 0: o(",")
+    #if i > 0: o(",")
     o("\n"); ind()
     print_value(v['items'][i])
     i = i + 1
@@ -307,10 +307,10 @@ def print_value_imm_record(v, ctx):
 
     if multiline: ind()
 
-    o("%s=" % k)
+    o("%s = " % k)
     print_value(item, ctx)
     if i < (nitems - 1):
-      o(",")
+      #o(",")
       if not multiline: o(" ")
     if multiline: o("\n")
 

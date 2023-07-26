@@ -343,7 +343,7 @@ def print_value_imm_record(v, ctx):
       ind()
 
     field_str = item['id']['str']
-    o(".%s=" % field_str)
+    o(".%s = " % field_str)
     if not isinstance(v['items'], dict):
       print(v['items'])
       exit(1)
