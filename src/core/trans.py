@@ -620,10 +620,10 @@ def do_value_access(x):
   # if field not found
   if field == None:
     error("undefined field '%s'" % field_id['str'], x)
-    return hlir_value_bad(x['right']['ti'])
+    return hlir_value_bad(x['field']['ti'])
 
   if type.is_bad(field['type']):
-    return hlir_value_bad(x['right']['ti'])
+    return hlir_value_bad(x['field']['ti'])
 
   # immediate access (!)
   if value_is_immediate(r):
