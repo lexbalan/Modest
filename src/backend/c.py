@@ -580,6 +580,7 @@ def print_stmt(x):
   else: o("<stmt %s>" % str(x))
 
 
+
 # not works
 def print_arrays(arrays):
   for array in arrays:
@@ -594,13 +595,34 @@ def print_arrays(arrays):
 
 
 
+def print_stmts_puffy(stmts):
+  k_prev = ""
+  if len(stmts) > 0:
+    k_prev = stmts[0]['kind']
+  i = 0
+  for stmt in stmts:
+    need_nl = k_prev != stmt['kind'] or stmt['kind'] in ['if', 'while']
+    if need_nl and i > 0:
+      k_prev = stmt['kind']
+      o("\n")
+    print_stmt(stmt)
+    i = i + 1
+
+
+def print_stmts_flat(stmts):
+  for stmt in stmts:
+    print_stmt(stmt)
+
+
 def print_stmt_block(s, arrays=None):
   o("{")
   indent_up()
+
   if arrays != None:
     print_arrays(arrays)
-  for stmt in s['stmts']:
-    print_stmt(stmt)
+
+  print_stmts_puffy(s['stmts'])
+
   indent_down()
   o("\n")
   ind()
