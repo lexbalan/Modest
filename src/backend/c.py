@@ -659,6 +659,9 @@ def print_func_signature(id, typ):
   o(" " + "*" * ptr_level)
   o("%s(" % id)
 
+  if len(params) == 0:
+    o("void")  # see C language documentation
+
   i = 0
   while i < len(params):
     param = params[i]
