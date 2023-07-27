@@ -1037,7 +1037,8 @@ def do_include(x):
   # get abspath
   abspath = import_abspath(impline)
   if abspath == None:
-    fatal("module not found", x)
+    error("module not found", x)
+    fatal("module not found")
     return None
 
 
@@ -1095,7 +1096,8 @@ def do_import(x):
   abspath = import_abspath(impline)
 
   if abspath == None:
-    fatal("module not found", x)
+    error("module not found", x)
+    fatal("module not found")
     return None
 
   m = translate(abspath)
@@ -1146,6 +1148,10 @@ def def_const(x):
   definition = hlir_def_const(id, nv, v, ti=x['ti'])
   nv['definition'] = definition
   definition['att'].extend(attributes)
+
+  # extern const для C принтера (не печатает)
+  if x['extern']:
+    definition['att'].append('extern')
 
   return definition
 
