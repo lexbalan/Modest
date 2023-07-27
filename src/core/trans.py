@@ -465,6 +465,7 @@ def do_value_deref(val, t, ti):
 
 def do_value_ref(val, t, ti):
   if value_is_immutable(val):
+    if not type.is_func(t):
       error("cannot get pointer to immutable value", ti)
   vt = hlir_type_pointer(t, ti=ti)
   return hlir_value_un('ref', val, vt, att=[], ti=ti)

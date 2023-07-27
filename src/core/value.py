@@ -44,12 +44,16 @@ def value_is_mutable(x):
   if 'immutable' in x['att']:
     return False
 
+  if value_is_immediate(x):
+    return False
+
   return x['kind'] in [
     'var', 'access', 'access_ptr', 'index', 'index_ptr', 'deref'
   ]
 
 
 def value_is_immutable(x):
+
   return not value_is_mutable(x)
 
 

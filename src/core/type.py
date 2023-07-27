@@ -343,6 +343,13 @@ def get_size(t):
     return t['volume']['num'] * get_size(t['of'])
 
 
+def print_list_by(lst, method):
+  i = 0
+  while i < len(lst):
+    if i > 0:
+      print(", ")
+    method(lst[i])
+    i = i + 1
 
 def type_print(t, print_aka=True):
   k = t['kind']
