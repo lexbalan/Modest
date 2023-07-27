@@ -93,6 +93,17 @@ def option_get(id):
 
 
 
+def insert(s):
+  global module
+
+  inc = {
+    'isa': 'directive',
+    'kind': 'insert',
+    'str': s,
+    'att': [],
+  }
+  module['text'].append(inc)
+
 
 
 

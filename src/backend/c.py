@@ -831,6 +831,10 @@ def print_include(x):
   o("#include %s" % s)
 
 
+def print_insert(x):
+  s = x['str']
+  o(s)
+
 
 def print_comment_line(x):
   lines = x['lines']
@@ -908,6 +912,7 @@ def run(module, outname):
       elif k == 'type': print_decl_type(x)
     elif isa == 'directive':
       if k == 'include': print_include(x)
+      if k == 'insert': print_insert(x)
     elif isa == 'comment':
       if k == 'comment-line': print_comment_line(x)
       if k == 'comment-block': print_comment_block(x)
