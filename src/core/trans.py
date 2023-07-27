@@ -1150,8 +1150,8 @@ def def_const(x):
   definition['att'].extend(attributes)
 
   # extern const для C принтера (не печатает)
-  if x['extern']:
-    definition['att'].append('extern')
+  #if x['extern']:
+  #  definition['att'].append('extern')
 
   return definition
 
