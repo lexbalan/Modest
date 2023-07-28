@@ -300,6 +300,17 @@ def value_cons_pointer(v, t, ti, method):
     ### UNSAFE ###
 
     if method == 'explicit':
+
+      if value_is_immediate(v):
+        # compile-time casting
+        nv = hlir_value_cast(v, t, att=[], ti=ti)
+        #nv['type'] = t
+        #nv['ti'] = ti
+        nv['num'] = v['num']
+        nv['att'].append('immediate')
+        return nv
+
+
       # Int -> Ptr
       if type.is_generic_integer(from_type):
         return hlir_value_cast(v, t, ti=ti) # @!!
@@ -328,7 +339,6 @@ def value_cons_pointer(v, t, ti, method):
 
   # *X -> Pointer
   if type.is_pointer(from_type) and type.is_free_pointer(t):
-    print("*X -> Pointer")
     return hlir_value_cast(v, t, ti=ti)
 
   return None
