@@ -286,12 +286,17 @@ def do_value_shift(op, l, r, ti):
     error("type error", r)
 
   # const folding
-  if not settings_check('backend', 'c'):
-    if value_is_immediate(l) and value_is_immediate(r):
-      xv = 0
-      if op == 'shl': xv = hlir_value_num_get(l) << hlir_value_num_get(r)
-      elif op == 'shr': xv = hlir_value_num_get(l) >> hlir_value_num_get(r)
-      return hlir_value_int(xv, typ=l['type'], ti=ti)
+  #if not settings_check('backend', 'c'):
+  if value_is_immediate(l) and value_is_immediate(r):
+    xv = 0
+    if op == 'shl': xv = hlir_value_num_get(l) << hlir_value_num_get(r)
+    elif op == 'shr': xv = hlir_value_num_get(l) >> hlir_value_num_get(r)
+
+    v = hlir_value_bin(op, l, r, l['type'], ti)
+    v['att'].append('immediate')
+    v['num'] = xv
+    return v
+    #return hlir_value_int(xv, typ=l['type'], ti=ti)
 
 
   if type.is_generic(l['type']):
@@ -409,11 +414,10 @@ def do_value_bin(x):
   # and append field 'num' to nv
   if value_is_immediate(l) and value_is_immediate(r):
     folded = value_bin_fold(k, l, r, t, ti)
-    #value_attribute_add(nv, 'immediate')
-    nv['num'] = folded['num']
-    nv['type'] = folded['type']
-    return nv
 
+    nv['type'] = folded['type']
+    nv['num'] = folded['num']
+    nv['att'].append('immediate')
 
   return nv
 
