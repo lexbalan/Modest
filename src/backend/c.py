@@ -712,6 +712,7 @@ def print_def_func(x):
   arrays = print_func_signature(func['id']['str'], func['type'])
   o("\n")
   print_stmt_block(func['stmt'], arrays=arrays)
+  o("\n")
 
 
 
