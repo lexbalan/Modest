@@ -39,6 +39,7 @@ def main():
 
   # set default settings
   settings_set('library', path_lib)
+  settings_set('int', 32)
 
 
   # parse features (ex. -funsafe)

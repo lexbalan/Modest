@@ -19,6 +19,7 @@ settings = {}
 
 def settings_set(key, value):
   global settings
+  #print("set %s %s" % (key, str(value)))
   settings[key] = value
 
 

@@ -119,6 +119,28 @@ def import_add(id, m):
   module['imports'].update({id: m})
 
 
+
+
+typeSysInt = None
+typeSysNat = None
+
+def select_int(sz):
+  return {
+    8: type.typeInt8,
+    16: type.typeInt16,
+    32: type.typeInt32,
+    64: type.typeInt64,
+  }[sz]
+
+def select_nat(sz):
+  return {
+    8: type.typeNat8,
+    16: type.typeNat16,
+    32: type.typeNat32,
+    64: type.typeNat64,
+  }[sz]
+
+
 def init():
   global root_context
   # init main context
@@ -142,6 +164,18 @@ def init():
   root_context.value_add('nil', valueNil)
   root_context.value_add('true', valueTrue)
   root_context.value_add('false', valueFalse)
+
+
+  # Set taget depended Int & Nat types
+  # (used in index, extra agrs & generic numeric var definitions)
+  int_size = int(settings_get('int'))
+  global typeSysInt, typeSysNat
+  typeSysInt = copy.copy(select_int(int_size))
+  typeSysInt['c_alias'] = 'int'
+  typeSysNat = copy.copy(select_nat(int_size))
+  typeSysNat['c_alias'] = 'unsigned int'
+
+
 
 
 # last fiels of record can be zero size array (!)
@@ -369,13 +403,13 @@ def do_value_bin(x):
   # IR (LLVM)  ptr +/- num
   # для си это же смотри выше
   if p_and_n:
-    lnat = do_cast_runtime(l, type.typeNat, ti)
+    lnat = do_cast_runtime(l, typeSysNat, ti)
     xr = value_cast_implicit(r, lnat['type'], ti)
     result = hlir_value_bin(x['kind'], lnat, xr, xr['type'], ti)
     return do_cast_runtime(result, l['type'], ti)
 
   if n_and_p:
-    rnat = do_cast_runtime(r, type.typeNat, ti)
+    rnat = do_cast_runtime(r, typeSysNat, ti)
     xl = value_cast_implicit(l, rnat['type'], ti)
     result = hlir_value_bin(x['kind'], rnat, xl, xl['type'], ti)
     return do_cast_runtime(result, r['type'], ti)
@@ -477,9 +511,8 @@ def do_value_deref(val, t, ti):
     if 'string' in val['att']:
       return do_value_deref_string(val, t, ti)
 
-
-
   return hlir_value_un('deref', val, to, att=[], ti=ti)
+
 
 
 def do_value_ref(val, t, ti):
@@ -488,6 +521,7 @@ def do_value_ref(val, t, ti):
       error("cannot get pointer to immutable value", ti)
   vt = hlir_type_pointer(t, ti=ti)
   return hlir_value_un('ref', val, vt, att=[], ti=ti)
+
 
 
 def do_value_un(x):
@@ -557,7 +591,7 @@ def do_value_call(x):
     arg = do_value(x['args'][i])
 
     if not value_is_bad(arg):
-      arg = value_cast_implicit(arg, type.typeInt, arg['ti'])
+      arg = value_cast_implicit(arg, typeSysInt, arg['ti'])
       args.append(arg)
 
     i = i + 1
@@ -597,7 +631,7 @@ def do_value_index(x):
       if hlir_value_num_get(i) >= typ['size']:
         error("array index out of bounds", x['index'])
 
-  i = value_cast_implicit(i, type.typeInt, i['ti'])
+  i = value_cast_implicit(i, typeSysInt, i['ti'])
 
   # immediate index (!)
   if value_is_immediate(a):
@@ -790,7 +824,7 @@ def do_value_float(x):
 
 def do_value_sizeof(x):
   of = do_type(x['type'])
-  return hlir_value_sizeof(of, type.typeNat, ti=x['ti'])
+  return hlir_value_sizeof(of, typeSysNat, ti=x['ti'])
 
 
 
@@ -917,15 +951,10 @@ def do_stmt_var(x):
   if x['value'] != None:
     v = do_value(x['value'])
 
+  # error: no type, no init value
   if t == None and v == None:
     module['context'].value_add(id['str'], hlir_value_bad())
     return hlir_stmt_bad()
-
-  if t != None and v != None:
-    # type check
-    v = value_cast_implicit(v, t, v['ti'])
-    type.check(t, v['type'], v['ti'])
-
 
   if t != None:
     if type.is_bad(t):
@@ -935,8 +964,20 @@ def do_stmt_var(x):
     if type.is_forbidden_var(t):
       error("unsuitable type", x['type'])
 
+  # type & init value present
+  if t != None and v != None:
+    # type check
+    v = value_cast_implicit(v, t, v['ti'])
+    type.check(t, v['type'], v['ti'])
+
+
 
   if t == None:
+    if type.is_generic_integer(v['type']):
+      # если тип не указан явно, а у значения тип generic_integer
+      # приводим его к системному инту
+      v = value_cast_implicit(v, typeSysInt, v['ti'])
+
     t = v['type']
 
   # check if identifier is free (in current block)

@@ -57,9 +57,6 @@ typeStr['att'].append('str')
 genericStr = typeStr
 
 
-typeInt = copy.copy(typeInt64)
-typeInt['c_alias'] = 'int'
-typeNat = copy.copy(typeNat64)
 typeFreePtr = hlir_type_free_pointer()
 typeFreePtr['att'].append('generic')  #!
 
@@ -318,6 +315,7 @@ def record_field_get(t, id):
 
 
 
+
 def create_alias(id, t, ti):
   #print('type.create_alias ' + id)
   nt = copy.copy(t)
@@ -372,7 +370,7 @@ def type_print(t, print_aka=True):
       return
 
   if k == 'record':
-    print("{")
+    print("record {")
     fields = t['fields']
     i = 0
     while i < len(fields):
