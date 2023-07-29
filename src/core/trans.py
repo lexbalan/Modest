@@ -385,7 +385,7 @@ def do_value_bin(x):
   r = value_cast_implicit(r, l['type'], r['ti'])
 
   if not k in ['eq', 'ne']:
-    if not k in ['add', 'sub']:  # add, sub, for *Unit pointers
+    if not k in ['add', 'sub']:  # add, sub, for free pointers
       if not type_attribute_check(l['type'], 'numeric'):
         error("type error", x['left'])
       if not type_attribute_check(r['type'], 'numeric'):
@@ -424,19 +424,23 @@ def do_value_bin(x):
 
 
 def do_value_not(val, t, ti):
-  if value_is_immediate(val):
-    num = hlir_value_num_get(val)
-    return hlir_value_int(~num, typ=val['type'], att=[], ti=ti)
+  v = hlir_value_un('not', val, t, att=[], ti=ti)
 
-  return hlir_value_un('not', val, t, att=[], ti=ti)
+  if value_is_immediate(val):
+    v['num'] = ~hlir_value_num_get(val)
+    v['att'].append('immediate')
+
+  return v
 
 
 def do_value_minus(val, t, ti):
-  if value_is_immediate(val):
-    num = hlir_value_num_get(val)
-    return hlir_value_int(-num, typ=val['type'], att=[], ti=ti)
+  v = hlir_value_un('minus', val, t, att=[], ti=ti)
 
-  return hlir_value_un('minus', val, t, att=[], ti=ti)
+  if value_is_immediate(val):
+    v['num'] = -hlir_value_num_get(val)
+    v['att'].append('immediate')
+
+  return v
 
 
 
