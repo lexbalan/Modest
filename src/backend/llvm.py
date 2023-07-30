@@ -1148,7 +1148,10 @@ def ll_alloca(id, typ, init_value):
 
 def print_stmt_def_var(x):
   id = x['id']['str']
-  val = ll_alloca(id, x['type'], do_eval(x['value']))
+  init_value = None
+  if x['value'] != None:
+    init_value = do_eval(x['value'])
+  val = ll_alloca(id, x['type'], init_value)
   locals_add(id, val)
   return None
 
