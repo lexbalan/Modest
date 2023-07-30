@@ -57,24 +57,24 @@ def hlir_type_float(aka, size=0, att=[], ti=None):
 
 
 def hlir_type_pointer(to, att=[], ti=None):
-  pointer_size = settings_get('pointer_size')
+  pointer_size = settings_get('ptr')
   return {
     'isa': 'type',
     'kind': 'pointer',
     'to': to,
-    'size': pointer_size,
-    'power': pointer_size * 8,
+    'size': pointer_size / 8,
+    'power': pointer_size,
     'att': [] + att,
     'ti': ti
   }
 
 def hlir_type_free_pointer(ti=None):
-  pointer_size = settings_get('pointer_size')
+  pointer_size = settings_get('ptr')
   return {
     'isa': 'type',
     'kind': 'free_pointer',
-    'size': pointer_size,
-    'power': pointer_size * 8,
+    'size': pointer_size / 8,
+    'power': pointer_size,
     'att': [],
     'ti': ti
   }

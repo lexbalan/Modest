@@ -7,9 +7,16 @@ import importlib
 
 from opt import *
 
-settings_set('pointer_size', 8)
-settings_set('backend', 'llvm')
 
+DEFAULT_BACKEND = 'llvm'
+DEFAULT_MINT = 64
+DEFAULT_MPTR = 64
+DEFAULT_MFLT = 64
+
+# right here!
+settings_set('int', DEFAULT_MINT)
+settings_set('ptr', DEFAULT_MPTR)
+settings_set('backend', DEFAULT_BACKEND)
 
 import error
 import core.trans as trans
@@ -39,7 +46,6 @@ def main():
 
   # set default settings
   settings_set('library', path_lib)
-  settings_set('int', 32)
 
 
   # parse features (ex. -funsafe)
