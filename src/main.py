@@ -8,14 +8,17 @@ import importlib
 from opt import *
 
 
-DEFAULT_BACKEND = 'llvm'
-DEFAULT_MINT = 64
+DEFAULT_MINT = 32
 DEFAULT_MPTR = 64
 DEFAULT_MFLT = 64
+DEFAULT_MLIB = ""
+DEFAULT_BACKEND = 'llvm'
 
 # right here!
 settings_set('int', DEFAULT_MINT)
 settings_set('ptr', DEFAULT_MPTR)
+settings_set('flt', DEFAULT_MFLT)
+settings_set('lib', DEFAULT_MLIB)
 settings_set('backend', DEFAULT_BACKEND)
 
 import error
@@ -45,7 +48,7 @@ def main():
     fatal("MODEST_LIB required")
 
   # set default settings
-  settings_set('library', path_lib)
+  settings_set('lib', path_lib)
 
 
   # parse features (ex. -funsafe)

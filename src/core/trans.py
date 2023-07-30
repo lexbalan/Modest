@@ -1510,7 +1510,7 @@ def import_abspath(s):
     f = env_cfdir + '/' + s #[1:]
 
   else: # (global)
-    path_lib = settings_get('library')
+    path_lib = settings_get('lib')
     f = path_lib + '/' + s
 
   if not os.path.exists(f):
