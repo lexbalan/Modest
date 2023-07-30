@@ -389,7 +389,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 
   k = x['kind']
 
-  if k == 'immediate': print_value_imm(x, ctx)
+  if k == 'literal': print_value_imm(x, ctx)
   elif k in bin_ops: print_value_bin(x, ctx)
   elif k in un_ops: print_value_un(x, ctx)
   elif k in ['func', 'var']: print_value_by_id(x, ctx)

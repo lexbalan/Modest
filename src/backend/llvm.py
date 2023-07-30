@@ -226,7 +226,10 @@ def print_value(x):
     inline_cast('bitcast', from_type, to_type, v)
 
   elif c == 'zero':
-    o("zeroinitializer")
+    if type.is_numeric(x['type']):
+      o("0")
+    else:
+      o("zeroinitializer")
 
   elif c == 'null':
     o("null")
@@ -401,11 +404,10 @@ def get_bin_opcode_suf (sop, uop, fop, t): # ["sdiv", "udiv", "fdiv", x]
 
 
 
-def do_eval_binary (op, x): # ["add", "fadd", x]
-  l = do_ld(do_eval(x['left']))
-  r = do_ld(do_eval(x['right']))
+def do_eval_binary (op, l, r, x): # ["add", "fadd", x]
 
-  reg = operation_with_type (op, x['left']['type'])
+
+  reg = operation_with_type (op, l['type'])
   o(" "); print_value (l); o(", "); print_value (r)
 
   return {
@@ -424,7 +426,9 @@ def do_eval_expr_bin(x):
     return ll_create_value_num(x['type'], hlir_value_num_get(x))
 
   opcode = get_bin_opcode(x['kind'], x['left']['type'])
-  return do_eval_binary(opcode, x)
+  l = do_ld(do_eval(x['left']))
+  r = do_ld(do_eval(x['right']))
+  return do_eval_binary(opcode, l, r, x)
 
 
 
@@ -457,6 +461,15 @@ def do_eval_expr_un(v):
     o(" ");
     print_value(vx)
     o(", -1")
+
+
+  elif v['kind'] == 'minus':
+
+    #%10 = sub i32 0, %9
+
+    z = ll_create_value_zero(v['type'])
+    return do_eval_binary('sub', z, vx, v)
+
   else:
     reg = operation(v['kind']); o(" "); print_value(vx)
 
@@ -843,10 +856,16 @@ def do_eval_record(v):
 
 
 def do_eval(x):
-  # bad value
-  if x == None:
-    return None
+  assert(x != None)
 
+
+  # compile time evaluation
+  if 'immediate' in x['att']:
+    if type.is_integer(x['type']):
+      return ll_create_value_num(x['type'], x['num'])
+
+
+  # runtime evaluation
   v = do_eval_x(x)
 
   if v == None:
@@ -937,7 +956,7 @@ def do_eval_x(x):
 
   k = x['kind']
 
-  if k == 'immediate': return do_eval_imm(x)
+  if k == 'literal': return do_eval_imm(x)
   elif k in bin_ops: return do_eval_expr_bin(x)
   elif k in un_ops: return do_eval_expr_un(x)
   elif k in ['func', 'const', 'var']: return func_const_var(x)

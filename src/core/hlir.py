@@ -142,11 +142,11 @@ def hlir_value_bad(ti=None):
 def hlir_value_zero(t, ti=None):
   return {
     'isa': 'value',
-    'kind': 'immediate',
+    'kind': 'literal',
     'type': t,
     'num': 0,
     'items': [],
-    'att': [],
+    'att': ['immediate'],
     'ti': ti
   }
 
@@ -179,10 +179,10 @@ def hlir_value_int(num, typ=None, att=[], ti=None):
 
   return {
     'isa': 'value',
-    'kind': 'immediate',
+    'kind': 'literal',
     'num': num,
     'type': typ,
-    'att': [],
+    'att': ['immediate'],
     'ti': ti
   }
 
@@ -193,10 +193,10 @@ def hlir_value_float(num, att=[], ti=None):
   typ = hlir_type_float('Float', att=['generic'])
   return {
     'isa': 'value',
-    'kind': 'immediate',
+    'kind': 'literal',
     'num': num,
     'type': typ,
-    'att': att,
+    'att': ['immediate'] + att,
     'ti': ti
   }
 
@@ -204,11 +204,11 @@ def hlir_value_float(num, att=[], ti=None):
 def hlir_value_cstr(string, length, type, att=[], ti=None):
   return {
     'isa': 'value',
-    'kind': 'immediate',
+    'kind': 'literal',
     'str': string,
     'len': length,
     'type': type,
-    'att': ['string'],
+    'att': ['immediate', 'string'],
     'ti': ti
   }
 
@@ -216,10 +216,10 @@ def hlir_value_cstr(string, length, type, att=[], ti=None):
 def hlir_value_array(type, items, att=[], ti=None):
   return {
     'isa': 'value',
-    'kind': 'immediate',
+    'kind': 'literal',
     'type': type,
     'items': items,
-    'att': att,
+    'att': ['immediate'] + att,
     'ti': ti
   }
 
@@ -227,10 +227,10 @@ def hlir_value_array(type, items, att=[], ti=None):
 def hlir_value_record(typ, items={}, att=[], ti=None):
   return {
     'isa': 'value',
-    'kind': 'immediate',
+    'kind': 'literal',
     'type': typ,
     'items': items,
-    'att': [],
+    'att': ['immediate'],
     'ti': ti
   }
 

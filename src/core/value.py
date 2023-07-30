@@ -64,11 +64,12 @@ def value_is_const_imm(x):
       return True
   return False
 
+
 def value_is_immediate(x):
   if 'immediate' in x['att']:
     return True
-  if x['kind'] == 'immediate':
-    return True
+  #if x['kind'] == 'literal':
+  #  return True
 
   return value_is_const_imm(x)
 
@@ -94,7 +95,7 @@ def value_cons_array_from_generic_array(v, t, ti, method):
 
   vx = {
     'isa': 'value',
-    'kind': 'immediate',
+    'kind': 'literal',
     'items': casted_items,
     'type': t,
     'att': [],
@@ -197,7 +198,7 @@ def value_cons_record_from_generic_record(v, t, ti, method):
 
   vx = {
     'isa': 'value',
-    'kind': 'immediate',
+    'kind': 'literal',
     'items': items,
     'type': t,
     'att': ['generic-casted'],
@@ -302,18 +303,17 @@ def value_cons_pointer(v, t, ti, method):
     if method == 'explicit':
 
       if value_is_immediate(v):
-        # compile-time casting
-        nv = hlir_value_cast(v, t, att=[], ti=ti)
-        #nv['type'] = t
-        #nv['ti'] = ti
-        nv['num'] = v['num']
-        nv['att'].append('immediate')
-        return nv
+        if type.is_numeric(v['type']):
+          # compile-time casting
+          nv = hlir_value_cast(v, t, att=[], ti=ti)
+          nv['num'] = v['num']
+          nv['att'].append('immediate')
+          return nv
 
 
       # Int -> Ptr
-      if type.is_generic_integer(from_type):
-        return hlir_value_cast(v, t, ti=ti) # @!!
+#      if type.is_generic_integer(from_type):
+#        return hlir_value_cast(v, t, ti=ti)
 
       # Ptr -> Ptr
       if type.is_pointer(from_type):
@@ -328,8 +328,8 @@ def value_cons_pointer(v, t, ti, method):
         # кароче это стаб - си хочет печатать runtime приведение строки
         # к char *, что излишне; по этому атрибуту он понимает
         # что делать так не надо; Это временное решение (!)
-        if 'string' in v['att']:
-          y['att'].append('string')
+#        if 'string' in v['att']:
+#          y['att'].append('casted_string_literal')
 
         return y
 
