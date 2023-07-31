@@ -286,7 +286,11 @@ def do_type_func(t):
     if param != None:
       params.append(param)
 
-  to = do_type(t['to'])
+  to = None
+  if t['to'] != None:
+    to = do_type(t['to'])
+  else:
+    to = type.typeUnit
 
   return hlir_type_func(params, to)
 

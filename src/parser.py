@@ -125,7 +125,8 @@ class Parser:
         t = self.expr_type()
         return {'isa': 'type', 'kind': 'func', 'params': fields, 'to': t, 'ti': ti}
       else:
-        error("???", ti)
+        #error("???", ti)
+        return {'isa': 'type', 'kind': 'func', 'params': fields, 'to': None, 'ti': ti}
       #  return r
     
     elif self.match("*"):
