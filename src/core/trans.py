@@ -1297,6 +1297,7 @@ def def_var(x):
   module['context'].value_add(x['field']['id']['str'], var)
 
   definition = hlir_def_var(var, init_value, ti=x['ti'])
+  definition['att'].extend(attributes)
   var['definition'] = definition
 
   return definition

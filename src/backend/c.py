@@ -813,9 +813,6 @@ def print_field(x, const=False, prefix=None):
 
 
 def print_def_var(x):
-  if 'c-no-print' in x['att']:
-      return
-
   if 'c_prefix' in x['var']:
       o("%s " % x['var']['c_prefix'])
   print_field(x['var'])
