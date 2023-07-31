@@ -171,9 +171,9 @@ def init():
   int_size = int(settings_get('int'))
   global typeSysInt, typeSysNat
   typeSysInt = copy.copy(select_int(int_size))
-  #typeSysInt['c_alias'] = 'int'
+  typeSysInt['c_alias'] = 'int'
   typeSysNat = copy.copy(select_nat(int_size))
-  #typeSysNat['c_alias'] = 'unsigned int'
+  typeSysNat['c_alias'] = 'unsigned int'
 
 
 
@@ -236,7 +236,7 @@ def do_type_record(t):
     f['no'] = i
     i = i + 1
 
-    f_exist = None #TODO!/ type.record_field_get(record, f['id']['str'])
+    f_exist = None #TODO! type.record_field_get(record, f['id']['str'])
     if f_exist != None:
       error("redefinition of '%s'" % f['id']['str'], f)
       continue
@@ -288,7 +288,7 @@ def do_type_func(t):
 
   to = do_type(t['to'])
 
-  return hlir_type_func(params, to, att=[])
+  return hlir_type_func(params, to)
 
 
 
@@ -326,7 +326,7 @@ def do_value_shift(op, l, r, ti):
     if op == 'shl': xv = hlir_value_num_get(l) << hlir_value_num_get(r)
     elif op == 'shr': xv = hlir_value_num_get(l) >> hlir_value_num_get(r)
 
-    v = hlir_value_bin(op, l, r, l['type'], ti)
+    v = hlir_value_bin(op, l, r, l['type'], ti=ti)
     v['att'].append('immediate')
     v['num'] = xv
     return v
@@ -337,7 +337,7 @@ def do_value_shift(op, l, r, ti):
     #if value.is_immediate(r['type']):
     error("required type", l)
 
-  return hlir_value_bin(op, l, r, l['type'], ti)
+  return hlir_value_bin(op, l, r, l['type'], ti=ti)
 
 
 
@@ -442,7 +442,7 @@ def do_value_bin(x):
     t = type.typeNat1
 
 
-  nv = hlir_value_bin(x['kind'], l, r, t, ti)
+  nv = hlir_value_bin(x['kind'], l, r, t, ti=ti)
 
   # if left & right are immediate, we can fold const
   # and append field 'num' to nv
@@ -458,7 +458,7 @@ def do_value_bin(x):
 
 
 def do_value_not(val, t, ti):
-  v = hlir_value_un('not', val, t, att=[], ti=ti)
+  v = hlir_value_un('not', val, t, ti=ti)
 
   if value_is_immediate(val):
     v['num'] = ~hlir_value_num_get(val)
@@ -468,7 +468,7 @@ def do_value_not(val, t, ti):
 
 
 def do_value_minus(val, t, ti):
-  v = hlir_value_un('minus', val, t, att=[], ti=ti)
+  v = hlir_value_un('minus', val, t, ti=ti)
 
   if value_is_immediate(val):
     v['num'] = -hlir_value_num_get(val)
@@ -488,9 +488,9 @@ def do_value_deref_string(val, t, ti):
   # и после разыменования мы должны получить массив элементов
   items = []
   for c in val['str']:
-    cc = hlir_value_int(ord(c), typ=type.typeChar, att=[], ti=None)
+    cc = hlir_value_int(ord(c), typ=type.typeChar, ti=None)
     items.append(cc)
-  return hlir_value_array(t['to'], items, att=[], ti=ti)
+  return hlir_value_array(t['to'], items, ti=ti)
 
 
 
@@ -511,7 +511,7 @@ def do_value_deref(val, t, ti):
     if 'string' in val['att']:
       return do_value_deref_string(val, t, ti)
 
-  return hlir_value_un('deref', val, to, att=[], ti=ti)
+  return hlir_value_un('deref', val, to, ti=ti)
 
 
 
@@ -520,7 +520,7 @@ def do_value_ref(val, t, ti):
     if not type.is_func(t):
       error("cannot get pointer to immutable value", ti)
   vt = hlir_type_pointer(t, ti=ti)
-  return hlir_value_un('ref', val, vt, att=[], ti=ti)
+  return hlir_value_un('ref', val, vt, ti=ti)
 
 
 
@@ -761,7 +761,7 @@ def select_type(x):
     return x['type']
 
   if type.is_integer(x['type']):
-    return type.typeInt
+    return typeSysInt
 
 
 
@@ -786,7 +786,8 @@ def do_value_array(x):
       items2.append(i2)
 
   vol = hlir_value_int(n)
-  type = hlir_type_array(of, volume=vol, att=['generic'], ti=x['ti'])
+  type = hlir_type_array(of, volume=vol, ti=x['ti'])
+  type['att'].extend(['generic'])
   return hlir_value_array(type, items2, ti=x['ti'])
 
 
@@ -794,6 +795,7 @@ def do_value_array(x):
 def do_value_record(x):
   items = {}
   fields = []
+  i = 0
   for item in x['items']:
     id = item['id']
 
@@ -802,9 +804,12 @@ def do_value_record(x):
 
     # создаем поле для типа generic записи
     field = hlir_field(id, select_type(val), ti=val['ti'])
+    field['no'] = i
     fields.append(field)
+    i = i + 1
 
-  typ = hlir_type_record(fields, att=['generic'], ti=x['ti'])
+  typ = hlir_type_record(fields, ti=x['ti'])
+  typ['att'].extend(['generic'])
   return hlir_value_record(typ, items, ti=x['ti'])
 
 
@@ -987,7 +992,8 @@ def do_stmt_var(x):
     return hlir_stmt_bad()
 
   #
-  var_value = hlir_value_var(id, t, att=['local'], ti=x['ti'])
+  var_value = hlir_value_var(id, t, ti=x['ti'])
+  var_value['att'].extend(['local'])
   module['context'].value_add(id['str'], var_value)
 
   return hlir_stmt_def_var(id, t, v, ti=x['ti'])
@@ -1001,7 +1007,8 @@ def do_stmt_let(x):
     module['context'].value_add(id['str'], hlir_value_bad())
     return hlir_stmt_bad()
 
-  const_value = hlir_value_const(id, v['type'], init=None, att=['local'], ti=x['ti'])
+  const_value = hlir_value_const(id, v['type'], init=None, ti=x['ti'])
+  const_value['att'].extend(['local'])
 
 
   if value_is_immediate(v):
@@ -1033,6 +1040,7 @@ def do_stmt_assign(x):
 
   if value_is_immutable(l):
     error("immutable left", x['left'])
+    print(l['att'])
     return hlir_stmt_bad()
 
   # type check
@@ -1313,7 +1321,7 @@ def def_func(x):
   global cfunc
   old_cfunc = cfunc
 
-  cfunc = hlir_value_func(func_id, func_type, att=[], ti=func_ti)
+  cfunc = hlir_value_func(func_id, func_type, ti=func_ti)
 
   global attributes
   cfunc['att'].extend(attributes)
@@ -1326,7 +1334,8 @@ def def_func(x):
     p = params[i]
     p_id = p['id']
 
-    param = hlir_value_const(p_id, p['type'], att=['local'])
+    param = hlir_value_const(p_id, p['type'])
+    param['att'].extend(['local'])
     module['context'].value_add(p_id['str'], param)
 
     i = i + 1
@@ -1391,7 +1400,8 @@ def decl_func(x):
   if option_get("arghack") == True:
     functype['att'].append('arghack')
 
-  func = hlir_value_func(id, functype, att=['undefined'], ti=x['ti'])
+  func = hlir_value_func(id, functype, ti=x['ti'])
+  func['att'].extend(['undefined'])
 
   extend_props(func)
 

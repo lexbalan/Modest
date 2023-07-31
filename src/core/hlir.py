@@ -14,7 +14,7 @@ def nbytes_for_bits(x):
 
 
 
-def hlir_type_bad(att=[], ti=None):
+def hlir_type_bad(ti=None):
   return {'isa': 'type', 'kind': 'bad', 'att': [], 'ti': ti}
 
 
@@ -33,30 +33,30 @@ def hlir_type_unit():
   }
 
 
-def hlir_type_integer(name, power=0, att=[], ti=None):
+def hlir_type_integer(name, power=0, ti=None):
   return {
     'isa': 'type',
     'kind': 'integer',
     'name': name,
-    'att': ['numeric', 'ordered', 'integer'] + att,
+    'att': ['numeric', 'ordered', 'integer'],
     'power': power,
     'size': nbytes_for_bits(power),
     'ti': ti
   }
 
 
-def hlir_type_float(aka, size=0, att=[], ti=None):
+def hlir_type_float(aka, size=0, ti=None):
   return {
     'isa': 'type',
     'kind': 'float',
     'name': aka,
-    'att': ['numeric', 'ordered', 'float'] + att,
+    'att': ['numeric', 'ordered', 'float'],
     'size': size,
     'ti': ti
   }
 
 
-def hlir_type_pointer(to, att=[], ti=None):
+def hlir_type_pointer(to, ti=None):
   pointer_size = settings_get('ptr')
   return {
     'isa': 'type',
@@ -64,7 +64,7 @@ def hlir_type_pointer(to, att=[], ti=None):
     'to': to,
     'size': pointer_size / 8,
     'power': pointer_size,
-    'att': [] + att,
+    'att': [],
     'ti': ti
   }
 
@@ -80,13 +80,13 @@ def hlir_type_free_pointer(ti=None):
   }
 
 # size - always hlir_value (!)
-def hlir_type_array(of, volume=None, att=[], ti=None):
+def hlir_type_array(of, volume=None, ti=None):
   return {
     'isa': 'type',
     'kind': 'array',
     'volume': volume,
     'of': of,
-    'att': att,
+    'att': [],
     'ti': ti
   }
 
@@ -100,25 +100,25 @@ def hlir_field(id, type, ti=None):
   }
 
 
-def hlir_type_record(fields=[], att=[], ti=None):
+def hlir_type_record(fields=[], ti=None):
   return {
     'isa': 'type',
     'kind': 'record',
     'fields': fields,
     'size': 0,
-    'att': att,
+    'att': [],
     'ti': ti
   }
 
 
 # дефолт аргумент не работает!!!!
-def hlir_type_func(params, to, att=[], ti=None):
+def hlir_type_func(params, to, ti=None):
   tt = {
     'isa': 'type',
     'kind': 'func',
     'params': params,
     'to': to,
-    'att': att,
+    'att': [],
     'ti': ti
   }
 
@@ -151,7 +151,7 @@ def hlir_value_zero(t, ti=None):
   }
 
 
-def hlir_value_int(num, typ=None, att=[], ti=None):
+def hlir_value_int(num, typ=None, ti=None):
   def nbits_for_int(x):
     n = 1
     y = 1
@@ -164,7 +164,9 @@ def hlir_value_int(num, typ=None, att=[], ti=None):
 
   if typ == None:
     # get custom generic int type
-    gen_int_type = hlir_type_integer('Int', att=['generic'])
+    gen_int_type = hlir_type_integer('Int')
+    gen_int_type['att'].extend(['generic'])
+
     gen_int_type['power'] = nbits
     gen_int_type['size'] = nbytes_for_bits(nbits)
     typ = gen_int_type
@@ -173,7 +175,8 @@ def hlir_value_int(num, typ=None, att=[], ti=None):
   if nbits > typ['power']:
     # extend if generic or error
     if type.is_generic(typ):
-      typ = hlir_type_integer('Int', nbits, att=['generic'])
+      typ = hlir_type_integer('Int', nbits)
+      typ['att'].extend(['generic'])
     else:
       error("integer oferflow", ti)
 
@@ -187,21 +190,22 @@ def hlir_value_int(num, typ=None, att=[], ti=None):
   }
 
 
-def hlir_value_float(num, att=[], ti=None):
+def hlir_value_float(num, ti=None):
   # вообще с флотом непонятно можно ли понять какого он Generic типа
   # тк есть числа которые вообще никак не запишешь
-  typ = hlir_type_float('Float', att=['generic'])
+  typ = hlir_type_float('Float')
+  typ['att'].extend(['generic'])
   return {
     'isa': 'value',
     'kind': 'literal',
     'num': num,
     'type': typ,
-    'att': ['immediate'] + att,
+    'att': ['immediate'],
     'ti': ti
   }
 
 
-def hlir_value_cstr(string, length, type, att=[], ti=None):
+def hlir_value_cstr(string, length, type, ti=None):
   return {
     'isa': 'value',
     'kind': 'literal',
@@ -213,18 +217,18 @@ def hlir_value_cstr(string, length, type, att=[], ti=None):
   }
 
 
-def hlir_value_array(type, items, att=[], ti=None):
+def hlir_value_array(type, items, ti=None):
   return {
     'isa': 'value',
     'kind': 'literal',
     'type': type,
     'items': items,
-    'att': ['immediate'] + att,
+    'att': ['immediate'],
     'ti': ti
   }
 
 
-def hlir_value_record(typ, items={}, att=[], ti=None):
+def hlir_value_record(typ, items={}, ti=None):
   return {
     'isa': 'value',
     'kind': 'literal',
@@ -241,13 +245,13 @@ def hlir_value_num_get(x):
 
 
 
-def hlir_value_un(k, value, type, att=[], ti=None):
+def hlir_value_un(k, value, type, ti=None):
   return {
     'isa': 'value',
     'kind': k,
     'value': value,
     'type': type,
-    'att': att,
+    'att': [],
     'ti': ti
   }
 
@@ -264,80 +268,80 @@ def hlir_value_bin(op, l, r, t, ti):
   }
 
 
-def hlir_value_func(id, type, att=[], ti=None):
+def hlir_value_func(id, type, ti=None):
   return {
     'isa': 'value',
     'kind': 'func',
     'id': id,
     'type': type,
-    'att': att,
+    'att': [],
     'ti': ti
   }
 
 
-def hlir_value_var(id, type, init=None, att=[], ti=None):
+def hlir_value_var(id, type, init=None, ti=None):
   return {
     'isa': 'value',
     'kind': 'var',
     'id': id,
     'type': type,
     'init': init,
-    'att': att,
+    'att': [],
     'ti': ti
   }
 
 
 # hlir_const is an immutable value
 # (not necessary immediate)
-def hlir_value_const(id, type, init=None, att=[], ti=None):
+def hlir_value_const(id, type, init=None, ti=None):
   return {
     'isa': 'value',
     'kind': 'const',
     'id': id,
     'type': type,
     'init': init,
-    'att': att,
+    'att': [],
     'ti': ti
   }
 
 
-def hlir_value_call(func, args, att=[], ti=None):
+def hlir_value_call(func, args, ti=None):
   return {
     'isa': 'value',
     'kind': 'call',
     'func': func,
     'args': args,
     'type': func['type']['to'],
-    'att': att,
+    'att': [],
     'ti': ti
   }
 
 
-def hlir_value_index_array(array, index, att=[], ti=None):
+def hlir_value_index_array(array, index, ti=None):
   return {
     'isa': 'value',
     'kind': 'index',
     'array': array,
     'index': index,
     'type': array['type']['of'],
-    'att': att,
+    'att': [],
     'ti': ti
   }
 
 
-def hlir_value_index_array_by_ptr(ptr, index, att=[], ti=None):
+def hlir_value_index_array_by_ptr(ptr, index, ti=None):
   return {
     'isa': 'value',
     'kind': 'index_ptr',
     'pointer': ptr,
     'index': index,
     'type': ptr['type']['to']['of'],
-    'att': att,
+    'att': [],
     'ti': ti
   }
 
 
-def hlir_value_access_record(record, field, att=[], ti=None):
+def hlir_value_access_record(record, field, ti=None):
   return {
     'isa': 'value',
     'kind': 'access',
@@ -345,12 +349,12 @@ def hlir_value_access_record(record, field, att=[], ti=None):
     'field': field,
     'record_type': record['type'],
     'type': field['type'],
-    'att': att,
+    'att': [],
     'ti': ti
   }
 
 
-def hlir_value_access_record_by_ptr(record, field, att=[], ti=None):
+def hlir_value_access_record_by_ptr(record, field, ti=None):
   return {
     'isa': 'value',
     'kind': 'access_ptr',
@@ -358,18 +362,18 @@ def hlir_value_access_record_by_ptr(record, field, att=[], ti=None):
     'field': field,
     'record_type': record['type']['to'],
     'type': field['type'],
-    'att': att,
+    'att': [],
     'ti': ti
   }
 
 
-def hlir_value_cast(value, type, att=[], ti=None):
+def hlir_value_cast(value, type, ti=None):
   return {
     'isa': 'value',
     'kind': 'cast',
     'value': value,
     'type': type,
-    'att': att,
+    'att': [],
     'ti': ti
   }
 

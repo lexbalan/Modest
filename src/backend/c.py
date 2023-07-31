@@ -601,8 +601,13 @@ def print_stmts_puffy(stmts):
     k_prev = stmts[0]['kind']
   i = 0
   for stmt in stmts:
-    need_nl = k_prev != stmt['kind'] or stmt['kind'] in ['if', 'while']
-    if need_nl and i > 0:
+    #noneed0 = k_prev == 'value' and stmt['kind'] == 'assign'
+    #noneed1 = k_prev == 'assign' and stmt['kind'] == 'value'
+    noneed = False #noneed0 or noneed1
+    need = k_prev != stmt['kind']
+    need_nl = need or stmt['kind'] in ['if', 'while']
+
+    if need_nl and i > 0 and not noneed:
       k_prev = stmt['kind']
       o("\n")
     print_stmt(stmt)

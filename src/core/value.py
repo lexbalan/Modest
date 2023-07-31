@@ -53,7 +53,6 @@ def value_is_mutable(x):
 
 
 def value_is_immutable(x):
-
   return not value_is_mutable(x)
 
 
@@ -305,7 +304,7 @@ def value_cons_pointer(v, t, ti, method):
       if value_is_immediate(v):
         if type.is_numeric(v['type']):
           # compile-time casting
-          nv = hlir_value_cast(v, t, att=[], ti=ti)
+          nv = hlir_value_cast(v, t, ti=ti)
           nv['num'] = v['num']
           nv['att'].append('immediate')
           return nv
