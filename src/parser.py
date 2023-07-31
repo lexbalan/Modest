@@ -43,10 +43,8 @@ class Parser:
 
 
   def ti(self):
-    try:
-      return self.tokens[self.ctoken][2]
-    except:
-      print("NOT TI IN " + str(self.tokens[self.ctoken]))
+    assert(len(self.tokens[self.ctoken]) == 3)
+    return self.tokens[self.ctoken][2]
     
   
   def gettok(self):
@@ -55,8 +53,8 @@ class Parser:
     return t
   
 
-  def skip_blanks(self):
-    while self.is_blank(self.ctok()):
+  def skip_tokens(self, tokens):
+    while self.ctok() in tokens:
       self.skip()
   
 
@@ -138,7 +136,7 @@ class Parser:
       self.need("{")
       fields = []
       while not self.match("}"):
-        self.skip_blanks()
+        self.skip_tokens([' ', '\t', '\n'])
         f = self.parse_field()
         self.need_sep()
         if f != None:
@@ -150,7 +148,7 @@ class Parser:
       self.need("{")
       items = []
       while not self.match("}"):
-        self.skip_blanks()
+        self.skip_tokens([' ', '\t', '\n'])
         ti = self.ti()
         f = self.identifier()
         self.need_sep(separators=['\n', ','])
@@ -379,7 +377,7 @@ class Parser:
       if self.match("("):
         args = []
         while not self.match(")"):
-          self.skip_blanks()
+          self.skip_tokens([' ', '\t', '\n'])
           a = self.expr_value()
           args.append(a)
           self.need_sep(separators=[',', '\n'], stoppers=[')'])
@@ -411,7 +409,7 @@ class Parser:
     ti = self.ti()
     self.need("[")
     while not self.match("]"):
-      self.skip_blanks()
+      self.skip_tokens([' ', '\t', '\n'])
       field_value = self.expr_value()
       self.need_sep(separators=[',', '\n'], stoppers=[']'])
       items.append(field_value)
@@ -430,7 +428,10 @@ class Parser:
     ti = self.ti()
     self.need("{")
     while not self.match("}"):
-      self.skip_blanks()
+      self.skip_tokens([' ', '\t', '\n'])
+      if self.match("}"):
+        break
+
       item_ti = self.ti()
       field_id = self.identifier()
       self.need("=")
@@ -757,7 +758,7 @@ class Parser:
     self.need("{")
     stmts = []
     while True:
-      self.skip_blanks()
+      self.skip_tokens([' ', '\t', '\n'])
 
       if self.match('}'):
         break
