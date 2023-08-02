@@ -162,6 +162,11 @@ def value_cons_array(v, t, ti, method):
 
 
 def value_cons_record_from_generic_record(v, t, ti, method):
+  if v['kind'] == 'const':
+    return hlir_value_cast(v, t, ti=ti)
+
+  #print(v['kind'])  # exp kind == 'literal'
+
   # 1. проходим по порядку определения по всем полям типа t (целевого)
   # 2. если поля с таким именеи нет в v:
     # 2.1 конструируем нулевое значение соотв типа
@@ -173,6 +178,8 @@ def value_cons_record_from_generic_record(v, t, ti, method):
   for field in t['fields']:
     field_name = field['id']['str']
     field_type = field['type']
+
+    assert('items' in v)
 
     # получаем элемент с соотв именем из исходного значения
     item_value = None

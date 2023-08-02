@@ -226,6 +226,13 @@ def is_generic_integer(t):
   return 'generic' in t['att'] and 'integer' in t['att']
 
 
+def is_generic_record(t):
+  if t['kind'] == 'record':
+    return 'generic' in t['att']
+  return False
+
+
+
 def is_unit(t):
   return t['kind'] == 'unit'
 
