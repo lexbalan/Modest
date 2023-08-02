@@ -403,6 +403,10 @@ def type_print(t, print_aka=True):
       return
 
   if k == 'record':
+    if is_generic_record(t):
+      print("GenericRecord")
+      return
+
     print("record {")
     fields = t['fields']
     i = 0

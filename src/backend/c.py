@@ -265,7 +265,38 @@ def print_value_access_ptr(v, ctx):
 
 
 
+def huhu(v_id, fields):
+  o("{")
+  i = 0
+  for field in fields:
+    if (i > 0): o(", ")
+    fid = field['id']['str']
+    o(".%s = " % fid)
+
+    if type.is_record(field['type']):
+      huhu(v_id + '.' + field['id']['str'], field['type']['fields'])
+    else:
+      o("%s.%s" % (v_id, fid)) #; print_value(item, ctx)
+
+    i = i + 1
+  o("}")
+
+
+def print_cast_gen_rec_to_rec(t, v, ctx=[]):
+  #print("FROM GENERIC RECORD")
+  v_id = v['id']['str']
+  fields = v['type']['fields']
+  o("("); print_type(t); o(")")
+  huhu(v_id, fields)
+
+
 def print_cast(t, v, ctx=[]):
+  # в C мы не можем привести одну структуру к другой
+  # поэтому вынуждены будем построить новую структуру
+  # на основе другой (пусть и с таким же внутренним устройством)
+  if type.is_generic_record(v['type']):
+    return print_cast_gen_rec_to_rec(t, v, ctx=ctx)
+
   o("("); print_type(t); o(")")
   need_wrap = precedence(v['kind']) < precedence('cast')
   print_value(v, ctx=ctx, need_wrap=need_wrap)

@@ -192,7 +192,7 @@ def value_cons_record_from_generic_record(v, t, ti, method):
       item_value = hlir_value_zero(field_type, ti=None)
       if method == 'implicit':
         # implicit cast требует наличия всех полей
-        info("expected field '%s'" % field_name, v['ti'])
+        #info("expected field '%s'" % field_name, v['ti'])
         return None  # это cast, а cast не выдает ошибки
 
 

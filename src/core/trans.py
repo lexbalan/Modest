@@ -1011,7 +1011,7 @@ def do_stmt_let(x):
     module['context'].value_add(id['str'], hlir_value_bad())
     return hlir_stmt_bad()
 
-  const_value = hlir_value_const(id, v['type'], init=None, ti=x['ti'])
+  const_value = hlir_value_const(id, v['type'], init=v, ti=x['ti'])
   const_value['att'].extend(['local'])
 
 
