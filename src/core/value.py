@@ -308,6 +308,7 @@ def value_cons_pointer(v, t, ti, method):
 
     if method == 'explicit':
 
+      # Imm Int -> Pointer
       if value_is_immediate(v):
         if type.is_numeric(v['type']):
           # compile-time casting
@@ -316,10 +317,12 @@ def value_cons_pointer(v, t, ti, method):
           nv['att'].append('immediate')
           return nv
 
-
       # Int -> Ptr
-#      if type.is_generic_integer(from_type):
-#        return hlir_value_cast(v, t, ti=ti)
+      if type.is_integer(from_type):
+        from core.trans import ptr_size
+        if from_type['power'] != ptr_size:
+          error("cons pointer from integer with different size", ti)
+        return hlir_value_cast(v, t, ti=ti)
 
       # Ptr -> Ptr
       if type.is_pointer(from_type):

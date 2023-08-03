@@ -293,9 +293,6 @@ def is_generic(t):
   return 'generic' in t['att']
 
 
-def is_numeric(t):
-  return 'numeric' in t['att']
-
 
 def is_signed(t):
   return 'signed' in t['att']

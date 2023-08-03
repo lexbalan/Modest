@@ -140,8 +140,16 @@ def select_nat(sz):
     64: type.typeNat64,
   }[sz]
 
+int_size = 0
+ptr_size = 0
 
 def init():
+
+  global int_size, ptr_size
+  int_size = int(settings_get('int'))
+  ptr_size = int(settings_get('ptr'))
+
+
   global root_context
   # init main context
   root_context = Symtab()
@@ -168,7 +176,7 @@ def init():
 
   # Set taget depended Int & Nat types
   # (used in index, extra agrs & generic numeric var definitions)
-  int_size = int(settings_get('int'))
+
   global typeSysInt, typeSysNat
   typeSysInt = copy.copy(select_int(int_size))
   typeSysInt['c_alias'] = 'int'
