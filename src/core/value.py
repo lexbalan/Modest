@@ -163,6 +163,9 @@ def value_cons_array(v, t, ti, method):
 
 def value_cons_record_from_generic_record(v, t, ti, method):
   if v['kind'] == 'const':
+    # TODO: тут нужно проверить чтобы при implicit методе
+    # все поля присутствовали (!)
+    
     return hlir_value_cast(v, t, ti=ti)
 
   #print(v['kind'])  # exp kind == 'literal'
@@ -192,7 +195,7 @@ def value_cons_record_from_generic_record(v, t, ti, method):
       item_value = hlir_value_zero(field_type, ti=None)
       if method == 'implicit':
         # implicit cast требует наличия всех полей
-        #info("expected field '%s'" % field_name, v['ti'])
+        error("expected field '%s'" % field_name, v['ti'])
         return None  # это cast, а cast не выдает ошибки
 
 

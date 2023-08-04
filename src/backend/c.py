@@ -343,15 +343,19 @@ def print_value_imm_array(v, ctx):
 #    print_type(v['type'])
 #    o(")")
 
+  screening = 'screening' in ctx
+
   o("{")
   indent_up()
   i = 0
   while i < len(v['items']):
     if i > 0: o(",")
+    if screening: o("\\")
     o("\n"); ind()
     print_value(v['items'][i])
     i = i + 1
   indent_down()
+  if screening: o("\\")
   o("\n"); ind(); o("}")
 
 
