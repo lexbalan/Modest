@@ -1,6 +1,6 @@
 
 
-IMPORT_OBJECTS = False
+IMPORT_OBJECTS = True
 
 
 import copy

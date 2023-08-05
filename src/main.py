@@ -7,8 +7,6 @@ import importlib
 
 from opt import *
 
-import_objects = True
-
 DEFAULT_MINT = 32
 DEFAULT_MPTR = 64
 DEFAULT_MFLT = 64
@@ -76,6 +74,17 @@ def main():
   src_dirname = os.path.dirname(src_abspath)
 
   settings_set('path', src_dirname)
+  
+  
+  # loading backend
+  backend_name = settings_get('backend')
+  backend = importlib.import_module("backend." + backend_name)
+  
+  # трбует ли бэкенд импорта объектов из модуля (LLVM)
+  # или ему хватает символов (C, CM)
+  import_objects = backend.IMPORT_OBJECTS
+  settings_set('import_objects', import_objects)
+  
 
   trans.init()
 
@@ -85,12 +94,7 @@ def main():
     #error.fatal("%d errors occurred" % error.errcnt)
     exit(1)
 
-  # loading backend
-  backend_name = settings_get('backend')
-  backend = importlib.import_module("backend." + backend_name)
   
-  global import_objects
-  import_objects = backend.IMPORT_OBJECTS
 
   # print output
   if args.output != None:

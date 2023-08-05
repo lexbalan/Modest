@@ -1113,6 +1113,15 @@ included_modules = {}
 def do_include(x):
   impline = x['str']
   #print("do_include: " + impline)
+  
+  only_content = option_get("only-content")
+  if only_content:
+    option_off("only-content")
+  
+  #no_include_directive = option_get("c-no-include")
+  #if no_include_directive:
+  #  option_off("c-no-include")
+  
 
   # get abspath
   abspath = import_abspath(impline)
@@ -1128,34 +1137,31 @@ def do_include(x):
     module['context'].merge(m['context'])  #!
     return None  # already imported
 
-
   m = translate(abspath)
   included_modules[abspath] = m
-
-  #print("\nINCLUDE: " + impline)
-  #m['context'].show_tables()
 
   # расширяем нашу таблицу символов таблицей импорта
   module['context'].merge(m['context'])
 
-
-  # если не нужно печатать сожержимое заголовка
-  # а просто напечатать #include "someheader.h"
+  
+  return_include_text = True
   return_include_directive = False
   
+  import_objects = settings_get('import_objects')
+  #print("import_objects = %d" % import_objects)
+  #if only_content:
+  #  import_objects = True
   
-  from main import import_objects
   if not import_objects:
+    return_include_text = False
     return_include_directive = True
 
-  """if settings_check('backend', 'cm'):
-    return_include_directive = True
-
-  if settings_check('backend', 'c'):
-    if option_get('c-just-include'):
-      option_off('c-just-include')
-      return_include_directive = True"""
-
+  if only_content: #or no_include_directive
+    print("no_print_include")
+    return_include_text = True
+    return_include_directive = False
+  
+  out = []
 
   if return_include_directive:
     directive = {
@@ -1165,13 +1171,14 @@ def do_include(x):
       'att': [],
       'local': True
     }
-
     directive['att'].extend(attributes)
+    out.append(directive)
 
-    return [directive]
 
-  return m['text']
-
+  if return_include_text:
+    out.extend(m['text'])
+  
+  return out
 
 
 
