@@ -1157,7 +1157,6 @@ def do_include(x):
     return_include_directive = True
 
   if only_content: #or no_include_directive
-    print("no_print_include")
     return_include_text = True
     return_include_directive = False
   

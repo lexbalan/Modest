@@ -1,5 +1,6 @@
 // libc/stdio.hm
 
+@option("only-content")
 include "./ctypes.hm"
 
 
