@@ -7,6 +7,7 @@ import importlib
 
 from opt import *
 
+import_objects = True
 
 DEFAULT_MINT = 32
 DEFAULT_MPTR = 64
@@ -87,6 +88,9 @@ def main():
   # loading backend
   backend_name = settings_get('backend')
   backend = importlib.import_module("backend." + backend_name)
+  
+  global import_objects
+  import_objects = backend.IMPORT_OBJECTS
 
   # print output
   if args.output != None:

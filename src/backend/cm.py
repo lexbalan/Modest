@@ -1,4 +1,7 @@
 
+IMPORT_OBJECTS = False
+
+
 from opt import *
 import core.type as type
 from error import info

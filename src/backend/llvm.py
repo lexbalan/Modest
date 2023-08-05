@@ -1,4 +1,8 @@
 
+
+IMPORT_OBJECTS = False
+
+
 import copy
 from .common import *
 from error import info
@@ -6,6 +10,8 @@ import core.type as type
 from core.type import type_attribute_check
 from core.value import value_attribute_check
 from core.hlir import hlir_type_pointer, hlir_value_int, hlir_value_num_get
+
+
 
 
 func_context = None

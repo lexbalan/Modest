@@ -1,10 +1,14 @@
 
+IMPORT_OBJECTS = False
+
 from opt import *
 from error import info
 from .common import *
 import core.type as type
 from core.value import value_attribute_check
 from core.hlir import hlir_value_num_get
+
+
 
 # красивости
 # если сущность была уже отделена новой строкой

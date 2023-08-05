@@ -1142,14 +1142,19 @@ def do_include(x):
   # если не нужно печатать сожержимое заголовка
   # а просто напечатать #include "someheader.h"
   return_include_directive = False
+  
+  
+  from main import import_objects
+  if not import_objects:
+    return_include_directive = True
 
-  if settings_check('backend', 'cm'):
+  """if settings_check('backend', 'cm'):
     return_include_directive = True
 
   if settings_check('backend', 'c'):
     if option_get('c-just-include'):
       option_off('c-just-include')
-      return_include_directive = True
+      return_include_directive = True"""
 
 
   if return_include_directive:
