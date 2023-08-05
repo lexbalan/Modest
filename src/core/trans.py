@@ -114,10 +114,10 @@ def stmt_is_bad(x):
 
 
 
-def import_add(id, m):
+"""def import_add(id, m):
   print("import_add: " + id)
   module['imports'].update({id: m})
-
+"""
 
 
 
@@ -740,7 +740,7 @@ def do_value_id(x):
 
 
 
-def do_value_ns(x):
+"""def do_value_ns(x):
   ns_id = x['ids'][0]
   id = x['ids'][1]
 
@@ -748,7 +748,7 @@ def do_value_ns(x):
   if not ns_id_str in module['imports']:
     error("namespace nof found", ns_id)
 
-  return hlir_value_bad(ns_id['ti'])
+  return hlir_value_bad(ns_id['ti'])"""
 
 
 
@@ -1140,6 +1140,8 @@ def do_include(x):
   m = translate(abspath)
   included_modules[abspath] = m
 
+  return m
+
   # расширяем нашу таблицу символов таблицей импорта
   module['context'].merge(m['context'])
 
@@ -1478,7 +1480,7 @@ def proc(ast):
     'isa': 'module',
     'id': "<>",
     #'path': srcname,
-    'imports': {},
+    'imports': [],
     'strings': [],
     'context': root_context.branch(),
     'text': []
@@ -1514,9 +1516,9 @@ def proc(ast):
         import_add(x['str'], m)
 
       elif kind == 'include':
-        y = do_include(x)
-        if y != None:
-          module['text'].extend(y)
+        m = do_include(x)
+        if m != None:
+          module['imports'].append(y)
 
       continue
 
