@@ -1167,8 +1167,7 @@ def do_include(x):
   global included_modules
   if abspath in included_modules:
     m = included_modules[abspath]
-    module['context'].merge(m['context'])  #!
-    return None  # already imported
+    return m  # already imported
 
   m = translate(abspath)
   included_modules[abspath] = m
@@ -1555,13 +1554,18 @@ def proc(ast, id="<MODULE_ID>", path="<MODULE_PATH>"):
 
       elif kind == 'include':
         # right here, before calling "do_include" (!)
-        only_content = option_get("only-content")
+
+        # не создавать include директиву
+        only_content = option_get("no-include")
         if only_content:
-          option_off("only-content")
+          option_off("no-include")
 
         #print("INCLUDE(%d): %s" % (only_content, x['str']))
 
         m = do_include(x)
+
+        # 1. Добавляем символы из
+        #module['context'].merge(m['context'])  #!
 
         # 1. добавляем проимпортированный модуль в список нашего импорта
         if m != None:

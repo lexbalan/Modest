@@ -1,5 +1,5 @@
 // libc/ctypes.hm
 
-@option("only-content")
+@option("no-include")
 include "./ctypes64.hm"
 

@@ -1,6 +1,6 @@
 // libc/stdio.hm
 
-@option("only-content")
+@option("no-include")
 include "./ctypes.hm"
 
 
