@@ -1,8 +1,6 @@
 // libc/ctypes64.hm
 
 
-@attribute("c-no-print")
-
 @property("c_alias", "char")
 type Char Int8
 
@@ -71,5 +69,4 @@ type SizeT Nat64
 @property("c_alias", "ssize_t")
 type SSizeT Int64
 
-@attribute_off("c-no-print")
 

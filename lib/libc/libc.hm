@@ -7,10 +7,8 @@
 @c_include("unistd.h")
 
 
-include "./stdio.hm"
-include "./ctypes.hm"
-
-@attribute("c-no-print")
+import "./stdio.hm"
+import "./ctypes.hm"
 
 
 @property("c_alias", "dev_t")
@@ -114,5 +112,4 @@ extern func getcwd (buf : Str, size : SizeT) -> Str
 
 extern func getenv (name : Str) -> Str
 
-@attribute_off("c-no-print")
 

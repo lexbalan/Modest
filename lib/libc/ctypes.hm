@@ -1,5 +1,5 @@
 // libc/ctypes.hm
 
 @option("no-include")
-include "./ctypes64.hm"
+import "./ctypes64.hm"
 

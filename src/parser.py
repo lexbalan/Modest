@@ -2,6 +2,7 @@
 #                            PARSER                                 #
 #####################################################################
 
+import os
 from lexer import Lexer
 from error import warning, error, getline
 
@@ -949,6 +950,10 @@ class Parser:
 
 
   def parse(self, filename):
+
+    if not os.path.exists(filename):
+      return None
+
     self.tokens = self.lex.tokenize(filename)
     #print("ENDLEX: " + filename)
     self.ctoken = 0

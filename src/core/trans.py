@@ -21,8 +21,8 @@ from .hlir import *
 
 
 # current file directory
-env_cfabs = ""
-env_cfdir = ""
+env_current_file_abspath = ""
+env_current_file_dir = ""
 
 parser = Parser()
 
@@ -203,6 +203,7 @@ def init():
   root_context.type_add('Str', type.typeStr)
   root_context.type_add('Pointer', type.typeFreePtr)
 
+  root_context.type_add('Bool', type.typeNat1)
   root_context.value_add('nil', valueNil)
   root_context.value_add('true', valueTrue)
   root_context.value_add('false', valueFalse)
@@ -1143,18 +1144,18 @@ def do_stmt_block(x):
 
 
 
-# include аналог from xxx import *
 included_modules = {}
-def do_include(x):
+def do_import(x):
   impline = x['str']
-  #print("do_include: " + impline)
   
+  # "do not create include directive"
+  # right here, before calling "do_import" (!)
+  no_include_directive = option_get("no-include")
+  if no_include_directive:
+    option_off("no-include")
 
-  
-  #no_include_directive = option_get("c-no-include")
-  #if no_include_directive:
-  #  option_off("c-no-include")
-  
+  #print("INCLUDE: %s" % (x['str']))
+
 
   # get abspath
   abspath = import_abspath(impline)
@@ -1166,37 +1167,31 @@ def do_include(x):
 
   global included_modules
   if abspath in included_modules:
+    # already imported
     m = included_modules[abspath]
-    return m  # already imported
+  else:
+    m = translate(abspath)
+    included_modules[abspath] = m
 
-  m = translate(abspath)
-  included_modules[abspath] = m
 
-  return m
+  # 1. НЕ добавляем символы из модуля в текущий
+  # тк поиск символа идет рекурсивно по всем импортам
+  #module['context'].merge(m['context'])  #!
 
-  # расширяем нашу таблицу символов таблицей импорта
-  module['context'].merge(m['context'])
-
+  # 1. добавляем проимпортированный модуль в список нашего импорта
   
-  return_include_text = True
-  return_include_directive = False
+  # но сперва проверим нет ли его уже среди импортированных модулей
+  for imported_module in module['imports']:
+    if imported_module['path'] == m['path']:
+      error("attempt to include module twice", x['ti'])
   
-  import_objects = settings_get('import_objects')
-  #print("import_objects = %d" % import_objects)
-  #if only_content:
-  #  import_objects = True
-  
-  if not import_objects:
-    return_include_text = False
-    return_include_directive = True
+  if m != None:
+    module['imports'].append(m)
 
-  if only_content: #or no_include_directive
-    return_include_text = True
-    return_include_directive = False
-  
-  out = []
-
-  if return_include_directive:
+  # 2. А в нашем модуле добавляем директиву инклуда
+  # (если ее явно не отключили с помошью @option("no_include"))
+  if not no_include_directive:
+    impline = x['str']
     directive = {
       'isa': 'directive',
       'kind': 'include',
@@ -1205,32 +1200,9 @@ def do_include(x):
       'local': True
     }
     directive['att'].extend(attributes)
-    out.append(directive)
+    module['text'].append(directive)
 
 
-  if return_include_text:
-    out.extend(m['text'])
-  
-  return out
-
-
-
-def do_import(x):
-  impline = x['str']
-  #print("do_import " + impline)
-  abspath = import_abspath(impline)
-
-  if abspath == None:
-    error("module not found", x)
-    fatal("module not found")
-    return None
-
-  m = translate(abspath)
-
-  #print("\nIMPORT: " + impline)
-  m['context'].show_tables()
-
-  return m
 
 
 # form directive '@property'
@@ -1549,43 +1521,11 @@ def proc(ast, id="<MODULE_ID>", path="<MODULE_PATH>"):
         exec(x['text'])
 
       elif kind == 'import':
-        m = do_import(x)
-        import_add(x['str'], m)
+        do_import(x)
 
       elif kind == 'include':
-        # right here, before calling "do_include" (!)
-
-        # не создавать include директиву
-        only_content = option_get("no-include")
-        if only_content:
-          option_off("no-include")
-
-        #print("INCLUDE(%d): %s" % (only_content, x['str']))
-
-        m = do_include(x)
-
-        # 1. Добавляем символы из
-        #module['context'].merge(m['context'])  #!
-
-        # 1. добавляем проимпортированный модуль в список нашего импорта
-        if m != None:
-          module['imports'].append(m)
-
-        # 2. А в нашем модуле добавляем директиву импорта
-        if not only_content:
-          impline = x['str']
-          directive = {
-            'isa': 'directive',
-            'kind': 'include',
-            'str': impline[:-1],  # .hm -> .h
-            'att': [],
-            'local': True
-          }
-          directive['att'].extend(attributes)
-          module['text'].append(directive)
-
-
-
+        info("include instead import", x['ti'])
+        do_import(x)
 
       continue
 
@@ -1610,7 +1550,7 @@ def import_abspath(s):
 
   f = ''
   if is_local:
-    f = env_cfdir + '/' + s #[1:]
+    f = env_current_file_dir + '/' + s #[1:]
 
   else: # (global)
     path_lib = settings_get('lib')
@@ -1624,42 +1564,30 @@ def import_abspath(s):
 
 
 def translate(srcname):
-  #print("translate!")
-  #module['context'].show_tables()
-  #root_context.show_tables()
+  assert(srcname != None)
+  assert(srcname != "")
 
-  # выставляем директорию текущего файла
-  # (будет использоваться в релативных инклудах)
-  #global included_modules
-  #old_included_modules = included_modules
-  #included_modules = {}
-
-  #srcname = import_abspath(srcname)
-  if srcname == None:
-    return None
-
-  global env_cfabs
-  global env_cfdir
-  old_env_cfdir = env_cfdir
-  old_env_cfabs = env_cfabs
+  global env_current_file_abspath
+  global env_current_file_dir
+  old_env_current_file_dir = env_current_file_dir
+  old_env_current_file_abspath = env_current_file_abspath
 
   absp = os.path.abspath(srcname)
-  env_cfabs = absp
   fdir = os.path.dirname(absp)
-  env_cfdir = fdir
+
+  env_current_file_abspath = absp
+  env_current_file_dir = fdir
   #print("ABS: " + absp)
   #print("FDIR: " + fdir)
 
-  if not os.path.exists(absp):
-    return None
-
+  #print("parse %s" % absp)
   ast = parser.parse(absp)
   #print("process %s" % absp)
   m = proc(ast, id=srcname, path=absp)
-  #print("end process %s" % absp)
+  #print("end %s" % absp)
 
-  env_cfabs = old_env_cfabs
-  env_cfdir = old_env_cfdir
+  env_current_file_abspath = old_env_current_file_abspath
+  env_current_file_dir = old_env_current_file_dir
 
   #included_modules = old_included_modules
   return m

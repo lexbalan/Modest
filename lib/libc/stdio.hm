@@ -1,12 +1,11 @@
 // libc/stdio.hm
 
 @option("no-include")
-include "./ctypes.hm"
+import "./ctypes.hm"
 
 
 @c_include("stdio.h")
 
-@attribute("c-no-print")
 
 type FposT
 type FILE
@@ -77,5 +76,4 @@ extern func puts (str : ConstCharStr) -> Int
 extern func ungetc(char : Int, f : *FILE) -> Int
 extern func perror(str : ConstCharStr) -> Unit
 
-@attribute_off("c-no-print")
 

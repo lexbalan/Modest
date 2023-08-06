@@ -1,6 +1,7 @@
 // libc/unistd.hm
 
-include "./ctypes.hm"
+@option("no-include")
+import "./ctypes.hm"
 
 type PidT  Int  // ??
 type UidT  Int  // ??
