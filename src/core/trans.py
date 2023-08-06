@@ -1283,13 +1283,16 @@ def def_const(x):
 
 
 # удаляет декларацию по имени
-def module_text_remove_decl(kind, id_str):
-  for x in module['text']:
+def module_remove_decl(m, kind, id_str):
+  for submodule in m['imports']:
+    module_remove_decl(submodule, kind, id_str)
+
+  for x in m['text']:
     if x['isa'] == 'declaration':
       if x['kind'] == kind:
         if x[kind]['id']['str'] == id_str:
           #print("REMOVE: " + id_str)
-          module['text'].remove(x)
+          m['text'].remove(x)
           break
 
 
@@ -1314,7 +1317,7 @@ def def_type(x):
     # just overwrite existed 'opaque' type (for records)
     exist.update(nt)
     # and find and remove declaration instruction
-    module_text_remove_decl('type', id['str'])
+    module_remove_decl(module, 'type', id['str'])
   else:
     module['context'].type_add(id['str'], nt)
 
@@ -1416,7 +1419,7 @@ def def_func(x):
   # в LLVM если делаем func definition нельзя писать func declaration
   # поэтому удалим все сделаные ранее декларации (если они есть)
   if settings_check('backend', 'llvm'):
-    module_text_remove_decl('func', func_id['str'])
+    module_remove_decl(module, 'func', func_id['str'])
 
   return definition
 

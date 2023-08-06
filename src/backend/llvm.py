@@ -1335,12 +1335,11 @@ def print_func_signature(id, typ):
   o(")")
 
 
-# печатаем только extern декларации
+
 def print_decl_func(x):
-  if 'extern' in x['att']:
-    o("\ndeclare ")
-    func = x['func']
-    print_func_signature(func['id']['str'], func['type'])
+  o("\ndeclare ")
+  func = x['func']
+  print_func_signature(func['id']['str'], func['type'])
 
 
 def print_def_func(x):
