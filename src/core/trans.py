@@ -33,6 +33,47 @@ root_context = None
 module = None
 
 
+def module_type_get(m, id_str):
+  #print("SEARCH_TYPE %s in %s" % (id_str, cm['path']))
+  t = m['context'].type_get(id_str)
+  if t != None:
+    return t
+
+  for imported_module in m['imports']:
+    t = module_type_get(imported_module, id_str)
+    if t != None:
+      return t
+
+
+def module_value_get(m, id_str):
+  #print("SEARCH_VALUE %s in %s" % (id_str, cm['path']))
+  v = m['context'].value_get(id_str)
+  if v != None:
+    return v
+
+  for imported_module in m['imports']:
+    v = module_value_get(imported_module, id_str)
+    if v != None:
+      return v
+
+
+def type_get(id_str):
+  return module_type_get(module, id_str)
+
+
+
+def value_get(id_str):
+  return module_value_get(module, id_str)
+  #return module['context'].value_get(id_str, recursive=True)
+
+
+# искать только внутри текущего контекста (блока)
+def value_get_here(id_str):
+  return module['context'].value_get(id_str, recursive=False)
+
+
+
+
 # used in metadirs
 def c_include(s):
   #print("c_include %s" % s)
@@ -114,13 +155,6 @@ def stmt_is_bad(x):
 
 
 
-"""def import_add(id, m):
-  print("import_add: " + id)
-  module['imports'].update({id: m})
-"""
-
-
-
 typeSysInt = None
 typeSysNat = None
 
@@ -192,7 +226,7 @@ def do_field(x, is_last=False):
   t = do_type(x['type'])
 
   if type.is_bad(t):
-    t = type.type_bad(x['type']['ti'])
+    t = hlir_type_bad(x['type']['ti'])
 
   if type.is_forbidden_var(t, zero_array_forbidden=not is_last):
     error("unsuitable type", x['type'])
@@ -205,12 +239,12 @@ def do_field(x, is_last=False):
 #
 
 def do_type_id(t):
-  tx = module['context'].type_get(t['id']['str'])
+  tx = type_get(t['id']['str'])
   if tx == None:
     id = t['id']['str']
     error("undeclared type %s" % id, t)
     # create fake alias for unknown type
-    tx = type.type_bad()
+    tx = hlir_type_bad()
     nt = type.create_alias(id, tx, t['ti'])
     root_context.type_add(id, nt)
     return nt
@@ -720,9 +754,10 @@ def do_value_to(x):
 
 
 
+
 def do_value_id(x):
   id_str = x['id']['str']
-  vx = module['context'].value_get(id_str)
+  vx = value_get(id_str)
   if vx == None:
     error("undeclared value '%s'" % x['id']['str'], x)
 
@@ -745,7 +780,7 @@ def do_value_id(x):
   id = x['ids'][1]
 
   ns_id_str = ns_id['str']
-  if not ns_id_str in module['imports']:
+  if not ns_id_str in module['imwports']:
     error("namespace nof found", ns_id)
 
   return hlir_value_bad(ns_id['ti'])"""
@@ -998,7 +1033,7 @@ def do_stmt_var(x):
     t = v['type']
 
   # check if identifier is free (in current block)
-  already = module['context'].value_get(id['str'], recursive=False)
+  already = value_get_here(id['str'])
   if already != None:
     error("local id redefinition", x['id']['ti'])
     return hlir_stmt_bad()
@@ -1030,7 +1065,7 @@ def do_stmt_let(x):
 
 
   # check if identifier is free (in current block)
-  already = module['context'].value_get(id['str'], recursive=False)
+  already = value_get_here(id['str'])
   if already != None:
     error("local id redefinition", x['id']['ti'])
     return hlir_stmt_bad()
@@ -1114,9 +1149,7 @@ def do_include(x):
   impline = x['str']
   #print("do_include: " + impline)
   
-  only_content = option_get("only-content")
-  if only_content:
-    option_off("only-content")
+
   
   #no_include_directive = option_get("c-no-include")
   #if no_include_directive:
@@ -1266,7 +1299,7 @@ def def_type(x):
   if type.is_bad(t):
     return def_bad()
 
-  exist = module['context'].type_get(id['str'])
+  exist = type_get(id['str'])
   already_declared = exist != None
 
   nt = type.create_alias(id['str'], t, id['ti'])
@@ -1335,7 +1368,7 @@ def def_func(x):
   func_type = do_type(x['type'])
 
   # if function already declared/defined, check it
-  already = module['context'].value_get(func_id['str'])
+  already = value_get(func_id['str'])
   if already != None:
     if not type.eq(already['type'], func_type):
       error("func redefinition", x['ti'])
@@ -1472,14 +1505,16 @@ def comm_block(x):
 
 
 
-def proc(ast):
+def proc(ast, id="<MODULE_ID>", path="<MODULE_PATH>"):
   global module
   old_module = module
+
+  #print("PROC: id = %s" % id)
 
   module = {
     'isa': 'module',
     'id': "<>",
-    #'path': srcname,
+    'path': path,
     'imports': [],
     'strings': [],
     'context': root_context.branch(),
@@ -1516,9 +1551,34 @@ def proc(ast):
         import_add(x['str'], m)
 
       elif kind == 'include':
+        # right here, before calling "do_include" (!)
+        only_content = option_get("only-content")
+        if only_content:
+          option_off("only-content")
+
+        #print("INCLUDE(%d): %s" % (only_content, x['str']))
+
         m = do_include(x)
+
+        # 1. добавляем проимпортированный модуль в список нашего импорта
         if m != None:
-          module['imports'].append(y)
+          module['imports'].append(m)
+
+        # 2. А в нашем модуле добавляем директиву импорта
+        if not only_content:
+          impline = x['str']
+          directive = {
+            'isa': 'directive',
+            'kind': 'include',
+            'str': impline[:-1],  # .hm -> .h
+            'att': [],
+            'local': True
+          }
+          directive['att'].extend(attributes)
+          module['text'].append(directive)
+
+
+
 
       continue
 
@@ -1588,7 +1648,7 @@ def translate(srcname):
 
   ast = parser.parse(absp)
   #print("process %s" % absp)
-  m = proc(ast)
+  m = proc(ast, id=srcname, path=absp)
   #print("end process %s" % absp)
 
   env_cfabs = old_env_cfabs
