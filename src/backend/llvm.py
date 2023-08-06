@@ -1335,11 +1335,12 @@ def print_func_signature(id, typ):
   o(")")
 
 
-
+# печатаем только extern декларации
 def print_decl_func(x):
-  o("\ndeclare ")
-  func = x['func']
-  print_func_signature(func['id']['str'], func['type'])
+  if 'extern' in x['att']:
+    o("\ndeclare ")
+    func = x['func']
+    print_func_signature(func['id']['str'], func['type'])
 
 
 def print_def_func(x):
@@ -1545,17 +1546,28 @@ def print_strings(strings):
 
 
 
+# список имен модулей распечатанных в текущей сброке
+printed_modules = []
 
-def run(module, outname):
-  outname = outname + '.ll'
-  output_open(outname)
+def print_module(m):
 
-  print_strings(module['strings'])
+  if m['path'] in printed_modules:
+    return
+
+  printed_modules.append(m['path'])
 
 
-  text = module['text']
+  for imported_module in m['imports']:
+    print_module(imported_module)
+
+
+  o("; -- MODULE: %s\n" % m['path'])
+
+  print_strings(m['strings'])
+
   isa_prev = None
-  for x in text:
+
+  for x in m['text']:
     isa = x['isa']
     k = x['kind']
 
@@ -1578,6 +1590,14 @@ def run(module, outname):
       elif k == 'type': print_def_type(x)
 
   o("\n\n")
+
+
+def run(module, outname):
+  outname = outname + '.ll'
+  output_open(outname)
+
+  print_module(module)
+
   output_close()
 
 
