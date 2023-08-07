@@ -193,30 +193,7 @@ def print_value_un(v, ctx):
 
 
 def print_value_call(v, ctx):
-  left = v['func']
-  if left['type']['kind'] == 'pointer':
-    t = left['type']['to']
-    # вызов через указатель
-    # поскольку у нас указатели на функции это *void
-    # при вызове приводим левое к указателю на функцию
-    o("((")
-    print_type(t['to'])
-    o("(*)(")
-    i = 0
-    n = len(t['params'])
-    while i < n:
-      p = t['params'][i]
-      print_field(p)
-      i = i + 1
-      if i < n:
-        o(", ")
-    o(")")
-    o(")")
-    print_value(left)
-    o(")")
-
-  else:
-    print_value(left)
+  print_value(v['func'])
 
   o("(")
   i = 0
