@@ -868,12 +868,16 @@ def print_def_const(x):
 
 
 def print_include(x):
+  if 'c-no-print' in x['att']:
+    return
+
   s = x['str']
   if x['local']:
     s = '"' + s + '"'
   else:
     s = '<' + s + '>'
   o("#include %s" % s)
+
 
 
 def print_insert(x):
@@ -973,7 +977,7 @@ def run(module, outname):
       if k == 'func': print_decl_func(x)
       elif k == 'type': print_decl_type(x)
     elif isa == 'directive':
-      if k == 'include': print_include(x)
+      if k == 'import': print_include(x)
       elif k == 'insert': print_insert(x)
     elif isa == 'comment':
       if k == 'comment-line': print_comment_line(x)

@@ -1190,15 +1190,19 @@ def do_import(x):
 
   # 2. А в нашем модуле добавляем директиву инклуда
   # (если ее явно не отключили с помошью @option("no_include"))
-  if not no_include_directive:
+  #if not no_include_directive:
     impline = x['str']
     directive = {
       'isa': 'directive',
-      'kind': 'include',
+      'kind': 'import',
       'str': impline[:-1],  # .hm -> .h
       'att': [],
       'local': True
     }
+
+    if no_include_directive:
+      directive['att'].append('c-no-print')
+
     directive['att'].extend(attributes)
     module['text'].append(directive)
 
