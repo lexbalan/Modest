@@ -81,7 +81,7 @@ def c_include(s):
   local = s[0:2] == './'
   inc = {
     'isa': 'directive',
-    'kind': 'include',
+    'kind': 'c_include',
     'str': s,
     'local': local,
     'att': [],

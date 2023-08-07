@@ -1,5 +1,7 @@
 // libc/unistd.hm
 
+@c_include("unistd.h")
+
 @option("no-include")
 import "./ctypes.hm"
 

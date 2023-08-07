@@ -899,10 +899,23 @@ def print_comment_block(x):
 
 
 
+def cdirectives(module):
+  for imported_module in module['imports']:
+    for obj in imported_module['text']:
+      if obj['kind'] == 'c_include':
+        o("\n")
+        print_include(obj)
+  for obj in module['text']:
+    if obj['kind'] == 'c_include':
+      o("\n")
+      print_include(obj)
+
+
+
 def run(module, outname):
 
-  text = module['text']
   strs = module['strings']
+
 
   is_header = 'header' in features
 
@@ -911,7 +924,11 @@ def run(module, outname):
   else:
     outname = outname + '.c'
 
+
   output_open(outname)
+
+  # search for c_include
+  cdirectives(module)
 
   guardname = ''
   if is_header:
@@ -925,7 +942,7 @@ def run(module, outname):
 
   prev_ik = ('', '')
 
-  for x in text:
+  for x in module['text']:
     if 'c-no-print' in x['att']:
       continue
 
@@ -957,11 +974,10 @@ def run(module, outname):
       elif k == 'type': print_decl_type(x)
     elif isa == 'directive':
       if k == 'include': print_include(x)
-      if k == 'insert': print_insert(x)
+      elif k == 'insert': print_insert(x)
     elif isa == 'comment':
       if k == 'comment-line': print_comment_line(x)
-      if k == 'comment-block': print_comment_block(x)
-
+      elif k == 'comment-block': print_comment_block(x)
 
   o("\n")
   if is_header:
