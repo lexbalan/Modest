@@ -105,18 +105,30 @@ def attribute(id):
   global attributes
   attributes.append(id)
 
-def attribute_off(id):
+"""def attribute_off(id):
   global attributes
   i = 0
   while i < len(attributes):
     if attributes[i] == id:
       del attributes[i]
-    i = i + 1
+    i = i + 1"""
+
+def attributes_get():
+  global attributes
+  attributes2 = attributes
+  attributes = []
+  return attributes2
+
+  """present = id in attributes
+  if present:
+    attribute_off(id)
+  return present"""
+
 
 
 # опциии компилятора, либо включена, либо выклчена
 # впрочем может иметь и значение отлитчное от True
-options = {}
+"""options = {}
 
 def option(id, value=True):
   global options
@@ -131,7 +143,7 @@ def option_get(id):
   if not id in options:
     return None
   return options[id]
-
+"""
 
 
 def insert(s):
@@ -1150,15 +1162,11 @@ def do_stmt_block(x):
 included_modules = {}
 def do_import(x):
   impline = x['str']
-  
-  # "do not create include directive"
+
   # right here, before calling "do_import" (!)
-  no_include_directive = option_get("no-include")
-  if no_include_directive:
-    option_off("no-include")
+  att = attributes_get()
 
   #print("INCLUDE: %s" % (x['str']))
-
 
   # get abspath
   abspath = import_abspath(impline)
@@ -1192,22 +1200,16 @@ def do_import(x):
     module['imports'].append(m)
 
   # 2. А в нашем модуле добавляем директиву инклуда
-  # (если ее явно не отключили с помошью @option("no_include"))
-  #if not no_include_directive:
-    impline = x['str']
-    directive = {
-      'isa': 'directive',
-      'kind': 'import',
-      'str': impline[:-1],  # .hm -> .h
-      'att': [],
-      'local': True
-    }
+  impline = x['str']
+  directive = {
+    'isa': 'directive',
+    'kind': 'import',
+    'str': impline[:-1],  # .hm -> .h
+    'att': att,
+    'local': True
+  }
 
-    if no_include_directive:
-      directive['att'].append('c-no-print')
-
-    directive['att'].extend(attributes)
-    module['text'].append(directive)
+  module['text'].append(directive)
 
 
 
@@ -1245,13 +1247,13 @@ def def_const(x):
   extend_props(nv)
 
   global attributes
-  nv['att'].extend(attributes)
+  nv['att'].extend(attributes_get())
 
   module['context'].value_add(id['str'], nv)
 
   definition = hlir_def_const(id, nv, v, ti=x['ti'])
   nv['definition'] = definition
-  definition['att'].extend(attributes)
+  definition['att'].extend(attributes_get())
 
   # extern const для C принтера (не печатает)
   #if x['extern']:
@@ -1288,7 +1290,7 @@ def def_type(x):
   extend_props(nt)
 
   global attributes
-  nt['att'].extend(attributes)
+  nt['att'].extend(attributes_get())
 
 
   if already_declared:
@@ -1300,7 +1302,7 @@ def def_type(x):
     module['context'].type_add(id['str'], nt)
 
   definition = hlir_def_type(x['id'], t, already_declared, ti=x['ti'])
-  definition['att'].extend(attributes)
+  definition['att'].extend(attributes_get())
   nt['definition'] = definition
 
   return definition
@@ -1329,14 +1331,14 @@ def def_var(x):
   var = hlir_value_var(f['id'], f['type'], init=init_value)
 
   global attributes
-  var['att'].extend(attributes)
+  var['att'].extend(attributes_get())
 
   extend_props(var)
 
   module['context'].value_add(x['field']['id']['str'], var)
 
   definition = hlir_def_var(var, init_value, ti=x['ti'])
-  definition['att'].extend(attributes)
+  definition['att'].extend(attributes_get())
   var['definition'] = definition
 
   return definition
@@ -1364,7 +1366,7 @@ def def_func(x):
   cfunc = hlir_value_func(func_id, func_type, ti=func_ti)
 
   global attributes
-  cfunc['att'].extend(attributes)
+  cfunc['att'].extend(attributes_get())
 
   extend_props(cfunc)
 
@@ -1426,18 +1428,18 @@ def decl_type(x):
   if x['extern']:
     declaration['att'].append('extern')
 
-  declaration['att'].extend(attributes)
+  declaration['att'].extend(attributes_get())
 
   return declaration
 
 
 
 def decl_func(x):
-  global attributes
   id = x['id']
   functype = do_type(x['type'])
 
-  if option_get("arghack") == True:
+  global attributes
+  if "arghack" in attributes:
     functype['att'].append('arghack')
 
   func = hlir_value_func(id, functype, ti=x['ti'])
@@ -1449,7 +1451,7 @@ def decl_func(x):
 
   declaration = hlir_decl_func(func, ti=x['ti'])
   func['declaration'] = declaration
-  declaration['att'].extend(attributes)
+  declaration['att'].extend(attributes_get())
 
   if x['extern']:
     declaration['att'].append('extern')
@@ -1468,7 +1470,7 @@ def comm_line(x):
     'att': []
   }
 
-  y['att'].extend(attributes)
+  y['att'].extend(attributes_get())
   return y
 
 
@@ -1481,7 +1483,7 @@ def comm_block(x):
     'att': []
   }
 
-  y['att'].extend(attributes)
+  y['att'].extend(attributes_get())
   return y
 
 

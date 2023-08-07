@@ -2,7 +2,7 @@
 
 @c_include("unistd.h")
 
-@option("no-include")
+@attribute("c-no-print")
 import "./ctypes.hm"
 
 type PidT  Int  // ??

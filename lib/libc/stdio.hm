@@ -1,6 +1,6 @@
 // libc/stdio.hm
 
-@option("no-include")
+@attribute("c-no-print")
 import "./ctypes.hm"
 
 @c_include("stdio.h")
@@ -46,14 +46,19 @@ extern func tmpfile() -> *FILE
 extern func tmpnam(str : CharStr) -> CharStr
 
 
-@option("arghack")
+@attribute("arghack")
 extern func printf  (s : ConstCharStr) -> Int
+@attribute("arghack")
 extern func scanf   (s : ConstCharStr) -> Int
+@attribute("arghack")
 extern func fprintf (stream : *FILE, format : Str) -> Int
+@attribute("arghack")
 extern func fscanf (f : *FILE, format : ConstCharStr) -> Int
+@attribute("arghack")
 extern func sscanf  (buf : ConstCharStr, format : ConstCharStr) -> Int
+@attribute("arghack")
 extern func sprintf (buf : CharStr, format : ConstCharStr) -> Int
-@option_off("arghack")
+
 
 
 //extern func vfprintf (f : *FILE, format : ConstCharStr, arg : VaList) -> Int
