@@ -161,11 +161,11 @@ def print_value_bin(v, ctx):
     need_wrap_right = precedence(right['kind']) < precedenceMax
 
   # if logic operation
-  if type.eq(left['type'], type.typeNat1):
-    if op == 'or':
-      op = 'or'
-    elif op == 'and':
-      op = 'and'
+  #if type.eq(left['type'], type.typeNat1):
+  #  if op == 'or':
+  #    op = 'or'
+  #  elif op == 'and':
+  #    op = 'and'
 
   print_value(left, need_wrap=need_wrap_left)
   o(' %s ' % bin_ops[op])
@@ -174,21 +174,15 @@ def print_value_bin(v, ctx):
 
 
 un_ops = {
-  'ref': '&', 'deref': '*', 'plus': '+', 'minus': '-', 'not': 'not', 'logic_not': 'not'
+  'ref': '&', 'deref': '*', 'plus': '+', 'minus': '-', 'not': 'not'
 }
 
 
 def print_value_un(v, ctx):
   op = v['kind']
   value = v['value']
-
   p0 = precedence(op)
   pv = precedence(value['kind'])
-
-  if op == 'not':
-    if type.eq(value['type'], type.typeNat1):
-      op = 'logic_not'
-
   o(un_ops[op]); print_value(value, need_wrap=pv<p0)
 
 
