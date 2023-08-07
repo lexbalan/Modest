@@ -1504,11 +1504,6 @@ def print_def_var(x):
     o(" zeroinitializer")
 
 
-def print_def_const(x):
-  pass
-
-
-
 
 def print_strings(strings):
   strno = 0
@@ -1567,7 +1562,6 @@ def print_module(m):
       isa_prev = isa
 
     if isa == 'directive':
-      #if k =='import': print_import(x)
       pass
 
     elif isa == 'declaration':
@@ -1576,7 +1570,7 @@ def print_module(m):
 
     elif isa == 'definition':
       if k == 'var': print_def_var(x)
-      elif k == 'const': print_def_const(x)
+      elif k == 'const': pass
       elif k == 'func': print_def_func(x)
       elif k == 'type': print_def_type(x)
 
