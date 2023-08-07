@@ -868,9 +868,6 @@ def print_def_const(x):
 
 
 def print_include(x):
-  if 'c-no-print' in x['att']:
-    return
-
   s = x['str']
   if x['local']:
     s = '"' + s + '"'
