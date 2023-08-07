@@ -1508,15 +1508,6 @@ def print_def_const(x):
   pass
 
 
-def print_import(x):
-  s = x['str'] + '.h'
-  if x['local']:
-    s = '"' + s + '"'
-  else:
-    s = '<' + s + '>'
-  o("#include %s" % s)
-
-
 
 
 def print_strings(strings):
@@ -1576,7 +1567,8 @@ def print_module(m):
       isa_prev = isa
 
     if isa == 'directive':
-      if k =='import': print_import(x)
+      #if k =='import': print_import(x)
+      pass
 
     elif isa == 'declaration':
       if k == 'func': print_decl_func(x)
