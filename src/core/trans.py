@@ -175,17 +175,17 @@ def select_nat(sz):
   }[sz]
 
 
-int_size = 0
-size_size = 0
-ptr_size = 0
+
+int_size = 0  # sizeof(int)
+size_size = 0 # sizeof(size_t)
+ptr_size = 0  # sizeof(int *)
+
 
 def init():
-
   global int_size, ptr_size, size_size
   int_size = int(settings_get('int'))
   ptr_size = int(settings_get('ptr'))
   size_size = int(settings_get('size'))
-
 
   global root_context
   # init main context

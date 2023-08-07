@@ -6,8 +6,6 @@
 @c_include("fcntl.h")
 @c_include("unistd.h")
 
-
-import "./stdio.hm"
 import "./ctypes.hm"
 
 
@@ -78,20 +76,20 @@ extern func strlen  (s : *ConstChar) -> SizeT
 extern func ftruncate (fd : Int, size : OffT) -> Int
 
 
-const c_O_RDONLY = 0x0000  // open for reading only
-const c_O_WRONLY = 0x0001  // open for writing only
-const c_O_RDWR   = 0x0002  // open for reading and writing
+const c_O_RDONLY = 0x0000   // open for reading only
+const c_O_WRONLY = 0x0001   // open for writing only
+const c_O_RDWR = 0x0002     // open for reading and writing
 
 const o_CREAT = 0x0200
-const o_TRUNC = 0x0400     // trunc to zero len
+const o_TRUNC = 0x0400      // trunc to zero len
 const o_WRONLY = 0x0001
 
 const o_RDONLY = 00
 const o_RDWR = 02
 
-const s_IRUSR = 0x0000100  // R for owner
-const s_IWUSR = 0x0000080  // W for owner
-const s_IXUSR = 0x0000040  // X for owner
+const s_IRUSR = 0x0000100   // R for owner
+const s_IWUSR = 0x0000080   // W for owner
+const s_IXUSR = 0x0000040   // X for owner
 
 
 extern func creat (path : Str, mode : ModeT) -> Int

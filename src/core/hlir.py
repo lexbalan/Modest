@@ -12,8 +12,6 @@ def nbytes_for_bits(x):
 
 
 
-
-
 def hlir_type_bad(ti=None):
   return {'isa': 'type', 'kind': 'bad', 'att': [], 'ti': ti}
 
