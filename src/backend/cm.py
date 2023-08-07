@@ -194,7 +194,6 @@ def print_value_un(v, ctx):
 
 def print_value_call(v, ctx):
   print_value(v['func'])
-
   o("(")
   i = 0
   while i < len(v['args']):
