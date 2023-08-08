@@ -11,9 +11,13 @@ from core.hlir import hlir_value_num_get
 
 
 # красивости
+
+puffy = False
+
 # если сущность была уже отделена новой строкой
 # (typedef struct & def func должны всегда отделяться пустой строкой)
 was_separated_by_new_line = True
+
 
 
 aprecedence = [
@@ -633,22 +637,23 @@ def print_arrays(arrays):
     o("memcpy(%s, _%s, %d);" % (dst, src, len))
 
 
-
 def print_stmts_puffy(stmts):
   k_prev = ""
   if len(stmts) > 0:
     k_prev = stmts[0]['kind']
   i = 0
   for stmt in stmts:
-    #noneed0 = k_prev == 'value' and stmt['kind'] == 'assign'
-    #noneed1 = k_prev == 'assign' and stmt['kind'] == 'value'
-    noneed = False #noneed0 or noneed1
-    need = k_prev != stmt['kind']
-    need_nl = need or stmt['kind'] in ['if', 'while']
+    if puffy:
+      #noneed0 = k_prev == 'value' and stmt['kind'] == 'assign'
+      #noneed1 = k_prev == 'assign' and stmt['kind'] == 'value'
+      noneed = False #noneed0 or noneed1
+      need = k_prev != stmt['kind']
+      need_nl = need or stmt['kind'] in ['if', 'while']
 
-    if need_nl and i > 0 and not noneed:
-      k_prev = stmt['kind']
-      o("\n")
+      if need_nl and i > 0 and not noneed:
+        k_prev = stmt['kind']
+        o("\n")
+
     print_stmt(stmt)
     i = i + 1
 
