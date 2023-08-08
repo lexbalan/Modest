@@ -1245,8 +1245,7 @@ def def_const(x):
 
   extend_props(nv)
 
-  global attributes
-  nv['att'].extend(attributes_get())
+  #nv['att'].extend(attributes_get())
 
   module['context'].value_add(id['str'], nv)
 
@@ -1288,7 +1287,6 @@ def def_type(x):
 
   extend_props(nt)
 
-  global attributes
   nt['att'].extend(attributes_get())
 
 
@@ -1329,7 +1327,6 @@ def def_var(x):
 
   var = hlir_value_var(f['id'], f['type'], init=init_value)
 
-  global attributes
   var['att'].extend(attributes_get())
 
   extend_props(var)
@@ -1364,7 +1361,6 @@ def def_func(x):
 
   cfunc = hlir_value_func(func_id, func_type, ti=func_ti)
 
-  global attributes
   cfunc['att'].extend(attributes_get())
 
   extend_props(cfunc)
