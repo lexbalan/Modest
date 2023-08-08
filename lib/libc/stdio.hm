@@ -1,9 +1,10 @@
 // libc/stdio.hm
 
-@attribute("c-no-print")
-import "./ctypes.hm"
 
 @c_include("stdio.h")
+
+
+import "./ctypes.hm"
 
 
 type FposT
@@ -48,14 +49,19 @@ extern func tmpnam(str : CharStr) -> CharStr
 
 @attribute("arghack")
 extern func printf  (s : ConstCharStr) -> Int
+
 @attribute("arghack")
 extern func scanf   (s : ConstCharStr) -> Int
+
 @attribute("arghack")
 extern func fprintf (stream : *FILE, format : Str) -> Int
+
 @attribute("arghack")
 extern func fscanf (f : *FILE, format : ConstCharStr) -> Int
+
 @attribute("arghack")
 extern func sscanf  (buf : ConstCharStr, format : ConstCharStr) -> Int
+
 @attribute("arghack")
 extern func sprintf (buf : CharStr, format : ConstCharStr) -> Int
 

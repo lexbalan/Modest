@@ -160,13 +160,6 @@ def print_value_bin(v, ctx):
     need_wrap_left = precedence(left['kind']) < precedenceMax
     need_wrap_right = precedence(right['kind']) < precedenceMax
 
-  # if logic operation
-  #if type.eq(left['type'], type.typeNat1):
-  #  if op == 'or':
-  #    op = 'or'
-  #  elif op == 'and':
-  #    op = 'and'
-
   print_value(left, need_wrap=need_wrap_left)
   o(' %s ' % bin_ops[op])
   print_value(right, need_wrap=need_wrap_right)

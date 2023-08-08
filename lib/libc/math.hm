@@ -1,8 +1,10 @@
 // libc/math.hm
 
-import "./ctypes.hm"
 
 @c_include("math.h")
+
+
+import "./ctypes.hm"
 
 
 const M_PI = 3.141592653589793238462643383279502884
