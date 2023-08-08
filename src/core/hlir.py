@@ -89,6 +89,19 @@ def hlir_type_array(of, volume=None, ti=None):
   }
 
 
+
+def hlir_type_generic_int_for(num, unsigned=False, ti=None):
+  nbits = nbits_for_num(num)
+  # get custom generic int type
+  gen_int_type = hlir_type_integer('Int')
+  gen_int_type['att'].extend(['generic'])
+  if unsigned:
+    gen_int_type['att'].extend(['unsigned'])
+  gen_int_type['power'] = nbits
+  gen_int_type['size'] = nbytes_for_bits(nbits)
+  return gen_int_type
+
+
 def hlir_field(id, type, ti=None):
   return {
     'isa': 'field',
@@ -149,8 +162,8 @@ def hlir_value_zero(t, ti=None):
   }
 
 
-def hlir_value_int(num, typ=None, ti=None):
-  def nbits_for_int(x):
+
+def nbits_for_num(x):
     n = 1
     y = 1
     while x > y:
@@ -158,25 +171,22 @@ def hlir_value_int(num, typ=None, ti=None):
       n = n + 1
     return n
 
-  nbits = nbits_for_int(num)
+
+
+def hlir_value_int(num, typ=None, ti=None):
 
   if typ == None:
-    # get custom generic int type
-    gen_int_type = hlir_type_integer('Int')
-    gen_int_type['att'].extend(['generic'])
+    typ = hlir_type_generic_int_for(num, ti)
 
-    gen_int_type['power'] = nbits
-    gen_int_type['size'] = nbytes_for_bits(nbits)
-    typ = gen_int_type
-
-
-  if nbits > typ['power']:
-    # extend if generic or error
-    if type.is_generic(typ):
-      typ = hlir_type_integer('Int', nbits)
-      typ['att'].extend(['generic'])
-    else:
-      error("integer oferflow", ti)
+  else:
+    nbits = nbits_for_num(num)
+    if nbits > typ['power']:
+      # extend if generic or error
+      if type.is_generic(typ):
+        typ = hlir_type_integer('Int', nbits)
+        typ['att'].extend(['generic'])
+      else:
+        error("integer oferflow", ti)
 
   return {
     'isa': 'value',
@@ -376,13 +386,16 @@ def hlir_value_cast(value, type, ti=None):
   }
 
 
-def hlir_value_sizeof(of, type, ti=None):
+def hlir_value_sizeof(of, ti=None):
+  size = of['size']
+  type = hlir_type_generic_int_for(size, unsigned=True, ti=ti)
   return {
     'isa': 'value',
     'kind': 'sizeof',
     'of': of,
     'type': type,
-    'att': [],
+    'att': ['immediate'],
+    'num': size,
     'ti': ti
   }
 

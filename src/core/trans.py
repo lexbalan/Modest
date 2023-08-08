@@ -188,7 +188,6 @@ def select_nat(sz):
 
 
 int_size = 0  # sizeof(int)
-size_size = 0 # sizeof(size_t)
 ptr_size = 0  # sizeof(int *)
 
 
@@ -196,7 +195,6 @@ def init():
   global int_size, ptr_size, size_size
   int_size = int(settings_get('int'))
   ptr_size = int(settings_get('ptr'))
-  size_size = int(settings_get('size'))
 
   global root_context
   # init main context
@@ -227,9 +225,11 @@ def init():
   # (used in index, extra agrs & generic numeric var definitions)
 
   global typeSysInt, typeSysNat
+
   typeSysInt = copy.copy(select_int(int_size))
   typeSysInt['c_alias'] = 'int'
-  typeSysNat = copy.copy(select_nat(size_size))
+
+  typeSysNat = copy.copy(select_nat(int_size))
   typeSysNat['c_alias'] = 'unsigned int'
 
 
@@ -891,7 +891,7 @@ def do_value_float(x):
 
 def do_value_sizeof(x):
   of = do_type(x['type'])
-  return hlir_value_sizeof(of, typeSysNat, ti=x['ti'])
+  return hlir_value_sizeof(of, ti=x['ti'])
 
 
 
