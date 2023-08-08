@@ -810,28 +810,13 @@ class Parser:
   # Top Level Directives
   #
   
-  def do_import(self):
+  def parse_import(self):
     ti = self.ti()
     str = self.gettok()
     return {'isa': 'ast_directive', 'kind': 'import', 'str': str, 'ti': ti}
-
-  def do_include(self):
-    ti = self.ti()
-    str = self.gettok()
-    return {'isa': 'ast_directive', 'kind': 'include', 'str': str, 'ti': ti}
-
-  
-  def decl_extern(self):
-    if self.match('type'):
-      return self.def_type(extern=True)
-    elif self.match('func'):
-      return self.def_func(extern=True)
-    else:
-      print("bad extern")
-      exit(1)
   
   
-  def def_func(self, extern=False):
+  def parse_func(self, extern=False):
     ti = self.ti()
     id = self.identifier()
     ftyp = self.expr_type()
@@ -859,10 +844,7 @@ class Parser:
     }
 
 
-
-    
-  
-  def def_const(self):
+  def parse_const(self):
     ti = self.ti()
     id = self.identifier()
     self.need('=')
@@ -876,7 +858,7 @@ class Parser:
     }
   
   
-  def def_var(self):
+  def parse_var(self):
     ff = self.parse_field()
     if ff == None:
       return None
@@ -898,7 +880,7 @@ class Parser:
     return vars
   
   
-  def def_type(self, extern=False):
+  def parse_type(self, extern=False):
     ti = self.ti()
     id = self.identifier()
 
@@ -931,19 +913,19 @@ class Parser:
       self.skip()
 
 
-  def def_comment_line(self):
+  def parse_comment_line(self):
     ti = self.ti()
     x = self.gettok()
     return {'isa': 'ast_comment', 'kind': 'line', 'lines': x, 'ti': ti}
 
 
-  def def_comment_block(self):
+  def parse_comment_block(self):
     ti = self.ti()
     x = self.gettok()
     return {'isa': 'ast_comment', 'kind': 'block', 'lines': x, 'ti': ti}
 
 
-  def def_dir(self):
+  def parse_dir(self):
     ti = self.ti()
     x = self.gettok()
     return {'isa': 'ast_directive', 'kind': 'pragma', 'text': x, 'ti': ti}
@@ -955,40 +937,54 @@ class Parser:
       return None
 
     self.tokens = self.lex.tokenize(filename)
-    #print("ENDLEX: " + filename)
     self.ctoken = 0
 
-    xx = []
+    output = []
+
+    while not self.is_end():
+      x = None
+      if self.match('\n'):
+        continue
+      elif self.token_class_is('block-comment'):
+        x = self.parse_comment_block()
+      elif self.token_class_is('line-comment'):
+        x = self.parse_comment_line()
+      elif self.token_class_is('directive'):
+        x = self.parse_dir()
+      elif self.match('import'):
+        x = self.parse_import()
+
+      if x == None:
+        break
+
+      if isinstance(x, list):
+        output.extend(x)
+      else:
+        output.append(x)
+
 
 
     while not self.is_end():
-
       export = self.match('export')
+      extern = self.match('extern')
+
       x = None
 
-      if self.match('\n'):
-        continue
-      elif self.match('func'):
-        x = self.def_func()
-      elif self.match('const'):
-        x = self.def_const()
-      elif self.match('var'):
-        x = self.def_var()
-      elif self.match('type'):
-        x = self.def_type()
-      elif self.match('extern'):
-        x = self.decl_extern()
+      if self.match('\n'): continue
+      elif self.match('func'): x = self.parse_func()
+      elif self.match('const'): x = self.parse_const()
+      elif self.match('var'): x = self.parse_var()
+      elif self.match('type'): x = self.parse_type()
 
       elif self.token_class_is('block-comment'):
-        x = self.def_comment_block()
+        x = self.parse_comment_block()
       elif self.token_class_is('line-comment'):
-        x = self.def_comment_line()
+        x = self.parse_comment_line()
       elif self.token_class_is('directive'):
-        x = self.def_dir()
+        x = self.parse_dir()
       elif self.match('import'):
-        x = self.do_import()
-      elif self.match('include'):
-        x = self.do_include()
+        error("import directive must be placed before definitions", self.ti())
+        x = self.parse_import()
 
       else:
         error("unexpected token", self.ti())
@@ -998,12 +994,15 @@ class Parser:
       if x == None:
         continue
 
+      if extern:
+        x['extern'] = True
+
       if isinstance(x, list):
-        xx.extend(x)
+        output.extend(x)
       else:
-        xx.append(x)
+        output.append(x)
     
-    return xx
+    return output
 
 
 
