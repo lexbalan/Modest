@@ -238,6 +238,20 @@ def print_value_cast(v, ctx):
     print_value(v['value'])
     return
 
+  from_type = v['value']['type']
+  to_type = v['type']
+  # NO need cast ptr to *void
+  if type.is_pointer(from_type):
+    if type.is_free_pointer(to_type):
+      print_value(v['value'])
+      return
+
+  # NO need cast *void to ptr
+  if type.is_free_pointer(from_type):
+    if type.is_pointer(to_type):
+      print_value(v['value'])
+      return
+
   print_cast(v['type'], v['value'], ctx)
 
   #if need_wrap:
