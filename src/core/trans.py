@@ -482,9 +482,11 @@ def do_value_bin(x):
   if not k in ['eq', 'ne']:
     if not k in ['add', 'sub']:  # add, sub, for free pointers
       if not type_attribute_check(l['type'], 'numeric'):
-        error("type error", x['left'])
+        error("expected value with numeric type", x['left'])
+        return hlir_value_bad(ti)
       if not type_attribute_check(r['type'], 'numeric'):
-        error("type error", x['right'])
+        error("expected value with numeric type", x['right'])
+        return hlir_value_bad(ti)
 
 
   if not (p_and_n or n_and_p):

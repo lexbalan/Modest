@@ -27,7 +27,7 @@ def left_start_pos(ti):
 def right_end_pos(ti):
   if 'end' in ti:
     return right_end_pos(ti['end'])
-  return ti['pos'] + ti['len'] - 1
+  return ti['pos'] - ti['len']# - 1
 
 
 
@@ -50,6 +50,8 @@ def highlight(ti, color):
   #mark(pos, color)
   start = left_start_pos(ti)
   end = right_end_pos(ti)
+  #print("start = " + str(start))
+  #print("end = " + str(end))
   himark(start, pos, ti['len'], end - 1, color)
 
 
