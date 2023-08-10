@@ -12,6 +12,7 @@ from core.value import value_attribute_check
 from core.hlir import hlir_type_pointer, hlir_value_int, hlir_value_num_get
 
 
+INDENT_SYMBOL = " " * 2
 
 
 func_context = None
@@ -54,7 +55,7 @@ def reg_get():
 
 def operation (op):
   reg = reg_get ()
-  o("\n  %%%s = %s " % (reg, op))
+  out("\n  %%%s = %s " % (reg, op))
   return reg
 
 
@@ -100,13 +101,13 @@ ll_value_zero = ll_create_value_num(type.typeInt32, 0)
 
 def print_type_value(llvm_value):
   print_type(llvm_value['type'])
-  o(" ")
+  out(" ")
   print_value(llvm_value)
 
 
 def print_type_value_param(llvm_value):
   print_type(llvm_value['type'], arr_as_ptr_to_arr=True)
-  o(" ")
+  out(" ")
   print_value(llvm_value)
 
 
@@ -115,10 +116,10 @@ def insertvalue(v, x, pos):
   #%5 = insertvalue %Type24 zeroinitializer, %Int32 1, 0
   reg = operation('insertvalue')
   print_type_value(v)
-  o(", ")
+  out(", ")
   print_type_value(x)
-  o(", ")
-  o('%d' % pos)
+  out(", ")
+  out('%d' % pos)
   return {
     'isa': 'llvm_value',
     'class': 'reg',
@@ -143,69 +144,69 @@ def double_to_hex(f):
 
 
 def inline_cast(op, from_type, to_type, val):
-  o("%s (" % op)
+  out("%s (" % op)
   print_type(from_type)
-  o(" ")
+  out(" ")
   print_value(val)
-  o(" to ")
+  out(" to ")
   print_type(to_type)
-  o(")")
+  out(")")
 
 
 def print_value_array(x):
   if len(x['items']) > 0:
-    o("[\n")
+    out("[\n")
     indent_up()
     n = len(x['items'])
     i = 0
     while i < n:
       item = x['items'][i]
       if i > 0:
-        o(",\n")
-      ind(); print_type_value(item);
+        out(",\n")
+      ind(INDENT_SYMBOL); print_type_value(item);
       i = i + 1
     indent_down()
-    o("\n"); ind(); o("]")
+    out("\n"); ind(INDENT_SYMBOL); out("]")
   else:
-    o("zeroinitializer")
+    out("zeroinitializer")
 
 
 def print_value_record(x):
   #def print_type_value_value(llvm_value):
   #  print_type_value(llvm_value['value'])
   if len(x['items']) > 0:
-    #o("{"); print_list_by(x['items'], print_type_value_value); o("}")
-    o("{\n")
+    #o("{"); print_list_by(x['items'], print_type_value_value); out("}")
+    out("{\n")
     indent_up()
     n = len(x['items'])
     i = 0
     while i < n:
       item = x['items'][i]
       if i > 0:
-        o(",\n")
-      ind(); print_type_value(item['value']);
+        out(",\n")
+      ind(INDENT_SYMBOL); print_type_value(item['value']);
       i = i + 1
     indent_down()
-    o("\n"); ind(); o("}")
+    out("\n"); ind(INDENT_SYMBOL); out("}")
   else:
-    o("zeroinitializer")
+    out("zeroinitializer")
 
 def print_value(x):
   c = x['class']
   if c == 'reg':
-    o('%%%s' % x['reg'])
+    out('%%%s' % x['reg'])
   elif c == 'stk':
-    o('%%%s' % x['id'])
+    out('%%%s' % x['id'])
   elif c == 'mem':
-    o('@%s' % x['id'])
+    out('@%s' % x['id'])
   elif c == 'num':
     num = hlir_value_num_get(x)
     if type.is_integer(x['type']):
-      o(str(num))
+      out(str(num))
 
     elif type.is_pointer(x['type']):
       if hlir_value_num_get(x) == 0:
-        o("null")
+        out("null")
         return
 
       v = ll_create_value_num(type.typeNat64, hlir_value_num_get(x))
@@ -213,10 +214,10 @@ def print_value(x):
 
     else:
       #o(str(f'{num:f}'))
-      o(str(double_to_hex(num)))
+      out(str(double_to_hex(num)))
 
   elif c == 'str':
-    o("@%s" % x['id'])
+    out("@%s" % x['id'])
 
   elif c == 'array':
     print_value_array(x)
@@ -233,15 +234,15 @@ def print_value(x):
 
   elif c == 'zero':
     if type.is_numeric(x['type']):
-      o("0")
+      out("0")
     else:
-      o("zeroinitializer")
+      out("zeroinitializer")
 
   elif c == 'null':
-    o("null")
+    out("null")
 
   else:
-    o("<unknown_value::%s>" % c)
+    out("<unknown_value::%s>" % c)
     info("???", x['ti'])
 
 
@@ -250,7 +251,7 @@ def print_list_by(lst, method):
   i = 0
   while i < len(lst):
     if i > 0:
-      o(", ")
+      out(", ")
     method(lst[i])
     i = i + 1
 
@@ -263,77 +264,77 @@ def print_type(t, print_aka=True, arr_as_ptr_to_arr=False):
 
   if print_aka:
     if 'llvm_alias' in t:
-      o(t['llvm_alias'])
+      out(t['llvm_alias'])
       return
 
     # иногда сюда залетают дженерики например в to левое:
     # let p = 0x12345678 to *Nat32
     if type.is_generic_integer(t):
-      o("i%d" % t['power'])
+      out("i%d" % t['power'])
       return
 
     if 'name' in t:
-      o('%' + t['name'])
+      out('%' + t['name'])
       return
 
   if type.is_record(t):
-    o("{")
+    out("{")
     fields = t['fields']
     i = 0
     while i < len(fields):
       field = fields[i]
-      if i > 0: o(',')
-      o("\n\t"); print_type(field['type'])
+      if i > 0: out(',')
+      out("\n\t"); print_type(field['type'])
       i = i + 1
-    o("\n}")
+    out("\n}")
 
   elif type.is_enum(t):
-    o("i16")
+    out("i16")
 
   elif type.is_pointer(t):
     if type.is_free_pointer(t):
-      o("i8*")
+      out("i8*")
     else:
-      print_type(t['to']); o("*")
+      print_type(t['to']); out("*")
 
 
   elif type.is_array(t):
-    o("[")
+    out("[")
     array_size = t['volume']
     sz = 0
     if array_size != None:
       sz = array_size['num']
 
-    o("%d x " % sz)
+    out("%d x " % sz)
     print_type(t['of'])
-    o("]")
+    out("]")
     if arr_as_ptr_to_arr:
-      o("*")
+      out("*")
 
   elif type.is_func(t):
     print_type(t['to'])
-    o("(")
+    out("(")
     print_list_by(t['params'], lambda f: print_type(f['type'], arr_as_ptr_to_arr=True))
-    o(")")
+    out(")")
 
   elif type.is_integer(t):
     if 'llvm_alias' in t:
-      o(t['llvm_alias'])
+      out(t['llvm_alias'])
     #  return
     #o('%' + t['aka'])
 
   elif type.is_float(t):
     if 'llvm_alias' in t:
-      o(t['llvm_alias'])
+      out(t['llvm_alias'])
 
 
   elif type.is_opaque(t):
-    o('opaque')
+    out('opaque')
 
 
 
   else:
-    o("<type:%s>" % k)
+    out("<type:%s>" % k)
 
 
 
@@ -349,9 +350,9 @@ def do_ld(x):
   reg = operation('load');
   typ = x['type']
   print_type(typ)
-  o(", ")
+  out(", ")
   print_type(typ)
-  o("* ")
+  out("* ")
   print_value (x)
   return {
     'isa': 'llvm_value',
@@ -414,7 +415,7 @@ def do_eval_binary (op, l, r, x): # ["add", "fadd", x]
 
 
   reg = operation_with_type (op, l['type'])
-  o(" "); print_value (l); o(", "); print_value (r)
+  out(" "); print_value (l); out(", "); print_value (r)
 
   return {
     'isa': 'llvm_value',
@@ -462,11 +463,11 @@ def do_eval_expr_un(v):
   if v['kind'] == 'not':
     #%10 = xor i32 %9, -1
     reg = operation('xor');
-    o(" ");
+    out(" ");
     print_type(v['type'])
-    o(" ");
+    out(" ");
     print_value(vx)
-    o(", -1")
+    out(", -1")
 
 
   elif v['kind'] == 'minus':
@@ -477,7 +478,7 @@ def do_eval_expr_un(v):
     return do_eval_binary('sub', z, vx, v)
 
   else:
-    reg = operation(v['kind']); o(" "); print_value(vx)
+    reg = operation(v['kind']); out(" "); print_value(vx)
 
   return {
     'isa': 'llvm_value',
@@ -520,17 +521,17 @@ def do_eval_expr_call(v):
 
   #%Int32(%Str, ...)
   print_type(ftype['to'])
-  o("(")
+  out("(")
   params = ftype['params']
   print_list_by(params, lambda par: print_type(par['type'], arr_as_ptr_to_arr=True))
   if type_attribute_check(ftype, 'arghack'):
-    o(", ...")
-  o(") ")
+    out(", ...")
+  out(") ")
 
   print_value(f)
-  o(" (")
+  out(" (")
   print_list_by(args, print_type_value_param)
-  o(")")
+  out(")")
   return {
     'isa': 'llvm_value',
     'class': 'reg',
@@ -548,11 +549,11 @@ def llvm_getelementptr(rec, rt, indexes, vt):
   # Прикол в том что индекс (i) структуры
   # не может быть i64 (!) (а только i32)
   reg = operation_with_type("getelementptr inbounds", rt)
-  o(", ")
+  out(", ")
   print_type(rt)
-  o("* ")
+  out("* ")
   print_value(rec)
-  o(", ")
+  out(", ")
   print_list_by(indexes, print_type_value)
 
   return {
@@ -595,7 +596,7 @@ def do_eval_access_ptr(x, xt, field_no, vt):
 def extract_record_field(x, ft, field_no):
   reg = operation('extractvalue')
   print_type_value(x)
-  o(', %d' % field_no)
+  out(', %d' % field_no)
   return {
     'isa': 'llvm_value',
     'class': 'reg',
@@ -736,9 +737,9 @@ def do_eval_expr_to(v):
   opcode = select_cast_operator(from_type, to_type)
   reg = operation(opcode)
   print_type(from_type)
-  o(" ")
+  out(" ")
   print_value(y)
-  o(" to ")
+  out(" to ")
   print_type(to_type)
   return {
     'isa': 'llvm_value',
@@ -760,10 +761,10 @@ def do_eval_sizeof(x):
   #%SizeI = ptrtoint %T* %Size to i32
   t = x['of']
   r0 = operation("getelementptr ")
-  print_type(t); o(", ")
-  print_type(t); o("* null, i32 1")
+  print_type(t); out(", ")
+  print_type(t); out("* null, i32 1")
   r1 = operation("ptrtoint ")
-  print_type(t); o("* %%%s to i64" % r0)
+  print_type(t); out("* %%%s to i64" % r0)
 
   return {
     'isa': 'llvm_value',
@@ -974,7 +975,7 @@ def do_eval_x(x):
   elif k == 'cast': return do_eval_expr_to(x)
   elif k == 'sizeof': return do_eval_sizeof(x)
   else:
-    o("<%s>" % k)
+    out("<%s>" % k)
     return ll_create_value_num(x['type'], 0)
 
 #
@@ -986,11 +987,11 @@ def do_eval_x(x):
 def ll_store(l, r):
   lo("  store ");
   print_type(r['type'])
-  o(" ")
+  out(" ")
   print_value(r)
-  o(", ")
+  out(", ")
   print_type(r['type'])
-  o("* ")
+  out("* ")
   print_value(l)
 
 
@@ -1031,20 +1032,20 @@ def print_stmt_assign(x):
 
 
 def print_integer_block():
-  o("<integer block>")
+  out("<integer block>")
 
 
 
 def ll_br(x, then_label, else_label):
-  o("\n  br %s " % TYPE_BOOL)
+  out("\n  br %s " % TYPE_BOOL)
   print_value(x)
-  o(" , label %%%s, label %%%s" % (then_label, else_label))
+  out(" , label %%%s, label %%%s" % (then_label, else_label))
 
 def op_goto(label):
-  o("\n  br label %%%s" % label)
+  out("\n  br label %%%s" % label)
 
 def set_label(label):
-  o("\n%s:" % label)
+  out("\n%s:" % label)
 
 
 def print_stmt_if(x):
@@ -1122,10 +1123,10 @@ def print_stmt_return(x):
 
   if v != None:
     print_type(x['value']['type'])
-    o(" ")
+    out(" ")
     print_value(v)
   else:
-    o("void")
+    out("void")
 
   reg_get()  # for LLVM
 
@@ -1325,19 +1326,19 @@ def print_func_signature(id, typ):
   to = typ['to']
 
   print_type(to)
-  o(" @%s(" % id)
+  out(" @%s(" % id)
 
   print_list_by(params, lambda field: print_type(field['type']))
 
   if type_attribute_check(typ, 'arghack'):
-    o(", ...")
+    out(", ...")
 
-  o(")")
+  out(")")
 
 
 
 def print_decl_func(x):
-  o("\ndeclare ")
+  out("\ndeclare ")
   func = x['func']
   print_func_signature(func['id']['str'], func['type'])
 
@@ -1360,10 +1361,10 @@ def print_def_func(x):
   }
 
   func = x['func']
-  o("\ndefine ")
+  out("\ndefine ")
   print_type(func['type']['to'])
-  o(" @%s" % func['id']['str'])
-  o("(")
+  out(" @%s" % func['id']['str'])
+  out("(")
 
   # список параметров которые следует разместить на стеке
   # (массивы передаваемые по значению)
@@ -1385,12 +1386,12 @@ def print_def_func(x):
 
     id = param['id']['str']
     if i > 0:
-      o(", ")
+      out(", ")
     print_type(param['type'])
     if param_is_arr:
-      o("*")
-    o(" ")
-    o('%%%s%s' % (prefix, id))
+      out("*")
+    out(" ")
+    out('%%%s%s' % (prefix, id))
 
     #reg = reg_get()
     vv = {
@@ -1417,12 +1418,12 @@ def print_def_func(x):
     locals_add(id, vv)
 
     i = i + 1
-  o(")")
+  out(")")
 
   # 0, 1, 2 - params; 3 - entry label, 4 - first free register
   entry_label = reg_get()  # (!)
 
-  o(" {")
+  out(" {")
 
   for r in reloc:
     print("  ; reloc %s " % (r['id']))
@@ -1443,14 +1444,14 @@ def print_def_func(x):
 def print_decl_type(x):
   # LLVM не печатает, но C печатает (!)
   #if x['extern']:
-  o("\n%%%s = type opaque" % x['id']['str'])
+  out("\n%%%s = type opaque" % x['id']['str'])
 
 
 def print_def_type(x):
-  o("\n%%%s = type " % x['id']['str'])
+  out("\n%%%s = type " % x['id']['str'])
   print_type(x['type'], print_aka=False)
   if type.is_record(x['type']):
-    o("\n")
+    out("\n")
 
 
 
@@ -1479,29 +1480,29 @@ def print_field(x):
         t = t['of']
 
   print_type(t)
-  o(" ")
-  o("*" * ptr_level)
-  o("%s" % (x['id']['str']))
+  out(" ")
+  out("*" * ptr_level)
+  out("%s" % (x['id']['str']))
   if is_array:
-    o("[")
+    out("[")
     if array_size != None:
       do_eval(array_size)
-    o("]")
+    out("]")
 
 
 
 def print_def_var(x):
   mods = ['external', 'global', 'constant']
   mod = 'global'
-  o("\n@")
-  o(x['var']['id']['str'])
-  o(" = %s " % mod)
+  out("\n@")
+  out(x['var']['id']['str'])
+  out(" = %s " % mod)
   print_type(x['var']['type'])
   if x['init'] != None:
-    o(" ")
+    out(" ")
     print_value(do_eval(x['init']))
   else:
-    o(" zeroinitializer")
+    out(" zeroinitializer")
 
 
 
@@ -1546,7 +1547,7 @@ def print_module(m):
     print_module(imported_module)
 
 
-  o("; -- MODULE: %s\n" % m['path'])
+  out("; -- MODULE: %s\n" % m['path'])
 
   print_strings(m['strings'])
 
@@ -1558,7 +1559,7 @@ def print_module(m):
 
     if isa_prev != isa:
       if not isa in ['asg_def_func', 'asg_def_type']:
-        o("\n")
+        out("\n")
       isa_prev = isa
 
     if isa == 'directive':
@@ -1574,7 +1575,7 @@ def print_module(m):
       elif k == 'func': print_def_func(x)
       elif k == 'type': print_def_type(x)
 
-  o("\n\n")
+  out("\n\n")
 
 
 def run(module, outname):
