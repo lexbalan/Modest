@@ -1,10 +1,14 @@
 
-export MODEST_DIR=~/Modest
-export PATH=$PATH:$MODEST_DIR
-export MODEST_LIB=$MODEST_DIR/lib/
 
+CUR_DIR=$PWD
 
-echo "MODEST_DIR=~/Modest" >> ~/.zshrc
-echo "PATH=\$PATH:\$MODEST_DIR" >> ~/.zshrc
-echo "MODEST_LIB=\$MODEST_DIR/lib/" >> ~/.zshrc
+echo "" >> ~/.zshrc
+echo "export MODEST_DIR=$CUR_DIR" >> ~/.zshrc
+echo "export PATH=\$PATH:\$MODEST_DIR" >> ~/.zshrc
+echo "export MODEST_LIB=\$MODEST_DIR/lib/" >> ~/.zshrc
+
+echo "" >> ~/.bashrc
+echo "export MODEST_DIR=$CUR_DIR" >> ~/.bashrc
+echo "export PATH=\$PATH:\$MODEST_DIR" >> ~/.bashrc
+echo "export MODEST_LIB=\$MODEST_DIR/lib/" >> ~/.bashrc
 
