@@ -71,6 +71,7 @@ def hlir_type_free_pointer(ti=None):
   return {
     'isa': 'type',
     'kind': 'free_pointer',
+    'to': type.typeUnit,
     'size': pointer_size / 8,
     'power': pointer_size,
     'att': [],

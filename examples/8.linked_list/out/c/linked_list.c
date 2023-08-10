@@ -14,7 +14,7 @@
 struct Node {
     Node *next;
     Node *prev;
-    void * link;
+    void *link;
 };
 
 
@@ -95,7 +95,7 @@ Node *linked_list_node_prev_get(Node *node)
 }
 
 
-void * linked_list_node_link_get(Node *node)
+void *linked_list_node_link_get(Node *node)
 {
     if (node == NULL) {
         return NULL;
@@ -123,7 +123,7 @@ Node *linked_list_insert_node(List *list, Node *new_node)
 }
 
 
-Node *linked_list_insert(List *list, void * link)
+Node *linked_list_insert(List *list, void *link)
 {
     if (list == NULL) {
         return NULL;

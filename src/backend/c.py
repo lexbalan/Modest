@@ -759,7 +759,7 @@ def print_func_signature(id, typ):
 
   # поле является указателем?
   ptr_level = 0
-  while t['kind'] == 'pointer':
+  while type.is_pointer(t):
     ptr_level = ptr_level + 1
     t = t['to']
     # *[] or *[n] -> just *
@@ -873,7 +873,7 @@ def print_field(x, const=False, prefix=None):
 
   # поле является указателем?
   ptr_level = 0
-  while t['kind'] == 'pointer':
+  while type.is_pointer(t):
     t = t['to']
 
     if t == 'func':
