@@ -9,10 +9,30 @@ from core.value import value_attribute_check
 from core.hlir import hlir_value_num_get
 
 
-
-# красивости
-
 puffy = False
+
+INDENT_SYMBOL = "\t"
+
+SPACE_AFTER_IF_WHILE = True
+
+# K&R (KNF)
+# LINE_BREAK_BEFORE_STRUCT_BRACE = False
+# LINE_BREAK_BEFORE_FUNC_BRACE = True
+# LINE_BREAK_BEFORE_BLOCK_BRACE = False
+#
+# Allman (BSD)
+# LINE_BREAK_BEFORE_STRUCT_BRACE = True
+# LINE_BREAK_BEFORE_FUNC_BRACE = True
+# LINE_BREAK_BEFORE_BLOCK_BRACE = True
+#
+
+LINE_BREAK_BEFORE_STRUCT_BRACE = True
+LINE_BREAK_BEFORE_FUNC_BRACE = True
+LINE_BREAK_BEFORE_BLOCK_BRACE = True
+
+
+
+
 
 # если сущность была уже отделена новой строкой
 # (typedef struct & def func должны всегда отделяться пустой строкой)
@@ -49,61 +69,75 @@ def precedence(x):
 
 def print_type_numeric(t):
   if 'c_alias' in t:
-    o(t['c_alias'])
+    out(t['c_alias'])
     return
 
-  o(t['name'])
+  out(t['name'])
 
 
 def print_type_array(t):
   print_type(t['of'])
   if t['volume'] != None:
-    o("["); print_value(t['volume']); o("]")
+    out("["); print_value(t['volume']); out("]")
   else:
-    o("*")
+    out("*")
 
 
 def print_type_pointer(t):
   if type.is_free_pointer(t):
-    o("void *")
+    out("void *")
     return
 
   print_type(t['to'])
   if t['to']['kind'] != 'array':
-    o("*")
+    out("*")
+
+
+
+
+def print_fields(fields, before, after, separator):
+  i = 0
+  n = len(fields)
+  while i < n:
+    param = fields[i]
+    out(before); print_field(param); out(after)
+    i = i + 1
+    if i < n: out(separator)
+
 
 
 def print_type_record(t, tag=""):
-  o("struct ")
+  out("struct")
 
   if tag != "":
-    o("%s " % tag)
+    out(" %s" % tag)
 
-  o("{")
+  if LINE_BREAK_BEFORE_STRUCT_BRACE:
+    out("\n")
+  else:
+    out(" ")
+
+  out("{")
   indent_up()
-  fields = t['fields']
-  i = 0
-  while i < len(fields):
-    field = fields[i]
-    o("\n")
-    ind(); print_field(field)
-    o(";")
-    i = i + 1
+
+  print_fields(t['fields'], before=nl_indentation(INDENT_SYMBOL), after=";", separator="")
+
   indent_down()
-  o("\n"); ind(); o("}")
+  out("\n"); ind(INDENT_SYMBOL); out("}")
+
 
 
 def print_type_enum(t):
-  o("enum {")
+  out("enum {")
   items = t['items']
   i = 0
   while i < len(items):
     item = items[i]
-    o("\n")
+    out("\n")
     #o("\t%s_%s," % (t['aka'], item['id']['str']))
-    o("\t%s," % (item['id']['str']))
+    out("\t%s," % (item['id']['str']))
     i = i + 1
-  o("\n}")
+  out("\n}")
 
 
 
@@ -114,18 +148,18 @@ def print_type(t, print_aka=True):
   if type.is_generic_integer(t):
     sz = t['size']
     if sz == 0:
-      o("int")
+      out("int")
     else:
-      o("int%d_t" % (sz * 8))
+      out("int%d_t" % (sz * 8))
     return
 
   if print_aka:
     if 'c_alias' in t:
-      o(t['c_alias'])
+      out(t['c_alias'])
       return
 
     if 'name' in t:
-      o(t['name'])
+      out(t['name'])
       return
 
   if type.is_numeric(t): print_type_numeric(t)
@@ -133,9 +167,9 @@ def print_type(t, print_aka=True):
   elif type.is_enum(t): print_type_enum(t)
   elif type.is_pointer(t): print_type_pointer(t)
   elif type.is_array(t): print_type_array(t)
-  elif type.is_func(t): o("void")
-  elif k == 'opaque': o("void")
-  else: o("<type:" + str(t) + ">")
+  elif type.is_func(t): out("void")
+  elif k == 'opaque': out("void")
+  else: out("<type:" + str(t) + ">")
 
 
 
@@ -175,7 +209,7 @@ def print_value_bin(v, ctx):
       op = 'logic_and'
 
   print_value(left, need_wrap=need_wrap_left)
-  o(' %s ' % bin_ops[op])
+  out(' %s ' % bin_ops[op])
   print_value(right, need_wrap=need_wrap_right)
 
 
@@ -196,50 +230,64 @@ def print_value_un(v, ctx):
     if type.eq(value['type'], type.typeNat1):
       op = 'logic_not'
 
-  o(un_ops[op]); print_value(value, need_wrap=pv<p0)
+  out(un_ops[op]); print_value(value, need_wrap=pv<p0)
 
   # указатель на массив в сях берем как &array[0]
   # поскольку у нас указатель на массив сейчас печатается как *<item_type>
   # а &array дает нам *array[n]
   if v['kind'] == 'ref':
     if value['type']['kind'] == 'array':
-      o("[0]")
+      out("[0]")
+
+
+
+
+def print_paramlist(parms, arghack=False):
+  out("(")
+
+  if len(parms) == 0:
+    out("void")
+  else:
+    print_fields(parms, before="",  after="", separator=", ")
+    if arghack:
+      out(", ...")
+
+  out(")")
+
+
+def print_values(values, before, after, separator):
+  i = 0
+  n = len(values)
+  while i < n:
+    a = values[i]
+    out(before)
+    print_value(a)
+    out(after)
+    i = i + 1
+    if i < n:
+      out(separator)
 
 
 def print_value_call(v, ctx):
   left = v['func']
-  if left['type']['kind'] == 'pointer':
+  if type.is_pointer(left['type']):
     t = left['type']['to']
     # вызов через указатель
     # поскольку у нас указатели на функции это *void
     # при вызове приводим левое к указателю на функцию
-    o("((")
-    print_type(t['to'])
-    o("(*)(")
-    i = 0
-    n = len(t['params'])
-    while i < n:
-      p = t['params'][i]
-      print_field(p)
-      i = i + 1
-      if i < n:
-        o(", ")
-    o("))")
+    out("(("); print_type(t['to']); out("(*)")
+    arghack = 'arghack' in t['att']
+    print_paramlist(t['params'], arghack)
+    out(")")
     print_value(left)
-    o(")")
+    out(")")
 
   else:
     print_value(left)
 
-  o("(")
-  i = 0
-  while i < len(v['args']):
-    a = v['args'][i]
-    print_value(a)
-    i = i + 1
-    if i < len(v['args']):
-      o(", ")
-  o(")")
+  out("(")
+  print_values(v['args'], before="", after="", separator=", ")
+  out(")")
 
 
 
@@ -248,7 +296,7 @@ def print_value_index(v, ctx):
   index = v['index']
   need_wrap = precedence(array['kind']) < precedence('index')
   print_value(array, need_wrap)
-  o("["); print_value(index); o("]")
+  out("["); print_value(index); out("]")
 
 
 def print_value_index_ptr(v, ctx):
@@ -256,45 +304,45 @@ def print_value_index_ptr(v, ctx):
   index = v['index']
   need_wrap = precedence(array['kind']) < precedence('index')
   print_value(array, need_wrap)
-  o("["); print_value(index); o("]")
+  out("["); print_value(index); out("]")
 
 
 
 def print_value_access(v, ctx):
   left = v['record']
   need_wrap = precedence(left['kind']) < precedence('access')
-  print_value(left, need_wrap); o('.'); o(v['field']['id']['str'])
+  print_value(left, need_wrap); out('.'); out(v['field']['id']['str'])
 
 
 def print_value_access_ptr(v, ctx):
   left = v['pointer']
   need_wrap = precedence(left['kind']) < precedence('access')
-  print_value(left, need_wrap); o("->"); o(v['field']['id']['str'])
+  print_value(left, need_wrap); out("->"); out(v['field']['id']['str'])
 
 
 
 def huhu(v_id, fields):
-  o("{")
+  out("{")
   i = 0
   for field in fields:
-    if (i > 0): o(", ")
+    if (i > 0): out(", ")
     fid = field['id']['str']
-    o(".%s = " % fid)
+    out(".%s = " % fid)
 
     if type.is_record(field['type']):
       huhu(v_id + '.' + field['id']['str'], field['type']['fields'])
     else:
-      o("%s.%s" % (v_id, fid)) #; print_value(item, ctx)
+      out("%s.%s" % (v_id, fid)) #; print_value(item, ctx)
 
     i = i + 1
-  o("}")
+  out("}")
 
 
 def print_cast_gen_rec_to_rec(t, v, ctx=[]):
   #print("FROM GENERIC RECORD")
   v_id = v['id']['str']
   fields = v['type']['fields']
-  o("("); print_type(t); o(")")
+  out("("); print_type(t); out(")")
   huhu(v_id, fields)
 
 
@@ -305,7 +353,7 @@ def print_cast(t, v, ctx=[]):
   if type.is_generic_record(v['type']):
     return print_cast_gen_rec_to_rec(t, v, ctx=ctx)
 
-  o("("); print_type(t); o(")")
+  out("("); print_type(t); out(")")
   need_wrap = precedence(v['kind']) < precedence('cast')
   print_value(v, ctx=ctx, need_wrap=need_wrap)
 
@@ -347,105 +395,102 @@ def print_value_cast(v, ctx):
 
 def print_value_imm_array(v, ctx):
 #  if not type.is_generic(v['type']):
-#    o("(")
+#    out("(")
 #    print_type(v['type'])
-#    o(")")
+#    out(")")
 
   screening = 'screening' in ctx
 
-  o("{")
+  out("{")
   indent_up()
-  i = 0
-  while i < len(v['items']):
-    if i > 0: o(",")
-    if screening: o("\\")
-    o("\n"); ind()
-    print_value(v['items'][i])
-    i = i + 1
+
+  sep=","
+  if screening:
+    sep=",\\"
+  print_values(v['items'], before=nl_indentation(INDENT_SYMBOL), after="", separator=sep)
+
   indent_down()
-  if screening: o("\\")
-  o("\n"); ind(); o("}")
+  if screening: out("\\")
+
+  out("\n"); ind(INDENT_SYMBOL); out("}")
 
 
 def print_value_imm_record(v, ctx):
   multiline = True #not 'oneline' in ctx
   screening = 'screening' in ctx
 
-  o("{")
+  out("{")
   i = 0
   if multiline:
     if screening:
-      o("\t\\")
-    o("\n")
+      out("\t\\")
+    out("\n")
     indent_up()
   nitems = len(v['items'])
   while i < nitems:
     item = v['type']['fields'][i]
 
     if multiline:
-      ind()
+      ind(INDENT_SYMBOL)
 
     field_str = item['id']['str']
-    o(".%s = " % field_str)
-    if not isinstance(v['items'], dict):
-      print(v['items'])
-      exit(1)
+    out(".%s = " % field_str)
     print_value(v['items'][field_str], ctx)
     if i < (nitems - 1):
-      o(",")
+      out(",")
       if not multiline:
-        o(" ")
+        out(" ")
     if multiline:
       if screening:
-        o("\t\\")
-      o("\n")
+        out("\t\\")
+      out("\n")
 
     i = i + 1
   if multiline:
     indent_down()
-    ind()
-  o("}")
+    ind(INDENT_SYMBOL)
+  out("}")
 
 
 
 def print_value_imm_str(x, ctx):
-  o("\"")
+  out("\"")
   for sym in x['str']:
-    if sym == '\n': o("\\n")
-    elif sym == '\r': o("\\r")
-    elif sym == '\a': o("\\a")
-    else: o(sym)
-  o("\"")
+    if sym == '\n': out("\\n")
+    elif sym == '\r': out("\\r")
+    elif sym == '\a': out("\\a")
+    else: out(sym)
+  out("\"")
 
 
 def print_value_imm_int(x, ctx):
   if value_attribute_check(x, 'hexadecimal'):
-    o("0x%X" % hlir_value_num_get(x))
+    out("0x%X" % hlir_value_num_get(x))
   else:
-    o(str(hlir_value_num_get(x)))
+    out(str(hlir_value_num_get(x)))
 
 
 def print_value_imm_flt(x, ctx):
-  o(str(hlir_value_num_get(x)))
+  out(str(hlir_value_num_get(x)))
 
 
 def print_value_imm_num(x, ctx):
   if value_attribute_check(x, 'hexadecimal'):
-    o("0x%X" % hlir_value_num_get(x))
+    out("0x%X" % hlir_value_num_get(x))
   elif type.is_pointer(x['type']):
     if hlir_value_num_get(x) == 0:
-      o("NULL")
+      out("NULL")
       return
   else:
-    o(str(hlir_value_num_get(x)))
+    out(str(hlir_value_num_get(x)))
 
 
 
 def print_value_imm_ptr(x, ctx):
   if type.is_free_pointer(x['type']):
-    o("NULL")
+    out("NULL")
   else:
-    o("0x%X" % hlir_value_num_get(x))
+    out("0x%X" % hlir_value_num_get(x))
 
 
 def print_value_imm(x, ctx):
@@ -460,7 +505,7 @@ def print_value_imm(x, ctx):
 
 
 def print_value_by_id(x, ctx):
-  o("%s" % x['id']['str'])
+  out("%s" % x['id']['str'])
 
 
 
@@ -471,17 +516,17 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 
   need_cast = value_attribute_check(x, 'generic-casted')
   if need_cast:
-    o("(("); print_type(x['type']); o(")")
+    out("(("); print_type(x['type']); out(")")
 
   if print_just_id:
     if 'id' in x:
       print_value_by_id(x, ctx)
       if need_cast:
-        o(")")
+        out(")")
       return
 
   if need_wrap:
-    o("(")
+    out("(")
 
   k = x['kind']
 
@@ -495,87 +540,105 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
   elif k == 'access': print_value_access(x, ctx)
   elif k == 'access_ptr': print_value_access_ptr(x, ctx)
   elif k == 'cast': print_value_cast(x, ctx)
-  elif k == 'sizeof': o("sizeof("); print_type(x['of']); o(")")
+  elif k == 'sizeof': out("sizeof("); print_type(x['of']); out(")")
   else:
-    o("<%s>" % k)
+    out("<%s>" % k)
     print(x)
     exit(1)
 
   if need_wrap:
-    o(")")
+    out(")")
 
   if need_cast:
-    o(")")
+    out(")")
 
 
 
 
 
 def print_stmt_if(x):
-  o("if ("); print_value(x['cond']); o(") ")
+  out("if")
+  if SPACE_AFTER_IF_WHILE: out(" ")
+  out("("); print_value(x['cond']); out(")")
+
+  if LINE_BREAK_BEFORE_BLOCK_BRACE:
+    out("\n")
+    ind(INDENT_SYMBOL)
+  else:
+    out(" ")
+
   print_stmt_block(x['then'])
 
   e = x['else']
   if e != None:
     if e['kind'] == 'if':
-      o(" else ")
+      out(" else ")
       print_stmt_if(e)
     else:
-      o(" else ")
+      out(" else ")
       print_stmt_block(e)
 
 
 
 def print_stmt_while(x):
-  o("while ("); print_value(x['cond']); o(") ")
+  out("while")
+  if SPACE_AFTER_IF_WHILE: out(" ")
+  out("("); print_value(x['cond']); out(")")
+
+  if LINE_BREAK_BEFORE_BLOCK_BRACE:
+    out("\n")
+    ind(INDENT_SYMBOL)
+  else:
+    out(" ")
+
   print_stmt_block(x['stmt'])
 
 
 def print_stmt_return(x):
-  o("return")
+  out("return")
   if x['value'] != None:
-    o(" ")
+    out(" ")
     print_value(x['value'])
-  o(";")
+  out(";")
 
 
 def print_stmt_defvar(x):
   print_field({'isa': 'field', 'id': x['id'], 'type': x['type']})
   if x['value'] != None:
-    o(" = ")
+    out(" = ")
     print_value(x['value'])
-  o(";")
+  out(";")
 
 
 def print_stmt_let(x):
   f = {'isa': 'field', 'id': x['id'], 'type': x['value']['type']}
-  print_field(f, const=True); o(" = "); print_value(x['value']); o(";")
+  print_field(f, const=True); out(" = "); print_value(x['value']); out(";")
 
 
 
 def assign_array_by_items(x):
-  o("// array assignation")
+  out("// array assignation")
   for i in range(x['right']['type']['size']):
-    o("\n")
-    ind()
+    out("\n")
+    ind(INDENT_SYMBOL)
     print_value(x['left']);
-    o("[%s] = " % i)
+    out("[%s] = " % i)
     print_value(x['right']);
-    o("[%s];" % i)
+    out("[%s];" % i)
     i = i + 1
 
 
 def assign_record_by_fields(x):
   # в си нельзя просто так присвоить запись
   #print("assign_record_by_fields " + x['right']['kind'])
-  o("// record assignation")
+  out("// record assignation")
   for f in x['right']['type']['fields']:
-    o("\n")
-    ind()
+    out("\n")
+    ind(INDENT_SYMBOL)
     print_value(x['left']);
-    o(".%s = " % f['id']['str'])
+    out(".%s = " % f['id']['str'])
     print_value(x['right']);
-    o(".%s;" % f['id']['str'])
+    out(".%s;" % f['id']['str'])
 
 
 def print_stmt_assign(x):
@@ -591,7 +654,7 @@ def print_stmt_assign(x):
 #      return
 
   print_value(x['left'])
-  o(" = ")
+  out(" = ")
   # В си можно просто присвоить литерал структуры глоб переменной
   # но вот локальной - нельзя, нужно явно привести его е треб типу
 #  if (type.is_record(x['right']['type'])):
@@ -599,15 +662,15 @@ def print_stmt_assign(x):
 #  else:
   print_value(x['right'])
 
-  o(";")
+  out(";")
 
 
 def print_stmt_value(x):
-  print_value(x['value']); o(";")
+  print_value(x['value']); out(";")
 
 
 def print_stmt(x):
-  o("\n"); ind()
+  out("\n"); ind(INDENT_SYMBOL)
 
   k = x['kind']
   if k == 'block': print_stmt_block(x)
@@ -618,23 +681,23 @@ def print_stmt(x):
   elif k == 'while': print_stmt_while(x)
   elif k == 'def_var': print_stmt_defvar(x)
   elif k == 'def_let': print_stmt_let(x)
-  elif k == 'break': o('break;')
-  elif k == 'again': o('continue;')
-  else: o("<stmt %s>" % str(x))
+  elif k == 'break': out('break;')
+  elif k == 'again': out('continue;')
+  else: out("<stmt %s>" % str(x))
 
 
 
 # not works
 def print_arrays(arrays):
   for array in arrays:
-    o("\n"); ind()
+    out("\n"); ind(INDENT_SYMBOL)
     array['value'] = None
     print_stmt_defvar(array)
-    o("\n"); ind()
+    out("\n"); ind(INDENT_SYMBOL)
     dst = array['id']['str']
     src = array['id']['str']
     len = type.get_size(array['type'])
-    o("memcpy(%s, _%s, %d);" % (dst, src, len))
+    out("memcpy(%s, _%s, %d);" % (dst, src, len))
 
 
 def print_stmts_puffy(stmts):
@@ -652,7 +715,7 @@ def print_stmts_puffy(stmts):
 
       if need_nl and i > 0 and not noneed:
         k_prev = stmt['kind']
-        o("\n")
+        out("\n")
 
     print_stmt(stmt)
     i = i + 1
@@ -664,7 +727,7 @@ def print_stmts_flat(stmts):
 
 
 def print_stmt_block(s, arrays=None):
-  o("{")
+  out("{")
   indent_up()
 
   if arrays != None:
@@ -673,13 +736,13 @@ def print_stmt_block(s, arrays=None):
   print_stmts_puffy(s['stmts'])
 
   indent_down()
-  o("\n")
-  ind()
-  o("}")
+  out("\n")
+  ind(INDENT_SYMBOL)
+  out("}")
 
 
 def print_func_signature(id, typ):
-  params = typ['params']
+
   to = typ['to']
   t = to
 
@@ -705,98 +768,82 @@ def print_func_signature(id, typ):
       t = t['of']
 
   print_type(t)
-  o(" " + "*" * ptr_level)
-  o("%s(" % id)
-
-  if len(params) == 0:
-    o("void")  # see C language documentation
-
-  i = 0
-  while i < len(params):
-    param = params[i]
-
-    field_prefix = ""
-    if type.is_array(param['type']):
-      arrays.append(param)
-      field_prefix = "_"
-
-    print_field(param, prefix=field_prefix)
-    i = i + 1
-    if i < len(params):
-      o(", ")
-
-
-  if 'arghack' in typ:
-    if typ['arghack']:
-      o(", ...")
-
-  o(")")
+  out(" " + "*" * ptr_level)
+  out("%s" % id)
+  arghack = 'arghack' in t['att']
+  print_paramlist(typ['params'], arghack)
 
   return arrays
 
 
 
+
 def print_decl_func(x):
   if 'extern' in x['att']:
-    o("extern ")
+    out("extern ")
   func = x['func']
   if 'c_prefix' in func:
-    o("%s " % func['c_prefix'])
+    out("%s " % func['c_prefix'])
   print_func_signature(func['id']['str'], func['type'])
-  o(";")
+  out(";")
 
 
 def print_def_func(x):
   if not was_separated_by_new_line:
-    o("\n")
+    out("\n")
 
   func = x['func']
   if 'comment' in func:
     if func['comment'] != '':
-      o("// %s\n" % func['comment'])
+      out("// %s\n" % func['comment'])
 
   if 'c_prefix' in func:
-    o("%s " % func['c_prefix'])
+    out("%s " % func['c_prefix'])
 
   arrays = print_func_signature(func['id']['str'], func['type'])
-  o("\n")
+
+  if LINE_BREAK_BEFORE_FUNC_BRACE:
+    out("\n")
+  else:
+    out(" ")
+
   print_stmt_block(func['stmt'], arrays=arrays)
-  o("\n")
+  out("\n")
 
 
 
 def print_decl_type(x):
   name = x['id']['str']
   #o("// type declaration %s\n" % name)
-  o("struct %s;\n" % name)
-  o("typedef struct %s %s;\n" % (name, name))
+  out("struct %s;\n" % name)
+  out("typedef struct %s %s;\n" % (name, name))
 
 
 def print_def_type(x):
   if not was_separated_by_new_line:
     if x['type']['kind'] in ['record', 'enum']:
-      o("\n")
+      out("\n")
 
   # !
   if x['afterdef']:
     if type.is_record(x['type']):
       print_type_record(x['type'], tag=x['id']['str'])
-      o(";\n")
+      out(";\n")
       return;
 
 
   defined_array = type.is_defined_array(x['type'])
-  o("typedef ")
+  out("typedef ")
   if defined_array:
     print_type(x['type']['of'])#, print_aka=False)
   else:
     print_type(x['type'])#, print_aka=False)
-  o(" %s" % x['id']['str'])
+  out(" %s" % x['id']['str'])
   if defined_array:
-    o("["); print_value(x['type']['volume']); o("]")
-  o(";")
+    out("["); print_value(x['type']['volume']); out("]")
+  out(";")
   if x['type']['kind'] in ['record', 'enum']:
-    o("\n")
+    out("\n")
 
 
 
@@ -807,10 +854,10 @@ def print_field(x, const=False, prefix=None):
 
   if 'aka' in x:
     print_type(t)
-    o(" ")
+    out(" ")
     if prefix != None:
-      o(prefix)
-    o("%s" % (x['id']['str']))
+      out(prefix)
+    out("%s" % (x['id']['str']))
     return
 
   # поле является масссивом?
@@ -839,35 +886,35 @@ def print_field(x, const=False, prefix=None):
         t = t['of']
 
   if ptr_level == 0 and const:
-    o("const ")
+    out("const ")
   print_type(t)
-  o(" ")
-  o("*" * ptr_level)
+  out(" ")
+  out("*" * ptr_level)
   if ptr_level > 0 and const:
-    o(" const ")
+    out(" const ")
 
   if prefix != None:
-    o(prefix)
-  o("%s" % (x['id']['str']))
+    out(prefix)
+  out("%s" % (x['id']['str']))
   if is_array:
     if array_dims != None:
       for dim in array_dims:
-        o("["); print_value(dim); o("]")
+        out("["); print_value(dim); out("]")
 
 
 
 def print_def_var(x):
   if 'c_prefix' in x['var']:
-      o("%s " % x['var']['c_prefix'])
+      out("%s " % x['var']['c_prefix'])
   print_field(x['var'])
   if x['init'] != None:
-    o(" = "); print_value(x['init'])
-  o(";")
+    out(" = "); print_value(x['init'])
+  out(";")
 
 
 def print_def_const(x):
   #print("print_def_const " + str(x['id']['str']))
-  o("#define %s  " % x['id']['str'])
+  out("#define %s  " % x['id']['str'])
   need_wrap = precedence(x['value']['kind']) < precedenceMax
   print_value(x['value'], ctx=['screening'], need_wrap=need_wrap, print_just_id=True)
 
@@ -878,30 +925,30 @@ def print_include(x):
     s = '"' + s + '"'
   else:
     s = '<' + s + '>'
-  o("#include %s" % s)
+  out("#include %s" % s)
 
 
 
 def print_insert(x):
   s = x['str']
-  o(s)
+  out(s)
 
 
 def print_comment_line(x):
   lines = x['lines']
   for line in lines:
-    o("\n//%s" % line['str'])
+    out("\n//%s" % line['str'])
 
 
 def print_comment_block(x):
   lines = x['lines']
 
-  o("/*\n")
+  out("/*\n")
 
   for line in lines:
-    o("%s\n" % (line['str']))
+    out("%s\n" % (line['str']))
 
-  o(" */")
+  out(" */")
 
 
 
@@ -909,11 +956,11 @@ def cdirectives(module):
   for imported_module in module['imports']:
     for obj in imported_module['text']:
       if obj['kind'] == 'c_include':
-        o("\n")
+        out("\n")
         print_include(obj)
   for obj in module['text']:
     if obj['kind'] == 'c_include':
-      o("\n")
+      out("\n")
       print_include(obj)
 
 
@@ -952,7 +999,7 @@ def run(module, outname):
     if 'c-no-print' in x['att']:
       continue
 
-    o("\n")
+    out("\n")
 
     isa = x['isa']
     k = x['kind']
@@ -962,13 +1009,13 @@ def run(module, outname):
     separation = prev_ik != ik
     if separation:
       prev_ik = ik
-      o("\n")
+      out("\n")
     global was_separated_by_new_line
     was_separated_by_new_line = separation
 
     if 'comment' in x:
       if x['comment'] != '':
-        o("// " + x['comment'])
+        out("// " + x['comment'])
 
     if isa == 'definition':
       if k == 'var': print_def_var(x)
@@ -985,10 +1032,10 @@ def run(module, outname):
       if k == 'comment-line': print_comment_line(x)
       elif k == 'comment-block': print_comment_block(x)
 
-  o("\n")
+  out("\n")
   if is_header:
     lo("#endif  /* %s */" % guardname)
-  o("\n")
+  out("\n")
 
   output_close()
 

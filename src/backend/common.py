@@ -3,28 +3,35 @@ import os
 
 f = None
 
-INDENT_SYMBOL = " " * 4
 
-indent = 0
-
+indent_level = 0
 
 def indent_up():
-  global indent
-  indent = indent + 1
+  global indent_level
+  indent_level = indent_level + 1
 
 
 def indent_down():
-  global indent
-  indent = indent - 1
+  global indent_level
+  indent_level = indent_level - 1
 
 
-def ind():
-  global indent
-  f.write(INDENT_SYMBOL * indent)
+def indentation(symbol):
+  global indent_level
+  return symbol * indent_level
+
+
+def nl_indentation(symbol):
+  global indent_level
+  return "\n" + symbol * indent_level
+
+
+def ind(symbol):
+  f.write(indentation(symbol))
 
 
 
-def o(s):
+def out(s):
   global f
   f.write(s)
 

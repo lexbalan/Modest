@@ -189,6 +189,18 @@ def type_attribute_check(t, a):
   return a in t['att']
 
 
+"""def type_class_check(t, a):
+  absent = ''
+  for c in a:
+    if not type_attribute_check(t, c):
+      absent = c
+      break
+
+  if absent != '':
+    error("expected %s type" % (a), x['left'])
+  return result"""
+
+
 def is_bad(t):
   assert t != None
   return t['kind'] == 'bad'

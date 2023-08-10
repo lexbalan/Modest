@@ -8,7 +8,7 @@ from error import warning, error, getline
 
 
 top_level_stoppers = ['type', 'const', 'var', 'func']
-
+func_stoppers = ['let', 'var',  'if', 'while', 'return', 'type']
 
 class Parser:
 
@@ -84,6 +84,7 @@ class Parser:
       error("expected '%s' token" % token, ti)
     return yes
 
+
   
   def identifier(self):
     ti = self.ti()
@@ -106,7 +107,10 @@ class Parser:
       pass
     else:
       error("expected separator", self.ti())
+      self.restore(top_level_stoppers + func_stoppers)
+      return False
 
+    return True
 
   #
   # Parse Type
@@ -767,7 +771,10 @@ class Parser:
 
       s = self.stmt()
       if s != None:
-        self.need_sep()
+        sep = self.need_sep()
+        #if sep == False:
+        #  break
+
         if isinstance(s, list):
           stmts.extend(s)
         else:
