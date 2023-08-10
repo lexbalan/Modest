@@ -1,0 +1,12 @@
+
+
+
+
+import "libc/stdio.h"
+
+
+func main () -> Int32 {
+    printf("Hello World!\n")
+    return 0
+}
+

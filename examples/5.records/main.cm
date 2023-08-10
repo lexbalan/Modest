@@ -1,0 +1,75 @@
+// examples/records/main.cm
+
+@attribute("c-no-print")
+import "libc/math.hm"
+
+@attribute("c-no-print")
+import "libc/stdio.hm"
+
+@attribute("c-no-print")
+import "libc/libc.hm"
+
+
+type Point record {
+  x : Float
+  y : Float
+}
+
+type Line record {
+  a : Point
+  b : Point
+}
+
+
+var line : Line := {a={x=0,y=0}, b={x=1, y=1}}
+
+
+@property("c_prefix", "static inline")
+func max (a : Float, b : Float) -> Float {
+  if a > b {
+    return a
+  }
+  return b
+}
+
+@property("c_prefix", "static inline")
+func min (a : Float, b : Float) -> Float {
+  if a < b {
+    return a
+  }
+  return b
+}
+
+
+// Pythagorean theorem
+func lineLength (line : Line) -> Float {
+  let dx = max(line.a.x, line.b.x) - min(line.a.x, line.b.x)
+  let dy = max(line.a.y, line.b.y) - min(line.a.y, line.b.y)
+  let dx2 = pow(dx, 2)
+  let dy2 = pow(dy, 2)
+  let len = sqrt(dx2 + dy2)
+  return len
+}
+
+
+func ptr_example () -> Unit {
+  let ptr_p = malloc(sizeof(Point)) to *Point
+
+  // access by pointer
+  ptr_p.x := 10
+  ptr_p.y := 20
+
+  printf("point(%f, %f)\n", ptr_p.x, ptr_p.y)
+}
+
+
+func main () -> Int {
+  // by value
+  let len = lineLength(line)
+  printf("line length = %f\n", len)
+
+  ptr_example()
+
+  return 0
+}
+

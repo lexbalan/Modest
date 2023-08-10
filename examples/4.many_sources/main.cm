@@ -1,0 +1,13 @@
+// examples/many_sources/main.cm
+
+@attribute("c-no-print")
+import "libc/stdio.hm"
+
+import "./lib.hm"
+
+func main () -> Int {
+	printf("hello from main\n")
+	lib_func()
+	return 0
+}
+

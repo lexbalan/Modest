@@ -1,0 +1,12 @@
+
+
+
+
+import "libc/stdio.h"
+import "./lib.h"
+
+
+func lib_func () -> Unit {
+    printf("hello from lib_func\n")
+}
+
