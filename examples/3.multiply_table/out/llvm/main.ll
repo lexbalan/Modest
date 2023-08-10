@@ -83,7 +83,7 @@ declare %Int @puts(%ConstCharStr)
 declare %Int @ungetc(%Int, %FILE*)
 declare void @perror(%ConstCharStr)
 
-; -- MODULE: /Users/alexbalan/p/Modest/examples/3.multiply_table/main.cm
+; -- MODULE: /Users/alexbalan/p/Modest/examples/3.multiply_table/src/main.cm
 
 @str_1 = private constant [14 x i8] c"%d * %d = %d\0A\00"
 @str_2 = private constant [23 x i8] c"multiply table for %d\0A\00"

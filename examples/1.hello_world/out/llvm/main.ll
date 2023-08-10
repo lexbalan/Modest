@@ -83,7 +83,7 @@ declare %Int @puts(%ConstCharStr)
 declare %Int @ungetc(%Int, %FILE*)
 declare void @perror(%ConstCharStr)
 
-; -- MODULE: /Users/alexbalan/p/Modest/examples/1.hello_world/main.cm
+; -- MODULE: /Users/alexbalan/p/Modest/examples/1.hello_world/src/main.cm
 
 @str_1 = private constant [14 x i8] c"Hello World!\0A\00"
 

@@ -90,7 +90,7 @@ def main():
 
   module = trans.translate(src_name)
 
-  if error.errcnt > 0:
+  if error.errcnt > 0 or module == None:
     #error.fatal("%d errors occurred" % error.errcnt)
     exit(1)
 

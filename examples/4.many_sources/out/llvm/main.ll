@@ -83,13 +83,13 @@ declare %Int @puts(%ConstCharStr)
 declare %Int @ungetc(%Int, %FILE*)
 declare void @perror(%ConstCharStr)
 
-; -- MODULE: /Users/alexbalan/p/Modest/examples/4.many_sources/lib.hm
+; -- MODULE: /Users/alexbalan/p/Modest/examples/4.many_sources/src/lib.hm
 
 
 
 declare void @lib_func()
 
-; -- MODULE: /Users/alexbalan/p/Modest/examples/4.many_sources/main.cm
+; -- MODULE: /Users/alexbalan/p/Modest/examples/4.many_sources/src/main.cm
 
 @str_1 = private constant [17 x i8] c"hello from main\0A\00"
 

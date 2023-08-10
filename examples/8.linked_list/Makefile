@@ -1,11 +1,11 @@
 
 OUTDIR=./out
-INDIR=./
+INDIR=./src
 
 # output dir prefix
-CMPREFIX=$(OUTDIR)/cm/
-CPREFIX=$(OUTDIR)/c/
-LLVMPREFIX = $(OUTDIR)/llvm/
+CMPREFIX=$(OUTDIR)/cm
+CPREFIX=$(OUTDIR)/c
+LLVMPREFIX = $(OUTDIR)/llvm
 
 
 all: LLVM
@@ -24,10 +24,12 @@ LLVM:
 	mcc -o $(LLVMPREFIX)/linked_list -mbackend=llvm -mint=64 $(INDIR)/linked_list.cm
 	
 	# 2. LLVM/IR -> *.o
-	clang -c $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/linked_list.ll
+	#clang -c $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/linked_list.ll
 	
 	# 3. *.o -> a.out
-	CC main.o linked_list.o -o a.out
+	#CC main.o linked_list.o -o a.out
+	
+	clang $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/linked_list.ll
 
 
 

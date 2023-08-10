@@ -1,6 +1,6 @@
 
+INDIR=./src
 OUTDIR=./out
-INDIR=./
 
 # output dir prefix
 CMPREFIX=$(OUTDIR)/cm/
@@ -23,7 +23,8 @@ LLVM:
 	mcc -o $(LLVMPREFIX)/lib -mbackend=llvm $(INDIR)/lib.cm
 	
 	# translate IR to .o
-	clang -c $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/lib.ll
+	clang -c $(LLVMPREFIX)/main.ll
+	clang -c $(LLVMPREFIX)/lib.ll
 	
 	# compile .o files to a.out
 	CC main.o lib.o -o a.out

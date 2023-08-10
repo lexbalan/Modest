@@ -1501,7 +1501,6 @@ def proc(ast, id="<MODULE_ID>", path="<MODULE_PATH>"):
     'text': []
   }
 
-
   for x in ast:
     isa = x['isa']
     kind = x['kind']
@@ -1588,6 +1587,10 @@ def translate(srcname):
 
   #print("parse %s" % absp)
   ast = parser.parse(absp)
+
+  if ast == None:
+    return None
+
   #print("process %s" % absp)
   m = proc(ast, id=srcname, path=absp)
   #print("end %s" % absp)

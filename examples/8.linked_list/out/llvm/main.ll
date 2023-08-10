@@ -162,7 +162,7 @@ declare %Int @puts(%ConstCharStr)
 declare %Int @ungetc(%Int, %FILE*)
 declare void @perror(%ConstCharStr)
 
-; -- MODULE: /Users/alexbalan/p/Modest/examples/8.linked_list/linked_list.hm
+; -- MODULE: /Users/alexbalan/p/Modest/examples/8.linked_list/src/linked_list.hm
 
 
 
@@ -179,7 +179,7 @@ declare i8* @linked_list_node_link_get(%Node*)
 declare %Node* @linked_list_insert_node(%List*, %Node*)
 declare %Node* @linked_list_insert(%List*, i8*)
 
-; -- MODULE: /Users/alexbalan/p/Modest/examples/8.linked_list/main.cm
+; -- MODULE: /Users/alexbalan/p/Modest/examples/8.linked_list/src/main.cm
 
 @str_1 = private constant [21 x i8] c"list_print_forward:\0A\00"
 @str_2 = private constant [8 x i8] c"v = %d\0A\00"

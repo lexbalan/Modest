@@ -251,7 +251,7 @@ declare %Int @closedir(%DIR*)
 declare [0 x i8]* @getcwd([0 x i8]*, %SizeT)
 declare [0 x i8]* @getenv([0 x i8]*)
 
-; -- MODULE: /Users/alexbalan/p/Modest/examples/5.records/main.cm
+; -- MODULE: /Users/alexbalan/p/Modest/examples/5.records/src/main.cm
 
 @str_1 = private constant [15 x i8] c"point(%f, %f)\0A\00"
 @str_2 = private constant [18 x i8] c"line length = %f\0A\00"

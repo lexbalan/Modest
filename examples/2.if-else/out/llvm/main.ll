@@ -83,7 +83,7 @@ declare %Int @puts(%ConstCharStr)
 declare %Int @ungetc(%Int, %FILE*)
 declare void @perror(%ConstCharStr)
 
-; -- MODULE: /Users/alexbalan/p/Modest/examples/2.if-else/main.cm
+; -- MODULE: /Users/alexbalan/p/Modest/examples/2.if-else/src/main.cm
 
 @str_1 = private constant [17 x i8] c"if-else example\0A\00"
 @str_2 = private constant [10 x i8] c"enter a: \00"
