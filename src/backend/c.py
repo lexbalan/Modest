@@ -417,6 +417,7 @@ def print_value_imm_array(v, ctx):
   out("\n"); ind(INDENT_SYMBOL); out("}")
 
 
+
 def print_value_imm_record(v, ctx):
   multiline = 'multiline' in ctx
   screening = 'screening' in ctx
@@ -424,7 +425,7 @@ def print_value_imm_record(v, ctx):
   i = 0
   if multiline:
     if screening:
-      out("\t\\")
+      out("\\")
     out("\n")
     indent_up()
   nitems = len(v['items'])
