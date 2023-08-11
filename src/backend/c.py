@@ -557,8 +557,6 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 
 
 
-
-
 def print_stmt_if(x):
   out("if")
   if SPACE_AFTER_IF_WHILE: out(" ")
@@ -819,7 +817,7 @@ def print_decl_type(x):
   name = x['id']['str']
   #o("// type declaration %s\n" % name)
   out("struct %s;\n" % name)
-  out("typedef struct %s %s;\n" % (name, name))
+  out("typedef struct %s %s;\n\n" % (name, name))
 
 
 def print_def_type(x):
@@ -923,23 +921,19 @@ def print_def_const(x):
 
 
 def print_include(x):
-  s = x['str']
   if x['local']:
-    s = '"' + s + '"'
+    impline = "#include \"%s\"" % x['str']
   else:
-    s = '<' + s + '>'
-  out("#include %s" % s)
-
+    impline = "#include <%s>" % x['str']
+  out(impline)
 
 
 def print_insert(x):
-  s = x['str']
-  out(s)
+  out(x['str'])
 
 
 def print_comment_line(x):
-  lines = x['lines']
-  for line in lines:
+  for line in x['lines']:
     out("\n//%s" % line['str'])
 
 
