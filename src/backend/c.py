@@ -95,14 +95,14 @@ def print_type_pointer(t):
 
 
 
-def print_fields(fields, before, after, separator):
+def print_fields(fields, before, after, between):
   i = 0
   n = len(fields)
   while i < n:
     param = fields[i]
     out(before); print_field(param); out(after)
     i = i + 1
-    if i < n: out(separator)
+    if i < n: out(between)
 
 
 
@@ -120,7 +120,7 @@ def print_type_record(t, tag=""):
   out("{")
   indent_up()
 
-  print_fields(t['fields'], before=nl_indentation(INDENT_SYMBOL), after=";", separator="")
+  print_fields(t['fields'], before=nl_indentation(INDENT_SYMBOL), after=";", between="")
 
   indent_down()
   out("\n"); ind(INDENT_SYMBOL); out("}")
@@ -249,24 +249,24 @@ def print_paramlist(parms, arghack=False):
     if VOID_PARAM_FUNCTIONS:
       out("void")
   else:
-    print_fields(parms, before="",  after="", separator=", ")
+    print_fields(parms, before="",  after="", between=", ")
     if arghack:
       out(", ...")
 
   out(")")
 
 
-def print_values(values, before, after, separator):
+def print_values(values, before, between, after, ctx=[]):
   i = 0
   n = len(values)
   while i < n:
     a = values[i]
     out(before)
-    print_value(a)
-    out(after)
+    print_value(a, ctx=ctx)
     i = i + 1
     if i < n:
-      out(separator)
+      out(between)
+    out(after)
 
 
 def print_value_call(v, ctx):
@@ -287,7 +287,7 @@ def print_value_call(v, ctx):
     print_value(left)
 
   out("(")
-  print_values(v['args'], before="", after="", separator=", ")
+  print_values(v['args'], before="", between=", ", after="", ctx=[])
   out(")")
 
 
@@ -306,7 +306,6 @@ def print_value_index_ptr(v, ctx):
   need_wrap = precedence(array['kind']) < precedence('index')
   print_value(array, need_wrap)
   out("["); print_value(index); out("]")
-
 
 
 def print_value_access(v, ctx):
@@ -393,33 +392,34 @@ def print_value_cast(v, ctx):
 
 
 
-
 def print_value_imm_array(v, ctx):
-#  if not type.is_generic(v['type']):
-#    out("(")
-#    print_type(v['type'])
-#    out(")")
-
+  multiline = 'multiline' in ctx
   screening = 'screening' in ctx
 
   out("{")
   indent_up()
 
-  sep=","
-  if screening:
-    sep=",\\"
-  print_values(v['items'], before=nl_indentation(INDENT_SYMBOL), after="", separator=sep)
+  if screening: out("\\")
+
+  before = ", "
+  after = ""
+  between = ""
+  if multiline:
+    before = nl_indentation(INDENT_SYMBOL)
+    between = ","
+    if screening:
+      after = "\\"
+
+  print_values(v['items'], before=before, between=between, after=after, ctx=ctx)
 
   indent_down()
-  if screening: out("\\")
 
   out("\n"); ind(INDENT_SYMBOL); out("}")
 
 
 def print_value_imm_record(v, ctx):
-  multiline = True #not 'oneline' in ctx
+  multiline = 'multiline' in ctx
   screening = 'screening' in ctx
-
   out("{")
   i = 0
   if multiline:
@@ -909,7 +909,7 @@ def print_def_var(x):
       out("%s " % x['var']['c_prefix'])
   print_field(x['var'])
   if x['init'] != None:
-    out(" = "); print_value(x['init'])
+    out(" = "); print_value(x['init'], ctx=['multiline'])
   out(";")
 
 
@@ -917,7 +917,7 @@ def print_def_const(x):
   #print("print_def_const " + str(x['id']['str']))
   out("#define %s  " % x['id']['str'])
   need_wrap = precedence(x['value']['kind']) < precedenceMax
-  print_value(x['value'], ctx=['screening'], need_wrap=need_wrap, print_just_id=True)
+  print_value(x['value'], ctx=['multiline', 'screening'], need_wrap=need_wrap, print_just_id=True)
 
 
 def print_include(x):
