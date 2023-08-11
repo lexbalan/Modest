@@ -13,6 +13,7 @@ puffy = False
 
 INDENT_SYMBOL = " " * 4
 
+VOID_PARAM_FUNCTIONS = True
 SPACE_AFTER_IF_WHILE = True
 
 # K&R (KNF)
@@ -245,7 +246,8 @@ def print_paramlist(parms, arghack=False):
   out("(")
 
   if len(parms) == 0:
-    out("void")
+    if VOID_PARAM_FUNCTIONS:
+      out("void")
   else:
     print_fields(parms, before="",  after="", separator=", ")
     if arghack:
