@@ -428,6 +428,7 @@ def print_value_imm_record(v, ctx):
       out("\\")
     out("\n")
     indent_up()
+
   nitems = len(v['items'])
   while i < nitems:
     item = v['type']['fields'][i]
@@ -444,7 +445,7 @@ def print_value_imm_record(v, ctx):
         out(" ")
     if multiline:
       if screening:
-        out("\t\\")
+        out("\\")
       out("\n")
 
     i = i + 1
