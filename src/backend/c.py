@@ -963,17 +963,12 @@ def cdirectives(module):
 
 
 def run(module, outname):
-
-  strs = module['strings']
-
-
   is_header = 'header' in features
 
   if is_header:
     outname = outname + '.h'
   else:
     outname = outname + '.c'
-
 
   output_open(outname)
 
