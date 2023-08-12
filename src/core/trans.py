@@ -1296,7 +1296,8 @@ def def_type(x):
     # just overwrite existed 'opaque' type (for records)
     exist.update(nt)
     # and find and remove declaration instruction
-    module_remove_decl(module, 'type', id['str'])
+    if settings_check('backend', 'llvm'):
+      module_remove_decl(module, 'type', id['str'])
   else:
     module['context'].type_add(id['str'], nt)
 
