@@ -182,6 +182,13 @@ def value_cons_record_from_generic_record(v, t, ti, method):
     field_name = field['id']['str']
     field_type = field['type']
 
+
+    if (field_type == None):
+      print("field_type == None")
+      print(field_name)
+      print(str(t['fields']))
+      exit(1)
+
     assert('items' in v)
 
     # получаем элемент с соотв именем из исходного значения
@@ -227,6 +234,13 @@ def value_cons_record_from_generic_record(v, t, ti, method):
 
   return vx
 
+
+def is_bad_struct(x):
+  if type.is_record(x):
+    for field in x['fields']:
+      if field['type'] == None:
+        return True
+  return False
 
 
 def value_cons_record(v, t, ti, method):
@@ -365,6 +379,9 @@ def value_cons(v, t, ti, method):
 
   if type.eq(v['type'], t):
     return v
+
+    #if is_bad_struct(t['of']):
+    #  exit(1)
 
   cons = None
   if type.is_integer(t): cons = value_cons_integer

@@ -818,16 +818,6 @@ def do_value_str(x):
   return s
 
 
-# select type for value x
-# (generic type ~*> any suitable type)
-def select_type(x):
-  if type.is_generic(x['type']):
-    return x['type']
-
-  if type.is_integer(x['type']):
-    return typeSysInt
-
-
 
 def do_value_array(x):
   items = []
@@ -867,7 +857,7 @@ def do_value_record(x):
     items[id['str']] = val
 
     # создаем поле для типа generic записи
-    field = hlir_field(id, select_type(val), ti=val['ti'])
+    field = hlir_field(id, val['type'], ti=val['ti'])
     field['no'] = i
     fields.append(field)
     i = i + 1

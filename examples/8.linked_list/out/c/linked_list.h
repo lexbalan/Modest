@@ -11,8 +11,10 @@
 struct List;
 typedef struct List List;
 
+
 struct Node;
 typedef struct Node Node;
+
 
 
 List *linked_list_create(void);
