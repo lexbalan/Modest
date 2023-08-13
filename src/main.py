@@ -37,6 +37,7 @@ parser.add_argument('filename', default='main')
 parser.add_argument('-o', '--output')
 parser.add_argument('-f', '--feature', action='append', help='[unsafe]')
 parser.add_argument('-m', action='append', help='-m<var>=<value>')
+parser.add_argument('-d', action='append', help='-d<constant_name>="<value_expression>"')
 #parser.add_argument('-v', '--verbose')
 args = parser.parse_args()
 
@@ -64,6 +65,10 @@ def main():
       k, v = mod.split('=')
       settings_set(k, v)
 
+
+  if args.d != None:
+    for d in args.d:
+      print("DEF: " + str(d))
 
   src_name = args.filename
 
