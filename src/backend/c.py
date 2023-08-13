@@ -16,6 +16,13 @@ INDENT_SYMBOL = " " * 4
 VOID_PARAM_FUNCTIONS = True
 SPACE_AFTER_IF_WHILE = True
 
+ARRAYS_MULTILINE_ALWAYS = False
+ARRAYS_MULTILINE_FROM = 8
+
+RECORDS_MULTILINE_ALWAYS = False
+RECORDS_MULTILINE_FROM = 4
+
+
 # K&R (KNF)
 # LINE_BREAK_BEFORE_STRUCT_BRACE = False
 # LINE_BREAK_BEFORE_FUNC_BRACE = True
@@ -163,7 +170,7 @@ def print_type(t, print_aka=True):
       return
 
   if type.is_numeric(t): print_type_numeric(t)
-  elif type.is_record(t): print_type_record(t) #, tag=t['id']['str'])
+  elif type.is_record(t): print_type_record(t)
   elif type.is_enum(t): print_type_enum(t)
   elif type.is_pointer(t): print_type_pointer(t)
   elif type.is_array(t): print_type_array(t)
@@ -395,7 +402,11 @@ def print_value_cast(v, ctx):
 def print_value_imm_array(v, ctx):
   screening = 'screening' in ctx
 
-  multiline = hlir_value_num_get(v['type']['volume']) > 8
+  if ARRAYS_MULTILINE_ALWAYS:
+    multiline = True
+  else:
+    multiline = hlir_value_num_get(v['type']['volume']) > ARRAYS_MULTILINE_FROM
+
 
   out("{")
   indent_up()
@@ -422,11 +433,13 @@ def print_value_imm_array(v, ctx):
   out("}")
 
 
-
 def print_value_imm_record(v, ctx):
   screening = 'screening' in ctx
 
-  multiline = len(v['type']['fields']) > 4
+  if RECORDS_MULTILINE_ALWAYS:
+    multiline = True
+  else:
+    multiline = len(v['type']['fields']) > RECORDS_MULTILINE_FROM
 
   out("{")
   i = 0
