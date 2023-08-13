@@ -419,8 +419,11 @@ def print_value_imm_array(v, ctx):
 
 
 def print_value_imm_record(v, ctx):
-  multiline = 'multiline' in ctx
+  #multiline = 'multiline' in ctx
   screening = 'screening' in ctx
+
+  multiline = len(v['type']['fields']) > 5
+
   out("{")
   i = 0
   if multiline:
