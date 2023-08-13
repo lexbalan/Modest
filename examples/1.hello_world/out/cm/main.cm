@@ -6,7 +6,7 @@ import "libc/stdio.h"
 
 
 func main () -> Int32 {
-    printf("Hello World!\n")
+    printf("Hello 🐁\n")
     return 0
 }
 
