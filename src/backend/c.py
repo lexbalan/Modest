@@ -402,9 +402,9 @@ def print_value_imm_array(v, ctx):
 
   if multiline and screening: out("\\")
 
-  before = ", "
+  before = ""
   after = ""
-  between = ""
+  between = ", "
   if multiline:
     before = nl_indentation(INDENT_SYMBOL)
     between = ","
