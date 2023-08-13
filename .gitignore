@@ -3,3 +3,5 @@
 a.out
 test/
 #examples/*
+*.pyc
+*/__pycache__/
