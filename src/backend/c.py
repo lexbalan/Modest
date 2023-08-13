@@ -395,12 +395,12 @@ def print_value_cast(v, ctx):
 def print_value_imm_array(v, ctx):
   screening = 'screening' in ctx
 
-  multiline = v['type']['volume'] > 8
+  multiline = hlir_value_num_get(v['type']['volume']) > 8
 
   out("{")
   indent_up()
 
-  if screening: out("\\")
+  if multiline and screening: out("\\")
 
   before = ", "
   after = ""
@@ -415,7 +415,11 @@ def print_value_imm_array(v, ctx):
 
   indent_down()
 
-  out("\n"); ind(INDENT_SYMBOL); out("}")
+  if multiline:
+    out("\n")
+    ind(INDENT_SYMBOL)
+
+  out("}")
 
 
 
