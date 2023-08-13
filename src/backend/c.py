@@ -393,8 +393,9 @@ def print_value_cast(v, ctx):
 
 
 def print_value_imm_array(v, ctx):
-  multiline = 'multiline' in ctx
   screening = 'screening' in ctx
+
+  multiline = v['type']['volume'] > 8
 
   out("{")
   indent_up()
@@ -419,10 +420,9 @@ def print_value_imm_array(v, ctx):
 
 
 def print_value_imm_record(v, ctx):
-  #multiline = 'multiline' in ctx
   screening = 'screening' in ctx
 
-  multiline = len(v['type']['fields']) > 5
+  multiline = len(v['type']['fields']) > 4
 
   out("{")
   i = 0
@@ -616,19 +616,7 @@ def print_stmt_defvar(x):
 
 def print_stmt_let(x):
   f = {'isa': 'field', 'id': x['id'], 'type': x['value']['type']}
-  v = x['value']
-  t = v['type']
-
-  # comb code
-  ctx = []
-  if type.is_record(t):
-    if len(t['fields']) > 4:
-      ctx.append('multiline')
-  elif type.is_array(t):
-    if len(t['items']) > 8:
-      ctx.append('multiline')
-
-  print_field(f, const=True); out(" = "); print_value(x['value'], ctx=ctx); out(";")
+  print_field(f, const=True); out(" = "); print_value(x['value']); out(";")
 
 
 
@@ -924,7 +912,7 @@ def print_def_var(x):
       out("%s " % x['var']['c_prefix'])
   print_field(x['var'])
   if x['init'] != None:
-    out(" = "); print_value(x['init'], ctx=['multiline'])
+    out(" = "); print_value(x['init'])
   out(";")
 
 
@@ -932,7 +920,7 @@ def print_def_const(x):
   #print("print_def_const " + str(x['id']['str']))
   out("#define %s  " % x['id']['str'])
   need_wrap = precedence(x['value']['kind']) < precedenceMax
-  print_value(x['value'], ctx=['multiline', 'screening'], need_wrap=need_wrap, print_just_id=True)
+  print_value(x['value'], ctx=['screening'], need_wrap=need_wrap, print_just_id=True)
 
 
 def print_include(x):
