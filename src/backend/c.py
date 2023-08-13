@@ -613,7 +613,15 @@ def print_stmt_defvar(x):
 
 def print_stmt_let(x):
   f = {'isa': 'field', 'id': x['id'], 'type': x['value']['type']}
-  print_field(f, const=True); out(" = "); print_value(x['value']); out(";")
+  ctx = []
+  t = x['value']['type']
+  if type.is_record(t):
+    if len(t['fields']) > 5:
+      ctx.append('multiline')
+  elif type.is_array(t):
+    if len(t['items']) > 10:
+      ctx.append('multiline')
+  print_field(f, const=True); out(" = "); print_value(x['value'], ctx=ctx); out(";")
 
 
 
