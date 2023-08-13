@@ -10,6 +10,7 @@ from opt import *
 DEFAULT_MINT = 32
 DEFAULT_MPTR = 64
 DEFAULT_MFLT = 64
+DEFAULT_MCHAR = 8
 DEFAULT_MLIB = ""
 DEFAULT_BACKEND = 'llvm'
 
@@ -17,6 +18,7 @@ DEFAULT_BACKEND = 'llvm'
 settings_set('int', DEFAULT_MINT)
 settings_set('ptr', DEFAULT_MPTR)
 settings_set('flt', DEFAULT_MFLT)
+settings_set('char', DEFAULT_MCHAR)
 settings_set('lib', DEFAULT_MLIB)
 settings_set('backend', DEFAULT_BACKEND)
 

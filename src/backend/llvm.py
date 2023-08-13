@@ -1515,6 +1515,8 @@ def print_strings(strings):
 
     ss = string['str']
 
+    slen = len(bytes(ss, 'utf-8')) + 1 # +1 (zero)
+
     ss = ss.replace("\a", "\\07")
     ss = ss.replace("\b", "\\08")
     ss = ss.replace("\t", "\\09")
@@ -1524,8 +1526,6 @@ def print_strings(strings):
     ss = ss.replace("\e", "\\1B")
     ss = ss.replace("\"", "\\22")
     ss = ss.replace("\'", "\\27")
-
-    slen = string['len']
 
     #ex: @str_1 = private constant [4 x i8] c"Hi!\00"
     lo("@%s = private constant [%d x i8] c\"%s\\00\"" % (strid, slen, ss))
