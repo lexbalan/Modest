@@ -5,6 +5,7 @@
 #include <string.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <time.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -23,16 +24,7 @@ typedef struct {
 } Line;
 
 
-Line line = ((Line){
-    .a = ((Point){
-        .x = 0.0,
-        .y = 0.0
-    }),
-    .b = ((Point){
-        .x = 1.0,
-        .y = 1.0
-    })
-});
+Line line = ((Line){.a = ((Point){.x = 0.0, .y = 0.0}), .b = ((Point){.x = 1.0, .y = 1.0})});
 
 static inline float max(float a, float b)
 {
@@ -68,7 +60,7 @@ float lineLength(Line line)
 
 void ptr_example(void)
 {
-    Point * const ptr_p = malloc(sizeof(Point));
+    Point * const ptr_p = (Point*)malloc(sizeof(Point));
     ptr_p->x = 10.0;
     ptr_p->y = 20.0;
     printf("point(%f, %f)\n", ptr_p->x, ptr_p->y);

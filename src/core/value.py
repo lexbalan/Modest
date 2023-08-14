@@ -406,6 +406,9 @@ def value_cast_implicit(v, t, ti):
   if value_is_bad(v) or type.is_bad(t):
     return hlir_value_bad(ti)
 
+  if type.eq(v['type'], t):
+    return v
+
   from_type = v['type']
 
 

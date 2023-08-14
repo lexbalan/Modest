@@ -1,7 +1,8 @@
 .DS_Store
 *.o
 a.out
-test/
+test
 #examples/*
 *.pyc
-*/__pycache__/
+*/__pycache__
+lib/fastfood

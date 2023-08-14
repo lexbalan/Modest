@@ -104,18 +104,17 @@ define void @write_example() {
   %3 = bitcast [9 x i8]* @str_1 to %ConstCharStr
   %4 = bitcast [2 x i8]* @str_3 to %ConstCharStr
   %5 = call %FILE*(%ConstCharStr, %ConstCharStr) @fopen (%ConstCharStr %3, %ConstCharStr %4)
-  %6 = bitcast %FILE* %5 to i8*
-  %7 = icmp eq i8* %6, null
-  br i1 %7 , label %then_0, label %endif_0
+  %6 = icmp eq %FILE* %5, null
+  br i1 %6 , label %then_0, label %endif_0
 then_0:
-  %8 = bitcast [31 x i8]* @str_4 to %ConstCharStr
-  %9 = call %Int(%ConstCharStr, ...) @printf (%ConstCharStr %8, [9 x i8]* @str_1)
+  %7 = bitcast [31 x i8]* @str_4 to %ConstCharStr
+  %8 = call %Int(%ConstCharStr, ...) @printf (%ConstCharStr %7, [9 x i8]* @str_1)
   ret void
   br label %endif_0
 endif_0:
-  %11 = bitcast [12 x i8]* @str_5 to [0 x i8]*
-  %12 = call %Int(%FILE*, [0 x i8]*, ...) @fprintf (%FILE* %5, [0 x i8]* %11)
-  %13 = call %Int(%FILE*) @fclose (%FILE* %5)
+  %10 = bitcast [12 x i8]* @str_5 to [0 x i8]*
+  %11 = call %Int(%FILE*, [0 x i8]*, ...) @fprintf (%FILE* %5, [0 x i8]* %10)
+  %12 = call %Int(%FILE*) @fclose (%FILE* %5)
   ret void
 }
 
@@ -125,32 +124,31 @@ define void @read_example() {
   %3 = bitcast [9 x i8]* @str_1 to %ConstCharStr
   %4 = bitcast [2 x i8]* @str_7 to %ConstCharStr
   %5 = call %FILE*(%ConstCharStr, %ConstCharStr) @fopen (%ConstCharStr %3, %ConstCharStr %4)
-  %6 = bitcast %FILE* %5 to i8*
-  %7 = icmp eq i8* %6, null
-  br i1 %7 , label %then_0, label %endif_0
+  %6 = icmp eq %FILE* %5, null
+  br i1 %6 , label %then_0, label %endif_0
 then_0:
-  %8 = bitcast [29 x i8]* @str_8 to %ConstCharStr
-  %9 = call %Int(%ConstCharStr, ...) @printf (%ConstCharStr %8, [9 x i8]* @str_1)
+  %7 = bitcast [29 x i8]* @str_8 to %ConstCharStr
+  %8 = call %Int(%ConstCharStr, ...) @printf (%ConstCharStr %7, [9 x i8]* @str_1)
   ret void
   br label %endif_0
 endif_0:
-  %11 = bitcast [21 x i8]* @str_9 to %ConstCharStr
-  %12 = call %Int(%ConstCharStr, ...) @printf (%ConstCharStr %11, [9 x i8]* @str_1)
+  %10 = bitcast [21 x i8]* @str_9 to %ConstCharStr
+  %11 = call %Int(%ConstCharStr, ...) @printf (%ConstCharStr %10, [9 x i8]* @str_1)
   br label %again_1
 again_1:
   br i1 1 , label %body_1, label %break_1
 body_1:
-  %13 = call %Int(%FILE*) @fgetc (%FILE* %5)
-  %14 = icmp eq %Int %13, -1
-  br i1 %14 , label %then_1, label %endif_1
+  %12 = call %Int(%FILE*) @fgetc (%FILE* %5)
+  %13 = icmp eq %Int %12, -1
+  br i1 %13 , label %then_1, label %endif_1
 then_1:
   br label %break_1
   br label %endif_1
 endif_1:
-  %16 = call %Int(%Int) @putchar (%Int %13)
+  %15 = call %Int(%Int) @putchar (%Int %12)
   br label %again_1
 break_1:
-  %17 = call %Int(%FILE*) @fclose (%FILE* %5)
+  %16 = call %Int(%FILE*) @fclose (%FILE* %5)
   ret void
 }
 

@@ -3,6 +3,7 @@
 #include <string.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <time.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
@@ -17,9 +18,9 @@
 
 void nat64_list_insert(List *list, uint64_t x)
 {
-    uint64_t * const p_nat64 = malloc(sizeof(uint64_t));
+    uint64_t * const p_nat64 = (uint64_t*)malloc(sizeof(uint64_t));
     *p_nat64 = x;
-    linked_list_insert(list, p_nat64);
+    linked_list_insert(list, (void *)p_nat64);
 }
 
 
@@ -31,7 +32,7 @@ void list_print_forward(List *list)
     printf("list_print_forward:\n");
     Node *pn = linked_list_first_get(list);
     while (pn != NULL) {
-        uint32_t * const x = linked_list_node_link_get(pn);
+        uint32_t * const x = (uint32_t*)linked_list_node_link_get(pn);
         printf("v = %d\n", *x);
         pn = linked_list_node_next_get(pn);
     }
@@ -46,7 +47,7 @@ void list_print_backward(List *list)
     printf("list_print_backward:\n");
     Node *pn = linked_list_last_get(list);
     while (pn != NULL) {
-        uint32_t * const x = linked_list_node_link_get(pn);
+        uint32_t * const x = (uint32_t*)linked_list_node_link_get(pn);
         printf("v = %d\n", *x);
         pn = linked_list_node_prev_get(pn);
     }

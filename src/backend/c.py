@@ -503,9 +503,11 @@ def print_value_imm_num(x, ctx):
   if value_attribute_check(x, 'hexadecimal'):
     out("0x%X" % hlir_value_num_get(x))
   elif type.is_pointer(x['type']):
-    if hlir_value_num_get(x) == 0:
-      out("NULL")
-      return
+    out("<print_value_imm_num::PTR>")
+    fatal("print_value_imm_num: type.is_pointer")
+  #  if hlir_value_num_get(x) == 0:
+  #    out("NULL")
+  #    return
   else:
     out(str(hlir_value_num_get(x)))
 
@@ -515,7 +517,10 @@ def print_value_imm_ptr(x, ctx):
   if type.is_free_pointer(x['type']):
     out("NULL")
   else:
-    out("0x%X" % hlir_value_num_get(x))
+    if hlir_value_num_get(x) == 0:
+      out("NULL")
+    else:
+      out("0x%X" % hlir_value_num_get(x))
 
 
 def print_value_imm(x, ctx):

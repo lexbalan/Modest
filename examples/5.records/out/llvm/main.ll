@@ -208,6 +208,9 @@ declare void @perror(%ConstCharStr)
 
 
 %DIR = type opaque
+
+
+declare i64 @clock()
 declare i8* @malloc(%SizeT)
 declare i8* @memset(i8*, %Int, %SizeT)
 declare i8* @memcpy(i8*, i8*, %SizeT)

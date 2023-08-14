@@ -475,6 +475,12 @@ def do_value_bin(x):
     result = hlir_value_bin(x['kind'], rnat, xl, xl['type'], ti)
     return do_cast_runtime(result, r['type'], ti)
 
+  if type.is_free_pointer(l['type']) and type.is_pointer(r['type']):
+    l = copy.copy(l)
+    l['type'] = r['type']
+  elif type.is_pointer(l['type']) and type.is_free_pointer(r['type']):
+    r = copy.copy(r)
+    r['type'] = l['type']
 
   l = value_cast_implicit(l, r['type'], l['ti'])
   r = value_cast_implicit(r, l['type'], r['ti'])
