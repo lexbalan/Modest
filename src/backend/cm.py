@@ -210,7 +210,7 @@ def print_value_index(v, ctx):
   array = v['array']
   index = v['index']
   need_wrap = precedence(array['kind']) < precedence('index')
-  print_value(array, need_wrap)
+  print_value(array, need_wrap=need_wrap)
   out("["); print_value(index); out("]")
 
 
@@ -218,20 +218,20 @@ def print_value_index_ptr(v, ctx):
   array = v['pointer']
   index = v['index']
   need_wrap = precedence(array['kind']) < precedence('index')
-  print_value(array, need_wrap)
+  print_value(array, need_wrap=need_wrap)
   out("["); print_value(index); out("]")
 
 
 def print_value_access(v, ctx):
   left = v['record']
   need_wrap = precedence(left['kind']) < precedence('access')
-  print_value(left, need_wrap); out("."); out(v['field']['id']['str'])
+  print_value(left, need_wrap=need_wrap); out("."); out(v['field']['id']['str'])
 
 
 def print_value_access_ptr(v, ctx):
   left = v['pointer']
   need_wrap = precedence(left['kind']) < precedence('access')
-  print_value(left, need_wrap); out("."); out(v['field']['id']['str'])
+  print_value(left, need_wrap=need_wrap); out("."); out(v['field']['id']['str'])
 
 
 def print_cast(t, v, ctx=[]):

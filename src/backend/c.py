@@ -56,7 +56,7 @@ aprecedence = [
   ['shl', 'shr'], #5
   ['add', 'sub'], #6
   ['mul', 'div', 'mod'], #7
-  ['plus', 'minus', 'not', 'cast', 'ref', 'deref', 'sizeof'], #8
+  ['plus', 'minus', 'not', 'cast', 'to', 'ref', 'deref', 'sizeof'], #8
   ['call', 'index', 'access'], #9
   ['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #10
 ]
@@ -303,28 +303,28 @@ def print_value_index(v, ctx):
   array = v['array']
   index = v['index']
   need_wrap = precedence(array['kind']) < precedence('index')
-  print_value(array, need_wrap)
+  print_value(array, need_wrap=need_wrap)
   out("["); print_value(index); out("]")
 
 
 def print_value_index_ptr(v, ctx):
-  array = v['pointer']
+  ptr2array = v['pointer']
   index = v['index']
-  need_wrap = precedence(array['kind']) < precedence('index')
-  print_value(array, need_wrap)
+  need_wrap = precedence(ptr2array['kind']) < precedence('index')
+  print_value(ptr2array, need_wrap=need_wrap)
   out("["); print_value(index); out("]")
 
 
 def print_value_access(v, ctx):
   left = v['record']
   need_wrap = precedence(left['kind']) < precedence('access')
-  print_value(left, need_wrap); out('.'); out(v['field']['id']['str'])
+  print_value(left, need_wrap=need_wrap); out('.'); out(v['field']['id']['str'])
 
 
 def print_value_access_ptr(v, ctx):
   left = v['pointer']
   need_wrap = precedence(left['kind']) < precedence('access')
-  print_value(left, need_wrap); out("->"); out(v['field']['id']['str'])
+  print_value(left, need_wrap=need_wrap); out("->"); out(v['field']['id']['str'])
 
 
 
@@ -369,6 +369,7 @@ def print_value_cast(v, ctx):
   from_type = v['value']['type']
   to_type = v['type']
 
+  """
   # NO need cast ptr to *void
   if type.is_pointer(from_type):
     if type.is_free_pointer(to_type):
@@ -380,6 +381,7 @@ def print_value_cast(v, ctx):
     if type.is_pointer(to_type):
       print_value(v['value'], ctx)
       return
+  """
 
 
   # Чтобы не приводить тип в выражениях типа ((int32_t)0), etc.
@@ -546,10 +548,12 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
       print_value_by_id(x, ctx)
       if need_cast:
         out(")")
+
       return
 
   if need_wrap:
     out("(")
+
 
   k = x['kind']
 
