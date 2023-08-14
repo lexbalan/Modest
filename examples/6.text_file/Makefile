@@ -1,6 +1,6 @@
 
 OUTDIR=./out
-INDIR=./
+INDIR=./src
 
 # output dir prefix
 CMPREFIX=$(OUTDIR)/cm/
