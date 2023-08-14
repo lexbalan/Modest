@@ -136,7 +136,7 @@ Node *linked_list_insert(List *list, void *link)
     new_node->link = link;
     Node * const node = linked_list_insert_node(list, new_node);
     if (node == NULL) {
-        free((void *)new_node);
+        free((void*)new_node);
     }
     return node;
 }

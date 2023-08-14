@@ -92,7 +92,7 @@ def print_type_array(t):
 
 def print_type_pointer(t):
   if type.is_free_pointer(t):
-    out("void *")
+    out("void*")
     return
 
   print_type(t['to'])

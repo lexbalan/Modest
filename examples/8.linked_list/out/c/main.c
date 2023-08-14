@@ -20,7 +20,7 @@ void nat64_list_insert(List *list, uint64_t x)
 {
     uint64_t * const p_nat64 = (uint64_t*)malloc(sizeof(uint64_t));
     *p_nat64 = x;
-    linked_list_insert(list, (void *)p_nat64);
+    linked_list_insert(list, (void*)p_nat64);
 }
 
 
