@@ -425,7 +425,6 @@ def value_bin_fold(op, l, r, t, ti):
     num_val = ops[op](hlir_value_num_get(l), hlir_value_num_get(r))
     return hlir_value_int(num_val, typ=l['type'], ti=ti)
 
-
 def do_value_bin(x):
   k = x['kind']
   l = do_value(x['left'])
@@ -475,12 +474,10 @@ def do_value_bin(x):
     result = hlir_value_bin(x['kind'], rnat, xl, xl['type'], ti)
     return do_cast_runtime(result, r['type'], ti)
 
-  if type.is_free_pointer(l['type']) and type.is_pointer(r['type']):
-    l = copy.copy(l)
-    l['type'] = r['type']
-  elif type.is_pointer(l['type']) and type.is_free_pointer(r['type']):
-    r = copy.copy(r)
-    r['type'] = l['type']
+  if type.is_nil(l['type']) and type.is_pointer(r['type']):
+    l = value_change_type(l, r['type'])
+  elif type.is_pointer(l['type']) and type.is_nil(r['type']):
+    r = value_change_type(r, l['type'])
 
   l = value_cast_implicit(l, r['type'], l['ti'])
   r = value_cast_implicit(r, l['type'], r['ti'])

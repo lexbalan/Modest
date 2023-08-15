@@ -84,7 +84,10 @@ genericStr = typeStr
 
 
 typeFreePtr = hlir_type_free_pointer()
-typeFreePtr['att'].append('generic')  #!
+typeFreePtr['att'].append('generic')
+
+typeNil = hlir_type_nil()
+
 
 
 
@@ -254,11 +257,15 @@ def is_enum(t):
 
 
 def is_pointer(t):
-  return t['kind'] == 'pointer'  or t['kind'] == 'free_pointer'
+  return t['kind'] in ['pointer', 'FreePointer', 'Nil']
 
 
 def is_free_pointer(t):
-  return t['kind'] == 'free_pointer'
+  return t['kind'] == 'FreePointer'
+
+
+def is_nil(t):
+  return t['kind'] == 'Nil'
 
 
 def is_array(t):

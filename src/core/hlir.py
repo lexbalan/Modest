@@ -66,15 +66,29 @@ def hlir_type_pointer(to, ti=None):
     'ti': ti
   }
 
+# FreePointer - особый тип, он приводится неявно CM (но не в C!)
 def hlir_type_free_pointer(ti=None):
   pointer_size = int(settings_get('ptr'))
   return {
     'isa': 'type',
-    'kind': 'free_pointer',
+    'kind': 'FreePointer',
     'to': type.typeUnit,
     'size': pointer_size / 8,
     'power': pointer_size,
     'att': [],
+    'ti': ti
+  }
+
+# Nil - особый тип, он приводится неявно как в CM так и в C
+def hlir_type_nil(ti=None):
+  pointer_size = int(settings_get('ptr'))
+  return {
+    'isa': 'type',
+    'kind': 'Nil',
+    'to': type.typeUnit,
+    'size': pointer_size / 8,
+    'power': pointer_size,
+    'att': ['generic'],
     'ti': ti
   }
 

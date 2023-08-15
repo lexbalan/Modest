@@ -292,7 +292,7 @@ def print_type(t, print_aka=True, arr_as_ptr_to_arr=False):
     out("i16")
 
   elif type.is_pointer(t):
-    if type.is_free_pointer(t):
+    if type.is_free_pointer(t) or type.is_nil(t):
       out("i8*")
     else:
       print_type(t['to']); out("*")

@@ -19,7 +19,7 @@ def value_create_zero(t):
 
 
 
-valueNil = hlir_value_int(0, typ=type.typeFreePtr)
+valueNil = hlir_value_int(0, typ=type.typeNil)
 valueTrue = hlir_value_int(1, typ=type.typeNat1)
 valueFalse = hlir_value_int(0, typ=type.typeNat1)
 
@@ -315,6 +315,12 @@ def value_cons_float(v, t, ti, method):
 
 
 
+def value_change_type(v, t):
+    nv = copy.copy(v)
+    nv['type'] = t
+    return nv
+
+
 def value_cons_pointer(v, t, ti, method):
 
   from_type = v['type']
@@ -358,6 +364,10 @@ def value_cons_pointer(v, t, ti, method):
 #          y['att'].append('casted_string_literal')
 
         return y
+
+  # Nil -> *X
+  if type.is_nil(from_type) and type.is_pointer(t):
+    return value_change_type(v, t)
 
   # Pointer -> *X
   if type.is_free_pointer(from_type) and type.is_pointer(t):
@@ -411,12 +421,15 @@ def value_cast_implicit(v, t, ti):
 
   from_type = v['type']
 
+  # Nil -> *X
+  if type.is_nil(from_type) and type.is_pointer(t):
+    return value_change_type(v, t)
 
-  # Pointer -> *X
+  # FreePointer -> *X
   if type.is_free_pointer(from_type) and type.is_pointer(t):
     return hlir_value_cast(v, t, ti=ti)
 
-  # *X -> Pointer
+  # *X -> FreePointer
   if type.is_pointer(from_type) and type.is_free_pointer(t):
     return hlir_value_cast(v, t, ti=ti)
 
