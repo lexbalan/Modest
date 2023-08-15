@@ -49,6 +49,10 @@ styles = {
 styleguide = styles['legacy']
 
 
+def indent():
+  ind(INDENT_SYMBOL)
+
+
 def init():
   global styleguide
   stylename = settings_get('style')
@@ -146,7 +150,7 @@ def print_type_record(t, tag=""):
   print_fields(t['fields'], before=nl_indentation(INDENT_SYMBOL), after=";", between="")
 
   indent_down()
-  out("\n"); ind(INDENT_SYMBOL); out("}")
+  out("\n"); indent(); out("}")
 
 
 
@@ -446,7 +450,7 @@ def print_value_imm_array(v, ctx):
 
   if multiline:
     out("\n")
-    ind(INDENT_SYMBOL)
+    indent()
 
   out("}")
 
@@ -472,7 +476,7 @@ def print_value_imm_record(v, ctx):
     item = v['type']['fields'][i]
 
     if multiline:
-      ind(INDENT_SYMBOL)
+      indent()
 
     field_str = item['id']['str']
     out(".%s = " % field_str)
@@ -489,7 +493,7 @@ def print_value_imm_record(v, ctx):
     i = i + 1
   if multiline:
     indent_down()
-    ind(INDENT_SYMBOL)
+    indent()
   out("}")
 
 
@@ -609,7 +613,7 @@ def print_stmt_if(x):
 
   if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
     out("\n")
-    ind(INDENT_SYMBOL)
+    indent()
   else:
     out(" ")
 
@@ -633,7 +637,7 @@ def print_stmt_while(x):
 
   if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
     out("\n")
-    ind(INDENT_SYMBOL)
+    indent()
   else:
     out(" ")
 
@@ -666,7 +670,7 @@ def assign_array_by_items(x):
   out("// array assignation")
   for i in range(x['right']['type']['size']):
     out("\n")
-    ind(INDENT_SYMBOL)
+    indent()
     print_value(x['left']);
     out("[%s] = " % i)
     print_value(x['right']);
@@ -680,7 +684,7 @@ def assign_record_by_fields(x):
   out("// record assignation")
   for f in x['right']['type']['fields']:
     out("\n")
-    ind(INDENT_SYMBOL)
+    indent()
     print_value(x['left']);
     out(".%s = " % f['id']['str'])
     print_value(x['right']);
@@ -716,7 +720,7 @@ def print_stmt_value(x):
 
 
 def print_stmt(x):
-  out("\n"); ind(INDENT_SYMBOL)
+  out("\n"); indent()
 
   k = x['kind']
   if k == 'block': print_stmt_block(x)
@@ -736,10 +740,10 @@ def print_stmt(x):
 # not works
 def print_arrays(arrays):
   for array in arrays:
-    out("\n"); ind(INDENT_SYMBOL)
+    out("\n"); indent()
     array['value'] = None
     print_stmt_defvar(array)
-    out("\n"); ind(INDENT_SYMBOL)
+    out("\n"); indent()
     dst = array['id']['str']
     src = array['id']['str']
     len = type.get_size(array['type'])
@@ -783,7 +787,7 @@ def print_stmt_block(s, arrays=None):
 
   indent_down()
   out("\n")
-  ind(INDENT_SYMBOL)
+  indent()
   out("}")
 
 

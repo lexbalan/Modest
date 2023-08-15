@@ -18,8 +18,13 @@ INDENT_SYMBOL = " " * 2
 func_context = None
 
 
+
 def init():
   pass
+
+
+def indent():
+  ind(INDENT_SYMBOL)
 
 
 def locals_push():
@@ -167,10 +172,10 @@ def print_value_array(x):
       item = x['items'][i]
       if i > 0:
         out(",\n")
-      ind(INDENT_SYMBOL); print_type_value(item);
+      indent(); print_type_value(item);
       i = i + 1
     indent_down()
-    out("\n"); ind(INDENT_SYMBOL); out("]")
+    out("\n"); indent(); out("]")
   else:
     out("zeroinitializer")
 
@@ -188,10 +193,10 @@ def print_value_record(x):
       item = x['items'][i]
       if i > 0:
         out(",\n")
-      ind(INDENT_SYMBOL); print_type_value(item['value']);
+      indent(); print_type_value(item['value']);
       i = i + 1
     indent_down()
-    out("\n"); ind(INDENT_SYMBOL); out("}")
+    out("\n"); indent(); out("}")
   else:
     out("zeroinitializer")
 

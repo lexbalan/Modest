@@ -22,6 +22,10 @@ def init():
   pass
 
 
+def indent():
+  ind(INDENT_SYMBOL)
+
+
 aprecedence = [
   ['or'], #0
   ['xor'], #1
@@ -94,7 +98,7 @@ def print_type_record(t):
   indent_up()
   print_fields(t['fields'], before=nl_indentation(INDENT_SYMBOL), after="", separator="")
   indent_down()
-  out("\n"); ind(INDENT_SYMBOL); out("}")
+  out("\n"); indent(); out("}")
 
 
 
@@ -282,7 +286,7 @@ def print_value_imm_array(v, ctx):
   indent_up()
   print_values(v['items'], before=nl_indentation(INDENT_SYMBOL), after="", separator="")
   indent_down()
-  out("\n"); ind(INDENT_SYMBOL); out("]")
+  out("\n"); indent(); out("]")
 
 
 def print_value_imm_record(v, ctx):
@@ -298,7 +302,7 @@ def print_value_imm_record(v, ctx):
   for k in v['items']:
     item = v['items'][k]
 
-    if multiline: ind(INDENT_SYMBOL)
+    if multiline: indent()
 
     out("%s = " % k)
     print_value(item, ctx)
@@ -310,7 +314,7 @@ def print_value_imm_record(v, ctx):
     i = i + 1
   if multiline:
     indent_down()
-    ind(INDENT_SYMBOL)
+    indent()
   out("}")
 
 
@@ -460,7 +464,7 @@ def print_stmt_value(x):
 
 def print_stmt(x):
 
-  out("\n"); ind(INDENT_SYMBOL)
+  out("\n"); indent()
 
   k = x['kind']
   if k == 'block': print_stmt_block(x)
@@ -484,7 +488,7 @@ def print_stmt_block(s):
     print_stmt(stmt)
   indent_down()
   out("\n")
-  ind(INDENT_SYMBOL)
+  indent()
   out("}")
 
 
