@@ -58,7 +58,7 @@ def main():
     for feature in args.feature:
       features_set(feature)
 
-  # parse modifiers (-mbackend=c)
+  # parse modifiers (-mbackend=c, -mstyle=legacy)
   # and change default settings
   if args.m != None:
     for mod in args.m:
@@ -86,12 +86,7 @@ def main():
   # loading backend
   backend_name = settings_get('backend')
   backend = importlib.import_module("backend." + backend_name)
-  
-  # трбует ли бэкенд импорта объектов из модуля (LLVM)
-  # или ему хватает символов (C, CM)
-#  import_objects = backend.IMPORT_OBJECTS
-#  settings_set('import_objects', import_objects)
-  
+
 
   trans.init()
 
@@ -100,6 +95,7 @@ def main():
   if error.errcnt > 0 or module == None:
     #error.fatal("%d errors occurred" % error.errcnt)
     exit(1)
+
 
   backend.init()
 
