@@ -89,8 +89,8 @@ def main():
   
   # трбует ли бэкенд импорта объектов из модуля (LLVM)
   # или ему хватает символов (C, CM)
-  import_objects = backend.IMPORT_OBJECTS
-  settings_set('import_objects', import_objects)
+#  import_objects = backend.IMPORT_OBJECTS
+#  settings_set('import_objects', import_objects)
   
 
   trans.init()
@@ -101,7 +101,7 @@ def main():
     #error.fatal("%d errors occurred" % error.errcnt)
     exit(1)
 
-  
+  backend.init()
 
   # print output
   if args.output != None:

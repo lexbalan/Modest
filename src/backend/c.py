@@ -23,22 +23,38 @@ RECORDS_MULTILINE_ALWAYS = False
 RECORDS_MULTILINE_FROM = 4
 
 
-# K&R (KNF)
-# LINE_BREAK_BEFORE_STRUCT_BRACE = False
-# LINE_BREAK_BEFORE_FUNC_BRACE = True
-# LINE_BREAK_BEFORE_BLOCK_BRACE = False
-#
-# Allman (BSD)
-# LINE_BREAK_BEFORE_STRUCT_BRACE = True
-# LINE_BREAK_BEFORE_FUNC_BRACE = True
-# LINE_BREAK_BEFORE_BLOCK_BRACE = True
-#
+legacy_style = {
+  'LINE_BREAK_BEFORE_STRUCT_BRACE': False,
+  'LINE_BREAK_BEFORE_FUNC_BRACE': True,
+  'LINE_BREAK_BEFORE_BLOCK_BRACE': False,
+  'EXTRA_BLANK_LINES_BETWEEN_FUNCS': 0,
+}
 
-LINE_BREAK_BEFORE_STRUCT_BRACE = False
-LINE_BREAK_BEFORE_FUNC_BRACE = True
-LINE_BREAK_BEFORE_BLOCK_BRACE = False
+modern_style = {
+  'LINE_BREAK_BEFORE_STRUCT_BRACE': True,
+  'LINE_BREAK_BEFORE_FUNC_BRACE': True,
+  'LINE_BREAK_BEFORE_BLOCK_BRACE': True,
+  'EXTRA_BLANK_LINES_BETWEEN_FUNCS': 1,
+}
+
+styles = {
+  'legacy': legacy_style,
+  'KnR': legacy_style,
+  'kernel': legacy_style,
+
+  'modern': modern_style,
+  'allman': modern_style,
+}
+
+styleguide = styles['legacy']
 
 
+def init():
+  global styleguide
+  stylename = settings_get('style')
+  if stylename != None:
+    if stylename in styles:
+      styleguide = styles[stylename]
 
 
 # если сущность была уже отделена новой строкой
@@ -119,7 +135,7 @@ def print_type_record(t, tag=""):
   if tag != "":
     out(" %s" % tag)
 
-  if LINE_BREAK_BEFORE_STRUCT_BRACE:
+  if styleguide['LINE_BREAK_BEFORE_STRUCT_BRACE']:
     out("\n")
   else:
     out(" ")
@@ -591,7 +607,7 @@ def print_stmt_if(x):
   if SPACE_AFTER_IF_WHILE: out(" ")
   out("("); print_value(x['cond']); out(")")
 
-  if LINE_BREAK_BEFORE_BLOCK_BRACE:
+  if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
     out("\n")
     ind(INDENT_SYMBOL)
   else:
@@ -615,7 +631,7 @@ def print_stmt_while(x):
   if SPACE_AFTER_IF_WHILE: out(" ")
   out("("); print_value(x['cond']); out(")")
 
-  if LINE_BREAK_BEFORE_BLOCK_BRACE:
+  if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
     out("\n")
     ind(INDENT_SYMBOL)
   else:
@@ -832,13 +848,15 @@ def print_def_func(x):
 
   arrays = print_func_signature(func['id']['str'], func['type'])
 
-  if LINE_BREAK_BEFORE_FUNC_BRACE:
+  if styleguide['LINE_BREAK_BEFORE_FUNC_BRACE']:
     out("\n")
   else:
     out(" ")
 
   print_stmt_block(func['stmt'], arrays=arrays)
-  out("\n")
+
+  if styleguide['EXTRA_BLANK_LINES_BETWEEN_FUNCS'] > 0:
+    out("\n" * styleguide['EXTRA_BLANK_LINES_BETWEEN_FUNCS'])
 
 
 

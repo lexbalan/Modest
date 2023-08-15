@@ -24,7 +24,6 @@ void nat64_list_insert(List *list, uint64_t x)
 }
 
 
-
 // show list conent from first item to last
 
 void list_print_forward(List *list)
@@ -39,7 +38,6 @@ void list_print_forward(List *list)
 }
 
 
-
 // show list conent from last item to first
 
 void list_print_backward(List *list)
@@ -52,7 +50,6 @@ void list_print_backward(List *list)
         pn = linked_list_node_prev_get(pn);
     }
 }
-
 
 int main(void)
 {
@@ -79,5 +76,4 @@ int main(void)
     list_print_backward(list);
     return 0;
 }
-
 

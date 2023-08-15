@@ -34,7 +34,6 @@ static inline float max(float a, float b)
     return b;
 }
 
-
 static inline float min(float a, float b)
 {
     if (a < b) {
@@ -42,7 +41,6 @@ static inline float min(float a, float b)
     }
     return b;
 }
-
 
 
 // Pythagorean theorem
@@ -57,7 +55,6 @@ float lineLength(Line line)
     return len;
 }
 
-
 void ptr_example(void)
 {
     Point * const ptr_p = (Point*)malloc(sizeof(Point));
@@ -66,7 +63,6 @@ void ptr_example(void)
     printf("point(%f, %f)\n", ptr_p->x, ptr_p->y);
 }
 
-
 int main(void)
 {
     const float len = lineLength(line);
@@ -74,5 +70,4 @@ int main(void)
     ptr_example();
     return 0;
 }
-
 

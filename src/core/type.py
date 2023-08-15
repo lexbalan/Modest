@@ -89,7 +89,14 @@ typeFreePtr['att'].append('generic')
 typeNil = hlir_type_nil()
 
 
+"""typeCharacter = hlir_type_integer("Character", 32)
+typeCharacter['att'].extend(['generic', 'unsigned'])
 
+typeString = hlir_type_pointer(hlir_type_array(typeCharacter))
+typeStr['att'].append('str')
+typeStr['c_alias'] = 'char *'
+genericStr = typeStr
+"""
 
 def eq_integer(a, b):
   return a['name'] == b['name']

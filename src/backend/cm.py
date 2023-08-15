@@ -18,6 +18,10 @@ INDENT_SYMBOL = " " * 4
 was_separated_by_new_line = True
 
 
+def init():
+  pass
+
+
 aprecedence = [
   ['or'], #0
   ['xor'], #1

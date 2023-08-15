@@ -18,6 +18,10 @@ INDENT_SYMBOL = " " * 2
 func_context = None
 
 
+def init():
+  pass
+
+
 def locals_push():
   func_context['locals'].append({})
 
