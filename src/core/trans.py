@@ -387,12 +387,18 @@ def do_value_shift(op, l, r, ti):
     if op == 'shl': xv = hlir_value_num_get(l) << hlir_value_num_get(r)
     elif op == 'shr': xv = hlir_value_num_get(l) >> hlir_value_num_get(r)
 
+    if type.is_generic(l['type']):
+      # select new generic type for left (!)
+      nbits = nbits_for_num(hlir_value_num_get(l)) + hlir_value_num_get(r)
+      #print("NBITS = " + str(nbits))
+      t = hlir_type_generic_int_bits(nbits, unsigned=False, ti=ti)
+      l = value_change_type(l, t)
+
     v = hlir_value_bin(op, l, r, l['type'], ti=ti)
+
     v['att'].append('immediate')
     v['num'] = xv
     return v
-    #return hlir_value_int(xv, typ=l['type'], ti=ti)
-
 
   if type.is_generic(l['type']):
     #if value.is_immediate(r['type']):
@@ -1344,7 +1350,7 @@ def def_func(x):
   already = value_get(func_id['str'])
   if already != None:
     if not type.eq(already['type'], func_type):
-      error("func redefinition", x['ti'])
+      error("definition not correspond to declared function type", x['ti'])
       info("firstly declared here", already['ti'])
 
   # create params context

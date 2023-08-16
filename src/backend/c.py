@@ -515,14 +515,15 @@ def print_value_imm_int(x, ctx):
   else:
     out(str(n))
 
-  if type.is_numeric(x['type']):
-    if 'explicit-casted' in x['att']:
-      if 'unsigned' in x['type']['att']:
-        out("U")
-      sz = x['type']['size']
-      if x['type']['size'] > 4:
-        if sz == 8:
-          out("LL")
+  #if type.is_numeric(x['type']):
+  if 'explicit-casted' in x['att']:
+    if 'unsigned' in x['type']['att']:
+      out("U")
+
+  if x['type']['size'] > 4:
+    sz = x['type']['size']
+    if sz == 8:
+      out("LL")
 
 
 def print_value_imm_flt(x, ctx):
