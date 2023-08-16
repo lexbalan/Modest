@@ -29,7 +29,7 @@ void read_example(void)
         return;
     }
     printf("file '%s' contains: ", filename);
-    while (1) {
+    while (1U) {
         const int ch = fgetc(fp);
         if (ch == EOF) {
             break;

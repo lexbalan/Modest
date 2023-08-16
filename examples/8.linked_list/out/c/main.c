@@ -59,17 +59,17 @@ int main(void)
         printf("error: cannot create list");
         return 1;
     }
-    nat64_list_insert(list, 0);
-    nat64_list_insert(list, 10);
-    nat64_list_insert(list, 20);
-    nat64_list_insert(list, 30);
-    nat64_list_insert(list, 40);
-    nat64_list_insert(list, 50);
-    nat64_list_insert(list, 60);
-    nat64_list_insert(list, 70);
-    nat64_list_insert(list, 80);
-    nat64_list_insert(list, 90);
-    nat64_list_insert(list, 100);
+    nat64_list_insert(list, 0ULL);
+    nat64_list_insert(list, 10ULL);
+    nat64_list_insert(list, 20ULL);
+    nat64_list_insert(list, 30ULL);
+    nat64_list_insert(list, 40ULL);
+    nat64_list_insert(list, 50ULL);
+    nat64_list_insert(list, 60ULL);
+    nat64_list_insert(list, 70ULL);
+    nat64_list_insert(list, 80ULL);
+    nat64_list_insert(list, 90ULL);
+    nat64_list_insert(list, 100ULL);
     const uint32_t list_size = linked_list_size_get(list);
     printf("linked list size: %d\n", list_size);
     list_print_forward(list);

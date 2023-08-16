@@ -509,10 +509,20 @@ def print_value_imm_str(x, ctx):
 
 
 def print_value_imm_int(x, ctx):
+  n = hlir_value_num_get(x)
   if value_attribute_check(x, 'hexadecimal'):
-    out("0x%X" % hlir_value_num_get(x))
+    out("0x%X" % n)
   else:
-    out(str(hlir_value_num_get(x)))
+    out(str(n))
+
+  if type.is_numeric(x['type']):
+    if not 'generic' in x['type']['att']:
+      if 'unsigned' in x['type']['att']:
+        out("U")
+      sz = x['type']['size']
+      if x['type']['size'] > 4:
+        if sz == 8:
+          out("LL")
 
 
 def print_value_imm_flt(x, ctx):
