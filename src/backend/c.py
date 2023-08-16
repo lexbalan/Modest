@@ -516,7 +516,7 @@ def print_value_imm_int(x, ctx):
     out(str(n))
 
   if type.is_numeric(x['type']):
-    if not 'generic' in x['type']['att']:
+    if 'explicit-casted' in x['att']:
       if 'unsigned' in x['type']['att']:
         out("U")
       sz = x['type']['size']
