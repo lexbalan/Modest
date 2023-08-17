@@ -140,10 +140,11 @@ def print_fields(fields, before, after, between):
 def print_type_record(t, tag=""):
   out("struct")
 
-  if PRINT_STRUCT_PREFIX_FOR_RECORDS:
-    #out(" %s" % t['name'])
+  """if PRINT_STRUCT_PREFIX_FOR_RECORDS:
+    out(" %s" % t['name'])
     pass
 
+  el"""
   if tag != "":
     out(" %s" % tag)
 
@@ -929,14 +930,17 @@ def print_def_type(x):
       return;
 
 
-  defined_array = type.is_defined_array(x['type'])
+  is_defined_array = type.is_defined_array(x['type'])
   out("typedef ")
-  if defined_array:
+  if is_defined_array:
     print_type(x['type']['of'])#, print_aka=False)
   else:
-    print_type(x['type'])#, print_aka=False)
+    if type.is_record(x['type']) and PRINT_STRUCT_PREFIX_FOR_RECORDS:
+      print_type_record(x['type'], tag=x['id']['str'])
+    else:
+      print_type(x['type'])#, print_aka=False)
   out(" %s" % x['id']['str'])
-  if defined_array:
+  if is_defined_array:
     out("["); print_value(x['type']['volume']); out("]")
   out(";")
   if x['type']['kind'] in ['record', 'enum']:
