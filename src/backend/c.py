@@ -22,7 +22,7 @@ ARRAYS_MULTILINE_FROM = 8
 RECORDS_MULTILINE_ALWAYS = False
 RECORDS_MULTILINE_FROM = 4
 
-PRINT_STRUCT_PREFIX_FOR_RECORDS = False
+NO_TYPEDEF_STRUCTS = False
 
 
 legacy_style = {
@@ -191,7 +191,7 @@ def print_type(t, print_aka=True):
       return
 
     if 'name' in t:
-      if PRINT_STRUCT_PREFIX_FOR_RECORDS:
+      if NO_TYPEDEF_STRUCTS:
         if type.is_record(t):
           out("struct ")
       out(t['name'])
@@ -924,7 +924,7 @@ def print_def_type(x):
       return;
 
 
-  if PRINT_STRUCT_PREFIX_FOR_RECORDS:
+  if NO_TYPEDEF_STRUCTS:
     if type.is_record(x['type']):
       print_type_record(x['type'], tag=x['id']['str'])
       out(";")
