@@ -42,7 +42,7 @@ func list_print_backward (list : *List) -> Unit {
 }
 
 
-func main () -> Int32 {
+func main () -> Int {
     printf("linked list example\n")
     let list = linked_list_create()
     if list == nil {

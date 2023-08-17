@@ -56,17 +56,17 @@ typeNat64['att'].extend(['unsigned'])
 typeNat64['c_alias'] = 'uint64_t'
 typeNat64['llvm_alias'] = 'i64'
 
-typeFloat16 = hlir_type_float('Float16', 2)
+typeFloat16 = hlir_type_float('Float16', 16)
 typeFloat16['att'].extend(['float'])
 typeFloat16['c_alias'] = 'half'
 typeFloat16['llvm_alias'] = 'half'
 
-typeFloat32 = hlir_type_float('Float32', 4)
+typeFloat32 = hlir_type_float('Float32', 32)
 typeFloat32['att'].extend(['float'])
 typeFloat32['c_alias'] = 'float'
 typeFloat32['llvm_alias'] = 'float'
 
-typeFloat64 = hlir_type_float('Float64', 8)
+typeFloat64 = hlir_type_float('Float64', 64)
 typeFloat64['att'].extend(['float'])
 typeFloat64['c_alias'] = 'double'
 typeFloat64['llvm_alias'] = 'double'
@@ -99,7 +99,11 @@ genericStr = typeStr
 """
 
 def eq_integer(a, b):
-  return a['name'] == b['name']
+  if a['power'] != b['power']:
+    return False
+  if is_signed(a) != is_signed(b):
+    return False
+  return True
 
 
 def eq_pointer(a, b):
@@ -150,7 +154,10 @@ def eq_record(a, b):
 
 
 def eq_float(a, b):
-  return a['name'] == b['name']
+  if 'power' in a and 'power' in b:
+    return a['power'] == b['power']
+
+  return False
 
 
 def eq_opaque(a, b):
@@ -166,7 +173,7 @@ def eq(a, b):
 
   # normal checking
   k = a['kind']
-  if k == 'integer': return eq_integer(a, b)
+  if k == 'int': return eq_integer(a, b)
   elif k == 'unit': return True
   elif k == 'func': return eq_func(a, b)
   elif k == 'record': return eq_record(a, b)
@@ -221,7 +228,7 @@ def is_numeric(t):
 
 
 def is_integer(t):
-  return t['kind'] == 'integer'
+  return t['kind'] == 'int' or t['kind'] == 'Integer'
 
 
 def is_float(t):
@@ -376,11 +383,11 @@ def create_alias(id, t, ti):
   #print('type.create_alias ' + id)
   nt = copy.copy(t)
 
-  nt['c_alias'] = id
-  nt['llvm_alias'] = '%' + id
+  #nt['c_alias'] = id
+  #nt['llvm_alias'] = '%' + id
 
-  if not 'name' in nt:
-    nt['name'] = id
+  #if not 'name' in nt:
+  nt['name'] = id
 
   nt['att'].append('alias')
   nt['aliasof'] = t
@@ -391,7 +398,7 @@ def create_alias(id, t, ti):
 
 def get_size(t):
   k = t['kind']
-  if k == 'integer':
+  if k == 'int':
     return t['size']
   elif k == 'array':
     return t['volume']['num'] * get_size(t['of'])
@@ -471,7 +478,7 @@ def type_print(t, print_aka=True):
     print(" -> ", end='')
     type_print(t['to'])
 
-  elif k == 'integer':
+  elif k == 'int':
     print('%' + t['name'], end='')
     if is_generic(t):
       print('%d' % t['power'], end='')

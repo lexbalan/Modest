@@ -5,7 +5,7 @@
 import "libc/stdio.h"
 
 
-func mtab (n : Int32) -> Unit {
+func mtab (n : Int) -> Unit {
     var m : Int32 := 1
     while m < 10 {
         let nm = n * m
@@ -15,7 +15,7 @@ func mtab (n : Int32) -> Unit {
 }
 
 
-func main () -> Int32 {
+func main () -> Int {
     let n = 2
     printf("multiply table for %d\n", n)
     mtab(n)

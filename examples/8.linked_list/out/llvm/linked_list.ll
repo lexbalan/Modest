@@ -3,7 +3,7 @@
 
 
 %Char = type i8
-%ConstChar = type %Char
+%ConstChar = type i8
 %SignedChar = type i8
 %UnsignedChar = type i8
 %Short = type i16
@@ -69,21 +69,18 @@
 
 
 declare i64 @clock()
-declare i8* @malloc(%SizeT)
-declare i8* @memset(i8*, %Int, %SizeT)
-declare i8* @memcpy(i8*, i8*, %SizeT)
-declare %Int @memcmp(i8*, i8*, %SizeT)
+declare i8* @malloc(i64)
+declare i8* @memset(i8*, i32, i64)
+declare i8* @memcpy(i8*, i8*, i64)
+declare i32 @memcmp(i8*, i8*, i64)
 declare void @free(i8*)
-declare %Int @strncmp(%ConstChar*, %ConstChar*, %SizeT)
-declare %Int @strcmp(%ConstChar*, %ConstChar*)
-declare %Char* @strcpy(%Char*, %ConstChar*)
-declare %SizeT @strlen(%ConstChar*)
+declare i32 @strncmp(i8*, i8*, i64)
+declare i32 @strcmp(i8*, i8*)
+declare i8* @strcpy(i8*, i8*)
+declare i64 @strlen(i8*)
 
 
-declare %Int @ftruncate(%Int, %OffT)
-
-
-
+declare i32 @ftruncate(i32, i32)
 
 
 
@@ -96,20 +93,23 @@ declare %Int @ftruncate(%Int, %OffT)
 
 
 
-declare %Int @creat([0 x i8]*, %ModeT)
-declare %Int @open([0 x i8]*, %Int)
-declare %Int @read(%Int, i8*, i32)
-declare %Int @write(%Int, i8*, i32)
-declare %OffT @lseek(%Int, %OffT, %Int)
-declare %Int @close(%Int)
-declare void @exit(%Int)
+
+
+
+declare i32 @creat([0 x i8]*, i32)
+declare i32 @open([0 x i8]*, i32)
+declare i32 @read(i32, i8*, i32)
+declare i32 @write(i32, i8*, i32)
+declare i32 @lseek(i32, i32, i32)
+declare i32 @close(i32)
+declare void @exit(i32)
 
 
 declare %DIR* @opendir([0 x i8]*)
-declare %Int @closedir(%DIR*)
+declare i32 @closedir(%DIR*)
 
 
-declare [0 x i8]* @getcwd([0 x i8]*, %SizeT)
+declare [0 x i8]* @getcwd([0 x i8]*, i64)
 declare [0 x i8]* @getenv([0 x i8]*)
 
 ; -- MODULE: /Users/alexbalan/p/Modest/examples/8.linked_list/src/linked_list.hm
@@ -134,7 +134,7 @@ declare [0 x i8]* @getenv([0 x i8]*)
 }
 
 define %List* @linked_list_create() {
-  %1 = call i8*(%SizeT) @malloc (%SizeT 0)
+  %1 = call i8*(i64) @malloc (i64 0)
   %2 = bitcast i8* %1 to %List*
   %3 = icmp eq %List* %2, null
   br i1 %3 , label %then_0, label %endif_0
@@ -186,7 +186,7 @@ endif_0:
 }
 
 define %Node* @linked_list_node_create() {
-  %1 = call i8*(%SizeT) @malloc (%SizeT 0)
+  %1 = call i8*(i64) @malloc (i64 0)
   %2 = bitcast i8* %1 to %Node*
   %3 = icmp eq %Node* %2, null
   br i1 %3 , label %then_0, label %endif_0

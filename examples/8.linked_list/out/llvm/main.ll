@@ -3,7 +3,7 @@
 
 
 %Char = type i8
-%ConstChar = type %Char
+%ConstChar = type i8
 %SignedChar = type i8
 %UnsignedChar = type i8
 %Short = type i16
@@ -69,21 +69,18 @@
 
 
 declare i64 @clock()
-declare i8* @malloc(%SizeT)
-declare i8* @memset(i8*, %Int, %SizeT)
-declare i8* @memcpy(i8*, i8*, %SizeT)
-declare %Int @memcmp(i8*, i8*, %SizeT)
+declare i8* @malloc(i64)
+declare i8* @memset(i8*, i32, i64)
+declare i8* @memcpy(i8*, i8*, i64)
+declare i32 @memcmp(i8*, i8*, i64)
 declare void @free(i8*)
-declare %Int @strncmp(%ConstChar*, %ConstChar*, %SizeT)
-declare %Int @strcmp(%ConstChar*, %ConstChar*)
-declare %Char* @strcpy(%Char*, %ConstChar*)
-declare %SizeT @strlen(%ConstChar*)
+declare i32 @strncmp(i8*, i8*, i64)
+declare i32 @strcmp(i8*, i8*)
+declare i8* @strcpy(i8*, i8*)
+declare i64 @strlen(i8*)
 
 
-declare %Int @ftruncate(%Int, %OffT)
-
-
-
+declare i32 @ftruncate(i32, i32)
 
 
 
@@ -96,20 +93,23 @@ declare %Int @ftruncate(%Int, %OffT)
 
 
 
-declare %Int @creat([0 x i8]*, %ModeT)
-declare %Int @open([0 x i8]*, %Int)
-declare %Int @read(%Int, i8*, i32)
-declare %Int @write(%Int, i8*, i32)
-declare %OffT @lseek(%Int, %OffT, %Int)
-declare %Int @close(%Int)
-declare void @exit(%Int)
+
+
+
+declare i32 @creat([0 x i8]*, i32)
+declare i32 @open([0 x i8]*, i32)
+declare i32 @read(i32, i8*, i32)
+declare i32 @write(i32, i8*, i32)
+declare i32 @lseek(i32, i32, i32)
+declare i32 @close(i32)
+declare void @exit(i32)
 
 
 declare %DIR* @opendir([0 x i8]*)
-declare %Int @closedir(%DIR*)
+declare i32 @closedir(%DIR*)
 
 
-declare [0 x i8]* @getcwd([0 x i8]*, %SizeT)
+declare [0 x i8]* @getcwd([0 x i8]*, i64)
 declare [0 x i8]* @getenv([0 x i8]*)
 
 ; -- MODULE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
@@ -123,46 +123,46 @@ declare [0 x i8]* @getenv([0 x i8]*)
 %CharStr = type [0 x i8]*
 %ConstCharStr = type [0 x i8]*
 
-declare %Int @fclose(%FILE*)
-declare %Int @feof(%FILE*)
-declare %Int @ferror(%FILE*)
-declare %Int @fflush(%FILE*)
-declare %Int @fgetpos(%FILE*, %FposT*)
+declare i32 @fclose(%FILE*)
+declare i32 @feof(%FILE*)
+declare i32 @ferror(%FILE*)
+declare i32 @fflush(%FILE*)
+declare i32 @fgetpos(%FILE*, %FposT*)
 declare %FILE* @fopen(%ConstCharStr, %ConstCharStr)
-declare %SizeT @fread(i8*, %SizeT, %SizeT, %FILE*)
-declare %SizeT @fwrite(i8*, %SizeT, %SizeT, %FILE*)
+declare i64 @fread(i8*, i64, i64, %FILE*)
+declare i64 @fwrite(i8*, i64, i64, %FILE*)
 declare %FILE* @freopen(%ConstCharStr, %ConstCharStr, %FILE*)
-declare %Int @fseek(%FILE*, %LongInt, %Int)
-declare %Int @fsetpos(%FILE*, %FposT*)
-declare %LongInt @ftell(%FILE*)
-declare %Int @remove(%ConstCharStr)
-declare %Int @rename(%ConstCharStr, %ConstCharStr)
+declare i32 @fseek(%FILE*, i64, i32)
+declare i32 @fsetpos(%FILE*, %FposT*)
+declare i64 @ftell(%FILE*)
+declare i32 @remove(%ConstCharStr)
+declare i32 @rename(%ConstCharStr, %ConstCharStr)
 declare void @rewind(%FILE*)
 declare void @setbuf(%FILE*, %CharStr)
 
 
-declare %Int @setvbuf(%FILE*, %CharStr, %Int, %SizeT)
+declare i32 @setvbuf(%FILE*, %CharStr, i32, i64)
 declare %FILE* @tmpfile()
 declare %CharStr @tmpnam(%CharStr)
-declare %Int @printf(%ConstCharStr, ...)
-declare %Int @scanf(%ConstCharStr, ...)
-declare %Int @fprintf(%FILE*, [0 x i8]*, ...)
-declare %Int @fscanf(%FILE*, %ConstCharStr, ...)
-declare %Int @sscanf(%ConstCharStr, %ConstCharStr, ...)
-declare %Int @sprintf(%CharStr, %ConstCharStr, ...)
+declare i32 @printf(%ConstCharStr, ...)
+declare i32 @scanf(%ConstCharStr, ...)
+declare i32 @fprintf(%FILE*, [0 x i8]*, ...)
+declare i32 @fscanf(%FILE*, %ConstCharStr, ...)
+declare i32 @sscanf(%ConstCharStr, %ConstCharStr, ...)
+declare i32 @sprintf(%CharStr, %ConstCharStr, ...)
 
 
-declare %Int @fgetc(%FILE*)
-declare %Int @fputc(%Int, %FILE*)
-declare %CharStr @fgets(%CharStr, %Int, %FILE*)
-declare %Int @fputs(%ConstCharStr, %FILE*)
-declare %Int @getc(%FILE*)
-declare %Int @getchar()
+declare i32 @fgetc(%FILE*)
+declare i32 @fputc(i32, %FILE*)
+declare %CharStr @fgets(%CharStr, i32, %FILE*)
+declare i32 @fputs(%ConstCharStr, %FILE*)
+declare i32 @getc(%FILE*)
+declare i32 @getchar()
 declare %CharStr @gets(%CharStr)
-declare %Int @putc(%Int, %FILE*)
-declare %Int @putchar(%Int)
-declare %Int @puts(%ConstCharStr)
-declare %Int @ungetc(%Int, %FILE*)
+declare i32 @putc(i32, %FILE*)
+declare i32 @putchar(i32)
+declare i32 @puts(%ConstCharStr)
+declare i32 @ungetc(i32, %FILE*)
 declare void @perror(%ConstCharStr)
 
 ; -- MODULE: /Users/alexbalan/p/Modest/examples/8.linked_list/src/linked_list.hm
@@ -196,7 +196,7 @@ declare %Node* @linked_list_insert(%List*, i8*)
 
 
 define void @nat64_list_insert(%List* %list, i64 %x) {
-  %1 = call i8*(%SizeT) @malloc (%SizeT 8)
+  %1 = call i8*(i64) @malloc (i64 8)
   %2 = bitcast i8* %1 to i64*
   store i64 %x, i64* %2
   %3 = bitcast i64* %2 to i8*
@@ -208,7 +208,7 @@ define void @nat64_list_insert(%List* %list, i64 %x) {
 
 define void @list_print_forward(%List* %list) {
   %1 = bitcast [21 x i8]* @str_1 to %ConstCharStr
-  %2 = call %Int(%ConstCharStr, ...) @printf (%ConstCharStr %1)
+  %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %1)
   %3 = call %Node*(%List*) @linked_list_first_get (%List* %list)
   %pn = alloca %Node*
   store %Node* %3, %Node** %pn
@@ -223,7 +223,7 @@ body_1:
   %8 = bitcast i8* %7 to i32*
   %9 = bitcast [8 x i8]* @str_2 to %ConstCharStr
   %10 = load i32, i32* %8
-  %11 = call %Int(%ConstCharStr, ...) @printf (%ConstCharStr %9, i32 %10)
+  %11 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %9, i32 %10)
   %12 = load %Node*, %Node** %pn
   %13 = call %Node*(%Node*) @linked_list_node_next_get (%Node* %12)
   store %Node* %13, %Node** %pn
@@ -236,7 +236,7 @@ break_1:
 
 define void @list_print_backward(%List* %list) {
   %1 = bitcast [22 x i8]* @str_3 to %ConstCharStr
-  %2 = call %Int(%ConstCharStr, ...) @printf (%ConstCharStr %1)
+  %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %1)
   %3 = call %Node*(%List*) @linked_list_last_get (%List* %list)
   %pn = alloca %Node*
   store %Node* %3, %Node** %pn
@@ -251,7 +251,7 @@ body_1:
   %8 = bitcast i8* %7 to i32*
   %9 = bitcast [8 x i8]* @str_4 to %ConstCharStr
   %10 = load i32, i32* %8
-  %11 = call %Int(%ConstCharStr, ...) @printf (%ConstCharStr %9, i32 %10)
+  %11 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %9, i32 %10)
   %12 = load %Node*, %Node** %pn
   %13 = call %Node*(%Node*) @linked_list_node_prev_get (%Node* %12)
   store %Node* %13, %Node** %pn
@@ -260,16 +260,16 @@ break_1:
   ret void
 }
 
-define %Int @main() {
+define i32 @main() {
   %1 = bitcast [21 x i8]* @str_5 to %ConstCharStr
-  %2 = call %Int(%ConstCharStr, ...) @printf (%ConstCharStr %1)
+  %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %1)
   %3 = call %List*() @linked_list_create ()
   %4 = icmp eq %List* %3, null
   br i1 %4 , label %then_0, label %endif_0
 then_0:
   %5 = bitcast [26 x i8]* @str_6 to %ConstCharStr
-  %6 = call %Int(%ConstCharStr, ...) @printf (%ConstCharStr %5)
-  ret %Int 1
+  %6 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %5)
+  ret i32 1
   br label %endif_0
 endif_0:
   call void(%List*, i64) @nat64_list_insert (%List* %3, i64 0)
@@ -285,10 +285,10 @@ endif_0:
   call void(%List*, i64) @nat64_list_insert (%List* %3, i64 100)
   %8 = call i32(%List*) @linked_list_size_get (%List* %3)
   %9 = bitcast [22 x i8]* @str_7 to %ConstCharStr
-  %10 = call %Int(%ConstCharStr, ...) @printf (%ConstCharStr %9, i32 %8)
+  %10 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %9, i32 %8)
   call void(%List*) @list_print_forward (%List* %3)
   call void(%List*) @list_print_backward (%List* %3)
-  ret %Int 0
+  ret i32 0
 }
 
 

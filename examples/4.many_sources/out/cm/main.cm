@@ -6,7 +6,7 @@ import "libc/stdio.h"
 import "./lib.h"
 
 
-func main () -> Int32 {
+func main () -> Int {
     printf("hello from main\n")
     lib_func()
     return 0

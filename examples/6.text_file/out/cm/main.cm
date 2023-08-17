@@ -38,7 +38,7 @@ func read_example () -> Unit {
 }
 
 
-func main () -> Int32 {
+func main () -> Int {
     printf("text_file example\n")
     write_example()
     read_example()

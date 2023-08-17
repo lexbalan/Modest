@@ -7,8 +7,8 @@ import "libc/stdio.h"
 import "libc/libc.h"
 
 type Point record {
-    x : Float64
-    y : Float64
+    x : Float
+    y : Float
 }
 
 type Line record {
@@ -28,7 +28,7 @@ var line : Line := {
 }
 
 
-func max (a : Float64, b : Float64) -> Float64 {
+func max (a : Float, b : Float) -> Float {
     if a > b {
         return a
     }
@@ -36,7 +36,7 @@ func max (a : Float64, b : Float64) -> Float64 {
 }
 
 
-func min (a : Float64, b : Float64) -> Float64 {
+func min (a : Float, b : Float) -> Float {
     if a < b {
         return a
     }
@@ -46,7 +46,7 @@ func min (a : Float64, b : Float64) -> Float64 {
 
 
 
-func lineLength (line : Line) -> Float64 {
+func lineLength (line : Line) -> Float {
     let dx = max(line.a.x, line.b.x) - min(line.a.x, line.b.x)
     let dy = max(line.a.y, line.b.y) - min(line.a.y, line.b.y)
     let dx2 = pow(dx, 2.0)
@@ -64,7 +64,7 @@ func ptr_example () -> Unit {
 }
 
 
-func main () -> Int32 {
+func main () -> Int {
     let len = lineLength(line)
     printf("line length = %f\n", len)
     ptr_example()

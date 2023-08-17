@@ -2,9 +2,11 @@
 import copy
 from opt import *
 import core.type as type
+from core.type import type_print
 from .trans import is_local_context
 from error import error, warning, info
 from .hlir import *
+
 
 
 #TODO: value #kind=zero
@@ -266,7 +268,6 @@ def value_cons_integer(v, t, ti, method):
     # Int -> Int
     if type.is_generic(v['type']):
       # GenericInt -> Int
-
       # check size
       if type.is_numeric(t):
         if v['type']['power'] > t['power']:

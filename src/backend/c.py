@@ -22,6 +22,8 @@ ARRAYS_MULTILINE_FROM = 8
 RECORDS_MULTILINE_ALWAYS = False
 RECORDS_MULTILINE_FROM = 4
 
+PRINT_STRUCT_PREFIX_FOR_RECORDS = False
+
 
 legacy_style = {
   'LINE_BREAK_BEFORE_STRUCT_BRACE': False,
@@ -56,9 +58,6 @@ def indent():
 def init():
   global puffy
   puffy = features_get("puffy")
-  if puffy:
-    print("-----------------------------PUFFY!")
-
   global styleguide
   stylename = settings_get('style')
   if stylename != None:
@@ -141,6 +140,10 @@ def print_fields(fields, before, after, between):
 def print_type_record(t, tag=""):
   out("struct")
 
+  if PRINT_STRUCT_PREFIX_FOR_RECORDS:
+    #out(" %s" % t['name'])
+    pass
+
   if tag != "":
     out(" %s" % tag)
 
@@ -186,11 +189,16 @@ def print_type(t, print_aka=True):
     return
 
   if print_aka:
+
     if 'c_alias' in t:
       out(t['c_alias'])
       return
 
     if 'name' in t:
+      if PRINT_STRUCT_PREFIX_FOR_RECORDS:
+        if type.is_record(t):
+          #print("JKNJKNKJNKJNJKNKJNJKNJKNKJNKJNJKNJKNJKNKJN")
+          out("struct ")
       out(t['name'])
       return
 

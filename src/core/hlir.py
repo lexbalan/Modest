@@ -34,7 +34,7 @@ def hlir_type_unit():
 def hlir_type_integer(name, power=0, ti=None):
   return {
     'isa': 'type',
-    'kind': 'integer',
+    'kind': 'int',
     'name': name,
     'att': ['numeric', 'ordered', 'integer'],
     'power': power,
@@ -43,13 +43,14 @@ def hlir_type_integer(name, power=0, ti=None):
   }
 
 
-def hlir_type_float(aka, size=0, ti=None):
+def hlir_type_float(aka, power=0, ti=None):
   return {
     'isa': 'type',
     'kind': 'float',
     'name': aka,
     'att': ['numeric', 'ordered', 'float'],
-    'size': size,
+    'power': power,
+    'size': nbytes_for_bits(power),
     'ti': ti
   }
 
@@ -108,6 +109,7 @@ def hlir_type_array(of, volume=None, ti=None):
 def hlir_type_generic_int_bits(nbits, unsigned=False, ti=None):
   # get custom generic int type
   gen_int_type = hlir_type_integer('Int')
+  gen_int_type['kind'] = 'Integer'
   gen_int_type['att'].extend(['generic'])
   if unsigned:
     gen_int_type['att'].extend(['unsigned'])
@@ -202,8 +204,9 @@ def hlir_value_int(num, typ=None, ti=None):
     if nbits > typ['power']:
       # extend if generic or error
       if type.is_generic(typ):
-        typ = hlir_type_integer('Int', nbits)
-        typ['att'].extend(['generic'])
+        typ = hlir_type_generic_int_bits(nbits, unsigned=False, ti=ti)
+        #typ = hlir_type_integer('Int', nbits)
+        #typ['att'].extend(['generic'])
       else:
         error("integer oferflow", ti)
 

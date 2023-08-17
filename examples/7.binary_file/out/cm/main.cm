@@ -23,8 +23,8 @@ func write_example () -> Unit {
         return
     }
     var chunk : Chunk
-    strcpy(&chunk.id to *Int8, "id" to *Int8)
-    strcpy(&chunk.data to *Int8, "data" to *Int8)
+    strcpy(&chunk.id to *Char, "id" to *Char)
+    strcpy(&chunk.data to *Char, "data" to *Char)
     fwrite(&chunk, sizeof(Chunk), 1, fp)
     fclose(fp)
 }
@@ -46,7 +46,7 @@ func read_example () -> Unit {
 }
 
 
-func main () -> Int32 {
+func main () -> Int {
     printf("text_file example\n")
     write_example()
     read_example()

@@ -5,7 +5,7 @@
 import "libc/stdio.h"
 
 
-func main () -> Int32 {
+func main () -> Int {
     printf("Hello 🐁\n")
     return 0
 }

@@ -4,6 +4,16 @@
 import os
 import argparse
 import importlib
+import tomllib
+
+"""CONFIG_PATH = os.path.expandvars("${MODEST_DIR}/config.toml")
+
+toml_dict = None
+# Opening a Toml file using tomlib
+with open(CONFIG_PATH, "rb") as toml:
+    toml_dict = tomllib.load(toml)
+
+print(toml_dict)"""
 
 from opt import *
 

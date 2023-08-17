@@ -5,7 +5,7 @@
 import "libc/stdio.h"
 
 
-func main () -> Int32 {
+func main () -> Int {
     printf("if-else example\n")
     var a : Int32
     var b : Int32
