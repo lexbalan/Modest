@@ -416,10 +416,17 @@ def value_cast_implicit(v, t, ti):
   if value_is_bad(v) or type.is_bad(t):
     return hlir_value_bad(ti)
 
-  if type.eq(v['type'], t):
+  from_type = v['type']
+
+  """if type.is_generic_integer(t):
+    if type.is_generic_integer(from_type):
+      nv = value_change_type(v, t)
+      nv['att'].append('implicit-casted')
+      return nv"""
+
+  if type.eq(from_type, t):
     return v
 
-  from_type = v['type']
 
   # Nil -> *X
   if type.is_nil(from_type) and type.is_pointer(t):

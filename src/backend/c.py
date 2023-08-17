@@ -54,6 +54,11 @@ def indent():
 
 
 def init():
+  global puffy
+  puffy = features_get("puffy")
+  if puffy:
+    print("-----------------------------PUFFY!")
+
   global styleguide
   stylename = settings_get('style')
   if stylename != None:
@@ -730,10 +735,26 @@ def print_stmt_value(x):
   print_value(x['value']); out(";")
 
 
+
+k_prev = ""
 def print_stmt(x):
   out("\n"); indent()
 
+  global k_prev
   k = x['kind']
+
+  if puffy:
+    global block_starts
+    if not block_starts:
+      if k in ['if', 'while', 'return']:
+        out("\n")
+        indent()
+      elif k != k_prev:
+        out("\n")
+        indent()
+    else:
+      block_starts = False
+
   if k == 'block': print_stmt_block(x)
   elif k == 'value': print_stmt_value(x)
   elif k == 'assign': print_stmt_assign(x)
@@ -746,6 +767,7 @@ def print_stmt(x):
   elif k == 'again': out('continue;')
   else: out("<stmt %s>" % str(x))
 
+  k_prev = k
 
 
 # not works
@@ -761,13 +783,14 @@ def print_arrays(arrays):
     out("memcpy(%s, _%s, %d);" % (dst, src, len))
 
 
-def print_stmts_puffy(stmts):
+def print_stmts(stmts):
   k_prev = ""
   if len(stmts) > 0:
     k_prev = stmts[0]['kind']
   i = 0
   for stmt in stmts:
-    if puffy:
+
+    """if puffy:
       #noneed0 = k_prev == 'value' and stmt['kind'] == 'assign'
       #noneed1 = k_prev == 'assign' and stmt['kind'] == 'value'
       noneed = False #noneed0 or noneed1
@@ -776,7 +799,7 @@ def print_stmts_puffy(stmts):
 
       if need_nl and i > 0 and not noneed:
         k_prev = stmt['kind']
-        out("\n")
+        out("\n")"""
 
     print_stmt(stmt)
     i = i + 1
@@ -787,14 +810,17 @@ def print_stmts_flat(stmts):
     print_stmt(stmt)
 
 
+block_starts = False
 def print_stmt_block(s, arrays=None):
   out("{")
   indent_up()
+  global block_starts
+  block_starts = True
 
   if arrays != None:
     print_arrays(arrays)
 
-  print_stmts_puffy(s['stmts'])
+  print_stmts(s['stmts'])
 
   indent_down()
   out("\n")
