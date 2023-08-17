@@ -140,11 +140,6 @@ def print_fields(fields, before, after, between):
 def print_type_record(t, tag=""):
   out("struct")
 
-  """if PRINT_STRUCT_PREFIX_FOR_RECORDS:
-    out(" %s" % t['name'])
-    pass
-
-  el"""
   if tag != "":
     out(" %s" % tag)
 
@@ -198,7 +193,6 @@ def print_type(t, print_aka=True):
     if 'name' in t:
       if PRINT_STRUCT_PREFIX_FOR_RECORDS:
         if type.is_record(t):
-          #print("JKNJKNKJNKJNJKNKJNJKNJKNKJNKJNJKNJKNJKNKJN")
           out("struct ")
       out(t['name'])
       return
@@ -930,15 +924,18 @@ def print_def_type(x):
       return;
 
 
+  if PRINT_STRUCT_PREFIX_FOR_RECORDS:
+    if type.is_record(x['type']):
+      print_type_record(x['type'], tag=x['id']['str'])
+      out(";")
+      return
+
   is_defined_array = type.is_defined_array(x['type'])
   out("typedef ")
   if is_defined_array:
     print_type(x['type']['of'])#, print_aka=False)
   else:
-    if type.is_record(x['type']) and PRINT_STRUCT_PREFIX_FOR_RECORDS:
-      print_type_record(x['type'], tag=x['id']['str'])
-    else:
-      print_type(x['type'])#, print_aka=False)
+    print_type(x['type'])#, print_aka=False)
   out(" %s" % x['id']['str'])
   if is_defined_array:
     out("["); print_value(x['type']['volume']); out("]")
