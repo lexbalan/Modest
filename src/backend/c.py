@@ -172,7 +172,16 @@ def print_type_enum(t):
 
 
 
-def print_type(t, print_aka=True):
+
+# блядские аргументы по умолчанию - нихера с ними не работает!
+def print_type(t):
+  print_type2(t, print_aka=True)
+
+def print_type_full(t):
+  print_type2(t, print_aka=False)
+
+
+def print_type2(t, print_aka):
   k = t['kind']
 
   # hotfix for let generic value problem (let x = 1)
@@ -184,8 +193,8 @@ def print_type(t, print_aka=True):
       out("int%d_t" % (sz * 8))
     return
 
-  if print_aka:
 
+  if print_aka:
     if 'c_alias' in t:
       out(t['c_alias'])
       return
@@ -933,9 +942,9 @@ def print_def_type(x):
   is_defined_array = type.is_defined_array(x['type'])
   out("typedef ")
   if is_defined_array:
-    print_type(x['type']['of'])#, print_aka=False)
+    print_type_full(x['type']['of'])#, print_aka=False)
   else:
-    print_type(x['type'])#, print_aka=False)
+    print_type_full(x['type'])#, print_aka=False)
   out(" %s" % x['id']['str'])
   if is_defined_array:
     out("["); print_value(x['type']['volume']); out("]")

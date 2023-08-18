@@ -1275,17 +1275,15 @@ def module_remove_decl(m, kind, id_str):
 
 def def_type(x):
   id = x['id']
-  t = do_type(x['type'])
-  if type.is_bad(t):
+  ty = do_type(x['type'])
+  if type.is_bad(ty):
     return def_bad()
 
   exist = type_get(id['str'])
   already_declared = exist != None
 
-  nt = type.create_alias(id['str'], t, id['ti'])
-
+  nt = type.create_alias(id['str'], ty, id['ti'])
   extend_props(nt)
-
   nt['att'].extend(attributes_get())
 
 
@@ -1298,9 +1296,9 @@ def def_type(x):
   else:
     module['context'].type_add(id['str'], nt)
 
-  definition = hlir_def_type(x['id'], t, already_declared, ti=x['ti'])
+  definition = hlir_def_type(x['id'], ty, already_declared, ti=x['ti'])
   definition['att'].extend(attributes_get())
-  nt['definition'] = definition
+  #nt['definition'] = definition
 
   return definition
 

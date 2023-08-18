@@ -164,6 +164,13 @@ def eq_opaque(a, b):
   return a['name'] == b['name']  # maybe by UID?
 
 
+def eq_alias(a, b):
+  if a['att'] != b['att']:
+    return False
+
+  return eq(a['of'], b['of'])
+
+
 def eq(a, b):
   # fast checking
   if a == b: return True
@@ -216,6 +223,8 @@ def type_attribute_check(t, a):
   if absent != '':
     error("expected %s type" % (a), x['left'])
   return result"""
+
+
 
 
 def is_bad(t):
@@ -326,9 +335,9 @@ def is_generic(t):
   return 'generic' in t['att']
 
 
-
 def is_signed(t):
   return 'signed' in t['att']
+
 
 def is_unsigned(t):
   return 'unsigned' in t['att']
@@ -337,8 +346,7 @@ def is_unsigned(t):
 
 # cannot create variable with type
 def is_forbidden_var(t, zero_array_forbidden=True):
-  k = t['kind']
-  if k == 'opaque' or k == 'unit':
+  if is_opaque(t) or is_unit(t):
     return True
 
   # [0]Int, []Int, [n]<Forbidden>
@@ -362,8 +370,6 @@ def is_forbidden_var(t, zero_array_forbidden=True):
   return False
 
 
-def is_alias(t):
-  return 'alias' in t['att']
 
 
 
@@ -383,24 +389,25 @@ def create_alias(id, t, ti):
   #print('type.create_alias ' + id)
   nt = copy.copy(t)
 
-  #nt['c_alias'] = id
-  #nt['llvm_alias'] = '%' + id
-
   #if not 'name' in nt:
   nt['name'] = id
 
+  # именно так!  иначе добавим в att t тк это ссылка на лист!
+  nt['att'] = []
+  nt['att'].extend(t['att'])
   nt['att'].append('alias')
+
   nt['aliasof'] = t
   nt['ti'] = ti
+
   return nt
 
 
 
 def get_size(t):
-  k = t['kind']
-  if k == 'int':
+  if is_integer(t):
     return t['size']
-  elif k == 'array':
+  elif is_array(t):
     return t['volume']['num'] * get_size(t['of'])
 
 
@@ -432,7 +439,7 @@ def type_print(t, print_aka=True):
 
       return
 
-  if k == 'record':
+  if is_record(t):
     if is_generic_record(t):
       print("GenericRecord")
       return
@@ -449,13 +456,13 @@ def type_print(t, print_aka=True):
       i = i + 1
     print("\n}")
 
-  elif k == 'enum':
+  elif is_enum(t):
     print("enum", end='')
 
-  elif k == 'pointer':
+  elif is_pointer(t):
     print("*", end=''); type_print(t['to'])
 
-  elif k == 'array':
+  elif is_array(t):
     if t['of'] == None:
       print("EmptyArray")
       return
@@ -463,27 +470,27 @@ def type_print(t, print_aka=True):
 
     print("[", end='')
     array_size = t['volume']
-    sz = 0
+
     if array_size != None:
       sz = hlir_value_num_get(array_size)
+      print("%d" % sz, end='')
 
-    print("%d" % sz, end='')
     print("]", end='')
     type_print(t['of'])
 
-  elif k == 'func':
+  elif is_func(t):
     print("(", end='')
     print_list_by(t['params'], lambda f: type_print(f['type']))
     print(")", end='')
     print(" -> ", end='')
     type_print(t['to'])
 
-  elif k == 'int':
+  elif is_integer(t):
     print('%' + t['name'], end='')
     if is_generic(t):
       print('%d' % t['power'], end='')
 
-  elif k == 'opaque':
+  elif is_opaque(t):
     print('opaque', end='')
 
   else:
