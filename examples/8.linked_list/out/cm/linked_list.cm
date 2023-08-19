@@ -100,7 +100,6 @@ func linked_list_insert_node (list : *List, new_node : *Node) -> *Node {
         let old_tail = list.tail
         old_tail.next := new_node
         new_node.prev := old_tail
-    } else {
     }
     list.tail := new_node
     list.size := list.size + 1

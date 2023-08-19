@@ -28,6 +28,7 @@ NO_TYPEDEF_OTHERS = True
 USE_BOOLEAN = True
 USE_STDBOOL = True
 
+APPEND_ELSE_TO_IFELSE_LADDER = True
 EMPTY_BLOCK_COMMENT = "// TODO: pay attention here"
 
 
@@ -662,7 +663,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
   #  out(")")
 
 
-def print_stmt_if(x):
+def print_stmt_if(x, need_else_branch):
   out("if")
   if SPACE_AFTER_IF_WHILE: out(" ")
   out("("); print_value(x['cond']); out(")")
@@ -679,10 +680,16 @@ def print_stmt_if(x):
   if e != None:
     if e['kind'] == 'if':
       out(" else ")
-      print_stmt_if(e)
+      print_stmt_if(e, need_else_branch=True)
     else:
       out(" else ")
       print_stmt_block(e)
+
+  else:
+    if APPEND_ELSE_TO_IFELSE_LADDER:
+      if need_else_branch:
+        out(" else ")
+        print_stmt_block({'isa': 'block', 'stmts':[]})
 
 
 
@@ -804,7 +811,7 @@ def print_stmt(x):
   elif k == 'value': print_stmt_value(x)
   elif k == 'assign': print_stmt_assign(x)
   elif k == 'return': print_stmt_return(x)
-  elif k == 'if': print_stmt_if(x)
+  elif k == 'if': print_stmt_if(x, need_else_branch=False)
   elif k == 'while': print_stmt_while(x)
   elif k == 'def_var': print_stmt_defvar(x)
   elif k == 'def_let': print_stmt_let(x)
