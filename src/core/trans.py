@@ -1275,6 +1275,8 @@ def module_remove_decl(m, kind, id_str):
 
 def def_type(x):
   id = x['id']
+  #print("@type " + id['str'])
+
   ty = do_type(x['type'])
   if type.is_bad(ty):
     return def_bad()
@@ -1285,7 +1287,6 @@ def def_type(x):
   nt = type.create_alias(id['str'], ty, id['ti'])
   extend_props(nt)
   nt['att'].extend(attributes_get())
-
 
   if already_declared:
     # just overwrite existed 'opaque' type (for records)

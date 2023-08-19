@@ -392,6 +392,9 @@ def create_alias(id, t, ti):
   #if not 'name' in nt:
   nt['name'] = id
 
+  if 'c_alias' in nt:
+    del nt['c_alias']
+
   # именно так!  иначе добавим в att t тк это ссылка на лист!
   nt['att'] = []
   nt['att'].extend(t['att'])

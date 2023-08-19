@@ -193,7 +193,6 @@ def print_type2(t, print_aka):
       out("int%d_t" % (sz * 8))
     return
 
-
   if print_aka:
     if 'c_alias' in t:
       out(t['c_alias'])
@@ -961,6 +960,22 @@ def print_field(x, const=False, prefix=None):
 
   if 'aka' in x:
     print_type(t)
+    out(" ")
+    if prefix != None:
+      out(prefix)
+    out("%s" % (x['id']['str']))
+    return
+
+  if 'c_alias' in t:
+    out(t['c_alias'])
+    out(" ")
+    if prefix != None:
+      out(prefix)
+    out("%s" % (x['id']['str']))
+    return
+
+  if 'name' in t:
+    out(t['name'])
     out(" ")
     if prefix != None:
       out(prefix)
