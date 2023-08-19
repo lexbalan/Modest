@@ -61,7 +61,7 @@ def value_is_immutable(x):
 # то что определено директивой let
 def value_is_const_imm(x):
   if x['kind'] == 'const':
-    if 'num' in x:
+    if 'imm_num' in x:
       return True
   return False
 
@@ -299,7 +299,7 @@ def value_cons_float(v, t, ti, method):
           return None
 
         y = do_cast_generic(v, t, ti)
-        y['num'] = float(y['num'])  # 0 -> 0.0, need for printer (!)
+        y['imm_num'] = float(y['imm_num'])  # 0 -> 0.0, need for printer (!)
         return y
 
     elif type.is_integer(vt):
@@ -337,7 +337,7 @@ def value_cons_pointer(v, t, ti, method):
         if type.is_numeric(v['type']):
           # compile-time casting
           nv = hlir_value_cast(v, t, ti=ti)
-          nv['num'] = v['num']
+          nv['imm_num'] = v['imm_num']
           nv['att'].append('immediate')
           return nv
 

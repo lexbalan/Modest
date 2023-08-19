@@ -80,7 +80,7 @@ def ll_create_value_num(t, num):
     'isa': 'llvm_value',
     'class': 'num',
     'level': 'value',
-    'num': num,
+    'imm_num': num,
     'type': t,
     'proto': None
   }
@@ -312,7 +312,7 @@ def print_type(t, print_aka=True, arr_as_ptr_to_arr=False):
     array_size = t['volume']
     sz = 0
     if array_size != None:
-      sz = array_size['num']
+      sz = array_size['imm_num']
 
     out("%d x " % sz)
     print_type(t['of'])
@@ -438,7 +438,7 @@ def do_eval_binary (op, l, r, x): # ["add", "fadd", x]
 
 def do_eval_expr_bin(x):
   # if folded bin
-  if 'num' in x:
+  if 'imm_num' in x:
     return ll_create_value_num(x['type'], hlir_value_num_get(x))
 
   opcode = get_bin_opcode(x['kind'], x['left']['type'])
@@ -738,8 +738,8 @@ def do_eval_expr_to(v):
 
   # (STUB?) nil -> zeroinitializer
   if type.is_free_pointer(from_type):
-    if 'num' in value:
-      if value['num'] == 0:
+    if 'imm_num' in value:
+      if value['imm_num'] == 0:
         return ll_create_value_null(to_type)
 
   y = do_ld(do_eval(value))
@@ -810,7 +810,7 @@ def do_eval_array(v):
 
 
   # теперь добавим паддинг нулевыми значениями
-  fulllen = v['type']['volume']['num']
+  fulllen = v['type']['volume']['imm_num']
   n_pad = fulllen - len(items)
   i = 0
   while i < n_pad:
@@ -878,7 +878,7 @@ def do_eval(x):
   # compile time evaluation
   if 'immediate' in x['att']:
     if type.is_integer(x['type']):
-      return ll_create_value_num(x['type'], x['num'])
+      return ll_create_value_num(x['type'], x['imm_num'])
 
 
   # runtime evaluation
@@ -934,8 +934,8 @@ def func_const_var(x):
   k = x['kind']
 
   if k == 'const':
-    if 'num' in x:
-      return ll_create_value_num(x['type'], x['num'])
+    if 'imm_num' in x:
+      return ll_create_value_num(x['type'], x['imm_num'])
 
   if value_attribute_check(x, 'local'):
     localname = x['id']['str']

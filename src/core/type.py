@@ -415,7 +415,7 @@ def get_size(t):
   if is_integer(t):
     return t['size']
   elif is_array(t):
-    return t['volume']['num'] * get_size(t['of'])
+    return t['volume']['imm_num'] * get_size(t['of'])
 
 
 def print_list_by(lst, method):

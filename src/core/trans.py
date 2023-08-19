@@ -398,7 +398,7 @@ def do_value_shift(op, l, r, ti):
     v = hlir_value_bin(op, l, r, l['type'], ti=ti)
 
     v['att'].append('immediate')
-    v['num'] = xv
+    v['imm_num'] = xv
     return v
 
   if type.is_generic(l['type']):
@@ -518,12 +518,12 @@ def do_value_bin(x):
   nv = hlir_value_bin(x['kind'], l, r, t, ti=ti)
 
   # if left & right are immediate, we can fold const
-  # and append field 'num' to nv
+  # and append field 'imm_num' to nv
   if value_is_immediate(l) and value_is_immediate(r):
     folded = value_bin_fold(k, l, r, t, ti)
 
     nv['type'] = folded['type']
-    nv['num'] = folded['num']
+    nv['imm_num'] = folded['imm_num']
     nv['att'].append('immediate')
 
   return nv
@@ -534,7 +534,7 @@ def do_value_not(val, t, ti):
   v = hlir_value_un('not', val, t, ti=ti)
 
   if value_is_immediate(val):
-    v['num'] = ~hlir_value_num_get(val)
+    v['imm_num'] = ~hlir_value_num_get(val)
     v['att'].append('immediate')
 
   return v
@@ -544,7 +544,7 @@ def do_value_minus(val, t, ti):
   v = hlir_value_un('minus', val, t, ti=ti)
 
   if value_is_immediate(val):
-    v['num'] = -hlir_value_num_get(val)
+    v['imm_num'] = -hlir_value_num_get(val)
     v['att'].append('immediate')
 
   return v
@@ -709,7 +709,7 @@ def do_value_index(x):
   # immediate index (!)
   if value_is_immediate(a):
     if value_is_immediate(i):
-      return a['items'][i['num']]
+      return a['items'][i['imm_num']]
 
   if ptr_access:
     v = hlir_value_index_array_by_ptr(a, i, ti=x['ti'])
@@ -1084,8 +1084,8 @@ def do_stmt_let(x):
   const_value['att'].extend(['local'])
 
   if value_is_immediate(v):
-    if 'num' in v:
-      const_value['num'] = v['num']
+    if 'imm_num' in v:
+      const_value['imm_num'] = v['imm_num']
 
   module['context'].value_add(id['str'], const_value)
 

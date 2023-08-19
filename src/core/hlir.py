@@ -171,7 +171,7 @@ def hlir_value_zero(t, ti=None):
     'isa': 'value',
     'kind': 'literal',
     'type': t,
-    'num': 0,
+    'imm_num': 0,
     'items': [],
     'att': ['immediate'],
     'ti': ti
@@ -197,7 +197,7 @@ def hlir_value_int(num, typ=None, ti=None):
   return {
     'isa': 'value',
     'kind': 'literal',
-    'num': num,
+    'imm_num': num,
     'type': typ,
     'att': ['immediate'],
     'ti': ti
@@ -212,7 +212,7 @@ def hlir_value_float(num, ti=None):
   return {
     'isa': 'value',
     'kind': 'literal',
-    'num': num,
+    'imm_num': num,
     'type': typ,
     'att': ['immediate'],
     'ti': ti
@@ -254,7 +254,7 @@ def hlir_value_record(typ, items={}, ti=None):
 
 
 def hlir_value_num_get(x):
-  return x['num']
+  return x['imm_num']
 
 
 
@@ -401,7 +401,7 @@ def hlir_value_sizeof(of, ti=None):
     'of': of,
     'type': type,
     'att': ['immediate'],
-    'num': size,
+    'imm_num': size,
     'ti': ti
   }
 

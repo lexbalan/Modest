@@ -6,6 +6,7 @@
 #include <time.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <string.h>
 
 
 // examples/linked_list/linked_list.cm
