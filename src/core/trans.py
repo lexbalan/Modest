@@ -709,7 +709,7 @@ def do_value_index(x):
   # immediate index (!)
   if value_is_immediate(a):
     if value_is_immediate(i):
-      return a['items'][i['imm_num']]
+      return a['imm_items'][i['imm_num']]
 
   if ptr_access:
     v = hlir_value_index_array_by_ptr(a, i, ti=x['ti'])
@@ -755,7 +755,7 @@ def do_value_access(x):
   # immediate access (!)
   if value_is_immediate(r):
     field_id_str = field_id['str']
-    v = r['items'][field_id_str]
+    v = r['imm_items'][field_id_str]
     nv = copy.copy(v)
     nv['value'] = hlir_value_access_record(r, field, ti=x['ti'])
     return nv

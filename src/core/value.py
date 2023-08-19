@@ -80,7 +80,7 @@ def value_is_immediate(x):
 # полного или из пустого дженерик массива
 def value_cons_array_from_generic_array(v, t, ti, method):
   #print("value_cons_array_from_generic_array")
-  if len(v['items']) > hlir_value_num_get(t['volume']):
+  if len(v['imm_items']) > hlir_value_num_get(t['volume']):
     info("too many items", v['ti'])
     return None
 
@@ -89,7 +89,7 @@ def value_cons_array_from_generic_array(v, t, ti, method):
   #  cast_method = value_cast_explicit
 
   casted_items = []
-  for item in v['items']:
+  for item in v['imm_items']:
     casted_item = value_cast_implicit(item, t['of'], item['ti'])
     type.check(t['of'], casted_item['type'], item['ti'])
     casted_items.append(casted_item)
@@ -97,7 +97,7 @@ def value_cons_array_from_generic_array(v, t, ti, method):
   vx = {
     'isa': 'value',
     'kind': 'literal',
-    'items': casted_items,
+    'imm_items': casted_items,
     'type': t,
     'att': [],
     'ti': ti
@@ -143,7 +143,7 @@ def value_cons_array_from_array(v, t, ti, method):
 
     # extend array with zero items
     padding = [hlir_value_zero(t['of'], ti=None)] * n
-    nv['items'].extend(padding)
+    nv['imm_items'].extend(padding)
 
     return nv
 
@@ -191,12 +191,12 @@ def value_cons_record_from_generic_record(v, t, ti, method):
       print(str(t['fields']))
       exit(1)
 
-    assert('items' in v)
+    assert('imm_items' in v)
 
     # получаем элемент с соотв именем из исходного значения
     item_value = None
-    if field_name in v['items']:
-      item_value = v['items'][field_name]
+    if field_name in v['imm_items']:
+      item_value = v['imm_items'][field_name]
 
 
     if item_value == None:
@@ -217,7 +217,7 @@ def value_cons_record_from_generic_record(v, t, ti, method):
   vx = {
     'isa': 'value',
     'kind': 'literal',
-    'items': items,
+    'imm_items': items,
     'type': t,
     'att': ['generic-casted'],
     'ti': ti

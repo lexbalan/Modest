@@ -20,7 +20,7 @@ def hlir_type_unit():
     'llvm_alias': 'void',
     'size': 0,
     'power': 0,
-    'items': [],
+    'imm_items': [],
     'att': [],
     'ti': None
   }
@@ -172,7 +172,7 @@ def hlir_value_zero(t, ti=None):
     'kind': 'literal',
     'type': t,
     'imm_num': 0,
-    'items': [],
+    'imm_items': [],
     'att': ['immediate'],
     'ti': ti
   }
@@ -236,7 +236,7 @@ def hlir_value_array(type, items, ti=None):
     'isa': 'value',
     'kind': 'literal',
     'type': type,
-    'items': items,
+    'imm_items': items,
     'att': ['immediate'],
     'ti': ti
   }
@@ -247,7 +247,7 @@ def hlir_value_record(typ, items={}, ti=None):
     'isa': 'value',
     'kind': 'literal',
     'type': typ,
-    'items': items,
+    'imm_items': items,
     'att': ['immediate'],
     'ti': ti
   }

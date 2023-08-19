@@ -284,7 +284,7 @@ def print_value_cast(v, ctx):
 def print_value_imm_array(v, ctx):
   out("[")
   indent_up()
-  print_values(v['items'], before=nl_indentation(INDENT_SYMBOL), after="", separator="")
+  print_values(v['imm_items'], before=nl_indentation(INDENT_SYMBOL), after="", separator="")
   indent_down()
   out("\n"); indent(); out("]")
 
@@ -297,10 +297,10 @@ def print_value_imm_record(v, ctx):
   if multiline:
     out("\n")
     indent_up()
-  nitems = len(v['items'])
+  nitems = len(v['imm_items'])
   #while i < nitems:
-  for k in v['items']:
-    item = v['items'][k]
+  for k in v['imm_items']:
+    item = v['imm_items'][k]
 
     if multiline: indent()
 

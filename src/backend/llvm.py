@@ -804,7 +804,7 @@ def do_eval_array(v):
   # сперва вычисляем все элементы массива в регистры
   # (кроме констант, они едут до последнего)
   items = []
-  for item in v['items']:
+  for item in v['imm_items']:
     iv = do_ld(do_eval(item))
     items.append(iv)
 
@@ -854,8 +854,8 @@ def do_eval_record(v):
   # (кроме констант, ведь они едут до последнего)
 
   items = []
-  for k in v['items']:
-    item = v['items'][k]
+  for k in v['imm_items']:
+    item = v['imm_items'][k]
     iv = do_ld(do_eval(item))
     items.append({'id': k, 'value': iv})
 

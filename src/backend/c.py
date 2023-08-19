@@ -475,7 +475,7 @@ def print_value_imm_array(v, ctx):
     if screening:
       after = "\\"
 
-  print_values(v['items'], before=before, between=between, after=after, ctx=ctx)
+  print_values(v['imm_items'], before=before, between=between, after=after, ctx=ctx)
 
   indent_down()
 
@@ -502,7 +502,11 @@ def print_value_imm_record(v, ctx):
     out("\n")
     indent_up()
 
-  nitems = len(v['items'])
+  if not 'imm_items' in v:
+    for ii in v:
+      print(ii)
+
+  nitems = len(v['imm_items'])
   while i < nitems:
     item = v['type']['fields'][i]
 
@@ -511,7 +515,7 @@ def print_value_imm_record(v, ctx):
 
     field_str = item['id']['str']
     out(".%s = " % field_str)
-    print_value(v['items'][field_str], ctx)
+    print_value(v['imm_items'][field_str], ctx)
     if i < (nitems - 1):
       out(",")
       if not multiline:
