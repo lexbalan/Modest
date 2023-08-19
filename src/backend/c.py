@@ -678,17 +678,43 @@ def print_stmt_if(x, need_else_branch):
 
   e = x['else']
   if e != None:
+
+    if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
+      out("\n")
+      indent()
+    else:
+      out(" ")
+
     if e['kind'] == 'if':
-      out(" else ")
+      out("else ")
       print_stmt_if(e, need_else_branch=True)
     else:
-      out(" else ")
+      out("else")
+      if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
+        out("\n")
+        indent()
+      else:
+        out(" ")
       print_stmt_block(e)
 
   else:
     if APPEND_ELSE_TO_IFELSE_LADDER:
       if need_else_branch:
-        out(" else ")
+
+        if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
+          out("\n")
+          indent()
+        else:
+          out(" ")
+
+        out("else")
+
+        if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
+          out("\n")
+          indent()
+        else:
+          out(" ")
+
         print_stmt_block({'isa': 'block', 'stmts':[]})
 
 
