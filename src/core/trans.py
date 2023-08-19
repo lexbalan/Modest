@@ -430,7 +430,7 @@ def value_bin_fold(op, l, r, t, ti):
     }
 
     num_val = ops[op](hlir_value_num_get(l), hlir_value_num_get(r))
-    return hlir_value_int(num_val, typ=l['type'], ti=ti)
+    return hlir_value_int(num_val, typ=t,  ti=ti)
 
 def do_value_bin(x):
   k = x['kind']
@@ -510,17 +510,27 @@ def do_value_bin(x):
     if not type_attribute_check(r['type'], 'ordered'):
       error("expected value with ordered type", r)
 
-  t = l['type']
+
+  #
+  # Select type for binary operation result
+  #
+
+  type_result = l['type']
+
+  if type.is_generic(l['type']) and type.is_generic(r['type']):
+    type_result = hlir_type_generic_int_for(num_val, unsigned=False, ti=ti)
+
   if k in ['eq', 'ne', 'lt', 'gt', 'le', 'ge']:
-    t = type.typeNat1
+    type_result = type.typeNat1
 
 
-  nv = hlir_value_bin(x['kind'], l, r, t, ti=ti)
+
+  nv = hlir_value_bin(x['kind'], l, r, type_result, ti=ti)
 
   # if left & right are immediate, we can fold const
   # and append field 'imm_num' to nv
   if value_is_immediate(l) and value_is_immediate(r):
-    folded = value_bin_fold(k, l, r, t, ti)
+    folded = value_bin_fold(k, l, r, type_result, ti)
 
     nv['type'] = folded['type']
     nv['imm_num'] = folded['imm_num']
