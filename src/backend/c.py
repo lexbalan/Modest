@@ -13,7 +13,7 @@ puffy = False
 
 INDENT_SYMBOL = " " * 4
 
-VOID_PARAM_FUNCTIONS = True
+FUNC_EMPTY_PARAMLIST = "(void)"
 SPACE_AFTER_IF_WHILE = True
 
 ARRAYS_MULTILINE_ALWAYS = False
@@ -301,17 +301,16 @@ def print_value_un(v, ctx):
 
 
 def print_paramlist(parms, arghack=False):
-  out("(")
-
   if len(parms) == 0:
-    if VOID_PARAM_FUNCTIONS:
-      out("void")
+    out(FUNC_EMPTY_PARAMLIST)
+
   else:
+    out("(")
     print_fields(parms, before="",  after="", between=", ")
     if arghack:
       out(", ...")
+    out(")")
 
-  out(")")
 
 
 def print_values(values, before, between, after, ctx=[]):
@@ -780,22 +779,24 @@ def print_stmt_value(x):
 
 k_prev = ""
 def print_stmt(x):
-  out("\n"); indent()
 
   global k_prev
   k = x['kind']
+
+  out("\n")
 
   if puffy:
     global block_starts
     if not block_starts:
       if k in ['if', 'while', 'return']:
         out("\n")
-        #indent()
       elif k != k_prev:
         out("\n")
-        #indent()
     else:
       block_starts = False
+
+
+  indent()
 
   if k == 'block': print_stmt_block(x)
   elif k == 'value': print_stmt_value(x)
@@ -831,18 +832,6 @@ def print_stmts(stmts):
     k_prev = stmts[0]['kind']
   i = 0
   for stmt in stmts:
-
-    """if puffy:
-      #noneed0 = k_prev == 'value' and stmt['kind'] == 'assign'
-      #noneed1 = k_prev == 'assign' and stmt['kind'] == 'value'
-      noneed = False #noneed0 or noneed1
-      need = k_prev != stmt['kind']
-      need_nl = need or stmt['kind'] in ['if', 'while']
-
-      if need_nl and i > 0 and not noneed:
-        k_prev = stmt['kind']
-        out("\n")"""
-
     print_stmt(stmt)
     i = i + 1
 
