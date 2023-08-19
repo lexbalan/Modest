@@ -1174,8 +1174,7 @@ def run(module, outname):
   lo("#include <stdint.h>")
   if USE_STDBOOL:
     lo("#include <stdbool.h>")
-
-  #lo("#include <string.h>")  # for memcpy
+  lo("#include <string.h>")  # for NULL & memcpy
 
 
   prev_ik = ('', '')
