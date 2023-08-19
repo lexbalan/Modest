@@ -182,17 +182,16 @@ def hlir_value_int(num, typ=None, ti=None):
 
   if typ == None:
     typ = hlir_type_generic_int_for(num, unsigned=False, ti=ti)
-
   else:
     nbits = nbits_for_num(num)
-    if nbits > typ['power']:
-      # extend if generic or error
-      if type.is_generic(typ):
-        typ = hlir_type_generic_int_bits(nbits, unsigned=False, ti=ti)
-        #typ = hlir_type_integer('Int', nbits)
-        #typ['att'].extend(['generic'])
-      else:
-        error("integer oferflow", ti)
+    assert(nbits <= typ['power'])
+    """
+    # extend if generic or error
+    if type.is_generic(typ):
+      typ = hlir_type_generic_int_bits(nbits, unsigned=False, ti=ti)
+    else:
+      error("integer oferflow", ti)
+    """
 
   return {
     'isa': 'value',
