@@ -1170,11 +1170,12 @@ def run(module, outname):
     lo("#ifndef %s" % guardname)
     lo("#define %s\n" % guardname)
 
-  lo("#include <stdint.h>")
-  lo("#include <string.h>")  # for memcpy
 
+  lo("#include <stdint.h>")
   if USE_STDBOOL:
     lo("#include <stdbool.h>")
+
+  #lo("#include <string.h>")  # for memcpy
 
 
   prev_ik = ('', '')
