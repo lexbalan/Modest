@@ -412,25 +412,7 @@ def do_value_shift(op, l, r, ti):
 
 # const folding for binary operation
 def value_bin_fold(op, l, r, t, ti):
-    ops = {
-      'or': lambda a, b: a or b,
-      'and': lambda a, b: a and b,
-      'xor': lambda a, b: (a and not b) or (not a and b),
-      'eq': lambda a, b: 1 if a == b else 0,
-      'ne': lambda a, b: 1 if a != b else 0,
-      'lt': lambda a, b: 1 if a < b else 0,
-      'gt': lambda a, b: 1 if a > b else 0,
-      'le': lambda a, b: 1 if a <= b else 0,
-      'ge': lambda a, b: 1 if a >= b else 0,
-      'add': lambda a, b: a + b,
-      'sub': lambda a, b: a - b,
-      'mul': lambda a, b: a * b,
-      'div': lambda a, b: int(a / b),
-      'mod': lambda a, b: a % b,
-    }
-
-    num_val = ops[op](hlir_value_num_get(l), hlir_value_num_get(r))
-    return hlir_value_int(num_val, typ=t,  ti=ti)
+    pass
 
 def do_value_bin(x):
   k = x['kind']
@@ -517,9 +499,6 @@ def do_value_bin(x):
 
   type_result = l['type']
 
-  if type.is_generic(l['type']) and type.is_generic(r['type']):
-    type_result = hlir_type_generic_int_for(num_val, unsigned=False, ti=ti)
-
   if k in ['eq', 'ne', 'lt', 'gt', 'le', 'ge']:
     type_result = type.typeNat1
 
@@ -530,13 +509,35 @@ def do_value_bin(x):
   # if left & right are immediate, we can fold const
   # and append field 'imm_num' to nv
   if value_is_immediate(l) and value_is_immediate(r):
-    folded = value_bin_fold(k, l, r, type_result, ti)
+    ops = {
+      'or': lambda a, b: a or b,
+      'and': lambda a, b: a and b,
+      'xor': lambda a, b: (a and not b) or (not a and b),
+      'eq': lambda a, b: 1 if a == b else 0,
+      'ne': lambda a, b: 1 if a != b else 0,
+      'lt': lambda a, b: 1 if a < b else 0,
+      'gt': lambda a, b: 1 if a > b else 0,
+      'le': lambda a, b: 1 if a <= b else 0,
+      'ge': lambda a, b: 1 if a >= b else 0,
+      'add': lambda a, b: a + b,
+      'sub': lambda a, b: a - b,
+      'mul': lambda a, b: a * b,
+      'div': lambda a, b: int(a / b),
+      'mod': lambda a, b: a % b,
+    }
 
-    nv['type'] = folded['type']
-    nv['imm_num'] = folded['imm_num']
+    num_val = ops[k](hlir_value_num_get(l), hlir_value_num_get(r))
+
+    if type.is_generic(l['type']) and type.is_generic(r['type']):
+      type_result = hlir_type_generic_int_for(num_val, unsigned=False, ti=ti)
+
+    nv['type'] = type_result
+    nv['imm_num'] = num_val
     nv['att'].append('immediate')
 
   return nv
+
+
 
 
 

@@ -114,8 +114,8 @@ break_1:
 
 define i32 @main() {
   %1 = bitcast [23 x i8]* @str_2 to %ConstCharStr
-  %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %1, i32 2)
-  call void(i32) @mtab (i32 2)
+  %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %1, i32 4)
+  call void(i32) @mtab (i32 4)
   ret i32 0
 }
 
