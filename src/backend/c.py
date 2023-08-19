@@ -28,6 +28,8 @@ NO_TYPEDEF_OTHERS = True
 USE_BOOLEAN = True
 USE_STDBOOL = True
 
+EMPTY_BLOCK_COMMENT = "// TODO: pay attention here"
+
 
 # for integer literals printing
 CC_INT_SIZE_BITS = 32
@@ -851,7 +853,11 @@ def print_stmt_block(s, arrays=None):
   if arrays != None:
     print_arrays(arrays)
 
-  print_stmts(s['stmts'])
+  if len (s['stmts']) > 0:
+    print_stmts(s['stmts'])
+  else:
+    out("\n"); indent()
+    out(EMPTY_BLOCK_COMMENT)
 
   indent_down()
   out("\n")

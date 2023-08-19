@@ -125,8 +125,9 @@ Node *linked_list_insert_node(List *list, Node *new_node)
 
         old_tail->next = new_node;
         new_node->prev = old_tail;
+    } else {
+        // TODO: pay attention here
     }
-
     list->tail = new_node;
     list->size = list->size + 1U;
 

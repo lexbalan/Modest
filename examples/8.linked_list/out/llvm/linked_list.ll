@@ -260,7 +260,7 @@ endif_1:
   %9 = getelementptr inbounds %List, %List* %list, i32 0, i32 1
   %10 = load %Node*, %Node** %9
   %11 = icmp ne %Node* %10, null
-  br i1 %11 , label %then_2, label %endif_2
+  br i1 %11 , label %then_2, label %else_2
 then_2:
   %12 = getelementptr inbounds %List, %List* %list, i32 0, i32 1
   %13 = load %Node*, %Node** %12
@@ -268,6 +268,8 @@ then_2:
   store %Node* %new_node, %Node** %14
   %15 = getelementptr inbounds %Node, %Node* %new_node, i32 0, i32 1
   store %Node* %13, %Node** %15
+  br label %endif_2
+else_2:
   br label %endif_2
 endif_2:
   %16 = getelementptr inbounds %List, %List* %list, i32 0, i32 1
