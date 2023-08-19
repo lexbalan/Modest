@@ -865,6 +865,7 @@ def print_stmt_block(s, arrays=None):
   else:
     out("\n"); indent()
     out(EMPTY_BLOCK_COMMENT)
+    block_starts = False
 
   indent_down()
   out("\n")
