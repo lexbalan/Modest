@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+#include <stdbool.h>
 
 
 // examples/if-else/main.cm
@@ -29,7 +30,7 @@ void read_example(void)
         return;
     }
     printf("file '%s' contains: ", filename);
-    while (1U) {
+    while (true) {
         const int ch = fgetc(fp);
         if (ch == EOF) {
             break;

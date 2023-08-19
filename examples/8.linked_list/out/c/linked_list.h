@@ -4,6 +4,7 @@
 
 #include <stdint.h>
 #include <string.h>
+#include <stdbool.h>
 
 
 // examples/linked_list/linked_list.hm

@@ -31,7 +31,7 @@ typeInt64['llvm_alias'] = 'i64'
 
 
 typeNat1 = hlir_type_integer("Nat1", 1)
-typeNat1['att'].extend(['unsigned'])
+typeNat1['att'].extend(['unsigned', 'logical'])
 typeNat1['c_alias'] = 'uint8_t'
 typeNat1['llvm_alias'] = 'i1'
 
@@ -234,6 +234,10 @@ def is_bad(t):
 
 def is_numeric(t):
   return 'numeric' in t['att']
+
+
+def is_logical(t):
+  return 'logical' in t['att']
 
 
 def is_integer(t):

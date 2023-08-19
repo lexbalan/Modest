@@ -25,6 +25,9 @@ RECORDS_MULTILINE_FROM = 4
 NO_TYPEDEF_STRUCTS = False
 NO_TYPEDEF_OTHERS = True
 
+USE_BOOLEAN = True
+USE_STDBOOL = True
+
 
 # for integer literals printing
 CC_INT_SIZE_BITS = 32
@@ -190,6 +193,11 @@ def print_type_full(t):
 
 def print_type2(t, print_aka):
   k = t['kind']
+
+  if USE_BOOLEAN:
+    if type.is_logical(t):
+      out("bool")
+      return
 
   # hotfix for let generic value problem (let x = 1)
   if type.is_generic_integer(t):
@@ -535,6 +543,14 @@ from util import nbits_for_num
 
 def print_value_imm_int(x, ctx):
   num = hlir_value_num_get(x)
+
+  if USE_BOOLEAN:
+    if type.is_logical(x['type']):
+      if num:
+        out("true")
+      else:
+        out("false")
+      return
 
   if value_attribute_check(x, 'hexadecimal'):
     out("0x%X" % num)
@@ -977,7 +993,6 @@ def print_field(x, const=False, prefix=None):
   # let n = 10
   # в я ддре их приводить нельзя, приходится тут по месту
   if type.is_generic_integer(t):
-
     if const:
       out("const ")
 
@@ -992,11 +1007,13 @@ def print_field(x, const=False, prefix=None):
     out("%s" % (x['id']['str']))
     return
 
+
   if 'aka' in x:
     if const:
       out("const ")
 
     print_type(t)
+
     out(" ")
     if prefix != None:
       out(prefix)
@@ -1007,7 +1024,9 @@ def print_field(x, const=False, prefix=None):
     if const:
       out("const ")
 
-    out(t['c_alias'])
+    print_type(t)
+
+    #out(t['c_alias'])
     out(" ")
     if prefix != None:
       out(prefix)
@@ -1022,7 +1041,8 @@ def print_field(x, const=False, prefix=None):
         if type.is_record(t):
           out("struct ")
 
-    out(t['name'])
+    #out(t['name'])
+    print_type(t)
     out(" ")
     if prefix != None:
       out(prefix)
@@ -1152,6 +1172,10 @@ def run(module, outname):
 
   lo("#include <stdint.h>")
   lo("#include <string.h>")  # for memcpy
+
+  if USE_STDBOOL:
+    lo("#include <stdbool.h>")
+
 
   prev_ik = ('', '')
 
