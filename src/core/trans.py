@@ -16,6 +16,7 @@ from parser import Parser
 from core.symtab import Symtab
 import core.type as type
 from core.type import type_attribute_check, type_print
+from util import nbits_for_num, nbytes_for_bits
 
 from .hlir import *
 
@@ -1065,7 +1066,16 @@ def do_stmt_var(x):
 
 def do_stmt_let(x):
   id = x['id']
+
+  # check if identifier is free (in current block)
+  already = value_get_here(id['str'])
+  if already != None:
+    error("local id redefinition", x['id']['ti'])
+    return hlir_stmt_bad()
+
+
   v = do_value(x['value'])
+
   if value_is_bad(v):
     module['context'].value_add(id['str'], hlir_value_bad())
     return hlir_stmt_bad()
@@ -1073,18 +1083,9 @@ def do_stmt_let(x):
   const_value = hlir_value_const(id, v['type'], init=v, ti=x['ti'])
   const_value['att'].extend(['local'])
 
-
   if value_is_immediate(v):
     if 'num' in v:
-      # for LLVM (!) e.g. array volume
       const_value['num'] = v['num']
-
-
-  # check if identifier is free (in current block)
-  already = value_get_here(id['str'])
-  if already != None:
-    error("local id redefinition", x['id']['ti'])
-    return hlir_stmt_bad()
 
   module['context'].value_add(id['str'], const_value)
 

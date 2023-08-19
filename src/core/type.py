@@ -3,7 +3,7 @@
 import copy
 from opt import *
 from error import error
-
+#from util import nbits_for_num, nbytes_for_bits
 from .hlir import *
 
 

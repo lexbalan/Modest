@@ -3,12 +3,7 @@
 import copy
 from opt import settings_get
 import core.type as type
-
-def nbytes_for_bits(x):
-  aligned_bits = 8
-  while aligned_bits < x:
-    aligned_bits = aligned_bits * 2
-  return aligned_bits // 8
+from util import nbits_for_num, nbytes_for_bits
 
 
 
@@ -108,7 +103,7 @@ def hlir_type_array(of, volume=None, ti=None):
 # used in shifts
 def hlir_type_generic_int_bits(nbits, unsigned=False, ti=None):
   # get custom generic int type
-  gen_int_type = hlir_type_integer('Int')
+  gen_int_type = hlir_type_integer('Integer')
   gen_int_type['kind'] = 'Integer'
   gen_int_type['att'].extend(['generic'])
   if unsigned:
@@ -181,17 +176,6 @@ def hlir_value_zero(t, ti=None):
     'att': ['immediate'],
     'ti': ti
   }
-
-
-
-def nbits_for_num(x):
-    n = 1
-    y = 1
-    while x > y:
-      y = (y << 1) | 1
-      n = n + 1
-    return n
-
 
 
 def hlir_value_int(num, typ=None, ti=None):

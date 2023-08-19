@@ -22,8 +22,14 @@ ARRAYS_MULTILINE_FROM = 8
 RECORDS_MULTILINE_ALWAYS = False
 RECORDS_MULTILINE_FROM = 4
 
-NO_TYPEDEF_STRUCTS = True
+NO_TYPEDEF_STRUCTS = False
 NO_TYPEDEF_OTHERS = True
+
+
+# for integer literals printing
+CC_INT_SIZE_BITS = 32
+CC_LONG_SIZE_BITS = 64
+CC_LONG_LONG_SIZE_BITS = 64
 
 
 legacy_style = {
@@ -525,21 +531,24 @@ def print_value_imm_str(x, ctx):
   out("\"")
 
 
+from util import nbits_for_num
+
 def print_value_imm_int(x, ctx):
-  n = hlir_value_num_get(x)
+  num = hlir_value_num_get(x)
+
   if value_attribute_check(x, 'hexadecimal'):
-    out("0x%X" % n)
+    out("0x%X" % num)
   else:
-    out(str(n))
+    out(str(num))
 
-  #if type.is_numeric(x['type']):
-  if 'explicit-casted' in x['att']:
-    if 'unsigned' in x['type']['att']:
-      out("U")
+  if type.is_unsigned(x['type']):
+    out("U")
 
-  if x['type']['size'] > 4:
-    sz = x['type']['size']
-    if sz == 8:
+  nbits = nbits_for_num(num)
+  if nbits > CC_INT_SIZE_BITS:
+    if nbits <= CC_LONG_SIZE_BITS:
+      out("L")
+    else:
       out("LL")
 
 
@@ -688,7 +697,10 @@ def print_stmt_defvar(x):
 
 def print_stmt_let(x):
   f = {'isa': 'field', 'id': x['id'], 'type': x['value']['type']}
-  print_field(f, const=True); out(" = "); print_value(x['value']); out(";")
+  print_field(f, const=True)
+  out(" = ")
+  print_value(x['value'])
+  out(";")
 
 
 
@@ -961,7 +973,29 @@ def print_def_type(x):
 def print_field(x, const=False, prefix=None):
   t = x['type']
 
+  # да, сюда прилетают Generic:Integer например из:
+  # let n = 10
+  # в я ддре их приводить нельзя, приходится тут по месту
+  if type.is_generic_integer(t):
+
+    if const:
+      out("const ")
+
+    if type.is_unsigned(t):
+      out("unsigned ")
+    if t['power'] <= 32:
+      out("int ")
+    else:
+      out("long long ")
+    if prefix != None:
+      out(prefix)
+    out("%s" % (x['id']['str']))
+    return
+
   if 'aka' in x:
+    if const:
+      out("const ")
+
     print_type(t)
     out(" ")
     if prefix != None:
@@ -970,6 +1004,9 @@ def print_field(x, const=False, prefix=None):
     return
 
   if 'c_alias' in t:
+    if const:
+      out("const ")
+
     out(t['c_alias'])
     out(" ")
     if prefix != None:
@@ -978,6 +1015,9 @@ def print_field(x, const=False, prefix=None):
     return
 
   if 'name' in t:
+    if const:
+      out("const ")
+
     if NO_TYPEDEF_STRUCTS:
         if type.is_record(t):
           out("struct ")

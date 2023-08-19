@@ -43,7 +43,7 @@ List *linked_list_create(void)
 uint32_t linked_list_size_get(List *list)
 {
     if (list == NULL) {
-        return 0;
+        return 0U;
     }
 
     return list->size;
@@ -127,7 +127,7 @@ Node *linked_list_insert_node(List *list, Node *new_node)
     }
 
     list->tail = new_node;
-    list->size = list->size + 1;
+    list->size = list->size + 1U;
 
     return new_node;
 }
