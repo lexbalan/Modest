@@ -981,38 +981,43 @@ def print_decl_type(x):
 
 
 def print_def_type(x):
+  id = x['id']['str']
+  t = x['type']
+
+
+
   if not was_separated_by_new_line:
-    if x['type']['kind'] in ['record', 'enum']:
+    if t['kind'] in ['record', 'enum']:
       out("\n")
 
   # !
   if x['afterdef']:
-    if type.is_record(x['type']):
-      print_type_record(x['type'], tag=x['id']['str'])
+    if type.is_record(t):
+      print_type_record(t, tag=x['id']['str'])
       out(";\n")
       return;
 
 
   if NO_TYPEDEF_STRUCTS:
-    if type.is_record(x['type']):
-      print_type_record(x['type'], tag=x['id']['str'])
+    if type.is_record(t):
+      print_type_record(t, tag=x['id']['str'])
       out(";")
       return
 
   #if NO_TYPEDEF_OTHERS:
   #  return
 
-  is_defined_array = type.is_defined_array(x['type'])
+  is_defined_array = type.is_defined_array(t)
   out("typedef ")
   if is_defined_array:
-    print_type_full(x['type']['of'])#, print_aka=False)
+    print_type_full(t['of'])#, print_aka=False)
   else:
-    print_type_full(x['type'])#, print_aka=False)
+    print_type_full(t)#, print_aka=False)
   out(" %s" % x['id']['str'])
   if is_defined_array:
-    out("["); print_value(x['type']['volume']); out("]")
+    out("["); print_value(t['volume']); out("]")
   out(";")
-  if x['type']['kind'] in ['record', 'enum']:
+  if t['kind'] in ['record', 'enum']:
     out("\n")
 
 
