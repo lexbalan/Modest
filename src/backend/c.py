@@ -197,6 +197,12 @@ def print_type_full(t):
 def print_type2(t, print_aka):
   k = t['kind']
 
+  if NO_TYPEDEF_OTHERS:
+    if type.is_alias(t):
+      tt = t['aliasof']
+      if not type.is_record(tt):
+        return print_type2(t['aliasof'], print_aka=True)
+
   if USE_BOOLEAN:
     if type.is_logical(t):
       out("bool")
@@ -985,7 +991,6 @@ def print_def_type(x):
   t = x['type']
 
 
-
   if not was_separated_by_new_line:
     if t['kind'] in ['record', 'enum']:
       out("\n")
@@ -1004,8 +1009,9 @@ def print_def_type(x):
       out(";")
       return
 
-  #if NO_TYPEDEF_OTHERS:
-  #  return
+  if NO_TYPEDEF_OTHERS:
+    if not type.is_record(t):
+      return
 
   is_defined_array = type.is_defined_array(t)
   out("typedef ")
@@ -1017,8 +1023,6 @@ def print_def_type(x):
   if is_defined_array:
     out("["); print_value(t['volume']); out("]")
   out(";")
-  if t['kind'] in ['record', 'enum']:
-    out("\n")
 
 
 

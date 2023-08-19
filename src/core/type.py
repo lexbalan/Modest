@@ -231,6 +231,8 @@ def is_bad(t):
   assert t != None
   return t['kind'] == 'bad'
 
+def is_alias(t):
+  return 'alias' in t['att']
 
 def is_numeric(t):
   return 'numeric' in t['att']
