@@ -19,7 +19,7 @@ void mtab(int n)
 
 int main(void)
 {
-    const unsigned int n = 2U;
+    const int n = 2;
     printf("multiply table for %d\n", n);
     mtab(n);
     return 0;

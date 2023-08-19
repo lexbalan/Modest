@@ -18,8 +18,8 @@
 // chunk of data for read/write operations in file
 
 typedef struct {
-    uint8_t id[100U];
-    uint8_t data[1024U];
+    uint8_t id[100];
+    uint8_t data[1024];
 } Chunk;
 
 

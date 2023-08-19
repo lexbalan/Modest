@@ -181,7 +181,7 @@ def hlir_value_zero(t, ti=None):
 def hlir_value_int(num, typ=None, ti=None):
 
   if typ == None:
-    typ = hlir_type_generic_int_for(num, ti)
+    typ = hlir_type_generic_int_for(num, unsigned=False, ti=ti)
 
   else:
     nbits = nbits_for_num(num)
