@@ -36,7 +36,7 @@ LLVM:
 C:
 	mcc -o $(CPREFIX)/main -funsafe -mbackend=c -mint=64 $(INDIR)/main.cm
 	mcc -o $(CPREFIX)/linked_list -mbackend=c -mint=64 $(INDIR)/linked_list.hm
-	mcc -o $(CPREFIX)/linked_list2 -mbackend=c -mint=64 $(INDIR)/linked_list.cm
+	mcc -o $(CPREFIX)/linked_list2 -fpuffy -mbackend=c -mint=64 $(INDIR)/linked_list.cm
 	CC $(CPREFIX)/main.c $(CPREFIX)/linked_list2.c
 
 

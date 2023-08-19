@@ -790,10 +790,10 @@ def print_stmt(x):
     if not block_starts:
       if k in ['if', 'while', 'return']:
         out("\n")
-        indent()
+        #indent()
       elif k != k_prev:
         out("\n")
-        indent()
+        #indent()
     else:
       block_starts = False
 
