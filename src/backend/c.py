@@ -22,7 +22,8 @@ ARRAYS_MULTILINE_FROM = 8
 RECORDS_MULTILINE_ALWAYS = False
 RECORDS_MULTILINE_FROM = 4
 
-NO_TYPEDEF_STRUCTS = False
+NO_TYPEDEF_STRUCTS = True
+NO_TYPEDEF_OTHERS = True
 
 
 legacy_style = {
@@ -593,19 +594,18 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 
   need_cast = value_attribute_check(x, 'generic-casted')
   if need_cast:
-    out("(("); print_type(x['type']); out(")")
+    #out("(")
+    out("("); print_type(x['type']); out(")")
 
   if print_just_id:
     if 'id' in x:
       print_value_by_id(x, ctx)
-      if need_cast:
-        out(")")
-
+      #if need_cast:
+      #  out(")")
       return
 
   if need_wrap:
     out("(")
-
 
   k = x['kind']
 
@@ -628,9 +628,8 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
   if need_wrap:
     out(")")
 
-  if need_cast:
-    out(")")
-
+  #if need_cast:
+  #  out(")")
 
 
 def print_stmt_if(x):
@@ -916,7 +915,8 @@ def print_decl_type(x):
   name = x['id']['str']
   #o("// type declaration %s\n" % name)
   out("struct %s;\n" % name)
-  out("typedef struct %s %s;\n\n" % (name, name))
+  if not NO_TYPEDEF_STRUCTS:
+    out("typedef struct %s %s;\n\n" % (name, name))
 
 
 def print_def_type(x):
@@ -937,6 +937,9 @@ def print_def_type(x):
       print_type_record(x['type'], tag=x['id']['str'])
       out(";")
       return
+
+  #if NO_TYPEDEF_OTHERS:
+  #  return
 
   is_defined_array = type.is_defined_array(x['type'])
   out("typedef ")
@@ -975,6 +978,10 @@ def print_field(x, const=False, prefix=None):
     return
 
   if 'name' in t:
+    if NO_TYPEDEF_STRUCTS:
+        if type.is_record(t):
+          out("struct ")
+
     out(t['name'])
     out(" ")
     if prefix != None:
