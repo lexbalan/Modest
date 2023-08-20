@@ -29,7 +29,7 @@ struct List {
 
 List *linked_list_create(void)
 {
-    List * const list = (List*)malloc(sizeof(List));
+    List *const list = (List*)malloc(sizeof(List));
 
     if (list == NULL) {
         return NULL;
@@ -70,7 +70,7 @@ Node *linked_list_last_get(List *list)
 
 Node *linked_list_node_create(void)
 {
-    Node * const node = (Node*)malloc(sizeof(Node));
+    Node *const node = (Node*)malloc(sizeof(Node));
 
     if (node == NULL) {
         return NULL;
@@ -121,7 +121,7 @@ Node *linked_list_insert_node(List *list, Node *new_node)
     }
 
     if (list->tail != NULL) {
-        Node * const old_tail = list->tail;
+        Node *const old_tail = list->tail;
 
         old_tail->next = new_node;
         new_node->prev = old_tail;
@@ -139,7 +139,7 @@ Node *linked_list_insert(List *list, void *link)
         return NULL;
     }
 
-    Node * const new_node = linked_list_node_create();
+    Node *const new_node = linked_list_node_create();
 
     if (new_node == NULL) {
         return NULL;
@@ -147,7 +147,7 @@ Node *linked_list_insert(List *list, void *link)
 
     new_node->link = link;
 
-    Node * const node = linked_list_insert_node(list, new_node);
+    Node *const node = linked_list_insert_node(list, new_node);
 
     if (node == NULL) {
         free((void*)new_node);

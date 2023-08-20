@@ -12,7 +12,7 @@
 void write_example(void)
 {
     printf("run write_example\n");
-    FILE * const fp = fopen(filename, "w");
+    FILE *const fp = fopen(filename, "w");
     if (fp == NULL) {
         printf("error: cannot create file '%s'", filename);
         return;
@@ -24,7 +24,7 @@ void write_example(void)
 void read_example(void)
 {
     printf("run read_example\n");
-    FILE * const fp = fopen(filename, "r");
+    FILE *const fp = fopen(filename, "r");
     if (fp == NULL) {
         printf("error: cannot open file '%s'", filename);
         return;

@@ -144,7 +144,9 @@ def print_fields(fields, before, after, between):
   n = len(fields)
   while i < n:
     param = fields[i]
-    out(before); print_field(param); out(after)
+    out(before)
+    print_field(param, const=False, prefix="")
+    out(after)
     i = i + 1
     if i < n: out(between)
 
@@ -748,7 +750,8 @@ def print_stmt_return(x):
 
 
 def print_stmt_defvar(x):
-  print_field({'isa': 'field', 'id': x['id'], 'type': x['type']})
+  f = {'isa': 'field', 'id': x['id'], 'type': x['type']}
+  print_field(f, const=False, prefix="")
   if x['value'] != None:
     out(" = ")
     print_value(x['value'])
@@ -757,7 +760,7 @@ def print_stmt_defvar(x):
 
 def print_stmt_let(x):
   f = {'isa': 'field', 'id': x['id'], 'type': x['value']['type']}
-  print_field(f, const=True)
+  print_field(f, const=True, prefix="")
   out(" = ")
   print_value(x['value'])
   out(";")
@@ -1026,11 +1029,56 @@ def print_def_type(x):
 
 
 
+
+def print_field_regular(t, id):
+  print_type(t); out(" %s" % id)
+
+
+def print_field_pointer(t, id, isconst):
+  ptr_level = 0
+  while type.is_pointer(t):
+    t = t['to']
+
+    if t == 'func':
+      t = type.typeUnit
+    else:
+      ptr_level = ptr_level + 1
+      # *[] or *[n] -> just *
+      if t['kind'] == 'array':
+        t = t['of']
+
+  print_type(t); out(" ")
+  out("*" * ptr_level)
+  if ptr_level > 0 and isconst:
+    out("const ")
+
+  out("%s" % id)
+
+
+def print_field_array(t, id, isconst):
+  array_dims = []
+  #array_dims.append(t['volume'])
+  #t = t['of']
+  while t['kind'] == 'array':
+    array_dims.append(t['volume'])
+    t = t['of']
+
+  #out("%s" % id)
+  print_field2(t, id, const=isconst, prefix="")
+
+  for dim in array_dims:
+    out("["); print_value(dim); out("]")
+
+
 # из за того что с C типы записваются через жопу
 # приходится печатать типы ptr, arr & func вместе с именем поля
-def print_field(x, const=False, prefix=None):
+def print_field(x, const, prefix):
   t = x['type']
+  id = prefix + x['id']['str']
+  print_field2(t, id, const, prefix)
 
+
+def print_field2(t, id, const, prefix):
   # да, сюда прилетают Generic:Integer например из:
   # let n = 10
   # в я ддре их приводить нельзя, приходится тут по месту
@@ -1046,50 +1094,22 @@ def print_field(x, const=False, prefix=None):
       out("long long ")
     if prefix != None:
       out(prefix)
-    out("%s" % (x['id']['str']))
+    out("%s" % (id))
     return
 
-
-  if 'aka' in x:
+  if 'c_alias' in t or 'name' in t:
     if const:
       out("const ")
 
-    print_type(t)
-
-    out(" ")
-    if prefix != None:
-      out(prefix)
-    out("%s" % (x['id']['str']))
+    print_field_regular(t, id)
     return
 
-  if 'c_alias' in t:
-    if const:
-      out("const ")
+  if type.is_pointer(t): print_field_pointer(t, id, const)
+  elif type.is_array(t): print_field_array(t, id, const)
+  else: print_field_regular(t, id, const)
 
-    print_type(t)
-
-    #out(t['c_alias'])
-    out(" ")
-    if prefix != None:
-      out(prefix)
-    out("%s" % (x['id']['str']))
-    return
-
-  if 'name' in t:
-    if const:
-      out("const ")
-
-    #if NO_TYPEDEF_STRUCTS:
-    #    if type.is_record(t):
-    #      out("^struct ")
-
-    #out(t['name'])
-    print_type(t)
-    out(" ")
-    if prefix != None:
-      out(prefix)
-    out("%s" % (x['id']['str']))
-    return
+  """
+  return
 
   # поле является масссивом?
   is_array = t['kind'] == 'array'
@@ -1131,13 +1151,14 @@ def print_field(x, const=False, prefix=None):
     if array_dims != None:
       for dim in array_dims:
         out("["); print_value(dim); out("]")
+  """
 
 
 
 def print_def_var(x):
   if 'c_prefix' in x['var']:
       out("%s " % x['var']['c_prefix'])
-  print_field(x['var'])
+  print_field(x['var'], const=False, prefix="")
   if x['init'] != None:
     out(" = "); print_value(x['init'])
   out(";")

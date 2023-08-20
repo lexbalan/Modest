@@ -56,7 +56,7 @@ float lineLength(Line line)
 
 void ptr_example(void)
 {
-    Point * const ptr_p = (Point*)malloc(sizeof(Point));
+    Point *const ptr_p = (Point*)malloc(sizeof(Point));
     ptr_p->x = 10.0;
     ptr_p->y = 20.0;
     printf("point(%f, %f)\n", ptr_p->x, ptr_p->y);
