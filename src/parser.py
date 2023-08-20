@@ -141,8 +141,10 @@ class Parser:
     elif self.match("record"):
       self.need("{")
       fields = []
-      while not self.match("}"):
+      while True:
         self.skip_tokens([' ', '\t', '\n'])
+        if self.match("}"):
+          break
         f = self.parse_field()
         self.need_sep()
         if f != None:
