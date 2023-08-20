@@ -89,6 +89,24 @@ typeFreePtr['att'].append('generic')
 typeNil = hlir_type_nil()
 
 
+def select_int(sz):
+  if sz <= 8: return typeInt8
+  elif sz <= 16: return typeInt16
+  elif sz <= 32: return typeInt32
+  elif sz <= 64: return typeInt64
+
+def select_nat(sz):
+  if sz <= 8: return typeNat8
+  elif sz <= 16: return typeNat16
+  elif sz <= 32: return typeNat32
+  elif sz <= 64: return typeNat64
+
+def select_numeric(sz, signedness):
+  if signedness:
+    return select_int(sz)
+  return select_nat(sz)
+
+
 """typeCharacter = hlir_type_integer("Character", 32)
 typeCharacter['att'].extend(['generic', 'unsigned'])
 

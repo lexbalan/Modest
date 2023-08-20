@@ -15,7 +15,7 @@ from .value import *
 from parser import Parser
 from core.symtab import Symtab
 import core.type as type
-from core.type import type_attribute_check, type_print
+from core.type import type_attribute_check, select_int, select_nat, type_print
 from util import nbits_for_num, nbytes_for_bits
 
 from .hlir import *
@@ -169,23 +169,6 @@ def stmt_is_bad(x):
 
 typeSysInt = None
 typeSysNat = None
-
-def select_int(sz):
-  return {
-    8: type.typeInt8,
-    16: type.typeInt16,
-    32: type.typeInt32,
-    64: type.typeInt64,
-  }[sz]
-
-def select_nat(sz):
-  return {
-    8: type.typeNat8,
-    16: type.typeNat16,
-    32: type.typeNat32,
-    64: type.typeNat64,
-  }[sz]
-
 
 
 int_size = 0  # sizeof(int)
