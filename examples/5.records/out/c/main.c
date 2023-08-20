@@ -18,12 +18,10 @@ typedef struct {
     float y;
 } Point;
 
-
 typedef struct {
     Point a;
     Point b;
 } Line;
-
 
 Line line = (Line){.a = (Point){.x = 0.0, .y = 0.0}, .b = (Point){.x = 1.0, .y = 1.0}};
 

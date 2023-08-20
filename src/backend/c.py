@@ -23,7 +23,7 @@ RECORDS_MULTILINE_ALWAYS = False
 RECORDS_MULTILINE_FROM = 4
 
 NO_TYPEDEF_STRUCTS = False
-NO_TYPEDEF_OTHERS = True
+NO_TYPEDEF_OTHERS = False
 
 USE_BOOLEAN = True
 USE_STDBOOL = True
@@ -1079,9 +1079,9 @@ def print_field(x, const=False, prefix=None):
     if const:
       out("const ")
 
-    if NO_TYPEDEF_STRUCTS:
-        if type.is_record(t):
-          out("struct ")
+    #if NO_TYPEDEF_STRUCTS:
+    #    if type.is_record(t):
+    #      out("^struct ")
 
     #out(t['name'])
     print_type(t)

@@ -22,7 +22,6 @@ typedef struct {
     uint8_t data[1024];
 } Chunk;
 
-
 void write_example(void)
 {
     printf("run write_example\n");
