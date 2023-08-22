@@ -446,6 +446,7 @@ def print_list_by(lst, method):
     method(lst[i])
     i = i + 1
 
+
 def type_print(t, print_aka=True):
   k = t['kind']
 
@@ -468,7 +469,12 @@ def type_print(t, print_aka=True):
 
   if is_record(t):
     if is_generic_record(t):
-      print("GenericRecord")
+      print("GenericRecord {")
+      for f in t['fields']:
+        print("\t%s : " % f['id']['str'], end='')
+        type_print(f['type'])
+        print()
+      print("}")
       return
 
     print("record {")

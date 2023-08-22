@@ -167,7 +167,6 @@ def value_cons_record_from_generic_record(v, t, ti, method):
   if v['kind'] == 'const':
     # TODO: тут нужно проверить чтобы при implicit методе
     # все поля присутствовали (!)
-    
     return hlir_value_cast(v, t, ti=ti)
 
   #print(v['kind'])  # exp kind == 'literal'
@@ -183,13 +182,6 @@ def value_cons_record_from_generic_record(v, t, ti, method):
   for field in t['fields']:
     field_name = field['id']['str']
     field_type = field['type']
-
-
-    if (field_type == None):
-      print("field_type == None")
-      print(field_name)
-      print(str(t['fields']))
-      exit(1)
 
     assert('imm_items' in v)
 
@@ -424,6 +416,13 @@ def value_cast_implicit(v, t, ti):
       nv = value_change_type(v, t)
       nv['att'].append('implicit-casted')
       return nv"""
+
+  # TODO: нужно ли приводить generics?
+  # казалось бы для binary нужно но там тип расширяется
+  # а не просто выбирается наибольший...
+  """if type.is_generic(from_type) and type.is_integer(from_type):
+    if t['power'] > v['type']['power']:
+      return value_change_type(v, t)"""
 
   if type.eq(from_type, t):
     return v

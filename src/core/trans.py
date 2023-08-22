@@ -822,19 +822,28 @@ def do_value_str(x):
   return s
 
 
-
 def do_value_array(x):
+
   items = []
   for i in x['items']:
     vi = do_value(i)
     items.append(vi)
 
-  n = len(x['items'])
+  length = len(x['items'])
 
+  # FIXIT: если массив пустой, то тип of == None это вообще норм??
   of = None
-  if n > 0:
+  if length > 0:
     of = items[0]['type']
 
+  # было решено не пытаться приводить generic элементы массива
+  # к общему знаменателю, а оставить как есть;
+  # потом, когда массив будет приводиться к конкретному типу
+  # всплывут ошибки типизации если они есть.
+  # Сейчас не знаю правильно ли, но вроде так хоть работает
+
+  #print("OF: "); type_print(of); print()
+  """
   # implicit cast array items to 'of' type
   items2 = items
   if of != None:
@@ -842,12 +851,13 @@ def do_value_array(x):
     for item in items:
       i2 = value_cast_implicit(item, of, item['ti'])
       items2.append(i2)
+  """
+  items2 = items
 
-  vol = hlir_value_int(n)
-  type = hlir_type_array(of, volume=vol, ti=x['ti'])
-  type['att'].extend(['generic'])
-  return hlir_value_array(type, items2, ti=x['ti'])
-
+  vol = hlir_value_int(length)
+  typ = hlir_type_array(of, volume=vol, ti=x['ti'])
+  typ['att'].extend(['generic'])
+  return hlir_value_array(typ, items2, ti=x['ti'])
 
 
 def do_value_record(x):
