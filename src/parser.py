@@ -336,9 +336,8 @@ class Parser:
 
   def expr_value_8(self):
     v = self.expr_value_9()
-    #while True:
     ti = self.ti()
-    if self.match("to"):
+    while self.match("to"):
       t = self.expr_type()
       ti['start'] = v['ti']
       ti['end'] = t['ti']
