@@ -29,6 +29,7 @@ USE_BOOLEAN = True
 USE_STDBOOL = True
 
 USE_STATIC_VARIABLES = True
+USE_CONST_LET_VARIABLES = False
 
 APPEND_ELSE_TO_IFELSE_LADDER = True
 EMPTY_BLOCK_COMMENT = "// TODO: pay attention here"
@@ -761,7 +762,7 @@ def print_stmt_defvar(x):
 
 def print_stmt_let(x):
   f = {'isa': 'field', 'id': x['id'], 'type': x['value']['type']}
-  print_field(f, const=True, prefix="")
+  print_field(f, const=USE_CONST_LET_VARIABLES, prefix="")
   out(" = ")
   print_value(x['value'])
   out(";")
