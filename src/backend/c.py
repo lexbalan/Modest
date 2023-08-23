@@ -28,6 +28,8 @@ NO_TYPEDEF_OTHERS = False
 USE_BOOLEAN = True
 USE_STDBOOL = True
 
+USE_STATIC_VARIABLES = True
+
 APPEND_ELSE_TO_IFELSE_LADDER = True
 EMPTY_BLOCK_COMMENT = "// TODO: pay attention here"
 
@@ -1094,11 +1096,18 @@ def print_field2(t, id, isconst, prefix):
 
 
 def print_def_var(x):
+  if USE_STATIC_VARIABLES:
+    if not 'non-static' in x['var']['att']:
+      out("static ")
+
   if 'c_prefix' in x['var']:
-      out("%s " % x['var']['c_prefix'])
+    out("%s " % x['var']['c_prefix'])
+
   print_field(x['var'], const=False, prefix="")
+
   if x['init'] != None:
     out(" = "); print_value(x['init'])
+
   out(";")
 
 
