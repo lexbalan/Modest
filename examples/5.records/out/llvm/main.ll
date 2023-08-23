@@ -238,6 +238,7 @@ declare i32 @ftruncate(i32, i32)
 
 
 
+
 declare i32 @creat([0 x i8]*, i32)
 declare i32 @open([0 x i8]*, i32)
 declare i32 @read(i32, i8*, i32)

@@ -79,6 +79,9 @@ extern func strlen  (s : *ConstChar) -> SizeT
 
 extern func ftruncate (fd : Int, size : OffT) -> Int
 
+// from unistd.h
+//extern func pause () -> Int
+
 
 const c_O_RDONLY = 0x0000   // open for reading only
 const c_O_WRONLY = 0x0001   // open for writing only
