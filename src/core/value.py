@@ -383,9 +383,6 @@ def value_cons(v, t, ti, method):
   if type.eq(v['type'], t):
     return v
 
-    #if is_bad_struct(t['of']):
-    #  exit(1)
-
   cons = None
   if type.is_integer(t): cons = value_cons_integer
   elif type.is_pointer(t): cons = value_cons_pointer
@@ -427,7 +424,6 @@ def value_cast_implicit(v, t, ti):
   if type.eq(from_type, t):
     return v
 
-
   # Nil -> *X
   if type.is_nil(from_type) and type.is_pointer(t):
     return value_change_type(v, t)
@@ -462,7 +458,7 @@ def value_cast_explicit(v, t, ti):
     return hlir_value_bad(ti)
 
   if type.eq(v['type'], t):
-    warning("explicit cast to same type", ti)
+    info("explicit cast to same type", ti)
     return v
 
   c = value_cons(v, t, ti, method='explicit')

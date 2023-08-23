@@ -558,10 +558,8 @@ def print_value_imm_int(x, ctx):
 
   if USE_BOOLEAN:
     if type.is_logical(x['type']):
-      if num:
-        out("true")
-      else:
-        out("false")
+      if num: out("true")
+      else: out("false")
       return
 
   if value_attribute_check(x, 'hexadecimal'):
@@ -569,10 +567,13 @@ def print_value_imm_int(x, ctx):
   else:
     out(str(num))
 
-  if type.is_unsigned(x['type']):
-    out("U")
 
   nbits = nbits_for_num(num)
+
+  if nbits == x['type']['power']:
+    if type.is_unsigned(x['type']):
+      out("U")
+
   if nbits > CC_INT_SIZE_BITS:
     if nbits <= CC_LONG_SIZE_BITS:
       out("L")
