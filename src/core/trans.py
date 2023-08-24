@@ -1437,7 +1437,7 @@ def decl_func(x):
   id = x['id']
   functype = do_type(x['type'])
 
-  attributes = attributes_get()
+  atts = attributes_get()
 
   global attributes
   if "arghack" in attributes:
@@ -1445,7 +1445,7 @@ def decl_func(x):
 
   func = hlir_value_func(id, functype, ti=x['ti'])
   func['att'].extend(['undefined'])
-  func['att'].extend(attributes)
+  func['att'].extend(atts)
 
   extend_props(func)
 
@@ -1453,7 +1453,7 @@ def decl_func(x):
 
   declaration = hlir_decl_func(func, ti=x['ti'])
   func['declaration'] = declaration
-  declaration['att'].extend(attributes)
+  declaration['att'].extend(atts)
 
   if x['extern']:
     declaration['att'].append('extern')
