@@ -948,13 +948,24 @@ def print_func_signature(id, typ):
 
 
 def print_decl_func(x):
-  if 'extern' in x['att']:
-    out("extern ")
   func = x['func']
+
+  if 'extern' in func['att']:
+    out("extern ")
+
+  if 'static' in func['att']:
+    out("static ")
+
+  if 'inline' in func['att']:
+    out("inline ")
+
   if 'c_prefix' in func:
     out("%s " % func['c_prefix'])
+
   print_func_signature(func['id']['str'], func['type'])
+
   out(";")
+
 
 
 def print_def_func(x):
@@ -968,6 +979,9 @@ def print_def_func(x):
 
   if 'c_prefix' in func:
     out("%s " % func['c_prefix'])
+
+  if 'static' in func['att']:
+    out("static ")
 
   arrays = print_func_signature(func['id']['str'], func['type'])
 
