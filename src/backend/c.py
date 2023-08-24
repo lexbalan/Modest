@@ -416,15 +416,42 @@ def print_cast_gen_rec_to_rec(t, v, ctx=[]):
 
 
 def print_cast(t, v, ctx=[]):
+  from_type = v['type']
   # в C мы не можем привести одну структуру к другой
   # поэтому вынуждены будем построить новую структуру
   # на основе другой (пусть и с таким же внутренним устройством)
-  if type.is_generic_record(v['type']):
+  if type.is_generic_record(from_type):
     return print_cast_gen_rec_to_rec(t, v, ctx=ctx)
+
+
+  # because
+  # - in C  int32(-1) -> uint64 => 0xffffffffffffffff
+  # - in CM int32(-1) -> uint64 => 0x00000000ffffffff
+  # require: (uint64_t)((uint32)int32_value)
+  need_pre = False
+  if type.is_integer(from_type):
+    if type.is_integer(t):
+      if type.is_signed(from_type):
+        if type.is_unsigned(t):
+          if from_type['size'] < t['size']:
+            need_pre = True
+
 
   out("("); print_type(t); out(")")
   need_wrap = precedence(v['kind']) < precedence('cast')
+
+  if need_pre:
+    out("((")
+    nat_same_sz = type.select_nat(a['size'])
+    print_type(nat_same_sz)
+    out(")")
+
   print_value(v, ctx=ctx, need_wrap=need_wrap)
+
+  if need_pre:
+    out(")")
+
+
 
 
 def print_value_cast(v, ctx):
