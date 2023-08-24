@@ -1437,11 +1437,12 @@ def decl_func(x):
   id = x['id']
   functype = do_type(x['type'])
 
-  atts = attributes_get()
 
   global attributes
   if "arghack" in attributes:
     functype['att'].append('arghack')
+  # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!
+  atts = attributes_get()
 
   func = hlir_value_func(id, functype, ti=x['ti'])
   func['att'].extend(['undefined'])
