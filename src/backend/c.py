@@ -1098,8 +1098,13 @@ def print_field2(t, id, isconst, prefix):
 
 def print_def_var(x):
   if USE_STATIC_VARIABLES:
-    if not 'non-static' in x['var']['att']:
-      out("static ")
+    if not 'global' in x['var']['att']:
+      if not 'extern' in x['var']['att']:
+        out("static ")
+
+    if 'extern' in x['var']['att']:
+      out("extern ")
+
 
   if 'c_prefix' in x['var']:
     out("%s " % x['var']['c_prefix'])
