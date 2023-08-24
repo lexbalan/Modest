@@ -1105,6 +1105,9 @@ def print_def_var(x):
     if 'extern' in x['var']['att']:
       out("extern ")
 
+    if 'volatile' in x['var']['att']:
+      out("volatile ")
+
 
   if 'c_prefix' in x['var']:
     out("%s " % x['var']['c_prefix'])
