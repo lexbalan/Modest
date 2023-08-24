@@ -983,6 +983,9 @@ def print_def_func(x):
   if 'static' in func['att']:
     out("static ")
 
+  if 'inline' in func['att']:
+    out("inline ")
+
   arrays = print_func_signature(func['id']['str'], func['type'])
 
   if styleguide['LINE_BREAK_BEFORE_FUNC_BRACE']:
