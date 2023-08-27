@@ -125,7 +125,7 @@ def print_type_numeric(t):
 def print_type_array(t, print_as_pointer=True):
   print_type(t['of'])
   if print_as_pointer:
-    out("*")
+    out(" *")
     if 'const' in t['att']:
       out("const ")
     return
