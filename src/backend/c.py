@@ -136,11 +136,14 @@ def print_type_array(t, print_as_pointer=True):
 
 
 def print_type_pointer(t):
+  # array was printed as *, we dont need to place another *
+  if type.is_array(t['to']):
+    return
+
   if type.is_free_pointer(t):
     out("void")
   else:
     print_type(t['to'])
-    #if t['to']['kind'] != 'array':
 
   out(" *")
   if 'const' in t['att']:
