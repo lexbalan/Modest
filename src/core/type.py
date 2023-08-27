@@ -79,7 +79,7 @@ typeChar['llvm_alias'] = 'i8'
 
 typeStr = hlir_type_pointer(hlir_type_array(typeChar))
 typeStr['att'].append('str')
-typeStr['c_alias'] = 'char *'
+typeStr['c_alias'] = 'const char *'
 genericStr = typeStr
 
 

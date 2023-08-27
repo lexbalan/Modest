@@ -140,6 +140,8 @@ def print_type_pointer(t):
   # array was printed as *, we dont need to place another *
   if type.is_array(t['to']):
     print_type(t['to'])
+    if 'const' in t['att']:
+      out("const")
     return
 
   if type.is_free_pointer(t):
@@ -242,6 +244,9 @@ def print_type2(t, print_aka):
     t = type.select_numeric(t['power'], is_signed)
 
   if print_aka:
+
+
+
     if 'c_alias' in t:
       out(t['c_alias'])
       return
@@ -873,7 +878,6 @@ def print_stmt_value(x):
 
 k_prev = ""
 def print_stmt(x):
-
   global k_prev
   k = x['kind']
 
@@ -888,7 +892,6 @@ def print_stmt(x):
         out("\n")
     else:
       block_starts = False
-
 
   indent()
 
@@ -1097,33 +1100,29 @@ def print_def_type(x):
 
 
 def print_field_regular(t, id):
-  print_type(t); out(" %s" % id)
+  print_type(t);
+
+  #
+  # not need SPACE after non-constant-pointer:
+  # uint32_t *x;
+  # but need after constant pointer:
+  # uint32_t *const x;
+  # and after all another types:
+  # struct X x;
+  #
+  is_ptr = type.is_pointer(t)
+  if not is_ptr or (is_ptr and 'const' in t['att']):
+    out(" ")
+
+  out("%s" % id)
 
 
 def print_field_pointer(t, id):
-  """ptr_level = 0
-  while type.is_pointer(t):
-    t = t['to']
-
-    if t == 'func':
-      t = type.typeUnit
-    else:
-      ptr_level = ptr_level + 1
-      # *[] or *[n] -> just *
-      if t['kind'] == 'array':
-        t = t['of']
-
-  print_type(t); out(" ")
-  out("*" * ptr_level)
-  if isconst:
-    out("const ")
-  """
-
   print_type(t)
   if 'const' in t['att']:
-    out(" %s" % id)
-  else:
-    out("%s" % id)
+    out(" ")
+  out("%s" % id)
+
 
 
 def print_field_array(t, id, prefix):
@@ -1134,7 +1133,6 @@ def print_field_array(t, id, prefix):
 
   print_type(root_type)
   out(" %s" % id)
-  #print_field2(t2, id, isconst=False, prefix=prefix)
 
   # print arrays dimensions
   array_type = t
@@ -1147,13 +1145,11 @@ def print_field_array(t, id, prefix):
 # приходится печатать типы ptr, arr & func вместе с именем поля
 def print_field(x, prefix):
   t = x['type']
-  id = prefix + x['id']['str']
-  print_field2(t, id, prefix)
-
-
-def print_field2(t, id, prefix):
   assert (t != None)
+
+  id = prefix + x['id']['str']
   assert (id != "")
+
 
   if 'c_alias' in t or 'name' in t:
     print_field_regular(t, id)
