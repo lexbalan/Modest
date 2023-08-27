@@ -21,7 +21,7 @@ def hlir_type_unit():
     'size': 0,
     'power': 0,
     'imm_items': [],
-    'att': [],
+    'att': ['builtin'],
     'ti': None
   }
 
@@ -31,7 +31,7 @@ def hlir_type_integer(name, power=0, ti=None):
     'isa': 'type',
     'kind': 'int',
     'name': name,
-    'att': ['numeric', 'ordered', 'integer'],
+    'att': ['builtin', 'numeric', 'ordered', 'integer'],
     'power': power,
     'size': nbytes_for_bits(power),
     'ti': ti
@@ -43,7 +43,7 @@ def hlir_type_float(aka, power=0, ti=None):
     'isa': 'type',
     'kind': 'float',
     'name': aka,
-    'att': ['numeric', 'ordered', 'float'],
+    'att': ['builtin', 'numeric', 'ordered', 'float'],
     'power': power,
     'size': nbytes_for_bits(power),
     'ti': ti
@@ -71,7 +71,7 @@ def hlir_type_free_pointer(ti=None):
     'to': type.typeUnit,
     'size': pointer_size / 8,
     'power': pointer_size,
-    'att': [],
+    'att': ['builtin'],
     'ti': ti
   }
 
@@ -84,7 +84,7 @@ def hlir_type_nil(ti=None):
     'to': type.typeUnit,
     'size': pointer_size / 8,
     'power': pointer_size,
-    'att': ['generic'],
+    'att': ['builtin', 'generic'],
     'ti': ti
   }
 
