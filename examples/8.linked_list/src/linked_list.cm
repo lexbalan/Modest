@@ -28,7 +28,6 @@ func linked_list_create () -> *List {
 
   //list.size >= list.head
 
-
   list.head := nil
   list.tail := nil
 
@@ -133,6 +132,7 @@ func linked_list_insert (list : *List, link : Pointer) -> *Node {
   }
 
   let new_node = linked_list_node_create()
+
   if new_node == nil {
     return nil
   }
@@ -140,6 +140,7 @@ func linked_list_insert (list : *List, link : Pointer) -> *Node {
   new_node.link := link
 
   let node = linked_list_insert_node(list, new_node)
+
   if node == nil {
     free(new_node)
   }

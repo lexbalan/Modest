@@ -1084,7 +1084,10 @@ def do_stmt_let(x):
     module['context'].value_add(id['str'], hlir_value_bad())
     return hlir_stmt_bad()
 
-  const_value = hlir_value_const(id, v['type'], init=v, ti=x['ti'])
+
+  typ = copy.copy(v['type'])
+  typ['att'].append('const')
+  const_value = hlir_value_const(id, typ, init=v, ti=x['ti'])
   const_value['att'].extend(['local'])
 
   if value_is_immediate(v):
