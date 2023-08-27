@@ -97,6 +97,7 @@ class Parser:
 
 
   def need_sep(self, separators=['\n', ';'], stoppers=['}']):
+    self.skip_tokens([' '])
     if self.ctok() in separators:
       while self.ctok() in separators:
         self.skip()
