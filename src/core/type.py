@@ -249,6 +249,10 @@ def is_bad(t):
   assert t != None
   return t['kind'] == 'bad'
 
+
+def is_builtin(t):
+  return 'builtin' in t['att']
+
 def is_alias(t):
   return 'alias' in t['att']
 
@@ -417,6 +421,10 @@ def create_copy(t):
   nt['att'] = []
 
   nt['att'].extend(t['att'])
+
+  # а надо л и это вообще?
+  #if is_builtin(t):
+  #  t['att'].remove('builtin')
 
   return nt
 

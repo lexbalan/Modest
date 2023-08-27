@@ -214,6 +214,10 @@ def print_type_full(t):
 def print_type2(t, print_aka):
   k = t['kind']
 
+  if 'const' in t['att']:
+    if not type.is_pointer(t):
+      out("const ")
+
   if NO_TYPEDEF_OTHERS:
     if type.is_alias(t):
       tt = t['aliasof']

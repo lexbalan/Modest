@@ -46,11 +46,11 @@ static inline float min(float a, float b)
 
 float lineLength(Line line)
 {
-    float dx = max(line.a.x, line.b.x) - min(line.a.x, line.b.x);
-    float dy = max(line.a.y, line.b.y) - min(line.a.y, line.b.y);
-    double dx2 = pow(dx, 2.0);
-    double dy2 = pow(dy, 2.0);
-    double len = sqrt(dx2 + dy2);
+    const float dx = max(line.a.x, line.b.x) - min(line.a.x, line.b.x);
+    const float dy = max(line.a.y, line.b.y) - min(line.a.y, line.b.y);
+    const double dx2 = pow(dx, 2.0);
+    const double dy2 = pow(dy, 2.0);
+    const double len = sqrt(dx2 + dy2);
     return len;
 }
 
@@ -64,7 +64,7 @@ void ptr_example(void)
 
 int main(void)
 {
-    float len = lineLength(line);
+    const float len = lineLength(line);
     printf("line length = %f\n", len);
     ptr_example();
     return 0;

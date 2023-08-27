@@ -71,7 +71,7 @@ int main(void)
     nat64_list_insert(list, 80);
     nat64_list_insert(list, 90);
     nat64_list_insert(list, 100);
-    uint32_t list_size = linked_list_size_get(list);
+    const uint32_t list_size = linked_list_size_get(list);
     printf("linked list size: %d\n", list_size);
     list_print_forward(list);
     list_print_backward(list);
