@@ -129,10 +129,11 @@ def print_type_array(t, print_as_pointer=True):
     if 'const' in t['att']:
       out("const ")
     return
+
   if t['volume'] != None:
     out("["); print_value(t['volume']); out("]")
   else:
-    out("*")
+    out(" *")
 
 
 def print_type_pointer(t):
