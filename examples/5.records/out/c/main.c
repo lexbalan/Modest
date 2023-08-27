@@ -46,17 +46,17 @@ static inline float min(float a, float b)
 
 float lineLength(Line line)
 {
-    const float dx = max(line.a.x, line.b.x) - min(line.a.x, line.b.x);
-    const float dy = max(line.a.y, line.b.y) - min(line.a.y, line.b.y);
-    const double dx2 = pow(dx, 2.0);
-    const double dy2 = pow(dy, 2.0);
-    const double len = sqrt(dx2 + dy2);
+    float dx = max(line.a.x, line.b.x) - min(line.a.x, line.b.x);
+    float dy = max(line.a.y, line.b.y) - min(line.a.y, line.b.y);
+    double dx2 = pow(dx, 2.0);
+    double dy2 = pow(dy, 2.0);
+    double len = sqrt(dx2 + dy2);
     return len;
 }
 
 void ptr_example(void)
 {
-    Point *const ptr_p = (Point*)malloc(sizeof(Point));
+    Point *const ptr_p = (Point *const)malloc(sizeof(Point));
     ptr_p->x = 10.0;
     ptr_p->y = 20.0;
     printf("point(%f, %f)\n", ptr_p->x, ptr_p->y);
@@ -64,7 +64,7 @@ void ptr_example(void)
 
 int main(void)
 {
-    const float len = lineLength(line);
+    float len = lineLength(line);
     printf("line length = %f\n", len);
     ptr_example();
     return 0;

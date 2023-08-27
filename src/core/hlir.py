@@ -127,7 +127,7 @@ def hlir_field(id, type, ti=None):
   }
 
 
-def hlir_type_record(fields=[], ti=None):
+def hlir_type_record(fields, ti=None):
   return {
     'isa': 'type',
     'kind': 'record',

@@ -122,8 +122,13 @@ def print_type_numeric(t):
   out(t['name'])
 
 
-def print_type_array(t):
+def print_type_array(t, print_as_pointer=True):
   print_type(t['of'])
+  if print_as_pointer:
+    out("*")
+    if 'const' in t['att']:
+      out("const ")
+    return
   if t['volume'] != None:
     out("["); print_value(t['volume']); out("]")
   else:
@@ -132,12 +137,14 @@ def print_type_array(t):
 
 def print_type_pointer(t):
   if type.is_free_pointer(t):
-    out("void*")
-    return
+    out("void")
+  else:
+    print_type(t['to'])
+    #if t['to']['kind'] != 'array':
 
-  print_type(t['to'])
-  if t['to']['kind'] != 'array':
-    out("*")
+  out(" *")
+  if 'const' in t['att']:
+    out("const")
 
 
 
@@ -148,7 +155,12 @@ def print_fields(fields, before, after, between):
   while i < n:
     param = fields[i]
     out(before)
-    print_field(param, const=False, prefix="")
+    print_field(param, prefix="")
+
+    if 'const' in param['type']['att']:
+      info("const in att", param['ti'])
+      exit(1)
+
     out(after)
     i = i + 1
     if i < n: out(between)
@@ -780,7 +792,7 @@ def print_stmt_return(x):
 
 def print_stmt_defvar(x):
   f = {'isa': 'field', 'id': x['id'], 'type': x['type']}
-  print_field(f, const=False, prefix="")
+  print_field(f, prefix="")
   if x['value'] != None:
     out(" = ")
     print_value(x['value'])
@@ -789,7 +801,7 @@ def print_stmt_defvar(x):
 
 def print_stmt_let(x):
   f = {'isa': 'field', 'id': x['id'], 'type': x['value']['type']}
-  print_field(f, const=USE_CONST_LET_VARIABLES, prefix="")
+  print_field(f, prefix="")
   out(" = ")
   print_value(x['value'])
   out(";")
@@ -1075,14 +1087,12 @@ def print_def_type(x):
 
 
 
-def print_field_regular(t, id, isconst):
-  if isconst:
-    out("const ")
+def print_field_regular(t, id):
   print_type(t); out(" %s" % id)
 
 
-def print_field_pointer(t, id, isconst):
-  ptr_level = 0
+def print_field_pointer(t, id):
+  """ptr_level = 0
   while type.is_pointer(t):
     t = t['to']
 
@@ -1098,44 +1108,51 @@ def print_field_pointer(t, id, isconst):
   out("*" * ptr_level)
   if isconst:
     out("const ")
+  """
 
-  out("%s" % id)
+  print_type(t)
+  if 'const' in t['att']:
+    out(" %s" % id)
+  else:
+    out("%s" % id)
 
 
 def print_field_array(t, id, prefix):
   # get list element type
-  t2 = t
-  while t2['kind'] == 'array':
-    t2 = t2['of']
+  root_type = t
+  while root_type['kind'] == 'array':
+    root_type = root_type['of']
 
-  print_field2(t2, id, isconst=False, prefix=prefix)
+  print_type(root_type)
+  out(" %s" % id)
+  #print_field2(t2, id, isconst=False, prefix=prefix)
 
-  # print list dimensions
-  t2 = t
-  while t2['kind'] == 'array':
-    out("["); print_value(t2['volume']); out("]")
-    t2 = t2['of']
+  # print arrays dimensions
+  array_type = t
+  while type.is_array(array_type):
+    out("["); print_value(array_type['volume']); out("]")
+    array_type = array_type['of']
 
 
 # из за того что с C типы записваются через жопу
 # приходится печатать типы ptr, arr & func вместе с именем поля
-def print_field(x, const, prefix):
+def print_field(x, prefix):
   t = x['type']
   id = prefix + x['id']['str']
-  print_field2(t, id, const, prefix)
+  print_field2(t, id, prefix)
 
 
-def print_field2(t, id, isconst, prefix):
+def print_field2(t, id, prefix):
   assert (t != None)
   assert (id != "")
 
   if 'c_alias' in t or 'name' in t:
-    print_field_regular(t, id, isconst)
+    print_field_regular(t, id)
     return
 
-  if type.is_pointer(t): print_field_pointer(t, id, isconst=isconst)
+  if type.is_pointer(t): print_field_pointer(t, id)
   elif type.is_array(t): print_field_array(t, id, prefix=prefix)
-  else: print_field_regular(t, id, isconst=isconst)
+  else: print_field_regular(t, id)
 
 
 
@@ -1156,7 +1173,7 @@ def print_def_var(x):
   if 'c_prefix' in x['var']:
     out("%s " % x['var']['c_prefix'])
 
-  print_field(x['var'], const=False, prefix="")
+  print_field(x['var'], prefix="")
 
   if x['init'] != None:
     out(" = "); print_value(x['init'])

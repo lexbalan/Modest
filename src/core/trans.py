@@ -1085,9 +1085,13 @@ def do_stmt_let(x):
     return hlir_stmt_bad()
 
 
-  typ = copy.copy(v['type'])
+  # 'const' attribute is used by C printer
+  typ = type.create_copy(v['type'])
   typ['att'].append('const')
-  const_value = hlir_value_const(id, typ, init=v, ti=x['ti'])
+
+  v = value_change_type(v, typ)
+
+  const_value = hlir_value_const(id, v['type'], init=v, ti=x['ti'])
   const_value['att'].extend(['local'])
 
   if value_is_immediate(v):

@@ -408,10 +408,22 @@ def record_field_get(t, id):
 
 
 
+def create_copy(t):
+  nt = copy.copy(t)
+
+  # именно так!  иначе добавим в att t тк это ссылка на лист!
+  # (!) создаем новый массив аттрибутов,
+  # чтобы не испортить оригинальный (!)
+  nt['att'] = []
+
+  nt['att'].extend(t['att'])
+
+  return nt
+
 
 def create_alias(id, t, ti):
   #print('type.create_alias ' + id)
-  nt = copy.copy(t)
+  nt = create_copy(t)
 
   #if not 'name' in nt:
   nt['name'] = id
@@ -419,9 +431,6 @@ def create_alias(id, t, ti):
   if 'c_alias' in nt:
     del nt['c_alias']
 
-  # именно так!  иначе добавим в att t тк это ссылка на лист!
-  nt['att'] = []
-  nt['att'].extend(t['att'])
   nt['att'].append('alias')
 
   nt['aliasof'] = t
