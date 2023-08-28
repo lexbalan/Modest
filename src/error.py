@@ -65,8 +65,10 @@ def warning(s, ti):
       if 'ti' in ti:
         ti = ti['ti']
 
+    prelin = "%d | " % ti['line']
+
     lin = getline(ti)
-    print(lin)
+    print(prelin + lin)
     highlight(ti, 95)
 
 
@@ -87,8 +89,10 @@ def error(s, ti):
   print(pre + '\033[91m' + 'error: ' + '\033[0m' + s)
   
   if ti != None:
+    prelin = "%d | " % ti['line']
+
     lin = getline(ti)
-    print(lin)
+    print(prelin + lin)
     highlight(ti, 91)
 
   if errcnt >= 10:
@@ -108,8 +112,9 @@ def info(s, ti):
   print(pre + '\033[96m' + 'info: ' + '\033[0m' + s)
 
   if ti != None:
+    prelin = "%d | " % ti['line']
     lin = getline(ti)
-    print(lin)
+    print(prelin + lin)
     highlight(ti, 96)
   
 

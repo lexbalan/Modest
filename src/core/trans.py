@@ -1450,6 +1450,24 @@ def decl_func(x):
   id = x['id']
   functype = do_type(x['type'])
 
+  #
+  # Check if function already declared/defined
+  #
+  already = value_get(id['str'])
+  if already != None:
+    if 'stmt' in already:
+      # already defined function
+      info("function declaration after definition", x['ti'])
+    else:
+      # already declared function
+      info("repeated function declaration", x['ti'])
+
+    # check type of already created function
+    if not type.eq(already['type'], functype):
+      error("definition not correspond to function type", x['ti'])
+      info("firstly declared here", already['type']['ti'])
+
+
   global attributes
   if "arghack" in attributes:
     functype['att'].append('arghack')
