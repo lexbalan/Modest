@@ -26,7 +26,7 @@ def hlir_type_unit():
   }
 
 
-def hlir_type_integer(name, power=0, ti=None):
+def hlir_type_integer(name, power, ti):
   return {
     'isa': 'type',
     'kind': 'int',
@@ -38,7 +38,7 @@ def hlir_type_integer(name, power=0, ti=None):
   }
 
 
-def hlir_type_float(aka, power=0, ti=None):
+def hlir_type_float(aka, power, ti):
   return {
     'isa': 'type',
     'kind': 'float',
@@ -50,7 +50,7 @@ def hlir_type_float(aka, power=0, ti=None):
   }
 
 
-def hlir_type_pointer(to, ti=None):
+def hlir_type_pointer(to, ti):
   pointer_size = int(settings_get('ptr'))
   return {
     'isa': 'type',
@@ -63,7 +63,7 @@ def hlir_type_pointer(to, ti=None):
   }
 
 # FreePointer - особый тип, он приводится неявно CM (но не в C!)
-def hlir_type_free_pointer(ti=None):
+def hlir_type_free_pointer(ti):
   pointer_size = int(settings_get('ptr'))
   return {
     'isa': 'type',
@@ -76,7 +76,7 @@ def hlir_type_free_pointer(ti=None):
   }
 
 # Nil - особый тип, он приводится неявно как в CM так и в C
-def hlir_type_nil(ti=None):
+def hlir_type_nil(ti):
   pointer_size = int(settings_get('ptr'))
   return {
     'isa': 'type',
@@ -89,7 +89,7 @@ def hlir_type_nil(ti=None):
   }
 
 # size - always hlir_value (!)
-def hlir_type_array(of, volume=None, ti=None):
+def hlir_type_array(of, volume, ti):
   return {
     'isa': 'type',
     'kind': 'array',
@@ -103,7 +103,7 @@ def hlir_type_array(of, volume=None, ti=None):
 # used in shifts
 def hlir_type_generic_int_bits(nbits, unsigned=False, ti=None):
   # get custom generic int type
-  gen_int_type = hlir_type_integer('Integer')
+  gen_int_type = hlir_type_integer('Integer', power=nbits, ti=ti)
   gen_int_type['kind'] = 'Integer'
   gen_int_type['att'].extend(['generic'])
   if unsigned:
@@ -206,7 +206,7 @@ def hlir_value_int(num, typ=None, ti=None):
 def hlir_value_float(num, ti=None):
   # вообще с флотом непонятно можно ли понять какого он Generic типа
   # тк есть числа которые вообще никак не запишешь
-  typ = hlir_type_float('Float')
+  typ = hlir_type_float('Float', power=0, ti=ti)
   typ['att'].extend(['generic'])
   return {
     'isa': 'value',

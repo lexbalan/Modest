@@ -258,11 +258,11 @@ def do_type_pointer(t):
 def do_type_array(t):
   of = do_type(t['of'])
 
-  tx = hlir_type_array(of)
-
+  volume_expr = None
   if t['size'] != None:
-    size_expr = do_value(t['size'])
-    tx['volume'] = size_expr
+    volume_expr = do_value(t['size'])
+
+  tx = hlir_type_array(of, volume=volume_expr, ti=t['ti'])
 
   return tx
 
@@ -333,7 +333,7 @@ def do_type_func(t):
   else:
     to = type.typeUnit
 
-  return hlir_type_func(params, to)
+  return hlir_type_func(params, to, ti=t['ti'])
 
 
 
@@ -815,7 +815,7 @@ def do_value_str(x):
   # type of any C string is *[x]typeChar
   vol = hlir_value_int(length)
   ta = hlir_type_array(type.typeChar, volume=vol, ti=x['ti'])
-  stype = hlir_type_pointer(ta)
+  stype = hlir_type_pointer(ta, ti=x['ti'])
 
   s =  hlir_value_cstr(string, length, stype, ti=x['ti'])
   module['strings'].append(s)
@@ -1360,9 +1360,12 @@ def def_func(x):
   # if function already declared/defined, check it
   already = value_get(func_id['str'])
   if already != None:
+    if 'stmt' in already:
+      error("redefinition of", x['ti'])
+
     if not type.eq(already['type'], func_type):
-      error("definition not correspond to declared function type", x['ti'])
-      info("firstly declared here", already['ti'])
+      error("definition not correspond to declatartion", x['ti'])
+      info("firstly declared here", already['type']['ti'])
 
   # create params context
   module['context'] = module['context'].branch(domain='local')
@@ -1443,7 +1446,6 @@ def decl_type(x):
 def decl_func(x):
   id = x['id']
   functype = do_type(x['type'])
-
 
   global attributes
   if "arghack" in attributes:
