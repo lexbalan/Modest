@@ -1361,11 +1361,14 @@ def def_func(x):
   already = value_get(func_id['str'])
   if already != None:
     if 'stmt' in already:
+      # already defined function
       error("redefinition of", x['ti'])
+    else:
+      # already declared function
+      if not type.eq(already['type'], func_type):
+        error("definition not correspond to declatartion", x['ti'])
+        info("firstly declared here", already['type']['ti'])
 
-    if not type.eq(already['type'], func_type):
-      error("definition not correspond to declatartion", x['ti'])
-      info("firstly declared here", already['type']['ti'])
 
   # create params context
   module['context'] = module['context'].branch(domain='local')
