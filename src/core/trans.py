@@ -210,10 +210,10 @@ def init():
 
   global typeSysInt, typeSysNat
 
-  typeSysInt = copy.copy(select_int(int_size))
+  typeSysInt = type.create_copy(select_int(int_size))
   typeSysInt['c_alias'] = 'int'
 
-  typeSysNat = copy.copy(select_nat(int_size))
+  typeSysNat = type.create_copy(select_nat(int_size))
   typeSysNat['c_alias'] = 'unsigned int'
 
 
