@@ -122,36 +122,48 @@ def print_type_numeric(t):
   out(t['name'])
 
 
+
 def print_type_array(t, print_as_pointer=True):
-  print_type(t['of'])
+  print_type(t['of'], need_space_after=True)
+
   if print_as_pointer:
-    out(" *")
     if 'const' in t['att']:
-      out("const ")
-    return
+      out("*const")
+      return True
+    else:
+      out("*")
+      return False
+
 
   if t['volume'] != None:
     out("["); print_value(t['volume']); out("]")
   else:
-    out(" *")
+    out("*")
+    return False
+
+  return True
 
 
 def print_type_pointer(t):
   # array was printed as *, we dont need to place another *
   if type.is_array(t['to']):
-    print_type(t['to'])
+    print_type(t['to'], need_space_after=True)
     if 'const' in t['att']:
       out("const")
-    return
+      return True
+    return False
 
   if type.is_free_pointer(t):
-    out("void")
+    out("void ")
   else:
-    print_type(t['to'])
+    print_type(t['to'], need_space_after=True)
 
-  out(" *")
   if 'const' in t['att']:
-    out("const")
+    out("*const")
+    return True
+
+  out("*")
+  return False # не нужен пробел после звездочки
 
 
 
@@ -210,12 +222,17 @@ def print_type_enum(t):
 
 
 
+# Возвращает False если НЕ нужно отделять пробелом после типа
+# (только указатели *)
 # блядские аргументы по умолчанию - нихера с ними не работает!
-def print_type(t):
-  print_type2(t, print_aka=True)
+def print_type(t, need_space_after):
+  rc = print_type2(t, print_aka=True)
+  if need_space_after:
+    if rc:
+      out(" ")
 
 def print_type_full(t):
-  print_type2(t, print_aka=False)
+  return print_type2(t, print_aka=False)
 
 
 def print_type2(t, print_aka):
@@ -234,7 +251,7 @@ def print_type2(t, print_aka):
   if USE_BOOLEAN:
     if type.is_logical(t):
       out("bool")
-      return
+      return True
 
   # hotfix for let generic value problem (let x = 1)
   if type.is_generic_integer(t):
@@ -244,28 +261,27 @@ def print_type2(t, print_aka):
     t = type.select_numeric(t['power'], is_signed)
 
   if print_aka:
-
-
-
     if 'c_alias' in t:
       out(t['c_alias'])
-      return
+      return True
 
     if 'name' in t:
       if NO_TYPEDEF_STRUCTS:
         if type.is_record(t):
           out("struct ")
       out(t['name'])
-      return
+      return True
 
-  if type.is_numeric(t): print_type_numeric(t)
-  elif type.is_record(t): print_type_record(t)
-  elif type.is_enum(t): print_type_enum(t)
-  elif type.is_pointer(t): print_type_pointer(t)
-  elif type.is_array(t): print_type_array(t)
-  elif type.is_func(t): out("void")
-  elif k == 'opaque': out("void")
-  else: out("<type:" + str(t) + ">")
+  if type.is_numeric(t): print_type_numeric(t); return True
+  elif type.is_record(t): print_type_record(t); return True
+  elif type.is_enum(t): print_type_enum(t); return True
+  elif type.is_pointer(t): return print_type_pointer(t)
+  elif type.is_array(t): return print_type_array(t)
+  elif type.is_func(t): out("void"); return True
+  elif k == 'opaque': out("void"); return True
+  else: out("<type:" + str(t) + ">"); return True
+
+  return True
 
 
 
@@ -437,7 +453,7 @@ def print_cast_gen_rec_to_rec(t, v, ctx=[]):
   #print("FROM GENERIC RECORD")
   v_id = v['id']['str']
   fields = v['type']['fields']
-  out("("); print_type(t); out(")")
+  out("("); print_type(t, need_space_after=False); out(")")
   huhu(v_id, fields)
 
 
@@ -463,13 +479,13 @@ def print_cast(t, v, ctx=[]):
             need_pre = True
 
 
-  out("("); print_type(t); out(")")
+  out("("); print_type(t, need_space_after=False); out(")")
   need_wrap = precedence(v['kind']) < precedence('cast')
 
   if need_pre:
     out("((")
     nat_same_sz = type.select_nat(a['size'])
-    print_type(nat_same_sz)
+    print_type(nat_same_sz, need_space_after=False)
     out(")")
 
   print_value(v, ctx=ctx, need_wrap=need_wrap)
@@ -689,7 +705,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
   need_cast = value_attribute_check(x, 'generic-casted')
   if need_cast:
     #out("(")
-    out("("); print_type(x['type']); out(")")
+    out("("); print_type(x['type'], need_space_after=False); out(")")
 
   if print_just_id:
     if 'id' in x:
@@ -713,7 +729,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
   elif k == 'access': print_value_access(x, ctx)
   elif k == 'access_ptr': print_value_access_ptr(x, ctx)
   elif k == 'cast': print_value_cast(x, ctx)
-  elif k == 'sizeof': out("sizeof("); print_type(x['of']); out(")")
+  elif k == 'sizeof': out("sizeof("); print_type(x['of'], need_space_after=False); out(")")
   else:
     out("<%s>" % k)
     print(x)
@@ -987,7 +1003,7 @@ def print_func_signature(id, typ):
     if t['kind'] == 'array':
       t = t['of']
 
-  print_type(t)
+  print_type(t, need_space_after=False)
   out(" " + "*" * ptr_level)
   out("%s" % id)
   arghack = 'arghack' in t['att']
@@ -1100,27 +1116,12 @@ def print_def_type(x):
 
 
 def print_field_regular(t, id):
-  print_type(t);
-
-  #
-  # not need SPACE after non-constant-pointer:
-  # uint32_t *x;
-  # but need after constant pointer:
-  # uint32_t *const x;
-  # and after all another types:
-  # struct X x;
-  #
-  is_ptr = type.is_pointer(t)
-  if not is_ptr or (is_ptr and 'const' in t['att']):
-    out(" ")
-
+  print_type(t, need_space_after=True)
   out("%s" % id)
 
 
 def print_field_pointer(t, id):
-  print_type(t)
-  if 'const' in t['att']:
-    out(" ")
+  print_type(t, need_space_after=True)
   out("%s" % id)
 
 
@@ -1131,8 +1132,9 @@ def print_field_array(t, id, prefix):
   while root_type['kind'] == 'array':
     root_type = root_type['of']
 
-  print_type(root_type)
-  out(" %s" % id)
+  print_type(root_type, need_space_after=True)
+
+  out("%s" % id)
 
   # print arrays dimensions
   array_type = t
