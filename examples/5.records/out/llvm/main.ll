@@ -304,34 +304,33 @@ endif_0:
 
 
 
+define double @distance(%Point %a, %Point %b) {
+  %1 = extractvalue %Point %a, 0
+  %2 = extractvalue %Point %b, 0
+  %3 = call double(double, double) @max (double %1, double %2)
+  %4 = extractvalue %Point %a, 0
+  %5 = extractvalue %Point %b, 0
+  %6 = call double(double, double) @min (double %4, double %5)
+  %7 = fsub double %3, %6
+  %8 = extractvalue %Point %a, 1
+  %9 = extractvalue %Point %b, 1
+  %10 = call double(double, double) @max (double %8, double %9)
+  %11 = extractvalue %Point %a, 1
+  %12 = extractvalue %Point %b, 1
+  %13 = call double(double, double) @min (double %11, double %12)
+  %14 = fsub double %10, %13
+  %15 = call double(double, double) @pow (double %7, double 0x4000000000000000)
+  %16 = call double(double, double) @pow (double %14, double 0x4000000000000000)
+  %17 = fadd double %15, %16
+  %18 = call double(double) @sqrt (double %17)
+  ret double %18
+}
+
 define double @lineLength(%Line %line) {
   %1 = extractvalue %Line %line, 0
-  %2 = extractvalue %Point %1, 0
-  %3 = extractvalue %Line %line, 1
-  %4 = extractvalue %Point %3, 0
-  %5 = call double(double, double) @max (double %2, double %4)
-  %6 = extractvalue %Line %line, 0
-  %7 = extractvalue %Point %6, 0
-  %8 = extractvalue %Line %line, 1
-  %9 = extractvalue %Point %8, 0
-  %10 = call double(double, double) @min (double %7, double %9)
-  %11 = fsub double %5, %10
-  %12 = extractvalue %Line %line, 0
-  %13 = extractvalue %Point %12, 1
-  %14 = extractvalue %Line %line, 1
-  %15 = extractvalue %Point %14, 1
-  %16 = call double(double, double) @max (double %13, double %15)
-  %17 = extractvalue %Line %line, 0
-  %18 = extractvalue %Point %17, 1
-  %19 = extractvalue %Line %line, 1
-  %20 = extractvalue %Point %19, 1
-  %21 = call double(double, double) @min (double %18, double %20)
-  %22 = fsub double %16, %21
-  %23 = call double(double, double) @pow (double %11, double 0x4000000000000000)
-  %24 = call double(double, double) @pow (double %22, double 0x4000000000000000)
-  %25 = fadd double %23, %24
-  %26 = call double(double) @sqrt (double %25)
-  ret double %26
+  %2 = extractvalue %Line %line, 1
+  %3 = call double(%Point, %Point) @distance (%Point %1, %Point %2)
+  ret double %3
 }
 
 define void @ptr_example() {

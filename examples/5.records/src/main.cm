@@ -25,7 +25,7 @@ var line : Line := {a={x=0,y=0}, b={x=1, y=1}}
 
 
 @property("c_prefix", "static inline")
-func max (a : Float, b : Float) -> Float {
+func max(a : Float, b : Float) -> Float {
   if a > b {
     return a
   }
@@ -33,7 +33,7 @@ func max (a : Float, b : Float) -> Float {
 }
 
 @property("c_prefix", "static inline")
-func min (a : Float, b : Float) -> Float {
+func min(a : Float, b : Float) -> Float {
   if a < b {
     return a
   }
@@ -42,17 +42,21 @@ func min (a : Float, b : Float) -> Float {
 
 
 // Pythagorean theorem
-func lineLength (line : Line) -> Float {
-  let dx = max(line.a.x, line.b.x) - min(line.a.x, line.b.x)
-  let dy = max(line.a.y, line.b.y) - min(line.a.y, line.b.y)
+func distance(a : Point, b : Point) -> Float {
+  let dx = max(a.x, b.x) - min(a.x, b.x)
+  let dy = max(a.y, b.y) - min(a.y, b.y)
   let dx2 = pow(dx, 2)
   let dy2 = pow(dy, 2)
-  let len = sqrt(dx2 + dy2)
-  return len
+  return sqrt(dx2 + dy2)
 }
 
 
-func ptr_example () -> Unit {
+func lineLength (line : Line) -> Float {
+  return distance(line.a, line.b)
+}
+
+
+func ptr_example() -> Unit {
   let ptr_p = malloc(sizeof(Point)) to *Point
 
   // access by pointer
@@ -63,7 +67,7 @@ func ptr_example () -> Unit {
 }
 
 
-func main () -> Int {
+func main() -> Int {
   // by value
   let len = lineLength(line)
   printf("line length = %f\n", len)

@@ -44,14 +44,18 @@ static inline float min(float a, float b)
 
 // Pythagorean theorem
 
-float lineLength(Line line)
+float distance(Point a, Point b)
 {
-    const float dx = max(line.a.x, line.b.x) - min(line.a.x, line.b.x);
-    const float dy = max(line.a.y, line.b.y) - min(line.a.y, line.b.y);
+    const float dx = max(a.x, b.x) - min(a.x, b.x);
+    const float dy = max(a.y, b.y) - min(a.y, b.y);
     const double dx2 = pow(dx, 2.0);
     const double dy2 = pow(dy, 2.0);
-    const double len = sqrt(dx2 + dy2);
-    return len;
+    return sqrt(dx2 + dy2);
+}
+
+float lineLength(Line line)
+{
+    return distance(line.a, line.b);
 }
 
 void ptr_example(void)
