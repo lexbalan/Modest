@@ -123,35 +123,38 @@ def print_type_numeric(t):
 
 
 
-def print_type_array(t, print_as_pointer=True):
+def print_type_array(t, print_as_pointer, need_space_after):
   print_type(t['of'], need_space_after=True)
 
   if print_as_pointer:
     if 'const' in t['att']:
       out("*const")
-      return True
     else:
       out("*")
-      return False
+    if need_space_after:
+      out(" ")
+    return
 
 
   if t['volume'] != None:
     out("["); print_value(t['volume']); out("]")
   else:
     out("*")
-    return False
 
-  return True
+  if need_space_after:
+      out(" ")
 
 
-def print_type_pointer(t):
+
+def print_type_pointer(t, need_space_after):
   # array was printed as *, we dont need to place another *
   if type.is_array(t['to']):
     print_type(t['to'], need_space_after=True)
     if 'const' in t['att']:
       out("const")
-      return True
-    return False
+    if need_space_after:
+      out(" ")
+    return
 
   if type.is_free_pointer(t):
     out("void ")
@@ -160,10 +163,13 @@ def print_type_pointer(t):
 
   if 'const' in t['att']:
     out("*const")
-    return True
+    if need_space_after:
+      out(" ")
+  else:
+    out("*")
 
-  out("*")
-  return False # не нужен пробел после звездочки
+
+
 
 
 
@@ -226,16 +232,14 @@ def print_type_enum(t):
 # (только указатели *)
 # блядские аргументы по умолчанию - нихера с ними не работает!
 def print_type(t, need_space_after):
-  rc = print_type2(t, print_aka=True)
-  if need_space_after:
-    if rc:
-      out(" ")
+  rc = print_type2(t, print_aka=True, need_space_after=need_space_after)
+
 
 def print_type_full(t):
-  return print_type2(t, print_aka=False)
+  return print_type2(t, print_aka=False, need_space_after=False)
 
 
-def print_type2(t, print_aka):
+def print_type2(t, print_aka, need_space_after):
   k = t['kind']
 
   if 'const' in t['att']:
@@ -246,12 +250,14 @@ def print_type2(t, print_aka):
     if type.is_alias(t):
       tt = t['aliasof']
       if not type.is_record(tt):
-        return print_type2(t['aliasof'], print_aka=True)
+        print_type2(t['aliasof'], print_aka=True, need_space_after=need_space_after)
 
   if USE_BOOLEAN:
     if type.is_logical(t):
       out("bool")
-      return True
+      if need_space_after:
+        out(" ")
+      return
 
   # hotfix for let generic value problem (let x = 1)
   if type.is_generic_integer(t):
@@ -263,25 +269,48 @@ def print_type2(t, print_aka):
   if print_aka:
     if 'c_alias' in t:
       out(t['c_alias'])
-      return True
+      if need_space_after:
+        out(" ")
+      return
 
     if 'name' in t:
       if NO_TYPEDEF_STRUCTS:
         if type.is_record(t):
           out("struct ")
       out(t['name'])
-      return True
+      if need_space_after:
+        out(" ")
+      return
 
-  if type.is_numeric(t): print_type_numeric(t); return True
-  elif type.is_record(t): print_type_record(t); return True
-  elif type.is_enum(t): print_type_enum(t); return True
-  elif type.is_pointer(t): return print_type_pointer(t)
-  elif type.is_array(t): return print_type_array(t)
-  elif type.is_func(t): out("void"); return True
-  elif k == 'opaque': out("void"); return True
-  else: out("<type:" + str(t) + ">"); return True
+  if type.is_numeric(t):
+    print_type_numeric(t)
+    if need_space_after:
+      out(" ")
 
-  return True
+  elif type.is_record(t):
+    print_type_record(t)
+    if need_space_after:
+      out(" ")
+
+  #elif type.is_enum(t): print_type_enum(t, need_space_after)
+  elif type.is_pointer(t):
+    print_type_pointer(t, need_space_after)
+
+  elif type.is_array(t):
+    print_type_array(t, print_as_pointer=True, need_space_after=need_space_after)
+
+  elif type.is_func(t):
+    out("void")
+    if need_space_after:
+      out(" ")
+
+  elif k == 'opaque':
+    out("void")
+    if need_space_after:
+      out(" ")
+
+  else: out("<type:" + str(t) + ">")
+
 
 
 
