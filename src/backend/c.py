@@ -129,10 +129,10 @@ def print_type_array(t, print_as_pointer, need_space_after):
   if print_as_pointer:
     if 'const' in t['att']:
       out("*const")
+      if need_space_after:
+        out(" ")
     else:
       out("*")
-    if need_space_after:
-      out(" ")
     return
 
 
