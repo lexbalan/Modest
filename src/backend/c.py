@@ -416,7 +416,7 @@ def print_value_call(v, ctx):
     # вызов через указатель
     # поскольку у нас указатели на функции это *void
     # при вызове приводим левое к указателю на функцию
-    out("(("); print_type(t['to']); out("(*)")
+    out("(("); print_type(t['to'], need_space_after=False); out("(*)")
     arghack = 'arghack' in t['att']
     print_paramlist(t['params'], arghack)
     out(")")
