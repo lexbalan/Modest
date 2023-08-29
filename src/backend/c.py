@@ -141,8 +141,8 @@ def print_type_array(t, print_as_pointer, need_space_after):
   else:
     out("*")
 
-  if need_space_after:
-      out(" ")
+  """if need_space_after:
+      out(" ")"""
 
 
 
