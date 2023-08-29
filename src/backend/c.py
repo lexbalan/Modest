@@ -149,11 +149,13 @@ def print_type_array(t, print_as_pointer, need_space_after):
 def print_type_pointer(t, need_space_after):
   # array was printed as *, we dont need to place another *
   if type.is_array(t['to']):
-    print_type(t['to'], need_space_after=True)
+    print_type(t['to']['of'], need_space_after=True)
     if 'const' in t['att']:
-      out("const")
-    if need_space_after:
-      out(" ")
+      out(" *const")
+      if need_space_after:
+        out(" ")
+    else:
+      out("*")
     return
 
   if type.is_free_pointer(t):
