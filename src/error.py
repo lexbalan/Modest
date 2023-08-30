@@ -5,11 +5,11 @@ errcnt = 0
 
 
 HEADER = '\033[95m'
-OKBLUE = '\033[94m'
-OKCYAN = '\033[96m'
-OKGREEN = '\033[92m'
-WARNING = '\033[93m'
-FAIL = '\033[91m'
+BLUE = '\033[94m'
+YELLOW = '\033[93m'
+INFO = '\033[96m'
+WARNING = '\033[95m'
+ERROR = '\033[91m'
 ENDC = '\033[0m'
 BOLD = '\033[1m'
 UNDERLINE = '\033[4m'
@@ -41,8 +41,6 @@ def right_end_pos(ti):
   return ti['pos'] - ti['len']# - 1
 
 
-
-
 def mark(pos, color):
   print(" " * pos, end=''); print(colorize('^', color))
 
@@ -56,37 +54,62 @@ def himark(lpos, pos, lenc, rpos, color):
   print(colorize('-' * rlen, color))
 
 
-def highlight(ti, color):
-  pos = ti['pos']
+def highlight(ti, color, offset):
+  pos = ti['pos'] + offset
   #mark(pos, color)
-  start = left_start_pos(ti)
-  end = right_end_pos(ti)
+  start = left_start_pos(ti) + offset
+  end = right_end_pos(ti) + offset
+  #print(ti)
+  #print("start = %d, end = %d, pos = %d" % (start, end, pos))
   #print("start = " + str(start))
   #print("end = " + str(end))
   himark(start, pos, ti['len'], end - 1, color)
 
 
 
-def warning(s, ti):
-  global warncnt
-  warncnt = warncnt + 1
-  print('\033[95m' + 'warning: ' + '\033[0m' + s)
+
+def note(s, ti=None):
+  print(BOLD + 'note: ' + s + ENDC)
+
+
+def info(s, ti):
+  pre = ''
   if ti != None:
     if ti['isa'] != 'ti':
       if 'ti' in ti:
         ti = ti['ti']
 
-    prelin = "%d | " % ti['line']
+    pre = '%s:%d:%d: ' % (ti['file'], ti['line'], ti['pos'])
+  print(pre + '\033[96m' + 'info: ' + '\033[0m' + s)
+
+  if ti != None:
+    prelin = "%d |" % ti['line']
+    lin = getline(ti)
+    print(prelin + lin)
+    highlight(ti, 96, offset=len(prelin))
+
+
+def warning(s, ti=None):
+  global warncnt
+  warncnt = warncnt + 1
+
+  print(WARNING + 'warning: ' + '\033[0m' + s)
+  if ti != None:
+    if ti['isa'] != 'ti':
+      if 'ti' in ti:
+        ti = ti['ti']
+
+    prelin = "%d |" % ti['line']
 
     lin = getline(ti)
     print(prelin + lin)
-    highlight(ti, 95)
+    highlight(ti, 95, offset=len(prelin))
 
 
-def error(s, ti):
+def error(s, ti=None):
   global errcnt
   errcnt = errcnt + 1
-  
+
   pre = ''
   if ti != None:
     if ti['isa'] != 'ti':
@@ -98,40 +121,16 @@ def error(s, ti):
     pre = '%s:%d:%d: ' % (ti['file'], ti['line'], ti['pos'])
 
   print(pre + '\033[91m' + 'error: ' + '\033[0m' + s)
-  
+
   if ti != None:
-    prelin = "%d | " % ti['line']
+    prelin = "%d |" % ti['line']
 
     lin = getline(ti)
     print(prelin + lin)
-    highlight(ti, 91)
+    highlight(ti, 91, offset=len(prelin))
 
   if errcnt >= 10:
     exit(-1)
-
-
-def info(s, ti):
-  pre = ''
-  if ti != None:
-    if ti['isa'] != 'ti':
-      if 'ti' in ti:
-        ti = ti['ti']
-
-    if not 'file' in ti:
-      print("NOT FILE IN TI: " + str(ti))
-    pre = '%s:%d:%d: ' % (ti['file'], ti['line'], ti['pos'])
-  print(pre + '\033[96m' + 'info: ' + '\033[0m' + s)
-
-  if ti != None:
-    prelin = "%d | " % ti['line']
-    lin = getline(ti)
-    print(prelin + lin)
-    highlight(ti, 96)
-  
-
-
-def note(s, ti=None):
-  print(BOLD + 'note: ' + ENDC + s)
 
 
 
