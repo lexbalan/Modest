@@ -124,7 +124,7 @@ def doop1(src):
 
 def doblank(src):
   c = src.getc()
-  if not c == ' ' or c == '\t':
+  if not (c == ' ' or c == '\t'):
     return False
   return None
 
