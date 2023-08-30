@@ -9,6 +9,15 @@ from .hlir import *
 
 
 
+
+def value_copy(x):
+  nv = copy.copy(x)
+  nv['att'] = []
+  nv['att'].extend(x['att'])
+  return nv
+
+
+
 #TODO: value #kind=zero
 def value_create_zero(t):
   if type.is_numeric(t):

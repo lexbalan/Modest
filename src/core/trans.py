@@ -750,7 +750,7 @@ def do_value_access(x):
   if value_is_immediate(r):
     field_id_str = field_id['str']
     v = r['imm_items'][field_id_str]
-    nv = copy.copy(v)
+    nv = value_copy(v)
     nv['value'] = hlir_value_access_record(r, field, ti=x['ti'])
     return nv
 
@@ -790,7 +790,7 @@ def do_value_id(x):
     return hlir_value_bad(x['ti'])
 
   # for TI чтобы не переписать у самого определения
-  vx = copy.copy(vx)
+  vx = value_copy(vx)
   vx['ti'] = x['ti']
   return vx
 
@@ -1233,6 +1233,8 @@ def extend_props(x):
   properties = {}
 
 
+
+
 def def_const(x):
   id = x['id']
   v = do_value(x['value'])
@@ -1249,7 +1251,7 @@ def def_const(x):
   # если оно сворачиваемое то может иметь поле num
   # так его сможет распечатать как LLVM так и C принтер
 
-  nv = copy.copy(v)
+  nv = value_copy(v)
 
   # выражение значения из которого он создан
   # юзается принтером при печати напр #define <id> <value>
