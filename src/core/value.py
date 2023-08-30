@@ -143,9 +143,9 @@ def value_cons_array_from_array(v, t, ti, method):
   if value_is_immediate(v):
     n = n_to - n_from
     # будем менять значение (его тип) потому неглубоко копируем значение
-    nv = copy.copy(v)
+    nv = value_copy(v)
     # будем менять тип (его размер) потому неглубоко копируем тип
-    nv['type'] = copy.copy(nv['type'])
+    nv['type'] = type_copy(nv['type'])
 
     nv['type']['volume'] = t['volume']
     nv['att'] = []
@@ -318,7 +318,7 @@ def value_cons_float(v, t, ti, method):
 
 
 def value_change_type(v, t):
-    nv = copy.copy(v)
+    nv = value_copy(v)
     nv['type'] = t
     return nv
 
