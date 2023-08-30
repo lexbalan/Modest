@@ -1,4 +1,5 @@
 
+EOF_TOKEN = ('eof', '', None)
 
 class Tokenizer:
   def __init__(self, rules):
@@ -10,7 +11,7 @@ class Tokenizer:
       
       # EOF?
       if src.lookup(1) == '':
-          return tokens + [('eof', '', None)]
+          return tokens + [EOF_TOKEN]
       pos_before = src.getpos()
       for rule in self.rules:
         result = rule(src)

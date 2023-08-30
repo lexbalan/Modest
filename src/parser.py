@@ -21,8 +21,8 @@ class Parser:
     return self.ctoken >= (len(self.tokens) - 1)
   
 
-  def is_blank(self, c):
-    return c == ' ' or c == '\t' or c == '\n'
+  #def is_blank(self, c):
+  #  return c == ' ' or c == '\t' or c == '\n'
   
 
   def skip(self):
@@ -97,7 +97,10 @@ class Parser:
 
 
   def need_sep(self, separators=['\n', ';'], stoppers=['}']):
-    self.skip_tokens([' '])
+
+		# random space after
+		self.skip_tokens([' ', '\t'])
+
     if self.ctok() in separators:
       while self.ctok() in separators:
         self.skip()
@@ -622,7 +625,7 @@ class Parser:
         tokstr = 'newline'
       elif tokstr == '':
         tokstr = 'end-of-file'
-      error("unexpected token '%s'" % tokstr, ti)
+      error("unexpected token '%s'" % tokstr, self.ti())
       self.skip()
       return {'isa': 'value', 'kind': 'bad', 'ti': ti}
 
