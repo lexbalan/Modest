@@ -97,9 +97,8 @@ class Parser:
 
 
   def need_sep(self, separators=['\n', ';'], stoppers=['}']):
-
-		# random space after
-		self.skip_tokens([' ', '\t'])
+    # random space after
+    self.skip_tokens([' ', '\t'])
 
     if self.ctok() in separators:
       while self.ctok() in separators:
