@@ -412,7 +412,7 @@ def record_field_get(t, id):
 
 
 
-def create_copy(t):
+def type_copy(t):
   nt = copy.copy(t)
 
   # именно так!  иначе добавим в att t тк это ссылка на лист!
@@ -431,7 +431,7 @@ def create_copy(t):
 
 def create_alias(id, t, ti):
   #print('type.create_alias ' + id)
-  nt = create_copy(t)
+  nt = type_copy(t)
 
   #if not 'name' in nt:
   nt['name'] = id

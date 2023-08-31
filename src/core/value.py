@@ -145,7 +145,7 @@ def value_cons_array_from_array(v, t, ti, method):
     # будем менять значение (его тип) потому неглубоко копируем значение
     nv = value_copy(v)
     # будем менять тип (его размер) потому неглубоко копируем тип
-    nv['type'] = type_copy(nv['type'])
+    nv['type'] = type.type_copy(nv['type'])
 
     nv['type']['volume'] = t['volume']
     nv['att'] = []

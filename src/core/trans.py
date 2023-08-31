@@ -6,6 +6,8 @@ from opt import *
 from error import *
 
 
+#type Address = tuple[str, int]
+
 def is_local_context():
   global cfunc
   return cfunc != None
@@ -210,10 +212,10 @@ def init():
 
   global typeSysInt, typeSysNat
 
-  typeSysInt = type.create_copy(select_int(int_size))
+  typeSysInt = type.type_copy(select_int(int_size))
   typeSysInt['c_alias'] = 'int'
 
-  typeSysNat = type.create_copy(select_nat(int_size))
+  typeSysNat = type.type_copy(select_nat(int_size))
   typeSysNat['c_alias'] = 'unsigned int'
 
 
@@ -1086,7 +1088,7 @@ def do_stmt_let(x):
 
 
   # 'const' attribute is used by C printer
-  typ = type.create_copy(v['type'])
+  typ = type.type_copy(v['type'])
   typ['att'].append('const')
 
   v = value_change_type(v, typ)
