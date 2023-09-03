@@ -1134,8 +1134,14 @@ def do_stmt_assign(x):
 
 def do_stmt_value(x):
   v = do_value(x['value'])
+
   if value_is_bad(v):
     return hlir_stmt_bad()
+
+  if not type.is_unit(v['type']):
+    if not 'dispensable' in v['type']['att']:
+      warning("expression result unused", v['ti'])
+
   return hlir_stmt_value(v, ti=x['ti'])
 
 

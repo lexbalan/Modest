@@ -48,22 +48,22 @@ extern func tmpnam(str : CharStr) -> CharStr
 
 
 @attribute("arghack")
-extern func printf  (s : ConstCharStr) -> Int
+extern func printf  (s : ConstCharStr) -> DispInt
 
 @attribute("arghack")
-extern func scanf   (s : ConstCharStr) -> Int
+extern func scanf   (s : ConstCharStr) -> DispInt
 
 @attribute("arghack")
-extern func fprintf (stream : *FILE, format : Str) -> Int
+extern func fprintf (stream : *FILE, format : Str) -> DispInt
 
 @attribute("arghack")
-extern func fscanf (f : *FILE, format : ConstCharStr) -> Int
+extern func fscanf (f : *FILE, format : ConstCharStr) -> DispInt
 
 @attribute("arghack")
-extern func sscanf  (buf : ConstCharStr, format : ConstCharStr) -> Int
+extern func sscanf  (buf : ConstCharStr, format : ConstCharStr) -> DispInt
 
 @attribute("arghack")
-extern func sprintf (buf : CharStr, format : ConstCharStr) -> Int
+extern func sprintf (buf : CharStr, format : ConstCharStr) -> DispInt
 
 
 
