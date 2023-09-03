@@ -4,7 +4,7 @@
 
 import os
 from lexer import Lexer
-from error import warning, error, getline
+from error import error, warning, info
 
 
 top_level_stoppers = ['type', 'const', 'var', 'func']

@@ -15,6 +15,9 @@ BOLD = '\033[1m'
 UNDERLINE = '\033[4m'
 
 
+SIMPLE_MARK = True
+
+
 def colorize(text, color):
   return '\033[%dm%s\033[0m' % (color, text)
 
@@ -45,12 +48,22 @@ def mark(pos, color):
   print(" " * pos, end=''); print(colorize('^', color))
 
 
+
 def himark(lpos, pos, lenc, rpos, color):
+  if SIMPLE_MARK:
+    print(" " * lpos, end='')
+    print(colorize('^', color))
+    return
+
+
   print(" " * lpos, end='')
+
   llen = pos - lpos
-  rlen = rpos - pos
   print(colorize('-' * llen, color), end='')
-  print(colorize('*' * lenc, color), end='')
+
+  print(colorize('^' * lenc, color), end='')
+
+  rlen = rpos - pos
   print(colorize('-' * rlen, color))
 
 
@@ -60,7 +73,6 @@ def highlight(ti, color, offset):
   start = left_start_pos(ti) + offset
   end = right_end_pos(ti) + offset
   #print(ti)
-  #print("start = %d, end = %d, pos = %d" % (start, end, pos))
   #print("start = " + str(start))
   #print("end = " + str(end))
   himark(start, pos, ti['len'], end - 1, color)

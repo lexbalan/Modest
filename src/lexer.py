@@ -130,11 +130,11 @@ def doblank(src):
 
 
 def dostr(src):
+  ti = src.get_ti()
   c = src.getc()
   if not c == '"':
     return False
-  
-  ti = src.get_ti()
+
   
   par = c
   
@@ -147,7 +147,7 @@ def dostr(src):
     
   
   token = ''.join(s)
-  ti['len'] = len(token)
+  ti['len'] = len(token) + 2  # "
   return ('str', token, ti)
 
 
