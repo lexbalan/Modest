@@ -76,6 +76,9 @@ def value_get_here(id_str):
 
 
 
+def pragma(cmd, args):
+  exec("%s(%s)" % (cmd, str(args)))
+
 
 # used in metadirs
 def c_include(s):

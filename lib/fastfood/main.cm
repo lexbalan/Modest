@@ -1,28 +1,22 @@
 
+// for clock()
 @attribute("c-no-print")
 import "libc/libc.hm"
 
+// for printf
 @attribute("c-no-print")
 import "libc/stdio.hm"
 
-/*@c_include("stdlib.h")
-@c_include("string.h")
-@c_include("fcntl.h")
-@c_include("unistd.h")
-@c_include("time.h")
-@c_include("stdio.h")
-@c_include("stdint.h")
-@c_include("stdbool.h")
-@c_include("string.h")*/
 
-type ArchWord Nat64
+type ArchInt Int64
+type ArchNat Nat64
 
 
 func ff_memzero (mem : Pointer, len : Nat64) {
-  let len_words = len / sizeof(ArchWord)
-  let len_bytes = len % sizeof(ArchWord)
+  let len_words = len / sizeof(ArchNat)
+  let len_bytes = len % sizeof(ArchNat)
 
-  let dst_word = mem to *[]ArchWord
+  let dst_word = mem to *[]ArchNat
 
   var i := 0 to Nat64
   while (i < len_words) {
@@ -30,7 +24,7 @@ func ff_memzero (mem : Pointer, len : Nat64) {
     i := i + 1
   }
 
-  let dst_byte = &dst_word[i] to Pointer to *[]Nat8
+  let dst_byte = &dst_word[i] to *[]Nat8
 
   i := 0
   while (i < len_bytes) {
@@ -41,11 +35,11 @@ func ff_memzero (mem : Pointer, len : Nat64) {
 
 
 func ff_memcpy (dst : Pointer, src : Pointer, len : Nat64) {
-    let len_words = len / sizeof(ArchWord)
-    let len_bytes = len % sizeof(ArchWord)
+    let len_words = len / sizeof(ArchNat)
+    let len_bytes = len % sizeof(ArchNat)
 
-    let src_w = src to *[]ArchWord
-    let dst_w = dst to *[]ArchWord
+    let src_w = src to *[]ArchNat
+    let dst_w = dst to *[]ArchNat
 
 	var i := 0 to Nat64
     while (i < len_words) {
@@ -53,8 +47,8 @@ func ff_memcpy (dst : Pointer, src : Pointer, len : Nat64) {
         i := i + 1
     }
 
-    let src_b = &src_w[i] to Pointer to *[]Nat8
-    let dst_b = &dst_w[i] to Pointer to *[]Nat8
+    let src_b = &src_w[i] to *[]Nat8
+    let dst_b = &dst_w[i] to *[]Nat8
 
     i := 0
     while (i < len_bytes) {
