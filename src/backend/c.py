@@ -151,7 +151,7 @@ def print_type_pointer(t, need_space_after):
   if type.is_array(t['to']):
     print_type(t['to']['of'], need_space_after=True)
     if 'const' in t['att']:
-      out(" *const")
+      out("*const")
       if need_space_after:
         out(" ")
     else:

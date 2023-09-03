@@ -1,0 +1,60 @@
+
+@attribute("c-no-print")
+import "libc/libc.hm"
+
+/*@c_include("stdlib.h")
+@c_include("string.h")
+@c_include("fcntl.h")
+@c_include("unistd.h")
+@c_include("time.h")
+@c_include("stdio.h")
+@c_include("stdint.h")
+@c_include("stdbool.h")
+@c_include("string.h")*/
+
+
+func ff_memcpy (dst : Pointer, src : Pointer, len : Nat64) {
+    let len_words = len / 8
+    let src1 = src to *[]Nat64
+    let dst1 = dst to *[]Nat64
+
+	var i := 0 to Nat64
+
+    while (i < len_words) {
+        dst1[i] := src1[i]
+        i := i + 1
+    }
+
+    let len_bytes = len % 8
+    let src2 = &(src to *[]Nat64)[i] to Pointer to *[]Nat8
+    let dst2 = &(dst to *[]Nat64)[i] to Pointer to *[]Nat8
+
+    i := 0
+
+    while (i < len_bytes) {
+        dst2[i] := src2[i]
+        i := i + 1
+    }
+}
+
+func delay_us(us : Nat64) {
+    let start_time = clock()
+
+    while (clock() < start_time + us) {
+        // TODO: pay attention here
+    }
+}
+
+func delay(us : Nat64) {
+    delay_us(us)
+}
+
+func delay_ms(ms : Nat64) {
+    delay_us(ms * 1000)
+}
+
+func delay_s(s : Nat64) {
+    delay_ms(s * 1000)
+}
+
+
