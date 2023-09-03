@@ -392,13 +392,13 @@ def hlir_value_cast(value, type, ti=None):
 
 
 def hlir_value_sizeof(of, ti=None):
-  size = of['size']
-  type = hlir_type_generic_int_for(size, unsigned=True, ti=ti)
+  size = type.get_size(of)
+  typ = hlir_type_generic_int_for(size, unsigned=True, ti=ti)
   return {
     'isa': 'value',
     'kind': 'sizeof',
     'of': of,
-    'type': type,
+    'type': typ,
     'att': ['immediate'],
     'imm_num': size,
     'ti': ti

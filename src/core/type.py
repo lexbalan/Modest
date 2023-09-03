@@ -2,7 +2,7 @@
 
 import copy
 from opt import *
-from error import error
+from error import error, fatal
 #from util import nbits_for_num, nbytes_for_bits
 from .hlir import *
 
@@ -453,6 +453,11 @@ def get_size(t):
     return t['size']
   elif is_array(t):
     return t['volume']['imm_num'] * get_size(t['of'])
+
+  #else:
+  #  fatal("type.get_size() for '%s' not implemented" % t['kind'])
+
+  return 0
 
 
 def print_list_by(lst, method):

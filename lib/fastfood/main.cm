@@ -2,6 +2,9 @@
 @attribute("c-no-print")
 import "libc/libc.hm"
 
+@attribute("c-no-print")
+import "libc/stdio.hm"
+
 /*@c_include("stdlib.h")
 @c_include("string.h")
 @c_include("fcntl.h")
@@ -12,30 +15,54 @@ import "libc/libc.hm"
 @c_include("stdbool.h")
 @c_include("string.h")*/
 
+type ArchWord Nat64
+
+
+func ff_memzero (mem : Pointer, len : Nat64) {
+  let len_words = len / sizeof(ArchWord)
+  let len_bytes = len % sizeof(ArchWord)
+
+  let dst_word = mem to *[]ArchWord
+
+  var i := 0 to Nat64
+  while (i < len_words) {
+    dst_word[i] := 0
+    i := i + 1
+  }
+
+  let dst_byte = &dst_word[i] to Pointer to *[]Nat8
+
+  i := 0
+  while (i < len_bytes) {
+    dst_byte[i] := 0
+    i := i + 1
+  }
+}
+
 
 func ff_memcpy (dst : Pointer, src : Pointer, len : Nat64) {
-    let len_words = len / 8
-    let src1 = src to *[]Nat64
-    let dst1 = dst to *[]Nat64
+    let len_words = len / sizeof(ArchWord)
+    let len_bytes = len % sizeof(ArchWord)
+
+    let src_w = src to *[]ArchWord
+    let dst_w = dst to *[]ArchWord
 
 	var i := 0 to Nat64
-
     while (i < len_words) {
-        dst1[i] := src1[i]
+        dst_w[i] := src_w[i]
         i := i + 1
     }
 
-    let len_bytes = len % 8
-    let src2 = &(src to *[]Nat64)[i] to Pointer to *[]Nat8
-    let dst2 = &(dst to *[]Nat64)[i] to Pointer to *[]Nat8
+    let src_b = &src_w[i] to Pointer to *[]Nat8
+    let dst_b = &dst_w[i] to Pointer to *[]Nat8
 
     i := 0
-
     while (i < len_bytes) {
-        dst2[i] := src2[i]
+        dst_b[i] := src_b[i]
         i := i + 1
     }
 }
+
 
 func delay_us(us : Nat64) {
     let start_time = clock()
@@ -45,13 +72,16 @@ func delay_us(us : Nat64) {
     }
 }
 
+
 func delay(us : Nat64) {
     delay_us(us)
 }
 
+
 func delay_ms(ms : Nat64) {
     delay_us(ms * 1000)
 }
+
 
 func delay_s(s : Nat64) {
     delay_ms(s * 1000)

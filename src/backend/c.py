@@ -228,20 +228,25 @@ def print_type_enum(t):
   out("\n}")
 
 
+def print_array_asis(t):
+  print_type(t['of'], need_space_after=True)
+  out("[")
+  print_value(t['volume'])
+  out("]")
 
 
 # Возвращает False если НЕ нужно отделять пробелом после типа
 # (только указатели *)
 # блядские аргументы по умолчанию - нихера с ними не работает!
-def print_type(t, need_space_after):
-  rc = print_type2(t, print_aka=True, need_space_after=need_space_after)
+def print_type(t, need_space_after, _print_array_asis=False):
+  rc = print_type2(t, print_aka=True, need_space_after=need_space_after, _print_array_asis=_print_array_asis)
 
 
-def print_type_full(t):
-  return print_type2(t, print_aka=False, need_space_after=False)
+def print_type_full(t, _print_array_asis=False):
+  return print_type2(t, print_aka=False, need_space_after=False, _print_array_asis=_print_array_asis)
 
 
-def print_type2(t, print_aka, need_space_after):
+def print_type2(t, print_aka, need_space_after, _print_array_asis):
   k = t['kind']
 
   if 'const' in t['att']:
@@ -299,6 +304,9 @@ def print_type2(t, print_aka, need_space_after):
     print_type_pointer(t, need_space_after)
 
   elif type.is_array(t):
+    if _print_array_asis:
+      print_array_asis(t)
+      return
     print_type_array(t, print_as_pointer=True, need_space_after=need_space_after)
 
   elif type.is_func(t):
@@ -760,7 +768,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
   elif k == 'access': print_value_access(x, ctx)
   elif k == 'access_ptr': print_value_access_ptr(x, ctx)
   elif k == 'cast': print_value_cast(x, ctx)
-  elif k == 'sizeof': out("sizeof("); print_type(x['of'], need_space_after=False); out(")")
+  elif k == 'sizeof': out("sizeof("); print_type(x['of'], need_space_after=False, _print_array_asis=True); out(")")
   else:
     out("<%s>" % k)
     print(x)

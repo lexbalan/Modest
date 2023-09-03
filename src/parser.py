@@ -340,11 +340,21 @@ class Parser:
   def expr_value_8(self):
     v = self.expr_value_9()
     ti = self.ti()
-    while self.match("to"):
+    while self.look("to"):
+      ti = self.ti()
+      self.skip()
       t = self.expr_type()
-      ti['start'] = v['ti']
+      lv = v
+      ti['start'] = lv['ti']
       ti['end'] = t['ti']
-      v = {'isa': 'value', 'kind': 'cast', 'value': v, 'type': t, 'ti': ti}
+      v = {
+        'isa': 'value',
+        'kind': 'cast',
+        'value': lv,
+        'type': t,
+        'ti': ti
+      }
+
     return v
   
   
@@ -392,14 +402,36 @@ class Parser:
           args.append(a)
           self.need_sep(separators=[',', '\n'], stoppers=[')'])
         
-        v = {'isa': 'value', 'kind': 'call', 'left': v, 'args': args, 'ti': ti}
+        v = {
+          'isa': 'value',
+          'kind': 'call',
+          'left': v,
+          'args': args,
+          'ti': ti
+        }
       elif self.match("."):
-        f = self.identifier()
-        v = {'isa': 'value', 'kind': 'access', 'left': v, 'field': f, 'ti': ti}
+        field_id = self.identifier()
+        ti['start'] = v['ti']
+        ti['end'] = field_id['ti']
+        v = {
+          'isa': 'value',
+          'kind': 'access',
+          'left': v,
+          'field': field_id,
+          'ti': ti
+        }
       elif self.match("["):
         i = self.expr_value()
         self.need("]")
-        v = {'isa': 'value', 'kind': 'index', 'left': v, 'index': i, 'ti': ti}
+        ti['start'] = v['ti']
+        #ti['end'] =
+        v = {
+          'isa': 'value',
+          'kind': 'index',
+          'left': v,
+          'index': i,
+          'ti': ti
+        }
       else:
         return v
   
