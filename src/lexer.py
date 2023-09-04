@@ -220,8 +220,7 @@ def dolcom(src):
       commtext += c
 
     src.getc()
-  
-  #if exc:
+
   ti['len'] = 0
   return ('line-comment', lines, ti)
 

@@ -78,8 +78,6 @@ def value_is_const_imm(x):
 def value_is_immediate(x):
   if 'immediate' in x['att']:
     return True
-  #if x['kind'] == 'literal':
-  #  return True
 
   return value_is_const_imm(x)
 
@@ -92,10 +90,6 @@ def value_cons_array_from_generic_array(v, t, ti, method):
   if len(v['imm_items']) > hlir_value_num_get(t['volume']):
     info("too many items", v['ti'])
     return None
-
-  #cast_method = value_cast_implicit
-  #if method == 'explicit':
-  #  cast_method = value_cast_explicit
 
   casted_items = []
   for item in v['imm_items']:
@@ -327,7 +321,6 @@ def value_cons_pointer(v, t, ti, method):
 
   from_type = v['type']
 
-  #if method == 'explicit':
   if 'unsafe' in features:
     ### UNSAFE ###
 

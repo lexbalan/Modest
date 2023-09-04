@@ -250,10 +250,6 @@ def print_cast(t, v, ctx=[]):
 
 def print_value_cast(v, ctx):
 
-  #need_wrap = precedence(v['value']['kind']) > precedence('to')
-
-  #if need_wrap:
-  #  out('(')
 
   # не печатаем операции неявного приведения (!)
   if value_attribute_check(v, 'implicit-casted'):
@@ -275,9 +271,6 @@ def print_value_cast(v, ctx):
       return
 
   print_cast(v['type'], v['value'], ctx)
-
-  #if need_wrap:
-  #  out(')')
 
 
 
@@ -374,11 +367,6 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
   if print_just_id:
     if 'id' in x:
       print_value_by_id(x, ctx)
-
-      # ??
-      #need_cast = value_attribute_check(x, 'explicit-casted')
-      #if need_cast:
-      #  out(" to "); print_type(x['type'])
       return
 
   if need_wrap:
@@ -401,11 +389,6 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 
   if need_wrap:
     out(")")
-
-  # ??
-  #need_cast = value_attribute_check(x, 'explicit-casted')
-  #if need_cast:
-  #  out(" to "); print_type(x['type'])
 
 
 

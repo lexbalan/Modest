@@ -22,18 +22,22 @@ const SEEK_SET = 0
 const SEEK_CUR = 1
 const SEEK_END = 2
 
-
-extern func fclose (f : *FILE) -> Int
-extern func feof (f : *FILE) -> Int
-extern func ferror (f : *FILE) -> Int
-extern func fflush (f : *FILE) -> Int
-extern func fgetpos (f : *FILE, pos : *FposT) -> Int
-extern func fopen (fname : ConstCharStr, mode : ConstCharStr) -> *FILE
-extern func fread (buf : Pointer, size : SizeT, count : SizeT, f : *FILE) -> SizeT
-extern func fwrite (buf : Pointer, size : SizeT, count : SizeT, f : *FILE) -> SizeT
+@attribute("dispensable")
+extern func fclose(f : *FILE) -> Int
+extern func feof(f : *FILE) -> Int
+extern func ferror(f : *FILE) -> Int
+@attribute("dispensable")
+extern func fflush(f : *FILE) -> Int
+@attribute("dispensable")
+extern func fgetpos(f : *FILE, pos : *FposT) -> Int
+extern func fopen(fname : ConstCharStr, mode : ConstCharStr) -> *FILE
+@attribute("dispensable")
+extern func fread(buf : Pointer, size : SizeT, count : SizeT, f : *FILE) -> SizeT
+@attribute("dispensable")
+extern func fwrite(buf : Pointer, size : SizeT, count : SizeT, f : *FILE) -> SizeT
 extern func freopen(filename : ConstCharStr, mode : ConstCharStr, f : *FILE) -> *FILE
 
-extern func fseek  (stream : *FILE, offset : LongInt, whence : Int) -> Int
+extern func fseek(stream : *FILE, offset : LongInt, whence : Int) -> Int
 
 extern func fsetpos (f : *FILE, pos : *FposT) -> Int
 extern func ftell (f : *FILE) -> LongInt
@@ -47,23 +51,23 @@ extern func tmpfile() -> *FILE
 extern func tmpnam(str : CharStr) -> CharStr
 
 
-@attribute("arghack")
-extern func printf  (s : ConstCharStr) -> DispInt
+@attribute(["arghack", "dispensable"])
+extern func printf(s : ConstCharStr) -> Int
 
-@attribute("arghack")
-extern func scanf   (s : ConstCharStr) -> DispInt
+@attribute(["arghack", "dispensable"])
+extern func scanf(s : ConstCharStr) -> Int
 
-@attribute("arghack")
-extern func fprintf (stream : *FILE, format : Str) -> DispInt
+@attribute(["arghack", "dispensable"])
+extern func fprintf(stream : *FILE, format : Str) -> Int
 
-@attribute("arghack")
-extern func fscanf (f : *FILE, format : ConstCharStr) -> DispInt
+@attribute(["arghack", "dispensable"])
+extern func fscanf(f : *FILE, format : ConstCharStr) -> Int
 
-@attribute("arghack")
-extern func sscanf  (buf : ConstCharStr, format : ConstCharStr) -> DispInt
+@attribute(["arghack", "dispensable"])
+extern func sscanf(buf : ConstCharStr, format : ConstCharStr) -> Int
 
-@attribute("arghack")
-extern func sprintf (buf : CharStr, format : ConstCharStr) -> DispInt
+@attribute(["arghack", "dispensable"])
+extern func sprintf(buf : CharStr, format : ConstCharStr) -> Int
 
 
 
@@ -80,8 +84,11 @@ extern func fputs (str : ConstCharStr, f : *FILE) -> Int
 extern func getc (f : *FILE) -> Int
 extern func getchar () -> Int
 extern func gets (str : CharStr) -> CharStr
+@attribute("dispensable")
 extern func putc (char : Int, f : *FILE) -> Int
+@attribute("dispensable")
 extern func putchar (char : Int) -> Int
+@attribute("dispensable")
 extern func puts (str : ConstCharStr) -> Int
 extern func ungetc(char : Int, f : *FILE) -> Int
 extern func perror(str : ConstCharStr) -> Unit

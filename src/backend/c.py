@@ -749,8 +749,6 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
   if print_just_id:
     if 'id' in x:
       print_value_by_id(x, ctx)
-      #if need_cast:
-      #  out(")")
       return
 
   if need_wrap:
@@ -776,9 +774,6 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 
   if need_wrap:
     out(")")
-
-  #if need_cast:
-  #  out(")")
 
 
 def print_stmt_if(x, need_else_branch):

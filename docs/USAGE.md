@@ -1,11 +1,23 @@
 
+# Compiler usage
 
-#### Compiler flags
-*-funsafe* - unsafe mode when
+##### Example:
+```Shell
+mcc -o $(OUTDIR)/main -mbackend=cm $(INDIR)/main.cm
+```
+
+## Compiler flags
+
+#### Feature flags
+
+**-funsafe** -Enable *unsafe* mode when
   * You can cast pointer to another pointer
   * Enable pointer arithmetics for Pointer type
 
-*-fparanoid*
-  * Every warning becomes error
-  * Every info becomes warning
+**-fparanoid** - Every warning becomes error
+
+
+#### Modifier flags
+
+**-mbackend=backend_name** - 
 

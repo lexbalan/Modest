@@ -70,7 +70,3 @@ type SizeT Nat64
 type SSizeT Int64
 
 
-
-@attribute("dispensable")
-type DispInt Int
-

@@ -14,5 +14,7 @@ func linked_list_node_next_get (node : *Node) -> *Node
 func linked_list_node_link_get (node : *Node) -> Pointer
 
 func linked_list_insert_node (list : *List, new_node : *Node) -> *Node
+
+@attribute("dispensable")
 func linked_list_insert (list : *List, link : Pointer) -> *Node
 

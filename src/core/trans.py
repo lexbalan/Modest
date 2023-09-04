@@ -105,31 +105,21 @@ def property(id, value):
   properties[id] = value
 
 
+
 attributes = []
 
-def attribute(id):
+def attribute(at):
   global attributes
-  attributes.append(id)
-
-
-"""def attribute_off(id):
-  global attributes
-  i = 0
-  while i < len(attributes):
-    if attributes[i] == id:
-      del attributes[i]
-    i = i + 1"""
+  if isinstance(at, list):
+    attributes.extend(at)
+  else:
+    attributes.append(at)
 
 def attributes_get():
   global attributes
   attributes2 = attributes
   attributes = []
   return attributes2
-
-  """present = id in attributes
-  if present:
-    attribute_off(id)
-  return present"""
 
 
 # опциии компилятора, либо включена, либо выклчена
@@ -371,7 +361,6 @@ def do_value_shift(op, l, r, ti):
     error("type error", r)
 
   # const folding
-  #if not settings_check('backend', 'c'):
   if value_is_immediate(l) and value_is_immediate(r):
     xv = 0
     if op == 'shl': xv = hlir_value_num_get(l) << hlir_value_num_get(r)
@@ -391,7 +380,6 @@ def do_value_shift(op, l, r, ti):
     return v
 
   if type.is_generic(l['type']):
-    #if value.is_immediate(r['type']):
     error("required type", l)
 
   return hlir_value_bin(op, l, r, l['type'], ti=ti)
@@ -639,7 +627,7 @@ def do_value_call(x):
     return hlir_value_bad(x['ti'])
 
   if nargs > npars:
-    if not type_attribute_check(ftype, 'arghack'):
+    if not 'arghack' in f['att']:
       error("too many args", x)
       return hlir_value_bad(x['ti'])
 
@@ -669,8 +657,13 @@ def do_value_call(x):
 
     i = i + 1
 
-  return hlir_value_call(f, args, ti=x['ti'])
 
+  rv = hlir_value_call(f, args, ti=x['ti'])
+
+  if 'dispensable' in f['att']:
+    rv['att'].append('dispensable')
+
+  return rv
 
 
 def do_value_index(x):
@@ -1140,7 +1133,7 @@ def do_stmt_value(x):
     return hlir_stmt_bad()
 
   if not type.is_unit(v['type']):
-    if not 'dispensable' in v['type']['att']:
+    if not 'dispensable' in v['att']:
       warning("expression result unused", v['ti'])
 
   return hlir_stmt_value(v, ti=x['ti'])
@@ -1187,8 +1180,9 @@ included_modules = {}
 def do_import(x):
   impline = x['str']
 
-  # right here, before calling "do_import" (!)
+  # (!) right here, before calling "do_import" (!)
   att = attributes_get()
+  # (!) ^^
 
   #print("INCLUDE: %s" % (x['str']))
 
@@ -1278,10 +1272,6 @@ def def_const(x):
   nv['definition'] = definition
   definition['att'].extend(attributes_get())
 
-  # extern const для C принтера (не печатает)
-  #if x['extern']:
-  #  definition['att'].append('extern')
-
   return definition
 
 
@@ -1324,7 +1314,7 @@ def def_type(x):
     module['context'].type_add(id['str'], nt)
 
   definition = hlir_def_type(x['id'], ty, already_declared, ti=x['ti'])
-  definition['att'].extend(attributes_get())
+  #definition['att'].extend(attributes_get())
   #nt['definition'] = definition
 
   return definition
@@ -1359,7 +1349,7 @@ def def_var(x):
   module['context'].value_add(x['field']['id']['str'], var)
 
   definition = hlir_def_var(var, init_value, ti=x['ti'])
-  definition['att'].extend(attributes_get())
+  #definition['att'].extend(attributes_get())
   var['definition'] = definition
 
   return definition
@@ -1392,7 +1382,8 @@ def def_func(x):
 
   cfunc = hlir_value_func(func_id, func_type, ti=func_ti)
 
-  cfunc['att'].extend(attributes_get())
+  atts = attributes_get()
+  cfunc['att'].extend(atts)
 
   extend_props(cfunc)
 
@@ -1482,10 +1473,6 @@ def decl_func(x):
       info("firstly declared here", already['type']['ti'])
 
 
-  global attributes
-  if "arghack" in attributes:
-    functype['att'].append('arghack')
-  # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!
   atts = attributes_get()
 
   func = hlir_value_func(id, functype, ti=x['ti'])
@@ -1498,7 +1485,9 @@ def decl_func(x):
 
   declaration = hlir_decl_func(func, ti=x['ti'])
   func['declaration'] = declaration
-  declaration['att'].extend(atts)
+  #declaration['att'].extend(atts)
+
+
 
   if x['extern']:
     declaration['att'].append('extern')
@@ -1517,7 +1506,7 @@ def comm_line(x):
     'att': []
   }
 
-  y['att'].extend(attributes_get())
+  #y['att'].extend(attributes_get())
   return y
 
 
@@ -1530,7 +1519,7 @@ def comm_block(x):
     'att': []
   }
 
-  y['att'].extend(attributes_get())
+  #y['att'].extend(attributes_get())
   return y
 
 

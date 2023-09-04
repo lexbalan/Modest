@@ -35,4 +35,6 @@
   * [While statement](./stmt/while.md)
   * [Return statement](./stmt/return.md)
 
--
+- [Compiler Optons]
+  * [Usage](./USAGE.md)
+  * [Attributes](./ATTRIBUTES.md)

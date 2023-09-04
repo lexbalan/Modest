@@ -65,13 +65,16 @@ type DIR
 extern func clock () -> Nat64
 
 extern func malloc (size : SizeT) -> Pointer
+@attribute("dispensable")
 extern func memset (mem : Pointer, c : Int, n : SizeT) -> Pointer
+@attribute("dispensable")
 extern func memcpy (dst : Pointer, src : Pointer, len : SizeT) -> Pointer
 extern func memcmp (ptr1 : Pointer, ptr2 : Pointer, num : SizeT) -> Int
 extern func free   (ptr : Pointer) -> Unit
 
 extern func strncmp (s1 : *ConstChar, s2 : *ConstChar, n : SizeT) -> Int
 extern func strcmp  (s1 : *ConstChar, s2 : *ConstChar) -> Int
+@attribute("dispensable")
 extern func strcpy  (dst : *Char, src : *ConstChar) -> *Char
 extern func strlen  (s : *ConstChar) -> SizeT
 
@@ -99,11 +102,16 @@ const s_IWUSR = 0x0000080   // W for owner
 const s_IXUSR = 0x0000040   // X for owner
 
 
+@attribute("dispensable")
 extern func creat (path : Str, mode : ModeT) -> Int
 extern func open  (path : Str, oflags : Int) -> Int
+@attribute("dispensable")
 extern func read  (fd : Int, buf : *Nat8, len : Nat32) -> Int
+@attribute("dispensable")
 extern func write (fd : Int, buf : *Nat8, len : Nat32) -> Int
+@attribute("dispensable")
 extern func lseek (fd : Int, offset : OffT, whence : Int) -> OffT
+@attribute("dispensable")
 extern func close (fd : Int) -> Int
 extern func exit  (rc : Int) -> Unit
 //extern func fstat (fd : Int, buf : *Stat) -> Int

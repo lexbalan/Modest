@@ -533,7 +533,7 @@ def do_eval_expr_call(v):
   out("(")
   params = ftype['params']
   print_list_by(params, lambda par: print_type(par['type'], arr_as_ptr_to_arr=True))
-  if type_attribute_check(ftype, 'arghack'):
+  if 'arghack' in v['func']['att']:
     out(", ...")
   out(") ")
 
@@ -1334,7 +1334,7 @@ def print_stmt_block(s, arrays=None):
   locals_pop()
 
 
-def print_func_signature(id, typ):
+def print_func_signature(id, typ, arghack):
   params = typ['params']
   to = typ['to']
 
@@ -1343,7 +1343,7 @@ def print_func_signature(id, typ):
 
   print_list_by(params, lambda field: print_type(field['type']))
 
-  if type_attribute_check(typ, 'arghack'):
+  if arghack:
     out(", ...")
 
   out(")")
@@ -1353,7 +1353,8 @@ def print_func_signature(id, typ):
 def print_decl_func(x):
   out("\ndeclare ")
   func = x['func']
-  print_func_signature(func['id']['str'], func['type'])
+  arghack = 'arghack' in func['att']
+  print_func_signature(func['id']['str'], func['type'], arghack)
 
 
 def print_def_func(x):
@@ -1419,15 +1420,6 @@ def print_def_func(x):
     if param_is_arr:
       vv['type'] = hlir_type_pointer(vv['type'])
 
-    #param_id = param['id']['str']
-
-    #if param['type']['kind'] == 'array':
-    #  info("array parameter", param['ti'])
-      #id = 'par.' + id
-      #print("ID = %s" % id)
-      #vv['id'] = id
-      #reloc.append(vv)
-
     locals_add(id, vv)
 
     i = i + 1
@@ -1456,7 +1448,6 @@ def print_def_func(x):
 
 def print_decl_type(x):
   # LLVM не печатает, но C печатает (!)
-  #if x['extern']:
   out("\n%%%s = type opaque" % x['id']['str'])
 
 

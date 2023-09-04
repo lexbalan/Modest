@@ -422,10 +422,6 @@ def type_copy(t):
 
   nt['att'].extend(t['att'])
 
-  # а надо л и это вообще?
-  #if is_builtin(t):
-  #  t['att'].remove('builtin')
-
   return nt
 
 
@@ -433,7 +429,6 @@ def create_alias(id, t, ti):
   #print('type.create_alias ' + id)
   nt = type_copy(t)
 
-  #if not 'name' in nt:
   nt['name'] = id
 
   if 'c_alias' in nt:
