@@ -17,6 +17,8 @@ UNDERLINE = '\033[4m'
 
 SIMPLE_MARK = True
 
+from opt import *
+
 
 def colorize(text, color):
   return '\033[%dm%s\033[0m' % (color, text)
@@ -84,7 +86,7 @@ def note(s, ti=None):
   print(BOLD + 'note: ' + s + ENDC)
 
 
-def info(s, ti):
+def info(s, ti=None):
   pre = ''
   if ti != None:
     if ti['isa'] != 'ti':
@@ -102,6 +104,12 @@ def info(s, ti):
 
 
 def warning(s, ti=None):
+
+  if 'paranoid' in features:
+    error(s, ti)
+    #info("paranoid mode endbled")
+    return
+
   global warncnt
   warncnt = warncnt + 1
 
@@ -128,8 +136,6 @@ def error(s, ti=None):
       if 'ti' in ti:
         ti = ti['ti']
 
-    if not 'file' in ti:
-      print("NOT FILE IN TI: " + str(ti))
     pre = '%s:%d:%d: ' % (ti['file'], ti['line'], ti['pos'])
 
   print(pre + '\033[91m' + 'error: ' + '\033[0m' + s)
