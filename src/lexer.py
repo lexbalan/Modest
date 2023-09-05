@@ -2,6 +2,7 @@
 
 from source import Source
 from tokenizer import Tokenizer
+from error import info
 
 fname = ""
 line = 1
@@ -22,7 +23,8 @@ operators2 = [
 
 def doid(src):
   c = src.lookup(1)
-  if not c.isalpha() or c == '_':
+
+  if not (c.isalpha() or c == '_'):
     return False
   
   ti = src.get_ti()
@@ -134,7 +136,6 @@ def dostr(src):
   c = src.getc()
   if not c == '"':
     return False
-
   
   par = c
   
@@ -145,8 +146,9 @@ def dostr(src):
       break
     s.append(c)
     
-  
-  token = ''.join(s)
+  # добавляем " чтобы match в парсере не путал "+" с оператором + (!)
+  # поскольку match не учитывает класс
+  token = '"' + ''.join(s) + '"'
   ti['len'] = len(token) + 2  # "
   return ('str', token, ti)
 

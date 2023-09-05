@@ -1,4 +1,6 @@
 
+from error import info
+
 EOF_TOKEN = ('eof', '', None)
 
 class Tokenizer:
@@ -15,11 +17,20 @@ class Tokenizer:
       pos_before = src.getpos()
       for rule in self.rules:
         result = rule(src)
+
         if result == False:
           src.setpos(pos_before)
           continue
+
         if result != None:
+
+          if result[0] == 'str':
+            if result[1] == "-":
+              info("STR(\"-\") = " + str(result), result[2])
+              #print("END: " + src.lookup(1))
+
           tokens.append(result)
+
         break
 
     return None

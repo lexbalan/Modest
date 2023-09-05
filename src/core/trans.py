@@ -1179,6 +1179,8 @@ def do_stmt_block(x):
 included_modules = {}
 def do_import(x):
   impline = x['str']
+  impline = impline[1:]
+  impline = impline[:-1]
 
   # (!) right here, before calling "do_import" (!)
   att = attributes_get()
@@ -1218,7 +1220,6 @@ def do_import(x):
     module['imports'].append(m)
 
   # 2. А в нашем модуле добавляем директиву инклуда
-  impline = x['str']
   directive = {
     'isa': 'directive',
     'kind': 'import',
@@ -1601,6 +1602,7 @@ def import_abspath(s):
     f = path_lib + '/' + s
 
   if not os.path.exists(f):
+    print("%s not exist" % f)
     return None
 
   return os.path.abspath(f)

@@ -145,15 +145,34 @@ class Parser:
       self.need("{")
       fields = []
       while True:
-        self.skip_tokens([' ', '\t', '\n'])
+
+        #self.skip_tokens([' ', '\t', '\n'])
+
+        # skip spaces & comments before
+        while True:
+          if self.match('\n'):
+            continue
+          elif self.token_class_is('block-comment'):
+            x = self.parse_comment_block()
+          elif self.token_class_is('line-comment'):
+            x = self.parse_comment_line()
+          elif self.token_class_is('directive'):
+            x = self.parse_dir()
+          else:
+            break
+
         if self.match("}"):
           break
+
         f = self.parse_field()
+
         self.need_sep()
+
         if f != None:
           fields.extend(f)
 
       return {'isa': 'type', 'kind': 'record', 'fields': fields, 'ti': ti}
+
 
     elif self.match("enum"):
       self.need("{")
@@ -586,6 +605,11 @@ class Parser:
   def parse_value_term(self):
     ti = self.ti()
 
+
+    if self.ctok() == '-':
+        print("=-=-------HJHJHJHJHJHJHJHJ")
+
+
     if self.ctok_class() == 'id':
       id = self.identifier()
 
@@ -627,7 +651,10 @@ class Parser:
       }
 
     elif self.ctok_class() == 'str':
+
       s = self.gettok()
+      s = s[1:]
+      s = s[:-1]
       return self.parse_value_term_str(s, ti)
 
     elif self.ctok_class() == 'sym':
