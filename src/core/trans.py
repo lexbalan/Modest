@@ -920,9 +920,9 @@ def do_rvalue(x):
 
   if 'writeonly' in v['type']['att']:
     error("attempt to read writeonly value", x['ti'])
+    return hlir_value_bad(x['ti'])
 
   return value_load(v)
-
 
 
 
