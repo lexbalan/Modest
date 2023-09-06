@@ -53,7 +53,7 @@ def mark(pos, color):
 
 def himark(lpos, pos, lenc, rpos, color):
   if SIMPLE_MARK:
-    print(" " * lpos, end='')
+    print(" " * pos, end='')
     print(colorize('^', color))
     return
 

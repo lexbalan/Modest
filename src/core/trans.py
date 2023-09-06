@@ -269,7 +269,8 @@ def do_type_record(t):
   nfields = len(t['fields'])
   i = 0
   while i < nfields:
-    f = do_field(t['fields'][i], is_last=i==(nfields-1))
+    fe = t['fields'][i]
+    f = do_field(fe, is_last=i==(nfields-1))
     f['no'] = i
     i = i + 1
 
@@ -277,6 +278,9 @@ def do_type_record(t):
     if f_exist != None:
       error("redefinition of '%s'" % f['id']['str'], f)
       continue
+
+    if 'comments' in fe:
+      f.update({'comments': fe['comments']})
 
     fields.append(f)
 
@@ -1114,7 +1118,6 @@ def do_stmt_assign(x):
 
   if value_is_immutable(l):
     error("immutable left", x['left'])
-    print(l['att'])
     return hlir_stmt_bad()
 
   # type check
@@ -1303,7 +1306,8 @@ def def_type(x):
 
   nt = type.create_alias(id['str'], ty, id['ti'])
   extend_props(nt)
-  nt['att'].extend(attributes_get())
+  atts = attributes_get()
+  nt['att'].extend(atts)
 
   if already_declared:
     # just overwrite existed 'opaque' type (for records)
@@ -1317,6 +1321,9 @@ def def_type(x):
   definition = hlir_def_type(x['id'], ty, already_declared, ti=x['ti'])
   #definition['att'].extend(attributes_get())
   #nt['definition'] = definition
+
+  if 'volatile' in atts:
+    definition['att'].extend(atts)
 
   return definition
 

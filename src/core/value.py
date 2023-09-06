@@ -64,6 +64,8 @@ def value_is_mutable(x):
 
 
 def value_is_immutable(x):
+  if 'readonly' in x['type']['att']:
+    return True
   return not value_is_mutable(x)
 
 

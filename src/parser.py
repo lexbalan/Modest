@@ -119,6 +119,53 @@ class Parser:
   # Parse Type
   #
   
+  def expr_type_record(self, ti):
+    self.need("{")
+    fields = []
+    while True:
+
+      #self.skip_tokens([' ', '\t', '\n'])
+
+      comments = []
+      directives = []
+
+      # skip spaces & comments before
+      while True:
+        if self.match('\n'):
+          continue
+        elif self.token_class_is('block-comment'):
+          x = self.parse_comment_block()
+          comments.append(x)
+        elif self.token_class_is('line-comment'):
+          x = self.parse_comment_line()
+          comments.append(x)
+        elif self.token_class_is('directive'):
+          x = self.parse_dir()
+          directives.append(x)
+        else:
+          break
+
+      if self.match("}"):
+        break
+
+      f = self.parse_field()
+
+      self.need_sep()
+
+      if f != None:
+        f[0].update({'comments': comments})
+        f[0].update({'directives': directives})
+        fields.extend(f)
+
+    return {
+      'isa': 'type',
+      'kind': 'record',
+      'fields': fields,
+      'ti': ti
+    }
+
+
+
   def expr_type(self):
     ti = self.ti()
     if self.match("("):
@@ -142,36 +189,7 @@ class Parser:
       return {'isa': 'type', 'kind': 'pointer', 'to': t, 'ti': ti}
     
     elif self.match("record"):
-      self.need("{")
-      fields = []
-      while True:
-
-        #self.skip_tokens([' ', '\t', '\n'])
-
-        # skip spaces & comments before
-        while True:
-          if self.match('\n'):
-            continue
-          elif self.token_class_is('block-comment'):
-            x = self.parse_comment_block()
-          elif self.token_class_is('line-comment'):
-            x = self.parse_comment_line()
-          elif self.token_class_is('directive'):
-            x = self.parse_dir()
-          else:
-            break
-
-        if self.match("}"):
-          break
-
-        f = self.parse_field()
-
-        self.need_sep()
-
-        if f != None:
-          fields.extend(f)
-
-      return {'isa': 'type', 'kind': 'record', 'fields': fields, 'ti': ti}
+      return self.expr_type_record(ti)
 
 
     elif self.match("enum"):
@@ -432,6 +450,7 @@ class Parser:
         field_id = self.identifier()
         ti['start'] = v['ti']
         ti['end'] = field_id['ti']
+
         v = {
           'isa': 'value',
           'kind': 'access',

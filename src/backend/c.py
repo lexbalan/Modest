@@ -208,7 +208,19 @@ def print_type_record(t, tag=""):
   out("{")
   indent_up()
 
-  print_fields(t['fields'], before=nl_indentation(INDENT_SYMBOL), after=";", between="")
+  for field in t['fields']:
+    # print comments
+    if 'comments' in field:
+      for comment in field['comments']:
+        for line in comment['lines']:
+          out("\n"); indent();
+          out("//%s" % line['str'])
+
+    # print field
+    out("\n"); indent();
+    print_field(field, prefix="")
+    out(";")
+
 
   indent_down()
   out("\n"); indent(); out("}")
@@ -1138,6 +1150,10 @@ def print_def_type(x):
 
   is_defined_array = type.is_defined_array(t)
   out("typedef ")
+
+  if 'volatile' in x['att']:
+    out("volatile ")
+
   if is_defined_array:
     print_type_full(t['of'])#, print_aka=False)
   else:
