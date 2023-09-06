@@ -85,6 +85,12 @@ def value_is_immediate(x):
 
 
 
+
+def value_load(x):
+  return x
+
+
+
 # TODO: массив может НЕЯВНО быть построен только из
 # полного или из пустого дженерик массива
 def value_cons_array_from_generic_array(v, t, ti, method):

@@ -397,9 +397,10 @@ def value_bin_fold(op, l, r, t, ti):
 
 def do_value_bin(x):
   k = x['kind']
-  l = do_value(x['left'])
-  r = do_value(x['right'])
+  l = do_rvalue(x['left'])
+  r = do_rvalue(x['right'])
   ti = x['ti']
+
 
   if value_is_bad(l) or value_is_bad(r):
     return hlir_value_bad(ti)
@@ -590,7 +591,7 @@ def do_value_ref(val, t, ti):
 
 
 def do_value_un(x):
-  val = do_value(x['value'])
+  val = do_rvalue(x['value'])
   ti = x['ti']
 
   if value_is_bad(val):
@@ -606,7 +607,7 @@ def do_value_un(x):
 
 
 def do_value_call(x):
-  f = do_value(x['left'])
+  f = do_rvalue(x['left'])
 
   if value_is_bad(f):
     return hlir_value_bad(x['ti'])
@@ -641,7 +642,7 @@ def do_value_call(x):
   i = 0
   while i < npars:
     param = params[i]
-    arg = do_value(x['args'][i])
+    arg = do_rvalue(x['args'][i])
 
     if not value_is_bad(arg):
       arg = value_cast_implicit(arg, param['type'], arg['ti'])
@@ -653,7 +654,7 @@ def do_value_call(x):
 
   # arghack rest args
   while i < nargs:
-    arg = do_value(x['args'][i])
+    arg = do_rvalue(x['args'][i])
 
     if not value_is_bad(arg):
       arg = value_cast_implicit(arg, typeSysInt, arg['ti'])
@@ -671,7 +672,7 @@ def do_value_call(x):
 
 
 def do_value_index(x):
-  a = do_value(x['left'])
+  a = do_rvalue(x['left'])
 
   if value_is_bad(a):
     return hlir_value_bad(x['ti'])
@@ -687,7 +688,7 @@ def do_value_index(x):
     error("expected array or pointer to array", x)
     return hlir_value_bad(x['left']['ti'])
 
-  i = do_value(x['index'])
+  i = do_rvalue(x['index'])
 
   if value_is_bad(i):
     return hlir_value_bad(x['index']['ti'])
@@ -720,7 +721,7 @@ def do_value_index(x):
 
 
 def do_value_access(x):
-  r = do_value(x['left'])
+  r = do_rvalue(x['left'])
 
   if value_is_bad(r):
     return hlir_value_bad(x['ti'])
@@ -770,8 +771,8 @@ def do_value_access(x):
 
 
 def do_value_to(x):
+  v = do_rvalue(x['value'])
   t = do_type(x['type'])
-  v = do_value(x['value'])
   if value_is_bad(v) or type.is_bad(t):
     return hlir_value_bad(x['ti'])
   return value_cast_explicit(v, t, x['ti'])
@@ -911,6 +912,18 @@ bin_ops = [
 ]
 
 un_ops = ['ref', 'deref', 'plus', 'minus', 'not']
+
+
+
+def do_rvalue(x):
+  v = do_value(x)
+
+  if 'writeonly' in v['type']['att']:
+    error("attempt to read writeonly value", x['ti'])
+
+  return value_load(v)
+
+
 
 
 def do_value(x):
@@ -1081,7 +1094,7 @@ def do_stmt_let(x):
     return hlir_stmt_bad()
 
 
-  v = do_value(x['value'])
+  v = do_rvalue(x['value'])
 
   if value_is_bad(v):
     module['context'].value_add(id['str'], hlir_value_bad())
@@ -1130,7 +1143,7 @@ def do_stmt_assign(x):
 
 
 def do_stmt_value(x):
-  v = do_value(x['value'])
+  v = do_rvalue(x['value'])
 
   if value_is_bad(v):
     return hlir_stmt_bad()
