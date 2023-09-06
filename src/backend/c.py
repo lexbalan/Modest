@@ -211,6 +211,7 @@ def print_type_record(t, tag=""):
   for field in t['fields']:
     # print comments
     if 'comments' in field:
+      out("\n")
       for comment in field['comments']:
         for line in comment['lines']:
           out("\n"); indent();
@@ -1352,6 +1353,10 @@ def run(module, outname):
     elif isa == 'comment':
       if k == 'comment-line': print_comment_line(x)
       elif k == 'comment-block': print_comment_block(x)
+    elif isa == 'space':
+      #if k == 'emptyline':
+      #print("SP")
+      out("//NL\n")
 
   out("\n")
   if is_header:

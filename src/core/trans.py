@@ -1594,6 +1594,16 @@ def proc(ast, id="<MODULE_ID>", path="<MODULE_PATH>"):
 
       continue
 
+    elif isa == 'ast_space':
+      if x['kind'] == 'emptyline':
+        y = {
+          'isa': 'space',
+          'kind': 'emptyline',
+          'att': []
+        }
+
+
+
 
     if y == None:
       continue

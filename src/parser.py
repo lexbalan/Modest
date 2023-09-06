@@ -1032,7 +1032,9 @@ class Parser:
 
     while not self.is_end():
       x = None
+      ti = self.ti()
       if self.match('\n'):
+        #x = {'isa': 'ast_space', 'kind': 'emptyline', 'ti': ti}
         continue
       elif self.token_class_is('block-comment'):
         x = self.parse_comment_block()
@@ -1054,12 +1056,16 @@ class Parser:
 
 
     while not self.is_end():
+      ti = self.ti()
+
       export = self.match('export')
       extern = self.match('extern')
 
       x = None
 
-      if self.match('\n'): continue
+      if self.match('\n'):
+        #x = {'isa': 'ast_space', 'kind': 'emptyline', 'ti': ti}
+        continue
       elif self.match('func'): x = self.parse_func()
       elif self.match('const'): x = self.parse_const()
       elif self.match('var'): x = self.parse_var()
