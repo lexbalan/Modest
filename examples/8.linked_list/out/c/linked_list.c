@@ -19,13 +19,11 @@ struct Node {
     void *link;
 };
 
-
 struct List {
     Node *head;
     Node *tail;
     uint32_t size;
 };
-
 
 
 List *linked_list_create(void)

@@ -1113,16 +1113,14 @@ def print_def_func(x):
 
 def print_decl_type(x):
   name = x['id']['str']
-  #o("// type declaration %s\n" % name)
-  out("struct %s;\n" % name)
+  out("struct %s;" % name)
   if not NO_TYPEDEF_STRUCTS:
-    out("typedef struct %s %s;\n\n" % (name, name))
+    out("\ntypedef struct %s %s;" % (name, name))
 
 
 def print_def_type(x):
   id = x['id']['str']
   t = x['type']
-
 
   if not was_separated_by_new_line:
     if t['kind'] in ['record', 'enum']:
@@ -1132,7 +1130,7 @@ def print_def_type(x):
   if x['afterdef']:
     if type.is_record(t):
       print_type_record(t, tag=x['id']['str'])
-      out(";\n")
+      out(";")
       return;
 
 
