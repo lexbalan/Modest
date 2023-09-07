@@ -226,7 +226,12 @@ def do_field(x, is_last=False):
   if type.is_forbidden_var(t, zero_array_forbidden=not is_last):
     error("unsuitable type", x['type'])
 
-  return hlir_field(x['id'], t, ti=x['ti'])
+  f = hlir_field(x['id'], t, ti=x['ti'])
+  if 'nl' in x:
+    f['nl'] = x['nl']
+  else:
+    f['nl'] = 0
+  return f
 
 
 #
@@ -1244,7 +1249,8 @@ def do_import(x):
     'local': True
   }
 
-  module['text'].append(directive)
+  return directive
+  #module['text'].append(directive)
 
 
 
@@ -1522,7 +1528,7 @@ def comm_line(x):
   #print("ast_comment-line")
   y = {
     'isa': 'comment',
-    'kind': 'comment-line',
+    'kind': 'line',
     'lines': x['lines'],
     'att': []
   }
@@ -1535,8 +1541,8 @@ def comm_block(x):
   #print("ast_comment-block")
   y = {
     'isa': 'comment',
-    'kind': 'comment-block',
-    'lines': x['lines'],
+    'kind': 'block',
+    'text': x['text'],
     'att': []
   }
 
@@ -1561,6 +1567,8 @@ def proc(ast, id="<MODULE_ID>", path="<MODULE_PATH>"):
     'text': []
   }
 
+
+
   for x in ast:
     isa = x['isa']
     kind = x['kind']
@@ -1584,30 +1592,16 @@ def proc(ast, id="<MODULE_ID>", path="<MODULE_PATH>"):
     elif isa == 'ast_directive':
       if kind == 'pragma':
         exec(x['text'])
+        continue
 
       elif kind == 'import':
-        do_import(x)
-
-      elif kind == 'include':
-        info("include instead import", x['ti'])
-        do_import(x)
-
-      continue
-
-    elif isa == 'ast_space':
-      if x['kind'] == 'emptyline':
-        y = {
-          'isa': 'space',
-          'kind': 'emptyline',
-          'att': []
-        }
-
-
+        y = do_import(x)
 
 
     if y == None:
       continue
 
+    y['nl'] = x['nl']
     module['text'].append(y)
 
   m = module

@@ -1,14 +1,12 @@
-
-
-
-
+// examples/binary_file/main.cm
 import "libc/libc.h"
 import "libc/stdio.h"
+
 
 const filename = "file.bin"
 
 
-
+// chunk of data for read/write operations in file
 type Chunk record {
     id : [100]Nat8
     data : [1024]Nat8

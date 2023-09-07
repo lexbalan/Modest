@@ -1,7 +1,4 @@
-
-
-
-
+// examples/hello_world/main.cm
 import "libc/stdio.h"
 
 

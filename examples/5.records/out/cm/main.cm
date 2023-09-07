@@ -1,10 +1,8 @@
-
-
-
-
+// examples/records/main.cm
 import "libc/math.h"
 import "libc/stdio.h"
 import "libc/libc.h"
+
 
 type Point record {
     x : Float
@@ -15,6 +13,7 @@ type Line record {
     a : Point
     b : Point
 }
+
 
 var line : Line := {
     a = {
@@ -35,7 +34,6 @@ func max (a : Float, b : Float) -> Float {
     return b
 }
 
-
 func min (a : Float, b : Float) -> Float {
     if a < b {
         return a
@@ -44,8 +42,7 @@ func min (a : Float, b : Float) -> Float {
 }
 
 
-
-
+// Pythagorean theorem
 func distance (a : Point, b : Point) -> Float {
     let dx = max(a.x, b.x) - min(a.x, b.x)
     let dy = max(a.y, b.y) - min(a.y, b.y)

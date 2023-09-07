@@ -4,8 +4,8 @@
 #include <stdbool.h>
 #include <string.h>
 
-
 // examples/hello_world/main.cm
+
 
 int main(void)
 {

@@ -53,6 +53,34 @@ def precedence(x):
 
 
 
+def print_comment(x):
+  k = x['kind']
+  if k == 'line':
+    print_comment_line(x)
+  elif k == 'block':
+    print_comment_block(x)
+  else:
+    pass
+
+
+def print_comment_block(x):
+  out("/*%s*/" % x['text'])
+
+
+def print_comment_line(x):
+  lines = x['lines']
+  n = len(lines)
+  i = 0
+  while i < n:
+    line = lines[i]
+    indent(); out("//%s" % line['str'])
+    i = i + 1
+    if i < n:
+      out("\n")
+
+
+
+
 def print_type_integer(t):
   if 'id' in t:
     out(t['id']['str'])
@@ -96,7 +124,18 @@ def print_fields(fields, before, after, separator):
 def print_type_record(t):
   out("record {")
   indent_up()
-  print_fields(t['fields'], before=nl_indentation(INDENT_SYMBOL), after="", separator="")
+
+  for field in t['fields']:
+    # print comments
+    if 'comments' in field:
+      for comment in field['comments']:
+        out("\n" * comment['nl'])
+        print_comment(comment)
+
+    out("\n" * field['nl'])
+    indent();
+    print_field(field)
+
   indent_down()
   out("\n"); indent(); out("}")
 
@@ -485,11 +524,11 @@ def print_decl_func(x):
 
 
 def print_def_func(x):
-  if not was_separated_by_new_line:
-    out("\n")
+  #if not was_separated_by_new_line:
+  #  out("\n")
 
   func = x['func']
-  out('\nfunc %s ' % func['id']['str']); print_type(func['type'])
+  out('func %s ' % func['id']['str']); print_type(func['type'])
   print_stmt_block(func['stmt'])
 
 
@@ -499,9 +538,9 @@ def print_decl_type(x):
 
 
 def print_def_type(x):
-  if not was_separated_by_new_line:
-    if x['type']['kind'] in ['record', 'enum']:
-      out("\n")
+  #if not was_separated_by_new_line:
+  #  if x['type']['kind'] in ['record', 'enum']:
+  #    out("\n")
 
   out("type %s " % x['id']['str'])
   print_type(x['type'])#, print_aka=False)
@@ -538,38 +577,23 @@ def print_import(dirname, x):
   out("%s %s" % (dirname, s))
 
 
+
 def run(module, outname):
-
-  text = module['text']
-  strs = module['strings']
-
   is_header = 'header' in features
 
-  if is_header:
-    outname = outname + '.hm'
-  else:
-    outname = outname + '.cm'
+  if is_header: outname = outname + '.hm'
+  else: outname = outname + '.cm'
 
   output_open(outname)
 
 
-  prev_ik = ('', '')
+  for x in module['text']:
 
-  for x in text:
-    out("\n")
+    if 'nl' in x:
+      out("\n" * x['nl'])
 
     isa = x['isa']
     k = x['kind']
-
-    # prettify output with empty lines
-    ik = (isa, k)
-    separation = prev_ik != ik
-    if separation:
-      prev_ik = ik
-      out("\n")
-    global was_separated_by_new_line
-    was_separated_by_new_line = separation
-
 
     if isa == 'definition':
       if k == 'var': print_def_var(x)
@@ -582,6 +606,8 @@ def run(module, outname):
     elif isa == 'directive':
       if k == 'include': print_import('include', x)
       if k == 'import': print_import('import', x)
+    elif isa == 'comment':
+      print_comment(x)
 
   out("\n\n")
 

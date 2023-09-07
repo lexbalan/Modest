@@ -9,14 +9,13 @@
 #include <stdbool.h>
 #include <string.h>
 
-
 // examples/linked_list/main.cm
 
 #include "./linked_list.h"
 
 
-// wrap around linked list for List Nat64
 
+// wrap around linked list for List Nat64
 void nat64_list_insert(List *list, uint64_t x)
 {
     uint64_t *const p_nat64 = (uint64_t *const)malloc(sizeof(uint64_t));
@@ -26,7 +25,6 @@ void nat64_list_insert(List *list, uint64_t x)
 
 
 // show list conent from first item to last
-
 void list_print_forward(List *list)
 {
     printf("list_print_forward:\n");
@@ -40,7 +38,6 @@ void list_print_forward(List *list)
 
 
 // show list conent from last item to first
-
 void list_print_backward(List *list)
 {
     printf("list_print_backward:\n");
@@ -51,6 +48,7 @@ void list_print_backward(List *list)
         pn = linked_list_node_prev_get(pn);
     }
 }
+
 
 int main(void)
 {

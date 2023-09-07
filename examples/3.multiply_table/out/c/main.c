@@ -4,8 +4,8 @@
 #include <stdbool.h>
 #include <string.h>
 
-
 // examples/multiply_table/main.cm
+
 
 void mtab(int n)
 {
@@ -16,6 +16,7 @@ void mtab(int n)
         m = m + 1;
     }
 }
+
 
 int main(void)
 {

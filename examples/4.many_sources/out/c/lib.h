@@ -6,7 +6,6 @@
 #include <stdbool.h>
 #include <string.h>
 
-
 // examples/many_sources/lib.hm
 
 void lib_func(void);

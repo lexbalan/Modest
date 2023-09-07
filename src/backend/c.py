@@ -184,9 +184,9 @@ def print_fields(fields, before, after, between):
     out(before)
     print_field(param, prefix="")
 
-    if 'const' in param['type']['att']:
-      info("const in att", param['ti'])
-      exit(1)
+    #if 'const' in param['type']['att']:
+    #  info("const in att", param['ti'])
+    #  exit(1)
 
     out(after)
     i = i + 1
@@ -211,17 +211,14 @@ def print_type_record(t, tag=""):
   for field in t['fields']:
     # print comments
     if 'comments' in field:
-      out("\n")
       for comment in field['comments']:
-        for line in comment['lines']:
-          out("\n"); indent();
-          out("//%s" % line['str'])
+        out("\n" * comment['nl'])
+        print_comment(comment)
 
-    # print field
-    out("\n"); indent();
+    out("\n" * field['nl'])
+    indent();
     print_field(field, prefix="")
     out(";")
-
 
   indent_down()
   out("\n"); indent(); out("}")
@@ -1109,8 +1106,8 @@ def print_def_func(x):
 
   print_stmt_block(func['stmt'], arrays=arrays)
 
-  if styleguide['EXTRA_BLANK_LINES_BETWEEN_FUNCS'] > 0:
-    out("\n" * styleguide['EXTRA_BLANK_LINES_BETWEEN_FUNCS'])
+#  if styleguide['EXTRA_BLANK_LINES_BETWEEN_FUNCS'] > 0:
+#    out("\n" * styleguide['EXTRA_BLANK_LINES_BETWEEN_FUNCS'])
 
 
 
@@ -1258,20 +1255,33 @@ def print_insert(x):
   out(x['str'])
 
 
-def print_comment_line(x):
-  for line in x['lines']:
-    out("\n//%s" % line['str'])
+def print_comment(x):
+  k = x['kind']
+  if k == 'line':
+    print_comment_line(x)
+  elif k == 'block':
+    print_comment_block(x)
+  else:
+    pass
 
 
 def print_comment_block(x):
+  out("/*%s*/" % x['text'])
+
+
+def print_comment_line(x):
   lines = x['lines']
+  i = 0
+  n = len(lines)
+  while i < n:
+    line = lines[i]
+    indent()
+    out("//%s" % line['str'])
+    i = i + 1
+    if i < n:
+      out("\n")
 
-  out("/*\n")
 
-  for line in lines:
-    out("%s\n" % (line['str']))
-
-  out(" */")
 
 
 
@@ -1312,7 +1322,7 @@ def run(module, outname):
   lo("#include <stdint.h>")
   if USE_STDBOOL:
     lo("#include <stdbool.h>")
-  lo("#include <string.h>")  # for NULL & memcpy
+  lo("#include <string.h>\n\n")
 
 
   prev_ik = ('', '')
@@ -1321,23 +1331,14 @@ def run(module, outname):
     if 'c-no-print' in x['att']:
       continue
 
-    out("\n")
-
     isa = x['isa']
     k = x['kind']
 
-    # prettify output with empty lines
-    ik = (isa, k)
-    separation = prev_ik != ik
-    if separation:
-      prev_ik = ik
+    if 'nl' in x:
+      out("\n" * x['nl'])
+    else:
       out("\n")
-    global was_separated_by_new_line
-    was_separated_by_new_line = separation
-
-    if 'comment' in x:
-      if x['comment'] != '':
-        out("// " + x['comment'])
+      print('not NL in ' + str(x))
 
     if isa == 'definition':
       if k == 'var': print_def_var(x)
@@ -1351,12 +1352,9 @@ def run(module, outname):
       if k == 'import': print_include(x)
       elif k == 'insert': print_insert(x)
     elif isa == 'comment':
-      if k == 'comment-line': print_comment_line(x)
-      elif k == 'comment-block': print_comment_block(x)
-    elif isa == 'space':
-      #if k == 'emptyline':
-      #print("SP")
-      out("//NL\n")
+      print_comment(x)
+
+
 
   out("\n")
   if is_header:

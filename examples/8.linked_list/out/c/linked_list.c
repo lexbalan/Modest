@@ -8,10 +8,10 @@
 #include <stdbool.h>
 #include <string.h>
 
-
 // examples/linked_list/linked_list.cm
 
 #include "./linked_list.h"
+
 
 struct Node {
     Node *next;
@@ -25,6 +25,7 @@ struct List {
     Node *tail;
     uint32_t size;
 };
+
 
 
 List *linked_list_create(void)
@@ -41,6 +42,7 @@ List *linked_list_create(void)
     return list;
 }
 
+
 uint32_t linked_list_size_get(List *list)
 {
     if (list == NULL) {
@@ -49,6 +51,7 @@ uint32_t linked_list_size_get(List *list)
 
     return list->size;
 }
+
 
 Node *linked_list_first_get(List *list)
 {
@@ -59,6 +62,7 @@ Node *linked_list_first_get(List *list)
     return list->head;
 }
 
+
 Node *linked_list_last_get(List *list)
 {
     if (list == NULL) {
@@ -67,6 +71,7 @@ Node *linked_list_last_get(List *list)
 
     return list->tail;
 }
+
 
 Node *linked_list_node_create(void)
 {
@@ -83,6 +88,7 @@ Node *linked_list_node_create(void)
     return node;
 }
 
+
 Node *linked_list_node_next_get(Node *node)
 {
     if (node == NULL) {
@@ -91,6 +97,7 @@ Node *linked_list_node_next_get(Node *node)
 
     return node->next;
 }
+
 
 Node *linked_list_node_prev_get(Node *node)
 {
@@ -101,6 +108,7 @@ Node *linked_list_node_prev_get(Node *node)
     return node->prev;
 }
 
+
 void *linked_list_node_link_get(Node *node)
 {
     if (node == NULL) {
@@ -109,6 +117,7 @@ void *linked_list_node_link_get(Node *node)
 
     return node->link;
 }
+
 
 Node *linked_list_insert_node(List *list, Node *new_node)
 {

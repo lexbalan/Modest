@@ -96,16 +96,18 @@ class Parser:
     return {'isa': 'id', 'str': s, 'ti': ti}
 
 
-  def need_sep(self, separators=['\n', ';'], stoppers=['}']):
+  def need_sep(self, separators=['\n', ';'], stoppers=['}'], eat=True):
     # random space after
     self.skip_tokens([' ', '\t'])
 
     if self.ctok() in separators:
-      while self.ctok() in separators:
-        self.skip()
+      if eat:
+        while self.ctok() in separators:
+          self.skip()
+
     elif self.ctok() in stoppers:
       pass
-    elif self.ctok_class() in ['line-comment', 'block-comment']:
+    elif self.ctok_class() in ['comment-line', 'comment-block']:
       self.skip()
       pass
     else:
@@ -129,18 +131,26 @@ class Parser:
       comments = []
       directives = []
 
+      spaceline_cnt = 0
       # skip spaces & comments before
       while True:
         if self.match('\n'):
+          spaceline_cnt = spaceline_cnt + 1
           continue
-        elif self.token_class_is('block-comment'):
+        elif self.token_class_is('comment-block'):
           x = self.parse_comment_block()
+          x['nl'] = spaceline_cnt
+          spaceline_cnt = 0
           comments.append(x)
-        elif self.token_class_is('line-comment'):
+        elif self.token_class_is('comment-line'):
           x = self.parse_comment_line()
+          x['nl'] = spaceline_cnt
+          spaceline_cnt = 0
           comments.append(x)
         elif self.token_class_is('directive'):
           x = self.parse_dir()
+          x['nl'] = spaceline_cnt
+          spaceline_cnt = 0
           directives.append(x)
         else:
           break
@@ -150,11 +160,13 @@ class Parser:
 
       f = self.parse_field()
 
-      self.need_sep()
+      self.need_sep(eat=False)
 
       if f != None:
         f[0].update({'comments': comments})
         f[0].update({'directives': directives})
+        f[0]['nl'] = spaceline_cnt
+        spaceline_cnt = 0
         fields.extend(f)
 
     return {
@@ -820,7 +832,7 @@ class Parser:
 
       # comment?
       cl = self.ctok_class()
-      if cl in ['line-comment', 'block-comment']:
+      if cl in ['comment-line', 'comment-block']:
         self.skip()
         return None
 
@@ -911,7 +923,7 @@ class Parser:
     ftyp = self.expr_type()
 
     # func declaration?
-    if self.match("\n"):
+    if self.look("\n"):
       return {
         'isa': 'ast_declaration',
         'kind': 'func',
@@ -974,7 +986,7 @@ class Parser:
     id = self.identifier()
 
     # type declaration
-    if self.match("\n"):
+    if self.look("\n"):
       return {
         'isa': 'ast_declaration',
         'kind': 'type',
@@ -1011,7 +1023,7 @@ class Parser:
   def parse_comment_block(self):
     ti = self.ti()
     x = self.gettok()
-    return {'isa': 'ast_comment', 'kind': 'block', 'lines': x, 'ti': ti}
+    return {'isa': 'ast_comment', 'kind': 'block', 'text': x, 'ti': ti}
 
 
   def parse_dir(self):
@@ -1030,15 +1042,16 @@ class Parser:
 
     output = []
 
+    spaceline_cnt = 0
     while not self.is_end():
       x = None
       ti = self.ti()
       if self.match('\n'):
-        #x = {'isa': 'ast_space', 'kind': 'emptyline', 'ti': ti}
+        spaceline_cnt = spaceline_cnt + 1
         continue
-      elif self.token_class_is('block-comment'):
+      elif self.token_class_is('comment-block'):
         x = self.parse_comment_block()
-      elif self.token_class_is('line-comment'):
+      elif self.token_class_is('comment-line'):
         x = self.parse_comment_line()
       elif self.token_class_is('directive'):
         x = self.parse_dir()
@@ -1049,10 +1062,21 @@ class Parser:
         break
 
       if isinstance(x, list):
+        x[0]['nl'] = spaceline_cnt
+        spaceline_cnt = 0
         output.extend(x)
       else:
-        output.append(x)
 
+        x['nl'] = spaceline_cnt
+        spaceline_cnt = 0
+
+        """if x['isa'] != 'ast_directive':
+          x['nl'] = spaceline_cnt
+          spaceline_cnt = 0
+        else:
+          x['nl'] = 1"""
+
+        output.append(x)
 
 
     while not self.is_end():
@@ -1064,16 +1088,16 @@ class Parser:
       x = None
 
       if self.match('\n'):
-        #x = {'isa': 'ast_space', 'kind': 'emptyline', 'ti': ti}
+        spaceline_cnt = spaceline_cnt + 1
         continue
       elif self.match('func'): x = self.parse_func()
       elif self.match('const'): x = self.parse_const()
       elif self.match('var'): x = self.parse_var()
       elif self.match('type'): x = self.parse_type()
 
-      elif self.token_class_is('block-comment'):
+      elif self.token_class_is('comment-block'):
         x = self.parse_comment_block()
-      elif self.token_class_is('line-comment'):
+      elif self.token_class_is('comment-line'):
         x = self.parse_comment_line()
       elif self.token_class_is('directive'):
         x = self.parse_dir()
@@ -1093,10 +1117,24 @@ class Parser:
         x['extern'] = True
 
       if isinstance(x, list):
+        x[0]['nl'] = spaceline_cnt
+        spaceline_cnt = 0
         output.extend(x)
       else:
+
+        # CM директива не печатается в C
+        if x['isa'] != 'ast_directive':
+          x['nl'] = spaceline_cnt
+          spaceline_cnt = 0
+        else:
+          x['nl'] = 1
+          spaceline_cnt = spaceline_cnt - 1
+
+        #x['nl'] = spaceline_cnt
+        #spaceline_cnt = 0
         output.append(x)
     
+
     return output
 
 

@@ -37,6 +37,7 @@ extern func fread(buf : Pointer, size : SizeT, count : SizeT, f : *FILE) -> Size
 extern func fwrite(buf : Pointer, size : SizeT, count : SizeT, f : *FILE) -> SizeT
 extern func freopen(filename : ConstCharStr, mode : ConstCharStr, f : *FILE) -> *FILE
 
+@attribute("dispensable")
 extern func fseek(stream : *FILE, offset : LongInt, whence : Int) -> Int
 
 extern func fsetpos (f : *FILE, pos : *FposT) -> Int

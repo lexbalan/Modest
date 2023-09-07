@@ -4,10 +4,11 @@
 #include <stdbool.h>
 #include <string.h>
 
-
 // examples/if-else/main.cm
 
+
 #define filename  "file.txt"
+
 
 void write_example(void)
 {
@@ -20,6 +21,7 @@ void write_example(void)
     fprintf(fp, "some text.\n");
     fclose(fp);
 }
+
 
 void read_example(void)
 {
@@ -39,6 +41,7 @@ void read_example(void)
     }
     fclose(fp);
 }
+
 
 int main(void)
 {

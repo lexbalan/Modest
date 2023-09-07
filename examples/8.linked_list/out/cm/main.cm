@@ -1,14 +1,12 @@
-
-
-
-
+// examples/linked_list/main.cm
 import "libc/libc.h"
 import "libc/stdio.h"
+
 import "./linked_list.h"
 
 
 
-
+// wrap around linked list for List Nat64
 func nat64_list_insert (list : *List, x : Nat64) -> Unit {
     let p_nat64 = malloc(sizeof(Nat64))
     *p_nat64 := x
@@ -16,8 +14,7 @@ func nat64_list_insert (list : *List, x : Nat64) -> Unit {
 }
 
 
-
-
+// show list conent from first item to last
 func list_print_forward (list : *List) -> Unit {
     printf("list_print_forward:\n")
     var pn : *Node := linked_list_first_get(list)
@@ -29,8 +26,7 @@ func list_print_forward (list : *List) -> Unit {
 }
 
 
-
-
+// show list conent from last item to first
 func list_print_backward (list : *List) -> Unit {
     printf("list_print_backward:\n")
     var pn : *Node := linked_list_last_get(list)

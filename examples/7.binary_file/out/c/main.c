@@ -9,18 +9,18 @@
 #include <stdbool.h>
 #include <string.h>
 
-
 // examples/binary_file/main.cm
+
 
 #define filename  "file.bin"
 
 
 // chunk of data for read/write operations in file
-
 typedef struct {
     uint8_t id[100];
     uint8_t data[1024];
 } Chunk;
+
 
 void write_example(void)
 {
@@ -37,6 +37,7 @@ void write_example(void)
     fclose(fp);
 }
 
+
 void read_example(void)
 {
     printf("run read_example\n");
@@ -52,6 +53,7 @@ void read_example(void)
     printf("chunk.data: %s\n", &chunk.data[0]);
     fclose(fp);
 }
+
 
 int main(void)
 {

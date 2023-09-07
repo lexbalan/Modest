@@ -1,10 +1,7 @@
-
-
-
-
+// examples/many_sources/main.cm
 import "libc/stdio.h"
-import "./lib.h"
 
+import "./lib.h"
 
 func main () -> Int {
     printf("hello from main\n")

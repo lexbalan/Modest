@@ -1,8 +1,6 @@
-
-
-
-
+// examples/if-else/main.cm
 import "libc/stdio.h"
+
 
 const filename = "file.txt"
 

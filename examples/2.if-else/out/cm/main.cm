@@ -1,7 +1,4 @@
-
-
-
-
+// examples/if-else/main.cm
 import "libc/stdio.h"
 
 

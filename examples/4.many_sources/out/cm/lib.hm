@@ -1,6 +1,4 @@
-
-
-
+// examples/many_sources/lib.hm
 
 func lib_func () -> Unit
 

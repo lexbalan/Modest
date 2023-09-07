@@ -1,7 +1,4 @@
-
-
-
-
+// examples/multiply_table/main.cm
 import "libc/stdio.h"
 
 

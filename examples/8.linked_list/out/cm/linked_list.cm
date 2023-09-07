@@ -1,9 +1,8 @@
-
-
-
-
+// examples/linked_list/linked_list.cm
 import "libc/libc.h"
+
 import "./linked_list.h"
+
 
 type Node record {
     next : *Node
@@ -105,7 +104,6 @@ func linked_list_insert_node (list : *List, new_node : *Node) -> *Node {
     list.size := list.size + 1
     return new_node
 }
-
 
 func linked_list_insert (list : *List, link : Pointer) -> *Node {
     if list == nil {
