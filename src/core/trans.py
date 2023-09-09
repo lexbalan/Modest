@@ -91,6 +91,8 @@ def c_include(s):
     'str': s,
     'local': local,
     'att': [],
+    'nl': 1,
+    'ti': None
   }
   module['text'].append(inc)
 
@@ -150,6 +152,8 @@ def insert(s):
     'kind': 'insert',
     'str': s,
     'att': [],
+    'nl': 1,
+    'ti': None
   }
   module['text'].append(inc)
 
@@ -668,7 +672,7 @@ def do_value_call(x):
     i = i + 1
 
 
-  rv = hlir_value_call(f, args, ti=x['ti'])
+  rv = hlir_value_call(f, ftype['to'], args, ti=x['ti'])
 
   if 'dispensable' in f['att']:
     rv['att'].append('dispensable')

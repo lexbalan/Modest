@@ -318,13 +318,13 @@ def hlir_value_const(id, type, init=None, ti=None):
   }
 
 
-def hlir_value_call(func, args, ti=None):
+def hlir_value_call(func, rettype, args, ti=None):
   return {
     'isa': 'value',
     'kind': 'call',
     'func': func,
     'args': args,
-    'type': func['type']['to'],
+    'type': rettype,
     'att': [],
     'ti': ti
   }
