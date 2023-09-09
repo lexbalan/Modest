@@ -1181,6 +1181,9 @@ def do_stmt(x):
   elif k == 'break': s = do_stmt_break(x)
   else: s = hlir_stmt_bad()
 
+  if 'nl' in x:
+    s['nl'] = x['nl']
+
   return s
 
 

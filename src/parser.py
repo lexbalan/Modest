@@ -858,21 +858,43 @@ class Parser:
     self.need("{")
     stmts = []
     while True:
-      self.skip_tokens([' ', '\t', '\n'])
+      #self.skip_tokens([' ', '\t', '\n'])
+
+      nl_cnt = 0
+      while True:
+        if self.look(" ") or self.look("\t"):
+          self.skip()
+          continue
+
+        elif self.look('\n'):
+          self.skip()
+          nl_cnt = nl_cnt + 1
+          continue
+
+        else:
+          break
+
 
       if self.match('}'):
         break
 
       s = self.stmt()
+
       if s != None:
-        sep = self.need_sep()
+        sep = self.need_sep(eat=False)
         #if sep == False:
         #  break
 
         if isinstance(s, list):
+          s[0]['nl'] = nl_cnt
           stmts.extend(s)
         else:
+          s['nl'] = nl_cnt
           stmts.append(s)
+
+        nl_cnt = 0
+
+
 
     return {'isa': 'stmt', 'kind': 'block', 'stmts': stmts, 'ti': ti}
   

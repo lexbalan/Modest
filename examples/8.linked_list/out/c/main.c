@@ -53,7 +53,9 @@ void list_print_backward(List *list)
 int main(void)
 {
     printf("linked list example\n");
+
     List *const list = linked_list_create();
+
     if (list == NULL) {
         printf("error: cannot create list");
         return 1;
@@ -73,6 +75,7 @@ int main(void)
     printf("linked list size: %d\n", list_size);
     list_print_forward(list);
     list_print_backward(list);
+
     return 0;
 }
 

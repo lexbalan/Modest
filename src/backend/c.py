@@ -936,25 +936,12 @@ def print_stmt_value(x):
 
 
 
-k_prev = ""
 def print_stmt(x):
-  global k_prev
-  k = x['kind']
 
-  out("\n")
-
-  if puffy:
-    global block_starts
-    if not block_starts:
-      if k in ['if', 'while', 'return']:
-        out("\n")
-      elif k != k_prev:
-        out("\n")
-    else:
-      block_starts = False
-
+  out("\n" * x['nl'])
   indent()
 
+  k = x['kind']
   if k == 'block': print_stmt_block(x)
   elif k == 'value': print_stmt_value(x)
   elif k == 'assign': print_stmt_assign(x)
@@ -967,7 +954,6 @@ def print_stmt(x):
   elif k == 'again': out('continue;')
   else: out("<stmt %s>" % str(x))
 
-  k_prev = k
 
 
 # not works
@@ -1008,7 +994,7 @@ def print_stmt_block(s, arrays=None):
   if arrays != None:
     print_arrays(arrays)
 
-  if len (s['stmts']) > 0:
+  if len(s['stmts']) > 0:
     print_stmts(s['stmts'])
   else:
     out("\n"); indent()

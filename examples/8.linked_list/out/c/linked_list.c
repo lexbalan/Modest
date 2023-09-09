@@ -129,7 +129,6 @@ Node *linked_list_insert_node(List *list, Node *new_node)
 
     if (list->tail != NULL) {
         Node *const old_tail = list->tail;
-
         old_tail->next = new_node;
         new_node->prev = old_tail;
     }
