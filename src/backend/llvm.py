@@ -1206,6 +1206,9 @@ def print_stmt(x):
     print_stmt_break()
   elif k == 'again':
     print_stmt_again()
+
+  elif k == 'comment-line': pass
+  elif k == 'comment-block': pass
   else:
     lo("<stmt %s>" % str(x))
 

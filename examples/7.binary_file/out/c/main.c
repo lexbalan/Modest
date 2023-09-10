@@ -35,12 +35,12 @@ void write_example(void)
 
     Chunk chunk;
 
-
-
+    // pointers casting requires -funsafe translator option
+    // (see Makefile)
     strcpy((char *)&chunk.id[0], (char *)"id");
     strcpy((char *)&chunk.data[0], (char *)"data");
 
-
+    // write chunk to file
     fwrite((void *)&chunk, sizeof(Chunk), 1, fp);
 
     fclose(fp);

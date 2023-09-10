@@ -34,7 +34,7 @@ List *linked_list_create(void)
         return NULL;
     }
 
-
+    //list.size >= list.head
 
     list->head = NULL;
     list->tail = NULL;

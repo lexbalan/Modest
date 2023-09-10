@@ -59,16 +59,22 @@ func lineLength (line : Line) -> Float {
 
 func ptr_example () -> Unit {
     let ptr_p = malloc(sizeof(Point))
+
+    // access by pointer
     ptr_p.x := 10.0
     ptr_p.y := 20.0
+
     printf("point(%f, %f)\n", ptr_p.x, ptr_p.y)
 }
 
 
 func main () -> Int {
+    // by value
     let len = lineLength(line)
     printf("line length = %f\n", len)
+
     ptr_example()
+
     return 0
 }
 

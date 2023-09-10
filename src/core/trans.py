@@ -1164,6 +1164,27 @@ def do_stmt_value(x):
   return hlir_stmt_value(v, ti=x['ti'])
 
 
+def do_stmt_comment_line(x):
+  print("do_stmt_comment_line")
+  return {
+    'isa': 'stmt',
+    'kind': 'comment-line',
+    'lines': x['lines'],
+    'nl': x['nl'],
+    'ti': x['ti']
+  }
+
+
+def do_stmt_comment_block(x):
+  print("do_stmt_comment_block")
+  return {
+    'isa': 'stmt',
+    'kind': 'comment-block',
+    'text': x['text'],
+    'nl': x['nl'],
+    'ti': x['ti']
+  }
+
 
 def do_stmt(x):
   k = x['kind']
@@ -1179,6 +1200,8 @@ def do_stmt(x):
   elif k == 'var': s = do_stmt_var(x)
   elif k == 'again': s = do_stmt_again(x)
   elif k == 'break': s = do_stmt_break(x)
+  elif k == 'comment-line': s = do_stmt_comment_line(x)
+  elif k == 'comment-block': s = do_stmt_comment_block(x)
   else: s = hlir_stmt_bad()
 
   if 'nl' in x:

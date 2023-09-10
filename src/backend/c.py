@@ -6,7 +6,7 @@ from error import info
 from .common import *
 import core.type as type
 from core.value import value_attribute_check
-from core.hlir import hlir_value_num_get
+from core.hlir import hlir_value_num_get, hlir_stmt_block
 
 
 puffy = False
@@ -938,21 +938,22 @@ def print_stmt_value(x):
 
 
 def print_stmt(x):
+  k = x['kind']
 
   out("\n" * x['nl'])
-  indent()
 
-  k = x['kind']
   if k == 'block': print_stmt_block(x)
-  elif k == 'value': print_stmt_value(x)
-  elif k == 'assign': print_stmt_assign(x)
-  elif k == 'return': print_stmt_return(x)
-  elif k == 'if': print_stmt_if(x, need_else_branch=False)
-  elif k == 'while': print_stmt_while(x)
-  elif k == 'def_var': print_stmt_defvar(x)
-  elif k == 'def_let': print_stmt_let(x)
-  elif k == 'break': out('break;')
-  elif k == 'again': out('continue;')
+  elif k == 'value': indent(); print_stmt_value(x)
+  elif k == 'assign': indent(); print_stmt_assign(x)
+  elif k == 'return': indent(); print_stmt_return(x)
+  elif k == 'if': indent(); print_stmt_if(x, need_else_branch=False)
+  elif k == 'while': indent(); print_stmt_while(x)
+  elif k == 'def_var': indent(); print_stmt_defvar(x)
+  elif k == 'def_let': indent(); print_stmt_let(x)
+  elif k == 'break': indent(); out('break;')
+  elif k == 'again': indent(); out('continue;')
+  elif k == 'comment-line': print_comment_line(x)
+  elif k == 'comment-block': print_comment_block(x)
   else: out("<stmt %s>" % str(x))
 
 
@@ -1245,12 +1246,8 @@ def print_insert(x):
 
 def print_comment(x):
   k = x['kind']
-  if k == 'line':
-    print_comment_line(x)
-  elif k == 'block':
-    print_comment_block(x)
-  else:
-    pass
+  if k == 'line': print_comment_line(x)
+  elif k == 'block': print_comment_block(x)
 
 
 def print_comment_block(x):
@@ -1263,6 +1260,7 @@ def print_comment_line(x):
   n = len(lines)
   while i < n:
     line = lines[i]
+    #if need_indent:
     indent()
     out("//%s" % line['str'])
     i = i + 1

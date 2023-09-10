@@ -9,8 +9,8 @@
 
 void mtab(int n)
 {
-
-
+    //var m : Nat32
+    //m := 1
     int m = 1;
     while (m < 10) {
         const int nm = n * m;

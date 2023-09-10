@@ -698,15 +698,7 @@ class Parser:
     elif self.look("{"):
       return self.parse_value_term_rec(ti)
 
-      """elif self.match("@"):
-      #t = self.parse_type()
-      if self.look("{"):
-        return self.parse_value_term_rec(ti)
-      if self.look("["):
-        return self.parse_value_term_arr(ti)"""
-
     else:
-      #print("??? " + str(self.ctok()))
       cl = self.ctok_class()
       tokstr = self.ctok()
 
@@ -714,6 +706,7 @@ class Parser:
         tokstr = 'newline'
       elif tokstr == '':
         tokstr = 'end-of-file'
+
       error("unexpected token '%s'" % tokstr, self.ti())
       self.skip()
       return {'isa': 'value', 'kind': 'bad', 'ti': ti}
@@ -811,6 +804,18 @@ class Parser:
     return {'isa': 'stmt', 'kind': 'assign', 'left': v, 'right': r, 'ti': assign_ti}
   
   
+  def stmt_comment_line(self):
+    ti = self.ti()
+    x = self.gettok()
+    return {'isa': 'stmt', 'kind': 'comment-line', 'lines': x, 'ti': ti}
+
+
+  def stmt_comment_block(self):
+    ti = self.ti()
+    x = self.gettok()
+    return {'isa': 'stmt', 'kind': 'comment-block', 'text': x, 'ti': ti}
+
+
   def stmt(self):
     ti = self.ti()
 
@@ -832,11 +837,17 @@ class Parser:
 
       # comment?
       cl = self.ctok_class()
-      if cl in ['comment-line', 'comment-block']:
-        self.skip()
-        return None
+      if cl == 'comment-line':
+        s = self.stmt_comment_line()
+      elif cl == 'comment-block':
+        s = self.stmt_comment_block()
+      else:
 
-      s = self.stmt_expr_value()
+        """if cl in ['comment-line', 'comment-block']:
+        self.skip()
+        return None"""
+
+        s = self.stmt_expr_value()
 
     if s == None:
       return s

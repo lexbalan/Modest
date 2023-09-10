@@ -18,7 +18,7 @@
 // wrap around linked list for List Nat64
 void nat64_list_insert(List *list, uint64_t x)
 {
-
+    // alloc memory for Nat64 value
     uint64_t *const p_nat64 = (uint64_t *const)malloc(sizeof(uint64_t));
     *p_nat64 = x;
     linked_list_insert(list, (void *)p_nat64);
@@ -62,7 +62,7 @@ int main(void)
         return 1;
     }
 
-
+    // add some Nat64 values to list
     nat64_list_insert(list, 0);
     nat64_list_insert(list, 10);
     nat64_list_insert(list, 20);
@@ -75,14 +75,14 @@ int main(void)
     nat64_list_insert(list, 90);
     nat64_list_insert(list, 100);
 
-
+    // print list size
     const uint32_t list_size = linked_list_size_get(list);
     printf("linked list size: %d\n", list_size);
 
-
+    // print list forward
     list_print_forward(list);
 
-
+    // print list backward
     list_print_backward(list);
 
     return 0;

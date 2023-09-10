@@ -486,19 +486,21 @@ def print_stmt_value(x):
 
 def print_stmt(x):
 
-  out("\n"); indent()
+  out("\n" * x['nl'])
 
   k = x['kind']
-  if k == 'block': print_stmt_block(x)
-  elif k == 'value': print_stmt_value(x)
-  elif k == 'assign': print_stmt_assign(x)
-  elif k == 'return': print_stmt_return(x)
-  elif k == 'if': print_stmt_if(x)
-  elif k == 'while': print_stmt_while(x)
-  elif k == 'def_var': print_stmt_defvar(x)
-  elif k == 'def_let': print_stmt_let(x)
-  elif k == 'break': out('break')
-  elif k == 'again': out('continue')
+  if k == 'block': indent(); print_stmt_block(x)
+  elif k == 'value': indent(); print_stmt_value(x)
+  elif k == 'assign': indent(); print_stmt_assign(x)
+  elif k == 'return': indent(); print_stmt_return(x)
+  elif k == 'if': indent(); print_stmt_if(x)
+  elif k == 'while': indent(); print_stmt_while(x)
+  elif k == 'def_var': indent(); print_stmt_defvar(x)
+  elif k == 'def_let': indent(); print_stmt_let(x)
+  elif k == 'break': indent(); out('break')
+  elif k == 'again': indent(); out('continue')
+  elif k == 'comment-line': print_comment_line(x)
+  elif k == 'comment-block': print_comment_block(x)
   else: out("<stmt %s>" % str(x))
 
 
