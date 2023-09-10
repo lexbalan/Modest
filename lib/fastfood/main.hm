@@ -1,6 +1,7 @@
 
-func ff_memzero (mem : Pointer, len : Nat64)
-func ff_memcpy (dst : Pointer, src : Pointer, len : Nat64)
+func ff_memzero(mem : Pointer, len : Nat64)
+func ff_memcpy(dst : Pointer, src : Pointer, len : Nat64)
+func ff_cstrlen(cstr : *[]Nat8) -> Nat64
 func delay_us(us : Nat64)
 func delay_ms(ms : Nat64)
 func delay_s(s : Nat64)

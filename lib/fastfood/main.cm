@@ -41,7 +41,7 @@ func ff_memcpy (dst : Pointer, src : Pointer, len : Nat64) {
     let src_w = src to *[]ArchNat
     let dst_w = dst to *[]ArchNat
 
-	var i := 0 to Nat64
+    var i := 0 to Nat64
     while (i < len_words) {
         dst_w[i] := src_w[i]
         i := i + 1
@@ -56,6 +56,16 @@ func ff_memcpy (dst : Pointer, src : Pointer, len : Nat64) {
         i := i + 1
     }
 }
+
+
+func ff_cstrlen(cstr : *[]Nat8) -> Nat64 {
+    var i := 0 to Nat64
+    while cstr[i] != 0 {
+        i := i + 1
+    }
+    return i
+}
+
 
 
 func delay_us(us : Nat64) {
