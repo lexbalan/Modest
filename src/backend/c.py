@@ -1,6 +1,4 @@
 
-IMPORT_OBJECTS = False
-
 from opt import *
 from error import info
 from .common import *

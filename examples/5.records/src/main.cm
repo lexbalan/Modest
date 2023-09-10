@@ -24,7 +24,7 @@ type Line record {
 var line : Line := {a={x=0,y=0}, b={x=1, y=1}}
 
 
-@property("c_prefix", "static inline")
+@attribute(["static", "inline"])
 func max(a : Float, b : Float) -> Float {
   if a > b {
     return a
@@ -32,7 +32,7 @@ func max(a : Float, b : Float) -> Float {
   return b
 }
 
-@property("c_prefix", "static inline")
+@attribute(["static", "inline"])
 func min(a : Float, b : Float) -> Float {
   if a < b {
     return a
