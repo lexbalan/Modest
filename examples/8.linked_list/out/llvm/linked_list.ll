@@ -143,6 +143,7 @@ then_0:
   ret %List* null
   br label %endif_0
 endif_0:
+;list.size >= list.head
   %5 = getelementptr inbounds %List, %List* %2, i32 0, i32 0
   store %Node* null, %Node** %5
   %6 = getelementptr inbounds %List, %List* %2, i32 0, i32 1

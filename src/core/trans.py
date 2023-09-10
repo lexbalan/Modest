@@ -1165,7 +1165,6 @@ def do_stmt_value(x):
 
 
 def do_stmt_comment_line(x):
-  print("do_stmt_comment_line")
   return {
     'isa': 'stmt',
     'kind': 'comment-line',
@@ -1176,7 +1175,6 @@ def do_stmt_comment_line(x):
 
 
 def do_stmt_comment_block(x):
-  print("do_stmt_comment_block")
   return {
     'isa': 'stmt',
     'kind': 'comment-block',

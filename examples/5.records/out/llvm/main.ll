@@ -336,6 +336,7 @@ define double @lineLength(%Line %line) {
 define void @ptr_example() {
   %1 = call i8*(i64) @malloc (i64 0)
   %2 = bitcast i8* %1 to %Point*
+; access by pointer
   %3 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 0
   store double 0x4024000000000000, double* %3
   %4 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 1
@@ -350,6 +351,7 @@ define void @ptr_example() {
 }
 
 define i32 @main() {
+; by value
   %1 = load %Line, %Line* @line
   %2 = call double(%Line) @lineLength (%Line %1)
   %3 = bitcast [18 x i8]* @str_2 to %ConstCharStr

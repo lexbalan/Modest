@@ -91,6 +91,8 @@ declare void @perror(%ConstCharStr)
 
 
 define void @mtab(i32 %n) {
+;var m : Nat32
+;m := 1
   %m = alloca i32
   store i32 1, i32* %m
   br label %again_1

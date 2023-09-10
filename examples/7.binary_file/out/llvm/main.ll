@@ -206,6 +206,8 @@ then_0:
   br label %endif_0
 endif_0:
   %chunk = alloca %Chunk
+; pointers casting requires -funsafe translator option
+; (see Makefile)
   %10 = getelementptr inbounds %Chunk, %Chunk* %chunk, i32 0, i32 0
   %11 = bitcast [100 x i8]* %10 to i8*
   %12 = bitcast [3 x i8]* @str_5 to i8*
@@ -214,6 +216,7 @@ endif_0:
   %15 = bitcast [1024 x i8]* %14 to i8*
   %16 = bitcast [5 x i8]* @str_6 to i8*
   %17 = call i8*(i8*, i8*) @strcpy (i8* %15, i8* %16)
+; write chunk to file
   %18 = bitcast %Chunk* %chunk to i8*
   %19 = call i64(i8*, i64, i64, %FILE*) @fwrite (i8* %18, i64 0, i64 1, %FILE* %5)
   %20 = call i32(%FILE*) @fclose (%FILE* %5)

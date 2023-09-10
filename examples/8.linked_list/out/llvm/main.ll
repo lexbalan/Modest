@@ -197,6 +197,7 @@ declare %Node* @linked_list_insert(%List*, i8*)
 
 
 define void @nat64_list_insert(%List* %list, i64 %x) {
+; alloc memory for Nat64 value
   %1 = call i8*(i64) @malloc (i64 8)
   %2 = bitcast i8* %1 to i64*
   store i64 %x, i64* %2
@@ -273,6 +274,7 @@ then_0:
   ret i32 1
   br label %endif_0
 endif_0:
+; add some Nat64 values to list
   call void(%List*, i64) @nat64_list_insert (%List* %3, i64 0)
   call void(%List*, i64) @nat64_list_insert (%List* %3, i64 10)
   call void(%List*, i64) @nat64_list_insert (%List* %3, i64 20)
@@ -284,10 +286,13 @@ endif_0:
   call void(%List*, i64) @nat64_list_insert (%List* %3, i64 80)
   call void(%List*, i64) @nat64_list_insert (%List* %3, i64 90)
   call void(%List*, i64) @nat64_list_insert (%List* %3, i64 100)
+; print list size
   %8 = call i32(%List*) @linked_list_size_get (%List* %3)
   %9 = bitcast [22 x i8]* @str_7 to %ConstCharStr
   %10 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %9, i32 %8)
+; print list forward
   call void(%List*) @list_print_forward (%List* %3)
+; print list backward
   call void(%List*) @list_print_backward (%List* %3)
   ret i32 0
 }
