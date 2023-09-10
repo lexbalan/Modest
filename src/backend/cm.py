@@ -34,7 +34,7 @@ aprecedence = [
   ['lt', 'le', 'gt', 'ge'], #4
   ['shl', 'shr'], #5
   ['add', 'sub'], #6
-  ['mul', 'div', 'mod'], #7
+  ['mul', 'div', 'rem'], #7
   ['plus', 'minus', 'not', 'cast', 'ref', 'deref', 'sizeof'], #8
   ['call', 'index', 'access'], #9
   ['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #10
@@ -191,7 +191,7 @@ def print_type(t, print_aka=True):
 bin_ops = {
   'or': 'or', 'xor': 'xor', 'and': 'and', 'shl': '<<', 'shr': '>>',
   'eq': '==', 'ne': '!=', 'lt': '<', 'gt': '>', 'le': '<=', 'ge': '>=',
-  'add': '+', 'sub': '-', 'mul': '*', 'div': '/', 'mod': '%',
+  'add': '+', 'sub': '-', 'mul': '*', 'div': '/', 'rem': '%',
   'logic_and': 'and', 'logic_or': 'or'
 }
 

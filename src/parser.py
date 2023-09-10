@@ -380,7 +380,7 @@ class Parser:
         r = self.expr_value_8()
         ti['start'] = v['ti']
         ti['end'] = r['ti']
-        v = {'isa': 'value', 'kind': 'mod', 'left': v, 'right': r, 'ti': ti}
+        v = {'isa': 'value', 'kind': 'rem', 'left': v, 'right': r, 'ti': ti}
       else:
         break
     return v

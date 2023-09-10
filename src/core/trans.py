@@ -514,7 +514,7 @@ def do_value_bin(x):
       'sub': lambda a, b: a - b,
       'mul': lambda a, b: a * b,
       'div': lambda a, b: int(a / b),
-      'mod': lambda a, b: a % b,
+      'rem': lambda a, b: a % b,
     }
 
     num_val = ops[k](hlir_value_num_get(l), hlir_value_num_get(r))
@@ -917,7 +917,7 @@ def do_value_sizeof(x):
 bin_ops = [
   'or', 'xor', 'and', 'shl', 'shr',
   'eq', 'ne', 'lt', 'gt', 'le', 'ge',
-  'add', 'sub', 'mul', 'div', 'mod'
+  'add', 'sub', 'mul', 'div', 'rem'
 ]
 
 un_ops = ['ref', 'deref', 'plus', 'minus', 'not']

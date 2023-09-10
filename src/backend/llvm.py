@@ -386,9 +386,7 @@ def get_bin_opcode(op, t):
     opcode = get_bin_opcode_f(op, 'f' + op, t)
   elif op in ['and', 'or', 'xor', 'shl']:
     opcode = op
-  elif op in ['div', 'mod']:
-    if op == 'mod':
-      op = 'rem'
+  elif op in ['div', 'rem']:
     opcode = get_bin_opcode_suf('s' + op, 'u' + op, 'f' + op, t)
   elif op in ['lt', 'gt', 'le', 'ge']:
     opcode = get_bin_opcode_suf('icmp s' + op, 'icmp u' + op, 'fcmp o' + op, t)
@@ -792,7 +790,7 @@ def do_eval_sizeof(x):
 bin_ops = [
   'or', 'xor', 'and', 'shl', 'shr',
   'eq', 'ne', 'lt', 'gt', 'le', 'ge',
-  'add', 'sub', 'mul', 'div', 'mod'
+  'add', 'sub', 'mul', 'div', 'rem'
 ]
 
 un_ops = ['ref', 'deref', 'plus', 'minus', 'not']
