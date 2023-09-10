@@ -1199,8 +1199,7 @@ def do_stmt_block(x):
 
   module['context'] = module['context'].parent_get()
 
-  return hlir_stmt_block(stmts, ti=x['ti'])
-
+  return hlir_stmt_block(stmts, ti=x['ti'], end_nl=x['end_nl'])
 
 
 

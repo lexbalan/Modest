@@ -838,7 +838,8 @@ def print_stmt_if(x, need_else_branch):
         else:
           out(" ")
 
-        print_stmt_block({'isa': 'block', 'stmts':[]})
+        empty_block = hlir_stmt_block(stmts=[], ti=x['ti'], end_nl=1)
+        print_stmt_block(empty_block)
 
 
 
@@ -1001,9 +1002,12 @@ def print_stmt_block(s, arrays=None):
     out(EMPTY_BLOCK_COMMENT)
     block_starts = False
 
+
   indent_down()
-  out("\n")
-  indent()
+  if s['end_nl']:
+    out("\n" * s['end_nl'])
+    indent()
+
   out("}")
 
 

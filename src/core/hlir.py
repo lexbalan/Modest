@@ -411,11 +411,13 @@ def hlir_stmt_bad(ti=None):
   return {'isa': 'stmt', 'kind': 'bad', 'ti': ti}
 
 
-def hlir_stmt_block(stmts, ti=None):
+def hlir_stmt_block(stmts, ti=None, end_nl=1):
   return {
     'isa': 'stmt',
     'kind': 'block',
     'stmts': stmts,
+    # количество пустых строк перед закрывающей скобкой блока
+    'end_nl': end_nl,
     'ti': ti
   }
 

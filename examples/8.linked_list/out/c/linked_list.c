@@ -34,6 +34,8 @@ List *linked_list_create(void)
         return NULL;
     }
 
+
+
     list->head = NULL;
     list->tail = NULL;
 

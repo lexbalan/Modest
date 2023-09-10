@@ -855,12 +855,12 @@ class Parser:
     ti = self.ti()
     #print('stmt_block')
 
+    nl_cnt = 0
     self.need("{")
     stmts = []
     while True:
       #self.skip_tokens([' ', '\t', '\n'])
 
-      nl_cnt = 0
       while True:
         if self.look(" ") or self.look("\t"):
           self.skip()
@@ -894,9 +894,13 @@ class Parser:
 
         nl_cnt = 0
 
-
-
-    return {'isa': 'stmt', 'kind': 'block', 'stmts': stmts, 'ti': ti}
+    return {
+      'isa': 'stmt',
+      'kind': 'block',
+      'stmts': stmts,
+      'end_nl': nl_cnt,
+      'ti': ti
+    }
   
 
   def parse_field(self):

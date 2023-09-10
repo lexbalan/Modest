@@ -64,6 +64,8 @@ float lineLength(Line line)
 void ptr_example(void)
 {
     Point *const ptr_p = (Point *const)malloc(sizeof(Point));
+
+
     ptr_p->x = 10.0;
     ptr_p->y = 20.0;
 
@@ -73,6 +75,7 @@ void ptr_example(void)
 
 int main(void)
 {
+
     const float len = lineLength(line);
     printf("line length = %f\n", len);
 

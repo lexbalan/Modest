@@ -34,8 +34,13 @@ void write_example(void)
     }
 
     Chunk chunk;
+
+
+
     strcpy((char *)&chunk.id[0], (char *)"id");
     strcpy((char *)&chunk.data[0], (char *)"data");
+
+
     fwrite((void *)&chunk, sizeof(Chunk), 1, fp);
 
     fclose(fp);

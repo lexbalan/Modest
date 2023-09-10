@@ -9,6 +9,8 @@
 
 void mtab(int n)
 {
+
+
     int m = 1;
     while (m < 10) {
         const int nm = n * m;
