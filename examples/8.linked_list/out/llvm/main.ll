@@ -1,3 +1,6 @@
+
+target triple = "arm64-apple-darwin21.6.0"
+
 ; -- MODULE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
 
 

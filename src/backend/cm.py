@@ -1,7 +1,4 @@
 
-IMPORT_OBJECTS = False
-
-
 from opt import *
 import core.type as type
 from error import info
@@ -100,8 +97,8 @@ def print_type_array(t):
 def print_type_pointer(t):
   if type.is_free_pointer(t):
     out("Pointer")
-    return
-  out("*"); print_type(t['to'])
+  else:
+    out("*"); print_type(t['to'])
 
 
 

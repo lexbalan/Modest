@@ -1,8 +1,4 @@
 
-
-IMPORT_OBJECTS = True
-
-
 import copy
 from .common import *
 from error import info
@@ -10,6 +6,9 @@ import core.type as type
 from core.type import type_attribute_check
 from core.value import value_attribute_check
 from core.hlir import hlir_type_pointer, hlir_value_int, hlir_value_num_get
+
+
+LLVM_TARGET_TRIPLE = os.popen("llvm-config --host-target").read()[:-1]
 
 
 INDENT_SYMBOL = " " * 2
@@ -1591,17 +1590,13 @@ def run(module, outname):
   outname = outname + '.ll'
   output_open(outname)
 
-  print_module(module)
+  out('\ntarget triple = "%s"\n\n' % LLVM_TARGET_TRIPLE)
 
+  print_module(module)
   output_close()
 
 
 
-
-
-
-
-# Подвал
 
 
 
