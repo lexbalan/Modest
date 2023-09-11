@@ -213,9 +213,12 @@ def value_cons_record_from_generic_record(v, t, ti, method):
         # implicit cast требует наличия всех полей
         error("expected field '%s'" % field_name, v['ti'])
         return None  # это cast, а cast не выдает ошибки
+      nl = 0
+      ti = None
     else:
       item_value = ini['value']
-
+      nl = ini['nl']
+      ti = ini['ti']
 
 
     item_value2 = value_cast_implicit(item_value, field_type, ti=None)
@@ -228,8 +231,8 @@ def value_cons_record_from_generic_record(v, t, ti, method):
       'id': field['id'],
       'value': item_value2,
       'att': [],
-      'nl': ini['nl'],
-      'ti': ini['ti'],
+      'nl': nl,
+      'ti': ti
     })
 
   vx = {
