@@ -23,6 +23,10 @@ typedef struct {
     Point b;
 } Line;
 
+static Point points[2] = {
+    (Point){.x = 0.0, .y = 0.0},
+    (Point){.x = 1.0, .y = 1.0}
+};
 
 static Line line = (Line){
     .a = (Point){.x = 0.0, .y = 0.0},

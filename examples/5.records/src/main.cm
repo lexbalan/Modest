@@ -20,10 +20,14 @@ type Line record {
   b : Point
 }
 
+var points : [2]Point := [
+  {x = 0, y = 0}
+  {x = 1, y = 1}
+]
 
 var line : Line := {
-  a = {x = 0, y = 0}
-  b = {x = 1, y = 1}
+  a = {x = 0, y = 0, c = 10}
+  b = {x = 1, y = 1, c = 14}
 }
 
 

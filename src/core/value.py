@@ -256,6 +256,9 @@ def value_cons_record_from_generic_record(v, t, ti, method):
   if 'id' in v:
     vx['id'] = v['id']
 
+  if 'nl' in v:
+    vx['nl'] = v['nl']
+
   return vx
 
 
