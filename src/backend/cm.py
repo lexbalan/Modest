@@ -310,7 +310,7 @@ def print_value_cast(v, ctx):
 
 
 
-def print_value_imm_array(v, ctx):
+def print_value_literal_array(v, ctx):
   out("[")
   indent_up()
   print_values(v['imm_items'], before=nl_indentation(INDENT_SYMBOL), after="", separator="")
@@ -318,7 +318,7 @@ def print_value_imm_array(v, ctx):
   out("\n"); indent(); out("]")
 
 
-def print_value_imm_record(v, ctx):
+def print_value_literal_record(v, ctx):
   multiline = not 'oneline' in ctx
 
   out("{")
@@ -326,17 +326,18 @@ def print_value_imm_record(v, ctx):
   if multiline:
     out("\n")
     indent_up()
-  nitems = len(v['imm_items'])
-  #while i < nitems:
-  for k in v['imm_items']:
-    item = v['imm_items'][k]
+
+  nitems = len(v['initializers'])
+
+  for initializer in v['initializers']:
+    k = initializer['id']['str']
+    item = initializer['value']
 
     if multiline: indent()
 
     out("%s = " % k)
     print_value(item, ctx)
     if i < (nitems - 1):
-      #o(",")
       if not multiline: out(" ")
     if multiline: out("\n")
 
@@ -348,7 +349,7 @@ def print_value_imm_record(v, ctx):
 
 
 
-def print_value_imm_str(x, ctx):
+def print_value_literal_str(x, ctx):
   out("\"")
   for sym in x['str']:
     if sym == '\n': out("\\n")
@@ -358,7 +359,7 @@ def print_value_imm_str(x, ctx):
   out("\"")
 
 
-def print_value_imm_num(x, ctx):
+def print_value_literal_num(x, ctx):
   if value_attribute_check(x, 'hexadecimal'):
     out("0x%X" % hlir_value_num_get(x))
   elif type.is_pointer(x['type']):
@@ -384,15 +385,15 @@ def print_value_by_id(x, ctx):
   out("%s" % x['id']['str'])
 
 
-def print_value_imm(x, ctx):
+def print_value_literal(x, ctx):
   t = x['type']
-  if type.is_integer(t): print_value_imm_num(x, ctx)
-  elif type.is_float(t): print_value_imm_num(x, ctx)
-  elif type.is_record(t): print_value_imm_record(x, ctx)
-  elif type.is_array(t): print_value_imm_array(x, ctx)
-  elif type.is_string(t): print_value_imm_str(x, ctx)
+  if type.is_integer(t): print_value_literal_num(x, ctx)
+  elif type.is_float(t): print_value_literal_num(x, ctx)
+  elif type.is_record(t): print_value_literal_record(x, ctx)
+  elif type.is_array(t): print_value_literal_array(x, ctx)
+  elif type.is_string(t): print_value_literal_str(x, ctx)
   elif type.is_free_pointer(t): out("nil")
-  elif type.is_pointer(t): print_value_imm_num(x, ctx)
+  elif type.is_pointer(t): print_value_literal_num(x, ctx)
 
 
 def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
@@ -410,7 +411,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 
   k = x['kind']
 
-  if k == 'literal': print_value_imm(x, ctx)
+  if k == 'literal': print_value_literal(x, ctx)
   elif k in bin_ops: print_value_bin(x, ctx)
   elif k in un_ops: print_value_un(x, ctx)
   elif k in ['func', 'var']: print_value_by_id(x, ctx)

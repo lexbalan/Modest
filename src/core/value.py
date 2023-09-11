@@ -6,7 +6,7 @@ from core.type import type_print
 from .trans import is_local_context
 from error import error, warning, info
 from .hlir import *
-
+from util import get_item_with_id
 
 
 
@@ -111,6 +111,7 @@ def value_cons_array_from_generic_array(v, t, ti, method):
     'imm_items': casted_items,
     'type': t,
     'att': [],
+    'nl_end': v['nl_end'],
     'ti': ti
   }
 
@@ -174,13 +175,17 @@ def value_cons_array(v, t, ti, method):
 
 
 
+
+
+
+
+
 def value_cons_record_from_generic_record(v, t, ti, method):
   if v['kind'] == 'const':
     # TODO: тут нужно проверить чтобы при implicit методе
     # все поля присутствовали (!)
     return hlir_value_cast(v, t, ti=ti)
 
-  #print(v['kind'])  # exp kind == 'literal'
 
   # 1. проходим по порядку определения по всем полям типа t (целевого)
   # 2. если поля с таким именеи нет в v:
@@ -189,18 +194,20 @@ def value_cons_record_from_generic_record(v, t, ti, method):
   # 3. делаем implicit_cast() для поля из v к соотв полю из t
   # 4. проверяем тип
   # 5. пакуем
-  items = {}
+  items = []
   for field in t['fields']:
     field_name = field['id']['str']
     field_type = field['type']
 
-    assert('imm_items' in v)
-
     # получаем элемент с соотв именем из исходного значения
     item_value = None
-    if field_name in v['imm_items']:
-      item_value = v['imm_items'][field_name]
+    nl = 0
+    xti = None
 
+    ini = get_item_with_id(v['initializers'], field_name)
+    item_value = ini['value']
+    nl = ini['nl']
+    xti = ini['ti']
 
     if item_value == None:
       # no field, create zero value stub
@@ -211,18 +218,28 @@ def value_cons_record_from_generic_record(v, t, ti, method):
         return None  # это cast, а cast не выдает ошибки
 
 
-    item_value = value_cast_implicit(item_value, field_type, ti=None)
 
-    type.check(field_type, item_value['type'], item_value)
+    item_value2 = value_cast_implicit(item_value, field_type, ti=None)
 
-    items[field_name] = item_value
+    type.check(field_type, item_value2['type'], item_value2)
+
+    #items[field_name] = item_value2
+    items.append({
+      'isa': 'initizlizer',
+      'id': field['id'],
+      'value': item_value2,
+      'att': [],
+      'nl': nl,
+      'ti': xti,
+    })
 
   vx = {
     'isa': 'value',
     'kind': 'literal',
-    'imm_items': items,
+    'initializers': items,
     'type': t,
     'att': ['generic-casted'],
+    'nl_end': v['nl_end'],
     'ti': ti
   }
 

@@ -21,6 +21,7 @@ def hlir_type_unit():
     'size': 0,
     'power': 0,
     'imm_items': [],
+    'initializers': [],
     'att': ['builtin'],
     'ti': None
   }
@@ -123,6 +124,7 @@ def hlir_field(id, type, ti=None):
     'isa': 'field',
     'id': id,
     'type': type,
+    'nl': 0,
     'ti': ti
   }
 
@@ -173,6 +175,7 @@ def hlir_value_zero(t, ti=None):
     'type': t,
     'imm_num': 0,
     'imm_items': [],
+    'initializers': [],
     'att': ['immediate'],
     'ti': ti
   }
@@ -237,6 +240,7 @@ def hlir_value_array(type, items, ti=None):
     'type': type,
     'imm_items': items,
     'att': ['immediate'],
+    'nl_end': 0,
     'ti': ti
   }
 
@@ -246,8 +250,9 @@ def hlir_value_record(typ, items={}, ti=None):
     'isa': 'value',
     'kind': 'literal',
     'type': typ,
-    'imm_items': items,
+    'initializers': items,
     'att': ['immediate'],
+    'nl_end': 0,
     'ti': ti
   }
 

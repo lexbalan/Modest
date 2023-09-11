@@ -762,7 +762,8 @@ def do_value_access(x):
   # immediate access (!)
   if value_is_immediate(r):
     field_id_str = field_id['str']
-    v = r['imm_items'][field_id_str]
+    #TODO!
+    v = r['initializers'][field_id_str]
     nv = value_copy(v)
     nv['value'] = hlir_value_access_record(r, field, ti=x['ti'])
     return nv
@@ -838,8 +839,9 @@ def do_value_str(x):
 def do_value_array(x):
 
   items = []
-  for i in x['items']:
-    vi = do_value(i)
+  for item in x['items']:
+    vi = do_value(item)
+    vi['nl'] = item['nl']
     items.append(vi)
 
   length = len(x['items'])
@@ -870,18 +872,28 @@ def do_value_array(x):
   vol = hlir_value_int(length)
   typ = hlir_type_array(of, volume=vol, ti=x['ti'])
   typ['att'].extend(['generic'])
-  return hlir_value_array(typ, items2, ti=x['ti'])
+  y = hlir_value_array(typ, items2, ti=x['ti'])
+  y['nl_end'] = x['nl_end']
+  print("y['kind'] = " + y['kind'])
+  return y
 
 
 def do_value_record(x):
-  items = {}
+  items = []
   fields = []
   i = 0
   for item in x['items']:
     id = item['id']
 
     val = do_value(item['value'])
-    items[id['str']] = val
+    items.append({
+      'isa': 'initializer',
+      'id': id,
+      'value': val,
+      'nl': item['nl'],
+      'att': [],
+      'ti': item['ti']
+    })
 
     # создаем поле для типа generic записи
     field = hlir_field(id, val['type'], ti=val['ti'])
@@ -891,7 +903,11 @@ def do_value_record(x):
 
   typ = hlir_type_record(fields, ti=x['ti'])
   typ['att'].extend(['generic'])
-  return hlir_value_record(typ, items, ti=x['ti'])
+
+  y = hlir_value_record(typ, items, ti=x['ti'])
+  y['nl_end'] = x['nl_end']
+  return y
+
 
 
 
@@ -946,7 +962,6 @@ def do_value(x):
     if k == 'int': rv = do_value_int(x)
     elif k == 'float': rv = do_value_float(x)
     elif k == 'id': rv = do_value_id(x)
-#    elif k == 'ns': rv = do_value_ns(x)
     elif k == 'str': rv = do_value_str(x)
     elif k == 'record': rv = do_value_record(x)
     elif k == 'array': rv = do_value_array(x)

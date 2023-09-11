@@ -3,8 +3,8 @@
 import copy
 from opt import *
 from error import error, fatal
-#from util import nbits_for_num, nbytes_for_bits
 from .hlir import *
+from util import get_item_with_id
 
 
 typeUnit = hlir_type_unit()
@@ -400,14 +400,9 @@ def is_forbidden_var(t, zero_array_forbidden=True):
 
 
 
-
-
 # ищем поле с таким id в типе record
 def record_field_get(t, id):
-  for field in t['fields']:
-    if field['id']['str'] == id:
-      return field
-  return None
+  return get_item_with_id(t['fields'], id)
 
 
 

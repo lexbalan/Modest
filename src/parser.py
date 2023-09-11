@@ -498,18 +498,29 @@ class Parser:
   def parse_value_term_arr(self, ti):
     items = []
 
+    nl_cnt = 0
     ti = self.ti()
     self.need("[")
     while not self.match("]"):
-      self.skip_tokens([' ', '\t', '\n'])
+      #self.skip_tokens([' ', '\t', '\n'])
+      nl_cnt = self.skipt()
+
+      if self.match("]"):
+        break
+
       field_value = self.expr_value()
-      self.need_sep(separators=[',', '\n'], stoppers=[']'])
+      field_value['nl'] = nl_cnt
+
+      if not self.look("\n"):
+        self.need_sep(separators=[','], stoppers=[']'])
+
       items.append(field_value)
 
     return {
       'isa': 'value',
       'kind': 'array',
       'items': items,
+      'nl_end': nl_cnt,
       'ti': ti
     }
 
@@ -517,10 +528,13 @@ class Parser:
   def parse_value_term_rec(self, ti):
     items = []
 
+    nl_cnt = 0
     ti = self.ti()
     self.need("{")
     while not self.match("}"):
-      self.skip_tokens([' ', '\t', '\n'])
+      #self.skip_tokens([' ', '\t', '\n'])
+      nl_cnt = self.skipt()
+
       if self.match("}"):
         break
 
@@ -528,11 +542,14 @@ class Parser:
       field_id = self.identifier()
       self.need("=")
       field_value = self.expr_value()
-      self.need_sep(separators=[',', '\n'], stoppers=['}'])
+      if not self.look("\n"):
+        self.need_sep(separators=[',', '\n'], stoppers=['}'])
+
       items.append({
         'isa': 'item',
         'id': field_id,
         'value': field_value,
+        'nl': nl_cnt,
         'ti': item_ti
       })
 
@@ -540,6 +557,7 @@ class Parser:
       'isa': 'value',
       'kind': 'record',
       'items': items,
+      'nl_end': nl_cnt,
       'ti': ti
     }
 
@@ -862,6 +880,22 @@ class Parser:
     return s
   
   
+  def skipt(self):
+    nl_cnt = 0
+    while True:
+      if self.look(" ") or self.look("\t"):
+        self.skip()
+        continue
+
+      elif self.look('\n'):
+        self.skip()
+        nl_cnt = nl_cnt + 1
+        continue
+
+      else:
+        return nl_cnt
+
+
   def stmt_block(self):
     ti = self.ti()
     #print('stmt_block')
@@ -872,18 +906,7 @@ class Parser:
     while True:
       #self.skip_tokens([' ', '\t', '\n'])
 
-      while True:
-        if self.look(" ") or self.look("\t"):
-          self.skip()
-          continue
-
-        elif self.look('\n'):
-          self.skip()
-          nl_cnt = nl_cnt + 1
-          continue
-
-        else:
-          break
+      nl_cnt = self.skipt()
 
 
       if self.match('}'):

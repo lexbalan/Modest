@@ -5,7 +5,7 @@ from .common import *
 import core.type as type
 from core.value import value_attribute_check
 from core.hlir import hlir_value_num_get, hlir_stmt_block
-
+from util import get_item_with_id
 
 puffy = False
 
@@ -579,7 +579,7 @@ def print_value_cast(v, ctx):
 
 
 
-def print_value_imm_array(v, ctx):
+def print_value_literal_array(v, ctx):
   screening = 'screening' in ctx
 
   if ARRAYS_MULTILINE_ALWAYS:
@@ -602,18 +602,39 @@ def print_value_imm_array(v, ctx):
     if screening:
       after = "\\"
 
-  print_values(v['imm_items'], before=before, between=between, after=after, ctx=ctx)
+  #print_values(v['imm_items'], before=before, between=between, after=after, ctx=ctx)
+
+  values = v['imm_items']
+  i = 0
+  n = len(values)
+  while i < n:
+    a = values[i]
+    #out(before)
+    if a['nl'] > 0:
+      out("\n" * a['nl'])
+      indent()
+    else:
+      if i > 0:
+        out(" ")
+
+    print_value(a, ctx=ctx)
+    i = i + 1
+    if i < n:
+      out(',')
+    out(after)
+
 
   indent_down()
 
-  if multiline:
-    out("\n")
+  if v['nl_end'] > 0:
+    out("\n" * v['nl_end'])
     indent()
 
   out("}")
 
 
-def print_value_imm_record(v, ctx):
+
+def print_value_literal_record(v, ctx):
   screening = 'screening' in ctx
 
   if RECORDS_MULTILINE_ALWAYS:
@@ -623,44 +644,47 @@ def print_value_imm_record(v, ctx):
 
   out("{")
   i = 0
-  if multiline:
+  """if multiline:
     if screening:
       out("\\")
-    out("\n")
-    indent_up()
+    out("\n")"""
+  indent_up()
 
-  if not 'imm_items' in v:
-    for ii in v:
-      print(ii)
 
-  nitems = len(v['imm_items'])
+  nitems = len(v['initializers'])
   while i < nitems:
     item = v['type']['fields'][i]
 
-    if multiline:
-      indent()
-
     field_str = item['id']['str']
+
+    ini = get_item_with_id(v['initializers'], field_str)
+
+    if ini['nl'] > 0:
+      out("\n" * ini['nl'])
+      indent()
+    else:
+      if i > 0:
+        out(" ")
+
     out(".%s = " % field_str)
-    print_value(v['imm_items'][field_str], ctx)
+
+    print_value(ini['value'], ctx)
     if i < (nitems - 1):
       out(",")
-      if not multiline:
-        out(" ")
-    if multiline:
-      if screening:
-        out("\\")
-      out("\n")
 
     i = i + 1
-  if multiline:
-    indent_down()
+
+  indent_down()
+
+  if v['nl_end'] > 0:
+    out("\n" * v['nl_end'])
     indent()
+
   out("}")
 
 
 
-def print_value_imm_str(x, ctx):
+def print_value_literal_str(x, ctx):
   out("\"")
   for sym in x['str']:
     if sym == '\n': out("\\n")
@@ -672,7 +696,7 @@ def print_value_imm_str(x, ctx):
 
 from util import nbits_for_num
 
-def print_value_imm_int(x, ctx):
+def print_value_literal_int(x, ctx):
   num = hlir_value_num_get(x)
 
   if USE_BOOLEAN:
@@ -700,16 +724,16 @@ def print_value_imm_int(x, ctx):
       out("LL")
 
 
-def print_value_imm_flt(x, ctx):
+def print_value_literal_flt(x, ctx):
   out(str(hlir_value_num_get(x)))
 
 
-def print_value_imm_num(x, ctx):
+def print_value_literal_num(x, ctx):
   if value_attribute_check(x, 'hexadecimal'):
     out("0x%X" % hlir_value_num_get(x))
   elif type.is_pointer(x['type']):
-    out("<print_value_imm_num::PTR>")
-    fatal("print_value_imm_num: type.is_pointer")
+    out("<print_value_literal_num::PTR>")
+    fatal("print_value_literal_num: type.is_pointer")
   #  if hlir_value_num_get(x) == 0:
   #    out("NULL")
   #    return
@@ -718,7 +742,7 @@ def print_value_imm_num(x, ctx):
 
 
 
-def print_value_imm_ptr(x, ctx):
+def print_value_literal_ptr(x, ctx):
   if type.is_free_pointer(x['type']):
     out("NULL")
   else:
@@ -728,14 +752,14 @@ def print_value_imm_ptr(x, ctx):
       out("0x%X" % hlir_value_num_get(x))
 
 
-def print_value_imm(x, ctx):
+def print_value_literal(x, ctx):
   t = x['type']
-  if type.is_integer(t): print_value_imm_int(x, ctx)
-  elif type.is_float(t): print_value_imm_num(x, ctx)
-  elif type.is_record(t): print_value_imm_record(x, ctx)
-  elif type.is_array(t): print_value_imm_array(x, ctx)
-  elif type.is_string(t): print_value_imm_str(x, ctx)
-  elif type.is_pointer(t): print_value_imm_ptr(x, ctx)
+  if type.is_integer(t): print_value_literal_int(x, ctx)
+  elif type.is_float(t): print_value_literal_num(x, ctx)
+  elif type.is_record(t): print_value_literal_record(x, ctx)
+  elif type.is_array(t): print_value_literal_array(x, ctx)
+  elif type.is_string(t): print_value_literal_str(x, ctx)
+  elif type.is_pointer(t): print_value_literal_ptr(x, ctx)
 
 
 
@@ -764,7 +788,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 
   k = x['kind']
 
-  if k == 'literal': print_value_imm(x, ctx)
+  if k == 'literal': print_value_literal(x, ctx)
   elif k in bin_ops: print_value_bin(x, ctx)
   elif k in un_ops: print_value_un(x, ctx)
   elif k in ['func', 'var', 'const']: print_value_by_id(x, ctx)
