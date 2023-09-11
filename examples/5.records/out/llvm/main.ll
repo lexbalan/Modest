@@ -275,16 +275,6 @@ declare [0 x i8]* @getenv([0 x i8]*)
 	%Point
 }
 
-@points = global [2 x %Point] [
-  %Point {
-    double 0x0,
-    double 0x0
-  },
-  %Point {
-    double 0x3ff0000000000000,
-    double 0x3ff0000000000000
-  }
-]
 @line = global %Line {
   %Point {
     double 0x0,

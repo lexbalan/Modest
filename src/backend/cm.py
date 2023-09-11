@@ -6,6 +6,7 @@ from .common import *
 from core.type import type_attribute_check
 from core.value import value_attribute_check
 from core.hlir import hlir_value_num_get
+from util import get_item_with_id
 
 
 INDENT_SYMBOL = " " * 4
@@ -313,38 +314,73 @@ def print_value_cast(v, ctx):
 def print_value_literal_array(v, ctx):
   out("[")
   indent_up()
-  print_values(v['imm_items'], before=nl_indentation(INDENT_SYMBOL), after="", separator="")
+  #print_values(v['imm_items'], before=nl_indentation(INDENT_SYMBOL), after="", separator="")
+
+  values = v['imm_items']
+  i = 0
+  n = len(values)
+  while i < n:
+    a = values[i]
+
+    if a['nl'] > 0:
+      out("\n" * a['nl'])
+      indent()
+    else:
+      if i > 0:
+        out(" ")
+
+    print_value(a, ctx=ctx)
+
+    i = i + 1
+
+    if a['nl'] == 0:
+      if i < n:
+        out(',')
+
+
   indent_down()
+
   out("\n"); indent(); out("]")
+
 
 
 def print_value_literal_record(v, ctx):
   multiline = not 'oneline' in ctx
 
   out("{")
-  i = 0
-  if multiline:
-    out("\n")
-    indent_up()
+
+  indent_up()
 
   nitems = len(v['initializers'])
+  i = 0
+  while i < nitems:
+    item = v['type']['fields'][i]
+    field_str = item['id']['str']
 
-  for initializer in v['initializers']:
-    k = initializer['id']['str']
-    item = initializer['value']
+    ini = get_item_with_id(v['initializers'], field_str)
 
-    if multiline: indent()
+    if ini['nl'] > 0:
+      out("\n" * ini['nl'])
+      indent()
+    else:
+      if i > 0:
+        out(" ")
 
-    out("%s = " % k)
-    print_value(item, ctx)
-    if i < (nitems - 1):
-      if not multiline: out(" ")
-    if multiline: out("\n")
+    out("%s = " % field_str)
+    print_value(ini['value'], ctx)
+
+    if ini['nl'] == 0:
+      if i < (nitems - 1):
+        out(",")
 
     i = i + 1
-  if multiline:
-    indent_down()
+
+  indent_down()
+
+  if v['nl_end'] > 0:
+    out("\n" * v['nl_end'])
     indent()
+
   out("}")
 
 

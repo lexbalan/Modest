@@ -593,23 +593,12 @@ def print_value_literal_array(v, ctx):
 
   if multiline and screening: out("\\")
 
-  before = ""
-  after = ""
-  between = ", "
-  if multiline:
-    before = nl_indentation(INDENT_SYMBOL)
-    between = ","
-    if screening:
-      after = "\\"
-
-  #print_values(v['imm_items'], before=before, between=between, after=after, ctx=ctx)
-
   values = v['imm_items']
   i = 0
   n = len(values)
   while i < n:
     a = values[i]
-    #out(before)
+
     if a['nl'] > 0:
       out("\n" * a['nl'])
       indent()
@@ -618,10 +607,10 @@ def print_value_literal_array(v, ctx):
         out(" ")
 
     print_value(a, ctx=ctx)
+
     i = i + 1
     if i < n:
       out(',')
-    out(after)
 
 
   indent_down()
@@ -654,7 +643,6 @@ def print_value_literal_record(v, ctx):
   nitems = len(v['initializers'])
   while i < nitems:
     item = v['type']['fields'][i]
-
     field_str = item['id']['str']
 
     ini = get_item_with_id(v['initializers'], field_str)

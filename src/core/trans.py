@@ -4,6 +4,7 @@ import copy
 
 from opt import *
 from error import *
+from util import get_item_with_id
 
 
 #type Address = tuple[str, int]
@@ -283,7 +284,7 @@ def do_type_record(t):
     f['no'] = i
     i = i + 1
 
-    f_exist = None #TODO! type.record_field_get(record, f['id']['str'])
+    f_exist = get_item_with_id(fields, f['id']['str'])
     if f_exist != None:
       error("redefinition of '%s'" % f['id']['str'], f)
       continue

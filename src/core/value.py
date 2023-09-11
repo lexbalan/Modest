@@ -195,6 +195,7 @@ def value_cons_record_from_generic_record(v, t, ti, method):
   # 4. проверяем тип
   # 5. пакуем
   items = []
+  prev_nl = 0 # nl для неявных инициализаторов (zero)
   for field in t['fields']:
     field_name = field['id']['str']
     field_type = field['type']
@@ -213,13 +214,14 @@ def value_cons_record_from_generic_record(v, t, ti, method):
         # implicit cast требует наличия всех полей
         error("expected field '%s'" % field_name, v['ti'])
         return None  # это cast, а cast не выдает ошибки
-      nl = 0
+      nl = prev_nl
       ti = None
     else:
       item_value = ini['value']
       nl = ini['nl']
       ti = ini['ti']
 
+    prev_nl = nl
 
     item_value2 = value_cast_implicit(item_value, field_type, ti=None)
 
