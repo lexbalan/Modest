@@ -874,7 +874,6 @@ def do_value_array(x):
   typ['att'].extend(['generic'])
   y = hlir_value_array(typ, items2, ti=x['ti'])
   y['nl_end'] = x['nl_end']
-  print("y['kind'] = " + y['kind'])
   return y
 
 
