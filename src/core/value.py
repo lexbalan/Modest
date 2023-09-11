@@ -205,17 +205,16 @@ def value_cons_record_from_generic_record(v, t, ti, method):
     xti = None
 
     ini = get_item_with_id(v['initializers'], field_name)
-    item_value = ini['value']
-    nl = ini['nl']
-    xti = ini['ti']
 
-    if item_value == None:
+    if ini == None:
       # no field, create zero value stub
       item_value = hlir_value_zero(field_type, ti=None)
       if method == 'implicit':
         # implicit cast требует наличия всех полей
         error("expected field '%s'" % field_name, v['ti'])
         return None  # это cast, а cast не выдает ошибки
+    else:
+      item_value = ini['value']
 
 
 
@@ -229,8 +228,8 @@ def value_cons_record_from_generic_record(v, t, ti, method):
       'id': field['id'],
       'value': item_value2,
       'att': [],
-      'nl': nl,
-      'ti': xti,
+      'nl': ini['nl'],
+      'ti': ini['ti'],
     })
 
   vx = {
