@@ -601,8 +601,13 @@ def print_value_literal_array(v, ctx):
   while i < n:
     a = values[i]
 
-    if a['nl'] > 0:
-      out("\n" * a['nl'])
+    nl = 0
+    if 'nl' in a:
+      nl = a['nl']
+
+
+    if nl > 0:
+      out("\n" * nl)
       indent()
     else:
       if i > 0:
@@ -649,8 +654,12 @@ def print_value_literal_record(v, ctx):
 
     ini = get_item_with_id(v['initializers'], field_str)
 
-    if ini['nl'] > 0:
-      out("\n" * ini['nl'])
+    nl = 0
+    if 'nl' in ini:
+      nl = ini['nl']
+
+    if nl > 0:
+      out("\n" * nl)
       indent()
     else:
       if i > 0:
