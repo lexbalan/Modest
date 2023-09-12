@@ -718,7 +718,7 @@ def do_value_index(x):
       if type.is_generic_string(a['type']):
         # is generic string
         c = a['str'][i['imm_num']]
-        print(ord(c))
+        #print(ord(c))
         return value_generic_char(c, ti=x['ti'])
       else:
         # is an array
