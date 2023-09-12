@@ -7,8 +7,6 @@ from error import *
 from util import get_item_with_id
 
 
-#type Address = tuple[str, int]
-
 def is_local_context():
   global cfunc
   return cfunc != None

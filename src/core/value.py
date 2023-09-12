@@ -195,7 +195,7 @@ def value_cons_record_from_generic_record(v, t, ti, method):
   # 4. проверяем тип
   # 5. пакуем
   items = []
-  prev_nl = 0 # nl для неявных инициализаторов (zero)
+  prev_nl = 1 # nl для неявных инициализаторов (zero)
   for field in t['fields']:
     field_name = field['id']['str']
     field_type = field['type']
