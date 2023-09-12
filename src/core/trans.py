@@ -715,7 +715,14 @@ def do_value_index(x):
   # immediate index (!)
   if value_is_immediate(a):
     if value_is_immediate(i):
-      return a['imm_items'][i['imm_num']]
+      if type.is_generic_string(a['type']):
+        # is generic string
+        c = a['str'][i['imm_num']]
+        print(ord(c))
+        return value_generic_char(c, ti=x['ti'])
+      else:
+        # is an array
+        return a['imm_items'][i['imm_num']]
 
   if ptr_access:
     v = hlir_value_index_array_by_ptr(a, i, ti=x['ti'])
@@ -829,8 +836,10 @@ def do_value_str(x):
   vol = hlir_value_int(length)
   ta = hlir_type_array(type.typeChar, volume=vol, ti=x['ti'])
   stype = hlir_type_pointer(ta, ti=x['ti'])
+  stype['att'].append('generic-string')
 
-  s =  hlir_value_cstr(string, length, stype, ti=x['ti'])
+  s = hlir_value_cstr(string, length, stype, ti=x['ti'])
+
   module['strings'].append(s)
   return s
 

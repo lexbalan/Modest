@@ -85,6 +85,10 @@ def value_is_immediate(x):
 
 
 
+def value_generic_char(c, ti=None):
+  return hlir_value_int(ord(c), typ=type.typeChar, ti=ti)
+
+
 
 def value_load(x):
   return x

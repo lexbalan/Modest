@@ -72,8 +72,15 @@ typeFloat64['c_alias'] = 'double'
 typeFloat64['llvm_alias'] = 'double'
 
 
+typeGenericChar = hlir_type_integer("Nat32", power=32, ti=None)
+typeGenericChar['att'].extend(['unsigned', 'generic', 'char'])
+typeGenericChar['c_alias'] = 'char32_t'
+typeGenericChar['llvm_alias'] = 'i32'
+
+
+
 typeChar = hlir_type_integer("Nat8", power=8, ti=None)
-typeChar['att'].extend(['unsigned'])
+typeChar['att'].extend(['unsigned', 'char'])
 typeChar['c_alias'] = 'char'
 typeChar['llvm_alias'] = 'i8'
 
@@ -296,6 +303,10 @@ def is_generic_record(t):
   if t['kind'] == 'record':
     return 'generic' in t['att']
   return False
+
+
+def is_generic_string(t):
+  return 'generic-string' in t['att']
 
 
 
