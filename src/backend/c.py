@@ -994,44 +994,30 @@ def print_arrays(arrays):
     out("memcpy(%s, _%s, %d);" % (dst, src, len))
 
 
-def print_stmts(stmts):
-  k_prev = ""
-  if len(stmts) > 0:
-    k_prev = stmts[0]['kind']
-  i = 0
-  for stmt in stmts:
-    print_stmt(stmt)
-    i = i + 1
 
-
-def print_stmts_flat(stmts):
-  for stmt in stmts:
-    print_stmt(stmt)
-
-
-block_starts = False
-def print_stmt_block(s, arrays=None):
+def print_stmt_block(s, arrays=None, empty_comment=""):
   out("{")
+
   indent_up()
-  global block_starts
-  block_starts = True
 
-  if arrays != None:
-    print_arrays(arrays)
+  #if arrays != None:
+  #  print_arrays(arrays)
 
-  if len(s['stmts']) > 0:
-    print_stmts(s['stmts'])
-  else:
-    out("\n"); indent()
-    out(EMPTY_BLOCK_COMMENT)
-    block_starts = False
+  for stmt in s['stmts']:
+    print_stmt(stmt)
 
+  #elif empty_comment != "":
+    #out("\n"); indent()
+    #out(empty_comment)
 
   indent_down()
-  if s['end_nl']:
-    out("\n" * s['end_nl'])
-    indent()
 
+  endnl = s['end_nl']
+  if endnl == 0:
+    endnl = 1
+
+  out("\n" * endnl)
+  indent()
   out("}")
 
 
@@ -1118,6 +1104,7 @@ def print_def_func(x):
   else:
     out(" ")
 
+  #empty_comment="// TODO: function %s implementation" % func['id']['str']
   print_stmt_block(func['stmt'], arrays=arrays)
 
 #  if styleguide['EXTRA_BLANK_LINES_BETWEEN_FUNCS'] > 0:
