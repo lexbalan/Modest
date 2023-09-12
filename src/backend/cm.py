@@ -397,14 +397,18 @@ def print_value_literal_str(x, ctx):
 
 def print_value_literal_num(x, ctx):
   num = hlir_value_num_get(x)
+
   if type.type_attribute_check(x['type'], 'char'):
     out("\"%c\"[0]" % num)
+
   elif value_attribute_check(x, 'hexadecimal'):
     out("0x%X" % num)
+
   elif type.is_pointer(x['type']):
     if num == 0:
       out("nil")
       return
+
   else:
     out(str(num))
 
