@@ -718,14 +718,15 @@ def do_value_index(x):
       if type.is_generic_string(a['type']):
         # is generic string
         c = a['str'][i['imm_num']]
-        #print(ord(c))
         return value_generic_char(c, ti=x['ti'])
+
       else:
         # is an array
         return a['imm_items'][i['imm_num']]
 
   if ptr_access:
     v = hlir_value_index_array_by_ptr(a, i, ti=x['ti'])
+
   else:
     v = hlir_value_index_array(a, i, ti=x['ti'])
     if value_is_immutable(a):
