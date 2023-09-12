@@ -26,6 +26,8 @@ NO_TYPEDEF_OTHERS = False
 USE_BOOLEAN = True
 USE_STDBOOL = True
 
+USE_UCHAR = False
+
 USE_STATIC_VARIABLES = True
 USE_CONST_LET_VARIABLES = True
 
@@ -672,8 +674,8 @@ def print_value_literal_record(v, ctx):
 
 
 
-def print_value_literal_str(x, ctx):
-  out("\"")
+def print_value_literal_str(x, ctx, prefix=""):
+  out("%s\"" % prefix)
   for sym in x['str']:
     if sym == '\n': out("\\n")
     elif sym == '\r': out("\\r")
@@ -693,7 +695,9 @@ def print_value_literal_int(x, ctx):
       else: out("false")
       return
 
-  if value_attribute_check(x, 'hexadecimal'):
+  if type.type_attribute_check(x['type'], 'char'):
+    out("'%c'" % num)
+  elif value_attribute_check(x, 'hexadecimal'):
     out("0x%X" % num)
   else:
     out(str(num))
@@ -1314,14 +1318,15 @@ def run(module, outname):
     lo("#ifndef %s" % guardname)
     lo("#define %s\n" % guardname)
 
-
   lo("#include <stdint.h>")
-  if USE_STDBOOL:
-    lo("#include <stdbool.h>")
   lo("#include <string.h>\n\n")
 
+  if USE_STDBOOL:
+    lo("#include <stdbool.h>")
 
-  prev_ik = ('', '')
+  if USE_UCHAR:
+    lo("#include <uchar.h>")
+
 
   for x in module['text']:
     if 'c-no-print' in x['att']:

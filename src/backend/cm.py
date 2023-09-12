@@ -396,14 +396,17 @@ def print_value_literal_str(x, ctx):
 
 
 def print_value_literal_num(x, ctx):
-  if value_attribute_check(x, 'hexadecimal'):
-    out("0x%X" % hlir_value_num_get(x))
+  num = hlir_value_num_get(x)
+  if type.type_attribute_check(x['type'], 'char'):
+    out("\"%c\"[0]" % num)
+  elif value_attribute_check(x, 'hexadecimal'):
+    out("0x%X" % num)
   elif type.is_pointer(x['type']):
-    if hlir_value_num_get(x) == 0:
+    if num == 0:
       out("nil")
       return
   else:
-    out(str(hlir_value_num_get(x)))
+    out(str(num))
 
 
 def print_value_zero(x, ctx):
