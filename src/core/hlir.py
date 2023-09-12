@@ -187,6 +187,8 @@ def hlir_value_int(num, typ=None, ti=None):
     typ = hlir_type_generic_int_for(num, unsigned=False, ti=ti)
   else:
     nbits = nbits_for_num(num)
+    #print("nbits = %d" % nbits)
+    #print("typ['power'] = %d" % typ['power'])
     assert(nbits <= typ['power'])
     """
     # extend if generic or error

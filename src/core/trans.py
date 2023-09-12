@@ -829,20 +829,23 @@ def do_value_id(x):
 
 
 
+def value_cstr(string, length, ti):
+  # type of any C string is *[x]typeChar
+  vol = hlir_value_int(length)
+  ta = hlir_type_array(type.typeChar, volume=vol, ti=ti)
+  stype = hlir_type_pointer(ta, ti=ti)
+  stype['att'].append('generic-string')
+  s = hlir_value_cstr(string, length, stype, ti=ti)
+  module['strings'].append(s)
+  return s
+
+
+
 def do_value_str(x):
   string = x['str']
   length = x['len']
+  return value_cstr(string, length, ti=x['ti'])
 
-  # type of any C string is *[x]typeChar
-  vol = hlir_value_int(length)
-  ta = hlir_type_array(type.typeChar, volume=vol, ti=x['ti'])
-  stype = hlir_type_pointer(ta, ti=x['ti'])
-  stype['att'].append('generic-string')
-
-  s = hlir_value_cstr(string, length, stype, ti=x['ti'])
-
-  module['strings'].append(s)
-  return s
 
 
 def do_value_array(x):

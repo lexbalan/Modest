@@ -88,12 +88,12 @@ declare void @perror(%ConstCharStr)
 
 ; -- MODULE: /Users/alexbalan/p/Modest/examples/1.hello_world/src/main.cm
 
-@str_1 = private constant [12 x i8] c"Hello 🐁\0A\00"
+@str_1 = private constant [14 x i8] c"Hello World!\0A\00"
 
 
 
 define i32 @main() {
-  %1 = bitcast [9 x i8]* @str_1 to %ConstCharStr
+  %1 = bitcast [14 x i8]* @str_1 to %ConstCharStr
   %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %1)
   ret i32 0
 }

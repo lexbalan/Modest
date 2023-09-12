@@ -1319,13 +1319,15 @@ def run(module, outname):
     lo("#define %s\n" % guardname)
 
   lo("#include <stdint.h>")
-  lo("#include <string.h>\n\n")
+  lo("#include <string.h>")
 
   if USE_STDBOOL:
     lo("#include <stdbool.h>")
 
   if USE_UCHAR:
     lo("#include <uchar.h>")
+
+  out("\n\n")
 
 
   for x in module['text']:

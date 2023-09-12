@@ -3,8 +3,8 @@
 #define LIB_H
 
 #include <stdint.h>
-#include <stdbool.h>
 #include <string.h>
+#include <stdbool.h>
 
 // examples/many_sources/lib.hm
 

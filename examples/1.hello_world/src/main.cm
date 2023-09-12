@@ -5,7 +5,7 @@ import "libc/stdio.hm"
 
 
 func main () -> Int {
-  printf("Hello 🐁\n")
-  return 0
+    printf("Hello World!\n")
+    return 0
 }
 

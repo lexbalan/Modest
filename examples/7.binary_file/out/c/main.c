@@ -6,8 +6,8 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdint.h>
-#include <stdbool.h>
 #include <string.h>
+#include <stdbool.h>
 
 // examples/binary_file/main.cm
 
