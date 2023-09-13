@@ -71,6 +71,16 @@ def indent():
   ind(INDENT_SYMBOL)
 
 
+def indent_if(x):
+  if x: indent()
+
+
+def nl_indent():
+  out("\n")
+  indent()
+
+
+
 def init():
   global puffy
   puffy = features_get("puffy")
@@ -223,7 +233,8 @@ def print_type_record(t, tag=""):
     out(";")
 
   indent_down()
-  out("\n"); indent(); out("}")
+  nl_indent()
+  out("}")
 
 
 
@@ -812,8 +823,7 @@ def print_stmt_if(x, need_else_branch):
   out("("); print_value(x['cond']); out(")")
 
   if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
-    out("\n")
-    indent()
+    nl_indent()
   else:
     out(" ")
 
@@ -822,8 +832,7 @@ def print_stmt_if(x, need_else_branch):
   e = x['else']
   if e != None:
     if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
-      out("\n")
-      indent()
+      nl_indent()
     else:
       out(" ")
 
@@ -833,8 +842,7 @@ def print_stmt_if(x, need_else_branch):
     else:
       out("else")
       if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
-        out("\n")
-        indent()
+        nl_indent()
       else:
         out(" ")
       print_stmt_block(e)
@@ -847,8 +855,7 @@ def print_stmt_while(x):
   out("("); print_value(x['cond']); out(")")
 
   if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
-    out("\n")
-    indent()
+    nl_indent()
   else:
     out(" ")
 
@@ -877,9 +884,9 @@ def assign_big_int(id_str, val):
   high64 = (val >> 64) & 0xFFFFFFFFFFFFFFFF
   low64 = val & 0xFFFFFFFFFFFFFFFF
 
-  out("\n"); indent(); out("%s = 0x%x;" % (id_str, high64))
-  out("\n"); indent(); out("%s = %s << 64;" % (id_str, id_str))
-  out("\n"); indent(); out("%s |= 0x%x;" % (id_str, low64))
+  nl_indent(); out("%s = 0x%x;" % (id_str, high64))
+  nl_indent(); out("%s = %s << 64;" % (id_str, id_str))
+  nl_indent(); out("%s |= 0x%x;" % (id_str, low64))
 
 
 
@@ -911,8 +918,7 @@ def print_stmt_let(x):
 def assign_array_by_items(x):
   out("// array assignation")
   for i in range(x['right']['type']['size']):
-    out("\n")
-    indent()
+    nl_indent()
     print_value(x['left']);
     out("[%s] = " % i)
     print_value(x['right']);
@@ -925,8 +931,7 @@ def assign_record_by_fields(x):
   #print("assign_record_by_fields " + x['right']['kind'])
   out("// record assignation")
   for f in x['right']['type']['fields']:
-    out("\n")
-    indent()
+    nl_indent()
     print_value(x['left']);
     out(".%s = " % f['id']['str'])
     print_value(x['right']);
@@ -968,9 +973,6 @@ def print_stmt_value(x):
   print_value(x['value']); out(";")
 
 
-def indent_if(x):
-  if x: indent()
-
 
 def print_stmt(x):
   k = x['kind']
@@ -996,10 +998,10 @@ def print_stmt(x):
 # not works
 def print_arrays(arrays):
   for array in arrays:
-    out("\n"); indent()
+    nl_indent()
     array['value'] = None
     print_stmt_defvar(array)
-    out("\n"); indent()
+    nl_indent()
     dst = array['id']['str']
     src = array['id']['str']
     len = type.get_size(array['type'])
@@ -1019,7 +1021,7 @@ def print_stmt_block(s, arrays=None, empty_comment=""):
     print_stmt(stmt)
 
   #elif empty_comment != "":
-    #out("\n"); indent()
+    #nl_indent()
     #out(empty_comment)
 
   indent_down()

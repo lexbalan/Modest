@@ -123,6 +123,7 @@ def print_fields(fields, before, after, separator):
 
 def print_type_record(t):
   out("record {")
+
   indent_up()
 
   for field in t['fields']:
@@ -137,7 +138,10 @@ def print_type_record(t):
     print_field(field)
 
   indent_down()
-  out("\n"); indent(); out("}")
+
+  out("\n")
+  indent()
+  out("}")
 
 
 
