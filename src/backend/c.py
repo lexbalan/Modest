@@ -4,7 +4,7 @@ from error import info
 from .common import *
 import core.type as type
 from core.value import value_attribute_check
-from core.hlir import hlir_value_num_get, hlir_stmt_block
+from core.hlir import hlir_field, hlir_value_num_get, hlir_stmt_block
 from util import get_item_with_id
 
 puffy = False
@@ -872,9 +872,36 @@ def print_stmt_defvar(x):
   out(";")
 
 
+
+def assign_big_int(id_str, val):
+  high64 = (val >> 64) & 0xFFFFFFFFFFFFFFFF
+  low64 = val & 0xFFFFFFFFFFFFFFFF
+
+  out("\n"); indent(); out("%s = 0x%x;" % (id_str, high64))
+  out("\n"); indent(); out("%s = %s << 64;" % (id_str, id_str))
+  out("\n"); indent(); out("%s |= 0x%x;" % (id_str, low64))
+
+
+
 def print_stmt_let(x):
-  f = {'isa': 'field', 'id': x['id'], 'type': x['value']['type']}
-  print_field(f, prefix="")
+  typ = x['value']['type']
+
+  big_int = False
+  if type.is_integer(typ):
+    if typ['power'] > 64:
+      big_int = True
+      x['value']['type']['att'].remove('const')
+
+  print_field(hlir_field(x['id'], typ), prefix="")
+
+  if big_int:
+    out(";")
+    id_str = x['id']['str']
+    val = hlir_value_num_get(x['value'])
+    assign_big_int(id_str, val)
+    return
+
+  # classic assign
   out(" = ")
   print_value(x['value'])
   out(";")
@@ -916,6 +943,11 @@ def print_stmt_assign(x):
     #if type.is_record(x['right']['type']):
       #assign_record_by_fields(x)
       #return
+
+  """if type.is_integer(x['left']['type']):
+    if type['power'] >= 64:
+      type.type_print(x['left']['type'])
+      out("{big}")"""
 
 
   print_value(x['left'])
