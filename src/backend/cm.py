@@ -221,7 +221,9 @@ def print_value_bin(v, ctx):
 
 
 un_ops = {
-  'ref': '&', 'deref': '*', 'plus': '+', 'minus': '-', 'not': 'not'
+  'ref': '&', 'deref': '*',
+  'plus': '+', 'minus': '-',
+  'not': 'not', 'logic_not': 'not'
 }
 
 
@@ -558,12 +560,18 @@ def print_stmt(x):
 
 def print_stmt_block(s):
   out(" {")
+
   indent_up()
+
   for stmt in s['stmts']:
     print_stmt(stmt)
+
   indent_down()
-  out("\n")
-  indent()
+
+  endnl = s['end_nl']
+  out("\n" * endnl)
+  if endnl:
+    indent()
   out("}")
 
 

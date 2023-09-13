@@ -371,7 +371,9 @@ def print_value_bin(v, ctx):
 
 
 un_ops = {
-  'ref': '&', 'deref': '*', 'plus': '+', 'minus': '-', 'not': '~', 'logic_not': '!'
+  'ref': '&', 'deref': '*',
+  'plus': '+', 'minus': '-',
+  'not': '~', 'logic_not': '!'
 }
 
 
@@ -954,26 +956,29 @@ def print_stmt_value(x):
   print_value(x['value']); out(";")
 
 
+def indent_if(x):
+  if x: indent()
+
 
 def print_stmt(x):
   k = x['kind']
 
-  out("\n" * x['nl'])
+  nl = x['nl']
+  out("\n" * nl)
 
   if k == 'block': print_stmt_block(x)
-  elif k == 'value': indent(); print_stmt_value(x)
-  elif k == 'assign': indent(); print_stmt_assign(x)
-  elif k == 'return': indent(); print_stmt_return(x)
-  elif k == 'if': indent(); print_stmt_if(x, need_else_branch=False)
-  elif k == 'while': indent(); print_stmt_while(x)
-  elif k == 'def_var': indent(); print_stmt_defvar(x)
-  elif k == 'def_let': indent(); print_stmt_let(x)
-  elif k == 'break': indent(); out('break;')
-  elif k == 'again': indent(); out('continue;')
+  elif k == 'value': indent_if(nl > 0); print_stmt_value(x)
+  elif k == 'assign': indent_if(nl > 0); print_stmt_assign(x)
+  elif k == 'return': indent_if(nl > 0); print_stmt_return(x)
+  elif k == 'if': indent_if(nl > 0); print_stmt_if(x, need_else_branch=False)
+  elif k == 'while': indent_if(nl > 0); print_stmt_while(x)
+  elif k == 'def_var': indent_if(nl > 0); print_stmt_defvar(x)
+  elif k == 'def_let': indent_if(nl > 0); print_stmt_let(x)
+  elif k == 'break': indent_if(nl > 0); out('break;')
+  elif k == 'again': indent_if(nl > 0); out('continue;')
   elif k == 'comment-line': print_comment_line(x)
   elif k == 'comment-block': print_comment_block(x)
   else: out("<stmt %s>" % str(x))
-
 
 
 # not works
@@ -1008,11 +1013,9 @@ def print_stmt_block(s, arrays=None, empty_comment=""):
   indent_down()
 
   endnl = s['end_nl']
-  if endnl == 0:
-    endnl = 1
-
   out("\n" * endnl)
-  indent()
+  if endnl:
+    indent()
   out("}")
 
 
