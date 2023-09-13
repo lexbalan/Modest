@@ -13,30 +13,31 @@ type ArchNat Nat64
 
 
 func ff_memzero (mem : Pointer, len : Nat64) {
-  let len_words = len / sizeof(ArchNat)
-  let len_bytes = len % sizeof(ArchNat)
+    let len_words = len / sizeof(ArchNat)
 
-  let dst_word = mem to *[]ArchNat
+    let dst_word = mem to *[]ArchNat
 
-  var i := 0 to Nat64
-  while (i < len_words) {
-    dst_word[i] := 0
-    i := i + 1
-  }
+    var i := 0 to Nat64
+    while (i < len_words) {
+        dst_word[i] := 0
+        i := i + 1
+    }
 
-  let dst_byte = &dst_word[i] to *[]Nat8
 
-  i := 0
-  while (i < len_bytes) {
-    dst_byte[i] := 0
-    i := i + 1
-  }
+    let len_bytes = len % sizeof(ArchNat)
+
+    let dst_byte = &dst_word[i] to *[]Nat8
+
+    i := 0
+    while (i < len_bytes) {
+        dst_byte[i] := 0
+        i := i + 1
+    }
 }
 
 
 func ff_memcpy (dst : Pointer, src : Pointer, len : Nat64) {
     let len_words = len / sizeof(ArchNat)
-    let len_bytes = len % sizeof(ArchNat)
 
     let src_w = src to *[]ArchNat
     let dst_w = dst to *[]ArchNat
@@ -46,6 +47,9 @@ func ff_memcpy (dst : Pointer, src : Pointer, len : Nat64) {
         dst_w[i] := src_w[i]
         i := i + 1
     }
+
+
+    let len_bytes = len % sizeof(ArchNat)
 
     let src_b = &src_w[i] to *[]Nat8
     let dst_b = &dst_w[i] to *[]Nat8
