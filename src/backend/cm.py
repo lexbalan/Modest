@@ -25,17 +25,19 @@ def indent():
 
 
 aprecedence = [
-  ['or'], #0
-  ['xor'], #1
-  ['and'], #2
-  ['eq', 'ne'], #3
-  ['lt', 'le', 'gt', 'ge'], #4
-  ['shl', 'shr'], #5
-  ['add', 'sub'], #6
-  ['mul', 'div', 'rem'], #7
-  ['plus', 'minus', 'not', 'cast', 'ref', 'deref', 'sizeof'], #8
-  ['call', 'index', 'access'], #9
-  ['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #10
+  ['logic_or'], #0
+  ['logic_and'], #1
+  ['or'], #2
+  ['xor'], #3
+  ['and'], #4
+  ['eq', 'ne'], #5
+  ['lt', 'le', 'gt', 'ge'], #6
+  ['shl', 'shr'], #7
+  ['add', 'sub'], #8
+  ['mul', 'div', 'rem'], #9
+  ['plus', 'minus', 'not', 'cast', 'ref', 'deref', 'sizeof'], #10
+  ['call', 'index', 'access'], #11
+  ['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #12
 ]
 
 precedenceMax = len(aprecedence) - 1
@@ -322,8 +324,12 @@ def print_value_literal_array(v, ctx):
   while i < n:
     a = values[i]
 
-    if a['nl'] > 0:
-      out("\n" * a['nl'])
+    nl = 0
+    if 'nl' in a:
+      nl = a['nl']
+
+    if nl > 0:
+      out("\n" * nl)
       indent()
     else:
       if i > 0:
@@ -333,7 +339,7 @@ def print_value_literal_array(v, ctx):
 
     i = i + 1
 
-    if a['nl'] == 0:
+    if nl == 0:
       if i < n:
         out(',')
 
@@ -359,8 +365,12 @@ def print_value_literal_record(v, ctx):
 
     ini = get_item_with_id(v['initializers'], field_str)
 
-    if ini['nl'] > 0:
-      out("\n" * ini['nl'])
+    nl = 0
+    if 'nl' in ini:
+      nl = ini['nl']
+
+    if nl > 0:
+      out("\n" * nl)
       indent()
     else:
       if i > 0:
@@ -369,7 +379,7 @@ def print_value_literal_record(v, ctx):
     out("%s = " % field_str)
     print_value(ini['value'], ctx)
 
-    if ini['nl'] == 0:
+    if nl == 0:
       if i < (nitems - 1):
         out(",")
 

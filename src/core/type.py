@@ -85,7 +85,7 @@ typeChar['c_alias'] = 'char'
 typeChar['llvm_alias'] = 'i8'
 
 typeStr = hlir_type_pointer(hlir_type_array(typeChar, volume=None, ti=None), ti=None)
-typeStr['att'].extend(['const', 'str'])
+typeStr['att'].extend(['const', 'string'])
 #typeStr['c_alias'] = 'const char *'
 genericStr = typeStr
 
@@ -280,15 +280,7 @@ def is_float(t):
 
 
 def is_string(t):
-  if 'str' in t['att']:
-    return True
-  #!
-  if t['kind'] == 'pointer':
-    if t['to']['kind'] == 'array':
-      if eq(t['to']['of'], typeChar):
-        return True
-
-  return False
+  return 'string' in t['att']
 
 
 def is_generic_numeric(t):
@@ -306,7 +298,9 @@ def is_generic_record(t):
 
 
 def is_generic_string(t):
-  return 'generic-string' in t['att']
+  if 'string' in t['att']:
+    return 'generic' in t['att']
+  return False
 
 
 

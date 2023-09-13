@@ -88,17 +88,19 @@ was_separated_by_new_line = True
 
 
 aprecedence = [
-  ['or'], #0
-  ['xor'], #1
-  ['and'], #2
-  ['eq', 'ne'], #3
-  ['lt', 'le', 'gt', 'ge'], #4
-  ['shl', 'shr'], #5
-  ['add', 'sub'], #6
-  ['mul', 'div', 'rem'], #7
-  ['plus', 'minus', 'not', 'cast', 'to', 'ref', 'deref', 'sizeof'], #8
-  ['call', 'index', 'access'], #9
-  ['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #10
+  ['logic_or'], #0
+  ['logic_and'], #1
+  ['or'], #2
+  ['xor'], #3
+  ['and'], #4
+  ['eq', 'ne'], #5
+  ['lt', 'le', 'gt', 'ge'], #6
+  ['shl', 'shr'], #7
+  ['add', 'sub'], #8
+  ['mul', 'div', 'rem'], #9
+  ['plus', 'minus', 'not', 'cast', 'ref', 'deref', 'sizeof'], #10
+  ['call', 'index', 'access'], #11
+  ['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #12
 ]
 
 precedenceMax = len(aprecedence) - 1
@@ -358,16 +360,9 @@ def print_value_bin(v, ctx):
   # GCC выдает warning например в: 1 << 2 + 2, тк считает
   # Что юзер имел в виду (1 << 2) + 2, а у << приоритет тние
   # чтобы он не ругался, завернем такие выражения в скобки
-  if op in ['shl', 'shr']:
-    need_wrap_left = precedence(left['kind']) < precedenceMax
-    need_wrap_right = precedence(right['kind']) < precedenceMax
-
-  # if logic operation
-  if type.eq(left['type'], type.typeNat1):
-    if op == 'or':
-      op = 'logic_or'
-    elif op == 'and':
-      op = 'logic_and'
+  if op in ['shl', 'shr', 'logic_or', 'logic_and']:
+    need_wrap_left = precedence(left['kind']) < 10 #precedenceMax
+    need_wrap_right = precedence(right['kind']) < 10 #precedenceMax
 
   print_value(left, need_wrap=need_wrap_left)
   out(' %s ' % bin_ops[op])

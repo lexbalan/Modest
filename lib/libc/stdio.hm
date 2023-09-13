@@ -10,6 +10,7 @@ import "./ctypes.hm"
 type FposT
 type FILE
 
+@property("c_alias", "char *")
 type CharStr Str
 
 @property("c_alias", "const char *")

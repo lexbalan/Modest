@@ -393,6 +393,11 @@ def get_bin_opcode(op, t):
     opcode = 'lshr'
     if type.is_signed(t):
       opcode = 'ashr'
+  elif op == 'logic_or':
+    opcode = 'or'
+  elif op == 'logic_and':
+    opcode = 'and'
+
 
   return opcode
 
@@ -787,9 +792,10 @@ def do_eval_sizeof(x):
 
 
 bin_ops = [
+  'logic_or', 'logic_and',
   'or', 'xor', 'and', 'shl', 'shr',
   'eq', 'ne', 'lt', 'gt', 'le', 'ge',
-  'add', 'sub', 'mul', 'div', 'rem'
+  'add', 'sub', 'mul', 'div', 'rem',
 ]
 
 un_ops = ['ref', 'deref', 'plus', 'minus', 'not']
@@ -985,7 +991,7 @@ def do_eval_x(x):
   elif k == 'sizeof': return do_eval_sizeof(x)
   else:
     out("<%s>" % k)
-    return ll_create_value_num(x['type'], 0)
+    return ll_create_value_zero(x['type'])
 
 #
 #

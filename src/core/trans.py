@@ -492,17 +492,23 @@ def do_value_bin(x):
   if k in ['eq', 'ne', 'lt', 'gt', 'le', 'ge']:
     type_result = type.typeNat1
 
+  if type.eq(type_result, type.typeNat1):
+    if k == 'or':
+      k = 'logic_or'
+    elif k == 'and':
+      k = 'logic_and'
 
-
-  nv = hlir_value_bin(x['kind'], l, r, type_result, ti=ti)
+  nv = hlir_value_bin(k, l, r, type_result, ti=ti)
 
   # if left & right are immediate, we can fold const
   # and append field 'imm_num' to nv
   if value_is_immediate(l) and value_is_immediate(r):
     ops = {
+      'logic_or': lambda a, b: a | b,
+      'logic_and': lambda a, b: a & b,
       'or': lambda a, b: a or b,
       'and': lambda a, b: a and b,
-      'xor': lambda a, b: (a and not b) or (not a and b),
+      'xor': lambda a, b: a ^ b,
       'eq': lambda a, b: 1 if a == b else 0,
       'ne': lambda a, b: 1 if a != b else 0,
       'lt': lambda a, b: 1 if a < b else 0,
@@ -834,7 +840,7 @@ def value_cstr(string, length, ti):
   vol = hlir_value_int(length)
   ta = hlir_type_array(type.typeChar, volume=vol, ti=ti)
   stype = hlir_type_pointer(ta, ti=ti)
-  stype['att'].append('generic-string')
+  stype['att'].extend(['string', 'generic'])
   s = hlir_value_cstr(string, length, stype, ti=ti)
   module['strings'].append(s)
   return s
@@ -1321,6 +1327,9 @@ def def_const(x):
   id = x['id']
   v = do_value(x['value'])
 
+  if value_is_bad(v):
+    return hlir_def_const(id, v, v, ti=x['ti'])
+
   if not value_is_immediate(v):
     error("expected immediate value", v)
 
@@ -1417,8 +1426,10 @@ def def_var(x):
   init_value = None
   if x['init'] != None:
     iv = do_value(x['init'])
-    init_value = value_cast_implicit(iv, f['type'], iv['ti'])
-    type.check(init_value['type'], f['type'], x['init']['ti'])
+
+    if not value_is_bad(iv):
+      init_value = value_cast_implicit(iv, f['type'], iv['ti'])
+      type.check(init_value['type'], f['type'], x['init']['ti'])
 
   var = hlir_value_var(f['id'], f['type'], init=init_value)
 

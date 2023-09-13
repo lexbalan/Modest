@@ -121,7 +121,7 @@ void *linked_list_node_link_get(Node *node)
 
 Node *linked_list_insert_node(List *list, Node *new_node)
 {
-    if (list == NULL || new_node == NULL) {
+    if ((list == NULL) || (new_node == NULL)) {
         return NULL;
     }
 
