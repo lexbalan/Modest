@@ -913,18 +913,20 @@ def print_stmt_assign(x):
       assign_array_by_items(x)
       return
 
-#  if x['right']['kind'] == 'var':
-#    if type.is_record(x['right']['type']):
-#      assign_record_by_fields(x)
-#      return
+    #if type.is_record(x['right']['type']):
+      #assign_record_by_fields(x)
+      #return
+
 
   print_value(x['left'])
   out(" = ")
+
   # В си можно просто присвоить литерал структуры глоб переменной
   # но вот локальной - нельзя, нужно явно привести его е треб типу
 #  if (type.is_record(x['right']['type'])):
 #    print_cast(x['right']['type'], x['right'])
 #  else:
+
   print_value(x['right'])
 
   out(";")

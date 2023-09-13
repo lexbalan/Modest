@@ -29,6 +29,11 @@ typeInt64['att'].extend(['signed'])
 typeInt64['c_alias'] = 'int64_t'
 typeInt64['llvm_alias'] = 'i64'
 
+typeInt128 = hlir_type_integer("Int128", power=128, ti=None)
+typeInt128['att'].extend(['signed'])
+typeInt128['c_alias'] = '__int128'
+typeInt128['llvm_alias'] = 'i128'
+
 
 typeNat1 = hlir_type_integer("Nat1", power=1, ti=None)
 typeNat1['att'].extend(['unsigned', 'logical'])
@@ -55,6 +60,11 @@ typeNat64 = hlir_type_integer("Nat64", power=64, ti=None)
 typeNat64['att'].extend(['unsigned'])
 typeNat64['c_alias'] = 'uint64_t'
 typeNat64['llvm_alias'] = 'i64'
+
+typeNat128 = hlir_type_integer("Nat128", power=128, ti=None)
+typeNat128['att'].extend(['unsigned'])
+typeNat128['c_alias'] = 'unsigned __int128'
+typeNat128['llvm_alias'] = 'i128'
 
 typeFloat16 = hlir_type_float('Float16', power=16, ti=None)
 typeFloat16['att'].extend(['float'])
@@ -101,12 +111,16 @@ def select_int(sz):
   elif sz <= 16: return typeInt16
   elif sz <= 32: return typeInt32
   elif sz <= 64: return typeInt64
+  elif sz <= 128: return typeInt128
+
 
 def select_nat(sz):
   if sz <= 8: return typeNat8
   elif sz <= 16: return typeNat16
   elif sz <= 32: return typeNat32
   elif sz <= 64: return typeNat64
+  elif sz <= 128: return typeNat128
+
 
 def select_numeric(sz, signedness):
   if signedness:
