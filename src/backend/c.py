@@ -31,7 +31,7 @@ USE_UCHAR = False
 USE_STATIC_VARIABLES = True
 USE_CONST_LET_VARIABLES = True
 
-APPEND_ELSE_TO_IFELSE_LADDER = True
+
 EMPTY_BLOCK_COMMENT = "// TODO: pay attention here"
 
 
@@ -821,7 +821,6 @@ def print_stmt_if(x, need_else_branch):
 
   e = x['else']
   if e != None:
-
     if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
       out("\n")
       indent()
@@ -839,27 +838,6 @@ def print_stmt_if(x, need_else_branch):
       else:
         out(" ")
       print_stmt_block(e)
-
-  else:
-    if APPEND_ELSE_TO_IFELSE_LADDER:
-      if need_else_branch:
-
-        if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
-          out("\n")
-          indent()
-        else:
-          out(" ")
-
-        out("else")
-
-        if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
-          out("\n")
-          indent()
-        else:
-          out(" ")
-
-        empty_block = hlir_stmt_block(stmts=[], ti=x['ti'], end_nl=1)
-        print_stmt_block(empty_block)
 
 
 
