@@ -19,6 +19,8 @@ echo "export PATH=$PATH:$MODEST_DIR" >> ~/.bashrc
 echo "export MODEST_LIB=$MODEST_DIR/lib/" >> ~/.bashrc
 ```
 
+> Restart your terminal after commands showed above
+
 3. Compile example:
 ```
 cd ~/Modest/examples/hello_world
@@ -28,6 +30,11 @@ make
 Default target is LLVM, but you can get C output
 ```
 make C
+```
+
+Or Modest output
+```
+make CM
 ```
 
 

@@ -571,12 +571,13 @@ def print_value_cast(v, ctx):
   """
 
 
+  # ! Вырубил тк мешает; Непонятно нужно ли вообще но похоже что нет
   # Чтобы не приводить тип в выражениях типа ((int32_t)0), etc.
-  if type.is_numeric(to_type):
+  """if type.is_numeric(to_type):
     if type.is_generic(from_type):
       if type.is_numeric(from_type):
         print_value(v['value'], ctx)
-        return
+        return"""
 
   # не печатаем приведение литерала строки "string" к Str
   if type.eq(type.typeStr, to_type):

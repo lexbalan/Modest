@@ -312,7 +312,9 @@ def value_cons_integer(v, t, ti, method):
       # check size
       if type.is_numeric(t):
         if v['type']['power'] > t['power']:
-          return None
+          warning("casting with data loss", ti)
+          #return None
+          return hlir_value_cast(v, t, ti)
 
       return do_cast_generic(v, t, ti)
 
