@@ -182,23 +182,33 @@ def init():
   global root_context
   # init main context
   root_context = Symtab()
+
   root_context.type_add('Unit', type.typeUnit)
+
   root_context.type_add('Int8', type.typeInt8)
   root_context.type_add('Int16', type.typeInt16)
   root_context.type_add('Int32', type.typeInt32)
   root_context.type_add('Int64', type.typeInt64)
+  root_context.type_add('Int128', type.typeInt128)
+
   root_context.type_add('Nat1', type.typeNat1)
   root_context.type_add('Nat8', type.typeNat8)
   root_context.type_add('Nat16', type.typeNat16)
   root_context.type_add('Nat32', type.typeNat32)
   root_context.type_add('Nat64', type.typeNat64)
+  root_context.type_add('Nat128', type.typeNat128)
+
   root_context.type_add('Float16', type.typeFloat16)
   root_context.type_add('Float32', type.typeFloat32)
   root_context.type_add('Float64', type.typeFloat64)
+
   root_context.type_add('Str', type.typeStr)
+
   root_context.type_add('Pointer', type.typeFreePtr)
 
   root_context.type_add('Bool', type.typeNat1)
+
+
   root_context.value_add('nil', valueNil)
   root_context.value_add('true', valueTrue)
   root_context.value_add('false', valueFalse)
@@ -1121,7 +1131,7 @@ def do_stmt_var(x):
   var_value['att'].extend(['local'])
   module['context'].value_add(id['str'], var_value)
 
-  return hlir_stmt_def_var(id, t, v, ti=x['ti'])
+  return hlir_stmt_def_var(var_value, v, ti=x['ti'])
 
 
 
@@ -1325,13 +1335,13 @@ def extend_props(x):
 
 def def_const(x):
   id = x['id']
-  v = do_value(x['value'])
+  init_value = do_value(x['value'])
 
-  if value_is_bad(v):
-    return hlir_def_const(id, v, v, ti=x['ti'])
+  if value_is_bad(init_value):
+    return hlir_def_const(id, init_value, init_value, ti=x['ti'])
 
-  if not value_is_immediate(v):
-    error("expected immediate value", v)
+  if not value_is_immediate(init_value):
+    error("expected immediate value", init_value)
 
   # (!) в дефиницию идет сам v;
   # а в контекст - значение-конатснта с id (нужно при C печати);
@@ -1342,19 +1352,19 @@ def def_const(x):
   # если оно сворачиваемое то может иметь поле num
   # так его сможет распечатать как LLVM так и C принтер
 
-  nv = value_copy(v)
+  const_value = value_copy(init_value)
 
   # выражение значения из которого он создан
   # юзается принтером при печати напр #define <id> <value>
-  nv['value'] = v
-  nv['id'] = id
+  const_value['value'] = init_value
+  const_value['id'] = id
 
-  extend_props(nv)
+  extend_props(const_value)
 
-  module['context'].value_add(id['str'], nv)
+  module['context'].value_add(id['str'], const_value)
 
-  definition = hlir_def_const(id, nv, v, ti=x['ti'])
-  nv['definition'] = definition
+  definition = hlir_def_const(id, const_value, init_value, ti=x['ti'])
+  const_value['definition'] = definition
   definition['att'].extend(attributes_get())
 
   return definition
@@ -1401,7 +1411,7 @@ def def_type(x):
 
   definition = hlir_def_type(x['id'], ty, already_declared, ti=x['ti'])
   #definition['att'].extend(attributes_get())
-  #nt['definition'] = definition
+  nt['definition'] = definition
 
   if 'volatile' in atts:
     definition['att'].extend(atts)

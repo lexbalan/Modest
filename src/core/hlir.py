@@ -415,7 +415,7 @@ def hlir_value_sizeof(of, ti=None):
 
 
 def hlir_stmt_bad(ti=None):
-  return {'isa': 'stmt', 'kind': 'bad', 'ti': ti}
+  return {'isa': 'stmt', 'kind': 'bad', 'att': [], 'ti': ti}
 
 
 def hlir_stmt_block(stmts, ti=None, end_nl=1):
@@ -425,17 +425,18 @@ def hlir_stmt_block(stmts, ti=None, end_nl=1):
     'stmts': stmts,
     # количество пустых строк перед закрывающей скобкой блока
     'end_nl': end_nl,
+    'att': [],
     'ti': ti
   }
 
 
-def hlir_stmt_def_var(id, type, init_value=None, ti=None):
+def hlir_stmt_def_var(var_value, init_value=None, ti=None):
   return {
     'isa': 'stmt',
     'kind': 'def_var',
-    'id': id,
-    'type': type,
-    'value': init_value,
+    'var': var_value,
+    'init_value': init_value,
+    'att': [],
     'ti': ti
   }
 
@@ -446,6 +447,7 @@ def hlir_stmt_def_const(id, value, ti=None):
     'kind': 'def_let',
     'id': id,
     'value': value,
+    'att': [],
     'ti': ti
   }
 
@@ -455,6 +457,7 @@ def hlir_stmt_value(value, ti=None):
     'isa': 'stmt',
     'kind': 'value',
     'value': value,
+    'att': [],
     'ti': ti
   }
 
@@ -465,6 +468,7 @@ def hlir_stmt_assign(left, right, ti=None):
     'kind': 'assign',
     'left': left,
     'right': right,
+    'att': [],
     'ti': ti
   }
 
@@ -476,6 +480,7 @@ def hlir_stmt_if(cond, then, els=None, ti=None):
     'cond': cond,
     'then': then,
     'else': els,
+    'att': [],
     'ti': ti
   }
 
@@ -486,16 +491,17 @@ def hlir_stmt_while(cond, stmt, ti=None):
     'kind': 'while',
     'cond': cond,
     'stmt': stmt,
+    'att': [],
     'ti': ti
   }
 
 
 def hlir_stmt_again(ti=None):
-  return {'isa': 'stmt', 'kind': 'again', 'ti': ti}
+  return {'isa': 'stmt', 'kind': 'again', 'att': [], 'ti': ti}
 
 
 def hlir_stmt_break(ti=None):
-  return {'isa': 'stmt', 'kind': 'break', 'ti': ti}
+  return {'isa': 'stmt', 'kind': 'break', 'att': [], 'ti': ti}
 
 
 def hlir_stmt_return(value=None, ti=None):
@@ -503,6 +509,7 @@ def hlir_stmt_return(value=None, ti=None):
     'isa': 'stmt',
     'kind': 'return',
     'value': value,
+    'att': [],
     'ti': ti
   }
 
@@ -516,6 +523,7 @@ def hlir_decl_type(id, type, ti=None):
     'id': id,
     'type': type,
     'att': ['undefined'],
+    'ti': ti
   }
 
 
@@ -535,8 +543,8 @@ def hlir_def_type(id, type, already_declared=False, ti=None):
     'kind': 'type',
     'id': id,
     'type': type,  # именно t!
-    'att': [],
     'afterdef': already_declared,
+    'att': [],
     'ti': ti
   }
 
@@ -549,15 +557,16 @@ def hlir_def_const(id, const_value, orig_value, ti=None):
     'value': orig_value,
     'id': id,
     'att': [],
+    'ti': ti
   }
 
 
-def hlir_def_var(var, init, ti=None):
+def hlir_def_var(var_value, init_value=None, ti=None):
   return {
     'isa': 'definition',
     'kind': 'var',
-    'var': var,
-    'init': init,
+    'var': var_value,
+    'init_value': init_value,
     'att': [],
     'ti': ti
   }

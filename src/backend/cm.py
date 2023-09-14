@@ -519,10 +519,12 @@ def print_stmt_return(x):
 
 def print_stmt_defvar(x):
   out('var ')
-  print_field({'isa': 'field', 'id': x['id'], 'type': x['type']})
-  if x['value'] != None:
+  print_field(x['var'])
+
+  init_value = x['init_value']
+  if init_value != None:
     out(" := ")
-    print_value(x['value'])
+    print_value(init_value)
 
 
 def print_stmt_let(x):
@@ -613,13 +615,11 @@ def print_def_type(x):
 
 
 
-
 def print_def_var(x):
   out("var ")
-  f = {'isa': 'field', 'id': x['var']['id'], 'type': x['var']['type']}
-  print_field(f)
-  if x['init'] != None:
-    out(" := "); print_value(x['init'])
+  print_field(x['var'])
+  if x['init_value'] != None:
+    out(" := "); print_value(x['init_value'])
 
 
 def print_def_const(x):

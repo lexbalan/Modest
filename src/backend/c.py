@@ -1,10 +1,10 @@
 
 from opt import *
-from error import info
+from error import info, error
 from .common import *
 import core.type as type
-from core.value import value_attribute_check
-from core.hlir import hlir_field, hlir_value_num_get, hlir_stmt_block
+from core.value import value_attribute_check, value_is_immediate, value_is_immediate_big_integer
+from core.hlir import hlir_field, hlir_value_num_get, hlir_stmt_block, hlir_value_var
 from util import get_item_with_id
 
 puffy = False
@@ -194,8 +194,7 @@ def print_fields(fields, before, after, between):
   while i < n:
     param = fields[i]
     out(before)
-    print_field(param, prefix="")
-
+    print_field(param)
     #if 'const' in param['type']['att']:
     #  info("const in att", param['ti'])
     #  exit(1)
@@ -229,7 +228,7 @@ def print_type_record(t, tag=""):
 
     out("\n" * field['nl'])
     indent();
-    print_field(field, prefix="")
+    print_field(field)
     out(";")
 
   indent_down()
@@ -871,44 +870,57 @@ def print_stmt_return(x):
 
 
 def print_stmt_defvar(x):
-  f = {'isa': 'field', 'id': x['id'], 'type': x['type']}
-  print_field(f, prefix="")
-  if x['value'] != None:
+  print_field(x['var'])
+
+  init_value = x['init_value']
+  if init_value != None:
+
+    # assign immediate big int
+    # var x : Nat128 := 0xccccccccccccccccffffffffffffffff
+    if value_is_immediate_big_integer(init_value):
+      out(";")
+      #vleft = hlir_value_var(x['id'], init_value['type'], ti=x['ti'])
+      assign_big_int_immediate(x['var'], init_value)
+      return
+
+    # classic assign
     out(" = ")
-    print_value(x['value'])
+    print_value(init_value)
+
   out(";")
 
 
 
-def assign_big_int(id_str, val):
-  high64 = (val >> 64) & 0xFFFFFFFFFFFFFFFF
-  low64 = val & 0xFFFFFFFFFFFFFFFF
+# в C не существует литерала для 128 бит
+# поэтому приходится рачком-бочком
+def assign_big_int_immediate(left, right):
+  n = hlir_value_num_get(right)
 
-  nl_indent(); out("%s = 0x%x;" % (id_str, high64))
-  nl_indent(); out("%s = %s << 64;" % (id_str, id_str))
-  nl_indent(); out("%s |= 0x%x;" % (id_str, low64))
+  high64 = (n >> 64) & 0xFFFFFFFFFFFFFFFF
+  low64 = n & 0xFFFFFFFFFFFFFFFF
+
+  nl_indent(); print_value(left); out(" = 0x%X;" % (high64))
+  nl_indent(); print_value(left); out(" <<= 64;")
+  nl_indent(); print_value(left); out(" |= 0x%X;" % (low64))
 
 
 
 def print_stmt_let(x):
-  typ = x['value']['type']
+  v = x['value']
+  typ = v['type']
 
-  big_int = False
-  if type.is_integer(typ):
-    if typ['power'] > 64:
-      big_int = True
-      x['value']['type']['att'].remove('const')
-
-  print_field(hlir_field(x['id'], typ), prefix="")
-
-  if big_int:
+  # let x = 0xccccccccccccccccffffffffffffffff
+  if value_is_immediate_big_integer(v):
+    x['value']['type']['att'].remove('const')
+    print_field2(x['id'], typ)
     out(";")
-    id_str = x['id']['str']
-    val = hlir_value_num_get(x['value'])
-    assign_big_int(id_str, val)
+    vleft = hlir_value_var(x['id'], typ, ti=x['ti'])
+    assign_big_int_immediate(vleft, x['value'])
     return
 
+
   # classic assign
+  print_field2(x['id'], typ)
   out(" = ")
   print_value(x['value'])
   out(";")
@@ -938,10 +950,19 @@ def assign_record_by_fields(x):
     out(".%s;" % f['id']['str'])
 
 
-def print_stmt_assign(x):
+def assign(left, right):
+
+  # assign immediate big int
+  # var x : Nat128
+  # x := 0xccccccccccccccccffffffffffffffff
+  if value_is_immediate_big_integer(right):
+    assign_big_int_immediate(left, right)
+    return
+
+
   # в си нельзя просто так присвоить массив // или структуру
-  if x['right']['kind'] == 'var':
-    if type.is_array(x['right']['type']):
+  if right['kind'] == 'var':
+    if type.is_array(right['type']):
       assign_array_by_items(x)
       return
 
@@ -955,7 +976,7 @@ def print_stmt_assign(x):
       out("{big}")"""
 
 
-  print_value(x['left'])
+  print_value(left)
   out(" = ")
 
   # В си можно просто присвоить литерал структуры глоб переменной
@@ -964,9 +985,14 @@ def print_stmt_assign(x):
 #    print_cast(x['right']['type'], x['right'])
 #  else:
 
-  print_value(x['right'])
+  print_value(right)
 
   out(";")
+
+
+
+def print_stmt_assign(x):
+  assign(x['left'], x['right'])
 
 
 def print_stmt_value(x):
@@ -1185,7 +1211,7 @@ def print_field_pointer(t, id):
 
 
 
-def print_field_array(t, id, prefix):
+def print_field_array(t, id):
   # get list element type
   root_type = t
   while root_type['kind'] == 'array':
@@ -1204,21 +1230,24 @@ def print_field_array(t, id, prefix):
 
 # из за того что с C типы записваются через жопу
 # приходится печатать типы ptr, arr & func вместе с именем поля
-def print_field(x, prefix):
-  t = x['type']
-  assert (t != None)
-
-  id = prefix + x['id']['str']
-  assert (id != "")
+def print_field(x):
+  print_field2(x['id'], x['type'])
 
 
-  if 'c_alias' in t or 'name' in t:
-    print_field_regular(t, id)
+def print_field2(_id, typ):
+  assert (typ != None)
+
+  id_str = _id['str']
+  assert (id_str != "")
+
+
+  if 'c_alias' in typ or 'name' in typ:
+    print_field_regular(typ, id_str)
     return
 
-  if type.is_pointer(t): print_field_pointer(t, id)
-  elif type.is_array(t): print_field_array(t, id, prefix=prefix)
-  else: print_field_regular(t, id)
+  if type.is_pointer(typ): print_field_pointer(typ, id_str)
+  elif type.is_array(typ): print_field_array(typ, id_str)
+  else: print_field_regular(typ, id_str)
 
 
 
@@ -1239,10 +1268,16 @@ def print_def_var(x):
   if 'c_prefix' in x['var']:
     out("%s " % x['var']['c_prefix'])
 
-  print_field(x['var'], prefix="")
+  print_field(x['var'])
 
-  if x['init'] != None:
-    out(" = "); print_value(x['init'])
+  init_value = x['init_value']
+  if init_value != None:
+    if value_is_immediate_big_integer(init_value):
+      error("cannot assign big number in C to global variable", init_value['ti'])
+
+    else:
+      # classic assign
+      out(" = "); print_value(init_value)
 
   out(";")
 
