@@ -6,7 +6,7 @@ Strong typed, concise syntax, low level programming language, that you can trans
 Now on research & development stage.
 
 If you are interested with the project, write to me what you thought about it.
-You can contact me by [telegram](t.me/@alexbalan).
+You can contact me by telegram: t.me/@alexbalan.
 
 
 [Installation](./docs/INSTALL.md)
