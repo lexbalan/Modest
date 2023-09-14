@@ -27,13 +27,11 @@ uint64_t low_128(unsigned __int128 x)
 
 int main(void)
 {
-    __int128 big1;
-    big1 = 0xFFFFFFFFFFFFFFFF;
+    __int128 big1;big1 = 0xFFFFFFFFFFFFFFFF;
     big1 <<= 64;
     big1 |= 0xFFFFFFFFFFFFFFFF;
 
     unsigned __int128 big2;
-
     big2 = 0xFFFFFFFFFFFFFFFF;
     big2 <<= 64;
     big2 |= 0xFFFFFFFFFFFFFFFF;

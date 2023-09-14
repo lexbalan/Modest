@@ -879,7 +879,6 @@ def print_stmt_defvar(x):
     # assign immediate big int
     # var x : Nat128 := 0xccccccccccccccccffffffffffffffff
     if value_is_immediate_big_integer(init_value):
-      out(";")
       #vleft = hlir_value_var(x['id'], init_value['type'], ti=x['ti'])
       assign_big_int_immediate(x['var'], init_value)
       return
@@ -900,7 +899,7 @@ def assign_big_int_immediate(left, right):
   high64 = (n >> 64) & 0xFFFFFFFFFFFFFFFF
   low64 = n & 0xFFFFFFFFFFFFFFFF
 
-  nl_indent(); print_value(left); out(" = 0x%X;" % (high64))
+  print_value(left); out(" = 0x%X;" % (high64))
   nl_indent(); print_value(left); out(" <<= 64;")
   nl_indent(); print_value(left); out(" |= 0x%X;" % (low64))
 
@@ -952,7 +951,6 @@ def assign_record_by_fields(x):
 
 
 def assign(left, right):
-
   # assign immediate big int
   # var x : Nat128
   # x := 0xccccccccccccccccffffffffffffffff
