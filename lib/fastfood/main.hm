@@ -8,3 +8,6 @@ func delay_ms(ms : Nat64)
 func delay_s(s : Nat64)
 func delay(us : Nat64)
 
+func ff_print_hex_n32(x : Nat32, a : Nat8) -> Unit
+func ff_print_hex_n64(x : Nat64, a : Nat8) -> Unit
+func ff_print_hex_n128(x : Nat128, a : Nat8) -> Unit

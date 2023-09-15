@@ -1,0 +1,85 @@
+
+@attribute("c-no-print")
+import "./main.hm"
+@c_include("./ff.h")
+
+@attribute("c-no-print")
+import "libc/stdio.hm"
+
+
+func n2hex_digit (n : Nat8, a : Nat8) -> Nat8 {
+    if n < 10 {
+        return "0"[0] + n
+    } else if n < 16 {
+        return a + (n - 10)
+    }
+    return "-"[0]
+}
+
+
+func ff_print_hex_n32(x : Nat32, a : Nat8) -> Unit {
+    var buf : [8]Nat8
+    ff_memzero(&buf, 8)
+    var msk := 0xF to Nat32
+    var i := 0
+    while i < 8 {
+        let n = (x and msk) >> (i * 4)
+        buf[i] := n2hex_digit(n to Nat8, a)
+        msk := msk << 4
+        i := i + 1
+    }
+
+    i := 0
+    while i<8 {
+        let s = buf[7-i]
+        if s != 0 {
+            printf("%c", s)
+            i := i + 1
+        }
+    }
+}
+
+func ff_print_hex_n64(x : Nat64, a : Nat8) -> Unit {
+    var buf : [16]Nat8
+    ff_memzero(&buf, 16)
+    var msk := 0xF to Nat64
+    var i := 0
+    while i < 16 {
+        let n = (x and msk) >> (i * 4)
+        buf[i] := n2hex_digit(n to Nat8, a)
+        msk := msk << 4
+        i := i + 1
+    }
+
+    i := 0
+    while i<16 {
+        let s = buf[15-i]
+        if s != 0 {
+            printf("%c", s)
+            i := i + 1
+        }
+    }
+}
+
+
+func ff_print_hex_n128(x : Nat128, a : Nat8) -> Unit {
+    var buf : [32]Nat8
+    ff_memzero(&buf, 32)
+    var msk := 0xF to Nat128
+    var i := 0
+    while i < 32 {
+        let n = (x and msk) >> (i * 4)
+        buf[i] := n2hex_digit(n to Nat8, a)
+        msk := msk << 4
+        i := i + 1
+    }
+
+    i := 0
+    while i<32 {
+        let s = buf[31-i]
+        if s != 0 {
+            printf("%c", s)
+            i := i + 1
+        }
+    }
+}

@@ -93,11 +93,11 @@ declare void @perror(%ConstCharStr)
 @str_3 = private constant [19 x i8] c"big2 = 0x%llX%llX\0A\00"
 @str_4 = private constant [19 x i8] c"big3 = 0x%llX%llX\0A\00"
 @str_5 = private constant [22 x i8] c"big_sum = 0x%llX%llX\0A\00"
+@str_6 = private constant [13 x i8] c"sig1 = %lld\0A\00"
 
 
 
-
-@big0 = global i128 81985529216486895
+@big0 = global i128 1512366075204170947332355369683137040
 define i64 @high_128(i128 %x) {
   %1 = lshr i128 %x, 64
   %2 = trunc i128 %1 to i64
@@ -152,6 +152,16 @@ define i32 @main() {
   %31 = load i128, i128* %big_sum
   %32 = call i64(i128) @low_128 (i128 %31)
   %33 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %28, i64 %30, i64 %32)
+; signed big int test
+  %sig1 = alloca i128
+  store i128 -1, i128* %sig1
+  %34 = load i128, i128* %sig1
+  %35 = add i128 %34, 1
+  store i128 %35, i128* %sig1
+  %36 = bitcast [13 x i8]* @str_6 to %ConstCharStr
+  %37 = load i128, i128* %sig1
+  %38 = trunc i128 %37 to i64
+  %39 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %36, i64 %38)
   ret i32 0
 }
 
