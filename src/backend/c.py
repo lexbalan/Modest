@@ -3,9 +3,9 @@ from opt import *
 from error import info, error
 from .common import *
 import core.type as type
-from core.value import value_attribute_check, value_is_immediate, value_is_immediate_big_integer
+from core.value import value_attribute_check, value_is_immediate
 from core.hlir import hlir_field, hlir_value_num_get, hlir_stmt_block, hlir_value_var
-from util import get_item_with_id
+from util import nbits_for_num, get_item_with_id
 
 puffy = False
 
@@ -701,10 +701,23 @@ def print_value_literal_str(x, ctx, prefix=""):
   out("\"")
 
 
-from util import nbits_for_num
+
+
 
 def print_value_literal_int(x, ctx):
+
   num = hlir_value_num_get(x)
+
+  # Big Number?
+  if x['type']['power'] > 64:
+    if nbits_for_num(num):
+      # print Big Numbers
+      high64 = (num >> 64) & 0xFFFFFFFFFFFFFFFF
+      low64 = num & 0xFFFFFFFFFFFFFFFF
+
+      out("(((__int128)0x%X << 64) | ((__int128)0x%X))" % (high64, low64))
+      return
+
 
   if USE_BOOLEAN:
     if type.is_logical(x['type']):
@@ -737,19 +750,6 @@ def print_value_literal_flt(x, ctx):
   out(str(hlir_value_num_get(x)))
 
 
-def print_value_literal_num(x, ctx):
-  if value_attribute_check(x, 'hexadecimal'):
-    out("0x%X" % hlir_value_num_get(x))
-  elif type.is_pointer(x['type']):
-    out("<print_value_literal_num::PTR>")
-    fatal("print_value_literal_num: type.is_pointer")
-  #  if hlir_value_num_get(x) == 0:
-  #    out("NULL")
-  #    return
-  else:
-    out(str(hlir_value_num_get(x)))
-
-
 
 def print_value_literal_ptr(x, ctx):
   if type.is_free_pointer(x['type']):
@@ -764,7 +764,7 @@ def print_value_literal_ptr(x, ctx):
 def print_value_literal(x, ctx):
   t = x['type']
   if type.is_integer(t): print_value_literal_int(x, ctx)
-  elif type.is_float(t): print_value_literal_num(x, ctx)
+  elif type.is_float(t): print_value_literal_flt(x, ctx)
   elif type.is_record(t): print_value_literal_record(x, ctx)
   elif type.is_array(t): print_value_literal_array(x, ctx)
   elif type.is_string(t): print_value_literal_str(x, ctx)
@@ -875,15 +875,6 @@ def print_stmt_defvar(x):
 
   init_value = x['init_value']
   if init_value != None:
-
-    # assign immediate big int
-    # var x : Nat128 := 0xccccccccccccccccffffffffffffffff
-    if value_is_immediate_big_integer(init_value):
-      #vleft = hlir_value_var(x['id'], init_value['type'], ti=x['ti'])
-      assign_big_int_immediate(x['var'], init_value)
-      return
-
-    # classic assign
     out(" = ")
     print_value(init_value)
 
@@ -909,17 +900,6 @@ def print_stmt_let(x):
   v = x['value']
   typ = v['type']
 
-  # let x = 0xccccccccccccccccffffffffffffffff
-  if value_is_immediate_big_integer(v):
-    x['value']['type']['att'].remove('const')
-    print_field2(x['id'], typ)
-    out(";")
-    vleft = hlir_value_var(x['id'], typ, ti=x['ti'])
-    assign_big_int_immediate(vleft, x['value'])
-    return
-
-
-  # classic assign
   print_field2(x['id'], typ)
   out(" = ")
   print_value(x['value'])
@@ -951,13 +931,6 @@ def assign_record_by_fields(x):
 
 
 def assign(left, right):
-  # assign immediate big int
-  # var x : Nat128
-  # x := 0xccccccccccccccccffffffffffffffff
-  if value_is_immediate_big_integer(right):
-    assign_big_int_immediate(left, right)
-    return
-
 
   # в си нельзя просто так присвоить массив // или структуру
   if right['kind'] == 'var':
@@ -1271,12 +1244,7 @@ def print_def_var(x):
 
   init_value = x['init_value']
   if init_value != None:
-    if value_is_immediate_big_integer(init_value):
-      error("cannot assign big number in C to global variable", init_value['ti'])
-
-    else:
-      # classic assign
-      out(" = "); print_value(init_value)
+    out(" = "); print_value(init_value)
 
   out(";")
 

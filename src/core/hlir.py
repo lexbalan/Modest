@@ -32,7 +32,7 @@ def hlir_type_integer(name, power, ti):
     'isa': 'type',
     'kind': 'int',
     'name': name,
-    'att': ['builtin', 'numeric', 'ordered', 'integer'],
+    'att': ['builtin', 'numeric', 'comparable', 'ordered', 'integer'],
     'power': power,
     'size': nbytes_for_bits(power),
     'ti': ti
@@ -44,7 +44,7 @@ def hlir_type_float(aka, power, ti):
     'isa': 'type',
     'kind': 'float',
     'name': aka,
-    'att': ['builtin', 'numeric', 'ordered', 'float'],
+    'att': ['builtin', 'numeric', 'comparable', 'ordered', 'float'],
     'power': power,
     'size': nbytes_for_bits(power),
     'ti': ti
@@ -59,7 +59,7 @@ def hlir_type_pointer(to, ti):
     'to': to,
     'size': pointer_size / 8,
     'power': pointer_size,
-    'att': [],
+    'att': ['comparable'],
     'ti': ti
   }
 
@@ -72,7 +72,7 @@ def hlir_type_free_pointer(ti):
     'to': type.typeUnit,
     'size': pointer_size / 8,
     'power': pointer_size,
-    'att': ['builtin'],
+    'att': ['builtin', 'comparable'],
     'ti': ti
   }
 
@@ -85,7 +85,7 @@ def hlir_type_nil(ti):
     'to': type.typeUnit,
     'size': pointer_size / 8,
     'power': pointer_size,
-    'att': ['builtin', 'generic'],
+    'att': ['builtin', 'comparable', 'generic'],
     'ti': ti
   }
 

@@ -413,64 +413,30 @@ def do_value_shift(op, l, r, ti):
 def value_bin_fold(op, l, r, t, ti):
     pass
 
-def do_value_bin(x):
-  k = x['kind']
-  l = do_rvalue(x['left'])
-  r = do_rvalue(x['right'])
-  ti = x['ti']
+
+# select result type of common binary operation
+def bin_type_select(a, b):
+  if type.is_generic_numeric(a) and type.is_generic_numeric(b):
+    if a['power'] > b['power']:
+      return a
+    else:
+      return b
+
+  elif type.is_generic_numeric(a):
+    return b
+
+  elif type.is_generic_numeric(b):
+    return a
+
+  return a
 
 
-  if value_is_bad(l) or value_is_bad(r):
-    return hlir_value_bad(ti)
 
-  if k in ['shl', 'shr']:
-    return do_value_shift(k, l, r, ti)
+"""if not (p_and_n or n_and_p):
+    if not type.check(l['type'], r['type'], x['ti']):
+      return hlir_value_bad(x['ti'])"""
 
-
-  p_and_n = type.is_free_pointer(l['type']) and type.is_numeric(r['type'])
-  n_and_p = type.is_numeric(l['type']) and type.is_free_pointer(r['type'])
-
-  if k in ['add', 'sub']:
-    if 'unsafe' in features:
-      if p_and_n or n_and_p:
-        if value_is_immediate(l) and value_is_immediate(r):
-          typ = None
-          if p_and_n:
-            typ = l['type']
-          elif n_and_p:
-            typ = r['type']
-
-          num = 0
-          if k == 'add': num = hlir_value_num_get(l) + hlir_value_num_get(r)
-          elif k == 'sub': num = hlir_value_num_get(l) - hlir_value_num_get(r)
-
-          return hlir_value_int(num, typ=typ, ti=ti)
-
-        pass
-
-
-  # IR (LLVM)  ptr +/- num
-  # для си это же смотри выше
-  if p_and_n:
-    lnat = do_cast_runtime(l, typeSysNat, ti)
-    xr = value_cast_implicit(r, lnat['type'], ti)
-    result = hlir_value_bin(x['kind'], lnat, xr, xr['type'], ti)
-    return do_cast_runtime(result, l['type'], ti)
-
-  if n_and_p:
-    rnat = do_cast_runtime(r, typeSysNat, ti)
-    xl = value_cast_implicit(l, rnat['type'], ti)
-    result = hlir_value_bin(x['kind'], rnat, xl, xl['type'], ti)
-    return do_cast_runtime(result, r['type'], ti)
-
-  if type.is_nil(l['type']) and type.is_pointer(r['type']):
-    l = value_change_type(l, r['type'])
-  elif type.is_pointer(l['type']) and type.is_nil(r['type']):
-    r = value_change_type(r, l['type'])
-
-  l = value_cast_implicit(l, r['type'], l['ti'])
-  r = value_cast_implicit(r, l['type'], r['ti'])
-
+"""
   if not k in ['eq', 'ne']:
     if not k in ['add', 'sub']:  # add, sub, for free pointers
       if not type_attribute_check(l['type'], 'numeric'):
@@ -478,35 +444,120 @@ def do_value_bin(x):
         return hlir_value_bad(ti)
       if not type_attribute_check(r['type'], 'numeric'):
         error("expected value with numeric type", x['right'])
-        return hlir_value_bad(ti)
+        return hlir_value_bad(ti)"""
+
+# бинарные операции с указателями имеют особые правила
+def do_bin_op_with_pointers(k, l, r , ti):
+  # единственная безопасная операция для указателей - это сравнение
+  if k in ['eq', 'ne']:
+    # сравнивать можно только указатель с указателем
+    if type.is_pointer(l['type']) and type.is_pointer(r['type']):
+
+      # what about typeFreePointer?
+      if type.is_nil(l['type']):
+        l = value_cast_implicit(l, r['type'], ti)
+      elif type.is_nil(r['type']):
+        r = value_cast_implicit(r, l['type'], ti)
+
+      return hlir_value_bin(k, l, r, type.typeNat1, ti)
 
 
-  if not (p_and_n or n_and_p):
-    if not type.check(l['type'], r['type'], x['ti']):
-      return hlir_value_bad(x['ti'])
-
-  # < > <= >= only for values with 'ordered' type
-  if k in ['lt', 'gt', 'le', 'ge']:
-    if not type_attribute_check(l['type'], 'ordered'):
-      error("expected value with ordered type", l)
-    if not type_attribute_check(r['type'], 'ordered'):
-      error("expected value with ordered type", r)
+  if not 'unsafe' in features:
+    error("illegal operation with pointers", ti)
+    return hlir_value_bad(ti)
 
 
-  #
-  # Select type for binary operation result
-  #
+  # если включен unsafe режим
+  if k in ['add', 'sub']:
+    ptr_n_num = type.is_free_pointer(l['type']) and type.is_numeric(r['type'])
+    num_n_ptr = type.is_numeric(l['type']) and type.is_free_pointer(r['type'])
 
-  type_result = l['type']
+    # если и указатель и число непосредственные
+    if value_is_immediate(l) and value_is_immediate(r):
+      typ = None
+      if ptr_n_num:
+        typ = l['type']
+      else:
+        typ = r['type']
 
-  if k in ['eq', 'ne', 'lt', 'gt', 'le', 'ge']:
+      num = 0
+      if k == 'add': num = hlir_value_num_get(l) + hlir_value_num_get(r)
+      elif k == 'sub': num = hlir_value_num_get(l) - hlir_value_num_get(r)
+      return hlir_value_int(num, typ=typ, ti=ti)
+
+    # указатель или число в рантайме
+    else:
+
+      if ptr_n_num:
+        lnat = do_cast_runtime(l, typeSysNat, ti)
+        xr = value_cast_implicit(r, lnat['type'], ti)
+        result = hlir_value_bin(x['kind'], lnat, xr, xr['type'], ti)
+        return do_cast_runtime(result, l['type'], ti)
+
+      if num_n_ptr:
+        rnat = do_cast_runtime(r, typeSysNat, ti)
+        xl = value_cast_implicit(l, rnat['type'], ti)
+        result = hlir_value_bin(x['kind'], rnat, xl, xl['type'], ti)
+        return do_cast_runtime(result, r['type'], ti)
+
+    error("illegal operation with pointers", ti)
+    return hlir_value_bad(ti)
+
+
+
+
+def do_value_bin(x):
+  k = x['kind']
+  l = do_rvalue(x['left'])
+  r = do_rvalue(x['right'])
+  ti = x['ti']
+
+  if value_is_bad(l) or value_is_bad(r):
+    return hlir_value_bad(ti)
+
+
+  if k in ['shl', 'shr']:
+    return do_value_shift(k, l, r, ti)
+
+
+  if type.is_pointer(l['type']) or type.is_pointer(r['type']):
+    return do_bin_op_with_pointers(k, l, r , ti)
+
+
+  common_type = bin_type_select(l['type'], r['type'])
+
+  l = value_cast_implicit(l, common_type, x['left']['ti'])
+  r = value_cast_implicit(r, common_type, x['right']['ti'])
+
+  if not type.check(l['type'], r['type'], x['ti']):
+    return hlir_value_bad(x['ti'])
+
+  type_result = common_type
+
+
+  if k in ['eq', 'ne']:
     type_result = type.typeNat1
 
+    if not type_attribute_check(l['type'], 'comparable'):
+      error("expected value with comparable type", l['ti'])
+
+    if not type_attribute_check(r['type'], 'comparable'):
+      error("expected value with comparable type", r['ti'])
+
+  # < > <= >= only for values with 'ordered' type
+  elif k in ['lt', 'gt', 'le', 'ge']:
+    type_result = type.typeNat1
+
+    if not type_attribute_check(l['type'], 'ordered'):
+      error("expected value with ordered type", l['ti'])
+
+    if not type_attribute_check(r['type'], 'ordered'):
+      error("expected value with ordered type", r['ti'])
+
+
   if type.eq(type_result, type.typeNat1):
-    if k == 'or':
-      k = 'logic_or'
-    elif k == 'and':
-      k = 'logic_and'
+    if k == 'or': k = 'logic_or'
+    elif k == 'and': k = 'logic_and'
 
   nv = hlir_value_bin(k, l, r, type_result, ti=ti)
 
@@ -528,11 +579,14 @@ def do_value_bin(x):
       'add': lambda a, b: a + b,
       'sub': lambda a, b: a - b,
       'mul': lambda a, b: a * b,
-      'div': lambda a, b: int(a / b),
+      'div': lambda a, b: (a / b),
       'rem': lambda a, b: a % b,
     }
 
     num_val = ops[k](hlir_value_num_get(l), hlir_value_num_get(r))
+
+    if not type.is_float(l['type']):
+      num_val = int(num_val)
 
     if type.is_generic(l['type']) and type.is_generic(r['type']):
       type_result = hlir_type_generic_int_for(num_val, unsigned=False, ti=ti)

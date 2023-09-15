@@ -2,10 +2,9 @@
 import "libc/stdio.h"
 
 
-// there's no way to use 128-bit literals
-// for global variables initializers
-// when used C backend ()
-var big0 : Nat128 := 0x123456789ABCDEF
+
+var big0 : Nat128 := 0x123456789ABCDEFFEDCBA9876543210
+
 
 
 func high_128 (x : Nat128) -> Nat64 {
@@ -19,6 +18,7 @@ func low_128 (x : Nat128) -> Nat64 {
 
 
 func main () -> Int {
+
     let big1 = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
 
     var big2 : Nat128
@@ -35,6 +35,16 @@ func main () -> Int {
     printf("big2 = 0x%llX%llX\n", high_128(big2), low_128(big2))
     printf("big3 = 0x%llX%llX\n", high_128(big3), low_128(big3))
     printf("big_sum = 0x%llX%llX\n", high_128(big_sum), low_128(big_sum))
+
+
+    // signed big int test
+    let sig0 = -1
+
+    var sig1 : Int128 := sig0
+
+    sig1 := sig1 + 1
+
+    printf("sig1 = %lld\n", sig1 to Nat64)
 
     return 0
 }

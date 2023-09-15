@@ -84,16 +84,6 @@ def value_is_immediate(x):
   return value_is_const_imm(x)
 
 
-# need for C printer (!)
-def value_is_immediate_big_integer(x):
-  if value_is_immediate(x):
-    if type.is_integer(x['type']):
-      if x['type']['power'] > 64:
-        nbits = nbits_for_num(hlir_value_num_get(x))  #!
-        return nbits > 64
-  return False
-
-
 
 def value_generic_char(c, ti=None):
   return hlir_value_int(ord(c), typ=type.typeChar, ti=ti)
