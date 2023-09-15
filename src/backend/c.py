@@ -784,7 +784,6 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 
   need_cast = value_attribute_check(x, 'generic-casted')
   if need_cast:
-    #out("(")
     out("("); print_type(x['type'], need_space_after=False); out(")")
 
   if print_just_id:
@@ -898,11 +897,9 @@ def assign_big_int_immediate(left, right):
 
 def print_stmt_let(x):
   v = x['value']
-  typ = v['type']
-
-  print_field2(x['id'], typ)
+  print_field2(x['id'], v['type'])
   out(" = ")
-  print_value(x['value'])
+  print_value(v)
   out(";")
 
 
@@ -942,23 +939,9 @@ def assign(left, right):
       #assign_record_by_fields(x)
       #return
 
-  """if type.is_integer(x['left']['type']):
-    if type['power'] >= 64:
-      type.type_print(x['left']['type'])
-      out("{big}")"""
-
-
   print_value(left)
   out(" = ")
-
-  # В си можно просто присвоить литерал структуры глоб переменной
-  # но вот локальной - нельзя, нужно явно привести его е треб типу
-#  if (type.is_record(x['right']['type'])):
-#    print_cast(x['right']['type'], x['right'])
-#  else:
-
   print_value(right)
-
   out(";")
 
 

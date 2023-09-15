@@ -287,7 +287,7 @@ def value_cons_record(v, t, ti, method):
 
 
 def do_cast_generic(v, t, ti):
-  x = copy.deepcopy(v)
+  x = value_copy(v)
   x['type'] = t
   x['ti'] = ti
   return x
