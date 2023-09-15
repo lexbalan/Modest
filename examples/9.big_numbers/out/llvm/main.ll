@@ -88,11 +88,12 @@ declare void @perror(%ConstCharStr)
 
 ; -- MODULE: /Users/alexbalan/p/Modest/examples/9.big_numbers/src/main.cm
 
-@str_1 = private constant [16 x i8] c"big0 =%llx%llx\0A\00"
-@str_2 = private constant [16 x i8] c"big1 =%llx%llx\0A\00"
-@str_3 = private constant [16 x i8] c"big2 =%llx%llx\0A\00"
-@str_4 = private constant [16 x i8] c"big3 =%llx%llx\0A\00"
-@str_5 = private constant [19 x i8] c"big_sum =%llx%llx\0A\00"
+@str_1 = private constant [19 x i8] c"big0 = 0x%llX%llX\0A\00"
+@str_2 = private constant [19 x i8] c"big1 = 0x%llX%llX\0A\00"
+@str_3 = private constant [19 x i8] c"big2 = 0x%llX%llX\0A\00"
+@str_4 = private constant [19 x i8] c"big3 = 0x%llX%llX\0A\00"
+@str_5 = private constant [22 x i8] c"big_sum = 0x%llX%llX\0A\00"
+
 
 
 
@@ -123,29 +124,29 @@ define i32 @main() {
   %5 = add i128 %2, %4
   %big_sum = alloca i128
   store i128 %5, i128* %big_sum
-  %6 = bitcast [16 x i8]* @str_1 to %ConstCharStr
+  %6 = bitcast [19 x i8]* @str_1 to %ConstCharStr
   %7 = load i128, i128* @big0
   %8 = call i64(i128) @high_128 (i128 %7)
   %9 = load i128, i128* @big0
   %10 = call i64(i128) @low_128 (i128 %9)
   %11 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %6, i64 %8, i64 %10)
-  %12 = bitcast [16 x i8]* @str_2 to %ConstCharStr
+  %12 = bitcast [19 x i8]* @str_2 to %ConstCharStr
   %13 = call i64(i128) @high_128 (i128 340282366920938463463374607431768211455)
   %14 = call i64(i128) @low_128 (i128 340282366920938463463374607431768211455)
   %15 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %12, i64 %13, i64 %14)
-  %16 = bitcast [16 x i8]* @str_3 to %ConstCharStr
+  %16 = bitcast [19 x i8]* @str_3 to %ConstCharStr
   %17 = load i128, i128* %big2
   %18 = call i64(i128) @high_128 (i128 %17)
   %19 = load i128, i128* %big2
   %20 = call i64(i128) @low_128 (i128 %19)
   %21 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %16, i64 %18, i64 %20)
-  %22 = bitcast [16 x i8]* @str_4 to %ConstCharStr
+  %22 = bitcast [19 x i8]* @str_4 to %ConstCharStr
   %23 = load i128, i128* %big3
   %24 = call i64(i128) @high_128 (i128 %23)
   %25 = load i128, i128* %big3
   %26 = call i64(i128) @low_128 (i128 %25)
   %27 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %22, i64 %24, i64 %26)
-  %28 = bitcast [19 x i8]* @str_5 to %ConstCharStr
+  %28 = bitcast [22 x i8]* @str_5 to %ConstCharStr
   %29 = load i128, i128* %big_sum
   %30 = call i64(i128) @high_128 (i128 %29)
   %31 = load i128, i128* %big_sum
