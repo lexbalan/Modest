@@ -271,9 +271,6 @@ def is_bad(t):
   return t['kind'] == 'bad'
 
 
-def is_builtin(t):
-  return 'builtin' in t['att']
-
 def is_alias(t):
   return 'alias' in t['att']
 
