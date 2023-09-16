@@ -271,8 +271,23 @@ def is_bad(t):
   return t['kind'] == 'bad'
 
 
+
+def is_generic(t):
+  return 'generic' in t['att']
+
+
 def is_alias(t):
   return 'alias' in t['att']
+
+
+
+def is_unit(t):
+  return t['kind'] == 'unit'
+
+
+def is_enum(t):
+  return t['kind'] == 'enum'
+
 
 def is_numeric(t):
   return 'numeric' in t['att']
@@ -283,7 +298,7 @@ def is_logical(t):
 
 
 def is_integer(t):
-  return t['kind'] == 'int' or t['kind'] == 'Integer'
+  return t['kind'] in ['int', 'Integer']
 
 
 def is_float(t):
@@ -294,33 +309,33 @@ def is_string(t):
   return 'string' in t['att']
 
 
+def is_record(t):
+  return t['kind'] == 'record'
+
+
+def is_signed(t):
+  return 'signed' in t['att']
+
+
+def is_unsigned(t):
+  return 'unsigned' in t['att']
+
+
+
 def is_generic_numeric(t):
-  return 'generic' in t['att'] and 'numeric' in t['att']
+  return is_generic(t) and is_numeric(t)
 
 
 def is_generic_integer(t):
-  return 'generic' in t['att'] and 'integer' in t['att']
+  return is_generic(t) and is_integer(t)
 
 
 def is_generic_record(t):
-  if t['kind'] == 'record':
-    return 'generic' in t['att']
-  return False
+  return is_generic(t) and is_record(t)
 
 
 def is_generic_string(t):
-  if 'string' in t['att']:
-    return 'generic' in t['att']
-  return False
-
-
-
-def is_unit(t):
-  return t['kind'] == 'unit'
-
-
-def is_enum(t):
-  return t['kind'] == 'enum'
+  return is_generic(t) and is_string(t)
 
 
 def is_pointer(t):
@@ -348,43 +363,27 @@ def is_opaque(t):
 
 
 def is_defined_array(t):
-  if t['kind'] == 'array':
+  if is_array(t):
     return t['volume'] != None
   return False
 
 
 def is_undefined_array(t):
-  if t['kind'] == 'array':
+  if is_array(t):
     return t['volume'] == None
   return False
 
 
 def is_pointer_to_defined_array(t):
-  if t['kind'] != 'pointer':
+  if not is_pointer(t):
     return False
   return is_defined_array(t['to'])
 
 
 def is_pointer_to_undefined_array(t):
-  if t['kind'] != 'pointer':
+  if not is_pointer(t):
     return False
   return is_undefined_array(t['to'])
-
-
-def is_record(t):
-  return t['kind'] == 'record'
-
-
-def is_generic(t):
-  return 'generic' in t['att']
-
-
-def is_signed(t):
-  return 'signed' in t['att']
-
-
-def is_unsigned(t):
-  return 'unsigned' in t['att']
 
 
 
@@ -419,7 +418,6 @@ def is_forbidden_var(t, zero_array_forbidden=True):
 # ищем поле с таким id в типе record
 def record_field_get(t, id):
   return get_item_with_id(t['fields'], id)
-
 
 
 
