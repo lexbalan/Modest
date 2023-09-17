@@ -893,8 +893,6 @@ def do_value_id(x):
     #exit(1)
     vx['definition']['usecnt'] = vx['definition']['usecnt'] + 1
 
-  #vx = value_copy(vx)
-  #vx['ti'] = x['ti']
   return vx
 
 
