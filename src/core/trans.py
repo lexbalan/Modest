@@ -1205,11 +1205,12 @@ def do_stmt_let(x):
     return hlir_stmt_bad()
 
 
-  # 'const' attribute is used by C printer
+  # add 'const' attribute to type
+  # (used by C printer)
   typ = type.type_copy(v['type'])
   typ['att'].append('const')
+  v['type'] = typ
 
-  v = value_cast_implicit(v, typ, x['ti'])
 
   const_value = hlir_value_const(id, v['type'], value=v, ti=x['ti'])
   const_value['att'].extend(['local'])
