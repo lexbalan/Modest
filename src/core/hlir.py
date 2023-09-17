@@ -436,6 +436,7 @@ def hlir_stmt_def_var(var_value, init_value=None, ti=None):
     'kind': 'def_var',
     'var': var_value,
     'init_value': init_value,
+    'usecnt': 0,
     'att': [],
     'ti': ti
   }
@@ -447,6 +448,7 @@ def hlir_stmt_def_const(id, value, ti=None):
     'kind': 'def_let',
     'id': id,
     'value': value,
+    'usecnt': 0,
     'att': [],
     'ti': ti
   }
@@ -527,23 +529,14 @@ def hlir_decl_type(id, type, ti=None):
   }
 
 
-def hlir_decl_func(func, ti=None):
-  return {
-    'isa': 'declaration',
-    'kind': 'func',
-    'func': func,
-    'att': ['undefined'],
-    'ti': ti
-  }
-
-
 def hlir_def_type(id, type, already_declared=False, ti=None):
   return {
     'isa': 'definition',
     'kind': 'type',
     'id': id,
-    'type': type,  # именно t!
+    'type': type,
     'afterdef': already_declared,
+    'usecnt': 0,
     'att': [],
     'ti': ti
   }
@@ -556,6 +549,7 @@ def hlir_def_const(id, const_value, orig_value, ti=None):
     'const': const_value,
     'value': orig_value,
     'id': id,
+    'usecnt': 0,
     'att': [],
     'ti': ti
   }
@@ -567,7 +561,19 @@ def hlir_def_var(var_value, init_value=None, ti=None):
     'kind': 'var',
     'var': var_value,
     'init_value': init_value,
+    'usecnt': 0,
     'att': [],
+    'ti': ti
+  }
+
+
+
+def hlir_decl_func(func, ti=None):
+  return {
+    'isa': 'declaration',
+    'kind': 'func',
+    'func': func,
+    'att': ['undefined'],
     'ti': ti
   }
 
@@ -577,6 +583,7 @@ def hlir_def_func(func, ti=None):
     'isa': 'definition',
     'kind': 'func',
     'func': func,
+    'usecnt': 0,
     'att': [],
     'ti': ti
   }

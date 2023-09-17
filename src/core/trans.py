@@ -1,6 +1,5 @@
 
 import os
-import copy
 
 from opt import *
 from error import *
@@ -376,10 +375,10 @@ def do_type(t):
 
 def do_value_shift(op, l, r, ti):
 
-  if not type.is_numeric(l['type']):
+  if not type.is_integer(l['type']):
     error("type error", l)
 
-  if not type.is_numeric(r['type']):
+  if not type.is_integer(r['type']):
     error("type error", r)
 
   # const folding
@@ -469,13 +468,13 @@ def do_bin_op_with_pointers(k, l, r , ti):
 
   # если включен unsafe режим
   if k in ['add', 'sub']:
-    ptr_n_num = type.is_free_pointer(l['type']) and type.is_numeric(r['type'])
-    num_n_ptr = type.is_numeric(l['type']) and type.is_free_pointer(r['type'])
+    ptr_n_int = type.is_free_pointer(l['type']) and type.is_integer(r['type'])
+    int_n_ptr = type.is_integer(l['type']) and type.is_free_pointer(r['type'])
 
     # если и указатель и число непосредственные
     if value_is_immediate(l) and value_is_immediate(r):
       typ = None
-      if ptr_n_num:
+      if ptr_n_int:
         typ = l['type']
       else:
         typ = r['type']
@@ -488,13 +487,13 @@ def do_bin_op_with_pointers(k, l, r , ti):
     # указатель или число в рантайме
     else:
 
-      if ptr_n_num:
+      if ptr_n_int:
         lnat = do_cast_runtime(l, typeSysNat, ti)
         xr = value_cast_implicit(r, lnat['type'], ti)
         result = hlir_value_bin(x['kind'], lnat, xr, xr['type'], ti)
         return do_cast_runtime(result, l['type'], ti)
 
-      if num_n_ptr:
+      if int_n_ptr:
         rnat = do_cast_runtime(r, typeSysNat, ti)
         xl = value_cast_implicit(l, rnat['type'], ti)
         result = hlir_value_bin(x['kind'], rnat, xl, xl['type'], ti)
@@ -579,7 +578,7 @@ def do_value_bin(x):
       'add': lambda a, b: a + b,
       'sub': lambda a, b: a - b,
       'mul': lambda a, b: a * b,
-      'div': lambda a, b: (a / b),
+      'div': lambda a, b: a / b,
       'rem': lambda a, b: a % b,
     }
 
@@ -866,7 +865,6 @@ def do_value_to(x):
 
 
 
-
 def do_value_id(x):
   id_str = x['id']['str']
   vx = value_get(id_str)
@@ -881,6 +879,11 @@ def do_value_id(x):
     return hlir_value_bad(x['ti'])
 
   # for TI чтобы не переписать у самого определения
+  if 'definition' in vx:
+    #print("NOT DEFINITION" + str(vx))
+    #exit(1)
+    vx['definition']['usecnt'] = vx['definition']['usecnt'] + 1
+
   vx = value_copy(vx)
   vx['ti'] = x['ti']
   return vx
@@ -912,14 +915,11 @@ def value_cstr(string, length, ti):
 
 
 def do_value_str(x):
-  string = x['str']
-  length = x['len']
-  return value_cstr(string, length, ti=x['ti'])
+  return value_cstr(string=x['str'], length=x['len'], ti=x['ti'])
 
 
 
 def do_value_array(x):
-
   items = []
   for item in x['items']:
     vi = do_value(item)
@@ -1102,7 +1102,6 @@ def do_stmt_while(x):
 
 def do_stmt_return(x):
   global cfunc
-  assert(cfunc != None)
 
   no_ret_func = type.eq(cfunc['type']['to'], type.typeUnit)
 
@@ -1165,7 +1164,6 @@ def do_stmt_var(x):
     type.check(t, v['type'], v['ti'])
 
 
-
   if t == None:
     if type.is_generic_integer(v['type']):
       # если тип не указан явно, а у значения тип generic_integer
@@ -1185,7 +1183,10 @@ def do_stmt_var(x):
   var_value['att'].extend(['local'])
   module['context'].value_add(id['str'], var_value)
 
-  return hlir_stmt_def_var(var_value, v, ti=x['ti'])
+  stmt_def_var = hlir_stmt_def_var(var_value, v, ti=x['ti'])
+  var_value['definition'] = stmt_def_var
+
+  return stmt_def_var
 
 
 
@@ -1221,9 +1222,9 @@ def do_stmt_let(x):
 
   module['context'].value_add(id['str'], const_value)
 
-  return hlir_stmt_def_const(id, v, ti=x['ti'])
-
-
+  stmt_def_const = hlir_stmt_def_const(id, v, ti=x['ti'])
+  const_value['definition'] = stmt_def_const
+  return stmt_def_const
 
 
 
@@ -1246,7 +1247,6 @@ def do_stmt_assign(x):
 
 
 
-
 def do_stmt_value(x):
   v = do_rvalue(x['value'])
 
@@ -1258,6 +1258,7 @@ def do_stmt_value(x):
       warning("expression result unused", v['ti'])
 
   return hlir_stmt_value(v, ti=x['ti'])
+
 
 
 def do_stmt_comment_line(x):
@@ -1512,13 +1513,21 @@ def def_var(x):
 
 
 def def_func(x):
+  global cfunc
+
   func_ti = x['ti']
   func_id = x['id']
   func_type = do_type(x['type'])
 
+  old_cfunc = cfunc
+
+  cfunc = None
+
   # if function already declared/defined, check it
   already = value_get(func_id['str'])
   if already != None:
+    # function already declared & defined (incomplete definition)
+
     if 'stmt' in already:
       # already defined function
       error("redefinition of", x['ti'])
@@ -1528,14 +1537,19 @@ def def_func(x):
         error("definition not correspond to declatartion", x['ti'])
         info("firstly declared here", already['type']['ti'])
 
+    cfunc = already
+
+  else:
+    # function already not declared & defined
+    # create new function definition
+    cfunc = hlir_value_func(func_id, func_type, ti=func_ti)
+    cfunc['definition'] = hlir_def_func(cfunc, ti=func_ti)
+
+  cfunc['definition']['ti'] = func_ti
 
   # create params context
   module['context'] = module['context'].branch(domain='local')
 
-  global cfunc
-  old_cfunc = cfunc
-
-  cfunc = hlir_value_func(func_id, func_type, ti=func_ti)
 
   atts = attributes_get()
   cfunc['att'].extend(atts)
@@ -1560,11 +1574,10 @@ def def_func(x):
   # remove params context
   module['context'] = module['context'].parent_get()
 
-  # add function to global context
+  # add function to parent (global) context
   module['context'].value_add(func_id['str'], cfunc)
 
-  definition = hlir_def_func(cfunc, ti=func_ti)
-  cfunc['definition'] = definition
+  fn = cfunc
 
   cfunc = old_cfunc
 
@@ -1573,7 +1586,7 @@ def def_func(x):
   if settings_check('backend', 'llvm'):
     module_remove_decl(module, 'func', func_id['str'])
 
-  return definition
+  return fn['definition']
 
 
 
@@ -1618,6 +1631,7 @@ def decl_func(x):
     if 'stmt' in already:
       # already defined function
       info("function declaration after definition", x['ti'])
+
     else:
       # already declared function
       info("repeated function declaration", x['ti'])
@@ -1626,6 +1640,8 @@ def decl_func(x):
     if not type.eq(already['type'], functype):
       error("definition not correspond to function type", x['ti'])
       info("firstly declared here", already['type']['ti'])
+
+    return
 
 
   atts = attributes_get()
@@ -1640,9 +1656,9 @@ def decl_func(x):
 
   declaration = hlir_decl_func(func, ti=x['ti'])
   func['declaration'] = declaration
+  definition = hlir_def_func(func, ti=x['ti'])
+  func['definition'] = definition
   #declaration['att'].extend(atts)
-
-
 
   if x['extern']:
     declaration['att'].append('extern')
@@ -1787,6 +1803,11 @@ def translate(srcname):
   #print("process %s" % absp)
   m = proc(ast, id=srcname, path=absp)
   #print("end %s" % absp)
+
+  #for x in m['text']:
+  #  if x['isa'] == 'definition':
+  #    if x['usecnt'] == 0:
+  #      warning("defined but not used", x['ti'])
 
   env_current_file_abspath = old_env_current_file_abspath
   env_current_file_dir = old_env_current_file_dir

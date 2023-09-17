@@ -290,6 +290,7 @@ def do_cast_generic(v, t, ti):
   x = value_copy(v)
   x['type'] = t
   x['ti'] = ti
+  #x['att'].append('generic-casted')
   return x
 
 
@@ -300,11 +301,11 @@ def value_cons_integer(v, t, ti, method):
     if type.is_generic(v['type']):
       # GenericInt -> Int
       # check size
-      if type.is_numeric(t):
-        if v['type']['power'] > t['power']:
-          warning("casting with data loss", ti)
-          #return None
-          return hlir_value_cast(v, t, ti)
+      #if type.is_numeric(t):
+      if v['type']['power'] > t['power']:
+        warning("casting with data loss", ti)
+        #return None
+        return hlir_value_cast(v, t, ti)
 
       return do_cast_generic(v, t, ti)
 
@@ -366,7 +367,7 @@ def value_cons_pointer(v, t, ti, method):
 
       # Imm Int -> Pointer
       if value_is_immediate(v):
-        if type.is_numeric(v['type']):
+        if type.is_integer(v['type']):
           # compile-time casting
           nv = hlir_value_cast(v, t, ti=ti)
           nv['imm_num'] = v['imm_num']
