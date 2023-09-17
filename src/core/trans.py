@@ -392,7 +392,7 @@ def do_value_shift(op, l, r, ti):
       nbits = nbits_for_num(hlir_value_num_get(l)) + hlir_value_num_get(r)
       #print("NBITS = " + str(nbits))
       t = hlir_type_generic_int_bits(nbits, unsigned=False, ti=ti)
-      l = value_change_type(l, t)
+      l = do_cast_generic(l, t)
 
     v = hlir_value_bin(op, l, r, l['type'], ti=ti)
 
@@ -1211,7 +1211,7 @@ def do_stmt_let(x):
   typ = type.type_copy(v['type'])
   typ['att'].append('const')
 
-  v = value_change_type(v, typ)
+  v = do_cast_generic(v, typ, x['ti'])
 
   const_value = hlir_value_const(id, v['type'], init=v, ti=x['ti'])
   const_value['att'].extend(['local'])

@@ -17,7 +17,6 @@ def value_copy(x):
   return nv
 
 
-
 def do_cast_generic(v, t, ti):
   x = value_copy(v)
   x['type'] = t
@@ -351,12 +350,6 @@ def value_cons_float(v, t, ti, method):
 
 
 
-def value_change_type(v, t):
-    nv = value_copy(v)
-    nv['type'] = t
-    return nv
-
-
 def value_cons_pointer(v, t, ti, method):
 
   from_type = v['type']
@@ -402,7 +395,7 @@ def value_cons_pointer(v, t, ti, method):
 
   # Nil -> *X
   if type.is_nil(from_type) and type.is_pointer(t):
-    return value_change_type(v, t)
+    return do_cast_generic(v, t, ti)
 
   # Pointer -> *X
   if type.is_free_pointer(from_type) and type.is_pointer(t):
@@ -450,25 +443,12 @@ def value_cast_implicit(v, t, ti):
 
   from_type = v['type']
 
-  """if type.is_generic_integer(t):
-    if type.is_generic_integer(from_type):
-      nv = value_change_type(v, t)
-      nv['att'].append('implicit-casted')
-      return nv"""
-
-  # TODO: нужно ли приводить generics?
-  # казалось бы для binary нужно но там тип расширяется
-  # а не просто выбирается наибольший...
-  """if type.is_generic(from_type) and type.is_integer(from_type):
-    if t['power'] > v['type']['power']:
-      return value_change_type(v, t)"""
-
   if type.eq(from_type, t):
     return v
 
   # Nil -> *X
   if type.is_nil(from_type) and type.is_pointer(t):
-    return value_change_type(v, t)
+    return do_cast_generic(v, t, ti)
 
   # FreePointer -> *X
   if type.is_free_pointer(from_type) and type.is_pointer(t):
