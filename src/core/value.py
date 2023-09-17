@@ -454,18 +454,57 @@ def value_cons(v, t, ti, method):
 
 
 
+
+def value_soft_cast(v, t, ti):
+  c = value_cons(v, t, ti, method='implicit')
+  if c == None:
+    return v
+  return c
+
+
+def value_hard_cast(v, t, ti):
+  c = value_cons(v, t, ti, method='explicit')
+  if c == None:
+    error("cast error", ti)
+    return hlir_value_bad(ti)
+  return c
+
+
+
 def value_cast_implicit(v, t, ti):
   if value_is_bad(v) or type.is_bad(t):
     return hlir_value_bad(ti)
 
   from_type = v['type']
 
+  # implisit cast possible only for:
+  # 1. Generic -> NonGeneric
+  # 2. Nil -> AnyPointer
+  # 3. *[n]T -> *[]T
+  # 4. AnyPointer -> FreePointer
+  # 5. FreePointer -> AnyPointer
+
+  #if not type.is_generic(from_type):
+  #  return v
+
   if type.eq(from_type, t):
     return v
+
+
+  if type.is_generic(from_type):
+    return value_soft_cast(v, t, ti)
+
+
+  ptr_def_arr_to_undef_arr = type.is_pointer_to_defined_array(from_type) and type.is_pointer_to_undefined_array(t)
+
+  if ptr_def_arr_to_undef_arr:
+    return value_soft_cast(v, t, ti)
+
 
   # Nil -> *X
   if type.is_nil(from_type) and type.is_pointer(t):
     return do_cast_generic(v, t, ti)
+
 
   # FreePointer -> *X
   if type.is_free_pointer(from_type) and type.is_pointer(t):
@@ -475,20 +514,7 @@ def value_cast_implicit(v, t, ti):
   if type.is_pointer(from_type) and type.is_free_pointer(t):
     return hlir_value_cast(v, t, ti=ti)
 
-
-  # implisit cast possible only for:
-  # 1. Generic -> NonGeneric
-  # 2. *[n]T -> *[]T
-  cons_from_generic = type.is_generic(from_type)
-
-  ptr_def_arr_to_undef_arr = type.is_pointer_to_defined_array(from_type) and type.is_pointer_to_undefined_array(t)
-
-  if not (cons_from_generic or ptr_def_arr_to_undef_arr):
-    return v
-
-  c = value_cons(v, t, ti, method='implicit')
-
-  return v if c == None else c
+  return v
 
 
 
@@ -500,10 +526,6 @@ def value_cast_explicit(v, t, ti):
     info("explicit cast to same type", ti)
     return v
 
-  c = value_cons(v, t, ti, method='explicit')
-  if c == None:
-    error("cast error", ti)
-    return hlir_value_bad(ti)
-  return c
+  return value_hard_cast(v, t, ti)
 
 
