@@ -518,11 +518,10 @@ def hlir_stmt_return(value=None, ti=None):
 
 
 
-def hlir_decl_type(id, type, ti=None):
+def hlir_decl_type(type, ti=None):
   return {
     'isa': 'declaration',
     'kind': 'type',
-    'id': id,
     'type': type
   }
 

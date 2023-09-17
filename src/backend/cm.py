@@ -605,7 +605,7 @@ def print_def_func(x):
 
 
 def print_decl_type(x):
-  out("type %s" % x['id']['str'])
+  out("type %s" % x['type']['id']['str'])
 
 
 def print_def_type(x):

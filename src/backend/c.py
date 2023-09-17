@@ -1111,7 +1111,7 @@ def print_def_func(x):
 
 
 def print_decl_type(x):
-  name = x['id']['str']
+  name = x['type']['id']['str']
   out("struct %s;" % name)
   if not NO_TYPEDEF_STRUCTS:
     out("\ntypedef struct %s %s;" % (name, name))

@@ -1464,7 +1464,7 @@ def print_def_func(x):
 
 def print_decl_type(x):
   # LLVM не печатает, но C печатает (!)
-  out("\n%%%s = type opaque" % x['id']['str'])
+  out("\n%%%s = type opaque" % x['type']['id']['str'])
 
 
 def print_def_type(x):
