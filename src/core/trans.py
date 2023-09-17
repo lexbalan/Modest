@@ -1597,8 +1597,6 @@ def decl_type(x):
   if x['extern']:
     declaration['att'].append('extern')
 
-  declaration['att'].extend(attributes_get())
-
   return declaration
 
 

@@ -1146,7 +1146,7 @@ def print_def_type(x):
   is_defined_array = type.is_defined_array(t)
   out("typedef ")
 
-  if 'volatile' in x['att']:
+  if 'volatile' in x['type']['att']:
     out("volatile ")
 
   if is_defined_array:
