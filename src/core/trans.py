@@ -879,10 +879,10 @@ def do_value_id(x):
     return hlir_value_bad(x['ti'])
 
   # for TI чтобы не переписать у самого определения
-  if 'definition' in vx:
+  #if 'definition' in vx:
     #print("NOT DEFINITION" + str(vx))
     #exit(1)
-    vx['definition']['usecnt'] = vx['definition']['usecnt'] + 1
+    #vx['definition']['usecnt'] = vx['definition']['usecnt'] + 1
 
   return vx
 
@@ -1177,7 +1177,7 @@ def do_stmt_var(x):
     return hlir_stmt_bad()
 
   #
-  var_value = hlir_value_var(id, t, ti=x['ti'])
+  var_value = hlir_value_var(id, t, v, ti=x['ti'])
   var_value['att'].extend(['local'])
   module['context'].value_add(id['str'], var_value)
 
@@ -1391,7 +1391,7 @@ def def_const(x):
   init_value = do_value(x['value'])
 
   if value_is_bad(init_value):
-    return hlir_def_const(id, init_value, init_value, ti=x['ti'])
+    return hlir_def_const(id, init_value, ti=x['ti'])
 
   if not value_is_immediate(init_value):
     error("expected immediate value", init_value)
@@ -1404,9 +1404,8 @@ def def_const(x):
 
   module['context'].value_add(id['str'], const_value)
 
-  definition = hlir_def_const(id, const_value, const_value, ti=x['ti'])
+  definition = hlir_def_const(id, const_value, ti=x['ti'])
   const_value['definition'] = definition
-  definition['att'].extend(attributes_get())
 
   return definition
 
@@ -1452,7 +1451,6 @@ def def_type(x):
     module['context'].type_add(id['str'], nt)
 
   definition = hlir_def_type(x['id'], ty, already_declared, ti=x['ti'])
-  #definition['att'].extend(attributes_get())
   nt['definition'] = definition
 
   if 'volatile' in atts:
@@ -1492,7 +1490,6 @@ def def_var(x):
   module['context'].value_add(x['field']['id']['str'], var)
 
   definition = hlir_def_var(var, init_value, ti=x['ti'])
-  #definition['att'].extend(attributes_get())
   var['definition'] = definition
 
   return definition
@@ -1645,10 +1642,10 @@ def decl_func(x):
   func['declaration'] = declaration
   definition = hlir_def_func(func, ti=x['ti'])
   func['definition'] = definition
-  #declaration['att'].extend(atts)
+
 
   if x['extern']:
-    declaration['att'].append('extern')
+    func['att'].append('extern')
 
   return declaration
 

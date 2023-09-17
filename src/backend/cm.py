@@ -525,7 +525,7 @@ def print_stmt_defvar(x):
   out('var ')
   print_field(x['var'])
 
-  init_value = x['init_value']
+  init_value = x['var']['init']
   if init_value != None:
     out(" := ")
     print_value(init_value)
@@ -587,9 +587,9 @@ def print_stmt_block(s):
 
 
 def print_decl_func(x):
-  if 'extern' in x['att']:
-    out("extern ")
   func = x['func']
+  if 'extern' in func['att']:
+    out("extern ")
   out('func %s ' % func['id']['str'])
   print_type(func['type'])
 
@@ -622,13 +622,15 @@ def print_def_type(x):
 def print_def_var(x):
   out("var ")
   print_field(x['var'])
-  if x['init_value'] != None:
-    out(" := "); print_value(x['init_value'])
+  iv = x['var']['init']
+  if iv != None:
+    out(" := "); print_value(iv)
 
 
 def print_def_const(x):
-  out("const %s = " % x['id']['str'])
   v = x['value']
+
+  out("const %s = " % v['id']['str'])
 
   # если есть оригинальное выражение, внутри, печатаем его
   if 'value' in v:

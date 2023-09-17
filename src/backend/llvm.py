@@ -1178,8 +1178,8 @@ def print_stmt_def_var(x):
   id = x['var']['id']['str']
 
   init_value = None
-  if x['init_value'] != None:
-    init_value = do_eval(x['init_value'])
+  if x['var']['init'] != None:
+    init_value = do_eval(x['var']['init'])
   val = ll_alloca(id, x['var']['type'], init_value)
   locals_add(id, val)
   return None
@@ -1518,9 +1518,9 @@ def print_def_var(x):
   out(x['var']['id']['str'])
   out(" = %s " % mod)
   print_type(x['var']['type'])
-  if x['init_value'] != None:
+  if x['var']['init'] != None:
     out(" ")
-    print_value(do_eval(x['init_value']))
+    print_value(do_eval(x['var']['init']))
   else:
     out(" zeroinitializer")
 

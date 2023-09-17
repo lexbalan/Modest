@@ -877,7 +877,7 @@ def print_stmt_return(x):
 def print_stmt_defvar(x):
   print_field(x['var'])
 
-  init_value = x['init_value']
+  init_value = x['var']['init']
   if init_value != None:
     out(" = ")
     print_value(init_value)
@@ -1230,7 +1230,7 @@ def print_def_var(x):
 
   print_field(x['var'])
 
-  init_value = x['init_value']
+  init_value = x['var']['init']
   if init_value != None:
     out(" = "); print_value(init_value)
 
@@ -1239,9 +1239,9 @@ def print_def_var(x):
 
 def print_def_const(x):
   #print("print_def_const " + str(x['id']['str']))
-  out("#define %s  " % x['id']['str'])
-
   v = x['value']['value']
+  out("#define %s  " % x['value']['id']['str'])
+
   need_wrap = precedence(v['kind']) < precedenceMax
   print_value(v, ctx=['screening'], need_wrap=need_wrap, print_just_id=True)
 
@@ -1331,8 +1331,24 @@ def run(module, outname):
 
 
   for x in module['text']:
-    if 'c-no-print' in x['att']:
-      continue
+    if 'value' in x:
+      if 'c-no-print' in x['value']['att']:
+        continue
+    elif 'type' in x:
+      if 'c-no-print' in x['type']['att']:
+        continue
+    elif 'func' in x:
+      if 'c-no-print' in x['func']['att']:
+        continue
+
+    elif 'var' in x:
+      if 'c-no-print' in x['var']['att']:
+        continue
+
+    else:
+      if 'c-no-print' in x['att']:
+        continue
+
 
     isa = x['isa']
     k = x['kind']
