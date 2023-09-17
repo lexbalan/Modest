@@ -518,7 +518,7 @@ def hlir_stmt_return(value=None, ti=None):
 
 
 
-def hlir_decl_type(type, ti=None):
+def hlir_decl_type(type):
   return {
     'isa': 'declaration',
     'kind': 'type',
@@ -526,7 +526,7 @@ def hlir_decl_type(type, ti=None):
   }
 
 
-def hlir_def_type(id, type, already_declared=False, ti=None):
+def hlir_def_type(id, type, already_declared=False):
   return {
     'isa': 'definition',
     'kind': 'type',
@@ -536,7 +536,7 @@ def hlir_def_type(id, type, already_declared=False, ti=None):
   }
 
 
-def hlir_def_const(id, value, ti=None):
+def hlir_def_const(value):
   return {
     'isa': 'definition',
     'kind': 'const',
@@ -544,16 +544,16 @@ def hlir_def_const(id, value, ti=None):
   }
 
 
-def hlir_def_var(var_value, init_value=None, ti=None):
+def hlir_def_var(var):
   return {
     'isa': 'definition',
     'kind': 'var',
-    'var': var_value
+    'var': var
   }
 
 
 
-def hlir_decl_func(func, ti=None):
+def hlir_decl_func(func):
   return {
     'isa': 'declaration',
     'kind': 'func',
@@ -561,7 +561,7 @@ def hlir_decl_func(func, ti=None):
   }
 
 
-def hlir_def_func(func, ti=None):
+def hlir_def_func(func):
   return {
     'isa': 'definition',
     'kind': 'func',

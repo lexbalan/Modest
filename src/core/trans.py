@@ -1404,10 +1404,7 @@ def def_const(x):
 
   module['context'].value_add(id['str'], const_value)
 
-  definition = hlir_def_const(id, const_value, ti=x['ti'])
-  const_value['definition'] = definition
-
-  return definition
+  return hlir_def_const(const_value)
 
 
 
@@ -1450,13 +1447,7 @@ def def_type(x):
   else:
     module['context'].type_add(id['str'], nt)
 
-  definition = hlir_def_type(x['id'], ty, already_declared, ti=x['ti'])
-  nt['definition'] = definition
-
-  if 'volatile' in atts:
-    definition['att'].extend(atts)
-
-  return definition
+  return hlir_def_type(x['id'], ty, already_declared)
 
 
 
@@ -1489,10 +1480,7 @@ def def_var(x):
 
   module['context'].value_add(x['field']['id']['str'], var)
 
-  definition = hlir_def_var(var, init_value, ti=x['ti'])
-  var['definition'] = definition
-
-  return definition
+  return hlir_def_var(var)
 
 
 
@@ -1527,7 +1515,7 @@ def def_func(x):
     # function already not declared & defined
     # create new function definition
     cfunc = hlir_value_func(func_id, func_type, ti=func_ti)
-    cfunc['definition'] = hlir_def_func(cfunc, ti=func_ti)
+    cfunc['definition'] = hlir_def_func(cfunc)
 
   cfunc['definition']['ti'] = func_ti
 
@@ -1590,7 +1578,7 @@ def decl_type(x):
   module['context'].type_add(id['str'], nt)
 
   # С не печатает opaque, но LLVM печатает (!)
-  declaration = hlir_decl_type(nt, ti=x['ti'])
+  declaration = hlir_decl_type(nt)
 
   nt['declaration'] = declaration
 
@@ -1636,9 +1624,9 @@ def decl_func(x):
 
   module['context'].value_add(id['str'], func)
 
-  declaration = hlir_decl_func(func, ti=x['ti'])
+  declaration = hlir_decl_func(func)
   func['declaration'] = declaration
-  definition = hlir_def_func(func, ti=x['ti'])
+  definition = hlir_def_func(func)
   func['definition'] = definition
 
 
