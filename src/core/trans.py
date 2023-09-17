@@ -1373,7 +1373,6 @@ def do_import(x):
   }
 
   return directive
-  #module['text'].append(directive)
 
 
 

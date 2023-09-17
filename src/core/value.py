@@ -186,7 +186,6 @@ def value_cons_array_from_array(v, t, ti, method):
 
     return nv
 
-
   return None
 
 
@@ -202,17 +201,11 @@ def value_cons_array(v, t, ti, method):
 
 
 
-
-
-
-
-
 def value_cons_record_from_generic_record(v, t, ti, method):
   if v['kind'] == 'const':
     # TODO: тут нужно проверить чтобы при implicit методе
     # все поля присутствовали (!)
     return hlir_value_cast(v, t, ti=ti)
-
 
   # 1. проходим по порядку определения по всем полям типа t (целевого)
   # 2. если поля с таким именеи нет в v:
@@ -318,10 +311,8 @@ def value_cons_integer(v, t, ti, method):
     if type.is_generic(v['type']):
       # GenericInt -> Int
       # check size
-      #if type.is_numeric(t):
       if v['type']['power'] > t['power']:
         warning("casting with data loss", ti)
-        #return None
         return hlir_value_cast(v, t, ti)
 
       return do_cast_generic(v, t, ti)
@@ -400,15 +391,7 @@ def value_cons_pointer(v, t, ti, method):
   if type.is_pointer_to_defined_array(from_type):
     if type.is_pointer_to_undefined_array(t):
       if type.eq(from_type['to']['of'], t['to']['of']):
-        y = hlir_value_cast(v, t, ti=ti)
-
-        # кароче это стаб - си хочет печатать runtime приведение строки
-        # к char *, что излишне; по этому атрибуту он понимает
-        # что делать так не надо; Это временное решение (!)
-#        if 'string' in v['att']:
-#          y['att'].append('casted_string_literal')
-
-        return y
+        return hlir_value_cast(v, t, ti=ti)
 
   # Nil -> *X
   if type.is_nil(from_type) and type.is_pointer(t):
