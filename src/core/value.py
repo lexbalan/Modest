@@ -18,6 +18,15 @@ def value_copy(x):
 
 
 
+def do_cast_generic(v, t, ti):
+  x = value_copy(v)
+  x['type'] = t
+  x['ti'] = ti
+  #x['att'].append('generic-casted')
+  return x
+
+
+
 #TODO: value #kind=zero
 def value_create_zero(t):
   if type.is_numeric(t):
@@ -149,6 +158,8 @@ def value_cons_array_from_array(v, t, ti, method):
   # если массив идет как непосредственное значение
   if value_is_immediate(v):
     n = n_to - n_from
+
+    #do_cast_generic(v, )
     # будем менять значение (его тип) потому неглубоко копируем значение
     nv = value_copy(v)
     # будем менять тип (его размер) потому неглубоко копируем тип
@@ -282,16 +293,6 @@ def value_cons_record(v, t, ti, method):
     return value_cons_record_from_generic_record(v, t, ti, method)
 
   return None
-
-
-
-
-def do_cast_generic(v, t, ti):
-  x = value_copy(v)
-  x['type'] = t
-  x['ti'] = ti
-  #x['att'].append('generic-casted')
-  return x
 
 
 
