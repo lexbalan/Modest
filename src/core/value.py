@@ -10,19 +10,14 @@ from util import get_item_with_id
 
 
 
-def value_copy(x):
-  nv = copy.copy(x)
-  nv['att'] = []
-  nv['att'].extend(x['att'])
-  return nv
-
-
 def do_cast_generic(v, t, ti):
-  x = value_copy(v)
-  x['type'] = t
-  x['ti'] = ti
-  #x['att'].append('generic-casted')
-  return x
+  nv = copy.copy(v)
+  nv['att'] = []
+  nv['att'].extend(v['att'])
+  nv['type'] = t
+  nv['ti'] = ti
+  #nv['att'].append('generic-casted')
+  return nv
 
 
 
@@ -158,14 +153,7 @@ def value_cons_array_from_array(v, t, ti, method):
   if value_is_immediate(v):
     n = n_to - n_from
 
-    #do_cast_generic(v, )
-    # будем менять значение (его тип) потому неглубоко копируем значение
-    nv = value_copy(v)
-    # будем менять тип (его размер) потому неглубоко копируем тип
-    nv['type'] = type.type_copy(nv['type'])
-
-    nv['type']['volume'] = t['volume']
-    nv['att'] = []
+    nv = do_cast_generic(v, t, ti)
 
     # extend array with zero items
     padding = [hlir_value_zero(t['of'], ti=None)] * n

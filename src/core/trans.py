@@ -21,6 +21,15 @@ from util import nbits_for_num, nbytes_for_bits
 from .hlir import *
 
 
+#TODO: убери это нахрен !!!
+def value_copy(x):
+  nv = copy.copy(x)
+  nv['att'] = []
+  nv['att'].extend(x['att'])
+  return nv
+
+
+
 # current file directory
 env_current_file_abspath = ""
 env_current_file_dir = ""
@@ -392,7 +401,7 @@ def do_value_shift(op, l, r, ti):
       nbits = nbits_for_num(hlir_value_num_get(l)) + hlir_value_num_get(r)
       #print("NBITS = " + str(nbits))
       t = hlir_type_generic_int_bits(nbits, unsigned=False, ti=ti)
-      l = do_cast_generic(l, t)
+      l = do_cast_generic(l, t, None)#FIXIT: x['left]['ti] instead None must be
 
     v = hlir_value_bin(op, l, r, l['type'], ti=ti)
 
@@ -884,8 +893,8 @@ def do_value_id(x):
     #exit(1)
     vx['definition']['usecnt'] = vx['definition']['usecnt'] + 1
 
-  vx = value_copy(vx)
-  vx['ti'] = x['ti']
+  #vx = value_copy(vx)
+  #vx['ti'] = x['ti']
   return vx
 
 
