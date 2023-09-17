@@ -295,6 +295,10 @@ def print_cast(t, v, ctx=[]):
 
 def print_value_cast(v, ctx):
 
+  if 'is-generic-cast' in v['att']:
+    print_value_literal(v, ctx)
+    return
+
 
   # не печатаем операции неявного приведения (!)
   if value_attribute_check(v, 'implicit-casted'):

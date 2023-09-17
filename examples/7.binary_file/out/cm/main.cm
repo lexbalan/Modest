@@ -31,7 +31,7 @@ func write_example () -> Unit {
     strcpy(&chunk.data to *Char, "data" to *Char)
 
     // write chunk to file
-    fwrite(&chunk, sizeof(Chunk), 1, fp)
+    fwrite(&chunk, 0, 1, fp)
 
     fclose(fp)
 }
@@ -48,7 +48,7 @@ func read_example () -> Unit {
     }
 
     var chunk : Chunk
-    fread(&chunk, sizeof(Chunk), 1, fp)
+    fread(&chunk, 0, 1, fp)
     printf("file '%s' contains:\n", filename)
     printf("chunk.id: %s\n", &chunk.id)
     printf("chunk.data: %s\n", &chunk.data)

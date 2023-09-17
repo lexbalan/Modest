@@ -1,5 +1,4 @@
 
-import copy
 from opt import *
 import core.type as type
 from core.type import type_print
@@ -9,14 +8,40 @@ from .hlir import *
 from util import get_item_with_id
 
 
+def cp_immediate(nv, v):
+
+  if 'immediate' in v['att']:
+    nv['att'].append('immediate')
+
+
+  if 'imm_num' in v:
+    nv['imm_num'] = v['imm_num']
+
+  elif 'imm_items' in v:
+    nv['imm_items'] = v['imm_items']
+
+  elif 'initializers' in v:
+    nv['initializers'] = v['initializers']
+
+  elif 'str' in v:
+    nv['str'] = v['str']
+    nv['len'] = v['len']
+
+  else:
+    error("unknown immediate", v['ti'])
+
+
 
 def do_cast_generic(v, t, ti):
-  nv = copy.copy(v)
-  nv['att'] = []
-  nv['att'].extend(v['att'])
-  nv['type'] = t
-  nv['ti'] = ti
-  #nv['att'].append('generic-casted')
+  nv = hlir_value_cast(v, t, ti)
+
+  cp_immediate(nv, v)
+
+  if 'nl_end' in v:
+    nv['nl_end'] = v['nl_end']
+
+  nv['att'].append('is-generic-cast')
+
   return nv
 
 
@@ -262,6 +287,10 @@ def value_cons_record_from_generic_record(v, t, ti, method):
 
   if 'nl' in v:
     vx['nl'] = v['nl']
+
+
+  if 'immediate' in v['att']:
+    vx['att'].append('immediate')
 
   return vx
 

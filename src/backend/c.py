@@ -553,6 +553,11 @@ def print_cast(t, v, ctx=[]):
 
 
 def print_value_cast(v, ctx):
+
+  if 'is-generic-cast' in v['att']:
+    print_value_literal(v, ctx)
+    return
+
   from_type = v['value']['type']
   to_type = v['type']
 
@@ -1235,8 +1240,10 @@ def print_def_var(x):
 def print_def_const(x):
   #print("print_def_const " + str(x['id']['str']))
   out("#define %s  " % x['id']['str'])
-  need_wrap = precedence(x['value']['kind']) < precedenceMax
-  print_value(x['value'], ctx=['screening'], need_wrap=need_wrap, print_just_id=True)
+
+  v = x['value']['value']
+  need_wrap = precedence(v['kind']) < precedenceMax
+  print_value(v, ctx=['screening'], need_wrap=need_wrap, print_just_id=True)
 
 
 def print_include(x):

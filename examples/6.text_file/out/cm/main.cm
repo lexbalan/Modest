@@ -34,7 +34,7 @@ func read_example () -> Unit {
     printf("file '%s' contains: ", filename)
     while 1 {
         let ch = fgetc(fp)
-        if ch == EOF {
+        if ch == -1 {
             break
         }
         putchar(ch)

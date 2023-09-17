@@ -738,6 +738,12 @@ def select_cast_operator(a, b):
 
 
 def do_eval_expr_to(v):
+
+  if 'is-generic-cast' in v['att']:
+    return do_eval_literal(v)
+    #info("??", v['ti'])
+    return
+
   value = v['value']
   from_type = value['type']
   to_type = v['type']
@@ -919,7 +925,7 @@ def do_eval_str(x):
     }
 
 
-def do_eval_imm(x):
+def do_eval_literal(x):
   if type.is_integer(x['type']):
     return ll_create_value_num(x['type'], hlir_value_num_get(x))
   elif type.is_float(x['type']):
@@ -978,7 +984,7 @@ def do_eval_x(x):
 
   k = x['kind']
 
-  if k == 'literal': return do_eval_imm(x)
+  if k == 'literal': return do_eval_literal(x)
   elif k in bin_ops: return do_eval_expr_bin(x)
   elif k in un_ops: return do_eval_expr_un(x)
   elif k in ['func', 'const', 'var']: return func_const_var(x)

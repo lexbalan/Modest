@@ -3,7 +3,7 @@ import "libc/stdio.h"
 
 
 
-var big0 : Nat128 := 0x123456789ABCDEFFEDCBA9876543210
+var big0 : Nat128 := 1512366075204170947332355369683137040
 
 
 
@@ -13,25 +13,25 @@ func high_128 (x : Nat128) -> Nat64 {
 
 
 func low_128 (x : Nat128) -> Nat64 {
-    return x and 0xFFFFFFFFFFFFFFFF to Nat64
+    return x and 18446744073709551615 to Nat64
 }
 
 
 func main () -> Int {
 
-    let big1 = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    let big1 = 340282366920938463463374607431768211455
 
     var big2 : Nat128
-    big2 := big1
+    big2 := 340282366920938463463374607431768211455
 
-    var big3 : Nat128 := 0x1
+    var big3 : Nat128 := 1
 
-    var a : Nat32 := 0x1
+    var a : Nat32 := 1
 
-    var big_sum : Nat128 := big1 + big2 + a to Nat128
+    var big_sum : Nat128 := 340282366920938463463374607431768211455 + big2 + a to Nat128
 
     printf("big0 = 0x%llX%llX\n", high_128(big0), low_128(big0))
-    printf("big1 = 0x%llX%llX\n", high_128(big1), low_128(big1))
+    printf("big1 = 0x%llX%llX\n", high_128(340282366920938463463374607431768211455), low_128(340282366920938463463374607431768211455))
     printf("big2 = 0x%llX%llX\n", high_128(big2), low_128(big2))
     printf("big3 = 0x%llX%llX\n", high_128(big3), low_128(big3))
     printf("big_sum = 0x%llX%llX\n", high_128(big_sum), low_128(big_sum))
@@ -40,7 +40,7 @@ func main () -> Int {
     // signed big int test
     let sig0 = -1
 
-    var sig1 : Int128 := sig0
+    var sig1 : Int128 := -1
 
     sig1 := sig1 + 1
 

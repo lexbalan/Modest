@@ -313,13 +313,13 @@ def hlir_value_var(id, type, init=None, ti=None):
 
 # hlir_const is an immutable value
 # (not necessary immediate)
-def hlir_value_const(id, type, init=None, ti=None):
+def hlir_value_const(id, type, value=None, ti=None):
   return {
     'isa': 'value',
     'kind': 'const',
     'id': id,
     'type': type,
-    'init': init,
+    'value': value,
     'att': [],
     'ti': ti
   }
@@ -546,7 +546,6 @@ def hlir_def_const(id, const_value, orig_value, ti=None):
   return {
     'isa': 'definition',
     'kind': 'const',
-    'const': const_value,
     'value': orig_value,
     'id': id,
     'usecnt': 0,

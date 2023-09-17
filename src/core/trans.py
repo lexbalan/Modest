@@ -21,13 +21,6 @@ from util import nbits_for_num, nbytes_for_bits
 from .hlir import *
 
 
-#TODO: убери это нахрен !!!
-def value_copy(x):
-  nv = copy.copy(x)
-  nv['att'] = []
-  nv['att'].extend(x['att'])
-  return nv
-
 
 
 # current file directory
@@ -516,6 +509,7 @@ def do_bin_op_with_pointers(k, l, r , ti):
 
 def do_value_bin(x):
   k = x['kind']
+
   l = do_rvalue(x['left'])
   r = do_rvalue(x['right'])
   ti = x['ti']
@@ -815,19 +809,19 @@ def do_value_index(x):
 
 
 def do_value_access(x):
-  r = do_rvalue(x['left'])
+  obj = do_rvalue(x['left'])
 
-  if value_is_bad(r):
+  if value_is_bad(obj):
     return hlir_value_bad(x['ti'])
 
   field_id = x['field']
 
   # доступ через переменную-указатель
-  ptr_access = type.is_pointer(r['type'])
+  ptr_access = type.is_pointer(obj['type'])
 
-  record_type = r['type']
+  record_type = obj['type']
   if ptr_access:
-    record_type = r['type']['to']
+    record_type = obj['type']['to']
 
   # check if is record
   if not type.is_record(record_type):
@@ -844,21 +838,18 @@ def do_value_access(x):
   if type.is_bad(field['type']):
     return hlir_value_bad(x['field']['ti'])
 
-  # immediate access (!)
-  if value_is_immediate(r):
-    field_id_str = field_id['str']
-    #TODO!
-    v = r['initializers'][field_id_str]
-    nv = value_copy(v)
-    nv['value'] = hlir_value_access_record(r, field, ti=x['ti'])
-    return nv
+
+  # access to immediate object
+  if value_is_immediate(obj):
+    initializer = get_item_with_id(obj['initializers'], field_id['str'])
+    return initializer['value']
 
 
   if ptr_access:
-    v = hlir_value_access_record_by_ptr(r, field, ti=x['ti'])
+    v = hlir_value_access_record_by_ptr(obj, field, ti=x['ti'])
   else:
-    v = hlir_value_access_record(r, field, ti=x['ti'])
-    if value_is_immutable(r):
+    v = hlir_value_access_record(obj, field, ti=x['ti'])
+    if value_is_immutable(obj):
       v['att'].append('immutable')
 
   return v
@@ -1218,9 +1209,9 @@ def do_stmt_let(x):
   typ = type.type_copy(v['type'])
   typ['att'].append('const')
 
-  v = do_cast_generic(v, typ, x['ti'])
+  v = value_cast_implicit(v, typ, x['ti'])
 
-  const_value = hlir_value_const(id, v['type'], init=v, ti=x['ti'])
+  const_value = hlir_value_const(id, v['type'], value=v, ti=x['ti'])
   const_value['att'].extend(['local'])
 
   if value_is_immediate(v):
@@ -1405,31 +1396,20 @@ def def_const(x):
   if not value_is_immediate(init_value):
     error("expected immediate value", init_value)
 
-  # (!) в дефиницию идет сам v;
-  # а в контекст - значение-конатснта с id (нужно при C печати);
-  # так же, в него идет поле value ссылающееся на v
+  const_value = hlir_value_const(id, init_value['type'], init_value, x['ti'])
 
-  # идея: никаких объектов вида конст, просто само выражение,
-  # но у него добавлено поле 'id' и атрибут 'const'
-  # если оно сворачиваемое то может иметь поле num
-  # так его сможет распечатать как LLVM так и C принтер
-
-  const_value = value_copy(init_value)
-
-  # выражение значения из которого он создан
-  # юзается принтером при печати напр #define <id> <value>
-  const_value['value'] = init_value
-  const_value['id'] = id
+  cp_immediate(const_value, init_value)
 
   extend_props(const_value)
 
   module['context'].value_add(id['str'], const_value)
 
-  definition = hlir_def_const(id, const_value, init_value, ti=x['ti'])
+  definition = hlir_def_const(id, const_value, const_value, ti=x['ti'])
   const_value['definition'] = definition
   definition['att'].extend(attributes_get())
 
   return definition
+
 
 
 # удаляет декларацию по имени
