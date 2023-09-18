@@ -1383,17 +1383,17 @@ def extend_props(x):
 
 def def_const(x):
   id = x['id']
-  init_value = do_value(x['value'])
+  v = do_value(x['value'])
 
-  if value_is_bad(init_value):
-    return hlir_def_const(id, init_value, ti=x['ti'])
+  if value_is_bad(v):
+    return hlir_def_const(id, v, ti=x['ti'])
 
-  if not value_is_immediate(init_value):
-    error("expected immediate value", init_value)
+  if not value_is_immediate(v):
+    error("expected immediate value", v)
 
-  const_value = hlir_value_const(id, init_value['type'], init_value, x['ti'])
+  const_value = hlir_value_const(id, v['type'], v, x['ti'])
 
-  cp_immediate(const_value, init_value)
+  cp_immediate(const_value, v)
 
   extend_props(const_value)
 

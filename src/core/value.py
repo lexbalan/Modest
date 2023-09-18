@@ -13,9 +13,16 @@ def cp_immediate(nv, v):
   if 'immediate' in v['att']:
     nv['att'].append('immediate')
 
+  # для generic приведения констант (!)
+  if 'id' in v:
+    nv['id'] = v['id']
+
 
   if 'imm_num' in v:
     nv['imm_num'] = v['imm_num']
+
+    if value_attribute_check(v, 'hexadecimal'):
+      nv['att'].append('hexadecimal')
 
   elif 'imm_items' in v:
     nv['imm_items'] = v['imm_items']

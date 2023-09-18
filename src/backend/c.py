@@ -781,7 +781,6 @@ def print_value_by_id(x, ctx):
   out("%s" % x['id']['str'])
 
 
-
 def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
   # если у значения есть свойство 'id' то печатаем просто id
   # (используется для печати имени констант а не просто их значения)
