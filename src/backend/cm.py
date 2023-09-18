@@ -11,10 +11,6 @@ from util import get_item_with_id
 
 INDENT_SYMBOL = " " * 4
 
-# если сущность была уже отделена новой строкой
-# (typedef struct & def func должны всегда отделяться пустой строкой)
-was_separated_by_new_line = True
-
 
 def init():
   pass
@@ -587,7 +583,7 @@ def print_stmt_block(s):
 
 
 def print_decl_func(x):
-  func = x['func']
+  func = x['value']
   if 'extern' in func['att']:
     out("extern ")
   out('func %s ' % func['id']['str'])
@@ -595,13 +591,9 @@ def print_decl_func(x):
 
 
 def print_def_func(x):
-  #if not was_separated_by_new_line:
-  #  out("\n")
-
-  func = x['func']
+  func = x['value']
   out('func %s ' % func['id']['str']); print_type(func['type'])
   print_stmt_block(func['stmt'])
-
 
 
 def print_decl_type(x):
@@ -609,20 +601,17 @@ def print_decl_type(x):
 
 
 def print_def_type(x):
-  #if not was_separated_by_new_line:
-  #  if x['type']['kind'] in ['record', 'enum']:
-  #    out("\n")
-
-  out("type %s " % x['id']['str'])
-  print_type(x['type'])#, print_aka=False)
+  out("type %s " % x['type']['name'])
+  print_type(x['type'], print_aka=False)
 
 
 
 
 def print_def_var(x):
   out("var ")
-  print_field(x['var'])
-  iv = x['var']['init']
+  var = x['value']
+  print_field(var)
+  iv = var['init']
   if iv != None:
     out(" := "); print_value(iv)
 
@@ -639,13 +628,9 @@ def print_def_const(x):
   print_value(v, ctx=['oneline'], print_just_id=False)
 
 
-def print_import(dirname, x):
+def print_import(x):
   s = x['str']
-  if x['local']:
-    s = '"' + s + '"'
-  else:
-    s = '<' + s + '>'
-  out("%s %s" % (dirname, s))
+  out("import \"%s\"" % (s))
 
 
 
@@ -664,19 +649,19 @@ def run(module, outname):
       out("\n" * x['nl'])
 
     isa = x['isa']
-    k = x['kind']
 
-    if isa == 'definition':
-      if k == 'var': print_def_var(x)
-      elif k == 'const': print_def_const(x)
-      elif k == 'func': print_def_func(x)
-      elif k == 'type': print_def_type(x)
-    elif isa == 'declaration':
-      if k == 'func': print_decl_func(x)
-      elif k == 'type': print_decl_type(x)
+
+    if isa == 'def_var': print_def_var(x)
+    elif isa == 'def_const': print_def_const(x)
+    elif isa == 'def_func': print_def_func(x)
+    elif isa == 'def_type': print_def_type(x)
+
+    elif isa == 'decl_func': print_decl_func(x)
+    elif isa == 'decl_type': print_decl_type(x)
+
     elif isa == 'directive':
-      if k == 'include': print_import('include', x)
-      if k == 'import': print_import('import', x)
+      if x['kind'] == 'import': print_import(x)
+
     elif isa == 'comment':
       print_comment(x)
 

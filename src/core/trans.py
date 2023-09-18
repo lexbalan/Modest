@@ -1181,10 +1181,7 @@ def do_stmt_var(x):
   var_value['att'].extend(['local'])
   module['context'].value_add(id['str'], var_value)
 
-  stmt_def_var = hlir_stmt_def_var(var_value, v, ti=x['ti'])
-  var_value['definition'] = stmt_def_var
-
-  return stmt_def_var
+  return hlir_stmt_def_var(var_value, v, ti=x['ti'])
 
 
 
@@ -1216,14 +1213,12 @@ def do_stmt_let(x):
   const_value['att'].extend(['local'])
 
   if value_is_immediate(v):
-    if 'imm_num' in v:
-      const_value['imm_num'] = v['imm_num']
+    cp_immediate(const_value, v)
+
 
   module['context'].value_add(id['str'], const_value)
 
-  stmt_def_const = hlir_stmt_def_const(id, v, ti=x['ti'])
-  const_value['definition'] = stmt_def_const
-  return stmt_def_const
+  return hlir_stmt_def_const(id, v, ti=x['ti'])
 
 
 
@@ -1408,15 +1403,21 @@ def def_const(x):
 
 
 
-# удаляет декларацию по имени
-def module_remove_decl(m, kind, id_str):
+# удаляет ?? по имени
+def module_remove_node(m, isa, id_str):
   for submodule in m['imports']:
-    module_remove_decl(submodule, kind, id_str)
+    module_remove_node(submodule, isa, id_str)
 
   for x in m['text']:
-    if x['isa'] == 'declaration':
-      if x['kind'] == kind:
-        if x[kind]['id']['str'] == id_str:
+    if isa in x:
+      if 'id' in x[isa]:
+        if x[isa]['id']['str'] == id_str:
+          #print("REMOVE: " + id_str)
+          m['text'].remove(x)
+          break
+      else:
+        # вот этот name убери к херам!! Сделай id как везде! FIXIT
+        if x[isa]['name'] == id_str:
           #print("REMOVE: " + id_str)
           m['text'].remove(x)
           break
@@ -1435,19 +1436,18 @@ def def_type(x):
 
   nt = type.create_alias(id['str'], ty, id['ti'])
   extend_props(nt)
-  atts = attributes_get()
-  nt['att'].extend(atts)
+  nt['att'].extend(attributes_get())
 
   if already_declared:
     # just overwrite existed 'opaque' type (for records)
     exist.update(nt)
     # and find and remove declaration instruction
     if settings_check('backend', 'llvm'):
-      module_remove_decl(module, 'type', id['str'])
+      module_remove_node(module, 'type', id['str'])
   else:
     module['context'].type_add(id['str'], nt)
 
-  return hlir_def_type(x['id'], ty, already_declared)
+  return hlir_def_type(nt, already_declared)
 
 
 
@@ -1460,7 +1460,7 @@ def def_var(x):
   if type.is_bad(f['type']):
     return None
 
-  if f['type']['kind'] == 'opaque':
+  if type.is_opaque(f['type']):
     error("cannot create variable with undefined type", x['type'])
     return None
 
@@ -1493,12 +1493,15 @@ def def_func(x):
 
   old_cfunc = cfunc
 
-  cfunc = None
+  fn = None
 
   # if function already declared/defined, check it
   already = value_get(func_id['str'])
   if already != None:
     # function already declared & defined (incomplete definition)
+    fn = already
+
+    fn['decl_ti'] = fn['ti']
 
     if 'stmt' in already:
       # already defined function
@@ -1509,24 +1512,21 @@ def def_func(x):
         error("definition not correspond to declatartion", x['ti'])
         info("firstly declared here", already['type']['ti'])
 
-    cfunc = already
-
   else:
     # function already not declared & defined
     # create new function definition
-    cfunc = hlir_value_func(func_id, func_type, ti=func_ti)
-    cfunc['definition'] = hlir_def_func(cfunc)
+    fn = hlir_value_func(func_id, func_type, ti=func_ti)
 
-  cfunc['definition']['ti'] = func_ti
+  cfunc = fn
+
+  fn['ti'] = func_ti
 
   # create params context
   module['context'] = module['context'].branch(domain='local')
 
+  fn['att'].extend(attributes_get())
 
-  atts = attributes_get()
-  cfunc['att'].extend(atts)
-
-  extend_props(cfunc)
+  extend_props(fn)
 
   params = func_type['params']
   i = 0
@@ -1541,24 +1541,23 @@ def def_func(x):
     i = i + 1
 
 
-  cfunc['stmt'] = do_stmt_block(x['stmt'])
+  fn['stmt'] = do_stmt_block(x['stmt'])
 
   # remove params context
   module['context'] = module['context'].parent_get()
 
   # add function to parent (global) context
-  module['context'].value_add(func_id['str'], cfunc)
+  module['context'].value_add(func_id['str'], fn)
 
-  fn = cfunc
 
   cfunc = old_cfunc
 
   # в LLVM если делаем func definition нельзя писать func declaration
   # поэтому удалим все сделаные ранее декларации (если они есть)
   if settings_check('backend', 'llvm'):
-    module_remove_decl(module, 'func', func_id['str'])
+    module_remove_node(module, 'value', func_id['str'])
 
-  return fn['definition']
+  return hlir_def_func(fn)
 
 
 
@@ -1613,27 +1612,18 @@ def decl_func(x):
 
     return
 
-
-  atts = attributes_get()
-
   func = hlir_value_func(id, functype, ti=x['ti'])
   func['att'].extend(['undefined'])
-  func['att'].extend(atts)
+  func['att'].extend(attributes_get())
+
+  if x['extern']:
+    func['att'].append('extern')
 
   extend_props(func)
 
   module['context'].value_add(id['str'], func)
 
-  declaration = hlir_decl_func(func)
-  func['declaration'] = declaration
-  definition = hlir_def_func(func)
-  func['definition'] = definition
-
-
-  if x['extern']:
-    func['att'].append('extern')
-
-  return declaration
+  return hlir_decl_func(func)
 
 
 

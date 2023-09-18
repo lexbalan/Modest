@@ -133,6 +133,7 @@ declare double @fmal(double, double, double)
 %CharStr = type [0 x i8]*
 %ConstCharStr = type [0 x i8]*
 
+
 declare i32 @fclose(%FILE*)
 declare i32 @feof(%FILE*)
 declare i32 @ferror(%FILE*)
@@ -275,6 +276,7 @@ declare [0 x i8]* @getenv([0 x i8]*)
 	%Point
 }
 
+
 @line = global %Line {
   %Point {
     double 0x0,
@@ -285,6 +287,7 @@ declare [0 x i8]* @getenv([0 x i8]*)
     double 0x3ff0000000000000
   }
 }
+
 define double @max(double %a, double %b) {
   %1 = fcmp ogt double %a, %b
   br i1 %1 , label %then_0, label %endif_0

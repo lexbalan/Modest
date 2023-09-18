@@ -28,7 +28,9 @@ def cp_immediate(nv, v):
     nv['len'] = v['len']
 
   else:
-    error("unknown immediate", v['ti'])
+    error("fatal: unknown immediate", v['ti'])
+    #for f in v:
+    #  print(f)
 
 
 
@@ -157,6 +159,10 @@ def value_cons_array_from_generic_array(v, t, ti, method):
   # на именованную константу и станет печатать ее по месту
   if 'id' in v:
     vx['id'] = v['id']
+
+
+  if 'immediate' in v['att']:
+    vx['att'].append('immediate')
 
   return vx
 
