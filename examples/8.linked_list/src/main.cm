@@ -1,4 +1,4 @@
-// examples/linked_list/main.cm
+// examples/8.linked_list/main.cm
 
 @attribute("c-no-print")
 import "libc/libc.hm"

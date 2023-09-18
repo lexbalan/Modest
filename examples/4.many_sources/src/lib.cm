@@ -1,4 +1,4 @@
-// examples/many_sources/lib.cm
+// examples/4.many_sources/lib.cm
 
 @attribute("c-no-print")
 import "libc/stdio.hm"

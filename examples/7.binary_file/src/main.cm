@@ -1,4 +1,4 @@
-// examples/binary_file/main.cm
+// examples/7.binary_file/main.cm
 
 @attribute("c-no-print")
 import "libc/libc.hm"
