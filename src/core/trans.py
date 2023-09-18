@@ -1,6 +1,5 @@
 
 import os
-import copy
 
 from opt import *
 from error import *
@@ -20,6 +19,8 @@ from core.type import type_attribute_check, select_int, select_nat, type_print
 from util import nbits_for_num, nbytes_for_bits
 
 from .hlir import *
+
+
 
 
 # current file directory
@@ -376,10 +377,10 @@ def do_type(t):
 
 def do_value_shift(op, l, r, ti):
 
-  if not type.is_numeric(l['type']):
+  if not type.is_integer(l['type']):
     error("type error", l)
 
-  if not type.is_numeric(r['type']):
+  if not type.is_integer(r['type']):
     error("type error", r)
 
   # const folding
@@ -393,7 +394,7 @@ def do_value_shift(op, l, r, ti):
       nbits = nbits_for_num(hlir_value_num_get(l)) + hlir_value_num_get(r)
       #print("NBITS = " + str(nbits))
       t = hlir_type_generic_int_bits(nbits, unsigned=False, ti=ti)
-      l = value_change_type(l, t)
+      l = do_cast_generic(l, t, None)#FIXIT: x['left]['ti] instead None must be
 
     v = hlir_value_bin(op, l, r, l['type'], ti=ti)
 
@@ -469,13 +470,13 @@ def do_bin_op_with_pointers(k, l, r , ti):
 
   # если включен unsafe режим
   if k in ['add', 'sub']:
-    ptr_n_num = type.is_free_pointer(l['type']) and type.is_numeric(r['type'])
-    num_n_ptr = type.is_numeric(l['type']) and type.is_free_pointer(r['type'])
+    ptr_n_int = type.is_free_pointer(l['type']) and type.is_integer(r['type'])
+    int_n_ptr = type.is_integer(l['type']) and type.is_free_pointer(r['type'])
 
     # если и указатель и число непосредственные
     if value_is_immediate(l) and value_is_immediate(r):
       typ = None
-      if ptr_n_num:
+      if ptr_n_int:
         typ = l['type']
       else:
         typ = r['type']
@@ -488,13 +489,13 @@ def do_bin_op_with_pointers(k, l, r , ti):
     # указатель или число в рантайме
     else:
 
-      if ptr_n_num:
+      if ptr_n_int:
         lnat = do_cast_runtime(l, typeSysNat, ti)
         xr = value_cast_implicit(r, lnat['type'], ti)
         result = hlir_value_bin(x['kind'], lnat, xr, xr['type'], ti)
         return do_cast_runtime(result, l['type'], ti)
 
-      if num_n_ptr:
+      if int_n_ptr:
         rnat = do_cast_runtime(r, typeSysNat, ti)
         xl = value_cast_implicit(l, rnat['type'], ti)
         result = hlir_value_bin(x['kind'], rnat, xl, xl['type'], ti)
@@ -508,6 +509,7 @@ def do_bin_op_with_pointers(k, l, r , ti):
 
 def do_value_bin(x):
   k = x['kind']
+
   l = do_rvalue(x['left'])
   r = do_rvalue(x['right'])
   ti = x['ti']
@@ -579,7 +581,7 @@ def do_value_bin(x):
       'add': lambda a, b: a + b,
       'sub': lambda a, b: a - b,
       'mul': lambda a, b: a * b,
-      'div': lambda a, b: (a / b),
+      'div': lambda a, b: a / b,
       'rem': lambda a, b: a % b,
     }
 
@@ -807,19 +809,19 @@ def do_value_index(x):
 
 
 def do_value_access(x):
-  r = do_rvalue(x['left'])
+  obj = do_rvalue(x['left'])
 
-  if value_is_bad(r):
+  if value_is_bad(obj):
     return hlir_value_bad(x['ti'])
 
   field_id = x['field']
 
   # доступ через переменную-указатель
-  ptr_access = type.is_pointer(r['type'])
+  ptr_access = type.is_pointer(obj['type'])
 
-  record_type = r['type']
+  record_type = obj['type']
   if ptr_access:
-    record_type = r['type']['to']
+    record_type = obj['type']['to']
 
   # check if is record
   if not type.is_record(record_type):
@@ -836,21 +838,18 @@ def do_value_access(x):
   if type.is_bad(field['type']):
     return hlir_value_bad(x['field']['ti'])
 
-  # immediate access (!)
-  if value_is_immediate(r):
-    field_id_str = field_id['str']
-    #TODO!
-    v = r['initializers'][field_id_str]
-    nv = value_copy(v)
-    nv['value'] = hlir_value_access_record(r, field, ti=x['ti'])
-    return nv
+
+  # access to immediate object
+  if value_is_immediate(obj):
+    initializer = get_item_with_id(obj['initializers'], field_id['str'])
+    return initializer['value']
 
 
   if ptr_access:
-    v = hlir_value_access_record_by_ptr(r, field, ti=x['ti'])
+    v = hlir_value_access_record_by_ptr(obj, field, ti=x['ti'])
   else:
-    v = hlir_value_access_record(r, field, ti=x['ti'])
-    if value_is_immutable(r):
+    v = hlir_value_access_record(obj, field, ti=x['ti'])
+    if value_is_immutable(obj):
       v['att'].append('immutable')
 
   return v
@@ -863,7 +862,6 @@ def do_value_to(x):
   if value_is_bad(v) or type.is_bad(t):
     return hlir_value_bad(x['ti'])
   return value_cast_explicit(v, t, x['ti'])
-
 
 
 
@@ -881,8 +879,11 @@ def do_value_id(x):
     return hlir_value_bad(x['ti'])
 
   # for TI чтобы не переписать у самого определения
-  vx = value_copy(vx)
-  vx['ti'] = x['ti']
+  #if 'definition' in vx:
+    #print("NOT DEFINITION" + str(vx))
+    #exit(1)
+    #vx['definition']['usecnt'] = vx['definition']['usecnt'] + 1
+
   return vx
 
 
@@ -912,14 +913,11 @@ def value_cstr(string, length, ti):
 
 
 def do_value_str(x):
-  string = x['str']
-  length = x['len']
-  return value_cstr(string, length, ti=x['ti'])
+  return value_cstr(string=x['str'], length=x['len'], ti=x['ti'])
 
 
 
 def do_value_array(x):
-
   items = []
   for item in x['items']:
     vi = do_value(item)
@@ -1102,7 +1100,6 @@ def do_stmt_while(x):
 
 def do_stmt_return(x):
   global cfunc
-  assert(cfunc != None)
 
   no_ret_func = type.eq(cfunc['type']['to'], type.typeUnit)
 
@@ -1165,7 +1162,6 @@ def do_stmt_var(x):
     type.check(t, v['type'], v['ti'])
 
 
-
   if t == None:
     if type.is_generic_integer(v['type']):
       # если тип не указан явно, а у значения тип generic_integer
@@ -1181,7 +1177,7 @@ def do_stmt_var(x):
     return hlir_stmt_bad()
 
   #
-  var_value = hlir_value_var(id, t, ti=x['ti'])
+  var_value = hlir_value_var(id, t, v, ti=x['ti'])
   var_value['att'].extend(['local'])
   module['context'].value_add(id['str'], var_value)
 
@@ -1206,24 +1202,23 @@ def do_stmt_let(x):
     return hlir_stmt_bad()
 
 
-  # 'const' attribute is used by C printer
+  # add 'const' attribute to type
+  # (used by C printer)
   typ = type.type_copy(v['type'])
   typ['att'].append('const')
+  v['type'] = typ
 
-  v = value_change_type(v, typ)
 
-  const_value = hlir_value_const(id, v['type'], init=v, ti=x['ti'])
+  const_value = hlir_value_const(id, v['type'], value=v, ti=x['ti'])
   const_value['att'].extend(['local'])
 
   if value_is_immediate(v):
-    if 'imm_num' in v:
-      const_value['imm_num'] = v['imm_num']
+    cp_immediate(const_value, v)
+
 
   module['context'].value_add(id['str'], const_value)
 
   return hlir_stmt_def_const(id, v, ti=x['ti'])
-
-
 
 
 
@@ -1246,7 +1241,6 @@ def do_stmt_assign(x):
 
 
 
-
 def do_stmt_value(x):
   v = do_rvalue(x['value'])
 
@@ -1258,6 +1252,7 @@ def do_stmt_value(x):
       warning("expression result unused", v['ti'])
 
   return hlir_stmt_value(v, ti=x['ti'])
+
 
 
 def do_stmt_comment_line(x):
@@ -1373,7 +1368,6 @@ def do_import(x):
   }
 
   return directive
-  #module['text'].append(directive)
 
 
 
@@ -1392,47 +1386,38 @@ def def_const(x):
   init_value = do_value(x['value'])
 
   if value_is_bad(init_value):
-    return hlir_def_const(id, init_value, init_value, ti=x['ti'])
+    return hlir_def_const(id, init_value, ti=x['ti'])
 
   if not value_is_immediate(init_value):
     error("expected immediate value", init_value)
 
-  # (!) в дефиницию идет сам v;
-  # а в контекст - значение-конатснта с id (нужно при C печати);
-  # так же, в него идет поле value ссылающееся на v
+  const_value = hlir_value_const(id, init_value['type'], init_value, x['ti'])
 
-  # идея: никаких объектов вида конст, просто само выражение,
-  # но у него добавлено поле 'id' и атрибут 'const'
-  # если оно сворачиваемое то может иметь поле num
-  # так его сможет распечатать как LLVM так и C принтер
-
-  const_value = value_copy(init_value)
-
-  # выражение значения из которого он создан
-  # юзается принтером при печати напр #define <id> <value>
-  const_value['value'] = init_value
-  const_value['id'] = id
+  cp_immediate(const_value, init_value)
 
   extend_props(const_value)
 
   module['context'].value_add(id['str'], const_value)
 
-  definition = hlir_def_const(id, const_value, init_value, ti=x['ti'])
-  const_value['definition'] = definition
-  definition['att'].extend(attributes_get())
-
-  return definition
+  return hlir_def_const(const_value)
 
 
-# удаляет декларацию по имени
-def module_remove_decl(m, kind, id_str):
+
+# удаляет ?? по имени
+def module_remove_node(m, isa, id_str):
   for submodule in m['imports']:
-    module_remove_decl(submodule, kind, id_str)
+    module_remove_node(submodule, isa, id_str)
 
   for x in m['text']:
-    if x['isa'] == 'declaration':
-      if x['kind'] == kind:
-        if x[kind]['id']['str'] == id_str:
+    if isa in x:
+      if 'id' in x[isa]:
+        if x[isa]['id']['str'] == id_str:
+          #print("REMOVE: " + id_str)
+          m['text'].remove(x)
+          break
+      else:
+        # вот этот name убери к херам!! Сделай id как везде! FIXIT
+        if x[isa]['name'] == id_str:
           #print("REMOVE: " + id_str)
           m['text'].remove(x)
           break
@@ -1451,26 +1436,18 @@ def def_type(x):
 
   nt = type.create_alias(id['str'], ty, id['ti'])
   extend_props(nt)
-  atts = attributes_get()
-  nt['att'].extend(atts)
+  nt['att'].extend(attributes_get())
 
   if already_declared:
     # just overwrite existed 'opaque' type (for records)
     exist.update(nt)
     # and find and remove declaration instruction
     if settings_check('backend', 'llvm'):
-      module_remove_decl(module, 'type', id['str'])
+      module_remove_node(module, 'type', id['str'])
   else:
     module['context'].type_add(id['str'], nt)
 
-  definition = hlir_def_type(x['id'], ty, already_declared, ti=x['ti'])
-  #definition['att'].extend(attributes_get())
-  nt['definition'] = definition
-
-  if 'volatile' in atts:
-    definition['att'].extend(atts)
-
-  return definition
+  return hlir_def_type(nt, already_declared)
 
 
 
@@ -1483,7 +1460,7 @@ def def_var(x):
   if type.is_bad(f['type']):
     return None
 
-  if f['type']['kind'] == 'opaque':
+  if type.is_opaque(f['type']):
     error("cannot create variable with undefined type", x['type'])
     return None
 
@@ -1503,22 +1480,29 @@ def def_var(x):
 
   module['context'].value_add(x['field']['id']['str'], var)
 
-  definition = hlir_def_var(var, init_value, ti=x['ti'])
-  #definition['att'].extend(attributes_get())
-  var['definition'] = definition
-
-  return definition
+  return hlir_def_var(var)
 
 
 
 def def_func(x):
+  global cfunc
+
   func_ti = x['ti']
   func_id = x['id']
   func_type = do_type(x['type'])
 
+  old_cfunc = cfunc
+
+  fn = None
+
   # if function already declared/defined, check it
   already = value_get(func_id['str'])
   if already != None:
+    # function already declared & defined (incomplete definition)
+    fn = already
+
+    fn['decl_ti'] = fn['ti']
+
     if 'stmt' in already:
       # already defined function
       error("redefinition of", x['ti'])
@@ -1528,19 +1512,21 @@ def def_func(x):
         error("definition not correspond to declatartion", x['ti'])
         info("firstly declared here", already['type']['ti'])
 
+  else:
+    # function already not declared & defined
+    # create new function definition
+    fn = hlir_value_func(func_id, func_type, ti=func_ti)
+
+  cfunc = fn
+
+  fn['ti'] = func_ti
 
   # create params context
   module['context'] = module['context'].branch(domain='local')
 
-  global cfunc
-  old_cfunc = cfunc
+  fn['att'].extend(attributes_get())
 
-  cfunc = hlir_value_func(func_id, func_type, ti=func_ti)
-
-  atts = attributes_get()
-  cfunc['att'].extend(atts)
-
-  extend_props(cfunc)
+  extend_props(fn)
 
   params = func_type['params']
   i = 0
@@ -1555,25 +1541,23 @@ def def_func(x):
     i = i + 1
 
 
-  cfunc['stmt'] = do_stmt_block(x['stmt'])
+  fn['stmt'] = do_stmt_block(x['stmt'])
 
   # remove params context
   module['context'] = module['context'].parent_get()
 
-  # add function to global context
-  module['context'].value_add(func_id['str'], cfunc)
+  # add function to parent (global) context
+  module['context'].value_add(func_id['str'], fn)
 
-  definition = hlir_def_func(cfunc, ti=func_ti)
-  cfunc['definition'] = definition
 
   cfunc = old_cfunc
 
   # в LLVM если делаем func definition нельзя писать func declaration
   # поэтому удалим все сделаные ранее декларации (если они есть)
   if settings_check('backend', 'llvm'):
-    module_remove_decl(module, 'func', func_id['str'])
+    module_remove_node(module, 'value', func_id['str'])
 
-  return definition
+  return hlir_def_func(fn)
 
 
 
@@ -1593,14 +1577,12 @@ def decl_type(x):
   module['context'].type_add(id['str'], nt)
 
   # С не печатает opaque, но LLVM печатает (!)
-  declaration = hlir_decl_type(x['id'], nt, ti=x['ti'])
+  declaration = hlir_decl_type(nt)
 
   nt['declaration'] = declaration
 
   if x['extern']:
     declaration['att'].append('extern')
-
-  declaration['att'].extend(attributes_get())
 
   return declaration
 
@@ -1618,6 +1600,7 @@ def decl_func(x):
     if 'stmt' in already:
       # already defined function
       info("function declaration after definition", x['ti'])
+
     else:
       # already declared function
       info("repeated function declaration", x['ti'])
@@ -1627,27 +1610,20 @@ def decl_func(x):
       error("definition not correspond to function type", x['ti'])
       info("firstly declared here", already['type']['ti'])
 
-
-  atts = attributes_get()
+    return
 
   func = hlir_value_func(id, functype, ti=x['ti'])
   func['att'].extend(['undefined'])
-  func['att'].extend(atts)
+  func['att'].extend(attributes_get())
+
+  if x['extern']:
+    func['att'].append('extern')
 
   extend_props(func)
 
   module['context'].value_add(id['str'], func)
 
-  declaration = hlir_decl_func(func, ti=x['ti'])
-  func['declaration'] = declaration
-  #declaration['att'].extend(atts)
-
-
-
-  if x['extern']:
-    declaration['att'].append('extern')
-
-  return declaration
+  return hlir_decl_func(func)
 
 
 
@@ -1787,6 +1763,11 @@ def translate(srcname):
   #print("process %s" % absp)
   m = proc(ast, id=srcname, path=absp)
   #print("end %s" % absp)
+
+  #for x in m['text']:
+  #  if x['isa'] == 'definition':
+  #    if x['usecnt'] == 0:
+  #      warning("defined but not used", x['ti'])
 
   env_current_file_abspath = old_env_current_file_abspath
   env_current_file_dir = old_env_current_file_dir

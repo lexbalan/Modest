@@ -738,6 +738,12 @@ def select_cast_operator(a, b):
 
 
 def do_eval_expr_to(v):
+
+  if 'is-generic-cast' in v['att']:
+    return do_eval_literal(v)
+    #info("??", v['ti'])
+    return
+
   value = v['value']
   from_type = value['type']
   to_type = v['type']
@@ -919,7 +925,7 @@ def do_eval_str(x):
     }
 
 
-def do_eval_imm(x):
+def do_eval_literal(x):
   if type.is_integer(x['type']):
     return ll_create_value_num(x['type'], hlir_value_num_get(x))
   elif type.is_float(x['type']):
@@ -978,7 +984,7 @@ def do_eval_x(x):
 
   k = x['kind']
 
-  if k == 'literal': return do_eval_imm(x)
+  if k == 'literal': return do_eval_literal(x)
   elif k in bin_ops: return do_eval_expr_bin(x)
   elif k in un_ops: return do_eval_expr_un(x)
   elif k in ['func', 'const', 'var']: return func_const_var(x)
@@ -1172,8 +1178,8 @@ def print_stmt_def_var(x):
   id = x['var']['id']['str']
 
   init_value = None
-  if x['init_value'] != None:
-    init_value = do_eval(x['init_value'])
+  if x['var']['init'] != None:
+    init_value = do_eval(x['var']['init'])
   val = ll_alloca(id, x['var']['type'], init_value)
   locals_add(id, val)
   return None
@@ -1362,7 +1368,7 @@ def print_func_signature(id, typ, arghack):
 
 def print_decl_func(x):
   out("\ndeclare ")
-  func = x['func']
+  func = x['value']
   arghack = 'arghack' in func['att']
   print_func_signature(func['id']['str'], func['type'], arghack)
 
@@ -1384,7 +1390,7 @@ def print_def_func(x):
     'locals': [{}]
   }
 
-  func = x['func']
+  func = x['value']
   out("\ndefine ")
   print_type(func['type']['to'])
   out(" @%s" % func['id']['str'])
@@ -1458,11 +1464,11 @@ def print_def_func(x):
 
 def print_decl_type(x):
   # LLVM не печатает, но C печатает (!)
-  out("\n%%%s = type opaque" % x['id']['str'])
+  out("\n%%%s = type opaque" % x['type']['id']['str'])
 
 
 def print_def_type(x):
-  out("\n%%%s = type " % x['id']['str'])
+  out("\n%%%s = type " % x['type']['name'])
   print_type(x['type'], print_aka=False)
   if type.is_record(x['type']):
     out("\n")
@@ -1509,12 +1515,13 @@ def print_def_var(x):
   mods = ['external', 'global', 'constant']
   mod = 'global'
   out("\n@")
-  out(x['var']['id']['str'])
+  var = x['value']
+  out(var['id']['str'])
   out(" = %s " % mod)
-  print_type(x['var']['type'])
-  if x['init_value'] != None:
+  print_type(var['type'])
+  if var['init'] != None:
     out(" ")
-    print_value(do_eval(x['init_value']))
+    print_value(do_eval(var['init']))
   else:
     out(" zeroinitializer")
 
@@ -1569,25 +1576,20 @@ def print_module(m):
 
   for x in m['text']:
     isa = x['isa']
-    k = x['kind']
 
     if isa_prev != isa:
-      if not isa in ['asg_def_func', 'asg_def_type']:
-        out("\n")
+      out("\n")
       isa_prev = isa
 
     if isa == 'directive':
       pass
 
-    elif isa == 'declaration':
-      if k == 'func': print_decl_func(x)
-      elif k == 'type': print_decl_type(x)
-
-    elif isa == 'definition':
-      if k == 'var': print_def_var(x)
-      elif k == 'const': pass
-      elif k == 'func': print_def_func(x)
-      elif k == 'type': print_def_type(x)
+    if isa == 'decl_func': print_decl_func(x)
+    elif isa == 'decl_type': print_decl_type(x)
+    elif isa == 'def_var': print_def_var(x)
+    elif isa == 'def_const': pass
+    elif isa == 'def_func': print_def_func(x)
+    elif isa == 'def_type': print_def_type(x)
 
   out("\n\n")
 

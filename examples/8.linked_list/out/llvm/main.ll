@@ -127,6 +127,7 @@ declare [0 x i8]* @getenv([0 x i8]*)
 %CharStr = type [0 x i8]*
 %ConstCharStr = type [0 x i8]*
 
+
 declare i32 @fclose(%FILE*)
 declare i32 @feof(%FILE*)
 declare i32 @ferror(%FILE*)
@@ -175,6 +176,7 @@ declare void @perror(%ConstCharStr)
 
 %List = type opaque
 %Node = type opaque
+
 declare %List* @linked_list_create()
 declare i32 @linked_list_size_get(%List*)
 declare %Node* @linked_list_first_get(%List*)

@@ -44,6 +44,7 @@ target triple = "arm64-apple-darwin21.6.0"
 %CharStr = type [0 x i8]*
 %ConstCharStr = type [0 x i8]*
 
+
 declare i32 @fclose(%FILE*)
 declare i32 @feof(%FILE*)
 declare i32 @ferror(%FILE*)
@@ -98,6 +99,7 @@ declare void @perror(%ConstCharStr)
 @str_8 = private constant [29 x i8] c"error: cannot open file \27%s\27\00"
 @str_9 = private constant [21 x i8] c"file \27%s\27 contains: \00"
 @str_10 = private constant [19 x i8] c"text_file example\0A\00"
+
 
 
 

@@ -44,6 +44,7 @@ target triple = "arm64-apple-darwin21.6.0"
 %CharStr = type [0 x i8]*
 %ConstCharStr = type [0 x i8]*
 
+
 declare i32 @fclose(%FILE*)
 declare i32 @feof(%FILE*)
 declare i32 @ferror(%FILE*)
@@ -98,6 +99,7 @@ declare void @perror(%ConstCharStr)
 
 
 @big0 = global i128 1512366075204170947332355369683137040
+
 define i64 @high_128(i128 %x) {
   %1 = lshr i128 %x, 64
   %2 = trunc i128 %1 to i64

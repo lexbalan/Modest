@@ -28,7 +28,7 @@ struct List {
 
 List *linked_list_create(void)
 {
-    List *const list = (List *const)malloc(sizeof(List));
+    List *const list = (List *const)malloc(0);
 
     if (list == NULL) {
         return NULL;
@@ -75,7 +75,7 @@ Node *linked_list_last_get(List *list)
 
 Node *linked_list_node_create(void)
 {
-    Node *const node = (Node *const)malloc(sizeof(Node));
+    Node *const node = (Node *const)malloc(0);
 
     if (node == NULL) {
         return NULL;

@@ -1,5 +1,4 @@
 
-import copy
 from opt import *
 import core.type as type
 from core.type import type_print
@@ -9,11 +8,42 @@ from .hlir import *
 from util import get_item_with_id
 
 
+def cp_immediate(nv, v):
 
-def value_copy(x):
-  nv = copy.copy(x)
-  nv['att'] = []
-  nv['att'].extend(x['att'])
+  if 'immediate' in v['att']:
+    nv['att'].append('immediate')
+
+
+  if 'imm_num' in v:
+    nv['imm_num'] = v['imm_num']
+
+  elif 'imm_items' in v:
+    nv['imm_items'] = v['imm_items']
+
+  elif 'initializers' in v:
+    nv['initializers'] = v['initializers']
+
+  elif 'str' in v:
+    nv['str'] = v['str']
+    nv['len'] = v['len']
+
+  else:
+    error("fatal: unknown immediate", v['ti'])
+    #for f in v:
+    #  print(f)
+
+
+
+def do_cast_generic(v, t, ti):
+  nv = hlir_value_cast(v, t, ti)
+
+  cp_immediate(nv, v)
+
+  if 'nl_end' in v:
+    nv['nl_end'] = v['nl_end']
+
+  nv['att'].append('is-generic-cast')
+
   return nv
 
 
@@ -130,6 +160,10 @@ def value_cons_array_from_generic_array(v, t, ti, method):
   if 'id' in v:
     vx['id'] = v['id']
 
+
+  if 'immediate' in v['att']:
+    vx['att'].append('immediate')
+
   return vx
 
 
@@ -149,20 +183,14 @@ def value_cons_array_from_array(v, t, ti, method):
   # если массив идет как непосредственное значение
   if value_is_immediate(v):
     n = n_to - n_from
-    # будем менять значение (его тип) потому неглубоко копируем значение
-    nv = value_copy(v)
-    # будем менять тип (его размер) потому неглубоко копируем тип
-    nv['type'] = type.type_copy(nv['type'])
 
-    nv['type']['volume'] = t['volume']
-    nv['att'] = []
+    nv = do_cast_generic(v, t, ti)
 
     # extend array with zero items
     padding = [hlir_value_zero(t['of'], ti=None)] * n
     nv['imm_items'].extend(padding)
 
     return nv
-
 
   return None
 
@@ -179,17 +207,11 @@ def value_cons_array(v, t, ti, method):
 
 
 
-
-
-
-
-
 def value_cons_record_from_generic_record(v, t, ti, method):
   if v['kind'] == 'const':
     # TODO: тут нужно проверить чтобы при implicit методе
     # все поля присутствовали (!)
     return hlir_value_cast(v, t, ti=ti)
-
 
   # 1. проходим по порядку определения по всем полям типа t (целевого)
   # 2. если поля с таким именеи нет в v:
@@ -265,6 +287,10 @@ def value_cons_record_from_generic_record(v, t, ti, method):
   if 'nl' in v:
     vx['nl'] = v['nl']
 
+
+  if 'immediate' in v['att']:
+    vx['att'].append('immediate')
+
   return vx
 
 
@@ -285,26 +311,15 @@ def value_cons_record(v, t, ti, method):
 
 
 
-
-def do_cast_generic(v, t, ti):
-  x = copy.deepcopy(v)
-  x['type'] = t
-  x['ti'] = ti
-  return x
-
-
-
 def value_cons_integer(v, t, ti, method):
   if type.is_integer(v['type']):
     # Int -> Int
     if type.is_generic(v['type']):
       # GenericInt -> Int
       # check size
-      if type.is_numeric(t):
-        if v['type']['power'] > t['power']:
-          warning("casting with data loss", ti)
-          #return None
-          return hlir_value_cast(v, t, ti)
+      if v['type']['power'] > t['power']:
+        warning("casting with data loss", ti)
+        return hlir_value_cast(v, t, ti)
 
       return do_cast_generic(v, t, ti)
 
@@ -349,12 +364,6 @@ def value_cons_float(v, t, ti, method):
 
 
 
-def value_change_type(v, t):
-    nv = value_copy(v)
-    nv['type'] = t
-    return nv
-
-
 def value_cons_pointer(v, t, ti, method):
 
   from_type = v['type']
@@ -366,7 +375,7 @@ def value_cons_pointer(v, t, ti, method):
 
       # Imm Int -> Pointer
       if value_is_immediate(v):
-        if type.is_numeric(v['type']):
+        if type.is_integer(v['type']):
           # compile-time casting
           nv = hlir_value_cast(v, t, ti=ti)
           nv['imm_num'] = v['imm_num']
@@ -388,19 +397,11 @@ def value_cons_pointer(v, t, ti, method):
   if type.is_pointer_to_defined_array(from_type):
     if type.is_pointer_to_undefined_array(t):
       if type.eq(from_type['to']['of'], t['to']['of']):
-        y = hlir_value_cast(v, t, ti=ti)
-
-        # кароче это стаб - си хочет печатать runtime приведение строки
-        # к char *, что излишне; по этому атрибуту он понимает
-        # что делать так не надо; Это временное решение (!)
-#        if 'string' in v['att']:
-#          y['att'].append('casted_string_literal')
-
-        return y
+        return hlir_value_cast(v, t, ti=ti)
 
   # Nil -> *X
   if type.is_nil(from_type) and type.is_pointer(t):
-    return value_change_type(v, t)
+    return do_cast_generic(v, t, ti)
 
   # Pointer -> *X
   if type.is_free_pointer(from_type) and type.is_pointer(t):
@@ -442,31 +443,57 @@ def value_cons(v, t, ti, method):
 
 
 
+
+def value_soft_cast(v, t, ti):
+  c = value_cons(v, t, ti, method='implicit')
+  if c == None:
+    return v
+  return c
+
+
+def value_hard_cast(v, t, ti):
+  c = value_cons(v, t, ti, method='explicit')
+  if c == None:
+    error("cast error", ti)
+    return hlir_value_bad(ti)
+  return c
+
+
+
 def value_cast_implicit(v, t, ti):
   if value_is_bad(v) or type.is_bad(t):
     return hlir_value_bad(ti)
 
   from_type = v['type']
 
-  """if type.is_generic_integer(t):
-    if type.is_generic_integer(from_type):
-      nv = value_change_type(v, t)
-      nv['att'].append('implicit-casted')
-      return nv"""
+  # implisit cast possible only for:
+  # 1. Generic -> NonGeneric
+  # 2. Nil -> AnyPointer
+  # 3. *[n]T -> *[]T
+  # 4. AnyPointer -> FreePointer
+  # 5. FreePointer -> AnyPointer
 
-  # TODO: нужно ли приводить generics?
-  # казалось бы для binary нужно но там тип расширяется
-  # а не просто выбирается наибольший...
-  """if type.is_generic(from_type) and type.is_integer(from_type):
-    if t['power'] > v['type']['power']:
-      return value_change_type(v, t)"""
+  #if not type.is_generic(from_type):
+  #  return v
 
   if type.eq(from_type, t):
     return v
 
+
+  if type.is_generic(from_type):
+    return value_soft_cast(v, t, ti)
+
+
+  ptr_def_arr_to_undef_arr = type.is_pointer_to_defined_array(from_type) and type.is_pointer_to_undefined_array(t)
+
+  if ptr_def_arr_to_undef_arr:
+    return value_soft_cast(v, t, ti)
+
+
   # Nil -> *X
   if type.is_nil(from_type) and type.is_pointer(t):
-    return value_change_type(v, t)
+    return do_cast_generic(v, t, ti)
+
 
   # FreePointer -> *X
   if type.is_free_pointer(from_type) and type.is_pointer(t):
@@ -476,20 +503,7 @@ def value_cast_implicit(v, t, ti):
   if type.is_pointer(from_type) and type.is_free_pointer(t):
     return hlir_value_cast(v, t, ti=ti)
 
-
-  # implisit cast possible only for:
-  # 1. Generic -> NonGeneric
-  # 2. *[n]T -> *[]T
-  cons_from_generic = type.is_generic(from_type)
-
-  ptr_def_arr_to_undef_arr = type.is_pointer_to_defined_array(from_type) and type.is_pointer_to_undefined_array(t)
-
-  if not (cons_from_generic or ptr_def_arr_to_undef_arr):
-    return v
-
-  c = value_cons(v, t, ti, method='implicit')
-
-  return v if c == None else c
+  return v
 
 
 
@@ -501,10 +515,6 @@ def value_cast_explicit(v, t, ti):
     info("explicit cast to same type", ti)
     return v
 
-  c = value_cons(v, t, ti, method='explicit')
-  if c == None:
-    error("cast error", ti)
-    return hlir_value_bad(ti)
-  return c
+  return value_hard_cast(v, t, ti)
 
 

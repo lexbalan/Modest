@@ -127,6 +127,7 @@ declare [0 x i8]* @getenv([0 x i8]*)
 %CharStr = type [0 x i8]*
 %ConstCharStr = type [0 x i8]*
 
+
 declare i32 @fclose(%FILE*)
 declare i32 @feof(%FILE*)
 declare i32 @ferror(%FILE*)
@@ -193,6 +194,7 @@ declare void @perror(%ConstCharStr)
 	[100 x i8],
 	[1024 x i8]
 }
+
 
 define void @write_example() {
   %1 = bitcast [19 x i8]* @str_2 to %ConstCharStr

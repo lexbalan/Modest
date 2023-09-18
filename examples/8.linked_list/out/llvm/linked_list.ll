@@ -137,6 +137,7 @@ declare [0 x i8]* @getenv([0 x i8]*)
 	i32
 }
 
+
 define %List* @linked_list_create() {
   %1 = call i8*(i64) @malloc (i64 0)
   %2 = bitcast i8* %1 to %List*

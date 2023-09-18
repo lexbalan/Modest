@@ -22,7 +22,7 @@ def hlir_type_unit():
     'power': 0,
     'imm_items': [],
     'initializers': [],
-    'att': ['builtin'],
+    'att': [],
     'ti': None
   }
 
@@ -32,7 +32,7 @@ def hlir_type_integer(name, power, ti):
     'isa': 'type',
     'kind': 'int',
     'name': name,
-    'att': ['builtin', 'numeric', 'comparable', 'ordered', 'integer'],
+    'att': ['numeric', 'comparable', 'ordered', 'integer'],
     'power': power,
     'size': nbytes_for_bits(power),
     'ti': ti
@@ -44,7 +44,7 @@ def hlir_type_float(aka, power, ti):
     'isa': 'type',
     'kind': 'float',
     'name': aka,
-    'att': ['builtin', 'numeric', 'comparable', 'ordered', 'float'],
+    'att': ['numeric', 'comparable', 'ordered', 'float'],
     'power': power,
     'size': nbytes_for_bits(power),
     'ti': ti
@@ -72,7 +72,7 @@ def hlir_type_free_pointer(ti):
     'to': type.typeUnit,
     'size': pointer_size / 8,
     'power': pointer_size,
-    'att': ['builtin', 'comparable'],
+    'att': ['comparable'],
     'ti': ti
   }
 
@@ -85,7 +85,7 @@ def hlir_type_nil(ti):
     'to': type.typeUnit,
     'size': pointer_size / 8,
     'power': pointer_size,
-    'att': ['builtin', 'comparable', 'generic'],
+    'att': ['comparable', 'generic'],
     'ti': ti
   }
 
@@ -313,13 +313,13 @@ def hlir_value_var(id, type, init=None, ti=None):
 
 # hlir_const is an immutable value
 # (not necessary immediate)
-def hlir_value_const(id, type, init=None, ti=None):
+def hlir_value_const(id, type, value=None, ti=None):
   return {
     'isa': 'value',
     'kind': 'const',
     'id': id,
     'type': type,
-    'init': init,
+    'value': value,
     'att': [],
     'ti': ti
   }
@@ -436,6 +436,7 @@ def hlir_stmt_def_var(var_value, init_value=None, ti=None):
     'kind': 'def_var',
     'var': var_value,
     'init_value': init_value,
+    'usecnt': 0,
     'att': [],
     'ti': ti
   }
@@ -447,6 +448,7 @@ def hlir_stmt_def_const(id, value, ti=None):
     'kind': 'def_let',
     'id': id,
     'value': value,
+    'usecnt': 0,
     'att': [],
     'ti': ti
   }
@@ -516,69 +518,28 @@ def hlir_stmt_return(value=None, ti=None):
 
 
 
-def hlir_decl_type(id, type, ti=None):
-  return {
-    'isa': 'declaration',
-    'kind': 'type',
-    'id': id,
-    'type': type,
-    'att': ['undefined'],
-    'ti': ti
-  }
+
+def hlir_decl_type(type):
+  return {'isa': 'decl_type', 'type': type}
 
 
-def hlir_decl_func(func, ti=None):
-  return {
-    'isa': 'declaration',
-    'kind': 'func',
-    'func': func,
-    'att': ['undefined'],
-    'ti': ti
-  }
+def hlir_def_type(type, already_declared=False):
+  return {'isa': 'def_type', 'type': type, 'afterdef': already_declared}
 
 
-def hlir_def_type(id, type, already_declared=False, ti=None):
-  return {
-    'isa': 'definition',
-    'kind': 'type',
-    'id': id,
-    'type': type,  # именно t!
-    'afterdef': already_declared,
-    'att': [],
-    'ti': ti
-  }
+def hlir_def_const(value_const):
+  return {'isa': 'def_const', 'value': value_const}
 
 
-def hlir_def_const(id, const_value, orig_value, ti=None):
-  return {
-    'isa': 'definition',
-    'kind': 'const',
-    'const': const_value,
-    'value': orig_value,
-    'id': id,
-    'att': [],
-    'ti': ti
-  }
+def hlir_def_var(value_var):
+  return {'isa': 'def_var', 'value': value_var}
 
 
-def hlir_def_var(var_value, init_value=None, ti=None):
-  return {
-    'isa': 'definition',
-    'kind': 'var',
-    'var': var_value,
-    'init_value': init_value,
-    'att': [],
-    'ti': ti
-  }
+def hlir_decl_func(value_func):
+  return {'isa': 'decl_func', 'value': value_func}
 
 
-def hlir_def_func(func, ti=None):
-  return {
-    'isa': 'definition',
-    'kind': 'func',
-    'func': func,
-    'att': [],
-    'ti': ti
-  }
+def hlir_def_func(value_func):
+  return {'isa': 'def_func', 'value': value_func}
 
 

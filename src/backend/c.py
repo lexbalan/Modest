@@ -553,6 +553,11 @@ def print_cast(t, v, ctx=[]):
 
 
 def print_value_cast(v, ctx):
+
+  if 'is-generic-cast' in v['att']:
+    print_value_literal(v, ctx)
+    return
+
   from_type = v['value']['type']
   to_type = v['type']
 
@@ -784,7 +789,6 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 
   need_cast = value_attribute_check(x, 'generic-casted')
   if need_cast:
-    #out("(")
     out("("); print_type(x['type'], need_space_after=False); out(")")
 
   if print_just_id:
@@ -873,7 +877,7 @@ def print_stmt_return(x):
 def print_stmt_defvar(x):
   print_field(x['var'])
 
-  init_value = x['init_value']
+  init_value = x['var']['init']
   if init_value != None:
     out(" = ")
     print_value(init_value)
@@ -898,11 +902,9 @@ def assign_big_int_immediate(left, right):
 
 def print_stmt_let(x):
   v = x['value']
-  typ = v['type']
-
-  print_field2(x['id'], typ)
+  print_field2(x['id'], v['type'])
   out(" = ")
-  print_value(x['value'])
+  print_value(v)
   out(";")
 
 
@@ -942,23 +944,9 @@ def assign(left, right):
       #assign_record_by_fields(x)
       #return
 
-  """if type.is_integer(x['left']['type']):
-    if type['power'] >= 64:
-      type.type_print(x['left']['type'])
-      out("{big}")"""
-
-
   print_value(left)
   out(" = ")
-
-  # В си можно просто присвоить литерал структуры глоб переменной
-  # но вот локальной - нельзя, нужно явно привести его е треб типу
-#  if (type.is_record(x['right']['type'])):
-#    print_cast(x['right']['type'], x['right'])
-#  else:
-
   print_value(right)
-
   out(";")
 
 
@@ -1069,7 +1057,7 @@ def print_func_signature(id, typ):
 
 
 def print_decl_func(x):
-  func = x['func']
+  func = x['value']
 
   if 'extern' in func['att']:
     out("extern ")
@@ -1093,7 +1081,7 @@ def print_def_func(x):
   if not was_separated_by_new_line:
     out("\n")
 
-  func = x['func']
+  func = x['value']
   if 'comment' in func:
     if func['comment'] != '':
       out("// %s\n" % func['comment'])
@@ -1123,15 +1111,16 @@ def print_def_func(x):
 
 
 def print_decl_type(x):
-  name = x['id']['str']
+  name = x['type']['id']['str']
   out("struct %s;" % name)
   if not NO_TYPEDEF_STRUCTS:
     out("\ntypedef struct %s %s;" % (name, name))
 
 
+
 def print_def_type(x):
-  id = x['id']['str']
-  t = x['type']
+  id = x['type']['name']#['str']
+  t = x['type']['aliasof']
 
   if not was_separated_by_new_line:
     if t['kind'] in ['record', 'enum']:
@@ -1140,14 +1129,14 @@ def print_def_type(x):
   # !
   if x['afterdef']:
     if type.is_record(t):
-      print_type_record(t, tag=x['id']['str'])
+      print_type_record(t, tag=x['type']['name'])
       out(";")
       return;
 
 
   if NO_TYPEDEF_STRUCTS:
     if type.is_record(t):
-      print_type_record(t, tag=x['id']['str'])
+      print_type_record(t, tag=x['type']['name'])
       out(";")
       return
 
@@ -1158,14 +1147,14 @@ def print_def_type(x):
   is_defined_array = type.is_defined_array(t)
   out("typedef ")
 
-  if 'volatile' in x['att']:
+  if 'volatile' in x['type']['att']:
     out("volatile ")
 
   if is_defined_array:
     print_type_full(t['of'])#, print_aka=False)
   else:
     print_type_full(t)#, print_aka=False)
-  out(" %s" % x['id']['str'])
+  out(" %s" % x['type']['name'])
   if is_defined_array:
     out("["); print_value(t['volume']); out("]")
   out(";")
@@ -1225,24 +1214,25 @@ def print_field2(_id, typ):
 
 
 def print_def_var(x):
+  var = x['value']
   if USE_STATIC_VARIABLES:
-    if not 'global' in x['var']['att']:
-      if not 'extern' in x['var']['att']:
+    if not 'global' in var['att']:
+      if not 'extern' in var['att']:
         out("static ")
 
-    if 'extern' in x['var']['att']:
+    if 'extern' in var['att']:
       out("extern ")
 
-    if 'volatile' in x['var']['att']:
+    if 'volatile' in var['att']:
       out("volatile ")
 
 
-  if 'c_prefix' in x['var']:
-    out("%s " % x['var']['c_prefix'])
+  if 'c_prefix' in var:
+    out("%s " % var['c_prefix'])
 
-  print_field(x['var'])
+  print_field(var)
 
-  init_value = x['init_value']
+  init_value = var['init']
   if init_value != None:
     out(" = "); print_value(init_value)
 
@@ -1251,9 +1241,11 @@ def print_def_var(x):
 
 def print_def_const(x):
   #print("print_def_const " + str(x['id']['str']))
-  out("#define %s  " % x['id']['str'])
-  need_wrap = precedence(x['value']['kind']) < precedenceMax
-  print_value(x['value'], ctx=['screening'], need_wrap=need_wrap, print_just_id=True)
+  v = x['value']['value']
+  out("#define %s  " % x['value']['id']['str'])
+
+  need_wrap = precedence(v['kind']) < precedenceMax
+  print_value(v, ctx=['screening'], need_wrap=need_wrap, print_just_id=True)
 
 
 def print_include(x):
@@ -1293,18 +1285,18 @@ def print_comment_line(x):
 
 
 
-
-
 def cdirectives(module):
   for imported_module in module['imports']:
     for obj in imported_module['text']:
+      if obj['isa'] == 'directive':
+        if obj['kind'] == 'c_include':
+          out("\n")
+          print_include(obj)
+  for obj in module['text']:
+    if obj['isa'] == 'directive':
       if obj['kind'] == 'c_include':
         out("\n")
         print_include(obj)
-  for obj in module['text']:
-    if obj['kind'] == 'c_include':
-      out("\n")
-      print_include(obj)
 
 
 
@@ -1341,11 +1333,17 @@ def run(module, outname):
 
 
   for x in module['text']:
-    if 'c-no-print' in x['att']:
+    if 'value' in x:
+      if 'c-no-print' in x['value']['att']:
+        continue
+    elif 'type' in x:
+      if 'c-no-print' in x['type']['att']:
+        continue
+
+    elif 'c-no-print' in x['att']:
       continue
 
-    isa = x['isa']
-    k = x['kind']
+
 
     if 'nl' in x:
       out("\n" * x['nl'])
@@ -1353,17 +1351,19 @@ def run(module, outname):
       out("\n")
       print('not NL in ' + str(x))
 
-    if isa == 'definition':
-      if k == 'var': print_def_var(x)
-      elif k == 'const': print_def_const(x)
-      elif k == 'func': print_def_func(x)
-      elif k == 'type': print_def_type(x)
-    elif isa == 'declaration':
-      if k == 'func': print_decl_func(x)
-      elif k == 'type': print_decl_type(x)
+    isa = x['isa']
+    if isa == 'def_var': print_def_var(x)
+    elif isa == 'def_const': print_def_const(x)
+    elif isa == 'def_func': print_def_func(x)
+    elif isa == 'def_type': print_def_type(x)
+    elif isa == 'decl_func': print_decl_func(x)
+    elif isa == 'decl_type': print_decl_type(x)
+
     elif isa == 'directive':
+      k = x['kind']
       if k == 'import': print_include(x)
       elif k == 'insert': print_insert(x)
+
     elif isa == 'comment':
       print_comment(x)
 
