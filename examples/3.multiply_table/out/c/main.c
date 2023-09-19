@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-// examples/multiply_table/main.cm
+// examples/3.multiply_table/main.cm
 
 
 void mtab(int n)

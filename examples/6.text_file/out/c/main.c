@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-// examples/if-else/main.cm
+// examples/6.text_file/main.cm
 
 
 #define filename  "file.txt"

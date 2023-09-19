@@ -291,9 +291,12 @@ def print_cast(t, v, ctx=[]):
 
 def print_value_cast(v, ctx):
 
-  if 'is-generic-cast' in v['att']:
-    print_value_literal(v, ctx)
-    return
+  if not 'no_print_gen_cast' in ctx:
+    # дженерик каст не печатаю (!)
+    if 'is-generic-cast' in v['att']:
+      need_wrap = precedence(v['value']['kind']) < precedenceMax
+      print_value(v['value'], ctx, need_wrap=need_wrap)
+      return
 
 
   # не печатаем операции неявного приведения (!)

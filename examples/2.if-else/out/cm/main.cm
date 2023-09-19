@@ -1,4 +1,4 @@
-// examples/if-else/main.cm
+// examples/2.if-else/main.cm
 import "libc/stdio.h"
 
 

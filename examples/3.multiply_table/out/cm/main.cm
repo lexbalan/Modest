@@ -1,4 +1,4 @@
-// examples/multiply_table/main.cm
+// examples/3.multiply_table/main.cm
 import "libc/stdio.h"
 
 

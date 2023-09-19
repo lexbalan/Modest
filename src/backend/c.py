@@ -37,7 +37,7 @@ EMPTY_BLOCK_COMMENT = "// TODO: pay attention here"
 
 # for integer literals printing
 CC_INT_SIZE_BITS = 32
-CC_LONG_SIZE_BITS = 64
+CC_LONG_SIZE_BITS = 32
 CC_LONG_LONG_SIZE_BITS = 64
 
 
@@ -555,7 +555,8 @@ def print_cast(t, v, ctx=[]):
 def print_value_cast(v, ctx):
 
   if 'is-generic-cast' in v['att']:
-    print_value_literal(v, ctx)
+    need_wrap = precedence(v['value']['kind']) < precedenceMax
+    print_value(v['value'], ctx, need_wrap=need_wrap)
     return
 
   from_type = v['value']['type']
@@ -885,19 +886,6 @@ def print_stmt_defvar(x):
 
 
 
-# в C не существует литерала для 128 бит
-# поэтому приходится рачком-бочком
-def assign_big_int_immediate(left, right):
-  n = hlir_value_num_get(right)
-
-  high64 = (n >> 64) & 0xFFFFFFFFFFFFFFFF
-  low64 = n & 0xFFFFFFFFFFFFFFFF
-
-  print_value(left); out(" = 0x%X;" % (high64))
-  nl_indent(); print_value(left); out(" <<= 64;")
-  nl_indent(); print_value(left); out(" |= 0x%X;" % (low64))
-
-
 
 def print_stmt_let(x):
   v = x['value']
@@ -939,7 +927,7 @@ def assign(left, right):
       assign_array_by_items(x)
       return
 
-    #if type.is_record(x['right']['type']):
+    #elif type.is_record(x['right']['type']):
       #assign_record_by_fields(x)
       #return
 

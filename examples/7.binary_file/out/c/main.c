@@ -9,7 +9,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-// examples/binary_file/main.cm
+// examples/7.binary_file/main.cm
 
 
 #define filename  "file.bin"
@@ -41,7 +41,7 @@ void write_example(void)
     strcpy((char *)&chunk.data[0], (char *)"data");
 
     // write chunk to file
-    fwrite((void *)&chunk, 0, 1, fp);
+    fwrite((void *)&chunk, (sizeof(Chunk)), 1, fp);
 
     fclose(fp);
 }
@@ -59,7 +59,7 @@ void read_example(void)
     }
 
     Chunk chunk;
-    fread((void *)&chunk, 0, 1, fp);
+    fread((void *)&chunk, (sizeof(Chunk)), 1, fp);
     printf("file '%s' contains:\n", filename);
     printf("chunk.id: %s\n", &chunk.id[0]);
     printf("chunk.data: %s\n", &chunk.data[0]);

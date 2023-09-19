@@ -9,7 +9,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-// examples/linked_list/main.cm
+// examples/8.linked_list/main.cm
 
 #include "./linked_list.h"
 
@@ -19,7 +19,7 @@
 void nat64_list_insert(List *list, uint64_t x)
 {
     // alloc memory for Nat64 value
-    uint64_t *const p_nat64 = (uint64_t *const)malloc(8);
+    uint64_t *const p_nat64 = (uint64_t *const)malloc((sizeof(uint64_t)));
     *p_nat64 = x;
     linked_list_insert(list, (void *)p_nat64);
 }

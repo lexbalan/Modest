@@ -10,7 +10,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-// examples/records/main.cm
+// examples/5.records/main.cm
 
 
 typedef struct {
@@ -25,7 +25,7 @@ typedef struct {
 
 
 static Line line = (Line){
-    .a = (Point){.x = 0.0, .y = 0.0},
+    .a = (Point){.x = 0, .y = 0},
     .b = (Point){.x = 1.0, .y = 1.0}
 };
 
@@ -52,8 +52,8 @@ float distance(Point a, Point b)
 {
     const float dx = max(a.x, b.x) - min(a.x, b.x);
     const float dy = max(a.y, b.y) - min(a.y, b.y);
-    const double dx2 = pow(dx, 2.0);
-    const double dy2 = pow(dy, 2.0);
+    const double dx2 = pow(dx, 2);
+    const double dy2 = pow(dy, 2);
     return sqrt(dx2 + dy2);
 }
 
@@ -66,11 +66,11 @@ float lineLength(Line line)
 
 void ptr_example(void)
 {
-    Point *const ptr_p = (Point *const)malloc(0);
+    Point *const ptr_p = (Point *const)malloc((sizeof(Point)));
 
     // access by pointer
-    ptr_p->x = 10.0;
-    ptr_p->y = 20.0;
+    ptr_p->x = 10;
+    ptr_p->y = 20;
 
     printf("point(%f, %f)\n", ptr_p->x, ptr_p->y);
 }

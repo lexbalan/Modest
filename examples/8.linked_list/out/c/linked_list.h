@@ -6,7 +6,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-// examples/linked_list/linked_list.hm
+// examples/8.linked_list/linked_list.hm
 
 struct List;
 typedef struct List List;
