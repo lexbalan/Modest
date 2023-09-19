@@ -509,7 +509,6 @@ def do_bin_op_with_pointers(k, l, r , ti):
 
 def do_value_bin(x):
   k = x['kind']
-
   l = do_rvalue(x['left'])
   r = do_rvalue(x['right'])
   ti = x['ti']
@@ -561,10 +560,10 @@ def do_value_bin(x):
     if k == 'or': k = 'logic_or'
     elif k == 'and': k = 'logic_and'
 
-  nv = hlir_value_bin(k, l, r, type_result, ti=ti)
+  bin_value = hlir_value_bin(k, l, r, type_result, ti=ti)
 
   # if left & right are immediate, we can fold const
-  # and append field 'imm_num' to nv
+  # and append field 'imm_num' to bin_value
   if value_is_immediate(l) and value_is_immediate(r):
     ops = {
       'logic_or': lambda a, b: a | b,
@@ -590,14 +589,10 @@ def do_value_bin(x):
     if not type.is_float(l['type']):
       num_val = int(num_val)
 
-    if type.is_generic(l['type']) and type.is_generic(r['type']):
-      type_result = hlir_type_generic_int_for(num_val, unsigned=False, ti=ti)
+    bin_value['imm_num'] = num_val
+    bin_value['att'].append('immediate')
 
-    nv['type'] = type_result
-    nv['imm_num'] = num_val
-    nv['att'].append('immediate')
-
-  return nv
+  return bin_value
 
 
 
@@ -992,6 +987,8 @@ def do_value_record(x):
 
 def do_value_int(x):
   rv = hlir_value_int(x['num'], ti=x['ti'])
+
+  rv['nsigns'] = x['nsigns']
 
   if 'hexadecimal' in x['att']:
     value_attribute_add(rv, 'hexadecimal')

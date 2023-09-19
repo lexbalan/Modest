@@ -414,14 +414,21 @@ def print_value_literal_str(x, ctx):
   out("\"")
 
 
-def print_value_literal_num(x, ctx):
+
+def print_value_literal_int(x, ctx):
   num = hlir_value_num_get(x)
 
   if type.type_attribute_check(x['type'], 'char'):
     out("\"%c\"[0]" % num)
 
   elif value_attribute_check(x, 'hexadecimal'):
-    out("0x%X" % num)
+
+    nsigns = 0
+    if 'nsigns' in x:
+      nsigns = x['nsigns']
+
+    fmt = "0x%%0%dX" % nsigns
+    out(fmt % num)
 
   elif type.is_pointer(x['type']):
     if num == 0:
@@ -430,6 +437,10 @@ def print_value_literal_num(x, ctx):
 
   else:
     out(str(num))
+
+
+def print_value_literal_flt(x, ctx):
+  out(str(float(hlir_value_num_get(x))))
 
 
 def print_value_zero(x, ctx):
@@ -449,13 +460,13 @@ def print_value_by_id(x, ctx):
 
 def print_value_literal(x, ctx):
   t = x['type']
-  if type.is_integer(t): print_value_literal_num(x, ctx)
-  elif type.is_float(t): print_value_literal_num(x, ctx)
+  if type.is_integer(t): print_value_literal_int(x, ctx)
+  elif type.is_float(t): print_value_literal_flt(x, ctx)
   elif type.is_record(t): print_value_literal_record(x, ctx)
   elif type.is_array(t): print_value_literal_array(x, ctx)
   elif type.is_string(t): print_value_literal_str(x, ctx)
   elif type.is_free_pointer(t): out("nil")
-  elif type.is_pointer(t): print_value_literal_num(x, ctx)
+  elif type.is_pointer(t): print_value_literal_int(x, ctx)
 
 
 def print_value(x, ctx=[], need_wrap=False, print_just_id=True):

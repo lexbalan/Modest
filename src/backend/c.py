@@ -370,9 +370,21 @@ def print_value_bin(v, ctx):
   # GCC выдает warning например в: 1 << 2 + 2, тк считает
   # Что юзер имел в виду (1 << 2) + 2, а у << приоритет тние
   # чтобы он не ругался, завернем такие выражения в скобки
-  if op in ['shl', 'shr', 'logic_or', 'logic_and']:
+
+  if op in ['shl', 'shr']:
     need_wrap_left = precedence(left['kind']) < 10 #precedenceMax
     need_wrap_right = precedence(right['kind']) < 10 #precedenceMax
+  elif op == 'logic_or':
+    if left['kind'] != 'logic_or':
+      need_wrap_left = precedence(left['kind']) < 10 #precedenceMax
+    if right['kind'] != 'logic_or':
+      need_wrap_right = precedence(right['kind']) < 10 #precedenceMax
+  elif op == 'logic_and':
+    if left['kind'] != 'logic_and':
+      need_wrap_left = precedence(left['kind']) < 10 #precedenceMa
+    if right['kind'] != 'logic_and':
+      need_wrap_right = precedence(right['kind']) < 10 #precedenceMax
+
 
   print_value(left, need_wrap=need_wrap_left)
   out(' %s ' % bin_ops[op])
@@ -714,6 +726,7 @@ def print_value_literal_int(x, ctx):
 
   num = hlir_value_num_get(x)
 
+
   # Big Number?
   if x['type']['power'] > 64:
     if nbits_for_num(num):
@@ -731,10 +744,16 @@ def print_value_literal_int(x, ctx):
       else: out("false")
       return
 
+
+
   if type.type_attribute_check(x['type'], 'char'):
     out("'%c'" % num)
   elif value_attribute_check(x, 'hexadecimal'):
-    out("0x%X" % num)
+    nsigns = 0
+    if 'nsigns' in x:
+      nsigns = x['nsigns']
+    fmt = "0x%%0%dX" % nsigns
+    out(fmt % num)
   else:
     out(str(num))
 
@@ -753,7 +772,7 @@ def print_value_literal_int(x, ctx):
 
 
 def print_value_literal_flt(x, ctx):
-  out(str(hlir_value_num_get(x)))
+  out(str(float(hlir_value_num_get(x))))
 
 
 
