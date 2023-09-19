@@ -8,17 +8,21 @@ from .hlir import *
 from util import get_item_with_id
 
 
-def cp_immediate(nv, v, copy_id=True):
 
-  if 'immediate' in v['att']:
-    nv['att'].append('immediate')
+def value_print(x):
+  print("print_value:")
+  print("isa: " + str(x['isa']))
+  print("kind: " + str(x['kind']))
+  print("type: ", end=""); type.type_print(x['type']); print()
+  print("att: " + str(x['att']))
+  print("additional properties:")
+  for prop in x:
+    if not prop in ['isa', 'kind', 'type', 'att', 'ti']:
+      print(" - %s" % prop)
+  info("here", x['ti'])
 
-  if copy_id:
-    # для generic приведения констант (!)
-    if 'id' in v:
-      nv['id'] = v['id']
 
-
+def cp_immval(nv, v):
   if 'imm_num' in v:
     nv['imm_num'] = v['imm_num']
 
@@ -37,8 +41,25 @@ def cp_immediate(nv, v, copy_id=True):
 
   else:
     error("fatal: unknown immediate", v['ti'])
-    #for f in v:
-    #  print(f)
+    #value_print(v)
+
+  nv['att'].append('immediate')
+
+
+
+def cp_immediate(nv, v, copy_id=True):
+
+  #if 'immediate' in v['att']:
+  #  nv['att'].append('immediate')
+
+  if copy_id:
+    # для generic приведения констант (!)
+    if 'id' in v:
+      nv['id'] = v['id']
+
+  cp_immval(nv, v)
+
+
 
 
 
@@ -329,11 +350,18 @@ def value_cons_integer(v, t, ti, method):
         warning("casting with data loss", ti)
         return hlir_value_cast(v, t, ti)
 
-      return do_cast_generic(v, t, ti)
 
     # cast non-generic integer to integer
     if method == 'explicit':
-      return hlir_value_cast(v, t, ti=ti)
+
+      nv = hlir_value_cast(v, t, ti)
+      if value_is_immediate(v):
+        cp_immval(nv, v)
+      return nv
+
+    else:
+      return do_cast_generic(v, t, ti)
+
 
   elif type.is_float(v['type']):
     if method == 'explicit':

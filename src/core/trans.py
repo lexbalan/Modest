@@ -375,7 +375,11 @@ def do_type(t):
 #
 
 
-def do_value_shift(op, l, r, ti):
+def do_value_shift(x):
+  op = x['kind']
+  l = do_rvalue(x['left'])
+  r = do_rvalue(x['right'])
+  ti = x['ti']
 
   if not type.is_integer(l['type']):
     error("type error", l)
@@ -385,22 +389,49 @@ def do_value_shift(op, l, r, ti):
 
   # const folding
   if value_is_immediate(l) and value_is_immediate(r):
-    xv = 0
-    if op == 'shl': xv = hlir_value_num_get(l) << hlir_value_num_get(r)
-    elif op == 'shr': xv = hlir_value_num_get(l) >> hlir_value_num_get(r)
+    nl = hlir_value_num_get(l)
+    nr = hlir_value_num_get(r)
 
-    if type.is_generic(l['type']):
-      # select new generic type for left (!)
-      nbits = nbits_for_num(hlir_value_num_get(l)) + hlir_value_num_get(r)
-      #print("NBITS = " + str(nbits))
-      t = hlir_type_generic_int_bits(nbits, unsigned=False, ti=ti)
-      l = do_cast_generic(l, t, None)#FIXIT: x['left]['ti] instead None must be
+    imm_result = 0
 
-    v = hlir_value_bin(op, l, r, l['type'], ti=ti)
+    if op == 'shl':
+      # bits required for result storing
+      #nbits_req = nbits_for_num(nl) + nr
+      imm_result = nl << nr
+      nbits = nbits_for_num(imm_result)
 
-    v['att'].append('immediate')
-    v['imm_num'] = xv
-    return v
+      # если тип Generic - расширим,
+      # иначе - проверим влезает ли результат
+      if type.is_generic(l['type']):
+        res_t = hlir_type_generic_int_bits(nbits, unsigned=False, ti=ti)
+      else:
+        if nbits > l['type']['power']:
+          error("data loss left shift", ti)
+        res_t = l['type']
+
+      v = hlir_value_bin(op, l, r, res_t, ti=ti)
+      v['att'].append('immediate')
+      v['imm_num'] = imm_result
+      return v
+
+
+    elif op == 'shr':
+      imm_result = nl >> nr
+
+      # TODO: реализуй сдвиг влево!
+
+      if type.is_generic(l['type']):
+        # select new generic type for left (!)
+
+        #print("NBITS = " + str(nbits))
+        t = hlir_type_generic_int_bits(nbits, unsigned=False, ti=ti)
+        l = do_cast_generic(l, t, x['left']['ti'])
+
+      v = hlir_value_bin(op, l, r, l['type'], ti=ti)
+
+      v['att'].append('immediate')
+      v['imm_num'] = imm_result
+      return v
 
   if type.is_generic(l['type']):
     error("required type", l)
@@ -509,6 +540,10 @@ def do_bin_op_with_pointers(k, l, r , ti):
 
 def do_value_bin(x):
   k = x['kind']
+
+  if k in ['shl', 'shr']:
+    return do_value_shift(x)
+
   l = do_rvalue(x['left'])
   r = do_rvalue(x['right'])
   ti = x['ti']
@@ -516,9 +551,6 @@ def do_value_bin(x):
   if value_is_bad(l) or value_is_bad(r):
     return hlir_value_bad(ti)
 
-
-  if k in ['shl', 'shr']:
-    return do_value_shift(k, l, r, ti)
 
 
   if type.is_pointer(l['type']) or type.is_pointer(r['type']):

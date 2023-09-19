@@ -3,7 +3,7 @@ import "libc/stdio.h"
 
 
 
-var big0 : Nat128 := 0x123456789ABCDEFFEDCBA9876543210
+var big0 : Nat128 := 0x0123456789ABCDEFFEDCBA9876543210
 
 
 

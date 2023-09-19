@@ -566,36 +566,16 @@ def print_cast(t, v, ctx=[]):
 
 def print_value_cast(v, ctx):
 
+  # не печатаем generic-cast
+  # просто пишем значение; Но если оно не литерал - берем в скобки
   if 'is-generic-cast' in v['att']:
     need_wrap = precedence(v['value']['kind']) < precedenceMax
     print_value(v['value'], ctx, need_wrap=need_wrap)
     return
 
+
   from_type = v['value']['type']
   to_type = v['type']
-
-  """
-  # NO need cast ptr to *void
-  if type.is_pointer(from_type):
-    if type.is_free_pointer(to_type):
-      print_value(v['value'], ctx)
-      return
-
-  # NO need cast *void to ptr
-  if type.is_free_pointer(from_type):
-    if type.is_pointer(to_type):
-      print_value(v['value'], ctx)
-      return
-  """
-
-
-  # ! Вырубил тк мешает; Непонятно нужно ли вообще но похоже что нет
-  # Чтобы не приводить тип в выражениях типа ((int32_t)0), etc.
-  """if type.is_numeric(to_type):
-    if type.is_generic(from_type):
-      if type.is_numeric(from_type):
-        print_value(v['value'], ctx)
-        return"""
 
   # не печатаем приведение литерала строки "string" к Str
   if type.eq(type.typeStr, to_type):
