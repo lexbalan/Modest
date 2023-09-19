@@ -1393,7 +1393,8 @@ def def_const(x):
 
   const_value = hlir_value_const(id, v['type'], v, x['ti'])
 
-  cp_immediate(const_value, v)
+  cp_immediate(const_value, v, copy_id=False)
+
 
   extend_props(const_value)
 

@@ -8,14 +8,15 @@ from .hlir import *
 from util import get_item_with_id
 
 
-def cp_immediate(nv, v):
+def cp_immediate(nv, v, copy_id=True):
 
   if 'immediate' in v['att']:
     nv['att'].append('immediate')
 
-  # для generic приведения констант (!)
-  if 'id' in v:
-    nv['id'] = v['id']
+  if copy_id:
+    # для generic приведения констант (!)
+    if 'id' in v:
+      nv['id'] = v['id']
 
 
   if 'imm_num' in v:
