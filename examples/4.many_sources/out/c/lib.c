@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-// examples/many_sources/lib.cm
+// examples/4.many_sources/lib.cm
 
 #include "./lib.h"
 

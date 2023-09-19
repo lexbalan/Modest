@@ -8,7 +8,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-// examples/linked_list/linked_list.cm
+// examples/8.linked_list/linked_list.cm
 
 #include "./linked_list.h"
 
@@ -28,7 +28,7 @@ struct List {
 
 List *linked_list_create(void)
 {
-    List *const list = (List *const)malloc(0);
+    List *const list = (List *const)malloc((sizeof(List)));
 
     if (list == NULL) {
         return NULL;
@@ -75,7 +75,7 @@ Node *linked_list_last_get(List *list)
 
 Node *linked_list_node_create(void)
 {
-    Node *const node = (Node *const)malloc(0);
+    Node *const node = (Node *const)malloc((sizeof(Node)));
 
     if (node == NULL) {
         return NULL;

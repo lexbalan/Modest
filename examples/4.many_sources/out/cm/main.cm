@@ -1,4 +1,4 @@
-// examples/many_sources/main.cm
+// examples/4.many_sources/main.cm
 import "libc/stdio.h"
 
 import "./lib.h"

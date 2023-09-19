@@ -1,4 +1,4 @@
-// examples/linked_list/linked_list.hm
+// examples/8.linked_list/linked_list.hm
 
 type List
 type Node

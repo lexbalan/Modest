@@ -1,4 +1,4 @@
-// examples/linked_list/main.cm
+// examples/8.linked_list/main.cm
 import "libc/libc.h"
 import "libc/stdio.h"
 
@@ -9,7 +9,7 @@ import "./linked_list.h"
 // wrap around linked list for List Nat64
 func nat64_list_insert (list : *List, x : Nat64) -> Unit {
     // alloc memory for Nat64 value
-    let p_nat64 = malloc(8)
+    let p_nat64 = malloc((sizeof(Nat64)))
     *p_nat64 := x
     linked_list_insert(list, p_nat64)
 }

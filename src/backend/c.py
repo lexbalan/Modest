@@ -37,7 +37,7 @@ EMPTY_BLOCK_COMMENT = "// TODO: pay attention here"
 
 # for integer literals printing
 CC_INT_SIZE_BITS = 32
-CC_LONG_SIZE_BITS = 64
+CC_LONG_SIZE_BITS = 32
 CC_LONG_LONG_SIZE_BITS = 64
 
 
@@ -370,9 +370,21 @@ def print_value_bin(v, ctx):
   # GCC выдает warning например в: 1 << 2 + 2, тк считает
   # Что юзер имел в виду (1 << 2) + 2, а у << приоритет тние
   # чтобы он не ругался, завернем такие выражения в скобки
-  if op in ['shl', 'shr', 'logic_or', 'logic_and']:
+
+  if op in ['shl', 'shr']:
     need_wrap_left = precedence(left['kind']) < 10 #precedenceMax
     need_wrap_right = precedence(right['kind']) < 10 #precedenceMax
+  elif op == 'logic_or':
+    if left['kind'] != 'logic_or':
+      need_wrap_left = precedence(left['kind']) < 10 #precedenceMax
+    if right['kind'] != 'logic_or':
+      need_wrap_right = precedence(right['kind']) < 10 #precedenceMax
+  elif op == 'logic_and':
+    if left['kind'] != 'logic_and':
+      need_wrap_left = precedence(left['kind']) < 10 #precedenceMa
+    if right['kind'] != 'logic_and':
+      need_wrap_right = precedence(right['kind']) < 10 #precedenceMax
+
 
   print_value(left, need_wrap=need_wrap_left)
   out(' %s ' % bin_ops[op])
@@ -554,35 +566,16 @@ def print_cast(t, v, ctx=[]):
 
 def print_value_cast(v, ctx):
 
+  # не печатаем generic-cast
+  # просто пишем значение; Но если оно не литерал - берем в скобки
   if 'is-generic-cast' in v['att']:
-    print_value_literal(v, ctx)
+    need_wrap = precedence(v['value']['kind']) < precedenceMax
+    print_value(v['value'], ctx, need_wrap=need_wrap)
     return
+
 
   from_type = v['value']['type']
   to_type = v['type']
-
-  """
-  # NO need cast ptr to *void
-  if type.is_pointer(from_type):
-    if type.is_free_pointer(to_type):
-      print_value(v['value'], ctx)
-      return
-
-  # NO need cast *void to ptr
-  if type.is_free_pointer(from_type):
-    if type.is_pointer(to_type):
-      print_value(v['value'], ctx)
-      return
-  """
-
-
-  # ! Вырубил тк мешает; Непонятно нужно ли вообще но похоже что нет
-  # Чтобы не приводить тип в выражениях типа ((int32_t)0), etc.
-  """if type.is_numeric(to_type):
-    if type.is_generic(from_type):
-      if type.is_numeric(from_type):
-        print_value(v['value'], ctx)
-        return"""
 
   # не печатаем приведение литерала строки "string" к Str
   if type.eq(type.typeStr, to_type):
@@ -713,6 +706,7 @@ def print_value_literal_int(x, ctx):
 
   num = hlir_value_num_get(x)
 
+
   # Big Number?
   if x['type']['power'] > 64:
     if nbits_for_num(num):
@@ -730,10 +724,16 @@ def print_value_literal_int(x, ctx):
       else: out("false")
       return
 
+
+
   if type.type_attribute_check(x['type'], 'char'):
     out("'%c'" % num)
   elif value_attribute_check(x, 'hexadecimal'):
-    out("0x%X" % num)
+    nsigns = 0
+    if 'nsigns' in x:
+      nsigns = x['nsigns']
+    fmt = "0x%%0%dX" % nsigns
+    out(fmt % num)
   else:
     out(str(num))
 
@@ -752,7 +752,7 @@ def print_value_literal_int(x, ctx):
 
 
 def print_value_literal_flt(x, ctx):
-  out(str(hlir_value_num_get(x)))
+  out(str(float(hlir_value_num_get(x))))
 
 
 
@@ -885,19 +885,6 @@ def print_stmt_defvar(x):
 
 
 
-# в C не существует литерала для 128 бит
-# поэтому приходится рачком-бочком
-def assign_big_int_immediate(left, right):
-  n = hlir_value_num_get(right)
-
-  high64 = (n >> 64) & 0xFFFFFFFFFFFFFFFF
-  low64 = n & 0xFFFFFFFFFFFFFFFF
-
-  print_value(left); out(" = 0x%X;" % (high64))
-  nl_indent(); print_value(left); out(" <<= 64;")
-  nl_indent(); print_value(left); out(" |= 0x%X;" % (low64))
-
-
 
 def print_stmt_let(x):
   v = x['value']
@@ -939,7 +926,7 @@ def assign(left, right):
       assign_array_by_items(x)
       return
 
-    #if type.is_record(x['right']['type']):
+    #elif type.is_record(x['right']['type']):
       #assign_record_by_fields(x)
       #return
 

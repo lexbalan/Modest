@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-// examples/hello_world/main.cm
+// examples/9.big_numbers/main.cm
 
 
 
@@ -20,7 +20,7 @@ uint64_t high_128(unsigned __int128 x)
 
 uint64_t low_128(unsigned __int128 x)
 {
-    return (uint64_t)(x & (((__int128)0x0 << 64) | ((__int128)0xFFFFFFFFFFFFFFFF)));
+    return (uint64_t)(x & 0xFFFFFFFFFFFFFFFFLL);
 }
 
 
@@ -32,7 +32,7 @@ int main(void)
     unsigned __int128 big2;
     big2 = big1;
 
-    unsigned __int128 big3 = (((__int128)0x0 << 64) | ((__int128)0x1));
+    unsigned __int128 big3 = 0x1;
 
     uint32_t a = 0x1;
 
@@ -50,7 +50,7 @@ int main(void)
 
     __int128 sig1 = sig0;
 
-    sig1 = sig1 + (((__int128)0x0 << 64) | ((__int128)0x1));
+    sig1 = sig1 + 1;
 
     printf("sig1 = %lld\n", (uint64_t)sig1);
 
