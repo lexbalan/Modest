@@ -63,6 +63,7 @@ def hlir_type_pointer(to, ti):
         'ti': ti
     }
 
+
 # FreePointer - особый тип, он приводится неявно CM (но не в C!)
 def hlir_type_free_pointer(ti):
     pointer_size = int(settings_get('ptr'))
@@ -76,6 +77,7 @@ def hlir_type_free_pointer(ti):
         'ti': ti
     }
 
+
 # Nil - особый тип, он приводится неявно как в CM так и в C
 def hlir_type_nil(ti):
     pointer_size = int(settings_get('ptr'))
@@ -88,6 +90,7 @@ def hlir_type_nil(ti):
         'att': ['comparable', 'generic'],
         'ti': ti
     }
+
 
 # size - always hlir_value (!)
 def hlir_type_array(of, volume, ti):
@@ -142,7 +145,7 @@ def hlir_type_record(fields, ti=None):
 
 # дефолт аргумент не работает!!!!
 def hlir_type_func(params, to, ti=None):
-    tt = {
+    return {
         'isa': 'type',
         'kind': 'func',
         'params': params,
@@ -150,10 +153,6 @@ def hlir_type_func(params, to, ti=None):
         'att': [],
         'ti': ti
     }
-
-    return tt
-
-
 
 
 
