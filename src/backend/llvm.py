@@ -978,6 +978,26 @@ def func_const_var(x):
   }
 
 
+import core.value as cv
+
+
+def print_let_const(x):
+  cv.value_print(x)
+
+  """k = x['kind']
+  if k == 'const':
+    if 'imm_num' in x:
+      return ll_create_value_num(x['type'], x['imm_num'])"""
+
+  if value_attribute_check(x, 'local'):
+    localname = x['id']['str']
+    y = locals_get(localname)
+    return y
+
+  return do_eval(x['value'])
+
+
+
 def do_eval_x(x):
   if x == None:
     return None
@@ -987,7 +1007,8 @@ def do_eval_x(x):
   if k == 'literal': return do_eval_literal(x)
   elif k in bin_ops: return do_eval_expr_bin(x)
   elif k in un_ops: return do_eval_expr_un(x)
-  elif k in ['func', 'const', 'var']: return func_const_var(x)
+  elif k == 'const': return print_let_const(x)
+  elif k in ['func', 'var']: return func_const_var(x)
   elif k == 'call': return do_eval_expr_call(x)
   elif k == 'index': return do_eval_expr_index(x)
   elif k == 'index_ptr': return do_eval_expr_index_ptr(x)
@@ -1185,7 +1206,7 @@ def print_stmt_def_var(x):
   return None
 
 
-def print_stmt_def_let(x):
+def print_stmt_let(x):
   v = do_ld(do_eval(x['value']))
   locals_add(x['id']['str'], v)
   return None
@@ -1220,7 +1241,7 @@ def print_stmt(x):
   elif k == 'if': print_stmt_if(x)
   elif k == 'while': print_stmt_while(x)
   elif k == 'def_var': print_stmt_def_var(x)
-  elif k == 'def_let': print_stmt_def_let(x)
+  elif k == 'let': print_stmt_let(x)
   elif k == 'break': print_stmt_break()
   elif k == 'again': print_stmt_again()
   elif k == 'comment-line': out("\n"); print_comment_line(x)

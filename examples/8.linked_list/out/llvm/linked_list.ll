@@ -141,18 +141,26 @@ declare [0 x i8]* @getenv([0 x i8]*)
 define %List* @linked_list_create() {
   %1 = call i8*(i64) @malloc (i64 0)
   %2 = bitcast i8* %1 to %List*
-  %3 = icmp eq %List* %2, null
-  br i1 %3 , label %then_0, label %endif_0
+  %3 = call i8*(i64) @malloc (i64 0)
+  %4 = bitcast i8* %3 to %List*
+  %5 = icmp eq %List* %4, null
+  br i1 %5 , label %then_0, label %endif_0
 then_0:
   ret %List* null
   br label %endif_0
 endif_0:
 ;list.size >= list.head
-  %5 = getelementptr inbounds %List, %List* %2, i32 0, i32 0
-  store %Node* null, %Node** %5
-  %6 = getelementptr inbounds %List, %List* %2, i32 0, i32 1
-  store %Node* null, %Node** %6
-  ret %List* %2
+  %7 = call i8*(i64) @malloc (i64 0)
+  %8 = bitcast i8* %7 to %List*
+  %9 = getelementptr inbounds %List, %List* %8, i32 0, i32 0
+  store %Node* null, %Node** %9
+  %10 = call i8*(i64) @malloc (i64 0)
+  %11 = bitcast i8* %10 to %List*
+  %12 = getelementptr inbounds %List, %List* %11, i32 0, i32 1
+  store %Node* null, %Node** %12
+  %13 = call i8*(i64) @malloc (i64 0)
+  %14 = bitcast i8* %13 to %List*
+  ret %List* %14
 }
 
 define i32 @linked_list_size_get(%List* %list) {
@@ -194,19 +202,29 @@ endif_0:
 define %Node* @linked_list_node_create() {
   %1 = call i8*(i64) @malloc (i64 0)
   %2 = bitcast i8* %1 to %Node*
-  %3 = icmp eq %Node* %2, null
-  br i1 %3 , label %then_0, label %endif_0
+  %3 = call i8*(i64) @malloc (i64 0)
+  %4 = bitcast i8* %3 to %Node*
+  %5 = icmp eq %Node* %4, null
+  br i1 %5 , label %then_0, label %endif_0
 then_0:
   ret %Node* null
   br label %endif_0
 endif_0:
-  %5 = getelementptr inbounds %Node, %Node* %2, i32 0, i32 1
-  store %Node* null, %Node** %5
-  %6 = getelementptr inbounds %Node, %Node* %2, i32 0, i32 0
-  store %Node* null, %Node** %6
-  %7 = getelementptr inbounds %Node, %Node* %2, i32 0, i32 2
-  store i8* null, i8** %7
-  ret %Node* %2
+  %7 = call i8*(i64) @malloc (i64 0)
+  %8 = bitcast i8* %7 to %Node*
+  %9 = getelementptr inbounds %Node, %Node* %8, i32 0, i32 1
+  store %Node* null, %Node** %9
+  %10 = call i8*(i64) @malloc (i64 0)
+  %11 = bitcast i8* %10 to %Node*
+  %12 = getelementptr inbounds %Node, %Node* %11, i32 0, i32 0
+  store %Node* null, %Node** %12
+  %13 = call i8*(i64) @malloc (i64 0)
+  %14 = bitcast i8* %13 to %Node*
+  %15 = getelementptr inbounds %Node, %Node* %14, i32 0, i32 2
+  store i8* null, i8** %15
+  %16 = call i8*(i64) @malloc (i64 0)
+  %17 = bitcast i8* %16 to %Node*
+  ret %Node* %17
 }
 
 define %Node* @linked_list_node_next_get(%Node* %node) {
@@ -270,19 +288,23 @@ endif_1:
 then_2:
   %12 = getelementptr inbounds %List, %List* %list, i32 0, i32 1
   %13 = load %Node*, %Node** %12
-  %14 = getelementptr inbounds %Node, %Node* %13, i32 0, i32 0
-  store %Node* %new_node, %Node** %14
-  %15 = getelementptr inbounds %Node, %Node* %new_node, i32 0, i32 1
-  store %Node* %13, %Node** %15
+  %14 = getelementptr inbounds %List, %List* %list, i32 0, i32 1
+  %15 = load %Node*, %Node** %14
+  %16 = getelementptr inbounds %Node, %Node* %15, i32 0, i32 0
+  store %Node* %new_node, %Node** %16
+  %17 = getelementptr inbounds %List, %List* %list, i32 0, i32 1
+  %18 = load %Node*, %Node** %17
+  %19 = getelementptr inbounds %Node, %Node* %new_node, i32 0, i32 1
+  store %Node* %18, %Node** %19
   br label %endif_2
 endif_2:
-  %16 = getelementptr inbounds %List, %List* %list, i32 0, i32 1
-  store %Node* %new_node, %Node** %16
-  %17 = getelementptr inbounds %List, %List* %list, i32 0, i32 2
-  %18 = load i32, i32* %17
-  %19 = add i32 %18, 1
-  %20 = getelementptr inbounds %List, %List* %list, i32 0, i32 2
-  store i32 %19, i32* %20
+  %20 = getelementptr inbounds %List, %List* %list, i32 0, i32 1
+  store %Node* %new_node, %Node** %20
+  %21 = getelementptr inbounds %List, %List* %list, i32 0, i32 2
+  %22 = load i32, i32* %21
+  %23 = add i32 %22, 1
+  %24 = getelementptr inbounds %List, %List* %list, i32 0, i32 2
+  store i32 %23, i32* %24
   ret %Node* %new_node
 }
 
@@ -294,23 +316,31 @@ then_0:
   br label %endif_0
 endif_0:
   %3 = call %Node*() @linked_list_node_create ()
-  %4 = icmp eq %Node* %3, null
-  br i1 %4 , label %then_1, label %endif_1
+  %4 = call %Node*() @linked_list_node_create ()
+  %5 = icmp eq %Node* %4, null
+  br i1 %5 , label %then_1, label %endif_1
 then_1:
   ret %Node* null
   br label %endif_1
 endif_1:
-  %6 = getelementptr inbounds %Node, %Node* %3, i32 0, i32 2
-  store i8* %link, i8** %6
-  %7 = call %Node*(%List*, %Node*) @linked_list_insert_node (%List* %list, %Node* %3)
-  %8 = icmp eq %Node* %7, null
-  br i1 %8 , label %then_2, label %endif_2
+  %7 = call %Node*() @linked_list_node_create ()
+  %8 = getelementptr inbounds %Node, %Node* %7, i32 0, i32 2
+  store i8* %link, i8** %8
+  %9 = call %Node*() @linked_list_node_create ()
+  %10 = call %Node*(%List*, %Node*) @linked_list_insert_node (%List* %list, %Node* %9)
+  %11 = call %Node*() @linked_list_node_create ()
+  %12 = call %Node*(%List*, %Node*) @linked_list_insert_node (%List* %list, %Node* %11)
+  %13 = icmp eq %Node* %12, null
+  br i1 %13 , label %then_2, label %endif_2
 then_2:
-  %9 = bitcast %Node* %3 to i8*
-  call void(i8*) @free (i8* %9)
+  %14 = call %Node*() @linked_list_node_create ()
+  %15 = bitcast %Node* %14 to i8*
+  call void(i8*) @free (i8* %15)
   br label %endif_2
 endif_2:
-  ret %Node* %7
+  %16 = call %Node*() @linked_list_node_create ()
+  %17 = call %Node*(%List*, %Node*) @linked_list_insert_node (%List* %list, %Node* %16)
+  ret %Node* %17
 }
 
 

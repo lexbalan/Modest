@@ -325,11 +325,41 @@ define double @distance(%Point %a, %Point %b) {
   %12 = extractvalue %Point %b, 1
   %13 = call double(double, double) @min (double %11, double %12)
   %14 = fsub double %10, %13
-  %15 = call double(double, double) @pow (double %7, double 0x4000000000000000)
-  %16 = call double(double, double) @pow (double %14, double 0x4000000000000000)
-  %17 = fadd double %15, %16
-  %18 = call double(double) @sqrt (double %17)
-  ret double %18
+  %15 = extractvalue %Point %a, 0
+  %16 = extractvalue %Point %b, 0
+  %17 = call double(double, double) @max (double %15, double %16)
+  %18 = extractvalue %Point %a, 0
+  %19 = extractvalue %Point %b, 0
+  %20 = call double(double, double) @min (double %18, double %19)
+  %21 = fsub double %17, %20
+  %22 = call double(double, double) @pow (double %21, double 0x4000000000000000)
+  %23 = extractvalue %Point %a, 1
+  %24 = extractvalue %Point %b, 1
+  %25 = call double(double, double) @max (double %23, double %24)
+  %26 = extractvalue %Point %a, 1
+  %27 = extractvalue %Point %b, 1
+  %28 = call double(double, double) @min (double %26, double %27)
+  %29 = fsub double %25, %28
+  %30 = call double(double, double) @pow (double %29, double 0x4000000000000000)
+  %31 = extractvalue %Point %a, 0
+  %32 = extractvalue %Point %b, 0
+  %33 = call double(double, double) @max (double %31, double %32)
+  %34 = extractvalue %Point %a, 0
+  %35 = extractvalue %Point %b, 0
+  %36 = call double(double, double) @min (double %34, double %35)
+  %37 = fsub double %33, %36
+  %38 = call double(double, double) @pow (double %37, double 0x4000000000000000)
+  %39 = extractvalue %Point %a, 1
+  %40 = extractvalue %Point %b, 1
+  %41 = call double(double, double) @max (double %39, double %40)
+  %42 = extractvalue %Point %a, 1
+  %43 = extractvalue %Point %b, 1
+  %44 = call double(double, double) @min (double %42, double %43)
+  %45 = fsub double %41, %44
+  %46 = call double(double, double) @pow (double %45, double 0x4000000000000000)
+  %47 = fadd double %38, %46
+  %48 = call double(double) @sqrt (double %47)
+  ret double %48
 }
 
 define double @lineLength(%Line %line) {
@@ -343,16 +373,24 @@ define void @ptr_example() {
   %1 = call i8*(i64) @malloc (i64 0)
   %2 = bitcast i8* %1 to %Point*
 ; access by pointer
-  %3 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 0
-  store double 0x4024000000000000, double* %3
-  %4 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 1
-  store double 0x4034000000000000, double* %4
-  %5 = bitcast [15 x i8]* @str_1 to %ConstCharStr
-  %6 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 0
-  %7 = load double, double* %6
-  %8 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 1
-  %9 = load double, double* %8
-  %10 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %5, double %7, double %9)
+  %3 = call i8*(i64) @malloc (i64 0)
+  %4 = bitcast i8* %3 to %Point*
+  %5 = getelementptr inbounds %Point, %Point* %4, i32 0, i32 0
+  store double 0x4024000000000000, double* %5
+  %6 = call i8*(i64) @malloc (i64 0)
+  %7 = bitcast i8* %6 to %Point*
+  %8 = getelementptr inbounds %Point, %Point* %7, i32 0, i32 1
+  store double 0x4034000000000000, double* %8
+  %9 = bitcast [15 x i8]* @str_1 to %ConstCharStr
+  %10 = call i8*(i64) @malloc (i64 0)
+  %11 = bitcast i8* %10 to %Point*
+  %12 = getelementptr inbounds %Point, %Point* %11, i32 0, i32 0
+  %13 = load double, double* %12
+  %14 = call i8*(i64) @malloc (i64 0)
+  %15 = bitcast i8* %14 to %Point*
+  %16 = getelementptr inbounds %Point, %Point* %15, i32 0, i32 1
+  %17 = load double, double* %16
+  %18 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %9, double %13, double %17)
   ret void
 }
 
@@ -361,7 +399,9 @@ define i32 @main() {
   %1 = load %Line, %Line* @line
   %2 = call double(%Line) @lineLength (%Line %1)
   %3 = bitcast [18 x i8]* @str_2 to %ConstCharStr
-  %4 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %3, double %2)
+  %4 = load %Line, %Line* @line
+  %5 = call double(%Line) @lineLength (%Line %4)
+  %6 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %3, double %5)
   call void() @ptr_example ()
   ret i32 0
 }

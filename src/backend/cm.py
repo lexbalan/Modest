@@ -458,6 +458,11 @@ def print_value_by_id(x, ctx):
   out("%s" % x['id']['str'])
 
 
+def print_value_let(x, ctx):
+  return print_value(x['value'])
+
+
+
 def print_value_literal(x, ctx):
   t = x['type']
   if type.is_integer(t): print_value_literal_int(x, ctx)
@@ -487,6 +492,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
   if k == 'literal': print_value_literal(x, ctx)
   elif k in bin_ops: print_value_bin(x, ctx)
   elif k in un_ops: print_value_un(x, ctx)
+  elif k == 'const': print_value_let(x, ctx)
   elif k in ['func', 'var']: print_value_by_id(x, ctx)
   elif k == 'call': print_value_call(x, ctx)
   elif k == 'index': print_value_index(x, ctx)
@@ -543,7 +549,7 @@ def print_stmt_defvar(x):
 
 def print_stmt_let(x):
   out("let %s = " % x['id']['str'])
-  print_value(x['value'])
+  print_value(x['value'], print_just_id=False)
 
 
 def print_stmt_assign(x):
@@ -569,7 +575,7 @@ def print_stmt(x):
   elif k == 'if': indent(); print_stmt_if(x)
   elif k == 'while': indent(); print_stmt_while(x)
   elif k == 'def_var': indent(); print_stmt_defvar(x)
-  elif k == 'def_let': indent(); print_stmt_let(x)
+  elif k == 'let': indent(); print_stmt_let(x)
   elif k == 'break': indent(); out('break')
   elif k == 'again': indent(); out('continue')
   elif k == 'comment-line': print_comment_line(x)

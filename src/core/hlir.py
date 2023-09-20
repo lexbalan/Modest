@@ -294,6 +294,7 @@ def hlir_value_func(id, type, ti=None):
     'kind': 'func',
     'id': id,
     'type': type,
+    'usecnt': 0,
     'att': [],
     'ti': ti
   }
@@ -306,6 +307,7 @@ def hlir_value_var(id, type, init=None, ti=None):
     'id': id,
     'type': type,
     'init': init,
+    'usecnt': 0,
     'att': [],
     'ti': ti
   }
@@ -320,6 +322,7 @@ def hlir_value_const(id, type, value=None, ti=None):
     'id': id,
     'type': type,
     'value': value,
+    'usecnt': 0,
     'att': [],
     'ti': ti
   }
@@ -436,19 +439,17 @@ def hlir_stmt_def_var(var_value, init_value=None, ti=None):
     'kind': 'def_var',
     'var': var_value,
     'init_value': init_value,
-    'usecnt': 0,
     'att': [],
     'ti': ti
   }
 
 
-def hlir_stmt_def_const(id, value, ti=None):
+def hlir_stmt_let(id, value, ti=None):
   return {
     'isa': 'stmt',
-    'kind': 'def_let',
+    'kind': 'let',
     'id': id,
     'value': value,
-    'usecnt': 0,
     'att': [],
     'ti': ti
   }

@@ -374,7 +374,6 @@ def do_type(t):
 # Do Statement
 #
 
-
 def do_value_shift(x):
   op = x['kind']
   l = do_rvalue(x['left'])
@@ -905,12 +904,8 @@ def do_value_id(x):
     module['context'].value_add(id_str, v)
     return hlir_value_bad(x['ti'])
 
-  # for TI чтобы не переписать у самого определения
-  #if 'definition' in vx:
-    #print("NOT DEFINITION" + str(vx))
-    #exit(1)
-    #vx['definition']['usecnt'] = vx['definition']['usecnt'] + 1
-
+  if 'usecnt' in vx:
+    vx['usecnt'] = vx['usecnt'] + 1
   return vx
 
 
@@ -1239,7 +1234,7 @@ def do_stmt_let(x):
 
 
   const_value = hlir_value_const(id, v['type'], value=v, ti=x['ti'])
-  const_value['att'].extend(['local'])
+  #const_value['att'].extend(['local'])  ## ??? WTF ???
 
   if value_is_immediate(v):
     cp_immediate(const_value, v)
@@ -1247,7 +1242,7 @@ def do_stmt_let(x):
 
   module['context'].value_add(id['str'], const_value)
 
-  return hlir_stmt_def_const(id, v, ti=x['ti'])
+  return hlir_stmt_let(id, const_value, ti=x['ti'])
 
 
 
@@ -1573,6 +1568,17 @@ def def_func(x):
 
   fn['stmt'] = do_stmt_block(x['stmt'])
 
+
+  """for stmt in fn['stmt']['stmts']:
+    if stmt['kind'] == 'let': #in ['let', 'def_var']:
+      value_print(stmt['value'])
+      print("@%s" % stmt['value']['kind'])
+
+      if 'usecnt' in stmt['value']:
+        print("!!%s" % stmt['value']['kind'])
+        if stmt['value']['usecnt'] == 0:
+          warning("defined but not used", stmt['value']['ti'])"""
+
   # remove params context
   module['context'] = module['context'].parent_get()
 
@@ -1794,10 +1800,11 @@ def translate(srcname):
   m = proc(ast, id=srcname, path=absp)
   #print("end %s" % absp)
 
-  #for x in m['text']:
-  #  if x['isa'] == 'definition':
-  #    if x['usecnt'] == 0:
-  #      warning("defined but not used", x['ti'])
+  if False:
+    for x in m['text']:
+      if x['isa'] in ['def_func', 'def_const', 'def_var']:
+        if x['value']['usecnt'] == 0:
+          warning("defined but not used", x['value']['ti'])
 
   env_current_file_abspath = old_env_current_file_abspath
   env_current_file_dir = old_env_current_file_dir

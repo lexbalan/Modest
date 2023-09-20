@@ -348,6 +348,10 @@ def value_cons_integer(v, t, ti, method):
       # check size
       if v['type']['power'] > t['power']:
         warning("casting with data loss", ti)
+        type_print(v['type'])
+        print(" -> ", end="")
+        type_print(t)
+        print()
         return hlir_value_cast(v, t, ti)
 
 
