@@ -1253,12 +1253,12 @@ def do_stmt_assign(x):
         return hlir_stmt_bad()
 
     if value_is_immutable(l):
-        error("immutable left", x['left'])
+        error("immutable left", x['left']['ti'])
         return hlir_stmt_bad()
 
     # type check
-    r = value_cast_implicit(r, l['type'], r['ti'])
-    type.check(l['type'], r['type'], r['ti'])
+    r = value_cast_implicit(r, l['type'], x['right']['ti'])
+    type.check(l['type'], r['type'], x['ti'])
 
     return hlir_stmt_assign(l, r, ti=x['ti'])
 
