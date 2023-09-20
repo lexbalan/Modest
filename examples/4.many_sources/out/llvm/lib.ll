@@ -98,9 +98,9 @@ declare void @perror(%ConstCharStr)
 
 
 define void @lib_func() {
-  %1 = bitcast [21 x i8]* @str_1 to %ConstCharStr
-  %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %1)
-  ret void
+    %1 = bitcast [21 x i8]* @str_1 to %ConstCharStr
+    %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %1)
+    ret void
 }
 
 

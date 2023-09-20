@@ -289,81 +289,81 @@ declare [0 x i8]* @getenv([0 x i8]*)
 }
 
 define double @max(double %a, double %b) {
-  %1 = fcmp ogt double %a, %b
-  br i1 %1 , label %then_0, label %endif_0
+    %1 = fcmp ogt double %a, %b
+    br i1 %1 , label %then_0, label %endif_0
 then_0:
-  ret double %a
-  br label %endif_0
+    ret double %a
+    br label %endif_0
 endif_0:
-  ret double %b
+    ret double %b
 }
 
 define double @min(double %a, double %b) {
-  %1 = fcmp olt double %a, %b
-  br i1 %1 , label %then_0, label %endif_0
+    %1 = fcmp olt double %a, %b
+    br i1 %1 , label %then_0, label %endif_0
 then_0:
-  ret double %a
-  br label %endif_0
+    ret double %a
+    br label %endif_0
 endif_0:
-  ret double %b
+    ret double %b
 }
 
 
 
 define double @distance(%Point %a, %Point %b) {
-  %1 = extractvalue %Point %a, 0
-  %2 = extractvalue %Point %b, 0
-  %3 = call double(double, double) @max (double %1, double %2)
-  %4 = extractvalue %Point %a, 0
-  %5 = extractvalue %Point %b, 0
-  %6 = call double(double, double) @min (double %4, double %5)
-  %7 = fsub double %3, %6
-  %8 = extractvalue %Point %a, 1
-  %9 = extractvalue %Point %b, 1
-  %10 = call double(double, double) @max (double %8, double %9)
-  %11 = extractvalue %Point %a, 1
-  %12 = extractvalue %Point %b, 1
-  %13 = call double(double, double) @min (double %11, double %12)
-  %14 = fsub double %10, %13
-  %15 = call double(double, double) @pow (double %7, double 0x4000000000000000)
-  %16 = call double(double, double) @pow (double %14, double 0x4000000000000000)
-  %17 = fadd double %15, %16
-  %18 = call double(double) @sqrt (double %17)
-  ret double %18
+    %1 = extractvalue %Point %a, 0
+    %2 = extractvalue %Point %b, 0
+    %3 = call double(double, double) @max (double %1, double %2)
+    %4 = extractvalue %Point %a, 0
+    %5 = extractvalue %Point %b, 0
+    %6 = call double(double, double) @min (double %4, double %5)
+    %7 = fsub double %3, %6
+    %8 = extractvalue %Point %a, 1
+    %9 = extractvalue %Point %b, 1
+    %10 = call double(double, double) @max (double %8, double %9)
+    %11 = extractvalue %Point %a, 1
+    %12 = extractvalue %Point %b, 1
+    %13 = call double(double, double) @min (double %11, double %12)
+    %14 = fsub double %10, %13
+    %15 = call double(double, double) @pow (double %7, double 0x4000000000000000)
+    %16 = call double(double, double) @pow (double %14, double 0x4000000000000000)
+    %17 = fadd double %15, %16
+    %18 = call double(double) @sqrt (double %17)
+    ret double %18
 }
 
 define double @lineLength(%Line %line) {
-  %1 = extractvalue %Line %line, 0
-  %2 = extractvalue %Line %line, 1
-  %3 = call double(%Point, %Point) @distance (%Point %1, %Point %2)
-  ret double %3
+    %1 = extractvalue %Line %line, 0
+    %2 = extractvalue %Line %line, 1
+    %3 = call double(%Point, %Point) @distance (%Point %1, %Point %2)
+    ret double %3
 }
 
 define void @ptr_example() {
-  %1 = call i8*(i64) @malloc (i64 0)
-  %2 = bitcast i8* %1 to %Point*
+    %1 = call i8*(i64) @malloc (i64 0)
+    %2 = bitcast i8* %1 to %Point*
 ; access by pointer
-  %3 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 0
-  store double 0x4024000000000000, double* %3
-  %4 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 1
-  store double 0x4034000000000000, double* %4
-  %5 = bitcast [15 x i8]* @str_1 to %ConstCharStr
-  %6 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 0
-  %7 = load double, double* %6
-  %8 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 1
-  %9 = load double, double* %8
-  %10 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %5, double %7, double %9)
-  ret void
+    %3 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 0
+    store double 0x4024000000000000, double* %3
+    %4 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 1
+    store double 0x4034000000000000, double* %4
+    %5 = bitcast [15 x i8]* @str_1 to %ConstCharStr
+    %6 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 0
+    %7 = load double, double* %6
+    %8 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 1
+    %9 = load double, double* %8
+    %10 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %5, double %7, double %9)
+    ret void
 }
 
 define i32 @main() {
 ; by value
-  %1 = load %Line, %Line* @line
-  %2 = call double(%Line) @lineLength (%Line %1)
-  %3 = bitcast [18 x i8]* @str_2 to %ConstCharStr
-  %4 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %3, double %2)
-  call void() @ptr_example ()
-  ret i32 0
+    %1 = load %Line, %Line* @line
+    %2 = call double(%Line) @lineLength (%Line %1)
+    %3 = bitcast [18 x i8]* @str_2 to %ConstCharStr
+    %4 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %3, double %2)
+    call void() @ptr_example ()
+    ret i32 0
 }
 
 

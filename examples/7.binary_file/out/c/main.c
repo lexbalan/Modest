@@ -12,7 +12,7 @@
 // examples/7.binary_file/main.cm
 
 
-#define filename  "file.bin"
+#define filename    "file.bin"
 
 
 // chunk of data for read/write operations in file
