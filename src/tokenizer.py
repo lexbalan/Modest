@@ -4,35 +4,35 @@ from error import info
 EOF_TOKEN = ('eof', '', None)
 
 class Tokenizer:
-  def __init__(self, rules):
-    self.rules = rules
-  
-  def tokenize(self, src):
-    tokens = []
-    while True:
-      
-      # EOF?
-      if src.lookup(1) == '':
-          return tokens + [EOF_TOKEN]
-      pos_before = src.getpos()
-      for rule in self.rules:
-        result = rule(src)
+    def __init__(self, rules):
+        self.rules = rules
 
-        if result == False:
-          src.setpos(pos_before)
-          continue
+    def tokenize(self, src):
+        tokens = []
+        while True:
 
-        if result != None:
+            # EOF?
+            if src.lookup(1) == '':
+                    return tokens + [EOF_TOKEN]
+            pos_before = src.getpos()
+            for rule in self.rules:
+                result = rule(src)
 
-          if result[0] == 'str':
-            if result[1] == "-":
-              info("STR(\"-\") = " + str(result), result[2])
-              #print("END: " + src.lookup(1))
+                if result == False:
+                    src.setpos(pos_before)
+                    continue
 
-          tokens.append(result)
+                if result != None:
 
-        break
+                    if result[0] == 'str':
+                        if result[1] == "-":
+                            info("STR(\"-\") = " + str(result), result[2])
+                            #print("END: " + src.lookup(1))
 
-    return None
+                    tokens.append(result)
+
+                break
+
+        return None
 
 

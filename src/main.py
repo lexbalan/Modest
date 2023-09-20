@@ -11,7 +11,7 @@ import tomllib
 toml_dict = None
 # Opening a Toml file using tomlib
 with open(CONFIG_PATH, "rb") as toml:
-    toml_dict = tomllib.load(toml)
+        toml_dict = tomllib.load(toml)
 
 print(toml_dict)"""
 
@@ -37,9 +37,9 @@ import core.trans as trans
 
 
 parser = argparse.ArgumentParser(
-  prog = 'ProgramName',
-  #description = 'What the program does',
-  #epilog = 'Text at the bottom of help'
+    prog = 'ProgramName',
+    #description = 'What the program does',
+    #epilog = 'Text at the bottom of help'
 )
 
 
@@ -53,72 +53,72 @@ args = parser.parse_args()
 
 
 def main():
-  #print(os.getcwd())
+    #print(os.getcwd())
 
-  path_lib = os.getenv('MODEST_LIB')
-  if path_lib == None:
-    fatal("MODEST_LIB required")
+    path_lib = os.getenv('MODEST_LIB')
+    if path_lib == None:
+        fatal("MODEST_LIB required")
 
-  # set default settings
-  settings_set('lib', path_lib)
-
-
-  # parse features (ex. -funsafe)
-  if args.feature != None:
-    for feature in args.feature:
-      features_set(feature)
-
-  # parse modifiers (-mbackend=c, -mstyle=legacy)
-  # and change default settings
-  if args.m != None:
-    for mod in args.m:
-      k, v = mod.split('=')
-      settings_set(k, v)
+    # set default settings
+    settings_set('lib', path_lib)
 
 
-  if args.d != None:
-    for d in args.d:
-      print("DEF: " + str(d))
+    # parse features (ex. -funsafe)
+    if args.feature != None:
+        for feature in args.feature:
+            features_set(feature)
 
-  src_name = args.filename
-
-  # is header?
-  splittded_name = src_name.split(".")
-  if splittded_name[-1] == 'hm':
-    features_set('header')
-
-  src_abspath = os.path.abspath(src_name)
-  src_dirname = os.path.dirname(src_abspath)
-
-  settings_set('path', src_dirname)
-  
-  
-  # loading backend
-  backend_name = settings_get('backend')
-  backend = importlib.import_module("backend." + backend_name)
+    # parse modifiers (-mbackend=c, -mstyle=legacy)
+    # and change default settings
+    if args.m != None:
+        for mod in args.m:
+            k, v = mod.split('=')
+            settings_set(k, v)
 
 
-  trans.init()
+    if args.d != None:
+        for d in args.d:
+            print("DEF: " + str(d))
 
-  module = trans.translate(src_name)
+    src_name = args.filename
 
-  if error.errcnt > 0 or module == None:
-    #error.fatal("%d errors occurred" % error.errcnt)
-    exit(1)
+    # is header?
+    splittded_name = src_name.split(".")
+    if splittded_name[-1] == 'hm':
+        features_set('header')
+
+    src_abspath = os.path.abspath(src_name)
+    src_dirname = os.path.dirname(src_abspath)
+
+    settings_set('path', src_dirname)
 
 
-  backend.init()
+    # loading backend
+    backend_name = settings_get('backend')
+    backend = importlib.import_module("backend." + backend_name)
 
-  # print output
-  if args.output != None:
-    outname = args.output
-  else:
-    outname = splittded_name[0]
 
-  backend.run(module, outname)
+    trans.init()
+
+    module = trans.translate(src_name)
+
+    if error.errcnt > 0 or module == None:
+        #error.fatal("%d errors occurred" % error.errcnt)
+        exit(1)
+
+
+    backend.init()
+
+    # print output
+    if args.output != None:
+        outname = args.output
+    else:
+        outname = splittded_name[0]
+
+    backend.run(module, outname)
 
 
 
 if __name__ == '__main__':
-  main()
+    main()
 

@@ -94,9 +94,9 @@ declare void @perror(%ConstCharStr)
 
 
 define i32 @main() {
-  %1 = bitcast [14 x i8]* @str_1 to %ConstCharStr
-  %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %1)
-  ret i32 0
+    %1 = bitcast [14 x i8]* @str_1 to %ConstCharStr
+    %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %1)
+    ret i32 0
 }
 
 

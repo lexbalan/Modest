@@ -104,65 +104,65 @@ declare void @perror(%ConstCharStr)
 
 
 define void @write_example() {
-  %1 = bitcast [19 x i8]* @str_2 to %ConstCharStr
-  %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %1)
-  %3 = bitcast [9 x i8]* @str_1 to %ConstCharStr
-  %4 = bitcast [2 x i8]* @str_3 to %ConstCharStr
-  %5 = call %FILE*(%ConstCharStr, %ConstCharStr) @fopen (%ConstCharStr %3, %ConstCharStr %4)
-  %6 = icmp eq %FILE* %5, null
-  br i1 %6 , label %then_0, label %endif_0
+    %1 = bitcast [19 x i8]* @str_2 to %ConstCharStr
+    %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %1)
+    %3 = bitcast [9 x i8]* @str_1 to %ConstCharStr
+    %4 = bitcast [2 x i8]* @str_3 to %ConstCharStr
+    %5 = call %FILE*(%ConstCharStr, %ConstCharStr) @fopen (%ConstCharStr %3, %ConstCharStr %4)
+    %6 = icmp eq %FILE* %5, null
+    br i1 %6 , label %then_0, label %endif_0
 then_0:
-  %7 = bitcast [31 x i8]* @str_4 to %ConstCharStr
-  %8 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %7, [9 x i8]* @str_1)
-  ret void
-  br label %endif_0
+    %7 = bitcast [31 x i8]* @str_4 to %ConstCharStr
+    %8 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %7, [9 x i8]* @str_1)
+    ret void
+    br label %endif_0
 endif_0:
-  %10 = bitcast [12 x i8]* @str_5 to [0 x i8]*
-  %11 = call i32(%FILE*, [0 x i8]*, ...) @fprintf (%FILE* %5, [0 x i8]* %10)
-  %12 = call i32(%FILE*) @fclose (%FILE* %5)
-  ret void
+    %10 = bitcast [12 x i8]* @str_5 to [0 x i8]*
+    %11 = call i32(%FILE*, [0 x i8]*, ...) @fprintf (%FILE* %5, [0 x i8]* %10)
+    %12 = call i32(%FILE*) @fclose (%FILE* %5)
+    ret void
 }
 
 define void @read_example() {
-  %1 = bitcast [18 x i8]* @str_6 to %ConstCharStr
-  %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %1)
-  %3 = bitcast [9 x i8]* @str_1 to %ConstCharStr
-  %4 = bitcast [2 x i8]* @str_7 to %ConstCharStr
-  %5 = call %FILE*(%ConstCharStr, %ConstCharStr) @fopen (%ConstCharStr %3, %ConstCharStr %4)
-  %6 = icmp eq %FILE* %5, null
-  br i1 %6 , label %then_0, label %endif_0
+    %1 = bitcast [18 x i8]* @str_6 to %ConstCharStr
+    %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %1)
+    %3 = bitcast [9 x i8]* @str_1 to %ConstCharStr
+    %4 = bitcast [2 x i8]* @str_7 to %ConstCharStr
+    %5 = call %FILE*(%ConstCharStr, %ConstCharStr) @fopen (%ConstCharStr %3, %ConstCharStr %4)
+    %6 = icmp eq %FILE* %5, null
+    br i1 %6 , label %then_0, label %endif_0
 then_0:
-  %7 = bitcast [29 x i8]* @str_8 to %ConstCharStr
-  %8 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %7, [9 x i8]* @str_1)
-  ret void
-  br label %endif_0
+    %7 = bitcast [29 x i8]* @str_8 to %ConstCharStr
+    %8 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %7, [9 x i8]* @str_1)
+    ret void
+    br label %endif_0
 endif_0:
-  %10 = bitcast [21 x i8]* @str_9 to %ConstCharStr
-  %11 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %10, [9 x i8]* @str_1)
-  br label %again_1
+    %10 = bitcast [21 x i8]* @str_9 to %ConstCharStr
+    %11 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %10, [9 x i8]* @str_1)
+    br label %again_1
 again_1:
-  br i1 1 , label %body_1, label %break_1
+    br i1 1 , label %body_1, label %break_1
 body_1:
-  %12 = call i32(%FILE*) @fgetc (%FILE* %5)
-  %13 = icmp eq i32 %12, -1
-  br i1 %13 , label %then_1, label %endif_1
+    %12 = call i32(%FILE*) @fgetc (%FILE* %5)
+    %13 = icmp eq i32 %12, -1
+    br i1 %13 , label %then_1, label %endif_1
 then_1:
-  br label %break_1
-  br label %endif_1
+    br label %break_1
+    br label %endif_1
 endif_1:
-  %15 = call i32(i32) @putchar (i32 %12)
-  br label %again_1
+    %15 = call i32(i32) @putchar (i32 %12)
+    br label %again_1
 break_1:
-  %16 = call i32(%FILE*) @fclose (%FILE* %5)
-  ret void
+    %16 = call i32(%FILE*) @fclose (%FILE* %5)
+    ret void
 }
 
 define i32 @main() {
-  %1 = bitcast [19 x i8]* @str_10 to %ConstCharStr
-  %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %1)
-  call void() @write_example ()
-  call void() @read_example ()
-  ret i32 0
+    %1 = bitcast [19 x i8]* @str_10 to %ConstCharStr
+    %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %1)
+    call void() @write_example ()
+    call void() @read_example ()
+    ret i32 0
 }
 
 
