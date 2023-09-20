@@ -22,7 +22,6 @@ from .hlir import *
 
 
 
-
 # current file directory
 env_current_file_abspath = ""
 env_current_file_dir = ""
@@ -1511,10 +1510,19 @@ def def_var(x):
 
 
 def check_unuse(v):
-    if v != None:
-        if 'usecnt' in v:
-            if v['usecnt'] == 0:
-                warning("value defined but not used", v['ti'])
+    if v == None:
+        return
+
+    if not 'usecnt' in v:
+        return
+
+    if v['usecnt'] > 0:
+        return
+
+    vid = v['id']['str']
+    warning("value '%s' defined but not used" % (BOLD + vid + ENDC), v['ti'])
+
+
 
 def check_stmt(stmt):
     k = stmt['kind']
@@ -1604,9 +1612,10 @@ def def_func(x):
 
     # check if return present
     if not type.is_unit(fn['type']['to']):
-        if len(fn['stmt']['stmts']) == 0:
+        stmts = fn['stmt']['stmts']
+        if len(stmts) == 0:
             warning("expected return operator at end", fn['stmt']['ti'])
-        elif fn['stmt']['stmts'][-1]['kind'] != 'return':
+        elif stmts[-1]['kind'] != 'return':
             warning("expected return operator at end", fn['stmt']['ti'])
 
 
@@ -1831,11 +1840,10 @@ def translate(srcname):
     m = proc(ast, id=srcname, path=absp)
     #print("end %s" % absp)
 
-    if False:
-        for x in m['text']:
-            if x['isa'] in ['def_func', 'def_const', 'def_var']:
-                if x['value']['usecnt'] == 0:
-                    warning("defined but not used", x['value']['ti'])
+    #for x in m['text']:
+    #    if x['isa'] in ['def_func', 'def_const', 'def_var']:
+    #        if x['value']['usecnt'] == 0:
+    #            warning("defined but not used", x['value']['ti'])
 
     env_current_file_abspath = old_env_current_file_abspath
     env_current_file_dir = old_env_current_file_dir

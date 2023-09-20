@@ -10,8 +10,8 @@ YELLOW = '\033[93m'
 INFO = '\033[96m'
 WARNING = '\033[95m'
 ERROR = '\033[91m'
-ENDC = '\033[0m'
 BOLD = '\033[1m'
+ENDC = '\033[0m'
 UNDERLINE = '\033[4m'
 
 
