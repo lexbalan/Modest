@@ -1232,9 +1232,10 @@ def print_def_var(x):
 
 
 def print_def_const(x):
-    #print("print_def_const " + str(x['id']['str']))
-    v = x['value']['value']
-    out("#define %s    " % x['value']['id']['str'])
+    const_value = x['value']
+    id_str = const_value['id']['str']
+    v = const_value['value']
+    out("#define %s  " % id_str)
 
     need_wrap = precedence(v['kind']) < precedenceMax
     print_value(v, ctx=['screening'], need_wrap=need_wrap, print_just_id=True)
@@ -1302,7 +1303,7 @@ def run(module, outname):
 
     output_open(outname)
 
-    # search for c_include
+    # search for @c_include("...")
     cdirectives(module)
 
     guardname = ''
@@ -1328,13 +1329,13 @@ def run(module, outname):
         if 'value' in x:
             if 'c-no-print' in x['value']['att']:
                 continue
+
         elif 'type' in x:
             if 'c-no-print' in x['type']['att']:
                 continue
 
         elif 'c-no-print' in x['att']:
             continue
-
 
 
         if 'nl' in x:
@@ -1363,7 +1364,7 @@ def run(module, outname):
 
     out("\n")
     if is_header:
-        lo("#endif    /* %s */" % guardname)
+        lo("#endif  /* %s */" % guardname)
     out("\n")
 
     output_close()

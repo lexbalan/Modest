@@ -7,7 +7,7 @@
 // examples/6.text_file/main.cm
 
 
-#define filename    "file.txt"
+#define filename  "file.txt"
 
 
 void write_example(void)
