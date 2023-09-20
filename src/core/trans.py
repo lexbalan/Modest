@@ -1234,7 +1234,7 @@ def do_stmt_let(x):
 
 
   const_value = hlir_value_const(id, v['type'], value=v, ti=x['ti'])
-  #const_value['att'].extend(['local'])  ## ??? WTF ???
+  const_value['att'].extend(['local']) # need for LLVM printer (!)
 
   if value_is_immediate(v):
     cp_immediate(const_value, v)

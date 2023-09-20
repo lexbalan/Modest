@@ -109,26 +109,17 @@ define void @write_example() {
   %3 = bitcast [9 x i8]* @str_1 to %ConstCharStr
   %4 = bitcast [2 x i8]* @str_3 to %ConstCharStr
   %5 = call %FILE*(%ConstCharStr, %ConstCharStr) @fopen (%ConstCharStr %3, %ConstCharStr %4)
-  %6 = bitcast [9 x i8]* @str_1 to %ConstCharStr
-  %7 = bitcast [2 x i8]* @str_3 to %ConstCharStr
-  %8 = call %FILE*(%ConstCharStr, %ConstCharStr) @fopen (%ConstCharStr %6, %ConstCharStr %7)
-  %9 = icmp eq %FILE* %8, null
-  br i1 %9 , label %then_0, label %endif_0
+  %6 = icmp eq %FILE* %5, null
+  br i1 %6 , label %then_0, label %endif_0
 then_0:
-  %10 = bitcast [31 x i8]* @str_4 to %ConstCharStr
-  %11 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %10, [9 x i8]* @str_1)
+  %7 = bitcast [31 x i8]* @str_4 to %ConstCharStr
+  %8 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %7, [9 x i8]* @str_1)
   ret void
   br label %endif_0
 endif_0:
-  %13 = bitcast [9 x i8]* @str_1 to %ConstCharStr
-  %14 = bitcast [2 x i8]* @str_3 to %ConstCharStr
-  %15 = call %FILE*(%ConstCharStr, %ConstCharStr) @fopen (%ConstCharStr %13, %ConstCharStr %14)
-  %16 = bitcast [12 x i8]* @str_5 to [0 x i8]*
-  %17 = call i32(%FILE*, [0 x i8]*, ...) @fprintf (%FILE* %15, [0 x i8]* %16)
-  %18 = bitcast [9 x i8]* @str_1 to %ConstCharStr
-  %19 = bitcast [2 x i8]* @str_3 to %ConstCharStr
-  %20 = call %FILE*(%ConstCharStr, %ConstCharStr) @fopen (%ConstCharStr %18, %ConstCharStr %19)
-  %21 = call i32(%FILE*) @fclose (%FILE* %20)
+  %10 = bitcast [12 x i8]* @str_5 to [0 x i8]*
+  %11 = call i32(%FILE*, [0 x i8]*, ...) @fprintf (%FILE* %5, [0 x i8]* %10)
+  %12 = call i32(%FILE*) @fclose (%FILE* %5)
   ret void
 }
 
@@ -138,48 +129,31 @@ define void @read_example() {
   %3 = bitcast [9 x i8]* @str_1 to %ConstCharStr
   %4 = bitcast [2 x i8]* @str_7 to %ConstCharStr
   %5 = call %FILE*(%ConstCharStr, %ConstCharStr) @fopen (%ConstCharStr %3, %ConstCharStr %4)
-  %6 = bitcast [9 x i8]* @str_1 to %ConstCharStr
-  %7 = bitcast [2 x i8]* @str_7 to %ConstCharStr
-  %8 = call %FILE*(%ConstCharStr, %ConstCharStr) @fopen (%ConstCharStr %6, %ConstCharStr %7)
-  %9 = icmp eq %FILE* %8, null
-  br i1 %9 , label %then_0, label %endif_0
+  %6 = icmp eq %FILE* %5, null
+  br i1 %6 , label %then_0, label %endif_0
 then_0:
-  %10 = bitcast [29 x i8]* @str_8 to %ConstCharStr
-  %11 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %10, [9 x i8]* @str_1)
+  %7 = bitcast [29 x i8]* @str_8 to %ConstCharStr
+  %8 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %7, [9 x i8]* @str_1)
   ret void
   br label %endif_0
 endif_0:
-  %13 = bitcast [21 x i8]* @str_9 to %ConstCharStr
-  %14 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %13, [9 x i8]* @str_1)
+  %10 = bitcast [21 x i8]* @str_9 to %ConstCharStr
+  %11 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %10, [9 x i8]* @str_1)
   br label %again_1
 again_1:
   br i1 1 , label %body_1, label %break_1
 body_1:
-  %15 = bitcast [9 x i8]* @str_1 to %ConstCharStr
-  %16 = bitcast [2 x i8]* @str_7 to %ConstCharStr
-  %17 = call %FILE*(%ConstCharStr, %ConstCharStr) @fopen (%ConstCharStr %15, %ConstCharStr %16)
-  %18 = call i32(%FILE*) @fgetc (%FILE* %17)
-  %19 = bitcast [9 x i8]* @str_1 to %ConstCharStr
-  %20 = bitcast [2 x i8]* @str_7 to %ConstCharStr
-  %21 = call %FILE*(%ConstCharStr, %ConstCharStr) @fopen (%ConstCharStr %19, %ConstCharStr %20)
-  %22 = call i32(%FILE*) @fgetc (%FILE* %21)
-  %23 = icmp eq i32 %22, -1
-  br i1 %23 , label %then_1, label %endif_1
+  %12 = call i32(%FILE*) @fgetc (%FILE* %5)
+  %13 = icmp eq i32 %12, -1
+  br i1 %13 , label %then_1, label %endif_1
 then_1:
   br label %break_1
   br label %endif_1
 endif_1:
-  %25 = bitcast [9 x i8]* @str_1 to %ConstCharStr
-  %26 = bitcast [2 x i8]* @str_7 to %ConstCharStr
-  %27 = call %FILE*(%ConstCharStr, %ConstCharStr) @fopen (%ConstCharStr %25, %ConstCharStr %26)
-  %28 = call i32(%FILE*) @fgetc (%FILE* %27)
-  %29 = call i32(i32) @putchar (i32 %28)
+  %15 = call i32(i32) @putchar (i32 %12)
   br label %again_1
 break_1:
-  %30 = bitcast [9 x i8]* @str_1 to %ConstCharStr
-  %31 = bitcast [2 x i8]* @str_7 to %ConstCharStr
-  %32 = call %FILE*(%ConstCharStr, %ConstCharStr) @fopen (%ConstCharStr %30, %ConstCharStr %31)
-  %33 = call i32(%FILE*) @fclose (%FILE* %32)
+  %16 = call i32(%FILE*) @fclose (%FILE* %5)
   ret void
 }
 

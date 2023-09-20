@@ -109,12 +109,10 @@ body_1:
   %4 = mul i32 %n, %3
   %5 = bitcast [14 x i8]* @str_1 to %ConstCharStr
   %6 = load i32, i32* %m
-  %7 = load i32, i32* %m
-  %8 = mul i32 %n, %7
-  %9 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %5, i32 %n, i32 %6, i32 %8)
-  %10 = load i32, i32* %m
-  %11 = add i32 %10, 1
-  store i32 %11, i32* %m
+  %7 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %5, i32 %n, i32 %6, i32 %4)
+  %8 = load i32, i32* %m
+  %9 = add i32 %8, 1
+  store i32 %9, i32* %m
   br label %again_1
 break_1:
   ret void

@@ -4,7 +4,7 @@ from .common import *
 from error import info
 import core.type as type
 from core.type import type_attribute_check
-from core.value import value_attribute_check
+from core.value import value_attribute_check, value_print, value_is_immediate
 from core.hlir import hlir_type_pointer, hlir_value_int, hlir_value_num_get
 
 
@@ -978,23 +978,9 @@ def func_const_var(x):
   }
 
 
-import core.value as cv
-
 
 def print_let_const(x):
-  cv.value_print(x)
-
-  """k = x['kind']
-  if k == 'const':
-    if 'imm_num' in x:
-      return ll_create_value_num(x['type'], x['imm_num'])"""
-
-  if value_attribute_check(x, 'local'):
-    localname = x['id']['str']
-    y = locals_get(localname)
-    return y
-
-  return do_eval(x['value'])
+  return func_const_var(x)
 
 
 
@@ -1004,21 +990,29 @@ def do_eval_x(x):
 
   k = x['kind']
 
-  if k == 'literal': return do_eval_literal(x)
-  elif k in bin_ops: return do_eval_expr_bin(x)
-  elif k in un_ops: return do_eval_expr_un(x)
-  elif k == 'const': return print_let_const(x)
-  elif k in ['func', 'var']: return func_const_var(x)
-  elif k == 'call': return do_eval_expr_call(x)
-  elif k == 'index': return do_eval_expr_index(x)
-  elif k == 'index_ptr': return do_eval_expr_index_ptr(x)
-  elif k == 'access': return do_eval_expr_access(x)
-  elif k == 'access_ptr': return do_eval_expr_access_ptr(x)
-  elif k == 'cast': return do_eval_expr_to(x)
-  elif k == 'sizeof': return do_eval_sizeof(x)
+  if k == 'literal': y = do_eval_literal(x)
+  elif k in bin_ops: y = do_eval_expr_bin(x)
+  elif k in un_ops: y = do_eval_expr_un(x)
+  elif k == 'const': y = print_let_const(x)
+  elif k in ['func', 'var']: y = func_const_var(x)
+  elif k == 'call': y = do_eval_expr_call(x)
+  elif k == 'index': y = do_eval_expr_index(x)
+  elif k == 'index_ptr': y = do_eval_expr_index_ptr(x)
+  elif k == 'access': y = do_eval_expr_access(x)
+  elif k == 'access_ptr': y = do_eval_expr_access_ptr(x)
+  elif k == 'cast': y = do_eval_expr_to(x)
+  elif k == 'sizeof': y = do_eval_sizeof(x)
   else:
     out("<%s>" % k)
+    y = None
+
+  if y == None:
+    print("do_eval_x cannot eval value")
+    value_print(x)
     return ll_create_value_zero(x['type'])
+
+  return y
+
 
 #
 #
@@ -1207,7 +1201,10 @@ def print_stmt_def_var(x):
 
 
 def print_stmt_let(x):
-  v = do_ld(do_eval(x['value']))
+  id = x['value']['id']
+  val = x['value']['value']
+  #value_print(val)
+  v = do_ld(do_eval(val))
   locals_add(x['id']['str'], v)
   return None
 
