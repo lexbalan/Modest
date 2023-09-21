@@ -924,6 +924,9 @@ class Parser:
 
             if s != None:
                 sep = self.need_sep(eat=False)
+
+                while self.match(";"):
+                    pass
                 #if sep == False:
                 #    break
 
