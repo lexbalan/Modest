@@ -7,144 +7,144 @@ import "./linked_list.hm"
 
 
 type Node record {
-  next : *Node
-  prev : *Node
-  link : Pointer
+    next : *Node
+    prev : *Node
+    link : Pointer
 }
 
 type List record {
-  head : *Node
-  tail : *Node
-  size : Nat32
+    head : *Node
+    tail : *Node
+    size : Nat32
 }
 
 
 func linked_list_create () -> *List {
-  let list = malloc(sizeof(List)) to *List
+    let list = malloc(sizeof(List)) to *List
 
-  if list == nil {
-    return nil
-  }
+    if list == nil {
+        return nil
+    }
 
-  //list.size >= list.head
+    //list.size >= list.head
 
-  list.head := nil
-  list.tail := nil
+    list.head := nil
+    list.tail := nil
 
-  return list
+    return list
 }
 
 
 func linked_list_size_get (list : *List) -> Nat32 {
-  if list == nil {
-    return 0
-  }
+    if list == nil {
+        return 0
+    }
 
-  return list.size
+    return list.size
 }
 
 
 func linked_list_first_get (list : *List) -> *Node {
-  if list == nil {
-    return nil
-  }
+    if list == nil {
+        return nil
+    }
 
-  return list.head
+    return list.head
 }
 
 
 func linked_list_last_get (list : *List) -> *Node {
-  if list == nil {
-    return nil
-  }
+    if list == nil {
+        return nil
+    }
 
-  return list.tail
+    return list.tail
 }
 
 
 func linked_list_node_create () -> *Node {
-  let node = malloc(sizeof(Node)) to *Node
+    let node = malloc(sizeof(Node)) to *Node
 
-  if node == nil {
-    return nil
-  }
+    if node == nil {
+        return nil
+    }
 
-  node.prev := nil
-  node.next := nil
-  node.link := nil
+    node.prev := nil
+    node.next := nil
+    node.link := nil
 
-  return node
+    return node
 }
 
 
 func linked_list_node_next_get (node : *Node) -> *Node {
-  if(node == nil) {
-    return nil
-  }
+    if(node == nil) {
+        return nil
+    }
 
-  return node.next
+    return node.next
 }
 
 
 func linked_list_node_prev_get (node : *Node) -> *Node {
-  if(node == nil) {
-    return nil
-  }
+    if(node == nil) {
+        return nil
+    }
 
-  return node.prev
+    return node.prev
 }
 
 
 func linked_list_node_link_get (node : *Node) -> Pointer {
-  if(node == nil) {
-    return nil
-  }
+    if(node == nil) {
+        return nil
+    }
 
-  return node.link
+    return node.link
 }
 
 
 func linked_list_insert_node (list : *List, new_node : *Node) -> *Node {
-  if list == nil or new_node == nil {
-    return nil
-  }
+    if list == nil or new_node == nil {
+        return nil
+    }
 
-  if list.head == nil {
-    list.head := new_node
-  }
+    if list.head == nil {
+        list.head := new_node
+    }
 
-  if list.tail != nil {
-    let old_tail = list.tail
-    old_tail.next := new_node
-    new_node.prev := old_tail
-  }
+    if list.tail != nil {
+        let old_tail = list.tail
+        old_tail.next := new_node
+        new_node.prev := old_tail
+    }
 
-  list.tail := new_node
-  list.size := list.size + 1
+    list.tail := new_node
+    list.size := list.size + 1
 
-  return new_node
+    return new_node
 }
 
 @attribute("dispensable")
 func linked_list_insert (list : *List, link : Pointer) -> *Node {
-  if list == nil {
-    return nil
-  }
+    if list == nil {
+        return nil
+    }
 
-  let new_node = linked_list_node_create()
+    let new_node = linked_list_node_create()
 
-  if new_node == nil {
-    return nil
-  }
+    if new_node == nil {
+        return nil
+    }
 
-  new_node.link := link
+    new_node.link := link
 
-  let node = linked_list_insert_node(list, new_node)
+    let node = linked_list_insert_node(list, new_node)
 
-  if node == nil {
-    free(new_node)
-  }
+    if node == nil {
+        free(new_node)
+    }
 
-  return node
+    return node
 }
 
