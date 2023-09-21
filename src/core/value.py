@@ -454,6 +454,9 @@ def value_cons_pointer(v, t, ti, method):
     return None
 
 
+def value_cons_unit(v, t, ti, method):
+    return hlir_value_cast(v, t, ti=ti)
+
 # возвращает None если не может привести (!)
 # не принтует ошибку
 # это НЕ нужно для удобства приведения полей структур
@@ -470,6 +473,7 @@ def value_cons(v, t, ti, method):
     elif type.is_array(t): cons = value_cons_array
     elif type.is_record(t): cons = value_cons_record
     elif type.is_float(t): cons = value_cons_float
+    elif type.is_unit(t): cons = value_cons_unit
 
     if cons != None:
         y = cons(v, t, ti, method)
