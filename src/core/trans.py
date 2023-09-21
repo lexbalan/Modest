@@ -202,6 +202,10 @@ def init():
     root_context.type_add('Float32', type.typeFloat32)
     root_context.type_add('Float64', type.typeFloat64)
 
+    #root_context.type_add('Decimal32', type.typeDecimal32)
+    #root_context.type_add('Decimal64', type.typeDecimal64)
+    #root_context.type_add('Decimal128', type.typeDecimal128)
+
     root_context.type_add('Str', type.typeStr)
 
     root_context.type_add('Pointer', type.typeFreePtr)
