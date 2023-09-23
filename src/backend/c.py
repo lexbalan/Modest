@@ -45,14 +45,12 @@ legacy_style = {
     'LINE_BREAK_BEFORE_STRUCT_BRACE': False,
     'LINE_BREAK_BEFORE_FUNC_BRACE': True,
     'LINE_BREAK_BEFORE_BLOCK_BRACE': False,
-    'EXTRA_BLANK_LINES_BETWEEN_FUNCS': 0,
 }
 
 modern_style = {
     'LINE_BREAK_BEFORE_STRUCT_BRACE': True,
     'LINE_BREAK_BEFORE_FUNC_BRACE': True,
     'LINE_BREAK_BEFORE_BLOCK_BRACE': True,
-    'EXTRA_BLANK_LINES_BETWEEN_FUNCS': 1,
 }
 
 styles = {
@@ -89,11 +87,6 @@ def init():
     if stylename != None:
         if stylename in styles:
             styleguide = styles[stylename]
-
-
-# если сущность была уже отделена новой строкой
-# (typedef struct & def func должны всегда отделяться пустой строкой)
-was_separated_by_new_line = True
 
 
 
@@ -987,7 +980,7 @@ def print_arrays(arrays):
 
 
 
-def print_stmt_block(s, arrays=None, empty_comment=""):
+def print_stmt_block(s, arrays=None):
     out("{")
 
     indent_up()
@@ -997,10 +990,6 @@ def print_stmt_block(s, arrays=None, empty_comment=""):
 
     for stmt in s['stmts']:
         print_stmt(stmt)
-
-    #elif empty_comment != "":
-        #nl_indent()
-        #out(empty_comment)
 
     indent_down()
 
@@ -1070,10 +1059,8 @@ def print_decl_func(x):
 
 
 def print_def_func(x):
-    if not was_separated_by_new_line:
-        out("\n")
-
     func = x['value']
+
     if 'comment' in func:
         if func['comment'] != '':
             out("// %s\n" % func['comment'])
@@ -1094,11 +1081,8 @@ def print_def_func(x):
     else:
         out(" ")
 
-    #empty_comment="// TODO: function %s implementation" % func['id']['str']
     print_stmt_block(func['stmt'], arrays=arrays)
 
-#    if styleguide['EXTRA_BLANK_LINES_BETWEEN_FUNCS'] > 0:
-#        out("\n" * styleguide['EXTRA_BLANK_LINES_BETWEEN_FUNCS'])
 
 
 
@@ -1113,10 +1097,6 @@ def print_decl_type(x):
 def print_def_type(x):
     id = x['type']['name']#['str']
     t = x['type']['aliasof']
-
-    if not was_separated_by_new_line:
-        if t['kind'] in ['record', 'enum']:
-            out("\n")
 
     # !
     if x['afterdef']:

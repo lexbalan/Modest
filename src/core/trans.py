@@ -1422,6 +1422,8 @@ def def_const(x):
 
     cp_immediate(const_value, v, copy_id=False)
 
+    atts = attributes_get()
+    const_value['att'].extend(atts)
 
     extend_props(const_value)
 
@@ -1588,7 +1590,8 @@ def def_func(x):
     # create params context
     module['context'] = module['context'].branch(domain='local')
 
-    fn['att'].extend(attributes_get())
+    atts = attributes_get()
+    fn['att'].extend(atts)
 
     extend_props(fn)
 
@@ -1694,7 +1697,9 @@ def decl_func(x):
 
     func = hlir_value_func(id, functype, ti=x['ti'])
     func['att'].extend(['undefined'])
-    func['att'].extend(attributes_get())
+
+    atts = attributes_get()
+    func['att'].extend(atts)
 
     if x['extern']:
         func['att'].append('extern')
@@ -1760,10 +1765,10 @@ def proc(ast, id="<MODULE_ID>", path="<MODULE_PATH>"):
         y = None
 
         if isa == 'ast_definition':
-            if kind == 'func':    y = def_func(x)
-            elif kind == 'type':    y = def_type(x)
+            if kind == 'func': y = def_func(x)
+            elif kind == 'type': y = def_type(x)
             elif kind == 'const': y = def_const(x)
-            elif kind == 'var':     y = def_var(x)
+            elif kind == 'var': y = def_var(x)
 
         elif isa == 'ast_declaration':
             if kind == 'func': y = decl_func(x)
