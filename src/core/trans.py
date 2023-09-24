@@ -813,6 +813,15 @@ def do_value_index(x):
 
     i = value_cast_implicit(i, typeSysInt, i['ti'])
 
+    if ptr_access:
+        v = hlir_value_index_array_by_ptr(a, i, ti=x['ti'])
+
+    else:
+        v = hlir_value_index_array(a, i, ti=x['ti'])
+        if value_is_immutable(a):
+            v['att'].append('immutable')
+
+
     # immediate index (!)
     if value_is_immediate(a):
         if value_is_immediate(i):
@@ -823,15 +832,8 @@ def do_value_index(x):
 
             else:
                 # is an array
-                return a['imm_items'][i['imm_num']]
-
-    if ptr_access:
-        v = hlir_value_index_array_by_ptr(a, i, ti=x['ti'])
-
-    else:
-        v = hlir_value_index_array(a, i, ti=x['ti'])
-        if value_is_immutable(a):
-            v['att'].append('immutable')
+                v_imm = a['imm_items'][i['imm_num']]
+                cp_immediate(v, v_imm)
 
     return v
 
@@ -868,11 +870,6 @@ def do_value_access(x):
         return hlir_value_bad(x['field']['ti'])
 
 
-    # access to immediate object
-    if value_is_immediate(obj):
-        initializer = get_item_with_id(obj['initializers'], field_id['str'])
-        return initializer['value']
-
 
     if ptr_access:
         v = hlir_value_access_record_by_ptr(obj, field, ti=x['ti'])
@@ -880,6 +877,12 @@ def do_value_access(x):
         v = hlir_value_access_record(obj, field, ti=x['ti'])
         if value_is_immutable(obj):
             v['att'].append('immutable')
+
+
+    # access to immediate object
+    if value_is_immediate(obj):
+        initializer = get_item_with_id(obj['initializers'], field_id['str'])
+        cp_immediate(v, initializer['value'])
 
     return v
 
