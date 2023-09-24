@@ -823,7 +823,7 @@ def do_value_index(x):
 
 
     # immediate index (!)
-    if value_is_immediate(a):
+    if value_is_immediate(a) and not ptr_access:
         if value_is_immediate(i):
             if type.is_generic_string(a['type']):
                 # is generic string
@@ -880,7 +880,7 @@ def do_value_access(x):
 
 
     # access to immediate object
-    if value_is_immediate(obj):
+    if value_is_immediate(obj) and not ptr_access:
         initializer = get_item_with_id(obj['initializers'], field_id['str'])
         cp_immval(v, initializer['value'])
 
