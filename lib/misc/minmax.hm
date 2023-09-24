@@ -1,0 +1,22 @@
+
+
+func min_int32(a : Int32, b : Int32) -> Int32
+func max_int32(a : Int32, b : Int32) -> Int32
+
+func min_int64(a : Int64, b : Int64) -> Int64
+func max_int64(a : Int64, b : Int64) -> Int64
+
+
+func min_nat32(a : Nat32, b : Nat32) -> Nat32
+func max_nat32(a : Nat32, b : Nat32) -> Nat32
+
+func min_nat64(a : Nat64, b : Nat64) -> Nat64
+func max_nat64(a : Nat64, b : Nat64) -> Nat64
+
+
+func min_float(a : Float, b : Float) -> Float
+func max_float(a : Float, b : Float) -> Float
+
+func min_double(a : Double, b : Double) -> Double
+func max_double(a : Double, b : Double) -> Double
+
