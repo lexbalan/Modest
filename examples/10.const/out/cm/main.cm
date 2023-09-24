@@ -37,12 +37,6 @@ const lines = [line0, line1
 ]
 
 
-var line : Line := {
-    a = pointZero
-    b = pointOne
-}
-
-
 // Pythagorean theorem
 func distance (a : Point, b : Point) -> Float {
     let dx = max_float64(a.x, b.x) - min_float64(a.x, b.x)

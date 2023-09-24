@@ -44,12 +44,6 @@ typedef struct {
 #define lines  (Line [2]){line0, line1}
 
 
-static Line line = (Line){
-    .a = pointZero,
-    .b = pointOne
-};
-
-
 // Pythagorean theorem
 float distance(Point a, Point b)
 {
