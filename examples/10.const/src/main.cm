@@ -28,16 +28,16 @@ const zero = 0
 const pointZero = {x = zero, y = zero} to Point
 const pointOne = {x = 1.0, y = 1.0} to Point
 
-const carr = [0, 1, 2, 3, 4, 5]
-
 const line0 = {
     a = pointZero
     b = pointOne
 } to Line
 
+const carr = [0, 10, 15, 20, 25]
+
 const line1 = {
-    a={x=10, y=20}
-    b={x=5, y=18}
+    a={x=carr[1], y=carr[2]}
+    b={x=carr[3], y=carr[4]}
 } to Line
 
 const lines = [line0, line1]

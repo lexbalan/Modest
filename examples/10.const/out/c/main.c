@@ -29,16 +29,16 @@ typedef struct {
 #define pointZero  (Point){.x = zero, .y = zero}
 #define pointOne  (Point){.x = 1.0, .y = 1.0}
 
-#define carr  (int8_t [6]){0, 1, 2, 3, 4, 5}
-
 #define line0  (Line){ \
     .a = pointZero, \
     .b = pointOne \
 }
 
+#define carr  (int8_t [5]){0, 10, 15, 20, 25}
+
 #define line1  (Line){ \
-    .a = (Point){.x = 10, .y = 20}, \
-    .b = (Point){.x = 5, .y = 18} \
+    .a = (Point){.x = (carr[1]), .y = (carr[2])}, \
+    .b = (Point){.x = (carr[3]), .y = (carr[4])} \
 }
 
 #define lines  (Line [2]){line0, line1}

@@ -20,7 +20,7 @@ type Chunk record {
 func write_example () -> Unit {
     printf("run write_example\n")
 
-  let fp = fopen(filename, "wb")
+	let fp = fopen(filename, "wb")
 
     if fp == nil {
         printf("error: cannot create file '%s'", filename)
