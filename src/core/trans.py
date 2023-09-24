@@ -833,7 +833,7 @@ def do_value_index(x):
             else:
                 # is an array
                 v_imm = a['imm_items'][i['imm_num']]
-                cp_immediate(v, v_imm)
+                cp_immval(v, v_imm)
 
     return v
 
@@ -882,7 +882,7 @@ def do_value_access(x):
     # access to immediate object
     if value_is_immediate(obj):
         initializer = get_item_with_id(obj['initializers'], field_id['str'])
-        cp_immediate(v, initializer['value'])
+        cp_immval(v, initializer['value'])
 
     return v
 
@@ -1243,8 +1243,7 @@ def do_stmt_let(x):
     const_value['att'].extend(['local']) # need for LLVM printer (!)
 
     if value_is_immediate(v):
-        cp_immediate(const_value, v)
-
+        cp_immval(const_value, v)
 
     module['context'].value_add(id['str'], const_value)
 
@@ -1423,7 +1422,7 @@ def def_const(x):
 
     const_value = hlir_value_const(id, v['type'], v, x['ti'])
 
-    cp_immediate(const_value, v, copy_id=False)
+    cp_immval(const_value, v)
 
     atts = attributes_get()
     const_value['att'].extend(atts)

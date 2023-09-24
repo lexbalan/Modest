@@ -47,15 +47,11 @@ def cp_immval(nv, v):
 
 
 
-def cp_immediate(nv, v, copy_id=True):
+def cp_immediate(nv, v):
 
-    #if 'immediate' in v['att']:
-    #    nv['att'].append('immediate')
-
-    if copy_id:
-        # для generic приведения констант (!)
-        if 'id' in v:
-            nv['id'] = v['id']
+    # для generic приведения констант (!)
+    if 'id' in v:
+        nv['id'] = v['id']
 
     cp_immval(nv, v)
 
@@ -544,7 +540,7 @@ def value_cast_explicit(v, t, ti):
         return hlir_value_bad(ti)
 
     if type.eq(v['type'], t):
-        info("explicit cast to same type", ti)
+        info("explicit cast to the same type", ti)
         return v
 
     return value_hard_cast(v, t, ti)
