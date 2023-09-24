@@ -82,6 +82,22 @@ typeFloat64['c_alias'] = 'double'
 typeFloat64['llvm_alias'] = 'double'
 
 
+typeDecimal32 = hlir_type_float('Decimal32', power=32, ti=None)
+typeDecimal32['att'].extend(['float', 'decimal'])
+typeDecimal32['c_alias'] = '_Decimal32'
+typeDecimal32['llvm_alias'] = 'float'
+
+typeDecimal64 = hlir_type_float('Decimal64', power=64, ti=None)
+typeDecimal64['att'].extend(['float', 'decimal'])
+typeDecimal64['c_alias'] = '_Decimal64'
+typeDecimal64['llvm_alias'] = 'double'
+
+typeDecimal128 = hlir_type_float('Decimal128', power=128, ti=None)
+typeDecimal128['att'].extend(['float', 'decimal'])
+typeDecimal128['c_alias'] = '_Decimal128'
+typeDecimal128['llvm_alias'] = 'double'
+
+
 typeGenericChar = hlir_type_integer("Nat32", power=32, ti=None)
 typeGenericChar['att'].extend(['unsigned', 'generic', 'char'])
 typeGenericChar['c_alias'] = 'char32_t'

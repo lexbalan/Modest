@@ -202,6 +202,10 @@ def init():
     root_context.type_add('Float32', type.typeFloat32)
     root_context.type_add('Float64', type.typeFloat64)
 
+    #root_context.type_add('Decimal32', type.typeDecimal32)
+    #root_context.type_add('Decimal64', type.typeDecimal64)
+    #root_context.type_add('Decimal128', type.typeDecimal128)
+
     root_context.type_add('Str', type.typeStr)
 
     root_context.type_add('Pointer', type.typeFreePtr)
@@ -809,6 +813,15 @@ def do_value_index(x):
 
     i = value_cast_implicit(i, typeSysInt, i['ti'])
 
+    if ptr_access:
+        v = hlir_value_index_array_by_ptr(a, i, ti=x['ti'])
+
+    else:
+        v = hlir_value_index_array(a, i, ti=x['ti'])
+        if value_is_immutable(a):
+            v['att'].append('immutable')
+
+
     # immediate index (!)
     if value_is_immediate(a):
         if value_is_immediate(i):
@@ -819,15 +832,8 @@ def do_value_index(x):
 
             else:
                 # is an array
-                return a['imm_items'][i['imm_num']]
-
-    if ptr_access:
-        v = hlir_value_index_array_by_ptr(a, i, ti=x['ti'])
-
-    else:
-        v = hlir_value_index_array(a, i, ti=x['ti'])
-        if value_is_immutable(a):
-            v['att'].append('immutable')
+                v_imm = a['imm_items'][i['imm_num']]
+                cp_immval(v, v_imm)
 
     return v
 
@@ -864,11 +870,6 @@ def do_value_access(x):
         return hlir_value_bad(x['field']['ti'])
 
 
-    # access to immediate object
-    if value_is_immediate(obj):
-        initializer = get_item_with_id(obj['initializers'], field_id['str'])
-        return initializer['value']
-
 
     if ptr_access:
         v = hlir_value_access_record_by_ptr(obj, field, ti=x['ti'])
@@ -876,6 +877,12 @@ def do_value_access(x):
         v = hlir_value_access_record(obj, field, ti=x['ti'])
         if value_is_immutable(obj):
             v['att'].append('immutable')
+
+
+    # access to immediate object
+    if value_is_immediate(obj):
+        initializer = get_item_with_id(obj['initializers'], field_id['str'])
+        cp_immval(v, initializer['value'])
 
     return v
 
@@ -1236,8 +1243,7 @@ def do_stmt_let(x):
     const_value['att'].extend(['local']) # need for LLVM printer (!)
 
     if value_is_immediate(v):
-        cp_immediate(const_value, v)
-
+        cp_immval(const_value, v)
 
     module['context'].value_add(id['str'], const_value)
 
@@ -1253,12 +1259,12 @@ def do_stmt_assign(x):
         return hlir_stmt_bad()
 
     if value_is_immutable(l):
-        error("immutable left", x['left'])
+        error("immutable left", x['left']['ti'])
         return hlir_stmt_bad()
 
     # type check
-    r = value_cast_implicit(r, l['type'], r['ti'])
-    type.check(l['type'], r['type'], r['ti'])
+    r = value_cast_implicit(r, l['type'], x['right']['ti'])
+    type.check(l['type'], r['type'], x['ti'])
 
     return hlir_stmt_assign(l, r, ti=x['ti'])
 
@@ -1416,8 +1422,10 @@ def def_const(x):
 
     const_value = hlir_value_const(id, v['type'], v, x['ti'])
 
-    cp_immediate(const_value, v, copy_id=False)
+    cp_immval(const_value, v)
 
+    atts = attributes_get()
+    const_value['att'].extend(atts)
 
     extend_props(const_value)
 
@@ -1584,7 +1592,8 @@ def def_func(x):
     # create params context
     module['context'] = module['context'].branch(domain='local')
 
-    fn['att'].extend(attributes_get())
+    atts = attributes_get()
+    fn['att'].extend(atts)
 
     extend_props(fn)
 
@@ -1690,7 +1699,9 @@ def decl_func(x):
 
     func = hlir_value_func(id, functype, ti=x['ti'])
     func['att'].extend(['undefined'])
-    func['att'].extend(attributes_get())
+
+    atts = attributes_get()
+    func['att'].extend(atts)
 
     if x['extern']:
         func['att'].append('extern')
@@ -1756,10 +1767,10 @@ def proc(ast, id="<MODULE_ID>", path="<MODULE_PATH>"):
         y = None
 
         if isa == 'ast_definition':
-            if kind == 'func':    y = def_func(x)
-            elif kind == 'type':    y = def_type(x)
+            if kind == 'func': y = def_func(x)
+            elif kind == 'type': y = def_type(x)
             elif kind == 'const': y = def_const(x)
-            elif kind == 'var':     y = def_var(x)
+            elif kind == 'var': y = def_var(x)
 
         elif isa == 'ast_declaration':
             if kind == 'func': y = decl_func(x)

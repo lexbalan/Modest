@@ -14,12 +14,6 @@ INDENT_SYMBOL = " " * 4
 FUNC_EMPTY_PARAMLIST = "(void)"
 SPACE_AFTER_IF_WHILE = True
 
-ARRAYS_MULTILINE_ALWAYS = False
-ARRAYS_MULTILINE_FROM = 8
-
-RECORDS_MULTILINE_ALWAYS = False
-RECORDS_MULTILINE_FROM = 4
-
 NO_TYPEDEF_STRUCTS = False
 NO_TYPEDEF_OTHERS = False
 
@@ -45,14 +39,12 @@ legacy_style = {
     'LINE_BREAK_BEFORE_STRUCT_BRACE': False,
     'LINE_BREAK_BEFORE_FUNC_BRACE': True,
     'LINE_BREAK_BEFORE_BLOCK_BRACE': False,
-    'EXTRA_BLANK_LINES_BETWEEN_FUNCS': 0,
 }
 
 modern_style = {
     'LINE_BREAK_BEFORE_STRUCT_BRACE': True,
     'LINE_BREAK_BEFORE_FUNC_BRACE': True,
     'LINE_BREAK_BEFORE_BLOCK_BRACE': True,
-    'EXTRA_BLANK_LINES_BETWEEN_FUNCS': 1,
 }
 
 styles = {
@@ -67,6 +59,12 @@ styles = {
 styleguide = styles['legacy']
 
 
+NLSYM = "\n"
+
+def newline(n=1):
+    out(NLSYM * n)
+
+
 def indent():
     ind(INDENT_SYMBOL)
 
@@ -76,7 +74,7 @@ def indent_if(x):
 
 
 def nl_indent():
-    out("\n")
+    newline()
     indent()
 
 
@@ -89,11 +87,6 @@ def init():
     if stylename != None:
         if stylename in styles:
             styleguide = styles[stylename]
-
-
-# если сущность была уже отделена новой строкой
-# (typedef struct & def func должны всегда отделяться пустой строкой)
-was_separated_by_new_line = True
 
 
 
@@ -212,7 +205,7 @@ def print_type_record(t, tag=""):
         out(" %s" % tag)
 
     if styleguide['LINE_BREAK_BEFORE_STRUCT_BRACE']:
-        out("\n")
+        newline()
     else:
         out(" ")
 
@@ -223,10 +216,10 @@ def print_type_record(t, tag=""):
         # print comments
         if 'comments' in field:
             for comment in field['comments']:
-                out("\n" * comment['nl'])
+                newline(n=comment['nl'])
                 print_comment(comment)
 
-        out("\n" * field['nl'])
+        newline(n=field['nl'])
         indent();
         print_field(field)
         out(";")
@@ -243,11 +236,12 @@ def print_type_enum(t):
     i = 0
     while i < len(items):
         item = items[i]
-        out("\n")
+        newline()
         #o("\t%s_%s," % (t['aka'], item['id']['str']))
         out("\t%s," % (item['id']['str']))
         i = i + 1
-    out("\n}")
+    newline()
+    out("}")
 
 
 def print_array_asis(t):
@@ -588,18 +582,14 @@ def print_value_cast(v, ctx):
 
 
 def print_value_literal_array(v, ctx):
-    screening = 'screening' in ctx
 
-    if ARRAYS_MULTILINE_ALWAYS:
-        multiline = True
-    else:
-        multiline = hlir_value_num_get(v['type']['volume']) > ARRAYS_MULTILINE_FROM
-
+    out("(")
+    print_type(v['type'], need_space_after=False, _print_array_asis=True)
+    out(")")
 
     out("{")
     indent_up()
 
-    if multiline and screening: out("\\")
 
     values = v['imm_items']
     i = 0
@@ -613,7 +603,7 @@ def print_value_literal_array(v, ctx):
 
 
         if nl > 0:
-            out("\n" * nl)
+            newline(n=nl)
             indent()
         else:
             if i > 0:
@@ -629,31 +619,27 @@ def print_value_literal_array(v, ctx):
     indent_down()
 
     if v['nl_end'] > 0:
-        out("\n" * v['nl_end'])
+        newline(n=v['nl_end'])
         indent()
 
     out("}")
 
+    #if cast_req:
+    #    out(")")
+
 
 
 def print_value_literal_record(v, ctx):
-    screening = 'screening' in ctx
 
-    if RECORDS_MULTILINE_ALWAYS:
-        multiline = True
-    else:
-        multiline = len(v['type']['fields']) > RECORDS_MULTILINE_FROM
+    out("(")
+    print_type(v['type'], need_space_after=False, _print_array_asis=True)
+    out(")")
 
     out("{")
-    i = 0
-    """if multiline:
-        if screening:
-            out("\\")
-        out("\n")"""
     indent_up()
 
-
     nitems = len(v['initializers'])
+    i = 0
     while i < nitems:
         item = v['type']['fields'][i]
         field_str = item['id']['str']
@@ -665,7 +651,7 @@ def print_value_literal_record(v, ctx):
             nl = ini['nl']
 
         if nl > 0:
-            out("\n" * nl)
+            newline(n=nl)
             indent()
         else:
             if i > 0:
@@ -682,10 +668,13 @@ def print_value_literal_record(v, ctx):
     indent_down()
 
     if v['nl_end'] > 0:
-        out("\n" * v['nl_end'])
+        newline(n=v['nl_end'])
         indent()
 
     out("}")
+
+    #if cast_req:
+    #    out(")")
 
 
 
@@ -791,9 +780,9 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
     # (используется для печати имени констант а не просто их значения)
     # в LLVM перчаем просто значение
 
-    need_cast = value_attribute_check(x, 'generic-casted')
-    if need_cast:
-        out("("); print_type(x['type'], need_space_after=False); out(")")
+    #need_cast = value_attribute_check(x, 'generic-casted')
+    #if need_cast:
+    #    out("("); print_type(x['type'], need_space_after=False); out(")")
 
     if print_just_id:
         if 'id' in x:
@@ -956,7 +945,7 @@ def print_stmt(x):
     k = x['kind']
 
     nl = x['nl']
-    out("\n" * nl)
+    newline(n=nl)
 
     if k == 'block': print_stmt_block(x)
     elif k == 'value': indent_if(nl > 0); print_stmt_value(x)
@@ -987,7 +976,7 @@ def print_arrays(arrays):
 
 
 
-def print_stmt_block(s, arrays=None, empty_comment=""):
+def print_stmt_block(s, arrays=None):
     out("{")
 
     indent_up()
@@ -998,14 +987,10 @@ def print_stmt_block(s, arrays=None, empty_comment=""):
     for stmt in s['stmts']:
         print_stmt(stmt)
 
-    #elif empty_comment != "":
-        #nl_indent()
-        #out(empty_comment)
-
     indent_down()
 
     endnl = s['end_nl']
-    out("\n" * endnl)
+    newline(n=endnl)
     if endnl:
         indent()
     out("}")
@@ -1070,13 +1055,12 @@ def print_decl_func(x):
 
 
 def print_def_func(x):
-    if not was_separated_by_new_line:
-        out("\n")
-
     func = x['value']
+
     if 'comment' in func:
         if func['comment'] != '':
-            out("// %s\n" % func['comment'])
+            out("// %s" % func['comment'])
+            newline()
 
     if 'c_prefix' in func:
         out("%s " % func['c_prefix'])
@@ -1090,15 +1074,12 @@ def print_def_func(x):
     arrays = print_func_signature(func['id']['str'], func['type'])
 
     if styleguide['LINE_BREAK_BEFORE_FUNC_BRACE']:
-        out("\n")
+        newline()
     else:
         out(" ")
 
-    #empty_comment="// TODO: function %s implementation" % func['id']['str']
     print_stmt_block(func['stmt'], arrays=arrays)
 
-#    if styleguide['EXTRA_BLANK_LINES_BETWEEN_FUNCS'] > 0:
-#        out("\n" * styleguide['EXTRA_BLANK_LINES_BETWEEN_FUNCS'])
 
 
 
@@ -1113,10 +1094,6 @@ def print_decl_type(x):
 def print_def_type(x):
     id = x['type']['name']#['str']
     t = x['type']['aliasof']
-
-    if not was_separated_by_new_line:
-        if t['kind'] in ['record', 'enum']:
-            out("\n")
 
     # !
     if x['afterdef']:
@@ -1238,7 +1215,10 @@ def print_def_const(x):
     out("#define %s  " % id_str)
 
     need_wrap = precedence(v['kind']) < precedenceMax
-    print_value(v, ctx=['screening'], need_wrap=need_wrap, print_just_id=True)
+    global NLSYM
+    NLSYM = " \\\n"
+    print_value(v, need_wrap=need_wrap, print_just_id=True)
+    NLSYM = "\n"
 
 
 def print_include(x):
@@ -1274,7 +1254,7 @@ def print_comment_line(x):
         out("//%s" % line['str'])
         i = i + 1
         if i < n:
-            out("\n")
+            newline()
 
 
 
@@ -1283,12 +1263,12 @@ def cdirectives(module):
         for obj in imported_module['text']:
             if obj['isa'] == 'directive':
                 if obj['kind'] == 'c_include':
-                    out("\n")
+                    newline()
                     print_include(obj)
     for obj in module['text']:
         if obj['isa'] == 'directive':
             if obj['kind'] == 'c_include':
-                out("\n")
+                newline()
                 print_include(obj)
 
 
@@ -1311,7 +1291,8 @@ def run(module, outname):
         guardname = outname.split("/")[-1]
         guardname = guardname[:-2].upper() + '_H'
         lo("#ifndef %s" % guardname)
-        lo("#define %s\n" % guardname)
+        lo("#define %s" % guardname)
+        newline()
 
     lo("#include <stdint.h>")
     lo("#include <string.h>")
@@ -1322,8 +1303,7 @@ def run(module, outname):
     if USE_UCHAR:
         lo("#include <uchar.h>")
 
-    out("\n\n")
-
+    newline(n=2)
 
     for x in module['text']:
         if 'value' in x:
@@ -1339,9 +1319,9 @@ def run(module, outname):
 
 
         if 'nl' in x:
-            out("\n" * x['nl'])
+            newline(n=x['nl'])
         else:
-            out("\n")
+            newline()
             print('not NL in ' + str(x))
 
         isa = x['isa']
@@ -1362,10 +1342,10 @@ def run(module, outname):
 
 
 
-    out("\n")
+    newline()
     if is_header:
         lo("#endif  /* %s */" % guardname)
-    out("\n")
+    newline()
 
     output_close()
 

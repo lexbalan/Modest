@@ -47,15 +47,11 @@ def cp_immval(nv, v):
 
 
 
-def cp_immediate(nv, v, copy_id=True):
+def cp_immediate(nv, v):
 
-    #if 'immediate' in v['att']:
-    #    nv['att'].append('immediate')
-
-    if copy_id:
-        # для generic приведения констант (!)
-        if 'id' in v:
-            nv['id'] = v['id']
+    # для generic приведения констант (!)
+    if 'id' in v:
+        nv['id'] = v['id']
 
     cp_immval(nv, v)
 
@@ -178,12 +174,6 @@ def value_cons_array_from_generic_array(v, t, ti, method):
         'ti': ti
     }
 
-    # 'generic-casted' - нужен для принтера C
-    # чтобы он добавил явное приведение к Локальному (!) массиву
-    # (uint32_t[3]){0, 1, 2}
-    if is_local_context():
-        vx['att'].append('generic-casted')
-
     # если это не сделать то принтер C не сможет сослаться
     # на именованную константу и станет печатать ее по месту
     if 'id' in v:
@@ -297,16 +287,10 @@ def value_cons_record_from_generic_record(v, t, ti, method):
         'kind': 'literal',
         'initializers': items,
         'type': t,
-        'att': ['generic-casted'],
+        'att': [],
         'nl_end': v['nl_end'],
         'ti': ti
     }
-
-    # 'generic-casted' - нужен для принтера C
-    # чтобы он добавил явное приведение к типу
-    # example: (Point){.x=0, .y=0}
-#    if is_local_context():
-#        vx['att'].append('generic-casted')
 
     # если это не сделать то принтер C не сможет сослаться
     # на именованную константу и станет печатать ее по месту
@@ -454,6 +438,9 @@ def value_cons_pointer(v, t, ti, method):
     return None
 
 
+def value_cons_unit(v, t, ti, method):
+    return hlir_value_cast(v, t, ti=ti)
+
 # возвращает None если не может привести (!)
 # не принтует ошибку
 # это НЕ нужно для удобства приведения полей структур
@@ -470,6 +457,7 @@ def value_cons(v, t, ti, method):
     elif type.is_array(t): cons = value_cons_array
     elif type.is_record(t): cons = value_cons_record
     elif type.is_float(t): cons = value_cons_float
+    elif type.is_unit(t): cons = value_cons_unit
 
     if cons != None:
         y = cons(v, t, ti, method)
@@ -552,7 +540,7 @@ def value_cast_explicit(v, t, ti):
         return hlir_value_bad(ti)
 
     if type.eq(v['type'], t):
-        info("explicit cast to same type", ti)
+        info("explicit cast to the same type", ti)
         return v
 
     return value_hard_cast(v, t, ti)
