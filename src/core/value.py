@@ -178,12 +178,6 @@ def value_cons_array_from_generic_array(v, t, ti, method):
         'ti': ti
     }
 
-    # 'generic-casted' - нужен для принтера C
-    # чтобы он добавил явное приведение к Локальному (!) массиву
-    # (uint32_t[3]){0, 1, 2}
-    if is_local_context():
-        vx['att'].append('generic-casted')
-
     # если это не сделать то принтер C не сможет сослаться
     # на именованную константу и станет печатать ее по месту
     if 'id' in v:
@@ -297,16 +291,10 @@ def value_cons_record_from_generic_record(v, t, ti, method):
         'kind': 'literal',
         'initializers': items,
         'type': t,
-        'att': ['generic-casted'],
+        'att': [],
         'nl_end': v['nl_end'],
         'ti': ti
     }
-
-    # 'generic-casted' - нужен для принтера C
-    # чтобы он добавил явное приведение к типу
-    # example: (Point){.x=0, .y=0}
-#    if is_local_context():
-#        vx['att'].append('generic-casted')
 
     # если это не сделать то принтер C не сможет сослаться
     # на именованную константу и станет печатать ее по месту
