@@ -1087,7 +1087,7 @@ def print_decl_type(x):
     name = x['type']['id']['str']
     out("struct %s;" % name)
     if not NO_TYPEDEF_STRUCTS:
-        out("typedef struct %s %s;" % (name, name))
+        out("\ntypedef struct %s %s;" % (name, name))
 
 
 
