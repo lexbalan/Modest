@@ -47,6 +47,7 @@ def hlir_type_float(aka, power, ti):
         'att': ['numeric', 'comparable', 'ordered', 'float'],
         'power': power,
         'size': nbytes_for_bits(power),
+        'c_alias': 'double',
         'ti': ti
     }
 
