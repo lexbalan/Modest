@@ -105,6 +105,18 @@ def hlir_type_array(of, volume, ti):
     }
 
 
+def hlir_type_generic_str(ti=None):
+    return {
+        'isa': 'type',
+        'kind': 'Str',
+        'name': 'Str',
+        'att': ['generic', 'string'],
+        #'power': 0,
+        #'size': 0,
+        'ti': ti
+    }
+
+
 # used in shifts
 def hlir_type_generic_int_bits(nbits, unsigned=False, ti=None):
     # get custom generic int type

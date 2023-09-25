@@ -110,10 +110,8 @@ typeChar['att'].extend(['unsigned', 'char'])
 typeChar['c_alias'] = 'char'
 typeChar['llvm_alias'] = 'i8'
 
-typeStr = hlir_type_pointer(hlir_type_array(typeChar, volume=None, ti=None), ti=None)
-typeStr['att'].extend(['const', 'string'])
-#typeStr['c_alias'] = 'const char *'
-genericStr = typeStr
+
+typeStr = hlir_type_generic_str(ti=None)
 
 
 typeFreePtr = hlir_type_free_pointer(ti=None)
@@ -144,14 +142,7 @@ def select_numeric(sz, signedness):
     return select_nat(sz)
 
 
-"""typeCharacter = hlir_type_integer("Character", 32)
-typeCharacter['att'].extend(['generic', 'unsigned'])
 
-typeString = hlir_type_pointer(hlir_type_array(typeCharacter))
-typeStr['att'].append('str')
-typeStr['c_alias'] = 'char *'
-genericStr = typeStr
-"""
 
 def eq_integer(a, b):
     if a['power'] != b['power']:
@@ -505,7 +496,8 @@ def type_print(t, print_aka=True):
             print(id, end='')
 
             if is_generic(t):
-                print('%d' % (t['power']), end='')
+                if 'power' in t:
+                    print('%d' % (t['power']), end='')
 
             return
 

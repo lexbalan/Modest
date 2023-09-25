@@ -417,11 +417,14 @@ def value_cons_pointer(v, t, ti, method):
             if type.is_pointer(from_type):
                 return hlir_value_cast(v, t, ti=ti)
 
-    # *[n]X -> *[]X    (например строковой литерал к типу Str)
+    # *[n]X -> *[]X  (например строковой литерал к типу Str)
     if type.is_pointer_to_defined_array(from_type):
         if type.is_pointer_to_undefined_array(t):
             if type.eq(from_type['to']['of'], t['to']['of']):
                 return hlir_value_cast(v, t, ti=ti)
+
+    if type.is_generic_string(from_type):
+        #??
 
     # Nil -> *X
     if type.is_nil(from_type) and type.is_pointer(t):

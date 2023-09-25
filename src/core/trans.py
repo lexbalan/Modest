@@ -915,7 +915,6 @@ def do_value_id(x):
     return vx
 
 
-
 """def do_value_ns(x):
     ns_id = x['ids'][0]
     id = x['ids'][1]
@@ -927,9 +926,8 @@ def do_value_id(x):
     return hlir_value_bad(ns_id['ti'])"""
 
 
-
+# type of any C string is *[x]typeChar
 def value_cstr(string, length, ti):
-    # type of any C string is *[x]typeChar
     vol = hlir_value_int(length)
     ta = hlir_type_array(type.typeChar, volume=vol, ti=ti)
     stype = hlir_type_pointer(ta, ti=ti)
@@ -939,9 +937,15 @@ def value_cstr(string, length, ti):
     return s
 
 
+# type of Cm generic string
+def value_gstr(string, length, ti):
+    s = hlir_value_cstr(string, length, type.typeStr, ti=ti)
+    module['strings'].append(s)
+    return s
+
 
 def do_value_str(x):
-    return value_cstr(string=x['str'], length=x['len'], ti=x['ti'])
+    return value_gstr(string=x['str'], length=x['len'], ti=x['ti'])
 
 
 
