@@ -5,58 +5,145 @@ import "libc/stdio.hm"
 
 @insert("#include <wchar.h>")
 
+
+@property("c_alias", "wchar_t")
+type WChar Int16
+
 @property("c_alias", "wchar_t *")
-type WCharStr Str
+type WCharStr16 *[]Nat16
 
 
 @attribute(["arghack", "dispensable", "c-no-print"])
-extern func wprintf(s : WCharStr) -> Int
+extern func wprintf(s : WCharStr16) -> Int
 
-//const hello_w16 = "Hello W!\n"
 
-func printw32(wstr : *[]Nat32) -> Unit {
+@attribute(["dispensable", "c-no-print"])
+extern func putwchar(c : WChar) -> Int
+
+
+
+// декодирует символ UTF-32 в последовательность UTF-8
+func utf32_to_utf8 (x : Nat32, buf : *[5]Nat8) -> Unit {
+    if x <= 0x0000007F {
+        buf[0] := x to Nat8
+        buf[1] := 0
+    } else if x <= 0x000007FF {
+        let a = (x >> 6) and 0x1F
+        let b = (x >> 0) and 0x3F
+        buf[0] := 0xC0 or a to Nat8
+        buf[1] := 0x80 or b to Nat8
+        buf[2] := 0
+    } else if x <= 0x0000FFFF {
+        let a = (x >> 12) and 0x0F
+        let b = (x >> 6) and 0x3F
+        let c = (x >> 0) and 0x3F
+        buf[0] := 0xE0 or a to Nat8
+        buf[1] := 0x80 or b to Nat8
+        buf[2] := 0x80 or c to Nat8
+        buf[3] := 0
+    } else if x <= 0x0010FFFF {
+        let a = (x >> 18) and 0x07
+        let b = (x >> 12) and 0x3F
+        let c = (x >> 6) and 0x3F
+        let d = (x >> 0) and 0x3F
+        buf[0] := 0xF0 or a to Nat8
+        buf[1] := 0x80 or b to Nat8
+        buf[2] := 0x80 or c to Nat8
+        buf[3] := 0x80 or d to Nat8
+        buf[4] := 0
+    }
+}
+
+
+func utf32_putchar(c : Nat32) -> Unit {
+    var decoded_buf : [5]Nat8
+    utf32_to_utf8(c, &decoded_buf)
+
     var i := 0
     while true {
-        let wc = wstr[i]
-        if wc == 0 {
-            break
-        }
-
-        /*if wc <= 0xFF {
-            printf("%c\n", wc)
-        } else if wc <= 0xFFFF {
-            printf("%c\n", wc >> 8)
-            printf("%c\n", wc and 0xFF)
-        } else {
-            printf("%c\n", wc >> 24 and 0xFF)
-            printf("%c\n", wc >> 16 and 0xFF)
-            printf("%c\n", wc >> 8 and 0xFF)
-            printf("%c\n", wc and 0xFF)
-        }*/
-
-        printf("%d\n", wc)
+        let c = decoded_buf[i]
+        if c == 0 {break}
+        putchar(c to Int32)
         i := i + 1
     }
 }
 
-func printw16(wstr : *[]Nat16) -> Unit {
+
+func utf32_puts(s : *[]Nat32) -> Unit {
     var i := 0
     while true {
-        let wc = wstr[i]
-        if wc == 0 {
-            break
-        }
-        printf("%d\n", wc)
+        let c = s[i]
+        if c == 0 {break}
+        utf32_putchar(c)
         i := i + 1
     }
 }
+
+
+func utf16_puts(s : *[]Nat16) -> Unit {
+    var i := 0
+    while true {
+        let c = s[i]
+        if c == 0 {break}
+        utf32_putchar(c to Nat32)
+        i := i + 1
+    }
+}
+
+
+/*
+    UTF-8 Encoding:	    0xF0 0x9F 0x90 0x80
+    UTF-16 Encoding:	0xD83D 0xDC00
+    UTF-32 Encoding:	0x0001F400
+*/
+
+const ratUTF8 = [0xf0, 0x9f, 0x90, 0x80]
+const ratUTF16 = [0xD83D, 0xDC00]
+const ratUTF32 = 0x0001F400
+
+
+// TODO: перекрытие имен - что с этим делать???
+
 
 func main () -> Int {
-    wprintf("Hello 🐀!\n")
-    //printf("Hello 🐀!\n")
-    //printw16("Hello 🐀!\n")
-    //printw32("Hello 🐀!\n")
+   /* var buf : [32]Nat8
+
+    utf32_to_utf8(0x1F400, &buf to Pointer)
+
+    var i := 0
+    while i < 5 {
+        printf("%d : %x\n", i, buf[i])
+        i := i + 1
+    }*/
+
+    //printf("%s\n", &buf to Pointer)
+
+    //sprintf(&buf to Pointer, "Hello 🐀\n")
+
+    /*var i := 0
+    while i < 20 {
+        //f0 9f 90 80
+        printf("%02d %x\n", i, buf[i])
+        i := i + 1
+    }*/
+
+    //printf("Hello 🐀\n")
+
+    /*
+    putchar(ratUTF8[0])
+    putchar(ratUTF8[1])
+    putchar(ratUTF8[2])
+    putchar(ratUTF8[3])
+    putchar(0x0A)
+    //*/
+
+    utf32_putchar(ratUTF32)
+    utf32_putchar(0xA)
+
+    utf16_puts("Hello Ω!\n")
+    utf32_puts("Hello 🐀!\n")
     //0x1F400
+    // 0001.1111.0100.0000.0000
     //printf("%C", '\x1F400')
     return 0
 }

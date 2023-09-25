@@ -6,56 +6,139 @@
 
 // examples/1.hello_world/main.cm
 #include <wchar.h>
-typedef char * WCharStr;
+typedef int16_t WChar;
 
-//const hello_w16 = "Hello W!\n"
+typedef uint16_t * WCharStr16;
 
-void printw32(uint32_t *wstr)
+
+
+// декодирует символ UTF-32 в последовательность UTF-8
+void utf32_to_utf8(uint32_t x, uint8_t *buf)
 {
+    if (x <= 0x0000007F) {
+        buf[0] = (uint8_t)x;
+        buf[1] = 0;
+    } else if (x <= 0x000007FF) {
+        const uint32_t a = x >> 6 & 0x1F;
+        const uint32_t b = x >> 0 & 0x3F;
+        buf[0] = 0xC0 | (uint8_t)a;
+        buf[1] = 0x80 | (uint8_t)b;
+        buf[2] = 0;
+    } else if (x <= 0x0000FFFF) {
+        const uint32_t a = x >> 12 & 0x0F;
+        const uint32_t b = x >> 6 & 0x3F;
+        const uint32_t c = x >> 0 & 0x3F;
+        buf[0] = 0xE0 | (uint8_t)a;
+        buf[1] = 0x80 | (uint8_t)b;
+        buf[2] = 0x80 | (uint8_t)c;
+        buf[3] = 0;
+    } else if (x <= 0x0010FFFF) {
+        const uint32_t a = x >> 18 & 0x07;
+        const uint32_t b = x >> 12 & 0x3F;
+        const uint32_t c = x >> 6 & 0x3F;
+        const uint32_t d = x >> 0 & 0x3F;
+        buf[0] = 0xF0 | (uint8_t)a;
+        buf[1] = 0x80 | (uint8_t)b;
+        buf[2] = 0x80 | (uint8_t)c;
+        buf[3] = 0x80 | (uint8_t)d;
+        buf[4] = 0;
+    }
+}
+
+
+void utf32_putchar(uint32_t c)
+{
+    uint8_t decoded_buf[5];
+    utf32_to_utf8(c, &decoded_buf[0]);
+
     int i = 0;
     while (true) {
-        const uint32_t wc = wstr[i];
-        if (wc == 0) {
-            break;
-        }
-
-/*if wc <= 0xFF {
-            printf("%c\n", wc)
-        } else if wc <= 0xFFFF {
-            printf("%c\n", wc >> 8)
-            printf("%c\n", wc and 0xFF)
-        } else {
-            printf("%c\n", wc >> 24 and 0xFF)
-            printf("%c\n", wc >> 16 and 0xFF)
-            printf("%c\n", wc >> 8 and 0xFF)
-            printf("%c\n", wc and 0xFF)
-        }*/
-
-        printf("%d\n", wc);
+        const uint8_t c = decoded_buf[i];
+        if (c == 0) {break;}
+        putchar((int32_t)c);
         i = i + 1;
     }
 }
 
-void printw16(uint16_t *wstr)
+
+void utf32_puts(uint32_t *s)
 {
     int i = 0;
     while (true) {
-        const uint16_t wc = wstr[i];
-        if (wc == 0) {
-            break;
-        }
-        printf("%d\n", wc);
+        const uint32_t c = s[i];
+        if (c == 0) {break;}
+        utf32_putchar(c);
         i = i + 1;
     }
 }
+
+
+void utf16_puts(uint16_t *s)
+{
+    int i = 0;
+    while (true) {
+        const uint16_t c = s[i];
+        if (c == 0) {break;}
+        utf32_putchar((uint32_t)c);
+        i = i + 1;
+    }
+}
+
+
+/*
+    UTF-8 Encoding:	    0xF0 0x9F 0x90 0x80
+    UTF-16 Encoding:	0xD83D 0xDC00
+    UTF-32 Encoding:	0x0001F400
+*/
+
+#define ratUTF8  (int8_t [4]){0xF0, 0x9F, 0x90, 0x80}
+#define ratUTF16  (int16_t [2]){0xD83D, 0xDC00}
+#define ratUTF32  0x0001F400
+
+
+// TODO: перекрытие имен - что с этим делать???
+
 
 int main(void)
 {
-    wprintf("Hello \x1F400!\n");
-    //printf("Hello 🐀!\n")
-    //printw16("Hello 🐀!\n")
-    //printw32("Hello 🐀!\n")
+/* var buf : [32]Nat8
+
+    utf32_to_utf8(0x1F400, &buf to Pointer)
+
+    var i := 0
+    while i < 5 {
+        printf("%d : %x\n", i, buf[i])
+        i := i + 1
+    }*/
+
+    //printf("%s\n", &buf to Pointer)
+
+    //sprintf(&buf to Pointer, "Hello 🐀\n")
+
+/*var i := 0
+    while i < 20 {
+        //f0 9f 90 80
+        printf("%02d %x\n", i, buf[i])
+        i := i + 1
+    }*/
+
+    //printf("Hello 🐀\n")
+
+/*
+    putchar(ratUTF8[0])
+    putchar(ratUTF8[1])
+    putchar(ratUTF8[2])
+    putchar(ratUTF8[3])
+    putchar(0x0A)
+    //*/
+
+    utf32_putchar(ratUTF32);
+    utf32_putchar(0xA);
+
+    utf16_puts((uint16_t *)u"Hello Ω!\n");
+    utf32_puts((uint32_t *)U"Hello 🐀!\n");
     //0x1F400
+    // 0001.1111.0100.0000.0000
     //printf("%C", '\x1F400')
     return 0;
 }

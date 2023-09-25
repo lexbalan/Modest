@@ -493,6 +493,7 @@ def value_cast_implicit(v, t, ti):
         return hlir_value_bad(ti)
 
     from_type = v['type']
+    to_type = t
 
     # implisit cast possible only for:
     # 1. Generic -> NonGeneric
@@ -509,12 +510,16 @@ def value_cast_implicit(v, t, ti):
 
 
     if type.is_generic(from_type):
-        print("X?")
-        type.type_print(from_type)
-        print()
+        #print("X?")
+        #type.type_print(from_type)
+        #print()
         if type.is_generic_string(from_type):
-            print("cast generic string to pointer")
-            return hlir_value_cast(v, t, ti=ti) #?!
+            if type.is_pointer(to_type):
+                if type.is_array(to_type['to']):
+                    if type.is_integer(to_type['to']['of']):
+                        info("cast generic string to pointer", ti)
+                        return hlir_value_cast(v, t, ti=ti) #?!
+            return v
 
         return value_soft_cast(v, t, ti)
 

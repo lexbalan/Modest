@@ -573,28 +573,37 @@ def print_value_cast(v, ctx):
     to_type = v['type']
 
     if type.is_generic_string(from_type):
+        if type.is_pointer(to_type):
+            if type.is_array(to_type['to']):
+                if type.is_integer(to_type['to']['of']):
+                    #type.type_print(to_type)
+                    #print("???%s" % to_type['kind'])
+                    tt = to_type['to']['of']
+                    #print("POWER = ", tt['power'])
 
-        #type.type_print(to_type)
-        print("???%s" % to_type['kind'])
-        tt = to_type['to']['of']
+                    prefix = "u8"
+                    if tt['power'] > 16:
+                        prefix = "U"
+                    elif tt['power'] > 8:
+                        prefix = "u"
 
-        prefix = ""
-        if tt['power'] > 16:
-            prefix = "U"
-        elif tt['power'] > 8:
-            prefix = "u"
 
-        print_value_literal_str(val, ctx=[], prefix=prefix)
-        return
+                    out("(")
+                    print_type(to_type, need_space_after=False, _print_array_asis=True)
+                    out(")")
+
+                    print_value_literal_str(val, ctx=[], prefix=prefix)
+                    return
 
 
     # не печатаем приведение литерала строки "string" к Str
-    if type.eq(type.typeStr, to_type):
-        if value_attribute_check(v['value'], 'string'):
-            print_value(v['value'], ctx)
-            return
+    #if type.eq(type.typeStr, to_type):
+    #    if value_attribute_check(v['value'], 'string'):
+    #        print_value(v['value'], ctx)
+    #        return
 
     print_cast(to_type, v['value'], ctx)
+
 
 
 
@@ -703,11 +712,15 @@ def print_value_literal_str(x, ctx, prefix=""):
         elif sym == '\r': out("\\r")
         elif sym == '\a': out("\\a")
         else:
-            if ord(sym) <= 0xFF:
-                out(sym)
-            else:
+            #if ord(sym) <= 0xFF:
+            #utf8 = sym.encode("utf-8")
+            #utf16 = sym.encode("utf-16")
+            #print("UTF8 = %s" % str(utf8))
+            #print("UTF16 = %s" % str(utf16))
+            out(sym)
+            """else:
                 sym = "\\x%X" % ord(sym)
-                out(sym)
+                out(sym)"""
     out("\"")
 
 

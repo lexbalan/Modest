@@ -751,11 +751,12 @@ def do_value_call(x):
     i = 0
     while i < npars:
         param = params[i]
-        arg = do_rvalue(x['args'][i])
+        a = x['args'][i]
+        arg = do_rvalue(a)
 
         if not value_is_bad(arg):
             arg = value_cast_implicit(arg, param['type'], arg['ti'])
-            type.check(param['type'], arg['type'], arg['ti'])
+            type.check(param['type'], arg['type'], a['ti'])
             args.append(arg)
 
         i = i + 1
