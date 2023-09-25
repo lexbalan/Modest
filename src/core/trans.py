@@ -206,7 +206,7 @@ def init():
     #root_context.type_add('Decimal64', type.typeDecimal64)
     #root_context.type_add('Decimal128', type.typeDecimal128)
 
-    root_context.type_add('Str', type.typeStr)
+    root_context.type_add('Str', type.typeCStr)
 
     root_context.type_add('Pointer', type.typeFreePtr)
 
@@ -663,7 +663,7 @@ def do_value_deref_string(val, t, ti):
     # и после разыменования мы должны получить массив элементов
     items = []
     for c in val['str']:
-        cc = hlir_value_int(ord(c), typ=type.typeChar, ti=None)
+        cc = hlir_value_int(ord(c), typ=type.typeCChar, ti=None)
         items.append(cc)
     return hlir_value_array(t['to'], items, ti=ti)
 
@@ -929,7 +929,7 @@ def do_value_id(x):
 # type of any C string is *[x]typeChar
 def value_cstr(string, length, ti):
     vol = hlir_value_int(length)
-    ta = hlir_type_array(type.typeChar, volume=vol, ti=ti)
+    ta = hlir_type_array(type.typeCChar, volume=vol, ti=ti)
     stype = hlir_type_pointer(ta, ti=ti)
     stype['att'].extend(['string', 'generic'])
     s = hlir_value_cstr(string, length, stype, ti=ti)

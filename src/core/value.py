@@ -141,7 +141,7 @@ def value_is_immediate(x):
 
 
 def value_generic_char(c, ti=None):
-    return hlir_value_int(ord(c), typ=type.typeChar, ti=ti)
+    return hlir_value_int(ord(c), typ=type.typeCChar, ti=ti)
 
 
 
@@ -423,9 +423,6 @@ def value_cons_pointer(v, t, ti, method):
             if type.eq(from_type['to']['of'], t['to']['of']):
                 return hlir_value_cast(v, t, ti=ti)
 
-    if type.is_generic_string(from_type):
-        #??
-
     # Nil -> *X
     if type.is_nil(from_type) and type.is_pointer(t):
         return do_cast_generic(v, t, ti)
@@ -512,6 +509,13 @@ def value_cast_implicit(v, t, ti):
 
 
     if type.is_generic(from_type):
+        print("X?")
+        type.type_print(from_type)
+        print()
+        if type.is_generic_string(from_type):
+            print("cast generic string to pointer")
+            return hlir_value_cast(v, t, ti=ti) #?!
+
         return value_soft_cast(v, t, ti)
 
 

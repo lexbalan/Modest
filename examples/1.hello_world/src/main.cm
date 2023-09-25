@@ -3,9 +3,61 @@
 @attribute("c-no-print")
 import "libc/stdio.hm"
 
+@insert("#include <wchar.h>")
+
+@property("c_alias", "wchar_t *")
+type WCharStr Str
+
+
+@attribute(["arghack", "dispensable", "c-no-print"])
+extern func wprintf(s : WCharStr) -> Int
+
+//const hello_w16 = "Hello W!\n"
+
+func printw32(wstr : *[]Nat32) -> Unit {
+    var i := 0
+    while true {
+        let wc = wstr[i]
+        if wc == 0 {
+            break
+        }
+
+        /*if wc <= 0xFF {
+            printf("%c\n", wc)
+        } else if wc <= 0xFFFF {
+            printf("%c\n", wc >> 8)
+            printf("%c\n", wc and 0xFF)
+        } else {
+            printf("%c\n", wc >> 24 and 0xFF)
+            printf("%c\n", wc >> 16 and 0xFF)
+            printf("%c\n", wc >> 8 and 0xFF)
+            printf("%c\n", wc and 0xFF)
+        }*/
+
+        printf("%d\n", wc)
+        i := i + 1
+    }
+}
+
+func printw16(wstr : *[]Nat16) -> Unit {
+    var i := 0
+    while true {
+        let wc = wstr[i]
+        if wc == 0 {
+            break
+        }
+        printf("%d\n", wc)
+        i := i + 1
+    }
+}
 
 func main () -> Int {
-    printf("Hello World!\n")
+    wprintf("Hello 🐀!\n")
+    //printf("Hello 🐀!\n")
+    //printw16("Hello 🐀!\n")
+    //printw32("Hello 🐀!\n")
+    //0x1F400
+    //printf("%C", '\x1F400')
     return 0
 }
 

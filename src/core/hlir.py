@@ -52,7 +52,7 @@ def hlir_type_float(aka, power, ti):
     }
 
 
-def hlir_type_pointer(to, ti):
+def hlir_type_pointer(to, ti=None):
     pointer_size = int(settings_get('ptr'))
     return {
         'isa': 'type',
@@ -94,7 +94,7 @@ def hlir_type_nil(ti):
 
 
 # size - always hlir_value (!)
-def hlir_type_array(of, volume, ti):
+def hlir_type_array(of, volume, ti=None):
     return {
         'isa': 'type',
         'kind': 'array',

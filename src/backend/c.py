@@ -3,7 +3,7 @@ from opt import *
 from error import info, error
 from .common import *
 import core.type as type
-from core.value import value_attribute_check, value_is_immediate
+from core.value import value_attribute_check, value_is_immediate, value_print
 from core.hlir import hlir_field, hlir_value_num_get, hlir_stmt_block, hlir_value_var
 from util import nbits_for_num, get_item_with_id
 
@@ -568,8 +568,25 @@ def print_value_cast(v, ctx):
         return
 
 
-    from_type = v['value']['type']
+    val = v['value']
+    from_type = val['type']
     to_type = v['type']
+
+    if type.is_generic_string(from_type):
+
+        #type.type_print(to_type)
+        print("???%s" % to_type['kind'])
+        tt = to_type['to']['of']
+
+        prefix = ""
+        if tt['power'] > 16:
+            prefix = "U"
+        elif tt['power'] > 8:
+            prefix = "u"
+
+        print_value_literal_str(val, ctx=[], prefix=prefix)
+        return
+
 
     # не печатаем приведение литерала строки "string" к Str
     if type.eq(type.typeStr, to_type):
@@ -680,11 +697,17 @@ def print_value_literal_record(v, ctx):
 
 def print_value_literal_str(x, ctx, prefix=""):
     out("%s\"" % prefix)
+    #value_print(x)
     for sym in x['str']:
         if sym == '\n': out("\\n")
         elif sym == '\r': out("\\r")
         elif sym == '\a': out("\\a")
-        else: out(sym)
+        else:
+            if ord(sym) <= 0xFF:
+                out(sym)
+            else:
+                sym = "\\x%X" % ord(sym)
+                out(sym)
     out("\"")
 
 

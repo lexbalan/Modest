@@ -105,12 +105,13 @@ typeGenericChar['llvm_alias'] = 'i32'
 
 
 
-typeChar = hlir_type_integer("Nat8", power=8, ti=None)
-typeChar['att'].extend(['unsigned', 'char'])
-typeChar['c_alias'] = 'char'
-typeChar['llvm_alias'] = 'i8'
+typeCChar = hlir_type_integer("Nat8", power=8, ti=None)
+typeCChar['att'].extend(['unsigned', 'char'])
+typeCChar['c_alias'] = 'char'
+typeCChar['llvm_alias'] = 'i8'
 
 
+typeCStr = hlir_type_pointer(hlir_type_array(of=typeCChar, volume=hlir_value_int(0)))
 typeStr = hlir_type_generic_str(ti=None)
 
 
