@@ -242,6 +242,11 @@ def hlir_value_cstr(string, length, type, ti=None):
         'str': string,
         'len': length,
         'type': type,
+
+        'used_char8': False,
+        'used_char16': False,
+        'used_char32': False,
+
         'att': ['immediate', 'string'],
         'ti': ti
     }

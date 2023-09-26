@@ -355,7 +355,11 @@ def print_value_literal_array(v, ctx):
 
     indent_down()
 
-    out("\n"); indent(); out("]")
+    if v['nl_end'] > 0:
+        out("\n" * v['nl_end'])
+        indent()
+
+    out("]")
 
 
 

@@ -1547,29 +1547,87 @@ def print_def_var(x):
 
 
 
+def print_string_utf8(strid, string):
+    ss = string['str']
+
+    slen = len(bytes(ss, 'utf-8')) + 1 # +1 (zero)
+
+    ss = ss.replace("\a", "\\07")
+    ss = ss.replace("\b", "\\08")
+    ss = ss.replace("\t", "\\09")
+    ss = ss.replace("\n", "\\0A")
+    ss = ss.replace("\v", "\\0B")
+    ss = ss.replace("\r", "\\0D")
+    ss = ss.replace("\e", "\\1B")
+    ss = ss.replace("\"", "\\22")
+    ss = ss.replace("\'", "\\27")
+
+    #ex: @str_1 = private constant [4 x i8] c"Hi!\00"
+    lo("@%s = private constant [%d x i8] c\"%s\\00\"" % (strid, slen, ss))
+
+
+
+def print_string_utf16(strid, string):
+    ss = string['str']
+
+    bb = (ss.encode('utf-16')).decode("utf16")
+    #bb = ss.decode('utf-8').encode('utf-16be')
+    #bb = bytes(ss, 'utf-16')
+    slen = len(bb) + 1 # +1 (zero)
+
+    print(bb)
+
+    lo("@%s = private constant [%d x i16] [" % (strid, slen))
+    for b in bb:
+        out("i16 %d, " % ord(b))
+
+    out("i16 0]")
+
+
+
+def print_string_utf32(strid, string):
+    ss = string['str']
+
+    bb = ss#ss.encode('utf-16')
+    #bb = bytes(ss, 'utf-32')
+    slen = len(bb) + 1 # +1 (zero)
+
+    print(bb)
+
+    lo("@%s = private constant [%d x i32] [" % (strid, slen))
+    for b in bb:
+        out("i32 %d, " % ord(b))
+
+    out("i32 0]")
+
+
+
+
 def print_strings(strings):
     strno = 0
     for string in strings:
+
         strno = strno + 1
         strid = 'str_%d' % strno
         string['strid'] = strid
 
-        ss = string['str']
+        #print(string)
 
-        slen = len(bytes(ss, 'utf-8')) + 1 # +1 (zero)
+        if string['used_char8']:
+            print("PRINT_STR8")
+            print_string_utf8(strid, string)
 
-        ss = ss.replace("\a", "\\07")
-        ss = ss.replace("\b", "\\08")
-        ss = ss.replace("\t", "\\09")
-        ss = ss.replace("\n", "\\0A")
-        ss = ss.replace("\v", "\\0B")
-        ss = ss.replace("\r", "\\0D")
-        ss = ss.replace("\e", "\\1B")
-        ss = ss.replace("\"", "\\22")
-        ss = ss.replace("\'", "\\27")
+        if string['used_char16']:
+            print("PRINT_STR16")
+            strid = strid + '_utf16'
+            string['strid_16'] = strid
+            print_string_utf16(strid, string)
 
-        #ex: @str_1 = private constant [4 x i8] c"Hi!\00"
-        lo("@%s = private constant [%d x i8] c\"%s\\00\"" % (strid, slen, ss))
+        if string['used_char32']:
+            print("PRINT_STR32")
+            strid = strid + '_utf32'
+            string['strid_32'] = strid
+            print_string_utf32(strid, string)
 
 
 

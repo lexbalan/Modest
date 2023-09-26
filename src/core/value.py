@@ -39,6 +39,10 @@ def cp_immval(nv, v):
         nv['str'] = v['str']
         nv['len'] = v['len']
 
+        nv['used_char8'] = False
+        nv['used_char16'] = False
+        nv['used_char32'] = False
+
     else:
         error("fatal: unknown immediate", v['ti'])
         #value_print(v)
@@ -214,6 +218,15 @@ def value_cons_array_from_array(v, t, ti, method):
     return None
 
 
+def str_used_as(string_value, typ):
+    if typ['power'] == 8:
+        string_value['used_char8'] = True
+    elif typ['power'] <= 16:
+        string_value['used_char16'] = True
+    elif typ['power'] <= 32:
+        string_value['used_char32'] = True
+
+
 def value_cons_array(v, t, ti, method):
     from_type = v['type']
     to_type = t
@@ -242,6 +255,9 @@ def value_cons_array(v, t, ti, method):
                 items.append(hlir_value_int(ccode, typ=to_type['of']))
 
             items.append(hlir_value_int(0, typ=to_type['of']))
+
+            str_used_as(string_value=v, typ=to_type['of'])
+
 
             return hlir_value_array(items, type=to_type, ti=None)
 
@@ -343,10 +359,6 @@ def is_bad_struct(x):
 
 def value_cons_record(v, t, ti, method):
     from_type = v['type']
-
-    # GenericRecord -> Record
-    """if type.is_generic(v['type']) and type.is_record(v['type']):
-        return value_cons_record_from_generic_record(v, t, ti, method)"""
 
     # GenericRecord -> Record
     if type.is_record(from_type):
@@ -464,6 +476,7 @@ def value_cons_pointer(v, t, ti, method):
         if type.is_array(to_type['to']):
             if type.is_integer(to_type['to']['of']):
                 #info("cast generic string to pointer", ti)
+                str_used_as(string_value=v, typ=to_type['to']['of'])
                 return hlir_value_cast(v, t, ti=ti) #?!
         return v
 
