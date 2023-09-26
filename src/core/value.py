@@ -215,12 +215,31 @@ def value_cons_array_from_array(v, t, ti, method):
 
 
 def value_cons_array(v, t, ti, method):
+    from_type = v['type']
+    to_type = t
+
     #print("value_cons_array")
     # GenericArray -> Array
-    if type.is_array(v['type']):
-        if type.is_generic(v['type']):
+    if type.is_array(from_type):
+        if type.is_generic(from_type):
             return value_cons_array_from_generic_array(v, t, ti, method)
         return value_cons_array_from_array(v, t, ti, method)
+
+
+    # GenericString -> [x]NatX
+    if type.is_generic_string(from_type):
+        if type.is_integer(to_type['of']):
+            #info("cast generic string to array", ti)
+
+            items = []
+            for c in v['str']:
+                ccode = ord(c)
+                #print("ccode = %d" % ccode)
+                items.append(hlir_value_int(ccode))
+
+            items.append(hlir_value_int(0))
+
+            return hlir_value_array(to_type, items, ti=None)
 
     return None
 
@@ -391,6 +410,7 @@ def value_cons_float(v, t, ti, method):
 def value_cons_pointer(v, t, ti, method):
 
     from_type = v['type']
+    to_type = t
 
     if 'unsafe' in features:
         ### UNSAFE ###
@@ -422,6 +442,15 @@ def value_cons_pointer(v, t, ti, method):
         if type.is_pointer_to_undefined_array(t):
             if type.eq(from_type['to']['of'], t['to']['of']):
                 return hlir_value_cast(v, t, ti=ti)
+
+
+    # GenericString -> *[]NatX
+    if type.is_generic_string(from_type):
+        if type.is_array(to_type['to']):
+            if type.is_integer(to_type['to']['of']):
+                #info("cast generic string to pointer", ti)
+                return hlir_value_cast(v, t, ti=ti) #?!
+        return v
 
     # Nil -> *X
     if type.is_nil(from_type) and type.is_pointer(t):
@@ -510,17 +539,6 @@ def value_cast_implicit(v, t, ti):
 
 
     if type.is_generic(from_type):
-        #print("X?")
-        #type.type_print(from_type)
-        #print()
-        if type.is_generic_string(from_type):
-            if type.is_pointer(to_type):
-                if type.is_array(to_type['to']):
-                    if type.is_integer(to_type['to']['of']):
-                        info("cast generic string to pointer", ti)
-                        return hlir_value_cast(v, t, ti=ti) #?!
-            return v
-
         return value_soft_cast(v, t, ti)
 
 

@@ -1497,6 +1497,10 @@ def def_var(x):
     if type.is_bad(f['type']):
         return None
 
+    already = value_get(f['id']['str'])
+    if already != None:
+        error("redefinition of '%s'" % f['id']['str'], x['field']['ti'])
+
     if type.is_opaque(f['type']):
         error("cannot create variable with undefined type", x['type'])
         return None
