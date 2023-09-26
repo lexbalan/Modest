@@ -219,8 +219,6 @@ def value_cons_array(v, t, ti, method):
     to_type = t
 
     # GenericArray -> Array
-    #info("value_cons_array", ti)
-    #type_print(from_type)
     if type.is_array(from_type):
         if type.is_generic(from_type):
             return value_cons_array_from_generic_array(v, t, ti, method)
@@ -252,60 +250,63 @@ def value_cons_array(v, t, ti, method):
 
 
 def value_cons_record_from_generic_record(v, t, ti, method):
+
     if v['kind'] == 'const':
         # TODO: тут нужно проверить чтобы при implicit методе
         # все поля присутствовали (!)
         return hlir_value_cast(v, t, ti=ti)
 
-    # 1. проходим по порядку определения по всем полям типа t (целевого)
-    # 2. если поля с таким именеи нет в v:
-        # 2.1 конструируем нулевое значение соотв типа
-        # 2.2 if method == 'implicit' - это ошибка (!)
-    # 3. делаем implicit_cast() для поля из v к соотв полю из t
-    # 4. проверяем тип
-    # 5. пакуем
     items = []
-    prev_nl = 1 # nl для неявных инициализаторов (zero)
-    for field in t['fields']:
-        field_name = field['id']['str']
-        field_type = field['type']
+    if len(v['type']['fields']) > 0:
+        # 1. проходим по порядку определения по всем полям типа t (целевого)
+        # 2. если поля с таким именеи нет в v:
+            # 2.1 конструируем нулевое значение соотв типа
+            # 2.2 if method == 'implicit' - это ошибка (!)
+        # 3. делаем implicit_cast() для поля из v к соотв полю из t
+        # 4. проверяем тип
+        # 5. пакуем
+        prev_nl = 1 # nl для неявных инициализаторов (zero)
+        for field in t['fields']:
+            field_name = field['id']['str']
+            field_type = field['type']
 
-        # получаем элемент с соотв именем из исходного значения
-        item_value = None
-        nl = 0
-        xti = None
+            # получаем элемент с соотв именем из исходного значения
+            item_value = None
+            nl = 0
+            xti = None
 
-        ini = get_item_with_id(v['initializers'], field_name)
+            ini = get_item_with_id(v['initializers'], field_name)
 
-        if ini == None:
-            # no field, create zero value stub
-            item_value = hlir_value_zero(field_type, ti=None)
-            if method == 'implicit':
-                # implicit cast требует наличия всех полей
-                error("expected field '%s'" % field_name, v['ti'])
-                return None    # это cast, а cast не выдает ошибки
-            nl = prev_nl
-            ti = None
-        else:
-            item_value = ini['value']
-            nl = ini['nl']
-            ti = ini['ti']
+            if ini == None:
+                # no field, create zero value stub
+                item_value = hlir_value_zero(field_type, ti=None)
+                if method == 'implicit':
+                    # implicit cast требует наличия всех полей
+                    error("expected field '%s'" % field_name, v['ti'])
+                    return None    # это cast, а cast не выдает ошибки
+                nl = prev_nl
+                ti = None
+            else:
+                item_value = ini['value']
+                nl = ini['nl']
+                ti = ini['ti']
 
-        prev_nl = nl
+            prev_nl = nl
 
-        item_value2 = value_cast_implicit(item_value, field_type, ti=None)
+            item_value2 = value_cast_implicit(item_value, field_type, ti=None)
 
-        type.check(field_type, item_value2['type'], item_value2)
+            type.check(field_type, item_value2['type'], item_value2)
 
-        #items[field_name] = item_value2
-        items.append({
-            'isa': 'initizlizer',
-            'id': field['id'],
-            'value': item_value2,
-            'att': [],
-            'nl': nl,
-            'ti': ti
-        })
+            #items[field_name] = item_value2
+            items.append({
+                'isa': 'initizlizer',
+                'id': field['id'],
+                'value': item_value2,
+                'att': [],
+                'nl': nl,
+                'ti': ti
+            })
+
 
     vx = {
         'isa': 'value',
@@ -341,9 +342,17 @@ def is_bad_struct(x):
 
 
 def value_cons_record(v, t, ti, method):
+    from_type = v['type']
+
     # GenericRecord -> Record
-    if type.is_generic(v['type']) and type.is_record(v['type']):
-        return value_cons_record_from_generic_record(v, t, ti, method)
+    """if type.is_generic(v['type']) and type.is_record(v['type']):
+        return value_cons_record_from_generic_record(v, t, ti, method)"""
+
+    # GenericRecord -> Record
+    if type.is_record(from_type):
+        if type.is_generic(from_type):
+            return value_cons_record_from_generic_record(v, t, ti, method)
+        return value_cons_record_from_record(v, t, ti, method)
 
     return None
 
