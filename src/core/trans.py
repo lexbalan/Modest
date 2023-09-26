@@ -653,22 +653,6 @@ def do_value_minus(val, t, ti):
 
 
 
-
-# string literal dereference ` * "Hello World!" `
-# returns array of chars
-def do_value_deref_string(val, t, ti):
-    # разыменование строки это особый случай
-    # поскольку она хоть и числится указателем на массив,
-    # но она в себе несет поля str и len
-    # и после разыменования мы должны получить массив элементов
-    items = []
-    for c in val['str']:
-        cc = hlir_value_int(ord(c), typ=type.typeCChar, ti=None)
-        items.append(cc)
-    return hlir_value_array(t['to'], items, ti=ti)
-
-
-
 def do_value_deref(val, t, ti):
     if not type.is_pointer(t):
         error("expected pointer", val)
@@ -679,12 +663,6 @@ def do_value_deref(val, t, ti):
     # and pointer to undefined array
     if type.is_func(to) or type.is_undefined_array(to):
         error("unsuitable type", val)
-
-
-    # string literal dereference
-    if value_is_immediate(val):
-        if 'string' in val['att']:
-            return do_value_deref_string(val, t, ti)
 
     return hlir_value_un('deref', val, to, ti=ti)
 
@@ -950,6 +928,13 @@ def do_value_str(x):
 
 
 
+
+# было решено не пытаться приводить generic элементы массива
+# к общему знаменателю, а оставить как есть;
+# потом, когда массив будет приводиться к конкретному типу
+# всплывут ошибки типизации если они есть.
+# Сейчас не знаю правильно ли, но вроде так хоть работает
+
 def do_value_array(x):
     items = []
     for item in x['items']:
@@ -959,33 +944,11 @@ def do_value_array(x):
 
     length = len(x['items'])
 
-    # FIXIT: если массив пустой, то тип of == None это вообще норм??
     of = None
     if length > 0:
         of = items[0]['type']
 
-    # было решено не пытаться приводить generic элементы массива
-    # к общему знаменателю, а оставить как есть;
-    # потом, когда массив будет приводиться к конкретному типу
-    # всплывут ошибки типизации если они есть.
-    # Сейчас не знаю правильно ли, но вроде так хоть работает
-
-    #print("OF: "); type_print(of); print()
-    """
-    # implicit cast array items to 'of' type
-    items2 = items
-    if of != None:
-        items2 = []
-        for item in items:
-            i2 = value_cast_implicit(item, of, item['ti'])
-            items2.append(i2)
-    """
-    items2 = items
-
-    vol = hlir_value_int(length)
-    typ = hlir_type_array(of, volume=vol, ti=x['ti'])
-    typ['att'].extend(['generic'])
-    y = hlir_value_array(typ, items2, ti=x['ti'])
+    y = hlir_value_array(items, is_generic=True, ti=x['ti'])
     y['nl_end'] = x['nl_end']
     return y
 

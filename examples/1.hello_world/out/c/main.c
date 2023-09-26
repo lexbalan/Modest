@@ -99,6 +99,10 @@ void utf16_puts(uint16_t *s)
 // TODO: перекрытие имен - что с этим делать???
 
 
+static uint8_t arr_utf8[8] = (uint8_t [8]){72, 101, 108, 111, 33, 10, 0};
+static uint16_t arr_utf16[8] = (uint16_t [8]){72, 101, 108, 108, 111, 33, 10, 0};
+static uint32_t arr_utf32[8] = (uint32_t [8]){72, 101, 108, 108, 111, 33, 10, 0};
+
 int main(void)
 {
 /* var buf : [32]Nat8
@@ -131,6 +135,9 @@ int main(void)
     putchar(ratUTF8[3])
     putchar(0x0A)
     //*/
+
+
+    putwchar(0x03A9);
 
     utf32_putchar(ratUTF32);
     utf32_putchar(0xA);

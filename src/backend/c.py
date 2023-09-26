@@ -609,6 +609,7 @@ def print_value_cast(v, ctx):
 
 def print_value_literal_array(v, ctx):
 
+    #if not type.is_generic(v['type']):
     out("(")
     print_type(v['type'], need_space_after=False, _print_array_asis=True)
     out(")")
@@ -658,7 +659,7 @@ def print_value_literal_array(v, ctx):
 def print_value_literal_record(v, ctx):
 
     out("(")
-    print_type(v['type'], need_space_after=False, _print_array_asis=True)
+    print_type(v['type'], need_space_after=False)
     out(")")
 
     out("{")
