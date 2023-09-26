@@ -5,6 +5,7 @@ import "libc/stdio.hm"
 
 @attribute("c-no-print")
 import "misc/utf.hm"
+@c_include("./utf.h")
 
 
 /*

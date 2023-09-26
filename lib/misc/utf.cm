@@ -1,0 +1,85 @@
+
+@attribute("c-no-print")
+import "libc/stdio.hm"
+
+
+// декодирует символ UTF-32 в последовательность UTF-8
+func utf32_to_utf8 (x : Nat32, buf : *[5]Nat8) -> Unit {
+    if x <= 0x0000007F {
+        buf[0] := x to Nat8
+        buf[1] := 0
+    } else if x <= 0x000007FF {
+        let a = (x >> 6) and 0x1F
+        let b = (x >> 0) and 0x3F
+        buf[0] := 0xC0 or a to Nat8
+        buf[1] := 0x80 or b to Nat8
+        buf[2] := 0
+    } else if x <= 0x0000FFFF {
+        let a = (x >> 12) and 0x0F
+        let b = (x >> 06) and 0x3F
+        let c = (x >> 00) and 0x3F
+        buf[0] := 0xE0 or a to Nat8
+        buf[1] := 0x80 or b to Nat8
+        buf[2] := 0x80 or c to Nat8
+        buf[3] := 0
+    } else if x <= 0x0010FFFF {
+        let a = (x >> 18) and 0x07
+        let b = (x >> 12) and 0x3F
+        let c = (x >> 06) and 0x3F
+        let d = (x >> 00) and 0x3F
+        buf[0] := 0xF0 or a to Nat8
+        buf[1] := 0x80 or b to Nat8
+        buf[2] := 0x80 or c to Nat8
+        buf[3] := 0x80 or d to Nat8
+        buf[4] := 0
+    }
+}
+
+
+func utf32_putchar(c : Nat32) -> Unit {
+    var decoded_buf : [5]Nat8
+    utf32_to_utf8(c, &decoded_buf)
+
+    var i := 0
+    while true {
+        let c = decoded_buf[i]
+        if c == 0 {break}
+        putchar(c to Int32)
+        i := i + 1
+    }
+}
+
+
+func utf32_puts(s : Str32) -> Unit {
+    var i := 0
+    while true {
+        let c = s[i]
+        if c == 0 {break}
+        utf32_putchar(c)
+        i := i + 1
+    }
+}
+
+
+func utf16_puts(s : Str16) -> Unit {
+    var i := 0
+    while true {
+        let c = s[i]
+        if c == 0 {break}
+        utf32_putchar(c to Nat32)
+        i := i + 1
+    }
+}
+
+
+func utf8_puts(s : Str8) -> Unit {
+    var i := 0
+    while true {
+        let c = s[i]
+        if c == 0 {break}
+        putchar(c to Int)
+        i := i + 1
+    }
+}
+
+
