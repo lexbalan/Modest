@@ -251,23 +251,24 @@ def hlir_value_array(items, is_generic=False, type=None, ti=None):
 
     if type == None:
         length = len(items)
-        assert(length > 0)
-        #of = None
-        #if not is_generic:
-        of = items[0]['type']
+
+        of = None
+        if length > 0:
+            of = items[0]['type']
+
         array_volume = hlir_value_int(length)
         type = hlir_type_array(of, volume=array_volume, ti=ti)
 
-    atts = ['immediate']
+
     if is_generic:
-        atts.append('generic')
+        type['att'].append('generic')
 
     return {
         'isa': 'value',
         'kind': 'literal',
         'type': type,
         'imm_items': items,
-        'att': atts,
+        'att': ['immediate'],
         'nl_end': 0,
         'ti': ti
     }

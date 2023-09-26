@@ -532,7 +532,7 @@ def type_print(t, print_aka=True):
 
     elif is_array(t):
         if t['of'] == None:
-            print("GenericEmptyArray")
+            print("GenericEmptyArray", end='')
             return
 
 

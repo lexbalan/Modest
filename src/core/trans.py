@@ -1474,7 +1474,7 @@ def def_var(x):
 
         if not value_is_bad(iv):
             init_value = value_cast_implicit(iv, f['type'], iv['ti'])
-            type.check(init_value['type'], f['type'], x['init']['ti'])
+            type.check(f['type'], init_value['type'], x['init']['ti'])
 
     var = hlir_value_var(f['id'], f['type'], init=init_value)
 

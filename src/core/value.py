@@ -218,8 +218,9 @@ def value_cons_array(v, t, ti, method):
     from_type = v['type']
     to_type = t
 
-    #print("value_cons_array")
     # GenericArray -> Array
+    #info("value_cons_array", ti)
+    #type_print(from_type)
     if type.is_array(from_type):
         if type.is_generic(from_type):
             return value_cons_array_from_generic_array(v, t, ti, method)
@@ -482,6 +483,7 @@ def value_cons(v, t, ti, method):
     if value_is_bad(v) or type.is_bad(t):
         return None
 
+
     if type.eq(v['type'], t):
         return v
 
@@ -528,6 +530,7 @@ def value_cast_implicit(v, t, ti):
 
     from_type = v['type']
     to_type = t
+
 
     # implisit cast possible only for:
     # 1. Generic -> NonGeneric
