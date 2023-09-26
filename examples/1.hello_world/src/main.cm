@@ -69,7 +69,7 @@ func utf32_putchar(c : Nat32) -> Unit {
 }
 
 
-func utf32_puts(s : *[]Nat32) -> Unit {
+func utf32_puts(s : Str32) -> Unit {
     var i := 0
     while true {
         let c = s[i]
@@ -80,7 +80,7 @@ func utf32_puts(s : *[]Nat32) -> Unit {
 }
 
 
-func utf16_puts(s : *[]Nat16) -> Unit {
+func utf16_puts(s : Str16) -> Unit {
     var i := 0
     while true {
         let c = s[i]
@@ -89,6 +89,18 @@ func utf16_puts(s : *[]Nat16) -> Unit {
         i := i + 1
     }
 }
+
+
+func utf8_puts(s : Str8) -> Unit {
+    var i := 0
+    while true {
+        let c = s[i]
+        if c == 0 {break}
+        putchar(c to Int)
+        i := i + 1
+    }
+}
+
 
 
 /*
@@ -144,7 +156,7 @@ func main () -> Int {
     //*/
 
 
-    putwchar(0x03A9)
+    //putwchar(0x03A9)
 
     utf32_putchar(ratUTF32)
     utf32_putchar(0xA)

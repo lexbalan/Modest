@@ -111,8 +111,29 @@ typeCChar['c_alias'] = 'char'
 typeCChar['llvm_alias'] = 'i8'
 
 
+typeCChar8 = hlir_type_integer("Char8", power=8, ti=None)
+typeCChar8['att'].extend(['unsigned', 'char'])
+typeCChar8['c_alias'] = 'uint8_t'
+typeCChar8['llvm_alias'] = 'i8'
+
+typeCChar16 = hlir_type_integer("Char16", power=16, ti=None)
+typeCChar16['att'].extend(['unsigned', 'char'])
+typeCChar16['c_alias'] = 'uint16_t'
+typeCChar16['llvm_alias'] = 'i16'
+
+typeCChar32 = hlir_type_integer("Char32", power=32, ti=None)
+typeCChar32['att'].extend(['unsigned', 'char'])
+typeCChar32['c_alias'] = 'uint32_t'
+typeCChar32['llvm_alias'] = 'i32'
+
+
 typeCStr = hlir_type_pointer(hlir_type_array(of=typeCChar, volume=hlir_value_int(0)))
 typeStr = hlir_type_generic_str(ti=None)
+
+
+typeStr8 = hlir_type_pointer(hlir_type_array(of=typeCChar8, volume=hlir_value_int(0)))
+typeStr16 = hlir_type_pointer(hlir_type_array(of=typeCChar16, volume=hlir_value_int(0)))
+typeStr32 = hlir_type_pointer(hlir_type_array(of=typeCChar32, volume=hlir_value_int(0)))
 
 
 typeFreePtr = hlir_type_free_pointer(ti=None)

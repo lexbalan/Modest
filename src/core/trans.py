@@ -208,6 +208,10 @@ def init():
 
     root_context.type_add('Str', type.typeCStr)
 
+    root_context.type_add('Str8', type.typeStr8)
+    root_context.type_add('Str16', type.typeStr16)
+    root_context.type_add('Str32', type.typeStr32)
+
     root_context.type_add('Pointer', type.typeFreePtr)
 
     root_context.type_add('Bool', type.typeNat1)

@@ -1333,6 +1333,7 @@ def run(module, outname):
 
     lo("#include <stdint.h>")
     lo("#include <string.h>")
+    #lo("#include <uchar.h>")
 
     if USE_STDBOOL:
         lo("#include <stdbool.h>")

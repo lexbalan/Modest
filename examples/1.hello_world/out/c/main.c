@@ -85,6 +85,19 @@ void utf16_puts(uint16_t *s)
 }
 
 
+void utf8_puts(uint8_t *s)
+{
+    int i = 0;
+    while (true) {
+        const uint8_t c = s[i];
+        if (c == 0) {break;}
+        putchar((int)c);
+        i = i + 1;
+    }
+}
+
+
+
 /*
     UTF-8 Encoding:	    0xF0 0x9F 0x90 0x80
     UTF-16 Encoding:	0xD83D 0xDC00
@@ -139,7 +152,7 @@ int main(void)
     //*/
 
 
-    putwchar(0x03A9);
+    //putwchar(0x03A9)
 
     utf32_putchar(ratUTF32);
     utf32_putchar(0xA);
