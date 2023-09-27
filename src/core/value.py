@@ -41,6 +41,8 @@ def cp_immediate(nv, v):
 
 
 def do_cast_generic(v, t, ti):
+    #info("do_cast_generic", ti)
+
     nv = hlir_value_cast(v, t, ti)
 
     cp_immediate(nv, v)
@@ -48,6 +50,8 @@ def do_cast_generic(v, t, ti):
     if 'nl_end' in v:
         nv['nl_end'] = v['nl_end']
 
+    # принтер не будет печатать операцию приведения с 'is-generic-cast'
+    # он просто напечатает значение (см print_value_cast)
     nv['att'].append('is-generic-cast')
 
     return nv
@@ -456,10 +460,12 @@ def value_cons_pointer(v, t, ti, method):
             if type.is_integer(to_type['to']['of']):
                 #info("cast generic string to pointer", ti)
                 str_used_as(string_value=v, typ=to_type['to']['of'])
-                #return hlir_value_cast(v, t, ti=ti) #?!
-                zz = do_cast_generic(v, t, ti=ti) #?!
+                return hlir_value_cast(v, t, ti=ti) #?!
+                """zz = do_cast_generic(v, t, ti=ti) #?!
                 zz['att'].append('string')
-                return zz
+                if 'is-generic-cast' in zz['att']:
+                    print("YEP!")
+                return zz"""
         return v
 
     # Nil -> *X

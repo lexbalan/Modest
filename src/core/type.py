@@ -129,6 +129,7 @@ typeCChar32['llvm_alias'] = 'i32'
 
 
 typeString = hlir_type_generic_str(ti=None)
+typeString['cm_alias'] = 'String'
 typeString['c_alias'] = 'const char *'
 typeString['llvm_alias'] = 'i8*'
 

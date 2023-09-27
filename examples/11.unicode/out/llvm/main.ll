@@ -99,12 +99,48 @@ declare void @utf32_to_utf8(i32, [5 x i8]*)
 
 ; -- MODULE: /Users/alexbalan/p/Modest/examples/11.unicode/src/main.cm
 
-@str_2_utf32 = private constant [10 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 32, i32 128000, i32 33, i32 10, i32 0]
+@str.1 = private constant [7 x i8] c"Helo!\0A\00"
+@str.2_utf16 = private constant [8 x i16] [i16 72, i16 101, i16 108, i16 108, i16 111, i16 33, i16 10, i16 0]
+@str.3_utf32 = private constant [8 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 33, i32 10, i32 0]
+@str.4_utf16 = private constant [10 x i16] [i16 72, i16 101, i16 108, i16 108, i16 111, i16 32, i16 937, i16 33, i16 10, i16 0]
+@str.5_utf32 = private constant [10 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 32, i32 937, i32 33, i32 10, i32 0]
+@str.6_utf32 = private constant [10 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 32, i32 128000, i32 33, i32 10, i32 0]
 
 
 
 
 
+
+@arr_utf8 = global [8 x i8] [
+  i8 72,
+  i8 101,
+  i8 108,
+  i8 111,
+  i8 33,
+  i8 10,
+  i8 0,
+  i8 0
+]
+@arr_utf16 = global [8 x i16] [
+  i16 72,
+  i16 101,
+  i16 108,
+  i16 108,
+  i16 111,
+  i16 33,
+  i16 10,
+  i16 0
+]
+@arr_utf32 = global [8 x i32] [
+  i32 72,
+  i32 101,
+  i32 108,
+  i32 108,
+  i32 111,
+  i32 33,
+  i32 10,
+  i32 0
+]
 
 
 define i32 @main() {
@@ -112,12 +148,9 @@ define i32 @main() {
 ;printf("clocale = %s\n", clocale)
 ;    utf32_putchar(ratUTF32)
 ;    utf32_putchar(0xA)
-    %1 = uncast %Str @str_1 to [0 x i16]*
-    call void([0 x i16]*) @utf16_puts ([0 x i16]* %1)
-    %2 = uncast %Str @str_1 to [0 x i32]*
-    call void([0 x i32]*) @utf32_puts ([0 x i32]* %2)
-    %3 = uncast %Str @str_2 to [0 x i32]*
-    call void([0 x i32]*) @utf32_puts ([0 x i32]* %3)
+    call void([0 x i16]*) @utf16_puts ([0 x i16]* @str.4_utf16)
+    call void([0 x i32]*) @utf32_puts ([0 x i32]* @str.5_utf32)
+    call void([0 x i32]*) @utf32_puts ([0 x i32]* @str.6_utf32)
     ret i32 0
 }
 

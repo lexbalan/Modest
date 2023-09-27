@@ -58,7 +58,7 @@ var arr_utf32 : [8]Nat32 := "Hello!\n"
 //var xxx : [8]Nat8 := []
 
 
-const strUtf16 = "Hello Ω!\n"
+//const strUtf16 = "Hello Ω!\n"
 
 func main () -> Int {
 
@@ -68,8 +68,8 @@ func main () -> Int {
 //    utf32_putchar(ratUTF32)
 //    utf32_putchar(0xA)
 
-    utf16_puts(strUtf16)
-    utf32_puts(strUtf16)
+    utf16_puts("Hello Ω!\n")
+    utf32_puts("Hello Ω!\n")
     utf32_puts("Hello 🐀!\n")
 
     return 0

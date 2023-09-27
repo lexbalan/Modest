@@ -742,16 +742,41 @@ def select_cast_operator(a, b):
 
 
 
-def do_eval_expr_to(v):
-
-    if 'is-generic-cast' in v['att']:
-        return do_eval_literal(v)
-        #info("??", v['ti'])
-        return
+def do_eval_expr_cast(v):
 
     value = v['value']
     from_type = value['type']
     to_type = v['type']
+
+    # строки печатаются отсюда!
+    if type.is_generic_string(from_type):
+        v = v['value']
+        if type.is_string(to_type):
+            tt = to_type['to']['of']
+
+            id_name = 'strid_8'
+            if tt['power'] == 16:
+                id_name = 'strid_16'
+            elif tt['power'] == 32:
+                id_name = "strid_32"
+
+            return {
+                'isa': 'llvm_value',
+                'class': 'mem',
+                'level': 'value',
+                'id': v['imm'][id_name],
+                'type': v['type'],
+                'proto': v
+            }
+
+            return
+
+
+    if 'is-generic-cast' in v['att']:
+        return do_eval_literal(v)
+
+
+
 
     # (STUB?) nil -> zeroinitializer
     if type.is_free_pointer(from_type):
@@ -917,7 +942,7 @@ def do_eval(x):
 
 def do_eval_str(x):
     # проблема строковых констант и strid
-    #if not 'strid' in x:
+    #if not 'strid_8' in x:
     #    if 'value' in x:
     #        return do_eval_x(x['value'])
 
@@ -925,7 +950,7 @@ def do_eval_str(x):
         'isa': 'llvm_value',
         'class': 'mem',
         'level': 'value',
-        'id': x['imm']['strid'],
+        'id': x['imm']['strid_8'],
         'type': x['type'],
         'proto': x
     }
@@ -1007,7 +1032,7 @@ def do_eval_x(x):
     elif k == 'index_ptr': y = do_eval_expr_index_ptr(x)
     elif k == 'access': y = do_eval_expr_access(x)
     elif k == 'access_ptr': y = do_eval_expr_access_ptr(x)
-    elif k == 'cast': y = do_eval_expr_to(x)
+    elif k == 'cast': y = do_eval_expr_cast(x)
     elif k == 'sizeof': y = do_eval_sizeof(x)
     else:
         out("<%s>" % k)
@@ -1615,12 +1640,12 @@ def print_strings(strings):
     for string in strings:
 
         strno = strno + 1
-        strid = 'str_%d' % strno
-        string['imm']['strid'] = strid
+        strid = 'str.%d' % strno
 
 
         if string['imm']['used_char8']:
             print("PRINT_STR8")
+            string['imm']['strid_8'] = strid
             print_string_utf8(strid, string)
 
         if string['imm']['used_char16']:

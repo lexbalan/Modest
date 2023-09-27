@@ -16,8 +16,10 @@ CM:
 
 
 LLVM:
+	mcc -o $(LLVMPREFIX)/utf  -funsafe -mbackend=llvm ${MODEST_LIB}/misc/utf.cm
+	
 	mcc -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.cm
-	clang $(LLVMPREFIX)/main.ll
+	clang $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/utf.ll
 
 
 C:

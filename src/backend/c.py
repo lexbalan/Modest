@@ -3,6 +3,7 @@ from opt import *
 from error import info, error
 from .common import *
 import core.type as type
+from core.type import type_print
 from core.value import value_attribute_check, value_is_immediate, value_print
 from core.hlir import hlir_field, hlir_value_num_get, hlir_stmt_block, hlir_value_var
 from util import nbits_for_num, get_item_with_id
@@ -573,27 +574,21 @@ def print_value_cast(v, ctx):
     to_type = v['type']
 
     if type.is_generic_string(from_type):
-        if type.is_pointer(to_type):
-            if type.is_array(to_type['to']):
-                if type.is_integer(to_type['to']['of']):
-                    #type.type_print(to_type)
-                    #print("???%s" % to_type['kind'])
-                    tt = to_type['to']['of']
-                    #print("POWER = ", tt['power'])
+        if type.is_string(to_type):
+            tt = to_type['to']['of']
 
-                    prefix = "u8"
-                    if tt['power'] > 16:
-                        prefix = "U"
-                    elif tt['power'] > 8:
-                        prefix = "u"
+            prefix = "u8"
+            if tt['power'] > 16:
+                prefix = "U"
+            elif tt['power'] > 8:
+                prefix = "u"
 
+            out("(")
+            print_type(to_type, need_space_after=False, _print_array_asis=True)
+            out(")")
 
-                    out("(")
-                    print_type(to_type, need_space_after=False, _print_array_asis=True)
-                    out(")")
-
-                    print_value_literal_str(val, ctx=[], prefix=prefix)
-                    return
+            print_value_literal_str(val, ctx=[], prefix=prefix)
+            return
 
 
     # не печатаем приведение литерала строки "string" к Str
@@ -712,7 +707,35 @@ def print_value_literal_record(v, ctx):
 
 
 
+
+"""if type.is_generic_string(from_type):
+        if type.is_pointer(to_type):
+            if type.is_array(to_type['to']):
+                if type.is_integer(to_type['to']['of']):
+                    #type.type_print(to_type)
+                    #print("???%s" % to_type['kind'])
+                    tt = to_type['to']['of']
+                    #print("POWER = ", tt['power'])
+
+                    prefix = "u8"
+                    if tt['power'] > 16:
+                        prefix = "U"
+                    elif tt['power'] > 8:
+                        prefix = "u"
+
+                    out("(")
+                    print_type(to_type, need_space_after=False, _print_array_asis=True)
+                    out(")")
+
+                    print_value_literal_str(val, ctx=[], prefix=prefix)
+                    return
+"""
+
+
 def print_value_literal_str(x, ctx, prefix=""):
+
+
+
     out("%s\"" % prefix)
 
     for sym in x['imm']['str']:
