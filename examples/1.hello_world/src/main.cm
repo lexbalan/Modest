@@ -3,58 +3,8 @@
 @attribute("c-no-print")
 import "libc/stdio.hm"
 
-
-@attribute("c-no-print")
-import "misc/utf.hm"
-@c_include("./utf.h")
-
-/*
-@property("c_alias", "wchar_t")
-type WChar Int16
-
-@property("c_alias", "wchar_t *")
-type WCharStr16 *[]Nat16
-
-
-@attribute(["arghack", "dispensable", "c-no-print"])
-extern func wprintf(s : WCharStr16) -> Int
-
-
-@attribute(["dispensable", "c-no-print"])
-extern func putwchar(c : WChar) -> Int
-*/
-
-
-/*
-    UTF-8 Encoding:	    0xF0 0x9F 0x90 0x80
-    UTF-16 Encoding:	0xD83D 0xDC00
-    UTF-32 Encoding:	0x0001F400
-*/
-
-const ratUTF8 = [0xf0, 0x9f, 0x90, 0x80]
-const ratUTF16 = [0xD83D, 0xDC00]
-const ratUTF32 = 0x0001F400
-
-
-// TODO: перекрытие имен - что с этим делать???
-
-
-var arr_utf8 : [8]Nat8 := "Helo!\n"
-var arr_utf16 : [8]Nat16 := "Hello!\n"
-var arr_utf32 : [8]Nat32 := "Hello!\n"
-
-var xxx : [8]Nat8 := []
-
 func main () -> Int {
-
-    utf32_putchar(ratUTF32)
-    utf32_putchar(0xA)
-
-    utf16_puts("Hello Ω!\n")
-    utf32_puts("Hello 🐀!\n")
-    //0x1F400
-    // 0001.1111.0100.0000.0000
-    //printf("%C", '\x1F400')
+    printf("Hello World!\n")
     return 0
 }
 

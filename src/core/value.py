@@ -457,15 +457,23 @@ def value_cons_pointer(v, t, ti, method):
     # GenericString -> *[]NatX
     if type.is_generic_string(from_type):
         if type.is_array(to_type['to']):
+            #
+            # GenericString -> *[]NatX
+            #
+
             if type.is_integer(to_type['to']['of']):
                 #info("cast generic string to pointer", ti)
                 str_used_as(string_value=v, typ=to_type['to']['of'])
                 return hlir_value_cast(v, t, ti=ti) #?!
-                """zz = do_cast_generic(v, t, ti=ti) #?!
-                zz['att'].append('string')
-                if 'is-generic-cast' in zz['att']:
-                    print("YEP!")
-                return zz"""
+
+        elif type.is_integer(to_type['to']):
+            #
+            # GenericString -> *NatX
+            #
+
+            str_used_as(string_value=v, typ=to_type['to'])
+            return hlir_value_cast(v, t, ti=ti) #?!
+
         return v
 
     # Nil -> *X

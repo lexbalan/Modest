@@ -24,12 +24,12 @@ typedef struct {
 
 void write_example(void)
 {
-    printf("run write_example\n");
+    printf((const char *)u8"run write_example\n");
 
-    FILE *const fp = fopen((const char *)filename, "wb");
+    FILE *const fp = fopen((const char *)u8"file.bin", (const char *)u8"wb");
 
     if (fp == NULL) {
-        printf("error: cannot create file '%s'", filename);
+        printf((const char *)u8"error: cannot create file '%s'", filename);
         return;
     }
 
@@ -49,20 +49,20 @@ void write_example(void)
 
 void read_example(void)
 {
-    printf("run read_example\n");
+    printf((const char *)u8"run read_example\n");
 
-    FILE *const fp = fopen((const char *)filename, "rb");
+    FILE *const fp = fopen((const char *)u8"file.bin", (const char *)u8"rb");
 
     if (fp == NULL) {
-        printf("error: cannot open file '%s'", filename);
+        printf((const char *)u8"error: cannot open file '%s'", filename);
         return;
     }
 
     Chunk chunk;
     fread((void *)&chunk, (sizeof(Chunk)), 1, fp);
-    printf("file '%s' contains:\n", filename);
-    printf("chunk.id: %s\n", &chunk.id[0]);
-    printf("chunk.data: %s\n", &chunk.data[0]);
+    printf((const char *)u8"file '%s' contains:\n", filename);
+    printf((const char *)u8"chunk.id: %s\n", &chunk.id[0]);
+    printf((const char *)u8"chunk.data: %s\n", &chunk.data[0]);
 
     fclose(fp);
 }
@@ -70,7 +70,7 @@ void read_example(void)
 
 int main(void)
 {
-    printf("text_file example\n");
+    printf((const char *)u8"text_file example\n");
     write_example();
     read_example();
     return 0;

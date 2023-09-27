@@ -89,31 +89,31 @@ declare void @perror(%ConstCharStr)
 
 ; -- MODULE: /Users/alexbalan/p/Modest/examples/2.if-else/src/main.cm
 
-@str_1 = private constant [17 x i8] c"if-else example\0A\00"
-@str_2 = private constant [10 x i8] c"enter a: \00"
-@str_3 = private constant [3 x i8] c"%d\00"
-@str_4 = private constant [10 x i8] c"enter b: \00"
-@str_5 = private constant [3 x i8] c"%d\00"
-@str_6 = private constant [7 x i8] c"a > b\0A\00"
-@str_7 = private constant [7 x i8] c"a < b\0A\00"
-@str_8 = private constant [8 x i8] c"a == b\0A\00"
+@str1.c8 = private constant [17 x i8] c"if-else example\0A\00"
+@str2.c8 = private constant [10 x i8] c"enter a: \00"
+@str3.c8 = private constant [3 x i8] c"%d\00"
+@str4.c8 = private constant [10 x i8] c"enter b: \00"
+@str5.c8 = private constant [3 x i8] c"%d\00"
+@str6.c8 = private constant [7 x i8] c"a > b\0A\00"
+@str7.c8 = private constant [7 x i8] c"a < b\0A\00"
+@str8.c8 = private constant [8 x i8] c"a == b\0A\00"
 
 
 
 define i32 @main() {
-    %1 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str_1)
+    %1 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str1.c8)
     %a = alloca i32
     %b = alloca i32
-    %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str_2)
-    %3 = call i32(%ConstCharStr, ...) @scanf (%ConstCharStr @str_3, i32* %a)
-    %4 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str_4)
-    %5 = call i32(%ConstCharStr, ...) @scanf (%ConstCharStr @str_5, i32* %b)
+    %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str2.c8)
+    %3 = call i32(%ConstCharStr, ...) @scanf (%ConstCharStr @str3.c8, i32* %a)
+    %4 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str4.c8)
+    %5 = call i32(%ConstCharStr, ...) @scanf (%ConstCharStr @str5.c8, i32* %b)
     %6 = load i32, i32* %a
     %7 = load i32, i32* %b
     %8 = icmp sgt i32 %6, %7
     br i1 %8 , label %then_0, label %else_0
 then_0:
-    %9 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str_6)
+    %9 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str6.c8)
     br label %endif_0
 else_0:
     %10 = load i32, i32* %a
@@ -121,10 +121,10 @@ else_0:
     %12 = icmp slt i32 %10, %11
     br i1 %12 , label %then_1, label %else_1
 then_1:
-    %13 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str_7)
+    %13 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str7.c8)
     br label %endif_1
 else_1:
-    %14 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str_8)
+    %14 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str8.c8)
     br label %endif_1
 endif_1:
     br label %endif_0

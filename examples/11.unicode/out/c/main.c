@@ -59,7 +59,7 @@ static uint32_t arr_utf32[8] = (uint32_t [8]){72, 101, 108, 108, 111, 33, 10, 0}
 //var xxx : [8]Nat8 := []
 
 
-//const strUtf16 = "Hello Ω!\n"
+#define strUtf16  "Hello Ω!\n"
 
 int main(void)
 {

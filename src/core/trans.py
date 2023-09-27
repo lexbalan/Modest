@@ -815,7 +815,7 @@ def do_value_index(x):
                 # is an array
                 items = a['imm']
                 v_imm = items[index]
-                value_set_imm(v, v_imm)
+                value_set_imm(v, v_imm['imm'])
 
     return v
 
