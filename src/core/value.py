@@ -22,31 +22,8 @@ def value_print(x):
     info("here", x['ti'])
 
 
-def cp_immval(nv, v):
-    if 'imm_num' in v:
-        nv['imm_num'] = hlir_value_num_get(v)
-
-        if value_attribute_check(v, 'hexadecimal'):
-            nv['att'].append('hexadecimal')
-
-    elif 'imm_items' in v:
-        nv['imm_items'] = v['imm_items']
-
-    elif 'imm_initializers' in v:
-        nv['imm_initializers'] = v['imm_initializers']
-
-    elif 'str' in v:
-        nv['str'] = v['str']
-        nv['len'] = v['len']
-
-        nv['used_char8'] = False
-        nv['used_char16'] = False
-        nv['used_char32'] = False
-
-    else:
-        error("fatal: unknown immediate", v['ti'])
-        #value_print(v)
-
+def value_set_imm(nv, imm):
+    nv['imm'] = imm
     nv['att'].append('immediate')
 
 
@@ -57,7 +34,7 @@ def cp_immediate(nv, v):
     if 'id' in v:
         nv['id'] = v['id']
 
-    cp_immval(nv, v)
+    value_set_imm(nv, v['imm'])
 
 
 
@@ -131,8 +108,9 @@ def value_is_immutable(x):
 # то что определено директивой let
 def value_is_const_imm(x):
     if x['kind'] == 'const':
-        if 'imm_num' in x:
-            return True
+        if 'imm' in x:
+            return 'num' in x
+        #return value_is_immediate()
     return False
 
 
@@ -158,12 +136,13 @@ def value_load(x):
 # полного или из пустого дженерик массива
 def value_cons_array_from_generic_array(v, t, ti, method):
     #print("value_cons_array_from_generic_array")
-    if len(v['imm_items']) > hlir_value_num_get(t['volume']):
+    if len(v['imm']) > hlir_value_num_get(t['volume']):
         info("too many items", v['ti'])
         return None
 
     casted_items = []
-    for item in v['imm_items']:
+    items = v['imm']
+    for item in items:
         casted_item = value_cast_implicit(item, t['of'], item['ti'])
         type.check(t['of'], casted_item['type'], item['ti'])
         casted_items.append(casted_item)
@@ -171,7 +150,7 @@ def value_cons_array_from_generic_array(v, t, ti, method):
     vx = {
         'isa': 'value',
         'kind': 'literal',
-        'imm_items': casted_items,
+        'imm': casted_items,
         'type': t,
         'att': [],
         'nl_end': v['nl_end'],
@@ -211,7 +190,7 @@ def value_cons_array_from_array(v, t, ti, method):
 
         # extend array with zero items
         padding = [hlir_value_zero(t['of'], ti=None)] * n
-        nv['imm_items'].extend(padding)
+        nv['imm'].extend(padding)
 
         return nv
 
@@ -245,11 +224,11 @@ def value_cons_array(v, t, ti, method):
 
             to_arr_volume = hlir_value_num_get(to_type['volume'])
             # v['len'] учитывает '\0'
-            if v['len'] > to_arr_volume:
+            if v['imm']['len'] > to_arr_volume:
                 error("too big", ti)
 
             items = []
-            for c in v['str']:
+            for c in v['imm']['str']:
                 ccode = ord(c)
                 #print("ccode = %d" % ccode)
                 items.append(hlir_value_int(ccode, typ=to_type['of']))
@@ -291,7 +270,8 @@ def value_cons_record_from_generic_record(v, t, ti, method):
             nl = 0
             xti = None
 
-            ini = get_item_with_id(v['imm_initializers'], field_name)
+            initializers = v['imm']
+            ini = get_item_with_id(initializers, field_name)
 
             if ini == None:
                 # no field, create zero value stub
@@ -327,7 +307,7 @@ def value_cons_record_from_generic_record(v, t, ti, method):
     vx = {
         'isa': 'value',
         'kind': 'literal',
-        'imm_initializers': items,
+        'imm': items,
         'type': t,
         'att': [],
         'nl_end': v['nl_end'],
@@ -390,7 +370,7 @@ def value_cons_integer(v, t, ti, method):
 
             nv = hlir_value_cast(v, t, ti)
             if value_is_immediate(v):
-                cp_immval(nv, v)
+                value_set_imm(nv, v['imm'])
             return nv
 
         else:
@@ -417,7 +397,8 @@ def value_cons_float(v, t, ti, method):
                     return None
 
                 y = do_cast_generic(v, t, ti)
-                y['imm_num'] = float(hlir_value_num_get(y))    # 0 -> 0.0, need for printer (!)
+                num = float(hlir_value_num_get(y))    # 0 -> 0.0, need for printer (!)
+                y['imm'] = num
                 return y
 
         elif type.is_integer(vt):
@@ -449,7 +430,8 @@ def value_cons_pointer(v, t, ti, method):
                 if type.is_integer(v['type']):
                     # compile-time casting
                     nv = hlir_value_cast(v, t, ti=ti)
-                    nv['imm_num'] = hlir_value_num_get(v)
+                    num = hlir_value_num_get(v)
+                    nv['imm'] = num
                     nv['att'].append('immediate')
                     return nv
 

@@ -325,9 +325,9 @@ def print_value_cast(v, ctx):
 def print_value_literal_array(v, ctx):
     out("[")
     indent_up()
-    #print_values(v['imm_items'], before=nl_indentation(INDENT_SYMBOL), after="", separator="")
+    #print_values(v['imm'], before=nl_indentation(INDENT_SYMBOL), after="", separator="")
 
-    values = v['imm_items']
+    values = v['imm']
     i = 0
     n = len(values)
     while i < n:
@@ -370,13 +370,15 @@ def print_value_literal_record(v, ctx):
 
     indent_up()
 
-    nitems = len(v['imm_initializers'])
+    initializers = v['imm']
+    nitems = len(initializers)
     i = 0
     while i < nitems:
         item = v['type']['fields'][i]
         field_str = item['id']['str']
 
-        ini = get_item_with_id(v['imm_initializers'], field_str)
+
+        ini = get_item_with_id(initializers, field_str)
 
         nl = 0
         if 'nl' in ini:
@@ -410,7 +412,7 @@ def print_value_literal_record(v, ctx):
 
 def print_value_literal_str(x, ctx):
     out("\"")
-    for sym in x['str']:
+    for sym in x['imm']['str']:
         if sym == '\n': out("\\n")
         elif sym == '\r': out("\\r")
         elif sym == '\a': out("\\a")

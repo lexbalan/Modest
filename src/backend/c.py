@@ -618,11 +618,17 @@ def print_value_literal_array(v, ctx):
     indent_up()
 
 
-    values = v['imm_items']
+    values = v['imm']
     i = 0
     n = len(values)
     while i < n:
-        a = values[i]
+        a = None
+        try:
+            a = values[i]
+        except:
+            print("N = " + str(n))
+            value_print(v)
+            print(values)
 
         nl = 0
         if 'nl' in a:
@@ -665,13 +671,14 @@ def print_value_literal_record(v, ctx):
     out("{")
     indent_up()
 
-    nitems = len(v['imm_initializers'])
+    initializers = v['imm']
+    nitems = len(initializers)
     i = 0
     while i < nitems:
         item = v['type']['fields'][i]
         field_str = item['id']['str']
 
-        ini = get_item_with_id(v['imm_initializers'], field_str)
+        ini = get_item_with_id(initializers, field_str)
 
         nl = 0
         if 'nl' in ini:
@@ -707,8 +714,8 @@ def print_value_literal_record(v, ctx):
 
 def print_value_literal_str(x, ctx, prefix=""):
     out("%s\"" % prefix)
-    #value_print(x)
-    for sym in x['str']:
+
+    for sym in x['imm']['str']:
         if sym == '\n': out("\\n")
         elif sym == '\r': out("\\r")
         elif sym == '\a': out("\\a")

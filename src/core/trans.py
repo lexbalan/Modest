@@ -416,8 +416,7 @@ def do_value_shift(x):
                 res_t = l['type']
 
             v = hlir_value_bin(op, l, r, res_t, ti=ti)
-            v['att'].append('immediate')
-            v['imm_num'] = imm_result
+            value_set_imm(v, imm_result)
             return v
 
 
@@ -434,9 +433,7 @@ def do_value_shift(x):
                 l = do_cast_generic(l, t, x['left']['ti'])
 
             v = hlir_value_bin(op, l, r, l['type'], ti=ti)
-
-            v['att'].append('immediate')
-            v['imm_num'] = imm_result
+            value_set_imm(v, imm_result)
             return v
 
     if type.is_generic(l['type']):
@@ -601,7 +598,7 @@ def do_value_bin(x):
     bin_value = hlir_value_bin(k, l, r, type_result, ti=ti)
 
     # if left & right are immediate, we can fold const
-    # and append field 'imm_num' to bin_value
+    # and append field ['imm'] to bin_value
     if value_is_immediate(l) and value_is_immediate(r):
         ops = {
             'logic_or': lambda a, b: a | b,
@@ -627,8 +624,7 @@ def do_value_bin(x):
         if not type.is_float(l['type']):
             num_val = int(num_val)
 
-        bin_value['imm_num'] = num_val
-        bin_value['att'].append('immediate')
+        value_set_imm(bin_value, num_val)
 
     return bin_value
 
@@ -640,8 +636,8 @@ def do_value_not(val, t, ti):
     v = hlir_value_un('not', val, t, ti=ti)
 
     if value_is_immediate(val):
-        v['imm_num'] = ~hlir_value_num_get(val)
-        v['att'].append('immediate')
+        num = ~hlir_value_num_get(val)
+        value_set_imm(v, num)
 
     return v
 
@@ -650,8 +646,8 @@ def do_value_minus(val, t, ti):
     v = hlir_value_un('minus', val, t, ti=ti)
 
     if value_is_immediate(val):
-        v['imm_num'] = -hlir_value_num_get(val)
-        v['att'].append('immediate')
+        num = -hlir_value_num_get(val)
+        value_set_imm(v, num)
 
     return v
 
@@ -817,8 +813,9 @@ def do_value_index(x):
 
             else:
                 # is an array
-                v_imm = a['imm_items'][index]
-                cp_immval(v, v_imm)
+                items = a['imm']
+                v_imm = items[index]
+                value_set_imm(v, v_imm)
 
     return v
 
@@ -866,8 +863,9 @@ def do_value_access(x):
 
     # access to immediate object
     if value_is_immediate(obj) and not ptr_access:
-        initializer = get_item_with_id(obj['imm_initializers'], field_id['str'])
-        cp_immval(v, initializer['value'])
+        initializers = obj['imm']
+        initializer = get_item_with_id(initializers, field_id['str'])
+        value_set_imm(v, initializer['value']['imm'])
 
     return v
 
@@ -1217,7 +1215,7 @@ def do_stmt_let(x):
     const_value['att'].extend(['local']) # need for LLVM printer (!)
 
     if value_is_immediate(v):
-        cp_immval(const_value, v)
+        value_set_imm(const_value, v['imm'])
 
     module['context'].value_add(id['str'], const_value)
 
@@ -1396,7 +1394,7 @@ def def_const(x):
 
     const_value = hlir_value_const(id, v['type'], v, x['ti'])
 
-    cp_immval(const_value, v)
+    value_set_imm(const_value, v['imm'])
 
     atts = attributes_get()
     const_value['att'].extend(atts)

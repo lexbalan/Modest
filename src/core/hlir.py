@@ -20,8 +20,7 @@ def hlir_type_unit():
         'llvm_alias': 'void',
         'size': 0,
         'power': 0,
-        'imm_items': [],
-        'imm_initializers': [],
+        'imm': {},
         'att': [],
         'ti': None
     }
@@ -185,9 +184,7 @@ def hlir_value_zero(t, ti=None):
         'isa': 'value',
         'kind': 'literal',
         'type': t,
-        'imm_num': 0,
-        'imm_items': [],
-        'imm_initializers': [],
+        'imm': None,
         'att': ['immediate'],
         'ti': ti
     }
@@ -213,7 +210,7 @@ def hlir_value_int(num, typ=None, ti=None):
     return {
         'isa': 'value',
         'kind': 'literal',
-        'imm_num': num,
+        'imm': num,
         'type': typ,
         'att': ['immediate'],
         'ti': ti
@@ -228,7 +225,7 @@ def hlir_value_float(num, ti=None):
     return {
         'isa': 'value',
         'kind': 'literal',
-        'imm_num': num,
+        'imm': num,
         'type': typ,
         'att': ['immediate'],
         'ti': ti
@@ -239,13 +236,16 @@ def hlir_value_cstr(string, length, type, ti=None):
     return {
         'isa': 'value',
         'kind': 'literal',
-        'str': string,
-        'len': length,
         'type': type,
 
-        'used_char8': False,
-        'used_char16': False,
-        'used_char32': False,
+        'imm': {
+            'str': string,
+            'len': length,
+
+            'used_char8': False,
+            'used_char16': False,
+            'used_char32': False
+        },
 
         'att': ['immediate', 'string'],
         'ti': ti
@@ -272,19 +272,19 @@ def hlir_value_array(items, is_generic=False, type=None, ti=None):
         'isa': 'value',
         'kind': 'literal',
         'type': type,
-        'imm_items': items,
+        'imm': items,
         'att': ['immediate'],
         'nl_end': 0,
         'ti': ti
     }
 
 
-def hlir_value_record(typ, items={}, ti=None):
+def hlir_value_record(typ, initializers={}, ti=None):
     return {
         'isa': 'value',
         'kind': 'literal',
         'type': typ,
-        'imm_initializers': items,
+        'imm': initializers,
         'att': ['immediate'],
         'nl_end': 0,
         'ti': ti
@@ -292,7 +292,11 @@ def hlir_value_record(typ, items={}, ti=None):
 
 
 def hlir_value_num_get(x):
-    return x['imm_num']
+    if x['imm'] == None:
+        print("IMM is None")
+        value_print(x)
+        exit(1)
+    return x['imm']
 
 
 
@@ -442,7 +446,7 @@ def hlir_value_sizeof(of, ti=None):
         'of': of,
         'type': typ,
         'att': ['immediate'],
-        'imm_num': size,
+        'imm': {'num': size},
         'ti': ti
     }
 

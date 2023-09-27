@@ -79,7 +79,7 @@ def ll_create_value_num(t, num):
         'isa': 'llvm_value',
         'class': 'num',
         'level': 'value',
-        'imm_num': num,
+        'imm': {'num': num},
         'type': t,
         'proto': None
     }
@@ -440,7 +440,7 @@ def do_eval_binary (op, l, r, x): # ["add", "fadd", x]
 
 def do_eval_expr_bin(x):
     # if folded bin
-    if 'imm_num' in x:
+    if 'num' in x['imm']:
         return ll_create_value_num(x['type'], hlir_value_num_get(x))
 
     opcode = get_bin_opcode(x['kind'], x['left']['type'])
@@ -750,7 +750,7 @@ def do_eval_expr_to(v):
 
     # (STUB?) nil -> zeroinitializer
     if type.is_free_pointer(from_type):
-        if 'imm_num' in value:
+        if value['imm'] != None:
             if hlir_value_num_get(value) == 0:
                 return ll_create_value_null(to_type)
 
@@ -817,7 +817,7 @@ def do_eval_array(v):
     # сперва вычисляем все элементы массива в регистры
     # (кроме констант, они едут до последнего)
     items = []
-    for item in v['imm_items']:
+    for item in v['imm']:
         iv = do_ld(do_eval(item))
         items.append(iv)
 
@@ -867,7 +867,8 @@ def do_eval_record(v):
     # (кроме констант, ведь они едут до последнего)
 
     items = []
-    for initializer in v['imm_initializers']:
+    initializers = v['imm']
+    for initializer in initializers:
         iv = do_ld(do_eval(initializer['value']))
         items.append({'id': initializer['id'], 'value': iv})
 
@@ -946,8 +947,9 @@ def func_const_var(x):
     k = x['kind']
 
     if k == 'const':
-        if 'imm_num' in x:
-            return ll_create_value_num(x['type'], hlir_value_num_get(x))
+        if 'imm' in x:
+            if type.is_numeric(x['type']):
+                return ll_create_value_num(x['type'], hlir_value_num_get(x))
 
     if value_attribute_check(x, 'local'):
         localname = x['id']['str']
