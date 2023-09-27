@@ -718,6 +718,11 @@ def select_cast_operator(a, b):
             return 'ptrtoint'
 
 
+    elif type.is_string(a):
+        if type.is_pointer(b):
+            return 'bitcast'
+
+
     elif type.is_float(a):
         # Float -> Integer
         if type.is_integer(b):
