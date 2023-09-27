@@ -261,8 +261,6 @@ declare [0 x i8]* @getenv([0 x i8]*)
 
 ; -- MODULE: /Users/alexbalan/p/Modest/examples/5.records/src/main.cm
 
-@str_1 = private constant [15 x i8] c"point(%f, %f)\0A\00"
-@str_2 = private constant [18 x i8] c"line length = %f\0A\00"
 
 
 
@@ -347,7 +345,7 @@ define void @ptr_example() {
     store double 0x4024000000000000, double* %3
     %4 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 1
     store double 0x4034000000000000, double* %4
-    %5 = bitcast [15 x i8]* @str_1 to %ConstCharStr
+    %5 = uncast %Str @str_1 to %ConstCharStr
     %6 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 0
     %7 = load double, double* %6
     %8 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 1
@@ -360,7 +358,7 @@ define i32 @main() {
 ; by value
     %1 = load %Line, %Line* @line
     %2 = call double(%Line) @lineLength (%Line %1)
-    %3 = bitcast [18 x i8]* @str_2 to %ConstCharStr
+    %3 = uncast %Str @str_2 to %ConstCharStr
     %4 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %3, double %2)
     call void() @ptr_example ()
     ret i32 0

@@ -209,7 +209,6 @@ def print_value(x):
         out('@%s' % x['id'])
     elif c == 'num':
         num = hlir_value_num_get(x)
-        print(num)
         if type.is_integer(x['type']):
             out(str(num))
 
@@ -734,7 +733,7 @@ def select_cast_operator(a, b):
             elif a['size'] > b['size']:
                 return 'fptrunc'
 
-    return 'uncast'
+    return 'uncast<%s -> %s>' % (a['kind'], b['kind'])
 
 
 

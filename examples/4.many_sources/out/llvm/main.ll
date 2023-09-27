@@ -95,12 +95,11 @@ declare void @lib_func()
 
 ; -- MODULE: /Users/alexbalan/p/Modest/examples/4.many_sources/src/main.cm
 
-@str_1 = private constant [17 x i8] c"hello from main\0A\00"
 
 
 
 define i32 @main() {
-    %1 = bitcast [17 x i8]* @str_1 to %ConstCharStr
+    %1 = uncast %Str @str_1 to %ConstCharStr
     %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %1)
     call void() @lib_func ()
     ret i32 0

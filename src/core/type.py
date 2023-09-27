@@ -128,7 +128,8 @@ typeCChar32['llvm_alias'] = 'i32'
 
 
 typeCStr = hlir_type_pointer(hlir_type_array(of=typeCChar, volume=hlir_value_int(0)))
-typeStr = hlir_type_generic_str(ti=None)
+
+typeString = hlir_type_generic_str(ti=None)
 
 
 typeStr8 = hlir_type_pointer(hlir_type_array(of=typeCChar8, volume=hlir_value_int(0)))
@@ -366,7 +367,8 @@ def is_generic_record(t):
 
 
 def is_generic_string(t):
-    return is_generic(t) and is_string(t)
+    return t['kind'] == 'String'
+    #is_generic(t) and is_string(t)
 
 
 def is_pointer(t):

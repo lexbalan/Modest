@@ -922,7 +922,7 @@ def value_cstr(string, length, ti):
 
 # type of Cm generic string
 def value_gstr(string, length, ti):
-    s = hlir_value_cstr(string, length, type.typeStr, ti=ti)
+    s = hlir_value_cstr(string, length, type.typeString, ti=ti)
     module['strings'].append(s)
     return s
 

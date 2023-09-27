@@ -107,11 +107,9 @@ def hlir_type_array(of, volume, ti=None):
 def hlir_type_generic_str(ti=None):
     return {
         'isa': 'type',
-        'kind': 'Str',
-        'name': 'Str',
+        'kind': 'String',
+        'name': 'String',
         'att': ['generic', 'string'],
-        #'power': 0,
-        #'size': 0,
         'ti': ti
     }
 
