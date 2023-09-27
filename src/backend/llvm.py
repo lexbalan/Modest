@@ -311,7 +311,7 @@ def print_type(t, print_aka=True, arr_as_ptr_to_arr=False):
         array_size = t['volume']
         sz = 0
         if array_size != None:
-            sz = array_size['imm_num']
+            sz = hlir_value_num_get(array_size)
 
         out("%d x " % sz)
         print_type(t['of'])
@@ -751,7 +751,7 @@ def do_eval_expr_to(v):
     # (STUB?) nil -> zeroinitializer
     if type.is_free_pointer(from_type):
         if 'imm_num' in value:
-            if value['imm_num'] == 0:
+            if hlir_value_num_get(value) == 0:
                 return ll_create_value_null(to_type)
 
     y = do_ld(do_eval(value))
@@ -823,7 +823,7 @@ def do_eval_array(v):
 
 
     # теперь добавим паддинг нулевыми значениями
-    fulllen = v['type']['volume']['imm_num']
+    fulllen = hlir_value_num_get(v['type']['volume'])
     n_pad = fulllen - len(items)
     i = 0
     while i < n_pad:
@@ -890,7 +890,7 @@ def do_eval(x):
     # compile time evaluation
     if 'immediate' in x['att']:
         if type.is_integer(x['type']):
-            return ll_create_value_num(x['type'], x['imm_num'])
+            return ll_create_value_num(x['type'], hlir_value_num_get(x))
 
 
     # runtime evaluation
@@ -947,7 +947,7 @@ def func_const_var(x):
 
     if k == 'const':
         if 'imm_num' in x:
-            return ll_create_value_num(x['type'], x['imm_num'])
+            return ll_create_value_num(x['type'], hlir_value_num_get(x))
 
     if value_attribute_check(x, 'local'):
         localname = x['id']['str']

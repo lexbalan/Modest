@@ -52,9 +52,9 @@ extern func setlocale (category : Int, locale : Str8) -> Str8
 // TODO: перекрытие имен - что с этим делать???
 
 
-//var arr_utf8 : [8]Nat8 := "Helo!\n"
-//var arr_utf16 : [8]Nat16 := "Hello!\n"
-//var arr_utf32 : [8]Nat32 := "Hello!\n"
+static uint8_t arr_utf8[8] = (uint8_t [8]){72, 101, 108, 111, 33, 10, 0};
+static uint16_t arr_utf16[8] = (uint16_t [8]){72, 101, 108, 108, 111, 33, 10, 0};
+static uint32_t arr_utf32[8] = (uint32_t [8]){72, 101, 108, 108, 111, 33, 10, 0};
 
 //var xxx : [8]Nat8 := []
 

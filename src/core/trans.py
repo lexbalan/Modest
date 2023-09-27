@@ -808,14 +808,16 @@ def do_value_index(x):
     # immediate index (!)
     if value_is_immediate(a) and not ptr_access:
         if value_is_immediate(i):
+            index = hlir_value_num_get(i)
+
             if type.is_generic_string(a['type']):
                 # is generic string
-                c = a['str'][i['imm_num']]
+                c = a['str'][index]
                 return value_generic_char(c, ti=x['ti'])
 
             else:
                 # is an array
-                v_imm = a['imm_items'][i['imm_num']]
+                v_imm = a['imm_items'][index]
                 cp_immval(v, v_imm)
 
     return v

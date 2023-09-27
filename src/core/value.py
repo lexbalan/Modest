@@ -24,7 +24,7 @@ def value_print(x):
 
 def cp_immval(nv, v):
     if 'imm_num' in v:
-        nv['imm_num'] = v['imm_num']
+        nv['imm_num'] = hlir_value_num_get(v)
 
         if value_attribute_check(v, 'hexadecimal'):
             nv['att'].append('hexadecimal')
@@ -417,7 +417,7 @@ def value_cons_float(v, t, ti, method):
                     return None
 
                 y = do_cast_generic(v, t, ti)
-                y['imm_num'] = float(y['imm_num'])    # 0 -> 0.0, need for printer (!)
+                y['imm_num'] = float(hlir_value_num_get(y))    # 0 -> 0.0, need for printer (!)
                 return y
 
         elif type.is_integer(vt):
@@ -449,7 +449,7 @@ def value_cons_pointer(v, t, ti, method):
                 if type.is_integer(v['type']):
                     # compile-time casting
                     nv = hlir_value_cast(v, t, ti=ti)
-                    nv['imm_num'] = v['imm_num']
+                    nv['imm_num'] = hlir_value_num_get(v)
                     nv['att'].append('immediate')
                     return nv
 

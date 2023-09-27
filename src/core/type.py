@@ -485,7 +485,7 @@ def get_size(t):
     if is_integer(t):
         return t['size']
     elif is_array(t):
-        return t['volume']['imm_num'] * get_size(t['of'])
+        return hlir_value_num_get(t['volume']) * get_size(t['of'])
 
     #else:
     #    fatal("type.get_size() for '%s' not implemented" % t['kind'])
