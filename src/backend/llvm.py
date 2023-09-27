@@ -917,19 +917,18 @@ def do_eval(x):
 
 def do_eval_str(x):
     # проблема строковых констант и strid
-        if not 'strid' in x:
-            if 'value' in x:
-                return do_eval_x(x['value'])
+    #if not 'strid' in x:
+    #    if 'value' in x:
+    #        return do_eval_x(x['value'])
 
-
-        return {
-            'isa': 'llvm_value',
-            'class': 'mem',
-            'level': 'value',
-            'id': x['strid'],
-            'type': x['type'],
-            'proto': x
-        }
+    return {
+        'isa': 'llvm_value',
+        'class': 'mem',
+        'level': 'value',
+        'id': x['imm']['strid'],
+        'type': x['type'],
+        'proto': x
+    }
 
 
 def do_eval_literal(x):
@@ -1583,7 +1582,7 @@ def print_string_utf16(strid, string):
     #bb = bytes(ss, 'utf-16')
     slen = len(bb) + 1 # +1 (zero)
 
-    print(bb)
+    #print(bb)
 
     lo("@%s = private constant [%d x i16] [" % (strid, slen))
     for b in bb:
@@ -1600,7 +1599,7 @@ def print_string_utf32(strid, string):
     #bb = bytes(ss, 'utf-32')
     slen = len(bb) + 1 # +1 (zero)
 
-    print(bb)
+    #print(bb)
 
     lo("@%s = private constant [%d x i32] [" % (strid, slen))
     for b in bb:
@@ -1617,9 +1616,8 @@ def print_strings(strings):
 
         strno = strno + 1
         strid = 'str_%d' % strno
-        string['strid'] = strid
+        string['imm']['strid'] = strid
 
-        #print(string)
 
         if string['imm']['used_char8']:
             print("PRINT_STR8")

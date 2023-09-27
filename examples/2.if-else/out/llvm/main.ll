@@ -101,38 +101,30 @@ declare void @perror(%ConstCharStr)
 
 
 define i32 @main() {
-    %1 = bitcast %String @str_1 to %ConstCharStr
-    %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %1)
+    %1 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str_1)
     %a = alloca i32
     %b = alloca i32
-    %3 = bitcast %String @str_2 to %ConstCharStr
-    %4 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %3)
-    %5 = bitcast %String @str_3 to %ConstCharStr
-    %6 = call i32(%ConstCharStr, ...) @scanf (%ConstCharStr %5, i32* %a)
-    %7 = bitcast %String @str_4 to %ConstCharStr
-    %8 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %7)
-    %9 = bitcast %String @str_5 to %ConstCharStr
-    %10 = call i32(%ConstCharStr, ...) @scanf (%ConstCharStr %9, i32* %b)
-    %11 = load i32, i32* %a
-    %12 = load i32, i32* %b
-    %13 = icmp sgt i32 %11, %12
-    br i1 %13 , label %then_0, label %else_0
+    %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str_2)
+    %3 = call i32(%ConstCharStr, ...) @scanf (%ConstCharStr @str_3, i32* %a)
+    %4 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str_4)
+    %5 = call i32(%ConstCharStr, ...) @scanf (%ConstCharStr @str_5, i32* %b)
+    %6 = load i32, i32* %a
+    %7 = load i32, i32* %b
+    %8 = icmp sgt i32 %6, %7
+    br i1 %8 , label %then_0, label %else_0
 then_0:
-    %14 = bitcast %String @str_6 to %ConstCharStr
-    %15 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %14)
+    %9 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str_6)
     br label %endif_0
 else_0:
-    %16 = load i32, i32* %a
-    %17 = load i32, i32* %b
-    %18 = icmp slt i32 %16, %17
-    br i1 %18 , label %then_1, label %else_1
+    %10 = load i32, i32* %a
+    %11 = load i32, i32* %b
+    %12 = icmp slt i32 %10, %11
+    br i1 %12 , label %then_1, label %else_1
 then_1:
-    %19 = bitcast %String @str_7 to %ConstCharStr
-    %20 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %19)
+    %13 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str_7)
     br label %endif_1
 else_1:
-    %21 = bitcast %String @str_8 to %ConstCharStr
-    %22 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %21)
+    %14 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str_8)
     br label %endif_1
 endif_1:
     br label %endif_0

@@ -72,7 +72,7 @@ void ptr_example(void)
     ptr_p->x = 10;
     ptr_p->y = 20;
 
-    printf((const char *)u8"point(%f, %f)\n", ptr_p->x, ptr_p->y);
+    printf("point(%f, %f)\n", ptr_p->x, ptr_p->y);
 }
 
 
@@ -80,7 +80,7 @@ int main(void)
 {
     // by value
     const float len = lineLength(line);
-    printf((const char *)u8"line length = %f\n", len);
+    printf("line length = %f\n", len);
 
     ptr_example();
 

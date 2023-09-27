@@ -443,7 +443,7 @@ def value_cons_pointer(v, t, ti, method):
             if type.is_pointer(from_type):
                 return hlir_value_cast(v, t, ti=ti)
 
-    # *[n]X -> *[]X  (например строковой литерал к типу Str)
+    # *[n]X -> *[]X
     if type.is_pointer_to_defined_array(from_type):
         if type.is_pointer_to_undefined_array(t):
             if type.eq(from_type['to']['of'], t['to']['of']):
@@ -456,7 +456,10 @@ def value_cons_pointer(v, t, ti, method):
             if type.is_integer(to_type['to']['of']):
                 #info("cast generic string to pointer", ti)
                 str_used_as(string_value=v, typ=to_type['to']['of'])
-                return hlir_value_cast(v, t, ti=ti) #?!
+                #return hlir_value_cast(v, t, ti=ti) #?!
+                zz = do_cast_generic(v, t, ti=ti) #?!
+                zz['att'].append('string')
+                return zz
         return v
 
     # Nil -> *X

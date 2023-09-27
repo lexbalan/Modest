@@ -127,9 +127,10 @@ typeCChar32['c_alias'] = 'uint32_t'
 typeCChar32['llvm_alias'] = 'i32'
 
 
-typeCStr = hlir_type_pointer(hlir_type_array(of=typeCChar, volume=hlir_value_int(0)))
 
 typeString = hlir_type_generic_str(ti=None)
+typeString['c_alias'] = 'const char *'
+typeString['llvm_alias'] = 'i8*'
 
 
 typeStr8 = hlir_type_pointer(hlir_type_array(of=typeCChar8, volume=hlir_value_int(0)))
@@ -138,6 +139,9 @@ typeStr16 = hlir_type_pointer(hlir_type_array(of=typeCChar16, volume=hlir_value_
 typeStr16['att'].append('string')
 typeStr32 = hlir_type_pointer(hlir_type_array(of=typeCChar32, volume=hlir_value_int(0)))
 typeStr32['att'].append('string')
+
+
+typeCStr = typeStr8
 
 typeFreePtr = hlir_type_free_pointer(ti=None)
 typeFreePtr['att'].append('generic')
