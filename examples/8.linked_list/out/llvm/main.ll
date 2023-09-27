@@ -190,13 +190,6 @@ declare %Node* @linked_list_insert(%List*, i8*)
 
 ; -- MODULE: /Users/alexbalan/p/Modest/examples/8.linked_list/src/main.cm
 
-@str_1 = private constant [21 x i8] c"list_print_forward:\0A\00"
-@str_2 = private constant [8 x i8] c"v = %d\0A\00"
-@str_3 = private constant [22 x i8] c"list_print_backward:\0A\00"
-@str_4 = private constant [8 x i8] c"v = %d\0A\00"
-@str_5 = private constant [21 x i8] c"linked list example\0A\00"
-@str_6 = private constant [26 x i8] c"error: cannot create list\00"
-@str_7 = private constant [22 x i8] c"linked list size: %d\0A\00"
 
 
 
@@ -214,7 +207,7 @@ define void @nat64_list_insert(%List* %list, i64 %x) {
 
 
 define void @list_print_forward(%List* %list) {
-    %1 = bitcast [21 x i8]* @str_1 to %ConstCharStr
+    %1 = uncast %Str @str_1 to %ConstCharStr
     %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %1)
     %3 = call %Node*(%List*) @linked_list_first_get (%List* %list)
     %pn = alloca %Node*
@@ -228,7 +221,7 @@ body_1:
     %6 = load %Node*, %Node** %pn
     %7 = call i8*(%Node*) @linked_list_node_link_get (%Node* %6)
     %8 = bitcast i8* %7 to i32*
-    %9 = bitcast [8 x i8]* @str_2 to %ConstCharStr
+    %9 = uncast %Str @str_2 to %ConstCharStr
     %10 = load i32, i32* %8
     %11 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %9, i32 %10)
     %12 = load %Node*, %Node** %pn
@@ -242,7 +235,7 @@ break_1:
 
 
 define void @list_print_backward(%List* %list) {
-    %1 = bitcast [22 x i8]* @str_3 to %ConstCharStr
+    %1 = uncast %Str @str_3 to %ConstCharStr
     %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %1)
     %3 = call %Node*(%List*) @linked_list_last_get (%List* %list)
     %pn = alloca %Node*
@@ -256,7 +249,7 @@ body_1:
     %6 = load %Node*, %Node** %pn
     %7 = call i8*(%Node*) @linked_list_node_link_get (%Node* %6)
     %8 = bitcast i8* %7 to i32*
-    %9 = bitcast [8 x i8]* @str_4 to %ConstCharStr
+    %9 = uncast %Str @str_4 to %ConstCharStr
     %10 = load i32, i32* %8
     %11 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %9, i32 %10)
     %12 = load %Node*, %Node** %pn
@@ -268,13 +261,13 @@ break_1:
 }
 
 define i32 @main() {
-    %1 = bitcast [21 x i8]* @str_5 to %ConstCharStr
+    %1 = uncast %Str @str_5 to %ConstCharStr
     %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %1)
     %3 = call %List*() @linked_list_create ()
     %4 = icmp eq %List* %3, null
     br i1 %4 , label %then_0, label %endif_0
 then_0:
-    %5 = bitcast [26 x i8]* @str_6 to %ConstCharStr
+    %5 = uncast %Str @str_6 to %ConstCharStr
     %6 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %5)
     ret i32 1
     br label %endif_0
@@ -293,7 +286,7 @@ endif_0:
     call void(%List*, i64) @nat64_list_insert (%List* %3, i64 100)
 ; print list size
     %8 = call i32(%List*) @linked_list_size_get (%List* %3)
-    %9 = bitcast [22 x i8]* @str_7 to %ConstCharStr
+    %9 = uncast %Str @str_7 to %ConstCharStr
     %10 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %9, i32 %8)
 ; print list forward
     call void(%List*) @list_print_forward (%List* %3)

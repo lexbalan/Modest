@@ -79,7 +79,7 @@ def ll_create_value_num(t, num):
         'isa': 'llvm_value',
         'class': 'num',
         'level': 'value',
-        'imm': {'num': num},
+        'imm': num,
         'type': t,
         'proto': None
     }
@@ -209,6 +209,7 @@ def print_value(x):
         out('@%s' % x['id'])
     elif c == 'num':
         num = hlir_value_num_get(x)
+        print(num)
         if type.is_integer(x['type']):
             out(str(num))
 
@@ -440,7 +441,7 @@ def do_eval_binary (op, l, r, x): # ["add", "fadd", x]
 
 def do_eval_expr_bin(x):
     # if folded bin
-    if 'num' in x['imm']:
+    if 'imm' in x:
         return ll_create_value_num(x['type'], hlir_value_num_get(x))
 
     opcode = get_bin_opcode(x['kind'], x['left']['type'])
@@ -750,9 +751,10 @@ def do_eval_expr_to(v):
 
     # (STUB?) nil -> zeroinitializer
     if type.is_free_pointer(from_type):
-        if value['imm'] != None:
-            if hlir_value_num_get(value) == 0:
-                return ll_create_value_null(to_type)
+        if 'imm' in value:
+            if value['imm'] != None:
+                if hlir_value_num_get(value) == 0:
+                    return ll_create_value_null(to_type)
 
     y = do_ld(do_eval(value))
     opcode = select_cast_operator(from_type, to_type)
@@ -1550,7 +1552,7 @@ def print_def_var(x):
 
 
 def print_string_utf8(strid, string):
-    ss = string['str']
+    ss = string['imm']['str']
 
     slen = len(bytes(ss, 'utf-8')) + 1 # +1 (zero)
 
@@ -1570,7 +1572,7 @@ def print_string_utf8(strid, string):
 
 
 def print_string_utf16(strid, string):
-    ss = string['str']
+    ss = string['imm']['str']
 
     bb = (ss.encode('utf-16')).decode("utf16")
     #bb = ss.decode('utf-8').encode('utf-16be')
@@ -1588,7 +1590,7 @@ def print_string_utf16(strid, string):
 
 
 def print_string_utf32(strid, string):
-    ss = string['str']
+    ss = string['imm']['str']
 
     bb = ss#ss.encode('utf-16')
     #bb = bytes(ss, 'utf-32')
@@ -1615,20 +1617,20 @@ def print_strings(strings):
 
         #print(string)
 
-        if string['used_char8']:
+        if string['imm']['used_char8']:
             print("PRINT_STR8")
             print_string_utf8(strid, string)
 
-        if string['used_char16']:
+        if string['imm']['used_char16']:
             print("PRINT_STR16")
             strid = strid + '_utf16'
-            string['strid_16'] = strid
+            string['imm']['strid_16'] = strid
             print_string_utf16(strid, string)
 
-        if string['used_char32']:
+        if string['imm']['used_char32']:
             print("PRINT_STR32")
             strid = strid + '_utf32'
-            string['strid_32'] = strid
+            string['imm']['strid_32'] = strid
             print_string_utf32(strid, string)
 
 

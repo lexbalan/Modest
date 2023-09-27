@@ -3,9 +3,10 @@
 @attribute("c-no-print")
 import "libc/stdio.hm"
 
+
 @attribute("c-no-print")
 import "misc/utf.hm"
-
+@c_include("./utf.h")
 
 /*
 @property("c_alias", "wchar_t")

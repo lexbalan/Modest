@@ -446,7 +446,7 @@ def hlir_value_sizeof(of, ti=None):
         'of': of,
         'type': typ,
         'att': ['immediate'],
-        'imm': {'num': size},
+        'imm': size,
         'ti': ti
     }
 
