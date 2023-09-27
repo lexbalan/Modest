@@ -1640,25 +1640,25 @@ def print_strings(strings):
     for string in strings:
 
         strno = strno + 1
-        strid = 'str.%d' % strno
-
+        strid = 'str%d' % strno
 
         if string['imm']['used_char8']:
-            print("PRINT_STR8")
-            string['imm']['strid_8'] = strid
-            print_string_utf8(strid, string)
+            #print("PRINT_STR8")
+            strid8 = strid + '.c8'
+            string['imm']['strid_8'] = strid8
+            print_string_utf8(strid8, string)
 
         if string['imm']['used_char16']:
-            print("PRINT_STR16")
-            strid = strid + '_utf16'
-            string['imm']['strid_16'] = strid
-            print_string_utf16(strid, string)
+            #print("PRINT_STR16")
+            strid16 = strid + '.c16'
+            string['imm']['strid_16'] = strid16
+            print_string_utf16(strid16, string)
 
         if string['imm']['used_char32']:
-            print("PRINT_STR32")
-            strid = strid + '_utf32'
-            string['imm']['strid_32'] = strid
-            print_string_utf32(strid, string)
+            #print("PRINT_STR32")
+            strid32 = strid + '.c32'
+            string['imm']['strid_32'] = strid32
+            print_string_utf32(strid32, string)
 
 
 
