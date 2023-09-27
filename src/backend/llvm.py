@@ -867,7 +867,7 @@ def do_eval_record(v):
     # (кроме констант, ведь они едут до последнего)
 
     items = []
-    for initializer in v['initializers']:
+    for initializer in v['imm_initializers']:
         iv = do_ld(do_eval(initializer['value']))
         items.append({'id': initializer['id'], 'value': iv})
 

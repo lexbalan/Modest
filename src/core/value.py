@@ -32,8 +32,8 @@ def cp_immval(nv, v):
     elif 'imm_items' in v:
         nv['imm_items'] = v['imm_items']
 
-    elif 'initializers' in v:
-        nv['initializers'] = v['initializers']
+    elif 'imm_initializers' in v:
+        nv['imm_initializers'] = v['imm_initializers']
 
     elif 'str' in v:
         nv['str'] = v['str']
@@ -291,7 +291,7 @@ def value_cons_record_from_generic_record(v, t, ti, method):
             nl = 0
             xti = None
 
-            ini = get_item_with_id(v['initializers'], field_name)
+            ini = get_item_with_id(v['imm_initializers'], field_name)
 
             if ini == None:
                 # no field, create zero value stub
@@ -327,7 +327,7 @@ def value_cons_record_from_generic_record(v, t, ti, method):
     vx = {
         'isa': 'value',
         'kind': 'literal',
-        'initializers': items,
+        'imm_initializers': items,
         'type': t,
         'att': [],
         'nl_end': v['nl_end'],

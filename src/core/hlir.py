@@ -21,7 +21,7 @@ def hlir_type_unit():
         'size': 0,
         'power': 0,
         'imm_items': [],
-        'initializers': [],
+        'imm_initializers': [],
         'att': [],
         'ti': None
     }
@@ -187,7 +187,7 @@ def hlir_value_zero(t, ti=None):
         'type': t,
         'imm_num': 0,
         'imm_items': [],
-        'initializers': [],
+        'imm_initializers': [],
         'att': ['immediate'],
         'ti': ti
     }
@@ -284,7 +284,7 @@ def hlir_value_record(typ, items={}, ti=None):
         'isa': 'value',
         'kind': 'literal',
         'type': typ,
-        'initializers': items,
+        'imm_initializers': items,
         'att': ['immediate'],
         'nl_end': 0,
         'ti': ti

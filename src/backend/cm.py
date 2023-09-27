@@ -370,13 +370,13 @@ def print_value_literal_record(v, ctx):
 
     indent_up()
 
-    nitems = len(v['initializers'])
+    nitems = len(v['imm_initializers'])
     i = 0
     while i < nitems:
         item = v['type']['fields'][i]
         field_str = item['id']['str']
 
-        ini = get_item_with_id(v['initializers'], field_str)
+        ini = get_item_with_id(v['imm_initializers'], field_str)
 
         nl = 0
         if 'nl' in ini:

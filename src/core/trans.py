@@ -866,7 +866,7 @@ def do_value_access(x):
 
     # access to immediate object
     if value_is_immediate(obj) and not ptr_access:
-        initializer = get_item_with_id(obj['initializers'], field_id['str'])
+        initializer = get_item_with_id(obj['imm_initializers'], field_id['str'])
         cp_immval(v, initializer['value'])
 
     return v
