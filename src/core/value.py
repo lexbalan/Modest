@@ -198,12 +198,9 @@ def value_cons_array_from_array(v, t, ti, method):
 
 
 def str_used_as(string_value, typ):
-    if typ['power'] == 8:
-        string_value['imm']['used_char8'] = True
-    elif typ['power'] <= 16:
-        string_value['imm']['used_char16'] = True
-    elif typ['power'] <= 32:
-        string_value['imm']['used_char32'] = True
+    if typ['power'] == 8: string_value['imm']['used_char8'] = True
+    elif typ['power'] == 16: string_value['imm']['used_char16'] = True
+    elif typ['power'] == 32: string_value['imm']['used_char32'] = True
 
 
 def value_cons_array(v, t, ti, method):
