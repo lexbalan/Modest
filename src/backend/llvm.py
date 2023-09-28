@@ -776,6 +776,9 @@ def do_eval_expr_cast(v):
         return do_eval_literal(v)
 
 
+    # cast any type to Unit type
+    if type.is_unit(to_type):
+        return ll_create_value_zero(to_type)
 
 
     # (STUB?) nil -> zeroinitializer
