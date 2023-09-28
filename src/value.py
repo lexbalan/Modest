@@ -223,21 +223,23 @@ def value_cons_array(v, t, ti, method):
         if type.is_integer(to_type['of']):
             #info("cast generic string to array", ti)
 
-            to_arr_volume = hlir_value_num_get(to_type['volume'])
-            # v['len'] учитывает '\0'
-            if v['imm']['len'] > to_arr_volume:
-                error("too big", ti)
+
+            # Check to:array volume vs string len
+            # "xxx" to []X | "xxx" to [n]X
+            if to_type['volume'] != None:
+                to_arr_volume = hlir_value_num_get(to_type['volume'])
+                # v['len'] учитывает '\0'
+                if v['imm']['len'] > to_arr_volume:
+                    error("too big", ti)
 
             items = []
             for c in v['imm']['str']:
-                ccode = ord(c)
-                #print("ccode = %d" % ccode)
+                ccode = ord(c) # get character code in utf-32
                 items.append(hlir_value_int(ccode, typ=to_type['of']))
 
             items.append(hlir_value_int(0, typ=to_type['of']))
 
             str_used_as(string_value=v, typ=to_type['of'])
-
 
             return hlir_value_array(items, type=to_type, ti=None)
 

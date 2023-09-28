@@ -116,6 +116,7 @@ def attribute(at):
     else:
         attributes.append(at)
 
+
 def attributes_get():
     global attributes
     attributes2 = attributes

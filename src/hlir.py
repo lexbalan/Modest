@@ -290,10 +290,6 @@ def hlir_value_record(typ, initializers={}, ti=None):
 
 
 def hlir_value_num_get(x):
-    if x['imm'] == None:
-        print("IMM is None")
-        value_print(x)
-        exit(1)
     return x['imm']
 
 
