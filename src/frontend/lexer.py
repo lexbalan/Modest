@@ -1,8 +1,9 @@
 
-
-from source import Source
-from tokenizer import Tokenizer
 from error import info
+
+from .source import Source
+from .tokenizer import Tokenizer
+
 
 fname = ""
 line = 1
@@ -136,7 +137,7 @@ def dostr(src):
     c = src.getc()
     if not c == '"':
         return False
-    
+
     par = c
 
     s = []

@@ -68,8 +68,9 @@ func main () -> Int {
 //    utf32_putchar(ratUTF32)
 //    utf32_putchar(0xA)
 
-    utf16_puts(strUtf16) //("Hello Ω!\n")
-    utf32_puts(strUtf16) //("Hello Ω!\n")
+    utf16_puts("Hello Ω!\n")
+    utf32_puts("Hello Ω!\n")
+
     utf32_puts("Hello 🐀!\n")
 
     return 0

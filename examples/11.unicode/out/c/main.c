@@ -72,6 +72,7 @@ int main(void)
 
     utf16_puts((uint16_t *)u"Hello Ω!\n");
     utf32_puts((uint32_t *)U"Hello Ω!\n");
+
     utf32_puts((uint32_t *)U"Hello 🐀!\n");
 
     return 0;

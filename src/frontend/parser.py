@@ -3,7 +3,7 @@
 #####################################################################
 
 import os
-from lexer import Lexer
+from .lexer import Lexer
 from error import error, warning, info
 
 
@@ -85,7 +85,7 @@ class Parser:
         return yes
 
 
-    
+
     def identifier(self):
         ti = self.ti()
         if self.ctok_class() != 'id':
@@ -187,7 +187,7 @@ class Parser:
                 self.match(",")
                 if f != None:
                     fields.extend(f)
-    
+
             if self.match("->"):
                 t = self.expr_type()
                 return {'isa': 'type', 'kind': 'func', 'params': fields, 'to': t, 'ti': ti}
@@ -232,7 +232,7 @@ class Parser:
     #
     # Parse Value
     #
-    
+
     def expr_value(self):
         return self.expr_value_0()
 
@@ -259,7 +259,7 @@ class Parser:
             return {'isa': 'value', 'kind': 'xor', 'left': v, 'right': r, 'ti': ti}
         else:
             return v
-    
+
 
     def expr_value_2(self):
         v = self.expr_value_3()
@@ -271,7 +271,7 @@ class Parser:
             return {'isa': 'value', 'kind': 'and', 'left': v, 'right': r, 'ti': ti}
         else:
             return v
-    
+
 
     def expr_value_3(self):
         v = self.expr_value_4()
@@ -341,7 +341,7 @@ class Parser:
             else:
                 break
         return v
-    
+
 
     def expr_value_6(self):
         v = self.expr_value_7()
@@ -740,7 +740,7 @@ class Parser:
     #
     # Parse Statement
     #
-    
+
     def stmt_let(self):
         id = self.identifier()
         self.need("=")
@@ -777,7 +777,7 @@ class Parser:
 
         return {'isa': 'stmt', 'kind': 'return', 'value': v}
 
-    
+
     def stmt_var(self):
         ti = self.ti()
 
@@ -1029,7 +1029,7 @@ class Parser:
             'ti': ti
         }
 
-    
+
     def parse_var(self):
         ff = self.parse_field()
         if ff == None:

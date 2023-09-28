@@ -12,7 +12,7 @@ def is_local_context():
 
 
 from .value import *
-from parser import Parser
+from frontend.parser import Parser
 from core.symtab import Symtab
 import core.type as type
 from core.type import type_attribute_check, select_int, select_nat, type_print
