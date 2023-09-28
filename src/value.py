@@ -44,28 +44,25 @@ def do_cast_generic(v, t, ti):
     #info("do_cast_generic", ti)
 
     nv = hlir_value_cast(v, t, ti)
+    nv['kind'] = 'ccast'
 
     cp_immediate(nv, v)
 
     if 'nl_end' in v:
         nv['nl_end'] = v['nl_end']
 
-    # принтер не будет печатать операцию приведения с 'is-generic-cast'
-    # он просто напечатает значение (см print_value_cast)
-    nv['att'].append('is-generic-cast')
-
     return nv
 
 
 
-#TODO: value #kind=zero
+"""#TODO: value #kind=zero
 def value_create_zero(t):
     if type.is_numeric(t):
         return hlir_value_int(0, t)
 
     # stub (!)
     # todo: struct, array
-    return hlir_value_int(0, t)
+    return hlir_value_int(0, t)"""
 
 
 
@@ -461,20 +458,14 @@ def value_cons_pointer(v, t, ti, method):
     # GenericString -> *[]NatX
     if type.is_generic_string(from_type):
         if type.is_array(to_type['to']):
-            #
             # GenericString -> *[]NatX
-            #
-
             if type.is_integer(to_type['to']['of']):
                 #info("cast generic string to pointer", ti)
                 str_used_as(string_value=v, typ=to_type['to']['of'])
-                return hlir_value_cast(v, t, ti=ti) #?!
+                return do_cast_generic(v, t, ti=ti) #?!
 
         elif type.is_integer(to_type['to']):
-            #
             # GenericString -> *NatX
-            #
-
             str_used_as(string_value=v, typ=to_type['to'])
             return hlir_value_cast(v, t, ti=ti) #?!
 
@@ -495,8 +486,10 @@ def value_cons_pointer(v, t, ti, method):
     return None
 
 
+
 def value_cons_unit(v, t, ti, method):
     return hlir_value_cast(v, t, ti=ti)
+
 
 # возвращает None если не может привести (!)
 # не принтует ошибку

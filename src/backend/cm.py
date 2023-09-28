@@ -291,7 +291,7 @@ def print_cast(t, v, ctx=[]):
 
 
 def print_value_ccast(v, ctx):
-    # дженерик каст не печатаю (!)
+    # дженерик каст не печатаю, печатаю просто значение
     need_wrap = precedence(v['value']['kind']) < precedenceMax
     print_value(v['value'], ctx, need_wrap=need_wrap)
     return

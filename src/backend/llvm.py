@@ -742,36 +742,40 @@ def select_cast_operator(a, b):
 
 
 def do_eval_expr_ccast(x):
-    return do_eval_literal(x)
 
-def do_eval_expr_cast(v):
-
-    value = v['value']
+    value = x['value']
     from_type = value['type']
-    to_type = v['type']
+    to_type = x['type']
 
     # строки печатаются отсюда!
     if type.is_generic_string(from_type):
-        v = v['value']
         if type.is_string(to_type):
-            tt = to_type['to']['of']
+            string_of = to_type['to']['of']
 
             id_name = 'strid_8'
-            if tt['power'] == 16:
+            if string_of['power'] == 16:
                 id_name = 'strid_16'
-            elif tt['power'] == 32:
+            elif string_of['power'] == 32:
                 id_name = "strid_32"
 
             return {
                 'isa': 'llvm_value',
                 'class': 'mem',
                 'level': 'value',
-                'id': v['imm'][id_name],
-                'type': v['type'],
-                'proto': v
+                'id': value['imm'][id_name],
+                'type': value['type'],
+                'proto': value
             }
 
-            return
+    return do_eval_literal(x)
+
+
+
+
+def do_eval_expr_cast(v):
+    value = v['value']
+    from_type = value['type']
+    to_type = v['type']
 
 
     # cast any type to Unit type

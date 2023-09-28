@@ -26,7 +26,7 @@ void write_example(void)
 {
     printf((const char *)u8"run write_example\n");
 
-    FILE *const fp = fopen((const char *)u8"file.bin", (const char *)u8"wb");
+    FILE *const fp = fopen(filename, (const char *)u8"wb");
 
     if (fp == NULL) {
         printf((const char *)u8"error: cannot create file '%s'", filename);
@@ -51,7 +51,7 @@ void read_example(void)
 {
     printf((const char *)u8"run read_example\n");
 
-    FILE *const fp = fopen((const char *)u8"file.bin", (const char *)u8"rb");
+    FILE *const fp = fopen(filename, (const char *)u8"rb");
 
     if (fp == NULL) {
         printf((const char *)u8"error: cannot open file '%s'", filename);

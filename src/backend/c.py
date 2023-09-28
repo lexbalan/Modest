@@ -560,14 +560,8 @@ def print_cast(t, v, ctx=[]):
 
 
 def print_value_ccast(v, ctx):
-    need_wrap = precedence(v['value']['kind']) < precedenceMax
-    print_value(v['value'], ctx, need_wrap=need_wrap)
-
-
-
-def print_value_cast(v, ctx):
-    val = v['value']
-    from_type = val['type']
+    value = v['value']
+    from_type = value['type']
     to_type = v['type']
 
     if type.is_generic_string(from_type):
@@ -584,17 +578,22 @@ def print_value_cast(v, ctx):
             print_type(to_type, need_space_after=False, _print_array_asis=True)
             out(")")
 
-            print_value_literal_str(val, ctx=[], prefix=prefix)
+            print_value_literal_str(value, ctx=[], prefix=prefix)
             return
 
 
-    # не печатаем приведение литерала строки "string" к Str
-    #if type.eq(type.typeStr, to_type):
-    #    if value_attribute_check(v['value'], 'string'):
-    #        print_value(v['value'], ctx)
-    #        return
+    need_wrap = precedence(value['kind']) < precedenceMax
+    print_value(value, ctx, need_wrap=need_wrap)
 
-    print_cast(to_type, v['value'], ctx)
+
+
+
+def print_value_cast(x, ctx):
+    to_type = x['type']
+    value = x['value']
+    from_type = value['type']
+
+    print_cast(to_type, value, ctx)
 
 
 
