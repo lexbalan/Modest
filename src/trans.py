@@ -786,6 +786,19 @@ def do_value_index(x):
         error("expected integer value", x['index'])
 
 
+
+
+    i = value_cast_implicit(i, typeSysInt, i['ti'])
+
+    if ptr_access:
+        v = hlir_value_index_array_by_ptr(a, i, ti=x['ti'])
+
+    else:
+        v = hlir_value_index_array(a, i, ti=x['ti'])
+        if value_is_immutable(a):
+            v['att'].append('immutable')
+
+
     # immediate index (!)
     if value_is_immediate(a) and not ptr_access:
         if value_is_immediate(i):
@@ -804,20 +817,6 @@ def do_value_index(x):
                 items = a['imm']
                 v_imm = items[index]
                 value_set_imm(v, v_imm['imm'])
-
-
-
-
-    i = value_cast_implicit(i, typeSysInt, i['ti'])
-
-    if ptr_access:
-        v = hlir_value_index_array_by_ptr(a, i, ti=x['ti'])
-
-    else:
-        v = hlir_value_index_array(a, i, ti=x['ti'])
-        if value_is_immutable(a):
-            v['att'].append('immutable')
-
 
 
     return v
