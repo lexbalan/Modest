@@ -1,11 +1,11 @@
 
 from opt import *
-import core.type as type
+import type
 from error import info
 from .common import *
-from core.type import type_attribute_check
-from core.value import value_attribute_check
-from core.hlir import hlir_value_num_get
+from type import type_attribute_check
+from value import value_attribute_check
+from hlir import hlir_value_num_get
 from util import get_item_with_id
 
 
@@ -325,9 +325,9 @@ def print_value_cast(v, ctx):
 def print_value_literal_array(v, ctx):
     out("[")
     indent_up()
-    #print_values(v['imm_items'], before=nl_indentation(INDENT_SYMBOL), after="", separator="")
+    #print_values(v['imm'], before=nl_indentation(INDENT_SYMBOL), after="", separator="")
 
-    values = v['imm_items']
+    values = v['imm']
     i = 0
     n = len(values)
     while i < n:
@@ -355,7 +355,11 @@ def print_value_literal_array(v, ctx):
 
     indent_down()
 
-    out("\n"); indent(); out("]")
+    if v['nl_end'] > 0:
+        out("\n" * v['nl_end'])
+        indent()
+
+    out("]")
 
 
 
@@ -366,13 +370,15 @@ def print_value_literal_record(v, ctx):
 
     indent_up()
 
-    nitems = len(v['initializers'])
+    initializers = v['imm']
+    nitems = len(initializers)
     i = 0
     while i < nitems:
         item = v['type']['fields'][i]
         field_str = item['id']['str']
 
-        ini = get_item_with_id(v['initializers'], field_str)
+
+        ini = get_item_with_id(initializers, field_str)
 
         nl = 0
         if 'nl' in ini:
@@ -406,7 +412,7 @@ def print_value_literal_record(v, ctx):
 
 def print_value_literal_str(x, ctx):
     out("\"")
-    for sym in x['str']:
+    for sym in x['imm']['str']:
         if sym == '\n': out("\\n")
         elif sym == '\r': out("\\r")
         elif sym == '\a': out("\\a")

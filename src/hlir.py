@@ -2,7 +2,7 @@
 
 import copy
 from opt import settings_get
-import core.type as type
+import type
 from util import nbits_for_num, nbytes_for_bits
 
 
@@ -20,8 +20,7 @@ def hlir_type_unit():
         'llvm_alias': 'void',
         'size': 0,
         'power': 0,
-        'imm_items': [],
-        'initializers': [],
+        'imm': {},
         'att': [],
         'ti': None
     }
@@ -52,7 +51,7 @@ def hlir_type_float(aka, power, ti):
     }
 
 
-def hlir_type_pointer(to, ti):
+def hlir_type_pointer(to, ti=None):
     pointer_size = int(settings_get('ptr'))
     return {
         'isa': 'type',
@@ -94,13 +93,23 @@ def hlir_type_nil(ti):
 
 
 # size - always hlir_value (!)
-def hlir_type_array(of, volume, ti):
+def hlir_type_array(of, volume=None, ti=None):
     return {
         'isa': 'type',
         'kind': 'array',
         'volume': volume,
         'of': of,
         'att': [],
+        'ti': ti
+    }
+
+
+def hlir_type_generic_str(ti=None):
+    return {
+        'isa': 'type',
+        'kind': 'String',
+        'name': 'String',
+        'att': ['generic', 'string'],
         'ti': ti
     }
 
@@ -173,9 +182,7 @@ def hlir_value_zero(t, ti=None):
         'isa': 'value',
         'kind': 'literal',
         'type': t,
-        'imm_num': 0,
-        'imm_items': [],
-        'initializers': [],
+        'imm': None,
         'att': ['immediate'],
         'ti': ti
     }
@@ -201,7 +208,7 @@ def hlir_value_int(num, typ=None, ti=None):
     return {
         'isa': 'value',
         'kind': 'literal',
-        'imm_num': num,
+        'imm': num,
         'type': typ,
         'att': ['immediate'],
         'ti': ti
@@ -216,7 +223,7 @@ def hlir_value_float(num, ti=None):
     return {
         'isa': 'value',
         'kind': 'literal',
-        'imm_num': num,
+        'imm': num,
         'type': typ,
         'att': ['immediate'],
         'ti': ti
@@ -227,32 +234,55 @@ def hlir_value_cstr(string, length, type, ti=None):
     return {
         'isa': 'value',
         'kind': 'literal',
-        'str': string,
-        'len': length,
         'type': type,
+
+        'imm': {
+            'str': string,
+            'len': length,
+
+            'used_char8': False,
+            'used_char16': False,
+            'used_char32': False
+        },
+
         'att': ['immediate', 'string'],
         'ti': ti
     }
 
 
-def hlir_value_array(type, items, ti=None):
+def hlir_value_array(items, is_generic=False, type=None, ti=None):
+
+    if type == None:
+        length = len(items)
+
+        of = None
+        if length > 0:
+            of = items[0]['type']
+
+        array_volume = hlir_value_int(length)
+        type = hlir_type_array(of, volume=array_volume, ti=ti)
+
+
+    if is_generic:
+        type['att'].append('generic')
+
     return {
         'isa': 'value',
         'kind': 'literal',
         'type': type,
-        'imm_items': items,
+        'imm': items,
         'att': ['immediate'],
         'nl_end': 0,
         'ti': ti
     }
 
 
-def hlir_value_record(typ, items={}, ti=None):
+def hlir_value_record(typ, initializers={}, ti=None):
     return {
         'isa': 'value',
         'kind': 'literal',
         'type': typ,
-        'initializers': items,
+        'imm': initializers,
         'att': ['immediate'],
         'nl_end': 0,
         'ti': ti
@@ -260,7 +290,7 @@ def hlir_value_record(typ, items={}, ti=None):
 
 
 def hlir_value_num_get(x):
-    return x['imm_num']
+    return x['imm']
 
 
 
@@ -410,7 +440,7 @@ def hlir_value_sizeof(of, ti=None):
         'of': of,
         'type': typ,
         'att': ['immediate'],
-        'imm_num': size,
+        'imm': size,
         'ti': ti
     }
 

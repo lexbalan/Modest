@@ -259,10 +259,26 @@ declare i32 @closedir(%DIR*)
 declare [0 x i8]* @getcwd([0 x i8]*, i64)
 declare [0 x i8]* @getenv([0 x i8]*)
 
-; -- MODULE: /Users/alexbalan/p/Modest/examples/5.records/src/main.cm
+; -- MODULE: /Users/alexbalan/p/Modest/lib/misc/minmax.hm
 
-@str1.c8 = private constant [15 x i8] c"point(%f, %f)\0A\00"
-@str2.c8 = private constant [18 x i8] c"line length = %f\0A\00"
+
+declare i32 @min_int32(i32, i32)
+declare i32 @max_int32(i32, i32)
+declare i64 @min_int64(i64, i64)
+declare i64 @max_int64(i64, i64)
+declare i32 @min_nat32(i32, i32)
+declare i32 @max_nat32(i32, i32)
+declare i64 @min_nat64(i64, i64)
+declare i64 @max_nat64(i64, i64)
+declare float @min_float32(float, float)
+declare float @max_float32(float, float)
+declare double @min_float64(double, double)
+declare double @max_float64(double, double)
+
+; -- MODULE: /Users/alexbalan/p/Modest/examples/10.const/src/main.cm
+
+@str_1 = private constant [18 x i8] c"lines_0_len = %f\0A\00"
+@str_2 = private constant [18 x i8] c"lines_1_len = %f\0A\00"
 
 
 
@@ -277,53 +293,22 @@ declare [0 x i8]* @getenv([0 x i8]*)
 }
 
 
-@line = global %Line {
-  %Point {
-    double 0x0,
-    double 0x0
-  },
-  %Point {
-    double 0x3ff0000000000000,
-    double 0x3ff0000000000000
-  }
-}
-
-define double @max(double %a, double %b) {
-    %1 = fcmp ogt double %a, %b
-    br i1 %1 , label %then_0, label %endif_0
-then_0:
-    ret double %a
-    br label %endif_0
-endif_0:
-    ret double %b
-}
-
-define double @min(double %a, double %b) {
-    %1 = fcmp olt double %a, %b
-    br i1 %1 , label %then_0, label %endif_0
-then_0:
-    ret double %a
-    br label %endif_0
-endif_0:
-    ret double %b
-}
-
 
 
 define double @distance(%Point %a, %Point %b) {
     %1 = extractvalue %Point %a, 0
     %2 = extractvalue %Point %b, 0
-    %3 = call double(double, double) @max (double %1, double %2)
+    %3 = call double(double, double) @max_float64 (double %1, double %2)
     %4 = extractvalue %Point %a, 0
     %5 = extractvalue %Point %b, 0
-    %6 = call double(double, double) @min (double %4, double %5)
+    %6 = call double(double, double) @min_float64 (double %4, double %5)
     %7 = fsub double %3, %6
     %8 = extractvalue %Point %a, 1
     %9 = extractvalue %Point %b, 1
-    %10 = call double(double, double) @max (double %8, double %9)
+    %10 = call double(double, double) @max_float64 (double %8, double %9)
     %11 = extractvalue %Point %a, 1
     %12 = extractvalue %Point %b, 1
-    %13 = call double(double, double) @min (double %11, double %12)
+    %13 = call double(double, double) @min_float64 (double %11, double %12)
     %14 = fsub double %10, %13
     %15 = call double(double, double) @pow (double %7, double 0x4000000000000000)
     %16 = call double(double, double) @pow (double %14, double 0x4000000000000000)
@@ -339,28 +324,57 @@ define double @lineLength(%Line %line) {
     ret double %3
 }
 
-define void @ptr_example() {
-    %1 = call i8*(i64) @malloc (i64 0)
-    %2 = bitcast i8* %1 to %Point*
-; access by pointer
-    %3 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 0
-    store double 0x4024000000000000, double* %3
-    %4 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 1
-    store double 0x4034000000000000, double* %4
-    %5 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 0
-    %6 = load double, double* %5
-    %7 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 1
-    %8 = load double, double* %7
-    %9 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str1.c8, double %6, double %8)
-    ret void
-}
-
 define i32 @main() {
-; by value
-    %1 = load %Line, %Line* @line
-    %2 = call double(%Line) @lineLength (%Line %1)
-    %3 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str2.c8, double %2)
-    call void() @ptr_example ()
+    %1 = insertvalue [2 x %Line] zeroinitializer, %Line {
+  %Point {
+    double 0x0,
+    double 0x0
+  },
+  %Point {
+    double 0x3ff0000000000000,
+    double 0x3ff0000000000000
+  }
+}, 0
+    %2 = insertvalue [2 x %Line] %1, %Line {
+  %Point {
+    double 0x4024000000000000,
+    double 0x402e000000000000
+  },
+  %Point {
+    double 0x4034000000000000,
+    double 0x4039000000000000
+  }
+}, 1
+    %3 = getelementptr inbounds [2 x %Line], [2 x %Line]* %2, i32 0, i32 0
+    %4 = load %Line, %Line* %3
+    %5 = call double(%Line) @lineLength (%Line %4)
+    %6 = insertvalue [2 x %Line] zeroinitializer, %Line {
+  %Point {
+    double 0x0,
+    double 0x0
+  },
+  %Point {
+    double 0x3ff0000000000000,
+    double 0x3ff0000000000000
+  }
+}, 0
+    %7 = insertvalue [2 x %Line] %6, %Line {
+  %Point {
+    double 0x4024000000000000,
+    double 0x402e000000000000
+  },
+  %Point {
+    double 0x4034000000000000,
+    double 0x4039000000000000
+  }
+}, 1
+    %8 = getelementptr inbounds [2 x %Line], [2 x %Line]* %7, i32 0, i32 1
+    %9 = load %Line, %Line* %8
+    %10 = call double(%Line) @lineLength (%Line %9)
+    %11 = bitcast [18 x i8]* @str_1 to %ConstCharStr
+    %12 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %11, double %5)
+    %13 = bitcast [18 x i8]* @str_2 to %ConstCharStr
+    %14 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %13, double %10)
     ret i32 0
 }
 

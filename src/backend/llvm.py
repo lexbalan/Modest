@@ -2,10 +2,10 @@
 import copy
 from .common import *
 from error import info
-import core.type as type
-from core.type import type_attribute_check
-from core.value import value_attribute_check, value_print, value_is_immediate
-from core.hlir import hlir_type_pointer, hlir_value_int, hlir_value_num_get
+import type
+from type import type_attribute_check
+from value import value_attribute_check, value_print, value_is_immediate
+from hlir import hlir_type_pointer, hlir_value_int, hlir_value_num_get
 
 
 LLVM_TARGET_TRIPLE = os.popen("llvm-config --host-target").read()[:-1]
@@ -79,7 +79,7 @@ def ll_create_value_num(t, num):
         'isa': 'llvm_value',
         'class': 'num',
         'level': 'value',
-        'imm_num': num,
+        'imm': num,
         'type': t,
         'proto': None
     }
@@ -311,7 +311,7 @@ def print_type(t, print_aka=True, arr_as_ptr_to_arr=False):
         array_size = t['volume']
         sz = 0
         if array_size != None:
-            sz = array_size['imm_num']
+            sz = hlir_value_num_get(array_size)
 
         out("%d x " % sz)
         print_type(t['of'])
@@ -440,7 +440,7 @@ def do_eval_binary (op, l, r, x): # ["add", "fadd", x]
 
 def do_eval_expr_bin(x):
     # if folded bin
-    if 'imm_num' in x:
+    if 'imm' in x:
         return ll_create_value_num(x['type'], hlir_value_num_get(x))
 
     opcode = get_bin_opcode(x['kind'], x['left']['type'])
@@ -718,6 +718,11 @@ def select_cast_operator(a, b):
             return 'ptrtoint'
 
 
+    elif type.is_string(a):
+        if type.is_pointer(b):
+            return 'bitcast'
+
+
     elif type.is_float(a):
         # Float -> Integer
         if type.is_integer(b):
@@ -733,26 +738,55 @@ def select_cast_operator(a, b):
             elif a['size'] > b['size']:
                 return 'fptrunc'
 
-    return 'uncast'
+    return 'uncast<%s -> %s>' % (a['kind'], b['kind'])
 
 
 
-def do_eval_expr_to(v):
-
-    if 'is-generic-cast' in v['att']:
-        return do_eval_literal(v)
-        #info("??", v['ti'])
-        return
+def do_eval_expr_cast(v):
 
     value = v['value']
     from_type = value['type']
     to_type = v['type']
 
+    # строки печатаются отсюда!
+    if type.is_generic_string(from_type):
+        v = v['value']
+        if type.is_string(to_type):
+            tt = to_type['to']['of']
+
+            id_name = 'strid_8'
+            if tt['power'] == 16:
+                id_name = 'strid_16'
+            elif tt['power'] == 32:
+                id_name = "strid_32"
+
+            return {
+                'isa': 'llvm_value',
+                'class': 'mem',
+                'level': 'value',
+                'id': v['imm'][id_name],
+                'type': v['type'],
+                'proto': v
+            }
+
+            return
+
+
+    if 'is-generic-cast' in v['att']:
+        return do_eval_literal(v)
+
+
+    # cast any type to Unit type
+    if type.is_unit(to_type):
+        return ll_create_value_zero(to_type)
+
+
     # (STUB?) nil -> zeroinitializer
     if type.is_free_pointer(from_type):
-        if 'imm_num' in value:
-            if value['imm_num'] == 0:
-                return ll_create_value_null(to_type)
+        if 'imm' in value:
+            if value['imm'] != None:
+                if hlir_value_num_get(value) == 0:
+                    return ll_create_value_null(to_type)
 
     y = do_ld(do_eval(value))
     opcode = select_cast_operator(from_type, to_type)
@@ -817,13 +851,13 @@ def do_eval_array(v):
     # сперва вычисляем все элементы массива в регистры
     # (кроме констант, они едут до последнего)
     items = []
-    for item in v['imm_items']:
+    for item in v['imm']:
         iv = do_ld(do_eval(item))
         items.append(iv)
 
 
     # теперь добавим паддинг нулевыми значениями
-    fulllen = v['type']['volume']['imm_num']
+    fulllen = hlir_value_num_get(v['type']['volume'])
     n_pad = fulllen - len(items)
     i = 0
     while i < n_pad:
@@ -867,7 +901,8 @@ def do_eval_record(v):
     # (кроме констант, ведь они едут до последнего)
 
     items = []
-    for initializer in v['initializers']:
+    initializers = v['imm']
+    for initializer in initializers:
         iv = do_ld(do_eval(initializer['value']))
         items.append({'id': initializer['id'], 'value': iv})
 
@@ -890,7 +925,7 @@ def do_eval(x):
     # compile time evaluation
     if 'immediate' in x['att']:
         if type.is_integer(x['type']):
-            return ll_create_value_num(x['type'], x['imm_num'])
+            return ll_create_value_num(x['type'], hlir_value_num_get(x))
 
 
     # runtime evaluation
@@ -910,19 +945,18 @@ def do_eval(x):
 
 def do_eval_str(x):
     # проблема строковых констант и strid
-        if not 'strid' in x:
-            if 'value' in x:
-                return do_eval_x(x['value'])
+    #if not 'strid_8' in x:
+    #    if 'value' in x:
+    #        return do_eval_x(x['value'])
 
-
-        return {
-            'isa': 'llvm_value',
-            'class': 'mem',
-            'level': 'value',
-            'id': x['strid'],
-            'type': x['type'],
-            'proto': x
-        }
+    return {
+        'isa': 'llvm_value',
+        'class': 'mem',
+        'level': 'value',
+        'id': x['imm']['strid_8'],
+        'type': x['type'],
+        'proto': x
+    }
 
 
 def do_eval_literal(x):
@@ -946,8 +980,9 @@ def func_const_var(x):
     k = x['kind']
 
     if k == 'const':
-        if 'imm_num' in x:
-            return ll_create_value_num(x['type'], x['imm_num'])
+        if 'imm' in x:
+            if type.is_numeric(x['type']):
+                return ll_create_value_num(x['type'], hlir_value_num_get(x))
 
     if value_attribute_check(x, 'local'):
         localname = x['id']['str']
@@ -1000,7 +1035,7 @@ def do_eval_x(x):
     elif k == 'index_ptr': y = do_eval_expr_index_ptr(x)
     elif k == 'access': y = do_eval_expr_access(x)
     elif k == 'access_ptr': y = do_eval_expr_access_ptr(x)
-    elif k == 'cast': y = do_eval_expr_to(x)
+    elif k == 'cast': y = do_eval_expr_cast(x)
     elif k == 'sizeof': y = do_eval_sizeof(x)
     else:
         out("<%s>" % k)
@@ -1257,7 +1292,7 @@ def print_arrays(arrays):
         val = ll_alloca(id, array['type'], None)
         locals_add('_' + id, val)
 
-        #from core.trans import value_create_int
+        #from trans import value_create_int
 
         memcpy_type = {
             'isa': 'type',
@@ -1547,29 +1582,86 @@ def print_def_var(x):
 
 
 
+def print_string_utf8(strid, string):
+    ss = string['imm']['str']
+
+    slen = len(bytes(ss, 'utf-8')) + 1 # +1 (zero)
+
+    ss = ss.replace("\a", "\\07")
+    ss = ss.replace("\b", "\\08")
+    ss = ss.replace("\t", "\\09")
+    ss = ss.replace("\n", "\\0A")
+    ss = ss.replace("\v", "\\0B")
+    ss = ss.replace("\r", "\\0D")
+    ss = ss.replace("\e", "\\1B")
+    ss = ss.replace("\"", "\\22")
+    ss = ss.replace("\'", "\\27")
+
+    #ex: @str_1 = private constant [4 x i8] c"Hi!\00"
+    lo("@%s = private constant [%d x i8] c\"%s\\00\"" % (strid, slen, ss))
+
+
+
+def print_string_utf16(strid, string):
+    ss = string['imm']['str']
+
+    bb = (ss.encode('utf-16')).decode("utf16")
+    #bb = ss.decode('utf-8').encode('utf-16be')
+    #bb = bytes(ss, 'utf-16')
+    slen = len(bb) + 1 # +1 (zero)
+
+    #print(bb)
+
+    lo("@%s = private constant [%d x i16] [" % (strid, slen))
+    for b in bb:
+        out("i16 %d, " % ord(b))
+
+    out("i16 0]")
+
+
+
+def print_string_utf32(strid, string):
+    ss = string['imm']['str']
+
+    bb = ss#ss.encode('utf-16')
+    #bb = bytes(ss, 'utf-32')
+    slen = len(bb) + 1 # +1 (zero)
+
+    #print(bb)
+
+    lo("@%s = private constant [%d x i32] [" % (strid, slen))
+    for b in bb:
+        out("i32 %d, " % ord(b))
+
+    out("i32 0]")
+
+
+
+
 def print_strings(strings):
     strno = 0
     for string in strings:
+
         strno = strno + 1
-        strid = 'str_%d' % strno
-        string['strid'] = strid
+        strid = 'str%d' % strno
 
-        ss = string['str']
+        if string['imm']['used_char8']:
+            #print("PRINT_STR8")
+            strid8 = strid + '.c8'
+            string['imm']['strid_8'] = strid8
+            print_string_utf8(strid8, string)
 
-        slen = len(bytes(ss, 'utf-8')) + 1 # +1 (zero)
+        if string['imm']['used_char16']:
+            #print("PRINT_STR16")
+            strid16 = strid + '.c16'
+            string['imm']['strid_16'] = strid16
+            print_string_utf16(strid16, string)
 
-        ss = ss.replace("\a", "\\07")
-        ss = ss.replace("\b", "\\08")
-        ss = ss.replace("\t", "\\09")
-        ss = ss.replace("\n", "\\0A")
-        ss = ss.replace("\v", "\\0B")
-        ss = ss.replace("\r", "\\0D")
-        ss = ss.replace("\e", "\\1B")
-        ss = ss.replace("\"", "\\22")
-        ss = ss.replace("\'", "\\27")
-
-        #ex: @str_1 = private constant [4 x i8] c"Hi!\00"
-        lo("@%s = private constant [%d x i8] c\"%s\\00\"" % (strid, slen, ss))
+        if string['imm']['used_char32']:
+            #print("PRINT_STR32")
+            strid32 = strid + '.c32'
+            string['imm']['strid_32'] = strid32
+            print_string_utf32(strid32, string)
 
 
 

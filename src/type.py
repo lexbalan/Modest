@@ -3,7 +3,7 @@
 import copy
 from opt import *
 from error import error, fatal
-from .hlir import *
+from hlir import *
 from util import get_item_with_id
 
 
@@ -105,16 +105,44 @@ typeGenericChar['llvm_alias'] = 'i32'
 
 
 
-typeChar = hlir_type_integer("Nat8", power=8, ti=None)
-typeChar['att'].extend(['unsigned', 'char'])
-typeChar['c_alias'] = 'char'
-typeChar['llvm_alias'] = 'i8'
+typeCChar = hlir_type_integer("Nat8", power=8, ti=None)
+typeCChar['att'].extend(['unsigned', 'char'])
+typeCChar['c_alias'] = 'char'
+typeCChar['llvm_alias'] = 'i8'
 
-typeStr = hlir_type_pointer(hlir_type_array(typeChar, volume=None, ti=None), ti=None)
-typeStr['att'].extend(['const', 'string'])
-#typeStr['c_alias'] = 'const char *'
-genericStr = typeStr
 
+typeCChar8 = hlir_type_integer("Char8", power=8, ti=None)
+typeCChar8['att'].extend(['unsigned', 'char'])
+typeCChar8['c_alias'] = 'uint8_t'
+typeCChar8['llvm_alias'] = 'i8'
+
+typeCChar16 = hlir_type_integer("Char16", power=16, ti=None)
+typeCChar16['att'].extend(['unsigned', 'char'])
+typeCChar16['c_alias'] = 'uint16_t'
+typeCChar16['llvm_alias'] = 'i16'
+
+typeCChar32 = hlir_type_integer("Char32", power=32, ti=None)
+typeCChar32['att'].extend(['unsigned', 'char'])
+typeCChar32['c_alias'] = 'uint32_t'
+typeCChar32['llvm_alias'] = 'i32'
+
+
+
+typeString = hlir_type_generic_str(ti=None)
+typeString['cm_alias'] = 'String'
+typeString['c_alias'] = 'const char *'
+typeString['llvm_alias'] = 'i8*'
+
+
+typeStr8 = hlir_type_pointer(hlir_type_array(of=typeCChar8))
+typeStr8['att'].append('string')
+typeStr16 = hlir_type_pointer(hlir_type_array(of=typeCChar16))
+typeStr16['att'].append('string')
+typeStr32 = hlir_type_pointer(hlir_type_array(of=typeCChar32))
+typeStr32['att'].append('string')
+
+
+typeCStr = typeStr8
 
 typeFreePtr = hlir_type_free_pointer(ti=None)
 typeFreePtr['att'].append('generic')
@@ -144,14 +172,7 @@ def select_numeric(sz, signedness):
     return select_nat(sz)
 
 
-"""typeCharacter = hlir_type_integer("Character", 32)
-typeCharacter['att'].extend(['generic', 'unsigned'])
 
-typeString = hlir_type_pointer(hlir_type_array(typeCharacter))
-typeStr['att'].append('str')
-typeStr['c_alias'] = 'char *'
-genericStr = typeStr
-"""
 
 def eq_integer(a, b):
     if a['power'] != b['power']:
@@ -351,7 +372,8 @@ def is_generic_record(t):
 
 
 def is_generic_string(t):
-    return is_generic(t) and is_string(t)
+    return t['kind'] == 'String'
+    #is_generic(t) and is_string(t)
 
 
 def is_pointer(t):
@@ -472,7 +494,7 @@ def get_size(t):
     if is_integer(t):
         return t['size']
     elif is_array(t):
-        return t['volume']['imm_num'] * get_size(t['of'])
+        return hlir_value_num_get(t['volume']) * get_size(t['of'])
 
     #else:
     #    fatal("type.get_size() for '%s' not implemented" % t['kind'])
@@ -505,7 +527,8 @@ def type_print(t, print_aka=True):
             print(id, end='')
 
             if is_generic(t):
-                print('%d' % (t['power']), end='')
+                if 'power' in t:
+                    print('%d' % (t['power']), end='')
 
             return
 
@@ -539,7 +562,7 @@ def type_print(t, print_aka=True):
 
     elif is_array(t):
         if t['of'] == None:
-            print("EmptyArray")
+            print("GenericEmptyArray", end='')
             return
 
 

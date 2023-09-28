@@ -93,13 +93,12 @@ declare void @perror(%ConstCharStr)
 
 ; -- MODULE: /Users/alexbalan/p/Modest/examples/4.many_sources/src/lib.cm
 
-@str_1 = private constant [21 x i8] c"hello from lib_func\0A\00"
+@str1.c8 = private constant [21 x i8] c"hello from lib_func\0A\00"
 
 
 
 define void @lib_func() {
-    %1 = bitcast [21 x i8]* @str_1 to %ConstCharStr
-    %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %1)
+    %1 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str1.c8)
     ret void
 }
 

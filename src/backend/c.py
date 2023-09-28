@@ -2,9 +2,10 @@
 from opt import *
 from error import info, error
 from .common import *
-import core.type as type
-from core.value import value_attribute_check, value_is_immediate
-from core.hlir import hlir_field, hlir_value_num_get, hlir_stmt_block, hlir_value_var
+import type
+from type import type_print
+from value import value_attribute_check, value_is_immediate, value_print
+from hlir import hlir_field, hlir_value_num_get, hlir_stmt_block, hlir_value_var
 from util import nbits_for_num, get_item_with_id
 
 puffy = False
@@ -568,34 +569,63 @@ def print_value_cast(v, ctx):
         return
 
 
-    from_type = v['value']['type']
+    val = v['value']
+    from_type = val['type']
     to_type = v['type']
 
-    # не печатаем приведение литерала строки "string" к Str
-    if type.eq(type.typeStr, to_type):
-        if value_attribute_check(v['value'], 'string'):
-            print_value(v['value'], ctx)
+    if type.is_generic_string(from_type):
+        if type.is_string(to_type):
+            tt = to_type['to']['of']
+
+            prefix = "u8"
+            if tt['power'] > 16:
+                prefix = "U"
+            elif tt['power'] > 8:
+                prefix = "u"
+
+            out("(")
+            print_type(to_type, need_space_after=False, _print_array_asis=True)
+            out(")")
+
+            print_value_literal_str(val, ctx=[], prefix=prefix)
             return
+
+
+    # не печатаем приведение литерала строки "string" к Str
+    #if type.eq(type.typeStr, to_type):
+    #    if value_attribute_check(v['value'], 'string'):
+    #        print_value(v['value'], ctx)
+    #        return
 
     print_cast(to_type, v['value'], ctx)
 
 
 
+
 def print_value_literal_array(v, ctx):
 
-    out("(")
-    print_type(v['type'], need_space_after=False, _print_array_asis=True)
-    out(")")
+    #if not 'no-cast-literal-array' in v['att']:
+    #if do_cast:
+    if not 'no-literal-array-cast' in ctx:
+        out("(")
+        print_type(v['type'], need_space_after=False, _print_array_asis=True)
+        out(")")
 
     out("{")
     indent_up()
 
 
-    values = v['imm_items']
+    values = v['imm']
     i = 0
     n = len(values)
     while i < n:
-        a = values[i]
+        a = None
+        try:
+            a = values[i]
+        except:
+            print("N = " + str(n))
+            value_print(v)
+            print(values)
 
         nl = 0
         if 'nl' in a:
@@ -632,19 +662,20 @@ def print_value_literal_array(v, ctx):
 def print_value_literal_record(v, ctx):
 
     out("(")
-    print_type(v['type'], need_space_after=False, _print_array_asis=True)
+    print_type(v['type'], need_space_after=False)
     out(")")
 
     out("{")
     indent_up()
 
-    nitems = len(v['initializers'])
+    initializers = v['imm']
+    nitems = len(initializers)
     i = 0
     while i < nitems:
         item = v['type']['fields'][i]
         field_str = item['id']['str']
 
-        ini = get_item_with_id(v['initializers'], field_str)
+        ini = get_item_with_id(initializers, field_str)
 
         nl = 0
         if 'nl' in ini:
@@ -659,7 +690,13 @@ def print_value_literal_record(v, ctx):
 
         out(".%s = " % field_str)
 
-        print_value(ini['value'], ctx)
+        # 'no-literal-array-cast' - когда прописываем инициализаторы
+        # литерал массива не нужно приводить к типу массива
+        # тк C это не умеет:
+        # .arr = (uint8_t [3]){1, 2, 3}  // not worked
+        # .arr = {1, 2, 3}  // worked
+        # вот такая вот херня
+        print_value(ini['value'], ctx + ['no-literal-array-cast'])
         if i < (nitems - 1):
             out(",")
 
@@ -678,13 +715,51 @@ def print_value_literal_record(v, ctx):
 
 
 
+
+"""if type.is_generic_string(from_type):
+        if type.is_pointer(to_type):
+            if type.is_array(to_type['to']):
+                if type.is_integer(to_type['to']['of']):
+                    #type.type_print(to_type)
+                    #print("???%s" % to_type['kind'])
+                    tt = to_type['to']['of']
+                    #print("POWER = ", tt['power'])
+
+                    prefix = "u8"
+                    if tt['power'] > 16:
+                        prefix = "U"
+                    elif tt['power'] > 8:
+                        prefix = "u"
+
+                    out("(")
+                    print_type(to_type, need_space_after=False, _print_array_asis=True)
+                    out(")")
+
+                    print_value_literal_str(val, ctx=[], prefix=prefix)
+                    return
+"""
+
+
 def print_value_literal_str(x, ctx, prefix=""):
+
+
+
     out("%s\"" % prefix)
-    for sym in x['str']:
+
+    for sym in x['imm']['str']:
         if sym == '\n': out("\\n")
         elif sym == '\r': out("\\r")
         elif sym == '\a': out("\\a")
-        else: out(sym)
+        else:
+            #if ord(sym) <= 0xFF:
+            #utf8 = sym.encode("utf-8")
+            #utf16 = sym.encode("utf-16")
+            #print("UTF8 = %s" % str(utf8))
+            #print("UTF16 = %s" % str(utf16))
+            out(sym)
+            """else:
+                sym = "\\x%X" % ord(sym)
+                out(sym)"""
     out("\"")
 
 
@@ -1296,6 +1371,7 @@ def run(module, outname):
 
     lo("#include <stdint.h>")
     lo("#include <string.h>")
+    #lo("#include <uchar.h>")
 
     if USE_STDBOOL:
         lo("#include <stdbool.h>")

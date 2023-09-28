@@ -25,16 +25,14 @@ const line0 = {
     b = pointOne
 }
 
-const carr = [0, 10, 15, 20, 25
-]
+const carr = [0, 10, 15, 20, 25]
 
 const line1 = {
     a = {x = (carr[1]), y = (carr[2])}
     b = {x = (carr[3]), y = (carr[4])}
 }
 
-const lines = [line0, line1
-]
+const lines = [line0, line1]
 
 
 // Pythagorean theorem

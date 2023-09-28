@@ -1,0 +1,12 @@
+
+
+@insert("#include <wchar.h>")
+
+func utf8_puts(s : Str8) -> Unit
+func utf16_puts(s : Str16) -> Unit
+func utf32_puts(s : Str32) -> Unit
+
+func utf32_putchar(c : Nat32) -> Unit
+
+func utf32_to_utf8 (x : Nat32, buf : *[5]Nat8) -> Unit
+

@@ -7,6 +7,8 @@ import "./main.hm"
 import "libc/stdio.hm"
 
 
+
+//FIXIT: ("0" to []Nat8)[0] + n  // not worked!
 func n2hex_digit (n : Nat8, a : Nat8) -> Nat8 {
     if n < 10 {
         return "0"[0] + n

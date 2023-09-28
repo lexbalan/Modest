@@ -6,10 +6,9 @@
 
 // examples/1.hello_world/main.cm
 
-
 int main(void)
 {
-    printf("Hello World!\n");
+    printf((const char *)u8"Hello World!\n");
     return 0;
 }
 

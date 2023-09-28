@@ -11,14 +11,14 @@ def is_local_context():
     return cfunc != None
 
 
-from .value import *
-from parser import Parser
-from core.symtab import Symtab
-import core.type as type
-from core.type import type_attribute_check, select_int, select_nat, type_print
+from value import *
+from frontend.parser import Parser
+from symtab import Symtab
+import type
+from type import type_attribute_check, select_int, select_nat, type_print
 from util import nbits_for_num, nbytes_for_bits
 
-from .hlir import *
+from hlir import *
 
 
 
@@ -116,6 +116,7 @@ def attribute(at):
     else:
         attributes.append(at)
 
+
 def attributes_get():
     global attributes
     attributes2 = attributes
@@ -206,7 +207,11 @@ def init():
     #root_context.type_add('Decimal64', type.typeDecimal64)
     #root_context.type_add('Decimal128', type.typeDecimal128)
 
-    root_context.type_add('Str', type.typeStr)
+    root_context.type_add('Str', type.typeCStr)
+
+    root_context.type_add('Str8', type.typeStr8)
+    root_context.type_add('Str16', type.typeStr16)
+    root_context.type_add('Str32', type.typeStr32)
 
     root_context.type_add('Pointer', type.typeFreePtr)
 
@@ -412,8 +417,7 @@ def do_value_shift(x):
                 res_t = l['type']
 
             v = hlir_value_bin(op, l, r, res_t, ti=ti)
-            v['att'].append('immediate')
-            v['imm_num'] = imm_result
+            value_set_imm(v, imm_result)
             return v
 
 
@@ -430,9 +434,7 @@ def do_value_shift(x):
                 l = do_cast_generic(l, t, x['left']['ti'])
 
             v = hlir_value_bin(op, l, r, l['type'], ti=ti)
-
-            v['att'].append('immediate')
-            v['imm_num'] = imm_result
+            value_set_imm(v, imm_result)
             return v
 
     if type.is_generic(l['type']):
@@ -597,7 +599,7 @@ def do_value_bin(x):
     bin_value = hlir_value_bin(k, l, r, type_result, ti=ti)
 
     # if left & right are immediate, we can fold const
-    # and append field 'imm_num' to bin_value
+    # and append field ['imm'] to bin_value
     if value_is_immediate(l) and value_is_immediate(r):
         ops = {
             'logic_or': lambda a, b: a | b,
@@ -623,8 +625,7 @@ def do_value_bin(x):
         if not type.is_float(l['type']):
             num_val = int(num_val)
 
-        bin_value['imm_num'] = num_val
-        bin_value['att'].append('immediate')
+        value_set_imm(bin_value, num_val)
 
     return bin_value
 
@@ -636,8 +637,8 @@ def do_value_not(val, t, ti):
     v = hlir_value_un('not', val, t, ti=ti)
 
     if value_is_immediate(val):
-        v['imm_num'] = ~hlir_value_num_get(val)
-        v['att'].append('immediate')
+        num = ~hlir_value_num_get(val)
+        value_set_imm(v, num)
 
     return v
 
@@ -646,26 +647,10 @@ def do_value_minus(val, t, ti):
     v = hlir_value_un('minus', val, t, ti=ti)
 
     if value_is_immediate(val):
-        v['imm_num'] = -hlir_value_num_get(val)
-        v['att'].append('immediate')
+        num = -hlir_value_num_get(val)
+        value_set_imm(v, num)
 
     return v
-
-
-
-
-# string literal dereference ` * "Hello World!" `
-# returns array of chars
-def do_value_deref_string(val, t, ti):
-    # разыменование строки это особый случай
-    # поскольку она хоть и числится указателем на массив,
-    # но она в себе несет поля str и len
-    # и после разыменования мы должны получить массив элементов
-    items = []
-    for c in val['str']:
-        cc = hlir_value_int(ord(c), typ=type.typeChar, ti=None)
-        items.append(cc)
-    return hlir_value_array(t['to'], items, ti=ti)
 
 
 
@@ -679,12 +664,6 @@ def do_value_deref(val, t, ti):
     # and pointer to undefined array
     if type.is_func(to) or type.is_undefined_array(to):
         error("unsuitable type", val)
-
-
-    # string literal dereference
-    if value_is_immediate(val):
-        if 'string' in val['att']:
-            return do_value_deref_string(val, t, ti)
 
     return hlir_value_un('deref', val, to, ti=ti)
 
@@ -751,11 +730,12 @@ def do_value_call(x):
     i = 0
     while i < npars:
         param = params[i]
-        arg = do_rvalue(x['args'][i])
+        a = x['args'][i]
+        arg = do_rvalue(a)
 
         if not value_is_bad(arg):
             arg = value_cast_implicit(arg, param['type'], arg['ti'])
-            type.check(param['type'], arg['type'], arg['ti'])
+            type.check(param['type'], arg['type'], a['ti'])
             args.append(arg)
 
         i = i + 1
@@ -792,8 +772,8 @@ def do_value_index(x):
     if ptr_access:
         typ = typ['to']
 
-    # check if is record
-    if not type.is_array(typ):
+    # check if left type is valid
+    if not (type.is_array(typ) or type.is_pointer(typ) or type.is_string(typ)):
         error("expected array or pointer to array", x)
         return hlir_value_bad(x['left']['ti'])
 
@@ -805,11 +785,8 @@ def do_value_index(x):
     if not type.is_integer(i['type']):
         error("expected integer value", x['index'])
 
-    # check if index out-of-bounds
-    if i['kind'] == 'int':
-        if typ['size'] != None:
-            if hlir_value_num_get(i) >= typ['size']:
-                error("array index out of bounds", x['index'])
+
+
 
     i = value_cast_implicit(i, typeSysInt, i['ti'])
 
@@ -825,15 +802,22 @@ def do_value_index(x):
     # immediate index (!)
     if value_is_immediate(a) and not ptr_access:
         if value_is_immediate(i):
+            index = hlir_value_num_get(i)
+
+            #if index >= hlir_value_num_get(typ['volume']):
+            #    error("array index out of bounds", x['index'])
+
             if type.is_generic_string(a['type']):
                 # is generic string
-                c = a['str'][i['imm_num']]
+                c = a['imm']['str'][index]
                 return value_generic_char(c, ti=x['ti'])
 
             else:
                 # is an array
-                v_imm = a['imm_items'][i['imm_num']]
-                cp_immval(v, v_imm)
+                items = a['imm']
+                v_imm = items[index]
+                value_set_imm(v, v_imm['imm'])
+
 
     return v
 
@@ -881,8 +865,9 @@ def do_value_access(x):
 
     # access to immediate object
     if value_is_immediate(obj) and not ptr_access:
-        initializer = get_item_with_id(obj['initializers'], field_id['str'])
-        cp_immval(v, initializer['value'])
+        initializers = obj['imm']
+        initializer = get_item_with_id(initializers, field_id['str'])
+        value_set_imm(v, initializer['value']['imm'])
 
     return v
 
@@ -915,7 +900,6 @@ def do_value_id(x):
     return vx
 
 
-
 """def do_value_ns(x):
     ns_id = x['ids'][0]
     id = x['ids'][1]
@@ -927,23 +911,35 @@ def do_value_id(x):
     return hlir_value_bad(ns_id['ti'])"""
 
 
-
+"""# type of any C string is *[x]typeChar
 def value_cstr(string, length, ti):
-    # type of any C string is *[x]typeChar
     vol = hlir_value_int(length)
-    ta = hlir_type_array(type.typeChar, volume=vol, ti=ti)
+    ta = hlir_type_array(type.typeCChar, volume=vol, ti=ti)
     stype = hlir_type_pointer(ta, ti=ti)
     stype['att'].extend(['string', 'generic'])
     s = hlir_value_cstr(string, length, stype, ti=ti)
     module['strings'].append(s)
+    return s"""
+
+
+# type of Cm generic string
+def value_gstr(string, length, ti):
+    s = hlir_value_cstr(string, length, type.typeString, ti=ti)
+    module['strings'].append(s)
     return s
 
 
-
 def do_value_str(x):
-    return value_cstr(string=x['str'], length=x['len'], ti=x['ti'])
+    return value_gstr(string=x['str'], length=x['len'], ti=x['ti'])
 
 
+
+
+# было решено не пытаться приводить generic элементы массива
+# к общему знаменателю, а оставить как есть;
+# потом, когда массив будет приводиться к конкретному типу
+# всплывут ошибки типизации если они есть.
+# Сейчас не знаю правильно ли, но вроде так хоть работает
 
 def do_value_array(x):
     items = []
@@ -954,33 +950,11 @@ def do_value_array(x):
 
     length = len(x['items'])
 
-    # FIXIT: если массив пустой, то тип of == None это вообще норм??
     of = None
     if length > 0:
         of = items[0]['type']
 
-    # было решено не пытаться приводить generic элементы массива
-    # к общему знаменателю, а оставить как есть;
-    # потом, когда массив будет приводиться к конкретному типу
-    # всплывут ошибки типизации если они есть.
-    # Сейчас не знаю правильно ли, но вроде так хоть работает
-
-    #print("OF: "); type_print(of); print()
-    """
-    # implicit cast array items to 'of' type
-    items2 = items
-    if of != None:
-        items2 = []
-        for item in items:
-            i2 = value_cast_implicit(item, of, item['ti'])
-            items2.append(i2)
-    """
-    items2 = items
-
-    vol = hlir_value_int(length)
-    typ = hlir_type_array(of, volume=vol, ti=x['ti'])
-    typ['att'].extend(['generic'])
-    y = hlir_value_array(typ, items2, ti=x['ti'])
+    y = hlir_value_array(items, is_generic=True, ti=x['ti'])
     y['nl_end'] = x['nl_end']
     return y
 
@@ -1243,7 +1217,7 @@ def do_stmt_let(x):
     const_value['att'].extend(['local']) # need for LLVM printer (!)
 
     if value_is_immediate(v):
-        cp_immval(const_value, v)
+        value_set_imm(const_value, v['imm'])
 
     module['context'].value_add(id['str'], const_value)
 
@@ -1422,7 +1396,7 @@ def def_const(x):
 
     const_value = hlir_value_const(id, v['type'], v, x['ti'])
 
-    cp_immval(const_value, v)
+    value_set_imm(const_value, v['imm'])
 
     atts = attributes_get()
     const_value['att'].extend(atts)
@@ -1492,6 +1466,10 @@ def def_var(x):
     if type.is_bad(f['type']):
         return None
 
+    already = value_get(f['id']['str'])
+    if already != None:
+        error("redefinition of '%s'" % f['id']['str'], x['field']['ti'])
+
     if type.is_opaque(f['type']):
         error("cannot create variable with undefined type", x['type'])
         return None
@@ -1502,7 +1480,7 @@ def def_var(x):
 
         if not value_is_bad(iv):
             init_value = value_cast_implicit(iv, f['type'], iv['ti'])
-            type.check(init_value['type'], f['type'], x['init']['ti'])
+            type.check(f['type'], init_value['type'], x['init']['ti'])
 
     var = hlir_value_var(f['id'], f['type'], init=init_value)
 

@@ -89,12 +89,12 @@ declare void @perror(%ConstCharStr)
 
 ; -- MODULE: /Users/alexbalan/p/Modest/examples/9.big_numbers/src/main.cm
 
-@str_1 = private constant [19 x i8] c"big0 = 0x%llX%llX\0A\00"
-@str_2 = private constant [19 x i8] c"big1 = 0x%llX%llX\0A\00"
-@str_3 = private constant [19 x i8] c"big2 = 0x%llX%llX\0A\00"
-@str_4 = private constant [19 x i8] c"big3 = 0x%llX%llX\0A\00"
-@str_5 = private constant [22 x i8] c"big_sum = 0x%llX%llX\0A\00"
-@str_6 = private constant [13 x i8] c"sig1 = %lld\0A\00"
+@str1.c8 = private constant [19 x i8] c"big0 = 0x%llX%llX\0A\00"
+@str2.c8 = private constant [19 x i8] c"big1 = 0x%llX%llX\0A\00"
+@str3.c8 = private constant [19 x i8] c"big2 = 0x%llX%llX\0A\00"
+@str4.c8 = private constant [19 x i8] c"big3 = 0x%llX%llX\0A\00"
+@str5.c8 = private constant [22 x i8] c"big_sum = 0x%llX%llX\0A\00"
+@str6.c8 = private constant [13 x i8] c"sig1 = %lld\0A\00"
 
 
 
@@ -126,44 +126,38 @@ define i32 @main() {
     %5 = add i128 %2, %4
     %big_sum = alloca i128
     store i128 %5, i128* %big_sum
-    %6 = bitcast [19 x i8]* @str_1 to %ConstCharStr
-    %7 = load i128, i128* @big0
-    %8 = call i64(i128) @high_128 (i128 %7)
-    %9 = load i128, i128* @big0
-    %10 = call i64(i128) @low_128 (i128 %9)
-    %11 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %6, i64 %8, i64 %10)
-    %12 = bitcast [19 x i8]* @str_2 to %ConstCharStr
-    %13 = call i64(i128) @high_128 (i128 340282366920938463463374607431768211455)
-    %14 = call i64(i128) @low_128 (i128 340282366920938463463374607431768211455)
-    %15 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %12, i64 %13, i64 %14)
-    %16 = bitcast [19 x i8]* @str_3 to %ConstCharStr
-    %17 = load i128, i128* %big2
-    %18 = call i64(i128) @high_128 (i128 %17)
-    %19 = load i128, i128* %big2
-    %20 = call i64(i128) @low_128 (i128 %19)
-    %21 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %16, i64 %18, i64 %20)
-    %22 = bitcast [19 x i8]* @str_4 to %ConstCharStr
-    %23 = load i128, i128* %big3
-    %24 = call i64(i128) @high_128 (i128 %23)
-    %25 = load i128, i128* %big3
-    %26 = call i64(i128) @low_128 (i128 %25)
-    %27 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %22, i64 %24, i64 %26)
-    %28 = bitcast [22 x i8]* @str_5 to %ConstCharStr
-    %29 = load i128, i128* %big_sum
-    %30 = call i64(i128) @high_128 (i128 %29)
-    %31 = load i128, i128* %big_sum
-    %32 = call i64(i128) @low_128 (i128 %31)
-    %33 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %28, i64 %30, i64 %32)
+    %6 = load i128, i128* @big0
+    %7 = call i64(i128) @high_128 (i128 %6)
+    %8 = load i128, i128* @big0
+    %9 = call i64(i128) @low_128 (i128 %8)
+    %10 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str1.c8, i64 %7, i64 %9)
+    %11 = call i64(i128) @high_128 (i128 340282366920938463463374607431768211455)
+    %12 = call i64(i128) @low_128 (i128 340282366920938463463374607431768211455)
+    %13 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str2.c8, i64 %11, i64 %12)
+    %14 = load i128, i128* %big2
+    %15 = call i64(i128) @high_128 (i128 %14)
+    %16 = load i128, i128* %big2
+    %17 = call i64(i128) @low_128 (i128 %16)
+    %18 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str3.c8, i64 %15, i64 %17)
+    %19 = load i128, i128* %big3
+    %20 = call i64(i128) @high_128 (i128 %19)
+    %21 = load i128, i128* %big3
+    %22 = call i64(i128) @low_128 (i128 %21)
+    %23 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str4.c8, i64 %20, i64 %22)
+    %24 = load i128, i128* %big_sum
+    %25 = call i64(i128) @high_128 (i128 %24)
+    %26 = load i128, i128* %big_sum
+    %27 = call i64(i128) @low_128 (i128 %26)
+    %28 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str5.c8, i64 %25, i64 %27)
 ; signed big int test
     %sig1 = alloca i128
     store i128 -1, i128* %sig1
-    %34 = load i128, i128* %sig1
-    %35 = add i128 %34, 1
-    store i128 %35, i128* %sig1
-    %36 = bitcast [13 x i8]* @str_6 to %ConstCharStr
-    %37 = load i128, i128* %sig1
-    %38 = trunc i128 %37 to i64
-    %39 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr %36, i64 %38)
+    %29 = load i128, i128* %sig1
+    %30 = add i128 %29, 1
+    store i128 %30, i128* %sig1
+    %31 = load i128, i128* %sig1
+    %32 = trunc i128 %31 to i64
+    %33 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str6.c8, i64 %32)
     ret i32 0
 }
 

@@ -28,7 +28,7 @@ class Source:
             s.append(c)
             i = i + 1
         return "".join(s)
-    
+
 
     # получить позицию в файле
     def getpos(self):

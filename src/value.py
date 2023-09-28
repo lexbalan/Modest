@@ -1,10 +1,10 @@
 
 from opt import *
-import core.type as type
-from core.type import type_print
-from .trans import is_local_context
+import type
+from type import type_print
+from trans import is_local_context
 from error import error, warning, info
-from .hlir import *
+from hlir import *
 from util import get_item_with_id
 
 
@@ -22,27 +22,8 @@ def value_print(x):
     info("here", x['ti'])
 
 
-def cp_immval(nv, v):
-    if 'imm_num' in v:
-        nv['imm_num'] = v['imm_num']
-
-        if value_attribute_check(v, 'hexadecimal'):
-            nv['att'].append('hexadecimal')
-
-    elif 'imm_items' in v:
-        nv['imm_items'] = v['imm_items']
-
-    elif 'initializers' in v:
-        nv['initializers'] = v['initializers']
-
-    elif 'str' in v:
-        nv['str'] = v['str']
-        nv['len'] = v['len']
-
-    else:
-        error("fatal: unknown immediate", v['ti'])
-        #value_print(v)
-
+def value_set_imm(nv, imm):
+    nv['imm'] = imm
     nv['att'].append('immediate')
 
 
@@ -53,13 +34,15 @@ def cp_immediate(nv, v):
     if 'id' in v:
         nv['id'] = v['id']
 
-    cp_immval(nv, v)
+    value_set_imm(nv, v['imm'])
 
 
 
 
 
 def do_cast_generic(v, t, ti):
+    #info("do_cast_generic", ti)
+
     nv = hlir_value_cast(v, t, ti)
 
     cp_immediate(nv, v)
@@ -67,6 +50,8 @@ def do_cast_generic(v, t, ti):
     if 'nl_end' in v:
         nv['nl_end'] = v['nl_end']
 
+    # принтер не будет печатать операцию приведения с 'is-generic-cast'
+    # он просто напечатает значение (см print_value_cast)
     nv['att'].append('is-generic-cast')
 
     return nv
@@ -127,8 +112,9 @@ def value_is_immutable(x):
 # то что определено директивой let
 def value_is_const_imm(x):
     if x['kind'] == 'const':
-        if 'imm_num' in x:
-            return True
+        if 'imm' in x:
+            return 'num' in x
+        #return value_is_immediate()
     return False
 
 
@@ -141,7 +127,7 @@ def value_is_immediate(x):
 
 
 def value_generic_char(c, ti=None):
-    return hlir_value_int(ord(c), typ=type.typeChar, ti=ti)
+    return hlir_value_int(ord(c), typ=type.typeCChar, ti=ti)
 
 
 
@@ -154,12 +140,13 @@ def value_load(x):
 # полного или из пустого дженерик массива
 def value_cons_array_from_generic_array(v, t, ti, method):
     #print("value_cons_array_from_generic_array")
-    if len(v['imm_items']) > hlir_value_num_get(t['volume']):
+    if len(v['imm']) > hlir_value_num_get(t['volume']):
         info("too many items", v['ti'])
         return None
 
     casted_items = []
-    for item in v['imm_items']:
+    items = v['imm']
+    for item in items:
         casted_item = value_cast_implicit(item, t['of'], item['ti'])
         type.check(t['of'], casted_item['type'], item['ti'])
         casted_items.append(casted_item)
@@ -167,7 +154,7 @@ def value_cons_array_from_generic_array(v, t, ti, method):
     vx = {
         'isa': 'value',
         'kind': 'literal',
-        'imm_items': casted_items,
+        'imm': casted_items,
         'type': t,
         'att': [],
         'nl_end': v['nl_end'],
@@ -207,85 +194,125 @@ def value_cons_array_from_array(v, t, ti, method):
 
         # extend array with zero items
         padding = [hlir_value_zero(t['of'], ti=None)] * n
-        nv['imm_items'].extend(padding)
+        nv['imm'].extend(padding)
 
         return nv
 
     return None
 
 
+def str_used_as(string_value, typ):
+    if typ['power'] == 8: string_value['imm']['used_char8'] = True
+    elif typ['power'] == 16: string_value['imm']['used_char16'] = True
+    elif typ['power'] == 32: string_value['imm']['used_char32'] = True
+
+
 def value_cons_array(v, t, ti, method):
-    #print("value_cons_array")
+    from_type = v['type']
+    to_type = t
+
     # GenericArray -> Array
-    if type.is_array(v['type']):
-        if type.is_generic(v['type']):
+    if type.is_array(from_type):
+        if type.is_generic(from_type):
             return value_cons_array_from_generic_array(v, t, ti, method)
         return value_cons_array_from_array(v, t, ti, method)
+
+
+    # GenericString -> [x]NatX
+    if type.is_generic_string(from_type):
+        if type.is_integer(to_type['of']):
+            #info("cast generic string to array", ti)
+
+
+            # Check to:array volume vs string len
+            # "xxx" to []X | "xxx" to [n]X
+            if to_type['volume'] != None:
+                to_arr_volume = hlir_value_num_get(to_type['volume'])
+                # v['len'] учитывает '\0'
+                if v['imm']['len'] > to_arr_volume:
+                    error("too big", ti)
+
+            items = []
+            for c in v['imm']['str']:
+                ccode = ord(c) # get character code in utf-32
+                items.append(hlir_value_int(ccode, typ=to_type['of']))
+
+            items.append(hlir_value_int(0, typ=to_type['of']))
+
+            str_used_as(string_value=v, typ=to_type['of'])
+
+            a = hlir_value_array(items, type=to_type, ti=None)
+            a['att'].append('no-cast-literal-array')
+            return a
 
     return None
 
 
 
 def value_cons_record_from_generic_record(v, t, ti, method):
+
     if v['kind'] == 'const':
         # TODO: тут нужно проверить чтобы при implicit методе
         # все поля присутствовали (!)
         return hlir_value_cast(v, t, ti=ti)
 
-    # 1. проходим по порядку определения по всем полям типа t (целевого)
-    # 2. если поля с таким именеи нет в v:
-        # 2.1 конструируем нулевое значение соотв типа
-        # 2.2 if method == 'implicit' - это ошибка (!)
-    # 3. делаем implicit_cast() для поля из v к соотв полю из t
-    # 4. проверяем тип
-    # 5. пакуем
     items = []
-    prev_nl = 1 # nl для неявных инициализаторов (zero)
-    for field in t['fields']:
-        field_name = field['id']['str']
-        field_type = field['type']
+    if len(v['type']['fields']) > 0:
+        # 1. проходим по порядку определения по всем полям типа t (целевого)
+        # 2. если поля с таким именеи нет в v:
+            # 2.1 конструируем нулевое значение соотв типа
+            # 2.2 if method == 'implicit' - это ошибка (!)
+        # 3. делаем implicit_cast() для поля из v к соотв полю из t
+        # 4. проверяем тип
+        # 5. пакуем
+        prev_nl = 1 # nl для неявных инициализаторов (zero)
+        for field in t['fields']:
+            field_name = field['id']['str']
+            field_type = field['type']
 
-        # получаем элемент с соотв именем из исходного значения
-        item_value = None
-        nl = 0
-        xti = None
+            # получаем элемент с соотв именем из исходного значения
+            item_value = None
+            nl = 0
+            xti = None
 
-        ini = get_item_with_id(v['initializers'], field_name)
+            initializers = v['imm']
+            ini = get_item_with_id(initializers, field_name)
 
-        if ini == None:
-            # no field, create zero value stub
-            item_value = hlir_value_zero(field_type, ti=None)
-            if method == 'implicit':
-                # implicit cast требует наличия всех полей
-                error("expected field '%s'" % field_name, v['ti'])
-                return None    # это cast, а cast не выдает ошибки
-            nl = prev_nl
-            ti = None
-        else:
-            item_value = ini['value']
-            nl = ini['nl']
-            ti = ini['ti']
+            if ini == None:
+                # no field, create zero value stub
+                item_value = hlir_value_zero(field_type, ti=None)
+                if method == 'implicit':
+                    # implicit cast требует наличия всех полей
+                    error("expected field '%s'" % field_name, v['ti'])
+                    return None    # это cast, а cast не выдает ошибки
+                nl = prev_nl
+                ti = None
+            else:
+                item_value = ini['value']
+                nl = ini['nl']
+                ti = ini['ti']
 
-        prev_nl = nl
+            prev_nl = nl
 
-        item_value2 = value_cast_implicit(item_value, field_type, ti=None)
+            item_value2 = value_cast_implicit(item_value, field_type, ti=None)
 
-        type.check(field_type, item_value2['type'], item_value2)
+            type.check(field_type, item_value2['type'], item_value2)
 
-        #items[field_name] = item_value2
-        items.append({
-            'isa': 'initizlizer',
-            'id': field['id'],
-            'value': item_value2,
-            'att': [],
-            'nl': nl,
-            'ti': ti
-        })
+            #items[field_name] = item_value2
+            items.append({
+                'isa': 'initizlizer',
+                'id': field['id'],
+                'value': item_value2,
+                'att': [],
+                'nl': nl,
+                'ti': ti
+            })
+
 
     vx = {
         'isa': 'value',
         'kind': 'literal',
-        'initializers': items,
+        'imm': items,
         'type': t,
         'att': [],
         'nl_end': v['nl_end'],
@@ -316,9 +343,13 @@ def is_bad_struct(x):
 
 
 def value_cons_record(v, t, ti, method):
+    from_type = v['type']
+
     # GenericRecord -> Record
-    if type.is_generic(v['type']) and type.is_record(v['type']):
-        return value_cons_record_from_generic_record(v, t, ti, method)
+    if type.is_record(from_type):
+        if type.is_generic(from_type):
+            return value_cons_record_from_generic_record(v, t, ti, method)
+        return value_cons_record_from_record(v, t, ti, method)
 
     return None
 
@@ -344,7 +375,7 @@ def value_cons_integer(v, t, ti, method):
 
             nv = hlir_value_cast(v, t, ti)
             if value_is_immediate(v):
-                cp_immval(nv, v)
+                value_set_imm(nv, v['imm'])
             return nv
 
         else:
@@ -371,7 +402,8 @@ def value_cons_float(v, t, ti, method):
                     return None
 
                 y = do_cast_generic(v, t, ti)
-                y['imm_num'] = float(y['imm_num'])    # 0 -> 0.0, need for printer (!)
+                num = float(hlir_value_num_get(y))    # 0 -> 0.0, need for printer (!)
+                y['imm'] = num
                 return y
 
         elif type.is_integer(vt):
@@ -391,6 +423,7 @@ def value_cons_float(v, t, ti, method):
 def value_cons_pointer(v, t, ti, method):
 
     from_type = v['type']
+    to_type = t
 
     if 'unsafe' in features:
         ### UNSAFE ###
@@ -402,13 +435,14 @@ def value_cons_pointer(v, t, ti, method):
                 if type.is_integer(v['type']):
                     # compile-time casting
                     nv = hlir_value_cast(v, t, ti=ti)
-                    nv['imm_num'] = v['imm_num']
+                    num = hlir_value_num_get(v)
+                    nv['imm'] = num
                     nv['att'].append('immediate')
                     return nv
 
             # Int -> Ptr
             if type.is_integer(from_type):
-                from core.trans import ptr_size
+                from trans import ptr_size
                 if from_type['power'] != ptr_size:
                     error("cons pointer from integer with different size", ti)
                 return hlir_value_cast(v, t, ti=ti)
@@ -417,11 +451,34 @@ def value_cons_pointer(v, t, ti, method):
             if type.is_pointer(from_type):
                 return hlir_value_cast(v, t, ti=ti)
 
-    # *[n]X -> *[]X    (например строковой литерал к типу Str)
+    # *[n]X -> *[]X
     if type.is_pointer_to_defined_array(from_type):
         if type.is_pointer_to_undefined_array(t):
             if type.eq(from_type['to']['of'], t['to']['of']):
                 return hlir_value_cast(v, t, ti=ti)
+
+
+    # GenericString -> *[]NatX
+    if type.is_generic_string(from_type):
+        if type.is_array(to_type['to']):
+            #
+            # GenericString -> *[]NatX
+            #
+
+            if type.is_integer(to_type['to']['of']):
+                #info("cast generic string to pointer", ti)
+                str_used_as(string_value=v, typ=to_type['to']['of'])
+                return hlir_value_cast(v, t, ti=ti) #?!
+
+        elif type.is_integer(to_type['to']):
+            #
+            # GenericString -> *NatX
+            #
+
+            str_used_as(string_value=v, typ=to_type['to'])
+            return hlir_value_cast(v, t, ti=ti) #?!
+
+        return v
 
     # Nil -> *X
     if type.is_nil(from_type) and type.is_pointer(t):
@@ -447,6 +504,7 @@ def value_cons_unit(v, t, ti, method):
 def value_cons(v, t, ti, method):
     if value_is_bad(v) or type.is_bad(t):
         return None
+
 
     if type.eq(v['type'], t):
         return v
@@ -493,6 +551,8 @@ def value_cast_implicit(v, t, ti):
         return hlir_value_bad(ti)
 
     from_type = v['type']
+    to_type = t
+
 
     # implisit cast possible only for:
     # 1. Generic -> NonGeneric
