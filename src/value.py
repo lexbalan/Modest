@@ -22,20 +22,10 @@ def value_print(x):
     info("here", x['ti'])
 
 
+
 def value_set_imm(nv, imm):
     nv['imm'] = imm
     nv['att'].append('immediate')
-
-
-
-def cp_immediate(nv, v):
-
-    # для generic приведения констант (!)
-    if 'id' in v:
-        nv['id'] = v['id']
-
-    value_set_imm(nv, v['imm'])
-
 
 
 
@@ -46,10 +36,14 @@ def do_cast_generic(v, t, ti):
     nv = hlir_value_cast(v, t, ti)
     nv['kind'] = 'ccast'
 
-    cp_immediate(nv, v)
+    value_set_imm(nv, v['imm'])
 
     if 'nl_end' in v:
         nv['nl_end'] = v['nl_end']
+
+    # для generic приведения констант (!)
+    if 'id' in v:
+        nv['id'] = v['id']
 
     return nv
 
