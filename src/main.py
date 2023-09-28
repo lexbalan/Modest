@@ -33,7 +33,7 @@ settings_set('lib', DEFAULT_MLIB)
 settings_set('backend', DEFAULT_BACKEND)
 
 import error
-import core.trans as trans
+import trans
 
 
 parser = argparse.ArgumentParser(
@@ -83,7 +83,7 @@ def main():
     src_name = args.filename
 
     # is header?
-    if src_name[:-2] == 'hm':
+    if src_name[-2:] == 'hm':
         features_set('header')
 
     src_abspath = os.path.abspath(src_name)
