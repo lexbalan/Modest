@@ -741,6 +741,8 @@ def select_cast_operator(a, b):
     return 'uncast<%s -> %s>' % (a['kind'], b['kind'])
 
 
+def do_eval_expr_ccast(x):
+    return do_eval_literal(x)
 
 def do_eval_expr_cast(v):
 
@@ -770,10 +772,6 @@ def do_eval_expr_cast(v):
             }
 
             return
-
-
-    if 'is-generic-cast' in v['att']:
-        return do_eval_literal(v)
 
 
     # cast any type to Unit type
@@ -1035,6 +1033,7 @@ def do_eval_x(x):
     elif k == 'index_ptr': y = do_eval_expr_index_ptr(x)
     elif k == 'access': y = do_eval_expr_access(x)
     elif k == 'access_ptr': y = do_eval_expr_access_ptr(x)
+    elif k == 'ccast': y = do_eval_expr_ccast(x)
     elif k == 'cast': y = do_eval_expr_cast(x)
     elif k == 'sizeof': y = do_eval_sizeof(x)
     else:

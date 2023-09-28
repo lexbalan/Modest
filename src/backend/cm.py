@@ -289,16 +289,15 @@ def print_cast(t, v, ctx=[]):
     print_type(t)
 
 
+
+def print_value_ccast(v, ctx):
+    # дженерик каст не печатаю (!)
+    need_wrap = precedence(v['value']['kind']) < precedenceMax
+    print_value(v['value'], ctx, need_wrap=need_wrap)
+    return
+
+
 def print_value_cast(v, ctx):
-
-    if not 'no_print_gen_cast' in ctx:
-        # дженерик каст не печатаю (!)
-        if 'is-generic-cast' in v['att']:
-            need_wrap = precedence(v['value']['kind']) < precedenceMax
-            print_value(v['value'], ctx, need_wrap=need_wrap)
-            return
-
-
     # не печатаем операции неявного приведения (!)
     if value_attribute_check(v, 'implicit-casted'):
         print_value(v['value'])
@@ -505,6 +504,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
     elif k == 'index_ptr': print_value_index_ptr(x, ctx)
     elif k == 'access': print_value_access(x, ctx)
     elif k == 'access_ptr': print_value_access_ptr(x, ctx)
+    elif k == 'ccast': print_value_ccast(x, ctx)
     elif k == 'cast': print_value_cast(x, ctx)
     elif k == 'sizeof': out("sizeof("); print_type(x['of']); out(")")
     else: out("<%s>" % k)

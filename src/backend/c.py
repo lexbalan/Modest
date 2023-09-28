@@ -102,7 +102,7 @@ aprecedence = [
     ['shl', 'shr'], #7
     ['add', 'sub'], #8
     ['mul', 'div', 'rem'], #9
-    ['plus', 'minus', 'not', 'cast', 'ref', 'deref', 'sizeof'], #10
+    ['plus', 'minus', 'not', 'cast', 'ccast', 'ref', 'deref', 'sizeof'], #10
     ['call', 'index', 'access'], #11
     ['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #12
 ]
@@ -559,16 +559,13 @@ def print_cast(t, v, ctx=[]):
 
 
 
+def print_value_ccast(v, ctx):
+    need_wrap = precedence(v['value']['kind']) < precedenceMax
+    print_value(v['value'], ctx, need_wrap=need_wrap)
+
+
+
 def print_value_cast(v, ctx):
-
-    # не печатаем generic-cast
-    # просто пишем значение; Но если оно не литерал - берем в скобки
-    if 'is-generic-cast' in v['att']:
-        need_wrap = precedence(v['value']['kind']) < precedenceMax
-        print_value(v['value'], ctx, need_wrap=need_wrap)
-        return
-
-
     val = v['value']
     from_type = val['type']
     to_type = v['type']
@@ -879,6 +876,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
     elif k == 'index_ptr': print_value_index_ptr(x, ctx)
     elif k == 'access': print_value_access(x, ctx)
     elif k == 'access_ptr': print_value_access_ptr(x, ctx)
+    elif k == 'ccast': print_value_ccast(x, ctx)
     elif k == 'cast': print_value_cast(x, ctx)
     elif k == 'sizeof': out("sizeof("); print_type(x['of'], need_space_after=False, _print_array_asis=True); out(")")
     else:

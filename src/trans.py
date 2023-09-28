@@ -772,6 +772,7 @@ def do_value_index(x):
     if ptr_access:
         typ = typ['to']
 
+
     # check if left type is valid
     if not (type.is_array(typ) or type.is_pointer(typ) or type.is_string(typ)):
         error("expected array or pointer to array", x)
@@ -786,12 +787,13 @@ def do_value_index(x):
         error("expected integer value", x['index'])
 
 
-
-
     i = value_cast_implicit(i, typeSysInt, i['ti'])
 
     if ptr_access:
         v = hlir_value_index_array_by_ptr(a, i, ti=x['ti'])
+
+    elif type.is_generic_string(typ):
+        pass
 
     else:
         v = hlir_value_index_array(a, i, ti=x['ti'])
