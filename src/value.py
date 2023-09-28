@@ -68,18 +68,20 @@ valueFalse = hlir_value_int(0, typ=type.typeNat1)
 
 
 
-def value_is_bad(x):
-    assert x != None
-    return x['kind'] == 'bad'
-
-
 
 def value_attribute_add(v, a):
     v['att'].append(a)
 
+
 def value_attribute_check(v, a):
     return a in v['att']
 
+
+
+
+def value_is_bad(x):
+    assert x != None
+    return x['kind'] == 'bad'
 
 
 def value_is_mutable(x):
