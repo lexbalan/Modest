@@ -2,10 +2,10 @@
 from opt import *
 from error import info, error
 from .common import *
-import core.type as type
-from core.type import type_print
-from core.value import value_attribute_check, value_is_immediate, value_print
-from core.hlir import hlir_field, hlir_value_num_get, hlir_stmt_block, hlir_value_var
+import type
+from type import type_print
+from value import value_attribute_check, value_is_immediate, value_print
+from hlir import hlir_field, hlir_value_num_get, hlir_stmt_block, hlir_value_var
 from util import nbits_for_num, get_item_with_id
 
 puffy = False

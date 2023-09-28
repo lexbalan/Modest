@@ -11,14 +11,14 @@ def is_local_context():
     return cfunc != None
 
 
-from .value import *
+from value import *
 from frontend.parser import Parser
-from core.symtab import Symtab
-import core.type as type
-from core.type import type_attribute_check, select_int, select_nat, type_print
+from symtab import Symtab
+import type
+from type import type_attribute_check, select_int, select_nat, type_print
 from util import nbits_for_num, nbytes_for_bits
 
-from .hlir import *
+from hlir import *
 
 
 

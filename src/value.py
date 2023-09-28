@@ -1,10 +1,10 @@
 
 from opt import *
-import core.type as type
-from core.type import type_print
-from .trans import is_local_context
+import type
+from type import type_print
+from trans import is_local_context
 from error import error, warning, info
-from .hlir import *
+from hlir import *
 from util import get_item_with_id
 
 
@@ -438,7 +438,7 @@ def value_cons_pointer(v, t, ti, method):
 
             # Int -> Ptr
             if type.is_integer(from_type):
-                from core.trans import ptr_size
+                from trans import ptr_size
                 if from_type['power'] != ptr_size:
                     error("cons pointer from integer with different size", ti)
                 return hlir_value_cast(v, t, ti=ti)

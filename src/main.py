@@ -33,7 +33,7 @@ settings_set('lib', DEFAULT_MLIB)
 settings_set('backend', DEFAULT_BACKEND)
 
 import error
-import core.trans as trans
+import trans
 
 
 parser = argparse.ArgumentParser(

@@ -2,10 +2,10 @@
 import copy
 from .common import *
 from error import info
-import core.type as type
-from core.type import type_attribute_check
-from core.value import value_attribute_check, value_print, value_is_immediate
-from core.hlir import hlir_type_pointer, hlir_value_int, hlir_value_num_get
+import type
+from type import type_attribute_check
+from value import value_attribute_check, value_print, value_is_immediate
+from hlir import hlir_type_pointer, hlir_value_int, hlir_value_num_get
 
 
 LLVM_TARGET_TRIPLE = os.popen("llvm-config --host-target").read()[:-1]
@@ -1289,7 +1289,7 @@ def print_arrays(arrays):
         val = ll_alloca(id, array['type'], None)
         locals_add('_' + id, val)
 
-        #from core.trans import value_create_int
+        #from trans import value_create_int
 
         memcpy_type = {
             'isa': 'type',

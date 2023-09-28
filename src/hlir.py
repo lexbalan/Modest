@@ -2,7 +2,7 @@
 
 import copy
 from opt import settings_get
-import core.type as type
+import type
 from util import nbits_for_num, nbytes_for_bits
 
 

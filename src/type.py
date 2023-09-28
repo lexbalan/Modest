@@ -3,7 +3,7 @@
 import copy
 from opt import *
 from error import error, fatal
-from .hlir import *
+from hlir import *
 from util import get_item_with_id
 
 

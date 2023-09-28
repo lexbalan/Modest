@@ -1,11 +1,11 @@
 
 from opt import *
-import core.type as type
+import type
 from error import info
 from .common import *
-from core.type import type_attribute_check
-from core.value import value_attribute_check
-from core.hlir import hlir_value_num_get
+from type import type_attribute_check
+from value import value_attribute_check
+from hlir import hlir_value_num_get
 from util import get_item_with_id
 
 
