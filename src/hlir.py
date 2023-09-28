@@ -93,7 +93,7 @@ def hlir_type_nil(ti):
 
 
 # size - always hlir_value (!)
-def hlir_type_array(of, volume, ti=None):
+def hlir_type_array(of, volume=None, ti=None):
     return {
         'isa': 'type',
         'kind': 'array',

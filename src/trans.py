@@ -772,8 +772,8 @@ def do_value_index(x):
     if ptr_access:
         typ = typ['to']
 
-    # check if is record
-    if not type.is_array(typ):
+    # check if left type is valid
+    if not (type.is_array(typ) or type.is_pointer(typ) or type.is_string(typ)):
         error("expected array or pointer to array", x)
         return hlir_value_bad(x['left']['ti'])
 
@@ -785,11 +785,28 @@ def do_value_index(x):
     if not type.is_integer(i['type']):
         error("expected integer value", x['index'])
 
-    # check if index out-of-bounds
-    if i['kind'] == 'int':
-        if typ['size'] != None:
-            if hlir_value_num_get(i) >= typ['size']:
-                error("array index out of bounds", x['index'])
+
+    # immediate index (!)
+    if value_is_immediate(a) and not ptr_access:
+        if value_is_immediate(i):
+            index = hlir_value_num_get(i)
+
+            #if index >= hlir_value_num_get(typ['volume']):
+            #    error("array index out of bounds", x['index'])
+
+            if type.is_generic_string(a['type']):
+                # is generic string
+                c = a['imm']['str'][index]
+                return value_generic_char(c, ti=x['ti'])
+
+            else:
+                # is an array
+                items = a['imm']
+                v_imm = items[index]
+                value_set_imm(v, v_imm['imm'])
+
+
+
 
     i = value_cast_implicit(i, typeSysInt, i['ti'])
 
@@ -802,21 +819,6 @@ def do_value_index(x):
             v['att'].append('immutable')
 
 
-    # immediate index (!)
-    if value_is_immediate(a) and not ptr_access:
-        if value_is_immediate(i):
-            index = hlir_value_num_get(i)
-
-            if type.is_generic_string(a['type']):
-                # is generic string
-                c = a['str'][index]
-                return value_generic_char(c, ti=x['ti'])
-
-            else:
-                # is an array
-                items = a['imm']
-                v_imm = items[index]
-                value_set_imm(v, v_imm['imm'])
 
     return v
 
@@ -910,7 +912,7 @@ def do_value_id(x):
     return hlir_value_bad(ns_id['ti'])"""
 
 
-# type of any C string is *[x]typeChar
+"""# type of any C string is *[x]typeChar
 def value_cstr(string, length, ti):
     vol = hlir_value_int(length)
     ta = hlir_type_array(type.typeCChar, volume=vol, ti=ti)
@@ -918,7 +920,7 @@ def value_cstr(string, length, ti):
     stype['att'].extend(['string', 'generic'])
     s = hlir_value_cstr(string, length, stype, ti=ti)
     module['strings'].append(s)
-    return s
+    return s"""
 
 
 # type of Cm generic string

@@ -241,7 +241,9 @@ def value_cons_array(v, t, ti, method):
 
             str_used_as(string_value=v, typ=to_type['of'])
 
-            return hlir_value_array(items, type=to_type, ti=None)
+            a = hlir_value_array(items, type=to_type, ti=None)
+            a['att'].append('no-cast-literal-array')
+            return a
 
     return None
 

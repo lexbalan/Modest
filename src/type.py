@@ -134,11 +134,11 @@ typeString['c_alias'] = 'const char *'
 typeString['llvm_alias'] = 'i8*'
 
 
-typeStr8 = hlir_type_pointer(hlir_type_array(of=typeCChar8, volume=hlir_value_int(0)))
+typeStr8 = hlir_type_pointer(hlir_type_array(of=typeCChar8))
 typeStr8['att'].append('string')
-typeStr16 = hlir_type_pointer(hlir_type_array(of=typeCChar16, volume=hlir_value_int(0)))
+typeStr16 = hlir_type_pointer(hlir_type_array(of=typeCChar16))
 typeStr16['att'].append('string')
-typeStr32 = hlir_type_pointer(hlir_type_array(of=typeCChar32, volume=hlir_value_int(0)))
+typeStr32 = hlir_type_pointer(hlir_type_array(of=typeCChar32))
 typeStr32['att'].append('string')
 
 

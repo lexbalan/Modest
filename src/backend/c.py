@@ -604,10 +604,12 @@ def print_value_cast(v, ctx):
 
 def print_value_literal_array(v, ctx):
 
-    #if not type.is_generic(v['type']):
-    out("(")
-    print_type(v['type'], need_space_after=False, _print_array_asis=True)
-    out(")")
+    #if not 'no-cast-literal-array' in v['att']:
+    #if do_cast:
+    if not 'no-literal-array-cast' in ctx:
+        out("(")
+        print_type(v['type'], need_space_after=False, _print_array_asis=True)
+        out(")")
 
     out("{")
     indent_up()
@@ -688,7 +690,13 @@ def print_value_literal_record(v, ctx):
 
         out(".%s = " % field_str)
 
-        print_value(ini['value'], ctx)
+        # 'no-literal-array-cast' - когда прописываем инициализаторы
+        # литерал массива не нужно приводить к типу массива
+        # тк C это не умеет:
+        # .arr = (uint8_t [3]){1, 2, 3}  // not worked
+        # .arr = {1, 2, 3}  // worked
+        # вот такая вот херня
+        print_value(ini['value'], ctx + ['no-literal-array-cast'])
         if i < (nitems - 1):
             out(",")
 
