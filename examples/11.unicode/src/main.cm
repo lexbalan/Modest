@@ -29,6 +29,7 @@ func main () -> Int {
 
     let ratCode = "Hello 🐀!\n"[6]
     printf("ratCharCode = %d\n", ratCode)
+    var rat : Nat16 := ratCode
 
     utf16_puts("Hello Ω!\n")
     utf32_puts("Hello Ω!\n")

@@ -357,7 +357,11 @@ def value_cons_integer(v, t, ti, method):
             # GenericInt -> Int
             # check size
             if v['type']['power'] > t['power']:
-                warning("casting with data loss", ti)
+                if method == 'explicit':
+                    warning("explicit casting with data loss", ti)
+                else:
+                    error("implicit casting with data loss", ti)
+
                 type_print(v['type'])
                 print(" -> ", end="")
                 type_print(t)

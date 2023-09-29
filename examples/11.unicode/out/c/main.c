@@ -31,6 +31,7 @@ int main(void)
 
     const uint32_t ratCode = U'🐀';
     printf((const char *)"ratCharCode = %d\n", ratCode);
+    uint16_t rat = (uint16_t)ratCode;
 
     utf16_puts((uint16_t *)u"Hello Ω!\n");
     utf32_puts((uint32_t *)U"Hello Ω!\n");
