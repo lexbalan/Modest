@@ -1154,15 +1154,15 @@ def do_stmt_var(x):
     # type & init value present
     if t != None and v != None:
         # type check
-        v = value_cast_implicit(v, t, v['ti'])
-        type.check(t, v['type'], v['ti'])
+        v = value_cast_implicit(v, t, x['value']['ti'])
+        type.check(t, v['type'], x['value']['ti'])
 
 
     if t == None:
         if type.is_generic_integer(v['type']):
             # если тип не указан явно, а у значения тип generic_integer
             # приводим его к системному инту
-            v = value_cast_implicit(v, typeSysInt, v['ti'])
+            v = value_cast_implicit(v, typeSysInt, x['value']['ti'])
 
         t = v['type']
 
@@ -1467,11 +1467,12 @@ def def_var(x):
         return None
 
     init_value = None
+
     if x['init'] != None:
         iv = do_value(x['init'])
 
         if not value_is_bad(iv):
-            init_value = value_cast_implicit(iv, f['type'], iv['ti'])
+            init_value = value_cast_implicit(iv, f['type'], x['init']['ti'])
             type.check(f['type'], init_value['type'], x['init']['ti'])
 
     var = hlir_value_var(f['id'], f['type'], init=init_value)
