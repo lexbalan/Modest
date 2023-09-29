@@ -15,7 +15,7 @@ Generic type - compile time type, that must be casted to any real type for using
 ### Unit type
 Unit type is an analog of *void* type in C language.
 It used to indicate that function have no return value
-```
+```swift
 func no_return_func () -> Unit {
 }
 ```
@@ -30,19 +30,19 @@ Result of [==, !=, <, >, <=, >=] operations have Bool type.
 ### Integer types
 
 Signed integer types
-```
+```javascript
 Int8, Int16, Int32, Int64, Int128
 ```
 
 Unsigned integer types
-```
+```javascript
 Nat8, Nat16, Nat32, Nat64, Nat128
 ```
 
 
 ### Float types
 Float types
-```
+```javascript
 Float32, Float64, Float128
 ```
 
@@ -54,7 +54,7 @@ There's no special char type, instead use Nat8, Nat16 or Nat32 integer type
 
 ### String types
 String types are builtin pointers to arrays of Nat8, Nat16, Nat32
-```
+```javascript
 Str8, Str16, Str32
 ```
 
