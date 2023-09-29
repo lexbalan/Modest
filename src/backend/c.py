@@ -785,15 +785,22 @@ def print_value_literal_int(x, ctx):
             return
 
 
-
     if type.type_attribute_check(x['type'], 'char'):
-        out("'%c'" % num)
+        prefix = ""
+        if num <= 0xFFFF:
+            prefix = "u"
+        elif num <= 0xFFFFFFFF:
+            prefix = "U"
+
+        out("%c'%c'" % (prefix, num))
+
     elif value_attribute_check(x, 'hexadecimal'):
         nsigns = 0
         if 'nsigns' in x:
             nsigns = x['nsigns']
         fmt = "0x%%0%dX" % nsigns
         out(fmt % num)
+
     else:
         out(str(num))
 

@@ -43,30 +43,22 @@ extern func setlocale (category : Int, locale : Str8) -> Str8
     UTF-32 Encoding:	0x0001F400
 */
 
-const ratUTF8 = [0xf0, 0x9f, 0x90, 0x80]
-const ratUTF16 = [0xD83D, 0xDC00]
-const ratUTF32 = 0x0001F400
-
-
-// TODO: перекрытие имен - что с этим делать???
+const ratSymbolUTF8 = [0xf0, 0x9f, 0x90, 0x80]
+const ratSymbolUTF16 = [0xD83D, 0xDC00]
+const ratSymbolUTF32 = 0x0001F400
 
 
 var arr_utf8 : [8]Nat8 := "Helo!\n"
 var arr_utf16 : [8]Nat16 := "Hello!\n"
 var arr_utf32 : [8]Nat32 := "Hello!\n"
 
-//var xxx : [8]Nat8 := []
-
 
 const strUtf16 = "Hello Ω!\n"
 
 func main () -> Int {
 
-    //let clocale = setlocale(LC_ALL, nil)
-    //printf("clocale = %s\n", clocale)
-
-//    utf32_putchar(ratUTF32)
-//    utf32_putchar(0xA)
+    let omegaCharCode = strUtf16[6]
+    printf("omegaCharCode = %d\n", omegaCharCode)
 
     utf16_puts("Hello Ω!\n")
     utf32_puts("Hello Ω!\n")
@@ -75,4 +67,5 @@ func main () -> Int {
 
     return 0
 }
+
 

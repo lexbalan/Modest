@@ -44,19 +44,14 @@ extern func setlocale (category : Int, locale : Str8) -> Str8
     UTF-32 Encoding:	0x0001F400
 */
 
-#define ratUTF8  (int8_t [4]){0xF0, 0x9F, 0x90, 0x80}
-#define ratUTF16  (int16_t [2]){0xD83D, 0xDC00}
-#define ratUTF32  0x0001F400
-
-
-// TODO: перекрытие имен - что с этим делать???
+#define ratSymbolUTF8  (int8_t [4]){0xF0, 0x9F, 0x90, 0x80}
+#define ratSymbolUTF16  (int16_t [2]){0xD83D, 0xDC00}
+#define ratSymbolUTF32  0x0001F400
 
 
 static uint8_t arr_utf8[8] = (uint8_t [8]){72, 101, 108, 111, 33, 10, 0};
 static uint16_t arr_utf16[8] = (uint16_t [8]){72, 101, 108, 108, 111, 33, 10, 0};
 static uint32_t arr_utf32[8] = (uint32_t [8]){72, 101, 108, 108, 111, 33, 10, 0};
-
-//var xxx : [8]Nat8 := []
 
 
 #define strUtf16  "Hello Ω!\n"
@@ -64,11 +59,8 @@ static uint32_t arr_utf32[8] = (uint32_t [8]){72, 101, 108, 108, 111, 33, 10, 0}
 int main(void)
 {
 
-    //let clocale = setlocale(LC_ALL, nil)
-    //printf("clocale = %s\n", clocale)
-
-    //    utf32_putchar(ratUTF32)
-    //    utf32_putchar(0xA)
+    const uint32_t omegaCharCode = u'Ω';
+    printf((const char *)u8"omegaCharCode = %d\n", omegaCharCode);
 
     utf16_puts((uint16_t *)u"Hello Ω!\n");
     utf32_puts((uint32_t *)U"Hello Ω!\n");

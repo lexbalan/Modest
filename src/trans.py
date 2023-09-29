@@ -913,20 +913,10 @@ def do_value_id(x):
     return hlir_value_bad(ns_id['ti'])"""
 
 
-"""# type of any C string is *[x]typeChar
-def value_cstr(string, length, ti):
-    vol = hlir_value_int(length)
-    ta = hlir_type_array(type.typeCChar, volume=vol, ti=ti)
-    stype = hlir_type_pointer(ta, ti=ti)
-    stype['att'].extend(['string', 'generic'])
-    s = hlir_value_cstr(string, length, stype, ti=ti)
-    module['strings'].append(s)
-    return s"""
-
 
 # type of Cm generic string
 def value_gstr(string, length, ti):
-    s = hlir_value_cstr(string, length, type.typeString, ti=ti)
+    s = hlir_value_cstr(string, length, type.typeGenericString, ti=ti)
     module['strings'].append(s)
     return s
 

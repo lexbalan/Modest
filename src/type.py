@@ -98,17 +98,11 @@ typeDecimal128['c_alias'] = '_Decimal128'
 typeDecimal128['llvm_alias'] = 'double'
 
 
-typeGenericChar = hlir_type_integer("Nat32", power=32, ti=None)
+typeGenericChar = hlir_type_integer("Char", power=32, ti=None)
 typeGenericChar['att'].extend(['unsigned', 'generic', 'char'])
 typeGenericChar['c_alias'] = 'char32_t'
 typeGenericChar['llvm_alias'] = 'i32'
 
-
-
-typeCChar = hlir_type_integer("Nat8", power=8, ti=None)
-typeCChar['att'].extend(['unsigned', 'char'])
-typeCChar['c_alias'] = 'char'
-typeCChar['llvm_alias'] = 'i8'
 
 
 typeCChar8 = hlir_type_integer("Char8", power=8, ti=None)
@@ -128,10 +122,10 @@ typeCChar32['llvm_alias'] = 'i32'
 
 
 
-typeString = hlir_type_generic_str(ti=None)
-typeString['cm_alias'] = 'String'
-typeString['c_alias'] = 'const char *'
-typeString['llvm_alias'] = 'i8*'
+typeGenericString = hlir_type_generic_str(ti=None)
+typeGenericString['cm_alias'] = 'String'
+typeGenericString['c_alias'] = 'const char *'
+typeGenericString['llvm_alias'] = 'i8*'
 
 
 typeStr8 = hlir_type_pointer(hlir_type_array(of=typeCChar8))

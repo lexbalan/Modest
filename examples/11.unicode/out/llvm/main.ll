@@ -90,22 +90,21 @@ declare void @perror(%ConstCharStr)
 ; -- MODULE: /Users/alexbalan/p/Modest/lib/misc/utf.hm
 
 
-
+declare void @utf32_to_utf8(i32, [5 x i8]*)
 declare void @utf8_puts([0 x i8]*)
 declare void @utf16_puts([0 x i16]*)
 declare void @utf32_puts([0 x i32]*)
 declare void @utf32_putchar(i32)
-declare void @utf32_to_utf8(i32, [5 x i8]*)
 
 ; -- MODULE: /Users/alexbalan/p/Modest/examples/11.unicode/src/main.cm
 
 @str1.c8 = private constant [7 x i8] c"Helo!\0A\00"
 @str2.c16 = private constant [8 x i16] [i16 72, i16 101, i16 108, i16 108, i16 111, i16 33, i16 10, i16 0]
 @str3.c32 = private constant [8 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 33, i32 10, i32 0]
-@str4.c16 = private constant [10 x i16] [i16 72, i16 101, i16 108, i16 108, i16 111, i16 32, i16 937, i16 33, i16 10, i16 0]
-@str4.c32 = private constant [10 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 32, i32 937, i32 33, i32 10, i32 0]
-@str5.c32 = private constant [10 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 32, i32 128000, i32 33, i32 10, i32 0]
-
+@str5.c8 = private constant [20 x i8] c"omegaCharCode = %d\0A\00"
+@str6.c16 = private constant [10 x i16] [i16 72, i16 101, i16 108, i16 108, i16 111, i16 32, i16 937, i16 33, i16 10, i16 0]
+@str7.c32 = private constant [10 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 32, i32 937, i32 33, i32 10, i32 0]
+@str8.c32 = private constant [10 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 32, i32 128000, i32 33, i32 10, i32 0]
 
 
 
@@ -143,15 +142,11 @@ declare void @utf32_to_utf8(i32, [5 x i8]*)
 ]
 
 
-
 define i32 @main() {
-;let clocale = setlocale(LC_ALL, nil)
-;printf("clocale = %s\n", clocale)
-;    utf32_putchar(ratUTF32)
-;    utf32_putchar(0xA)
-    call void([0 x i16]*) @utf16_puts ([0 x i16]* @str4.c16)
-    call void([0 x i32]*) @utf32_puts ([0 x i32]* @str4.c32)
-    call void([0 x i32]*) @utf32_puts ([0 x i32]* @str5.c32)
+    %1 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str5.c8, i32 937)
+    call void([0 x i16]*) @utf16_puts ([0 x i16]* @str6.c16)
+    call void([0 x i32]*) @utf32_puts ([0 x i32]* @str7.c32)
+    call void([0 x i32]*) @utf32_puts ([0 x i32]* @str8.c32)
     ret i32 0
 }
 
