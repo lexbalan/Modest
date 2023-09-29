@@ -1,5 +1,8 @@
 # Minor language documentation
 
+- [Values](./values.md)
+- [Types](./types.md)
+
 - [Definitions](./def/README.md)
   * [Type definition](./def/type.md)
   * [Constant definition](./def/const.md)
