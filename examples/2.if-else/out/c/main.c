@@ -9,22 +9,22 @@
 
 int main(void)
 {
-    printf((const char *)u8"if-else example\n");
+    printf((const char *)"if-else example\n");
 
     int32_t a;
     int32_t b;
 
-    printf((const char *)u8"enter a: ");
-    scanf((const char *)u8"%d", &a);
-    printf((const char *)u8"enter b: ");
-    scanf((const char *)u8"%d", &b);
+    printf((const char *)"enter a: ");
+    scanf((const char *)"%d", &a);
+    printf((const char *)"enter b: ");
+    scanf((const char *)"%d", &b);
 
     if (a > b) {
-        printf((const char *)u8"a > b\n");
+        printf((const char *)"a > b\n");
     } else if (a < b) {
-        printf((const char *)u8"a < b\n");
+        printf((const char *)"a < b\n");
     } else {
-        printf((const char *)u8"a == b\n");
+        printf((const char *)"a == b\n");
     }
 
     return 0;

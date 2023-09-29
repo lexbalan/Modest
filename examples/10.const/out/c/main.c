@@ -65,8 +65,8 @@ int main(void)
 {
     const float lines_0_len = lineLength(lines[0]);
     const float lines_1_len = lineLength(lines[1]);
-    printf((const char *)u8"lines_0_len = %f\n", lines_0_len);
-    printf((const char *)u8"lines_1_len = %f\n", lines_1_len);
+    printf((const char *)"lines_0_len = %f\n", lines_0_len);
+    printf((const char *)"lines_1_len = %f\n", lines_1_len);
 
     return 0;
 }

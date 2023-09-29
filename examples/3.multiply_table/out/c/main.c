@@ -14,7 +14,7 @@ void mtab(int n)
     int m = 1;
     while (m < 10) {
         const int nm = n * m;
-        printf((const char *)u8"%d * %d = %d\n", n, m, nm);
+        printf((const char *)"%d * %d = %d\n", n, m, nm);
         m = m + 1;
     }
 }
@@ -23,7 +23,7 @@ void mtab(int n)
 int main(void)
 {
     const int8_t n = 2 * 2;
-    printf((const char *)u8"multiply table for %d\n", n);
+    printf((const char *)"multiply table for %d\n", n);
     mtab(n);
     return 0;
 }
