@@ -207,7 +207,7 @@ def init():
     #root_context.type_add('Decimal64', type.typeDecimal64)
     #root_context.type_add('Decimal128', type.typeDecimal128)
 
-    root_context.type_add('Str', type.typeCStr)
+    root_context.type_add('Str', type.typeStr8)
 
     root_context.type_add('Str8', type.typeStr8)
     root_context.type_add('Str16', type.typeStr16)

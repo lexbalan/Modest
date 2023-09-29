@@ -130,8 +130,6 @@ typeStr32 = hlir_type_pointer(hlir_type_array(of=typeCChar32))
 typeStr32['att'].append('string')
 
 
-typeCStr = typeStr8
-
 typeFreePtr = hlir_type_free_pointer(ti=None)
 typeFreePtr['att'].append('generic')
 
