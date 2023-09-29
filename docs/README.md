@@ -15,6 +15,7 @@
 
 
 - [Value Expression](./expr/value/README.md)
+  * [Value Literals](./expr/value/literals.md)
   * [Numeric value expression](./expr/value/numeric.md)
   * [String value expression](./expr/value/string.md)
   * [Binary value expression](./expr/value/binary.md)
