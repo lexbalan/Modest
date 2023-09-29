@@ -19,17 +19,21 @@ var arr_utf16 : [8]Nat16 := "Hello!\n"
 var arr_utf32 : [8]Nat32 := "Hello!\n"
 
 
-const strUtf16 = "Hello Ω!\n"
-
 func main () -> Int {
 
-    let omegaCharCode = strUtf16[6]
-    printf("omegaCharCode = %d\n", omegaCharCode)
-    var omega : Nat16 := omegaCharCode
+    // indexing of GenericString returns #i symbol code
+    // the symbols have GenericInteger type
+    let omegaCharCode = "Hello Ω!\n"[6]
+    let ratCharCode = "Hello 🐀!\n"[6]
 
-    let ratCode = "Hello 🐀!\n"[6]
-    printf("ratCharCode = %d\n", ratCode)
-    var rat : Nat16 := ratCode
+    // you can assign omegaCharCode (937) to Nat32,
+    // but you can't assign ratCharCode (128000) to Nat16 (!)
+    var omegaCode : Nat16 := omegaCharCode
+    var ratCode : Nat32 := ratCharCode
+
+    printf("omegaCode = %d\n", omegaCode)
+    printf("ratCode = %d\n", ratCode)
+
 
     utf16_puts("Hello Ω!\n")
     utf32_puts("Hello Ω!\n")

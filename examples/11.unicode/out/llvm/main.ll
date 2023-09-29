@@ -101,11 +101,11 @@ declare void @utf32_putchar(i32)
 @str1.c8 = private constant [7 x i8] c"Helo!\0A\00"
 @str2.c16 = private constant [8 x i16] [i16 72, i16 101, i16 108, i16 108, i16 111, i16 33, i16 10, i16 0]
 @str3.c32 = private constant [8 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 33, i32 10, i32 0]
-@str5.c8 = private constant [20 x i8] c"omegaCharCode = %d\0A\00"
-@str6.c16 = private constant [10 x i16] [i16 72, i16 101, i16 108, i16 108, i16 111, i16 32, i16 937, i16 33, i16 10, i16 0]
-@str7.c32 = private constant [10 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 32, i32 937, i32 33, i32 10, i32 0]
-@str8.c32 = private constant [10 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 32, i32 128000, i32 33, i32 10, i32 0]
-
+@str6.c8 = private constant [16 x i8] c"omegaCode = %d\0A\00"
+@str7.c8 = private constant [14 x i8] c"ratCode = %d\0A\00"
+@str8.c16 = private constant [10 x i16] [i16 72, i16 101, i16 108, i16 108, i16 111, i16 32, i16 937, i16 33, i16 10, i16 0]
+@str9.c32 = private constant [10 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 32, i32 937, i32 33, i32 10, i32 0]
+@str10.c32 = private constant [10 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 32, i32 128000, i32 33, i32 10, i32 0]
 
 
 
@@ -141,12 +141,22 @@ declare void @utf32_putchar(i32)
   i32 0
 ]
 
-
 define i32 @main() {
-    %1 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str5.c8, i32 937)
-    call void([0 x i16]*) @utf16_puts ([0 x i16]* @str6.c16)
-    call void([0 x i32]*) @utf32_puts ([0 x i32]* @str7.c32)
-    call void([0 x i32]*) @utf32_puts ([0 x i32]* @str8.c32)
+; indexing of GenericString returns #i symbol code
+; the symbols have GenericInteger type
+; you can assign omegaCharCode (937) to Nat32,
+; but you can't assign ratCharCode (128000) to Nat16 (!)
+    %omegaCode = alloca i16
+    store i16 937, i16* %omegaCode
+    %ratCode = alloca i32
+    store i32 128000, i32* %ratCode
+    %1 = load i16, i16* %omegaCode
+    %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str6.c8, i16 %1)
+    %3 = load i32, i32* %ratCode
+    %4 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str7.c8, i32 %3)
+    call void([0 x i16]*) @utf16_puts ([0 x i16]* @str8.c16)
+    call void([0 x i32]*) @utf32_puts ([0 x i32]* @str9.c32)
+    call void([0 x i32]*) @utf32_puts ([0 x i32]* @str10.c32)
     ret i32 0
 }
 

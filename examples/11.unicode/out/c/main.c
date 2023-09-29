@@ -20,18 +20,22 @@ static uint16_t arr_utf16[8] = (uint16_t [8]){72, 101, 108, 108, 111, 33, 10, 0}
 static uint32_t arr_utf32[8] = (uint32_t [8]){72, 101, 108, 108, 111, 33, 10, 0};
 
 
-#define strUtf16  "Hello Ω!\n"
-
 int main(void)
 {
 
+    // indexing of GenericString returns #i symbol code
+    // the symbols have GenericInteger type
     const uint16_t omegaCharCode = u'Ω';
-    printf((const char *)"omegaCharCode = %d\n", omegaCharCode);
-    uint16_t omega = omegaCharCode;
+    const uint32_t ratCharCode = U'🐀';
 
-    const uint32_t ratCode = U'🐀';
-    printf((const char *)"ratCharCode = %d\n", ratCode);
-    uint16_t rat = (uint16_t)ratCode;
+    // you can assign omegaCharCode (937) to Nat32,
+    // but you can't assign ratCharCode (128000) to Nat16 (!)
+    uint16_t omegaCode = omegaCharCode;
+    uint32_t ratCode = ratCharCode;
+
+    printf((const char *)"omegaCode = %d\n", omegaCode);
+    printf((const char *)"ratCode = %d\n", ratCode);
+
 
     utf16_puts((uint16_t *)u"Hello Ω!\n");
     utf32_puts((uint32_t *)U"Hello Ω!\n");
