@@ -120,7 +120,9 @@ def value_is_immediate(x):
 
 
 def value_generic_char(c, ti=None):
-    return hlir_value_int(ord(c), typ=type.typeGenericChar, ti=ti)
+    char_code = ord(c)
+    typ = hlir_type_char(nbits_for_num(char_code), ti=ti)
+    return hlir_value_int(char_code, typ=typ, ti=ti)
 
 
 

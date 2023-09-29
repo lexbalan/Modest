@@ -98,12 +98,6 @@ typeDecimal128['c_alias'] = '_Decimal128'
 typeDecimal128['llvm_alias'] = 'double'
 
 
-typeGenericChar = hlir_type_integer("Char", power=32, ti=None)
-typeGenericChar['att'].extend(['unsigned', 'generic', 'char'])
-typeGenericChar['c_alias'] = 'char32_t'
-typeGenericChar['llvm_alias'] = 'i32'
-
-
 
 typeCChar8 = hlir_type_integer("Char8", power=8, ti=None)
 typeCChar8['att'].extend(['unsigned', 'char'])

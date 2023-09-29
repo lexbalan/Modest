@@ -568,7 +568,7 @@ def print_value_ccast(v, ctx):
         if type.is_string(to_type):
             tt = to_type['to']['of']
 
-            prefix = "u8"
+            prefix = "" #"u8"
             if tt['power'] > 16:
                 prefix = "U"
             elif tt['power'] > 8:
@@ -793,6 +793,7 @@ def print_value_literal_int(x, ctx):
             prefix = "U"
 
         out("%c'%c'" % (prefix, num))
+        return
 
     elif value_attribute_check(x, 'hexadecimal'):
         nsigns = 0

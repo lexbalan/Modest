@@ -38,6 +38,20 @@ def hlir_type_integer(name, power, ti):
     }
 
 
+def hlir_type_char(power, ti):
+    return {
+        'isa': 'type',
+        'kind': 'int',
+        'name': 'Char',
+        'att': ['char', 'generic', 'numeric', 'comparable', 'ordered', 'unsigned'],
+        'power': power,
+        'c_alias': 'char32_t',
+        'llvm_alias': 'i32',
+        'size': nbytes_for_bits(power),
+        'ti': ti
+    }
+
+
 def hlir_type_float(aka, power, ti):
     return {
         'isa': 'type',
@@ -194,6 +208,7 @@ def hlir_value_int(num, typ=None, ti=None):
         typ = hlir_type_generic_int_for(num, unsigned=False, ti=ti)
     else:
         nbits = nbits_for_num(num)
+
         #print("nbits = %d" % nbits)
         #print("typ['power'] = %d" % typ['power'])
         assert(nbits <= typ['power'])

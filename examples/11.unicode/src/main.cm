@@ -25,6 +25,10 @@ func main () -> Int {
 
     let omegaCharCode = strUtf16[6]
     printf("omegaCharCode = %d\n", omegaCharCode)
+    var omega : Nat16 := omegaCharCode
+
+    let ratCode = "Hello 🐀!\n"[6]
+    printf("ratCharCode = %d\n", ratCode)
 
     utf16_puts("Hello Ω!\n")
     utf32_puts("Hello Ω!\n")
