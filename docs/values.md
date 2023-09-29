@@ -1,4 +1,6 @@
-# Value Literals
+# Values
+
+## Literal values
 
 ### Numeric literals
 Numeric literals have type **GenericNumeric**
