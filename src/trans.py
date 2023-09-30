@@ -407,9 +407,16 @@ def do_value_shift(x):
             imm_result = nl << nr
             nbits = nbits_for_num(imm_result)
 
+            # для сдвига влево минимальный размер - размер int
+            mint = settings_get('int')
+            if nbits < mint:
+                nbits = mint
+
             # если тип Generic - расширим,
             # иначе - проверим влезает ли результат
             if type.is_generic(l['type']):
+                # расширяем generic int тип чтобы в нем можно было сдвигать
+                l['type']['power'] = nbits #!
                 res_t = hlir_type_generic_int_bits(nbits, unsigned=False, ti=ti)
             else:
                 if nbits > l['type']['power']:

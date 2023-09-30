@@ -806,11 +806,10 @@ def print_value_literal_int(x, ctx):
         out(str(num))
 
 
-    nbits = nbits_for_num(num)
+    nbits = x['type']['power']
 
-    if nbits == x['type']['power']:
-        if type.is_unsigned(x['type']):
-            out("U")
+    if type.is_unsigned(x['type']):
+        out("U")
 
     if nbits > CC_INT_SIZE_BITS:
         if nbits <= CC_LONG_SIZE_BITS:
