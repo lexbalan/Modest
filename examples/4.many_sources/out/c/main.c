@@ -10,7 +10,7 @@
 
 int main(void)
 {
-    printf((const char *)"hello from main\n");
+    printf("hello from main\n");
     lib_func();
     return 0;
 }

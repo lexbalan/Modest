@@ -37,8 +37,8 @@ typedef struct {
 #define carr  (int8_t [5]){0, 10, 15, 20, 25}
 
 #define line1  (Line){ \
-    .a = (Point){.x = (carr[1]), .y = (carr[2])}, \
-    .b = (Point){.x = (carr[3]), .y = (carr[4])} \
+    .a = (Point){.x = carr[1], .y = carr[2]}, \
+    .b = (Point){.x = carr[3], .y = carr[4]} \
 }
 
 #define lines  (Line [2]){line0, line1}
@@ -65,8 +65,8 @@ int main(void)
 {
     const float lines_0_len = lineLength(lines[0]);
     const float lines_1_len = lineLength(lines[1]);
-    printf((const char *)"lines_0_len = %f\n", lines_0_len);
-    printf((const char *)"lines_1_len = %f\n", lines_1_len);
+    printf("lines_0_len = %f\n", lines_0_len);
+    printf("lines_1_len = %f\n", lines_1_len);
 
     return 0;
 }

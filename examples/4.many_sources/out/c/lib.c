@@ -10,6 +10,6 @@
 
 void lib_func(void)
 {
-    printf((const char *)"hello from lib_func\n");
+    printf("hello from lib_func\n");
 }
 

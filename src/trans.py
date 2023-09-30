@@ -147,7 +147,7 @@ def option_get(id):
 def insert(s):
     global module
 
-    inc = {
+    ins = {
         'isa': 'directive',
         'kind': 'insert',
         'str': s,
@@ -155,7 +155,7 @@ def insert(s):
         'nl': 1,
         'ti': None
     }
-    module['text'].append(inc)
+    module['text'].append(ins)
 
 
 
@@ -438,7 +438,8 @@ def do_value_shift(x):
             return v
 
     if type.is_generic(l['type']):
-        error("required type", l)
+        error("required value with non-generic type", l)
+        return hlir_value_bad(ti)
 
     return hlir_value_bin(op, l, r, l['type'], ti=ti)
 
@@ -1137,6 +1138,8 @@ def do_stmt_var(x):
 
     if x['value'] != None:
         v = do_value(x['value'])
+        if value_is_bad(v):
+            return hlir_stmt_bad()
 
     # error: no type, no init value
     if t == None and v == None:
@@ -1160,9 +1163,14 @@ def do_stmt_var(x):
 
     if t == None:
         if type.is_generic_integer(v['type']):
-            # если тип не указан явно, а у значения тип generic_integer
-            # приводим его к системному инту
-            v = value_cast_implicit(v, typeSysInt, x['value']['ti'])
+
+            # select type for
+            sz = v['type']['power']
+            if sz < 32:
+                sz = settings_get('int')
+
+            t = type.select_int(sz)
+            v = value_cast_implicit(v, t, x['value']['ti'])
 
         t = v['type']
 

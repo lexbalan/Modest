@@ -38,11 +38,11 @@ int main(void)
 
     unsigned __int128 big_sum = big1 + big2 + (unsigned __int128)a;
 
-    printf((const char *)"big0 = 0x%llX%llX\n", high_128(big0), low_128(big0));
-    printf((const char *)"big1 = 0x%llX%llX\n", high_128(big1), low_128(big1));
-    printf((const char *)"big2 = 0x%llX%llX\n", high_128(big2), low_128(big2));
-    printf((const char *)"big3 = 0x%llX%llX\n", high_128(big3), low_128(big3));
-    printf((const char *)"big_sum = 0x%llX%llX\n", high_128(big_sum), low_128(big_sum));
+    printf("big0 = 0x%llX%llX\n", high_128(big0), low_128(big0));
+    printf("big1 = 0x%llX%llX\n", high_128(big1), low_128(big1));
+    printf("big2 = 0x%llX%llX\n", high_128(big2), low_128(big2));
+    printf("big3 = 0x%llX%llX\n", high_128(big3), low_128(big3));
+    printf("big_sum = 0x%llX%llX\n", high_128(big_sum), low_128(big_sum));
 
 
     // signed big int test
@@ -52,7 +52,7 @@ int main(void)
 
     sig1 = sig1 + 1;
 
-    printf((const char *)"sig1 = %lld\n", (uint64_t)sig1);
+    printf("sig1 = %lld\n", (uint64_t)sig1);
 
     return 0;
 }

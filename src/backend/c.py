@@ -102,9 +102,9 @@ aprecedence = [
     ['shl', 'shr'], #7
     ['add', 'sub'], #8
     ['mul', 'div', 'rem'], #9
-    ['plus', 'minus', 'not', 'cast', 'ccast', 'ref', 'deref', 'sizeof'], #10
+    ['plus', 'minus', 'not', 'cast', 'ref', 'deref', 'sizeof'], #10
     ['call', 'index', 'access'], #11
-    ['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #12
+    ['ccast', 'num', 'var', 'func', 'str', 'enum', 'record', 'array'] #12
 ]
 
 precedenceMax = len(aprecedence) - 1
@@ -566,24 +566,26 @@ def print_value_ccast(v, ctx):
 
     if type.is_generic_string(from_type):
         if type.is_string(to_type):
-            tt = to_type['to']['of']
+
+            char_power = to_type['to']['of']['power']
 
             prefix = "" #"u8"
-            if tt['power'] > 16:
+            if char_power > 16:
                 prefix = "U"
-            elif tt['power'] > 8:
+            elif char_power > 8:
                 prefix = "u"
 
-            out("(")
-            print_type(to_type, need_space_after=False, _print_array_asis=True)
-            out(")")
+            """if char_power > 8:
+                out("(")
+                print_type(to_type, need_space_after=False, _print_array_asis=True)
+                out(")")"""
 
             print_value_literal_str(value, ctx=[], prefix=prefix)
             return
 
 
-    need_wrap = precedence(value['kind']) < precedenceMax
-    print_value(value, ctx, need_wrap=need_wrap)
+    #need_wrap = precedence(value['kind']) < precedenceMax
+    print_value(value, ctx)#, need_wrap=need_wrap)
 
 
 
@@ -737,8 +739,6 @@ def print_value_literal_record(v, ctx):
 
 
 def print_value_literal_str(x, ctx, prefix=""):
-
-
 
     out("%s\"" % prefix)
 

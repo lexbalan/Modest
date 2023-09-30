@@ -11,10 +11,10 @@ void mtab(int n)
 {
     //var m : Nat32
     //m := 1
-    int m = 1;
+    int32_t m = 1;
     while (m < 10) {
         const int nm = n * m;
-        printf((const char *)"%d * %d = %d\n", n, m, nm);
+        printf("%d * %d = %d\n", n, m, nm);
         m = m + 1;
     }
 }
@@ -23,7 +23,7 @@ void mtab(int n)
 int main(void)
 {
     const int8_t n = 2 * 2;
-    printf((const char *)"multiply table for %d\n", n);
+    printf("multiply table for %d\n", n);
     mtab(n);
     return 0;
 }
