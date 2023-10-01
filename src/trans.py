@@ -407,11 +407,6 @@ def do_value_shift(x):
             imm_result = nl << nr
             nbits = nbits_for_num(imm_result)
 
-            # для сдвига влево минимальный размер - размер int
-            mint = settings_get('int')
-            if nbits < mint:
-                nbits = mint
-
             # если тип Generic - расширим,
             # иначе - проверим влезает ли результат
             if type.is_generic(l['type']):
@@ -1174,7 +1169,7 @@ def do_stmt_var(x):
             # select type for
             sz = v['type']['power']
             if sz < 32:
-                sz = settings_get('int')
+                sz = int(settings_get('int'))
 
             t = type.select_int(sz)
             v = value_cast_implicit(v, t, x['value']['ti'])
