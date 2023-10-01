@@ -76,7 +76,7 @@ func delay_us(us : Nat64) {
     let start_time = clock()
 
     while (clock() < start_time + us) {
-        // TODO: pay attention here
+        // waiting
     }
 }
 
