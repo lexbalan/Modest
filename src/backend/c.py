@@ -858,10 +858,6 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
     # (используется для печати имени констант а не просто их значения)
     # в LLVM перчаем просто значение
 
-    #need_cast = value_attribute_check(x, 'generic-casted')
-    #if need_cast:
-    #    out("("); print_type(x['type'], need_space_after=False); out(")")
-
     if print_just_id:
         if 'id' in x:
             print_value_by_id(x, ctx)

@@ -298,10 +298,6 @@ def print_value_ccast(v, ctx):
 
 
 def print_value_cast(v, ctx):
-    # не печатаем операции неявного приведения (!)
-    if value_attribute_check(v, 'implicit-casted'):
-        print_value(v['value'])
-        return
 
     from_type = v['value']['type']
     to_type = v['type']

@@ -512,12 +512,7 @@ def value_cons(v, t, ti, method):
     elif type.is_unit(t): cons = value_cons_unit
 
     if cons != None:
-        y = cons(v, t, ti, method)
-        if y == None:
-            return None
-
-        value_attribute_add(y, '%s-casted' % method)
-        return y
+        return cons(v, t, ti, method)
 
     return None
 
