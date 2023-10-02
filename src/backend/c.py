@@ -1199,9 +1199,10 @@ def print_def_type(x):
         out("volatile ")
 
     if is_defined_array:
-        print_type_full(t['of'])#, print_aka=False)
+        print_type(t['of'], need_space_after=False)#, print_aka=False)
     else:
-        print_type_full(t)#, print_aka=False)
+        print_type(t, need_space_after=False)#, print_aka=False)
+
     out(" %s" % x['type']['name'])
     if is_defined_array:
         out("["); print_value(t['volume']); out("]")
