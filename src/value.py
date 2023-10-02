@@ -562,22 +562,22 @@ def value_cast_implicit(v, t, ti):
 
 
     if type.is_pointer(t):
-        ptr_def_arr_to_undef_arr = type.is_pointer_to_defined_array(from_type) and type.is_pointer_to_undefined_array(t)
-
-        if ptr_def_arr_to_undef_arr:
+        # cons *[]X from *[n]X
+        if type.is_pointer_to_defined_array(from_type) and type.is_pointer_to_undefined_array(t):
             return value_soft_cast(v, t, ti)
 
 
-        # Nil -> *X
+        # cons *X from Nil
         if type.is_nil(from_type) and type.is_pointer(t):
             return do_cast_generic(v, t, ti)
 
 
-        # FreePointer -> *X
+        # cons *X from FreePointer
         if type.is_free_pointer(from_type) and type.is_pointer(t):
             return hlir_value_cast(v, t, ti=ti)
 
-        # *X -> FreePointer
+
+        # cons FreePointer from *X
         if type.is_pointer(from_type) and type.is_free_pointer(t):
             return hlir_value_cast(v, t, ti=ti)
 
