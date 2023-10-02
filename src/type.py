@@ -240,6 +240,14 @@ def eq(a, b):
     if b['kind'] == 'bad': return True
     if a['kind'] != b['kind']: return False
 
+    """if ('name' in a) != ('name' in b):
+        return False
+
+    if 'name' in a:
+        if 'name' in b:
+            if a['name'] != b['name']:
+                return False"""
+
     # normal checking
     k = a['kind']
     if k == 'int': return eq_integer(a, b)

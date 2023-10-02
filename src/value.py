@@ -500,9 +500,8 @@ def value_cons(v, t, ti, method):
     if value_is_bad(v) or type.is_bad(t):
         return None
 
-
-    if type.eq(v['type'], t):
-        return v
+    #if type.eq(v['type'], t):
+    #    return v
 
     cons = None
     if type.is_integer(t): cons = value_cons_integer
@@ -567,24 +566,25 @@ def value_cast_implicit(v, t, ti):
         return value_soft_cast(v, t, ti)
 
 
-    ptr_def_arr_to_undef_arr = type.is_pointer_to_defined_array(from_type) and type.is_pointer_to_undefined_array(t)
+    if type.is_pointer(t):
+        ptr_def_arr_to_undef_arr = type.is_pointer_to_defined_array(from_type) and type.is_pointer_to_undefined_array(t)
 
-    if ptr_def_arr_to_undef_arr:
-        return value_soft_cast(v, t, ti)
-
-
-    # Nil -> *X
-    if type.is_nil(from_type) and type.is_pointer(t):
-        return do_cast_generic(v, t, ti)
+        if ptr_def_arr_to_undef_arr:
+            return value_soft_cast(v, t, ti)
 
 
-    # FreePointer -> *X
-    if type.is_free_pointer(from_type) and type.is_pointer(t):
-        return hlir_value_cast(v, t, ti=ti)
+        # Nil -> *X
+        if type.is_nil(from_type) and type.is_pointer(t):
+            return do_cast_generic(v, t, ti)
 
-    # *X -> FreePointer
-    if type.is_pointer(from_type) and type.is_free_pointer(t):
-        return hlir_value_cast(v, t, ti=ti)
+
+        # FreePointer -> *X
+        if type.is_free_pointer(from_type) and type.is_pointer(t):
+            return hlir_value_cast(v, t, ti=ti)
+
+        # *X -> FreePointer
+        if type.is_pointer(from_type) and type.is_free_pointer(t):
+            return hlir_value_cast(v, t, ti=ti)
 
     return v
 
@@ -596,7 +596,7 @@ def value_cast_explicit(v, t, ti):
 
     if type.eq(v['type'], t):
         info("explicit cast to the same type", ti)
-        return v
+        #return v
 
     return value_hard_cast(v, t, ti)
 
