@@ -209,7 +209,7 @@ def eq_record(a, b):
     if len(a['fields']) != len(b['fields']): return False
 
     for ax, bx in zip(a['fields'], b['fields']):
-        if ax['id'] != bx['id']: return False
+        if ax['id']['str'] != bx['id']['str']: return False
         if not eq(ax['type'], bx['type']): return False
 
     return True
