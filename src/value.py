@@ -581,6 +581,7 @@ def value_cast_implicit(v, t, ti):
         if type.is_pointer(from_type) and type.is_free_pointer(t):
             return hlir_value_cast(v, t, ti=ti)
 
+
     return v
 
 

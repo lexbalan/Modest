@@ -1819,28 +1819,17 @@ def translate(srcname):
 
     env_current_file_abspath = absp
     env_current_file_dir = fdir
-    #print("ABS: " + absp)
-    #print("FDIR: " + fdir)
 
-    #print("parse %s" % absp)
-    ast = parser.parse(absp)
+    ast = parser.parse(srcname)
 
     if ast == None:
         return None
 
-    #print("process %s" % absp)
     m = proc(ast, id=srcname, path=absp)
-    #print("end %s" % absp)
-
-    #for x in m['text']:
-    #    if x['isa'] in ['def_func', 'def_const', 'def_var']:
-    #        if x['value']['usecnt'] == 0:
-    #            warning("defined but not used", x['value']['ti'])
 
     env_current_file_abspath = old_env_current_file_abspath
     env_current_file_dir = old_env_current_file_dir
 
-    #included_modules = old_included_modules
     return m
 
 

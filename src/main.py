@@ -80,7 +80,9 @@ def main():
         for d in args.d:
             print("DEF: " + str(d))
 
-    src_name = args.filename
+    src_name = os.path.normpath(args.filename)
+
+    #print("CPL: " + src_name)
 
     # is header?
     if src_name[-2:] == 'hm':
