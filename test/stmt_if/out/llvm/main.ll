@@ -87,9 +87,9 @@ declare i32 @puts(%ConstCharStr)
 declare i32 @ungetc(i32, %FILE*)
 declare void @perror(%ConstCharStr)
 
-; -- MODULE: /Users/alexbalan/p/Modest/test/2.if-else/src/main.cm
+; -- MODULE: /Users/alexbalan/p/Modest/test/stmt_if/src/main.cm
 
-@str1.c8 = private constant [17 x i8] c"if-else example\0A\00"
+@str1.c8 = private constant [17 x i8] c"stmt_if example\0A\00"
 @str2.c8 = private constant [10 x i8] c"enter a: \00"
 @str3.c8 = private constant [3 x i8] c"%d\00"
 @str4.c8 = private constant [10 x i8] c"enter b: \00"

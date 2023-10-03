@@ -1,11 +1,9 @@
-// examples/2.if-else/main.cm
-
-@attribute("c-no-print")
-import "libc/stdio.hm"
+// examples/stmt_if/main.cm
+import "libc/stdio.h"
 
 
 func main () -> Int {
-    printf("if-else example\n")
+    printf("stmt_if example\n")
 
     var a : Int32
     var b : Int32

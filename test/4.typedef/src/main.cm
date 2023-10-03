@@ -1,0 +1,16 @@
+// examples/1.hello_world/main.cm
+
+@attribute("c-no-print")
+import "libc/stdio.hm"
+
+type NewInt32 Int32
+
+func main () -> Int {
+    printf("test typedef\n")
+
+    var newInt32 : NewInt32
+    newInt32 := 0 to NewInt32
+
+    return 0
+}
+

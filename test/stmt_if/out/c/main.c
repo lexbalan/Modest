@@ -4,12 +4,12 @@
 #include <string.h>
 #include <stdbool.h>
 
-// examples/2.if-else/main.cm
+// examples/stmt_if/main.cm
 
 
 int main(void)
 {
-    printf("if-else example\n");
+    printf("stmt_if example\n");
 
     int32_t a;
     int32_t b;
