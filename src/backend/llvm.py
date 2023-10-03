@@ -737,6 +737,8 @@ def select_cast_operator(a, b):
                 return 'fpext'
             elif a['size'] > b['size']:
                 return 'fptrunc'
+            else:
+                return 'bitcast'
 
     return 'uncast<%s -> %s>' % (a['kind'], b['kind'])
 

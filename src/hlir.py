@@ -233,7 +233,8 @@ def hlir_value_int(num, typ=None, ti=None):
 def hlir_value_float(num, ti=None):
     # вообще с флотом непонятно можно ли понять какого он Generic типа
     # тк есть числа которые вообще никак не запишешь
-    typ = hlir_type_float('Float', power=0, ti=ti)
+    float_default_bit = int(settings_get('flt'))
+    typ = hlir_type_float('Float', power=float_default_bit, ti=ti)
     typ['att'].extend(['generic'])
     return {
         'isa': 'value',

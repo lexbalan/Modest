@@ -228,7 +228,7 @@ def init():
     # Set taget depended Int & Nat types
     # (used in index, extra agrs & generic numeric var definitions)
 
-    global typeSysInt, typeSysNat, typeSysStr
+    global typeSysInt, typeSysNat, typeSysStr, typeSysFloat
 
     typeSysInt = type.type_copy(select_int(int_size))
     typeSysInt['c_alias'] = 'int'
@@ -244,7 +244,7 @@ def init():
     elif sysCharSize == 32:
         typeSysStr = type.typeStr32
 
-    typeSysFloat = type.typeFloat32
+    typeSysFloat = type.typeFloat64
 
 
 
@@ -282,13 +282,13 @@ def cons_default(x, ti):
             req_sz = int(settings_get('int'))
 
         t = type.select_int(req_sz)
-        return value_cast_implicit(x, t, ti)
+        return hlir_value_cast(x, t, ti)
 
     elif type.is_string(from_type):
-        return value_cast_implicit(x, typeSysStr, ti)
+        return hlir_value_cast(x, typeSysStr, ti)
 
     elif type.is_float(from_type):
-        return value_cast_implicit(x, typeSysFloat, ti)
+        return hlir_value_cast(x, typeSysFloat, ti)
 
     else:
         fatal("unimplemented cons_default case")
