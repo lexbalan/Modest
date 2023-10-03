@@ -116,11 +116,11 @@ declare i32 @closedir(%DIR*)
 declare [0 x i8]* @getcwd([0 x i8]*, i64)
 declare [0 x i8]* @getenv([0 x i8]*)
 
-; -- MODULE: /Users/alexbalan/p/Modest/test/8.linked_list/src/linked_list.hm
+; -- MODULE: /Users/alexbalan/p/Modest/examples/8.linked_list/src/linked_list.hm
 
 
 
-; -- MODULE: /Users/alexbalan/p/Modest/test/8.linked_list/src/linked_list.cm
+; -- MODULE: /Users/alexbalan/p/Modest/examples/8.linked_list/src/linked_list.cm
 
 
 

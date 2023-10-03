@@ -87,11 +87,11 @@ declare i32 @puts(%ConstCharStr)
 declare i32 @ungetc(i32, %FILE*)
 declare void @perror(%ConstCharStr)
 
-; -- MODULE: /Users/alexbalan/p/Modest/test/4.many_sources/src/lib.hm
+; -- MODULE: /Users/alexbalan/p/Modest/examples/4.many_sources/src/lib.hm
 
 
 
-; -- MODULE: /Users/alexbalan/p/Modest/test/4.many_sources/src/lib.cm
+; -- MODULE: /Users/alexbalan/p/Modest/examples/4.many_sources/src/lib.cm
 
 @str1.c8 = private constant [21 x i8] c"hello from lib_func\0A\00"
 

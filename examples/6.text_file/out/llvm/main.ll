@@ -87,7 +87,7 @@ declare i32 @puts(%ConstCharStr)
 declare i32 @ungetc(i32, %FILE*)
 declare void @perror(%ConstCharStr)
 
-; -- MODULE: /Users/alexbalan/p/Modest/test/6.text_file/src/main.cm
+; -- MODULE: /Users/alexbalan/p/Modest/examples/6.text_file/src/main.cm
 
 @str1.c8 = private constant [9 x i8] c"file.txt\00"
 @str2.c8 = private constant [19 x i8] c"run write_example\0A\00"
@@ -109,7 +109,7 @@ define void @write_example() {
     %3 = icmp eq %FILE* %2, null
     br i1 %3 , label %then_0, label %endif_0
 then_0:
-    %4 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str4.c8, i8* @str1.c8)
+    %4 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str4.c8, [0 x i8]* @str1.c8)
     ret void
     br label %endif_0
 endif_0:
@@ -124,11 +124,11 @@ define void @read_example() {
     %3 = icmp eq %FILE* %2, null
     br i1 %3 , label %then_0, label %endif_0
 then_0:
-    %4 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str8.c8, i8* @str1.c8)
+    %4 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str8.c8, [0 x i8]* @str1.c8)
     ret void
     br label %endif_0
 endif_0:
-    %6 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str9.c8, i8* @str1.c8)
+    %6 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str9.c8, [0 x i8]* @str1.c8)
     br label %again_1
 again_1:
     br i1 1 , label %body_1, label %break_1

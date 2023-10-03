@@ -170,7 +170,7 @@ declare i32 @puts(%ConstCharStr)
 declare i32 @ungetc(i32, %FILE*)
 declare void @perror(%ConstCharStr)
 
-; -- MODULE: /Users/alexbalan/p/Modest/test/7.binary_file/src/main.cm
+; -- MODULE: /Users/alexbalan/p/Modest/examples/7.binary_file/src/main.cm
 
 @str1.c8 = private constant [9 x i8] c"file.bin\00"
 @str2.c8 = private constant [19 x i8] c"run write_example\0A\00"
@@ -202,7 +202,7 @@ define void @write_example() {
     %3 = icmp eq %FILE* %2, null
     br i1 %3 , label %then_0, label %endif_0
 then_0:
-    %4 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str4.c8, i8* @str1.c8)
+    %4 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str4.c8, [0 x i8]* @str1.c8)
     ret void
     br label %endif_0
 endif_0:
@@ -230,14 +230,14 @@ define void @read_example() {
     %3 = icmp eq %FILE* %2, null
     br i1 %3 , label %then_0, label %endif_0
 then_0:
-    %4 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str9.c8, i8* @str1.c8)
+    %4 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str9.c8, [0 x i8]* @str1.c8)
     ret void
     br label %endif_0
 endif_0:
     %chunk = alloca %Chunk
     %6 = bitcast %Chunk* %chunk to i8*
     %7 = call i64(i8*, i64, i64, %FILE*) @fread (i8* %6, i64 0, i64 1, %FILE* %2)
-    %8 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str10.c8, i8* @str1.c8)
+    %8 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str10.c8, [0 x i8]* @str1.c8)
     %9 = getelementptr inbounds %Chunk, %Chunk* %chunk, i32 0, i32 0
     %10 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str11.c8, [100 x i8]* %9)
     %11 = getelementptr inbounds %Chunk, %Chunk* %chunk, i32 0, i32 1

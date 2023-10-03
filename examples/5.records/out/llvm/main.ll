@@ -259,7 +259,7 @@ declare i32 @closedir(%DIR*)
 declare [0 x i8]* @getcwd([0 x i8]*, i64)
 declare [0 x i8]* @getenv([0 x i8]*)
 
-; -- MODULE: /Users/alexbalan/p/Modest/test/5.records/src/main.cm
+; -- MODULE: /Users/alexbalan/p/Modest/examples/5.records/src/main.cm
 
 @str1.c8 = private constant [15 x i8] c"point(%f, %f)\0A\00"
 @str2.c8 = private constant [18 x i8] c"line length = %f\0A\00"

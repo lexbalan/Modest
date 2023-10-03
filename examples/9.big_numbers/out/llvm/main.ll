@@ -87,7 +87,7 @@ declare i32 @puts(%ConstCharStr)
 declare i32 @ungetc(i32, %FILE*)
 declare void @perror(%ConstCharStr)
 
-; -- MODULE: /Users/alexbalan/p/Modest/test/9.big_numbers/src/main.cm
+; -- MODULE: /Users/alexbalan/p/Modest/examples/9.big_numbers/src/main.cm
 
 @str1.c8 = private constant [19 x i8] c"big0 = 0x%llX%llX\0A\00"
 @str2.c8 = private constant [19 x i8] c"big1 = 0x%llX%llX\0A\00"

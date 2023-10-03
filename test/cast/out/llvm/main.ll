@@ -87,14 +87,19 @@ declare i32 @puts(%ConstCharStr)
 declare i32 @ungetc(i32, %FILE*)
 declare void @perror(%ConstCharStr)
 
-; -- MODULE: /Users/alexbalan/p/Modest/examples/1.hello_world/src/main.cm
+; -- MODULE: /Users/alexbalan/p/Modest/test/cast/src/main.cm
 
 @str1.c8 = private constant [14 x i8] c"Hello World!\0A\00"
+@str2.c8 = private constant [11 x i8] c"x0 = %llx\0A\00"
+@str3.c8 = private constant [11 x i8] c"x1 = %llx\0A\00"
 
 
 
 define i32 @main() {
     %1 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str1.c8)
+
+    %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str2.c8, i64 -1)
+    %3 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str3.c8, i64 -1)
     ret i32 0
 }
 

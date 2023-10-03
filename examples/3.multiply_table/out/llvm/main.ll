@@ -87,7 +87,7 @@ declare i32 @puts(%ConstCharStr)
 declare i32 @ungetc(i32, %FILE*)
 declare void @perror(%ConstCharStr)
 
-; -- MODULE: /Users/alexbalan/p/Modest/test/3.multiply_table/src/main.cm
+; -- MODULE: /Users/alexbalan/p/Modest/examples/3.multiply_table/src/main.cm
 
 @str1.c8 = private constant [14 x i8] c"%d * %d = %d\0A\00"
 @str2.c8 = private constant [23 x i8] c"multiply table for %d\0A\00"

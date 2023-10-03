@@ -495,71 +495,16 @@ def print_value_access_ptr(v, ctx):
 
 
 
-def huhu(v_id, fields):
-    out("{")
-    i = 0
-    for field in fields:
-        if (i > 0): out(", ")
-        fid = field['id']['str']
-        out(".%s = " % fid)
-
-        if type.is_record(field['type']):
-            huhu(v_id + '.' + field['id']['str'], field['type']['fields'])
-        else:
-            out("%s.%s" % (v_id, fid)) #; print_value(item, ctx)
-
-        i = i + 1
-    out("}")
-
-
-def print_cast_gen_rec_to_rec(t, v, ctx=[]):
-    #print("FROM GENERIC RECORD")
-    v_id = v['id']['str']
-    fields = v['type']['fields']
-    out("("); print_type(t, need_space_after=False); out(")")
-    huhu(v_id, fields)
-
 
 def print_cast(t, v, ctx=[]):
     from_type = v['type']
+    to_type = t
 
-
-    # в C мы не можем привести одну структуру к другой
-    # поэтому вынуждены будем построить новую структуру
-    # на основе другой (пусть и с таким же внутренним устройством)
-    if type.is_generic_record(from_type):
-        return print_cast_gen_rec_to_rec(t, v, ctx=ctx)
-
-
-
-
-
-    # because
-    # - in C    int32(-1) -> uint64 => 0xffffffffffffffff
-    # - in CM int32(-1) -> uint64 => 0x00000000ffffffff
-    # require: (uint64_t)((uint32)int32_value)
-    need_pre = False
-    if type.is_integer(from_type):
-        if type.is_integer(t):
-            if type.is_signed(from_type):
-                if type.is_unsigned(t):
-                    if from_type['size'] < t['size']:
-                        need_pre = True
-
-
-    out("("); print_type(t, need_space_after=False); out(")")
+    out("("); print_type(to_type, need_space_after=False); out(")")
     need_wrap = precedence(v['kind']) < precedence('cast')
-
-    if need_pre:
-        out("((")
-        nat_same_sz = type.select_nat(a['size'])
-        print_type(nat_same_sz, need_space_after=False)
-        out(")")
-
     print_value(v, ctx=ctx, need_wrap=need_wrap)
 
-    if need_pre:
-        out(")")
+
 
 
 
@@ -594,13 +539,6 @@ def print_value_ccast(v, ctx):
 
 
 
-
-def print_cast_op(to_type, value, ctx, need_wrap=False):
-    out("("); print_type(to_type, need_space_after=False); out(")")
-    need_wrap = precedence(value['kind']) < precedence('cast')
-    print_value(value, ctx=ctx, need_wrap=need_wrap)
-
-
 def print_value_cast(x, ctx):
     to_type = x['type']
     value = x['value']
@@ -610,12 +548,15 @@ def print_value_cast(x, ctx):
     # в у нас типы структурные, в си - номинальные
     # поэтому даже если структуры одинаковы, но имена разные
     # их нужно приводить
+
+    # cast pointer to struct to pointer to another struct
     if type.is_pointer_to_record(from_type):
         if type.is_pointer_to_record(to_type):
-            print_cast_op(to_type, value, ctx, need_wrap=False)
+            print_cast(to_type, value, ctx)
             return
 
 
+    # cast struct to another struct
     if type.is_record(from_type):
         if type.is_record(to_type):
             # *((RecordType *)&value)
@@ -626,7 +567,29 @@ def print_value_cast(x, ctx):
             out(")")
             return
 
+
+    # (!) because
+    # - in Cm int32(-1) -> uint64 => 0x00000000ffffffff
+    # - in C  int32(-1) -> uint64 => 0xffffffffffffffff
+    # required: (uint64_t)((uint32)int32_value)
+    need_pre = False
+    if type.is_integer(from_type):
+        if type.is_integer(to_type):
+            if type.is_signed(from_type):
+                if type.is_unsigned(to_type):
+                    if from_type['size'] < to_type['size']:
+                        #need_pre = True
+                        out("((")
+                        print_type(to_type, need_space_after=False)
+                        out(")")
+                        nat_same_sz = type.select_nat(from_type['power'])
+                        print_cast(nat_same_sz, value, ctx)
+                        out(")")
+                        return
+
+
     print_cast(to_type, value, ctx)
+
 
 
 
