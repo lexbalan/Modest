@@ -240,13 +240,12 @@ def eq(a, b):
     if b['kind'] == 'bad': return True
     if a['kind'] != b['kind']: return False
 
-    """if ('name' in a) != ('name' in b):
+    # дженерик и не дженерик типы не равны
+    # это важно при конструировании записей из джененрков
+    # в противном случае конструирование будет скипнуто (тк уже равны)
+    if ('generic' in a['att']) != ('generic' in b['att']):
         return False
 
-    if 'name' in a:
-        if 'name' in b:
-            if a['name'] != b['name']:
-                return False"""
 
     # normal checking
     k = a['kind']

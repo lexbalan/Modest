@@ -500,8 +500,8 @@ def value_cons(v, t, ti, method):
     if value_is_bad(v) or type.is_bad(t):
         return None
 
-    #if type.eq(v['type'], t):
-    #    return v
+    if type.eq(v['type'], t):
+        return v
 
     cons = None
     if type.is_integer(t): cons = value_cons_integer
@@ -592,7 +592,7 @@ def value_cast_explicit(v, t, ti):
 
     if type.eq(v['type'], t):
         info("explicit cast to the same type", ti)
-        #return v
+        return v
 
     return value_hard_cast(v, t, ti)
 
