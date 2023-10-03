@@ -1395,7 +1395,7 @@ def do_import(x):
 
     # но сперва проверим нет ли его уже среди импортированных модулей
     for imported_module in module['imports']:
-        if imported_module['path'] == m['path']:
+        if imported_module['source_info']['path'] == m['source_info']['path']:
             error("attempt to include module twice", x['ti'])
 
     if m != None:
@@ -1761,7 +1761,7 @@ def comm_block(x):
 
 
 
-def proc(ast, id="<MODULE_ID>", path="<MODULE_PATH>"):
+def proc(ast, source_info):
     global module
     old_module = module
 
@@ -1769,8 +1769,8 @@ def proc(ast, id="<MODULE_ID>", path="<MODULE_PATH>"):
 
     module = {
         'isa': 'module',
-        'id': "<>",
-        'path': path,
+        'id': id,
+        'source_info': source_info,
         'imports': [],
         'strings': [],
         'context': root_context.branch(),
@@ -1847,6 +1847,9 @@ def translate(srcname):
     assert(srcname != None)
     assert(srcname != "")
 
+    if not os.path.exists(srcname):
+        return None
+
     global env_current_file_abspath
     global env_current_file_dir
     old_env_current_file_dir = env_current_file_dir
@@ -1858,12 +1861,20 @@ def translate(srcname):
     env_current_file_abspath = absp
     env_current_file_dir = fdir
 
-    ast = parser.parse(srcname)
+    source_info = {
+        'id': srcname,
+        'path': absp,
+        'dir': fdir,
+        'name':srcname,
+    }
+
+
+    ast = parser.parse(source_info)
 
     if ast == None:
         return None
 
-    m = proc(ast, id=srcname, path=absp)
+    m = proc(ast, source_info)
 
     env_current_file_abspath = old_env_current_file_abspath
     env_current_file_dir = old_env_current_file_dir

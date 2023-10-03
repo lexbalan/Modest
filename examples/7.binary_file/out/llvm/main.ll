@@ -1,7 +1,7 @@
 
 target triple = "arm64-apple-darwin21.6.0"
 
-; -- MODULE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
 
 
 
@@ -27,13 +27,13 @@ target triple = "arm64-apple-darwin21.6.0"
 %SizeT = type i64
 %SSizeT = type i64
 
-; -- MODULE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
 
 
 
 
 
-; -- MODULE: /Users/alexbalan/p/Modest/lib/libc/libc.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/libc.hm
 
 
 
@@ -116,7 +116,7 @@ declare i32 @closedir(%DIR*)
 declare [0 x i8]* @getcwd([0 x i8]*, i64)
 declare [0 x i8]* @getenv([0 x i8]*)
 
-; -- MODULE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
 
 
 
@@ -170,7 +170,7 @@ declare i32 @puts(%ConstCharStr)
 declare i32 @ungetc(i32, %FILE*)
 declare void @perror(%ConstCharStr)
 
-; -- MODULE: /Users/alexbalan/p/Modest/examples/7.binary_file/src/main.cm
+; -- SOURCE: src/main.cm
 
 @str1.c8 = private constant [9 x i8] c"file.bin\00"
 @str2.c8 = private constant [19 x i8] c"run write_example\0A\00"

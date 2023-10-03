@@ -1,7 +1,7 @@
 
 target triple = "arm64-apple-darwin21.6.0"
 
-; -- MODULE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
 
 
 
@@ -27,13 +27,13 @@ target triple = "arm64-apple-darwin21.6.0"
 %SizeT = type i64
 %SSizeT = type i64
 
-; -- MODULE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
 
 
 
 
 
-; -- MODULE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
 
 
 
@@ -87,7 +87,7 @@ declare i32 @puts(%ConstCharStr)
 declare i32 @ungetc(i32, %FILE*)
 declare void @perror(%ConstCharStr)
 
-; -- MODULE: /Users/alexbalan/p/Modest/examples/3.multiply_table/src/main.cm
+; -- SOURCE: src/main.cm
 
 @str1.c8 = private constant [14 x i8] c"%d * %d = %d\0A\00"
 @str2.c8 = private constant [23 x i8] c"multiply table for %d\0A\00"

@@ -1,7 +1,7 @@
 
 target triple = "arm64-apple-darwin21.6.0"
 
-; -- MODULE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
 
 
 
@@ -27,13 +27,13 @@ target triple = "arm64-apple-darwin21.6.0"
 %SizeT = type i64
 %SSizeT = type i64
 
-; -- MODULE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
 
 
 
 
 
-; -- MODULE: /Users/alexbalan/p/Modest/lib/libc/libc.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/libc.hm
 
 
 
@@ -116,11 +116,11 @@ declare i32 @closedir(%DIR*)
 declare [0 x i8]* @getcwd([0 x i8]*, i64)
 declare [0 x i8]* @getenv([0 x i8]*)
 
-; -- MODULE: /Users/alexbalan/p/Modest/examples/8.linked_list/src/linked_list.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/examples/8.linked_list/src/linked_list.hm
 
 
 
-; -- MODULE: /Users/alexbalan/p/Modest/examples/8.linked_list/src/linked_list.cm
+; -- SOURCE: src/linked_list.cm
 
 
 

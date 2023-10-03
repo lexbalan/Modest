@@ -1103,12 +1103,9 @@ class Parser:
         return {'isa': 'ast_directive', 'kind': 'pragma', 'text': x, 'ti': ti}
 
 
-    def parse(self, filename):
+    def parse(self, source_info):
 
-        if not os.path.exists(filename):
-            return None
-
-        self.tokens = self.lex.tokenize(filename)
+        self.tokens = self.lex.tokenize(source_info['path'])
         self.ctoken = 0
 
         output = []

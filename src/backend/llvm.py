@@ -1673,17 +1673,17 @@ printed_modules = []
 
 def print_module(m):
 
-    if m['path'] in printed_modules:
+    if m['source_info']['path'] in printed_modules:
         return
 
-    printed_modules.append(m['path'])
+    printed_modules.append(m['source_info']['path'])
 
 
     for imported_module in m['imports']:
         print_module(imported_module)
 
 
-    out("; -- MODULE: %s\n" % m['path'])
+    out("; -- SOURCE: %s\n" % m['source_info']['name'])
 
     print_strings(m['strings'])
 
