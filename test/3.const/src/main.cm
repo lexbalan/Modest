@@ -1,0 +1,28 @@
+// test/2.func/main.cm
+
+@attribute("c-no-print")
+import "libc/stdio.hm"
+
+const genericIntConst = 42
+const int32Const = genericIntConst to Int32
+
+const genericStringConst = "Hello!"
+const genericString8Const = genericStringConst to Str8
+//const genericString16Const = genericStringConst to Str16
+//const genericString32Const = genericStringConst to Str32
+
+
+// define function main
+func main () -> Int {
+    printf("test const\n")
+
+	printf("genericIntConst = %d\n", genericIntConst)
+	printf("int32Const = %d\n", int32Const)
+
+	printf("genericStringConst = %s\n", genericStringConst)
+	printf("genericString8Const = %s\n", genericString8Const)
+
+    return 0
+}
+
+
