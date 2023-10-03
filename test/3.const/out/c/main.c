@@ -11,8 +11,8 @@
 
 #define genericStringConst  "Hello!"
 #define genericString8Const  genericStringConst
-#define genericString16Const  u##genericStringConst
-#define genericString32Const  U##genericStringConst
+//const genericString16Const = genericStringConst to Str16
+//const genericString32Const = genericStringConst to Str32
 
 
 // define function main
