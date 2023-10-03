@@ -87,7 +87,7 @@ declare i32 @puts(%ConstCharStr)
 declare i32 @ungetc(i32, %FILE*)
 declare void @perror(%ConstCharStr)
 
-; -- MODULE: /Users/alexbalan/p/Modest/examples/12.structural_type_system/src/main.cm
+; -- MODULE: /Users/alexbalan/p/Modest/test/12.structural_type_system/src/main.cm
 
 @str1.c8 = private constant [13 x i8] c"f0 x.x = %d\0A\00"
 @str2.c8 = private constant [13 x i8] c"f1 x.x = %d\0A\00"
