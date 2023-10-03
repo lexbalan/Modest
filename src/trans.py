@@ -170,6 +170,7 @@ def stmt_is_bad(x):
 typeSysInt = None
 typeSysNat = None
 typeSysStr = None
+typeSysFloat = None
 
 
 int_size = 0    # sizeof(int)
@@ -243,6 +244,9 @@ def init():
     elif sysCharSize == 32:
         typeSysStr = type.typeStr32
 
+    typeSysFloat = type.typeFloat32
+
+
 
 
 # last fiels of record can be zero size array (!)
@@ -265,31 +269,30 @@ def do_field(x, is_last=False):
 
 
 
-
-
-
-
-"""if type.is_generic_integer(v['type']):
-    # select type for
-    sz = v['type']['power']
-    if sz < 32:
-        sz = int(settings_get('int'))
-
-    t = type.select_int(sz)
-    v = value_cast_implicit(v, t, x['value']['ti'])"""
-
-def consDefault(x, ti):
+def cons_default(x, ti):
     from_type = x['type']
 
     if not type.is_generic(from_type):
         return x
 
     if type.is_integer(from_type):
-        return value_cast_implicit(x, typeSysInt, ti)
+        # select type for default implementation of generic numeric
+        req_sz = from_type['power']
+        if req_sz < 32:
+            req_sz = int(settings_get('int'))
+
+        t = type.select_int(req_sz)
+        return value_cast_implicit(x, t, ti)
+
     elif type.is_string(from_type):
         return value_cast_implicit(x, typeSysStr, ti)
+
+    elif type.is_float(from_type):
+        return value_cast_implicit(x, typeSysFloat, ti)
+
     else:
-        fatal("unimplemented consDefault case")
+        fatal("unimplemented cons_default case")
+
 
     return hlir_value_bad(ti)
 
@@ -790,7 +793,7 @@ def do_value_call(x):
 
         if not value_is_bad(arg):
             if type.is_generic(arg['type']):
-                arg = consDefault(arg, arg['ti'])
+                arg = cons_default(arg, arg['ti'])
             args.append(arg)
 
         i = i + 1
@@ -1206,7 +1209,7 @@ def do_stmt_var(x):
 
     if t == None:
         if type.is_generic(v['type']):
-            v = consDefault(v, x['value']['ti'])
+            v = cons_default(v, x['value']['ti'])
 
         t = v['type']
 
