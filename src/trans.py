@@ -737,7 +737,7 @@ def do_value_call(x):
         arg = do_rvalue(a)
 
         if not value_is_bad(arg):
-            arg = value_cast_implicit(arg, param['type'], arg['ti'])
+            arg = value_cast_implicit(arg, param['type'], a['ti'])
             type.check(param['type'], arg['type'], a['ti'])
             args.append(arg)
 

@@ -553,6 +553,23 @@ def value_cast_implicit(v, t, ti):
     #if not type.is_generic(from_type):
     #    return v
 
+
+    # потому что в C номинальные типы, а у нас - структурные
+    if type.is_record(t):
+        if type.is_record(from_type):
+            if 'name' in from_type and 'name' in t:
+                if from_type['name'] != t['name']:
+                    info("impl cast record", ti)
+                    return hlir_value_cast(v, t, ti=ti)
+
+
+
+    if type.is_pointer_to_record(t):
+        if type.is_pointer_to_record(from_type):
+            #info("impl cast pointer to record", ti)
+            return hlir_value_cast(v, t, ti=ti)
+
+
     if type.eq(from_type, t):
         return v
 
@@ -561,7 +578,14 @@ def value_cast_implicit(v, t, ti):
         return value_soft_cast(v, t, ti)
 
 
+
+    if type.is_record(t):
+        if type.is_record(from_type):
+            info("impl cast record2", ti)
+
+
     if type.is_pointer(t):
+
         # cons *[]X from *[n]X
         if type.is_pointer_to_defined_array(from_type) and type.is_pointer_to_undefined_array(t):
             return value_soft_cast(v, t, ti)

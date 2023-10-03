@@ -417,6 +417,11 @@ def is_pointer_to_undefined_array(t):
     return is_undefined_array(t['to'])
 
 
+def is_pointer_to_record(t):
+    if not is_pointer(t):
+        return False
+    return is_record(t['to'])
+
 
 # cannot create variable with type
 def is_forbidden_var(t, zero_array_forbidden=True):

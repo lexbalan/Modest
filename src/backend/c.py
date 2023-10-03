@@ -522,11 +522,16 @@ def print_cast_gen_rec_to_rec(t, v, ctx=[]):
 
 def print_cast(t, v, ctx=[]):
     from_type = v['type']
+
+
     # в C мы не можем привести одну структуру к другой
     # поэтому вынуждены будем построить новую структуру
     # на основе другой (пусть и с таким же внутренним устройством)
     if type.is_generic_record(from_type):
         return print_cast_gen_rec_to_rec(t, v, ctx=ctx)
+
+
+
 
 
     # because
@@ -590,10 +595,36 @@ def print_value_ccast(v, ctx):
 
 
 
+def print_cast_op(to_type, value, ctx, need_wrap=False):
+    out("("); print_type(to_type, need_space_after=False); out(")")
+    need_wrap = precedence(value['kind']) < precedence('cast')
+    print_value(value, ctx=ctx, need_wrap=need_wrap)
+
+
 def print_value_cast(x, ctx):
     to_type = x['type']
     value = x['value']
     from_type = value['type']
+
+
+    # в у нас типы структурные, в си - номинальные
+    # поэтому даже если структуры одинаковы, но имена разные
+    # их нужно приводить
+    if type.is_pointer_to_record(from_type):
+        if type.is_pointer_to_record(to_type):
+            print_cast_op(to_type, value, ctx, need_wrap=False)
+            return
+
+
+    if type.is_record(from_type):
+        if type.is_record(to_type):
+            # *((RecordType *)&value)
+            out("*((")
+            print_type(to_type, need_space_after=False)
+            out(" *)&")
+            print_value(value, [], need_wrap=True)
+            out(")")
+            return
 
     print_cast(to_type, value, ctx)
 
