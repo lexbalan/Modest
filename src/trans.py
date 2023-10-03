@@ -169,6 +169,7 @@ def stmt_is_bad(x):
 
 typeSysInt = None
 typeSysNat = None
+typeSysStr = None
 
 
 int_size = 0    # sizeof(int)
@@ -226,7 +227,7 @@ def init():
     # Set taget depended Int & Nat types
     # (used in index, extra agrs & generic numeric var definitions)
 
-    global typeSysInt, typeSysNat
+    global typeSysInt, typeSysNat, typeSysStr
 
     typeSysInt = type.type_copy(select_int(int_size))
     typeSysInt['c_alias'] = 'int'
@@ -234,6 +235,13 @@ def init():
     typeSysNat = type.type_copy(select_nat(int_size))
     typeSysNat['c_alias'] = 'unsigned int'
 
+    sysCharSize = int(settings_get('char'))
+    if sysCharSize == 8:
+        typeSysStr = type.typeStr8
+    elif sysCharSize == 16:
+        typeSysStr = type.typeStr16
+    elif sysCharSize == 32:
+        typeSysStr = type.typeStr32
 
 
 
@@ -254,6 +262,38 @@ def do_field(x, is_last=False):
     else:
         f['nl'] = 0
     return f
+
+
+
+
+
+
+
+"""if type.is_generic_integer(v['type']):
+    # select type for
+    sz = v['type']['power']
+    if sz < 32:
+        sz = int(settings_get('int'))
+
+    t = type.select_int(sz)
+    v = value_cast_implicit(v, t, x['value']['ti'])"""
+
+def consDefault(x, ti):
+    from_type = x['type']
+
+    if not type.is_generic(from_type):
+        return x
+
+    if type.is_integer(from_type):
+        return value_cast_implicit(x, typeSysInt, ti)
+    elif type.is_string(from_type):
+        return value_cast_implicit(x, typeSysStr, ti)
+    else:
+        fatal("unimplemented consDefault case")
+
+    return hlir_value_bad(ti)
+
+
 
 
 #
@@ -749,7 +789,8 @@ def do_value_call(x):
         arg = do_rvalue(x['args'][i])
 
         if not value_is_bad(arg):
-            arg = value_cast_implicit(arg, typeSysInt, arg['ti'])
+            if type.is_generic(arg['type']):
+                arg = consDefault(arg, arg['ti'])
             args.append(arg)
 
         i = i + 1
@@ -1164,17 +1205,11 @@ def do_stmt_var(x):
 
 
     if t == None:
-        if type.is_generic_integer(v['type']):
-
-            # select type for
-            sz = v['type']['power']
-            if sz < 32:
-                sz = int(settings_get('int'))
-
-            t = type.select_int(sz)
-            v = value_cast_implicit(v, t, x['value']['ti'])
+        if type.is_generic(v['type']):
+            v = consDefault(v, x['value']['ti'])
 
         t = v['type']
+
 
     # check if identifier is free (in current block)
     already = value_get_here(id['str'])
