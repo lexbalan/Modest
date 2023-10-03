@@ -559,7 +559,7 @@ def value_cast_implicit(v, t, ti):
         if type.is_record(from_type):
             if 'name' in from_type and 'name' in t:
                 if from_type['name'] != t['name']:
-                    info("impl cast record", ti)
+                    #info("impl cast record", ti)
                     return hlir_value_cast(v, t, ti=ti)
 
 
@@ -576,12 +576,6 @@ def value_cast_implicit(v, t, ti):
 
     if type.is_generic(from_type):
         return value_soft_cast(v, t, ti)
-
-
-
-    if type.is_record(t):
-        if type.is_record(from_type):
-            info("impl cast record2", ti)
 
 
     if type.is_pointer(t):

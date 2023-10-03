@@ -1,0 +1,11 @@
+// examples/4.many_sources/lib.cm
+
+@attribute("c-no-print")
+import "libc/stdio.hm"
+
+import "./lib.hm"
+
+func lib_func () -> Unit {
+	printf("hello from lib_func\n")
+}
+

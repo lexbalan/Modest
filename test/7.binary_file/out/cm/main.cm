@@ -1,0 +1,66 @@
+// examples/7.binary_file/main.cm
+import "libc/libc.h"
+import "libc/stdio.h"
+
+
+const filename = "file.bin"
+
+
+// chunk of data for read/write operations in file
+type Chunk record {
+    id : [100]Nat8
+    data : [1024]Nat8
+}
+
+
+func write_example () -> Unit {
+    printf("run write_example\n")
+
+    let fp = fopen(filename, "wb")
+
+    if fp == nil {
+        printf("error: cannot create file '%s'", filename)
+        return
+    }
+
+    var chunk : Chunk
+
+    // pointers casting requires -funsafe translator option
+    // (see Makefile)
+    strcpy(&chunk.id to *Char, "id" to *Char)
+    strcpy(&chunk.data to *Char, "data" to *Char)
+
+    // write chunk to file
+    fwrite(&chunk, (sizeof(Chunk)), 1, fp)
+
+    fclose(fp)
+}
+
+
+func read_example () -> Unit {
+    printf("run read_example\n")
+
+    let fp = fopen(filename, "rb")
+
+    if fp == nil {
+        printf("error: cannot open file '%s'", filename)
+        return
+    }
+
+    var chunk : Chunk
+    fread(&chunk, (sizeof(Chunk)), 1, fp)
+    printf("file '%s' contains:\n", filename)
+    printf("chunk.id: %s\n", &chunk.id)
+    printf("chunk.data: %s\n", &chunk.data)
+
+    fclose(fp)
+}
+
+
+func main () -> Int {
+    printf("text_file example\n")
+    write_example()
+    read_example()
+    return 0
+}
+

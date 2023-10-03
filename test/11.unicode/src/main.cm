@@ -1,0 +1,46 @@
+// examples/1.hello_world/main.cm
+
+@attribute("c-no-print")
+import "libc/stdio.hm"
+
+@attribute("c-no-print")
+import "misc/utf.hm"
+@c_include("./utf.h")
+
+
+
+const ratSymbolUTF8 = [0xf0, 0x9f, 0x90, 0x80]
+const ratSymbolUTF16 = [0xD83D, 0xDC00]
+const ratSymbolUTF32 = 0x0001F400
+
+
+var arr_utf8 : [8]Nat8 := "Helo!\n"
+var arr_utf16 : [8]Nat16 := "Hello!\n"
+var arr_utf32 : [8]Nat32 := "Hello!\n"
+
+
+func main () -> Int {
+
+    // indexing of GenericString returns #i symbol code
+    // the symbols have GenericInteger type
+    let omegaCharCode = "Hello Ω!\n"[6]
+    let ratCharCode = "Hello 🐀!\n"[6]
+
+    // you can assign omegaCharCode (937) to Nat32,
+    // but you can't assign ratCharCode (128000) to Nat16 (!)
+    var omegaCode : Nat16 := omegaCharCode
+    var ratCode : Nat32 := ratCharCode
+
+    printf("omegaCode = %d\n", omegaCode)
+    printf("ratCode = %d\n", ratCode)
+
+
+    utf16_puts("Hello Ω!\n")
+    utf32_puts("Hello Ω!\n")
+
+    utf32_puts("Hello 🐀!\n")
+
+    return 0
+}
+
+

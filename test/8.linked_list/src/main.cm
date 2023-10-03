@@ -1,0 +1,81 @@
+// examples/8.linked_list/main.cm
+
+@attribute("c-no-print")
+import "libc/libc.hm"
+
+@attribute("c-no-print")
+import "libc/stdio.hm"
+
+import "./linked_list.hm"
+
+
+
+// wrap around linked list for List Nat64
+func nat64_list_insert (list : *List, x : Nat64) -> Unit {
+    // alloc memory for Nat64 value
+    let p_nat64 = malloc(sizeof(Nat64)) to *Nat64
+    *p_nat64 := x
+    linked_list_insert(list, p_nat64)
+}
+
+
+// show list conent from first item to last
+func list_print_forward(list : *List) -> Unit {
+    printf("list_print_forward:\n")
+    var pn := linked_list_first_get(list)
+    while pn != nil {
+        let x = linked_list_node_link_get(pn) to *Nat32
+        printf("v = %d\n", *x)
+        pn := linked_list_node_next_get(pn)
+    }
+}
+
+
+// show list conent from last item to first
+func list_print_backward(list : *List) -> Unit {
+    printf("list_print_backward:\n")
+    var pn := linked_list_last_get(list)
+    while pn != nil {
+        let x = linked_list_node_link_get(pn) to *Nat32
+        printf("v = %d\n", *x)
+        pn := linked_list_node_prev_get(pn)
+    }
+}
+
+
+func main () -> Int {
+    printf("linked list example\n")
+
+    let list = linked_list_create()
+
+    if list == nil {
+        printf("error: cannot create list")
+        return 1
+    }
+
+    // add some Nat64 values to list
+    nat64_list_insert(list, 0)
+    nat64_list_insert(list, 10)
+    nat64_list_insert(list, 20)
+    nat64_list_insert(list, 30)
+    nat64_list_insert(list, 40)
+    nat64_list_insert(list, 50)
+    nat64_list_insert(list, 60)
+    nat64_list_insert(list, 70)
+    nat64_list_insert(list, 80)
+    nat64_list_insert(list, 90)
+    nat64_list_insert(list, 100)
+
+    // print list size
+    let list_size = linked_list_size_get(list)
+	printf("linked list size: %d\n", list_size)
+
+    // print list forward
+    list_print_forward(list)
+
+    // print list backward
+    list_print_backward(list)
+
+    return 0
+}
+

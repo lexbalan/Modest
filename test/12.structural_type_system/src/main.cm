@@ -1,0 +1,97 @@
+// examples/12.structural_type_system/main.cm
+
+@attribute("c-no-print")
+import "libc/stdio.hm"
+
+type Type1 record {
+    x : Int32
+}
+
+type Type2 record {
+    x : Int32
+}
+
+
+type Type3 Type1
+
+
+func f0(x : Type1) -> Unit {
+    printf("f0 x.x = %d\n", x.x)
+}
+
+func f1(x : Type2) -> Unit {
+    printf("f1 x.x = %d\n", x.x)
+}
+
+func f2(x : Type3) -> Unit {
+    printf("f2 x.x = %d\n", x.x)
+}
+
+func f3(x : record {x : Int32}) -> Unit {
+    printf("f3 x.x = %d\n", x.x)
+}
+
+
+func f0p(x : *Type1) -> Unit {
+    printf("f0p x.x = %d\n", x.x)
+}
+
+func f1p(x : *Type2) -> Unit {
+    printf("f1p x.x = %d\n", x.x)
+}
+
+func f2p(x : *Type3) -> Unit {
+    printf("f2p x.x = %d\n", x.x)
+}
+
+func f3p(x : *record {x : Int32}) -> Unit {
+    printf("f3p x.x = %d\n", x.x)
+}
+
+
+var a : Type1 := {x=1}
+var b : Type2 := {x=2}
+var c : Type3 := {x=3}
+
+
+func test_by_value() -> Unit {
+    f0(a)
+    f1(a)
+    f2(a)
+    //f3(a)
+
+    f0(b)
+    f1(b)
+    f2(b)
+    //f3(b)
+
+    f0(c)
+    f1(c)
+    f2(c)
+    //f3(c)
+}
+
+func test_by_pointer() -> Unit {
+    f0p(&a)
+    f1p(&a)
+    f2p(&a)
+    //f3p(&a)
+
+    f0p(&b)
+    f1p(&b)
+    f2p(&b)
+    //f3p(&b)
+
+    f0p(&c)
+    f1p(&c)
+    f2p(&c)
+    //f3p(&c)
+}
+
+
+func main () -> Int {
+    test_by_value()
+    test_by_pointer()
+    return 0
+}
+

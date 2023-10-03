@@ -1,0 +1,73 @@
+// examples/1.hello_world/main.cm
+import "libc/stdio.h"
+import "misc/utf.h"
+
+
+
+/*
+@property("c_alias", "wchar_t")
+type WChar Int16
+
+@property("c_alias", "wchar_t *")
+type WCharStr16 *[]Nat16
+
+
+@attribute(["arghack", "dispensable", "c-no-print"])
+extern func wprintf(s : WCharStr16) -> Int
+
+
+@attribute(["dispensable", "c-no-print"])
+extern func putwchar(c : WChar) -> Int
+*/
+
+
+/*
+@c_include("locale.h")
+
+@attribute("c-no-print")
+const LC_ALL = 0
+
+@attribute("c-no-print")
+//char * setlocale( int category, const char * locale );
+extern func setlocale (category : Int, locale : Str8) -> Str8
+*/
+
+
+/*
+    UTF-8 Encoding:	    0xF0 0x9F 0x90 0x80
+    UTF-16 Encoding:	0xD83D 0xDC00
+    UTF-32 Encoding:	0x0001F400
+*/
+
+const ratUTF8 = [0xF0, 0x9F, 0x90, 0x80]
+const ratUTF16 = [0xD83D, 0xDC00]
+const ratUTF32 = 0x0001F400
+
+
+// TODO: перекрытие имен - что с этим делать???
+
+
+var arr_utf8 : [8]Nat8 := [72, 101, 108, 111, 33, 10, 0]
+var arr_utf16 : [8]Nat16 := [72, 101, 108, 108, 111, 33, 10, 0]
+var arr_utf32 : [8]Nat32 := [72, 101, 108, 108, 111, 33, 10, 0]
+
+//var xxx : [8]Nat8 := []
+
+
+const strUtf16 = "Hello Ω!\n"
+
+func main () -> Int {
+
+    //let clocale = setlocale(LC_ALL, nil)
+    //printf("clocale = %s\n", clocale)
+
+    //    utf32_putchar(ratUTF32)
+    //    utf32_putchar(0xA)
+
+    utf16_puts(strUtf16)
+    utf32_puts(strUtf16)
+    utf32_puts("Hello 🐀!\n")
+
+    return 0
+}
+
