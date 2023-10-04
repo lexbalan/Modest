@@ -199,6 +199,7 @@ def print_value_record(x):
     else:
         out("zeroinitializer")
 
+
 def print_value(x):
     c = x['class']
     if c == 'reg':
@@ -220,9 +221,11 @@ def print_value(x):
             v = ll_create_value_num(type.typeNat64, hlir_value_num_get(x))
             inline_cast('inttoptr', v['type'], x['type'], v)
 
-        else:
-            #o(str(f'{num:f}'))
-            out(str(double_to_hex(num)))
+        elif type.is_float(x['type']):
+            if x['type']['power'] == 32:
+                out(str(float_to_hex(num)))
+            else:
+                out(str(double_to_hex(num)))
 
     elif c == 'str':
         out("@%s" % x['id'])
