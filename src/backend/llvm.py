@@ -139,18 +139,6 @@ def insertvalue(v, x, pos):
 
 
 
-# from here:
-# https://stackoverflow.com/questions/23624212/how-to-convert-a-float-into-hex
-import struct
-
-def float_to_hex(f):
-        return hex(struct.unpack('<I', struct.pack('<f', f))[0])
-
-def double_to_hex(f):
-        return hex(struct.unpack('<Q', struct.pack('<d', f))[0])
-
-
-
 def inline_cast(op, from_type, to_type, val):
     out("%s (" % op)
     print_type(from_type)
@@ -222,10 +210,7 @@ def print_value(x):
             inline_cast('inttoptr', v['type'], x['type'], v)
 
         elif type.is_float(x['type']):
-            if x['type']['power'] == 32:
-                out(str(float_to_hex(num)))
-            else:
-                out(str(double_to_hex(num)))
+            out(str(num))
 
     elif c == 'str':
         out("@%s" % x['id'])

@@ -332,7 +332,7 @@ def is_integer(t):
 
 
 def is_float(t):
-    return t['kind'] == 'float'
+    return 'float' in t['att']
 
 
 def is_string(t):

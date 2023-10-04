@@ -396,13 +396,23 @@ def value_cons_float(v, t, ti, method):
             # GenericFloat -> Float
             # GenericInt -> Float
             if type.is_integer(vt) or type.is_float(vt):
-
-                if v['type']['size'] > t['size']:
-                    return None
+                #if v['type']['size'] > t['size']:
+                #    return None
 
                 y = do_cast_generic(v, t, ti)
-                num = float(hlir_value_num_get(y))    # 0 -> 0.0, need for printer (!)
-                y['imm'] = num
+                num = hlir_value_num_get(y)
+
+                import struct
+
+                z = 0
+                if t['power'] == 32:
+                    z = struct.unpack('<f', struct.pack('<f', num))[0]
+                elif t['power'] == 64:
+                    z = struct.unpack('<d', struct.pack('<d', num))[0]
+                else:
+                    fatal("too big float, not implemented")
+
+                y['imm'] = z
                 return y
 
         elif type.is_integer(vt):
