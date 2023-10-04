@@ -1252,7 +1252,6 @@ def do_stmt_let(x):
     typ['att'].append('const')
     v['type'] = typ
 
-
     const_value = hlir_value_const(id, v['type'], value=v, ti=x['id']['ti'])
     const_value['att'].extend(['local']) # need for LLVM printer (!)
 

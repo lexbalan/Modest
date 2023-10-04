@@ -154,7 +154,7 @@ def select_nat(sz):
 
 def select_numeric(sz, signedness):
     if signedness:
-        return select_int(sz)
+        return select_int(sz + 1)
     return select_nat(sz)
 
 
