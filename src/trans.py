@@ -611,6 +611,7 @@ def bin_imm(k, type_result, l, r, ti):
     num_val = ops[k](hlir_value_num_get(l), hlir_value_num_get(r))
 
     if type.is_generic(type_result):
+        # пересматриваем generic тип для нового значения (!)
         type_result = hlir_type_generic_int_for(num_val, unsigned=True, ti=ti)
 
     if not type.is_float(l['type']):
