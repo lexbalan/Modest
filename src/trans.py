@@ -588,19 +588,50 @@ def do_bin_op_with_pointers(k, l, r , ti):
 
 
 
+def bin_imm(k, type_result, l, r, ti):
+    ops = {
+        'logic_or': lambda a, b: a | b,
+        'logic_and': lambda a, b: a & b,
+        'or': lambda a, b: a or b,
+        'and': lambda a, b: a and b,
+        'xor': lambda a, b: a ^ b,
+        'eq': lambda a, b: 1 if a == b else 0,
+        'ne': lambda a, b: 1 if a != b else 0,
+        'lt': lambda a, b: 1 if a < b else 0,
+        'gt': lambda a, b: 1 if a > b else 0,
+        'le': lambda a, b: 1 if a <= b else 0,
+        'ge': lambda a, b: 1 if a >= b else 0,
+        'add': lambda a, b: a + b,
+        'sub': lambda a, b: a - b,
+        'mul': lambda a, b: a * b,
+        'div': lambda a, b: a / b,
+        'rem': lambda a, b: a % b,
+    }
+
+    num_val = ops[k](hlir_value_num_get(l), hlir_value_num_get(r))
+
+    if type.is_generic(type_result):
+        type_result = hlir_type_generic_int_for(num_val, unsigned=True, ti=ti)
+
+    if not type.is_float(l['type']):
+        num_val = int(num_val)
+
+    bin_value = hlir_value_bin(k, l, r, type_result, ti=ti)
+
+    value_set_imm(bin_value, num_val)
+
+    return bin_value
+
+
+
 def do_value_bin(x):
     k = x['kind']
-
-    if k in ['shl', 'shr']:
-        return do_value_shift(x)
-
     l = do_rvalue(x['left'])
     r = do_rvalue(x['right'])
     ti = x['ti']
 
     if value_is_bad(l) or value_is_bad(r):
         return hlir_value_bad(ti)
-
 
 
     if type.is_pointer(l['type']) or type.is_pointer(r['type']):
@@ -642,38 +673,14 @@ def do_value_bin(x):
         if k == 'or': k = 'logic_or'
         elif k == 'and': k = 'logic_and'
 
-    bin_value = hlir_value_bin(k, l, r, type_result, ti=ti)
 
     # if left & right are immediate, we can fold const
     # and append field ['imm'] to bin_value
     if value_is_immediate(l) and value_is_immediate(r):
-        ops = {
-            'logic_or': lambda a, b: a | b,
-            'logic_and': lambda a, b: a & b,
-            'or': lambda a, b: a or b,
-            'and': lambda a, b: a and b,
-            'xor': lambda a, b: a ^ b,
-            'eq': lambda a, b: 1 if a == b else 0,
-            'ne': lambda a, b: 1 if a != b else 0,
-            'lt': lambda a, b: 1 if a < b else 0,
-            'gt': lambda a, b: 1 if a > b else 0,
-            'le': lambda a, b: 1 if a <= b else 0,
-            'ge': lambda a, b: 1 if a >= b else 0,
-            'add': lambda a, b: a + b,
-            'sub': lambda a, b: a - b,
-            'mul': lambda a, b: a * b,
-            'div': lambda a, b: a / b,
-            'rem': lambda a, b: a % b,
-        }
+        return bin_imm(k, type_result, l, r, ti)
 
-        num_val = ops[k](hlir_value_num_get(l), hlir_value_num_get(r))
 
-        if not type.is_float(l['type']):
-            num_val = int(num_val)
-
-        value_set_imm(bin_value, num_val)
-
-    return bin_value
+    return hlir_value_bin(k, l, r, type_result, ti=ti)
 
 
 
@@ -1053,7 +1060,7 @@ def do_value_sizeof(x):
 
 
 bin_ops = [
-    'or', 'xor', 'and', 'shl', 'shr',
+    'or', 'xor', 'and',
     'eq', 'ne', 'lt', 'gt', 'le', 'ge',
     'add', 'sub', 'mul', 'div', 'rem'
 ]
@@ -1093,6 +1100,8 @@ def do_value(x):
             elif k == 'access': rv = do_value_access(x)
             elif k == 'cast': rv = do_value_to(x)
             elif k == 'sizeof': rv = do_value_sizeof(x)
+            elif k == 'shl': rv = do_value_shift(x)
+            elif k == 'shr': rv = do_value_shift(x)
 
     if rv == None:
         rv = hlir_value_bad(x['ti'])

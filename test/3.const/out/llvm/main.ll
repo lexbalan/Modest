@@ -1,7 +1,7 @@
 
 target triple = "arm64-apple-darwin21.6.0"
 
-; -- MODULE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
 
 
 
@@ -27,13 +27,13 @@ target triple = "arm64-apple-darwin21.6.0"
 %SizeT = type i64
 %SSizeT = type i64
 
-; -- MODULE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
 
 
 
 
 
-; -- MODULE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
 
 
 
@@ -87,7 +87,7 @@ declare i32 @puts(%ConstCharStr)
 declare i32 @ungetc(i32, %FILE*)
 declare void @perror(%ConstCharStr)
 
-; -- MODULE: /Users/alexbalan/p/Modest/test/3.const/src/main.cm
+; -- SOURCE: src/main.cm
 
 @str1.c8 = private constant [7 x i8] c"Hello!\00"
 @str2.c8 = private constant [12 x i8] c"test const\0A\00"
@@ -102,10 +102,12 @@ declare void @perror(%ConstCharStr)
 
 define i32 @main() {
     %1 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str2.c8)
-    %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str3.c8, i32 42)
-    %3 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str4.c8, i32 42)
-    %4 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str5.c8, [0 x i8]* @str1.c8)
-    %5 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str6.c8, [0 x i8]* @str1.c8)
+    %2 = sext i6 42 to i32
+    %3 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str3.c8, i32 %2)
+    %4 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str4.c8, i32 42)
+    %5 = bitcast i8* @str1.c8 to [0 x i8]*
+    %6 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str5.c8, [0 x i8]* %5)
+    %7 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str6.c8, [0 x i8]* @str1.c8)
     ret i32 0
 }
 

@@ -20,10 +20,10 @@ int main(void)
 {
     printf("test const\n");
 
-    printf("genericIntConst = %d\n", genericIntConst);
+    printf("genericIntConst = %d\n", (int32_t)genericIntConst);
     printf("int32Const = %d\n", int32Const);
 
-    printf("genericStringConst = %s\n", genericStringConst);
+    printf("genericStringConst = %s\n", (uint8_t *)genericStringConst);
     printf("genericString8Const = %s\n", genericString8Const);
 
     return 0;

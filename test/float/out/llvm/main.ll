@@ -89,16 +89,71 @@ declare void @perror(%ConstCharStr)
 
 ; -- SOURCE: src/main.cm
 
-@str1.c8 = private constant [14 x i8] c"test typedef\0A\00"
+@str1.c8 = private constant [8 x i8] c"n = %d\0A\00"
+@str2.c8 = private constant [8 x i8] c"p = %d\0A\00"
+@str3.c8 = private constant [9 x i8] c"t2 = %f\0A\00"
+@str4.c8 = private constant [14 x i8] c"Hello World!\0A\00"
+@str5.c8 = private constant [8 x i8] c"f = %f\0A\00"
+@str6.c8 = private constant [9 x i8] c"d = %lf\0A\00"
+@str7.c8 = private constant [10 x i8] c"pi = %lf\0A\00"
 
 
 
-%NewInt32 = type i32
+
+define float @float32(i1 %s, i8 %p, i32 %n) {
+    %bits = alloca i32
+    br i1 %s , label %then_0, label %endif_0
+then_0:
+    store i32 2147483648, i32* %bits
+    br label %endif_0
+endif_0:
+    %1 = load i32, i32* %bits
+    %2 = zext i8 %p to i32
+    %3 = shl i32 %2, 23
+    %4 = or i32 %1, %3
+    store i32 %4, i32* %bits
+    %5 = load i32, i32* %bits
+    %6 = and i32 %n, 8388607
+    %7 = or i32 %5, %6
+    store i32 %7, i32* %bits
+; bitcast Nat32 to Float32
+    %pfloat32 = alloca float*
+    %8 = bitcast i32* %bits to i8*
+    %9 = bitcast i8* %8 to float*
+    store float* %9, float** %pfloat32
+    %10 = load float*, float** %pfloat32
+    %11 = load float, float* %10
+    ret float %11
+}
+
+define void @test2() {
+    %1 = sext i1 1 to i32
+    %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str1.c8, i32 %1)
+    %3 = sext i8 -128 to i32
+    %4 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str2.c8, i32 %3)
+    %5 = call float(i1, i8, i32) @float32 (i1 0, i8 -128, i32 1)
+    %6 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str3.c8, float %5)
+    ret void
+}
+
+
 
 define i32 @main() {
-    %1 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str1.c8)
-    %newInt32 = alloca i32
-    store i32 0, i32* %newInt32
+    %1 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str4.c8)
+;test2()
+    %f = alloca float
+    store float 3.1415927410125732, float* %f
+    %d = alloca double
+    store double 3.141592653589793, double* %d
+    %2 = load float, float* %f
+    %3 = fpext float %2 to double
+    %4 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str5.c8, double %3)
+    %5 = load double, double* %d
+    %6 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str6.c8, double %5)
+    %7 = bitcast %Float 3.141592653589793 to double
+    %8 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str7.c8, double %7)
+    ret i32 0
+
     ret i32 0
 }
 

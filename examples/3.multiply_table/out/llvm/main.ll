@@ -119,7 +119,7 @@ break_1:
 }
 
 define i32 @main() {
-    %1 = sext i2 4 to i32
+    %1 = sext i3 4 to i32
     %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str2.c8, i32 %1)
     call void(i32) @mtab (i32 4)
     ret i32 0
