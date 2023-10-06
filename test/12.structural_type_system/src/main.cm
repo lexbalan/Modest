@@ -1,4 +1,4 @@
-// examples/12.structural_type_system/main.cm
+// test/12.structural_type_system/main.cm
 
 @attribute("c-no-print")
 import "libc/stdio.hm"

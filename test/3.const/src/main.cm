@@ -1,4 +1,4 @@
-// test/2.func/main.cm
+// test/3.const/main.cm
 
 @attribute("c-no-print")
 import "libc/stdio.hm"
@@ -7,7 +7,7 @@ const genericIntConst = 42
 const int32Const = genericIntConst to Int32
 
 const genericStringConst = "Hello!"
-const genericString8Const = genericStringConst to Str8
+const string8Const = genericStringConst to Str8
 //const genericString16Const = genericStringConst to Str16
 //const genericString32Const = genericStringConst to Str32
 
@@ -20,7 +20,7 @@ func main () -> Int {
 	printf("int32Const = %d\n", int32Const)
 
 	printf("genericStringConst = %s\n", genericStringConst)
-	printf("genericString8Const = %s\n", genericString8Const)
+	printf("string8Const = %s\n", string8Const)
 
     return 0
 }

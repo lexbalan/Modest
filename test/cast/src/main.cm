@@ -1,4 +1,4 @@
-// examples/1.hello_world/main.cm
+// test/cast/main.cm
 
 @attribute("c-no-print")
 import "libc/stdio.hm"
@@ -6,16 +6,7 @@ import "libc/stdio.hm"
 
 
 func main () -> Int {
-    printf("Hello World!\n")
-
-    /*let x0 = -1 to Nat32
-    let x1 = -1 to Nat64
-
-    let y0 = x0 to Nat64
-    let y1 = x1 to Nat64
-
-    printf("x0 = %llx\n", y0)
-    printf("x1 = %llx\n", y1)*/
+    printf("test cast operation\n")
 
     let x0 = -1 to Int32
     let x1 = -1 to Int64

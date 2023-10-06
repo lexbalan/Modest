@@ -1,4 +1,4 @@
-// examples/10.const/main.cm
+// test/10.const/main.cm
 
 @attribute("c-no-print")
 import "libc/math.hm"

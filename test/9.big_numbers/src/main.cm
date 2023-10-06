@@ -1,4 +1,4 @@
-// examples/9.big_numbers/main.cm
+// test/9.big_numbers/main.cm
 
 @attribute("c-no-print")
 import "libc/stdio.hm"
