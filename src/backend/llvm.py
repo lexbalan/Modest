@@ -16,6 +16,8 @@ INDENT_SYMBOL = " " * 2
 
 func_context = None
 
+def is_global_context():
+    return func_context == None
 
 
 def init():
@@ -444,6 +446,20 @@ def do_eval_expr_un(v):
     ve = do_eval(v['value'])
 
     if v['kind'] == 'ref':
+
+        if is_global_context():
+            if v['value']['kind'] == 'var':
+                if 'global' in  v['value']['att']:
+                    #value_print(v['value'])
+                    return {
+                        'isa': 'llvm_value',
+                        'class': 'mem',
+                        'level': 'value',
+                        'id': v['value']['id']['str'],
+                        'type': v['type'],
+                        'proto': v
+                    }
+
         nv = copy.copy(ve)
         nv['level'] = 'value'
         nv['proto'] = v    # for type
@@ -780,7 +796,12 @@ def do_eval_expr_cast(v):
                 if hlir_value_num_get(value) == 0:
                     return ll_create_value_null(to_type)
 
+
     y = do_ld(do_eval(value))
+
+    if type.eq(v['type'], v['value']['type']):
+        return y
+
     opcode = select_cast_operator(from_type, to_type)
     reg = operation(opcode)
     print_type(from_type)
@@ -860,7 +881,7 @@ def do_eval_array(v):
 
     # global?
     # глобальный массив распечатает print_value как литерал
-    if func_context == None:
+    if is_global_context():
         return {
             'isa': 'llvm_value',
             'class': 'array',

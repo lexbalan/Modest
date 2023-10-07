@@ -1545,6 +1545,7 @@ def def_var(x):
     var = hlir_value_var(f['id'], f['type'], init=init_value)
 
     var['att'].extend(attributes_get())
+    var['att'].append('global')
 
     extend_props(var)
 
