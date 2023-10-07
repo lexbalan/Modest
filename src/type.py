@@ -142,6 +142,7 @@ def select_int(sz):
     elif sz <= 32: return typeInt32
     elif sz <= 64: return typeInt64
     elif sz <= 128: return typeInt128
+    else: return None
 
 
 def select_nat(sz):
@@ -150,10 +151,11 @@ def select_nat(sz):
     elif sz <= 32: return typeNat32
     elif sz <= 64: return typeNat64
     elif sz <= 128: return typeNat128
+    else: return None
 
 
-def select_numeric(sz, signedness):
-    if signedness:
+def select_numeric(sz, is_signed):
+    if is_signed:
         return select_int(sz + 1)
     return select_nat(sz)
 
@@ -342,6 +344,9 @@ def is_string(t):
 def is_record(t):
     return t['kind'] == 'record'
 
+
+
+# WARNING: Generic type can be not signed and not unsigned (!)
 
 def is_signed(t):
     return 'signed' in t['att']

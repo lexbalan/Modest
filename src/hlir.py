@@ -129,13 +129,12 @@ def hlir_type_generic_str(ti=None):
 
 
 # used in shifts
-def hlir_type_generic_int_bits(nbits, unsigned=False, ti=None):
+def hlir_type_generic_int_bits(nbits, ti=None):
     # get custom generic int type
     gen_int_type = hlir_type_integer('Integer', power=nbits, ti=ti)
     gen_int_type['kind'] = 'Integer'
     gen_int_type['att'].extend(['generic'])
-    if unsigned:
-        gen_int_type['att'].extend(['unsigned'])
+    # generic int not signed, and not unsigned (!)
     gen_int_type['power'] = nbits
     gen_int_type['size'] = nbytes_for_bits(nbits)
     return gen_int_type
@@ -143,7 +142,7 @@ def hlir_type_generic_int_bits(nbits, unsigned=False, ti=None):
 
 def hlir_type_generic_int_for(num, unsigned=False, ti=None):
     nbits = nbits_for_num(num)
-    return hlir_type_generic_int_bits(nbits, unsigned=unsigned, ti=ti)
+    return hlir_type_generic_int_bits(nbits, ti=ti)
 
 
 def hlir_field(id, type, ti=None):

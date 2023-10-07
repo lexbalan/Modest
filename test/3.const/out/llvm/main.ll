@@ -94,7 +94,7 @@ declare void @perror(%ConstCharStr)
 @str3.c8 = private constant [22 x i8] c"genericIntConst = %d\0A\00"
 @str4.c8 = private constant [17 x i8] c"int32Const = %d\0A\00"
 @str5.c8 = private constant [25 x i8] c"genericStringConst = %s\0A\00"
-@str6.c8 = private constant [26 x i8] c"genericString8Const = %s\0A\00"
+@str6.c8 = private constant [19 x i8] c"string8Const = %s\0A\00"
 
 
 

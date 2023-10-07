@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-// examples/1.hello_world/main.cm
+// test/4.typedef/main.cm
 
 typedef int32_t NewInt32;
 

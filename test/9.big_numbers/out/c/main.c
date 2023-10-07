@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-// examples/9.big_numbers/main.cm
+// test/9.big_numbers/main.cm
 
 
 
@@ -27,7 +27,7 @@ uint64_t low_128(unsigned __int128 x)
 int main(void)
 {
 
-    const __int128 big1 = (((__int128)0xFFFFFFFFFFFFFFFF << 64) | ((__int128)0xFFFFFFFFFFFFFFFF));
+    const unsigned __int128 big1 = (((__int128)0xFFFFFFFFFFFFFFFF << 64) | ((__int128)0xFFFFFFFFFFFFFFFF));
 
     unsigned __int128 big2;
     big2 = big1;

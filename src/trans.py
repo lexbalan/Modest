@@ -704,6 +704,11 @@ def do_value_minus(val, t, ti):
         num = -hlir_value_num_get(val)
         value_set_imm(v, num)
 
+    if type.is_generic(v['type']):
+        if not type.is_signed(v['type']):
+            #type.set_signed()
+            v['type']['att'].append("signed")
+
     return v
 
 
@@ -1254,7 +1259,6 @@ def do_stmt_let(x):
     if value_is_bad(v):
         module['context'].value_add(id['str'], hlir_value_bad())
         return hlir_stmt_bad()
-
 
     # add 'const' attribute to type
     # (used by C printer)

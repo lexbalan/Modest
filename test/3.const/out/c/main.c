@@ -4,13 +4,13 @@
 #include <string.h>
 #include <stdbool.h>
 
-// test/2.func/main.cm
+// test/3.const/main.cm
 
 #define genericIntConst  42
 #define int32Const  ((int32_t)genericIntConst)
 
 #define genericStringConst  "Hello!"
-#define genericString8Const  genericStringConst
+#define string8Const  genericStringConst
 //const genericString16Const = genericStringConst to Str16
 //const genericString32Const = genericStringConst to Str32
 
@@ -24,7 +24,7 @@ int main(void)
     printf("int32Const = %d\n", int32Const);
 
     printf("genericStringConst = %s\n", (uint8_t *)genericStringConst);
-    printf("genericString8Const = %s\n", genericString8Const);
+    printf("string8Const = %s\n", string8Const);
 
     return 0;
 }

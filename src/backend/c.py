@@ -1,6 +1,6 @@
 
 from opt import *
-from error import info, error
+from error import info, error, fatal
 from .common import *
 import type
 from type import type_print
@@ -287,8 +287,14 @@ def print_type2(t, print_aka, need_space_after, _print_array_asis):
     if type.is_generic_integer(t):
         # если пришел generic - подберем подходящий тип
         # ex: let x = 1; func(x)
-        is_signed = not type.is_unsigned(t)
-        t = type.select_numeric(t['power'], is_signed)
+        power = t['power']
+        nt = type.select_numeric(power, is_signed=type.is_signed(t))
+        if nt == None:
+            error("cannot select integer type for too big value", t['ti'])
+            return
+        else:
+            t = nt
+
 
     if print_aka:
         if 'c_alias' in t:

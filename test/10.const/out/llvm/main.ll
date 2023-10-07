@@ -1,7 +1,7 @@
 
 target triple = "arm64-apple-darwin21.6.0"
 
-; -- MODULE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
 
 
 
@@ -27,13 +27,13 @@ target triple = "arm64-apple-darwin21.6.0"
 %SizeT = type i64
 %SSizeT = type i64
 
-; -- MODULE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
 
 
 
 
 
-; -- MODULE: /Users/alexbalan/p/Modest/lib/libc/math.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/math.hm
 
 
 
@@ -122,7 +122,7 @@ declare double @fmaxl(double, double)
 declare double @fminl(double, double)
 declare double @fmal(double, double, double)
 
-; -- MODULE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
 
 
 
@@ -176,7 +176,7 @@ declare i32 @puts(%ConstCharStr)
 declare i32 @ungetc(i32, %FILE*)
 declare void @perror(%ConstCharStr)
 
-; -- MODULE: /Users/alexbalan/p/Modest/lib/libc/libc.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/libc.hm
 
 
 
@@ -259,7 +259,7 @@ declare i32 @closedir(%DIR*)
 declare [0 x i8]* @getcwd([0 x i8]*, i64)
 declare [0 x i8]* @getenv([0 x i8]*)
 
-; -- MODULE: /Users/alexbalan/p/Modest/lib/misc/minmax.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/misc/minmax.hm
 
 
 declare i32 @min_int32(i32, i32)
@@ -275,7 +275,7 @@ declare float @max_float32(float, float)
 declare double @min_float64(double, double)
 declare double @max_float64(double, double)
 
-; -- MODULE: /Users/alexbalan/p/Modest/examples/10.const/src/main.cm
+; -- SOURCE: src/main.cm
 
 @str1.c8 = private constant [18 x i8] c"lines_0_len = %f\0A\00"
 @str2.c8 = private constant [18 x i8] c"lines_1_len = %f\0A\00"
@@ -310,8 +310,8 @@ define double @distance(%Point %a, %Point %b) {
     %12 = extractvalue %Point %b, 1
     %13 = call double(double, double) @min_float64 (double %11, double %12)
     %14 = fsub double %10, %13
-    %15 = call double(double, double) @pow (double %7, double 0x4000000000000000)
-    %16 = call double(double, double) @pow (double %14, double 0x4000000000000000)
+    %15 = call double(double, double) @pow (double %7, double 2.0)
+    %16 = call double(double, double) @pow (double %14, double 2.0)
     %17 = fadd double %15, %16
     %18 = call double(double) @sqrt (double %17)
     ret double %18
@@ -325,100 +325,52 @@ define double @lineLength(%Line %line) {
 }
 
 define i32 @main() {
-    %1 = insertvalue [2 x {
-	%Point,
-	%Point
-}] zeroinitializer, {
-	%Point,
-	%Point
-} {
+    %1 = insertvalue [2 x %Line] zeroinitializer, %Line {
   %Point {
-    double 0x0,
-    double 0x0
+    double 0.0,
+    double 0.0
   },
   %Point {
-    double 0x3ff0000000000000,
-    double 0x3ff0000000000000
+    double 1.0,
+    double 1.0
   }
 }, 0
-    %2 = insertvalue [2 x {
-	%Point,
-	%Point
-}] %1, %Line {
+    %2 = insertvalue [2 x %Line] %1, %Line {
   %Point {
-    double 0x4024000000000000,
-    double 0x402e000000000000
+    double 10.0,
+    double 15.0
   },
   %Point {
-    double 0x4034000000000000,
-    double 0x4039000000000000
+    double 20.0,
+    double 25.0
   }
 }, 1
-    %3 = getelementptr inbounds [2 x {
-	%Point,
-	%Point
-}], [2 x {
-	%Point,
-	%Point
-}]* %2, i32 0, i32 0
-    %4 = load {
-	%Point,
-	%Point
-}, {
-	%Point,
-	%Point
-}* %3
-    %5 = call double(%Line) @lineLength ({
-	%Point,
-	%Point
-} %4)
-    %6 = insertvalue [2 x {
-	%Point,
-	%Point
-}] zeroinitializer, {
-	%Point,
-	%Point
-} {
+    %3 = getelementptr inbounds [2 x %Line], [2 x %Line]* %2, i32 0, i32 0
+    %4 = load %Line, %Line* %3
+    %5 = call double(%Line) @lineLength (%Line %4)
+    %6 = insertvalue [2 x %Line] zeroinitializer, %Line {
   %Point {
-    double 0x0,
-    double 0x0
+    double 0.0,
+    double 0.0
   },
   %Point {
-    double 0x3ff0000000000000,
-    double 0x3ff0000000000000
+    double 1.0,
+    double 1.0
   }
 }, 0
-    %7 = insertvalue [2 x {
-	%Point,
-	%Point
-}] %6, %Line {
+    %7 = insertvalue [2 x %Line] %6, %Line {
   %Point {
-    double 0x4024000000000000,
-    double 0x402e000000000000
+    double 10.0,
+    double 15.0
   },
   %Point {
-    double 0x4034000000000000,
-    double 0x4039000000000000
+    double 20.0,
+    double 25.0
   }
 }, 1
-    %8 = getelementptr inbounds [2 x {
-	%Point,
-	%Point
-}], [2 x {
-	%Point,
-	%Point
-}]* %7, i32 0, i32 1
-    %9 = load {
-	%Point,
-	%Point
-}, {
-	%Point,
-	%Point
-}* %8
-    %10 = call double(%Line) @lineLength ({
-	%Point,
-	%Point
-} %9)
+    %8 = getelementptr inbounds [2 x %Line], [2 x %Line]* %7, i32 0, i32 1
+    %9 = load %Line, %Line* %8
+    %10 = call double(%Line) @lineLength (%Line %9)
     %11 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str1.c8, double %5)
     %12 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str2.c8, double %10)
     ret i32 0

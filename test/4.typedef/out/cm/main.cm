@@ -1,4 +1,4 @@
-// examples/1.hello_world/main.cm
+// test/4.typedef/main.cm
 import "libc/stdio.h"
 
 type NewInt32 NewInt32
