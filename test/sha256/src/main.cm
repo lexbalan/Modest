@@ -81,15 +81,6 @@ func main () -> Int {
         i := i + 1
     }
 
-
-    /*sha256_doHash(&test_msg, 12, &test_hash)
-
-    var i := 0
-    while i < sha256HashSize {
-        printf("0x%02X, ", test_hash[i])
-        i := i + 1
-    }*/
-
     return 0
 }
 
