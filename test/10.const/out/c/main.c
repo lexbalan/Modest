@@ -11,7 +11,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-// examples/10.const/main.cm
+// test/10.const/main.cm
 
 
 
@@ -34,7 +34,7 @@ typedef struct {
     .b = pointOne \
 }
 
-#define carr  (int8_t [5]){0, 10, 15, 20, 25}
+#define carr  (uint8_t [5]){0, 10, 15, 20, 25}
 
 #define line1  (Line){ \
     .a = (Point){.x = carr[1], .y = carr[2]}, \
@@ -65,8 +65,9 @@ int main(void)
 {
     const float lines_0_len = lineLength(lines[0]);
     const float lines_1_len = lineLength(lines[1]);
-    printf("lines_0_len = %f\n", lines_0_len);
-    printf("lines_1_len = %f\n", lines_1_len);
+
+    //printf("lines_0_len = %f\n", lines_0_len)
+    //printf("lines_1_len = %f\n", lines_1_len)
 
     return 0;
 }

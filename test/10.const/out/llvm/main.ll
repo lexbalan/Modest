@@ -277,8 +277,6 @@ declare double @max_float64(double, double)
 
 ; -- SOURCE: src/main.cm
 
-@str1.c8 = private constant [18 x i8] c"lines_0_len = %f\0A\00"
-@str2.c8 = private constant [18 x i8] c"lines_1_len = %f\0A\00"
 
 
 
@@ -371,8 +369,8 @@ define i32 @main() {
     %8 = getelementptr inbounds [2 x %Line], [2 x %Line]* %7, i32 0, i32 1
     %9 = load %Line, %Line* %8
     %10 = call double(%Line) @lineLength (%Line %9)
-    %11 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str1.c8, double %5)
-    %12 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str2.c8, double %10)
+;printf("lines_0_len = %f\n", lines_0_len)
+;printf("lines_1_len = %f\n", lines_1_len)
     ret i32 0
 }
 

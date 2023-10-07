@@ -1,0 +1,304 @@
+
+target triple = "arm64-apple-darwin21.6.0"
+
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
+
+
+
+%Char = type i8
+%ConstChar = type i8
+%SignedChar = type i8
+%UnsignedChar = type i8
+%Short = type i16
+%UnsignedShort = type i16
+%Int = type i32
+%UnsignedInt = type i32
+%LongInt = type i64
+%UnsignedLongInt = type i64
+%Long = type i64
+%UnsignedLong = type i64
+%LongLong = type i64
+%UnsignedLongLong = type i64
+%LongLongInt = type i64
+%UnsignedLongLongInt = type i64
+%Float = type double
+%Double = type double
+%LongDouble = type double
+%SizeT = type i64
+%SSizeT = type i64
+
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
+
+
+
+
+
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
+
+
+
+
+%FposT = type opaque
+%FILE = type opaque
+
+%CharStr = type [0 x i8]*
+%ConstCharStr = type [0 x i8]*
+
+
+declare i32 @fclose(%FILE*)
+declare i32 @feof(%FILE*)
+declare i32 @ferror(%FILE*)
+declare i32 @fflush(%FILE*)
+declare i32 @fgetpos(%FILE*, %FposT*)
+declare %FILE* @fopen(%ConstCharStr, %ConstCharStr)
+declare i64 @fread(i8*, i64, i64, %FILE*)
+declare i64 @fwrite(i8*, i64, i64, %FILE*)
+declare %FILE* @freopen(%ConstCharStr, %ConstCharStr, %FILE*)
+declare i32 @fseek(%FILE*, i64, i32)
+declare i32 @fsetpos(%FILE*, %FposT*)
+declare i64 @ftell(%FILE*)
+declare i32 @remove(%ConstCharStr)
+declare i32 @rename(%ConstCharStr, %ConstCharStr)
+declare void @rewind(%FILE*)
+declare void @setbuf(%FILE*, %CharStr)
+
+
+declare i32 @setvbuf(%FILE*, %CharStr, i32, i64)
+declare %FILE* @tmpfile()
+declare %CharStr @tmpnam(%CharStr)
+declare i32 @printf(%ConstCharStr, ...)
+declare i32 @scanf(%ConstCharStr, ...)
+declare i32 @fprintf(%FILE*, [0 x i8]*, ...)
+declare i32 @fscanf(%FILE*, %ConstCharStr, ...)
+declare i32 @sscanf(%ConstCharStr, %ConstCharStr, ...)
+declare i32 @sprintf(%CharStr, %ConstCharStr, ...)
+
+
+declare i32 @fgetc(%FILE*)
+declare i32 @fputc(i32, %FILE*)
+declare %CharStr @fgets(%CharStr, i32, %FILE*)
+declare i32 @fputs(%ConstCharStr, %FILE*)
+declare i32 @getc(%FILE*)
+declare i32 @getchar()
+declare %CharStr @gets(%CharStr)
+declare i32 @putc(i32, %FILE*)
+declare i32 @putchar(i32)
+declare i32 @puts(%ConstCharStr)
+declare i32 @ungetc(i32, %FILE*)
+declare void @perror(%ConstCharStr)
+
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/libc.hm
+
+
+
+
+%DevT = type i16
+
+
+%InoT = type i32
+
+
+%BlkCntT = type i32
+
+
+%OffT = type i32
+
+
+%NlinkT = type i16
+
+
+%ModeT = type i32
+
+
+%UIDT = type i16
+
+
+%GIDT = type i8
+
+
+%BlkSizeT = type i16
+
+
+%TimeT = type i32
+
+
+%DIR = type opaque
+
+
+declare i64 @clock()
+declare i8* @malloc(i64)
+declare i8* @memset(i8*, i32, i64)
+declare i8* @memcpy(i8*, i8*, i64)
+declare i32 @memcmp(i8*, i8*, i64)
+declare void @free(i8*)
+declare i32 @strncmp(i8*, i8*, i64)
+declare i32 @strcmp(i8*, i8*)
+declare i8* @strcpy(i8*, i8*)
+declare i64 @strlen(i8*)
+
+
+declare i32 @ftruncate(i32, i32)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+declare i32 @creat([0 x i8]*, i32)
+declare i32 @open([0 x i8]*, i32)
+declare i32 @read(i32, i8*, i32)
+declare i32 @write(i32, i8*, i32)
+declare i32 @lseek(i32, i32, i32)
+declare i32 @close(i32)
+declare void @exit(i32)
+
+
+declare %DIR* @opendir([0 x i8]*)
+declare i32 @closedir(%DIR*)
+
+
+declare [0 x i8]* @getcwd([0 x i8]*, i64)
+declare [0 x i8]* @getenv([0 x i8]*)
+
+; -- SOURCE: src/main.cm
+
+@str1.c8 = private constant [13 x i8] c"Hello World!\00"
+@str2.c8 = private constant [4 x i8] c"abc\00"
+@str3.c8 = private constant [8 x i8] c"0x%02X \00"
+@str4.c8 = private constant [2 x i8] c"\0A\00"
+@str5.c8 = private constant [21 x i8] c"test xor encrypting\0A\00"
+@str6.c8 = private constant [19 x i8] c"before test_msg: \0A\00"
+@str7.c8 = private constant [18 x i8] c"after test_msg: \0A\00"
+@str8.c8 = private constant [19 x i8] c"after2 test_msg: \0A\00"
+
+
+
+define void @xor_encrypter([0 x i8]* %buf, i32 %buflen, [0 x i8]* %key, i32 %keylen) {
+    %i = alloca i32
+    store i32 0, i32* %i
+    %j = alloca i32
+    store i32 0, i32* %j
+    br label %again_1
+again_1:
+    %1 = load i32, i32* %i
+    %2 = icmp ult i32 %1, %buflen
+    br i1 %2 , label %body_1, label %break_1
+body_1:
+    %3 = load i32, i32* %i
+    %4 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %3
+    %5 = load i8, i8* %4
+    %6 = load i32, i32* %j
+    %7 = getelementptr inbounds [0 x i8], [0 x i8]* %key, i32 0, i32 %6
+    %8 = load i8, i8* %7
+    %9 = xor i8 %5, %8
+    %10 = load i32, i32* %i
+    %11 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %10
+    store i8 %9, i8* %11
+    %12 = load i32, i32* %i
+    %13 = add i32 %12, 1
+    store i32 %13, i32* %i
+    %14 = load i32, i32* %j
+    %15 = sub i32 %keylen, 1
+    %16 = icmp ult i32 %14, %15
+    br i1 %16 , label %then_0, label %else_0
+then_0:
+    %17 = load i32, i32* %j
+    %18 = add i32 %17, 1
+    store i32 %18, i32* %j
+    br label %endif_0
+else_0:
+    store i32 0, i32* %j
+    br label %endif_0
+endif_0:
+    br label %again_1
+break_1:
+    ret void
+}
+
+
+
+
+@test_msg = global [13 x i8] [
+  i8 72,
+  i8 101,
+  i8 108,
+  i8 108,
+  i8 111,
+  i8 32,
+  i8 87,
+  i8 111,
+  i8 114,
+  i8 108,
+  i8 100,
+  i8 33,
+  i8 0
+]
+@test_key = global [13 x i8] [
+  i8 97,
+  i8 98,
+  i8 99,
+  i8 0,
+  i8 0,
+  i8 0,
+  i8 0,
+  i8 0,
+  i8 0,
+  i8 0,
+  i8 0,
+  i8 0,
+  i8 0
+]
+
+define void @print_bytes([0 x i8]* %buf, i32 %len) {
+    %i = alloca i32
+    store i32 0, i32* %i
+    br label %again_1
+again_1:
+    %1 = load i32, i32* %i
+    %2 = icmp ult i32 %1, %len
+    br i1 %2 , label %body_1, label %break_1
+body_1:
+    %3 = load i32, i32* %i
+    %4 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %3
+    %5 = load i8, i8* %4
+    %6 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str3.c8, i8 %5)
+    %7 = load i32, i32* %i
+    %8 = add i32 %7, 1
+    store i32 %8, i32* %i
+    br label %again_1
+break_1:
+    %9 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str4.c8)
+    ret void
+}
+
+define i32 @main() {
+    %1 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str5.c8)
+    %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str6.c8)
+    %3 = bitcast [13 x i8]* @test_msg to [0 x i8]*
+    call void([0 x i8]*, i32) @print_bytes ([0 x i8]* %3, i32 12)
+    %4 = bitcast [13 x i8]* @test_msg to [0 x i8]*
+    %5 = bitcast [13 x i8]* @test_key to [0 x i8]*
+    call void([0 x i8]*, i32, [0 x i8]*, i32) @xor_encrypter ([0 x i8]* %4, i32 12, [0 x i8]* %5, i32 12)
+    %6 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str7.c8)
+    %7 = bitcast [13 x i8]* @test_msg to [0 x i8]*
+    call void([0 x i8]*, i32) @print_bytes ([0 x i8]* %7, i32 12)
+    %8 = bitcast [13 x i8]* @test_msg to [0 x i8]*
+    %9 = bitcast [13 x i8]* @test_key to [0 x i8]*
+    call void([0 x i8]*, i32, [0 x i8]*, i32) @xor_encrypter ([0 x i8]* %8, i32 12, [0 x i8]* %9, i32 12)
+    %10 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str8.c8)
+    %11 = bitcast [13 x i8]* @test_msg to [0 x i8]*
+    call void([0 x i8]*, i32) @print_bytes ([0 x i8]* %11, i32 12)
+    ret i32 0
+}
+
+

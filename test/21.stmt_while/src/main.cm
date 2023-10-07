@@ -1,4 +1,4 @@
-// examples/stmt_while/main.cm
+// test/stmt_while/main.cm
 
 @attribute("c-no-print")
 import "libc/stdio.hm"
