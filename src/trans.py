@@ -1269,6 +1269,9 @@ def do_stmt_let(x):
     const_value = hlir_value_const(id, v['type'], value=v, ti=x['id']['ti'])
     const_value['att'].extend(['local']) # need for LLVM printer (!)
 
+    if 'nl_end' in v:
+        const_value['nl_end'] = v['nl_end']
+
     if value_is_immediate(v):
         value_set_imm(const_value, v['imm'])
 
@@ -1450,6 +1453,9 @@ def def_const(x):
     const_value = hlir_value_const(id, v['type'], v, x['ti'])
 
     value_set_imm(const_value, v['imm'])
+
+    if 'nl_end' in v:
+        const_value['nl_end'] = v['nl_end']
 
     atts = attributes_get()
     const_value['att'].extend(atts)
