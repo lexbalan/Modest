@@ -24,7 +24,7 @@ typedef struct {
 } Line;
 
 
-static Line line = (Line){
+Line line = (Line){
     .a = (Point){.x = 0, .y = 0},
     .b = (Point){.x = 1.0, .y = 1.0}
 };
