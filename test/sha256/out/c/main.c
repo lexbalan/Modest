@@ -189,14 +189,15 @@ void sha256_final(SHA256_Context *ctx, uint8_t *hash)
 
     i = 0;
     while (i < 4) {
-        hash[i + 0] = (uint8_t)(ctx->state[0] >> (24 - i * 8));
-        hash[i + 4] = (uint8_t)(ctx->state[1] >> (24 - i * 8));
-        hash[i + 8] = (uint8_t)(ctx->state[2] >> (24 - i * 8));
-        hash[i + 12] = (uint8_t)(ctx->state[3] >> (24 - i * 8));
-        hash[i + 16] = (uint8_t)(ctx->state[4] >> (24 - i * 8));
-        hash[i + 20] = (uint8_t)(ctx->state[5] >> (24 - i * 8));
-        hash[i + 24] = (uint8_t)(ctx->state[6] >> (24 - i * 8));
-        hash[i + 28] = (uint8_t)(ctx->state[7] >> (24 - i * 8));
+        const uint32_t sh = 24 - i * 8;
+        hash[i + 0] = (uint8_t)(ctx->state[0] >> sh);
+        hash[i + 4] = (uint8_t)(ctx->state[1] >> sh);
+        hash[i + 8] = (uint8_t)(ctx->state[2] >> sh);
+        hash[i + 12] = (uint8_t)(ctx->state[3] >> sh);
+        hash[i + 16] = (uint8_t)(ctx->state[4] >> sh);
+        hash[i + 20] = (uint8_t)(ctx->state[5] >> sh);
+        hash[i + 24] = (uint8_t)(ctx->state[6] >> sh);
+        hash[i + 28] = (uint8_t)(ctx->state[7] >> sh);
         i = i + 1;
     }
 }
@@ -270,10 +271,10 @@ bool sha256_doTest(SHA256_TestData *test)
 static uint8_t test_msg[13] = (uint8_t [13]){72U, 101U, 108U, 108U, 111U, 32U, 87U, 111U, 114U, 108U, 100U, 33U, 0U};
 static uint8_t test_hash[sha256HashSize];
 
+
 int main(void)
 {
     printf("test SHA256\n");
-
 
     int32_t i = (int32_t)0;
     while (i < nTests) {

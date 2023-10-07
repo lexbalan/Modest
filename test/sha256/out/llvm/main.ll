@@ -180,8 +180,8 @@ declare [0 x i8]* @getenv([0 x i8]*)
 @str6.c8 = private constant [2 x i8] c"\0A\00"
 @str7.c8 = private constant [13 x i8] c"Hello World!\00"
 @str8.c8 = private constant [13 x i8] c"test SHA256\0A\00"
-@str9.c8 = private constant [15 x i8] c"test%d passed\0A\00"
-@str10.c8 = private constant [15 x i8] c"test%d failed\0A\00"
+@str9.c8 = private constant [17 x i8] c"test #%d passed\0A\00"
+@str10.c8 = private constant [17 x i8] c"test #%d failed\0A\00"
 
 
 
