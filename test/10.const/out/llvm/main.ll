@@ -277,6 +277,8 @@ declare double @max_float64(double, double)
 
 ; -- SOURCE: src/main.cm
 
+@str1.c8 = private constant [18 x i8] c"lines_0_len = %f\0A\00"
+@str2.c8 = private constant [18 x i8] c"lines_1_len = %f\0A\00"
 
 
 
@@ -323,7 +325,7 @@ define double @lineLength(%Line %line) {
 }
 
 define i32 @main() {
-    %1 = insertvalue [2 x %Line] zeroinitializer, %Line {
+    %1 = call double(%Line) @lineLength (%Line {
   %Point {
     double 0.0,
     double 0.0
@@ -332,8 +334,8 @@ define i32 @main() {
     double 1.0,
     double 1.0
   }
-}, 0
-    %2 = insertvalue [2 x %Line] %1, %Line {
+})
+    %2 = call double(%Line) @lineLength (%Line {
   %Point {
     double 10.0,
     double 15.0
@@ -342,35 +344,9 @@ define i32 @main() {
     double 20.0,
     double 25.0
   }
-}, 1
-    %3 = getelementptr inbounds [2 x %Line], [2 x %Line]* %2, i32 0, i32 0
-    %4 = load %Line, %Line* %3
-    %5 = call double(%Line) @lineLength (%Line %4)
-    %6 = insertvalue [2 x %Line] zeroinitializer, %Line {
-  %Point {
-    double 0.0,
-    double 0.0
-  },
-  %Point {
-    double 1.0,
-    double 1.0
-  }
-}, 0
-    %7 = insertvalue [2 x %Line] %6, %Line {
-  %Point {
-    double 10.0,
-    double 15.0
-  },
-  %Point {
-    double 20.0,
-    double 25.0
-  }
-}, 1
-    %8 = getelementptr inbounds [2 x %Line], [2 x %Line]* %7, i32 0, i32 1
-    %9 = load %Line, %Line* %8
-    %10 = call double(%Line) @lineLength (%Line %9)
-;printf("lines_0_len = %f\n", lines_0_len)
-;printf("lines_1_len = %f\n", lines_1_len)
+})
+    %3 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str1.c8, double %1)
+    %4 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str2.c8, double %2)
     ret i32 0
 }
 

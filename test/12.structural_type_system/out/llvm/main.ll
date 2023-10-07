@@ -1,7 +1,7 @@
 
 target triple = "arm64-apple-darwin21.6.0"
 
-; -- MODULE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
 
 
 
@@ -27,13 +27,13 @@ target triple = "arm64-apple-darwin21.6.0"
 %SizeT = type i64
 %SSizeT = type i64
 
-; -- MODULE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
 
 
 
 
 
-; -- MODULE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
 
 
 
@@ -87,7 +87,7 @@ declare i32 @puts(%ConstCharStr)
 declare i32 @ungetc(i32, %FILE*)
 declare void @perror(%ConstCharStr)
 
-; -- MODULE: /Users/alexbalan/p/Modest/test/12.structural_type_system/src/main.cm
+; -- SOURCE: src/main.cm
 
 @str1.c8 = private constant [13 x i8] c"f0 x.x = %d\0A\00"
 @str2.c8 = private constant [13 x i8] c"f1 x.x = %d\0A\00"
@@ -190,54 +190,39 @@ define void @test_by_value() {
     %1 = load %Type1, %Type1* @a
     call void(%Type1) @f0 (%Type1 %1)
     %2 = load %Type1, %Type1* @a
-    %3 = uncast<record -> record> %Type1 %2 to %Type2
-    call void(%Type2) @f1 (%Type2 %3)
-    %4 = load %Type1, %Type1* @a
-    %5 = uncast<record -> record> %Type1 %4 to %Type3
-    call void(%Type3) @f2 (%Type3 %5)
+    call void(%Type2) @f1 (%Type2 %2)
+    %3 = load %Type1, %Type1* @a
+    call void(%Type3) @f2 (%Type3 %3)
 ;f3(a)
+    %4 = load %Type2, %Type2* @b
+    call void(%Type1) @f0 (%Type1 %4)
+    %5 = load %Type2, %Type2* @b
+    call void(%Type2) @f1 (%Type2 %5)
     %6 = load %Type2, %Type2* @b
-    %7 = uncast<record -> record> %Type2 %6 to %Type1
-    call void(%Type1) @f0 (%Type1 %7)
-    %8 = load %Type2, %Type2* @b
-    call void(%Type2) @f1 (%Type2 %8)
-    %9 = load %Type2, %Type2* @b
-    %10 = uncast<record -> record> %Type2 %9 to %Type3
-    call void(%Type3) @f2 (%Type3 %10)
+    call void(%Type3) @f2 (%Type3 %6)
 ;f3(b)
-    %11 = load %Type3, %Type3* @c
-    %12 = uncast<record -> record> %Type3 %11 to %Type1
-    call void(%Type1) @f0 (%Type1 %12)
-    %13 = load %Type3, %Type3* @c
-    %14 = uncast<record -> record> %Type3 %13 to %Type2
-    call void(%Type2) @f1 (%Type2 %14)
-    %15 = load %Type3, %Type3* @c
-    call void(%Type3) @f2 (%Type3 %15)
+    %7 = load %Type3, %Type3* @c
+    call void(%Type1) @f0 (%Type1 %7)
+    %8 = load %Type3, %Type3* @c
+    call void(%Type2) @f1 (%Type2 %8)
+    %9 = load %Type3, %Type3* @c
+    call void(%Type3) @f2 (%Type3 %9)
 ;f3(c)
     ret void
 }
 
 define void @test_by_pointer() {
-    %1 = bitcast %Type1* @a to %Type1*
-    call void(%Type1*) @f0p (%Type1* %1)
-    %2 = bitcast %Type1* @a to %Type2*
-    call void(%Type2*) @f1p (%Type2* %2)
-    %3 = bitcast %Type1* @a to %Type3*
-    call void(%Type3*) @f2p (%Type3* %3)
+    call void(%Type1*) @f0p (%Type1* @a)
+    call void(%Type2*) @f1p (%Type2* @a)
+    call void(%Type3*) @f2p (%Type3* @a)
 ;f3p(&a)
-    %4 = bitcast %Type2* @b to %Type1*
-    call void(%Type1*) @f0p (%Type1* %4)
-    %5 = bitcast %Type2* @b to %Type2*
-    call void(%Type2*) @f1p (%Type2* %5)
-    %6 = bitcast %Type2* @b to %Type3*
-    call void(%Type3*) @f2p (%Type3* %6)
+    call void(%Type1*) @f0p (%Type1* @b)
+    call void(%Type2*) @f1p (%Type2* @b)
+    call void(%Type3*) @f2p (%Type3* @b)
 ;f3p(&b)
-    %7 = bitcast %Type3* @c to %Type1*
-    call void(%Type1*) @f0p (%Type1* %7)
-    %8 = bitcast %Type3* @c to %Type2*
-    call void(%Type2*) @f1p (%Type2* %8)
-    %9 = bitcast %Type3* @c to %Type3*
-    call void(%Type3*) @f2p (%Type3* %9)
+    call void(%Type1*) @f0p (%Type1* @c)
+    call void(%Type2*) @f1p (%Type2* @c)
+    call void(%Type3*) @f2p (%Type3* @c)
 ;f3p(&c)
     ret void
 }

@@ -182,12 +182,13 @@ def print_value_record(x):
             item = x['items'][i]
             if i > 0:
                 out(",\n")
-            indent(); print_type_value(item['value']);
+            indent(); print_type_value(item['value'])
             i = i + 1
         indent_down()
         out("\n"); indent(); out("}")
     else:
         out("zeroinitializer")
+
 
 
 def print_value(x):
@@ -935,10 +936,15 @@ def do_eval(x):
     assert(x != None)
 
 
-    # compile time evaluation
-    if 'immediate' in x['att']:
-        if type.is_integer(x['type']):
-            return ll_create_value_num(x['type'], hlir_value_num_get(x))
+    # Way for IMMEDIATE values
+    if value_is_immediate(x):
+        xtype = x['type']
+        if type.is_integer(xtype):
+            return ll_create_value_num(xtype, hlir_value_num_get(x))
+        elif type.is_record(xtype):
+            return do_eval_record(x)
+        elif type.is_array(xtype):
+            return do_eval_array(x)
 
 
     # runtime evaluation

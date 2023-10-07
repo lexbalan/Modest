@@ -1,7 +1,7 @@
 
 target triple = "arm64-apple-darwin21.6.0"
 
-; -- MODULE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
 
 
 
@@ -27,13 +27,13 @@ target triple = "arm64-apple-darwin21.6.0"
 %SizeT = type i64
 %SSizeT = type i64
 
-; -- MODULE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
 
 
 
 
 
-; -- MODULE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
 
 
 
@@ -87,7 +87,7 @@ declare i32 @puts(%ConstCharStr)
 declare i32 @ungetc(i32, %FILE*)
 declare void @perror(%ConstCharStr)
 
-; -- MODULE: /Users/alexbalan/p/Modest/lib/misc/utf.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/misc/utf.hm
 
 
 declare void @utf32_to_utf8(i32, [5 x i8]*)
@@ -96,7 +96,7 @@ declare void @utf16_puts([0 x i16]*)
 declare void @utf32_puts([0 x i32]*)
 declare void @utf32_putchar(i32)
 
-; -- MODULE: /Users/alexbalan/p/Modest/examples/11.unicode/src/main.cm
+; -- SOURCE: src/main.cm
 
 @str1.c8 = private constant [7 x i8] c"Helo!\0A\00"
 @str2.c16 = private constant [8 x i16] [i16 72, i16 101, i16 108, i16 108, i16 111, i16 33, i16 10, i16 0]

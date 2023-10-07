@@ -1,4 +1,4 @@
-// examples/10.const/main.cm
+// test/10.const/main.cm
 import "libc/math.h"
 import "libc/stdio.h"
 import "libc/libc.h"
@@ -53,6 +53,7 @@ func lineLength (line : Line) -> Float {
 func main () -> Int {
     let lines_0_len = lineLength(lines[0])
     let lines_1_len = lineLength(lines[1])
+
     printf("lines_0_len = %f\n", lines_0_len)
     printf("lines_1_len = %f\n", lines_1_len)
 

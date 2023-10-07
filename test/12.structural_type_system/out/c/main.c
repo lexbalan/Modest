@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-// examples/12.structural_type_system/main.cm
+// test/12.structural_type_system/main.cm
 
 typedef struct {
     int32_t x;
@@ -62,9 +62,9 @@ void f3p(struct {    int32_t x;
 }
 
 
-static Type1 a = (Type1){.x = 1};
-static Type2 b = (Type2){.x = 2};
-static Type3 c = (Type3){.x = 3};
+Type1 a = (Type1){.x = 1};
+Type2 b = (Type2){.x = 2};
+Type3 c = (Type3){.x = 3};
 
 
 void test_by_value(void)

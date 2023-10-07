@@ -16,8 +16,12 @@ CM:
 
 
 LLVM:
+	mcc -o $(LLVMPREFIX)/minmax $(C_OPTIONS) -funsafe -mbackend=llvm ${MODEST_LIB}/misc/minmax.cm
+
 	mcc -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.cm
-	clang $(LLVMPREFIX)/main.ll
+	
+	clang $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/minmax.ll
+    
 
 
 C:
