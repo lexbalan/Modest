@@ -243,19 +243,10 @@ break_1:
   i8 33,
   i8 0
 ]
-@test_key = global [13 x i8] [
+@test_key = global [4 x i8] [
   i8 97,
   i8 98,
   i8 99,
-  i8 0,
-  i8 0,
-  i8 0,
-  i8 0,
-  i8 0,
-  i8 0,
-  i8 0,
-  i8 0,
-  i8 0,
   i8 0
 ]
 
@@ -287,14 +278,14 @@ define i32 @main() {
     %3 = bitcast [13 x i8]* @test_msg to [0 x i8]*
     call void([0 x i8]*, i32) @print_bytes ([0 x i8]* %3, i32 12)
     %4 = bitcast [13 x i8]* @test_msg to [0 x i8]*
-    %5 = bitcast [13 x i8]* @test_key to [0 x i8]*
-    call void([0 x i8]*, i32, [0 x i8]*, i32) @xor_encrypter ([0 x i8]* %4, i32 12, [0 x i8]* %5, i32 12)
+    %5 = bitcast [4 x i8]* @test_key to [0 x i8]*
+    call void([0 x i8]*, i32, [0 x i8]*, i32) @xor_encrypter ([0 x i8]* %4, i32 12, [0 x i8]* %5, i32 3)
     %6 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str7.c8)
     %7 = bitcast [13 x i8]* @test_msg to [0 x i8]*
     call void([0 x i8]*, i32) @print_bytes ([0 x i8]* %7, i32 12)
     %8 = bitcast [13 x i8]* @test_msg to [0 x i8]*
-    %9 = bitcast [13 x i8]* @test_key to [0 x i8]*
-    call void([0 x i8]*, i32, [0 x i8]*, i32) @xor_encrypter ([0 x i8]* %8, i32 12, [0 x i8]* %9, i32 12)
+    %9 = bitcast [4 x i8]* @test_key to [0 x i8]*
+    call void([0 x i8]*, i32, [0 x i8]*, i32) @xor_encrypter ([0 x i8]* %8, i32 12, [0 x i8]* %9, i32 3)
     %10 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str8.c8)
     %11 = bitcast [13 x i8]* @test_msg to [0 x i8]*
     call void([0 x i8]*, i32) @print_bytes ([0 x i8]* %11, i32 12)

@@ -29,11 +29,11 @@ void xor_encrypter(uint8_t *buf, uint32_t buflen, uint8_t *key, uint32_t keylen)
     }
 }
 
-//xorEncrypt = xor_encrypter
-//xorDecrypt = xor_encrypter
+//xor_encrypt = xor_encrypter
+//xor_decrypt = xor_encrypter
 
 #define msg_length  12
-#define key_length  12
+#define key_length  3
 
 static uint8_t test_msg[msg_length + 1] = (uint8_t [msg_length + 1]){72U, 101U, 108U, 108U, 111U, 32U, 87U, 111U, 114U, 108U, 100U, 33U, 0U};
 static uint8_t test_key[key_length + 1] = (uint8_t [key_length + 1]){97U, 98U, 99U, 0U};
@@ -48,6 +48,7 @@ void print_bytes(uint8_t *buf, uint32_t len)
     }
     printf("\n");
 }
+
 
 int main(void)
 {
