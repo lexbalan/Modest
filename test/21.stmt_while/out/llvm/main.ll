@@ -1,7 +1,7 @@
 
 target triple = "arm64-apple-darwin21.6.0"
 
-; -- MODULE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
 
 
 
@@ -27,13 +27,13 @@ target triple = "arm64-apple-darwin21.6.0"
 %SizeT = type i64
 %SSizeT = type i64
 
-; -- MODULE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
 
 
 
 
 
-; -- MODULE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
 
 
 
@@ -87,7 +87,7 @@ declare i32 @puts(%ConstCharStr)
 declare i32 @ungetc(i32, %FILE*)
 declare void @perror(%ConstCharStr)
 
-; -- MODULE: /Users/alexbalan/p/Modest/test/stmt_while/src/main.cm
+; -- SOURCE: src/main.cm
 
 @str1.c8 = private constant [17 x i8] c"test stmt_while\0A\00"
 @str2.c8 = private constant [8 x i8] c"a = %d\0A\00"
@@ -96,19 +96,20 @@ declare void @perror(%ConstCharStr)
 
 define i32 @main() {
     %1 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str1.c8)
+    %2 = sext i1 0 to i32
     %a = alloca i32
-    store i32 0, i32* %a
+    store i32 %2, i32* %a
     br label %again_1
 again_1:
-    %2 = load i32, i32* %a
-    %3 = icmp slt i32 %2, 10
-    br i1 %3 , label %body_1, label %break_1
+    %3 = load i32, i32* %a
+    %4 = icmp slt i32 %3, 10
+    br i1 %4 , label %body_1, label %break_1
 body_1:
-    %4 = load i32, i32* %a
-    %5 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str2.c8, i32 %4)
-    %6 = load i32, i32* %a
-    %7 = add i32 %6, 1
-    store i32 %7, i32* %a
+    %5 = load i32, i32* %a
+    %6 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str2.c8, i32 %5)
+    %7 = load i32, i32* %a
+    %8 = add i32 %7, 1
+    store i32 %8, i32* %a
     br label %again_1
 break_1:
     ret i32 0

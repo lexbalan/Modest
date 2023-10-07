@@ -1,11 +1,11 @@
-// examples/stmt_while/main.cm
+// test/stmt_while/main.cm
 import "libc/stdio.h"
 
 
 func main () -> Int {
     printf("test stmt_while\n")
 
-    var a : Int32 := 0
+    var a : Int32 := 0 to Int32
     let b = 10
 
     while a < b {

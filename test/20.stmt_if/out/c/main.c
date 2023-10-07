@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-// examples/stmt_if/main.cm
+// test/stmt_if/main.cm
 
 
 int main(void)

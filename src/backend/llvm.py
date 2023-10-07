@@ -887,6 +887,7 @@ def do_eval_array(v):
             'isa': 'llvm_value',
             'class': 'array',
             'level': 'value',
+            'type': v['type'],
             'items': items,
             'proto': v
         }
@@ -1587,7 +1588,7 @@ def print_field(x):
 
 
 def print_def_var(x):
-    mods = ['external', 'global', 'constant']
+    #mods = ['external', 'global', 'constant']
     mod = 'global'
     out("\n@")
     var = x['value']

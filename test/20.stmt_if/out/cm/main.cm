@@ -1,4 +1,4 @@
-// examples/stmt_if/main.cm
+// test/stmt_if/main.cm
 import "libc/stdio.h"
 
 

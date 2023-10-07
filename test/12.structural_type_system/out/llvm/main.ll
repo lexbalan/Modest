@@ -113,25 +113,25 @@ declare void @perror(%ConstCharStr)
 }
 
 
-define void @f0(%Type1 %x) {
+define void @f0_val(%Type1 %x) {
     %1 = extractvalue %Type1 %x, 0
     %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str1.c8, i32 %1)
     ret void
 }
 
-define void @f1(%Type2 %x) {
+define void @f1_val(%Type2 %x) {
     %1 = extractvalue %Type2 %x, 0
     %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str2.c8, i32 %1)
     ret void
 }
 
-define void @f2(%Type3 %x) {
+define void @f2_val(%Type3 %x) {
     %1 = extractvalue %Type3 %x, 0
     %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str3.c8, i32 %1)
     ret void
 }
 
-define void @f3({
+define void @f3_val({
 	i32
 } %x) {
     %1 = extractvalue {
@@ -141,28 +141,28 @@ define void @f3({
     ret void
 }
 
-define void @f0p(%Type1* %x) {
+define void @f0_ptr(%Type1* %x) {
     %1 = getelementptr inbounds %Type1, %Type1* %x, i32 0, i32 0
     %2 = load i32, i32* %1
     %3 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str5.c8, i32 %2)
     ret void
 }
 
-define void @f1p(%Type2* %x) {
+define void @f1_ptr(%Type2* %x) {
     %1 = getelementptr inbounds %Type2, %Type2* %x, i32 0, i32 0
     %2 = load i32, i32* %1
     %3 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str6.c8, i32 %2)
     ret void
 }
 
-define void @f2p(%Type3* %x) {
+define void @f2_ptr(%Type3* %x) {
     %1 = getelementptr inbounds %Type3, %Type3* %x, i32 0, i32 0
     %2 = load i32, i32* %1
     %3 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str7.c8, i32 %2)
     ret void
 }
 
-define void @f3p({
+define void @f3_ptr({
 	i32
 }* %x) {
     %1 = getelementptr inbounds {
@@ -188,42 +188,42 @@ define void @f3p({
 
 define void @test_by_value() {
     %1 = load %Type1, %Type1* @a
-    call void(%Type1) @f0 (%Type1 %1)
+    call void(%Type1) @f0_val (%Type1 %1)
     %2 = load %Type1, %Type1* @a
-    call void(%Type2) @f1 (%Type2 %2)
+    call void(%Type2) @f1_val (%Type2 %2)
     %3 = load %Type1, %Type1* @a
-    call void(%Type3) @f2 (%Type3 %3)
-;f3(a)
+    call void(%Type3) @f2_val (%Type3 %3)
+;f3_val(a)
     %4 = load %Type2, %Type2* @b
-    call void(%Type1) @f0 (%Type1 %4)
+    call void(%Type1) @f0_val (%Type1 %4)
     %5 = load %Type2, %Type2* @b
-    call void(%Type2) @f1 (%Type2 %5)
+    call void(%Type2) @f1_val (%Type2 %5)
     %6 = load %Type2, %Type2* @b
-    call void(%Type3) @f2 (%Type3 %6)
-;f3(b)
+    call void(%Type3) @f2_val (%Type3 %6)
+;f3_val(b)
     %7 = load %Type3, %Type3* @c
-    call void(%Type1) @f0 (%Type1 %7)
+    call void(%Type1) @f0_val (%Type1 %7)
     %8 = load %Type3, %Type3* @c
-    call void(%Type2) @f1 (%Type2 %8)
+    call void(%Type2) @f1_val (%Type2 %8)
     %9 = load %Type3, %Type3* @c
-    call void(%Type3) @f2 (%Type3 %9)
-;f3(c)
+    call void(%Type3) @f2_val (%Type3 %9)
+;f3_val(c)
     ret void
 }
 
 define void @test_by_pointer() {
-    call void(%Type1*) @f0p (%Type1* @a)
-    call void(%Type2*) @f1p (%Type2* @a)
-    call void(%Type3*) @f2p (%Type3* @a)
-;f3p(&a)
-    call void(%Type1*) @f0p (%Type1* @b)
-    call void(%Type2*) @f1p (%Type2* @b)
-    call void(%Type3*) @f2p (%Type3* @b)
-;f3p(&b)
-    call void(%Type1*) @f0p (%Type1* @c)
-    call void(%Type2*) @f1p (%Type2* @c)
-    call void(%Type3*) @f2p (%Type3* @c)
-;f3p(&c)
+    call void(%Type1*) @f0_ptr (%Type1* @a)
+    call void(%Type2*) @f1_ptr (%Type2* @a)
+    call void(%Type3*) @f2_ptr (%Type3* @a)
+;f3_ptr(&a)
+    call void(%Type1*) @f0_ptr (%Type1* @b)
+    call void(%Type2*) @f1_ptr (%Type2* @b)
+    call void(%Type3*) @f2_ptr (%Type3* @b)
+;f3_ptr(&b)
+    call void(%Type1*) @f0_ptr (%Type1* @c)
+    call void(%Type2*) @f1_ptr (%Type2* @c)
+    call void(%Type3*) @f2_ptr (%Type3* @c)
+;f3_ptr(&c)
     ret void
 }
 

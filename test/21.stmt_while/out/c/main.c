@@ -4,15 +4,15 @@
 #include <string.h>
 #include <stdbool.h>
 
-// examples/stmt_while/main.cm
+// test/stmt_while/main.cm
 
 
 int main(void)
 {
     printf("test stmt_while\n");
 
-    int a = 0;
-    const int8_t b = 10;
+    int32_t a = (int32_t)0;
+    const uint8_t b = 10;
 
     while (a < b) {
         printf("a = %d\n", a);
