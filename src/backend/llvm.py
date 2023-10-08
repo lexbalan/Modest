@@ -63,8 +63,8 @@ def reg_get():
     return str(reg)
 
 
-def operation (op):
-    reg = reg_get ()
+def operation(op):
+    reg = reg_get()
     out("\n    %%%s = %s " % (reg, op))
     return reg
 
@@ -441,6 +441,17 @@ def do_eval_expr_bin(x):
 
 
 
+def deref(x):
+    vx = do_ld(do_eval(x['value']))
+    return llvm_deref(vx)
+
+
+def llvm_deref(x):
+    nv = copy.copy(x)
+    nv['level'] = 'adr'
+    #nv['proto'] = proto
+    return nv
+
 
 def do_eval_expr_un(v):
 
@@ -470,10 +481,7 @@ def do_eval_expr_un(v):
     vx = do_ld(ve)    #!
 
     if v['kind'] == 'deref':
-        nv = copy.copy(vx)
-        nv['level'] = 'adr'
-        nv['proto'] = v    # for type
-        return nv
+        return deref(v)
 
     reg = None
     if v['kind'] == 'not':
@@ -745,6 +753,8 @@ def select_cast_operator(a, b):
             else:
                 return 'bitcast'
 
+
+
     return 'uncast<%s -> %s>' % (a['kind'], b['kind'])
 
 
@@ -778,11 +788,46 @@ def do_eval_expr_ccast(x):
 
 
 
-
-def do_eval_expr_cast(v):
-    value = v['value']
+# перепаковываем структуру в такую же структуру
+# (просто с другим именем, изза чего LLVM ее считает "другой")
+def cast_record_to_record(to_type, value, ti):
+    #info("cast_record_to_record", ti)
     from_type = value['type']
-    to_type = v['type']
+    # создаем переменную под структуру A
+    y = do_ld(do_eval(value))
+    reg = reg_get()
+    struct = ll_alloca(reg, value['type'], y)
+    # приводим указатель на нее к указателю на структуру B
+    new_struct_ptr = opcast("bitcast", hlir_type_pointer(from_type), hlir_type_pointer(to_type), struct)
+    # загружаем структуру B и возвращаем ее
+    new_struct = llvm_deref(new_struct_ptr)
+    return new_struct
+
+
+
+
+def opcast(opcode, from_type, to_type, value):
+    reg = operation(opcode)
+    print_type(from_type)
+    out(" ")
+    print_value(value)
+    out(" to ")
+    print_type(to_type)
+
+    return {
+        'isa': 'llvm_value',
+        'class': 'reg',
+        'level': 'value',
+        'reg': reg,
+        'type': to_type,
+        'proto': value
+    }
+
+
+def do_eval_expr_cast(x):
+    value = x['value']
+    from_type = value['type']
+    to_type = x['type']
 
 
     # cast any type to Unit type
@@ -798,26 +843,21 @@ def do_eval_expr_cast(v):
                     return ll_create_value_null(to_type)
 
 
-    y = do_ld(do_eval(value))
+    # Cm имеет структурную систему типов, тогда как llvm - номинативную
+    # приведение структуры к структуре по значению не поддерживается LLVM
+    # поэтому делаем его отдельно
+    if type.is_record(from_type):
+        if type.is_record(to_type):
+            return cast_record_to_record(to_type, value, x['ti'])
 
-    if type.eq(v['type'], v['value']['type']):
-        return y
+
+    v = do_ld(do_eval(value))
+
+    #if type.eq(v['type'], v['value']['type']):
+    #    return y
 
     opcode = select_cast_operator(from_type, to_type)
-    reg = operation(opcode)
-    print_type(from_type)
-    out(" ")
-    print_value(y)
-    out(" to ")
-    print_type(to_type)
-    return {
-        'isa': 'llvm_value',
-        'class': 'reg',
-        'level': 'value',
-        'reg': reg,
-        'type': to_type,
-        'proto': v
-    }
+    return opcast(opcode, from_type, to_type, v)
 
 
 

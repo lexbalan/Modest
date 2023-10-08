@@ -67,6 +67,7 @@ Type2 b = (Type2){.x = 2};
 Type3 c = (Type3){.x = 3};
 
 
+
 void test_by_value(void)
 {
     f0_val(a);
@@ -84,6 +85,7 @@ void test_by_value(void)
     f2_val(c);
     //f3_val(c)
 }
+
 
 void test_by_pointer(void)
 {

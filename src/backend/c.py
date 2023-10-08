@@ -531,14 +531,8 @@ def print_value_ccast(v, ctx):
             elif char_power > 8:
                 prefix = "u"
 
-            """if char_power > 8:
-                out("(")
-                print_type(to_type, need_space_after=False, _print_array_asis=True)
-                out(")")"""
-
             print_value_literal_str(value, ctx=[], prefix=prefix)
             return
-
 
     #need_wrap = precedence(value['kind']) < precedenceMax
     print_value(value, ctx)#, need_wrap=need_wrap)

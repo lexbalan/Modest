@@ -54,6 +54,7 @@ var b : Type2 := {x=2}
 var c : Type3 := {x=3}
 
 
+
 func test_by_value() -> Unit {
     f0_val(a)
     f1_val(a)
@@ -70,6 +71,7 @@ func test_by_value() -> Unit {
     f2_val(c)
     //f3_val(c)
 }
+
 
 func test_by_pointer() -> Unit {
     f0_ptr(&a)
