@@ -6,7 +6,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-// examples/records/main.cm
+// examples/fsm/fsm.cm
 
 
 #define fsmNameLength  8
@@ -33,13 +33,13 @@ typedef struct {
 #define fsmSubstateLoop  1
 #define fsmSubstateLeaving  2
 
-typedef uint32_t N32;
+typedef uint32_t UInt32;
 
 struct FSM {
     uint8_t name[fsmNameLength];
-    N32 state;
-    N32 nexstate;
-    N32 substate;
+    UInt32 state;
+    UInt32 nexstate;
+    UInt32 substate;
     FSM_StateDesc states[fsmMaxStates];
 };
 

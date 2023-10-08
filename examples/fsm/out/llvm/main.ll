@@ -105,7 +105,7 @@ declare void @perror(%ConstCharStr)
 
 
 
-%N32 = type i32
+%UInt32 = type i32
 %FSM = type {
 	[8 x i8],
 	i32,
@@ -328,7 +328,6 @@ define void @beacon_exit(%FSM* %fsm) {
     %FSM_StateDesc zeroinitializer
   ]
 }
-
 
 define i32 @main() {
     br label %again_1

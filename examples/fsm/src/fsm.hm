@@ -23,13 +23,13 @@ const fsmSubstateEntering = 0
 const fsmSubstateLoop = 1
 const fsmSubstateLeaving = 2
 
-type N32 Nat32
+type UInt32 Nat32
 
 type FSM record {
   name : [fsmNameLength]Nat8
-  state : N32
-  nexstate : N32
-  substate : N32
+  state : UInt32
+  nexstate : UInt32
+  substate : UInt32
   states : [fsmMaxStates]FSM_StateDesc
 }
 

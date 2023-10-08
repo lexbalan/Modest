@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdbool.h>
 
-// examples/records/main.cm
+// examples/fsm/fsm.cm
 
 #include "./fsm.h"
 
@@ -33,7 +33,7 @@ void fsm_switch(FSM *fsm, uint32_t state)
 void fsm_run(FSM *fsm)
 {
     if (fsm->substate == fsmSubstateEntering) {
-        const N32 nexstate = fsm->nexstate;
+        const UInt32 nexstate = fsm->nexstate;
         FSM_StateDesc *const s = &fsm->states[nexstate];
 
         if (fsmVerbose) {

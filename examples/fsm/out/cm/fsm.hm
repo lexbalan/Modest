@@ -1,4 +1,4 @@
-// examples/records/main.cm
+// examples/fsm/fsm.cm
 
 
 const fsmNameLength = 8
@@ -24,13 +24,13 @@ const fsmSubstateEntering = 0
 const fsmSubstateLoop = 1
 const fsmSubstateLeaving = 2
 
-type N32 N32
+type UInt32 UInt32
 
 type FSM record {
     name : [fsmNameLength]Nat8
-    state : N32
-    nexstate : N32
-    substate : N32
+    state : UInt32
+    nexstate : UInt32
+    substate : UInt32
     states : [fsmMaxStates]FSM_StateDesc
 }
 

@@ -5,7 +5,10 @@
 #include <string.h>
 #include <stdbool.h>
 
-// examples/records/main.cm
+// examples/fsm/main.cm
+
+// This is flashlight final state machine example
+// (just for compiler test and language demonstration)
 
 #include "./fsm.h"
 
@@ -30,6 +33,7 @@ void off_entry(FSM *fsm)
     //printf("off_entry\n")
 }
 
+
 void off_loop(FSM *fsm)
 {
     (void)fsm;
@@ -42,6 +46,7 @@ void off_loop(FSM *fsm)
         fsm_switch((FSM *)fsm, flashlightStateOn);
     }
 }
+
 
 void off_exit(FSM *fsm)
 {
@@ -60,6 +65,7 @@ void on_entry(FSM *fsm)
     //printf("on_entry\n")
 }
 
+
 void on_loop(FSM *fsm)
 {
     (void)fsm;
@@ -71,6 +77,7 @@ void on_loop(FSM *fsm)
         fsm_switch((FSM *)fsm, flashlightStateBeacon);
     }
 }
+
 
 void on_exit(FSM *fsm)
 {
@@ -108,10 +115,7 @@ void beacon_exit(FSM *fsm)
     printf("beacon_exit to %s\n", to_name);
 }
 
-// 1. получаем все элементы массива (пусть и GFeneric)
-// 2. Первый not-generic тип становится типом всего массива
-// 3. Если нет not-generic типа, выводим общий generic тип (произведение)
-//
+
 
 // FIXIT: если не приводить явно to FSM_StateDesc
 FSM fsm = (FSM){
@@ -145,48 +149,11 @@ FSM fsm = (FSM){
 };
 
 
-// Geany
-// в C сдвиг 64 битного на 64 - UB
-// Зато 2 to Nat64 << 63 - это все же 0 (!)
-// в CM - это просто 0
-//const X = 1 << 63
-//const Y = 0x8000000000 //>> 14
-// есть проболема перекрытия имен дефина на локальное (!)
-
-
-/*
-type AB record {
-    a : Int32
-    b : Int32
-}
-
-const x = {a=10, b=20} to AB
-
-const VER = [0, 1, 2, 3]
-
-    let v = VER
-    printf("ver %d.%d.%d.%d\n", v[0], v[1], v[2], v[3])
-
-    printf("x.a = %d", x.a)
-
-    ff_print_hex_n32(0x1234567F, "A"[0])
-    printf("\n")
-    ff_print_hex_n64(0x0123456789ABCDEF, "A"[0])
-    printf("\n")
-    ff_print_hex_n128(0x0123456789ABCDE0F123456789ABCDEF, "A"[0])
-    printf("\n")
-
-    let y = 0x0123456789ABCDE0F123456789ABCDEF + 1
-    ff_print_hex_n128(y, "A"[0])
-    printf("\n")
-*/
-
 
 int main(void)
 {
 
-    const bool cond = true;
-    while (cond) {
+    while (true) {
         fsm_run((FSM *)&fsm);
         delay(500000);
     }

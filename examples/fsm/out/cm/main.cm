@@ -1,4 +1,7 @@
-// examples/records/main.cm
+// examples/fsm/main.cm
+
+// This is flashlight final state machine example
+// (just for compiler test and language demonstration)
 import "libc/stdio.h"
 
 import "./fsm.h"
@@ -24,6 +27,7 @@ func off_entry (fsm : *FSM) -> Unit {
     //printf("off_entry\n")
 }
 
+
 func off_loop (fsm : *FSM) -> Unit {
     fsm to Unit
 
@@ -35,6 +39,7 @@ func off_loop (fsm : *FSM) -> Unit {
         fsm_switch(fsm to *FSM, flashlightStateOn)
     }
 }
+
 
 func off_exit (fsm : *FSM) -> Unit {
     fsm to Unit
@@ -51,6 +56,7 @@ func on_entry (fsm : *FSM) -> Unit {
     //printf("on_entry\n")
 }
 
+
 func on_loop (fsm : *FSM) -> Unit {
     fsm to Unit
     printf("on_loop\n")
@@ -61,6 +67,7 @@ func on_loop (fsm : *FSM) -> Unit {
         fsm_switch(fsm to *FSM, flashlightStateBeacon)
     }
 }
+
 
 func on_exit (fsm : *FSM) -> Unit {
     fsm to Unit
@@ -94,10 +101,7 @@ func beacon_exit (fsm : *FSM) -> Unit {
     printf("beacon_exit to %s\n", to_name)
 }
 
-// 1. получаем все элементы массива (пусть и GFeneric)
-// 2. Первый not-generic тип становится типом всего массива
-// 3. Если нет not-generic типа, выводим общий generic тип (произведение)
-//
+
 
 // FIXIT: если не приводить явно to FSM_StateDesc
 var fsm : FSM := {
@@ -131,47 +135,10 @@ var fsm : FSM := {
 }
 
 
-// Geany
-// в C сдвиг 64 битного на 64 - UB
-// Зато 2 to Nat64 << 63 - это все же 0 (!)
-// в CM - это просто 0
-//const X = 1 << 63
-//const Y = 0x8000000000 //>> 14
-// есть проболема перекрытия имен дефина на локальное (!)
-
-
-/*
-type AB record {
-    a : Int32
-    b : Int32
-}
-
-const x = {a=10, b=20} to AB
-
-const VER = [0, 1, 2, 3]
-
-    let v = VER
-    printf("ver %d.%d.%d.%d\n", v[0], v[1], v[2], v[3])
-
-    printf("x.a = %d", x.a)
-
-    ff_print_hex_n32(0x1234567F, "A"[0])
-    printf("\n")
-    ff_print_hex_n64(0x0123456789ABCDEF, "A"[0])
-    printf("\n")
-    ff_print_hex_n128(0x0123456789ABCDE0F123456789ABCDEF, "A"[0])
-    printf("\n")
-
-    let y = 0x0123456789ABCDE0F123456789ABCDEF + 1
-    ff_print_hex_n128(y, "A"[0])
-    printf("\n")
-*/
-
 
 func main () -> Int {
 
-    let cond = 1
-    while cond {
+    while 1 {
         fsm_run(&fsm to *FSM)
         delay(500000)
     }
