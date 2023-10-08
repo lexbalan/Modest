@@ -1,0 +1,14 @@
+// lib/fastfood/main.hm
+
+func ff_memzero (mem : Pointer, len : Nat64) -> Unit
+func ff_memcpy (dst : Pointer, src : Pointer, len : Nat64) -> Unit
+func ff_cstrlen (cstr : *[]Nat8) -> Nat64
+func delay_us (us : Nat64) -> Unit
+func delay_ms (ms : Nat64) -> Unit
+func delay_s (s : Nat64) -> Unit
+func delay (us : Nat64) -> Unit
+
+func ff_print_hex_n32 (x : Nat32, a : Nat8) -> Unit
+func ff_print_hex_n64 (x : Nat64, a : Nat8) -> Unit
+func ff_print_hex_n128 (x : Nat128, a : Nat8) -> Unit
+

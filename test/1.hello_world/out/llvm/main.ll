@@ -89,7 +89,7 @@ declare void @perror(%ConstCharStr)
 
 ; -- SOURCE: src/main.cm
 
-@str1.c8 = private constant [14 x i8] c"Hello World!\0A\00"
+@str1.c8 = private constant [19 x i8] c"Hello World! 🎉\0A\00"
 
 
 

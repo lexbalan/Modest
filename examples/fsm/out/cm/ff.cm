@@ -1,0 +1,95 @@
+
+// for clock()
+import "libc/libc.h"
+
+// for printf
+import "libc/stdio.h"
+
+
+type ArchInt ArchInt
+type ArchNat ArchNat
+
+
+func ff_memzero (mem : Pointer, len : Nat64) -> Unit {
+    let len_words = len / (sizeof(ArchNat))
+
+    let dst_word = mem
+
+    var i : Nat64 := 0 to Nat64
+    while i < len_words {
+        dst_word[i] := 0
+        i := i + 1
+    }
+
+
+    let len_bytes = len % (sizeof(ArchNat))
+
+    let dst_byte = &dst_word[i] to *[]Nat8
+
+    i := 0
+    while i < len_bytes {
+        dst_byte[i] := 0
+        i := i + 1
+    }
+}
+
+
+func ff_memcpy (dst : Pointer, src : Pointer, len : Nat64) -> Unit {
+    let len_words = len / (sizeof(ArchNat))
+
+    let src_w = src
+    let dst_w = dst
+
+    var i : Nat64 := 0 to Nat64
+    while i < len_words {
+        dst_w[i] := src_w[i]
+        i := i + 1
+    }
+
+
+    let len_bytes = len % (sizeof(ArchNat))
+
+    let src_b = &src_w[i] to *[]Nat8
+    let dst_b = &dst_w[i] to *[]Nat8
+
+    i := 0
+    while i < len_bytes {
+        dst_b[i] := src_b[i]
+        i := i + 1
+    }
+}
+
+
+func ff_cstrlen (cstr : *[]Nat8) -> Nat64 {
+    var i : Nat64 := 0 to Nat64
+    while cstr[i] != 0 {
+        i := i + 1
+    }
+    return i
+}
+
+
+
+func delay_us (us : Nat64) -> Unit {
+    let start_time = clock()
+
+    while clock() < start_time + us {
+        // waiting
+    }
+}
+
+
+func delay (us : Nat64) -> Unit {
+    delay_us(us)
+}
+
+
+func delay_ms (ms : Nat64) -> Unit {
+    delay_us(ms * 1000)
+}
+
+
+func delay_s (s : Nat64) -> Unit {
+    delay_ms(s * 1000)
+}
+

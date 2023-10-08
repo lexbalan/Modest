@@ -1,0 +1,41 @@
+// examples/records/main.cm
+
+
+const fsmNameLength = 8
+const fsmMaxStates = 16
+
+
+type FSM
+
+type FSM_Proc *(fsm : *FSM) -> Unit
+
+type FSM_Empty record {
+}
+
+type FSM_StateDesc record {
+    name : [fsmNameLength]Nat8
+    entry : FSM_Proc
+    loop : FSM_Proc
+    exit : FSM_Proc
+}
+
+
+const fsmSubstateEntering = 0
+const fsmSubstateLoop = 1
+const fsmSubstateLeaving = 2
+
+type N32 N32
+
+type FSM record {
+    name : [fsmNameLength]Nat8
+    state : N32
+    nexstate : N32
+    substate : N32
+    states : [fsmMaxStates]FSM_StateDesc
+}
+
+
+func fsm_state_no_name (fsm : *FSM, state_no : Nat32) -> *[]Char8
+func fsm_switch (fsm : *FSM, state : Nat32) -> Unit
+func fsm_run (fsm : *FSM) -> Unit
+

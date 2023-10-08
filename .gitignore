@@ -5,3 +5,4 @@ a.out
 #examples/*
 *.pyc
 */__pycache__
+.vscode

@@ -1,0 +1,66 @@
+// examples/fsm/fsm.cm
+
+@attribute("c-no-print")
+import "libc/stdio.hm"
+
+import "./fsm.hm"
+
+
+const fsmVerbose = true
+
+const fsmSubstateEntering = 0
+const fsmSubstateLoop = 1
+const fsmSubstateLeaving = 2
+
+
+
+func fsm_state_no_name(fsm : *FSM, state_no : Nat32) -> Str {
+    return &fsm.states[state_no].name
+}
+
+
+func fsm_switch (fsm : *FSM, state : Nat32) {
+    fsm.nexstate := state
+    fsm.substate := fsmSubstateLeaving
+}
+
+
+func fsm_run (fsm : *FSM) {
+    if fsm.substate == fsmSubstateEntering {
+        let nexstate = fsm.nexstate
+        let s = &fsm.states[nexstate]
+
+        if fsmVerbose {
+            printf("enter %s\n", s.name)
+        }
+
+        if s.entry != nil {
+            s.entry(fsm)
+        }
+
+        fsm.state := nexstate
+        fsm.substate := fsmSubstateLoop
+
+    } else if fsm.substate == fsmSubstateLoop {
+        let s = &fsm.states[fsm.state]
+
+        if s.loop != nil {
+            s.loop(fsm)
+        }
+
+    } else if fsm.substate == fsmSubstateLeaving {
+        let s = &fsm.states[fsm.state]
+
+        if fsmVerbose {
+            printf("exit %s\n", s.name)
+        }
+
+        if s.exit != nil {
+            s.exit(fsm)
+        }
+
+        fsm.substate := fsmSubstateEntering
+    }
+}
+
+
