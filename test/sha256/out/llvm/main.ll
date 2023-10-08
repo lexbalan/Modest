@@ -417,23 +417,23 @@ body_1:
     %5 = load i32, i32* %i
     %6 = getelementptr inbounds [2 x %SHA256_TestData*], [2 x %SHA256_TestData*]* @sha256_tests, i32 0, i32 %5
     %7 = load %SHA256_TestData*, %SHA256_TestData** %6
-    %8 = call i1(%SHA256_TestData*) @sha256_doTest (%SHA256_TestData* %7)
-    br i1 %8 , label %then_0, label %else_0
+    %8 = bitcast %SHA256_TestData* %7 to %SHA256_TestData*
+    %9 = call i1(%SHA256_TestData*) @sha256_doTest (%SHA256_TestData* %8)
+    br i1 %9 , label %then_0, label %else_0
 then_0:
-    %9 = load i32, i32* %i
-    %10 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str9.c8, i32 %9)
+    %10 = load i32, i32* %i
+    %11 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str9.c8, i32 %10)
     br label %endif_0
 else_0:
-    %11 = load i32, i32* %i
-    %12 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str10.c8, i32 %11)
+    %12 = load i32, i32* %i
+    %13 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str10.c8, i32 %12)
     br label %endif_0
 endif_0:
-    %13 = load i32, i32* %i
-    %14 = add i32 %13, 1
-    store i32 %14, i32* %i
+    %14 = load i32, i32* %i
+    %15 = add i32 %14, 1
+    store i32 %15, i32* %i
     br label %again_1
 break_1:
-
     ret i32 0
 }
 

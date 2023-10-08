@@ -14,12 +14,12 @@
 
 
 
-
 typedef struct {
     uint8_t input[32];
     uint32_t input_len;
     uint8_t output[32];
 } SHA256_TestData;
+
 
 SHA256_TestData test0 = (SHA256_TestData){
     .input = {97U, 98U, 99U, 0U},
@@ -27,7 +27,6 @@ SHA256_TestData test0 = (SHA256_TestData){
 
     .output = {0xBA, 0x78, 0x16, 0xBF, 0x8F, 0x01, 0xCF, 0xEA, 0x41, 0x41, 0x40, 0xDE, 0x5D, 0xAE, 0x22, 0x23, 0xB0, 0x03, 0x61, 0xA3, 0x96, 0x17, 0x7A, 0x9C, 0xB4, 0x10, 0xFF, 0x61, 0xF2, 0x00, 0x15, 0xAD}
 };
-
 
 SHA256_TestData test1 = (SHA256_TestData){
     .input = {72U, 101U, 108U, 108U, 111U, 32U, 87U, 111U, 114U, 108U, 100U, 33U, 0U},
@@ -39,7 +38,6 @@ SHA256_TestData test1 = (SHA256_TestData){
 
 #define nTests  2
 SHA256_TestData *sha256_tests[nTests] = (SHA256_TestData *[nTests]){(SHA256_TestData *)&test0, (SHA256_TestData *)&test1};
-
 
 
 bool sha256_doTest(SHA256_TestData *test)
@@ -87,15 +85,6 @@ int main(void)
 
         i = i + 1;
     }
-
-
-/*sha256_doHash(&test_msg, 12, &test_hash)
-
-    var i := 0
-    while i < sha256HashSize {
-        printf("0x%02X, ", test_hash[i])
-        i := i + 1
-    }*/
 
     return 0;
 }

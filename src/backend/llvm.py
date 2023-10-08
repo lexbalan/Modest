@@ -857,6 +857,9 @@ def do_eval_expr_cast(x):
     #    return y
 
     opcode = select_cast_operator(from_type, to_type)
+    if is_global_context():
+        return v
+
     return opcast(opcode, from_type, to_type, v)
 
 
