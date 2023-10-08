@@ -87,7 +87,7 @@ declare i32 @puts(%ConstCharStr)
 declare i32 @ungetc(i32, %FILE*)
 declare void @perror(%ConstCharStr)
 
-; -- SOURCE: /Users/alexbalan/p/Modest/examples/fsm/src/fsm.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/examples/9.fsm/src/fsm.hm
 
 
 

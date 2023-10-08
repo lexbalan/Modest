@@ -107,7 +107,6 @@ func beacon_exit(fsm : *FSM) {
 
 
 
-// FIXIT: если не приводить явно to FSM_StateDesc
 var fsm : FSM := {
     name = "Flash" // to [fsmNameLength]Nat8
     state = 0

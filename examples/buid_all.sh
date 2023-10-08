@@ -5,5 +5,6 @@ cd 4.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd 5.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd 6.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd 7.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
-cd 8.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
+cd 8.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+cd 9.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
 
