@@ -21,9 +21,6 @@ LLVM:
 
 
 C:
-	mcc -o $(CPREFIX)/utf $(C_OPTIONS) -funsafe -mbackend=c ${MODEST_LIB}/misc/utf.hm
-	mcc -o $(CPREFIX)/utf $(C_OPTIONS) -funsafe -mbackend=c ${MODEST_LIB}/misc/utf.cm
-	
 	mcc -o $(CPREFIX)/main -mbackend=c $(INDIR)/main.cm
 	CC $(CPREFIX)/main.c $(CPREFIX)/utf.c
 

@@ -128,7 +128,6 @@ func sha256_transform(ctx: *SHA256_Context, data: *[]Nat8) -> Unit {
 }
 
 
-
 func sha256_update(ctx: *SHA256_Context, data: *[]Nat8, len: Nat32) -> Unit {
     var i := 0 to Nat32
     while i < len {
