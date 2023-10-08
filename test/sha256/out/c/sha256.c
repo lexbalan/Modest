@@ -128,7 +128,6 @@ void sha256_transform(SHA256_Context *ctx, uint8_t *data)
 }
 
 
-
 void sha256_update(SHA256_Context *ctx, uint8_t *data, uint32_t len)
 {
     uint32_t i = (uint32_t)0;
