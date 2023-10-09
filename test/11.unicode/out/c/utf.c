@@ -8,8 +8,9 @@
 
 
 // декодирует символ UTF-32 в последовательность UTF-8
-void utf32_to_utf8(uint32_t x, uint8_t *buf)
+void utf32_to_utf8(uint32_t c, uint8_t *buf)
 {
+    const uint32_t x = (const uint32_t)c;
     if (x <= 0x0000007F) {
         buf[0] = (uint8_t)x;
         buf[1] = 0;
@@ -61,7 +62,7 @@ void utf32_puts(uint32_t *s)
     int32_t i = (int32_t)0;
     while (true) {
         const uint32_t c = s[i];
-        if (c == 0) {break;}
+        if ((uint32_t)c == 0) {break;}
         utf32_putchar(c);
         i = i + 1;
     }
@@ -73,7 +74,7 @@ void utf16_puts(uint16_t *s)
     int32_t i = (int32_t)0;
     while (true) {
         const uint16_t c = s[i];
-        if (c == 0) {break;}
+        if ((uint16_t)c == 0) {break;}
         utf32_putchar((uint32_t)c);
         i = i + 1;
     }
@@ -85,7 +86,7 @@ void utf8_puts(uint8_t *s)
     int32_t i = (int32_t)0;
     while (true) {
         const uint8_t c = s[i];
-        if (c == 0) {break;}
+        if ((uint8_t)c == 0) {break;}
         putchar((int)c);
         i = i + 1;
     }

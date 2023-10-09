@@ -47,17 +47,17 @@ func main () -> Int {
     printf("test xor encrypting\n")
 
     printf("before test_msg: \n")
-    print_bytes(&test_msg, msg_length)
+    print_bytes(&test_msg to *[]Nat8, msg_length)
 
-    xor_encrypter(&test_msg, msg_length, &test_key, key_length)
+    xor_encrypter(&test_msg to *[]Nat8, msg_length, &test_key to *[]Nat8, key_length)
 
     printf("after test_msg: \n")
-    print_bytes(&test_msg, msg_length)
+    print_bytes(&test_msg to *[]Nat8, msg_length)
 
-    xor_encrypter(&test_msg, msg_length, &test_key, key_length)
+    xor_encrypter(&test_msg to *[]Nat8, msg_length, &test_key to *[]Nat8, key_length)
 
     printf("after2 test_msg: \n")
-    print_bytes(&test_msg, msg_length)
+    print_bytes(&test_msg to *[]Nat8, msg_length)
 
     return 0
 }

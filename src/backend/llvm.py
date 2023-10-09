@@ -215,6 +215,9 @@ def print_value(x):
         elif type.is_float(x['type']):
             out(str(num))
 
+        elif type.is_char(x['type']):
+            out(str(num))
+
     elif c == 'str':
         out("@%s" % x['id'])
 
@@ -698,8 +701,8 @@ def select_cast_operator(a, b):
 
     signed = type.is_signed(b)
 
-    if type.is_integer(a):
-        if type.is_integer(b):
+    if type.is_integer(a) or type.is_char(a):
+        if type.is_integer(b) or type.is_char(b):
             if a['size'] < b['size']:
                 if signed:
                     return 'sext'
@@ -1036,6 +1039,8 @@ def do_eval_literal(x):
     elif type.is_free_pointer(x['type']):
         return ll_create_value_num(x['type'], hlir_value_num_get(x))
     elif type.is_pointer(x['type']):
+        return ll_create_value_num(x['type'], hlir_value_num_get(x))
+    elif type.is_char(x['type']):
         return ll_create_value_num(x['type'], hlir_value_num_get(x))
 
 

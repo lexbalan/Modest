@@ -39,7 +39,7 @@ var sha256_tests : [nTests]*SHA256_TestData := [&test0, &test1]
 
 func sha256_doTest(test : *SHA256_TestData) -> Bool {
     var test_hash : [sha256HashSize]Nat8
-    sha256_doHash(&test.input, test.input_len, &test_hash)
+    sha256_doHash(&test.input to *[]Nat8, test.input_len, &test_hash)
 
 
     printf("'%s'", &test.input)

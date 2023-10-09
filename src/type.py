@@ -100,16 +100,19 @@ typeDecimal128['llvm_alias'] = 'double'
 
 
 typeChar8 = hlir_type_integer("Char8", power=8, ti=None)
+typeChar8['kind'] = 'char'
 typeChar8['att'] = ['char', 'numeric', 'unsigned', 'comparable', 'ordered']
 typeChar8['c_alias'] = 'uint8_t'
 typeChar8['llvm_alias'] = 'i8'
 
 typeChar16 = hlir_type_integer("Char16", power=16, ti=None)
+typeChar16['kind'] = 'char'
 typeChar16['att'] = ['char', 'numeric', 'unsigned', 'comparable', 'ordered']
 typeChar16['c_alias'] = 'uint16_t'
 typeChar16['llvm_alias'] = 'i16'
 
 typeChar32 = hlir_type_integer("Char32", power=32, ti=None)
+typeChar32['kind'] = 'char'
 typeChar32['att'] = ['char', 'numeric', 'unsigned', 'comparable', 'ordered']
 typeChar32['c_alias'] = 'uint32_t'
 typeChar32['llvm_alias'] = 'i32'
@@ -177,6 +180,9 @@ def eq_integer(a, b):
         return False
     return True
 
+
+def eq_char(a, b):
+    return eq_integer(a, b)
 
 def eq_pointer(a, b):
     return eq(a['to'], b['to'])
@@ -265,6 +271,7 @@ def eq(a, b):
     elif k == 'pointer': return eq_pointer(a, b)
     elif k == 'array': return eq_array(a, b)
     elif k == 'float': return eq_float(a, b)
+    elif k == 'char': return eq_char(a, b)
     elif k == 'opaque': return eq_opaque(a, b)
 
     return False
@@ -341,7 +348,7 @@ def is_integer(t):
 
 
 def is_char(t):
-    return 'char' in t['att']
+    return t['kind'] == 'char'# in t['att']
 
 
 def is_float(t):

@@ -754,6 +754,21 @@ def print_value_literal_str(x, ctx, prefix=""):
 
 
 
+def print_value_literal_char(x, ctx):
+    #if type.type_attribute_check(x['type'], 'char'):
+    num = hlir_value_num_get(x)
+
+    prefix = ""
+    if num <= 0xFFFF:
+        prefix = "u"
+    elif num <= 0xFFFFFFFF:
+        prefix = "U"
+
+    if num >= 0x20:
+        out("%c'%c'" % (prefix, num))
+    else:
+        out("%s'\\x%02x'" % (prefix, num))
+    return
 
 
 def print_value_literal_int(x, ctx):
@@ -779,20 +794,8 @@ def print_value_literal_int(x, ctx):
             return
 
 
-    if type.type_attribute_check(x['type'], 'char'):
-        prefix = ""
-        if num <= 0xFFFF:
-            prefix = "u"
-        elif num <= 0xFFFFFFFF:
-            prefix = "U"
 
-        if num >= 0x20:
-            out("%c'%c'" % (prefix, num))
-        else:
-            out("%s'\\x%02x'" % (prefix, num))
-        return
-
-    elif value_attribute_check(x, 'hexadecimal'):
+    if value_attribute_check(x, 'hexadecimal'):
         nsigns = 0
         if 'nsigns' in x:
             nsigns = x['nsigns']
@@ -838,6 +841,9 @@ def print_value_literal(x, ctx):
     elif type.is_array(t): print_value_literal_array(x, ctx)
     elif type.is_string(t): print_value_literal_str(x, ctx)
     elif type.is_pointer(t): print_value_literal_ptr(x, ctx)
+    elif type.is_char(t): print_value_literal_char(x, ctx)
+    else:
+        print("JNONJN")
 
 
 

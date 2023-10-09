@@ -4,7 +4,8 @@ import "libc/stdio.hm"
 
 
 // декодирует символ UTF-32 в последовательность UTF-8
-func utf32_to_utf8 (x : Nat32, buf : *[5]Nat8) -> Unit {
+func utf32_to_utf8 (c : Char32, buf : *[5]Nat8) -> Unit {
+    let x = c to Nat32
     if x <= 0x0000007F {
         buf[0] := x to Nat8
         buf[1] := 0
@@ -36,7 +37,7 @@ func utf32_to_utf8 (x : Nat32, buf : *[5]Nat8) -> Unit {
 }
 
 
-func utf32_putchar(c : Nat32) -> Unit {
+func utf32_putchar(c : Char32) -> Unit {
     var decoded_buf : [5]Nat8
     utf32_to_utf8(c, &decoded_buf)
 
@@ -54,7 +55,7 @@ func utf32_puts(s : Str32) -> Unit {
     var i := 0
     while true {
         let c = s[i]
-        if c == 0 {break}
+        if c to Nat32 == 0 {break}
         utf32_putchar(c)
         i := i + 1
     }
@@ -65,8 +66,8 @@ func utf16_puts(s : Str16) -> Unit {
     var i := 0
     while true {
         let c = s[i]
-        if c == 0 {break}
-        utf32_putchar(c to Nat32)
+        if c to Nat16 == 0 {break}
+        utf32_putchar(c to Char32)
         i := i + 1
     }
 }
@@ -76,7 +77,7 @@ func utf8_puts(s : Str8) -> Unit {
     var i := 0
     while true {
         let c = s[i]
-        if c == 0 {break}
+        if c to Nat8 == 0 {break}
         putchar(c to Int)
         i := i + 1
     }

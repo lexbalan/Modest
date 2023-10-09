@@ -349,8 +349,11 @@ def value_cons_record(v, t, ti, method):
 
 
 
+def value_cons_char(v, t, ti, method):
+    return value_cons_integer(v, t, ti, method)
+
 def value_cons_integer(v, t, ti, method):
-    if type.is_integer(v['type']):
+    if type.is_integer(v['type']) or type.is_char(v['type']):
         # Int -> Int
         if type.is_generic(v['type']):
             # GenericInt -> Int
@@ -370,7 +373,6 @@ def value_cons_integer(v, t, ti, method):
 
         # cast non-generic integer to integer
         if method == 'explicit':
-
             nv = hlir_value_cast(v, t, ti)
             if value_is_immediate(v):
                 value_set_imm(nv, v['imm'])
@@ -383,6 +385,8 @@ def value_cons_integer(v, t, ti, method):
     elif type.is_float(v['type']):
         if method == 'explicit':
             return hlir_value_cast(v, t, ti=ti)
+
+
 
     return None
 
@@ -467,10 +471,12 @@ def value_cons_pointer(v, t, ti, method):
 
 
     # GenericString -> *[]NatX
+    #info("HEHE", ti)
     if type.is_generic_string(from_type):
         if type.is_array(to_type['to']):
-            # GenericString -> *[]NatX
-            if type.is_integer(to_type['to']['of']):
+            #info("XOXO", ti)
+            # GenericString -> *[]CharX
+            if type.is_char(to_type['to']['of']):
                 #info("cast generic string to pointer", ti)
                 str_used_as(string_value=v, typ=to_type['to']['of'])
                 return do_cast_generic(v, t, ti=ti) #?!
@@ -518,6 +524,7 @@ def value_cons(v, t, ti, method):
     elif type.is_array(t): cons = value_cons_array
     elif type.is_record(t): cons = value_cons_record
     elif type.is_float(t): cons = value_cons_float
+    elif type.is_char(t): cons = value_cons_char
     elif type.is_unit(t): cons = value_cons_unit
 
     if cons != None:

@@ -12,16 +12,16 @@ all: LLVM
 
 
 CM:
-	mcc -o $(CMPREFIX)/main -mbackend=cm $(INDIR)/main.cm
+	mcc -o $(CMPREFIX)/main -funsafe -mbackend=cm $(INDIR)/main.cm
 
 
 LLVM:
-	mcc -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.cm
+	mcc -o $(LLVMPREFIX)/main -funsafe -mbackend=llvm $(INDIR)/main.cm
 	clang $(LLVMPREFIX)/main.ll
 
 
 C:	
-	mcc -o $(CPREFIX)/main -mbackend=c $(INDIR)/main.cm
+	mcc -o $(CPREFIX)/main -funsafe -mbackend=c $(INDIR)/main.cm
 	CC $(CPREFIX)/main.c #$(CPREFIX)/utf.c
 
 
