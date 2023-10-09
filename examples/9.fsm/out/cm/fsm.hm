@@ -13,7 +13,7 @@ type FSM_Empty record {
 }
 
 type FSM_StateDesc record {
-    name : [fsmNameLength]Nat8
+    name : [fsmNameLength]Char8
     entry : FSM_Proc
     loop : FSM_Proc
     exit : FSM_Proc
@@ -27,7 +27,7 @@ const fsmSubstateLeaving = 2
 type UInt32 UInt32
 
 type FSM record {
-    name : [fsmNameLength]Nat8
+    name : [fsmNameLength]Char8
     state : UInt32
     nexstate : UInt32
     substate : UInt32

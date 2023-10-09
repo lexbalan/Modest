@@ -15,9 +15,9 @@
 #define ratSymbolUTF32  0x0001F400
 
 
-uint8_t arr_utf8[8] = (uint8_t [8]){72U, 101U, 108U, 111U, 33U, 10U, 0U};
-uint16_t arr_utf16[8] = (uint16_t [8]){72U, 101U, 108U, 108U, 111U, 33U, 10U, 0U};
-uint32_t arr_utf32[8] = (uint32_t [8]){72U, 101U, 108U, 108U, 111U, 33U, 10U, 0U};
+uint8_t arr_utf8[8] = (uint8_t [8]){u'H', u'e', u'l', u'o', u'!', u'\x0a', u'\x00'};
+uint16_t arr_utf16[8] = (uint16_t [8]){u'H', u'e', u'l', u'l', u'o', u'!', u'\x0a', u'\x00'};
+uint32_t arr_utf32[8] = (uint32_t [8]){u'H', u'e', u'l', u'l', u'o', u'!', u'\x0a', u'\x00'};
 
 
 int main(void)

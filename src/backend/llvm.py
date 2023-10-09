@@ -1646,6 +1646,10 @@ def print_def_var(x):
 
 
 
+def print_def_const(x):
+    pass # TODO
+
+
 def print_string_utf8(strid, string):
     ss = string['imm']['str']
 
@@ -1763,7 +1767,7 @@ def print_module(m):
         if isa == 'decl_func': print_decl_func(x)
         elif isa == 'decl_type': print_decl_type(x)
         elif isa == 'def_var': print_def_var(x)
-        elif isa == 'def_const': pass
+        elif isa == 'def_const': print_def_const(x)
         elif isa == 'def_func': print_def_func(x)
         elif isa == 'def_type': print_def_type(x)
 

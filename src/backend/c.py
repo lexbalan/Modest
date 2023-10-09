@@ -786,7 +786,10 @@ def print_value_literal_int(x, ctx):
         elif num <= 0xFFFFFFFF:
             prefix = "U"
 
-        out("%c'%c'" % (prefix, num))
+        if num >= 0x20:
+            out("%c'%c'" % (prefix, num))
+        else:
+            out("%s'\\x%02x'" % (prefix, num))
         return
 
     elif value_attribute_check(x, 'hexadecimal'):

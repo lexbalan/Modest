@@ -209,11 +209,15 @@ def init():
     #root_context.type_add('Decimal64', type.typeDecimal64)
     #root_context.type_add('Decimal128', type.typeDecimal128)
 
-    root_context.type_add('Str', type.typeStr8)
+    root_context.type_add('Char8', type.typeChar8)
+    root_context.type_add('Char16', type.typeChar16)
+    root_context.type_add('Char32', type.typeChar32)
 
     root_context.type_add('Str8', type.typeStr8)
     root_context.type_add('Str16', type.typeStr16)
     root_context.type_add('Str32', type.typeStr32)
+
+    root_context.type_add('Str', type.typeStr8)
 
     root_context.type_add('Pointer', type.typeFreePtr)
 

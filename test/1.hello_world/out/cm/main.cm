@@ -2,7 +2,7 @@
 import "libc/stdio.h"
 
 func main () -> Int {
-    printf("Hello World!\n")
+    printf("Hello World! 🎉\n")
     return 0
 }
 

@@ -252,7 +252,6 @@ define void @beacon_exit(%FSM* %fsm) {
 }
 
 
-
 @fsm = global %FSM {
   [8 x i8] [
     i8 70,

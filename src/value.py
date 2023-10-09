@@ -134,7 +134,7 @@ def value_load(x):
 # TODO: массив может НЕЯВНО быть построен только из
 # полного или из пустого дженерик массива
 def value_cons_array_from_generic_array(v, t, ti, method):
-    #print("value_cons_array_from_generic_array")
+    #info("value_cons_array_from_generic_array", ti)
     if len(v['imm']) > hlir_value_num_get(t['volume']):
         info("too many items", v['ti'])
         return None
@@ -215,9 +215,8 @@ def value_cons_array(v, t, ti, method):
 
     # GenericString -> [x]NatX
     if type.is_generic_string(from_type):
-        if type.is_integer(to_type['of']):
+        if type.is_char(to_type['of']):
             #info("cast generic string to array", ti)
-
 
             # Check to:array volume vs string len
             # "xxx" to []X | "xxx" to [n]X

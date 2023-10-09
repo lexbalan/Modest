@@ -99,21 +99,20 @@ typeDecimal128['llvm_alias'] = 'double'
 
 
 
-typeCChar8 = hlir_type_integer("Char8", power=8, ti=None)
-typeCChar8['att'].extend(['unsigned', 'char'])
-typeCChar8['c_alias'] = 'uint8_t'
-typeCChar8['llvm_alias'] = 'i8'
+typeChar8 = hlir_type_integer("Char8", power=8, ti=None)
+typeChar8['att'] = ['char', 'numeric', 'unsigned', 'comparable', 'ordered']
+typeChar8['c_alias'] = 'uint8_t'
+typeChar8['llvm_alias'] = 'i8'
 
-typeCChar16 = hlir_type_integer("Char16", power=16, ti=None)
-typeCChar16['att'].extend(['unsigned', 'char'])
-typeCChar16['c_alias'] = 'uint16_t'
-typeCChar16['llvm_alias'] = 'i16'
+typeChar16 = hlir_type_integer("Char16", power=16, ti=None)
+typeChar16['att'] = ['char', 'numeric', 'unsigned', 'comparable', 'ordered']
+typeChar16['c_alias'] = 'uint16_t'
+typeChar16['llvm_alias'] = 'i16'
 
-typeCChar32 = hlir_type_integer("Char32", power=32, ti=None)
-typeCChar32['att'].extend(['unsigned', 'char'])
-typeCChar32['c_alias'] = 'uint32_t'
-typeCChar32['llvm_alias'] = 'i32'
-
+typeChar32 = hlir_type_integer("Char32", power=32, ti=None)
+typeChar32['att'] = ['char', 'numeric', 'unsigned', 'comparable', 'ordered']
+typeChar32['c_alias'] = 'uint32_t'
+typeChar32['llvm_alias'] = 'i32'
 
 
 typeGenericString = hlir_type_generic_str(ti=None)
@@ -122,11 +121,11 @@ typeGenericString['c_alias'] = 'const char *'
 typeGenericString['llvm_alias'] = 'i8*'
 
 
-typeStr8 = hlir_type_pointer(hlir_type_array(of=typeCChar8))
+typeStr8 = hlir_type_pointer(hlir_type_array(of=typeChar8))
 typeStr8['att'].append('string')
-typeStr16 = hlir_type_pointer(hlir_type_array(of=typeCChar16))
+typeStr16 = hlir_type_pointer(hlir_type_array(of=typeChar16))
 typeStr16['att'].append('string')
-typeStr32 = hlir_type_pointer(hlir_type_array(of=typeCChar32))
+typeStr32 = hlir_type_pointer(hlir_type_array(of=typeChar32))
 typeStr32['att'].append('string')
 
 
@@ -163,6 +162,15 @@ def select_numeric(sz, is_signed):
 
 
 def eq_integer(a, b):
+
+    if 'integer' in a != 'integer' in b:
+        return False
+
+    if 'char' in a:
+        print('CHARR')
+    if 'char' in a != 'char' in b:
+        return False
+
     if a['power'] != b['power']:
         return False
     if is_signed(a) != is_signed(b):
@@ -248,7 +256,6 @@ def eq(a, b):
     if ('generic' in a['att']) != ('generic' in b['att']):
         return False
 
-
     # normal checking
     k = a['kind']
     if k == 'int': return eq_integer(a, b)
@@ -331,6 +338,10 @@ def is_logical(t):
 
 def is_integer(t):
     return t['kind'] in ['int', 'Integer']
+
+
+def is_char(t):
+    return 'char' in t['att']
 
 
 def is_float(t):

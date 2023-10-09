@@ -12,9 +12,9 @@ import "misc/sha256.hm"
 
 
 type SHA256_TestData record {
-    input : [32]Nat8
+    input : [32]Char8
     input_len : Nat32
-    output : [32]Nat8
+    output : [32]Char8
 }
 
 
@@ -61,7 +61,7 @@ func sha256_doTest(test : *SHA256_TestData) -> Bool {
 }
 
 
-var test_msg : [13]Nat8 := "Hello World!"
+var test_msg : [13]Char8 := "Hello World!"
 var test_hash : [sha256HashSize]Nat8
 
 
