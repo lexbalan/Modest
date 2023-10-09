@@ -5,6 +5,7 @@ target triple = "arm64-apple-darwin21.6.0"
 
 
 
+%Str = type [0 x i8]*
 %Char = type i8
 %ConstChar = type i8
 %SignedChar = type i8
@@ -68,7 +69,7 @@ declare %FILE* @tmpfile()
 declare %CharStr @tmpnam(%CharStr)
 declare i32 @printf(%ConstCharStr, ...)
 declare i32 @scanf(%ConstCharStr, ...)
-declare i32 @fprintf(%FILE*, [0 x i8]*, ...)
+declare i32 @fprintf(%FILE*, %Str, ...)
 declare i32 @fscanf(%FILE*, %ConstCharStr, ...)
 declare i32 @sscanf(%ConstCharStr, %ConstCharStr, ...)
 declare i32 @sprintf(%CharStr, %ConstCharStr, ...)

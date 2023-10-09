@@ -217,7 +217,7 @@ def init():
     root_context.type_add('Str16', type.typeStr16)
     root_context.type_add('Str32', type.typeStr32)
 
-    root_context.type_add('Str', type.typeStr8)
+    #root_context.type_add('Str', type.typeStr8)
 
     root_context.type_add('Pointer', type.typeFreePtr)
 
@@ -1498,7 +1498,7 @@ def def_type(x):
 
     ty = do_type(x['type'])
     if type.is_bad(ty):
-        return def_bad()
+        return None
 
     exist = type_get(id['str'])
     already_declared = exist != None

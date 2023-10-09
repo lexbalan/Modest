@@ -1,5 +1,7 @@
 // libc/ctypes64.hm
 
+@property("c_alias", "char *")
+type Str Str8
 
 @property("c_alias", "char")
 type Char Int8

@@ -5,6 +5,7 @@ target triple = "arm64-apple-darwin21.6.0"
 
 
 
+%Str = type [0 x i8]*
 %Char = type i8
 %ConstChar = type i8
 %SignedChar = type i8
@@ -157,7 +158,7 @@ declare %FILE* @tmpfile()
 declare %CharStr @tmpnam(%CharStr)
 declare i32 @printf(%ConstCharStr, ...)
 declare i32 @scanf(%ConstCharStr, ...)
-declare i32 @fprintf(%FILE*, [0 x i8]*, ...)
+declare i32 @fprintf(%FILE*, %Str, ...)
 declare i32 @fscanf(%FILE*, %ConstCharStr, ...)
 declare i32 @sscanf(%ConstCharStr, %ConstCharStr, ...)
 declare i32 @sprintf(%CharStr, %ConstCharStr, ...)
@@ -243,8 +244,8 @@ declare i32 @ftruncate(i32, i32)
 
 
 
-declare i32 @creat([0 x i8]*, i32)
-declare i32 @open([0 x i8]*, i32)
+declare i32 @creat(%Str, i32)
+declare i32 @open(%Str, i32)
 declare i32 @read(i32, i8*, i32)
 declare i32 @write(i32, i8*, i32)
 declare i32 @lseek(i32, i32, i32)
@@ -252,12 +253,12 @@ declare i32 @close(i32)
 declare void @exit(i32)
 
 
-declare %DIR* @opendir([0 x i8]*)
+declare %DIR* @opendir(%Str)
 declare i32 @closedir(%DIR*)
 
 
-declare [0 x i8]* @getcwd([0 x i8]*, i64)
-declare [0 x i8]* @getenv([0 x i8]*)
+declare %Str @getcwd(%Str, i64)
+declare %Str @getenv(%Str)
 
 ; -- SOURCE: src/main.cm
 

@@ -14,7 +14,7 @@ const fsmSubstateLeaving = 2
 
 
 
-func fsm_state_no_name(fsm : *FSM, state_no : Nat32) -> Str {
+func fsm_state_no_name(fsm : *FSM, state_no : Nat32) -> Str8 {
     return &fsm.states[state_no].name
 }
 
