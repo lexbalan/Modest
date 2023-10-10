@@ -48,7 +48,10 @@ Float32, Float64, Float128
 
 
 ### Char type
-There's no special char type, instead use Nat8, Nat16 or Nat32 integer type
+Char types
+```javascript
+Char8, Char16, Char32
+```
 
 
 
