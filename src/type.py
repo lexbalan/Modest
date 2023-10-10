@@ -67,17 +67,17 @@ typeNat128['c_alias'] = 'unsigned __int128'
 typeNat128['llvm_alias'] = 'i128'
 
 typeFloat16 = hlir_type_float('Float16', power=16, ti=None)
-typeFloat16['att'].extend(['float'])
+#typeFloat16['att'].extend(['float'])
 typeFloat16['c_alias'] = 'half'
 typeFloat16['llvm_alias'] = 'half'
 
 typeFloat32 = hlir_type_float('Float32', power=32, ti=None)
-typeFloat32['att'].extend(['float'])
+#typeFloat32['att'].extend(['float'])
 typeFloat32['c_alias'] = 'float'
 typeFloat32['llvm_alias'] = 'float'
 
 typeFloat64 = hlir_type_float('Float64', power=64, ti=None)
-typeFloat64['att'].extend(['float'])
+#typeFloat64['att'].extend(['float'])
 typeFloat64['c_alias'] = 'double'
 typeFloat64['llvm_alias'] = 'double'
 
@@ -163,26 +163,19 @@ def select_numeric(sz, is_signed):
 
 
 
-
 def eq_integer(a, b):
-
-    if 'integer' in a != 'integer' in b:
-        return False
-
-    if 'char' in a:
-        print('CHARR')
-    if 'char' in a != 'char' in b:
-        return False
-
     if a['power'] != b['power']:
         return False
+
     if is_signed(a) != is_signed(b):
         return False
+
     return True
 
 
 def eq_char(a, b):
     return eq_integer(a, b)
+
 
 def eq_pointer(a, b):
     return eq(a['to'], b['to'])
@@ -348,20 +341,19 @@ def is_integer(t):
 
 
 def is_char(t):
-    return t['kind'] == 'char'# in t['att']
+    return t['kind'] == 'char'
 
 
 def is_float(t):
-    return 'float' in t['att']
-
-
-def is_string(t):
-    return 'string' in t['att']
+    return t['kind'] == 'float'
 
 
 def is_record(t):
     return t['kind'] == 'record'
 
+
+def is_string(t):
+    return 'string' in t['att']
 
 
 # WARNING: Generic type can be not signed and not unsigned (!)

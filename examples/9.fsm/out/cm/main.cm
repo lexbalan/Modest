@@ -104,27 +104,27 @@ func beacon_exit (fsm : *FSM) -> Unit {
 
 
 var fsm : FSM := {
-    name = ["F"[0], "l"[0], "a"[0], "s"[0], "h"[0], "\0"[0]]
+    name = ["F"[0], "l"[0], "a"[0], "s"[0], "h"[0], "\x0"[0]]
     state = 0
     nexstate = 0
     substate = fsmSubstateEntering
     states = [
         {
-            name = ["O"[0], "f"[0], "f"[0], "\0"[0]]
+            name = ["O"[0], "f"[0], "f"[0], "\x0"[0]]
             entry = &off_entry
             loop = &off_loop
             exit = &off_exit
         }
 
         {
-            name = ["O"[0], "n"[0], "\0"[0]]
+            name = ["O"[0], "n"[0], "\x0"[0]]
             entry = &on_entry
             loop = &on_loop
             exit = &on_exit
         }
 
         {
-            name = ["B"[0], "e"[0], "a"[0], "c"[0], "o"[0], "n"[0], "\0"[0]]
+            name = ["B"[0], "e"[0], "a"[0], "c"[0], "o"[0], "n"[0], "\x0"[0]]
             entry = &beacon_entry
             loop = &beacon_loop
             exit = &beacon_exit
