@@ -219,6 +219,13 @@ def value_cons_array_from_string(v, t, ti, method):
         # v['len'] учитывает '\0'
         if v['imm']['len'] > to_arr_volume:
             error("too big", ti)
+            return None
+        if method == 'implicit':
+            if v['imm']['len'] < to_arr_volume:
+                print("v['imm']['len'] = " + str(v['imm']['len']))
+                print("to_arr_volume = " + str(to_arr_volume))
+                error("too short", ti)
+                return None
 
     items = []
     for c in v['imm']['str']:

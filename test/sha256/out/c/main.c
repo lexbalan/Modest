@@ -14,22 +14,24 @@
 
 
 
+typedef uint8_t InputString[32];
+
 typedef struct {
-    uint8_t input[32];
+    InputString input;
     uint32_t input_len;
     uint8_t output[32];
 } SHA256_TestData;
 
 
 SHA256_TestData test0 = (SHA256_TestData){
-    .input = {u'a', u'b', u'c', u'\x00'},
+    .input = {'a', 'b', 'c', '\x0'},
     .input_len = 3,
 
     .output = {0xBA, 0x78, 0x16, 0xBF, 0x8F, 0x01, 0xCF, 0xEA, 0x41, 0x41, 0x40, 0xDE, 0x5D, 0xAE, 0x22, 0x23, 0xB0, 0x03, 0x61, 0xA3, 0x96, 0x17, 0x7A, 0x9C, 0xB4, 0x10, 0xFF, 0x61, 0xF2, 0x00, 0x15, 0xAD}
 };
 
 SHA256_TestData test1 = (SHA256_TestData){
-    .input = {u'H', u'e', u'l', u'l', u'o', u' ', u'W', u'o', u'r', u'l', u'd', u'!', u'\x00'},
+    .input = {'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!', '\x0'},
     .input_len = 12,
 
     .output = {0x7F, 0x83, 0xB1, 0x65, 0x7F, 0xF1, 0xFC, 0x53, 0xB9, 0x2D, 0xC1, 0x81, 0x48, 0xA1, 0xD6, 0x5D, 0xFC, 0x2D, 0x4B, 0x1F, 0xA3, 0xD6, 0x77, 0x28, 0x4A, 0xDD, 0xD2, 0x00, 0x12, 0x6D, 0x90, 0x69}
@@ -65,7 +67,7 @@ bool sha256_doTest(SHA256_TestData *test)
 }
 
 
-uint8_t test_msg[13] = (uint8_t [13]){u'H', u'e', u'l', u'l', u'o', u' ', u'W', u'o', u'r', u'l', u'd', u'!', u'\x00'};
+uint8_t test_msg[13] = (uint8_t [13]){'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!', '\x0'};
 uint8_t test_hash[sha256HashSize];
 
 

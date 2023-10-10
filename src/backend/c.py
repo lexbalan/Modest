@@ -759,15 +759,15 @@ def print_value_literal_char(x, ctx):
     num = hlir_value_num_get(x)
 
     prefix = ""
-    if num <= 0xFFFF:
-        prefix = "u"
-    elif num <= 0xFFFFFFFF:
+    if num > 0xFFFF:
         prefix = "U"
+    elif num > 0xFF:
+        prefix = "u"
 
-    if num >= 0x20:
-        out("%c'%c'" % (prefix, num))
+    if num >= 0x20 and num <= 0x7F:
+        out("%s'%c'" % (prefix, num))
     else:
-        out("%s'\\x%02x'" % (prefix, num))
+        out("%s'\\x%x'" % (prefix, num))
     return
 
 

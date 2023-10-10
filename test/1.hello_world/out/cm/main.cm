@@ -2,7 +2,7 @@
 import "libc/stdio.h"
 
 func main () -> Int {
-    let c32 =
+    let c32 = "🎉"[0]
 
     var c : Nat32
 

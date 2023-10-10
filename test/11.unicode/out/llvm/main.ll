@@ -99,7 +99,7 @@ declare void @utf32_putchar(i32)
 
 ; -- SOURCE: src/main.cm
 
-@str1.c8 = private constant [7 x i8] c"Helo!\0A\00"
+@str1.c8 = private constant [5 x i8] c"Hi!\0A\00"
 @str2.c16 = private constant [8 x i16] [i16 72, i16 101, i16 108, i16 108, i16 111, i16 33, i16 10, i16 0]
 @str3.c32 = private constant [8 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 33, i32 10, i32 0]
 @str6.c8 = private constant [16 x i8] c"omegaCode = %d\0A\00"
@@ -113,11 +113,11 @@ declare void @utf32_putchar(i32)
 
 @arr_utf8 = global [8 x i8] [
   i8 72,
-  i8 101,
-  i8 108,
-  i8 111,
+  i8 105,
   i8 33,
   i8 10,
+  i8 0,
+  i8 0,
   i8 0,
   i8 0
 ]

@@ -416,13 +416,18 @@ def print_value_literal_str(x, ctx):
 
 
 
+def print_value_literal_char(x, ctx):
+    num = hlir_value_num_get(x)
+    out("\"%c\"[0]" % num)
+
+
 def print_value_literal_int(x, ctx):
     num = hlir_value_num_get(x)
 
-    if type.type_attribute_check(x['type'], 'char'):
-        out("\"%c\"[0]" % num)
+    #if type.type_attribute_check(x['type'], 'char'):
+    #    out("\"%c\"[0]" % num)
 
-    elif value_attribute_check(x, 'hexadecimal'):
+    if value_attribute_check(x, 'hexadecimal'):
 
         nsigns = 0
         if 'nsigns' in x:
@@ -473,6 +478,7 @@ def print_value_literal(x, ctx):
     elif type.is_string(t): print_value_literal_str(x, ctx)
     elif type.is_free_pointer(t): out("nil")
     elif type.is_pointer(t): print_value_literal_int(x, ctx)
+    elif type.is_char(t): print_value_literal_char(x, ctx)
 
 
 def print_value(x, ctx=[], need_wrap=False, print_just_id=True):

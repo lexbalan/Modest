@@ -35,8 +35,8 @@ void xor_encrypter(uint8_t *buf, uint32_t buflen, uint8_t *key, uint32_t keylen)
 #define msg_length  12
 #define key_length  3
 
-uint8_t test_msg[msg_length + 1] = (uint8_t [msg_length + 1]){u'H', u'e', u'l', u'l', u'o', u' ', u'W', u'o', u'r', u'l', u'd', u'!', u'\x00'};
-uint8_t test_key[key_length + 1] = (uint8_t [key_length + 1]){u'a', u'b', u'c', u'\x00'};
+uint8_t test_msg[msg_length + 1] = (uint8_t [msg_length + 1]){'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!', '\x0'};
+uint8_t test_key[key_length + 1] = (uint8_t [key_length + 1]){'a', 'b', 'c', '\x0'};
 
 
 void print_bytes(uint8_t *buf, uint32_t len)

@@ -8,7 +8,7 @@
 
 int main(void)
 {
-    const uint32_t c32 = U'🎉';
+    const uint32_t c32 = U'\x1f389';
 
     uint32_t c;
 
