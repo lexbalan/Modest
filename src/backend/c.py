@@ -768,6 +768,7 @@ def print_value_literal_char(x, ctx):
         out("%s'%c'" % (prefix, num))
     else:
         out("%s'\\x%x'" % (prefix, num))
+
     return
 
 

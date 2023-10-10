@@ -418,7 +418,10 @@ def print_value_literal_str(x, ctx):
 
 def print_value_literal_char(x, ctx):
     num = hlir_value_num_get(x)
-    out("\"%c\"[0]" % num)
+    if num >= 0x20:
+        out("\"%c\"[0]" % num)
+    else:
+        out("\"\\x%x\"[0]" % num)
 
 
 def print_value_literal_int(x, ctx):
