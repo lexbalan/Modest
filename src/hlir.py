@@ -41,11 +41,11 @@ def hlir_type_integer(name, power, ti):
 def hlir_type_char(power, ti):
     return {
         'isa': 'type',
-        'kind': 'int',
+        'kind': 'char',
         'name': 'Char',
         'att': ['char', 'generic', 'numeric', 'comparable', 'ordered', 'unsigned'],
         'power': power,
-        'c_alias': 'char32_t',
+        'c_alias': 'uint32_t',
         'llvm_alias': 'i32',
         'size': nbytes_for_bits(power),
         'ti': ti

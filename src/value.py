@@ -353,7 +353,11 @@ def value_cons_char(v, t, ti, method):
     return value_cons_integer(v, t, ti, method)
 
 def value_cons_integer(v, t, ti, method):
-    if type.is_integer(v['type']) or type.is_char(v['type']):
+
+    # implicit & explicit
+
+    #
+    if type.is_integer(v['type']) or (type.is_char(v['type']) and method == 'explicit'):
         # Int -> Int
         if type.is_generic(v['type']):
             # GenericInt -> Int

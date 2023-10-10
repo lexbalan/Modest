@@ -25,13 +25,13 @@ int main(void)
 
     // indexing of GenericString returns #i symbol code
     // the symbols have GenericInteger type
-    const uint16_t omegaCharCode = 937U;
-    const uint32_t ratCharCode = 128000U;
+    const uint32_t omegaCharCode = u'Ω';
+    const uint32_t ratCharCode = U'🐀';
 
     // you can assign omegaCharCode (937) to Nat32,
     // but you can't assign ratCharCode (128000) to Nat16 (!)
-    uint16_t omegaCode = omegaCharCode;
-    uint32_t ratCode = ratCharCode;
+    uint16_t omegaCode = (uint16_t)omegaCharCode;
+    uint32_t ratCode = (uint32_t)ratCharCode;
 
     printf("omegaCode = %d\n", omegaCode);
     printf("ratCode = %d\n", ratCode);

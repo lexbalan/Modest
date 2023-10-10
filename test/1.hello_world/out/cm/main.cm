@@ -2,6 +2,13 @@
 import "libc/stdio.h"
 
 func main () -> Int {
+    let c32 =
+
+    var c : Nat32
+
+    c := c32 to Nat32
+
+
     printf("Hello World! 🎉\n")
     return 0
 }

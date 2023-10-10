@@ -8,6 +8,13 @@
 
 int main(void)
 {
+    const uint32_t c32 = U'🎉';
+
+    uint32_t c;
+
+    c = (uint32_t)c32;
+
+
     printf("Hello World! 🎉\n");
     return 0;
 }

@@ -14,11 +14,11 @@
 uint8_t n2hex_digit(uint8_t n, uint8_t a)
 {
     if (n < 10) {
-        return 48U + n;
+        return (uint8_t)u'0' + n;
     } else if (n < 16) {
         return a + n - 10;
     }
-    return 45U;
+    return (uint8_t)u'-';
 }
 
 
