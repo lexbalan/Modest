@@ -356,7 +356,9 @@ def is_string(t):
     return 'string' in t['att']
 
 
-# WARNING: Generic type can be not signed and not unsigned (!)
+# WARNING: Generic int type can be
+# not signed and not unsigned at same time (!)
+# (because we dont know how it will be used)
 
 def is_signed(t):
     return 'signed' in t['att']
