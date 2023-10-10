@@ -132,7 +132,6 @@ def hlir_type_generic_str(ti=None):
 def hlir_type_generic_int_bits(nbits, ti=None):
     # get custom generic int type
     gen_int_type = hlir_type_integer('Integer', power=nbits, ti=ti)
-    gen_int_type['kind'] = 'Integer'
     gen_int_type['att'].extend(['generic'])
     # generic int not signed, and not unsigned (!)
     gen_int_type['power'] = nbits

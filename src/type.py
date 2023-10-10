@@ -337,7 +337,7 @@ def is_logical(t):
 
 
 def is_integer(t):
-    return t['kind'] in ['int', 'Integer']
+    return t['kind'] == 'int'
 
 
 def is_char(t):
