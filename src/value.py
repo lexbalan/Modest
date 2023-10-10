@@ -202,6 +202,39 @@ def str_used_as(string_value, typ):
     elif typ['power'] == 32: string_value['imm']['used_char32'] = True
 
 
+
+def value_cons_array_from_string(v, t, ti, method):
+    from_type = v['type']
+    to_type = t
+
+    if not type.is_char(to_type['of']):
+        return None
+
+    #info("cast generic string to array", ti)
+
+    # Check to:array volume vs string len
+    # "xxx" to []X | "xxx" to [n]X
+    if to_type['volume'] != None:
+        to_arr_volume = hlir_value_num_get(to_type['volume'])
+        # v['len'] учитывает '\0'
+        if v['imm']['len'] > to_arr_volume:
+            error("too big", ti)
+
+    items = []
+    for c in v['imm']['str']:
+        ccode = ord(c) # get character code in utf-32
+        item = hlir_value_int(ccode, typ=to_type['of'], ti=ti)
+        items.append(item)
+
+    items.append(hlir_value_int(0, typ=to_type['of']))
+
+    str_used_as(string_value=v, typ=to_type['of'])
+
+    a = hlir_value_array(items, type=to_type, ti=None)
+    a['att'].append('no-cast-literal-array')
+    return a
+
+
 def value_cons_array(v, t, ti, method):
     from_type = v['type']
     to_type = t
@@ -213,31 +246,9 @@ def value_cons_array(v, t, ti, method):
         return value_cons_array_from_array(v, t, ti, method)
 
 
-    # GenericString -> [x]NatX
+    # GenericString -> Array
     if type.is_generic_string(from_type):
-        if type.is_char(to_type['of']):
-            #info("cast generic string to array", ti)
-
-            # Check to:array volume vs string len
-            # "xxx" to []X | "xxx" to [n]X
-            if to_type['volume'] != None:
-                to_arr_volume = hlir_value_num_get(to_type['volume'])
-                # v['len'] учитывает '\0'
-                if v['imm']['len'] > to_arr_volume:
-                    error("too big", ti)
-
-            items = []
-            for c in v['imm']['str']:
-                ccode = ord(c) # get character code in utf-32
-                items.append(hlir_value_int(ccode, typ=to_type['of']))
-
-            items.append(hlir_value_int(0, typ=to_type['of']))
-
-            str_used_as(string_value=v, typ=to_type['of'])
-
-            a = hlir_value_array(items, type=to_type, ti=None)
-            a['att'].append('no-cast-literal-array')
-            return a
+        return value_cons_array_from_string(v, t, ti, method)
 
     return None
 
@@ -278,7 +289,7 @@ def value_cons_record_from_generic_record(v, t, ti, method):
                 if method == 'implicit':
                     # implicit cast требует наличия всех полей
                     error("expected field '%s'" % field_name, v['ti'])
-                    return None    # это cast, а cast не выдает ошибки
+                    return None  # это cast, а cast не выдает ошибки
                 nl = prev_nl
                 ti = None
             else:
@@ -288,7 +299,7 @@ def value_cons_record_from_generic_record(v, t, ti, method):
 
             prev_nl = nl
 
-            item_value2 = value_cast_implicit(item_value, field_type, ti=None)
+            item_value2 = value_cast_implicit(item_value, field_type, ti=item_value['ti'])
 
             type.check(field_type, item_value2['type'], item_value2)
 

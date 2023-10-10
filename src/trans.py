@@ -978,16 +978,15 @@ def do_value_id(x):
 
 
 
-# type of Cm generic string
-def value_gstr(string, length, ti):
+
+def do_value_str(x):
+    string=x['str']
+    length=x['len']
+    ti=x['ti']
+
     s = hlir_value_cstr(string, length, type.typeGenericString, ti=ti)
     module['strings'].append(s)
     return s
-
-
-def do_value_str(x):
-    return value_gstr(string=x['str'], length=x['len'], ti=x['ti'])
-
 
 
 

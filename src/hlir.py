@@ -202,22 +202,17 @@ def hlir_value_zero(t, ti=None):
 
 
 def hlir_value_int(num, typ=None, ti=None):
-
     if typ == None:
         typ = hlir_type_generic_int_for(num, unsigned=False, ti=ti)
     else:
         nbits = nbits_for_num(num)
 
-        #print("nbits = %d" % nbits)
-        #print("typ['power'] = %d" % typ['power'])
-        assert(nbits <= typ['power'])
-        """
-        # extend if generic or error
-        if type.is_generic(typ):
-            typ = hlir_type_generic_int_bits(nbits, unsigned=False, ti=ti)
-        else:
-            error("integer oferflow", ti)
-        """
+        if nbits > typ['power']:
+            from error import error
+            error("value size not corresponded type size", ti)
+            #print("nbits = %d" % nbits)
+            #print("typ['power'] = %d" % typ['power'])
+            return hlir_value_bad(ti)
 
     return {
         'isa': 'value',
@@ -227,6 +222,7 @@ def hlir_value_int(num, typ=None, ti=None):
         'att': ['immediate'],
         'ti': ti
     }
+
 
 
 def hlir_value_float(num, ti=None):
