@@ -459,7 +459,7 @@ def do_value_shift(x):
             if type.is_generic(l['type']):
                 # расширяем generic int тип чтобы в нем можно было сдвигать
                 l['type']['power'] = nbits #!
-                res_t = hlir_type_generic_int_bits(nbits, unsigned=False, ti=ti)
+                res_t = hlir_type_generic_int_bits(nbits, ti=ti)
             else:
                 if nbits > l['type']['power']:
                     error("data loss left shift", ti)
@@ -472,14 +472,13 @@ def do_value_shift(x):
 
         elif op == 'shr':
             imm_result = nl >> nr
+            nbits = nbits_for_num(imm_result)
 
             # TODO: реализуй сдвиг влево!
 
             if type.is_generic(l['type']):
                 # select new generic type for left (!)
-
-                #print("NBITS = " + str(nbits))
-                t = hlir_type_generic_int_bits(nbits, unsigned=False, ti=ti)
+                t = hlir_type_generic_int_bits(nbits, ti=ti)
                 l = do_cast_generic(l, t, x['left']['ti'])
 
             v = hlir_value_bin(op, l, r, l['type'], ti=ti)

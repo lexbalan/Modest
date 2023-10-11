@@ -1,0 +1,19 @@
+// examples/1.hello_world/main.cm
+import "libc/stdio.h"
+
+
+
+func main () -> Int {
+    printf("test shift\n")
+
+    var c : Int32
+
+    c := (1 << 31)
+    printf("1 << 31 = 0x%x\n", c)
+
+    c := (0x80000000 >> 31)
+    printf("0x80000000 >> 31 = 0x%x\n", c)
+
+    return 0
+}
+
