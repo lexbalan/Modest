@@ -171,6 +171,10 @@ declare i32 @closedir(%DIR*)
 declare %Str @getcwd(%Str, i64)
 declare %Str @getenv(%Str)
 
+
+declare void @bzero(i8*, i64)
+
+
 ; -- SOURCE: src/main.cm
 
 @str1.c8 = private constant [13 x i8] c"Hello World!\00"

@@ -1710,7 +1710,6 @@ def print_string_utf32(strid, string):
 
 
 
-
 def print_strings(strings):
     strno = 0
     for string in strings:
@@ -1756,6 +1755,9 @@ def print_module(m):
     out("; -- SOURCE: %s\n" % m['source_info']['name'])
 
     print_strings(m['strings'])
+
+    if 'strings2' in m:
+        print_strings(m['strings2'])
 
     isa_prev = None
 

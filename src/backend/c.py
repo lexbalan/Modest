@@ -352,7 +352,7 @@ bin_ops = {
     'or': '|', 'xor': '^', 'and': '&', 'shl': '<<', 'shr': '>>',
     'eq': '==', 'ne': '!=', 'lt': '<', 'gt': '>', 'le': '<=', 'ge': '>=',
     'add': '+', 'sub': '-', 'mul': '*', 'div': '/', 'rem': '%',
-    'logic_and': '&&', 'logic_or': '||'
+    'logic_and': '&&', 'logic_or': '||', 'add_str': ''
 }
 
 
@@ -372,6 +372,7 @@ def print_value_bin(v, ctx):
     # Что юзер имел в виду (1 << 2) + 2, а у << приоритет тние
     # чтобы он не ругался, завернем такие выражения в скобки
 
+
     if op in ['shl', 'shr']:
         need_wrap_left = precedence(left['kind']) < 10 #precedenceMax
         need_wrap_right = precedence(right['kind']) < 10 #precedenceMax
@@ -385,6 +386,7 @@ def print_value_bin(v, ctx):
             need_wrap_left = precedence(left['kind']) < 10 #precedenceMa
         if right['kind'] != 'logic_and':
             need_wrap_right = precedence(right['kind']) < 10 #precedenceMax
+
 
 
     print_value(left, need_wrap=need_wrap_left)

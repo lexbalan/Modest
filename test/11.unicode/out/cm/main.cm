@@ -15,9 +15,7 @@ var arr_utf16 : [8]Char16 := ["H"[0], "e"[0], "l"[0], "l"[0], "o"[0], "!"[0], "\
 var arr_utf32 : [8]Char32 := ["H"[0], "e"[0], "l"[0], "l"[0], "o"[0], "!"[0], "\xa"[0], "\x0"[0]]
 
 
-
 func main () -> Int {
-
     // indexing of GenericString returns #i symbol code
     // the symbols have GenericInteger type
     let omegaCharCode = "Ω"[0]

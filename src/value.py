@@ -119,6 +119,10 @@ def value_is_immediate(x):
 
 
 
+def value_is_string_literal(x):
+    return x['type']['kind'] == 'String'
+
+
 def value_generic_char(c, ti=None):
     char_code = ord(c)
     typ = hlir_type_char(nbits_for_num(char_code), ti=ti)

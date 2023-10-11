@@ -90,14 +90,13 @@ declare void @perror(%ConstCharStr)
 
 ; -- SOURCE: src/main.cm
 
-@str2.c8 = private constant [19 x i8] c"Hello World! 🎉\0A\00"
+@str1.c8 = private constant [19 x i8] c"Hello World! 🎉\0A\00"
+
 
 
 
 define i32 @main() {
-    %c = alloca i32
-    store i32 127881, i32* %c
-    %1 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str2.c8)
+    %1 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str1.c8)
     ret i32 0
 }
 

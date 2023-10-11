@@ -354,6 +354,7 @@ def is_record(t):
 
 def is_string(t):
     return 'string' in t['att']
+    #return t['kind'] == 'String'
 
 
 # WARNING: Generic int type can be

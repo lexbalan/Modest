@@ -240,21 +240,25 @@ def hlir_value_float(num, ti=None):
     }
 
 
+
+def hlir_string_imm(string, length):
+    return {
+        'str': string,
+        'len': length,
+
+        'used_char8': False,
+        'used_char16': False,
+        'used_char32': False
+    }
+
+
 def hlir_value_cstr(string, length, type, ti=None):
+    imm = hlir_string_imm(string, length)
     return {
         'isa': 'value',
         'kind': 'literal',
         'type': type,
-
-        'imm': {
-            'str': string,
-            'len': length,
-
-            'used_char8': False,
-            'used_char16': False,
-            'used_char32': False
-        },
-
+        'imm': imm,
         'att': ['immediate', 'string'],
         'ti': ti
     }

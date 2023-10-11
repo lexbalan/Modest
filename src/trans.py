@@ -628,6 +628,18 @@ def bin_imm(k, type_result, l, r, ti):
 
 
 
+def value_strings_concat(l, r, ti):
+    string = l['imm']['str'] + r['imm']['str']
+    length = l['imm']['len'] + r['imm']['len']
+    imm_str = hlir_string_imm(string, length)
+    #new_s = hlir_value_cstr(string, length, type.typeGenericString, ti=ti)
+    #module['strings'].append(new_s)
+    bin_value = hlir_value_bin('add_str', l, r, type.typeGenericString, ti=ti)
+    value_set_imm(bin_value, imm_str)
+    module['strings2'].append(bin_value)
+    return bin_value
+
+
 def do_value_bin(x):
     k = x['kind']
     l = do_rvalue(x['left'])
@@ -640,6 +652,11 @@ def do_value_bin(x):
 
     if type.is_pointer(l['type']) or type.is_pointer(r['type']):
         return do_bin_op_with_pointers(k, l, r , ti)
+
+
+    if value_is_string_literal(l) or value_is_string_literal(r):
+        if k == 'add':
+            return value_strings_concat(l, r, ti)
 
 
     common_type = bin_type_select(l['type'], r['type'])
@@ -1795,6 +1812,7 @@ def proc(ast, source_info):
         'source_info': source_info,
         'imports': [],
         'strings': [],
+        'strings2': [],  # concated strings (only for LLVM IR backend)
         'context': root_context.branch(),
         'text': []
     }
