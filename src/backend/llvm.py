@@ -1011,10 +1011,10 @@ def do_eval(x):
 
 def do_eval_str(x):
     # проблема строковых констант и strid
-    #if not 'strid_8' in x:
-    #    if 'value' in x:
-    #        return do_eval_x(x['value'])
-
+    """if not 'strid_8' in x:
+        if 'value' in x:
+            return do_eval_x(x['value'])
+            """
     return {
         'isa': 'llvm_value',
         'class': 'mem',
@@ -1106,6 +1106,7 @@ def do_eval_x(x):
     elif k == 'ccast': y = do_eval_expr_ccast(x)
     elif k == 'cast': y = do_eval_expr_cast(x)
     elif k == 'sizeof': y = do_eval_sizeof(x)
+    elif k == 'add_str': y = do_eval_str(x)
     else:
         out("<%s>" % k)
         y = None

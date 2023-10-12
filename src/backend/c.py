@@ -352,7 +352,8 @@ bin_ops = {
     'or': '|', 'xor': '^', 'and': '&', 'shl': '<<', 'shr': '>>',
     'eq': '==', 'ne': '!=', 'lt': '<', 'gt': '>', 'le': '<=', 'ge': '>=',
     'add': '+', 'sub': '-', 'mul': '*', 'div': '/', 'rem': '%',
-    'logic_and': '&&', 'logic_or': '||', 'add_str': ''
+    'logic_and': '&&', 'logic_or': '||',
+    'add_str': '', 'eq_str': '', 'ne_str': ''
 }
 
 
@@ -383,11 +384,12 @@ def print_value_bin(v, ctx):
             need_wrap_right = precedence(right['kind']) < 10 #precedenceMax
     elif op == 'logic_and':
         if left['kind'] != 'logic_and':
-            need_wrap_left = precedence(left['kind']) < 10 #precedenceMa
+            need_wrap_left = precedence(left['kind']) < 10 #precedenceMax
         if right['kind'] != 'logic_and':
             need_wrap_right = precedence(right['kind']) < 10 #precedenceMax
-
-
+    elif op in ['eq_str', 'ne_str']:
+        print_value_literal_int(v, ctx)
+        return
 
     print_value(left, need_wrap=need_wrap_left)
     out(' %s ' % bin_ops[op])

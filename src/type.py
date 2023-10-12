@@ -357,6 +357,10 @@ def is_string(t):
     #return t['kind'] == 'String'
 
 
+def is_generic_string(t):
+    return t['kind'] == 'String'
+
+
 # WARNING: Generic int type can be
 # not signed and not unsigned at same time (!)
 # (because we dont know how it will be used)

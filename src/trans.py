@@ -288,7 +288,7 @@ def cons_default(x, ti):
         t = type.select_int(req_sz)
         return hlir_value_cast(x, t, ti)
 
-    elif type.is_string(from_type):
+    elif type.is_generic_string(from_type):
         return hlir_value_cast(x, typeSysStr, ti)
 
     elif type.is_float(from_type):
@@ -628,6 +628,8 @@ def bin_imm(k, type_result, l, r, ti):
 
 
 
+
+
 def value_strings_concat(l, r, ti):
     string = l['imm']['str'] + r['imm']['str']
     length = l['imm']['len'] + r['imm']['len']
@@ -638,6 +640,34 @@ def value_strings_concat(l, r, ti):
     value_set_imm(bin_value, imm_str)
     module['strings2'].append(bin_value)
     return bin_value
+
+
+
+def value_string_eq(l, r):
+    if l['imm']['len'] != r['imm']['len']:
+        return 0
+
+    if l['imm']['str'] != r['imm']['str']:
+        return 0
+
+    return 1
+
+
+
+def do_value_bin_str_eq(k, l, r, ti):
+    bool_result = value_string_eq(l, r)
+
+    if k == 'eq':
+        k = 'eq_str'
+
+    elif k == 'ne':
+        k = 'ne_str'
+        bool_result = not bool_result
+
+    bin_value = hlir_value_bin(k, l, r, type.typeNat1, ti=ti)
+    value_set_imm(bin_value, bool_result)
+    return bin_value
+
 
 
 def do_value_bin(x):
@@ -654,9 +684,11 @@ def do_value_bin(x):
         return do_bin_op_with_pointers(k, l, r , ti)
 
 
-    if value_is_string_literal(l) or value_is_string_literal(r):
+    if type.is_generic_string(l['type']) or type.is_generic_string(r['type']):
         if k == 'add':
             return value_strings_concat(l, r, ti)
+        elif k in ['eq', 'ne']:
+            return do_value_bin_str_eq(k, l, r, ti)
 
 
     common_type = bin_type_select(l['type'], r['type'])
@@ -674,21 +706,34 @@ def do_value_bin(x):
         type_result = type.typeNat1
 
         if not type_attribute_check(l['type'], 'comparable'):
-            error("expected value with comparable type", l['ti'])
+            error("expected value with comparable type", x['left']['ti'])
+            return hlir_value_bad(x['ti'])
 
         if not type_attribute_check(r['type'], 'comparable'):
-            error("expected value with comparable type", r['ti'])
+            error("expected value with comparable type", x['right']['ti'])
+            return hlir_value_bad(x['ti'])
 
     # < > <= >= only for values with 'ordered' type
     elif k in ['lt', 'gt', 'le', 'ge']:
         type_result = type.typeNat1
 
         if not type_attribute_check(l['type'], 'ordered'):
-            error("expected value with ordered type", l['ti'])
+            error("expected value with ordered type", x['left']['ti'])
+            return hlir_value_bad(x['ti'])
 
         if not type_attribute_check(r['type'], 'ordered'):
-            error("expected value with ordered type", r['ti'])
+            error("expected value with ordered type", x['right']['ti'])
+            return hlir_value_bad(x['ti'])
 
+    elif k in ['add', 'sub', 'mul', 'div', 'rem']:
+        if not type_attribute_check(l['type'], 'numeric'):
+            error("expected value with ordered type", x['left']['ti'])
+            return hlir_value_bad(x['ti'])
+
+        if not type_attribute_check(r['type'], 'numeric'):
+            error("expected value with ordered type", x['right']['ti'])
+            return hlir_value_bad(x['ti'])
+        pass
 
     if type.eq(type_result, type.typeNat1):
         if k == 'or': k = 'logic_or'
