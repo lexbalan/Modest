@@ -1,0 +1,118 @@
+
+
+import "./libc.hm"
+
+
+//@c_include("sys/socket.h")
+@c_include("arpa/inet.h")
+
+
+@property("c_alias", "struct sockaddr")
+type Struct_sockaddr record {
+    sa_family: UnsignedShort  /* address family */
+    sa_data: [14]Char8        /*  up to 14 bytes of direct address */
+}
+
+@property("c_alias", "struct in_addr")
+type Struct_in_addr record {
+    s_addr: UnsignedLong
+}
+
+
+@property("c_alias", "struct sockaddr_in")
+type Struct_sockaddr_in record {
+    sin_family: Short
+    sin_port: UnsignedShort
+    sin_addr: Struct_in_addr
+}
+
+
+const SOCK_STREAM = 1		/* stream socket */
+const SOCK_DGRAM = 2		/* datagram socket */
+const SOCK_RAW = 3		/* raw-protocol interface */
+const SOCK_RDM = 4		/* reliably-delivered message */
+const SOCK_SEQPACKET = 5		/* sequenced packet stream */
+//#ifdef _KERNEL
+//const SOCK_TYPE_MASK = 0x000F		/* mask that covers the above */
+//#endif
+
+
+/*
+ * Address families.
+ */
+const AF_UNSPEC = 0		/* unspecified */
+const AF_UNIX = 1		/* local to host */
+const AF_LOCAL = AF_UNIX		/* draft POSIX compatibility */
+const AF_INET = 2		/* internetwork: UDP, TCP, etc. */
+const AF_IMPLINK = 3		/* arpanet imp addresses */
+const AF_PUP = 4		/* pup protocols: e.g. BSP */
+const AF_CHAOS = 5		/* mit CHAOS protocols */
+const AF_NS = 6		/* XEROX NS protocols */
+const AF_ISO = 7		/* ISO protocols */
+const AF_OSI = AF_ISO
+const AF_ECMA = 8		/* european computer manufacturers */
+const AF_DATAKIT = 9		/* datakit protocols */
+const AF_CCITT = 10		/* CCITT protocols, X.25 etc */
+const AF_SNA = 11		/* IBM SNA */
+const AF_DECnet = 12		/* DECnet */
+const AF_DLI = 13		/* DEC Direct data link interface */
+const AF_LAT = 14		/* LAT */
+const AF_HYLINK = 15		/* NSC Hyperchannel */
+const AF_APPLETALK = 16		/* Apple Talk */
+const AF_ROUTE = 17		/* Internal Routing Protocol */
+const AF_LINK = 18		/* Link layer interface */
+const pseudo_AF_XTP = 19		/* eXpress Transfer Protocol (no AF) */
+const AF_COIP = 20		/* connection-oriented IP, aka ST II */
+const AF_CNT = 21		/* Computer Network Technology */
+const pseudo_AF_RTIP = 22		/* Help Identify RTIP packets */
+const AF_IPX = 23		/* Novell Internet Protocol */
+const AF_INET6 = 24		/* IPv6 */
+const pseudo_AF_PIP = 25		/* Help Identify PIP packets */
+const AF_ISDN = 26		/* Integrated Services Digital Network*/
+const AF_E164 = AF_ISDN		/* CCITT E.164 recommendation */
+const AF_NATM = 27		/* native ATM access */
+const AF_ENCAP = 28
+const AF_SIP = 29		/* Simple Internet Protocol */
+const AF_KEY = 30
+const pseudo_AF_HDRCMPLT = 31		/* Used by BPF to not rewrite headers
+					   in interface output routine */
+const AF_BLUETOOTH = 32		/* Bluetooth */
+const AF_MPLS = 33              /* MPLS */
+const pseudo_AF_PFLOW = 34		/* pflow */
+const pseudo_AF_PIPEX = 35		/* PIPEX */
+const AF_MAX = 36
+
+
+@property("c_alias", "in_addr_t")
+type in_addr_t Nat32
+
+@property("c_alias", "in_port_t")
+type in_port_t Nat16
+
+@property("c_alias", "socklen_t")
+type socklen_t Nat32
+
+
+func inet_addr(cp: *ConstChar) -> in_addr_t
+/*
+func inet_lnaof(in: Struct_in_addr) -> in_addr_t
+func inet_makeaddr(net: in_addr_t, lna: in_addr_t) -> Struct_in_addr
+func inet_netof(in: Struct_in_addr) -> in_addr_t
+func inet_network(cp: *ConstChar) -> in_addr_t
+func inet_ntoa(in: Struct_in_addr) -> *Char
+*/
+
+
+
+func socket(domain: Int, type: Int, protocol: Int) -> Int
+func send(socket: Int, buffer: Pointer, length: SizeT, flags: Int) -> SSizeT
+func connect(sockfd: Int, addr: *Struct_sockaddr, addrlen: socklen_t) -> Int
+
+func bind(sockfd: Int, addr: *Struct_sockaddr, addrlen: socklen_t) -> Int
+func listen(sockfd: Int, backlog: Int) -> Int
+
+func recv(sockfd: Int, buf: Pointer, len: SizeT, flags: Int) -> SSizeT
+
+// вообще syscall, разберись
+func accept(s: Int, addr: *Struct_sockaddr, addrlen: *socklen_t) -> Int
+

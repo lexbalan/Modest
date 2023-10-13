@@ -55,7 +55,6 @@ bool sha256_doTest(SHA256_TestData *test)
     uint8_t test_hash[sha256HashSize];
     sha256_doHash((uint8_t *)&test->input[0], test->input_len, (uint8_t *)&test_hash[0]);
 
-
     printf("'%s'", &test->input[0]);
 
     printf(" -> ");

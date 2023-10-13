@@ -45,7 +45,6 @@ func sha256_doTest (test : *SHA256_TestData) -> Nat1 {
     var test_hash : [sha256HashSize]Nat8
     sha256_doHash(&test.input to *[]Nat8, test.input_len, &test_hash to *[]Nat8)
 
-
     printf("'%s'", &test.input)
 
     printf(" -> ")
