@@ -260,7 +260,6 @@ def value_cons_array(v, t, ti, method):
             return value_cons_array_from_generic_array(v, t, ti, method)
         return value_cons_array_from_array(v, t, ti, method)
 
-
     # GenericString -> Array
     if type.is_generic_string(from_type):
         return value_cons_array_from_string(v, t, ti, method)
@@ -354,13 +353,6 @@ def value_cons_record_from_generic_record(v, t, ti, method):
     return vx
 
 
-def is_bad_struct(x):
-    if type.is_record(x):
-        for field in x['fields']:
-            if field['type'] == None:
-                return True
-    return False
-
 
 def value_cons_record(v, t, ti, method):
     from_type = v['type']
@@ -380,12 +372,16 @@ def value_cons_char(v, t, ti, method):
     if type.is_generic_char(v['type']):
         return do_cast_generic(v, t, ti)
 
+
     # explicit casts
     if method != 'explicit':
+        info("cannot implicit cons Char value", ti)
         return None
+
 
     if type.is_char(v['type']) or type.is_integer(v['type']):
         return hlir_value_cast(v, t, ti)
+
 
     return None
 
@@ -421,16 +417,22 @@ def value_cons_integer(v, t, ti, method):
         check_power(vtype, t, method, ti)
         return do_cast_generic(v, t, ti)
 
-    if method == 'explicit':
-        if type.is_integer(vtype) or type.is_char(vtype):
-            # (Int or Char) -> Int
-            check_power(vtype, t, method, ti)
-            return hlir_value_cast(v, t, ti)
 
-        elif type.is_float(vtype):
-            # Float -> Int
-            # TODO: need float imm int part check
-            return hlir_value_cast(v, t, ti=ti)
+    if method != 'explicit':
+        info("cannot implicit cons Integer value", ti)
+        return None
+
+
+    if type.is_integer(vtype) or type.is_char(vtype):
+        # (Int or Char) -> Int
+        check_power(vtype, t, method, ti)
+        return hlir_value_cast(v, t, ti)
+
+    if type.is_float(vtype):
+        # Float -> Int
+        # TODO: need float imm int part check
+        return hlir_value_cast(v, t, ti=ti)
+
 
     return None
 
@@ -460,14 +462,18 @@ def value_cons_float(v, t, ti, method):
             return y
 
 
-    if method == 'explicit':
-        if type.is_integer(vt):
-            # Int -> Float
-            return hlir_value_cast(v, t, ti=ti)
+    if method != 'explicit':
+        info("cannot implicit cons Float value", ti)
 
-        elif type.is_float(vt):
-            # Float -> Float
-            return hlir_value_cast(v, t, ti=ti)
+
+    if type.is_integer(vt):
+        # Int -> Float
+        return hlir_value_cast(v, t, ti=ti)
+
+    if type.is_float(vt):
+        # Float -> Float
+        return hlir_value_cast(v, t, ti=ti)
+
 
     return None
 
@@ -505,11 +511,11 @@ def value_cons_pointer(v, t, ti, method):
 
 
     if method != 'explicit':
-        error("cannot implicit cast different pointers", ti)
+        info("cannot implicit cast different pointers", ti)
         return None
 
     if not 'unsafe' in features:
-        error("explicit typecast between pointers is forbidden in safe mode", ti)
+        info("explicit typecast to pointer is forbidden in safe mode", ti)
         return None
 
     ### UNSAFE REGION ###
