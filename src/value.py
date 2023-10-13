@@ -8,6 +8,8 @@ from hlir import *
 from util import get_item_with_id
 
 
+no_warning_cast_data_loss = True
+
 
 def value_print(x):
     print("print_value:")
@@ -389,87 +391,88 @@ def value_cons_char(v, t, ti, method):
 
 
 
-def value_cons_integer(v, t, ti, method):
+def check_power(vtype, t, method, ti):
+    rv = True
 
-    # implicit & explicit
-
-    #
-    if type.is_integer(v['type']) or (type.is_char(v['type']) and method == 'explicit'):
-        # Int -> Int
-        if type.is_generic(v['type']):
-            # GenericInt -> Int
-            # check size
-            if v['type']['power'] > t['power']:
-                if method == 'explicit':
-                    warning("explicit casting with data loss", ti)
-                else:
-                    error("implicit casting with data loss", ti)
-
-                type_print(v['type'])
-                print(" -> ", end="")
-                type_print(t)
-                print()
-                return hlir_value_cast(v, t, ti)
-
-
-        # cast non-generic integer to integer
+    if vtype['power'] > t['power']:
         if method == 'explicit':
-            nv = hlir_value_cast(v, t, ti)
-            if value_is_immediate(v):
-                value_set_imm(nv, v['imm'])
-            return nv
+            if not no_warning_cast_data_loss:
+                warning("explicit casting with data loss", ti)
 
         else:
-            return do_cast_generic(v, t, ti)
+            error("implicit casting with data loss", ti)
+            rv = False
+
+    if not rv:
+        type_print(vtype)
+        print(" -> ", end="")
+        type_print(t)
+        print()
+
+    return rv
 
 
-    elif type.is_float(v['type']):
-        if method == 'explicit':
-            return hlir_value_cast(v, t, ti=ti)
 
+def value_cons_integer(v, t, ti, method):
+    vtype = v['type']
 
+    nv = None
 
-    return None
+    if type.is_generic_integer(vtype):
+        # GenericInt -> Int
+        check_power(vtype, t, method, ti)
+        nv = do_cast_generic(v, t, ti)
+
+    if method == 'explicit':
+        if type.is_integer(vtype) or type.is_char(vtype):
+            # (Int or Char) -> Int
+            check_power(vtype, t, method, ti)
+            nv = hlir_value_cast(v, t, ti)
+
+        elif type.is_float(vtype):
+            # Float -> Int
+            # TODO: need float imm int part check
+            nv = hlir_value_cast(v, t, ti=ti)
+
+    return nv
 
 
 
 def value_cons_float(v, t, ti, method):
-        vt = v['type']
+    vt = v['type']
 
-        if type.is_generic(vt):
-            # GenericFloat -> Float
-            # GenericInt -> Float
-            if type.is_integer(vt) or type.is_float(vt):
-                #if v['type']['size'] > t['size']:
-                #    return None
+    nv = None
 
-                y = do_cast_generic(v, t, ti)
-                num = hlir_value_imm_get(y)
+    if type.is_generic(vt):
+        if type.is_integer(vt) or type.is_float(vt):
+            # (GenericInt or GenericFloat) -> Float
+            y = do_cast_generic(v, t, ti)
+            num = hlir_value_imm_get(y)
 
-                import struct
+            import struct
 
-                z = 0
-                if t['power'] == 32:
-                    z = struct.unpack('<f', struct.pack('<f', num))[0]
-                elif t['power'] == 64:
-                    z = struct.unpack('<d', struct.pack('<d', num))[0]
-                else:
-                    fatal("too big float, not implemented")
+            z = 0
+            if t['power'] == 32:
+                z = struct.unpack('<f', struct.pack('<f', num))[0]
+            elif t['power'] == 64:
+                z = struct.unpack('<d', struct.pack('<d', num))[0]
+            else:
+                fatal("too big float, not implemented")
 
-                y['imm'] = z
-                return y
+            y['imm'] = z
+            nv = y
 
-        elif type.is_integer(vt):
+
+    if method == 'explicit':
+        if type.is_integer(vt):
             # Int -> Float
-            if method == 'explicit':
-                return hlir_value_cast(v, t, ti=ti)
+            nv = hlir_value_cast(v, t, ti=ti)
 
         elif type.is_float(vt):
             # Float -> Float
-            if method == 'explicit':
-                return hlir_value_cast(v, t, ti=ti)
+            nv = hlir_value_cast(v, t, ti=ti)
 
-        return None
+    return nv
 
 
 
@@ -568,10 +571,18 @@ def value_cons(v, t, ti, method):
     elif type.is_char(t): cons = value_cons_char
     elif type.is_unit(t): cons = value_cons_unit
 
-    if cons != None:
-        return cons(v, t, ti, method)
+    nv = None
 
-    return None
+    if cons != None:
+        nv = cons(v, t, ti, method)
+
+    # if construct immediate value
+    if nv != None:
+        if (cons == value_cons_integer) or (cons == value_cons_float):
+            if value_is_immediate(v):
+                value_set_imm(nv, v['imm'])
+
+    return nv
 
 
 
@@ -598,7 +609,6 @@ def value_cast_implicit(v, t, ti):
 
     from_type = v['type']
     to_type = t
-
 
     # implisit cast possible only for:
     # 1. Generic -> NonGeneric

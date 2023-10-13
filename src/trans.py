@@ -914,6 +914,8 @@ def do_value_index(x):
 
     i = value_cast_implicit(i, typeSysInt, i['ti'])
 
+    v = None
+
     if ptr_access:
         v = hlir_value_index_array_by_ptr(a, i, ti=x['ti'])
 
@@ -931,6 +933,7 @@ def do_value_index(x):
         if value_is_immediate(i):
             index = hlir_value_imm_get(i)
 
+            # TODO:
             #if index >= hlir_value_imm_get(typ['volume']):
             #    error("array index out of bounds", x['index'])
 

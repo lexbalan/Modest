@@ -213,7 +213,7 @@ def print_value(x):
             inline_cast('inttoptr', v['type'], x['type'], v)
 
         elif type.is_float(x['type']):
-            out(str(num))
+            out("%.1f" % (num))
 
         elif type.is_char(x['type']):
             out(str(num))
