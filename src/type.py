@@ -369,6 +369,7 @@ def is_generic_string(t):
 # WARNING: Generic int type can be
 # not signed and not unsigned at same time (!)
 # (because we dont know how it will be used)
+# example: let x = 0xFFFFFFFF  #it is signed or unsigned value?
 
 def is_signed(t):
     return 'signed' in t['att']
@@ -393,7 +394,6 @@ def is_generic_record(t):
 
 def is_generic_string(t):
     return t['kind'] == 'String'
-    #is_generic(t) and is_string(t)
 
 
 def is_pointer(t):
