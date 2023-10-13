@@ -139,7 +139,7 @@ def value_load(x):
 # полного или из пустого дженерик массива
 def value_cons_array_from_generic_array(v, t, ti, method):
     #info("value_cons_array_from_generic_array", ti)
-    if len(v['imm']) > hlir_value_num_get(t['volume']):
+    if len(v['imm']) > hlir_value_imm_get(t['volume']):
         info("too many items", v['ti'])
         return None
 
@@ -182,8 +182,8 @@ def value_cons_array_from_array(v, t, ti, method):
         return None
 
     # нельзя построить меньший массив из большего
-    n_from = hlir_value_num_get(v['type']['volume'])
-    n_to = hlir_value_num_get(t['volume'])
+    n_from = hlir_value_imm_get(v['type']['volume'])
+    n_to = hlir_value_imm_get(t['volume'])
     if n_from > n_to:
         return None
 
@@ -221,7 +221,7 @@ def value_cons_array_from_string(v, t, ti, method):
     # Check to:array volume vs string len
     # "xxx" to []X | "xxx" to [n]X
     if to_type['volume'] != None:
-        to_arr_volume = hlir_value_num_get(to_type['volume'])
+        to_arr_volume = hlir_value_imm_get(to_type['volume'])
         # v['len'] учитывает '\0'
         if v['imm']['len'] > to_arr_volume:
             error("too big", ti)
@@ -444,7 +444,7 @@ def value_cons_float(v, t, ti, method):
                 #    return None
 
                 y = do_cast_generic(v, t, ti)
-                num = hlir_value_num_get(y)
+                num = hlir_value_imm_get(y)
 
                 import struct
 
@@ -488,7 +488,7 @@ def value_cons_pointer(v, t, ti, method):
                 if type.is_integer(v['type']):
                     # compile-time casting
                     nv = hlir_value_cast(v, t, ti=ti)
-                    num = hlir_value_num_get(v)
+                    num = hlir_value_imm_get(v)
                     nv['imm'] = num
                     nv['att'].append('immediate')
                     return nv

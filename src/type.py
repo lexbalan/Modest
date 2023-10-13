@@ -189,7 +189,7 @@ def eq_array(a, b):
     if a['volume'] == None or b['volume'] == None:
         return False
 
-    if hlir_value_num_get(a['volume']) != hlir_value_num_get(b['volume']):
+    if hlir_value_imm_get(a['volume']) != hlir_value_imm_get(b['volume']):
         return False
 
     if a['of'] == None and b['of'] == None:
@@ -519,7 +519,7 @@ def get_size(t):
     if is_integer(t):
         return t['size']
     elif is_array(t):
-        return hlir_value_num_get(t['volume']) * get_size(t['of'])
+        return hlir_value_imm_get(t['volume']) * get_size(t['of'])
 
     #else:
     #    fatal("type.get_size() for '%s' not implemented" % t['kind'])
@@ -595,7 +595,7 @@ def type_print(t, print_aka=True):
         array_size = t['volume']
 
         if array_size != None:
-            sz = hlir_value_num_get(array_size)
+            sz = hlir_value_imm_get(array_size)
             print("%d" % sz, end='')
 
         print("]", end='')

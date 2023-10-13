@@ -443,8 +443,8 @@ def do_value_shift(x):
 
     # const folding
     if value_is_immediate(l) and value_is_immediate(r):
-        nl = hlir_value_num_get(l)
-        nr = hlir_value_num_get(r)
+        nl = hlir_value_imm_get(l)
+        nr = hlir_value_imm_get(r)
 
         imm_result = 0
 
@@ -566,8 +566,8 @@ def do_bin_op_with_pointers(k, l, r , ti):
                 typ = r['type']
 
             num = 0
-            if k == 'add': num = hlir_value_num_get(l) + hlir_value_num_get(r)
-            elif k == 'sub': num = hlir_value_num_get(l) - hlir_value_num_get(r)
+            if k == 'add': num = hlir_value_imm_get(l) + hlir_value_imm_get(r)
+            elif k == 'sub': num = hlir_value_imm_get(l) - hlir_value_imm_get(r)
             return hlir_value_int(num, typ=typ, ti=ti)
 
         # указатель или число в рантайме
@@ -611,7 +611,7 @@ def bin_imm(k, type_result, l, r, ti):
         'rem': lambda a, b: a % b,
     }
 
-    num_val = ops[k](hlir_value_num_get(l), hlir_value_num_get(r))
+    num_val = ops[k](hlir_value_imm_get(l), hlir_value_imm_get(r))
 
     if type.is_generic(type_result):
         # пересматриваем generic тип для нового значения (!)
@@ -756,7 +756,7 @@ def do_value_not(val, t, ti):
     v = hlir_value_un('not', val, t, ti=ti)
 
     if value_is_immediate(val):
-        num = ~hlir_value_num_get(val)
+        num = ~hlir_value_imm_get(val)
         value_set_imm(v, num)
 
     return v
@@ -766,7 +766,7 @@ def do_value_minus(val, t, ti):
     v = hlir_value_un('minus', val, t, ti=ti)
 
     if value_is_immediate(val):
-        num = -hlir_value_num_get(val)
+        num = -hlir_value_imm_get(val)
         value_set_imm(v, num)
 
     if type.is_generic(v['type']):
@@ -929,9 +929,9 @@ def do_value_index(x):
     # immediate index (!)
     if value_is_immediate(a) and not ptr_access:
         if value_is_immediate(i):
-            index = hlir_value_num_get(i)
+            index = hlir_value_imm_get(i)
 
-            #if index >= hlir_value_num_get(typ['volume']):
+            #if index >= hlir_value_imm_get(typ['volume']):
             #    error("array index out of bounds", x['index'])
 
             if type.is_generic_string(a['type']):

@@ -5,7 +5,7 @@ from .common import *
 import type
 from type import type_print
 from value import value_attribute_check, value_is_immediate, value_print
-from hlir import hlir_field, hlir_value_num_get, hlir_stmt_block, hlir_value_var
+from hlir import hlir_field, hlir_value_imm_get, hlir_stmt_block, hlir_value_var
 from util import nbits_for_num, get_item_with_id
 
 puffy = False
@@ -612,6 +612,11 @@ def print_value_literal_array(v, ctx):
 
 
     values = v['imm']
+
+    if values == None:
+        out("{0}")
+        return
+
     i = 0
     n = len(values)
     while i < n:
@@ -665,6 +670,11 @@ def print_value_literal_record(v, ctx):
     indent_up()
 
     initializers = v['imm']
+
+    if initializers == None:
+        out("{0}")
+        return
+
     nitems = len(initializers)
     i = 0
     while i < nitems:
@@ -738,6 +748,10 @@ def print_value_literal_record(v, ctx):
 
 def print_value_literal_str(x, ctx, prefix=""):
 
+    if x['imm'] == None:
+        out("\"\"")
+        return
+
     out("%s\"" % prefix)
 
     for sym in x['imm']['str']:
@@ -760,7 +774,11 @@ def print_value_literal_str(x, ctx, prefix=""):
 
 def print_value_literal_char(x, ctx):
     #if type.type_attribute_check(x['type'], 'char'):
-    num = hlir_value_num_get(x)
+    num = hlir_value_imm_get(x)
+
+    if num == None:
+        out("'\0'")
+        return
 
     prefix = ""
     if num > 0xFFFF:
@@ -778,7 +796,7 @@ def print_value_literal_char(x, ctx):
 
 def print_value_literal_int(x, ctx):
 
-    num = hlir_value_num_get(x)
+    num = hlir_value_imm_get(x)
 
 
     # Big Number?
@@ -808,7 +826,10 @@ def print_value_literal_int(x, ctx):
         out(fmt % num)
 
     else:
-        out(str(num))
+        if num == None:
+            out("0")
+        else:
+            out(str(num))
 
 
     nbits = x['type']['power']
@@ -824,7 +845,12 @@ def print_value_literal_int(x, ctx):
 
 
 def print_value_literal_flt(x, ctx):
-    out(str(float(hlir_value_num_get(x))))
+    num = hlir_value_imm_get(x)
+    if num == None:
+        out("0")
+    else:
+        out(str(float(num)))
+
 
 
 
@@ -832,10 +858,10 @@ def print_value_literal_ptr(x, ctx):
     if type.is_free_pointer(x['type']):
         out("NULL")
     else:
-        if hlir_value_num_get(x) == 0:
+        if hlir_value_imm_get(x) in [0, None]:
             out("NULL")
         else:
-            out("0x%X" % hlir_value_num_get(x))
+            out("0x%X" % hlir_value_imm_get(x))
 
 
 def print_value_literal(x, ctx):

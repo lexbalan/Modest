@@ -5,7 +5,7 @@ from error import info
 from .common import *
 from type import type_attribute_check
 from value import value_attribute_check
-from hlir import hlir_value_num_get
+from hlir import hlir_value_imm_get
 from util import get_item_with_id
 
 
@@ -418,7 +418,7 @@ def print_value_literal_str(x, ctx):
 
 
 def print_value_literal_char(x, ctx):
-    num = hlir_value_num_get(x)
+    num = hlir_value_imm_get(x)
     if num >= 0x20:
         out("\"%c\"[0]" % num)
     else:
@@ -426,7 +426,7 @@ def print_value_literal_char(x, ctx):
 
 
 def print_value_literal_int(x, ctx):
-    num = hlir_value_num_get(x)
+    num = hlir_value_imm_get(x)
 
     #if type.type_attribute_check(x['type'], 'char'):
     #    out("\"%c\"[0]" % num)
@@ -450,7 +450,7 @@ def print_value_literal_int(x, ctx):
 
 
 def print_value_literal_flt(x, ctx):
-    out(str(float(hlir_value_num_get(x))))
+    out(str(float(hlir_value_imm_get(x))))
 
 
 def print_value_zero(x, ctx):

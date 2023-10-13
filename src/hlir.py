@@ -303,7 +303,7 @@ def hlir_value_record(typ, initializers={}, ti=None):
     }
 
 
-def hlir_value_num_get(x):
+def hlir_value_imm_get(x):
     return x['imm']
 
 
