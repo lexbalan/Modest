@@ -191,10 +191,9 @@ declare void @sha256_doHash([0 x i8]*, i32, [0 x i8]*)
 @str4.c8 = private constant [5 x i8] c" -> \00"
 @str5.c8 = private constant [5 x i8] c"%02X\00"
 @str6.c8 = private constant [2 x i8] c"\0A\00"
-@str7.c8 = private constant [13 x i8] c"Hello World!\00"
-@str8.c8 = private constant [13 x i8] c"test SHA256\0A\00"
-@str9.c8 = private constant [17 x i8] c"test #%d passed\0A\00"
-@str10.c8 = private constant [17 x i8] c"test #%d failed\0A\00"
+@str7.c8 = private constant [13 x i8] c"test SHA256\0A\00"
+@str8.c8 = private constant [17 x i8] c"test #%d passed\0A\00"
+@str9.c8 = private constant [17 x i8] c"test #%d failed\0A\00"
 
 
 
@@ -394,25 +393,9 @@ break_1:
 }
 
 
-@test_msg = global [13 x i8] [
-  i8 72,
-  i8 101,
-  i8 108,
-  i8 108,
-  i8 111,
-  i8 32,
-  i8 87,
-  i8 111,
-  i8 114,
-  i8 108,
-  i8 100,
-  i8 33,
-  i8 0
-]
-@test_hash = global [32 x i8] zeroinitializer
 
 define i32 @main() {
-    %1 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str8.c8)
+    %1 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str7.c8)
     %2 = sext i1 0 to i32
     %i = alloca i32
     store i32 %2, i32* %i
@@ -430,11 +413,11 @@ body_1:
     br i1 %9 , label %then_0, label %else_0
 then_0:
     %10 = load i32, i32* %i
-    %11 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str9.c8, i32 %10)
+    %11 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str8.c8, i32 %10)
     br label %endif_0
 else_0:
     %12 = load i32, i32* %i
-    %13 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str10.c8, i32 %12)
+    %13 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str9.c8, i32 %12)
     br label %endif_0
 endif_0:
     %14 = load i32, i32* %i

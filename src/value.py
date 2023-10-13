@@ -148,6 +148,8 @@ def value_cons_array_from_generic_array(v, t, ti, method):
     for item in items:
         casted_item = value_cast_implicit(item, t['of'], item['ti'])
         type.check(t['of'], casted_item['type'], item['ti'])
+
+        casted_item['nl'] = item['nl']
         casted_items.append(casted_item)
 
     vx = {
