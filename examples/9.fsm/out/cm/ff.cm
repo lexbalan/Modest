@@ -72,8 +72,9 @@ func ff_cstrlen (cstr : *[]Char8) -> Nat64 {
 
 func delay_us (us : Nat64) -> Unit {
     let start_time = clock()
+    let end_time = start_time + us
 
-    while clock() < start_time + us {
+    while clock() < end_time {
         // waiting
     }
 }
