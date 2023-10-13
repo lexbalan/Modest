@@ -175,6 +175,8 @@ declare %Str @getenv(%Str)
 declare void @bzero(i8*, i64)
 
 
+declare void @bcopy(i8*, i8*, i64)
+
 ; -- SOURCE: src/main.cm
 
 @str1.c8 = private constant [13 x i8] c"Hello World!\00"

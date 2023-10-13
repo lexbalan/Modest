@@ -60,9 +60,9 @@ func ff_memcpy (dst : Pointer, src : Pointer, len : Nat64) -> Unit {
 }
 
 
-func ff_cstrlen (cstr : *[]Nat8) -> Nat64 {
+func ff_cstrlen (cstr : *[]Char8) -> Nat64 {
     var i : Nat64 := 0 to Nat64
-    while cstr[i] != 0 {
+    while cstr[i] != "\x0"[0] {
         i := i + 1
     }
     return i

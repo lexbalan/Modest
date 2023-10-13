@@ -117,6 +117,12 @@ declare i32 @closedir(%DIR*)
 declare %Str @getcwd(%Str, i64)
 declare %Str @getenv(%Str)
 
+
+declare void @bzero(i8*, i64)
+
+
+declare void @bcopy(i8*, i8*, i64)
+
 ; -- SOURCE: /Users/alexbalan/p/Modest/examples/8.linked_list/src/linked_list.hm
 
 

@@ -343,6 +343,11 @@ def is_integer(t):
 def is_char(t):
     return t['kind'] == 'char'
 
+def is_generic_char(t):
+    if not is_generic(t):
+        return False
+    return is_char(t)
+
 
 def is_float(t):
     return t['kind'] == 'float'

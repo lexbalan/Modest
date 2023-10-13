@@ -372,7 +372,20 @@ def value_cons_record(v, t, ti, method):
 
 
 def value_cons_char(v, t, ti, method):
-    return value_cons_integer(v, t, ti, method)
+    # implicit casts
+    if type.is_generic_char(v['type']):
+        return do_cast_generic(v, t, ti)
+
+    # explicit casts
+    if method != 'explicit':
+        return None
+
+    if type.is_char(v['type']) or type.is_integer(v['type']):
+        return hlir_value_cast(v, t, ti)
+
+    return None
+
+
 
 def value_cons_integer(v, t, ti, method):
 

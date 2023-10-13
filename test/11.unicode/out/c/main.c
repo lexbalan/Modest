@@ -22,7 +22,6 @@ uint32_t arr_utf32[8] = (uint32_t [8]){'H', 'e', 'l', 'l', 'o', '!', '\xa', '\x0
 
 int main(void)
 {
-
     // indexing of GenericString returns #i symbol code
     // the symbols have GenericInteger type
     const uint32_t omegaCharCode = u'\x3a9';

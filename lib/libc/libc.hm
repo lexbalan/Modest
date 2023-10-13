@@ -126,3 +126,12 @@ extern func getcwd (buf : Str, size : SizeT) -> Str
 extern func getenv (name : Str) -> Str
 
 
+
+// нестандартная (BSD) функция
+// как правило - макрос над memset
+func bzero(s: Pointer, n: SizeT) -> Unit
+
+// нестандартная (BSD) функция
+// как правило - макрос над memmove (strings.h)
+func bcopy(src: Pointer, dst: Pointer, n: SizeT) -> Unit
+

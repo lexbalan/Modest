@@ -10,7 +10,7 @@ type InputString [32]Char8
 type SHA256_TestData record {
     input : InputString
     input_len : Nat32
-    output : [32]Char8
+    output : [32]Nat8
 }
 
 

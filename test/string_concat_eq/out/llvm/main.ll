@@ -34,8 +34,6 @@ target triple = "arm64-apple-darwin21.6.0"
 
 
 
-%socklen_t = type i32
-
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
 
 

@@ -121,6 +121,8 @@ declare %Str @getenv(%Str)
 declare void @bzero(i8*, i64)
 
 
+declare void @bcopy(i8*, i8*, i64)
+
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/misc/sha256.cm
 
 
