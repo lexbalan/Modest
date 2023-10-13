@@ -8,7 +8,6 @@ from value import value_attribute_check, value_is_immediate, value_print
 from hlir import hlir_field, hlir_value_imm_get, hlir_stmt_block, hlir_value_var
 from util import nbits_for_num, get_item_with_id
 
-puffy = False
 
 INDENT_SYMBOL = " " * 4
 
@@ -21,13 +20,7 @@ NO_TYPEDEF_OTHERS = False
 USE_BOOLEAN = True
 USE_STDBOOL = True
 
-USE_UCHAR = False
-
 USE_STATIC_VARIABLES = True
-USE_CONST_LET_VARIABLES = True
-
-
-EMPTY_BLOCK_COMMENT = "// TODO: pay attention here"
 
 
 # for integer literals printing
@@ -60,10 +53,10 @@ styles = {
 styleguide = styles['legacy']
 
 
-NLSYM = "\n"
+nl_str = "\n"
 
 def newline(n=1):
-    out(NLSYM * n)
+    out(nl_str * n)
 
 
 def indent():
@@ -81,8 +74,6 @@ def nl_indent():
 
 
 def init():
-    global puffy
-    puffy = features_get("puffy")
     global styleguide
     stylename = settings_get('style')
     if stylename != None:
@@ -1325,10 +1316,11 @@ def print_def_const(x):
     out("#define %s  " % id_str)
 
     need_wrap = precedence(v['kind']) < precedenceMax
-    global NLSYM
-    NLSYM = " \\\n"
+    global nl_str
+    nl_str = " \\\n"
+    # ctx=['no-literal-array-cast'],
     print_value(v, need_wrap=need_wrap, print_just_id=True)
-    NLSYM = "\n"
+    nl_str = "\n"
 
 
 def print_include(x):
@@ -1410,9 +1402,6 @@ def run(module, outname):
 
     if USE_STDBOOL:
         lo("#include <stdbool.h>")
-
-    if USE_UCHAR:
-        lo("#include <uchar.h>")
 
     newline(n=2)
 
