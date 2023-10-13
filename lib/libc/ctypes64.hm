@@ -4,7 +4,7 @@
 type Str Str8
 
 @property("c_alias", "char")
-type Char Int8
+type Char Char8
 
 @property("c_alias", "const char")
 type ConstChar Char

@@ -319,11 +319,9 @@ def print_type(t, print_aka=True, arr_as_ptr_to_arr=False):
         print_list_by(t['params'], lambda f: print_type(f['type'], arr_as_ptr_to_arr=True))
         out(")")
 
-    elif type.is_integer(t):
+    elif type.is_integer(t) or type.is_char(t):
         if 'llvm_alias' in t:
             out(t['llvm_alias'])
-        #    return
-        #o('%' + t['aka'])
 
     elif type.is_float(t):
         if 'llvm_alias' in t:

@@ -6,8 +6,8 @@ import "libc/stdio.h"
 func main () -> Int {
     printf("test cast operation\n")
 
-    let x0 = -1 to Int32
-    let x1 = -1 to Int64
+    let x0 = (-1)
+    let x1 = (-1)
 
     let y0 = x0 to Nat64
     let y1 = x1 to Nat64

@@ -416,32 +416,28 @@ def check_power(vtype, t, method, ti):
 def value_cons_integer(v, t, ti, method):
     vtype = v['type']
 
-    nv = None
-
     if type.is_generic_integer(vtype):
         # GenericInt -> Int
         check_power(vtype, t, method, ti)
-        nv = do_cast_generic(v, t, ti)
+        return do_cast_generic(v, t, ti)
 
     if method == 'explicit':
         if type.is_integer(vtype) or type.is_char(vtype):
             # (Int or Char) -> Int
             check_power(vtype, t, method, ti)
-            nv = hlir_value_cast(v, t, ti)
+            return hlir_value_cast(v, t, ti)
 
         elif type.is_float(vtype):
             # Float -> Int
             # TODO: need float imm int part check
-            nv = hlir_value_cast(v, t, ti=ti)
+            return hlir_value_cast(v, t, ti=ti)
 
-    return nv
+    return None
 
 
 
 def value_cons_float(v, t, ti, method):
     vt = v['type']
-
-    nv = None
 
     if type.is_generic(vt):
         if type.is_integer(vt) or type.is_float(vt):
@@ -460,89 +456,91 @@ def value_cons_float(v, t, ti, method):
                 fatal("too big float, not implemented")
 
             y['imm'] = z
-            nv = y
+
+            return y
 
 
     if method == 'explicit':
         if type.is_integer(vt):
             # Int -> Float
-            nv = hlir_value_cast(v, t, ti=ti)
+            return hlir_value_cast(v, t, ti=ti)
 
         elif type.is_float(vt):
             # Float -> Float
-            nv = hlir_value_cast(v, t, ti=ti)
+            return hlir_value_cast(v, t, ti=ti)
 
-    return nv
+    return None
+
 
 
 
 def value_cons_pointer(v, t, ti, method):
-
-    from_type = v['type']
+    vtype = v['type']
     to_type = t
 
-    if 'unsafe' in features:
-        ### UNSAFE ###
+    # Nil -> *X
+    if type.is_nil(vtype):
+        return do_cast_generic(v, t, ti)
 
-        if method == 'explicit':
-
-            # Imm Int -> Pointer
-            if value_is_immediate(v):
-                if type.is_integer(v['type']):
-                    # compile-time casting
-                    nv = hlir_value_cast(v, t, ti=ti)
-                    num = hlir_value_imm_get(v)
-                    nv['imm'] = num
-                    nv['att'].append('immediate')
-                    return nv
-
-            # Int -> Ptr
-            if type.is_integer(from_type):
-                from trans import ptr_size
-                if from_type['power'] != ptr_size:
-                    error("cons pointer from integer with different size", ti)
-                return hlir_value_cast(v, t, ti=ti)
-
-            # Ptr -> Ptr
-            if type.is_pointer(from_type):
-                return hlir_value_cast(v, t, ti=ti)
-
-    # *[n]X -> *[]X
-    if type.is_pointer_to_defined_array(from_type):
-        if type.is_pointer_to_undefined_array(t):
-            if type.eq(from_type['to']['of'], t['to']['of']):
-                return hlir_value_cast(v, t, ti=ti)
-
-
-    # GenericString -> *[]NatX
-    #info("HEHE", ti)
-    if type.is_generic_string(from_type):
+    # GenericString -> *[]CharX
+    if type.is_generic_string(vtype):
         if type.is_array(to_type['to']):
-            #info("XOXO", ti)
-            # GenericString -> *[]CharX
             if type.is_char(to_type['to']['of']):
-                #info("cast generic string to pointer", ti)
                 str_used_as(string_value=v, typ=to_type['to']['of'])
                 return do_cast_generic(v, t, ti=ti) #?!
 
-        elif type.is_integer(to_type['to']):
-            # GenericString -> *NatX
-            str_used_as(string_value=v, typ=to_type['to'])
-            return hlir_value_cast(v, t, ti=ti) #?!
-
-        return v
-
-    # Nil -> *X
-    if type.is_nil(from_type) and type.is_pointer(t):
-        return do_cast_generic(v, t, ti)
+    # *[n]X -> *[]X
+    if type.is_pointer_to_defined_array(vtype):
+        if type.is_pointer_to_undefined_array(t):
+            if type.eq(vtype['to']['of'], t['to']['of']):
+                return hlir_value_cast(v, t, ti=ti)
 
     # Pointer -> *X
-    if type.is_free_pointer(from_type) and type.is_pointer(t):
+    if type.is_free_pointer(vtype):
         return hlir_value_cast(v, t, ti=ti)
 
     # *X -> Pointer
-    if type.is_pointer(from_type) and type.is_free_pointer(t):
+    if type.is_pointer(vtype):
         return hlir_value_cast(v, t, ti=ti)
+
+
+    if method != 'explicit':
+        error("cannot implicit cast different pointers", ti)
+        return None
+
+    if not 'unsafe' in features:
+        error("explicit typecast between pointers is forbidden in safe mode", ti)
+        return None
+
+    ### UNSAFE REGION ###
+
+    # Imm Int -> Pointer
+    if value_is_immediate(v):
+        if type.is_integer(v['type']):
+            # compile-time casting
+            nv = hlir_value_cast(v, t, ti=ti)
+            num = hlir_value_imm_get(v)
+            nv['imm'] = num
+            nv['att'].append('immediate')
+            return nv
+
+    # Int -> Ptr
+    if type.is_integer(vtype):
+        from trans import ptr_size
+        if vtype['power'] != ptr_size:
+            error("cons pointer from integer with different size", ti)
+        return hlir_value_cast(v, t, ti=ti)
+
+    # Ptr -> Ptr
+    if type.is_pointer(vtype):
+        return hlir_value_cast(v, t, ti=ti)
+
+    # GenericString -> *CharX
+    if type.is_generic_string(vtype):
+        if type.is_char(to_type['to']):
+            # GenericString -> *CharX
+            str_used_as(string_value=v, typ=to_type['to'])
+            return hlir_value_cast(v, t, ti=ti) #?!
 
     return None
 

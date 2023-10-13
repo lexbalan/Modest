@@ -102,8 +102,8 @@ void sha256_transform(SHA256_Context *ctx, uint8_t *data)
 {
     uint32_t m[64] = (uint32_t [64]){};
 
-    uint32_t i = (uint32_t)0;
-    uint32_t j = (uint32_t)0;
+    uint32_t i = 0;
+    uint32_t j = 0;
 
     while (i < 16) {
         const uint32_t x = (uint32_t)data[j + 0] << 24 | (uint32_t)data[j + 1] << 16 | (uint32_t)data[j + 2] << 8 | (uint32_t)data[j + 3] << 0;
@@ -148,7 +148,7 @@ void sha256_transform(SHA256_Context *ctx, uint8_t *data)
 
 void sha256_update(SHA256_Context *ctx, uint8_t *data, uint32_t len)
 {
-    uint32_t i = (uint32_t)0;
+    uint32_t i = 0;
     while (i < len) {
         ctx->data[ctx->datalen] = data[i];
         ctx->datalen = ctx->datalen + 1;
@@ -168,7 +168,7 @@ void sha256_final(SHA256_Context *ctx, uint8_t *hash)
 
     // Pad whatever data is left in the buffer.
 
-    uint32_t n = (uint32_t)64;
+    uint32_t n = 64;
     if (ctx->datalen < 56) {
         n = 56;
     }

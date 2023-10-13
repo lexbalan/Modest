@@ -2,7 +2,7 @@
 import "libc/stdio.h"
 
 const genericIntConst = 42
-const int32Const = genericIntConst to Int32
+const int32Const = genericIntConst
 
 const genericStringConst = "Hello!"
 const string8Const = genericStringConst

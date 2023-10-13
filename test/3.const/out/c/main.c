@@ -7,7 +7,7 @@
 // test/3.const/main.cm
 
 #define genericIntConst  42
-#define int32Const  ((int32_t)genericIntConst)
+#define int32Const  genericIntConst
 
 #define genericStringConst  "Hello!"
 #define string8Const  genericStringConst
