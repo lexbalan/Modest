@@ -102,7 +102,7 @@ typeDecimal128['llvm_alias'] = 'double'
 typeChar8 = hlir_type_integer("Char8", power=8, ti=None)
 typeChar8['kind'] = 'char'
 typeChar8['att'] = ['char', 'numeric', 'unsigned', 'comparable', 'ordered']
-typeChar8['c_alias'] = 'uint8_t'
+typeChar8['c_alias'] = 'char' #'uint8_t'
 typeChar8['llvm_alias'] = 'i8'
 
 typeChar16 = hlir_type_integer("Char16", power=16, ti=None)
@@ -448,6 +448,22 @@ def is_pointer_to_record(t):
     if not is_pointer(t):
         return False
     return is_record(t['to'])
+
+
+
+def is_ptr_to_arr_of_char(t):
+    if not is_pointer(t):
+        return False
+
+    if not is_array(t['to']):
+        return False
+
+    if not is_char(t['to']['of']):
+        return False
+
+    return True
+
+
 
 
 # cannot create variable with type
