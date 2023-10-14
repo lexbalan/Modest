@@ -101,6 +101,30 @@ declare void @perror(%ConstCharStr)
 
 
 
+%Point = type {
+	i32,
+	i32
+}
+
+
+
+
+@points2 = global [3 x %Point] [
+  %Point {
+    i32 0,
+    i32 0
+  },
+  %Point {
+    i32 1,
+    i32 1
+  },
+  %Point {
+    i32 2,
+    i32 2
+  }
+]
+
+
 define i32 @main() {
     %1 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str2.c8)
     %2 = sext i6 42 to i32

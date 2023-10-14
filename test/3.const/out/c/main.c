@@ -15,6 +15,25 @@
 //const genericString32Const = genericStringConst to Str32
 
 
+typedef struct {
+    uint32_t x;
+    uint32_t y;
+} Point;
+
+#define points  (Point [3]){ \
+    (Point){.x = 0, .y = 0}, \
+    (Point){.x = 1, .y = 1}, \
+    (Point){.x = 2, .y = 2} \
+}
+
+
+// есть проблема - в C глобальные переменные с модификатором const
+// не могут быть так инициализированы, поскольку points является приведением
+// непонятно существует ли хорошее решение
+//@property("c_prefix", "const")
+Point points2[3] = points;
+
+
 // define function main
 int main(void)
 {
