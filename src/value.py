@@ -500,7 +500,8 @@ def value_cons_pointer(v, t, ti, method):
         if type.is_array(to_type['to']):
             if type.is_char(to_type['to']['of']):
                 str_used_as(string_value=v, typ=to_type['to']['of'])
-                return do_cast_generic(v, t, ti=ti) #?!
+                return hlir_value_cast(v, t, ti=ti)
+                #return do_cast_generic(v, t, ti=ti) #?!
 
     # *[n]X -> *[]X
     if type.is_pointer_to_defined_array(vtype):
@@ -560,6 +561,9 @@ def value_cons_pointer(v, t, ti, method):
 
 
 def value_cons_unit(v, t, ti, method):
+    if method != 'explicit':
+        return None
+
     return hlir_value_cast(v, t, ti=ti)
 
 
@@ -589,7 +593,7 @@ def value_cons(v, t, ti, method):
 
     # if construct immediate value
     if nv != None:
-        if (cons == value_cons_integer) or (cons == value_cons_float):
+        if (cons == value_cons_integer) or (cons == value_cons_float)  or (cons == value_cons_pointer):
             if value_is_immediate(v):
                 value_set_imm(nv, v['imm'])
 
