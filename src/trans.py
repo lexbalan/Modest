@@ -1255,6 +1255,7 @@ def do_stmt_break(x):
     return hlir_stmt_break(x['ti'])
 
 
+
 def do_stmt_var(x):
     id = x['id']
 
@@ -1268,6 +1269,8 @@ def do_stmt_var(x):
         v = do_value(x['value'])
         if value_is_bad(v):
             return hlir_stmt_bad()
+            # TODO: создавай переменную с value_bad!
+            #return hlir_stmt_def_var(hlir_value_bad(x['ti']), None, ti=x['ti'])
 
     # error: no type, no init value
     if t == None and v == None:
