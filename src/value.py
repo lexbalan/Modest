@@ -8,7 +8,7 @@ from hlir import *
 from util import get_item_with_id
 
 
-no_warning_cast_data_loss = True
+no_warning_cast_data_loss = False
 
 
 def value_print(x):
@@ -284,7 +284,7 @@ def value_cons_record_from_generic_record(v, t, ti, method):
         # 3. делаем implicit_cast() для поля из v к соотв полю из t
         # 4. проверяем тип
         # 5. пакуем
-        prev_nl = 1 # nl для неявных инициализаторов (zero)
+        prev_nl = 1 # nl для неявных инициализаторов (zeroinitializers)
         for field in t['fields']:
             field_name = field['id']['str']
             field_type = field['type']
@@ -292,7 +292,6 @@ def value_cons_record_from_generic_record(v, t, ti, method):
             # получаем элемент с соотв именем из исходного значения
             item_value = None
             nl = 0
-            xti = None
 
             initializers = v['imm']
             ini = get_item_with_id(initializers, field_name)
@@ -430,8 +429,16 @@ def value_cons_integer(v, t, ti, method):
 
     if type.is_float(vtype):
         # Float -> Int
-        # TODO: need float imm int part check
-        return hlir_value_cast(v, t, ti=ti)
+        nv = hlir_value_cast(v, t, ti=ti)
+        # need float imm int part check
+        if value_is_immediate(v):
+            imm_fltval = hlir_value_imm_get(v)
+            imm_intval = int(imm_fltval)
+            typ = hlir_type_generic_int_for(imm_intval, unsigned=True, ti=ti)
+            check_power(typ, t, method, ti)
+            nv['imm'] = imm_intval
+
+        return nv
 
 
     return None
