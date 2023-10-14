@@ -2,10 +2,15 @@
 
 def nbits_for_num(x):
     n = 1
+    if x < 0:
+        x = -x
+        n = 2
+
     y = 1
     while x > y:
         y = (y << 1) | 1
         n = n + 1
+
     return n
 
 
