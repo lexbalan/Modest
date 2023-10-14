@@ -533,11 +533,29 @@ def print_value_ccast(v, ctx):
     print_value(value, ctx)#, need_wrap=need_wrap)
 
 
-
 def print_value_cast(x, ctx):
     to_type = x['type']
     value = x['value']
     from_type = value['type']
+
+
+    # const greeting = "Hello World!\n"
+    # const greeting8 = greeting to Str8
+    # const greeting16 = greeting to Str16
+    # const greeting32 = greeting to Str32
+    if type.is_generic_string(from_type):
+        if type.is_ptr_to_arr_of_char(to_type):
+            to_char_power = to_type['to']['of']['power']
+            if to_char_power == 8:
+                out("u8")
+            elif to_char_power == 16:
+                out("u")
+            elif to_char_power == 32:
+                out("U")
+
+            print_value_literal_str(value, ctx=[])
+            return
+
 
 
     # в у нас типы структурные, в си - номинальные
@@ -589,7 +607,7 @@ def print_value_cast(x, ctx):
 
 
 
-def print_value_literal_array(v, ctx):
+def print_value_literal_arr(v, ctx):
 
     #if not 'no-cast-literal-array' in v['att']:
     #if do_cast:
@@ -860,7 +878,7 @@ def print_value_literal(x, ctx):
     if type.is_integer(t): print_value_literal_int(x, ctx)
     elif type.is_float(t): print_value_literal_flt(x, ctx)
     elif type.is_record(t): print_value_literal_record(x, ctx)
-    elif type.is_array(t): print_value_literal_array(x, ctx)
+    elif type.is_array(t): print_value_literal_arr(x, ctx)
     elif type.is_string(t): print_value_literal_str(x, ctx)
     elif type.is_pointer(t): print_value_literal_ptr(x, ctx)
     elif type.is_char(t): print_value_literal_char(x, ctx)
