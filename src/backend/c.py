@@ -345,8 +345,6 @@ def print_value_bin(v, ctx):
     p0 = precedence(v)
     pl = precedence(left)
     pr = precedence(right)
-    print(f"{op} {left['kind']} {right['kind']}")
-    print(f"{p0} {pl} {pr}")
     need_wrap_left = pl < p0
     need_wrap_right = pr < p0
 
