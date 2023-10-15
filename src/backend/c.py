@@ -543,14 +543,20 @@ def print_value_cast(x, ctx):
             elif type.is_ptr_to_char(to_type):
                 char_power = to_type['to']['power']
 
-            if char_power == 8: pass #out("u8")
-            elif char_power == 16: out("u")
-            elif char_power == 32: out("U")
+            if char_power == 8:
+                if 'id' in value:
+                    print_value_by_id(value)
+                    return
+
+            elif char_power == 16:
+                out("u")
+
+            elif char_power == 32:
+                out("U")
 
             print_value_literal_str(value, ctx=[])
 
             return
-
 
 
     # в у нас типы структурные, в си - номинальные
@@ -878,7 +884,7 @@ def print_value_literal(x, ctx):
 
 
 
-def print_value_by_id(x, ctx):
+def print_value_by_id(x):
     out("%s" % x['id']['str'])
 
 
@@ -894,7 +900,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 
     if print_just_id:
         if 'id' in x:
-            print_value_by_id(x, ctx)
+            print_value_by_id(x)
             return
 
     if need_wrap:
@@ -906,7 +912,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
     elif k in bin_ops: print_value_bin(x, ctx)
     elif k in un_ops: print_value_un(x, ctx)
     elif k == 'const': print_value_let(x, ctx)
-    elif k in ['func', 'var']: print_value_by_id(x, ctx)
+    elif k in ['func', 'var']: print_value_by_id(x)
     elif k == 'call': print_value_call(x, ctx)
     elif k == 'index': print_value_index(x, ctx)
     elif k == 'index_ptr': print_value_index_ptr(x, ctx)

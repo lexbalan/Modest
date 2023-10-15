@@ -14,7 +14,7 @@
 
 int main(void)
 {
-    printf("Hello World! 🎉\n");
+    printf(hello_world);
     return 0;
 }
 

@@ -14,10 +14,10 @@ void write_example(void)
 {
     printf("run write_example\n");
 
-    FILE *const fp = fopen("file.txt", "w");
+    FILE *const fp = fopen(filename, "w");
 
     if (fp == NULL) {
-        printf("error: cannot create file '%s'", "file.txt");
+        printf("error: cannot create file '%s'", filename);
         return;
     }
 
@@ -31,14 +31,14 @@ void read_example(void)
 {
     printf("run read_example\n");
 
-    FILE *const fp = fopen("file.txt", "r");
+    FILE *const fp = fopen(filename, "r");
 
     if (fp == NULL) {
-        printf("error: cannot open file '%s'", "file.txt");
+        printf("error: cannot open file '%s'", filename);
         return;
     }
 
-    printf("file '%s' contains: ", "file.txt");
+    printf("file '%s' contains: ", filename);
     while (true) {
         const int ch = fgetc(fp);
         if (ch == EOF) {
