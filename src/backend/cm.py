@@ -60,6 +60,7 @@ def print_comment(x):
 
 
 def print_comment_block(x):
+    indent()
     out("/*%s*/" % x['text'])
 
 
