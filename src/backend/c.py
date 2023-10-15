@@ -43,10 +43,10 @@ modern_style = {
 
 styles = {
     'legacy': legacy_style,
+    'modern': modern_style,
+
     'KnR': legacy_style,
     'kernel': legacy_style,
-
-    'modern': modern_style,
     'allman': modern_style,
 }
 
@@ -54,6 +54,7 @@ styleguide = styles['legacy']
 
 
 nl_str = "\n"
+
 
 def newline(n=1):
     out(nl_str * n)
@@ -100,6 +101,7 @@ aprecedence = [
 
 precedenceMax = len(aprecedence) - 1
 
+
 # приоритет операции
 def precedence(x):
     i = 0
@@ -138,9 +140,6 @@ def print_type_array(t, print_as_pointer, need_space_after):
     else:
         out("*")
 
-    """if need_space_after:
-            out(" ")"""
-
 
 
 def print_type_pointer(t, need_space_after):
@@ -157,6 +156,7 @@ def print_type_pointer(t, need_space_after):
 
     if type.is_free_pointer(t):
         out("void ")
+
     else:
         print_type(t['to'], need_space_after=True)
 
@@ -164,29 +164,9 @@ def print_type_pointer(t, need_space_after):
         out("*const")
         if need_space_after:
             out(" ")
+
     else:
         out("*")
-
-
-
-
-
-
-
-def print_fields(fields, before, after, between):
-    i = 0
-    n = len(fields)
-    while i < n:
-        param = fields[i]
-        out(before)
-        print_field(param)
-        #if 'const' in param['type']['att']:
-        #    info("const in att", param['ti'])
-        #    exit(1)
-
-        out(after)
-        i = i + 1
-        if i < n: out(between)
 
 
 
@@ -418,6 +398,18 @@ def print_value_un(v, ctx):
 
 
 
+def print_fields(fields, before, after, between):
+    i = 0
+    n = len(fields)
+    while i < n:
+        param = fields[i]
+        out(before)
+        print_field(param)
+        out(after)
+        i = i + 1
+        if i < n: out(between)
+
+
 def print_paramlist(parms, arghack=False):
     if len(parms) == 0:
         out(FUNC_EMPTY_PARAMLIST)
@@ -504,9 +496,6 @@ def print_cast(t, v, ctx=[]):
     out("("); print_type(to_type, need_space_after=False); out(")")
     need_wrap = precedence(v['kind']) < precedence('cast')
     print_value(v, ctx=ctx, need_wrap=need_wrap)
-
-
-
 
 
 

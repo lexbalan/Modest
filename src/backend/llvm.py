@@ -804,7 +804,6 @@ def cast_record_to_record(to_type, value, ti):
 
 
 
-
 def opcast(opcode, from_type, to_type, value):
     reg = operation(opcode)
     print_type(from_type)
@@ -821,6 +820,7 @@ def opcast(opcode, from_type, to_type, value):
         'type': to_type,
         'proto': value
     }
+
 
 
 def do_eval_expr_cast(x):
@@ -891,8 +891,6 @@ def do_eval_expr_cast(x):
         return v
 
     return opcast(opcode, from_type, to_type, v)
-
-
 
 
 
