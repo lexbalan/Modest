@@ -759,7 +759,7 @@ def select_cast_operator(a, b):
     return 'uncast<%s -> %s>' % (a['kind'], b['kind'])
 
 
-def do_eval_expr_ccast(x):
+def do_eval_expr_cast_generic(x):
 
     value = x['value']
     from_type = value['type']
@@ -1151,7 +1151,7 @@ def do_eval_x(x):
     elif k == 'index_ptr': y = do_eval_expr_index_ptr(x)
     elif k == 'access': y = do_eval_expr_access(x)
     elif k == 'access_ptr': y = do_eval_expr_access_ptr(x)
-    elif k == 'ccast': y = do_eval_expr_ccast(x)
+    elif k == 'cast_generic': y = do_eval_expr_cast_generic(x)
     elif k == 'cast': y = do_eval_expr_cast(x)
     elif k == 'sizeof': y = do_eval_sizeof(x)
 #    elif k == 'add_str': y = do_eval_str(x)

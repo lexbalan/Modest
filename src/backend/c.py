@@ -95,7 +95,7 @@ aprecedence = [
     ['mul', 'div', 'rem'], #9
     ['plus', 'minus', 'not', 'cast', 'ref', 'deref', 'sizeof'], #10
     ['call', 'index', 'access'], #11
-    ['ccast', 'num', 'var', 'func', 'str', 'enum', 'record', 'array'] #12
+    ['cast_generic', 'num', 'var', 'func', 'str', 'enum', 'record', 'array'] #12
 ]
 
 precedenceMax = len(aprecedence) - 1
@@ -510,7 +510,7 @@ def print_cast(t, v, ctx=[]):
 
 
 
-def print_value_ccast(v, ctx):
+def print_value_cast_generic(v, ctx):
     value = v['value']
     from_type = value['type']
     to_type = v['type']
@@ -929,7 +929,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
     elif k == 'index_ptr': print_value_index_ptr(x, ctx)
     elif k == 'access': print_value_access(x, ctx)
     elif k == 'access_ptr': print_value_access_ptr(x, ctx)
-    elif k == 'ccast': print_value_ccast(x, ctx)
+    elif k == 'cast_generic': print_value_cast_generic(x, ctx)
     elif k == 'cast': print_value_cast(x, ctx)
     elif k == 'sizeof': out("sizeof("); print_type(x['of'], need_space_after=False, _print_array_asis=True); out(")")
     else:

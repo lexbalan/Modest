@@ -36,7 +36,7 @@ def do_cast_generic(v, t, ti):
     #info("do_cast_generic", ti)
 
     nv = hlir_value_cast(v, t, ti)
-    nv['kind'] = 'ccast'
+    nv['kind'] = 'cast_generic'
 
     value_set_imm(nv, v['imm'])
 
