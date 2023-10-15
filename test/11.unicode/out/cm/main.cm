@@ -43,9 +43,9 @@ func main () -> Int {
     utf32_puts("Hello 🐀!\n")
 
 
-/*var str8: Str8 := string8Const
-    var str16: Str16 := string16Const
-    var str32: Str32 := string32Const
+    var str8 : *[]Char8 := string8Const
+    var str16 : *[]Char16 := string16Const
+    var str32 : *[]Char32 := string32Const
 
     utf8_puts(str8)
     utf8_puts("\n")
@@ -54,7 +54,7 @@ func main () -> Int {
     utf8_puts("\n")
 
     utf32_puts(str32)
-    utf8_puts("\n")*/
+    utf8_puts("\n")
 
     return 0
 }

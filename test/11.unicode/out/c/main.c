@@ -49,18 +49,18 @@ int main(void)
     utf32_puts(U"Hello 🐀!\n");
 
 
-/*var str8: Str8 := string8Const
-    var str16: Str16 := string16Const
-    var str32: Str32 := string32Const
+    char *str8 = string8Const;
+    uint16_t *str16 = string16Const;
+    uint32_t *str32 = string32Const;
 
-    utf8_puts(str8)
-    utf8_puts("\n")
+    utf8_puts(str8);
+    utf8_puts("\n");
 
-    utf16_puts(str16)
-    utf8_puts("\n")
+    utf16_puts(str16);
+    utf8_puts("\n");
 
-    utf32_puts(str32)
-    utf8_puts("\n")*/
+    utf32_puts(str32);
+    utf8_puts("\n");
 
     return 0;
 }

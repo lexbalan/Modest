@@ -499,12 +499,6 @@ def do_value_shift(x):
 
 
 
-
-# const folding for binary operation
-def value_bin_fold(op, l, r, t, ti):
-        pass
-
-
 # select result type of common binary operation
 def bin_type_select(a, b):
     if type.is_generic_numeric(a) and type.is_generic_numeric(b):
@@ -522,20 +516,6 @@ def bin_type_select(a, b):
     return a
 
 
-
-"""if not (p_and_n or n_and_p):
-        if not type.check(l['type'], r['type'], x['ti']):
-            return hlir_value_bad(x['ti'])"""
-
-"""
-    if not k in ['eq', 'ne']:
-        if not k in ['add', 'sub']:    # add, sub, for free pointers
-            if not type_attribute_check(l['type'], 'numeric'):
-                error("expected value with numeric type", x['left'])
-                return hlir_value_bad(ti)
-            if not type_attribute_check(r['type'], 'numeric'):
-                error("expected value with numeric type", x['right'])
-                return hlir_value_bad(ti)"""
 
 # бинарные операции с указателями имеют особые правила
 def do_bin_op_with_pointers(k, l, r , ti):
@@ -735,7 +715,6 @@ def do_value_bin(x):
         if not type_attribute_check(r['type'], 'numeric'):
             error("expected value with ordered type", x['right']['ti'])
             return hlir_value_bad(x['ti'])
-        pass
 
     if type.eq(type_result, type.typeNat1):
         if k == 'or': k = 'logic_or'
@@ -752,8 +731,6 @@ def do_value_bin(x):
 
 
 
-
-
 def do_value_not(val, t, ti):
     v = hlir_value_un('not', val, t, ti=ti)
 
@@ -762,6 +739,7 @@ def do_value_not(val, t, ti):
         hlir_value_set_imm(v, num)
 
     return v
+
 
 
 def do_value_minus(val, t, ti):

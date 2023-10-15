@@ -113,6 +113,9 @@ declare void @utf32_putchar(i32)
 @str6.c16 = private constant [10 x i16] [i16 72, i16 101, i16 108, i16 108, i16 111, i16 32, i16 937, i16 33, i16 10, i16 0]
 @str7.c32 = private constant [10 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 32, i32 937, i32 33, i32 10, i32 0]
 @str8.c32 = private constant [10 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 32, i32 128000, i32 33, i32 10, i32 0]
+@str9.c8 = private constant [2 x i8] c"\0A\00"
+@str10.c8 = private constant [2 x i8] c"\0A\00"
+@str11.c8 = private constant [2 x i8] c"\0A\00"
 
 
 
@@ -165,7 +168,21 @@ define i32 @main() {
     call void([0 x i16]*) @utf16_puts ([0 x i16]* @str6.c16)
     call void([0 x i32]*) @utf32_puts ([0 x i32]* @str7.c32)
     call void([0 x i32]*) @utf32_puts ([0 x i32]* @str8.c32)
-
+    %str8 = alloca [0 x i8]*
+    store [0 x i8]* @str3.c8, [0 x i8]** %str8
+    %str16 = alloca [0 x i16]*
+    store [0 x i16]* @str3.c16, [0 x i16]** %str16
+    %str32 = alloca [0 x i32]*
+    store [0 x i32]* @str3.c32, [0 x i32]** %str32
+    %5 = load [0 x i8]*, [0 x i8]** %str8
+    call void([0 x i8]*) @utf8_puts ([0 x i8]* %5)
+    call void([0 x i8]*) @utf8_puts ([0 x i8]* @str9.c8)
+    %6 = load [0 x i16]*, [0 x i16]** %str16
+    call void([0 x i16]*) @utf16_puts ([0 x i16]* %6)
+    call void([0 x i8]*) @utf8_puts ([0 x i8]* @str10.c8)
+    %7 = load [0 x i32]*, [0 x i32]** %str32
+    call void([0 x i32]*) @utf32_puts ([0 x i32]* %7)
+    call void([0 x i8]*) @utf8_puts ([0 x i8]* @str11.c8)
     ret i32 0
 }
 
