@@ -543,12 +543,9 @@ def print_value_cast(x, ctx):
             elif type.is_ptr_to_char(to_type):
                 char_power = to_type['to']['power']
 
-            if char_power == 8:
-                pass #out("u8")
-            elif char_power == 16:
-                out("u")
-            elif char_power == 32:
-                out("U")
+            if char_power == 8: pass #out("u8")
+            elif char_power == 16: out("u")
+            elif char_power == 32: out("U")
 
             print_value_literal_str(value, ctx=[])
 
