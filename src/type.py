@@ -340,8 +340,16 @@ def is_integer(t):
     return t['kind'] == 'int'
 
 
+def is_integer_signed(t):
+    return is_integer(t) and is_signed(t)
+
+def is_integer_unsigned(t):
+    return is_integer(t) and is_unsigned(t)
+
+
 def is_char(t):
     return t['kind'] == 'char'
+
 
 def is_generic_char(t):
     if not is_generic(t):

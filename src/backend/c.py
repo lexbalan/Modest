@@ -533,11 +533,11 @@ def print_value_cast_generic(v, ctx):
     print_value(value, ctx)#, need_wrap=need_wrap)
 
 
+
 def print_value_cast(x, ctx):
     to_type = x['type']
     value = x['value']
     from_type = value['type']
-
 
     # example:
     # const greeting = "Hello World!\n"
@@ -593,20 +593,16 @@ def print_value_cast(x, ctx):
     # - in Cm int32(-1) -> uint64 => 0x00000000ffffffff
     # - in C  int32(-1) -> uint64 => 0xffffffffffffffff
     # required: (uint64_t)((uint32)int32_value)
-    need_pre = False
-    if type.is_integer(from_type):
-        if type.is_integer(to_type):
-            if type.is_signed(from_type):
-                if type.is_unsigned(to_type):
-                    if from_type['size'] < to_type['size']:
-                        #need_pre = True
-                        out("((")
-                        print_type(to_type, need_space_after=False)
-                        out(")")
-                        nat_same_sz = type.select_nat(from_type['power'])
-                        print_cast(nat_same_sz, value, ctx)
-                        out(")")
-                        return
+    if type.is_integer_signed(from_type):
+        if type.is_integer_unsigned(to_type):
+            if from_type['size'] < to_type['size']:
+                out("((")
+                print_type(to_type, need_space_after=False)
+                out(")")
+                nat_same_sz = type.select_nat(from_type['power'])
+                print_cast(nat_same_sz, value, ctx)
+                out(")")
+                return
 
 
     print_cast(to_type, value, ctx)
