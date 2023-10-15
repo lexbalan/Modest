@@ -472,7 +472,7 @@ def do_value_shift(x):
                 res_t = l['type']
 
             v = hlir_value_bin(op, l, r, res_t, ti=ti)
-            value_set_imm(v, imm_result)
+            hlir_value_set_imm(v, imm_result)
             return v
 
 
@@ -488,7 +488,7 @@ def do_value_shift(x):
                 l = do_cast_generic(l, t, x['left']['ti'])
 
             v = hlir_value_bin(op, l, r, l['type'], ti=ti)
-            value_set_imm(v, imm_result)
+            hlir_value_set_imm(v, imm_result)
             return v
 
     if type.is_generic(l['type']):
@@ -628,7 +628,7 @@ def bin_imm(k, type_result, l, r, ti):
 
     bin_value = hlir_value_bin(k, l, r, type_result, ti=ti)
 
-    value_set_imm(bin_value, num_val)
+    hlir_value_set_imm(bin_value, num_val)
 
     return bin_value
 
@@ -639,7 +639,7 @@ def value_strings_concat(l, r, ti):
     length = l['imm']['len'] + r['imm']['len']
     imm_str = hlir_string_imm(string, length)
     bin_value = hlir_value_bin('add_str', l, r, type.typeGenericString, ti=ti)
-    value_set_imm(bin_value, imm_str)
+    hlir_value_set_imm(bin_value, imm_str)
     #module_strings_add(bin_value)
     return bin_value
 
@@ -667,7 +667,7 @@ def do_value_bin_str_eq(k, l, r, ti):
         bool_result = not bool_result
 
     bin_value = hlir_value_bin(k, l, r, type.typeNat1, ti=ti)
-    value_set_imm(bin_value, bool_result)
+    hlir_value_set_imm(bin_value, bool_result)
     return bin_value
 
 
@@ -759,7 +759,7 @@ def do_value_not(val, t, ti):
 
     if value_is_immediate(val):
         num = ~hlir_value_imm_get(val)
-        value_set_imm(v, num)
+        hlir_value_set_imm(v, num)
 
     return v
 
@@ -769,7 +769,7 @@ def do_value_minus(val, t, ti):
 
     if value_is_immediate(val):
         num = -hlir_value_imm_get(val)
-        value_set_imm(v, num)
+        hlir_value_set_imm(v, num)
 
     if type.is_generic(v['type']):
         if not type.is_signed(v['type']):
@@ -948,7 +948,7 @@ def do_value_index(x):
                 # is an array
                 items = a['imm']
                 v_imm = items[index]
-                value_set_imm(v, v_imm['imm'])
+                hlir_value_set_imm(v, v_imm['imm'])
 
 
     return v
@@ -999,7 +999,7 @@ def do_value_access(x):
     if value_is_immediate(obj) and not ptr_access:
         initializers = obj['imm']
         initializer = get_item_with_id(initializers, field_id['str'])
-        value_set_imm(v, initializer['value']['imm'])
+        hlir_value_set_imm(v, initializer['value']['imm'])
 
     return v
 
@@ -1345,7 +1345,7 @@ def do_stmt_let(x):
         const_value['nl_end'] = v['nl_end']
 
     if value_is_immediate(v):
-        value_set_imm(const_value, v['imm'])
+        hlir_value_set_imm(const_value, v['imm'])
 
     module['context'].value_add(id['str'], const_value)
 
@@ -1524,7 +1524,7 @@ def def_const(x):
 
     const_value = hlir_value_const(id, v['type'], v, x['ti'])
 
-    value_set_imm(const_value, v['imm'])
+    hlir_value_set_imm(const_value, v['imm'])
 
     if 'nl_end' in v:
         const_value['nl_end'] = v['nl_end']

@@ -25,12 +25,6 @@ def value_print(x):
 
 
 
-def value_set_imm(nv, imm):
-    nv['imm'] = imm
-    nv['att'].append('immediate')
-
-
-
 
 def do_cast_generic(v, t, ti):
     #info("do_cast_generic", ti)
@@ -38,7 +32,7 @@ def do_cast_generic(v, t, ti):
     nv = hlir_value_cast(v, t, ti)
     nv['kind'] = 'cast_generic'
 
-    value_set_imm(nv, v['imm'])
+    hlir_value_set_imm(nv, v['imm'])
 
     if 'nl_end' in v:
         nv['nl_end'] = v['nl_end']
@@ -157,21 +151,19 @@ def value_cons_array_from_generic_array(v, t, ti, method):
     vx = {
         'isa': 'value',
         'kind': 'literal',
-        'imm': casted_items,
+        'imm': None,
         'type': t,
         'att': [],
         'nl_end': v['nl_end'],
         'ti': ti
     }
 
+    hlir_value_set_imm(vx, casted_items)
+
     # если это не сделать то принтер C не сможет сослаться
     # на именованную константу и станет печатать ее по месту
     if 'id' in v:
         vx['id'] = v['id']
-
-
-    if 'immediate' in v['att']:
-        vx['att'].append('immediate')
 
     return vx
 
@@ -330,12 +322,14 @@ def value_cons_record_from_generic_record(v, t, ti, method):
     vx = {
         'isa': 'value',
         'kind': 'literal',
-        'imm': items,
+        'imm': None,
         'type': t,
         'att': [],
         'nl_end': v['nl_end'],
         'ti': ti
     }
+
+    hlir_value_set_imm(vx, items)
 
     # если это не сделать то принтер C не сможет сослаться
     # на именованную константу и станет печатать ее по месту
@@ -345,9 +339,6 @@ def value_cons_record_from_generic_record(v, t, ti, method):
     if 'nl' in v:
         vx['nl'] = v['nl']
 
-
-    if 'immediate' in v['att']:
-        vx['att'].append('immediate')
 
     return vx
 
@@ -436,7 +427,7 @@ def value_cons_integer(v, t, ti, method):
             imm_intval = int(imm_fltval)
             typ = hlir_type_generic_int_for(imm_intval, unsigned=True, ti=ti)
             check_power(typ, t, method, ti)
-            value_set_imm(nv, imm_intval)
+            hlir_value_set_imm(nv, imm_intval)
 
         return nv
 
@@ -465,7 +456,7 @@ def value_cons_float(v, t, ti, method):
             else:
                 fatal("too big float, not implemented")
 
-            value_set_imm(y, z)
+            hlir_value_set_imm(y, z)
 
             return y
 
@@ -546,7 +537,7 @@ def value_cons_pointer(v, t, ti, method):
             # compile-time casting
             nv = hlir_value_cast(v, t, ti=ti)
             num = hlir_value_imm_get(v)
-            value_set_imm(nv, num)
+            hlir_value_set_imm(nv, num)
             return nv
 
     # Int -> Ptr
@@ -606,7 +597,7 @@ def value_cons(v, t, ti, method):
     if nv != None:
         if (cons == value_cons_integer) or (cons == value_cons_float)  or (cons == value_cons_pointer):
             if value_is_immediate(v):
-                value_set_imm(nv, v['imm'])
+                hlir_value_set_imm(nv, v['imm'])
 
     return nv
 

@@ -189,15 +189,27 @@ def hlir_value_bad(ti=None):
     }
 
 
-def hlir_value_zero(t, ti=None):
+
+def hlir_value_set_imm(nv, imm):
+    nv['imm'] = imm
+    nv['att'].append('immediate')
+
+
+
+def hlir_value_literal(t, imm, ti):
     return {
         'isa': 'value',
         'kind': 'literal',
         'type': t,
-        'imm': None,
+        'imm': imm,
         'att': ['immediate'],
+        'nl_end': 0,
         'ti': ti
     }
+
+
+def hlir_value_zero(t, ti=None):
+    return hlir_value_literal(t, None, ti)
 
 
 def hlir_value_int(num, typ=None, ti=None):
@@ -213,14 +225,8 @@ def hlir_value_int(num, typ=None, ti=None):
             #print("typ['power'] = %d" % typ['power'])
             return hlir_value_bad(ti)
 
-    return {
-        'isa': 'value',
-        'kind': 'literal',
-        'imm': num,
-        'type': typ,
-        'att': ['immediate'],
-        'ti': ti
-    }
+    return hlir_value_literal(typ, num, ti)
+
 
 
 
@@ -230,14 +236,7 @@ def hlir_value_float(num, ti=None):
     float_default_bit = int(settings_get('flt'))
     typ = hlir_type_float('Float', power=float_default_bit, ti=ti)
     typ['att'].extend(['generic'])
-    return {
-        'isa': 'value',
-        'kind': 'literal',
-        'imm': num,
-        'type': typ,
-        'att': ['immediate'],
-        'ti': ti
-    }
+    return hlir_value_literal(typ, num, ti)
 
 
 
@@ -254,14 +253,10 @@ def hlir_string_imm(string, length):
 
 def hlir_value_cstr(string, length, type, ti=None):
     imm = hlir_string_imm(string, length)
-    return {
-        'isa': 'value',
-        'kind': 'literal',
-        'type': type,
-        'imm': imm,
-        'att': ['immediate', 'string'],
-        'ti': ti
-    }
+    s = hlir_value_literal(type, imm, ti)
+    s['att'].append('string')
+    return s
+
 
 
 def hlir_value_array(items, is_generic=False, type=None, ti=None):
@@ -280,27 +275,13 @@ def hlir_value_array(items, is_generic=False, type=None, ti=None):
     if is_generic:
         type['att'].append('generic')
 
-    return {
-        'isa': 'value',
-        'kind': 'literal',
-        'type': type,
-        'imm': items,
-        'att': ['immediate'],
-        'nl_end': 0,
-        'ti': ti
-    }
+    return hlir_value_literal(type, items, ti)
+
 
 
 def hlir_value_record(typ, initializers={}, ti=None):
-    return {
-        'isa': 'value',
-        'kind': 'literal',
-        'type': typ,
-        'imm': initializers,
-        'att': ['immediate'],
-        'nl_end': 0,
-        'ti': ti
-    }
+    return hlir_value_literal(typ, initializers, ti)
+
 
 
 def hlir_value_imm_get(x):
