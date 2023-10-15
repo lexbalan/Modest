@@ -1375,6 +1375,7 @@ def print_comment(x):
 
 
 def print_comment_block(x):
+    indent()
     out("/*%s*/" % x['text'])
 
 
@@ -1384,7 +1385,6 @@ def print_comment_line(x):
     n = len(lines)
     while i < n:
         line = lines[i]
-        #if need_indent:
         indent()
         out("//%s" % line['str'])
         i = i + 1
