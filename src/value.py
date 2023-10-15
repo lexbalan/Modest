@@ -436,12 +436,13 @@ def value_cons_integer(v, t, ti, method):
             imm_intval = int(imm_fltval)
             typ = hlir_type_generic_int_for(imm_intval, unsigned=True, ti=ti)
             check_power(typ, t, method, ti)
-            nv['imm'] = imm_intval
+            value_set_imm(nv, imm_intval)
 
         return nv
 
 
     return None
+
 
 
 
@@ -464,7 +465,7 @@ def value_cons_float(v, t, ti, method):
             else:
                 fatal("too big float, not implemented")
 
-            y['imm'] = z
+            value_set_imm(y, z)
 
             return y
 
@@ -545,8 +546,7 @@ def value_cons_pointer(v, t, ti, method):
             # compile-time casting
             nv = hlir_value_cast(v, t, ti=ti)
             num = hlir_value_imm_get(v)
-            nv['imm'] = num
-            nv['att'].append('immediate')
+            value_set_imm(nv, num)
             return nv
 
     # Int -> Ptr
