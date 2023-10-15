@@ -35,6 +35,12 @@ root_context = None
 module = None
 
 
+# тепреь вызывается только из конструктора строки (value)
+def module_strings_add(v):
+    module['strings'].append(v)
+
+
+
 def module_type_get(m, id_str):
     #print("SEARCH_TYPE %s in %s" % (id_str, cm['path']))
     t = m['context'].type_get(id_str)
@@ -628,16 +634,10 @@ def bin_imm(k, type_result, l, r, ti):
 
 
 
-def module_strings_add(v):
-    module['strings'].append(v)
-
-
 def value_strings_concat(l, r, ti):
     string = l['imm']['str'] + r['imm']['str']
     length = l['imm']['len'] + r['imm']['len']
     imm_str = hlir_string_imm(string, length)
-    #new_s = hlir_value_cstr(string, length, type.typeGenericString, ti=ti)
-    #module['strings'].append(new_s)
     bin_value = hlir_value_bin('add_str', l, r, type.typeGenericString, ti=ti)
     value_set_imm(bin_value, imm_str)
     #module_strings_add(bin_value)

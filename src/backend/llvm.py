@@ -1805,9 +1805,6 @@ def print_module(m):
 
     print_strings(m['strings'])
 
-    if 'strings2' in m:
-        print_strings(m['strings2'])
-
     isa_prev = None
 
     for x in m['text']:

@@ -539,16 +539,23 @@ def print_value_cast(x, ctx):
     from_type = value['type']
 
 
+    # example:
     # const greeting = "Hello World!\n"
     # const greeting8 = greeting to Str8
     # const greeting16 = greeting to Str16
     # const greeting32 = greeting to Str32
+    #
     if type.is_generic_string(from_type):
-        if type.is_ptr_to_arr_of_char(to_type):
-            to_char_power = to_type['to']['of']['power']
+        if type.is_ptr_to_arr_of_char(to_type) or type.is_ptr_to_char(to_type):
+            # or type.is_ptr_to_char(to_type): ?
+            to_char_power = 0
+            if type.is_ptr_to_arr_of_char(to_type):
+                to_char_power = to_type['to']['of']['power']
+            elif type.is_ptr_to_char(to_type):
+                to_char_power = to_type['to']['power']
+
             if to_char_power == 8:
-                #out("u8")
-                pass
+                pass #out("u8")
             elif to_char_power == 16:
                 out("u")
             elif to_char_power == 32:
