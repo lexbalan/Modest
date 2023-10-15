@@ -4,7 +4,7 @@ from error import info, error, fatal
 from .common import *
 import type
 from type import type_print
-from value import value_attribute_check, value_is_immediate, value_print
+from value import value_attribute_check, value_is_immediate, value_is_zero, value_print
 from hlir import hlir_field, hlir_value_imm_get, hlir_stmt_block, hlir_value_var
 from util import nbits_for_num, get_item_with_id
 
@@ -683,11 +683,20 @@ def print_value_literal_record(v, ctx):
 
     nitems = len(initializers)
     i = 0
+
+    # for situation when firat item is value_zero
+    # without it, forst value will be printed with space before it.
+    item_printed = False
+
     while i < nitems:
         item = v['type']['fields'][i]
         field_str = item['id']['str']
 
         ini = get_item_with_id(initializers, field_str)
+
+        if value_is_zero(ini['value']):
+            i = i + 1
+            continue
 
         nl = 0
         if 'nl' in ini:
@@ -697,7 +706,7 @@ def print_value_literal_record(v, ctx):
             newline(n=nl)
             indent()
         else:
-            if i > 0:
+            if item_printed:
                 out(" ")
 
         out(".%s = " % field_str)
@@ -712,6 +721,7 @@ def print_value_literal_record(v, ctx):
         if i < (nitems - 1):
             out(",")
 
+        item_printed = True
         i = i + 1
 
     indent_down()
@@ -1319,7 +1329,7 @@ def print_def_var(x):
 
     init_value = var['init']
     if init_value != None:
-        out(" = "); print_value(init_value)
+        out(" = "); print_value(init_value, ctx=['no-literal-array-cast'])
 
     out(";")
 

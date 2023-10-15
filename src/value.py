@@ -114,6 +114,12 @@ def value_is_immediate(x):
     return value_is_const_imm(x)
 
 
+def value_is_zero(x):
+    if not value_is_immediate(x):
+        return False
+
+    return x['imm'] == None
+
 
 def value_is_string_literal(x):
     return x['type']['kind'] == 'String'
