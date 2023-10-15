@@ -736,7 +736,6 @@ def select_cast_operator(a, b):
         if type.is_pointer(b):
             return 'bitcast'
 
-
     elif type.is_float(a):
         # Float -> Integer
         if type.is_integer(b):
@@ -755,12 +754,11 @@ def select_cast_operator(a, b):
                 return 'bitcast'
 
 
-
     return 'uncast<%s -> %s>' % (a['kind'], b['kind'])
 
 
-def do_eval_expr_cast_generic(x):
 
+def do_eval_expr_cast_generic(x):
     value = x['value']
     from_type = value['type']
     to_type = x['type']
