@@ -96,7 +96,7 @@ aprecedence = [
     ['mul', 'div', 'rem'], #9
     ['plus', 'minus', 'not', 'cast', 'ref', 'deref', 'sizeof'], #10
     ['call', 'index', 'access'], #11
-    ['cast_generic', 'num', 'var', 'func', 'str', 'enum', 'record', 'array'] #12
+    ['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #12
 ]
 
 precedenceMax = len(aprecedence) - 1
@@ -104,9 +104,17 @@ precedenceMax = len(aprecedence) - 1
 
 # приоритет операции
 def precedence(x):
+    k = x['kind']
+
+    # cast generic не является 'оператором'
+    # его приоритет, это приоритет его содержимого (value)
+    if k == 'cast_generic':
+        return precedence(x['value'])
+
+
     i = 0
     while i < precedenceMax + 1:
-        if x in aprecedence[i]:
+        if k in aprecedence[i]:
             break
         i = i + 1
     return i
@@ -334,9 +342,11 @@ def print_value_bin(v, ctx):
     right = v['right']
 
     # получаем приоритеты операции и операндов
-    p0 = precedence(op)
-    pl = precedence(left['kind'])
-    pr = precedence(right['kind'])
+    p0 = precedence(v)
+    pl = precedence(left)
+    pr = precedence(right)
+    print(f"{op} {left['kind']} {right['kind']}")
+    print(f"{p0} {pl} {pr}")
     need_wrap_left = pl < p0
     need_wrap_right = pr < p0
 
@@ -346,18 +356,18 @@ def print_value_bin(v, ctx):
 
 
     if op in ['shl', 'shr']:
-        need_wrap_left = precedence(left['kind']) < 10 #precedenceMax
-        need_wrap_right = precedence(right['kind']) < 10 #precedenceMax
+        need_wrap_left = precedence(left) < 10 #precedenceMax
+        need_wrap_right = precedence(right) < 10 #precedenceMax
     elif op == 'logic_or':
         if left['kind'] != 'logic_or':
-            need_wrap_left = precedence(left['kind']) < 10 #precedenceMax
+            need_wrap_left = precedence(left) < 10 #precedenceMax
         if right['kind'] != 'logic_or':
-            need_wrap_right = precedence(right['kind']) < 10 #precedenceMax
+            need_wrap_right = precedence(right) < 10 #precedenceMax
     elif op == 'logic_and':
         if left['kind'] != 'logic_and':
-            need_wrap_left = precedence(left['kind']) < 10 #precedenceMax
+            need_wrap_left = precedence(left) < 10 #precedenceMax
         if right['kind'] != 'logic_and':
-            need_wrap_right = precedence(right['kind']) < 10 #precedenceMax
+            need_wrap_right = precedence(right) < 10 #precedenceMax
     elif op in ['eq_str', 'ne_str']:
         print_value_literal_int(v, ctx)
         return
@@ -379,8 +389,8 @@ def print_value_un(v, ctx):
     op = v['kind']
     value = v['value']
 
-    p0 = precedence(op)
-    pv = precedence(value['kind'])
+    p0 = precedence(v)
+    pv = precedence(value)
 
     if op == 'not':
         if type.eq(value['type'], type.typeNat1):
@@ -462,7 +472,7 @@ def print_value_call(v, ctx):
 def print_value_index(v, ctx):
     array = v['array']
     index = v['index']
-    need_wrap = precedence(array['kind']) < precedence('index')
+    need_wrap = precedence(array) < precedence(v)
     print_value(array, need_wrap=need_wrap)
     out("["); print_value(index); out("]")
 
@@ -470,20 +480,20 @@ def print_value_index(v, ctx):
 def print_value_index_ptr(v, ctx):
     ptr2array = v['pointer']
     index = v['index']
-    need_wrap = precedence(ptr2array['kind']) < precedence('index')
+    need_wrap = precedence(ptr2array) < precedence(v)
     print_value(ptr2array, need_wrap=need_wrap)
     out("["); print_value(index); out("]")
 
 
 def print_value_access(v, ctx):
     left = v['record']
-    need_wrap = precedence(left['kind']) < precedence('access')
+    need_wrap = precedence(left) < precedence(v)
     print_value(left, need_wrap=need_wrap); out('.'); out(v['field']['id']['str'])
 
 
 def print_value_access_ptr(v, ctx):
     left = v['pointer']
-    need_wrap = precedence(left['kind']) < precedence('access')
+    need_wrap = precedence(left) < precedence(v)
     print_value(left, need_wrap=need_wrap); out("->"); out(v['field']['id']['str'])
 
 
@@ -494,7 +504,7 @@ def print_cast(t, v, ctx=[]):
     to_type = t
 
     out("("); print_type(to_type, need_space_after=False); out(")")
-    need_wrap = precedence(v['kind']) < precedence('cast')
+    need_wrap = precedence(v) < precedence({'kind': 'cast'})
     print_value(v, ctx=ctx, need_wrap=need_wrap)
 
 
@@ -518,7 +528,7 @@ def print_value_cast_generic(v, ctx):
             print_value_literal_str(value, ctx=[], prefix=prefix)
             return
 
-    #need_wrap = precedence(value['kind']) < precedenceMax
+    #need_wrap = precedence(value) < precedenceMax
     print_value(value, ctx)#, need_wrap=need_wrap)
 
 
@@ -1340,7 +1350,7 @@ def print_def_const(x):
     v = const_value['value']
     out("#define %s  " % id_str)
 
-    need_wrap = precedence(v['kind']) < precedenceMax
+    need_wrap = precedence(v) < precedenceMax
     global nl_str
     nl_str = " \\\n"
     # ctx=['no-literal-array-cast'],
