@@ -536,21 +536,22 @@ def print_value_cast(x, ctx):
     #
     if type.is_generic_string(from_type):
         if type.is_ptr_to_arr_of_char(to_type) or type.is_ptr_to_char(to_type):
-            # or type.is_ptr_to_char(to_type): ?
-            to_char_power = 0
-            if type.is_ptr_to_arr_of_char(to_type):
-                to_char_power = to_type['to']['of']['power']
-            elif type.is_ptr_to_char(to_type):
-                to_char_power = to_type['to']['power']
+            char_power = 0
 
-            if to_char_power == 8:
+            if type.is_ptr_to_arr_of_char(to_type):
+                char_power = to_type['to']['of']['power']
+            elif type.is_ptr_to_char(to_type):
+                char_power = to_type['to']['power']
+
+            if char_power == 8:
                 pass #out("u8")
-            elif to_char_power == 16:
+            elif char_power == 16:
                 out("u")
-            elif to_char_power == 32:
+            elif char_power == 32:
                 out("U")
 
             print_value_literal_str(value, ctx=[])
+
             return
 
 
