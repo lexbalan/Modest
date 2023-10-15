@@ -8,8 +8,8 @@ const int32Const = genericIntConst to Int32
 
 const genericStringConst = "Hello!"
 const string8Const = genericStringConst to Str8
-//const genericString16Const = genericStringConst to Str16
-//const genericString32Const = genericStringConst to Str32
+const string16Const = genericStringConst to Str16
+const string32Const = genericStringConst to Str32
 
 
 type Point record {

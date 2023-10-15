@@ -90,69 +90,67 @@ declare void @perror(%ConstCharStr)
 
 ; -- SOURCE: src/main.cm
 
-@str1.c8 = private constant [9 x i8] c"file.txt\00"
-@str2.c8 = private constant [19 x i8] c"run write_example\0A\00"
+@str1.c8 = private constant [19 x i8] c"run write_example\0A\00"
+@str2.c8 = private constant [9 x i8] c"file.txt\00"
 @str3.c8 = private constant [2 x i8] c"w\00"
 @str4.c8 = private constant [31 x i8] c"error: cannot create file \27%s\27\00"
 @str5.c8 = private constant [12 x i8] c"some text.\0A\00"
 @str6.c8 = private constant [18 x i8] c"run read_example\0A\00"
-@str7.c8 = private constant [2 x i8] c"r\00"
-@str8.c8 = private constant [29 x i8] c"error: cannot open file \27%s\27\00"
-@str9.c8 = private constant [21 x i8] c"file \27%s\27 contains: \00"
-@str10.c8 = private constant [19 x i8] c"text_file example\0A\00"
+@str7.c8 = private constant [9 x i8] c"file.txt\00"
+@str8.c8 = private constant [2 x i8] c"r\00"
+@str9.c8 = private constant [29 x i8] c"error: cannot open file \27%s\27\00"
+@str10.c8 = private constant [21 x i8] c"file \27%s\27 contains: \00"
+@str11.c8 = private constant [19 x i8] c"text_file example\0A\00"
 
 
 
 
 define void @write_example() {
-    %1 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str2.c8)
-    %2 = call %FILE*(%ConstCharStr, %ConstCharStr) @fopen (%ConstCharStr @str1.c8, %ConstCharStr @str3.c8)
+    %1 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str1.c8)
+    %2 = call %FILE*(%ConstCharStr, %ConstCharStr) @fopen (%ConstCharStr @str7.c8, %ConstCharStr @str3.c8)
     %3 = icmp eq %FILE* %2, null
     br i1 %3 , label %then_0, label %endif_0
 then_0:
-    %4 = bitcast i8* @str1.c8 to [0 x i8]*
-    %5 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str4.c8, [0 x i8]* %4)
+    %4 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str4.c8, [0 x i8]* @str7.c8)
     ret void
     br label %endif_0
 endif_0:
-    %7 = call i32(%FILE*, %Str, ...) @fprintf (%FILE* %2, %Str @str5.c8)
-    %8 = call i32(%FILE*) @fclose (%FILE* %2)
+    %6 = call i32(%FILE*, %Str, ...) @fprintf (%FILE* %2, %Str @str5.c8)
+    %7 = call i32(%FILE*) @fclose (%FILE* %2)
     ret void
 }
 
 define void @read_example() {
     %1 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str6.c8)
-    %2 = call %FILE*(%ConstCharStr, %ConstCharStr) @fopen (%ConstCharStr @str1.c8, %ConstCharStr @str7.c8)
+    %2 = call %FILE*(%ConstCharStr, %ConstCharStr) @fopen (%ConstCharStr @str7.c8, %ConstCharStr @str8.c8)
     %3 = icmp eq %FILE* %2, null
     br i1 %3 , label %then_0, label %endif_0
 then_0:
-    %4 = bitcast i8* @str1.c8 to [0 x i8]*
-    %5 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str8.c8, [0 x i8]* %4)
+    %4 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str9.c8, [0 x i8]* @str7.c8)
     ret void
     br label %endif_0
 endif_0:
-    %7 = bitcast i8* @str1.c8 to [0 x i8]*
-    %8 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str9.c8, [0 x i8]* %7)
+    %6 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str10.c8, [0 x i8]* @str7.c8)
     br label %again_1
 again_1:
     br i1 1 , label %body_1, label %break_1
 body_1:
-    %9 = call i32(%FILE*) @fgetc (%FILE* %2)
-    %10 = icmp eq i32 %9, -1
-    br i1 %10 , label %then_1, label %endif_1
+    %7 = call i32(%FILE*) @fgetc (%FILE* %2)
+    %8 = icmp eq i32 %7, -1
+    br i1 %8 , label %then_1, label %endif_1
 then_1:
     br label %break_1
     br label %endif_1
 endif_1:
-    %12 = call i32(i32) @putchar (i32 %9)
+    %10 = call i32(i32) @putchar (i32 %7)
     br label %again_1
 break_1:
-    %13 = call i32(%FILE*) @fclose (%FILE* %2)
+    %11 = call i32(%FILE*) @fclose (%FILE* %2)
     ret void
 }
 
 define i32 @main() {
-    %1 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str10.c8)
+    %1 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str11.c8)
     call void() @write_example ()
     call void() @read_example ()
     ret i32 0

@@ -179,19 +179,20 @@ declare void @perror(%ConstCharStr)
 
 ; -- SOURCE: src/main.cm
 
-@str1.c8 = private constant [9 x i8] c"file.bin\00"
-@str2.c8 = private constant [19 x i8] c"run write_example\0A\00"
+@str1.c8 = private constant [19 x i8] c"run write_example\0A\00"
+@str2.c8 = private constant [9 x i8] c"file.bin\00"
 @str3.c8 = private constant [3 x i8] c"wb\00"
 @str4.c8 = private constant [31 x i8] c"error: cannot create file \27%s\27\00"
 @str5.c8 = private constant [3 x i8] c"id\00"
 @str6.c8 = private constant [5 x i8] c"data\00"
 @str7.c8 = private constant [18 x i8] c"run read_example\0A\00"
-@str8.c8 = private constant [3 x i8] c"rb\00"
-@str9.c8 = private constant [29 x i8] c"error: cannot open file \27%s\27\00"
-@str10.c8 = private constant [21 x i8] c"file \27%s\27 contains:\0A\00"
-@str11.c8 = private constant [14 x i8] c"chunk.id: %s\0A\00"
-@str12.c8 = private constant [16 x i8] c"chunk.data: %s\0A\00"
-@str13.c8 = private constant [19 x i8] c"text_file example\0A\00"
+@str8.c8 = private constant [9 x i8] c"file.bin\00"
+@str9.c8 = private constant [3 x i8] c"rb\00"
+@str10.c8 = private constant [29 x i8] c"error: cannot open file \27%s\27\00"
+@str11.c8 = private constant [21 x i8] c"file \27%s\27 contains:\0A\00"
+@str12.c8 = private constant [14 x i8] c"chunk.id: %s\0A\00"
+@str13.c8 = private constant [16 x i8] c"chunk.data: %s\0A\00"
+@str14.c8 = private constant [19 x i8] c"text_file example\0A\00"
 
 
 
@@ -204,60 +205,55 @@ declare void @perror(%ConstCharStr)
 
 
 define void @write_example() {
-    %1 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str2.c8)
-    %2 = call %FILE*(%ConstCharStr, %ConstCharStr) @fopen (%ConstCharStr @str1.c8, %ConstCharStr @str3.c8)
+    %1 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str1.c8)
+    %2 = call %FILE*(%ConstCharStr, %ConstCharStr) @fopen (%ConstCharStr @str8.c8, %ConstCharStr @str3.c8)
     %3 = icmp eq %FILE* %2, null
     br i1 %3 , label %then_0, label %endif_0
 then_0:
-    %4 = bitcast i8* @str1.c8 to [0 x i8]*
-    %5 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str4.c8, [0 x i8]* %4)
+    %4 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str4.c8, [0 x i8]* @str8.c8)
     ret void
     br label %endif_0
 endif_0:
     %chunk = alloca %Chunk
 ; pointers casting requires -funsafe translator option
 ; (see Makefile)
-    %7 = getelementptr inbounds %Chunk, %Chunk* %chunk, i32 0, i32 0
-    %8 = bitcast [100 x i8]* %7 to i8*
-    %9 = bitcast i8* @str5.c8 to i8*
-    %10 = call i8*(i8*, i8*) @strcpy (i8* %8, i8* %9)
-    %11 = getelementptr inbounds %Chunk, %Chunk* %chunk, i32 0, i32 1
-    %12 = bitcast [1024 x i8]* %11 to i8*
-    %13 = bitcast i8* @str6.c8 to i8*
-    %14 = call i8*(i8*, i8*) @strcpy (i8* %12, i8* %13)
+    %6 = getelementptr inbounds %Chunk, %Chunk* %chunk, i32 0, i32 0
+    %7 = bitcast [100 x i8]* %6 to i8*
+    %8 = call i8*(i8*, i8*) @strcpy (i8* %7, i8* @str5.c8)
+    %9 = getelementptr inbounds %Chunk, %Chunk* %chunk, i32 0, i32 1
+    %10 = bitcast [1024 x i8]* %9 to i8*
+    %11 = call i8*(i8*, i8*) @strcpy (i8* %10, i8* @str6.c8)
 ; write chunk to file
-    %15 = bitcast %Chunk* %chunk to i8*
-    %16 = call i64(i8*, i64, i64, %FILE*) @fwrite (i8* %15, i64 0, i64 1, %FILE* %2)
-    %17 = call i32(%FILE*) @fclose (%FILE* %2)
+    %12 = bitcast %Chunk* %chunk to i8*
+    %13 = call i64(i8*, i64, i64, %FILE*) @fwrite (i8* %12, i64 0, i64 1, %FILE* %2)
+    %14 = call i32(%FILE*) @fclose (%FILE* %2)
     ret void
 }
 
 define void @read_example() {
     %1 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str7.c8)
-    %2 = call %FILE*(%ConstCharStr, %ConstCharStr) @fopen (%ConstCharStr @str1.c8, %ConstCharStr @str8.c8)
+    %2 = call %FILE*(%ConstCharStr, %ConstCharStr) @fopen (%ConstCharStr @str8.c8, %ConstCharStr @str9.c8)
     %3 = icmp eq %FILE* %2, null
     br i1 %3 , label %then_0, label %endif_0
 then_0:
-    %4 = bitcast i8* @str1.c8 to [0 x i8]*
-    %5 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str9.c8, [0 x i8]* %4)
+    %4 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str10.c8, [0 x i8]* @str8.c8)
     ret void
     br label %endif_0
 endif_0:
     %chunk = alloca %Chunk
-    %7 = bitcast %Chunk* %chunk to i8*
-    %8 = call i64(i8*, i64, i64, %FILE*) @fread (i8* %7, i64 0, i64 1, %FILE* %2)
-    %9 = bitcast i8* @str1.c8 to [0 x i8]*
-    %10 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str10.c8, [0 x i8]* %9)
-    %11 = getelementptr inbounds %Chunk, %Chunk* %chunk, i32 0, i32 0
-    %12 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str11.c8, [100 x i8]* %11)
-    %13 = getelementptr inbounds %Chunk, %Chunk* %chunk, i32 0, i32 1
-    %14 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str12.c8, [1024 x i8]* %13)
-    %15 = call i32(%FILE*) @fclose (%FILE* %2)
+    %6 = bitcast %Chunk* %chunk to i8*
+    %7 = call i64(i8*, i64, i64, %FILE*) @fread (i8* %6, i64 0, i64 1, %FILE* %2)
+    %8 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str11.c8, [0 x i8]* @str8.c8)
+    %9 = getelementptr inbounds %Chunk, %Chunk* %chunk, i32 0, i32 0
+    %10 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str12.c8, [100 x i8]* %9)
+    %11 = getelementptr inbounds %Chunk, %Chunk* %chunk, i32 0, i32 1
+    %12 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str13.c8, [1024 x i8]* %11)
+    %13 = call i32(%FILE*) @fclose (%FILE* %2)
     ret void
 }
 
 define i32 @main() {
-    %1 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str13.c8)
+    %1 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str14.c8)
     call void() @write_example ()
     call void() @read_example ()
     ret i32 0

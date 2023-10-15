@@ -81,11 +81,11 @@ void utf16_puts(uint16_t *s)
 }
 
 
-void utf8_puts(uint8_t *s)
+void utf8_puts(char *s)
 {
     int32_t i = (int32_t)0;
     while (true) {
-        const uint8_t c = s[i];
+        const char c = s[i];
         if ((uint8_t)c == 0) {break;}
         putchar((int)c);
         i = i + 1;

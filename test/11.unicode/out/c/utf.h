@@ -10,7 +10,7 @@
 
 void utf32_to_utf8(uint32_t x, uint8_t *buf);
 
-void utf8_puts(uint8_t *s);
+void utf8_puts(char *s);
 void utf16_puts(uint16_t *s);
 void utf32_puts(uint32_t *s);
 

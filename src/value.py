@@ -392,10 +392,10 @@ def check_power(vtype, t, method, ti):
     if vtype['power'] > t['power']:
         if method == 'explicit':
             if not no_warning_cast_data_loss:
-                warning("explicit casting with data loss", ti)
+                warning("casting with data loss", ti)
 
         else:
-            error("implicit casting with data loss", ti)
+            error("casting with data loss", ti)
             rv = False
 
     if not rv:
@@ -495,13 +495,24 @@ def value_cons_pointer(v, t, ti, method):
     if type.is_nil(vtype):
         return do_cast_generic(v, t, ti)
 
-    # GenericString -> *[]CharX
+    # GenericString -> (*[]CharX | *CharX)
     if type.is_generic_string(vtype):
-        if type.is_array(to_type['to']):
-            if type.is_char(to_type['to']['of']):
-                str_used_as(string_value=v, typ=to_type['to']['of'])
-                return hlir_value_cast(v, t, ti=ti)
-                #return do_cast_generic(v, t, ti=ti) #?!
+        if type.is_ptr_to_arr_of_char(to_type) or type.is_ptr_to_char(to_type):
+
+            char_type = None
+            if type.is_ptr_to_char(to_type):
+                char_type = to_type['to']
+            elif type.is_ptr_to_arr_of_char(to_type):
+                char_type = to_type['to']['of']
+
+            str_used_as(string_value=v, typ=char_type)
+            cv = hlir_value_cast(v, t, ti=ti)
+            cv['att'].append("string-cons")
+            from trans import module_strings_add
+            module_strings_add(cv)
+            return cv
+            #return do_cast_generic(v, t, ti=ti) #?!
+
 
     # *[n]X -> *[]X
     if type.is_pointer_to_defined_array(vtype):

@@ -15,9 +15,16 @@
 #define ratSymbolUTF32  0x0001F400
 
 
-uint8_t arr_utf8[8] = (uint8_t [8]){'H', 'i', '!', '\xa', '\x0'};
+char arr_utf8[8] = (char [8]){'H', 'i', '!', '\xa', '\x0'};
 uint16_t arr_utf16[8] = (uint16_t [8]){'H', 'e', 'l', 'l', 'o', '!', '\xa', '\x0'};
 uint32_t arr_utf32[8] = (uint32_t [8]){'H', 'e', 'l', 'l', 'o', '!', '\xa', '\x0'};
+
+
+
+#define genericStringConst  "S-t-r-i-n-g"
+#define string8Const  ("S-t-r-i-n-g")
+#define string16Const  (u"S-t-r-i-n-g")
+#define string32Const  (U"S-t-r-i-n-g")
 
 
 int main(void)
@@ -40,6 +47,20 @@ int main(void)
     utf32_puts(U"Hello Ω!\n");
 
     utf32_puts(U"Hello 🐀!\n");
+
+
+/*var str8: Str8 := string8Const
+    var str16: Str16 := string16Const
+    var str32: Str32 := string32Const
+
+    utf8_puts(str8)
+    utf8_puts("\n")
+
+    utf16_puts(str16)
+    utf8_puts("\n")
+
+    utf32_puts(str32)
+    utf8_puts("\n")*/
 
     return 0;
 }

@@ -19,6 +19,13 @@ var arr_utf16 : [8]Char16 := "Hello!\n"
 var arr_utf32 : [8]Char32 := "Hello!\n"
 
 
+
+const genericStringConst = "S-t-r-i-n-g"
+const string8Const = genericStringConst to *[]Char8
+const string16Const = genericStringConst to *[]Char16
+const string32Const = genericStringConst to *[]Char32
+
+
 func main () -> Int {
     // indexing of GenericString returns #i symbol code
     // the symbols have GenericInteger type
@@ -38,6 +45,20 @@ func main () -> Int {
     utf32_puts("Hello Ω!\n")
 
     utf32_puts("Hello 🐀!\n")
+
+
+    /*var str8: Str8 := string8Const
+    var str16: Str16 := string16Const
+    var str32: Str32 := string32Const
+
+    utf8_puts(str8)
+    utf8_puts("\n")
+
+    utf16_puts(str16)
+    utf8_puts("\n")
+
+    utf32_puts(str32)
+    utf8_puts("\n")*/
 
     return 0
 }

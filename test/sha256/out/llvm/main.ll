@@ -185,15 +185,13 @@ declare void @sha256_doHash([0 x i8]*, i32, [0 x i8]*)
 
 ; -- SOURCE: src/main.cm
 
-@str1.c8 = private constant [4 x i8] c"abc\00"
-@str2.c8 = private constant [13 x i8] c"Hello World!\00"
-@str3.c8 = private constant [5 x i8] c"\27%s\27\00"
-@str4.c8 = private constant [5 x i8] c" -> \00"
-@str5.c8 = private constant [5 x i8] c"%02X\00"
-@str6.c8 = private constant [2 x i8] c"\0A\00"
-@str7.c8 = private constant [13 x i8] c"test SHA256\0A\00"
-@str8.c8 = private constant [17 x i8] c"test #%d passed\0A\00"
-@str9.c8 = private constant [17 x i8] c"test #%d failed\0A\00"
+@str1.c8 = private constant [5 x i8] c"\27%s\27\00"
+@str2.c8 = private constant [5 x i8] c" -> \00"
+@str3.c8 = private constant [5 x i8] c"%02X\00"
+@str4.c8 = private constant [2 x i8] c"\0A\00"
+@str5.c8 = private constant [13 x i8] c"test SHA256\0A\00"
+@str6.c8 = private constant [17 x i8] c"test #%d passed\0A\00"
+@str7.c8 = private constant [17 x i8] c"test #%d failed\0A\00"
 
 
 
@@ -363,8 +361,8 @@ define i1 @sha256_doTest(%SHA256_TestData* %test) {
     %5 = bitcast [32 x i8]* %test_hash to [0 x i8]*
     call void([0 x i8]*, i32, [0 x i8]*) @sha256_doHash ([0 x i8]* %2, i32 %4, [0 x i8]* %5)
     %6 = getelementptr inbounds %SHA256_TestData, %SHA256_TestData* %test, i32 0, i32 0
-    %7 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str3.c8, %InputString* %6)
-    %8 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str4.c8)
+    %7 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str1.c8, %InputString* %6)
+    %8 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str2.c8)
     %9 = sext i1 0 to i32
     %i = alloca i32
     store i32 %9, i32* %i
@@ -377,13 +375,13 @@ body_1:
     %12 = load i32, i32* %i
     %13 = getelementptr inbounds [32 x i8], [32 x i8]* %test_hash, i32 0, i32 %12
     %14 = load i8, i8* %13
-    %15 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str5.c8, i8 %14)
+    %15 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str3.c8, i8 %14)
     %16 = load i32, i32* %i
     %17 = add i32 %16, 1
     store i32 %17, i32* %i
     br label %again_1
 break_1:
-    %18 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str6.c8)
+    %18 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str4.c8)
     %19 = getelementptr inbounds %SHA256_TestData, %SHA256_TestData* %test, i32 0, i32 2
     %20 = bitcast [32 x i8]* %19 to i8*
     %21 = bitcast [32 x i8]* %test_hash to i8*
@@ -395,7 +393,7 @@ break_1:
 
 
 define i32 @main() {
-    %1 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str7.c8)
+    %1 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str5.c8)
     %2 = sext i1 0 to i32
     %i = alloca i32
     store i32 %2, i32* %i
@@ -413,11 +411,11 @@ body_1:
     br i1 %9 , label %then_0, label %else_0
 then_0:
     %10 = load i32, i32* %i
-    %11 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str8.c8, i32 %10)
+    %11 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str6.c8, i32 %10)
     br label %endif_0
 else_0:
     %12 = load i32, i32* %i
-    %13 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str9.c8, i32 %12)
+    %13 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str7.c8, i32 %12)
     br label %endif_0
 endif_0:
     %14 = load i32, i32* %i

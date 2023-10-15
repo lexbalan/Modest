@@ -12,7 +12,7 @@ const test = "test"
 
 
 func main () -> Int {
-    printf("%s\n", greeting)
+    printf("%s\n", "Hello World 🎉")
 
     if test == "test" {
         printf("test ok.\n")

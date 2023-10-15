@@ -17,9 +17,9 @@
 
 
 
-uint8_t *fsm_state_no_name(FSM *fsm, uint32_t state_no)
+char *fsm_state_no_name(FSM *fsm, uint32_t state_no)
 {
-    return (uint8_t *)&fsm->states[state_no].name[0];
+    return (char *)&fsm->states[state_no].name[0];
 }
 
 

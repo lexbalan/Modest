@@ -14,7 +14,7 @@
 
 
 
-typedef uint8_t InputString[32];
+typedef char InputString[32];
 
 typedef struct {
     InputString input;

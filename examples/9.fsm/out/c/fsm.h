@@ -22,7 +22,7 @@ typedef struct {
 } FSM_Empty;
 
 typedef struct {
-    uint8_t name[fsmNameLength];
+    char name[fsmNameLength];
     FSM_Proc entry;
     FSM_Proc loop;
     FSM_Proc exit;
@@ -36,7 +36,7 @@ typedef struct {
 typedef uint32_t UInt32;
 
 struct FSM {
-    uint8_t name[fsmNameLength];
+    char name[fsmNameLength];
     UInt32 state;
     UInt32 nexstate;
     UInt32 substate;
@@ -44,7 +44,7 @@ struct FSM {
 };
 
 
-uint8_t *fsm_state_no_name(FSM *fsm, uint32_t state_no);
+char *fsm_state_no_name(FSM *fsm, uint32_t state_no);
 void fsm_switch(FSM *fsm, uint32_t state);
 void fsm_run(FSM *fsm);
 

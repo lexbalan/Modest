@@ -10,7 +10,7 @@
 
 void ff_memzero(void *mem, uint64_t len);
 void ff_memcpy(void *dst, void *src, uint64_t len);
-uint64_t ff_cstrlen(uint8_t *cstr);
+uint64_t ff_cstrlen(char *cstr);
 void delay_us(uint64_t us);
 void delay_ms(uint64_t ms);
 void delay_s(uint64_t s);

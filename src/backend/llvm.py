@@ -1,7 +1,7 @@
 
 import copy
 from .common import *
-from error import info
+from error import info, warning, error
 import type
 from type import type_attribute_check
 from value import value_attribute_check, value_print, value_is_immediate
@@ -831,6 +831,37 @@ def do_eval_expr_cast(x):
     to_type = x['type']
 
 
+    # const greeting = "Hello World!\n"
+    # const greeting8 = greeting to Str8
+    # const greeting16 = greeting to Str16
+    # const greeting32 = greeting to Str32
+    if type.is_generic_string(from_type):
+        if type.is_ptr_to_arr_of_char(to_type) or type.is_ptr_to_char(to_type):
+
+            to_char_power = 0
+            if type.is_ptr_to_char(to_type):
+                to_char_power = to_type['to']['power']
+            else:
+                to_char_power = to_type['to']['of']['power']
+
+            e = None
+            if to_char_power == 8:
+                #print_value_literal_str8(value, ctx=[])
+                e = do_eval_str8(value)
+            elif to_char_power == 16:
+                e = do_eval_str16(value)
+                #print_value_literal_str16(value, ctx=[])
+            elif to_char_power == 32:
+                e = do_eval_str32(value)
+                #print_value_literal_str32(value, ctx=[])
+
+            #print_value(e)
+
+            #print_value_literal_str(value, ctx=[])
+            return e
+
+
+
     # cast any type to Unit type
     if type.is_unit(to_type):
         return ll_create_value_zero(to_type)
@@ -1007,17 +1038,32 @@ def do_eval(x):
     return v
 
 
-def do_eval_str(x):
-    # проблема строковых констант и strid
-    """if not 'strid_8' in x:
-        if 'value' in x:
-            return do_eval_x(x['value'])
-            """
+def do_eval_str8(x):
     return {
         'isa': 'llvm_value',
         'class': 'mem',
         'level': 'value',
         'id': x['imm']['strid_8'],
+        'type': x['type'],
+        'proto': x
+    }
+
+def do_eval_str16(x):
+    return {
+        'isa': 'llvm_value',
+        'class': 'mem',
+        'level': 'value',
+        'id': x['imm']['strid_16'],
+        'type': x['type'],
+        'proto': x
+    }
+
+def do_eval_str32(x):
+    return {
+        'isa': 'llvm_value',
+        'class': 'mem',
+        'level': 'value',
+        'id': x['imm']['strid_32'],
         'type': x['type'],
         'proto': x
     }
@@ -1032,14 +1078,18 @@ def do_eval_literal(x):
         return do_eval_record(x)
     elif type.is_array(x['type']):
         return do_eval_array(x)
-    elif type.is_string(x['type']):
-        return do_eval_str(x)
+    #elif type.is_string(x['type']):
+    #    return do_eval_str(x)
     elif type.is_free_pointer(x['type']):
         return ll_create_value_num(x['type'], hlir_value_imm_get(x))
     elif type.is_pointer(x['type']):
         return ll_create_value_num(x['type'], hlir_value_imm_get(x))
     elif type.is_char(x['type']):
         return ll_create_value_num(x['type'], hlir_value_imm_get(x))
+    else:
+        value_print(x)
+        error("do_eval_literal: unknown literal", x['ti'])
+        exit(1)
 
 
 def func_const_var(x):
@@ -1104,7 +1154,7 @@ def do_eval_x(x):
     elif k == 'ccast': y = do_eval_expr_ccast(x)
     elif k == 'cast': y = do_eval_expr_cast(x)
     elif k == 'sizeof': y = do_eval_sizeof(x)
-    elif k == 'add_str': y = do_eval_str(x)
+#    elif k == 'add_str': y = do_eval_str(x)
     else:
         out("<%s>" % k)
         y = None

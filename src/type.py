@@ -450,6 +450,15 @@ def is_pointer_to_record(t):
     return is_record(t['to'])
 
 
+def is_ptr_to_char(t):
+    if not is_pointer(t):
+        return False
+
+    if not is_char(t['to']):
+        return False
+
+    return True
+
 
 def is_ptr_to_arr_of_char(t):
     if not is_pointer(t):

@@ -99,14 +99,20 @@ declare void @utf32_putchar(i32)
 
 ; -- SOURCE: src/main.cm
 
-@str1.c8 = private constant [5 x i8] c"Hi!\0A\00"
-@str2.c16 = private constant [8 x i16] [i16 72, i16 101, i16 108, i16 108, i16 111, i16 33, i16 10, i16 0]
-@str3.c32 = private constant [8 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 33, i32 10, i32 0]
-@str6.c8 = private constant [16 x i8] c"omegaCode = %d\0A\00"
-@str7.c8 = private constant [14 x i8] c"ratCode = %d\0A\00"
-@str8.c16 = private constant [10 x i16] [i16 72, i16 101, i16 108, i16 108, i16 111, i16 32, i16 937, i16 33, i16 10, i16 0]
-@str9.c32 = private constant [10 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 32, i32 937, i32 33, i32 10, i32 0]
-@str10.c32 = private constant [10 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 32, i32 128000, i32 33, i32 10, i32 0]
+@str1.c8 = private constant [12 x i8] c"S-t-r-i-n-g\00"
+@str1.c16 = private constant [12 x i16] [i16 83, i16 45, i16 116, i16 45, i16 114, i16 45, i16 105, i16 45, i16 110, i16 45, i16 103, i16 0]
+@str1.c32 = private constant [12 x i32] [i32 83, i32 45, i32 116, i32 45, i32 114, i32 45, i32 105, i32 45, i32 110, i32 45, i32 103, i32 0]
+@str2.c8 = private constant [12 x i8] c"S-t-r-i-n-g\00"
+@str2.c16 = private constant [12 x i16] [i16 83, i16 45, i16 116, i16 45, i16 114, i16 45, i16 105, i16 45, i16 110, i16 45, i16 103, i16 0]
+@str2.c32 = private constant [12 x i32] [i32 83, i32 45, i32 116, i32 45, i32 114, i32 45, i32 105, i32 45, i32 110, i32 45, i32 103, i32 0]
+@str3.c8 = private constant [12 x i8] c"S-t-r-i-n-g\00"
+@str3.c16 = private constant [12 x i16] [i16 83, i16 45, i16 116, i16 45, i16 114, i16 45, i16 105, i16 45, i16 110, i16 45, i16 103, i16 0]
+@str3.c32 = private constant [12 x i32] [i32 83, i32 45, i32 116, i32 45, i32 114, i32 45, i32 105, i32 45, i32 110, i32 45, i32 103, i32 0]
+@str4.c8 = private constant [16 x i8] c"omegaCode = %d\0A\00"
+@str5.c8 = private constant [14 x i8] c"ratCode = %d\0A\00"
+@str6.c16 = private constant [10 x i16] [i16 72, i16 101, i16 108, i16 108, i16 111, i16 32, i16 937, i16 33, i16 10, i16 0]
+@str7.c32 = private constant [10 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 32, i32 937, i32 33, i32 10, i32 0]
+@str8.c32 = private constant [10 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 32, i32 128000, i32 33, i32 10, i32 0]
 
 
 
@@ -142,6 +148,7 @@ declare void @utf32_putchar(i32)
   i32 0
 ]
 
+
 define i32 @main() {
 ; indexing of GenericString returns #i symbol code
 ; the symbols have GenericInteger type
@@ -152,12 +159,13 @@ define i32 @main() {
     %ratCode = alloca i32
     store i32 128000, i32* %ratCode
     %1 = load i16, i16* %omegaCode
-    %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str6.c8, i16 %1)
+    %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str4.c8, i16 %1)
     %3 = load i32, i32* %ratCode
-    %4 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str7.c8, i32 %3)
-    call void([0 x i16]*) @utf16_puts ([0 x i16]* @str8.c16)
-    call void([0 x i32]*) @utf32_puts ([0 x i32]* @str9.c32)
-    call void([0 x i32]*) @utf32_puts ([0 x i32]* @str10.c32)
+    %4 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str5.c8, i32 %3)
+    call void([0 x i16]*) @utf16_puts ([0 x i16]* @str6.c16)
+    call void([0 x i32]*) @utf32_puts ([0 x i32]* @str7.c32)
+    call void([0 x i32]*) @utf32_puts ([0 x i32]* @str8.c32)
+
     ret i32 0
 }
 

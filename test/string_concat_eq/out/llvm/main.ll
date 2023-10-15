@@ -90,22 +90,22 @@ declare void @perror(%ConstCharStr)
 
 ; -- SOURCE: src/main.cm
 
-@str7.c8 = private constant [4 x i8] c"%s\0A\00"
-@str9.c8 = private constant [10 x i8] c"test ok.\0A\00"
-@str10.c8 = private constant [14 x i8] c"test failed.\0A\00"
-@str4.c8 = private constant [17 x i8] c"Hello World 🎉\00"
+@str1.c8 = private constant [4 x i8] c"%s\0A\00"
+@str2.c8 = private constant [17 x i8] c"Hello World 🎉\00"
+@str3.c8 = private constant [10 x i8] c"test ok.\0A\00"
+@str4.c8 = private constant [14 x i8] c"test failed.\0A\00"
 
 
 
 
 define i32 @main() {
-    %1 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str7.c8, [0 x i8]* @str4.c8)
+    %1 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str1.c8, [0 x i8]* @str2.c8)
     br i1 1 , label %then_0, label %else_0
 then_0:
-    %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str9.c8)
+    %2 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str3.c8)
     br label %endif_0
 else_0:
-    %3 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str10.c8)
+    %3 = call i32(%ConstCharStr, ...) @printf (%ConstCharStr @str4.c8)
     br label %endif_0
 endif_0:
     ret i32 0

@@ -628,6 +628,8 @@ def bin_imm(k, type_result, l, r, ti):
 
 
 
+def module_strings_add(v):
+    module['strings'].append(v)
 
 
 def value_strings_concat(l, r, ti):
@@ -638,7 +640,7 @@ def value_strings_concat(l, r, ti):
     #module['strings'].append(new_s)
     bin_value = hlir_value_bin('add_str', l, r, type.typeGenericString, ti=ti)
     value_set_imm(bin_value, imm_str)
-    module['strings2'].append(bin_value)
+    #module_strings_add(bin_value)
     return bin_value
 
 
@@ -1049,7 +1051,7 @@ def do_value_str(x):
     ti=x['ti']
 
     s = hlir_value_cstr(string, length, type.typeGenericString, ti=ti)
-    module['strings'].append(s)
+    #module_strings_add(s)
     return s
 
 
@@ -1857,17 +1859,17 @@ def proc(ast, source_info):
 
     #print("PROC: id = %s" % id)
 
+    new_context = root_context.branch()
+
     module = {
         'isa': 'module',
         'id': id,
         'source_info': source_info,
         'imports': [],
-        'strings': [],
-        'strings2': [],  # concated strings (only for LLVM IR backend)
-        'context': root_context.branch(),
+        'strings': [],  # (only for LLVM IR backend)
+        'context': new_context,
         'text': []
     }
-
 
 
     for x in ast:

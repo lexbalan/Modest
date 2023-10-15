@@ -299,9 +299,17 @@ def print_value_ccast(v, ctx):
 
 
 def print_value_cast(v, ctx):
-
-    from_type = v['value']['type']
+    value = v['value']
+    from_type = value['type']
     to_type = v['type']
+
+
+    if type.is_generic_string(from_type):
+        if type.is_ptr_to_arr_of_char(to_type):
+            print_value_literal_str(value, ctx=[])
+            return
+
+
     # NO need cast ptr to *void
     if type.is_pointer(from_type):
         if type.is_free_pointer(to_type):

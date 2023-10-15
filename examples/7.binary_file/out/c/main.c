@@ -26,10 +26,10 @@ void write_example(void)
 {
     printf("run write_example\n");
 
-    FILE *const fp = fopen(filename, "wb");
+    FILE *const fp = fopen("file.bin", "wb");
 
     if (fp == NULL) {
-        printf("error: cannot create file '%s'", (uint8_t *)filename);
+        printf("error: cannot create file '%s'", "file.bin");
         return;
     }
 
@@ -51,16 +51,16 @@ void read_example(void)
 {
     printf("run read_example\n");
 
-    FILE *const fp = fopen(filename, "rb");
+    FILE *const fp = fopen("file.bin", "rb");
 
     if (fp == NULL) {
-        printf("error: cannot open file '%s'", (uint8_t *)filename);
+        printf("error: cannot open file '%s'", "file.bin");
         return;
     }
 
     Chunk chunk;
     fread((void *)&chunk, sizeof(Chunk), 1, fp);
-    printf("file '%s' contains:\n", (uint8_t *)filename);
+    printf("file '%s' contains:\n", "file.bin");
     printf("chunk.id: %s\n", &chunk.id[0]);
     printf("chunk.data: %s\n", &chunk.data[0]);
 

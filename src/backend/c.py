@@ -547,7 +547,8 @@ def print_value_cast(x, ctx):
         if type.is_ptr_to_arr_of_char(to_type):
             to_char_power = to_type['to']['of']['power']
             if to_char_power == 8:
-                out("u8")
+                #out("u8")
+                pass
             elif to_char_power == 16:
                 out("u")
             elif to_char_power == 32:

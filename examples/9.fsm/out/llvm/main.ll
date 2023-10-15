@@ -142,10 +142,6 @@ declare void @ff_print_hex_n128(i128, i8)
 @str3.c8 = private constant [22 x i8] c"beacon_entry from %s\0A\00"
 @str4.c8 = private constant [13 x i8] c"beacon_loop\0A\00"
 @str5.c8 = private constant [19 x i8] c"beacon_exit to %s\0A\00"
-@str6.c8 = private constant [6 x i8] c"Flash\00"
-@str7.c8 = private constant [4 x i8] c"Off\00"
-@str8.c8 = private constant [3 x i8] c"On\00"
-@str9.c8 = private constant [7 x i8] c"Beacon\00"
 
 
 
