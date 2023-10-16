@@ -31,8 +31,7 @@ def do_cast_generic(v, t, ti):
 
     nv = hlir_value_cast(v, t, ti)
     nv['kind'] = 'cast_generic'
-
-    hlir_value_set_imm(nv, v['imm'])
+    nv['imm'] = v['imm']
 
     if 'nl_end' in v:
         nv['nl_end'] = v['nl_end']
@@ -112,6 +111,10 @@ def value_is_immediate(x):
         return 'imm' != None
 
 
+def value_is_immediate_integer(x):
+    return value_is_immediate(x) and type.is_integer(x['type'])
+
+
 def value_is_zero(x):
     if not value_is_immediate(x):
         return False
@@ -162,7 +165,7 @@ def value_cons_array_from_generic_array(v, t, ti, method):
         'ti': ti
     }
 
-    hlir_value_set_imm(vx, casted_items)
+    vx['imm'] = casted_items
 
     # если это не сделать то принтер C не сможет сослаться
     # на именованную константу и станет печатать ее по месту
@@ -333,7 +336,7 @@ def value_cons_record_from_generic_record(v, t, ti, method):
         'ti': ti
     }
 
-    hlir_value_set_imm(vx, items)
+    vx['imm'] = items
 
     # если это не сделать то принтер C не сможет сослаться
     # на именованную константу и станет печатать ее по месту
@@ -406,10 +409,17 @@ def check_power(vtype, t, method, ti):
 def value_cons_integer(v, t, ti, method):
     vtype = v['type']
 
+    nv = None
+
     if type.is_generic_integer(vtype):
         # GenericInt -> Int
         check_power(vtype, t, method, ti)
-        return do_cast_generic(v, t, ti)
+        nv = do_cast_generic(v, t, ti)
+
+    if nv != None:
+        if value_is_immediate(v):
+            nv['imm'] = v['imm']
+        return nv
 
 
     if method != 'explicit':
@@ -420,9 +430,9 @@ def value_cons_integer(v, t, ti, method):
     if type.is_integer(vtype) or type.is_char(vtype):
         # (Int or Char) -> Int
         check_power(vtype, t, method, ti)
-        return hlir_value_cast(v, t, ti)
+        nv = hlir_value_cast(v, t, ti)
 
-    if type.is_float(vtype):
+    elif type.is_float(vtype):
         # Float -> Int
         nv = hlir_value_cast(v, t, ti=ti)
         # need float imm int part check
@@ -431,12 +441,15 @@ def value_cons_integer(v, t, ti, method):
             imm_intval = int(imm_fltval)
             typ = hlir_type_generic_int_for(imm_intval, unsigned=True, ti=ti)
             check_power(typ, t, method, ti)
-            hlir_value_set_imm(nv, imm_intval)
+            nv['imm'] = imm_intval
 
-        return nv
+        #return nv
 
+    if nv != None:
+        if value_is_immediate(v):
+            nv['imm'] = v['imm']
 
-    return None
+    return nv
 
 
 
@@ -444,12 +457,14 @@ def value_cons_integer(v, t, ti, method):
 def value_cons_float(v, t, ti, method):
     vt = v['type']
 
+    nv = None
+
     if type.is_generic(vt):
         if type.is_integer(vt) or type.is_float(vt):
             # (GenericInt or GenericFloat) -> Float
-            y = do_cast_generic(v, t, ti)
-            num = y['imm']
+            nv = do_cast_generic(v, t, ti)
 
+            num = nv['imm']
             import struct
 
             z = 0
@@ -460,25 +475,41 @@ def value_cons_float(v, t, ti, method):
             else:
                 fatal("too big float, not implemented")
 
-            hlir_value_set_imm(y, z)
+            nv['imm'] = z
 
-            return y
+
+
+    if nv != None:
+        if value_is_immediate(v):
+            nv['imm'] = v['imm']
+        return nv
 
 
     if method != 'explicit':
         info("cannot implicit cons Float value", ti)
 
 
-    if type.is_integer(vt):
-        # Int -> Float
-        return hlir_value_cast(v, t, ti=ti)
-
     if type.is_float(vt):
         # Float -> Float
-        return hlir_value_cast(v, t, ti=ti)
+        nv = hlir_value_cast(v, t, ti=ti)
+
+        if value_is_immediate(v):
+            nv['imm'] = v['imm']
+
+    elif type.is_integer(vt):
+        # Int -> Float
+        nv = hlir_value_cast(v, t, ti=ti)
+
+        if value_is_immediate(v):
+            nv['imm'] = v['imm']
 
 
-    return None
+    if nv != None:
+        if value_is_immediate(v):
+            nv['imm'] = v['imm']
+
+
+    return nv
 
 
 
@@ -487,12 +518,14 @@ def value_cons_pointer(v, t, ti, method):
     vtype = v['type']
     to_type = t
 
+    nv = None
+
     # Nil -> *X
     if type.is_nil(vtype):
-        return do_cast_generic(v, t, ti)
+        nv = do_cast_generic(v, t, ti)
 
     # GenericString -> (*[]CharX | *CharX)
-    if type.is_generic_string(vtype):
+    elif type.is_generic_string(vtype):
         if type.is_ptr_to_arr_of_char(to_type) or type.is_ptr_to_char(to_type):
 
             char_type = None
@@ -502,27 +535,31 @@ def value_cons_pointer(v, t, ti, method):
                 char_type = to_type['to']['of']
 
             str_used_as(string_value=v, typ=char_type)
-            cv = hlir_value_cast(v, t, ti=ti)
-            cv['att'].append("string-cons")
+            nv = hlir_value_cast(v, t, ti=ti)
+            nv['att'].append("string-cons")
             from trans import module_strings_add
-            module_strings_add(cv)
-            return cv
-            #return do_cast_generic(v, t, ti=ti) #?!
+            module_strings_add(nv)
 
 
     # *[n]X -> *[]X
-    if type.is_pointer_to_defined_array(vtype):
+    elif type.is_pointer_to_defined_array(vtype):
         if type.is_pointer_to_undefined_array(t):
             if type.eq(vtype['to']['of'], t['to']['of']):
-                return hlir_value_cast(v, t, ti=ti)
+                nv = hlir_value_cast(v, t, ti=ti)
 
     # Pointer -> *X
-    if type.is_free_pointer(vtype):
-        return hlir_value_cast(v, t, ti=ti)
+    elif type.is_free_pointer(vtype):
+        nv = hlir_value_cast(v, t, ti=ti)
 
     # *X -> Pointer
-    if type.is_pointer(vtype):
-        return hlir_value_cast(v, t, ti=ti)
+    elif type.is_pointer(vtype):
+        nv = hlir_value_cast(v, t, ti=ti)
+
+
+    if nv != None:
+        if value_is_immediate(v):
+            nv['imm'] = v['imm']
+        return nv
 
 
     if method != 'explicit':
@@ -535,34 +572,36 @@ def value_cons_pointer(v, t, ti, method):
 
     ### UNSAFE REGION ###
 
-    # Imm Int -> Pointer
-    if value_is_immediate(v):
-        if type.is_integer(v['type']):
-            # compile-time casting
-            nv = hlir_value_cast(v, t, ti=ti)
-            num = v['imm']
-            hlir_value_set_imm(nv, num)
-            return nv
-
-    # Int -> Ptr
-    if type.is_integer(vtype):
-        from trans import ptr_size
-        if vtype['power'] != ptr_size:
-            error("cons pointer from integer with different size", ti)
-        return hlir_value_cast(v, t, ti=ti)
-
     # Ptr -> Ptr
     if type.is_pointer(vtype):
-        return hlir_value_cast(v, t, ti=ti)
+        nv = hlir_value_cast(v, t, ti=ti)
+
+    # Int -> Ptr
+    elif type.is_integer(vtype):
+        if value_is_immediate(v):
+            # compile-time casting
+            nv = hlir_value_cast(v, t, ti=ti)
+            nv['imm'] = v['imm']
+
+        else:
+            from trans import ptr_size
+            if vtype['power'] > ptr_size:
+                error("cons pointer from biggest integer", ti)
+            nv = hlir_value_cast(v, t, ti=ti)
 
     # GenericString -> *CharX
-    if type.is_generic_string(vtype):
+    elif type.is_generic_string(vtype):
         if type.is_char(to_type['to']):
             # GenericString -> *CharX
             str_used_as(string_value=v, typ=to_type['to'])
-            return hlir_value_cast(v, t, ti=ti) #?!
+            nv = hlir_value_cast(v, t, ti=ti) #?!
 
-    return None
+
+    if nv != None:
+        if value_is_immediate(v):
+            nv['imm'] = v['imm']
+
+    return nv
 
 
 
@@ -601,7 +640,7 @@ def value_cons(v, t, ti, method):
     if nv != None:
         if (cons == value_cons_integer) or (cons == value_cons_float)  or (cons == value_cons_pointer):
             if value_is_immediate(v):
-                hlir_value_set_imm(nv, v['imm'])
+                nv['imm'] = v['imm']
 
     return nv
 

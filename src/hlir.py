@@ -294,10 +294,6 @@ def hlir_value_record(typ, initializers={}, ti=None):
 
 
 
-def hlir_value_set_imm(nv, imm):
-    nv['imm'] = imm
-
-
 def hlir_value_un(k, value, type, ti=None):
     return {
         'isa': 'value',
