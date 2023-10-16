@@ -99,21 +99,15 @@ typeDecimal128['llvm_alias'] = 'double'
 
 
 
-typeChar8 = hlir_type_integer("Char8", power=8, ti=None)
-typeChar8['kind'] = 'char'
-typeChar8['att'] = ['char', 'numeric', 'unsigned', 'comparable', 'ordered']
+typeChar8 = hlir_type_char("Char8", power=8, ti=None)
 typeChar8['c_alias'] = 'char' #'uint8_t'
 typeChar8['llvm_alias'] = 'i8'
 
-typeChar16 = hlir_type_integer("Char16", power=16, ti=None)
-typeChar16['kind'] = 'char'
-typeChar16['att'] = ['char', 'numeric', 'unsigned', 'comparable', 'ordered']
+typeChar16 = hlir_type_char("Char16", power=16, ti=None)
 typeChar16['c_alias'] = 'uint16_t'
 typeChar16['llvm_alias'] = 'i16'
 
-typeChar32 = hlir_type_integer("Char32", power=32, ti=None)
-typeChar32['kind'] = 'char'
-typeChar32['att'] = ['char', 'numeric', 'unsigned', 'comparable', 'ordered']
+typeChar32 = hlir_type_char("Char32", power=32, ti=None)
 typeChar32['c_alias'] = 'uint32_t'
 typeChar32['llvm_alias'] = 'i32'
 
@@ -330,6 +324,9 @@ def is_enum(t):
 
 def is_numeric(t):
     return 'numeric' in t['att']
+
+def is_arithmetical(t):
+    return 'arithmetical' in t['att']
 
 
 def is_logical(t):

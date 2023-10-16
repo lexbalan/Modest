@@ -721,6 +721,10 @@ def do_value_bin(x):
         elif k == 'and': k = 'logic_and'
 
 
+    if not (type.is_arithmetical(l['type']) and type.is_arithmetical(r['type'])):
+        if k in ['or', 'and', 'xor', 'add', 'sub', 'mul', 'div', 'rem']:
+            error("expected 'arithmetical' type", x['ti'])
+
     # if left & right are immediate, we can fold const
     # and append field ['imm'] to bin_value
     if value_is_immediate(l) and value_is_immediate(r):

@@ -31,14 +31,14 @@ def hlir_type_integer(name, power, ti):
         'isa': 'type',
         'kind': 'int',
         'name': name,
-        'att': ['numeric', 'comparable', 'ordered'],
+        'att': ['numeric', 'arithmetical', 'comparable', 'ordered'],
         'power': power,
         'size': nbytes_for_bits(power),
         'ti': ti
     }
 
 
-def hlir_type_char(power, ti):
+def hlir_type_generic_char(power, ti):
     return {
         'isa': 'type',
         'kind': 'char',
@@ -52,12 +52,24 @@ def hlir_type_char(power, ti):
     }
 
 
+def hlir_type_char(name, power, ti):
+    return {
+        'isa': 'type',
+        'kind': 'char',
+        'name': name,
+        'att': ['numeric', 'comparable', 'ordered', 'unsigned'],
+        'power': power,
+        'size': nbytes_for_bits(power),
+        'ti': ti
+    }
+
+
 def hlir_type_float(aka, power, ti):
     return {
         'isa': 'type',
         'kind': 'float',
         'name': aka,
-        'att': ['numeric', 'comparable', 'ordered'],
+        'att': ['numeric', 'arithmetical', 'comparable', 'ordered'],
         'power': power,
         'size': nbytes_for_bits(power),
         'c_alias': 'double',
