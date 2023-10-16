@@ -5,7 +5,7 @@ from type import type_print
 from trans import is_local_context
 from error import error, warning, info
 from hlir import *
-from util import get_item_with_id
+from util import get_item_with_id, float_align
 
 
 no_warning_cast_data_loss = False
@@ -453,7 +453,6 @@ def value_cons_integer(v, t, ti, method):
 
 
 
-
 def value_cons_float(v, t, ti, method):
     vt = v['type']
 
@@ -463,26 +462,8 @@ def value_cons_float(v, t, ti, method):
         if type.is_integer(vt) or type.is_float(vt):
             # (GenericInt or GenericFloat) -> Float
             nv = do_cast_generic(v, t, ti)
-
-            num = nv['imm']
-            import struct
-
-            z = 0
-            if t['power'] == 32:
-                z = struct.unpack('<f', struct.pack('<f', num))[0]
-            elif t['power'] == 64:
-                z = struct.unpack('<d', struct.pack('<d', num))[0]
-            else:
-                fatal("too big float, not implemented")
-
-            nv['imm'] = z
-
-
-
-    if nv != None:
-        if value_is_immediate(v):
-            nv['imm'] = v['imm']
-        return nv
+            nv['imm'] = float_align(nv['imm'], t['power'])
+            return nv
 
 
     if method != 'explicit':
@@ -500,11 +481,6 @@ def value_cons_float(v, t, ti, method):
         # Int -> Float
         nv = hlir_value_cast(v, t, ti=ti)
 
-        if value_is_immediate(v):
-            nv['imm'] = v['imm']
-
-
-    if nv != None:
         if value_is_immediate(v):
             nv['imm'] = v['imm']
 
@@ -589,7 +565,7 @@ def value_cons_pointer(v, t, ti, method):
                 error("cons pointer from biggest integer", ti)
             nv = hlir_value_cast(v, t, ti=ti)
 
-    # GenericString -> *CharX
+    # GenericString -> *CharX (only for C capability)
     elif type.is_generic_string(vtype):
         if type.is_char(to_type['to']):
             # GenericString -> *CharX
@@ -613,7 +589,7 @@ def value_cons_unit(v, t, ti, method):
 
 
 # возвращает None если не может привести (!)
-# не принтует ошибку
+# не принтует ошибку (но может info)
 # это НЕ нужно для удобства приведения полей структур
 def value_cons(v, t, ti, method):
     if value_is_bad(v) or type.is_bad(t):
@@ -635,12 +611,6 @@ def value_cons(v, t, ti, method):
 
     if cons != None:
         nv = cons(v, t, ti, method)
-
-    # if construct immediate value
-    if nv != None:
-        if (cons == value_cons_integer) or (cons == value_cons_float)  or (cons == value_cons_pointer):
-            if value_is_immediate(v):
-                nv['imm'] = v['imm']
 
     return nv
 
