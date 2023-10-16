@@ -6,21 +6,22 @@ import argparse
 import importlib
 import tomllib
 
-"""CONFIG_PATH = os.path.expandvars("${MODEST_DIR}/config.toml")
+CONFIG_PATH = os.path.expandvars("${MODEST_DIR}/config.toml")
 
 toml_dict = None
 # Opening a Toml file using tomlib
 with open(CONFIG_PATH, "rb") as toml:
         toml_dict = tomllib.load(toml)
 
-print(toml_dict)"""
+#print(toml_dict)
 
 from opt import *
 
-DEFAULT_MINT = 32
-DEFAULT_MPTR = 64
-DEFAULT_MFLT = 64
-DEFAULT_MCHAR = 8
+default = toml_dict['Default']
+DEFAULT_MCHAR = default['char_size']#8
+DEFAULT_MINT = default['int_size']#32
+DEFAULT_MPTR = default['ptr_size']#64
+DEFAULT_MFLT = default['flt_size']#64
 DEFAULT_MLIB = ""
 DEFAULT_BACKEND = 'llvm'
 

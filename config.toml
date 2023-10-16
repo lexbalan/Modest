@@ -1,0 +1,7 @@
+
+[Default]
+char_size=8
+int_size=32
+ptr_size=32
+flt_size=32
+
