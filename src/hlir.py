@@ -190,9 +190,7 @@ def hlir_value_bad(ti=None):
 
 
 
-def hlir_value_set_imm(nv, imm):
-    nv['imm'] = imm
-    nv['att'].append('immediate')
+
 
 
 
@@ -202,7 +200,7 @@ def hlir_value_literal(t, imm, ti):
         'kind': 'literal',
         'type': t,
         'imm': imm,
-        'att': ['immediate'],
+        'att': [],
         'nl_end': 0,
         'ti': ti
     }
@@ -287,7 +285,8 @@ def hlir_value_record(typ, initializers={}, ti=None):
 def hlir_value_imm_get(x):
     return x['imm']
 
-
+def hlir_value_set_imm(nv, imm):
+    nv['imm'] = imm
 
 
 def hlir_value_un(k, value, type, ti=None):
@@ -434,7 +433,7 @@ def hlir_value_sizeof(of, ti=None):
         'kind': 'sizeof',
         'of': of,
         'type': typ,
-        'att': ['immediate'],
+        'att': [],
         'imm': size,
         'ti': ti
     }

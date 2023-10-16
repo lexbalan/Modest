@@ -15,9 +15,9 @@
 #define ratSymbolUTF32  0x0001F400
 
 
-char arr_utf8[8] = (char [8]){'H', 'i', '!', '\xa', '\x0'};
-uint16_t arr_utf16[8] = (uint16_t [8]){'H', 'e', 'l', 'l', 'o', '!', '\xa', '\x0'};
-uint32_t arr_utf32[8] = (uint32_t [8]){'H', 'e', 'l', 'l', 'o', '!', '\xa', '\x0'};
+char arr_utf8[8] = {'H', 'i', '!', '\xa', '\x0'};
+uint16_t arr_utf16[8] = {'H', 'e', 'l', 'l', 'o', '!', '\xa', '\x0'};
+uint32_t arr_utf32[8] = {'H', 'e', 'l', 'l', 'o', '!', '\xa', '\x0'};
 
 
 

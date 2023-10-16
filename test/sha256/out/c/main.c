@@ -47,7 +47,7 @@ SHA256_TestData test1 = (SHA256_TestData){
 
 
 #define nTests  2
-SHA256_TestData *sha256_tests[nTests] = (SHA256_TestData *[nTests]){(SHA256_TestData *)&test0, (SHA256_TestData *)&test1};
+SHA256_TestData *sha256_tests[nTests] = {(SHA256_TestData *)&test0, (SHA256_TestData *)&test1};
 
 
 bool sha256_doTest(SHA256_TestData *test)
