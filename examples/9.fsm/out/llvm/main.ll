@@ -257,8 +257,8 @@ define void @beacon_exit(%FSM* %fsm) {
     i8 115,
     i8 104,
     i8 0,
-    i8 0,
-    i8 0
+    i8 zeroinitializer,
+    i8 zeroinitializer
   ],
   i32 0,
   i32 0,
@@ -270,10 +270,10 @@ define void @beacon_exit(%FSM* %fsm) {
         i8 102,
         i8 102,
         i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0
+        i8 zeroinitializer,
+        i8 zeroinitializer,
+        i8 zeroinitializer,
+        i8 zeroinitializer
       ],
       void(%FSM*)* @off_entry,
       void(%FSM*)* @off_loop,
@@ -284,11 +284,11 @@ define void @beacon_exit(%FSM* %fsm) {
         i8 79,
         i8 110,
         i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0
+        i8 zeroinitializer,
+        i8 zeroinitializer,
+        i8 zeroinitializer,
+        i8 zeroinitializer,
+        i8 zeroinitializer
       ],
       void(%FSM*)* @on_entry,
       void(%FSM*)* @on_loop,
@@ -303,7 +303,7 @@ define void @beacon_exit(%FSM* %fsm) {
         i8 111,
         i8 110,
         i8 0,
-        i8 0
+        i8 zeroinitializer
       ],
       void(%FSM*)* @beacon_entry,
       void(%FSM*)* @beacon_loop,

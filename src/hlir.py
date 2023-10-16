@@ -31,7 +31,7 @@ def hlir_type_integer(name, power, ti):
         'isa': 'type',
         'kind': 'int',
         'name': name,
-        'att': ['numeric', 'arithmetical', 'comparable', 'ordered'],
+        'att': ['numeric', 'comparable', 'ordered'],
         'power': power,
         'size': nbytes_for_bits(power),
         'ti': ti
@@ -43,7 +43,7 @@ def hlir_type_generic_char(power, ti):
         'isa': 'type',
         'kind': 'char',
         'name': 'Char',
-        'att': ['generic', 'numeric', 'comparable', 'ordered', 'unsigned'],
+        'att': ['generic', 'comparable'],
         'power': power,
         'c_alias': 'uint32_t',
         'llvm_alias': 'i32',
@@ -57,7 +57,7 @@ def hlir_type_char(name, power, ti):
         'isa': 'type',
         'kind': 'char',
         'name': name,
-        'att': ['numeric', 'comparable', 'ordered', 'unsigned'],
+        'att': ['comparable'],
         'power': power,
         'size': nbytes_for_bits(power),
         'ti': ti
@@ -69,7 +69,7 @@ def hlir_type_float(aka, power, ti):
         'isa': 'type',
         'kind': 'float',
         'name': aka,
-        'att': ['numeric', 'arithmetical', 'comparable', 'ordered'],
+        'att': ['numeric', 'comparable', 'ordered'],
         'power': power,
         'size': nbytes_for_bits(power),
         'c_alias': 'double',
@@ -140,20 +140,21 @@ def hlir_type_generic_str(ti=None):
     }
 
 
+
 # used in shifts
 def hlir_type_generic_int_bits(nbits, ti=None):
     # get custom generic int type
+    # generic int not signed, and not unsigned (!)
     gen_int_type = hlir_type_integer('Integer', power=nbits, ti=ti)
     gen_int_type['att'].extend(['generic'])
-    # generic int not signed, and not unsigned (!)
-    gen_int_type['power'] = nbits
-    gen_int_type['size'] = nbytes_for_bits(nbits)
     return gen_int_type
+
 
 
 def hlir_type_generic_int_for(num, unsigned=False, ti=None):
     nbits = nbits_for_num(num)
     return hlir_type_generic_int_bits(nbits, ti=ti)
+
 
 
 def hlir_field(id, type, ti=None):
@@ -191,6 +192,9 @@ def hlir_type_func(params, to, ti=None):
 
 
 
+
+
+
 def hlir_value_bad(ti=None):
     return {
         'isa': 'value',
@@ -199,11 +203,6 @@ def hlir_value_bad(ti=None):
         'att': [],
         'ti': ti
     }
-
-
-
-
-
 
 
 def hlir_value_literal(t, imm, ti):
@@ -241,8 +240,6 @@ def hlir_value_int(num, typ=None, ti=None):
 
 
 def hlir_value_float(num, ti=None):
-    # вообще с флотом непонятно можно ли понять какого он Generic типа
-    # тк есть числа которые вообще никак не запишешь
     float_default_bit = int(settings_get('flt'))
     typ = hlir_type_float('Float', power=float_default_bit, ti=ti)
     typ['att'].extend(['generic'])
@@ -255,15 +252,18 @@ def hlir_string_imm(string, length):
         'str': string,
         'len': length,
 
-        'used_char8': False,
-        'used_char16': False,
-        'used_char32': False
+        # признак того что в коде эта строка приводится к:
+        'used_char8': False,  # Str8
+        'used_char16': False, # Str16
+        'used_char32': False  # Str32
     }
 
 
-def hlir_value_cstr(string, length, type, ti=None):
+
+def hlir_value_generic_str(string, length, ti=None):
+    typ = type.typeGenericString
     imm = hlir_string_imm(string, length)
-    s = hlir_value_literal(type, imm, ti)
+    s = hlir_value_literal(typ, imm, ti)
     s['att'].append('string')
     return s
 
@@ -293,9 +293,6 @@ def hlir_value_record(typ, initializers={}, ti=None):
     return hlir_value_literal(typ, initializers, ti)
 
 
-
-def hlir_value_imm_get(x):
-    return x['imm']
 
 def hlir_value_set_imm(nv, imm):
     nv['imm'] = imm

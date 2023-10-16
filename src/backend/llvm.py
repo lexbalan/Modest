@@ -5,7 +5,7 @@ from error import info, warning, error
 import type
 from type import type_attribute_check
 from value import value_attribute_check, value_print, value_is_immediate
-from hlir import hlir_type_pointer, hlir_value_int, hlir_value_imm_get
+from hlir import hlir_type_pointer, hlir_value_int
 
 
 LLVM_TARGET_TRIPLE = os.popen("llvm-config --host-target").read()[:-1]
@@ -200,16 +200,16 @@ def print_value(x):
     elif c == 'mem':
         out('@%s' % x['id'])
     elif c == 'num':
-        num = hlir_value_imm_get(x)
+        num = x['imm']
         if type.is_integer(x['type']):
             out(str(num))
 
         elif type.is_pointer(x['type']):
-            if hlir_value_imm_get(x) == 0:
+            if x['imm'] == 0:
                 out("null")
                 return
 
-            v = ll_create_value_num(type.typeNat64, hlir_value_imm_get(x))
+            v = ll_create_value_num(type.typeNat64, x['imm'])
             inline_cast('inttoptr', v['type'], x['type'], v)
 
         elif type.is_float(x['type']):
@@ -305,7 +305,7 @@ def print_type(t, print_aka=True, arr_as_ptr_to_arr=False):
         array_size = t['volume']
         sz = 0
         if array_size != None:
-            sz = hlir_value_imm_get(array_size)
+            sz = array_size['imm']
 
         out("%d x " % sz)
         print_type(t['of'])
@@ -433,7 +433,7 @@ def do_eval_binary (op, l, r, x): # ["add", "fadd", x]
 def do_eval_expr_bin(x):
     # if folded bin
     if 'imm' in x:
-        return ll_create_value_num(x['type'], hlir_value_imm_get(x))
+        return ll_create_value_num(x['type'], x['imm'])
 
     opcode = get_bin_opcode(x['kind'], x['left']['type'])
     l = do_ld(do_eval(x['left']))
@@ -867,10 +867,9 @@ def do_eval_expr_cast(x):
 
     # (STUB?) nil -> zeroinitializer
     if type.is_free_pointer(from_type):
-        if 'imm' in value:
-            if value['imm'] != None:
-                if hlir_value_imm_get(value) == 0:
-                    return ll_create_value_null(to_type)
+        if value_is_immediate(value):
+            if value['imm'] == 0:
+                return ll_create_value_null(to_type)
 
 
     # Cm имеет структурную систему типов, тогда как llvm - номинативную
@@ -942,7 +941,7 @@ def do_eval_array(v):
 
 
     # теперь добавим паддинг нулевыми значениями
-    fulllen = hlir_value_imm_get(v['type']['volume'])
+    fulllen = v['type']['volume']['imm']
     n_pad = fulllen - len(items)
     i = 0
     while i < n_pad:
@@ -1012,7 +1011,7 @@ def do_eval(x):
     if value_is_immediate(x):
         xtype = x['type']
         if type.is_integer(xtype):
-            return ll_create_value_num(xtype, hlir_value_imm_get(x))
+            return ll_create_value_num(xtype, x['imm'])
         elif type.is_record(xtype):
             return do_eval_record(x)
         elif type.is_array(xtype):
@@ -1067,9 +1066,9 @@ def do_eval_str32(x):
 
 def do_eval_literal(x):
     if type.is_integer(x['type']):
-        return ll_create_value_num(x['type'], hlir_value_imm_get(x))
+        return ll_create_value_num(x['type'], x['imm'])
     elif type.is_float(x['type']):
-        return ll_create_value_num(x['type'], hlir_value_imm_get(x))
+        return ll_create_value_num(x['type'], x['imm'])
     elif type.is_record(x['type']):
         return do_eval_record(x)
     elif type.is_array(x['type']):
@@ -1077,11 +1076,11 @@ def do_eval_literal(x):
     #elif type.is_string(x['type']):
     #    return do_eval_str(x)
     elif type.is_free_pointer(x['type']):
-        return ll_create_value_num(x['type'], hlir_value_imm_get(x))
+        return ll_create_value_num(x['type'], x['imm'])
     elif type.is_pointer(x['type']):
-        return ll_create_value_num(x['type'], hlir_value_imm_get(x))
+        return ll_create_value_num(x['type'], x['imm'])
     elif type.is_char(x['type']):
-        return ll_create_value_num(x['type'], hlir_value_imm_get(x))
+        return ll_create_value_num(x['type'], x['imm'])
     else:
         value_print(x)
         error("do_eval_literal: unknown literal", x['ti'])
@@ -1094,7 +1093,7 @@ def func_const_var(x):
     if k == 'const':
         if 'imm' in x:
             if type.is_numeric(x['type']):
-                return ll_create_value_num(x['type'], hlir_value_imm_get(x))
+                return ll_create_value_num(x['type'], x['imm'])
 
     if value_attribute_check(x, 'local'):
         localname = x['id']['str']

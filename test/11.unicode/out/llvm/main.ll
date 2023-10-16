@@ -126,9 +126,9 @@ declare void @utf32_putchar(i32)
   i8 33,
   i8 10,
   i8 0,
-  i8 0,
-  i8 0,
-  i8 0
+  i8 zeroinitializer,
+  i8 zeroinitializer,
+  i8 zeroinitializer
 ]
 @arr_utf16 = global [8 x i16] [
   i16 72,

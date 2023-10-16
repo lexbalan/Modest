@@ -139,7 +139,7 @@ def value_load(x):
 # полного или из пустого дженерик массива
 def value_cons_array_from_generic_array(v, t, ti, method):
     #info("value_cons_array_from_generic_array", ti)
-    if len(v['imm']) > hlir_value_imm_get(t['volume']):
+    if len(v['imm']) > t['volume']['imm']:
         info("too many items", v['ti'])
         return None
 
@@ -180,8 +180,8 @@ def value_cons_array_from_array(v, t, ti, method):
         return None
 
     # нельзя построить меньший массив из большего
-    n_from = hlir_value_imm_get(v['type']['volume'])
-    n_to = hlir_value_imm_get(t['volume'])
+    n_from = v['type']['volume']['imm']
+    n_to = t['volume']['imm']
     if n_from > n_to:
         return None
 
@@ -219,7 +219,7 @@ def value_cons_array_from_string(v, t, ti, method):
     # Check to:array volume vs string len
     # "xxx" to []X | "xxx" to [n]X
     if to_type['volume'] != None:
-        to_arr_volume = hlir_value_imm_get(to_type['volume'])
+        to_arr_volume = to_type['volume']['imm']
         # v['len'] учитывает '\0'
         if v['imm']['len'] > to_arr_volume:
             error("too big", ti)
@@ -427,7 +427,7 @@ def value_cons_integer(v, t, ti, method):
         nv = hlir_value_cast(v, t, ti=ti)
         # need float imm int part check
         if value_is_immediate(v):
-            imm_fltval = hlir_value_imm_get(v)
+            imm_fltval = v['imm']
             imm_intval = int(imm_fltval)
             typ = hlir_type_generic_int_for(imm_intval, unsigned=True, ti=ti)
             check_power(typ, t, method, ti)
@@ -448,7 +448,7 @@ def value_cons_float(v, t, ti, method):
         if type.is_integer(vt) or type.is_float(vt):
             # (GenericInt or GenericFloat) -> Float
             y = do_cast_generic(v, t, ti)
-            num = hlir_value_imm_get(y)
+            num = y['imm']
 
             import struct
 
@@ -540,7 +540,7 @@ def value_cons_pointer(v, t, ti, method):
         if type.is_integer(v['type']):
             # compile-time casting
             nv = hlir_value_cast(v, t, ti=ti)
-            num = hlir_value_imm_get(v)
+            num = v['imm']
             hlir_value_set_imm(nv, num)
             return nv
 

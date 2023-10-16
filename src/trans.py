@@ -449,8 +449,8 @@ def do_value_shift(x):
 
     # const folding
     if value_is_immediate(l) and value_is_immediate(r):
-        nl = hlir_value_imm_get(l)
-        nr = hlir_value_imm_get(r)
+        nl = l['imm']
+        nr = r['imm']
 
         imm_result = 0
 
@@ -552,8 +552,8 @@ def do_bin_op_with_pointers(k, l, r , ti):
                 typ = r['type']
 
             num = 0
-            if k == 'add': num = hlir_value_imm_get(l) + hlir_value_imm_get(r)
-            elif k == 'sub': num = hlir_value_imm_get(l) - hlir_value_imm_get(r)
+            if k == 'add': num = l['imm'] + r['imm']
+            elif k == 'sub': num = l['imm'] - r['imm']
             return hlir_value_int(num, typ=typ, ti=ti)
 
         # указатель или число в рантайме
@@ -597,7 +597,7 @@ def bin_imm(k, type_result, l, r, ti):
         'rem': lambda a, b: a % b,
     }
 
-    num_val = ops[k](hlir_value_imm_get(l), hlir_value_imm_get(r))
+    num_val = ops[k](l['imm'], r['imm'])
 
     if type.is_generic(type_result):
         # пересматриваем generic тип для нового значения (!)
@@ -707,23 +707,19 @@ def do_value_bin(x):
             error("expected value with ordered type", x['right']['ti'])
             return hlir_value_bad(x['ti'])
 
-    elif k in ['add', 'sub', 'mul', 'div', 'rem']:
+    elif k in ['or', 'and', 'xor', 'add', 'sub', 'mul', 'div', 'rem']:
         if not type_attribute_check(l['type'], 'numeric'):
-            error("expected value with ordered type", x['left']['ti'])
+            error("expected value with numeric type", x['left']['ti'])
             return hlir_value_bad(x['ti'])
 
         if not type_attribute_check(r['type'], 'numeric'):
-            error("expected value with ordered type", x['right']['ti'])
+            error("expected value with numeric type", x['right']['ti'])
             return hlir_value_bad(x['ti'])
 
     if type.eq(type_result, type.typeNat1):
         if k == 'or': k = 'logic_or'
         elif k == 'and': k = 'logic_and'
 
-
-    if not (type.is_arithmetical(l['type']) and type.is_arithmetical(r['type'])):
-        if k in ['or', 'and', 'xor', 'add', 'sub', 'mul', 'div', 'rem']:
-            error("expected 'arithmetical' type", x['ti'])
 
     # if left & right are immediate, we can fold const
     # and append field ['imm'] to bin_value
@@ -739,7 +735,7 @@ def do_value_not(val, t, ti):
     v = hlir_value_un('not', val, t, ti=ti)
 
     if value_is_immediate(val):
-        num = ~hlir_value_imm_get(val)
+        num = ~val['imm']
         hlir_value_set_imm(v, num)
 
     return v
@@ -750,7 +746,7 @@ def do_value_minus(val, t, ti):
     v = hlir_value_un('minus', val, t, ti=ti)
 
     if value_is_immediate(val):
-        num = -hlir_value_imm_get(val)
+        num = -val['imm']
         hlir_value_set_imm(v, num)
 
     if type.is_generic(v['type']):
@@ -915,10 +911,10 @@ def do_value_index(x):
     # immediate index (!)
     if value_is_immediate(a) and not ptr_access:
         if value_is_immediate(i):
-            index = hlir_value_imm_get(i)
+            index = i['imm']
 
             # TODO:
-            #if index >= hlir_value_imm_get(typ['volume']):
+            #if index >= typ['volume']['imm']:
             #    error("array index out of bounds", x['index'])
 
             if type.is_generic_string(a['type']):
@@ -1031,10 +1027,7 @@ def do_value_str(x):
     string=x['str']
     length=x['len']
     ti=x['ti']
-
-    s = hlir_value_cstr(string, length, type.typeGenericString, ti=ti)
-    #module_strings_add(s)
-    return s
+    return hlir_value_generic_str(string, length, ti=ti)
 
 
 

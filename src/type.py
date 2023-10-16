@@ -183,7 +183,7 @@ def eq_array(a, b):
     if a['volume'] == None or b['volume'] == None:
         return False
 
-    if hlir_value_imm_get(a['volume']) != hlir_value_imm_get(b['volume']):
+    if a['volume']['imm'] != b['volume']['imm']:
         return False
 
     if a['of'] == None and b['of'] == None:
@@ -324,9 +324,6 @@ def is_enum(t):
 
 def is_numeric(t):
     return 'numeric' in t['att']
-
-def is_arithmetical(t):
-    return 'arithmetical' in t['att']
 
 
 def is_logical(t):
@@ -549,7 +546,7 @@ def get_size(t):
     if is_integer(t):
         return t['size']
     elif is_array(t):
-        return hlir_value_imm_get(t['volume']) * get_size(t['of'])
+        return t['volume']['imm'] * get_size(t['of'])
 
     #else:
     #    fatal("type.get_size() for '%s' not implemented" % t['kind'])
@@ -625,7 +622,7 @@ def type_print(t, print_aka=True):
         array_size = t['volume']
 
         if array_size != None:
-            sz = hlir_value_imm_get(array_size)
+            sz = array_size['imm']
             print("%d" % sz, end='')
 
         print("]", end='')
