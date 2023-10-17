@@ -678,7 +678,6 @@ def print_value_literal_arr(v, ctx):
 
 
 def print_value_literal_record(v, ctx):
-
     out("(")
     print_type(v['type'], need_space_after=False)
     out(")")
@@ -748,33 +747,7 @@ def print_value_literal_record(v, ctx):
 
 
 
-
-"""if type.is_generic_string(from_type):
-        if type.is_pointer(to_type):
-            if type.is_array(to_type['to']):
-                if type.is_integer(to_type['to']['of']):
-                    #type.type_print(to_type)
-                    #print("???%s" % to_type['kind'])
-                    tt = to_type['to']['of']
-                    #print("POWER = ", tt['power'])
-
-                    prefix = "u8"
-                    if tt['power'] > 16:
-                        prefix = "U"
-                    elif tt['power'] > 8:
-                        prefix = "u"
-
-                    out("(")
-                    print_type(to_type, need_space_after=False, _print_array_asis=True)
-                    out(")")
-
-                    print_value_literal_str(val, ctx=[], prefix=prefix)
-                    return
-"""
-
-
 def print_value_literal_str(x, ctx, prefix=""):
-
     if x['imm'] == None:
         out("\"\"")
         return
@@ -785,16 +758,8 @@ def print_value_literal_str(x, ctx, prefix=""):
         if sym == '\n': out("\\n")
         elif sym == '\r': out("\\r")
         elif sym == '\a': out("\\a")
-        else:
-            #if ord(sym) <= 0xFF:
-            #utf8 = sym.encode("utf-8")
-            #utf16 = sym.encode("utf-16")
-            #print("UTF8 = %s" % str(utf8))
-            #print("UTF16 = %s" % str(utf16))
-            out(sym)
-            """else:
-                sym = "\\x%X" % ord(sym)
-                out(sym)"""
+        else: out(sym)
+
     out("\"")
 
 
@@ -871,11 +836,8 @@ def print_value_literal_int(x, ctx):
 
 def print_value_literal_flt(x, ctx):
     num = x['imm']
-    if num == None:
-        out("0")
-    else:
-        out(str(float(num)))
-
+    if num == None: out("0")
+    else: out(str(float(num)))
 
 
 
@@ -994,12 +956,14 @@ def print_stmt_while(x):
     print_stmt_block(x['stmt'])
 
 
+
 def print_stmt_return(x):
     out("return")
     if x['value'] != None:
         out(" ")
         print_value(x['value'])
     out(";")
+
 
 
 def print_stmt_defvar(x):
@@ -1011,7 +975,6 @@ def print_stmt_defvar(x):
         print_value(init_value)
 
     out(";")
-
 
 
 
@@ -1072,7 +1035,6 @@ def print_stmt_assign(x):
 
 def print_stmt_value(x):
     print_value(x['value']); out(";")
-
 
 
 def print_stmt(x):
@@ -1409,14 +1371,19 @@ def cdirectives(module):
 
 
 
+def print_directive(x):
+    k = x['kind']
+    if k == 'import': print_include(x)
+    elif k == 'insert': print_insert(x)
+
+
+
 def run(module, outname):
     from main import features
     is_header = features.get('header')
 
-    if is_header:
-        outname = outname + '.h'
-    else:
-        outname = outname + '.c'
+    if is_header: outname = outname + '.h'
+    else: outname = outname + '.c'
 
     output_open(outname)
 
@@ -1433,16 +1400,13 @@ def run(module, outname):
 
     lo("#include <stdint.h>")
     lo("#include <string.h>")
-    #lo("#include <uchar.h>")
 
     if USE_STDBOOL:
         lo("#include <stdbool.h>")
 
     newline(n=2)
 
-
     for x in module['text']:
-
         if 'value' in x:
             if 'c-no-print' in x['value']['att']:
                 continue
@@ -1468,16 +1432,8 @@ def run(module, outname):
         elif isa == 'def_type': print_def_type(x)
         elif isa == 'decl_func': print_decl_func(x)
         elif isa == 'decl_type': print_decl_type(x)
-
-        elif isa == 'directive':
-            k = x['kind']
-            if k == 'import': print_include(x)
-            elif k == 'insert': print_insert(x)
-
-        elif isa == 'comment':
-            print_comment(x)
-
-
+        elif isa == 'comment': print_comment(x)
+        elif isa == 'directive': print_directive(x)
 
     newline()
     if is_header:
