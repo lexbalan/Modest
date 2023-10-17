@@ -11,7 +11,6 @@ from main import settings
 INDENT_SYMBOL = " " * 4
 
 FUNC_EMPTY_PARAMLIST = "(void)"
-SPACE_AFTER_IF_WHILE = True
 
 NO_TYPEDEF_STRUCTS = False
 NO_TYPEDEF_OTHERS = False
@@ -80,6 +79,11 @@ def init():
         if stylename in styles:
             styleguide = styles[stylename]
 
+    global CC_INT_SIZE_BITS, CC_LONG_SIZE_BITS, CC_LONG_LONG_SIZE_BITS
+    CC_INT_SIZE_BITS = 32
+    CC_LONG_SIZE_BITS = 32
+    CC_LONG_LONG_SIZE_BITS = 64
+
 
 
 aprecedence = [
@@ -110,12 +114,12 @@ def precedence(x):
     if k == 'cast_generic':
         return precedence(x['value'])
 
-
     i = 0
     while i < precedenceMax + 1:
         if k in aprecedence[i]:
             break
         i = i + 1
+
     return i
 
 
@@ -816,10 +820,9 @@ def print_value_literal_char(x, ctx):
     return
 
 
+
 def print_value_literal_int(x, ctx):
-
     num = x['imm']
-
 
     # Big Number?
     if x['type']['power'] > 64:
@@ -837,7 +840,6 @@ def print_value_literal_int(x, ctx):
             if num: out("true")
             else: out("false")
             return
-
 
 
     if value_attribute_check(x, 'hexadecimal'):
@@ -864,6 +866,7 @@ def print_value_literal_int(x, ctx):
             out("L")
         else:
             out("LL")
+
 
 
 def print_value_literal_flt(x, ctx):
@@ -895,9 +898,7 @@ def print_value_literal(x, ctx):
     elif type.is_string(t): print_value_literal_str(x, ctx)
     elif type.is_pointer(t): print_value_literal_ptr(x, ctx)
     elif type.is_char(t): print_value_literal_char(x, ctx)
-    else:
-        print("JNONJN")
-
+    else: error("print_value_literal not implemented", x['ti'])
 
 
 def print_value_by_id(x):
@@ -907,6 +908,11 @@ def print_value_by_id(x):
 def print_value_let(x, ctx):
     return print_value(x['value'])
 
+
+def print_value_sizeof(x, ctx):
+    out("sizeof(")
+    print_type(x['of'], need_space_after=False, _print_array_asis=True)
+    out(")")
 
 
 def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
@@ -936,7 +942,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
     elif k == 'access_ptr': print_value_access_ptr(x, ctx)
     elif k == 'cast_generic': print_value_cast_generic(x, ctx)
     elif k == 'cast': print_value_cast(x, ctx)
-    elif k == 'sizeof': out("sizeof("); print_type(x['of'], need_space_after=False, _print_array_asis=True); out(")")
+    elif k == 'sizeof': print_value_sizeof(x, ctx)
     else:
         out("<%s>" % k)
         print(x)
@@ -946,10 +952,9 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
         out(")")
 
 
+
 def print_stmt_if(x, need_else_branch):
-    out("if")
-    if SPACE_AFTER_IF_WHILE: out(" ")
-    out("("); print_value(x['cond']); out(")")
+    out("if ("); print_value(x['cond']); out(")")
 
     if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
         nl_indent()
@@ -979,9 +984,7 @@ def print_stmt_if(x, need_else_branch):
 
 
 def print_stmt_while(x):
-    out("while")
-    if SPACE_AFTER_IF_WHILE: out(" ")
-    out("("); print_value(x['cond']); out(")")
+    out("while ("); print_value(x['cond']); out(")")
 
     if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
         nl_indent()

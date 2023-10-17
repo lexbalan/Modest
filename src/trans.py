@@ -1562,6 +1562,7 @@ def module_remove_node(m, isa, id_str):
                     break
 
 
+
 def def_type(x):
     id = x['id']
     #print("@type " + id['str'])
@@ -1618,10 +1619,8 @@ def def_var(x):
             type.check(f['type'], init_value['type'], x['init']['ti'])
 
     var = hlir_value_var(f['id'], f['type'], init=init_value)
-
     var['att'].extend(attributes_get())
     var['att'].append('global')
-
     extend_props(var)
 
     module['context'].value_add(x['field']['id']['str'], var)
@@ -1646,6 +1645,13 @@ def check_unuse(v):
 
 
 
+# check block for unused vars
+def check_block(block):
+    for stmt in block['stmts']:
+        check_stmt(stmt)
+
+
+
 def check_stmt(stmt):
     k = stmt['kind']
     if k == 'let':
@@ -1659,10 +1665,6 @@ def check_stmt(stmt):
     elif k == 'while':
         check_block(stmt['stmt'])
 
-# check block for unused vars
-def check_block(block):
-    for stmt in block['stmts']:
-        check_stmt(stmt)
 
 
 
