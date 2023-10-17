@@ -24,9 +24,11 @@ def value_print(x):
 
 
 def str_used_as(string_value, typ):
-    if typ['power'] == 8: string_value['imm']['used_char8'] = True
-    elif typ['power'] == 16: string_value['imm']['used_char16'] = True
-    elif typ['power'] == 32: string_value['imm']['used_char32'] = True
+    p = typ['power']
+    imm = string_value['imm']
+    if p == 8: imm['used_char8'] = True
+    elif p == 16: imm['used_char16'] = True
+    elif p == 32: imm['used_char32'] = True
 
 
 
