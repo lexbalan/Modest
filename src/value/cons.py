@@ -17,7 +17,7 @@ no_warning_cast_data_loss = False
 def value_cons_char(v, t, ti, method):
     # implicit casts
     if type.is_generic_char(v['type']):
-        return do_cast_generic(v, t, ti)
+        return value_cons_generic(v, t, ti)
 
 
     # explicit casts
@@ -64,7 +64,7 @@ def value_cons_integer(v, t, ti, method):
     if type.is_generic_integer(vtype):
         # GenericInt -> Int
         check_power(vtype, t, method, ti)
-        nv = do_cast_generic(v, t, ti)
+        nv = value_cons_generic(v, t, ti)
 
     if nv != None:
         if value_is_immediate(v):
@@ -111,7 +111,7 @@ def value_cons_float(v, t, ti, method):
     if type.is_generic(vt):
         if type.is_integer(vt) or type.is_float(vt):
             # (GenericInt or GenericFloat) -> Float
-            nv = do_cast_generic(v, t, ti)
+            nv = value_cons_generic(v, t, ti)
             nv['imm'] = float_align(nv['imm'], t['power'])
             return nv
 
@@ -147,7 +147,7 @@ def value_cons_pointer(v, t, ti, method):
 
     # Nil -> *X
     if type.is_nil(vtype):
-        nv = do_cast_generic(v, t, ti)
+        nv = value_cons_generic(v, t, ti)
 
     # GenericString -> (*[]CharX | *CharX)
     elif type.is_generic_string(vtype):
@@ -236,6 +236,26 @@ def value_cons_unit(v, t, ti, method):
         return None
 
     return hlir_value_cast(v, t, ti=ti)
+
+
+
+
+def value_cons_generic(v, t, ti):
+    #info("value_cons_generic", ti)
+
+    nv = hlir_value_cast(v, t, ti)
+    nv['kind'] = 'cast_generic'
+    nv['imm'] = v['imm']
+
+    if 'nl_end' in v:
+        nv['nl_end'] = v['nl_end']
+
+    # для generic приведения констант (!)
+    if 'id' in v:
+        nv['id'] = v['id']
+
+    return nv
+
 
 
 # возвращает None если не может привести (!)

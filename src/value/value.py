@@ -5,6 +5,7 @@ from trans import is_local_context
 from error import error, warning, info
 from hlir import *
 from util import get_item_with_id, float_align
+from .cons import value_cons_generic
 
 
 
@@ -29,23 +30,6 @@ def str_used_as(string_value, typ):
 
 
 
-def do_cast_generic(v, t, ti):
-    #info("do_cast_generic", ti)
-
-    nv = hlir_value_cast(v, t, ti)
-    nv['kind'] = 'cast_generic'
-    nv['imm'] = v['imm']
-
-    if 'nl_end' in v:
-        nv['nl_end'] = v['nl_end']
-
-    # для generic приведения констант (!)
-    if 'id' in v:
-        nv['id'] = v['id']
-
-    return nv
-
-
 
 def value_attribute_add(v, a):
     v['att'].append(a)
@@ -53,7 +37,6 @@ def value_attribute_add(v, a):
 
 def value_attribute_check(v, a):
     return a in v['att']
-
 
 
 
@@ -74,12 +57,10 @@ def value_is_mutable(x):
     ]
 
 
-
 def value_is_immutable(x):
     if 'readonly' in x['type']['att']:
         return True
     return not value_is_mutable(x)
-
 
 
 def value_is_immediate(x):
@@ -111,7 +92,7 @@ def value_load(x):
 
 
 
-def value_soft_cast(v, t, ti):
+def value_cons_soft(v, t, ti):
     from value.cons import value_cons
     c = value_cons(v, t, ti, method='implicit')
     if c == None:
@@ -120,7 +101,7 @@ def value_soft_cast(v, t, ti):
 
 
 
-def value_hard_cast(v, t, ti):
+def value_cons_hard(v, t, ti):
     from value.cons import value_cons
     c = value_cons(v, t, ti, method='explicit')
     if c == None:
@@ -167,17 +148,17 @@ def value_cons_implicit(v, t, ti):
 
 
     if type.is_generic(from_type):
-        return value_soft_cast(v, t, ti)
+        return value_cons_soft(v, t, ti)
 
 
     if type.is_pointer(t):
         # cons *[]X from *[n]X
         if type.is_pointer_to_defined_array(from_type) and type.is_pointer_to_undefined_array(t):
-            return value_soft_cast(v, t, ti)
+            return value_cons_soft(v, t, ti)
 
         # cons *X from Nil
         if type.is_nil(from_type) and type.is_pointer(t):
-            return do_cast_generic(v, t, ti)
+            return value_cons_generic(v, t, ti)
 
         # cons *X from FreePointer
         if type.is_free_pointer(from_type) and type.is_pointer(t):
@@ -200,7 +181,7 @@ def value_cons_explicit(v, t, ti):
         info("explicit cast to the same type", ti)
         return v
 
-    return value_hard_cast(v, t, ti)
+    return value_cons_hard(v, t, ti)
 
 
 
