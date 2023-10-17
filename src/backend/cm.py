@@ -2,7 +2,7 @@
 import type
 from error import info
 from .common import *
-from value import value_attribute_check
+from value.value import value_attribute_check
 from util import get_item_with_id
 
 

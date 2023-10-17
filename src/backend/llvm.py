@@ -3,7 +3,7 @@ import copy
 from .common import *
 from error import info, warning, error
 import type
-from value import value_attribute_check, value_print, value_is_immediate
+from value.value import value_attribute_check, value_print, value_is_immediate
 from hlir import hlir_type_pointer, hlir_value_int
 
 

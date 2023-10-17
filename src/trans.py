@@ -10,7 +10,7 @@ def is_local_context():
     return cfunc != None
 
 
-from value import *
+from value.value import *
 from frontend.parser import Parser
 from symtab import Symtab
 import type
