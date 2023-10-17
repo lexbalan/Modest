@@ -196,7 +196,6 @@ def print_type_record(t, tag=""):
     indent_up()
 
     for field in t['fields']:
-        # print comments
         if 'comments' in field:
             for comment in field['comments']:
                 newline(n=comment['nl'])
@@ -220,7 +219,6 @@ def print_type_enum(t):
     while i < len(items):
         item = items[i]
         newline()
-        #o("\t%s_%s," % (t['aka'], item['id']['str']))
         out("\t%s," % (item['id']['str']))
         i = i + 1
     newline()
@@ -329,7 +327,6 @@ def print_type2(t, print_aka, need_space_after, _print_array_asis):
 
 
 
-
 bin_ops = {
     'or': '|', 'xor': '^', 'and': '&', 'shl': '<<', 'shr': '>>',
     'eq': '==', 'ne': '!=', 'lt': '<', 'gt': '>', 'le': '<=', 'ge': '>=',
@@ -354,7 +351,6 @@ def print_value_bin(v, ctx):
     # GCC выдает warning например в: 1 << 2 + 2, тк считает
     # Что юзер имел в виду (1 << 2) + 2, а у << приоритет тние
     # чтобы он не ругался, завернем такие выражения в скобки
-
 
     if op in ['shl', 'shr']:
         need_wrap_left = precedence(left) < 10 #precedenceMax
@@ -626,7 +622,6 @@ def print_value_literal_arr(v, ctx):
 
     out("{")
     indent_up()
-
 
     values = v['imm']
 
