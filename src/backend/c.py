@@ -1,5 +1,4 @@
 
-from opt import *
 from error import info, error, fatal
 from .common import *
 import type
@@ -1409,7 +1408,8 @@ def cdirectives(module):
 
 
 def run(module, outname):
-    is_header = 'header' in features
+    from main import features
+    is_header = features.get('header')
 
     if is_header:
         outname = outname + '.h'

@@ -558,8 +558,8 @@ def do_bin_op_with_pointers(k, l, r , ti):
 
             return hlir_value_bin(k, l, r, type.typeNat1, ti)
 
-
-    if not 'unsafe' in features:
+    from main import features
+    if not features.get('unsafe'):
         error("illegal operation with pointers", ti)
         return hlir_value_bad(ti)
 
@@ -1930,8 +1930,6 @@ def import_abspath(s):
         f = env_current_file_dir + '/' + s #[1:]
 
     else: # (global)
-#        from opt import settings.get
-
         #print(f"lib_path = {lib_path}")
 #        lib_path = settings.get('lib')
 #        print(f"lib_path = {lib_path}")

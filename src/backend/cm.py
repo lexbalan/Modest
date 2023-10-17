@@ -1,5 +1,4 @@
 
-from opt import *
 import type
 from error import info
 from .common import *
@@ -675,7 +674,8 @@ def print_import(x):
 
 
 def run(module, outname):
-    is_header = 'header' in features
+    from main import features
+    is_header = features.get('header')
 
     if is_header: outname = outname + '.hm'
     else: outname = outname + '.cm'

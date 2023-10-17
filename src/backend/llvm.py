@@ -1727,13 +1727,8 @@ def print_string_utf8(strid, string):
 
 def print_string_utf16(strid, string):
     ss = string['imm']['str']
-
     bb = (ss.encode('utf-16')).decode("utf16")
-    #bb = ss.decode('utf-8').encode('utf-16be')
-    #bb = bytes(ss, 'utf-16')
     slen = len(bb) + 1 # +1 (zero)
-
-    #print(bb)
 
     lo("@%s = private constant [%d x i16] [" % (strid, slen))
     for b in bb:
@@ -1745,15 +1740,10 @@ def print_string_utf16(strid, string):
 
 def print_string_utf32(strid, string):
     ss = string['imm']['str']
-
-    bb = ss#ss.encode('utf-16')
-    #bb = bytes(ss, 'utf-32')
-    slen = len(bb) + 1 # +1 (zero)
-
-    #print(bb)
+    slen = len(ss) + 1 # +1 (zero)
 
     lo("@%s = private constant [%d x i32] [" % (strid, slen))
-    for b in bb:
+    for b in ss:
         out("i32 %d, " % ord(b))
 
     out("i32 0]")
@@ -1837,9 +1827,6 @@ def run(module, outname):
 
     print_module(module)
     output_close()
-
-
-
 
 
 

@@ -1,5 +1,4 @@
 
-from opt import *
 import type
 from type import type_print
 from trans import is_local_context
@@ -538,7 +537,8 @@ def value_cons_pointer(v, t, ti, method):
         info("cannot implicit cast different pointers", ti)
         return None
 
-    if not 'unsafe' in features:
+    from main import features
+    if not features.get('unsafe'):
         info("explicit typecast to pointer is forbidden in safe mode", ti)
         return None
 

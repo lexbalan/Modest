@@ -17,7 +17,6 @@ UNDERLINE = '\033[4m'
 
 SIMPLE_MARK = True
 
-from opt import *
 
 
 def colorize(text, color):
@@ -105,7 +104,8 @@ def info(s, ti=None):
 
 def warning(s, ti=None):
 
-    if 'paranoid' in features:
+    from main import features
+    if features.get('paranoid'):
         error(s, ti)
         #info("paranoid mode endbled")
         return

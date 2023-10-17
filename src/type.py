@@ -1,7 +1,6 @@
 
 
 import copy
-from opt import *
 from error import error, fatal
 from hlir import *
 from util import get_item_with_id
@@ -531,7 +530,8 @@ def is_forbidden_var(t, zero_array_forbidden=True):
 
         # is defined array;
         # It can't be 0 sized (can only with 'unsafe' compiler flag)
-        if zero_array_forbidden or not features_get('unsafe'):
+        from main import features
+        if zero_array_forbidden or not features.get('unsafe'):
             if t['volume'] == 0:
                 return True
 

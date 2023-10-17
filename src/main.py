@@ -20,7 +20,6 @@ config = toml_dict['Default']
 
 path_lib = os.getenv('MODEST_LIB')
 
-from opt import *
 
 import settings
 
@@ -42,6 +41,8 @@ settings.set('backend', DEFAULT_BACKEND)
 import error
 import trans
 
+
+import features
 
 parser = argparse.ArgumentParser(
     prog = 'ProgramName',
@@ -77,9 +78,10 @@ def main():
 
 
     # parse features (ex. -funsafe)
+    global features
     if args.feature != None:
         for feature in args.feature:
-            features_set(feature)
+            features.set(feature)
 
     # parse modifiers (-mbackend=c, -mstyle=legacy)
     # and change default settings
@@ -99,7 +101,7 @@ def main():
 
     # is header?
     if src_name[-2:] == 'hm':
-        features_set('header')
+        features.set('header')
 
     src_abspath = os.path.abspath(src_name)
     src_dirname = os.path.dirname(src_abspath)
