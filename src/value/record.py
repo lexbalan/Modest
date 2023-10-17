@@ -50,6 +50,7 @@ def value_cons_record_from_generic_record(v, t, ti, method):
 
             prev_nl = nl
 
+            from .cons import value_cons_implicit
             item_value2 = value_cons_implicit(item_value, field_type, ti=item_value['ti'])
 
             type.check(field_type, item_value2['type'], item_value2)

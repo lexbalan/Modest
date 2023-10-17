@@ -284,3 +284,99 @@ def value_cons(v, t, ti, method):
 
     return nv
 
+
+
+
+def value_cons_soft(v, t, ti):
+    from value.cons import value_cons
+    c = value_cons(v, t, ti, method='implicit')
+    if c == None:
+        return v
+    return c
+
+
+
+def value_cons_hard(v, t, ti):
+    from value.cons import value_cons
+    c = value_cons(v, t, ti, method='explicit')
+    if c == None:
+        error("cast error", ti)
+        return hlir_value_bad(ti)
+    return c
+
+
+
+def value_cons_implicit(v, t, ti):
+    if value_is_bad(v) or type.is_bad(t):
+        return hlir_value_bad(ti)
+
+    from_type = v['type']
+    to_type = t
+
+    # implisit cast possible only for:
+    # 1. Generic -> NonGeneric
+    # 2. Nil -> AnyPointer
+    # 3. *[n]T -> *[]T
+    # 4. AnyPointer -> FreePointer
+    # 5. FreePointer -> AnyPointer
+
+    #if not type.is_generic(from_type):
+    #    return v
+
+    # потому что в C номинальные типы, а у нас - структурные
+    if type.is_record(t):
+        if type.is_record(from_type):
+            if 'name' in from_type and 'name' in t:
+                if from_type['name'] != t['name']:
+                    #info("impl cast record", ti)
+                    return hlir_value_cast(v, t, ti=ti)
+
+
+    if type.is_pointer_to_record(t):
+        if type.is_pointer_to_record(from_type):
+            #info("impl cast pointer to record", ti)
+            return hlir_value_cast(v, t, ti=ti)
+
+
+    if type.eq(from_type, t):
+        return v
+
+
+    if type.is_generic(from_type):
+        return value_cons_soft(v, t, ti)
+
+
+    if type.is_pointer(t):
+        # cons *[]X from *[n]X
+        if type.is_pointer_to_defined_array(from_type) and type.is_pointer_to_undefined_array(t):
+            return value_cons_soft(v, t, ti)
+
+        # cons *X from Nil
+        if type.is_nil(from_type) and type.is_pointer(t):
+            from .cons import value_cons_generic
+            return value_cons_generic(v, t, ti)
+
+        # cons *X from FreePointer
+        if type.is_free_pointer(from_type) and type.is_pointer(t):
+            return hlir_value_cast(v, t, ti=ti)
+
+        # cons FreePointer from *X
+        if type.is_pointer(from_type) and type.is_free_pointer(t):
+            return hlir_value_cast(v, t, ti=ti)
+
+
+    return v
+
+
+
+def value_cons_explicit(v, t, ti):
+    if value_is_bad(v) or type.is_bad(t):
+        return hlir_value_bad(ti)
+
+    if type.eq(v['type'], t):
+        info("explicit cast to the same type", ti)
+        return v
+
+    return value_cons_hard(v, t, ti)
+
+

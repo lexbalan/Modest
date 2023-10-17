@@ -5,12 +5,15 @@ from error import *
 from util import get_item_with_id
 from main import settings
 
+
 def is_local_context():
     global cfunc
     return cfunc != None
 
 
 from value.value import *
+from value.cons import value_cons_generic, value_cons_implicit, value_cons_explicit
+
 from frontend.parser import Parser
 from symtab import Symtab
 import type
@@ -511,7 +514,7 @@ def do_value_shift(x):
             if type.is_generic(l['type']):
                 # select new generic type for left (!)
                 t = hlir_type_generic_int_bits(nbits, ti=ti)
-                l = do_cast_generic(l, t, x['left']['ti'])
+                l = value_cons_generic(l, t, x['left']['ti'])
 
             v = hlir_value_bin(op, l, r, l['type'], ti=ti)
             v['imm'] = imm_result
