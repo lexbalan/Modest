@@ -2,7 +2,6 @@
 import type
 from error import info
 from .common import *
-from type import type_attribute_check
 from value import value_attribute_check
 from util import get_item_with_id
 
@@ -434,9 +433,6 @@ def print_value_literal_char(x, ctx):
 
 def print_value_literal_int(x, ctx):
     num = x['imm']
-
-    #if type.type_attribute_check(x['type'], 'char'):
-    #    out("\"%c\"[0]" % num)
 
     if value_attribute_check(x, 'hexadecimal'):
 

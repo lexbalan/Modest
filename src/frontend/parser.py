@@ -190,7 +190,13 @@ class Parser:
 
             if self.match("->"):
                 t = self.expr_type()
-                return {'isa': 'type', 'kind': 'func', 'params': fields, 'to': t, 'ti': ti}
+                return {
+                    'isa': 'type',
+                    'kind': 'func',
+                    'params': fields,
+                    'to': t,
+                    'ti': ti
+                }
             else:
                 #error("???", ti)
                 return {'isa': 'type', 'kind': 'func', 'params': fields, 'to': None, 'ti': ti}

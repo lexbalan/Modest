@@ -14,7 +14,7 @@ from value import *
 from frontend.parser import Parser
 from symtab import Symtab
 import type
-from type import type_attribute_check, select_int, select_nat, type_print
+from type import type_class_check, select_int, select_nat, type_print
 from util import nbits_for_num, nbytes_for_bits
 
 from hlir import *
@@ -394,10 +394,10 @@ def do_type_record(t):
 
 
 def do_type_enum(t):
-
     enum_type = {
         'isa': 'type',
         'kind': 'enum',
+        'generic': False,
         'items': [],
         'size': 32,
         'att': [],
@@ -713,11 +713,11 @@ def do_value_bin(x):
     if k in ['eq', 'ne']:
         type_result = type.typeNat1
 
-        if not type_attribute_check(l['type'], 'comparable'):
+        if not type_class_check(l['type'], 'comparable'):
             error("expected value with comparable type", x['left']['ti'])
             return hlir_value_bad(x['ti'])
 
-        if not type_attribute_check(r['type'], 'comparable'):
+        if not type_class_check(r['type'], 'comparable'):
             error("expected value with comparable type", x['right']['ti'])
             return hlir_value_bad(x['ti'])
 
@@ -725,20 +725,20 @@ def do_value_bin(x):
     elif k in ['lt', 'gt', 'le', 'ge']:
         type_result = type.typeNat1
 
-        if not type_attribute_check(l['type'], 'ordered'):
+        if not type_class_check(l['type'], 'ordered'):
             error("expected value with ordered type", x['left']['ti'])
             return hlir_value_bad(x['ti'])
 
-        if not type_attribute_check(r['type'], 'ordered'):
+        if not type_class_check(r['type'], 'ordered'):
             error("expected value with ordered type", x['right']['ti'])
             return hlir_value_bad(x['ti'])
 
     elif k in ['or', 'and', 'xor', 'add', 'sub', 'mul', 'div', 'rem']:
-        if not type_attribute_check(l['type'], 'numeric'):
+        if not type_class_check(l['type'], 'numeric'):
             error("expected value with numeric type", x['left']['ti'])
             return hlir_value_bad(x['ti'])
 
-        if not type_attribute_check(r['type'], 'numeric'):
+        if not type_class_check(r['type'], 'numeric'):
             error("expected value with numeric type", x['right']['ti'])
             return hlir_value_bad(x['ti'])
 
@@ -778,7 +778,7 @@ def do_value_minus(val, t, ti):
     if type.is_generic(v['type']):
         if not type.is_signed(v['type']):
             #type.set_signed()
-            v['type']['att'].append("signed")
+            v['type']['signed'] = True
 
     return v
 
@@ -1104,7 +1104,7 @@ def do_value_record(x):
         i = i + 1
 
     typ = hlir_type_record(fields, ti=x['ti'])
-    typ['att'].extend(['generic'])
+    typ['generic'] = True
 
     y = hlir_value_record(typ, items, ti=x['ti'])
     y['nl_end'] = x['nl_end']
@@ -1768,9 +1768,11 @@ def decl_type(x):
     nt = {
         'isa': 'type',
         'kind': 'opaque',
+        'generic': False,
         'name': id['str'],
         'id': id,
         'att': [],
+        'classes': [],
         'ti': id['ti'],
     }
 

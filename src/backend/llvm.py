@@ -3,7 +3,6 @@ import copy
 from .common import *
 from error import info, warning, error
 import type
-from type import type_attribute_check
 from value import value_attribute_check, value_print, value_is_immediate
 from hlir import hlir_type_pointer, hlir_value_int
 
@@ -702,11 +701,12 @@ def do_eval_expr_access_ptr(v):
 
 # cast type a to type b
 def select_cast_operator(a, b):
-
-    signed = type.is_signed(b)
-
     if type.is_integer(a) or type.is_char(a):
         if type.is_integer(b) or type.is_char(b):
+            signed = False
+            if type.is_integer(b):
+                signed = type.is_signed(b)
+
             if a['size'] < b['size']:
                 if signed:
                     return 'sext'
@@ -736,7 +736,6 @@ def select_cast_operator(a, b):
 
         elif type.is_integer(b):
             return 'ptrtoint'
-
 
     elif type.is_string(a):
         if type.is_pointer(b):
@@ -1416,6 +1415,7 @@ def print_arrays(arrays):
         memcpy_type = {
             'isa': 'type',
             'kind': 'func',
+            'classes': [],
             'params': [
                 {
                     'isa': 'field',
@@ -1452,6 +1452,7 @@ def print_arrays(arrays):
             'id': {'isa': 'id', 'str': "memcpy", 'ti': None},
             'type': memcpy_type,
             'att': [],
+            'classes': [],
             'ti': None
         }
 

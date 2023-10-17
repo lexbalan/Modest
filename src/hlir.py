@@ -21,7 +21,14 @@ def hlir_init():
 
 
 def hlir_type_bad(ti=None):
-    return {'isa': 'type', 'kind': 'bad', 'att': [], 'ti': ti}
+    return {
+        'isa': 'type',
+        'kind': 'bad',
+        'generic': False,
+        'att': [],
+        'classes': [],
+        'ti': ti
+    }
 
 
 def hlir_type_unit():
@@ -29,12 +36,14 @@ def hlir_type_unit():
         'isa': 'type',
         'kind': 'unit',
         'name': 'Unit',
+        'generic': False,
         'c_alias': 'void',
         'llvm_alias': 'void',
         'size': 0,
         'power': 0,
         'imm': {},
         'att': [],
+        'classes': [],
         'ti': None
     }
 
@@ -44,8 +53,12 @@ def hlir_type_integer(name, power, ti):
         'isa': 'type',
         'kind': 'int',
         'name': name,
-        'att': ['numeric', 'comparable', 'ordered'],
+        'generic': False,
+        'att': [],
+        'classes': ['numeric', 'comparable', 'ordered'],
         'power': power,
+        'signed': False,
+        'unsigned': False,
         'size': nbytes_for_bits(power),
         'ti': ti
     }
@@ -56,7 +69,9 @@ def hlir_type_generic_char(power, ti):
         'isa': 'type',
         'kind': 'char',
         'name': 'Char',
-        'att': ['generic', 'comparable'],
+        'generic': True,
+        'att': [],
+        'classes': ['comparable'],
         'power': power,
         'c_alias': 'uint32_t',
         'llvm_alias': 'i32',
@@ -70,7 +85,9 @@ def hlir_type_char(name, power, ti):
         'isa': 'type',
         'kind': 'char',
         'name': name,
-        'att': ['comparable'],
+        'generic': False,
+        'att': [],
+        'classes': ['comparable'],
         'power': power,
         'size': nbytes_for_bits(power),
         'ti': ti
@@ -82,7 +99,9 @@ def hlir_type_float(aka, power, ti):
         'isa': 'type',
         'kind': 'float',
         'name': aka,
-        'att': ['numeric', 'comparable', 'ordered'],
+        'generic': False,
+        'att': [],
+        'classes': ['numeric', 'comparable', 'ordered'],
         'power': power,
         'size': nbytes_for_bits(power),
         'c_alias': 'double',
@@ -94,10 +113,12 @@ def hlir_type_pointer(to, ti=None):
     return {
         'isa': 'type',
         'kind': 'pointer',
+        'generic': False,
         'to': to,
         'size': ptr_power / 8,
         'power': ptr_power,
-        'att': ['comparable'],
+        'att': [],
+        'classes': ['comparable'],
         'ti': ti
     }
 
@@ -107,10 +128,12 @@ def hlir_type_free_pointer(ti):
     return {
         'isa': 'type',
         'kind': 'FreePointer',
+        'generic': False,
         'to': type.typeUnit,
         'size': ptr_power / 8,
         'power': ptr_power,
-        'att': ['comparable'],
+        'att': [],
+        'classes': ['comparable'],
         'ti': ti
     }
 
@@ -120,10 +143,12 @@ def hlir_type_nil(ti):
     return {
         'isa': 'type',
         'kind': 'Nil',
+        'generic': True,
         'to': type.typeUnit,
         'size': ptr_power / 8,
         'power': ptr_power,
-        'att': ['comparable', 'generic'],
+        'att': [],
+        'classes': ['comparable'],
         'ti': ti
     }
 
@@ -132,10 +157,12 @@ def hlir_type_nil(ti):
 def hlir_type_array(of, volume=None, ti=None):
     return {
         'isa': 'type',
+        'generic': False,
         'kind': 'array',
         'volume': volume,
         'of': of,
         'att': [],
+        'classes': [],
         'ti': ti
     }
 
@@ -145,7 +172,9 @@ def hlir_type_generic_str(ti=None):
         'isa': 'type',
         'kind': 'String',
         'name': 'String',
-        'att': ['generic', 'string'],
+        'generic': True,
+        'att': [],
+        'classes': [],
         'ti': ti
     }
 
@@ -156,7 +185,7 @@ def hlir_type_generic_int_bits(nbits, ti=None):
     # get custom generic int type
     # generic int not signed, and not unsigned (!)
     gen_int_type = hlir_type_integer('Integer', power=nbits, ti=ti)
-    gen_int_type['att'].extend(['generic'])
+    gen_int_type['generic'] = True
     return gen_int_type
 
 
@@ -181,9 +210,11 @@ def hlir_type_record(fields, ti=None):
     return {
         'isa': 'type',
         'kind': 'record',
+        'generic': False,
         'fields': fields,
         'size': 0,
         'att': [],
+        'classes': [],
         'ti': ti
     }
 
@@ -192,15 +223,14 @@ def hlir_type_record(fields, ti=None):
 def hlir_type_func(params, to, ti=None):
     return {
         'isa': 'type',
+        'generic': False,
         'kind': 'func',
         'params': params,
         'to': to,
         'att': [],
+        'classes': [],
         'ti': ti
     }
-
-
-
 
 
 
@@ -252,7 +282,7 @@ def hlir_value_int(num, typ=None, ti=None):
 
 def hlir_value_float(num, ti=None):
     typ = hlir_type_float('Float', power=flt_power, ti=ti)
-    typ['att'].extend(['generic'])
+    typ['generic'] = True
     return hlir_value_literal(typ, num, ti)
 
 
@@ -273,9 +303,7 @@ def hlir_string_imm(string, length):
 def hlir_value_generic_str(string, length, ti=None):
     typ = type.typeGenericString
     imm = hlir_string_imm(string, length)
-    s = hlir_value_literal(typ, imm, ti)
-    s['att'].append('string')
-    return s
+    return hlir_value_literal(typ, imm, ti)
 
 
 
@@ -293,7 +321,7 @@ def hlir_value_array(items, is_generic=False, type=None, ti=None):
 
 
     if is_generic:
-        type['att'].append('generic')
+        type['generic'] = True
 
     return hlir_value_literal(type, items, ti)
 
@@ -335,6 +363,7 @@ def hlir_value_func(id, type, ti=None):
         'type': type,
         'usecnt': 0,
         'att': [],
+        'classes': [],
         'ti': ti
     }
 

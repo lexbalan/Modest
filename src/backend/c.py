@@ -796,7 +796,6 @@ def print_value_literal_str(x, ctx, prefix=""):
 
 
 def print_value_literal_char(x, ctx):
-    #if type.type_attribute_check(x['type'], 'char'):
     num = x['imm']
 
     if num == None:

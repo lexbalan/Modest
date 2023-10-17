@@ -1,5 +1,17 @@
 # Types
 
+
+## Type Classes
+
+```
+generic     // it's a generic type
+logical     // supports '==', '!=', 'or', 'and', 'xor', 'not'
+comparable  // supports  '==' & '!='
+ordered     // supports '<', '>', '<=', '>='
+numeric     // supports '+', '-', '*', '/', '%', 'or', 'and', 'xor', 'not'
+```
+
+
 ## Generic types
 
 Generic type - compile time type, that must be casted to any real type for using in runtime.

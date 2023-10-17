@@ -47,91 +47,88 @@ def type_init():
     typeUnit = hlir_type_unit()
 
     typeInt8 = hlir_type_integer("Int8", power=8, ti=None)
-    typeInt8['att'].extend(['signed'])
+    typeInt8['signed'] = True
     typeInt8['c_alias'] = 'int8_t'
     typeInt8['llvm_alias'] = 'i8'
 
     typeInt16 = hlir_type_integer("Int16", power=16, ti=None)
-    typeInt16['att'].extend(['signed'])
+    typeInt16['signed'] = True
     typeInt16['c_alias'] = 'int16_t'
     typeInt16['llvm_alias'] = 'i16'
 
     typeInt32 = hlir_type_integer("Int32", power=32, ti=None)
-    typeInt32['att'].extend(['signed'])
+    typeInt32['signed'] = True
     typeInt32['c_alias'] = 'int32_t'
     typeInt32['llvm_alias'] = 'i32'
 
     typeInt64 = hlir_type_integer("Int64", power=64, ti=None)
-    typeInt64['att'].extend(['signed'])
+    typeInt64['signed'] = True
     typeInt64['c_alias'] = 'int64_t'
     typeInt64['llvm_alias'] = 'i64'
 
     typeInt128 = hlir_type_integer("Int128", power=128, ti=None)
-    typeInt128['att'].extend(['signed'])
+    typeInt128['signed'] = True
     typeInt128['c_alias'] = '__int128'
     typeInt128['llvm_alias'] = 'i128'
 
 
     typeNat1 = hlir_type_integer("Nat1", power=1, ti=None)
-    typeNat1['att'].extend(['unsigned', 'logical'])
+    typeNat1['classes'].extend(['logical'])
     typeNat1['c_alias'] = 'uint8_t'
     typeNat1['llvm_alias'] = 'i1'
 
     typeNat8 = hlir_type_integer("Nat8", power=8, ti=None)
 
     typeNat8['c_alias'] = 'uint8_t'
-    typeNat8['att'].extend(['unsigned'])
+    typeNat8['unsigned'] = True
     typeNat8['llvm_alias'] = 'i8'
 
     typeNat16 = hlir_type_integer("Nat16", power=16, ti=None)
-    typeNat16['att'].extend(['unsigned'])
+    typeNat16['unsigned'] = True
     typeNat16['c_alias'] = 'uint16_t'
     typeNat16['llvm_alias'] = 'i16'
 
     typeNat32 = hlir_type_integer("Nat32", power=32, ti=None)
-    typeNat32['att'].extend(['unsigned'])
+    typeNat32['unsigned'] = True
     typeNat32['c_alias'] = 'uint32_t'
     typeNat32['llvm_alias'] = 'i32'
 
     typeNat64 = hlir_type_integer("Nat64", power=64, ti=None)
-    typeNat64['att'].extend(['unsigned'])
+    typeNat64['unsigned'] = True
     typeNat64['c_alias'] = 'uint64_t'
     typeNat64['llvm_alias'] = 'i64'
 
     typeNat128 = hlir_type_integer("Nat128", power=128, ti=None)
-    typeNat128['att'].extend(['unsigned'])
+    typeNat128['unsigned'] = True
     typeNat128['c_alias'] = 'unsigned __int128'
     typeNat128['llvm_alias'] = 'i128'
 
 
     typeFloat16 = hlir_type_float('Float16', power=16, ti=None)
-    #typeFloat16['att'].extend(['float'])
     typeFloat16['c_alias'] = 'half'
     typeFloat16['llvm_alias'] = 'half'
 
     typeFloat32 = hlir_type_float('Float32', power=32, ti=None)
-    #typeFloat32['att'].extend(['float'])
     typeFloat32['c_alias'] = 'float'
     typeFloat32['llvm_alias'] = 'float'
 
     typeFloat64 = hlir_type_float('Float64', power=64, ti=None)
-    #typeFloat64['att'].extend(['float'])
     typeFloat64['c_alias'] = 'double'
     typeFloat64['llvm_alias'] = 'double'
 
 
     typeDecimal32 = hlir_type_float('Decimal32', power=32, ti=None)
-    typeDecimal32['att'].extend(['float', 'decimal'])
+    typeDecimal32['classes'].extend(['float', 'decimal'])
     typeDecimal32['c_alias'] = '_Decimal32'
     typeDecimal32['llvm_alias'] = 'float'
 
     typeDecimal64 = hlir_type_float('Decimal64', power=64, ti=None)
-    typeDecimal64['att'].extend(['float', 'decimal'])
+    typeDecimal64['classes'].extend(['float', 'decimal'])
     typeDecimal64['c_alias'] = '_Decimal64'
     typeDecimal64['llvm_alias'] = 'double'
 
     typeDecimal128 = hlir_type_float('Decimal128', power=128, ti=None)
-    typeDecimal128['att'].extend(['float', 'decimal'])
+    typeDecimal128['classes'].extend(['float', 'decimal'])
     typeDecimal128['c_alias'] = '_Decimal128'
     typeDecimal128['llvm_alias'] = 'double'
 
@@ -148,25 +145,18 @@ def type_init():
     typeChar32['c_alias'] = 'uint32_t'
     typeChar32['llvm_alias'] = 'i32'
 
-
     typeGenericString = hlir_type_generic_str(ti=None)
     typeGenericString['cm_alias'] = 'String'
     typeGenericString['c_alias'] = 'const char *'
     typeGenericString['llvm_alias'] = 'i8*'
 
-
     typeStr8 = hlir_type_pointer(hlir_type_array(of=typeChar8))
-    typeStr8['att'].append('string')
-
     typeStr16 = hlir_type_pointer(hlir_type_array(of=typeChar16))
-    typeStr16['att'].append('string')
-
     typeStr32 = hlir_type_pointer(hlir_type_array(of=typeChar32))
-    typeStr32['att'].append('string')
 
 
     typeFreePtr = hlir_type_free_pointer(ti=None)
-    typeFreePtr['att'].append('generic')
+    typeFreePtr['generic'] = True
 
     typeNil = hlir_type_nil(ti=None)
 
@@ -207,7 +197,10 @@ def eq_integer(a, b):
 
 
 def eq_char(a, b):
-    return eq_integer(a, b)
+    if a['power'] != b['power']:
+        return False
+
+    return True
 
 
 def eq_pointer(a, b):
@@ -285,7 +278,7 @@ def eq(a, b):
     # дженерик и не дженерик типы не равны
     # это важно при конструировании записей из джененрков
     # в противном случае конструирование будет скипнуто (тк уже равны)
-    if ('generic' in a['att']) != ('generic' in b['att']):
+    if is_generic(a) != is_generic(b):
         return False
 
     # normal checking
@@ -320,21 +313,8 @@ def type_attribute_add(t, a):
     t['att'].append(a)
 
 
-def type_attribute_check(t, a):
-    return a in t['att']
-
-
-"""def type_class_check(t, a):
-    absent = ''
-    for c in a:
-        if not type_attribute_check(t, c):
-            absent = c
-            break
-
-    if absent != '':
-        error("expected %s type" % (a), x['left'])
-    return result"""
-
+def type_class_check(t, a):
+    return a in t['classes']
 
 
 
@@ -343,14 +323,12 @@ def is_bad(t):
     return t['kind'] == 'bad'
 
 
-
 def is_generic(t):
-    return 'generic' in t['att']
+    return t['generic']
 
 
 def is_alias(t):
     return 'alias' in t['att']
-
 
 
 def is_unit(t):
@@ -362,11 +340,11 @@ def is_enum(t):
 
 
 def is_numeric(t):
-    return 'numeric' in t['att']
+    return type_class_check(t, 'numeric')
 
 
 def is_logical(t):
-    return 'logical' in t['att']
+    return type_class_check(t, 'logical')
 
 
 def is_integer(t):
@@ -400,12 +378,12 @@ def is_record(t):
 
 
 def is_string(t):
-    return 'string' in t['att']
-    #return t['kind'] == 'String'
+    if t['kind'] == 'String':
+        return True
+    if is_ptr_to_arr_of_char(t):
+        return is_char(t['to']['of'])
+    return False
 
-
-def is_generic_string(t):
-    return t['kind'] == 'String'
 
 
 # WARNING: Generic int type can be
@@ -414,11 +392,11 @@ def is_generic_string(t):
 # example: let x = 0xFFFFFFFF  #it is signed or unsigned value?
 
 def is_signed(t):
-    return 'signed' in t['att']
+    return t['signed']
 
 
 def is_unsigned(t):
-    return 'unsigned' in t['att']
+    return t['unsigned']
 
 
 
@@ -559,8 +537,10 @@ def type_copy(t):
     # (!) создаем новый массив аттрибутов,
     # чтобы не испортить оригинальный (!)
     nt['att'] = []
+    nt['classes'] = []
 
     nt['att'].extend(t['att'])
+    nt['classes'].extend(t['classes'])
 
     return nt
 
@@ -584,14 +564,8 @@ def create_alias(id, t, ti):
 
 
 def get_size(t):
-    if is_integer(t):
-        return t['size']
-    elif is_array(t):
-        return t['volume']['imm'] * get_size(t['of'])
-
-    #else:
-    #    fatal("type.get_size() for '%s' not implemented" % t['kind'])
-
+    if is_integer(t): return t['size']
+    elif is_array(t): return get_size(t['of']) * t['volume']['imm']
     return 0
 
 
