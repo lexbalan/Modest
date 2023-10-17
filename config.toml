@@ -1,7 +1,9 @@
 
 [Default]
-char_size=8
-int_size=32
-ptr_size=32
-flt_size=32
-
+char_size = 8
+int_size = 32
+ptr_size = 32
+flt_size = 32
+target_datalayout = "e-m:o-i64:64-i128:128-n32:64-S128"
+target_triple = "arm64-apple-macosx12.0.0"
+stdlib_path = "/Users/alexbalan/p/Modest/lib/"

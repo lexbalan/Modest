@@ -7,7 +7,7 @@ from type import type_print
 from value import value_attribute_check, value_is_immediate, value_is_zero, value_print
 from hlir import hlir_field, hlir_stmt_block, hlir_value_var
 from util import nbits_for_num, get_item_with_id
-
+from main import settings
 
 INDENT_SYMBOL = " " * 4
 
@@ -76,7 +76,7 @@ def nl_indent():
 
 def init():
     global styleguide
-    stylename = settings_get('style')
+    stylename = settings.get('style')
     if stylename != None:
         if stylename in styles:
             styleguide = styles[stylename]
@@ -1438,7 +1438,9 @@ def run(module, outname):
 
     newline(n=2)
 
+
     for x in module['text']:
+
         if 'value' in x:
             if 'c-no-print' in x['value']['att']:
                 continue

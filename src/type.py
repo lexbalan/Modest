@@ -7,129 +7,169 @@ from hlir import *
 from util import get_item_with_id
 
 
-typeUnit = hlir_type_unit()
+typeUnit = None
+typeInt8 = None
+typeInt16 = None
+typeInt32 = None
+typeInt64 = None
+typeInt128 = None
+typeNat1 = None
+typeNat8 = None
+typeNat16 = None
+typeNat32 = None
+typeNat64 = None
+typeNat128 = None
+typeFloat16 = None
+typeFloat32 = None
+typeFloat64 = None
+typeDecimal32 = None
+typeDecimal64 = None
+typeDecimal128 = None
+typeChar8 = None
+typeChar16 = None
+typeChar32 = None
+typeGenericString = None
+typeStr8 = None
+typeStr16 = None
+typeStr32 = None
+typeFreePtr = None
+typeNil = None
 
-typeInt8    = hlir_type_integer("Int8", power=8, ti=None)
-typeInt8['att'].extend(['signed'])
-typeInt8['c_alias'] = 'int8_t'
-typeInt8['llvm_alias'] = 'i8'
+def type_init():
+    global typeUnit
+    global typeInt8, typeInt16, typeInt32, typeInt64, typeInt128
+    global typeNat1, typeNat8, typeNat16, typeNat32, typeNat64, typeNat128
+    global typeFloat16, typeFloat32, typeFloat64
+    global typeDecimal32, typeDecimal64, typeDecimal128
+    global typeChar8, typeChar16, typeChar32
+    global typeGenericString, typeStr8, typeStr16, typeStr32
+    global typeFreePtr, typeNil
 
-typeInt16 = hlir_type_integer("Int16", power=16, ti=None)
-typeInt16['att'].extend(['signed'])
-typeInt16['c_alias'] = 'int16_t'
-typeInt16['llvm_alias'] = 'i16'
+    typeUnit = hlir_type_unit()
 
-typeInt32 = hlir_type_integer("Int32", power=32, ti=None)
-typeInt32['att'].extend(['signed'])
-typeInt32['c_alias'] = 'int32_t'
-typeInt32['llvm_alias'] = 'i32'
+    typeInt8 = hlir_type_integer("Int8", power=8, ti=None)
+    typeInt8['att'].extend(['signed'])
+    typeInt8['c_alias'] = 'int8_t'
+    typeInt8['llvm_alias'] = 'i8'
 
-typeInt64 = hlir_type_integer("Int64", power=64, ti=None)
-typeInt64['att'].extend(['signed'])
-typeInt64['c_alias'] = 'int64_t'
-typeInt64['llvm_alias'] = 'i64'
+    typeInt16 = hlir_type_integer("Int16", power=16, ti=None)
+    typeInt16['att'].extend(['signed'])
+    typeInt16['c_alias'] = 'int16_t'
+    typeInt16['llvm_alias'] = 'i16'
 
-typeInt128 = hlir_type_integer("Int128", power=128, ti=None)
-typeInt128['att'].extend(['signed'])
-typeInt128['c_alias'] = '__int128'
-typeInt128['llvm_alias'] = 'i128'
+    typeInt32 = hlir_type_integer("Int32", power=32, ti=None)
+    typeInt32['att'].extend(['signed'])
+    typeInt32['c_alias'] = 'int32_t'
+    typeInt32['llvm_alias'] = 'i32'
 
+    typeInt64 = hlir_type_integer("Int64", power=64, ti=None)
+    typeInt64['att'].extend(['signed'])
+    typeInt64['c_alias'] = 'int64_t'
+    typeInt64['llvm_alias'] = 'i64'
 
-typeNat1 = hlir_type_integer("Nat1", power=1, ti=None)
-typeNat1['att'].extend(['unsigned', 'logical'])
-typeNat1['c_alias'] = 'uint8_t'
-typeNat1['llvm_alias'] = 'i1'
-
-typeNat8 = hlir_type_integer("Nat8", power=8, ti=None)
-
-typeNat8['c_alias'] = 'uint8_t'
-typeNat8['att'].extend(['unsigned'])
-typeNat8['llvm_alias'] = 'i8'
-
-typeNat16 = hlir_type_integer("Nat16", power=16, ti=None)
-typeNat16['att'].extend(['unsigned'])
-typeNat16['c_alias'] = 'uint16_t'
-typeNat16['llvm_alias'] = 'i16'
-
-typeNat32 = hlir_type_integer("Nat32", power=32, ti=None)
-typeNat32['att'].extend(['unsigned'])
-typeNat32['c_alias'] = 'uint32_t'
-typeNat32['llvm_alias'] = 'i32'
-
-typeNat64 = hlir_type_integer("Nat64", power=64, ti=None)
-typeNat64['att'].extend(['unsigned'])
-typeNat64['c_alias'] = 'uint64_t'
-typeNat64['llvm_alias'] = 'i64'
-
-typeNat128 = hlir_type_integer("Nat128", power=128, ti=None)
-typeNat128['att'].extend(['unsigned'])
-typeNat128['c_alias'] = 'unsigned __int128'
-typeNat128['llvm_alias'] = 'i128'
-
-typeFloat16 = hlir_type_float('Float16', power=16, ti=None)
-#typeFloat16['att'].extend(['float'])
-typeFloat16['c_alias'] = 'half'
-typeFloat16['llvm_alias'] = 'half'
-
-typeFloat32 = hlir_type_float('Float32', power=32, ti=None)
-#typeFloat32['att'].extend(['float'])
-typeFloat32['c_alias'] = 'float'
-typeFloat32['llvm_alias'] = 'float'
-
-typeFloat64 = hlir_type_float('Float64', power=64, ti=None)
-#typeFloat64['att'].extend(['float'])
-typeFloat64['c_alias'] = 'double'
-typeFloat64['llvm_alias'] = 'double'
+    typeInt128 = hlir_type_integer("Int128", power=128, ti=None)
+    typeInt128['att'].extend(['signed'])
+    typeInt128['c_alias'] = '__int128'
+    typeInt128['llvm_alias'] = 'i128'
 
 
-typeDecimal32 = hlir_type_float('Decimal32', power=32, ti=None)
-typeDecimal32['att'].extend(['float', 'decimal'])
-typeDecimal32['c_alias'] = '_Decimal32'
-typeDecimal32['llvm_alias'] = 'float'
+    typeNat1 = hlir_type_integer("Nat1", power=1, ti=None)
+    typeNat1['att'].extend(['unsigned', 'logical'])
+    typeNat1['c_alias'] = 'uint8_t'
+    typeNat1['llvm_alias'] = 'i1'
 
-typeDecimal64 = hlir_type_float('Decimal64', power=64, ti=None)
-typeDecimal64['att'].extend(['float', 'decimal'])
-typeDecimal64['c_alias'] = '_Decimal64'
-typeDecimal64['llvm_alias'] = 'double'
+    typeNat8 = hlir_type_integer("Nat8", power=8, ti=None)
 
-typeDecimal128 = hlir_type_float('Decimal128', power=128, ti=None)
-typeDecimal128['att'].extend(['float', 'decimal'])
-typeDecimal128['c_alias'] = '_Decimal128'
-typeDecimal128['llvm_alias'] = 'double'
+    typeNat8['c_alias'] = 'uint8_t'
+    typeNat8['att'].extend(['unsigned'])
+    typeNat8['llvm_alias'] = 'i8'
 
+    typeNat16 = hlir_type_integer("Nat16", power=16, ti=None)
+    typeNat16['att'].extend(['unsigned'])
+    typeNat16['c_alias'] = 'uint16_t'
+    typeNat16['llvm_alias'] = 'i16'
 
+    typeNat32 = hlir_type_integer("Nat32", power=32, ti=None)
+    typeNat32['att'].extend(['unsigned'])
+    typeNat32['c_alias'] = 'uint32_t'
+    typeNat32['llvm_alias'] = 'i32'
 
-typeChar8 = hlir_type_char("Char8", power=8, ti=None)
-typeChar8['c_alias'] = 'char' #'uint8_t'
-typeChar8['llvm_alias'] = 'i8'
+    typeNat64 = hlir_type_integer("Nat64", power=64, ti=None)
+    typeNat64['att'].extend(['unsigned'])
+    typeNat64['c_alias'] = 'uint64_t'
+    typeNat64['llvm_alias'] = 'i64'
 
-typeChar16 = hlir_type_char("Char16", power=16, ti=None)
-typeChar16['c_alias'] = 'uint16_t'
-typeChar16['llvm_alias'] = 'i16'
-
-typeChar32 = hlir_type_char("Char32", power=32, ti=None)
-typeChar32['c_alias'] = 'uint32_t'
-typeChar32['llvm_alias'] = 'i32'
-
-
-typeGenericString = hlir_type_generic_str(ti=None)
-typeGenericString['cm_alias'] = 'String'
-typeGenericString['c_alias'] = 'const char *'
-typeGenericString['llvm_alias'] = 'i8*'
+    typeNat128 = hlir_type_integer("Nat128", power=128, ti=None)
+    typeNat128['att'].extend(['unsigned'])
+    typeNat128['c_alias'] = 'unsigned __int128'
+    typeNat128['llvm_alias'] = 'i128'
 
 
-typeStr8 = hlir_type_pointer(hlir_type_array(of=typeChar8))
-typeStr8['att'].append('string')
-typeStr16 = hlir_type_pointer(hlir_type_array(of=typeChar16))
-typeStr16['att'].append('string')
-typeStr32 = hlir_type_pointer(hlir_type_array(of=typeChar32))
-typeStr32['att'].append('string')
+    typeFloat16 = hlir_type_float('Float16', power=16, ti=None)
+    #typeFloat16['att'].extend(['float'])
+    typeFloat16['c_alias'] = 'half'
+    typeFloat16['llvm_alias'] = 'half'
+
+    typeFloat32 = hlir_type_float('Float32', power=32, ti=None)
+    #typeFloat32['att'].extend(['float'])
+    typeFloat32['c_alias'] = 'float'
+    typeFloat32['llvm_alias'] = 'float'
+
+    typeFloat64 = hlir_type_float('Float64', power=64, ti=None)
+    #typeFloat64['att'].extend(['float'])
+    typeFloat64['c_alias'] = 'double'
+    typeFloat64['llvm_alias'] = 'double'
 
 
-typeFreePtr = hlir_type_free_pointer(ti=None)
-typeFreePtr['att'].append('generic')
+    typeDecimal32 = hlir_type_float('Decimal32', power=32, ti=None)
+    typeDecimal32['att'].extend(['float', 'decimal'])
+    typeDecimal32['c_alias'] = '_Decimal32'
+    typeDecimal32['llvm_alias'] = 'float'
 
-typeNil = hlir_type_nil(ti=None)
+    typeDecimal64 = hlir_type_float('Decimal64', power=64, ti=None)
+    typeDecimal64['att'].extend(['float', 'decimal'])
+    typeDecimal64['c_alias'] = '_Decimal64'
+    typeDecimal64['llvm_alias'] = 'double'
+
+    typeDecimal128 = hlir_type_float('Decimal128', power=128, ti=None)
+    typeDecimal128['att'].extend(['float', 'decimal'])
+    typeDecimal128['c_alias'] = '_Decimal128'
+    typeDecimal128['llvm_alias'] = 'double'
+
+
+    typeChar8 = hlir_type_char("Char8", power=8, ti=None)
+    typeChar8['c_alias'] = 'char' #'uint8_t'
+    typeChar8['llvm_alias'] = 'i8'
+
+    typeChar16 = hlir_type_char("Char16", power=16, ti=None)
+    typeChar16['c_alias'] = 'uint16_t'
+    typeChar16['llvm_alias'] = 'i16'
+
+    typeChar32 = hlir_type_char("Char32", power=32, ti=None)
+    typeChar32['c_alias'] = 'uint32_t'
+    typeChar32['llvm_alias'] = 'i32'
+
+
+    typeGenericString = hlir_type_generic_str(ti=None)
+    typeGenericString['cm_alias'] = 'String'
+    typeGenericString['c_alias'] = 'const char *'
+    typeGenericString['llvm_alias'] = 'i8*'
+
+
+    typeStr8 = hlir_type_pointer(hlir_type_array(of=typeChar8))
+    typeStr8['att'].append('string')
+
+    typeStr16 = hlir_type_pointer(hlir_type_array(of=typeChar16))
+    typeStr16['att'].append('string')
+
+    typeStr32 = hlir_type_pointer(hlir_type_array(of=typeChar32))
+    typeStr32['att'].append('string')
+
+
+    typeFreePtr = hlir_type_free_pointer(ti=None)
+    typeFreePtr['att'].append('generic')
+
+    typeNil = hlir_type_nil(ti=None)
 
 
 def select_int(sz):
@@ -336,6 +376,7 @@ def is_integer(t):
 
 def is_integer_signed(t):
     return is_integer(t) and is_signed(t)
+
 
 def is_integer_unsigned(t):
     return is_integer(t) and is_unsigned(t)

@@ -56,10 +56,6 @@ def value_create_zero(t):
 
 
 
-valueNil = hlir_value_int(0, typ=type.typeNil)
-valueTrue = hlir_value_int(1, typ=type.typeNat1)
-valueFalse = hlir_value_int(0, typ=type.typeNat1)
-
 
 
 

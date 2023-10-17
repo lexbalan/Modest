@@ -8,7 +8,8 @@ from value import value_attribute_check, value_print, value_is_immediate
 from hlir import hlir_type_pointer, hlir_value_int
 
 
-LLVM_TARGET_TRIPLE = os.popen("llvm-config --host-target").read()[:-1]
+LLVM_TARGET_TRIPLE = ""
+LLVM_TARGET_DATALAYOUT = ""
 
 
 INDENT_SYMBOL = " " * 2
@@ -20,7 +21,15 @@ def is_global_context():
     return func_context == None
 
 
+ll_value_zero = None
+
 def init():
+    from main import config
+    global LLVM_TARGET_TRIPLE, LLVM_TARGET_DATALAYOUT, ll_value_zero
+    LLVM_TARGET_TRIPLE = config['target_triple']
+    LLVM_TARGET_DATALAYOUT = config['target_datalayout']
+
+    ll_value_zero = ll_create_value_num(type.typeInt32, 0)
     pass
 
 
@@ -103,9 +112,6 @@ def ll_create_value_null(t):
         'type': t,
         'proto': None
     }
-
-ll_value_zero = ll_create_value_num(type.typeInt32, 0)
-
 
 
 
@@ -1826,6 +1832,7 @@ def run(module, outname):
     outname = outname + '.ll'
     output_open(outname)
 
+    out('\ntarget datalayout = "%s"' % LLVM_TARGET_DATALAYOUT)
     out('\ntarget triple = "%s"\n\n' % LLVM_TARGET_TRIPLE)
 
     print_module(module)

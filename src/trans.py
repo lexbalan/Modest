@@ -1,10 +1,9 @@
 
 import os
 
-from opt import *
 from error import *
 from util import get_item_with_id
-
+from main import settings
 
 def is_local_context():
     global cfunc
@@ -172,21 +171,48 @@ def stmt_is_bad(x):
 
 
 
-
 typeSysInt = None
 typeSysNat = None
 typeSysStr = None
 typeSysFloat = None
 
-
+# for target arch
+char_size = 0   # sizeof(char)
 int_size = 0    # sizeof(int)
 ptr_size = 0    # sizeof(int *)
+flt_size = 0    # sizeof(float)
+lib_path = ""
+
+
+
+valueNil = None
+valueTrue = None
+valueFalse = None
 
 
 def init():
-    global int_size, ptr_size, size_size
-    int_size = int(settings_get('int'))
-    ptr_size = int(settings_get('ptr'))
+
+    from main import config
+    from main import path_lib
+    LLVM_TARGET_TRIPLE = config['target_triple']
+
+    global char_size, int_size, ptr_size, flt_size, lib_path
+    int_size = int(config['int_size'])
+    ptr_size = int(config['ptr_size'])
+    flt_size = int(config['flt_size'])
+    char_size = int(config['char_size'])
+    lib_path = path_lib
+    #print(f"path_lib = {path_lib}")
+
+    hlir_init()
+    type.type_init()
+
+
+    valueNil = hlir_value_int(0, typ=type.typeNil)
+    valueTrue = hlir_value_int(1, typ=type.typeNat1)
+    valueFalse = hlir_value_int(0, typ=type.typeNat1)
+
+
 
     global root_context
     # init main context
@@ -246,15 +272,15 @@ def init():
     typeSysNat = type.type_copy(select_nat(int_size))
     typeSysNat['c_alias'] = 'unsigned int'
 
-    sysCharSize = int(settings_get('char'))
-    if sysCharSize == 8:
+    if char_size == 8:
         typeSysStr = type.typeStr8
-    elif sysCharSize == 16:
+    elif char_size == 16:
         typeSysStr = type.typeStr16
-    elif sysCharSize == 32:
+    elif char_size == 32:
         typeSysStr = type.typeStr32
 
     typeSysFloat = type.typeFloat64
+
 
 
 
@@ -289,7 +315,7 @@ def cons_default(x, ti):
         # select type for default implementation of generic numeric
         req_sz = from_type['power']
         if req_sz < 32:
-            req_sz = int(settings_get('int'))
+            req_sz = int_size
 
         t = type.select_int(req_sz)
         return hlir_value_cast(x, t, ti)
@@ -373,7 +399,7 @@ def do_type_enum(t):
         'isa': 'type',
         'kind': 'enum',
         'items': [],
-        'size': settings_get('enum_size'),
+        'size': 32,
         'att': [],
         'ti': t['ti']
     }
@@ -1516,6 +1542,8 @@ def def_const(x):
 
 # удаляет ?? по имени
 def module_remove_node(m, isa, id_str):
+    #print(f"module_remove_node: {id_str}")
+
     for submodule in m['imports']:
         module_remove_node(submodule, isa, id_str)
 
@@ -1553,8 +1581,9 @@ def def_type(x):
         # just overwrite existed 'opaque' type (for records)
         exist.update(nt)
         # and find and remove declaration instruction
-        if settings_check('backend', 'llvm'):
+        if settings.check('backend', 'llvm'):
             module_remove_node(module, 'type', id['str'])
+
     else:
         module['context'].type_add(id['str'], nt)
 
@@ -1724,7 +1753,7 @@ def def_func(x):
 
     # в LLVM если делаем func definition нельзя писать func declaration
     # поэтому удалим все сделаные ранее декларации (если они есть)
-    if settings_check('backend', 'llvm'):
+    if settings.check('backend', 'llvm'):
         module_remove_node(module, 'value', func_id['str'])
 
     return hlir_def_func(fn)
@@ -1733,7 +1762,8 @@ def def_func(x):
 
 def decl_type(x):
     id = x['id']
-    #print("decl_type " + id['str'])
+
+    #info("decl_type " + id['str'], x['ti'])
 
     nt = {
         'isa': 'type',
@@ -1879,6 +1909,7 @@ def proc(ast, source_info):
             continue
 
         y['nl'] = x['nl']
+
         module['text'].append(y)
 
     m = module
@@ -1899,8 +1930,14 @@ def import_abspath(s):
         f = env_current_file_dir + '/' + s #[1:]
 
     else: # (global)
-        path_lib = settings_get('lib')
-        f = path_lib + '/' + s
+#        from opt import settings.get
+
+        #print(f"lib_path = {lib_path}")
+#        lib_path = settings.get('lib')
+#        print(f"lib_path = {lib_path}")
+        #from main import config
+        #lib_path = config['lib']
+        f = lib_path + '/' + s
 
     if not os.path.exists(f):
         print("%s not exist" % f)

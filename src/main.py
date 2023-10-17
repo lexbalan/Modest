@@ -15,23 +15,29 @@ with open(CONFIG_PATH, "rb") as toml:
 
 #print(toml_dict)
 
+
+config = toml_dict['Default']
+
+path_lib = os.getenv('MODEST_LIB')
+
 from opt import *
 
-default = toml_dict['Default']
-DEFAULT_MCHAR = default['char_size']#8
-DEFAULT_MINT = default['int_size']#32
-DEFAULT_MPTR = default['ptr_size']#64
-DEFAULT_MFLT = default['flt_size']#64
+import settings
+
+DEFAULT_MCHAR = config['char_size']#8
+DEFAULT_MINT = config['int_size']#32
+DEFAULT_MPTR = config['ptr_size']#64
+DEFAULT_MFLT = config['flt_size']#64
 DEFAULT_MLIB = ""
 DEFAULT_BACKEND = 'llvm'
 
 # right here!
-settings_set('int', DEFAULT_MINT)
-settings_set('ptr', DEFAULT_MPTR)
-settings_set('flt', DEFAULT_MFLT)
-settings_set('char', DEFAULT_MCHAR)
-settings_set('lib', DEFAULT_MLIB)
-settings_set('backend', DEFAULT_BACKEND)
+settings.set('int', DEFAULT_MINT)
+settings.set('ptr', DEFAULT_MPTR)
+settings.set('flt', DEFAULT_MFLT)
+settings.set('char', DEFAULT_MCHAR)
+settings.set('lib', DEFAULT_MLIB)
+settings.set('backend', DEFAULT_BACKEND)
 
 import error
 import trans
@@ -53,15 +59,21 @@ parser.add_argument('-d', action='append', help='-d<constant_name>="<value_expre
 args = parser.parse_args()
 
 
+
+
 def main():
     #print(os.getcwd())
-
-    path_lib = os.getenv('MODEST_LIB')
+    global path_lib
+    #path_lib = os.getenv('MODEST_LIB')
     if path_lib == None:
         fatal("MODEST_LIB required")
 
     # set default settings
-    settings_set('lib', path_lib)
+#    settings.set('lib', path_lib)
+#    path_lib2 = settings.get('lib')
+#    print(f"path_lib2 = {path_lib2}")
+    #global config
+    #config['lib'] = path_lib
 
 
     # parse features (ex. -funsafe)
@@ -74,7 +86,7 @@ def main():
     if args.m != None:
         for mod in args.m:
             k, v = mod.split('=')
-            settings_set(k, v)
+            settings.set(k, v)
 
 
     if args.d != None:
@@ -92,13 +104,12 @@ def main():
     src_abspath = os.path.abspath(src_name)
     src_dirname = os.path.dirname(src_abspath)
 
-    settings_set('path', src_dirname)
+    settings.set('path', src_dirname)
 
 
     # loading backend
-    backend_name = settings_get('backend')
+    backend_name = settings.get('backend')
     backend = importlib.import_module("backend." + backend_name)
-
 
     trans.init()
 

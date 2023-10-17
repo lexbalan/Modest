@@ -1,9 +1,22 @@
 
 
 import copy
-from opt import settings_get
 import type
 from util import nbits_for_num, nbytes_for_bits
+
+
+ptr_power = 0
+flt_power = 0
+
+
+def hlir_init():
+    from main import config
+    global ptr_power, flt_power
+    ptr_power = int(config['ptr_size'])
+    flt_power = int(config['flt_size'])
+    #print(f"ptr_power = {ptr_power}")
+
+
 
 
 
@@ -78,13 +91,12 @@ def hlir_type_float(aka, power, ti):
 
 
 def hlir_type_pointer(to, ti=None):
-    pointer_size = int(settings_get('ptr'))
     return {
         'isa': 'type',
         'kind': 'pointer',
         'to': to,
-        'size': pointer_size / 8,
-        'power': pointer_size,
+        'size': ptr_power / 8,
+        'power': ptr_power,
         'att': ['comparable'],
         'ti': ti
     }
@@ -92,13 +104,12 @@ def hlir_type_pointer(to, ti=None):
 
 # FreePointer - особый тип, он приводится неявно CM (но не в C!)
 def hlir_type_free_pointer(ti):
-    pointer_size = int(settings_get('ptr'))
     return {
         'isa': 'type',
         'kind': 'FreePointer',
         'to': type.typeUnit,
-        'size': pointer_size / 8,
-        'power': pointer_size,
+        'size': ptr_power / 8,
+        'power': ptr_power,
         'att': ['comparable'],
         'ti': ti
     }
@@ -106,13 +117,12 @@ def hlir_type_free_pointer(ti):
 
 # Nil - особый тип, он приводится неявно как в CM так и в C
 def hlir_type_nil(ti):
-    pointer_size = int(settings_get('ptr'))
     return {
         'isa': 'type',
         'kind': 'Nil',
         'to': type.typeUnit,
-        'size': pointer_size / 8,
-        'power': pointer_size,
+        'size': ptr_power / 8,
+        'power': ptr_power,
         'att': ['comparable', 'generic'],
         'ti': ti
     }
@@ -230,6 +240,7 @@ def hlir_value_int(num, typ=None, ti=None):
         if nbits > typ['power']:
             from error import error
             error("value size not corresponded type size", ti)
+            1 / 0
             #print("nbits = %d" % nbits)
             #print("typ['power'] = %d" % typ['power'])
             return hlir_value_bad(ti)
@@ -240,8 +251,7 @@ def hlir_value_int(num, typ=None, ti=None):
 
 
 def hlir_value_float(num, ti=None):
-    float_default_bit = int(settings_get('flt'))
-    typ = hlir_type_float('Float', power=float_default_bit, ti=ti)
+    typ = hlir_type_float('Float', power=flt_power, ti=ti)
     typ['att'].extend(['generic'])
     return hlir_value_literal(typ, num, ti)
 
