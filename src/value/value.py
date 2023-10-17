@@ -130,7 +130,7 @@ def value_hard_cast(v, t, ti):
 
 
 
-def value_cast_implicit(v, t, ti):
+def value_cons_implicit(v, t, ti):
     if value_is_bad(v) or type.is_bad(t):
         return hlir_value_bad(ti)
 
@@ -192,7 +192,7 @@ def value_cast_implicit(v, t, ti):
 
 
 
-def value_cast_explicit(v, t, ti):
+def value_cons_explicit(v, t, ti):
     if value_is_bad(v) or type.is_bad(t):
         return hlir_value_bad(ti)
 

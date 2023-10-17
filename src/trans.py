@@ -552,9 +552,9 @@ def do_bin_op_with_pointers(k, l, r , ti):
 
             # what about typeFreePointer?
             if type.is_nil(l['type']):
-                l = value_cast_implicit(l, r['type'], ti)
+                l = value_cons_implicit(l, r['type'], ti)
             elif type.is_nil(r['type']):
-                r = value_cast_implicit(r, l['type'], ti)
+                r = value_cons_implicit(r, l['type'], ti)
 
             return hlir_value_bin(k, l, r, type.typeNat1, ti)
 
@@ -587,13 +587,13 @@ def do_bin_op_with_pointers(k, l, r , ti):
 
             if ptr_n_int:
                 lnat = do_cast_runtime(l, typeSysNat, ti)
-                xr = value_cast_implicit(r, lnat['type'], ti)
+                xr = value_cons_implicit(r, lnat['type'], ti)
                 result = hlir_value_bin(x['kind'], lnat, xr, xr['type'], ti)
                 return do_cast_runtime(result, l['type'], ti)
 
             if int_n_ptr:
                 rnat = do_cast_runtime(r, typeSysNat, ti)
-                xl = value_cast_implicit(l, rnat['type'], ti)
+                xl = value_cons_implicit(l, rnat['type'], ti)
                 result = hlir_value_bin(x['kind'], rnat, xl, xl['type'], ti)
                 return do_cast_runtime(result, r['type'], ti)
 
@@ -701,8 +701,8 @@ def do_value_bin(x):
 
     common_type = bin_type_select(l['type'], r['type'])
 
-    l = value_cast_implicit(l, common_type, x['left']['ti'])
-    r = value_cast_implicit(r, common_type, x['right']['ti'])
+    l = value_cons_implicit(l, common_type, x['left']['ti'])
+    r = value_cons_implicit(r, common_type, x['right']['ti'])
 
     if not type.check(l['type'], r['type'], x['ti']):
         return hlir_value_bad(x['ti'])
@@ -864,7 +864,7 @@ def do_value_call(x):
         arg = do_rvalue(a)
 
         if not value_is_bad(arg):
-            arg = value_cast_implicit(arg, param['type'], a['ti'])
+            arg = value_cons_implicit(arg, param['type'], a['ti'])
             type.check(param['type'], arg['type'], a['ti'])
             args.append(arg)
 
@@ -918,7 +918,7 @@ def do_value_index(x):
         error("expected integer value", x['index'])
 
 
-    i = value_cast_implicit(i, typeSysInt, i['ti'])
+    i = value_cons_implicit(i, typeSysInt, i['ti'])
 
     v = None
 
@@ -1013,7 +1013,7 @@ def do_value_to(x):
     t = do_type(x['type'])
     if value_is_bad(v) or type.is_bad(t):
         return hlir_value_bad(x['ti'])
-    return value_cast_explicit(v, t, x['ti'])
+    return value_cons_explicit(v, t, x['ti'])
 
 
 
@@ -1198,7 +1198,7 @@ def do_stmt_if(x):
     if value_is_bad(c) or stmt_is_bad(t):
         return hlir_stmt_bad()
 
-    c = value_cast_implicit(c, type.typeNat1, c['ti'])
+    c = value_cons_implicit(c, type.typeNat1, c['ti'])
     type.check(c['type'], type.typeNat1, x['cond']['ti'])
 
     e = None
@@ -1217,7 +1217,7 @@ def do_stmt_while(x):
     if value_is_bad(c) or stmt_is_bad(s):
         return hlir_stmt_bad()
 
-    c = value_cast_implicit(c, type.typeNat1, c['ti'])
+    c = value_cons_implicit(c, type.typeNat1, c['ti'])
     if not type.check(c['type'], type.typeNat1, x['cond']['ti']):
         return hlir_stmt_bad()
 
@@ -1242,7 +1242,7 @@ def do_stmt_return(x):
     if value_is_bad(v):
         return hlir_stmt_bad()
 
-    v = value_cast_implicit(v, cfunc['type']['to'], v['ti'])
+    v = value_cons_implicit(v, cfunc['type']['to'], v['ti'])
     type.check(v['type'], cfunc['type']['to'], x['value']['ti'])
 
     return hlir_stmt_return(v, ti=x['ti'])
@@ -1290,7 +1290,7 @@ def do_stmt_var(x):
     # type & init value present
     if t != None and v != None:
         # type check
-        v = value_cast_implicit(v, t, x['value']['ti'])
+        v = value_cons_implicit(v, t, x['value']['ti'])
         type.check(t, v['type'], x['value']['ti'])
 
 
@@ -1365,7 +1365,7 @@ def do_stmt_assign(x):
         return hlir_stmt_bad()
 
     # type check
-    r = value_cast_implicit(r, l['type'], x['right']['ti'])
+    r = value_cons_implicit(r, l['type'], x['right']['ti'])
     type.check(l['type'], r['type'], x['ti'])
 
     return hlir_stmt_assign(l, r, ti=x['ti'])
@@ -1615,7 +1615,7 @@ def def_var(x):
         iv = do_value(x['init'])
 
         if not value_is_bad(iv):
-            init_value = value_cast_implicit(iv, f['type'], x['init']['ti'])
+            init_value = value_cons_implicit(iv, f['type'], x['init']['ti'])
             type.check(f['type'], init_value['type'], x['init']['ti'])
 
     var = hlir_value_var(f['id'], f['type'], init=init_value)
