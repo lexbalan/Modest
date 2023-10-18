@@ -1771,19 +1771,25 @@ def print_strings(strings):
         strno = strno + 1
         strid = 'str%d' % strno
 
-        if string['imm']['used_char8']:
+        char_power = 0
+        if type.is_array(string['type']['to']):
+            char_power = string['type']['to']['of']['power']
+        else:
+            char_power = string['type']['to']['power']
+
+        if char_power == 8:
             #print("PRINT_STR8")
             strid8 = strid + '.c8'
             string['imm']['strid_8'] = strid8
             print_string_utf8(strid8, string)
 
-        if string['imm']['used_char16']:
+        elif char_power == 16:
             #print("PRINT_STR16")
             strid16 = strid + '.c16'
             string['imm']['strid_16'] = strid16
             print_string_utf16(strid16, string)
 
-        if string['imm']['used_char32']:
+        elif char_power == 32:
             #print("PRINT_STR32")
             strid32 = strid + '.c32'
             string['imm']['strid_32'] = strid32

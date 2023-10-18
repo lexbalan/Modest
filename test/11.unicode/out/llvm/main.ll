@@ -101,13 +101,7 @@ declare void @utf32_putchar(i32)
 ; -- SOURCE: src/main.cm
 
 @str1.c8 = private constant [12 x i8] c"S-t-r-i-n-g\00"
-@str1.c16 = private constant [12 x i16] [i16 83, i16 45, i16 116, i16 45, i16 114, i16 45, i16 105, i16 45, i16 110, i16 45, i16 103, i16 0]
-@str1.c32 = private constant [12 x i32] [i32 83, i32 45, i32 116, i32 45, i32 114, i32 45, i32 105, i32 45, i32 110, i32 45, i32 103, i32 0]
-@str2.c8 = private constant [12 x i8] c"S-t-r-i-n-g\00"
 @str2.c16 = private constant [12 x i16] [i16 83, i16 45, i16 116, i16 45, i16 114, i16 45, i16 105, i16 45, i16 110, i16 45, i16 103, i16 0]
-@str2.c32 = private constant [12 x i32] [i32 83, i32 45, i32 116, i32 45, i32 114, i32 45, i32 105, i32 45, i32 110, i32 45, i32 103, i32 0]
-@str3.c8 = private constant [12 x i8] c"S-t-r-i-n-g\00"
-@str3.c16 = private constant [12 x i16] [i16 83, i16 45, i16 116, i16 45, i16 114, i16 45, i16 105, i16 45, i16 110, i16 45, i16 103, i16 0]
 @str3.c32 = private constant [12 x i32] [i32 83, i32 45, i32 116, i32 45, i32 114, i32 45, i32 105, i32 45, i32 110, i32 45, i32 103, i32 0]
 @str4.c8 = private constant [16 x i8] c"omegaCode = %d\0A\00"
 @str5.c8 = private constant [14 x i8] c"ratCode = %d\0A\00"
@@ -170,9 +164,9 @@ define i32 @main() {
     call void([0 x i32]*) @utf32_puts ([0 x i32]* @str7.c32)
     call void([0 x i32]*) @utf32_puts ([0 x i32]* @str8.c32)
     %str8 = alloca [0 x i8]*
-    store [0 x i8]* @str3.c8, [0 x i8]** %str8
+    store [0 x i8]* @str1.c8, [0 x i8]** %str8
     %str16 = alloca [0 x i16]*
-    store [0 x i16]* @str3.c16, [0 x i16]** %str16
+    store [0 x i16]* @str2.c16, [0 x i16]** %str16
     %str32 = alloca [0 x i32]*
     store [0 x i32]* @str3.c32, [0 x i32]** %str32
     %5 = load [0 x i8]*, [0 x i8]** %str8

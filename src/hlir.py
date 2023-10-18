@@ -302,11 +302,6 @@ def hlir_string_imm(string, length):
     return {
         'str': string,
         'len': length,
-
-        # признак того что в коде эта строка приводится к:
-        'used_char8': False,  # Str8
-        'used_char16': False, # Str16
-        'used_char32': False  # Str32
     }
 
 
