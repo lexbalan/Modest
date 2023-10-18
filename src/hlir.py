@@ -98,12 +98,12 @@ def hlir_type_generic_char(power, ti):
     }
 
 
-def hlir_type_char(name, power, ti):
+def hlir_type_char(name, power, generic=False, ti=None):
     return {
         'isa': 'type',
         'kind': 'char',
         'name': name,
-        'generic': False,
+        'generic': generic,
         'att': [],
         'classes': ['comparable'],
         'power': power,
