@@ -197,17 +197,14 @@ def hlir_type_generic_str(ti=None):
     }
 
 
-
 # used in shifts
 def hlir_type_generic_int_bits(nbits, ti=None):
     return hlir_type_integer('Integer', power=nbits, generic=True, ti=ti)
 
 
-
 def hlir_type_generic_int_for(num, unsigned=False, ti=None):
     nbits = nbits_for_num(num)
     return hlir_type_generic_int_bits(nbits, ti=ti)
-
 
 
 def hlir_field(id, type, ti=None):
