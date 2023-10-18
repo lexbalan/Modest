@@ -117,13 +117,13 @@ extern func exit  (rc : Int) -> Unit
 //extern func fstat (fd : Int, buf : *Stat) -> Int
 
 
-extern func opendir  (name : *Str) -> *DIR
-extern func closedir (dir : *DIR) -> Int
+extern func opendir  (name: *Str) -> *DIR
+extern func closedir (dir: *DIR) -> Int
 
 // current working directory
-extern func getcwd (buf : *Str, size : SizeT) -> *Str
+extern func getcwd (buf: *Str, size: SizeT) -> *Str
 
-extern func getenv (name : *Str) -> *Str
+extern func getenv (name: *Str) -> *Str
 
 
 

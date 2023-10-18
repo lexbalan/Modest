@@ -8,7 +8,7 @@
 
 
 
-void utf32_to_utf8(uint32_t x, uint8_t *buf);
+void utf32_to_utf8(uint32_t x, char *buf);
 
 void utf8_puts(char *s);
 void utf16_puts(uint16_t *s);

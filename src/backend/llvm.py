@@ -701,20 +701,25 @@ def do_eval_expr_access_ptr(v):
 
 # cast type a to type b
 def select_cast_operator(a, b):
-    if type.is_integer(a) or type.is_char(a):
-        if type.is_integer(b) or type.is_char(b):
+    if type.is_integer(a) or type.is_char(a) or type.is_bool(a):
+        if type.is_integer(b) or type.is_char(b) or type.is_bool(b):
             signed = False
             if type.is_integer(b):
                 signed = type.is_signed(b)
 
-            if a['size'] < b['size']:
+            """print("BITCAST!")
+            print(a)
+            print(f"{a['size']} ? {b['size']}")
+            print()"""
+
+            if a['power'] < b['power']:
                 if signed:
                     return 'sext'
 
                 else:
                     return 'zext'
 
-            elif a['size'] > b['size']:
+            elif a['power'] > b['power']:
                 return 'trunc'
 
             else:
@@ -751,9 +756,9 @@ def select_cast_operator(a, b):
 
         # Float -> Float
         elif type.is_float(b):
-            if a['size'] < b['size']:
+            if a['power'] < b['power']:
                 return 'fpext'
-            elif a['size'] > b['size']:
+            elif a['power'] > b['power']:
                 return 'fptrunc'
             else:
                 return 'bitcast'

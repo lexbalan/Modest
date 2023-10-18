@@ -346,6 +346,8 @@ def is_numeric(t):
 def is_logical(t):
     return type_class_check(t, 'logical')
 
+def is_bool(t):
+    return type_class_check(t, 'logical')
 
 def is_integer(t):
     return t['kind'] == 'int'
