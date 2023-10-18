@@ -7,12 +7,12 @@ from util import get_item_with_id
 
 
 typeUnit = None
+typeBool = None
 typeInt8 = None
 typeInt16 = None
 typeInt32 = None
 typeInt64 = None
 typeInt128 = None
-typeNat1 = None
 typeNat8 = None
 typeNat16 = None
 typeNat32 = None
@@ -35,9 +35,9 @@ typeFreePtr = None
 typeNil = None
 
 def type_init():
-    global typeUnit
+    global typeUnit, typeBool
     global typeInt8, typeInt16, typeInt32, typeInt64, typeInt128
-    global typeNat1, typeNat8, typeNat16, typeNat32, typeNat64, typeNat128
+    global typeNat8, typeNat16, typeNat32, typeNat64, typeNat128
     global typeFloat16, typeFloat32, typeFloat64
     global typeDecimal32, typeDecimal64, typeDecimal128
     global typeChar8, typeChar16, typeChar32
@@ -72,10 +72,9 @@ def type_init():
     typeInt128['llvm_alias'] = 'i128'
 
 
-    typeNat1 = hlir_type_integer("Nat1", power=1, ti=None)
-    typeNat1['classes'].extend(['logical'])
-    typeNat1['c_alias'] = 'uint8_t'
-    typeNat1['llvm_alias'] = 'i1'
+    typeBool = hlir_type_bool(ti=None)
+    typeBool['c_alias'] = 'uint8_t'
+    typeBool['llvm_alias'] = 'i1'
 
     typeNat8 = hlir_type_integer("Nat8", power=8, ti=None)
 
@@ -196,6 +195,7 @@ def eq_integer(a, b):
     return True
 
 
+
 def eq_char(a, b):
     if a['power'] != b['power']:
         return False
@@ -288,6 +288,7 @@ def eq(a, b):
     elif k == 'func': return eq_func(a, b)
     elif k == 'record': return eq_record(a, b)
     elif k == 'pointer': return eq_pointer(a, b)
+    elif k == 'Bool': return True
     elif k == 'array': return eq_array(a, b)
     elif k == 'float': return eq_float(a, b)
     elif k == 'char': return eq_char(a, b)
@@ -343,11 +344,9 @@ def is_numeric(t):
     return type_class_check(t, 'numeric')
 
 
-def is_logical(t):
-    return type_class_check(t, 'logical')
-
 def is_bool(t):
-    return type_class_check(t, 'logical')
+    return t['kind'] == 'Bool'
+
 
 def is_integer(t):
     return t['kind'] == 'int'

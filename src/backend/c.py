@@ -257,7 +257,7 @@ def print_type2(t, print_aka, need_space_after, _print_array_asis):
                 print_type2(t['aliasof'], print_aka=True, need_space_after=need_space_after)
 
     if USE_BOOLEAN:
-        if type.is_logical(t):
+        if type.is_bool(t):
             out("bool")
             if need_space_after:
                 out(" ")
@@ -390,7 +390,7 @@ def print_value_un(v, ctx):
     pv = precedence(value)
 
     if op == 'not':
-        if type.eq(value['type'], type.typeNat1):
+        if type.eq(value['type'], type.typeBool):
             op = 'logic_not'
 
     out(un_ops[op]); print_value(value, need_wrap=pv<p0)
@@ -796,7 +796,7 @@ def print_value_literal_int(x, ctx):
 
 
     if USE_BOOLEAN:
-        if type.is_logical(x['type']):
+        if type.is_bool(x['type']):
             if num: out("true")
             else: out("false")
             return
@@ -855,6 +855,7 @@ def print_value_literal(x, ctx):
     elif type.is_string(t): print_value_literal_str(x, ctx)
     elif type.is_pointer(t): print_value_literal_ptr(x, ctx)
     elif type.is_char(t): print_value_literal_char(x, ctx)
+    elif type.is_bool(t): print_value_literal_int(x, ctx)
     else: error("print_value_literal not implemented", x['ti'])
 
 

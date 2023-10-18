@@ -485,6 +485,7 @@ def print_value_literal(x, ctx):
     elif type.is_string(t): print_value_literal_str(x, ctx)
     elif type.is_free_pointer(t): out("nil")
     elif type.is_pointer(t): print_value_literal_int(x, ctx)
+    elif type.is_bool(t): print_value_literal_int(x, ctx)
     elif type.is_char(t): print_value_literal_char(x, ctx)
 
 

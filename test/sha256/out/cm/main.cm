@@ -41,7 +41,7 @@ const nTests = 2
 var sha256_tests : [nTests]*SHA256_TestData := [&test0 to *SHA256_TestData, &test1 to *SHA256_TestData]
 
 
-func sha256_doTest (test : *SHA256_TestData) -> Nat1 {
+func sha256_doTest (test : *SHA256_TestData) -> Bool {
     var test_hash : [sha256HashSize]Nat8
     sha256_doHash(&test.input to *[]Nat8, test.input_len, &test_hash to *[]Nat8)
 

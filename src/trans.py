@@ -212,8 +212,8 @@ def init():
 
 
     valueNil = hlir_value_int(0, typ=type.typeNil)
-    valueTrue = hlir_value_int(1, typ=type.typeNat1)
-    valueFalse = hlir_value_int(0, typ=type.typeNat1)
+    valueTrue = hlir_value_int(1, typ=type.typeBool)
+    valueFalse = hlir_value_int(0, typ=type.typeBool)
 
 
 
@@ -229,7 +229,7 @@ def init():
     root_context.type_add('Int64', type.typeInt64)
     root_context.type_add('Int128', type.typeInt128)
 
-    root_context.type_add('Nat1', type.typeNat1)
+    root_context.type_add('Bool', type.typeBool)
     root_context.type_add('Nat8', type.typeNat8)
     root_context.type_add('Nat16', type.typeNat16)
     root_context.type_add('Nat32', type.typeNat32)
@@ -256,7 +256,7 @@ def init():
 
     root_context.type_add('Pointer', type.typeFreePtr)
 
-    root_context.type_add('Bool', type.typeNat1)
+    root_context.type_add('Bool', type.typeBool)
 
 
     root_context.value_add('nil', valueNil)
@@ -559,7 +559,7 @@ def do_bin_op_with_pointers(k, l, r , ti):
             elif type.is_nil(r['type']):
                 r = value_cons_implicit(r, l['type'], ti)
 
-            return hlir_value_bin(k, l, r, type.typeNat1, ti)
+            return hlir_value_bin(k, l, r, type.typeBool, ti)
 
     from main import features
     if not features.get('unsafe'):
@@ -675,7 +675,7 @@ def do_value_bin_str_eq(k, l, r, ti):
         k = 'ne_str'
         bool_result = not bool_result
 
-    bin_value = hlir_value_bin(k, l, r, type.typeNat1, ti=ti)
+    bin_value = hlir_value_bin(k, l, r, type.typeBool, ti=ti)
     bin_value['imm'] = bool_result
     return bin_value
 
@@ -714,7 +714,7 @@ def do_value_bin(x):
 
 
     if k in ['eq', 'ne']:
-        type_result = type.typeNat1
+        type_result = type.typeBool
 
         if not type_class_check(l['type'], 'comparable'):
             error("expected value with comparable type", x['left']['ti'])
@@ -726,7 +726,7 @@ def do_value_bin(x):
 
     # < > <= >= only for values with 'ordered' type
     elif k in ['lt', 'gt', 'le', 'ge']:
-        type_result = type.typeNat1
+        type_result = type.typeBool
 
         if not type_class_check(l['type'], 'ordered'):
             error("expected value with ordered type", x['left']['ti'])
@@ -737,15 +737,15 @@ def do_value_bin(x):
             return hlir_value_bad(x['ti'])
 
     elif k in ['or', 'and', 'xor', 'add', 'sub', 'mul', 'div', 'rem']:
-        if not type_class_check(l['type'], 'numeric'):
+        if not type_class_check(l['type'], 'numeric') and not type.is_bool(l['type']):
             error("expected value with numeric type", x['left']['ti'])
             return hlir_value_bad(x['ti'])
 
-        if not type_class_check(r['type'], 'numeric'):
+        if not type_class_check(r['type'], 'numeric') and not type.is_bool(r['type']):
             error("expected value with numeric type", x['right']['ti'])
             return hlir_value_bad(x['ti'])
 
-    if type.eq(type_result, type.typeNat1):
+    if type.eq(type_result, type.typeBool):
         if k == 'or': k = 'logic_or'
         elif k == 'and': k = 'logic_and'
 
@@ -1201,8 +1201,8 @@ def do_stmt_if(x):
     if value_is_bad(c) or stmt_is_bad(t):
         return hlir_stmt_bad()
 
-    c = value_cons_implicit(c, type.typeNat1, c['ti'])
-    type.check(c['type'], type.typeNat1, x['cond']['ti'])
+    c = value_cons_implicit(c, type.typeBool, c['ti'])
+    type.check(c['type'], type.typeBool, x['cond']['ti'])
 
     e = None
     if x['else'] != None:
@@ -1220,8 +1220,8 @@ def do_stmt_while(x):
     if value_is_bad(c) or stmt_is_bad(s):
         return hlir_stmt_bad()
 
-    c = value_cons_implicit(c, type.typeNat1, c['ti'])
-    if not type.check(c['type'], type.typeNat1, x['cond']['ti']):
+    c = value_cons_implicit(c, type.typeBool, c['ti'])
+    if not type.check(c['type'], type.typeBool, x['cond']['ti']):
         return hlir_stmt_bad()
 
     return hlir_stmt_while(c, s, ti=x['ti'])

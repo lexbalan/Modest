@@ -220,6 +220,8 @@ def print_value(x):
         elif type.is_float(x['type']):
             out("%.1f" % (num))
 
+        elif type.is_bool(x['type']):
+            out(str(num))
         elif type.is_char(x['type']):
             out(str(num))
 
@@ -1084,6 +1086,8 @@ def do_eval_literal(x):
         return do_eval_record(x)
     elif type.is_array(x['type']):
         return do_eval_array(x)
+    elif type.is_bool(x['type']):
+        return ll_create_value_num(x['type'], x['imm'])
     #elif type.is_string(x['type']):
     #    return do_eval_str(x)
     elif type.is_free_pointer(x['type']):
@@ -1091,6 +1095,8 @@ def do_eval_literal(x):
     elif type.is_pointer(x['type']):
         return ll_create_value_num(x['type'], x['imm'])
     elif type.is_char(x['type']):
+        return ll_create_value_num(x['type'], x['imm'])
+    elif type.is_bool(x['type']):
         return ll_create_value_num(x['type'], x['imm'])
     else:
         value_print(x)
@@ -1160,6 +1166,7 @@ def do_eval_x(x):
     elif k == 'cast_generic': y = do_eval_expr_cast_generic(x)
     elif k == 'cast': y = do_eval_expr_cast(x)
     elif k == 'sizeof': y = do_eval_sizeof(x)
+    elif k == 'eq_str': y = do_eval_literal(x)
 #    elif k == 'add_str': y = do_eval_str(x)
     else:
         out("<%s>" % k)

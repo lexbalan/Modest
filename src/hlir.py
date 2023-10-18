@@ -64,6 +64,24 @@ def hlir_type_integer(name, power, ti):
     }
 
 
+def hlir_type_bool(ti):
+    return {
+        'isa': 'type',
+        'kind': 'Bool',
+        'name': 'Bool',
+        'generic': False,
+        'att': [],
+        'classes': ['comparable'],
+        'power': 1,
+        'size': 1,
+        # see types.py
+        #'c_alias': 'uint8_t',
+        #'llvm_alias': 'i1',
+        'ti': None
+    }
+
+
+
 def hlir_type_generic_char(power, ti):
     return {
         'isa': 'type',
