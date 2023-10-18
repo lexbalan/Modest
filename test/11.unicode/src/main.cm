@@ -47,9 +47,9 @@ func main () -> Int {
     utf32_puts("Hello 🐀!\n")
 
 
-    var str8: Str8 := string8Const
-    var str16: Str16 := string16Const
-    var str32: Str32 := string32Const
+    var str8: *Str8 := string8Const
+    var str16: *Str16 := string16Const
+    var str32: *Str32 := string32Const
 
     utf8_puts(str8)
     utf8_puts("\n")

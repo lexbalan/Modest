@@ -276,11 +276,11 @@ def init():
     typeSysNat['c_alias'] = 'unsigned int'
 
     if char_size == 8:
-        typeSysStr = type.typeStr8
+        typeSysStr = hlir_type_pointer(type.typeStr8)
     elif char_size == 16:
-        typeSysStr = type.typeStr16
+        typeSysStr = hlir_type_pointer(type.typeStr16)
     elif char_size == 32:
-        typeSysStr = type.typeStr32
+        typeSysStr = hlir_type_pointer(type.typeStr32)
 
     typeSysFloat = type.typeFloat64
 

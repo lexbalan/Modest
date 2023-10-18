@@ -78,7 +78,7 @@ extern func strcmp  (s1 : *ConstChar, s2 : *ConstChar) -> Int
 extern func strcpy  (dst : *Char, src : *ConstChar) -> *Char
 extern func strlen  (s : *ConstChar) -> SizeT
 
-//extern func mkdir (path : Str, mode : Mode_T) -> Int
+//extern func mkdir (path : *Str, mode : Mode_T) -> Int
 
 extern func ftruncate (fd : Int, size : OffT) -> Int
 
@@ -103,8 +103,8 @@ const s_IXUSR = 0x0000040   // X for owner
 
 
 @attribute("dispensable")
-extern func creat (path : Str, mode : ModeT) -> Int
-extern func open  (path : Str, oflags : Int) -> Int
+extern func creat (path : *Str, mode : ModeT) -> Int
+extern func open  (path : *Str, oflags : Int) -> Int
 @attribute("dispensable")
 extern func read  (fd : Int, buf : *Nat8, len : Nat32) -> Int
 @attribute("dispensable")
@@ -117,13 +117,13 @@ extern func exit  (rc : Int) -> Unit
 //extern func fstat (fd : Int, buf : *Stat) -> Int
 
 
-extern func opendir  (name : Str) -> *DIR
+extern func opendir  (name : *Str) -> *DIR
 extern func closedir (dir : *DIR) -> Int
 
 // current working directory
-extern func getcwd (buf : Str, size : SizeT) -> Str
+extern func getcwd (buf : *Str, size : SizeT) -> *Str
 
-extern func getenv (name : Str) -> Str
+extern func getenv (name : *Str) -> *Str
 
 
 

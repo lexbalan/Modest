@@ -62,7 +62,7 @@ func ff_memcpy (dst : Pointer, src : Pointer, len : Nat64) {
 }
 
 
-func ff_cstrlen(cstr : Str8) -> Nat64 {
+func ff_cstrlen(cstr : *Str8) -> Nat64 {
     var i := 0 to Nat64
     while cstr[i] != "\0"[0] {
         i := i + 1

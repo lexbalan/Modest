@@ -947,6 +947,7 @@ def do_eval_array(v):
 
     # теперь добавим паддинг нулевыми значениями
     fulllen = v['type']['volume']['imm']
+
     n_pad = fulllen - len(items)
     i = 0
     while i < n_pad:

@@ -51,7 +51,7 @@ func utf32_putchar(c : Char32) -> Unit {
 }
 
 
-func utf32_puts(s : Str32) -> Unit {
+func utf32_puts(s : *Str32) -> Unit {
     var i := 0
     while true {
         let c = s[i]
@@ -62,7 +62,7 @@ func utf32_puts(s : Str32) -> Unit {
 }
 
 
-func utf16_puts(s : Str16) -> Unit {
+func utf16_puts(s : *Str16) -> Unit {
     var i := 0
     while true {
         let c = s[i]
@@ -73,7 +73,7 @@ func utf16_puts(s : Str16) -> Unit {
 }
 
 
-func utf8_puts(s : Str8) -> Unit {
+func utf8_puts(s : *Str8) -> Unit {
     var i := 0
     while true {
         let c = s[i]

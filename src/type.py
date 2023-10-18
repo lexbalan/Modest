@@ -150,9 +150,9 @@ def type_init():
     typeGenericString['c_alias'] = 'const char *'
     typeGenericString['llvm_alias'] = 'i8*'
 
-    typeStr8 = hlir_type_pointer(hlir_type_array(of=typeChar8))
-    typeStr16 = hlir_type_pointer(hlir_type_array(of=typeChar16))
-    typeStr32 = hlir_type_pointer(hlir_type_array(of=typeChar32))
+    typeStr8 = (hlir_type_array(of=typeChar8))
+    typeStr16 = (hlir_type_array(of=typeChar16))
+    typeStr32 = (hlir_type_array(of=typeChar32))
 
 
     typeFreePtr = hlir_type_free_pointer(ti=None)
@@ -380,9 +380,8 @@ def is_record(t):
 def is_string(t):
     if t['kind'] == 'String':
         return True
-    if is_ptr_to_arr_of_char(t):
-        return is_char(t['to']['of'])
-    return False
+
+    return is_ptr_to_arr_of_char(t)
 
 
 

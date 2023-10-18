@@ -6,7 +6,7 @@ target triple = "arm64-apple-macosx12.0.0"
 
 
 
-%Str = type [0 x i8]*
+%Str = type [0 x i8]
 %Char = type i8
 %ConstChar = type i8
 %SignedChar = type i8
@@ -102,8 +102,8 @@ declare i32 @ftruncate(i32, i32)
 
 
 
-declare i32 @creat(%Str, i32)
-declare i32 @open(%Str, i32)
+declare i32 @creat(%Str*, i32)
+declare i32 @open(%Str*, i32)
 declare i32 @read(i32, i8*, i32)
 declare i32 @write(i32, i8*, i32)
 declare i32 @lseek(i32, i32, i32)
@@ -111,12 +111,12 @@ declare i32 @close(i32)
 declare void @exit(i32)
 
 
-declare %DIR* @opendir(%Str)
+declare %DIR* @opendir(%Str*)
 declare i32 @closedir(%DIR*)
 
 
-declare %Str @getcwd(%Str, i64)
-declare %Str @getenv(%Str)
+declare %Str* @getcwd(%Str*, i64)
+declare %Str* @getenv(%Str*)
 
 
 declare void @bzero(i8*, i64)

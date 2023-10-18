@@ -7,9 +7,9 @@ const genericIntConst = 42
 const int32Const = genericIntConst to Int32
 
 const genericStringConst = "Hello!"
-const string8Const = genericStringConst to Str8
-const string16Const = genericStringConst to Str16
-const string32Const = genericStringConst to Str32
+const string8Const = genericStringConst to *Str8
+const string16Const = genericStringConst to *Str16
+const string32Const = genericStringConst to *Str32
 
 
 type Point record {
@@ -38,7 +38,7 @@ func main () -> Int {
 	printf("genericIntConst = %d\n", genericIntConst)
 	printf("int32Const = %d\n", int32Const)
 
-	printf("genericStringConst = %s\n", genericStringConst)
+//	printf("genericStringConst = %s\n", genericStringConst)
 	printf("string8Const = %s\n", string8Const)
 
     return 0
