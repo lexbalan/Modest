@@ -48,12 +48,12 @@ def hlir_type_unit():
     }
 
 
-def hlir_type_integer(name, power, ti):
+def hlir_type_integer(name, power, generic=False, ti=None):
     return {
         'isa': 'type',
         'kind': 'int',
         'name': name,
-        'generic': False,
+        'generic': generic,
         'att': [],
         'classes': ['numeric', 'comparable', 'ordered'],
         'power': power,
@@ -172,10 +172,10 @@ def hlir_type_nil(ti):
 
 
 # size - always hlir_value (!)
-def hlir_type_array(of, volume=None, ti=None):
+def hlir_type_array(of, volume=None, generic=False, ti=None):
     return {
         'isa': 'type',
-        'generic': False,
+        'generic': generic,
         'kind': 'array',
         'volume': volume,
         'of': of,
@@ -200,11 +200,7 @@ def hlir_type_generic_str(ti=None):
 
 # used in shifts
 def hlir_type_generic_int_bits(nbits, ti=None):
-    # get custom generic int type
-    # generic int not signed, and not unsigned (!)
-    gen_int_type = hlir_type_integer('Integer', power=nbits, ti=ti)
-    gen_int_type['generic'] = True
-    return gen_int_type
+    return hlir_type_integer('Integer', power=nbits, generic=True, ti=ti)
 
 
 
