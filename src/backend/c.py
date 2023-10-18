@@ -229,6 +229,7 @@ def print_array_asis(t):
     print_type(t['of'], need_space_after=True)
     out("[")
     print_value(t['volume'])
+
     out("]")
 
 
@@ -613,6 +614,22 @@ def print_value_cast(x, ctx):
 
 def print_value_literal_arr(v, ctx):
 
+    value = v
+    if type.is_generic_string(value['type']):
+
+        print("LIT")
+        char_power = value['type']['of']['power']
+
+        prefix = "" #"u8"
+        if char_power > 16:
+            prefix = "U"
+        elif char_power > 8:
+            prefix = "u"
+
+        print_value_literal_str(value, ctx=[])#, prefix=prefix)
+        return
+
+
     #if not 'no-cast-literal-array' in v['att']:
     #if do_cast:
     if not 'no-literal-array-cast' in ctx:
@@ -852,7 +869,7 @@ def print_value_literal(x, ctx):
     elif type.is_float(t): print_value_literal_flt(x, ctx)
     elif type.is_record(t): print_value_literal_record(x, ctx)
     elif type.is_array(t): print_value_literal_arr(x, ctx)
-    elif type.is_string(t): print_value_literal_str(x, ctx)
+    #elif type.is_string(t): print_value_literal_str(x, ctx)
     elif type.is_pointer(t): print_value_literal_ptr(x, ctx)
     elif type.is_char(t): print_value_literal_char(x, ctx)
     elif type.is_bool(t): print_value_literal_int(x, ctx)

@@ -647,7 +647,10 @@ def value_strings_concat(l, r, ti):
     string = l['imm']['str'] + r['imm']['str']
     length = l['imm']['len'] + r['imm']['len']
     imm_str = hlir_string_imm(string, length)
-    bin_value = hlir_value_bin('add_str', l, r, type.typeGenericString, ti=ti)
+
+    genStrType = hlir_type_array(type.typeGenericChar, volume=length, generic=True, ti=ti)
+
+    bin_value = hlir_value_bin('add_str', l, r, genStrType, ti=ti)
     bin_value['imm'] = imm_str
     #module_strings_add(bin_value)
     return bin_value

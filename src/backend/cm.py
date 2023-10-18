@@ -324,7 +324,17 @@ def print_value_cast(v, ctx):
 
 
 
-def print_value_literal_array(v, ctx):
+def print_value_literal_arr(v, ctx):
+
+    value = v
+    if type.is_generic_string(value['type']):
+        print("LIT_CM")
+        print_value_literal_str(value, ctx=[])
+        return
+
+
+
+
     out("[")
     indent_up()
     #print_values(v['imm'], before=nl_indentation(INDENT_SYMBOL), after="", separator="")
@@ -481,8 +491,8 @@ def print_value_literal(x, ctx):
     if type.is_integer(t): print_value_literal_int(x, ctx)
     elif type.is_float(t): print_value_literal_flt(x, ctx)
     elif type.is_record(t): print_value_literal_record(x, ctx)
-    elif type.is_array(t): print_value_literal_array(x, ctx)
-    elif type.is_string(t): print_value_literal_str(x, ctx)
+    elif type.is_array(t): print_value_literal_arr(x, ctx)
+    #elif type.is_string(t): print_value_literal_str(x, ctx)
     elif type.is_free_pointer(t): out("nil")
     elif type.is_pointer(t): print_value_literal_int(x, ctx)
     elif type.is_bool(t): print_value_literal_int(x, ctx)

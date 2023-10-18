@@ -114,15 +114,18 @@ def value_cons_array(v, t, ti, method):
     from_type = v['type']
     to_type = t
 
+    # GenericString -> Array
+    if type.is_generic_string(from_type):
+        return value_cons_array_from_string(v, t, ti, method)
+
+
     # GenericArray -> Array
     if type.is_array(from_type):
         if type.is_generic(from_type):
             return value_cons_array_from_generic_array(v, t, ti, method)
         return value_cons_array_from_array(v, t, ti, method)
 
-    # GenericString -> Array
-    if type.is_generic_string(from_type):
-        return value_cons_array_from_string(v, t, ti, method)
+
 
     return None
 

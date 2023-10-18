@@ -1,7 +1,7 @@
 
 
 import copy
-from error import error, fatal
+from error import info, warning, error, fatal
 from hlir import *
 from util import get_item_with_id
 
@@ -24,6 +24,7 @@ typeFloat64 = None
 typeDecimal32 = None
 typeDecimal64 = None
 typeDecimal128 = None
+typeGenericChar = None
 typeChar8 = None
 typeChar16 = None
 typeChar32 = None
@@ -40,7 +41,7 @@ def type_init():
     global typeNat8, typeNat16, typeNat32, typeNat64, typeNat128
     global typeFloat16, typeFloat32, typeFloat64
     global typeDecimal32, typeDecimal64, typeDecimal128
-    global typeChar8, typeChar16, typeChar32
+    global typeGenericChar, typeChar8, typeChar16, typeChar32
     global typeGenericString, typeStr8, typeStr16, typeStr32
     global typeFreePtr, typeNil
 
@@ -130,6 +131,12 @@ def type_init():
     typeDecimal128['classes'].extend(['float', 'decimal'])
     typeDecimal128['c_alias'] = '_Decimal128'
     typeDecimal128['llvm_alias'] = 'double'
+
+
+    typeGenericChar = hlir_type_generic_char(power=32, ti=None)
+    typeGenericChar['cm_alias'] = 'Char'
+    typeGenericChar['c_alias'] = 'char'
+    typeGenericChar['llvm_alias'] = 'i8'
 
 
     typeChar8 = hlir_type_char("Char8", power=8, ti=None)
@@ -325,6 +332,9 @@ def is_bad(t):
 
 
 def is_generic(t):
+    if not 'generic' in t:
+        print(t)
+
     return t['generic']
 
 
@@ -412,8 +422,19 @@ def is_generic_record(t):
     return is_generic(t) and is_record(t)
 
 
+def is_generic_array(t):
+    return is_generic(t) and is_array(t)
+
+
 def is_generic_string(t):
-    return t['kind'] == 'String'
+    if not is_generic_array(t):
+        return False
+
+    if t['of'] != None: #!
+        return is_generic_char(t['of'])
+
+    return False
+
 
 
 def is_pointer(t):

@@ -82,7 +82,7 @@ def hlir_type_bool(ti):
 
 
 
-def hlir_type_generic_char(power, ti):
+def hlir_type_generic_char(power, ti=None):
     return {
         'isa': 'type',
         'kind': 'char',
@@ -312,13 +312,17 @@ def hlir_string_imm(string, length):
 
 
 def hlir_value_generic_str(string, length, ti=None):
-    typ = type.typeGenericString
+    genStrType = hlir_type_array(type.typeGenericChar, volume=length, generic=True, ti=ti)
+
     imm = hlir_string_imm(string, length)
-    return hlir_value_literal(typ, imm, ti)
+    items = imm
+
+    return hlir_value_literal(genStrType, items, ti)
 
 
 
-def hlir_value_array(items, is_generic=False, type=None, ti=None):
+
+def hlir_value_array(items, type=None, is_generic=False, ti=None):
 
     if type == None:
         length = len(items)
