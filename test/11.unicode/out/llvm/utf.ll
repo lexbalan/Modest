@@ -214,7 +214,7 @@ then_0:
     br label %break_1
     br label %endif_0
 endif_0:
-    %8 = sext i8 %4 to i32
+    %8 = bitcast i32 %c to i32
     %9 = call i32(i32) @putchar (i32 %8)
     %10 = load i32, i32* %i
     %11 = add i32 %10, 1

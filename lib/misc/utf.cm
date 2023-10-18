@@ -4,34 +4,34 @@ import "libc/stdio.hm"
 
 
 // декодирует символ UTF-32 в последовательность UTF-8
-func utf32_to_utf8 (c: Char32, buf: *[5]Char8) -> Unit {
+func utf32_to_utf8(c: Char32, buf: *[5]Char8) -> Unit {
     let x = c to Nat32
     if x <= 0x0000007F {
         buf[0] := x to Char8
         buf[1] := 0 to Char8
     } else if x <= 0x000007FF {
-        let a = (x >> 6) and 0x1F
-        let b = (x >> 0) and 0x3F
-        buf[0] := (0xC0 or a) to Char8
-        buf[1] := (0x80 or b) to Char8
+        let c0 = (x >> 6) and 0x1F
+        let c1 = (x >> 0) and 0x3F
+        buf[0] := (0xC0 or c0) to Char8
+        buf[1] := (0x80 or c1) to Char8
         buf[2] := 0 to Char8
     } else if x <= 0x0000FFFF {
-        let a = (x >> 12) and 0x0F
-        let b = (x >> 06) and 0x3F
-        let c = (x >> 00) and 0x3F
-        buf[0] := (0xE0 or a) to Char8
-        buf[1] := (0x80 or b) to Char8
-        buf[2] := (0x80 or c) to Char8
+        let c0 = (x >> 12) and 0x0F
+        let c1 = (x >> 06) and 0x3F
+        let c2 = (x >> 00) and 0x3F
+        buf[0] := (0xE0 or c0) to Char8
+        buf[1] := (0x80 or c1) to Char8
+        buf[2] := (0x80 or c2) to Char8
         buf[3] := 0 to Char8
     } else if x <= 0x0010FFFF {
-        let a = (x >> 18) and 0x07
-        let b = (x >> 12) and 0x3F
-        let c = (x >> 06) and 0x3F
-        let d = (x >> 00) and 0x3F
-        buf[0] := (0xF0 or a) to Char8
-        buf[1] := (0x80 or b) to Char8
-        buf[2] := (0x80 or c) to Char8
-        buf[3] := (0x80 or d) to Char8
+        let c0 = (x >> 18) and 0x07
+        let c1 = (x >> 12) and 0x3F
+        let c2 = (x >> 06) and 0x3F
+        let c3 = (x >> 00) and 0x3F
+        buf[0] := (0xF0 or c0) to Char8
+        buf[1] := (0x80 or c1) to Char8
+        buf[2] := (0x80 or c2) to Char8
+        buf[3] := (0x80 or c3) to Char8
         buf[4] := 0 to Char8
     }
 }
@@ -43,8 +43,8 @@ func utf32_putchar(c: Char32) -> Unit {
 
     var i := 0
     while true {
-        let c = decoded_buf[i]
-        if c to Nat8 == 0 {break}
+        let c2 = decoded_buf[i]
+        if c2 to Nat8 == 0 {break}
         putchar(c to Int32)
         i := i + 1
     }

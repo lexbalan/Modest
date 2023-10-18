@@ -15,28 +15,28 @@ void utf32_to_utf8(uint32_t c, char *buf)
         buf[0] = (char)x;
         buf[1] = (char)0;
     } else if (x <= 0x000007FF) {
-        const uint32_t a = x >> 6 & 0x1F;
-        const uint32_t b = x >> 0 & 0x3F;
-        buf[0] = (char)(0xC0 | a);
-        buf[1] = (char)(0x80 | b);
+        const uint32_t c0 = x >> 6 & 0x1F;
+        const uint32_t c1 = x >> 0 & 0x3F;
+        buf[0] = (char)(0xC0 | c0);
+        buf[1] = (char)(0x80 | c1);
         buf[2] = (char)0;
     } else if (x <= 0x0000FFFF) {
-        const uint32_t a = x >> 12 & 0x0F;
-        const uint32_t b = x >> 6 & 0x3F;
-        const uint32_t c = x >> 0 & 0x3F;
-        buf[0] = (char)(0xE0 | a);
-        buf[1] = (char)(0x80 | b);
-        buf[2] = (char)(0x80 | c);
+        const uint32_t c0 = x >> 12 & 0x0F;
+        const uint32_t c1 = x >> 6 & 0x3F;
+        const uint32_t c2 = x >> 0 & 0x3F;
+        buf[0] = (char)(0xE0 | c0);
+        buf[1] = (char)(0x80 | c1);
+        buf[2] = (char)(0x80 | c2);
         buf[3] = (char)0;
     } else if (x <= 0x0010FFFF) {
-        const uint32_t a = x >> 18 & 0x07;
-        const uint32_t b = x >> 12 & 0x3F;
-        const uint32_t c = x >> 6 & 0x3F;
-        const uint32_t d = x >> 0 & 0x3F;
-        buf[0] = (char)(0xF0 | a);
-        buf[1] = (char)(0x80 | b);
-        buf[2] = (char)(0x80 | c);
-        buf[3] = (char)(0x80 | d);
+        const uint32_t c0 = x >> 18 & 0x07;
+        const uint32_t c1 = x >> 12 & 0x3F;
+        const uint32_t c2 = x >> 6 & 0x3F;
+        const uint32_t c3 = x >> 0 & 0x3F;
+        buf[0] = (char)(0xF0 | c0);
+        buf[1] = (char)(0x80 | c1);
+        buf[2] = (char)(0x80 | c2);
+        buf[3] = (char)(0x80 | c3);
         buf[4] = (char)0;
     }
 }
@@ -49,8 +49,8 @@ void utf32_putchar(uint32_t c)
 
     int32_t i = (int32_t)0;
     while (true) {
-        const char c = decoded_buf[i];
-        if ((uint8_t)c == 0) {break;}
+        const char c2 = decoded_buf[i];
+        if ((uint8_t)c2 == 0) {break;}
         putchar((int32_t)c);
         i = i + 1;
     }
