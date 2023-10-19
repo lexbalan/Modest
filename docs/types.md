@@ -57,7 +57,7 @@ b := false
 while not b {
     b := check_condition()
 }
-...
+
 ```
 
 
@@ -182,9 +182,12 @@ type Str32 = []Char32
 *Usage example:*
 ```rust
 var s : *Str8
+
 s := "Hello World!\n"
+
 printf(s)
 ```
+
 > Result: `Hello World!`
 
 
@@ -197,7 +200,8 @@ record {x: Float64, y: Float64}
 
 *Usage example:*
 ```rust
-
+// it is good idea to use type definition statement
+// for bind identifier to record type  
 type Point record {
     x : Float64
     y : Float64
