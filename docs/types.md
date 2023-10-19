@@ -4,7 +4,6 @@
 ## Type Classes
 
 ```
-generic     // it's a generic type
 logical     // supports '==', '!=', 'or', 'and', 'xor', 'not'
 comparable  // supports  '==' & '!='
 ordered     // supports '<', '>', '<=', '>='
@@ -39,6 +38,9 @@ func no_return_func () -> Unit {
 Bool type is logical type with only two values true & false.
 Result of [==, !=, <, >, <=, >=] operations have Bool type.
 There is two built-in values with bool type: *true* and *false*
+
+> Classes: logical
+
 ```javascript
 var b: Bool
 b := false
@@ -49,6 +51,8 @@ while not b {
 
 
 ### Integer types
+
+> Classes: numeric, comparable, ordered
 
 Signed integer types
 ```javascript
@@ -62,6 +66,9 @@ Nat8, Nat16, Nat32, Nat64, Nat128
 
 
 ### Float types
+
+> Classes: numeric, comparable, ordered
+
 Float types
 ```javascript
 Float32, Float64, Float128
@@ -69,6 +76,9 @@ Float32, Float64, Float128
 
 
 ### Char type
+
+> Classes: comparable
+
 Char types
 ```javascript
 Char8, Char16, Char32
