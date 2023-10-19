@@ -26,7 +26,7 @@ def cons_default(x, ti):
         return value_cons_integer(x, typeSysInt, ti, method='implicit')
 
     elif type.is_generic_string(from_type):
-        return value_cons_ptr_to_string_from_generic_string(x, typeSysStr, ti, method='implicit')
+        return cons_ptr_to_string_from_generic_string(x, typeSysStr, ti, method='implicit')
 
     elif type.is_float(from_type):
         return value_cons_float(x, typeSysFloat, ti, method='implicit')
@@ -166,7 +166,7 @@ def value_cons_float(v, t, ti, method):
 
 
 
-def value_cons_ptr_to_string_from_generic_string(v, t, ti, method):
+def cons_ptr_to_string_from_generic_string(v, t, ti, method):
     nv = value_cons_generic(v, t, ti=ti)
     nv['att'].append("string-cons")
     from trans import module_strings_add
@@ -189,7 +189,7 @@ def value_cons_pointer(v, t, ti, method):
     # GenericString -> (*[]CharX | *CharX)
     elif type.is_generic_string(vtype):
         if type.is_ptr_to_arr_of_char(to_type) or type.is_ptr_to_char(to_type):
-            nv = value_cons_ptr_to_string_from_generic_string(v, t, ti, method)
+            nv = cons_ptr_to_string_from_generic_string(v, t, ti, method)
 
 
     # *[n]X -> *[]X
