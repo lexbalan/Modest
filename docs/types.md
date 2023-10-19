@@ -15,28 +15,34 @@ numeric     // supports '+', '-', '*', '/', '%', 'or', 'and', 'xor', 'not'
 
 Generic type - compile time type, that must be *implicit* casted to real types for using in runtime.
 
-1) GenericInteger - type of any integral literal: `0, 1, 2, ...`
-2) GenericFloat - type of any floating point literal: `0.5, 2.7, 3.14, ...`
-3) GenericChar - type of any char literal: `"a"[0], "b"[0], ...`
-4) GenericArray - type of any array literal: `[1, 2, 3], ...`
-4) GenericRecord - type of any record literal: `{x=1, y=2, z=3}, ...`
+1) **GenericInteger** - type of any integral literal: `0, 1, 2, ...`
+2) **GenericFloat** - type of any floating point literal: `0.5, 2.7, 3.14, ...`
+3) **GenericChar** - type of any char literal: `"a"[0], "b"[0], ...`
+4) **GenericArray** - type of any array literal: `[1, 2, 3], ...`
+4) **GenericRecord** - type of any record literal: `{x=1, y=2, z=3}, ...`
 
 
 ## Real types
 
 
 #### Unit type
-Unit type is an analog of *void* type in C language.
+*Unit* type is an analog of `void` type in C language.
 It used to indicate that function have no return value
 ```swift
 func no_return_func () -> Unit {
 }
 ```
+Also, you can construct *Unit* value from not used function parameter to prevent error message:
+```swift
+func just (not_used_param: Int32) -> Unit {
+    not_used_param to Unit
+}
+```
 
 
 #### Bool type
-Bool type is logical type with only two values true & false.
-Result of [==, !=, <, >, <=, >=] operations have Bool type.
+*Bool* type is logical type with only two values `true` & `false`.
+Result of `==, !=, <, >, <=, >=` operations have *Bool* type.
 There is two built-in values with bool type: *true* and *false*
 
 > Classes: logical
