@@ -6,8 +6,10 @@ from hlir import *
 from util import float_align
 from .value import *
 
+from .unit import value_cons_unit
 from .char import value_cons_char
 from .integer import value_cons_integer
+from .float import value_cons_float
 from .record import value_cons_record
 from .array import value_cons_array
 from .pointer import value_cons_pointer, cons_ptr_to_string_from_generic_string
@@ -53,54 +55,6 @@ def value_cons_generic(v, t, ti):
 
     return nv
 
-
-
-
-
-def value_cons_float(v, t, ti, method):
-    vt = v['type']
-
-    nv = None
-
-    if type.is_generic(vt):
-        if type.is_integer(vt) or type.is_float(vt):
-            # (GenericInt or GenericFloat) -> Float
-            nv = value_cons_generic(v, t, ti)
-            nv['imm'] = float_align(nv['imm'], t['power'])
-            return nv
-
-
-    if method != 'explicit':
-        info("cannot implicit cons Float value", ti)
-
-
-    if type.is_float(vt):
-        # Float -> Float
-        nv = hlir_value_cast(v, t, ti=ti)
-
-        if value_is_immediate(v):
-            nv['imm'] = v['imm']
-
-    elif type.is_integer(vt):
-        # Int -> Float
-        nv = hlir_value_cast(v, t, ti=ti)
-
-        if value_is_immediate(v):
-            nv['imm'] = v['imm']
-
-
-    return nv
-
-
-
-
-
-
-def value_cons_unit(v, t, ti, method):
-    if method != 'explicit':
-        return None
-
-    return hlir_value_cast(v, t, ti=ti)
 
 
 
