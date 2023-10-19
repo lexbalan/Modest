@@ -22,7 +22,7 @@ numeric     // supports '+', '-', '*', '/', '%', 'or', 'and', 'xor', 'not'
 4) **GenericRecord** - type of record literal: `{x=1, y=2, z=3}, ...`
 
 
-## Real types
+## Real types *(non-generic)*
 
 
 #### Unit type
