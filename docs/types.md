@@ -150,7 +150,6 @@ while i < 5 {
 // print array in cycle
 i := 0
 while i < 5 {
-    a[i] := i * 10
     printf("a[%d] = %d\n", i, a[i])
     i := i + 1
 }
