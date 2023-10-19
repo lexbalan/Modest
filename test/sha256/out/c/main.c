@@ -14,10 +14,10 @@
 
 
 
-typedef char InputString[32];
+typedef char TestInputString[32];
 
 typedef struct {
-    InputString input;
+    TestInputString input;
     uint32_t input_len;
     uint8_t output[32];
 } SHA256_TestData;
@@ -59,7 +59,7 @@ bool sha256_doTest(SHA256_TestData *test)
 
     printf(" -> ");
 
-    int32_t i = (int32_t)0;
+    int i = 0;
     while (i < sha256HashSize) {
         printf("%02X", test_hash[i]);
         i = i + 1;
@@ -67,22 +67,16 @@ bool sha256_doTest(SHA256_TestData *test)
 
     printf("\n");
 
-
     const bool is_eq = memcmp((void *)&test->output[0], (void *)&test_hash[0], sha256HashSize) == 0;
-
     return is_eq;
 }
-
-
-//var test_msg : [13]Char8 := "Hello World!"
-//var test_hash : [sha256HashSize]Nat8
 
 
 int main(void)
 {
     printf("test SHA256\n");
 
-    int32_t i = (int32_t)0;
+    int i = 0;
     while (i < nTests) {
         SHA256_TestData *const test = sha256_tests[i];
         const bool test_result = sha256_doTest((SHA256_TestData *)test);

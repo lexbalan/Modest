@@ -10,6 +10,7 @@ func utf32_to_utf8(c: Char32, buf: *[5]Char8) -> Nat8 {
     if x <= 0x0000007F {
         buf[0] := x to Char8
         buf[1] := 0 to Char8
+        return 2
 
     } else if x <= 0x000007FF {
         let c0 = (x >> 6) and 0x1F
@@ -17,6 +18,7 @@ func utf32_to_utf8(c: Char32, buf: *[5]Char8) -> Nat8 {
         buf[0] := (0xC0 or c0) to Char8
         buf[1] := (0x80 or c1) to Char8
         buf[2] := 0 to Char8
+        return 3
 
     } else if x <= 0x0000FFFF {
         let c0 = (x >> 12) and 0x0F
@@ -26,6 +28,7 @@ func utf32_to_utf8(c: Char32, buf: *[5]Char8) -> Nat8 {
         buf[1] := (0x80 or c1) to Char8
         buf[2] := (0x80 or c2) to Char8
         buf[3] := 0 to Char8
+        return 4
 
     } else if x <= 0x0010FFFF {
         let c0 = (x >> 18) and 0x07
@@ -37,7 +40,10 @@ func utf32_to_utf8(c: Char32, buf: *[5]Char8) -> Nat8 {
         buf[2] := (0x80 or c2) to Char8
         buf[3] := (0x80 or c3) to Char8
         buf[4] := 0 to Char8
+        return 5
     }
+
+    return 0
 }
 
 

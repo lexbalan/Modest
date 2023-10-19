@@ -14,6 +14,31 @@ no_warning_cast_data_loss = False
 
 
 
+def cons_default(x, ti):
+    from trans import typeSysInt, typeSysStr, typeSysFloat
+
+    from_type = x['type']
+
+    if not type.is_generic(from_type):
+        return x
+
+    if type.is_integer(from_type):
+        return value_cons_integer(x, typeSysInt, ti, method='implicit')
+
+    elif type.is_generic_string(from_type):
+        return value_cons_ptr_to_string_from_generic_string(x, typeSysStr, ti, method='implicit')
+
+    elif type.is_float(from_type):
+        return value_cons_float(x, typeSysFloat, ti, method='implicit')
+
+    else:
+        fatal("unimplemented cons_default case")
+
+    return hlir_value_bad(ti)
+
+
+
+
 def value_cons_char(v, t, ti, method):
     # implicit casts
     if type.is_generic_char(v['type']):
@@ -139,6 +164,18 @@ def value_cons_float(v, t, ti, method):
 
 
 
+
+
+def value_cons_ptr_to_string_from_generic_string(v, t, ti, method):
+    nv = value_cons_generic(v, t, ti=ti)
+    nv['att'].append("string-cons")
+    from trans import module_strings_add
+    module_strings_add(nv)
+    return nv
+
+
+
+
 def value_cons_pointer(v, t, ti, method):
     vtype = v['type']
     to_type = t
@@ -152,11 +189,7 @@ def value_cons_pointer(v, t, ti, method):
     # GenericString -> (*[]CharX | *CharX)
     elif type.is_generic_string(vtype):
         if type.is_ptr_to_arr_of_char(to_type) or type.is_ptr_to_char(to_type):
-
-            nv = value_cons_generic(v, t, ti=ti)
-            nv['att'].append("string-cons")
-            from trans import module_strings_add
-            module_strings_add(nv)
+            nv = value_cons_ptr_to_string_from_generic_string(v, t, ti, method)
 
 
     # *[n]X -> *[]X

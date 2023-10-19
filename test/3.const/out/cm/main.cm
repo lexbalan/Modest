@@ -33,7 +33,7 @@ var points2 : [3]Point := points
 func main () -> Int {
     printf("test const\n")
 
-    printf("genericIntConst = %d\n", genericIntConst to Int32)
+    printf("genericIntConst = %d\n", genericIntConst)
     printf("int32Const = %d\n", int32Const)
 
     //	printf("genericStringConst = %s\n", genericStringConst)

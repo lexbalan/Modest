@@ -12,7 +12,7 @@ def is_local_context():
 
 
 from value.value import *
-from value.cons import value_cons_generic, value_cons_implicit, value_cons_explicit
+from value.cons import value_cons_generic, value_cons_implicit, value_cons_explicit, cons_default
 
 from frontend.parser import Parser
 from symtab import Symtab
@@ -177,6 +177,7 @@ def stmt_is_bad(x):
 typeSysInt = None
 typeSysNat = None
 typeSysStr = None
+typeSysChar = None
 typeSysFloat = None
 
 # for target arch
@@ -185,7 +186,6 @@ int_size = 0    # sizeof(int)
 ptr_size = 0    # sizeof(int *)
 flt_size = 0    # sizeof(float)
 lib_path = ""
-
 
 
 valueNil = None
@@ -267,7 +267,7 @@ def init():
     # Set taget depended Int & Nat types
     # (used in index, extra agrs & generic numeric var definitions)
 
-    global typeSysInt, typeSysNat, typeSysStr, typeSysFloat
+    global typeSysInt, typeSysNat, typeSysFloat, typeSysChar, typeSysStr
 
     typeSysInt = type.type_copy(select_int(int_size))
     typeSysInt['c_alias'] = 'int'
@@ -275,12 +275,13 @@ def init():
     typeSysNat = type.type_copy(select_nat(int_size))
     typeSysNat['c_alias'] = 'unsigned int'
 
-    if char_size == 8:
-        typeSysStr = hlir_type_pointer(type.typeStr8)
-    elif char_size == 16:
-        typeSysStr = hlir_type_pointer(type.typeStr16)
-    elif char_size == 32:
-        typeSysStr = hlir_type_pointer(type.typeStr32)
+    typeSysChar
+
+    if char_size == 8: typeSysChar = type.typeChar8
+    elif char_size == 16: typeSysChar = type.typeChar16
+    elif char_size == 32: typeSysChar = type.typeChar32
+
+    typeSysStr = hlir_type_pointer(hlir_type_array(typeSysChar, volume=None))
 
     typeSysFloat = type.typeFloat64
 
@@ -306,38 +307,6 @@ def do_field(x, is_last=False):
         f['nl'] = 0
     return f
 
-
-
-def cons_default(x, ti):
-    from_type = x['type']
-
-    if not type.is_generic(from_type):
-        return x
-
-    if type.is_integer(from_type):
-        # select type for default implementation of generic numeric
-        req_sz = from_type['power']
-        if req_sz < 32:
-            req_sz = int_size
-
-        t = type.select_int(req_sz)
-        return hlir_value_cast(x, t, ti)
-
-    elif type.is_generic_string(from_type):
-        print("cons_default is_generic_string")
-        nv = value_cons_generic(x, typeSysStr, ti=ti)
-        nv['att'].append("string-cons")
-        module_strings_add(nv)
-        return nv
-
-    elif type.is_float(from_type):
-        return hlir_value_cast(x, typeSysFloat, ti)
-
-    else:
-        fatal("unimplemented cons_default case")
-
-
-    return hlir_value_bad(ti)
 
 
 
@@ -670,7 +639,6 @@ def value_strings_concat(l, r, ti):
 
     bin_value = hlir_value_bin('add_str', l, r, genStrType, ti=ti)
     bin_value['imm'] = imm_str
-    #module_strings_add(bin_value)
     return bin_value
 
 

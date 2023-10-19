@@ -39,7 +39,7 @@ int main(void)
 {
     printf("test const\n");
 
-    printf("genericIntConst = %d\n", (int32_t)genericIntConst);
+    printf("genericIntConst = %d\n", genericIntConst);
     printf("int32Const = %d\n", int32Const);
 
     //	printf("genericStringConst = %s\n", genericStringConst)

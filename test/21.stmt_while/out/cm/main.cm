@@ -5,7 +5,7 @@ import "libc/stdio.h"
 func main () -> Int {
     printf("test stmt_while\n")
 
-    var a : Int32 := 0 to Int32
+    var a : Int32 := 0
     let b = 10
 
     while a < b {

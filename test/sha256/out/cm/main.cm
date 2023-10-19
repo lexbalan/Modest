@@ -5,10 +5,10 @@ import "misc/sha256.h"
 
 
 
-type InputString [32]Char8
+type TestInputString [32]Char8
 
 type SHA256_TestData record {
-    input : InputString
+    input : TestInputString
     input_len : Nat32
     output : [32]Nat8
 }
@@ -49,7 +49,7 @@ func sha256_doTest (test : *SHA256_TestData) -> Bool {
 
     printf(" -> ")
 
-    var i : Int32 := 0 to Int32
+    var i : Int32 := 0
     while i < sha256HashSize {
         printf("%02X", test_hash[i])
         i := i + 1
@@ -57,21 +57,15 @@ func sha256_doTest (test : *SHA256_TestData) -> Bool {
 
     printf("\n")
 
-
     let is_eq = memcmp(&test.output, &test_hash, sha256HashSize) == 0
-
     return is_eq
 }
-
-
-//var test_msg : [13]Char8 := "Hello World!"
-//var test_hash : [sha256HashSize]Nat8
 
 
 func main () -> Int {
     printf("test SHA256\n")
 
-    var i : Int32 := 0 to Int32
+    var i : Int32 := 0
     while i < nTests {
         let test = sha256_tests[i]
         let test_result = sha256_doTest(test to *SHA256_TestData)

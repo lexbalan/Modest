@@ -11,7 +11,7 @@ int main(void)
 {
     printf("test stmt_while\n");
 
-    int32_t a = (int32_t)0;
+    int a = 0;
     const uint8_t b = 10;
 
     while (a < b) {

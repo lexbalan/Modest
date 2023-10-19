@@ -128,11 +128,10 @@ declare void @perror(%ConstCharStr*)
 
 define i32 @main() {
     %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str4.c8)
-    %2 = sext i6 42 to i32
-    %3 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str5.c8, i32 %2)
-    %4 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str6.c8, i32 42)
+    %2 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str5.c8, i32 42)
+    %3 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str6.c8, i32 42)
 ;	printf("genericStringConst = %s\n", genericStringConst)
-    %5 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str7.c8, [0 x i8]* @str1.c8)
+    %4 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str7.c8, [0 x i8]* @str1.c8)
     ret i32 0
 }
 

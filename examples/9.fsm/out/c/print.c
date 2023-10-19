@@ -27,7 +27,7 @@ void ff_print_hex_n32(uint32_t x, uint8_t a)
     uint8_t buf[8];
     ff_memzero((void *)&buf[0], 8);
     uint32_t msk = 0xF;
-    int32_t i = (int32_t)0;
+    int i = 0;
     while (i < 8) {
         const uint32_t n = (x & msk) >> (i * 4);
         buf[i] = n2hex_digit((uint8_t)n, a);
@@ -51,7 +51,7 @@ void ff_print_hex_n64(uint64_t x, uint8_t a)
     uint8_t buf[16];
     ff_memzero((void *)&buf[0], 16);
     uint64_t msk = 0xF;
-    int32_t i = (int32_t)0;
+    int i = 0;
     while (i < 16) {
         const uint64_t n = (x & msk) >> (i * 4);
         buf[i] = n2hex_digit((uint8_t)n, a);
@@ -75,7 +75,7 @@ void ff_print_hex_n128(unsigned __int128 x, uint8_t a)
     uint8_t buf[32];
     ff_memzero((void *)&buf[0], 32);
     unsigned __int128 msk = 0xF;
-    int32_t i = (int32_t)0;
+    int i = 0;
     while (i < 32) {
         const unsigned __int128 n = (x & msk) >> (i * 4);
         buf[i] = n2hex_digit((uint8_t)n, a);

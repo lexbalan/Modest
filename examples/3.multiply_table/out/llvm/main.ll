@@ -99,30 +99,28 @@ declare void @perror(%ConstCharStr*)
 define void @mtab(i32 %n) {
 ;var m : Nat32
 ;m := 1
-    %1 = sext i1 1 to i32
     %m = alloca i32
-    store i32 %1, i32* %m
+    store i32 1, i32* %m
     br label %again_1
 again_1:
-    %2 = load i32, i32* %m
-    %3 = icmp slt i32 %2, 10
-    br i1 %3 , label %body_1, label %break_1
+    %1 = load i32, i32* %m
+    %2 = icmp slt i32 %1, 10
+    br i1 %2 , label %body_1, label %break_1
 body_1:
-    %4 = load i32, i32* %m
-    %5 = mul i32 %n, %4
-    %6 = load i32, i32* %m
-    %7 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str1.c8, i32 %n, i32 %6, i32 %5)
-    %8 = load i32, i32* %m
-    %9 = add i32 %8, 1
-    store i32 %9, i32* %m
+    %3 = load i32, i32* %m
+    %4 = mul i32 %n, %3
+    %5 = load i32, i32* %m
+    %6 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str1.c8, i32 %n, i32 %5, i32 %4)
+    %7 = load i32, i32* %m
+    %8 = add i32 %7, 1
+    store i32 %8, i32* %m
     br label %again_1
 break_1:
     ret void
 }
 
 define i32 @main() {
-    %1 = sext i3 4 to i32
-    %2 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str2.c8, i32 %1)
+    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str2.c8, i32 4)
     call void(i32) @mtab (i32 4)
     ret i32 0
 }
