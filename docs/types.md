@@ -90,10 +90,7 @@ Float32, Float64, Float128
 
 > Classes: *comparable*
 
-Char types
-```javascript
-Char8, Char16, Char32
-```
+There is three char types: `Char8`, `Char16`, `Char32`.
 
 *Usage example:*
 
