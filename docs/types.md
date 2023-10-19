@@ -90,24 +90,42 @@ Char types
 Char8, Char16, Char32
 ```
 
+```rust
+var a : Char8
+var b : Char8
+a := "a"[0]
+b := "b"[0]
+
+if a == b {
+    printf("'a' == 'b'\n")
+} else {
+    printf("'a' != 'b'\n")
+}
+```
+
+> Result: `'a' != 'b'`
+
+
 
 #### Array types
 There is *defined* arrays:
 ```javascript
-[10]Int32  // array with ten elements of Int32
-[16]Char8  // array with sixteen elements of Char8
+[10]Int32  // array with ten Int32 elements
+[16]Char8  // array with sixteen Char8 elements
+...
 ```
 And *undefined* arrays:
 ```javascript
-[]Int32  // array with unknown amount elements of Int32
-[]Char8  // array with unknown amount elements of Char8
+[]Int32  // array with unknown amount of Int32 elements
+[]Char8  // array with unknown amount of Char8 elements
+...
 ```
 You can't create variable of undefined array, but you can create pointer to it
 ```javascript
-// creating two variables
-// with type pointer to undefined array
-var a: *[]Int32
-var s: *[]Char8
+// creating two variables with type
+var a: *[]Int32  // pointer to undefined array of Int32
+var s: *[]Char8  // pointer to undefined array of Char8
+...
 ```
 
 ##### String types
