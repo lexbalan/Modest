@@ -133,7 +133,42 @@ var s: *[]Char8  // pointer to undefined array of Char8
 ...
 ```
 
-##### String types
+*Usage example:*
+```rust
+
+var a : [5]Int32
+
+var i : Int32
+
+// fill array in cycle
+i := 0
+while i < 5 {
+    a[i]: = i * 10
+    i := i + 1
+}
+
+// print array in cycle
+i := 0
+while i < 5 {
+    a[i] := i * 10
+    printf("a[%d] = %d\n", i, a[i])
+    i := i + 1
+}
+
+```
+
+> Result:
+`a[0] = 0`
+`a[1] = 10`
+`a[2] = 20`
+`a[3] = 30`
+`a[4] = 40`
+`a[5] = 50`
+
+
+
+
+###### String types
 String types are builtin aliases of `[]Char8`, `[]Char16`, `[]Char32`
 ```rust
 // (Built-in types!)
