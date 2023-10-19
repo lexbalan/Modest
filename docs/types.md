@@ -5,7 +5,7 @@
 
 ```
 logical     // supports '==', '!=', 'or', 'and', 'xor', 'not'
-comparable  // supports  '==', '!='
+comparable  // supports '==', '!='
 ordered     // supports '<', '>', '<=', '>='
 numeric     // supports '+', '-', '*', '/', '%', 'or', 'and', 'xor', 'not'
 ```
@@ -45,22 +45,25 @@ func just (not_used_param: Int32) -> Unit {
 Result of `==, !=, <, >, <=, >=` operations have *Bool* type.
 There is two built-in values with bool type: *true* and *false*
 
-> Classes: logical
+> Classes: *logical*
 
 *Usage example:*
 
 ```javascript
 var b: Bool
+
 b := false
+
 while not b {
     b := check_condition()
 }
+...
 ```
 
 
 #### Integer types
 
-> Classes: numeric, comparable, ordered
+> Classes: *numeric*, *comparable*, *ordered*
 
 Signed integer types
 ```javascript
@@ -75,7 +78,7 @@ Nat8, Nat16, Nat32, Nat64, Nat128
 
 #### Float types
 
-> Classes: numeric, comparable, ordered
+> Classes: *numeric*, *comparable*, *ordered*
 
 Float types
 ```javascript
@@ -85,7 +88,7 @@ Float32, Float64, Float128
 
 #### Char type
 
-> Classes: comparable
+> Classes: *comparable*
 
 Char types
 ```javascript
