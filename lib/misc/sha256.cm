@@ -100,7 +100,7 @@ func sha256_transform(ctx: *SHA256_Context, data: *[]Nat8) -> Unit {
         i := i + 1
     }
 
-    var x : [8]Nat32// := ctx.state
+    var x : [8]Nat32// := ctx.state  // TODO: not worked
     memcpy(&x, &ctx.state, 8*4)
 
     i := 0
