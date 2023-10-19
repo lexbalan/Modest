@@ -6,6 +6,7 @@ from hlir import *
 from util import float_align
 from .value import *
 
+from .char import value_cons_char
 from .record import value_cons_record
 from .array import value_cons_array
 from .pointer import value_cons_pointer, cons_ptr_to_string_from_generic_string
@@ -56,27 +57,6 @@ def value_cons_generic(v, t, ti):
 
     return nv
 
-
-
-
-
-def value_cons_char(v, t, ti, method):
-    # implicit casts
-    if type.is_generic_char(v['type']):
-        return value_cons_generic(v, t, ti)
-
-
-    # explicit casts
-    if method != 'explicit':
-        info("cannot implicit cons Char value", ti)
-        return None
-
-
-    if type.is_char(v['type']) or type.is_integer(v['type']):
-        return hlir_value_cast(v, t, ti)
-
-
-    return None
 
 
 
