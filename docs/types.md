@@ -13,13 +13,13 @@ numeric     // supports '+', '-', '*', '/', '%', 'or', 'and', 'xor', 'not'
 
 ## Generic types
 
-Generic type - compile time type, that must be *implicit* casted to real types for using in runtime.
+*Generic type* - compile time type, that can be *implicit* casted to real types for using in runtime.
 
-1) **GenericInteger** - type of any integral literal: `0, 1, 2, ...`
-2) **GenericFloat** - type of any floating point literal: `0.5, 2.7, 3.14, ...`
-3) **GenericChar** - type of any char literal: `"a"[0], "b"[0], ...`
-4) **GenericArray** - type of any array literal: `[1, 2, 3], ...`
-4) **GenericRecord** - type of any record literal: `{x=1, y=2, z=3}, ...`
+1) **GenericInteger** - type of integer literal: `0, 1, 2, ...`
+2) **GenericFloat** - type of floating point literal: `0.5, 2.7, 3.14, ...`
+3) **GenericChar** - type of char literal: `"a"[0], "b"[0], ...`
+4) **GenericArray** - type of array literal: `[1, 2, 3], ...`
+4) **GenericRecord** - type of record literal: `{x=1, y=2, z=3}, ...`
 
 
 ## Real types
@@ -216,8 +216,8 @@ printf("p.y = %f\n", p.y)
 ```
 
 > Result:
-`p.x = 1`
-`p.y = 2`
+`p.x = 1.0`
+`p.y = 2.0`
 
 
 
