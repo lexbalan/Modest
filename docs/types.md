@@ -90,9 +90,12 @@ Char types
 Char8, Char16, Char32
 ```
 
+*Example:*
+
 ```rust
 var a : Char8
 var b : Char8
+
 a := "a"[0]
 b := "b"[0]
 
