@@ -143,7 +143,7 @@ var i : Int32
 // fill array in cycle
 i := 0
 while i < 5 {
-    a[i]: = i * 10
+    a[i] := i * 10
     i := i + 1
 }
 
