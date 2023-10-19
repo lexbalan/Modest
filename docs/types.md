@@ -158,6 +158,24 @@ Record type is a composite type, that can contain inside values of any *another*
 record {x: Float64, y: Float64}
 ```
 
+*Usage example:*
+```rust
+
+type Point record {
+    x : Float64
+    y : Float64
+}
+
+var p : Point
+p := {x=1, y=2}
+printf("p.x = %f\n", p.x)
+printf("p.y = %f\n", p.y)
+```
+
+> Result:
+`p.x = 1`
+`p.y = 2`
+
 
 
 
