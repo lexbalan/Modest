@@ -15,24 +15,24 @@
 #define ratSymbolUTF32  0x0001F400
 
 
-char arr_utf8[8] = {'H', 'i', '!', '\xa', '\x0'};
-uint16_t arr_utf16[8] = {'H', 'e', 'l', 'l', 'o', '!', '\xa', '\x0'};
-uint32_t arr_utf32[8] = {'H', 'e', 'l', 'l', 'o', '!', '\xa', '\x0'};
+char arr_utf8[8] = {'H', 'i', '!', '\xa'};
+uint16_t arr_utf16[8] = {'H', 'e', 'l', 'l', 'o', '!', '\xa'};
+uint32_t arr_utf32[8] = {'H', 'e', 'l', 'l', 'o', '!', '\xa'};
 
 
 
 #define genericStringConst  "S-t-r-i-n-g"
-#define string8Const  (genericStringConst)
-#define string16Const  (u"S-t-r-i-n-g")
-#define string32Const  (U"S-t-r-i-n-g")
+#define string8Const  genericStringConst
+#define string16Const  genericStringConst
+#define string32Const  genericStringConst
 
 
 int main(void)
 {
     // indexing of GenericString returns #i symbol code
     // the symbols have GenericInteger type
-    const uint32_t omegaCharCode = u'\x3a9';
-    const uint32_t ratCharCode = U'\x1f400';
+    const char omegaCharCode = u'\x3a9';
+    const char ratCharCode = U'\x1f400';
 
     // you can assign omegaCharCode (937) to Nat32,
     // but you can't assign ratCharCode (128000) to Nat16 (!)

@@ -302,12 +302,6 @@ def print_value_cast(v, ctx):
     to_type = v['type']
 
 
-    if type.is_generic_string(from_type):
-        if type.is_ptr_to_arr_of_char(to_type):
-            print_value_literal_str(value, ctx=[])
-            return
-
-
     # NO need cast ptr to *void
     if type.is_pointer(from_type):
         if type.is_free_pointer(to_type):
@@ -328,11 +322,9 @@ def print_value_literal_arr(v, ctx):
 
     value = v
     if type.is_generic_string(value['type']):
-        print("LIT_CM")
+        #print("LIT_CM")
         print_value_literal_str(value, ctx=[])
         return
-
-
 
 
     out("[")
@@ -424,7 +416,8 @@ def print_value_literal_record(v, ctx):
 
 def print_value_literal_str(x, ctx):
     out("\"")
-    for sym in x['imm']['str']:
+    for c in x['imm']:
+        sym = chr(c['imm'])
         if sym == '\n': out("\\n")
         elif sym == '\r': out("\\r")
         elif sym == '\a': out("\\a")

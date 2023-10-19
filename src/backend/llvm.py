@@ -3,6 +3,7 @@ import copy
 from .common import *
 from error import info, warning, error
 import type
+from type import type_print
 from value.value import value_attribute_check, value_print, value_is_immediate
 from hlir import hlir_type_pointer, hlir_value_int
 
@@ -156,6 +157,7 @@ def inline_cast(op, from_type, to_type, val):
     out(")")
 
 
+
 def print_value_array(x):
     if len(x['items']) > 0:
         out("[\n")
@@ -172,6 +174,7 @@ def print_value_array(x):
         out("\n"); indent(); out("]")
     else:
         out("zeroinitializer")
+
 
 
 def print_value_record(x):
@@ -206,6 +209,7 @@ def print_value(x):
         out('@%s' % x['id'])
     elif c == 'num':
         num = x['imm']
+
         if type.is_integer(x['type']):
             out(str(num))
 
@@ -222,6 +226,7 @@ def print_value(x):
 
         elif type.is_bool(x['type']):
             out(str(num))
+
         elif type.is_char(x['type']):
             out(str(num))
 
@@ -470,7 +475,6 @@ def do_eval_expr_un(v):
         if is_global_context():
             if v['value']['kind'] == 'var':
                 if 'global' in  v['value']['att']:
-                    #value_print(v['value'])
                     return {
                         'isa': 'llvm_value',
                         'class': 'mem',
@@ -775,10 +779,14 @@ def do_eval_expr_cast_generic(x):
     from_type = value['type']
     to_type = x['type']
 
-    # строки печатаются отсюда!
+    # строки печатаются ТОЛЬКО отсюда!
     if type.is_generic_string(from_type):
-        if type.is_string(to_type):
-            string_of = to_type['to']['of']
+        if type.is_string(to_type) or type.is_ptr_to_char(to_type):
+
+            if type.is_string(to_type):
+                string_of = to_type['to']['of']
+            else:
+                string_of = to_type['to']
 
             id_name = 'strid_8'
             if string_of['power'] == 16:
@@ -790,7 +798,7 @@ def do_eval_expr_cast_generic(x):
                 'isa': 'llvm_value',
                 'class': 'mem',
                 'level': 'value',
-                'id': value['imm'][id_name],
+                'id': x[id_name],
                 'type': value['type'],
                 'proto': value
             }
@@ -841,35 +849,10 @@ def do_eval_expr_cast(x):
     to_type = x['type']
 
 
-    # const greeting = "Hello World!\n"
-    # const greeting8 = greeting to Str8
-    # const greeting16 = greeting to Str16
-    # const greeting32 = greeting to Str32
     if type.is_generic_string(from_type):
         if type.is_ptr_to_arr_of_char(to_type) or type.is_ptr_to_char(to_type):
-
-            to_char_power = 0
-            if type.is_ptr_to_char(to_type):
-                to_char_power = to_type['to']['power']
-            else:
-                to_char_power = to_type['to']['of']['power']
-
-            e = None
-            if to_char_power == 8:
-                #print_value_literal_str8(value, ctx=[])
-                e = do_eval_str8(value)
-            elif to_char_power == 16:
-                e = do_eval_str16(value)
-                #print_value_literal_str16(value, ctx=[])
-            elif to_char_power == 32:
-                e = do_eval_str32(value)
-                #print_value_literal_str32(value, ctx=[])
-
-            #print_value(e)
-
-            #print_value_literal_str(value, ctx=[])
-            return e
-
+            error("strings need to print through do_eval_expr_cast_generic", x)
+            exit(1)
 
 
     # cast any type to Unit type
@@ -1051,7 +1034,7 @@ def do_eval_str8(x):
         'isa': 'llvm_value',
         'class': 'mem',
         'level': 'value',
-        'id': x['imm']['strid_8'],
+        'id': x['strid_8'],
         'type': x['type'],
         'proto': x
     }
@@ -1061,7 +1044,7 @@ def do_eval_str16(x):
         'isa': 'llvm_value',
         'class': 'mem',
         'level': 'value',
-        'id': x['imm']['strid_16'],
+        'id': x['strid_16'],
         'type': x['type'],
         'proto': x
     }
@@ -1071,7 +1054,7 @@ def do_eval_str32(x):
         'isa': 'llvm_value',
         'class': 'mem',
         'level': 'value',
-        'id': x['imm']['strid_32'],
+        'id': x['strid_32'],
         'type': x['type'],
         'proto': x
     }
@@ -1719,8 +1702,12 @@ def print_def_const(x):
     pass # TODO
 
 
+
 def print_string_utf8(strid, string):
-    ss = string['imm']['str']
+    ss = "" #string['imm']['str']
+
+    for c in string['imm']:
+        ss = ss + chr(c['imm'])
 
     slen = len(bytes(ss, 'utf-8')) + 1 # +1 (zero)
 
@@ -1740,7 +1727,12 @@ def print_string_utf8(strid, string):
 
 
 def print_string_utf16(strid, string):
-    ss = string['imm']['str']
+    #ss = string['imm']['str']
+    ss = "" #string['imm']['str']
+
+    for c in string['imm']:
+        ss = ss + chr(c['imm'])
+
     bb = (ss.encode('utf-16')).decode("utf16")
     slen = len(bb) + 1 # +1 (zero)
 
@@ -1753,7 +1745,12 @@ def print_string_utf16(strid, string):
 
 
 def print_string_utf32(strid, string):
-    ss = string['imm']['str']
+    #ss = string['imm']['str']
+    ss = "" #string['imm']['str']
+
+    for c in string['imm']:
+        ss = ss + chr(c['imm'])
+
     slen = len(ss) + 1 # +1 (zero)
 
     lo("@%s = private constant [%d x i32] [" % (strid, slen))
@@ -1780,19 +1777,19 @@ def print_strings(strings):
         if char_power == 8:
             #print("PRINT_STR8")
             strid8 = strid + '.c8'
-            string['imm']['strid_8'] = strid8
+            string['strid_8'] = strid8
             print_string_utf8(strid8, string)
 
         elif char_power == 16:
             #print("PRINT_STR16")
             strid16 = strid + '.c16'
-            string['imm']['strid_16'] = strid16
+            string['strid_16'] = strid16
             print_string_utf16(strid16, string)
 
         elif char_power == 32:
             #print("PRINT_STR32")
             strid32 = strid + '.c32'
-            string['imm']['strid_32'] = strid32
+            string['strid_32'] = strid32
             print_string_utf32(strid32, string)
 
 

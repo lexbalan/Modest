@@ -247,13 +247,13 @@ break_1:
   i8 108,
   i8 100,
   i8 33,
-  i8 0
+  i8 zeroinitializer
 ]
 @test_key = global [4 x i8] [
   i8 97,
   i8 98,
   i8 99,
-  i8 0
+  i8 zeroinitializer
 ]
 
 define void @print_bytes([0 x i8]* %buf, i32 %len) {

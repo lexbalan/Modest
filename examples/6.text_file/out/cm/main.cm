@@ -8,10 +8,10 @@ const filename = "file.txt"
 func write_example () -> Unit {
     printf("run write_example\n")
 
-    let fp = fopen("file.txt", "w")
+    let fp = fopen(filename, "w")
 
     if fp == nil {
-        printf("error: cannot create file '%s'", "file.txt")
+        printf("error: cannot create file '%s'", filename)
         return
     }
 
@@ -24,14 +24,14 @@ func write_example () -> Unit {
 func read_example () -> Unit {
     printf("run read_example\n")
 
-    let fp = fopen("file.txt", "r")
+    let fp = fopen(filename, "r")
 
     if fp == nil {
-        printf("error: cannot open file '%s'", "file.txt")
+        printf("error: cannot open file '%s'", filename)
         return
     }
 
-    printf("file '%s' contains: ", "file.txt")
+    printf("file '%s' contains: ", filename)
     while 1 {
         let ch = fgetc(fp)
         if ch == EOF {

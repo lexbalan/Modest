@@ -324,7 +324,11 @@ def cons_default(x, ti):
         return hlir_value_cast(x, t, ti)
 
     elif type.is_generic_string(from_type):
-        return hlir_value_cast(x, typeSysStr, ti)
+        print("cons_default is_generic_string")
+        nv = value_cons_generic(x, typeSysStr, ti=ti)
+        nv['att'].append("string-cons")
+        module_strings_add(nv)
+        return nv
 
     elif type.is_float(from_type):
         return hlir_value_cast(x, typeSysFloat, ti)
@@ -643,12 +647,26 @@ def bin_imm(k, type_result, l, r, ti):
 
 
 
+
+
 def value_strings_concat(l, r, ti):
-    string = l['imm']['str'] + r['imm']['str']
-    length = l['imm']['len'] + r['imm']['len']
+    length = l['type']['volume']['imm'] + r['type']['volume']['imm']
+
+
+    #string = l['imm']['str'] + r['imm']['str']
+    string = ""
+    for c in l['imm']:
+        string = string + chr(c['imm'])
+
+    for c in r['imm']:
+        string = string + chr(c['imm'])
+
+    #print(f"STRCAT: {string}")
+
     imm_str = hlir_string_imm(string, length)
 
-    genStrType = hlir_type_array(type.typeGenericChar, volume=length, generic=True, ti=ti)
+    vol = hlir_value_int(length)
+    genStrType = hlir_type_array(type.typeGenericChar, volume=vol, generic=True, ti=ti)
 
     bin_value = hlir_value_bin('add_str', l, r, genStrType, ti=ti)
     bin_value['imm'] = imm_str
@@ -656,13 +674,14 @@ def value_strings_concat(l, r, ti):
     return bin_value
 
 
-
+# FIXIT: it is generic arrays EQ!
 def value_string_eq(l, r):
-    if l['imm']['len'] != r['imm']['len']:
+    if l['type']['volume']['imm'] != r['type']['volume']['imm']:
         return 0
 
-    if l['imm']['str'] != r['imm']['str']:
-        return 0
+    for a, b in zip(l['imm'], r['imm']):
+        if a['imm'] != b['imm']:
+            return 0
 
     return 1
 
@@ -698,7 +717,7 @@ def do_value_bin(x):
         return do_bin_op_with_pointers(k, l, r , ti)
 
 
-    if type.is_generic_string(l['type']) or type.is_generic_string(r['type']):
+    if type.is_generic_string(l['type']) and type.is_generic_string(r['type']):
         if k == 'add':
             return value_strings_concat(l, r, ti)
         elif k in ['eq', 'ne']:
@@ -951,8 +970,8 @@ def do_value_index(x):
 
             if type.is_generic_string(a['type']):
                 # is generic string
-                c = a['imm']['str'][index]
-                return value_generic_char(c, ti=x['ti'])
+                c = a['imm'][index]
+                return c #value_generic_char(c, ti=x['ti'])
 
             else:
                 # is an array

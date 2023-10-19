@@ -16,10 +16,10 @@ type Chunk record {
 func write_example () -> Unit {
     printf("run write_example\n")
 
-    let fp = fopen("file.bin", "wb")
+    let fp = fopen(filename, "wb")
 
     if fp == nil {
-        printf("error: cannot create file '%s'", "file.bin")
+        printf("error: cannot create file '%s'", filename)
         return
     }
 
@@ -27,8 +27,8 @@ func write_example () -> Unit {
 
     // pointers casting requires -funsafe translator option
     // (see Makefile)
-    strcpy(&chunk.id to *Char, "id" to *Char)
-    strcpy(&chunk.data to *Char, "data" to *Char)
+    strcpy(&chunk.id to *Char, "id")
+    strcpy(&chunk.data to *Char, "data")
 
     // write chunk to file
     fwrite(&chunk, (sizeof(Chunk)), 1, fp)
@@ -40,16 +40,16 @@ func write_example () -> Unit {
 func read_example () -> Unit {
     printf("run read_example\n")
 
-    let fp = fopen("file.bin", "rb")
+    let fp = fopen(filename, "rb")
 
     if fp == nil {
-        printf("error: cannot open file '%s'", "file.bin")
+        printf("error: cannot open file '%s'", filename)
         return
     }
 
     var chunk : Chunk
     fread(&chunk, (sizeof(Chunk)), 1, fp)
-    printf("file '%s' contains:\n", "file.bin")
+    printf("file '%s' contains:\n", filename)
     printf("chunk.id: %s\n", &chunk.id)
     printf("chunk.data: %s\n", &chunk.data)
 

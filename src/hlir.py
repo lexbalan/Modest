@@ -264,6 +264,7 @@ def hlir_value_literal(t, imm, ti):
         'imm': imm,
         'att': [],
         'nl_end': 0,
+        'nl': 0,
         'ti': ti
     }
 
@@ -299,15 +300,23 @@ def hlir_value_float(num, ti=None):
 
 
 def hlir_string_imm(string, length):
-    return {
+    """return {
         'str': string,
         'len': length,
-    }
+    }"""
+    items = []
+    for ch in string:
+        char_power = nbits_for_num(ord(ch))
+        t = hlir_type_generic_char(power=char_power, ti=None)
+        char = hlir_value_literal(type.typeGenericChar, ord(ch), ti=None)
+        items.append(char)
+    return items
 
 
 
 def hlir_value_generic_str(string, length, ti=None):
-    genStrType = hlir_type_array(type.typeGenericChar, volume=length, generic=True, ti=ti)
+    vol = hlir_value_int(length)
+    genStrType = hlir_type_array(type.typeGenericChar, volume=vol, generic=True, ti=ti)
 
     imm = hlir_string_imm(string, length)
     items = imm

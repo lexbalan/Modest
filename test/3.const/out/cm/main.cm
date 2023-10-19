@@ -5,9 +5,9 @@ const genericIntConst = 42
 const int32Const = genericIntConst
 
 const genericStringConst = "Hello!"
-const string8Const = "Hello!"
-const string16Const = "Hello!"
-const string32Const = "Hello!"
+const string8Const = genericStringConst
+const string16Const = genericStringConst
+const string32Const = genericStringConst
 
 
 type Point record {

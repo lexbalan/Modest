@@ -10,16 +10,16 @@ const ratSymbolUTF16 = [0xD83D, 0xDC00]
 const ratSymbolUTF32 = 0x0001F400
 
 
-var arr_utf8 : [8]Char8 := ["H"[0], "i"[0], "!"[0], "\xa"[0], "\x0"[0]]
-var arr_utf16 : [8]Char16 := ["H"[0], "e"[0], "l"[0], "l"[0], "o"[0], "!"[0], "\xa"[0], "\x0"[0]]
-var arr_utf32 : [8]Char32 := ["H"[0], "e"[0], "l"[0], "l"[0], "o"[0], "!"[0], "\xa"[0], "\x0"[0]]
+var arr_utf8 : [8]Char8 := ["H"[0], "i"[0], "!"[0], "\xa"[0]]
+var arr_utf16 : [8]Char16 := ["H"[0], "e"[0], "l"[0], "l"[0], "o"[0], "!"[0], "\xa"[0]]
+var arr_utf32 : [8]Char32 := ["H"[0], "e"[0], "l"[0], "l"[0], "o"[0], "!"[0], "\xa"[0]]
 
 
 
 const genericStringConst = "S-t-r-i-n-g"
-const string8Const = "S-t-r-i-n-g"
-const string16Const = "S-t-r-i-n-g"
-const string32Const = "S-t-r-i-n-g"
+const string8Const = genericStringConst
+const string16Const = genericStringConst
+const string32Const = genericStringConst
 
 
 func main () -> Int {

@@ -9,7 +9,7 @@ from util import get_item_with_id, float_align
 
 
 
-def value_print(x):
+def value_print(x, msg="here"):
     print("print_value:")
     print("isa: " + str(x['isa']))
     print("kind: " + str(x['kind']))
@@ -19,7 +19,7 @@ def value_print(x):
     for prop in x:
         if not prop in ['isa', 'kind', 'type', 'att', 'ti']:
             print(" - %s" % prop)
-    info("here", x['ti'])
+    info(msg, x['ti'])
 
 
 

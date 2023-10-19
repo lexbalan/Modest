@@ -153,14 +153,7 @@ def value_cons_pointer(v, t, ti, method):
     elif type.is_generic_string(vtype):
         if type.is_ptr_to_arr_of_char(to_type) or type.is_ptr_to_char(to_type):
 
-            char_type = None
-            if type.is_ptr_to_char(to_type):
-                char_type = to_type['to']
-            elif type.is_ptr_to_arr_of_char(to_type):
-                char_type = to_type['to']['of']
-
-            #str_used_as(string_value=v, typ=char_type)
-            nv = hlir_value_cast(v, t, ti=ti)
+            nv = value_cons_generic(v, t, ti=ti)
             nv['att'].append("string-cons")
             from trans import module_strings_add
             module_strings_add(nv)

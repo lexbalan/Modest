@@ -120,7 +120,7 @@ declare void @utf32_putchar(i32)
   i8 105,
   i8 33,
   i8 10,
-  i8 0,
+  i8 zeroinitializer,
   i8 zeroinitializer,
   i8 zeroinitializer,
   i8 zeroinitializer
@@ -133,7 +133,7 @@ declare void @utf32_putchar(i32)
   i16 111,
   i16 33,
   i16 10,
-  i16 0
+  i16 zeroinitializer
 ]
 @arr_utf32 = global [8 x i32] [
   i32 72,
@@ -143,7 +143,7 @@ declare void @utf32_putchar(i32)
   i32 111,
   i32 33,
   i32 10,
-  i32 0
+  i32 zeroinitializer
 ]
 
 

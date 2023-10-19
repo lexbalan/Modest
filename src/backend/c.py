@@ -542,7 +542,7 @@ def print_value_cast(x, ctx):
     # const greeting16 = greeting to Str16
     # const greeting32 = greeting to Str32
     #
-    if type.is_generic_string(from_type):
+    """if type.is_generic_string(from_type):
         if type.is_ptr_to_arr_of_char(to_type) or type.is_ptr_to_char(to_type):
             char_power = 0
 
@@ -565,6 +565,7 @@ def print_value_cast(x, ctx):
             print_value_literal_str(value, ctx=[])
 
             return
+            """
 
 
     # в у нас типы структурные, в си - номинальные
@@ -614,11 +615,9 @@ def print_value_cast(x, ctx):
 
 def print_value_literal_arr(v, ctx):
 
-    value = v
-    if type.is_generic_string(value['type']):
-
-        print("LIT")
-        char_power = value['type']['of']['power']
+    if type.is_generic_string(v['type']):
+        #print("LIT")
+        char_power = v['type']['of']['power']
 
         prefix = "" #"u8"
         if char_power > 16:
@@ -626,7 +625,7 @@ def print_value_literal_arr(v, ctx):
         elif char_power > 8:
             prefix = "u"
 
-        print_value_literal_str(value, ctx=[])#, prefix=prefix)
+        print_value_literal_str(v, ctx=[])#, prefix=prefix)
         return
 
 
@@ -760,13 +759,12 @@ def print_value_literal_record(v, ctx):
 
 
 def print_value_literal_str(x, ctx, prefix=""):
-    if x['imm'] == None:
-        out("\"\"")
-        return
 
     out("%s\"" % prefix)
 
-    for sym in x['imm']['str']:
+    for c in x['imm']:
+        sym = chr(c['imm'])
+
         if sym == '\n': out("\\n")
         elif sym == '\r': out("\\r")
         elif sym == '\a': out("\\a")
