@@ -16,8 +16,8 @@ def value_cons_float(v, t, ti, method):
     if type.is_generic(vt):
         if type.is_integer(vt) or type.is_float(vt):
             # (GenericInt or GenericFloat) -> Float
-            from .cons import value_cons_generic
-            nv = value_cons_generic(v, t, ti)
+            from .cons import value_cons_from_generic
+            nv = value_cons_from_generic(v, t, ti)
             nv['imm'] = float_align(nv['imm'], t['power'])
             return nv
 

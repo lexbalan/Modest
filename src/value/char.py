@@ -7,8 +7,8 @@ from hlir import hlir_value_cast
 def value_cons_char(v, t, ti, method):
     # implicit casts
     if type.is_generic_char(v['type']):
-        from .cons import value_cons_generic
-        return value_cons_generic(v, t, ti)
+        from .cons import value_cons_from_generic
+        return value_cons_from_generic(v, t, ti)
 
 
     # explicit casts

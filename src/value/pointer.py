@@ -8,8 +8,8 @@ from .value import *
 
 
 def cons_ptr_to_string_from_generic_string(v, t, ti, method):
-    from .cons import value_cons_generic
-    nv = value_cons_generic(v, t, ti=ti)
+    from .cons import value_cons_from_generic
+    nv = value_cons_from_generic(v, t, ti=ti)
     nv['att'].append("string-cons")
     from trans import module_strings_add
     module_strings_add(nv)
@@ -24,8 +24,8 @@ def value_cons_pointer(v, t, ti, method):
 
     # Nil -> *X
     if type.is_nil(vtype):
-        from .cons import value_cons_generic
-        nv = value_cons_generic(v, t, ti)
+        from .cons import value_cons_from_generic
+        nv = value_cons_from_generic(v, t, ti)
 
     # GenericString -> (*[]CharX | *CharX)
     elif type.is_generic_string(vtype):

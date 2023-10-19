@@ -12,7 +12,7 @@ def is_local_context():
 
 
 from value.value import *
-from value.cons import value_cons_generic, value_cons_implicit, value_cons_explicit, cons_default
+from value.cons import value_cons_from_generic, value_cons_implicit, value_cons_explicit, cons_default
 
 from frontend.parser import Parser
 from symtab import Symtab
@@ -487,7 +487,7 @@ def do_value_shift(x):
             if type.is_generic(l['type']):
                 # select new generic type for left (!)
                 t = hlir_type_generic_int_bits(nbits, ti=ti)
-                l = value_cons_generic(l, t, x['left']['ti'])
+                l = value_cons_from_generic(l, t, x['left']['ti'])
 
             v = hlir_value_bin(op, l, r, l['type'], ti=ti)
             v['imm'] = imm_result

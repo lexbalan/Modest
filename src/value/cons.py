@@ -15,32 +15,10 @@ from .array import value_cons_array
 from .pointer import value_cons_pointer, cons_ptr_to_string_from_generic_string
 
 
-def cons_default(x, ti):
-    from trans import typeSysInt, typeSysStr, typeSysFloat
-
-    from_type = x['type']
-
-    if not type.is_generic(from_type):
-        return x
-
-    if type.is_integer(from_type):
-        return value_cons_integer(x, typeSysInt, ti, method='implicit')
-
-    elif type.is_generic_string(from_type):
-        return cons_ptr_to_string_from_generic_string(x, typeSysStr, ti, method='implicit')
-
-    elif type.is_float(from_type):
-        return value_cons_float(x, typeSysFloat, ti, method='implicit')
-
-    else:
-        fatal("unimplemented cons_default case")
-
-    return hlir_value_bad(ti)
 
 
-
-def value_cons_generic(v, t, ti):
-    #info("value_cons_generic", ti)
+def value_cons_from_generic(v, t, ti):
+    #info("value_cons_from_generic", ti)
 
     nv = hlir_value_cast(v, t, ti)
     nv['kind'] = 'cast_generic'
@@ -54,6 +32,34 @@ def value_cons_generic(v, t, ti):
         nv['id'] = v['id']
 
     return nv
+
+
+
+
+
+def cons_default(x, ti):
+    from trans import typeSysInt, typeSysStr, typeSysFloat
+
+    from_type = x['type']
+
+    if not type.is_generic(from_type):
+        return x
+
+    method = 'implicit'
+
+    if type.is_integer(from_type):
+        return value_cons_integer(x, typeSysInt, ti, method)
+
+    elif type.is_generic_string(from_type):
+        return cons_ptr_to_string_from_generic_string(x, typeSysStr, ti, method)
+
+    elif type.is_float(from_type):
+        return value_cons_float(x, typeSysFloat, ti, method)
+
+
+    fatal("unimplemented cons_default case")
+    return hlir_value_bad(ti)
+
 
 
 
@@ -154,8 +160,8 @@ def value_cons_implicit(v, t, ti):
 
         # cons *X from Nil
         if type.is_nil(from_type) and type.is_pointer(t):
-            from .cons import value_cons_generic
-            return value_cons_generic(v, t, ti)
+            from .cons import value_cons_from_generic
+            return value_cons_from_generic(v, t, ti)
 
         # cons *X from FreePointer
         if type.is_free_pointer(from_type) and type.is_pointer(t):
