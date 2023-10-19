@@ -47,6 +47,8 @@ There is two built-in values with bool type: *true* and *false*
 
 > Classes: logical
 
+*Usage example:*
+
 ```javascript
 var b: Bool
 b := false
@@ -90,7 +92,7 @@ Char types
 Char8, Char16, Char32
 ```
 
-*Example:*
+*Usage example:*
 
 ```rust
 var a : Char8
@@ -139,6 +141,14 @@ type Str8 = []Char8
 type Str16 = []Char16
 type Str32 = []Char32
 ```
+
+*Usage example:*
+```rust
+var s : *Str8
+s := "Hello World!\n"
+printf(s)
+```
+> Result: `Hello World!`
 
 
 
