@@ -167,7 +167,9 @@ type Point record {
 }
 
 var p : Point
+
 p := {x=1, y=2}
+
 printf("p.x = %f\n", p.x)
 printf("p.y = %f\n", p.y)
 ```
