@@ -32,6 +32,7 @@ def value_cons_pointer(v, t, ti, method):
         if type.is_ptr_to_arr_of_char(to_type) or type.is_ptr_to_char(to_type):
             nv = cons_ptr_to_string_from_generic_string(v, t, ti, method)
 
+
     # *[n]X -> *[]X
     elif type.is_pointer_to_defined_array(vtype):
         if type.is_pointer_to_undefined_array(t):
