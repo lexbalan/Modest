@@ -302,9 +302,10 @@ def hlir_value_float(num, ti=None):
 def hlir_string_imm(string):
     items = []
     for ch in string:
-        char_power = nbits_for_num(ord(ch))
+        code = ord(ch)
+        char_power = nbits_for_num(code)
         t = hlir_type_generic_char(power=char_power, ti=None)
-        char = hlir_value_literal(type.typeGenericChar, ord(ch), ti=None)
+        char = hlir_value_literal(type.typeGenericChar, code, ti=None)
         items.append(char)
     return items
 
