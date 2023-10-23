@@ -16,6 +16,7 @@ def cons_ptr_to_string_from_generic_string(v, t, ti, method):
     return nv
 
 
+
 def value_cons_pointer(v, t, ti, method):
     vtype = v['type']
     to_type = t

@@ -231,7 +231,11 @@ def print_value(x):
             out(str(num))
 
     elif c == 'str':
-        out("@%s" % x['id'])
+        #out("@%s" % x['id'])
+        len = x['len']# + 1
+        id = x['id']
+        ch = x['ch']
+        out("bitcast ([%d x i%d]* @%s to [0 x i%d]*)" % (len, ch, id, ch))
 
     elif c == 'array':
         print_value_array(x)
@@ -788,17 +792,22 @@ def do_eval_expr_cast_generic(x):
             else:
                 string_of = to_type['to']
 
+            char_pow = string_of['power']
+
             id_name = 'strid_8'
-            if string_of['power'] == 16:
+            if char_pow == 16:
                 id_name = 'strid_16'
-            elif string_of['power'] == 32:
+            elif char_pow == 32:
                 id_name = "strid_32"
+
 
             return {
                 'isa': 'llvm_value',
-                'class': 'mem',
+                'class': 'str',
                 'level': 'value',
                 'id': x[id_name],
+                'ch': char_pow,
+                'len': from_type['volume']['imm'],
                 'type': value['type'],
                 'proto': value
             }

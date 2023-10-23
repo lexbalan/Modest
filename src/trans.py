@@ -619,23 +619,23 @@ def bin_imm(k, type_result, l, r, ti):
 
 
 def value_strings_concat(l, r, ti):
-    length = l['type']['volume']['imm'] + r['type']['volume']['imm']
-
-
-    #string = l['imm']['str'] + r['imm']['str']
     string = ""
     for c in l['imm']:
-        string = string + chr(c['imm'])
+        if c['imm'] != 0:
+            string = string + chr(c['imm'])
 
     for c in r['imm']:
-        string = string + chr(c['imm'])
+        if c['imm'] != 0:
+            string = string + chr(c['imm'])
 
-    #print(f"STRCAT: {string}")
-
+    length = len(string) + 1  #!
     imm_str = hlir_string_imm(string, length)
 
     vol = hlir_value_int(length)
     genStrType = hlir_type_array(type.typeGenericChar, volume=vol, generic=True, ti=ti)
+
+    #info("?%d" % len(string), ti)
+    #type_print(genStrType)
 
     bin_value = hlir_value_bin('add_str', l, r, genStrType, ti=ti)
     bin_value['imm'] = imm_str
@@ -1045,7 +1045,8 @@ def do_value_str(x):
     string=x['str']
     length=x['len']
     ti=x['ti']
-    return hlir_value_generic_str(string, length, ti=ti)
+    s = hlir_value_generic_str(string, length, ti=ti)
+    return s
 
 
 
