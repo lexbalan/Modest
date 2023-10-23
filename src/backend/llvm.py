@@ -859,7 +859,7 @@ def do_eval_expr_cast(x):
 
 
     if type.is_generic_string(from_type):
-        if type.is_ptr_to_arr_of_char(to_type) or type.is_ptr_to_char(to_type):
+        if type.is_ptr_to_arr_of_char(to_type):
             error("strings need to print through do_eval_expr_cast_generic", x)
             exit(1)
 

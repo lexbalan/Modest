@@ -16,6 +16,29 @@ def cons_ptr_to_string8_from_generic_string(v, t, ti, method):
     return nv
 
 
+def cons_ptr_to_string16_from_generic_string(v, t, ti, method):
+    from util import str2utf16
+    s16 = str2utf16(v['imm'])
+    info("S16", ti)
+    from .cons import value_cons_from_generic
+    nv = value_cons_from_generic(v, t, ti=ti)
+    nv['att'].append("string-cons")
+    from trans import module_strings_add
+    module_strings_add(nv)
+    return nv
+
+
+def cons_ptr_to_string32_from_generic_string(v, t, ti, method):
+    from util import str2utf32
+    s32 = str2utf32(v['imm'])
+    info("S32", ti)
+    from .cons import value_cons_from_generic
+    nv = value_cons_from_generic(v, t, ti=ti)
+    nv['att'].append("string-cons")
+    from trans import module_strings_add
+    module_strings_add(nv)
+    return nv
+
 
 def value_cons_pointer(v, t, ti, method):
     vtype = v['type']
@@ -30,8 +53,14 @@ def value_cons_pointer(v, t, ti, method):
 
     # GenericString -> (*[]CharX | *CharX)
     elif type.is_generic_string(vtype):
-        if type.is_ptr_to_arr_of_char(to_type) or type.is_ptr_to_char(to_type):
-            nv = cons_ptr_to_string8_from_generic_string(v, t, ti, method)
+        if type.is_ptr_to_arr_of_char(to_type):
+            ct = to_type['to']['of']
+            if type.eq(ct, type.typeChar8):
+                nv = cons_ptr_to_string8_from_generic_string(v, t, ti, method)
+            elif type.eq(ct, type.typeChar16):
+                nv = cons_ptr_to_string16_from_generic_string(v, t, ti, method)
+            elif type.eq(ct, type.typeChar32):
+                nv = cons_ptr_to_string32_from_generic_string(v, t, ti, method)
 
 
     # *[n]X -> *[]X
