@@ -629,7 +629,7 @@ def value_strings_concat(l, r, ti):
             string = string + chr(c['imm'])
 
     length = len(string) + 1  #!
-    imm_str = hlir_string_imm(string, length)
+    imm_str = hlir_string_imm(string)
 
     vol = hlir_value_int(length)
     genStrType = hlir_type_array(type.typeGenericChar, volume=vol, generic=True, ti=ti)
@@ -1045,7 +1045,7 @@ def do_value_str(x):
     string=x['str']
     length=x['len']
     ti=x['ti']
-    s = hlir_value_generic_str(string, length, ti=ti)
+    s = hlir_value_generic_str(string, ti=ti)
     return s
 
 
