@@ -788,7 +788,10 @@ def print_value_literal_char(x, ctx):
         prefix = "u"
 
     if num >= 0x20 and num <= 0x7F:
-        out("%s'%c'" % (prefix, num))
+        if num == 39:
+            out("'\\''")
+        else:
+            out("%s'%c'" % (prefix, num))
     else:
         out("%s'\\x%x'" % (prefix, num))
 

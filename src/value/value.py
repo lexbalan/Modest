@@ -10,7 +10,7 @@ from util import get_item_with_id, float_align
 
 
 def value_print(x, msg="here"):
-    print("print_value:")
+    print("\nvalue_print:")
     print("isa: " + str(x['isa']))
     print("kind: " + str(x['kind']))
     print("type: ", end=""); type.type_print(x['type']); print()

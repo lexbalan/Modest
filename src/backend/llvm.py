@@ -784,7 +784,9 @@ def do_eval_expr_cast_generic(x):
     to_type = x['type']
 
     # строки печатаются ТОЛЬКО отсюда!
-    if type.is_generic_string(from_type):
+    #if type.is_generic_string(from_type):
+    #if type.is_string(from_type):
+    if True:
         if type.is_string(to_type) or type.is_ptr_to_char(to_type):
 
             if type.is_string(to_type):
@@ -1712,7 +1714,7 @@ def print_def_const(x):
 
 
 
-def print_string_utf8(strid, string):
+def print_string_utf8_old(strid, string):
     ss = "" #string['imm']['str']
 
     for c in string['imm']:
@@ -1735,38 +1737,44 @@ def print_string_utf8(strid, string):
 
 
 
-def print_string_utf16(strid, string):
-    #ss = string['imm']['str']
-    ss = "" #string['imm']['str']
 
+def print_string_utf8(strid, string):
+    slen = len(string['imm'])
+    lo("@%s = private constant [%d x i8] [" % (strid, slen))
+    i = 0
     for c in string['imm']:
-        ss = ss + chr(c['imm'])
+        if i > 0:
+            out(", ")
+        out("i8 %d" % c['imm'])
+        i = i + 1
 
-    bb = (ss.encode('utf-16')).decode("utf16")
-    slen = len(bb) + 1 # +1 (zero)
+    out("]")
 
+
+def print_string_utf16(strid, string):
+    slen = len(string['imm'])
     lo("@%s = private constant [%d x i16] [" % (strid, slen))
-    for b in bb:
-        out("i16 %d, " % ord(b))
+    i = 0
+    for c in string['imm']:
+        if i > 0:
+            out(", ")
+        out("i16 %d" % c['imm'])
+        i = i + 1
 
-    out("i16 0]")
-
+    out("]")
 
 
 def print_string_utf32(strid, string):
-    #ss = string['imm']['str']
-    ss = "" #string['imm']['str']
-
-    for c in string['imm']:
-        ss = ss + chr(c['imm'])
-
-    slen = len(ss) + 1 # +1 (zero)
-
+    slen = len(string['imm'])
     lo("@%s = private constant [%d x i32] [" % (strid, slen))
-    for b in ss:
-        out("i32 %d, " % ord(b))
+    i = 0
+    for c in string['imm']:
+        if i > 0:
+            out(", ")
+        out("i32 %d" % c['imm'])
+        i = i + 1
 
-    out("i32 0]")
+    out("]")
 
 
 

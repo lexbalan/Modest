@@ -7,9 +7,38 @@ from util import float_align
 from .value import *
 
 
+
+
+def hlir_string_imm_from_codes(codes, char_type):
+    items = []
+
+    for code in codes:
+        char = hlir_value_literal(char_type, code, ti=None)
+        items.append(char)
+
+    # append Zero
+    char = hlir_value_literal(char_type, 0, ti=None)
+    items.append(char)
+
+    return items
+
+
+def str_literal(imm, charType, ti):
+    items = hlir_string_imm_from_codes(imm, charType)
+    vol = hlir_value_int(len(items))
+    #print("N = %d" % (vol['imm']))
+    strType = hlir_type_array(charType, volume=vol, generic=True, ti=ti)
+    return hlir_value_literal(strType, items, ti)
+
+
+
 def cons_ptr_to_string8_from_generic_string(v, t, ti, method):
+    from util import str2utf8
+    s8_imm = str2utf8(v['imm'])
+    #info("S8", ti)
+    vy = str_literal(s8_imm, type.typeChar8, ti)
     from .cons import value_cons_from_generic
-    nv = value_cons_from_generic(v, t, ti=ti)
+    nv = value_cons_from_generic(vy, t, ti=ti)
     nv['att'].append("string-cons")
     from trans import module_strings_add
     module_strings_add(nv)
@@ -18,10 +47,11 @@ def cons_ptr_to_string8_from_generic_string(v, t, ti, method):
 
 def cons_ptr_to_string16_from_generic_string(v, t, ti, method):
     from util import str2utf16
-    s16 = str2utf16(v['imm'])
-    info("S16", ti)
+    s16_imm = str2utf16(v['imm'])
+    #info("S16", ti)
+    vy = str_literal(s16_imm, type.typeChar16, ti)
     from .cons import value_cons_from_generic
-    nv = value_cons_from_generic(v, t, ti=ti)
+    nv = value_cons_from_generic(vy, t, ti=ti)
     nv['att'].append("string-cons")
     from trans import module_strings_add
     module_strings_add(nv)
@@ -30,10 +60,11 @@ def cons_ptr_to_string16_from_generic_string(v, t, ti, method):
 
 def cons_ptr_to_string32_from_generic_string(v, t, ti, method):
     from util import str2utf32
-    s32 = str2utf32(v['imm'])
-    info("S32", ti)
+    s32_imm = str2utf32(v['imm'])
+    #info("S32", ti)
+    vy = str_literal(s32_imm, type.typeChar32, ti)
     from .cons import value_cons_from_generic
-    nv = value_cons_from_generic(v, t, ti=ti)
+    nv = value_cons_from_generic(vy, t, ti=ti)
     nv['att'].append("string-cons")
     from trans import module_strings_add
     module_strings_add(nv)
@@ -62,6 +93,7 @@ def value_cons_pointer(v, t, ti, method):
             elif type.eq(ct, type.typeChar32):
                 nv = cons_ptr_to_string32_from_generic_string(v, t, ti, method)
 
+            return nv #!!
 
     # *[n]X -> *[]X
     elif type.is_pointer_to_defined_array(vtype):

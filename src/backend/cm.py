@@ -429,7 +429,9 @@ def print_value_literal_str(x, ctx):
 def print_value_literal_char(x, ctx):
     num = x['imm']
     if num >= 0x20:
-        out("\"%c\"[0]" % num)
+        out("\"%s\"[0]" % num)
+    elif num == 0:
+        out("\"\\x%x\"[0]" % num)
     else:
         out("\"\\x%x\"[0]" % num)
 
