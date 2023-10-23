@@ -12,7 +12,7 @@ from .integer import value_cons_integer
 from .float import value_cons_float
 from .record import value_cons_record
 from .array import value_cons_array
-from .pointer import value_cons_pointer, cons_ptr_to_string_from_generic_string
+from .pointer import value_cons_pointer, cons_ptr_to_string8_from_generic_string
 
 
 

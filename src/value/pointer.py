@@ -7,7 +7,7 @@ from util import float_align
 from .value import *
 
 
-def cons_ptr_to_string_from_generic_string(v, t, ti, method):
+def cons_ptr_to_string8_from_generic_string(v, t, ti, method):
     from .cons import value_cons_from_generic
     nv = value_cons_from_generic(v, t, ti=ti)
     nv['att'].append("string-cons")
@@ -31,7 +31,7 @@ def value_cons_pointer(v, t, ti, method):
     # GenericString -> (*[]CharX | *CharX)
     elif type.is_generic_string(vtype):
         if type.is_ptr_to_arr_of_char(to_type) or type.is_ptr_to_char(to_type):
-            nv = cons_ptr_to_string_from_generic_string(v, t, ti, method)
+            nv = cons_ptr_to_string8_from_generic_string(v, t, ti, method)
 
 
     # *[n]X -> *[]X
