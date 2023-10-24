@@ -10,9 +10,9 @@
 #define int32Const  genericIntConst
 
 #define genericStringConst  "Hello!"
-#define string8Const  genericStringConst
-#define string16Const  genericStringConst
-#define string32Const  genericStringConst
+#define string8Const  "Hello!"
+#define string16Const  u"Hello!"
+#define string32Const  U"Hello!"
 
 
 typedef struct {

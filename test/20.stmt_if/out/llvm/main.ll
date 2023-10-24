@@ -91,31 +91,31 @@ declare void @perror(%ConstCharStr*)
 
 ; -- SOURCE: src/main.cm
 
-@str1.c8 = private constant [17 x i8] c"stmt_if example\0A\00"
-@str2.c8 = private constant [10 x i8] c"enter a: \00"
-@str3.c8 = private constant [3 x i8] c"%d\00"
-@str4.c8 = private constant [10 x i8] c"enter b: \00"
-@str5.c8 = private constant [3 x i8] c"%d\00"
-@str6.c8 = private constant [7 x i8] c"a > b\0A\00"
-@str7.c8 = private constant [7 x i8] c"a < b\0A\00"
-@str8.c8 = private constant [8 x i8] c"a == b\0A\00"
+@str1.c8 = private constant [17 x i8] [i8 115, i8 116, i8 109, i8 116, i8 95, i8 105, i8 102, i8 32, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
+@str2.c8 = private constant [10 x i8] [i8 101, i8 110, i8 116, i8 101, i8 114, i8 32, i8 97, i8 58, i8 32, i8 0]
+@str3.c8 = private constant [3 x i8] [i8 37, i8 100, i8 0]
+@str4.c8 = private constant [10 x i8] [i8 101, i8 110, i8 116, i8 101, i8 114, i8 32, i8 98, i8 58, i8 32, i8 0]
+@str5.c8 = private constant [3 x i8] [i8 37, i8 100, i8 0]
+@str6.c8 = private constant [7 x i8] [i8 97, i8 32, i8 62, i8 32, i8 98, i8 10, i8 0]
+@str7.c8 = private constant [7 x i8] [i8 97, i8 32, i8 60, i8 32, i8 98, i8 10, i8 0]
+@str8.c8 = private constant [8 x i8] [i8 97, i8 32, i8 61, i8 61, i8 32, i8 98, i8 10, i8 0]
 
 
 
 define i32 @main() {
-    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str1.c8)
+    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([17 x i8]* @str1.c8 to [0 x i8]*))
     %a = alloca i32
     %b = alloca i32
-    %2 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str2.c8)
-    %3 = call i32(%ConstCharStr*, ...) @scanf (%ConstCharStr* @str3.c8, i32* %a)
-    %4 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str4.c8)
-    %5 = call i32(%ConstCharStr*, ...) @scanf (%ConstCharStr* @str5.c8, i32* %b)
+    %2 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([10 x i8]* @str2.c8 to [0 x i8]*))
+    %3 = call i32(%ConstCharStr*, ...) @scanf (%ConstCharStr* bitcast ([3 x i8]* @str3.c8 to [0 x i8]*), i32* %a)
+    %4 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([10 x i8]* @str4.c8 to [0 x i8]*))
+    %5 = call i32(%ConstCharStr*, ...) @scanf (%ConstCharStr* bitcast ([3 x i8]* @str5.c8 to [0 x i8]*), i32* %b)
     %6 = load i32, i32* %a
     %7 = load i32, i32* %b
     %8 = icmp sgt i32 %6, %7
     br i1 %8 , label %then_0, label %else_0
 then_0:
-    %9 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str6.c8)
+    %9 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([7 x i8]* @str6.c8 to [0 x i8]*))
     br label %endif_0
 else_0:
     %10 = load i32, i32* %a
@@ -123,10 +123,10 @@ else_0:
     %12 = icmp slt i32 %10, %11
     br i1 %12 , label %then_1, label %else_1
 then_1:
-    %13 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str7.c8)
+    %13 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([7 x i8]* @str7.c8 to [0 x i8]*))
     br label %endif_1
 else_1:
-    %14 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str8.c8)
+    %14 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([8 x i8]* @str8.c8 to [0 x i8]*))
     br label %endif_1
 endif_1:
     br label %endif_0

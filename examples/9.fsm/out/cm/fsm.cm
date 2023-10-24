@@ -29,7 +29,7 @@ func fsm_run (fsm : *FSM) -> Unit {
         let s = &fsm.states[nexstate]
 
         if fsmVerbose {
-            printf("enter %s\n", s.name)
+            printf(["101"[0], "110"[0], "116"[0], "101"[0], "114"[0], "32"[0], "37"[0], "115"[0], "\xa"[0], "\x0"[0]], s.name)
         }
 
         if s.entry != nil {
@@ -50,7 +50,7 @@ func fsm_run (fsm : *FSM) -> Unit {
         let s = &fsm.states[fsm.state]
 
         if fsmVerbose {
-            printf("exit %s\n", s.name)
+            printf(["101"[0], "120"[0], "105"[0], "116"[0], "32"[0], "37"[0], "115"[0], "\xa"[0], "\x0"[0]], s.name)
         }
 
         if s.exit != nil {

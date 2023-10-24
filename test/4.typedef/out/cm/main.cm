@@ -4,7 +4,7 @@ import "libc/stdio.h"
 type NewInt32 NewInt32
 
 func main () -> Int {
-    printf("test typedef\n")
+    printf(["116"[0], "101"[0], "115"[0], "116"[0], "32"[0], "116"[0], "121"[0], "112"[0], "101"[0], "100"[0], "101"[0], "102"[0], "\xa"[0], "\x0"[0]])
 
     var newInt32 : NewInt32
     newInt32 := 0

@@ -5,19 +5,19 @@ const hello = "Hello"
 const world = "World"
 const party_corn = "🎉"
 
-const greeting = hello + " " + world + " " + party_corn
+const greeting = hello + " " + world//+ " " + party_corn
 
 
 const test = "test"
 
 
 func main () -> Int {
-    printf("%s\n", greeting)
+    printf(["37"[0], "115"[0], "\xa"[0], "\x0"[0]], ["72"[0], "101"[0], "108"[0], "108"[0], "111"[0], "32"[0], "87"[0], "111"[0], "114"[0], "108"[0], "100"[0], "\x0"[0]])
 
     if test == "test" {
-        printf("test ok.\n")
+        printf(["116"[0], "101"[0], "115"[0], "116"[0], "32"[0], "111"[0], "107"[0], "46"[0], "\xa"[0], "\x0"[0]])
     } else {
-        printf("test failed.\n")
+        printf(["116"[0], "101"[0], "115"[0], "116"[0], "32"[0], "102"[0], "97"[0], "105"[0], "108"[0], "101"[0], "100"[0], "46"[0], "\xa"[0], "\x0"[0]])
     }
 
     return 0

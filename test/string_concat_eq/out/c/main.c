@@ -8,9 +8,9 @@
 
 #define hello  "Hello"
 #define world  "World"
-#define party_corn  "🎉"
+#define party_corn  "\x1f389"
 
-#define greeting  hello  " "  world  " "  party_corn
+#define greeting  hello  " "  world//+ " " + party_corn
 
 
 #define test  "test"
@@ -18,7 +18,7 @@
 
 int main(void)
 {
-    printf("%s\n", greeting);
+    printf("%s\n", "Hello World");
 
     if (true) {
         printf("test ok.\n");

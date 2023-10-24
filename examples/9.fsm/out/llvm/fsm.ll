@@ -119,8 +119,8 @@ declare void @perror(%ConstCharStr*)
 
 ; -- SOURCE: src/fsm.cm
 
-@str1.c8 = private constant [10 x i8] c"enter %s\0A\00"
-@str2.c8 = private constant [9 x i8] c"exit %s\0A\00"
+@str1.c8 = private constant [10 x i8] [i8 101, i8 110, i8 116, i8 101, i8 114, i8 32, i8 37, i8 115, i8 10, i8 0]
+@str2.c8 = private constant [9 x i8] [i8 101, i8 120, i8 105, i8 116, i8 32, i8 37, i8 115, i8 10, i8 0]
 
 
 
@@ -154,7 +154,7 @@ then_0:
     br i1 1 , label %then_1, label %endif_1
 then_1:
     %8 = getelementptr inbounds %FSM_StateDesc, %FSM_StateDesc* %7, i32 0, i32 0
-    %9 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str1.c8, [8 x i8]* %8)
+    %9 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([10 x i8]* @str1.c8 to [0 x i8]*), [8 x i8]* %8)
     br label %endif_1
 endif_1:
     %10 = getelementptr inbounds %FSM_StateDesc, %FSM_StateDesc* %7, i32 0, i32 1
@@ -208,7 +208,7 @@ then_5:
     br i1 1 , label %then_6, label %endif_6
 then_6:
     %38 = getelementptr inbounds %FSM_StateDesc, %FSM_StateDesc* %37, i32 0, i32 0
-    %39 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str2.c8, [8 x i8]* %38)
+    %39 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([9 x i8]* @str2.c8 to [0 x i8]*), [8 x i8]* %38)
     br label %endif_6
 endif_6:
     %40 = getelementptr inbounds %FSM_StateDesc, %FSM_StateDesc* %37, i32 0, i32 3

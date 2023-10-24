@@ -91,13 +91,13 @@ declare void @perror(%ConstCharStr*)
 
 ; -- SOURCE: src/main.cm
 
-@str1.c8 = private constant [7 x i8] c"Hello!\00"
+@str1.c8 = private constant [7 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 33, i8 0]
 @str2.c16 = private constant [7 x i16] [i16 72, i16 101, i16 108, i16 108, i16 111, i16 33, i16 0]
 @str3.c32 = private constant [7 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 33, i32 0]
-@str4.c8 = private constant [12 x i8] c"test const\0A\00"
-@str5.c8 = private constant [22 x i8] c"genericIntConst = %d\0A\00"
-@str6.c8 = private constant [17 x i8] c"int32Const = %d\0A\00"
-@str7.c8 = private constant [19 x i8] c"string8Const = %s\0A\00"
+@str4.c8 = private constant [12 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 99, i8 111, i8 110, i8 115, i8 116, i8 10, i8 0]
+@str5.c8 = private constant [22 x i8] [i8 103, i8 101, i8 110, i8 101, i8 114, i8 105, i8 99, i8 73, i8 110, i8 116, i8 67, i8 111, i8 110, i8 115, i8 116, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str6.c8 = private constant [17 x i8] [i8 105, i8 110, i8 116, i8 51, i8 50, i8 67, i8 111, i8 110, i8 115, i8 116, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str7.c8 = private constant [19 x i8] [i8 115, i8 116, i8 114, i8 105, i8 110, i8 103, i8 56, i8 67, i8 111, i8 110, i8 115, i8 116, i8 32, i8 61, i8 32, i8 37, i8 115, i8 10, i8 0]
 
 
 
@@ -127,11 +127,11 @@ declare void @perror(%ConstCharStr*)
 
 
 define i32 @main() {
-    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str4.c8)
-    %2 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str5.c8, i32 42)
-    %3 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str6.c8, i32 42)
+    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([12 x i8]* @str4.c8 to [0 x i8]*))
+    %2 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([22 x i8]* @str5.c8 to [0 x i8]*), i32 42)
+    %3 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([17 x i8]* @str6.c8 to [0 x i8]*), i32 42)
 ;	printf("genericStringConst = %s\n", genericStringConst)
-    %4 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str7.c8, [0 x i8]* @str1.c8)
+    %4 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([19 x i8]* @str7.c8 to [0 x i8]*), [0 x i8]* bitcast ([7 x i8]* @str1.c8 to [0 x i8]*))
     ret i32 0
 }
 

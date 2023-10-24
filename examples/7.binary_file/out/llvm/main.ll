@@ -79,10 +79,10 @@ declare i8* @memset(i8*, i32, i64)
 declare i8* @memcpy(i8*, i8*, i64)
 declare i32 @memcmp(i8*, i8*, i64)
 declare void @free(i8*)
-declare i32 @strncmp(i8*, i8*, i64)
-declare i32 @strcmp(i8*, i8*)
-declare i8* @strcpy(i8*, i8*)
-declare i64 @strlen(i8*)
+declare i32 @strncmp([0 x i8]*, [0 x i8]*, i64)
+declare i32 @strcmp([0 x i8]*, [0 x i8]*)
+declare [0 x i8]* @strcpy([0 x i8]*, [0 x i8]*)
+declare i64 @strlen([0 x i8]*)
 
 
 declare i32 @ftruncate(i32, i32)
@@ -180,23 +180,24 @@ declare void @perror(%ConstCharStr*)
 
 ; -- SOURCE: src/main.cm
 
-@str1.c8 = private constant [19 x i8] c"run write_example\0A\00"
-@str2.c8 = private constant [9 x i8] c"file.bin\00"
-@str3.c8 = private constant [3 x i8] c"wb\00"
-@str4.c8 = private constant [31 x i8] c"error: cannot create file \27%s\27\00"
-@str5.c8 = private constant [9 x i8] c"file.bin\00"
-@str6.c8 = private constant [3 x i8] c"id\00"
-@str7.c8 = private constant [5 x i8] c"data\00"
-@str8.c8 = private constant [18 x i8] c"run read_example\0A\00"
-@str9.c8 = private constant [9 x i8] c"file.bin\00"
-@str10.c8 = private constant [3 x i8] c"rb\00"
-@str11.c8 = private constant [29 x i8] c"error: cannot open file \27%s\27\00"
-@str12.c8 = private constant [9 x i8] c"file.bin\00"
-@str13.c8 = private constant [21 x i8] c"file \27%s\27 contains:\0A\00"
-@str14.c8 = private constant [9 x i8] c"file.bin\00"
-@str15.c8 = private constant [14 x i8] c"chunk.id: %s\0A\00"
-@str16.c8 = private constant [16 x i8] c"chunk.data: %s\0A\00"
-@str17.c8 = private constant [19 x i8] c"text_file example\0A\00"
+@str1.c8 = private constant [19 x i8] [i8 114, i8 117, i8 110, i8 32, i8 119, i8 114, i8 105, i8 116, i8 101, i8 95, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
+@str2.c8 = private constant [9 x i8] [i8 102, i8 105, i8 108, i8 101, i8 46, i8 98, i8 105, i8 110, i8 0]
+@str3.c8 = private constant [3 x i8] [i8 119, i8 98, i8 0]
+@str4.c8 = private constant [31 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 99, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 99, i8 114, i8 101, i8 97, i8 116, i8 101, i8 32, i8 102, i8 105, i8 108, i8 101, i8 32, i8 39, i8 37, i8 115, i8 39, i8 0]
+@str5.c8 = private constant [9 x i8] [i8 102, i8 105, i8 108, i8 101, i8 46, i8 98, i8 105, i8 110, i8 0]
+@str6.c8 = private constant [3 x i8] [i8 105, i8 100, i8 0]
+@str7.c8 = private constant [5 x i8] [i8 100, i8 97, i8 116, i8 97, i8 0]
+@str8.c8 = private constant [18 x i8] [i8 114, i8 117, i8 110, i8 32, i8 114, i8 101, i8 97, i8 100, i8 95, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
+@str9.c8 = private constant [9 x i8] [i8 102, i8 105, i8 108, i8 101, i8 46, i8 98, i8 105, i8 110, i8 0]
+@str10.c8 = private constant [3 x i8] [i8 114, i8 98, i8 0]
+@str11.c8 = private constant [29 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 99, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 111, i8 112, i8 101, i8 110, i8 32, i8 102, i8 105, i8 108, i8 101, i8 32, i8 39, i8 37, i8 115, i8 39, i8 0]
+@str12.c8 = private constant [9 x i8] [i8 102, i8 105, i8 108, i8 101, i8 46, i8 98, i8 105, i8 110, i8 0]
+@str13.c8 = private constant [21 x i8] [i8 102, i8 105, i8 108, i8 101, i8 32, i8 39, i8 37, i8 115, i8 39, i8 32, i8 99, i8 111, i8 110, i8 116, i8 97, i8 105, i8 110, i8 115, i8 58, i8 10, i8 0]
+@str14.c8 = private constant [9 x i8] [i8 102, i8 105, i8 108, i8 101, i8 46, i8 98, i8 105, i8 110, i8 0]
+@str15.c8 = private constant [14 x i8] [i8 99, i8 104, i8 117, i8 110, i8 107, i8 46, i8 105, i8 100, i8 58, i8 32, i8 37, i8 115, i8 10, i8 0]
+@str16.c8 = private constant [16 x i8] [i8 99, i8 104, i8 117, i8 110, i8 107, i8 46, i8 100, i8 97, i8 116, i8 97, i8 58, i8 32, i8 37, i8 115, i8 10, i8 0]
+@str17.c8 = private constant [19 x i8] [i8 116, i8 101, i8 120, i8 116, i8 95, i8 102, i8 105, i8 108, i8 101, i8 32, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
+
 
 
 
@@ -209,12 +210,12 @@ declare void @perror(%ConstCharStr*)
 
 
 define void @write_example() {
-    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str1.c8)
-    %2 = call %FILE*(%ConstCharStr*, %ConstCharStr*) @fopen (%ConstCharStr* @str2.c8, %ConstCharStr* @str3.c8)
+    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([19 x i8]* @str1.c8 to [0 x i8]*))
+    %2 = call %FILE*(%ConstCharStr*, %ConstCharStr*) @fopen (%ConstCharStr* bitcast ([9 x i8]* @str2.c8 to [0 x i8]*), %ConstCharStr* bitcast ([3 x i8]* @str3.c8 to [0 x i8]*))
     %3 = icmp eq %FILE* %2, null
     br i1 %3 , label %then_0, label %endif_0
 then_0:
-    %4 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str4.c8, [0 x i8]* @str5.c8)
+    %4 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([31 x i8]* @str4.c8 to [0 x i8]*), [0 x i8]* bitcast ([9 x i8]* @str5.c8 to [0 x i8]*))
     ret void
     br label %endif_0
 endif_0:
@@ -222,11 +223,11 @@ endif_0:
 ; pointers casting requires -funsafe translator option
 ; (see Makefile)
     %6 = getelementptr inbounds %Chunk, %Chunk* %chunk, i32 0, i32 0
-    %7 = bitcast [100 x i8]* %6 to i8*
-    %8 = call i8*(i8*, i8*) @strcpy (i8* %7, i8* @str6.c8)
+    %7 = bitcast [100 x i8]* %6 to [0 x i8]*
+    %8 = call [0 x i8]*([0 x i8]*, [0 x i8]*) @strcpy ([0 x i8]* %7, [0 x i8]* bitcast ([3 x i8]* @str6.c8 to [0 x i8]*))
     %9 = getelementptr inbounds %Chunk, %Chunk* %chunk, i32 0, i32 1
-    %10 = bitcast [1024 x i8]* %9 to i8*
-    %11 = call i8*(i8*, i8*) @strcpy (i8* %10, i8* @str7.c8)
+    %10 = bitcast [1024 x i8]* %9 to [0 x i8]*
+    %11 = call [0 x i8]*([0 x i8]*, [0 x i8]*) @strcpy ([0 x i8]* %10, [0 x i8]* bitcast ([5 x i8]* @str7.c8 to [0 x i8]*))
 ; write chunk to file
     %12 = bitcast %Chunk* %chunk to i8*
     %13 = call i64(i8*, i64, i64, %FILE*) @fwrite (i8* %12, i64 0, i64 1, %FILE* %2)
@@ -235,29 +236,29 @@ endif_0:
 }
 
 define void @read_example() {
-    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str8.c8)
-    %2 = call %FILE*(%ConstCharStr*, %ConstCharStr*) @fopen (%ConstCharStr* @str9.c8, %ConstCharStr* @str10.c8)
+    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([18 x i8]* @str8.c8 to [0 x i8]*))
+    %2 = call %FILE*(%ConstCharStr*, %ConstCharStr*) @fopen (%ConstCharStr* bitcast ([9 x i8]* @str9.c8 to [0 x i8]*), %ConstCharStr* bitcast ([3 x i8]* @str10.c8 to [0 x i8]*))
     %3 = icmp eq %FILE* %2, null
     br i1 %3 , label %then_0, label %endif_0
 then_0:
-    %4 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str11.c8, [0 x i8]* @str12.c8)
+    %4 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([29 x i8]* @str11.c8 to [0 x i8]*), [0 x i8]* bitcast ([9 x i8]* @str12.c8 to [0 x i8]*))
     ret void
     br label %endif_0
 endif_0:
     %chunk = alloca %Chunk
     %6 = bitcast %Chunk* %chunk to i8*
     %7 = call i64(i8*, i64, i64, %FILE*) @fread (i8* %6, i64 0, i64 1, %FILE* %2)
-    %8 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str13.c8, [0 x i8]* @str14.c8)
+    %8 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([21 x i8]* @str13.c8 to [0 x i8]*), [0 x i8]* bitcast ([9 x i8]* @str14.c8 to [0 x i8]*))
     %9 = getelementptr inbounds %Chunk, %Chunk* %chunk, i32 0, i32 0
-    %10 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str15.c8, [100 x i8]* %9)
+    %10 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([14 x i8]* @str15.c8 to [0 x i8]*), [100 x i8]* %9)
     %11 = getelementptr inbounds %Chunk, %Chunk* %chunk, i32 0, i32 1
-    %12 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str16.c8, [1024 x i8]* %11)
+    %12 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([16 x i8]* @str16.c8 to [0 x i8]*), [1024 x i8]* %11)
     %13 = call i32(%FILE*) @fclose (%FILE* %2)
     ret void
 }
 
 define i32 @main() {
-    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str17.c8)
+    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([19 x i8]* @str17.c8 to [0 x i8]*))
     call void() @write_example ()
     call void() @read_example ()
     ret i32 0

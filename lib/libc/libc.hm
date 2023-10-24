@@ -114,7 +114,7 @@ extern func lseek(fd: Int, offset: OffT, whence: Int) -> OffT
 @attribute("dispensable")
 extern func close(fd: Int) -> Int
 extern func exit(rc: Int) -> Unit
-//extern func fstat (fd : Int, buf : *Stat) -> Int
+//extern func fstat(fd: Int, buf: *Stat) -> Int
 
 
 extern func opendir(name: *Str) -> *DIR

@@ -22,9 +22,9 @@ uint32_t arr_utf32[8] = {'H', 'e', 'l', 'l', 'o', '!', '\xa'};
 
 
 #define genericStringConst  "S-t-r-i-n-g"
-#define string8Const  genericStringConst
-#define string16Const  genericStringConst
-#define string32Const  genericStringConst
+#define string8Const  "S-t-r-i-n-g"
+#define string16Const  u"S-t-r-i-n-g"
+#define string32Const  U"S-t-r-i-n-g"
 
 
 int main(void)
@@ -43,10 +43,10 @@ int main(void)
     printf("ratCode = %d\n", ratCode);
 
 
-    utf16_puts(u"Hello Ω!\n");
-    utf32_puts(U"Hello Ω!\n");
+    utf16_puts(u"Hello \x3a9!\n");
+    utf32_puts(U"Hello \x3a9!\n");
 
-    utf32_puts(U"Hello 🐀!\n");
+    utf32_puts(U"Hello \x1f400!\n");
 
 
     char *str8 = string8Const;

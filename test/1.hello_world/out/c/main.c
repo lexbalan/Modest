@@ -7,14 +7,14 @@
 // examples/1.hello_world/main.cm
 
 #define hello  "Hello"
-#define world  " World! 🎉\n"
+#define world  " World! \x1f389\n"
 
 #define hello_world  hello  world
 
 
 int main(void)
 {
-    printf(hello_world);
+    printf("Hello World! \xf0\x9f\x8e\x89\n");
     return 0;
 }
 

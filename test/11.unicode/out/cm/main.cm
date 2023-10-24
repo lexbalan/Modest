@@ -10,37 +10,37 @@ const ratSymbolUTF16 = [0xD83D, 0xDC00]
 const ratSymbolUTF32 = 0x0001F400
 
 
-var arr_utf8 : [8]Char8 := ["H"[0], "i"[0], "!"[0], "\xa"[0]]
-var arr_utf16 : [8]Char16 := ["H"[0], "e"[0], "l"[0], "l"[0], "o"[0], "!"[0], "\xa"[0]]
-var arr_utf32 : [8]Char32 := ["H"[0], "e"[0], "l"[0], "l"[0], "o"[0], "!"[0], "\xa"[0]]
+var arr_utf8 : [8]Char8 := ["72"[0], "105"[0], "33"[0], "\xa"[0]]
+var arr_utf16 : [8]Char16 := ["72"[0], "101"[0], "108"[0], "108"[0], "111"[0], "33"[0], "\xa"[0]]
+var arr_utf32 : [8]Char32 := ["72"[0], "101"[0], "108"[0], "108"[0], "111"[0], "33"[0], "\xa"[0]]
 
 
 
 const genericStringConst = "S-t-r-i-n-g"
-const string8Const = genericStringConst
-const string16Const = genericStringConst
-const string32Const = genericStringConst
+const string8Const = ["83"[0], "45"[0], "116"[0], "45"[0], "114"[0], "45"[0], "105"[0], "45"[0], "110"[0], "45"[0], "103"[0], "\x0"[0]]
+const string16Const = ["83"[0], "45"[0], "116"[0], "45"[0], "114"[0], "45"[0], "105"[0], "45"[0], "110"[0], "45"[0], "103"[0], "\x0"[0]]
+const string32Const = ["83"[0], "45"[0], "116"[0], "45"[0], "114"[0], "45"[0], "105"[0], "45"[0], "110"[0], "45"[0], "103"[0], "\x0"[0]]
 
 
 func main () -> Int {
     // indexing of GenericString returns #i symbol code
     // the symbols have GenericInteger type
-    let omegaCharCode = "Ω"[0]
-    let ratCharCode = "🐀"[0]
+    let omegaCharCode = "937"[0]
+    let ratCharCode = "128000"[0]
 
     // you can assign omegaCharCode (937) to Nat32,
     // but you can't assign ratCharCode (128000) to Nat16 (!)
     var omegaCode : Nat16 := omegaCharCode to Nat16
     var ratCode : Nat32 := ratCharCode to Nat32
 
-    printf("omegaCode = %d\n", omegaCode)
-    printf("ratCode = %d\n", ratCode)
+    printf(["111"[0], "109"[0], "101"[0], "103"[0], "97"[0], "67"[0], "111"[0], "100"[0], "101"[0], "32"[0], "61"[0], "32"[0], "37"[0], "100"[0], "\xa"[0], "\x0"[0]], omegaCode)
+    printf(["114"[0], "97"[0], "116"[0], "67"[0], "111"[0], "100"[0], "101"[0], "32"[0], "61"[0], "32"[0], "37"[0], "100"[0], "\xa"[0], "\x0"[0]], ratCode)
 
 
-    utf16_puts("Hello Ω!\n")
-    utf32_puts("Hello Ω!\n")
+    utf16_puts(["72"[0], "101"[0], "108"[0], "108"[0], "111"[0], "32"[0], "937"[0], "33"[0], "\xa"[0], "\x0"[0]])
+    utf32_puts(["72"[0], "101"[0], "108"[0], "108"[0], "111"[0], "32"[0], "937"[0], "33"[0], "\xa"[0], "\x0"[0]])
 
-    utf32_puts("Hello 🐀!\n")
+    utf32_puts(["72"[0], "101"[0], "108"[0], "108"[0], "111"[0], "32"[0], "128000"[0], "33"[0], "\xa"[0], "\x0"[0]])
 
 
     var str8 : *[]Char8 := string8Const
@@ -48,13 +48,13 @@ func main () -> Int {
     var str32 : *[]Char32 := string32Const
 
     utf8_puts(str8)
-    utf8_puts("\n")
+    utf8_puts(["\xa"[0], "\x0"[0]])
 
     utf16_puts(str16)
-    utf8_puts("\n")
+    utf8_puts(["\xa"[0], "\x0"[0]])
 
     utf32_puts(str32)
-    utf8_puts("\n")
+    utf8_puts(["\xa"[0], "\x0"[0]])
 
     return 0
 }

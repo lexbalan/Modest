@@ -7,6 +7,9 @@ import "libc/libc.hm"
 import "libc/stdio.hm"
 
 
+// FIXIT: not worked LLVM result (!)
+
+
 const filename = "file.bin"
 
 
@@ -31,8 +34,8 @@ func write_example () -> Unit {
 
     // pointers casting requires -funsafe translator option
     // (see Makefile)
-    strcpy(&chunk.id to *Char, "id" to *Char)
-    strcpy(&chunk.data to *Char, "data" to *Char)
+    strcpy(&chunk.id to *[]Char, "id" to *[]Char)
+    strcpy(&chunk.data to *[]Char, "data" to *[]Char)
 
     // write chunk to file
     fwrite(&chunk, sizeof(Chunk), 1, fp)

@@ -91,13 +91,13 @@ declare void @perror(%ConstCharStr*)
 
 ; -- SOURCE: src/main.cm
 
-@str1.c8 = private constant [17 x i8] c"test stmt_while\0A\00"
-@str2.c8 = private constant [8 x i8] c"a = %d\0A\00"
+@str1.c8 = private constant [17 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 115, i8 116, i8 109, i8 116, i8 95, i8 119, i8 104, i8 105, i8 108, i8 101, i8 10, i8 0]
+@str2.c8 = private constant [8 x i8] [i8 97, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 
 
 
 define i32 @main() {
-    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str1.c8)
+    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([17 x i8]* @str1.c8 to [0 x i8]*))
     %a = alloca i32
     store i32 0, i32* %a
     br label %again_1
@@ -107,7 +107,7 @@ again_1:
     br i1 %3 , label %body_1, label %break_1
 body_1:
     %4 = load i32, i32* %a
-    %5 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str2.c8, i32 %4)
+    %5 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([8 x i8]* @str2.c8 to [0 x i8]*), i32 %4)
     %6 = load i32, i32* %a
     %7 = add i32 %6, 1
     store i32 %7, i32* %a

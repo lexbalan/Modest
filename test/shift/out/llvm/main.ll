@@ -91,21 +91,21 @@ declare void @perror(%ConstCharStr*)
 
 ; -- SOURCE: src/main.cm
 
-@str1.c8 = private constant [12 x i8] c"test shift\0A\00"
-@str2.c8 = private constant [16 x i8] c"1 << 31 = 0x%x\0A\00"
-@str3.c8 = private constant [25 x i8] c"0x80000000 >> 31 = 0x%x\0A\00"
+@str1.c8 = private constant [12 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 115, i8 104, i8 105, i8 102, i8 116, i8 10, i8 0]
+@str2.c8 = private constant [16 x i8] [i8 49, i8 32, i8 60, i8 60, i8 32, i8 51, i8 49, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 120, i8 10, i8 0]
+@str3.c8 = private constant [25 x i8] [i8 48, i8 120, i8 56, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 48, i8 32, i8 62, i8 62, i8 32, i8 51, i8 49, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 120, i8 10, i8 0]
 
 
 
 define i32 @main() {
-    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str1.c8)
+    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([12 x i8]* @str1.c8 to [0 x i8]*))
     %c = alloca i32
     store i32 2147483648, i32* %c
     %2 = load i32, i32* %c
-    %3 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str2.c8, i32 %2)
+    %3 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([16 x i8]* @str2.c8 to [0 x i8]*), i32 %2)
     store i32 1, i32* %c
     %4 = load i32, i32* %c
-    %5 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str3.c8, i32 %4)
+    %5 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([25 x i8]* @str3.c8 to [0 x i8]*), i32 %4)
     ret i32 0
 }
 

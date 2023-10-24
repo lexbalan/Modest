@@ -138,11 +138,11 @@ declare void @ff_print_hex_n128(i128, i8)
 
 ; -- SOURCE: src/main.cm
 
-@str1.c8 = private constant [10 x i8] c"off_loop\0A\00"
-@str2.c8 = private constant [9 x i8] c"on_loop\0A\00"
-@str3.c8 = private constant [22 x i8] c"beacon_entry from %s\0A\00"
-@str4.c8 = private constant [13 x i8] c"beacon_loop\0A\00"
-@str5.c8 = private constant [19 x i8] c"beacon_exit to %s\0A\00"
+@str1.c8 = private constant [10 x i8] [i8 111, i8 102, i8 102, i8 95, i8 108, i8 111, i8 111, i8 112, i8 10, i8 0]
+@str2.c8 = private constant [9 x i8] [i8 111, i8 110, i8 95, i8 108, i8 111, i8 111, i8 112, i8 10, i8 0]
+@str3.c8 = private constant [22 x i8] [i8 98, i8 101, i8 97, i8 99, i8 111, i8 110, i8 95, i8 101, i8 110, i8 116, i8 114, i8 121, i8 32, i8 102, i8 114, i8 111, i8 109, i8 32, i8 37, i8 115, i8 10, i8 0]
+@str4.c8 = private constant [13 x i8] [i8 98, i8 101, i8 97, i8 99, i8 111, i8 110, i8 95, i8 108, i8 111, i8 111, i8 112, i8 10, i8 0]
+@str5.c8 = private constant [19 x i8] [i8 98, i8 101, i8 97, i8 99, i8 111, i8 110, i8 95, i8 101, i8 120, i8 105, i8 116, i8 32, i8 116, i8 111, i8 32, i8 37, i8 115, i8 10, i8 0]
 
 
 
@@ -156,7 +156,7 @@ define void @off_entry(%FSM* %fsm) {
 }
 
 define void @off_loop(%FSM* %fsm) {
-    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str1.c8)
+    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([10 x i8]* @str1.c8 to [0 x i8]*))
     %2 = load i8, i8* @cnt
     %3 = icmp ult i8 %2, 10
     br i1 %3 , label %then_0, label %else_0
@@ -187,7 +187,7 @@ define void @on_entry(%FSM* %fsm) {
 }
 
 define void @on_loop(%FSM* %fsm) {
-    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str2.c8)
+    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([9 x i8]* @str2.c8 to [0 x i8]*))
     %2 = load i8, i8* @cnt
     %3 = icmp ult i8 %2, 10
     br i1 %3 , label %then_0, label %else_0
@@ -217,12 +217,12 @@ define void @beacon_entry(%FSM* %fsm) {
     %2 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 1
     %3 = load i32, i32* %2
     %4 = call [0 x i8]*(%FSM*, i32) @fsm_state_no_name (%FSM* %1, i32 %3)
-    %5 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str3.c8, [0 x i8]* %4)
+    %5 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([22 x i8]* @str3.c8 to [0 x i8]*), [0 x i8]* %4)
     ret void
 }
 
 define void @beacon_loop(%FSM* %fsm) {
-    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str4.c8)
+    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([13 x i8]* @str4.c8 to [0 x i8]*))
     %2 = load i8, i8* @cnt
     %3 = icmp ult i8 %2, 10
     br i1 %3 , label %then_0, label %else_0
@@ -245,7 +245,7 @@ define void @beacon_exit(%FSM* %fsm) {
     %2 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 2
     %3 = load i32, i32* %2
     %4 = call [0 x i8]*(%FSM*, i32) @fsm_state_no_name (%FSM* %1, i32 %3)
-    %5 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str5.c8, [0 x i8]* %4)
+    %5 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([19 x i8]* @str5.c8 to [0 x i8]*), [0 x i8]* %4)
     ret void
 }
 

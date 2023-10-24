@@ -222,10 +222,10 @@ declare i8* @memset(i8*, i32, i64)
 declare i8* @memcpy(i8*, i8*, i64)
 declare i32 @memcmp(i8*, i8*, i64)
 declare void @free(i8*)
-declare i32 @strncmp(i8*, i8*, i64)
-declare i32 @strcmp(i8*, i8*)
-declare i8* @strcpy(i8*, i8*)
-declare i64 @strlen(i8*)
+declare i32 @strncmp([0 x i8]*, [0 x i8]*, i64)
+declare i32 @strcmp([0 x i8]*, [0 x i8]*)
+declare [0 x i8]* @strcpy([0 x i8]*, [0 x i8]*)
+declare i64 @strlen([0 x i8]*)
 
 
 declare i32 @ftruncate(i32, i32)
@@ -285,8 +285,8 @@ declare double @max_float64(double, double)
 
 ; -- SOURCE: src/main.cm
 
-@str1.c8 = private constant [18 x i8] c"lines_0_len = %f\0A\00"
-@str2.c8 = private constant [18 x i8] c"lines_1_len = %f\0A\00"
+@str1.c8 = private constant [18 x i8] [i8 108, i8 105, i8 110, i8 101, i8 115, i8 95, i8 48, i8 95, i8 108, i8 101, i8 110, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
+@str2.c8 = private constant [18 x i8] [i8 108, i8 105, i8 110, i8 101, i8 115, i8 95, i8 49, i8 95, i8 108, i8 101, i8 110, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
 
 
 
@@ -353,8 +353,8 @@ define i32 @main() {
     double 25.0
   }
 })
-    %3 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str1.c8, double %1)
-    %4 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str2.c8, double %2)
+    %3 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([18 x i8]* @str1.c8 to [0 x i8]*), double %1)
+    %4 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([18 x i8]* @str2.c8 to [0 x i8]*), double %2)
     ret i32 0
 }
 

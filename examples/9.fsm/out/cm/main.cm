@@ -31,7 +31,7 @@ func off_entry (fsm : *FSM) -> Unit {
 func off_loop (fsm : *FSM) -> Unit {
     fsm to Unit
 
-    printf("off_loop\n")
+    printf(["111"[0], "102"[0], "102"[0], "95"[0], "108"[0], "111"[0], "111"[0], "112"[0], "\xa"[0], "\x0"[0]])
     if cnt < 10 {
         cnt := cnt + 1
     } else {
@@ -59,7 +59,7 @@ func on_entry (fsm : *FSM) -> Unit {
 
 func on_loop (fsm : *FSM) -> Unit {
     fsm to Unit
-    printf("on_loop\n")
+    printf(["111"[0], "110"[0], "95"[0], "108"[0], "111"[0], "111"[0], "112"[0], "\xa"[0], "\x0"[0]])
     if cnt < 10 {
         cnt := cnt + 1
     } else {
@@ -81,12 +81,12 @@ func on_exit (fsm : *FSM) -> Unit {
 
 func beacon_entry (fsm : *FSM) -> Unit {
     let from_name = fsm_state_no_name(fsm to *FSM, fsm.state)
-    printf("beacon_entry from %s\n", from_name)
+    printf(["98"[0], "101"[0], "97"[0], "99"[0], "111"[0], "110"[0], "95"[0], "101"[0], "110"[0], "116"[0], "114"[0], "121"[0], "32"[0], "102"[0], "114"[0], "111"[0], "109"[0], "32"[0], "37"[0], "115"[0], "\xa"[0], "\x0"[0]], from_name)
 }
 
 
 func beacon_loop (fsm : *FSM) -> Unit {
-    printf("beacon_loop\n")
+    printf(["98"[0], "101"[0], "97"[0], "99"[0], "111"[0], "110"[0], "95"[0], "108"[0], "111"[0], "111"[0], "112"[0], "\xa"[0], "\x0"[0]])
     if cnt < 10 {
         cnt := cnt + 1
     } else {
@@ -98,33 +98,33 @@ func beacon_loop (fsm : *FSM) -> Unit {
 
 func beacon_exit (fsm : *FSM) -> Unit {
     let to_name = fsm_state_no_name(fsm to *FSM, fsm.nexstate)
-    printf("beacon_exit to %s\n", to_name)
+    printf(["98"[0], "101"[0], "97"[0], "99"[0], "111"[0], "110"[0], "95"[0], "101"[0], "120"[0], "105"[0], "116"[0], "32"[0], "116"[0], "111"[0], "32"[0], "37"[0], "115"[0], "\xa"[0], "\x0"[0]], to_name)
 }
 
 
 
 var fsm : FSM := {
-    name = ["F"[0], "l"[0], "a"[0], "s"[0], "h"[0]]
+    name = ["70"[0], "108"[0], "97"[0], "115"[0], "104"[0]]
     state = 0
     nexstate = 0
     substate = fsmSubstateEntering
     states = [
         {
-            name = ["O"[0], "f"[0], "f"[0]]
+            name = ["79"[0], "102"[0], "102"[0]]
             entry = &off_entry
             loop = &off_loop
             exit = &off_exit
         }
 
         {
-            name = ["O"[0], "n"[0]]
+            name = ["79"[0], "110"[0]]
             entry = &on_entry
             loop = &on_loop
             exit = &on_exit
         }
 
         {
-            name = ["B"[0], "e"[0], "a"[0], "c"[0], "o"[0], "n"[0]]
+            name = ["66"[0], "101"[0], "97"[0], "99"[0], "111"[0], "110"[0]]
             entry = &beacon_entry
             loop = &beacon_loop
             exit = &beacon_exit

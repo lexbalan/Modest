@@ -91,13 +91,13 @@ declare void @perror(%ConstCharStr*)
 
 ; -- SOURCE: src/main.cm
 
-@str1.c8 = private constant [19 x i8] c"Hello World! 🎉\0A\00"
+@str1.c8 = private constant [19 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 32, i8 87, i8 111, i8 114, i8 108, i8 100, i8 33, i8 32, i8 240, i8 159, i8 142, i8 137, i8 10, i8 0]
 
 
 
 
 define i32 @main() {
-    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* @str1.c8)
+    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([19 x i8]* @str1.c8 to [0 x i8]*))
     ret i32 0
 }
 

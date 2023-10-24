@@ -17,11 +17,11 @@ func nat64_list_insert (list : *List, x : Nat64) -> Unit {
 
 // show list conent from first item to last
 func list_print_forward (list : *List) -> Unit {
-    printf("list_print_forward:\n")
+    printf(["108"[0], "105"[0], "115"[0], "116"[0], "95"[0], "112"[0], "114"[0], "105"[0], "110"[0], "116"[0], "95"[0], "102"[0], "111"[0], "114"[0], "119"[0], "97"[0], "114"[0], "100"[0], "58"[0], "\xa"[0], "\x0"[0]])
     var pn : *Node := linked_list_first_get(list)
     while pn != nil {
         let x = linked_list_node_link_get(pn)
-        printf("v = %d\n", *x)
+        printf(["118"[0], "32"[0], "61"[0], "32"[0], "37"[0], "100"[0], "\xa"[0], "\x0"[0]], *x)
         pn := linked_list_node_next_get(pn)
     }
 }
@@ -29,23 +29,23 @@ func list_print_forward (list : *List) -> Unit {
 
 // show list conent from last item to first
 func list_print_backward (list : *List) -> Unit {
-    printf("list_print_backward:\n")
+    printf(["108"[0], "105"[0], "115"[0], "116"[0], "95"[0], "112"[0], "114"[0], "105"[0], "110"[0], "116"[0], "95"[0], "98"[0], "97"[0], "99"[0], "107"[0], "119"[0], "97"[0], "114"[0], "100"[0], "58"[0], "\xa"[0], "\x0"[0]])
     var pn : *Node := linked_list_last_get(list)
     while pn != nil {
         let x = linked_list_node_link_get(pn)
-        printf("v = %d\n", *x)
+        printf(["118"[0], "32"[0], "61"[0], "32"[0], "37"[0], "100"[0], "\xa"[0], "\x0"[0]], *x)
         pn := linked_list_node_prev_get(pn)
     }
 }
 
 
 func main () -> Int {
-    printf("linked list example\n")
+    printf(["108"[0], "105"[0], "110"[0], "107"[0], "101"[0], "100"[0], "32"[0], "108"[0], "105"[0], "115"[0], "116"[0], "32"[0], "101"[0], "120"[0], "97"[0], "109"[0], "112"[0], "108"[0], "101"[0], "\xa"[0], "\x0"[0]])
 
     let list = linked_list_create()
 
     if list == nil {
-        printf("error: cannot create list")
+        printf(["101"[0], "114"[0], "114"[0], "111"[0], "114"[0], "58"[0], "32"[0], "99"[0], "97"[0], "110"[0], "110"[0], "111"[0], "116"[0], "32"[0], "99"[0], "114"[0], "101"[0], "97"[0], "116"[0], "101"[0], "32"[0], "108"[0], "105"[0], "115"[0], "116"[0], "\x0"[0]])
         return 1
     }
 
@@ -64,7 +64,7 @@ func main () -> Int {
 
     // print list size
     let list_size = linked_list_size_get(list)
-    printf("linked list size: %d\n", list_size)
+    printf(["108"[0], "105"[0], "110"[0], "107"[0], "101"[0], "100"[0], "32"[0], "108"[0], "105"[0], "115"[0], "116"[0], "32"[0], "115"[0], "105"[0], "122"[0], "101"[0], "58"[0], "32"[0], "37"[0], "100"[0], "\xa"[0], "\x0"[0]], list_size)
 
     // print list forward
     list_print_forward(list)
