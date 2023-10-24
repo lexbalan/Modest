@@ -25,31 +25,25 @@ e := 256 // error (Nat8 = {0 .. 255})
 
 
 ### String literals
-Numeric literals have type **GenericString**
+String literals have type `[]GenericChar`
 ```swift
 "Hello wolrd!"
 ```
-You can cast it to:
-1) Array
+You can cons from it:
+1) Array of Char
 ```swift
-var array : [12]Nat8 := "Hello wolrd!"
+var array : [12]Char8 := "Hello wolrd!"
 ```
 
-2) Pointer to Array
+2) Pointer to Array of Char
 ```swift
-var ptr_to_array : *[]Nat8 := "Hello wolrd!"
+var ptr_to_array : *[]Char8 := "Hello wolrd!"
 ```
 
-String types are aliases to arrays:
-```swift
-// this types are builtin, and you dont need to describe them
-// type Str8 *[]Nat8
-// type Str16 *[]Nat16
-// type Str32 *[]Nat32
-```
+
 
 And you can use it this way
 ```swift
-var mystr : Str8
+var mystr : *Str8
 mystr := "Hello!"
 ```
