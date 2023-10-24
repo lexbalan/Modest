@@ -752,7 +752,7 @@ def select_cast_operator(a, b):
         elif type.is_integer(b):
             return 'ptrtoint'
 
-    elif type.is_string(a):
+    elif type.is_ptr_to_string(a):
         if type.is_pointer(b):
             return 'bitcast'
 
@@ -784,12 +784,10 @@ def do_eval_expr_cast_generic(x):
     to_type = x['type']
 
     # строки печатаются ТОЛЬКО отсюда!
-    #if type.is_generic_string(from_type):
-    #if type.is_string(from_type):
     if True:
-        if type.is_string(to_type) or type.is_ptr_to_char(to_type):
+        if type.is_ptr_to_string(to_type):
 
-            if type.is_string(to_type):
+            if type.is_ptr_to_string(to_type):
                 string_of = to_type['to']['of']
             else:
                 string_of = to_type['to']
@@ -861,7 +859,7 @@ def do_eval_expr_cast(x):
 
 
     if type.is_generic_string(from_type):
-        if type.is_ptr_to_arr_of_char(to_type):
+        if type.is_ptr_to_string(to_type):
             error("strings need to print through do_eval_expr_cast_generic", x)
             exit(1)
 
@@ -1082,8 +1080,7 @@ def do_eval_literal(x):
         return do_eval_array(x)
     elif type.is_bool(x['type']):
         return ll_create_value_num(x['type'], x['imm'])
-    #elif type.is_string(x['type']):
-    #    return do_eval_str(x)
+
     elif type.is_free_pointer(x['type']):
         return ll_create_value_num(x['type'], x['imm'])
     elif type.is_pointer(x['type']):

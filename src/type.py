@@ -332,9 +332,6 @@ def is_bad(t):
 
 
 def is_generic(t):
-    if not 'generic' in t:
-        print(t)
-
     return t['generic']
 
 
@@ -388,12 +385,16 @@ def is_record(t):
     return t['kind'] == 'record'
 
 
+
 def is_string(t):
-    if t['kind'] == 'String':
-        return True
+    return is_array_of_char(t)
 
-    return is_ptr_to_arr_of_char(t)
 
+def is_ptr_to_string(t):
+    if not is_pointer(t):
+        return False
+
+    return is_string(t['to'])
 
 
 # WARNING: Generic int type can be
@@ -491,11 +492,12 @@ def is_pointer_to_record(t):
     return is_record(t['to'])
 
 
-def is_ptr_to_char(t):
-    if not is_pointer(t):
+
+def is_array_of_char(t):
+    if not is_array(t):
         return False
 
-    if not is_char(t['to']):
+    if not is_char(t['of']):
         return False
 
     return True
@@ -505,13 +507,8 @@ def is_ptr_to_arr_of_char(t):
     if not is_pointer(t):
         return False
 
-    if not is_array(t['to']):
-        return False
+    return is_array_of_char(t['to'])
 
-    if not is_char(t['to']['of']):
-        return False
-
-    return True
 
 
 

@@ -898,7 +898,7 @@ def do_value_index(x):
 
 
     # check if left type is valid
-    if not (type.is_array(typ) or type.is_pointer(typ) or type.is_string(typ)):
+    if not (type.is_array(typ) or type.is_pointer(typ) or type.is_ptr_to_string(typ)):
         error("expected array or pointer to array", x)
         return hlir_value_bad(x['left']['ti'])
 

@@ -12,7 +12,7 @@ from .integer import value_cons_integer
 from .float import value_cons_float
 from .record import value_cons_record
 from .array import value_cons_array
-from .pointer import value_cons_pointer, cons_ptr_to_string8_from_generic_string
+from .pointer import value_cons_pointer, cons_ptr_to_str_from_generic_str
 
 
 
@@ -45,13 +45,15 @@ def cons_default(x, ti):
     if not type.is_generic(from_type):
         return x
 
+    # ONLY FOR GENERIC
+
     method = 'implicit'
 
     if type.is_integer(from_type):
         return value_cons_integer(x, typeSysInt, ti, method)
 
-    elif type.is_generic_string(from_type):
-        return cons_ptr_to_string_from_generic_string(x, typeSysStr, ti, method)
+    elif type.is_string(from_type):
+        return cons_ptr_to_str_from_generic_str(x, typeSysStr, ti, method)
 
     elif type.is_float(from_type):
         return value_cons_float(x, typeSysFloat, ti, method)
@@ -59,8 +61,6 @@ def cons_default(x, ti):
 
     fatal("unimplemented cons_default case")
     return hlir_value_bad(ti)
-
-
 
 
 

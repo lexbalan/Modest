@@ -512,9 +512,8 @@ def print_value_cast_generic(v, ctx):
     from_type = value['type']
     to_type = v['type']
 
-    if type.is_generic_string(from_type):
-        if type.is_string(to_type):
-
+    if type.is_string(from_type):
+        if type.is_ptr_to_string(to_type):
             char_power = to_type['to']['of']['power']
 
             prefix = "" #"u8"
@@ -614,9 +613,7 @@ def print_value_cast(x, ctx):
 
 
 def print_value_literal_arr(v, ctx):
-
     if type.is_generic_string(v['type']):
-        #print("LIT")
         char_power = v['type']['of']['power']
 
         prefix = "" #"u8"
@@ -763,12 +760,14 @@ def print_value_literal_str(x, ctx, prefix=""):
     out("%s\"" % prefix)
 
     for c in x['imm']:
-        sym = chr(c['imm'])
+        ccode = c['imm']
+        sym = chr(ccode)
 
         if sym == '\n': out("\\n")
         elif sym == '\r': out("\\r")
         elif sym == '\a': out("\\a")
-        else: out(sym)
+        elif ccode >= 0x20 and ccode <= 0x7E : out(sym)
+        elif ccode != 0: out("\\x%x" % ccode)
 
     out("\"")
 
@@ -870,7 +869,6 @@ def print_value_literal(x, ctx):
     elif type.is_float(t): print_value_literal_flt(x, ctx)
     elif type.is_record(t): print_value_literal_record(x, ctx)
     elif type.is_array(t): print_value_literal_arr(x, ctx)
-    #elif type.is_string(t): print_value_literal_str(x, ctx)
     elif type.is_pointer(t): print_value_literal_ptr(x, ctx)
     elif type.is_char(t): print_value_literal_char(x, ctx)
     elif type.is_bool(t): print_value_literal_int(x, ctx)
