@@ -31,8 +31,8 @@ int main(void)
 {
     // indexing of GenericString returns #i symbol code
     // the symbols have GenericInteger type
-    const char omegaCharCode = u'\x3a9';
-    const char ratCharCode = U'\x1f400';
+    const uint32_t omegaCharCode = u'\x3a9';
+    const uint32_t ratCharCode = U'\x1f400';
 
     // you can assign omegaCharCode (937) to Nat32,
     // but you can't assign ratCharCode (128000) to Nat16 (!)

@@ -135,8 +135,8 @@ def type_init():
 
     typeGenericChar = hlir_type_generic_char(power=32, ti=None)
     typeGenericChar['cm_alias'] = 'Char'
-    typeGenericChar['c_alias'] = 'char'
-    typeGenericChar['llvm_alias'] = 'i8'
+    typeGenericChar['c_alias'] = 'uint32_t'
+    typeGenericChar['llvm_alias'] = 'i32'
 
 
     typeChar8 = hlir_type_char("Char8", power=8, ti=None)
@@ -156,9 +156,9 @@ def type_init():
     typeGenericString['c_alias'] = 'const char *'
     typeGenericString['llvm_alias'] = 'i8*'
 
-    typeStr8 = (hlir_type_array(of=typeChar8))
-    typeStr16 = (hlir_type_array(of=typeChar16))
-    typeStr32 = (hlir_type_array(of=typeChar32))
+    typeStr8 = hlir_type_array(of=typeChar8)
+    typeStr16 = hlir_type_array(of=typeChar16)
+    typeStr32 = hlir_type_array(of=typeChar32)
 
 
     typeFreePtr = hlir_type_free_pointer(ti=None)
