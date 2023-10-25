@@ -49,12 +49,12 @@ func utf32_to_utf8(c: Char32, buf: *[5]Char8) -> Nat8 {
 
 func utf32_putchar(c: Char32) -> Unit {
     var decoded_buf : [5]Char8
-    utf32_to_utf8(c, &decoded_buf)
+    let n = utf32_to_utf8(c, &decoded_buf) to Int
 
     var i := 0
-    while true {
-        let c2 = decoded_buf[i]
-        if c2 to Nat8 == 0 {break}
+    while i < n {
+        let c = decoded_buf[i]
+        if c to Nat8 == 0 {break}
         putchar(c to Int32)
         i := i + 1
     }

@@ -1,6 +1,6 @@
 
 
-func utf32_to_utf8(x: Nat32, buf: *[5]Char8) -> Unit
+func utf32_to_utf8(x: Char32, buf: *[5]Char8) -> Unit
 
 func utf8_puts(s: *Str8) -> Unit
 func utf16_puts(s: *Str16) -> Unit
