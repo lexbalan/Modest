@@ -403,11 +403,19 @@ def is_ptr_to_string(t):
 # example: let x = 0xFFFFFFFF  #it is signed or unsigned value?
 
 def is_signed(t):
-    return t['signed']
+    if t['kind'] == 'int':
+        return t['signed']
+    return False
 
 
 def is_unsigned(t):
-    return t['unsigned']
+    if t['kind'] == 'int':
+        return t['unsigned']
+
+    if t['kind'] in ['char', 'pointer']:
+        return True
+
+    return False
 
 
 

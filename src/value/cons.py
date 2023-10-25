@@ -22,6 +22,11 @@ def value_cons_from_generic(v, t, ti):
 
     nv = hlir_value_cast(v, t, ti)
     nv['kind'] = 'cast_generic'
+
+    if not 'imm' in v:
+        print("not #imm in value:")
+        value_print(v)
+
     nv['imm'] = v['imm']
 
     if 'nl_end' in v:

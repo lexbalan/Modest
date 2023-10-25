@@ -535,38 +535,6 @@ def print_value_cast(x, ctx):
     value = x['value']
     from_type = value['type']
 
-    # example:
-    # const greeting = "Hello World!\n"
-    # const greeting8 = greeting to Str8
-    # const greeting16 = greeting to Str16
-    # const greeting32 = greeting to Str32
-    #
-    """if type.is_generic_string(from_type):
-        if type.is_ptr_to_arr_of_char(to_type) or type.is_ptr_to_char(to_type):
-            char_power = 0
-
-            if type.is_ptr_to_arr_of_char(to_type):
-                char_power = to_type['to']['of']['power']
-            elif type.is_ptr_to_char(to_type):
-                char_power = to_type['to']['power']
-
-            if char_power == 8:
-                if 'id' in value:
-                    print_value_by_id(value)
-                    return
-
-            elif char_power == 16:
-                out("u")
-
-            elif char_power == 32:
-                out("U")
-
-            print_value_literal_str(value, ctx=[])
-
-            return
-            """
-
-
     # в у нас типы структурные, в си - номинальные
     # поэтому даже если структуры одинаковы, но имена разные
     # их нужно приводить
@@ -579,8 +547,8 @@ def print_value_cast(x, ctx):
 
 
     # cast struct to another struct
-    if type.is_record(from_type):
-        if type.is_record(to_type):
+    if type.is_record(to_type):
+        if type.is_record(from_type):
             # *((RecordType *)&value)
             out("*((")
             print_type(to_type, need_space_after=False)
@@ -594,16 +562,16 @@ def print_value_cast(x, ctx):
     # - in Cm int32(-1) -> uint64 => 0x00000000ffffffff
     # - in C  int32(-1) -> uint64 => 0xffffffffffffffff
     # required: (uint64_t)((uint32)int32_value)
-    if type.is_integer_signed(from_type):
-        if type.is_integer_unsigned(to_type):
-            if from_type['size'] < to_type['size']:
-                out("((")
-                print_type(to_type, need_space_after=False)
-                out(")")
-                nat_same_sz = type.select_nat(from_type['power'])
-                print_cast(nat_same_sz, value, ctx)
-                out(")")
-                return
+    if type.is_unsigned(to_type):
+        #if type.is_signed(from_type): # is_signed (integers, chars)
+        if from_type['size'] < to_type['size']:
+            out("((")
+            print_type(to_type, need_space_after=False)
+            out(")")
+            nat_same_sz = type.select_nat(from_type['power'])
+            print_cast(nat_same_sz, value, ctx)
+            out(")")
+            return
 
 
     print_cast(to_type, value, ctx)
@@ -622,7 +590,7 @@ def print_value_literal_arr(v, ctx):
         elif char_power > 8:
             prefix = "u"
 
-        print_value_literal_str(v, ctx=[])#, prefix=prefix)
+        print_value_literal_str(v, ctx=[], prefix=prefix)
         return
 
 

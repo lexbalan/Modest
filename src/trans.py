@@ -918,8 +918,8 @@ def do_value_index(x):
     if ptr_access:
         v = hlir_value_index_array_by_ptr(a, i, ti=x['ti'])
 
-    elif type.is_generic_string(typ):
-        pass
+#    elif type.is_generic_string(typ):
+#        pass
 
     else:
         v = hlir_value_index_array(a, i, ti=x['ti'])
@@ -930,21 +930,15 @@ def do_value_index(x):
     # immediate index (!)
     if value_is_immediate(a) and not ptr_access:
         if value_is_immediate(i):
+            #info("^^", x['ti'])
+
             index = i['imm']
 
-            # TODO:
-            #if index >= typ['volume']['imm']:
-            #    error("array index out of bounds", x['index'])
+            if index >= typ['volume']['imm']:
+                error("array index out of bounds", x['index'])
 
-            if type.is_generic_string(a['type']):
-                # is generic string
-                c = a['imm'][index]
-                return c #value_generic_char(c, ti=x['ti'])
-
-            else:
-                # is an array
-                items = a['imm']
-                v['imm'] = items[index]['imm']
+            items = a['imm']
+            v['imm'] = items[index]['imm']
 
 
     return v
