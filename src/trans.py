@@ -1022,24 +1022,19 @@ def do_value_id(x):
     return vx
 
 
-"""def do_value_ns(x):
-    ns_id = x['ids'][0]
-    id = x['ids'][1]
-
-    ns_id_str = ns_id['str']
-    if not ns_id_str in module['imwports']:
-        error("namespace nof found", ns_id)
-
-    return hlir_value_bad(ns_id['ti'])"""
-
-
-
-
 def do_value_str(x):
     string=x['str']
     length=x['len']
     ti=x['ti']
-    s = hlir_value_generic_str(string, ti=ti)
+
+    vol = hlir_value_int(len(string) + 1)
+    genStrType = hlir_type_array(type.typeGenericChar, volume=vol, generic=True, ti=ti)
+
+    imm = hlir_string_imm(string)
+    items = imm
+
+    s = hlir_value_literal(genStrType, items, ti)
+
     return s
 
 

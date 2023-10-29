@@ -9,7 +9,7 @@
 #define genericIntConst  42
 #define int32Const  genericIntConst
 
-#define genericStringConst  "Hello!"
+#define genericStringConst  U"Hello!"
 #define string8Const  "Hello!"
 #define string16Const  u"Hello!"
 #define string32Const  U"Hello!"

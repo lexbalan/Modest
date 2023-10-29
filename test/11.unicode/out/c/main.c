@@ -21,7 +21,7 @@ uint32_t arr_utf32[8] = {'H', 'e', 'l', 'l', 'o', '!', '\xa'};
 
 
 
-#define genericStringConst  "S-t-r-i-n-g"
+#define genericStringConst  U"S-t-r-i-n-g"
 #define string8Const  "S-t-r-i-n-g"
 #define string16Const  u"S-t-r-i-n-g"
 #define string32Const  U"S-t-r-i-n-g"
@@ -31,16 +31,16 @@ int main(void)
 {
     // indexing of GenericString returns #i symbol code
     // the symbols have GenericInteger type
-    const uint32_t omegaCharCode = u'\x3a9';
-    const uint32_t ratCharCode = U'\x1f400';
+    //    let omegaCharCode = "Hello Ω!\n"[6]
+    //    let ratCharCode = "Hello 🐀!\n"[6]
 
     // you can assign omegaCharCode (937) to Nat32,
     // but you can't assign ratCharCode (128000) to Nat16 (!)
-    uint16_t omegaCode = (uint16_t)omegaCharCode;
-    uint32_t ratCode = (uint32_t)ratCharCode;
+    //    var omegaCode : Nat16 := omegaCharCode to Nat16
+    //    var ratCode : Nat32 := ratCharCode to Nat32
 
-    printf("omegaCode = %d\n", omegaCode);
-    printf("ratCode = %d\n", ratCode);
+    //    printf("omegaCode = %d\n", omegaCode)
+    //    printf("ratCode = %d\n", ratCode)
 
 
     utf16_puts(u"Hello \x3a9!\n");

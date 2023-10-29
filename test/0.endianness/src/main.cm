@@ -1,0 +1,21 @@
+// examples/0.endianness/main.cm
+
+@attribute("c-no-print")
+import "libc/stdio.hm"
+
+
+func main () -> Int {
+    var check : Nat16 := 0x0001
+    var p_check : *Nat8 := &check to *Nat8
+
+    if *p_check == 1 {
+        printf("little")
+    } else {
+        printf("big")
+    }
+
+    printf("-endian\n")
+
+    return 0
+}
+

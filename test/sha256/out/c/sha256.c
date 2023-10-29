@@ -106,7 +106,7 @@ void sha256_transform(SHA256_Context *ctx, uint8_t *data)
     uint32_t j = 0;
 
     while (i < 16) {
-        const uint32_t x = (uint32_t)data[j + 0] << 24 | (uint32_t)data[j + 1] << 16 | (uint32_t)data[j + 2] << 8 | (uint32_t)data[j + 3] << 0;
+        const uint32_t x = ((uint32_t)(uint8_t)data[j + 0]) << 24 | ((uint32_t)(uint8_t)data[j + 1]) << 16 | ((uint32_t)(uint8_t)data[j + 2]) << 8 | ((uint32_t)(uint8_t)data[j + 3]) << 0;
 
         m[i] = x;
         j = j + 4;
@@ -177,7 +177,7 @@ void sha256_final(SHA256_Context *ctx, uint8_t *hash)
 
     i = i + 1;
 
-    memset((void *)&ctx->data[i], 0, (size_t)(n - i));
+    memset((void *)&ctx->data[i], 0, ((size_t)(uint32_t)(n - i)));
 
     if (ctx->datalen >= 56) {
         sha256_transform((SHA256_Context *)ctx, (uint8_t *)&ctx->data[0]);
@@ -185,7 +185,7 @@ void sha256_final(SHA256_Context *ctx, uint8_t *hash)
     }
 
     // Append to the padding the total message's length in bits and transform.
-    ctx->bitlen = ctx->bitlen + (uint64_t)ctx->datalen * 8;
+    ctx->bitlen = ctx->bitlen + ((uint64_t)(uint32_t)ctx->datalen) * 8;
 
     ctx->data[63] = (uint8_t)(ctx->bitlen >> 0);
     ctx->data[62] = (uint8_t)(ctx->bitlen >> 8);

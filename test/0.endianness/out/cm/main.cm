@@ -1,0 +1,19 @@
+// examples/0.endianness/main.cm
+import "libc/stdio.h"
+
+
+func main () -> Int {
+    var check : Nat16 := 0x0001
+    var p_check : *Nat8 := &check to *Nat8
+
+    if *p_check == 1 {
+        printf(["108"[0], "105"[0], "116"[0], "116"[0], "108"[0], "101"[0], "\x0"[0]])
+    } else {
+        printf(["98"[0], "105"[0], "103"[0], "\x0"[0]])
+    }
+
+    printf(["45"[0], "101"[0], "110"[0], "100"[0], "105"[0], "97"[0], "110"[0], "\xa"[0], "\x0"[0]])
+
+    return 0
+}
+

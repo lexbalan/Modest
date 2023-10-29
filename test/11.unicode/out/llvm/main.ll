@@ -103,14 +103,12 @@ declare void @utf32_putchar(i32)
 @str1.c8 = private constant [12 x i8] [i8 83, i8 45, i8 116, i8 45, i8 114, i8 45, i8 105, i8 45, i8 110, i8 45, i8 103, i8 0]
 @str2.c16 = private constant [12 x i16] [i16 83, i16 45, i16 116, i16 45, i16 114, i16 45, i16 105, i16 45, i16 110, i16 45, i16 103, i16 0]
 @str3.c32 = private constant [12 x i32] [i32 83, i32 45, i32 116, i32 45, i32 114, i32 45, i32 105, i32 45, i32 110, i32 45, i32 103, i32 0]
-@str4.c8 = private constant [16 x i8] [i8 111, i8 109, i8 101, i8 103, i8 97, i8 67, i8 111, i8 100, i8 101, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str5.c8 = private constant [14 x i8] [i8 114, i8 97, i8 116, i8 67, i8 111, i8 100, i8 101, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str6.c16 = private constant [10 x i16] [i16 72, i16 101, i16 108, i16 108, i16 111, i16 32, i16 937, i16 33, i16 10, i16 0]
-@str7.c32 = private constant [10 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 32, i32 937, i32 33, i32 10, i32 0]
-@str8.c32 = private constant [10 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 32, i32 128000, i32 33, i32 10, i32 0]
+@str4.c16 = private constant [10 x i16] [i16 72, i16 101, i16 108, i16 108, i16 111, i16 32, i16 937, i16 33, i16 10, i16 0]
+@str5.c32 = private constant [10 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 32, i32 937, i32 33, i32 10, i32 0]
+@str6.c32 = private constant [10 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 32, i32 128000, i32 33, i32 10, i32 0]
+@str7.c8 = private constant [2 x i8] [i8 10, i8 0]
+@str8.c8 = private constant [2 x i8] [i8 10, i8 0]
 @str9.c8 = private constant [2 x i8] [i8 10, i8 0]
-@str10.c8 = private constant [2 x i8] [i8 10, i8 0]
-@str11.c8 = private constant [2 x i8] [i8 10, i8 0]
 
 
 
@@ -150,34 +148,32 @@ declare void @utf32_putchar(i32)
 define i32 @main() {
 ; indexing of GenericString returns #i symbol code
 ; the symbols have GenericInteger type
+;    let omegaCharCode = "Hello Ω!\n"[6]
+;    let ratCharCode = "Hello 🐀!\n"[6]
 ; you can assign omegaCharCode (937) to Nat32,
 ; but you can't assign ratCharCode (128000) to Nat16 (!)
-    %omegaCode = alloca i16
-    store i16 937, i16* %omegaCode
-    %ratCode = alloca i32
-    store i32 128000, i32* %ratCode
-    %1 = load i16, i16* %omegaCode
-    %2 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([16 x i8]* @str4.c8 to [0 x i8]*), i16 %1)
-    %3 = load i32, i32* %ratCode
-    %4 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([14 x i8]* @str5.c8 to [0 x i8]*), i32 %3)
-    call void([0 x i16]*) @utf16_puts ([0 x i16]* bitcast ([10 x i16]* @str6.c16 to [0 x i16]*))
-    call void([0 x i32]*) @utf32_puts ([0 x i32]* bitcast ([10 x i32]* @str7.c32 to [0 x i32]*))
-    call void([0 x i32]*) @utf32_puts ([0 x i32]* bitcast ([10 x i32]* @str8.c32 to [0 x i32]*))
+;    var omegaCode : Nat16 := omegaCharCode to Nat16
+;    var ratCode : Nat32 := ratCharCode to Nat32
+;    printf("omegaCode = %d\n", omegaCode)
+;    printf("ratCode = %d\n", ratCode)
+    call void([0 x i16]*) @utf16_puts ([0 x i16]* bitcast ([10 x i16]* @str4.c16 to [0 x i16]*))
+    call void([0 x i32]*) @utf32_puts ([0 x i32]* bitcast ([10 x i32]* @str5.c32 to [0 x i32]*))
+    call void([0 x i32]*) @utf32_puts ([0 x i32]* bitcast ([10 x i32]* @str6.c32 to [0 x i32]*))
     %str8 = alloca [0 x i8]*
     store [0 x i8]* bitcast ([12 x i8]* @str1.c8 to [0 x i8]*), [0 x i8]** %str8
     %str16 = alloca [0 x i16]*
     store [0 x i16]* bitcast ([12 x i16]* @str2.c16 to [0 x i16]*), [0 x i16]** %str16
     %str32 = alloca [0 x i32]*
     store [0 x i32]* bitcast ([12 x i32]* @str3.c32 to [0 x i32]*), [0 x i32]** %str32
-    %5 = load [0 x i8]*, [0 x i8]** %str8
-    call void([0 x i8]*) @utf8_puts ([0 x i8]* %5)
+    %1 = load [0 x i8]*, [0 x i8]** %str8
+    call void([0 x i8]*) @utf8_puts ([0 x i8]* %1)
+    call void([0 x i8]*) @utf8_puts ([0 x i8]* bitcast ([2 x i8]* @str7.c8 to [0 x i8]*))
+    %2 = load [0 x i16]*, [0 x i16]** %str16
+    call void([0 x i16]*) @utf16_puts ([0 x i16]* %2)
+    call void([0 x i8]*) @utf8_puts ([0 x i8]* bitcast ([2 x i8]* @str8.c8 to [0 x i8]*))
+    %3 = load [0 x i32]*, [0 x i32]** %str32
+    call void([0 x i32]*) @utf32_puts ([0 x i32]* %3)
     call void([0 x i8]*) @utf8_puts ([0 x i8]* bitcast ([2 x i8]* @str9.c8 to [0 x i8]*))
-    %6 = load [0 x i16]*, [0 x i16]** %str16
-    call void([0 x i16]*) @utf16_puts ([0 x i16]* %6)
-    call void([0 x i8]*) @utf8_puts ([0 x i8]* bitcast ([2 x i8]* @str10.c8 to [0 x i8]*))
-    %7 = load [0 x i32]*, [0 x i32]** %str32
-    call void([0 x i32]*) @utf32_puts ([0 x i32]* %7)
-    call void([0 x i8]*) @utf8_puts ([0 x i8]* bitcast ([2 x i8]* @str11.c8 to [0 x i8]*))
     ret i32 0
 }
 

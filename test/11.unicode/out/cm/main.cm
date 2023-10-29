@@ -25,16 +25,16 @@ const string32Const = ["83"[0], "45"[0], "116"[0], "45"[0], "114"[0], "45"[0], "
 func main () -> Int {
     // indexing of GenericString returns #i symbol code
     // the symbols have GenericInteger type
-    let omegaCharCode = "937"[0]
-    let ratCharCode = "128000"[0]
+    //    let omegaCharCode = "Hello Ω!\n"[6]
+    //    let ratCharCode = "Hello 🐀!\n"[6]
 
     // you can assign omegaCharCode (937) to Nat32,
     // but you can't assign ratCharCode (128000) to Nat16 (!)
-    var omegaCode : Nat16 := omegaCharCode to Nat16
-    var ratCode : Nat32 := ratCharCode to Nat32
+    //    var omegaCode : Nat16 := omegaCharCode to Nat16
+    //    var ratCode : Nat32 := ratCharCode to Nat32
 
-    printf(["111"[0], "109"[0], "101"[0], "103"[0], "97"[0], "67"[0], "111"[0], "100"[0], "101"[0], "32"[0], "61"[0], "32"[0], "37"[0], "100"[0], "\xa"[0], "\x0"[0]], omegaCode)
-    printf(["114"[0], "97"[0], "116"[0], "67"[0], "111"[0], "100"[0], "101"[0], "32"[0], "61"[0], "32"[0], "37"[0], "100"[0], "\xa"[0], "\x0"[0]], ratCode)
+    //    printf("omegaCode = %d\n", omegaCode)
+    //    printf("ratCode = %d\n", ratCode)
 
 
     utf16_puts(["72"[0], "101"[0], "108"[0], "108"[0], "111"[0], "32"[0], "937"[0], "33"[0], "\xa"[0], "\x0"[0]])

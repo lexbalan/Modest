@@ -6,8 +6,8 @@
 
 // examples/1.hello_world/main.cm
 
-#define hello  "Hello"
-#define world  " World! \x1f389\n"
+#define hello  U"Hello"
+#define world  U" World! \x1f389\n"
 
 #define hello_world  hello  world
 

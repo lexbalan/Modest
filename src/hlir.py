@@ -311,18 +311,6 @@ def hlir_string_imm(string):
 
 
 
-def hlir_value_generic_str(string, ti=None):
-    vol = hlir_value_int(len(string) + 1)
-    genStrType = hlir_type_array(type.typeGenericChar, volume=vol, generic=True, ti=ti)
-
-    imm = hlir_string_imm(string)
-    items = imm
-
-    return hlir_value_literal(genStrType, items, ti)
-
-
-
-
 def hlir_value_array(items, type=None, is_generic=False, ti=None):
 
     if type == None:

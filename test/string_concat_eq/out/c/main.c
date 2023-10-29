@@ -6,14 +6,14 @@
 
 // examples/1.hello_world/main.cm
 
-#define hello  "Hello"
-#define world  "World"
-#define party_corn  "\x1f389"
+#define hello  U"Hello"
+#define world  U"World"
+#define party_corn  U"\x1f389"
 
-#define greeting  hello  " "  world//+ " " + party_corn
+#define greeting  hello  U" "  world//+ " " + party_corn
 
 
-#define test  "test"
+#define test  U"test"
 
 
 int main(void)

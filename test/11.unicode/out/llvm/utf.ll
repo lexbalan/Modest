@@ -201,27 +201,30 @@ endif_0:
 define void @utf32_putchar(i32 %c) {
     %decoded_buf = alloca [5 x i8]
     %1 = call i8(i32, [5 x i8]*) @utf32_to_utf8 (i32 %c, [5 x i8]* %decoded_buf)
+    %2 = sext i8 %1 to i32
     %i = alloca i32
     store i32 0, i32* %i
     br label %again_1
 again_1:
-    br i1 1 , label %body_1, label %break_1
+    %3 = load i32, i32* %i
+    %4 = icmp slt i32 %3, %2
+    br i1 %4 , label %body_1, label %break_1
 body_1:
-    %2 = load i32, i32* %i
-    %3 = getelementptr inbounds [5 x i8], [5 x i8]* %decoded_buf, i32 0, i32 %2
-    %4 = load i8, i8* %3
-    %5 = bitcast i8 %4 to i8
-    %6 = icmp eq i8 %5, 0
-    br i1 %6 , label %then_0, label %endif_0
+    %5 = load i32, i32* %i
+    %6 = getelementptr inbounds [5 x i8], [5 x i8]* %decoded_buf, i32 0, i32 %5
+    %7 = load i8, i8* %6
+    %8 = bitcast i8 %7 to i8
+    %9 = icmp eq i8 %8, 0
+    br i1 %9 , label %then_0, label %endif_0
 then_0:
     br label %break_1
     br label %endif_0
 endif_0:
-    %8 = bitcast i32 %c to i32
-    %9 = call i32(i32) @putchar (i32 %8)
-    %10 = load i32, i32* %i
-    %11 = add i32 %10, 1
-    store i32 %11, i32* %i
+    %11 = sext i8 %7 to i32
+    %12 = call i32(i32) @putchar (i32 %11)
+    %13 = load i32, i32* %i
+    %14 = add i32 %13, 1
+    store i32 %14, i32* %i
     br label %again_1
 break_1:
     ret void

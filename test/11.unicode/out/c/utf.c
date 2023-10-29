@@ -55,12 +55,12 @@ uint8_t utf32_to_utf8(uint32_t c, char *buf)
 void utf32_putchar(uint32_t c)
 {
     char decoded_buf[5];
-    utf32_to_utf8(c, &decoded_buf[0]);
+    const int n = (const int)utf32_to_utf8(c, &decoded_buf[0]);
 
     int i = 0;
-    while (true) {
-        const char c2 = decoded_buf[i];
-        if ((uint8_t)c2 == 0) {break;}
+    while (i < n) {
+        const char c = decoded_buf[i];
+        if ((uint8_t)c == 0) {break;}
         putchar((int32_t)c);
         i = i + 1;
     }
@@ -85,7 +85,7 @@ void utf16_puts(uint16_t *s)
     while (true) {
         const uint16_t c = s[i];
         if ((uint16_t)c == 0) {break;}
-        utf32_putchar((uint32_t)c);
+        utf32_putchar(((uint32_t)(uint16_t)c));
         i = i + 1;
     }
 }
