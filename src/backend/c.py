@@ -515,14 +515,7 @@ def print_value_cast_generic(v, ctx):
     if type.is_string(from_type):
         if type.is_ptr_to_string(to_type):
             char_power = to_type['to']['of']['power']
-
-            prefix = "" #"u8"
-            if char_power > 16:
-                prefix = "U"
-            elif char_power > 8:
-                prefix = "u"
-
-            print_value_literal_str(value, ctx=[], prefix=prefix)
+            print_value_literal_str(value, ctx=[], char_power=char_power)
             return
 
     #need_wrap = precedence(value) < precedenceMax
@@ -583,14 +576,7 @@ def print_value_cast(x, ctx):
 def print_value_literal_arr(v, ctx):
     if type.is_generic_string(v['type']):
         char_power = v['type']['of']['power']
-
-        prefix = "" #"u8"
-        if char_power > 16:
-            prefix = "U"
-        elif char_power > 8:
-            prefix = "u"
-
-        print_value_literal_str(v, ctx=[], prefix=prefix)
+        print_value_literal_str(v, ctx=[], char_power=char_power)
         return
 
 
@@ -723,7 +709,13 @@ def print_value_literal_record(v, ctx):
 
 
 
-def print_value_literal_str(x, ctx, prefix=""):
+def print_value_literal_str(x, ctx, char_power=8):
+
+    prefix = "" #"u8"
+    if char_power > 16:
+        prefix = "U"
+    elif char_power > 8:
+        prefix = "u"
 
     out("%s\"" % prefix)
 
