@@ -46,18 +46,21 @@ func print_bytes(buf: *[]Nat8, len: Nat32) -> Unit {
 func main () -> Int {
     printf("test xor encrypting\n")
 
-    printf("before test_msg: \n")
-    print_bytes(&test_msg to *[]Nat8, msg_length)
+    let tmsg = &test_msg to *[]Nat8
+    let tkey = &test_key to *[]Nat8
 
-    xor_encrypter(&test_msg to *[]Nat8, msg_length, &test_key to *[]Nat8, key_length)
+    printf("before test_msg: \n")
+    print_bytes(tmsg, msg_length)
+
+    xor_encrypter(tmsg, msg_length, tkey, key_length)
 
     printf("after test_msg: \n")
-    print_bytes(&test_msg to *[]Nat8, msg_length)
+    print_bytes(tmsg, msg_length)
 
-    xor_encrypter(&test_msg to *[]Nat8, msg_length, &test_key to *[]Nat8, key_length)
+    xor_encrypter(tmsg, msg_length, tkey, key_length)
 
     printf("after2 test_msg: \n")
-    print_bytes(&test_msg to *[]Nat8, msg_length)
+    print_bytes(tmsg, msg_length)
 
     return 0
 }
