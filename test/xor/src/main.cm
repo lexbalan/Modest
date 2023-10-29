@@ -52,11 +52,13 @@ func main () -> Int {
     printf("before test_msg: \n")
     print_bytes(tmsg, msg_length)
 
+    // encrypt test data
     xor_encrypter(tmsg, msg_length, tkey, key_length)
 
     printf("after test_msg: \n")
     print_bytes(tmsg, msg_length)
 
+    // decrypt test data
     xor_encrypter(tmsg, msg_length, tkey, key_length)
 
     printf("after2 test_msg: \n")
