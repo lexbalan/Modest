@@ -14,7 +14,7 @@
 
 int main(void)
 {
-    printf("Hello World! \xf0\x9f\x8e\x89\n");
+    printf(hello_world);
     return 0;
 }
 

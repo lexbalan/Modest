@@ -54,6 +54,16 @@ def cons_ptr_to_str_from_generic_str(v, t, ti, method):
     nv = value_cons_from_generic(vy, t, ti=ti)
     nv['att'].append("string-cons")
     module_strings_add(nv)
+
+
+    #! Если у нас v - именованная константа и тип чара у нее Char8
+    #! то печатаем ее просто по имени
+    #! (если этого не сделать C принтер напечатает ее по значению а не по имени)
+    #! (BADFIX)
+    if char_pow == 8:
+        if 'id' in v:
+            nv['id'] = v['id']
+
     return nv
 
 

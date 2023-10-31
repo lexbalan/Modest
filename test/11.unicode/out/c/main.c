@@ -22,9 +22,9 @@ uint32_t arr_utf32[8] = {'H', 'e', 'l', 'l', 'o', '!', '\xa'};
 
 
 #define genericStringConst  U"S-t-r-i-n-g"
-#define string8Const  "S-t-r-i-n-g"
-#define string16Const  u"S-t-r-i-n-g"
-#define string32Const  U"S-t-r-i-n-g"
+#define string8Const  genericStringConst
+#define string16Const  genericStringConst
+#define string32Const  genericStringConst
 
 
 int main(void)

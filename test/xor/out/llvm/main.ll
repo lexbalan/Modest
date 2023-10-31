@@ -183,9 +183,9 @@ declare void @bcopy(i8*, i8*, i64)
 @str1.c8 = private constant [8 x i8] [i8 48, i8 120, i8 37, i8 48, i8 50, i8 88, i8 32, i8 0]
 @str2.c8 = private constant [2 x i8] [i8 10, i8 0]
 @str3.c8 = private constant [21 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 120, i8 111, i8 114, i8 32, i8 101, i8 110, i8 99, i8 114, i8 121, i8 112, i8 116, i8 105, i8 110, i8 103, i8 10, i8 0]
-@str4.c8 = private constant [19 x i8] [i8 98, i8 101, i8 102, i8 111, i8 114, i8 101, i8 32, i8 116, i8 101, i8 115, i8 116, i8 95, i8 109, i8 115, i8 103, i8 58, i8 32, i8 10, i8 0]
-@str5.c8 = private constant [18 x i8] [i8 97, i8 102, i8 116, i8 101, i8 114, i8 32, i8 116, i8 101, i8 115, i8 116, i8 95, i8 109, i8 115, i8 103, i8 58, i8 32, i8 10, i8 0]
-@str6.c8 = private constant [19 x i8] [i8 97, i8 102, i8 116, i8 101, i8 114, i8 50, i8 32, i8 116, i8 101, i8 115, i8 116, i8 95, i8 109, i8 115, i8 103, i8 58, i8 32, i8 10, i8 0]
+@str4.c8 = private constant [27 x i8] [i8 98, i8 101, i8 102, i8 111, i8 114, i8 101, i8 32, i8 101, i8 110, i8 99, i8 114, i8 121, i8 112, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 95, i8 109, i8 115, i8 103, i8 58, i8 32, i8 10, i8 0]
+@str5.c8 = private constant [26 x i8] [i8 97, i8 102, i8 116, i8 101, i8 114, i8 32, i8 101, i8 110, i8 99, i8 114, i8 121, i8 112, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 95, i8 109, i8 115, i8 103, i8 58, i8 32, i8 10, i8 0]
+@str6.c8 = private constant [26 x i8] [i8 97, i8 102, i8 116, i8 101, i8 114, i8 32, i8 100, i8 101, i8 99, i8 114, i8 121, i8 112, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 95, i8 109, i8 115, i8 103, i8 58, i8 32, i8 10, i8 0]
 
 
 
@@ -280,21 +280,18 @@ break_1:
 
 define i32 @main() {
     %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([21 x i8]* @str3.c8 to [0 x i8]*))
-    %2 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([19 x i8]* @str4.c8 to [0 x i8]*))
-    %3 = bitcast [13 x i8]* @test_msg to [0 x i8]*
-    call void([0 x i8]*, i32) @print_bytes ([0 x i8]* %3, i32 12)
-    %4 = bitcast [13 x i8]* @test_msg to [0 x i8]*
-    %5 = bitcast [4 x i8]* @test_key to [0 x i8]*
-    call void([0 x i8]*, i32, [0 x i8]*, i32) @xor_encrypter ([0 x i8]* %4, i32 12, [0 x i8]* %5, i32 3)
-    %6 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([18 x i8]* @str5.c8 to [0 x i8]*))
-    %7 = bitcast [13 x i8]* @test_msg to [0 x i8]*
-    call void([0 x i8]*, i32) @print_bytes ([0 x i8]* %7, i32 12)
-    %8 = bitcast [13 x i8]* @test_msg to [0 x i8]*
-    %9 = bitcast [4 x i8]* @test_key to [0 x i8]*
-    call void([0 x i8]*, i32, [0 x i8]*, i32) @xor_encrypter ([0 x i8]* %8, i32 12, [0 x i8]* %9, i32 3)
-    %10 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([19 x i8]* @str6.c8 to [0 x i8]*))
-    %11 = bitcast [13 x i8]* @test_msg to [0 x i8]*
-    call void([0 x i8]*, i32) @print_bytes ([0 x i8]* %11, i32 12)
+    %2 = bitcast [13 x i8]* @test_msg to [0 x i8]*
+    %3 = bitcast [4 x i8]* @test_key to [0 x i8]*
+    %4 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([27 x i8]* @str4.c8 to [0 x i8]*))
+    call void([0 x i8]*, i32) @print_bytes ([0 x i8]* %2, i32 12)
+; encrypt test data
+    call void([0 x i8]*, i32, [0 x i8]*, i32) @xor_encrypter ([0 x i8]* %2, i32 12, [0 x i8]* %3, i32 3)
+    %5 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([26 x i8]* @str5.c8 to [0 x i8]*))
+    call void([0 x i8]*, i32) @print_bytes ([0 x i8]* %2, i32 12)
+; decrypt test data
+    call void([0 x i8]*, i32, [0 x i8]*, i32) @xor_encrypter ([0 x i8]* %2, i32 12, [0 x i8]* %3, i32 3)
+    %6 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([26 x i8]* @str6.c8 to [0 x i8]*))
+    call void([0 x i8]*, i32) @print_bytes ([0 x i8]* %2, i32 12)
     ret i32 0
 }
 

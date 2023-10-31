@@ -49,19 +49,19 @@ func main () -> Int {
     let tmsg = &test_msg to *[]Nat8
     let tkey = &test_key to *[]Nat8
 
-    printf("before test_msg: \n")
+    printf("before encrypt test_msg: \n")
     print_bytes(tmsg, msg_length)
 
     // encrypt test data
     xor_encrypter(tmsg, msg_length, tkey, key_length)
 
-    printf("after test_msg: \n")
+    printf("after encrypt test_msg: \n")
     print_bytes(tmsg, msg_length)
 
     // decrypt test data
     xor_encrypter(tmsg, msg_length, tkey, key_length)
 
-    printf("after2 test_msg: \n")
+    printf("after decrypt test_msg: \n")
     print_bytes(tmsg, msg_length)
 
     return 0

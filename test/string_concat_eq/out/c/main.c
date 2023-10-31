@@ -18,7 +18,7 @@
 
 int main(void)
 {
-    printf("%s\n", "Hello World");
+    printf("%s\n", greeting);
 
     if (true) {
         printf("test ok.\n");
