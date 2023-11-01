@@ -14,9 +14,6 @@
 
 int main(void)
 {
-
-    //let c = "C"[0]
-
     printf(hello_world);
     return 0;
 }

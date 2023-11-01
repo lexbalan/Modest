@@ -1019,10 +1019,15 @@ def do_eval(x):
         elif type.is_char(xtype): return ll_create_value_num(xtype, x['imm'])
         elif type.is_record(xtype): return do_eval_record(x)
         elif type.is_array(xtype): return do_eval_array(x)
-        """else:
+        elif type.is_float(xtype): return ll_create_value_num(xtype, x['imm'])
+        elif type.is_bool(xtype): return ll_create_value_num(xtype, x['imm'])
+        elif type.is_pointer(xtype):
+            # Nil (!) например
+            return ll_create_value_num(xtype, x['imm'])
+        else:
             type_print(xtype)
             print(x['imm'])
-            1 / 0"""
+            1 / 0
 
 
     # runtime evaluation

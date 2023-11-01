@@ -930,15 +930,20 @@ def do_value_index(x):
     # immediate index (!)
     if value_is_immediate(a) and not ptr_access:
         if value_is_immediate(i):
-            #info("^^", x['ti'])
-
             index = i['imm']
 
             if index >= typ['volume']['imm']:
                 error("array index out of bounds", x['index'])
 
             items = a['imm']
-            v['imm'] = items[index]['imm']
+            item = items[index]
+
+            if type.is_char(item['type']):
+                # return just char, there's no need for print index op
+                return item
+
+            v['imm'] = item['imm']
+
 
 
     return v

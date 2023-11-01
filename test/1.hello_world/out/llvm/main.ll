@@ -97,7 +97,6 @@ declare void @perror(%ConstCharStr*)
 
 
 define i32 @main() {
-;let c = "C"[0]
     %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([14 x i8]* @str1.c8 to [0 x i8]*))
     ret i32 0
 }
