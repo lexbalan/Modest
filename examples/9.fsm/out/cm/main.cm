@@ -31,7 +31,7 @@ func off_entry (fsm : *FSM) -> Unit {
 func off_loop (fsm : *FSM) -> Unit {
     fsm to Unit
 
-    printf(["o"[0], "f"[0], "f"[0], "_"[0], "l"[0], "o"[0], "o"[0], "p"[0], "\xa"[0], "\x0"[0]])
+    printf("off_loop\n")
     if cnt < 10 {
         cnt := cnt + 1
     } else {
@@ -59,7 +59,7 @@ func on_entry (fsm : *FSM) -> Unit {
 
 func on_loop (fsm : *FSM) -> Unit {
     fsm to Unit
-    printf(["o"[0], "n"[0], "_"[0], "l"[0], "o"[0], "o"[0], "p"[0], "\xa"[0], "\x0"[0]])
+    printf("on_loop\n")
     if cnt < 10 {
         cnt := cnt + 1
     } else {
@@ -81,12 +81,12 @@ func on_exit (fsm : *FSM) -> Unit {
 
 func beacon_entry (fsm : *FSM) -> Unit {
     let from_name = fsm_state_no_name(fsm to *FSM, fsm.state)
-    printf(["b"[0], "e"[0], "a"[0], "c"[0], "o"[0], "n"[0], "_"[0], "e"[0], "n"[0], "t"[0], "r"[0], "y"[0], " "[0], "f"[0], "r"[0], "o"[0], "m"[0], " "[0], "%"[0], "s"[0], "\xa"[0], "\x0"[0]], from_name)
+    printf("beacon_entry from %s\n", from_name)
 }
 
 
 func beacon_loop (fsm : *FSM) -> Unit {
-    printf(["b"[0], "e"[0], "a"[0], "c"[0], "o"[0], "n"[0], "_"[0], "l"[0], "o"[0], "o"[0], "p"[0], "\xa"[0], "\x0"[0]])
+    printf("beacon_loop\n")
     if cnt < 10 {
         cnt := cnt + 1
     } else {
@@ -98,33 +98,33 @@ func beacon_loop (fsm : *FSM) -> Unit {
 
 func beacon_exit (fsm : *FSM) -> Unit {
     let to_name = fsm_state_no_name(fsm to *FSM, fsm.nexstate)
-    printf(["b"[0], "e"[0], "a"[0], "c"[0], "o"[0], "n"[0], "_"[0], "e"[0], "x"[0], "i"[0], "t"[0], " "[0], "t"[0], "o"[0], " "[0], "%"[0], "s"[0], "\xa"[0], "\x0"[0]], to_name)
+    printf("beacon_exit to %s\n", to_name)
 }
 
 
 
 var fsm : FSM := {
-    name = ["F"[0], "l"[0], "a"[0], "s"[0], "h"[0]]
+    name = "Flash"
     state = 0
     nexstate = 0
     substate = fsmSubstateEntering
     states = [
         {
-            name = ["O"[0], "f"[0], "f"[0]]
+            name = "Off"
             entry = &off_entry
             loop = &off_loop
             exit = &off_exit
         }
 
         {
-            name = ["O"[0], "n"[0]]
+            name = "On"
             entry = &on_entry
             loop = &on_loop
             exit = &on_exit
         }
 
         {
-            name = ["B"[0], "e"[0], "a"[0], "c"[0], "o"[0], "n"[0]]
+            name = "Beacon"
             entry = &beacon_entry
             loop = &beacon_loop
             exit = &beacon_exit

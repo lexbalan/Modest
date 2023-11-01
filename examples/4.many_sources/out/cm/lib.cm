@@ -4,6 +4,6 @@ import "libc/stdio.h"
 import "./lib.h"
 
 func lib_func () -> Unit {
-    printf(["h"[0], "e"[0], "l"[0], "l"[0], "o"[0], " "[0], "f"[0], "r"[0], "o"[0], "m"[0], " "[0], "l"[0], "i"[0], "b"[0], "_"[0], "f"[0], "u"[0], "n"[0], "c"[0], "\xa"[0], "\x0"[0]])
+    printf("hello from lib_func\n")
 }
 

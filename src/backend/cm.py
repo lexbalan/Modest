@@ -321,11 +321,9 @@ def print_value_cast(v, ctx):
 def print_value_literal_arr(v, ctx):
 
     value = v
-    if type.is_generic_string(value['type']):
-        #print("LIT_CM")
+    if type.is_string(value['type']):
         print_value_literal_str(value, ctx=[])
         return
-
 
     out("[")
     indent_up()
@@ -417,11 +415,14 @@ def print_value_literal_record(v, ctx):
 def print_value_literal_str(x, ctx):
     out("\"")
     for c in x['imm']:
-        sym = chr(c['imm'])
+        ccode = c['imm']
+        sym = chr(ccode)
+
         if sym == '\n': out("\\n")
         elif sym == '\r': out("\\r")
         elif sym == '\a': out("\\a")
-        else: out(sym)
+        elif ccode >= 0x20 and ccode <= 0x7E : out(sym)
+        elif ccode != 0: out("\\x%x" % ccode)
     out("\"")
 
 

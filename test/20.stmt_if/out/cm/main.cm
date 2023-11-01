@@ -3,22 +3,22 @@ import "libc/stdio.h"
 
 
 func main () -> Int {
-    printf(["s"[0], "t"[0], "m"[0], "t"[0], "_"[0], "i"[0], "f"[0], " "[0], "e"[0], "x"[0], "a"[0], "m"[0], "p"[0], "l"[0], "e"[0], "\xa"[0], "\x0"[0]])
+    printf("stmt_if example\n")
 
     var a : Int32
     var b : Int32
 
-    printf(["e"[0], "n"[0], "t"[0], "e"[0], "r"[0], " "[0], "a"[0], ":"[0], " "[0], "\x0"[0]])
-    scanf(["%"[0], "d"[0], "\x0"[0]], &a)
-    printf(["e"[0], "n"[0], "t"[0], "e"[0], "r"[0], " "[0], "b"[0], ":"[0], " "[0], "\x0"[0]])
-    scanf(["%"[0], "d"[0], "\x0"[0]], &b)
+    printf("enter a: ")
+    scanf("%d", &a)
+    printf("enter b: ")
+    scanf("%d", &b)
 
     if a > b {
-        printf(["a"[0], " "[0], ">"[0], " "[0], "b"[0], "\xa"[0], "\x0"[0]])
+        printf("a > b\n")
     } else if a < b {
-        printf(["a"[0], " "[0], "<"[0], " "[0], "b"[0], "\xa"[0], "\x0"[0]])
+        printf("a < b\n")
     } else {
-        printf(["a"[0], " "[0], "="[0], "="[0], " "[0], "b"[0], "\xa"[0], "\x0"[0]])
+        printf("a == b\n")
     }
 
     return 0

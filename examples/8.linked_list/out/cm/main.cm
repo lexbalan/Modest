@@ -17,11 +17,11 @@ func nat64_list_insert (list : *List, x : Nat64) -> Unit {
 
 // show list conent from first item to last
 func list_print_forward (list : *List) -> Unit {
-    printf(["l"[0], "i"[0], "s"[0], "t"[0], "_"[0], "p"[0], "r"[0], "i"[0], "n"[0], "t"[0], "_"[0], "f"[0], "o"[0], "r"[0], "w"[0], "a"[0], "r"[0], "d"[0], ":"[0], "\xa"[0], "\x0"[0]])
+    printf("list_print_forward:\n")
     var pn : *Node := linked_list_first_get(list)
     while pn != nil {
         let x = linked_list_node_link_get(pn)
-        printf(["v"[0], " "[0], "="[0], " "[0], "%"[0], "d"[0], "\xa"[0], "\x0"[0]], *x)
+        printf("v = %d\n", *x)
         pn := linked_list_node_next_get(pn)
     }
 }
@@ -29,23 +29,23 @@ func list_print_forward (list : *List) -> Unit {
 
 // show list conent from last item to first
 func list_print_backward (list : *List) -> Unit {
-    printf(["l"[0], "i"[0], "s"[0], "t"[0], "_"[0], "p"[0], "r"[0], "i"[0], "n"[0], "t"[0], "_"[0], "b"[0], "a"[0], "c"[0], "k"[0], "w"[0], "a"[0], "r"[0], "d"[0], ":"[0], "\xa"[0], "\x0"[0]])
+    printf("list_print_backward:\n")
     var pn : *Node := linked_list_last_get(list)
     while pn != nil {
         let x = linked_list_node_link_get(pn)
-        printf(["v"[0], " "[0], "="[0], " "[0], "%"[0], "d"[0], "\xa"[0], "\x0"[0]], *x)
+        printf("v = %d\n", *x)
         pn := linked_list_node_prev_get(pn)
     }
 }
 
 
 func main () -> Int {
-    printf(["l"[0], "i"[0], "n"[0], "k"[0], "e"[0], "d"[0], " "[0], "l"[0], "i"[0], "s"[0], "t"[0], " "[0], "e"[0], "x"[0], "a"[0], "m"[0], "p"[0], "l"[0], "e"[0], "\xa"[0], "\x0"[0]])
+    printf("linked list example\n")
 
     let list = linked_list_create()
 
     if list == nil {
-        printf(["e"[0], "r"[0], "r"[0], "o"[0], "r"[0], ":"[0], " "[0], "c"[0], "a"[0], "n"[0], "n"[0], "o"[0], "t"[0], " "[0], "c"[0], "r"[0], "e"[0], "a"[0], "t"[0], "e"[0], " "[0], "l"[0], "i"[0], "s"[0], "t"[0], "\x0"[0]])
+        printf("error: cannot create list")
         return 1
     }
 
@@ -64,7 +64,7 @@ func main () -> Int {
 
     // print list size
     let list_size = linked_list_size_get(list)
-    printf(["l"[0], "i"[0], "n"[0], "k"[0], "e"[0], "d"[0], " "[0], "l"[0], "i"[0], "s"[0], "t"[0], " "[0], "s"[0], "i"[0], "z"[0], "e"[0], ":"[0], " "[0], "%"[0], "d"[0], "\xa"[0], "\x0"[0]], list_size)
+    printf("linked list size: %d\n", list_size)
 
     // print list forward
     list_print_forward(list)

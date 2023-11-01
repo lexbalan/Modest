@@ -54,8 +54,8 @@ func main () -> Int {
     let lines_0_len = lineLength(lines[0])
     let lines_1_len = lineLength(lines[1])
 
-    printf(["l"[0], "i"[0], "n"[0], "e"[0], "s"[0], "_"[0], "0"[0], "_"[0], "l"[0], "e"[0], "n"[0], " "[0], "="[0], " "[0], "%"[0], "f"[0], "\xa"[0], "\x0"[0]], lines_0_len)
-    printf(["l"[0], "i"[0], "n"[0], "e"[0], "s"[0], "_"[0], "1"[0], "_"[0], "l"[0], "e"[0], "n"[0], " "[0], "="[0], " "[0], "%"[0], "f"[0], "\xa"[0], "\x0"[0]], lines_1_len)
+    printf("lines_0_len = %f\n", lines_0_len)
+    printf("lines_1_len = %f\n", lines_1_len)
 
     return 0
 }

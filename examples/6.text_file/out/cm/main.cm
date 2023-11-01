@@ -6,32 +6,32 @@ const filename = "file.txt"
 
 
 func write_example () -> Unit {
-    printf(["r"[0], "u"[0], "n"[0], " "[0], "w"[0], "r"[0], "i"[0], "t"[0], "e"[0], "_"[0], "e"[0], "x"[0], "a"[0], "m"[0], "p"[0], "l"[0], "e"[0], "\xa"[0], "\x0"[0]])
+    printf("run write_example\n")
 
-    let fp = fopen(filename, ["w"[0], "\x0"[0]])
+    let fp = fopen(filename, "w")
 
     if fp == nil {
-        printf(["e"[0], "r"[0], "r"[0], "o"[0], "r"[0], ":"[0], " "[0], "c"[0], "a"[0], "n"[0], "n"[0], "o"[0], "t"[0], " "[0], "c"[0], "r"[0], "e"[0], "a"[0], "t"[0], "e"[0], " "[0], "f"[0], "i"[0], "l"[0], "e"[0], " "[0], "'"[0], "%"[0], "s"[0], "'"[0], "\x0"[0]], filename)
+        printf("error: cannot create file '%s'", filename)
         return
     }
 
-    fprintf(fp, ["s"[0], "o"[0], "m"[0], "e"[0], " "[0], "t"[0], "e"[0], "x"[0], "t"[0], "."[0], "\xa"[0], "\x0"[0]])
+    fprintf(fp, "some text.\n")
 
     fclose(fp)
 }
 
 
 func read_example () -> Unit {
-    printf(["r"[0], "u"[0], "n"[0], " "[0], "r"[0], "e"[0], "a"[0], "d"[0], "_"[0], "e"[0], "x"[0], "a"[0], "m"[0], "p"[0], "l"[0], "e"[0], "\xa"[0], "\x0"[0]])
+    printf("run read_example\n")
 
-    let fp = fopen(filename, ["r"[0], "\x0"[0]])
+    let fp = fopen(filename, "r")
 
     if fp == nil {
-        printf(["e"[0], "r"[0], "r"[0], "o"[0], "r"[0], ":"[0], " "[0], "c"[0], "a"[0], "n"[0], "n"[0], "o"[0], "t"[0], " "[0], "o"[0], "p"[0], "e"[0], "n"[0], " "[0], "f"[0], "i"[0], "l"[0], "e"[0], " "[0], "'"[0], "%"[0], "s"[0], "'"[0], "\x0"[0]], filename)
+        printf("error: cannot open file '%s'", filename)
         return
     }
 
-    printf(["f"[0], "i"[0], "l"[0], "e"[0], " "[0], "'"[0], "%"[0], "s"[0], "'"[0], " "[0], "c"[0], "o"[0], "n"[0], "t"[0], "a"[0], "i"[0], "n"[0], "s"[0], ":"[0], " "[0], "\x0"[0]], filename)
+    printf("file '%s' contains: ", filename)
     while 1 {
         let ch = fgetc(fp)
         if ch == EOF {
@@ -45,7 +45,7 @@ func read_example () -> Unit {
 
 
 func main () -> Int {
-    printf(["t"[0], "e"[0], "x"[0], "t"[0], "_"[0], "f"[0], "i"[0], "l"[0], "e"[0], " "[0], "e"[0], "x"[0], "a"[0], "m"[0], "p"[0], "l"[0], "e"[0], "\xa"[0], "\x0"[0]])
+    printf("text_file example\n")
     write_example()
     read_example()
     return 0

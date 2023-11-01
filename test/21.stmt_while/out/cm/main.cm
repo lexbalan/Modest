@@ -3,13 +3,13 @@ import "libc/stdio.h"
 
 
 func main () -> Int {
-    printf(["t"[0], "e"[0], "s"[0], "t"[0], " "[0], "s"[0], "t"[0], "m"[0], "t"[0], "_"[0], "w"[0], "h"[0], "i"[0], "l"[0], "e"[0], "\xa"[0], "\x0"[0]])
+    printf("test stmt_while\n")
 
     var a : Int32 := 0
     let b = 10
 
     while a < b {
-        printf(["a"[0], " "[0], "="[0], " "[0], "%"[0], "d"[0], "\xa"[0], "\x0"[0]], a)
+        printf("a = %d\n", a)
         a := a + 1
     }
 

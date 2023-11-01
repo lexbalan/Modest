@@ -8,7 +8,7 @@ func mtab (n : Int) -> Unit {
     var m : Int32 := 1
     while m < 10 {
         let nm = n * m
-        printf(["%"[0], "d"[0], " "[0], "*"[0], " "[0], "%"[0], "d"[0], " "[0], "="[0], " "[0], "%"[0], "d"[0], "\xa"[0], "\x0"[0]], n, m, nm)
+        printf("%d * %d = %d\n", n, m, nm)
         m := m + 1
     }
 }
@@ -16,7 +16,7 @@ func mtab (n : Int) -> Unit {
 
 func main () -> Int {
     let n = 2 * 2
-    printf(["m"[0], "u"[0], "l"[0], "t"[0], "i"[0], "p"[0], "l"[0], "y"[0], " "[0], "t"[0], "a"[0], "b"[0], "l"[0], "e"[0], " "[0], "f"[0], "o"[0], "r"[0], " "[0], "%"[0], "d"[0], "\xa"[0], "\x0"[0]], n)
+    printf("multiply table for %d\n", n)
     mtab(n)
     return 0
 }

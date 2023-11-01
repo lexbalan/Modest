@@ -30,11 +30,11 @@ func main () -> Int {
 
     var big_sum : Nat128 := big1 + big2 + a to Nat128
 
-    printf(["b"[0], "i"[0], "g"[0], "0"[0], " "[0], "="[0], " "[0], "0"[0], "x"[0], "%"[0], "l"[0], "l"[0], "X"[0], "%"[0], "l"[0], "l"[0], "X"[0], "\xa"[0], "\x0"[0]], high_128(big0), low_128(big0))
-    printf(["b"[0], "i"[0], "g"[0], "1"[0], " "[0], "="[0], " "[0], "0"[0], "x"[0], "%"[0], "l"[0], "l"[0], "X"[0], "%"[0], "l"[0], "l"[0], "X"[0], "\xa"[0], "\x0"[0]], high_128(big1), low_128(big1))
-    printf(["b"[0], "i"[0], "g"[0], "2"[0], " "[0], "="[0], " "[0], "0"[0], "x"[0], "%"[0], "l"[0], "l"[0], "X"[0], "%"[0], "l"[0], "l"[0], "X"[0], "\xa"[0], "\x0"[0]], high_128(big2), low_128(big2))
-    printf(["b"[0], "i"[0], "g"[0], "3"[0], " "[0], "="[0], " "[0], "0"[0], "x"[0], "%"[0], "l"[0], "l"[0], "X"[0], "%"[0], "l"[0], "l"[0], "X"[0], "\xa"[0], "\x0"[0]], high_128(big3), low_128(big3))
-    printf(["b"[0], "i"[0], "g"[0], "_"[0], "s"[0], "u"[0], "m"[0], " "[0], "="[0], " "[0], "0"[0], "x"[0], "%"[0], "l"[0], "l"[0], "X"[0], "%"[0], "l"[0], "l"[0], "X"[0], "\xa"[0], "\x0"[0]], high_128(big_sum), low_128(big_sum))
+    printf("big0 = 0x%llX%llX\n", high_128(big0), low_128(big0))
+    printf("big1 = 0x%llX%llX\n", high_128(big1), low_128(big1))
+    printf("big2 = 0x%llX%llX\n", high_128(big2), low_128(big2))
+    printf("big3 = 0x%llX%llX\n", high_128(big3), low_128(big3))
+    printf("big_sum = 0x%llX%llX\n", high_128(big_sum), low_128(big_sum))
 
 
     // signed big int test
@@ -44,7 +44,7 @@ func main () -> Int {
 
     sig1 := sig1 + 1
 
-    printf(["s"[0], "i"[0], "g"[0], "1"[0], " "[0], "="[0], " "[0], "%"[0], "l"[0], "l"[0], "d"[0], "\xa"[0], "\x0"[0]], sig1 to Nat64)
+    printf("sig1 = %lld\n", sig1 to Nat64)
 
     return 0
 }

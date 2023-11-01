@@ -5,9 +5,9 @@ const genericIntConst = 42
 const int32Const = genericIntConst
 
 const genericStringConst = "Hello!"
-const string8Const = ["H"[0], "e"[0], "l"[0], "l"[0], "o"[0], "!"[0], "\x0"[0]]
-const string16Const = ["H"[0], "e"[0], "l"[0], "l"[0], "o"[0], "!"[0], "\x0"[0]]
-const string32Const = ["H"[0], "e"[0], "l"[0], "l"[0], "o"[0], "!"[0], "\x0"[0]]
+const string8Const = "Hello!"
+const string16Const = "Hello!"
+const string32Const = "Hello!"
 
 
 type Point record {
@@ -31,13 +31,13 @@ var points2 : [3]Point := points
 
 // define function main
 func main () -> Int {
-    printf(["t"[0], "e"[0], "s"[0], "t"[0], " "[0], "c"[0], "o"[0], "n"[0], "s"[0], "t"[0], "\xa"[0], "\x0"[0]])
+    printf("test const\n")
 
-    printf(["g"[0], "e"[0], "n"[0], "e"[0], "r"[0], "i"[0], "c"[0], "I"[0], "n"[0], "t"[0], "C"[0], "o"[0], "n"[0], "s"[0], "t"[0], " "[0], "="[0], " "[0], "%"[0], "d"[0], "\xa"[0], "\x0"[0]], genericIntConst)
-    printf(["i"[0], "n"[0], "t"[0], "3"[0], "2"[0], "C"[0], "o"[0], "n"[0], "s"[0], "t"[0], " "[0], "="[0], " "[0], "%"[0], "d"[0], "\xa"[0], "\x0"[0]], int32Const)
+    printf("genericIntConst = %d\n", genericIntConst)
+    printf("int32Const = %d\n", int32Const)
 
     //	printf("genericStringConst = %s\n", genericStringConst)
-    printf(["s"[0], "t"[0], "r"[0], "i"[0], "n"[0], "g"[0], "8"[0], "C"[0], "o"[0], "n"[0], "s"[0], "t"[0], " "[0], "="[0], " "[0], "%"[0], "s"[0], "\xa"[0], "\x0"[0]], string8Const)
+    printf("string8Const = %s\n", string8Const)
 
     return 0
 }

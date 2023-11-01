@@ -3,7 +3,7 @@ import "libc/stdio.h"
 
 const hello = "Hello"
 const world = "World"
-const party_corn = "🎉"
+const party_corn = "\x1f389"
 
 const greeting = hello + " " + world//+ " " + party_corn
 
@@ -12,12 +12,12 @@ const test = "test"
 
 
 func main () -> Int {
-    printf(["%"[0], "s"[0], "\xa"[0], "\x0"[0]], greeting)
+    printf("%s\n", greeting)
 
     if test == "test" {
-        printf(["t"[0], "e"[0], "s"[0], "t"[0], " "[0], "o"[0], "k"[0], "."[0], "\xa"[0], "\x0"[0]])
+        printf("test ok.\n")
     } else {
-        printf(["t"[0], "e"[0], "s"[0], "t"[0], " "[0], "f"[0], "a"[0], "i"[0], "l"[0], "e"[0], "d"[0], "."[0], "\xa"[0], "\x0"[0]])
+        printf("test failed.\n")
     }
 
     return 0
