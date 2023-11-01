@@ -482,6 +482,12 @@ def is_undefined_array(t):
     return False
 
 
+def is_pointer_to_array(t):
+    if not is_pointer(t):
+        return False
+    return is_array(t['to'])
+
+
 def is_pointer_to_defined_array(t):
     if not is_pointer(t):
         return False

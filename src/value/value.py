@@ -59,6 +59,12 @@ def value_is_mutable(x):
     ]
 
 
+def value_is_ptr_to_str(x):
+    if not type.is_pointer_to_array(x['type']):
+        return False
+    return type.is_char(x['type']['to']['of'])
+
+
 def value_is_immutable(x):
     if 'readonly' in x['type']['att']:
         return True

@@ -930,7 +930,7 @@ def do_value_index(x):
     # immediate index (!)
     if value_is_immediate(a) and not ptr_access:
         if value_is_immediate(i):
-            info("^^", x['ti'])
+            #info("^^", x['ti'])
 
             index = i['imm']
 
@@ -1503,11 +1503,13 @@ def def_const(x):
         return hlir_def_const(id, v, ti=x['ti'])
 
     if not value_is_immediate(v):
-        error("expected immediate value", v)
+        if not value_is_ptr_to_str(v):
+            error("expected immediate value", v)
 
     const_value = hlir_value_const(id, v['type'], v, x['ti'])
 
-    const_value['imm'] = v['imm']
+    if value_is_immediate(v):
+        const_value['imm'] = v['imm']
 
     if 'nl_end' in v:
         const_value['nl_end'] = v['nl_end']

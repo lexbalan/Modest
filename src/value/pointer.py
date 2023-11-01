@@ -64,7 +64,7 @@ def cons_ptr_to_str_from_generic_str(v, t, ti, method):
         if 'id' in v:
             nv['id'] = v['id']
 
-    #nv.pop('imm')
+    nv.pop('imm')
 
     return nv
 

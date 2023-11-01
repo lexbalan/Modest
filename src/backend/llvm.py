@@ -1794,19 +1794,19 @@ def print_strings(strings):
             #print("PRINT_STR8")
             strid8 = strid + '.c8'
             string['strid_8'] = strid8
-            print_string_utf8(strid8, string)
+            print_string_utf8(strid8, string['value'])
 
         elif char_power == 16:
             #print("PRINT_STR16")
             strid16 = strid + '.c16'
             string['strid_16'] = strid16
-            print_string_utf16(strid16, string)
+            print_string_utf16(strid16, string['value'])
 
         elif char_power == 32:
             #print("PRINT_STR32")
             strid32 = strid + '.c32'
             string['strid_32'] = strid32
-            print_string_utf32(strid32, string)
+            print_string_utf32(strid32, string['value'])
 
 
 
