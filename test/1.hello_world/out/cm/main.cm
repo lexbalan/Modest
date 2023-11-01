@@ -2,12 +2,15 @@
 import "libc/stdio.h"
 
 const hello = "Hello"
-const world = " World! 🎉\n"
+const world = " World!\n"
 
 const hello_world = hello + world
 
 
 func main () -> Int {
+
+    //let c = "C"[0]
+
     printf(hello_world)
     return 0
 }

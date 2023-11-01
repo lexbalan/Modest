@@ -6,14 +6,17 @@
 
 // examples/1.hello_world/main.cm
 
-#define hello  U"Hello"
-#define world  U" World! \x1f389\n"
+#define hello  "Hello"
+#define world  " World!\n"
 
 #define hello_world  hello  world
 
 
 int main(void)
 {
+
+    //let c = "C"[0]
+
     printf(hello_world);
     return 0;
 }

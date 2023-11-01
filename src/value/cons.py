@@ -17,16 +17,11 @@ from .pointer import value_cons_pointer, cons_ptr_to_str_from_generic_str
 
 
 
-def value_cons_from_generic(v, t, ti):
-    #info("value_cons_from_generic", ti)
+def value_cons_from_immediate(v, t, ti):
+    #info("value_cons_from_immediate", ti)
 
     nv = hlir_value_cast(v, t, ti)
     nv['kind'] = 'cast_generic'
-
-    if not 'imm' in v:
-        print("not #imm in value:")
-        value_print(v)
-
     nv['imm'] = v['imm']
 
     if 'nl_end' in v:
@@ -165,8 +160,8 @@ def value_cons_implicit(v, t, ti):
 
         # cons *X from Nil
         if type.is_nil(from_type) and type.is_pointer(t):
-            from .cons import value_cons_from_generic
-            return value_cons_from_generic(v, t, ti)
+            from .cons import value_cons_from_immediate
+            return value_cons_from_immediate(v, t, ti)
 
         # cons *X from FreePointer
         if type.is_free_pointer(from_type) and type.is_pointer(t):

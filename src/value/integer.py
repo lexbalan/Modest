@@ -39,8 +39,8 @@ def value_cons_integer(v, t, ti, method):
     if type.is_generic_integer(vtype):
         # GenericInt -> Int
         check_power(vtype, t, method, ti)
-        from .cons import value_cons_from_generic
-        nv = value_cons_from_generic(v, t, ti)
+        from .cons import value_cons_from_immediate
+        nv = value_cons_from_immediate(v, t, ti)
 
     if nv != None:
         if value_is_immediate(v):

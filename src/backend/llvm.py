@@ -1011,16 +1011,18 @@ def do_eval_record(v):
 def do_eval(x):
     assert(x != None)
 
-
     # Way for IMMEDIATE values
     if value_is_immediate(x):
         xtype = x['type']
-        if type.is_integer(xtype):
-            return ll_create_value_num(xtype, x['imm'])
-        elif type.is_record(xtype):
-            return do_eval_record(x)
-        elif type.is_array(xtype):
-            return do_eval_array(x)
+
+        if type.is_integer(xtype): return ll_create_value_num(xtype, x['imm'])
+        elif type.is_char(xtype): return ll_create_value_num(xtype, x['imm'])
+        elif type.is_record(xtype): return do_eval_record(x)
+        elif type.is_array(xtype): return do_eval_array(x)
+        """else:
+            type_print(xtype)
+            print(x['imm'])
+            1 / 0"""
 
 
     # runtime evaluation

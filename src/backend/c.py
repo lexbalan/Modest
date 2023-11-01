@@ -1,3 +1,6 @@
+#Есть проблема с массивом generic int когда индексируешь и приводишь к инту
+#но индексируешь переменной (в цикле например)
+
 
 from error import info, error, fatal
 from .common import *
@@ -512,11 +515,17 @@ def print_value_cast_generic(v, ctx):
     from_type = value['type']
     to_type = v['type']
 
-    if type.is_string(from_type):
-        if type.is_ptr_to_string(to_type):
+    if type.is_ptr_to_string(to_type):
+        if type.is_string(from_type):
             char_power = to_type['to']['of']['power']
             print_value_literal_str(value, ctx=[], char_power=char_power)
             return
+
+#    elif type.is_char(to_type):
+#        if type.is_char(from_type):
+#            print_value_literal_char(v, ctx)
+#            return
+
 
     #need_wrap = precedence(value) < precedenceMax
     print_value(value, ctx)#, need_wrap=need_wrap)

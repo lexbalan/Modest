@@ -32,7 +32,7 @@ def str_literal(imm, charType, ti):
 
 def cons_ptr_to_str_from_generic_str(v, t, ti, method):
     from util import str2utf8, str2utf16, str2utf32
-    from .cons import value_cons_from_generic
+    from .cons import value_cons_from_immediate
     from trans import module_strings_add
 
     char_typ = t['to']['of']
@@ -51,7 +51,7 @@ def cons_ptr_to_str_from_generic_str(v, t, ti, method):
     vy = str_literal(s_imm, char_typ, ti)
     # далее формируем операцию приведения этого литерала к типу
     # это дженерик каст, он идет особым путем
-    nv = value_cons_from_generic(vy, t, ti=ti)
+    nv = value_cons_from_immediate(vy, t, ti=ti)
     nv['att'].append("string-cons")
     module_strings_add(nv)
 
@@ -63,6 +63,8 @@ def cons_ptr_to_str_from_generic_str(v, t, ti, method):
     if char_pow == 8:
         if 'id' in v:
             nv['id'] = v['id']
+
+    #nv.pop('imm')
 
     return nv
 
@@ -76,8 +78,8 @@ def value_cons_pointer(v, t, ti, method):
 
     # Nil -> *X
     if type.is_nil(vtype):
-        from .cons import value_cons_from_generic
-        nv = value_cons_from_generic(v, t, ti)
+        from .cons import value_cons_from_immediate
+        nv = value_cons_from_immediate(v, t, ti)
 
     # GenericString -> (*[]CharX | *CharX)
     elif type.is_generic_string(vtype):

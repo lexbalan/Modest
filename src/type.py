@@ -133,10 +133,10 @@ def type_init():
     typeDecimal128['llvm_alias'] = 'double'
 
 
-    typeGenericChar = hlir_type_generic_char(power=32, ti=None)
+    typeGenericChar = hlir_type_generic_char(power=8, ti=None)
     typeGenericChar['cm_alias'] = 'Char'
-    typeGenericChar['c_alias'] = 'uint32_t'
-    typeGenericChar['llvm_alias'] = 'i32'
+    typeGenericChar['c_alias'] = 'uint8_t'
+    typeGenericChar['llvm_alias'] = 'i8'
 
 
     typeChar8 = hlir_type_char("Char8", power=8, ti=None)
