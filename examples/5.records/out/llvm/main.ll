@@ -269,8 +269,8 @@ declare void @bcopy(i8*, i8*, i64)
 
 ; -- SOURCE: src/main.cm
 
-@str1.c8 = private constant [15 x i8] [i8 112, i8 111, i8 105, i8 110, i8 116, i8 40, i8 37, i8 102, i8 44, i8 32, i8 37, i8 102, i8 41, i8 10, i8 0]
-@str2.c8 = private constant [18 x i8] [i8 108, i8 105, i8 110, i8 101, i8 32, i8 108, i8 101, i8 110, i8 103, i8 116, i8 104, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
+@str1 = private constant [15 x i8] [i8 112, i8 111, i8 105, i8 110, i8 116, i8 40, i8 37, i8 102, i8 44, i8 32, i8 37, i8 102, i8 41, i8 10, i8 0]
+@str2 = private constant [18 x i8] [i8 108, i8 105, i8 110, i8 101, i8 32, i8 108, i8 101, i8 110, i8 103, i8 116, i8 104, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
 
 
 
@@ -359,7 +359,7 @@ define void @ptr_example() {
     %6 = load double, double* %5
     %7 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 1
     %8 = load double, double* %7
-    %9 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([15 x i8]* @str1.c8 to [0 x i8]*), double %6, double %8)
+    %9 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*), double %6, double %8)
     ret void
 }
 
@@ -367,7 +367,7 @@ define i32 @main() {
 ; by value
     %1 = load %Line, %Line* @line
     %2 = call double(%Line) @lineLength (%Line %1)
-    %3 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([18 x i8]* @str2.c8 to [0 x i8]*), double %2)
+    %3 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([18 x i8]* @str2 to [0 x i8]*), double %2)
     call void() @ptr_example ()
     ret i32 0
 }

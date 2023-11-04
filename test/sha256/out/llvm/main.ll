@@ -186,13 +186,13 @@ declare void @sha256_doHash([0 x i8]*, i32, [0 x i8]*)
 
 ; -- SOURCE: src/main.cm
 
-@str1.c8 = private constant [5 x i8] [i8 39, i8 37, i8 115, i8 39, i8 0]
-@str2.c8 = private constant [5 x i8] [i8 32, i8 45, i8 62, i8 32, i8 0]
-@str3.c8 = private constant [5 x i8] [i8 37, i8 48, i8 50, i8 88, i8 0]
-@str4.c8 = private constant [2 x i8] [i8 10, i8 0]
-@str5.c8 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 83, i8 72, i8 65, i8 50, i8 53, i8 54, i8 10, i8 0]
-@str6.c8 = private constant [17 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 35, i8 37, i8 100, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
-@str7.c8 = private constant [17 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 35, i8 37, i8 100, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
+@str1 = private constant [5 x i8] [i8 39, i8 37, i8 115, i8 39, i8 0]
+@str2 = private constant [5 x i8] [i8 32, i8 45, i8 62, i8 32, i8 0]
+@str3 = private constant [5 x i8] [i8 37, i8 48, i8 50, i8 88, i8 0]
+@str4 = private constant [2 x i8] [i8 10, i8 0]
+@str5 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 83, i8 72, i8 65, i8 50, i8 53, i8 54, i8 10, i8 0]
+@str6 = private constant [17 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 35, i8 37, i8 100, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
+@str7 = private constant [17 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 35, i8 37, i8 100, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 
 
 
@@ -362,8 +362,8 @@ define i1 @sha256_doTest(%SHA256_TestData* %test) {
     %5 = bitcast [32 x i8]* %test_hash to [0 x i8]*
     call void([0 x i8]*, i32, [0 x i8]*) @sha256_doHash ([0 x i8]* %2, i32 %4, [0 x i8]* %5)
     %6 = getelementptr inbounds %SHA256_TestData, %SHA256_TestData* %test, i32 0, i32 0
-    %7 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([5 x i8]* @str1.c8 to [0 x i8]*), %TestInputString* %6)
-    %8 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([5 x i8]* @str2.c8 to [0 x i8]*))
+    %7 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([5 x i8]* @str1 to [0 x i8]*), %TestInputString* %6)
+    %8 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([5 x i8]* @str2 to [0 x i8]*))
     %i = alloca i32
     store i32 0, i32* %i
     br label %again_1
@@ -375,13 +375,13 @@ body_1:
     %11 = load i32, i32* %i
     %12 = getelementptr inbounds [32 x i8], [32 x i8]* %test_hash, i32 0, i32 %11
     %13 = load i8, i8* %12
-    %14 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([5 x i8]* @str3.c8 to [0 x i8]*), i8 %13)
+    %14 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([5 x i8]* @str3 to [0 x i8]*), i8 %13)
     %15 = load i32, i32* %i
     %16 = add i32 %15, 1
     store i32 %16, i32* %i
     br label %again_1
 break_1:
-    %17 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([2 x i8]* @str4.c8 to [0 x i8]*))
+    %17 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))
     %18 = getelementptr inbounds %SHA256_TestData, %SHA256_TestData* %test, i32 0, i32 2
     %19 = bitcast [32 x i8]* %18 to i8*
     %20 = bitcast [32 x i8]* %test_hash to i8*
@@ -391,7 +391,7 @@ break_1:
 }
 
 define i32 @main() {
-    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([13 x i8]* @str5.c8 to [0 x i8]*))
+    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([13 x i8]* @str5 to [0 x i8]*))
     %i = alloca i32
     store i32 0, i32* %i
     br label %again_1
@@ -408,11 +408,11 @@ body_1:
     br i1 %8 , label %then_0, label %else_0
 then_0:
     %9 = load i32, i32* %i
-    %10 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([17 x i8]* @str6.c8 to [0 x i8]*), i32 %9)
+    %10 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([17 x i8]* @str6 to [0 x i8]*), i32 %9)
     br label %endif_0
 else_0:
     %11 = load i32, i32* %i
-    %12 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([17 x i8]* @str7.c8 to [0 x i8]*), i32 %11)
+    %12 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([17 x i8]* @str7 to [0 x i8]*), i32 %11)
     br label %endif_0
 endif_0:
     %13 = load i32, i32* %i

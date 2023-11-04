@@ -91,14 +91,14 @@ declare void @perror(%ConstCharStr*)
 
 ; -- SOURCE: src/main.cm
 
-@str1.c8 = private constant [13 x i8] [i8 102, i8 48, i8 32, i8 120, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str2.c8 = private constant [13 x i8] [i8 102, i8 49, i8 32, i8 120, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str3.c8 = private constant [13 x i8] [i8 102, i8 50, i8 32, i8 120, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str4.c8 = private constant [13 x i8] [i8 102, i8 51, i8 32, i8 120, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str5.c8 = private constant [14 x i8] [i8 102, i8 48, i8 112, i8 32, i8 120, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str6.c8 = private constant [14 x i8] [i8 102, i8 49, i8 112, i8 32, i8 120, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str7.c8 = private constant [14 x i8] [i8 102, i8 50, i8 112, i8 32, i8 120, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str8.c8 = private constant [14 x i8] [i8 102, i8 51, i8 112, i8 32, i8 120, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str1 = private constant [13 x i8] [i8 102, i8 48, i8 32, i8 120, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str2 = private constant [13 x i8] [i8 102, i8 49, i8 32, i8 120, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str3 = private constant [13 x i8] [i8 102, i8 50, i8 32, i8 120, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str4 = private constant [13 x i8] [i8 102, i8 51, i8 32, i8 120, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str5 = private constant [14 x i8] [i8 102, i8 48, i8 112, i8 32, i8 120, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str6 = private constant [14 x i8] [i8 102, i8 49, i8 112, i8 32, i8 120, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str7 = private constant [14 x i8] [i8 102, i8 50, i8 112, i8 32, i8 120, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str8 = private constant [14 x i8] [i8 102, i8 51, i8 112, i8 32, i8 120, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 
 
 
@@ -117,19 +117,19 @@ declare void @perror(%ConstCharStr*)
 
 define void @f0_val(%Type1 %x) {
     %1 = extractvalue %Type1 %x, 0
-    %2 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([13 x i8]* @str1.c8 to [0 x i8]*), i32 %1)
+    %2 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([13 x i8]* @str1 to [0 x i8]*), i32 %1)
     ret void
 }
 
 define void @f1_val(%Type2 %x) {
     %1 = extractvalue %Type2 %x, 0
-    %2 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([13 x i8]* @str2.c8 to [0 x i8]*), i32 %1)
+    %2 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*), i32 %1)
     ret void
 }
 
 define void @f2_val(%Type3 %x) {
     %1 = extractvalue %Type3 %x, 0
-    %2 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([13 x i8]* @str3.c8 to [0 x i8]*), i32 %1)
+    %2 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([13 x i8]* @str3 to [0 x i8]*), i32 %1)
     ret void
 }
 
@@ -139,28 +139,28 @@ define void @f3_val({
     %1 = extractvalue {
 	i32
 } %x, 0
-    %2 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([13 x i8]* @str4.c8 to [0 x i8]*), i32 %1)
+    %2 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([13 x i8]* @str4 to [0 x i8]*), i32 %1)
     ret void
 }
 
 define void @f0_ptr(%Type1* %x) {
     %1 = getelementptr inbounds %Type1, %Type1* %x, i32 0, i32 0
     %2 = load i32, i32* %1
-    %3 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([14 x i8]* @str5.c8 to [0 x i8]*), i32 %2)
+    %3 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([14 x i8]* @str5 to [0 x i8]*), i32 %2)
     ret void
 }
 
 define void @f1_ptr(%Type2* %x) {
     %1 = getelementptr inbounds %Type2, %Type2* %x, i32 0, i32 0
     %2 = load i32, i32* %1
-    %3 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([14 x i8]* @str6.c8 to [0 x i8]*), i32 %2)
+    %3 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([14 x i8]* @str6 to [0 x i8]*), i32 %2)
     ret void
 }
 
 define void @f2_ptr(%Type3* %x) {
     %1 = getelementptr inbounds %Type3, %Type3* %x, i32 0, i32 0
     %2 = load i32, i32* %1
-    %3 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([14 x i8]* @str7.c8 to [0 x i8]*), i32 %2)
+    %3 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([14 x i8]* @str7 to [0 x i8]*), i32 %2)
     ret void
 }
 
@@ -173,7 +173,7 @@ define void @f3_ptr({
 	i32
 }* %x, i32 0, i32 0
     %2 = load i32, i32* %1
-    %3 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([14 x i8]* @str8.c8 to [0 x i8]*), i32 %2)
+    %3 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([14 x i8]* @str8 to [0 x i8]*), i32 %2)
     ret void
 }
 

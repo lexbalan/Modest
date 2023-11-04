@@ -91,22 +91,22 @@ declare void @perror(%ConstCharStr*)
 
 ; -- SOURCE: src/main.cm
 
-@str1.c8 = private constant [15 x i8] [i8 102, i8 49, i8 32, i8 119, i8 97, i8 115, i8 32, i8 99, i8 97, i8 108, i8 108, i8 101, i8 100, i8 10, i8 0]
-@str2.c8 = private constant [11 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 117, i8 110, i8 99, i8 10, i8 0]
-@str3.c8 = private constant [15 x i8] [i8 102, i8 48, i8 32, i8 119, i8 97, i8 115, i8 32, i8 99, i8 97, i8 108, i8 108, i8 101, i8 100, i8 10, i8 0]
+@str1 = private constant [15 x i8] [i8 102, i8 49, i8 32, i8 119, i8 97, i8 115, i8 32, i8 99, i8 97, i8 108, i8 108, i8 101, i8 100, i8 10, i8 0]
+@str2 = private constant [11 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 117, i8 110, i8 99, i8 10, i8 0]
+@str3 = private constant [15 x i8] [i8 102, i8 48, i8 32, i8 119, i8 97, i8 115, i8 32, i8 99, i8 97, i8 108, i8 108, i8 101, i8 100, i8 10, i8 0]
 
 
 
 
 define void @f1() {
-    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([15 x i8]* @str1.c8 to [0 x i8]*))
+    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
     ret void
 }
 
 
 
 define i32 @main() {
-    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([11 x i8]* @str2.c8 to [0 x i8]*))
+    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([11 x i8]* @str2 to [0 x i8]*))
     call void() @f0 ()
     call void() @f1 ()
     ret i32 0
@@ -115,7 +115,7 @@ define i32 @main() {
 
 
 define void @f0() {
-    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([15 x i8]* @str3.c8 to [0 x i8]*))
+    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([15 x i8]* @str3 to [0 x i8]*))
     ret void
 }
 

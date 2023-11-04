@@ -100,15 +100,15 @@ declare void @utf32_putchar(i32)
 
 ; -- SOURCE: src/main.cm
 
-@str1.c8 = private constant [12 x i8] [i8 83, i8 45, i8 116, i8 45, i8 114, i8 45, i8 105, i8 45, i8 110, i8 45, i8 103, i8 0]
-@str2.c16 = private constant [12 x i16] [i16 83, i16 45, i16 116, i16 45, i16 114, i16 45, i16 105, i16 45, i16 110, i16 45, i16 103, i16 0]
-@str3.c32 = private constant [12 x i32] [i32 83, i32 45, i32 116, i32 45, i32 114, i32 45, i32 105, i32 45, i32 110, i32 45, i32 103, i32 0]
-@str4.c16 = private constant [10 x i16] [i16 72, i16 101, i16 108, i16 108, i16 111, i16 32, i16 937, i16 33, i16 10, i16 0]
-@str5.c32 = private constant [10 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 32, i32 937, i32 33, i32 10, i32 0]
-@str6.c32 = private constant [10 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 32, i32 128000, i32 33, i32 10, i32 0]
-@str7.c8 = private constant [2 x i8] [i8 10, i8 0]
-@str8.c8 = private constant [2 x i8] [i8 10, i8 0]
-@str9.c8 = private constant [2 x i8] [i8 10, i8 0]
+@str1 = private constant [12 x i8] [i8 83, i8 45, i8 116, i8 45, i8 114, i8 45, i8 105, i8 45, i8 110, i8 45, i8 103, i8 0]
+@str2 = private constant [12 x i16] [i16 83, i16 45, i16 116, i16 45, i16 114, i16 45, i16 105, i16 45, i16 110, i16 45, i16 103, i16 0]
+@str3 = private constant [12 x i32] [i32 83, i32 45, i32 116, i32 45, i32 114, i32 45, i32 105, i32 45, i32 110, i32 45, i32 103, i32 0]
+@str4 = private constant [10 x i16] [i16 72, i16 101, i16 108, i16 108, i16 111, i16 32, i16 937, i16 33, i16 10, i16 0]
+@str5 = private constant [10 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 32, i32 937, i32 33, i32 10, i32 0]
+@str6 = private constant [10 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 32, i32 128000, i32 33, i32 10, i32 0]
+@str7 = private constant [2 x i8] [i8 10, i8 0]
+@str8 = private constant [2 x i8] [i8 10, i8 0]
+@str9 = private constant [2 x i8] [i8 10, i8 0]
 
 
 
@@ -156,24 +156,24 @@ define i32 @main() {
 ;    var ratCode : Nat32 := ratCharCode to Nat32
 ;    printf("omegaCode = %d\n", omegaCode)
 ;    printf("ratCode = %d\n", ratCode)
-    call void([0 x i16]*) @utf16_puts ([0 x i16]* bitcast ([10 x i16]* @str4.c16 to [0 x i16]*))
-    call void([0 x i32]*) @utf32_puts ([0 x i32]* bitcast ([10 x i32]* @str5.c32 to [0 x i32]*))
-    call void([0 x i32]*) @utf32_puts ([0 x i32]* bitcast ([10 x i32]* @str6.c32 to [0 x i32]*))
+    call void([0 x i16]*) @utf16_puts ([0 x i16]* bitcast ([10 x i16]* @str4 to [0 x i16]*))
+    call void([0 x i32]*) @utf32_puts ([0 x i32]* bitcast ([10 x i32]* @str5 to [0 x i32]*))
+    call void([0 x i32]*) @utf32_puts ([0 x i32]* bitcast ([10 x i32]* @str6 to [0 x i32]*))
     %str8 = alloca [0 x i8]*
-    store [0 x i8]* bitcast ([12 x i8]* @str1.c8 to [0 x i8]*), [0 x i8]** %str8
+    store [0 x i8]* bitcast ([12 x i8]* @str1 to [0 x i8]*), [0 x i8]** %str8
     %str16 = alloca [0 x i16]*
-    store [0 x i16]* bitcast ([12 x i16]* @str2.c16 to [0 x i16]*), [0 x i16]** %str16
+    store [0 x i16]* bitcast ([12 x i16]* @str2 to [0 x i16]*), [0 x i16]** %str16
     %str32 = alloca [0 x i32]*
-    store [0 x i32]* bitcast ([12 x i32]* @str3.c32 to [0 x i32]*), [0 x i32]** %str32
+    store [0 x i32]* bitcast ([12 x i32]* @str3 to [0 x i32]*), [0 x i32]** %str32
     %1 = load [0 x i8]*, [0 x i8]** %str8
     call void([0 x i8]*) @utf8_puts ([0 x i8]* %1)
-    call void([0 x i8]*) @utf8_puts ([0 x i8]* bitcast ([2 x i8]* @str7.c8 to [0 x i8]*))
+    call void([0 x i8]*) @utf8_puts ([0 x i8]* bitcast ([2 x i8]* @str7 to [0 x i8]*))
     %2 = load [0 x i16]*, [0 x i16]** %str16
     call void([0 x i16]*) @utf16_puts ([0 x i16]* %2)
-    call void([0 x i8]*) @utf8_puts ([0 x i8]* bitcast ([2 x i8]* @str8.c8 to [0 x i8]*))
+    call void([0 x i8]*) @utf8_puts ([0 x i8]* bitcast ([2 x i8]* @str8 to [0 x i8]*))
     %3 = load [0 x i32]*, [0 x i32]** %str32
     call void([0 x i32]*) @utf32_puts ([0 x i32]* %3)
-    call void([0 x i8]*) @utf8_puts ([0 x i8]* bitcast ([2 x i8]* @str9.c8 to [0 x i8]*))
+    call void([0 x i8]*) @utf8_puts ([0 x i8]* bitcast ([2 x i8]* @str9 to [0 x i8]*))
     ret i32 0
 }
 

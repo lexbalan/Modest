@@ -794,18 +794,11 @@ def do_eval_expr_cast_generic(x):
 
             char_pow = string_of['power']
 
-            id_name = 'strid_8'
-            if char_pow == 16:
-                id_name = 'strid_16'
-            elif char_pow == 32:
-                id_name = "strid_32"
-
-
             return {
                 'isa': 'llvm_value',
                 'class': 'str',
                 'level': 'value',
-                'id': x[id_name],
+                'id': x['strid'],
                 'ch': char_pow,
                 'len': from_type['volume']['imm'],
                 'type': value['type'],
@@ -1050,7 +1043,7 @@ def do_eval_str8(x):
         'isa': 'llvm_value',
         'class': 'mem',
         'level': 'value',
-        'id': x['strid_8'],
+        'id': x['strid'],
         'type': x['type'],
         'proto': x
     }
@@ -1060,7 +1053,7 @@ def do_eval_str16(x):
         'isa': 'llvm_value',
         'class': 'mem',
         'level': 'value',
-        'id': x['strid_16'],
+        'id': x['strid'],
         'type': x['type'],
         'proto': x
     }
@@ -1070,7 +1063,7 @@ def do_eval_str32(x):
         'isa': 'llvm_value',
         'class': 'mem',
         'level': 'value',
-        'id': x['strid_32'],
+        'id': x['strid'],
         'type': x['type'],
         'proto': x
     }
@@ -1741,41 +1734,14 @@ def print_string_utf8_old(strid, string):
 
 
 
-
-def print_string_utf8(strid, string):
+def print_string_as_array(strid, string, char_size):
     slen = len(string['imm'])
-    lo("@%s = private constant [%d x i8] [" % (strid, slen))
+    lo("@%s = private constant [%d x i%d] [" % (strid, slen, char_size))
     i = 0
     for c in string['imm']:
         if i > 0:
             out(", ")
-        out("i8 %d" % c['imm'])
-        i = i + 1
-
-    out("]")
-
-
-def print_string_utf16(strid, string):
-    slen = len(string['imm'])
-    lo("@%s = private constant [%d x i16] [" % (strid, slen))
-    i = 0
-    for c in string['imm']:
-        if i > 0:
-            out(", ")
-        out("i16 %d" % c['imm'])
-        i = i + 1
-
-    out("]")
-
-
-def print_string_utf32(strid, string):
-    slen = len(string['imm'])
-    lo("@%s = private constant [%d x i32] [" % (strid, slen))
-    i = 0
-    for c in string['imm']:
-        if i > 0:
-            out(", ")
-        out("i32 %d" % c['imm'])
+        out("i%d %d" % (char_size, c['imm']))
         i = i + 1
 
     out("]")
@@ -1795,23 +1761,9 @@ def print_strings(strings):
         else:
             char_power = string['type']['to']['power']
 
-        if char_power == 8:
-            #print("PRINT_STR8")
-            strid8 = strid + '.c8'
-            string['strid_8'] = strid8
-            print_string_utf8(strid8, string['value'])
+        string['strid'] = strid
 
-        elif char_power == 16:
-            #print("PRINT_STR16")
-            strid16 = strid + '.c16'
-            string['strid_16'] = strid16
-            print_string_utf16(strid16, string['value'])
-
-        elif char_power == 32:
-            #print("PRINT_STR32")
-            strid32 = strid + '.c32'
-            string['strid_32'] = strid32
-            print_string_utf32(strid32, string['value'])
+        print_string_as_array(strid, string['value'], char_power)
 
 
 

@@ -95,12 +95,12 @@ declare void @perror(%ConstCharStr*)
 
 ; -- SOURCE: src/lib.cm
 
-@str1.c8 = private constant [21 x i8] [i8 104, i8 101, i8 108, i8 108, i8 111, i8 32, i8 102, i8 114, i8 111, i8 109, i8 32, i8 108, i8 105, i8 98, i8 95, i8 102, i8 117, i8 110, i8 99, i8 10, i8 0]
+@str1 = private constant [21 x i8] [i8 104, i8 101, i8 108, i8 108, i8 111, i8 32, i8 102, i8 114, i8 111, i8 109, i8 32, i8 108, i8 105, i8 98, i8 95, i8 102, i8 117, i8 110, i8 99, i8 10, i8 0]
 
 
 
 define void @lib_func() {
-    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([21 x i8]* @str1.c8 to [0 x i8]*))
+    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([21 x i8]* @str1 to [0 x i8]*))
     ret void
 }
 

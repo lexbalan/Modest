@@ -91,8 +91,8 @@ declare void @perror(%ConstCharStr*)
 
 ; -- SOURCE: src/main.cm
 
-@str1.c8 = private constant [14 x i8] [i8 37, i8 100, i8 32, i8 42, i8 32, i8 37, i8 100, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str2.c8 = private constant [23 x i8] [i8 109, i8 117, i8 108, i8 116, i8 105, i8 112, i8 108, i8 121, i8 32, i8 116, i8 97, i8 98, i8 108, i8 101, i8 32, i8 102, i8 111, i8 114, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str1 = private constant [14 x i8] [i8 37, i8 100, i8 32, i8 42, i8 32, i8 37, i8 100, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str2 = private constant [23 x i8] [i8 109, i8 117, i8 108, i8 116, i8 105, i8 112, i8 108, i8 121, i8 32, i8 116, i8 97, i8 98, i8 108, i8 101, i8 32, i8 102, i8 111, i8 114, i8 32, i8 37, i8 100, i8 10, i8 0]
 
 
 
@@ -110,7 +110,7 @@ body_1:
     %3 = load i32, i32* %m
     %4 = mul i32 %n, %3
     %5 = load i32, i32* %m
-    %6 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([14 x i8]* @str1.c8 to [0 x i8]*), i32 %n, i32 %5, i32 %4)
+    %6 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*), i32 %n, i32 %5, i32 %4)
     %7 = load i32, i32* %m
     %8 = add i32 %7, 1
     store i32 %8, i32* %m
@@ -120,7 +120,7 @@ break_1:
 }
 
 define i32 @main() {
-    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([23 x i8]* @str2.c8 to [0 x i8]*), i32 4)
+    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([23 x i8]* @str2 to [0 x i8]*), i32 4)
     call void(i32) @mtab (i32 4)
     ret i32 0
 }
