@@ -517,12 +517,6 @@ def print_value_cast_generic(v, ctx):
 
     if type.is_ptr_to_string(to_type):
         if type.is_string(from_type):
-
-            if 'id' in value:
-                #?
-                print_value_by_id(value)
-                return
-
             char_power = to_type['to']['of']['power']
             print_value_literal_str(value, ctx=[], char_power=char_power)
             return
@@ -1294,6 +1288,13 @@ def print_def_var(x):
 
 def print_def_const(x):
     const_value = x['value']
+
+    # не печатаем GenericString
+    # печатаем только сконструированные (явно или неявно) строки
+    # временно вырубил но в целом здравая идея
+#    if type.is_generic_string(const_value['type']):
+#        return
+
     id_str = const_value['id']['str']
     v = const_value['value']
     out("#define %s  " % id_str)

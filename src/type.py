@@ -134,9 +134,6 @@ def type_init():
 
 
     typeGenericChar = hlir_type_generic_char(power=8, ti=None)
-    typeGenericChar['cm_alias'] = 'Char'
-    typeGenericChar['c_alias'] = 'uint8_t'
-    typeGenericChar['llvm_alias'] = 'i8'
 
 
     typeChar8 = hlir_type_char("Char8", power=8, ti=None)
@@ -387,6 +384,12 @@ def is_record(t):
 
 
 def is_string(t):
+    return is_array_of_char(t)
+
+
+def is_generic_string(t):
+    if not is_generic(t):
+        return False
     return is_array_of_char(t)
 
 

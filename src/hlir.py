@@ -91,8 +91,9 @@ def hlir_type_generic_char(power, ti=None):
         'att': [],
         'classes': ['comparable'],
         'power': power,
-        'c_alias': 'uint32_t',
-        'llvm_alias': 'i32',
+        'cm_alias': 'Char',
+        'c_alias': 'uint8_t',
+        'llvm_alias': 'i8',
         'size': nbytes_for_bits(power),
         'ti': ti
     }
