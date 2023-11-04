@@ -1351,6 +1351,7 @@ def cdirectives(module):
                 if obj['kind'] == 'c_include':
                     newline()
                     print_include(obj)
+
     for obj in module['text']:
         if obj['isa'] == 'directive':
             if obj['kind'] == 'c_include':
