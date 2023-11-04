@@ -27,10 +27,6 @@ def value_cons_from_immediate(v, t, ti):
     if 'nl_end' in v:
         nv['nl_end'] = v['nl_end']
 
-    # для generic приведения констант (!)
-    if 'id' in v:
-        nv['id'] = v['id']
-
     return nv
 
 

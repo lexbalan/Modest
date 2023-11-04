@@ -10,7 +10,7 @@ import "libc/stdio.hm"
 // FIXIT: not worked LLVM result (!)
 
 
-const filename = "file.bin"
+const filename = "file.bin" to *Str8
 
 
 // chunk of data for read/write operations in file

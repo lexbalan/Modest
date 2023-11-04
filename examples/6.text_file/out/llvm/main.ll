@@ -91,50 +91,46 @@ declare void @perror(%ConstCharStr*)
 
 ; -- SOURCE: src/main.cm
 
-@str1 = private constant [19 x i8] [i8 114, i8 117, i8 110, i8 32, i8 119, i8 114, i8 105, i8 116, i8 101, i8 95, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
-@str2 = private constant [9 x i8] [i8 102, i8 105, i8 108, i8 101, i8 46, i8 116, i8 120, i8 116, i8 0]
+@str1 = private constant [9 x i8] [i8 102, i8 105, i8 108, i8 101, i8 46, i8 116, i8 120, i8 116, i8 0]
+@str2 = private constant [19 x i8] [i8 114, i8 117, i8 110, i8 32, i8 119, i8 114, i8 105, i8 116, i8 101, i8 95, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
 @str3 = private constant [2 x i8] [i8 119, i8 0]
 @str4 = private constant [31 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 99, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 99, i8 114, i8 101, i8 97, i8 116, i8 101, i8 32, i8 102, i8 105, i8 108, i8 101, i8 32, i8 39, i8 37, i8 115, i8 39, i8 0]
-@str5 = private constant [9 x i8] [i8 102, i8 105, i8 108, i8 101, i8 46, i8 116, i8 120, i8 116, i8 0]
-@str6 = private constant [12 x i8] [i8 115, i8 111, i8 109, i8 101, i8 32, i8 116, i8 101, i8 120, i8 116, i8 46, i8 10, i8 0]
-@str7 = private constant [18 x i8] [i8 114, i8 117, i8 110, i8 32, i8 114, i8 101, i8 97, i8 100, i8 95, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
-@str8 = private constant [9 x i8] [i8 102, i8 105, i8 108, i8 101, i8 46, i8 116, i8 120, i8 116, i8 0]
-@str9 = private constant [2 x i8] [i8 114, i8 0]
-@str10 = private constant [29 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 99, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 111, i8 112, i8 101, i8 110, i8 32, i8 102, i8 105, i8 108, i8 101, i8 32, i8 39, i8 37, i8 115, i8 39, i8 0]
-@str11 = private constant [9 x i8] [i8 102, i8 105, i8 108, i8 101, i8 46, i8 116, i8 120, i8 116, i8 0]
-@str12 = private constant [21 x i8] [i8 102, i8 105, i8 108, i8 101, i8 32, i8 39, i8 37, i8 115, i8 39, i8 32, i8 99, i8 111, i8 110, i8 116, i8 97, i8 105, i8 110, i8 115, i8 58, i8 32, i8 0]
-@str13 = private constant [9 x i8] [i8 102, i8 105, i8 108, i8 101, i8 46, i8 116, i8 120, i8 116, i8 0]
-@str14 = private constant [19 x i8] [i8 116, i8 101, i8 120, i8 116, i8 95, i8 102, i8 105, i8 108, i8 101, i8 32, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
+@str5 = private constant [12 x i8] [i8 115, i8 111, i8 109, i8 101, i8 32, i8 116, i8 101, i8 120, i8 116, i8 46, i8 10, i8 0]
+@str6 = private constant [18 x i8] [i8 114, i8 117, i8 110, i8 32, i8 114, i8 101, i8 97, i8 100, i8 95, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
+@str7 = private constant [2 x i8] [i8 114, i8 0]
+@str8 = private constant [29 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 99, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 111, i8 112, i8 101, i8 110, i8 32, i8 102, i8 105, i8 108, i8 101, i8 32, i8 39, i8 37, i8 115, i8 39, i8 0]
+@str9 = private constant [21 x i8] [i8 102, i8 105, i8 108, i8 101, i8 32, i8 39, i8 37, i8 115, i8 39, i8 32, i8 99, i8 111, i8 110, i8 116, i8 97, i8 105, i8 110, i8 115, i8 58, i8 32, i8 0]
+@str10 = private constant [19 x i8] [i8 116, i8 101, i8 120, i8 116, i8 95, i8 102, i8 105, i8 108, i8 101, i8 32, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
 
 
 
 
 define void @write_example() {
-    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([19 x i8]* @str1 to [0 x i8]*))
-    %2 = call %FILE*(%ConstCharStr*, %ConstCharStr*) @fopen (%ConstCharStr* bitcast ([9 x i8]* @str2 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str3 to [0 x i8]*))
+    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([19 x i8]* @str2 to [0 x i8]*))
+    %2 = call %FILE*(%ConstCharStr*, %ConstCharStr*) @fopen ([0 x i8]* bitcast ([9 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str3 to [0 x i8]*))
     %3 = icmp eq %FILE* %2, null
     br i1 %3 , label %then_0, label %endif_0
 then_0:
-    %4 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([31 x i8]* @str4 to [0 x i8]*), [0 x i8]* bitcast ([9 x i8]* @str5 to [0 x i8]*))
+    %4 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([31 x i8]* @str4 to [0 x i8]*), [0 x i8]* bitcast ([9 x i8]* @str1 to [0 x i8]*))
     ret void
     br label %endif_0
 endif_0:
-    %6 = call i32(%FILE*, %Str*, ...) @fprintf (%FILE* %2, %Str* bitcast ([12 x i8]* @str6 to [0 x i8]*))
+    %6 = call i32(%FILE*, %Str*, ...) @fprintf (%FILE* %2, %Str* bitcast ([12 x i8]* @str5 to [0 x i8]*))
     %7 = call i32(%FILE*) @fclose (%FILE* %2)
     ret void
 }
 
 define void @read_example() {
-    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([18 x i8]* @str7 to [0 x i8]*))
-    %2 = call %FILE*(%ConstCharStr*, %ConstCharStr*) @fopen (%ConstCharStr* bitcast ([9 x i8]* @str8 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str9 to [0 x i8]*))
+    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([18 x i8]* @str6 to [0 x i8]*))
+    %2 = call %FILE*(%ConstCharStr*, %ConstCharStr*) @fopen ([0 x i8]* bitcast ([9 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str7 to [0 x i8]*))
     %3 = icmp eq %FILE* %2, null
     br i1 %3 , label %then_0, label %endif_0
 then_0:
-    %4 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([29 x i8]* @str10 to [0 x i8]*), [0 x i8]* bitcast ([9 x i8]* @str11 to [0 x i8]*))
+    %4 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([29 x i8]* @str8 to [0 x i8]*), [0 x i8]* bitcast ([9 x i8]* @str1 to [0 x i8]*))
     ret void
     br label %endif_0
 endif_0:
-    %6 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([21 x i8]* @str12 to [0 x i8]*), [0 x i8]* bitcast ([9 x i8]* @str13 to [0 x i8]*))
+    %6 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([21 x i8]* @str9 to [0 x i8]*), [0 x i8]* bitcast ([9 x i8]* @str1 to [0 x i8]*))
     br label %again_1
 again_1:
     br i1 1 , label %body_1, label %break_1
@@ -154,7 +150,7 @@ break_1:
 }
 
 define i32 @main() {
-    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([19 x i8]* @str14 to [0 x i8]*))
+    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([19 x i8]* @str10 to [0 x i8]*))
     call void() @write_example ()
     call void() @read_example ()
     ret i32 0

@@ -1752,14 +1752,16 @@ def print_strings(strings):
     strno = 0
     for string in strings:
 
-        strno = strno + 1
-        strid = 'str%d' % strno
-
-        char_power = 0
-        if type.is_array(string['type']['to']):
-            char_power = string['type']['to']['of']['power']
+        strid = None
+        if 'id' in string:
+            # it is named constant
+            strid = string['id']['str']
         else:
-            char_power = string['type']['to']['power']
+            # it is anonymous string
+            strno = strno + 1
+            strid = 'str%d' % strno
+
+        char_power = string['type']['to']['of']['power']
 
         string['strid'] = strid
 

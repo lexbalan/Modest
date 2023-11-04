@@ -517,6 +517,12 @@ def print_value_cast_generic(v, ctx):
 
     if type.is_ptr_to_string(to_type):
         if type.is_string(from_type):
+
+            if 'id' in value:
+                #?
+                print_value_by_id(value)
+                return
+
             char_power = to_type['to']['of']['power']
             print_value_literal_str(value, ctx=[], char_power=char_power)
             return
