@@ -1158,7 +1158,6 @@ def do_eval_x(x):
     elif k == 'cast': y = do_eval_expr_cast(x)
     elif k == 'sizeof': y = do_eval_sizeof(x)
     elif k == 'eq_str': y = do_eval_literal(x)
-#    elif k == 'add_str': y = do_eval_str(x)
     else:
         out("<%s>" % k)
         y = None
@@ -1711,7 +1710,7 @@ def print_def_const(x):
 
 
 
-def print_string_utf8_old(strid, string):
+def print_string_ascii(strid, string):
     ss = "" #string['imm']['str']
 
     for c in string['imm']:

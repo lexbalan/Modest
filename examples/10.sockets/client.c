@@ -1,0 +1,93 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <time.h>
+#include <arpa/inet.h>
+#include <stdint.h>
+#include <string.h>
+#include <stdbool.h>
+
+/* from: https://github.com/pshashipreetham/File-Transfer-Using-TCP-Socket-in-C-Socket-Programming/tree/master */
+
+
+#define SIZE  1024
+
+
+void send_file(FILE *fp, int sockfd)
+{
+    char data[SIZE];
+
+    while (fgets((char *)&data[0], SIZE, fp) != NULL) {
+        if (send(sockfd, (void *)&data[0], sizeof(char [SIZE]), 0) == -1) {
+            perror("[-] Error in sendung data");
+            exit(1);
+        }
+        bzero((void *)&data[0], SIZE);
+    }
+}
+
+
+#define role  "client"
+
+
+int main(void)
+{
+    uint8_t ip[10] = "127.0.0.1";
+    const uint16_t port = 8080;
+
+    if (true) {
+        printf("role - CLIENT\n");
+    }
+
+    if (false) {
+        printf("role - SERVER\n");
+    }
+
+    uint8_t filename[9] = "file.txt";
+
+    int e;
+    int sockfd;
+    struct sockaddr_in server_addr;
+    FILE *fp;
+
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (sockfd < 0) {
+        perror("[-] Error in socket");
+        exit(1);
+    }
+
+    printf("[+] Server socket created. \n");
+
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = port;
+    server_addr.sin_addr.s_addr = ((unsigned long)(uint32_t)inet_addr("127.0.0.1"));
+
+    struct sockaddr *const s = (struct sockaddr *const)(void *)&server_addr;
+    e = connect(sockfd, (struct sockaddr *)s, sizeof(struct sockaddr_in));
+    if (e == -1) {
+        perror("[-] Error in Connecting");
+        exit(1);
+    }
+
+    printf("[+] Connected to server.\n");
+
+    fp = fopen("file.txt", "r");
+    if (fp == NULL) {
+        perror("[-] Error in reading file.");
+        exit(1);
+    }
+
+    send_file(fp, sockfd);
+
+    printf("[+] File data send successfully.\n");
+
+    close(sockfd);
+
+    printf("[+] Disconnected from the server.\n");
+
+    return 0;
+}
+

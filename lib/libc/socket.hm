@@ -93,7 +93,7 @@ type in_port_t Nat16
 type socklen_t Nat32
 
 
-func inet_addr(cp: *ConstChar) -> in_addr_t
+func inet_addr(cp: *[]ConstChar) -> in_addr_t
 /*
 func inet_lnaof(in: Struct_in_addr) -> in_addr_t
 func inet_makeaddr(net: in_addr_t, lna: in_addr_t) -> Struct_in_addr
