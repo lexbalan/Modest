@@ -855,12 +855,12 @@ def do_value_call(x):
     i = 0
     while i < npars:
         param = params[i]
-        a = x['args'][i]
-        arg = do_rvalue(a)
+        aa = x['args'][i]
+        arg = do_rvalue(aa)
 
         if not value_is_bad(arg):
-            arg = value_cons_implicit(arg, param['type'], a['ti'])
-            type.check(param['type'], arg['type'], a['ti'])
+            arg = value_cons_implicit(arg, param['type'], aa['ti'])
+            type.check(param['type'], arg['type'], aa['ti'])
             args.append(arg)
 
         i = i + 1
@@ -868,11 +868,13 @@ def do_value_call(x):
 
     # arghack rest args
     while i < nargs:
-        arg = do_rvalue(x['args'][i])
+        aa = x['args'][i]
+        arg = do_rvalue(aa)
 
         if not value_is_bad(arg):
             if type.is_generic(arg['type']):
-                arg = cons_default(arg, arg['ti'])
+                error("required value with non-generic type", aa['ti'])
+                arg = cons_default(arg, aa['ti'])
             args.append(arg)
 
         i = i + 1
