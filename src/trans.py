@@ -482,20 +482,22 @@ def do_value_shift(x):
             imm_result = nl >> nr
             nbits = nbits_for_num(imm_result)
 
-            # TODO: реализуй сдвиг влево!
+            # TODO: реализуй сдвиг вправо!
 
+            t = l['type']
             if type.is_generic(l['type']):
-                # select new generic type for left (!)
                 t = hlir_type_generic_int_bits(nbits, ti=ti)
-                l = value_cons_from_immediate(l, t, x['left']['ti'])
 
-            v = hlir_value_bin(op, l, r, l['type'], ti=ti)
+            v = hlir_value_bin(op, l, r, t, ti=ti)
             v['imm'] = imm_result
+
             return v
+
 
     if type.is_generic(l['type']):
         error("required value with non-generic type", l)
         return hlir_value_bad(ti)
+
 
     return hlir_value_bin(op, l, r, l['type'], ti=ti)
 

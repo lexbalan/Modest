@@ -1,8 +1,22 @@
 
 import type
-from error import info
-from hlir import hlir_value_cast
+from error import info, error
+from hlir import hlir_value_cast, hlir_value_cast_immediate
 from value.value import value_is_immediate
+from util import nbits_for_num
+
+
+
+def value_cons_char_immediate(v, t, ti):
+    #info("value_cons_char_immediate", ti)
+    power = t['power']
+    need_power = nbits_for_num(v['imm'])
+
+    if need_power > power:
+        error("integer overflow", ti)
+
+    return hlir_value_cast_immediate(v, t, ti)
+
 
 
 def value_cons_char(v, t, ti, method):

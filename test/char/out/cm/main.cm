@@ -1,0 +1,14 @@
+// examples/1.hello_world/main.cm
+import "libc/stdio.h"
+
+const hello = "Hello"
+const world = " World!\n"
+
+const hello_world = hello + world
+
+
+func main () -> Int {
+    printf("Hello World!\n")
+    return 0
+}
+

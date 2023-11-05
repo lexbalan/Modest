@@ -474,6 +474,15 @@ def hlir_value_cast(value, type, ti=None):
     }
 
 
+def hlir_value_cast_immediate(v, t, ti=None):
+    nv = hlir_value_cast(v, t, ti)
+    nv['kind'] = 'cast_immediate'
+    nv['imm'] = v['imm']
+    if 'nl_end' in v:
+        nv['nl_end'] = v['nl_end']
+    return nv
+
+
 def hlir_value_sizeof(of, ti=None):
     size = type.get_size(of)
     typ = hlir_type_generic_int_for(size, unsigned=True, ti=ti)

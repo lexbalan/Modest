@@ -7,8 +7,8 @@ from util import float_align
 from .value import *
 
 from .unit import value_cons_unit
-from .char import value_cons_char
-from .integer import value_cons_integer
+from .char import value_cons_char, value_cons_char_immediate
+from .integer import value_cons_integer, value_cons_integer_immediate
 from .float import value_cons_float
 from .record import value_cons_record
 from .array import value_cons_array
@@ -16,18 +16,20 @@ from .pointer import value_cons_pointer, cons_ptr_to_str_from_generic_str
 
 
 
-
+# конструирование из immediate значения
+# при этом проверяется разрядность (!)
 def value_cons_from_immediate(v, t, ti):
     #info("value_cons_from_immediate", ti)
 
-    nv = hlir_value_cast(v, t, ti)
-    nv['kind'] = 'cast_immediate'
-    nv['imm'] = v['imm']
+    if type.is_integer(t):
+        return value_cons_integer_immediate(v, t, ti)
+    elif type.is_char(t):
+        return value_cons_char_immediate(v, t, ti)
+    elif type.is_float(t):
+        #TODO!
+        pass
 
-    if 'nl_end' in v:
-        nv['nl_end'] = v['nl_end']
-
-    return nv
+    return hlir_value_cast_immediate(v, t, ti)
 
 
 

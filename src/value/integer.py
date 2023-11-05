@@ -31,6 +31,27 @@ def check_power(vtype, t, method, ti):
 
 
 
+def value_cons_integer_immediate(v, t, ti):
+    #info("value_cons_int_immediate", ti)
+    power = t['power']
+    need_power = nbits_for_num(v['imm'])
+
+
+    if need_power > power:
+        print("IMM K -= %s" % v['kind'])
+        print("IMM -= %d" % v['imm'])
+        type_print(t); print()
+        print("need_power = %d" % need_power)
+        print("power = %d" % power)
+        error("integer overflow5", ti)
+
+
+    return hlir_value_cast_immediate(v, t, ti)
+
+
+
+
+
 def value_cons_integer(v, t, ti, method):
     vtype = v['type']
 
