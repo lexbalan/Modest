@@ -21,7 +21,7 @@ def value_cons_from_immediate(v, t, ti):
     #info("value_cons_from_immediate", ti)
 
     nv = hlir_value_cast(v, t, ti)
-    nv['kind'] = 'cast_generic'
+    nv['kind'] = 'cast_immediate'
     nv['imm'] = v['imm']
 
     if 'nl_end' in v:

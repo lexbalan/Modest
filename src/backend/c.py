@@ -114,7 +114,7 @@ def precedence(x):
 
     # cast generic не является 'оператором'
     # его приоритет, это приоритет его содержимого (value)
-    if k == 'cast_generic':
+    if k == 'cast_immediate':
         return precedence(x['value'])
 
     i = 0
@@ -510,7 +510,7 @@ def print_cast(t, v, ctx=[]):
 
 
 
-def print_value_cast_generic(v, ctx):
+def print_value_cast_immediate(v, ctx):
     value = v['value']
     from_type = value['type']
     to_type = v['type']
@@ -521,10 +521,11 @@ def print_value_cast_generic(v, ctx):
             print_value_literal_str(value, ctx=[], char_power=char_power)
             return
 
-#    elif type.is_char(to_type):
-#        if type.is_char(from_type):
-#            print_value_literal_char(v, ctx)
-#            return
+    # GenericChar -> vast_immediate -> Char
+    elif type.is_char(to_type):
+        if type.is_char(from_type):
+            print_value_literal_char(v, ctx)
+            return
 
 
     #need_wrap = precedence(value) < precedenceMax
@@ -749,19 +750,22 @@ def print_value_literal_char(x, ctx):
         out("'\0'")
         return
 
+    power = x['type']['power']
+
     prefix = ""
-    if num > 0xFFFF:
+    if power == 32:
         prefix = "U"
-    elif num > 0xFF:
+    elif power == 16:
         prefix = "u"
 
+    out(prefix)
     if num >= 0x20 and num <= 0x7F:
         if num == 39:
             out("'\\''")
         else:
-            out("%s'%c'" % (prefix, num))
+            out("'%c'" % (num))
     else:
-        out("%s'\\x%x'" % (prefix, num))
+        out("'\\x%x'" % (num))
 
     return
 
@@ -883,7 +887,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
     elif k == 'index_ptr': print_value_index_ptr(x, ctx)
     elif k == 'access': print_value_access(x, ctx)
     elif k == 'access_ptr': print_value_access_ptr(x, ctx)
-    elif k == 'cast_generic': print_value_cast_generic(x, ctx)
+    elif k == 'cast_immediate': print_value_cast_immediate(x, ctx)
     elif k == 'cast': print_value_cast(x, ctx)
     elif k == 'sizeof': print_value_sizeof(x, ctx)
     else:

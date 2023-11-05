@@ -16,8 +16,8 @@
 
 
 char arr_utf8[8] = {'H', 'i', '!', '\xa'};
-uint16_t arr_utf16[8] = {'H', 'e', 'l', 'l', 'o', '!', '\xa'};
-uint32_t arr_utf32[8] = {'H', 'e', 'l', 'l', 'o', '!', '\xa'};
+uint16_t arr_utf16[8] = {u'H', u'e', u'l', u'l', u'o', u'!', u'\xa'};
+uint32_t arr_utf32[8] = {U'H', U'e', U'l', U'l', U'o', U'!', U'\xa'};
 
 
 

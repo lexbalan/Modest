@@ -289,7 +289,7 @@ def print_cast(t, v, ctx=[]):
 
 
 
-def print_value_cast_generic(v, ctx):
+def print_value_cast_immediate(v, ctx):
     # дженерик каст не печатаю, печатаю просто значение
     need_wrap = precedence(v['value']['kind']) < precedenceMax
     print_value(v['value'], ctx, need_wrap=need_wrap)
@@ -519,7 +519,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
     elif k == 'index_ptr': print_value_index_ptr(x, ctx)
     elif k == 'access': print_value_access(x, ctx)
     elif k == 'access_ptr': print_value_access_ptr(x, ctx)
-    elif k == 'cast_generic': print_value_cast_generic(x, ctx)
+    elif k == 'cast_immediate': print_value_cast_immediate(x, ctx)
     elif k == 'cast': print_value_cast(x, ctx)
     elif k == 'sizeof': out("sizeof("); print_type(x['of']); out(")")
     else: out("<%s>" % k)

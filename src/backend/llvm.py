@@ -778,7 +778,7 @@ def select_cast_operator(a, b):
 
 
 
-def do_eval_expr_cast_generic(x):
+def do_eval_expr_cast_immediate(x):
     value = x['value']
     from_type = value['type']
     to_type = x['type']
@@ -853,7 +853,7 @@ def do_eval_expr_cast(x):
 
     if type.is_generic_string(from_type):
         if type.is_ptr_to_string(to_type):
-            error("strings need to print through do_eval_expr_cast_generic", x)
+            error("strings need to print through do_eval_expr_cast_immediate", x)
             exit(1)
 
 
@@ -1154,7 +1154,7 @@ def do_eval_x(x):
     elif k == 'index_ptr': y = do_eval_expr_index_ptr(x)
     elif k == 'access': y = do_eval_expr_access(x)
     elif k == 'access_ptr': y = do_eval_expr_access_ptr(x)
-    elif k == 'cast_generic': y = do_eval_expr_cast_generic(x)
+    elif k == 'cast_immediate': y = do_eval_expr_cast_immediate(x)
     elif k == 'cast': y = do_eval_expr_cast(x)
     elif k == 'sizeof': y = do_eval_sizeof(x)
     elif k == 'eq_str': y = do_eval_literal(x)

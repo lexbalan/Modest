@@ -59,7 +59,7 @@ def value_cons_array_from_array(v, t, ti, method):
     if value_is_immediate(v):
         n = n_to - n_from
 
-        nv = do_cast_generic(v, t, ti)
+        nv = value_cons_from_immediate(v, t, ti)
 
         # extend array with zero items
         padding = [hlir_value_zero(t['of'], ti=None)] * n
