@@ -231,11 +231,10 @@ def print_value(x):
             out(str(num))
 
     elif c == 'str':
-        #out("@%s" % x['id'])
-        len = x['len']# + 1
+        len = x['len']
         id = x['id']
-        ch = x['ch']
-        out("bitcast ([%d x i%d]* @%s to [0 x i%d]*)" % (len, ch, id, ch))
+        char_size = x['char_size']
+        out("bitcast ([%d x i%d]* @%s to [0 x i%d]*)" % (len, char_size, id, char_size))
 
     elif c == 'array':
         print_value_array(x)
@@ -784,26 +783,21 @@ def do_eval_expr_cast_immediate(x):
     to_type = x['type']
 
     # строки печатаются ТОЛЬКО отсюда!
-    if True:
-        if type.is_ptr_to_string(to_type):
+    if type.is_ptr_to_string(to_type):
+        string_of = to_type['to']['of']
+        char_pow = string_of['power']
 
-            if type.is_ptr_to_string(to_type):
-                string_of = to_type['to']['of']
-            else:
-                string_of = to_type['to']
+        return {
+            'isa': 'llvm_value',
+            'class': 'str',
+            'level': 'value',
+            'id': x['strid'],
+            'char_size': char_pow,
+            'len': len(x['imm']),
+            'type': x['type'],
+            'proto': value
+        }
 
-            char_pow = string_of['power']
-
-            return {
-                'isa': 'llvm_value',
-                'class': 'str',
-                'level': 'value',
-                'id': x['strid'],
-                'ch': char_pow,
-                'len': from_type['volume']['imm'],
-                'type': value['type'],
-                'proto': value
-            }
 
     return do_eval_literal(x)
 
@@ -882,9 +876,10 @@ def do_eval_expr_cast(x):
     #if type.eq(v['type'], v['value']['type']):
     #    return y
 
-    opcode = select_cast_operator(from_type, to_type)
     if is_global_context():
         return v
+
+    opcode = select_cast_operator(from_type, to_type)
 
     return opcast(opcode, from_type, to_type, v)
 
@@ -1004,6 +999,7 @@ def do_eval_record(v):
 def do_eval(x):
     assert(x != None)
 
+    # WRONG WAY! remove this shit!
     # Way for IMMEDIATE values
     if value_is_immediate(x):
         xtype = x['type']
@@ -1014,13 +1010,14 @@ def do_eval(x):
         elif type.is_array(xtype): return do_eval_array(x)
         elif type.is_float(xtype): return ll_create_value_num(xtype, x['imm'])
         elif type.is_bool(xtype): return ll_create_value_num(xtype, x['imm'])
-        elif type.is_pointer(xtype):
+        #elif type.is_pointer(xtype):
             # Nil (!) например
-            return ll_create_value_num(xtype, x['imm'])
-        else:
-            type_print(xtype)
-            print(x['imm'])
-            1 / 0
+        #    print("OJENFONEFIWNFEJNEKJFNDJK")
+        #    return ll_create_value_num(xtype, x['imm'])
+#        else:
+#            type_print(xtype)
+#            print(x['imm'])
+#            1 / 0
 
 
     # runtime evaluation
@@ -1740,7 +1737,8 @@ def print_string_as_array(strid, string, char_size):
     for c in string['imm']:
         if i > 0:
             out(", ")
-        out("i%d %d" % (char_size, c['imm']))
+        #out("i%d %d" % (char_size, c['imm']))
+        out("i%d %d" % (char_size, c))
         i = i + 1
 
     out("]")
@@ -1764,7 +1762,7 @@ def print_strings(strings):
 
         string['strid'] = strid
 
-        print_string_as_array(strid, string['value'], char_power)
+        print_string_as_array(strid, string, char_power)
 
 
 

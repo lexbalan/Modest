@@ -30,34 +30,30 @@ def str_literal(imm, charType, ti):
     return hlir_value_literal(strType, items, ti)
 
 
+
 def cons_ptr_to_str_from_generic_str(v, t, ti, method):
     from util import str2utf8, str2utf16, str2utf32
     from .cons import value_cons_from_immediate
     from trans import module_strings_add
 
-    char_typ = t['to']['of']
-    char_pow = char_typ['power']
-    if char_pow == 8:
-        method = str2utf8
-    elif char_pow == 16:
-        method = str2utf16
-    elif char_pow == 32:
-        method = str2utf32
+    char_pow = t['to']['of']['power']
+
+    method = str2utf8
+    if char_pow == 16: method = str2utf16
+    elif char_pow == 32: method = str2utf32
 
     # получаем список кодов чаров для строки в целевой кодировке
     # из списка чар кодов в utf-32
     s_imm = method(v['imm'])
-    # формируем из них строковой литерал
-    vy = str_literal(s_imm, char_typ, ti)
-    # далее формируем операцию приведения этого литерала к типу
-    # (это дженерик каст, он в принтере идет особым путем)
-    nv = value_cons_from_immediate(vy, t, ti=ti)
-    #nv['att'].append("string-cons")
-    module_strings_add(nv)
+    # массив кодов
+    #print("S_IMM = " + str(s_imm))
+    # длина полученной строки может отличаться от длины оригинала в utf-32
+    #str_length = len(s_imm)
+    #print("str_length = " + str(str_length))
 
-    # сейчас у каста к строке нет поля imm
-    # но оно будет нужно
-    nv.pop('imm')  #!
+    nv = value_cons_from_immediate(v, t, ti=ti)
+    nv['imm'] = s_imm
+    module_strings_add(nv)
 
     return nv
 
@@ -74,18 +70,10 @@ def value_cons_pointer(v, t, ti, method):
         from .cons import value_cons_from_immediate
         nv = value_cons_from_immediate(v, t, ti)
 
-    # GenericString -> (*[]CharX | *CharX)
+    # GenericString -> *[]CharX
     elif type.is_generic_string(vtype):
         if type.is_ptr_to_string(to_type):
-            ct = to_type['to']['of']
-            if type.eq(ct, type.typeChar8):
-                nv = cons_ptr_to_str_from_generic_str(v, t, ti, method)
-            elif type.eq(ct, type.typeChar16):
-                nv = cons_ptr_to_str_from_generic_str(v, t, ti, method)
-            elif type.eq(ct, type.typeChar32):
-                nv = cons_ptr_to_str_from_generic_str(v, t, ti, method)
-
-            return nv #!!
+            return cons_ptr_to_str_from_generic_str(v, t, ti, method)
 
     # *[n]X -> *[]X
     elif type.is_pointer_to_defined_array(vtype):

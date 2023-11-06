@@ -518,7 +518,7 @@ def print_value_cast_immediate(v, ctx):
     if type.is_ptr_to_string(to_type):
         if type.is_string(from_type):
             char_power = to_type['to']['of']['power']
-            print_value_literal_str(value, ctx=[], char_power=char_power)
+            print_value_literal_str(v, ctx=[], char_power=char_power)
             return
 
     # GenericChar -> vast_immediate -> Char
@@ -584,9 +584,11 @@ def print_value_cast(x, ctx):
 
 
 def print_value_literal_arr(v, ctx):
+
     if type.is_generic_string(v['type']):
         char_power = v['type']['of']['power']
-        print_value_literal_str(v, ctx=[], char_power=char_power)
+        # FIXIT: вообще нефиг печатать generic string (!)
+        out('"<GENERIC-STRING>"')
         return
 
 
@@ -730,7 +732,8 @@ def print_value_literal_str(x, ctx, char_power=8):
     out("%s\"" % prefix)
 
     for c in x['imm']:
-        ccode = c['imm']
+        #print(c)
+        ccode = c
         sym = chr(ccode)
 
         if sym == '\n': out("\\n")

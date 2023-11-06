@@ -57,6 +57,7 @@ def str2utf8(string_items):
             codes.append(k)
             i = i + 1
 
+    codes.append(0)
     return codes
 
 
@@ -80,6 +81,7 @@ def str2utf16(string_items):
 
             codes.append(k)
 
+    codes.append(0)
     return codes
 
 
@@ -90,6 +92,7 @@ def str2utf32(string_items):
     for i in string_items:
         c = (i['imm'])
         codes.append(c)
+    codes.append(0)
     return codes
 
 
