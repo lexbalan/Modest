@@ -18,11 +18,11 @@
 
 void write_file(int sockfd)
 {
-    uint8_t filename[10] = "file2.txt";
+    char *const filename = "file2.txt";
 
     char buffer[BUF_SIZE];
 
-    FILE *const fp = fopen("file2.txt", "w");
+    FILE *const fp = fopen(filename, "w");
     if (fp == NULL) {
         perror("[-] Error in creating file.");
         exit(1);
@@ -43,7 +43,7 @@ void write_file(int sockfd)
 
 int main(void)
 {
-    uint8_t ip[10] = "127.0.0.1";
+    char *const ip = "127.0.0.1";
     const uint16_t port = 8080;
 
     int e;
@@ -61,7 +61,7 @@ int main(void)
 
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = port;
-    server_addr.sin_addr.s_addr = ((unsigned long)(uint32_t)inet_addr("127.0.0.1"));
+    server_addr.sin_addr.s_addr = ((unsigned long)(uint32_t)inet_addr(ip));
 
     struct sockaddr *const a = (struct sockaddr *const)(void *)&server_addr;
     e = bind(sockfd, (struct sockaddr *)a, sizeof(struct sockaddr_in));

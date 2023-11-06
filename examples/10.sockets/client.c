@@ -30,12 +30,12 @@ void send_file(FILE *fp, int sockfd)
 }
 
 
-#define role  "client"
+#define role  "<GENERIC-STRING>"
 
 
 int main(void)
 {
-    uint8_t ip[10] = "127.0.0.1";
+    char *const ip = "127.0.0.1";
     const uint16_t port = 8080;
 
     if (true) {
@@ -46,7 +46,7 @@ int main(void)
         printf("role - SERVER\n");
     }
 
-    uint8_t filename[9] = "file.txt";
+    char *const filename = "file.txt";
 
     int e;
     int sockfd;
@@ -63,7 +63,7 @@ int main(void)
 
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = port;
-    server_addr.sin_addr.s_addr = ((unsigned long)(uint32_t)inet_addr("127.0.0.1"));
+    server_addr.sin_addr.s_addr = ((unsigned long)(uint32_t)inet_addr(ip));
 
     struct sockaddr *const s = (struct sockaddr *const)(void *)&server_addr;
     e = connect(sockfd, (struct sockaddr *)s, sizeof(struct sockaddr_in));
@@ -74,7 +74,7 @@ int main(void)
 
     printf("[+] Connected to server.\n");
 
-    fp = fopen("file.txt", "r");
+    fp = fopen(filename, "r");
     if (fp == NULL) {
         perror("[-] Error in reading file.");
         exit(1);

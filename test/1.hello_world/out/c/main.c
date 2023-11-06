@@ -6,8 +6,8 @@
 
 // examples/1.hello_world/main.cm
 
-#define hello  "Hello"
-#define world  " World!\n"
+#define hello  "<GENERIC-STRING>"
+#define world  "<GENERIC-STRING>"
 
 #define hello_world  hello  world
 

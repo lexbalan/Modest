@@ -17,9 +17,9 @@ var arr_utf32 : [8]Char32 := "Hello!\n"
 
 
 const genericStringConst = "S-t-r-i-n-g-\x3a9 \x1f400\x1f389\x1f984"
-const string8Const = "S-t-r-i-n-g-\xce\xa9 \xf0\x9f\x90\x80\xf0\x9f\x8e\x89\xf0\x9f\xa6\x84"
-const string16Const = "S-t-r-i-n-g-\x3a9 \xd83d\xdc00\xd83c\xdf89\xd83e\xdd84"
-const string32Const = "S-t-r-i-n-g-\x3a9 \x1f400\x1f389\x1f984"
+const string8Const = genericStringConst
+const string16Const = genericStringConst
+const string32Const = genericStringConst
 
 
 func main () -> Int {

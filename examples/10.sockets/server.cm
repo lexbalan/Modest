@@ -14,7 +14,7 @@ import "libc/socket.hm"
 const BUF_SIZE = 1024
 
 func write_file(sockfd: Int) {
-    let filename = "file2.txt"
+    let filename = "file2.txt" to *Str8
 
     var buffer: [BUF_SIZE]Char8
 
@@ -38,7 +38,7 @@ func write_file(sockfd: Int) {
 
 
 func main () -> Int {
-    let ip = "127.0.0.1"
+    let ip = "127.0.0.1" to *Str8
     let port = 8080
 
     var e: Int

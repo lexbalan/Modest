@@ -21,7 +21,7 @@ uint32_t arr_utf32[8] = {U'H', U'e', U'l', U'l', U'o', U'!', U'\xa'};
 
 
 
-#define genericStringConst  "S-t-r-i-n-g-\x3a9 \x1f400\x1f389\x1f984"
+#define genericStringConst  "<GENERIC-STRING>"
 #define string8Const  "S-t-r-i-n-g-\xce\xa9 \xf0\x9f\x90\x80\xf0\x9f\x8e\x89\xf0\x9f\xa6\x84"
 #define string16Const  u"S-t-r-i-n-g-\x3a9 \xd83d\xdc00\xd83c\xdf89\xd83e\xdd84"
 #define string32Const  U"S-t-r-i-n-g-\x3a9 \x1f400\x1f389\x1f984"

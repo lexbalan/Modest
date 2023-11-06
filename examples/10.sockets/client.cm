@@ -30,7 +30,7 @@ const role = "client"
 
 
 func main() -> Int {
-    let ip = "127.0.0.1"
+    let ip = "127.0.0.1" to *Str8
     let port = 8080
 
     if role == "client" {
@@ -41,7 +41,7 @@ func main() -> Int {
         printf("role - SERVER\n")
     }
 
-    let filename = "file.txt"
+    let filename = "file.txt" to *Str8
 
     var e: Int
     var sockfd : Int

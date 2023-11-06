@@ -8,7 +8,7 @@ const hello_world = hello + world
 
 
 func main () -> Int {
-    printf("Hello World!\n")
+    printf(hello_world)
     return 0
 }
 
