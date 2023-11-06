@@ -10,19 +10,24 @@ const hello_world = hello + world
 
 
 func main () -> Int {
-    var ch8 : Char8
+    var ch08 : Char8
     var ch16 : Char16
     var ch32 : Char32
 
-    ch8 := "🐀"[0]
-    ch16 := "🐀"[0]
+    //ch08 := "🐀"[0]  // error
+    //ch16 := "🐀"[0]  // error
     ch32 := "🐀"[0]
 
-    printf("ch8 == %x\n", ch8)
-    printf("ch16 == %x\n", ch16)
-    printf("ch32 == %x\n", ch32)
+    ch08 := "s"[0]
+    ch16 := "А"[0]
+    ch32 := "Я"[0]
+
+    printf("ch08 == 0x%x (%c)\n", ch08, ch08)
+    printf("ch16 == 0x%x (%c)\n", ch16, ch16)
+    printf("ch32 == 0x%x (%c)\n", ch32, ch32)
 
     printf(hello_world)
+
     return 0
 }
 

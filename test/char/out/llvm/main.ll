@@ -91,13 +91,28 @@ declare void @perror(%ConstCharStr*)
 
 ; -- SOURCE: src/main.cm
 
-@str1 = private constant [14 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 32, i8 87, i8 111, i8 114, i8 108, i8 100, i8 33, i8 10, i8 0]
+@str1 = private constant [11 x i8] [i8 99, i8 104, i8 56, i8 32, i8 61, i8 61, i8 32, i8 37, i8 120, i8 10, i8 0]
+@str2 = private constant [12 x i8] [i8 99, i8 104, i8 49, i8 54, i8 32, i8 61, i8 61, i8 32, i8 37, i8 120, i8 10, i8 0]
+@str3 = private constant [12 x i8] [i8 99, i8 104, i8 51, i8 50, i8 32, i8 61, i8 61, i8 32, i8 37, i8 120, i8 10, i8 0]
+@str4 = private constant [14 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 32, i8 87, i8 111, i8 114, i8 108, i8 100, i8 33, i8 10, i8 0]
 
 
 
 
 define i32 @main() {
-    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*))
+    %ch8 = alloca i8
+    %ch16 = alloca i16
+    %ch32 = alloca i32
+;ch8 := "🐀"[0]  // error
+;ch16 := "🐀"[0] // erro
+    store i32 128000, i32* %ch32
+    %1 = load i8, i8* %ch8
+    %2 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([11 x i8]* @str1 to [0 x i8]*), i8 %1)
+    %3 = load i16, i16* %ch16
+    %4 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([12 x i8]* @str2 to [0 x i8]*), i16 %3)
+    %5 = load i32, i32* %ch32
+    %6 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([12 x i8]* @str3 to [0 x i8]*), i32 %5)
+    %7 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([14 x i8]* @str4 to [0 x i8]*))
     ret i32 0
 }
 
