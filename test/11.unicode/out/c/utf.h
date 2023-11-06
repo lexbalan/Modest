@@ -10,6 +10,9 @@
 
 void utf32_to_utf8(uint32_t x, char *buf);
 
+uint8_t utf16_to_utf32(uint16_t *c, uint32_t *result);
+
+
 void utf8_puts(char *s);
 void utf16_puts(uint16_t *s);
 void utf32_puts(uint32_t *s);

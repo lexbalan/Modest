@@ -194,6 +194,61 @@ endif_0:
     ret i8 0
 }
 
+
+
+define i8 @utf16_to_utf32([0 x i16]* %c, i32* %result) {
+    %1 = getelementptr inbounds [0 x i16], [0 x i16]* %c, i32 0, i32 0
+    %2 = load i16, i16* %1
+    %3 = zext i16 %2 to i32
+    %4 = icmp ult i32 %3, 55296
+    %5 = icmp ugt i32 %3, 57343
+    %6 = or i1 %4, %5
+    br i1 %6 , label %then_0, label %else_0
+then_0:
+    %7 = bitcast i32 %3 to i32
+    store i32 %7, i32* %result
+    ret i8 1
+    br label %endif_0
+else_0:
+    %9 = icmp uge i32 %3, 56320
+    br i1 %9 , label %then_1, label %else_1
+then_1:
+;error("Недопустимая кодовая последовательность.")
+    br label %endif_1
+else_1:
+    %code = alloca i32
+    %10 = and i32 %3, 1023
+    %11 = shl i32 %10, 10
+    store i32 %11, i32* %code
+    %12 = getelementptr inbounds [0 x i16], [0 x i16]* %c, i32 0, i32 1
+    %13 = load i16, i16* %12
+    %14 = zext i16 %13 to i32
+    %15 = icmp ult i32 %14, 56320
+    %16 = icmp ugt i32 %14, 57343
+    %17 = or i1 %15, %16
+    br i1 %17 , label %then_2, label %else_2
+then_2:
+;error("Недопустимая кодовая последовательность.")
+    br label %endif_2
+else_2:
+    %18 = load i32, i32* %code
+    %19 = and i32 %14, 1023
+    %20 = or i32 %18, %19
+    store i32 %20, i32* %code
+    %21 = load i32, i32* %code
+    %22 = add i32 %21, 65536
+    %23 = bitcast i32 %22 to i32
+    store i32 %23, i32* %result
+    ret i8 2
+    br label %endif_2
+endif_2:
+    br label %endif_1
+endif_1:
+    br label %endif_0
+endif_0:
+    ret i8 0
+}
+
 define void @utf32_putchar(i32 %c) {
     %decoded_buf = alloca [5 x i8]
     %1 = call i8(i32, [5 x i8]*) @utf32_to_utf8 (i32 %c, [5 x i8]* %decoded_buf)
@@ -269,11 +324,23 @@ then_0:
     br label %break_1
     br label %endif_0
 endif_0:
-    %7 = zext i16 %3 to i32
-    call void(i32) @utf32_putchar (i32 %7)
-    %8 = load i32, i32* %i
-    %9 = add i32 %8, 1
-    store i32 %9, i32* %i
+    %c32 = alloca i32
+    %7 = load i32, i32* %i
+    %8 = getelementptr inbounds [0 x i16], [0 x i16]* %s, i32 0, i32 %7
+    %9 = bitcast i16* %8 to [0 x i16]*
+    %10 = call i8([0 x i16]*, i32*) @utf16_to_utf32 ([0 x i16]* %9, i32* %c32)
+    %11 = icmp eq i8 %10, 0
+    br i1 %11 , label %then_1, label %endif_1
+then_1:
+    br label %break_1
+    br label %endif_1
+endif_1:
+    %13 = load i32, i32* %c32
+    call void(i32) @utf32_putchar (i32 %13)
+    %14 = load i32, i32* %i
+    %15 = sext i8 %10 to i32
+    %16 = add i32 %14, %15
+    store i32 %16, i32* %i
     br label %again_1
 break_1:
     ret void

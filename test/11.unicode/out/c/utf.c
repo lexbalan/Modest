@@ -52,6 +52,35 @@ uint8_t utf32_to_utf8(uint32_t c, char *buf)
 }
 
 
+// algorithm from wikipedia
+// (https://ru.wikipedia.org/wiki/UTF-16)
+// returns n-symbols from input stream
+uint8_t utf16_to_utf32(uint16_t *c, uint32_t *result)
+{
+    const uint32_t leading = ((const uint32_t)(uint16_t)c[0]);
+
+    if ((leading < 0xD800) || (leading > 0xDFFF)) {
+        *result = (uint32_t)leading;
+        return 1;
+    } else if (leading >= 0xDC00) {
+        //error("Недопустимая кодовая последовательность.")
+    } else {
+        uint32_t code;
+        code = (leading & 0x3FF) << 10;
+        const uint32_t trailing = ((const uint32_t)(uint16_t)c[1]);
+        if ((trailing < 0xDC00) || (trailing > 0xDFFF)) {
+            //error("Недопустимая кодовая последовательность.")
+        } else {
+            code = code | trailing & 0x3FF;
+            *result = (uint32_t)(code + 0x10000);
+            return 2;
+        }
+    }
+
+    return 0;
+}
+
+
 void utf32_putchar(uint32_t c)
 {
     char decoded_buf[5];
@@ -85,8 +114,15 @@ void utf16_puts(uint16_t *s)
     while (true) {
         const uint16_t c = s[i];
         if ((uint16_t)c == 0) {break;}
-        utf32_putchar(((uint32_t)(uint16_t)c));
-        i = i + 1;
+
+        uint32_t c32;
+        const uint8_t n = utf16_to_utf32((uint16_t *)&s[i], &c32);
+
+        if (n == 0) {break;}
+
+        utf32_putchar(c32);
+
+        i = i + (int32_t)n;
     }
 }
 

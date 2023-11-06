@@ -50,11 +50,13 @@ def cons_ptr_to_str_from_generic_str(v, t, ti, method):
     # формируем из них строковой литерал
     vy = str_literal(s_imm, char_typ, ti)
     # далее формируем операцию приведения этого литерала к типу
-    # это дженерик каст, он идет особым путем
+    # (это дженерик каст, он в принтере идет особым путем)
     nv = value_cons_from_immediate(vy, t, ti=ti)
-    nv['att'].append("string-cons")
+    #nv['att'].append("string-cons")
     module_strings_add(nv)
 
+    # сейчас у каста к строке нет поля imm
+    # но оно будет нужно
     nv.pop('imm')  #!
 
     return nv

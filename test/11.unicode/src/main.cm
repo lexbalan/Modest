@@ -20,7 +20,7 @@ var arr_utf32 : [8]Char32 := "Hello!\n"
 
 
 
-const genericStringConst = "S-t-r-i-n-g"
+const genericStringConst = "S-t-r-i-n-g-Ω 🐀🎉🦄"
 const string8Const = genericStringConst to *Str8
 const string16Const = genericStringConst to *Str16
 const string32Const = genericStringConst to *Str32
@@ -41,10 +41,17 @@ func main () -> Int {
 //    printf("ratCode = %d\n", ratCode)
 
 
-    utf16_puts("Hello Ω!\n")
-    utf32_puts("Hello Ω!\n")
+    var i := 0
+    while true {
+        let c = string16Const[i]
+        if c == 0 to Char16 {
+            break
+        }
 
-    utf32_puts("Hello 🐀!\n")
+        printf("[%d]U16: 0x%x\n", i, c to Nat32)
+
+        i := i + 1
+    }
 
 
     var str8: *Str8 := string8Const
