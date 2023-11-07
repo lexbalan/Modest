@@ -17,16 +17,7 @@ with open(CONFIG_PATH, "rb") as toml:
 #print(toml_dict)
 
 
-
-path_lib = os.getenv('MODEST_LIB')
-
-
 import settings
-
-
-# right here!
-
-#config = None
 
 
 def load_config(setup_name):
@@ -71,17 +62,12 @@ args = parser.parse_args()
 
 def main():
     #print(os.getcwd())
-    global path_lib
-    #path_lib = os.getenv('MODEST_LIB')
-    if path_lib == None:
-        fatal("MODEST_LIB required")
 
-    # set default settings
-#    settings.set('lib', path_lib)
-#    path_lib2 = settings.get('lib')
-#    print(f"path_lib2 = {path_lib2}")
-    #global config
-    #config['lib'] = path_lib
+    path_lib = os.getenv('MODEST_LIB')
+    if path_lib != None:
+        settings.set('lib', path_lib)
+    else:
+        fatal("MODEST_LIB required")
 
 
     # parse features (ex. -funsafe)
