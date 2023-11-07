@@ -8,6 +8,12 @@ from .value import *
 
 
 
+def value_cons_float_immediate(v, t, ti):
+    #info("value_cons_float_immediate", ti)
+    return hlir_value_cast_immediate(v, t, ti)
+
+
+
 def value_cons_float(v, t, ti, method):
     vt = v['type']
 

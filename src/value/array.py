@@ -5,6 +5,14 @@ from hlir import *
 from .value import *
 
 
+
+def value_cons_array_immediate(v, t, ti):
+    info("value_cons_array_immediate", ti)
+    return hlir_value_cast_immediate(v, t, ti)
+
+
+
+
 # TODO: массив может НЕЯВНО быть построен только из
 # полного или из пустого дженерик массива
 def value_cons_array_from_generic_array(v, t, ti, method):
