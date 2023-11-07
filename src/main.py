@@ -21,8 +21,8 @@ import settings
 
 
 def load_config(setup_name):
-    print("load_setup %s" % setup_name)
-    #global config
+    #print("load_setup %s" % setup_name)
+
     config = toml_dict[setup_name]
 
     for k in config:
@@ -31,7 +31,7 @@ def load_config(setup_name):
         settings.set(k, v)
 
 
-#print("WTF?")
+#print("WTF?")  # за каким то хером вызываетс два раза, видимо из-за импорта
 load_config('Default')
 
 
