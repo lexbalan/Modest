@@ -16,7 +16,7 @@ CM:
 
 
 LLVM:
-	mcc -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.cm
+	mcc -o $(LLVMPREFIX)/main -mbackend=llvm  --setup=CortexM3 $(INDIR)/main.cm
 	clang $(LLVMPREFIX)/main.ll
 
 

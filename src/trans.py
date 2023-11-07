@@ -194,16 +194,14 @@ valueFalse = None
 
 
 def init():
-
-    from main import config
     from main import path_lib
-    LLVM_TARGET_TRIPLE = config['target_triple']
+    LLVM_TARGET_TRIPLE = settings.get('target_triple')
 
     global char_size, int_size, ptr_size, flt_size, lib_path
-    int_size = int(config['int_size'])
-    ptr_size = int(config['ptr_size'])
-    flt_size = int(config['flt_size'])
-    char_size = int(config['char_size'])
+    int_size = int(settings.get('int'))
+    ptr_size = int(settings.get('ptr'))
+    flt_size = int(settings.get('flt'))
+    char_size = int(settings.get('char'))
     lib_path = path_lib
     #print(f"path_lib = {path_lib}")
 
@@ -1928,11 +1926,6 @@ def import_abspath(s):
         f = env_current_file_dir + '/' + s #[1:]
 
     else: # (global)
-        #print(f"lib_path = {lib_path}")
-#        lib_path = settings.get('lib')
-#        print(f"lib_path = {lib_path}")
-        #from main import config
-        #lib_path = config['lib']
         f = lib_path + '/' + s
 
     if not os.path.exists(f):

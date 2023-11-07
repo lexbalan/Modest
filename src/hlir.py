@@ -3,17 +3,16 @@
 import copy
 import type
 from util import nbits_for_num, nbytes_for_bits
-
+import settings
 
 ptr_power = 0
 flt_power = 0
 
 
 def hlir_init():
-    from main import config
     global ptr_power, flt_power
-    ptr_power = int(config['ptr_size'])
-    flt_power = int(config['flt_size'])
+    ptr_power = int(settings.get('ptr'))
+    flt_power = int(settings.get('flt'))
     #print(f"ptr_power = {ptr_power}")
 
 

@@ -6,6 +6,7 @@ import argparse
 import importlib
 import tomllib
 
+
 CONFIG_PATH = os.path.expandvars("${MODEST_DIR}/config.toml")
 
 toml_dict = None
@@ -16,27 +17,32 @@ with open(CONFIG_PATH, "rb") as toml:
 #print(toml_dict)
 
 
-config = toml_dict['Default']
 
 path_lib = os.getenv('MODEST_LIB')
 
 
 import settings
 
-DEFAULT_MCHAR = config['char_size']#8
-DEFAULT_MINT = config['int_size']#32
-DEFAULT_MPTR = config['ptr_size']#64
-DEFAULT_MFLT = config['flt_size']#64
-DEFAULT_MLIB = ""
-DEFAULT_BACKEND = 'llvm'
 
 # right here!
-settings.set('int', DEFAULT_MINT)
-settings.set('ptr', DEFAULT_MPTR)
-settings.set('flt', DEFAULT_MFLT)
-settings.set('char', DEFAULT_MCHAR)
-settings.set('lib', DEFAULT_MLIB)
-settings.set('backend', DEFAULT_BACKEND)
+
+#config = None
+
+
+def load_config(setup_name):
+    print("load_setup %s" % setup_name)
+    #global config
+    config = toml_dict[setup_name]
+
+    for k in config:
+        v = config[k]
+        #print("SET %s = %s" % (k, v))
+        settings.set(k, v)
+
+
+#print("WTF?")
+load_config('Default')
+
 
 import error
 import trans
@@ -53,6 +59,7 @@ parser = argparse.ArgumentParser(
 
 parser.add_argument('filename', default='main')
 parser.add_argument('-o', '--output')
+parser.add_argument('-s', '--setup', help='-setup=<value>')
 parser.add_argument('-f', '--feature', action='append', help='[unsafe]')
 parser.add_argument('-m', action='append', help='-m<var>=<value>')
 parser.add_argument('-d', action='append', help='-d<constant_name>="<value_expression>"')
@@ -82,6 +89,11 @@ def main():
     if args.feature != None:
         for feature in args.feature:
             features.set(feature)
+
+
+    if args.setup != None:
+        setup_name = args.setup
+        load_config(setup_name)
 
     # parse modifiers (-mbackend=c, -mstyle=legacy)
     # and change default settings
