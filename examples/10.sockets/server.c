@@ -43,13 +43,8 @@ void write_file(int sockfd)
 
 int main(void)
 {
-    char *const ip = "127.0.0.1";
+    uint8_t ip[10] = "<GENERIC-STRING>";
     const uint16_t port = 8080;
-
-    int e;
-    struct sockaddr_in server_addr;
-    struct sockaddr_in new_addr;
-    socklen_t addr_size;
 
     const int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
@@ -59,12 +54,13 @@ int main(void)
 
     printf("[+] Server socket created. \n");
 
+    struct sockaddr_in server_addr;
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = port;
-    server_addr.sin_addr.s_addr = ((unsigned long)(uint32_t)inet_addr(ip));
+    server_addr.sin_addr.s_addr = ((unsigned long)(uint32_t)inet_addr("127.0.0.1"));
 
     struct sockaddr *const a = (struct sockaddr *const)(void *)&server_addr;
-    e = bind(sockfd, (struct sockaddr *)a, sizeof(struct sockaddr_in));
+    int e = bind(sockfd, (struct sockaddr *)a, sizeof(struct sockaddr_in));
     if (e < 0) {
         perror("[-] Error in Binding");
         exit(1);
@@ -80,7 +76,9 @@ int main(void)
         exit(1);
     }
 
+    socklen_t addr_size;
     addr_size = sizeof(struct sockaddr_in);
+    struct sockaddr_in new_addr;
     struct sockaddr *const na = (struct sockaddr *const)(void *)&new_addr;
     const int new_sock = accept(sockfd, (struct sockaddr *)na, &addr_size);
 

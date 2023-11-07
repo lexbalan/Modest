@@ -38,13 +38,8 @@ func write_file(sockfd: Int) {
 
 
 func main () -> Int {
-    let ip = "127.0.0.1" to *Str8
+    let ip = "127.0.0.1"
     let port = 8080
-
-    var e: Int
-    var server_addr: Struct_sockaddr_in
-    var new_addr: Struct_sockaddr_in
-    var addr_size: socklen_t
 
     let sockfd = socket(AF_INET, SOCK_STREAM, 0)
     if sockfd < 0 {
@@ -54,12 +49,13 @@ func main () -> Int {
 
     printf("[+] Server socket created. \n")
 
+    var server_addr: Struct_sockaddr_in
     server_addr.sin_family := AF_INET
     server_addr.sin_port := port
     server_addr.sin_addr.s_addr := inet_addr(ip) to UnsignedLong
 
     let a = &server_addr to Pointer to *Struct_sockaddr
-    e := bind(sockfd, a, sizeof(Struct_sockaddr_in))
+    var e := bind(sockfd, a, sizeof(Struct_sockaddr_in))
     if e < 0 {
         perror("[-] Error in Binding")
         exit(1)
@@ -75,7 +71,9 @@ func main () -> Int {
         exit(1)
     }
 
+    var addr_size: socklen_t
     addr_size := sizeof(Struct_sockaddr_in)
+    var new_addr: Struct_sockaddr_in
     let na = &new_addr to Pointer to *Struct_sockaddr
     let new_sock = accept(sockfd, na, &addr_size)
 
