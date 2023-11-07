@@ -8,6 +8,7 @@ from value.value import value_attribute_check, value_print, value_is_immediate
 from hlir import hlir_type_pointer, hlir_value_int
 import settings
 
+
 LLVM_TARGET_TRIPLE = ""
 LLVM_TARGET_DATALAYOUT = ""
 

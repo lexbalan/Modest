@@ -6,8 +6,7 @@ from error import info, error, fatal
 from .common import *
 import type
 from type import type_print
-from value.value import value_attribute_check, value_is_immediate, value_is_zero, value_print
-from hlir import hlir_field, hlir_stmt_block, hlir_value_var
+from value.value import value_attribute_check, value_is_zero, value_print
 from util import nbits_for_num, get_item_with_id
 from main import settings
 
