@@ -48,12 +48,7 @@ int main(void)
 
     char *const filename = "file.txt";
 
-    int e;
-    int sockfd;
-    struct sockaddr_in server_addr;
-    FILE *fp;
-
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    const int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
         perror("[-] Error in socket");
         exit(1);
@@ -61,12 +56,16 @@ int main(void)
 
     printf("[+] Server socket created. \n");
 
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = port;
-    server_addr.sin_addr.s_addr = ((unsigned long)(uint32_t)inet_addr(ip));
+    struct sockaddr_in server_addr = (struct sockaddr_in){
+        .sin_family = AF_INET,
+        .sin_port = port,
+        .sin_addr = (struct in_addr){
+            .s_addr = ((unsigned long)(uint32_t)inet_addr(ip))
+        }
+    };
 
     struct sockaddr *const s = (struct sockaddr *const)(void *)&server_addr;
-    e = connect(sockfd, (struct sockaddr *)s, sizeof(struct sockaddr_in));
+    int e = connect(sockfd, (struct sockaddr *)s, sizeof(struct sockaddr_in));
     if (e == -1) {
         perror("[-] Error in Connecting");
         exit(1);
@@ -74,7 +73,7 @@ int main(void)
 
     printf("[+] Connected to server.\n");
 
-    fp = fopen(filename, "r");
+    FILE *const fp = fopen(filename, "r");
     if (fp == NULL) {
         perror("[-] Error in reading file.");
         exit(1);

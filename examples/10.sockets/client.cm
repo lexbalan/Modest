@@ -43,12 +43,7 @@ func main() -> Int {
 
     let filename = "file.txt" to *Str8
 
-    var e: Int
-    var sockfd : Int
-    var server_addr : Struct_sockaddr_in
-    var fp: *FILE
-
-    sockfd := socket(AF_INET, SOCK_STREAM, 0)
+    let sockfd = socket(AF_INET, SOCK_STREAM, 0)
     if sockfd < 0 {
         perror("[-] Error in socket")
         exit(1)
@@ -56,12 +51,16 @@ func main() -> Int {
 
     printf("[+] Server socket created. \n")
 
-    server_addr.sin_family := AF_INET
-    server_addr.sin_port := port
-    server_addr.sin_addr.s_addr := inet_addr(ip) to UnsignedLong
+    var server_addr := {
+        sin_family = AF_INET
+        sin_port = port
+        sin_addr = {
+            s_addr = inet_addr(ip) to UnsignedLong
+        }
+    } to Struct_sockaddr_in
 
     let s = &server_addr to Pointer to *Struct_sockaddr
-    e := connect(sockfd, s, sizeof(Struct_sockaddr_in))
+    var e := connect(sockfd, s, sizeof(Struct_sockaddr_in))
     if e == -1 {
          perror("[-] Error in Connecting")
          exit(1)
@@ -69,7 +68,7 @@ func main() -> Int {
 
     printf("[+] Connected to server.\n")
 
-    fp := fopen(filename, "r")
+    let fp = fopen(filename, "r")
     if fp == nil {
         perror("[-] Error in reading file.")
         exit(1)
