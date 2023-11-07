@@ -52,7 +52,9 @@ func main () -> Int {
     var server_addr := {
         sin_family = AF_INET
         sin_port = port
-        sin_addr = {s_addr = inet_addr(ip) to UnsignedLong}
+        sin_addr = {
+            s_addr = inet_addr(ip) to UnsignedLong
+        }
     } to Struct_sockaddr_in
 
     let a = &server_addr to Pointer to *Struct_sockaddr
