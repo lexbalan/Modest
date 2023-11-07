@@ -8,6 +8,11 @@ from .value import *
 
 
 
+def value_cons_pointer_immediate(v, t, ti):
+    #info("value_cons_pointer_immediate", ti)
+    return hlir_value_cast_immediate(v, t, ti)
+
+
 
 def hlir_string_imm_from_codes(codes, char_type):
     items = []

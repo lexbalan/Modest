@@ -9,10 +9,10 @@ from .value import *
 from .unit import value_cons_unit
 from .char import value_cons_char, value_cons_char_immediate
 from .integer import value_cons_integer, value_cons_integer_immediate
-from .float import value_cons_float
-from .record import value_cons_record
-from .array import value_cons_array
-from .pointer import value_cons_pointer, cons_ptr_to_str_from_generic_str
+from .float import value_cons_float, value_cons_float_immediate
+from .record import value_cons_record, value_cons_record_immediate
+from .array import value_cons_array, value_cons_array_immediate
+from .pointer import value_cons_pointer, value_cons_pointer_immediate, cons_ptr_to_str_from_generic_str
 
 
 
@@ -23,12 +23,20 @@ def value_cons_from_immediate(v, t, ti):
 
     if type.is_integer(t):
         return value_cons_integer_immediate(v, t, ti)
+    elif type.is_float(t):
+        return value_cons_float_immediate(v, t, ti)
+    elif type.is_record(t):
+        return value_cons_record_immediate(v, t, ti)
+    elif type.is_array(t):
+        return value_cons_array_immediate(v, t, ti)
     elif type.is_char(t):
         return value_cons_char_immediate(v, t, ti)
-    elif type.is_float(t):
-        #TODO!
-        pass
+    elif type.is_pointer(t):
+        return value_cons_pointer_immediate(v, t, ti)
+    elif type.is_unit(t):
+        return value_cons_unit_immediate(v, t, ti)
 
+    error("value_cons_from_immediate type not implemented", ti)
     return hlir_value_cast_immediate(v, t, ti)
 
 

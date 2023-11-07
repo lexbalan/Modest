@@ -54,10 +54,12 @@ int main(void)
 
     printf("[+] Server socket created. \n");
 
-    struct sockaddr_in server_addr;
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = port;
-    server_addr.sin_addr.s_addr = ((unsigned long)(uint32_t)inet_addr("127.0.0.1"));
+    struct sockaddr_in server_addr = (struct sockaddr_in){
+        .sin_family = AF_INET,
+        .sin_port = port,
+        .sin_addr = (struct in_addr){.s_addr = ((unsigned long)(uint32_t)inet_addr(ip))}
+    };
+
 
     struct sockaddr *const a = (struct sockaddr *const)(void *)&server_addr;
     int e = bind(sockfd, (struct sockaddr *)a, sizeof(struct sockaddr_in));
