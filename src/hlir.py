@@ -11,8 +11,8 @@ flt_power = 0
 
 def hlir_init():
     global ptr_power, flt_power
-    ptr_power = int(settings.get('ptr'))
-    flt_power = int(settings.get('flt'))
+    ptr_power = int(settings.get('pointer_size'))
+    flt_power = int(settings.get('float_size'))
     #print(f"ptr_power = {ptr_power}")
 
 

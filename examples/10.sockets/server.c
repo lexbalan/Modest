@@ -58,10 +58,9 @@ int main(void)
         .sin_family = AF_INET,
         .sin_port = port,
         .sin_addr = (struct in_addr){
-            .s_addr = ((unsigned long)(uint32_t)inet_addr(ip))
+            .s_addr = ((unsigned long)(uint32_t)inet_addr("127.0.0.1"))
         }
     };
-
 
     struct sockaddr *const a = (struct sockaddr *const)(void *)&server_addr;
     int e = bind(sockfd, (struct sockaddr *)a, sizeof(struct sockaddr_in));

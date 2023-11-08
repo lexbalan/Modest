@@ -453,7 +453,6 @@ def print_value_literal_str_arr(x, ctx):
             out("%s" % sym_utf8)
         else:
             if sym == "\\": out("\\\\")
-            #elif sym == "'": out("\\'")
             elif sym == '"': out('\\"')
             else: out(sym)
     out("\"")

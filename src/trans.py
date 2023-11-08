@@ -194,13 +194,11 @@ valueFalse = None
 
 
 def init():
-    LLVM_TARGET_TRIPLE = settings.get('target_triple')
-
     global char_size, int_size, ptr_size, flt_size, lib_path
-    int_size = int(settings.get('int'))
-    ptr_size = int(settings.get('ptr'))
-    flt_size = int(settings.get('flt'))
-    char_size = int(settings.get('char'))
+    int_size = int(settings.get('integer_size'))
+    ptr_size = int(settings.get('pointer_size'))
+    flt_size = int(settings.get('float_size'))
+    char_size = int(settings.get('char_size'))
     lib_path = settings.get('lib')
 
     hlir_init()
