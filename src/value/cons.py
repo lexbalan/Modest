@@ -100,22 +100,16 @@ def value_cons(v, t, ti, method):
 
 
 
+
 def value_cons_soft(v, t, ti):
-    from value.cons import value_cons
     c = value_cons(v, t, ti, method='implicit')
+
     if c == None:
         return v
+
     return c
 
 
-
-def value_cons_hard(v, t, ti):
-    from value.cons import value_cons
-    c = value_cons(v, t, ti, method='explicit')
-    if c == None:
-        error("cast error", ti)
-        return hlir_value_bad(ti)
-    return c
 
 
 
@@ -190,8 +184,14 @@ def value_cons_explicit(v, t, ti):
         info("explicit cast to the same type", ti)
         return v
 
-    y = value_cons_hard(v, t, ti)
-    y['att'].append('explicit_cast')
+    y = value_cons(v, t, ti, method='explicit')
+
+    if y == None:
+        error("cast error", ti)
+        return hlir_value_bad(ti)
+
+    y['att'].append('explicit_cast')  # used by CM backend
+
     return y
 
 
