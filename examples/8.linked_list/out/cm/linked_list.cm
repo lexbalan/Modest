@@ -5,19 +5,19 @@ import "./linked_list.h"
 
 
 type Node record {
-    next : *Node
-    prev : *Node
-    link : Pointer
+    next: *Node
+    prev: *Node
+    link: Pointer
 }
 
 type List record {
-    head : *Node
-    tail : *Node
-    size : Nat32
+    head: *Node
+    tail: *Node
+    size: Nat32
 }
 
 
-func linked_list_create () -> *List {
+func linked_list_create() -> *List {
     let list = malloc((sizeof(List)))
 
     if list == nil {
@@ -33,7 +33,7 @@ func linked_list_create () -> *List {
 }
 
 
-func linked_list_size_get (list : *List) -> Nat32 {
+func linked_list_size_get(list: *List) -> Nat32 {
     if list == nil {
         return 0
     }
@@ -42,7 +42,7 @@ func linked_list_size_get (list : *List) -> Nat32 {
 }
 
 
-func linked_list_first_get (list : *List) -> *Node {
+func linked_list_first_get(list: *List) -> *Node {
     if list == nil {
         return nil
     }
@@ -51,7 +51,7 @@ func linked_list_first_get (list : *List) -> *Node {
 }
 
 
-func linked_list_last_get (list : *List) -> *Node {
+func linked_list_last_get(list: *List) -> *Node {
     if list == nil {
         return nil
     }
@@ -60,7 +60,7 @@ func linked_list_last_get (list : *List) -> *Node {
 }
 
 
-func linked_list_node_create () -> *Node {
+func linked_list_node_create() -> *Node {
     let node = malloc((sizeof(Node)))
 
     if node == nil {
@@ -75,7 +75,7 @@ func linked_list_node_create () -> *Node {
 }
 
 
-func linked_list_node_next_get (node : *Node) -> *Node {
+func linked_list_node_next_get(node: *Node) -> *Node {
     if node == nil {
         return nil
     }
@@ -84,7 +84,7 @@ func linked_list_node_next_get (node : *Node) -> *Node {
 }
 
 
-func linked_list_node_prev_get (node : *Node) -> *Node {
+func linked_list_node_prev_get(node: *Node) -> *Node {
     if node == nil {
         return nil
     }
@@ -93,7 +93,7 @@ func linked_list_node_prev_get (node : *Node) -> *Node {
 }
 
 
-func linked_list_node_link_get (node : *Node) -> Pointer {
+func linked_list_node_link_get(node: *Node) -> Pointer {
     if node == nil {
         return nil
     }
@@ -102,7 +102,7 @@ func linked_list_node_link_get (node : *Node) -> Pointer {
 }
 
 
-func linked_list_insert_node (list : *List, new_node : *Node) -> *Node {
+func linked_list_insert_node(list: *List, new_node: *Node) -> *Node {
     if list == nil or new_node == nil {
         return nil
     }
@@ -123,7 +123,7 @@ func linked_list_insert_node (list : *List, new_node : *Node) -> *Node {
     return new_node
 }
 
-func linked_list_insert (list : *List, link : Pointer) -> *Node {
+func linked_list_insert(list: *List, link: Pointer) -> *Node {
     if list == nil {
         return nil
     }

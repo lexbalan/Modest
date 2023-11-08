@@ -101,7 +101,7 @@ def print_type_pointer(t):
 
 
 def print_field(x):
-    out("%s : " % x['id']['str'])
+    out("%s: " % x['id']['str'])
     print_type(x['type'])
 
 
@@ -659,13 +659,13 @@ def print_decl_func(x):
     func = x['value']
     if 'extern' in func['att']:
         out("extern ")
-    out('func %s ' % func['id']['str'])
+    out('func %s' % func['id']['str'])
     print_type(func['type'])
 
 
 def print_def_func(x):
     func = x['value']
-    out('func %s ' % func['id']['str']); print_type(func['type'])
+    out('func %s' % func['id']['str']); print_type(func['type'])
     print_stmt_block(func['stmt'])
 
 

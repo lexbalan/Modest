@@ -2,10 +2,10 @@
 import "libc/stdio.h"
 
 
-func mtab (n : Int) -> Unit {
+func mtab(n: Int) -> Unit {
     //var m : Nat32
     //m := 1
-    var m : Int32 := 1
+    var m: Int32 := 1
     while m < 10 {
         let nm = n * m
         printf("%d * %d = %d\n", n, m, nm)
@@ -14,7 +14,7 @@ func mtab (n : Int) -> Unit {
 }
 
 
-func main () -> Int {
+func main() -> Int {
     let n = 2 * 2
     printf("multiply table for %d\n", n)
     mtab(n)

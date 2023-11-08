@@ -16,7 +16,6 @@
 #define fsmSubstateLeaving  2
 
 
-
 char *fsm_state_no_name(FSM *fsm, uint32_t state_no)
 {
     return (char *)&fsm->states[state_no].name[0];

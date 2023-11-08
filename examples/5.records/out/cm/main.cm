@@ -5,30 +5,30 @@ import "libc/libc.h"
 
 
 type Point record {
-    x : Float
-    y : Float
+    x: Float
+    y: Float
 }
 
 type Line record {
-    a : Point
-    b : Point
+    a: Point
+    b: Point
 }
 
 
-var line : Line := {
+var line: Line := {
     a = {x = 0, y = 0}
     b = {x = 1.0, y = 1.0}
 }
 
 
-func max (a : Float, b : Float) -> Float {
+func max(a: Float, b: Float) -> Float {
     if a > b {
         return a
     }
     return b
 }
 
-func min (a : Float, b : Float) -> Float {
+func min(a: Float, b: Float) -> Float {
     if a < b {
         return a
     }
@@ -37,7 +37,7 @@ func min (a : Float, b : Float) -> Float {
 
 
 // Pythagorean theorem
-func distance (a : Point, b : Point) -> Float {
+func distance(a: Point, b: Point) -> Float {
     let dx = max(a.x, b.x) - min(a.x, b.x)
     let dy = max(a.y, b.y) - min(a.y, b.y)
     let dx2 = pow(dx, 2)
@@ -46,12 +46,12 @@ func distance (a : Point, b : Point) -> Float {
 }
 
 
-func lineLength (line : Line) -> Float {
+func lineLength(line: Line) -> Float {
     return distance(line.a, line.b)
 }
 
 
-func ptr_example () -> Unit {
+func ptr_example() -> Unit {
     let ptr_p = malloc((sizeof(Point)))
 
     // access by pointer
@@ -62,7 +62,7 @@ func ptr_example () -> Unit {
 }
 
 
-func main () -> Int {
+func main() -> Int {
     // by value
     let len = lineLength(line)
     printf("line length = %f\n", len)

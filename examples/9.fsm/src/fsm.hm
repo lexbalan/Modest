@@ -34,7 +34,7 @@ type FSM record {
 }
 
 
-func fsm_state_no_name(fsm : *FSM, state_no : Nat32) -> *Str8
-func fsm_switch (fsm : *FSM, state : Nat32)
-func fsm_run (fsm : *FSM)
+func fsm_state_no_name(fsm: *FSM, state_no: Nat32) -> *Str8
+func fsm_switch(fsm: *FSM, state: Nat32)
+func fsm_run(fsm: *FSM)
 

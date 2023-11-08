@@ -7,7 +7,7 @@ import "./linked_list.h"
 
 
 // wrap around linked list for List Nat64
-func nat64_list_insert (list : *List, x : Nat64) -> Unit {
+func nat64_list_insert(list: *List, x: Nat64) -> Unit {
     // alloc memory for Nat64 value
     let p_nat64 = malloc((sizeof(Nat64)))
     *p_nat64 := x
@@ -16,9 +16,9 @@ func nat64_list_insert (list : *List, x : Nat64) -> Unit {
 
 
 // show list conent from first item to last
-func list_print_forward (list : *List) -> Unit {
+func list_print_forward(list: *List) -> Unit {
     printf("list_print_forward:\n")
-    var pn : *Node := linked_list_first_get(list)
+    var pn: *Node := linked_list_first_get(list)
     while pn != nil {
         let x = linked_list_node_link_get(pn)
         printf("v = %d\n", *x)
@@ -28,9 +28,9 @@ func list_print_forward (list : *List) -> Unit {
 
 
 // show list conent from last item to first
-func list_print_backward (list : *List) -> Unit {
+func list_print_backward(list: *List) -> Unit {
     printf("list_print_backward:\n")
-    var pn : *Node := linked_list_last_get(list)
+    var pn: *Node := linked_list_last_get(list)
     while pn != nil {
         let x = linked_list_node_link_get(pn)
         printf("v = %d\n", *x)
@@ -39,7 +39,7 @@ func list_print_backward (list : *List) -> Unit {
 }
 
 
-func main () -> Int {
+func main() -> Int {
     printf("linked list example\n")
 
     let list = linked_list_create()

@@ -26,13 +26,13 @@ var cnt : Nat8
 // State Off
 //
 
-func off_entry(fsm : *FSM) {
+func off_entry(fsm: *FSM) {
     fsm to Unit  // ignore argument
     //printf("off_entry\n")
 }
 
 
-func off_loop(fsm : *FSM) {
+func off_loop(fsm: *FSM) {
     fsm to Unit
 
     printf("off_loop\n")
@@ -45,7 +45,7 @@ func off_loop(fsm : *FSM) {
 }
 
 
-func off_exit(fsm : *FSM) {
+func off_exit(fsm: *FSM) {
     fsm to Unit  // ignore argument
     //printf("off_exit\n")
 }
@@ -55,13 +55,13 @@ func off_exit(fsm : *FSM) {
 // State On
 //
 
-func on_entry(fsm : *FSM) {
+func on_entry(fsm: *FSM) {
     fsm to Unit  // ignore argument
     //printf("on_entry\n")
 }
 
 
-func on_loop(fsm : *FSM) {
+func on_loop(fsm: *FSM) {
     fsm to Unit  // ignore argument
     printf("on_loop\n")
     if cnt < 10 {
@@ -73,7 +73,7 @@ func on_loop(fsm : *FSM) {
 }
 
 
-func on_exit(fsm : *FSM) {
+func on_exit(fsm: *FSM) {
     fsm to Unit  // ignore argument
     //printf("on_exit\n")
 }
@@ -83,13 +83,13 @@ func on_exit(fsm : *FSM) {
 // State Beacon
 //
 
-func beacon_entry(fsm : *FSM) {
+func beacon_entry(fsm: *FSM) {
     let from_name = fsm_state_no_name(fsm, fsm.state)
     printf("beacon_entry from %s\n", from_name)
 }
 
 
-func beacon_loop(fsm : *FSM) {
+func beacon_loop(fsm: *FSM) {
     printf("beacon_loop\n")
     if cnt < 10 {
         cnt := cnt + 1
@@ -100,14 +100,14 @@ func beacon_loop(fsm : *FSM) {
 }
 
 
-func beacon_exit(fsm : *FSM) {
+func beacon_exit(fsm: *FSM) {
     let to_name = fsm_state_no_name(fsm, fsm.nexstate)
     printf("beacon_exit to %s\n", to_name)
 }
 
 
 
-var fsm : FSM := {
+var fsm: FSM := {
     name = "Flash" to [fsmNameLength]Char8
     state = 0
     nexstate = 0
@@ -139,7 +139,7 @@ var fsm : FSM := {
 
 
 
-func main () -> Int {
+func main() -> Int {
 
     while true {
         fsm_run(&fsm)

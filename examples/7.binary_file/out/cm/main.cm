@@ -11,12 +11,12 @@ const filename = "file.bin" to *[]Char8
 
 // chunk of data for read/write operations in file
 type Chunk record {
-    id : [100]Nat8
-    data : [1024]Nat8
+    id: [100]Nat8
+    data: [1024]Nat8
 }
 
 
-func write_example () -> Unit {
+func write_example() -> Unit {
     printf("run write_example\n")
 
     let fp = fopen(filename, "wb")
@@ -26,7 +26,7 @@ func write_example () -> Unit {
         return
     }
 
-    var chunk : Chunk
+    var chunk: Chunk
 
     // pointers casting requires -funsafe translator option
     // (see Makefile)
@@ -40,7 +40,7 @@ func write_example () -> Unit {
 }
 
 
-func read_example () -> Unit {
+func read_example() -> Unit {
     printf("run read_example\n")
 
     let fp = fopen(filename, "rb")
@@ -50,7 +50,7 @@ func read_example () -> Unit {
         return
     }
 
-    var chunk : Chunk
+    var chunk: Chunk
     fread(&chunk, (sizeof(Chunk)), 1, fp)
     printf("file '%s' contains:\n", filename)
     printf("chunk.id: %s\n", &chunk.id)
@@ -60,7 +60,7 @@ func read_example () -> Unit {
 }
 
 
-func main () -> Int {
+func main() -> Int {
     printf("text_file example\n")
     write_example()
     read_example()

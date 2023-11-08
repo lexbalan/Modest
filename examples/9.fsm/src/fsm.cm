@@ -13,19 +13,18 @@ const fsmSubstateLoop = 1
 const fsmSubstateLeaving = 2
 
 
-
-func fsm_state_no_name(fsm : *FSM, state_no : Nat32) -> *Str8 {
+func fsm_state_no_name(fsm: *FSM, state_no: Nat32) -> *Str8 {
     return &fsm.states[state_no].name
 }
 
 
-func fsm_switch (fsm : *FSM, state : Nat32) {
+func fsm_switch(fsm: *FSM, state: Nat32) {
     fsm.nexstate := state
     fsm.substate := fsmSubstateLeaving
 }
 
 
-func fsm_run (fsm : *FSM) {
+func fsm_run(fsm: *FSM) {
     if fsm.substate == fsmSubstateEntering {
         let nexstate = fsm.nexstate
         let s = &fsm.states[nexstate]
