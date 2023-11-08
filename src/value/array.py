@@ -24,6 +24,11 @@ def value_cons_array_from_generic_array(v, t, ti, method):
     casted_items = []
     items = v['imm']
     for item in items:
+
+        if type.is_string(v['type']):
+            code = item
+            item = hlir_value_literal(type.typeGenericChar, code, ti=None)
+
         from .cons import value_cons_implicit
         casted_item = value_cons_implicit(item, t['of'], item['ti'])
         type.check(t['of'], casted_item['type'], item['ti'])

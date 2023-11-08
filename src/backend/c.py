@@ -767,7 +767,7 @@ def print_value_literal_char(x, ctx):
         else:
             out("'%c'" % (num))
     else:
-        out("'\\x%x'" % (num))
+        out("'\\x%X'" % (num))
 
     return
 

@@ -36,7 +36,7 @@ func off_loop (fsm : *FSM) -> Unit {
         cnt := cnt + 1
     } else {
         cnt := 0
-        fsm_switch(fsm to *FSM, flashlightStateOn)
+        fsm_switch(fsm, flashlightStateOn)
     }
 }
 
@@ -64,7 +64,7 @@ func on_loop (fsm : *FSM) -> Unit {
         cnt := cnt + 1
     } else {
         cnt := 0
-        fsm_switch(fsm to *FSM, flashlightStateBeacon)
+        fsm_switch(fsm, flashlightStateBeacon)
     }
 }
 
@@ -80,7 +80,7 @@ func on_exit (fsm : *FSM) -> Unit {
 //
 
 func beacon_entry (fsm : *FSM) -> Unit {
-    let from_name = fsm_state_no_name(fsm to *FSM, fsm.state)
+    let from_name = fsm_state_no_name(fsm, fsm.state)
     printf("beacon_entry from %s\n", from_name)
 }
 
@@ -91,13 +91,13 @@ func beacon_loop (fsm : *FSM) -> Unit {
         cnt := cnt + 1
     } else {
         cnt := 0
-        fsm_switch(fsm to *FSM, flashlightStateOff)
+        fsm_switch(fsm, flashlightStateOff)
     }
 }
 
 
 func beacon_exit (fsm : *FSM) -> Unit {
-    let to_name = fsm_state_no_name(fsm to *FSM, fsm.nexstate)
+    let to_name = fsm_state_no_name(fsm, fsm.nexstate)
     printf("beacon_exit to %s\n", to_name)
 }
 
@@ -138,7 +138,7 @@ var fsm : FSM := {
 func main () -> Int {
 
     while 1 {
-        fsm_run(&fsm to *FSM)
+        fsm_run(&fsm)
         delay(500000)
     }
 

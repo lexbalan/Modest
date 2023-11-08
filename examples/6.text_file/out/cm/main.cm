@@ -2,7 +2,7 @@
 import "libc/stdio.h"
 
 
-const filename = "file.txt"
+const filename = "file.txt" to *[]Char8
 
 
 func write_example () -> Unit {

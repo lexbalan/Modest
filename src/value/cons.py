@@ -190,6 +190,8 @@ def value_cons_explicit(v, t, ti):
         info("explicit cast to the same type", ti)
         return v
 
-    return value_cons_hard(v, t, ti)
+    y = value_cons_hard(v, t, ti)
+    y['att'].append('explicit_cast')
+    return y
 
 

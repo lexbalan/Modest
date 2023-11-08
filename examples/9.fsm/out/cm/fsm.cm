@@ -13,7 +13,7 @@ const fsmSubstateLeaving = 2
 
 
 func fsm_state_no_name (fsm : *FSM, state_no : Nat32) -> *[]Char8 {
-    return &fsm.states[state_no].name to *[]Char8
+    return &fsm.states[state_no].name
 }
 
 
@@ -33,7 +33,7 @@ func fsm_run (fsm : *FSM) -> Unit {
         }
 
         if s.entry != nil {
-            s.entry(fsm to *FSM)
+            s.entry(fsm)
         }
 
         fsm.state := nexstate
@@ -43,7 +43,7 @@ func fsm_run (fsm : *FSM) -> Unit {
         let s = &fsm.states[fsm.state]
 
         if s.loop != nil {
-            s.loop(fsm to *FSM)
+            s.loop(fsm)
         }
 
     } else if fsm.substate == fsmSubstateLeaving {
@@ -54,7 +54,7 @@ func fsm_run (fsm : *FSM) -> Unit {
         }
 
         if s.exit != nil {
-            s.exit(fsm to *FSM)
+            s.exit(fsm)
         }
 
         fsm.substate := fsmSubstateEntering

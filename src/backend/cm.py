@@ -2,7 +2,7 @@
 import type
 from error import info
 from .common import *
-from value.value import value_attribute_check
+from value.value import value_attribute_check, value_print
 from util import get_item_with_id
 
 
@@ -289,10 +289,18 @@ def print_cast(t, v, ctx=[]):
 
 
 
-def print_value_cast_immediate(v, ctx):
-    # дженерик каст не печатаю, печатаю просто значение
-    need_wrap = precedence(v['value']['kind']) < precedenceMax
-    print_value(v['value'], ctx, need_wrap=need_wrap)
+def print_value_cast_immediate(x, ctx):
+
+    if 'explicit_cast' in x['att']:
+        if type.is_ptr_to_string(x['type']):
+            print_value(x['value'], ctx=[])
+            out(" to ")
+            print_type(x['type'])
+            return
+
+    # imm каст не печатаю, печатаю просто значение
+    need_wrap = precedence(x['value']['kind']) < precedenceMax
+    print_value(x['value'], ctx, need_wrap=need_wrap)
     return
 
 
@@ -300,6 +308,11 @@ def print_value_cast(v, ctx):
     value = v['value']
     from_type = value['type']
     to_type = v['type']
+
+
+    if not 'explicit_cast' in v['att']:
+        print_value(value)
+        return
 
 
     # NO need cast ptr to *void
@@ -320,9 +333,9 @@ def print_value_cast(v, ctx):
 
 def print_value_literal_arr(v, ctx):
 
-    value = v
-    if type.is_string(value['type']):
-        print_value_literal_str(value, ctx=[])
+    # FIXIT: это вообще херня
+    if type.is_array_of_char(v['type']):
+        print_value_literal_str_arr(v, ctx=[])
         return
 
     out("[")
@@ -412,17 +425,34 @@ def print_value_literal_record(v, ctx):
 
 
 
-def print_value_literal_str(x, ctx):
+
+# FIXIT: это вообще херня
+def print_value_literal_str_arr(x, ctx):
     out("\"")
     for c in x['imm']:
-        ccode = c['imm']
+        ccode = c
+
+        # FIXIT: это вообще херня
+        if isinstance(c, dict):
+            ccode = c['imm']
+
         sym = chr(ccode)
 
-        if sym == '\n': out("\\n")
-        elif sym == '\r': out("\\r")
-        elif sym == '\a': out("\\a")
-        elif ccode >= 0x20 and ccode <= 0x7E : out(sym)
-        elif ccode != 0: out("\\x%x" % ccode)
+        if ccode < 0x20:
+            if ccode == 0x07: out("\\a") # bell
+            elif ccode == 0x08: out("\\b") # backspace
+            elif ccode == 0x09: out("\\t") # horizontal tab
+            elif ccode == 0x0A: out("\\n") # line feed
+            elif ccode == 0x0B: out("\\v") # vertical tab
+            elif ccode == 0x0C: out("\\f") # form feed
+            elif ccode == 0x0D: out("\\r") # carriage return
+            elif ccode == 0x1B: out("\\e") # escape
+            else: out("\\x%X" % ccode)
+        elif ccode > 0x7E:
+            sym_utf8 = sym.encode('utf-8').decode('utf-8')
+            out("%s" % sym_utf8)
+        else:
+            out(sym)
     out("\"")
 
 
