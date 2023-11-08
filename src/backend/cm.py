@@ -430,25 +430,25 @@ def print_value_literal_record(v, ctx):
 def print_value_literal_str_arr(x, ctx):
     out("\"")
     for c in x['imm']:
-        ccode = c
+        cc = c
 
         # FIXIT: это вообще херня
         if isinstance(c, dict):
-            ccode = c['imm']
+            cc = c['imm']
 
-        sym = chr(ccode)
+        sym = chr(cc)
 
-        if ccode < 0x20:
-            if ccode == 0x07: out("\\a") # bell
-            elif ccode == 0x08: out("\\b") # backspace
-            elif ccode == 0x09: out("\\t") # horizontal tab
-            elif ccode == 0x0A: out("\\n") # line feed
-            elif ccode == 0x0B: out("\\v") # vertical tab
-            elif ccode == 0x0C: out("\\f") # form feed
-            elif ccode == 0x0D: out("\\r") # carriage return
-            elif ccode == 0x1B: out("\\e") # escape
-            else: out("\\x%X" % ccode)
-        elif ccode > 0x7E:
+        if cc < 0x20:
+            if cc == 0x07: out("\\a") # bell
+            elif cc == 0x08: out("\\b") # backspace
+            elif cc == 0x09: out("\\t") # horizontal tab
+            elif cc == 0x0A: out("\\n") # line feed
+            elif cc == 0x0B: out("\\v") # vertical tab
+            elif cc == 0x0C: out("\\f") # form feed
+            elif cc == 0x0D: out("\\r") # carriage return
+            elif cc == 0x1B: out("\\e") # escape
+            else: out("\\x%X" % cc)
+        elif cc > 0x7E:
             sym_utf8 = sym.encode('utf-8').decode('utf-8')
             out("%s" % sym_utf8)
         else:
