@@ -29,7 +29,7 @@ func linked_list_create () -> *List {
     list.head := nil
     list.tail := nil
 
-    return list to *List
+    return list
 }
 
 
@@ -47,7 +47,7 @@ func linked_list_first_get (list : *List) -> *Node {
         return nil
     }
 
-    return list.head to *Node
+    return list.head
 }
 
 
@@ -56,7 +56,7 @@ func linked_list_last_get (list : *List) -> *Node {
         return nil
     }
 
-    return list.tail to *Node
+    return list.tail
 }
 
 
@@ -71,7 +71,7 @@ func linked_list_node_create () -> *Node {
     node.next := nil
     node.link := nil
 
-    return node to *Node
+    return node
 }
 
 
@@ -80,7 +80,7 @@ func linked_list_node_next_get (node : *Node) -> *Node {
         return nil
     }
 
-    return node.next to *Node
+    return node.next
 }
 
 
@@ -89,7 +89,7 @@ func linked_list_node_prev_get (node : *Node) -> *Node {
         return nil
     }
 
-    return node.prev to *Node
+    return node.prev
 }
 
 
@@ -108,19 +108,19 @@ func linked_list_insert_node (list : *List, new_node : *Node) -> *Node {
     }
 
     if list.head == nil {
-        list.head := new_node to *Node
+        list.head := new_node
     }
 
     if list.tail != nil {
         let old_tail = list.tail
-        old_tail.next := new_node to *Node
-        new_node.prev := old_tail to *Node
+        old_tail.next := new_node
+        new_node.prev := old_tail
     }
 
-    list.tail := new_node to *Node
+    list.tail := new_node
     list.size := list.size + 1
 
-    return new_node to *Node
+    return new_node
 }
 
 func linked_list_insert (list : *List, link : Pointer) -> *Node {
@@ -136,12 +136,12 @@ func linked_list_insert (list : *List, link : Pointer) -> *Node {
 
     new_node.link := link
 
-    let node = linked_list_insert_node(list to *List, new_node to *Node)
+    let node = linked_list_insert_node(list, new_node)
 
     if node == nil {
         free(new_node)
     }
 
-    return node to *Node
+    return node
 }
 

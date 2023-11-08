@@ -623,12 +623,12 @@ def bin_imm(k, type_result, l, r, ti):
 def value_strings_concat(l, r, ti):
     string = ""
     for c in l['imm']:
-        if c['imm'] != 0:
-            string = string + chr(c['imm'])
+        if c != 0:
+            string = string + chr(c)
 
     for c in r['imm']:
-        if c['imm'] != 0:
-            string = string + chr(c['imm'])
+        if c != 0:
+            string = string + chr(c)
 
     length = len(string) + 1  #!
     imm_str = hlir_string_imm(string)
@@ -650,7 +650,7 @@ def value_string_eq(l, r):
         return 0
 
     for a, b in zip(l['imm'], r['imm']):
-        if a['imm'] != b['imm']:
+        if a != b:
             return 0
 
     return 1
@@ -901,6 +901,8 @@ def do_value_index(x):
         typ = typ['to']
 
 
+    item_type = typ['of']
+
     # check if left type is valid
     if not (type.is_array(typ) or type.is_pointer(typ) or type.is_ptr_to_string(typ)):
         error("expected array or pointer to array", x)
@@ -942,10 +944,10 @@ def do_value_index(x):
             items = a['imm']
             item = items[index]
 
-            if type.is_char(item['type']):
+            if type.is_char(item_type):
                 code = item
                 # return just char, there's no need for print index op
-                char = hlir_value_literal(item['type'], code, x['ti'])
+                char = hlir_value_literal(item_type, code, x['ti'])
                 return char
 
             v['imm'] = item['imm']

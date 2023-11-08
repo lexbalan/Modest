@@ -15,16 +15,16 @@
 #define ratSymbolUTF32  0x0001F400
 
 
-char arr_utf8[8] = {'H', 'i', '!', '\xa'};
-uint16_t arr_utf16[8] = {u'H', u'e', u'l', u'l', u'o', u'!', u'\xa'};
-uint32_t arr_utf32[8] = {U'H', U'e', U'l', U'l', U'o', U'!', U'\xa'};
+char arr_utf8[8] = {'H', 'i', '!', '\xA'};
+uint16_t arr_utf16[8] = {u'H', u'e', u'l', u'l', u'o', u'!', u'\xA'};
+uint32_t arr_utf32[8] = {U'H', U'e', U'l', U'l', U'o', U'!', U'\xA'};
 
 
 
 #define genericStringConst  "<GENERIC-STRING>"
-#define string8Const  "S-t-r-i-n-g-\xce\xa9 \xf0\x9f\x90\x80\xf0\x9f\x8e\x89\xf0\x9f\xa6\x84"
-#define string16Const  u"S-t-r-i-n-g-\x3a9 \xd83d\xdc00\xd83c\xdf89\xd83e\xdd84"
-#define string32Const  U"S-t-r-i-n-g-\x3a9 \x1f400\x1f389\x1f984"
+#define string8Const  "S-t-r-i-n-g-\xce\xa9 \xf0\x9f\x90\x80\xf0\x9f\x8e\x89\xf0\x9f\xa6\x84\n"
+#define string16Const  u"S-t-r-i-n-g-\x3a9 \xd83d\xdc00\xd83c\xdf89\xd83e\xdd84\n"
+#define string32Const  U"S-t-r-i-n-g-\x3a9 \x1f400\x1f389\x1f984\n"
 
 
 int main(void)

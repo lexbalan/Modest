@@ -3,7 +3,7 @@ import "libc/stdio.h"
 
 const hello = "Hello"
 const world = "World"
-const party_corn = "\x1f389"
+const party_corn = "🎉"
 
 const greeting = hello + " " + world//+ " " + party_corn
 
@@ -12,7 +12,7 @@ const test = "test"
 
 
 func main () -> Int {
-    printf("%s\n", greeting)
+    printf("%s\n", greeting to *[]Char8)
 
     if test == "test" {
         printf("test ok.\n")
