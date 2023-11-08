@@ -301,13 +301,12 @@ def hlir_value_float(num, ti=None):
 
 
 def hlir_string_imm(string):
+    # imm of string - it just list of UTF-32 codes
     items = []
     for ch in string:
         code = ord(ch)
-        char_power = nbits_for_num(code)
-        t = hlir_type_generic_char(power=char_power, ti=None)
-        char = hlir_value_literal(type.typeGenericChar, code, ti=None)
-        items.append(char)
+        items.append(code)
+
     return items
 
 

@@ -943,8 +943,10 @@ def do_value_index(x):
             item = items[index]
 
             if type.is_char(item['type']):
+                code = item
                 # return just char, there's no need for print index op
-                return item
+                char = hlir_value_literal(item['type'], code, x['ti'])
+                return char
 
             v['imm'] = item['imm']
 

@@ -48,8 +48,8 @@ def float_align(f_num, power):
 
 def str2utf8(string_items):
     codes = []
-    for i in string_items:
-        c = chr(i['imm'])
+    for cc in string_items:
+        c = chr(cc)
         utf8_bytes = bytes(c, encoding='utf-8') # [2:] - skip BOM
         i = 0
         while i < len(utf8_bytes):
@@ -63,8 +63,8 @@ def str2utf8(string_items):
 
 def str2utf16(string_items):
     codes = []
-    for i in string_items:
-        c = chr(i['imm'])
+    for cc in string_items:
+        c = chr(cc)
         utf16_bytes = bytes(c, encoding='utf-16')[2:] # [2:] - skip BOM
 
         i = 0
@@ -89,9 +89,8 @@ def str2utf16(string_items):
 def str2utf32(string_items):
     # python uses utf32 by default
     codes = []
-    for i in string_items:
-        c = (i['imm'])
-        codes.append(c)
+    for cc in string_items:
+        codes.append(cc)
     codes.append(0)
     return codes
 
