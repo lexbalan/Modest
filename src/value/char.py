@@ -13,14 +13,6 @@ def value_cons_char_immediate(v, t, ti):
     imm = v['imm']
     v_power = v['type']['power']
 
-    if v_power <= 7:
-        pass
-    elif v_power <= 16:
-        if power < 16:
-            error("char overflow", ti)
-    elif v_power <= 32:
-        pass
-
     if v_power > power:
         error("char overflow", ti)
 

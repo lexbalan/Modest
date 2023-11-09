@@ -8,25 +8,23 @@ import "misc/utf.hm"
 @c_include("./utf.h")
 
 
-
 const ratSymbolUTF8 = [0xf0, 0x9f, 0x90, 0x80]
 const ratSymbolUTF16 = [0xD83D, 0xDC00]
 const ratSymbolUTF32 = 0x0001F400
 
 
-var arr_utf8 : [8]Char8 := "Hi!\n" to [8]Char8
-var arr_utf16 : [8]Char16 := "Hello!\n"
-var arr_utf32 : [8]Char32 := "Hello!\n"
+var arr_utf8: [8]Char8 := "Hi!\n" to [8]Char8
+var arr_utf16: [8]Char16 := "Hello!\n"
+var arr_utf32: [8]Char32 := "Hello!\n"
 
 
-
-const genericStringConst = "S-t-r-i-n-g-Ω 🐀🎉🦄\n"
+const genericStringConst = "S-t-r-i-n-g-Ω 🐀🎉🦄"
 const string8Const = genericStringConst to *Str8
 const string16Const = genericStringConst to *Str16
 const string32Const = genericStringConst to *Str32
 
 
-func main () -> Int {
+func main() -> Int {
     // indexing of GenericString returns #i symbol code
     // the symbols have GenericInteger type
 //    let omegaCharCode = "Hello Ω!\n"[6]
@@ -52,17 +50,6 @@ func main () -> Int {
 
         i := i + 1
     }
-
-
-    let a = "Ω"[0]
-    var ch16_str : [3]Char16
-    //ch16_str[0] := a
-    //ch16_str[1] := "\0"[0]
-
-    //utf16_puts(&ch16_str to *Str16)
-
-    printf("\n")
-
 
     var str8: *Str8 := string8Const
     var str16: *Str16 := string16Const

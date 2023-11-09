@@ -730,15 +730,26 @@ def print_value_literal_str(x, ctx, char_power=8):
 
     out("%s\"" % prefix)
 
-    for c in x['imm']:
+    for cc in x['imm']:
         #print(c)
-        ccode = c
+        ccode = cc
+
+        if cc == 0:
+            break
+
         sym = chr(ccode)
 
-        if sym == '\n': out("\\n")
-        elif sym == '\r': out("\\r")
-        elif sym == '\a': out("\\a")
-        elif ccode >= 0x20 and ccode <= 0x7E : out(sym)
+        if cc < 0x20:
+            if cc == 0x07: out("\\a") # bell
+            elif cc == 0x08: out("\\b") # backspace
+            elif cc == 0x09: out("\\t") # horizontal tab
+            elif cc == 0x0A: out("\\n") # line feed
+            elif cc == 0x0B: out("\\v") # vertical tab
+            elif cc == 0x0C: out("\\f") # form feed
+            elif cc == 0x0D: out("\\r") # carriage return
+            elif cc == 0x1B: out("\\e") # escape
+            else: out("\\x%X" % cc)
+        elif ccode <= 0x7E : out(sym)
         elif ccode != 0: out("\\x%x" % ccode)
 
     out("\"")
