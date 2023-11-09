@@ -30,7 +30,7 @@ void send_file(FILE *fp, int sockfd)
 }
 
 
-#define role  "<GENERIC-STRING>"
+#define role  {} /*GENERIC-STRING*/
 
 
 int main(void)

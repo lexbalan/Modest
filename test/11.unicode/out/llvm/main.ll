@@ -108,6 +108,7 @@ declare void @utf32_putchar(i32)
 @str5 = private constant [2 x i8] [i8 10, i8 0]
 @str6 = private constant [2 x i8] [i8 10, i8 0]
 @str7 = private constant [2 x i8] [i8 10, i8 0]
+@str8 = private constant [2 x i8] [i8 10, i8 0]
 
 
 
@@ -178,21 +179,26 @@ endif_0:
     store i32 %10, i32* %i
     br label %again_1
 break_1:
+    %ch16_str = alloca [3 x i16]
+;ch16_str[0] := a
+;ch16_str[1] := "\0"[0]
+;utf16_puts(&ch16_str to *Str16)
+    %11 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([2 x i8]* @str5 to [0 x i8]*))
     %str8 = alloca [0 x i8]*
     store [0 x i8]* bitcast ([29 x i8]* @str1 to [0 x i8]*), [0 x i8]** %str8
     %str16 = alloca [0 x i16]*
     store [0 x i16]* bitcast ([22 x i16]* @str2 to [0 x i16]*), [0 x i16]** %str16
     %str32 = alloca [0 x i32]*
     store [0 x i32]* bitcast ([19 x i32]* @str3 to [0 x i32]*), [0 x i32]** %str32
-    %11 = load [0 x i8]*, [0 x i8]** %str8
-    call void([0 x i8]*) @utf8_puts ([0 x i8]* %11)
-    call void([0 x i8]*) @utf8_puts ([0 x i8]* bitcast ([2 x i8]* @str5 to [0 x i8]*))
-    %12 = load [0 x i16]*, [0 x i16]** %str16
-    call void([0 x i16]*) @utf16_puts ([0 x i16]* %12)
+    %12 = load [0 x i8]*, [0 x i8]** %str8
+    call void([0 x i8]*) @utf8_puts ([0 x i8]* %12)
     call void([0 x i8]*) @utf8_puts ([0 x i8]* bitcast ([2 x i8]* @str6 to [0 x i8]*))
-    %13 = load [0 x i32]*, [0 x i32]** %str32
-    call void([0 x i32]*) @utf32_puts ([0 x i32]* %13)
+    %13 = load [0 x i16]*, [0 x i16]** %str16
+    call void([0 x i16]*) @utf16_puts ([0 x i16]* %13)
     call void([0 x i8]*) @utf8_puts ([0 x i8]* bitcast ([2 x i8]* @str7 to [0 x i8]*))
+    %14 = load [0 x i32]*, [0 x i32]** %str32
+    call void([0 x i32]*) @utf32_puts ([0 x i32]* %14)
+    call void([0 x i8]*) @utf8_puts ([0 x i8]* bitcast ([2 x i8]* @str8 to [0 x i8]*))
     ret i32 0
 }
 

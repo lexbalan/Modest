@@ -43,7 +43,7 @@ void write_file(int sockfd)
 
 int main(void)
 {
-    uint8_t ip[10] = "<GENERIC-STRING>";
+    uint32_t ip[10] = {} /*GENERIC-STRING*/;
     const uint16_t port = 8080;
 
     const int sockfd = socket(AF_INET, SOCK_STREAM, 0);

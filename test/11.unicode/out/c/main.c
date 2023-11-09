@@ -21,7 +21,7 @@ uint32_t arr_utf32[8] = {U'H', U'e', U'l', U'l', U'o', U'!', U'\xA'};
 
 
 
-#define genericStringConst  "<GENERIC-STRING>"
+#define genericStringConst  {} /*GENERIC-STRING*/
 #define string8Const  "S-t-r-i-n-g-\xce\xa9 \xf0\x9f\x90\x80\xf0\x9f\x8e\x89\xf0\x9f\xa6\x84\n"
 #define string16Const  u"S-t-r-i-n-g-\x3a9 \xd83d\xdc00\xd83c\xdf89\xd83e\xdd84\n"
 #define string32Const  U"S-t-r-i-n-g-\x3a9 \x1f400\x1f389\x1f984\n"
@@ -54,6 +54,16 @@ int main(void)
 
         i = i + 1;
     }
+
+
+    const uint32_t a = u'\x3A9';
+    uint16_t ch16_str[3];
+    //ch16_str[0] := a
+    //ch16_str[1] := "\0"[0]
+
+    //utf16_puts(&ch16_str to *Str16)
+
+    printf("\n");
 
 
     char *str8 = string8Const;

@@ -3,15 +3,15 @@ import "libc/stdio.h"
 
 
 // declare function f0
-func f0 () -> Unit
+func f0() -> Unit
 
 // define function f1
-func f1 () -> Unit {
+func f1() -> Unit {
     printf("f1 was called\n")
 }
 
 // define function main
-func main () -> Int {
+func main() -> Int {
     printf("test func\n")
     f0()
     f1()
@@ -19,7 +19,7 @@ func main () -> Int {
 }
 
 // define function f0
-func f0 () -> Unit {
+func f0() -> Unit {
     printf("f0 was called\n")
 }
 

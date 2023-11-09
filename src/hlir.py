@@ -91,7 +91,7 @@ def hlir_type_generic_char(power, ti=None):
         'classes': ['comparable'],
         'power': power,
         'cm_alias': 'Char',
-        'c_alias': 'uint8_t',
+        'c_alias': 'uint32_t',
         'llvm_alias': 'i8',
         'size': nbytes_for_bits(power),
         'ti': ti
@@ -269,6 +269,7 @@ def hlir_value_literal(t, imm, ti):
     }
 
 
+
 def hlir_value_zero(t, ti=None):
     return hlir_value_literal(t, None, ti)
 
@@ -289,6 +290,16 @@ def hlir_value_int(num, typ=None, ti=None):
 
     return hlir_value_literal(typ, num, ti)
 
+
+
+def hlir_value_char(char_code, type=None, ti=None):
+
+    if type == None:
+        # Generic CHar
+        char_power = nbits_for_num(char_code)
+        type = hlir_type_generic_char(char_power, ti)
+
+    return hlir_value_literal(type, char_code, ti)
 
 
 

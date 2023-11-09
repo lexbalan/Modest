@@ -2,11 +2,11 @@
 import "libc/stdio.h"
 
 
-func main () -> Int {
+func main() -> Int {
     printf("stmt_if example\n")
 
-    var a : Int32
-    var b : Int32
+    var a: Int32
+    var b: Int32
 
     printf("enter a: ")
     scanf("%d", &a)

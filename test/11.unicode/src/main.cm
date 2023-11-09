@@ -54,6 +54,16 @@ func main () -> Int {
     }
 
 
+    let a = "Ω"[0]
+    var ch16_str : [3]Char16
+    //ch16_str[0] := a
+    //ch16_str[1] := "\0"[0]
+
+    //utf16_puts(&ch16_str to *Str16)
+
+    printf("\n")
+
+
     var str8: *Str8 := string8Const
     var str16: *Str16 := string16Const
     var str32: *Str32 := string32Const

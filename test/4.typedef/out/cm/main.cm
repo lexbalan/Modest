@@ -3,10 +3,10 @@ import "libc/stdio.h"
 
 type NewInt32 NewInt32
 
-func main () -> Int {
+func main() -> Int {
     printf("test typedef\n")
 
-    var newInt32 : NewInt32
+    var newInt32: NewInt32
     newInt32 := 0
 
     return 0

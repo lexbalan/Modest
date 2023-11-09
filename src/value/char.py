@@ -10,10 +10,23 @@ from util import nbits_for_num
 def value_cons_char_immediate(v, t, ti):
     #info("value_cons_char_immediate", ti)
     power = t['power']
-    need_power = nbits_for_num(v['imm'])
+    #v_power = nbits_for_num(v['imm'])
+    imm = v['imm']
+    v_power = v['type']['power']
 
-    if need_power > power:
-        error("integer overflow", ti)
+    if v_power <= 7:
+        pass
+    elif v_power <= 16:
+        if power < 16:
+            error("char overflow", ti)
+            print("%d %d", v_power, power)
+            print("imm = 0x%x" % imm)
+            1/ 0
+    elif v_power <= 32:
+        pass
+
+    if v_power > power:
+        error("char overflow", ti)
 
     return hlir_value_cast_immediate(v, t, ti)
 

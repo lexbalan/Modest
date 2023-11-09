@@ -8,13 +8,13 @@ import "misc/sha256.h"
 type TestInputString [32]Char8
 
 type SHA256_TestData record {
-    input : TestInputString
-    input_len : Nat32
-    output : [32]Nat8
+    input: TestInputString
+    input_len: Nat32
+    output: [32]Nat8
 }
 
 
-var test0 : SHA256_TestData := {
+var test0: SHA256_TestData := {
     input = "abc"
     input_len = 3
 
@@ -25,7 +25,7 @@ var test0 : SHA256_TestData := {
     ]
 }
 
-var test1 : SHA256_TestData := {
+var test1: SHA256_TestData := {
     input = "Hello World!"
     input_len = 12
 
@@ -38,18 +38,18 @@ var test1 : SHA256_TestData := {
 
 
 const nTests = 2
-var sha256_tests : [nTests]*SHA256_TestData := [&test0, &test1]
+var sha256_tests: [nTests]*SHA256_TestData := [&test0, &test1]
 
 
-func sha256_doTest (test : *SHA256_TestData) -> Bool {
-    var test_hash : [sha256HashSize]Nat8
+func sha256_doTest(test: *SHA256_TestData) -> Bool {
+    var test_hash: [sha256HashSize]Nat8
     sha256_doHash(&test.input to *[]Nat8, test.input_len, &test_hash)
 
     printf("'%s'", &test.input)
 
     printf(" -> ")
 
-    var i : Int32 := 0
+    var i: Int32 := 0
     while i < sha256HashSize {
         printf("%02X", test_hash[i])
         i := i + 1
@@ -62,10 +62,10 @@ func sha256_doTest (test : *SHA256_TestData) -> Bool {
 }
 
 
-func main () -> Int {
+func main() -> Int {
     printf("test SHA256\n")
 
-    var i : Int32 := 0
+    var i: Int32 := 0
     while i < nTests {
         let test = sha256_tests[i]
         let test_result = sha256_doTest(test)

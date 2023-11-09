@@ -6,14 +6,14 @@
 
 // examples/1.hello_world/main.cm
 
-#define hello  "<GENERIC-STRING>"
-#define world  "<GENERIC-STRING>"
-#define party_corn  "<GENERIC-STRING>"
+#define hello  {} /*GENERIC-STRING*/
+#define world  {} /*GENERIC-STRING*/
+#define party_corn  {} /*GENERIC-STRING*/
 
-#define greeting  hello  "<GENERIC-STRING>"  world//+ " " + party_corn
+#define greeting  hello  {} /*GENERIC-STRING*/  world//+ " " + party_corn
 
 
-#define test  "<GENERIC-STRING>"
+#define test  {} /*GENERIC-STRING*/
 
 
 int main(void)

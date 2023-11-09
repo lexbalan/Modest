@@ -630,9 +630,6 @@ def value_strings_concat(l, r, ti):
     vol = hlir_value_int(length)
     genStrType = hlir_type_array(type.typeGenericChar, volume=vol, generic=True, ti=ti)
 
-    #info("?%d" % len(string), ti)
-    #type_print(genStrType)
-
     bin_value = hlir_value_bin('add_str', l, r, genStrType, ti=ti)
     bin_value['imm'] = imm_str
     return bin_value
@@ -939,9 +936,8 @@ def do_value_index(x):
             item = items[index]
 
             if type.is_char(item_type):
-                code = item
-                # return just char, there's no need for print index op
-                char = hlir_value_literal(item_type, code, x['ti'])
+                char_code = item
+                char = hlir_value_char(char_code, type=None, ti=x['ti'])
                 return char
 
             v['imm'] = item['imm']
@@ -1321,6 +1317,11 @@ def do_stmt_let(x):
     if value_is_bad(v):
         module['context'].value_add(id['str'], hlir_value_bad())
         return hlir_stmt_bad()
+
+
+    if type.is_generic(v['type']):
+        warning("let generic", x['ti'])
+        #v = cons_default(v, x['ti'])
 
     # add 'const' attribute to type
     # (used by C printer)

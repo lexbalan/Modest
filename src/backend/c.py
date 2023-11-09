@@ -587,7 +587,7 @@ def print_value_literal_arr(v, ctx):
     if type.is_generic_string(v['type']):
         char_power = v['type']['of']['power']
         # FIXIT: вообще нефиг печатать generic string (!)
-        out('"<GENERIC-STRING>"')
+        out('{} /*GENERIC-STRING*/')
         return
 
 
@@ -755,9 +755,9 @@ def print_value_literal_char(x, ctx):
     power = x['type']['power']
 
     prefix = ""
-    if power == 32:
+    if power == 32 or num > 0xFFFF:
         prefix = "U"
-    elif power == 16:
+    elif power == 16 or num > 0x7F:
         prefix = "u"
 
     out(prefix)

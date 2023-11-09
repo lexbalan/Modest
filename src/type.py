@@ -133,7 +133,7 @@ def type_init():
     typeDecimal128['llvm_alias'] = 'double'
 
 
-    typeGenericChar = hlir_type_generic_char(power=8, ti=None)
+    typeGenericChar = hlir_type_generic_char(power=0, ti=None)
 
 
     typeChar8 = hlir_type_char("Char8", power=8, ti=None)
