@@ -124,3 +124,62 @@ def str2utf32(string_items):
 
 
 
+
+def utf16_to_utf32(c):
+    leading = c[0]
+
+    if (leading < 0xD800) | (leading > 0xDFFF):
+        return  [leading, 1]
+
+    elif leading >= 0xDC00:
+        #error("Недопустимая кодовая последовательность.")
+        pass
+    else:
+        code = (leading & 0x3FF) << 10
+        trailing = c[1]
+        if (trailing < 0xDC00) or (trailing > 0xDFFF):
+            #error("Недопустимая кодовая последовательность.")
+            pass
+        else:
+            code = code | (trailing & 0x3FF)
+            return [(code + 0x10000), 2]
+
+
+    return ['', 0]
+
+
+
+
+
+def utf8_cc_arr_to_utf32_cc_arr(arr):
+    arr = list(bytes(arr).decode('utf-8').encode('utf-32').decode('utf32'))
+
+    res = []
+    for c in arr:
+        cc = ord(c)
+        res.append(cc)
+
+    return res
+
+
+
+def utf16_cc_arr_to_utf32_cc_arr(arr):
+    #"\ud83d\ude4f".encode('utf-16', 'surrogatepass')[2:].decode('utf-16').encode('utf-8').decode('utf-8')
+
+    s16 = u""
+    for cc in arr:
+        s16 = s16 + chr(cc)
+
+    s_list = list(s16.encode('utf-16', 'surrogatepass')[2:].decode('utf-16').encode('utf-32').decode('utf32'))
+
+    res = []
+    for c in s_list:
+        cc = ord(c)
+        res.append(cc)
+
+    return res
+
+
+
+
+

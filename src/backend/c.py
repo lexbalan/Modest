@@ -7,7 +7,7 @@ from .common import *
 import type
 from type import type_print
 from value.value import value_attribute_check, value_is_zero, value_print
-from util import nbits_for_num, get_item_with_id
+from util import nbits_for_num, get_item_with_id, utf8_cc_arr_to_utf32_cc_arr, utf16_cc_arr_to_utf32_cc_arr
 from main import settings
 
 INDENT_SYMBOL = " " * 4
@@ -722,22 +722,26 @@ def print_value_literal_record(v, ctx):
 
 def print_value_literal_str(x, ctx, char_power=8):
 
-    prefix = "" #"u8"
-    if char_power > 16:
-        prefix = "U"
-    elif char_power > 8:
+    prefix = ""
+    utf8_codes = None
+    if char_power == 8:
+        prefix = "" #"u8"
+        utf8_codes = utf8_cc_arr_to_utf32_cc_arr(x['imm'])
+    elif char_power == 16:
         prefix = "u"
+        utf8_codes = utf16_cc_arr_to_utf32_cc_arr(x['imm'])
+    elif char_power == 32:
+        prefix = "U"
+        utf8_codes = x['imm']
+
 
     out("%s\"" % prefix)
 
-    for cc in x['imm']:
-        #print(c)
-        ccode = cc
-
+    for cc in utf8_codes:
         if cc == 0:
             break
 
-        sym = chr(ccode)
+        sym = chr(cc)
 
         if cc < 0x20:
             if cc == 0x07: out("\\a") # bell
@@ -749,8 +753,8 @@ def print_value_literal_str(x, ctx, char_power=8):
             elif cc == 0x0D: out("\\r") # carriage return
             elif cc == 0x1B: out("\\e") # escape
             else: out("\\x%X" % cc)
-        elif ccode <= 0x7E : out(sym)
-        elif ccode != 0: out("\\x%x" % ccode)
+        elif cc <= 0x7E : out(sym)
+        elif cc != 0: out(sym)
 
     out("\"")
 
