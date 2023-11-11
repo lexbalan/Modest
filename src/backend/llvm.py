@@ -618,8 +618,9 @@ def do_eval_expr_index_ptr(v):
     pointer = do_eval(v['pointer'])
     array_type = pointer['type']['to']
     result_type = v['type']
+    array = do_ld(pointer)
     index = do_ld(do_eval(v['index']))
-    return llvm_getelementptr(pointer, array_type, (ll_value_zero, index), result_type)
+    return llvm_getelementptr(array, array_type, (ll_value_zero, index), result_type)
 
 
 # получает укзаатель на структуру x
