@@ -8,7 +8,7 @@ from error import error, warning, info
 
 
 top_level_stoppers = ['type', 'const', 'var', 'func']
-func_stoppers = ['let', 'var',    'if', 'while', 'return', 'type']
+func_stoppers = ['let', 'var', 'if', 'while', 'return', 'type']
 
 class Parser:
 
@@ -84,6 +84,9 @@ class Parser:
             error("expected '%s' token" % token, ti)
         return yes
 
+
+    def is_assign_operator(self):
+        return self.match("<-") or self.match(":=") or self.match("=")
 
 
     def identifier(self):
@@ -798,7 +801,7 @@ class Parser:
         v = None
         if self.match(":"):
             t = self.expr_type()
-        if self.match("<-") or self.match(":="):
+        if self.is_assign_operator():
             v = self.expr_value()
 
         stmts = []
@@ -828,7 +831,7 @@ class Parser:
 
         # stmt expr
         assign_ti = self.ti()
-        if not (self.match(":=") or self.match("<-")):
+        if not (self.is_assign_operator()):
             return {'isa': 'stmt', 'kind': 'value', 'value': v}
 
         # stmt assign
@@ -1042,7 +1045,7 @@ class Parser:
             return None
 
         iv = None
-        if self.match("<-") or self.match(":="):
+        if self.is_assign_operator():
             iv = self.expr_value()
 
         vars = []
