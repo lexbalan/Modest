@@ -1,0 +1,57 @@
+// test/arrays/main.cm
+import "libc/math.h"
+import "libc/stdio.h"
+import "libc/libc.h"
+import "misc/minmax.h"
+
+
+
+var globalArray: [3]Int32 := [1, 2, 3]
+
+
+func main() -> Int {
+    var i: Int32 := 0
+    while i < 3 {
+        let a = globalArray[i]
+        printf("globalArray[%d] = %d\n", i, a)
+        i := i + 1
+    }
+
+    printf("------------------------------------\n")
+
+    var localArray: [3]Int32 := [4, 5, 6]
+
+    i := 0
+    while i < 3 {
+        let a = localArray[i]
+        printf("localArray[%d] = %d\n", i, a)
+        i := i + 1
+    }
+
+    printf("------------------------------------\n")
+
+    var p_globalArray: *[]Int32
+    p_globalArray := &globalArray
+
+    i := 0
+    while i < 3 {
+        let a = p_globalArray[i]
+        printf("p_globalArray[%d] = %d\n", i, a)
+        i := i + 1
+    }
+
+    printf("------------------------------------\n")
+
+    var p_localArray: *[]Int32
+    p_localArray := &localArray
+
+    i := 0
+    while i < 3 {
+        let a = p_localArray[i]
+        printf("p_localArray[%d] = %d\n", i, a)
+        i := i + 1
+    }
+
+    return 0
+}
+
