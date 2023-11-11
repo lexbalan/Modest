@@ -1319,10 +1319,6 @@ def do_stmt_let(x):
         return hlir_stmt_bad()
 
 
-    if type.is_generic(v['type']):
-        warning("let generic", x['ti'])
-        #v = cons_default(v, x['ti'])
-
     # add 'const' attribute to type
     # (used by C printer)
     typ = type.type_copy(v['type'])

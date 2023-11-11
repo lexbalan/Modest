@@ -40,25 +40,25 @@ int main(void)
 
     printf("------------------------------------\n");
 
-    int32_t *p_globalArray;
-    p_globalArray = (int32_t *)&globalArray[0];
+    int32_t *globalArrayPtr;
+    globalArrayPtr = (int32_t *)&globalArray[0];
 
     i = 0;
     while (i < 3) {
-        const int32_t a = p_globalArray[i];
-        printf("p_globalArray[%d] = %d\n", i, a);
+        const int32_t a = globalArrayPtr[i];
+        printf("globalArrayPtr[%d] = %d\n", i, a);
         i = i + 1;
     }
 
     printf("------------------------------------\n");
 
-    int32_t *p_localArray;
-    p_localArray = (int32_t *)&localArray[0];
+    int32_t *localArrayPtr;
+    localArrayPtr = (int32_t *)&localArray[0];
 
     i = 0;
     while (i < 3) {
-        const int32_t a = p_localArray[i];
-        printf("p_localArray[%d] = %d\n", i, a);
+        const int32_t a = localArrayPtr[i];
+        printf("localArrayPtr[%d] = %d\n", i, a);
         i = i + 1;
     }
 

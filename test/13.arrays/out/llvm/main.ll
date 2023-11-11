@@ -289,9 +289,9 @@ declare double @max_float64(double, double)
 @str2 = private constant [38 x i8] [i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 10, i8 0]
 @str3 = private constant [21 x i8] [i8 108, i8 111, i8 99, i8 97, i8 108, i8 65, i8 114, i8 114, i8 97, i8 121, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 @str4 = private constant [38 x i8] [i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 10, i8 0]
-@str5 = private constant [24 x i8] [i8 112, i8 95, i8 103, i8 108, i8 111, i8 98, i8 97, i8 108, i8 65, i8 114, i8 114, i8 97, i8 121, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str5 = private constant [25 x i8] [i8 103, i8 108, i8 111, i8 98, i8 97, i8 108, i8 65, i8 114, i8 114, i8 97, i8 121, i8 80, i8 116, i8 114, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 @str6 = private constant [38 x i8] [i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 10, i8 0]
-@str7 = private constant [23 x i8] [i8 112, i8 95, i8 108, i8 111, i8 99, i8 97, i8 108, i8 65, i8 114, i8 114, i8 97, i8 121, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str7 = private constant [24 x i8] [i8 108, i8 111, i8 99, i8 97, i8 108, i8 65, i8 114, i8 114, i8 97, i8 121, i8 80, i8 116, i8 114, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 
 
 
@@ -344,9 +344,9 @@ body_2:
     br label %again_2
 break_2:
     %23 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([38 x i8]* @str4 to [0 x i8]*))
-    %p_globalArray = alloca [0 x i32]*
+    %globalArrayPtr = alloca [0 x i32]*
     %24 = bitcast [3 x i32]* @globalArray to [0 x i32]*
-    store [0 x i32]* %24, [0 x i32]** %p_globalArray
+    store [0 x i32]* %24, [0 x i32]** %globalArrayPtr
     store i32 0, i32* %i
     br label %again_3
 again_3:
@@ -354,21 +354,21 @@ again_3:
     %26 = icmp slt i32 %25, 3
     br i1 %26 , label %body_3, label %break_3
 body_3:
-    %27 = load [0 x i32]*, [0 x i32]** %p_globalArray
+    %27 = load [0 x i32]*, [0 x i32]** %globalArrayPtr
     %28 = load i32, i32* %i
     %29 = getelementptr inbounds [0 x i32], [0 x i32]* %27, i32 0, i32 %28
     %30 = load i32, i32* %29
     %31 = load i32, i32* %i
-    %32 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([24 x i8]* @str5 to [0 x i8]*), i32 %31, i32 %30)
+    %32 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([25 x i8]* @str5 to [0 x i8]*), i32 %31, i32 %30)
     %33 = load i32, i32* %i
     %34 = add i32 %33, 1
     store i32 %34, i32* %i
     br label %again_3
 break_3:
     %35 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([38 x i8]* @str6 to [0 x i8]*))
-    %p_localArray = alloca [0 x i32]*
+    %localArrayPtr = alloca [0 x i32]*
     %36 = bitcast [3 x i32]* %localArray to [0 x i32]*
-    store [0 x i32]* %36, [0 x i32]** %p_localArray
+    store [0 x i32]* %36, [0 x i32]** %localArrayPtr
     store i32 0, i32* %i
     br label %again_4
 again_4:
@@ -376,12 +376,12 @@ again_4:
     %38 = icmp slt i32 %37, 3
     br i1 %38 , label %body_4, label %break_4
 body_4:
-    %39 = load [0 x i32]*, [0 x i32]** %p_localArray
+    %39 = load [0 x i32]*, [0 x i32]** %localArrayPtr
     %40 = load i32, i32* %i
     %41 = getelementptr inbounds [0 x i32], [0 x i32]* %39, i32 0, i32 %40
     %42 = load i32, i32* %41
     %43 = load i32, i32* %i
-    %44 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([23 x i8]* @str7 to [0 x i8]*), i32 %43, i32 %42)
+    %44 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([24 x i8]* @str7 to [0 x i8]*), i32 %43, i32 %42)
     %45 = load i32, i32* %i
     %46 = add i32 %45, 1
     store i32 %46, i32* %i

@@ -30,25 +30,25 @@ func main() -> Int {
 
     printf("------------------------------------\n")
 
-    var p_globalArray: *[]Int32
-    p_globalArray := &globalArray
+    var globalArrayPtr: *[]Int32
+    globalArrayPtr := &globalArray
 
     i := 0
     while i < 3 {
-        let a = p_globalArray[i]
-        printf("p_globalArray[%d] = %d\n", i, a)
+        let a = globalArrayPtr[i]
+        printf("globalArrayPtr[%d] = %d\n", i, a)
         i := i + 1
     }
 
     printf("------------------------------------\n")
 
-    var p_localArray: *[]Int32
-    p_localArray := &localArray
+    var localArrayPtr: *[]Int32
+    localArrayPtr := &localArray
 
     i := 0
     while i < 3 {
-        let a = p_localArray[i]
-        printf("p_localArray[%d] = %d\n", i, a)
+        let a = localArrayPtr[i]
+        printf("localArrayPtr[%d] = %d\n", i, a)
         i := i + 1
     }
 
