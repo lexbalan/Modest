@@ -111,10 +111,14 @@ def value_cons_implicit(v, t, ti):
                     return hlir_value_cast(v, t, ti=ti)
 
 
+    # for structural type system support
     if type.is_pointer_to_record(t):
         if type.is_pointer_to_record(from_type):
-            #info("impl cast pointer to record", ti)
-            return hlir_value_cast(v, t, ti=ti)
+
+            if type.eq_record(from_type['to'], t['to']):
+                return hlir_value_cast(v, t, ti=ti)
+            else:
+                return v
 
 
     if type.eq(from_type, t):

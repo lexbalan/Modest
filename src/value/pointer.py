@@ -50,11 +50,7 @@ def cons_ptr_to_str_from_generic_str(v, t, ti, method):
     # из списка чар кодов в utf-32
     s_imm = method(v['imm'])
     # массив кодов
-    #print("S_IMM = " + str(s_imm))
     # длина полученной строки может отличаться от длины оригинала в utf-32
-    #str_length = len(s_imm)
-    #print("str_length = " + str(str_length))
-
     nv = value_cons_pointer_immediate(v, t, ti=ti)
     nv['imm'] = s_imm
     module_strings_add(nv)

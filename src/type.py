@@ -614,6 +614,12 @@ def print_list_by(lst, method):
 
 
 def type_print(t, print_aka=True):
+
+    if 'volatile' in t['att']:
+        print("volatile_", end='')
+    if 'const' in t['att']:
+        print("const_", end='')
+
     k = t['kind']
 
     if print_aka:
