@@ -1191,7 +1191,11 @@ class Parser:
                 continue
 
             if extern:
-                x['extern'] = True
+                if isinstance(x, list):
+                    for item in x:
+                        item['extern'] = True
+                else:
+                    x['extern'] = True
 
             if isinstance(x, list):
                 x[0]['nl'] = spaceline_cnt

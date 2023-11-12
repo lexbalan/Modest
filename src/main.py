@@ -126,7 +126,7 @@ def main():
     if args.output != None:
         outname = args.output
     else:
-        outname = splittded_name[0]
+        outname = "out"
 
     backend.run(module, outname)
 

@@ -17,7 +17,11 @@ def value_cons_array_immediate(v, t, ti):
 # полного или из пустого дженерик массива
 def value_cons_array_from_generic_array(v, t, ti, method):
     #info("value_cons_array_from_generic_array", ti)
-    if len(v['imm']) > t['volume']['imm']:
+
+    if t['volume'] == None:
+        info("cons open array", ti)
+
+    elif len(v['imm']) > t['volume']['imm']:
         info("too many items", v['ti'])
         return None
 

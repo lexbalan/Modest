@@ -1504,7 +1504,7 @@ def def_const(x):
     v = do_value(x['value'])
 
     if value_is_bad(v):
-        return hlir_def_const(id, v, ti=x['ti'])
+        return hlir_def_const(v)
 
     if not value_is_immediate(v):
         if not value_is_ptr_to_str(v):
