@@ -189,7 +189,7 @@ def select_numeric(sz, is_signed):
 
 
 
-def eq_integer(a, b):
+def eq_integer(a, b, opt):
     if a['power'] != b['power']:
         return False
 
@@ -200,21 +200,21 @@ def eq_integer(a, b):
 
 
 
-def eq_char(a, b):
+def eq_char(a, b, opt):
     if a['power'] != b['power']:
         return False
 
     return True
 
 
-def eq_pointer(a, b):
-    return eq(a['to'], b['to'])
+def eq_pointer(a, b, opt):
+    return eq(a['to'], b['to'], opt)
 
 
-def eq_array(a, b):
+def eq_array(a, b, opt):
 
     if a['volume'] == None and b['volume'] == None:
-        return eq(a['of'], b['of'])
+        return eq(a['of'], b['of'], opt)
 
     if a['volume'] == None or b['volume'] == None:
         return False
@@ -228,56 +228,64 @@ def eq_array(a, b):
     if a['of'] == None or b['of'] == None:
         return False
 
-    return eq(a['of'], b['of'])
+    return eq(a['of'], b['of'], opt)
 
 
 
 
-def eq_func(a, b):
-    if not eq(a['to'], b['to']): return False
+def eq_func(a, b, opt):
+    if not eq(a['to'], b['to'], opt): return False
     if len(a['params']) != len(b['params']): return False
 
     for ax, bx in zip(a['params'], b['params']):
         if ax['id']['str'] != bx['id']['str']: return False
-        if not eq(ax['type'], bx['type']): return False
+        if not eq(ax['type'], bx['type'], opt): return False
 
     return True
 
 
-def eq_record(a, b):
+def eq_record(a, b, opt):
     if len(a['fields']) != len(b['fields']): return False
 
     for ax, bx in zip(a['fields'], b['fields']):
         if ax['id']['str'] != bx['id']['str']: return False
-        if not eq(ax['type'], bx['type']): return False
+        if not eq(ax['type'], bx['type'], opt): return False
 
     return True
 
 
-def eq_float(a, b):
+def eq_float(a, b, opt):
     if 'power' in a and 'power' in b:
         return a['power'] == b['power']
 
     return False
 
 
-def eq_opaque(a, b):
+def eq_opaque(a, b, opt):
     return a['name'] == b['name']    # maybe by UID?
 
 
-def eq_alias(a, b):
+def eq_alias(a, b, opt):
     if a['att'] != b['att']:
         return False
 
-    return eq(a['of'], b['of'])
+    return eq(a['of'], b['of'], opt)
 
 
-def eq(a, b):
+
+def eq(a, b, opt=[]):
     # fast checking
     if a == b: return True
     if a['kind'] == 'bad': return True
     if b['kind'] == 'bad': return True
     if a['kind'] != b['kind']: return False
+
+    # проверять аттрибуты (volatile, const)
+    # использую для C чтобы можно было более строго проверить типы
+    # напр для явного приведения в беканде C *volatile uint32_t -> uint32_t
+    if 'att_checking' in opt:
+        if a['att'] != b['att']:
+            return False
 
     # дженерик и не дженерик типы не равны
     # это важно при конструировании записей из джененрков
@@ -287,16 +295,16 @@ def eq(a, b):
 
     # normal checking
     k = a['kind']
-    if k == 'int': return eq_integer(a, b)
+    if k == 'int': return eq_integer(a, b, opt)
     elif k == 'unit': return True
-    elif k == 'func': return eq_func(a, b)
-    elif k == 'record': return eq_record(a, b)
-    elif k == 'pointer': return eq_pointer(a, b)
+    elif k == 'func': return eq_func(a, b, opt)
+    elif k == 'record': return eq_record(a, b, opt)
+    elif k == 'pointer': return eq_pointer(a, b, opt)
     elif k == 'Bool': return True
-    elif k == 'array': return eq_array(a, b)
-    elif k == 'float': return eq_float(a, b)
-    elif k == 'char': return eq_char(a, b)
-    elif k == 'opaque': return eq_opaque(a, b)
+    elif k == 'array': return eq_array(a, b, opt)
+    elif k == 'float': return eq_float(a, b, opt)
+    elif k == 'char': return eq_char(a, b, opt)
+    elif k == 'opaque': return eq_opaque(a, b, opt)
 
     return False
 

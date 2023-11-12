@@ -436,14 +436,17 @@ def print_paramlist(parms, arghack=False):
 
 def print_value_call(v, ctx):
     left = v['func']
+    ftype = left['type']
+
     if type.is_pointer(left['type']):
-        t = left['type']['to']
+        ftype = left['type']['to']
+
         # вызов через указатель
         # поскольку у нас указатели на функции это *void
         # при вызове приводим левое к указателю на функцию
-        out("(("); print_type(t['to'], need_space_after=False); out("(*)")
-        arghack = 'arghack' in t['att']
-        print_paramlist(t['params'], arghack)
+        out("(("); print_type(ftype['to'], need_space_after=False); out("(*)")
+        arghack = 'arghack' in ftype['att']
+        print_paramlist(ftype['params'], arghack)
         out(")")
         print_value(left)
         out(")")
@@ -451,16 +454,29 @@ def print_value_call(v, ctx):
     else:
         print_value(left)
 
+    params = ftype['params']
+
     out("(")
     values = v['args']
     i = 0
     n = len(values)
     while i < n:
         a = values[i]
+
+        try:
+            # проверяем только те аргументы, для которых есть параметры
+            p = params[i]
+            if not type.eq(p['type'], a['type'], opt=['att_checking']):
+                out("("); print_type(p['type'], need_space_after=False); out(")")
+        except:
+            pass
+
+
         print_value(a, ctx=ctx)
         i = i + 1
         if i < n:
             out(", ")
+
     out(")")
 
 

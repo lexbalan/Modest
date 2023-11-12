@@ -73,9 +73,9 @@ def hlir_type_bool(ti):
         'classes': ['comparable'],
         'power': 1,
         'size': 1,
-        # see types.py
-        #'c_alias': 'uint8_t',
-        #'llvm_alias': 'i1',
+        'c_alias': 'uint8_t',
+        'llvm_alias': 'i1',
+        'cm_alias': 'Bool',
         'ti': None
     }
 
