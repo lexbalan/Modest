@@ -7,39 +7,12 @@ from util import float_align
 from .value import *
 
 from .unit import value_cons_unit
-from .char import value_cons_char, value_cons_char_immediate
-from .integer import value_cons_integer, value_cons_integer_immediate
-from .float import value_cons_float, value_cons_float_immediate
-from .record import value_cons_record, value_cons_record_immediate
-from .array import value_cons_array, value_cons_array_immediate
-from .pointer import value_cons_pointer, value_cons_pointer_immediate, cons_ptr_to_str_from_generic_str
-
-
-
-# конструирование из immediate значения
-# при этом проверяется разрядность (!)
-def value_cons_from_immediate(v, t, ti):
-    #info("value_cons_from_immediate", ti)
-
-    if type.is_integer(t):
-        return value_cons_integer_immediate(v, t, ti)
-    elif type.is_float(t):
-        return value_cons_float_immediate(v, t, ti)
-    elif type.is_record(t):
-        return value_cons_record_immediate(v, t, ti)
-    elif type.is_array(t):
-        return value_cons_array_immediate(v, t, ti)
-    elif type.is_char(t):
-        return value_cons_char_immediate(v, t, ti)
-    elif type.is_pointer(t):
-        return value_cons_pointer_immediate(v, t, ti)
-    elif type.is_unit(t):
-        return value_cons_unit_immediate(v, t, ti)
-
-    error("value_cons_from_immediate type not implemented", ti)
-    return hlir_value_cast_immediate(v, t, ti)
-
-
+from .char import value_cons_char
+from .integer import value_cons_integer
+from .float import value_cons_float
+from .record import value_cons_record
+from .array import value_cons_array
+from .pointer import value_cons_pointer
 
 
 
@@ -112,7 +85,6 @@ def value_cons_soft(v, t, ti):
 
 
 
-
 def value_cons_implicit(v, t, ti):
     if value_is_bad(v) or type.is_bad(t):
         return hlir_value_bad(ti)
@@ -160,8 +132,7 @@ def value_cons_implicit(v, t, ti):
 
         # cons *X from Nil
         if type.is_nil(from_type) and type.is_pointer(t):
-            from .cons import value_cons_from_immediate
-            return value_cons_from_immediate(v, t, ti)
+            return value_cons_pointer(v, t, ti)
 
         # cons *X from FreePointer
         if type.is_free_pointer(from_type) and type.is_pointer(t):

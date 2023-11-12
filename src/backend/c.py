@@ -426,24 +426,12 @@ def print_paramlist(parms, arghack=False):
 
     else:
         out("(")
-        print_fields(parms, before="",    after="", between=", ")
+        print_fields(parms, before="", after="", between=", ")
         if arghack:
             out(", ...")
         out(")")
 
 
-
-def print_values(values, before, between, after, ctx=[]):
-    i = 0
-    n = len(values)
-    while i < n:
-        a = values[i]
-        out(before)
-        print_value(a, ctx=ctx)
-        i = i + 1
-        if i < n:
-            out(between)
-        out(after)
 
 
 def print_value_call(v, ctx):
@@ -464,7 +452,15 @@ def print_value_call(v, ctx):
         print_value(left)
 
     out("(")
-    print_values(v['args'], before="", between=", ", after="", ctx=[])
+    values = v['args']
+    i = 0
+    n = len(values)
+    while i < n:
+        a = values[i]
+        print_value(a, ctx=ctx)
+        i = i + 1
+        if i < n:
+            out(", ")
     out(")")
 
 
@@ -879,10 +875,18 @@ def print_value_sizeof(x, ctx):
     out(")")
 
 
+
+#def print_rvalue(x, ctx=[], need_wrap=False, print_just_id=True):
+#    print_value(x, ctx, need_wrap, print_just_id)
+
+
 def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
     # если у значения есть свойство 'id' то печатаем просто id
     # (используется для печати имени констант а не просто их значения)
     # в LLVM перчаем просто значение
+
+    #if 'need_cast' in v['att']:
+    #    out("("); print_type(to_type, need_space_after=False); out(")")
 
     if print_just_id:
         if 'id' in x:

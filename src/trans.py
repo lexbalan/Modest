@@ -12,7 +12,7 @@ def is_local_context():
 
 
 from value.value import *
-from value.cons import value_cons_from_immediate, value_cons_implicit, value_cons_explicit, cons_default
+from value.cons import value_cons_implicit, value_cons_explicit, cons_default
 
 from frontend.parser import Parser
 from symtab import Symtab
