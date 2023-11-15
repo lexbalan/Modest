@@ -5,17 +5,15 @@ import type
 from util import nbits_for_num, nbytes_for_bits
 import settings
 
-ptr_power = 0
-flt_power = 0
+ptr_width = 0
+flt_width = 0
 
 
 def hlir_init():
-    global ptr_power, flt_power
-    ptr_power = int(settings.get('pointer_size'))
-    flt_power = int(settings.get('float_size'))
-    #print(f"ptr_power = {ptr_power}")
-
-
+    global ptr_width, flt_width
+    ptr_width = int(settings.get('pointer_width'))
+    flt_width = int(settings.get('float_width'))
+    #print(f"ptr_width = {ptr_width}")
 
 
 
@@ -133,8 +131,8 @@ def hlir_type_pointer(to, ti=None):
         'kind': 'pointer',
         'generic': False,
         'to': to,
-        'size': ptr_power / 8,
-        'power': ptr_power,
+        'size': ptr_width / 8,
+        'power': ptr_width,
         'att': [],
         'classes': ['comparable'],
         'ti': ti
@@ -148,8 +146,8 @@ def hlir_type_free_pointer(ti):
         'kind': 'FreePointer',
         'generic': False,
         'to': type.typeUnit,
-        'size': ptr_power / 8,
-        'power': ptr_power,
+        'size': ptr_width / 8,
+        'power': ptr_width,
         'att': [],
         'classes': ['comparable'],
         'ti': ti
@@ -163,8 +161,8 @@ def hlir_type_nil(ti):
         'kind': 'Nil',
         'generic': True,
         'to': type.typeUnit,
-        'size': ptr_power / 8,
-        'power': ptr_power,
+        'size': ptr_width / 8,
+        'power': ptr_width,
         'att': [],
         'classes': ['comparable'],
         'ti': ti
@@ -296,15 +294,15 @@ def hlir_value_char(char_code, type=None, ti=None):
 
     if type == None:
         # Generic CHar
-        char_power = nbits_for_num(char_code)
-        type = hlir_type_generic_char(char_power, ti)
+        char_width = nbits_for_num(char_code)
+        type = hlir_type_generic_char(char_width, ti)
 
     return hlir_value_literal(type, char_code, ti)
 
 
 
 def hlir_value_float(num, ti=None):
-    typ = hlir_type_float('Float', power=flt_power, ti=ti)
+    typ = hlir_type_float('Float', power=flt_width, ti=ti)
     typ['generic'] = True
     return hlir_value_literal(typ, num, ti)
 

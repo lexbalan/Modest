@@ -60,12 +60,12 @@ int main(void)
         .sin_family = AF_INET,
         .sin_port = port,
         .sin_addr = (struct in_addr){
-            .s_addr = ((unsigned long)(uint32_t)inet_addr(ip))
+            .s_addr = ((unsigned long)(uint32_t)inet_addr((const char *)ip))
         }
     };
 
     struct sockaddr *const s = (struct sockaddr *const)(void *)&server_addr;
-    int e = connect(sockfd, (struct sockaddr *)s, sizeof(struct sockaddr_in));
+    int e = connect((int)sockfd, (struct sockaddr *)s, sizeof(struct sockaddr_in));
     if (e == -1) {
         perror("[-] Error in Connecting");
         exit(1);
@@ -73,17 +73,17 @@ int main(void)
 
     printf("[+] Connected to server.\n");
 
-    FILE *const fp = fopen(filename, "r");
+    FILE *const fp = fopen((char *)filename, "r");
     if (fp == NULL) {
         perror("[-] Error in reading file.");
         exit(1);
     }
 
-    send_file(fp, sockfd);
+    send_file((FILE *)fp, (int)sockfd);
 
     printf("[+] File data send successfully.\n");
 
-    close(sockfd);
+    close((int)sockfd);
 
     printf("[+] Disconnected from the server.\n");
 

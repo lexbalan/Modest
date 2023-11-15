@@ -115,7 +115,7 @@ def value_cons_implicit(v, t, ti):
     if type.is_pointer_to_record(t):
         if type.is_pointer_to_record(from_type):
 
-            if type.eq_record(from_type['to'], t['to']):
+            if type.eq_record(from_type['to'], t['to'], opt=[]):
                 return hlir_value_cast(v, t, ti=ti)
             else:
                 return v

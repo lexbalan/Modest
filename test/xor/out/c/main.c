@@ -58,19 +58,19 @@ int main(void)
     uint8_t *const tkey = (uint8_t *const)&test_key[0];
 
     printf("before encrypt test_msg: \n");
-    print_bytes(tmsg, msg_length);
+    print_bytes((uint8_t *)tmsg, msg_length);
 
     // encrypt test data
-    xor_encrypter(tmsg, msg_length, tkey, key_length);
+    xor_encrypter((uint8_t *)tmsg, msg_length, (uint8_t *)tkey, key_length);
 
     printf("after encrypt test_msg: \n");
-    print_bytes(tmsg, msg_length);
+    print_bytes((uint8_t *)tmsg, msg_length);
 
     // decrypt test data
-    xor_encrypter(tmsg, msg_length, tkey, key_length);
+    xor_encrypter((uint8_t *)tmsg, msg_length, (uint8_t *)tkey, key_length);
 
     printf("after decrypt test_msg: \n");
-    print_bytes(tmsg, msg_length);
+    print_bytes((uint8_t *)tmsg, msg_length);
 
     return 0;
 }

@@ -118,8 +118,8 @@ def value_cons_pointer(v, t, ti, method):
             nv['imm'] = v['imm']
 
         else:
-            from trans import ptr_size
-            if vtype['power'] > ptr_size:
+            from trans import ptr_width
+            if vtype['power'] > ptr_width:
                 error("cons pointer from biggest integer", ti)
             nv = hlir_value_cast(v, t, ti=ti)
 

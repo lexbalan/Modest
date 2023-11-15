@@ -52,9 +52,9 @@ float distance(Point a, Point b)
 {
     const float dx = max(a.x, b.x) - min(a.x, b.x);
     const float dy = max(a.y, b.y) - min(a.y, b.y);
-    const double dx2 = pow(dx, 2);
-    const double dy2 = pow(dy, 2);
-    return sqrt(dx2 + dy2);
+    const double dx2 = pow((double)dx, 2);
+    const double dy2 = pow((double)dy, 2);
+    return sqrt((double)dx2 + dy2);
 }
 
 

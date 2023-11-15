@@ -233,8 +233,8 @@ def print_value(x):
     elif c == 'str':
         len = x['len']
         id = x['id']
-        char_size = x['char_size']
-        out("bitcast ([%d x i%d]* @%s to [0 x i%d]*)" % (len, char_size, id, char_size))
+        char_width = x['char_width']
+        out("bitcast ([%d x i%d]* @%s to [0 x i%d]*)" % (len, char_width, id, char_width))
 
     elif c == 'array':
         print_value_array(x)
@@ -793,7 +793,7 @@ def do_eval_expr_cast_immediate(x):
             'class': 'str',
             'level': 'value',
             'id': x['strid'],
-            'char_size': char_pow,
+            'char_width': char_pow,
             'len': len(x['imm']),
             'type': x['type'],
             'proto': value
@@ -1731,15 +1731,15 @@ def print_string_ascii(strid, string):
 
 
 
-def print_string_as_array(strid, string, char_size):
+def print_string_as_array(strid, string, char_width):
     slen = len(string['imm'])
-    lo("@%s = private constant [%d x i%d] [" % (strid, slen, char_size))
+    lo("@%s = private constant [%d x i%d] [" % (strid, slen, char_width))
     i = 0
     for c in string['imm']:
         if i > 0:
             out(", ")
-        #out("i%d %d" % (char_size, c['imm']))
-        out("i%d %d" % (char_size, c))
+        #out("i%d %d" % (char_width, c['imm']))
+        out("i%d %d" % (char_width, c))
         i = i + 1
 
     out("]")

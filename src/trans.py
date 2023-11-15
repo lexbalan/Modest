@@ -37,6 +37,7 @@ root_context = None
 module = None
 
 
+
 # тепреь вызывается только из конструктора строки (value)
 def module_strings_add(v):
     module['strings'].append(v)
@@ -56,7 +57,6 @@ def module_type_get(m, id_str):
 
 
 def module_value_get(m, id_str):
-    #print("SEARCH_VALUE %s in %s" % (id_str, cm['path']))
     v = m['context'].value_get(id_str)
     if v != None:
         return v
@@ -71,7 +71,6 @@ def type_get(id_str):
     return module_type_get(module, id_str)
 
 
-
 def value_get(id_str):
     return module_value_get(module, id_str)
     #return module['context'].value_get(id_str, recursive=True)
@@ -80,7 +79,6 @@ def value_get(id_str):
 # искать только внутри текущего контекста (блока)
 def value_get_here(id_str):
     return module['context'].value_get(id_str, recursive=False)
-
 
 
 def pragma(cmd, args):
@@ -132,25 +130,6 @@ def attributes_get():
     return attributes2
 
 
-# опциии компилятора, либо включена, либо выклчена
-# впрочем может иметь и значение отлитчное от True
-"""options = {}
-
-def option(id, value=True):
-    global options
-    options[id] = value
-
-def option_off(id):
-    global options
-    options[id] = False
-
-def option_get(id):
-    global options
-    if not id in options:
-        return None
-    return options[id]
-"""
-
 
 def insert(s):
     global module
@@ -167,7 +146,6 @@ def insert(s):
 
 
 
-
 def stmt_is_bad(x):
     assert x != None
     return x['kind'] == 'bad'
@@ -181,10 +159,10 @@ typeSysChar = None
 typeSysFloat = None
 
 # for target arch
-char_size = 0   # sizeof(char)
-int_size = 0    # sizeof(int)
-ptr_size = 0    # sizeof(int *)
-flt_size = 0    # sizeof(float)
+char_width = 0
+int_width = 0
+ptr_width = 0
+flt_width = 0
 lib_path = ""
 
 
@@ -194,11 +172,11 @@ valueFalse = None
 
 
 def init():
-    global char_size, int_size, ptr_size, flt_size, lib_path
-    int_size = int(settings.get('integer_size'))
-    ptr_size = int(settings.get('pointer_size'))
-    flt_size = int(settings.get('float_size'))
-    char_size = int(settings.get('char_size'))
+    global char_width, int_width, ptr_width, flt_width, lib_path
+    int_width = int(settings.get('integer_width'))
+    ptr_width = int(settings.get('pointer_width'))
+    flt_width = int(settings.get('float_width'))
+    char_width = int(settings.get('char_width'))
     lib_path = settings.get('lib')
 
     hlir_init()
@@ -263,17 +241,17 @@ def init():
 
     global typeSysInt, typeSysNat, typeSysFloat, typeSysChar, typeSysStr
 
-    typeSysInt = type.type_copy(select_int(int_size))
+    typeSysInt = type.type_copy(select_int(int_width))
     typeSysInt['c_alias'] = 'int'
 
-    typeSysNat = type.type_copy(select_nat(int_size))
+    typeSysNat = type.type_copy(select_nat(int_width))
     typeSysNat['c_alias'] = 'unsigned int'
 
     typeSysChar
 
-    if char_size == 8: typeSysChar = type.typeChar8
-    elif char_size == 16: typeSysChar = type.typeChar16
-    elif char_size == 32: typeSysChar = type.typeChar32
+    if char_width == 8: typeSysChar = type.typeChar8
+    elif char_width == 16: typeSysChar = type.typeChar16
+    elif char_width == 32: typeSysChar = type.typeChar32
 
     typeSysStr = hlir_type_pointer(hlir_type_array(typeSysChar, volume=None))
 
@@ -1653,7 +1631,6 @@ def check_stmt(stmt):
             check_stmt(stmt['else'])
     elif k == 'while':
         check_block(stmt['stmt'])
-
 
 
 

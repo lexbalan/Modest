@@ -63,27 +63,27 @@ int main(void)
     }
 
     // add some Nat64 values to list
-    nat64_list_insert(list, 0);
-    nat64_list_insert(list, 10);
-    nat64_list_insert(list, 20);
-    nat64_list_insert(list, 30);
-    nat64_list_insert(list, 40);
-    nat64_list_insert(list, 50);
-    nat64_list_insert(list, 60);
-    nat64_list_insert(list, 70);
-    nat64_list_insert(list, 80);
-    nat64_list_insert(list, 90);
-    nat64_list_insert(list, 100);
+    nat64_list_insert((List *)list, 0);
+    nat64_list_insert((List *)list, 10);
+    nat64_list_insert((List *)list, 20);
+    nat64_list_insert((List *)list, 30);
+    nat64_list_insert((List *)list, 40);
+    nat64_list_insert((List *)list, 50);
+    nat64_list_insert((List *)list, 60);
+    nat64_list_insert((List *)list, 70);
+    nat64_list_insert((List *)list, 80);
+    nat64_list_insert((List *)list, 90);
+    nat64_list_insert((List *)list, 100);
 
     // print list size
-    const uint32_t list_size = linked_list_size_get(list);
+    const uint32_t list_size = linked_list_size_get((List *)list);
     printf("linked list size: %d\n", list_size);
 
     // print list forward
-    list_print_forward(list);
+    list_print_forward((List *)list);
 
     // print list backward
-    list_print_backward(list);
+    list_print_backward((List *)list);
 
     return 0;
 }

@@ -22,7 +22,7 @@ void write_file(int sockfd)
 
     char buffer[BUF_SIZE];
 
-    FILE *const fp = fopen(filename, "w");
+    FILE *const fp = fopen((char *)filename, "w");
     if (fp == NULL) {
         perror("[-] Error in creating file.");
         exit(1);
@@ -35,7 +35,7 @@ void write_file(int sockfd)
             break;
         }
 
-        fprintf(fp, "%s", buffer);
+        fprintf((FILE *)fp, "%s", buffer);
         bzero((void *)&buffer[0], BUF_SIZE);
     }
 }
@@ -63,7 +63,7 @@ int main(void)
     };
 
     struct sockaddr *const a = (struct sockaddr *const)(void *)&server_addr;
-    int e = bind(sockfd, (struct sockaddr *)a, sizeof(struct sockaddr_in));
+    int e = bind((int)sockfd, (struct sockaddr *)a, sizeof(struct sockaddr_in));
     if (e < 0) {
         perror("[-] Error in Binding");
         exit(1);
@@ -71,7 +71,7 @@ int main(void)
 
     printf("[+] Binding Successfull.\n");
 
-    e = listen(sockfd, 10);
+    e = listen((int)sockfd, 10);
     if (e == 0) {
         printf("[+] Listening...\n");
     } else {
@@ -83,9 +83,9 @@ int main(void)
     addr_size = sizeof(struct sockaddr_in);
     struct sockaddr_in new_addr;
     struct sockaddr *const na = (struct sockaddr *const)(void *)&new_addr;
-    const int new_sock = accept(sockfd, (struct sockaddr *)na, &addr_size);
+    const int new_sock = accept((int)sockfd, (struct sockaddr *)na, &addr_size);
 
-    write_file(new_sock);
+    write_file((int)new_sock);
 
     printf("[+] Data written in the text file ");
 
