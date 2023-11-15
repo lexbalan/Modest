@@ -464,7 +464,9 @@ def print_value_call(v, ctx):
         a = values[i]
 
         try:
-            # проверяем только те аргументы, для которых есть параметры
+            # если тип аргумента отличается модификатором (const, volatile)
+            # то явно приведем его к типу параметра, чтобы C не ругался
+            # (try: проверяем только те аргументы, для которых есть параметры)
             p = params[i]
             if not type.eq(p['type'], a['type'], opt=['att_checking']):
                 out("("); print_type(p['type'], need_space_after=False); out(")")

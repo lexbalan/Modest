@@ -15,10 +15,10 @@ def check_power(vtype, t, method, ti):
     if vtype['power'] > t['power']:
         if method == 'explicit':
             if not no_warning_cast_data_loss:
-                warning("casting with data loss", ti)
+                warning("casting with potential data loss", ti)
 
         else:
-            error("casting with data loss", ti)
+            error("casting with potential data loss", ti)
             rv = False
 
     if not rv:
