@@ -1,0 +1,54 @@
+// test/sizeof/main.cm
+
+@attribute("c-no-print")
+import "libc/stdio.hm"
+
+
+type Point record {
+    x : Nat32
+    y : Nat32
+}
+
+func main () -> Int {
+    printf("test cast operation\n")
+
+    // sizeof(void) in C  == 1
+    // sizeof(Unit) in CM == 0
+    // TODO: here is a broblem
+    printf("sizeof(Unit) = %lu\n", sizeof(Unit) to Nat64)
+
+    printf("sizeof(Bool) = %lu\n", sizeof(Bool) to Nat64)
+
+    printf("sizeof(Nat8) = %lu\n", sizeof(Nat8) to Nat64)
+    printf("sizeof(Nat16) = %lu\n", sizeof(Nat16) to Nat64)
+    printf("sizeof(Nat32) = %lu\n", sizeof(Nat32) to Nat64)
+    printf("sizeof(Nat64) = %lu\n", sizeof(Nat64) to Nat64)
+    printf("sizeof(Nat128) = %lu\n", sizeof(Nat128) to Nat64)
+    // type Nat256 not implemented
+    //printf("sizeof(Nat256) = %lu\n", sizeof(Nat256) to Nat64)
+
+    printf("sizeof(Int8) = %lu\n", sizeof(Int8) to Nat64)
+    printf("sizeof(Int16) = %lu\n", sizeof(Int16) to Nat64)
+    printf("sizeof(Int32) = %lu\n", sizeof(Int32) to Nat64)
+    printf("sizeof(Int64) = %lu\n", sizeof(Int64) to Nat64)
+    printf("sizeof(Int128) = %lu\n", sizeof(Int128) to Nat64)
+    // type Int256 not implemented
+    //printf("sizeof(Int256) = %lu\n", sizeof(Int256) to Nat64)
+
+    printf("sizeof(Char8) = %lu\n", sizeof(Char8) to Nat64)
+    printf("sizeof(Char16) = %lu\n", sizeof(Char16) to Nat64)
+    printf("sizeof(Char32) = %lu\n", sizeof(Char32) to Nat64)
+
+    // pointer size (for example pointer to []Char8)
+    printf("sizeof(*Str8) = %lu\n", sizeof(*Str8) to Nat64)
+
+    // array size
+    printf("sizeof([10]Int32) = %lu\n", sizeof([10]Int32) to Nat64)
+
+    // record size
+    printf("sizeof(Point) = %lu\n", sizeof(Point) to Nat64)
+
+
+    return 0
+}
+

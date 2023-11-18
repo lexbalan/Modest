@@ -1,0 +1,37 @@
+// test/sizeof/main.cm
+import "libc/stdio.h"
+
+
+
+func main() -> Int {
+    printf("test cast operation\n")
+
+    printf("sizeof(Bool) = %lu\n", (sizeof(Bool)))
+    printf("sizeof(Nat8) = %lu\n", (sizeof(Nat8)))
+    printf("sizeof(Nat16) = %lu\n", (sizeof(Nat16)))
+    printf("sizeof(Nat32) = %lu\n", (sizeof(Nat32)))
+    printf("sizeof(Nat64) = %lu\n", (sizeof(Nat64)))
+    printf("sizeof(Nat128) = %lu\n", (sizeof(Nat128)))
+    // type Nat256 not implemented
+    //printf("sizeof(Nat256) = %lu\n", sizeof(Nat256) to Nat64)
+
+    printf("sizeof(Int8) = %lu\n", (sizeof(Int8)))
+    printf("sizeof(Int16) = %lu\n", (sizeof(Int16)))
+    printf("sizeof(Int32) = %lu\n", (sizeof(Int32)))
+    printf("sizeof(Int64) = %lu\n", (sizeof(Int64)))
+    printf("sizeof(Int128) = %lu\n", (sizeof(Int128)))
+    // type Int256 not implemented
+    //printf("sizeof(Int256) = %lu\n", sizeof(Int256) to Nat64)
+
+    printf("sizeof(Char8) = %lu\n", (sizeof(Char8)))
+    printf("sizeof(Char16) = %lu\n", (sizeof(Char16)))
+    printf("sizeof(Char32) = %lu\n", (sizeof(Char32)))
+
+    // pointer size (for example pointer to []Char8)
+    printf("sizeof(*Str8) = %lu\n", (sizeof(*[]Char8)))
+
+
+
+    return 0
+}
+

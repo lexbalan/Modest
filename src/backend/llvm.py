@@ -1494,7 +1494,7 @@ def print_arrays(arrays):
             {
                 'isa': 'value',
                 'kind': 'cast',
-                'value': hlir_value_int(type.get_size(val['type'])),
+                'value': hlir_value_int(type.type_get_size(val['type'])),
                 'type': type.typeInt64,
             }
         ]
@@ -1738,7 +1738,6 @@ def print_string_as_array(strid, string, char_width):
     for c in string['imm']:
         if i > 0:
             out(", ")
-        #out("i%d %d" % (char_width, c['imm']))
         out("i%d %d" % (char_width, c))
         i = i + 1
 

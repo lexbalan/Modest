@@ -1091,7 +1091,7 @@ def print_arrays(arrays):
         nl_indent()
         dst = array['id']['str']
         src = array['id']['str']
-        len = type.get_size(array['type'])
+        len = type.type_get_size(array['type'])
         out("memcpy(%s, _%s, %d);" % (dst, src, len))
 
 

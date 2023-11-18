@@ -13,7 +13,6 @@ def hlir_init():
     global ptr_width, flt_width
     ptr_width = int(settings.get('pointer_width'))
     flt_width = int(settings.get('float_width'))
-    #print(f"ptr_width = {ptr_width}")
 
 
 
@@ -131,7 +130,7 @@ def hlir_type_pointer(to, ti=None):
         'kind': 'pointer',
         'generic': False,
         'to': to,
-        'size': ptr_width / 8,
+        'size': nbytes_for_bits(ptr_width),
         'power': ptr_width,
         'att': [],
         'classes': ['comparable'],
@@ -146,7 +145,7 @@ def hlir_type_free_pointer(ti):
         'kind': 'FreePointer',
         'generic': False,
         'to': type.typeUnit,
-        'size': ptr_width / 8,
+        'size': nbytes_for_bits(ptr_width),
         'power': ptr_width,
         'att': [],
         'classes': ['comparable'],
@@ -161,7 +160,7 @@ def hlir_type_nil(ti):
         'kind': 'Nil',
         'generic': True,
         'to': type.typeUnit,
-        'size': ptr_width / 8,
+        'size': nbytes_for_bits(ptr_width),
         'power': ptr_width,
         'att': [],
         'classes': ['comparable'],
@@ -171,11 +170,16 @@ def hlir_type_nil(ti):
 
 # size - always hlir_value (!)
 def hlir_type_array(of, volume=None, generic=False, ti=None):
+    item_size = type.type_get_size(of)
+    size = 0
+    if volume != None:
+        size = item_size * volume['imm']
     return {
         'isa': 'type',
         'generic': generic,
         'kind': 'array',
         'volume': volume,
+        'size': size,
         'of': of,
         'att': [],
         'classes': [],
@@ -215,13 +219,13 @@ def hlir_field(id, type, ti=None):
     }
 
 
-def hlir_type_record(fields, ti=None):
+def hlir_type_record(fields, size=0, ti=None):
     return {
         'isa': 'type',
         'kind': 'record',
         'generic': False,
         'fields': fields,
-        'size': 0,
+        'size': size,
         'att': [],
         'classes': [],
         'ti': ti
@@ -491,7 +495,7 @@ def hlir_value_cast_immediate(v, t, ti=None):
 
 
 def hlir_value_sizeof(of, ti=None):
-    size = type.get_size(of)
+    size = type.type_get_size(of)
     typ = hlir_type_generic_int_for(size, unsigned=True, ti=ti)
     return {
         'isa': 'value',

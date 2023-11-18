@@ -606,10 +606,12 @@ def create_alias(id, t, ti):
 
 
 
-def get_size(t):
-    if is_integer(t): return t['size']
-    elif is_array(t): return get_size(t['of']) * t['volume']['imm']
-    return 0
+def type_get_size(t):
+    if 'size' in t:
+        return t['size']
+    else:
+        type_print(t); print()
+        fatal("#size not defined in type")
 
 
 def print_list_by(lst, method):

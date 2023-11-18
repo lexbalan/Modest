@@ -842,7 +842,7 @@ def do_value_call(x):
 
         if not value_is_bad(arg):
             if type.is_generic(arg['type']):
-                error("required value with non-generic type", aa['ti'])
+                warning("value with non-generic type as extra argument", aa['ti'])
                 arg = cons_default(arg, aa['ti'])
             args.append(arg)
 
@@ -1044,6 +1044,7 @@ def do_value_array(x):
     return y
 
 
+
 def do_value_record(x):
     items = []
     fields = []
@@ -1073,7 +1074,6 @@ def do_value_record(x):
     y = hlir_value_record(typ, items, ti=x['ti'])
     y['nl_end'] = x['nl_end']
     return y
-
 
 
 
@@ -1192,7 +1192,9 @@ def do_stmt_while(x):
 def do_stmt_return(x):
     global cfunc
 
-    no_ret_func = type.eq(cfunc['type']['to'], type.typeUnit)
+    f_ret_type = cfunc['type']['to']
+
+    no_ret_func = type.eq(f_ret_type, type.typeUnit)
 
     if x['value'] == None:
         if not no_ret_func:
@@ -1206,8 +1208,8 @@ def do_stmt_return(x):
     if value_is_bad(v):
         return hlir_stmt_bad()
 
-    v = value_cons_implicit(v, cfunc['type']['to'], v['ti'])
-    type.check(v['type'], cfunc['type']['to'], x['value']['ti'])
+    v = value_cons_implicit(v, f_ret_type, v['ti'])
+    type.check(v['type'], f_ret_type, x['value']['ti'])
 
     return hlir_stmt_return(v, ti=x['ti'])
 
