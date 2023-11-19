@@ -2,7 +2,7 @@
 import os
 
 from error import *
-from util import get_item_with_id
+from util import get_item_with_id, align_to
 from main import settings
 
 
@@ -257,16 +257,6 @@ def init():
 
     typeSysFloat = type.typeFloat64
 
-
-
-
-def align_to(x, y):
-    if y == 0:
-        return 0
-    # смещаемся на первый выровненный адрес
-    while x % y != 0:
-        x = x + 1
-    return x
 
 
 # last fiels of record can be zero size array (!)

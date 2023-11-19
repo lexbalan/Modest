@@ -1,5 +1,15 @@
 
 
+def align_to(x, y):
+    if y == 0:
+        return 0
+
+    while x % y != 0:
+        x = x + 1
+
+    return x
+
+
 def nbits_for_num(x):
     n = 1
     if x < 0:
