@@ -152,7 +152,7 @@ def hlir_type_pointer(to, ti=None):
 
 # FreePointer - особый тип, он приводится неявно CM (но не в C!)
 def hlir_type_free_pointer(ti):
-    size = nbytes_for_bits(ptr_width),
+    size = nbytes_for_bits(ptr_width)
     return {
         'isa': 'type',
         'kind': 'FreePointer',
@@ -532,15 +532,15 @@ def hlir_value_sizeof(of, ti=None):
 
 
 def hlir_value_alignof(of, ti=None):
-    size = type.type_get_align(of)
-    typ = hlir_type_generic_int_for(size, unsigned=True, ti=ti)
+    align = type.type_get_align(of)
+    typ = hlir_type_generic_int_for(align, unsigned=True, ti=ti)
     return {
         'isa': 'value',
         'kind': 'alignof',
         'of': of,
         'type': typ,
         'att': [],
-        'imm': size,
+        'imm': align,
         'ti': ti
     }
 

@@ -12,6 +12,27 @@ typedef struct {
     uint32_t y;
 } Point;
 
+
+typedef struct {
+    char c;
+    int32_t i;
+    double f;
+} Mixed1;
+
+typedef struct {
+    char c;
+    int32_t i;
+    double f;
+    char c2;
+} Mixed2;
+
+typedef struct {
+    char c;
+    int32_t i;
+    double f;
+    char c2[9];
+} Mixed3;
+
 int main(void)
 {
     printf("test cast operation\n");
@@ -70,6 +91,14 @@ int main(void)
     printf("sizeof(Point) = %lu\n", sizeof(Point));
     printf("alignof(Point) = %lu\n", __alignof(Point));
 
+    printf("sizeof(Mixed1) = %lu\n", sizeof(Mixed1));
+    printf("alignof(Mixed1) = %lu\n", __alignof(Mixed1));
+
+    printf("sizeof(Mixed2) = %lu\n", sizeof(Mixed2));
+    printf("alignof(Mixed2) = %lu\n", __alignof(Mixed2));
+
+    printf("sizeof(Mixed3) = %lu\n", sizeof(Mixed3));
+    printf("alignof(Mixed3) = %lu\n", __alignof(Mixed3));
 
     return 0;
 }

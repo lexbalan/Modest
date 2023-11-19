@@ -260,19 +260,32 @@ def init():
 
 
 
+def align_to(x, y):
+    # смещаемся на первый выровненный адрес
+    while x % y != 0:
+        x = x + 1
+    return x
+
 
 # last fiels of record can be zero size array (!)
 # (only with -funsafe key)
-def do_field(x, is_last=False):
+def do_field(x, offset=0, is_last=False):
     t = do_type(x['type'])
 
     if type.is_bad(t):
         t = hlir_type_bad(x['type']['ti'])
 
+    """# смещаемся на первый выровненный адрес
+    while offset % type.type_get_align(t) != 0:
+        offset = offset + 1"""
+
+    offset = align_to(offset, type.type_get_align(t))
+
+
     if type.is_forbidden_var(t, zero_array_forbidden=not is_last):
         error("unsuitable type", x['type'])
 
-    f = hlir_field(x['id'], t, ti=x['ti'])
+    f = hlir_field(x['id'], t, offset=offset, ti=x['ti'])
     if 'nl' in x:
         f['nl'] = x['nl']
     else:
@@ -320,11 +333,26 @@ def do_type_array(t):
 def do_type_record(t):
     fields = []
 
+    record_align = 0
+    record_size = 0
+
     nfields = len(t['fields'])
     i = 0
     while i < nfields:
         fe = t['fields'][i]
-        f = do_field(fe, is_last=i==(nfields-1))
+
+        # новое поле получит смещение отталкиваясь от текущего (curr_offset)
+        f = do_field(fe, offset=record_size, is_last=i==(nfields-1))
+
+        # двигаем смещение
+        field_size = type.type_get_size(f['type'])
+        record_size = f['offset'] + field_size
+
+        # выравнивание структуры - макс выравнивание среди ее полей
+        field_align = type.type_get_align(f['type'])
+        if field_align > record_align:
+            record_align = field_size
+
         f['no'] = i
         i = i + 1
 
@@ -338,7 +366,12 @@ def do_type_record(t):
 
         fields.append(f)
 
-    return hlir_type_record(fields, ti=t['ti'])
+
+    # Afterall we need to align record_size to record_align (!)
+    record_size = align_to(record_size, record_align)
+
+    return hlir_type_record(fields, size=record_size, align=record_align, ti=t['ti'])
+
 
 
 def do_type_enum(t):
