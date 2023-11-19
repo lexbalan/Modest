@@ -886,7 +886,7 @@ def do_eval_expr_cast(x):
 
 
 
-def do_eval_sizeof(x):
+"""def do_eval_sizeof(x):
     # thx:
     # stackoverflow.com/questions/14608250/how-can-i-find-the-size-of-a-type
     #%Size = getelementptr %T* null, i32 1
@@ -905,7 +905,7 @@ def do_eval_sizeof(x):
         'reg': r1,
         'type': type.typeInt32,
         'proto': x
-    }
+    }"""
 
 
 bin_ops = [
@@ -1154,7 +1154,7 @@ def do_eval_x(x):
     elif k == 'access_ptr': y = do_eval_expr_access_ptr(x)
     elif k == 'cast_immediate': y = do_eval_expr_cast_immediate(x)
     elif k == 'cast': y = do_eval_expr_cast(x)
-    elif k == 'sizeof': y = do_eval_sizeof(x)
+    elif k == 'sizeof': y = do_eval_literal(x)
     elif k == 'alignof': y = do_eval_literal(x)
     elif k == 'eq_str': y = do_eval_literal(x)
     else:
