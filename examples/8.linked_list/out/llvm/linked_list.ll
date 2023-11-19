@@ -147,7 +147,7 @@ declare void @bcopy(i8*, i8*, i64)
 
 
 define %List* @linked_list_create() {
-    %1 = call i8*(i64) @malloc (i64 0)
+    %1 = call i8*(i64) @malloc (i64 24)
     %2 = bitcast i8* %1 to %List*
     %3 = icmp eq %List* %2, null
     br i1 %3 , label %then_0, label %endif_0
@@ -203,7 +203,7 @@ endif_0:
 }
 
 define %Node* @linked_list_node_create() {
-    %1 = call i8*(i64) @malloc (i64 0)
+    %1 = call i8*(i64) @malloc (i64 24)
     %2 = bitcast i8* %1 to %Node*
     %3 = icmp eq %Node* %2, null
     br i1 %3 , label %then_0, label %endif_0

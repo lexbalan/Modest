@@ -348,7 +348,7 @@ define double @lineLength(%Line %line) {
 }
 
 define void @ptr_example() {
-    %1 = call i8*(i64) @malloc (i64 0)
+    %1 = call i8*(i64) @malloc (i64 16)
     %2 = bitcast i8* %1 to %Point*
 ; access by pointer
     %3 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 0

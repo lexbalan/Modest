@@ -226,7 +226,7 @@ endif_0:
     %11 = call [0 x i8]*([0 x i8]*, [0 x i8]*) @strcpy ([0 x i8]* %10, [0 x i8]* bitcast ([5 x i8]* @str6 to [0 x i8]*))
 ; write chunk to file
     %12 = bitcast %Chunk* %chunk to i8*
-    %13 = call i64(i8*, i64, i64, %FILE*) @fwrite (i8* %12, i64 0, i64 1, %FILE* %2)
+    %13 = call i64(i8*, i64, i64, %FILE*) @fwrite (i8* %12, i64 1124, i64 1, %FILE* %2)
     %14 = call i32(%FILE*) @fclose (%FILE* %2)
     ret void
 }
@@ -243,7 +243,7 @@ then_0:
 endif_0:
     %chunk = alloca %Chunk
     %6 = bitcast %Chunk* %chunk to i8*
-    %7 = call i64(i8*, i64, i64, %FILE*) @fread (i8* %6, i64 0, i64 1, %FILE* %2)
+    %7 = call i64(i8*, i64, i64, %FILE*) @fread (i8* %6, i64 1124, i64 1, %FILE* %2)
     %8 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([21 x i8]* @str10 to [0 x i8]*), [0 x i8]* bitcast ([9 x i8]* @str1 to [0 x i8]*))
     %9 = getelementptr inbounds %Chunk, %Chunk* %chunk, i32 0, i32 0
     %10 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([14 x i8]* @str11 to [0 x i8]*), [100 x i8]* %9)

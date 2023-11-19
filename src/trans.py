@@ -261,6 +261,8 @@ def init():
 
 
 def align_to(x, y):
+    if y == 0:
+        return 0
     # смещаемся на первый выровненный адрес
     while x % y != 0:
         x = x + 1

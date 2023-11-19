@@ -7,6 +7,38 @@ type Point record {
     y: Nat32
 }
 
+type Mixed1 record {
+    c: Char8
+    i: Int32
+    f: Float64
+}
+
+type Mixed2 record {
+    c: Char8
+    i: Int32
+    f: Float64
+    c2: Char8
+}
+
+type Mixed3 record {
+    c: Char8
+    i: Int32
+    f: Float64
+    c2: [9]Char8
+}
+
+type Mixed4 record {
+    s: Mixed2
+    c: Char8
+    i: Int32
+    f: Float64
+    c2: [9]Char8
+    i2: Int16
+    p: [3]Point
+    s2: Mixed3
+}
+
+
 func main() -> Int {
     printf("test cast operation\n")
 
@@ -64,6 +96,17 @@ func main() -> Int {
     printf("sizeof(Point) = %lu\n", (sizeof(Point)))
     printf("alignof(Point) = %lu\n", alignof(Point))
 
+    printf("sizeof(Mixed1) = %lu\n", (sizeof(Mixed1)))
+    printf("alignof(Mixed1) = %lu\n", alignof(Mixed1))
+
+    printf("sizeof(Mixed2) = %lu\n", (sizeof(Mixed2)))
+    printf("alignof(Mixed2) = %lu\n", alignof(Mixed2))
+
+    printf("sizeof(Mixed3) = %lu\n", (sizeof(Mixed3)))
+    printf("alignof(Mixed3) = %lu\n", alignof(Mixed3))
+
+    printf("sizeof(Mixed4) = %lu\n", (sizeof(Mixed4)))
+    printf("alignof(Mixed4) = %lu\n", alignof(Mixed4))
 
     return 0
 }
