@@ -893,6 +893,12 @@ def print_value_sizeof(x, ctx):
     out(")")
 
 
+def print_value_alignof(x, ctx):
+    out("__alignof(")
+    print_type(x['of'], need_space_after=False, _print_array_asis=True)
+    out(")")
+
+
 
 #def print_rvalue(x, ctx=[], need_wrap=False, print_just_id=True):
 #    print_value(x, ctx, need_wrap, print_just_id)
@@ -929,6 +935,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
     elif k == 'cast_immediate': print_value_cast_immediate(x, ctx)
     elif k == 'cast': print_value_cast(x, ctx)
     elif k == 'sizeof': print_value_sizeof(x, ctx)
+    elif k == 'alignof': print_value_alignof(x, ctx)
     else:
         out("<%s>" % k)
         print(x)

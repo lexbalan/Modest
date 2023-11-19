@@ -20,37 +20,55 @@ int main(void)
     // sizeof(Unit) in CM == 0
     // TODO: here is a broblem
     printf("sizeof(Unit) = %lu\n", sizeof(void));
+    printf("alignof(Unit) = %lu\n", __alignof(void));
 
     printf("sizeof(Bool) = %lu\n", sizeof(bool));
+    printf("alignof(Bool) = %lu\n", __alignof(bool));
 
     printf("sizeof(Nat8) = %lu\n", sizeof(uint8_t));
+    printf("alignof(Nat8) = %lu\n", __alignof(uint8_t));
     printf("sizeof(Nat16) = %lu\n", sizeof(uint16_t));
+    printf("alignof(Nat16) = %lu\n", __alignof(uint16_t));
     printf("sizeof(Nat32) = %lu\n", sizeof(uint32_t));
+    printf("alignof(Nat32) = %lu\n", __alignof(uint32_t));
     printf("sizeof(Nat64) = %lu\n", sizeof(uint64_t));
+    printf("alignof(Nat64) = %lu\n", __alignof(uint64_t));
     printf("sizeof(Nat128) = %lu\n", sizeof(unsigned __int128));
+    printf("alignof(Nat128) = %lu\n", __alignof(unsigned __int128));
     // type Nat256 not implemented
     //printf("sizeof(Nat256) = %lu\n", sizeof(Nat256) to Nat64)
 
     printf("sizeof(Int8) = %lu\n", sizeof(int8_t));
+    printf("alignof(Int8) = %lu\n", __alignof(int8_t));
     printf("sizeof(Int16) = %lu\n", sizeof(int16_t));
+    printf("alignof(Int16) = %lu\n", __alignof(int16_t));
     printf("sizeof(Int32) = %lu\n", sizeof(int32_t));
+    printf("alignof(Int32) = %lu\n", __alignof(int32_t));
     printf("sizeof(Int64) = %lu\n", sizeof(int64_t));
+    printf("alignof(Int64) = %lu\n", __alignof(int64_t));
     printf("sizeof(Int128) = %lu\n", sizeof(__int128));
+    printf("alignof(Int128) = %lu\n", __alignof(__int128));
     // type Int256 not implemented
     //printf("sizeof(Int256) = %lu\n", sizeof(Int256) to Nat64)
 
     printf("sizeof(Char8) = %lu\n", sizeof(char));
+    printf("alignof(Char8) = %lu\n", __alignof(char));
     printf("sizeof(Char16) = %lu\n", sizeof(uint16_t));
+    printf("alignof(Char16) = %lu\n", __alignof(uint16_t));
     printf("sizeof(Char32) = %lu\n", sizeof(uint32_t));
+    printf("alignof(Char32) = %lu\n", __alignof(uint32_t));
 
     // pointer size (for example pointer to []Char8)
     printf("sizeof(*Str8) = %lu\n", sizeof(char *));
+    printf("alignof(*Str8) = %lu\n", __alignof(char *));
 
     // array size
     printf("sizeof([10]Int32) = %lu\n", sizeof(int32_t [10]));
+    printf("alignof([10]Int32) = %lu\n", __alignof(int32_t [10]));
 
     // record size
     printf("sizeof(Point) = %lu\n", sizeof(Point));
+    printf("alignof(Point) = %lu\n", __alignof(Point));
 
 
     return 0;

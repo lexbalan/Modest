@@ -247,7 +247,7 @@ def hlir_type_record(fields, size=0, align=0, ti=None):
         'generic': False,
         'fields': fields,
         'size': size,
-        'size': align,
+        'align': align,
         'att': [],
         'classes': [],
         'ti': ti
@@ -530,6 +530,18 @@ def hlir_value_sizeof(of, ti=None):
     }
 
 
+def hlir_value_alignof(of, ti=None):
+    size = type.type_get_align(of)
+    typ = hlir_type_generic_int_for(size, unsigned=True, ti=ti)
+    return {
+        'isa': 'value',
+        'kind': 'alignof',
+        'of': of,
+        'type': typ,
+        'att': [],
+        'imm': size,
+        'ti': ti
+    }
 
 
 def hlir_stmt_bad(ti=None):

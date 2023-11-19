@@ -1097,6 +1097,10 @@ def do_value_sizeof(x):
     return hlir_value_sizeof(of, ti=x['ti'])
 
 
+def do_value_alignof(x):
+    of = do_type(x['type'])
+    return hlir_value_alignof(of, ti=x['ti'])
+
 
 bin_ops = [
     'or', 'xor', 'and',
@@ -1139,6 +1143,7 @@ def do_value(x):
             elif k == 'access': rv = do_value_access(x)
             elif k == 'cast': rv = do_value_to(x)
             elif k == 'sizeof': rv = do_value_sizeof(x)
+            elif k == 'alignof': rv = do_value_alignof(x)
             elif k == 'shl': rv = do_value_shift(x)
             elif k == 'shr': rv = do_value_shift(x)
 

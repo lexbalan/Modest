@@ -554,6 +554,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
     elif k == 'cast_immediate': print_value_cast_immediate(x, ctx)
     elif k == 'cast': print_value_cast(x, ctx)
     elif k == 'sizeof': out("sizeof("); print_type(x['of']); out(")")
+    elif k == 'alignof': out("alignof("); print_type(x['of']); out(")")
     else: out("<%s>" % k)
 
     if need_wrap:

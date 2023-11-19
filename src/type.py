@@ -614,6 +614,14 @@ def type_get_size(t):
         fatal("#size not defined in type")
 
 
+def type_get_align(t):
+    if 'align' in t:
+        return t['align']
+    else:
+        type_print(t); print()
+        fatal("#align not defined in type")
+
+
 def print_list_by(lst, method):
     i = 0
     while i < len(lst):
