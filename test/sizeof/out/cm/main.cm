@@ -2,11 +2,21 @@
 import "libc/stdio.h"
 
 
+type Point record {
+    x: Nat32
+    y: Nat32
+}
 
 func main() -> Int {
     printf("test cast operation\n")
 
+    // sizeof(void) in C  == 1
+    // sizeof(Unit) in CM == 0
+    // TODO: here is a broblem
+    printf("sizeof(Unit) = %lu\n", (sizeof(Unit)))
+
     printf("sizeof(Bool) = %lu\n", (sizeof(Bool)))
+
     printf("sizeof(Nat8) = %lu\n", (sizeof(Nat8)))
     printf("sizeof(Nat16) = %lu\n", (sizeof(Nat16)))
     printf("sizeof(Nat32) = %lu\n", (sizeof(Nat32)))
@@ -30,6 +40,11 @@ func main() -> Int {
     // pointer size (for example pointer to []Char8)
     printf("sizeof(*Str8) = %lu\n", (sizeof(*[]Char8)))
 
+    // array size
+    printf("sizeof([10]Int32) = %lu\n", (sizeof([10]Int32)))
+
+    // record size
+    printf("sizeof(Point) = %lu\n", (sizeof(Point)))
 
 
     return 0

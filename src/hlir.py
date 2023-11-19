@@ -36,6 +36,7 @@ def hlir_type_unit():
         'c_alias': 'void',
         'llvm_alias': 'void',
         'size': 0,
+        'align': 0,
         'power': 0,
         'imm': {},
         'att': [],
@@ -45,6 +46,7 @@ def hlir_type_unit():
 
 
 def hlir_type_integer(name, power, generic=False, ti=None):
+    size = nbytes_for_bits(power)
     return {
         'isa': 'type',
         'kind': 'int',
@@ -55,7 +57,8 @@ def hlir_type_integer(name, power, generic=False, ti=None):
         'power': power,
         'signed': False,
         'unsigned': False,
-        'size': nbytes_for_bits(power),
+        'size': size,
+        'align': size,
         'ti': ti
     }
 
@@ -70,6 +73,7 @@ def hlir_type_bool(ti):
         'classes': ['comparable'],
         'power': 1,
         'size': 1,
+        'align': 1,
         'c_alias': 'uint8_t',
         'llvm_alias': 'i1',
         'cm_alias': 'Bool',
@@ -79,6 +83,7 @@ def hlir_type_bool(ti):
 
 
 def hlir_type_generic_char(power, ti=None):
+    size = nbytes_for_bits(power)
     return {
         'isa': 'type',
         'kind': 'char',
@@ -90,12 +95,14 @@ def hlir_type_generic_char(power, ti=None):
         'cm_alias': 'Char',
         'c_alias': 'uint32_t',
         'llvm_alias': 'i8',
-        'size': nbytes_for_bits(power),
+        'size': size,
+        'align': size,
         'ti': ti
     }
 
 
 def hlir_type_char(name, power, generic=False, ti=None):
+    size = nbytes_for_bits(power)
     return {
         'isa': 'type',
         'kind': 'char',
@@ -104,12 +111,14 @@ def hlir_type_char(name, power, generic=False, ti=None):
         'att': [],
         'classes': ['comparable'],
         'power': power,
-        'size': nbytes_for_bits(power),
+        'size': size,
+        'align': size,
         'ti': ti
     }
 
 
 def hlir_type_float(aka, power, ti):
+    size = nbytes_for_bits(power)
     return {
         'isa': 'type',
         'kind': 'float',
@@ -118,19 +127,22 @@ def hlir_type_float(aka, power, ti):
         'att': [],
         'classes': ['numeric', 'comparable', 'ordered'],
         'power': power,
-        'size': nbytes_for_bits(power),
+        'size': size,
+        'align': size,
         'c_alias': 'double',
         'ti': ti
     }
 
 
 def hlir_type_pointer(to, ti=None):
+    size = nbytes_for_bits(ptr_width)
     return {
         'isa': 'type',
         'kind': 'pointer',
         'generic': False,
         'to': to,
-        'size': nbytes_for_bits(ptr_width),
+        'size': size,
+        'align': size,
         'power': ptr_width,
         'att': [],
         'classes': ['comparable'],
@@ -140,12 +152,14 @@ def hlir_type_pointer(to, ti=None):
 
 # FreePointer - особый тип, он приводится неявно CM (но не в C!)
 def hlir_type_free_pointer(ti):
+    size = nbytes_for_bits(ptr_width),
     return {
         'isa': 'type',
         'kind': 'FreePointer',
         'generic': False,
         'to': type.typeUnit,
-        'size': nbytes_for_bits(ptr_width),
+        'size': size,
+        'align': size,
         'power': ptr_width,
         'att': [],
         'classes': ['comparable'],
@@ -155,12 +169,14 @@ def hlir_type_free_pointer(ti):
 
 # Nil - особый тип, он приводится неявно как в CM так и в C
 def hlir_type_nil(ti):
+    size = nbytes_for_bits(ptr_width)
     return {
         'isa': 'type',
         'kind': 'Nil',
         'generic': True,
         'to': type.typeUnit,
-        'size': nbytes_for_bits(ptr_width),
+        'size': size,
+        'align': size,
         'power': ptr_width,
         'att': [],
         'classes': ['comparable'],
@@ -170,16 +186,21 @@ def hlir_type_nil(ti):
 
 # size - always hlir_value (!)
 def hlir_type_array(of, volume=None, generic=False, ti=None):
-    item_size = type.type_get_size(of)
+    item_size = 0
+    if of != None:
+        item_size = type.type_get_size(of)
+
     size = 0
     if volume != None:
         size = item_size * volume['imm']
+
     return {
         'isa': 'type',
         'generic': generic,
         'kind': 'array',
         'volume': volume,
         'size': size,
+        'align': item_size,
         'of': of,
         'att': [],
         'classes': [],
@@ -219,13 +240,14 @@ def hlir_field(id, type, ti=None):
     }
 
 
-def hlir_type_record(fields, size=0, ti=None):
+def hlir_type_record(fields, size=0, align=0, ti=None):
     return {
         'isa': 'type',
         'kind': 'record',
         'generic': False,
         'fields': fields,
         'size': size,
+        'size': align,
         'att': [],
         'classes': [],
         'ti': ti

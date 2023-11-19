@@ -121,6 +121,9 @@ declare void @perror(%ConstCharStr*)
 
 define i32 @main() {
     %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([21 x i8]* @str1 to [0 x i8]*))
+; sizeof(void) in C  == 1
+; sizeof(Unit) in CM == 0
+; TODO: here is a broblem
     %2 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([20 x i8]* @str2 to [0 x i8]*), i64 0)
     %3 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([20 x i8]* @str3 to [0 x i8]*), i64 1)
     %4 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([20 x i8]* @str4 to [0 x i8]*), i64 1)

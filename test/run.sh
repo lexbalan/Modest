@@ -10,6 +10,7 @@ cd 13.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
 cd 20.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
 cd 21.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
 cd cast && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
+cd sizeof && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
 cd xor && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
 cd sha256 && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
 cd shift && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
