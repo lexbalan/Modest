@@ -9,7 +9,6 @@ type Point record {
     y : Nat32
 }
 
-
 type Mixed1 record {
     c : Char8
     i : Int32
@@ -31,11 +30,14 @@ type Mixed3 record {
 }
 
 type Mixed4 record {
+    s : Mixed2
     c : Char8
     i : Int32
     f : Float64
     c2 : [9]Char8
     i2 : Int16
+    p : [3]Point
+    s2 : Mixed3
 }
 
 

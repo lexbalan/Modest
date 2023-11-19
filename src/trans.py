@@ -351,7 +351,7 @@ def do_type_record(t):
         # выравнивание структуры - макс выравнивание среди ее полей
         field_align = type.type_get_align(f['type'])
         if field_align > record_align:
-            record_align = field_size
+            record_align = field_align
 
         f['no'] = i
         i = i + 1

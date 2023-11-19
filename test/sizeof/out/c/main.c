@@ -12,7 +12,6 @@ typedef struct {
     uint32_t y;
 } Point;
 
-
 typedef struct {
     char c;
     int32_t i;
@@ -32,6 +31,18 @@ typedef struct {
     double f;
     char c2[9];
 } Mixed3;
+
+typedef struct {
+    Mixed2 s;
+    char c;
+    int32_t i;
+    double f;
+    char c2[9];
+    int16_t i2;
+    Point p[3];
+    Mixed3 s2;
+} Mixed4;
+
 
 int main(void)
 {
@@ -99,6 +110,9 @@ int main(void)
 
     printf("sizeof(Mixed3) = %lu\n", sizeof(Mixed3));
     printf("alignof(Mixed3) = %lu\n", __alignof(Mixed3));
+
+    printf("sizeof(Mixed4) = %lu\n", sizeof(Mixed4));
+    printf("alignof(Mixed4) = %lu\n", __alignof(Mixed4));
 
     return 0;
 }

@@ -165,11 +165,14 @@ declare void @perror(%ConstCharStr*)
 }
 
 %Mixed4 = type {
+	%Mixed2,
 	i8,
 	i32,
 	double,
 	[9 x i8],
-	i16
+	i16,
+	[3 x %Point],
+	%Mixed3
 }
 
 
@@ -227,7 +230,7 @@ define i32 @main() {
     %41 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([23 x i8]* @str41 to [0 x i8]*), i64 8)
     %42 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([22 x i8]* @str42 to [0 x i8]*), i64 32)
     %43 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([23 x i8]* @str43 to [0 x i8]*), i64 8)
-    %44 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([22 x i8]* @str44 to [0 x i8]*), i64 32)
+    %44 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([22 x i8]* @str44 to [0 x i8]*), i64 112)
     %45 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([23 x i8]* @str45 to [0 x i8]*), i64 8)
     ret i32 0
 }
