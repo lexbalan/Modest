@@ -261,7 +261,9 @@ def init():
 
 # last fiels of record can be zero size array (!)
 # (only with -funsafe key)
-def do_field(x, offset=0, is_last=False):
+# pos - position #
+# offset - real offset (address inside container struct)
+def do_field(x, pos=0, offset=0, is_last=False):
     t = do_type(x['type'])
 
     if type.is_bad(t):
@@ -277,7 +279,7 @@ def do_field(x, offset=0, is_last=False):
     if type.is_forbidden_var(t, zero_array_forbidden=not is_last):
         error("unsuitable type", x['type'])
 
-    f = hlir_field(x['id'], t, offset=offset, ti=x['ti'])
+    f = hlir_field(x['id'], t, pos=pos, offset=offset, ti=x['ti'])
     if 'nl' in x:
         f['nl'] = x['nl']
     else:
@@ -334,7 +336,7 @@ def do_type_record(t):
         fe = t['fields'][i]
 
         # новое поле получит смещение отталкиваясь от текущего (curr_offset)
-        f = do_field(fe, offset=record_size, is_last=i==(nfields-1))
+        f = do_field(fe, pos=i, offset=record_size, is_last=i==(nfields-1))
 
         # двигаем смещение
         field_size = type.type_get_size(f['type'])
@@ -345,7 +347,6 @@ def do_type_record(t):
         if field_align > record_align:
             record_align = field_align
 
-        f['no'] = i
         i = i + 1
 
         f_exist = get_item_with_id(fields, f['id']['str'])
@@ -1088,8 +1089,7 @@ def do_value_record(x):
         })
 
         # создаем поле для типа generic записи
-        field = hlir_field(id, val['type'], ti=val['ti'])
-        field['no'] = i
+        field = hlir_field(id, val['type'], pos=i, ti=val['ti'])
         fields.append(field)
         i = i + 1
 

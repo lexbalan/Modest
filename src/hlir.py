@@ -230,11 +230,12 @@ def hlir_type_generic_int_for(num, unsigned=False, ti=None):
     return hlir_type_generic_int_bits(nbits, ti=ti)
 
 
-def hlir_field(id, type, offset=0, ti=None):
+def hlir_field(id, type, pos=0, offset=0, ti=None):
     return {
         'isa': 'field',
         'id': id,
         'type': type,
+        'pos': pos,
         'offset': offset,
         'nl': 0,
         'ti': ti

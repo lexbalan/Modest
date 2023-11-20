@@ -681,14 +681,14 @@ def do_eval_access(rec, rt, pos, vt):
 def do_eval_expr_access(v):
     rec = do_eval(v['record'])
     rt = v['record']['type']
-    pos = v['field']['no']
+    pos = v['field']['pos']
     return do_eval_access(rec, rt, pos, v['type'])
 
 
 def do_eval_expr_access_ptr(v):
     ptr = do_ld(do_eval(v['pointer']))
     rt = ptr['type']['to']
-    pos = v['field']['no']
+    pos = v['field']['pos']
     return do_eval_access_ptr(ptr, rt, pos, v['type'])
 
 
@@ -1193,14 +1193,13 @@ def ll_store_record(l, r):
         ft = field['type']
 
         # получаем указатель на поле левого (в которое будем сохранять)
-        l_field_ptr = do_eval_access_ptr(l, l['type'], field['no'], ft)
+        l_field_ptr = do_eval_access_ptr(l, l['type'], field['pos'], ft)
 
         # получаем дескриптор правого поля
         #rfield = type.record_field_get(r['type'], field['id']['str'])
 
         # загружаем значение поля правого
-        rv = do_ld(do_eval_access(r, r['type'], field['no'], ft))
-        #rv = do_ld(do_eval_access(r, r['type'], rfield['no'], ft))
+        rv = do_ld(do_eval_access(r, r['type'], field['pos'], ft))
 
         # сохраняем
         ll_assign(l_field_ptr, rv)
@@ -1842,7 +1841,7 @@ def create_local_srtuct(typ, llvalues):
         field_target = type.record_field_get(v['type'], llvalue['id']['str'])
 
 
-        pos = field_target['no']
+        pos = field_target['pos']
         # запаковываем значение в структуру
         xv = insertvalue(xv, llvalue['value'], pos)
         i = i + 1
