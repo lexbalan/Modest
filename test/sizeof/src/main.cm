@@ -94,6 +94,10 @@ func main () -> Int {
     printf("sizeof([10]Int32) = %lu\n", sizeof([10]Int32) to Nat64)
     printf("alignof([10]Int32) = %lu\n", alignof([10]Int32) to Nat64)
 
+    printf("> alignof([3]Point) = %lu\n", alignof([3]Point) to Nat64)
+
+
+
     // record size
     printf("sizeof(Point) = %lu\n", sizeof(Point) to Nat64)
     printf("alignof(Point) = %lu\n", alignof(Point) to Nat64)

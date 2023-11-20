@@ -187,8 +187,10 @@ def hlir_type_nil(ti):
 # size - always hlir_value (!)
 def hlir_type_array(of, volume=None, generic=False, ti=None):
     item_size = 0
+    item_align = 0
     if of != None:
         item_size = type.type_get_size(of)
+        item_align = type.type_get_align(of)
 
     size = 0
     if volume != None:
@@ -200,7 +202,7 @@ def hlir_type_array(of, volume=None, generic=False, ti=None):
         'kind': 'array',
         'volume': volume,
         'size': size,
-        'align': item_size,
+        'align': item_align,
         'of': of,
         'att': [],
         'classes': [],

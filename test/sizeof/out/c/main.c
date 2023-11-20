@@ -98,6 +98,10 @@ int main(void)
     printf("sizeof([10]Int32) = %lu\n", sizeof(int32_t [10]));
     printf("alignof([10]Int32) = %lu\n", __alignof(int32_t [10]));
 
+    printf("> alignof([3]Point) = %lu\n", __alignof(Point [3]));
+
+
+
     // record size
     printf("sizeof(Point) = %lu\n", sizeof(Point));
     printf("alignof(Point) = %lu\n", __alignof(Point));
