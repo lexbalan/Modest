@@ -192,16 +192,16 @@ def hlir_type_array(of, volume=None, generic=False, ti=None):
         item_size = type.type_get_size(of)
         item_align = type.type_get_align(of)
 
-    size = 0
+    array_size = 0
     if volume != None:
-        size = item_size * volume['imm']
+        array_size = item_size * volume['imm']
 
     return {
         'isa': 'type',
         'generic': generic,
         'kind': 'array',
         'volume': volume,
-        'size': size,
+        'size': array_size,
         'align': item_align,
         'of': of,
         'att': [],
