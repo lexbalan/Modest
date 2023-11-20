@@ -102,6 +102,10 @@ int main(void)
     printf("sizeof(Point) = %lu\n", sizeof(Point));
     printf("alignof(Point) = %lu\n", __alignof(Point));
 
+    printf("offsetof(Point.x) = %lu\n", __offsetof(Point, x));
+    printf("offsetof(Point.y) = %lu\n", __offsetof(Point, y));
+
+
     printf("sizeof(Mixed1) = %lu\n", sizeof(Mixed1));
     printf("alignof(Mixed1) = %lu\n", __alignof(Mixed1));
 
@@ -113,6 +117,15 @@ int main(void)
 
     printf("sizeof(Mixed4) = %lu\n", sizeof(Mixed4));
     printf("alignof(Mixed4) = %lu\n", __alignof(Mixed4));
+
+    printf("offsetof(Mixed4.s) = %lu\n", __offsetof(Mixed4, s));
+    printf("offsetof(Mixed4.c) = %lu\n", __offsetof(Mixed4, c));
+    printf("offsetof(Mixed4.i) = %lu\n", __offsetof(Mixed4, i));
+    printf("offsetof(Mixed4.f) = %lu\n", __offsetof(Mixed4, f));
+    printf("offsetof(Mixed4.c2) = %lu\n", __offsetof(Mixed4, c2));
+    printf("offsetof(Mixed4.i2) = %lu\n", __offsetof(Mixed4, i2));
+    printf("offsetof(Mixed4.p) = %lu\n", __offsetof(Mixed4, p));
+    printf("offsetof(Mixed4.s2) = %lu\n", __offsetof(Mixed4, s2));
 
     return 0;
 }

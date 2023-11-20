@@ -269,12 +269,8 @@ def do_field(x, pos=0, offset=0, is_last=False):
     if type.is_bad(t):
         t = hlir_type_bad(x['type']['ti'])
 
-    """# смещаемся на первый выровненный адрес
-    while offset % type.type_get_align(t) != 0:
-        offset = offset + 1"""
-
+    # get aligned field offset
     offset = align_to(offset, type.type_get_align(t))
-
 
     if type.is_forbidden_var(t, zero_array_forbidden=not is_last):
         error("unsuitable type", x['type'])
@@ -1127,6 +1123,12 @@ def do_value_alignof(x):
     return hlir_value_alignof(of, ti=x['ti'])
 
 
+def do_value_offsetof(x):
+    of = do_type(x['type'])
+    field_id = x['field']
+    return hlir_value_offsetof(of, field_id, ti=x['ti'])
+
+
 bin_ops = [
     'or', 'xor', 'and',
     'eq', 'ne', 'lt', 'gt', 'le', 'ge',
@@ -1169,6 +1171,7 @@ def do_value(x):
             elif k == 'cast': rv = do_value_to(x)
             elif k == 'sizeof': rv = do_value_sizeof(x)
             elif k == 'alignof': rv = do_value_alignof(x)
+            elif k == 'offsetof': rv = do_value_offsetof(x)
             elif k == 'shl': rv = do_value_shift(x)
             elif k == 'shr': rv = do_value_shift(x)
 

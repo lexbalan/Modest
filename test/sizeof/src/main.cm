@@ -98,6 +98,10 @@ func main () -> Int {
     printf("sizeof(Point) = %lu\n", sizeof(Point) to Nat64)
     printf("alignof(Point) = %lu\n", alignof(Point) to Nat64)
 
+    printf("offsetof(Point.x) = %lu\n", offsetof(Point.x) to Nat64)
+    printf("offsetof(Point.y) = %lu\n", offsetof(Point.y) to Nat64)
+
+
     printf("sizeof(Mixed1) = %lu\n", sizeof(Mixed1) to Nat64)
     printf("alignof(Mixed1) = %lu\n", alignof(Mixed1) to Nat64)
 
@@ -109,6 +113,15 @@ func main () -> Int {
 
     printf("sizeof(Mixed4) = %lu\n", sizeof(Mixed4) to Nat64)
     printf("alignof(Mixed4) = %lu\n", alignof(Mixed4) to Nat64)
+
+    printf("offsetof(Mixed4.s) = %lu\n", offsetof(Mixed4.s) to Nat64)
+    printf("offsetof(Mixed4.c) = %lu\n", offsetof(Mixed4.c) to Nat64)
+    printf("offsetof(Mixed4.i) = %lu\n", offsetof(Mixed4.i) to Nat64)
+    printf("offsetof(Mixed4.f) = %lu\n", offsetof(Mixed4.f) to Nat64)
+    printf("offsetof(Mixed4.c2) = %lu\n", offsetof(Mixed4.c2) to Nat64)
+    printf("offsetof(Mixed4.i2) = %lu\n", offsetof(Mixed4.i2) to Nat64)
+    printf("offsetof(Mixed4.p) = %lu\n", offsetof(Mixed4.p) to Nat64)
+    printf("offsetof(Mixed4.s2) = %lu\n", offsetof(Mixed4.s2) to Nat64)
 
     return 0
 }

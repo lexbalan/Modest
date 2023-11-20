@@ -546,6 +546,22 @@ def hlir_value_alignof(of, ti=None):
     }
 
 
+def hlir_value_offsetof(of, field_id, ti=None):
+    field = type.record_field_get(of, field_id['str'])
+    offset = field['offset']
+    typ = hlir_type_generic_int_for(offset, unsigned=True, ti=ti)
+    return {
+        'isa': 'value',
+        'kind': 'offsetof',
+        'of': of,
+        'field': field_id,
+        'type': typ,
+        'att': [],
+        'imm': offset,
+        'ti': ti
+    }
+
+
 def hlir_stmt_bad(ti=None):
     return {'isa': 'stmt', 'kind': 'bad', 'att': [], 'ti': ti}
 

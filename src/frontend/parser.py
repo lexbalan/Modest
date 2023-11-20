@@ -448,6 +448,13 @@ class Parser:
             t = self.expr_type()
             self.need(")")
             return {'isa': 'value', 'kind': 'alignof', 'type': t, 'ti': ti}
+        elif self.match("offsetof"):
+            self.match("(")
+            t = self.expr_type()
+            self.need('.')
+            f = self.identifier()
+            self.need(")")
+            return {'isa': 'value', 'kind': 'offsetof', 'type': t, 'field': f, 'ti': ti}
         else:
             y = self.expr_value_10()
             return y

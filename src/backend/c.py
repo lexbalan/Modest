@@ -99,7 +99,7 @@ aprecedence = [
     ['shl', 'shr'], #7
     ['add', 'sub'], #8
     ['mul', 'div', 'rem'], #9
-    ['plus', 'minus', 'not', 'cast', 'ref', 'deref', 'sizeof'], #10
+    ['plus', 'minus', 'not', 'cast', 'ref', 'deref', 'sizeof', 'alignof', 'offsetof'], #10
     ['call', 'index', 'access'], #11
     ['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #12
 ]
@@ -899,6 +899,14 @@ def print_value_alignof(x, ctx):
     out(")")
 
 
+def print_value_offsetof(x, ctx):
+    out("__offsetof(")
+    print_type(x['of'], need_space_after=False, _print_array_asis=True)
+    out(", ")
+    out(x['field']['str'])
+    out(")")
+
+
 
 #def print_rvalue(x, ctx=[], need_wrap=False, print_just_id=True):
 #    print_value(x, ctx, need_wrap, print_just_id)
@@ -936,6 +944,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
     elif k == 'cast': print_value_cast(x, ctx)
     elif k == 'sizeof': print_value_sizeof(x, ctx)
     elif k == 'alignof': print_value_alignof(x, ctx)
+    elif k == 'offsetof': y = print_value_offsetof(x, ctx)
     else:
         out("<%s>" % k)
         print(x)

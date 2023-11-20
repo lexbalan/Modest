@@ -28,7 +28,7 @@ aprecedence = [
     ['shl', 'shr'], #7
     ['add', 'sub'], #8
     ['mul', 'div', 'rem'], #9
-    ['plus', 'minus', 'not', 'cast', 'ref', 'deref', 'sizeof'], #10
+    ['plus', 'minus', 'not', 'cast', 'ref', 'deref', 'sizeof', 'alignof', 'offsetof'], #10
     ['call', 'index', 'access'], #11
     ['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #12
 ]
@@ -555,6 +555,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
     elif k == 'cast': print_value_cast(x, ctx)
     elif k == 'sizeof': out("sizeof("); print_type(x['of']); out(")")
     elif k == 'alignof': out("alignof("); print_type(x['of']); out(")")
+    elif k == 'offsetof': out("offsetof("); print_type(x['of']); out('.%s' % x['field']['str']); out(")")
     else: out("<%s>" % k)
 
     if need_wrap:

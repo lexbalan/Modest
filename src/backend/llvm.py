@@ -1155,7 +1155,8 @@ def do_eval_x(x):
     elif k == 'cast_immediate': y = do_eval_expr_cast_immediate(x)
     elif k == 'cast': y = do_eval_expr_cast(x)
     elif k == 'sizeof': y = do_eval_literal(x)
-    elif k == 'alignof': y = do_eval_literal(x)
+    #elif k == 'alignof': y = do_eval_literal(x)
+    #elif k == 'offsetof': y = do_eval_literal(x)
     elif k == 'eq_str': y = do_eval_literal(x)
     else:
         out("<%s>" % k)
