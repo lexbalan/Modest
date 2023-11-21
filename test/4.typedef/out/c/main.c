@@ -13,7 +13,7 @@ int main(void)
     printf("test typedef\n");
 
     NewInt32 newInt32;
-    newInt32 = 0;
+    newInt32 = (NewInt32)0;
 
     return 0;
 }

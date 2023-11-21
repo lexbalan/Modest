@@ -16,7 +16,7 @@ func mtab(n: Int) -> Unit {
 
 func main() -> Int {
     let n = 2 * 2
-    printf("multiply table for %d\n", n)
+    printf("multiply table for %d\n", n to Int32)
     mtab(n)
     return 0
 }

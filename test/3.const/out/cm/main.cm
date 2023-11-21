@@ -2,7 +2,7 @@
 import "libc/stdio.h"
 
 const genericIntConst = 42
-const int32Const = genericIntConst
+const int32Const = genericIntConst to Int32
 
 const genericStringConst = "Hello!"
 const string8Const = genericStringConst to *[]Char8
@@ -33,7 +33,7 @@ var points2: [3]Point := points
 func main() -> Int {
     printf("test const\n")
 
-    printf("genericIntConst = %d\n", genericIntConst)
+    printf("genericIntConst = %d\n", genericIntConst to Int32)
     printf("int32Const = %d\n", int32Const)
 
     //	printf("genericStringConst = %s\n", genericStringConst)

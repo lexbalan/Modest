@@ -83,6 +83,9 @@ def value_cons_integer(v, t, ti, method):
             nv['imm'] = imm_intval
             return v # (!)
 
+    elif type.is_pointer(vtype):
+        nv = hlir_value_cast(v, t, ti)
+
 
     if nv != None:
         if value_is_immediate(v):

@@ -14,8 +14,8 @@
 
 void xor_encrypter(uint8_t *buf, uint32_t buflen, uint8_t *key, uint32_t keylen)
 {
-    uint32_t i = 0;
-    uint32_t j = 0;
+    uint32_t i = (uint32_t)0;
+    uint32_t j = (uint32_t)0;
     while (i < buflen) {
         buf[i] = buf[i] ^ key[j];
 
@@ -41,7 +41,7 @@ char test_key[key_length + 1] = {'a', 'b', 'c'};
 
 void print_bytes(uint8_t *buf, uint32_t len)
 {
-    uint32_t i = 0;
+    uint32_t i = (uint32_t)0;
     while (i < len) {
         printf("0x%02X ", buf[i]);
         i = i + 1;

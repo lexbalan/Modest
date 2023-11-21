@@ -42,99 +42,135 @@ type Mixed4 record {
 }
 
 
+//var s : Mixed2
+var c : Char8
+var i : Int32
+var f : Float64
+var i2 : Int16
+var p : [3]Point
+var g : Bool
+
+type X record {
+    c : Char8
+    i : Int32
+    f : Float64
+    i2 : Int16
+    p : [3]Point
+    g : Bool
+}
+
+var x : X
+
 func main () -> Int {
     printf("test cast operation\n")
+
+    let start_adr = &c to Nat64
+    printf("off(c) = %llu\n", &c to Nat64 - start_adr)
+    printf("off(i) = %llu\n", &i to Nat64 - start_adr)
+    printf("off(f) = %llu\n", &f to Nat64 - start_adr)
+    printf("off(i2) = %llu\n", &i2 to Nat64 - start_adr)
+    printf("off(p) = %llu\n", &p to Nat64 - start_adr)
+    printf("off(g) = %llu\n", &g to Nat64 - start_adr)
+
+    // дженерики в с явно не приводятся, но нектороые нужно!
+    printf("offsetof(x.c) = %llu\n", offsetof(X.c) to Nat64)
+    printf("offsetof(x.i) = %llu\n", offsetof(X.i) to Nat64)
+    printf("offsetof(x.f) = %llu\n", offsetof(X.f) to Nat64)
+    printf("offsetof(x.i2) = %llu\n", offsetof(X.i2) to Nat64)
+    printf("offsetof(x.p) = %llu\n", offsetof(X.p) to Nat64)
+    printf("offsetof(x.g) = %llu\n", offsetof(X.g) to Nat64)
+
 
     // sizeof(void) in C  == 1
     // sizeof(Unit) in CM == 0
     // TODO: here is a broblem
-    printf("sizeof(Unit) = %lu\n", sizeof(Unit) to Nat64)
-    printf("alignof(Unit) = %lu\n", alignof(Unit) to Nat64)
+    printf("sizeof(Unit) = %llu\n", sizeof(Unit) to Nat64)
+    printf("alignof(Unit) = %llu\n", alignof(Unit) to Nat64)
 
-    printf("sizeof(Bool) = %lu\n", sizeof(Bool) to Nat64)
-    printf("alignof(Bool) = %lu\n", alignof(Bool) to Nat64)
+    printf("sizeof(Bool) = %llu\n", sizeof(Bool) to Nat64)
+    printf("alignof(Bool) = %llu\n", alignof(Bool) to Nat64)
 
-    printf("sizeof(Nat8) = %lu\n", sizeof(Nat8) to Nat64)
-    printf("alignof(Nat8) = %lu\n", alignof(Nat8) to Nat64)
-    printf("sizeof(Nat16) = %lu\n", sizeof(Nat16) to Nat64)
-    printf("alignof(Nat16) = %lu\n", alignof(Nat16) to Nat64)
-    printf("sizeof(Nat32) = %lu\n", sizeof(Nat32) to Nat64)
-    printf("alignof(Nat32) = %lu\n", alignof(Nat32) to Nat64)
-    printf("sizeof(Nat64) = %lu\n", sizeof(Nat64) to Nat64)
-    printf("alignof(Nat64) = %lu\n", alignof(Nat64) to Nat64)
-    printf("sizeof(Nat128) = %lu\n", sizeof(Nat128) to Nat64)
-    printf("alignof(Nat128) = %lu\n", alignof(Nat128) to Nat64)
+    printf("sizeof(Nat8) = %llu\n", sizeof(Nat8) to Nat64)
+    printf("alignof(Nat8) = %llu\n", alignof(Nat8) to Nat64)
+    printf("sizeof(Nat16) = %llu\n", sizeof(Nat16) to Nat64)
+    printf("alignof(Nat16) = %llu\n", alignof(Nat16) to Nat64)
+    printf("sizeof(Nat32) = %llu\n", sizeof(Nat32) to Nat64)
+    printf("alignof(Nat32) = %llu\n", alignof(Nat32) to Nat64)
+    printf("sizeof(Nat64) = %llu\n", sizeof(Nat64) to Nat64)
+    printf("alignof(Nat64) = %llu\n", alignof(Nat64) to Nat64)
+    printf("sizeof(Nat128) = %llu\n", sizeof(Nat128) to Nat64)
+    printf("alignof(Nat128) = %llu\n", alignof(Nat128) to Nat64)
     // type Nat256 not implemented
-    //printf("sizeof(Nat256) = %lu\n", sizeof(Nat256) to Nat64)
+    //printf("sizeof(Nat256) = %llu\n", sizeof(Nat256) to Nat64)
 
-    printf("sizeof(Int8) = %lu\n", sizeof(Int8) to Nat64)
-    printf("alignof(Int8) = %lu\n", alignof(Int8) to Nat64)
-    printf("sizeof(Int16) = %lu\n", sizeof(Int16) to Nat64)
-    printf("alignof(Int16) = %lu\n", alignof(Int16) to Nat64)
-    printf("sizeof(Int32) = %lu\n", sizeof(Int32) to Nat64)
-    printf("alignof(Int32) = %lu\n", alignof(Int32) to Nat64)
-    printf("sizeof(Int64) = %lu\n", sizeof(Int64) to Nat64)
-    printf("alignof(Int64) = %lu\n", alignof(Int64) to Nat64)
-    printf("sizeof(Int128) = %lu\n", sizeof(Int128) to Nat64)
-    printf("alignof(Int128) = %lu\n", alignof(Int128) to Nat64)
+    printf("sizeof(Int8) = %llu\n", sizeof(Int8) to Nat64)
+    printf("alignof(Int8) = %llu\n", alignof(Int8) to Nat64)
+    printf("sizeof(Int16) = %llu\n", sizeof(Int16) to Nat64)
+    printf("alignof(Int16) = %llu\n", alignof(Int16) to Nat64)
+    printf("sizeof(Int32) = %llu\n", sizeof(Int32) to Nat64)
+    printf("alignof(Int32) = %llu\n", alignof(Int32) to Nat64)
+    printf("sizeof(Int64) = %llu\n", sizeof(Int64) to Nat64)
+    printf("alignof(Int64) = %llu\n", alignof(Int64) to Nat64)
+    printf("sizeof(Int128) = %llu\n", sizeof(Int128) to Nat64)
+    printf("alignof(Int128) = %llu\n", alignof(Int128) to Nat64)
     // type Int256 not implemented
-    //printf("sizeof(Int256) = %lu\n", sizeof(Int256) to Nat64)
+    //printf("sizeof(Int256) = %llu\n", sizeof(Int256) to Nat64)
 
-    printf("sizeof(Char8) = %lu\n", sizeof(Char8) to Nat64)
-    printf("alignof(Char8) = %lu\n", alignof(Char8) to Nat64)
-    printf("sizeof(Char16) = %lu\n", sizeof(Char16) to Nat64)
-    printf("alignof(Char16) = %lu\n", alignof(Char16) to Nat64)
-    printf("sizeof(Char32) = %lu\n", sizeof(Char32) to Nat64)
-    printf("alignof(Char32) = %lu\n", alignof(Char32) to Nat64)
+    printf("sizeof(Char8) = %llu\n", sizeof(Char8) to Nat64)
+    printf("alignof(Char8) = %llu\n", alignof(Char8) to Nat64)
+    printf("sizeof(Char16) = %llu\n", sizeof(Char16) to Nat64)
+    printf("alignof(Char16) = %llu\n", alignof(Char16) to Nat64)
+    printf("sizeof(Char32) = %llu\n", sizeof(Char32) to Nat64)
+    printf("alignof(Char32) = %llu\n", alignof(Char32) to Nat64)
 
     // pointer size (for example pointer to []Char8)
-    printf("sizeof(*Str8) = %lu\n", sizeof(*Str8) to Nat64)
-    printf("alignof(*Str8) = %lu\n", alignof(*Str8) to Nat64)
+    printf("sizeof(*Str8) = %llu\n", sizeof(*Str8) to Nat64)
+    printf("alignof(*Str8) = %llu\n", alignof(*Str8) to Nat64)
 
     // array size
-    printf("sizeof([10]Int32) = %lu\n", sizeof([10]Int32) to Nat64)
-    printf("alignof([10]Int32) = %lu\n", alignof([10]Int32) to Nat64)
+    printf("sizeof([10]Int32) = %llu\n", sizeof([10]Int32) to Nat64)
+    printf("alignof([10]Int32) = %llu\n", alignof([10]Int32) to Nat64)
 
-    printf("> alignof([3]Point) = %lu\n", alignof([3]Point) to Nat64)
+    printf("> alignof([3]Point) = %llu\n", alignof([3]Point) to Nat64)
 
 
 
     // record size
-    printf("sizeof(Point) = %lu\n", sizeof(Point) to Nat64)
-    printf("alignof(Point) = %lu\n", alignof(Point) to Nat64)
+    printf("sizeof(Point) = %llu\n", sizeof(Point) to Nat64)
+    printf("alignof(Point) = %llu\n", alignof(Point) to Nat64)
 
-    printf("offsetof(Point.x) = %lu\n", offsetof(Point.x) to Nat64)
-    printf("offsetof(Point.y) = %lu\n", offsetof(Point.y) to Nat64)
-
-
-    printf("sizeof(Mixed1) = %lu\n", sizeof(Mixed1) to Nat64)
-    printf("alignof(Mixed1) = %lu\n", alignof(Mixed1) to Nat64)
-
-    printf("sizeof(Mixed2) = %lu\n", sizeof(Mixed2) to Nat64)
-    printf("alignof(Mixed2) = %lu\n", alignof(Mixed2) to Nat64)
+    printf("offsetof(Point.x) = %llu\n", offsetof(Point.x) to Nat64)
+    printf("offsetof(Point.y) = %llu\n", offsetof(Point.y) to Nat64)
 
 
-    printf("offsetof(Mixed2.i) = %lu\n", offsetof(Mixed2.i) to Nat64)
-    printf("offsetof(Mixed2.c) = %lu\n", offsetof(Mixed2.c) to Nat64)
-    printf("offsetof(Mixed2.f) = %lu\n", offsetof(Mixed2.f) to Nat64)
-    printf("offsetof(Mixed2.c2) = %lu\n", offsetof(Mixed2.c2) to Nat64)
-    printf("offsetof(Mixed2.m) = %lu\n", offsetof(Mixed2.m) to Nat64)
+    printf("sizeof(Mixed1) = %llu\n", sizeof(Mixed1) to Nat64)
+    printf("alignof(Mixed1) = %llu\n", alignof(Mixed1) to Nat64)
+
+    printf("sizeof(Mixed2) = %llu\n", sizeof(Mixed2) to Nat64)
+    printf("alignof(Mixed2) = %llu\n", alignof(Mixed2) to Nat64)
 
 
-    printf("sizeof(Mixed3) = %lu\n", sizeof(Mixed3) to Nat64)
-    printf("alignof(Mixed3) = %lu\n", alignof(Mixed3) to Nat64)
+    printf("offsetof(Mixed2.i) = %llu\n", offsetof(Mixed2.i) to Nat64)
+    printf("offsetof(Mixed2.c) = %llu\n", offsetof(Mixed2.c) to Nat64)
+    printf("offsetof(Mixed2.f) = %llu\n", offsetof(Mixed2.f) to Nat64)
+    printf("offsetof(Mixed2.c2) = %llu\n", offsetof(Mixed2.c2) to Nat64)
+    printf("offsetof(Mixed2.m) = %llu\n", offsetof(Mixed2.m) to Nat64)
 
-    printf("sizeof(Mixed4) = %lu\n", sizeof(Mixed4) to Nat64)
-    printf("alignof(Mixed4) = %lu\n", alignof(Mixed4) to Nat64)
 
-    printf("offsetof(Mixed4.s) = %lu\n", offsetof(Mixed4.s) to Nat64)
-    printf("offsetof(Mixed4.c) = %lu\n", offsetof(Mixed4.c) to Nat64)
-    printf("offsetof(Mixed4.i) = %lu\n", offsetof(Mixed4.i) to Nat64)
-    printf("offsetof(Mixed4.f) = %lu\n", offsetof(Mixed4.f) to Nat64)
-    printf("offsetof(Mixed4.c2) = %lu\n", offsetof(Mixed4.c2) to Nat64)
-    printf("offsetof(Mixed4.i2) = %lu\n", offsetof(Mixed4.i2) to Nat64)
-    printf("offsetof(Mixed4.p) = %lu\n", offsetof(Mixed4.p) to Nat64)
-    printf("offsetof(Mixed4.s2) = %lu\n", offsetof(Mixed4.s2) to Nat64)
+    printf("sizeof(Mixed3) = %llu\n", sizeof(Mixed3) to Nat64)
+    printf("alignof(Mixed3) = %llu\n", alignof(Mixed3) to Nat64)
+
+    printf("sizeof(Mixed4) = %llu\n", sizeof(Mixed4) to Nat64)
+    printf("alignof(Mixed4) = %llu\n", alignof(Mixed4) to Nat64)
+
+    printf("offsetof(Mixed4.s) = %llu\n", offsetof(Mixed4.s) to Nat64)
+    printf("offsetof(Mixed4.c) = %llu\n", offsetof(Mixed4.c) to Nat64)
+    printf("offsetof(Mixed4.i) = %llu\n", offsetof(Mixed4.i) to Nat64)
+    printf("offsetof(Mixed4.f) = %llu\n", offsetof(Mixed4.f) to Nat64)
+    printf("offsetof(Mixed4.c2) = %llu\n", offsetof(Mixed4.c2) to Nat64)
+    printf("offsetof(Mixed4.i2) = %llu\n", offsetof(Mixed4.i2) to Nat64)
+    printf("offsetof(Mixed4.p) = %llu\n", offsetof(Mixed4.p) to Nat64)
+    printf("offsetof(Mixed4.s2) = %llu\n", offsetof(Mixed4.s2) to Nat64)
 
     return 0
 }

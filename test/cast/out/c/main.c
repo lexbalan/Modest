@@ -12,8 +12,8 @@ int main(void)
 {
     printf("test cast operation\n");
 
-    const int32_t x0 = -1;
-    const int64_t x1 = -1;
+    const int32_t x0 = (const int32_t)-1;
+    const int64_t x1 = (const int64_t)-1;
 
     const uint64_t y0 = ((const uint64_t)(uint32_t)x0);
     const uint64_t y1 = (const uint64_t)x1;

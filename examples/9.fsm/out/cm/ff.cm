@@ -15,7 +15,7 @@ func ff_memzero(mem: Pointer, len: Nat64) -> Unit {
 
     let dst_word = mem
 
-    var i: Nat64 := 0
+    var i: Nat64 := 0 to Nat64
     while i < len_words {
         dst_word[i] := 0
         i := i + 1
@@ -40,7 +40,7 @@ func ff_memcpy(dst: Pointer, src: Pointer, len: Nat64) -> Unit {
     let src_w = src
     let dst_w = dst
 
-    var i: Nat64 := 0
+    var i: Nat64 := 0 to Nat64
     while i < len_words {
         dst_w[i] := src_w[i]
         i := i + 1
@@ -61,7 +61,7 @@ func ff_memcpy(dst: Pointer, src: Pointer, len: Nat64) -> Unit {
 
 
 func ff_cstrlen(cstr: *[]Char8) -> Nat64 {
-    var i: Nat64 := 0
+    var i: Nat64 := 0 to Nat64
     while cstr[i] != "\x0"[0] {
         i := i + 1
     }

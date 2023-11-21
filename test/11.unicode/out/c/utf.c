@@ -14,7 +14,7 @@ uint8_t utf32_to_utf8(uint32_t c, char *buf)
 
     if (x <= 0x0000007F) {
         buf[0] = (char)x;
-        buf[1] = 0;
+        buf[1] = (char)0;
         return 2;
 
     } else if (x <= 0x000007FF) {
@@ -22,7 +22,7 @@ uint8_t utf32_to_utf8(uint32_t c, char *buf)
         const uint32_t c1 = x >> 0 & 0x3F;
         buf[0] = (char)(0xC0 | c0);
         buf[1] = (char)(0x80 | c1);
-        buf[2] = 0;
+        buf[2] = (char)0;
         return 3;
 
     } else if (x <= 0x0000FFFF) {
@@ -32,7 +32,7 @@ uint8_t utf32_to_utf8(uint32_t c, char *buf)
         buf[0] = (char)(0xE0 | c0);
         buf[1] = (char)(0x80 | c1);
         buf[2] = (char)(0x80 | c2);
-        buf[3] = 0;
+        buf[3] = (char)0;
         return 4;
 
     } else if (x <= 0x0010FFFF) {
@@ -44,7 +44,7 @@ uint8_t utf32_to_utf8(uint32_t c, char *buf)
         buf[1] = (char)(0x80 | c1);
         buf[2] = (char)(0x80 | c2);
         buf[3] = (char)(0x80 | c3);
-        buf[4] = 0;
+        buf[4] = (char)0;
         return 5;
     }
 

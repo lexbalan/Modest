@@ -28,7 +28,7 @@ aprecedence = [
     ['shl', 'shr'], #7
     ['add', 'sub'], #8
     ['mul', 'div', 'rem'], #9
-    ['plus', 'minus', 'not', 'cast', 'ref', 'deref', 'sizeof', 'alignof', 'offsetof'], #10
+    ['plus', 'minus', 'not', 'cast', 'cast_immediate', 'ref', 'deref', 'sizeof', 'alignof', 'offsetof'], #10
     ['call', 'index', 'access'], #11
     ['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #12
 ]
@@ -292,11 +292,8 @@ def print_cast(t, v, ctx=[]):
 def print_value_cast_immediate(x, ctx):
 
     if 'explicit_cast' in x['att']:
-        if type.is_ptr_to_string(x['type']):
-            print_value(x['value'], ctx=[])
-            out(" to ")
-            print_type(x['type'])
-            return
+        print_cast(x['type'], x['value'], ctx=[])
+        return
 
     # imm каст не печатаю, печатаю просто значение
     need_wrap = precedence(x['value']['kind']) < precedenceMax

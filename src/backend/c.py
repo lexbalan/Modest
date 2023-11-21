@@ -99,7 +99,7 @@ aprecedence = [
     ['shl', 'shr'], #7
     ['add', 'sub'], #8
     ['mul', 'div', 'rem'], #9
-    ['plus', 'minus', 'not', 'cast', 'ref', 'deref', 'sizeof', 'alignof', 'offsetof'], #10
+    ['plus', 'minus', 'not', 'cast', 'cast_immediate' 'ref', 'deref', 'sizeof', 'alignof', 'offsetof'], #10
     ['call', 'index', 'access'], #11
     ['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #12
 ]
@@ -541,6 +541,11 @@ def print_value_cast_immediate(v, ctx):
             return
 
 
+    if 'explicit_cast' in v['att']:
+        print_cast(to_type, value, ctx)
+        return
+
+    # implicit_cast of immediate value
     #need_wrap = precedence(value) < precedenceMax
     print_value(value, ctx)#, need_wrap=need_wrap)
 
