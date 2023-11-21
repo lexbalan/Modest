@@ -44,7 +44,7 @@ int main(void)
     int i = 0;
     while (true) {
         const uint16_t c = string16Const[i];
-        if (c == (uint16_t)0) {
+        if (c == 0) {
             break;
         }
 

@@ -542,8 +542,10 @@ def print_value_cast_immediate(v, ctx):
 
 
     if 'explicit_cast' in v['att']:
-        print_cast(to_type, value, ctx)
-        return
+        # литералы явно не приводим
+        if value['kind'] != 'literal':
+            print_cast(to_type, value, ctx)
+            return
 
     # implicit_cast of immediate value
     #need_wrap = precedence(value) < precedenceMax
