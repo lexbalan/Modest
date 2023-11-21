@@ -16,10 +16,11 @@ type Mixed1 record {
 }
 
 type Mixed2 record {
-    c : Char8
     i : Int32
+    c : Char8
     f : Float64
-    c2 : Char8
+    c2 : [3]Char8
+    m : Mixed1
 }
 
 type Mixed3 record {
@@ -111,6 +112,14 @@ func main () -> Int {
 
     printf("sizeof(Mixed2) = %lu\n", sizeof(Mixed2) to Nat64)
     printf("alignof(Mixed2) = %lu\n", alignof(Mixed2) to Nat64)
+
+
+    printf("offsetof(Mixed2.i) = %lu\n", offsetof(Mixed2.i) to Nat64)
+    printf("offsetof(Mixed2.c) = %lu\n", offsetof(Mixed2.c) to Nat64)
+    printf("offsetof(Mixed2.f) = %lu\n", offsetof(Mixed2.f) to Nat64)
+    printf("offsetof(Mixed2.c2) = %lu\n", offsetof(Mixed2.c2) to Nat64)
+    printf("offsetof(Mixed2.m) = %lu\n", offsetof(Mixed2.m) to Nat64)
+
 
     printf("sizeof(Mixed3) = %lu\n", sizeof(Mixed3) to Nat64)
     printf("alignof(Mixed3) = %lu\n", alignof(Mixed3) to Nat64)

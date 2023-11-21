@@ -19,10 +19,11 @@ typedef struct {
 } Mixed1;
 
 typedef struct {
-    char c;
     int32_t i;
+    char c;
     double f;
-    char c2;
+    char c2[3];
+    Mixed1 m;
 } Mixed2;
 
 typedef struct {
@@ -115,6 +116,14 @@ int main(void)
 
     printf("sizeof(Mixed2) = %lu\n", sizeof(Mixed2));
     printf("alignof(Mixed2) = %lu\n", __alignof(Mixed2));
+
+
+    printf("offsetof(Mixed2.i) = %lu\n", __offsetof(Mixed2, i));
+    printf("offsetof(Mixed2.c) = %lu\n", __offsetof(Mixed2, c));
+    printf("offsetof(Mixed2.f) = %lu\n", __offsetof(Mixed2, f));
+    printf("offsetof(Mixed2.c2) = %lu\n", __offsetof(Mixed2, c2));
+    printf("offsetof(Mixed2.m) = %lu\n", __offsetof(Mixed2, m));
+
 
     printf("sizeof(Mixed3) = %lu\n", sizeof(Mixed3));
     printf("alignof(Mixed3) = %lu\n", __alignof(Mixed3));
