@@ -13,7 +13,7 @@ LLVM_TARGET_TRIPLE = ""
 LLVM_TARGET_DATALAYOUT = ""
 
 
-INDENT_SYMBOL = " " * 2
+INDENT_SYMBOL = " " * 4
 
 
 func_context = None
@@ -35,6 +35,13 @@ def init():
 
 def indent():
     ind(INDENT_SYMBOL)
+
+
+
+def lo(s):
+    out('\n')
+    indent()
+    out(s)
 
 
 def locals_push():
@@ -74,7 +81,7 @@ def reg_get():
 
 def operation(op):
     reg = reg_get()
-    out("\n    %%%s = %s " % (reg, op))
+    lo("%%%s = %s " % (reg, op))
     return reg
 
 
@@ -554,7 +561,7 @@ def do_eval_expr_call(v):
     # do call
     reg = 0
     if to_unit:
-        lo("    call ")
+        lo("call ")
     else:
         reg = operation("call")
 
@@ -1177,7 +1184,7 @@ def do_eval_x(x):
 
 # сохр простых значений
 def ll_store(l, r):
-    lo("    store ");
+    lo("store ");
     print_type(r['type'])
     out(" ")
     print_value(r)
@@ -1228,13 +1235,13 @@ def print_integer_block():
 
 
 def ll_br(x, then_label, else_label):
-    out("\n    br %s " % TYPE_BOOL)
+    lo("br %s " % TYPE_BOOL)
     print_value(x)
     out(" , label %%%s, label %%%s" % (then_label, else_label))
 
 
 def op_goto(label):
-    out("\n    br label %%%s" % label)
+    lo("br label %%%s" % label)
 
 
 def set_label(label):
@@ -1312,7 +1319,7 @@ def print_stmt_return(x):
     if x['value'] != None:
         v = do_ld(do_eval(x['value']))
 
-    lo("    ret ")
+    lo("ret ")
 
     if v != None:
         print_type(x['value']['type'])
@@ -1335,7 +1342,7 @@ def ll_alloca(id, typ, init_value):
         'proto': None,
     }
 
-    lo("    %%%s = alloca " % id)
+    lo("%%%s = alloca " % id)
     print_type(typ)
 
     if init_value != None:
@@ -1553,6 +1560,8 @@ def print_decl_func(x):
 def print_def_func(x):
     global func_context
 
+    indent_up()
+
     # create new func context
     old_func_context = func_context
     func_context = {
@@ -1624,17 +1633,21 @@ def print_def_func(x):
     out(" {")
 
     for r in reloc:
-        print("    ; reloc %s " % (r['id']))
-        lo("    ; reloc " + r['id'])
+        #print("    ; reloc %s " % (r['id']))
+        lo("; reloc " + r['id'])
         ll_alloca(r['id'], r['type'], r)
 
     print_stmt_block(func['stmt'], arrays=arrays)
 
     if type.eq(func['type']['to'], type.typeUnit):
-        lo("    ret void")
+        lo("ret void")
+
+    indent_down()
+
     lo("}\n")
 
     func_context = old_func_context
+
 
 
 

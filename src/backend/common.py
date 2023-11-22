@@ -36,12 +36,6 @@ def out(s):
     f.write(s)
 
 
-def lo(s):
-    global f
-    f.write('\n')
-    f.write(s)
-
-
 def output_open(fname):
     global f
     dirname = os.path.dirname(fname)
