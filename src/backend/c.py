@@ -1449,15 +1449,15 @@ def run(module, outname):
     if is_header:
         guardname = outname.split("/")[-1]
         guardname = guardname[:-2].upper() + '_H'
-        lo("#ifndef %s" % guardname)
-        lo("#define %s" % guardname)
+        out("\n#ifndef %s" % guardname)
+        out("\n#define %s" % guardname)
         newline()
 
-    lo("#include <stdint.h>")
-    lo("#include <string.h>")
+    out("\n#include <stdint.h>")
+    out("\n#include <string.h>")
 
     if USE_STDBOOL:
-        lo("#include <stdbool.h>")
+        out("\n#include <stdbool.h>")
 
     newline(n=2)
 
@@ -1492,7 +1492,7 @@ def run(module, outname):
 
     newline()
     if is_header:
-        lo("#endif  /* %s */" % guardname)
+        out("\n#endif  /* %s */" % guardname)
     newline()
 
     output_close()
