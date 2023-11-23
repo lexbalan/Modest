@@ -155,6 +155,10 @@ class Parser:
                     x['nl'] = spaceline_cnt
                     spaceline_cnt = 0
                     directives.append(x)
+                elif self.match(","):
+                    pass
+                elif self.match(";"):
+                    pass
                 else:
                     break
 
@@ -163,7 +167,7 @@ class Parser:
 
             f = self.parse_field()
 
-            self.need_sep(eat=False)
+            self.need_sep(separators=['\n', ',', ';'], eat=False)
 
             if f != None:
                 f[0].update({'comments': comments})
