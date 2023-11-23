@@ -774,7 +774,10 @@ def print_value_literal_str(x, ctx, char_power=8):
             elif cc == 0x0D: out("\\r") # carriage return
             elif cc == 0x1B: out("\\e") # escape
             else: out("\\x%X" % cc)
-        elif cc <= 0x7E : out(sym)
+        elif cc <= 0x7E :
+            if sym == '\\': out('\\\\')
+            elif sym == '"': out('\\"')
+            else: out(sym)
         elif cc != 0: out(sym)
 
     out("\"")
