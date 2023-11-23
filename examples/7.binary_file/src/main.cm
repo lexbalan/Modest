@@ -9,7 +9,6 @@ import "libc/stdio.hm"
 
 // FIXIT: not worked LLVM result (!)
 
-
 const filename = "file.bin" to *Str8
 
 
@@ -56,16 +55,17 @@ func read_example () -> Unit {
 
     var chunk : Chunk
     fread(&chunk, sizeof(Chunk), 1, fp)
-    printf("file '%s' contains:\n", filename)
-    printf("chunk.id: %s\n", &chunk.id)
-    printf("chunk.data: %s\n", &chunk.data)
+
+    printf("file \"%s\" contains:\n", filename)
+    printf("chunk.id: \"%s\"\n", &chunk.id)
+    printf("chunk.data: \"%s\"\n", &chunk.data)
 
     fclose(fp)
 }
 
 
 func main () -> Int {
-    printf("text_file example\n")
+    printf("binary file example\n")
     write_example()
     read_example()
     return 0

@@ -177,7 +177,7 @@ void sha256_final(SHA256_Context *ctx, uint8_t *hash)
 
     i = i + 1;
 
-    memset((void *)&(ctx->data[i]), 0, ((size_t)(uint32_t)(n - i)));
+    memset((void *)&ctx->data[i], 0, ((size_t)(uint32_t)(n - i)));
 
     if (ctx->datalen >= 56) {
         sha256_transform((SHA256_Context *)ctx, (uint8_t *)&ctx->data[0]);

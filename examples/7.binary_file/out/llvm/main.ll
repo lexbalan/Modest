@@ -189,10 +189,10 @@ declare void @perror(%ConstCharStr*)
 @str7 = private constant [18 x i8] [i8 114, i8 117, i8 110, i8 32, i8 114, i8 101, i8 97, i8 100, i8 95, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
 @str8 = private constant [3 x i8] [i8 114, i8 98, i8 0]
 @str9 = private constant [29 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 99, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 111, i8 112, i8 101, i8 110, i8 32, i8 102, i8 105, i8 108, i8 101, i8 32, i8 39, i8 37, i8 115, i8 39, i8 0]
-@str10 = private constant [21 x i8] [i8 102, i8 105, i8 108, i8 101, i8 32, i8 39, i8 37, i8 115, i8 39, i8 32, i8 99, i8 111, i8 110, i8 116, i8 97, i8 105, i8 110, i8 115, i8 58, i8 10, i8 0]
-@str11 = private constant [14 x i8] [i8 99, i8 104, i8 117, i8 110, i8 107, i8 46, i8 105, i8 100, i8 58, i8 32, i8 37, i8 115, i8 10, i8 0]
-@str12 = private constant [16 x i8] [i8 99, i8 104, i8 117, i8 110, i8 107, i8 46, i8 100, i8 97, i8 116, i8 97, i8 58, i8 32, i8 37, i8 115, i8 10, i8 0]
-@str13 = private constant [19 x i8] [i8 116, i8 101, i8 120, i8 116, i8 95, i8 102, i8 105, i8 108, i8 101, i8 32, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
+@str10 = private constant [21 x i8] [i8 102, i8 105, i8 108, i8 101, i8 32, i8 34, i8 37, i8 115, i8 34, i8 32, i8 99, i8 111, i8 110, i8 116, i8 97, i8 105, i8 110, i8 115, i8 58, i8 10, i8 0]
+@str11 = private constant [16 x i8] [i8 99, i8 104, i8 117, i8 110, i8 107, i8 46, i8 105, i8 100, i8 58, i8 32, i8 34, i8 37, i8 115, i8 34, i8 10, i8 0]
+@str12 = private constant [18 x i8] [i8 99, i8 104, i8 117, i8 110, i8 107, i8 46, i8 100, i8 97, i8 116, i8 97, i8 58, i8 32, i8 34, i8 37, i8 115, i8 34, i8 10, i8 0]
+@str13 = private constant [21 x i8] [i8 98, i8 105, i8 110, i8 97, i8 114, i8 121, i8 32, i8 102, i8 105, i8 108, i8 101, i8 32, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
 
 
 
@@ -216,15 +216,15 @@ then_0:
     br label %endif_0
 endif_0:
     %chunk = alloca %Chunk
-; pointers casting requires -funsafe translator option
-; (see Makefile)
+    ; pointers casting requires -funsafe translator option
+    ; (see Makefile)
     %6 = getelementptr inbounds %Chunk, %Chunk* %chunk, i32 0, i32 0
     %7 = bitcast [100 x i8]* %6 to [0 x i8]*
     %8 = call [0 x i8]*([0 x i8]*, [0 x i8]*) @strcpy ([0 x i8]* %7, [0 x i8]* bitcast ([3 x i8]* @str5 to [0 x i8]*))
     %9 = getelementptr inbounds %Chunk, %Chunk* %chunk, i32 0, i32 1
     %10 = bitcast [1024 x i8]* %9 to [0 x i8]*
     %11 = call [0 x i8]*([0 x i8]*, [0 x i8]*) @strcpy ([0 x i8]* %10, [0 x i8]* bitcast ([5 x i8]* @str6 to [0 x i8]*))
-; write chunk to file
+    ; write chunk to file
     %12 = bitcast %Chunk* %chunk to i8*
     %13 = call i64(i8*, i64, i64, %FILE*) @fwrite (i8* %12, i64 1124, i64 1, %FILE* %2)
     %14 = call i32(%FILE*) @fclose (%FILE* %2)
@@ -246,15 +246,15 @@ endif_0:
     %7 = call i64(i8*, i64, i64, %FILE*) @fread (i8* %6, i64 1124, i64 1, %FILE* %2)
     %8 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([21 x i8]* @str10 to [0 x i8]*), [0 x i8]* bitcast ([9 x i8]* @str1 to [0 x i8]*))
     %9 = getelementptr inbounds %Chunk, %Chunk* %chunk, i32 0, i32 0
-    %10 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([14 x i8]* @str11 to [0 x i8]*), [100 x i8]* %9)
+    %10 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([16 x i8]* @str11 to [0 x i8]*), [100 x i8]* %9)
     %11 = getelementptr inbounds %Chunk, %Chunk* %chunk, i32 0, i32 1
-    %12 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([16 x i8]* @str12 to [0 x i8]*), [1024 x i8]* %11)
+    %12 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([18 x i8]* @str12 to [0 x i8]*), [1024 x i8]* %11)
     %13 = call i32(%FILE*) @fclose (%FILE* %2)
     ret void
 }
 
 define i32 @main() {
-    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([19 x i8]* @str13 to [0 x i8]*))
+    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([21 x i8]* @str13 to [0 x i8]*))
     call void() @write_example ()
     call void() @read_example ()
     ret i32 0

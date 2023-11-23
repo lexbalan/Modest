@@ -286,14 +286,14 @@ declare void @bcopy(i8*, i8*, i64)
 
 
 @line = global %Line {
-  %Point {
-    double 0.0,
-    double 0.0
-  },
-  %Point {
-    double 1.0,
-    double 1.0
-  }
+    %Point {
+        double 0.0,
+        double 0.0
+    },
+    %Point {
+        double 1.0,
+        double 1.0
+    }
 }
 
 define double @max(double %a, double %b) {
@@ -350,7 +350,7 @@ define double @lineLength(%Line %line) {
 define void @ptr_example() {
     %1 = call i8*(i64) @malloc (i64 16)
     %2 = bitcast i8* %1 to %Point*
-; access by pointer
+    ; access by pointer
     %3 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 0
     store double 10.0, double* %3
     %4 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 1
@@ -364,7 +364,7 @@ define void @ptr_example() {
 }
 
 define i32 @main() {
-; by value
+    ; by value
     %1 = load %Line, %Line* @line
     %2 = call double(%Line) @lineLength (%Line %1)
     %3 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([18 x i8]* @str2 to [0 x i8]*), double %2)

@@ -151,7 +151,7 @@ declare void @ff_print_hex_n128(i128, i8)
 
 
 define void @off_entry(%FSM* %fsm) {
-;printf("off_entry\n")
+    ;printf("off_entry\n")
     ret void
 }
 
@@ -175,14 +175,14 @@ endif_0:
 }
 
 define void @off_exit(%FSM* %fsm) {
-;printf("off_exit\n")
+    ;printf("off_exit\n")
     ret void
 }
 
 
 
 define void @on_entry(%FSM* %fsm) {
-;printf("on_entry\n")
+    ;printf("on_entry\n")
     ret void
 }
 
@@ -206,7 +206,7 @@ endif_0:
 }
 
 define void @on_exit(%FSM* %fsm) {
-;printf("on_exit\n")
+    ;printf("on_exit\n")
     ret void
 }
 
@@ -251,79 +251,79 @@ define void @beacon_exit(%FSM* %fsm) {
 
 
 @fsm = global %FSM {
-  [8 x i8] [
-    i8 70,
-    i8 108,
-    i8 97,
-    i8 115,
-    i8 104,
-    i8 zeroinitializer,
-    i8 zeroinitializer,
-    i8 zeroinitializer
-  ],
-  i32 0,
-  i32 0,
-  i32 0,
-  [16 x %FSM_StateDesc] [
-    %FSM_StateDesc {
-      [8 x i8] [
-        i8 79,
-        i8 102,
-        i8 102,
-        i8 zeroinitializer,
-        i8 zeroinitializer,
-        i8 zeroinitializer,
-        i8 zeroinitializer,
-        i8 zeroinitializer
-      ],
-      void(%FSM*)* @off_entry,
-      void(%FSM*)* @off_loop,
-      void(%FSM*)* @off_exit
-    },
-    %FSM_StateDesc {
-      [8 x i8] [
-        i8 79,
-        i8 110,
-        i8 zeroinitializer,
-        i8 zeroinitializer,
-        i8 zeroinitializer,
-        i8 zeroinitializer,
-        i8 zeroinitializer,
-        i8 zeroinitializer
-      ],
-      void(%FSM*)* @on_entry,
-      void(%FSM*)* @on_loop,
-      void(%FSM*)* @on_exit
-    },
-    %FSM_StateDesc {
-      [8 x i8] [
-        i8 66,
-        i8 101,
+    [8 x i8] [
+        i8 70,
+        i8 108,
         i8 97,
-        i8 99,
-        i8 111,
-        i8 110,
+        i8 115,
+        i8 104,
+        i8 zeroinitializer,
         i8 zeroinitializer,
         i8 zeroinitializer
-      ],
-      void(%FSM*)* @beacon_entry,
-      void(%FSM*)* @beacon_loop,
-      void(%FSM*)* @beacon_exit
-    },
-    %FSM_StateDesc zeroinitializer,
-    %FSM_StateDesc zeroinitializer,
-    %FSM_StateDesc zeroinitializer,
-    %FSM_StateDesc zeroinitializer,
-    %FSM_StateDesc zeroinitializer,
-    %FSM_StateDesc zeroinitializer,
-    %FSM_StateDesc zeroinitializer,
-    %FSM_StateDesc zeroinitializer,
-    %FSM_StateDesc zeroinitializer,
-    %FSM_StateDesc zeroinitializer,
-    %FSM_StateDesc zeroinitializer,
-    %FSM_StateDesc zeroinitializer,
-    %FSM_StateDesc zeroinitializer
-  ]
+    ],
+    i32 0,
+    i32 0,
+    i32 0,
+    [16 x %FSM_StateDesc] [
+        %FSM_StateDesc {
+            [8 x i8] [
+                i8 79,
+                i8 102,
+                i8 102,
+                i8 zeroinitializer,
+                i8 zeroinitializer,
+                i8 zeroinitializer,
+                i8 zeroinitializer,
+                i8 zeroinitializer
+            ],
+            void(%FSM*)* @off_entry,
+            void(%FSM*)* @off_loop,
+            void(%FSM*)* @off_exit
+        },
+        %FSM_StateDesc {
+            [8 x i8] [
+                i8 79,
+                i8 110,
+                i8 zeroinitializer,
+                i8 zeroinitializer,
+                i8 zeroinitializer,
+                i8 zeroinitializer,
+                i8 zeroinitializer,
+                i8 zeroinitializer
+            ],
+            void(%FSM*)* @on_entry,
+            void(%FSM*)* @on_loop,
+            void(%FSM*)* @on_exit
+        },
+        %FSM_StateDesc {
+            [8 x i8] [
+                i8 66,
+                i8 101,
+                i8 97,
+                i8 99,
+                i8 111,
+                i8 110,
+                i8 zeroinitializer,
+                i8 zeroinitializer
+            ],
+            void(%FSM*)* @beacon_entry,
+            void(%FSM*)* @beacon_loop,
+            void(%FSM*)* @beacon_exit
+        },
+        %FSM_StateDesc zeroinitializer,
+        %FSM_StateDesc zeroinitializer,
+        %FSM_StateDesc zeroinitializer,
+        %FSM_StateDesc zeroinitializer,
+        %FSM_StateDesc zeroinitializer,
+        %FSM_StateDesc zeroinitializer,
+        %FSM_StateDesc zeroinitializer,
+        %FSM_StateDesc zeroinitializer,
+        %FSM_StateDesc zeroinitializer,
+        %FSM_StateDesc zeroinitializer,
+        %FSM_StateDesc zeroinitializer,
+        %FSM_StateDesc zeroinitializer,
+        %FSM_StateDesc zeroinitializer
+    ]
 }
 
 define i32 @main() {

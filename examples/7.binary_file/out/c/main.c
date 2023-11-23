@@ -14,7 +14,6 @@
 
 // FIXIT: not worked LLVM result (!)
 
-
 #define filename  "file.bin"
 
 
@@ -40,8 +39,8 @@ void write_example(void)
 
     // pointers casting requires -funsafe translator option
     // (see Makefile)
-    strcpy((char *)&(chunk.id)[0], (const char *)"id");
-    strcpy((char *)&(chunk.data)[0], (const char *)"data");
+    strcpy((char *)&chunk.id[0], (const char *)"id");
+    strcpy((char *)&chunk.data[0], (const char *)"data");
 
     // write chunk to file
     fwrite((void *)&chunk, sizeof(Chunk), 1, (FILE *)fp);
@@ -63,9 +62,10 @@ void read_example(void)
 
     Chunk chunk;
     fread((void *)&chunk, sizeof(Chunk), 1, (FILE *)fp);
-    printf("file '%s' contains:\n", filename);
-    printf("chunk.id: %s\n", &(chunk.id)[0]);
-    printf("chunk.data: %s\n", &(chunk.data)[0]);
+
+    printf("file \"%s\" contains:\n", filename);
+    printf("chunk.id: \"%s\"\n", &chunk.id[0]);
+    printf("chunk.data: \"%s\"\n", &chunk.data[0]);
 
     fclose((FILE *)fp);
 }
@@ -73,7 +73,7 @@ void read_example(void)
 
 int main(void)
 {
-    printf("text_file example\n");
+    printf("binary file example\n");
     write_example();
     read_example();
     return 0;
