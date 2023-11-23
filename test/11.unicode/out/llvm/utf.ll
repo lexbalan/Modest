@@ -213,7 +213,7 @@ else_0:
     %9 = icmp uge i32 %3, 56320
     br i1 %9 , label %then_1, label %else_1
 then_1:
-;error("Недопустимая кодовая последовательность.")
+    ;error("Недопустимая кодовая последовательность.")
     br label %endif_1
 else_1:
     %code = alloca i32
@@ -228,7 +228,7 @@ else_1:
     %17 = or i1 %15, %16
     br i1 %17 , label %then_2, label %else_2
 then_2:
-;error("Недопустимая кодовая последовательность.")
+    ;error("Недопустимая кодовая последовательность.")
     br label %endif_2
 else_2:
     %18 = load i32, i32* %code

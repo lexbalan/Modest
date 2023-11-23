@@ -334,25 +334,25 @@ define double @lineLength(%Line %line) {
 
 define i32 @main() {
     %1 = call double(%Line) @lineLength (%Line {
-  %Point {
-    double 0.0,
-    double 0.0
-  },
-  %Point {
-    double 1.0,
-    double 1.0
-  }
-})
+        %Point {
+            double 0.0,
+            double 0.0
+        },
+        %Point {
+            double 1.0,
+            double 1.0
+        }
+    })
     %2 = call double(%Line) @lineLength (%Line {
-  %Point {
-    double 10.0,
-    double 15.0
-  },
-  %Point {
-    double 20.0,
-    double 25.0
-  }
-})
+        %Point {
+            double 10.0,
+            double 15.0
+        },
+        %Point {
+            double 20.0,
+            double 25.0
+        }
+    })
     %3 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([18 x i8]* @str1 to [0 x i8]*), double %1)
     %4 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([18 x i8]* @str2 to [0 x i8]*), double %2)
     ret i32 0

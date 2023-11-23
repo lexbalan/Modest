@@ -111,18 +111,18 @@ declare void @perror(%ConstCharStr*)
 
 
 @points2 = global [3 x %Point] [
-  %Point {
-    i32 0,
-    i32 0
-  },
-  %Point {
-    i32 1,
-    i32 1
-  },
-  %Point {
-    i32 2,
-    i32 2
-  }
+    %Point {
+        i32 0,
+        i32 0
+    },
+    %Point {
+        i32 1,
+        i32 1
+    },
+    %Point {
+        i32 2,
+        i32 2
+    }
 ]
 
 
@@ -130,7 +130,7 @@ define i32 @main() {
     %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([12 x i8]* @str4 to [0 x i8]*))
     %2 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*), i32 42)
     %3 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([17 x i8]* @str6 to [0 x i8]*), i32 42)
-;	printf("genericStringConst = %s\n", genericStringConst)
+    ;	printf("genericStringConst = %s\n", genericStringConst)
     %4 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([19 x i8]* @str7 to [0 x i8]*), [0 x i8]* bitcast ([7 x i8]* @str1 to [0 x i8]*))
     ret i32 0
 }

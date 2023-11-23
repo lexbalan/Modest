@@ -208,18 +208,18 @@ define i32 @sig1(i32 %x) {
 
 
 @initMagic = global [8 x i32] [
-  i32 1779033703,
-  i32 3144134277,
-  i32 1013904242,
-  i32 2773480762,
-  i32 1359893119,
-  i32 2600822924,
-  i32 528734635,
-  i32 1541459225
+    i32 1779033703,
+    i32 3144134277,
+    i32 1013904242,
+    i32 2773480762,
+    i32 1359893119,
+    i32 2600822924,
+    i32 528734635,
+    i32 1541459225
 ]
 
 define void @sha256_contextInit(%SHA256_Context* %ctx) {
-;ctx.state := initMagic  // not worked; FIXIT!
+    ;ctx.state := initMagic  // not worked; FIXIT!
     %1 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 3
     %2 = bitcast [8 x i32]* %1 to i8*
     %3 = bitcast [8 x i32]* @initMagic to i8*
@@ -230,70 +230,70 @@ define void @sha256_contextInit(%SHA256_Context* %ctx) {
 
 
 @k = global [64 x i32] [
-  i32 1116352408,
-  i32 1899447441,
-  i32 3049323471,
-  i32 3921009573,
-  i32 961987163,
-  i32 1508970993,
-  i32 2453635748,
-  i32 2870763221,
-  i32 3624381080,
-  i32 310598401,
-  i32 607225278,
-  i32 1426881987,
-  i32 1925078388,
-  i32 2162078206,
-  i32 2614888103,
-  i32 3248222580,
-  i32 3835390401,
-  i32 4022224774,
-  i32 264347078,
-  i32 604807628,
-  i32 770255983,
-  i32 1249150122,
-  i32 1555081692,
-  i32 1996064986,
-  i32 2554220882,
-  i32 2821834349,
-  i32 2952996808,
-  i32 3210313671,
-  i32 3336571891,
-  i32 3584528711,
-  i32 113926993,
-  i32 338241895,
-  i32 666307205,
-  i32 773529912,
-  i32 1294757372,
-  i32 1396182291,
-  i32 1695183700,
-  i32 1986661051,
-  i32 2177026350,
-  i32 2456956037,
-  i32 2730485921,
-  i32 2820302411,
-  i32 3259730800,
-  i32 3345764771,
-  i32 3516065817,
-  i32 3600352804,
-  i32 4094571909,
-  i32 275423344,
-  i32 430227734,
-  i32 506948616,
-  i32 659060556,
-  i32 883997877,
-  i32 958139571,
-  i32 1322822218,
-  i32 1537002063,
-  i32 1747873779,
-  i32 1955562222,
-  i32 2024104815,
-  i32 2227730452,
-  i32 2361852424,
-  i32 2428436474,
-  i32 2756734187,
-  i32 3204031479,
-  i32 3329325298
+    i32 1116352408,
+    i32 1899447441,
+    i32 3049323471,
+    i32 3921009573,
+    i32 961987163,
+    i32 1508970993,
+    i32 2453635748,
+    i32 2870763221,
+    i32 3624381080,
+    i32 310598401,
+    i32 607225278,
+    i32 1426881987,
+    i32 1925078388,
+    i32 2162078206,
+    i32 2614888103,
+    i32 3248222580,
+    i32 3835390401,
+    i32 4022224774,
+    i32 264347078,
+    i32 604807628,
+    i32 770255983,
+    i32 1249150122,
+    i32 1555081692,
+    i32 1996064986,
+    i32 2554220882,
+    i32 2821834349,
+    i32 2952996808,
+    i32 3210313671,
+    i32 3336571891,
+    i32 3584528711,
+    i32 113926993,
+    i32 338241895,
+    i32 666307205,
+    i32 773529912,
+    i32 1294757372,
+    i32 1396182291,
+    i32 1695183700,
+    i32 1986661051,
+    i32 2177026350,
+    i32 2456956037,
+    i32 2730485921,
+    i32 2820302411,
+    i32 3259730800,
+    i32 3345764771,
+    i32 3516065817,
+    i32 3600352804,
+    i32 4094571909,
+    i32 275423344,
+    i32 430227734,
+    i32 506948616,
+    i32 659060556,
+    i32 883997877,
+    i32 958139571,
+    i32 1322822218,
+    i32 1537002063,
+    i32 1747873779,
+    i32 1955562222,
+    i32 2024104815,
+    i32 2227730452,
+    i32 2361852424,
+    i32 2428436474,
+    i32 2756734187,
+    i32 3204031479,
+    i32 3329325298
 ]
 
 define void @sha256_transform(%SHA256_Context* %ctx, [0 x i8]* %data) {
@@ -608,7 +608,7 @@ define void @sha256_final(%SHA256_Context* %ctx, [0 x i8]* %hash) {
     %i = alloca i32
     %2 = load i32, i32* %1
     store i32 %2, i32* %i
-; Pad whatever data is left in the buffer.
+    ; Pad whatever data is left in the buffer.
     %n = alloca i32
     store i32 64, i32* %n
     %3 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 1
@@ -649,7 +649,7 @@ then_1:
     %28 = call i8*(i8*, i32, i64) @memset (i8* %27, i32 0, i64 56)
     br label %endif_1
 endif_1:
-; Append to the padding the total message's length in bits and transform.
+    ; Append to the padding the total message's length in bits and transform.
     %29 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 2
     %30 = load i64, i64* %29
     %31 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 1
@@ -719,9 +719,9 @@ endif_1:
     %86 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 0
     %87 = bitcast [64 x i8]* %86 to [0 x i8]*
     call void(%SHA256_Context*, [0 x i8]*) @sha256_transform (%SHA256_Context* %85, [0 x i8]* %87)
-; Since this implementation uses little endian byte ordering
-; and SHA uses big endian, reverse all the bytes
-; when copying the final state to the output hash.
+    ; Since this implementation uses little endian byte ordering
+    ; and SHA uses big endian, reverse all the bytes
+    ; when copying the final state to the output hash.
     store i32 0, i32* %i
     br label %again_1
 again_1:
@@ -816,7 +816,7 @@ break_1:
 
 define void @sha256_doHash([0 x i8]* %msg, i32 %len, [0 x i8]* %hash) {
     %ctx = alloca %SHA256_Context
-
+    
 ; -- record assign
     %1 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 0
     store [64 x i8] zeroinitializer, [64 x i8]* %1
@@ -826,7 +826,7 @@ define void @sha256_doHash([0 x i8]* %msg, i32 %len, [0 x i8]* %hash) {
     store i64 0, i64* %3
     %4 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 3
     store [8 x i32] zeroinitializer, [8 x i32]* %4
-; -- end record assign
+    ; -- end record assign
 
     %5 = bitcast %SHA256_Context* %ctx to %SHA256_Context*
     call void(%SHA256_Context*) @sha256_contextInit (%SHA256_Context* %5)

@@ -113,48 +113,48 @@ declare void @utf32_putchar(i32)
 
 
 @arr_utf8 = global [8 x i8] [
-  i8 72,
-  i8 105,
-  i8 33,
-  i8 10,
-  i8 zeroinitializer,
-  i8 zeroinitializer,
-  i8 zeroinitializer,
-  i8 zeroinitializer
+    i8 72,
+    i8 105,
+    i8 33,
+    i8 10,
+    i8 zeroinitializer,
+    i8 zeroinitializer,
+    i8 zeroinitializer,
+    i8 zeroinitializer
 ]
 @arr_utf16 = global [8 x i16] [
-  i16 72,
-  i16 101,
-  i16 108,
-  i16 108,
-  i16 111,
-  i16 33,
-  i16 10,
-  i16 zeroinitializer
+    i16 72,
+    i16 101,
+    i16 108,
+    i16 108,
+    i16 111,
+    i16 33,
+    i16 10,
+    i16 zeroinitializer
 ]
 @arr_utf32 = global [8 x i32] [
-  i32 72,
-  i32 101,
-  i32 108,
-  i32 108,
-  i32 111,
-  i32 33,
-  i32 10,
-  i32 zeroinitializer
+    i32 72,
+    i32 101,
+    i32 108,
+    i32 108,
+    i32 111,
+    i32 33,
+    i32 10,
+    i32 zeroinitializer
 ]
 
 
 define i32 @main() {
-; indexing of GenericString returns #i symbol code
-; the symbols have GenericInteger type
-;    let omegaCharCode = "Hello Ω!\n"[6]
-;    let ratCharCode = "Hello 🐀!\n"[6]
-; you can assign omegaCharCode (937) to Nat32,
-; but you can't assign ratCharCode (128000) to Nat16 (!)
-;    var omegaCode : Nat16 := omegaCharCode to Nat16
-;    var ratCode : Nat32 := ratCharCode to Nat32
-;    printf("omegaCode = %d\n", omegaCode)
-;    printf("ratCode = %d\n", ratCode)
+    ; indexing of GenericString returns #i symbol code
+    ; the symbols have GenericInteger type
+    ;    let omegaCharCode = "Hello Ω!\n"[6]
+    ;    let ratCharCode = "Hello 🐀!\n"[6]
+    ; you can assign omegaCharCode (937) to Nat32,
+    ; but you can't assign ratCharCode (128000) to Nat16 (!)
+    ;    var omegaCode : Nat16 := omegaCharCode to Nat16
+    ;    var ratCode : Nat32 := ratCharCode to Nat32
+    ;    printf("omegaCode = %d\n", omegaCode)
+    ;    printf("ratCode = %d\n", ratCode)
     %i = alloca i32
     store i32 0, i32* %i
     br label %again_1

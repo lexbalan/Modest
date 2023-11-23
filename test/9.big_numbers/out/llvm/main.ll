@@ -151,7 +151,7 @@ define i32 @main() {
     %26 = load i128, i128* %big_sum
     %27 = call i64(i128) @low_128 (i128 %26)
     %28 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*), i64 %25, i64 %27)
-; signed big int test
+    ; signed big int test
     %sig1 = alloca i128
     store i128 -1, i128* %sig1
     %29 = load i128, i128* %sig1

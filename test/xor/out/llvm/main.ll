@@ -235,25 +235,25 @@ break_1:
 
 
 @test_msg = global [13 x i8] [
-  i8 72,
-  i8 101,
-  i8 108,
-  i8 108,
-  i8 111,
-  i8 32,
-  i8 87,
-  i8 111,
-  i8 114,
-  i8 108,
-  i8 100,
-  i8 33,
-  i8 zeroinitializer
+    i8 72,
+    i8 101,
+    i8 108,
+    i8 108,
+    i8 111,
+    i8 32,
+    i8 87,
+    i8 111,
+    i8 114,
+    i8 108,
+    i8 100,
+    i8 33,
+    i8 zeroinitializer
 ]
 @test_key = global [4 x i8] [
-  i8 97,
-  i8 98,
-  i8 99,
-  i8 zeroinitializer
+    i8 97,
+    i8 98,
+    i8 99,
+    i8 zeroinitializer
 ]
 
 define void @print_bytes([0 x i8]* %buf, i32 %len) {
@@ -284,11 +284,11 @@ define i32 @main() {
     %3 = bitcast [4 x i8]* @test_key to [0 x i8]*
     %4 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([27 x i8]* @str4 to [0 x i8]*))
     call void([0 x i8]*, i32) @print_bytes ([0 x i8]* %2, i32 12)
-; encrypt test data
+    ; encrypt test data
     call void([0 x i8]*, i32, [0 x i8]*, i32) @xor_encrypter ([0 x i8]* %2, i32 12, [0 x i8]* %3, i32 3)
     %5 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([26 x i8]* @str5 to [0 x i8]*))
     call void([0 x i8]*, i32) @print_bytes ([0 x i8]* %2, i32 12)
-; decrypt test data
+    ; decrypt test data
     call void([0 x i8]*, i32, [0 x i8]*, i32) @xor_encrypter ([0 x i8]* %2, i32 12, [0 x i8]* %3, i32 3)
     %6 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([26 x i8]* @str6 to [0 x i8]*))
     call void([0 x i8]*, i32) @print_bytes ([0 x i8]* %2, i32 12)

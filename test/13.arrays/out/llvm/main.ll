@@ -296,9 +296,9 @@ declare double @max_float64(double, double)
 
 
 @globalArray = global [3 x i32] [
-  i32 1,
-  i32 2,
-  i32 3
+    i32 1,
+    i32 2,
+    i32 3
 ]
 
 define i32 @main() {
