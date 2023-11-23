@@ -143,7 +143,10 @@ def dostr(src):
     s = []
     while True:
         c = src.getc()
-        if c == par:
+        if c == '\\':
+            s.append(c)
+            c = src.getc()
+        elif c == par:
             break
         s.append(c)
 
