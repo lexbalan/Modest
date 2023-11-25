@@ -80,7 +80,7 @@ def print_type_integer(t):
         out(t['id']['str'])
         return
 
-    out(t['name'])
+    out(t['id']['str'])
 
 
 def print_type_array(t):
@@ -167,12 +167,8 @@ def print_type(t, print_aka=True):
     k = t['kind']
 
     if print_aka:
-        """if 'id' in t:
+        if 'id' in t:
             out(t['id']['str'])
-            return"""
-
-        if 'name' in t:
-            out(t['name'])
             return
 
     if type.is_integer(t): print_type_integer(t)
@@ -673,7 +669,7 @@ def print_decl_type(x):
 
 
 def print_def_type(x):
-    out("type %s " % x['type']['name'])
+    out("type %s " % x['type']['id']['str'])
     print_type(x['type'], print_aka=False)
 
 

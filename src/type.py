@@ -262,7 +262,7 @@ def eq_float(a, b, opt):
 
 
 def eq_opaque(a, b, opt):
-    return a['name'] == b['name']    # maybe by UID?
+    return a['id']['str'] == b['id']['str']    # maybe by UID?
 
 
 def eq_alias(a, b, opt):
@@ -588,11 +588,11 @@ def type_copy(t):
     return nt
 
 
-def create_alias(id, t, ti):
+def create_alias(id_str, t, ti):
     #print('type.create_alias ' + id)
     nt = type_copy(t)
 
-    nt['name'] = id
+    nt['id'] = {'str': id_str, 'ti': ti}
 
     if 'c_alias' in nt:
         del nt['c_alias']
@@ -641,16 +641,16 @@ def type_print(t, print_aka=True):
     k = t['kind']
 
     if print_aka:
-        if 'name' in t:
-            id = t['name']
+        if 'id' in t:
+            id_str = t['id']['str']
 
-            if id == '<generic:int>':
-                id = 'Int'
+            if id_str == '<generic:int>':
+                id_str = 'Int'
 
             if is_generic(t):
                 print('Generic', end='')
 
-            print(id, end='')
+            print(id_str, end='')
 
             if is_generic(t):
                 if 'power' in t:
@@ -710,7 +710,7 @@ def type_print(t, print_aka=True):
         type_print(t['to'])
 
     elif is_integer(t):
-        print('%' + t['name'], end='')
+        print('%' + t['id']['str'], end='')
         if is_generic(t):
             print('%d' % t['power'], end='')
 

@@ -31,7 +31,7 @@ def hlir_type_unit():
     return {
         'isa': 'type',
         'kind': 'unit',
-        'name': 'Unit',
+        'id': {'str': 'Unit', 'ti': None},
         'generic': False,
         'c_alias': 'void',
         'llvm_alias': 'void',
@@ -45,12 +45,12 @@ def hlir_type_unit():
     }
 
 
-def hlir_type_integer(name, power, generic=False, ti=None):
+def hlir_type_integer(id_str, power, generic=False, ti=None):
     size = nbytes_for_bits(power)
     return {
         'isa': 'type',
         'kind': 'int',
-        'name': name,
+        'id': {'str': id_str, 'ti': None},
         'generic': generic,
         'att': [],
         'classes': ['numeric', 'comparable', 'ordered'],
@@ -67,7 +67,7 @@ def hlir_type_bool(ti):
     return {
         'isa': 'type',
         'kind': 'Bool',
-        'name': 'Bool',
+        'id': {'str': 'Bool', 'ti': None},
         'generic': False,
         'att': [],
         'classes': ['comparable'],
@@ -87,7 +87,7 @@ def hlir_type_generic_char(power, ti=None):
     return {
         'isa': 'type',
         'kind': 'char',
-        'name': 'Char',
+        'id': {'str': 'Char', 'ti': None},
         'generic': True,
         'att': [],
         'classes': ['comparable'],
@@ -101,12 +101,12 @@ def hlir_type_generic_char(power, ti=None):
     }
 
 
-def hlir_type_char(name, power, generic=False, ti=None):
+def hlir_type_char(id_str, power, generic=False, ti=None):
     size = nbytes_for_bits(power)
     return {
         'isa': 'type',
         'kind': 'char',
-        'name': name,
+        'id': {'str': id_str, 'ti': None},
         'generic': generic,
         'att': [],
         'classes': ['comparable'],
@@ -117,12 +117,12 @@ def hlir_type_char(name, power, generic=False, ti=None):
     }
 
 
-def hlir_type_float(aka, power, ti):
+def hlir_type_float(id_str, power, ti):
     size = nbytes_for_bits(power)
     return {
         'isa': 'type',
         'kind': 'float',
-        'name': aka,
+        'id': {'str': id_str, 'ti': None},
         'generic': False,
         'att': [],
         'classes': ['numeric', 'comparable', 'ordered'],
@@ -214,7 +214,7 @@ def hlir_type_generic_str(ti=None):
     return {
         'isa': 'type',
         'kind': 'String',
-        'name': 'String',
+        'id': {'str': 'String', 'ti': None},
         'generic': True,
         'att': [],
         'classes': [],

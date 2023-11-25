@@ -105,8 +105,8 @@ def value_cons_implicit(v, t, ti):
     # потому что в C номинальные типы, а у нас - структурные
     if type.is_record(t):
         if type.is_record(from_type):
-            if 'name' in from_type and 'name' in t:
-                if from_type['name'] != t['name']:
+            if 'id' in from_type and 'id' in t:
+                if from_type['id']['str'] != t['id']['str']:
                     #info("impl cast record", ti)
                     return hlir_value_cast(v, t, ti=ti)
 

@@ -587,20 +587,6 @@ class Parser:
         }
 
 
-    """def parse_name(self):
-        ti = self.ti()
-        ids = []
-
-        id = self.identifier()
-        ids.append(id)
-
-        while self.match("::"):
-            id = self.identifier()
-            ids.append(id)
-
-        return {'isa': 'name', 'ids': ids, 'ti': ti}"""
-
-
     def parse_value_term_str(self, s, ti):
             str_len = 0
             new_s = ''

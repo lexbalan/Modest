@@ -293,12 +293,12 @@ def do_field(x, pos=0, offset=0, is_last=False):
 def do_type_id(t):
     tx = type_get(t['id']['str'])
     if tx == None:
-        id = t['id']['str']
-        error("undeclared type %s" % id, t)
+        id_str = t['id']['str']
+        error("undeclared type %s" % id_str, t)
         # create fake alias for unknown type
         tx = hlir_type_bad()
-        nt = type.create_alias(id, tx, t['ti'])
-        root_context.type_add(id, nt)
+        nt = type.create_alias(id_str, tx, t['ti'])
+        root_context.type_add(id_str, nt)
         return nt
     return tx
 
@@ -1556,12 +1556,6 @@ def module_remove_node(m, isa, id_str):
                     #print("REMOVE: " + id_str)
                     m['text'].remove(x)
                     break
-            else:
-                # вот этот name убери к херам!! Сделай id как везде! FIXIT
-                if x[isa]['name'] == id_str:
-                    #print("REMOVE: " + id_str)
-                    m['text'].remove(x)
-                    break
 
 
 
@@ -1772,7 +1766,6 @@ def decl_type(x):
         'isa': 'type',
         'kind': 'opaque',
         'generic': False,
-        'name': id['str'],
         'id': id,
         'att': [],
         'classes': [],
@@ -1967,7 +1960,7 @@ def translate(srcname):
         'id': srcname,
         'path': absp,
         'dir': fdir,
-        'name':srcname,
+        'name': srcname,
     }
 
 

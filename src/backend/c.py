@@ -131,7 +131,7 @@ def print_type_numeric(t):
         out(t['c_alias'])
         return
 
-    out(t['name'])
+    out(t['id']['str'])
 
 
 
@@ -286,11 +286,11 @@ def print_type2(t, print_aka, need_space_after, _print_array_asis):
                 out(" ")
             return
 
-        if 'name' in t:
+        if 'id' in t:
             if NO_TYPEDEF_STRUCTS:
                 if type.is_record(t):
                     out("struct ")
-            out(t['name'])
+            out(t['id']['str'])
             if need_space_after:
                 out(" ")
             return
@@ -557,6 +557,11 @@ def print_value_cast(x, ctx):
     to_type = x['type']
     value = x['value']
     from_type = value['type']
+
+#    if type.is_generic(from_type):
+#        print_value(value)
+#        return
+
 
     # в у нас типы структурные, в си - номинальные
     # поэтому даже если структуры одинаковы, но имена разные
@@ -1238,20 +1243,20 @@ def print_decl_type(x):
 
 
 def print_def_type(x):
-    id = x['type']['name']#['str']
+    id = x['type']['id']['str']
     t = x['type']['aliasof']
 
     # !
     if x['afterdef']:
         if type.is_record(t):
-            print_type_record(t, tag=x['type']['name'])
+            print_type_record(t, tag=x['type']['id']['str'])
             out(";")
             return;
 
 
     if NO_TYPEDEF_STRUCTS:
         if type.is_record(t):
-            print_type_record(t, tag=x['type']['name'])
+            print_type_record(t, tag=x['type']['id']['str'])
             out(";")
             return
 
@@ -1270,7 +1275,7 @@ def print_def_type(x):
     else:
         print_type(t, need_space_after=False)#, print_aka=False)
 
-    out(" %s" % x['type']['name'])
+    out(" %s" % x['type']['id']['str'])
     if is_defined_array:
         out("["); print_value(t['volume']); out("]")
     out(";")
@@ -1318,7 +1323,7 @@ def print_field2(_id, typ):
     assert (id_str != "")
 
 
-    if 'c_alias' in typ or 'name' in typ:
+    if 'c_alias' in typ or 'id' in typ:
         print_field_regular(typ, id_str)
         return
 

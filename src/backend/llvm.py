@@ -297,8 +297,8 @@ def print_type(t, print_aka=True, arr_as_ptr_to_arr=False):
             out("i%d" % t['power'])
             return
 
-        if 'name' in t:
-            out('%' + t['name'])
+        if 'id' in t:
+            out('%' + t['id']['str'])
             return
 
     if type.is_record(t):
@@ -1658,7 +1658,7 @@ def print_decl_type(x):
 
 
 def print_def_type(x):
-    out("\n%%%s = type " % x['type']['name'])
+    out("\n%%%s = type " % x['type']['id']['str'])
     print_type(x['type'], print_aka=False)
     if type.is_record(x['type']):
         out("\n")
