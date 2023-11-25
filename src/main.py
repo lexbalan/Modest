@@ -12,9 +12,7 @@ CONFIG_PATH = os.path.expandvars("${MODEST_DIR}/config.toml")
 toml_dict = None
 # Opening a Toml file using tomlib
 with open(CONFIG_PATH, "rb") as toml:
-        toml_dict = tomllib.load(toml)
-
-#print(toml_dict)
+    toml_dict = tomllib.load(toml)
 
 
 import settings
@@ -89,9 +87,9 @@ def main():
             settings.set(k, v)
 
 
-    if args.d != None:
-        for d in args.d:
-            print("DEF: " + str(d))
+    #if args.d != None:
+    #    for d in args.d:
+    #        print("DEF: " + str(d))
 
     src_name = os.path.normpath(args.filename)
 
@@ -116,7 +114,6 @@ def main():
     module = trans.translate(src_name)
 
     if error.errcnt > 0 or module == None:
-        #error.fatal("%d errors occurred" % error.errcnt)
         exit(1)
 
 
