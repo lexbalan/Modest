@@ -291,9 +291,9 @@ def do_field(x, pos=0, offset=0, is_last=False):
 #
 
 def do_type_id(t):
-    tx = type_get(t['id']['str'])
+    id_str = t['id']['str']
+    tx = type_get(id_str)
     if tx == None:
-        id_str = t['id']['str']
         error("undeclared type %s" % id_str, t)
         # create fake alias for unknown type
         tx = hlir_type_bad()
@@ -345,9 +345,10 @@ def do_type_record(t):
 
         i = i + 1
 
-        f_exist = get_item_with_id(fields, f['id']['str'])
+        field_id_str = f['id']['str']
+        f_exist = get_item_with_id(fields, field_id_str)
         if f_exist != None:
-            error("redefinition of '%s'" % f['id']['str'], f)
+            error("redefinition of '%s'" % field_id_str, f)
             continue
 
         if 'comments' in fe:
@@ -1011,7 +1012,7 @@ def do_value_id(x):
     id_str = x['id']['str']
     vx = value_get(id_str)
     if vx == None:
-        error("undeclared value '%s'" % x['id']['str'], x)
+        error("undeclared value '%s'" % id_str, x)
 
         # чтобы не генерил ошибки дальше
         # создадим bad value и пропишем его глобально
@@ -1551,11 +1552,11 @@ def module_remove_node(m, isa, id_str):
 
     for x in m['text']:
         if isa in x:
-            if 'id' in x[isa]:
-                if x[isa]['id']['str'] == id_str:
-                    #print("REMOVE: " + id_str)
-                    m['text'].remove(x)
-                    break
+            #if 'id' in x[isa]:
+            if x[isa]['id']['str'] == id_str:
+               #print("REMOVE: " + id_str)
+                m['text'].remove(x)
+                break
 
 
 
@@ -1636,8 +1637,8 @@ def check_unuse(v):
     if v['usecnt'] > 0:
         return
 
-    vid = v['id']['str']
-    warning("value '%s' defined but not used" % (BOLD + vid + ENDC), v['ti'])
+    id_str = v['id']['str']
+    warning("value '%s' defined but not used" % (BOLD + id_str + ENDC), v['ti'])
 
 
 

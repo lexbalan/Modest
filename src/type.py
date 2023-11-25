@@ -607,19 +607,11 @@ def create_alias(id_str, t, ti):
 
 
 def type_get_size(t):
-    if 'size' in t:
-        return t['size']
-    else:
-        type_print(t); print()
-        fatal("#size not defined in type")
+    return t['size']
 
 
 def type_get_align(t):
-    if 'align' in t:
-        return t['align']
-    else:
-        type_print(t); print()
-        fatal("#align not defined in type")
+    return t['align']
 
 
 def print_list_by(lst, method):
