@@ -45,15 +45,11 @@ def precedence(x):
     return i
 
 
-
 def print_comment(x):
     k = x['kind']
-    if k == 'line':
-        print_comment_line(x)
-    elif k == 'block':
-        print_comment_block(x)
-    else:
-        pass
+    if k == 'line': print_comment_line(x)
+    elif k == 'block': print_comment_block(x)
+    else: pass
 
 
 def print_comment_block(x):
@@ -73,13 +69,7 @@ def print_comment_line(x):
             out("\n")
 
 
-
-
 def print_type_integer(t):
-    if 'id' in t:
-        out(t['id']['str'])
-        return
-
     out(t['id']['str'])
 
 
@@ -698,8 +688,15 @@ def print_def_const(x):
 
 def print_import(x):
     s = x['str']
+
+    if 'c-no-print' in x['att']:
+        out("@attribute(\"c-no-print\")\n")
     out("import \"%s\"" % (s))
 
+
+def print_directive(x):
+    if x['kind'] == 'import': print_import(x)
+    elif x['kind'] == 'c_include': out("@c_include \"%s\"" % x['str'])
 
 
 def run(module, outname):
@@ -724,15 +721,10 @@ def run(module, outname):
         elif isa == 'def_const': print_def_const(x)
         elif isa == 'def_func': print_def_func(x)
         elif isa == 'def_type': print_def_type(x)
-
         elif isa == 'decl_func': print_decl_func(x)
         elif isa == 'decl_type': print_decl_type(x)
-
-        elif isa == 'directive':
-            if x['kind'] == 'import': print_import(x)
-
-        elif isa == 'comment':
-            print_comment(x)
+        elif isa == 'directive': print_directive(x)
+        elif isa == 'comment': print_comment(x)
 
     out("\n\n")
 

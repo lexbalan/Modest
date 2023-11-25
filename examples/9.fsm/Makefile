@@ -12,7 +12,7 @@ LIBPREFIX = ./lib
 all: LLVM
 
 
-C_OPTIONS = -mstyle=legacy -fpuffy
+C_OPTIONS = -mstyle=legacy
 
 CM:
 	mcc -o $(CMPREFIX)/ff -mbackend=cm ${MODEST_LIB}/fastfood/main.hm

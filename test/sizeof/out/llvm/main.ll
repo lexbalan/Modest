@@ -246,16 +246,16 @@ define i32 @main() {
     %18 = ptrtoint i1* @g to i64
     %19 = sub i64 %18, %2
     %20 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([15 x i8]* @str7 to [0 x i8]*), i64 %19)
-; дженерики в с явно не приводятся, но нектороые нужно!
+    ; дженерики в с явно не приводятся, но нектороые нужно!
     %21 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([22 x i8]* @str8 to [0 x i8]*), i64 0)
     %22 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([22 x i8]* @str9 to [0 x i8]*), i64 4)
     %23 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([22 x i8]* @str10 to [0 x i8]*), i64 8)
     %24 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([23 x i8]* @str11 to [0 x i8]*), i64 16)
     %25 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([22 x i8]* @str12 to [0 x i8]*), i64 20)
     %26 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([22 x i8]* @str13 to [0 x i8]*), i64 44)
-; sizeof(void) in C  == 1
-; sizeof(Unit) in CM == 0
-; TODO: here is a broblem
+    ; sizeof(void) in C  == 1
+    ; sizeof(Unit) in CM == 0
+    ; TODO: here is a broblem
     %27 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([21 x i8]* @str14 to [0 x i8]*), i64 0)
     %28 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([22 x i8]* @str15 to [0 x i8]*), i64 0)
     %29 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([21 x i8]* @str16 to [0 x i8]*), i64 1)
@@ -270,8 +270,8 @@ define i32 @main() {
     %38 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([23 x i8]* @str25 to [0 x i8]*), i64 8)
     %39 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([23 x i8]* @str26 to [0 x i8]*), i64 16)
     %40 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([24 x i8]* @str27 to [0 x i8]*), i64 16)
-; type Nat256 not implemented
-;printf("sizeof(Nat256) = %llu\n", sizeof(Nat256) to Nat64)
+    ; type Nat256 not implemented
+    ;printf("sizeof(Nat256) = %llu\n", sizeof(Nat256) to Nat64)
     %41 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([21 x i8]* @str28 to [0 x i8]*), i64 1)
     %42 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([22 x i8]* @str29 to [0 x i8]*), i64 1)
     %43 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([22 x i8]* @str30 to [0 x i8]*), i64 2)
@@ -282,22 +282,22 @@ define i32 @main() {
     %48 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([23 x i8]* @str35 to [0 x i8]*), i64 8)
     %49 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([23 x i8]* @str36 to [0 x i8]*), i64 16)
     %50 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([24 x i8]* @str37 to [0 x i8]*), i64 16)
-; type Int256 not implemented
-;printf("sizeof(Int256) = %llu\n", sizeof(Int256) to Nat64)
+    ; type Int256 not implemented
+    ;printf("sizeof(Int256) = %llu\n", sizeof(Int256) to Nat64)
     %51 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([22 x i8]* @str38 to [0 x i8]*), i64 1)
     %52 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([23 x i8]* @str39 to [0 x i8]*), i64 1)
     %53 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([23 x i8]* @str40 to [0 x i8]*), i64 2)
     %54 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([24 x i8]* @str41 to [0 x i8]*), i64 2)
     %55 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([23 x i8]* @str42 to [0 x i8]*), i64 4)
     %56 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([24 x i8]* @str43 to [0 x i8]*), i64 4)
-; pointer size (for example pointer to []Char8)
+    ; pointer size (for example pointer to []Char8)
     %57 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([22 x i8]* @str44 to [0 x i8]*), i64 8)
     %58 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([23 x i8]* @str45 to [0 x i8]*), i64 8)
-; array size
+    ; array size
     %59 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([26 x i8]* @str46 to [0 x i8]*), i64 40)
     %60 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([27 x i8]* @str47 to [0 x i8]*), i64 4)
     %61 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([28 x i8]* @str48 to [0 x i8]*), i64 4)
-; record size
+    ; record size
     %62 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([22 x i8]* @str49 to [0 x i8]*), i64 8)
     %63 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([23 x i8]* @str50 to [0 x i8]*), i64 4)
     %64 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([26 x i8]* @str51 to [0 x i8]*), i64 0)

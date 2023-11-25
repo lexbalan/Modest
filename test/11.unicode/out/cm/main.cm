@@ -1,7 +1,9 @@
 // test/11.unicode/main.cm
+@attribute("c-no-print")
 import "libc/stdio.h"
+@attribute("c-no-print")
 import "misc/utf.h"
-
+@c_include "./utf.h"
 
 
 const ratSymbolUTF8 = [0xF0, 0x9F, 0x90, 0x80]

@@ -1808,15 +1808,14 @@ def print_module(m):
             out("\n")
             isa_prev = isa
 
-        if isa == 'directive':
-            pass
-
         if isa == 'decl_func': print_decl_func(x)
         elif isa == 'decl_type': print_decl_type(x)
         elif isa == 'def_var': print_def_var(x)
         elif isa == 'def_const': print_def_const(x)
         elif isa == 'def_func': print_def_func(x)
         elif isa == 'def_type': print_def_type(x)
+        #elif isa == 'directive': pass
+        #elif isa == 'comment': pass
 
     out("\n\n")
 

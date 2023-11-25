@@ -2,11 +2,13 @@
 
 // This is flashlight final state machine example
 // (just for compiler test and language demonstration)
+@attribute("c-no-print")
 import "libc/stdio.h"
 
 import "./fsm.h"
+@attribute("c-no-print")
 import "fastfood/main.h"
-
+@c_include "./ff.h"
 
 
 

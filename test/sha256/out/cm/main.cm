@@ -1,8 +1,11 @@
 // test/sha256/main.cm
+@attribute("c-no-print")
 import "libc/stdio.h"
+@attribute("c-no-print")
 import "libc/libc.h"
+@attribute("c-no-print")
 import "misc/sha256.h"
-
+@c_include "./sha256.h"
 
 
 type TestInputString [32]Char8

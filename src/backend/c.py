@@ -699,9 +699,9 @@ def print_value_literal_record(v, ctx):
 
     while i < nitems:
         item = v['type']['fields'][i]
-        field_str = item['id']['str']
+        field_id_str = item['id']['str']
 
-        ini = get_item_with_id(initializers, field_str)
+        ini = get_item_with_id(initializers, field_id_str)
 
         if value_is_zero(ini['value']):
             i = i + 1
@@ -718,7 +718,7 @@ def print_value_literal_record(v, ctx):
             if item_printed:
                 out(" ")
 
-        out(".%s = " % field_str)
+        out(".%s = " % field_id_str)
 
         # 'no-literal-array-cast' - когда прописываем инициализаторы
         # литерал массива не нужно приводить к типу массива
@@ -1058,11 +1058,12 @@ def assign_record_by_fields(x):
     #print("assign_record_by_fields " + x['right']['kind'])
     out("// record assignation")
     for f in x['right']['type']['fields']:
+        f_id_str = f['id']['str']
         nl_indent()
         print_value(x['left']);
-        out(".%s = " % f['id']['str'])
+        out(".%s = " % f_id_str)
         print_value(x['right']);
-        out(".%s;" % f['id']['str'])
+        out(".%s;" % f_id_str)
 
 
 def assign(left, right):
@@ -1187,17 +1188,10 @@ def print_func_signature(id, typ):
 def print_decl_func(x):
     func = x['value']
 
-    if 'extern' in func['att']:
-        out("extern ")
-
-    if 'static' in func['att']:
-        out("static ")
-
-    if 'inline' in func['att']:
-        out("inline ")
-
-    if 'c_prefix' in func:
-        out("%s " % func['c_prefix'])
+    if 'extern' in func['att']: out("extern ")
+    if 'static' in func['att']: out("static ")
+    if 'inline' in func['att']: out("inline ")
+    if 'c_prefix' in func: out("%s " % func['c_prefix'])
 
     print_func_signature(func['id']['str'], func['type'])
 
@@ -1216,11 +1210,8 @@ def print_def_func(x):
     if 'c_prefix' in func:
         out("%s " % func['c_prefix'])
 
-    if 'static' in func['att']:
-        out("static ")
-
-    if 'inline' in func['att']:
-        out("inline ")
+    if 'static' in func['att']: out("static ")
+    if 'inline' in func['att']: out("inline ")
 
     arrays = print_func_signature(func['id']['str'], func['type'])
 
@@ -1235,28 +1226,27 @@ def print_def_func(x):
 
 
 def print_decl_type(x):
-    name = x['type']['id']['str']
-    out("struct %s;" % name)
+    id_str = x['type']['id']['str']
+    out("struct %s;" % id_str)
     if not NO_TYPEDEF_STRUCTS:
-        out("\ntypedef struct %s %s;" % (name, name))
-
+        out("\ntypedef struct %s %s;" % (id_str, id_str))
 
 
 def print_def_type(x):
-    id = x['type']['id']['str']
+    id_str = x['type']['id']['str']
     t = x['type']['aliasof']
 
     # !
     if x['afterdef']:
         if type.is_record(t):
-            print_type_record(t, tag=x['type']['id']['str'])
+            print_type_record(t, tag=id_str)
             out(";")
             return;
 
 
     if NO_TYPEDEF_STRUCTS:
         if type.is_record(t):
-            print_type_record(t, tag=x['type']['id']['str'])
+            print_type_record(t, tag=xid_str)
             out(";")
             return
 
@@ -1275,7 +1265,7 @@ def print_def_type(x):
     else:
         print_type(t, need_space_after=False)#, print_aka=False)
 
-    out(" %s" % x['type']['id']['str'])
+    out(" %s" % id_str)
     if is_defined_array:
         out("["); print_value(t['volume']); out("]")
     out(";")

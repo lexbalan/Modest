@@ -1,4 +1,5 @@
 // examples/1.hello_world/main.cm
+@attribute("c-no-print")
 import "libc/stdio.h"
 
 
