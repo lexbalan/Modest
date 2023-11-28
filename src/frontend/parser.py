@@ -206,7 +206,15 @@ class Parser:
                 }
             else:
                 #error("???", ti)
-                return {'isa': 'type', 'kind': 'func', 'params': fields, 'to': None, 'ti': ti}
+                return {
+                    'isa': 'type',
+                    'kind': 'func',
+                    'params': fields,
+                    'to': None,
+                    'size': 0,
+                    'align': 0,
+                    'ti': ti
+                }
             #    return r
 
         elif self.match("*"):
@@ -885,11 +893,6 @@ class Parser:
             elif cl == 'comment-block':
                 s = self.stmt_comment_block()
             else:
-
-                """if cl in ['comment-line', 'comment-block']:
-                self.skip()
-                return None"""
-
                 s = self.stmt_expr_value()
 
         if s == None:

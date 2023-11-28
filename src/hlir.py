@@ -266,6 +266,8 @@ def hlir_type_func(params, to, ti=None):
         'kind': 'func',
         'params': params,
         'to': to,
+        'size': 0,
+        'align': 0,
         'att': [],
         'classes': [],
         'ti': ti

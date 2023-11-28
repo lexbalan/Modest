@@ -1424,6 +1424,8 @@ def print_arrays(arrays):
         memcpy_type = {
             'isa': 'type',
             'kind': 'func',
+            'size': 0,
+            'align': 0,
             'classes': [],
             'params': [
                 {
@@ -1464,7 +1466,6 @@ def print_arrays(arrays):
             'classes': [],
             'ti': None
         }
-
 
         args = [
             {
