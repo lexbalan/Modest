@@ -66,7 +66,7 @@ def value_cons_integer(v, t, ti, method):
         return None
 
 
-    if type.is_integer(vtype) or type.is_char(vtype):
+    if type.is_integer(vtype) or type.is_char(vtype) or type.is_bool(vtype):
         # (Int or Char) -> Int
         check_power(vtype, t, method, ti)
         nv = hlir_value_cast(v, t, ti)
