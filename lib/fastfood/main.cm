@@ -12,7 +12,7 @@ type ArchInt Int64
 type ArchNat Nat64
 
 
-func ff_memzero (mem : Pointer, len : Nat64) {
+func ff_memzero(mem: Pointer, len: Nat64) {
     let len_words = len / sizeof(ArchNat)
 
     let dst_word = mem to *[]ArchNat
@@ -36,7 +36,7 @@ func ff_memzero (mem : Pointer, len : Nat64) {
 }
 
 
-func ff_memcpy (dst : Pointer, src : Pointer, len : Nat64) {
+func ff_memcpy(dst: Pointer, src: Pointer, len: Nat64) {
     let len_words = len / sizeof(ArchNat)
 
     let src_w = src to *[]ArchNat
@@ -62,7 +62,7 @@ func ff_memcpy (dst : Pointer, src : Pointer, len : Nat64) {
 }
 
 
-func ff_cstrlen(cstr : *Str8) -> Nat64 {
+func ff_cstrlen(cstr: *Str8) -> Nat64 {
     var i := 0 to Nat64
     while cstr[i] != "\0"[0] {
         i := i + 1
@@ -72,7 +72,7 @@ func ff_cstrlen(cstr : *Str8) -> Nat64 {
 
 
 
-func delay_us(us : Nat64) {
+func delay_us(us: Nat64) {
     let start_time = clock()
 
     while (clock() < start_time + us) {
@@ -81,17 +81,17 @@ func delay_us(us : Nat64) {
 }
 
 
-func delay(us : Nat64) {
+func delay(us: Nat64) {
     delay_us(us)
 }
 
 
-func delay_ms(ms : Nat64) {
+func delay_ms(ms: Nat64) {
     delay_us(ms * 1000)
 }
 
 
-func delay_s(s : Nat64) {
+func delay_s(s: Nat64) {
     delay_ms(s * 1000)
 }
 
