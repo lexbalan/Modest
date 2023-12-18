@@ -1,28 +1,55 @@
 # Types
 
 
-## Type Classes
+### Type Classses
 
-```
-logical     // supports '==', '!=', 'or', 'and', 'xor', 'not'
-comparable  // supports '==', '!='
-ordered     // supports '<', '>', '<=', '>='
-numeric     // supports '+', '-', '*', '/', '%', 'or', 'and', 'xor', 'not'
-```
+Type class in a marker that can to determine operations which allowed for the type.
+
+| TypeClass  | Operations |
+| -- | -- |
+| `logical` | `==, !=, or, and, xor, not` |
+| `comparable` | `==, !=` |
+| `ordered` | `<, >` |
+| `numeric` | `+, -, *, /, %` |
+
 
 
 ## Generic types
 
 *Generic type* - compile time type, that can be *implicit* casted to real types for using in runtime.
 
-1) **GenericInteger** - type of integer literal: `0, 1, 2, ...`
-2) **GenericFloat** - type of floating point literal: `0.5, 2.7, 3.14, ...`
-3) **GenericChar** - type of char literal: `"a"[0], "b"[0], ...`
-4) **GenericArray** - type of array literal: `[1, 2, 3], ...`
-4) **GenericRecord** - type of record literal: `{x=1, y=2, z=3}, ...`
+| GenericType | Description | Examples |
+| ----------- | ----------- | -------- |
+| `GenericInteger` | type of integer literal | `0, 1, 2, ...` |
+| `GenericFloat` | type of floating point literal | `0.5, 2.7, 3.14, ...` |
+| `GenericChar` | type of char literal | `"a"[0], "b"[0], ...` |
+| `GenericArray` | type of array literal | `[1, 2, 3], ...` |
+| `GenericRecord` | type of record literal | `{x=1, y=2, z=3}, ...` |
 
 
 ## Real types *(non-generic)*
+
+
+
+| Type     |Size |Align| Classes | Description |
+| :------: | :-: | :-: | ------- | --- |
+| `Unit`   | `0` | `1` | `-`     | `Empty type` |
+| `Bool`   | `1` | `1` | `logical, comparable` | |
+| `Char8`  | `1` | `1` | `comparable` | `UTF-8 character` |
+| `Char16` | `2` | `2` | `comparable` | `UTF-16 character` |
+| `Char16` | `4` | `4` | `comparable` | `UTF-32 character` |
+| `Int8`   | `1` | `1` | `numeric, comparable, ordered` | `signed` |
+| `Int16`  | `2` | `2` | `numeric, comparable, ordered` | `signed` |
+| `Int32`  | `4` | `4` | `numeric, comparable, ordered` | `signed` |
+| `Int64`  | `8` | `8` | `numeric, comparable, ordered` | `signed` |
+| `Int128` | `16` | `16` | `numeric, comparable, ordered` | `signed` |
+| `Nat8`   | `1` | `1` | `numeric, comparable, ordered` | `unsigned` |
+| `Nat16`  | `2` | `2` | `numeric, comparable, ordered` | `unsigned` |
+| `Nat32`  | `4` | `4` | `numeric, comparable, ordered` | `unsigned` |
+| `Nat64`  | `8` | `8` | `numeric, comparable, ordered` | `unsigned` |
+| `Nat128` | `16` | `16` | `numeric, comparable, ordered` | `unsigned` |
+
+> Alignment of any base type is equal to his size, **exclude the *Unit* type**.
 
 
 #### Unit type
