@@ -517,9 +517,9 @@ def bin_type_select(a, b):
 
 
 # бинарные операции с указателями имеют особые правила
-def do_bin_op_with_pointers(k, l, r , ti):
+def do_bin_op_with_pointers(op, l, r , ti):
     # единственная безопасная операция для указателей - это сравнение
-    if k in ['eq', 'ne']:
+    if op in ['eq', 'ne']:
         # сравнивать можно только указатель с указателем
         if type.is_pointer(l['type']) and type.is_pointer(r['type']):
 
@@ -529,7 +529,7 @@ def do_bin_op_with_pointers(k, l, r , ti):
             elif type.is_nil(r['type']):
                 r = value_cons_implicit(r, l['type'], ti)
 
-            return hlir_value_bin(k, l, r, type.typeBool, ti)
+            return hlir_value_bin(op, l, r, type.typeBool, ti)
 
     from main import features
     if not features.get('unsafe'):
@@ -538,7 +538,7 @@ def do_bin_op_with_pointers(k, l, r , ti):
 
 
     # если включен unsafe режим
-    if k in ['add', 'sub']:
+    if op in ['add', 'sub']:
         ptr_n_int = type.is_free_pointer(l['type']) and type.is_integer(r['type'])
         int_n_ptr = type.is_integer(l['type']) and type.is_free_pointer(r['type'])
 
@@ -551,8 +551,8 @@ def do_bin_op_with_pointers(k, l, r , ti):
                 typ = r['type']
 
             num = 0
-            if k == 'add': num = l['imm'] + r['imm']
-            elif k == 'sub': num = l['imm'] - r['imm']
+            if op == 'add': num = l['imm'] + r['imm']
+            elif op == 'sub': num = l['imm'] - r['imm']
             return hlir_value_int(num, typ=typ, ti=ti)
 
         # указатель или число в рантайме
@@ -576,7 +576,7 @@ def do_bin_op_with_pointers(k, l, r , ti):
 
 
 
-def bin_imm(k, type_result, l, r, ti):
+def bin_imm(op, type_result, l, r, ti):
     ops = {
         'logic_or': lambda a, b: a | b,
         'logic_and': lambda a, b: a & b,
@@ -596,7 +596,7 @@ def bin_imm(k, type_result, l, r, ti):
         'rem': lambda a, b: a % b,
     }
 
-    num_val = ops[k](l['imm'], r['imm'])
+    num_val = ops[op](l['imm'], r['imm'])
 
     if type.is_generic(type_result):
         # пересматриваем generic тип для нового значения (!)
@@ -605,7 +605,7 @@ def bin_imm(k, type_result, l, r, ti):
     if not type.is_float(l['type']):
         num_val = int(num_val)
 
-    bin_value = hlir_value_bin(k, l, r, type_result, ti=ti)
+    bin_value = hlir_value_bin(op, l, r, type_result, ti=ti)
 
     bin_value['imm'] = num_val
 
@@ -649,24 +649,24 @@ def value_string_eq(l, r):
 
 
 
-def do_value_bin_str_eq(k, l, r, ti):
+def do_value_bin_str_eq(op, l, r, ti):
     bool_result = value_string_eq(l, r)
 
-    if k == 'eq':
-        k = 'eq_str'
+    if op == 'eq':
+        op = 'eq_str'
 
-    elif k == 'ne':
-        k = 'ne_str'
+    elif op == 'ne':
+        op = 'ne_str'
         bool_result = not bool_result
 
-    bin_value = hlir_value_bin(k, l, r, type.typeBool, ti=ti)
+    bin_value = hlir_value_bin(op, l, r, type.typeBool, ti=ti)
     bin_value['imm'] = bool_result
     return bin_value
 
 
 
 def do_value_bin(x):
-    k = x['kind']
+    op = x['kind']
     l = do_rvalue(x['left'])
     r = do_rvalue(x['right'])
     ti = x['ti']
@@ -675,21 +675,21 @@ def do_value_bin(x):
         return hlir_value_bad(ti)
 
 
-    if not k in l['type']['ops']:
+    if not op in l['type']['ops']:
         error("unsuitable type", x['left']['ti'])
-    if not k in r['type']['ops']:
+    if not op in r['type']['ops']:
         error("unsuitable type", x['right']['ti'])
 
 
     if type.is_pointer(l['type']) or type.is_pointer(r['type']):
-        return do_bin_op_with_pointers(k, l, r , ti)
+        return do_bin_op_with_pointers(op, l, r , ti)
 
 
     if type.is_generic_string(l['type']) and type.is_generic_string(r['type']):
-        if k == 'add':
+        if op == 'add':
             return value_strings_concat(l, r, ti)
-        elif k in ['eq', 'ne']:
-            return do_value_bin_str_eq(k, l, r, ti)
+        elif op in ['eq', 'ne']:
+            return do_value_bin_str_eq(op, l, r, ti)
 
 
     common_type = bin_type_select(l['type'], r['type'])
@@ -703,7 +703,7 @@ def do_value_bin(x):
     type_result = common_type
 
 
-    if k in ['eq', 'ne']:
+    if op in ['eq', 'ne']:
         type_result = type.typeBool
 
         if not type_class_check(l['type'], 'comparable'):
@@ -715,7 +715,7 @@ def do_value_bin(x):
             return hlir_value_bad(x['ti'])
 
     # < > <= >= only for values with 'ordered' type
-    elif k in ['lt', 'gt', 'le', 'ge']:
+    elif op in ['lt', 'gt', 'le', 'ge']:
         type_result = type.typeBool
 
         if not type_class_check(l['type'], 'ordered'):
@@ -726,7 +726,7 @@ def do_value_bin(x):
             error("expected value with ordered type", x['right']['ti'])
             return hlir_value_bad(x['ti'])
 
-    elif k in ['or', 'and', 'xor', 'add', 'sub', 'mul', 'div', 'rem']:
+    elif op in ['or', 'and', 'xor', 'add', 'sub', 'mul', 'div', 'rem']:
         if not type_class_check(l['type'], 'numeric') and not type.is_bool(l['type']):
             error("expected value with numeric type", x['left']['ti'])
             return hlir_value_bad(x['ti'])
@@ -736,17 +736,17 @@ def do_value_bin(x):
             return hlir_value_bad(x['ti'])
 
     if type.eq(type_result, type.typeBool):
-        if k == 'or': k = 'logic_or'
-        elif k == 'and': k = 'logic_and'
+        if op == 'or': op = 'logic_or'
+        elif op == 'and': op = 'logic_and'
 
 
     # if left & right are immediate, we can fold const
     # and append field ['imm'] to bin_value
     if value_is_immediate(l) and value_is_immediate(r):
-        return bin_imm(k, type_result, l, r, ti)
+        return bin_imm(op, type_result, l, r, ti)
 
 
-    return hlir_value_bin(k, l, r, type_result, ti=ti)
+    return hlir_value_bin(op, l, r, type_result, ti=ti)
 
 
 
@@ -808,12 +808,20 @@ def do_value_un(x):
     if value_is_bad(val):
         return val
 
+    op = x['kind']
+
+
+    if op != 'ref':
+        if not op in val['type']['ops']:
+            error("unsuitable type", x['value']['ti'])
+
+
     t = val['type']
 
-    if x['kind'] == 'not': return do_value_not(val, t, ti)
-    elif x['kind'] == 'minus': return do_value_minus(val, t, ti)
-    elif x['kind'] == 'deref': return do_value_deref(val, t, ti)
-    elif x['kind'] == 'ref': return do_value_ref(val, t, ti)
+    if op == 'not': return do_value_not(val, t, ti)
+    elif op == 'minus': return do_value_minus(val, t, ti)
+    elif op == 'deref': return do_value_deref(val, t, ti)
+    elif op == 'ref': return do_value_ref(val, t, ti)
 
 
 

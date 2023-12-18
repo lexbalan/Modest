@@ -12,7 +12,7 @@ flt_width = 0
 CONS_OP = ['cast']
 EQ_OPS = ['eq', 'ne']
 RELATIONAL_OPS = ['lt', 'gt', 'le', 'ge']
-ARITHMETICAL_OPS = ['add', 'sub', 'mul', 'div', 'rem']
+ARITHMETICAL_OPS = ['add', 'sub', 'mul', 'div', 'rem', 'minus']
 LOGICAL_OPS = ['or', 'xor', 'and', 'not']
 
 INT_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS + LOGICAL_OPS
