@@ -60,7 +60,7 @@ int main(void)
         .sin_family = AF_INET,
         .sin_port = port,
         .sin_addr = (struct in_addr){
-            .s_addr = ((unsigned long)/*?*/(uint32_t)inet_addr((const char *)ip))
+            .s_addr = ((unsigned long)(uint32_t)inet_addr((const char *)ip))
         }
     };
 

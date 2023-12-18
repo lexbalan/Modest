@@ -148,10 +148,10 @@ def type_init():
     typeChar32['c_alias'] = 'uint32_t'
     typeChar32['llvm_alias'] = 'i32'
 
-    typeGenericString = hlir_type_generic_str(ti=None)
+    """typeGenericString = hlir_type_generic_str(ti=None)
     typeGenericString['cm_alias'] = 'String'
     typeGenericString['c_alias'] = 'const char *'
-    typeGenericString['llvm_alias'] = 'i8*'
+    typeGenericString['llvm_alias'] = 'i8*'"""
 
     typeStr8 = hlir_type_array(of=typeChar8)
     typeStr16 = hlir_type_array(of=typeChar16)

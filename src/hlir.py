@@ -9,11 +9,25 @@ ptr_width = 0
 flt_width = 0
 
 
+CONS_OP = ['cast']
+EQ_OPS = ['eq', 'ne']
+RELATIONAL_OPS = ['lt', 'gt', 'le', 'ge']
+ARITHMETICAL_OPS = ['add', 'sub', 'mul', 'div', 'rem']
+LOGICAL_OPS = ['or', 'xor', 'and', 'not']
+
+INT_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS + LOGICAL_OPS
+BOOL_OPS = CONS_OP + EQ_OPS + LOGICAL_OPS
+FLOAT_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS
+CHAR_OPS = CONS_OP + EQ_OPS
+PTR_OPS = CONS_OP + EQ_OPS + ['deref']
+ARR_OPS = CONS_OP + EQ_OPS + ['add', 'index']
+REC_OPS = CONS_OP + EQ_OPS + ['access']
+
+
 def hlir_init():
     global ptr_width, flt_width
     ptr_width = int(settings.get('pointer_width'))
     flt_width = int(settings.get('float_width'))
-
 
 
 def hlir_type_bad(ti=None):
@@ -23,6 +37,7 @@ def hlir_type_bad(ti=None):
         'generic': False,
         'att': [],
         'classes': [],
+        'ops': [],
         'ti': ti
     }
 
@@ -41,6 +56,7 @@ def hlir_type_unit():
         'imm': {},
         'att': [],
         'classes': [],
+        'ops': CONS_OP,
         'ti': None
     }
 
@@ -59,6 +75,7 @@ def hlir_type_integer(id_str, power, generic=False, ti=None):
         'unsigned': False,
         'size': size,
         'align': size,
+        'ops': INT_OPS,
         'ti': ti
     }
 
@@ -77,6 +94,7 @@ def hlir_type_bool(ti):
         'c_alias': 'uint8_t',
         'llvm_alias': 'i1',
         'cm_alias': 'Bool',
+        'ops': BOOL_OPS,
         'ti': None
     }
 
@@ -97,6 +115,7 @@ def hlir_type_generic_char(power, ti=None):
         'llvm_alias': 'i8',
         'size': size,
         'align': size,
+        'ops': EQ_OPS,
         'ti': ti
     }
 
@@ -113,6 +132,7 @@ def hlir_type_char(id_str, power, generic=False, ti=None):
         'power': power,
         'size': size,
         'align': size,
+        'ops': CHAR_OPS,
         'ti': ti
     }
 
@@ -130,6 +150,7 @@ def hlir_type_float(id_str, power, ti):
         'size': size,
         'align': size,
         'c_alias': 'double',
+        'ops': FLOAT_OPS,
         'ti': ti
     }
 
@@ -146,6 +167,7 @@ def hlir_type_pointer(to, ti=None):
         'power': ptr_width,
         'att': [],
         'classes': ['comparable'],
+        'ops': PTR_OPS,
         'ti': ti
     }
 
@@ -163,6 +185,7 @@ def hlir_type_free_pointer(ti):
         'power': ptr_width,
         'att': [],
         'classes': ['comparable'],
+        'ops': PTR_OPS,
         'ti': ti
     }
 
@@ -180,6 +203,7 @@ def hlir_type_nil(ti):
         'power': ptr_width,
         'att': [],
         'classes': ['comparable'],
+        'ops': PTR_OPS,
         'ti': ti
     }
 
@@ -206,11 +230,12 @@ def hlir_type_array(of, volume=None, generic=False, ti=None):
         'of': of,
         'att': [],
         'classes': [],
+        'ops': ARR_OPS,
         'ti': ti
     }
 
 
-def hlir_type_generic_str(ti=None):
+"""def hlir_type_generic_str(ti=None):
     return {
         'isa': 'type',
         'kind': 'String',
@@ -218,8 +243,9 @@ def hlir_type_generic_str(ti=None):
         'generic': True,
         'att': [],
         'classes': [],
+        'ops': STR_OPS,
         'ti': ti
-    }
+    }"""
 
 
 # used in shifts
@@ -254,6 +280,7 @@ def hlir_type_record(fields, size=0, align=0, ti=None):
         'align': align,
         'att': [],
         'classes': [],
+        'ops': REC_OPS,
         'ti': ti
     }
 
@@ -270,6 +297,7 @@ def hlir_type_func(params, to, ti=None):
         'align': 0,
         'att': [],
         'classes': [],
+        'ops': [],
         'ti': ti
     }
 
