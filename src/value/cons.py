@@ -3,7 +3,6 @@ import type
 from type import type_print
 from error import error, warning, info
 from hlir import *
-from util import float_align
 from .value import *
 
 from .unit import value_cons_unit

@@ -4,7 +4,7 @@ from type import type_print
 from trans import is_local_context
 from error import error, warning, info
 from hlir import *
-from util import get_item_with_id, float_align
+from util import get_item_with_id
 
 
 

@@ -39,19 +39,6 @@ def get_item_with_id(_list, name):
 
 
 
-def float_align(f_num, power):
-    import struct
-    z = 0
-    if power == 32:
-        z = struct.unpack('<f', struct.pack('<f', f_num))[0]
-    elif power == 64:
-        z = struct.unpack('<d', struct.pack('<d', f_num))[0]
-    else:
-        fatal("too big float, float_align not implemented")
-
-    return z
-
-
 
 
 

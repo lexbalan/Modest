@@ -6,7 +6,7 @@ from error import info, error, fatal
 from .common import *
 import type
 from type import type_print
-from value.value import value_attribute_check, value_is_zero, value_print
+from value.value import value_attribute_check, value_is_zero, value_print, value_is_immediate_integer
 from util import nbits_for_num, get_item_with_id, utf8_cc_arr_to_utf32_cc_arr, utf16_cc_arr_to_utf32_cc_arr
 from main import settings
 
@@ -528,6 +528,8 @@ def print_value_cast_immediate(v, ctx):
     from_type = value['type']
     to_type = v['type']
 
+    #out("/*^*/")
+
     if type.is_ptr_to_string(to_type):
         if type.is_string(from_type):
             char_power = to_type['to']['of']['power']
@@ -541,11 +543,11 @@ def print_value_cast_immediate(v, ctx):
             return
 
 
-    if 'explicit_cast' in v['att']:
+    """if 'explicit_cast' in v['att']:
         # литералы явно не приводим
         if value['kind'] != 'literal':
             print_cast(to_type, value, ctx)
-            return
+            return"""
 
     # implicit_cast of immediate value
     #need_wrap = precedence(value) < precedenceMax
@@ -558,11 +560,6 @@ def print_value_cast(x, ctx):
     value = x['value']
     from_type = value['type']
 
-#    if type.is_generic(from_type):
-#        print_value(value)
-#        return
-
-
     # в у нас типы структурные, в си - номинальные
     # поэтому даже если структуры одинаковы, но имена разные
     # их нужно приводить
@@ -572,7 +569,6 @@ def print_value_cast(x, ctx):
         if type.is_pointer_to_record(to_type):
             print_cast(to_type, value, ctx)
             return
-
 
     # cast struct to another struct
     if type.is_record(to_type):
@@ -586,6 +582,13 @@ def print_value_cast(x, ctx):
             return
 
 
+    #if not 'explicit_cast' in x['att']:
+    #if value_is_immediate_integer(value):
+    if value['kind'] == 'literal':
+        print_value(value)
+        return
+
+
     # (!) because
     # - in Cm int32(-1) -> uint64 => 0x00000000ffffffff
     # - in C  int32(-1) -> uint64 => 0xffffffffffffffff
@@ -596,6 +599,7 @@ def print_value_cast(x, ctx):
             out("((")
             print_type(to_type, need_space_after=False)
             out(")")
+            #out("/*?*/")
             nat_same_sz = type.select_nat(from_type['power'])
             print_cast(nat_same_sz, value, ctx)
             out(")")

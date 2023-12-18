@@ -44,7 +44,6 @@ def value_cons_integer_immediate(v, t, ti):
 
 
 
-
 def value_cons_integer(v, t, ti, method):
     vtype = v['type']
 
@@ -53,38 +52,36 @@ def value_cons_integer(v, t, ti, method):
     if type.is_generic_integer(vtype):
         # GenericInt -> Int
         check_power(vtype, t, method, ti)
+
+        if not t['signed']:
+            if v['imm'] < 0:
+                return None
+
         nv = value_cons_integer_immediate(v, t, ti)
 
-    if nv != None:
-        if value_is_immediate(v):
-            nv['imm'] = v['imm']
-        return nv
 
+    if method == 'explicit':
 
-    if method != 'explicit':
-        info("cannot implicit cons Integer value", ti)
-        return None
+        if type.is_integer(vtype) or type.is_char(vtype) or type.is_bool(vtype):
+            # (Int or Char) -> Int
+            check_power(vtype, t, method, ti)
+            nv = hlir_value_cast(v, t, ti)
 
+        elif type.is_float(vtype):
+            # Float -> Int
+            nv = hlir_value_cast(v, t, ti=ti)
+            # need float imm int part check
+            if value_is_immediate(v):
+                imm_fltval = v['imm']
+                imm_intval = int(imm_fltval)
+                typ = hlir_type_generic_int_for(imm_intval, unsigned=True, ti=ti)
+                check_power(typ, t, method, ti)
+                nv['imm'] = imm_intval
+                return v  # (!)
 
-    if type.is_integer(vtype) or type.is_char(vtype) or type.is_bool(vtype):
-        # (Int or Char) -> Int
-        check_power(vtype, t, method, ti)
-        nv = hlir_value_cast(v, t, ti)
-
-    elif type.is_float(vtype):
-        # Float -> Int
-        nv = hlir_value_cast(v, t, ti=ti)
-        # need float imm int part check
-        if value_is_immediate(v):
-            imm_fltval = v['imm']
-            imm_intval = int(imm_fltval)
-            typ = hlir_type_generic_int_for(imm_intval, unsigned=True, ti=ti)
-            check_power(typ, t, method, ti)
-            nv['imm'] = imm_intval
-            return v # (!)
-
-    elif type.is_pointer(vtype):
-        nv = hlir_value_cast(v, t, ti)
+        elif type.is_pointer(vtype):
+            # Pointer -> Int
+            nv = hlir_value_cast(v, t, ti)
 
 
     if nv != None:
