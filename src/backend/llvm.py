@@ -1426,7 +1426,6 @@ def print_arrays(arrays):
             'kind': 'func',
             'size': 0,
             'align': 0,
-            'classes': [],
             'params': [
                 {
                     'isa': 'field',
@@ -1463,7 +1462,6 @@ def print_arrays(arrays):
             'id': {'isa': 'id', 'str': "memcpy", 'ti': None},
             'type': memcpy_type,
             'att': [],
-            'classes': [],
             'ti': None
         }
 

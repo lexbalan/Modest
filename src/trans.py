@@ -17,9 +17,7 @@ from value.cons import value_cons_implicit, value_cons_explicit, cons_default
 from frontend.parser import Parser
 from symtab import Symtab
 import type
-from type import type_class_check, select_int, select_nat, type_print
 from util import nbits_for_num, nbytes_for_bits
-
 from hlir import *
 
 
@@ -241,10 +239,10 @@ def init():
 
     global typeSysInt, typeSysNat, typeSysFloat, typeSysChar, typeSysStr
 
-    typeSysInt = type.type_copy(select_int(int_width))
+    typeSysInt = type.type_copy(type.select_int(int_width))
     typeSysInt['c_alias'] = 'int'
 
-    typeSysNat = type.type_copy(select_nat(int_width))
+    typeSysNat = type.type_copy(type.select_nat(int_width))
     typeSysNat['c_alias'] = 'unsigned int'
 
     typeSysChar
@@ -682,7 +680,7 @@ def do_value_bin(x):
 
 
     if type.is_pointer(l['type']) or type.is_pointer(r['type']):
-        return do_bin_op_with_pointers(op, l, r , ti)
+        return do_bin_op_with_pointers(op, l, r, ti)
 
 
     if type.is_generic_string(l['type']) and type.is_generic_string(r['type']):
@@ -697,43 +695,15 @@ def do_value_bin(x):
     l = value_cons_implicit(l, common_type, x['left']['ti'])
     r = value_cons_implicit(r, common_type, x['right']['ti'])
 
+    # After implicit cast types must be equal
     if not type.check(l['type'], r['type'], x['ti']):
         return hlir_value_bad(x['ti'])
 
     type_result = common_type
 
-
-    if op in ['eq', 'ne']:
+    if op in (EQ_OPS + RELATIONAL_OPS):
         type_result = type.typeBool
 
-        if not type_class_check(l['type'], 'comparable'):
-            error("expected value with comparable type", x['left']['ti'])
-            return hlir_value_bad(x['ti'])
-
-        if not type_class_check(r['type'], 'comparable'):
-            error("expected value with comparable type", x['right']['ti'])
-            return hlir_value_bad(x['ti'])
-
-    # < > <= >= only for values with 'ordered' type
-    elif op in ['lt', 'gt', 'le', 'ge']:
-        type_result = type.typeBool
-
-        if not type_class_check(l['type'], 'ordered'):
-            error("expected value with ordered type", x['left']['ti'])
-            return hlir_value_bad(x['ti'])
-
-        if not type_class_check(r['type'], 'ordered'):
-            error("expected value with ordered type", x['right']['ti'])
-            return hlir_value_bad(x['ti'])
-
-    elif op in ['or', 'and', 'xor', 'add', 'sub', 'mul', 'div', 'rem']:
-        if not type_class_check(l['type'], 'numeric') and not type.is_bool(l['type']):
-            error("expected value with numeric type", x['left']['ti'])
-            return hlir_value_bad(x['ti'])
-
-        if not type_class_check(r['type'], 'numeric') and not type.is_bool(r['type']):
-            error("expected value with numeric type", x['right']['ti'])
-            return hlir_value_bad(x['ti'])
 
     if type.eq(type_result, type.typeBool):
         if op == 'or': op = 'logic_or'
@@ -1049,11 +1019,7 @@ def do_value_str(x):
     genStrType = hlir_type_array(type.typeGenericChar, volume=vol, generic=True, ti=ti)
 
     imm = hlir_string_imm(string)
-    items = imm
-
-    s = hlir_value_literal(genStrType, items, ti)
-
-    return s
+    return hlir_value_literal(genStrType, imm, ti)
 
 
 
@@ -1783,7 +1749,6 @@ def decl_type(x):
         'generic': False,
         'id': id,
         'att': [],
-        'classes': [],
         'ti': id['ti'],
     }
 

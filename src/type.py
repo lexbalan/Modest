@@ -118,17 +118,14 @@ def type_init():
 
 
     typeDecimal32 = hlir_type_float('Decimal32', power=32, ti=None)
-    typeDecimal32['classes'].extend(['float', 'decimal'])
     typeDecimal32['c_alias'] = '_Decimal32'
     typeDecimal32['llvm_alias'] = 'float'
 
     typeDecimal64 = hlir_type_float('Decimal64', power=64, ti=None)
-    typeDecimal64['classes'].extend(['float', 'decimal'])
     typeDecimal64['c_alias'] = '_Decimal64'
     typeDecimal64['llvm_alias'] = 'double'
 
     typeDecimal128 = hlir_type_float('Decimal128', power=128, ti=None)
-    typeDecimal128['classes'].extend(['float', 'decimal'])
     typeDecimal128['c_alias'] = '_Decimal128'
     typeDecimal128['llvm_alias'] = 'double'
 
@@ -326,10 +323,6 @@ def type_attribute_add(t, a):
     t['att'].append(a)
 
 
-def type_class_check(t, a):
-    return a in t['classes']
-
-
 
 def is_bad(t):
     assert t != None
@@ -353,7 +346,7 @@ def is_enum(t):
 
 
 def is_numeric(t):
-    return type_class_check(t, 'numeric')
+    return t['kind'] in ['int', 'float']
 
 
 def is_bool(t):
@@ -580,10 +573,9 @@ def type_copy(t):
     # (!) создаем новый массив аттрибутов,
     # чтобы не испортить оригинальный (!)
     nt['att'] = []
-    nt['classes'] = []
 
     nt['att'].extend(t['att'])
-    nt['classes'].extend(t['classes'])
+    #nt['classes'].extend(t['classes'])
 
     return nt
 
