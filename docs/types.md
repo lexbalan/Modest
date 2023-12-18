@@ -48,7 +48,7 @@ Type class in a marker that can to determine operations which allowed for the ty
 | `Nat128` | `16` | `16` | `numeric, comparable, ordered` | `unsigned` |
 | `Float32`  | `4` | `4` | `numeric, comparable, ordered` | `floating point` |
 | `Float64`  | `8` | `8` | `numeric, comparable, ordered` | `floating point` |
-| `Float128`  | `16` | `16` | `numeric, comparable, ordered` | `floating point` |
+
 
 > Alignment of any base type is equal to his size, **exclude the *Unit* type**.
 
@@ -137,13 +137,25 @@ func main () -> Unit {
 
 #### Float types
 
-> Classes: *numeric*, *comparable*, *ordered*
-
 Float types
 ```javascript
-Float32, Float64, Float128
+Float32, Float64
 ```
 
+```rust
+import "libc/stdio.hm"
+import "libc/math.hm"
+
+func main () -> Unit {
+	var pi: Float64
+	
+	pi := M_PI
+
+	printf("pi = %lf\n", pi)
+}
+
+```
+> Result: `pi = 3.14....`
 
 #### Char type
 
