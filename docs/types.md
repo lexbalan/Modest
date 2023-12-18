@@ -27,9 +27,7 @@ Type class in a marker that can to determine operations which allowed for the ty
 | `GenericRecord` | type of record literal | `{x=1, y=2, z=3}, ...` |
 
 
-## Real types *(non-generic)*
-
-
+## Real *(non-generic)* types
 
 | Type     |Size |Align| Classes | Description |
 | :------: | :-: | :-: | ------- | --- |
@@ -48,9 +46,14 @@ Type class in a marker that can to determine operations which allowed for the ty
 | `Nat32`  | `4` | `4` | `numeric, comparable, ordered` | `unsigned` |
 | `Nat64`  | `8` | `8` | `numeric, comparable, ordered` | `unsigned` |
 | `Nat128` | `16` | `16` | `numeric, comparable, ordered` | `unsigned` |
+| `Float32`  | `4` | `4` | `numeric, comparable, ordered` | `floating point` |
+| `Float64`  | `8` | `8` | `numeric, comparable, ordered` | `floating point` |
+| `Float128`  | `16` | `16` | `numeric, comparable, ordered` | `floating point` |
 
 > Alignment of any base type is equal to his size, **exclude the *Unit* type**.
 
+
+#### Examples
 
 #### Unit type
 *Unit* type is an analog of `void` type in C language.
@@ -68,13 +71,6 @@ func just (not_used_param: Int32) -> Unit {
 
 
 #### Bool type
-*Bool* type is logical type with only two values `true` & `false`.
-Result of `==, !=, <, >, <=, >=` operations have *Bool* type.
-There is two built-in values with bool type: *true* and *false*
-
-> Classes: *logical*
-
-*Usage example:*
 
 ```javascript
 var b: Bool
@@ -90,17 +86,53 @@ while not b {
 
 #### Integer types
 
-> Classes: *numeric*, *comparable*, *ordered*
-
-Signed integer types
+##### Signed integer types
 ```javascript
 Int8, Int16, Int32, Int64, Int128
 ```
 
-Unsigned integer types
+```rust
+func main () -> Unit {
+	var a, b : Int32
+	
+	a := -1
+	b := 1
+	
+	if a < b {
+		printf("a < b\n")
+	} else if a > b {
+		printf("a > b\n")
+	} else {
+		printf("a == b\n")
+	}
+}
+```
+> Result: `a < b`
+
+
+##### Unsigned integer types
 ```javascript
 Nat8, Nat16, Nat32, Nat64, Nat128
 ```
+
+```rust
+func main () -> Unit {
+	var a, b : Nat32
+	
+	a := -1 to Nat32
+	b := 1
+	
+	if a < b {
+		printf("a < b\n")
+	} else if a > b {
+		printf("a > b\n")
+	} else {
+		printf("a == b\n")
+	}
+}
+```
+> Result: `a > b`
+
 
 
 #### Float types
