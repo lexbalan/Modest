@@ -1,17 +1,16 @@
 # Types
 
 
-### Type Classses
+### Operations
 
-Type class in a marker that can to determine operations which allowed for the type.
 
-| TypeClass  | Operations |
-| -- | -- |
-| `logical` | `==, !=, or, and, xor, not` |
-| `comparable` | `==, !=` |
-| `ordered` | `<, >` |
-| `numeric` | `+, -, *, /, %` |
-
+| Op Class  | Operations |
+| :---: | -------- |
+| `equ` | `==, !=` |
+| `ord` | `<, >, <=, >=` |
+| `log` | `or, and, xor, not` |
+| `math` | `+, -, *, /` |
+| `rem` | `%` |
 
 
 ## Generic types
@@ -29,25 +28,25 @@ Type class in a marker that can to determine operations which allowed for the ty
 
 ## Real *(non-generic)* types
 
-| Type     |Size |Align| Classes | Description |
-| :------: | :-: | :-: | ------- | --- |
-| `Unit`   | `0` | `1` | `-`     | `Empty type` |
-| `Bool`   | `1` | `1` | `logical, comparable` | |
-| `Char8`  | `1` | `1` | `comparable` | `UTF-8 character` |
-| `Char16` | `2` | `2` | `comparable` | `UTF-16 character` |
-| `Char16` | `4` | `4` | `comparable` | `UTF-32 character` |
-| `Int8`   | `1` | `1` | `numeric, comparable, ordered` | `signed` |
-| `Int16`  | `2` | `2` | `numeric, comparable, ordered` | `signed` |
-| `Int32`  | `4` | `4` | `numeric, comparable, ordered` | `signed` |
-| `Int64`  | `8` | `8` | `numeric, comparable, ordered` | `signed` |
-| `Int128` | `16` | `16` | `numeric, comparable, ordered` | `signed` |
-| `Nat8`   | `1` | `1` | `numeric, comparable, ordered` | `unsigned` |
-| `Nat16`  | `2` | `2` | `numeric, comparable, ordered` | `unsigned` |
-| `Nat32`  | `4` | `4` | `numeric, comparable, ordered` | `unsigned` |
-| `Nat64`  | `8` | `8` | `numeric, comparable, ordered` | `unsigned` |
-| `Nat128` | `16` | `16` | `numeric, comparable, ordered` | `unsigned` |
-| `Float32`  | `4` | `4` | `numeric, comparable, ordered` | `floating point` |
-| `Float64`  | `8` | `8` | `numeric, comparable, ordered` | `floating point` |
+| Type     |Size | Classes | Description |
+| :------: | :-: | ------- | --- |
+| `Unit`   | `0` | `-`     | `Empty type` |
+| `Bool`   | `1` | `logical, equ` | |
+| `Char8`  | `1` | `equ` | `UTF-8 character` |
+| `Char16` | `2` | `equ` | `UTF-16 character` |
+| `Char16` | `4` | `equ` | `UTF-32 character` |
+| `Int8`   | `1` | `equ, ord, math, rem` | `signed` |
+| `Int16`  | `2` | `equ, ord, math, rem` | `signed` |
+| `Int32`  | `4` | `equ, ord, math, rem` | `signed` |
+| `Int64`  | `8` | `equ, ord, math, rem` | `signed` |
+| `Int128` | `16` | `equ, ord, math, rem` | `signed` |
+| `Nat8`   | `1` | `equ, ord, math, rem` | `unsigned` |
+| `Nat16`  | `2` | `equ, ord, math, rem` | `unsigned` |
+| `Nat32`  | `4` | `equ, ord, math, rem` | `unsigned` |
+| `Nat64`  | `8` | `equ, ord, math, rem` | `unsigned` |
+| `Nat128` | `16` | `equ, ord, math, rem` | `unsigned` |
+| `Float32`  | `4` | `equ, ord, math` | `floating point` |
+| `Float64`  | `8` | `equ, ord, math` | `floating point` |
 
 
 > Alignment of any base type is equal to his size, **exclude the *Unit* type**.
@@ -159,7 +158,7 @@ func main () -> Unit {
 
 #### Char type
 
-> Classes: *comparable*
+> Classes: *equ*
 
 There is three char types
 ```javascript
