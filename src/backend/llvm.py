@@ -570,7 +570,7 @@ def do_eval_expr_un(v):
 
     elif v['kind'] == 'minus':
         #%10 = sub i32 0, %9
-        z = ll_create_value_zero(v['type'])
+        z = ll_create_value_num(v['type'], 0)
         return do_eval_binary('sub', z, vx, v)
 
     else:
@@ -874,9 +874,7 @@ def do_eval_expr_cast(x):
     # (STUB?) nil -> zeroinitializer
     if type.is_free_pointer(from_type):
         if value_is_immediate(value):
-            if value['imm'] == 0:
-                #return ll_create_value_null(to_type)
-                return ll_create_value_zero(to_type)
+            return ll_create_value_num(to_type, value['imm'])
 
 
     # Cm имеет структурную систему типов, тогда как llvm - номинативную
@@ -912,12 +910,6 @@ un_ops = ['ref', 'deref', 'plus', 'minus', 'not']
 
 
 
-def do_eval_zero(x):
-    #print("do_eval_zero")
-    return ll_create_value_zero(x['type'])
-
-
-
 def do_eval_array(v):
     # сперва вычисляем все элементы массива в регистры
     # (кроме констант, они едут до последнего)
@@ -948,7 +940,7 @@ def do_eval_array(v):
     # если мы локальны то создадим иммутабельную структуру
     # с массивом (insertvalue)
     #%5 = insertvalue %Type24 zeroinitializer, %Int32 1, 0
-    xv = ll_create_value_zero(v['type'])
+    xv = ll_value_array([], v['type'])
 
     # набиваем массив
     i = 0
@@ -1750,8 +1742,6 @@ def run(module, outname):
 
 
 def create_local_srtuct(typ, llvalues):
-    #^llvalues.append({'id': item['id'], 'value': i})
-    #or xv = ll_create_value_zero(typ) ?
     #%5 = insertvalue %Type24 zeroinitializer, %Int32 1, 0
     xv = ll_value_record([], typ, proto=None)
 
