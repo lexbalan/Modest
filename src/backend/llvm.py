@@ -1524,7 +1524,6 @@ def print_def_func(x):
         out(" ")
         out('%%%s%s' % (prefix, param_id))
 
-        #reg = reg_get()
         vv = ll_value_stk(param_id, param['type'], param)
 
         if param_is_arr:
