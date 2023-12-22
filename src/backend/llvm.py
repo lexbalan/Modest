@@ -404,11 +404,7 @@ def print_type(t, print_aka=True, arr_as_ptr_to_arr=False):
     elif type.is_pointer(t): print_type_pointer(t)
     elif type.is_array(t): print_type_array(t, arr_as_ptr_to_arr)
 
-    elif type.is_integer(t) or type.is_char(t):
-        if 'llvm_alias' in t:
-            out(t['llvm_alias'])
-
-    elif type.is_float(t):
+    elif type.is_integer(t) or type.is_float(t) or type.is_char(t):
         if 'llvm_alias' in t:
             out(t['llvm_alias'])
 
@@ -425,6 +421,8 @@ def print_type(t, print_aka=True, arr_as_ptr_to_arr=False):
 # и если оно adr то загружает его в регистр
 # в любом другом случае просто возвращает исходное значение
 def do_ld(x):
+    assert(x['isa'] == 'llvm_value')
+
     if x['level'] != 'adr':
         return x
 
@@ -436,6 +434,7 @@ def do_ld(x):
     print_type(typ)
     out("* ")
     print_value (x)
+
     return ll_value_reg(reg, x['type'], x)
 
 
@@ -464,7 +463,6 @@ def get_bin_opcode(op, t):
     elif op == 'logic_and':
         opcode = 'and'
 
-
     return opcode
 
 
@@ -488,9 +486,7 @@ def get_bin_opcode_suf (sop, uop, fop, t): # ["sdiv", "udiv", "fdiv", x]
 
 
 
-def do_eval_binary (op, l, r, x): # ["add", "fadd", x]
-
-
+def do_eval_binary (op, l, r, x):
     reg = operation_with_type (op, l['type'])
     out(" "); print_value (l); out(", "); print_value (r)
     return ll_value_reg(reg, x['type'], x)
@@ -498,7 +494,6 @@ def do_eval_binary (op, l, r, x): # ["add", "fadd", x]
 
 
 def do_eval_expr_bin(x):
-    # if folded bin
     if 'imm' in x:
         return ll_value_num(x['type'], x['imm'])
 
@@ -517,9 +512,7 @@ def deref(x):
 def llvm_deref(x):
     nv = copy.copy(x)
     nv['level'] = 'adr'
-    #nv['proto'] = proto
     return nv
-
 
 
 def do_eval_expr_un(v):
@@ -631,7 +624,6 @@ def llvm_getelementptr(rec, rt, indexes, vt):
     return rv
 
 
-
 def do_eval_expr_index(v):
     array = do_eval(v['array'])
     array_type = array['type']
@@ -737,21 +729,14 @@ def select_cast_operator(a, b):
             if type.is_integer(b):
                 signed = type.is_signed(b)
 
-            """print("BITCAST!")
-            print(a)
-            print(f"{a['size']} ? {b['size']}")
-            print()"""
-
             if a['power'] < b['power']:
                 if signed:
                     return 'sext'
-
                 else:
                     return 'zext'
 
             elif a['power'] > b['power']:
                 return 'trunc'
-
             else:
                 return 'bitcast'
 
@@ -761,20 +746,12 @@ def select_cast_operator(a, b):
         elif type.is_float(b):
             if type.is_signed(a):
                 return 'sitofp'
-
             else:
                 return 'uitofp'
 
     elif type.is_pointer(a):
-        if type.is_pointer(b):
-            return 'bitcast'
-
-        elif type.is_integer(b):
-            return 'ptrtoint'
-
-    elif type.is_ptr_to_string(a):
-        if type.is_pointer(b):
-            return 'bitcast'
+        if type.is_pointer(b): return 'bitcast'
+        elif type.is_integer(b): return 'ptrtoint'
 
     elif type.is_float(a):
         # Float -> Integer
@@ -786,13 +763,9 @@ def select_cast_operator(a, b):
 
         # Float -> Float
         elif type.is_float(b):
-            if a['power'] < b['power']:
-                return 'fpext'
-            elif a['power'] > b['power']:
-                return 'fptrunc'
-            else:
-                return 'bitcast'
-
+            if a['power'] < b['power']: return 'fpext'
+            elif a['power'] > b['power']: return 'fptrunc'
+            else: return 'bitcast'
 
     return 'uncast<%s -> %s>' % (a['kind'], b['kind'])
 
@@ -1071,10 +1044,6 @@ def do_eval_x(x):
     elif k == 'access_ptr': y = do_eval_expr_access_ptr(x)
     elif k == 'cast_immediate': y = do_eval_expr_cast_immediate(x)
     elif k == 'cast': y = do_eval_expr_cast(x)
-    elif k == 'sizeof': y = do_eval_literal(x)
-    #elif k == 'alignof': y = do_eval_literal(x)
-    #elif k == 'offsetof': y = do_eval_literal(x)
-    elif k == 'eq_str': y = do_eval_literal(x)
     else:
         out("<%s>" % k)
         y = None
@@ -1143,7 +1112,6 @@ def print_integer_block():
     out("<integer block>")
 
 
-
 def ll_br(x, then_label, else_label):
     lo("br %s " % TYPE_BOOL)
     print_value(x)
@@ -1188,6 +1156,7 @@ def print_stmt_if(x):
     set_label(endif_label)
 
 
+
 def print_stmt_while(x):
     global func_context
     old_while_id = func_context['cur_while_id']
@@ -1210,6 +1179,7 @@ def print_stmt_while(x):
     func_context['cur_while_id'] = old_while_id
 
 
+
 def print_stmt_again():
     global func_context
     cur_while_id = func_context['cur_while_id']
@@ -1217,11 +1187,13 @@ def print_stmt_again():
     reg_get()    # for LLVM
 
 
+
 def print_stmt_break():
     global func_context
     cur_while_id = func_context['cur_while_id']
     op_goto('break_%d' % cur_while_id)
     reg_get()    # for LLVM
+
 
 
 def print_stmt_return(x):
