@@ -29,7 +29,7 @@ def init():
     LLVM_TARGET_TRIPLE = settings.get('target_triple')
     LLVM_TARGET_DATALAYOUT = settings.get('target_datalayout')
 
-    ll_value_zero = ll_create_value_num(type.typeInt32, 0)
+    ll_value_zero = ll_value_num(type.typeInt32, 0)
     pass
 
 
@@ -92,22 +92,22 @@ def operation_with_type(op, t):
 
 
 
-def ll_create_value_num(t, num):
+def ll_value_zero(t):
     return {
         'isa': 'llvm_value',
-        'class': 'num',
+        'class': 'zero',
         'level': 'value',
-        'imm': num,
         'type': t,
         'proto': None
     }
 
 
-def ll_create_value_zero(t):
+def ll_value_num(t, num):
     return {
         'isa': 'llvm_value',
-        'class': 'zero',
+        'class': 'num',
         'level': 'value',
+        'imm': num,
         'type': t,
         'proto': None
     }
@@ -291,7 +291,7 @@ def print_value(x):
                 out("null")
                 return
 
-            v = ll_create_value_num(type.typeNat64, x['imm'])
+            v = ll_value_num(type.typeNat64, x['imm'])
             inline_cast('inttoptr', v['type'], x['type'], v)
 
         elif type.is_float(x['type']):
@@ -512,7 +512,7 @@ def do_eval_binary (op, l, r, x): # ["add", "fadd", x]
 def do_eval_expr_bin(x):
     # if folded bin
     if 'imm' in x:
-        return ll_create_value_num(x['type'], x['imm'])
+        return ll_value_num(x['type'], x['imm'])
 
     opcode = get_bin_opcode(x['kind'], x['left']['type'])
     l = do_ld(do_eval(x['left']))
@@ -570,7 +570,7 @@ def do_eval_expr_un(v):
 
     elif v['kind'] == 'minus':
         #%10 = sub i32 0, %9
-        z = ll_create_value_num(v['type'], 0)
+        z = ll_value_num(v['type'], 0)
         return do_eval_binary('sub', z, vx, v)
 
     else:
@@ -666,7 +666,7 @@ def do_eval_expr_index_ptr(v):
 # носер поля (просто число)
 # возвращает value:address для поля этой структуры
 def do_eval_access_ptr(x, xt, field_no, vt):
-    field_index = ll_create_value_num(type.typeInt32, field_no)
+    field_index = ll_value_num(type.typeInt32, field_no)
     return llvm_getelementptr(x, xt, (ll_value_zero, field_index), vt)
 
 
@@ -692,7 +692,7 @@ def do_eval_access(rec, rt, pos, vt):
             # вернем пустышку
             # это опасное решение, но пока не знаю другого
             # (если структура из которой конструировали была пуста)
-            return ll_create_value_zero(vt)
+            return ll_value_zero(vt)
 
 
     # если сама запись находится в регистре: (let rec = get_rec())
@@ -868,13 +868,13 @@ def do_eval_expr_cast(x):
 
     # cast any type to Unit type
     if type.is_unit(to_type):
-        return ll_create_value_zero(to_type)
+        return ll_value_zero(to_type)
 
 
     # (STUB?) nil -> zeroinitializer
     if type.is_free_pointer(from_type):
         if value_is_immediate(value):
-            return ll_create_value_num(to_type, value['imm'])
+            return ll_value_num(to_type, value['imm'])
 
 
     # Cm имеет структурную систему типов, тогда как llvm - номинативную
@@ -925,7 +925,7 @@ def do_eval_array(v):
     n_pad = fulllen - len(items)
     i = 0
     while i < n_pad:
-        z = ll_create_value_zero(v['type']['of'])
+        z = ll_value_zero(v['type']['of'])
         items.append(z)
         i = i + 1
 
@@ -977,16 +977,16 @@ def do_eval(x):
     if value_is_immediate(x):
         xtype = x['type']
 
-        if type.is_integer(xtype): return ll_create_value_num(xtype, x['imm'])
-        elif type.is_char(xtype): return ll_create_value_num(xtype, x['imm'])
+        if type.is_integer(xtype): return ll_value_num(xtype, x['imm'])
+        elif type.is_char(xtype): return ll_value_num(xtype, x['imm'])
         elif type.is_record(xtype): return do_eval_record(x)
         elif type.is_array(xtype): return do_eval_array(x)
-        elif type.is_float(xtype): return ll_create_value_num(xtype, x['imm'])
-        elif type.is_bool(xtype): return ll_create_value_num(xtype, x['imm'])
+        elif type.is_float(xtype): return ll_value_num(xtype, x['imm'])
+        elif type.is_bool(xtype): return ll_value_num(xtype, x['imm'])
         #elif type.is_pointer(xtype):
             # Nil (!) например
         #    print("OJENFONEFIWNFEJNEKJFNDJK")
-        #    return ll_create_value_num(xtype, x['imm'])
+        #    return ll_value_num(xtype, x['imm'])
 #        else:
 #            type_print(xtype)
 #            print(x['imm'])
@@ -1010,24 +1010,24 @@ def do_eval(x):
 
 def do_eval_literal(x):
     if type.is_integer(x['type']):
-        return ll_create_value_num(x['type'], x['imm'])
+        return ll_value_num(x['type'], x['imm'])
     elif type.is_float(x['type']):
-        return ll_create_value_num(x['type'], x['imm'])
+        return ll_value_num(x['type'], x['imm'])
     elif type.is_record(x['type']):
         return do_eval_record(x)
     elif type.is_array(x['type']):
         return do_eval_array(x)
     elif type.is_bool(x['type']):
-        return ll_create_value_num(x['type'], x['imm'])
+        return ll_value_num(x['type'], x['imm'])
 
     elif type.is_free_pointer(x['type']):
-        return ll_create_value_num(x['type'], x['imm'])
+        return ll_value_num(x['type'], x['imm'])
     elif type.is_pointer(x['type']):
-        return ll_create_value_num(x['type'], x['imm'])
+        return ll_value_num(x['type'], x['imm'])
     elif type.is_char(x['type']):
-        return ll_create_value_num(x['type'], x['imm'])
+        return ll_value_num(x['type'], x['imm'])
     elif type.is_bool(x['type']):
-        return ll_create_value_num(x['type'], x['imm'])
+        return ll_value_num(x['type'], x['imm'])
     else:
         value_print(x)
         error("do_eval_literal: unknown literal", x['ti'])
@@ -1040,7 +1040,7 @@ def func_const_var(x):
     if k == 'const':
         if 'imm' in x:
             if type.is_numeric(x['type']):
-                return ll_create_value_num(x['type'], x['imm'])
+                return ll_value_num(x['type'], x['imm'])
 
     if value_attribute_check(x, 'local'):
         localname = x['id']['str']
@@ -1094,7 +1094,7 @@ def do_eval_x(x):
     if y == None:
         print("do_eval_x cannot eval value")
         value_print(x)
-        return ll_create_value_zero(x['type'])
+        return ll_value_zero(x['type'])
 
     return y
 
@@ -1331,7 +1331,7 @@ def print_arrays(arrays):
     for array in arrays:
 
         id = array['id']['str']
-        iv = ll_create_value_zero(array['type'])
+        iv = ll_value_zero(array['type'])
         val = ll_alloca(id, array['type'], None)
         locals_add('_' + id, val)
 
