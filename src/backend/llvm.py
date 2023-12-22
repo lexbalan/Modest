@@ -690,11 +690,13 @@ def do_eval_access(rec, rt, pos, vt):
     return do_eval_access_ptr(rec, rt, pos, vt)
 
 
+
 def do_eval_expr_access(v):
     rec = do_eval(v['record'])
     rt = v['record']['type']
     pos = v['field']['pos']
     return do_eval_access(rec, rt, pos, v['type'])
+
 
 
 def do_eval_expr_access_ptr(v):
@@ -820,23 +822,19 @@ def do_eval_expr_cast(x):
     from_type = value['type']
     to_type = x['type']
 
-
     if type.is_generic_string(from_type):
         if type.is_ptr_to_string(to_type):
             error("strings need to print through do_eval_expr_cast_immediate", x)
             exit(1)
 
-
     # cast any type to Unit type
     if type.is_unit(to_type):
         return ll_value_zero(to_type)
-
 
     # (STUB?) nil -> zeroinitializer
     if type.is_free_pointer(from_type):
         if value_is_immediate(value):
             return ll_value_num(to_type, value['imm'])
-
 
     # Cm имеет структурную систему типов, тогда как llvm - номинативную
     # приведение структуры к структуре по значению не поддерживается LLVM
@@ -847,9 +845,6 @@ def do_eval_expr_cast(x):
 
 
     v = do_ld(do_eval(value))
-
-    #if type.eq(v['type'], v['value']['type']):
-    #    return y
 
     if is_global_context():
         return v
@@ -879,7 +874,6 @@ def do_eval_array(v):
         iv = do_ld(do_eval(item))
         items.append(iv)
 
-
     # теперь добавим паддинг нулевыми значениями
     fulllen = v['type']['volume']['imm']
 
@@ -889,7 +883,6 @@ def do_eval_array(v):
         z = ll_value_zero(v['type']['of'])
         items.append(z)
         i = i + 1
-
 
     # global?
     # глобальный массив распечатает print_value как литерал
@@ -932,6 +925,7 @@ def do_eval_record(v):
 
 def do_eval(x):
     assert(x != None)
+    assert(x['isa'] == 'value')
 
     # WRONG WAY! remove this shit!
     # Way for IMMEDIATE values
@@ -944,15 +938,6 @@ def do_eval(x):
         elif type.is_array(xtype): return do_eval_array(x)
         elif type.is_float(xtype): return ll_value_num(xtype, x['imm'])
         elif type.is_bool(xtype): return ll_value_num(xtype, x['imm'])
-        #elif type.is_pointer(xtype):
-            # Nil (!) например
-        #    print("OJENFONEFIWNFEJNEKJFNDJK")
-        #    return ll_value_num(xtype, x['imm'])
-#        else:
-#            type_print(xtype)
-#            print(x['imm'])
-#            1 / 0
-
 
     # runtime evaluation
     v = do_eval_x(x)
@@ -970,25 +955,16 @@ def do_eval(x):
 
 
 def do_eval_literal(x):
-    if type.is_integer(x['type']):
-        return ll_value_num(x['type'], x['imm'])
-    elif type.is_float(x['type']):
-        return ll_value_num(x['type'], x['imm'])
-    elif type.is_record(x['type']):
-        return do_eval_record(x)
-    elif type.is_array(x['type']):
-        return do_eval_array(x)
-    elif type.is_bool(x['type']):
-        return ll_value_num(x['type'], x['imm'])
-
-    elif type.is_free_pointer(x['type']):
-        return ll_value_num(x['type'], x['imm'])
-    elif type.is_pointer(x['type']):
-        return ll_value_num(x['type'], x['imm'])
-    elif type.is_char(x['type']):
-        return ll_value_num(x['type'], x['imm'])
-    elif type.is_bool(x['type']):
-        return ll_value_num(x['type'], x['imm'])
+    xt = x['type']
+    if type.is_integer(xt): return ll_value_num(xt, x['imm'])
+    elif type.is_float(xt): return ll_value_num(xt, x['imm'])
+    elif type.is_record(xt): return do_eval_record(x)
+    elif type.is_array(xt): return do_eval_array(x)
+    elif type.is_bool(xt): return ll_value_num(xt, x['imm'])
+    elif type.is_free_pointer(xt): return ll_value_num(xt, x['imm'])
+    elif type.is_pointer(xt): return ll_value_num(xt, x['imm'])
+    elif type.is_char(xt): return ll_value_num(xt, x['imm'])
+    elif type.is_bool(xt): return ll_value_num(xt, x['imm'])
     else:
         value_print(x)
         error("do_eval_literal: unknown literal", x['ti'])
@@ -1016,13 +992,7 @@ def func_const_var(x):
     if k == 'const':
         return do_eval(x['value'])
 
-
     return ll_value_mem(x['id']['str'], ['type'], x)
-
-
-
-def print_let_const(x):
-    return func_const_var(x)
 
 
 
@@ -1035,7 +1005,7 @@ def do_eval_x(x):
     if k == 'literal': y = do_eval_literal(x)
     elif k in bin_ops: y = do_eval_expr_bin(x)
     elif k in un_ops: y = do_eval_expr_un(x)
-    elif k == 'const': y = print_let_const(x)
+    elif k == 'const': y = func_const_var(x)
     elif k in ['func', 'var']: y = func_const_var(x)
     elif k == 'call': y = do_eval_expr_call(x)
     elif k == 'index': y = do_eval_expr_index(x)
@@ -1243,7 +1213,6 @@ def print_stmt_def_var(x):
 def print_stmt_let(x):
     id = x['value']['id']
     val = x['value']['value']
-    #value_print(val)
     v = do_ld(do_eval(val))
     locals_add(x['id']['str'], v)
     return None
@@ -1251,11 +1220,13 @@ def print_stmt_let(x):
 
 
 def print_comment_block(x):
+    #out("\n");
     #out("/*%s*/" % x['text'])
     pass
 
 
 def print_comment_line(x):
+    out("\n")
     lines = x['lines']
     i = 0
     n = len(lines)
@@ -1281,13 +1252,13 @@ def print_stmt(x):
     elif k == 'let': print_stmt_let(x)
     elif k == 'break': print_stmt_break()
     elif k == 'again': print_stmt_again()
-    elif k == 'comment-line': out("\n"); print_comment_line(x)
-    elif k == 'comment-block': out("\n"); print_comment_block(x)
+    elif k == 'comment-line': print_comment_line(x)
+    elif k == 'comment-block': print_comment_block(x)
     else: lo("<stmt %s>" % str(x))
 
 
 
-def print_arrays(arrays):
+"""def print_arrays(arrays):
     for array in arrays:
 
         id = array['id']['str']
@@ -1393,7 +1364,7 @@ def print_arrays(arrays):
         }
 
         do_eval(op)
-
+"""
 
 
 
@@ -1401,8 +1372,8 @@ def print_stmt_block(s, arrays=None):
     locals_push()
 
     # arrays - arguments
-    if arrays != None:
-        print_arrays(arrays)
+    #if arrays != None:
+    #    print_arrays(arrays)
 
     for stmt in s['stmts']:
         print_stmt(stmt)
@@ -1681,8 +1652,8 @@ def print_module(m):
         elif isa == 'def_const': print_def_const(x)
         elif isa == 'def_func': print_def_func(x)
         elif isa == 'def_type': print_def_type(x)
-        #elif isa == 'directive': pass
-        #elif isa == 'comment': pass
+        elif isa == 'directive': pass
+        elif isa == 'comment': pass
 
     out("\n\n")
 
@@ -1699,7 +1670,7 @@ def run(module, outname):
 
 
 
-
+"""
 def create_local_srtuct(typ, llvalues):
     #%5 = insertvalue %Type24 zeroinitializer, %Int32 1, 0
     xv = ll_value_record([], typ, proto=None)
@@ -1721,4 +1692,4 @@ def create_local_srtuct(typ, llvalues):
 
     return xv
 
-
+"""
