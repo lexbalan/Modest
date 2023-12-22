@@ -102,6 +102,7 @@ def ll_create_value_num(t, num):
         'proto': None
     }
 
+
 def ll_create_value_zero(t):
     return {
         'isa': 'llvm_value',
@@ -111,14 +112,74 @@ def ll_create_value_zero(t):
         'proto': None
     }
 
-def ll_create_value_null(t):
+
+def ll_value_reg(vreg, vtype, proto=None):
     return {
         'isa': 'llvm_value',
-        'class': 'null',
+        'class': 'reg',
         'level': 'value',
-        'type': t,
-        'proto': None
+        'reg': vreg,
+        'type': vtype,
+        'proto': proto
     }
+
+
+def ll_value_mem(id, type, proto=None):
+    return {
+        'isa': 'llvm_value',
+        'class': 'mem',
+        'level': 'value',
+        'id': id,
+        'type': type,
+        'proto': proto
+    }
+
+
+def ll_value_stk(id, type, proto=None):
+    return {
+        'isa': 'llvm_value',
+        'class': 'stk',
+        'level': 'value',
+        'id': id,
+        'type': type,
+        'proto': proto,
+    }
+
+
+def ll_value_record(items, type, proto=None):
+    return {
+        'isa': 'llvm_value',
+        'class': 'record',
+        'level': 'value',
+        'type': type,
+        'items': items,
+        'proto': proto
+    }
+
+
+def ll_value_array(items, type, proto=None):
+    return {
+        'isa': 'llvm_value',
+        'class': 'array',
+        'level': 'value',
+        'type': type,
+        'items': items,
+        'proto': proto
+    }
+
+
+def ll_value_str(strid, _str, type, proto=None):
+    return {
+        'isa': 'llvm_value',
+        'class': 'str',
+        'level': 'value',
+        'id': strid,
+        'len': len(_str),
+        'str': _str,
+        'type': type,
+        'proto': proto
+    }
+
 
 
 
@@ -128,32 +189,13 @@ def print_type_value(llvm_value):
     print_value(llvm_value)
 
 
+
 def print_type_value_param(llvm_value):
     print_type(llvm_value['type'], arr_as_ptr_to_arr=True)
     out(" ")
     print_value(llvm_value)
 
 
-
-def llvm_value_reg(vreg, vtype, proto=None):
-    return {
-        'isa': 'llvm_value',
-        'class': 'reg',
-        'level': 'value',
-        'reg': vreg,
-        'type': vtype,
-        'proto': proto
-    }
-
-def llvm_value_adr_in_reg(vreg, vtype, proto=None):
-    return {
-        'isa': 'llvm_value',
-        'class': 'reg',
-        'level': 'adr',
-        'reg': vreg,
-        'type': vtype,
-        'proto': proto
-    }
 
 
 def insertvalue(v, x, pos):
@@ -164,7 +206,7 @@ def insertvalue(v, x, pos):
     print_type_value(x)
     out(", ")
     out('%d' % pos)
-    return llvm_value_reg(reg, v['type'], v)
+    return ll_value_reg(reg, v['type'], v)
 
 
 
@@ -174,7 +216,7 @@ def llvm_agr(va_list, typ):
     print_type_value(v)
     out(", ")
     print_type(typ)
-    return llvm_value_reg(reg, typ)
+    return ll_value_reg(reg, typ)
 
 
 
@@ -262,10 +304,14 @@ def print_value(x):
             out(str(num))
 
     elif c == 'str':
-        len = x['len']
         id = x['id']
-        char_width = x['char_width']
-        out("bitcast ([%d x i%d]* @%s to [0 x i%d]*)" % (len, char_width, id, char_width))
+
+        string_of = x['type']['to']['of']
+        char_width = string_of['power']
+
+        slen = x['len']
+
+        out("bitcast ([%d x i%d]* @%s to [0 x i%d]*)" % (slen, char_width, id, char_width))
 
     elif c == 'array':
         print_value_array(x)
@@ -283,11 +329,13 @@ def print_value(x):
     elif c == 'zero':
         if type.is_numeric(x['type']):
             out("0")
+        elif type.is_pointer(x['type']):
+            out("null")
         else:
             out("zeroinitializer")
 
-    elif c == 'null':
-        out("null")
+    #elif c == 'null':
+    #    out("null")
 
     else:
         out("<unknown_value::%s>" % c)
@@ -400,7 +448,7 @@ def do_ld(x):
     print_type(typ)
     out("* ")
     print_value (x)
-    return llvm_value_reg(reg, x['type'], x)
+    return ll_value_reg(reg, x['type'], x)
 
 
 
@@ -457,7 +505,7 @@ def do_eval_binary (op, l, r, x): # ["add", "fadd", x]
 
     reg = operation_with_type (op, l['type'])
     out(" "); print_value (l); out(", "); print_value (r)
-    return llvm_value_reg(reg, x['type'], x)
+    return ll_value_reg(reg, x['type'], x)
 
 
 
@@ -495,14 +543,8 @@ def do_eval_expr_un(v):
         if is_global_context():
             if v['value']['kind'] == 'var':
                 if 'global' in  v['value']['att']:
-                    return {
-                        'isa': 'llvm_value',
-                        'class': 'mem',
-                        'level': 'value',
-                        'id': v['value']['id']['str'],
-                        'type': v['type'],
-                        'proto': v
-                    }
+                    id = v['value']['id']['str']
+                    return ll_value_mem(id, v['type'], v)
 
         nv = copy.copy(ve)
         nv['level'] = 'value'
@@ -527,16 +569,14 @@ def do_eval_expr_un(v):
 
 
     elif v['kind'] == 'minus':
-
         #%10 = sub i32 0, %9
-
         z = ll_create_value_zero(v['type'])
         return do_eval_binary('sub', z, vx, v)
 
     else:
         reg = operation(v['kind']); out(" "); print_value(vx)
 
-    return llvm_value_reg(reg, v['type'], v)
+    return ll_value_reg(reg, v['type'], v)
 
 
 
@@ -582,7 +622,7 @@ def do_eval_expr_call(v):
     out(" (")
     print_list_by(args, print_type_value_param)
     out(")")
-    return llvm_value_reg(reg, v['type'], v)
+    return ll_value_reg(reg, v['type'], v)
 
 
 
@@ -598,7 +638,9 @@ def llvm_getelementptr(rec, rt, indexes, vt):
     print_value(rec)
     out(", ")
     print_list_by(indexes, print_type_value)
-    return llvm_value_adr_in_reg(reg, vt)
+    rv = ll_value_reg(reg, vt)
+    rv['level'] = 'adr'
+    return rv
 
 
 
@@ -633,7 +675,7 @@ def extract_record_field(x, ft, field_no):
     reg = operation('extractvalue')
     print_type_value(x)
     out(', %d' % field_no)
-    return llvm_value_reg(reg, ft)
+    return ll_value_reg(reg, ft)
 
 
 
@@ -768,6 +810,7 @@ def select_cast_operator(a, b):
 
 
 
+
 def do_eval_expr_cast_immediate(x):
     value = x['value']
     from_type = value['type']
@@ -777,18 +820,7 @@ def do_eval_expr_cast_immediate(x):
     if type.is_ptr_to_string(to_type):
         string_of = to_type['to']['of']
         char_pow = string_of['power']
-
-        return {
-            'isa': 'llvm_value',
-            'class': 'str',
-            'level': 'value',
-            'id': x['strid'],
-            'char_width': char_pow,
-            'len': len(x['imm']),
-            'type': x['type'],
-            'proto': value
-        }
-
+        return ll_value_str(x['strid'], x['imm'], x['type'], value)
 
     return do_eval_literal(x)
 
@@ -818,7 +850,7 @@ def opcast(opcode, from_type, to_type, value):
     print_value(value)
     out(" to ")
     print_type(to_type)
-    return llvm_value_reg(reg, to_type, value)
+    return ll_value_reg(reg, to_type, value)
 
 
 
@@ -843,7 +875,8 @@ def do_eval_expr_cast(x):
     if type.is_free_pointer(from_type):
         if value_is_immediate(value):
             if value['imm'] == 0:
-                return ll_create_value_null(to_type)
+                #return ll_create_value_null(to_type)
+                return ll_create_value_zero(to_type)
 
 
     # Cm имеет структурную систему типов, тогда как llvm - номинативную
@@ -868,28 +901,6 @@ def do_eval_expr_cast(x):
 
 
 
-"""def do_eval_sizeof(x):
-    # thx:
-    # stackoverflow.com/questions/14608250/how-can-i-find-the-size-of-a-type
-    #%Size = getelementptr %T* null, i32 1
-    #%SizeI = ptrtoint %T* %Size to i32
-    t = x['of']
-    r0 = operation("getelementptr ")
-    print_type(t); out(", ")
-    print_type(t); out("* null, i32 1")
-    r1 = operation("ptrtoint ")
-    print_type(t); out("* %%%s to i64" % r0)
-
-    return {
-        'isa': 'llvm_value',
-        'class': 'reg',
-        'level': 'value',
-        'reg': r1,
-        'type': type.typeInt32,
-        'proto': x
-    }"""
-
-
 bin_ops = [
     'logic_or', 'logic_and',
     'or', 'xor', 'and', 'shl', 'shr',
@@ -904,6 +915,7 @@ un_ops = ['ref', 'deref', 'plus', 'minus', 'not']
 def do_eval_zero(x):
     #print("do_eval_zero")
     return ll_create_value_zero(x['type'])
+
 
 
 def do_eval_array(v):
@@ -929,14 +941,7 @@ def do_eval_array(v):
     # global?
     # глобальный массив распечатает print_value как литерал
     if is_global_context():
-        return {
-            'isa': 'llvm_value',
-            'class': 'array',
-            'level': 'value',
-            'type': v['type'],
-            'items': items,
-            'proto': v
-        }
+        return ll_value_array(items, v['type'], v)
 
     # local.
 
@@ -967,14 +972,7 @@ def do_eval_record(v):
         iv = do_ld(do_eval(initializer['value']))
         items.append({'id': initializer['id'], 'value': iv})
 
-    return {
-        'isa': 'llvm_value',
-        'class': 'record',
-        'level': 'value',
-        'type': v['type'],
-        'items': items,
-        'proto': v
-    }
+    return ll_value_record(items, v['type'], v)
 
 
 
@@ -1018,37 +1016,6 @@ def do_eval(x):
     return v
 
 
-def do_eval_str8(x):
-    return {
-        'isa': 'llvm_value',
-        'class': 'mem',
-        'level': 'value',
-        'id': x['strid'],
-        'type': x['type'],
-        'proto': x
-    }
-
-def do_eval_str16(x):
-    return {
-        'isa': 'llvm_value',
-        'class': 'mem',
-        'level': 'value',
-        'id': x['strid'],
-        'type': x['type'],
-        'proto': x
-    }
-
-def do_eval_str32(x):
-    return {
-        'isa': 'llvm_value',
-        'class': 'mem',
-        'level': 'value',
-        'id': x['strid'],
-        'type': x['type'],
-        'proto': x
-    }
-
-
 def do_eval_literal(x):
     if type.is_integer(x['type']):
         return ll_create_value_num(x['type'], x['imm'])
@@ -1089,27 +1056,15 @@ def func_const_var(x):
         return y
 
     if k == 'var':
-        return {
-            'isa': 'llvm_value',
-            'class': 'mem',
-            'level': 'adr',
-            'id': x['id']['str'],
-            'type': x['type'],
-            'proto': x,    # need for load/store, because it is 'adr'
-        }
+        rv = ll_value_mem(x['id']['str'], x['type'], x)
+        rv['level'] = 'adr'
+        return rv
 
     if k == 'const':
         return do_eval(x['value'])
 
 
-    return {
-        'isa': 'llvm_value',
-        'class': 'mem',
-        'level': 'value',
-        'id': x['id']['str'],
-        'type': x['type'],
-        'proto': x
-    }
+    return ll_value_mem(x['id']['str'], ['type'], x)
 
 
 
@@ -1308,14 +1263,8 @@ def print_stmt_return(x):
 
 
 def ll_alloca(id, typ, init_value):
-    val = {
-        'isa': 'llvm_value',
-        'class': 'stk',
-        'level': 'adr',
-        'id': id,
-        'type': typ,
-        'proto': None,
-    }
+    val = ll_value_stk(id, typ)
+    val['level'] = 'adr'
 
     lo("%%%s = alloca " % id)
     print_type(typ)
@@ -1574,29 +1523,22 @@ def print_def_func(x):
             arrays.append(param)
             prefix = "_"
 
-        id = param['id']['str']
+        param_id = param['id']['str']
         if i > 0:
             out(", ")
         print_type(param['type'])
         if param_is_arr:
             out("*")
         out(" ")
-        out('%%%s%s' % (prefix, id))
+        out('%%%s%s' % (prefix, param_id))
 
         #reg = reg_get()
-        vv = {
-            'isa': 'llvm_value',
-            'class': 'stk',
-            'level': 'value',
-            'id': id,
-            'type': param['type'],
-            'proto': param
-        }
+        vv = ll_value_stk(param_id, param['type'], param)
 
         if param_is_arr:
             vv['type'] = hlir_type_pointer(vv['type'])
 
-        locals_add(id, vv)
+        locals_add(param_id, vv)
 
         i = i + 1
     out(")")
@@ -1806,18 +1748,12 @@ def run(module, outname):
 
 
 
+
 def create_local_srtuct(typ, llvalues):
     #^llvalues.append({'id': item['id'], 'value': i})
     #or xv = ll_create_value_zero(typ) ?
     #%5 = insertvalue %Type24 zeroinitializer, %Int32 1, 0
-    xv = {
-        'isa': 'llvm_value',
-        'kind': 'record',
-        'class': 'zero',
-        'level': 'value',
-        'type': typ,
-        'proto': None
-    }
+    xv = ll_value_record([], typ, proto=None)
 
     lo("\n; -- fill struct")
     # набиваем структуру
