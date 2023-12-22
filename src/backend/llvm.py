@@ -210,7 +210,7 @@ def insertvalue(v, x, pos):
 
 
 #%44 = va_arg i8** %3, i32
-def llvm_agr(va_list, typ):
+def llvm_va_arg(va_list, typ):
     reg = operation('va_arg')
     print_type_value(v)
     out(", ")
@@ -219,7 +219,7 @@ def llvm_agr(va_list, typ):
 
 
 
-def inline_cast(op, from_type, to_type, val):
+def llvm_inline_cast(op, from_type, to_type, val):
     out("%s (" % op)
     print_type(from_type)
     out(" ")
@@ -231,43 +231,42 @@ def inline_cast(op, from_type, to_type, val):
 
 
 def print_value_array(x):
-    if len(x['items']) > 0:
-        out("[\n")
-        indent_up()
-        n = len(x['items'])
-        i = 0
-        while i < n:
-            item = x['items'][i]
-            if i > 0:
-                out(",\n")
-            indent(); print_type_value(item);
-            i = i + 1
-        indent_down()
-        out("\n"); indent(); out("]")
-    else:
+    if len(x['items']) == 0:
         out("zeroinitializer")
+        return
+
+    out("[\n")
+    indent_up()
+    n = len(x['items'])
+    i = 0
+    while i < n:
+        item = x['items'][i]
+        if i > 0: out(",\n")
+        indent(); print_type_value(item);
+        i = i + 1
+    indent_down()
+    out("\n"); indent(); out("]")
+
 
 
 
 def print_value_record(x):
-    #def print_type_value_value(llvm_value):
-    #    print_type_value(llvm_value['value'])
-    if len(x['items']) > 0:
-        #o("{"); print_list_by(x['items'], print_type_value_value); out("}")
-        out("{\n")
-        indent_up()
-        n = len(x['items'])
-        i = 0
-        while i < n:
-            item = x['items'][i]
-            if i > 0:
-                out(",\n")
-            indent(); print_type_value(item['value'])
-            i = i + 1
-        indent_down()
-        out("\n"); indent(); out("}")
-    else:
+    if len(x['items']) == 0:
         out("zeroinitializer")
+        return
+
+    out("{\n")
+    indent_up()
+    n = len(x['items'])
+    i = 0
+    while i < n:
+        item = x['items'][i]
+        if i > 0: out(",\n")
+        indent(); print_type_value(item['value'])
+        i = i + 1
+    indent_down()
+    out("\n"); indent(); out("}")
+
 
 
 def print_value_str(x):
@@ -284,25 +283,16 @@ def print_value_str(x):
 
 def print_value_num(x):
     num = x['imm']
-
-    if type.is_integer(x['type']):
+    if not type.is_pointer(x['type']):
+        # integer, float, bool, char
         out(str(num))
 
-    elif type.is_float(x['type']):
-        out("%f" % num)
-
-    elif type.is_bool(x['type']):
-        out(str(num))
-
-    elif type.is_char(x['type']):
-        out(str(num))
-
-    elif type.is_pointer(x['type']):
+    else:
         if x['imm'] == 0:
             out("null")
         else:
             v = ll_value_num(type.typeNat64, x['imm'])
-            inline_cast('inttoptr', v['type'], x['type'], v)
+            llvm_inline_cast('inttoptr', v['type'], x['type'], v)
 
 
 
@@ -311,16 +301,13 @@ def print_value_inlinecast(x):
     v = x['value']
     from_type = v['type']
     to_type = x['type']
-    inline_cast('bitcast', from_type, to_type, v)
+    llvm_inline_cast('bitcast', from_type, to_type, v)
 
 
 def print_value_zero(x):
-    if type.is_numeric(x['type']):
-        out("0")
-    elif type.is_pointer(x['type']):
-        out("null")
-    else:
-        out("zeroinitializer")
+    if type.is_numeric(x['type']): out("0")
+    elif type.is_pointer(x['type']): out("null")
+    else: out("zeroinitializer")
 
 
 
@@ -344,10 +331,50 @@ def print_value(x):
 def print_list_by(lst, method):
     i = 0
     while i < len(lst):
-        if i > 0:
-            out(", ")
+        if i > 0: out(", ")
         method(lst[i])
         i = i + 1
+
+
+
+def print_type_record(t):
+    out("{")
+    fields = t['fields']
+    i = 0
+    while i < len(fields):
+        field = fields[i]
+        if i > 0: out(',')
+        out("\n\t"); print_type(field['type'])
+        i = i + 1
+    out("\n}")
+
+
+def print_type_array(t, arr_as_ptr_to_arr):
+    out("[")
+    array_size = t['volume']
+    sz = 0
+    if array_size != None:
+        sz = array_size['imm']
+
+    out("%d x " % sz)
+    print_type(t['of'])
+    out("]")
+    if arr_as_ptr_to_arr:
+        out("*")
+
+
+def print_type_func(t):
+    print_type(t['to'])
+    out("(")
+    print_list_by(t['params'], lambda f: print_type(f['type'], arr_as_ptr_to_arr=True))
+    out(")")
+
+
+def print_type_pointer(t):
+    if type.is_free_pointer(t) or type.is_nil(t):
+        out("i8*")
+    else:
+        print_type(t['to']); out("*")
 
 
 # функция может получать только указатель на массив
@@ -371,45 +398,11 @@ def print_type(t, print_aka=True, arr_as_ptr_to_arr=False):
             out('%' + t['id']['str'])
             return
 
-    if type.is_record(t):
-        out("{")
-        fields = t['fields']
-        i = 0
-        while i < len(fields):
-            field = fields[i]
-            if i > 0: out(',')
-            out("\n\t"); print_type(field['type'])
-            i = i + 1
-        out("\n}")
-
-    elif type.is_enum(t):
-        out("i16")
-
-    elif type.is_pointer(t):
-        if type.is_free_pointer(t) or type.is_nil(t):
-            out("i8*")
-        else:
-            print_type(t['to']); out("*")
-
-
-    elif type.is_array(t):
-        out("[")
-        array_size = t['volume']
-        sz = 0
-        if array_size != None:
-            sz = array_size['imm']
-
-        out("%d x " % sz)
-        print_type(t['of'])
-        out("]")
-        if arr_as_ptr_to_arr:
-            out("*")
-
-    elif type.is_func(t):
-        print_type(t['to'])
-        out("(")
-        print_list_by(t['params'], lambda f: print_type(f['type'], arr_as_ptr_to_arr=True))
-        out(")")
+    #elif type.is_enum(t): out("i16")
+    if type.is_func(t): print_type_func(t)
+    elif type.is_record(t): print_type_record(t)
+    elif type.is_pointer(t): print_type_pointer(t)
+    elif type.is_array(t): print_type_array(t, arr_as_ptr_to_arr)
 
     elif type.is_integer(t) or type.is_char(t):
         if 'llvm_alias' in t:
@@ -419,11 +412,8 @@ def print_type(t, print_aka=True, arr_as_ptr_to_arr=False):
         if 'llvm_alias' in t:
             out(t['llvm_alias'])
 
-
     elif type.is_opaque(t):
         out('opaque')
-
-
 
     else:
         out("<type:%s>" % k)
