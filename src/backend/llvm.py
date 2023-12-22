@@ -22,14 +22,14 @@ def is_global_context():
     return func_context == None
 
 
-ll_value_zero = None
+ll_value_num_zero = None
 
 def init():
-    global LLVM_TARGET_TRIPLE, LLVM_TARGET_DATALAYOUT, ll_value_zero
+    global LLVM_TARGET_TRIPLE, LLVM_TARGET_DATALAYOUT, ll_value_num_zero
     LLVM_TARGET_TRIPLE = settings.get('target_triple')
     LLVM_TARGET_DATALAYOUT = settings.get('target_datalayout')
 
-    ll_value_zero = ll_value_num(type.typeInt32, 0)
+    ll_value_num_zero = ll_value_num(type.typeInt32, 0)
     pass
 
 
@@ -197,7 +197,6 @@ def print_type_value_param(llvm_value):
 
 
 
-
 def insertvalue(v, x, pos):
     #%5 = insertvalue %Type24 zeroinitializer, %Int32 1, 0
     reg = operation('insertvalue')
@@ -271,72 +270,71 @@ def print_value_record(x):
         out("zeroinitializer")
 
 
+def print_value_str(x):
+    id = x['id']
 
-def print_value(x):
-    c = x['class']
-    if c == 'reg':
-        out('%%%s' % x['reg'])
-    elif c == 'stk':
-        out('%%%s' % x['id'])
-    elif c == 'mem':
-        out('@%s' % x['id'])
-    elif c == 'num':
-        num = x['imm']
+    string_of = x['type']['to']['of']
+    char_width = string_of['power']
 
-        if type.is_integer(x['type']):
-            out(str(num))
+    slen = x['len']
 
-        elif type.is_pointer(x['type']):
-            if x['imm'] == 0:
-                out("null")
-                return
+    out("bitcast ([%d x i%d]* @%s to [0 x i%d]*)" % (slen, char_width, id, char_width))
 
+
+
+def print_value_num(x):
+    num = x['imm']
+
+    if type.is_integer(x['type']):
+        out(str(num))
+
+    elif type.is_float(x['type']):
+        out("%f" % num)
+
+    elif type.is_bool(x['type']):
+        out(str(num))
+
+    elif type.is_char(x['type']):
+        out(str(num))
+
+    elif type.is_pointer(x['type']):
+        if x['imm'] == 0:
+            out("null")
+        else:
             v = ll_value_num(type.typeNat64, x['imm'])
             inline_cast('inttoptr', v['type'], x['type'], v)
 
-        elif type.is_float(x['type']):
-            out("%f" % (num))
 
-        elif type.is_bool(x['type']):
-            out(str(num))
 
-        elif type.is_char(x['type']):
-            out(str(num))
+def print_value_inlinecast(x):
+    #o("bitcast ([%d x i8]* @%s to %%Str)" % (x['len'], x['id']))
+    v = x['value']
+    from_type = v['type']
+    to_type = x['type']
+    inline_cast('bitcast', from_type, to_type, v)
 
-    elif c == 'str':
-        id = x['id']
 
-        string_of = x['type']['to']['of']
-        char_width = string_of['power']
+def print_value_zero(x):
+    if type.is_numeric(x['type']):
+        out("0")
+    elif type.is_pointer(x['type']):
+        out("null")
+    else:
+        out("zeroinitializer")
 
-        slen = x['len']
 
-        out("bitcast ([%d x i%d]* @%s to [0 x i%d]*)" % (slen, char_width, id, char_width))
 
-    elif c == 'array':
-        print_value_array(x)
-
-    elif c == 'record':
-        print_value_record(x)
-
-    elif c == 'cast':
-        #o("bitcast ([%d x i8]* @%s to %%Str)" % (x['len'], x['id']))
-        v = x['value']
-        from_type = v['type']
-        to_type = x['type']
-        inline_cast('bitcast', from_type, to_type, v)
-
-    elif c == 'zero':
-        if type.is_numeric(x['type']):
-            out("0")
-        elif type.is_pointer(x['type']):
-            out("null")
-        else:
-            out("zeroinitializer")
-
-    #elif c == 'null':
-    #    out("null")
-
+def print_value(x):
+    c = x['class']
+    if c == 'reg': out('%%%s' % x['reg'])
+    elif c == 'stk': out('%%%s' % x['id'])
+    elif c == 'mem': out('@%s' % x['id'])
+    elif c == 'num': print_value_num(x)
+    elif c == 'str': print_value_str(x)
+    elif c == 'array': print_value_array(x)
+    elif c == 'record': print_value_record(x)
+    elif c == 'cast': print_value_inlinecast(x)
+    elif c == 'zero': print_value_zero(x)
     else:
         out("<unknown_value::%s>" % c)
         info("???", x['ti'])
@@ -649,7 +647,7 @@ def do_eval_expr_index(v):
     array_type = array['type']
     result_type = v['type']
     index = do_ld(do_eval(v['index']))
-    return llvm_getelementptr(array, array_type, (ll_value_zero, index), result_type)
+    return llvm_getelementptr(array, array_type, (ll_value_num_zero, index), result_type)
 
 
 def do_eval_expr_index_ptr(v):
@@ -658,7 +656,7 @@ def do_eval_expr_index_ptr(v):
     result_type = v['type']
     array = do_ld(pointer)
     index = do_ld(do_eval(v['index']))
-    return llvm_getelementptr(array, array_type, (ll_value_zero, index), result_type)
+    return llvm_getelementptr(array, array_type, (ll_value_num_zero, index), result_type)
 
 
 # получает укзаатель на структуру x
@@ -667,7 +665,7 @@ def do_eval_expr_index_ptr(v):
 # возвращает value:address для поля этой структуры
 def do_eval_access_ptr(x, xt, field_no, vt):
     field_index = ll_value_num(type.typeInt32, field_no)
-    return llvm_getelementptr(x, xt, (ll_value_zero, field_index), vt)
+    return llvm_getelementptr(x, xt, (ll_value_num_zero, field_index), vt)
 
 
 # возвращает значение поля из 'структуры по значению'
