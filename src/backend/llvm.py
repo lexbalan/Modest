@@ -135,6 +135,17 @@ def print_type_value_param(llvm_value):
 
 
 
+def llvm_value_reg(vreg, vtype, proto=None):
+    return {
+        'isa': 'llvm_value',
+        'class': 'reg',
+        'level': 'value',
+        'reg': vreg,
+        'type': vtype,
+        'proto': proto
+    }
+
+
 def insertvalue(v, x, pos):
     #%5 = insertvalue %Type24 zeroinitializer, %Int32 1, 0
     reg = operation('insertvalue')
@@ -143,6 +154,7 @@ def insertvalue(v, x, pos):
     print_type_value(x)
     out(", ")
     out('%d' % pos)
+    return llvm_value_reg(reg, v['type'], v)
     return {
         'isa': 'llvm_value',
         'class': 'reg',
@@ -151,6 +163,26 @@ def insertvalue(v, x, pos):
         'type': v['type'],
         'proto': v
     }
+
+
+
+
+#%44 = va_arg i8** %3, i32
+def llvm_agr(va_list, typ):
+    reg = operation('va_arg')
+    print_type_value(v)
+    out(", ")
+    print_type(typ)
+    return llvm_value_reg(reg, typ)
+    return {
+        'isa': 'llvm_value',
+        'class': 'reg',
+        'level': 'value',
+        'reg': reg,
+        'type': typ,
+        'proto': None
+    }
+
 
 
 
@@ -376,6 +408,7 @@ def do_ld(x):
     print_type(typ)
     out("* ")
     print_value (x)
+    return llvm_value_reg(reg, x['type'], x)
     return {
         'isa': 'llvm_value',
         'class': 'reg',
@@ -441,7 +474,7 @@ def do_eval_binary (op, l, r, x): # ["add", "fadd", x]
 
     reg = operation_with_type (op, l['type'])
     out(" "); print_value (l); out(", "); print_value (r)
-
+    return llvm_value_reg(reg, x['type'], x)
     return {
         'isa': 'llvm_value',
         'class': 'reg',
@@ -474,6 +507,7 @@ def llvm_deref(x):
     nv['level'] = 'adr'
     #nv['proto'] = proto
     return nv
+
 
 
 def do_eval_expr_un(v):
@@ -526,6 +560,7 @@ def do_eval_expr_un(v):
     else:
         reg = operation(v['kind']); out(" "); print_value(vx)
 
+    return llvm_value_reg(reg, v['type'], v)
     return {
         'isa': 'llvm_value',
         'class': 'reg',
@@ -578,6 +613,7 @@ def do_eval_expr_call(v):
     out(" (")
     print_list_by(args, print_type_value_param)
     out(")")
+    return llvm_value_reg(reg, v['type'], v)
     return {
         'isa': 'llvm_value',
         'class': 'reg',
@@ -602,6 +638,7 @@ def llvm_getelementptr(rec, rt, indexes, vt):
     out(", ")
     print_list_by(indexes, print_type_value)
 
+    return llvm_value_reg(reg, vt)
     return {
         'isa': 'llvm_value',
         'class': 'reg',
@@ -644,6 +681,7 @@ def extract_record_field(x, ft, field_no):
     reg = operation('extractvalue')
     print_type_value(x)
     out(', %d' % field_no)
+    return llvm_value_reg(reg, ft)
     return {
         'isa': 'llvm_value',
         'class': 'reg',
@@ -835,7 +873,7 @@ def opcast(opcode, from_type, to_type, value):
     print_value(value)
     out(" to ")
     print_type(to_type)
-
+    return llvm_value_reg(reg, to_type, value)
     return {
         'isa': 'llvm_value',
         'class': 'reg',
