@@ -318,8 +318,8 @@ define double @distance(%Point %a, %Point %b) {
     %12 = extractvalue %Point %b, 1
     %13 = call double(double, double) @min_float64 (double %11, double %12)
     %14 = fsub double %10, %13
-    %15 = call double(double, double) @pow (double %7, double 2.000000)
-    %16 = call double(double, double) @pow (double %14, double 2.000000)
+    %15 = call double(double, double) @pow (double %7, double 2.0)
+    %16 = call double(double, double) @pow (double %14, double 2.0)
     %17 = fadd double %15, %16
     %18 = call double(double) @sqrt (double %17)
     ret double %18
@@ -335,22 +335,22 @@ define double @lineLength(%Line %line) {
 define i32 @main() {
     %1 = call double(%Line) @lineLength (%Line {
         %Point {
-            double 0.000000,
-            double 0.000000
+            double 0.0,
+            double 0.0
         },
         %Point {
-            double 1.000000,
-            double 1.000000
+            double 1.0,
+            double 1.0
         }
     })
     %2 = call double(%Line) @lineLength (%Line {
         %Point {
-            double 10.000000,
-            double 15.000000
+            double 10.0,
+            double 15.0
         },
         %Point {
-            double 20.000000,
-            double 25.000000
+            double 20.0,
+            double 25.0
         }
     })
     %3 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([18 x i8]* @str1 to [0 x i8]*), double %1)
