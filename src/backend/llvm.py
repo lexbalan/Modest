@@ -92,32 +92,32 @@ def operation_with_type(op, t):
 
 
 
-def ll_value_zero(t):
+def ll_value_zero(type):
     return {
         'isa': 'llvm_value',
         'kind': 'zero',
-        'type': t,
+        'type': type,
         'is_adr': False,
         'proto': None
     }
 
 
-def ll_value_num(t, num):
+def ll_value_num(type, num):
     return {
         'isa': 'llvm_value',
         'kind': 'num',
-        'type': t,
+        'type': type,
         'imm': num,
         'is_adr': False,
         'proto': None
     }
 
 
-def ll_value_reg(vreg, vtype, proto=None):
+def ll_value_reg(vreg, type, proto=None):
     return {
         'isa': 'llvm_value',
         'kind': 'reg',
-        'type': vtype,
+        'type': type,
         'reg': vreg,
         'is_adr': False,
         'proto': proto
@@ -182,18 +182,17 @@ def ll_value_str(strid, _str, type, proto=None):
 
 
 
-
 def print_type_value(llvm_value):
     print_type(llvm_value['type'])
     out(" ")
-    print_value(llvm_value)
+    ll_print_value(llvm_value)
 
 
 
 def print_type_value_param(llvm_value):
     print_type(llvm_value['type'], arr_as_ptr_to_arr=True)
     out(" ")
-    print_value(llvm_value)
+    ll_print_value(llvm_value)
 
 
 
@@ -223,7 +222,7 @@ def llvm_inline_cast(op, from_type, to_type, val):
     out("%s (" % op)
     print_type(from_type)
     out(" ")
-    print_value(val)
+    ll_print_value(val)
     out(" to ")
     print_type(to_type)
     out(")")
@@ -246,7 +245,6 @@ def print_value_array(x):
         i = i + 1
     indent_down()
     out("\n"); indent(); out("]")
-
 
 
 
@@ -311,7 +309,7 @@ def print_value_zero(x):
 
 
 
-def print_value(x):
+def ll_print_value(x):
     c = x['kind']
     if c == 'reg': out('%%%s' % x['reg'])
     elif c == 'stk': out('%%%s' % x['id'])
@@ -433,7 +431,7 @@ def do_ld(x):
     out(", ")
     print_type(typ)
     out("* ")
-    print_value (x)
+    ll_print_value(x)
 
     return ll_value_reg(reg, x['type'], x)
 
@@ -488,7 +486,7 @@ def get_bin_opcode_suf (sop, uop, fop, t): # ["sdiv", "udiv", "fdiv", x]
 
 def do_eval_binary (op, l, r, x):
     reg = operation_with_type (op, l['type'])
-    out(" "); print_value (l); out(", "); print_value (r)
+    out(" "); ll_print_value(l); out(", "); ll_print_value(r)
     return ll_value_reg(reg, x['type'], x)
 
 
@@ -545,7 +543,7 @@ def do_eval_expr_un(v):
         out(" ");
         print_type(v['type'])
         out(" ");
-        print_value(vx)
+        ll_print_value(vx)
         out(", -1")
 
 
@@ -555,7 +553,7 @@ def do_eval_expr_un(v):
         return do_eval_binary('sub', z, vx, v)
 
     else:
-        reg = operation(v['kind']); out(" "); print_value(vx)
+        reg = operation(v['kind']); out(" "); ll_print_value(vx)
 
     return ll_value_reg(reg, v['type'], v)
 
@@ -599,7 +597,7 @@ def do_eval_expr_call(v):
         out(", ...")
     out(") ")
 
-    print_value(f)
+    ll_print_value(f)
     out(" (")
     print_list_by(args, print_type_value_param)
     out(")")
@@ -616,7 +614,7 @@ def llvm_getelementptr(rec, rt, indexes, vt):
     out(", ")
     print_type(rt)
     out("* ")
-    print_value(rec)
+    ll_print_value(rec)
     out(", ")
     print_list_by(indexes, print_type_value)
     rv = ll_value_reg(reg, vt)
@@ -810,7 +808,7 @@ def opcast(opcode, from_type, to_type, value):
     reg = operation(opcode)
     print_type(from_type)
     out(" ")
-    print_value(value)
+    ll_print_value(value)
     out(" to ")
     print_type(to_type)
     return ll_value_reg(reg, to_type, value)
@@ -1036,11 +1034,11 @@ def ll_store(l, r):
     lo("store ");
     print_type(r['type'])
     out(" ")
-    print_value(r)
+    ll_print_value(r)
     out(", ")
     print_type(r['type'])
     out("* ")
-    print_value(l)
+    ll_print_value(l)
 
 
 # сохр структур (вот не может просто так сохранить, приходится по полю)
@@ -1084,7 +1082,7 @@ def print_integer_block():
 
 def ll_br(x, then_label, else_label):
     lo("br %s " % TYPE_BOOL)
-    print_value(x)
+    ll_print_value(x)
     out(" , label %%%s, label %%%s" % (then_label, else_label))
 
 
@@ -1176,7 +1174,7 @@ def print_stmt_return(x):
     if v != None:
         print_type(x['value']['type'])
         out(" ")
-        print_value(v)
+        ll_print_value(v)
     else:
         out("void")
 
@@ -1549,7 +1547,7 @@ def print_def_var(x):
     print_type(var['type'])
     if var['init'] != None:
         out(" ")
-        print_value(do_eval(var['init']))
+        ll_print_value(do_eval(var['init']))
     else:
         out(" zeroinitializer")
 
