@@ -425,6 +425,7 @@ def llvm_load(x):
 
 
 
+"""
 # сохр структур (вот не может просто так сохранить, приходится по полю)
 def llvm_store_record(l, r):
 
@@ -445,17 +446,17 @@ def llvm_store_record(l, r):
 
         rpos = field['field_no']
 
-        rv = do_ld(do_eval_access(r, r['type'], rpos, ft))
+        rv = dold(do_eval_access(r, r['type'], rpos, ft))
 
         # сохраняем
         llvm_assign(l_field_ptr, rv)
     lo("; -- end record assign field by field\n")
-
+"""
 
 
 def llvm_assign(l, r):
-    if type.is_record(l['type']):
-        return llvm_store_record(l, r)
+    #if type.is_record(l['type']):
+    #    return llvm_store_record(l, r)
 
     llvm_store(l, r)
 
@@ -484,11 +485,27 @@ def llvm_alloca(id, typ, init_value):
     print_type(typ)
 
     if init_value != None:
-        r = do_ld(init_value)
+        r = dold(init_value)
         llvm_assign(val, r)
 
     return val
 
+
+
+
+
+
+# получает на вход llvm_value
+# и если оно adr то загружает его в регистр
+# в любом другом случае просто возвращает исходное значение
+def dold(x):
+    assert(x['isa'] == 'll_value')
+
+    if x['is_adr']:
+        # It's address of the value, we need to load it
+        return llvm_load(x)
+
+    return x
 
 
 
@@ -592,20 +609,8 @@ def print_type(t, print_aka=True, arr_as_ptr_to_arr=False):
 
 
 
-
-# получает на вход llvm_value
-# и если оно adr то загружает его в регистр
-# в любом другом случае просто возвращает исходное значение
-def do_ld(x):
-    assert(x['isa'] == 'll_value')
-
-    if x['is_adr']:
-        # It's address of the value, we need to load it
-        return llvm_load(x)
-
-    return x
-
-
+def do_reval(x):
+    return dold(do_eval(x))
 
 
 def do_eval_expr_bin(x):
@@ -613,15 +618,15 @@ def do_eval_expr_bin(x):
         return llvm_value_num(x['type'], x['imm'])
 
     op = get_bin_opcode(x['kind'], x['left']['type'])
-    l = do_ld(do_eval(x['left']))
-    r = do_ld(do_eval(x['right']))
+    l = do_reval(x['left'])
+    r = do_reval(x['right'])
     return llvm_eval_binary(op, l, r, x)
 
 
 
 def do_eval_expr_deref(x):
     y = do_eval(x['value'])
-    z = do_ld(y)
+    z = dold(y)
     return llvm_deref(z)
 
 
@@ -642,7 +647,7 @@ def do_eval_expr_un(v):
         return nv
 
 
-    vx = do_ld(ve)    #!
+    vx = dold(ve)    #!
 
     if v['kind'] == 'deref':
         return do_eval_expr_deref(v)
@@ -676,7 +681,7 @@ def do_eval_expr_call(v):
         arg = do_eval(a)
         # do not load arrays (because arrays passed by pointer inside)
         if not type.is_array(arg['type']):
-            arg = do_ld(arg)
+            arg = dold(arg)
         args.append(arg)
 
     ftype = v['func']['type']
@@ -686,7 +691,7 @@ def do_eval_expr_call(v):
 
     if type.is_pointer(ftype):
         # pointer to array needs additional load
-        f = do_ld(f)
+        f = dold(f)
         ftype = ftype['to']
 
     to_unit = type.eq(ftype['to'], type.typeUnit)
@@ -719,7 +724,7 @@ def do_eval_expr_index(v):
     array = do_eval(v['array'])
     array_type = array['type']
     result_type = v['type']
-    index = do_ld(do_eval(v['index']))
+    index = do_reval(v['index'])
     return llvm_getelementptr(array, array_type, (llvm_value_num_zero, index), result_type)
 
 
@@ -727,8 +732,8 @@ def do_eval_expr_index_ptr(v):
     pointer = do_eval(v['pointer'])
     array_type = pointer['type']['to']
     result_type = v['type']
-    array = do_ld(pointer)
-    index = do_ld(do_eval(v['index']))
+    array = dold(pointer)
+    index = do_reval(v['index'])
     return llvm_getelementptr(array, array_type, (llvm_value_num_zero, index), result_type)
 
 
@@ -759,7 +764,7 @@ def do_eval_access(rec, rt, pos, vt):
     # сперва нужно загрузить ее в регистр тем самым получим 'указатель'
     if type.is_pointer(rt):
         # pointer to record needs additional load
-        rec = do_ld(rec)    # загружаем сам указатель
+        rec = dold(rec)    # загружаем сам указатель
         rt = rt['to']
 
     return do_eval_access_ptr(rec, rt, pos, vt)
@@ -775,7 +780,7 @@ def do_eval_expr_access(v):
 
 
 def do_eval_expr_access_ptr(v):
-    ptr = do_ld(do_eval(v['pointer']))
+    ptr = do_reval(v['pointer'])
     rt = ptr['type']['to']
     pos = v['field']['field_no']
     return do_eval_access_ptr(ptr, rt, pos, v['type'])
@@ -870,7 +875,7 @@ def cast_record_to_record(to_type, value, ti):
     #info("cast_record_to_record", ti)
     from_type = value['type']
     # создаем переменную под структуру A
-    y = do_ld(do_eval(value))
+    y = do_reval(value)
     reg = reg_get()
     struct = llvm_alloca(reg, value['type'], y)
     # приводим указатель на нее к указателю на структуру B
@@ -907,7 +912,7 @@ def do_eval_expr_cast(x):
             return cast_record_to_record(to_type, value, x['ti'])
 
 
-    v = do_ld(do_eval(value))
+    v = do_reval(value)
 
     if is_global_context():
         return v
@@ -934,7 +939,7 @@ def do_eval_array(v):
     # (кроме констант, они едут до последнего)
     items = []
     for item in v['imm']:
-        iv = do_ld(do_eval(item))
+        iv = do_reval(item)
         items.append(iv)
 
     # теперь добавим паддинг нулевыми значениями
@@ -978,7 +983,7 @@ def do_eval_record(v):
     items = []
     initializers = v['imm']
     for initializer in initializers:
-        iv = do_ld(do_eval(initializer['value']))
+        iv = do_reval(initializer['value'])
         items.append({'id': initializer['id'], 'value': iv})
 
     return llvm_value_record(items, v['type'], v)
@@ -1094,7 +1099,7 @@ def do_eval_x(x):
 #
 
 def print_stmt_assign(x):
-    r = do_ld(do_eval(x['right']))
+    r = do_reval(x['right'])
     l = do_eval(x['left'])
     llvm_assign(l, r)
 
@@ -1103,7 +1108,7 @@ def print_stmt_if(x):
     global func_context
     if_id = func_context['if_no']
     func_context['if_no'] = func_context['if_no'] + 1
-    cv = do_ld(do_eval(x['cond']))
+    cv = do_reval(x['cond'])
 
     then_label = 'then_%d' % if_id
     else_label = 'else_%d' % if_id
@@ -1143,7 +1148,7 @@ def print_stmt_while(x):
 
     llvm_jump(again_label)
     llvm_label(again_label)
-    cv = do_ld(do_eval(x['cond']))
+    cv = do_reval(x['cond'])
     llvm_br(cv, body_label, break_label)
     llvm_label(body_label)
     print_stmt(x['stmt'])
@@ -1172,7 +1177,7 @@ def print_stmt_break():
 def print_stmt_return(x):
     v = None
     if x['value'] != None:
-        v = do_ld(do_eval(x['value']))
+        v = do_reval(x['value'])
 
     lo("ret ")
 
@@ -1201,7 +1206,7 @@ def print_stmt_def_var(x):
 def print_stmt_let(x):
     id = x['value']['id']
     val = x['value']['value']
-    v = do_ld(do_eval(val))
+    v = do_reval(val)
     locals_add(x['id']['str'], v)
     return None
 
