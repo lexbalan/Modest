@@ -645,7 +645,7 @@ def do_eval_expr_un(v):
         return nv
 
 
-    vx = dold(ve)    #!
+    vx = dold(ve) #!
 
     if v['kind'] == 'deref':
         return do_eval_expr_deref(v)
@@ -752,17 +752,15 @@ def do_eval_access(rec, rt, pos, vt):
     if 'items' in rec:
         return rec['items'][pos]['value']
 
-
     # если сама запись находится в регистре: (let rec = get_rec())
     if type.is_record(rec['type']) and not rec['is_adr']:
         return llvm_extract_record_field(rec, vt, pos)
-
 
     # если работаем через 'переменую-указатель'
     # сперва нужно загрузить ее в регистр тем самым получим 'указатель'
     if type.is_pointer(rt):
         # pointer to record needs additional load
-        rec = dold(rec)    # загружаем сам указатель
+        rec = dold(rec)  # загружаем сам указатель
         rt = rt['to']
 
     return do_eval_access_ptr(rec, rt, pos, vt)
