@@ -20,6 +20,18 @@ def value_cons_record_from_generic_record(v, t, ti, method):
         # все поля присутствовали (!)
         return hlir_value_cast(v, t, ti=ti)
 
+    if len(v['imm']) == 0:
+        #info("cons record from empty record", ti)
+        return {
+            'isa': 'value',
+            'kind': 'literal',
+            'imm': [],
+            'type': t,
+            'att': [],
+            'nl_end': v['nl_end'],
+            'ti': ti
+        }
+
     items = []
     if len(v['type']['fields']) > 0:
         # 1. проходим по порядку определения по всем полям типа t (целевого)
