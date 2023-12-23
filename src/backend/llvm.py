@@ -94,7 +94,7 @@ def llvm_operation_with_type(op, t):
 
 def llvm_value_zero(type):
     return {
-        'isa': 'llvm_value',
+        'isa': 'll_value',
         'kind': 'zero',
         'type': type,
         'is_adr': False,
@@ -104,7 +104,7 @@ def llvm_value_zero(type):
 
 def llvm_value_num(type, num):
     return {
-        'isa': 'llvm_value',
+        'isa': 'll_value',
         'kind': 'num',
         'type': type,
         'imm': num,
@@ -115,7 +115,7 @@ def llvm_value_num(type, num):
 
 def llvm_value_reg(vreg, type, proto=None):
     return {
-        'isa': 'llvm_value',
+        'isa': 'll_value',
         'kind': 'reg',
         'type': type,
         'reg': vreg,
@@ -126,7 +126,7 @@ def llvm_value_reg(vreg, type, proto=None):
 
 def llvm_value_mem(id, type, proto=None):
     return {
-        'isa': 'llvm_value',
+        'isa': 'll_value',
         'kind': 'mem',
         'type': type,
         'id': id,
@@ -137,7 +137,7 @@ def llvm_value_mem(id, type, proto=None):
 
 def llvm_value_stk(id, type, proto=None):
     return {
-        'isa': 'llvm_value',
+        'isa': 'll_value',
         'kind': 'stk',
         'type': type,
         'id': id,
@@ -148,7 +148,7 @@ def llvm_value_stk(id, type, proto=None):
 
 def llvm_value_record(items, type, proto=None):
     return {
-        'isa': 'llvm_value',
+        'isa': 'll_value',
         'kind': 'record',
         'type': type,
         'items': items,
@@ -159,7 +159,7 @@ def llvm_value_record(items, type, proto=None):
 
 def llvm_value_array(items, type, proto=None):
     return {
-        'isa': 'llvm_value',
+        'isa': 'll_value',
         'kind': 'array',
         'type': type,
         'items': items,
@@ -170,7 +170,7 @@ def llvm_value_array(items, type, proto=None):
 
 def llvm_value_str(strid, _str, type, proto=None):
     return {
-        'isa': 'llvm_value',
+        'isa': 'll_value',
         'kind': 'str',
         'type': type,
         'id': strid,
@@ -183,7 +183,7 @@ def llvm_value_str(strid, _str, type, proto=None):
 
 
 def print_type_value(x):
-    assert(x['isa'] == 'llvm_value')
+    assert(x['isa'] == 'll_value')
     print_type(x['type'])
     out(" ")
     llvm_print_value(x)
@@ -191,7 +191,7 @@ def print_type_value(x):
 
 
 def print_type_value_param(x):
-    assert(x['isa'] == 'llvm_value')
+    assert(x['isa'] == 'll_value')
     print_type(x['type'], arr_as_ptr_to_arr=True)
     out(" ")
     llvm_print_value(x)
@@ -199,8 +199,8 @@ def print_type_value_param(x):
 
 
 def insertvalue(x, v, pos):
-    assert(x['isa'] == 'llvm_value')
-    assert(v['isa'] == 'llvm_value')
+    assert(x['isa'] == 'll_value')
+    assert(v['isa'] == 'll_value')
     #%5 = insertvalue %Type24 zeroinitializer, %Int32 1, 0
     reg = llvm_operation('insertvalue')
     print_type_value(x)
@@ -237,7 +237,7 @@ def llvm_va_end(x):
 
 
 def llvm_inline_cast(op, from_type, to_type, val):
-    assert(val['isa'] == 'llvm_value')
+    assert(val['isa'] == 'll_value')
     out("%s (" % op)
     print_type(from_type)
     out(" ")
@@ -327,7 +327,7 @@ def llvm_print_value_zero(x):
 
 
 def llvm_print_value(x):
-    assert(x['isa'] == 'llvm_value')
+    assert(x['isa'] == 'll_value')
     k = x['kind']
     if k == 'reg': out('%%%s' % x['reg'])
     elif k == 'stk': out('%%%s' % x['id'])
@@ -355,7 +355,7 @@ def llvm_eval_binary(op, l, r, x):
 
 
 def llvm_deref(x):
-    assert(x['isa'] == 'llvm_value')
+    assert(x['isa'] == 'll_value')
     nv = copy.copy(x)
     nv['is_adr'] = True
     return nv
@@ -400,6 +400,8 @@ def llvm_cast(kind, from_type, to_type, value):
 
 # сохр простых значений
 def llvm_store(l, r):
+    assert(l['isa'] == 'll_value')
+    assert(r['isa'] == 'll_value')
     lo("store ");
     print_type(r['type'])
     out(" ")
@@ -408,6 +410,19 @@ def llvm_store(l, r):
     print_type(r['type'])
     out("* ")
     llvm_print_value(l)
+
+
+def llvm_load(x):
+    assert(x['isa'] == 'll_value')
+    reg = llvm_operation('load');
+    type = x['type']
+    print_type(type)
+    out(", ")
+    print_type(type)
+    out("* ")
+    llvm_print_value(x)
+    return llvm_value_reg(reg, type, x)
+
 
 
 # сохр структур (вот не может просто так сохранить, приходится по полю)
@@ -582,21 +597,14 @@ def print_type(t, print_aka=True, arr_as_ptr_to_arr=False):
 # и если оно adr то загружает его в регистр
 # в любом другом случае просто возвращает исходное значение
 def do_ld(x):
-    assert(x['isa'] == 'llvm_value')
+    assert(x['isa'] == 'll_value')
 
-    if not x['is_adr']:
-        return x
+    if x['is_adr']:
+        # It's address of the value, we need to load it
+        return llvm_load(x)
 
-    # It's address of the value, we need to load it
-    reg = llvm_operation('load');
-    typ = x['type']
-    print_type(typ)
-    out(", ")
-    print_type(typ)
-    out("* ")
-    llvm_print_value(x)
+    return x
 
-    return llvm_value_reg(reg, x['type'], x)
 
 
 
@@ -962,7 +970,7 @@ def do_eval_array(v):
 
 
 # вычисляем значение-запись по месту
-# просто высичлим все его элементы и завернем все в 'llvm_value'/'record'
+# просто высичлим все его элементы и завернем все в 'll_value'/'record'
 def do_eval_record(v):
     # сперва вычисляем все иницифлизаторы поелей структуры в регистры
     # (кроме констант, ведь они едут до последнего)
