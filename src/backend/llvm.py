@@ -625,9 +625,7 @@ def do_eval_expr_bin(x):
 
 
 def do_eval_expr_deref(x):
-    y = do_eval(x['value'])
-    z = dold(y)
-    return llvm_deref(z)
+    return llvm_deref(do_reval(x['value']))
 
 
 
