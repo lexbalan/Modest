@@ -287,12 +287,12 @@ declare void @bcopy(i8*, i8*, i64)
 
 @line = global %Line {
     %Point {
-        double 0.000000,
-        double 0.000000
+        double 0.0,
+        double 0.0
     },
     %Point {
-        double 1.000000,
-        double 1.000000
+        double 1.0,
+        double 1.0
     }
 }
 
@@ -333,8 +333,8 @@ define double @distance(%Point %a, %Point %b) {
     %12 = extractvalue %Point %b, 1
     %13 = call double(double, double) @min (double %11, double %12)
     %14 = fsub double %10, %13
-    %15 = call double(double, double) @pow (double %7, double 2.000000)
-    %16 = call double(double, double) @pow (double %14, double 2.000000)
+    %15 = call double(double, double) @pow (double %7, double 2.0)
+    %16 = call double(double, double) @pow (double %14, double 2.0)
     %17 = fadd double %15, %16
     %18 = call double(double) @sqrt (double %17)
     ret double %18
@@ -352,9 +352,9 @@ define void @ptr_example() {
     %2 = bitcast i8* %1 to %Point*
     ; access by pointer
     %3 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 0
-    store double 10.000000, double* %3
+    store double 10.0, double* %3
     %4 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 1
-    store double 20.000000, double* %4
+    store double 20.0, double* %4
     %5 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 0
     %6 = load double, double* %5
     %7 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 1
