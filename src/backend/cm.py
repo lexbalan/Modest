@@ -452,6 +452,14 @@ def print_value_literal_char(x, ctx):
         out("\"\\x%x\"[0]" % num)
 
 
+def print_value_literal_bool(x, ctx):
+    num = x['imm']
+    if num != 0:
+        out('true')
+    else:
+        out('false')
+
+
 def print_value_literal_int(x, ctx):
     num = x['imm']
 
@@ -505,7 +513,7 @@ def print_value_literal(x, ctx):
     elif type.is_array(t): print_value_literal_arr(x, ctx)
     elif type.is_free_pointer(t): out("nil")
     elif type.is_pointer(t): print_value_literal_int(x, ctx)
-    elif type.is_bool(t): print_value_literal_int(x, ctx)
+    elif type.is_bool(t): print_value_literal_bool(x, ctx)
     elif type.is_char(t): print_value_literal_char(x, ctx)
 
 

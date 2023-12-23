@@ -1,0 +1,86 @@
+/* from: https://github.com/pshashipreetham/File-Transfer-Using-TCP-Socket-in-C-Socket-Programming/tree/master */
+@attribute("c-no-print")
+import "libc/stdio.h"
+@attribute("c-no-print")
+import "libc/libc.h"
+@attribute("c-no-print")
+import "libc/socket.h"
+
+
+
+const BUF_SIZE = 1024
+
+func write_file(sockfd: Int) -> Unit {
+    let filename = "file2.txt" to *[]Char8
+
+    var buffer: [BUF_SIZE]Char8
+
+    let fp = fopen(filename, "w")
+    if fp == nil {
+        perror("[-] Error in creating file.")
+        exit(1)
+    }
+
+    while true {
+        let n = recv(sockfd, &buffer, BUF_SIZE, 0)
+
+        if n <= 0 {
+            break
+        }
+
+        fprintf(fp, "%s", buffer)
+        bzero(&buffer, BUF_SIZE)
+    }
+}
+
+
+func main() -> Int {
+    let ip = "127.0.0.1"
+    let port = 8080
+
+    let sockfd = socket(AF_INET, SOCK_STREAM, 0)
+    if sockfd < 0 {
+        perror("[-] Error in socket")
+        exit(1)
+    }
+
+    printf("[+] Server socket created. \n")
+
+    var server_addr: Struct_sockaddr_in := {
+        sin_family = AF_INET
+        sin_port = port
+        sin_addr = {
+            s_addr = inet_addr(ip) to UnsignedLong
+        }
+    }
+
+    let a = &server_addr
+    var e: Int := bind(sockfd, a, (sizeof(Struct_sockaddr_in)))
+    if e < 0 {
+        perror("[-] Error in Binding")
+        exit(1)
+    }
+
+    printf("[+] Binding Successfull.\n")
+
+    e := listen(sockfd, 10)
+    if e == 0 {
+        printf("[+] Listening...\n")
+    } else {
+        perror("[-] Error in Binding")
+        exit(1)
+    }
+
+    var addr_size: socklen_t
+    addr_size := (sizeof(Struct_sockaddr_in))
+    var new_addr: Struct_sockaddr_in
+    let na = &new_addr
+    let new_sock = accept(sockfd, na, &addr_size)
+
+    write_file(new_sock)
+
+    printf("[+] Data written in the text file ")
+
+    return 0
+}
+
