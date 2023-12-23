@@ -217,6 +217,20 @@ def llvm_va_arg(va_list, typ):
     return ll_value_reg(reg, typ)
 
 
+#"%16 = bitcast i8** %3 to i8*"
+#"call void @llvm.va_start(i8* %16)"
+def llvm_va_start(x):
+    y = opcast('bitcast', x['type'], type.typeFreePtr, x)
+    out("call void @llvm.va_start(i8* %d)" % y['reg'])
+
+
+#"%96 = bitcast i8** %3 to i8*"
+#"call void @llvm.va_end(i8* %96)"
+def llvm_va_end(x):
+    y = opcast('bitcast', x['type'], type.typeFreePtr, x)
+    out("call void @llvm.va_end(i8* %d)" % y['reg'])
+
+
 
 def llvm_inline_cast(op, from_type, to_type, val):
     out("%s (" % op)
@@ -484,7 +498,7 @@ def select_bin_opcode_suf(sop, uop, fop, t): # ["sdiv", "udiv", "fdiv", x]
 
 
 
-def do_eval_binary(op, l, r, x):
+def ll_eval_binary(op, l, r, x):
     reg = operation_with_type (op, l['type'])
     out(" "); ll_print_value(l); out(", "); ll_print_value(r)
     return ll_value_reg(reg, x['type'], x)
@@ -498,7 +512,7 @@ def do_eval_expr_bin(x):
     opcode = get_bin_opcode(x['kind'], x['left']['type'])
     l = do_ld(do_eval(x['left']))
     r = do_ld(do_eval(x['right']))
-    return do_eval_binary(opcode, l, r, x)
+    return ll_eval_binary(opcode, l, r, x)
 
 
 
@@ -547,7 +561,7 @@ def do_eval_expr_un(v):
     elif v['kind'] == 'minus':
         #%10 = sub i32 0, %9
         z = ll_value_num(v['type'], 0)
-        return do_eval_binary('sub', z, vx, v)
+        return ll_eval_binary('sub', z, vx, v)
 
     else:
         reg = operation(v['kind']); out(" "); ll_print_value(vx)
@@ -1018,7 +1032,6 @@ def do_eval_x(x):
 #
 #
 
-
 # сохр простых значений
 def ll_store(l, r):
     lo("store ");
@@ -1049,9 +1062,7 @@ def ll_store_record(l, r):
         # получаем указатель на поле левого (в которое будем сохранять)
         l_field_ptr = do_eval_access_ptr(l, l['type'], field['pos'], ft)
 
-
         rpos = field['pos']
-
 
         rv = do_ld(do_eval_access(r, r['type'], rpos, ft))
 
