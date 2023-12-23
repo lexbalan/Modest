@@ -1,6 +1,6 @@
 
 
-func min_int32(a : Int32, b : Int32) -> Int32 {
+func min_int32(a: Int32, b: Int32) -> Int32 {
     if a < b {
         return a
     }
@@ -8,7 +8,7 @@ func min_int32(a : Int32, b : Int32) -> Int32 {
 }
 
 
-func max_int32(a : Int32, b : Int32) -> Int32 {
+func max_int32(a: Int32, b: Int32) -> Int32 {
     if a > b {
         return a
     }
@@ -17,7 +17,7 @@ func max_int32(a : Int32, b : Int32) -> Int32 {
 
 
 
-func min_int64(a : Int64, b : Int64) -> Int64 {
+func min_int64(a: Int64, b: Int64) -> Int64 {
     if a < b {
         return a
     }
@@ -25,7 +25,7 @@ func min_int64(a : Int64, b : Int64) -> Int64 {
 }
 
 
-func max_int64(a : Int64, b : Int64) -> Int64 {
+func max_int64(a: Int64, b: Int64) -> Int64 {
     if a > b {
         return a
     }
@@ -34,7 +34,7 @@ func max_int64(a : Int64, b : Int64) -> Int64 {
 
 
 
-func min_nat32(a : Nat32, b : Nat32) -> Nat32 {
+func min_nat32(a: Nat32, b: Nat32) -> Nat32 {
     if a < b {
         return a
     }
@@ -42,7 +42,7 @@ func min_nat32(a : Nat32, b : Nat32) -> Nat32 {
 }
 
 
-func max_nat32(a : Nat32, b : Nat32) -> Nat32 {
+func max_nat32(a: Nat32, b: Nat32) -> Nat32 {
     if a > b {
         return a
     }
@@ -51,7 +51,7 @@ func max_nat32(a : Nat32, b : Nat32) -> Nat32 {
 
 
 
-func min_nat64(a : Nat64, b : Nat64) -> Nat64 {
+func min_nat64(a: Nat64, b: Nat64) -> Nat64 {
     if a < b {
         return a
     }
@@ -59,7 +59,7 @@ func min_nat64(a : Nat64, b : Nat64) -> Nat64 {
 }
 
 
-func max_nat64(a : Nat64, b : Nat64) -> Nat64 {
+func max_nat64(a: Nat64, b: Nat64) -> Nat64 {
     if a > b {
         return a
     }
@@ -68,7 +68,7 @@ func max_nat64(a : Nat64, b : Nat64) -> Nat64 {
 
 
 
-func min_float32(a : Float32, b : Float32) -> Float32 {
+func min_float32(a: Float32, b: Float32) -> Float32 {
     if a < b {
         return a
     }
@@ -76,7 +76,7 @@ func min_float32(a : Float32, b : Float32) -> Float32 {
 }
 
 
-func max_float32(a : Float32, b : Float32) -> Float32 {
+func max_float32(a: Float32, b: Float32) -> Float32 {
     if a > b {
         return a
     }
@@ -85,7 +85,7 @@ func max_float32(a : Float32, b : Float32) -> Float32 {
 
 
 
-func min_float64(a : Float64, b : Float64) -> Float64 {
+func min_float64(a: Float64, b: Float64) -> Float64 {
     if a < b {
         return a
     }
@@ -93,7 +93,7 @@ func min_float64(a : Float64, b : Float64) -> Float64 {
 }
 
 
-func max_float64(a : Float64, b : Float64) -> Float64 {
+func max_float64(a: Float64, b: Float64) -> Float64 {
     if a > b {
         return a
     }
