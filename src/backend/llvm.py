@@ -485,8 +485,8 @@ def llvm_alloca(id, typ, init_value):
     print_type(typ)
 
     if init_value != None:
-        r = dold(init_value)
-        llvm_assign(val, r)
+        assert(init_value['isa'] == 'll_value')
+        llvm_assign(val, init_value)
 
     return val
 
@@ -1193,7 +1193,7 @@ def print_stmt_def_var(x):
 
     init_value = None
     if x['var']['init'] != None:
-        init_value = do_eval(x['var']['init'])
+        init_value = do_reval(x['var']['init'])
     val = llvm_alloca(id, x['var']['type'], init_value)
     locals_add(id, val)
     return None

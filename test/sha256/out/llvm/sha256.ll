@@ -605,8 +605,8 @@ break_1:
 
 define void @sha256_final(%SHA256_Context* %ctx, [0 x i8]* %hash) {
     %1 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 1
-    %i = alloca i32
     %2 = load i32, i32* %1
+    %i = alloca i32
     store i32 %2, i32* %i
     ; Pad whatever data is left in the buffer.
     %n = alloca i32
