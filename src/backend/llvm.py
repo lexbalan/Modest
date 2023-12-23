@@ -95,9 +95,9 @@ def operation_with_type(op, t):
 def ll_value_zero(t):
     return {
         'isa': 'llvm_value',
-        'class': 'zero',
-        'level': 'value',
+        'kind': 'zero',
         'type': t,
+        'is_adr': False,
         'proto': None
     }
 
@@ -105,10 +105,10 @@ def ll_value_zero(t):
 def ll_value_num(t, num):
     return {
         'isa': 'llvm_value',
-        'class': 'num',
-        'level': 'value',
-        'imm': num,
+        'kind': 'num',
         'type': t,
+        'imm': num,
+        'is_adr': False,
         'proto': None
     }
 
@@ -116,10 +116,10 @@ def ll_value_num(t, num):
 def ll_value_reg(vreg, vtype, proto=None):
     return {
         'isa': 'llvm_value',
-        'class': 'reg',
-        'level': 'value',
-        'reg': vreg,
+        'kind': 'reg',
         'type': vtype,
+        'reg': vreg,
+        'is_adr': False,
         'proto': proto
     }
 
@@ -127,10 +127,10 @@ def ll_value_reg(vreg, vtype, proto=None):
 def ll_value_mem(id, type, proto=None):
     return {
         'isa': 'llvm_value',
-        'class': 'mem',
-        'level': 'value',
-        'id': id,
+        'kind': 'mem',
         'type': type,
+        'id': id,
+        'is_adr': False,
         'proto': proto
     }
 
@@ -138,10 +138,10 @@ def ll_value_mem(id, type, proto=None):
 def ll_value_stk(id, type, proto=None):
     return {
         'isa': 'llvm_value',
-        'class': 'stk',
-        'level': 'value',
-        'id': id,
+        'kind': 'stk',
         'type': type,
+        'id': id,
+        'is_adr': False,
         'proto': proto,
     }
 
@@ -149,10 +149,10 @@ def ll_value_stk(id, type, proto=None):
 def ll_value_record(items, type, proto=None):
     return {
         'isa': 'llvm_value',
-        'class': 'record',
-        'level': 'value',
+        'kind': 'record',
         'type': type,
         'items': items,
+        'is_adr': False,
         'proto': proto
     }
 
@@ -160,10 +160,10 @@ def ll_value_record(items, type, proto=None):
 def ll_value_array(items, type, proto=None):
     return {
         'isa': 'llvm_value',
-        'class': 'array',
-        'level': 'value',
+        'kind': 'array',
         'type': type,
         'items': items,
+        'is_adr': False,
         'proto': proto
     }
 
@@ -171,12 +171,12 @@ def ll_value_array(items, type, proto=None):
 def ll_value_str(strid, _str, type, proto=None):
     return {
         'isa': 'llvm_value',
-        'class': 'str',
-        'level': 'value',
+        'kind': 'str',
+        'type': type,
         'id': strid,
         'len': len(_str),
         'str': _str,
-        'type': type,
+        'is_adr': False,
         'proto': proto
     }
 
@@ -312,7 +312,7 @@ def print_value_zero(x):
 
 
 def print_value(x):
-    c = x['class']
+    c = x['kind']
     if c == 'reg': out('%%%s' % x['reg'])
     elif c == 'stk': out('%%%s' % x['id'])
     elif c == 'mem': out('@%s' % x['id'])
@@ -423,7 +423,7 @@ def print_type(t, print_aka=True, arr_as_ptr_to_arr=False):
 def do_ld(x):
     assert(x['isa'] == 'llvm_value')
 
-    if x['level'] != 'adr':
+    if not x['is_adr']:
         return x
 
     # load when value#level == #adr
@@ -511,7 +511,7 @@ def deref(x):
 
 def llvm_deref(x):
     nv = copy.copy(x)
-    nv['level'] = 'adr'
+    nv['is_adr'] = True
     return nv
 
 
@@ -528,7 +528,7 @@ def do_eval_expr_un(v):
                     return ll_value_mem(id, v['type'], v)
 
         nv = copy.copy(ve)
-        nv['level'] = 'value'
+        nv['is_adr'] = False
         nv['proto'] = v    # for type
         return nv
 
@@ -620,7 +620,7 @@ def llvm_getelementptr(rec, rt, indexes, vt):
     out(", ")
     print_list_by(indexes, print_type_value)
     rv = ll_value_reg(reg, vt)
-    rv['level'] = 'adr'
+    rv['is_adr'] = True
     return rv
 
 
@@ -676,7 +676,7 @@ def do_eval_access(rec, rt, pos, vt):
 
 
     # если сама запись находится в регистре: (let rec = get_rec())
-    if type.is_record(rec['type']) and rec['level'] == 'value':
+    if type.is_record(rec['type']) and not rec['is_adr']:
         return extract_record_field(rec, vt, pos)
 
 
@@ -986,7 +986,7 @@ def func_const_var(x):
 
     if k == 'var':
         rv = ll_value_mem(x['id']['str'], x['type'], x)
-        rv['level'] = 'adr'
+        rv['is_adr'] = True
         return rv
 
     if k == 'const':
@@ -1186,7 +1186,7 @@ def print_stmt_return(x):
 
 def ll_alloca(id, typ, init_value):
     val = ll_value_stk(id, typ)
-    val['level'] = 'adr'
+    val['is_adr'] = True
 
     lo("%%%s = alloca " % id)
     print_type(typ)
