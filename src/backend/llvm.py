@@ -94,7 +94,7 @@ def operation_with_type(op, t):
 
 def ll_value_zero(type):
     return {
-        'isa': 'llvm_value',
+        'isa': 'll_value',
         'kind': 'zero',
         'type': type,
         'is_adr': False,
@@ -104,7 +104,7 @@ def ll_value_zero(type):
 
 def ll_value_num(type, num):
     return {
-        'isa': 'llvm_value',
+        'isa': 'll_value',
         'kind': 'num',
         'type': type,
         'imm': num,
@@ -115,7 +115,7 @@ def ll_value_num(type, num):
 
 def ll_value_reg(vreg, type, proto=None):
     return {
-        'isa': 'llvm_value',
+        'isa': 'll_value',
         'kind': 'reg',
         'type': type,
         'reg': vreg,
@@ -126,7 +126,7 @@ def ll_value_reg(vreg, type, proto=None):
 
 def ll_value_mem(id, type, proto=None):
     return {
-        'isa': 'llvm_value',
+        'isa': 'll_value',
         'kind': 'mem',
         'type': type,
         'id': id,
@@ -137,7 +137,7 @@ def ll_value_mem(id, type, proto=None):
 
 def ll_value_stk(id, type, proto=None):
     return {
-        'isa': 'llvm_value',
+        'isa': 'll_value',
         'kind': 'stk',
         'type': type,
         'id': id,
@@ -148,7 +148,7 @@ def ll_value_stk(id, type, proto=None):
 
 def ll_value_record(items, type, proto=None):
     return {
-        'isa': 'llvm_value',
+        'isa': 'll_value',
         'kind': 'record',
         'type': type,
         'items': items,
@@ -159,7 +159,7 @@ def ll_value_record(items, type, proto=None):
 
 def ll_value_array(items, type, proto=None):
     return {
-        'isa': 'llvm_value',
+        'isa': 'll_value',
         'kind': 'array',
         'type': type,
         'items': items,
@@ -170,7 +170,7 @@ def ll_value_array(items, type, proto=None):
 
 def ll_value_str(strid, _str, type, proto=None):
     return {
-        'isa': 'llvm_value',
+        'isa': 'll_value',
         'kind': 'str',
         'type': type,
         'id': strid,
@@ -229,7 +229,7 @@ def llvm_inline_cast(op, from_type, to_type, val):
 
 
 
-def print_value_array(x):
+def ll_print_value_array(x):
     if len(x['items']) == 0:
         out("zeroinitializer")
         return
@@ -248,7 +248,7 @@ def print_value_array(x):
 
 
 
-def print_value_record(x):
+def ll_print_value_record(x):
     if len(x['items']) == 0:
         out("zeroinitializer")
         return
@@ -267,7 +267,7 @@ def print_value_record(x):
 
 
 
-def print_value_str(x):
+def ll_print_value_str(x):
     id = x['id']
 
     string_of = x['type']['to']['of']
@@ -279,7 +279,7 @@ def print_value_str(x):
 
 
 
-def print_value_num(x):
+def ll_print_value_num(x):
     num = x['imm']
     if not type.is_pointer(x['type']):
         # integer, float, bool, char
@@ -294,7 +294,7 @@ def print_value_num(x):
 
 
 
-def print_value_inlinecast(x):
+def ll_print_value_inlinecast(x):
     #o("bitcast ([%d x i8]* @%s to %%Str)" % (x['len'], x['id']))
     v = x['value']
     from_type = v['type']
@@ -302,7 +302,7 @@ def print_value_inlinecast(x):
     llvm_inline_cast('bitcast', from_type, to_type, v)
 
 
-def print_value_zero(x):
+def ll_print_value_zero(x):
     if type.is_numeric(x['type']): out("0")
     elif type.is_pointer(x['type']): out("null")
     else: out("zeroinitializer")
@@ -310,16 +310,16 @@ def print_value_zero(x):
 
 
 def ll_print_value(x):
-    c = x['kind']
-    if c == 'reg': out('%%%s' % x['reg'])
-    elif c == 'stk': out('%%%s' % x['id'])
-    elif c == 'mem': out('@%s' % x['id'])
-    elif c == 'num': print_value_num(x)
-    elif c == 'str': print_value_str(x)
-    elif c == 'array': print_value_array(x)
-    elif c == 'record': print_value_record(x)
-    elif c == 'cast': print_value_inlinecast(x)
-    elif c == 'zero': print_value_zero(x)
+    k = x['kind']
+    if k == 'reg': out('%%%s' % x['reg'])
+    elif k == 'stk': out('%%%s' % x['id'])
+    elif k == 'mem': out('@%s' % x['id'])
+    elif k == 'num': ll_print_value_num(x)
+    elif k == 'str': ll_print_value_str(x)
+    elif k == 'array': ll_print_value_array(x)
+    elif k == 'record': ll_print_value_record(x)
+    elif k == 'cast': ll_print_value_inlinecast(x)
+    elif k == 'zero': ll_print_value_zero(x)
     else:
         out("<unknown_value::%s>" % c)
         info("???", x['ti'])
@@ -419,12 +419,12 @@ def print_type(t, print_aka=True, arr_as_ptr_to_arr=False):
 # и если оно adr то загружает его в регистр
 # в любом другом случае просто возвращает исходное значение
 def do_ld(x):
-    assert(x['isa'] == 'llvm_value')
+    assert(x['isa'] == 'll_value')
 
     if not x['is_adr']:
         return x
 
-    # load when value#level == #adr
+    # It's address of the value, we need to load it
     reg = operation('load');
     typ = x['type']
     print_type(typ)
@@ -443,15 +443,15 @@ REL_OPS = ['eq', 'ne', 'lt', 'gt', 'le', 'ge']
 def get_bin_opcode(op, t):
     opcode = "<unknown opcode '%s'>" % op
     if op in ['eq', 'ne']:
-        opcode = get_bin_opcode_f('icmp ' + op, 'fcmp o' + op, t)
+        opcode = select_bin_opcode_f('icmp ' + op, 'fcmp o' + op, t)
     elif op in ['add', 'sub', 'mul']:
-        opcode = get_bin_opcode_f(op, 'f' + op, t)
+        opcode = select_bin_opcode_f(op, 'f' + op, t)
     elif op in ['and', 'or', 'xor', 'shl']:
         opcode = op
     elif op in ['div', 'rem']:
-        opcode = get_bin_opcode_suf('s' + op, 'u' + op, 'f' + op, t)
+        opcode = select_bin_opcode_suf('s' + op, 'u' + op, 'f' + op, t)
     elif op in ['lt', 'gt', 'le', 'ge']:
-        opcode = get_bin_opcode_suf('icmp s' + op, 'icmp u' + op, 'fcmp o' + op, t)
+        opcode = select_bin_opcode_suf('icmp s' + op, 'icmp u' + op, 'fcmp o' + op, t)
     elif op == 'shr':
         opcode = 'lshr'
         if type.is_signed(t):
@@ -464,27 +464,27 @@ def get_bin_opcode(op, t):
     return opcode
 
 
-def get_bin_opcode_f (op, fop, t): # ["sdiv", "udiv", "fdiv", x]
+def select_bin_opcode_f(op, fop, t): # ["sdiv", "udiv", "fdiv", x]
     if type.is_float(t):
         return fop
     return op
 
 
-def get_bin_opcode_su (sop, uop, t): # ["icmp slt", "icmp ult", x]
+def select_bin_opcode_su(sop, uop, t): # ["icmp slt", "icmp ult", x]
     if type.is_unsigned(t):
         return uop
     return sop
 
 
-def get_bin_opcode_suf (sop, uop, fop, t): # ["sdiv", "udiv", "fdiv", x]
+def select_bin_opcode_suf(sop, uop, fop, t): # ["sdiv", "udiv", "fdiv", x]
     if type.is_float(t):
         return fop
-    return get_bin_opcode_su(sop, uop, t)
+    return select_bin_opcode_su(sop, uop, t)
 
 
 
 
-def do_eval_binary (op, l, r, x):
+def do_eval_binary(op, l, r, x):
     reg = operation_with_type (op, l['type'])
     out(" "); ll_print_value(l); out(", "); ll_print_value(r)
     return ll_value_reg(reg, x['type'], x)
@@ -514,11 +514,9 @@ def llvm_deref(x):
 
 
 def do_eval_expr_un(v):
-
     ve = do_eval(v['value'])
 
     if v['kind'] == 'ref':
-
         if is_global_context():
             if v['value']['kind'] == 'var':
                 if 'global' in  v['value']['att']:
@@ -545,7 +543,6 @@ def do_eval_expr_un(v):
         out(" ");
         ll_print_value(vx)
         out(", -1")
-
 
     elif v['kind'] == 'minus':
         #%10 = sub i32 0, %9
@@ -905,7 +902,7 @@ def do_eval_array(v):
 
 
 # вычисляем значение-запись по месту
-# просто высичлим все его элементы и завернем все в 'llvm_value'/'record'
+# просто высичлим все его элементы и завернем все в 'll_value'/'record'
 def do_eval_record(v):
     # сперва вычисляем все иницифлизаторы поелей структуры в регистры
     # (кроме констант, ведь они едут до последнего)
