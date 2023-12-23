@@ -1042,7 +1042,7 @@ def ll_store_record(l, r):
             ll_store(l, r)
             return
 
-    lo("\n; -- record assign field by field")
+    lo("; -- record assign field by field")
     for field in l['type']['fields']:
         ft = field['type']
 

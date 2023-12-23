@@ -193,24 +193,22 @@ define void @test_by_value() {
     call void(%Type1) @f0_val (%Type1 %1)
     %2 = load %Type1, %Type1* @a
     %3 = alloca %Type1
-    
-; -- record assign
+    ; -- record assign field by field
     %4 = getelementptr inbounds %Type1, %Type1* %3, i32 0, i32 0
     %5 = extractvalue %Type1 %2, 0
     store i32 %5, i32* %4
-    ; -- end record assign
+    ; -- end record assign field by field
 
     %6 = bitcast %Type1* %3 to %Type2*
     %7 = load %Type2, %Type2* %6
     call void(%Type2) @f1_val (%Type2 %7)
     %8 = load %Type1, %Type1* @a
     %9 = alloca %Type1
-    
-; -- record assign
+    ; -- record assign field by field
     %10 = getelementptr inbounds %Type1, %Type1* %9, i32 0, i32 0
     %11 = extractvalue %Type1 %8, 0
     store i32 %11, i32* %10
-    ; -- end record assign
+    ; -- end record assign field by field
 
     %12 = bitcast %Type1* %9 to %Type3*
     %13 = load %Type3, %Type3* %12
@@ -218,12 +216,11 @@ define void @test_by_value() {
     ;f3_val(a)
     %14 = load %Type2, %Type2* @b
     %15 = alloca %Type2
-    
-; -- record assign
+    ; -- record assign field by field
     %16 = getelementptr inbounds %Type2, %Type2* %15, i32 0, i32 0
     %17 = extractvalue %Type2 %14, 0
     store i32 %17, i32* %16
-    ; -- end record assign
+    ; -- end record assign field by field
 
     %18 = bitcast %Type2* %15 to %Type1*
     %19 = load %Type1, %Type1* %18
@@ -232,12 +229,11 @@ define void @test_by_value() {
     call void(%Type2) @f1_val (%Type2 %20)
     %21 = load %Type2, %Type2* @b
     %22 = alloca %Type2
-    
-; -- record assign
+    ; -- record assign field by field
     %23 = getelementptr inbounds %Type2, %Type2* %22, i32 0, i32 0
     %24 = extractvalue %Type2 %21, 0
     store i32 %24, i32* %23
-    ; -- end record assign
+    ; -- end record assign field by field
 
     %25 = bitcast %Type2* %22 to %Type3*
     %26 = load %Type3, %Type3* %25
@@ -245,24 +241,22 @@ define void @test_by_value() {
     ;f3_val(b)
     %27 = load %Type3, %Type3* @c
     %28 = alloca %Type3
-    
-; -- record assign
+    ; -- record assign field by field
     %29 = getelementptr inbounds %Type3, %Type3* %28, i32 0, i32 0
     %30 = extractvalue %Type3 %27, 0
     store i32 %30, i32* %29
-    ; -- end record assign
+    ; -- end record assign field by field
 
     %31 = bitcast %Type3* %28 to %Type1*
     %32 = load %Type1, %Type1* %31
     call void(%Type1) @f0_val (%Type1 %32)
     %33 = load %Type3, %Type3* @c
     %34 = alloca %Type3
-    
-; -- record assign
+    ; -- record assign field by field
     %35 = getelementptr inbounds %Type3, %Type3* %34, i32 0, i32 0
     %36 = extractvalue %Type3 %33, 0
     store i32 %36, i32* %35
-    ; -- end record assign
+    ; -- end record assign field by field
 
     %37 = bitcast %Type3* %34 to %Type2*
     %38 = load %Type2, %Type2* %37

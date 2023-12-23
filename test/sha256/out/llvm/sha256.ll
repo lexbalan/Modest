@@ -816,24 +816,13 @@ break_1:
 
 define void @sha256_doHash([0 x i8]* %msg, i32 %len, [0 x i8]* %hash) {
     %ctx = alloca %SHA256_Context
-    
-; -- record assign
-    %1 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 0
-    store [64 x i8] zeroinitializer, [64 x i8]* %1
-    %2 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 1
-    store i32 0, i32* %2
-    %3 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 2
-    store i64 0, i64* %3
-    %4 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 3
-    store [8 x i32] zeroinitializer, [8 x i32]* %4
-    ; -- end record assign
-
-    %5 = bitcast %SHA256_Context* %ctx to %SHA256_Context*
-    call void(%SHA256_Context*) @sha256_contextInit (%SHA256_Context* %5)
-    %6 = bitcast %SHA256_Context* %ctx to %SHA256_Context*
-    call void(%SHA256_Context*, [0 x i8]*, i32) @sha256_update (%SHA256_Context* %6, [0 x i8]* %msg, i32 %len)
-    %7 = bitcast %SHA256_Context* %ctx to %SHA256_Context*
-    call void(%SHA256_Context*, [0 x i8]*) @sha256_final (%SHA256_Context* %7, [0 x i8]* %hash)
+    store %SHA256_Context zeroinitializer, %SHA256_Context* %ctx
+    %1 = bitcast %SHA256_Context* %ctx to %SHA256_Context*
+    call void(%SHA256_Context*) @sha256_contextInit (%SHA256_Context* %1)
+    %2 = bitcast %SHA256_Context* %ctx to %SHA256_Context*
+    call void(%SHA256_Context*, [0 x i8]*, i32) @sha256_update (%SHA256_Context* %2, [0 x i8]* %msg, i32 %len)
+    %3 = bitcast %SHA256_Context* %ctx to %SHA256_Context*
+    call void(%SHA256_Context*, [0 x i8]*) @sha256_final (%SHA256_Context* %3, [0 x i8]* %hash)
     ret void
 }
 

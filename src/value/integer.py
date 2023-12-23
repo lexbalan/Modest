@@ -15,7 +15,10 @@ def check_power(vtype, t, method, ti):
     if vtype['power'] > t['power']:
         if method == 'explicit':
             if not no_warning_cast_data_loss:
-                warning("casting with potential data loss", ti)
+                from main import features
+                if not features.get('unsafe'):
+                    warning("casting with potential data loss", ti)
+                pass
 
         else:
             error("casting with potential data loss", ti)
