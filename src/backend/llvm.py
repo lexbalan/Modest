@@ -22,14 +22,14 @@ def is_global_context():
     return func_context == None
 
 
-ll_value_num_zero = None
+llvm_value_num_zero = None
 
 def init():
-    global LLVM_TARGET_TRIPLE, LLVM_TARGET_DATALAYOUT, ll_value_num_zero
+    global LLVM_TARGET_TRIPLE, LLVM_TARGET_DATALAYOUT, llvm_value_num_zero
     LLVM_TARGET_TRIPLE = settings.get('target_triple')
     LLVM_TARGET_DATALAYOUT = settings.get('target_datalayout')
 
-    ll_value_num_zero = ll_value_num(type.typeInt32, 0)
+    llvm_value_num_zero = llvm_value_num(type.typeInt32, 0)
     pass
 
 
@@ -79,22 +79,22 @@ def reg_get():
     return str(reg)
 
 
-def operation(op):
+def llvm_operation(op):
     reg = reg_get()
     lo("%%%s = %s " % (reg, op))
     return reg
 
 
-def operation_with_type(op, t):
-    reg = operation(op)
+def llvm_operation_with_type(op, t):
+    reg = llvm_operation(op)
     print_type(t)
     return reg
 
 
 
-def ll_value_zero(type):
+def llvm_value_zero(type):
     return {
-        'isa': 'll_value',
+        'isa': 'llvm_value',
         'kind': 'zero',
         'type': type,
         'is_adr': False,
@@ -102,9 +102,9 @@ def ll_value_zero(type):
     }
 
 
-def ll_value_num(type, num):
+def llvm_value_num(type, num):
     return {
-        'isa': 'll_value',
+        'isa': 'llvm_value',
         'kind': 'num',
         'type': type,
         'imm': num,
@@ -113,9 +113,9 @@ def ll_value_num(type, num):
     }
 
 
-def ll_value_reg(vreg, type, proto=None):
+def llvm_value_reg(vreg, type, proto=None):
     return {
-        'isa': 'll_value',
+        'isa': 'llvm_value',
         'kind': 'reg',
         'type': type,
         'reg': vreg,
@@ -124,9 +124,9 @@ def ll_value_reg(vreg, type, proto=None):
     }
 
 
-def ll_value_mem(id, type, proto=None):
+def llvm_value_mem(id, type, proto=None):
     return {
-        'isa': 'll_value',
+        'isa': 'llvm_value',
         'kind': 'mem',
         'type': type,
         'id': id,
@@ -135,9 +135,9 @@ def ll_value_mem(id, type, proto=None):
     }
 
 
-def ll_value_stk(id, type, proto=None):
+def llvm_value_stk(id, type, proto=None):
     return {
-        'isa': 'll_value',
+        'isa': 'llvm_value',
         'kind': 'stk',
         'type': type,
         'id': id,
@@ -146,9 +146,9 @@ def ll_value_stk(id, type, proto=None):
     }
 
 
-def ll_value_record(items, type, proto=None):
+def llvm_value_record(items, type, proto=None):
     return {
-        'isa': 'll_value',
+        'isa': 'llvm_value',
         'kind': 'record',
         'type': type,
         'items': items,
@@ -157,9 +157,9 @@ def ll_value_record(items, type, proto=None):
     }
 
 
-def ll_value_array(items, type, proto=None):
+def llvm_value_array(items, type, proto=None):
     return {
-        'isa': 'll_value',
+        'isa': 'llvm_value',
         'kind': 'array',
         'type': type,
         'items': items,
@@ -168,9 +168,9 @@ def ll_value_array(items, type, proto=None):
     }
 
 
-def ll_value_str(strid, _str, type, proto=None):
+def llvm_value_str(strid, _str, type, proto=None):
     return {
-        'isa': 'll_value',
+        'isa': 'llvm_value',
         'kind': 'str',
         'type': type,
         'id': strid,
@@ -182,68 +182,73 @@ def ll_value_str(strid, _str, type, proto=None):
 
 
 
-def print_type_value(llvm_value):
-    print_type(llvm_value['type'])
+def print_type_value(x):
+    assert(x['isa'] == 'llvm_value')
+    print_type(x['type'])
     out(" ")
-    ll_print_value(llvm_value)
+    llvm_print_value(x)
 
 
 
-def print_type_value_param(llvm_value):
-    print_type(llvm_value['type'], arr_as_ptr_to_arr=True)
+def print_type_value_param(x):
+    assert(x['isa'] == 'llvm_value')
+    print_type(x['type'], arr_as_ptr_to_arr=True)
     out(" ")
-    ll_print_value(llvm_value)
+    llvm_print_value(x)
 
 
 
-def insertvalue(v, x, pos):
+def insertvalue(x, v, pos):
+    assert(x['isa'] == 'llvm_value')
+    assert(v['isa'] == 'llvm_value')
     #%5 = insertvalue %Type24 zeroinitializer, %Int32 1, 0
-    reg = operation('insertvalue')
-    print_type_value(v)
-    out(", ")
+    reg = llvm_operation('insertvalue')
     print_type_value(x)
     out(", ")
+    print_type_value(v)
+    out(", ")
     out('%d' % pos)
-    return ll_value_reg(reg, v['type'], v)
+    return llvm_value_reg(reg, x['type'], x)
 
 
 
 #%44 = va_arg i8** %3, i32
 def llvm_va_arg(va_list, typ):
-    reg = operation('va_arg')
+    reg = llvm_operation('va_arg')
     print_type_value(v)
     out(", ")
     print_type(typ)
-    return ll_value_reg(reg, typ)
+    return llvm_value_reg(reg, typ)
 
 
 #"%16 = bitcast i8** %3 to i8*"
 #"call void @llvm.va_start(i8* %16)"
 def llvm_va_start(x):
-    y = opcast('bitcast', x['type'], type.typeFreePtr, x)
+    y = llvm_cast('bitcast', x['type'], type.typeFreePtr, x)
     out("call void @llvm.va_start(i8* %d)" % y['reg'])
 
 
 #"%96 = bitcast i8** %3 to i8*"
 #"call void @llvm.va_end(i8* %96)"
 def llvm_va_end(x):
-    y = opcast('bitcast', x['type'], type.typeFreePtr, x)
+    y = llvm_cast('bitcast', x['type'], type.typeFreePtr, x)
     out("call void @llvm.va_end(i8* %d)" % y['reg'])
 
 
 
 def llvm_inline_cast(op, from_type, to_type, val):
+    assert(val['isa'] == 'llvm_value')
     out("%s (" % op)
     print_type(from_type)
     out(" ")
-    ll_print_value(val)
+    llvm_print_value(val)
     out(" to ")
     print_type(to_type)
     out(")")
 
 
 
-def ll_print_value_array(x):
+def llvm_print_value_array(x):
     if len(x['items']) == 0:
         out("zeroinitializer")
         return
@@ -262,7 +267,7 @@ def ll_print_value_array(x):
 
 
 
-def ll_print_value_record(x):
+def llvm_print_value_record(x):
     if len(x['items']) == 0:
         out("zeroinitializer")
         return
@@ -281,19 +286,17 @@ def ll_print_value_record(x):
 
 
 
-def ll_print_value_str(x):
-    id = x['id']
-
+def llvm_print_value_str(x):
     string_of = x['type']['to']['of']
     char_width = string_of['power']
 
     slen = x['len']
 
-    out("bitcast ([%d x i%d]* @%s to [0 x i%d]*)" % (slen, char_width, id, char_width))
+    out("bitcast ([%d x i%d]* @%s to [0 x i%d]*)" % (slen, char_width, x['id'], char_width))
 
 
 
-def ll_print_value_num(x):
+def llvm_print_value_num(x):
     num = x['imm']
     if not type.is_pointer(x['type']):
         # integer, float, bool, char
@@ -303,12 +306,12 @@ def ll_print_value_num(x):
         if x['imm'] == 0:
             out("null")
         else:
-            v = ll_value_num(type.typeNat64, x['imm'])
+            v = llvm_value_num(type.typeNat64, x['imm'])
             llvm_inline_cast('inttoptr', v['type'], x['type'], v)
 
 
 
-def ll_print_value_inlinecast(x):
+def llvm_print_value_inlinecast(x):
     #o("bitcast ([%d x i8]* @%s to %%Str)" % (x['len'], x['id']))
     v = x['value']
     from_type = v['type']
@@ -316,27 +319,173 @@ def ll_print_value_inlinecast(x):
     llvm_inline_cast('bitcast', from_type, to_type, v)
 
 
-def ll_print_value_zero(x):
+def llvm_print_value_zero(x):
     if type.is_numeric(x['type']): out("0")
     elif type.is_pointer(x['type']): out("null")
     else: out("zeroinitializer")
 
 
 
-def ll_print_value(x):
+def llvm_print_value(x):
+    assert(x['isa'] == 'llvm_value')
     k = x['kind']
     if k == 'reg': out('%%%s' % x['reg'])
     elif k == 'stk': out('%%%s' % x['id'])
     elif k == 'mem': out('@%s' % x['id'])
-    elif k == 'num': ll_print_value_num(x)
-    elif k == 'str': ll_print_value_str(x)
-    elif k == 'array': ll_print_value_array(x)
-    elif k == 'record': ll_print_value_record(x)
-    elif k == 'cast': ll_print_value_inlinecast(x)
-    elif k == 'zero': ll_print_value_zero(x)
+    elif k == 'num': llvm_print_value_num(x)
+    elif k == 'str': llvm_print_value_str(x)
+    elif k == 'array': llvm_print_value_array(x)
+    elif k == 'record': llvm_print_value_record(x)
+    elif k == 'cast': llvm_print_value_inlinecast(x)
+    elif k == 'zero': llvm_print_value_zero(x)
     else:
         out("<unknown_value::%s>" % c)
         info("???", x['ti'])
+
+    return
+
+
+
+
+def llvm_eval_binary(op, l, r, x):
+    reg = llvm_operation_with_type (op, l['type'])
+    out(" "); llvm_print_value(l); out(", "); llvm_print_value(r)
+    return llvm_value_reg(reg, x['type'], x)
+
+
+
+def llvm_deref(x):
+    assert(x['isa'] == 'llvm_value')
+    nv = copy.copy(x)
+    nv['is_adr'] = True
+    return nv
+
+
+
+# индекс не может быть i64 (!) (а только i32)
+# t - тип самой записи или массива (без указателя)
+def llvm_getelementptr(rec, rt, indexes, vt):
+    # Прикол в том что индекс (i) структуры
+    # не может быть i64 (!) (а только i32)
+    reg = llvm_operation_with_type("getelementptr inbounds", rt)
+    out(", ")
+    print_type(rt)
+    out("* ")
+    llvm_print_value(rec)
+    out(", ")
+    print_list_by(indexes, print_type_value)
+    rv = llvm_value_reg(reg, vt)
+    rv['is_adr'] = True
+    return rv
+
+
+# возвращает значение поля из 'структуры по значению'
+def llvm_extract_record_field(x, ft, field_no):
+    reg = llvm_operation('extractvalue')
+    print_type_value(x)
+    out(', %d' % field_no)
+    return llvm_value_reg(reg, ft)
+
+
+def llvm_cast(kind, from_type, to_type, value):
+    reg = llvm_operation(kind)
+    print_type(from_type)
+    out(" ")
+    llvm_print_value(value)
+    out(" to ")
+    print_type(to_type)
+    return llvm_value_reg(reg, to_type, value)
+
+
+
+# сохр простых значений
+def llvm_store(l, r):
+    lo("store ");
+    print_type(r['type'])
+    out(" ")
+    llvm_print_value(r)
+    out(", ")
+    print_type(r['type'])
+    out("* ")
+    llvm_print_value(l)
+
+
+# сохр структур (вот не может просто так сохранить, приходится по полю)
+def llvm_store_record(l, r):
+
+    # if r is immediate value
+    if 'items' in r:
+        if len(r['items']) == 0:
+            # если сохраняем пустую структуру
+            # то просто сохраним в нее zeroinitializer
+            llvm_store(l, r)
+            return
+
+    lo("; -- record assign field by field")
+    for field in l['type']['fields']:
+        ft = field['type']
+
+        # получаем указатель на поле левого (в которое будем сохранять)
+        l_field_ptr = do_eval_access_ptr(l, l['type'], field['field_no'], ft)
+
+        rpos = field['field_no']
+
+        rv = do_ld(do_eval_access(r, r['type'], rpos, ft))
+
+        # сохраняем
+        llvm_assign(l_field_ptr, rv)
+    lo("; -- end record assign field by field\n")
+
+
+
+def llvm_assign(l, r):
+    if type.is_record(l['type']):
+        return llvm_store_record(l, r)
+
+    llvm_store(l, r)
+
+
+
+def llvm_br(x, then_label, else_label):
+    lo("br %s " % TYPE_BOOL)
+    llvm_print_value(x)
+    out(" , label %%%s, label %%%s" % (then_label, else_label))
+
+
+def llvm_jump(label):
+    lo("br label %%%s" % label)
+
+
+def llvm_label(label):
+    out("\n%s:" % label)
+
+
+
+def llvm_alloca(id, typ, init_value):
+    val = llvm_value_stk(id, typ)
+    val['is_adr'] = True
+
+    lo("%%%s = alloca " % id)
+    print_type(typ)
+
+    if init_value != None:
+        r = do_ld(init_value)
+        llvm_assign(val, r)
+
+    return val
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -433,98 +582,40 @@ def print_type(t, print_aka=True, arr_as_ptr_to_arr=False):
 # и если оно adr то загружает его в регистр
 # в любом другом случае просто возвращает исходное значение
 def do_ld(x):
-    assert(x['isa'] == 'll_value')
+    assert(x['isa'] == 'llvm_value')
 
     if not x['is_adr']:
         return x
 
     # It's address of the value, we need to load it
-    reg = operation('load');
+    reg = llvm_operation('load');
     typ = x['type']
     print_type(typ)
     out(", ")
     print_type(typ)
     out("* ")
-    ll_print_value(x)
+    llvm_print_value(x)
 
-    return ll_value_reg(reg, x['type'], x)
-
-
-
-REL_OPS = ['eq', 'ne', 'lt', 'gt', 'le', 'ge']
-
-
-def get_bin_opcode(op, t):
-    opcode = "<unknown opcode '%s'>" % op
-    if op in ['eq', 'ne']:
-        opcode = select_bin_opcode_f('icmp ' + op, 'fcmp o' + op, t)
-    elif op in ['add', 'sub', 'mul']:
-        opcode = select_bin_opcode_f(op, 'f' + op, t)
-    elif op in ['and', 'or', 'xor', 'shl']:
-        opcode = op
-    elif op in ['div', 'rem']:
-        opcode = select_bin_opcode_suf('s' + op, 'u' + op, 'f' + op, t)
-    elif op in ['lt', 'gt', 'le', 'ge']:
-        opcode = select_bin_opcode_suf('icmp s' + op, 'icmp u' + op, 'fcmp o' + op, t)
-    elif op == 'shr':
-        opcode = 'lshr'
-        if type.is_signed(t):
-            opcode = 'ashr'
-    elif op == 'logic_or':
-        opcode = 'or'
-    elif op == 'logic_and':
-        opcode = 'and'
-
-    return opcode
-
-
-def select_bin_opcode_f(op, fop, t): # ["sdiv", "udiv", "fdiv", x]
-    if type.is_float(t):
-        return fop
-    return op
-
-
-def select_bin_opcode_su(sop, uop, t): # ["icmp slt", "icmp ult", x]
-    if type.is_unsigned(t):
-        return uop
-    return sop
-
-
-def select_bin_opcode_suf(sop, uop, fop, t): # ["sdiv", "udiv", "fdiv", x]
-    if type.is_float(t):
-        return fop
-    return select_bin_opcode_su(sop, uop, t)
-
-
-
-
-def ll_eval_binary(op, l, r, x):
-    reg = operation_with_type (op, l['type'])
-    out(" "); ll_print_value(l); out(", "); ll_print_value(r)
-    return ll_value_reg(reg, x['type'], x)
+    return llvm_value_reg(reg, x['type'], x)
 
 
 
 def do_eval_expr_bin(x):
     if 'imm' in x:
-        return ll_value_num(x['type'], x['imm'])
+        return llvm_value_num(x['type'], x['imm'])
 
-    opcode = get_bin_opcode(x['kind'], x['left']['type'])
+    op = get_bin_opcode(x['kind'], x['left']['type'])
     l = do_ld(do_eval(x['left']))
     r = do_ld(do_eval(x['right']))
-    return ll_eval_binary(opcode, l, r, x)
+    return llvm_eval_binary(op, l, r, x)
 
 
 
-def deref(x):
-    vx = do_ld(do_eval(x['value']))
-    return llvm_deref(vx)
+def do_eval_expr_deref(x):
+    y = do_eval(x['value'])
+    z = do_ld(y)
+    return llvm_deref(z)
 
-
-def llvm_deref(x):
-    nv = copy.copy(x)
-    nv['is_adr'] = True
-    return nv
 
 
 def do_eval_expr_un(v):
@@ -535,7 +626,7 @@ def do_eval_expr_un(v):
             if v['value']['kind'] == 'var':
                 if 'global' in  v['value']['att']:
                     id = v['value']['id']['str']
-                    return ll_value_mem(id, v['type'], v)
+                    return llvm_value_mem(id, v['type'], v)
 
         nv = copy.copy(ve)
         nv['is_adr'] = False
@@ -546,27 +637,27 @@ def do_eval_expr_un(v):
     vx = do_ld(ve)    #!
 
     if v['kind'] == 'deref':
-        return deref(v)
+        return do_eval_expr_deref(v)
 
     reg = None
     if v['kind'] == 'not':
         #%10 = xor i32 %9, -1
-        reg = operation('xor');
+        reg = llvm_operation('xor');
         out(" ");
         print_type(v['type'])
         out(" ");
-        ll_print_value(vx)
+        llvm_print_value(vx)
         out(", -1")
 
     elif v['kind'] == 'minus':
         #%10 = sub i32 0, %9
-        z = ll_value_num(v['type'], 0)
-        return ll_eval_binary('sub', z, vx, v)
+        z = llvm_value_num(v['type'], 0)
+        return llvm_eval_binary('sub', z, vx, v)
 
     else:
-        reg = operation(v['kind']); out(" "); ll_print_value(vx)
+        reg = llvm_operation(v['kind']); out(" "); llvm_print_value(vx)
 
-    return ll_value_reg(reg, v['type'], v)
+    return llvm_value_reg(reg, v['type'], v)
 
 
 
@@ -597,7 +688,7 @@ def do_eval_expr_call(v):
     if to_unit:
         lo("call ")
     else:
-        reg = operation("call")
+        reg = llvm_operation("call")
 
     #%Int32(%Str, ...)
     print_type(ftype['to'])
@@ -608,29 +699,12 @@ def do_eval_expr_call(v):
         out(", ...")
     out(") ")
 
-    ll_print_value(f)
+    llvm_print_value(f)
     out(" (")
     print_list_by(args, print_type_value_param)
     out(")")
-    return ll_value_reg(reg, v['type'], v)
+    return llvm_value_reg(reg, v['type'], v)
 
-
-
-# индекс не может быть i64 (!) (а только i32)
-# t - тип самой записи или массива (без указателя)
-def llvm_getelementptr(rec, rt, indexes, vt):
-    # Прикол в том что индекс (i) структуры
-    # не может быть i64 (!) (а только i32)
-    reg = operation_with_type("getelementptr inbounds", rt)
-    out(", ")
-    print_type(rt)
-    out("* ")
-    ll_print_value(rec)
-    out(", ")
-    print_list_by(indexes, print_type_value)
-    rv = ll_value_reg(reg, vt)
-    rv['is_adr'] = True
-    return rv
 
 
 def do_eval_expr_index(v):
@@ -638,7 +712,7 @@ def do_eval_expr_index(v):
     array_type = array['type']
     result_type = v['type']
     index = do_ld(do_eval(v['index']))
-    return llvm_getelementptr(array, array_type, (ll_value_num_zero, index), result_type)
+    return llvm_getelementptr(array, array_type, (llvm_value_num_zero, index), result_type)
 
 
 def do_eval_expr_index_ptr(v):
@@ -647,7 +721,7 @@ def do_eval_expr_index_ptr(v):
     result_type = v['type']
     array = do_ld(pointer)
     index = do_ld(do_eval(v['index']))
-    return llvm_getelementptr(array, array_type, (ll_value_num_zero, index), result_type)
+    return llvm_getelementptr(array, array_type, (llvm_value_num_zero, index), result_type)
 
 
 # получает укзаатель на структуру x
@@ -655,17 +729,8 @@ def do_eval_expr_index_ptr(v):
 # носер поля (просто число)
 # возвращает value:address для поля этой структуры
 def do_eval_access_ptr(x, xt, field_no, vt):
-    field_index = ll_value_num(type.typeInt32, field_no)
-    return llvm_getelementptr(x, xt, (ll_value_num_zero, field_index), vt)
-
-
-# возвращает значение поля из 'структуры по значению'
-def extract_record_field(x, ft, field_no):
-    reg = operation('extractvalue')
-    print_type_value(x)
-    out(', %d' % field_no)
-    return ll_value_reg(reg, ft)
-
+    field_index = llvm_value_num(type.typeInt32, field_no)
+    return llvm_getelementptr(x, xt, (llvm_value_num_zero, field_index), vt)
 
 
 def do_eval_access(rec, rt, pos, vt):
@@ -679,7 +744,7 @@ def do_eval_access(rec, rt, pos, vt):
 
     # если сама запись находится в регистре: (let rec = get_rec())
     if type.is_record(rec['type']) and not rec['is_adr']:
-        return extract_record_field(rec, vt, pos)
+        return llvm_extract_record_field(rec, vt, pos)
 
 
     # если работаем через 'переменую-указатель'
@@ -696,7 +761,7 @@ def do_eval_access(rec, rt, pos, vt):
 def do_eval_expr_access(v):
     rec = do_eval(v['record'])
     rt = v['record']['type']
-    pos = v['field']['pos']
+    pos = v['field']['field_no']
     return do_eval_access(rec, rt, pos, v['type'])
 
 
@@ -704,7 +769,7 @@ def do_eval_expr_access(v):
 def do_eval_expr_access_ptr(v):
     ptr = do_ld(do_eval(v['pointer']))
     rt = ptr['type']['to']
-    pos = v['field']['pos']
+    pos = v['field']['field_no']
     return do_eval_access_ptr(ptr, rt, pos, v['type'])
 
 
@@ -785,7 +850,7 @@ def do_eval_expr_cast_immediate(x):
     if type.is_ptr_to_string(to_type):
         string_of = to_type['to']['of']
         char_pow = string_of['power']
-        return ll_value_str(x['strid'], x['imm'], x['type'], value)
+        return llvm_value_str(x['strid'], x['imm'], x['type'], value)
 
     return do_eval_literal(x)
 
@@ -799,24 +864,12 @@ def cast_record_to_record(to_type, value, ti):
     # создаем переменную под структуру A
     y = do_ld(do_eval(value))
     reg = reg_get()
-    struct = ll_alloca(reg, value['type'], y)
+    struct = llvm_alloca(reg, value['type'], y)
     # приводим указатель на нее к указателю на структуру B
-    new_struct_ptr = opcast("bitcast", hlir_type_pointer(from_type), hlir_type_pointer(to_type), struct)
+    new_struct_ptr = llvm_cast("bitcast", hlir_type_pointer(from_type), hlir_type_pointer(to_type), struct)
     # загружаем структуру B и возвращаем ее
     new_struct = llvm_deref(new_struct_ptr)
     return new_struct
-
-
-
-def opcast(opcode, from_type, to_type, value):
-    reg = operation(opcode)
-    print_type(from_type)
-    out(" ")
-    ll_print_value(value)
-    out(" to ")
-    print_type(to_type)
-    return ll_value_reg(reg, to_type, value)
-
 
 
 def do_eval_expr_cast(x):
@@ -831,12 +884,12 @@ def do_eval_expr_cast(x):
 
     # cast any type to Unit type
     if type.is_unit(to_type):
-        return ll_value_zero(to_type)
+        return llvm_value_zero(to_type)
 
     # (STUB?) nil -> zeroinitializer
     if type.is_free_pointer(from_type):
         if value_is_immediate(value):
-            return ll_value_num(to_type, value['imm'])
+            return llvm_value_num(to_type, value['imm'])
 
     # Cm имеет структурную систему типов, тогда как llvm - номинативную
     # приведение структуры к структуре по значению не поддерживается LLVM
@@ -853,7 +906,7 @@ def do_eval_expr_cast(x):
 
     opcode = select_cast_operator(from_type, to_type)
 
-    return opcast(opcode, from_type, to_type, v)
+    return llvm_cast(opcode, from_type, to_type, v)
 
 
 
@@ -882,21 +935,21 @@ def do_eval_array(v):
     n_pad = fulllen - len(items)
     i = 0
     while i < n_pad:
-        z = ll_value_zero(v['type']['of'])
+        z = llvm_value_zero(v['type']['of'])
         items.append(z)
         i = i + 1
 
     # global?
     # глобальный массив распечатает print_value как литерал
     if is_global_context():
-        return ll_value_array(items, v['type'], v)
+        return llvm_value_array(items, v['type'], v)
 
     # local.
 
     # если мы локальны то создадим иммутабельную структуру
     # с массивом (insertvalue)
     #%5 = insertvalue %Type24 zeroinitializer, %Int32 1, 0
-    xv = ll_value_array([], v['type'])
+    xv = llvm_value_array([], v['type'])
 
     # набиваем массив
     i = 0
@@ -909,7 +962,7 @@ def do_eval_array(v):
 
 
 # вычисляем значение-запись по месту
-# просто высичлим все его элементы и завернем все в 'll_value'/'record'
+# просто высичлим все его элементы и завернем все в 'llvm_value'/'record'
 def do_eval_record(v):
     # сперва вычисляем все иницифлизаторы поелей структуры в регистры
     # (кроме констант, ведь они едут до последнего)
@@ -920,7 +973,7 @@ def do_eval_record(v):
         iv = do_ld(do_eval(initializer['value']))
         items.append({'id': initializer['id'], 'value': iv})
 
-    return ll_value_record(items, v['type'], v)
+    return llvm_value_record(items, v['type'], v)
 
 
 
@@ -934,12 +987,12 @@ def do_eval(x):
     if value_is_immediate(x):
         xtype = x['type']
 
-        if type.is_integer(xtype): return ll_value_num(xtype, x['imm'])
-        elif type.is_char(xtype): return ll_value_num(xtype, x['imm'])
+        if type.is_integer(xtype): return llvm_value_num(xtype, x['imm'])
+        elif type.is_char(xtype): return llvm_value_num(xtype, x['imm'])
         elif type.is_record(xtype): return do_eval_record(x)
         elif type.is_array(xtype): return do_eval_array(x)
-        elif type.is_float(xtype): return ll_value_num(xtype, x['imm'])
-        elif type.is_bool(xtype): return ll_value_num(xtype, x['imm'])
+        elif type.is_float(xtype): return llvm_value_num(xtype, x['imm'])
+        elif type.is_bool(xtype): return llvm_value_num(xtype, x['imm'])
 
     # runtime evaluation
     v = do_eval_x(x)
@@ -958,15 +1011,15 @@ def do_eval(x):
 
 def do_eval_literal(x):
     xt = x['type']
-    if type.is_integer(xt): return ll_value_num(xt, x['imm'])
-    elif type.is_float(xt): return ll_value_num(xt, x['imm'])
+    if type.is_integer(xt): return llvm_value_num(xt, x['imm'])
+    elif type.is_float(xt): return llvm_value_num(xt, x['imm'])
     elif type.is_record(xt): return do_eval_record(x)
     elif type.is_array(xt): return do_eval_array(x)
-    elif type.is_bool(xt): return ll_value_num(xt, x['imm'])
-    elif type.is_free_pointer(xt): return ll_value_num(xt, x['imm'])
-    elif type.is_pointer(xt): return ll_value_num(xt, x['imm'])
-    elif type.is_char(xt): return ll_value_num(xt, x['imm'])
-    elif type.is_bool(xt): return ll_value_num(xt, x['imm'])
+    elif type.is_bool(xt): return llvm_value_num(xt, x['imm'])
+    elif type.is_free_pointer(xt): return llvm_value_num(xt, x['imm'])
+    elif type.is_pointer(xt): return llvm_value_num(xt, x['imm'])
+    elif type.is_char(xt): return llvm_value_num(xt, x['imm'])
+    elif type.is_bool(xt): return llvm_value_num(xt, x['imm'])
     else:
         value_print(x)
         error("do_eval_literal: unknown literal", x['ti'])
@@ -979,7 +1032,7 @@ def func_const_var(x):
     if k == 'const':
         if 'imm' in x:
             if type.is_numeric(x['type']):
-                return ll_value_num(x['type'], x['imm'])
+                return llvm_value_num(x['type'], x['imm'])
 
     if value_attribute_check(x, 'local'):
         localname = x['id']['str']
@@ -987,14 +1040,14 @@ def func_const_var(x):
         return y
 
     if k == 'var':
-        rv = ll_value_mem(x['id']['str'], x['type'], x)
+        rv = llvm_value_mem(x['id']['str'], x['type'], x)
         rv['is_adr'] = True
         return rv
 
     if k == 'const':
         return do_eval(x['value'])
 
-    return ll_value_mem(x['id']['str'], ['type'], x)
+    return llvm_value_mem(x['id']['str'], ['type'], x)
 
 
 
@@ -1023,7 +1076,7 @@ def do_eval_x(x):
     if y == None:
         print("do_eval_x cannot eval value")
         value_print(x)
-        return ll_value_zero(x['type'])
+        return llvm_value_zero(x['type'])
 
     return y
 
@@ -1032,76 +1085,10 @@ def do_eval_x(x):
 #
 #
 
-# сохр простых значений
-def ll_store(l, r):
-    lo("store ");
-    print_type(r['type'])
-    out(" ")
-    ll_print_value(r)
-    out(", ")
-    print_type(r['type'])
-    out("* ")
-    ll_print_value(l)
-
-
-# сохр структур (вот не может просто так сохранить, приходится по полю)
-def ll_store_record(l, r):
-
-    # if r is immediate value
-    if 'items' in r:
-        if len(r['items']) == 0:
-            # если сохраняем пустую структуру
-            # то просто сохраним в нее zeroinitializer
-            ll_store(l, r)
-            return
-
-    lo("; -- record assign field by field")
-    for field in l['type']['fields']:
-        ft = field['type']
-
-        # получаем указатель на поле левого (в которое будем сохранять)
-        l_field_ptr = do_eval_access_ptr(l, l['type'], field['pos'], ft)
-
-        rpos = field['pos']
-
-        rv = do_ld(do_eval_access(r, r['type'], rpos, ft))
-
-        # сохраняем
-        ll_assign(l_field_ptr, rv)
-    lo("; -- end record assign field by field\n")
-
-
-
-def ll_assign(l, r):
-    if type.is_record(l['type']):
-        return ll_store_record(l, r)
-
-    ll_store(l, r)
-
-
-
 def print_stmt_assign(x):
     r = do_ld(do_eval(x['right']))
     l = do_eval(x['left'])
-    ll_assign(l, r)
-
-
-def print_integer_block():
-    out("<integer block>")
-
-
-def ll_br(x, then_label, else_label):
-    lo("br %s " % TYPE_BOOL)
-    ll_print_value(x)
-    out(" , label %%%s, label %%%s" % (then_label, else_label))
-
-
-def op_goto(label):
-    lo("br label %%%s" % label)
-
-
-def set_label(label):
-    out("\n%s:" % label)
+    llvm_assign(l, r)
 
 
 def print_stmt_if(x):
@@ -1117,21 +1104,21 @@ def print_stmt_if(x):
     if x['else'] == None:
         else_label = endif_label
 
-    ll_br(cv, then_label, else_label)
+    llvm_br(cv, then_label, else_label)
 
     # then block
-    set_label(then_label)
+    llvm_label(then_label)
     print_stmt(x['then'])
-    op_goto(endif_label)
+    llvm_jump(endif_label)
 
     # else block
     if x['else'] != None:
-        set_label(else_label)
+        llvm_label(else_label)
         print_stmt(x['else'])
-        op_goto(endif_label)
+        llvm_jump(endif_label)
 
     # endif label
-    set_label(endif_label)
+    llvm_label(endif_label)
 
 
 
@@ -1146,14 +1133,14 @@ def print_stmt_while(x):
     break_label = 'break_%d' % cur_while_id
     body_label = 'body_%d' % cur_while_id
 
-    op_goto(again_label)
-    set_label(again_label)
+    llvm_jump(again_label)
+    llvm_label(again_label)
     cv = do_ld(do_eval(x['cond']))
-    ll_br(cv, body_label, break_label)
-    set_label(body_label)
+    llvm_br(cv, body_label, break_label)
+    llvm_label(body_label)
     print_stmt(x['stmt'])
-    op_goto(again_label)
-    set_label(break_label)
+    llvm_jump(again_label)
+    llvm_label(break_label)
     func_context['cur_while_id'] = old_while_id
 
 
@@ -1161,7 +1148,7 @@ def print_stmt_while(x):
 def print_stmt_again():
     global func_context
     cur_while_id = func_context['cur_while_id']
-    op_goto('again_%d' % cur_while_id)
+    llvm_jump('again_%d' % cur_while_id)
     reg_get()    # for LLVM
 
 
@@ -1169,7 +1156,7 @@ def print_stmt_again():
 def print_stmt_break():
     global func_context
     cur_while_id = func_context['cur_while_id']
-    op_goto('break_%d' % cur_while_id)
+    llvm_jump('break_%d' % cur_while_id)
     reg_get()    # for LLVM
 
 
@@ -1184,26 +1171,11 @@ def print_stmt_return(x):
     if v != None:
         print_type(x['value']['type'])
         out(" ")
-        ll_print_value(v)
+        llvm_print_value(v)
     else:
         out("void")
 
     reg_get()    # for LLVM
-
-
-
-def ll_alloca(id, typ, init_value):
-    val = ll_value_stk(id, typ)
-    val['is_adr'] = True
-
-    lo("%%%s = alloca " % id)
-    print_type(typ)
-
-    if init_value != None:
-        r = do_ld(init_value)
-        ll_assign(val, r)
-
-    return val
 
 
 
@@ -1213,7 +1185,7 @@ def print_stmt_def_var(x):
     init_value = None
     if x['var']['init'] != None:
         init_value = do_eval(x['var']['init'])
-    val = ll_alloca(id, x['var']['type'], init_value)
+    val = llvm_alloca(id, x['var']['type'], init_value)
     locals_add(id, val)
     return None
 
@@ -1270,8 +1242,8 @@ def print_stmt(x):
     for array in arrays:
 
         id = array['id']['str']
-        iv = ll_value_zero(array['type'])
-        val = ll_alloca(id, array['type'], None)
+        iv = llvm_value_zero(array['type'])
+        val = llvm_alloca(id, array['type'], None)
         locals_add('_' + id, val)
 
         #from trans import value_create_int
@@ -1463,7 +1435,7 @@ def print_def_func(x):
         out(" ")
         out('%%%s%s' % (prefix, param_id))
 
-        vv = ll_value_stk(param_id, param['type'], param)
+        vv = llvm_value_stk(param_id, param['type'], param)
 
         if param_is_arr:
             vv['type'] = hlir_type_pointer(vv['type'])
@@ -1481,7 +1453,7 @@ def print_def_func(x):
     for r in reloc:
         #print("    ; reloc %s " % (r['id']))
         lo("; reloc " + r['id'])
-        ll_alloca(r['id'], r['type'], r)
+        llvm_alloca(r['id'], r['type'], r)
 
     print_stmt_block(func['stmt'], arrays=arrays)
 
@@ -1557,7 +1529,7 @@ def print_def_var(x):
     print_type(var['type'])
     if var['init'] != None:
         out(" ")
-        ll_print_value(do_eval(var['init']))
+        llvm_print_value(do_eval(var['init']))
     else:
         out(" zeroinitializer")
 
@@ -1681,7 +1653,7 @@ def run(module, outname):
 """
 def create_local_srtuct(typ, llvalues):
     #%5 = insertvalue %Type24 zeroinitializer, %Int32 1, 0
-    xv = ll_value_record([], typ, proto=None)
+    xv = llvm_value_record([], typ, proto=None)
 
     lo("\n; -- fill struct")
     # набиваем структуру
@@ -1692,7 +1664,7 @@ def create_local_srtuct(typ, llvalues):
         field_target = type.record_field_get(v['type'], llvalue['id']['str'])
 
 
-        pos = field_target['pos']
+        pos = field_target['field_no']
         # запаковываем значение в структуру
         xv = insertvalue(xv, llvalue['value'], pos)
         i = i + 1
@@ -1701,3 +1673,53 @@ def create_local_srtuct(typ, llvalues):
     return xv
 
 """
+
+
+
+
+REL_OPS = ['eq', 'ne', 'lt', 'gt', 'le', 'ge']
+
+
+def get_bin_opcode(op, t):
+
+    def select_bin_opcode_su(sop, uop, t): # ["icmp slt", "icmp ult", x]
+        if type.is_unsigned(t):
+            return uop
+        return sop
+
+
+    def select_bin_opcode_f(op, fop, t): # ["sdiv", "udiv", "fdiv", x]
+        if type.is_float(t):
+            return fop
+        return op
+
+
+    def select_bin_opcode_suf(sop, uop, fop, t): # ["sdiv", "udiv", "fdiv", x]
+        if type.is_float(t):
+            return fop
+        return select_bin_opcode_su(sop, uop, t)
+
+
+    opcode = "<unknown opcode '%s'>" % op
+    if op in ['eq', 'ne']:
+        opcode = select_bin_opcode_f('icmp ' + op, 'fcmp o' + op, t)
+    elif op in ['add', 'sub', 'mul']:
+        opcode = select_bin_opcode_f(op, 'f' + op, t)
+    elif op in ['and', 'or', 'xor', 'shl']:
+        opcode = op
+    elif op in ['div', 'rem']:
+        opcode = select_bin_opcode_suf('s' + op, 'u' + op, 'f' + op, t)
+    elif op in ['lt', 'gt', 'le', 'ge']:
+        opcode = select_bin_opcode_suf('icmp s' + op, 'icmp u' + op, 'fcmp o' + op, t)
+    elif op == 'shr':
+        opcode = 'lshr'
+        if type.is_signed(t):
+            opcode = 'ashr'
+    elif op == 'logic_or':
+        opcode = 'or'
+    elif op == 'logic_and':
+        opcode = 'and'
+
+    return opcode
+
+

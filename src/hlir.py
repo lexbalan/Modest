@@ -251,7 +251,7 @@ def hlir_field(id, type, pos=0, offset=0, ti=None):
         'isa': 'field',
         'id': id,
         'type': type,
-        'pos': pos,
+        'field_no': pos,
         'offset': offset,
         'nl': 0,
         'ti': ti
