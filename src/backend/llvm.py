@@ -660,14 +660,7 @@ def do_eval_access(rec, rt, pos, vt):
     # поле value ссылается при этом на уже вычисленное значение поля
     # ex: let p = {x=0, y=0};    p.x    // <--
     if 'items' in rec:
-        try:
-            return rec['items'][pos]['value']
-        except:
-            # если это например пустая структура ({})
-            # вернем пустышку
-            # это опасное решение, но пока не знаю другого
-            # (если структура из которой конструировали была пуста)
-            return ll_value_zero(vt)
+        return rec['items'][pos]['value']
 
 
     # если сама запись находится в регистре: (let rec = get_rec())
@@ -1040,22 +1033,31 @@ def ll_store(l, r):
 
 # сохр структур (вот не может просто так сохранить, приходится по полю)
 def ll_store_record(l, r):
-    lo("\n; -- record assign")
+
+    # if r is immediate value
+    if 'items' in r:
+        if len(r['items']) == 0:
+            # если сохраняем пустую структуру
+            # то просто сохраним в нее zeroinitializer
+            ll_store(l, r)
+            return
+
+    lo("\n; -- record assign field by field")
     for field in l['type']['fields']:
         ft = field['type']
 
         # получаем указатель на поле левого (в которое будем сохранять)
         l_field_ptr = do_eval_access_ptr(l, l['type'], field['pos'], ft)
 
-        # получаем дескриптор правого поля
-        #rfield = type.record_field_get(r['type'], field['id']['str'])
 
-        # загружаем значение поля правого
-        rv = do_ld(do_eval_access(r, r['type'], field['pos'], ft))
+        rpos = field['pos']
+
+
+        rv = do_ld(do_eval_access(r, r['type'], rpos, ft))
 
         # сохраняем
         ll_assign(l_field_ptr, rv)
-    lo("; -- end record assign\n")
+    lo("; -- end record assign field by field\n")
 
 
 
