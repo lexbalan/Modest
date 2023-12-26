@@ -1,7 +1,6 @@
 
 #include <stdio.h>
 #include <stdint.h>
-#include <string.h>
 #include <stdbool.h>
 
 // test/9.big_numbers/main.cm

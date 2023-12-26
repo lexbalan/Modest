@@ -3,7 +3,6 @@
 #define LINKED_LIST_H
 
 #include <stdint.h>
-#include <string.h>
 #include <stdbool.h>
 
 // examples/8.linked_list/linked_list.hm

@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include "./ff.h"
 #include <stdint.h>
-#include <string.h>
 #include <stdbool.h>
 
 

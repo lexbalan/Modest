@@ -3,7 +3,6 @@
 #define FSM_H
 
 #include <stdint.h>
-#include <string.h>
 #include <stdbool.h>
 
 // examples/fsm/fsm.cm

@@ -8,7 +8,6 @@
 #include <time.h>
 #include "./minmax.h"
 #include <stdint.h>
-#include <string.h>
 #include <stdbool.h>
 
 // test/10.const/main.cm

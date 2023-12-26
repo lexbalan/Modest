@@ -1,7 +1,6 @@
 
 #include <stdio.h>
 #include <stdint.h>
-#include <string.h>
 #include <stdbool.h>
 
 // test/stmt_while/main.cm

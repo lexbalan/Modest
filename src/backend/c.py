@@ -1493,7 +1493,9 @@ def run(module, outname):
         newline()
 
     out("\n#include <stdint.h>")
-    out("\n#include <string.h>")
+
+    if 'use_string_h' in module['options']:
+        out("\n#include <string.h>")
 
     if USE_STDBOOL:
         out("\n#include <stdbool.h>")

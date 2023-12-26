@@ -3,7 +3,6 @@
 #define FF_H
 
 #include <stdint.h>
-#include <string.h>
 #include <stdbool.h>
 
 // lib/fastfood/main.hm

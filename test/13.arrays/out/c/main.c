@@ -8,7 +8,6 @@
 #include <time.h>
 #include "./minmax.h"
 #include <stdint.h>
-#include <string.h>
 #include <stdbool.h>
 
 // test/arrays/main.cm

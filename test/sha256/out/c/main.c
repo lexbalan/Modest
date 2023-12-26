@@ -7,7 +7,6 @@
 #include <time.h>
 #include "./sha256.h"
 #include <stdint.h>
-#include <string.h>
 #include <stdbool.h>
 
 // test/sha256/main.cm
