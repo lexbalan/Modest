@@ -4,15 +4,12 @@ import "libc/stdio.h"
 
 
 func _putchar(c: Char8) -> Unit {
-    //var cc := c
-    //write(0, &cc, 1)
-    printf("%c", c)
+    putchar(c to Int)
 }
 
 
 func put_str8(s: *[]Char8) -> Unit {
-    var i: Int32
-    i := 0
+    var i: Int32 := 0
     while true {
         let c = s[i]
         if c == "\x0"[0] {
@@ -31,9 +28,6 @@ func sprintf_hex_nat32(buf: *[]Char8, x: Nat32) -> Unit
 
 
 func ff_printf(str: *[]Char8, va_list: VA_List) -> Unit {
-    //var a_list: va_list
-    //va_start(a_list, str)
-
     var i: Int32 := 0
     while true {
         var c: Char8 := str[i]
@@ -87,8 +81,6 @@ func ff_printf(str: *[]Char8, va_list: VA_List) -> Unit {
 
         i := i + 1
     }
-
-    //va_end(a_list)
 }
 
 

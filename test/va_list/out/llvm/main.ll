@@ -94,23 +94,21 @@ declare void @perror(%ConstCharStr*)
 
 ; -- SOURCE: src/main.cm
 
-@str1 = private constant [3 x i8] [i8 37, i8 99, i8 0]
-@str2 = private constant [2 x i8] [i8 37, i8 0]
-@str3 = private constant [14 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 32, i8 87, i8 111, i8 114, i8 108, i8 100, i8 33, i8 10, i8 0]
-@str4 = private constant [4 x i8] [i8 72, i8 105, i8 33, i8 0]
-@str5 = private constant [11 x i8] [i8 37, i8 37, i8 32, i8 61, i8 32, i8 39, i8 37, i8 37, i8 39, i8 10, i8 0]
-@str6 = private constant [10 x i8] [i8 99, i8 32, i8 61, i8 32, i8 39, i8 37, i8 99, i8 39, i8 10, i8 0]
-@str7 = private constant [10 x i8] [i8 115, i8 32, i8 61, i8 32, i8 34, i8 37, i8 115, i8 34, i8 10, i8 0]
-@str8 = private constant [9 x i8] [i8 105, i8 32, i8 58, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
-@str9 = private constant [8 x i8] [i8 110, i8 32, i8 61, i8 32, i8 37, i8 110, i8 10, i8 0]
-@str10 = private constant [10 x i8] [i8 120, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 120, i8 10, i8 0]
+@str1 = private constant [2 x i8] [i8 37, i8 0]
+@str2 = private constant [14 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 32, i8 87, i8 111, i8 114, i8 108, i8 100, i8 33, i8 10, i8 0]
+@str3 = private constant [4 x i8] [i8 72, i8 105, i8 33, i8 0]
+@str4 = private constant [11 x i8] [i8 37, i8 37, i8 32, i8 61, i8 32, i8 39, i8 37, i8 37, i8 39, i8 10, i8 0]
+@str5 = private constant [10 x i8] [i8 99, i8 32, i8 61, i8 32, i8 39, i8 37, i8 99, i8 39, i8 10, i8 0]
+@str6 = private constant [10 x i8] [i8 115, i8 32, i8 61, i8 32, i8 34, i8 37, i8 115, i8 34, i8 10, i8 0]
+@str7 = private constant [9 x i8] [i8 105, i8 32, i8 58, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str8 = private constant [8 x i8] [i8 110, i8 32, i8 61, i8 32, i8 37, i8 110, i8 10, i8 0]
+@str9 = private constant [10 x i8] [i8 120, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 120, i8 10, i8 0]
 
 
 
 define void @_putchar(i8 %c) {
-    ;var cc := c
-    ;write(0, &cc, 1)
-    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([3 x i8]* @str1 to [0 x i8]*), i8 %c)
+    %1 = sext i8 %c to i32
+    %2 = call i32(i32) @putchar (i32 %1)
     ret void
 }
 
@@ -143,8 +141,6 @@ define void @ff_printf([0 x i8]* %str, ...) {
     %va_list = alloca i8*
     %1 = bitcast i8** %va_list to i8*
     call void @llvm.va_start(i8* %1)
-    ;var a_list: va_list
-    ;va_start(a_list, str)
     %i = alloca i32
     store i32 0, i32* %i
     br label %again_1
@@ -176,7 +172,6 @@ then_1:
     store i8 %14, i8* %c
     ; буффер для печати всего, кроме строк
     %buf = alloca [11 x i8]
-    ;buf := []
     %sptr = alloca [0 x i8]*
     %15 = bitcast [11 x i8]* %buf to [0 x i8]*
     store [0 x i8]* %15, [0 x i8]** %sptr
@@ -248,7 +243,7 @@ else_6:
     br i1 %47 , label %then_7, label %endif_7
 then_7:
     ; %% for PERCENT_SYMBOL
-    store [0 x i8]* bitcast ([2 x i8]* @str2 to [0 x i8]*), [0 x i8]** %sptr
+    store [0 x i8]* bitcast ([2 x i8]* @str1 to [0 x i8]*), [0 x i8]** %sptr
     br label %endif_7
 endif_7:
     br label %endif_6
@@ -274,7 +269,6 @@ endif_1:
     store i32 %51, i32* %i
     br label %again_1
 break_1:
-    ;va_end(a_list)
     %52 = bitcast i8** %va_list to i8*
     call void @llvm.va_end(i8* %52)
     ret void
@@ -302,7 +296,6 @@ endif_0:
 
 define void @sprintf_hex_nat32([0 x i8]* %buf, i32 %x) {
     %cc = alloca [8 x i8]
-    ;cc := []
     %d = alloca i32
     store i32 %x, i32* %d
     %i = alloca i32
@@ -365,7 +358,6 @@ break_2:
 
 define void @sprintf_dec_int32([0 x i8]* %buf, i32 %x) {
     %cc = alloca [11 x i8]
-    ;cc := []
     %d = alloca i32
     store i32 %x, i32* %d
     %1 = load i32, i32* %d
@@ -445,7 +437,6 @@ break_2:
 
 define void @sprintf_dec_nat32([0 x i8]* %buf, i32 %x) {
     %cc = alloca [11 x i8]
-    ;cc := []
     %d = alloca i32
     store i32 %x, i32* %d
     %i = alloca i32
@@ -506,13 +497,13 @@ break_2:
 }
 
 define i32 @main() {
-    call void([0 x i8]*, ...) @ff_printf ([0 x i8]* bitcast ([14 x i8]* @str3 to [0 x i8]*))
-    call void([0 x i8]*, ...) @ff_printf ([0 x i8]* bitcast ([11 x i8]* @str5 to [0 x i8]*))
-    call void([0 x i8]*, ...) @ff_printf ([0 x i8]* bitcast ([10 x i8]* @str6 to [0 x i8]*), i8 36)
-    call void([0 x i8]*, ...) @ff_printf ([0 x i8]* bitcast ([10 x i8]* @str7 to [0 x i8]*), [0 x i8]* bitcast ([4 x i8]* @str4 to [0 x i8]*))
-    call void([0 x i8]*, ...) @ff_printf ([0 x i8]* bitcast ([9 x i8]* @str8 to [0 x i8]*), i32 -1)
-    call void([0 x i8]*, ...) @ff_printf ([0 x i8]* bitcast ([8 x i8]* @str9 to [0 x i8]*), i32 123)
-    call void([0 x i8]*, ...) @ff_printf ([0 x i8]* bitcast ([10 x i8]* @str10 to [0 x i8]*), i32 305419903)
+    call void([0 x i8]*, ...) @ff_printf ([0 x i8]* bitcast ([14 x i8]* @str2 to [0 x i8]*))
+    call void([0 x i8]*, ...) @ff_printf ([0 x i8]* bitcast ([11 x i8]* @str4 to [0 x i8]*))
+    call void([0 x i8]*, ...) @ff_printf ([0 x i8]* bitcast ([10 x i8]* @str5 to [0 x i8]*), i8 36)
+    call void([0 x i8]*, ...) @ff_printf ([0 x i8]* bitcast ([10 x i8]* @str6 to [0 x i8]*), [0 x i8]* bitcast ([4 x i8]* @str3 to [0 x i8]*))
+    call void([0 x i8]*, ...) @ff_printf ([0 x i8]* bitcast ([9 x i8]* @str7 to [0 x i8]*), i32 -1)
+    call void([0 x i8]*, ...) @ff_printf ([0 x i8]* bitcast ([8 x i8]* @str8 to [0 x i8]*), i32 123)
+    call void([0 x i8]*, ...) @ff_printf ([0 x i8]* bitcast ([10 x i8]* @str9 to [0 x i8]*), i32 305419903)
     ret i32 0
 }
 

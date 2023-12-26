@@ -2,7 +2,6 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdint.h>
-#include <string.h>
 #include <stdbool.h>
 
 // examples/1.hello_world/main.cm
@@ -10,16 +9,13 @@
 
 void _putchar(char c)
 {
-    //var cc := c
-    //write(0, &cc, 1)
-    printf("%c", c);
+    putchar((int)c);
 }
 
 
 void put_str8(char *s)
 {
-    int32_t i;
-    i = 0;
+    int i = 0;
     while (true) {
         const char c = s[i];
         if (c == '\x0') {
@@ -41,9 +37,6 @@ void ff_printf(char *str, ...)
 {
     va_list __vargs;
     va_start(__vargs, str);
-    //var a_list: va_list
-    //va_start(a_list, str)
-
     int i = 0;
     while (true) {
         char c = str[i];
@@ -97,8 +90,6 @@ void ff_printf(char *str, ...)
 
         i = i + 1;
     }
-
-    //va_end(a_list)
     va_end(__vargs);
 }
 
