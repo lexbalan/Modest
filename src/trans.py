@@ -1715,14 +1715,11 @@ def def_func(x):
         if type.is_va_list(last_param['type']):
             va_id = last_param['id']
             va_id = last_param['id']
-            info("VA: %s" % va_id['str'], last_param)
+            #info("VA: %s" % va_id['str'], last_param)
             cfunc['att'].append('arghack')
             params.pop()
-            #abracadbra
             add_local_var(va_id, last_param['type'], None, va_id['ti'])
-            #va_value = hlir_value_const(va_id, type.typeVA_List, ti=va_id['ti'])
-            #va_value['att'].extend(['local'])
-            #module['context'].value_add(va_id['str'], va_value)
+            module['options'].append("use_arghack")
 
 
     fn['stmt'] = do_stmt_block(x['stmt'])
@@ -1882,6 +1879,7 @@ def proc(ast, source_info):
         'imports': [],
         'strings': [],  # (only for LLVM IR backend)
         'context': new_context,
+        'options': [],
         'text': []
     }
 

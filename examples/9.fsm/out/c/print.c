@@ -1,5 +1,4 @@
 
-#include <stdarg.h>
 #include <stdio.h>
 #include "./ff.h"
 #include <stdint.h>

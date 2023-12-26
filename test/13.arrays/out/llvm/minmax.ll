@@ -2,10 +2,7 @@
 target datalayout = "e-m:o-i64:64-i128:128-n32:64-S128"
 target triple = "arm64-apple-macosx12.0.0"
 
-
-declare void @llvm.va_start(i8*)
-declare void @llvm.va_copy(i8*, i8*)
-declare void @llvm.va_end(i8*); -- SOURCE: /Users/alexbalan/p/Modest/lib/misc/minmax.cm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/misc/minmax.cm
 
 
 define i32 @min_int32(i32 %a, i32 %b) {

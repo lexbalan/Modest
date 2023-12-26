@@ -1,5 +1,4 @@
 
-#include <stdarg.h>
 #ifndef FSM_H
 #define FSM_H
 

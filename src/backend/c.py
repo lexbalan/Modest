@@ -1478,7 +1478,8 @@ def run(module, outname):
 
     output_open(outname)
 
-    out("\n#include <stdarg.h>")
+    if 'use_arghack' in module['options']:
+        out("\n#include <stdarg.h>")
 
     # search for @c_include("...")
     cdirectives(module)

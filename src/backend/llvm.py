@@ -1689,9 +1689,10 @@ def run(module, outname):
     out('\ntarget datalayout = "%s"' % LLVM_TARGET_DATALAYOUT)
     out('\ntarget triple = "%s"\n\n' % LLVM_TARGET_TRIPLE)
 
-    lo("declare void @llvm.va_start(i8*)")
-    lo("declare void @llvm.va_copy(i8*, i8*)")
-    lo("declare void @llvm.va_end(i8*)")
+    if 'use_arghack' in module['options']:
+        lo("declare void @llvm.va_start(i8*)")
+        lo("declare void @llvm.va_copy(i8*, i8*)")
+        lo("declare void @llvm.va_end(i8*)")
 
     print_module(module)
     output_close()
