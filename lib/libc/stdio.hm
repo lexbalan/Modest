@@ -53,22 +53,22 @@ extern func tmpfile() -> *FILE
 extern func tmpnam(str: *CharStr) -> *CharStr
 
 
-@attribute(["dispensable"])
+@attribute("dispensable")
 extern func printf(s: *ConstCharStr, va_list: VA_List) -> Int
 
-@attribute(["dispensable"])
+@attribute("dispensable")
 extern func scanf(s: *ConstCharStr, va_list: VA_List) -> Int
 
-@attribute(["dispensable"])
+@attribute("dispensable")
 extern func fprintf(stream: *FILE, format: *Str, va_list: VA_List) -> Int
 
-@attribute(["dispensable"])
+@attribute("dispensable")
 extern func fscanf(f: *FILE, format: *ConstCharStr, va_list: VA_List) -> Int
 
-@attribute(["dispensable"])
+@attribute("dispensable")
 extern func sscanf(buf: *ConstCharStr, format: *ConstCharStr, va_list: VA_List) -> Int
 
-@attribute(["dispensable"])
+@attribute("dispensable")
 extern func sprintf(buf: *CharStr, format: *ConstCharStr, va_list: VA_List) -> Int
 
 
