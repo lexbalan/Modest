@@ -33,7 +33,7 @@ func read_example() -> Unit {
     }
 
     printf("file '%s' contains: ", filename)
-    while 1 {
+    while true {
         let ch = fgetc(fp)
         if ch == EOF {
             break

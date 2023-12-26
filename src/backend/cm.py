@@ -145,9 +145,11 @@ def print_type_enum(t):
 
 
 
-def print_type_func(t):
+def print_type_func(t, arghack=False):
     out('(')
-    print_fields(t['params'], before="",    after="", separator=", ")
+    print_fields(t['params'], before="", after="", separator=", ")
+    if arghack:
+        out(", va_list: VA_List")
     out(') -> ')
     print_type(t['to'])
 
@@ -658,7 +660,13 @@ def print_decl_func(x):
 
 def print_def_func(x):
     func = x['value']
-    out('func %s' % func['id']['str']); print_type(func['type'])
+    arghack = 'arghack' in func['att']
+
+    out('func %s' % func['id']['str'])
+
+    print_type_func(func['type'], arghack=arghack)
+
+
     print_stmt_block(func['stmt'])
 
 

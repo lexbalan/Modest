@@ -45,6 +45,10 @@ def value_cons_float(v, t, ti, method):
         if value_is_immediate(v):
             nv['imm'] = v['imm']
 
+    elif type.is_va_list(vt):
+        # VA_List -> Float
+        nv = hlir_value_cast(v, t, ti)
+
 
     return nv
 

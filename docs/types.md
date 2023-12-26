@@ -238,6 +238,8 @@ while i < 5 {
 
 
 
+Function parameter cannot be an array. But it can be a pointer to array.
+
 
 
 ###### String types

@@ -86,6 +86,10 @@ def value_cons_integer(v, t, ti, method):
             # Pointer -> Int
             nv = hlir_value_cast(v, t, ti)
 
+        elif type.is_va_list(vtype):
+            # VA_List -> Int
+            nv = hlir_value_cast(v, t, ti)
+
 
     if nv != None:
         if value_is_immediate(v):

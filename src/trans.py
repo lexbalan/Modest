@@ -228,6 +228,8 @@ def init():
 
     root_context.type_add('Bool', type.typeBool)
 
+    root_context.type_add('VA_List', type.typeVA_List)
+
 
     root_context.value_add('nil', valueNil)
     root_context.value_add('true', valueTrue)
@@ -245,7 +247,8 @@ def init():
     typeSysNat = type.type_copy(type.select_nat(int_width))
     typeSysNat['c_alias'] = 'unsigned int'
 
-    typeSysChar
+
+    typeSysChar = None
 
     if char_width == 8: typeSysChar = type.typeChar8
     elif char_width == 16: typeSysChar = type.typeChar16
@@ -611,8 +614,6 @@ def bin_imm(op, type_result, l, r, ti):
 
 
 
-
-
 def value_strings_concat(l, r, ti):
     string = ""
     for c in l['imm']:
@@ -849,7 +850,7 @@ def do_value_call(x):
 
         if not value_is_bad(arg):
             if type.is_generic(arg['type']):
-                warning("value with non-generic type as extra argument", aa['ti'])
+                warning("value with generic type as extra argument", aa['ti'])
                 arg = cons_default(arg, aa['ti'])
             args.append(arg)
 
@@ -1288,11 +1289,19 @@ def do_stmt_var(x):
         return hlir_stmt_bad()
 
     #
-    var_value = hlir_value_var(id, t, v, ti=x['ti'])
-    var_value['att'].extend(['local'])
-    module['context'].value_add(id['str'], var_value)
+    #var_value = hlir_value_var(id, t, v, ti=x['ti'])
+    #var_value['att'].extend(['local'])
+    #module['context'].value_add(id['str'], var_value)
+    var_value = add_local_var(id, t, v, x['ti'])
 
     return hlir_stmt_def_var(var_value, v, ti=x['ti'])
+
+
+def add_local_var(id, t, iv, ti):
+    var_value = hlir_value_var(id, t, iv, ti)
+    var_value['att'].extend(['local'])
+    module['context'].value_add(id['str'], var_value)
+    return var_value
 
 
 
@@ -1515,6 +1524,7 @@ def def_const(x):
     atts = attributes_get()
     const_value['att'].extend(atts)
 
+
     extend_props(const_value)
 
     module['context'].value_add(id['str'], const_value)
@@ -1684,23 +1694,35 @@ def def_func(x):
     # create params context
     module['context'] = module['context'].branch(domain='local')
 
-    atts = attributes_get()
-    fn['att'].extend(atts)
+    fn['att'].extend(attributes_get())
 
     extend_props(fn)
 
-    ast_params = func_type['params']
-    params = []
+    params = func_type['params']
     i = 0
-    while i < len(ast_params):
-        p = ast_params[i]
-        p_id = p['id']
+    while i < len(params):
+        param = params[i]
+        param_id = param['id']
 
-        param = hlir_value_const(p_id, p['type'], ti=p['ti'])
-        param['att'].extend(['local'])
-        module['context'].value_add(p_id['str'], param)
-        params.append(param)
+        param_value = hlir_value_const(param_id, param['type'], ti=param['ti'])
+        param_value['att'].extend(['local'])
+        module['context'].value_add(param_id['str'], param_value)
         i = i + 1
+
+
+    if len(params) > 1:
+        last_param = params[-1]
+        if type.is_va_list(last_param['type']):
+            va_id = last_param['id']
+            va_id = last_param['id']
+            info("VA: %s" % va_id['str'], last_param)
+            cfunc['att'].append('arghack')
+            params.pop()
+            #abracadbra
+            add_local_var(va_id, last_param['type'], None, va_id['ti'])
+            #va_value = hlir_value_const(va_id, type.typeVA_List, ti=va_id['ti'])
+            #va_value['att'].extend(['local'])
+            #module['context'].value_add(va_id['str'], va_value)
 
 
     fn['stmt'] = do_stmt_block(x['stmt'])
@@ -1725,7 +1747,6 @@ def def_func(x):
 
     # add function to parent (global) context
     module['context'].value_add(func_id['str'], fn)
-
 
     cfunc = old_cfunc
 
@@ -1793,8 +1814,19 @@ def decl_func(x):
     func = hlir_value_func(id, functype, ti=x['ti'])
     func['att'].extend(['undefined'])
 
-    atts = attributes_get()
-    func['att'].extend(atts)
+
+    # check if last arg is VA_List
+    # (in this case add 'arghack' attribute)
+    params = functype['params']
+    if len(params) > 1:
+        last_param = params[-1]
+        if type.is_va_list(last_param['type']):
+            va_id = last_param['id']
+            func['att'].append('arghack')
+            params.pop()
+
+
+    func['att'].extend(attributes_get())
 
     if x['extern']:
         func['att'].append('extern')

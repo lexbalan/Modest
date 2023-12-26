@@ -5,7 +5,7 @@ import "libc/stdio.h"
 import "./fsm.h"
 
 
-const fsmVerbose = 1
+const fsmVerbose = true
 
 const fsmSubstateEntering = 0
 const fsmSubstateLoop = 1

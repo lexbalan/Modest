@@ -1,4 +1,5 @@
 
+#include <stdarg.h>
 #ifndef SHA256_H
 #define SHA256_H
 

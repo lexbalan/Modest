@@ -41,57 +41,57 @@ extern func freopen(filename: *ConstCharStr, mode: *ConstCharStr, f: *FILE) -> *
 @attribute("dispensable")
 extern func fseek(stream: *FILE, offset: LongInt, whence: Int) -> Int
 
-extern func fsetpos (f: *FILE, pos: *FposT) -> Int
-extern func ftell (f: *FILE) -> LongInt
-extern func remove (filename: *ConstCharStr) -> Int
-extern func rename (old_filename: *ConstCharStr, new_filename: *ConstCharStr) -> Int
-extern func rewind (f: *FILE) -> Unit
-extern func setbuf (f: *FILE, buffer: *CharStr) -> Unit
+extern func fsetpos(f: *FILE, pos: *FposT) -> Int
+extern func ftell(f: *FILE) -> LongInt
+extern func remove(filename: *ConstCharStr) -> Int
+extern func rename(old_filename: *ConstCharStr, new_filename: *ConstCharStr) -> Int
+extern func rewind(f: *FILE) -> Unit
+extern func setbuf(f: *FILE, buffer: *CharStr) -> Unit
 //int setvbuf(FILE *stream, char *buffer, int mode, size_t size)
-extern func setvbuf (f: *FILE, buffer: *CharStr, mode: Int, size: SizeT) -> Int
+extern func setvbuf(f: *FILE, buffer: *CharStr, mode: Int, size: SizeT) -> Int
 extern func tmpfile() -> *FILE
 extern func tmpnam(str: *CharStr) -> *CharStr
 
 
-@attribute(["arghack", "dispensable"])
-extern func printf(s: *ConstCharStr) -> Int
+@attribute(["dispensable"])
+extern func printf(s: *ConstCharStr, va_list: VA_List) -> Int
 
-@attribute(["arghack", "dispensable"])
-extern func scanf(s: *ConstCharStr) -> Int
+@attribute(["dispensable"])
+extern func scanf(s: *ConstCharStr, va_list: VA_List) -> Int
 
-@attribute(["arghack", "dispensable"])
-extern func fprintf(stream: *FILE, format: *Str) -> Int
+@attribute(["dispensable"])
+extern func fprintf(stream: *FILE, format: *Str, va_list: VA_List) -> Int
 
-@attribute(["arghack", "dispensable"])
-extern func fscanf(f: *FILE, format: *ConstCharStr) -> Int
+@attribute(["dispensable"])
+extern func fscanf(f: *FILE, format: *ConstCharStr, va_list: VA_List) -> Int
 
-@attribute(["arghack", "dispensable"])
-extern func sscanf(buf: *ConstCharStr, format: *ConstCharStr) -> Int
+@attribute(["dispensable"])
+extern func sscanf(buf: *ConstCharStr, format: *ConstCharStr, va_list: VA_List) -> Int
 
-@attribute(["arghack", "dispensable"])
-extern func sprintf(buf: *CharStr, format: *ConstCharStr) -> Int
+@attribute(["dispensable"])
+extern func sprintf(buf: *CharStr, format: *ConstCharStr, va_list: VA_List) -> Int
 
 
 
-//extern func vfprintf (f: *FILE, format: *ConstCharStr, arg: VaList) -> Int
-//extern func vprintf (format: *ConstCharStr, arg: VaList) -> Int
-//extern func vsprintf (str: *CharStr, format: *ConstCharStr, arg: VaList) -> Int
+//extern func vfprintf(f: *FILE, format: *ConstCharStr, arg: VaList) -> Int
+//extern func vprintf(format: *ConstCharStr, arg: VaList) -> Int
+//extern func vsprintf(str: *CharStr, format: *ConstCharStr, arg: VaList) -> Int
 
-extern func fgetc (f: *FILE) -> Int
-extern func fputc (char: Int, f: *FILE) -> Int
+extern func fgetc(f: *FILE) -> Int
+extern func fputc(char: Int, f: *FILE) -> Int
 
-extern func fgets (str: *CharStr, n: Int, f: *FILE) -> *CharStr
-extern func fputs (str: *ConstCharStr, f: *FILE) -> Int
+extern func fgets(str: *CharStr, n: Int, f: *FILE) -> *CharStr
+extern func fputs(str: *ConstCharStr, f: *FILE) -> Int
 
-extern func getc (f: *FILE) -> Int
-extern func getchar () -> Int
-extern func gets (str: *CharStr) -> *CharStr
+extern func getc(f: *FILE) -> Int
+extern func getchar() -> Int
+extern func gets(str: *CharStr) -> *CharStr
 @attribute("dispensable")
-extern func putc (char: Int, f: *FILE) -> Int
+extern func putc(char: Int, f: *FILE) -> Int
 @attribute("dispensable")
-extern func putchar (char: Int) -> Int
+extern func putchar(char: Int) -> Int
 @attribute("dispensable")
-extern func puts (str: *ConstCharStr) -> Int
+extern func puts(str: *ConstCharStr) -> Int
 extern func ungetc(char: Int, f: *FILE) -> Int
 extern func perror(str: *ConstCharStr) -> Unit
 

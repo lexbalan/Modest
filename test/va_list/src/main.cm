@@ -1,0 +1,230 @@
+// examples/1.hello_world/main.cm
+
+@attribute("c-no-print")
+import "libc/stdio.hm"
+
+
+func _putchar(c: Char8) {
+    //var cc := c
+	//write(0, &cc, 1)
+    printf("%c", c)
+}
+
+
+func put_str8(s: *[]Char8) {
+    var i: Int32
+    i := 0
+	while true {
+		let c = s[i]
+		if c == "\0"[0] {
+			break
+		}
+		_putchar(c)
+        i := i + 1
+	}
+}
+
+
+func sprintf_dec_int32(buf: *[]Char8, x: Int)
+func sprintf_dec_nat32(buf: *[]Char8, x: Nat32)
+func sprintf_hex_nat32(buf: *[]Char8, x: Nat32)
+
+
+
+func ff_printf(str: *[]Char8, va_list: VA_List) {
+    //var a_list: va_list
+    //va_start(a_list, str)
+
+    var i := 0
+	while true {
+        var c := str[i]
+
+		if c == "\0"[0] {
+			break
+		}
+
+		if (c == "%"[0]) {
+            i := i + 1
+            c := str[i]
+
+			// буффер для печати всего, кроме строк
+            var buf: [10+1]Char8
+            var sptr: *[]Char8
+            sptr := &buf
+            sptr[0] := "\0"[0]
+
+			if (c == "i"[0]) or (c == "d"[0]) {
+                // %i & %d for signed integer (Int)
+                let i = va_list to Int32
+				sprintf_dec_int32(sptr, i)
+            } else if (c == "n"[0]) {
+                // %n for unsigned integer (Nat)
+                let n = va_list to Nat32
+				sprintf_dec_nat32(sptr, n)
+			} else if (c == "x"[0]) or (c == "p"[0]) {
+                // %x for unsigned integer (Nat)
+                // %p for pointers
+                let x = va_list to Nat32
+				sprintf_hex_nat32(sptr, x)
+			} else if (c == "s"[0]) {
+                // %s pointer to string
+                let s = va_list to *Str8
+                sptr := s
+			} else if (c == "c"[0]) {
+                // %c for char
+                let c = va_list to Char8
+                sptr[0] := c
+                sptr[1] := 0 to Char8
+			} else if (c == "%"[0]) {
+                // %% for PERCENT_SYMBOL
+                sptr := "%"
+			}
+
+			put_str8(sptr)
+
+		} else {
+			_putchar(c)
+		}
+
+        i := i + 1
+	}
+
+	//va_end(a_list)
+}
+
+
+func n_to_sym(n: Nat8) -> Char8 {
+    var c: Char8
+    if n <= 9 {
+        c := ("0"[0] to Nat8 + n) to Char8
+    } else {
+        c := ("A"[0] to Nat8 + (n - 10)) to Char8
+    }
+    return c
+}
+
+
+func sprintf_hex_nat32(buf: *[]Char8, x: Nat32) {
+    var cc: [8]Char8
+
+    var d := x
+
+    var i := 0
+	while true {
+		let n = d % 16
+        d := d / 16
+
+        cc[i] := n_to_sym(n to Nat8)
+        i := i + 1
+
+        if d == 0 {
+            break
+        }
+	}
+
+	// mirroring into buffer
+    var j := 0
+	while (i > 0) {
+        i := i - 1
+        buf[j] := cc[i]
+        j := j + 1
+	}
+
+    buf[j] := 0 to Char8
+
+	//return buf
+}
+
+
+func sprintf_dec_int32(buf: *[]Char8, x: Int32) {
+	var cc: [11]Char8
+
+    var d := x
+
+	let neg = d < 0
+
+	if (neg) {
+        d := -d
+	}
+
+    var i := 0
+	while true {
+		let n = d % 10
+        d := d / 10
+        cc[i] := n_to_sym(n to Nat8)
+		i := i + 1
+
+        if d == 0 {
+            break
+        }
+	}
+
+    var j := 0
+
+	if (neg) {
+        buf[0] := "-"[0]
+        j := j + 1
+	}
+
+	while (i > 0) {
+        i := i - 1
+        buf[j] := cc[i]
+        j := j + 1
+	}
+
+    buf[j] := "\0"[0] // 0 to Char8
+
+	//return buf
+}
+
+
+func sprintf_dec_nat32(buf: *[]Char8, x: Nat32) {
+	var cc: [11]Char8
+
+    var d := x
+
+    var i := 0
+	while true {
+		let n = d % 10
+        d := d / 10
+        cc[i] := n_to_sym(n to Nat8)
+		i := i + 1
+
+        if d == 0 {
+            break
+        }
+	}
+
+    var j := 0
+	while (i > 0) {
+        i := i - 1
+        buf[j] := cc[i]
+        j := j + 1
+	}
+
+    buf[j] := "\0"[0] // 0 to Char8
+
+	//return buf
+}
+
+
+
+func main () -> Int {
+    ff_printf("Hello World!\n")
+
+    let c = "$"[0] to Char8
+    let s = "Hi!" to *Str8
+    let i = -1 to Int32
+    let n = 123 to Nat32
+    let x = 0x1234567F to Nat32
+
+	ff_printf("%% = '%%'\n")
+	ff_printf("c = '%c'\n", c)
+	ff_printf("s = \"%s\"\n", s)
+	ff_printf("i := %i\n", i)
+	ff_printf("n = %n\n", n)
+	ff_printf("x = 0x%x\n", x)
+
+    return 0
+}
+

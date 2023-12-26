@@ -38,7 +38,7 @@ func write_file(sockfd: Int) {
 
 
 func main () -> Int {
-    let ip = "127.0.0.1"
+    let ip = "127.0.0.1" to *Str8
     let port = 8080
 
     let sockfd = socket(AF_INET, SOCK_STREAM, 0)

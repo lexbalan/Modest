@@ -34,6 +34,7 @@ typeStr16 = None
 typeStr32 = None
 typeFreePtr = None
 typeNil = None
+typeVA_List = None
 
 def type_init():
     global typeUnit, typeBool
@@ -44,6 +45,7 @@ def type_init():
     global typeGenericChar, typeChar8, typeChar16, typeChar32
     global typeGenericString, typeStr8, typeStr16, typeStr32
     global typeFreePtr, typeNil
+    global typeVA_List
 
     typeUnit = hlir_type_unit()
 
@@ -159,6 +161,18 @@ def type_init():
     typeFreePtr['generic'] = True
 
     typeNil = hlir_type_nil(ti=None)
+
+    typeVA_List = {
+        'isa': 'type',
+        'kind': 'VA_List',
+        'generic': False,
+        'size': 0,
+        'align': 1,
+        'power': 0,
+        'att': [],
+        'ops': [],
+        'ti': None
+    }
 
 
 def select_int(sz):
@@ -558,6 +572,9 @@ def is_forbidden_var(t, zero_array_forbidden=True):
     return False
 
 
+
+def is_va_list(t):
+    return t['kind'] == 'VA_List'
 
 
 # ищем поле с таким id в типе record

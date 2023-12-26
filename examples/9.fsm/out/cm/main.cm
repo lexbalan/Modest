@@ -139,7 +139,7 @@ var fsm: FSM := {
 
 func main() -> Int {
 
-    while 1 {
+    while true {
         fsm_run(&fsm)
         delay(500000)
     }

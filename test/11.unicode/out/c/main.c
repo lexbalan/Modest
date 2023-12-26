@@ -1,4 +1,5 @@
 
+#include <stdarg.h>
 #include <stdio.h>
 #include "./utf.h"
 #include <stdint.h>

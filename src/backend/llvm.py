@@ -215,7 +215,9 @@ def insertvalue(x, v, pos):
 #%44 = va_arg i8** %3, i32
 def llvm_va_arg(va_list, typ):
     reg = llvm_operation('va_arg')
-    print_type_value(v)
+    print_type(va_list['type'])
+    out("* ")
+    llvm_print_value(va_list)
     out(", ")
     print_type(typ)
     return llvm_value_reg(reg, typ)
@@ -224,15 +226,15 @@ def llvm_va_arg(va_list, typ):
 #"%16 = bitcast i8** %3 to i8*"
 #"call void @llvm.va_start(i8* %16)"
 def llvm_va_start(x):
-    y = llvm_cast('bitcast', x['type'], type.typeFreePtr, x)
-    out("call void @llvm.va_start(i8* %d)" % y['reg'])
+    y = llvm_cast('bitcast', hlir_type_pointer(x['type']), type.typeFreePtr, x)
+    lo("call void @llvm.va_start(i8* %%%s)" % y['reg'])
 
 
 #"%96 = bitcast i8** %3 to i8*"
 #"call void @llvm.va_end(i8* %96)"
 def llvm_va_end(x):
-    y = llvm_cast('bitcast', x['type'], type.typeFreePtr, x)
-    out("call void @llvm.va_end(i8* %d)" % y['reg'])
+    y = llvm_cast('bitcast', hlir_type_pointer(x['type']), type.typeFreePtr, x)
+    lo("call void @llvm.va_end(i8* %%%s)" % y['reg'])
 
 
 
@@ -558,8 +560,13 @@ def print_type_array(t, arr_as_ptr_to_arr):
 
 def print_type_func(t):
     print_type(t['to'])
+
     out("(")
     print_list_by(t['params'], lambda f: print_type(f['type'], arr_as_ptr_to_arr=True))
+
+    #if va_func:
+    #    out(", ...")
+
     out(")")
 
 
@@ -603,6 +610,9 @@ def print_type(t, print_aka=True, arr_as_ptr_to_arr=False):
 
     elif type.is_opaque(t):
         out('opaque')
+
+    elif type.is_va_list(t):
+        out("i8*")
 
     else:
         out("<type:%s>" % k)
@@ -849,7 +859,6 @@ def select_cast_operator(a, b):
 
 
 
-
 def do_eval_expr_cast_immediate(x):
     value = x['value']
     from_type = value['type']
@@ -859,6 +868,10 @@ def do_eval_expr_cast_immediate(x):
     if type.is_ptr_to_string(to_type):
         string_of = to_type['to']['of']
         char_pow = string_of['power']
+
+        #if not 'strid' in x:
+        #    print("NOT_STRID_IN" + str(x))
+
         return llvm_value_str(x['strid'], x['imm'], x['type'], value)
 
     return do_eval_literal(x)
@@ -906,6 +919,11 @@ def do_eval_expr_cast(x):
     if type.is_record(from_type):
         if type.is_record(to_type):
             return cast_record_to_record(to_type, value, x['ti'])
+
+
+    if type.is_va_list(from_type):
+        rv = do_eval(value)
+        return llvm_va_arg(rv, to_type)
 
 
     v = do_reval(value)
@@ -1412,6 +1430,8 @@ def print_def_func(x):
     }
 
     func = x['value']
+    arghack = 'arghack' in func['att']
+
     out("\ndefine ")
     print_type(func['type']['to'])
     out(" @%s" % func['id']['str'])
@@ -1452,6 +1472,11 @@ def print_def_func(x):
         locals_add(param_id, vv)
 
         i = i + 1
+
+
+        if arghack:
+            out(", ...")
+
     out(")")
 
     # 0, 1, 2 - params; 3 - entry label, 4 - first free register
@@ -1464,7 +1489,17 @@ def print_def_func(x):
         lo("; reloc " + r['id'])
         llvm_alloca(r['id'], r['type'], r)
 
+    if arghack:
+        id = 'va_list'
+        va_list = llvm_alloca(id, type.typeFreePtr, None)
+        locals_add(id, va_list)
+        #va_list = llvm_alloca(reg, type.typeFreePtr, None)
+        llvm_va_start(va_list)
+
     print_stmt_block(func['stmt'], arrays=arrays)
+
+    if arghack:
+        llvm_va_end(va_list)
 
     if type.eq(func['type']['to'], type.typeUnit):
         lo("ret void")
@@ -1653,6 +1688,10 @@ def run(module, outname):
 
     out('\ntarget datalayout = "%s"' % LLVM_TARGET_DATALAYOUT)
     out('\ntarget triple = "%s"\n\n' % LLVM_TARGET_TRIPLE)
+
+    lo("declare void @llvm.va_start(i8*)")
+    lo("declare void @llvm.va_copy(i8*, i8*)")
+    lo("declare void @llvm.va_end(i8*)")
 
     print_module(module)
     output_close()

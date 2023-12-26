@@ -1,4 +1,5 @@
 
+#include <stdarg.h>
 #ifndef UTF_H
 #define UTF_H
 

@@ -38,7 +38,7 @@ func main() -> Int {
 
 
     var i: Int32 := 0
-    while 1 {
+    while true {
         let c = string16Const[i]
         if c == 0 to Char16 {
             break

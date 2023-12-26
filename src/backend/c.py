@@ -582,6 +582,18 @@ def print_value_cast(x, ctx):
             return
 
 
+    if type.is_va_list(from_type):
+        #rv = do_eval(value)
+        #return llvm_va_arg(rv, to_type)
+        out("va_arg(__vargs")
+
+        #print_value(value, [], need_wrap=False)
+        out(", ")
+        print_type(to_type, need_space_after=False)
+        out(")")
+        return
+
+
     #if not 'explicit_cast' in x['att']:
     #if value_is_immediate_integer(value):
     if value['kind'] == 'literal':
@@ -1132,16 +1144,18 @@ def print_arrays(arrays):
 
 
 
-def print_stmt_block(s, arrays=None):
+def print_statements(stmts):
+    for stmt in stmts:
+        print_stmt(stmt)
+
+
+
+def print_stmt_block(s):
     out("{")
 
     indent_up()
 
-    #if arrays != None:
-    #    print_arrays(arrays)
-
-    for stmt in s['stmts']:
-        print_stmt(stmt)
+    print_statements(s['stmts'])
 
     indent_down()
 
@@ -1149,10 +1163,11 @@ def print_stmt_block(s, arrays=None):
     newline(n=endnl)
     if endnl:
         indent()
+
     out("}")
 
 
-def print_func_signature(id, typ):
+def print_func_signature(id, typ, arghack=False):
 
     to = typ['to']
     t = to
@@ -1181,7 +1196,7 @@ def print_func_signature(id, typ):
     print_type(t, need_space_after=False)
     out(" " + "*" * ptr_level)
     out("%s" % id)
-    arghack = 'arghack' in t['att']
+    #arghack = 'arghack' in t['att']
     print_paramlist(typ['params'], arghack)
 
     return arrays
@@ -1205,6 +1220,7 @@ def print_decl_func(x):
 
 def print_def_func(x):
     func = x['value']
+    arghack = 'arghack' in func['att']
 
     if 'comment' in func:
         if func['comment'] != '':
@@ -1217,15 +1233,33 @@ def print_def_func(x):
     if 'static' in func['att']: out("static ")
     if 'inline' in func['att']: out("inline ")
 
-    arrays = print_func_signature(func['id']['str'], func['type'])
+    print_func_signature(func['id']['str'], func['type'], arghack=arghack)
 
     if styleguide['LINE_BREAK_BEFORE_FUNC_BRACE']:
         newline()
     else:
         out(" ")
 
-    print_stmt_block(func['stmt'], arrays=arrays)
 
+    out("{")
+
+    indent_up()
+
+    if arghack:
+        newline(); indent(); out("va_list __vargs;")
+
+        last_param = func['type']['params'][-1]
+
+        newline(); indent(); out("va_start(__vargs, %s);" % last_param['id']['str'])
+
+    print_statements(func['stmt']['stmts'])
+
+    if arghack:
+        newline(); indent(); out("va_end(__vargs);")
+
+    indent_down()
+
+    out("\n}")
 
 
 
@@ -1443,6 +1477,8 @@ def run(module, outname):
     else: outname = outname + '.c'
 
     output_open(outname)
+
+    out("\n#include <stdarg.h>")
 
     # search for @c_include("...")
     cdirectives(module)

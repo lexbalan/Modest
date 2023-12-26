@@ -679,11 +679,6 @@ class Parser:
     def parse_value_term(self):
         ti = self.ti()
 
-
-        if self.ctok() == '-':
-                print("=-=-------HJHJHJHJHJHJHJHJ")
-
-
         if self.ctok_class() == 'id':
             id = self.identifier()
 
