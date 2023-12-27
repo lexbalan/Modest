@@ -579,10 +579,10 @@ def do_bin_op_with_pointers(op, l, r , ti):
 
 def bin_imm(op, type_result, l, r, ti):
     ops = {
-        'logic_or': lambda a, b: a | b,
-        'logic_and': lambda a, b: a & b,
-        'or': lambda a, b: a or b,
-        'and': lambda a, b: a and b,
+        'logic_or': lambda a, b: a or b,
+        'logic_and': lambda a, b: a and b,
+        'or': lambda a, b: a | b,
+        'and': lambda a, b: a & b,
         'xor': lambda a, b: a ^ b,
         'eq': lambda a, b: 1 if a == b else 0,
         'ne': lambda a, b: 1 if a != b else 0,
@@ -607,6 +607,10 @@ def bin_imm(op, type_result, l, r, ti):
         num_val = int(num_val)
 
     bin_value = hlir_value_bin(op, l, r, type_result, ti=ti)
+
+
+    if op == 'or':
+        print("num_val = %x" % num_val)
 
     bin_value['imm'] = num_val
 
@@ -672,6 +676,8 @@ def do_value_bin(x):
 
     if value_is_bad(l) or value_is_bad(r):
         return hlir_value_bad(ti)
+
+
 
 
     if not op in l['type']['ops']:
