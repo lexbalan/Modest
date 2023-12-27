@@ -22,6 +22,8 @@ def is_global_context():
     return func_context == None
 
 
+va_list = None
+
 llvm_value_num_zero = None
 
 def init():
@@ -1189,6 +1191,10 @@ def print_stmt_break():
 
 
 def print_stmt_return(x):
+
+    if va_list != None:
+        llvm_va_end(va_list)
+
     v = None
     if x['value'] != None:
         v = do_reval(x['value'])
@@ -1489,24 +1495,28 @@ def print_def_func(x):
         lo("; reloc " + r['id'])
         llvm_alloca(r['id'], r['type'], r)
 
+
     if arghack:
-        id = 'va_list'
+        global va_list
+        id = func['va_id']['str'] # 'va_list'
         va_list = llvm_alloca(id, type.typeFreePtr, None)
         locals_add(id, va_list)
-        #va_list = llvm_alloca(reg, type.typeFreePtr, None)
         llvm_va_start(va_list)
+
 
     print_stmt_block(func['stmt'], arrays=arrays)
 
-    if arghack:
-        llvm_va_end(va_list)
 
     if type.eq(func['type']['to'], type.typeUnit):
+        if va_list != None:
+            llvm_va_end(va_list)
         lo("ret void")
 
     indent_down()
 
     lo("}\n")
+
+    va_list = None
 
     func_context = old_func_context
 

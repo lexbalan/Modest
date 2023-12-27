@@ -35,8 +35,8 @@ void sprintf_hex_nat32(char *buf, uint32_t x);
 
 void ff_printf(char *str, ...)
 {
-    va_list __vargs;
-    va_start(__vargs, str);
+    va_list va_list;
+    va_start(va_list, str);
     int i = 0;
     while (true) {
         char c = str[i];
@@ -57,24 +57,24 @@ void ff_printf(char *str, ...)
 
             if ((c == 'i') || (c == 'd')) {
                 // %i & %d for signed integer (Int)
-                const int32_t i = va_arg(__vargs, const int32_t);
+                const int32_t i = va_arg(va_list, const int32_t);
                 sprintf_dec_int32(sptr, (int)i);
             } else if (c == 'n') {
                 // %n for unsigned integer (Nat)
-                const uint32_t n = va_arg(__vargs, const uint32_t);
+                const uint32_t n = va_arg(va_list, const uint32_t);
                 sprintf_dec_nat32(sptr, (uint32_t)n);
             } else if ((c == 'x') || (c == 'p')) {
                 // %x for unsigned integer (Nat)
                 // %p for pointers
-                const uint32_t x = va_arg(__vargs, const uint32_t);
+                const uint32_t x = va_arg(va_list, const uint32_t);
                 sprintf_hex_nat32(sptr, (uint32_t)x);
             } else if (c == 's') {
                 // %s pointer to string
-                char *const s = va_arg(__vargs, char *const);
+                char *const s = va_arg(va_list, char *const);
                 sptr = s;
             } else if (c == 'c') {
                 // %c for char
-                const char c = va_arg(__vargs, const char);
+                const char c = va_arg(va_list, const char);
                 sptr[0] = c;
                 sptr[1] = 0;
             } else if (c == '%') {
@@ -90,7 +90,7 @@ void ff_printf(char *str, ...)
 
         i = i + 1;
     }
-    va_end(__vargs);
+    va_end(va_list);
 }
 
 

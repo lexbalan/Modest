@@ -1720,8 +1720,7 @@ def def_func(x):
         last_param = params[-1]
         if type.is_va_list(last_param['type']):
             va_id = last_param['id']
-            va_id = last_param['id']
-            #info("VA: %s" % va_id['str'], last_param)
+            cfunc['va_id'] = va_id
             cfunc['att'].append('arghack')
             params.pop()
             add_local_var(va_id, last_param['type'], None, va_id['ti'])

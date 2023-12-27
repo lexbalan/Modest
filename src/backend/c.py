@@ -56,6 +56,9 @@ styleguide = styles['legacy']
 nl_str = "\n"
 
 
+va_id = None
+
+
 def newline(n=1):
     out(nl_str * n)
 
@@ -583,9 +586,10 @@ def print_value_cast(x, ctx):
 
 
     if type.is_va_list(from_type):
+        global va_id
         #rv = do_eval(value)
         #return llvm_va_arg(rv, to_type)
-        out("va_arg(__vargs")
+        out("va_arg(%s" % va_id)
 
         #print_value(value, [], need_wrap=False)
         out(", ")
@@ -1029,6 +1033,12 @@ def print_stmt_while(x):
 
 
 def print_stmt_return(x):
+
+    global va_id
+    if va_id != None:
+        out("va_end(%s);" % va_id)
+        newline(); indent();
+
     out("return")
     if x['value'] != None:
         out(" ")
@@ -1245,17 +1255,27 @@ def print_def_func(x):
 
     indent_up()
 
+
+
     if arghack:
-        newline(); indent(); out("va_list __vargs;")
+        global va_id
+        va_id = func['va_id']['str']
+        newline(); indent(); out("va_list %s;" % va_id)
 
         last_param = func['type']['params'][-1]
 
-        newline(); indent(); out("va_start(__vargs, %s);" % last_param['id']['str'])
+        newline(); indent(); out("va_start(%s, %s);" % (va_id, last_param['id']['str']))
 
-    print_statements(func['stmt']['stmts'])
+
+    stmts = func['stmt']['stmts']
+    print_statements(stmts)
+
 
     if arghack:
-        newline(); indent(); out("va_end(__vargs);")
+        if stmts[-1]['kind'] != 'return':
+            newline(); indent(); out("va_end(%s);" % va_id)
+
+    va_id = None
 
     indent_down()
 
