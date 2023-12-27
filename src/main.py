@@ -5,7 +5,7 @@ import os
 import argparse
 import importlib
 import tomllib
-
+from error import fatal
 
 CONFIG_PATH = os.path.expandvars("${MODEST_DIR}/config.toml")
 
@@ -92,6 +92,9 @@ def main():
     #        print("DEF: " + str(d))
 
     src_name = os.path.normpath(args.filename)
+
+    if not os.path.isfile(src_name):
+        fatal("file %s not found" % src_name)
 
     #print("CPL: " + src_name)
 

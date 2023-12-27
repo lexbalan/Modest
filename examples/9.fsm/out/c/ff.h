@@ -15,8 +15,7 @@ void delay_ms(uint64_t ms);
 void delay_s(uint64_t s);
 void delay(uint64_t us);
 
-void ff_print_hex_n32(uint32_t x, uint8_t a);
-void ff_print_hex_n64(uint64_t x, uint8_t a);
-void ff_print_hex_n128(unsigned __int128 x, uint8_t a);
+
+void ff_printf(char *str, ...);
 
 #endif  /* FF_H */

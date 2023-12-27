@@ -1222,7 +1222,9 @@ def print_decl_func(x):
     if 'inline' in func['att']: out("inline ")
     if 'c_prefix' in func: out("%s " % func['c_prefix'])
 
-    print_func_signature(func['id']['str'], func['type'])
+    arghack = 'arghack' in func['att']
+
+    print_func_signature(func['id']['str'], func['type'], arghack=arghack)
 
     out(";")
 

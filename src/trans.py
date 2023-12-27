@@ -1666,6 +1666,16 @@ def def_func(x):
     func_ti = x['ti']
     func_id = x['id']
     func_type = do_type(x['type'])
+    params = func_type['params']
+    arghack = False
+    va_id = ""
+    if len(params) > 1:
+        last_param = params[-1]
+        arghack = type.is_va_list(last_param['type'])
+        if arghack:
+            va_id = last_param['id']
+            params.pop()
+
 
     old_cfunc = cfunc
 
@@ -1704,7 +1714,7 @@ def def_func(x):
 
     extend_props(fn)
 
-    params = func_type['params']
+
     i = 0
     while i < len(params):
         param = params[i]
@@ -1716,15 +1726,11 @@ def def_func(x):
         i = i + 1
 
 
-    if len(params) > 1:
-        last_param = params[-1]
-        if type.is_va_list(last_param['type']):
-            va_id = last_param['id']
-            cfunc['va_id'] = va_id
-            cfunc['att'].append('arghack')
-            params.pop()
-            add_local_var(va_id, last_param['type'], None, va_id['ti'])
-            module['options'].append("use_arghack")
+    if arghack:
+        cfunc['va_id'] = va_id
+        cfunc['att'].append('arghack')
+        add_local_var(va_id, last_param['type'], None, va_id['ti'])
+        module['options'].append("use_arghack")
 
 
     fn['stmt'] = do_stmt_block(x['stmt'])

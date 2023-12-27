@@ -15,15 +15,27 @@ CM:
 	mcc -o $(CMPREFIX)/main -funsafe -mbackend=cm $(INDIR)/main.cm
 
 
+
 LLVM:
 	mcc -o $(LLVMPREFIX)/main -funsafe -mbackend=llvm $(INDIR)/main.cm
-	clang $(LLVMPREFIX)/main.ll
+	
+	mcc -o $(LLVMPREFIX)/print -funsafe -mbackend=llvm ${MODEST_LIB}/fastfood/print.cm
+
+	clang $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/print.ll
 
 
 C:
 	mcc -o $(CPREFIX)/main -funsafe -mbackend=c $(INDIR)/main.cm
-	CC $(CPREFIX)/main.c #$(CPREFIX)/utf.c
-
+	
+	# mcc -o $(CPREFIX)/ff $(C_OPTIONS) -mbackend=c ${MODEST_LIB}/fastfood/main.hm
+	
+	# mcc -o $(CPREFIX)/ff $(C_OPTIONS) -funsafe -mbackend=c 	${MODEST_LIB}/fastfood/main.cm
+	
+	mcc -o $(CPREFIX)/print $(C_OPTIONS) -funsafe -mbackend=c ${MODEST_LIB}/fastfood/print.hm
+	
+	mcc -o $(CPREFIX)/print $(C_OPTIONS) -funsafe -mbackend=c ${MODEST_LIB}/fastfood/print.cm
+	
+	CC $(CPREFIX)/main.c $(CPREFIX)/print.c
 
 clean:
 	rm *.o

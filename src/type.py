@@ -316,6 +316,7 @@ def eq(a, b, opt=[]):
     elif k == 'float': return eq_float(a, b, opt)
     elif k == 'char': return eq_char(a, b, opt)
     elif k == 'opaque': return eq_opaque(a, b, opt)
+    elif k == 'VA_List': print("UU"); return b['kind'] == 'VA_List'
 
     return False
 

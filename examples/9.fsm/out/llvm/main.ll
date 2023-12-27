@@ -132,9 +132,7 @@ declare void @delay_us(i64)
 declare void @delay_ms(i64)
 declare void @delay_s(i64)
 declare void @delay(i64)
-declare void @ff_print_hex_n32(i32, i8)
-declare void @ff_print_hex_n64(i64, i8)
-declare void @ff_print_hex_n128(i128, i8)
+declare void @ff_printf([0 x i8]*, ...)
 
 ; -- SOURCE: src/main.cm
 
