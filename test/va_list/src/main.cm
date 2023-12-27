@@ -164,7 +164,7 @@ func sprintf_dec_int32(buf: *[]Char8, x: Int32) {
         j := j + 1
 	}
 
-    buf[j] := "\0"[0] // 0 to Char8
+    buf[j] := "\0"[0]
 
 	//return buf
 }
@@ -194,7 +194,7 @@ func sprintf_dec_nat32(buf: *[]Char8, x: Nat32) {
         j := j + 1
 	}
 
-    buf[j] := "\0"[0] // 0 to Char8
+    buf[j] := "\0"[0]
 
 	//return buf
 }

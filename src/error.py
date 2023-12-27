@@ -4,16 +4,19 @@ warncnt = 0
 errcnt = 0
 
 
-HEADER = '\033[95m'
-BLUE = '\033[94m'
+RED = '\033[91m'
+GREEN = '\033[92m'
 YELLOW = '\033[93m'
-INFO = '\033[96m'
-WARNING = '\033[95m'
-ERROR = '\033[91m'
+BLUE = '\033[94m'
+MAGENTA = '\033[95m'
+CYAN = '\033[96m'
 BOLD = '\033[1m'
 ENDC = '\033[0m'
 UNDERLINE = '\033[4m'
 
+COLOR_INFO = CYAN
+COLOR_WARNING = MAGENTA
+COLOR_ERROR = RED
 
 SIMPLE_MARK = True
 
@@ -93,7 +96,7 @@ def info(s, ti=None):
                 ti = ti['ti']
 
         pre = '%s:%d:%d: ' % (ti['file'], ti['line'], ti['pos'])
-    print(pre + '\033[96m' + 'info: ' + '\033[0m' + s)
+    print(pre + COLOR_INFO + 'info: ' + ENDC + s)
 
     if ti != None:
         prelin = "%d |" % ti['line']
@@ -113,7 +116,7 @@ def warning(s, ti=None):
     global warncnt
     warncnt = warncnt + 1
 
-    print(WARNING + 'warning: ' + '\033[0m' + s)
+    print(COLOR_WARNING + 'warning: ' + ENDC + s)
     if ti != None:
         if ti['isa'] != 'ti':
             if 'ti' in ti:
@@ -138,7 +141,7 @@ def error(s, ti=None):
 
         pre = '%s:%d:%d: ' % (ti['file'], ti['line'], ti['pos'])
 
-    print(pre + '\033[91m' + 'error: ' + '\033[0m' + s)
+    print(pre + COLOR_ERROR + 'error: ' + ENDC + s)
 
     if ti != None:
         prelin = "%d |" % ti['line']
