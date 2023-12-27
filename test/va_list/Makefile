@@ -27,10 +27,6 @@ LLVM:
 C:
 	mcc -o $(CPREFIX)/main -funsafe -mbackend=c $(INDIR)/main.cm
 	
-	# mcc -o $(CPREFIX)/ff $(C_OPTIONS) -mbackend=c ${MODEST_LIB}/fastfood/main.hm
-	
-	# mcc -o $(CPREFIX)/ff $(C_OPTIONS) -funsafe -mbackend=c 	${MODEST_LIB}/fastfood/main.cm
-	
 	mcc -o $(CPREFIX)/print $(C_OPTIONS) -funsafe -mbackend=c ${MODEST_LIB}/fastfood/print.hm
 	
 	mcc -o $(CPREFIX)/print $(C_OPTIONS) -funsafe -mbackend=c ${MODEST_LIB}/fastfood/print.cm
