@@ -478,12 +478,13 @@ def print_value_call(v, ctx):
             # то явно приведем его к типу параметра, чтобы C не ругался
             # (try: проверяем только те аргументы, для которых есть параметры)
             p = params[i]
+            pt = p['type']
 
-            if 'wrapped_array' in p['type']['att']:
-                print_cast_hard(p['type'], a)
+            if 'wrapped_array' in pt['att']:
+                print_cast_hard(pt, a)
 
-            elif not type.eq(p['type'], a['type'], opt=['att_checking']):
-                print_cast(p['type'], a)
+            elif not type.eq(pt, a['type'], opt=['att_checking']):
+                print_cast(pt, a)
 
             else:
                 print_value(a, ctx=ctx)
