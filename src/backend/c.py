@@ -446,7 +446,7 @@ def print_value_call(v, ctx):
     if type.is_pointer(left['type']):
         ftype = left['type']['to']
 
-        # вызов через указатель
+        # Вызов функции через указатель
         # поскольку у нас указатели на функции это *void
         # при вызове приводим левое к указателю на функцию
         out("(("); print_type(ftype['to'], need_space_after=False); out("(*)")
@@ -473,7 +473,13 @@ def print_value_call(v, ctx):
             # то явно приведем его к типу параметра, чтобы C не ругался
             # (try: проверяем только те аргументы, для которых есть параметры)
             p = params[i]
-            if not type.eq(p['type'], a['type'], opt=['att_checking']):
+
+            if 'wrapped_array' in p['type']['att']:
+                out("*(")
+                print_type(p['type'], need_space_after=False)
+                out("*)&")
+
+            elif not type.eq(p['type'], a['type'], opt=['att_checking']):
                 out("("); print_type(p['type'], need_space_after=False); out(")")
         except:
             pass
@@ -518,11 +524,15 @@ def print_value_access_ptr(v, ctx):
 
 
 
-def print_cast(t, v, ctx=[]):
+def print_cast(t, v, hard_cast=False, ctx=[]):
     from_type = v['type']
     to_type = t
 
-    out("("); print_type(to_type, need_space_after=False); out(")")
+    hard_cast = 'wrapped_array' in t['att']
+
+    out("(")
+    print_type(to_type, need_space_after=False)
+    out(")")
     need_wrap = precedence(v) < precedence({'kind': 'cast'})
     print_value(v, ctx=ctx, need_wrap=need_wrap)
 
