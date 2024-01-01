@@ -1,0 +1,18 @@
+// examples/arr_param/main.cm
+
+@attribute("c-no-print")
+import "libc/stdio.hm"
+
+
+func swap (x: [2]Int32) -> [2]Int32 {
+    var out: [2]Int32
+    out[0] = x[1]
+    out[1] = x[0]
+    return out
+}
+
+func main () -> Int {
+    printf("hello world!\n")
+    return 0
+}
+

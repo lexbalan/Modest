@@ -1211,6 +1211,8 @@ def print_func_signature(id, typ, arghack=False):
 
 def print_decl_func(x):
     func = x['value']
+    ft = func['type']
+
 
     if 'extern' in func['att']: out("extern ")
     if 'static' in func['att']: out("static ")
@@ -1219,15 +1221,36 @@ def print_decl_func(x):
 
     arghack = 'arghack' in func['att']
 
-    print_func_signature(func['id']['str'], func['type'], arghack=arghack)
+    print_func_signature(func['id']['str'], ft, arghack=arghack)
 
     out(";")
 
 
 
+def print_wrapped_array(type, id_str):
+    out(type['id']['str'])
+    out (" {")
+    print_type(type['of'], need_space_after=True)
+    out(id_str)
+    out("["); print_value(type['volume']); out("]")
+    out(";};\n")
+
+
 def print_def_func(x):
     func = x['value']
     arghack = 'arghack' in func['att']
+
+    ft = func['type']
+
+    # печатаем обернутые параметры-массивы и возврашаемые массивы
+    # (обернуты тк C не позволяет принимать возвращать массив по значению)
+    for param in ft['params']:
+        if 'wrapped_array' in param['type']['att']:
+            print_wrapped_array(param['type'], param['id']['str'])
+    if 'wrapped_array' in ft['to']['att']:
+        print_wrapped_array(ft['to'], 'value')
+
+
 
     if 'comment' in func:
         if func['comment'] != '':

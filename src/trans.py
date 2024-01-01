@@ -395,14 +395,27 @@ def do_type_enum(t):
     return enum_type
 
 
-def do_type_func(t):
+
+def wrap_type(t, id_str):
+    t['att'].append('wrapped_array')
+    print(id_str)
+    t['id'] = {
+        'isa': 'id',
+        'str': id_str,
+        'ti': None
+    }
+
+def do_type_func(t, func_id="_"):
     params = []
 
     for _param in t['params']:
         param = do_field(_param)
         if type.is_array(param['type']):
             #error("function parameter cannot be an array", _param)
-            param['type']['att'].append('wrapped_array')
+            id_str = 'struct ' + func_id + '_' + param['id']['str']
+            wrap_type(param['type'], id_str)
+
+
 
         if param != None:
             params.append(param)
@@ -413,7 +426,8 @@ def do_type_func(t):
 
         if type.is_array(to):
             #error("function return value cannot be an array", t['to'])
-            to['att'].append('wrapped_array')
+            id_str = 'struct ' + func_id + '_' + 'retval'
+            wrap_type(to, id_str)
 
     else:
         to = type.typeUnit
