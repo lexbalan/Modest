@@ -118,15 +118,16 @@ define i32 @main() {
     store i32 10, i32* %1
     %2 = getelementptr inbounds [2 x i32], [2 x i32]* %a, i32 0, i32 1
     store i32 20, i32* %2
-    %3 = call [3 x i32]([2 x i32]*) @swap ([2 x i32]* %a)
-    %4 = extractvalue [3 x i32] %3, 0
-    %5 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([11 x i8]* @str1 to [0 x i8]*), i32 %4)
-    %6 = extractvalue [3 x i32] %3, 1
-    %7 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([11 x i8]* @str2 to [0 x i8]*), i32 %6)
-    %8 = extractvalue [3 x i32] %3, 2
-    %9 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([11 x i8]* @str3 to [0 x i8]*), i32 %8)
+    %3 = load [2 x i32], [2 x i32]* %a
+    %4 = call [3 x i32]([2 x i32]) @swap ([2 x i32] %3)
+    %5 = extractvalue [3 x i32] %4, 0
+    %6 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([11 x i8]* @str1 to [0 x i8]*), i32 %5)
+    %7 = extractvalue [3 x i32] %4, 1
+    %8 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([11 x i8]* @str2 to [0 x i8]*), i32 %7)
+    %9 = extractvalue [3 x i32] %4, 2
+    %10 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([11 x i8]* @str3 to [0 x i8]*), i32 %9)
     ;printf("b[3] = %i\n", b[3])
-    %10 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([14 x i8]* @str4 to [0 x i8]*))
+    %11 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([14 x i8]* @str4 to [0 x i8]*))
     ret i32 0
 }
 

@@ -194,7 +194,7 @@ def print_type_value(x):
 
 def print_type_value_param(x):
     assert(x['isa'] == 'll_value')
-    print_type(x['type'], arr_as_ptr_to_arr=True)
+    print_type(x['type'])
     out(" ")
     llvm_print_value(x)
 
@@ -546,7 +546,7 @@ def print_type_record(t):
     out("\n}")
 
 
-def print_type_array(t, arr_as_ptr_to_arr):
+def print_type_array(t):
     out("[")
     array_size = t['volume']
     sz = 0
@@ -556,15 +556,13 @@ def print_type_array(t, arr_as_ptr_to_arr):
     out("%d x " % sz)
     print_type(t['of'])
     out("]")
-    if arr_as_ptr_to_arr:
-        out("*")
 
 
 def print_type_func(t):
     print_type(t['to'])
 
     out("(")
-    print_list_by(t['params'], lambda f: print_type(f['type'], arr_as_ptr_to_arr=True))
+    print_list_by(t['params'], lambda f: print_type(f['type']))
 
     #if va_func:
     #    out(", ...")
@@ -582,7 +580,7 @@ def print_type_pointer(t):
 # функция может получать только указатель на массив
 # если же в CM она получает массив то тут и в СИ она получает
 # указатель на него, и потом копирует его во внутренний массив
-def print_type(t, print_aka=True, arr_as_ptr_to_arr=False):
+def print_type(t, print_aka=True):
     k = t['kind']
 
     if print_aka:
@@ -604,7 +602,7 @@ def print_type(t, print_aka=True, arr_as_ptr_to_arr=False):
     if type.is_func(t): print_type_func(t)
     elif type.is_record(t): print_type_record(t)
     elif type.is_pointer(t): print_type_pointer(t)
-    elif type.is_array(t): print_type_array(t, arr_as_ptr_to_arr)
+    elif type.is_array(t): print_type_array(t)
 
     elif type.is_integer(t) or type.is_float(t) or type.is_char(t):
         if 'llvm_alias' in t:
@@ -688,10 +686,7 @@ def do_eval_expr_call(v):
     # eval all args
     args = []
     for a in v['args']:
-        arg = do_eval(a)
-        # do not load arrays (because arrays passed by pointer inside)
-        if not type.is_array(arg['type']):
-            arg = dold(arg)
+        arg = do_reval(a)
         args.append(arg)
 
     ftype = v['func']['type']
@@ -717,7 +712,7 @@ def do_eval_expr_call(v):
     print_type(ftype['to'])
     out("(")
     params = ftype['params']
-    print_list_by(params, lambda par: print_type(par['type'], arr_as_ptr_to_arr=True))
+    print_list_by(params, lambda par: print_type(par['type']))
     if 'arghack' in v['func']['att']:
         out(", ...")
     out(") ")
