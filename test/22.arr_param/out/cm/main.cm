@@ -3,28 +3,34 @@
 import "libc/stdio.h"
 
 
-func swap(x: [2]Int32) -> [3]Int32
+func swap(x: [2]Int32) -> [2]Int32
 
-func swap(x: [2]Int32) -> [3]Int32 {
-    var out: [3]Int32
+
+func swap(x: [2]Int32) -> [2]Int32 {
+    var out: [2]Int32
     out[0] := x[1]
     out[1] := x[0]
-    out[2] := 30
     return out
 }
 
 
-func main() -> Int {
-    var a: [2]Int32
-    a[0] := 10
-    a[1] := 20
+var global_array: [2]Int32 := [1, 2]
 
-    let b = swap(a)
+func main() -> Int {
+    var local_array: [2]Int32
+
+    local_array[0] := 10
+    local_array[1] := 20
+
+    let a = swap(local_array)
+
+    printf("a[0] = %i\n", a[0])
+    printf("a[1] = %i\n", a[1])
+
+    let b = swap(global_array)
 
     printf("b[0] = %i\n", b[0])
     printf("b[1] = %i\n", b[1])
-    printf("b[2] = %i\n", b[2])
-    //printf("b[3] = %i\n", b[3])
 
     printf("hello world!\n")
 

@@ -91,10 +91,10 @@ declare void @perror(%ConstCharStr*)
 
 ; -- SOURCE: src/main.cm
 
-@str1 = private constant [11 x i8] [i8 98, i8 91, i8 48, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
-@str2 = private constant [11 x i8] [i8 98, i8 91, i8 49, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
-@str3 = private constant [11 x i8] [i8 99, i8 91, i8 48, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
-@str4 = private constant [11 x i8] [i8 99, i8 91, i8 49, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str1 = private constant [11 x i8] [i8 97, i8 91, i8 48, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str2 = private constant [11 x i8] [i8 97, i8 91, i8 49, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str3 = private constant [11 x i8] [i8 98, i8 91, i8 48, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str4 = private constant [11 x i8] [i8 98, i8 91, i8 49, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 @str5 = private constant [14 x i8] [i8 104, i8 101, i8 108, i8 108, i8 111, i8 32, i8 119, i8 111, i8 114, i8 108, i8 100, i8 33, i8 10, i8 0]
 
 
@@ -112,24 +112,24 @@ define [2 x i32] @swap([2 x i32] %x) {
 }
 
 
-@ga = global [2 x i32] [
+@global_array = global [2 x i32] [
     i32 1,
     i32 2
 ]
 
 define i32 @main() {
-    %a = alloca [2 x i32]
-    %1 = getelementptr inbounds [2 x i32], [2 x i32]* %a, i32 0, i32 0
+    %local_array = alloca [2 x i32]
+    %1 = getelementptr inbounds [2 x i32], [2 x i32]* %local_array, i32 0, i32 0
     store i32 10, i32* %1
-    %2 = getelementptr inbounds [2 x i32], [2 x i32]* %a, i32 0, i32 1
+    %2 = getelementptr inbounds [2 x i32], [2 x i32]* %local_array, i32 0, i32 1
     store i32 20, i32* %2
-    %3 = load [2 x i32], [2 x i32]* %a
+    %3 = load [2 x i32], [2 x i32]* %local_array
     %4 = call [2 x i32]([2 x i32]) @swap ([2 x i32] %3)
     %5 = extractvalue [2 x i32] %4, 0
     %6 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([11 x i8]* @str1 to [0 x i8]*), i32 %5)
     %7 = extractvalue [2 x i32] %4, 1
     %8 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([11 x i8]* @str2 to [0 x i8]*), i32 %7)
-    %9 = load [2 x i32], [2 x i32]* @ga
+    %9 = load [2 x i32], [2 x i32]* @global_array
     %10 = call [2 x i32]([2 x i32]) @swap ([2 x i32] %9)
     %11 = extractvalue [2 x i32] %10, 0
     %12 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([11 x i8]* @str3 to [0 x i8]*), i32 %11)
