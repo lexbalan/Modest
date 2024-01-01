@@ -91,26 +91,47 @@ declare void @perror(%ConstCharStr*)
 
 ; -- SOURCE: src/main.cm
 
-@str1 = private constant [14 x i8] [i8 104, i8 101, i8 108, i8 108, i8 111, i8 32, i8 119, i8 111, i8 114, i8 108, i8 100, i8 33, i8 10, i8 0]
+@str1 = private constant [11 x i8] [i8 98, i8 91, i8 48, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str2 = private constant [11 x i8] [i8 98, i8 91, i8 49, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str3 = private constant [11 x i8] [i8 98, i8 91, i8 50, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str4 = private constant [14 x i8] [i8 104, i8 101, i8 108, i8 108, i8 111, i8 32, i8 119, i8 111, i8 114, i8 108, i8 100, i8 33, i8 10, i8 0]
 
 
 
-define [2 x i32] @swap([2 x i32]* %_x) {
-    %out = alloca [2 x i32]
+define [3 x i32] @swap([2 x i32]* %_x) {
+    %out = alloca [3 x i32]
     %1 = getelementptr inbounds [2 x i32], [2 x i32]* %x, i32 0, i32 1
     %2 = load i32, i32* %1
-    %3 = getelementptr inbounds [2 x i32], [2 x i32]* %out, i32 0, i32 0
+    %3 = getelementptr inbounds [3 x i32], [3 x i32]* %out, i32 0, i32 0
     store i32 %2, i32* %3
     %4 = getelementptr inbounds [2 x i32], [2 x i32]* %x, i32 0, i32 0
     %5 = load i32, i32* %4
-    %6 = getelementptr inbounds [2 x i32], [2 x i32]* %out, i32 0, i32 1
+    %6 = getelementptr inbounds [3 x i32], [3 x i32]* %out, i32 0, i32 1
     store i32 %5, i32* %6
-    %7 = load [2 x i32], [2 x i32]* %out
-    ret [2 x i32] %7
+    %7 = getelementptr inbounds [3 x i32], [3 x i32]* %out, i32 0, i32 2
+    store i32 30, i32* %7
+    %8 = load [3 x i32], [3 x i32]* %out
+    ret [3 x i32] %8
 }
 
 define i32 @main() {
-    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*))
+    %a = alloca [2 x i32]
+    %1 = getelementptr inbounds [2 x i32], [2 x i32]* %a, i32 0, i32 0
+    store i32 10, i32* %1
+    %2 = getelementptr inbounds [2 x i32], [2 x i32]* %a, i32 0, i32 1
+    store i32 20, i32* %2
+    %3 = call [3 x i32]([2 x i32]*) @swap ([2 x i32]* %a)
+    %4 = getelementptr inbounds [3 x i32], [3 x i32]* %3, i32 0, i32 0
+    %5 = load i32, i32* %4
+    %6 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([11 x i8]* @str1 to [0 x i8]*), i32 %5)
+    %7 = getelementptr inbounds [3 x i32], [3 x i32]* %3, i32 0, i32 1
+    %8 = load i32, i32* %7
+    %9 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([11 x i8]* @str2 to [0 x i8]*), i32 %8)
+    %10 = getelementptr inbounds [3 x i32], [3 x i32]* %3, i32 0, i32 2
+    %11 = load i32, i32* %10
+    %12 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([11 x i8]* @str3 to [0 x i8]*), i32 %11)
+    ;printf("b[3] = %i\n", b[3])
+    %13 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([14 x i8]* @str4 to [0 x i8]*))
     ret i32 0
 }
 

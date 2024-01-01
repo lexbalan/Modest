@@ -4,9 +4,9 @@
 import "libc/stdio.hm"
 
 
-func swap (x: [2]Int32) -> [3]Int32
+func swap(x: [2]Int32) -> [3]Int32
 
-func swap (x: [2]Int32) -> [3]Int32 {
+func swap(x: [2]Int32) -> [3]Int32 {
     var out: [3]Int32
     out[0] = x[1]
     out[1] = x[0]
@@ -15,7 +15,7 @@ func swap (x: [2]Int32) -> [3]Int32 {
 }
 
 
-func main () -> Int {
+func main() -> Int {
     var a: [2]Int32
     a[0] = 10
     a[1] = 20

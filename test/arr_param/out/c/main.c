@@ -26,7 +26,7 @@ int main(void)
     a[0] = 10;
     a[1] = 20;
 
-    const struct swap_retval b = swap(*(struct swap_x*)&a);
+    struct swap_retval b = swap(*(struct swap_x*)&a);
 
     printf("b[0] = %i\n", b.a[0]);
     printf("b[1] = %i\n", b.a[1]);

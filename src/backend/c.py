@@ -254,6 +254,10 @@ def print_type_full(t, _print_array_asis=False):
 def print_type2(t, print_aka, need_space_after, _print_array_asis):
     k = t['kind']
 
+    if 'wrapped_array' in t['att']:
+        out(t['wrapped_id'])
+        return
+
     if 'const' in t['att']:
         if not type.is_pointer(t):
             out("const ")
@@ -270,6 +274,7 @@ def print_type2(t, print_aka, need_space_after, _print_array_asis):
             if need_space_after:
                 out(" ")
             return
+
 
     # hotfix for let generic value problem (let x = 1)
     if type.is_generic_integer(t):
@@ -1054,9 +1059,10 @@ def print_stmt_return(x):
         out(" ")
 
         global cfunc
-        if 'wrapped_array' in cfunc['type']['to']['att']:
+        to = cfunc['type']['to']
+        if 'wrapped_array' in to['att']:
             out("*(")
-            print_type(cfunc['type']['to'], need_space_after=False)
+            print_type(to, need_space_after=False)
             out(" *)&")
 
         print_value(x['value'])
@@ -1236,7 +1242,7 @@ def print_func_signature(id, typ, arghack=False):
 
 
 def print_wrapped_array(type):
-    out(type['id']['str'])
+    out(type['wrapped_id'])
     out (" {")
     print_type(type['of'], need_space_after=True)
     out("a["); print_value(type['volume']); out("]")
@@ -1400,6 +1406,11 @@ def print_field_array(t, id):
     # get list element type
     root_type = t
     while root_type['kind'] == 'array':
+        if 'wrapped_array' in t['att']:
+            out("%s %s" % (t['wrapped_id'], id))
+            return
+
+
         root_type = root_type['of']
 
     print_type(root_type, need_space_after=True)
