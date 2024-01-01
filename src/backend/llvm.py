@@ -384,7 +384,7 @@ def llvm_getelementptr(rec, rt, indexes, vt):
 
 
 # возвращает значение поля из 'структуры по значению'
-def llvm_extract_record_field(x, ft, field_no):
+def llvm_extract_item(x, ft, field_no):
     reg = llvm_operation('extractvalue')
     print_type_value(x)
     out(', %d' % field_no)
@@ -735,6 +735,11 @@ def do_eval_expr_index(v):
     array_type = array['type']
     result_type = v['type']
     index = do_reval(v['index'])
+
+    # если сам массив находится в регистре: (let rec = get_rec())
+    if not array['is_adr']:
+        return llvm_extract_item(array, result_type, index['imm'])
+
     return llvm_getelementptr(array, array_type, (llvm_value_num_zero, index), result_type)
 
 
@@ -765,8 +770,8 @@ def do_eval_access(rec, rt, pos, vt):
         return rec['items'][pos]['value']
 
     # если сама запись находится в регистре: (let rec = get_rec())
-    if type.is_record(rec['type']) and not rec['is_adr']:
-        return llvm_extract_record_field(rec, vt, pos)
+    if not rec['is_adr']:
+        return llvm_extract_item(rec, vt, pos)
 
     # если работаем через 'переменую-указатель'
     # сперва нужно загрузить ее в регистр тем самым получим 'указатель'
@@ -1381,15 +1386,12 @@ def print_stmt(x):
 
 
 
-def print_stmt_block(s, arrays=None):
+def print_stmt_block(s):
     locals_push()
-
-    # arrays - arguments
-    #if arrays != None:
-    #    print_arrays(arrays)
 
     for stmt in s['stmts']:
         print_stmt(stmt)
+
     locals_pop()
 
 
@@ -1447,33 +1449,34 @@ def print_def_func(x):
     # (массивы передаваемые по значению)
     reloc = []
 
-    arrays = []    # параметры-массивы
+    #arrays = []    # параметры-массивы
 
     params = func['type']['params']
     params_len = len(params)
     i = 0
     while i < params_len:
         param = params[i]
-        param_is_arr = type.is_array(param['type'])
+        #param_is_arr = type.is_array(param['type'])
         # array param gets _ prefix
         prefix = ""
-        if param_is_arr:
-            arrays.append(param)
-            prefix = "_"
+        #if param_is_arr:
+        #    arrays.append(param)
+        #    prefix = "_"
 
         param_id = param['id']['str']
         if i > 0:
             out(", ")
         print_type(param['type'])
-        if param_is_arr:
-            out("*")
-        out(" ")
-        out('%%%s%s' % (prefix, param_id))
+
+        #if param_is_arr:
+        #    out("*")
+
+        out(' %%%s%s' % (prefix, param_id))
 
         vv = llvm_value_stk(param_id, param['type'], param)
 
-        if param_is_arr:
-            vv['type'] = hlir_type_pointer(vv['type'])
+        #if param_is_arr:
+        #    vv['type'] = hlir_type_pointer(vv['type'])
 
         locals_add(param_id, vv)
 
@@ -1504,7 +1507,7 @@ def print_def_func(x):
         llvm_va_start(va_list)
 
 
-    print_stmt_block(func['stmt'], arrays=arrays)
+    print_stmt_block(func['stmt'])
 
 
     if type.eq(func['type']['to'], type.typeUnit):
