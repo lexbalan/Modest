@@ -10,6 +10,7 @@ struct swap_x {int32_t a[2];};
 struct swap_retval {int32_t a[3];};
 struct swap_retval swap(struct swap_x x);
 
+
 struct swap_retval swap(struct swap_x x)
 {
     int32_t out[3];
@@ -20,9 +21,12 @@ struct swap_retval swap(struct swap_x x)
 }
 
 
+int32_t ga[2] = {1, 2};
+
 int main(void)
 {
     int32_t a[2];
+
     a[0] = 10;
     a[1] = 20;
 
@@ -32,6 +36,10 @@ int main(void)
     printf("b[1] = %i\n", b.a[1]);
     printf("b[2] = %i\n", b.a[2]);
     //printf("b[3] = %i\n", b[3])
+
+    struct swap_retval c = swap(*(struct swap_x *)&ga);
+    printf("c[0] = %i\n", c.a[0]);
+    printf("c[1] = %i\n", c.a[1]);
 
     printf("hello world!\n");
 
