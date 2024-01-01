@@ -398,7 +398,6 @@ def do_type_enum(t):
 
 def wrap_type(t, id_str):
     t['att'].append('wrapped_array')
-    print(id_str)
     t['id'] = {
         'isa': 'id',
         'str': id_str,
@@ -1735,6 +1734,10 @@ def def_func(x):
 
     fn['att'].extend(attributes_get())
 
+    if already:
+        fn['att'].append('declared')
+
+
     extend_props(fn)
 
 
@@ -1819,13 +1822,13 @@ def decl_type(x):
 
 
 def decl_func(x):
-    id = x['id']
-    functype = do_type(x['type'])
+    func_id = x['id']
+    func_type = do_type_func(x['type'], func_id=func_id['str'])
 
     #
     # Check if function already declared/defined
     #
-    already = value_get(id['str'])
+    already = value_get(func_id['str'])
     if already != None:
         if 'stmt' in already:
             # already defined function
@@ -1836,19 +1839,19 @@ def decl_func(x):
             info("repeated function declaration", x['ti'])
 
         # check type of already created function
-        if not type.eq(already['type'], functype):
+        if not type.eq(already['type'], func_type):
             error("definition not correspond to function type", x['ti'])
             info("firstly declared here", already['type']['ti'])
 
         return
 
-    func = hlir_value_func(id, functype, ti=x['ti'])
+    func = hlir_value_func(func_id, func_type, ti=x['ti'])
     func['att'].extend(['undefined'])
 
 
     # check if last arg is VA_List
     # (in this case add 'arghack' attribute)
-    params = functype['params']
+    params = func_type['params']
     if len(params) > 1:
         last_param = params[-1]
         if type.is_va_list(last_param['type']):
@@ -1864,7 +1867,7 @@ def decl_func(x):
 
     extend_props(func)
 
-    module['context'].value_add(id['str'], func)
+    module['context'].value_add(func_id['str'], func)
 
     return hlir_decl_func(func)
 

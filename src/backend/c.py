@@ -528,8 +528,6 @@ def print_cast(t, v, hard_cast=False, ctx=[]):
     from_type = v['type']
     to_type = t
 
-    hard_cast = 'wrapped_array' in t['att']
-
     out("(")
     print_type(to_type, need_space_after=False)
     out(")")
@@ -1234,10 +1232,33 @@ def print_func_signature(id, typ, arghack=False):
 
 
 
+
+
+
+def print_wrapped_array(type):
+    out(type['id']['str'])
+    out (" {")
+    print_type(type['of'], need_space_after=True)
+    out("a["); print_value(type['volume']); out("]")
+    out(";};\n")
+
+def print_func_wrappers(f):
+    ft = f['type']
+    # печатаем обернутые параметры-массивы и возврашаемые массивы
+    # (обернуты тк C не позволяет принимать возвращать массив по значению)
+    for param in ft['params']:
+        if 'wrapped_array' in param['type']['att']:
+            print_wrapped_array(param['type'])
+    if 'wrapped_array' in ft['to']['att']:
+        print_wrapped_array(ft['to'])
+
+
+
 def print_decl_func(x):
     func = x['value']
     ft = func['type']
 
+    print_func_wrappers(func)
 
     if 'extern' in func['att']: out("extern ")
     if 'static' in func['att']: out("static ")
@@ -1252,14 +1273,6 @@ def print_decl_func(x):
 
 
 
-def print_wrapped_array(type):
-    out(type['id']['str'])
-    out (" {")
-    print_type(type['of'], need_space_after=True)
-    out("a["); print_value(type['volume']); out("]")
-    out(";};\n")
-
-
 def print_def_func(x):
     func = x['value']
     arghack = 'arghack' in func['att']
@@ -1267,17 +1280,10 @@ def print_def_func(x):
     global cfunc
     cfunc = func
 
-
     ft = func['type']
 
-    # печатаем обернутые параметры-массивы и возврашаемые массивы
-    # (обернуты тк C не позволяет принимать возвращать массив по значению)
-    for param in ft['params']:
-        if 'wrapped_array' in param['type']['att']:
-            print_wrapped_array(param['type'])
-    if 'wrapped_array' in ft['to']['att']:
-        print_wrapped_array(ft['to'])
-
+    if not 'declared' in func['att']:
+        print_func_wrappers(func)
 
 
     if 'comment' in func:
