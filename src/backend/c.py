@@ -1242,7 +1242,7 @@ def print_decl_func(x):
 
 
 
-def print_wrapped_array(type, id_str):
+def print_wrapped_array(type):
     out(type['id']['str'])
     out (" {")
     print_type(type['of'], need_space_after=True)
@@ -1264,9 +1264,9 @@ def print_def_func(x):
     # (обернуты тк C не позволяет принимать возвращать массив по значению)
     for param in ft['params']:
         if 'wrapped_array' in param['type']['att']:
-            print_wrapped_array(param['type'], param['id']['str'])
+            print_wrapped_array(param['type'])
     if 'wrapped_array' in ft['to']['att']:
-        print_wrapped_array(ft['to'], 'value')
+        print_wrapped_array(ft['to'])
 
 
 
