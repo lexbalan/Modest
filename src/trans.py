@@ -1686,7 +1686,9 @@ def def_func(x):
 
     func_ti = x['ti']
     func_id = x['id']
-    func_type = do_type(x['type'])
+
+    func_type = do_type_func(x['type'], func_id=func_id['str'])
+
     params = func_type['params']
     arghack = False
     va_id = ""

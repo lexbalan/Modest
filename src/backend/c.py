@@ -58,6 +58,8 @@ nl_str = "\n"
 
 va_id = None
 
+cfunc = None
+
 
 def newline(n=1):
     out(nl_str * n)
@@ -910,6 +912,9 @@ def print_value_literal(x, ctx):
 
 
 def print_value_by_id(x):
+    if 'wrapped_array' in x['type']['att']:
+        out("%s." % x['id']['str'])
+
     out("%s" % x['id']['str'])
 
 
@@ -1035,9 +1040,18 @@ def print_stmt_return(x):
         newline(); indent();
 
     out("return")
+
     if x['value'] != None:
         out(" ")
+
+        global cfunc
+        if 'wrapped_array' in cfunc['type']['to']['att']:
+            out("*(")
+            print_type(cfunc['type']['to'], need_space_after=False)
+            out(" *)&")
+
         print_value(x['value'])
+
     out(";")
 
 
@@ -1240,6 +1254,10 @@ def print_def_func(x):
     func = x['value']
     arghack = 'arghack' in func['att']
 
+    global cfunc
+    cfunc = func
+
+
     ft = func['type']
 
     # печатаем обернутые параметры-массивы и возврашаемые массивы
@@ -1276,7 +1294,6 @@ def print_def_func(x):
     indent_up()
 
 
-
     if arghack:
         global va_id
         va_id = func['va_id']['str']
@@ -1300,6 +1317,8 @@ def print_def_func(x):
     indent_down()
 
     out("\n}")
+
+    cfunc = None
 
 
 
