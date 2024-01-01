@@ -402,7 +402,7 @@ def do_type_func(t):
         param = do_field(_param)
         if type.is_array(param['type']):
             #error("function parameter cannot be an array", _param)
-            param['type']['att'].append('wrapped')
+            param['type']['att'].append('wrapped_array')
 
         if param != None:
             params.append(param)
@@ -413,7 +413,7 @@ def do_type_func(t):
 
         if type.is_array(to):
             #error("function return value cannot be an array", t['to'])
-            to['att'].append('wrapped')
+            to['att'].append('wrapped_array')
 
     else:
         to = type.typeUnit
