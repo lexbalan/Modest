@@ -443,7 +443,6 @@ def print_paramlist(parms, arghack=False):
 
 
 
-
 def print_value_call(v, ctx):
     left = v['func']
     ftype = left['type']
@@ -473,6 +472,7 @@ def print_value_call(v, ctx):
     while i < n:
         a = values[i]
 
+        # не всегда когда есть аргумент есть и параметер (!)
         try:
             # если тип аргумента отличается модификатором (const, volatile)
             # то явно приведем его к типу параметра, чтобы C не ругался
@@ -480,17 +480,17 @@ def print_value_call(v, ctx):
             p = params[i]
 
             if 'wrapped_array' in p['type']['att']:
-                out("*(")
-                print_type(p['type'], need_space_after=False)
-                out("*)&")
+                print_cast_hard(p['type'], a)
 
             elif not type.eq(p['type'], a['type'], opt=['att_checking']):
-                out("("); print_type(p['type'], need_space_after=False); out(")")
+                print_cast(p['type'], a)
+
+            else:
+                print_value(a, ctx=ctx)
+
         except:
-            pass
+            print_value(a, ctx=ctx)
 
-
-        print_value(a, ctx=ctx)
         i = i + 1
         if i < n:
             out(", ")
@@ -528,13 +528,17 @@ def print_value_access_ptr(v, ctx):
 
 
 
+def print_cast_hard(t, v, ctx=[]):
+    out("*(")
+    print_type(t, need_space_after=False)
+    out(" *)&")
+    need_wrap = precedence(v) < precedence({'kind': 'cast'})
+    print_value(v, ctx=ctx, need_wrap=need_wrap)
 
-def print_cast(t, v, hard_cast=False, ctx=[]):
-    from_type = v['type']
-    to_type = t
 
+def print_cast(t, v, ctx=[]):
     out("(")
-    print_type(to_type, need_space_after=False)
+    print_type(t, need_space_after=False)
     out(")")
     need_wrap = precedence(v) < precedence({'kind': 'cast'})
     print_value(v, ctx=ctx, need_wrap=need_wrap)
@@ -1060,12 +1064,11 @@ def print_stmt_return(x):
 
         global cfunc
         to = cfunc['type']['to']
-        if 'wrapped_array' in to['att']:
-            out("*(")
-            print_type(to, need_space_after=False)
-            out(" *)&")
 
-        print_value(x['value'])
+        if 'wrapped_array' in to['att']:
+            print_cast_hard(to, x['value'])
+        else:
+            print_value(x['value'])
 
     out(";")
 
@@ -1247,6 +1250,7 @@ def print_wrapped_array(type):
     print_type(type['of'], need_space_after=True)
     out("a["); print_value(type['volume']); out("]")
     out(";};\n")
+
 
 def print_func_wrappers(f):
     ft = f['type']
