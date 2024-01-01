@@ -398,16 +398,23 @@ def do_type_enum(t):
 def do_type_func(t):
     params = []
 
-    for param in t['params']:
-        param = do_field(param)
+    for _param in t['params']:
+        param = do_field(_param)
         if type.is_array(param['type']):
-            error("function parameter cannot be an array", param)
+            #error("function parameter cannot be an array", _param)
+            param['type']['att'].append('wrapped')
+
         if param != None:
             params.append(param)
 
     to = None
     if t['to'] != None:
         to = do_type(t['to'])
+
+        if type.is_array(to):
+            #error("function return value cannot be an array", t['to'])
+            to['att'].append('wrapped')
+
     else:
         to = type.typeUnit
 
