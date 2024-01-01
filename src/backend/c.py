@@ -913,7 +913,8 @@ def print_value_literal(x, ctx):
 
 def print_value_by_id(x):
     if 'wrapped_array' in x['type']['att']:
-        out("%s." % x['id']['str'])
+        out("%s.a" % (x['id']['str']))
+        return
 
     out("%s" % x['id']['str'])
 
@@ -1245,8 +1246,7 @@ def print_wrapped_array(type, id_str):
     out(type['id']['str'])
     out (" {")
     print_type(type['of'], need_space_after=True)
-    out(id_str)
-    out("["); print_value(type['volume']); out("]")
+    out("a["); print_value(type['volume']); out("]")
     out(";};\n")
 
 

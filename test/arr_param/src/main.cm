@@ -12,6 +12,15 @@ func swap (x: [2]Int32) -> [2]Int32 {
 }
 
 func main () -> Int {
+    var a: [2]Int32
+    a[0] = 10
+    a[1] = 20
+
+    let b = swap(a)
+
+    printf("b[0] = %i\n", b[0])
+    printf("b[1] = %i\n", b[1])
+
     printf("hello world!\n")
     return 0
 }
