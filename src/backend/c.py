@@ -587,12 +587,7 @@ def print_value_cast(x, ctx):
 
     if type.is_va_list(from_type):
         global va_id
-        #rv = do_eval(value)
-        #return llvm_va_arg(rv, to_type)
-        out("va_arg(%s" % va_id)
-
-        #print_value(value, [], need_wrap=False)
-        out(", ")
+        out("va_arg(%s, " % va_id)
         print_type(to_type, need_space_after=False)
         out(")")
         return
