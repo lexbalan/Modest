@@ -2,8 +2,7 @@
 target datalayout = "e-m:o-i64:64-i128:128-n32:64-S128"
 target triple = "arm64-apple-macosx12.0.0"
 
-
-declare void @llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1); -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
 
 
 
@@ -126,12 +125,6 @@ define [10 x i8] @ret_str() {
 }
 
 
-%Point = type {
-	i32,
-	i32
-}
-
-
 @global_array = global [2 x i32] [
     i32 1,
     i32 2
@@ -155,14 +148,6 @@ define i32 @main() {
     %12 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([11 x i8]* @str3 to [0 x i8]*), i32 %11)
     %13 = extractvalue [2 x i32] %10, 1
     %14 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([11 x i8]* @str4 to [0 x i8]*), i32 %13)
-    %a0 = alloca [10 x i32]
-    %a1 = alloca [10 x i32]
-    %15 = load [10 x i32], [10 x i32]* %a1
-    store [10 x i32] %15, [10 x i32]* %a0
-    %p0 = alloca %Point
-    %p1 = alloca %Point
-    %16 = load %Point, %Point* %p1
-    store %Point %16, %Point* %p0
     ret i32 0
 }
 

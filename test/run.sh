@@ -16,3 +16,4 @@ cd xor && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
 cd sha256 && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
 cd shift && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
 cd string_concat_eq && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
+cd assignation && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..

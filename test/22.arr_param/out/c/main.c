@@ -1,5 +1,4 @@
 
-#include <string.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -29,12 +28,6 @@ struct ret_str_retval ret_str(void)
 }
 
 
-typedef struct {
-    int32_t x;
-    int32_t y;
-} Point;
-
-
 int32_t global_array[2] = {1, 2};
 
 int main(void)
@@ -60,16 +53,6 @@ int main(void)
     var s: [10]Char8 = c
     printf("c = %s\n", &s)
     */
-
-    int32_t a0[10];
-    int32_t a1[10];
-
-    memcpy(&a0, &a1, sizeof(int32_t [10]));
-
-    Point p0;
-    Point p1;
-
-    memcpy(&p0, &p1, sizeof(Point));
 
     return 0;
 }
