@@ -319,6 +319,11 @@ def do_type_pointer(t):
 def do_type_array(t):
     of = do_type(t['of'])
 
+
+    if type.is_undefined_array(of):
+        error("cannot construct type array of undefined array", t['of']['ti'])
+        return hlir_type_bad()
+
     volume_expr = None
     if t['size'] != None:
         volume_expr = do_value(t['size'])
