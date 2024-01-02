@@ -327,6 +327,9 @@ def do_type_array(t):
     volume_expr = None
     if t['size'] != None:
         volume_expr = do_value(t['size'])
+        if not value_is_immediate(volume_expr):
+            error("array dimension must be immediate", t['size']['ti'])
+            return hlir_type_bad(t['ti'])
 
     tx = hlir_type_array(of, volume=volume_expr, ti=t['ti'])
 
