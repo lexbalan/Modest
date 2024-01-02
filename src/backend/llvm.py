@@ -1702,6 +1702,12 @@ def run(module, outname):
         lo("declare void @llvm.va_copy(i8*, i8*)")
         lo("declare void @llvm.va_end(i8*)")
 
+    # llvm.memcpy intrinsic
+    # <dest> <src> <len> <isvolatile>
+    if 'use_memcpy' in module['options']:
+        lo("declare void @llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)")
+        #lo("declare void @llvm.memcpy.p0.p0.i64(ptr, ptr, i64, i1)")
+
     print_module(module)
     output_close()
 

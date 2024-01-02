@@ -2,7 +2,8 @@
 target datalayout = "e-m:o-i64:64-i128:128-n32:64-S128"
 target triple = "arm64-apple-macosx12.0.0"
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
+
+declare void @llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1); -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
 
 
 
@@ -95,7 +96,6 @@ declare void @perror(%ConstCharStr*)
 @str2 = private constant [11 x i8] [i8 97, i8 91, i8 49, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 @str3 = private constant [11 x i8] [i8 98, i8 91, i8 48, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 @str4 = private constant [11 x i8] [i8 98, i8 91, i8 49, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
-@str5 = private constant [14 x i8] [i8 104, i8 101, i8 108, i8 108, i8 111, i8 32, i8 119, i8 111, i8 114, i8 108, i8 100, i8 33, i8 10, i8 0]
 
 
 
@@ -109,6 +109,26 @@ define [2 x i32] @swap([2 x i32] %x) {
     store i32 %3, i32* %4
     %5 = load [2 x i32], [2 x i32]* %out
     ret [2 x i32] %5
+}
+
+define [10 x i8] @ret_str() {
+    %1 = insertvalue [10 x i8] zeroinitializer, i8 104, 0
+    %2 = insertvalue [10 x i8] %1, i8 101, 1
+    %3 = insertvalue [10 x i8] %2, i8 108, 2
+    %4 = insertvalue [10 x i8] %3, i8 108, 3
+    %5 = insertvalue [10 x i8] %4, i8 111, 4
+    %6 = insertvalue [10 x i8] %5, i8 33, 5
+    %7 = insertvalue [10 x i8] %6, i8 zeroinitializer, 6
+    %8 = insertvalue [10 x i8] %7, i8 zeroinitializer, 7
+    %9 = insertvalue [10 x i8] %8, i8 zeroinitializer, 8
+    %10 = insertvalue [10 x i8] %9, i8 zeroinitializer, 9
+    ret [10 x i8] %10
+}
+
+
+%Point = type {
+	i32,
+	i32
 }
 
 
@@ -135,7 +155,14 @@ define i32 @main() {
     %12 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([11 x i8]* @str3 to [0 x i8]*), i32 %11)
     %13 = extractvalue [2 x i32] %10, 1
     %14 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([11 x i8]* @str4 to [0 x i8]*), i32 %13)
-    %15 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([14 x i8]* @str5 to [0 x i8]*))
+    %a0 = alloca [10 x i32]
+    %a1 = alloca [10 x i32]
+    %15 = load [10 x i32], [10 x i32]* %a1
+    store [10 x i32] %15, [10 x i32]* %a0
+    %p0 = alloca %Point
+    %p1 = alloca %Point
+    %16 = load %Point, %Point* %p1
+    store %Point %16, %Point* %p0
     ret i32 0
 }
 

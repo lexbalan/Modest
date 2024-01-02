@@ -240,11 +240,9 @@ def print_array_asis(t):
     out("]")
 
 
-# Возвращает False если НЕ нужно отделять пробелом после типа
-# (только указатели *)
-# блядские аргументы по умолчанию - нихера с ними не работает!
-def print_type(t, need_space_after, _print_array_asis=False):
-    rc = print_type2(t, print_aka=True, need_space_after=need_space_after, _print_array_asis=_print_array_asis)
+
+def print_type(t, need_space_after=False, _print_array_asis=False):
+    return print_type2(t, print_aka=True, need_space_after=need_space_after, _print_array_asis=_print_array_asis)
 
 
 def print_type_full(t, _print_array_asis=False):
@@ -453,7 +451,7 @@ def print_value_call(v, ctx):
         # Вызов функции через указатель
         # поскольку у нас указатели на функции это *void
         # при вызове приводим левое к указателю на функцию
-        out("(("); print_type(ftype['to'], need_space_after=False); out("(*)")
+        out("(("); print_type(ftype['to']); out("(*)")
         arghack = 'arghack' in ftype['att']
         print_paramlist(ftype['params'], arghack)
         out(")")
@@ -531,7 +529,7 @@ def print_value_access_ptr(v, ctx):
 
 def print_cast_hard(t, v, ctx=[]):
     out("*(")
-    print_type(t, need_space_after=False)
+    print_type(t)
     out(" *)&")
     need_wrap = precedence(v) < precedence({'kind': 'cast'})
     print_value(v, ctx=ctx, need_wrap=need_wrap)
@@ -539,7 +537,7 @@ def print_cast_hard(t, v, ctx=[]):
 
 def print_cast(t, v, ctx=[]):
     out("(")
-    print_type(t, need_space_after=False)
+    print_type(t)
     out(")")
     need_wrap = precedence(v) < precedence({'kind': 'cast'})
     print_value(v, ctx=ctx, need_wrap=need_wrap)
@@ -598,7 +596,7 @@ def print_value_cast(x, ctx):
         if type.is_record(from_type):
             # *((RecordType *)&value)
             out("*((")
-            print_type(to_type, need_space_after=False)
+            print_type(to_type)
             out(" *)&")
             print_value(value, [], need_wrap=True)
             out(")")
@@ -608,7 +606,7 @@ def print_value_cast(x, ctx):
     if type.is_va_list(from_type):
         global va_id
         out("va_arg(%s, " % va_id)
-        print_type(to_type, need_space_after=False)
+        print_type(to_type)
         out(")")
         return
 
@@ -628,7 +626,7 @@ def print_value_cast(x, ctx):
         #if type.is_signed(from_type): # is_signed (integers, chars)
         if from_type['size'] < to_type['size']:
             out("((")
-            print_type(to_type, need_space_after=False)
+            print_type(to_type)
             out(")")
             #out("/*?*/")
             nat_same_sz = type.select_nat(from_type['power'])
@@ -713,7 +711,7 @@ def print_value_literal_arr(v, ctx):
 
 def print_value_literal_record(v, ctx):
     out("(")
-    print_type(v['type'], need_space_after=False)
+    print_type(v['type'])
     out(")")
 
     out("{")
@@ -972,7 +970,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
     # в LLVM перчаем просто значение
 
     #if 'need_cast' in v['att']:
-    #    out("("); print_type(to_type, need_space_after=False); out(")")
+    #    out("("); print_type(to_type); out(")")
 
     if print_just_id:
         if 'id' in x:
@@ -1096,15 +1094,15 @@ def print_stmt_let(x):
 
 
 
-def assign_array_by_items(x):
-    out("// array assignation")
-    for i in range(x['right']['type']['size']):
-        nl_indent()
-        print_value(x['left']);
-        out("[%s] = " % i)
-        print_value(x['right']);
-        out("[%s];" % i)
-        i = i + 1
+def memcopy(left, right):
+    out("memcpy(&")
+    print_value(left)
+    out(", &")
+    print_value(right)
+    out(", sizeof(")
+    print_type(left['type'], need_space_after=False, _print_array_asis=True)
+    out("));")
+
 
 
 def assign_record_by_fields(x):
@@ -1123,14 +1121,13 @@ def assign_record_by_fields(x):
 def assign(left, right):
 
     # в си нельзя просто так присвоить массив // или структуру
-    if right['kind'] == 'var':
+    if left['kind'] == 'var' and right['kind'] == 'var':
         if type.is_array(right['type']):
-            assign_array_by_items(x)
+            memcopy(left, right)
             return
-
-        #elif type.is_record(x['right']['type']):
-            #assign_record_by_fields(x)
-            #return
+        elif type.is_record(right['type']):
+            memcopy(left, right)
+            return
 
     print_value(left)
     out(" = ")
@@ -1231,7 +1228,7 @@ def print_func_signature(id, typ, arghack=False):
         if t['kind'] == 'array':
             t = t['of']
 
-    print_type(t, need_space_after=False)
+    print_type(t)
     out(" " + "*" * ptr_level)
     out("%s" % id)
     #arghack = 'arghack' in t['att']
@@ -1385,9 +1382,9 @@ def print_def_type(x):
         out("volatile ")
 
     if is_defined_array:
-        print_type(t['of'], need_space_after=False)#, print_aka=False)
+        print_type(t['of'])#, print_aka=False)
     else:
-        print_type(t, need_space_after=False)#, print_aka=False)
+        print_type(t)#, print_aka=False)
 
     out(" %s" % id_str)
     if is_defined_array:
@@ -1571,6 +1568,9 @@ def run(module, outname):
 
     if 'use_arghack' in module['options']:
         out("\n#include <stdarg.h>")
+
+    if 'use_memcpy' in module['options']:
+        out("\n#include <string.h>")
 
     # search for @c_include("...")
     cdirectives(module)

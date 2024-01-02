@@ -176,21 +176,23 @@ def type_init():
 
 
 def select_int(sz):
-    if sz <= 8: return typeInt8
-    elif sz <= 16: return typeInt16
-    elif sz <= 32: return typeInt32
-    elif sz <= 64: return typeInt64
-    elif sz <= 128: return typeInt128
-    else: return None
+    t = None
+    if sz <= 8: t = typeInt8
+    elif sz <= 16: t = typeInt16
+    elif sz <= 32: t = typeInt32
+    elif sz <= 64: t = typeInt64
+    elif sz <= 128: t = typeInt128
+    return copy.copy(t)
 
 
 def select_nat(sz):
-    if sz <= 8: return typeNat8
-    elif sz <= 16: return typeNat16
-    elif sz <= 32: return typeNat32
-    elif sz <= 64: return typeNat64
-    elif sz <= 128: return typeNat128
-    else: return None
+    t = None
+    if sz <= 8: t = typeNat8
+    elif sz <= 16: t = typeNat16
+    elif sz <= 32: t = typeNat32
+    elif sz <= 64: t = typeNat64
+    elif sz <= 128: t = typeNat128
+    return copy.copy(t)
 
 
 def select_numeric(sz, is_signed):

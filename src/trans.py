@@ -35,6 +35,13 @@ root_context = None
 module = None
 
 
+# добавляет опцию в модуль ('use_arghack', 'use_memcpy')
+def module_option(option):
+    global module
+    if not option in module['options']:
+        #print("module_option('%s')" % option)
+        module['options'].append(option)
+
 
 # тепреь вызывается только из конструктора строки (value)
 def module_strings_add(v):
@@ -1375,6 +1382,9 @@ def do_stmt_assign(x):
     r = value_cons_implicit(r, l['type'], x['right']['ti'])
     type.check(l['type'], r['type'], x['ti'])
 
+    if type.is_record(l['type']) or type.is_array(l['type']):
+        module_option('use_memcpy')
+
     return hlir_stmt_assign(l, r, ti=x['ti'])
 
 
@@ -1747,7 +1757,7 @@ def def_func(x):
         cfunc['va_id'] = va_id
         cfunc['att'].append('arghack')
         add_local_var(va_id, last_param['type'], None, va_id['ti'])
-        module['options'].append("use_arghack")
+        module_option('use_arghack')
 
 
     fn['stmt'] = do_stmt_block(x['stmt'])
