@@ -52,11 +52,13 @@ func main() -> Int {
     printf("c = %s\n", &s)
     */
 
+    // copy arrays by value
     var a0: [10]Int32
     var a1: [10]Int32
 
     a0 = a1
 
+    // copy records by value
     var p0: Point
     var p1: Point
 
