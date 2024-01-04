@@ -10,6 +10,8 @@ from value.value import value_attribute_check, value_is_zero, value_print, value
 from util import nbits_for_num, get_item_with_id, utf8_cc_arr_to_utf32_cc_arr, utf16_cc_arr_to_utf32_cc_arr
 from main import settings
 
+import copy
+
 INDENT_SYMBOL = " " * 4
 
 FUNC_EMPTY_PARAMLIST = "(void)"
@@ -140,6 +142,27 @@ def print_type_numeric(t):
 
 
 
+def print_array_volume(t):
+    out("[")
+
+    # многомерные массивы в C не существуют, поэтому печатаем один массив
+    # размер которого будет произведением всех измерений
+    if type.is_defined_array(t['of']):
+        vol = t['volume']['imm']
+        t2 = t
+        while type.is_defined_array(t2['of']):
+            vol = vol * t2['volume']['imm']
+            t2 = t2['of']
+
+        #print("VOL=%d" % vol)
+        out("%d" % vol)
+    else:
+        print_value(t['volume'])
+
+    out("]")
+
+
+
 def print_type_array(t, print_as_pointer, need_space_after):
     print_type(t['of'], need_space_after=True)
 
@@ -154,7 +177,7 @@ def print_type_array(t, print_as_pointer, need_space_after):
 
 
     if t['volume'] != None:
-        out("["); print_value(t['volume']); out("]")
+        print_array_volume(t)
     else:
         out("*")
 
@@ -232,12 +255,16 @@ def print_type_enum(t):
     out("}")
 
 
-def print_array_asis(t):
-    print_type(t['of'], need_space_after=True)
-    out("[")
-    print_value(t['volume'])
 
-    out("]")
+# исп. напр. для sizeof(uint32_t [10])
+def print_type_array_asis(t):
+    item_type = t['of']
+    while type.is_array(item_type):
+        item_type = item_type['of']
+
+    print_type(item_type, need_space_after=True)
+    print_array_volume(t)
+
 
 
 
@@ -319,7 +346,7 @@ def print_type2(t, print_aka, need_space_after, _print_array_asis):
 
     elif type.is_array(t):
         if _print_array_asis:
-            print_array_asis(t)
+            print_type_array_asis(t)
             return
         print_type_array(t, print_as_pointer=True, need_space_after=need_space_after)
 
@@ -498,20 +525,33 @@ def print_value_call(v, ctx):
 
 
 
-def print_value_index(v, ctx):
-    array = v['array']
-    index = v['index']
-    need_wrap = precedence(array) < precedence(v)
+"""def print_array_index(x):
+    index = x['index']
+    out("[")
+    print_value(index)
+    out("]")"""
+
+
+def print_value_index(x, ctx):
+    array = x['array']
+    need_wrap = precedence(array) < precedence(x)
     print_value(array, need_wrap=need_wrap)
-    out("["); print_value(index); out("]")
+
+    index = x['index']
+    out("[")
+    print_value(index)
+    out("]")
 
 
-def print_value_index_ptr(v, ctx):
-    ptr2array = v['pointer']
-    index = v['index']
-    need_wrap = precedence(ptr2array) < precedence(v)
+def print_value_index_ptr(x, ctx):
+    ptr2array = x['pointer']
+    need_wrap = precedence(ptr2array) < precedence(x)
     print_value(ptr2array, need_wrap=need_wrap)
-    out("["); print_value(index); out("]")
+
+    index = x['index']
+    out("[")
+    print_value(index)
+    out("]")
 
 
 def print_value_access(v, ctx):
@@ -1074,9 +1114,20 @@ def print_stmt_return(x):
 
 
 def print_stmt_defvar(x):
+    init_value = x['var']['init']
+
+    if init_value != None:
+        if type.is_array(x['var']['type']):
+            id_str = x['var']['id']['str']
+            print_field_array(init_value['type'], id_str, do_wrapped=False)
+            out(";\n")
+            indent()
+            save_array(id_str, init_value, from_var=True)
+            return
+
+
     print_field(x['var'])
 
-    init_value = x['var']['init']
     if init_value != None:
         out(" = ")
         print_value(init_value)
@@ -1085,8 +1136,49 @@ def print_stmt_defvar(x):
 
 
 
+def save_array(id_str, v, from_var):
+    # если справа массив (а C не умеет присваивать массивы)
+    #print("save_array")
+
+    if 'wrapped_array' in v['type']['att']:
+        print("wrapped_array")
+        # -> *(struct ret_str_retval *)&c = ret_str();
+        out("*(")
+        print_type(v['type'])
+        out(" *)&")
+        need_wrap = precedence(v) < precedence({'kind': 'cast'})
+
+        # убираем отметку 'wrapped_array' с типа
+        # грязный хак, но пока не знаю как иначе...
+        v['type'] = copy.copy(v['type'])
+        v['type']['att'].remove('wrapped_array')
+        #print_value(v, ctx=[], need_wrap=need_wrap)
+        out(id_str)
+        out(" = ")
+        print_value(v, print_just_id=False)
+        out(";")
+
+    else:
+        print("not wrapped_array")
+        # -> memcpy(&s0, &c, sizeof s0);
+        out("memcpy(&%s, &" % id_str)
+        print_value(v, print_just_id=from_var)
+        out(", sizeof %s);" % id_str)
+
+
+
+
 def print_stmt_let(x):
     v = x['value']
+
+    if type.is_array(v['type']):
+        id_str = x['id']['str']
+        print_field_array(v['type'], id_str, do_wrapped=False)
+        out(";\n")
+        indent()
+        save_array(id_str, v, from_var=False)
+        return
+
     print_field2(x['id'], v['type'])
     out(" = ")
     print_value(v, print_just_id=False)
@@ -1099,35 +1191,30 @@ def memcopy(left, right):
     print_value(left)
     out(", &")
     print_value(right)
-    out(", sizeof(")
-    print_type(left['type'], need_space_after=False, _print_array_asis=True)
-    out("));")
+    out(", sizeof ")
+    print_value(left)
+    out(");")
 
-
-
-def assign_record_by_fields(x):
-    # в си нельзя просто так присвоить запись
-    #print("assign_record_by_fields " + x['right']['kind'])
-    out("// record assignation")
-    for f in x['right']['type']['fields']:
-        f_id_str = f['id']['str']
-        nl_indent()
-        print_value(x['left']);
-        out(".%s = " % f_id_str)
-        print_value(x['right']);
-        out(".%s;" % f_id_str)
 
 
 def assign(left, right):
+    # в си нельзя просто так присвоить массив
+    # приходится использовать memcpy()
+    if type.is_array(right['type']):
+        if right['kind'] != 'call':
+            memcopy(left, right)
+        else:
+            #print(right['func']['type']['att'])
+            out("/* * */")
+            """out("*(")
+            print_type(right['type'], _print_array_asis=True)
+            out(" *)&")
+            print_value(left)
 
-    # в си нельзя просто так присвоить массив // или структуру
-    if left['kind'] == 'var' and right['kind'] == 'var':
-        if type.is_array(right['type']):
-            memcopy(left, right)
-            return
-        elif type.is_record(right['type']):
-            memcopy(left, right)
-            return
+            out(" = ")
+            print_value(right)
+            out(";")"""
+        return
 
     print_value(left)
     out(" = ")
@@ -1240,13 +1327,12 @@ def print_func_signature(id, typ, arghack=False):
 
 
 
-
-
 def print_wrapped_array(type):
     out(type['wrapped_id'])
     out (" {")
     print_type(type['of'], need_space_after=True)
-    out("a["); print_value(type['volume']); out("]")
+    out("a");
+    print_array_volume(type)
     out(";};\n")
 
 
@@ -1339,7 +1425,6 @@ def print_def_func(x):
     va_id = None
 
     indent_down()
-
     out("\n}")
 
     cfunc = None
@@ -1382,48 +1467,54 @@ def print_def_type(x):
         out("volatile ")
 
     if is_defined_array:
-        print_type(t['of'])#, print_aka=False)
+        print_type(t['of'])
     else:
-        print_type(t)#, print_aka=False)
+        print_type(t)
 
     out(" %s" % id_str)
     if is_defined_array:
-        out("["); print_value(t['volume']); out("]")
+        print_array_volume(t)
     out(";")
 
 
 
-def print_field_regular(t, id):
+def print_field_regular(t, id_str):
     print_type(t, need_space_after=True)
-    out("%s" % id)
+    out("%s" % id_str)
 
 
-def print_field_pointer(t, id):
+def print_field_pointer(t, id_str):
     print_type(t, need_space_after=True)
-    out("%s" % id)
+    out("%s" % id_str)
 
 
 
-def print_field_array(t, id):
-    # get list element type
-    root_type = t
-    while root_type['kind'] == 'array':
+def print_field_array(t, id_str, do_wrapped=True):
+
+    if do_wrapped:
         if 'wrapped_array' in t['att']:
-            out("%s %s" % (t['wrapped_id'], id))
+            out("%s %s" % (t['wrapped_id'], id_str))
             return
 
+    # get array item type (array_root_type)
+    array_root_type = t
+    while array_root_type['kind'] == 'array':
+        array_root_type = array_root_type['of']
 
-        root_type = root_type['of']
+    print_type(array_root_type, need_space_after=True)
 
-    print_type(root_type, need_space_after=True)
+    out("%s" % id_str)
 
-    out("%s" % id)
+    #out("/**/")
+    print_array_volume(t)
 
-    # print arrays dimensions
+    """# print arrays dimensions
     array_type = t
-    while type.is_array(array_type):
-        out("["); print_value(array_type['volume']); out("]")
-        array_type = array_type['of']
+    while type.is_array(array_root_type):
+        out("/*^^*/")
+        print_array_volume(array_root_type)
+        array_type = array_type['of']"""
+
 
 
 # из за того что с C типы записваются через жопу
@@ -1631,3 +1722,15 @@ def run(module, outname):
 
 
 
+
+"""def assign_record_by_fields(x):
+    # в си нельзя просто так присвоить запись
+    #print("assign_record_by_fields " + x['right']['kind'])
+    out("// record assignation")
+    for f in x['right']['type']['fields']:
+        f_id_str = f['id']['str']
+        nl_indent()
+        print_value(x['left']);
+        out(".%s = " % f_id_str)
+        print_value(x['right']);
+        out(".%s;" % f_id_str)"""
