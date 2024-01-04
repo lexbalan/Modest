@@ -503,7 +503,7 @@ def print_value_by_id(x, ctx):
 
 
 def print_value_let(x, ctx):
-    return print_value(x['value'])
+    out(x['id']['str'])
 
 
 
@@ -597,7 +597,7 @@ def print_stmt_defvar(x):
 
 def print_stmt_let(x):
     out("let %s = " % x['id']['str'])
-    print_value(x['value'], print_just_id=False)
+    print_value(x['init_value'], print_just_id=False)
 
 
 def print_stmt_assign(x):

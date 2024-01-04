@@ -1225,7 +1225,7 @@ def print_stmt_def_var(x):
 
 def print_stmt_let(x):
     id = x['value']['id']
-    val = x['value']['value']
+    val = x['init_value']
     v = do_reval(val)
     locals_add(x['id']['str'], v)
     return None

@@ -894,6 +894,10 @@ def do_value_call(x):
     if 'dispensable' in f['att']:
         rv['att'].append('dispensable')
 
+    if 'wrapped_array' in f['type']['to']['att']:
+        info("- MARKED call!", x)
+        rv['att'].append('wrapped_array')
+
     return rv
 
 
@@ -1364,7 +1368,7 @@ def do_stmt_let(x):
     typ['att'].append('const')
     v['type'] = typ
 
-    const_value = hlir_value_const(id, v['type'], value=v, ti=x['id']['ti'])
+    const_value = hlir_value_const(id, v['type'], value=None, ti=x['id']['ti'])
     const_value['att'].extend(['local']) # need for LLVM printer (!)
 
     if 'nl_end' in v:
@@ -1375,7 +1379,9 @@ def do_stmt_let(x):
 
     module['context'].value_add(id['str'], const_value)
 
-    return hlir_stmt_let(id, const_value, ti=x['ti'])
+    stmt_let = hlir_stmt_let(id, const_value, ti=x['ti'])
+    stmt_let['init_value'] = v
+    return stmt_let
 
 
 
@@ -1761,6 +1767,11 @@ def def_func(x):
 
         param_value = hlir_value_const(param_id, param['type'], ti=param['ti'])
         param_value['att'].extend(['local'])
+
+        if 'wrapped_array' in param['type']['att']:
+            print("- MARKED param!")
+            param_value['att'].append('wrapped_array')
+
         module['context'].value_add(param_id['str'], param_value)
         i = i + 1
 

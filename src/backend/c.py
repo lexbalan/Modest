@@ -968,7 +968,7 @@ def print_value_literal(x, ctx):
 
 
 def print_value_by_id(x):
-    if 'wrapped_array' in x['type']['att']:
+    if 'wrapped_array' in x['att']:
         out("%s.a" % (x['id']['str']))
         return
 
@@ -976,7 +976,7 @@ def print_value_by_id(x):
 
 
 def print_value_let(x, ctx):
-    return print_value(x['value'])
+    out(x['id']['str'])
 
 
 def print_value_sizeof(x, ctx):
@@ -1119,6 +1119,7 @@ def print_stmt_defvar(x):
     if init_value != None:
         if type.is_array(x['var']['type']):
             id_str = x['var']['id']['str']
+
             print_field_array(init_value['type'], id_str, do_wrapped=False)
             out(";\n")
             indent()
@@ -1140,18 +1141,14 @@ def save_array(id_str, v, from_var):
     # если справа массив (а C не умеет присваивать массивы)
     #print("save_array")
 
-    if 'wrapped_array' in v['type']['att']:
-        print("wrapped_array")
+    if 'wrapped_array' in v['att']:
+        print("wrapped_array %s" % v['kind'])
         # -> *(struct ret_str_retval *)&c = ret_str();
         out("*(")
         print_type(v['type'])
         out(" *)&")
         need_wrap = precedence(v) < precedence({'kind': 'cast'})
 
-        # убираем отметку 'wrapped_array' с типа
-        # грязный хак, но пока не знаю как иначе...
-        v['type'] = copy.copy(v['type'])
-        v['type']['att'].remove('wrapped_array')
         #print_value(v, ctx=[], need_wrap=need_wrap)
         out(id_str)
         out(" = ")
@@ -1159,11 +1156,12 @@ def save_array(id_str, v, from_var):
         out(";")
 
     else:
-        print("not wrapped_array")
+        print("not wrapped_array %s" % v['kind'])
         # -> memcpy(&s0, &c, sizeof s0);
         out("memcpy(&%s, &" % id_str)
         print_value(v, print_just_id=from_var)
         out(", sizeof %s);" % id_str)
+        out("/* ? */")
 
 
 
@@ -1176,12 +1174,12 @@ def print_stmt_let(x):
         print_field_array(v['type'], id_str, do_wrapped=False)
         out(";\n")
         indent()
-        save_array(id_str, v, from_var=False)
+        save_array(id_str, x['init_value'], from_var=False)
         return
 
     print_field2(x['id'], v['type'])
     out(" = ")
-    print_value(v, print_just_id=False)
+    print_value(x['init_value'], print_just_id=False)
     out(";")
 
 
@@ -1201,19 +1199,18 @@ def assign(left, right):
     # в си нельзя просто так присвоить массив
     # приходится использовать memcpy()
     if type.is_array(right['type']):
-        if right['kind'] != 'call':
+        if not 'wrapped_array' in right['att']:
             memcopy(left, right)
         else:
-            #print(right['func']['type']['att'])
-            out("/* * */")
-            """out("*(")
-            print_type(right['type'], _print_array_asis=True)
+            f_to = right['func']['type']['to']
+            out("*(")
+            print_type(f_to)
             out(" *)&")
             print_value(left)
-
             out(" = ")
             print_value(right)
-            out(";")"""
+            out(";")
+            #out("/* * */")
         return
 
     print_value(left)
