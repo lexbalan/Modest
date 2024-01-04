@@ -95,7 +95,7 @@ def info(s, ti=None):
             if 'ti' in ti:
                 ti = ti['ti']
 
-        pre = '%s:%d:%d: ' % (ti['file'], ti['line'], ti['pos'])
+        pre = '\n%s:%d:%d:\n' % (ti['file'], ti['line'], ti['pos'])
     print(pre + COLOR_INFO + 'info: ' + ENDC + s)
 
     if ti != None:
@@ -116,13 +116,19 @@ def warning(s, ti=None):
     global warncnt
     warncnt = warncnt + 1
 
-    print(COLOR_WARNING + 'warning: ' + ENDC + s)
+    pre = ""
+    if ti != None:
+        pre = '\n%s:%d:%d:\n' % (ti['file'], ti['line'], ti['pos'])
+
+    print(pre + COLOR_WARNING + 'warning: ' + ENDC + s)
+
     if ti != None:
         if ti['isa'] != 'ti':
             if 'ti' in ti:
                 ti = ti['ti']
 
         prelin = "%d |" % ti['line']
+        pre = '\n%s:%d:%d:\n' % (ti['file'], ti['line'], ti['pos'])
 
         lin = getline(ti)
         print(prelin + lin)
@@ -139,7 +145,7 @@ def error(s, ti=None):
             if 'ti' in ti:
                 ti = ti['ti']
 
-        pre = '%s:%d:%d: ' % (ti['file'], ti['line'], ti['pos'])
+        pre = '\n%s:%d:%d:\n' % (ti['file'], ti['line'], ti['pos'])
 
     print(pre + COLOR_ERROR + 'error: ' + ENDC + s)
 

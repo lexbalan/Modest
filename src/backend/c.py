@@ -1142,7 +1142,6 @@ def save_array(id_str, v, from_var):
     #print("save_array")
 
     if 'wrapped_array' in v['att']:
-        print("wrapped_array %s" % v['kind'])
         # -> *(struct ret_str_retval *)&c = ret_str();
         out("*(")
         print_type(v['type'])
@@ -1156,12 +1155,10 @@ def save_array(id_str, v, from_var):
         out(";")
 
     else:
-        print("not wrapped_array %s" % v['kind'])
         # -> memcpy(&s0, &c, sizeof s0);
         out("memcpy(&%s, &" % id_str)
         print_value(v, print_just_id=from_var)
         out(", sizeof %s);" % id_str)
-        out("/* ? */")
 
 
 
