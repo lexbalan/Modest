@@ -534,12 +534,46 @@ def print_value_call(v, ctx):
 
 def print_value_index(x, ctx):
     array = x['array']
-    need_wrap = precedence(array) < precedence(x)
-    print_value(array, need_wrap=need_wrap)
 
-    index = x['index']
+    coord = []
+
+    xx = x
+    while xx['kind'] == 'index':
+        a = xx['array']
+        v = a['type']['volume']
+        coord.append((v, xx['index']))
+        xx = a
+
+    need_wrap = precedence(xx) < precedence(x)
+    print_value(xx, need_wrap=need_wrap)
+
+    # поскольку индексация идет в обратном порядке,
+    # приведем список к прямому порядку (так как индексация записывается)
+    coord.reverse()
+
     out("[")
-    print_value(index)
+
+    # Окончательный индекс равен сумме произведений индексов
+    # на произведение всех размерностей справа
+
+    i = 0
+    n = len(coord)
+    while i < n:
+        c = coord[i]
+        print_value(c[1])
+
+        j = i + 1
+        while j < n:
+            out(" * ")
+            c = coord[i]
+            print_value(c[0])
+            j = j + 1
+
+        if i < (n - 1):
+            out(" + ")
+
+        i = i + 1
+
     out("]")
 
 
