@@ -1354,6 +1354,10 @@ def do_stmt_let(x):
         return hlir_stmt_bad()
 
 
+    if type.is_record(v['type']) or type.is_array(v['type']):
+        module_option('use_memcpy')
+
+
     # add 'const' attribute to type
     # (used by C printer)
     typ = type.type_copy(v['type'])
