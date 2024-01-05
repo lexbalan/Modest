@@ -626,7 +626,7 @@ def type_get_align(t):
     return t['align']
 
 
-def array_item_type(ta):
+def defined_array_item_type(ta):
     array_of = ta['of']
     while is_array(array_of):
         array_of = array_of['of']

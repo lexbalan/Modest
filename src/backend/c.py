@@ -257,7 +257,7 @@ def print_type_enum(t):
 
 # исп. напр. для sizeof(uint32_t [10])
 def print_type_array_asis(t):
-    item_type = type.array_item_type(t)
+    item_type = type.defined_array_item_type(t)
     print_type(item_type, need_space_after=True)
     print_array_volume(t)
 
@@ -1367,7 +1367,7 @@ def print_wrapped_array(_type, id_str):
     out(_type['wrapped_id'])
     out (" {")
 
-    item_type = type.array_item_type(_type)
+    item_type = type.defined_array_item_type(_type)
 
     print_type(item_type, need_space_after=True)
     out(id_str);
