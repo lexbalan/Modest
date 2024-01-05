@@ -627,10 +627,10 @@ def type_get_align(t):
 
 
 def array_item_type(ta):
-    item_type = ta['of']
-    while type.is_array(item_type):
-        item_type = item_type['of']
-    return item_type
+    array_of = ta['of']
+    while is_array(array_of):
+        array_of = array_of['of']
+    return array_of
 
 
 
