@@ -257,13 +257,9 @@ def print_type_enum(t):
 
 # исп. напр. для sizeof(uint32_t [10])
 def print_type_array_asis(t):
-    item_type = t['of']
-    while type.is_array(item_type):
-        item_type = item_type['of']
-
+    item_type = type.array_item_type(t)
     print_type(item_type, need_space_after=True)
     print_array_volume(t)
-
 
 
 
@@ -1365,14 +1361,17 @@ def print_func_signature(id, typ, arghack=False):
 
 
 
+def print_wrapped_array(_type, id_str):
+    # -> struct ret_str_retval {char a[10];};
 
-
-def print_wrapped_array(type):
-    out(type['wrapped_id'])
+    out(_type['wrapped_id'])
     out (" {")
-    print_type(type['of'], need_space_after=True)
-    out("a");
-    print_array_volume(type)
+
+    item_type = type.array_item_type(_type)
+
+    print_type(item_type, need_space_after=True)
+    out(id_str);
+    print_array_volume(_type)
     out(";};\n")
 
 
@@ -1382,9 +1381,9 @@ def print_func_wrappers(f):
     # (обернуты тк C не позволяет принимать возвращать массив по значению)
     for param in ft['params']:
         if 'wrapped_array' in param['type']['att']:
-            print_wrapped_array(param['type'])
+            print_wrapped_array(param['type'], 'a')
     if 'wrapped_array' in ft['to']['att']:
-        print_wrapped_array(ft['to'])
+        print_wrapped_array(ft['to'], 'a')
 
 
 

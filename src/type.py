@@ -626,6 +626,14 @@ def type_get_align(t):
     return t['align']
 
 
+def array_item_type(ta):
+    item_type = ta['of']
+    while type.is_array(item_type):
+        item_type = item_type['of']
+    return item_type
+
+
+
 def print_list_by(lst, method):
     i = 0
     while i < len(lst):
