@@ -419,7 +419,7 @@ def do_type_func(t, func_id="_"):
         pt = param['type']
         if type.is_array(pt):
             #info("array as function parameter", _param)
-            pt['att'].append('wrapped_array')
+            pt['att'].append('wrapped_array_type')
             pt['wrapped_id'] = 'struct ' + func_id + '_' + param['id']['str']
 
         if param != None:
@@ -431,7 +431,7 @@ def do_type_func(t, func_id="_"):
 
         if type.is_array(to):
             #info("array as function return value", t['to'])
-            to['att'].append('wrapped_array')
+            to['att'].append('wrapped_array_type')
             to['wrapped_id'] = 'struct ' + func_id + '_' + 'retval'
 
     else:
@@ -894,8 +894,8 @@ def do_value_call(x):
     if 'dispensable' in f['att']:
         rv['att'].append('dispensable')
 
-    if 'wrapped_array' in f['type']['to']['att']:
-        rv['att'].append('wrapped_array')
+    if type.is_defined_array(f['type']['to']):
+        rv['att'].append('wrapped_array_value')
 
     return rv
 
@@ -1769,8 +1769,8 @@ def def_func(x):
         param_value = hlir_value_const(param_id, param['type'], ti=param['ti'])
         param_value['att'].append('local')
 
-        if 'wrapped_array' in param['type']['att']:
-            param_value['att'].append('wrapped_array')
+        if type.is_defined_array(param['type']):
+            param_value['att'].append('wrapped_array_value')
 
         module['context'].value_add(param_id['str'], param_value)
         i = i + 1

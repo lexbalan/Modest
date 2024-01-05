@@ -274,7 +274,7 @@ def print_type_full(t, _print_array_asis=False):
 def print_type2(t, print_aka, need_space_after, _print_array_asis):
     k = t['kind']
 
-    if 'wrapped_array' in t['att']:
+    if 'wrapped_array_type' in t['att']:
         out(t['wrapped_id'])
         return
 
@@ -506,7 +506,7 @@ def print_value_call(v, ctx):
             p = params[i]
             pt = p['type']
 
-            if 'wrapped_array' in pt['att']:
+            if 'wrapped_array_type' in pt['att']:
                 print_cast_hard(pt, a)
 
             elif not type.eq(pt, a['type'], opt=['att_checking']):
@@ -1009,7 +1009,7 @@ def print_value_literal(x, ctx):
 
 
 def print_value_by_id(x):
-    if 'wrapped_array' in x['att']:
+    if 'wrapped_array_value' in x['att']:
         out("%s.a" % (x['id']['str']))
         return
 
@@ -1144,8 +1144,7 @@ def print_stmt_return(x):
 
         global cfunc
         to = cfunc['type']['to']
-
-        if 'wrapped_array' in to['att']:
+        if type.is_defined_array(to):
             print_cast_hard(to, x['value'])
         else:
             print_value(x['value'])
@@ -1182,14 +1181,12 @@ def save_array(id_str, v, from_var):
     # если справа массив (а C не умеет присваивать массивы)
     #print("save_array")
 
-    if 'wrapped_array' in v['att']:
+    if 'wrapped_array_value' in v['att']:
         # -> *(struct ret_str_retval *)&c = ret_str();
         out("*(")
         print_type(v['type'])
         out(" *)&")
         need_wrap = precedence(v) < precedence({'kind': 'cast'})
-
-        #print_value(v, ctx=[], need_wrap=need_wrap)
         out(id_str)
         out(" = ")
         print_value(v, print_just_id=False)
@@ -1200,7 +1197,6 @@ def save_array(id_str, v, from_var):
         out("memcpy(&%s, &" % id_str)
         print_value(v, print_just_id=from_var)
         out(", sizeof %s);" % id_str)
-
 
 
 
@@ -1237,8 +1233,8 @@ def memcopy(left, right):
 def assign(left, right):
     # в си нельзя просто так присвоить массив
     # приходится использовать memcpy()
-    if type.is_array(right['type']):
-        if not 'wrapped_array' in right['att']:
+    if type.is_defined_array(right['type']):
+        if not 'wrapped_array_value' in right['att']:
             memcopy(left, right)
         else:
             f_to = right['func']['type']['to']
@@ -1249,7 +1245,6 @@ def assign(left, right):
             out(" = ")
             print_value(right)
             out(";")
-            #out("/* * */")
         return
 
     print_value(left)
@@ -1377,9 +1372,9 @@ def print_func_wrappers(f):
     # печатаем обернутые параметры-массивы и возврашаемые массивы
     # (обернуты тк C не позволяет принимать возвращать массив по значению)
     for param in ft['params']:
-        if 'wrapped_array' in param['type']['att']:
+        if type.is_defined_array(param['type']):
             print_wrapped_array(param['type'])
-    if 'wrapped_array' in ft['to']['att']:
+    if type.is_defined_array(ft['to']):
         print_wrapped_array(ft['to'])
 
 
@@ -1528,7 +1523,7 @@ def print_field_pointer(t, id_str):
 def print_field_array(t, id_str, do_wrapped=True):
 
     if do_wrapped:
-        if 'wrapped_array' in t['att']:
+        if 'wrapped_array_type' in t['att']:
             out("%s %s" % (t['wrapped_id'], id_str))
             return
 
