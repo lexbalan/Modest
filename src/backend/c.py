@@ -547,7 +547,7 @@ def print_value_index(x, ctx):
 
     dims = []
     yy = xx['type']
-    while type.is_array(yy):
+    while type.is_defined_array(yy):
         dims.append(yy['volume'])
         yy = yy['of']
 
@@ -1157,7 +1157,7 @@ def print_stmt_defvar(x):
     init_value = x['var']['init']
 
     if init_value != None:
-        if type.is_array(x['var']['type']):
+        if type.is_defined_array(x['var']['type']):
             id_str = x['var']['id']['str']
 
             print_field_array(init_value['type'], id_str, do_wrapped=False)
@@ -1203,7 +1203,7 @@ def save_array(id_str, v, from_var):
 def print_stmt_let(x):
     v = x['value']
 
-    if type.is_array(v['type']):
+    if type.is_defined_array(v['type']):
         id_str = x['id']['str']
         print_field_array(v['type'], id_str, do_wrapped=False)
         out(";\n")
