@@ -148,13 +148,17 @@ def print_array_volume(t):
     # многомерные массивы в C не существуют, поэтому печатаем один массив
     # размер которого будет произведением всех измерений
     if type.is_defined_array(t['of']):
-        vol = t['volume']['imm']
-        t2 = t
-        while type.is_defined_array(t2['of']):
-            t2 = t2['of']
-            vol = vol * t2['volume']['imm']
 
-        out("%d" % vol)
+        # if it is array of arrays, print volume as:
+        # [n * m * ...]
+        t2 = t
+        while True:
+            print_value(t2['volume'])
+            if not type.is_defined_array(t2['of']):
+                break
+            t2 = t2['of']
+            out(" * ")
+
     else:
         print_value(t['volume'])
 
