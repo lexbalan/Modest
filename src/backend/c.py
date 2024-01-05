@@ -1361,16 +1361,13 @@ def print_func_signature(id, typ, arghack=False):
 
 
 
-def print_wrapped_array(_type, id_str):
+def print_wrapped_array(_type):
     # -> struct ret_str_retval {char a[10];};
-
     out(_type['wrapped_id'])
     out (" {")
-
     item_type = type.defined_array_item_type(_type)
-
     print_type(item_type, need_space_after=True)
-    out(id_str);
+    out("a");
     print_array_volume(_type)
     out(";};\n")
 
@@ -1381,9 +1378,9 @@ def print_func_wrappers(f):
     # (обернуты тк C не позволяет принимать возвращать массив по значению)
     for param in ft['params']:
         if 'wrapped_array' in param['type']['att']:
-            print_wrapped_array(param['type'], 'a')
+            print_wrapped_array(param['type'])
     if 'wrapped_array' in ft['to']['att']:
-        print_wrapped_array(ft['to'], 'a')
+        print_wrapped_array(ft['to'])
 
 
 
