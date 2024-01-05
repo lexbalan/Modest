@@ -151,10 +151,9 @@ def print_array_volume(t):
         vol = t['volume']['imm']
         t2 = t
         while type.is_defined_array(t2['of']):
-            vol = vol * t2['volume']['imm']
             t2 = t2['of']
+            vol = vol * t2['volume']['imm']
 
-        #print("VOL=%d" % vol)
         out("%d" % vol)
     else:
         print_value(t['volume'])
@@ -431,14 +430,20 @@ def print_value_un(v, ctx):
         if type.eq(value['type'], type.typeBool):
             op = 'logic_not'
 
+    if v['kind'] == 'ref':
+        if type.is_array(value['type']):
+            out("(")
+            print_type(v['type'])
+            out(")")
+
     out(un_ops[op]); print_value(value, need_wrap=pv<p0)
 
     # указатель на массив в сях берем как &array[0]
     # поскольку у нас указатель на массив сейчас печатается как *<item_type>
     # а &array дает нам *array[n]
-    if v['kind'] == 'ref':
-        if value['type']['kind'] == 'array':
-            out("[0]")
+    #if v['kind'] == 'ref':
+    #    if value['type']['kind'] == 'array':
+    #        out("[0]")
 
 
 
@@ -1226,8 +1231,9 @@ def memcopy(left, right):
     print_value(left)
     out(", &")
     print_value(right)
-    out(", sizeof ")
-    print_value(left)
+    out(", %d" % left['type']['size'])
+    #out(", sizeof ")
+    #print_value(right)
     out(");")
 
 

@@ -733,6 +733,10 @@ def do_eval_expr_index(v):
 
     # если сам массив находится в регистре: (let rec = get_rec())
     if not array['is_adr']:
+        if not value_is_immediate(index):
+            error("expected immediate index value", v['ti'])
+            return llvm_value_zero(v['ti'])
+
         return llvm_extract_item(array, result_type, index['imm'])
 
     return llvm_getelementptr(array, array_type, (llvm_value_num_zero, index), result_type)
