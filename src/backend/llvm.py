@@ -186,9 +186,13 @@ def llvm_value_str(strid, _str, type, proto=None):
 
 
 
-def print_type_value(x):
+def llvm_print_type_and_value(x):
     assert(x['isa'] == 'll_value')
     print_type(x['type'])
+
+    #if x['is_adr']:
+    #    out("*")
+
     out(" ")
     llvm_print_value(x)
 
@@ -207,9 +211,9 @@ def insertvalue(x, v, pos):
     assert(v['isa'] == 'll_value')
     #%5 = insertvalue %Type24 zeroinitializer, %Int32 1, 0
     reg = llvm_operation('insertvalue')
-    print_type_value(x)
+    llvm_print_type_and_value(x)
     out(", ")
-    print_type_value(v)
+    llvm_print_type_and_value(v)
     out(", ")
     out('%d' % pos)
     return llvm_value_reg(reg, x['type'], x)
@@ -266,7 +270,7 @@ def llvm_print_value_array(x):
     while i < n:
         item = x['items'][i]
         if i > 0: out(",\n")
-        indent(); print_type_value(item);
+        indent(); llvm_print_type_and_value(item);
         i = i + 1
     indent_down()
     out("\n"); indent(); out("]")
@@ -285,7 +289,7 @@ def llvm_print_value_record(x):
     while i < n:
         item = x['items'][i]
         if i > 0: out(",\n")
-        indent(); print_type_value(item['value'])
+        indent(); llvm_print_type_and_value(item['value'])
         i = i + 1
     indent_down()
     out("\n"); indent(); out("}")
@@ -379,7 +383,7 @@ def llvm_getelementptr(rec, rt, indexes, vt):
     out("* ")
     llvm_print_value(rec)
     out(", ")
-    print_list_by(indexes, print_type_value)
+    print_list_by(indexes, llvm_print_type_and_value)
     rv = llvm_value_reg(reg, vt)
     rv['is_adr'] = True
     return rv
@@ -388,14 +392,15 @@ def llvm_getelementptr(rec, rt, indexes, vt):
 # возвращает значение поля из 'структуры по значению'
 def llvm_extract_item(x, ft, field_no):
     reg = llvm_operation('extractvalue')
-    print_type_value(x)
+    llvm_print_type_and_value(x)
     out(', %d' % field_no)
     return llvm_value_reg(reg, ft)
 
 
-def llvm_cast(kind, from_type, to_type, value):
+def llvm_cast(kind, from_type, to_type, value, addptr=False):
     reg = llvm_operation(kind)
     print_type(from_type)
+    if addptr: out("*")
     out(" ")
     llvm_print_value(value)
     out(" to ")
@@ -430,41 +435,21 @@ def llvm_load(x):
     return llvm_value_reg(reg, type, x)
 
 
-
-"""
-# сохр структур (вот не может просто так сохранить, приходится по полю)
-def llvm_store_record(l, r):
-
-    # if r is immediate value
-    if 'items' in r:
-        if len(r['items']) == 0:
-            # если сохраняем пустую структуру
-            # то просто сохраним в нее zeroinitializer
-            llvm_store(l, r)
-            return
-
-    lo("; -- record assign field by field")
-    for field in l['type']['fields']:
-        ft = field['type']
-
-        # получаем указатель на поле левого (в которое будем сохранять)
-        l_field_ptr = do_eval_access_ptr(l, l['type'], field['field_no'], ft)
-
-        rpos = field['field_no']
-
-        rv = dold(do_eval_access(r, r['type'], rpos, ft))
-
-        # сохраняем
-        llvm_assign(l_field_ptr, rv)
-    lo("; -- end record assign field by field\n")
-"""
-
-
-def llvm_assign(l, r):
-    #if type.is_record(l['type']):
-    #    return llvm_store_record(l, r)
-
-    llvm_store(l, r)
+# получает два указателя, и размер
+def llvm_memcpy(dst, src, size, volatile=False):
+    #"@llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)")
+    addptr = src['is_adr']
+    dst2 = llvm_cast('bitcast', dst['type'], type.typeFreePtr, dst)
+    src2 = llvm_cast('bitcast', src['type'], type.typeFreePtr, src, addptr=addptr)
+    out("\n")
+    out(INDENT_SYMBOL)
+    out("call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(")
+    llvm_print_type_and_value(dst2)
+    out(", ")
+    llvm_print_type_and_value(src2)
+    out(", ")
+    llvm_print_type_and_value(size)
+    out(", i1 %d)" % volatile)
 
 
 
@@ -492,7 +477,7 @@ def llvm_alloca(id, typ, init_value=None):
 
     if init_value != None:
         assert(init_value['isa'] == 'll_value')
-        llvm_assign(val, init_value)
+        llvm_store(val, init_value)
 
     return val
 
@@ -1125,7 +1110,7 @@ def do_eval_x(x):
 def print_stmt_assign(x):
     r = do_reval(x['right'])
     l = do_eval(x['left'])
-    llvm_assign(l, r)
+    llvm_store(l, r)
 
 
 def print_stmt_if(x):
@@ -1198,26 +1183,30 @@ def print_stmt_break():
 
 
 
-def print_stmt_return(x):
 
+def print_stmt_return(x):
     if va_list != None:
         llvm_va_end(va_list)
 
-    global cfunc
-    if 'sret' in cfunc['att']:
-        lo("ret void")
-        return
-
     v = None
     if x['value'] != None:
-        v = do_reval(x['value'])
+        v = do_eval(x['value'])
+
+    global cfunc
+    if 'sret' in cfunc['att']:
+        to = cfunc['type']['to']
+        p2retval = llvm_value_reg("0", hlir_type_pointer(to))
+        size = llvm_value_num(type.select_nat(32), to['size'])
+        llvm_memcpy(p2retval, v, size)
+        lo("ret void")
+        return
 
     lo("ret ")
 
     if v != None:
         print_type(x['value']['type'])
         out(" ")
-        llvm_print_value(v)
+        llvm_print_value(dold(v))
     else:
         out("void")
 
@@ -1247,7 +1236,6 @@ def print_stmt_let(x):
     # а массив-значение в "регистре" невозможно индексировать переменной
     if type.is_defined_array(val['type']):
         v = llvm_alloca(id['str'], val['type'], init_value=v)
-        #info("let arr", x)
 
     locals_add(x['id']['str'], v)
     return None
@@ -1290,116 +1278,6 @@ def print_stmt(x):
     elif k == 'comment-line': print_comment_line(x)
     elif k == 'comment-block': print_comment_block(x)
     else: lo("<stmt %s>" % str(x))
-
-
-
-"""def print_arrays(arrays):
-    for array in arrays:
-
-        id = array['id']['str']
-        iv = llvm_value_zero(array['type'])
-        val = llvm_alloca(id, array['type'], None)
-        locals_add('_' + id, val)
-
-        #from trans import value_create_int
-
-        memcpy_type = {
-            'isa': 'type',
-            'kind': 'func',
-            'size': 0,
-            'align': 0,
-            'params': [
-                {
-                    'isa': 'field',
-                    'id': {'isa': 'id', 'str': "dst", 'ti': None},
-                    'type': type.typeFreePtr,
-                    'ti': None
-                },
-
-                {
-                    'isa': 'field',
-                    'id': {'isa': 'id', 'str': "src", 'ti': None},
-                    'type': type.typeFreePtr,
-                    'ti': None
-                },
-
-                {
-                    'isa': 'field',
-                    'id': {'isa': 'id', 'str': "len", 'ti': None},
-                    'type': type.typeInt64,
-                    'ti': None
-                },
-
-            ],
-
-            'to': type.typeFreePtr,
-            'att': [],
-            'ti': None
-        }
-
-
-        fmemcpy = {
-            'isa': 'value',
-            'kind': 'func',
-            'id': {'isa': 'id', 'str': "memcpy", 'ti': None},
-            'type': memcpy_type,
-            'att': [],
-            'ti': None
-        }
-
-        args = [
-            {
-                'isa': 'value',
-                'kind': 'cast',
-
-                'value': {
-                    'isa': 'value',
-                    'kind': 'var',
-                    'id': {'isa': 'id', 'str': val['id'], 'ti': None},
-                    'type': hlir_type_pointer(val['type']),
-                    'att': ['local'],
-                    'ti': None
-                },
-
-                'type': type.typeFreePtr,
-            },
-
-            {
-                'isa': 'value',
-                'kind': 'cast',
-
-                'value': {
-                    'isa': 'value',
-                    'kind': 'var',
-                    'id': {'isa': 'id', 'str': '_' + val['id'], 'ti': None},
-                    'type': hlir_type_pointer(val['type']),
-                    'att': ['local'],
-                    'ti': None
-                },
-
-                'type': type.typeFreePtr,
-            },
-
-            {
-                'isa': 'value',
-                'kind': 'cast',
-                'value': hlir_value_int(type.type_get_size(val['type'])),
-                'type': type.typeInt64,
-            }
-        ]
-
-        op = {
-            'isa': 'value',
-            'kind': 'call',
-            'func': fmemcpy,
-            'args': args,
-            'type': memcpy_type['to'],
-            'att': [],
-            'ti': None
-        }
-
-        do_eval(op)
-"""
 
 
 
@@ -1798,3 +1676,33 @@ def get_bin_opcode(op, t):
     return opcode
 
 
+
+
+
+"""
+# сохр структур (вот не может просто так сохранить, приходится по полю)
+def llvm_store_record(l, r):
+
+    # if r is immediate value
+    if 'items' in r:
+        if len(r['items']) == 0:
+            # если сохраняем пустую структуру
+            # то просто сохраним в нее zeroinitializer
+            llvm_store(l, r)
+            return
+
+    lo("; -- record assign field by field")
+    for field in l['type']['fields']:
+        ft = field['type']
+
+        # получаем указатель на поле левого (в которое будем сохранять)
+        l_field_ptr = do_eval_access_ptr(l, l['type'], field['field_no'], ft)
+
+        rpos = field['field_no']
+
+        rv = dold(do_eval_access(r, r['type'], rpos, ft))
+
+        # сохраняем
+        llvm_assign(l_field_ptr, rv)
+    lo("; -- end record assign field by field\n")
+"""

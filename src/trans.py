@@ -21,6 +21,7 @@ from util import nbits_for_num, nbytes_for_bits
 from hlir import *
 
 
+RET_SIZE_MAX = 16
 
 # current file directory
 env_current_file_abspath = ""
@@ -1745,6 +1746,11 @@ def def_func(x):
         # create new function definition
         fn = hlir_value_func(func_id, func_type, ti=func_ti)
 
+    if already == None:
+        if func_type['to']['size'] > RET_SIZE_MAX:
+            fn['att'].append('sret')
+            module_option('use_memcpy')
+
     cfunc = fn
 
     fn['ti'] = func_ti
@@ -1870,8 +1876,11 @@ def decl_func(x):
         return
 
     func = hlir_value_func(func_id, func_type, ti=x['ti'])
-    func['att'].extend(['undefined'])
 
+    if already == None:
+        if func_type['to']['size'] > RET_SIZE_MAX:
+            func['att'].append('sret')
+            module_option('use_memcpy')
 
     # check if last arg is VA_List
     # (in this case add 'arghack' attribute)
