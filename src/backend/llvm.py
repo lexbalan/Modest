@@ -16,6 +16,8 @@ LLVM_TARGET_DATALAYOUT = ""
 INDENT_SYMBOL = " " * 4
 
 
+cfunc = None
+
 func_context = None
 
 def is_global_context():
@@ -481,7 +483,7 @@ def llvm_label(label):
 
 
 
-def llvm_alloca(id, typ, init_value):
+def llvm_alloca(id, typ, init_value=None):
     val = llvm_value_stk(id, typ)
     val['is_adr'] = True
 
@@ -682,7 +684,7 @@ def do_eval_expr_un(v):
 
 
 
-def do_eval_expr_call(v):
+def do_eval_expr_call(v, retval=None):
     # eval all args
     args = []
     for a in v['args']:
@@ -712,6 +714,8 @@ def do_eval_expr_call(v):
     print_type(ftype['to'])
     out("(")
     params = ftype['params']
+
+
     print_list_by(params, lambda par: print_type(par['type']))
     if 'arghack' in v['func']['att']:
         out(", ...")
@@ -1199,6 +1203,11 @@ def print_stmt_return(x):
     if va_list != None:
         llvm_va_end(va_list)
 
+    global cfunc
+    if 'sret' in cfunc['att']:
+        lo("ret void")
+        return
+
     v = None
     if x['value'] != None:
         v = do_reval(x['value'])
@@ -1230,7 +1239,16 @@ def print_stmt_def_var(x):
 def print_stmt_let(x):
     id = x['value']['id']
     val = x['init_value']
+
     v = do_reval(val)
+
+    # для let-массивов выделяем память
+    # поскольку их могут индексировать переменной
+    # а массив-значение в "регистре" невозможно индексировать переменной
+    if type.is_defined_array(val['type']):
+        v = llvm_alloca(id['str'], val['type'], init_value=v)
+        #info("let arr", x)
+
     locals_add(x['id']['str'], v)
     return None
 
@@ -1394,14 +1412,40 @@ def print_stmt_block(s):
     locals_pop()
 
 
-def print_func_signature(id, typ, arghack):
-    params = typ['params']
-    to = typ['to']
+def print_func_signature(func):
+    arghack = 'arghack' in func['att']
+    sret = 'sret' in func['att']
 
-    print_type(to)
-    out(" @%s(" % id)
+    ftype = func['type']
+    params = ftype['params']
+    to = ftype['to']
 
-    print_list_by(params, lambda field: print_type(field['type']))
+    if not sret:
+        print_type(to)
+    else:
+        out("void")
+
+    out(" @%s(" % func['id']['str'])
+
+    if sret:
+        # %struct.Sre* noalias sret(%struct.Sre) align 1 %0
+        print_type(to)
+        out("* noalias sret(")
+        print_type(to)
+        out(") %0")
+
+        # if we called not from func_decl
+        if func_context != None:
+            reg_get() # get %0 reg for retval
+
+        if len(params) > 0:
+            out(", ")
+
+
+    def print_param(param):
+        print_type(param['type']); out(" %%%s" % param['id']['str'])
+
+    print_list_by(params, lambda param: print_param(param))
 
     if arghack:
         out(", ...")
@@ -1412,9 +1456,7 @@ def print_func_signature(id, typ, arghack):
 
 def print_decl_func(x):
     out("\ndeclare ")
-    func = x['value']
-    arghack = 'arghack' in func['att']
-    print_func_signature(func['id']['str'], func['type'], arghack)
+    print_func_signature(x['value'])
 
 
 def print_def_func(x):
@@ -1437,71 +1479,32 @@ def print_def_func(x):
     }
 
     func = x['value']
-    arghack = 'arghack' in func['att']
+    global cfunc
+    cfunc = func
 
     out("\ndefine ")
-    print_type(func['type']['to'])
-    out(" @%s" % func['id']['str'])
-    out("(")
+    print_func_signature(func)
 
-    # список параметров которые следует разместить на стеке
-    # (массивы передаваемые по значению)
-    reloc = []
+    arghack = 'arghack' in func['att']
+    ftype = func['type']
 
-    #arrays = []    # параметры-массивы
 
-    params = func['type']['params']
-    params_len = len(params)
-    i = 0
-    while i < params_len:
-        param = params[i]
-        #param_is_arr = type.is_array(param['type'])
-        # array param gets _ prefix
-        prefix = ""
-        #if param_is_arr:
-        #    arrays.append(param)
-        #    prefix = "_"
-
+    params = ftype['params']
+    for param in params:
         param_id = param['id']['str']
-        if i > 0:
-            out(", ")
-        print_type(param['type'])
-
-        #if param_is_arr:
-        #    out("*")
-
-        out(' %%%s%s' % (prefix, param_id))
-
         vv = llvm_value_stk(param_id, param['type'], param)
-
-        #if param_is_arr:
-        #    vv['type'] = hlir_type_pointer(vv['type'])
-
         locals_add(param_id, vv)
 
-        i = i + 1
-
-
-        if arghack:
-            out(", ...")
-
-    out(")")
 
     # 0, 1, 2 - params; 3 - entry label, 4 - first free register
-    entry_label = reg_get()    # (!)
+    entry_label = reg_get()  # should be here (!)
 
     out(" {")
-
-    for r in reloc:
-        #print("    ; reloc %s " % (r['id']))
-        lo("; reloc " + r['id'])
-        llvm_alloca(r['id'], r['type'], r)
-
 
     if arghack:
         global va_list
         id = func['va_id']['str'] # 'va_list'
-        va_list = llvm_alloca(id, type.typeFreePtr, None)
+        va_list = llvm_alloca(id, type.typeFreePtr)
         locals_add(id, va_list)
         llvm_va_start(va_list)
 
@@ -1509,7 +1512,7 @@ def print_def_func(x):
     print_stmt_block(func['stmt'])
 
 
-    if type.eq(func['type']['to'], type.typeUnit):
+    if type.eq(ftype['to'], type.typeUnit):
         if va_list != None:
             llvm_va_end(va_list)
         lo("ret void")
@@ -1521,6 +1524,8 @@ def print_def_func(x):
     va_list = None
 
     func_context = old_func_context
+
+    cfunc = None
 
 
 
