@@ -725,9 +725,34 @@ def print_value_cast(x, ctx):
 
 
 
+def print_array_values(values):
+    i = 0
+    n = len(values)
+    while i < n:
+        a = values[i]
+
+        nl = 0
+        if 'nl' in a:
+            nl = a['nl']
+
+        if nl > 0:
+            newline(n=nl)
+            indent()
+        else:
+            if i > 0:
+                out(" ")
+
+        if type.is_defined_array(a['type']):
+            print_array_values(a['imm'])
+        else:
+            print_value(a)
+
+        i = i + 1
+        if i < n:
+            out(',')
+
 
 def print_value_literal_arr(v, ctx):
-
     if type.is_generic_string(v['type']):
         char_power = v['type']['of']['power']
         # FIXIT: вообще нефиг печатать generic string (!)
@@ -735,8 +760,6 @@ def print_value_literal_arr(v, ctx):
         return
 
 
-    #if not 'no-cast-literal-array' in v['att']:
-    #if do_cast:
     if not 'no-literal-array-cast' in ctx:
         out("(")
         print_type(v['type'], need_space_after=False, _print_array_asis=True)
@@ -747,39 +770,12 @@ def print_value_literal_arr(v, ctx):
 
     values = v['imm']
 
-    if values == None:
+    if values == None or values == []:
         out("{0}")
         return
 
-    i = 0
-    n = len(values)
-    while i < n:
-        a = None
-        try:
-            a = values[i]
-        except:
-            print("N = " + str(n))
-            value_print(v)
-            print(values)
 
-        nl = 0
-        if 'nl' in a:
-            nl = a['nl']
-
-
-        if nl > 0:
-            newline(n=nl)
-            indent()
-        else:
-            if i > 0:
-                out(" ")
-
-        print_value(a, ctx=ctx)
-
-        i = i + 1
-        if i < n:
-            out(',')
-
+    print_array_values(values)
 
     indent_down()
 
@@ -789,8 +785,6 @@ def print_value_literal_arr(v, ctx):
 
     out("}")
 
-    #if cast_req:
-    #    out(")")
 
 
 
@@ -910,8 +904,8 @@ def print_value_literal_str(x, ctx, char_power=8):
 def print_value_literal_char(x, ctx):
     num = x['imm']
 
-    if num == None:
-        out("'\0'")
+    if num == None or num == 0:
+        out("'\\0'")
         return
 
     power = x['type']['power']
@@ -1524,7 +1518,6 @@ def print_field_array(t, id_str, do_wrapped=True):
 
     out("%s" % id_str)
 
-    #out("/**/")
     print_array_volume(t)
 
     """# print arrays dimensions
@@ -1602,7 +1595,6 @@ def print_def_const(x):
     need_wrap = precedence(v) < precedenceMax
     global nl_str
     nl_str = " \\\n"
-    # ctx=['no-literal-array-cast'],
     print_value(v, need_wrap=need_wrap, print_just_id=True)
     nl_str = "\n"
 

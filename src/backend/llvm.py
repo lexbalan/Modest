@@ -1238,7 +1238,7 @@ def print_stmt_return(x):
             llvm_store(p2retval, v, add_ptr=False)
 
         lo("ret void")
-        reg_get()    # for LLVM
+        reg_get()  # for LLVM
         return
 
 
@@ -1271,7 +1271,7 @@ def print_stmt_let(x):
 
     if val['kind'] == 'call':
         if 'sret' in val['func']['att']:
-            info("call from let", x)
+            #info("call from let", x)
             v = llvm_alloca(val['type'], id_str=id_str)
             do_eval_expr_call(val, retval=v)
             locals_add(id_str, v)

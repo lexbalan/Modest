@@ -18,12 +18,18 @@ def value_cons_array_immediate(v, t, ti):
 def value_cons_array_from_generic_array(v, t, ti, method):
     #info("value_cons_array_from_generic_array", ti)
 
+    pad = 0
+
     if t['volume'] == None:
         info("cons open array", ti)
 
     elif len(v['imm']) > t['volume']['imm']:
         info("too many items", v['ti'])
         return None
+
+    elif len(v['imm']) < t['volume']['imm']:
+        pad = t['volume']['imm'] - len(v['imm'])
+
 
     casted_items = []
     items = v['imm']
@@ -39,6 +45,9 @@ def value_cons_array_from_generic_array(v, t, ti, method):
 
         casted_item['nl'] = item['nl']
         casted_items.append(casted_item)
+
+
+    casted_items = casted_items + [hlir_value_zero(t['of'])] * pad
 
     vx = {
         'isa': 'value',
