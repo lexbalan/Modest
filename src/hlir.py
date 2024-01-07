@@ -316,7 +316,10 @@ def hlir_value_literal(t, imm, ti):
 
 
 def hlir_value_zero(t, ti=None):
-    return hlir_value_literal(t, None, ti)
+    imm_val = 0
+    if type.is_record(t): imm_val = {}
+    elif type.is_array(t): imm_val = []
+    return hlir_value_literal(t, imm_val, ti)
 
 
 def hlir_value_int(num, typ=None, ti=None):
