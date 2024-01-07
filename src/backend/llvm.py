@@ -300,9 +300,7 @@ def llvm_print_value_record(x):
 def llvm_print_value_str(x):
     string_of = x['type']['to']['of']
     char_width = string_of['power']
-
     slen = x['len']
-
     out("bitcast ([%d x i%d]* @%s to [0 x i%d]*)" % (slen, char_width, x['id'], char_width))
 
 
@@ -413,18 +411,6 @@ def llvm_cast(kind, from_type, to_type, value, addptr=False):
     return llvm_value_reg(reg, to_type, value)
 
 
-
-# сохр простых значений
-def llvm_store(l, r):
-    assert(l['isa'] == 'll_value')
-    assert(r['isa'] == 'll_value')
-    lo("store ");
-    llvm_print_type_and_value(r)
-    out(", ")
-    llvm_print_type_and_value(l, add_ptr=True)
-
-
-
 def llvm_load(x):
     assert(x['isa'] == 'll_value')
     reg = llvm_operation('load');
@@ -435,6 +421,19 @@ def llvm_load(x):
     out("* ")
     llvm_print_value(x)
     return llvm_value_reg(reg, type, x)
+
+
+# сохр простых значений
+def llvm_store(l, r):
+    assert(l['isa'] == 'll_value')
+    assert(r['isa'] == 'll_value')
+    lo("store ")
+    llvm_print_type_and_value(r)
+    out(", ")
+    llvm_print_type_and_value(l, add_ptr=True)
+
+
+
 
 
 # получает два указателя, и размер
@@ -1003,14 +1002,32 @@ def do_eval_array(v):
 def do_eval_record(v):
     # сперва вычисляем все иницифлизаторы поелей структуры в регистры
     # (кроме констант, ведь они едут до последнего)
-
-    items = []
+    rec_type = v['type']
     initializers = v['imm']
+
+    if is_global_context():
+        items = []
+        for initializer in initializers:
+            iv = do_reval(initializer['value'])
+            items.append({'id': initializer['id'], 'value': iv})
+        return llvm_value_record(items, rec_type, v)
+
+
+    # local context
+
+    xv = llvm_value_record([], rec_type)
+
+    # набиваем структуру
     for initializer in initializers:
         iv = do_reval(initializer['value'])
-        items.append({'id': initializer['id'], 'value': iv})
+        iid = initializer['id']
+        field = type.record_field_get(rec_type, iid['str'])
+        xv = insertvalue(xv, iv, field['field_no'])
 
-    return llvm_value_record(items, v['type'], v)
+    return xv
+
+
+
 
 
 

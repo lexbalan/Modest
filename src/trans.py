@@ -1841,7 +1841,6 @@ def decl_type(x):
 
     # С не печатает opaque, но LLVM печатает (!)
     declaration = hlir_decl_type(nt)
-
     nt['declaration'] = declaration
 
     if x['extern']:
@@ -1892,16 +1891,11 @@ def decl_func(x):
             func_type['att'].append('arghack')
             params.pop()
 
-
     func['att'].extend(attributes_get())
-
     if x['extern']:
         func['att'].append('extern')
-
     extend_props(func)
-
     module['context'].value_add(func_id['str'], func)
-
     return hlir_decl_func(func)
 
 
