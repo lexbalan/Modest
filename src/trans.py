@@ -909,17 +909,16 @@ def do_value_index(x):
 
     typ = a['type']
 
-    ptr_access = type.is_pointer(typ)
-    if ptr_access:
-        typ = typ['to']
-
-
-    item_type = typ['of']
-
     # check if left type is valid
     if not (type.is_array(typ) or type.is_pointer(typ) or type.is_ptr_to_string(typ)):
         error("expected array or pointer to array", x)
         return hlir_value_bad(x['left']['ti'])
+
+
+    ptr_access = type.is_pointer(typ)
+    if ptr_access:
+        typ = typ['to']
+
 
     i = do_rvalue(x['index'])
 

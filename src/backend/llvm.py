@@ -1242,6 +1242,14 @@ def print_stmt_let(x):
     id_str = x['value']['id']['str']
     val = x['init_value']
 
+    if val['kind'] == 'call':
+        if 'sret' in val['func']['att']:
+            info("call from let", x)
+            v = llvm_alloca(val['type'], id_str=id_str)
+            do_eval_expr_call(val, retval=v)
+            locals_add(id_str, v)
+            return
+
     v = do_reval(val)
 
     # для let-массивов выделяем память
