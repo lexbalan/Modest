@@ -424,13 +424,13 @@ def llvm_load(x):
 
 
 # сохр простых значений
-def llvm_store(l, r):
+def llvm_store(l, r, add_ptr=True):
     assert(l['isa'] == 'll_value')
     assert(r['isa'] == 'll_value')
     lo("store ")
     llvm_print_type_and_value(r)
     out(", ")
-    llvm_print_type_and_value(l, add_ptr=True)
+    llvm_print_type_and_value(l, add_ptr=add_ptr)
 
 
 
@@ -1228,8 +1228,15 @@ def print_stmt_return(x):
     if 'sret' in cfunc['att']:
         to = cfunc['type']['to']
         p2retval = llvm_value_reg("0", hlir_type_pointer(to))
-        size = llvm_value_num(type.select_nat(32), to['size'])
-        llvm_memcpy(p2retval, v, size)
+
+        if v['is_adr']:
+            # save value from local variable (by ptr)
+            size = llvm_value_num(type.select_nat(32), to['size'])
+            llvm_memcpy(p2retval, v, size)
+        else:
+            # save value from reg
+            llvm_store(p2retval, v, add_ptr=False)
+
         lo("ret void")
         reg_get()    # for LLVM
         return
