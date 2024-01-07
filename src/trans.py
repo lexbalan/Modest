@@ -855,7 +855,7 @@ def do_value_call(x):
         return hlir_value_bad(x['ti'])
 
     if nargs > npars:
-        if not 'arghack' in f['att']:
+        if not 'arghack' in ftype['att']:
             error("too many args", x)
             return hlir_value_bad(x['ti'])
 
@@ -956,7 +956,8 @@ def do_value_index(x):
             items = a['imm']
             item = items[index]
 
-            if type.is_char(item_type):
+            #if type.is_char(item_type):
+            if type.is_char(typ['of']):
                 char_code = item
                 char = hlir_value_char(char_code, type=None, ti=x['ti'])
                 return char
@@ -1783,7 +1784,7 @@ def def_func(x):
 
     if arghack:
         cfunc['va_id'] = va_id
-        cfunc['att'].append('arghack')
+        func_type['att'].append('arghack')
         add_local_var(va_id, last_param['type'], None, va_id['ti'])
         module_option('use_arghack')
 
@@ -1888,7 +1889,7 @@ def decl_func(x):
         last_param = params[-1]
         if type.is_va_list(last_param['type']):
             va_id = last_param['id']
-            func['att'].append('arghack')
+            func_type['att'].append('arghack')
             params.pop()
 
 

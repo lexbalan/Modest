@@ -400,10 +400,14 @@ def llvm_extract_item(x, ft, field_no):
 
 def llvm_cast(kind, from_type, to_type, value, addptr=False):
     reg = llvm_operation(kind)
+
     print_type(from_type)
     if addptr: out("*")
     out(" ")
     llvm_print_value(value)
+
+    #llvm_print_type_and_value(value, add_ptr=addptr)
+
     out(" to ")
     print_type(to_type)
     return llvm_value_reg(reg, to_type, value)
@@ -415,13 +419,10 @@ def llvm_store(l, r):
     assert(l['isa'] == 'll_value')
     assert(r['isa'] == 'll_value')
     lo("store ");
-    print_type(r['type'])
-    out(" ")
-    llvm_print_value(r)
+    llvm_print_type_and_value(r)
     out(", ")
-    print_type(r['type'])
-    out("* ")
-    llvm_print_value(l)
+    llvm_print_type_and_value(l, add_ptr=True)
+
 
 
 def llvm_load(x):
@@ -1213,16 +1214,18 @@ def print_stmt_return(x):
         size = llvm_value_num(type.select_nat(32), to['size'])
         llvm_memcpy(p2retval, v, size)
         lo("ret void")
+        reg_get()    # for LLVM
         return
 
-    lo("ret ")
 
     if v != None:
+        loaded_v = dold(v)
+        lo("ret ")
         print_type(x['value']['type'])
         out(" ")
-        llvm_print_value(dold(v))
+        llvm_print_value(loaded_v)
     else:
-        out("void")
+        out("ret void")
 
     reg_get()    # for LLVM
 
@@ -1313,10 +1316,15 @@ def print_stmt_block(s):
 
 
 def print_func_paramlist(func, only_types=False, with_attributes=True):
-    arghack = 'arghack' in func['att']
+    arghack = 'arghack' in func['type']['att']
     sret = 'sret' in func['att']
 
     ftype = func['type']
+
+    # here can be a pointer to function
+    if type.is_pointer(ftype):
+        ftype = ftype['to']
+
     params = ftype['params']
     to = ftype['to']
 
@@ -1357,7 +1365,7 @@ def print_func_paramlist(func, only_types=False, with_attributes=True):
 
 
 def print_func_signature(func):
-    arghack = 'arghack' in func['att']
+    arghack = 'arghack' in func['type']['att']
     sret = 'sret' in func['att']
 
     ftype = func['type']
@@ -1406,10 +1414,9 @@ def print_def_func(x):
     out("\ndefine ")
     print_func_signature(func)
 
-    arghack = 'arghack' in func['att']
     sret = 'sret' in func['att']
     ftype = func['type']
-
+    arghack = 'arghack' in ftype['att']
 
     if sret:
         reg_get() # get %0 reg for retval

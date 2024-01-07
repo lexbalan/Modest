@@ -1325,21 +1325,8 @@ def print_stmt_block(s):
 
 
 def print_func_signature(id, typ, arghack=False):
-
     to = typ['to']
     t = to
-
-    # возвращает список аргументов с типом массив (!)
-    # для того чтобы print_stmt мог их пропечатать как локаоьные
-    # и скопировать
-    arrays = []
-
-    # возврат является масссивом?
-    #is_array = t['kind'] == 'array'
-    #array_dims = None
-    #if is_array:
-        #array_dims = t['size']
-        #t = t['of']
 
     # поле является указателем?
     ptr_level = 0
@@ -1353,10 +1340,7 @@ def print_func_signature(id, typ, arghack=False):
     print_type(t)
     out(" " + "*" * ptr_level)
     out("%s" % id)
-    #arghack = 'arghack' in t['att']
     print_paramlist(typ['params'], arghack)
-
-    return arrays
 
 
 
@@ -1394,7 +1378,7 @@ def print_decl_func(x):
     if 'inline' in func['att']: out("inline ")
     if 'c_prefix' in func: out("%s " % func['c_prefix'])
 
-    arghack = 'arghack' in func['att']
+    arghack = 'arghack' in ft['att']
 
     print_func_signature(func['id']['str'], ft, arghack=arghack)
 
@@ -1404,12 +1388,12 @@ def print_decl_func(x):
 
 def print_def_func(x):
     func = x['value']
-    arghack = 'arghack' in func['att']
 
     global cfunc
     cfunc = func
 
     ft = func['type']
+    arghack = 'arghack' in ft['att']
 
     if not 'declared' in func['att']:
         print_func_wrappers(func)

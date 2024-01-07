@@ -660,13 +660,10 @@ def print_decl_func(x):
 
 def print_def_func(x):
     func = x['value']
-    arghack = 'arghack' in func['att']
-
+    ft = func['type']
+    arghack = 'arghack' in ft['att']
     out('func %s' % func['id']['str'])
-
-    print_type_func(func['type'], arghack=arghack)
-
-
+    print_type_func(ft, arghack=arghack)
     print_stmt_block(func['stmt'])
 
 
