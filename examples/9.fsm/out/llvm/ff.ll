@@ -74,21 +74,18 @@ target triple = "arm64-apple-macosx12.0.0"
 
 
 declare i64 @clock()
-declare i8* @malloc(i64)
-declare i8* @memset(i8*, i32, i64)
-declare i8* @memcpy(i8*, i8*, i64)
-declare i32 @memcmp(i8*, i8*, i64)
-declare void @free(i8*)
-declare i32 @strncmp([0 x i8]*, [0 x i8]*, i64)
-declare i32 @strcmp([0 x i8]*, [0 x i8]*)
-declare [0 x i8]* @strcpy([0 x i8]*, [0 x i8]*)
-declare i64 @strlen([0 x i8]*)
+declare i8* @malloc(i64 %size)
+declare i8* @memset(i8* %mem, i32 %c, i64 %n)
+declare i8* @memcpy(i8* %dst, i8* %src, i64 %len)
+declare i32 @memcmp(i8* %ptr1, i8* %ptr2, i64 %num)
+declare void @free(i8* %ptr)
+declare i32 @strncmp([0 x i8]* %s1, [0 x i8]* %s2, i64 %n)
+declare i32 @strcmp([0 x i8]* %s1, [0 x i8]* %s2)
+declare [0 x i8]* @strcpy([0 x i8]* %dst, [0 x i8]* %src)
+declare i64 @strlen([0 x i8]* %s)
 
 
-declare i32 @ftruncate(i32, i32)
-
-
-
+declare i32 @ftruncate(i32 %fd, i32 %size)
 
 
 
@@ -102,27 +99,30 @@ declare i32 @ftruncate(i32, i32)
 
 
 
-declare i32 @creat(%Str*, i32)
-declare i32 @open(%Str*, i32)
-declare i32 @read(i32, i8*, i32)
-declare i32 @write(i32, i8*, i32)
-declare i32 @lseek(i32, i32, i32)
-declare i32 @close(i32)
-declare void @exit(i32)
 
 
-declare %DIR* @opendir(%Str*)
-declare i32 @closedir(%DIR*)
+
+declare i32 @creat(%Str* %path, i32 %mode)
+declare i32 @open(%Str* %path, i32 %oflags)
+declare i32 @read(i32 %fd, i8* %buf, i32 %len)
+declare i32 @write(i32 %fd, i8* %buf, i32 %len)
+declare i32 @lseek(i32 %fd, i32 %offset, i32 %whence)
+declare i32 @close(i32 %fd)
+declare void @exit(i32 %rc)
 
 
-declare %Str* @getcwd(%Str*, i64)
-declare %Str* @getenv(%Str*)
+declare %DIR* @opendir(%Str* %name)
+declare i32 @closedir(%DIR* %dir)
 
 
-declare void @bzero(i8*, i64)
+declare %Str* @getcwd(%Str* %buf, i64 %size)
+declare %Str* @getenv(%Str* %name)
 
 
-declare void @bcopy(i8*, i8*, i64)
+declare void @bzero(i8* %s, i64 %n)
+
+
+declare void @bcopy(i8* %src, i8* %dst, i64 %n)
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
 
@@ -136,47 +136,47 @@ declare void @bcopy(i8*, i8*, i64)
 %ConstCharStr = type [0 x i8]
 
 
-declare i32 @fclose(%FILE*)
-declare i32 @feof(%FILE*)
-declare i32 @ferror(%FILE*)
-declare i32 @fflush(%FILE*)
-declare i32 @fgetpos(%FILE*, %FposT*)
-declare %FILE* @fopen(%ConstCharStr*, %ConstCharStr*)
-declare i64 @fread(i8*, i64, i64, %FILE*)
-declare i64 @fwrite(i8*, i64, i64, %FILE*)
-declare %FILE* @freopen(%ConstCharStr*, %ConstCharStr*, %FILE*)
-declare i32 @fseek(%FILE*, i64, i32)
-declare i32 @fsetpos(%FILE*, %FposT*)
-declare i64 @ftell(%FILE*)
-declare i32 @remove(%ConstCharStr*)
-declare i32 @rename(%ConstCharStr*, %ConstCharStr*)
-declare void @rewind(%FILE*)
-declare void @setbuf(%FILE*, %CharStr*)
+declare i32 @fclose(%FILE* %f)
+declare i32 @feof(%FILE* %f)
+declare i32 @ferror(%FILE* %f)
+declare i32 @fflush(%FILE* %f)
+declare i32 @fgetpos(%FILE* %f, %FposT* %pos)
+declare %FILE* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
+declare i64 @fread(i8* %buf, i64 %size, i64 %count, %FILE* %f)
+declare i64 @fwrite(i8* %buf, i64 %size, i64 %count, %FILE* %f)
+declare %FILE* @freopen(%ConstCharStr* %filename, %ConstCharStr* %mode, %FILE* %f)
+declare i32 @fseek(%FILE* %stream, i64 %offset, i32 %whence)
+declare i32 @fsetpos(%FILE* %f, %FposT* %pos)
+declare i64 @ftell(%FILE* %f)
+declare i32 @remove(%ConstCharStr* %filename)
+declare i32 @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
+declare void @rewind(%FILE* %f)
+declare void @setbuf(%FILE* %f, %CharStr* %buffer)
 
 
-declare i32 @setvbuf(%FILE*, %CharStr*, i32, i64)
+declare i32 @setvbuf(%FILE* %f, %CharStr* %buffer, i32 %mode, i64 %size)
 declare %FILE* @tmpfile()
-declare %CharStr* @tmpnam(%CharStr*)
-declare i32 @printf(%ConstCharStr*, ...)
-declare i32 @scanf(%ConstCharStr*, ...)
-declare i32 @fprintf(%FILE*, %Str*, ...)
-declare i32 @fscanf(%FILE*, %ConstCharStr*, ...)
-declare i32 @sscanf(%ConstCharStr*, %ConstCharStr*, ...)
-declare i32 @sprintf(%CharStr*, %ConstCharStr*, ...)
+declare %CharStr* @tmpnam(%CharStr* %str)
+declare i32 @printf(%ConstCharStr* %s, ...)
+declare i32 @scanf(%ConstCharStr* %s, ...)
+declare i32 @fprintf(%FILE* %stream, %Str* %format, ...)
+declare i32 @fscanf(%FILE* %f, %ConstCharStr* %format, ...)
+declare i32 @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
+declare i32 @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
 
 
-declare i32 @fgetc(%FILE*)
-declare i32 @fputc(i32, %FILE*)
-declare %CharStr* @fgets(%CharStr*, i32, %FILE*)
-declare i32 @fputs(%ConstCharStr*, %FILE*)
-declare i32 @getc(%FILE*)
+declare i32 @fgetc(%FILE* %f)
+declare i32 @fputc(i32 %char, %FILE* %f)
+declare %CharStr* @fgets(%CharStr* %str, i32 %n, %FILE* %f)
+declare i32 @fputs(%ConstCharStr* %str, %FILE* %f)
+declare i32 @getc(%FILE* %f)
 declare i32 @getchar()
-declare %CharStr* @gets(%CharStr*)
-declare i32 @putc(i32, %FILE*)
-declare i32 @putchar(i32)
-declare i32 @puts(%ConstCharStr*)
-declare i32 @ungetc(i32, %FILE*)
-declare void @perror(%ConstCharStr*)
+declare %CharStr* @gets(%CharStr* %str)
+declare i32 @putc(i32 %char, %FILE* %f)
+declare i32 @putchar(i32 %char)
+declare i32 @puts(%ConstCharStr* %str)
+declare i32 @ungetc(i32 %char, %FILE* %f)
+declare void @perror(%ConstCharStr* %str)
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/fastfood/main.cm
 
@@ -301,10 +301,10 @@ break_1:
 }
 
 define void @delay_us(i64 %us) {
-    %1 = call i64() @clock ()
+    %1 = call i64()@clock()
     br label %again_1
 again_1:
-    %2 = call i64() @clock ()
+    %2 = call i64()@clock()
     %3 = add i64 %1, %us
     %4 = icmp ult i64 %2, %3
     br i1 %4 , label %body_1, label %break_1
@@ -316,19 +316,19 @@ break_1:
 }
 
 define void @delay(i64 %us) {
-    call void(i64) @delay_us (i64 %us)
+    call void(i64)@delay_us(i64 %us)
     ret void
 }
 
 define void @delay_ms(i64 %ms) {
     %1 = mul i64 %ms, 1000
-    call void(i64) @delay_us (i64 %1)
+    call void(i64)@delay_us(i64 %1)
     ret void
 }
 
 define void @delay_s(i64 %s) {
     %1 = mul i64 %s, 1000
-    call void(i64) @delay_ms (i64 %1)
+    call void(i64)@delay_ms(i64 %1)
     ret void
 }
 

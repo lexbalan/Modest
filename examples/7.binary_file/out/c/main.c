@@ -38,8 +38,8 @@ void write_example(void)
 
     // pointers casting requires -funsafe translator option
     // (see Makefile)
-    strcpy((char *)&chunk.id[0], (const char *)"id");
-    strcpy((char *)&chunk.data[0], (const char *)"data");
+    strcpy((char *)(uint8_t *)&chunk.id, (const char *)"id");
+    strcpy((char *)(uint8_t *)&chunk.data, (const char *)"data");
 
     // write chunk to file
     fwrite((void *)&chunk, sizeof(Chunk), 1, (FILE *)fp);
@@ -63,8 +63,8 @@ void read_example(void)
     fread((void *)&chunk, sizeof(Chunk), 1, (FILE *)fp);
 
     printf("file \"%s\" contains:\n", filename);
-    printf("chunk.id: \"%s\"\n", &chunk.id[0]);
-    printf("chunk.data: \"%s\"\n", &chunk.data[0]);
+    printf("chunk.id: \"%s\"\n", (uint8_t *)&chunk.id);
+    printf("chunk.data: \"%s\"\n", (uint8_t *)&chunk.data);
 
     fclose((FILE *)fp);
 }

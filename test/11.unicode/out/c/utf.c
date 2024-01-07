@@ -83,7 +83,7 @@ uint8_t utf16_to_utf32(uint16_t *c, uint32_t *result)
 void utf32_putchar(uint32_t c)
 {
     char decoded_buf[5];
-    const int n = (const int)utf32_to_utf8(c, &decoded_buf[0]);
+    const int n = (const int)utf32_to_utf8(c, (char *)&decoded_buf);
 
     int i = 0;
     while (i < n) {

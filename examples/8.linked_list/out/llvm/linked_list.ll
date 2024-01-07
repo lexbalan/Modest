@@ -74,21 +74,18 @@ target triple = "arm64-apple-macosx12.0.0"
 
 
 declare i64 @clock()
-declare i8* @malloc(i64)
-declare i8* @memset(i8*, i32, i64)
-declare i8* @memcpy(i8*, i8*, i64)
-declare i32 @memcmp(i8*, i8*, i64)
-declare void @free(i8*)
-declare i32 @strncmp([0 x i8]*, [0 x i8]*, i64)
-declare i32 @strcmp([0 x i8]*, [0 x i8]*)
-declare [0 x i8]* @strcpy([0 x i8]*, [0 x i8]*)
-declare i64 @strlen([0 x i8]*)
+declare i8* @malloc(i64 %size)
+declare i8* @memset(i8* %mem, i32 %c, i64 %n)
+declare i8* @memcpy(i8* %dst, i8* %src, i64 %len)
+declare i32 @memcmp(i8* %ptr1, i8* %ptr2, i64 %num)
+declare void @free(i8* %ptr)
+declare i32 @strncmp([0 x i8]* %s1, [0 x i8]* %s2, i64 %n)
+declare i32 @strcmp([0 x i8]* %s1, [0 x i8]* %s2)
+declare [0 x i8]* @strcpy([0 x i8]* %dst, [0 x i8]* %src)
+declare i64 @strlen([0 x i8]* %s)
 
 
-declare i32 @ftruncate(i32, i32)
-
-
-
+declare i32 @ftruncate(i32 %fd, i32 %size)
 
 
 
@@ -102,27 +99,30 @@ declare i32 @ftruncate(i32, i32)
 
 
 
-declare i32 @creat(%Str*, i32)
-declare i32 @open(%Str*, i32)
-declare i32 @read(i32, i8*, i32)
-declare i32 @write(i32, i8*, i32)
-declare i32 @lseek(i32, i32, i32)
-declare i32 @close(i32)
-declare void @exit(i32)
 
 
-declare %DIR* @opendir(%Str*)
-declare i32 @closedir(%DIR*)
+
+declare i32 @creat(%Str* %path, i32 %mode)
+declare i32 @open(%Str* %path, i32 %oflags)
+declare i32 @read(i32 %fd, i8* %buf, i32 %len)
+declare i32 @write(i32 %fd, i8* %buf, i32 %len)
+declare i32 @lseek(i32 %fd, i32 %offset, i32 %whence)
+declare i32 @close(i32 %fd)
+declare void @exit(i32 %rc)
 
 
-declare %Str* @getcwd(%Str*, i64)
-declare %Str* @getenv(%Str*)
+declare %DIR* @opendir(%Str* %name)
+declare i32 @closedir(%DIR* %dir)
 
 
-declare void @bzero(i8*, i64)
+declare %Str* @getcwd(%Str* %buf, i64 %size)
+declare %Str* @getenv(%Str* %name)
 
 
-declare void @bcopy(i8*, i8*, i64)
+declare void @bzero(i8* %s, i64 %n)
+
+
+declare void @bcopy(i8* %src, i8* %dst, i64 %n)
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/examples/8.linked_list/src/linked_list.hm
 
@@ -147,7 +147,7 @@ declare void @bcopy(i8*, i8*, i64)
 
 
 define %List* @linked_list_create() {
-    %1 = call i8*(i64) @malloc (i64 24)
+    %1 = call i8*(i64)@malloc(i64 24)
     %2 = bitcast i8* %1 to %List*
     %3 = icmp eq %List* %2, null
     br i1 %3 , label %then_0, label %endif_0
@@ -203,7 +203,7 @@ endif_0:
 }
 
 define %Node* @linked_list_node_create() {
-    %1 = call i8*(i64) @malloc (i64 24)
+    %1 = call i8*(i64)@malloc(i64 24)
     %2 = bitcast i8* %1 to %Node*
     %3 = icmp eq %Node* %2, null
     br i1 %3 , label %then_0, label %endif_0
@@ -312,7 +312,7 @@ then_0:
     ret %Node* null
     br label %endif_0
 endif_0:
-    %3 = call %Node*() @linked_list_node_create ()
+    %3 = call %Node*()@linked_list_node_create()
     %4 = icmp eq %Node* %3, null
     br i1 %4 , label %then_1, label %endif_1
 then_1:
@@ -323,12 +323,12 @@ endif_1:
     store i8* %link, i8** %6
     %7 = bitcast %List* %list to %List*
     %8 = bitcast %Node* %3 to %Node*
-    %9 = call %Node*(%List*, %Node*) @linked_list_insert_node (%List* %7, %Node* %8)
+    %9 = call %Node*(%List*, %Node*)@linked_list_insert_node(%List* %7, %Node* %8)
     %10 = icmp eq %Node* %9, null
     br i1 %10 , label %then_2, label %endif_2
 then_2:
     %11 = bitcast %Node* %3 to i8*
-    call void(i8*) @free (i8* %11)
+    call void(i8*)@free(i8* %11)
     br label %endif_2
 endif_2:
     %12 = bitcast %Node* %9 to %Node*

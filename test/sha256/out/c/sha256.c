@@ -71,7 +71,7 @@ uint32_t initMagic[8] = {
 void sha256_contextInit(SHA256_Context *ctx)
 {
     //ctx.state := initMagic  // not worked; FIXIT!
-    memcpy((void *)&ctx->state[0], (void *)&initMagic[0], 8 * 4);
+    memcpy((void *)(uint32_t *)&ctx->state, (void *)(uint32_t *)&initMagic, 8 * 4);
 }
 
 
@@ -99,7 +99,8 @@ uint32_t k[64] = {
 
 void sha256_transform(SHA256_Context *ctx, uint8_t *data)
 {
-    uint32_t m[64] = (uint32_t [64]){};
+    uint32_t m[64];
+    memcpy(&m, &(uint32_t [64]){0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U}, sizeof m);
 
     uint32_t i = 0;
     uint32_t j = 0;
@@ -118,7 +119,7 @@ void sha256_transform(SHA256_Context *ctx, uint8_t *data)
     }
 
     uint32_t x[8];
-    memcpy((void *)&x[0], (void *)&ctx->state[0], 8 * 4);
+    memcpy((void *)(uint32_t *)&x, (void *)(uint32_t *)&ctx->state, 8 * 4);
 
     i = 0;
     while (i < 64) {
@@ -152,7 +153,7 @@ void sha256_update(SHA256_Context *ctx, uint8_t *data, uint32_t len)
         ctx->data[ctx->datalen] = data[i];
         ctx->datalen = ctx->datalen + 1;
         if (ctx->datalen == 64) {
-            sha256_transform((SHA256_Context *)ctx, (uint8_t *)&ctx->data[0]);
+            sha256_transform((SHA256_Context *)ctx, (uint8_t *)(uint8_t *)&ctx->data);
             ctx->bitlen = ctx->bitlen + 512;
             ctx->datalen = 0;
         }
@@ -179,8 +180,8 @@ void sha256_final(SHA256_Context *ctx, uint8_t *hash)
     memset((void *)&ctx->data[i], 0, ((size_t)(uint32_t)(n - i)));
 
     if (ctx->datalen >= 56) {
-        sha256_transform((SHA256_Context *)ctx, (uint8_t *)&ctx->data[0]);
-        memset((void *)&ctx->data[0], 0, 56);
+        sha256_transform((SHA256_Context *)ctx, (uint8_t *)(uint8_t *)&ctx->data);
+        memset((void *)(uint8_t *)&ctx->data, 0, 56);
     }
 
     // Append to the padding the total message's length in bits and transform.
@@ -195,7 +196,7 @@ void sha256_final(SHA256_Context *ctx, uint8_t *hash)
     ctx->data[57] = (uint8_t)(ctx->bitlen >> 48);
     ctx->data[56] = (uint8_t)(ctx->bitlen >> 56);
 
-    sha256_transform((SHA256_Context *)ctx, (uint8_t *)&ctx->data[0]);
+    sha256_transform((SHA256_Context *)ctx, (uint8_t *)(uint8_t *)&ctx->data);
 
     // Since this implementation uses little endian byte ordering
     // and SHA uses big endian, reverse all the bytes

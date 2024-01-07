@@ -13,9 +13,9 @@
 #define ratSymbolUTF32  0x0001F400
 
 
-char arr_utf8[8] = {'H', 'i', '!', '\xA'};
-uint16_t arr_utf16[8] = {u'H', u'e', u'l', u'l', u'o', u'!', u'\xA'};
-uint32_t arr_utf32[8] = {U'H', U'e', U'l', U'l', U'o', U'!', U'\xA'};
+char arr_utf8[8] = {'H', 'i', '!', '\xA', '\0', '\0', '\0', '\0'};
+uint16_t arr_utf16[8] = {u'H', u'e', u'l', u'l', u'o', u'!', u'\xA', '\0'};
+uint32_t arr_utf32[8] = {U'H', U'e', U'l', U'l', U'o', U'!', U'\xA', '\0'};
 
 
 #define genericStringConst  {} /*GENERIC-STRING*/

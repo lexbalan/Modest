@@ -16,8 +16,8 @@ var glb_i1: Int32 := 321
 var glb_r0: Point := {}
 var glb_r1: Point := {x = 20, y = 10}
 
-var glb_a0: [10]Int32 := []
-var glb_a1: [10]Int32 := [64, 53, 42]
+var glb_a0: [10]Int32 := [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+var glb_a1: [10]Int32 := [64, 53, 42, 0, 0, 0, 0, 0, 0, 0]
 
 
 func main() -> Int {
@@ -59,8 +59,8 @@ func main() -> Int {
 
     // copy arrays by value
     // C backend will be use memcpy()
-    var loc_a0: [10]Int32 := []
-    var loc_a1: [10]Int32 := [42, 53, 64]
+    var loc_a0: [10]Int32 := [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    var loc_a1: [10]Int32 := [42, 53, 64, 0, 0, 0, 0, 0, 0, 0]
 
     loc_a0 := loc_a1
 
@@ -78,6 +78,42 @@ func main() -> Int {
 
     printf("loc_r0.x = %i\n", loc_r0.x)
     printf("loc_r0.y = %i\n", loc_r0.y)
+
+
+    let dim1 = 15
+    let dim2 = 16
+
+    var aa: [dim1][dim2]Int32
+
+    var i: Int32 := 0
+    while i < 16 {
+        var j: Int32 := 0
+        while j < 16 {
+            aa[i][j] := i * j
+            j := j + 1
+        }
+        i := i + 1
+    }
+
+    i := 0
+    while i < 16 {
+        var k: Int32 := 0
+        while k < 16 {
+            printf("aa[%i][%i] = %i\n", i, k, aa[i][k])
+            k := k + 1
+        }
+        i := i + 1
+    }
+
+
+    let xa = aa[3]
+
+    i := 0
+    while i < dim2 {
+        printf("xa[%i] = %i\n", i, xa[i])
+        i := i + 1
+    }
+
 
     return 0
 }

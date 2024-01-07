@@ -23,7 +23,7 @@ typedef struct {
 
 
 SHA256_TestData test0 = (SHA256_TestData){
-    .input = {'a', 'b', 'c'},
+    .input = {'a', 'b', 'c', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'},
     .input_len = 3,
 
     .output = {
@@ -34,7 +34,7 @@ SHA256_TestData test0 = (SHA256_TestData){
 };
 
 SHA256_TestData test1 = (SHA256_TestData){
-    .input = {'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!'},
+    .input = {'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'},
     .input_len = 12,
 
     .output = {
@@ -52,9 +52,9 @@ SHA256_TestData *sha256_tests[nTests] = {(SHA256_TestData *)&test0, (SHA256_Test
 bool sha256_doTest(SHA256_TestData *test)
 {
     uint8_t test_hash[sha256HashSize];
-    sha256_doHash((uint8_t *)&test->input[0], test->input_len, (uint8_t *)&test_hash[0]);
+    sha256_doHash((uint8_t *)(char *)&test->input, test->input_len, (uint8_t *)(uint8_t *)&test_hash);
 
-    printf("'%s'", &test->input[0]);
+    printf("'%s'", (char *)&test->input);
 
     printf(" -> ");
 
@@ -66,7 +66,7 @@ bool sha256_doTest(SHA256_TestData *test)
 
     printf("\n");
 
-    const bool is_eq = memcmp((void *)&test->output[0], (void *)&test_hash[0], sha256HashSize) == 0;
+    const bool is_eq = memcmp((void *)(uint8_t *)&test->output, (void *)(uint8_t *)&test_hash, sha256HashSize) == 0;
     return is_eq;
 }
 

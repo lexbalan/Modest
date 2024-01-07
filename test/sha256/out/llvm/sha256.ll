@@ -74,21 +74,18 @@ target triple = "arm64-apple-macosx12.0.0"
 
 
 declare i64 @clock()
-declare i8* @malloc(i64)
-declare i8* @memset(i8*, i32, i64)
-declare i8* @memcpy(i8*, i8*, i64)
-declare i32 @memcmp(i8*, i8*, i64)
-declare void @free(i8*)
-declare i32 @strncmp([0 x i8]*, [0 x i8]*, i64)
-declare i32 @strcmp([0 x i8]*, [0 x i8]*)
-declare [0 x i8]* @strcpy([0 x i8]*, [0 x i8]*)
-declare i64 @strlen([0 x i8]*)
+declare i8* @malloc(i64 %size)
+declare i8* @memset(i8* %mem, i32 %c, i64 %n)
+declare i8* @memcpy(i8* %dst, i8* %src, i64 %len)
+declare i32 @memcmp(i8* %ptr1, i8* %ptr2, i64 %num)
+declare void @free(i8* %ptr)
+declare i32 @strncmp([0 x i8]* %s1, [0 x i8]* %s2, i64 %n)
+declare i32 @strcmp([0 x i8]* %s1, [0 x i8]* %s2)
+declare [0 x i8]* @strcpy([0 x i8]* %dst, [0 x i8]* %src)
+declare i64 @strlen([0 x i8]* %s)
 
 
-declare i32 @ftruncate(i32, i32)
-
-
-
+declare i32 @ftruncate(i32 %fd, i32 %size)
 
 
 
@@ -102,27 +99,30 @@ declare i32 @ftruncate(i32, i32)
 
 
 
-declare i32 @creat(%Str*, i32)
-declare i32 @open(%Str*, i32)
-declare i32 @read(i32, i8*, i32)
-declare i32 @write(i32, i8*, i32)
-declare i32 @lseek(i32, i32, i32)
-declare i32 @close(i32)
-declare void @exit(i32)
 
 
-declare %DIR* @opendir(%Str*)
-declare i32 @closedir(%DIR*)
+
+declare i32 @creat(%Str* %path, i32 %mode)
+declare i32 @open(%Str* %path, i32 %oflags)
+declare i32 @read(i32 %fd, i8* %buf, i32 %len)
+declare i32 @write(i32 %fd, i8* %buf, i32 %len)
+declare i32 @lseek(i32 %fd, i32 %offset, i32 %whence)
+declare i32 @close(i32 %fd)
+declare void @exit(i32 %rc)
 
 
-declare %Str* @getcwd(%Str*, i64)
-declare %Str* @getenv(%Str*)
+declare %DIR* @opendir(%Str* %name)
+declare i32 @closedir(%DIR* %dir)
 
 
-declare void @bzero(i8*, i64)
+declare %Str* @getcwd(%Str* %buf, i64 %size)
+declare %Str* @getenv(%Str* %name)
 
 
-declare void @bcopy(i8*, i8*, i64)
+declare void @bzero(i8* %s, i64 %n)
+
+
+declare void @bcopy(i8* %src, i8* %dst, i64 %n)
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/misc/sha256.cm
 
@@ -170,26 +170,26 @@ define i32 @maj(i32 %x, i32 %y, i32 %z) {
 }
 
 define i32 @ep0(i32 %x) {
-    %1 = call i32(i32, i32) @rotright (i32 %x, i32 2)
-    %2 = call i32(i32, i32) @rotright (i32 %x, i32 13)
-    %3 = call i32(i32, i32) @rotright (i32 %x, i32 22)
+    %1 = call i32(i32, i32)@rotright(i32 %x, i32 2)
+    %2 = call i32(i32, i32)@rotright(i32 %x, i32 13)
+    %3 = call i32(i32, i32)@rotright(i32 %x, i32 22)
     %4 = xor i32 %2, %3
     %5 = xor i32 %1, %4
     ret i32 %5
 }
 
 define i32 @ep1(i32 %x) {
-    %1 = call i32(i32, i32) @rotright (i32 %x, i32 6)
-    %2 = call i32(i32, i32) @rotright (i32 %x, i32 11)
-    %3 = call i32(i32, i32) @rotright (i32 %x, i32 25)
+    %1 = call i32(i32, i32)@rotright(i32 %x, i32 6)
+    %2 = call i32(i32, i32)@rotright(i32 %x, i32 11)
+    %3 = call i32(i32, i32)@rotright(i32 %x, i32 25)
     %4 = xor i32 %2, %3
     %5 = xor i32 %1, %4
     ret i32 %5
 }
 
 define i32 @sig0(i32 %x) {
-    %1 = call i32(i32, i32) @rotright (i32 %x, i32 7)
-    %2 = call i32(i32, i32) @rotright (i32 %x, i32 18)
+    %1 = call i32(i32, i32)@rotright(i32 %x, i32 7)
+    %2 = call i32(i32, i32)@rotright(i32 %x, i32 18)
     %3 = lshr i32 %x, 3
     %4 = xor i32 %2, %3
     %5 = xor i32 %1, %4
@@ -197,8 +197,8 @@ define i32 @sig0(i32 %x) {
 }
 
 define i32 @sig1(i32 %x) {
-    %1 = call i32(i32, i32) @rotright (i32 %x, i32 17)
-    %2 = call i32(i32, i32) @rotright (i32 %x, i32 19)
+    %1 = call i32(i32, i32)@rotright(i32 %x, i32 17)
+    %2 = call i32(i32, i32)@rotright(i32 %x, i32 19)
     %3 = lshr i32 %x, 10
     %4 = xor i32 %2, %3
     %5 = xor i32 %1, %4
@@ -223,7 +223,7 @@ define void @sha256_contextInit(%SHA256_Context* %ctx) {
     %1 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 3
     %2 = bitcast [8 x i32]* %1 to i8*
     %3 = bitcast [8 x i32]* @initMagic to i8*
-    %4 = call i8*(i8*, i8*, i64) @memcpy (i8* %2, i8* %3, i64 32)
+    %4 = call i8*(i8*, i8*, i64)@memcpy(i8* %2, i8* %3, i64 32)
     ret void
 }
 
@@ -421,7 +421,7 @@ body_2:
     %103 = sub i32 %102, 2
     %104 = getelementptr inbounds [64 x i32], [64 x i32]* %m, i32 0, i32 %103
     %105 = load i32, i32* %104
-    %106 = call i32(i32) @sig1 (i32 %105)
+    %106 = call i32(i32)@sig1(i32 %105)
     %107 = load i32, i32* %i
     %108 = sub i32 %107, 7
     %109 = getelementptr inbounds [64 x i32], [64 x i32]* %m, i32 0, i32 %108
@@ -431,7 +431,7 @@ body_2:
     %113 = sub i32 %112, 15
     %114 = getelementptr inbounds [64 x i32], [64 x i32]* %m, i32 0, i32 %113
     %115 = load i32, i32* %114
-    %116 = call i32(i32) @sig0 (i32 %115)
+    %116 = call i32(i32)@sig0(i32 %115)
     %117 = add i32 %111, %116
     %118 = load i32, i32* %i
     %119 = sub i32 %118, 16
@@ -450,7 +450,7 @@ break_2:
     %127 = bitcast [8 x i32]* %x to i8*
     %128 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 3
     %129 = bitcast [8 x i32]* %128 to i8*
-    %130 = call i8*(i8*, i8*, i64) @memcpy (i8* %127, i8* %129, i64 32)
+    %130 = call i8*(i8*, i8*, i64)@memcpy(i8* %127, i8* %129, i64 32)
     store i32 0, i32* %i
     br label %again_3
 again_3:
@@ -462,7 +462,7 @@ body_3:
     %134 = load i32, i32* %133
     %135 = getelementptr inbounds [8 x i32], [8 x i32]* %x, i32 0, i32 4
     %136 = load i32, i32* %135
-    %137 = call i32(i32) @ep1 (i32 %136)
+    %137 = call i32(i32)@ep1(i32 %136)
     %138 = add i32 %134, %137
     %139 = getelementptr inbounds [8 x i32], [8 x i32]* %x, i32 0, i32 4
     %140 = load i32, i32* %139
@@ -470,7 +470,7 @@ body_3:
     %142 = load i32, i32* %141
     %143 = getelementptr inbounds [8 x i32], [8 x i32]* %x, i32 0, i32 6
     %144 = load i32, i32* %143
-    %145 = call i32(i32, i32, i32) @ch (i32 %140, i32 %142, i32 %144)
+    %145 = call i32(i32, i32, i32)@ch(i32 %140, i32 %142, i32 %144)
     %146 = add i32 %138, %145
     %147 = load i32, i32* %i
     %148 = getelementptr inbounds [64 x i32], [64 x i32]* @k, i32 0, i32 %147
@@ -482,14 +482,14 @@ body_3:
     %154 = add i32 %150, %153
     %155 = getelementptr inbounds [8 x i32], [8 x i32]* %x, i32 0, i32 0
     %156 = load i32, i32* %155
-    %157 = call i32(i32) @ep0 (i32 %156)
+    %157 = call i32(i32)@ep0(i32 %156)
     %158 = getelementptr inbounds [8 x i32], [8 x i32]* %x, i32 0, i32 0
     %159 = load i32, i32* %158
     %160 = getelementptr inbounds [8 x i32], [8 x i32]* %x, i32 0, i32 1
     %161 = load i32, i32* %160
     %162 = getelementptr inbounds [8 x i32], [8 x i32]* %x, i32 0, i32 2
     %163 = load i32, i32* %162
-    %164 = call i32(i32, i32, i32) @maj (i32 %159, i32 %161, i32 %163)
+    %164 = call i32(i32, i32, i32)@maj(i32 %159, i32 %161, i32 %163)
     %165 = add i32 %157, %164
     %166 = getelementptr inbounds [8 x i32], [8 x i32]* %x, i32 0, i32 6
     %167 = load i32, i32* %166
@@ -585,7 +585,7 @@ then_0:
     %17 = bitcast %SHA256_Context* %ctx to %SHA256_Context*
     %18 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 0
     %19 = bitcast [64 x i8]* %18 to [0 x i8]*
-    call void(%SHA256_Context*, [0 x i8]*) @sha256_transform (%SHA256_Context* %17, [0 x i8]* %19)
+    call void(%SHA256_Context*, [0 x i8]*)@sha256_transform(%SHA256_Context* %17, [0 x i8]* %19)
     %20 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 2
     %21 = load i64, i64* %20
     %22 = add i64 %21, 512
@@ -634,7 +634,7 @@ endif_0:
     %16 = load i32, i32* %i
     %17 = sub i32 %15, %16
     %18 = zext i32 %17 to i64
-    %19 = call i8*(i8*, i32, i64) @memset (i8* %14, i32 0, i64 %18)
+    %19 = call i8*(i8*, i32, i64)@memset(i8* %14, i32 0, i64 %18)
     %20 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 1
     %21 = load i32, i32* %20
     %22 = icmp uge i32 %21, 56
@@ -643,10 +643,10 @@ then_1:
     %23 = bitcast %SHA256_Context* %ctx to %SHA256_Context*
     %24 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 0
     %25 = bitcast [64 x i8]* %24 to [0 x i8]*
-    call void(%SHA256_Context*, [0 x i8]*) @sha256_transform (%SHA256_Context* %23, [0 x i8]* %25)
+    call void(%SHA256_Context*, [0 x i8]*)@sha256_transform(%SHA256_Context* %23, [0 x i8]* %25)
     %26 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 0
     %27 = bitcast [64 x i8]* %26 to i8*
-    %28 = call i8*(i8*, i32, i64) @memset (i8* %27, i32 0, i64 56)
+    %28 = call i8*(i8*, i32, i64)@memset(i8* %27, i32 0, i64 56)
     br label %endif_1
 endif_1:
     ; Append to the padding the total message's length in bits and transform.
@@ -718,7 +718,7 @@ endif_1:
     %85 = bitcast %SHA256_Context* %ctx to %SHA256_Context*
     %86 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 0
     %87 = bitcast [64 x i8]* %86 to [0 x i8]*
-    call void(%SHA256_Context*, [0 x i8]*) @sha256_transform (%SHA256_Context* %85, [0 x i8]* %87)
+    call void(%SHA256_Context*, [0 x i8]*)@sha256_transform(%SHA256_Context* %85, [0 x i8]* %87)
     ; Since this implementation uses little endian byte ordering
     ; and SHA uses big endian, reverse all the bytes
     ; when copying the final state to the output hash.
@@ -818,11 +818,11 @@ define void @sha256_doHash([0 x i8]* %msg, i32 %len, [0 x i8]* %hash) {
     %ctx = alloca %SHA256_Context
     store %SHA256_Context zeroinitializer, %SHA256_Context* %ctx
     %1 = bitcast %SHA256_Context* %ctx to %SHA256_Context*
-    call void(%SHA256_Context*) @sha256_contextInit (%SHA256_Context* %1)
+    call void(%SHA256_Context*)@sha256_contextInit(%SHA256_Context* %1)
     %2 = bitcast %SHA256_Context* %ctx to %SHA256_Context*
-    call void(%SHA256_Context*, [0 x i8]*, i32) @sha256_update (%SHA256_Context* %2, [0 x i8]* %msg, i32 %len)
+    call void(%SHA256_Context*, [0 x i8]*, i32)@sha256_update(%SHA256_Context* %2, [0 x i8]* %msg, i32 %len)
     %3 = bitcast %SHA256_Context* %ctx to %SHA256_Context*
-    call void(%SHA256_Context*, [0 x i8]*) @sha256_final (%SHA256_Context* %3, [0 x i8]* %hash)
+    call void(%SHA256_Context*, [0 x i8]*)@sha256_final(%SHA256_Context* %3, [0 x i8]* %hash)
     ret void
 }
 

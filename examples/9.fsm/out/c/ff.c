@@ -73,7 +73,7 @@ void ff_memcpy(void *dst, void *src, uint64_t len)
 uint64_t ff_cstrlen(char *cstr)
 {
     uint64_t i = 0;
-    while (cstr[i] != '\x0') {
+    while (cstr[i] != '\0') {
         i = i + 1;
     }
     return i;

@@ -47,47 +47,47 @@ target triple = "arm64-apple-macosx12.0.0"
 %ConstCharStr = type [0 x i8]
 
 
-declare i32 @fclose(%FILE*)
-declare i32 @feof(%FILE*)
-declare i32 @ferror(%FILE*)
-declare i32 @fflush(%FILE*)
-declare i32 @fgetpos(%FILE*, %FposT*)
-declare %FILE* @fopen(%ConstCharStr*, %ConstCharStr*)
-declare i64 @fread(i8*, i64, i64, %FILE*)
-declare i64 @fwrite(i8*, i64, i64, %FILE*)
-declare %FILE* @freopen(%ConstCharStr*, %ConstCharStr*, %FILE*)
-declare i32 @fseek(%FILE*, i64, i32)
-declare i32 @fsetpos(%FILE*, %FposT*)
-declare i64 @ftell(%FILE*)
-declare i32 @remove(%ConstCharStr*)
-declare i32 @rename(%ConstCharStr*, %ConstCharStr*)
-declare void @rewind(%FILE*)
-declare void @setbuf(%FILE*, %CharStr*)
+declare i32 @fclose(%FILE* %f)
+declare i32 @feof(%FILE* %f)
+declare i32 @ferror(%FILE* %f)
+declare i32 @fflush(%FILE* %f)
+declare i32 @fgetpos(%FILE* %f, %FposT* %pos)
+declare %FILE* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
+declare i64 @fread(i8* %buf, i64 %size, i64 %count, %FILE* %f)
+declare i64 @fwrite(i8* %buf, i64 %size, i64 %count, %FILE* %f)
+declare %FILE* @freopen(%ConstCharStr* %filename, %ConstCharStr* %mode, %FILE* %f)
+declare i32 @fseek(%FILE* %stream, i64 %offset, i32 %whence)
+declare i32 @fsetpos(%FILE* %f, %FposT* %pos)
+declare i64 @ftell(%FILE* %f)
+declare i32 @remove(%ConstCharStr* %filename)
+declare i32 @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
+declare void @rewind(%FILE* %f)
+declare void @setbuf(%FILE* %f, %CharStr* %buffer)
 
 
-declare i32 @setvbuf(%FILE*, %CharStr*, i32, i64)
+declare i32 @setvbuf(%FILE* %f, %CharStr* %buffer, i32 %mode, i64 %size)
 declare %FILE* @tmpfile()
-declare %CharStr* @tmpnam(%CharStr*)
-declare i32 @printf(%ConstCharStr*, ...)
-declare i32 @scanf(%ConstCharStr*, ...)
-declare i32 @fprintf(%FILE*, %Str*, ...)
-declare i32 @fscanf(%FILE*, %ConstCharStr*, ...)
-declare i32 @sscanf(%ConstCharStr*, %ConstCharStr*, ...)
-declare i32 @sprintf(%CharStr*, %ConstCharStr*, ...)
+declare %CharStr* @tmpnam(%CharStr* %str)
+declare i32 @printf(%ConstCharStr* %s, ...)
+declare i32 @scanf(%ConstCharStr* %s, ...)
+declare i32 @fprintf(%FILE* %stream, %Str* %format, ...)
+declare i32 @fscanf(%FILE* %f, %ConstCharStr* %format, ...)
+declare i32 @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
+declare i32 @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
 
 
-declare i32 @fgetc(%FILE*)
-declare i32 @fputc(i32, %FILE*)
-declare %CharStr* @fgets(%CharStr*, i32, %FILE*)
-declare i32 @fputs(%ConstCharStr*, %FILE*)
-declare i32 @getc(%FILE*)
+declare i32 @fgetc(%FILE* %f)
+declare i32 @fputc(i32 %char, %FILE* %f)
+declare %CharStr* @fgets(%CharStr* %str, i32 %n, %FILE* %f)
+declare i32 @fputs(%ConstCharStr* %str, %FILE* %f)
+declare i32 @getc(%FILE* %f)
 declare i32 @getchar()
-declare %CharStr* @gets(%CharStr*)
-declare i32 @putc(i32, %FILE*)
-declare i32 @putchar(i32)
-declare i32 @puts(%ConstCharStr*)
-declare i32 @ungetc(i32, %FILE*)
-declare void @perror(%ConstCharStr*)
+declare %CharStr* @gets(%CharStr* %str)
+declare i32 @putc(i32 %char, %FILE* %f)
+declare i32 @putchar(i32 %char)
+declare i32 @puts(%ConstCharStr* %str)
+declare i32 @ungetc(i32 %char, %FILE* %f)
+declare void @perror(%ConstCharStr* %str)
 
 ; -- SOURCE: src/main.cm
 
@@ -102,13 +102,13 @@ declare void @perror(%ConstCharStr*)
 
 
 define i32 @main() {
-    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([4 x i8]* @str1 to [0 x i8]*), [0 x i8]* bitcast ([12 x i8]* @str2 to [0 x i8]*))
+    %1 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([4 x i8]* @str1 to [0 x i8]*), [0 x i8]* bitcast ([12 x i8]* @str2 to [0 x i8]*))
     br i1 1 , label %then_0, label %else_0
 then_0:
-    %2 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([10 x i8]* @str3 to [0 x i8]*))
+    %2 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([10 x i8]* @str3 to [0 x i8]*))
     br label %endif_0
 else_0:
-    %3 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([14 x i8]* @str4 to [0 x i8]*))
+    %3 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([14 x i8]* @str4 to [0 x i8]*))
     br label %endif_0
 endif_0:
     ret i32 0

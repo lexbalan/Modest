@@ -34,8 +34,8 @@ void xor_encrypter(uint8_t *buf, uint32_t buflen, uint8_t *key, uint32_t keylen)
 #define msg_length  12
 #define key_length  3
 
-char test_msg[msg_length + 1] = {'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!'};
-char test_key[key_length + 1] = {'a', 'b', 'c'};
+char test_msg[msg_length + 1] = {'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!', '\0'};
+char test_key[key_length + 1] = {'a', 'b', 'c', '\0'};
 
 
 void print_bytes(uint8_t *buf, uint32_t len)
@@ -53,8 +53,8 @@ int main(void)
 {
     printf("test xor encrypting\n");
 
-    uint8_t *const tmsg = (uint8_t *const)&test_msg[0];
-    uint8_t *const tkey = (uint8_t *const)&test_key[0];
+    uint8_t *const tmsg = (uint8_t *const)(char *)&test_msg;
+    uint8_t *const tkey = (uint8_t *const)(char *)&test_key;
 
     printf("before encrypt test_msg: \n");
     print_bytes((uint8_t *)tmsg, msg_length);

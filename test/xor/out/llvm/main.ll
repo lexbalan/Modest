@@ -47,47 +47,47 @@ target triple = "arm64-apple-macosx12.0.0"
 %ConstCharStr = type [0 x i8]
 
 
-declare i32 @fclose(%FILE*)
-declare i32 @feof(%FILE*)
-declare i32 @ferror(%FILE*)
-declare i32 @fflush(%FILE*)
-declare i32 @fgetpos(%FILE*, %FposT*)
-declare %FILE* @fopen(%ConstCharStr*, %ConstCharStr*)
-declare i64 @fread(i8*, i64, i64, %FILE*)
-declare i64 @fwrite(i8*, i64, i64, %FILE*)
-declare %FILE* @freopen(%ConstCharStr*, %ConstCharStr*, %FILE*)
-declare i32 @fseek(%FILE*, i64, i32)
-declare i32 @fsetpos(%FILE*, %FposT*)
-declare i64 @ftell(%FILE*)
-declare i32 @remove(%ConstCharStr*)
-declare i32 @rename(%ConstCharStr*, %ConstCharStr*)
-declare void @rewind(%FILE*)
-declare void @setbuf(%FILE*, %CharStr*)
+declare i32 @fclose(%FILE* %f)
+declare i32 @feof(%FILE* %f)
+declare i32 @ferror(%FILE* %f)
+declare i32 @fflush(%FILE* %f)
+declare i32 @fgetpos(%FILE* %f, %FposT* %pos)
+declare %FILE* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
+declare i64 @fread(i8* %buf, i64 %size, i64 %count, %FILE* %f)
+declare i64 @fwrite(i8* %buf, i64 %size, i64 %count, %FILE* %f)
+declare %FILE* @freopen(%ConstCharStr* %filename, %ConstCharStr* %mode, %FILE* %f)
+declare i32 @fseek(%FILE* %stream, i64 %offset, i32 %whence)
+declare i32 @fsetpos(%FILE* %f, %FposT* %pos)
+declare i64 @ftell(%FILE* %f)
+declare i32 @remove(%ConstCharStr* %filename)
+declare i32 @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
+declare void @rewind(%FILE* %f)
+declare void @setbuf(%FILE* %f, %CharStr* %buffer)
 
 
-declare i32 @setvbuf(%FILE*, %CharStr*, i32, i64)
+declare i32 @setvbuf(%FILE* %f, %CharStr* %buffer, i32 %mode, i64 %size)
 declare %FILE* @tmpfile()
-declare %CharStr* @tmpnam(%CharStr*)
-declare i32 @printf(%ConstCharStr*, ...)
-declare i32 @scanf(%ConstCharStr*, ...)
-declare i32 @fprintf(%FILE*, %Str*, ...)
-declare i32 @fscanf(%FILE*, %ConstCharStr*, ...)
-declare i32 @sscanf(%ConstCharStr*, %ConstCharStr*, ...)
-declare i32 @sprintf(%CharStr*, %ConstCharStr*, ...)
+declare %CharStr* @tmpnam(%CharStr* %str)
+declare i32 @printf(%ConstCharStr* %s, ...)
+declare i32 @scanf(%ConstCharStr* %s, ...)
+declare i32 @fprintf(%FILE* %stream, %Str* %format, ...)
+declare i32 @fscanf(%FILE* %f, %ConstCharStr* %format, ...)
+declare i32 @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
+declare i32 @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
 
 
-declare i32 @fgetc(%FILE*)
-declare i32 @fputc(i32, %FILE*)
-declare %CharStr* @fgets(%CharStr*, i32, %FILE*)
-declare i32 @fputs(%ConstCharStr*, %FILE*)
-declare i32 @getc(%FILE*)
+declare i32 @fgetc(%FILE* %f)
+declare i32 @fputc(i32 %char, %FILE* %f)
+declare %CharStr* @fgets(%CharStr* %str, i32 %n, %FILE* %f)
+declare i32 @fputs(%ConstCharStr* %str, %FILE* %f)
+declare i32 @getc(%FILE* %f)
 declare i32 @getchar()
-declare %CharStr* @gets(%CharStr*)
-declare i32 @putc(i32, %FILE*)
-declare i32 @putchar(i32)
-declare i32 @puts(%ConstCharStr*)
-declare i32 @ungetc(i32, %FILE*)
-declare void @perror(%ConstCharStr*)
+declare %CharStr* @gets(%CharStr* %str)
+declare i32 @putc(i32 %char, %FILE* %f)
+declare i32 @putchar(i32 %char)
+declare i32 @puts(%ConstCharStr* %str)
+declare i32 @ungetc(i32 %char, %FILE* %f)
+declare void @perror(%ConstCharStr* %str)
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/libc.hm
 
@@ -128,21 +128,18 @@ declare void @perror(%ConstCharStr*)
 
 
 declare i64 @clock()
-declare i8* @malloc(i64)
-declare i8* @memset(i8*, i32, i64)
-declare i8* @memcpy(i8*, i8*, i64)
-declare i32 @memcmp(i8*, i8*, i64)
-declare void @free(i8*)
-declare i32 @strncmp([0 x i8]*, [0 x i8]*, i64)
-declare i32 @strcmp([0 x i8]*, [0 x i8]*)
-declare [0 x i8]* @strcpy([0 x i8]*, [0 x i8]*)
-declare i64 @strlen([0 x i8]*)
+declare i8* @malloc(i64 %size)
+declare i8* @memset(i8* %mem, i32 %c, i64 %n)
+declare i8* @memcpy(i8* %dst, i8* %src, i64 %len)
+declare i32 @memcmp(i8* %ptr1, i8* %ptr2, i64 %num)
+declare void @free(i8* %ptr)
+declare i32 @strncmp([0 x i8]* %s1, [0 x i8]* %s2, i64 %n)
+declare i32 @strcmp([0 x i8]* %s1, [0 x i8]* %s2)
+declare [0 x i8]* @strcpy([0 x i8]* %dst, [0 x i8]* %src)
+declare i64 @strlen([0 x i8]* %s)
 
 
-declare i32 @ftruncate(i32, i32)
-
-
-
+declare i32 @ftruncate(i32 %fd, i32 %size)
 
 
 
@@ -156,27 +153,30 @@ declare i32 @ftruncate(i32, i32)
 
 
 
-declare i32 @creat(%Str*, i32)
-declare i32 @open(%Str*, i32)
-declare i32 @read(i32, i8*, i32)
-declare i32 @write(i32, i8*, i32)
-declare i32 @lseek(i32, i32, i32)
-declare i32 @close(i32)
-declare void @exit(i32)
 
 
-declare %DIR* @opendir(%Str*)
-declare i32 @closedir(%DIR*)
+
+declare i32 @creat(%Str* %path, i32 %mode)
+declare i32 @open(%Str* %path, i32 %oflags)
+declare i32 @read(i32 %fd, i8* %buf, i32 %len)
+declare i32 @write(i32 %fd, i8* %buf, i32 %len)
+declare i32 @lseek(i32 %fd, i32 %offset, i32 %whence)
+declare i32 @close(i32 %fd)
+declare void @exit(i32 %rc)
 
 
-declare %Str* @getcwd(%Str*, i64)
-declare %Str* @getenv(%Str*)
+declare %DIR* @opendir(%Str* %name)
+declare i32 @closedir(%DIR* %dir)
 
 
-declare void @bzero(i8*, i64)
+declare %Str* @getcwd(%Str* %buf, i64 %size)
+declare %Str* @getenv(%Str* %name)
 
 
-declare void @bcopy(i8*, i8*, i64)
+declare void @bzero(i8* %s, i64 %n)
+
+
+declare void @bcopy(i8* %src, i8* %dst, i64 %n)
 
 ; -- SOURCE: src/main.cm
 
@@ -247,13 +247,13 @@ break_1:
     i8 108,
     i8 100,
     i8 33,
-    i8 zeroinitializer
+    i8 0
 ]
 @test_key = global [4 x i8] [
     i8 97,
     i8 98,
     i8 99,
-    i8 zeroinitializer
+    i8 0
 ]
 
 define void @print_bytes([0 x i8]* %buf, i32 %len) {
@@ -268,30 +268,30 @@ body_1:
     %3 = load i32, i32* %i
     %4 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %3
     %5 = load i8, i8* %4
-    %6 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([8 x i8]* @str1 to [0 x i8]*), i8 %5)
+    %6 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([8 x i8]* @str1 to [0 x i8]*), i8 %5)
     %7 = load i32, i32* %i
     %8 = add i32 %7, 1
     store i32 %8, i32* %i
     br label %again_1
 break_1:
-    %9 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
+    %9 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
     ret void
 }
 
 define i32 @main() {
-    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([21 x i8]* @str3 to [0 x i8]*))
+    %1 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([21 x i8]* @str3 to [0 x i8]*))
     %2 = bitcast [13 x i8]* @test_msg to [0 x i8]*
     %3 = bitcast [4 x i8]* @test_key to [0 x i8]*
-    %4 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([27 x i8]* @str4 to [0 x i8]*))
-    call void([0 x i8]*, i32) @print_bytes ([0 x i8]* %2, i32 12)
+    %4 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([27 x i8]* @str4 to [0 x i8]*))
+    call void([0 x i8]*, i32)@print_bytes([0 x i8]* %2, i32 12)
     ; encrypt test data
-    call void([0 x i8]*, i32, [0 x i8]*, i32) @xor_encrypter ([0 x i8]* %2, i32 12, [0 x i8]* %3, i32 3)
-    %5 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([26 x i8]* @str5 to [0 x i8]*))
-    call void([0 x i8]*, i32) @print_bytes ([0 x i8]* %2, i32 12)
+    call void([0 x i8]*, i32, [0 x i8]*, i32)@xor_encrypter([0 x i8]* %2, i32 12, [0 x i8]* %3, i32 3)
+    %5 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([26 x i8]* @str5 to [0 x i8]*))
+    call void([0 x i8]*, i32)@print_bytes([0 x i8]* %2, i32 12)
     ; decrypt test data
-    call void([0 x i8]*, i32, [0 x i8]*, i32) @xor_encrypter ([0 x i8]* %2, i32 12, [0 x i8]* %3, i32 3)
-    %6 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([26 x i8]* @str6 to [0 x i8]*))
-    call void([0 x i8]*, i32) @print_bytes ([0 x i8]* %2, i32 12)
+    call void([0 x i8]*, i32, [0 x i8]*, i32)@xor_encrypter([0 x i8]* %2, i32 12, [0 x i8]* %3, i32 3)
+    %6 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([26 x i8]* @str6 to [0 x i8]*))
+    call void([0 x i8]*, i32)@print_bytes([0 x i8]* %2, i32 12)
     ret i32 0
 }
 

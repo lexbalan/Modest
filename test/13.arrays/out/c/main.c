@@ -28,7 +28,8 @@ int main(void)
 
     printf("------------------------------------\n");
 
-    int32_t localArray[3] = (int32_t [3]){4, 5, 6};
+    int32_t localArray[3];
+    memcpy(&localArray, &(int32_t [3]){4, 5, 6}, sizeof localArray);
 
     i = 0;
     while (i < 3) {
@@ -40,7 +41,7 @@ int main(void)
     printf("------------------------------------\n");
 
     int32_t *globalArrayPtr;
-    globalArrayPtr = (int32_t *)&globalArray[0];
+    globalArrayPtr = (int32_t *)(int32_t *)&globalArray;
 
     i = 0;
     while (i < 3) {
@@ -52,7 +53,7 @@ int main(void)
     printf("------------------------------------\n");
 
     int32_t *localArrayPtr;
-    localArrayPtr = (int32_t *)&localArray[0];
+    localArrayPtr = (int32_t *)(int32_t *)&localArray;
 
     i = 0;
     while (i < 3) {

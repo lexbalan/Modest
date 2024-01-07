@@ -47,47 +47,47 @@ target triple = "arm64-apple-macosx12.0.0"
 %ConstCharStr = type [0 x i8]
 
 
-declare i32 @fclose(%FILE*)
-declare i32 @feof(%FILE*)
-declare i32 @ferror(%FILE*)
-declare i32 @fflush(%FILE*)
-declare i32 @fgetpos(%FILE*, %FposT*)
-declare %FILE* @fopen(%ConstCharStr*, %ConstCharStr*)
-declare i64 @fread(i8*, i64, i64, %FILE*)
-declare i64 @fwrite(i8*, i64, i64, %FILE*)
-declare %FILE* @freopen(%ConstCharStr*, %ConstCharStr*, %FILE*)
-declare i32 @fseek(%FILE*, i64, i32)
-declare i32 @fsetpos(%FILE*, %FposT*)
-declare i64 @ftell(%FILE*)
-declare i32 @remove(%ConstCharStr*)
-declare i32 @rename(%ConstCharStr*, %ConstCharStr*)
-declare void @rewind(%FILE*)
-declare void @setbuf(%FILE*, %CharStr*)
+declare i32 @fclose(%FILE* %f)
+declare i32 @feof(%FILE* %f)
+declare i32 @ferror(%FILE* %f)
+declare i32 @fflush(%FILE* %f)
+declare i32 @fgetpos(%FILE* %f, %FposT* %pos)
+declare %FILE* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
+declare i64 @fread(i8* %buf, i64 %size, i64 %count, %FILE* %f)
+declare i64 @fwrite(i8* %buf, i64 %size, i64 %count, %FILE* %f)
+declare %FILE* @freopen(%ConstCharStr* %filename, %ConstCharStr* %mode, %FILE* %f)
+declare i32 @fseek(%FILE* %stream, i64 %offset, i32 %whence)
+declare i32 @fsetpos(%FILE* %f, %FposT* %pos)
+declare i64 @ftell(%FILE* %f)
+declare i32 @remove(%ConstCharStr* %filename)
+declare i32 @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
+declare void @rewind(%FILE* %f)
+declare void @setbuf(%FILE* %f, %CharStr* %buffer)
 
 
-declare i32 @setvbuf(%FILE*, %CharStr*, i32, i64)
+declare i32 @setvbuf(%FILE* %f, %CharStr* %buffer, i32 %mode, i64 %size)
 declare %FILE* @tmpfile()
-declare %CharStr* @tmpnam(%CharStr*)
-declare i32 @printf(%ConstCharStr*, ...)
-declare i32 @scanf(%ConstCharStr*, ...)
-declare i32 @fprintf(%FILE*, %Str*, ...)
-declare i32 @fscanf(%FILE*, %ConstCharStr*, ...)
-declare i32 @sscanf(%ConstCharStr*, %ConstCharStr*, ...)
-declare i32 @sprintf(%CharStr*, %ConstCharStr*, ...)
+declare %CharStr* @tmpnam(%CharStr* %str)
+declare i32 @printf(%ConstCharStr* %s, ...)
+declare i32 @scanf(%ConstCharStr* %s, ...)
+declare i32 @fprintf(%FILE* %stream, %Str* %format, ...)
+declare i32 @fscanf(%FILE* %f, %ConstCharStr* %format, ...)
+declare i32 @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
+declare i32 @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
 
 
-declare i32 @fgetc(%FILE*)
-declare i32 @fputc(i32, %FILE*)
-declare %CharStr* @fgets(%CharStr*, i32, %FILE*)
-declare i32 @fputs(%ConstCharStr*, %FILE*)
-declare i32 @getc(%FILE*)
+declare i32 @fgetc(%FILE* %f)
+declare i32 @fputc(i32 %char, %FILE* %f)
+declare %CharStr* @fgets(%CharStr* %str, i32 %n, %FILE* %f)
+declare i32 @fputs(%ConstCharStr* %str, %FILE* %f)
+declare i32 @getc(%FILE* %f)
 declare i32 @getchar()
-declare %CharStr* @gets(%CharStr*)
-declare i32 @putc(i32, %FILE*)
-declare i32 @putchar(i32)
-declare i32 @puts(%ConstCharStr*)
-declare i32 @ungetc(i32, %FILE*)
-declare void @perror(%ConstCharStr*)
+declare %CharStr* @gets(%CharStr* %str)
+declare i32 @putc(i32 %char, %FILE* %f)
+declare i32 @putchar(i32 %char)
+declare i32 @puts(%ConstCharStr* %str)
+declare i32 @ungetc(i32 %char, %FILE* %f)
+declare void @perror(%ConstCharStr* %str)
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/examples/9.fsm/src/fsm.hm
 
@@ -117,22 +117,22 @@ declare void @perror(%ConstCharStr*)
 }
 
 
-declare [0 x i8]* @fsm_state_no_name(%FSM*, i32)
-declare void @fsm_switch(%FSM*, i32)
-declare void @fsm_run(%FSM*)
+declare [0 x i8]* @fsm_state_no_name(%FSM* %fsm, i32 %state_no)
+declare void @fsm_switch(%FSM* %fsm, i32 %state)
+declare void @fsm_run(%FSM* %fsm)
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/fastfood/main.hm
 
 
 
-declare void @ff_memzero(i8*, i64)
-declare void @ff_memcpy(i8*, i8*, i64)
-declare i64 @ff_cstrlen([0 x i8]*)
-declare void @delay_us(i64)
-declare void @delay_ms(i64)
-declare void @delay_s(i64)
-declare void @delay(i64)
-declare void @ff_printf([0 x i8]*, ...)
+declare void @ff_memzero(i8* %mem, i64 %len)
+declare void @ff_memcpy(i8* %dst, i8* %src, i64 %len)
+declare i64 @ff_cstrlen([0 x i8]* %cstr)
+declare void @delay_us(i64 %us)
+declare void @delay_ms(i64 %ms)
+declare void @delay_s(i64 %s)
+declare void @delay(i64 %us)
+declare void @ff_printf([0 x i8]* %str, ...)
 
 ; -- SOURCE: src/main.cm
 
@@ -154,7 +154,7 @@ define void @off_entry(%FSM* %fsm) {
 }
 
 define void @off_loop(%FSM* %fsm) {
-    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*))
+    %1 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*))
     %2 = load i8, i8* @cnt
     %3 = icmp ult i8 %2, 10
     br i1 %3 , label %then_0, label %else_0
@@ -166,7 +166,7 @@ then_0:
 else_0:
     store i8 0, i8* @cnt
     %6 = bitcast %FSM* %fsm to %FSM*
-    call void(%FSM*, i32) @fsm_switch (%FSM* %6, i32 1)
+    call void(%FSM*, i32)@fsm_switch(%FSM* %6, i32 1)
     br label %endif_0
 endif_0:
     ret void
@@ -185,7 +185,7 @@ define void @on_entry(%FSM* %fsm) {
 }
 
 define void @on_loop(%FSM* %fsm) {
-    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([9 x i8]* @str2 to [0 x i8]*))
+    %1 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([9 x i8]* @str2 to [0 x i8]*))
     %2 = load i8, i8* @cnt
     %3 = icmp ult i8 %2, 10
     br i1 %3 , label %then_0, label %else_0
@@ -197,7 +197,7 @@ then_0:
 else_0:
     store i8 0, i8* @cnt
     %6 = bitcast %FSM* %fsm to %FSM*
-    call void(%FSM*, i32) @fsm_switch (%FSM* %6, i32 2)
+    call void(%FSM*, i32)@fsm_switch(%FSM* %6, i32 2)
     br label %endif_0
 endif_0:
     ret void
@@ -214,13 +214,13 @@ define void @beacon_entry(%FSM* %fsm) {
     %1 = bitcast %FSM* %fsm to %FSM*
     %2 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 1
     %3 = load i32, i32* %2
-    %4 = call [0 x i8]*(%FSM*, i32) @fsm_state_no_name (%FSM* %1, i32 %3)
-    %5 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([22 x i8]* @str3 to [0 x i8]*), [0 x i8]* %4)
+    %4 = call [0 x i8]*(%FSM*, i32)@fsm_state_no_name(%FSM* %1, i32 %3)
+    %5 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([22 x i8]* @str3 to [0 x i8]*), [0 x i8]* %4)
     ret void
 }
 
 define void @beacon_loop(%FSM* %fsm) {
-    %1 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([13 x i8]* @str4 to [0 x i8]*))
+    %1 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([13 x i8]* @str4 to [0 x i8]*))
     %2 = load i8, i8* @cnt
     %3 = icmp ult i8 %2, 10
     br i1 %3 , label %then_0, label %else_0
@@ -232,7 +232,7 @@ then_0:
 else_0:
     store i8 0, i8* @cnt
     %6 = bitcast %FSM* %fsm to %FSM*
-    call void(%FSM*, i32) @fsm_switch (%FSM* %6, i32 0)
+    call void(%FSM*, i32)@fsm_switch(%FSM* %6, i32 0)
     br label %endif_0
 endif_0:
     ret void
@@ -242,8 +242,8 @@ define void @beacon_exit(%FSM* %fsm) {
     %1 = bitcast %FSM* %fsm to %FSM*
     %2 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 2
     %3 = load i32, i32* %2
-    %4 = call [0 x i8]*(%FSM*, i32) @fsm_state_no_name (%FSM* %1, i32 %3)
-    %5 = call i32(%ConstCharStr*, ...) @printf (%ConstCharStr* bitcast ([19 x i8]* @str5 to [0 x i8]*), [0 x i8]* %4)
+    %4 = call [0 x i8]*(%FSM*, i32)@fsm_state_no_name(%FSM* %1, i32 %3)
+    %5 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([19 x i8]* @str5 to [0 x i8]*), [0 x i8]* %4)
     ret void
 }
 
@@ -255,9 +255,9 @@ define void @beacon_exit(%FSM* %fsm) {
         i8 97,
         i8 115,
         i8 104,
-        i8 zeroinitializer,
-        i8 zeroinitializer,
-        i8 zeroinitializer
+        i8 0,
+        i8 0,
+        i8 0
     ],
     i32 0,
     i32 0,
@@ -268,11 +268,11 @@ define void @beacon_exit(%FSM* %fsm) {
                 i8 79,
                 i8 102,
                 i8 102,
-                i8 zeroinitializer,
-                i8 zeroinitializer,
-                i8 zeroinitializer,
-                i8 zeroinitializer,
-                i8 zeroinitializer
+                i8 0,
+                i8 0,
+                i8 0,
+                i8 0,
+                i8 0
             ],
             void(%FSM*)* @off_entry,
             void(%FSM*)* @off_loop,
@@ -282,12 +282,12 @@ define void @beacon_exit(%FSM* %fsm) {
             [8 x i8] [
                 i8 79,
                 i8 110,
-                i8 zeroinitializer,
-                i8 zeroinitializer,
-                i8 zeroinitializer,
-                i8 zeroinitializer,
-                i8 zeroinitializer,
-                i8 zeroinitializer
+                i8 0,
+                i8 0,
+                i8 0,
+                i8 0,
+                i8 0,
+                i8 0
             ],
             void(%FSM*)* @on_entry,
             void(%FSM*)* @on_loop,
@@ -301,8 +301,8 @@ define void @beacon_exit(%FSM* %fsm) {
                 i8 99,
                 i8 111,
                 i8 110,
-                i8 zeroinitializer,
-                i8 zeroinitializer
+                i8 0,
+                i8 0
             ],
             void(%FSM*)* @beacon_entry,
             void(%FSM*)* @beacon_loop,
@@ -330,8 +330,8 @@ again_1:
     br i1 1 , label %body_1, label %break_1
 body_1:
     %1 = bitcast %FSM* @fsm to %FSM*
-    call void(%FSM*) @fsm_run (%FSM* %1)
-    call void(i64) @delay (i64 500000)
+    call void(%FSM*)@fsm_run(%FSM* %1)
+    call void(i64)@delay(i64 500000)
     br label %again_1
 break_1:
     ret i32 0
