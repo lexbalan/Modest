@@ -1,0 +1,62 @@
+// examples/1.hello_world/main.cm
+
+@attribute("c-no-print")
+import "libc/stdio.hm"
+
+
+type RecordWith2DArray record {
+    x: [2][20]Int32
+}
+
+
+func yy() -> RecordWith2DArray {
+    var s: RecordWith2DArray = {
+        x = [[0,1,2,3,4,5,6,7,8,9], [20,21,22,23,24,25,26,27,28,29]]
+    }
+    return s
+}
+
+
+func inc_items(x: [2][20]Int32) -> [2][20]Int32 {
+    let x0 = x
+    var retval: [2][20]Int32
+
+    var i = 0
+    while i < 20 {
+        retval[0][i] = x0[0][i] + 1
+        i = i + 1
+    }
+
+    i = 0
+    while i < 20 {
+        retval[1][i] = x0[1][i] + 1
+        i = i + 1
+    }
+
+    return retval
+}
+
+
+func main () -> Int {
+    let rec_with_2d_array = yy()
+    let array_2d = rec_with_2d_array.x
+
+    let w = inc_items(array_2d)
+
+    var i = 0
+    while i < 10 {
+        printf("y[0][%i] = %i\n", i, w[0][i])
+        printf("y[1][%i] = %i\n", i, w[1][i])
+        i = i + 1
+    }
+
+
+    var x: [2][10]Char8
+    x[0] = "hello"
+    x[1] = "world"
+    //let z = x
+    //ee(z)
+
+    return 0
+}
+
