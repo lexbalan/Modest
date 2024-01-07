@@ -186,12 +186,13 @@ def llvm_value_str(strid, _str, type, proto=None):
 
 
 
-def llvm_print_type_and_value(x):
+def llvm_print_type_and_value(x, add_ptr=False):
     assert(x['isa'] == 'll_value')
     print_type(x['type'])
 
     #if x['is_adr']:
-    #    out("*")
+    if add_ptr:
+        out("*")
 
     out(" ")
     llvm_print_value(x)
@@ -383,7 +384,7 @@ def llvm_getelementptr(rec, rt, indexes, vt):
     out("* ")
     llvm_print_value(rec)
     out(", ")
-    print_list_by(indexes, llvm_print_type_and_value)
+    print_list_with(indexes, llvm_print_type_and_value)
     rv = llvm_value_reg(reg, vt)
     rv['is_adr'] = True
     return rv
@@ -468,11 +469,14 @@ def llvm_label(label):
 
 
 
-def llvm_alloca(id, typ, init_value=None):
-    val = llvm_value_stk(id, typ)
+def llvm_alloca(typ, id_str=None, init_value=None):
+    if id_str == None:
+        id_str = reg_get()
+
+    val = llvm_value_stk(id_str, typ)
     val['is_adr'] = True
 
-    lo("%%%s = alloca " % id)
+    lo("%%%s = alloca " % id_str)
     print_type(typ)
 
     if init_value != None:
@@ -512,7 +516,7 @@ def dold(x):
 
 
 
-def print_list_by(lst, method):
+def print_list_with(lst, method):
     i = 0
     while i < len(lst):
         if i > 0: out(", ")
@@ -549,7 +553,7 @@ def print_type_func(t):
     print_type(t['to'])
 
     out("(")
-    print_list_by(t['params'], lambda f: print_type(f['type']))
+    print_list_with(t['params'], lambda f: print_type(f['type']))
 
     #if va_func:
     #    out(", ...")
@@ -676,10 +680,18 @@ def do_eval_expr_call(v, retval=None):
         arg = do_reval(a)
         args.append(arg)
 
-    ftype = v['func']['type']
+    func = v['func']
+    ftype = func['type']
+    sret = 'sret' in func['att']
+
+    # если просто вызвали и не забирают retval
+    # сгенерим фейковый retval
+    if sret:
+        if retval == None:
+            retval = llvm_alloca(ftype['to'])
 
     # eval func
-    f = do_eval(v['func'])
+    f = do_eval(func)
 
     if type.is_pointer(ftype):
         # pointer to array needs additional load
@@ -688,28 +700,31 @@ def do_eval_expr_call(v, retval=None):
 
     to_unit = type.eq(ftype['to'], type.typeUnit)
 
+
     # do call
-    reg = 0
-    if to_unit:
-        lo("call ")
+    reg = "0"
+    if to_unit or sret:
+        lo("call void")
     else:
+        # call %Int32(%Str, ...)
         reg = llvm_operation("call")
+        print_type(ftype['to'])
 
-    #%Int32(%Str, ...)
-    print_type(ftype['to'])
     out("(")
-    params = ftype['params']
-
-
-    print_list_by(params, lambda par: print_type(par['type']))
-    if 'arghack' in v['func']['att']:
-        out(", ...")
-    out(") ")
+    print_func_paramlist(func, only_types=True, with_attributes=False)
+    out(")")
 
     llvm_print_value(f)
-    out(" (")
-    print_list_by(args, print_type_value_param)
+
+    out("(")
+    if sret:
+        llvm_print_type_and_value(retval, add_ptr=True)
+        if len(args) > 0:
+            out(", ")
+
+    print_list_with(args, print_type_value_param)
     out(")")
+
     return llvm_value_reg(reg, v['type'], v)
 
 
@@ -880,8 +895,7 @@ def cast_record_to_record(to_type, value, ti):
     from_type = value['type']
     # создаем переменную под структуру A
     y = do_reval(value)
-    reg = reg_get()
-    struct = llvm_alloca(reg, value['type'], y)
+    struct = llvm_alloca(value['type'], init_value=y)
     # приводим указатель на нее к указателю на структуру B
     new_struct_ptr = llvm_cast("bitcast", hlir_type_pointer(from_type), hlir_type_pointer(to_type), struct)
     # загружаем структуру B и возвращаем ее
@@ -1215,18 +1229,17 @@ def print_stmt_return(x):
 
 
 def print_stmt_def_var(x):
-    id = x['var']['id']['str']
-
-    init_value = None
+    id_str = x['var']['id']['str']
+    iv = None
     if x['var']['init'] != None:
-        init_value = do_reval(x['var']['init'])
-    val = llvm_alloca(id, x['var']['type'], init_value)
-    locals_add(id, val)
+        iv = do_reval(x['var']['init'])
+    val = llvm_alloca(x['var']['type'], id_str=id_str, init_value=iv)
+    locals_add(id_str, val)
     return None
 
 
 def print_stmt_let(x):
-    id = x['value']['id']
+    id_str = x['value']['id']['str']
     val = x['init_value']
 
     v = do_reval(val)
@@ -1235,9 +1248,9 @@ def print_stmt_let(x):
     # поскольку их могут индексировать переменной
     # а массив-значение в "регистре" невозможно индексировать переменной
     if type.is_defined_array(val['type']):
-        v = llvm_alloca(id['str'], val['type'], init_value=v)
+        v = llvm_alloca(val['type'], id_str=id_str, init_value=v)
 
-    locals_add(x['id']['str'], v)
+    locals_add(id_str, v)
     return None
 
 
@@ -1290,6 +1303,51 @@ def print_stmt_block(s):
     locals_pop()
 
 
+
+def print_func_paramlist(func, only_types=False, with_attributes=True):
+    arghack = 'arghack' in func['att']
+    sret = 'sret' in func['att']
+
+    ftype = func['type']
+    params = ftype['params']
+    to = ftype['to']
+
+    if sret:
+        # %struct.Sre* noalias sret(%struct.Sre) align 1 %0
+        print_type(to)
+
+        if with_attributes:
+            out("* noalias sret(")
+        else:
+            out("*")
+
+        if with_attributes:
+            print_type(to)
+            out(")")
+
+        if not only_types:
+            out(" %0")
+
+        if len(params) > 0:
+            out(", ")
+
+
+    def print_param_type(param):
+        print_type(param['type'])
+
+    def print_param_w_id(param):
+        print_type(param['type']); out(" %%%s" % param['id']['str'])
+
+    method = print_param_w_id
+    if only_types:
+        method = print_param_type
+
+    print_list_with(params, lambda param: method(param))
+
+    if arghack:
+        out(", ...")
+
+
 def print_func_signature(func):
     arghack = 'arghack' in func['att']
     sret = 'sret' in func['att']
@@ -1304,30 +1362,7 @@ def print_func_signature(func):
         out("void")
 
     out(" @%s(" % func['id']['str'])
-
-    if sret:
-        # %struct.Sre* noalias sret(%struct.Sre) align 1 %0
-        print_type(to)
-        out("* noalias sret(")
-        print_type(to)
-        out(") %0")
-
-        # if we called not from func_decl
-        if func_context != None:
-            reg_get() # get %0 reg for retval
-
-        if len(params) > 0:
-            out(", ")
-
-
-    def print_param(param):
-        print_type(param['type']); out(" %%%s" % param['id']['str'])
-
-    print_list_by(params, lambda param: print_param(param))
-
-    if arghack:
-        out(", ...")
-
+    print_func_paramlist(func)
     out(")")
 
 
@@ -1364,7 +1399,12 @@ def print_def_func(x):
     print_func_signature(func)
 
     arghack = 'arghack' in func['att']
+    sret = 'sret' in func['att']
     ftype = func['type']
+
+
+    if sret:
+        reg_get() # get %0 reg for retval
 
 
     params = ftype['params']
@@ -1381,9 +1421,9 @@ def print_def_func(x):
 
     if arghack:
         global va_list
-        id = func['va_id']['str'] # 'va_list'
-        va_list = llvm_alloca(id, type.typeFreePtr)
-        locals_add(id, va_list)
+        id_str = func['va_id']['str'] # 'va_list'
+        va_list = llvm_alloca(type.typeFreePtr, id_str=id_str)
+        locals_add(id_str, va_list)
         llvm_va_start(va_list)
 
 
