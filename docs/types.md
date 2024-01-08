@@ -243,9 +243,10 @@ Function parameter cannot be an array. But it can be a pointer to array.
 
 
 ###### String types
-String types are builtin aliases of `[]Char8`, `[]Char16`, `[]Char32`
+String types are builtin aliases for `[]Char8`, `[]Char16`, `[]Char32`
+String literal is an alternative form of Char array recording.
 ```rust
-// (Built-in types!)
+// (!) implicit defined built-in types
 type Str8 = []Char8
 type Str16 = []Char16
 type Str32 = []Char32
