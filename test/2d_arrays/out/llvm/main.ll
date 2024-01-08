@@ -249,11 +249,11 @@ break_1:
     %22 = insertvalue [10 x i8] %21, i8 108, 2
     %23 = insertvalue [10 x i8] %22, i8 108, 3
     %24 = insertvalue [10 x i8] %23, i8 111, 4
-    %25 = insertvalue [10 x i8] %24, i8 zeroinitializer, 5
-    %26 = insertvalue [10 x i8] %25, i8 zeroinitializer, 6
-    %27 = insertvalue [10 x i8] %26, i8 zeroinitializer, 7
-    %28 = insertvalue [10 x i8] %27, i8 zeroinitializer, 8
-    %29 = insertvalue [10 x i8] %28, i8 zeroinitializer, 9
+    %25 = insertvalue [10 x i8] %24, i8 0, 5
+    %26 = insertvalue [10 x i8] %25, i8 0, 6
+    %27 = insertvalue [10 x i8] %26, i8 0, 7
+    %28 = insertvalue [10 x i8] %27, i8 0, 8
+    %29 = insertvalue [10 x i8] %28, i8 0, 9
     %30 = getelementptr inbounds [2 x [10 x i8]], [2 x [10 x i8]]* %x, i32 0, i32 0
     store [10 x i8] %29, [10 x i8]* %30
     %31 = insertvalue [10 x i8] zeroinitializer, i8 119, 0
@@ -261,11 +261,11 @@ break_1:
     %33 = insertvalue [10 x i8] %32, i8 114, 2
     %34 = insertvalue [10 x i8] %33, i8 108, 3
     %35 = insertvalue [10 x i8] %34, i8 100, 4
-    %36 = insertvalue [10 x i8] %35, i8 zeroinitializer, 5
-    %37 = insertvalue [10 x i8] %36, i8 zeroinitializer, 6
-    %38 = insertvalue [10 x i8] %37, i8 zeroinitializer, 7
-    %39 = insertvalue [10 x i8] %38, i8 zeroinitializer, 8
-    %40 = insertvalue [10 x i8] %39, i8 zeroinitializer, 9
+    %36 = insertvalue [10 x i8] %35, i8 0, 5
+    %37 = insertvalue [10 x i8] %36, i8 0, 6
+    %38 = insertvalue [10 x i8] %37, i8 0, 7
+    %39 = insertvalue [10 x i8] %38, i8 0, 8
+    %40 = insertvalue [10 x i8] %39, i8 0, 9
     %41 = getelementptr inbounds [2 x [10 x i8]], [2 x [10 x i8]]* %x, i32 0, i32 1
     store [10 x i8] %40, [10 x i8]* %41
     ;let z = x

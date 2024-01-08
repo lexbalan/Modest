@@ -25,12 +25,14 @@ func fsm_switch(fsm: *FSM, state: Nat32) {
 
 
 func fsm_run(fsm: *FSM) {
+    printf("fsm_run()\n")
     if fsm.substate == fsmSubstateEntering {
         let nexstate = fsm.nexstate
         let s = &fsm.states[nexstate]
 
         if fsmVerbose {
-            printf("enter %s\n", s.name)
+            // &s.name, not just &s.name
+            printf("enter %s\n", &s.name)
         }
 
         if s.entry != nil {
@@ -51,7 +53,7 @@ func fsm_run(fsm: *FSM) {
         let s = &fsm.states[fsm.state]
 
         if fsmVerbose {
-            printf("exit %s\n", s.name)
+            printf("exit %s\n", &s.name)
         }
 
         if s.exit != nil {

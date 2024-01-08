@@ -5,7 +5,8 @@ target triple = "arm64-apple-macosx12.0.0"
 
 declare void @llvm.va_start(i8*)
 declare void @llvm.va_copy(i8*, i8*)
-declare void @llvm.va_end(i8*); -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
+declare void @llvm.va_end(i8*)
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
 
 
 
@@ -50,47 +51,47 @@ declare void @llvm.va_end(i8*); -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ct
 %ConstCharStr = type [0 x i8]
 
 
-declare i32 @fclose(%FILE*)
-declare i32 @feof(%FILE*)
-declare i32 @ferror(%FILE*)
-declare i32 @fflush(%FILE*)
-declare i32 @fgetpos(%FILE*, %FposT*)
-declare %FILE* @fopen(%ConstCharStr*, %ConstCharStr*)
-declare i64 @fread(i8*, i64, i64, %FILE*)
-declare i64 @fwrite(i8*, i64, i64, %FILE*)
-declare %FILE* @freopen(%ConstCharStr*, %ConstCharStr*, %FILE*)
-declare i32 @fseek(%FILE*, i64, i32)
-declare i32 @fsetpos(%FILE*, %FposT*)
-declare i64 @ftell(%FILE*)
-declare i32 @remove(%ConstCharStr*)
-declare i32 @rename(%ConstCharStr*, %ConstCharStr*)
-declare void @rewind(%FILE*)
-declare void @setbuf(%FILE*, %CharStr*)
+declare i32 @fclose(%FILE* %f)
+declare i32 @feof(%FILE* %f)
+declare i32 @ferror(%FILE* %f)
+declare i32 @fflush(%FILE* %f)
+declare i32 @fgetpos(%FILE* %f, %FposT* %pos)
+declare %FILE* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
+declare i64 @fread(i8* %buf, i64 %size, i64 %count, %FILE* %f)
+declare i64 @fwrite(i8* %buf, i64 %size, i64 %count, %FILE* %f)
+declare %FILE* @freopen(%ConstCharStr* %filename, %ConstCharStr* %mode, %FILE* %f)
+declare i32 @fseek(%FILE* %stream, i64 %offset, i32 %whence)
+declare i32 @fsetpos(%FILE* %f, %FposT* %pos)
+declare i64 @ftell(%FILE* %f)
+declare i32 @remove(%ConstCharStr* %filename)
+declare i32 @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
+declare void @rewind(%FILE* %f)
+declare void @setbuf(%FILE* %f, %CharStr* %buffer)
 
 
-declare i32 @setvbuf(%FILE*, %CharStr*, i32, i64)
+declare i32 @setvbuf(%FILE* %f, %CharStr* %buffer, i32 %mode, i64 %size)
 declare %FILE* @tmpfile()
-declare %CharStr* @tmpnam(%CharStr*)
-declare i32 @printf(%ConstCharStr*, ...)
-declare i32 @scanf(%ConstCharStr*, ...)
-declare i32 @fprintf(%FILE*, %Str*, ...)
-declare i32 @fscanf(%FILE*, %ConstCharStr*, ...)
-declare i32 @sscanf(%ConstCharStr*, %ConstCharStr*, ...)
-declare i32 @sprintf(%CharStr*, %ConstCharStr*, ...)
+declare %CharStr* @tmpnam(%CharStr* %str)
+declare i32 @printf(%ConstCharStr* %s, ...)
+declare i32 @scanf(%ConstCharStr* %s, ...)
+declare i32 @fprintf(%FILE* %stream, %Str* %format, ...)
+declare i32 @fscanf(%FILE* %f, %ConstCharStr* %format, ...)
+declare i32 @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
+declare i32 @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
 
 
-declare i32 @fgetc(%FILE*)
-declare i32 @fputc(i32, %FILE*)
-declare %CharStr* @fgets(%CharStr*, i32, %FILE*)
-declare i32 @fputs(%ConstCharStr*, %FILE*)
-declare i32 @getc(%FILE*)
+declare i32 @fgetc(%FILE* %f)
+declare i32 @fputc(i32 %char, %FILE* %f)
+declare %CharStr* @fgets(%CharStr* %str, i32 %n, %FILE* %f)
+declare i32 @fputs(%ConstCharStr* %str, %FILE* %f)
+declare i32 @getc(%FILE* %f)
 declare i32 @getchar()
-declare %CharStr* @gets(%CharStr*)
-declare i32 @putc(i32, %FILE*)
-declare i32 @putchar(i32)
-declare i32 @puts(%ConstCharStr*)
-declare i32 @ungetc(i32, %FILE*)
-declare void @perror(%ConstCharStr*)
+declare %CharStr* @gets(%CharStr* %str)
+declare i32 @putc(i32 %char, %FILE* %f)
+declare i32 @putchar(i32 %char)
+declare i32 @puts(%ConstCharStr* %str)
+declare i32 @ungetc(i32 %char, %FILE* %f)
+declare void @perror(%ConstCharStr* %str)
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/fastfood/print.cm
 
@@ -100,7 +101,7 @@ declare void @perror(%ConstCharStr*)
 
 define void @_putchar(i8 %c) {
     %1 = sext i8 %c to i32
-    %2 = call i32(i32) @putchar (i32 %1)
+    %2 = call i32(i32)@putchar(i32 %1)
     ret void
 }
 
@@ -120,7 +121,7 @@ then_0:
     br label %break_1
     br label %endif_0
 endif_0:
-    call void(i8) @_putchar (i8 %3)
+    call void(i8)@_putchar(i8 %3)
     %6 = load i32, i32* %i
     %7 = add i32 %6, 1
     store i32 %7, i32* %i
@@ -180,7 +181,7 @@ then_2:
     ; %i & %d for signed integer (Int)
     %23 = va_arg i8** %va_list, i32
     %24 = load [0 x i8]*, [0 x i8]** %sptr
-    call void([0 x i8]*, i32) @sprintf_dec_int32 ([0 x i8]* %24, i32 %23)
+    call void([0 x i8]*, i32)@sprintf_dec_int32([0 x i8]* %24, i32 %23)
     br label %endif_2
 else_2:
     %25 = load i8, i8* %c
@@ -190,7 +191,7 @@ then_3:
     ; %n for unsigned integer (Nat)
     %27 = va_arg i8** %va_list, i32
     %28 = load [0 x i8]*, [0 x i8]** %sptr
-    call void([0 x i8]*, i32) @sprintf_dec_nat32 ([0 x i8]* %28, i32 %27)
+    call void([0 x i8]*, i32)@sprintf_dec_nat32([0 x i8]* %28, i32 %27)
     br label %endif_3
 else_3:
     %29 = load i8, i8* %c
@@ -204,7 +205,7 @@ then_4:
     ; %p for pointers
     %34 = va_arg i8** %va_list, i32
     %35 = load [0 x i8]*, [0 x i8]** %sptr
-    call void([0 x i8]*, i32) @sprintf_hex_nat32 ([0 x i8]* %35, i32 %34)
+    call void([0 x i8]*, i32)@sprintf_hex_nat32([0 x i8]* %35, i32 %34)
     br label %endif_4
 else_4:
     %36 = load i8, i8* %c
@@ -249,11 +250,11 @@ endif_3:
     br label %endif_2
 endif_2:
     %48 = load [0 x i8]*, [0 x i8]** %sptr
-    call void([0 x i8]*) @put_str8 ([0 x i8]* %48)
+    call void([0 x i8]*)@put_str8([0 x i8]* %48)
     br label %endif_1
 else_1:
     %49 = load i8, i8* %c
-    call void(i8) @_putchar (i8 %49)
+    call void(i8)@_putchar(i8 %49)
     br label %endif_1
 endif_1:
     %50 = load i32, i32* %i
@@ -302,7 +303,7 @@ body_1:
     %4 = udiv i32 %3, 16
     store i32 %4, i32* %d
     %5 = trunc i32 %2 to i8
-    %6 = call i8(i8) @n_to_sym (i8 %5)
+    %6 = call i8(i8)@n_to_sym(i8 %5)
     %7 = load i32, i32* %i
     %8 = getelementptr inbounds [8 x i8], [8 x i8]* %cc, i32 0, i32 %7
     store i8 %6, i8* %8
@@ -373,7 +374,7 @@ body_1:
     %8 = sdiv i32 %7, 10
     store i32 %8, i32* %d
     %9 = trunc i32 %6 to i8
-    %10 = call i8(i8) @n_to_sym (i8 %9)
+    %10 = call i8(i8)@n_to_sym(i8 %9)
     %11 = load i32, i32* %i
     %12 = getelementptr inbounds [11 x i8], [11 x i8]* %cc, i32 0, i32 %11
     store i8 %10, i8* %12
@@ -443,7 +444,7 @@ body_1:
     %4 = udiv i32 %3, 10
     store i32 %4, i32* %d
     %5 = trunc i32 %2 to i8
-    %6 = call i8(i8) @n_to_sym (i8 %5)
+    %6 = call i8(i8)@n_to_sym(i8 %5)
     %7 = load i32, i32* %i
     %8 = getelementptr inbounds [11 x i8], [11 x i8]* %cc, i32 0, i32 %7
     store i8 %6, i8* %8
