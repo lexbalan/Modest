@@ -852,7 +852,7 @@ def get_forms(func_id_str, args):
                     i = i + 1
 
         #print("printf forms = %s" % str(forms))
-
+    return forms
 
 
 def do_value_call(x):
@@ -923,12 +923,15 @@ def do_value_call(x):
             if forms != None:
                 if forms != []:
                     form = forms[j]
-                    if form in ['i', 'd']:
+                    if form in ['i', 'd', 'x']:
                         if not type.is_numeric(arg_type):
                             warning("expected numeric value", a['ti'])
                     elif form == 's':
                         if not type.is_ptr_to_string(arg_type):
                             warning("expected pointer to string", a['ti'])
+                    elif form == 'f':
+                        if not type.is_float(arg_type):
+                            warning("expected float value", a['ti'])
                     elif form == 'c':
                         if not type.is_char(arg_type):
                             warning("expected char value", a['ti'])
