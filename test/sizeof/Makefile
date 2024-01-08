@@ -22,7 +22,7 @@ LLVM:
 
 C:
 	mcc -o $(CPREFIX)/main -funsafe -mbackend=c $(INDIR)/main.cm
-	CC $(CPREFIX)/main.c #$(CPREFIX)/utf.c
+	CC $(CPREFIX)/main.c
 
 
 clean:

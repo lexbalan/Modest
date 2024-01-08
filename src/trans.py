@@ -829,11 +829,42 @@ def do_value_un(x):
 
 
 
+
+def get_forms(func_id_str, args):
+    forms = None
+    # check format
+    if func_id_str != None:
+        if func_id_str == 'printf':
+            forms = []
+            aa = args[0]
+            if aa['kind'] != 'str':
+                warning("expected string literal", aa['ti'])
+            else:
+                s = aa['str']
+                i = 0
+                while i < len(s):
+                    c = s[i]
+                    if c == '%':
+                        i = i + 1
+                        c = s[i]
+                        forms.append(c)
+
+                    i = i + 1
+
+        #print("printf forms = %s" % str(forms))
+
+
+
 def do_value_call(x):
     f = do_rvalue(x['left'])
 
     if value_is_bad(f):
         return hlir_value_bad(x['ti'])
+
+    func_id_str = None
+    if 'id' in f:
+        func_id_str = f['id']['str']
+
 
     ftype = f['type']
 
@@ -861,6 +892,9 @@ def do_value_call(x):
 
     args = []
 
+    # список спецификаторов для проверки расширеных аргументов
+    forms = get_forms(func_id_str, x['args'])
+
     # normal args
     i = 0
     while i < npars:
@@ -876,18 +910,41 @@ def do_value_call(x):
         i = i + 1
 
 
+    j = 0
     # arghack rest args
     while i < nargs:
-        aa = x['args'][i]
-        arg = do_rvalue(aa)
+        a = x['args'][i]
+        arg = do_rvalue(a)
+        arg_type = arg['type']
 
         if not value_is_bad(arg):
-            if type.is_generic(arg['type']):
-                warning("value with generic type as extra argument", aa['ti'])
-                arg = cons_default(arg, aa['ti'])
+
+            # check extra args
+            if forms != None:
+                if forms != []:
+                    form = forms[j]
+                    if form in ['i', 'd']:
+                        if not type.is_numeric(arg_type):
+                            warning("expected numeric value", a['ti'])
+                    elif form == 's':
+                        if not type.is_ptr_to_string(arg_type):
+                            warning("expected pointer to string", a['ti'])
+                    elif form == 'c':
+                        if not type.is_char(arg_type):
+                            warning("expected char value", a['ti'])
+                    elif form == 'p':
+                        if not type.is_pointer(arg_type):
+                            warning("expected pointer value", a['ti'])
+
+
+
+            if type.is_generic(arg_type):
+                warning("value with generic type as extra argument", a['ti'])
+                arg = cons_default(arg, a['ti'])
             args.append(arg)
 
         i = i + 1
+        j = j + 1
 
 
     rv = hlir_value_call(f, ftype['to'], args, ti=x['ti'])
@@ -899,6 +956,7 @@ def do_value_call(x):
         rv['att'].append('wrapped_array_value')
 
     return rv
+
 
 
 def do_value_index(x):

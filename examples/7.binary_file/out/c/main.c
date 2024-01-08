@@ -18,8 +18,8 @@
 
 // chunk of data for read/write operations in file
 typedef struct {
-    uint8_t id[100];
-    uint8_t data[1024];
+    char id[100];
+    char data[1024];
 } Chunk;
 
 
@@ -38,8 +38,8 @@ void write_example(void)
 
     // pointers casting requires -funsafe translator option
     // (see Makefile)
-    strcpy((char *)(uint8_t *)&chunk.id, (const char *)"id");
-    strcpy((char *)(uint8_t *)&chunk.data, (const char *)"data");
+    strcpy((char *)(char *)&chunk.id, (const char *)"id");
+    strcpy((char *)(char *)&chunk.data, (const char *)"data");
 
     // write chunk to file
     fwrite((void *)&chunk, sizeof(Chunk), 1, (FILE *)fp);
@@ -63,8 +63,8 @@ void read_example(void)
     fread((void *)&chunk, sizeof(Chunk), 1, (FILE *)fp);
 
     printf("file \"%s\" contains:\n", filename);
-    printf("chunk.id: \"%s\"\n", (uint8_t *)&chunk.id);
-    printf("chunk.data: \"%s\"\n", (uint8_t *)&chunk.data);
+    printf("chunk.id: \"%s\"\n", (char *)&chunk.id);
+    printf("chunk.data: \"%s\"\n", (char *)&chunk.data);
 
     fclose((FILE *)fp);
 }

@@ -133,7 +133,8 @@ int main(void)
     printf("b[1] = %i\n", b[1])*/
 
     /*var c = */
-    ret_str();
+    char g[8];
+    *(struct ret_str_retval *)&g = ret_str();
     //let d = c[0]
 
     //let s0 = c

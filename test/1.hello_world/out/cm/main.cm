@@ -2,6 +2,7 @@
 @attribute("c-no-print")
 import "libc/stdio.h"
 
+
 const hello = "Hello"
 const world = " World!\n"
 
@@ -9,7 +10,7 @@ const hello_world = hello + world
 
 
 func main() -> Int {
-    printf(hello_world)
+    printf("%s", hello_world to *[]Char8)
     return 0
 }
 

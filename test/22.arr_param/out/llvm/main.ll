@@ -274,6 +274,8 @@ define void @kk([2 x [10 x i8]] %x) {
 
 define i32 @main() {
     %1 = call [8 x i8]()@ret_str()
+    %g = alloca [8 x i8]
+    store [8 x i8] %1, [8 x i8]* %g
     ;let d = c[0]
     ;let s0 = c
     ;var s1 = c

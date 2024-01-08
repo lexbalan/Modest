@@ -12,8 +12,8 @@ const filename = "file.bin" to *[]Char8
 
 // chunk of data for read/write operations in file
 type Chunk record {
-    id: [100]Nat8
-    data: [1024]Nat8
+    id: [100]Char
+    data: [1024]Char
 }
 
 
@@ -31,8 +31,8 @@ func write_example() -> Unit {
 
     // pointers casting requires -funsafe translator option
     // (see Makefile)
-    strcpy(&chunk.id to *[]Char, "id" to *[]Char)
-    strcpy(&chunk.data to *[]Char, "data" to *[]Char)
+    strcpy(&chunk.id, "id" to *[]Char)
+    strcpy(&chunk.data, "data" to *[]Char)
 
     // write chunk to file
     fwrite(&chunk, (sizeof(Chunk)), 1, fp)

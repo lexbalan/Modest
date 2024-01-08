@@ -30,12 +30,14 @@ void fsm_switch(FSM *fsm, uint32_t state)
 
 void fsm_run(FSM *fsm)
 {
+    printf("fsm_run()\n");
     if (fsm->substate == fsmSubstateEntering) {
         const UInt32 nexstate = fsm->nexstate;
         FSM_StateDesc *const s = &fsm->states[nexstate];
 
         if (fsmVerbose) {
-            printf("enter %s\n", s->name);
+            // &s.name, not just &s.name
+            printf("enter %s\n", (char *)&s->name);
         }
 
         if (s->entry != NULL) {
@@ -56,7 +58,7 @@ void fsm_run(FSM *fsm)
         FSM_StateDesc *const s = &fsm->states[fsm->state];
 
         if (fsmVerbose) {
-            printf("exit %s\n", s->name);
+            printf("exit %s\n", (char *)&s->name);
         }
 
         if (s->exit != NULL) {
