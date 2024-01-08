@@ -941,6 +941,7 @@ def do_value_call(x):
             if type.is_generic(arg_type):
                 warning("value with generic type as extra argument", a['ti'])
                 arg = cons_default(arg, a['ti'])
+
             args.append(arg)
 
         i = i + 1
