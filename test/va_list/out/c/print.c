@@ -22,7 +22,7 @@ void put_str8(char *s)
     int i = 0;
     while (true) {
         const char c = s[i];
-        if (c == '\x0') {
+        if (c == '\0') {
             break;
         }
         _putchar((char)c);
@@ -44,7 +44,7 @@ void ff_printf(char *str, ...)
     while (true) {
         char c = str[i];
 
-        if (c == '\x0') {
+        if (c == '\0') {
             break;
         }
 
@@ -55,8 +55,8 @@ void ff_printf(char *str, ...)
             // буффер для печати всего, кроме строк
             char buf[10 + 1];
             char *sptr;
-            sptr = (char *)&buf[0];
-            sptr[0] = '\x0';
+            sptr = (char *)(char *)&buf;
+            sptr[0] = '\0';
 
             if ((c == 'i') || (c == 'd')) {
                 // %i & %d for signed integer (Int)
@@ -179,7 +179,7 @@ void sprintf_dec_int32(char *buf, int x)
         j = j + 1;
     }
 
-    buf[j] = '\x0';
+    buf[j] = '\0';
 
     //return buf
 }
@@ -210,7 +210,7 @@ void sprintf_dec_nat32(char *buf, uint32_t x)
         j = j + 1;
     }
 
-    buf[j] = '\x0';
+    buf[j] = '\0';
 
     //return buf
 }

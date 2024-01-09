@@ -21,7 +21,7 @@ int main(void)
     ff_printf("%% = '%%'\n");
     ff_printf("c = '%c'\n", c);
     ff_printf("s = \"%s\"\n", s);
-    ff_printf("i := %i\n", i);
+    ff_printf("i = %i\n", i);
     ff_printf("n = %n\n", n);
     ff_printf("x = 0x%x\n", x);
 

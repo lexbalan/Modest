@@ -4,7 +4,7 @@
 import "libc/stdio.hm"
 
 const hello = "Hello"
-const world = " World!\n"
+const world = " World!"
 
 const hello_world = hello + world
 
@@ -22,11 +22,11 @@ func main () -> Int {
     ch16 := "А"[0]
     ch32 := "Я"[0]
 
-    printf("ch08 == 0x%x (%c)\n", ch08, ch08)
-    printf("ch16 == 0x%x (%c)\n", ch16, ch16)
-    printf("ch32 == 0x%x (%c)\n", ch32, ch32)
+    printf("ch08 == 0x%x (%c)\n", ch08 to Nat32, ch08)
+    //printf("ch16 == 0x%x (%c)\n", ch16 to Nat32, ch16)
+    //printf("ch32 == 0x%x (%c)\n", ch32 to Nat32, ch32)
 
-    printf(hello_world)
+    printf("%s\n", hello_world to *Str8)
 
     return 0
 }

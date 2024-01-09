@@ -17,3 +17,5 @@ cd sha256 && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
 cd shift && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
 cd string_concat_eq && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
 cd assignation && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
+cd va_list && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
+cd char && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..

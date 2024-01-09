@@ -1,16 +1,17 @@
 // examples/1.hello_world/main.cm
+@attribute("c-no-print")
 import "libc/stdio.h"
 
 const hello = "Hello"
-const world = " World!\n"
+const world = " World!"
 
 const hello_world = hello + world
 
 
-func main () -> Int {
-    var ch08 : Char8
-    var ch16 : Char16
-    var ch32 : Char32
+func main() -> Int {
+    var ch08: Char8
+    var ch16: Char16
+    var ch32: Char32
 
     //ch08 := "🐀"[0]  // error
     //ch16 := "🐀"[0]  // error
@@ -20,11 +21,11 @@ func main () -> Int {
     ch16 := "А"[0]
     ch32 := "Я"[0]
 
-    printf("ch08 == 0x%x (%c)\n", ch08, ch08)
-    printf("ch16 == 0x%x (%c)\n", ch16, ch16)
-    printf("ch32 == 0x%x (%c)\n", ch32, ch32)
+    printf("ch08 == 0x%x (%c)\n", ch08 to Nat32, ch08)
+    //printf("ch16 == 0x%x (%c)\n", ch16 to Nat32, ch16)
+    //printf("ch32 == 0x%x (%c)\n", ch32 to Nat32, ch32)
 
-    printf("Hello World!\n")
+    printf("%s\n", hello_world to *[]Char8)
 
     return 0
 }
