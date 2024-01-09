@@ -395,16 +395,9 @@ def llvm_extract_item(x, ft, field_no):
     return llvm_value_reg(reg, ft)
 
 
-def llvm_cast(kind, from_type, to_type, value, addptr=False):
+def llvm_cast(kind, from_type, to_type, value):
     reg = llvm_operation(kind)
-
-    print_type(from_type)
-    if addptr: out("*")
-    out(" ")
-    llvm_print_value(value)
-
-    #llvm_print_type_and_value(value, add_ptr=addptr)
-
+    llvm_print_type_and_value(value)
     out(" to ")
     print_type(to_type)
     return llvm_value_reg(reg, to_type, value)
@@ -436,9 +429,8 @@ def llvm_store(l, r):
 # получает два указателя, и размер
 def llvm_memcpy(dst, src, size, volatile=False):
     #"@llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)")
-    addptr = src['is_adr']
     dst2 = llvm_cast('bitcast', dst['type'], type.typeFreePtr, dst)
-    src2 = llvm_cast('bitcast', src['type'], type.typeFreePtr, src, addptr=addptr)
+    src2 = llvm_cast('bitcast', src['type'], type.typeFreePtr, src)
     out("\n")
     out(INDENT_SYMBOL)
     out("call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(")
