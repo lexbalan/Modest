@@ -1,0 +1,56 @@
+// examples/1.hello_world/main.cm
+
+@attribute("c-no-print")
+import "libc/stdio.hm"
+
+
+type Table record {
+    size_x: Nat8
+    size_y: Nat8
+
+    data: *[][]*Str8
+}
+
+
+func show_table(t: *Table) {
+
+    let dt = t.data to *[t.size_x][t.size_y]*Str8
+
+    var i : Nat8 = 0
+    while i < t.size_y {
+        var j : Nat8 = 0
+        while j < t.size_x {
+            printf("| %s ", "x" to *Str8)//t.data[i][j])
+            j = j + 1
+        }
+
+        printf("|\n")
+
+        i = i + 1
+    }
+}
+
+
+
+var strings : [2][3]*Str8 = [
+    ["a" to *Str8, "b" to *Str8, "c" to *Str8]
+    ["d" to *Str8, "e" to *Str8, "f" to *Str8]
+]
+
+
+var table: Table = {
+    size_x = 3
+    size_y = 2
+
+    data = nil //&strings
+}
+
+
+func main () -> Int {
+    printf("Hello World!\n")
+
+    show_table(&table)
+
+    return 0
+}
+

@@ -3,9 +3,9 @@ INDIR=./src
 OUTDIR=./out
 
 # output dir prefix
-CMPREFIX=$(OUTDIR)/cm/
-CPREFIX=$(OUTDIR)/c/
-LLVMPREFIX = $(OUTDIR)/llvm/
+CMPREFIX=$(OUTDIR)/cm
+CPREFIX=$(OUTDIR)/c
+LLVMPREFIX = $(OUTDIR)/llvm
 
 
 MCC_OPTIONS = -funsafe -mint=64

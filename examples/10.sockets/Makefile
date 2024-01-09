@@ -5,9 +5,9 @@ INDIR=./src
 OUTDIR=./out
 
 # output dir prefix
-CMPREFIX=$(OUTDIR)/cm/
-CPREFIX=$(OUTDIR)/c/
-LLVMPREFIX = $(OUTDIR)/llvm/
+CMPREFIX=$(OUTDIR)/cm
+CPREFIX=$(OUTDIR)/c
+LLVMPREFIX = $(OUTDIR)/llvm
 
 
 all: LLVM
