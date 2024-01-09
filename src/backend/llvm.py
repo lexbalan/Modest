@@ -223,9 +223,7 @@ def insertvalue(x, v, pos):
 #%44 = va_arg i8** %3, i32
 def llvm_va_arg(va_list, typ):
     reg = llvm_operation('va_arg')
-    print_type(va_list['type'])
-    out("* ")
-    llvm_print_value(va_list)
+    llvm_print_type_and_value(va_list)
     out(", ")
     print_type(typ)
     return llvm_value_reg(reg, typ)
@@ -405,14 +403,11 @@ def llvm_cast(kind, from_type, to_type, value):
 
 def llvm_load(x):
     assert(x['isa'] == 'll_value')
-    reg = llvm_operation('load');
-    type = x['type']
-    print_type(type)
+    reg = llvm_operation('load')
+    print_type(x['type'])
     out(", ")
-    print_type(type)
-    out("* ")
-    llvm_print_value(x)
-    return llvm_value_reg(reg, type, x)
+    llvm_print_type_and_value(x)
+    return llvm_value_reg(reg, x['type'], x)
 
 
 # сохр простых значений
