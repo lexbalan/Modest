@@ -186,12 +186,11 @@ def llvm_value_str(strid, _str, type, proto=None):
 
 
 
-def llvm_print_type_and_value(x, add_ptr=False):
+def llvm_print_type_and_value(x):
     assert(x['isa'] == 'll_value')
     print_type(x['type'])
 
-    #if x['is_adr']:
-    if add_ptr:
+    if x['is_adr']:
         out("*")
 
     out(" ")
@@ -424,15 +423,13 @@ def llvm_load(x):
 
 
 # сохр простых значений
-def llvm_store(l, r, add_ptr=True):
+def llvm_store(l, r):
     assert(l['isa'] == 'll_value')
     assert(r['isa'] == 'll_value')
     lo("store ")
     llvm_print_type_and_value(r)
     out(", ")
-    llvm_print_type_and_value(l, add_ptr=add_ptr)
-
-
+    llvm_print_type_and_value(l)
 
 
 
@@ -718,7 +715,7 @@ def do_eval_expr_call(v, retval=None):
 
     out("(")
     if sret:
-        llvm_print_type_and_value(retval, add_ptr=True)
+        llvm_print_type_and_value(retval)
         if len(args) > 0:
             out(", ")
 
@@ -1235,7 +1232,7 @@ def print_stmt_return(x):
             llvm_memcpy(p2retval, v, size)
         else:
             # save value from reg
-            llvm_store(p2retval, v, add_ptr=False)
+            llvm_store(p2retval, v)
 
         lo("ret void")
         reg_get()  # for LLVM
