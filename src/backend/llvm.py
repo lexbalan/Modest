@@ -650,7 +650,7 @@ def do_eval_expr_call(v, retval=None):
 
 
     # do call
-    reg = "0"
+    reg = None
     if to_unit or sret:
         lo("call ")
     else:
@@ -690,12 +690,11 @@ def do_eval_expr_index(v):
 
 
 def do_eval_expr_index_ptr(v):
-    pointer = do_eval(v['pointer'])
+    pointer = do_reval(v['pointer'])
     array_type = pointer['type']['to']
-    result_type = v['type']
-    array = llvm_dold(pointer)
     index = do_reval(v['index'])
-    return llvm_getelementptr(array, array_type, (llvm_value_num_zero, index), result_type)
+    result_type = v['type']
+    return llvm_getelementptr(pointer, array_type, (llvm_value_num_zero, index), result_type)
 
 
 # получает укзаатель на структуру x
