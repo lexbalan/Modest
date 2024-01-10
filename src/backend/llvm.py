@@ -206,8 +206,7 @@ def insertvalue(x, v, pos):
     llvm_print_type_and_value(x)
     out(", ")
     llvm_print_type_and_value(v)
-    out(", ")
-    out('%d' % pos)
+    out(", %d" % pos)
     return llvm_value_reg(reg, x['type'], x)
 
 
