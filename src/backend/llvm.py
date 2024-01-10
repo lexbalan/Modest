@@ -1428,7 +1428,7 @@ def print_def_const(x):
 
 
 def print_string_ascii(strid, string):
-    ss = "" #string['imm']['str']
+    ss = ""
 
     for c in string['imm']:
         ss = ss + chr(c['imm'])
