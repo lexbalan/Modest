@@ -397,7 +397,13 @@ def llvm_load(x):
     out(", ")
     llvm_print_type_value(x)
 
-    result_type = x['type'] # if it just 'is_adr' ll_value
+    result_type = None
+    if x['is_adr']:
+        result_type = x['type'] # if it just 'is_adr' ll_value
+    else:
+        result_type = x['type']['to'] # if it's real pointer
+    assert(result_type != None)
+
     return llvm_value_reg(reg, result_type, x)
 
 
@@ -414,16 +420,14 @@ def llvm_store(l, r):
 
 # получает два указателя, и размер
 def llvm_memcpy(dst, src, size, volatile=False):
-    #"@llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)")
+    #"@llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)"
     dst2 = llvm_cast('bitcast', dst['type'], type.typeFreePtr, dst)
     src2 = llvm_cast('bitcast', src['type'], type.typeFreePtr, src)
     out(NL_INDENT)
     out("call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(")
     llvm_print_type_value(dst2)
-    out(", ")
-    llvm_print_type_value(src2)
-    out(", ")
-    llvm_print_type_value(size)
+    out(", "); llvm_print_type_value(src2)
+    out(", "); llvm_print_type_value(size)
     out(", i1 %d)" % volatile)
 
 
@@ -750,7 +754,6 @@ def do_eval_expr_access_ptr(v):
 
 
 
-
 'trunc .. to'
 'zext .. to'
 'sext .. to'
@@ -828,8 +831,8 @@ def cast_record_to_record(to_type, value, ti):
     #info("cast_record_to_record", ti)
     from_type = value['type']
     # создаем переменную под структуру A
-    y = do_reval(value)
-    struct = llvm_alloca(value['type'], init_ll_value=y)
+    iv = do_reval(value)
+    struct = llvm_alloca(from_type, init_ll_value=iv)
     # приводим указатель на нее к указателю на структуру B
     new_struct_ptr = llvm_cast("bitcast", hlir_type_pointer(from_type), hlir_type_pointer(to_type), struct)
     # загружаем структуру B и возвращаем ее
@@ -863,8 +866,9 @@ def do_eval_expr_cast(x):
         if type.is_record(to_type):
             return cast_record_to_record(to_type, value, x['ti'])
 
-
     if type.is_va_list(from_type):
+        # приведение объекта типа va_list особенное
+        # оно дает доступ к следующему элементу списка
         rv = do_eval(value)
         return llvm_va_arg(rv, to_type)
 
@@ -963,23 +967,22 @@ def do_eval_record(v):
 def do_eval_func_const_var(x):
     k = x['kind']
 
-    if k == 'const':
-        if 'imm' in x:
-            if type.is_numeric(x['type']):
-                return llvm_value_num(x['type'], x['imm'])
-
     if value_attribute_check(x, 'local'):
         localname = x['id']['str']
         y = locals_get(localname)
         return y
 
-    if k == 'var':
+    if k == 'const':
+        if value_is_immediate(x): # TODO: wtf? (see begining of do_eval)
+            if type.is_numeric(x['type']):
+                return llvm_value_num(x['type'], x['imm'])
+
+        return do_eval(x['value'])
+
+    elif k == 'var':
         rv = llvm_value_mem(x['id']['str'], x['type'], x)
         rv['is_adr'] = True
         return rv
-
-    if k == 'const':
-        return do_eval(x['value'])
 
     return llvm_value_mem(x['id']['str'], x['type'], x)
 
