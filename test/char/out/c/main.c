@@ -25,9 +25,9 @@ int main(void)
     ch16 = u'\x410';
     ch32 = U'\x42F';
 
-    printf("ch08 == 0x%x (%c)\n", ((uint32_t)(uint8_t)ch08), ch08);
-    //printf("ch16 == 0x%x (%c)\n", ch16 to Nat32, ch16)
-    //printf("ch32 == 0x%x (%c)\n", ch32 to Nat32, ch32)
+    printf("ch08 = 0x%x (%c)\n", ((uint32_t)(uint8_t)ch08), ch08);
+    //printf("ch16 = 0x%x (%c)\n", ch16 to Nat32, ch16)
+    //printf("ch32 = 0x%x (%c)\n", ch32 to Nat32, ch32)
 
     printf("%s\n", "Hello World!");
 

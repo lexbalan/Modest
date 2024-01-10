@@ -91,7 +91,7 @@ declare void @perror(%ConstCharStr* %str)
 
 ; -- SOURCE: src/main.cm
 
-@str1 = private constant [19 x i8] [i8 99, i8 104, i8 48, i8 56, i8 32, i8 61, i8 61, i8 32, i8 48, i8 120, i8 37, i8 120, i8 32, i8 40, i8 37, i8 99, i8 41, i8 10, i8 0]
+@str1 = private constant [18 x i8] [i8 99, i8 104, i8 48, i8 56, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 120, i8 32, i8 40, i8 37, i8 99, i8 41, i8 10, i8 0]
 @str2 = private constant [4 x i8] [i8 37, i8 115, i8 10, i8 0]
 @str3 = private constant [13 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 32, i8 87, i8 111, i8 114, i8 108, i8 100, i8 33, i8 0]
 
@@ -111,9 +111,9 @@ define i32 @main() {
     %1 = load i8, i8* %ch08
     %2 = zext i8 %1 to i32
     %3 = load i8, i8* %ch08
-    %4 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([19 x i8]* @str1 to [0 x i8]*), i32 %2, i8 %3)
-    ;printf("ch16 == 0x%x (%c)\n", ch16 to Nat32, ch16)
-    ;printf("ch32 == 0x%x (%c)\n", ch32 to Nat32, ch32)
+    %4 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([18 x i8]* @str1 to [0 x i8]*), i32 %2, i8 %3)
+    ;printf("ch16 = 0x%x (%c)\n", ch16 to Nat32, ch16)
+    ;printf("ch32 = 0x%x (%c)\n", ch32 to Nat32, ch32)
     %5 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([4 x i8]* @str2 to [0 x i8]*), [0 x i8]* bitcast ([13 x i8]* @str3 to [0 x i8]*))
     ret i32 0
 }
