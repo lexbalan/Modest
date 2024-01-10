@@ -747,21 +747,20 @@ def do_eval_expr_access_ptr(v):
 
 
 
-"""
-‘trunc .. to’ Instruction
-‘zext .. to’ Instruction
-‘sext .. to’ Instruction
-‘fptrunc .. to’ Instruction
-‘fpext .. to’ Instruction
-‘fptoui .. to’ Instruction
-‘fptosi .. to’ Instruction
-‘uitofp .. to’ Instruction
-‘sitofp .. to’ Instruction
-‘ptrtoint .. to’ Instruction
-‘inttoptr .. to’ Instruction
-‘bitcast .. to’ Instruction
-‘addrspacecast .. to’ Instruction
-"""
+
+'trunc .. to'
+'zext .. to'
+'sext .. to'
+'fptrunc .. to'
+'fpext .. to'
+'fptoui .. to'
+'fptosi .. to'
+'uitofp .. to'
+'sitofp .. to'
+'ptrtoint .. to'
+'inttoptr .. to'
+'bitcast .. to'
+'addrspacecast .. to'
 
 # cast type a to type b
 def select_cast_operator(a, b):
@@ -772,13 +771,11 @@ def select_cast_operator(a, b):
                 signed = type.is_signed(b)
 
             if a['power'] < b['power']:
-                if signed:
-                    return 'sext'
-                else:
-                    return 'zext'
+                return 'sext' if signed else 'zext'
 
             elif a['power'] > b['power']:
                 return 'trunc'
+
             else:
                 return 'bitcast'
 
@@ -786,10 +783,7 @@ def select_cast_operator(a, b):
             return 'inttoptr'
 
         elif type.is_float(b):
-            if type.is_signed(a):
-                return 'sitofp'
-            else:
-                return 'uitofp'
+            return 'sitofp' if type.is_signed(a) else 'uitofp'
 
     elif type.is_pointer(a):
         if type.is_pointer(b): return 'bitcast'
@@ -798,10 +792,7 @@ def select_cast_operator(a, b):
     elif type.is_float(a):
         # Float -> Integer
         if type.is_integer(b):
-            if type.is_signed(b):
-                return 'fptosi'
-            else:
-                return 'fptoui'
+            return 'fptosi' if type.is_signed(b) else 'fptoui'
 
         # Float -> Float
         elif type.is_float(b):
