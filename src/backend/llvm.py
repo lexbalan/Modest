@@ -731,13 +731,11 @@ def do_eval_expr_index_ptr(v):
     return llvm_getelementptr(pointer, array_type, (llvm_value_num_zero, index), result_type)
 
 
-
 def do_eval_expr_access(v):
     rec = do_eval(v['record'])
     pos = v['field']['field_no']
     result_type = v['type']
     return llvm_eval_access(rec, pos, result_type)
-
 
 
 def do_eval_expr_access_ptr(v):
