@@ -470,6 +470,40 @@ def llvm_dold(x):
 
 
 
+# получает укзаатель на структуру x
+# его тип
+# носер поля (просто число)
+# возвращает value:address для поля этой структуры
+def llvm_eval_access_ptr(x, rec_type, field_no, result_type):
+    field_index = llvm_value_num(type.typeInt32, field_no)
+    return llvm_getelementptr(x, rec_type, (llvm_value_num_zero, field_index), result_type)
+
+
+def llvm_eval_access(rec, field_no, result_type):
+    rt = rec['type']
+    # если это структура высичленная на ходу, у нее есть поле 'items'
+    # там лежат записи вида {'id': ..., 'value': ...}
+    # поле value ссылается при этом на уже вычисленное значение поля
+    # ex: let p = {x=0, y=0};    p.x    // <--
+    if 'items' in rec:
+        return rec['items'][field_no]['value']
+
+    # если сама запись находится в регистре: (let rec = get_rec())
+    if not rec['is_adr']:
+        return llvm_extract_item(rec, result_type, field_no)
+
+    # если работаем через 'переменую-указатель'
+    # сперва нужно загрузить ее в регистр тем самым получим 'указатель'
+    if type.is_pointer(rt):
+        # pointer to record needs additional load
+        rec = llvm_dold(rec)  # загружаем сам указатель
+        rt = rt['to']
+
+    return llvm_eval_access_ptr(rec, rt, field_no, result_type)
+
+
+
+
 
 
 def print_list_with(lst, method):
@@ -697,43 +731,12 @@ def do_eval_expr_index_ptr(v):
     return llvm_getelementptr(pointer, array_type, (llvm_value_num_zero, index), result_type)
 
 
-# получает укзаатель на структуру x
-# его тип
-# носер поля (просто число)
-# возвращает value:address для поля этой структуры
-def do_eval_access_ptr(x, xt, field_no, vt):
-    field_index = llvm_value_num(type.typeInt32, field_no)
-    return llvm_getelementptr(x, xt, (llvm_value_num_zero, field_index), vt)
-
-
-def do_eval_access(rec, rt, pos, vt):
-    # если это структура высичленная на ходу, у нее есть поле 'items'
-    # там лежат записи вида {'id': ..., 'value': ...}
-    # поле value ссылается при этом на уже вычисленное значение поля
-    # ex: let p = {x=0, y=0};    p.x    // <--
-    if 'items' in rec:
-        return rec['items'][pos]['value']
-
-    # если сама запись находится в регистре: (let rec = get_rec())
-    if not rec['is_adr']:
-        return llvm_extract_item(rec, vt, pos)
-
-    # если работаем через 'переменую-указатель'
-    # сперва нужно загрузить ее в регистр тем самым получим 'указатель'
-    if type.is_pointer(rt):
-        # pointer to record needs additional load
-        rec = llvm_dold(rec)  # загружаем сам указатель
-        rt = rt['to']
-
-    return do_eval_access_ptr(rec, rt, pos, vt)
-
-
 
 def do_eval_expr_access(v):
     rec = do_eval(v['record'])
-    rt = v['record']['type']
     pos = v['field']['field_no']
-    return do_eval_access(rec, rt, pos, v['type'])
+    result_type = v['type']
+    return llvm_eval_access(rec, pos, result_type)
 
 
 
@@ -741,7 +744,8 @@ def do_eval_expr_access_ptr(v):
     ptr = do_reval(v['pointer'])
     rt = ptr['type']['to']
     pos = v['field']['field_no']
-    return do_eval_access_ptr(ptr, rt, pos, v['type'])
+    result_type = v['type']
+    return llvm_eval_access_ptr(ptr, rt, pos, result_type)
 
 
 
@@ -1717,11 +1721,11 @@ def llvm_store_record(l, r):
         ft = field['type']
 
         # получаем указатель на поле левого (в которое будем сохранять)
-        l_field_ptr = do_eval_access_ptr(l, l['type'], field['field_no'], ft)
+        l_field_ptr = llvm_eval_access_ptr(l, l['type'], field['field_no'], ft)
 
         rpos = field['field_no']
 
-        rv = llvm_dold(do_eval_access(r, r['type'], rpos, ft))
+        rv = llvm_dold(llvm_eval_access(r, r['type'], rpos, ft))
 
         # сохраняем
         llvm_assign(l_field_ptr, rv)
