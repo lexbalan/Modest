@@ -154,7 +154,7 @@ define i32 @rotright(i32 %a, i32 %b) {
 
 define i32 @ch(i32 %x, i32 %y, i32 %z) {
     %1 = and i32 %x, %y
-    %2 = xor  i32 %x, -1
+    %2 = xor i32 %x, -1
     %3 = and i32 %2, %z
     %4 = xor i32 %1, %3
     ret i32 %4

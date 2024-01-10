@@ -606,10 +606,7 @@ def do_eval_expr_un(v):
     if v['kind'] == 'not':
         #%10 = xor i32 %9, -1
         reg = llvm_operation('xor');
-        out(" ");
-        print_type(v['type'])
-        out(" ");
-        llvm_print_value(vx)
+        llvm_print_type_value(vx)
         out(", -1")
 
     elif v['kind'] == 'minus':
