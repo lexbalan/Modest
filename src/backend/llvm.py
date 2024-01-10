@@ -440,15 +440,15 @@ def llvm_label(label):
     out("\n%s:" % label)
 
 
-def llvm_alloca(typ, id_str=None, init_value=None):
+def llvm_alloca(typ, id_str=None, init_ll_value=None):
     assert(typ['isa'] == 'type')
     reg = llvm_operation("alloca", reg=id_str); print_type(typ)
     val = llvm_value_stk(reg, typ)
     val['is_adr'] = True
 
-    if init_value != None:
-        assert(init_value['isa'] == 'll_value')
-        llvm_store(val, init_value)
+    if init_ll_value != None:
+        assert(init_ll_value['isa'] == 'll_value')
+        llvm_store(val, init_ll_value)
 
     return val
 
@@ -862,7 +862,7 @@ def cast_record_to_record(to_type, value, ti):
     from_type = value['type']
     # создаем переменную под структуру A
     y = do_reval(value)
-    struct = llvm_alloca(value['type'], init_value=y)
+    struct = llvm_alloca(value['type'], init_ll_value=y)
     # приводим указатель на нее к указателю на структуру B
     new_struct_ptr = llvm_cast("bitcast", hlir_type_pointer(from_type), hlir_type_pointer(to_type), struct)
     # загружаем структуру B и возвращаем ее
@@ -1227,7 +1227,7 @@ def print_stmt_def_var(x):
     iv = None
     if x['var']['init'] != None:
         iv = do_reval(x['var']['init'])
-    val = llvm_alloca(x['var']['type'], id_str=id_str, init_value=iv)
+    val = llvm_alloca(x['var']['type'], id_str=id_str, init_ll_value=iv)
     locals_add(id_str, val)
     return None
 
@@ -1250,7 +1250,7 @@ def print_stmt_let(x):
     # поскольку их могут индексировать переменной
     # а массив-значение в "регистре" невозможно индексировать переменной
     if type.is_defined_array(val['type']):
-        v = llvm_alloca(val['type'], id_str=id_str, init_value=v)
+        v = llvm_alloca(val['type'], id_str=id_str, init_ll_value=v)
 
     locals_add(id_str, v)
     return None
