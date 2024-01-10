@@ -188,20 +188,12 @@ def llvm_value_str(strid, _str, type, proto=None):
 
 def llvm_print_type_and_value(x):
     assert(x['isa'] == 'll_value')
-    print_type(x['type'])
 
+    print_type(x['type'])
     if x['is_adr']:
-        out("*")
-
-    out(" ")
-    llvm_print_value(x)
-
-
-
-def print_type_value_param(x):
-    assert(x['isa'] == 'll_value')
-    print_type(x['type'])
-    out(" ")
+        out("* ")
+    else:
+        out(" ")
     llvm_print_value(x)
 
 
@@ -704,7 +696,7 @@ def do_eval_expr_call(v, retval=None):
         if len(args) > 0:
             out(", ")
 
-    print_list_with(args, print_type_value_param)
+    print_list_with(args, llvm_print_type_and_value)
     out(")")
 
     return llvm_value_reg(reg, v['type'], v)
