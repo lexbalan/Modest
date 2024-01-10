@@ -235,12 +235,11 @@ def llvm_va_end(x):
 
 
 
-def llvm_inline_cast(op, from_type, to_type, val):
+def llvm_inline_cast(op, to_type, val):
+    assert(to_type['isa'] == 'type')
     assert(val['isa'] == 'll_value')
     out("%s (" % op)
-    print_type(from_type)
-    out(" ")
-    llvm_print_value(val)
+    llvm_print_type_and_value(val)
     out(" to ")
     print_type(to_type)
     out(")")
@@ -304,16 +303,13 @@ def llvm_print_value_num(x):
             out("null")
         else:
             v = llvm_value_num(type.typeNat64, x['imm'])
-            llvm_inline_cast('inttoptr', v['type'], x['type'], v)
+            llvm_inline_cast('inttoptr', x['type'], v)
 
 
 
 def llvm_print_value_inlinecast(x):
     #o("bitcast ([%d x i8]* @%s to %%Str)" % (x['len'], x['id']))
-    v = x['value']
-    from_type = v['type']
-    to_type = x['type']
-    llvm_inline_cast('bitcast', from_type, to_type, v)
+    llvm_inline_cast('bitcast', x['type'], x['value'])
 
 
 def llvm_print_value_zero(x):
