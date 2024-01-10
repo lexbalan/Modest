@@ -102,8 +102,8 @@ declare void @lib_func()
 
 
 define i32 @main() {
-    %1 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([17 x i8]* @str1 to [0 x i8]*))
-    call void()@lib_func()
+    %1 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str1 to [0 x i8]*))
+    call void() @lib_func()
     ret i32 0
 }
 

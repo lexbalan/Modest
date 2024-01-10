@@ -396,7 +396,9 @@ def llvm_load(x):
     print_type(x['type'])
     out(", ")
     llvm_print_type_value(x)
-    return llvm_value_reg(reg, x['type'], x)
+
+    result_type = x['type'] # if it just 'is_adr' ll_value
+    return llvm_value_reg(reg, result_type, x)
 
 
 # сохр простых значений
@@ -691,6 +693,7 @@ def do_eval_expr_call(v, retval=None):
         reg = llvm_operation("call")
 
     print_type_func(ftype)
+    out(" ")
     llvm_print_value(f)
 
     out("(")

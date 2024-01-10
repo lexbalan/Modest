@@ -127,11 +127,11 @@ declare void @perror(%ConstCharStr* %str)
 
 
 define i32 @main() {
-    %1 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([12 x i8]* @str4 to [0 x i8]*))
-    %2 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*), i32 42)
-    %3 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([17 x i8]* @str6 to [0 x i8]*), i32 42)
+    %1 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str4 to [0 x i8]*))
+    %2 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*), i32 42)
+    %3 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str6 to [0 x i8]*), i32 42)
     ;	printf("genericStringConst = %s\n", genericStringConst)
-    %4 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([19 x i8]* @str7 to [0 x i8]*), [0 x i8]* bitcast ([7 x i8]* @str1 to [0 x i8]*))
+    %4 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str7 to [0 x i8]*), [0 x i8]* bitcast ([7 x i8]* @str1 to [0 x i8]*))
     ret i32 0
 }
 

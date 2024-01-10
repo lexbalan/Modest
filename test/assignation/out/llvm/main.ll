@@ -151,35 +151,35 @@ declare void @perror(%ConstCharStr* %str)
 ]
 
 define i32 @main() {
-    %1 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([18 x i8]* @str1 to [0 x i8]*))
+    %1 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str1 to [0 x i8]*))
     ; -----------------------------------
     ; Global
     ; copy integers by value
     %2 = load i32, i32* @glb_i1
     store i32 %2, i32* @glb_i0
     %3 = load i32, i32* @glb_i0
-    %4 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*), i32 %3)
+    %4 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*), i32 %3)
     ; copy arrays by value
     %5 = load [10 x i32], [10 x i32]* @glb_a1
     store [10 x i32] %5, [10 x i32]* @glb_a0
     %6 = getelementptr inbounds [10 x i32], [10 x i32]* @glb_a0, i32 0, i32 0
     %7 = load i32, i32* %6
-    %8 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([16 x i8]* @str3 to [0 x i8]*), i32 %7)
+    %8 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str3 to [0 x i8]*), i32 %7)
     %9 = getelementptr inbounds [10 x i32], [10 x i32]* @glb_a0, i32 0, i32 1
     %10 = load i32, i32* %9
-    %11 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([16 x i8]* @str4 to [0 x i8]*), i32 %10)
+    %11 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str4 to [0 x i8]*), i32 %10)
     %12 = getelementptr inbounds [10 x i32], [10 x i32]* @glb_a0, i32 0, i32 2
     %13 = load i32, i32* %12
-    %14 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([16 x i8]* @str5 to [0 x i8]*), i32 %13)
+    %14 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str5 to [0 x i8]*), i32 %13)
     ; copy records by value
     %15 = load %Point, %Point* @glb_r1
     store %Point %15, %Point* @glb_r0
     %16 = getelementptr inbounds %Point, %Point* @glb_r0, i32 0, i32 0
     %17 = load i32, i32* %16
-    %18 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([15 x i8]* @str6 to [0 x i8]*), i32 %17)
+    %18 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str6 to [0 x i8]*), i32 %17)
     %19 = getelementptr inbounds %Point, %Point* @glb_r0, i32 0, i32 1
     %20 = load i32, i32* %19
-    %21 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([15 x i8]* @str7 to [0 x i8]*), i32 %20)
+    %21 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str7 to [0 x i8]*), i32 %20)
     ; -----------------------------------
     ; Local
     ; copy integers by value
@@ -190,7 +190,7 @@ define i32 @main() {
     %24 = load i32, i32* %23
     store i32 %24, i32* %22
     %25 = load i32, i32* %22
-    %26 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([13 x i8]* @str8 to [0 x i8]*), i32 %25)
+    %26 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str8 to [0 x i8]*), i32 %25)
     ; copy arrays by value
     ; C backend will be use memcpy()
     %27 = insertvalue [10 x i32] zeroinitializer, i32 0, 0
@@ -221,13 +221,13 @@ define i32 @main() {
     store [10 x i32] %49, [10 x i32]* %37
     %50 = getelementptr inbounds [10 x i32], [10 x i32]* %37, i32 0, i32 0
     %51 = load i32, i32* %50
-    %52 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([16 x i8]* @str9 to [0 x i8]*), i32 %51)
+    %52 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str9 to [0 x i8]*), i32 %51)
     %53 = getelementptr inbounds [10 x i32], [10 x i32]* %37, i32 0, i32 1
     %54 = load i32, i32* %53
-    %55 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([16 x i8]* @str10 to [0 x i8]*), i32 %54)
+    %55 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str10 to [0 x i8]*), i32 %54)
     %56 = getelementptr inbounds [10 x i32], [10 x i32]* %37, i32 0, i32 2
     %57 = load i32, i32* %56
-    %58 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([16 x i8]* @str11 to [0 x i8]*), i32 %57)
+    %58 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str11 to [0 x i8]*), i32 %57)
     ; copy records by value
     ; C backend will be use memcpy()
     %59 = alloca %Point
@@ -240,10 +240,10 @@ define i32 @main() {
     store %Point %63, %Point* %59
     %64 = getelementptr inbounds %Point, %Point* %59, i32 0, i32 0
     %65 = load i32, i32* %64
-    %66 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([15 x i8]* @str12 to [0 x i8]*), i32 %65)
+    %66 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str12 to [0 x i8]*), i32 %65)
     %67 = getelementptr inbounds %Point, %Point* %59, i32 0, i32 1
     %68 = load i32, i32* %67
-    %69 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([15 x i8]* @str13 to [0 x i8]*), i32 %68)
+    %69 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str13 to [0 x i8]*), i32 %68)
     %70 = alloca [15 x [16 x i32]]
     %71 = alloca i32
     store i32 0, i32* %71
@@ -301,7 +301,7 @@ body_4:
     %97 = load i32, i32* %90
     %98 = getelementptr inbounds [16 x i32], [16 x i32]* %96, i32 0, i32 %97
     %99 = load i32, i32* %98
-    %100 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([17 x i8]* @str14 to [0 x i8]*), i32 %93, i32 %94, i32 %99)
+    %100 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str14 to [0 x i8]*), i32 %93, i32 %94, i32 %99)
     %101 = load i32, i32* %90
     %102 = add i32 %101, 1
     store i32 %102, i32* %90
@@ -327,7 +327,7 @@ body_5:
     %111 = load i32, i32* %71
     %112 = getelementptr inbounds [16 x i32], [16 x i32]* %107, i32 0, i32 %111
     %113 = load i32, i32* %112
-    %114 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([13 x i8]* @str15 to [0 x i8]*), i32 %110, i32 %113)
+    %114 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str15 to [0 x i8]*), i32 %110, i32 %113)
     %115 = load i32, i32* %71
     %116 = add i32 %115, 1
     store i32 %116, i32* %71

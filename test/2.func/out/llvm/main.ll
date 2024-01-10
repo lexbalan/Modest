@@ -99,23 +99,23 @@ declare void @perror(%ConstCharStr* %str)
 
 
 define void @f1() {
-    %1 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
+    %1 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
     ret void
 }
 
 
 
 define i32 @main() {
-    %1 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([11 x i8]* @str2 to [0 x i8]*))
-    call void()@f0()
-    call void()@f1()
+    %1 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str2 to [0 x i8]*))
+    call void() @f0()
+    call void() @f1()
     ret i32 0
 }
 
 
 
 define void @f0() {
-    %1 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([15 x i8]* @str3 to [0 x i8]*))
+    %1 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str3 to [0 x i8]*))
     ret void
 }
 

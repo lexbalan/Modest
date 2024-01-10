@@ -143,7 +143,7 @@ define void @fsm_switch(%FSM* %fsm, i32 %state) {
 }
 
 define void @fsm_run(%FSM* %fsm) {
-    %1 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([11 x i8]* @str1 to [0 x i8]*))
+    %1 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str1 to [0 x i8]*))
     %2 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 3
     %3 = load i32, i32* %2
     %4 = icmp eq i32 %3, 0
@@ -157,7 +157,7 @@ then_0:
 then_1:
     ; &s.name, not just &s.name
     %9 = getelementptr inbounds %FSM_StateDesc, %FSM_StateDesc* %8, i32 0, i32 0
-    %10 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([10 x i8]* @str2 to [0 x i8]*), [8 x i8]* %9)
+    %10 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str2 to [0 x i8]*), [8 x i8]* %9)
     br label %endif_1
 endif_1:
     %11 = getelementptr inbounds %FSM_StateDesc, %FSM_StateDesc* %8, i32 0, i32 1
@@ -168,7 +168,7 @@ then_2:
     %14 = bitcast %FSM* %fsm to %FSM*
     %15 = getelementptr inbounds %FSM_StateDesc, %FSM_StateDesc* %8, i32 0, i32 1
     %16 = load %FSM_Proc, %FSM_Proc* %15
-    call void(%FSM*)%16(%FSM* %14)
+    call void(%FSM*) %16(%FSM* %14)
     br label %endif_2
 endif_2:
     %17 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 1
@@ -194,7 +194,7 @@ then_4:
     %29 = bitcast %FSM* %fsm to %FSM*
     %30 = getelementptr inbounds %FSM_StateDesc, %FSM_StateDesc* %25, i32 0, i32 2
     %31 = load %FSM_Proc, %FSM_Proc* %30
-    call void(%FSM*)%31(%FSM* %29)
+    call void(%FSM*) %31(%FSM* %29)
     br label %endif_4
 endif_4:
     br label %endif_3
@@ -211,7 +211,7 @@ then_5:
     br i1 1 , label %then_6, label %endif_6
 then_6:
     %39 = getelementptr inbounds %FSM_StateDesc, %FSM_StateDesc* %38, i32 0, i32 0
-    %40 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([9 x i8]* @str3 to [0 x i8]*), [8 x i8]* %39)
+    %40 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str3 to [0 x i8]*), [8 x i8]* %39)
     br label %endif_6
 endif_6:
     %41 = getelementptr inbounds %FSM_StateDesc, %FSM_StateDesc* %38, i32 0, i32 3
@@ -222,7 +222,7 @@ then_7:
     %44 = bitcast %FSM* %fsm to %FSM*
     %45 = getelementptr inbounds %FSM_StateDesc, %FSM_StateDesc* %38, i32 0, i32 3
     %46 = load %FSM_Proc, %FSM_Proc* %45
-    call void(%FSM*)%46(%FSM* %44)
+    call void(%FSM*) %46(%FSM* %44)
     br label %endif_7
 endif_7:
     %47 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 3

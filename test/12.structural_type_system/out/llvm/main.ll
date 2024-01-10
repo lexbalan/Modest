@@ -117,19 +117,19 @@ declare void @perror(%ConstCharStr* %str)
 
 define void @f0_val(%Type1 %x) {
     %1 = extractvalue %Type1 %x, 0
-    %2 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([13 x i8]* @str1 to [0 x i8]*), i32 %1)
+    %2 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str1 to [0 x i8]*), i32 %1)
     ret void
 }
 
 define void @f1_val(%Type2 %x) {
     %1 = extractvalue %Type2 %x, 0
-    %2 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*), i32 %1)
+    %2 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*), i32 %1)
     ret void
 }
 
 define void @f2_val(%Type3 %x) {
     %1 = extractvalue %Type3 %x, 0
-    %2 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([13 x i8]* @str3 to [0 x i8]*), i32 %1)
+    %2 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str3 to [0 x i8]*), i32 %1)
     ret void
 }
 
@@ -139,28 +139,28 @@ define void @f3_val({
     %1 = extractvalue {
 	i32
 } %x, 0
-    %2 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([13 x i8]* @str4 to [0 x i8]*), i32 %1)
+    %2 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str4 to [0 x i8]*), i32 %1)
     ret void
 }
 
 define void @f0_ptr(%Type1* %x) {
     %1 = getelementptr inbounds %Type1, %Type1* %x, i32 0, i32 0
     %2 = load i32, i32* %1
-    %3 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([14 x i8]* @str5 to [0 x i8]*), i32 %2)
+    %3 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str5 to [0 x i8]*), i32 %2)
     ret void
 }
 
 define void @f1_ptr(%Type2* %x) {
     %1 = getelementptr inbounds %Type2, %Type2* %x, i32 0, i32 0
     %2 = load i32, i32* %1
-    %3 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([14 x i8]* @str6 to [0 x i8]*), i32 %2)
+    %3 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str6 to [0 x i8]*), i32 %2)
     ret void
 }
 
 define void @f2_ptr(%Type3* %x) {
     %1 = getelementptr inbounds %Type3, %Type3* %x, i32 0, i32 0
     %2 = load i32, i32* %1
-    %3 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([14 x i8]* @str7 to [0 x i8]*), i32 %2)
+    %3 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str7 to [0 x i8]*), i32 %2)
     ret void
 }
 
@@ -173,7 +173,7 @@ define void @f3_ptr({
 	i32
 }* %x, i32 0, i32 0
     %2 = load i32, i32* %1
-    %3 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([14 x i8]* @str8 to [0 x i8]*), i32 %2)
+    %3 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str8 to [0 x i8]*), i32 %2)
     ret void
 }
 
@@ -190,81 +190,81 @@ define void @f3_ptr({
 
 define void @test_by_value() {
     %1 = load %Type1, %Type1* @a
-    call void(%Type1)@f0_val(%Type1 %1)
+    call void(%Type1) @f0_val(%Type1 %1)
     %2 = load %Type1, %Type1* @a
     %3 = alloca %Type1
     store %Type1 %2, %Type1* %3
     %4 = bitcast %Type1* %3 to %Type2*
     %5 = load %Type2, %Type2* %4
-    call void(%Type2)@f1_val(%Type2 %5)
+    call void(%Type2) @f1_val(%Type2 %5)
     %6 = load %Type1, %Type1* @a
     %7 = alloca %Type1
     store %Type1 %6, %Type1* %7
     %8 = bitcast %Type1* %7 to %Type3*
     %9 = load %Type3, %Type3* %8
-    call void(%Type3)@f2_val(%Type3 %9)
+    call void(%Type3) @f2_val(%Type3 %9)
     ;f3_val(a)
     %10 = load %Type2, %Type2* @b
     %11 = alloca %Type2
     store %Type2 %10, %Type2* %11
     %12 = bitcast %Type2* %11 to %Type1*
     %13 = load %Type1, %Type1* %12
-    call void(%Type1)@f0_val(%Type1 %13)
+    call void(%Type1) @f0_val(%Type1 %13)
     %14 = load %Type2, %Type2* @b
-    call void(%Type2)@f1_val(%Type2 %14)
+    call void(%Type2) @f1_val(%Type2 %14)
     %15 = load %Type2, %Type2* @b
     %16 = alloca %Type2
     store %Type2 %15, %Type2* %16
     %17 = bitcast %Type2* %16 to %Type3*
     %18 = load %Type3, %Type3* %17
-    call void(%Type3)@f2_val(%Type3 %18)
+    call void(%Type3) @f2_val(%Type3 %18)
     ;f3_val(b)
     %19 = load %Type3, %Type3* @c
     %20 = alloca %Type3
     store %Type3 %19, %Type3* %20
     %21 = bitcast %Type3* %20 to %Type1*
     %22 = load %Type1, %Type1* %21
-    call void(%Type1)@f0_val(%Type1 %22)
+    call void(%Type1) @f0_val(%Type1 %22)
     %23 = load %Type3, %Type3* @c
     %24 = alloca %Type3
     store %Type3 %23, %Type3* %24
     %25 = bitcast %Type3* %24 to %Type2*
     %26 = load %Type2, %Type2* %25
-    call void(%Type2)@f1_val(%Type2 %26)
+    call void(%Type2) @f1_val(%Type2 %26)
     %27 = load %Type3, %Type3* @c
-    call void(%Type3)@f2_val(%Type3 %27)
+    call void(%Type3) @f2_val(%Type3 %27)
     ;f3_val(c)
     ret void
 }
 
 define void @test_by_pointer() {
     %1 = bitcast %Type1* @a to %Type1*
-    call void(%Type1*)@f0_ptr(%Type1* %1)
+    call void(%Type1*) @f0_ptr(%Type1* %1)
     %2 = bitcast %Type1* @a to %Type2*
-    call void(%Type2*)@f1_ptr(%Type2* %2)
+    call void(%Type2*) @f1_ptr(%Type2* %2)
     %3 = bitcast %Type1* @a to %Type3*
-    call void(%Type3*)@f2_ptr(%Type3* %3)
+    call void(%Type3*) @f2_ptr(%Type3* %3)
     ;f3_ptr(&a)
     %4 = bitcast %Type2* @b to %Type1*
-    call void(%Type1*)@f0_ptr(%Type1* %4)
+    call void(%Type1*) @f0_ptr(%Type1* %4)
     %5 = bitcast %Type2* @b to %Type2*
-    call void(%Type2*)@f1_ptr(%Type2* %5)
+    call void(%Type2*) @f1_ptr(%Type2* %5)
     %6 = bitcast %Type2* @b to %Type3*
-    call void(%Type3*)@f2_ptr(%Type3* %6)
+    call void(%Type3*) @f2_ptr(%Type3* %6)
     ;f3_ptr(&b)
     %7 = bitcast %Type3* @c to %Type1*
-    call void(%Type1*)@f0_ptr(%Type1* %7)
+    call void(%Type1*) @f0_ptr(%Type1* %7)
     %8 = bitcast %Type3* @c to %Type2*
-    call void(%Type2*)@f1_ptr(%Type2* %8)
+    call void(%Type2*) @f1_ptr(%Type2* %8)
     %9 = bitcast %Type3* @c to %Type3*
-    call void(%Type3*)@f2_ptr(%Type3* %9)
+    call void(%Type3*) @f2_ptr(%Type3* %9)
     ;f3_ptr(&c)
     ret void
 }
 
 define i32 @main() {
-    call void()@test_by_value()
-    call void()@test_by_pointer()
+    call void() @test_by_value()
+    call void() @test_by_pointer()
     ret i32 0
 }
 

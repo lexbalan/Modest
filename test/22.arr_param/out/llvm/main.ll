@@ -180,79 +180,79 @@ define void @ee([2 x [10 x i8]] %x) {
     ;y[1][7] = 0 to Char8
     %1 = extractvalue [2 x [10 x i8]] %x, 1
     %2 = extractvalue [10 x i8] %1, 0
-    %3 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([4 x i8]* @str1 to [0 x i8]*), i8 %2)
+    %3 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str1 to [0 x i8]*), i8 %2)
     %4 = extractvalue [2 x [10 x i8]] %x, 1
     %5 = extractvalue [10 x i8] %4, 1
-    %6 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([4 x i8]* @str2 to [0 x i8]*), i8 %5)
+    %6 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str2 to [0 x i8]*), i8 %5)
     %7 = extractvalue [2 x [10 x i8]] %x, 1
     %8 = extractvalue [10 x i8] %7, 2
-    %9 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([4 x i8]* @str3 to [0 x i8]*), i8 %8)
+    %9 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str3 to [0 x i8]*), i8 %8)
     ret void
 }
 
 define void @kk([2 x [10 x i8]] %x) {
     %1 = extractvalue [2 x [10 x i8]] %x, 0
     %2 = extractvalue [10 x i8] %1, 0
-    %3 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([4 x i8]* @str4 to [0 x i8]*), i8 %2)
+    %3 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str4 to [0 x i8]*), i8 %2)
     %4 = extractvalue [2 x [10 x i8]] %x, 0
     %5 = extractvalue [10 x i8] %4, 1
-    %6 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([4 x i8]* @str5 to [0 x i8]*), i8 %5)
+    %6 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str5 to [0 x i8]*), i8 %5)
     %7 = extractvalue [2 x [10 x i8]] %x, 0
     %8 = extractvalue [10 x i8] %7, 2
-    %9 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([4 x i8]* @str6 to [0 x i8]*), i8 %8)
+    %9 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str6 to [0 x i8]*), i8 %8)
     %10 = extractvalue [2 x [10 x i8]] %x, 0
     %11 = extractvalue [10 x i8] %10, 3
-    %12 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([4 x i8]* @str7 to [0 x i8]*), i8 %11)
+    %12 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str7 to [0 x i8]*), i8 %11)
     %13 = extractvalue [2 x [10 x i8]] %x, 0
     %14 = extractvalue [10 x i8] %13, 4
-    %15 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([4 x i8]* @str8 to [0 x i8]*), i8 %14)
+    %15 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str8 to [0 x i8]*), i8 %14)
     %16 = extractvalue [2 x [10 x i8]] %x, 0
     %17 = extractvalue [10 x i8] %16, 5
-    %18 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([4 x i8]* @str9 to [0 x i8]*), i8 %17)
+    %18 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str9 to [0 x i8]*), i8 %17)
     %19 = extractvalue [2 x [10 x i8]] %x, 0
     %20 = extractvalue [10 x i8] %19, 6
-    %21 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([4 x i8]* @str10 to [0 x i8]*), i8 %20)
+    %21 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str10 to [0 x i8]*), i8 %20)
     %22 = extractvalue [2 x [10 x i8]] %x, 0
     %23 = extractvalue [10 x i8] %22, 7
-    %24 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([4 x i8]* @str11 to [0 x i8]*), i8 %23)
+    %24 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str11 to [0 x i8]*), i8 %23)
     %25 = extractvalue [2 x [10 x i8]] %x, 0
     %26 = extractvalue [10 x i8] %25, 8
-    %27 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([4 x i8]* @str12 to [0 x i8]*), i8 %26)
+    %27 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str12 to [0 x i8]*), i8 %26)
     %28 = extractvalue [2 x [10 x i8]] %x, 0
     %29 = extractvalue [10 x i8] %28, 9
-    %30 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([4 x i8]* @str13 to [0 x i8]*), i8 %29)
-    %31 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([2 x i8]* @str14 to [0 x i8]*))
+    %30 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str13 to [0 x i8]*), i8 %29)
+    %31 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str14 to [0 x i8]*))
     %32 = extractvalue [2 x [10 x i8]] %x, 1
     %33 = extractvalue [10 x i8] %32, 0
-    %34 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([4 x i8]* @str15 to [0 x i8]*), i8 %33)
+    %34 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str15 to [0 x i8]*), i8 %33)
     %35 = extractvalue [2 x [10 x i8]] %x, 1
     %36 = extractvalue [10 x i8] %35, 1
-    %37 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([4 x i8]* @str16 to [0 x i8]*), i8 %36)
+    %37 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str16 to [0 x i8]*), i8 %36)
     %38 = extractvalue [2 x [10 x i8]] %x, 1
     %39 = extractvalue [10 x i8] %38, 2
-    %40 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([4 x i8]* @str17 to [0 x i8]*), i8 %39)
+    %40 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str17 to [0 x i8]*), i8 %39)
     %41 = extractvalue [2 x [10 x i8]] %x, 1
     %42 = extractvalue [10 x i8] %41, 3
-    %43 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([4 x i8]* @str18 to [0 x i8]*), i8 %42)
+    %43 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str18 to [0 x i8]*), i8 %42)
     %44 = extractvalue [2 x [10 x i8]] %x, 1
     %45 = extractvalue [10 x i8] %44, 4
-    %46 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([4 x i8]* @str19 to [0 x i8]*), i8 %45)
+    %46 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str19 to [0 x i8]*), i8 %45)
     %47 = extractvalue [2 x [10 x i8]] %x, 1
     %48 = extractvalue [10 x i8] %47, 5
-    %49 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([4 x i8]* @str20 to [0 x i8]*), i8 %48)
+    %49 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str20 to [0 x i8]*), i8 %48)
     %50 = extractvalue [2 x [10 x i8]] %x, 1
     %51 = extractvalue [10 x i8] %50, 6
-    %52 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([4 x i8]* @str21 to [0 x i8]*), i8 %51)
+    %52 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str21 to [0 x i8]*), i8 %51)
     %53 = extractvalue [2 x [10 x i8]] %x, 1
     %54 = extractvalue [10 x i8] %53, 7
-    %55 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([4 x i8]* @str22 to [0 x i8]*), i8 %54)
+    %55 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str22 to [0 x i8]*), i8 %54)
     %56 = extractvalue [2 x [10 x i8]] %x, 1
     %57 = extractvalue [10 x i8] %56, 8
-    %58 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([4 x i8]* @str23 to [0 x i8]*), i8 %57)
+    %58 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str23 to [0 x i8]*), i8 %57)
     %59 = extractvalue [2 x [10 x i8]] %x, 1
     %60 = extractvalue [10 x i8] %59, 9
-    %61 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([4 x i8]* @str24 to [0 x i8]*), i8 %60)
-    %62 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([2 x i8]* @str25 to [0 x i8]*))
+    %61 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str24 to [0 x i8]*), i8 %60)
+    %62 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str25 to [0 x i8]*))
     ret void
 }
 
@@ -273,7 +273,7 @@ define void @kk([2 x [10 x i8]] %x) {
 
 
 define i32 @main() {
-    %1 = call [8 x i8]()@ret_str()
+    %1 = call [8 x i8]() @ret_str()
     %2 = alloca [8 x i8]
     store [8 x i8] %1, [8 x i8]* %2
     ;let d = c[0]
@@ -310,7 +310,7 @@ define i32 @main() {
     %27 = alloca [2 x [10 x i8]]
     store [2 x [10 x i8]] %26, [2 x [10 x i8]]* %27
     %28 = load [2 x [10 x i8]], [2 x [10 x i8]]* %27
-    call void([2 x [10 x i8]])@kk([2 x [10 x i8]] %28)
+    call void([2 x [10 x i8]]) @kk([2 x [10 x i8]] %28)
     ret i32 0
 }
 

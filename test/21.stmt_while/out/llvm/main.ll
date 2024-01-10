@@ -97,7 +97,7 @@ declare void @perror(%ConstCharStr* %str)
 
 
 define i32 @main() {
-    %1 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([17 x i8]* @str1 to [0 x i8]*))
+    %1 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str1 to [0 x i8]*))
     %2 = alloca i32
     store i32 0, i32* %2
     br label %again_1
@@ -107,7 +107,7 @@ again_1:
     br i1 %4 , label %body_1, label %break_1
 body_1:
     %5 = load i32, i32* %2
-    %6 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), i32 %5)
+    %6 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), i32 %5)
     %7 = load i32, i32* %2
     %8 = add i32 %7, 1
     store i32 %8, i32* %2

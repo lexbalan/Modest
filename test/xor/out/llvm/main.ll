@@ -268,30 +268,30 @@ body_1:
     %4 = load i32, i32* %1
     %5 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %4
     %6 = load i8, i8* %5
-    %7 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([8 x i8]* @str1 to [0 x i8]*), i8 %6)
+    %7 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str1 to [0 x i8]*), i8 %6)
     %8 = load i32, i32* %1
     %9 = add i32 %8, 1
     store i32 %9, i32* %1
     br label %again_1
 break_1:
-    %10 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
+    %10 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
     ret void
 }
 
 define i32 @main() {
-    %1 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([21 x i8]* @str3 to [0 x i8]*))
+    %1 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str3 to [0 x i8]*))
     %2 = bitcast [13 x i8]* @test_msg to [0 x i8]*
     %3 = bitcast [4 x i8]* @test_key to [0 x i8]*
-    %4 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([27 x i8]* @str4 to [0 x i8]*))
-    call void([0 x i8]*, i32)@print_bytes([0 x i8]* %2, i32 12)
+    %4 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str4 to [0 x i8]*))
+    call void([0 x i8]*, i32) @print_bytes([0 x i8]* %2, i32 12)
     ; encrypt test data
-    call void([0 x i8]*, i32, [0 x i8]*, i32)@xor_encrypter([0 x i8]* %2, i32 12, [0 x i8]* %3, i32 3)
-    %5 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([26 x i8]* @str5 to [0 x i8]*))
-    call void([0 x i8]*, i32)@print_bytes([0 x i8]* %2, i32 12)
+    call void([0 x i8]*, i32, [0 x i8]*, i32) @xor_encrypter([0 x i8]* %2, i32 12, [0 x i8]* %3, i32 3)
+    %5 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str5 to [0 x i8]*))
+    call void([0 x i8]*, i32) @print_bytes([0 x i8]* %2, i32 12)
     ; decrypt test data
-    call void([0 x i8]*, i32, [0 x i8]*, i32)@xor_encrypter([0 x i8]* %2, i32 12, [0 x i8]* %3, i32 3)
-    %6 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([26 x i8]* @str6 to [0 x i8]*))
-    call void([0 x i8]*, i32)@print_bytes([0 x i8]* %2, i32 12)
+    call void([0 x i8]*, i32, [0 x i8]*, i32) @xor_encrypter([0 x i8]* %2, i32 12, [0 x i8]* %3, i32 3)
+    %6 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str6 to [0 x i8]*))
+    call void([0 x i8]*, i32) @print_bytes([0 x i8]* %2, i32 12)
     ret i32 0
 }
 

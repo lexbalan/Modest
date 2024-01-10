@@ -301,10 +301,10 @@ break_1:
 }
 
 define void @delay_us(i64 %us) {
-    %1 = call i64()@clock()
+    %1 = call i64() @clock()
     br label %again_1
 again_1:
-    %2 = call i64()@clock()
+    %2 = call i64() @clock()
     %3 = add i64 %1, %us
     %4 = icmp ult i64 %2, %3
     br i1 %4 , label %body_1, label %break_1
@@ -316,19 +316,19 @@ break_1:
 }
 
 define void @delay(i64 %us) {
-    call void(i64)@delay_us(i64 %us)
+    call void(i64) @delay_us(i64 %us)
     ret void
 }
 
 define void @delay_ms(i64 %ms) {
     %1 = mul i64 %ms, 1000
-    call void(i64)@delay_us(i64 %1)
+    call void(i64) @delay_us(i64 %1)
     ret void
 }
 
 define void @delay_s(i64 %s) {
     %1 = mul i64 %s, 1000
-    call void(i64)@delay_ms(i64 %1)
+    call void(i64) @delay_ms(i64 %1)
     ret void
 }
 

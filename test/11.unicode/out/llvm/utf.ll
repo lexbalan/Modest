@@ -251,7 +251,7 @@ endif_0:
 
 define void @utf32_putchar(i32 %c) {
     %1 = alloca [5 x i8]
-    %2 = call i8(i32, [5 x i8]*)@utf32_to_utf8(i32 %c, [5 x i8]* %1)
+    %2 = call i8(i32, [5 x i8]*) @utf32_to_utf8(i32 %c, [5 x i8]* %1)
     %3 = sext i8 %2 to i32
     %4 = alloca i32
     store i32 0, i32* %4
@@ -272,7 +272,7 @@ then_0:
     br label %endif_0
 endif_0:
     %13 = sext i8 %9 to i32
-    %14 = call i32(i32)@putchar(i32 %13)
+    %14 = call i32(i32) @putchar(i32 %13)
     %15 = load i32, i32* %4
     %16 = add i32 %15, 1
     store i32 %16, i32* %4
@@ -298,7 +298,7 @@ then_0:
     br label %break_1
     br label %endif_0
 endif_0:
-    call void(i32)@utf32_putchar(i32 %4)
+    call void(i32) @utf32_putchar(i32 %4)
     %8 = load i32, i32* %1
     %9 = add i32 %8, 1
     store i32 %9, i32* %1
@@ -328,7 +328,7 @@ endif_0:
     %9 = load i32, i32* %1
     %10 = getelementptr inbounds [0 x i16], [0 x i16]* %s, i32 0, i32 %9
     %11 = bitcast i16* %10 to [0 x i16]*
-    %12 = call i8([0 x i16]*, i32*)@utf16_to_utf32([0 x i16]* %11, i32* %8)
+    %12 = call i8([0 x i16]*, i32*) @utf16_to_utf32([0 x i16]* %11, i32* %8)
     %13 = icmp eq i8 %12, 0
     br i1 %13 , label %then_1, label %endif_1
 then_1:
@@ -336,7 +336,7 @@ then_1:
     br label %endif_1
 endif_1:
     %15 = load i32, i32* %8
-    call void(i32)@utf32_putchar(i32 %15)
+    call void(i32) @utf32_putchar(i32 %15)
     %16 = load i32, i32* %1
     %17 = sext i8 %12 to i32
     %18 = add i32 %16, %17
@@ -364,7 +364,7 @@ then_0:
     br label %endif_0
 endif_0:
     %8 = sext i8 %4 to i32
-    %9 = call i32(i32)@putchar(i32 %8)
+    %9 = call i32(i32) @putchar(i32 %8)
     %10 = load i32, i32* %1
     %11 = add i32 %10, 1
     store i32 %11, i32* %1

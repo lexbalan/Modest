@@ -147,7 +147,7 @@ declare void @bcopy(i8* %src, i8* %dst, i64 %n)
 
 
 define %List* @linked_list_create() {
-    %1 = call i8*(i64)@malloc(i64 24)
+    %1 = call i8*(i64) @malloc(i64 24)
     %2 = bitcast i8* %1 to %List*
     %3 = icmp eq %List* %2, null
     br i1 %3 , label %then_0, label %endif_0
@@ -203,7 +203,7 @@ endif_0:
 }
 
 define %Node* @linked_list_node_create() {
-    %1 = call i8*(i64)@malloc(i64 24)
+    %1 = call i8*(i64) @malloc(i64 24)
     %2 = bitcast i8* %1 to %Node*
     %3 = icmp eq %Node* %2, null
     br i1 %3 , label %then_0, label %endif_0
@@ -312,7 +312,7 @@ then_0:
     ret %Node* null
     br label %endif_0
 endif_0:
-    %3 = call %Node*()@linked_list_node_create()
+    %3 = call %Node*() @linked_list_node_create()
     %4 = icmp eq %Node* %3, null
     br i1 %4 , label %then_1, label %endif_1
 then_1:
@@ -323,12 +323,12 @@ endif_1:
     store i8* %link, i8** %6
     %7 = bitcast %List* %list to %List*
     %8 = bitcast %Node* %3 to %Node*
-    %9 = call %Node*(%List*, %Node*)@linked_list_insert_node(%List* %7, %Node* %8)
+    %9 = call %Node*(%List*, %Node*) @linked_list_insert_node(%List* %7, %Node* %8)
     %10 = icmp eq %Node* %9, null
     br i1 %10 , label %then_2, label %endif_2
 then_2:
     %11 = bitcast %Node* %3 to i8*
-    call void(i8*)@free(i8* %11)
+    call void(i8*) @free(i8* %11)
     br label %endif_2
 endif_2:
     %12 = bitcast %Node* %9 to %Node*

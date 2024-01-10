@@ -110,7 +110,7 @@ body_1:
     %4 = load i32, i32* %1
     %5 = mul i32 %n, %4
     %6 = load i32, i32* %1
-    %7 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*), i32 %n, i32 %6, i32 %5)
+    %7 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*), i32 %n, i32 %6, i32 %5)
     %8 = load i32, i32* %1
     %9 = add i32 %8, 1
     store i32 %9, i32* %1
@@ -120,8 +120,8 @@ break_1:
 }
 
 define i32 @main() {
-    %1 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([23 x i8]* @str2 to [0 x i8]*), i32 4)
-    call void(i32)@mtab(i32 4)
+    %1 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str2 to [0 x i8]*), i32 4)
+    call void(i32) @mtab(i32 4)
     ret i32 0
 }
 

@@ -98,7 +98,7 @@ declare void @perror(%ConstCharStr* %str)
 %NewInt32 = type i32
 
 define i32 @main() {
-    %1 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*))
+    %1 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*))
     %2 = alloca i32
     store i32 0, i32* %2
     ret i32 0
