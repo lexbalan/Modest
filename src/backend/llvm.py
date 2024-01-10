@@ -287,8 +287,8 @@ def llvm_print_value_record(x):
 def llvm_print_value_str(x):
     string_of = x['type']['to']['of']
     char_width = string_of['power']
-    slen = x['len']
-    out("bitcast ([%d x i%d]* @%s to [0 x i%d]*)" % (slen, char_width, x['id'], char_width))
+    str_len = x['len']
+    out("bitcast ([%d x i%d]* @%s to [0 x i%d]*)" % (str_len, char_width, x['id'], char_width))
 
 
 
@@ -308,14 +308,14 @@ def llvm_print_value_num(x):
 
 
 def llvm_print_value_inlinecast(x):
-    #o("bitcast ([%d x i8]* @%s to %%Str)" % (x['len'], x['id']))
     llvm_inline_cast('bitcast', x['type'], x['value'])
 
 
 def llvm_print_value_zero(x):
-    if type.is_numeric(x['type']): out("0")
+    if type.is_record(x['type']): out("zeroinitializer")
+    elif type.is_array(x['type']): out("zeroinitializer")
     elif type.is_pointer(x['type']): out("null")
-    else: out("zeroinitializer")
+    else: out("0")
 
 
 
