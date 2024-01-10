@@ -15,6 +15,7 @@ LLVM_TARGET_DATALAYOUT = ""
 
 INDENT_SYMBOL = " " * 4
 
+NL_INDENT = "\n%s" % INDENT_SYMBOL
 
 cfunc = None
 
@@ -83,8 +84,9 @@ def reg_get():
     return str(reg)
 
 
-def llvm_operation(op):
-    reg = reg_get()
+def llvm_operation(op, reg=None):
+    if reg == None:
+        reg = reg_get()
     lo("%%%s = %s " % (reg, op))
     return reg
 
@@ -186,7 +188,7 @@ def llvm_value_str(strid, _str, type, proto=None):
 
 
 
-def llvm_print_tv(x):
+def llvm_print_type_value(x):
     assert(x['isa'] == 'll_value')
 
     print_type(x['type'])
@@ -203,9 +205,9 @@ def insertvalue(x, v, pos):
     assert(v['isa'] == 'll_value')
     #%5 = insertvalue %Type24 zeroinitializer, %Int32 1, 0
     reg = llvm_operation('insertvalue')
-    llvm_print_tv(x)
+    llvm_print_type_value(x)
     out(", ")
-    llvm_print_tv(v)
+    llvm_print_type_value(v)
     out(", %d" % pos)
     return llvm_value_reg(reg, x['type'], x)
 
@@ -214,7 +216,7 @@ def insertvalue(x, v, pos):
 #%44 = va_arg i8** %3, i32
 def llvm_va_arg(va_list, typ):
     reg = llvm_operation('va_arg')
-    llvm_print_tv(va_list)
+    llvm_print_type_value(va_list)
     out(", ")
     print_type(typ)
     return llvm_value_reg(reg, typ)
@@ -239,7 +241,7 @@ def llvm_inline_cast(op, to_type, val):
     assert(to_type['isa'] == 'type')
     assert(val['isa'] == 'll_value')
     out("%s (" % op)
-    llvm_print_tv(val)
+    llvm_print_type_value(val)
     out(" to ")
     print_type(to_type)
     out(")")
@@ -258,7 +260,7 @@ def llvm_print_value_array(x):
     while i < n:
         item = x['items'][i]
         if i > 0: out(",\n")
-        indent(); llvm_print_tv(item);
+        indent(); llvm_print_type_value(item);
         i = i + 1
     indent_down()
     out("\n"); indent(); out("]")
@@ -277,7 +279,7 @@ def llvm_print_value_record(x):
     while i < n:
         item = x['items'][i]
         if i > 0: out(",\n")
-        indent(); llvm_print_tv(item['value'])
+        indent(); llvm_print_type_value(item['value'])
         i = i + 1
     indent_down()
     out("\n"); indent(); out("}")
@@ -333,7 +335,7 @@ def llvm_print_value(x):
     elif k == 'zero': llvm_print_value_zero(x)
     else:
         out("<unknown_value::%s>" % c)
-        info("???", x['ti'])
+        info("<llvm::unknown_value::%s>" % c, x['ti'])
 
     return
 
@@ -341,7 +343,9 @@ def llvm_print_value(x):
 
 
 def llvm_eval_binary(op, l, r, x):
-    reg = llvm_operation_with_type (op, l['type'])
+    assert(l['isa'] == 'll_value')
+    assert(r['isa'] == 'll_value')
+    reg = llvm_operation_with_type(op, l['type'])
     out(" "); llvm_print_value(l); out(", "); llvm_print_value(r)
     return llvm_value_reg(reg, x['type'], x)
 
@@ -362,9 +366,9 @@ def llvm_getelementptr(rec, rt, indexes, vt):
     # не может быть i64 (!) (а только i32)
     reg = llvm_operation_with_type("getelementptr inbounds", rt)
     out(", ")
-    llvm_print_tv(rec)
+    llvm_print_type_value(rec)
     out(", ")
-    print_list_with(indexes, llvm_print_tv)
+    print_list_with(indexes, llvm_print_type_value)
     rv = llvm_value_reg(reg, vt)
     rv['is_adr'] = True
     return rv
@@ -373,14 +377,14 @@ def llvm_getelementptr(rec, rt, indexes, vt):
 # возвращает значение поля из 'структуры по значению'
 def llvm_extract_item(x, ft, field_no):
     reg = llvm_operation('extractvalue')
-    llvm_print_tv(x)
+    llvm_print_type_value(x)
     out(', %d' % field_no)
     return llvm_value_reg(reg, ft)
 
 
 def llvm_cast(kind, from_type, to_type, value):
     reg = llvm_operation(kind)
-    llvm_print_tv(value)
+    llvm_print_type_value(value)
     out(" to ")
     print_type(to_type)
     return llvm_value_reg(reg, to_type, value)
@@ -391,7 +395,7 @@ def llvm_load(x):
     reg = llvm_operation('load')
     print_type(x['type'])
     out(", ")
-    llvm_print_tv(x)
+    llvm_print_type_value(x)
     return llvm_value_reg(reg, x['type'], x)
 
 
@@ -400,9 +404,9 @@ def llvm_store(l, r):
     assert(l['isa'] == 'll_value')
     assert(r['isa'] == 'll_value')
     lo("store ")
-    llvm_print_tv(r)
+    llvm_print_type_value(r)
     out(", ")
-    llvm_print_tv(l)
+    llvm_print_type_value(l)
 
 
 
@@ -411,14 +415,13 @@ def llvm_memcpy(dst, src, size, volatile=False):
     #"@llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)")
     dst2 = llvm_cast('bitcast', dst['type'], type.typeFreePtr, dst)
     src2 = llvm_cast('bitcast', src['type'], type.typeFreePtr, src)
-    out("\n")
-    out(INDENT_SYMBOL)
+    out(NL_INDENT)
     out("call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(")
-    llvm_print_tv(dst2)
+    llvm_print_type_value(dst2)
     out(", ")
-    llvm_print_tv(src2)
+    llvm_print_type_value(src2)
     out(", ")
-    llvm_print_tv(size)
+    llvm_print_type_value(size)
     out(", i1 %d)" % volatile)
 
 
@@ -437,16 +440,11 @@ def llvm_label(label):
     out("\n%s:" % label)
 
 
-
 def llvm_alloca(typ, id_str=None, init_value=None):
-    if id_str == None:
-        id_str = reg_get()
-
-    val = llvm_value_stk(id_str, typ)
+    assert(typ['isa'] == 'type')
+    reg = llvm_operation("alloca", reg=id_str); print_type(typ)
+    val = llvm_value_stk(reg, typ)
     val['is_adr'] = True
-
-    lo("%%%s = alloca " % id_str)
-    print_type(typ)
 
     if init_value != None:
         assert(init_value['isa'] == 'll_value')
@@ -687,11 +685,11 @@ def do_eval_expr_call(v, retval=None):
 
     out("(")
     if sret:
-        llvm_print_tv(retval)
+        llvm_print_type_value(retval)
         if len(args) > 0:
             out(", ")
 
-    print_list_with(args, llvm_print_tv)
+    print_list_with(args, llvm_print_type_value)
     out(")")
 
     return llvm_value_reg(reg, v['type'], v)
