@@ -813,10 +813,6 @@ def do_eval_expr_cast_immediate(x):
     if type.is_ptr_to_string(to_type):
         string_of = to_type['to']['of']
         char_pow = string_of['power']
-
-        #if not 'strid' in x:
-        #    print("NOT_STRID_IN" + str(x))
-
         return llvm_value_str(x['strid'], x['imm'], x['type'], value)
 
     return do_eval_literal(x)
@@ -845,7 +841,7 @@ def do_eval_expr_cast(x):
 
     if type.is_generic_string(from_type):
         if type.is_ptr_to_string(to_type):
-            error("strings need to print through do_eval_expr_cast_immediate", x)
+            error("strings need to be printed through do_eval_expr_cast_immediate", x)
             exit(1)
 
     # cast any type to Unit type
@@ -876,7 +872,6 @@ def do_eval_expr_cast(x):
         return v
 
     opcode = select_cast_operator(from_type, to_type)
-
     return llvm_cast(opcode, from_type, to_type, v)
 
 
@@ -955,67 +950,14 @@ def do_eval_record(v):
     # набиваем структуру
     for initializer in initializers:
         iv = do_reval(initializer['value'])
-        iid = initializer['id']
-        field = type.record_field_get(rec_type, iid['str'])
+        field = type.record_field_get(rec_type, initializer['id']['str'])
         xv = insertvalue(xv, iv, field['field_no'])
 
     return xv
 
 
 
-
-
-
-
-def do_eval(x):
-    assert(x != None)
-    assert(x['isa'] == 'value')
-
-    # WRONG WAY! remove this shit!
-    # Way for IMMEDIATE values
-    if value_is_immediate(x):
-        xtype = x['type']
-
-        if type.is_integer(xtype): return llvm_value_num(xtype, x['imm'])
-        elif type.is_char(xtype): return llvm_value_num(xtype, x['imm'])
-        elif type.is_record(xtype): return do_eval_record(x)
-        elif type.is_array(xtype): return do_eval_array(x)
-        elif type.is_float(xtype): return llvm_value_num(xtype, x['imm'])
-        elif type.is_bool(xtype): return llvm_value_num(xtype, x['imm'])
-
-    # runtime evaluation
-    v = do_eval_x(x)
-
-    if v == None:
-        print("do_eval_x(x) == None")
-        print(x)
-        exit(-1)
-
-    assert(v != None)
-
-    v['type'] = x['type']
-
-    return v
-
-
-def do_eval_literal(x):
-    xt = x['type']
-    if type.is_integer(xt): return llvm_value_num(xt, x['imm'])
-    elif type.is_float(xt): return llvm_value_num(xt, x['imm'])
-    elif type.is_record(xt): return do_eval_record(x)
-    elif type.is_array(xt): return do_eval_array(x)
-    elif type.is_bool(xt): return llvm_value_num(xt, x['imm'])
-    elif type.is_free_pointer(xt): return llvm_value_num(xt, x['imm'])
-    elif type.is_pointer(xt): return llvm_value_num(xt, x['imm'])
-    elif type.is_char(xt): return llvm_value_num(xt, x['imm'])
-    elif type.is_bool(xt): return llvm_value_num(xt, x['imm'])
-    else:
-        value_print(x)
-        error("do_eval_literal: unknown literal", x['ti'])
-        exit(1)
-
-
-def func_const_var(x):
+def do_eval_func_const_var(x):
     k = x['kind']
 
     if k == 'const':
@@ -1036,21 +978,40 @@ def func_const_var(x):
     if k == 'const':
         return do_eval(x['value'])
 
-    return llvm_value_mem(x['id']['str'], ['type'], x)
+    return llvm_value_mem(x['id']['str'], x['type'], x)
 
 
 
-def do_eval_x(x):
-    if x == None:
-        return None
+def do_eval_literal(x):
+    xt = x['type']
+    if type.is_integer(xt): return llvm_value_num(xt, x['imm'])
+    elif type.is_float(xt): return llvm_value_num(xt, x['imm'])
+    elif type.is_record(xt): return do_eval_record(x)
+    elif type.is_array(xt): return do_eval_array(x)
+    elif type.is_bool(xt): return llvm_value_num(xt, x['imm'])
+    elif type.is_free_pointer(xt): return llvm_value_num(xt, x['imm'])
+    elif type.is_pointer(xt): return llvm_value_num(xt, x['imm'])
+    elif type.is_char(xt): return llvm_value_num(xt, x['imm'])
+    else:
+        value_print(x)
+        error("do_eval_literal: unknown literal", x['ti'])
+        exit(1)
+
+
+def do_eval(x):
+    assert(x != None)
+    assert(x['isa'] == 'value')
+
+    if value_is_immediate(x):
+        # сюда попадают литералы,
+        # и любые другие значения с immediate полем
+        if not type.is_pointer(x['type']):
+            return do_eval_literal(x)
 
     k = x['kind']
-
-    if k == 'literal': y = do_eval_literal(x)
-    elif k in bin_ops: y = do_eval_expr_bin(x)
+    if k in bin_ops: y = do_eval_expr_bin(x)
     elif k in un_ops: y = do_eval_expr_un(x)
-    elif k == 'const': y = func_const_var(x)
-    elif k in ['func', 'var']: y = func_const_var(x)
+    elif k in ['func', 'const', 'var']: y = do_eval_func_const_var(x)
     elif k == 'call': y = do_eval_expr_call(x)
     elif k == 'index': y = do_eval_expr_index(x)
     elif k == 'index_ptr': y = do_eval_expr_index_ptr(x)
@@ -1062,7 +1023,10 @@ def do_eval_x(x):
         out("<%s>" % k)
         y = None
 
-    if y == None:
+    if y != None:
+        y['type'] = x['type']  # TODO: wtf?
+
+    else:
         print("do_eval_x cannot eval value")
         value_print(x)
         return llvm_value_zero(x['type'])
