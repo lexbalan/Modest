@@ -186,7 +186,7 @@ def llvm_value_str(strid, _str, type, proto=None):
 
 
 
-def llvm_print_type_and_value(x):
+def llvm_print_tv(x):
     assert(x['isa'] == 'll_value')
 
     print_type(x['type'])
@@ -203,9 +203,9 @@ def insertvalue(x, v, pos):
     assert(v['isa'] == 'll_value')
     #%5 = insertvalue %Type24 zeroinitializer, %Int32 1, 0
     reg = llvm_operation('insertvalue')
-    llvm_print_type_and_value(x)
+    llvm_print_tv(x)
     out(", ")
-    llvm_print_type_and_value(v)
+    llvm_print_tv(v)
     out(", %d" % pos)
     return llvm_value_reg(reg, x['type'], x)
 
@@ -214,7 +214,7 @@ def insertvalue(x, v, pos):
 #%44 = va_arg i8** %3, i32
 def llvm_va_arg(va_list, typ):
     reg = llvm_operation('va_arg')
-    llvm_print_type_and_value(va_list)
+    llvm_print_tv(va_list)
     out(", ")
     print_type(typ)
     return llvm_value_reg(reg, typ)
@@ -239,7 +239,7 @@ def llvm_inline_cast(op, to_type, val):
     assert(to_type['isa'] == 'type')
     assert(val['isa'] == 'll_value')
     out("%s (" % op)
-    llvm_print_type_and_value(val)
+    llvm_print_tv(val)
     out(" to ")
     print_type(to_type)
     out(")")
@@ -258,7 +258,7 @@ def llvm_print_value_array(x):
     while i < n:
         item = x['items'][i]
         if i > 0: out(",\n")
-        indent(); llvm_print_type_and_value(item);
+        indent(); llvm_print_tv(item);
         i = i + 1
     indent_down()
     out("\n"); indent(); out("]")
@@ -277,7 +277,7 @@ def llvm_print_value_record(x):
     while i < n:
         item = x['items'][i]
         if i > 0: out(",\n")
-        indent(); llvm_print_type_and_value(item['value'])
+        indent(); llvm_print_tv(item['value'])
         i = i + 1
     indent_down()
     out("\n"); indent(); out("}")
@@ -362,9 +362,9 @@ def llvm_getelementptr(rec, rt, indexes, vt):
     # не может быть i64 (!) (а только i32)
     reg = llvm_operation_with_type("getelementptr inbounds", rt)
     out(", ")
-    llvm_print_type_and_value(rec)
+    llvm_print_tv(rec)
     out(", ")
-    print_list_with(indexes, llvm_print_type_and_value)
+    print_list_with(indexes, llvm_print_tv)
     rv = llvm_value_reg(reg, vt)
     rv['is_adr'] = True
     return rv
@@ -373,14 +373,14 @@ def llvm_getelementptr(rec, rt, indexes, vt):
 # возвращает значение поля из 'структуры по значению'
 def llvm_extract_item(x, ft, field_no):
     reg = llvm_operation('extractvalue')
-    llvm_print_type_and_value(x)
+    llvm_print_tv(x)
     out(', %d' % field_no)
     return llvm_value_reg(reg, ft)
 
 
 def llvm_cast(kind, from_type, to_type, value):
     reg = llvm_operation(kind)
-    llvm_print_type_and_value(value)
+    llvm_print_tv(value)
     out(" to ")
     print_type(to_type)
     return llvm_value_reg(reg, to_type, value)
@@ -391,7 +391,7 @@ def llvm_load(x):
     reg = llvm_operation('load')
     print_type(x['type'])
     out(", ")
-    llvm_print_type_and_value(x)
+    llvm_print_tv(x)
     return llvm_value_reg(reg, x['type'], x)
 
 
@@ -400,9 +400,9 @@ def llvm_store(l, r):
     assert(l['isa'] == 'll_value')
     assert(r['isa'] == 'll_value')
     lo("store ")
-    llvm_print_type_and_value(r)
+    llvm_print_tv(r)
     out(", ")
-    llvm_print_type_and_value(l)
+    llvm_print_tv(l)
 
 
 
@@ -414,11 +414,11 @@ def llvm_memcpy(dst, src, size, volatile=False):
     out("\n")
     out(INDENT_SYMBOL)
     out("call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(")
-    llvm_print_type_and_value(dst2)
+    llvm_print_tv(dst2)
     out(", ")
-    llvm_print_type_and_value(src2)
+    llvm_print_tv(src2)
     out(", ")
-    llvm_print_type_and_value(size)
+    llvm_print_tv(size)
     out(", i1 %d)" % volatile)
 
 
@@ -687,11 +687,11 @@ def do_eval_expr_call(v, retval=None):
 
     out("(")
     if sret:
-        llvm_print_type_and_value(retval)
+        llvm_print_tv(retval)
         if len(args) > 0:
             out(", ")
 
-    print_list_with(args, llvm_print_type_and_value)
+    print_list_with(args, llvm_print_tv)
     out(")")
 
     return llvm_value_reg(reg, v['type'], v)
