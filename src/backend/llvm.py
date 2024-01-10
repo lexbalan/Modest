@@ -538,10 +538,9 @@ def print_type(t, print_aka=True):
             return
 
         if 'id' in t:
-            out('%' + t['id']['str'])
+            out('%%%s' % t['id']['str'])
             return
 
-    #elif type.is_enum(t): out("i16")
     if type.is_func(t): print_type_func(t)
     elif type.is_record(t): print_type_record(t)
     elif type.is_pointer(t): print_type_pointer(t)
