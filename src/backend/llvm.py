@@ -1360,9 +1360,7 @@ def print_def_func(x):
         locals_add(id_str, va_list)
         llvm_va_start(va_list)
 
-
     print_stmt_block(func['stmt'])
-
 
     if type.eq(ftype['to'], type.typeUnit):
         if va_list != None:
@@ -1381,10 +1379,7 @@ def print_def_func(x):
 
 
 
-
-
 def print_decl_type(x):
-    # LLVM не печатает, но C печатает (!)
     out("\n%%%s = type opaque" % x['type']['id']['str'])
 
 
@@ -1393,7 +1388,6 @@ def print_def_type(x):
     print_type(x['type'], print_aka=False)
     if type.is_record(x['type']):
         out("\n")
-
 
 
 def print_def_var(x):
@@ -1409,12 +1403,6 @@ def print_def_var(x):
         llvm_print_value(do_eval(var['init']))
     else:
         out(" zeroinitializer")
-
-
-
-def print_def_const(x):
-    pass # TODO
-
 
 
 def print_string_ascii(strid, string):
@@ -1506,7 +1494,7 @@ def print_module(m):
         if isa == 'decl_func': print_decl_func(x)
         elif isa == 'decl_type': print_decl_type(x)
         elif isa == 'def_var': print_def_var(x)
-        elif isa == 'def_const': print_def_const(x)
+        #elif isa == 'def_const': print_def_const(x)
         elif isa == 'def_func': print_def_func(x)
         elif isa == 'def_type': print_def_type(x)
         elif isa == 'directive': pass
@@ -1541,33 +1529,6 @@ def run(module, outname):
 
 
 
-"""
-def create_local_srtuct(typ, llvalues):
-    #%5 = insertvalue %Type24 zeroinitializer, %Int32 1, 0
-    xv = llvm_value_record([], typ, proto=None)
-
-    lo("\n; -- fill struct")
-    # набиваем структуру
-    i = 0
-    while i < len(llvalues):
-        llvalue = llvalues[i]
-        # получаем позицию поля в структуре
-        field_target = type.record_field_get(v['type'], llvalue['id']['str'])
-
-
-        pos = field_target['field_no']
-        # запаковываем значение в структуру
-        xv = insertvalue(xv, llvalue['value'], pos)
-        i = i + 1
-    lo("; -- end fill struct")
-
-    return xv
-
-"""
-
-
-
-
 REL_OPS = ['eq', 'ne', 'lt', 'gt', 'le', 'ge']
 
 
@@ -1578,18 +1539,15 @@ def get_bin_opcode(op, t):
             return uop
         return sop
 
-
     def select_bin_opcode_f(op, fop, t): # ["sdiv", "udiv", "fdiv", x]
         if type.is_float(t):
             return fop
         return op
 
-
     def select_bin_opcode_suf(sop, uop, fop, t): # ["sdiv", "udiv", "fdiv", x]
         if type.is_float(t):
             return fop
         return select_bin_opcode_su(sop, uop, t)
-
 
     opcode = "<unknown opcode '%s'>" % op
     if op in ['eq', 'ne']:
@@ -1603,9 +1561,7 @@ def get_bin_opcode(op, t):
     elif op in ['lt', 'gt', 'le', 'ge']:
         opcode = select_bin_opcode_suf('icmp s' + op, 'icmp u' + op, 'fcmp o' + op, t)
     elif op == 'shr':
-        opcode = 'lshr'
-        if type.is_signed(t):
-            opcode = 'ashr'
+        opcode = 'ashr' if type.is_signed(t) else 'lshr'
     elif op == 'logic_or':
         opcode = 'or'
     elif op == 'logic_and':
@@ -1613,34 +1569,3 @@ def get_bin_opcode(op, t):
 
     return opcode
 
-
-
-
-
-"""
-# сохр структур (вот не может просто так сохранить, приходится по полю)
-def llvm_store_record(l, r):
-
-    # if r is immediate value
-    if 'items' in r:
-        if len(r['items']) == 0:
-            # если сохраняем пустую структуру
-            # то просто сохраним в нее zeroinitializer
-            llvm_store(l, r)
-            return
-
-    lo("; -- record assign field by field")
-    for field in l['type']['fields']:
-        ft = field['type']
-
-        # получаем указатель на поле левого (в которое будем сохранять)
-        l_field_ptr = llvm_eval_access_ptr(l, l['type'], field['field_no'], ft)
-
-        rpos = field['field_no']
-
-        rv = llvm_dold(llvm_eval_access(r, r['type'], rpos, ft))
-
-        # сохраняем
-        llvm_assign(l_field_ptr, rv)
-    lo("; -- end record assign field by field\n")
-"""
