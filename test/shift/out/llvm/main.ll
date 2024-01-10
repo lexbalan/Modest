@@ -99,13 +99,13 @@ declare void @perror(%ConstCharStr* %str)
 
 define i32 @main() {
     %1 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*))
-    %c = alloca i32
-    store i32 2147483648, i32* %c
-    %2 = load i32, i32* %c
-    %3 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([16 x i8]* @str2 to [0 x i8]*), i32 %2)
-    store i32 1, i32* %c
-    %4 = load i32, i32* %c
-    %5 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([25 x i8]* @str3 to [0 x i8]*), i32 %4)
+    %2 = alloca i32
+    store i32 2147483648, i32* %2
+    %3 = load i32, i32* %2
+    %4 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([16 x i8]* @str2 to [0 x i8]*), i32 %3)
+    store i32 1, i32* %2
+    %5 = load i32, i32* %2
+    %6 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([25 x i8]* @str3 to [0 x i8]*), i32 %5)
     ret i32 0
 }
 

@@ -302,89 +302,89 @@ declare double @max_float64(double %a, double %b)
 ]
 
 define i32 @main() {
-    %i = alloca i32
-    store i32 0, i32* %i
+    %1 = alloca i32
+    store i32 0, i32* %1
     br label %again_1
 again_1:
-    %1 = load i32, i32* %i
-    %2 = icmp slt i32 %1, 3
-    br i1 %2 , label %body_1, label %break_1
+    %2 = load i32, i32* %1
+    %3 = icmp slt i32 %2, 3
+    br i1 %3 , label %body_1, label %break_1
 body_1:
-    %3 = load i32, i32* %i
-    %4 = getelementptr inbounds [3 x i32], [3 x i32]* @globalArray, i32 0, i32 %3
-    %5 = load i32, i32* %4
-    %6 = load i32, i32* %i
-    %7 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([22 x i8]* @str1 to [0 x i8]*), i32 %6, i32 %5)
-    %8 = load i32, i32* %i
-    %9 = add i32 %8, 1
-    store i32 %9, i32* %i
+    %4 = load i32, i32* %1
+    %5 = getelementptr inbounds [3 x i32], [3 x i32]* @globalArray, i32 0, i32 %4
+    %6 = load i32, i32* %5
+    %7 = load i32, i32* %1
+    %8 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([22 x i8]* @str1 to [0 x i8]*), i32 %7, i32 %6)
+    %9 = load i32, i32* %1
+    %10 = add i32 %9, 1
+    store i32 %10, i32* %1
     br label %again_1
 break_1:
-    %10 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([38 x i8]* @str2 to [0 x i8]*))
-    %11 = insertvalue [3 x i32] zeroinitializer, i32 4, 0
-    %12 = insertvalue [3 x i32] %11, i32 5, 1
-    %13 = insertvalue [3 x i32] %12, i32 6, 2
-    %localArray = alloca [3 x i32]
-    store [3 x i32] %13, [3 x i32]* %localArray
-    store i32 0, i32* %i
+    %11 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([38 x i8]* @str2 to [0 x i8]*))
+    %12 = insertvalue [3 x i32] zeroinitializer, i32 4, 0
+    %13 = insertvalue [3 x i32] %12, i32 5, 1
+    %14 = insertvalue [3 x i32] %13, i32 6, 2
+    %15 = alloca [3 x i32]
+    store [3 x i32] %14, [3 x i32]* %15
+    store i32 0, i32* %1
     br label %again_2
 again_2:
-    %14 = load i32, i32* %i
-    %15 = icmp slt i32 %14, 3
-    br i1 %15 , label %body_2, label %break_2
+    %16 = load i32, i32* %1
+    %17 = icmp slt i32 %16, 3
+    br i1 %17 , label %body_2, label %break_2
 body_2:
-    %16 = load i32, i32* %i
-    %17 = getelementptr inbounds [3 x i32], [3 x i32]* %localArray, i32 0, i32 %16
-    %18 = load i32, i32* %17
-    %19 = load i32, i32* %i
-    %20 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([21 x i8]* @str3 to [0 x i8]*), i32 %19, i32 %18)
-    %21 = load i32, i32* %i
-    %22 = add i32 %21, 1
-    store i32 %22, i32* %i
+    %18 = load i32, i32* %1
+    %19 = getelementptr inbounds [3 x i32], [3 x i32]* %15, i32 0, i32 %18
+    %20 = load i32, i32* %19
+    %21 = load i32, i32* %1
+    %22 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([21 x i8]* @str3 to [0 x i8]*), i32 %21, i32 %20)
+    %23 = load i32, i32* %1
+    %24 = add i32 %23, 1
+    store i32 %24, i32* %1
     br label %again_2
 break_2:
-    %23 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([38 x i8]* @str4 to [0 x i8]*))
-    %globalArrayPtr = alloca [0 x i32]*
-    %24 = bitcast [3 x i32]* @globalArray to [0 x i32]*
-    store [0 x i32]* %24, [0 x i32]** %globalArrayPtr
-    store i32 0, i32* %i
+    %25 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([38 x i8]* @str4 to [0 x i8]*))
+    %26 = alloca [0 x i32]*
+    %27 = bitcast [3 x i32]* @globalArray to [0 x i32]*
+    store [0 x i32]* %27, [0 x i32]** %26
+    store i32 0, i32* %1
     br label %again_3
 again_3:
-    %25 = load i32, i32* %i
-    %26 = icmp slt i32 %25, 3
-    br i1 %26 , label %body_3, label %break_3
+    %28 = load i32, i32* %1
+    %29 = icmp slt i32 %28, 3
+    br i1 %29 , label %body_3, label %break_3
 body_3:
-    %27 = load [0 x i32]*, [0 x i32]** %globalArrayPtr
-    %28 = load i32, i32* %i
-    %29 = getelementptr inbounds [0 x i32], [0 x i32]* %27, i32 0, i32 %28
-    %30 = load i32, i32* %29
-    %31 = load i32, i32* %i
-    %32 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([25 x i8]* @str5 to [0 x i8]*), i32 %31, i32 %30)
-    %33 = load i32, i32* %i
-    %34 = add i32 %33, 1
-    store i32 %34, i32* %i
+    %30 = load [0 x i32]*, [0 x i32]** %26
+    %31 = load i32, i32* %1
+    %32 = getelementptr inbounds [0 x i32], [0 x i32]* %30, i32 0, i32 %31
+    %33 = load i32, i32* %32
+    %34 = load i32, i32* %1
+    %35 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([25 x i8]* @str5 to [0 x i8]*), i32 %34, i32 %33)
+    %36 = load i32, i32* %1
+    %37 = add i32 %36, 1
+    store i32 %37, i32* %1
     br label %again_3
 break_3:
-    %35 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([38 x i8]* @str6 to [0 x i8]*))
-    %localArrayPtr = alloca [0 x i32]*
-    %36 = bitcast [3 x i32]* %localArray to [0 x i32]*
-    store [0 x i32]* %36, [0 x i32]** %localArrayPtr
-    store i32 0, i32* %i
+    %38 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([38 x i8]* @str6 to [0 x i8]*))
+    %39 = alloca [0 x i32]*
+    %40 = bitcast [3 x i32]* %15 to [0 x i32]*
+    store [0 x i32]* %40, [0 x i32]** %39
+    store i32 0, i32* %1
     br label %again_4
 again_4:
-    %37 = load i32, i32* %i
-    %38 = icmp slt i32 %37, 3
-    br i1 %38 , label %body_4, label %break_4
+    %41 = load i32, i32* %1
+    %42 = icmp slt i32 %41, 3
+    br i1 %42 , label %body_4, label %break_4
 body_4:
-    %39 = load [0 x i32]*, [0 x i32]** %localArrayPtr
-    %40 = load i32, i32* %i
-    %41 = getelementptr inbounds [0 x i32], [0 x i32]* %39, i32 0, i32 %40
-    %42 = load i32, i32* %41
-    %43 = load i32, i32* %i
-    %44 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([24 x i8]* @str7 to [0 x i8]*), i32 %43, i32 %42)
-    %45 = load i32, i32* %i
-    %46 = add i32 %45, 1
-    store i32 %46, i32* %i
+    %43 = load [0 x i32]*, [0 x i32]** %39
+    %44 = load i32, i32* %1
+    %45 = getelementptr inbounds [0 x i32], [0 x i32]* %43, i32 0, i32 %44
+    %46 = load i32, i32* %45
+    %47 = load i32, i32* %1
+    %48 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([24 x i8]* @str7 to [0 x i8]*), i32 %47, i32 %46)
+    %49 = load i32, i32* %1
+    %50 = add i32 %49, 1
+    store i32 %50, i32* %1
     br label %again_4
 break_4:
     ret i32 0

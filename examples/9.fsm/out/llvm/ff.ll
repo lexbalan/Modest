@@ -191,39 +191,39 @@ declare void @perror(%ConstCharStr* %str)
 define void @ff_memzero(i8* %mem, i64 %len) {
     %1 = udiv i64 %len, 8
     %2 = bitcast i8* %mem to [0 x i64]*
-    %i = alloca i64
-    store i64 0, i64* %i
+    %3 = alloca i64
+    store i64 0, i64* %3
     br label %again_1
 again_1:
-    %3 = load i64, i64* %i
-    %4 = icmp ult i64 %3, %1
-    br i1 %4 , label %body_1, label %break_1
+    %4 = load i64, i64* %3
+    %5 = icmp ult i64 %4, %1
+    br i1 %5 , label %body_1, label %break_1
 body_1:
-    %5 = load i64, i64* %i
-    %6 = getelementptr inbounds [0 x i64], [0 x i64]* %2, i32 0, i64 %5
-    store i64 0, i64* %6
-    %7 = load i64, i64* %i
-    %8 = add i64 %7, 1
-    store i64 %8, i64* %i
+    %6 = load i64, i64* %3
+    %7 = getelementptr inbounds [0 x i64], [0 x i64]* %2, i32 0, i64 %6
+    store i64 0, i64* %7
+    %8 = load i64, i64* %3
+    %9 = add i64 %8, 1
+    store i64 %9, i64* %3
     br label %again_1
 break_1:
-    %9 = urem i64 %len, 8
-    %10 = load i64, i64* %i
-    %11 = getelementptr inbounds [0 x i64], [0 x i64]* %2, i32 0, i64 %10
-    %12 = bitcast i64* %11 to [0 x i8]*
-    store i64 0, i64* %i
+    %10 = urem i64 %len, 8
+    %11 = load i64, i64* %3
+    %12 = getelementptr inbounds [0 x i64], [0 x i64]* %2, i32 0, i64 %11
+    %13 = bitcast i64* %12 to [0 x i8]*
+    store i64 0, i64* %3
     br label %again_2
 again_2:
-    %13 = load i64, i64* %i
-    %14 = icmp ult i64 %13, %9
-    br i1 %14 , label %body_2, label %break_2
+    %14 = load i64, i64* %3
+    %15 = icmp ult i64 %14, %10
+    br i1 %15 , label %body_2, label %break_2
 body_2:
-    %15 = load i64, i64* %i
-    %16 = getelementptr inbounds [0 x i8], [0 x i8]* %12, i32 0, i64 %15
-    store i8 0, i8* %16
-    %17 = load i64, i64* %i
-    %18 = add i64 %17, 1
-    store i64 %18, i64* %i
+    %16 = load i64, i64* %3
+    %17 = getelementptr inbounds [0 x i8], [0 x i8]* %13, i32 0, i64 %16
+    store i8 0, i8* %17
+    %18 = load i64, i64* %3
+    %19 = add i64 %18, 1
+    store i64 %19, i64* %3
     br label %again_2
 break_2:
     ret void
@@ -233,71 +233,71 @@ define void @ff_memcpy(i8* %dst, i8* %src, i64 %len) {
     %1 = udiv i64 %len, 8
     %2 = bitcast i8* %src to [0 x i64]*
     %3 = bitcast i8* %dst to [0 x i64]*
-    %i = alloca i64
-    store i64 0, i64* %i
+    %4 = alloca i64
+    store i64 0, i64* %4
     br label %again_1
 again_1:
-    %4 = load i64, i64* %i
-    %5 = icmp ult i64 %4, %1
-    br i1 %5 , label %body_1, label %break_1
+    %5 = load i64, i64* %4
+    %6 = icmp ult i64 %5, %1
+    br i1 %6 , label %body_1, label %break_1
 body_1:
-    %6 = load i64, i64* %i
-    %7 = getelementptr inbounds [0 x i64], [0 x i64]* %2, i32 0, i64 %6
-    %8 = load i64, i64* %7
-    %9 = load i64, i64* %i
-    %10 = getelementptr inbounds [0 x i64], [0 x i64]* %3, i32 0, i64 %9
-    store i64 %8, i64* %10
-    %11 = load i64, i64* %i
-    %12 = add i64 %11, 1
-    store i64 %12, i64* %i
+    %7 = load i64, i64* %4
+    %8 = getelementptr inbounds [0 x i64], [0 x i64]* %2, i32 0, i64 %7
+    %9 = load i64, i64* %8
+    %10 = load i64, i64* %4
+    %11 = getelementptr inbounds [0 x i64], [0 x i64]* %3, i32 0, i64 %10
+    store i64 %9, i64* %11
+    %12 = load i64, i64* %4
+    %13 = add i64 %12, 1
+    store i64 %13, i64* %4
     br label %again_1
 break_1:
-    %13 = urem i64 %len, 8
-    %14 = load i64, i64* %i
-    %15 = getelementptr inbounds [0 x i64], [0 x i64]* %2, i32 0, i64 %14
-    %16 = bitcast i64* %15 to [0 x i8]*
-    %17 = load i64, i64* %i
-    %18 = getelementptr inbounds [0 x i64], [0 x i64]* %3, i32 0, i64 %17
-    %19 = bitcast i64* %18 to [0 x i8]*
-    store i64 0, i64* %i
+    %14 = urem i64 %len, 8
+    %15 = load i64, i64* %4
+    %16 = getelementptr inbounds [0 x i64], [0 x i64]* %2, i32 0, i64 %15
+    %17 = bitcast i64* %16 to [0 x i8]*
+    %18 = load i64, i64* %4
+    %19 = getelementptr inbounds [0 x i64], [0 x i64]* %3, i32 0, i64 %18
+    %20 = bitcast i64* %19 to [0 x i8]*
+    store i64 0, i64* %4
     br label %again_2
 again_2:
-    %20 = load i64, i64* %i
-    %21 = icmp ult i64 %20, %13
-    br i1 %21 , label %body_2, label %break_2
+    %21 = load i64, i64* %4
+    %22 = icmp ult i64 %21, %14
+    br i1 %22 , label %body_2, label %break_2
 body_2:
-    %22 = load i64, i64* %i
-    %23 = getelementptr inbounds [0 x i8], [0 x i8]* %16, i32 0, i64 %22
-    %24 = load i8, i8* %23
-    %25 = load i64, i64* %i
-    %26 = getelementptr inbounds [0 x i8], [0 x i8]* %19, i32 0, i64 %25
-    store i8 %24, i8* %26
-    %27 = load i64, i64* %i
-    %28 = add i64 %27, 1
-    store i64 %28, i64* %i
+    %23 = load i64, i64* %4
+    %24 = getelementptr inbounds [0 x i8], [0 x i8]* %17, i32 0, i64 %23
+    %25 = load i8, i8* %24
+    %26 = load i64, i64* %4
+    %27 = getelementptr inbounds [0 x i8], [0 x i8]* %20, i32 0, i64 %26
+    store i8 %25, i8* %27
+    %28 = load i64, i64* %4
+    %29 = add i64 %28, 1
+    store i64 %29, i64* %4
     br label %again_2
 break_2:
     ret void
 }
 
 define i64 @ff_cstrlen([0 x i8]* %cstr) {
-    %i = alloca i64
-    store i64 0, i64* %i
+    %1 = alloca i64
+    store i64 0, i64* %1
     br label %again_1
 again_1:
-    %1 = load i64, i64* %i
-    %2 = getelementptr inbounds [0 x i8], [0 x i8]* %cstr, i32 0, i64 %1
-    %3 = load i8, i8* %2
-    %4 = icmp ne i8 %3, 0
-    br i1 %4 , label %body_1, label %break_1
+    %2 = load i64, i64* %1
+    %3 = getelementptr inbounds [0 x i8], [0 x i8]* %cstr, i32 0, i64 %2
+    %4 = load i8, i8* %3
+    %5 = icmp ne i8 %4, 0
+    br i1 %5 , label %body_1, label %break_1
 body_1:
-    %5 = load i64, i64* %i
-    %6 = add i64 %5, 1
-    store i64 %6, i64* %i
+    %6 = load i64, i64* %1
+    %7 = add i64 %6, 1
+    store i64 %7, i64* %1
     br label %again_1
 break_1:
-    %7 = load i64, i64* %i
-    ret i64 %7
+    %8 = load i64, i64* %1
+    ret i64 %8
 }
 
 define void @delay_us(i64 %us) {

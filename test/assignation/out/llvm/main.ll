@@ -183,154 +183,154 @@ define i32 @main() {
     ; -----------------------------------
     ; Local
     ; copy integers by value
-    %loc_i0 = alloca i32
-    store i32 0, i32* %loc_i0
-    %loc_i1 = alloca i32
-    store i32 123, i32* %loc_i1
-    %22 = load i32, i32* %loc_i1
-    store i32 %22, i32* %loc_i0
-    %23 = load i32, i32* %loc_i0
-    %24 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([13 x i8]* @str8 to [0 x i8]*), i32 %23)
+    %22 = alloca i32
+    store i32 0, i32* %22
+    %23 = alloca i32
+    store i32 123, i32* %23
+    %24 = load i32, i32* %23
+    store i32 %24, i32* %22
+    %25 = load i32, i32* %22
+    %26 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([13 x i8]* @str8 to [0 x i8]*), i32 %25)
     ; copy arrays by value
     ; C backend will be use memcpy()
-    %25 = insertvalue [10 x i32] zeroinitializer, i32 0, 0
-    %26 = insertvalue [10 x i32] %25, i32 0, 1
-    %27 = insertvalue [10 x i32] %26, i32 0, 2
-    %28 = insertvalue [10 x i32] %27, i32 0, 3
-    %29 = insertvalue [10 x i32] %28, i32 0, 4
-    %30 = insertvalue [10 x i32] %29, i32 0, 5
-    %31 = insertvalue [10 x i32] %30, i32 0, 6
-    %32 = insertvalue [10 x i32] %31, i32 0, 7
-    %33 = insertvalue [10 x i32] %32, i32 0, 8
-    %34 = insertvalue [10 x i32] %33, i32 0, 9
-    %loc_a0 = alloca [10 x i32]
-    store [10 x i32] %34, [10 x i32]* %loc_a0
-    %35 = insertvalue [10 x i32] zeroinitializer, i32 42, 0
-    %36 = insertvalue [10 x i32] %35, i32 53, 1
-    %37 = insertvalue [10 x i32] %36, i32 64, 2
-    %38 = insertvalue [10 x i32] %37, i32 0, 3
-    %39 = insertvalue [10 x i32] %38, i32 0, 4
-    %40 = insertvalue [10 x i32] %39, i32 0, 5
-    %41 = insertvalue [10 x i32] %40, i32 0, 6
-    %42 = insertvalue [10 x i32] %41, i32 0, 7
-    %43 = insertvalue [10 x i32] %42, i32 0, 8
-    %44 = insertvalue [10 x i32] %43, i32 0, 9
-    %loc_a1 = alloca [10 x i32]
-    store [10 x i32] %44, [10 x i32]* %loc_a1
-    %45 = load [10 x i32], [10 x i32]* %loc_a1
-    store [10 x i32] %45, [10 x i32]* %loc_a0
-    %46 = getelementptr inbounds [10 x i32], [10 x i32]* %loc_a0, i32 0, i32 0
-    %47 = load i32, i32* %46
-    %48 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([16 x i8]* @str9 to [0 x i8]*), i32 %47)
-    %49 = getelementptr inbounds [10 x i32], [10 x i32]* %loc_a0, i32 0, i32 1
-    %50 = load i32, i32* %49
-    %51 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([16 x i8]* @str10 to [0 x i8]*), i32 %50)
-    %52 = getelementptr inbounds [10 x i32], [10 x i32]* %loc_a0, i32 0, i32 2
-    %53 = load i32, i32* %52
-    %54 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([16 x i8]* @str11 to [0 x i8]*), i32 %53)
+    %27 = insertvalue [10 x i32] zeroinitializer, i32 0, 0
+    %28 = insertvalue [10 x i32] %27, i32 0, 1
+    %29 = insertvalue [10 x i32] %28, i32 0, 2
+    %30 = insertvalue [10 x i32] %29, i32 0, 3
+    %31 = insertvalue [10 x i32] %30, i32 0, 4
+    %32 = insertvalue [10 x i32] %31, i32 0, 5
+    %33 = insertvalue [10 x i32] %32, i32 0, 6
+    %34 = insertvalue [10 x i32] %33, i32 0, 7
+    %35 = insertvalue [10 x i32] %34, i32 0, 8
+    %36 = insertvalue [10 x i32] %35, i32 0, 9
+    %37 = alloca [10 x i32]
+    store [10 x i32] %36, [10 x i32]* %37
+    %38 = insertvalue [10 x i32] zeroinitializer, i32 42, 0
+    %39 = insertvalue [10 x i32] %38, i32 53, 1
+    %40 = insertvalue [10 x i32] %39, i32 64, 2
+    %41 = insertvalue [10 x i32] %40, i32 0, 3
+    %42 = insertvalue [10 x i32] %41, i32 0, 4
+    %43 = insertvalue [10 x i32] %42, i32 0, 5
+    %44 = insertvalue [10 x i32] %43, i32 0, 6
+    %45 = insertvalue [10 x i32] %44, i32 0, 7
+    %46 = insertvalue [10 x i32] %45, i32 0, 8
+    %47 = insertvalue [10 x i32] %46, i32 0, 9
+    %48 = alloca [10 x i32]
+    store [10 x i32] %47, [10 x i32]* %48
+    %49 = load [10 x i32], [10 x i32]* %48
+    store [10 x i32] %49, [10 x i32]* %37
+    %50 = getelementptr inbounds [10 x i32], [10 x i32]* %37, i32 0, i32 0
+    %51 = load i32, i32* %50
+    %52 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([16 x i8]* @str9 to [0 x i8]*), i32 %51)
+    %53 = getelementptr inbounds [10 x i32], [10 x i32]* %37, i32 0, i32 1
+    %54 = load i32, i32* %53
+    %55 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([16 x i8]* @str10 to [0 x i8]*), i32 %54)
+    %56 = getelementptr inbounds [10 x i32], [10 x i32]* %37, i32 0, i32 2
+    %57 = load i32, i32* %56
+    %58 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([16 x i8]* @str11 to [0 x i8]*), i32 %57)
     ; copy records by value
     ; C backend will be use memcpy()
-    %loc_r0 = alloca %Point
-    store %Point zeroinitializer, %Point* %loc_r0
-    %55 = insertvalue %Point zeroinitializer, i32 10, 0
-    %56 = insertvalue %Point %55, i32 20, 1
-    %loc_r1 = alloca %Point
-    store %Point %56, %Point* %loc_r1
-    %57 = load %Point, %Point* %loc_r1
-    store %Point %57, %Point* %loc_r0
-    %58 = getelementptr inbounds %Point, %Point* %loc_r0, i32 0, i32 0
-    %59 = load i32, i32* %58
-    %60 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([15 x i8]* @str12 to [0 x i8]*), i32 %59)
-    %61 = getelementptr inbounds %Point, %Point* %loc_r0, i32 0, i32 1
-    %62 = load i32, i32* %61
-    %63 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([15 x i8]* @str13 to [0 x i8]*), i32 %62)
-    %aa = alloca [15 x [16 x i32]]
-    %i = alloca i32
-    store i32 0, i32* %i
+    %59 = alloca %Point
+    store %Point zeroinitializer, %Point* %59
+    %60 = insertvalue %Point zeroinitializer, i32 10, 0
+    %61 = insertvalue %Point %60, i32 20, 1
+    %62 = alloca %Point
+    store %Point %61, %Point* %62
+    %63 = load %Point, %Point* %62
+    store %Point %63, %Point* %59
+    %64 = getelementptr inbounds %Point, %Point* %59, i32 0, i32 0
+    %65 = load i32, i32* %64
+    %66 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([15 x i8]* @str12 to [0 x i8]*), i32 %65)
+    %67 = getelementptr inbounds %Point, %Point* %59, i32 0, i32 1
+    %68 = load i32, i32* %67
+    %69 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([15 x i8]* @str13 to [0 x i8]*), i32 %68)
+    %70 = alloca [15 x [16 x i32]]
+    %71 = alloca i32
+    store i32 0, i32* %71
     br label %again_1
 again_1:
-    %64 = load i32, i32* %i
-    %65 = icmp slt i32 %64, 16
-    br i1 %65 , label %body_1, label %break_1
+    %72 = load i32, i32* %71
+    %73 = icmp slt i32 %72, 16
+    br i1 %73 , label %body_1, label %break_1
 body_1:
-    %j = alloca i32
-    store i32 0, i32* %j
+    %74 = alloca i32
+    store i32 0, i32* %74
     br label %again_2
 again_2:
-    %66 = load i32, i32* %j
-    %67 = icmp slt i32 %66, 16
-    br i1 %67 , label %body_2, label %break_2
+    %75 = load i32, i32* %74
+    %76 = icmp slt i32 %75, 16
+    br i1 %76 , label %body_2, label %break_2
 body_2:
-    %68 = load i32, i32* %i
-    %69 = load i32, i32* %j
-    %70 = mul i32 %68, %69
-    %71 = load i32, i32* %i
-    %72 = getelementptr inbounds [15 x [16 x i32]], [15 x [16 x i32]]* %aa, i32 0, i32 %71
-    %73 = load i32, i32* %j
-    %74 = getelementptr inbounds [16 x i32], [16 x i32]* %72, i32 0, i32 %73
-    store i32 %70, i32* %74
-    %75 = load i32, i32* %j
-    %76 = add i32 %75, 1
-    store i32 %76, i32* %j
+    %77 = load i32, i32* %71
+    %78 = load i32, i32* %74
+    %79 = mul i32 %77, %78
+    %80 = load i32, i32* %71
+    %81 = getelementptr inbounds [15 x [16 x i32]], [15 x [16 x i32]]* %70, i32 0, i32 %80
+    %82 = load i32, i32* %74
+    %83 = getelementptr inbounds [16 x i32], [16 x i32]* %81, i32 0, i32 %82
+    store i32 %79, i32* %83
+    %84 = load i32, i32* %74
+    %85 = add i32 %84, 1
+    store i32 %85, i32* %74
     br label %again_2
 break_2:
-    %77 = load i32, i32* %i
-    %78 = add i32 %77, 1
-    store i32 %78, i32* %i
+    %86 = load i32, i32* %71
+    %87 = add i32 %86, 1
+    store i32 %87, i32* %71
     br label %again_1
 break_1:
-    store i32 0, i32* %i
+    store i32 0, i32* %71
     br label %again_3
 again_3:
-    %79 = load i32, i32* %i
-    %80 = icmp slt i32 %79, 16
-    br i1 %80 , label %body_3, label %break_3
+    %88 = load i32, i32* %71
+    %89 = icmp slt i32 %88, 16
+    br i1 %89 , label %body_3, label %break_3
 body_3:
-    %k = alloca i32
-    store i32 0, i32* %k
+    %90 = alloca i32
+    store i32 0, i32* %90
     br label %again_4
 again_4:
-    %81 = load i32, i32* %k
-    %82 = icmp slt i32 %81, 16
-    br i1 %82 , label %body_4, label %break_4
+    %91 = load i32, i32* %90
+    %92 = icmp slt i32 %91, 16
+    br i1 %92 , label %body_4, label %break_4
 body_4:
-    %83 = load i32, i32* %i
-    %84 = load i32, i32* %k
-    %85 = load i32, i32* %i
-    %86 = getelementptr inbounds [15 x [16 x i32]], [15 x [16 x i32]]* %aa, i32 0, i32 %85
-    %87 = load i32, i32* %k
-    %88 = getelementptr inbounds [16 x i32], [16 x i32]* %86, i32 0, i32 %87
-    %89 = load i32, i32* %88
-    %90 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([17 x i8]* @str14 to [0 x i8]*), i32 %83, i32 %84, i32 %89)
-    %91 = load i32, i32* %k
-    %92 = add i32 %91, 1
-    store i32 %92, i32* %k
+    %93 = load i32, i32* %71
+    %94 = load i32, i32* %90
+    %95 = load i32, i32* %71
+    %96 = getelementptr inbounds [15 x [16 x i32]], [15 x [16 x i32]]* %70, i32 0, i32 %95
+    %97 = load i32, i32* %90
+    %98 = getelementptr inbounds [16 x i32], [16 x i32]* %96, i32 0, i32 %97
+    %99 = load i32, i32* %98
+    %100 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([17 x i8]* @str14 to [0 x i8]*), i32 %93, i32 %94, i32 %99)
+    %101 = load i32, i32* %90
+    %102 = add i32 %101, 1
+    store i32 %102, i32* %90
     br label %again_4
 break_4:
-    %93 = load i32, i32* %i
-    %94 = add i32 %93, 1
-    store i32 %94, i32* %i
+    %103 = load i32, i32* %71
+    %104 = add i32 %103, 1
+    store i32 %104, i32* %71
     br label %again_3
 break_3:
-    %95 = getelementptr inbounds [15 x [16 x i32]], [15 x [16 x i32]]* %aa, i32 0, i32 3
-    %96 = load [16 x i32], [16 x i32]* %95
-    %xa = alloca [16 x i32]
-    store [16 x i32] %96, [16 x i32]* %xa
-    store i32 0, i32* %i
+    %105 = getelementptr inbounds [15 x [16 x i32]], [15 x [16 x i32]]* %70, i32 0, i32 3
+    %106 = load [16 x i32], [16 x i32]* %105
+    %107 = alloca [16 x i32]
+    store [16 x i32] %106, [16 x i32]* %107
+    store i32 0, i32* %71
     br label %again_5
 again_5:
-    %97 = load i32, i32* %i
-    %98 = icmp slt i32 %97, 16
-    br i1 %98 , label %body_5, label %break_5
+    %108 = load i32, i32* %71
+    %109 = icmp slt i32 %108, 16
+    br i1 %109 , label %body_5, label %break_5
 body_5:
-    %99 = load i32, i32* %i
-    %100 = load i32, i32* %i
-    %101 = getelementptr inbounds [16 x i32], [16 x i32]* %xa, i32 0, i32 %100
-    %102 = load i32, i32* %101
-    %103 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([13 x i8]* @str15 to [0 x i8]*), i32 %99, i32 %102)
-    %104 = load i32, i32* %i
-    %105 = add i32 %104, 1
-    store i32 %105, i32* %i
+    %110 = load i32, i32* %71
+    %111 = load i32, i32* %71
+    %112 = getelementptr inbounds [16 x i32], [16 x i32]* %107, i32 0, i32 %111
+    %113 = load i32, i32* %112
+    %114 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([13 x i8]* @str15 to [0 x i8]*), i32 %110, i32 %113)
+    %115 = load i32, i32* %71
+    %116 = add i32 %115, 1
+    store i32 %116, i32* %71
     br label %again_5
 break_5:
     ret i32 0

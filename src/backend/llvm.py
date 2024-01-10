@@ -1158,7 +1158,7 @@ def do_stmt_def_var(x):
     iv = None
     if x['var']['init'] != None:
         iv = do_reval(x['var']['init'])
-    val = llvm_alloca(x['var']['type'], id_str=id_str, init_ll_value=iv)
+    val = llvm_alloca(x['var']['type'], id_str=None, init_ll_value=iv)
     locals_add(id_str, val)
     return None
 
@@ -1170,7 +1170,7 @@ def do_stmt_let(x):
     if val['kind'] == 'call':
         if 'sret' in val['func']['att']:
             #info("call from let", x)
-            v = llvm_alloca(val['type'], id_str=id_str)
+            v = llvm_alloca(val['type'], id_str=None)
             do_eval_expr_call(val, retval=v)
             locals_add(id_str, v)
             return
@@ -1181,7 +1181,7 @@ def do_stmt_let(x):
     # поскольку их могут индексировать переменной
     # а массив-значение в "регистре" невозможно индексировать переменной
     if type.is_defined_array(val['type']):
-        v = llvm_alloca(val['type'], id_str=id_str, init_ll_value=v)
+        v = llvm_alloca(val['type'], id_str=None, init_ll_value=v)
 
     locals_add(id_str, v)
     return None
@@ -1359,7 +1359,7 @@ def print_def_func(x):
     if arghack:
         global va_list
         id_str = func['va_id']['str'] # 'va_list'
-        va_list = llvm_alloca(type.typeFreePtr, id_str=id_str)
+        va_list = llvm_alloca(type.typeFreePtr, id_str=None)
         locals_add(id_str, va_list)
         llvm_va_start(va_list)
 

@@ -104,29 +104,29 @@ declare void @perror(%ConstCharStr* %str)
 
 define i32 @main() {
     %1 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([17 x i8]* @str1 to [0 x i8]*))
-    %a = alloca i32
-    %b = alloca i32
-    %2 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([10 x i8]* @str2 to [0 x i8]*))
-    %3 = call i32(%ConstCharStr*, ...)@scanf(%ConstCharStr* bitcast ([3 x i8]* @str3 to [0 x i8]*), i32* %a)
-    %4 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([10 x i8]* @str4 to [0 x i8]*))
-    %5 = call i32(%ConstCharStr*, ...)@scanf(%ConstCharStr* bitcast ([3 x i8]* @str5 to [0 x i8]*), i32* %b)
-    %6 = load i32, i32* %a
-    %7 = load i32, i32* %b
-    %8 = icmp sgt i32 %6, %7
-    br i1 %8 , label %then_0, label %else_0
+    %2 = alloca i32
+    %3 = alloca i32
+    %4 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([10 x i8]* @str2 to [0 x i8]*))
+    %5 = call i32(%ConstCharStr*, ...)@scanf(%ConstCharStr* bitcast ([3 x i8]* @str3 to [0 x i8]*), i32* %2)
+    %6 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([10 x i8]* @str4 to [0 x i8]*))
+    %7 = call i32(%ConstCharStr*, ...)@scanf(%ConstCharStr* bitcast ([3 x i8]* @str5 to [0 x i8]*), i32* %3)
+    %8 = load i32, i32* %2
+    %9 = load i32, i32* %3
+    %10 = icmp sgt i32 %8, %9
+    br i1 %10 , label %then_0, label %else_0
 then_0:
-    %9 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([7 x i8]* @str6 to [0 x i8]*))
+    %11 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([7 x i8]* @str6 to [0 x i8]*))
     br label %endif_0
 else_0:
-    %10 = load i32, i32* %a
-    %11 = load i32, i32* %b
-    %12 = icmp slt i32 %10, %11
-    br i1 %12 , label %then_1, label %else_1
+    %12 = load i32, i32* %2
+    %13 = load i32, i32* %3
+    %14 = icmp slt i32 %12, %13
+    br i1 %14 , label %then_1, label %else_1
 then_1:
-    %13 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([7 x i8]* @str7 to [0 x i8]*))
+    %15 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([7 x i8]* @str7 to [0 x i8]*))
     br label %endif_1
 else_1:
-    %14 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([8 x i8]* @str8 to [0 x i8]*))
+    %16 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([8 x i8]* @str8 to [0 x i8]*))
     br label %endif_1
 endif_1:
     br label %endif_0

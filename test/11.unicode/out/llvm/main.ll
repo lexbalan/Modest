@@ -155,43 +155,43 @@ define i32 @main() {
     ;    var ratCode : Nat32 := ratCharCode to Nat32
     ;    printf("omegaCode = %d\n", omegaCode)
     ;    printf("ratCode = %d\n", ratCode)
-    %i = alloca i32
-    store i32 0, i32* %i
+    %1 = alloca i32
+    store i32 0, i32* %1
     br label %again_1
 again_1:
     br i1 1 , label %body_1, label %break_1
 body_1:
-    %1 = load i32, i32* %i
-    %2 = getelementptr inbounds [0 x i16], [0 x i16]* bitcast ([21 x i16]* @str2 to [0 x i16]*), i32 0, i32 %1
-    %3 = load i16, i16* %2
-    %4 = icmp eq i16 %3, 0
-    br i1 %4 , label %then_0, label %endif_0
+    %2 = load i32, i32* %1
+    %3 = getelementptr inbounds [0 x i16], [0 x i16]* bitcast ([21 x i16]* @str2 to [0 x i16]*), i32 0, i32 %2
+    %4 = load i16, i16* %3
+    %5 = icmp eq i16 %4, 0
+    br i1 %5 , label %then_0, label %endif_0
 then_0:
     br label %break_1
     br label %endif_0
 endif_0:
-    %6 = load i32, i32* %i
-    %7 = zext i16 %3 to i32
-    %8 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([15 x i8]* @str4 to [0 x i8]*), i32 %6, i32 %7)
-    %9 = load i32, i32* %i
-    %10 = add i32 %9, 1
-    store i32 %10, i32* %i
+    %7 = load i32, i32* %1
+    %8 = zext i16 %4 to i32
+    %9 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([15 x i8]* @str4 to [0 x i8]*), i32 %7, i32 %8)
+    %10 = load i32, i32* %1
+    %11 = add i32 %10, 1
+    store i32 %11, i32* %1
     br label %again_1
 break_1:
-    %str8 = alloca [0 x i8]*
-    store [0 x i8]* bitcast ([28 x i8]* @str1 to [0 x i8]*), [0 x i8]** %str8
-    %str16 = alloca [0 x i16]*
-    store [0 x i16]* bitcast ([21 x i16]* @str2 to [0 x i16]*), [0 x i16]** %str16
-    %str32 = alloca [0 x i32]*
-    store [0 x i32]* bitcast ([18 x i32]* @str3 to [0 x i32]*), [0 x i32]** %str32
-    %11 = load [0 x i8]*, [0 x i8]** %str8
-    call void([0 x i8]*)@utf8_puts([0 x i8]* %11)
+    %12 = alloca [0 x i8]*
+    store [0 x i8]* bitcast ([28 x i8]* @str1 to [0 x i8]*), [0 x i8]** %12
+    %13 = alloca [0 x i16]*
+    store [0 x i16]* bitcast ([21 x i16]* @str2 to [0 x i16]*), [0 x i16]** %13
+    %14 = alloca [0 x i32]*
+    store [0 x i32]* bitcast ([18 x i32]* @str3 to [0 x i32]*), [0 x i32]** %14
+    %15 = load [0 x i8]*, [0 x i8]** %12
+    call void([0 x i8]*)@utf8_puts([0 x i8]* %15)
     call void([0 x i8]*)@utf8_puts([0 x i8]* bitcast ([2 x i8]* @str5 to [0 x i8]*))
-    %12 = load [0 x i16]*, [0 x i16]** %str16
-    call void([0 x i16]*)@utf16_puts([0 x i16]* %12)
+    %16 = load [0 x i16]*, [0 x i16]** %13
+    call void([0 x i16]*)@utf16_puts([0 x i16]* %16)
     call void([0 x i8]*)@utf8_puts([0 x i8]* bitcast ([2 x i8]* @str6 to [0 x i8]*))
-    %13 = load [0 x i32]*, [0 x i32]** %str32
-    call void([0 x i32]*)@utf32_puts([0 x i32]* %13)
+    %17 = load [0 x i32]*, [0 x i32]** %14
+    call void([0 x i32]*)@utf32_puts([0 x i32]* %17)
     call void([0 x i8]*)@utf8_puts([0 x i8]* bitcast ([2 x i8]* @str7 to [0 x i8]*))
     ret i32 0
 }

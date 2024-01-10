@@ -224,22 +224,22 @@ define void @nat64_list_insert(%List* %list, i64 %x) {
 define void @list_print_forward(%List* %list) {
     %1 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([21 x i8]* @str1 to [0 x i8]*))
     %2 = call %Node*(%List*)@linked_list_first_get(%List* %list)
-    %pn = alloca %Node*
-    store %Node* %2, %Node** %pn
+    %3 = alloca %Node*
+    store %Node* %2, %Node** %3
     br label %again_1
 again_1:
-    %3 = load %Node*, %Node** %pn
-    %4 = icmp ne %Node* %3, null
-    br i1 %4 , label %body_1, label %break_1
+    %4 = load %Node*, %Node** %3
+    %5 = icmp ne %Node* %4, null
+    br i1 %5 , label %body_1, label %break_1
 body_1:
-    %5 = load %Node*, %Node** %pn
-    %6 = call i8*(%Node*)@linked_list_node_link_get(%Node* %5)
-    %7 = bitcast i8* %6 to i32*
-    %8 = load i32, i32* %7
-    %9 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), i32 %8)
-    %10 = load %Node*, %Node** %pn
-    %11 = call %Node*(%Node*)@linked_list_node_next_get(%Node* %10)
-    store %Node* %11, %Node** %pn
+    %6 = load %Node*, %Node** %3
+    %7 = call i8*(%Node*)@linked_list_node_link_get(%Node* %6)
+    %8 = bitcast i8* %7 to i32*
+    %9 = load i32, i32* %8
+    %10 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), i32 %9)
+    %11 = load %Node*, %Node** %3
+    %12 = call %Node*(%Node*)@linked_list_node_next_get(%Node* %11)
+    store %Node* %12, %Node** %3
     br label %again_1
 break_1:
     ret void
@@ -250,22 +250,22 @@ break_1:
 define void @list_print_backward(%List* %list) {
     %1 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([22 x i8]* @str3 to [0 x i8]*))
     %2 = call %Node*(%List*)@linked_list_last_get(%List* %list)
-    %pn = alloca %Node*
-    store %Node* %2, %Node** %pn
+    %3 = alloca %Node*
+    store %Node* %2, %Node** %3
     br label %again_1
 again_1:
-    %3 = load %Node*, %Node** %pn
-    %4 = icmp ne %Node* %3, null
-    br i1 %4 , label %body_1, label %break_1
+    %4 = load %Node*, %Node** %3
+    %5 = icmp ne %Node* %4, null
+    br i1 %5 , label %body_1, label %break_1
 body_1:
-    %5 = load %Node*, %Node** %pn
-    %6 = call i8*(%Node*)@linked_list_node_link_get(%Node* %5)
-    %7 = bitcast i8* %6 to i32*
-    %8 = load i32, i32* %7
-    %9 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([8 x i8]* @str4 to [0 x i8]*), i32 %8)
-    %10 = load %Node*, %Node** %pn
-    %11 = call %Node*(%Node*)@linked_list_node_prev_get(%Node* %10)
-    store %Node* %11, %Node** %pn
+    %6 = load %Node*, %Node** %3
+    %7 = call i8*(%Node*)@linked_list_node_link_get(%Node* %6)
+    %8 = bitcast i8* %7 to i32*
+    %9 = load i32, i32* %8
+    %10 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([8 x i8]* @str4 to [0 x i8]*), i32 %9)
+    %11 = load %Node*, %Node** %3
+    %12 = call %Node*(%Node*)@linked_list_node_prev_get(%Node* %11)
+    store %Node* %12, %Node** %3
     br label %again_1
 break_1:
     ret void

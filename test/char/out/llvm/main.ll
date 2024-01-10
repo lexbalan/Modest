@@ -99,22 +99,22 @@ declare void @perror(%ConstCharStr* %str)
 
 
 define i32 @main() {
-    %ch08 = alloca i8
-    %ch16 = alloca i16
-    %ch32 = alloca i32
+    %1 = alloca i8
+    %2 = alloca i16
+    %3 = alloca i32
     ;ch08 := "🐀"[0]  // error
     ;ch16 := "🐀"[0]  // error
-    store i32 128000, i32* %ch32
-    store i8 115, i8* %ch08
-    store i16 1040, i16* %ch16
-    store i32 1071, i32* %ch32
-    %1 = load i8, i8* %ch08
-    %2 = zext i8 %1 to i32
-    %3 = load i8, i8* %ch08
-    %4 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([18 x i8]* @str1 to [0 x i8]*), i32 %2, i8 %3)
+    store i32 128000, i32* %3
+    store i8 115, i8* %1
+    store i16 1040, i16* %2
+    store i32 1071, i32* %3
+    %4 = load i8, i8* %1
+    %5 = zext i8 %4 to i32
+    %6 = load i8, i8* %1
+    %7 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([18 x i8]* @str1 to [0 x i8]*), i32 %5, i8 %6)
     ;printf("ch16 = 0x%x (%c)\n", ch16 to Nat32, ch16)
     ;printf("ch32 = 0x%x (%c)\n", ch32 to Nat32, ch32)
-    %5 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([4 x i8]* @str2 to [0 x i8]*), [0 x i8]* bitcast ([13 x i8]* @str3 to [0 x i8]*))
+    %8 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([4 x i8]* @str2 to [0 x i8]*), [0 x i8]* bitcast ([13 x i8]* @str3 to [0 x i8]*))
     ret i32 0
 }
 

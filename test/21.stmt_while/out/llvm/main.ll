@@ -98,19 +98,19 @@ declare void @perror(%ConstCharStr* %str)
 
 define i32 @main() {
     %1 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([17 x i8]* @str1 to [0 x i8]*))
-    %a = alloca i32
-    store i32 0, i32* %a
+    %2 = alloca i32
+    store i32 0, i32* %2
     br label %again_1
 again_1:
-    %2 = load i32, i32* %a
-    %3 = icmp slt i32 %2, 10
-    br i1 %3 , label %body_1, label %break_1
+    %3 = load i32, i32* %2
+    %4 = icmp slt i32 %3, 10
+    br i1 %4 , label %body_1, label %break_1
 body_1:
-    %4 = load i32, i32* %a
-    %5 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), i32 %4)
-    %6 = load i32, i32* %a
-    %7 = add i32 %6, 1
-    store i32 %7, i32* %a
+    %5 = load i32, i32* %2
+    %6 = call i32(%ConstCharStr*, ...)@printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), i32 %5)
+    %7 = load i32, i32* %2
+    %8 = add i32 %7, 1
+    store i32 %8, i32* %2
     br label %again_1
 break_1:
     ret i32 0
