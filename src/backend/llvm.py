@@ -427,8 +427,8 @@ def llvm_memcpy(dst, src, size, volatile=False):
 
 
 def llvm_br(x, then_label, else_label):
-    lo("br %s " % TYPE_BOOL)
-    llvm_print_value(x)
+    lo("br ")
+    llvm_print_type_value(x)
     out(" , label %%%s, label %%%s" % (then_label, else_label))
 
 
@@ -1038,13 +1038,13 @@ def do_eval(x):
 #
 #
 
-def print_stmt_assign(x):
+def do_stmt_assign(x):
     r = do_reval(x['right'])
     l = do_eval(x['left'])
     llvm_store(l, r)
 
 
-def print_stmt_if(x):
+def do_stmt_if(x):
     global func_context
     if_id = func_context['if_no']
     func_context['if_no'] = func_context['if_no'] + 1
@@ -1075,7 +1075,7 @@ def print_stmt_if(x):
 
 
 
-def print_stmt_while(x):
+def do_stmt_while(x):
     global func_context
     old_while_id = func_context['cur_while_id']
     func_context['while_no'] = func_context['while_no'] + 1
@@ -1098,24 +1098,24 @@ def print_stmt_while(x):
 
 
 
-def print_stmt_again():
+def do_stmt_again():
     global func_context
     cur_while_id = func_context['cur_while_id']
     llvm_jump('again_%d' % cur_while_id)
-    reg_get()    # for LLVM
+    reg_get()  # for LLVM
 
 
 
-def print_stmt_break():
+def do_stmt_break():
     global func_context
     cur_while_id = func_context['cur_while_id']
     llvm_jump('break_%d' % cur_while_id)
-    reg_get()    # for LLVM
+    reg_get()  # for LLVM
 
 
 
 
-def print_stmt_return(x):
+def do_stmt_return(x):
     if va_list != None:
         llvm_va_end(va_list)
 
@@ -1144,9 +1144,8 @@ def print_stmt_return(x):
     if v != None:
         loaded_v = llvm_dold(v)
         lo("ret ")
-        print_type(x['value']['type'])
-        out(" ")
-        llvm_print_value(loaded_v)
+        llvm_print_type_value(loaded_v)
+
     else:
         out("ret void")
 
@@ -1154,7 +1153,7 @@ def print_stmt_return(x):
 
 
 
-def print_stmt_def_var(x):
+def do_stmt_def_var(x):
     id_str = x['var']['id']['str']
     iv = None
     if x['var']['init'] != None:
@@ -1164,7 +1163,7 @@ def print_stmt_def_var(x):
     return None
 
 
-def print_stmt_let(x):
+def do_stmt_let(x):
     id_str = x['value']['id']['str']
     val = x['init_value']
 
@@ -1212,23 +1211,23 @@ def print_comment_line(x):
 
 def print_stmt(x):
     k = x['kind']
-    if k == 'block': print_stmt_block(x)
+    if k == 'block': do_stmt_block(x)
     elif k == 'value': do_eval(x['value'])
-    elif k == 'assign': print_stmt_assign(x)
-    elif k == 'return': print_stmt_return(x)
-    elif k == 'if': print_stmt_if(x)
-    elif k == 'while': print_stmt_while(x)
-    elif k == 'def_var': print_stmt_def_var(x)
-    elif k == 'let': print_stmt_let(x)
-    elif k == 'break': print_stmt_break()
-    elif k == 'again': print_stmt_again()
+    elif k == 'assign': do_stmt_assign(x)
+    elif k == 'return': do_stmt_return(x)
+    elif k == 'if': do_stmt_if(x)
+    elif k == 'while': do_stmt_while(x)
+    elif k == 'def_var': do_stmt_def_var(x)
+    elif k == 'let': do_stmt_let(x)
+    elif k == 'break': do_stmt_break()
+    elif k == 'again': do_stmt_again()
     elif k == 'comment-line': print_comment_line(x)
     elif k == 'comment-block': print_comment_block(x)
     else: lo("<stmt %s>" % str(x))
 
 
 
-def print_stmt_block(s):
+def do_stmt_block(s):
     locals_push()
 
     for stmt in s['stmts']:
@@ -1365,7 +1364,7 @@ def print_def_func(x):
         llvm_va_start(va_list)
 
 
-    print_stmt_block(func['stmt'])
+    do_stmt_block(func['stmt'])
 
 
     if type.eq(ftype['to'], type.typeUnit):
