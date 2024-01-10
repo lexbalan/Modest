@@ -455,29 +455,18 @@ def llvm_alloca(typ, id_str=None, init_ll_value=None):
 
 
 
-
-
 # получает на вход llvm_value
 # и если оно adr то загружает его в регистр
 # в любом другом случае просто возвращает исходное значение
-def dold(x):
+def llvm_dold(x):
     assert(x['isa'] == 'll_value')
 
     if x['is_adr']:
         # It's address of the value, we need to load it
         return llvm_load(x)
 
+    # It is "value by value"
     return x
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -489,7 +478,6 @@ def print_list_with(lst, method):
         if i > 0: out(", ")
         method(lst[i])
         i = i + 1
-
 
 
 def print_type_record(t):
@@ -510,21 +498,18 @@ def print_type_array(t):
     sz = 0
     if array_size != None:
         sz = array_size['imm']
-
     out("%d x " % sz)
     print_type(t['of'])
     out("]")
 
 
 def print_type_func(t):
+    arghack = 'arghack' in t['att']
     print_type(t['to'])
-
     out("(")
     print_list_with(t['params'], lambda f: print_type(f['type']))
-
-    #if va_func:
-    #    out(", ...")
-
+    if arghack:
+        out(", ...")
     out(")")
 
 
@@ -578,7 +563,7 @@ def print_type(t, print_aka=True):
 
 
 def do_reval(x):
-    return dold(do_eval(x))
+    return llvm_dold(do_eval(x))
 
 
 def do_eval_expr_bin(x):
@@ -613,7 +598,7 @@ def do_eval_expr_un(v):
         return nv
 
 
-    vx = dold(ve) #!
+    vx = llvm_dold(ve) #!
 
     if v['kind'] == 'deref':
         return do_eval_expr_deref(v)
@@ -662,7 +647,7 @@ def do_eval_expr_call(v, retval=None):
 
     if type.is_pointer(ftype):
         # pointer to array needs additional load
-        f = dold(f)
+        f = llvm_dold(f)
         ftype = ftype['to']
 
     to_unit = type.eq(ftype['to'], type.typeUnit)
@@ -671,16 +656,11 @@ def do_eval_expr_call(v, retval=None):
     # do call
     reg = "0"
     if to_unit or sret:
-        lo("call void")
+        lo("call ")
     else:
-        # call %Int32(%Str, ...)
         reg = llvm_operation("call")
-        print_type(ftype['to'])
 
-    out("(")
-    print_func_paramlist(func, only_types=True, with_attributes=False)
-    out(")")
-
+    print_type_func(ftype)
     llvm_print_value(f)
 
     out("(")
@@ -717,7 +697,7 @@ def do_eval_expr_index_ptr(v):
     pointer = do_eval(v['pointer'])
     array_type = pointer['type']['to']
     result_type = v['type']
-    array = dold(pointer)
+    array = llvm_dold(pointer)
     index = do_reval(v['index'])
     return llvm_getelementptr(array, array_type, (llvm_value_num_zero, index), result_type)
 
@@ -747,7 +727,7 @@ def do_eval_access(rec, rt, pos, vt):
     # сперва нужно загрузить ее в регистр тем самым получим 'указатель'
     if type.is_pointer(rt):
         # pointer to record needs additional load
-        rec = dold(rec)  # загружаем сам указатель
+        rec = llvm_dold(rec)  # загружаем сам указатель
         rt = rt['to']
 
     return do_eval_access_ptr(rec, rt, pos, vt)
@@ -1210,7 +1190,7 @@ def print_stmt_return(x):
 
 
     if v != None:
-        loaded_v = dold(v)
+        loaded_v = llvm_dold(v)
         lo("ret ")
         print_type(x['value']['type'])
         out(" ")
@@ -1746,7 +1726,7 @@ def llvm_store_record(l, r):
 
         rpos = field['field_no']
 
-        rv = dold(do_eval_access(r, r['type'], rpos, ft))
+        rv = llvm_dold(do_eval_access(r, r['type'], rpos, ft))
 
         # сохраняем
         llvm_assign(l_field_ptr, rv)
