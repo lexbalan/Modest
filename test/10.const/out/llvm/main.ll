@@ -306,29 +306,29 @@ declare double @max_float64(double %a, double %b)
 define double @distance(%Point %a, %Point %b) {
     %1 = extractvalue %Point %a, 0
     %2 = extractvalue %Point %b, 0
-    %3 = call double(double, double) @max_float64(double %1, double %2)
+    %3 = call double (double, double) @max_float64(double %1, double %2)
     %4 = extractvalue %Point %a, 0
     %5 = extractvalue %Point %b, 0
-    %6 = call double(double, double) @min_float64(double %4, double %5)
+    %6 = call double (double, double) @min_float64(double %4, double %5)
     %7 = fsub double %3, %6
     %8 = extractvalue %Point %a, 1
     %9 = extractvalue %Point %b, 1
-    %10 = call double(double, double) @max_float64(double %8, double %9)
+    %10 = call double (double, double) @max_float64(double %8, double %9)
     %11 = extractvalue %Point %a, 1
     %12 = extractvalue %Point %b, 1
-    %13 = call double(double, double) @min_float64(double %11, double %12)
+    %13 = call double (double, double) @min_float64(double %11, double %12)
     %14 = fsub double %10, %13
-    %15 = call double(double, double) @pow(double %7, double 2.0)
-    %16 = call double(double, double) @pow(double %14, double 2.0)
+    %15 = call double (double, double) @pow(double %7, double 2.0)
+    %16 = call double (double, double) @pow(double %14, double 2.0)
     %17 = fadd double %15, %16
-    %18 = call double(double) @sqrt(double %17)
+    %18 = call double (double) @sqrt(double %17)
     ret double %18
 }
 
 define double @lineLength(%Line %line) {
     %1 = extractvalue %Line %line, 0
     %2 = extractvalue %Line %line, 1
-    %3 = call double(%Point, %Point) @distance(%Point %1, %Point %2)
+    %3 = call double (%Point, %Point) @distance(%Point %1, %Point %2)
     ret double %3
 }
 
@@ -339,16 +339,16 @@ define i32 @main() {
     %4 = insertvalue %Point zeroinitializer, double 1.0, 0
     %5 = insertvalue %Point %4, double 1.0, 1
     %6 = insertvalue %Line %3, %Point %5, 1
-    %7 = call double(%Line) @lineLength(%Line %6)
+    %7 = call double (%Line) @lineLength(%Line %6)
     %8 = insertvalue %Point zeroinitializer, double 10.0, 0
     %9 = insertvalue %Point %8, double 15.0, 1
     %10 = insertvalue %Line zeroinitializer, %Point %9, 0
     %11 = insertvalue %Point zeroinitializer, double 20.0, 0
     %12 = insertvalue %Point %11, double 25.0, 1
     %13 = insertvalue %Line %10, %Point %12, 1
-    %14 = call double(%Line) @lineLength(%Line %13)
-    %15 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str1 to [0 x i8]*), double %7)
-    %16 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str2 to [0 x i8]*), double %14)
+    %14 = call double (%Line) @lineLength(%Line %13)
+    %15 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str1 to [0 x i8]*), double %7)
+    %16 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str2 to [0 x i8]*), double %14)
     ret i32 0
 }
 

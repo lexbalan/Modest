@@ -448,7 +448,8 @@ def llvm_label(label):
 
 def llvm_alloca(typ, id_str=None, init_ll_value=None):
     assert(typ['isa'] == 'type')
-    reg = llvm_operation("alloca", reg=id_str); print_type(typ)
+    reg = llvm_operation("alloca", reg=id_str)
+    print_type(typ)
     val = llvm_value_stk(reg, typ)
     val['is_adr'] = True
 
@@ -546,7 +547,7 @@ def print_type_array(t):
 def print_type_func(t):
     arghack = 'arghack' in t['att']
     print_type(t['to'])
-    out("(")
+    out(" (")
     print_list_with(t['params'], lambda f: print_type(f['type']))
     if arghack:
         out(", ...")
@@ -1044,13 +1045,14 @@ def do_eval(x):
 #
 #
 
-def do_stmt_assign(x):
+def print_stmt_assign(x):
     r = do_reval(x['right'])
     l = do_eval(x['left'])
     llvm_store(l, r)
 
 
-def do_stmt_if(x):
+
+def print_stmt_if(x):
     global func_context
     if_id = func_context['if_no']
     func_context['if_no'] = func_context['if_no'] + 1
@@ -1081,7 +1083,7 @@ def do_stmt_if(x):
 
 
 
-def do_stmt_while(x):
+def print_stmt_while(x):
     global func_context
     old_while_id = func_context['cur_while_id']
     func_context['while_no'] = func_context['while_no'] + 1
@@ -1104,7 +1106,7 @@ def do_stmt_while(x):
 
 
 
-def do_stmt_again():
+def print_stmt_again():
     global func_context
     cur_while_id = func_context['cur_while_id']
     llvm_jump('again_%d' % cur_while_id)
@@ -1112,7 +1114,7 @@ def do_stmt_again():
 
 
 
-def do_stmt_break():
+def print_stmt_break():
     global func_context
     cur_while_id = func_context['cur_while_id']
     llvm_jump('break_%d' % cur_while_id)
@@ -1120,8 +1122,7 @@ def do_stmt_break():
 
 
 
-
-def do_stmt_return(x):
+def print_stmt_return(x):
     if va_list != None:
         llvm_va_end(va_list)
 
@@ -1159,7 +1160,7 @@ def do_stmt_return(x):
 
 
 
-def do_stmt_def_var(x):
+def print_stmt_def_var(x):
     id_str = x['var']['id']['str']
     iv = None
     if x['var']['init'] != None:
@@ -1169,13 +1170,13 @@ def do_stmt_def_var(x):
     return None
 
 
-def do_stmt_let(x):
+
+def print_stmt_let(x):
     id_str = x['value']['id']['str']
     val = x['init_value']
 
     if val['kind'] == 'call':
         if 'sret' in val['func']['att']:
-            #info("call from let", x)
             v = llvm_alloca(val['type'], id_str=None)
             do_eval_expr_call(val, retval=v)
             locals_add(id_str, v)
@@ -1217,23 +1218,23 @@ def print_comment_line(x):
 
 def print_stmt(x):
     k = x['kind']
-    if k == 'block': do_stmt_block(x)
+    if k == 'block': print_stmt_block(x)
     elif k == 'value': do_eval(x['value'])
-    elif k == 'assign': do_stmt_assign(x)
-    elif k == 'return': do_stmt_return(x)
-    elif k == 'if': do_stmt_if(x)
-    elif k == 'while': do_stmt_while(x)
-    elif k == 'def_var': do_stmt_def_var(x)
-    elif k == 'let': do_stmt_let(x)
-    elif k == 'break': do_stmt_break()
-    elif k == 'again': do_stmt_again()
+    elif k == 'assign': print_stmt_assign(x)
+    elif k == 'return': print_stmt_return(x)
+    elif k == 'if': print_stmt_if(x)
+    elif k == 'while': print_stmt_while(x)
+    elif k == 'def_var': print_stmt_def_var(x)
+    elif k == 'let': print_stmt_let(x)
+    elif k == 'break': print_stmt_break()
+    elif k == 'again': print_stmt_again()
     elif k == 'comment-line': print_comment_line(x)
     elif k == 'comment-block': print_comment_block(x)
     else: lo("<stmt %s>" % str(x))
 
 
 
-def do_stmt_block(s):
+def print_stmt_block(s):
     locals_push()
 
     for stmt in s['stmts']:
@@ -1370,7 +1371,7 @@ def print_def_func(x):
         llvm_va_start(va_list)
 
 
-    do_stmt_block(func['stmt'])
+    print_stmt_block(func['stmt'])
 
 
     if type.eq(ftype['to'], type.typeUnit):
@@ -1402,42 +1403,6 @@ def print_def_type(x):
     print_type(x['type'], print_aka=False)
     if type.is_record(x['type']):
         out("\n")
-
-
-
-# из за того что с C типы записваются через жопу
-# приходится печатать типы ptr, arr & func вместе с именем поля
-def print_field(x):
-    t = x['type']
-
-    # поле является масссивом?
-    array_size = None
-    if type.is_array(t):
-        array_size = t['volume']
-        t = t['of']
-
-    # поле является указателем?
-    ptr_level = 0
-    while type.is_pointer(t):
-        t = t['to']
-
-        if t == 'func':
-            t = type.typeUnit
-        else:
-            ptr_level = ptr_level + 1
-            # *[] or *[n] -> just *
-            if type.is_array(t):
-                t = t['of']
-
-    print_type(t)
-    out(" ")
-    out("*" * ptr_level)
-    out("%s" % (x['id']['str']))
-    if is_array:
-        out("[")
-        if array_size != None:
-            do_eval(array_size)
-        out("]")
 
 
 

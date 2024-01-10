@@ -102,13 +102,13 @@ declare void @perror(%ConstCharStr* %str)
 
 
 define i32 @main() {
-    %1 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str1 to [0 x i8]*), [0 x i8]* bitcast ([12 x i8]* @str2 to [0 x i8]*))
+    %1 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str1 to [0 x i8]*), [0 x i8]* bitcast ([12 x i8]* @str2 to [0 x i8]*))
     br i1 1 , label %then_0, label %else_0
 then_0:
-    %2 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str3 to [0 x i8]*))
+    %2 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str3 to [0 x i8]*))
     br label %endif_0
 else_0:
-    %3 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str4 to [0 x i8]*))
+    %3 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str4 to [0 x i8]*))
     br label %endif_0
 endif_0:
     ret i32 0

@@ -172,7 +172,7 @@ then_0:
 endif_0:
     %7 = load i32, i32* %1
     %8 = zext i16 %4 to i32
-    %9 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str4 to [0 x i8]*), i32 %7, i32 %8)
+    %9 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str4 to [0 x i8]*), i32 %7, i32 %8)
     %10 = load i32, i32* %1
     %11 = add i32 %10, 1
     store i32 %11, i32* %1
@@ -185,14 +185,14 @@ break_1:
     %14 = alloca [0 x i32]*
     store [0 x i32]* bitcast ([18 x i32]* @str3 to [0 x i32]*), [0 x i32]** %14
     %15 = load [0 x i8]*, [0 x i8]** %12
-    call void([0 x i8]*) @utf8_puts([0 x i8]* %15)
-    call void([0 x i8]*) @utf8_puts([0 x i8]* bitcast ([2 x i8]* @str5 to [0 x i8]*))
+    call void ([0 x i8]*) @utf8_puts([0 x i8]* %15)
+    call void ([0 x i8]*) @utf8_puts([0 x i8]* bitcast ([2 x i8]* @str5 to [0 x i8]*))
     %16 = load [0 x i16]*, [0 x i16]** %13
-    call void([0 x i16]*) @utf16_puts([0 x i16]* %16)
-    call void([0 x i8]*) @utf8_puts([0 x i8]* bitcast ([2 x i8]* @str6 to [0 x i8]*))
+    call void ([0 x i16]*) @utf16_puts([0 x i16]* %16)
+    call void ([0 x i8]*) @utf8_puts([0 x i8]* bitcast ([2 x i8]* @str6 to [0 x i8]*))
     %17 = load [0 x i32]*, [0 x i32]** %14
-    call void([0 x i32]*) @utf32_puts([0 x i32]* %17)
-    call void([0 x i8]*) @utf8_puts([0 x i8]* bitcast ([2 x i8]* @str7 to [0 x i8]*))
+    call void ([0 x i32]*) @utf32_puts([0 x i32]* %17)
+    call void ([0 x i8]*) @utf8_puts([0 x i8]* bitcast ([2 x i8]* @str7 to [0 x i8]*))
     ret i32 0
 }
 

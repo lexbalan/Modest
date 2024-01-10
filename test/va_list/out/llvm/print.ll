@@ -101,7 +101,7 @@ declare void @perror(%ConstCharStr* %str)
 
 define void @_putchar(i8 %c) {
     %1 = sext i8 %c to i32
-    %2 = call i32(i32) @putchar(i32 %1)
+    %2 = call i32 (i32) @putchar(i32 %1)
     ret void
 }
 
@@ -121,7 +121,7 @@ then_0:
     br label %break_1
     br label %endif_0
 endif_0:
-    call void(i8) @_putchar(i8 %4)
+    call void (i8) @_putchar(i8 %4)
     %7 = load i32, i32* %1
     %8 = add i32 %7, 1
     store i32 %8, i32* %1
@@ -181,7 +181,7 @@ then_2:
     ; %i & %d for signed integer (Int)
     %28 = va_arg i8** %1, i32
     %29 = load [0 x i8]*, [0 x i8]** %19
-    call void([0 x i8]*, i32) @sprintf_dec_int32([0 x i8]* %29, i32 %28)
+    call void ([0 x i8]*, i32) @sprintf_dec_int32([0 x i8]* %29, i32 %28)
     br label %endif_2
 else_2:
     %30 = load i8, i8* %7
@@ -191,7 +191,7 @@ then_3:
     ; %n for unsigned integer (Nat)
     %32 = va_arg i8** %1, i32
     %33 = load [0 x i8]*, [0 x i8]** %19
-    call void([0 x i8]*, i32) @sprintf_dec_nat32([0 x i8]* %33, i32 %32)
+    call void ([0 x i8]*, i32) @sprintf_dec_nat32([0 x i8]* %33, i32 %32)
     br label %endif_3
 else_3:
     %34 = load i8, i8* %7
@@ -205,7 +205,7 @@ then_4:
     ; %p for pointers
     %39 = va_arg i8** %1, i32
     %40 = load [0 x i8]*, [0 x i8]** %19
-    call void([0 x i8]*, i32) @sprintf_hex_nat32([0 x i8]* %40, i32 %39)
+    call void ([0 x i8]*, i32) @sprintf_hex_nat32([0 x i8]* %40, i32 %39)
     br label %endif_4
 else_4:
     %41 = load i8, i8* %7
@@ -250,11 +250,11 @@ endif_3:
     br label %endif_2
 endif_2:
     %53 = load [0 x i8]*, [0 x i8]** %19
-    call void([0 x i8]*) @put_str8([0 x i8]* %53)
+    call void ([0 x i8]*) @put_str8([0 x i8]* %53)
     br label %endif_1
 else_1:
     %54 = load i8, i8* %7
-    call void(i8) @_putchar(i8 %54)
+    call void (i8) @_putchar(i8 %54)
     br label %endif_1
 endif_1:
     %55 = load i32, i32* %3
@@ -303,7 +303,7 @@ body_1:
     %7 = udiv i32 %6, 16
     store i32 %7, i32* %2
     %8 = trunc i32 %5 to i8
-    %9 = call i8(i8) @n_to_sym(i8 %8)
+    %9 = call i8 (i8) @n_to_sym(i8 %8)
     %10 = load i32, i32* %3
     %11 = getelementptr inbounds [8 x i8], [8 x i8]* %1, i32 0, i32 %10
     store i8 %9, i8* %11
@@ -374,7 +374,7 @@ body_1:
     %11 = sdiv i32 %10, 10
     store i32 %11, i32* %2
     %12 = trunc i32 %9 to i8
-    %13 = call i8(i8) @n_to_sym(i8 %12)
+    %13 = call i8 (i8) @n_to_sym(i8 %12)
     %14 = load i32, i32* %7
     %15 = getelementptr inbounds [11 x i8], [11 x i8]* %1, i32 0, i32 %14
     store i8 %13, i8* %15
@@ -444,7 +444,7 @@ body_1:
     %7 = udiv i32 %6, 10
     store i32 %7, i32* %2
     %8 = trunc i32 %5 to i8
-    %9 = call i8(i8) @n_to_sym(i8 %8)
+    %9 = call i8 (i8) @n_to_sym(i8 %8)
     %10 = load i32, i32* %3
     %11 = getelementptr inbounds [11 x i8], [11 x i8]* %1, i32 0, i32 %10
     store i8 %9, i8* %11

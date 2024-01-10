@@ -111,10 +111,10 @@ define i32 @main() {
     %4 = load i8, i8* %1
     %5 = zext i8 %4 to i32
     %6 = load i8, i8* %1
-    %7 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str1 to [0 x i8]*), i32 %5, i8 %6)
+    %7 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str1 to [0 x i8]*), i32 %5, i8 %6)
     ;printf("ch16 = 0x%x (%c)\n", ch16 to Nat32, ch16)
     ;printf("ch32 = 0x%x (%c)\n", ch32 to Nat32, ch32)
-    %8 = call i32(%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str2 to [0 x i8]*), [0 x i8]* bitcast ([13 x i8]* @str3 to [0 x i8]*))
+    %8 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str2 to [0 x i8]*), [0 x i8]* bitcast ([13 x i8]* @str3 to [0 x i8]*))
     ret i32 0
 }
 

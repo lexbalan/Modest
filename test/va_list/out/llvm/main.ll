@@ -109,13 +109,13 @@ declare void @ff_printf([0 x i8]* %str, ...)
 
 
 define i32 @main() {
-    call void([0 x i8]*, ...) @ff_printf([0 x i8]* bitcast ([14 x i8]* @str1 to [0 x i8]*))
-    call void([0 x i8]*, ...) @ff_printf([0 x i8]* bitcast ([11 x i8]* @str3 to [0 x i8]*))
-    call void([0 x i8]*, ...) @ff_printf([0 x i8]* bitcast ([10 x i8]* @str4 to [0 x i8]*), i8 36)
-    call void([0 x i8]*, ...) @ff_printf([0 x i8]* bitcast ([10 x i8]* @str5 to [0 x i8]*), [0 x i8]* bitcast ([4 x i8]* @str2 to [0 x i8]*))
-    call void([0 x i8]*, ...) @ff_printf([0 x i8]* bitcast ([8 x i8]* @str6 to [0 x i8]*), i32 -1)
-    call void([0 x i8]*, ...) @ff_printf([0 x i8]* bitcast ([8 x i8]* @str7 to [0 x i8]*), i32 123)
-    call void([0 x i8]*, ...) @ff_printf([0 x i8]* bitcast ([10 x i8]* @str8 to [0 x i8]*), i32 305419903)
+    call void ([0 x i8]*, ...) @ff_printf([0 x i8]* bitcast ([14 x i8]* @str1 to [0 x i8]*))
+    call void ([0 x i8]*, ...) @ff_printf([0 x i8]* bitcast ([11 x i8]* @str3 to [0 x i8]*))
+    call void ([0 x i8]*, ...) @ff_printf([0 x i8]* bitcast ([10 x i8]* @str4 to [0 x i8]*), i8 36)
+    call void ([0 x i8]*, ...) @ff_printf([0 x i8]* bitcast ([10 x i8]* @str5 to [0 x i8]*), [0 x i8]* bitcast ([4 x i8]* @str2 to [0 x i8]*))
+    call void ([0 x i8]*, ...) @ff_printf([0 x i8]* bitcast ([8 x i8]* @str6 to [0 x i8]*), i32 -1)
+    call void ([0 x i8]*, ...) @ff_printf([0 x i8]* bitcast ([8 x i8]* @str7 to [0 x i8]*), i32 123)
+    call void ([0 x i8]*, ...) @ff_printf([0 x i8]* bitcast ([10 x i8]* @str8 to [0 x i8]*), i32 305419903)
     ret i32 0
 }
 
