@@ -461,7 +461,6 @@ def llvm_alloca(typ, id_str=None, init_ll_value=None):
 
 
 
-
 # получает на вход llvm_value
 # и если оно adr то загружает его в регистр
 # в любом другом случае просто возвращает исходное значение
@@ -503,12 +502,10 @@ def llvm_eval_access(rec, field_no, result_type):
     # сперва нужно загрузить ее в регистр тем самым получим 'указатель'
     if type.is_pointer(rt):
         # pointer to record needs additional load
-        rec = llvm_dold(rec)  # загружаем сам указатель
+        rec = llvm_dold(rec)  # загружаем указатель в регистр
         rt = rt['to']
 
     return llvm_eval_access_ptr(rec, rt, field_no, result_type)
-
-
 
 
 
@@ -519,6 +516,7 @@ def print_list_with(lst, method):
         if i > 0: out(", ")
         method(lst[i])
         i = i + 1
+
 
 
 def print_type_record(t):
@@ -1051,7 +1049,6 @@ def print_stmt_assign(x):
     llvm_store(l, r)
 
 
-
 def print_stmt_if(x):
     global func_context
     if_id = func_context['if_no']
@@ -1082,7 +1079,6 @@ def print_stmt_if(x):
     llvm_label(endif_label)
 
 
-
 def print_stmt_while(x):
     global func_context
     old_while_id = func_context['cur_while_id']
@@ -1105,21 +1101,18 @@ def print_stmt_while(x):
     func_context['cur_while_id'] = old_while_id
 
 
-
-def print_stmt_again():
+def print_stmt_again(x):
     global func_context
     cur_while_id = func_context['cur_while_id']
     llvm_jump('again_%d' % cur_while_id)
     reg_get()  # for LLVM
 
 
-
-def print_stmt_break():
+def print_stmt_break(x):
     global func_context
     cur_while_id = func_context['cur_while_id']
     llvm_jump('break_%d' % cur_while_id)
     reg_get()  # for LLVM
-
 
 
 def print_stmt_return(x):
@@ -1159,7 +1152,6 @@ def print_stmt_return(x):
     reg_get()    # for LLVM
 
 
-
 def print_stmt_def_var(x):
     id_str = x['var']['id']['str']
     iv = None
@@ -1168,7 +1160,6 @@ def print_stmt_def_var(x):
     val = llvm_alloca(x['var']['type'], id_str=None, init_ll_value=iv)
     locals_add(id_str, val)
     return None
-
 
 
 def print_stmt_let(x):
@@ -1193,6 +1184,14 @@ def print_stmt_let(x):
     locals_add(id_str, v)
     return None
 
+
+def print_stmt_block(s):
+    locals_push()
+
+    for stmt in s['stmts']:
+        print_stmt(stmt)
+
+    locals_pop()
 
 
 def print_comment_block(x):
@@ -1226,21 +1225,12 @@ def print_stmt(x):
     elif k == 'while': print_stmt_while(x)
     elif k == 'def_var': print_stmt_def_var(x)
     elif k == 'let': print_stmt_let(x)
-    elif k == 'break': print_stmt_break()
-    elif k == 'again': print_stmt_again()
+    elif k == 'break': print_stmt_break(x)
+    elif k == 'again': print_stmt_again(x)
     elif k == 'comment-line': print_comment_line(x)
     elif k == 'comment-block': print_comment_block(x)
     else: lo("<stmt %s>" % str(x))
 
-
-
-def print_stmt_block(s):
-    locals_push()
-
-    for stmt in s['stmts']:
-        print_stmt(stmt)
-
-    locals_pop()
 
 
 
