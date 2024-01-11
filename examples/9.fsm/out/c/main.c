@@ -123,6 +123,7 @@ FSM fsm = (FSM) {
     .substate = fsmSubstateEntering,
     .states = {
         (FSM_StateDesc) {
+
             .name = {'O', 'f', 'f', '\0', '\0', '\0', '\0', '\0'},
             .entry = &off_entry,
             .loop = &off_loop,

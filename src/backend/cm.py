@@ -377,7 +377,6 @@ def print_value_literal_record(v, ctx):
         item = v['type']['fields'][i]
         field_str = item['id']['str']
 
-
         ini = get_item_with_id(initializers, field_str)
 
         nl = 0

@@ -112,6 +112,7 @@ var fsm: FSM := {
     substate = fsmSubstateEntering
     states = [
         {
+
             name = "Off\x0\x0\x0\x0\x0"
             entry = &off_entry
             loop = &off_loop

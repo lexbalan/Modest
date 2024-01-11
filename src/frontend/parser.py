@@ -538,17 +538,15 @@ class Parser:
             #self.skip_tokens([' ', '\t', '\n'])
             nl_cnt = self.skipt()
 
-            #ccomments = []
             while True:
                 if self.token_class_is('comment-block'):
                     x = self.parse_comment_block()
-                    #comments.append(x)
                 elif self.token_class_is('comment-line'):
                     x = self.parse_comment_line()
-                    #comments.append(x)
                 else:
                     break
 
+                # append comment to array 'items' list
                 items.append(x)
 
             nl_cnt = nl_cnt + self.skipt()
@@ -591,6 +589,10 @@ class Parser:
                     x = self.parse_comment_line()
                 else:
                     break
+
+                # append comment to record 'items' list
+                items.append(x)
+
 
             nl_cnt = nl_cnt + self.skipt()
 

@@ -825,6 +825,7 @@ def print_value_literal_record(v, ctx):
 
     while i < nitems:
         item = v['type']['fields'][i]
+
         field_id_str = item['id']['str']
 
         ini = get_item_with_id(initializers, field_id_str)

@@ -114,6 +114,7 @@ var fsm: FSM := {
     substate = fsmSubstateEntering
     states = [
         {
+            //
             name = "Off" to [fsmNameLength]Char8
             entry = &off_entry //
             loop = &off_loop //

@@ -1131,6 +1131,10 @@ def do_value_str(x):
 def do_value_array(x):
     items = []
     for item in x['items']:
+
+        if item['isa'] == 'ast_comment':
+            continue
+
         vi = do_value(item)
         vi['nl'] = item['nl']
         items.append(vi)
@@ -1152,6 +1156,10 @@ def do_value_record(x):
     fields = []
     i = 0
     for item in x['items']:
+
+        if item['isa'] == 'ast_comment':
+            continue
+
         id = item['id']
 
         val = do_value(item['value'])
