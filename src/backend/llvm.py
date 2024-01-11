@@ -70,11 +70,6 @@ def locals_get(id):
 
 
 
-
-
-TYPE_BOOL = 'i1'
-
-
 free_reg = 0
 
 def reg_get():
