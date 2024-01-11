@@ -764,15 +764,17 @@ def print_value_literal_arr(v, ctx):
             out('{} /*GENERIC-STRING*/')
             return
 
-
-        utf32_codes = []
-        for c in v['imm']:
-            xc = c['imm']
-            utf32_codes.append(xc)
-
-        #out("("); print_type(v['type'], _print_array_asis=True); out(")")
-        _print_string_literal(utf32_codes, width=char_power)
-        return
+        # массивы чаров в конце которых только один терминальный ноль
+        # печатаем в виде строковых литералов C
+        values = v['imm']
+        if len(values) > 1:
+            if values[-1]['imm'] == 0 and values[-2]['imm'] != 0:
+                utf32_codes = []
+                for c in values:
+                    xc = c['imm']
+                    utf32_codes.append(xc)
+                _print_string_literal(utf32_codes, width=char_power)
+                return
 
 
     if not 'no-literal-array-cast' in ctx:

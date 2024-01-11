@@ -13,7 +13,7 @@
 #define ratSymbolUTF32  0x0001F400
 
 
-char arr_utf8[8] = "Hi!\n";
+char arr_utf8[8] = {'H', 'i', '!', '\xA', '\0', '\0', '\0', '\0'};
 uint16_t arr_utf16[8] = u"Hello!\n";
 uint32_t arr_utf32[8] = U"Hello!\n";
 

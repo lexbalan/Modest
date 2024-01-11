@@ -117,27 +117,27 @@ void beacon_exit(FSM *fsm)
 
 
 FSM fsm = (FSM){
-    .name = "Flash",
+    .name = {'F', 'l', 'a', 's', 'h', '\0', '\0', '\0'},
     .state = 0,
     .nexstate = 0,
     .substate = fsmSubstateEntering,
     .states = {
         (FSM_StateDesc){
-            .name = "Off",
+            .name = {'O', 'f', 'f', '\0', '\0', '\0', '\0', '\0'},
             .entry = &off_entry,
             .loop = &off_loop,
             .exit = &off_exit
         },
 
         (FSM_StateDesc){
-            .name = "On",
+            .name = {'O', 'n', '\0', '\0', '\0', '\0', '\0', '\0'},
             .entry = &on_entry,
             .loop = &on_loop,
             .exit = &on_exit
         },
 
         (FSM_StateDesc){
-            .name = "Beacon",
+            .name = {'B', 'e', 'a', 'c', 'o', 'n', '\0', '\0'},
             .entry = &beacon_entry,
             .loop = &beacon_loop,
             .exit = &beacon_exit
