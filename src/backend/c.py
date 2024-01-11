@@ -752,25 +752,6 @@ def print_array_values(values):
             out(',')
 
 
-def code_to_char(cc):
-    sym = chr(cc)
-
-    if cc < 0x20:
-        if cc == 0x07: return "\\a" # bell
-        elif cc == 0x08: return "\\b" # backspace
-        elif cc == 0x09: return "\\t" # horizontal tab
-        elif cc == 0x0A: return "\\n" # line feed
-        elif cc == 0x0B: return "\\v" # vertical tab
-        elif cc == 0x0C: return "\\f" # form feed
-        elif cc == 0x0D: return "\\r" # carriage return
-        elif cc == 0x1B: return "\\e" # escape
-        else: return "\\x%X" % cc
-    elif cc <= 0x7E :
-        if sym == '\\': return '\\\\'
-        elif sym == '"': return '\\"'
-        else: return sym
-    elif cc != 0: return sym
-
 
 def print_value_literal_arr(v, ctx):
 
@@ -783,16 +764,15 @@ def print_value_literal_arr(v, ctx):
             out('{} /*GENERIC-STRING*/')
             return
 
-        if char_power == 8:
-            s = '"'
-            for c in v['imm']:
-                xc = c['imm']
-                if xc == 0:
-                    break
-                s = s + code_to_char(xc)
-            s = s + '"'
-            out(s)
-            return
+
+        utf32_codes = []
+        for c in v['imm']:
+            xc = c['imm']
+            utf32_codes.append(xc)
+
+        #out("("); print_type(v['type'], _print_array_asis=True); out(")")
+        _print_string_literal(utf32_codes, width=char_power)
+        return
 
 
     if not 'no-literal-array-cast' in ctx:
@@ -890,33 +870,57 @@ def print_value_literal_record(v, ctx):
 
     #if cast_req:
     #    out(")")
+    return
 
 
 
-def print_value_literal_str(x, ctx, char_power=8):
 
-    prefix = ""
-    utf8_codes = None
-    if char_power == 8:
-        prefix = "" #"u8"
-        utf8_codes = utf8_cc_arr_to_utf32_cc_arr(x['imm'])
-    elif char_power == 16:
-        prefix = "u"
-        utf8_codes = utf16_cc_arr_to_utf32_cc_arr(x['imm'])
-    elif char_power == 32:
-        prefix = "U"
-        utf8_codes = x['imm']
+def code_to_char(cc):
+    sym = chr(cc)
 
+    if cc < 0x20:
+        if cc == 0x07: return "\\a" # bell
+        elif cc == 0x08: return "\\b" # backspace
+        elif cc == 0x09: return "\\t" # horizontal tab
+        elif cc == 0x0A: return "\\n" # line feed
+        elif cc == 0x0B: return "\\v" # vertical tab
+        elif cc == 0x0C: return "\\f" # form feed
+        elif cc == 0x0D: return "\\r" # carriage return
+        elif cc == 0x1B: return "\\e" # escape
+        else: return "\\x%X" % cc
+    elif cc <= 0x7E :
+        if sym == '\\': return '\\\\'
+        elif sym == '"': return '\\"'
+        else: return sym
+    elif cc != 0: return sym
+
+
+def _print_string_literal(utf32_codes, width=8):
+    if width <= 8: prefix = ""
+    elif width <= 16: prefix = "u"
+    elif width <= 32: prefix = "U"
 
     out("%s\"" % prefix)
 
-    for cc in utf8_codes:
+    for cc in utf32_codes:
         if cc == 0:
             break
 
         out(code_to_char(cc))
 
     out("\"")
+
+
+def print_value_literal_str(x, ctx, char_power=8):
+    utf32_codes = []
+    if char_power == 8:
+        utf32_codes = utf8_cc_arr_to_utf32_cc_arr(x['imm'])
+    elif char_power == 16:
+        utf32_codes = utf16_cc_arr_to_utf32_cc_arr(x['imm'])
+    elif char_power == 32:
+        utf32_codes = x['imm']
+    _print_string_literal(utf32_codes, char_power)
+
 
 
 
