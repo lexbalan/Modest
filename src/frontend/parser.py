@@ -528,7 +528,7 @@ class Parser:
         return self.parse_value_term()
 
 
-    def parse_value_term_arr(self, ti):
+    def parse_value_array(self, ti):
         items = []
 
         nl_cnt = 0
@@ -558,7 +558,7 @@ class Parser:
         }
 
 
-    def parse_value_term_rec(self, ti):
+    def parse_value_record(self, ti):
         items = []
 
         nl_cnt = 0
@@ -595,7 +595,7 @@ class Parser:
         }
 
 
-    def parse_value_term_str(self, s, ti):
+    def parse_value_string(self, s, ti):
             str_len = 0
             new_s = ''
             i = 0
@@ -732,17 +732,17 @@ class Parser:
             s = self.gettok()
             s = s[1:]
             s = s[:-1]
-            return self.parse_value_term_str(s, ti)
+            return self.parse_value_string(s, ti)
 
         elif self.ctok_class() == 'sym':
             num = self.gettok()
             return {'isa': 'value', 'kind': 'sym', 'sym': num, 'ti': ti}
 
         elif self.look("["):
-            return self.parse_value_term_arr(ti)
+            return self.parse_value_array(ti)
 
         elif self.look("{"):
-            return self.parse_value_term_rec(ti)
+            return self.parse_value_record(ti)
 
         else:
             cl = self.ctok_class()
