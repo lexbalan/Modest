@@ -25,19 +25,19 @@ typedef struct {
 } Line;
 
 #define zero  0
-#define pointZero  (Point){.x = zero, .y = zero}
-#define pointOne  (Point){.x = 1.0, .y = 1.0}
+#define pointZero  (Point) {.x = zero, .y = zero}
+#define pointOne  (Point) {.x = 1.0, .y = 1.0}
 
-#define line0  (Line){ \
+#define line0  (Line) { \
     .a = pointZero, \
     .b = pointOne \
 }
 
 #define carr  (uint8_t [5]){0, 10, 15, 20, 25}
 
-#define line1  (Line){ \
-    .a = (Point){.x = carr[1], .y = carr[2]}, \
-    .b = (Point){.x = carr[3], .y = carr[4]} \
+#define line1  (Line) { \
+    .a = (Point) {.x = carr[1], .y = carr[2]}, \
+    .b = (Point) {.x = carr[3], .y = carr[4]} \
 }
 
 #define lines  (Line [2]){line0, line1}

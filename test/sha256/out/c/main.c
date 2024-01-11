@@ -22,7 +22,7 @@ typedef struct {
 } SHA256_TestData;
 
 
-SHA256_TestData test0 = (SHA256_TestData){
+SHA256_TestData test0 = (SHA256_TestData) {
     .input = {'a', 'b', 'c', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'},
     .input_len = 3,
 
@@ -33,7 +33,7 @@ SHA256_TestData test0 = (SHA256_TestData){
     }
 };
 
-SHA256_TestData test1 = (SHA256_TestData){
+SHA256_TestData test1 = (SHA256_TestData) {
     .input = {'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'},
     .input_len = 12,
 

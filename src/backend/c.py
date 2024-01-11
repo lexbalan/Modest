@@ -754,8 +754,6 @@ def print_array_values(values):
 
 
 def print_value_literal_arr(v, ctx):
-
-
     if type.is_string(v['type']):
         char_type = v['type']['of']
         char_power = char_type['power']
@@ -791,7 +789,6 @@ def print_value_literal_arr(v, ctx):
         out("{0}")
         return
 
-
     print_array_values(values)
 
     indent_down()
@@ -810,7 +807,7 @@ def print_value_literal_record(v, ctx):
     print_type(v['type'])
     out(")")
 
-    out("{")
+    out(" {")
     indent_up()
 
     initializers = v['imm']

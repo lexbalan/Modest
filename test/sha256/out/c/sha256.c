@@ -221,7 +221,7 @@ void sha256_final(SHA256_Context *ctx, uint8_t *hash)
 // arg hash must be at least SHA256_BLOCK_SIZE
 void sha256_doHash(uint8_t *msg, uint32_t len, uint8_t *hash)
 {
-    SHA256_Context ctx = (SHA256_Context){};
+    SHA256_Context ctx = (SHA256_Context) {};
     sha256_contextInit((SHA256_Context *)&ctx);
     sha256_update((SHA256_Context *)&ctx, msg, len);
     sha256_final((SHA256_Context *)&ctx, hash);
