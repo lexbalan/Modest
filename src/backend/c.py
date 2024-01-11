@@ -752,12 +752,47 @@ def print_array_values(values):
             out(',')
 
 
+def code_to_char(cc):
+    sym = chr(cc)
+
+    if cc < 0x20:
+        if cc == 0x07: return "\\a" # bell
+        elif cc == 0x08: return "\\b" # backspace
+        elif cc == 0x09: return "\\t" # horizontal tab
+        elif cc == 0x0A: return "\\n" # line feed
+        elif cc == 0x0B: return "\\v" # vertical tab
+        elif cc == 0x0C: return "\\f" # form feed
+        elif cc == 0x0D: return "\\r" # carriage return
+        elif cc == 0x1B: return "\\e" # escape
+        else: return "\\x%X" % cc
+    elif cc <= 0x7E :
+        if sym == '\\': return '\\\\'
+        elif sym == '"': return '\\"'
+        else: return sym
+    elif cc != 0: return sym
+
+
 def print_value_literal_arr(v, ctx):
-    if type.is_generic_string(v['type']):
-        char_power = v['type']['of']['power']
-        # FIXIT: вообще нефиг печатать generic string (!)
-        out('{} /*GENERIC-STRING*/')
-        return
+
+
+    if type.is_string(v['type']):
+        char_type = v['type']['of']
+        char_power = char_type['power']
+        if type.is_generic_string(v['type']):
+            # FIXIT: вообще нефиг печатать generic string (!)
+            out('{} /*GENERIC-STRING*/')
+            return
+
+        if char_power == 8:
+            s = '"'
+            for c in v['imm']:
+                xc = c['imm']
+                if xc == 0:
+                    break
+                s = s + code_to_char(xc)
+            s = s + '"'
+            out(s)
+            return
 
 
     if not 'no-literal-array-cast' in ctx:
@@ -879,23 +914,7 @@ def print_value_literal_str(x, ctx, char_power=8):
         if cc == 0:
             break
 
-        sym = chr(cc)
-
-        if cc < 0x20:
-            if cc == 0x07: out("\\a") # bell
-            elif cc == 0x08: out("\\b") # backspace
-            elif cc == 0x09: out("\\t") # horizontal tab
-            elif cc == 0x0A: out("\\n") # line feed
-            elif cc == 0x0B: out("\\v") # vertical tab
-            elif cc == 0x0C: out("\\f") # form feed
-            elif cc == 0x0D: out("\\r") # carriage return
-            elif cc == 0x1B: out("\\e") # escape
-            else: out("\\x%X" % cc)
-        elif cc <= 0x7E :
-            if sym == '\\': out('\\\\')
-            elif sym == '"': out('\\"')
-            else: out(sym)
-        elif cc != 0: out(sym)
+        out(code_to_char(cc))
 
     out("\"")
 

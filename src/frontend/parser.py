@@ -538,11 +538,14 @@ class Parser:
             #self.skip_tokens([' ', '\t', '\n'])
             nl_cnt = self.skipt()
 
+            comments = []
             while True:
                 if self.token_class_is('comment-block'):
                     x = self.parse_comment_block()
+                    comments.append(x)
                 elif self.token_class_is('comment-line'):
                     x = self.parse_comment_line()
+                    comments.append(x)
                 else:
                     break
 
@@ -553,6 +556,7 @@ class Parser:
 
             field_value = self.expr_value()
             field_value['nl'] = nl_cnt
+            field_value['comments'] = comments
 
             if not self.look("\n"):
                 self.need_sep(separators=[','], stoppers=[']'])

@@ -115,9 +115,9 @@ var fsm: FSM := {
     states = [
         {
             name = "Off" to [fsmNameLength]Char8
-            entry = &off_entry
-            loop = &off_loop
-            exit = &off_exit
+            entry = &off_entry //
+            loop = &off_loop //
+            exit = &off_exit //
         }
 
         {
