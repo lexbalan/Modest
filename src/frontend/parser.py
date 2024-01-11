@@ -538,6 +538,16 @@ class Parser:
             #self.skip_tokens([' ', '\t', '\n'])
             nl_cnt = self.skipt()
 
+            while True:
+                if self.token_class_is('comment-block'):
+                    x = self.parse_comment_block()
+                elif self.token_class_is('comment-line'):
+                    x = self.parse_comment_line()
+                else:
+                    break
+
+            nl_cnt = nl_cnt + self.skipt()
+
             if self.match("]"):
                 break
 
@@ -567,6 +577,16 @@ class Parser:
         while not self.match("}"):
             #self.skip_tokens([' ', '\t', '\n'])
             nl_cnt = self.skipt()
+
+            while True:
+                if self.token_class_is('comment-block'):
+                    x = self.parse_comment_block()
+                elif self.token_class_is('comment-line'):
+                    x = self.parse_comment_line()
+                else:
+                    break
+
+            nl_cnt = nl_cnt + self.skipt()
 
             if self.match("}"):
                 break
