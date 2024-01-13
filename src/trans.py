@@ -444,14 +444,12 @@ def do_type_func(t, func_id="_"):
 
 def do_type(t):
     k = t['kind']
-
     if k == 'id': return do_type_id(t)
     elif k == 'pointer': return do_type_pointer(t)
     elif k == 'array': return do_type_array(t)
     elif k == 'record': return do_type_record(t)
     elif k == 'enum': return do_type_enum(t)
     elif k == 'func': return do_type_func(t)
-
     return bad_type(t['ti'])
 
 

@@ -79,7 +79,7 @@ def hlir_type_integer(id_str, power, generic=False, signed=True, ti=None):
 def hlir_type_bool(ti):
     return {
         'isa': 'type',
-        'kind': 'Bool',
+        'kind': 'bool',
         'id': {'str': 'Bool', 'ti': None},
         'generic': False,
         'att': [],

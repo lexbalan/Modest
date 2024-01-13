@@ -309,7 +309,7 @@ def eq(a, b, opt=[]):
     elif k == 'func': return eq_func(a, b, opt)
     elif k == 'record': return eq_record(a, b, opt)
     elif k == 'pointer': return eq_pointer(a, b, opt)
-    elif k == 'Bool': return True
+    elif k == 'bool': return True
     elif k == 'array': return eq_array(a, b, opt)
     elif k == 'float': return eq_float(a, b, opt)
     elif k == 'char': return eq_char(a, b, opt)
@@ -359,7 +359,7 @@ def is_enum(t):
 
 
 def is_bool(t):
-    return t['kind'] == 'Bool'
+    return t['kind'] == 'bool'
 
 
 def is_char(t):
