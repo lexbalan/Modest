@@ -385,6 +385,7 @@ def do_type_enum(t):
     enum_type = {
         'isa': 'type',
         'kind': 'enum',
+        'id': None,
         'generic': False,
         'items': [],
         'size': 32,
@@ -1899,6 +1900,7 @@ def decl_type(x):
     nt = {
         'isa': 'type',
         'kind': 'opaque',
+        'id': None,
         'generic': False,
         'id': id,
         'att': [],

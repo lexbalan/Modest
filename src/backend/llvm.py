@@ -569,7 +569,7 @@ def print_type(t, print_aka=True):
             out("i%d" % t['width'])
             return
 
-        if 'id' in t:
+        if t['id'] != None:
             out('%%%s' % t['id']['str'])
             return
 

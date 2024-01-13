@@ -320,7 +320,7 @@ def print_type2(t, print_aka, need_space_after, _print_array_asis):
                 out(" ")
             return
 
-        if 'id' in t:
+        if t['id'] != None:
             if NO_TYPEDEF_STRUCTS:
                 if type.is_record(t):
                     out("struct ")
@@ -1564,7 +1564,7 @@ def print_field2(_id, typ):
     assert (id_str != "")
 
 
-    if 'c_alias' in typ or 'id' in typ:
+    if 'c_alias' in typ or typ['id'] != None:
         print_field_regular(typ, id_str)
         return
 

@@ -159,6 +159,7 @@ def type_init():
     typeVA_List = {
         'isa': 'type',
         'kind': 'VA_List',
+        'id': None,
         'generic': False,
         'size': 0,
         'align': 1,
@@ -586,7 +587,7 @@ def type_print(t, print_aka=True):
     k = t['kind']
 
     if print_aka:
-        if 'id' in t:
+        if t['id'] != None:
             id_str = t['id']['str']
 
             if id_str == '<generic:int>':

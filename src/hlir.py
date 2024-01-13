@@ -35,11 +35,12 @@ def hlir_id(str_id, ti=None):
     return {'isa': 'id', 'str': str_id, 'ti': ti}
 
 
-def hlir_type(kind, generic=False, width=0, ops=[], att=[], ti=None):
+def hlir_type(kind, id=None, generic=False, width=0, ops=[], att=[], ti=None):
     size = nbytes_for_bits(width)
     return {
         'isa': 'type',
         'kind': kind,
+        'id': id,
         'width': width,
         'size': size,
         'align': size,
@@ -54,6 +55,7 @@ def hlir_type_bad(ti=None):
     return {
         'isa': 'type',
         'kind': 'bad',
+        'id': None,
         'generic': False,
         'att': [],
         'ops': [],
@@ -72,7 +74,6 @@ def hlir_type_unit():
         'size': 0,
         'align': 0,
         'width': 0,
-        #'imm': {},
         'att': [],
         'ops': CONS_OP,
         'ti': None
@@ -172,6 +173,7 @@ def hlir_type_pointer(to, ti=None):
     return {
         'isa': 'type',
         'kind': 'pointer',
+        'id': None,
         'generic': False,
         'to': to,
         'size': size,
@@ -189,6 +191,7 @@ def hlir_type_free_pointer(ti):
     return {
         'isa': 'type',
         'kind': 'FreePointer',
+        'id': None,
         'generic': False,
         'to': type.typeUnit,
         'size': size,
@@ -206,6 +209,7 @@ def hlir_type_nil(ti):
     return {
         'isa': 'type',
         'kind': 'Nil',
+        'id': None,
         'generic': True,
         'to': type.typeUnit,
         'size': size,
@@ -231,8 +235,9 @@ def hlir_type_array(of, volume=None, generic=False, ti=None):
 
     return {
         'isa': 'type',
-        'generic': generic,
         'kind': 'array',
+        'id': None,
+        'generic': generic,
         'volume': volume,
         'size': array_size,
         'align': item_align,
@@ -269,6 +274,7 @@ def hlir_type_record(fields, size=0, align=0, ti=None):
     return {
         'isa': 'type',
         'kind': 'record',
+        'id': None,
         'generic': False,
         'fields': fields,
         'size': size,
@@ -283,8 +289,9 @@ def hlir_type_record(fields, size=0, align=0, ti=None):
 def hlir_type_func(params, to, ti=None):
     return {
         'isa': 'type',
-        'generic': False,
         'kind': 'func',
+        'id': None,
+        'generic': False,
         'params': params,
         'to': to,
         'size': 0,
