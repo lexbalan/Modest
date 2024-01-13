@@ -222,7 +222,6 @@ def eq_pointer(a, b, opt):
 
 
 def eq_array(a, b, opt):
-
     if a['volume'] == None or b['volume'] == None:
         if a['volume'] == None and b['volume'] == None:
             return eq(a['of'], b['of'], opt)
@@ -414,34 +413,33 @@ def is_free_pointer(t):
 
 
 def is_pointer_to_record(t):
-    if not is_pointer(t):
-        return False
-    return is_record(t['to'])
+    if is_pointer(t):
+        return is_record(t['to'])
+    return False
 
 
 def is_pointer_to_array(t):
-    if not is_pointer(t):
-        return False
-    return is_array(t['to'])
+    if is_pointer(t):
+        return is_array(t['to'])
+    return False
 
 
 def is_pointer_to_defined_array(t):
-    if not is_pointer(t):
-        return False
-    return is_defined_array(t['to'])
+    if is_pointer(t):
+        return is_defined_array(t['to'])
+    return False
 
 
 def is_pointer_to_undefined_array(t):
-    if not is_pointer(t):
-        return False
-    return is_undefined_array(t['to'])
+    if is_pointer(t):
+        return is_undefined_array(t['to'])
+    return False
 
 
 def is_pointer_to_string(t):
-    if not is_pointer(t):
-        return False
-
-    return is_string(t['to'])
+    if is_pointer(t):
+        return is_string(t['to'])
+    return False
 
 
 def is_nil(t):
@@ -470,11 +468,9 @@ def is_generic_array(t):
 
 
 def is_generic_string(t):
-    if not is_generic_array(t):
-        return False
-
-    if t['of'] != None: #!
-        return is_generic_char(t['of'])
+    if is_generic_array(t):
+        if t['of'] != None: #!
+            return is_generic_char(t['of'])
 
     return False
 
@@ -538,10 +534,10 @@ def type_copy(t):
 
 
 def create_alias(id_str, t, ti):
-    #print('type.create_alias ' + id)
+    #info('type.create_alias ' + id, ti)
     nt = type_copy(t)
 
-    nt['id'] = {'str': id_str, 'ti': ti}
+    nt['id'] = {'isa': 'id', 'str': id_str, 'ti': ti}
 
     if 'c_alias' in nt:
         del nt['c_alias']

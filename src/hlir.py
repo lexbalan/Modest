@@ -45,7 +45,7 @@ def hlir_type_unit():
     return {
         'isa': 'type',
         'kind': 'unit',
-        'id': {'str': 'Unit', 'ti': None},
+        'id': {'isa': 'id', 'str': 'Unit', 'ti': None},
         'generic': False,
         'c_alias': 'void',
         'llvm_alias': 'void',
@@ -64,7 +64,7 @@ def hlir_type_integer(id_str, power, generic=False, signed=True, ti=None):
     return {
         'isa': 'type',
         'kind': 'int',
-        'id': {'str': id_str, 'ti': None},
+        'id': {'isa': 'id', 'str': id_str, 'ti': None},
         'generic': generic,
         'att': [],
         'power': power,
@@ -80,7 +80,7 @@ def hlir_type_bool(ti):
     return {
         'isa': 'type',
         'kind': 'bool',
-        'id': {'str': 'Bool', 'ti': None},
+        'id': {'isa': 'id', 'str': 'Bool', 'ti': None},
         'generic': False,
         'att': [],
         'power': 1,
@@ -100,7 +100,7 @@ def hlir_type_generic_char(power, ti=None):
     return {
         'isa': 'type',
         'kind': 'char',
-        'id': {'str': 'Char', 'ti': None},
+        'id': {'isa': 'id', 'str': 'Char', 'ti': None},
         'generic': True,
         'att': [],
         'power': power,
@@ -119,7 +119,7 @@ def hlir_type_char(id_str, power, generic=False, ti=None):
     return {
         'isa': 'type',
         'kind': 'char',
-        'id': {'str': id_str, 'ti': None},
+        'id': {'isa': 'id', 'str': id_str, 'ti': None},
         'generic': generic,
         'att': [],
         'power': power,
@@ -135,7 +135,7 @@ def hlir_type_float(id_str, power, ti):
     return {
         'isa': 'type',
         'kind': 'float',
-        'id': {'str': id_str, 'ti': None},
+        'id': {'isa': 'id', 'str': id_str, 'ti': None},
         'generic': False,
         'att': [],
         'power': power,
@@ -227,7 +227,7 @@ def hlir_type_array(of, volume=None, generic=False, ti=None):
     return {
         'isa': 'type',
         'kind': 'String',
-        'id': {'str': 'String', 'ti': None},
+        'id': {'isa': 'id', 'str': 'String', 'ti': None},
         'generic': True,
         'att': [],
         'ops': STR_OPS,
@@ -295,7 +295,7 @@ def hlir_value_bad(ti=None):
         'kind': 'bad',
         'type': hlir_type_bad(),
         'att': [],
-        'id': {'str': '', 'ti': ti},
+        'id': {'isa': 'id', 'str': '', 'ti': ti},
         'ti': ti
     }
 
