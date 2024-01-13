@@ -339,7 +339,6 @@ def print_type2(t, print_aka, need_space_after, _print_array_asis):
         if need_space_after:
             out(" ")
 
-    #elif type.is_enum(t): print_type_enum(t, need_space_after)
     elif type.is_pointer(t):
         print_type_pointer(t, need_space_after)
 
