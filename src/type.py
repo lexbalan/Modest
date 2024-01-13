@@ -231,11 +231,8 @@ def eq_array(a, b, opt):
     if a['volume']['imm'] != b['volume']['imm']:
         return False
 
-    if a['of'] == None and b['of'] == None:
-        return True
-
     if a['of'] == None or b['of'] == None:
-        return False
+        return a['of'] == None and b['of'] == None
 
     return eq(a['of'], b['of'], opt)
 
