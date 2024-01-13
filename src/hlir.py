@@ -57,6 +57,9 @@ def hlir_type_bad(ti=None):
         'kind': 'bad',
         'id': None,
         'generic': False,
+        'width': 0,
+        'size': 0,
+        'align': 0,
         'att': [],
         'ops': [],
         'ti': ti
@@ -69,11 +72,11 @@ def hlir_type_unit():
         'kind': 'unit',
         'id': hlir_id('Unit'),
         'generic': False,
-        'c_alias': 'void',
-        'llvm_alias': 'void',
+        'width': 0,
         'size': 0,
         'align': 0,
-        'width': 0,
+        'c_alias': 'void',
+        'llvm_alias': 'void',
         'att': [],
         'ops': CONS_OP,
         'ti': None
@@ -87,12 +90,12 @@ def hlir_type_integer(id_str, width, generic=False, signed=True, ti=None):
         'kind': 'int',
         'id': hlir_id(id_str),
         'generic': generic,
-        'att': [],
         'width': width,
-        'signed': signed,
         'size': size,
         'align': size,
+        'signed': signed,
         'ops': INT_OPS,
+        'att': [],
         'ti': ti
     }
 
@@ -103,7 +106,6 @@ def hlir_type_bool(ti):
         'kind': 'bool',
         'id': hlir_id('Bool'),
         'generic': False,
-        'att': [],
         'width': 1,
         'size': 1,
         'align': 1,
@@ -111,6 +113,7 @@ def hlir_type_bool(ti):
         'llvm_alias': 'i1',
         'cm_alias': 'Bool',
         'ops': BOOL_OPS,
+        'att': [],
         'ti': None
     }
 
@@ -123,14 +126,14 @@ def hlir_type_generic_char(width, ti=None):
         'kind': 'char',
         'id': hlir_id('Char'),
         'generic': True,
-        'att': [],
         'width': width,
+        'size': size,
+        'align': size,
         'cm_alias': 'Char',
         'c_alias': 'uint32_t',
         'llvm_alias': 'i8',
-        'size': size,
-        'align': size,
         'ops': EQ_OPS,
+        'att': [],
         'ti': ti
     }
 
@@ -142,11 +145,11 @@ def hlir_type_char(id_str, width, generic=False, ti=None):
         'kind': 'char',
         'id': hlir_id(id_str),
         'generic': generic,
-        'att': [],
         'width': width,
         'size': size,
         'align': size,
         'ops': CHAR_OPS,
+        'att': [],
         'ti': ti
     }
 
@@ -158,12 +161,12 @@ def hlir_type_float(id_str, width, ti):
         'kind': 'float',
         'id': hlir_id(id_str),
         'generic': False,
-        'att': [],
         'width': width,
         'size': size,
         'align': size,
         'c_alias': 'double',
         'ops': FLOAT_OPS,
+        'att': [],
         'ti': ti
     }
 
@@ -175,12 +178,12 @@ def hlir_type_pointer(to, ti=None):
         'kind': 'pointer',
         'id': None,
         'generic': False,
-        'to': to,
+        'width': ptr_width,
         'size': size,
         'align': size,
-        'width': ptr_width,
-        'att': [],
+        'to': to,
         'ops': PTR_OPS,
+        'att': [],
         'ti': ti
     }
 
@@ -193,12 +196,12 @@ def hlir_type_free_pointer(ti):
         'kind': 'FreePointer',
         'id': None,
         'generic': False,
-        'to': type.typeUnit,
+        'width': ptr_width,
         'size': size,
         'align': size,
-        'width': ptr_width,
-        'att': [],
+        'to': type.typeUnit,
         'ops': PTR_OPS,
+        'att': [],
         'ti': ti
     }
 
@@ -211,12 +214,12 @@ def hlir_type_nil(ti):
         'kind': 'Nil',
         'id': None,
         'generic': True,
-        'to': type.typeUnit,
+        'width': ptr_width,
         'size': size,
         'align': size,
-        'width': ptr_width,
-        'att': [],
+        'to': type.typeUnit,
         'ops': PTR_OPS,
+        'att': [],
         'ti': ti
     }
 
@@ -238,12 +241,13 @@ def hlir_type_array(of, volume=None, generic=False, ti=None):
         'kind': 'array',
         'id': None,
         'generic': generic,
-        'volume': volume,
+        'width': 0, #!
         'size': array_size,
         'align': item_align,
         'of': of,
-        'att': [],
+        'volume': volume,
         'ops': ARR_OPS,
+        'att': [],
         'ti': ti
     }
 
@@ -276,11 +280,12 @@ def hlir_type_record(fields, size=0, align=0, ti=None):
         'kind': 'record',
         'id': None,
         'generic': False,
-        'fields': fields,
+        'width': 0, #!
         'size': size,
         'align': align,
-        'att': [],
+        'fields': fields,
         'ops': REC_OPS,
+        'att': [],
         'ti': ti
     }
 
@@ -292,12 +297,13 @@ def hlir_type_func(params, to, ti=None):
         'kind': 'func',
         'id': None,
         'generic': False,
-        'params': params,
-        'to': to,
+        'width': 0,
         'size': 0,
         'align': 0,
-        'att': [],
+        'params': params,
+        'to': to,
         'ops': [],
+        'att': [],
         'ti': ti
     }
 
