@@ -223,10 +223,9 @@ def eq_pointer(a, b, opt):
 
 def eq_array(a, b, opt):
 
-    if a['volume'] == None and b['volume'] == None:
-        return eq(a['of'], b['of'], opt)
-
     if a['volume'] == None or b['volume'] == None:
+        if a['volume'] == None and b['volume'] == None:
+            return eq(a['of'], b['of'], opt)
         return False
 
     if a['volume']['imm'] != b['volume']['imm']:
@@ -272,7 +271,7 @@ def eq_float(a, b, opt):
 
 
 def eq_opaque(a, b, opt):
-    return a['id']['str'] == b['id']['str']    # maybe by UID?
+    return a['id']['str'] == b['id']['str']  # maybe by UID?
 
 
 def eq_alias(a, b, opt):
