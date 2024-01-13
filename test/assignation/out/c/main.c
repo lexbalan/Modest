@@ -87,8 +87,8 @@ int main(void)
     printf("loc_r0.y = %i\n", loc_r0.y);
 
 
-    const uint8_t dim1 = 15;
-    const uint8_t dim2 = 16;
+    const int8_t dim1 = 15;
+    const int8_t dim2 = 16;
 
     int32_t aa[dim1 * dim2];
 

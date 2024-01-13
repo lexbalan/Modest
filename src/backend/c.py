@@ -305,7 +305,7 @@ def print_type2(t, print_aka, need_space_after, _print_array_asis):
         # если пришел generic - подберем подходящий тип
         # ex: let x = 1; func(x)
         power = t['power']
-        nt = type.select_numeric(power, is_signed=type.is_signed(t))
+        nt = type.select_integer_type(power, is_signed=type.is_integer_signed(t))
         if nt == None:
             error("cannot select integer type for too big value", t['ti'])
             return
@@ -706,8 +706,8 @@ def print_value_cast(x, ctx):
     # - in Cm int32(-1) -> uint64 => 0x00000000ffffffff
     # - in C  int32(-1) -> uint64 => 0xffffffffffffffff
     # required: (uint64_t)((uint32)int32_value)
-    if type.is_unsigned(to_type):
-        #if type.is_signed(from_type): # is_signed (integers, chars)
+    if type.is_integer_unsigned(to_type):
+        #if type.is_integer_signed(from_type): # is_signed (integers, chars)
         if from_type['size'] < to_type['size']:
             out("((")
             print_type(to_type)
@@ -988,7 +988,7 @@ def print_value_literal_int(x, ctx):
 
     nbits = x['type']['power']
 
-    if type.is_unsigned(x['type']):
+    if type.is_integer_unsigned(x['type']):
         out("U")
 
     if nbits > CC_INT_SIZE_BITS:

@@ -79,29 +79,23 @@ def type_init():
     typeBool['c_alias'] = 'uint8_t'
     typeBool['llvm_alias'] = 'i1'
 
-    typeNat8 = hlir_type_integer("Nat8", power=8, ti=None)
-
+    typeNat8 = hlir_type_integer("Nat8", power=8, signed=False, ti=None)
     typeNat8['c_alias'] = 'uint8_t'
-    typeNat8['unsigned'] = True
     typeNat8['llvm_alias'] = 'i8'
 
-    typeNat16 = hlir_type_integer("Nat16", power=16, ti=None)
-    typeNat16['unsigned'] = True
+    typeNat16 = hlir_type_integer("Nat16", power=16, signed=False, ti=None)
     typeNat16['c_alias'] = 'uint16_t'
     typeNat16['llvm_alias'] = 'i16'
 
-    typeNat32 = hlir_type_integer("Nat32", power=32, ti=None)
-    typeNat32['unsigned'] = True
+    typeNat32 = hlir_type_integer("Nat32", power=32, signed=False, ti=None)
     typeNat32['c_alias'] = 'uint32_t'
     typeNat32['llvm_alias'] = 'i32'
 
-    typeNat64 = hlir_type_integer("Nat64", power=64, ti=None)
-    typeNat64['unsigned'] = True
+    typeNat64 = hlir_type_integer("Nat64", power=64, signed=False, ti=None)
     typeNat64['c_alias'] = 'uint64_t'
     typeNat64['llvm_alias'] = 'i64'
 
-    typeNat128 = hlir_type_integer("Nat128", power=128, ti=None)
-    typeNat128['unsigned'] = True
+    typeNat128 = hlir_type_integer("Nat128", power=128, signed=False, ti=None)
     typeNat128['c_alias'] = 'unsigned __int128'
     typeNat128['llvm_alias'] = 'i128'
 
@@ -195,9 +189,12 @@ def select_nat(sz):
     return copy.copy(t)
 
 
-def select_numeric(sz, is_signed):
+def select_integer_type(sz, is_signed):
     if is_signed:
-        return select_int(sz + 1)
+        if sz < 128:
+            return select_int(sz + 1)
+        else:
+            return select_int(sz)
     return select_nat(sz)
 
 
@@ -206,7 +203,7 @@ def eq_integer(a, b, opt):
     if a['power'] != b['power']:
         return False
 
-    if is_signed(a) != is_signed(b):
+    if is_integer_signed(a) != is_integer_signed(b):
         return False
 
     return True
@@ -366,56 +363,28 @@ def is_bool(t):
     return t['kind'] == 'Bool'
 
 
-def is_integer(t):
-    return t['kind'] == 'int'
-
-
-def is_integer_signed(t):
-    return is_integer(t) and is_signed(t)
-
-
-def is_integer_unsigned(t):
-    return is_integer(t) and is_unsigned(t)
-
-
 def is_char(t):
     return t['kind'] == 'char'
-
-
-def is_generic_char(t):
-    if not is_generic(t):
-        return False
-    return is_char(t)
 
 
 def is_float(t):
     return t['kind'] == 'float'
 
 
-# WARNING: Generic int type can be
-# not signed and not unsigned at same time (!)
-# (because we dont know how it will be used)
-# example: let x = 0xFFFFFFFF  #it is signed or unsigned value?
+def is_integer(t):
+    return t['kind'] == 'int'
 
-def is_signed(t):
-    if t['kind'] == 'int':
+
+def is_integer_signed(t):
+    if is_integer(t):
         return t['signed']
     return False
 
 
-def is_unsigned(t):
-    if t['kind'] == 'int':
-        return t['unsigned']
-
-    if t['kind'] in ['char', 'pointer']:
-        return True
-
+def is_integer_unsigned(t):
+    if is_integer(t):
+        return not t['signed']
     return False
-
-
-
-def is_generic_integer(t):
-    return is_generic(t) and is_integer(t)
 
 
 def is_func(t):
@@ -426,26 +395,8 @@ def is_record(t):
     return t['kind'] == 'record'
 
 
-def is_generic_record(t):
-    return is_generic(t) and is_record(t)
-
-
 def is_array(t):
     return t['kind'] == 'array'
-
-
-def is_generic_array(t):
-    return is_generic(t) and is_array(t)
-
-
-def is_generic_string(t):
-    if not is_generic_array(t):
-        return False
-
-    if t['of'] != None: #!
-        return is_generic_char(t['of'])
-
-    return False
 
 
 def is_defined_array(t):
@@ -513,17 +464,40 @@ def is_pointer_to_string(t):
     return is_string(t['to'])
 
 
-
-
 def is_nil(t):
     return t['kind'] == 'Nil'
 
 
-
-
-
 def is_opaque(t):
     return t['kind'] == 'opaque'
+
+
+
+def is_generic_char(t):
+    return is_generic(t) and is_char(t)
+
+
+def is_generic_integer(t):
+    return is_generic(t) and is_integer(t)
+
+
+def is_generic_record(t):
+    return is_generic(t) and is_record(t)
+
+
+def is_generic_array(t):
+    return is_generic(t) and is_array(t)
+
+
+def is_generic_string(t):
+    if not is_generic_array(t):
+        return False
+
+    if t['of'] != None: #!
+        return is_generic_char(t['of'])
+
+    return False
+
 
 
 

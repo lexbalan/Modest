@@ -33,7 +33,7 @@ typedef struct {
     .b = pointOne \
 }
 
-#define carr  (uint8_t [5]){0, 10, 15, 20, 25}
+#define carr  (int8_t [5]){0, 10, 15, 20, 25}
 
 #define line1  (Line) { \
     .a = (Point) {.x = carr[1], .y = carr[2]}, \

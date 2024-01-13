@@ -764,9 +764,7 @@ def do_eval_expr_access_ptr(v):
 def select_cast_operator(a, b):
     if type.is_integer(a) or type.is_char(a) or type.is_bool(a):
         if type.is_integer(b) or type.is_char(b) or type.is_bool(b):
-            signed = False
-            if type.is_integer(b):
-                signed = type.is_signed(b)
+            signed = type.is_integer_signed(b)
 
             if a['power'] < b['power']:
                 return 'sext' if signed else 'zext'
@@ -781,7 +779,7 @@ def select_cast_operator(a, b):
             return 'inttoptr'
 
         elif type.is_float(b):
-            return 'sitofp' if type.is_signed(a) else 'uitofp'
+            return 'sitofp' if type.is_integer_signed(a) else 'uitofp'
 
     elif type.is_pointer(a):
         if type.is_pointer(b): return 'bitcast'
@@ -790,7 +788,7 @@ def select_cast_operator(a, b):
     elif type.is_float(a):
         # Float -> Integer
         if type.is_integer(b):
-            return 'fptosi' if type.is_signed(b) else 'fptoui'
+            return 'fptosi' if type.is_integer_signed(b) else 'fptoui'
 
         # Float -> Float
         elif type.is_float(b):
@@ -1528,7 +1526,7 @@ REL_OPS = ['eq', 'ne', 'lt', 'gt', 'le', 'ge']
 def get_bin_opcode(op, t):
 
     def select_bin_opcode_su(sop, uop, t): # ["icmp slt", "icmp ult", x]
-        if type.is_unsigned(t):
+        if type.is_integer_unsigned(t):
             return uop
         return sop
 
@@ -1554,7 +1552,7 @@ def get_bin_opcode(op, t):
     elif op in ['lt', 'gt', 'le', 'ge']:
         opcode = select_bin_opcode_suf('icmp s' + op, 'icmp u' + op, 'fcmp o' + op, t)
     elif op == 'shr':
-        opcode = 'ashr' if type.is_signed(t) else 'lshr'
+        opcode = 'ashr' if type.is_integer_signed(t) else 'lshr'
     elif op == 'logic_or':
         opcode = 'or'
     elif op == 'logic_and':

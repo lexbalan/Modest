@@ -8,8 +8,8 @@
 
 
 
-#define ratSymbolUTF8  (uint8_t [4]){0xF0, 0x9F, 0x90, 0x80}
-#define ratSymbolUTF16  (uint16_t [2]){0xD83D, 0xDC00}
+#define ratSymbolUTF8  (int16_t [4]){0xF0, 0x9F, 0x90, 0x80}
+#define ratSymbolUTF16  (int32_t [2]){0xD83D, 0xDC00}
 #define ratSymbolUTF32  0x0001F400
 
 

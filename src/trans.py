@@ -773,7 +773,7 @@ def do_value_minus(val, t, ti):
         v['imm'] = num
 
     if type.is_generic(v['type']):
-        if not type.is_signed(v['type']):
+        if not type.is_integer_signed(v['type']):
             #type.set_signed()
             v['type']['signed'] = True
 

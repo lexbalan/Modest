@@ -59,7 +59,7 @@ def hlir_type_unit():
     }
 
 
-def hlir_type_integer(id_str, power, generic=False, ti=None):
+def hlir_type_integer(id_str, power, generic=False, signed=True, ti=None):
     size = nbytes_for_bits(power)
     return {
         'isa': 'type',
@@ -68,8 +68,7 @@ def hlir_type_integer(id_str, power, generic=False, ti=None):
         'generic': generic,
         'att': [],
         'power': power,
-        'signed': False,
-        'unsigned': False,
+        'signed': signed,
         'size': size,
         'align': size,
         'ops': INT_OPS,
