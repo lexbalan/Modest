@@ -240,34 +240,26 @@ def eq_array(a, b, opt):
     return eq(a['of'], b['of'], opt)
 
 
+def eq_fields(a, b, opt):
+    if len(a) != len(b): return False
+    for ax, bx in zip(a, b):
+        if ax['id']['str'] != bx['id']['str']: return False
+        if not eq(ax['type'], bx['type'], opt): return False
+    return True
 
 
 def eq_func(a, b, opt):
     if not eq(a['to'], b['to'], opt): return False
-    if len(a['params']) != len(b['params']): return False
-
-    for ax, bx in zip(a['params'], b['params']):
-        if ax['id']['str'] != bx['id']['str']: return False
-        if not eq(ax['type'], bx['type'], opt): return False
-
-    return True
+    return eq_fields(a['params'], b['params'], opt)
 
 
 def eq_record(a, b, opt):
     if len(a['fields']) != len(b['fields']): return False
-
-    for ax, bx in zip(a['fields'], b['fields']):
-        if ax['id']['str'] != bx['id']['str']: return False
-        if not eq(ax['type'], bx['type'], opt): return False
-
-    return True
+    return eq_fields(a['fields'], b['fields'], opt)
 
 
 def eq_float(a, b, opt):
-    if 'power' in a and 'power' in b:
-        return a['power'] == b['power']
-
-    return False
+    return a['power'] == b['power']
 
 
 def eq_opaque(a, b, opt):
@@ -346,10 +338,6 @@ def is_generic(t):
     return t['generic']
 
 
-def is_alias(t):
-    return 'alias' in t['att']
-
-
 def is_unit(t):
     return t['kind'] == 'unit'
 
@@ -413,11 +401,7 @@ def is_undefined_array(t):
 def is_array_of_char(t):
     if not is_array(t):
         return False
-
-    if not is_char(t['of']):
-        return False
-
-    return True
+    return is_char(t['of'])
 
 
 def is_string(t):
@@ -498,6 +482,9 @@ def is_generic_string(t):
     return False
 
 
+
+def is_alias(t):
+    return 'alias' in t['att']
 
 
 
