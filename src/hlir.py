@@ -30,6 +30,12 @@ def hlir_init():
     flt_width = int(settings.get('float_width'))
 
 
+
+def hlir_id(str_id, ti=None):
+    return {'isa': 'id', 'str': str_id, 'ti': ti}
+
+
+
 def hlir_type_bad(ti=None):
     return {
         'isa': 'type',
@@ -45,7 +51,7 @@ def hlir_type_unit():
     return {
         'isa': 'type',
         'kind': 'unit',
-        'id': {'isa': 'id', 'str': 'Unit', 'ti': None},
+        'id': hlir_id('Unit'),
         'generic': False,
         'c_alias': 'void',
         'llvm_alias': 'void',
@@ -64,7 +70,7 @@ def hlir_type_integer(id_str, power, generic=False, signed=True, ti=None):
     return {
         'isa': 'type',
         'kind': 'int',
-        'id': {'isa': 'id', 'str': id_str, 'ti': None},
+        'id': hlir_id(id_str),
         'generic': generic,
         'att': [],
         'power': power,
@@ -80,7 +86,7 @@ def hlir_type_bool(ti):
     return {
         'isa': 'type',
         'kind': 'bool',
-        'id': {'isa': 'id', 'str': 'Bool', 'ti': None},
+        'id': hlir_id('Bool'),
         'generic': False,
         'att': [],
         'power': 1,
@@ -100,7 +106,7 @@ def hlir_type_generic_char(power, ti=None):
     return {
         'isa': 'type',
         'kind': 'char',
-        'id': {'isa': 'id', 'str': 'Char', 'ti': None},
+        'id': hlir_id('Char'),
         'generic': True,
         'att': [],
         'power': power,
@@ -119,7 +125,7 @@ def hlir_type_char(id_str, power, generic=False, ti=None):
     return {
         'isa': 'type',
         'kind': 'char',
-        'id': {'isa': 'id', 'str': id_str, 'ti': None},
+        'id': hlir_id(id_str),
         'generic': generic,
         'att': [],
         'power': power,
@@ -135,7 +141,7 @@ def hlir_type_float(id_str, power, ti):
     return {
         'isa': 'type',
         'kind': 'float',
-        'id': {'isa': 'id', 'str': id_str, 'ti': None},
+        'id': hlir_id(id_str),
         'generic': False,
         'att': [],
         'power': power,
@@ -223,18 +229,6 @@ def hlir_type_array(of, volume=None, generic=False, ti=None):
     }
 
 
-"""def hlir_type_generic_str(ti=None):
-    return {
-        'isa': 'type',
-        'kind': 'String',
-        'id': {'isa': 'id', 'str': 'String', 'ti': None},
-        'generic': True,
-        'att': [],
-        'ops': STR_OPS,
-        'ti': ti
-    }"""
-
-
 # used in shifts
 def hlir_type_generic_int_bits(nbits, ti=None):
     return hlir_type_integer('Integer', power=nbits, generic=True, ti=ti)
@@ -295,7 +289,7 @@ def hlir_value_bad(ti=None):
         'kind': 'bad',
         'type': hlir_type_bad(),
         'att': [],
-        'id': {'isa': 'id', 'str': '', 'ti': ti},
+        'id': hlir_id('_', ti=ti),
         'ti': ti
     }
 

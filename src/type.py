@@ -537,7 +537,7 @@ def create_alias(id_str, t, ti):
     #info('type.create_alias ' + id, ti)
     nt = type_copy(t)
 
-    nt['id'] = {'isa': 'id', 'str': id_str, 'ti': ti}
+    nt['id'] = hlir_id(id_str, ti=ti)
 
     if 'c_alias' in nt:
         del nt['c_alias']

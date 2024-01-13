@@ -5,6 +5,7 @@
 import os
 from .lexer import Lexer
 from error import error, warning, info
+from hlir import hlir_id
 
 
 top_level_stoppers = ['type', 'const', 'var', 'func']
@@ -96,7 +97,7 @@ class Parser:
             error("expected identifier", ti)
             return None
         s = self.gettok()
-        return {'isa': 'id', 'str': s, 'ti': ti}
+        return hlir_id(s, ti=ti)
 
 
     def need_sep(self, separators=['\n', ';'], stoppers=['}'], eat=True):
@@ -233,7 +234,8 @@ class Parser:
                 ti = self.ti()
                 f = self.identifier()
                 self.need_sep(separators=['\n', ','])
-                items.append({'isa': 'id', 'id': f, 'ti': ti})
+                id = hlir_id(f, ti=ti)
+                items.append(id)
             return {'isa': 'type', 'kind': 'enum', 'items': items, 'ti': ti}
 
         elif self.match("["):
