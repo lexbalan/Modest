@@ -329,7 +329,7 @@ def print_type2(t, print_aka, need_space_after, _print_array_asis):
                 out(" ")
             return
 
-    if type.is_numeric(t):
+    if type.is_integer(t) or type.is_float(t):
         print_type_numeric(t)
         if need_space_after:
             out(" ")
@@ -636,7 +636,7 @@ def print_value_cast_immediate(v, ctx):
 
     #out("/*^*/")
 
-    if type.is_ptr_to_string(to_type):
+    if type.is_pointer_to_string(to_type):
         if type.is_string(from_type):
             char_power = to_type['to']['of']['power']
             print_value_literal_str(v, ctx=[], char_power=char_power)

@@ -70,7 +70,7 @@ def value_cons_pointer(v, t, ti, method):
 
     # GenericString -> *[]CharX
     elif type.is_generic_string(vtype):
-        if type.is_ptr_to_string(to_type):
+        if type.is_pointer_to_string(to_type):
             s = cons_ptr_to_str_from_generic_str(v, t, ti, method)
             return s
 

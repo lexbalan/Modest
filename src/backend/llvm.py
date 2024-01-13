@@ -35,12 +35,10 @@ def init():
     LLVM_TARGET_DATALAYOUT = settings.get('target_datalayout')
 
     llvm_value_num_zero = llvm_value_num(type.typeInt32, 0)
-    pass
 
 
 def indent():
     ind(INDENT_SYMBOL)
-
 
 
 def lo(s):
@@ -810,7 +808,7 @@ def do_eval_expr_cast_immediate(x):
     to_type = x['type']
 
     # строки печатаются ТОЛЬКО отсюда!
-    if type.is_ptr_to_string(to_type):
+    if type.is_pointer_to_string(to_type):
         string_of = to_type['to']['of']
         char_pow = string_of['power']
         return llvm_value_str(x['strid'], x['imm'], x['type'], value)
@@ -840,7 +838,7 @@ def do_eval_expr_cast(x):
     to_type = x['type']
 
     if type.is_generic_string(from_type):
-        if type.is_ptr_to_string(to_type):
+        if type.is_pointer_to_string(to_type):
             error("strings need to be printed through do_eval_expr_cast_immediate", x)
             exit(1)
 
@@ -968,7 +966,7 @@ def do_eval_func_const_var(x):
 
     if k == 'const':
         if value_is_immediate(x): # TODO: wtf? (see begining of do_eval)
-            if type.is_numeric(x['type']):
+            if type.is_integer(x['type']) or type.is_float(x['type']):
                 return llvm_value_num(x['type'], x['imm'])
 
         return do_eval(x['value'])

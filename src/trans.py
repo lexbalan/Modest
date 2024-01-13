@@ -528,16 +528,16 @@ def do_value_shift(x):
 
 # select result type of common binary operation
 def bin_type_select(a, b):
-    if type.is_generic_numeric(a) and type.is_generic_numeric(b):
+    if type.is_generic(a) and type.is_generic(b):
         if a['power'] > b['power']:
             return a
         else:
             return b
 
-    elif type.is_generic_numeric(a):
+    elif type.is_generic(a):
         return b
 
-    elif type.is_generic_numeric(b):
+    elif type.is_generic(b):
         return a
 
     return a
@@ -924,10 +924,10 @@ def do_value_call(x):
                 if forms != []:
                     form = forms[j]
                     if form in ['i', 'd', 'x']:
-                        if not type.is_numeric(arg_type):
+                        if not type.is_integer(arg_type):
                             warning("expected numeric value", a['ti'])
                     elif form == 's':
-                        if not type.is_ptr_to_string(arg_type):
+                        if not type.is_pointer_to_string(arg_type):
                             warning("expected pointer to string", a['ti'])
                     elif form == 'f':
                         if not type.is_float(arg_type):
@@ -972,7 +972,7 @@ def do_value_index(x):
     typ = a['type']
 
     # check if left type is valid
-    if not (type.is_array(typ) or type.is_pointer(typ) or type.is_ptr_to_string(typ)):
+    if not (type.is_array(typ) or type.is_pointer(typ) or type.is_pointer_to_string(typ)):
         error("expected array or pointer to array", x)
         return hlir_value_bad(x['left']['ti'])
 

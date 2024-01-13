@@ -362,10 +362,6 @@ def is_enum(t):
     return t['kind'] == 'enum'
 
 
-def is_numeric(t):
-    return t['kind'] in ['int', 'float']
-
-
 def is_bool(t):
     return t['kind'] == 'Bool'
 
@@ -396,28 +392,6 @@ def is_float(t):
     return t['kind'] == 'float'
 
 
-def is_record(t):
-    return t['kind'] == 'record'
-
-
-
-def is_string(t):
-    return is_array_of_char(t)
-
-
-def is_generic_string(t):
-    if not is_generic(t):
-        return False
-    return is_array_of_char(t)
-
-
-def is_ptr_to_string(t):
-    if not is_pointer(t):
-        return False
-
-    return is_string(t['to'])
-
-
 # WARNING: Generic int type can be
 # not signed and not unsigned at same time (!)
 # (because we dont know how it will be used)
@@ -440,16 +414,24 @@ def is_unsigned(t):
 
 
 
-def is_generic_numeric(t):
-    return is_generic(t) and is_numeric(t)
-
-
 def is_generic_integer(t):
     return is_generic(t) and is_integer(t)
 
 
+def is_func(t):
+    return t['kind'] == 'func'
+
+
+def is_record(t):
+    return t['kind'] == 'record'
+
+
 def is_generic_record(t):
     return is_generic(t) and is_record(t)
+
+
+def is_array(t):
+    return t['kind'] == 'array'
 
 
 def is_generic_array(t):
@@ -466,31 +448,6 @@ def is_generic_string(t):
     return False
 
 
-
-def is_pointer(t):
-    return t['kind'] in ['pointer', 'FreePointer', 'Nil']
-
-
-def is_free_pointer(t):
-    return t['kind'] == 'FreePointer'
-
-
-def is_nil(t):
-    return t['kind'] == 'Nil'
-
-
-def is_array(t):
-    return t['kind'] == 'array'
-
-
-def is_func(t):
-    return t['kind'] == 'func'
-
-
-def is_opaque(t):
-    return t['kind'] == 'opaque'
-
-
 def is_defined_array(t):
     if is_array(t):
         return t['volume'] != None
@@ -501,6 +458,34 @@ def is_undefined_array(t):
     if is_array(t):
         return t['volume'] == None
     return False
+
+
+def is_array_of_char(t):
+    if not is_array(t):
+        return False
+
+    if not is_char(t['of']):
+        return False
+
+    return True
+
+
+def is_string(t):
+    return is_array_of_char(t)
+
+
+def is_pointer(t):
+    return t['kind'] in ['pointer', 'FreePointer', 'Nil']
+
+
+def is_free_pointer(t):
+    return t['kind'] == 'FreePointer'
+
+
+def is_pointer_to_record(t):
+    if not is_pointer(t):
+        return False
+    return is_record(t['to'])
 
 
 def is_pointer_to_array(t):
@@ -521,29 +506,24 @@ def is_pointer_to_undefined_array(t):
     return is_undefined_array(t['to'])
 
 
-def is_pointer_to_record(t):
-    if not is_pointer(t):
-        return False
-    return is_record(t['to'])
-
-
-
-def is_array_of_char(t):
-    if not is_array(t):
-        return False
-
-    if not is_char(t['of']):
-        return False
-
-    return True
-
-
-def is_ptr_to_arr_of_char(t):
+def is_pointer_to_string(t):
     if not is_pointer(t):
         return False
 
-    return is_array_of_char(t['to'])
+    return is_string(t['to'])
 
+
+
+
+def is_nil(t):
+    return t['kind'] == 'Nil'
+
+
+
+
+
+def is_opaque(t):
+    return t['kind'] == 'opaque'
 
 
 
