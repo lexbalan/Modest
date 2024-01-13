@@ -35,22 +35,6 @@ def hlir_id(str_id, ti=None):
     return {'isa': 'id', 'str': str_id, 'ti': ti}
 
 
-def hlir_type(kind, id=None, generic=False, width=0, ops=[], att=[], ti=None):
-    size = nbytes_for_bits(width)
-    return {
-        'isa': 'type',
-        'kind': kind,
-        'id': id,
-        'width': width,
-        'size': size,
-        'align': size,
-        'generic': False,
-        'att': att,
-        'ops': ops,
-        'ti': ti
-    }
-
-
 def hlir_type_bad(ti=None):
     return {
         'isa': 'type',
