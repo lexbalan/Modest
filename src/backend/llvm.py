@@ -281,7 +281,7 @@ def llvm_print_value_record(x):
 
 def llvm_print_value_str(x):
     string_of = x['type']['to']['of']
-    char_width = string_of['power']
+    char_width = string_of['width']
     str_len = x['len']
     out("bitcast ([%d x i%d]* @%s to [0 x i%d]*)" % (str_len, char_width, x['id'], char_width))
 
@@ -566,7 +566,7 @@ def print_type(t, print_aka=True):
         # иногда сюда залетают дженерики например в to левое:
         # let p = 0x12345678 to *Nat32
         if type.is_generic_integer(t):
-            out("i%d" % t['power'])
+            out("i%d" % t['width'])
             return
 
         if 'id' in t:
@@ -766,10 +766,10 @@ def select_cast_operator(a, b):
         if type.is_integer(b) or type.is_char(b) or type.is_bool(b):
             signed = type.is_integer_signed(b)
 
-            if a['power'] < b['power']:
+            if a['width'] < b['width']:
                 return 'sext' if signed else 'zext'
 
-            elif a['power'] > b['power']:
+            elif a['width'] > b['width']:
                 return 'trunc'
 
             else:
@@ -792,8 +792,8 @@ def select_cast_operator(a, b):
 
         # Float -> Float
         elif type.is_float(b):
-            if a['power'] < b['power']: return 'fpext'
-            elif a['power'] > b['power']: return 'fptrunc'
+            if a['width'] < b['width']: return 'fpext'
+            elif a['width'] > b['width']: return 'fptrunc'
             else: return 'bitcast'
 
     return 'uncast<%s -> %s>' % (a['kind'], b['kind'])
@@ -808,7 +808,7 @@ def do_eval_expr_cast_immediate(x):
     # строки печатаются ТОЛЬКО отсюда!
     if type.is_pointer_to_string(to_type):
         string_of = to_type['to']['of']
-        char_pow = string_of['power']
+        char_pow = string_of['width']
         return llvm_value_str(x['strid'], x['imm'], x['type'], value)
 
     return do_eval_literal(x)
@@ -1446,11 +1446,11 @@ def print_strings(strings):
             strno = strno + 1
             strid = 'str%d' % strno
 
-        char_power = string['type']['to']['of']['power']
+        char_width = string['type']['to']['of']['width']
 
         string['strid'] = strid
 
-        print_string_as_array(strid, string, char_power)
+        print_string_as_array(strid, string, char_width)
 
 
 

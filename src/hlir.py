@@ -35,6 +35,20 @@ def hlir_id(str_id, ti=None):
     return {'isa': 'id', 'str': str_id, 'ti': ti}
 
 
+def hlir_type(kind, generic=False, width=0, ops=[], att=[], ti=None):
+    size = nbytes_for_bits(width)
+    return {
+        'isa': 'type',
+        'kind': kind,
+        'width': width,
+        'size': size,
+        'align': size,
+        'generic': False,
+        'att': att,
+        'ops': ops,
+        'ti': ti
+    }
+
 
 def hlir_type_bad(ti=None):
     return {
@@ -57,23 +71,23 @@ def hlir_type_unit():
         'llvm_alias': 'void',
         'size': 0,
         'align': 0,
-        'power': 0,
-        'imm': {},
+        'width': 0,
+        #'imm': {},
         'att': [],
         'ops': CONS_OP,
         'ti': None
     }
 
 
-def hlir_type_integer(id_str, power, generic=False, signed=True, ti=None):
-    size = nbytes_for_bits(power)
+def hlir_type_integer(id_str, width, generic=False, signed=True, ti=None):
+    size = nbytes_for_bits(width)
     return {
         'isa': 'type',
         'kind': 'int',
         'id': hlir_id(id_str),
         'generic': generic,
         'att': [],
-        'power': power,
+        'width': width,
         'signed': signed,
         'size': size,
         'align': size,
@@ -89,7 +103,7 @@ def hlir_type_bool(ti):
         'id': hlir_id('Bool'),
         'generic': False,
         'att': [],
-        'power': 1,
+        'width': 1,
         'size': 1,
         'align': 1,
         'c_alias': 'uint8_t',
@@ -101,15 +115,15 @@ def hlir_type_bool(ti):
 
 
 
-def hlir_type_generic_char(power, ti=None):
-    size = nbytes_for_bits(power)
+def hlir_type_generic_char(width, ti=None):
+    size = nbytes_for_bits(width)
     return {
         'isa': 'type',
         'kind': 'char',
         'id': hlir_id('Char'),
         'generic': True,
         'att': [],
-        'power': power,
+        'width': width,
         'cm_alias': 'Char',
         'c_alias': 'uint32_t',
         'llvm_alias': 'i8',
@@ -120,15 +134,15 @@ def hlir_type_generic_char(power, ti=None):
     }
 
 
-def hlir_type_char(id_str, power, generic=False, ti=None):
-    size = nbytes_for_bits(power)
+def hlir_type_char(id_str, width, generic=False, ti=None):
+    size = nbytes_for_bits(width)
     return {
         'isa': 'type',
         'kind': 'char',
         'id': hlir_id(id_str),
         'generic': generic,
         'att': [],
-        'power': power,
+        'width': width,
         'size': size,
         'align': size,
         'ops': CHAR_OPS,
@@ -136,15 +150,15 @@ def hlir_type_char(id_str, power, generic=False, ti=None):
     }
 
 
-def hlir_type_float(id_str, power, ti):
-    size = nbytes_for_bits(power)
+def hlir_type_float(id_str, width, ti):
+    size = nbytes_for_bits(width)
     return {
         'isa': 'type',
         'kind': 'float',
         'id': hlir_id(id_str),
         'generic': False,
         'att': [],
-        'power': power,
+        'width': width,
         'size': size,
         'align': size,
         'c_alias': 'double',
@@ -162,7 +176,7 @@ def hlir_type_pointer(to, ti=None):
         'to': to,
         'size': size,
         'align': size,
-        'power': ptr_width,
+        'width': ptr_width,
         'att': [],
         'ops': PTR_OPS,
         'ti': ti
@@ -179,7 +193,7 @@ def hlir_type_free_pointer(ti):
         'to': type.typeUnit,
         'size': size,
         'align': size,
-        'power': ptr_width,
+        'width': ptr_width,
         'att': [],
         'ops': PTR_OPS,
         'ti': ti
@@ -196,7 +210,7 @@ def hlir_type_nil(ti):
         'to': type.typeUnit,
         'size': size,
         'align': size,
-        'power': ptr_width,
+        'width': ptr_width,
         'att': [],
         'ops': PTR_OPS,
         'ti': ti
@@ -231,7 +245,7 @@ def hlir_type_array(of, volume=None, generic=False, ti=None):
 
 # used in shifts
 def hlir_type_generic_int_bits(nbits, ti=None):
-    return hlir_type_integer('Integer', power=nbits, generic=True, ti=ti)
+    return hlir_type_integer('Integer', width=nbits, generic=True, ti=ti)
 
 
 def hlir_type_generic_int_for(num, unsigned=False, ti=None):
@@ -321,12 +335,12 @@ def hlir_value_int(num, typ=None, ti=None):
     else:
         nbits = nbits_for_num(num)
 
-        if nbits > typ['power']:
+        if nbits > typ['width']:
             from error import error
             error("value size not corresponded type size", ti)
             1 / 0
             #print("nbits = %d" % nbits)
-            #print("typ['power'] = %d" % typ['power'])
+            #print("typ['width'] = %d" % typ['width'])
             return hlir_value_bad(ti)
 
     return hlir_value_literal(typ, num, ti)
@@ -345,7 +359,7 @@ def hlir_value_char(char_code, type=None, ti=None):
 
 
 def hlir_value_float(num, ti=None):
-    typ = hlir_type_float('Float', power=flt_width, ti=ti)
+    typ = hlir_type_float('Float', width=flt_width, ti=ti)
     typ['generic'] = True
     return hlir_value_literal(typ, num, ti)
 

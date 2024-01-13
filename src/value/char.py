@@ -9,11 +9,11 @@ from util import nbits_for_num
 
 def value_cons_char_immediate(v, t, ti):
     #info("value_cons_char_immediate", ti)
-    power = t['power']
+    width = t['width']
     imm = v['imm']
-    v_power = v['type']['power']
+    v_width = v['type']['width']
 
-    if v_power > power:
+    if v_width > width:
         error("char overflow", ti)
 
     return hlir_value_cast_immediate(v, t, ti)

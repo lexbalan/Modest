@@ -24,7 +24,7 @@ def value_print(x, msg="here"):
 
 
 def str_used_as(string_value, typ):
-    """p = typ['power']
+    """p = typ['width']
     imm = string_value['imm']
     if p == 8: imm['used_char8'] = True
     elif p == 16: imm['used_char16'] = True

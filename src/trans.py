@@ -487,10 +487,10 @@ def do_value_shift(x):
             # иначе - проверим влезает ли результат
             if type.is_generic(l['type']):
                 # расширяем generic int тип чтобы в нем можно было сдвигать
-                l['type']['power'] = nbits #!
+                l['type']['width'] = nbits #!
                 res_t = hlir_type_generic_int_bits(nbits, ti=ti)
             else:
-                if nbits > l['type']['power']:
+                if nbits > l['type']['width']:
                     error("data loss left shift", ti)
                 res_t = l['type']
 
@@ -527,7 +527,7 @@ def do_value_shift(x):
 # select result type of common binary operation
 def bin_type_select(a, b):
     if type.is_generic(a) and type.is_generic(b):
-        if a['power'] > b['power']:
+        if a['width'] > b['width']:
             return a
         else:
             return b

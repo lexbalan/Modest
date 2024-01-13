@@ -23,7 +23,7 @@ def value_cons_float(v, t, ti, method):
         if type.is_integer(vt) or type.is_float(vt):
             # (GenericInt or GenericFloat) -> Float
             nv = value_cons_float_immediate(v, t, ti)
-            nv['imm'] = float_value_pack(float(nv['imm']), t['power'])
+            nv['imm'] = float_value_pack(float(nv['imm']), t['width'])
             return nv
 
 
@@ -56,12 +56,12 @@ def value_cons_float(v, t, ti, method):
 
 
 
-def float_value_pack(f_num, power):
+def float_value_pack(f_num, width):
     import struct
     z = 0
-    if power == 32:
+    if width == 32:
         z = struct.unpack('<f', struct.pack('<f', f_num))[0]
-    elif power == 64:
+    elif width == 64:
         z = struct.unpack('<d', struct.pack('<d', f_num))[0]
     else:
         fatal("too big float, float_value_pack not implemented")

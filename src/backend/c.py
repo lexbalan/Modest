@@ -304,8 +304,8 @@ def print_type2(t, print_aka, need_space_after, _print_array_asis):
     if type.is_generic_integer(t):
         # если пришел generic - подберем подходящий тип
         # ex: let x = 1; func(x)
-        power = t['power']
-        nt = type.select_integer_type(power, is_signed=type.is_integer_signed(t))
+        width = t['width']
+        nt = type.select_integer_type(width, is_signed=type.is_integer_signed(t))
         if nt == None:
             error("cannot select integer type for too big value", t['ti'])
             return
@@ -637,8 +637,8 @@ def print_value_cast_immediate(v, ctx):
 
     if type.is_pointer_to_string(to_type):
         if type.is_string(from_type):
-            char_power = to_type['to']['of']['power']
-            print_value_literal_str(v, ctx=[], char_power=char_power)
+            char_width = to_type['to']['of']['width']
+            print_value_literal_str(v, ctx=[], char_width=char_width)
             return
 
     # GenericChar -> vast_immediate -> Char
@@ -713,7 +713,7 @@ def print_value_cast(x, ctx):
             print_type(to_type)
             out(")")
             #out("/*?*/")
-            nat_same_sz = type.select_nat(from_type['power'])
+            nat_same_sz = type.select_nat(from_type['width'])
             print_cast(nat_same_sz, value, ctx)
             out(")")
             return
@@ -755,7 +755,7 @@ def print_array_values(values):
 def print_value_literal_arr(v, ctx):
     if type.is_string(v['type']):
         char_type = v['type']['of']
-        char_power = char_type['power']
+        char_width = char_type['width']
         if type.is_generic_string(v['type']):
             # FIXIT: вообще нефиг печатать generic string (!)
             out('{} /*GENERIC-STRING*/')
@@ -770,7 +770,7 @@ def print_value_literal_arr(v, ctx):
                 for c in values:
                     xc = c['imm']
                     utf32_codes.append(xc)
-                _print_string_literal(utf32_codes, width=char_power)
+                _print_string_literal(utf32_codes, width=char_width)
                 return
 
 
@@ -910,15 +910,15 @@ def _print_string_literal(utf32_codes, width=8):
     out("\"")
 
 
-def print_value_literal_str(x, ctx, char_power=8):
+def print_value_literal_str(x, ctx, char_width=8):
     utf32_codes = []
-    if char_power == 8:
+    if char_width == 8:
         utf32_codes = utf8_cc_arr_to_utf32_cc_arr(x['imm'])
-    elif char_power == 16:
+    elif char_width == 16:
         utf32_codes = utf16_cc_arr_to_utf32_cc_arr(x['imm'])
-    elif char_power == 32:
+    elif char_width == 32:
         utf32_codes = x['imm']
-    _print_string_literal(utf32_codes, char_power)
+    _print_string_literal(utf32_codes, char_width)
 
 
 
@@ -930,12 +930,12 @@ def print_value_literal_char(x, ctx):
         out("'\\0'")
         return
 
-    power = x['type']['power']
+    width = x['type']['width']
 
     prefix = ""
-    if power == 32 or num > 0xFFFF:
+    if width == 32 or num > 0xFFFF:
         prefix = "U"
-    elif power == 16 or num > 0x7F:
+    elif width == 16 or num > 0x7F:
         prefix = "u"
 
     out(prefix)
@@ -955,7 +955,7 @@ def print_value_literal_int(x, ctx):
     num = x['imm']
 
     # Big Number?
-    if x['type']['power'] > 64:
+    if x['type']['width'] > 64:
         if nbits_for_num(num):
             # print Big Numbers
             high64 = (num >> 64) & 0xFFFFFFFFFFFFFFFF
@@ -986,7 +986,7 @@ def print_value_literal_int(x, ctx):
             out(str(num))
 
 
-    nbits = x['type']['power']
+    nbits = x['type']['width']
 
     if type.is_integer_unsigned(x['type']):
         out("U")

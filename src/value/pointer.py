@@ -39,7 +39,7 @@ def cons_ptr_to_str_from_generic_str(v, t, ti, method):
     from util import str2utf8, str2utf16, str2utf32
     from trans import module_strings_add
 
-    char_pow = t['to']['of']['power']
+    char_pow = t['to']['of']['width']
 
     method = str2utf8
     if char_pow == 16: method = str2utf16
@@ -119,7 +119,7 @@ def value_cons_pointer(v, t, ti, method):
 
         else:
             from trans import ptr_width
-            if vtype['power'] > ptr_width:
+            if vtype['width'] > ptr_width:
                 error("cons pointer from biggest integer", ti)
             nv = hlir_value_cast(v, t, ti=ti)
 

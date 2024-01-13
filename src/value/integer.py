@@ -9,10 +9,10 @@ from .value import *
 no_warning_cast_data_loss = False
 
 
-def check_power(vtype, t, method, ti):
+def check_width(vtype, t, method, ti):
     rv = True
 
-    if vtype['power'] > t['power']:
+    if vtype['width'] > t['width']:
         if method == 'explicit':
             if not no_warning_cast_data_loss:
                 from main import features
@@ -36,10 +36,10 @@ def check_power(vtype, t, method, ti):
 
 def value_cons_integer_immediate(v, t, ti):
     #info("value_cons_int_immediate", ti)
-    power = t['power']
-    need_power = nbits_for_num(v['imm'])
+    width = t['width']
+    need_width = nbits_for_num(v['imm'])
 
-    if need_power > power:
+    if need_width > width:
         error("integer overflow", ti)
 
     return hlir_value_cast_immediate(v, t, ti)
@@ -54,7 +54,7 @@ def value_cons_integer(v, t, ti, method):
 
     if type.is_generic_integer(vtype):
         # GenericInt -> Int
-        check_power(vtype, t, method, ti)
+        check_width(vtype, t, method, ti)
 
         if not t['signed']:
             if v['imm'] < 0:
@@ -67,7 +67,7 @@ def value_cons_integer(v, t, ti, method):
 
         if type.is_integer(vtype) or type.is_char(vtype) or type.is_bool(vtype):
             # (Int or Char) -> Int
-            check_power(vtype, t, method, ti)
+            check_width(vtype, t, method, ti)
             nv = hlir_value_cast(v, t, ti)
 
         elif type.is_float(vtype):
@@ -78,7 +78,7 @@ def value_cons_integer(v, t, ti, method):
                 imm_fltval = v['imm']
                 imm_intval = int(imm_fltval)
                 typ = hlir_type_generic_int_for(imm_intval, unsigned=True, ti=ti)
-                check_power(typ, t, method, ti)
+                check_width(typ, t, method, ti)
                 nv['imm'] = imm_intval
                 return v  # (!)
 
