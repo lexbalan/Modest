@@ -1099,13 +1099,12 @@ def do_value_str(x):
 def do_value_array(x):
     items = []
     for item in x['items']:
-
         if item['isa'] == 'ast_comment':
             continue
 
-        vi = do_value(item)
-        vi['nl'] = item['nl']
-        items.append(vi)
+        item_value = do_value(item)
+        item_value['nl'] = item['nl']
+        items.append(item_value)
 
     length = len(x['items'])
 
@@ -1113,53 +1112,49 @@ def do_value_array(x):
     if length > 0:
         of = items[0]['type']
 
-    y = hlir_value_array(items, ti=x['ti'])
-    y['nl_end'] = x['nl_end']
-    return y
+    v = hlir_value_array(items, ti=x['ti'])
+    v['nl_end'] = x['nl_end']
+    return v
 
 
 def do_value_record(x):
-    items = []
+    initializers = []
     fields = []
-    i = 0
     for item in x['items']:
-
         if item['isa'] == 'ast_comment':
             continue
 
-        id = item['id']
-
-        val = do_value(item['value'])
-        items.append({
+        item_id = item['id']
+        item_value = do_value(item['value'])
+        initializers.append({
             'isa': 'initializer',
-            'id': id,
-            'value': val,
+            'id': item_id,
+            'value': item_value,
             'nl': item['nl'],
             'att': [],
             'ti': item['ti']
         })
 
-        # создаем поле для типа generic записи
-        field = hlir_field(id, val['type'], pos=i, ti=val['ti'])
+        # создаем поле для generic record
+        field = hlir_field(item_id, item_value['type'], ti=item['ti'])
         fields.append(field)
-        i = i + 1
 
-    record_type = hlir_type_record(fields, generic=True, ti=x['ti'])
-    y = hlir_value_record(record_type, items, ti=x['ti'])
-    y['nl_end'] = x['nl_end']
-    return y
+    generic_record_type = hlir_type_record(fields, generic=True, ti=x['ti'])
+    v = hlir_value_record(generic_record_type, initializers, ti=x['ti'])
+    v['nl_end'] = x['nl_end']
+    return v
 
 
 
 def do_value_int(x):
-    rv = hlir_value_int(x['num'], ti=x['ti'])
+    v = hlir_value_int(x['num'], ti=x['ti'])
 
-    rv['nsigns'] = x['nsigns']
+    v['nsigns'] = x['nsigns']
 
     if 'hexadecimal' in x['att']:
-        value_attribute_add(rv, 'hexadecimal')
+        value_attribute_add(v, 'hexadecimal')
 
-    return rv
+    return v
 
 
 def do_value_float(x):
