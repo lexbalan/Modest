@@ -28,7 +28,6 @@ typeGenericChar = None
 typeChar8 = None
 typeChar16 = None
 typeChar32 = None
-typeGenericString = None
 typeStr8 = None
 typeStr16 = None
 typeStr32 = None
@@ -43,7 +42,7 @@ def type_init():
     global typeFloat16, typeFloat32, typeFloat64
     global typeDecimal32, typeDecimal64, typeDecimal128
     global typeGenericChar, typeChar8, typeChar16, typeChar32
-    global typeGenericString, typeStr8, typeStr16, typeStr32
+    global typeStr8, typeStr16, typeStr32
     global typeFreePtr, typeNil
     global typeVA_List
 
@@ -126,8 +125,7 @@ def type_init():
     typeDecimal128['llvm_alias'] = 'double'
 
 
-    typeGenericChar = hlir_type_generic_char(width=0, ti=None)
-
+    typeGenericChar = hlir_type_char(None, width=0, generic=True, ti=None)
 
     typeChar8 = hlir_type_char("Char8", width=8, ti=None)
     typeChar8['c_alias'] = 'char' #'uint8_t'
@@ -140,11 +138,6 @@ def type_init():
     typeChar32 = hlir_type_char("Char32", width=32, ti=None)
     typeChar32['c_alias'] = 'uint32_t'
     typeChar32['llvm_alias'] = 'i32'
-
-    """typeGenericString = hlir_type_generic_str(ti=None)
-    typeGenericString['cm_alias'] = 'String'
-    typeGenericString['c_alias'] = 'const char *'
-    typeGenericString['llvm_alias'] = 'i8*'"""
 
     typeStr8 = hlir_type_array(of=typeChar8)
     typeStr16 = hlir_type_array(of=typeChar16)

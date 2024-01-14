@@ -489,7 +489,7 @@ def do_value_shift(x):
             if type.is_generic(l['type']):
                 # расширяем generic int тип чтобы в нем можно было сдвигать
                 l['type']['width'] = nbits #!
-                res_t = hlir_type_generic_int_bits(nbits, ti=ti)
+                res_t = hlir_type_integer(None, width=nbits, generic=True, ti=ti)
             else:
                 if nbits > l['type']['width']:
                     error("data loss left shift", ti)
@@ -508,7 +508,8 @@ def do_value_shift(x):
 
             t = l['type']
             if type.is_generic(l['type']):
-                t = hlir_type_generic_int_bits(nbits, ti=ti)
+                t = hlir_type_integer(None, width=nbits, generic=True, ti=ti)
+
 
             v = hlir_value_bin(op, l, r, t, ti=ti)
             v['imm'] = imm_result
@@ -1891,22 +1892,10 @@ def def_func(x):
     return hlir_def_func(fn)
 
 
-
 def decl_type(x):
     id = x['id']
-
     #info("decl_type " + id['str'], x['ti'])
-
-    nt = {
-        'isa': 'type',
-        'kind': 'opaque',
-        'id': None,
-        'generic': False,
-        'id': id,
-        'att': [],
-        'ti': id['ti'],
-    }
-
+    nt = hlir_type_opaque(id, x['ti'])
     module['context'].type_add(id['str'], nt)
 
     # С не печатает opaque, но LLVM печатает (!)

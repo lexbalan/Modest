@@ -88,13 +88,6 @@ def value_is_zero(x):
 
 
 
-def value_generic_char(c, ti=None):
-    char_code = ord(c)
-    typ = hlir_type_generic_char(nbits_for_num(char_code), ti=ti)
-    return hlir_value_int(char_code, typ=typ, ti=ti)
-
-
-
 def value_load(x):
     return x
 

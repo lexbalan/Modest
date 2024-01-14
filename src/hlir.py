@@ -31,8 +31,31 @@ def hlir_init():
 
 
 
+######################################################################
+#                          HLIR COMMON                               #
+######################################################################
+
+
 def hlir_id(str_id, ti=None):
     return {'isa': 'id', 'str': str_id, 'ti': ti}
+
+
+def hlir_field(id, type, pos=0, offset=0, ti=None):
+    return {
+        'isa': 'field',
+        'id': id,
+        'type': type,
+        'field_no': pos,
+        'offset': offset,
+        'nl': 0,
+        'ti': ti
+    }
+
+
+
+######################################################################
+#                            HLIR TYPE                               #
+######################################################################
 
 
 def hlir_type_bad(ti=None):
@@ -67,22 +90,6 @@ def hlir_type_unit():
     }
 
 
-def hlir_type_integer(id_str, width, generic=False, signed=True, ti=None):
-    size = nbytes_for_bits(width)
-    return {
-        'isa': 'type',
-        'kind': 'int',
-        'id': hlir_id(id_str),
-        'generic': generic,
-        'width': width,
-        'size': size,
-        'align': size,
-        'signed': signed,
-        'ops': INT_OPS,
-        'att': [],
-        'ti': ti
-    }
-
 
 def hlir_type_bool(ti):
     return {
@@ -103,31 +110,17 @@ def hlir_type_bool(ti):
 
 
 
-def hlir_type_generic_char(width, ti=None):
-    size = nbytes_for_bits(width)
-    return {
-        'isa': 'type',
-        'kind': 'char',
-        'id': hlir_id('Char'),
-        'generic': True,
-        'width': width,
-        'size': size,
-        'align': size,
-        'cm_alias': 'Char',
-        'c_alias': 'uint32_t',
-        'llvm_alias': 'i8',
-        'ops': EQ_OPS,
-        'att': [],
-        'ti': ti
-    }
-
-
 def hlir_type_char(id_str, width, generic=False, ti=None):
     size = nbytes_for_bits(width)
+
+    id = None
+    if id_str != None:
+        id = hlir_id(id_str)
+
     return {
         'isa': 'type',
         'kind': 'char',
-        'id': hlir_id(id_str),
+        'id': id,
         'generic': generic,
         'width': width,
         'size': size,
@@ -136,6 +129,24 @@ def hlir_type_char(id_str, width, generic=False, ti=None):
         'att': [],
         'ti': ti
     }
+
+
+def hlir_type_integer(id_str, width, generic=False, signed=True, ti=None):
+    size = nbytes_for_bits(width)
+    return {
+        'isa': 'type',
+        'kind': 'int',
+        'id': hlir_id(id_str),
+        'generic': generic,
+        'width': width,
+        'size': size,
+        'align': size,
+        'signed': signed,
+        'ops': INT_OPS,
+        'att': [],
+        'ti': ti
+    }
+
 
 
 def hlir_type_float(id_str, width, ti):
@@ -236,26 +247,10 @@ def hlir_type_array(of, volume=None, generic=False, ti=None):
     }
 
 
-# used in shifts
-def hlir_type_generic_int_bits(nbits, ti=None):
-    return hlir_type_integer('Integer', width=nbits, generic=True, ti=ti)
-
 
 def hlir_type_generic_int_for(num, unsigned=False, ti=None):
     nbits = nbits_for_num(num)
-    return hlir_type_generic_int_bits(nbits, ti=ti)
-
-
-def hlir_field(id, type, pos=0, offset=0, ti=None):
-    return {
-        'isa': 'field',
-        'id': id,
-        'type': type,
-        'field_no': pos,
-        'offset': offset,
-        'nl': 0,
-        'ti': ti
-    }
+    return hlir_type_integer(None, width=nbits, generic=True, ti=ti)
 
 
 def hlir_type_record(fields, size=0, align=0, ti=None):
@@ -292,6 +287,21 @@ def hlir_type_func(params, to, ti=None):
     }
 
 
+def hlir_type_opaque(id, ti=None):
+    return {
+        'isa': 'type',
+        'kind': 'opaque',
+        'id': id,
+        'generic': False,
+        'att': [],
+        'ti': ti
+    }
+
+
+
+######################################################################
+#                           HLIR VALUE                               #
+######################################################################
 
 
 def hlir_value_bad(ti=None):
@@ -345,11 +355,10 @@ def hlir_value_int(num, typ=None, ti=None):
 
 
 def hlir_value_char(char_code, type=None, ti=None):
-
     if type == None:
-        # Generic CHar
+        # if type not specified, set type as GenericChar
         char_width = nbits_for_num(char_code)
-        type = hlir_type_generic_char(char_width, ti)
+        type = hlir_type_char(None, char_width, generic=True, ti=ti)
 
     return hlir_value_literal(type, char_code, ti)
 
