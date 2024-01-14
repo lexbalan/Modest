@@ -452,7 +452,7 @@ def is_generic_array(t):
 
 
 def is_generic_string(t):
-    if is_generic_array(t):
+    if is_array(t):
         if t['of'] != None: #!
             return is_generic_char(t['of'])
 
@@ -471,7 +471,7 @@ def is_forbidden_var(t, zero_array_forbidden=True):
         return True
 
     # [0]Int, []Int, [n]<Forbidden>
-    if is_array(t):
+    if is_undefined_array(t):
         # is undefined array?
         if t['volume'] == None:
             return True
@@ -480,7 +480,7 @@ def is_forbidden_var(t, zero_array_forbidden=True):
         # It can't be 0 sized (can only with 'unsafe' compiler flag)
         from main import features
         if zero_array_forbidden or not features.get('unsafe'):
-            if t['volume'] == 0:
+            if t['volume']['imm'] == 0:
                 return True
 
         return is_forbidden_var(t['of'])
