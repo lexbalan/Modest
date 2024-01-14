@@ -493,13 +493,13 @@ def hlir_value_index_array(array, index, ti=None):
     }
 
 
-def hlir_value_index_array_by_ptr(ptr, index, ti=None):
+def hlir_value_index_array_by_ptr(ptr_to_array, index, ti=None):
     return {
         'isa': 'value',
         'kind': 'index_ptr',
-        'pointer': ptr,
+        'pointer': ptr_to_array,
         'index': index,
-        'type': ptr['type']['to']['of'],
+        'type': ptr_to_array['type']['to']['of'],
         'att': [],
         'ti': ti
     }
@@ -518,13 +518,13 @@ def hlir_value_access_record(record, field, ti=None):
     }
 
 
-def hlir_value_access_record_by_ptr(record, field, ti=None):
+def hlir_value_access_record_by_ptr(ptr_to_record, field, ti=None):
     return {
         'isa': 'value',
         'kind': 'access_ptr',
-        'pointer': record,
+        'pointer': ptr_to_record,
         'field': field,
-        'record_type': record['type']['to'],
+        'record_type': ptr_to_record['type']['to'],
         'type': field['type'],
         'att': [],
         'ti': ti
