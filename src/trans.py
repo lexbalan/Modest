@@ -1975,12 +1975,9 @@ def comm_block(x):
     return y
 
 
-
 def proc(ast, source_info):
     global module
     old_module = module
-
-    #print("PROC: id = %s" % id)
 
     new_context = root_context.branch()
 
@@ -1994,7 +1991,6 @@ def proc(ast, source_info):
         'options': [],
         'text': []
     }
-
 
     for x in ast:
         isa = x['isa']
