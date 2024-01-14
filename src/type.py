@@ -49,27 +49,22 @@ def type_init():
     typeUnit = hlir_type_unit()
 
     typeInt8 = hlir_type_integer("Int8", width=8, ti=None)
-    typeInt8['signed'] = True
     typeInt8['c_alias'] = 'int8_t'
     typeInt8['llvm_alias'] = 'i8'
 
     typeInt16 = hlir_type_integer("Int16", width=16, ti=None)
-    typeInt16['signed'] = True
     typeInt16['c_alias'] = 'int16_t'
     typeInt16['llvm_alias'] = 'i16'
 
     typeInt32 = hlir_type_integer("Int32", width=32, ti=None)
-    typeInt32['signed'] = True
     typeInt32['c_alias'] = 'int32_t'
     typeInt32['llvm_alias'] = 'i32'
 
     typeInt64 = hlir_type_integer("Int64", width=64, ti=None)
-    typeInt64['signed'] = True
     typeInt64['c_alias'] = 'int64_t'
     typeInt64['llvm_alias'] = 'i64'
 
     typeInt128 = hlir_type_integer("Int128", width=128, ti=None)
-    typeInt128['signed'] = True
     typeInt128['c_alias'] = '__int128'
     typeInt128['llvm_alias'] = 'i128'
 
@@ -142,7 +137,6 @@ def type_init():
     typeStr8 = hlir_type_array(of=typeChar8)
     typeStr16 = hlir_type_array(of=typeChar16)
     typeStr32 = hlir_type_array(of=typeChar32)
-
 
     typeFreePtr = hlir_type_free_pointer(ti=None)
 
@@ -256,9 +250,6 @@ def eq_opaque(a, b, opt):
 
 
 def eq_alias(a, b, opt):
-    if a['att'] != b['att']:
-        return False
-
     return eq(a['of'], b['of'], opt)
 
 
