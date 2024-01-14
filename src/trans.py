@@ -1148,8 +1148,7 @@ def do_value_record(x):
 
 def do_value_int(x):
     v = hlir_value_int(x['num'], ti=x['ti'])
-
-    v['nsigns'] = x['nsigns']
+    v['nsigns'] = x['nsigns']  # number of digits in literal (for printer)
 
     if 'hexadecimal' in x['att']:
         value_attribute_add(v, 'hexadecimal')
