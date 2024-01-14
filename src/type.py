@@ -145,7 +145,6 @@ def type_init():
 
 
     typeFreePtr = hlir_type_free_pointer(ti=None)
-    typeFreePtr['generic'] = True
 
     typeNil = hlir_type_nil(ti=None)
 

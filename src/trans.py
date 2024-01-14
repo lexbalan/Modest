@@ -272,19 +272,19 @@ def init():
 # (only with -funsafe key)
 # pos - position #
 # offset - real offset (address inside container struct)
-def do_field(x, pos=0, offset=0, is_last=False):
+def do_field(x):
     t = do_type(x['type'])
 
     if type.is_bad(t):
         t = hlir_type_bad(x['type']['ti'])
 
     # get aligned field offset
-    offset = align_to(offset, type.type_get_align(t))
+    #offset = align_to(offset, type.type_get_align(t))
 
-    if type.is_forbidden_var(t, zero_array_forbidden=not is_last):
-        error("unsuitable type", x['type'])
+    #if type.is_forbidden_var(t, zero_array_forbidden=not is_last):
+    #    error("unsuitable type", x['type'])
 
-    f = hlir_field(x['id'], t, pos=pos, offset=offset, ti=x['ti'])
+    f = hlir_field(x['id'], t, ti=x['ti'])
     if 'nl' in x:
         f['nl'] = x['nl']
     else:
@@ -312,72 +312,50 @@ def do_type_id(t):
     return tx
 
 
+
 def do_type_pointer(t):
     to = do_type(t['to'])
     return hlir_type_pointer(to, ti=t['ti'])
 
 
+
 def do_type_array(t):
     of = do_type(t['of'])
 
-
-    if type.is_undefined_array(of):
-        error("cannot construct type array of undefined array", t['of']['ti'])
-        return hlir_type_bad()
+    #if type.is_undefined_array(of):
+    #    error("cannot construct type array of undefined array", t['of']['ti'])
+    #    return hlir_type_bad()
 
     volume_expr = None
     if t['size'] != None:
         volume_expr = do_value(t['size'])
-        if not value_is_immediate(volume_expr):
-            error("array dimension must be immediate", t['size']['ti'])
-            return hlir_type_bad(t['ti'])
+        #if not value_is_immediate(volume_expr):
+        #    error("array dimension must be immediate", t['size']['ti'])
+        #    return hlir_type_bad(t['ti'])
 
-    tx = hlir_type_array(of, volume=volume_expr, ti=t['ti'])
-
-    return tx
+    return hlir_type_array(of, volume=volume_expr, ti=t['ti'])
 
 
 def do_type_record(t):
     fields = []
 
-    record_align = 0
-    record_size = 0
+    for field in t['fields']:
+        f = do_field(field)
 
-    nfields = len(t['fields'])
-    i = 0
-    while i < nfields:
-        fe = t['fields'][i]
-
-        # новое поле получит смещение отталкиваясь от текущего (curr_offset)
-        f = do_field(fe, pos=i, offset=record_size, is_last=i==(nfields-1))
-
-        # двигаем смещение
-        field_size = type.type_get_size(f['type'])
-        record_size = f['offset'] + field_size
-
-        # выравнивание структуры - макс выравнивание среди ее полей
-        field_align = type.type_get_align(f['type'])
-        if field_align > record_align:
-            record_align = field_align
-
-        i = i + 1
-
+        # redefinition?
         field_id_str = f['id']['str']
-        f_exist = get_item_with_id(fields, field_id_str)
-        if f_exist != None:
-            error("redefinition of '%s'" % field_id_str, f)
+        field_already_exist = get_item_with_id(fields, field_id_str)
+        if field_already_exist != None:
+            error("redefinition of '%s' field" % field_id_str, f)
             continue
 
-        if 'comments' in fe:
-            f.update({'comments': fe['comments']})
+
+        if 'comments' in field:
+            f.update({'comments': field['comments']})
 
         fields.append(f)
 
-
-    # Afterall we need to align record_size to record_align (!)
-    record_size = align_to(record_size, record_align)
-
-    return hlir_type_record(fields, size=record_size, align=record_align, ti=t['ti'])
+    return hlir_type_record(fields, ti=t['ti'])
 
 
 
@@ -1166,10 +1144,8 @@ def do_value_record(x):
         fields.append(field)
         i = i + 1
 
-    typ = hlir_type_record(fields, ti=x['ti'])
-    typ['generic'] = True
-
-    y = hlir_value_record(typ, items, ti=x['ti'])
+    record_type = hlir_type_record(fields, generic=True, ti=x['ti'])
+    y = hlir_value_record(record_type, items, ti=x['ti'])
     y['nl_end'] = x['nl_end']
     return y
 

@@ -190,7 +190,7 @@ def hlir_type_free_pointer(ti):
         'isa': 'type',
         'kind': 'FreePointer',
         'id': None,
-        'generic': False,
+        'generic': True,
         'width': ptr_width,
         'size': size,
         'align': size,
@@ -236,7 +236,7 @@ def hlir_type_array(of, volume=None, generic=False, ti=None):
         'kind': 'array',
         'id': None,
         'generic': generic,
-        'width': 0, #!
+        'width': 0, #'width': array_size * 8,
         'size': array_size,
         'align': item_align,
         'of': of,
@@ -247,21 +247,37 @@ def hlir_type_array(of, volume=None, generic=False, ti=None):
     }
 
 
+from util import align_to
+def hlir_type_record(fields, generic=False, ti=None):
+    record_size = 0
+    record_align = 0
 
-def hlir_type_generic_int_for(num, unsigned=False, ti=None):
-    nbits = nbits_for_num(num)
-    return hlir_type_integer(None, width=nbits, generic=True, ti=ti)
+    if not generic:
+        field_no = 0
+        field_offset = 0
+        for field in fields:
+            field['field_no'] = field_no
+            field['offset'] = record_size
 
+            field_size = type.type_get_size(field['type'])
+            field_align = type.type_get_align(field['type'])
 
-def hlir_type_record(fields, size=0, align=0, ti=None):
+            record_size = record_size + field_size
+            record_align = max(record_align, field_align)
+
+            field_no = field_no + 1
+
+        # Afterall we need to align record_size to record_align (!)
+        record_size = align_to(record_size, record_align)
+
     return {
         'isa': 'type',
         'kind': 'record',
         'id': None,
-        'generic': False,
-        'width': 0, #!
-        'size': size,
-        'align': align,
+        'generic': generic,
+        'width': 0, #'width': record_size * 8,
+        'size': record_size,
+        'align': record_align,
         'fields': fields,
         'ops': REC_OPS,
         'att': [],
@@ -348,6 +364,13 @@ def hlir_value_char(char_code, type=None, ti=None):
     return hlir_value_literal(type, char_code, ti)
 
 
+
+
+
+
+def hlir_type_generic_int_for(num, unsigned=False, ti=None):
+    nbits = nbits_for_num(num)
+    return hlir_type_integer(None, width=nbits, generic=True, ti=ti)
 
 
 def hlir_value_int(num, typ=None, ti=None):
