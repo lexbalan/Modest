@@ -336,6 +336,20 @@ def hlir_value_zero(t, ti=None):
     return hlir_value_literal(t, imm_val, ti)
 
 
+
+
+
+def hlir_value_char(char_code, type=None, ti=None):
+    if type == None:
+        # if type not specified, set type as GenericChar
+        char_width = nbits_for_num(char_code)
+        type = hlir_type_char(None, char_width, generic=True, ti=ti)
+
+    return hlir_value_literal(type, char_code, ti)
+
+
+
+
 def hlir_value_int(num, typ=None, ti=None):
     if typ == None:
         typ = hlir_type_generic_int_for(num, unsigned=False, ti=ti)
@@ -351,16 +365,6 @@ def hlir_value_int(num, typ=None, ti=None):
             return hlir_value_bad(ti)
 
     return hlir_value_literal(typ, num, ti)
-
-
-
-def hlir_value_char(char_code, type=None, ti=None):
-    if type == None:
-        # if type not specified, set type as GenericChar
-        char_width = nbits_for_num(char_code)
-        type = hlir_type_char(None, char_width, generic=True, ti=ti)
-
-    return hlir_value_literal(type, char_code, ti)
 
 
 
@@ -382,8 +386,7 @@ def hlir_string_imm(string):
 
 
 
-def hlir_value_array(items, type=None, is_generic=False, ti=None):
-
+def hlir_value_array(items, type=None, ti=None):
     if type == None:
         length = len(items)
 
@@ -392,11 +395,7 @@ def hlir_value_array(items, type=None, is_generic=False, ti=None):
             of = items[0]['type']
 
         array_volume = hlir_value_int(length)
-        type = hlir_type_array(of, volume=array_volume, ti=ti)
-
-
-    if is_generic:
-        type['generic'] = True
+        type = hlir_type_array(of, volume=array_volume, generic=True, ti=ti)
 
     return hlir_value_literal(type, items, ti)
 

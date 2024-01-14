@@ -997,15 +997,10 @@ def do_value_index(x):
 
     if ptr_access:
         v = hlir_value_index_array_by_ptr(a, i, ti=x['ti'])
-
-#    elif type.is_generic_string(typ):
-#        pass
-
     else:
         v = hlir_value_index_array(a, i, ti=x['ti'])
         if value_is_immutable(a):
             v['att'].append('immutable')
-
 
     # immediate index (!)
     if value_is_immediate(a) and not ptr_access:
@@ -1025,8 +1020,6 @@ def do_value_index(x):
                 return char
 
             v['imm'] = item['imm']
-
-
 
     return v
 
@@ -1062,15 +1055,12 @@ def do_value_access(x):
     if type.is_bad(field['type']):
         return hlir_value_bad(x['field']['ti'])
 
-
-
     if ptr_access:
         v = hlir_value_access_record_by_ptr(obj, field, ti=x['ti'])
     else:
         v = hlir_value_access_record(obj, field, ti=x['ti'])
         if value_is_immutable(obj):
             v['att'].append('immutable')
-
 
     # access to immediate object
     if value_is_immediate(obj) and not ptr_access:
@@ -1145,10 +1135,9 @@ def do_value_array(x):
     if length > 0:
         of = items[0]['type']
 
-    y = hlir_value_array(items, is_generic=True, ti=x['ti'])
+    y = hlir_value_array(items, ti=x['ti'])
     y['nl_end'] = x['nl_end']
     return y
-
 
 
 def do_value_record(x):
