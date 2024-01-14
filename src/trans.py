@@ -1613,7 +1613,7 @@ def def_const(x):
     v = do_value(x['value'])
 
     if value_is_bad(v):
-        return hlir_def_const(v)
+        return hlir_def_const(v, x['ti'])
 
     if not value_is_immediate(v):
         if not value_is_ptr_to_str(v):
@@ -1635,7 +1635,7 @@ def def_const(x):
 
     module['context'].value_add(id['str'], const_value)
 
-    return hlir_def_const(const_value)
+    return hlir_def_const(const_value, x['ti'])
 
 
 
@@ -1681,7 +1681,7 @@ def def_type(x):
     else:
         module['context'].type_add(id['str'], nt)
 
-    return hlir_def_type(nt, already_declared)
+    return hlir_def_type(nt, already_declared, ti=x['ti'])
 
 
 
@@ -1718,7 +1718,7 @@ def def_var(x):
 
     module['context'].value_add(x['field']['id']['str'], var)
 
-    return hlir_def_var(var)
+    return hlir_def_var(var, x['ti'])
 
 
 
@@ -1878,7 +1878,7 @@ def def_func(x):
     if settings.check('backend', 'llvm'):
         module_remove_node(module, 'value', func_id['str'])
 
-    return hlir_def_func(fn)
+    return hlir_def_func(fn, x['ti'])
 
 
 def decl_type(x):
@@ -1888,7 +1888,7 @@ def decl_type(x):
     module['context'].type_add(id['str'], nt)
 
     # С не печатает opaque, но LLVM печатает (!)
-    declaration = hlir_decl_type(nt)
+    declaration = hlir_decl_type(nt, x['ti'])
     nt['declaration'] = declaration
 
     if x['extern']:
@@ -1944,7 +1944,7 @@ def decl_func(x):
         func['att'].append('extern')
     extend_props(func)
     module['context'].value_add(func_id['str'], func)
-    return hlir_decl_func(func)
+    return hlir_decl_func(func, x['ti'])
 
 
 

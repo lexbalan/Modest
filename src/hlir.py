@@ -595,6 +595,13 @@ def hlir_value_offsetof(of, field_id, ti=None):
     }
 
 
+
+
+######################################################################
+#                           HLIR VALUE                               #
+######################################################################
+
+
 def hlir_stmt_bad(ti=None):
     return {'isa': 'stmt', 'kind': 'bad', 'att': [], 'ti': ti}
 
@@ -697,28 +704,57 @@ def hlir_stmt_return(value=None, ti=None):
 
 
 
-
-def hlir_decl_type(type):
-    return {'isa': 'decl_type', 'type': type}
-
-
-def hlir_def_type(type, already_declared=False):
-    return {'isa': 'def_type', 'type': type, 'afterdef': already_declared}
+######################################################################
+#                        HLIR DEFINITIONS                            #
+######################################################################
 
 
-def hlir_def_const(value_const):
-    return {'isa': 'def_const', 'value': value_const}
+def hlir_decl_type(type, ti):
+    return {
+        'isa': 'decl_type',
+        'type': type,
+        'ti': ti
+    }
 
 
-def hlir_def_var(value_var):
-    return {'isa': 'def_var', 'value': value_var}
+def hlir_def_type(type, already_declared=False, ti=None):
+    return {
+        'isa': 'def_type',
+        'type': type,
+        'afterdef': already_declared,
+        'ti': ti
+    }
 
 
-def hlir_decl_func(value_func):
-    return {'isa': 'decl_func', 'value': value_func}
+def hlir_def_const(value_const, ti):
+    return {
+        'isa': 'def_const',
+        'value': value_const,
+        'ti': ti
+    }
 
 
-def hlir_def_func(value_func):
-    return {'isa': 'def_func', 'value': value_func}
+def hlir_def_var(value_var, ti):
+    return {
+        'isa': 'def_var',
+        'value': value_var,
+        'ti': ti
+    }
+
+
+def hlir_decl_func(value_func, ti):
+    return {
+        'isa': 'decl_func',
+        'value': value_func,
+        'ti': ti
+    }
+
+
+def hlir_def_func(value_func, ti):
+    return {
+        'isa': 'def_func',
+        'value': value_func,
+        'ti': ti
+    }
 
 
