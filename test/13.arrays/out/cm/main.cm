@@ -13,7 +13,16 @@ import "misc/minmax.h"
 var globalArray: [3]Int32 := [1, 2, 3]
 
 
+
+func ee(x: [10]Char8) -> Unit {
+
+}
+
+
+
 func main() -> Int {
+    ee("hi!\x0\x0\x0\x0\x0\x0\x0")
+
     var i: Int32 := 0
     while i < 3 {
         let a = globalArray[i]

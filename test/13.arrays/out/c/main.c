@@ -17,8 +17,18 @@
 int32_t globalArray[3] = {1, 2, 3};
 
 
+
+struct ee_x {char a[10];};
+void ee(struct ee_x x)
+{
+}
+
+
+
 int main(void)
 {
+    ee(*(struct ee_x *)&(struct ee_x){'h', 'i', '!', '\0', '\0', '\0', '\0', '\0', '\0', '\0'});
+
     int i = 0;
     while (i < 3) {
         const int32_t a = globalArray[i];
