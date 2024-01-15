@@ -96,63 +96,19 @@ def value_cons_array_from_array(v, t, ti, method):
     return None
 
 
-
-def value_cons_array_from_string(v, t, ti, method):
-    from_type = v['type']
-    to_type = t
-
-    if not type.is_char(to_type['of']):
-        return None
-
-    #info("cast generic string to array", ti)
-
-    # Check to:array volume vs string len
-    # "xxx" to []X | "xxx" to [n]X
-    if to_type['volume'] != None:
-        to_arr_volume = to_type['volume']['imm']
-        # v['len'] учитывает '\0'
-        if v['imm']['len'] > to_arr_volume:
-            error("too big", ti)
-            return None
-        if method == 'implicit':
-            if v['imm']['len'] < to_arr_volume:
-                print("v['imm']['len'] = " + str(v['imm']['len']))
-                print("to_arr_volume = " + str(to_arr_volume))
-                error("too short", ti)
-                return None
-
-    items = []
-    for c in v['imm']['str']:
-        ccode = ord(c) # get character code in utf-32
-        item = hlir_value_int(ccode, typ=to_type['of'], ti=ti)
-        items.append(item)
-
-    items.append(hlir_value_int(0, typ=to_type['of']))
-
-    #str_used_as(string_value=v, typ=to_type['of'])
-
-    a = hlir_value_array(items, type=to_type, ti=None)
-    a['att'].append('no-cast-literal-array')
-    return a
-
-
 def value_cons_array(v, t, ti, method):
     from_type = v['type']
     to_type = t
 
     # GenericString -> Array
     if type.is_generic_string(from_type):
-        #return value_cons_array_from_string(v, t, ti, method)
         return value_cons_array_from_generic_array(v, t, ti, method)
 
-
     # GenericArray -> Array
-    if type.is_array(from_type):
+    elif type.is_array(from_type):
         if type.is_generic(from_type):
             return value_cons_array_from_generic_array(v, t, ti, method)
         return value_cons_array_from_array(v, t, ti, method)
-
-
 
     return None
 

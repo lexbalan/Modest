@@ -123,14 +123,6 @@ def value_cons_pointer(v, t, ti, method):
                 error("cons pointer from biggest integer", ti)
             nv = hlir_value_cast(v, t, ti=ti)
 
-    # GenericString -> *CharX (only for C capability)
-    elif type.is_generic_string(vtype):
-        if type.is_char(to_type['to']):
-            # GenericString -> *CharX
-            #str_used_as(string_value=v, typ=to_type['to'])
-            nv = hlir_value_cast(v, t, ti=ti) #?!
-
-
     elif type.is_va_list(vtype):
         # VA_List -> Int
         nv = hlir_value_cast(v, t, ti)
