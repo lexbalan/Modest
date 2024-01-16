@@ -48,88 +48,88 @@ def type_init():
 
     typeUnit = hlir_type_unit()
 
-    typeBool = hlir_type_bool(ti=None)
+    typeBool = hlir_type_bool()
     typeBool['c_alias'] = 'uint8_t'
     typeBool['llvm_alias'] = 'i1'
 
     #
-    typeChar8 = hlir_type_char("Char8", width=8, ti=None)
+    typeChar8 = hlir_type_char("Char8", width=8)
     typeChar8['c_alias'] = 'char'
     typeChar8['llvm_alias'] = 'i8'
 
-    typeChar16 = hlir_type_char("Char16", width=16, ti=None)
+    typeChar16 = hlir_type_char("Char16", width=16)
     typeChar16['c_alias'] = 'uint16_t'
     typeChar16['llvm_alias'] = 'i16'
 
-    typeChar32 = hlir_type_char("Char32", width=32, ti=None)
+    typeChar32 = hlir_type_char("Char32", width=32)
     typeChar32['c_alias'] = 'uint32_t'
     typeChar32['llvm_alias'] = 'i32'
 
     #
-    typeInt8 = hlir_type_integer("Int8", width=8, ti=None)
+    typeInt8 = hlir_type_integer("Int8", width=8)
     typeInt8['c_alias'] = 'int8_t'
     typeInt8['llvm_alias'] = 'i8'
 
-    typeInt16 = hlir_type_integer("Int16", width=16, ti=None)
+    typeInt16 = hlir_type_integer("Int16", width=16)
     typeInt16['c_alias'] = 'int16_t'
     typeInt16['llvm_alias'] = 'i16'
 
-    typeInt32 = hlir_type_integer("Int32", width=32, ti=None)
+    typeInt32 = hlir_type_integer("Int32", width=32)
     typeInt32['c_alias'] = 'int32_t'
     typeInt32['llvm_alias'] = 'i32'
 
-    typeInt64 = hlir_type_integer("Int64", width=64, ti=None)
+    typeInt64 = hlir_type_integer("Int64", width=64)
     typeInt64['c_alias'] = 'int64_t'
     typeInt64['llvm_alias'] = 'i64'
 
-    typeInt128 = hlir_type_integer("Int128", width=128, ti=None)
+    typeInt128 = hlir_type_integer("Int128", width=128)
     typeInt128['c_alias'] = '__int128'
     typeInt128['llvm_alias'] = 'i128'
 
     #
-    typeNat8 = hlir_type_integer("Nat8", width=8, signed=False, ti=None)
+    typeNat8 = hlir_type_integer("Nat8", width=8, signed=False)
     typeNat8['c_alias'] = 'uint8_t'
     typeNat8['llvm_alias'] = 'i8'
 
-    typeNat16 = hlir_type_integer("Nat16", width=16, signed=False, ti=None)
+    typeNat16 = hlir_type_integer("Nat16", width=16, signed=False)
     typeNat16['c_alias'] = 'uint16_t'
     typeNat16['llvm_alias'] = 'i16'
 
-    typeNat32 = hlir_type_integer("Nat32", width=32, signed=False, ti=None)
+    typeNat32 = hlir_type_integer("Nat32", width=32, signed=False)
     typeNat32['c_alias'] = 'uint32_t'
     typeNat32['llvm_alias'] = 'i32'
 
-    typeNat64 = hlir_type_integer("Nat64", width=64, signed=False, ti=None)
+    typeNat64 = hlir_type_integer("Nat64", width=64, signed=False)
     typeNat64['c_alias'] = 'uint64_t'
     typeNat64['llvm_alias'] = 'i64'
 
-    typeNat128 = hlir_type_integer("Nat128", width=128, signed=False, ti=None)
+    typeNat128 = hlir_type_integer("Nat128", width=128, signed=False)
     typeNat128['c_alias'] = 'unsigned __int128'
     typeNat128['llvm_alias'] = 'i128'
 
     #
-    typeFloat16 = hlir_type_float('Float16', width=16, ti=None)
+    typeFloat16 = hlir_type_float('Float16', width=16)
     typeFloat16['c_alias'] = 'half'
     typeFloat16['llvm_alias'] = 'half'
 
-    typeFloat32 = hlir_type_float('Float32', width=32, ti=None)
+    typeFloat32 = hlir_type_float('Float32', width=32)
     typeFloat32['c_alias'] = 'float'
     typeFloat32['llvm_alias'] = 'float'
 
-    typeFloat64 = hlir_type_float('Float64', width=64, ti=None)
+    typeFloat64 = hlir_type_float('Float64', width=64)
     typeFloat64['c_alias'] = 'double'
     typeFloat64['llvm_alias'] = 'double'
 
     #
-    typeDecimal32 = hlir_type_float('Decimal32', width=32, ti=None)
+    typeDecimal32 = hlir_type_float('Decimal32', width=32)
     typeDecimal32['c_alias'] = '_Decimal32'
     typeDecimal32['llvm_alias'] = 'float'
 
-    typeDecimal64 = hlir_type_float('Decimal64', width=64, ti=None)
+    typeDecimal64 = hlir_type_float('Decimal64', width=64)
     typeDecimal64['c_alias'] = '_Decimal64'
     typeDecimal64['llvm_alias'] = 'double'
 
-    typeDecimal128 = hlir_type_float('Decimal128', width=128, ti=None)
+    typeDecimal128 = hlir_type_float('Decimal128', width=128)
     typeDecimal128['c_alias'] = '_Decimal128'
     typeDecimal128['llvm_alias'] = 'double'
 

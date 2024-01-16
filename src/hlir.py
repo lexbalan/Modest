@@ -91,7 +91,7 @@ def hlir_type_unit():
 
 
 
-def hlir_type_bool(ti):
+def hlir_type_bool():
     return {
         'isa': 'type',
         'kind': 'bool',
@@ -149,7 +149,7 @@ def hlir_type_integer(id_str, width, generic=False, signed=True, ti=None):
 
 
 
-def hlir_type_float(id_str, width, ti):
+def hlir_type_float(id_str, width, ti=None):
     size = nbytes_for_bits(width)
     return {
         'isa': 'type',
