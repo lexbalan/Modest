@@ -184,7 +184,7 @@ def hlir_type_pointer(to, ti=None):
 
 
 # FreePointer - особый тип, он приводится неявно CM (но не в C!)
-def hlir_type_free_pointer(ti):
+def hlir_type_free_pointer():
     size = nbytes_for_bits(ptr_width)
     return {
         'isa': 'type',
@@ -197,7 +197,7 @@ def hlir_type_free_pointer(ti):
         'to': type.typeUnit,
         'ops': PTR_OPS,
         'att': [],
-        'ti': ti
+        'ti': None
     }
 
 

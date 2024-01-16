@@ -33,6 +33,7 @@ typeStr32 = None
 typeFreePointer = None
 typeVA_List = None
 
+
 def type_init():
     global typeUnit
     global typeBool
@@ -134,7 +135,7 @@ def type_init():
     typeDecimal128['llvm_alias'] = 'double'
 
 
-    typeFreePointer = hlir_type_free_pointer(ti=None)
+    typeFreePointer = hlir_type_free_pointer()
 
     typeStr8 = hlir_type_array(of=typeChar8)
     typeStr16 = hlir_type_array(of=typeChar16)
