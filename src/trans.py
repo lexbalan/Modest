@@ -4,6 +4,7 @@ import os
 from error import *
 from util import get_item_with_id, align_to
 from main import settings
+from frontend.parser import Parser
 
 
 def is_local_context():
@@ -14,16 +15,12 @@ def is_local_context():
 from value.value import *
 from value.cons import value_cons_implicit, value_cons_explicit, cons_default
 
-from frontend.parser import Parser
 from symtab import Symtab
-import hlir.type as type
 from util import nbits_for_num, nbytes_for_bits
 
-from hlir.id import *
-from hlir.type import *
-from hlir.field import *
+import hlir.type as hlir_type
+from hlir.field import hlir_field
 from hlir.value import *
-from hlir.type import *
 from hlir.stmt import *
 from hlir.hlir import *
 
@@ -194,50 +191,50 @@ def init():
 
     hlir_init()
 
-    type.type_init()
+    hlir_type.type_init()
 
-    valueNil = hlir_value_int(0, typ=type.typeFreePointer)
-    valueTrue = hlir_value_int(1, typ=type.typeBool)
-    valueFalse = hlir_value_int(0, typ=type.typeBool)
+    valueNil = hlir_value_int(0, typ=hlir_type.typeFreePointer)
+    valueTrue = hlir_value_int(1, typ=hlir_type.typeBool)
+    valueFalse = hlir_value_int(0, typ=hlir_type.typeBool)
 
     global root_context
     # init main context
     root_context = Symtab()
 
-    root_context.type_add('Unit', type.typeUnit)
-    root_context.type_add('Bool', type.typeBool)
+    root_context.type_add('Unit', hlir_type.typeUnit)
+    root_context.type_add('Bool', hlir_type.typeBool)
 
-    root_context.type_add('Char8', type.typeChar8)
-    root_context.type_add('Char16', type.typeChar16)
-    root_context.type_add('Char32', type.typeChar32)
+    root_context.type_add('Char8', hlir_type.typeChar8)
+    root_context.type_add('Char16', hlir_type.typeChar16)
+    root_context.type_add('Char32', hlir_type.typeChar32)
 
-    root_context.type_add('Int8', type.typeInt8)
-    root_context.type_add('Int16', type.typeInt16)
-    root_context.type_add('Int32', type.typeInt32)
-    root_context.type_add('Int64', type.typeInt64)
-    root_context.type_add('Int128', type.typeInt128)
+    root_context.type_add('Int8', hlir_type.typeInt8)
+    root_context.type_add('Int16', hlir_type.typeInt16)
+    root_context.type_add('Int32', hlir_type.typeInt32)
+    root_context.type_add('Int64', hlir_type.typeInt64)
+    root_context.type_add('Int128', hlir_type.typeInt128)
 
-    root_context.type_add('Nat8', type.typeNat8)
-    root_context.type_add('Nat16', type.typeNat16)
-    root_context.type_add('Nat32', type.typeNat32)
-    root_context.type_add('Nat64', type.typeNat64)
-    root_context.type_add('Nat128', type.typeNat128)
+    root_context.type_add('Nat8', hlir_type.typeNat8)
+    root_context.type_add('Nat16', hlir_type.typeNat16)
+    root_context.type_add('Nat32', hlir_type.typeNat32)
+    root_context.type_add('Nat64', hlir_type.typeNat64)
+    root_context.type_add('Nat128', hlir_type.typeNat128)
 
-    root_context.type_add('Float16', type.typeFloat16)
-    root_context.type_add('Float32', type.typeFloat32)
-    root_context.type_add('Float64', type.typeFloat64)
+    root_context.type_add('Float16', hlir_type.typeFloat16)
+    root_context.type_add('Float32', hlir_type.typeFloat32)
+    root_context.type_add('Float64', hlir_type.typeFloat64)
 
-    #root_context.type_add('Decimal32', type.typeDecimal32)
-    #root_context.type_add('Decimal64', type.typeDecimal64)
-    #root_context.type_add('Decimal128', type.typeDecimal128)
+    #root_context.type_add('Decimal32', hlir_type.typeDecimal32)
+    #root_context.type_add('Decimal64', hlir_type.typeDecimal64)
+    #root_context.type_add('Decimal128', hlir_type.typeDecimal128)
 
-    root_context.type_add('Str8', type.typeStr8)
-    root_context.type_add('Str16', type.typeStr16)
-    root_context.type_add('Str32', type.typeStr32)
+    root_context.type_add('Str8', hlir_type.typeStr8)
+    root_context.type_add('Str16', hlir_type.typeStr16)
+    root_context.type_add('Str32', hlir_type.typeStr32)
 
-    root_context.type_add('Pointer', type.typeFreePointer)
+    root_context.type_add('Pointer', hlir_type.typeFreePointer)
 
-    root_context.type_add('VA_List', type.typeVA_List)
+    root_context.type_add('VA_List', hlir_type.typeVA_List)
 
 
     root_context.value_add('nil', valueNil)
@@ -250,17 +247,17 @@ def init():
 
     global typeSysInt, typeSysNat, typeSysFloat, typeSysChar, typeSysStr
 
-    typeSysChar = type.select_char(char_width)
+    typeSysChar = hlir_type.select_char(char_width)
 
-    typeSysInt = type.select_int(int_width)
+    typeSysInt = hlir_type.select_int(int_width)
     typeSysInt['c_alias'] = 'int'
 
-    typeSysNat = type.select_nat(int_width)
+    typeSysNat = hlir_type.select_nat(int_width)
     typeSysNat['c_alias'] = 'unsigned int'
 
     typeSysStr = hlir_type_pointer(hlir_type_array(typeSysChar, volume=None))
 
-    typeSysFloat = type.typeFloat64
+    typeSysFloat = hlir_type.typeFloat64
 
 
 
@@ -271,13 +268,13 @@ def init():
 def do_field(x):
     t = do_type(x['type'])
 
-    if type.is_bad(t):
+    if hlir_type.is_bad(t):
         t = hlir_type_bad(x['type']['ti'])
 
     # get aligned field offset
-    #offset = align_to(offset, type.type_get_align(t))
+    #offset = align_to(offset, hlir_type.type_get_align(t))
 
-    #if type.is_forbidden_var(t, zero_array_forbidden=not is_last):
+    #if hlir_type.is_forbidden_var(t, zero_array_forbidden=not is_last):
     #    error("unsuitable type", x['type'])
 
     f = hlir_field(x['id'], t, ti=x['ti'])
@@ -302,7 +299,7 @@ def do_type_id(t):
         error("undeclared type %s" % id_str, t)
         # create fake alias for unknown type
         tx = hlir_type_bad()
-        nt = type.create_alias(id_str, tx, t['ti'])
+        nt = hlir_type.create_alias(id_str, tx, t['ti'])
         root_context.type_add(id_str, nt)
         return nt
     return tx
@@ -318,7 +315,7 @@ def do_type_pointer(t):
 def do_type_array(t):
     of = do_type(t['of'])
 
-    #if type.is_undefined_array(of):
+    #if hlir_type.is_undefined_array(of):
     #    error("cannot construct type array of undefined array", t['of']['ti'])
     #    return hlir_type_bad()
 
@@ -393,7 +390,7 @@ def do_type_func(t, func_id="_"):
     for _param in t['params']:
         param = do_field(_param)
         pt = param['type']
-        if type.is_array(pt):
+        if hlir_type.is_array(pt):
             #info("array as function parameter", _param)
             pt['att'].append('wrapped_array_type')
             pt['wrapped_id'] = 'struct ' + func_id + '_' + param['id']['str']
@@ -405,13 +402,13 @@ def do_type_func(t, func_id="_"):
     if t['to'] != None:
         to = do_type(t['to'])
 
-        if type.is_array(to):
+        if hlir_type.is_array(to):
             #info("array as function return value", t['to'])
             to['att'].append('wrapped_array_type')
             to['wrapped_id'] = 'struct ' + func_id + '_' + 'retval'
 
     else:
-        to = type.typeUnit
+        to = hlir_type.typeUnit
 
     return hlir_type_func(params, to, ti=t['ti'])
 
@@ -439,10 +436,10 @@ def do_value_shift(x):
     r = do_rvalue(x['right'])
     ti = x['ti']
 
-    if not type.is_integer(l['type']):
+    if not hlir_type.is_integer(l['type']):
         error("type error", l)
 
-    if not type.is_integer(r['type']):
+    if not hlir_type.is_integer(r['type']):
         error("type error", r)
 
     # const folding
@@ -460,7 +457,7 @@ def do_value_shift(x):
 
             # если тип Generic - расширим,
             # иначе - проверим влезает ли результат
-            if type.is_generic(l['type']):
+            if hlir_type.is_generic(l['type']):
                 # расширяем generic int тип чтобы в нем можно было сдвигать
                 l['type']['width'] = nbits #!
                 res_t = hlir_type_integer(None, width=nbits, generic=True, ti=ti)
@@ -481,7 +478,7 @@ def do_value_shift(x):
             # TODO: реализуй сдвиг вправо!
 
             t = l['type']
-            if type.is_generic(l['type']):
+            if hlir_type.is_generic(l['type']):
                 t = hlir_type_integer(None, width=nbits, generic=True, ti=ti)
 
 
@@ -491,7 +488,7 @@ def do_value_shift(x):
             return v
 
 
-    if type.is_generic(l['type']):
+    if hlir_type.is_generic(l['type']):
         error("required value with non-generic type", l)
         return hlir_value_bad(ti)
 
@@ -502,16 +499,16 @@ def do_value_shift(x):
 
 # select result type of common binary operation
 def bin_type_select(a, b):
-    if type.is_generic(a) and type.is_generic(b):
+    if hlir_type.is_generic(a) and hlir_type.is_generic(b):
         if a['width'] > b['width']:
             return a
         else:
             return b
 
-    elif type.is_generic(a):
+    elif hlir_type.is_generic(a):
         return b
 
-    elif type.is_generic(b):
+    elif hlir_type.is_generic(b):
         return a
 
     return a
@@ -523,15 +520,15 @@ def do_bin_op_with_pointers(op, l, r , ti):
     # единственная безопасная операция для указателей - это сравнение
     if op in ['eq', 'ne']:
         # сравнивать можно только указатель с указателем
-        if type.is_pointer(l['type']) and type.is_pointer(r['type']):
+        if hlir_type.is_pointer(l['type']) and hlir_type.is_pointer(r['type']):
 
             # what about typeFreePointer?
-            if type.is_nil(l['type']):
+            if hlir_type.is_nil(l['type']):
                 l = value_cons_implicit(l, r['type'], ti)
-            elif type.is_nil(r['type']):
+            elif hlir_type.is_nil(r['type']):
                 r = value_cons_implicit(r, l['type'], ti)
 
-            return hlir_value_bin(op, l, r, type.typeBool, ti)
+            return hlir_value_bin(op, l, r, hlir_type.typeBool, ti)
 
     from main import features
     if not features.get('unsafe'):
@@ -541,8 +538,8 @@ def do_bin_op_with_pointers(op, l, r , ti):
 
     # если включен unsafe режим
     if op in ['add', 'sub']:
-        ptr_n_int = type.is_free_pointer(l['type']) and type.is_integer(r['type'])
-        int_n_ptr = type.is_integer(l['type']) and type.is_free_pointer(r['type'])
+        ptr_n_int = hlir_type.is_free_pointer(l['type']) and hlir_type.is_integer(r['type'])
+        int_n_ptr = hlir_type.is_integer(l['type']) and hlir_type.is_free_pointer(r['type'])
 
         # если и указатель и число непосредственные
         if value_is_immediate(l) and value_is_immediate(r):
@@ -600,11 +597,11 @@ def bin_imm(op, type_result, l, r, ti):
 
     num_val = ops[op](l['imm'], r['imm'])
 
-    if type.is_generic(type_result):
+    if hlir_type.is_generic(type_result):
         # пересматриваем generic тип для нового значения (!)
         type_result = hlir_type_generic_int_for(num_val, unsigned=True, ti=ti)
 
-    if not type.is_float(l['type']):
+    if not hlir_type.is_float(l['type']):
         num_val = int(num_val)
 
     bin_value = hlir_value_bin(op, l, r, type_result, ti=ti)
@@ -625,7 +622,7 @@ def value_strings_concat(l, r, ti):
 
     str_array_volume = hlir_value_int(length)
     generic = True  # не факт, анализируй a и b
-    genStrType = hlir_type_array(type.typeChar32, generic=True, volume=str_array_volume, ti=ti)
+    genStrType = hlir_type_array(hlir_type.typeChar32, generic=True, volume=str_array_volume, ti=ti)
 
     bin_value = hlir_value_bin('add_str', l, r, genStrType, ti=ti)
     bin_value['imm'] = imm_str
@@ -655,7 +652,7 @@ def do_value_bin_str_eq(op, l, r, ti):
         op = 'ne_str'
         bool_result = not bool_result
 
-    bin_value = hlir_value_bin(op, l, r, type.typeBool, ti=ti)
+    bin_value = hlir_value_bin(op, l, r, hlir_type.typeBool, ti=ti)
     bin_value['imm'] = bool_result
     return bin_value
 
@@ -679,11 +676,11 @@ def do_value_bin(x):
         error("unsuitable type", x['right']['ti'])
 
 
-    if type.is_pointer(l['type']) or type.is_pointer(r['type']):
+    if hlir_type.is_pointer(l['type']) or hlir_type.is_pointer(r['type']):
         return do_bin_op_with_pointers(op, l, r, ti)
 
 
-    if type.is_generic_string(l['type']) and type.is_generic_string(r['type']):
+    if hlir_type.is_generic_string(l['type']) and hlir_type.is_generic_string(r['type']):
         if op == 'add':
             return value_strings_concat(l, r, ti)
         elif op in ['eq', 'ne']:
@@ -696,16 +693,16 @@ def do_value_bin(x):
     r = value_cons_implicit(r, common_type, x['right']['ti'])
 
     # After implicit cast types must be equal
-    if not type.check(l['type'], r['type'], x['ti']):
+    if not hlir_type.check(l['type'], r['type'], x['ti']):
         return hlir_value_bad(x['ti'])
 
     type_result = common_type
 
     if op in (EQ_OPS + RELATIONAL_OPS):
-        type_result = type.typeBool
+        type_result = hlir_type.typeBool
 
 
-    if type.eq(type_result, type.typeBool):
+    if hlir_type.eq(type_result, hlir_type.typeBool):
         if op == 'or': op = 'logic_or'
         elif op == 'and': op = 'logic_and'
 
@@ -738,9 +735,9 @@ def do_value_minus(val, t, ti):
         num = -val['imm']
         v['imm'] = num
 
-    if type.is_generic(v['type']):
-        if not type.is_integer_signed(v['type']):
-            #type.set_signed()
+    if hlir_type.is_generic(v['type']):
+        if not hlir_type.is_integer_signed(v['type']):
+            #hlir_type.set_signed()
             v['type']['signed'] = True
 
     return v
@@ -748,14 +745,14 @@ def do_value_minus(val, t, ti):
 
 
 def do_value_deref(val, t, ti):
-    if not type.is_pointer(t):
+    if not hlir_type.is_pointer(t):
         error("expected pointer", val)
         return hlir_value_bad(ti)
 
     to = t['to']
     # you can't deref pointer to function
     # and pointer to undefined array
-    if type.is_func(to) or type.is_undefined_array(to):
+    if hlir_type.is_func(to) or hlir_type.is_undefined_array(to):
         error("unsuitable type", val)
 
     return hlir_value_un('deref', val, to, ti=ti)
@@ -764,7 +761,7 @@ def do_value_deref(val, t, ti):
 
 def do_value_ref(val, t, ti):
     if value_is_immutable(val):
-        if not type.is_func(t):
+        if not hlir_type.is_func(t):
             error("cannot get pointer to immutable value", ti)
     vt = hlir_type_pointer(t, ti=ti)
     return hlir_value_un('ref', val, vt, ti=ti)
@@ -835,10 +832,10 @@ def do_value_call(x):
     ftype = f['type']
 
     # pointer to function?
-    if type.is_pointer(ftype):
+    if hlir_type.is_pointer(ftype):
         ftype = ftype['to']
 
-    if not type.is_func(ftype):
+    if not hlir_type.is_func(ftype):
         error("expected function", x)
 
     params = ftype['params']
@@ -870,7 +867,7 @@ def do_value_call(x):
 
         if not value_is_bad(arg):
             arg = value_cons_implicit(arg, param['type'], aa['ti'])
-            type.check(param['type'], arg['type'], aa['ti'])
+            hlir_type.check(param['type'], arg['type'], aa['ti'])
             args.append(arg)
 
         i = i + 1
@@ -890,24 +887,24 @@ def do_value_call(x):
                 if forms != []:
                     form = forms[j]
                     if form in ['i', 'd', 'x']:
-                        if not type.is_integer(arg_type):
+                        if not hlir_type.is_integer(arg_type):
                             warning("expected numeric value", a['ti'])
                     elif form == 's':
-                        if not type.is_pointer_to_string(arg_type):
+                        if not hlir_type.is_pointer_to_string(arg_type):
                             warning("expected pointer to string", a['ti'])
                     elif form == 'f':
-                        if not type.is_float(arg_type):
+                        if not hlir_type.is_float(arg_type):
                             warning("expected float value", a['ti'])
                     elif form == 'c':
-                        if not type.is_char(arg_type):
+                        if not hlir_type.is_char(arg_type):
                             warning("expected char value", a['ti'])
                     elif form == 'p':
-                        if not type.is_pointer(arg_type):
+                        if not hlir_type.is_pointer(arg_type):
                             warning("expected pointer value", a['ti'])
 
 
 
-            if type.is_generic(arg_type):
+            if hlir_type.is_generic(arg_type):
                 warning("value with generic type as extra argument", a['ti'])
                 arg = cons_default(arg, a['ti'])
 
@@ -922,7 +919,7 @@ def do_value_call(x):
     if 'dispensable' in f['att']:
         rv['att'].append('dispensable')
 
-    if type.is_defined_array(f['type']['to']):
+    if hlir_type.is_defined_array(f['type']['to']):
         rv['att'].append('wrapped_array_value')
 
     return rv
@@ -938,12 +935,12 @@ def do_value_index(x):
     typ = a['type']
 
     # check if left type is valid
-    if not (type.is_array(typ) or type.is_pointer(typ) or type.is_pointer_to_string(typ)):
+    if not (hlir_type.is_array(typ) or hlir_type.is_pointer(typ) or hlir_type.is_pointer_to_string(typ)):
         error("expected array or pointer to array", x)
         return hlir_value_bad(x['left']['ti'])
 
 
-    ptr_access = type.is_pointer(typ)
+    ptr_access = hlir_type.is_pointer(typ)
     if ptr_access:
         typ = typ['to']
 
@@ -953,7 +950,7 @@ def do_value_index(x):
     if value_is_bad(i):
         return hlir_value_bad(x['index']['ti'])
 
-    if not type.is_integer(i['type']):
+    if not hlir_type.is_integer(i['type']):
         error("expected integer value", x['index'])
 
 
@@ -979,8 +976,8 @@ def do_value_index(x):
             items = a['imm']
             item = items[index]
 
-            #if type.is_char(item_type):
-            if type.is_char(typ['of']):
+            #if hlir_type.is_char(item_type):
+            if hlir_type.is_char(typ['of']):
                 char_code = item
                 char = hlir_value_char(char_code, type=None, ti=x['ti'])
                 return char
@@ -1000,25 +997,25 @@ def do_value_access(x):
     field_id = x['field']
 
     # доступ через переменную-указатель
-    ptr_access = type.is_pointer(obj['type'])
+    ptr_access = hlir_type.is_pointer(obj['type'])
 
     record_type = obj['type']
     if ptr_access:
         record_type = obj['type']['to']
 
     # check if is record
-    if not type.is_record(record_type):
+    if not hlir_type.is_record(record_type):
         error("expected record or pointer to record", x)
         return hlir_value_bad(x['left']['ti'])
 
-    field = type.record_field_get(record_type, field_id['str'])
+    field = hlir_type.record_field_get(record_type, field_id['str'])
 
     # if field not found
     if field == None:
         error("undefined field '%s'" % field_id['str'], x)
         return hlir_value_bad(x['field']['ti'])
 
-    if type.is_bad(field['type']):
+    if hlir_type.is_bad(field['type']):
         return hlir_value_bad(x['field']['ti'])
 
     if ptr_access:
@@ -1041,7 +1038,7 @@ def do_value_access(x):
 def do_value_to(x):
     v = do_rvalue(x['value'])
     t = do_type(x['type'])
-    if value_is_bad(v) or type.is_bad(t):
+    if value_is_bad(v) or hlir_type.is_bad(t):
         return hlir_value_bad(x['ti'])
     return value_cons_explicit(v, t, x['ti'])
 
@@ -1071,7 +1068,7 @@ def do_value_str(x):
     ti=x['ti']
 
     vol = hlir_value_int(len(string) + 1)
-    genStrType = hlir_type_array(type.typeChar32, generic=True, volume=vol, ti=ti)
+    genStrType = hlir_type_array(hlir_type.typeChar32, generic=True, volume=vol, ti=ti)
 
     imm = hlir_string_imm(string)
     return hlir_value_literal(genStrType, imm, ti)
@@ -1230,8 +1227,8 @@ def do_stmt_if(x):
     if value_is_bad(c) or stmt_is_bad(t):
         return hlir_stmt_bad()
 
-    c = value_cons_implicit(c, type.typeBool, c['ti'])
-    type.check(c['type'], type.typeBool, x['cond']['ti'])
+    c = value_cons_implicit(c, hlir_type.typeBool, c['ti'])
+    hlir_type.check(c['type'], hlir_type.typeBool, x['cond']['ti'])
 
     e = None
     if x['else'] != None:
@@ -1249,8 +1246,8 @@ def do_stmt_while(x):
     if value_is_bad(c) or stmt_is_bad(s):
         return hlir_stmt_bad()
 
-    c = value_cons_implicit(c, type.typeBool, c['ti'])
-    if not type.check(c['type'], type.typeBool, x['cond']['ti']):
+    c = value_cons_implicit(c, hlir_type.typeBool, c['ti'])
+    if not hlir_type.check(c['type'], hlir_type.typeBool, x['cond']['ti']):
         return hlir_stmt_bad()
 
     return hlir_stmt_while(c, s, ti=x['ti'])
@@ -1262,7 +1259,7 @@ def do_stmt_return(x):
 
     f_ret_type = cfunc['type']['to']
 
-    no_ret_func = type.eq(f_ret_type, type.typeUnit)
+    no_ret_func = hlir_type.eq(f_ret_type, hlir_type.typeUnit)
 
     if x['value'] == None:
         if not no_ret_func:
@@ -1277,7 +1274,7 @@ def do_stmt_return(x):
         return hlir_stmt_bad()
 
     v = value_cons_implicit(v, f_ret_type, v['ti'])
-    type.check(v['type'], f_ret_type, x['value']['ti'])
+    hlir_type.check(v['type'], f_ret_type, x['value']['ti'])
 
     return hlir_stmt_return(v, ti=x['ti'])
 
@@ -1314,22 +1311,22 @@ def do_stmt_var(x):
         return hlir_stmt_bad()
 
     if t != None:
-        if type.is_bad(t):
+        if hlir_type.is_bad(t):
             module['context'].value_add(id['str'], hlir_value_bad())
             return hlir_stmt_bad()
 
-        if type.is_forbidden_var(t):
+        if hlir_type.is_forbidden_var(t):
             error("unsuitable type", x['type'])
 
     # type & init value present
     if t != None and v != None:
         # type check
         v = value_cons_implicit(v, t, x['value']['ti'])
-        type.check(t, v['type'], x['value']['ti'])
+        hlir_type.check(t, v['type'], x['value']['ti'])
 
 
     if t == None:
-        if type.is_generic(v['type']):
+        if hlir_type.is_generic(v['type']):
             v = cons_default(v, x['value']['ti'])
 
         t = v['type']
@@ -1375,13 +1372,13 @@ def do_stmt_let(x):
         return hlir_stmt_bad()
 
 
-    if type.is_record(v['type']) or type.is_array(v['type']):
+    if hlir_type.is_record(v['type']) or hlir_type.is_array(v['type']):
         module_option('use_memcpy')
 
 
     # add 'const' attribute to type
     # (used by C printer)
-    typ = type.type_copy(v['type'])
+    typ = hlir_type.type_copy(v['type'])
     typ['att'].append('const')
     v['type'] = typ
 
@@ -1417,9 +1414,9 @@ def do_stmt_assign(x):
 
     # type check
     r = value_cons_implicit(r, l['type'], x['right']['ti'])
-    type.check(l['type'], r['type'], x['ti'])
+    hlir_type.check(l['type'], r['type'], x['ti'])
 
-    if type.is_record(l['type']) or type.is_array(l['type']):
+    if hlir_type.is_record(l['type']) or hlir_type.is_array(l['type']):
         module_option('use_memcpy')
 
     return hlir_stmt_assign(l, r, ti=x['ti'])
@@ -1432,7 +1429,7 @@ def do_stmt_value(x):
     if value_is_bad(v):
         return hlir_stmt_bad()
 
-    if not type.is_unit(v['type']):
+    if not hlir_type.is_unit(v['type']):
         if not 'dispensable' in v['att']:
             warning("expression result unused", v['ti'])
 
@@ -1619,13 +1616,13 @@ def def_type(x):
     #print("@type " + id['str'])
 
     ty = do_type(x['type'])
-    if type.is_bad(ty):
+    if hlir_type.is_bad(ty):
         return None
 
     exist = type_get(id['str'])
     already_declared = exist != None
 
-    nt = type.create_alias(id['str'], ty, id['ti'])
+    nt = hlir_type.create_alias(id['str'], ty, id['ti'])
     extend_props(nt)
     nt['att'].extend(attributes_get())
 
@@ -1649,14 +1646,14 @@ def def_var(x):
     if f == None:
         return None
 
-    if type.is_bad(f['type']):
+    if hlir_type.is_bad(f['type']):
         return None
 
     already = value_get(f['id']['str'])
     if already != None:
         error("redefinition of '%s'" % f['id']['str'], x['field']['ti'])
 
-    if type.is_opaque(f['type']):
+    if hlir_type.is_opaque(f['type']):
         error("cannot create variable with undefined type", x['type'])
         return None
 
@@ -1667,7 +1664,7 @@ def def_var(x):
 
         if not value_is_bad(iv):
             init_value = value_cons_implicit(iv, f['type'], x['init']['ti'])
-            type.check(f['type'], init_value['type'], x['init']['ti'])
+            hlir_type.check(f['type'], init_value['type'], x['init']['ti'])
 
     var = hlir_value_var(f['id'], f['type'], init=init_value)
     var['att'].extend(attributes_get())
@@ -1731,7 +1728,7 @@ def def_func(x):
     va_id = ""
     if len(params) > 1:
         last_param = params[-1]
-        arghack = type.is_va_list(last_param['type'])
+        arghack = hlir_type.is_va_list(last_param['type'])
         if arghack:
             va_id = last_param['id']
             params.pop()
@@ -1754,7 +1751,7 @@ def def_func(x):
             error("redefinition of", x['ti'])
         else:
             # already declared function
-            if not type.eq(already['type'], func_type):
+            if not hlir_type.eq(already['type'], func_type):
                 error("definition not correspond to declatartion", x['ti'])
                 info("firstly declared here", already['type']['ti'])
 
@@ -1792,7 +1789,7 @@ def def_func(x):
         param_value = hlir_value_const(param_id, param['type'], ti=param['ti'])
         param_value['att'].append('local')
 
-        if type.is_defined_array(param['type']):
+        if hlir_type.is_defined_array(param['type']):
             param_value['att'].append('wrapped_array_value')
 
         module['context'].value_add(param_id['str'], param_value)
@@ -1815,7 +1812,7 @@ def def_func(x):
     check_block(fn['stmt'])
 
     # check if return present
-    if not type.is_unit(fn['type']['to']):
+    if not hlir_type.is_unit(fn['type']['to']):
         stmts = fn['stmt']['stmts']
         if len(stmts) == 0:
             warning("expected return operator at end", fn['stmt']['ti'])
@@ -1874,7 +1871,7 @@ def decl_func(x):
             info("repeated function declaration", x['ti'])
 
         # check type of already created function
-        if not type.eq(already['type'], func_type):
+        if not hlir_type.eq(already['type'], func_type):
             error("definition not correspond to function type", x['ti'])
             info("firstly declared here", already['type']['ti'])
 
@@ -1892,7 +1889,7 @@ def decl_func(x):
     params = func_type['params']
     if len(params) > 1:
         last_param = params[-1]
-        if type.is_va_list(last_param['type']):
+        if hlir_type.is_va_list(last_param['type']):
             va_id = last_param['id']
             func_type['att'].append('arghack')
             params.pop()
