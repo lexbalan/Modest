@@ -1,14 +1,10 @@
 
-import hlir.type as type
+from hlir.type import hlir_type_init
 
-from .id import *
-from hlir.type import *
-from .field import *
-from .stmt import *
 
 
 def hlir_init():
-    type.hlir_type_init()
+    hlir_type_init()
 
 
 

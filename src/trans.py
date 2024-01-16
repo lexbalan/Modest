@@ -18,9 +18,14 @@ from frontend.parser import Parser
 from symtab import Symtab
 import hlir.type as type
 from util import nbits_for_num, nbytes_for_bits
+
+from hlir.id import *
+from hlir.type import *
+from hlir.field import *
 from hlir.hlir import *
 from hlir.value import *
 from hlir.type import *
+from hlir.stmt import *
 
 
 RET_SIZE_MAX = 16
