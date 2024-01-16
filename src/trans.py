@@ -617,7 +617,7 @@ def value_strings_concat(l, r, ti):
 
     str_array_volume = hlir_value_int(length)
     generic = True  # не факт, анализируй a и b
-    genStrType = hlir_type_array(type.typeGenericChar, generic=generic, volume=str_array_volume, ti=ti)
+    genStrType = hlir_type_array(type.typeChar32, generic=True, volume=str_array_volume, ti=ti)
 
     bin_value = hlir_value_bin('add_str', l, r, genStrType, ti=ti)
     bin_value['imm'] = imm_str
@@ -1063,7 +1063,7 @@ def do_value_str(x):
     ti=x['ti']
 
     vol = hlir_value_int(len(string) + 1)
-    genStrType = hlir_type_array(type.typeGenericChar, generic=True, volume=vol, ti=ti)
+    genStrType = hlir_type_array(type.typeChar32, generic=True, volume=vol, ti=ti)
 
     imm = hlir_string_imm(string)
     return hlir_value_literal(genStrType, imm, ti)

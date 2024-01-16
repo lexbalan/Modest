@@ -8,6 +8,9 @@ from util import get_item_with_id
 
 typeUnit = None
 typeBool = None
+typeChar8 = None
+typeChar16 = None
+typeChar32 = None
 typeInt8 = None
 typeInt16 = None
 typeInt32 = None
@@ -24,10 +27,6 @@ typeFloat64 = None
 typeDecimal32 = None
 typeDecimal64 = None
 typeDecimal128 = None
-typeGenericChar = None
-typeChar8 = None
-typeChar16 = None
-typeChar32 = None
 typeStr8 = None
 typeStr16 = None
 typeStr32 = None
@@ -37,7 +36,7 @@ typeVA_List = None
 def type_init():
     global typeUnit
     global typeBool
-    global typeGenericChar, typeChar8, typeChar16, typeChar32
+    global typeChar8, typeChar16, typeChar32
     global typeInt8, typeInt16, typeInt32, typeInt64, typeInt128
     global typeNat8, typeNat16, typeNat32, typeNat64, typeNat128
     global typeFloat16, typeFloat32, typeFloat64
@@ -54,8 +53,6 @@ def type_init():
     typeBool['llvm_alias'] = 'i1'
 
     #
-    typeGenericChar = hlir_type_char(None, width=0, generic=True, ti=None)
-
     typeChar8 = hlir_type_char("Char8", width=8, ti=None)
     typeChar8['c_alias'] = 'char'
     typeChar8['llvm_alias'] = 'i8'
@@ -463,9 +460,9 @@ def is_generic_array(t):
 
 
 def is_generic_string(t):
-    if is_array(t):
+    if is_generic_array(t):
         if t['of'] != None: #!
-            return is_generic_char(t['of'])
+            return is_char(t['of'])
 
     return False
 
