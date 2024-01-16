@@ -1,7 +1,7 @@
 
 
 import copy
-import type
+import hlir.type as type
 from util import nbits_for_num, nbytes_for_bits
 import settings
 

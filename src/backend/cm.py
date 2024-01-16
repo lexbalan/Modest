@@ -1,5 +1,5 @@
 
-import type
+import hlir.type as type
 from error import info
 from .common import *
 from value.value import value_attribute_check, value_print

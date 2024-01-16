@@ -1,8 +1,8 @@
 
-import type
-from type import type_print
+import hlir.type as type
+from hlir.type import type_print
 from error import error, warning, info
-from hlir import *
+from hlir.hlir import *
 from .value import *
 
 from .unit import value_cons_unit

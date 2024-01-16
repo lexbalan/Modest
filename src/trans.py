@@ -16,9 +16,9 @@ from value.cons import value_cons_implicit, value_cons_explicit, cons_default
 
 from frontend.parser import Parser
 from symtab import Symtab
-import type
+import hlir.type as type
 from util import nbits_for_num, nbytes_for_bits
-from hlir import *
+from hlir.hlir import *
 
 
 RET_SIZE_MAX = 16

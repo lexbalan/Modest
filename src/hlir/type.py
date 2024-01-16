@@ -2,7 +2,7 @@
 
 import copy
 from error import info, warning, error, fatal
-from hlir import *
+from hlir.hlir import *
 from util import get_item_with_id
 
 

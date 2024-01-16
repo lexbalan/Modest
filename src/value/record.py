@@ -1,7 +1,7 @@
 
-import type
+import hlir.type as type
 from error import error, warning, info
-from hlir import *
+from hlir.hlir import *
 from util import get_item_with_id
 from .value import *
 

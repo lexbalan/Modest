@@ -5,7 +5,7 @@
 import os
 from .lexer import Lexer
 from error import error, warning, info
-from hlir import hlir_id
+from hlir.hlir import hlir_id
 
 
 top_level_stoppers = ['type', 'const', 'var', 'func']

@@ -2,10 +2,10 @@
 import copy
 from .common import *
 from error import info, warning, error
-import type
-from type import type_print
+import hlir.type as type
+from hlir.type import type_print
 from value.value import value_attribute_check, value_print, value_is_immediate
-from hlir import hlir_type_pointer, hlir_value_int
+from hlir.hlir import hlir_type_pointer, hlir_value_int
 import settings
 
 
