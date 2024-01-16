@@ -35,12 +35,13 @@ typeFreePointer = None
 typeVA_List = None
 
 def type_init():
-    global typeUnit, typeBool
+    global typeUnit
+    global typeBool
+    global typeGenericChar, typeChar8, typeChar16, typeChar32
     global typeInt8, typeInt16, typeInt32, typeInt64, typeInt128
     global typeNat8, typeNat16, typeNat32, typeNat64, typeNat128
     global typeFloat16, typeFloat32, typeFloat64
     global typeDecimal32, typeDecimal64, typeDecimal128
-    global typeGenericChar, typeChar8, typeChar16, typeChar32
     global typeStr8, typeStr16, typeStr32
     global typeFreePointer
     global typeVA_List
