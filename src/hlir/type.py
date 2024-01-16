@@ -2,8 +2,309 @@
 
 import copy
 from error import info, warning, error, fatal
-from hlir.hlir import *
-from util import get_item_with_id
+import settings
+
+ptr_width = 0
+flt_width = 0
+
+def hlir_type_init():
+    global ptr_width, flt_width
+    ptr_width = int(settings.get('pointer_width'))
+    flt_width = int(settings.get('float_width'))
+
+
+from .id import hlir_id
+
+#from hlir.hlir import *
+from util import get_item_with_id, nbits_for_num, nbytes_for_bits
+
+
+
+######################################################################
+#                            HLIR TYPE                               #
+######################################################################
+
+
+CONS_OP = ['cast']
+EQ_OPS = ['eq', 'ne']
+RELATIONAL_OPS = ['lt', 'gt', 'le', 'ge']
+ARITHMETICAL_OPS = ['add', 'sub', 'mul', 'div', 'rem', 'minus']
+LOGICAL_OPS = ['or', 'xor', 'and', 'not']
+
+INT_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS + LOGICAL_OPS
+BOOL_OPS = CONS_OP + EQ_OPS + LOGICAL_OPS
+FLOAT_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS
+CHAR_OPS = CONS_OP + EQ_OPS
+PTR_OPS = CONS_OP + EQ_OPS + ['deref']
+ARR_OPS = CONS_OP + EQ_OPS + ['add', 'index']
+REC_OPS = CONS_OP + EQ_OPS + ['access']
+
+
+
+def hlir_type_bad(ti=None):
+    return {
+        'isa': 'type',
+        'kind': 'bad',
+        'id': None,
+        'generic': False,
+        'width': 0,
+        'size': 0,
+        'align': 0,
+        'att': [],
+        'ops': [],
+        'ti': ti
+    }
+
+
+def hlir_type_unit():
+    return {
+        'isa': 'type',
+        'kind': 'unit',
+        'id': hlir_id('Unit'),
+        'generic': False,
+        'width': 0,
+        'size': 0,
+        'align': 0,
+        'c_alias': 'void',
+        'llvm_alias': 'void',
+        'att': [],
+        'ops': CONS_OP,
+        'ti': None
+    }
+
+
+
+def hlir_type_bool():
+    return {
+        'isa': 'type',
+        'kind': 'bool',
+        'id': hlir_id('Bool'),
+        'generic': False,
+        'width': 1,
+        'size': 1,
+        'align': 1,
+        'c_alias': 'uint8_t',
+        'llvm_alias': 'i1',
+        'cm_alias': 'Bool',
+        'ops': BOOL_OPS,
+        'att': [],
+        'ti': None
+    }
+
+
+
+def hlir_type_char(id_str, width, generic=False, ti=None):
+    size = nbytes_for_bits(width)
+
+    id = None
+    if id_str != None:
+        id = hlir_id(id_str)
+
+    return {
+        'isa': 'type',
+        'kind': 'char',
+        'id': id,
+        'generic': generic,
+        'width': width,
+        'size': size,
+        'align': size,
+        'ops': CHAR_OPS,
+        'att': [],
+        'ti': ti
+    }
+
+
+def hlir_type_integer(id_str, width, generic=False, signed=True, ti=None):
+    size = nbytes_for_bits(width)
+    return {
+        'isa': 'type',
+        'kind': 'int',
+        'id': hlir_id(id_str),
+        'generic': generic,
+        'width': width,
+        'size': size,
+        'align': size,
+        'signed': signed,
+        'ops': INT_OPS,
+        'att': [],
+        'ti': ti
+    }
+
+
+
+def hlir_type_float(id_str, width, ti=None):
+    size = nbytes_for_bits(width)
+    return {
+        'isa': 'type',
+        'kind': 'float',
+        'id': hlir_id(id_str),
+        'generic': False,
+        'width': width,
+        'size': size,
+        'align': size,
+        'c_alias': 'double',
+        'ops': FLOAT_OPS,
+        'att': [],
+        'ti': ti
+    }
+
+
+def hlir_type_pointer(to, ti=None):
+    size = nbytes_for_bits(ptr_width)
+    return {
+        'isa': 'type',
+        'kind': 'pointer',
+        'id': None,
+        'generic': False,
+        'width': ptr_width,
+        'size': size,
+        'align': size,
+        'to': to,
+        'ops': PTR_OPS,
+        'att': [],
+        'ti': ti
+    }
+
+
+# FreePointer - особый тип, он приводится неявно CM (но не в C!)
+def hlir_type_free_pointer():
+    size = nbytes_for_bits(ptr_width)
+    return {
+        'isa': 'type',
+        'kind': 'FreePointer',
+        'id': None,
+        'generic': True,
+        'width': ptr_width,
+        'size': size,
+        'align': size,
+        'to': typeUnit,
+        'ops': PTR_OPS,
+        'att': [],
+        'ti': None
+    }
+
+
+# Nil - особый тип, он приводится неявно как в CM так и в C
+def hlir_type_nil(ti):
+    size = nbytes_for_bits(ptr_width)
+    return {
+        'isa': 'type',
+        'kind': 'Nil',
+        'id': None,
+        'generic': True,
+        'width': ptr_width,
+        'size': size,
+        'align': size,
+        'to': typeUnit,
+        'ops': PTR_OPS,
+        'att': [],
+        'ti': ti
+    }
+
+
+# size - always hlir_value (!)
+def hlir_type_array(of, volume=None, generic=False, ti=None):
+    item_size = 0
+    item_align = 0
+    if of != None:
+        item_size = type_get_size(of)
+        item_align = type_get_align(of)
+
+    array_size = 0
+    if volume != None:
+        array_size = item_size * volume['imm']
+
+    return {
+        'isa': 'type',
+        'kind': 'array',
+        'id': None,
+        'generic': generic,
+        'width': 0, #'width': array_size * 8,
+        'size': array_size,
+        'align': item_align,
+        'of': of,
+        'volume': volume,
+        'ops': ARR_OPS,
+        'att': [],
+        'ti': ti
+    }
+
+
+from util import align_to
+def hlir_type_record(fields, generic=False, ti=None):
+    record_size = 0
+    record_align = 0
+
+    if not generic:
+        field_no = 0
+        field_offset = 0
+        for field in fields:
+            field['field_no'] = field_no
+            field['offset'] = record_size
+
+            field_size = type_get_size(field['type'])
+            field_align = type_get_align(field['type'])
+
+            record_size = record_size + field_size
+            record_align = max(record_align, field_align)
+
+            field_no = field_no + 1
+
+        # Afterall we need to align record_size to record_align (!)
+        record_size = align_to(record_size, record_align)
+
+    return {
+        'isa': 'type',
+        'kind': 'record',
+        'id': None,
+        'generic': generic,
+        'width': 0, #'width': record_size * 8,
+        'size': record_size,
+        'align': record_align,
+        'fields': fields,
+        'ops': REC_OPS,
+        'att': [],
+        'ti': ti
+    }
+
+
+# дефолт аргумент не работает!!!!
+def hlir_type_func(params, to, ti=None):
+    return {
+        'isa': 'type',
+        'kind': 'func',
+        'id': None,
+        'generic': False,
+        'width': 0,
+        'size': 0,
+        'align': 0,
+        'params': params,
+        'to': to,
+        'ops': [],
+        'att': [],
+        'ti': ti
+    }
+
+
+def hlir_type_opaque(id, ti=None):
+    return {
+        'isa': 'type',
+        'kind': 'opaque',
+        'id': id,
+        'generic': False,
+        'att': [],
+        'ti': ti
+    }
+
+
+
+
+
+def hlir_type_generic_int_for(num, unsigned=False, ti=None):
+    nbits = nbits_for_num(num)
+    return hlir_type_integer(None, width=nbits, generic=True, ti=ti)
+
+
 
 
 typeUnit = None

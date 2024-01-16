@@ -19,6 +19,7 @@ from symtab import Symtab
 import hlir.type as type
 from util import nbits_for_num, nbytes_for_bits
 from hlir.hlir import *
+from hlir.type import *
 
 
 RET_SIZE_MAX = 16
@@ -186,6 +187,7 @@ def init():
     lib_path = settings.get('lib')
 
     hlir_init()
+
     type.type_init()
 
     valueNil = hlir_value_int(0, typ=type.typeFreePointer)
