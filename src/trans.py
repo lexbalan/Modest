@@ -188,18 +188,20 @@ def init():
     hlir_init()
     type.type_init()
 
-
     valueNil = hlir_value_int(0, typ=type.typeNil)
     valueTrue = hlir_value_int(1, typ=type.typeBool)
     valueFalse = hlir_value_int(0, typ=type.typeBool)
-
-
 
     global root_context
     # init main context
     root_context = Symtab()
 
     root_context.type_add('Unit', type.typeUnit)
+    root_context.type_add('Bool', type.typeBool)
+
+    root_context.type_add('Char8', type.typeChar8)
+    root_context.type_add('Char16', type.typeChar16)
+    root_context.type_add('Char32', type.typeChar32)
 
     root_context.type_add('Int8', type.typeInt8)
     root_context.type_add('Int16', type.typeInt16)
@@ -207,7 +209,6 @@ def init():
     root_context.type_add('Int64', type.typeInt64)
     root_context.type_add('Int128', type.typeInt128)
 
-    root_context.type_add('Bool', type.typeBool)
     root_context.type_add('Nat8', type.typeNat8)
     root_context.type_add('Nat16', type.typeNat16)
     root_context.type_add('Nat32', type.typeNat32)
@@ -222,19 +223,11 @@ def init():
     #root_context.type_add('Decimal64', type.typeDecimal64)
     #root_context.type_add('Decimal128', type.typeDecimal128)
 
-    root_context.type_add('Char8', type.typeChar8)
-    root_context.type_add('Char16', type.typeChar16)
-    root_context.type_add('Char32', type.typeChar32)
-
     root_context.type_add('Str8', type.typeStr8)
     root_context.type_add('Str16', type.typeStr16)
     root_context.type_add('Str32', type.typeStr32)
 
-    #root_context.type_add('Str', type.typeStr8)
-
     root_context.type_add('Pointer', type.typeFreePtr)
-
-    root_context.type_add('Bool', type.typeBool)
 
     root_context.type_add('VA_List', type.typeVA_List)
 
@@ -249,18 +242,13 @@ def init():
 
     global typeSysInt, typeSysNat, typeSysFloat, typeSysChar, typeSysStr
 
-    typeSysInt = type.type_copy(type.select_int(int_width))
+    typeSysChar = type.select_char(char_width)
+
+    typeSysInt = type.select_int(int_width)
     typeSysInt['c_alias'] = 'int'
 
-    typeSysNat = type.type_copy(type.select_nat(int_width))
+    typeSysNat = type.select_nat(int_width)
     typeSysNat['c_alias'] = 'unsigned int'
-
-
-    typeSysChar = None
-
-    if char_width == 8: typeSysChar = type.typeChar8
-    elif char_width == 16: typeSysChar = type.typeChar16
-    elif char_width == 32: typeSysChar = type.typeChar32
 
     typeSysStr = hlir_type_pointer(hlir_type_array(typeSysChar, volume=None))
 

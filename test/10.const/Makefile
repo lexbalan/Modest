@@ -16,7 +16,7 @@ CM:
 
 
 LLVM:
-	mcc -o $(LLVMPREFIX)/minmax $(C_OPTIONS) -funsafe -mbackend=llvm ${MODEST_LIB}/misc/minmax.cm
+	mcc -o $(LLVMPREFIX)/minmax $(C_OPTIONS) -mbackend=llvm -funsafe ${MODEST_LIB}/misc/minmax.cm
 
 	mcc -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.cm
 	
@@ -25,8 +25,8 @@ LLVM:
 
 
 C:
-	mcc -o $(CPREFIX)/minmax $(C_OPTIONS) -funsafe -mbackend=c ${MODEST_LIB}/misc/minmax.hm
-	mcc -o $(CPREFIX)/minmax $(C_OPTIONS) -funsafe -mbackend=c ${MODEST_LIB}/misc/minmax.cm
+	mcc -o $(CPREFIX)/minmax $(C_OPTIONS) -mbackend=c -funsafe ${MODEST_LIB}/misc/minmax.hm
+	mcc -o $(CPREFIX)/minmax $(C_OPTIONS) -mbackend=c -funsafe ${MODEST_LIB}/misc/minmax.cm
 	mcc -o $(CPREFIX)/main -mbackend=c $(INDIR)/main.cm
 	CC $(CPREFIX)/main.c $(CPREFIX)/minmax.c
 	

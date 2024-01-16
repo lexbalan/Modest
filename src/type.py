@@ -46,8 +46,29 @@ def type_init():
     global typeFreePtr, typeNil
     global typeVA_List
 
+
     typeUnit = hlir_type_unit()
 
+    typeBool = hlir_type_bool(ti=None)
+    typeBool['c_alias'] = 'uint8_t'
+    typeBool['llvm_alias'] = 'i1'
+
+    #
+    typeGenericChar = hlir_type_char(None, width=0, generic=True, ti=None)
+
+    typeChar8 = hlir_type_char("Char8", width=8, ti=None)
+    typeChar8['c_alias'] = 'char' #'uint8_t'
+    typeChar8['llvm_alias'] = 'i8'
+
+    typeChar16 = hlir_type_char("Char16", width=16, ti=None)
+    typeChar16['c_alias'] = 'uint16_t'
+    typeChar16['llvm_alias'] = 'i16'
+
+    typeChar32 = hlir_type_char("Char32", width=32, ti=None)
+    typeChar32['c_alias'] = 'uint32_t'
+    typeChar32['llvm_alias'] = 'i32'
+
+    #
     typeInt8 = hlir_type_integer("Int8", width=8, ti=None)
     typeInt8['c_alias'] = 'int8_t'
     typeInt8['llvm_alias'] = 'i8'
@@ -68,11 +89,7 @@ def type_init():
     typeInt128['c_alias'] = '__int128'
     typeInt128['llvm_alias'] = 'i128'
 
-
-    typeBool = hlir_type_bool(ti=None)
-    typeBool['c_alias'] = 'uint8_t'
-    typeBool['llvm_alias'] = 'i1'
-
+    #
     typeNat8 = hlir_type_integer("Nat8", width=8, signed=False, ti=None)
     typeNat8['c_alias'] = 'uint8_t'
     typeNat8['llvm_alias'] = 'i8'
@@ -93,7 +110,7 @@ def type_init():
     typeNat128['c_alias'] = 'unsigned __int128'
     typeNat128['llvm_alias'] = 'i128'
 
-
+    #
     typeFloat16 = hlir_type_float('Float16', width=16, ti=None)
     typeFloat16['c_alias'] = 'half'
     typeFloat16['llvm_alias'] = 'half'
@@ -106,7 +123,7 @@ def type_init():
     typeFloat64['c_alias'] = 'double'
     typeFloat64['llvm_alias'] = 'double'
 
-
+    #
     typeDecimal32 = hlir_type_float('Decimal32', width=32, ti=None)
     typeDecimal32['c_alias'] = '_Decimal32'
     typeDecimal32['llvm_alias'] = 'float'
@@ -120,25 +137,11 @@ def type_init():
     typeDecimal128['llvm_alias'] = 'double'
 
 
-    typeGenericChar = hlir_type_char(None, width=0, generic=True, ti=None)
-
-    typeChar8 = hlir_type_char("Char8", width=8, ti=None)
-    typeChar8['c_alias'] = 'char' #'uint8_t'
-    typeChar8['llvm_alias'] = 'i8'
-
-    typeChar16 = hlir_type_char("Char16", width=16, ti=None)
-    typeChar16['c_alias'] = 'uint16_t'
-    typeChar16['llvm_alias'] = 'i16'
-
-    typeChar32 = hlir_type_char("Char32", width=32, ti=None)
-    typeChar32['c_alias'] = 'uint32_t'
-    typeChar32['llvm_alias'] = 'i32'
+    typeFreePtr = hlir_type_free_pointer(ti=None)
 
     typeStr8 = hlir_type_array(of=typeChar8)
     typeStr16 = hlir_type_array(of=typeChar16)
     typeStr32 = hlir_type_array(of=typeChar32)
-
-    typeFreePtr = hlir_type_free_pointer(ti=None)
 
     typeNil = hlir_type_nil(ti=None)
 
@@ -154,6 +157,15 @@ def type_init():
         'ops': [],
         'ti': None
     }
+
+
+
+def select_char(sz):
+    t = None
+    if sz <= 8: t = typeChar8
+    elif sz <= 16: t = typeChar16
+    else: t = typeChar32
+    return copy.copy(t)
 
 
 def select_int(sz):

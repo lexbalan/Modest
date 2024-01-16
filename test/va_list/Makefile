@@ -12,24 +12,24 @@ all: LLVM
 
 
 CM:
-	mcc -o $(CMPREFIX)/main -funsafe -mbackend=cm $(INDIR)/main.cm
+	mcc -o $(CMPREFIX)/main -mbackend=cm -funsafe $(INDIR)/main.cm
 
 
 
 LLVM:
-	mcc -o $(LLVMPREFIX)/main -funsafe -mbackend=llvm $(INDIR)/main.cm
+	mcc -o $(LLVMPREFIX)/main -mbackend=llvm -funsafe $(INDIR)/main.cm
 	
-	mcc -o $(LLVMPREFIX)/print -funsafe -mbackend=llvm ${MODEST_LIB}/fastfood/print.cm
+	mcc -o $(LLVMPREFIX)/print -mbackend=llvm -funsafe ${MODEST_LIB}/fastfood/print.cm
 
 	clang $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/print.ll
 
 
 C:
-	mcc -o $(CPREFIX)/main -funsafe -mbackend=c $(INDIR)/main.cm
+	mcc -o $(CPREFIX)/main -mbackend=c -funsafe $(INDIR)/main.cm
 	
-	mcc -o $(CPREFIX)/print $(C_OPTIONS) -funsafe -mbackend=c ${MODEST_LIB}/fastfood/print.hm
+	mcc -o $(CPREFIX)/print $(C_OPTIONS) -mbackend=c -funsafe ${MODEST_LIB}/fastfood/print.hm
 	
-	mcc -o $(CPREFIX)/print $(C_OPTIONS) -funsafe -mbackend=c ${MODEST_LIB}/fastfood/print.cm
+	mcc -o $(CPREFIX)/print $(C_OPTIONS) -mbackend=c -funsafe ${MODEST_LIB}/fastfood/print.cm
 	
 	CC $(CPREFIX)/main.c $(CPREFIX)/print.c
 

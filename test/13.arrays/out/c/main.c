@@ -18,8 +18,8 @@ int32_t globalArray[3] = {1, 2, 3};
 
 
 
-struct ee_x {char a[10];};
-void ee(struct ee_x x)
+struct f0_x {char a[10];};
+void f0(struct f0_x x)
 {
 }
 
@@ -27,7 +27,8 @@ void ee(struct ee_x x)
 
 int main(void)
 {
-    ee(*(struct ee_x *)&(struct ee_x){'h', 'i', '!', '\0', '\0', '\0', '\0', '\0', '\0', '\0'});
+
+    f0(*(struct f0_x *)&(struct f0_x){'h', 'i', '!', '\0', '\0', '\0', '\0', '\0', '\0', '\0'});
 
     int i = 0;
     while (i < 3) {

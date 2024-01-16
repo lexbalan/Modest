@@ -301,7 +301,7 @@ declare double @max_float64(double %a, double %b)
     i32 3
 ]
 
-define void @ee([10 x i8] %x) {
+define void @f0([10 x i8] %x) {
     ret void
 }
 
@@ -316,7 +316,7 @@ define i32 @main() {
     %8 = insertvalue [10 x i8] %7, i8 0, 7
     %9 = insertvalue [10 x i8] %8, i8 0, 8
     %10 = insertvalue [10 x i8] %9, i8 0, 9
-    call void ([10 x i8]) @ee([10 x i8] %10)
+    call void ([10 x i8]) @f0([10 x i8] %10)
     %11 = alloca i32
     store i32 0, i32* %11
     br label %again_1
