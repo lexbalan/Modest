@@ -1,7 +1,7 @@
 
 import hlir.type as type
 from error import error, warning, info
-from hlir.hlir import *
+from hlir.value import *
 from .value import *
 
 

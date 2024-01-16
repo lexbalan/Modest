@@ -14,8 +14,6 @@ def hlir_type_init():
 
 
 from .id import hlir_id
-
-#from hlir.hlir import *
 from util import get_item_with_id, nbits_for_num, nbytes_for_bits
 
 

@@ -1,5 +1,5 @@
 
-from hlir.hlir import hlir_value_cast
+from hlir.value import hlir_value_cast
 
 
 def value_cons_unit_immediate(v, t, ti):

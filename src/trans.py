@@ -19,6 +19,7 @@ from symtab import Symtab
 import hlir.type as type
 from util import nbits_for_num, nbytes_for_bits
 from hlir.hlir import *
+from hlir.value import *
 from hlir.type import *
 
 
