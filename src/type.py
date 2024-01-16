@@ -31,8 +31,7 @@ typeChar32 = None
 typeStr8 = None
 typeStr16 = None
 typeStr32 = None
-typeFreePtr = None
-typeNil = None
+typeFreePointer = None
 typeVA_List = None
 
 def type_init():
@@ -43,7 +42,7 @@ def type_init():
     global typeDecimal32, typeDecimal64, typeDecimal128
     global typeGenericChar, typeChar8, typeChar16, typeChar32
     global typeStr8, typeStr16, typeStr32
-    global typeFreePtr, typeNil
+    global typeFreePointer
     global typeVA_List
 
 
@@ -57,7 +56,7 @@ def type_init():
     typeGenericChar = hlir_type_char(None, width=0, generic=True, ti=None)
 
     typeChar8 = hlir_type_char("Char8", width=8, ti=None)
-    typeChar8['c_alias'] = 'char' #'uint8_t'
+    typeChar8['c_alias'] = 'char'
     typeChar8['llvm_alias'] = 'i8'
 
     typeChar16 = hlir_type_char("Char16", width=16, ti=None)
@@ -137,13 +136,12 @@ def type_init():
     typeDecimal128['llvm_alias'] = 'double'
 
 
-    typeFreePtr = hlir_type_free_pointer(ti=None)
+    typeFreePointer = hlir_type_free_pointer(ti=None)
 
     typeStr8 = hlir_type_array(of=typeChar8)
     typeStr16 = hlir_type_array(of=typeChar16)
     typeStr32 = hlir_type_array(of=typeChar32)
 
-    typeNil = hlir_type_nil(ti=None)
 
     typeVA_List = {
         'isa': 'type',

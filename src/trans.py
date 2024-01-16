@@ -188,7 +188,7 @@ def init():
     hlir_init()
     type.type_init()
 
-    valueNil = hlir_value_int(0, typ=type.typeNil)
+    valueNil = hlir_value_int(0, typ=type.typeFreePointer)
     valueTrue = hlir_value_int(1, typ=type.typeBool)
     valueFalse = hlir_value_int(0, typ=type.typeBool)
 
@@ -227,7 +227,7 @@ def init():
     root_context.type_add('Str16', type.typeStr16)
     root_context.type_add('Str32', type.typeStr32)
 
-    root_context.type_add('Pointer', type.typeFreePtr)
+    root_context.type_add('Pointer', type.typeFreePointer)
 
     root_context.type_add('VA_List', type.typeVA_List)
 

@@ -218,14 +218,14 @@ def llvm_va_arg(va_list, typ):
 #"%16 = bitcast i8** %3 to i8*"
 #"call void @llvm.va_start(i8* %16)"
 def llvm_va_start(x):
-    y = llvm_cast('bitcast', hlir_type_pointer(x['type']), type.typeFreePtr, x)
+    y = llvm_cast('bitcast', hlir_type_pointer(x['type']), type.typeFreePointer, x)
     lo("call void @llvm.va_start(i8* %%%s)" % y['reg'])
 
 
 #"%96 = bitcast i8** %3 to i8*"
 #"call void @llvm.va_end(i8* %96)"
 def llvm_va_end(x):
-    y = llvm_cast('bitcast', hlir_type_pointer(x['type']), type.typeFreePtr, x)
+    y = llvm_cast('bitcast', hlir_type_pointer(x['type']), type.typeFreePointer, x)
     lo("call void @llvm.va_end(i8* %%%s)" % y['reg'])
 
 
@@ -414,8 +414,8 @@ def llvm_store(l, r):
 # получает два указателя, и размер
 def llvm_memcpy(dst, src, size, volatile=False):
     #"@llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)"
-    dst2 = llvm_cast('bitcast', dst['type'], type.typeFreePtr, dst)
-    src2 = llvm_cast('bitcast', src['type'], type.typeFreePtr, src)
+    dst2 = llvm_cast('bitcast', dst['type'], type.typeFreePointer, dst)
+    src2 = llvm_cast('bitcast', src['type'], type.typeFreePointer, src)
     out(NL_INDENT)
     out("call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(")
     llvm_print_type_value(dst2)
@@ -1001,6 +1001,9 @@ def do_eval(x):
     if value_is_immediate(x):
         # сюда попадают литералы,
         # и любые другие значения с immediate полем
+        if type.is_free_pointer(x['type']):
+            return do_eval_literal(x)
+
         if not type.is_pointer(x['type']):
             return do_eval_literal(x)
 
@@ -1347,7 +1350,7 @@ def print_def_func(x):
     if arghack:
         global va_list
         id_str = func['va_id']['str'] # 'va_list'
-        va_list = llvm_alloca(type.typeFreePtr, id_str=None)
+        va_list = llvm_alloca(type.typeFreePointer, id_str=None)
         locals_add(id_str, va_list)
         llvm_va_start(va_list)
 
