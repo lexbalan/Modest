@@ -2,7 +2,7 @@
 import copy
 from .common import *
 from error import info, warning, error
-import hlir.type as type
+import hlir.type as hlir_type
 from hlir.type import type_print
 from value.value import value_attribute_check, value_print, value_is_immediate
 from hlir.value import hlir_value_int
@@ -35,7 +35,7 @@ def init():
     LLVM_TARGET_TRIPLE = settings.get('target_triple')
     LLVM_TARGET_DATALAYOUT = settings.get('target_datalayout')
 
-    llvm_value_num_zero = llvm_value_num(type.typeInt32, 0)
+    llvm_value_num_zero = llvm_value_num(hlir_type.typeInt32, 0)
 
 
 def indent():
@@ -219,14 +219,14 @@ def llvm_va_arg(va_list, typ):
 #"%16 = bitcast i8** %3 to i8*"
 #"call void @llvm.va_start(i8* %16)"
 def llvm_va_start(x):
-    y = llvm_cast('bitcast', hlir_type_pointer(x['type']), type.typeFreePointer, x)
+    y = llvm_cast('bitcast', hlir_type_pointer(x['type']), hlir_type.typeFreePointer, x)
     lo("call void @llvm.va_start(i8* %%%s)" % y['reg'])
 
 
 #"%96 = bitcast i8** %3 to i8*"
 #"call void @llvm.va_end(i8* %96)"
 def llvm_va_end(x):
-    y = llvm_cast('bitcast', hlir_type_pointer(x['type']), type.typeFreePointer, x)
+    y = llvm_cast('bitcast', hlir_type_pointer(x['type']), hlir_type.typeFreePointer, x)
     lo("call void @llvm.va_end(i8* %%%s)" % y['reg'])
 
 
@@ -290,7 +290,7 @@ def llvm_print_value_str(x):
 
 def llvm_print_value_num(x):
     num = x['imm']
-    if not type.is_pointer(x['type']):
+    if not hlir_type.is_pointer(x['type']):
         # integer, float, bool, char
         out(str(num))
 
@@ -298,7 +298,7 @@ def llvm_print_value_num(x):
         if x['imm'] == 0:
             out("null")
         else:
-            v = llvm_value_num(type.typeNat64, x['imm'])
+            v = llvm_value_num(hlir_type.typeNat64, x['imm'])
             llvm_inline_cast('inttoptr', x['type'], v)
 
 
@@ -308,9 +308,9 @@ def llvm_print_value_inlinecast(x):
 
 
 def llvm_print_value_zero(x):
-    if type.is_record(x['type']): out("zeroinitializer")
-    elif type.is_array(x['type']): out("zeroinitializer")
-    elif type.is_pointer(x['type']): out("null")
+    if hlir_type.is_record(x['type']): out("zeroinitializer")
+    elif hlir_type.is_array(x['type']): out("zeroinitializer")
+    elif hlir_type.is_pointer(x['type']): out("null")
     else: out("0")
 
 
@@ -415,8 +415,8 @@ def llvm_store(l, r):
 # получает два указателя, и размер
 def llvm_memcpy(dst, src, size, volatile=False):
     #"@llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)"
-    dst2 = llvm_cast('bitcast', dst['type'], type.typeFreePointer, dst)
-    src2 = llvm_cast('bitcast', src['type'], type.typeFreePointer, src)
+    dst2 = llvm_cast('bitcast', dst['type'], hlir_type.typeFreePointer, dst)
+    src2 = llvm_cast('bitcast', src['type'], hlir_type.typeFreePointer, src)
     out(NL_INDENT)
     out("call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(")
     llvm_print_type_value(dst2)
@@ -475,7 +475,7 @@ def llvm_dold(x):
 # носер поля (просто число)
 # возвращает value:address для поля этой структуры
 def llvm_eval_access_ptr(x, rec_type, field_no, result_type):
-    field_index = llvm_value_num(type.typeInt32, field_no)
+    field_index = llvm_value_num(hlir_type.typeInt32, field_no)
     return llvm_getelementptr(x, rec_type, (llvm_value_num_zero, field_index), result_type)
 
 
@@ -494,7 +494,7 @@ def llvm_eval_access(rec, field_no, result_type):
 
     # если работаем через 'переменую-указатель'
     # сперва нужно загрузить ее в регистр тем самым получим 'указатель'
-    if type.is_pointer(rt):
+    if hlir_type.is_pointer(rt):
         # pointer to record needs additional load
         rec = llvm_dold(rec)  # загружаем указатель в регистр
         rt = rt['to']
@@ -547,7 +547,7 @@ def print_type_func(t):
 
 
 def print_type_pointer(t):
-    if type.is_free_pointer(t):
+    if hlir_type.is_free_pointer(t):
         out("i8*")
     else:
         print_type(t['to']); out("*")
@@ -566,7 +566,7 @@ def print_type(t, print_aka=True):
 
         # иногда сюда залетают дженерики например в to левое:
         # let p = 0x12345678 to *Nat32
-        if type.is_generic_integer(t):
+        if hlir_type.is_generic_integer(t):
             out("i%d" % t['width'])
             return
 
@@ -574,19 +574,19 @@ def print_type(t, print_aka=True):
             out('%%%s' % t['id']['str'])
             return
 
-    if type.is_func(t): print_type_func(t)
-    elif type.is_record(t): print_type_record(t)
-    elif type.is_pointer(t): print_type_pointer(t)
-    elif type.is_array(t): print_type_array(t)
+    if hlir_type.is_func(t): print_type_func(t)
+    elif hlir_type.is_record(t): print_type_record(t)
+    elif hlir_type.is_pointer(t): print_type_pointer(t)
+    elif hlir_type.is_array(t): print_type_array(t)
 
-    elif type.is_integer(t) or type.is_float(t) or type.is_char(t):
+    elif hlir_type.is_integer(t) or hlir_type.is_float(t) or hlir_type.is_char(t):
         if 'llvm_alias' in t:
             out(t['llvm_alias'])
 
-    elif type.is_opaque(t):
+    elif hlir_type.is_opaque(t):
         out('opaque')
 
-    elif type.is_va_list(t):
+    elif hlir_type.is_va_list(t):
         out("i8*")
 
     else:
@@ -674,12 +674,12 @@ def do_eval_expr_call(v, retval=None):
     # eval func
     f = do_eval(func)
 
-    if type.is_pointer(ftype):
+    if hlir_type.is_pointer(ftype):
         # pointer to array needs additional load
         f = llvm_dold(f)
         ftype = ftype['to']
 
-    to_unit = type.eq(ftype['to'], type.typeUnit)
+    to_unit = hlir_type.eq(ftype['to'], hlir_type.typeUnit)
 
 
     # do call
@@ -763,9 +763,9 @@ def do_eval_expr_access_ptr(v):
 
 # cast type a to type b
 def select_cast_operator(a, b):
-    if type.is_integer(a) or type.is_char(a) or type.is_bool(a):
-        if type.is_integer(b) or type.is_char(b) or type.is_bool(b):
-            signed = type.is_integer_signed(b)
+    if hlir_type.is_integer(a) or hlir_type.is_char(a) or hlir_type.is_bool(a):
+        if hlir_type.is_integer(b) or hlir_type.is_char(b) or hlir_type.is_bool(b):
+            signed = hlir_type.is_integer_signed(b)
 
             if a['width'] < b['width']:
                 return 'sext' if signed else 'zext'
@@ -776,23 +776,23 @@ def select_cast_operator(a, b):
             else:
                 return 'bitcast'
 
-        elif type.is_pointer(b):
+        elif hlir_type.is_pointer(b):
             return 'inttoptr'
 
-        elif type.is_float(b):
-            return 'sitofp' if type.is_integer_signed(a) else 'uitofp'
+        elif hlir_type.is_float(b):
+            return 'sitofp' if hlir_type.is_integer_signed(a) else 'uitofp'
 
-    elif type.is_pointer(a):
-        if type.is_pointer(b): return 'bitcast'
-        elif type.is_integer(b): return 'ptrtoint'
+    elif hlir_type.is_pointer(a):
+        if hlir_type.is_pointer(b): return 'bitcast'
+        elif hlir_type.is_integer(b): return 'ptrtoint'
 
-    elif type.is_float(a):
+    elif hlir_type.is_float(a):
         # Float -> Integer
-        if type.is_integer(b):
-            return 'fptosi' if type.is_integer_signed(b) else 'fptoui'
+        if hlir_type.is_integer(b):
+            return 'fptosi' if hlir_type.is_integer_signed(b) else 'fptoui'
 
         # Float -> Float
-        elif type.is_float(b):
+        elif hlir_type.is_float(b):
             if a['width'] < b['width']: return 'fpext'
             elif a['width'] > b['width']: return 'fptrunc'
             else: return 'bitcast'
@@ -807,7 +807,7 @@ def do_eval_expr_cast_immediate(x):
     to_type = x['type']
 
     # строки печатаются ТОЛЬКО отсюда!
-    if type.is_pointer_to_string(to_type):
+    if hlir_type.is_pointer_to_string(to_type):
         string_of = to_type['to']['of']
         char_pow = string_of['width']
         return llvm_value_str(x['strid'], x['imm'], x['type'], value)
@@ -836,28 +836,28 @@ def do_eval_expr_cast(x):
     from_type = value['type']
     to_type = x['type']
 
-    if type.is_generic_string(from_type):
-        if type.is_pointer_to_string(to_type):
+    if hlir_type.is_generic_string(from_type):
+        if hlir_type.is_pointer_to_string(to_type):
             error("strings need to be printed through do_eval_expr_cast_immediate", x)
             exit(1)
 
     # cast any type to Unit type
-    if type.is_unit(to_type):
+    if hlir_type.is_unit(to_type):
         return llvm_value_zero(to_type)
 
     # (STUB?) nil -> zeroinitializer
-    if type.is_free_pointer(from_type):
+    if hlir_type.is_free_pointer(from_type):
         if value_is_immediate(value):
             return llvm_value_num(to_type, value['imm'])
 
     # Cm имеет структурную систему типов, тогда как llvm - номинативную
     # приведение структуры к структуре по значению не поддерживается LLVM
     # поэтому делаем его отдельно
-    if type.is_record(from_type):
-        if type.is_record(to_type):
+    if hlir_type.is_record(from_type):
+        if hlir_type.is_record(to_type):
             return cast_record_to_record(to_type, value, x['ti'])
 
-    if type.is_va_list(from_type):
+    if hlir_type.is_va_list(from_type):
         # приведение объекта типа va_list особенное
         # оно дает доступ к следующему элементу списка
         rv = do_eval(value)
@@ -948,7 +948,7 @@ def do_eval_record(v):
     # набиваем структуру
     for initializer in initializers:
         iv = do_reval(initializer['value'])
-        field = type.record_field_get(rec_type, initializer['id']['str'])
+        field = hlir_type.record_field_get(rec_type, initializer['id']['str'])
         xv = insertvalue(xv, iv, field['field_no'])
 
     return xv
@@ -965,7 +965,7 @@ def do_eval_func_const_var(x):
 
     if k == 'const':
         if value_is_immediate(x): # TODO: wtf? (see begining of do_eval)
-            if type.is_integer(x['type']) or type.is_float(x['type']):
+            if hlir_type.is_integer(x['type']) or hlir_type.is_float(x['type']):
                 return llvm_value_num(x['type'], x['imm'])
 
         return do_eval(x['value'])
@@ -981,14 +981,14 @@ def do_eval_func_const_var(x):
 
 def do_eval_literal(x):
     xt = x['type']
-    if type.is_integer(xt): return llvm_value_num(xt, x['imm'])
-    elif type.is_float(xt): return llvm_value_num(xt, x['imm'])
-    elif type.is_record(xt): return do_eval_record(x)
-    elif type.is_array(xt): return do_eval_array(x)
-    elif type.is_bool(xt): return llvm_value_num(xt, x['imm'])
-    elif type.is_free_pointer(xt): return llvm_value_num(xt, x['imm'])
-    elif type.is_pointer(xt): return llvm_value_num(xt, x['imm'])
-    elif type.is_char(xt): return llvm_value_num(xt, x['imm'])
+    if hlir_type.is_integer(xt): return llvm_value_num(xt, x['imm'])
+    elif hlir_type.is_float(xt): return llvm_value_num(xt, x['imm'])
+    elif hlir_type.is_record(xt): return do_eval_record(x)
+    elif hlir_type.is_array(xt): return do_eval_array(x)
+    elif hlir_type.is_bool(xt): return llvm_value_num(xt, x['imm'])
+    elif hlir_type.is_free_pointer(xt): return llvm_value_num(xt, x['imm'])
+    elif hlir_type.is_pointer(xt): return llvm_value_num(xt, x['imm'])
+    elif hlir_type.is_char(xt): return llvm_value_num(xt, x['imm'])
     else:
         value_print(x)
         error("do_eval_literal: unknown literal", x['ti'])
@@ -1002,10 +1002,10 @@ def do_eval(x):
     if value_is_immediate(x):
         # сюда попадают литералы,
         # и любые другие значения с immediate полем
-        if type.is_free_pointer(x['type']):
+        if hlir_type.is_free_pointer(x['type']):
             return do_eval_literal(x)
 
-        if not type.is_pointer(x['type']):
+        if not hlir_type.is_pointer(x['type']):
             return do_eval_literal(x)
 
     k = x['kind']
@@ -1125,7 +1125,7 @@ def print_stmt_return(x):
 
         if v['is_adr']:
             # save value from local variable (by ptr)
-            size = llvm_value_num(type.select_nat(32), to['size'])
+            size = llvm_value_num(hlir_type.select_nat(32), to['size'])
             llvm_memcpy(p2retval, v, size)
         else:
             # save value from reg
@@ -1173,7 +1173,7 @@ def print_stmt_let(x):
     # для let-массивов выделяем память
     # поскольку их могут индексировать переменной
     # а массив-значение в "регистре" невозможно индексировать переменной
-    if type.is_defined_array(val['type']):
+    if hlir_type.is_defined_array(val['type']):
         v = llvm_alloca(val['type'], id_str=None, init_ll_value=v)
 
     locals_add(id_str, v)
@@ -1236,7 +1236,7 @@ def print_func_paramlist(func, only_types=False, with_attributes=True):
     ftype = func['type']
 
     # here can be a pointer to function
-    if type.is_pointer(ftype):
+    if hlir_type.is_pointer(ftype):
         ftype = ftype['to']
 
     params = ftype['params']
@@ -1351,13 +1351,13 @@ def print_def_func(x):
     if arghack:
         global va_list
         id_str = func['va_id']['str'] # 'va_list'
-        va_list = llvm_alloca(type.typeFreePointer, id_str=None)
+        va_list = llvm_alloca(hlir_type.typeFreePointer, id_str=None)
         locals_add(id_str, va_list)
         llvm_va_start(va_list)
 
     print_stmt_block(func['stmt'])
 
-    if type.eq(ftype['to'], type.typeUnit):
+    if hlir_type.eq(ftype['to'], hlir_type.typeUnit):
         if va_list != None:
             llvm_va_end(va_list)
         lo("ret void")
@@ -1381,7 +1381,7 @@ def print_decl_type(x):
 def print_def_type(x):
     out("\n%%%s = type " % x['type']['id']['str'])
     print_type(x['type'], print_aka=False)
-    if type.is_record(x['type']):
+    if hlir_type.is_record(x['type']):
         out("\n")
 
 
@@ -1530,17 +1530,17 @@ REL_OPS = ['eq', 'ne', 'lt', 'gt', 'le', 'ge']
 def get_bin_opcode(op, t):
 
     def select_bin_opcode_su(sop, uop, t): # ["icmp slt", "icmp ult", x]
-        if type.is_integer_unsigned(t):
+        if hlir_type.is_integer_unsigned(t):
             return uop
         return sop
 
     def select_bin_opcode_f(op, fop, t): # ["sdiv", "udiv", "fdiv", x]
-        if type.is_float(t):
+        if hlir_type.is_float(t):
             return fop
         return op
 
     def select_bin_opcode_suf(sop, uop, fop, t): # ["sdiv", "udiv", "fdiv", x]
-        if type.is_float(t):
+        if hlir_type.is_float(t):
             return fop
         return select_bin_opcode_su(sop, uop, t)
 
@@ -1556,7 +1556,7 @@ def get_bin_opcode(op, t):
     elif op in ['lt', 'gt', 'le', 'ge']:
         opcode = select_bin_opcode_suf('icmp s' + op, 'icmp u' + op, 'fcmp o' + op, t)
     elif op == 'shr':
-        opcode = 'ashr' if type.is_integer_signed(t) else 'lshr'
+        opcode = 'ashr' if hlir_type.is_integer_signed(t) else 'lshr'
     elif op == 'logic_or':
         opcode = 'or'
     elif op == 'logic_and':

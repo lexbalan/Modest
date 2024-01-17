@@ -1,5 +1,5 @@
 
-import hlir.type as type
+import hlir.type as hlir_type
 from error import info
 from .common import *
 from value.value import value_attribute_check, value_print
@@ -82,7 +82,7 @@ def print_type_array(t):
 
 
 def print_type_pointer(t):
-    if type.is_free_pointer(t):
+    if hlir_type.is_free_pointer(t):
         out("Pointer")
     else:
         out("*"); print_type(t['to'])
@@ -163,12 +163,12 @@ def print_type(t, print_aka=True):
             out(t['id']['str'])
             return
 
-    if type.is_integer(t): print_type_integer(t)
-    elif type.is_func(t): print_type_func(t)
-    elif type.is_array(t): print_type_array(t)
-    elif type.is_record(t): print_type_record(t)
-    elif type.is_enum(t): print_type_enum(t)
-    elif type.is_pointer(t): print_type_pointer(t)
+    if hlir_type.is_integer(t): print_type_integer(t)
+    elif hlir_type.is_func(t): print_type_func(t)
+    elif hlir_type.is_array(t): print_type_array(t)
+    elif hlir_type.is_record(t): print_type_record(t)
+    elif hlir_type.is_enum(t): print_type_enum(t)
+    elif hlir_type.is_pointer(t): print_type_pointer(t)
     elif k == 'opaque': pass
     else: out("<type:" + str(t) + ">")
 
@@ -301,14 +301,14 @@ def print_value_cast(v, ctx):
 
 
     # NO need cast ptr to *void
-    if type.is_pointer(from_type):
-        if type.is_free_pointer(to_type):
+    if hlir_type.is_pointer(from_type):
+        if hlir_type.is_free_pointer(to_type):
             print_value(v['value'])
             return
 
     # NO need cast *void to ptr
-    if type.is_free_pointer(from_type):
-        if type.is_pointer(to_type):
+    if hlir_type.is_free_pointer(from_type):
+        if hlir_type.is_pointer(to_type):
             print_value(v['value'])
             return
 
@@ -319,7 +319,7 @@ def print_value_cast(v, ctx):
 def print_value_literal_arr(v, ctx):
 
     # FIXIT: это вообще херня
-    if type.is_array_of_char(v['type']):
+    if hlir_type.is_array_of_char(v['type']):
         print_value_literal_str_arr(v, ctx=[])
         return
 
@@ -473,7 +473,7 @@ def print_value_literal_int(x, ctx):
         fmt = "0x%%0%dX" % nsigns
         out(fmt % num)
 
-    elif type.is_pointer(x['type']):
+    elif hlir_type.is_pointer(x['type']):
         if num == 0:
             out("nil")
             return
@@ -488,8 +488,8 @@ def print_value_literal_flt(x, ctx):
 
 def print_value_zero(x, ctx):
     t = x['type']
-    if type.is_array(t): out("[]")
-    elif type.is_record(t): out("{}")
+    if hlir_type.is_array(t): out("[]")
+    elif hlir_type.is_record(t): out("{}")
     else: out("0")
 
 
@@ -508,14 +508,14 @@ def print_value_let(x, ctx):
 
 def print_value_literal(x, ctx):
     t = x['type']
-    if type.is_integer(t): print_value_literal_int(x, ctx)
-    elif type.is_float(t): print_value_literal_flt(x, ctx)
-    elif type.is_record(t): print_value_literal_record(x, ctx)
-    elif type.is_array(t): print_value_literal_arr(x, ctx)
-    elif type.is_free_pointer(t): out("nil")
-    elif type.is_pointer(t): print_value_literal_int(x, ctx)
-    elif type.is_bool(t): print_value_literal_bool(x, ctx)
-    elif type.is_char(t): print_value_literal_char(x, ctx)
+    if hlir_type.is_integer(t): print_value_literal_int(x, ctx)
+    elif hlir_type.is_float(t): print_value_literal_flt(x, ctx)
+    elif hlir_type.is_record(t): print_value_literal_record(x, ctx)
+    elif hlir_type.is_array(t): print_value_literal_arr(x, ctx)
+    elif hlir_type.is_free_pointer(t): out("nil")
+    elif hlir_type.is_pointer(t): print_value_literal_int(x, ctx)
+    elif hlir_type.is_bool(t): print_value_literal_bool(x, ctx)
+    elif hlir_type.is_char(t): print_value_literal_char(x, ctx)
 
 
 def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
