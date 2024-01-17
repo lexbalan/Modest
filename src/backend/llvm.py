@@ -547,7 +547,7 @@ def print_type_func(t):
 
 
 def print_type_pointer(t):
-    if type.is_free_pointer(t) or type.is_nil(t):
+    if type.is_free_pointer(t):
         out("i8*")
     else:
         print_type(t['to']); out("*")

@@ -523,9 +523,9 @@ def do_bin_op_with_pointers(op, l, r , ti):
         if hlir_type.is_pointer(l['type']) and hlir_type.is_pointer(r['type']):
 
             # what about typeFreePointer?
-            if hlir_type.is_nil(l['type']):
+            if hlir_type.is_free_pointer(l['type']):
                 l = value_cons_implicit(l, r['type'], ti)
-            elif hlir_type.is_nil(r['type']):
+            elif hlir_type.is_free_pointer(r['type']):
                 r = value_cons_implicit(r, l['type'], ti)
 
             return hlir_value_bin(op, l, r, hlir_type.typeBool, ti)

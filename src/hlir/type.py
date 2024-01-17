@@ -164,42 +164,6 @@ def hlir_type_pointer(to, ti=None):
     }
 
 
-# FreePointer - особый тип, он приводится неявно CM (но не в C!)
-def hlir_type_free_pointer():
-    size = nbytes_for_bits(ptr_width)
-    return {
-        'isa': 'type',
-        'kind': 'FreePointer',
-        'id': None,
-        'generic': True,
-        'width': ptr_width,
-        'size': size,
-        'align': size,
-        'to': typeUnit,
-        'ops': PTR_OPS,
-        'att': [],
-        'ti': None
-    }
-
-
-# Nil - особый тип, он приводится неявно как в CM так и в C
-def hlir_type_nil(ti):
-    size = nbytes_for_bits(ptr_width)
-    return {
-        'isa': 'type',
-        'kind': 'Nil',
-        'id': None,
-        'generic': True,
-        'width': ptr_width,
-        'size': size,
-        'align': size,
-        'to': typeUnit,
-        'ops': PTR_OPS,
-        'att': [],
-        'ti': ti
-    }
-
-
 # size - always hlir_value (!)
 def hlir_type_array(of, volume=None, generic=False, ti=None):
     item_size = 0
@@ -434,7 +398,7 @@ def type_init():
     typeDecimal128['llvm_alias'] = 'double'
 
 
-    typeFreePointer = hlir_type_free_pointer()
+    typeFreePointer = hlir_type_pointer(to=typeUnit)
 
     typeStr8 = hlir_type_array(of=typeChar8)
     typeStr16 = hlir_type_array(of=typeChar16)
@@ -697,11 +661,13 @@ def is_string(t):
 
 
 def is_pointer(t):
-    return t['kind'] in ['pointer', 'FreePointer', 'Nil']
+    return t['kind'] in ['pointer']
 
 
 def is_free_pointer(t):
-    return t['kind'] == 'FreePointer'
+    if is_pointer(t):
+        return is_unit(t['to'])
+    return False
 
 
 def is_pointer_to_record(t):
@@ -734,13 +700,8 @@ def is_pointer_to_string(t):
     return False
 
 
-def is_nil(t):
-    return t['kind'] == 'Nil'
-
-
 def is_opaque(t):
     return t['kind'] == 'opaque'
-
 
 
 def is_generic_char(t):

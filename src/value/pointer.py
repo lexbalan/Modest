@@ -65,8 +65,10 @@ def value_cons_pointer(v, t, ti, method):
     nv = None
 
     # Nil -> *X
-    if type.is_nil(vtype):
-        nv = value_cons_pointer_immediate(v, t, ti)
+    if type.is_free_pointer(vtype):
+        if value_is_immediate(v):
+            nv = value_cons_pointer_immediate(v, t, ti)
+        nv = hlir_value_cast(v, t, ti=ti)
 
     # GenericString -> *[]CharX
     elif type.is_generic_string(vtype):
