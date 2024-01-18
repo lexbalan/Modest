@@ -156,25 +156,13 @@ def insert(s):
 
 
 
-def stmt_is_bad(x):
-    assert x != None
-    return x['kind'] == 'bad'
-
-
-
-typeSysInt = None
-typeSysNat = None
-typeSysStr = None
-typeSysChar = None
-typeSysFloat = None
-
-# for target arch
-char_width = 0
-int_width = 0
-ptr_width = 0
-flt_width = 0
 lib_path = ""
 
+typeSysChar = None
+typeSysInt = None
+typeSysNat = None
+typeSysFloat = None
+typeSysStr = None
 
 valueNil = None
 valueTrue = None
@@ -182,11 +170,7 @@ valueFalse = None
 
 
 def init():
-    global char_width, int_width, ptr_width, flt_width, lib_path
-    int_width = int(settings.get('integer_width'))
-    ptr_width = int(settings.get('pointer_width'))
-    flt_width = int(settings.get('float_width'))
-    char_width = int(settings.get('char_width'))
+    global lib_path
     lib_path = settings.get('lib')
 
     hlir_init()
@@ -244,6 +228,10 @@ def init():
 
     # Set taget depended Int & Nat types
     # (used in index, extra agrs & generic numeric var definitions)
+
+    char_width = int(settings.get('char_width'))
+    int_width = int(settings.get('integer_width'))
+    flt_width = int(settings.get('float_width'))
 
     global typeSysInt, typeSysNat, typeSysFloat, typeSysChar, typeSysStr
 
@@ -1220,7 +1208,7 @@ def do_stmt_if(x):
     c = do_value(x['cond'])
     t = do_stmt(x['then'])
 
-    if value_is_bad(c) or stmt_is_bad(t):
+    if value_is_bad(c) or hlir_stmt_is_bad(t):
         return hlir_stmt_bad()
 
     c = value_cons_implicit(c, hlir_type.typeBool, c['ti'])
@@ -1229,7 +1217,7 @@ def do_stmt_if(x):
     e = None
     if x['else'] != None:
         e = do_stmt(x['else'])
-        if stmt_is_bad(e):
+        if hlir_stmt_is_bad(e):
             return hlir_stmt_bad()
 
     return hlir_stmt_if(c, t, e, ti=x['ti'])
@@ -1240,7 +1228,7 @@ def do_stmt_while(x):
     c = do_value(x['cond'])
     s = do_stmt(x['stmt'])
 
-    if value_is_bad(c) or stmt_is_bad(s):
+    if value_is_bad(c) or hlir_stmt_is_bad(s):
         return hlir_stmt_bad()
 
     c = value_cons_implicit(c, hlir_type.typeBool, c['ti'])
@@ -1484,7 +1472,7 @@ def do_stmt_block(x):
     stmts = []
     for stmt in x['stmts']:
         s = do_stmt(stmt)
-        if not stmt_is_bad(s):
+        if not hlir_stmt_is_bad(s):
             stmts.append(s)
 
     module['context'] = module['context'].parent_get()
