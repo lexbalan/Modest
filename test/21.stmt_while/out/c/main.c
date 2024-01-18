@@ -10,7 +10,7 @@ int main(void)
 {
     printf("test stmt_while\n");
 
-    int a = 0;
+    int32_t a = 0;
     const int8_t b = 10;
 
     while (a < b) {

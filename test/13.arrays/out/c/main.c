@@ -30,7 +30,7 @@ int main(void)
 
     f0(*(struct f0_x *)&(struct f0_x){'h', 'i', '!', '\0', '\0', '\0', '\0', '\0', '\0', '\0'});
 
-    int i = 0;
+    int32_t i = 0;
     while (i < 3) {
         const int32_t a = globalArray[i];
         printf("globalArray[%d] = %d\n", i, a);

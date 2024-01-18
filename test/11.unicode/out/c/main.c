@@ -40,7 +40,7 @@ int main(void)
     //    printf("ratCode = %d\n", ratCode)
 
 
-    int i = 0;
+    int32_t i = 0;
     while (true) {
         const uint16_t c = string16Const[i];
         if (c == 0) {

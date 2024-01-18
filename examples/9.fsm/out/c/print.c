@@ -19,7 +19,7 @@ void _putchar(char c)
 
 void put_str8(char *s)
 {
-    int i = 0;
+    int32_t i = 0;
     while (true) {
         const char c = s[i];
         if (c == '\0') {
@@ -40,7 +40,7 @@ void ff_printf(char *str, ...)
 {
     va_list va_list;
     va_start(va_list, str);
-    int i = 0;
+    int32_t i = 0;
     while (true) {
         char c = str[i];
 
@@ -115,7 +115,7 @@ void sprintf_hex_nat32(char *buf, uint32_t x)
 
     uint32_t d = x;
 
-    int i = 0;
+    int32_t i = 0;
     while (true) {
         const uint32_t n = d % 16;
         d = d / 16;
@@ -129,7 +129,7 @@ void sprintf_hex_nat32(char *buf, uint32_t x)
     }
 
     // mirroring into buffer
-    int j = 0;
+    int32_t j = 0;
     while (i > 0) {
         i = i - 1;
         buf[j] = cc[i];
@@ -154,7 +154,7 @@ void sprintf_dec_int32(char *buf, int x)
         d = -d;
     }
 
-    int i = 0;
+    int32_t i = 0;
     while (true) {
         const int32_t n = d % 10;
         d = d / 10;
@@ -166,7 +166,7 @@ void sprintf_dec_int32(char *buf, int x)
         }
     }
 
-    int j = 0;
+    int32_t j = 0;
 
     if (neg) {
         buf[0] = '-';
@@ -191,7 +191,7 @@ void sprintf_dec_nat32(char *buf, uint32_t x)
 
     uint32_t d = x;
 
-    int i = 0;
+    int32_t i = 0;
     while (true) {
         const uint32_t n = d % 10;
         d = d / 10;
@@ -203,7 +203,7 @@ void sprintf_dec_nat32(char *buf, uint32_t x)
         }
     }
 
-    int j = 0;
+    int32_t j = 0;
     while (i > 0) {
         i = i - 1;
         buf[j] = cc[i];

@@ -85,7 +85,7 @@ void utf32_putchar(uint32_t c)
     char decoded_buf[5];
     const int n = (const int)utf32_to_utf8(c, (char *)&decoded_buf);
 
-    int i = 0;
+    int32_t i = 0;
     while (i < n) {
         const char c = decoded_buf[i];
         if ((uint8_t)c == 0) {break;}
@@ -97,7 +97,7 @@ void utf32_putchar(uint32_t c)
 
 void utf32_puts(uint32_t *s)
 {
-    int i = 0;
+    int32_t i = 0;
     while (true) {
         const uint32_t c = s[i];
         if ((uint32_t)c == 0) {break;}
@@ -109,7 +109,7 @@ void utf32_puts(uint32_t *s)
 
 void utf16_puts(uint16_t *s)
 {
-    int i = 0;
+    int32_t i = 0;
     while (true) {
         const uint16_t c = s[i];
         if ((uint16_t)c == 0) {break;}
@@ -128,7 +128,7 @@ void utf16_puts(uint16_t *s)
 
 void utf8_puts(char *s)
 {
-    int i = 0;
+    int32_t i = 0;
     while (true) {
         const char c = s[i];
         if ((uint8_t)c == 0) {break;}

@@ -92,9 +92,9 @@ int main(void)
 
     int32_t aa[dim1 * dim2];
 
-    int i = 0;
+    int32_t i = 0;
     while (i < 16) {
-        int j = 0;
+        int32_t j = 0;
         while (j < 16) {
             aa[i * dim2 + j] = i * j;
             j = j + 1;
@@ -104,7 +104,7 @@ int main(void)
 
     i = 0;
     while (i < 16) {
-        int k = 0;
+        int32_t k = 0;
         while (k < 16) {
             printf("aa[%i][%i] = %i\n", i, k, aa[i * dim2 + k]);
             k = k + 1;

@@ -248,17 +248,10 @@ def init():
     global typeSysInt, typeSysNat, typeSysFloat, typeSysChar, typeSysStr
 
     typeSysChar = hlir_type.select_char(char_width)
-
     typeSysInt = hlir_type.select_int(int_width)
-    typeSysInt['c_alias'] = 'int'
-
     typeSysNat = hlir_type.select_nat(int_width)
-    typeSysNat['c_alias'] = 'unsigned int'
-
-    typeSysStr = hlir_type_pointer(hlir_type_array(typeSysChar, volume=None))
-
     typeSysFloat = hlir_type.typeFloat64
-
+    typeSysStr = hlir_type_pointer(hlir_type_array(typeSysChar, volume=None))
 
 
 # last fiels of record can be zero size array (!)

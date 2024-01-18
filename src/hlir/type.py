@@ -425,7 +425,8 @@ def select_char(sz):
     if sz <= 8: t = typeChar8
     elif sz <= 16: t = typeChar16
     else: t = typeChar32
-    return copy.copy(t)
+    assert(t != None)
+    return t
 
 
 def select_int(sz):
@@ -435,7 +436,8 @@ def select_int(sz):
     elif sz <= 32: t = typeInt32
     elif sz <= 64: t = typeInt64
     elif sz <= 128: t = typeInt128
-    return copy.copy(t)
+    assert(t != None)
+    return t
 
 
 def select_nat(sz):
@@ -445,7 +447,8 @@ def select_nat(sz):
     elif sz <= 32: t = typeNat32
     elif sz <= 64: t = typeNat64
     elif sz <= 128: t = typeNat128
-    return copy.copy(t)
+    assert(t != None)
+    return t
 
 
 def select_integer_type(sz, is_signed):
