@@ -765,7 +765,7 @@ def do_eval_expr_access_ptr(v):
 def select_cast_operator(a, b):
     if hlir_type.type_is_integer(a) or hlir_type.type_is_char(a) or hlir_type.type_is_bool(a):
         if hlir_type.type_is_integer(b) or hlir_type.type_is_char(b) or hlir_type.type_is_bool(b):
-            signed = hlir_type.type_is_integer_signed(b)
+            signed = hlir_type.type_is_signed(b)
 
             if a['width'] < b['width']:
                 return 'sext' if signed else 'zext'
@@ -780,7 +780,7 @@ def select_cast_operator(a, b):
             return 'inttoptr'
 
         elif hlir_type.type_is_float(b):
-            return 'sitofp' if hlir_type.type_is_integer_signed(a) else 'uitofp'
+            return 'sitofp' if hlir_type.type_is_signed(a) else 'uitofp'
 
     elif hlir_type.type_is_pointer(a):
         if hlir_type.type_is_pointer(b): return 'bitcast'
@@ -789,7 +789,7 @@ def select_cast_operator(a, b):
     elif hlir_type.type_is_float(a):
         # Float -> Integer
         if hlir_type.type_is_integer(b):
-            return 'fptosi' if hlir_type.type_is_integer_signed(b) else 'fptoui'
+            return 'fptosi' if hlir_type.type_is_signed(b) else 'fptoui'
 
         # Float -> Float
         elif hlir_type.type_is_float(b):
@@ -807,7 +807,7 @@ def do_eval_expr_cast_immediate(x):
     to_type = x['type']
 
     # строки печатаются ТОЛЬКО отсюда!
-    if hlir_type.type_is_pointer_to_string(to_type):
+    if hlir_type.type_is_pointer_to_array_of_char(to_type):
         string_of = to_type['to']['of']
         char_pow = string_of['width']
         return llvm_value_str(x['strid'], x['imm'], x['type'], value)
@@ -836,8 +836,8 @@ def do_eval_expr_cast(x):
     from_type = value['type']
     to_type = x['type']
 
-    if hlir_type.type_is_generic_string(from_type):
-        if hlir_type.type_is_pointer_to_string(to_type):
+    if hlir_type.type_is_generic_array_of_char(from_type):
+        if hlir_type.type_is_pointer_to_array_of_char(to_type):
             error("strings need to be printed through do_eval_expr_cast_immediate", x)
             exit(1)
 
@@ -1530,7 +1530,7 @@ REL_OPS = ['eq', 'ne', 'lt', 'gt', 'le', 'ge']
 def get_bin_opcode(op, t):
 
     def select_bin_opcode_su(sop, uop, t): # ["icmp slt", "icmp ult", x]
-        if hlir_type.type_is_integer_unsigned(t):
+        if hlir_type.type_is_unsigned(t):
             return uop
         return sop
 
@@ -1556,7 +1556,7 @@ def get_bin_opcode(op, t):
     elif op in ['lt', 'gt', 'le', 'ge']:
         opcode = select_bin_opcode_suf('icmp s' + op, 'icmp u' + op, 'fcmp o' + op, t)
     elif op == 'shr':
-        opcode = 'ashr' if hlir_type.type_is_integer_signed(t) else 'lshr'
+        opcode = 'ashr' if hlir_type.type_is_signed(t) else 'lshr'
     elif op == 'logic_or':
         opcode = 'or'
     elif op == 'logic_and':

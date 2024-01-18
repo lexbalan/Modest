@@ -30,7 +30,7 @@ def cons_default(x, ti):
     if type.type_is_integer(from_type):
         return value_cons_integer(x, typeSysInt, ti, method)
 
-    elif type.type_is_generic_string(from_type):
+    elif type.type_is_generic_array_of_char(from_type):
         print("cons_ptr_to_str_from_generic_str")
         s = cons_ptr_to_str_from_generic_str(x, typeSysStr, ti, 'explicit')
         #print(s)

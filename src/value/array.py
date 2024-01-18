@@ -35,7 +35,7 @@ def value_cons_array_from_generic_array(v, t, ti, method):
     items = v['imm']
     for item in items:
 
-        if type.type_is_string(v['type']):
+        if type.type_is_array_of_char(v['type']):
             char_code = item
             item = hlir_value_char(char_code, type=None, ti=ti)
 
@@ -101,7 +101,7 @@ def value_cons_array(v, t, ti, method):
     to_type = t
 
     # GenericString -> Array
-    if type.type_is_generic_string(from_type):
+    if type.type_is_generic_array_of_char(from_type):
         return value_cons_array_from_generic_array(v, t, ti, method)
 
     # GenericArray -> Array

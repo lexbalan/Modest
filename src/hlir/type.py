@@ -462,7 +462,7 @@ def type_eq_integer(a, b, opt):
     if a['width'] != b['width']:
         return False
 
-    if type_is_integer_signed(a) != type_is_integer_signed(b):
+    if a['signed'] != b['signed']:
         return False
 
     return True
@@ -550,16 +550,15 @@ def type_eq(a, b, opt=[]):
     k = a['kind']
     if k == 'int': return type_eq_integer(a, b, opt)
     elif k == 'unit': return True
+    elif k == 'bool': return True
     elif k == 'func': return type_eq_func(a, b, opt)
     elif k == 'record': return type_eq_record(a, b, opt)
     elif k == 'pointer': return type_eq_pointer(a, b, opt)
-    elif k == 'bool': return True
     elif k == 'array': return type_eq_array(a, b, opt)
     elif k == 'float': return type_eq_float(a, b, opt)
     elif k == 'char': return type_eq_char(a, b, opt)
     elif k == 'opaque': return type_eq_opaque(a, b, opt)
     elif k == 'VA_List': print("UU"); return b['kind'] == 'VA_List'
-
     return False
 
 
@@ -582,7 +581,6 @@ def type_attribute_add(t, a):
 
 
 def type_is_bad(t):
-    assert t != None
     return t['kind'] == 'bad'
 
 
@@ -594,10 +592,6 @@ def type_is_unit(t):
     return t['kind'] == 'unit'
 
 
-def type_is_enum(t):
-    return t['kind'] == 'enum'
-
-
 def type_is_bool(t):
     return t['kind'] == 'bool'
 
@@ -606,24 +600,12 @@ def type_is_char(t):
     return t['kind'] == 'char'
 
 
-def type_is_float(t):
-    return t['kind'] == 'float'
-
-
 def type_is_integer(t):
     return t['kind'] == 'int'
 
 
-def type_is_integer_signed(t):
-    if type_is_integer(t):
-        return t['signed']
-    return False
-
-
-def type_is_integer_unsigned(t):
-    if type_is_integer(t):
-        return not t['signed']
-    return False
+def type_is_float(t):
+    return t['kind'] == 'float'
 
 
 def type_is_func(t):
@@ -651,13 +633,13 @@ def type_is_undefined_array(t):
 
 
 def type_is_array_of_char(t):
-    if not type_is_array(t):
-        return False
-    return type_is_char(t['of'])
+    if type_is_array(t):
+        return type_is_char(t['of'])
+    return False
 
 
-def type_is_string(t):
-    return type_is_array_of_char(t)
+def type_is_enum(t):
+    return t['kind'] == 'enum'
 
 
 def type_is_pointer(t):
@@ -694,9 +676,9 @@ def type_is_pointer_to_undefined_array(t):
     return False
 
 
-def type_is_pointer_to_string(t):
+def type_is_pointer_to_array_of_char(t):
     if type_is_pointer(t):
-        return type_is_string(t['to'])
+        return type_is_array_of_char(t['to'])
     return False
 
 
@@ -720,7 +702,7 @@ def type_is_generic_array(t):
     return type_is_generic(t) and type_is_array(t)
 
 
-def type_is_generic_string(t):
+def type_is_generic_array_of_char(t):
     if type_is_generic_array(t):
         if t['of'] != None: #!
             return type_is_char(t['of'])
@@ -731,6 +713,18 @@ def type_is_generic_string(t):
 
 def type_is_alias(t):
     return 'alias' in t['att']
+
+
+def type_is_signed(t):
+    if 'signed' in t:
+        return t['signed']
+    return False
+
+
+def type_is_unsigned(t):
+    if 'signed' in t:
+        return not t['signed']
+    return False
 
 
 

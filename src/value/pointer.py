@@ -71,8 +71,8 @@ def value_cons_pointer(v, t, ti, method):
         nv = hlir_value_cast(v, t, ti=ti)
 
     # GenericString -> *[]CharX
-    elif type.type_is_generic_string(vtype):
-        if type.type_is_pointer_to_string(to_type):
+    elif type.type_is_generic_array_of_char(vtype):
+        if type.type_is_pointer_to_array_of_char(to_type):
             s = cons_ptr_to_str_from_generic_str(v, t, ti, method)
             return s
 

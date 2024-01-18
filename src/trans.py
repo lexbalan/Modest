@@ -680,7 +680,7 @@ def do_value_bin(x):
         return do_bin_op_with_pointers(op, l, r, ti)
 
 
-    if hlir_type.type_is_generic_string(l['type']) and hlir_type.type_is_generic_string(r['type']):
+    if hlir_type.type_is_generic_array_of_char(l['type']) and hlir_type.type_is_generic_array_of_char(r['type']):
         if op == 'add':
             return value_strings_concat(l, r, ti)
         elif op in ['eq', 'ne']:
@@ -736,7 +736,7 @@ def do_value_minus(val, t, ti):
         v['imm'] = num
 
     if hlir_type.type_is_generic(v['type']):
-        if not hlir_type.type_is_integer_signed(v['type']):
+        if hlir_type.type_is_unsigned(v['type']):
             #hlir_type.set_signed()
             v['type']['signed'] = True
 
@@ -890,7 +890,7 @@ def do_value_call(x):
                         if not hlir_type.type_is_integer(arg_type):
                             warning("expected numeric value", a['ti'])
                     elif form == 's':
-                        if not hlir_type.type_is_pointer_to_string(arg_type):
+                        if not hlir_type.type_is_pointer_to_array_of_char(arg_type):
                             warning("expected pointer to string", a['ti'])
                     elif form == 'f':
                         if not hlir_type.type_is_float(arg_type):
@@ -935,7 +935,7 @@ def do_value_index(x):
     typ = a['type']
 
     # check if left type is valid
-    if not (hlir_type.type_is_array(typ) or hlir_type.type_is_pointer(typ) or hlir_type.type_is_pointer_to_string(typ)):
+    if not (hlir_type.type_is_array(typ) or hlir_type.type_is_pointer(typ) or hlir_type.type_is_pointer_to_array_of_char(typ)):
         error("expected array or pointer to array", x)
         return hlir_value_bad(x['left']['ti'])
 

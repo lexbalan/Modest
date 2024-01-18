@@ -305,7 +305,7 @@ def print_type2(t, print_aka, need_space_after, _print_array_asis):
         # если пришел generic - подберем подходящий тип
         # ex: let x = 1; func(x)
         width = t['width']
-        nt = hlir_type.select_integer_type(width, is_signed=hlir_type.type_is_integer_signed(t))
+        nt = hlir_type.select_integer_type(width, is_signed=hlir_type.type_is_signed(t))
         if nt == None:
             error("cannot select integer type for too big value", t['ti'])
             return
@@ -635,8 +635,8 @@ def print_value_cast_immediate(v, ctx):
 
     #out("/*^*/")
 
-    if hlir_type.type_is_pointer_to_string(to_type):
-        if hlir_type.type_is_string(from_type):
+    if hlir_type.type_is_pointer_to_array_of_char(to_type):
+        if hlir_type.type_is_array_of_char(from_type):
             char_width = to_type['to']['of']['width']
             print_value_literal_str(v, ctx=[], char_width=char_width)
             return
@@ -706,17 +706,16 @@ def print_value_cast(x, ctx):
     # - in Cm int32(-1) -> uint64 => 0x00000000ffffffff
     # - in C  int32(-1) -> uint64 => 0xffffffffffffffff
     # required: (uint64_t)((uint32)int32_value)
-    if hlir_type.type_is_integer_unsigned(to_type):
-        #if hlir_type.type_is_integer_signed(from_type): # is_signed (integers, chars)
-        if from_type['size'] < to_type['size']:
-            out("((")
-            print_type(to_type)
-            out(")")
-            #out("/*?*/")
-            nat_same_sz = hlir_type.select_nat(from_type['width'])
-            print_cast(nat_same_sz, value, ctx)
-            out(")")
-            return
+    if hlir_type.type_is_integer(to_type):
+        if hlir_type.type_is_unsigned(to_type):
+            if from_type['size'] < to_type['size']:
+                out("((")
+                print_type(to_type)
+                out(")")
+                nat_same_sz = hlir_type.select_nat(from_type['width'])
+                print_cast(nat_same_sz, value, ctx)
+                out(")")
+                return
 
 
     print_cast(to_type, value, ctx)
@@ -753,10 +752,10 @@ def print_array_values(values):
 
 
 def print_value_literal_arr(v, ctx):
-    if hlir_type.type_is_string(v['type']):
+    if hlir_type.type_is_array_of_char(v['type']):
         char_type = v['type']['of']
         char_width = char_type['width']
-        if hlir_type.type_is_generic_string(v['type']):
+        if hlir_type.type_is_generic_array_of_char(v['type']):
             # FIXIT: вообще нефиг печатать generic string (!)
             out('{} /*GENERIC-STRING*/')
             return
@@ -988,7 +987,7 @@ def print_value_literal_int(x, ctx):
 
     nbits = x['type']['width']
 
-    if hlir_type.type_is_integer_unsigned(x['type']):
+    if hlir_type.type_is_unsigned(x['type']):
         out("U")
 
     if nbits > CC_INT_SIZE_BITS:
@@ -1603,12 +1602,6 @@ def print_def_var(x):
 
 def print_def_const(x):
     const_value = x['value']
-
-    # не печатаем GenericString
-    # печатаем только сконструированные (явно или неявно) строки
-    # временно вырубил но в целом здравая идея
-#    if hlir_type.type_is_generic_string(const_value['type']):
-#        return
 
     id_str = const_value['id']['str']
     v = const_value['value']
