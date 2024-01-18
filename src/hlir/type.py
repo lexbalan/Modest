@@ -616,7 +616,7 @@ def type_is_array(t):
 
 
 def type_is_pointer(t):
-    return t['kind'] in ['pointer']
+    return t['kind'] == 'pointer'
 
 
 def type_is_opaque(t):
