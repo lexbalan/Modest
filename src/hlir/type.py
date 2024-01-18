@@ -407,7 +407,7 @@ def type_init():
 
     typeVA_List = {
         'isa': 'type',
-        'kind': 'VA_List',
+        'kind': 'va_list',
         'id': None,
         'generic': False,
         'size': 0,
@@ -424,7 +424,7 @@ def type_select_char(sz):
     t = None
     if sz <= 8: t = typeChar8
     elif sz <= 16: t = typeChar16
-    else: t = typeChar32
+    elif sz <= 32: t = typeChar32
     assert(t != None)
     return t
 
@@ -453,10 +453,8 @@ def type_select_nat(sz):
 
 def type_select_integer(sz, is_signed):
     if is_signed:
-        if sz < 128:
-            return type_select_int(sz + 1)
-        else:
-            return type_select_int(sz)
+        if sz < 128: return type_select_int(sz + 1)
+        else: return type_select_int(sz)
     return type_select_nat(sz)
 
 
@@ -532,8 +530,7 @@ def type_eq_alias(a, b, opt):
 def type_eq(a, b, opt=[]):
     # fast checking
     if a == b: return True
-    if a['kind'] == 'bad': return True
-    if b['kind'] == 'bad': return True
+    if a['kind'] == 'bad' or b['kind'] == 'bad': return True
     if a['kind'] != b['kind']: return False
 
     # проверять аттрибуты (volatile, const)
@@ -561,7 +558,7 @@ def type_eq(a, b, opt=[]):
     elif k == 'float': return type_eq_float(a, b, opt)
     elif k == 'char': return type_eq_char(a, b, opt)
     elif k == 'opaque': return type_eq_opaque(a, b, opt)
-    elif k == 'VA_List': print("UU"); return b['kind'] == 'VA_List'
+    elif k == 'va_list': print("UU"); return b['kind'] == 'va_list'
     return False
 
 
@@ -578,17 +575,8 @@ def check(a, b, ti):
 
 
 
-def type_attribute_add(t, a):
-    t['att'].append(a)
-
-
-
 def type_is_bad(t):
     return t['kind'] == 'bad'
-
-
-def type_is_generic(t):
-    return t['generic']
 
 
 def type_is_unit(t):
@@ -615,12 +603,54 @@ def type_is_func(t):
     return t['kind'] == 'func'
 
 
+def type_is_enum(t):
+    return t['kind'] == 'enum'
+
+
 def type_is_record(t):
     return t['kind'] == 'record'
 
 
 def type_is_array(t):
     return t['kind'] == 'array'
+
+
+def type_is_pointer(t):
+    return t['kind'] in ['pointer']
+
+
+def type_is_opaque(t):
+    return t['kind'] == 'opaque'
+
+
+def type_is_va_list(t):
+    return t['kind'] == 'va_list'
+
+
+
+def type_is_generic_char(t):
+    return type_is_generic(t) and type_is_char(t)
+
+
+def type_is_generic_integer(t):
+    return type_is_generic(t) and type_is_integer(t)
+
+
+def type_is_generic_record(t):
+    return type_is_generic(t) and type_is_record(t)
+
+
+def type_is_generic_array(t):
+    return type_is_generic(t) and type_is_array(t)
+
+
+def type_is_generic_array_of_char(t):
+    if type_is_generic_array(t):
+        if t['of'] != None: # in case of empty array field #of == None
+            return type_is_char(t['of'])
+
+    return False
+
 
 
 def type_is_defined_array(t):
@@ -639,14 +669,6 @@ def type_is_array_of_char(t):
     if type_is_array(t):
         return type_is_char(t['of'])
     return False
-
-
-def type_is_enum(t):
-    return t['kind'] == 'enum'
-
-
-def type_is_pointer(t):
-    return t['kind'] in ['pointer']
 
 
 def type_is_free_pointer(t):
@@ -685,32 +707,13 @@ def type_is_pointer_to_array_of_char(t):
     return False
 
 
-def type_is_opaque(t):
-    return t['kind'] == 'opaque'
+
+def type_is_generic(t):
+    return t['generic']
 
 
-def type_is_generic_char(t):
-    return type_is_generic(t) and type_is_char(t)
-
-
-def type_is_generic_integer(t):
-    return type_is_generic(t) and type_is_integer(t)
-
-
-def type_is_generic_record(t):
-    return type_is_generic(t) and type_is_record(t)
-
-
-def type_is_generic_array(t):
-    return type_is_generic(t) and type_is_array(t)
-
-
-def type_is_generic_array_of_char(t):
-    if type_is_generic_array(t):
-        if t['of'] != None: #!
-            return type_is_char(t['of'])
-
-    return False
+def type_is_alias(t):
+    return 'alias' in t['att']
 
 
 def type_is_signed(t):
@@ -725,8 +728,6 @@ def type_is_unsigned(t):
     return False
 
 
-def type_is_alias(t):
-    return 'alias' in t['att']
 
 
 # cannot create variable with type
@@ -757,8 +758,12 @@ def type_is_forbidden_var(t, zero_array_forbidden=True):
 
 
 
-def type_is_va_list(t):
-    return t['kind'] == 'VA_List'
+
+
+# TODO!
+def type_attribute_add(t, a):
+    t['att'].append(a)
+
 
 
 # ищем поле с таким id в типе record
