@@ -679,11 +679,7 @@ def print_value_cast(x, ctx):
     if hlir_type.type_is_record(to_type):
         if hlir_type.type_is_record(from_type):
             # *((RecordType *)&value)
-            out("*((")
-            print_type(to_type)
-            out(" *)&")
-            print_value(value, [], need_wrap=True)
-            out(")")
+            print_cast_hard(to_type, value)
             return
 
 
@@ -910,13 +906,11 @@ def _print_string_literal(utf32_codes, width=8):
 
 
 def print_value_literal_str(x, ctx, char_width=8):
-    utf32_codes = []
-    if char_width == 8:
-        utf32_codes = utf8_cc_arr_to_utf32_cc_arr(x['imm'])
-    elif char_width == 16:
-        utf32_codes = utf16_cc_arr_to_utf32_cc_arr(x['imm'])
-    elif char_width == 32:
-        utf32_codes = x['imm']
+    utf32_codes = None
+    if char_width == 8: utf32_codes = utf8_cc_arr_to_utf32_cc_arr(x['imm'])
+    elif char_width == 16: utf32_codes = utf16_cc_arr_to_utf32_cc_arr(x['imm'])
+    elif char_width == 32: utf32_codes = x['imm']
+    assert(utf32_codes != None)
     _print_string_literal(utf32_codes, char_width)
 
 
@@ -1060,17 +1054,10 @@ def print_value_offsetof(x, ctx):
 
 
 
-#def print_rvalue(x, ctx=[], need_wrap=False, print_just_id=True):
-#    print_value(x, ctx, need_wrap, print_just_id)
-
-
 def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
     # если у значения есть свойство 'id' то печатаем просто id
     # (используется для печати имени констант а не просто их значения)
     # в LLVM перчаем просто значение
-
-    #if 'need_cast' in v['att']:
-    #    out("("); print_type(to_type); out(")")
 
     if print_just_id:
         if 'id' in x:
@@ -1099,7 +1086,6 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
     elif k == 'offsetof': y = print_value_offsetof(x, ctx)
     else:
         out("<%s>" % k)
-        print(x)
         exit(1)
 
     if need_wrap:
@@ -1256,11 +1242,7 @@ def assign(left, right):
         if not 'wrapped_array_value' in right['att']:
             memcopy(left, right)
         else:
-            f_to = right['func']['type']['to']
-            out("*(")
-            print_type(f_to)
-            out(" *)&")
-            print_value(left)
+            print_cast_hard(right['func']['type']['to'], left)
             out(" = ")
             print_value(right)
             out(";")
