@@ -264,9 +264,6 @@ def do_field(x):
     if hlir_type.type_is_bad(t):
         t = hlir_type_bad(x['type']['ti'])
 
-    # get aligned field offset
-    #offset = align_to(offset, hlir_type.type_get_align(t))
-
     #if hlir_type.type_is_forbidden_var(t, zero_array_forbidden=not is_last):
     #    error("unsuitable type", x['type'])
 
@@ -276,8 +273,6 @@ def do_field(x):
     else:
         f['nl'] = 0
     return f
-
-
 
 
 
@@ -385,8 +380,10 @@ def do_type_func(t, func_id="_"):
         pt = param['type']
         if hlir_type.type_is_array(pt):
             #info("array as function parameter", _param)
+            nt = type_copy(pt)
             pt['att'].append('wrapped_array_type')
             pt['wrapped_id'] = 'struct ' + func_id + '_' + param['id']['str']
+            param['type'] = pt
 
         if param != None:
             params.append(param)
@@ -397,6 +394,7 @@ def do_type_func(t, func_id="_"):
 
         if hlir_type.type_is_array(to):
             #info("array as function return value", t['to'])
+            to = type_copy(to)
             to['att'].append('wrapped_array_type')
             to['wrapped_id'] = 'struct ' + func_id + '_' + 'retval'
 

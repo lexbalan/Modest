@@ -768,18 +768,15 @@ def record_field_get(t, id):
     return get_item_with_id(t['fields'], id)
 
 
-
+# копирование типов следует использовать только в случае
+# необходимости изменения его аттрибутов.
 def type_copy(t):
     nt = copy.copy(t)
-
     # именно так!    иначе добавим в att t тк это ссылка на лист!
     # (!) создаем новый массив аттрибутов,
     # чтобы не испортить оригинальный (!)
     nt['att'] = []
-
     nt['att'].extend(t['att'])
-    #nt['classes'].extend(t['classes'])
-
     return nt
 
 
@@ -793,7 +790,6 @@ def create_alias(id_str, t, ti):
         del nt['c_alias']
 
     nt['att'].append('alias')
-
     nt['aliasof'] = t
     nt['ti'] = ti
 
