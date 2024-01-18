@@ -247,9 +247,9 @@ def init():
 
     global typeSysInt, typeSysNat, typeSysFloat, typeSysChar, typeSysStr
 
-    typeSysChar = hlir_type.select_char(char_width)
-    typeSysInt = hlir_type.select_int(int_width)
-    typeSysNat = hlir_type.select_nat(int_width)
+    typeSysChar = hlir_type.type_select_char(char_width)
+    typeSysInt = hlir_type.type_select_int(int_width)
+    typeSysNat = hlir_type.type_select_nat(int_width)
     typeSysFloat = hlir_type.typeFloat64
     typeSysStr = hlir_type_pointer(hlir_type_array(typeSysChar, volume=None))
 

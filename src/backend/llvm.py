@@ -1125,7 +1125,7 @@ def print_stmt_return(x):
 
         if v['is_adr']:
             # save value from local variable (by ptr)
-            size = llvm_value_num(hlir_type.select_nat(32), to['size'])
+            size = llvm_value_num(hlir_type.type_select_nat(32), to['size'])
             llvm_memcpy(p2retval, v, size)
         else:
             # save value from reg

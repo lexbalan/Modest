@@ -420,7 +420,7 @@ def type_init():
 
 
 
-def select_char(sz):
+def type_select_char(sz):
     t = None
     if sz <= 8: t = typeChar8
     elif sz <= 16: t = typeChar16
@@ -429,7 +429,7 @@ def select_char(sz):
     return t
 
 
-def select_int(sz):
+def type_select_int(sz):
     t = None
     if sz <= 8: t = typeInt8
     elif sz <= 16: t = typeInt16
@@ -440,7 +440,7 @@ def select_int(sz):
     return t
 
 
-def select_nat(sz):
+def type_select_nat(sz):
     t = None
     if sz <= 8: t = typeNat8
     elif sz <= 16: t = typeNat16
@@ -451,13 +451,13 @@ def select_nat(sz):
     return t
 
 
-def select_integer_type(sz, is_signed):
+def type_select_integer(sz, is_signed):
     if is_signed:
         if sz < 128:
-            return select_int(sz + 1)
+            return type_select_int(sz + 1)
         else:
-            return select_int(sz)
-    return select_nat(sz)
+            return type_select_int(sz)
+    return type_select_nat(sz)
 
 
 
