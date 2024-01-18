@@ -46,6 +46,17 @@ def value_cons_integer_immediate(v, t, ti):
 
 
 
+def do_cons_integer(v, t, method, ti):
+    check_width(v['type'], t, method, ti)
+    if value_is_immediate(v):
+        if method == 'explicit':
+            nv = hlir_value_cast(v, t, ti=ti)
+            nv['imm'] = int(v['imm'])  # here can be float
+            return nv
+        return value_cons_integer_immediate(v, t, ti)
+    return hlir_value_cast(v, t, ti=ti)
+
+
 
 def value_cons_integer(v, t, ti, method):
     vtype = v['type']
@@ -60,39 +71,29 @@ def value_cons_integer(v, t, ti, method):
             if v['imm'] < 0:
                 return None
 
-        nv = value_cons_integer_immediate(v, t, ti)
+        nv = do_cons_integer(v, t, method, ti)
+
+
+    if nv != None:
+        return nv
 
 
     if method == 'explicit':
 
+        # (Int or Char) -> Int
         if type.type_is_integer(vtype) or type.type_is_char(vtype) or type.type_is_bool(vtype):
-            # (Int or Char) -> Int
-            check_width(vtype, t, method, ti)
-            nv = hlir_value_cast(v, t, ti)
+            nv = do_cons_integer(v, t, method, ti)
 
+        # Float -> Int
         elif type.type_is_float(vtype):
-            # Float -> Int
-            nv = hlir_value_cast(v, t, ti=ti)
-            # need float imm int part check
-            if value_is_immediate(v):
-                imm_fltval = v['imm']
-                imm_intval = int(imm_fltval)
-                typ = hlir_type_generic_int_for(imm_intval, unsigned=True, ti=ti)
-                check_width(typ, t, method, ti)
-                nv['imm'] = imm_intval
-                return v  # (!)
+            nv = do_cons_integer(v, t, method, ti=ti)
 
+        # Pointer -> Int
         elif type.type_is_pointer(vtype):
-            # Pointer -> Int
-            nv = hlir_value_cast(v, t, ti)
+            nv = do_cons_integer(v, t, method, ti)
 
+        # VA_List -> Int
         elif type.type_is_va_list(vtype):
-            # VA_List -> Int
             nv = hlir_value_cast(v, t, ti)
-
-
-    if nv != None:
-        if value_is_immediate(v):
-            nv['imm'] = v['imm']
 
     return nv

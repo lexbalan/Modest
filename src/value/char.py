@@ -20,8 +20,14 @@ def value_cons_char_immediate(v, t, ti):
 
 
 
-def value_cons_char(v, t, ti, method):
+def do_cons_char(v, t, ti):
+    if value_is_immediate(v):
+        return value_cons_char_immediate(v, t, ti)
+    return hlir_value_cast(v, t, ti=ti)
 
+
+
+def value_cons_char(v, t, ti, method):
     vtype = v['type']
 
     # implicit casts
@@ -34,15 +40,12 @@ def value_cons_char(v, t, ti, method):
         info("cannot implicit cons Char value", ti)
         return None
 
-
+    # (Char or Integer) -> Char
     if type.type_is_char(vtype) or type.type_is_integer(vtype):
-        if value_is_immediate(v):
-            return value_cons_char_immediate(v, t, ti)
+        return do_cons_char(v, t, ti)
 
-        return hlir_value_cast(v, t, ti)
-
+    # VA_List -> Char
     elif type.type_is_va_list(vtype):
-        # VA_List -> Char
         return hlir_value_cast(v, t, ti)
 
 

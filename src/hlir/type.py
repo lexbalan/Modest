@@ -713,11 +713,6 @@ def type_is_generic_array_of_char(t):
     return False
 
 
-
-def type_is_alias(t):
-    return 'alias' in t['att']
-
-
 def type_is_signed(t):
     if 'signed' in t:
         return t['signed']
@@ -729,6 +724,9 @@ def type_is_unsigned(t):
         return not t['signed']
     return False
 
+
+def type_is_alias(t):
+    return 'alias' in t['att']
 
 
 # cannot create variable with type
@@ -805,11 +803,14 @@ def type_get_align(t):
     return t['align']
 
 
-def array_root_item_type(ta):
-    array_of = ta['of']
-    while type_is_array(array_of):
-        array_of = array_of['of']
-    return array_of
+def array_root_item_type(t):
+    assert(type_is_array(t))
+    of = t['of']
+    while type_is_array(of):
+        of = of['of']
+    return of
+
+
 
 
 

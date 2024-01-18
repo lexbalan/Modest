@@ -10,8 +10,15 @@ from .value import *
 
 def value_cons_float_immediate(v, t, ti):
     #info("value_cons_float_immediate", ti)
-    return hlir_value_cast_immediate(v, t, ti)
+    nv = hlir_value_cast_immediate(v, t, ti)
+    nv['imm'] = float_value_pack(float(nv['imm']), t['width'])
+    return nv
 
+
+def do_cons_float(v, t, ti):
+    if value_is_immediate(v):
+        return value_cons_float_immediate(v, t, ti)
+    return hlir_value_cast(v, t, ti=ti)
 
 
 def value_cons_float(v, t, ti, method):
@@ -22,33 +29,24 @@ def value_cons_float(v, t, ti, method):
     if type.type_is_generic(vt):
         if type.type_is_integer(vt) or type.type_is_float(vt):
             # (GenericInt or GenericFloat) -> Float
-            nv = value_cons_float_immediate(v, t, ti)
-            nv['imm'] = float_value_pack(float(nv['imm']), t['width'])
-            return nv
+            return value_cons_float_immediate(v, t, ti)
 
 
     if method != 'explicit':
         info("cannot implicit cons Float value", ti)
 
 
+    # Float -> Float
     if type.type_is_float(vt):
-        # Float -> Float
-        nv = hlir_value_cast(v, t, ti=ti)
+        nv = do_cons_float(v, t, ti=ti)
 
-        if value_is_immediate(v):
-            nv['imm'] = v['imm']
-
+    # Int -> Float
     elif type.type_is_integer(vt):
-        # Int -> Float
-        nv = hlir_value_cast(v, t, ti=ti)
+        nv = do_cons_float(v, t, ti=ti)
 
-        if value_is_immediate(v):
-            nv['imm'] = v['imm']
-
+    # VA_List -> Float
     elif type.type_is_va_list(vt):
-        # VA_List -> Float
         nv = hlir_value_cast(v, t, ti)
-
 
     return nv
 

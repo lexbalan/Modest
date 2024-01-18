@@ -110,11 +110,14 @@ def value_cons_record_from_generic_record(v, t, ti, method):
 def value_cons_record(v, t, ti, method):
     from_type = v['type']
 
-    # GenericRecord -> Record
     if type.type_is_record(from_type):
+        # GenericRecord -> Record
         if type.type_is_generic(from_type):
             return value_cons_record_from_generic_record(v, t, ti, method)
+
+        # Record -> Record
         return value_cons_record_from_record(v, t, ti, method)
 
     return None
+
 

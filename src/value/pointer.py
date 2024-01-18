@@ -1,6 +1,5 @@
 
 import hlir.type as type
-from hlir.type import type_print
 from error import error, warning, info
 from hlir.value import *
 from .value import *
@@ -58,44 +57,49 @@ def cons_ptr_to_str_from_generic_str(v, t, ti, method):
 
 
 
+def do_cons_pointer(v, t, ti):
+    if value_is_immediate(v):
+        return value_cons_pointer_immediate(v, t, ti)
+    return hlir_value_cast(v, t, ti=ti)
+
+
 def value_cons_pointer(v, t, ti, method):
     vtype = v['type']
     to_type = t
 
     nv = None
 
-    # Nil -> *X
-    if type.type_is_free_pointer(vtype):
-        if value_is_immediate(v):
-            nv = value_cons_pointer_immediate(v, t, ti)
-        nv = hlir_value_cast(v, t, ti=ti)
+    if type.type_is_pointer(vtype):
+        v_pointer_to = vtype['to']
 
-    # GenericString -> *[]CharX
-    elif type.type_is_generic_array_of_char(vtype):
-        if type.type_is_pointer_to_array_of_char(to_type):
-            s = cons_ptr_to_str_from_generic_str(v, t, ti, method)
-            return s
+        # Implicit cons pointer from pointer
 
-    # *[n]X -> *[]X
-    elif type.type_is_pointer_to_defined_array(vtype):
-        if type.type_is_pointer_to_undefined_array(t):
-            if type.type_eq(vtype['to']['of'], t['to']['of']):
-                nv = hlir_value_cast(v, t, ti=ti)
+        # implicit *Unit -> *Any
+        if type.type_is_unit(v_pointer_to):
+            nv = do_cons_pointer(v, t, ti)
 
-    # Pointer -> *X
-    elif type.type_is_free_pointer(vtype):
-        nv = hlir_value_cast(v, t, ti=ti)
+        # implicit  *[n]Any -> *[]Any
+        elif type.type_is_defined_array(v_pointer_to):
+            if type.type_is_pointer_to_undefined_array(t):
+                if type.type_eq(vtype['to']['of'], t['to']['of']):
+                    nv = do_cons_pointer(v, t, ti)
 
-    # *X -> Pointer
-    elif type.type_is_pointer(vtype):
-        nv = hlir_value_cast(v, t, ti=ti)
+        # implicit *Any -> *Unit
+        elif type.type_is_free_pointer(t):
+            nv = do_cons_pointer(v, t, ti)
+
+    else:
+        # implicit cons pointer from non-pointer value
+
+        if type.type_is_generic_array_of_char(vtype):
+            if type.type_is_pointer_to_array_of_char(to_type):
+                return cons_ptr_to_str_from_generic_str(v, t, ti, method)
 
 
     if nv != None:
-        if value_is_immediate(v):
-            nv['imm'] = v['imm']
         return nv
 
+    ### EXPLICIT REGION ###
 
     if method != 'explicit':
         info("cannot implicit cast different pointers", ti)
@@ -110,29 +114,15 @@ def value_cons_pointer(v, t, ti, method):
 
     # Ptr -> Ptr
     if type.type_is_pointer(vtype):
-        nv = hlir_value_cast(v, t, ti=ti)
+        nv = do_cons_pointer(v, t, ti=ti)
 
     # Int -> Ptr
     elif type.type_is_integer(vtype):
-        if value_is_immediate(v):
-            # compile-time casting
-            nv = hlir_value_cast(v, t, ti=ti)
-            nv['imm'] = v['imm']
+        nv = do_cons_pointer(v, t, ti=ti)
 
-        else:
-            from trans import ptr_width
-            if vtype['width'] > ptr_width:
-                error("cons pointer from biggest integer", ti)
-            nv = hlir_value_cast(v, t, ti=ti)
-
+    # VA_List -> Int
     elif type.type_is_va_list(vtype):
-        # VA_List -> Int
-        nv = hlir_value_cast(v, t, ti)
-
-
-    if nv != None:
-        if value_is_immediate(v):
-            nv['imm'] = v['imm']
+        nv = do_cons_pointer(v, t, ti)
 
     return nv
 
