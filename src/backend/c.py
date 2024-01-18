@@ -426,7 +426,7 @@ def print_value_un(v, ctx):
     pv = precedence(value)
 
     if op == 'not':
-        if hlir_type.eq(value['type'], hlir_type.typeBool):
+        if hlir_type.type_eq(value['type'], hlir_type.typeBool):
             op = 'logic_not'
 
     if v['kind'] == 'ref':
@@ -512,7 +512,7 @@ def print_value_call(v, ctx):
             if 'wrapped_array_type' in pt['att']:
                 print_cast_hard(pt, a)
 
-            elif not hlir_type.eq(pt, a['type'], opt=['att_checking']):
+            elif not hlir_type.type_eq(pt, a['type'], opt=['att_checking']):
                 print_cast(pt, a)
 
             else:

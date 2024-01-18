@@ -72,7 +72,7 @@ def value_cons_array_from_generic_array(v, t, ti, method):
 def value_cons_array_from_array(v, t, ti, method):
 
     # нельзя построить массив из массива другого типа
-    if not type.eq(v['type']['of'], t['of']):
+    if not type.type_eq(v['type']['of'], t['of']):
         return None
 
     # нельзя построить меньший массив из большего

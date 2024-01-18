@@ -679,7 +679,7 @@ def do_eval_expr_call(v, retval=None):
         f = llvm_dold(f)
         ftype = ftype['to']
 
-    to_unit = hlir_type.eq(ftype['to'], hlir_type.typeUnit)
+    to_unit = hlir_type.type_eq(ftype['to'], hlir_type.typeUnit)
 
 
     # do call
@@ -1357,7 +1357,7 @@ def print_def_func(x):
 
     print_stmt_block(func['stmt'])
 
-    if hlir_type.eq(ftype['to'], hlir_type.typeUnit):
+    if hlir_type.type_eq(ftype['to'], hlir_type.typeUnit):
         if va_list != None:
             llvm_va_end(va_list)
         lo("ret void")

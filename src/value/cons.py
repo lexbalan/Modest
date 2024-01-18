@@ -56,7 +56,7 @@ def value_cons(v, t, ti, method):
     if value_is_bad(v) or type.is_bad(t):
         return None
 
-    if type.eq(v['type'], t):
+    if type.type_eq(v['type'], t):
         return v
 
     cons = None
@@ -120,13 +120,13 @@ def value_cons_implicit(v, t, ti):
     if type.is_pointer_to_record(t):
         if type.is_pointer_to_record(from_type):
 
-            if type.eq_record(from_type['to'], t['to'], opt=[]):
+            if type.type_eq_record(from_type['to'], t['to'], opt=[]):
                 return hlir_value_cast(v, t, ti=ti)
             else:
                 return v
 
 
-    if type.eq(from_type, t):
+    if type.type_eq(from_type, t):
         return v
 
 
@@ -156,7 +156,7 @@ def value_cons_explicit(v, t, ti):
     if value_is_bad(v) or type.is_bad(t):
         return hlir_value_bad(ti)
 
-    if type.eq(v['type'], t):
+    if type.type_eq(v['type'], t):
         info("explicit cast to the same type", ti)
         return v
 

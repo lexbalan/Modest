@@ -79,7 +79,7 @@ def value_cons_pointer(v, t, ti, method):
     # *[n]X -> *[]X
     elif type.is_pointer_to_defined_array(vtype):
         if type.is_pointer_to_undefined_array(t):
-            if type.eq(vtype['to']['of'], t['to']['of']):
+            if type.type_eq(vtype['to']['of'], t['to']['of']):
                 nv = hlir_value_cast(v, t, ti=ti)
 
     # Pointer -> *X

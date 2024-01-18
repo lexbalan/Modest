@@ -702,7 +702,7 @@ def do_value_bin(x):
         type_result = hlir_type.typeBool
 
 
-    if hlir_type.eq(type_result, hlir_type.typeBool):
+    if hlir_type.type_eq(type_result, hlir_type.typeBool):
         if op == 'or': op = 'logic_or'
         elif op == 'and': op = 'logic_and'
 
@@ -1259,7 +1259,7 @@ def do_stmt_return(x):
 
     f_ret_type = cfunc['type']['to']
 
-    no_ret_func = hlir_type.eq(f_ret_type, hlir_type.typeUnit)
+    no_ret_func = hlir_type.type_eq(f_ret_type, hlir_type.typeUnit)
 
     if x['value'] == None:
         if not no_ret_func:
@@ -1751,7 +1751,7 @@ def def_func(x):
             error("redefinition of", x['ti'])
         else:
             # already declared function
-            if not hlir_type.eq(already['type'], func_type):
+            if not hlir_type.type_eq(already['type'], func_type):
                 error("definition not correspond to declatartion", x['ti'])
                 info("firstly declared here", already['type']['ti'])
 
@@ -1871,7 +1871,7 @@ def decl_func(x):
             info("repeated function declaration", x['ti'])
 
         # check type of already created function
-        if not hlir_type.eq(already['type'], func_type):
+        if not hlir_type.type_eq(already['type'], func_type):
             error("definition not correspond to function type", x['ti'])
             info("firstly declared here", already['type']['ti'])
 

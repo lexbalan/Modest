@@ -458,7 +458,7 @@ def select_integer_type(sz, is_signed):
 
 
 
-def eq_integer(a, b, opt):
+def type_eq_integer(a, b, opt):
     if a['width'] != b['width']:
         return False
 
@@ -469,21 +469,21 @@ def eq_integer(a, b, opt):
 
 
 
-def eq_char(a, b, opt):
+def type_eq_char(a, b, opt):
     if a['width'] != b['width']:
         return False
 
     return True
 
 
-def eq_pointer(a, b, opt):
-    return eq(a['to'], b['to'], opt)
+def type_eq_pointer(a, b, opt):
+    return type_eq(a['to'], b['to'], opt)
 
 
-def eq_array(a, b, opt):
+def type_eq_array(a, b, opt):
     if a['volume'] == None or b['volume'] == None:
         if a['volume'] == None and b['volume'] == None:
-            return eq(a['of'], b['of'], opt)
+            return type_eq(a['of'], b['of'], opt)
         return False
 
     if a['volume']['imm'] != b['volume']['imm']:
@@ -492,41 +492,41 @@ def eq_array(a, b, opt):
     if a['of'] == None or b['of'] == None:
         return a['of'] == None and b['of'] == None
 
-    return eq(a['of'], b['of'], opt)
+    return type_eq(a['of'], b['of'], opt)
 
 
-def eq_fields(a, b, opt):
+def type_eq_fields(a, b, opt):
     if len(a) != len(b): return False
     for ax, bx in zip(a, b):
         if ax['id']['str'] != bx['id']['str']: return False
-        if not eq(ax['type'], bx['type'], opt): return False
+        if not type_eq(ax['type'], bx['type'], opt): return False
     return True
 
 
-def eq_func(a, b, opt):
-    if not eq(a['to'], b['to'], opt): return False
-    return eq_fields(a['params'], b['params'], opt)
+def type_eq_func(a, b, opt):
+    if not type_eq(a['to'], b['to'], opt): return False
+    return type_eq_fields(a['params'], b['params'], opt)
 
 
-def eq_record(a, b, opt):
+def type_eq_record(a, b, opt):
     if len(a['fields']) != len(b['fields']): return False
-    return eq_fields(a['fields'], b['fields'], opt)
+    return type_eq_fields(a['fields'], b['fields'], opt)
 
 
-def eq_float(a, b, opt):
+def type_eq_float(a, b, opt):
     return a['width'] == b['width']
 
 
-def eq_opaque(a, b, opt):
+def type_eq_opaque(a, b, opt):
     return a['id']['str'] == b['id']['str']  # maybe by UID?
 
 
-def eq_alias(a, b, opt):
-    return eq(a['of'], b['of'], opt)
+def type_eq_alias(a, b, opt):
+    return type_eq(a['of'], b['of'], opt)
 
 
 
-def eq(a, b, opt=[]):
+def type_eq(a, b, opt=[]):
     # fast checking
     if a == b: return True
     if a['kind'] == 'bad': return True
@@ -548,16 +548,16 @@ def eq(a, b, opt=[]):
 
     # normal checking
     k = a['kind']
-    if k == 'int': return eq_integer(a, b, opt)
+    if k == 'int': return type_eq_integer(a, b, opt)
     elif k == 'unit': return True
-    elif k == 'func': return eq_func(a, b, opt)
-    elif k == 'record': return eq_record(a, b, opt)
-    elif k == 'pointer': return eq_pointer(a, b, opt)
+    elif k == 'func': return type_eq_func(a, b, opt)
+    elif k == 'record': return type_eq_record(a, b, opt)
+    elif k == 'pointer': return type_eq_pointer(a, b, opt)
     elif k == 'bool': return True
-    elif k == 'array': return eq_array(a, b, opt)
-    elif k == 'float': return eq_float(a, b, opt)
-    elif k == 'char': return eq_char(a, b, opt)
-    elif k == 'opaque': return eq_opaque(a, b, opt)
+    elif k == 'array': return type_eq_array(a, b, opt)
+    elif k == 'float': return type_eq_float(a, b, opt)
+    elif k == 'char': return type_eq_char(a, b, opt)
+    elif k == 'opaque': return type_eq_opaque(a, b, opt)
     elif k == 'VA_List': print("UU"); return b['kind'] == 'VA_List'
 
     return False
@@ -565,7 +565,7 @@ def eq(a, b, opt=[]):
 
 
 def check(a, b, ti):
-    res = eq(a, b)
+    res = type_eq(a, b)
     if not res:
         error("type error", ti)
         type_print(a)
