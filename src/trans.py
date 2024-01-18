@@ -268,10 +268,12 @@ def do_field(x):
     #    error("unsuitable type", x['type'])
 
     f = hlir_field(x['id'], t, ti=x['ti'])
+
     if 'nl' in x:
         f['nl'] = x['nl']
     else:
         f['nl'] = 0
+
     return f
 
 
@@ -1038,6 +1040,7 @@ def do_value_to(x):
 def do_value_id(x):
     id_str = x['id']['str']
     vx = value_get(id_str)
+
     if vx == None:
         error("undeclared value '%s'" % id_str, x)
 
@@ -1050,7 +1053,9 @@ def do_value_id(x):
 
     if 'usecnt' in vx:
         vx['usecnt'] = vx['usecnt'] + 1
+
     return vx
+
 
 
 def do_value_str(x):
@@ -1152,6 +1157,7 @@ def do_value_offsetof(x):
     return hlir_value_offsetof(of, field_id, ti=x['ti'])
 
 
+
 bin_ops = [
     'or', 'xor', 'and',
     'eq', 'ne', 'lt', 'gt', 'le', 'ge',
@@ -1161,13 +1167,12 @@ bin_ops = [
 un_ops = ['ref', 'deref', 'plus', 'minus', 'not']
 
 
-
 def do_rvalue(x):
     v = do_value(x)
 
-    if 'writeonly' in v['type']['att']:
-        error("attempt to read writeonly value", x['ti'])
-        return hlir_value_bad(x['ti'])
+    #if 'writeonly' in v['type']['att']:
+    #    error("attempt to read writeonly value", x['ti'])
+    #    return hlir_value_bad(x['ti'])
 
     return value_load(v)
 
@@ -1234,6 +1239,7 @@ def do_stmt_if(x):
 def do_stmt_while(x):
     c = do_value(x['cond'])
     s = do_stmt(x['stmt'])
+
     if value_is_bad(c) or stmt_is_bad(s):
         return hlir_stmt_bad()
 
@@ -1249,7 +1255,6 @@ def do_stmt_return(x):
     global cfunc
 
     f_ret_type = cfunc['type']['to']
-
     no_ret_func = hlir_type.type_eq(f_ret_type, hlir_type.typeUnit)
 
     if x['value'] == None:
@@ -1261,6 +1266,7 @@ def do_stmt_return(x):
         error("unexpected return value", x)
 
     v = do_value(x['value'])
+
     if value_is_bad(v):
         return hlir_stmt_bad()
 
@@ -1277,7 +1283,6 @@ def do_stmt_again(x):
 
 def do_stmt_break(x):
     return hlir_stmt_break(x['ti'])
-
 
 
 def do_stmt_var(x):
@@ -1453,13 +1458,13 @@ def do_stmt(x):
 
     s = None
     if k == 'let': s = do_stmt_let(x)
+    elif k == 'var': s = do_stmt_var(x)
     elif k == 'block': s = do_stmt_block(x)
-    elif k == 'value': s = do_stmt_value(x)
     elif k == 'assign': s = do_stmt_assign(x)
-    elif k == 'return': s = do_stmt_return(x)
+    elif k == 'value': s = do_stmt_value(x)
     elif k == 'if': s = do_stmt_if(x)
     elif k == 'while': s = do_stmt_while(x)
-    elif k == 'var': s = do_stmt_var(x)
+    elif k == 'return': s = do_stmt_return(x)
     elif k == 'again': s = do_stmt_again(x)
     elif k == 'break': s = do_stmt_break(x)
     elif k == 'comment-line': s = do_stmt_comment_line(x)
@@ -1633,9 +1638,6 @@ def def_type(x):
 
 def def_var(x):
     f = do_field(x['field'])
-
-    if f == None:
-        return None
 
     if hlir_type.type_is_bad(f['type']):
         return None
@@ -1894,9 +1896,7 @@ def decl_func(x):
 
 
 
-
 def comm_line(x):
-    #print("ast_comment-line")
     y = {
         'isa': 'comment',
         'kind': 'line',
@@ -1909,7 +1909,6 @@ def comm_line(x):
 
 
 def comm_block(x):
-    #print("ast_comment-block")
     y = {
         'isa': 'comment',
         'kind': 'block',
@@ -1931,8 +1930,8 @@ def proc(ast, source_info):
         'isa': 'module',
         'id': id,
         'source_info': source_info,
-        'imports': [],
-        'strings': [],  # (only for LLVM IR backend)
+        'imports': [],  #
+        'strings': [],  # (used in LLVM backend)
         'context': new_context,
         'options': [],
         'text': []
