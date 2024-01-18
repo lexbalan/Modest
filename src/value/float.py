@@ -19,8 +19,8 @@ def value_cons_float(v, t, ti, method):
 
     nv = None
 
-    if type.is_generic(vt):
-        if type.is_integer(vt) or type.is_float(vt):
+    if type.type_is_generic(vt):
+        if type.type_is_integer(vt) or type.type_is_float(vt):
             # (GenericInt or GenericFloat) -> Float
             nv = value_cons_float_immediate(v, t, ti)
             nv['imm'] = float_value_pack(float(nv['imm']), t['width'])
@@ -31,21 +31,21 @@ def value_cons_float(v, t, ti, method):
         info("cannot implicit cons Float value", ti)
 
 
-    if type.is_float(vt):
+    if type.type_is_float(vt):
         # Float -> Float
         nv = hlir_value_cast(v, t, ti=ti)
 
         if value_is_immediate(v):
             nv['imm'] = v['imm']
 
-    elif type.is_integer(vt):
+    elif type.type_is_integer(vt):
         # Int -> Float
         nv = hlir_value_cast(v, t, ti=ti)
 
         if value_is_immediate(v):
             nv['imm'] = v['imm']
 
-    elif type.is_va_list(vt):
+    elif type.type_is_va_list(vt):
         # VA_List -> Float
         nv = hlir_value_cast(v, t, ti)
 

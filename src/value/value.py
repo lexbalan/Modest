@@ -60,9 +60,9 @@ def value_is_mutable(x):
 
 
 def value_is_ptr_to_str(x):
-    if not type.is_pointer_to_array(x['type']):
+    if not type.type_is_pointer_to_array(x['type']):
         return False
-    return type.is_char(x['type']['to']['of'])
+    return type.type_is_char(x['type']['to']['of'])
 
 
 def value_is_immutable(x):
@@ -77,7 +77,7 @@ def value_is_immediate(x):
 
 
 def value_is_immediate_integer(x):
-    return value_is_immediate(x) and type.is_integer(x['type'])
+    return value_is_immediate(x) and type.type_is_integer(x['type'])
 
 
 def value_is_zero(x):

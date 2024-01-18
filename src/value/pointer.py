@@ -65,29 +65,29 @@ def value_cons_pointer(v, t, ti, method):
     nv = None
 
     # Nil -> *X
-    if type.is_free_pointer(vtype):
+    if type.type_is_free_pointer(vtype):
         if value_is_immediate(v):
             nv = value_cons_pointer_immediate(v, t, ti)
         nv = hlir_value_cast(v, t, ti=ti)
 
     # GenericString -> *[]CharX
-    elif type.is_generic_string(vtype):
-        if type.is_pointer_to_string(to_type):
+    elif type.type_is_generic_string(vtype):
+        if type.type_is_pointer_to_string(to_type):
             s = cons_ptr_to_str_from_generic_str(v, t, ti, method)
             return s
 
     # *[n]X -> *[]X
-    elif type.is_pointer_to_defined_array(vtype):
-        if type.is_pointer_to_undefined_array(t):
+    elif type.type_is_pointer_to_defined_array(vtype):
+        if type.type_is_pointer_to_undefined_array(t):
             if type.type_eq(vtype['to']['of'], t['to']['of']):
                 nv = hlir_value_cast(v, t, ti=ti)
 
     # Pointer -> *X
-    elif type.is_free_pointer(vtype):
+    elif type.type_is_free_pointer(vtype):
         nv = hlir_value_cast(v, t, ti=ti)
 
     # *X -> Pointer
-    elif type.is_pointer(vtype):
+    elif type.type_is_pointer(vtype):
         nv = hlir_value_cast(v, t, ti=ti)
 
 
@@ -109,11 +109,11 @@ def value_cons_pointer(v, t, ti, method):
     ### UNSAFE REGION ###
 
     # Ptr -> Ptr
-    if type.is_pointer(vtype):
+    if type.type_is_pointer(vtype):
         nv = hlir_value_cast(v, t, ti=ti)
 
     # Int -> Ptr
-    elif type.is_integer(vtype):
+    elif type.type_is_integer(vtype):
         if value_is_immediate(v):
             # compile-time casting
             nv = hlir_value_cast(v, t, ti=ti)
@@ -125,7 +125,7 @@ def value_cons_pointer(v, t, ti, method):
                 error("cons pointer from biggest integer", ti)
             nv = hlir_value_cast(v, t, ti=ti)
 
-    elif type.is_va_list(vtype):
+    elif type.type_is_va_list(vtype):
         # VA_List -> Int
         nv = hlir_value_cast(v, t, ti)
 

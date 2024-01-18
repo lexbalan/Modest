@@ -52,7 +52,7 @@ def value_cons_integer(v, t, ti, method):
 
     nv = None
 
-    if type.is_generic_integer(vtype):
+    if type.type_is_generic_integer(vtype):
         # GenericInt -> Int
         check_width(vtype, t, method, ti)
 
@@ -65,12 +65,12 @@ def value_cons_integer(v, t, ti, method):
 
     if method == 'explicit':
 
-        if type.is_integer(vtype) or type.is_char(vtype) or type.is_bool(vtype):
+        if type.type_is_integer(vtype) or type.type_is_char(vtype) or type.type_is_bool(vtype):
             # (Int or Char) -> Int
             check_width(vtype, t, method, ti)
             nv = hlir_value_cast(v, t, ti)
 
-        elif type.is_float(vtype):
+        elif type.type_is_float(vtype):
             # Float -> Int
             nv = hlir_value_cast(v, t, ti=ti)
             # need float imm int part check
@@ -82,11 +82,11 @@ def value_cons_integer(v, t, ti, method):
                 nv['imm'] = imm_intval
                 return v  # (!)
 
-        elif type.is_pointer(vtype):
+        elif type.type_is_pointer(vtype):
             # Pointer -> Int
             nv = hlir_value_cast(v, t, ti)
 
-        elif type.is_va_list(vtype):
+        elif type.type_is_va_list(vtype):
             # VA_List -> Int
             nv = hlir_value_cast(v, t, ti)
 

@@ -462,7 +462,7 @@ def type_eq_integer(a, b, opt):
     if a['width'] != b['width']:
         return False
 
-    if is_integer_signed(a) != is_integer_signed(b):
+    if type_is_integer_signed(a) != type_is_integer_signed(b):
         return False
 
     return True
@@ -543,7 +543,7 @@ def type_eq(a, b, opt=[]):
     # дженерик и не дженерик типы не равны
     # это важно при конструировании записей из джененрков
     # в противном случае конструирование будет скипнуто (тк уже равны)
-    if is_generic(a) != is_generic(b):
+    if type_is_generic(a) != type_is_generic(b):
         return False
 
     # normal checking
@@ -581,166 +581,166 @@ def type_attribute_add(t, a):
 
 
 
-def is_bad(t):
+def type_is_bad(t):
     assert t != None
     return t['kind'] == 'bad'
 
 
-def is_generic(t):
+def type_is_generic(t):
     return t['generic']
 
 
-def is_unit(t):
+def type_is_unit(t):
     return t['kind'] == 'unit'
 
 
-def is_enum(t):
+def type_is_enum(t):
     return t['kind'] == 'enum'
 
 
-def is_bool(t):
+def type_is_bool(t):
     return t['kind'] == 'bool'
 
 
-def is_char(t):
+def type_is_char(t):
     return t['kind'] == 'char'
 
 
-def is_float(t):
+def type_is_float(t):
     return t['kind'] == 'float'
 
 
-def is_integer(t):
+def type_is_integer(t):
     return t['kind'] == 'int'
 
 
-def is_integer_signed(t):
-    if is_integer(t):
+def type_is_integer_signed(t):
+    if type_is_integer(t):
         return t['signed']
     return False
 
 
-def is_integer_unsigned(t):
-    if is_integer(t):
+def type_is_integer_unsigned(t):
+    if type_is_integer(t):
         return not t['signed']
     return False
 
 
-def is_func(t):
+def type_is_func(t):
     return t['kind'] == 'func'
 
 
-def is_record(t):
+def type_is_record(t):
     return t['kind'] == 'record'
 
 
-def is_array(t):
+def type_is_array(t):
     return t['kind'] == 'array'
 
 
-def is_defined_array(t):
-    if is_array(t):
+def type_is_defined_array(t):
+    if type_is_array(t):
         return t['volume'] != None
     return False
 
 
-def is_undefined_array(t):
-    if is_array(t):
+def type_is_undefined_array(t):
+    if type_is_array(t):
         return t['volume'] == None
     return False
 
 
-def is_array_of_char(t):
-    if not is_array(t):
+def type_is_array_of_char(t):
+    if not type_is_array(t):
         return False
-    return is_char(t['of'])
+    return type_is_char(t['of'])
 
 
-def is_string(t):
-    return is_array_of_char(t)
+def type_is_string(t):
+    return type_is_array_of_char(t)
 
 
-def is_pointer(t):
+def type_is_pointer(t):
     return t['kind'] in ['pointer']
 
 
-def is_free_pointer(t):
-    if is_pointer(t):
-        return is_unit(t['to'])
+def type_is_free_pointer(t):
+    if type_is_pointer(t):
+        return type_is_unit(t['to'])
     return False
 
 
-def is_pointer_to_record(t):
-    if is_pointer(t):
-        return is_record(t['to'])
+def type_is_pointer_to_record(t):
+    if type_is_pointer(t):
+        return type_is_record(t['to'])
     return False
 
 
-def is_pointer_to_array(t):
-    if is_pointer(t):
-        return is_array(t['to'])
+def type_is_pointer_to_array(t):
+    if type_is_pointer(t):
+        return type_is_array(t['to'])
     return False
 
 
-def is_pointer_to_defined_array(t):
-    if is_pointer(t):
-        return is_defined_array(t['to'])
+def type_is_pointer_to_defined_array(t):
+    if type_is_pointer(t):
+        return type_is_defined_array(t['to'])
     return False
 
 
-def is_pointer_to_undefined_array(t):
-    if is_pointer(t):
-        return is_undefined_array(t['to'])
+def type_is_pointer_to_undefined_array(t):
+    if type_is_pointer(t):
+        return type_is_undefined_array(t['to'])
     return False
 
 
-def is_pointer_to_string(t):
-    if is_pointer(t):
-        return is_string(t['to'])
+def type_is_pointer_to_string(t):
+    if type_is_pointer(t):
+        return type_is_string(t['to'])
     return False
 
 
-def is_opaque(t):
+def type_is_opaque(t):
     return t['kind'] == 'opaque'
 
 
-def is_generic_char(t):
-    return is_generic(t) and is_char(t)
+def type_is_generic_char(t):
+    return type_is_generic(t) and type_is_char(t)
 
 
-def is_generic_integer(t):
-    return is_generic(t) and is_integer(t)
+def type_is_generic_integer(t):
+    return type_is_generic(t) and type_is_integer(t)
 
 
-def is_generic_record(t):
-    return is_generic(t) and is_record(t)
+def type_is_generic_record(t):
+    return type_is_generic(t) and type_is_record(t)
 
 
-def is_generic_array(t):
-    return is_generic(t) and is_array(t)
+def type_is_generic_array(t):
+    return type_is_generic(t) and type_is_array(t)
 
 
-def is_generic_string(t):
-    if is_generic_array(t):
+def type_is_generic_string(t):
+    if type_is_generic_array(t):
         if t['of'] != None: #!
-            return is_char(t['of'])
+            return type_is_char(t['of'])
 
     return False
 
 
 
-def is_alias(t):
+def type_is_alias(t):
     return 'alias' in t['att']
 
 
 
 # cannot create variable with type
-def is_forbidden_var(t, zero_array_forbidden=True):
-    if is_opaque(t) or is_unit(t):
+def type_is_forbidden_var(t, zero_array_forbidden=True):
+    if type_is_opaque(t) or type_is_unit(t):
         return True
 
     # [0]Int, []Int, [n]<Forbidden>
-    if is_undefined_array(t):
+    if type_is_undefined_array(t):
         # is undefined array?
         if t['volume'] == None:
             return True
@@ -752,9 +752,9 @@ def is_forbidden_var(t, zero_array_forbidden=True):
             if t['volume']['imm'] == 0:
                 return True
 
-        return is_forbidden_var(t['of'])
+        return type_is_forbidden_var(t['of'])
 
-    if is_func(t):
+    if type_is_func(t):
         return True
 
 
@@ -762,7 +762,7 @@ def is_forbidden_var(t, zero_array_forbidden=True):
 
 
 
-def is_va_list(t):
+def type_is_va_list(t):
     return t['kind'] == 'VA_List'
 
 
@@ -814,7 +814,7 @@ def type_get_align(t):
 
 def defined_array_item_type(ta):
     array_of = ta['of']
-    while is_array(array_of):
+    while type_is_array(array_of):
         array_of = array_of['of']
     return array_of
 
@@ -845,19 +845,19 @@ def type_print(t, print_aka=True):
             if id_str == '<generic:int>':
                 id_str = 'Int'
 
-            if is_generic(t):
+            if type_is_generic(t):
                 print('Generic', end='')
 
             print(id_str, end='')
 
-            if is_generic(t):
+            if type_is_generic(t):
                 if 'width' in t:
                     print('%d' % (t['width']), end='')
 
             return
 
-    if is_record(t):
-        if is_generic_record(t):
+    if type_is_record(t):
+        if type_is_generic_record(t):
             print("GenericRecord {")
             for f in t['fields']:
                 print("\t%s : " % f['id']['str'], end='')
@@ -878,13 +878,13 @@ def type_print(t, print_aka=True):
             i = i + 1
         print("\n}")
 
-    elif is_enum(t):
+    elif type_is_enum(t):
         print("enum", end='')
 
-    elif is_pointer(t):
+    elif type_is_pointer(t):
         print("*", end=''); type_print(t['to'])
 
-    elif is_array(t):
+    elif type_is_array(t):
         if t['of'] == None:
             print("GenericEmptyArray", end='')
             return
@@ -900,19 +900,19 @@ def type_print(t, print_aka=True):
         print("]", end='')
         type_print(t['of'])
 
-    elif is_func(t):
+    elif type_is_func(t):
         print("(", end='')
         print_list_by(t['params'], lambda f: type_print(f['type']))
         print(")", end='')
         print(" -> ", end='')
         type_print(t['to'])
 
-    elif is_integer(t):
+    elif type_is_integer(t):
         print('%' + t['id']['str'], end='')
-        if is_generic(t):
+        if type_is_generic(t):
             print('%d' % t['width'], end='')
 
-    elif is_opaque(t):
+    elif type_is_opaque(t):
         print('opaque', end='')
 
     else:
