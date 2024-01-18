@@ -261,7 +261,7 @@ def print_type_enum(t):
 
 # исп. напр. для sizeof(uint32_t [10])
 def print_type_array_asis(t):
-    item_type = hlir_type.array_rot_item_type(t)
+    item_type = hlir_type.array_root_item_type(t)
     print_type(item_type, need_space_after=True)
     print_array_volume(t)
 
@@ -1363,7 +1363,7 @@ def print_wrapped_array(_type):
     # -> struct ret_str_retval {char a[10];};
     out(_type['wrapped_id'])
     out (" {")
-    item_type = hlir_type.array_rot_item_type(_type)
+    item_type = hlir_type.array_root_item_type(_type)
     print_type(item_type, need_space_after=True)
     out("a");
     print_array_volume(_type)
