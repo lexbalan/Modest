@@ -20,30 +20,26 @@ def value_cons_default(x, ti):
 
     from_type = x['type']
 
+    # ONLY FOR GENERIC
+
     if not type.type_is_generic(from_type):
         return x
 
-    # ONLY FOR GENERIC
-
-    method = 'implicit'
 
     if type.type_is_integer(from_type):
-        return value_cons_integer(x, typeSysInt, ti, method)
+        return value_cons_integer(x, typeSysInt, ti, 'implicit')
 
     elif type.type_is_generic_array_of_char(from_type):
-        return cons_ptr_to_str_from_generic_str(x, typeSysStr, ti, 'explicit')
+        return cons_ptr_to_str_from_generic_str(x, typeSysStr, ti)
 
     elif type.type_is_float(from_type):
-        return value_cons_float(x, typeSysFloat, ti, method)
+        return value_cons_float(x, typeSysFloat, ti, 'implicit')
 
     elif type.type_is_char(from_type):
-        return value_cons_char(x, typeSysChar, ti, method)
+        return value_cons_char(x, typeSysChar, ti, 'implicit')
 
     from error import fatal
     fatal("unimplemented value_cons_default case")
-    return hlir_value_bad(ti)
-
-
 
 
 # возвращает None если не может привести (!)
@@ -56,23 +52,19 @@ def value_cons(v, t, ti, method):
     if type.type_eq(v['type'], t):
         return v
 
-    cons = None
-    if type.type_is_integer(t): cons = value_cons_integer
-    elif type.type_is_pointer(t): cons = value_cons_pointer
-    elif type.type_is_array(t): cons = value_cons_array
-    elif type.type_is_record(t): cons = value_cons_record
-    elif type.type_is_float(t): cons = value_cons_float
-    elif type.type_is_char(t): cons = value_cons_char
-    elif type.type_is_unit(t): cons = value_cons_unit
+    constructor = None
+    if type.type_is_integer(t): constructor = value_cons_integer
+    elif type.type_is_pointer(t): constructor = value_cons_pointer
+    elif type.type_is_array(t): constructor = value_cons_array
+    elif type.type_is_record(t): constructor = value_cons_record
+    elif type.type_is_float(t): constructor = value_cons_float
+    elif type.type_is_char(t): constructor = value_cons_char
+    elif type.type_is_unit(t): constructor = value_cons_unit
 
-    nv = None
+    if constructor != None:
+        return constructor(v, t, ti, method)
 
-    if cons != None:
-        nv = cons(v, t, ti, method)
-
-    return nv
-
-
+    return None
 
 
 
@@ -83,7 +75,6 @@ def value_cons_soft(v, t, ti):
         return v
 
     return c
-
 
 
 
@@ -131,7 +122,9 @@ def value_cons_implicit(v, t, ti):
         return value_cons_soft(v, t, ti)
 
 
+    # cons Pointer from:
     if type.type_is_pointer(t):
+
         # cons *[]X from *[n]X
         if type.type_is_pointer_to_defined_array(from_type) and type.type_is_pointer_to_undefined_array(t):
             return value_cons_soft(v, t, ti)
@@ -139,11 +132,11 @@ def value_cons_implicit(v, t, ti):
         # cons *X from Nil
         if type.type_is_free_pointer(from_type):
             return value_cons_pointer(v, t, ti, method='implicit')
-            #return hlir_value_cast(v, t, ti=ti)
 
         # cons FreePointer from *X
         if type.type_is_pointer(from_type):
-            return hlir_value_cast(v, t, ti=ti)
+            if type.type_is_free_pointer(t):
+                return hlir_value_cast(v, t, ti=ti)
 
     return v
 

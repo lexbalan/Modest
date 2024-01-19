@@ -34,7 +34,7 @@ def str_literal(imm, charType, ti):
 
 
 
-def cons_ptr_to_str_from_generic_str(v, t, ti, method):
+def cons_ptr_to_str_from_generic_str(v, t, ti):
     from util import str2utf8, str2utf16, str2utf32
     from trans import module_strings_add
 
@@ -93,7 +93,7 @@ def value_cons_pointer(v, t, ti, method):
 
         if type.type_is_generic_array_of_char(vtype):
             if type.type_is_pointer_to_array_of_char(to_type):
-                return cons_ptr_to_str_from_generic_str(v, t, ti, method)
+                return cons_ptr_to_str_from_generic_str(v, t, ti)
 
 
     if nv != None:
