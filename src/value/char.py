@@ -8,12 +8,7 @@ from util import nbits_for_num
 
 
 def value_cons_char_immediate(v, t, ti):
-    #info("value_cons_char_immediate", ti)
-    width = t['width']
-    imm = v['imm']
-    v_width = v['type']['width']
-
-    if v_width > width:
+    if v['type']['width'] > t['width']:
         error("char overflow", ti)
 
     return hlir_value_cast_immediate(v, t, ti)

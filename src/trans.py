@@ -13,7 +13,7 @@ def is_local_context():
 
 
 from value.value import *
-from value.cons import value_cons_implicit, value_cons_explicit, cons_default
+from value.cons import value_cons_implicit, value_cons_explicit, value_cons_default
 
 from symtab import Symtab
 from util import nbits_for_num, nbytes_for_bits
@@ -887,7 +887,7 @@ def do_value_call(x):
 
             if hlir_type.type_is_generic(arg_type):
                 warning("value with generic type as extra argument", a['ti'])
-                arg = cons_default(arg, a['ti'])
+                arg = value_cons_default(arg, a['ti'])
 
             args.append(arg)
 
@@ -1311,7 +1311,7 @@ def do_stmt_var(x):
 
     if t == None:
         if hlir_type.type_is_generic(v['type']):
-            v = cons_default(v, x['value']['ti'])
+            v = value_cons_default(v, x['value']['ti'])
 
         t = v['type']
 

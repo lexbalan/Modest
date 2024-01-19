@@ -15,7 +15,7 @@ from .pointer import value_cons_pointer, cons_ptr_to_str_from_generic_str
 
 
 
-def cons_default(x, ti):
+def value_cons_default(x, ti):
     from trans import typeSysInt, typeSysFloat, typeSysChar, typeSysStr
 
     from_type = x['type']
@@ -31,10 +31,7 @@ def cons_default(x, ti):
         return value_cons_integer(x, typeSysInt, ti, method)
 
     elif type.type_is_generic_array_of_char(from_type):
-        print("cons_ptr_to_str_from_generic_str")
-        s = cons_ptr_to_str_from_generic_str(x, typeSysStr, ti, 'explicit')
-        #print(s)
-        return s
+        return cons_ptr_to_str_from_generic_str(x, typeSysStr, ti, 'explicit')
 
     elif type.type_is_float(from_type):
         return value_cons_float(x, typeSysFloat, ti, method)
@@ -43,7 +40,7 @@ def cons_default(x, ti):
         return value_cons_char(x, typeSysChar, ti, method)
 
     from error import fatal
-    fatal("unimplemented cons_default case")
+    fatal("unimplemented value_cons_default case")
     return hlir_value_bad(ti)
 
 
