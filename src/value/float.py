@@ -9,7 +9,6 @@ from .value import *
 
 
 def value_cons_float_immediate(v, t, ti):
-    #info("value_cons_float_immediate", ti)
     nv = hlir_value_cast_immediate(v, t, ti)
     nv['imm'] = float_value_pack(float(nv['imm']), t['width'])
     return nv
@@ -24,31 +23,29 @@ def do_cons_float(v, t, ti):
 def value_cons_float(v, t, ti, method):
     vt = v['type']
 
-    nv = None
-
     if type.type_is_generic(vt):
+        # (GenericInt or GenericFloat) -> Float
         if type.type_is_integer(vt) or type.type_is_float(vt):
-            # (GenericInt or GenericFloat) -> Float
             return value_cons_float_immediate(v, t, ti)
 
 
     if method != 'explicit':
         info("cannot implicit cons Float value", ti)
+        return None
 
+	# Int -> Float
+    if type.type_is_integer(vt):
+        return do_cons_float(v, t, ti=ti)
 
     # Float -> Float
-    if type.type_is_float(vt):
-        nv = do_cons_float(v, t, ti=ti)
-
-    # Int -> Float
-    elif type.type_is_integer(vt):
-        nv = do_cons_float(v, t, ti=ti)
+    elif type.type_is_float(vt):
+        return do_cons_float(v, t, ti=ti)
 
     # VA_List -> Float
     elif type.type_is_va_list(vt):
-        nv = hlir_value_cast(v, t, ti)
+        return hlir_value_cast(v, t, ti)
 
-    return nv
+    return None
 
 
 

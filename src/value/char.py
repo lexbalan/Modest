@@ -43,7 +43,6 @@ def value_cons_char(v, t, ti, method):
     elif type.type_is_va_list(vtype):
         return hlir_value_cast(v, t, ti)
 
-
     return None
 
 

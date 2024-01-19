@@ -61,8 +61,6 @@ def do_cons_integer(v, t, method, ti):
 def value_cons_integer(v, t, ti, method):
     vtype = v['type']
 
-    nv = None
-
     if type.type_is_generic_integer(vtype):
         # GenericInt -> Int
         check_width(vtype, t, method, ti)
@@ -71,29 +69,27 @@ def value_cons_integer(v, t, ti, method):
             if v['imm'] < 0:
                 return None
 
-        nv = do_cons_integer(v, t, method, ti)
+        return do_cons_integer(v, t, method, ti)
 
 
-    if nv != None:
-        return nv
+    if method != 'explicit':
+        info("cannot implicit cons Int value", ti)
+        return None
 
+	# (Int or Char) -> Int
+    if type.type_is_integer(vtype) or type.type_is_char(vtype) or type.type_is_bool(vtype):
+        return do_cons_integer(v, t, method, ti)
 
-    if method == 'explicit':
+	# Float -> Int
+    elif type.type_is_float(vtype):
+        return do_cons_integer(v, t, method, ti=ti)
 
-        # (Int or Char) -> Int
-        if type.type_is_integer(vtype) or type.type_is_char(vtype) or type.type_is_bool(vtype):
-            nv = do_cons_integer(v, t, method, ti)
+    # Pointer -> Int
+    elif type.type_is_pointer(vtype):
+        return do_cons_integer(v, t, method, ti)
 
-        # Float -> Int
-        elif type.type_is_float(vtype):
-            nv = do_cons_integer(v, t, method, ti=ti)
+    # VA_List -> Int
+    elif type.type_is_va_list(vtype):
+        return hlir_value_cast(v, t, ti)
 
-        # Pointer -> Int
-        elif type.type_is_pointer(vtype):
-            nv = do_cons_integer(v, t, method, ti)
-
-        # VA_List -> Int
-        elif type.type_is_va_list(vtype):
-            nv = hlir_value_cast(v, t, ti)
-
-    return nv
+    return None

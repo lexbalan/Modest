@@ -111,9 +111,15 @@ def value_cons_record(v, t, ti, method):
     from_type = v['type']
 
     if type.type_is_record(from_type):
-        # GenericRecord -> Record
+
+		# GenericRecord -> Record
         if type.type_is_generic(from_type):
             return value_cons_record_from_generic_record(v, t, ti, method)
+
+
+        if method != 'explicit':
+            info("cannot implicit cons Record value", ti)
+            return None
 
         # Record -> Record
         return value_cons_record_from_record(v, t, ti, method)

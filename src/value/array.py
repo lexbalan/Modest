@@ -101,11 +101,16 @@ def value_cons_array(v, t, ti, method):
     to_type = t
 
     if type.type_is_array(from_type):
+
         # GenericArray -> Array
         if type.type_is_generic(from_type):
             return value_cons_array_from_generic_array(v, t, ti, method)
 
-        # Array -> Array
+        if method != 'explicit':
+            info("cannot implicit cons Array value", ti)
+            return None
+
+		# Array -> Array
         return value_cons_array_from_array(v, t, ti, method)
 
     return None

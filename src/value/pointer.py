@@ -102,7 +102,7 @@ def value_cons_pointer(v, t, ti, method):
     ### EXPLICIT REGION ###
 
     if method != 'explicit':
-        info("cannot implicit cast different pointers", ti)
+        info("cannot implicit cons Pointer value", ti)
         return None
 
     from main import features
