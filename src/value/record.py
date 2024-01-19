@@ -6,13 +6,6 @@ from util import get_item_with_id
 from .value import *
 
 
-
-def value_cons_record_immediate(v, t, ti):
-    info("value_cons_record_immediate", ti)
-    return hlir_value_cast_immediate(v, t, ti)
-
-
-
 def value_cons_record_from_generic_record(v, t, ti, method):
 
     if v['kind'] == 'const':
