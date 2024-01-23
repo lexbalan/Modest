@@ -29,7 +29,6 @@ def value_cons_char(v, t, ti, method):
     if type.type_is_generic_char(from_type):
         return value_cons_char_immediate(v, t, ti)
 
-
     # explicit casts
     if method != 'explicit':
         info("cannot implicit cons Char value", ti)

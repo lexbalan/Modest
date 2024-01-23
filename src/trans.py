@@ -55,7 +55,6 @@ def module_strings_add(v):
 
 
 def module_type_get(m, id_str):
-    #print("SEARCH_TYPE %s in %s" % (id_str, cm['path']))
     t = m['context'].type_get(id_str)
     if t != None:
         return t
@@ -83,7 +82,6 @@ def type_get(id_str):
 
 def value_get(id_str):
     return module_value_get(module, id_str)
-    #return module['context'].value_get(id_str, recursive=True)
 
 
 # искать только внутри текущего контекста (блока)
@@ -143,8 +141,7 @@ def attributes_get():
 
 def insert(s):
     global module
-
-    ins = {
+    directive_insert = {
         'isa': 'directive',
         'kind': 'insert',
         'str': s,
@@ -152,7 +149,7 @@ def insert(s):
         'nl': 1,
         'ti': None
     }
-    module['text'].append(ins)
+    module['text'].append(directive_insert)
 
 
 
@@ -239,7 +236,7 @@ def init():
     typeSysInt = hlir_type.type_select_int(int_width)
     typeSysNat = hlir_type.type_select_nat(int_width)
     typeSysFloat = hlir_type.typeFloat64
-    typeSysStr = hlir_type_pointer(hlir_type_array(typeSysChar, volume=None))
+    typeSysStr = hlir_type_pointer(hlir_type_array(typeSysChar))
 
 
 # last fiels of record can be zero size array (!)
@@ -251,9 +248,6 @@ def do_field(x):
 
     if hlir_type.type_is_bad(t):
         t = hlir_type_bad(x['type']['ti'])
-
-    #if hlir_type.type_is_forbidden_var(t, zero_array_forbidden=not is_last):
-    #    error("unsuitable type", x['type'])
 
     f = hlir_field(x['id'], t, ti=x['ti'])
 
@@ -441,7 +435,8 @@ def do_value_shift(x):
             if hlir_type.type_is_generic(l['type']):
                 # расширяем generic int тип чтобы в нем можно было сдвигать
                 l['type']['width'] = nbits #!
-                res_t = hlir_type_integer(None, width=nbits, generic=True, ti=ti)
+                res_t = hlir_type_integer(None, width=nbits, ti=ti)
+                res_t['generic'] = True
             else:
                 if nbits > l['type']['width']:
                     error("data loss left shift", ti)
@@ -460,8 +455,8 @@ def do_value_shift(x):
 
             t = l['type']
             if hlir_type.type_is_generic(l['type']):
-                t = hlir_type_integer(None, width=nbits, generic=True, ti=ti)
-
+                t = hlir_type_integer(None, width=nbits, ti=ti)
+                t['generic'] = True
 
             v = hlir_value_bin(op, l, r, t, ti=ti)
             v['imm'] = imm_result
@@ -603,7 +598,8 @@ def value_strings_concat(l, r, ti):
 
     str_array_volume = hlir_value_int(length)
     generic = True  # не факт, анализируй a и b
-    genStrType = hlir_type_array(hlir_type.typeChar32, generic=True, volume=str_array_volume, ti=ti)
+    genStrType = hlir_type_array(hlir_type.typeChar32, volume=str_array_volume, ti=ti)
+    genStrType['generic'] = True
 
     bin_value = hlir_value_bin('add_str', l, r, genStrType, ti=ti)
     bin_value['imm'] = imm_str
@@ -944,27 +940,27 @@ def do_value_index(x):
         v = hlir_value_index_array_by_ptr(a, i, ti=x['ti'])
     else:
         v = hlir_value_index_array(a, i, ti=x['ti'])
+
         if value_is_immutable(a):
             v['att'].append('immutable')
 
-    # immediate index (!)
-    if value_is_immediate(a) and not ptr_access:
-        if value_is_immediate(i):
-            index = i['imm']
+        if value_is_immediate(a):
+            if value_is_immediate(i):
+                index = i['imm']
 
-            if index >= array_typ['volume']['imm']:
-                error("array index out of bounds", x['index'])
+                if index >= array_typ['volume']['imm']:
+                    error("array index out of bounds", x['index'])
 
-            items = a['imm']
-            item = items[index]
+                items = a['imm']
+                item = items[index]
 
-            #if hlir_type.type_is_char(item_type):
-            if hlir_type.type_is_char(array_typ['of']):
-                char_code = item
-                char = hlir_value_char(char_code, type=None, ti=x['ti'])
-                return char
+                #if hlir_type.type_is_char(item_type):
+                if hlir_type.type_is_char(array_typ['of']):
+                    char_code = item
+                    char = hlir_value_char(char_code, type=None, ti=x['ti'])
+                    return char
 
-            v['imm'] = item['imm']
+                v['imm'] = item['imm']
 
     return v
 
@@ -1048,14 +1044,13 @@ def do_value_id(x):
 
 
 def do_value_str(x):
-    string=x['str']
-    length=x['len']
     ti=x['ti']
 
-    vol = hlir_value_int(len(string) + 1)
-    genStrType = hlir_type_array(hlir_type.typeChar32, generic=True, volume=vol, ti=ti)
+    vol = hlir_value_int(x['len'])  # <=> len(string) + 1
+    genStrType = hlir_type_array(hlir_type.typeChar32, volume=vol, ti=ti)
+    genStrType['generic'] = True
 
-    imm = hlir_string_imm(string)
+    imm = hlir_string_imm(x['str'])
     return hlir_value_literal(genStrType, imm, ti)
 
 
@@ -1109,7 +1104,8 @@ def do_value_record(x):
         field = hlir_field(item_id, item_value['type'], ti=item['ti'])
         fields.append(field)
 
-    generic_record_type = hlir_type_record(fields, generic=True, ti=x['ti'])
+    generic_record_type = hlir_type_record(fields, ti=x['ti'])
+    generic_record_type['generic'] = True
     v = hlir_value_record(generic_record_type, initializers, ti=x['ti'])
     v['nl_end'] = x['nl_end']
     return v
@@ -1318,17 +1314,12 @@ def do_stmt_var(x):
         error("local id redefinition", x['id']['ti'])
         return hlir_stmt_bad()
 
-    #
-    #var_value = hlir_value_var(id, t, v, ti=x['ti'])
-    #var_value['att'].extend(['local'])
-    #module['context'].value_add(id['str'], var_value)
     var_value = add_local_var(id, t, v, x['ti'])
-
     return hlir_stmt_def_var(var_value, v, ti=x['ti'])
 
 
-def add_local_var(id, t, iv, ti):
-    var_value = hlir_value_var(id, t, iv, ti)
+def add_local_var(id, typ, init_value, ti):
+    var_value = hlir_value_var(id, typ, init_value, ti)
     var_value['att'].extend(['local'])
     module['context'].value_add(id['str'], var_value)
     return var_value
@@ -1551,7 +1542,7 @@ def def_const(x):
         return hlir_def_const(v, x['ti'])
 
     if not value_is_immediate(v):
-        if not value_is_ptr_to_str(v):
+        if not type_is_pointer_to_array_of_char(v['type']):
             error("expected immediate value", v)
 
     const_value = hlir_value_const(id, v['type'], v, x['ti'])
@@ -1583,9 +1574,8 @@ def module_remove_node(m, isa, id_str):
 
     for x in m['text']:
         if isa in x:
-            #if 'id' in x[isa]:
             if x[isa]['id']['str'] == id_str:
-               #print("REMOVE: " + id_str)
+                #print("REMOVE: " + id_str)
                 m['text'].remove(x)
                 break
 
@@ -1623,27 +1613,28 @@ def def_type(x):
 def def_var(x):
     f = do_field(x['field'])
 
-    if hlir_type.type_is_bad(f['type']):
-        return None
-
+    # already defined?
     already = value_get(f['id']['str'])
     if already != None:
         error("redefinition of '%s'" % f['id']['str'], x['field']['ti'])
 
-    if hlir_type.type_is_opaque(f['type']):
-        error("cannot create variable with undefined type", x['type'])
+    var_type = f['type']
+
+    if hlir_type.type_is_bad(var_type):
         return None
+
+    if hlir_type.type_is_forbidden_var(var_type):
+        error("unsuitable type", x['type'])
 
     init_value = None
 
     if x['init'] != None:
         iv = do_value(x['init'])
-
         if not value_is_bad(iv):
-            init_value = value_cons_implicit(iv, f['type'], x['init']['ti'])
-            hlir_type.check(f['type'], init_value['type'], x['init']['ti'])
+            init_value = value_cons_implicit(iv, var_type, x['init']['ti'])
+            hlir_type.check(var_type, init_value['type'], x['init']['ti'])
 
-    var = hlir_value_var(f['id'], f['type'], init=init_value)
+    var = hlir_value_var(f['id'], var_type, init=init_value)
     var['att'].extend(attributes_get())
     var['att'].append('global')
     extend_props(var)
@@ -1811,6 +1802,7 @@ def def_func(x):
         module_remove_node(module, 'value', func_id['str'])
 
     return hlir_def_func(fn, x['ti'])
+
 
 
 def decl_type(x):

@@ -33,6 +33,71 @@ def hlir_value_literal(t, imm, ti):
     }
 
 
+
+def hlir_value_zero(t, ti=None):
+    imm_val = 0
+    if type.type_is_record(t): imm_val = []
+    elif type.type_is_array(t): imm_val = []
+    return hlir_value_literal(t, imm_val, ti)
+
+
+
+def hlir_value_char(char_code, type=None, ti=None):
+    if type == None:
+        # if type not specified, set type as GenericChar
+        char_width = nbits_for_num(char_code)
+        type = hlir_type_char("GenericChar", char_width, ti=ti)
+        type['generic'] = True
+
+    return hlir_value_literal(type, char_code, ti)
+
+
+
+def hlir_value_int(num, typ=None, ti=None):
+    if typ == None:
+        typ = hlir_type_generic_int_for(num, unsigned=False, ti=ti)
+    else:
+        nbits = nbits_for_num(num)
+
+        if nbits > typ['width']:
+            print(nbits)
+            print(typ)
+            from error import error
+            error("value size not corresponded type size", ti)
+            return hlir_value_bad(ti)
+
+    return hlir_value_literal(typ, num, ti)
+
+
+
+def hlir_value_float(num, ti=None):
+    typ = hlir_type_float('Float', width=flt_width, ti=ti)
+    typ['generic'] = True
+    return hlir_value_literal(typ, num, ti)
+
+
+
+def hlir_value_array(items, type=None, ti=None):
+    if type == None:
+        length = len(items)
+
+        of = None
+        if length > 0:
+            of = items[0]['type']
+
+        array_volume = hlir_value_int(length)
+        type = hlir_type_array(of, volume=array_volume, ti=ti)
+        type['generic'] = True
+
+    return hlir_value_literal(type, items, ti)
+
+
+
+def hlir_value_record(typ, initializers=[], ti=None):
+    return hlir_value_literal(typ, initializers, ti)
+
+
+
 def hlir_value_un(k, value, type, ti=None):
     return {
         'isa': 'value',
@@ -223,59 +288,6 @@ def hlir_value_offsetof(of, field_id, ti=None):
 
 
 
-
-
-
-
-
-
-def hlir_value_zero(t, ti=None):
-    imm_val = 0
-    if type.type_is_record(t): imm_val = {}
-    elif type.type_is_array(t): imm_val = []
-    return hlir_value_literal(t, imm_val, ti)
-
-
-
-def hlir_value_char(char_code, type=None, ti=None):
-    if type == None:
-        # if type not specified, set type as GenericChar
-        char_width = nbits_for_num(char_code)
-        type = hlir_type_char(None, char_width, generic=True, ti=ti)
-
-    return hlir_value_literal(type, char_code, ti)
-
-
-
-
-
-def hlir_value_int(num, typ=None, ti=None):
-    if typ == None:
-        typ = hlir_type_generic_int_for(num, unsigned=False, ti=ti)
-    else:
-        nbits = nbits_for_num(num)
-
-        if nbits > typ['width']:
-            print(nbits)
-            print(typ)
-            from error import error
-            error("value size not corresponded type size", ti)
-            1 / 0
-            #print("nbits = %d" % nbits)
-            #print("typ['width'] = %d" % typ['width'])
-            return hlir_value_bad(ti)
-
-    return hlir_value_literal(typ, num, ti)
-
-
-
-def hlir_value_float(num, ti=None):
-    typ = hlir_type_float('Float', width=flt_width, ti=ti)
-    typ['generic'] = True
-    return hlir_value_literal(typ, num, ti)
-
-
-
 def hlir_string_imm(string):
     # imm of string - it just list of UTF-32 codes
     items = []
@@ -287,23 +299,8 @@ def hlir_string_imm(string):
 
 
 
-def hlir_value_array(items, type=None, ti=None):
-    if type == None:
-        length = len(items)
 
-        of = None
-        if length > 0:
-            of = items[0]['type']
-
-        array_volume = hlir_value_int(length)
-        type = hlir_type_array(of, volume=array_volume, generic=True, ti=ti)
-
-    return hlir_value_literal(type, items, ti)
-
-
-
-def hlir_value_record(typ, initializers={}, ti=None):
-    return hlir_value_literal(typ, initializers, ti)
-
+def hlir_is_value(x):
+    return x['isa'] == 'value'
 
 

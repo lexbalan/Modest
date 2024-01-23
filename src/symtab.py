@@ -1,4 +1,5 @@
 
+
 class Symtab:
     def __init__(self, parent=None, domain='global'):
         self.parent = parent

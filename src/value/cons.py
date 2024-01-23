@@ -122,19 +122,8 @@ def value_cons_implicit(v, t, ti):
 
     # cons Pointer from:
     if type.type_is_pointer(t):
+        return value_cons_pointer(v, t, ti, method='implicit')
 
-        # cons *[]X from *[n]X
-        if type.type_is_pointer_to_defined_array(from_type) and type.type_is_pointer_to_undefined_array(t):
-            return value_cons_soft(v, t, ti)
-
-        # cons *X from Nil
-        if type.type_is_free_pointer(from_type):
-            return value_cons_pointer(v, t, ti, method='implicit')
-
-        # cons FreePointer from *X
-        if type.type_is_pointer(from_type):
-            if type.type_is_free_pointer(t):
-                return hlir_value_cast(v, t, ti=ti)
 
     return v
 

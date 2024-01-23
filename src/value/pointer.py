@@ -40,30 +40,37 @@ def do_cons_pointer(v, t, ti):
     return hlir_value_cast(v, t, ti=ti)
 
 
+
+
+"""
+
+"""
+
+
 def value_cons_pointer(v, t, ti, method):
     vtype = v['type']
     to_type = t
-
-    nv = None
 
     if type.type_is_pointer(vtype):
         v_pointer_to = vtype['to']
 
         # Implicit cons pointer from pointer
 
-        # implicit *Unit -> *Any
-        if type.type_is_unit(v_pointer_to):
-            nv = do_cons_pointer(v, t, ti)
+        from_type = v['type']
 
-        # implicit  *[n]Any -> *[]Any
-        elif type.type_is_defined_array(v_pointer_to):
-            if type.type_is_pointer_to_undefined_array(t):
-                if type.type_eq(vtype['to']['of'], t['to']['of']):
-                    nv = do_cons_pointer(v, t, ti)
+        # cons *[]X from *[n]X +
+        if type.type_is_pointer_to_defined_array(from_type) and type.type_is_pointer_to_undefined_array(t):
+            return do_cons_pointer(v, t, ti)
 
-        # implicit *Any -> *Unit
-        elif type.type_is_free_pointer(t):
-            nv = do_cons_pointer(v, t, ti)
+        # cons *X from Nil
+        if type.type_is_free_pointer(from_type):
+            return do_cons_pointer(v, t, ti)
+
+        # cons FreePointer from *X
+        if type.type_is_pointer(from_type):
+            if type.type_is_free_pointer(t):
+                return do_cons_pointer(v, t, ti=ti)
+
 
     else:
         # implicit cons pointer from non-pointer value
@@ -72,9 +79,6 @@ def value_cons_pointer(v, t, ti, method):
             if type.type_is_pointer_to_array_of_char(to_type):
                 return cons_ptr_to_str_from_generic_str(v, t, ti)
 
-
-    if nv != None:
-        return nv
 
     ### EXPLICIT REGION ###
 
@@ -91,17 +95,18 @@ def value_cons_pointer(v, t, ti, method):
 
     # Ptr -> Ptr
     if type.type_is_pointer(vtype):
-        nv = do_cons_pointer(v, t, ti=ti)
+        return do_cons_pointer(v, t, ti=ti)
 
     # Int -> Ptr
     elif type.type_is_integer(vtype):
-        nv = do_cons_pointer(v, t, ti=ti)
+        return do_cons_pointer(v, t, ti=ti)
 
-    # VA_List -> Int
+    # VA_List -> Ptr
     elif type.type_is_va_list(vtype):
-        nv = do_cons_pointer(v, t, ti)
+        return hlir_value_cast(v, t, ti)
 
-    return nv
+
+    return None
 
 
 

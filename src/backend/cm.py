@@ -45,6 +45,11 @@ def precedence(x):
     return i
 
 
+
+def print_id(x):
+    out(x['id']['str'])
+
+
 def print_comment(x):
     k = x['kind']
     if k == 'line': print_comment_line(x)
@@ -70,7 +75,7 @@ def print_comment_line(x):
 
 
 def print_type_integer(t):
-    out(t['id']['str'])
+    print_id(t)
 
 
 def print_type_array(t):
@@ -91,7 +96,8 @@ def print_type_pointer(t):
 
 
 def print_field(x):
-    out("%s: " % x['id']['str'])
+    print_id(x)
+    out(": ")
     print_type(x['type'])
 
 
@@ -135,9 +141,9 @@ def print_type_enum(t):
     i = 0
     while i < len(items):
         item = items[i]
-        out("\n")
-        #o("\t%s_%s," % (t['aka'], item['id']['str']))
-        out("\t%s," % (item['id']['str']))
+        out("\n\t")
+        print_id(item)
+        out(',')
         i = i + 1
     out("\n}")
 
@@ -160,7 +166,7 @@ def print_type(t, print_aka=True):
 
     if print_aka:
         if t['id'] != None:
-            out(t['id']['str'])
+            print_id(t)
             return
 
     if hlir_type.type_is_integer(t): print_type_integer(t)
@@ -261,13 +267,17 @@ def print_value_index_ptr(v, ctx):
 def print_value_access(v, ctx):
     left = v['record']
     need_wrap = precedence(left['kind']) < precedence('access')
-    print_value(left, need_wrap=need_wrap); out("."); out(v['field']['id']['str'])
+    print_value(left, need_wrap=need_wrap)
+    out(".")
+    print_id(v['field'])
 
 
 def print_value_access_ptr(v, ctx):
     left = v['pointer']
     need_wrap = precedence(left['kind']) < precedence('access')
-    print_value(left, need_wrap=need_wrap); out("."); out(v['field']['id']['str'])
+    print_value(left, need_wrap=need_wrap)
+    out(".")
+    print_id(v['field'])
 
 
 def print_cast(t, v, ctx=[]):
@@ -316,11 +326,13 @@ def print_value_cast(v, ctx):
 
 
 
+
+
 def print_value_literal_arr(v, ctx):
 
     # FIXIT: это вообще херня
     if hlir_type.type_is_array_of_char(v['type']):
-        print_value_literal_str_arr(v, ctx=[])
+        print_value_literal_arr_str(v, ctx=[])
         return
 
     out("[")
@@ -411,7 +423,7 @@ def print_value_literal_record(v, ctx):
 
 
 # FIXIT: это вообще херня
-def print_value_literal_str_arr(x, ctx):
+def print_value_literal_arr_str(x, ctx):
     out("\"")
     for c in x['imm']:
         cc = c
@@ -443,6 +455,13 @@ def print_value_literal_str_arr(x, ctx):
 
 
 
+def print_value_literal_bool(x, ctx):
+    if x['imm'] != 0:
+        out('true')
+    else:
+        out('false')
+
+
 def print_value_literal_char(x, ctx):
     num = x['imm']
     if num >= 0x20:
@@ -451,14 +470,6 @@ def print_value_literal_char(x, ctx):
         out("\"\\x%x\"[0]" % num)
     else:
         out("\"\\x%x\"[0]" % num)
-
-
-def print_value_literal_bool(x, ctx):
-    num = x['imm']
-    if num != 0:
-        out('true')
-    else:
-        out('false')
 
 
 def print_value_literal_int(x, ctx):
@@ -473,17 +484,22 @@ def print_value_literal_int(x, ctx):
         fmt = "0x%%0%dX" % nsigns
         out(fmt % num)
 
-    elif hlir_type.type_is_pointer(x['type']):
-        if num == 0:
-            out("nil")
-            return
-
     else:
         out(str(num))
 
 
 def print_value_literal_flt(x, ctx):
     out(str(float(x['imm'])))
+
+
+def print_value_literal_ptr(x, ctx):
+    if x['imm'] == 0:
+        out("nil")
+    else:
+        out("(0x%08X" % x['imm'])
+        out(" to ")
+        print_type(x['type'])
+        out(")")
 
 
 def print_value_zero(x, ctx):
@@ -494,15 +510,15 @@ def print_value_zero(x, ctx):
 
 
 def print_value_enum(x, ctx):
-    out("%s" % (x['id']['str']))
+    print_id(x)
 
 
 def print_value_by_id(x, ctx):
-    out("%s" % x['id']['str'])
+    print_id(x)
 
 
 def print_value_let(x, ctx):
-    out(x['id']['str'])
+    print_id(x)
 
 
 
@@ -512,10 +528,10 @@ def print_value_literal(x, ctx):
     elif hlir_type.type_is_float(t): print_value_literal_flt(x, ctx)
     elif hlir_type.type_is_record(t): print_value_literal_record(x, ctx)
     elif hlir_type.type_is_array(t): print_value_literal_arr(x, ctx)
-    elif hlir_type.type_is_free_pointer(t): out("nil")
-    elif hlir_type.type_is_pointer(t): print_value_literal_int(x, ctx)
+    elif hlir_type.type_is_pointer(t): print_value_literal_ptr(x, ctx)
     elif hlir_type.type_is_bool(t): print_value_literal_bool(x, ctx)
     elif hlir_type.type_is_char(t): print_value_literal_char(x, ctx)
+
 
 
 def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
@@ -595,7 +611,9 @@ def print_stmt_defvar(x):
 
 
 def print_stmt_let(x):
-    out("let %s = " % x['id']['str'])
+    out("let ")
+    print_id(x)
+    out(" = ")
     print_value(x['init_value'], print_just_id=False)
 
 
@@ -653,7 +671,8 @@ def print_decl_func(x):
     func = x['value']
     if 'extern' in func['att']:
         out("extern ")
-    out('func %s' % func['id']['str'])
+    out('func ')
+    print_id(func)
     print_type(func['type'])
 
 
@@ -661,17 +680,21 @@ def print_def_func(x):
     func = x['value']
     ft = func['type']
     arghack = 'arghack' in ft['att']
-    out('func %s' % func['id']['str'])
+    out('func ')
+    print_id(func)
     print_type_func(ft, arghack=arghack)
     print_stmt_block(func['stmt'])
 
 
 def print_decl_type(x):
-    out("type %s" % x['type']['id']['str'])
+    out("type ")
+    print_id(x['type'])
 
 
 def print_def_type(x):
-    out("type %s " % x['type']['id']['str'])
+    out("type ")
+    print_id(x['type'])
+    out(" ")
     print_type(x['type'], print_aka=False)
 
 
@@ -689,7 +712,9 @@ def print_def_var(x):
 def print_def_const(x):
     v = x['value']
 
-    out("const %s = " % v['id']['str'])
+    out("const ")
+    print_id(v)
+    out(" = ")
 
     # если есть оригинальное выражение, внутри, печатаем его
     if 'value' in v:

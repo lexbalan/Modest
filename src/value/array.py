@@ -63,7 +63,6 @@ def value_cons_array_from_generic_array(v, t, ti, method):
 
 # TODO: only for immediate array (!)
 def value_cons_array_from_array(v, t, ti, method):
-
     # нельзя построить массив из массива другого типа
     if not type.type_eq(v['type']['of'], t['of']):
         return None

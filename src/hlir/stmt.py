@@ -107,3 +107,4 @@ def hlir_stmt_return(value=None, ti=None):
 
 def hlir_stmt_is_bad(x):
     return x['kind'] == 'bad'
+

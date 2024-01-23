@@ -6,7 +6,7 @@ from error import info, error, fatal
 from .common import *
 import hlir.type as hlir_type
 from hlir.type import type_print
-from value.value import value_attribute_check, value_is_zero, value_print
+from value.value import value_attribute_check, value_print
 from util import nbits_for_num, get_item_with_id, utf8_cc_arr_to_utf32_cc_arr, utf16_cc_arr_to_utf32_cc_arr
 from main import settings
 
@@ -21,6 +21,9 @@ NO_TYPEDEF_OTHERS = False
 
 USE_BOOLEAN = True
 USE_STDBOOL = True
+BOOL_TRUE_LITERAL = 'true'
+BOOL_FALSE_LITERAL = 'false'
+
 
 USE_STATIC_VARIABLES = True
 
@@ -133,12 +136,17 @@ def precedence(x):
 
 
 
+def print_id(x):
+    out(x['id']['str'])
+
+
+
 def print_type_numeric(t):
     if 'c_alias' in t:
         out(t['c_alias'])
         return
 
-    out(t['id']['str'])
+    print_id(t)
 
 
 
@@ -251,11 +259,11 @@ def print_type_enum(t):
     i = 0
     while i < len(items):
         item = items[i]
-        newline()
-        out("\t%s," % (item['id']['str']))
+        out("\n\t")
+        print_id(item)
+        out(',')
         i = i + 1
-    newline()
-    out("}")
+    out("\n}")
 
 
 
@@ -292,12 +300,12 @@ def print_type2(t, print_aka, need_space_after, _print_array_asis):
             if not hlir_type.type_is_record(tt):
                 print_type2(t['aliasof'], print_aka=True, need_space_after=need_space_after)
 
-    if USE_BOOLEAN:
-        if hlir_type.type_is_bool(t):
-            out("bool")
-            if need_space_after:
-                out(" ")
-            return
+    #if USE_BOOLEAN:
+    #    if hlir_type.type_is_bool(t):
+    #        out("bool")
+    #        if need_space_after:
+    #            out(" ")
+    #        return
 
 
     # hotfix for let generic value problem (let x = 1)
@@ -324,7 +332,7 @@ def print_type2(t, print_aka, need_space_after, _print_array_asis):
             if NO_TYPEDEF_STRUCTS:
                 if hlir_type.type_is_record(t):
                     out("struct ")
-            out(t['id']['str'])
+            print_id(t)
             if need_space_after:
                 out(" ")
             return
@@ -402,7 +410,7 @@ def print_value_bin(v, ctx):
         if right['kind'] != 'logic_and':
             need_wrap_right = precedence(right) < 10 #precedenceMax
     elif op in ['eq_str', 'ne_str']:
-        print_value_literal_int(v, ctx)
+        print_value_literal_bool(v, ctx)
         return
 
     print_value(left, need_wrap=need_wrap_left)
@@ -601,13 +609,17 @@ def print_value_index_ptr(x, ctx):
 def print_value_access(v, ctx):
     left = v['record']
     need_wrap = precedence(left) < precedence(v)
-    print_value(left, need_wrap=need_wrap); out('.'); out(v['field']['id']['str'])
+    print_value(left, need_wrap=need_wrap)
+    out('.')
+    print_id(v['field'])
 
 
 def print_value_access_ptr(v, ctx):
     left = v['pointer']
     need_wrap = precedence(left) < precedence(v)
-    print_value(left, need_wrap=need_wrap); out("->"); out(v['field']['id']['str'])
+    print_value(left, need_wrap=need_wrap)
+    out("->")
+    print_id(v['field'])
 
 
 
@@ -777,10 +789,6 @@ def print_value_literal_arr(v, ctx):
 
     values = v['imm']
 
-    if values == None or values == []:
-        out("{0}")
-        return
-
     print_array_values(values)
 
     indent_down()
@@ -799,14 +807,10 @@ def print_value_literal_record(v, ctx):
     print_type(v['type'])
     out(")")
 
-    out(" {")
-    indent_up()
-
     initializers = v['imm']
 
-    if initializers == None:
-        out("{0}")
-        return
+    out(" {")
+    indent_up()
 
     nitems = len(initializers)
     i = 0
@@ -817,14 +821,8 @@ def print_value_literal_record(v, ctx):
 
     while i < nitems:
         item = v['type']['fields'][i]
-
         field_id_str = item['id']['str']
-
         ini = get_item_with_id(initializers, field_id_str)
-
-        if value_is_zero(ini['value']):
-            i = i + 1
-            continue
 
         nl = 0
         if 'nl' in ini:
@@ -919,7 +917,7 @@ def print_value_literal_str(x, ctx, char_width=8):
 def print_value_literal_char(x, ctx):
     num = x['imm']
 
-    if num == None or num == 0:
+    if num == 0:
         out("'\\0'")
         return
 
@@ -944,6 +942,15 @@ def print_value_literal_char(x, ctx):
 
 
 
+
+def print_value_literal_bool(x, ctx):
+    if x['imm']:
+        out(BOOL_TRUE_LITERAL)
+    else:
+        out(BOOL_FALSE_LITERAL)
+
+
+
 def print_value_literal_int(x, ctx):
     num = x['imm']
 
@@ -958,13 +965,6 @@ def print_value_literal_int(x, ctx):
             return
 
 
-    if USE_BOOLEAN:
-        if hlir_type.type_is_bool(x['type']):
-            if num: out("true")
-            else: out("false")
-            return
-
-
     if value_attribute_check(x, 'hexadecimal'):
         nsigns = 0
         if 'nsigns' in x:
@@ -973,10 +973,7 @@ def print_value_literal_int(x, ctx):
         out(fmt % num)
 
     else:
-        if num == None:
-            out("0")
-        else:
-            out(str(num))
+        out(str(num))
 
 
     nbits = x['type']['width']
@@ -993,20 +990,16 @@ def print_value_literal_int(x, ctx):
 
 
 def print_value_literal_flt(x, ctx):
-    num = x['imm']
-    if num == None: out("0")
-    else: out(str(float(num)))
+    out(str(float(x['imm'])))
 
 
 
 def print_value_literal_ptr(x, ctx):
-    if hlir_type.type_is_free_pointer(x['type']):
+    if x['imm'] == 0:
         out("NULL")
     else:
-        if x['imm'] in [0, None]:
-            out("NULL")
-        else:
-            out("0x%X" % x['imm'])
+        out("(("); print_type(x['type']); out(")")
+        out("0x%08X)" % x['imm'])
 
 
 def print_value_literal(x, ctx):
@@ -1015,22 +1008,20 @@ def print_value_literal(x, ctx):
     elif hlir_type.type_is_float(t): print_value_literal_flt(x, ctx)
     elif hlir_type.type_is_record(t): print_value_literal_record(x, ctx)
     elif hlir_type.type_is_array(t): print_value_literal_arr(x, ctx)
-    elif hlir_type.type_is_pointer(t): print_value_literal_ptr(x, ctx)
+    elif hlir_type.type_is_bool(t): print_value_literal_bool(x, ctx)
     elif hlir_type.type_is_char(t): print_value_literal_char(x, ctx)
-    elif hlir_type.type_is_bool(t): print_value_literal_int(x, ctx)
+    elif hlir_type.type_is_pointer(t): print_value_literal_ptr(x, ctx)
     else: error("print_value_literal not implemented", x['ti'])
 
 
 def print_value_by_id(x):
+    print_id(x)
     if 'wrapped_array_value' in x['att']:
-        out("%s.a" % (x['id']['str']))
-        return
-
-    out("%s" % x['id']['str'])
+        out(".a")
 
 
 def print_value_let(x, ctx):
-    out(x['id']['str'])
+    print_id(x)
 
 
 def print_value_sizeof(x, ctx):

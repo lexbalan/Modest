@@ -5,7 +5,7 @@ from error import info, warning, error
 import hlir.type as hlir_type
 from hlir.type import type_print
 from value.value import value_attribute_check, value_print, value_is_immediate
-from hlir.value import hlir_value_int
+from hlir.value import hlir_is_value, hlir_value_int
 from hlir.type import hlir_type_pointer
 import settings
 
@@ -995,9 +995,10 @@ def do_eval_literal(x):
         exit(1)
 
 
+
 def do_eval(x):
     assert(x != None)
-    assert(x['isa'] == 'value')
+    assert(hlir_is_value(x))
 
     if value_is_immediate(x):
         # сюда попадают литералы,

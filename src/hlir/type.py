@@ -81,7 +81,7 @@ def hlir_type_bool():
         'width': 1,
         'size': 1,
         'align': 1,
-        'c_alias': 'uint8_t',
+        'c_alias': 'bool',
         'llvm_alias': 'i1',
         'cm_alias': 'Bool',
         'ops': BOOL_OPS,
@@ -91,7 +91,7 @@ def hlir_type_bool():
 
 
 
-def hlir_type_char(id_str, width, generic=False, ti=None):
+def hlir_type_char(id_str, width, ti=None):
     size = nbytes_for_bits(width)
 
     id = None
@@ -102,7 +102,7 @@ def hlir_type_char(id_str, width, generic=False, ti=None):
         'isa': 'type',
         'kind': 'char',
         'id': id,
-        'generic': generic,
+        'generic': False,
         'width': width,
         'size': size,
         'align': size,
@@ -112,13 +112,13 @@ def hlir_type_char(id_str, width, generic=False, ti=None):
     }
 
 
-def hlir_type_integer(id_str, width, generic=False, signed=True, ti=None):
+def hlir_type_integer(id_str, width, signed=True, ti=None):
     size = nbytes_for_bits(width)
     return {
         'isa': 'type',
         'kind': 'int',
         'id': hlir_id(id_str),
-        'generic': generic,
+        'generic': False,
         'width': width,
         'size': size,
         'align': size,
@@ -165,7 +165,7 @@ def hlir_type_pointer(to, ti=None):
 
 
 # size - always hlir_value (!)
-def hlir_type_array(of, volume=None, generic=False, ti=None):
+def hlir_type_array(of, volume=None, ti=None):
     item_size = 0
     item_align = 0
     if of != None:
@@ -180,7 +180,7 @@ def hlir_type_array(of, volume=None, generic=False, ti=None):
         'isa': 'type',
         'kind': 'array',
         'id': None,
-        'generic': generic,
+        'generic': False,
         'width': 0, #'width': array_size * 8,
         'size': array_size,
         'align': item_align,
@@ -193,11 +193,11 @@ def hlir_type_array(of, volume=None, generic=False, ti=None):
 
 
 from util import align_to
-def hlir_type_record(fields, generic=False, ti=None):
+def hlir_type_record(fields, ti=None):
     record_size = 0
     record_align = 0
 
-    if not generic:
+    if fields != []:
         field_no = 0
         field_offset = 0
         for field in fields:
@@ -219,7 +219,7 @@ def hlir_type_record(fields, generic=False, ti=None):
         'isa': 'type',
         'kind': 'record',
         'id': None,
-        'generic': generic,
+        'generic': False,
         'width': 0, #'width': record_size * 8,
         'size': record_size,
         'align': record_align,
@@ -263,8 +263,10 @@ def hlir_type_opaque(id, ti=None):
 
 
 def hlir_type_generic_int_for(num, unsigned=False, ti=None):
-    nbits = nbits_for_num(num)
-    return hlir_type_integer(None, width=nbits, generic=True, ti=ti)
+    required_width = nbits_for_num(num)
+    t = hlir_type_integer(None, width=required_width, ti=ti)
+    t['generic'] = True
+    return t
 
 
 
@@ -311,10 +313,7 @@ def type_init():
 
 
     typeUnit = hlir_type_unit()
-
     typeBool = hlir_type_bool()
-    typeBool['c_alias'] = 'uint8_t'
-    typeBool['llvm_alias'] = 'i1'
 
     #
     typeChar8 = hlir_type_char("Char8", width=8)
