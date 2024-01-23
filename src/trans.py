@@ -283,21 +283,11 @@ def do_type_pointer(t):
     return hlir_type_pointer(to, ti=t['ti'])
 
 
-
 def do_type_array(t):
     of = do_type(t['of'])
-
-    #if hlir_type.type_is_undefined_array(of):
-    #    error("cannot construct type array of undefined array", t['of']['ti'])
-    #    return hlir_type_bad()
-
     volume_expr = None
     if t['size'] != None:
         volume_expr = do_value(t['size'])
-        #if not value_is_immediate(volume_expr):
-        #    error("array dimension must be immediate", t['size']['ti'])
-        #    return hlir_type_bad(t['ti'])
-
     return hlir_type_array(of, volume=volume_expr, ti=t['ti'])
 
 

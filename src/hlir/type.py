@@ -17,7 +17,6 @@ from .id import hlir_id
 from util import get_item_with_id, nbits_for_num, nbytes_for_bits
 
 
-
 ######################################################################
 #                            HLIR TYPE                               #
 ######################################################################
@@ -728,29 +727,29 @@ def type_is_unsigned(t):
 
 
 
-
 # cannot create variable with type
 def type_is_forbidden_var(t, zero_array_forbidden=True):
-    if type_is_opaque(t) or type_is_unit(t):
+    if type_is_opaque(t) or type_is_unit(t) or type_is_func(t):
         return True
 
-    # [0]Int, []Int, [n]<Forbidden>
-    if type_is_undefined_array(t):
-        # is undefined array?
-        if t['volume'] == None:
+    if type_is_array(t):
+        # [_]<Forbidden>
+        if type_is_forbidden_var(t['of']):
             return True
 
-        # is defined array;
-        # It can't be 0 sized (can only with 'unsafe' compiler flag)
+        # []Int
+        if type_is_undefined_array(t):
+            return True
+
+        # [0]Int
         from main import features
+        from value.value import value_is_immediate
         if zero_array_forbidden or not features.get('unsafe'):
-            if t['volume']['imm'] == 0:
-                return True
+            if value_is_immediate(t['volume']):
+                if t['volume']['imm'] == 0:
+                    return True
 
         return type_is_forbidden_var(t['of'])
-
-    if type_is_func(t):
-        return True
 
 
     return False

@@ -26,7 +26,7 @@ func put_str8(s: *[]Char8) {
 }
 
 
-func sprintf_dec_int32(buf: *[]Char8, x: Int)
+func sprintf_dec_int32(buf: *[]Char8, x: Int32)
 func sprintf_dec_nat32(buf: *[]Char8, x: Nat32)
 func sprintf_hex_nat32(buf: *[]Char8, x: Nat32)
 
@@ -54,7 +54,7 @@ func ff_printf(str: *[]Char8, va_list: VA_List) {
                 // %i & %d for signed integer (Int)
                 let i = va_list to Int32
 				sprintf_dec_int32(sptr, i)
-            } else if (c == "n"[0]) {
+            } else if c == "n"[0] {
                 // %n for unsigned integer (Nat)
                 let n = va_list to Nat32
 				sprintf_dec_nat32(sptr, n)
@@ -63,16 +63,16 @@ func ff_printf(str: *[]Char8, va_list: VA_List) {
                 // %p for pointers
                 let x = va_list to Nat32
 				sprintf_hex_nat32(sptr, x)
-			} else if (c == "s"[0]) {
+			} else if c == "s"[0] {
                 // %s pointer to string
                 let s = va_list to *Str8
                 sptr := s
-			} else if (c == "c"[0]) {
+			} else if c == "c"[0] {
                 // %c for char
                 let c = va_list to Char8
                 sptr[0] := c
                 sptr[1] := 0 to Char8
-			} else if (c == "%"[0]) {
+			} else if c == "%"[0] {
                 // %% for PERCENT_SYMBOL
                 sptr := "%"
 			}
