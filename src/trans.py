@@ -582,7 +582,7 @@ def bin_imm(op, type_result, l, r, ti):
 
 
 
-def value_strings_concat(l, r, ti):
+def value_concat_arrays(l, r, ti):
     imm_str = l['imm'] + r['imm']
     length = len(imm_str) + 1  #!
 
@@ -647,9 +647,9 @@ def do_value_bin(x):
         return do_bin_op_with_pointers(op, l, r, ti)
 
 
-    if hlir_type.type_is_generic_array_of_char(l['type']) and hlir_type.type_is_generic_array_of_char(r['type']):
+    if hlir_type.type_is_generic_array(l['type']) and hlir_type.type_is_generic_array(r['type']):
         if op == 'add':
-            return value_strings_concat(l, r, ti)
+            return value_concat_arrays(l, r, ti)
         elif op in ['eq', 'ne']:
             return do_value_bin_str_eq(op, l, r, ti)
 

@@ -757,7 +757,6 @@ def type_is_forbidden_var(t, zero_array_forbidden=True):
 
 
 
-
 # TODO!
 def type_attribute_add(t, a):
     t['att'].append(a)
