@@ -13,49 +13,52 @@
 
 
 
-typedef char TestInputString[32];
+#define INPUT_LENGTH  32
+#define OUTPUT_LENGTH  32
 
 typedef struct {
-    TestInputString input;
+    char input[INPUT_LENGTH];
     uint32_t input_len;
-    uint8_t output[32];
-} SHA256_TestData;
+
+    uint8_t output[OUTPUT_LENGTH];
+} SHA256_TestCase;
 
 
-SHA256_TestData test0 = (SHA256_TestData) {
+SHA256_TestCase test0 = (SHA256_TestCase) {
     .input = {'a', 'b', 'c', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'},
     .input_len = 3,
 
     .output = {
-        0xBA, 0x78, 0x16, 0xBF, 0x8F, 0x01, 0xCF, 0xEA, 0x41, 0x41, 0x40,
-        0xDE, 0x5D, 0xAE, 0x22, 0x23, 0xB0, 0x03, 0x61, 0xA3, 0x96, 0x17,
-        0x7A, 0x9C, 0xB4, 0x10, 0xFF, 0x61, 0xF2, 0x00, 0x15, 0xAD
+        0xBA, 0x78, 0x16, 0xBF, 0x8F, 0x01, 0xCF, 0xEA,
+        0x41, 0x41, 0x40, 0xDE, 0x5D, 0xAE, 0x22, 0x23,
+        0xB0, 0x03, 0x61, 0xA3, 0x96, 0x17, 0x7A, 0x9C,
+        0xB4, 0x10, 0xFF, 0x61, 0xF2, 0x00, 0x15, 0xAD
     }
 };
 
-SHA256_TestData test1 = (SHA256_TestData) {
+SHA256_TestCase test1 = (SHA256_TestCase) {
     .input = {'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'},
     .input_len = 12,
 
     .output = {
-        0x7F, 0x83, 0xB1, 0x65, 0x7F, 0xF1, 0xFC, 0x53, 0xB9, 0x2D, 0xC1,
-        0x81, 0x48, 0xA1, 0xD6, 0x5D, 0xFC, 0x2D, 0x4B, 0x1F, 0xA3, 0xD6,
-        0x77, 0x28, 0x4A, 0xDD, 0xD2, 0x00, 0x12, 0x6D, 0x90, 0x69
+        0x7F, 0x83, 0xB1, 0x65, 0x7F, 0xF1, 0xFC, 0x53,
+        0xB9, 0x2D, 0xC1, 0x81, 0x48, 0xA1, 0xD6, 0x5D,
+        0xFC, 0x2D, 0x4B, 0x1F, 0xA3, 0xD6, 0x77, 0x28,
+        0x4A, 0xDD, 0xD2, 0x00, 0x12, 0x6D, 0x90, 0x69
     }
 };
 
 
 #define nTests  2
-SHA256_TestData *sha256_tests[nTests] = {(SHA256_TestData *)&test0, (SHA256_TestData *)&test1};
+SHA256_TestCase *sha256_tests[nTests] = {(SHA256_TestCase *)&test0, (SHA256_TestCase *)&test1};
 
 
-bool sha256_doTest(SHA256_TestData *test)
+bool sha256_doTest(SHA256_TestCase *test)
 {
     uint8_t test_hash[sha256HashSize];
     sha256_doHash((uint8_t *)(char *)&test->input, test->input_len, (uint8_t *)(uint8_t *)&test_hash);
 
     printf("'%s'", (char *)&test->input);
-
     printf(" -> ");
 
     int32_t i = 0;
@@ -66,8 +69,8 @@ bool sha256_doTest(SHA256_TestData *test)
 
     printf("\n");
 
-    const bool is_eq = memcmp((void *)(uint8_t *)&test->output, (void *)(uint8_t *)&test_hash, sha256HashSize) == 0;
-    return is_eq;
+    const bool test_passed = memcmp((void *)(uint8_t *)&test->output, (void *)(uint8_t *)&test_hash, sha256HashSize) == 0;
+    return test_passed;
 }
 
 
@@ -77,8 +80,8 @@ int main(void)
 
     int32_t i = 0;
     while (i < nTests) {
-        SHA256_TestData *const test = sha256_tests[i];
-        const bool test_result = sha256_doTest((SHA256_TestData *)test);
+        SHA256_TestCase *const test = sha256_tests[i];
+        const bool test_result = sha256_doTest((SHA256_TestCase *)test);
 
         if (test_result) {
             printf("test #%d passed\n", i);

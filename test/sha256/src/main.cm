@@ -11,67 +11,70 @@ import "misc/sha256.hm"
 @c_include("./sha256.h")
 
 
-type TestInputString [32]Char8
+const INPUT_LENGTH = 32
+const OUTPUT_LENGTH = 32
 
-type SHA256_TestData record {
-    input : TestInputString
-    input_len : Nat32
-    output : [32]Nat8
+type SHA256_TestCase record {
+    input: [INPUT_LENGTH]Char8
+    input_len: Nat32
+
+    output: [OUTPUT_LENGTH]Nat8
 }
 
 
-var test0 : SHA256_TestData := {
-    input = "abc" to TestInputString
+var test0: SHA256_TestCase = {
+    input = "abc"
     input_len = 3
 
     output = [
-        0xBA, 0x78, 0x16, 0xBF, 0x8F, 0x01, 0xCF, 0xEA, 0x41, 0x41, 0x40,
-        0xDE, 0x5D, 0xAE, 0x22, 0x23, 0xB0, 0x03, 0x61, 0xA3, 0x96, 0x17,
-        0x7A, 0x9C, 0xB4, 0x10, 0xFF, 0x61, 0xF2, 0x00, 0x15, 0xAD
+        0xBA, 0x78, 0x16, 0xBF, 0x8F, 0x01, 0xCF, 0xEA,
+        0x41, 0x41, 0x40, 0xDE, 0x5D, 0xAE, 0x22, 0x23,
+        0xB0, 0x03, 0x61, 0xA3, 0x96, 0x17, 0x7A, 0x9C,
+        0xB4, 0x10, 0xFF, 0x61, 0xF2, 0x00, 0x15, 0xAD
     ]
 }
 
-var test1 : SHA256_TestData := {
-    input = "Hello World!" to TestInputString
+var test1: SHA256_TestCase = {
+    input = "Hello World!"
     input_len = 12
 
     output = [
-        0x7F, 0x83, 0xB1, 0x65, 0x7F, 0xF1, 0xFC, 0x53, 0xB9, 0x2D, 0xC1,
-        0x81, 0x48, 0xA1, 0xD6, 0x5D, 0xFC, 0x2D, 0x4B, 0x1F, 0xA3, 0xD6,
-        0x77, 0x28, 0x4A, 0xDD, 0xD2, 0x00, 0x12, 0x6D, 0x90, 0x69
+        0x7F, 0x83, 0xB1, 0x65, 0x7F, 0xF1, 0xFC, 0x53,
+        0xB9, 0x2D, 0xC1, 0x81, 0x48, 0xA1, 0xD6, 0x5D,
+        0xFC, 0x2D, 0x4B, 0x1F, 0xA3, 0xD6, 0x77, 0x28,
+        0x4A, 0xDD, 0xD2, 0x00, 0x12, 0x6D, 0x90, 0x69
     ]
 }
 
 
 const nTests = 2
-var sha256_tests : [nTests]*SHA256_TestData := [&test0, &test1]
+var sha256_tests: [nTests]*SHA256_TestCase = [&test0, &test1]
 
 
-func sha256_doTest(test : *SHA256_TestData) -> Bool {
-    var test_hash : [sha256HashSize]Nat8
+func sha256_doTest(test : *SHA256_TestCase) -> Bool {
+    var test_hash: [sha256HashSize]Nat8
     sha256_doHash(&test.input to *[]Nat8, test.input_len, &test_hash)
 
     printf("'%s'", &test.input)
-
     printf(" -> ")
 
-    var i := 0
+    var i = 0
     while i < sha256HashSize {
         printf("%02X", test_hash[i])
-        i := i + 1
+        i = i + 1
     }
 
     printf("\n")
 
-    let is_eq = memcmp(&test.output, &test_hash, sha256HashSize) == 0
-    return is_eq
+    let test_passed = memcmp(&test.output, &test_hash, sha256HashSize) == 0
+    return test_passed
 }
 
 
 func main () -> Int {
     printf("test SHA256\n")
 
-    var i := 0
+    var i = 0
     while i < nTests {
         let test = sha256_tests[i]
         let test_result = sha256_doTest(test)
@@ -82,7 +85,7 @@ func main () -> Int {
             printf("test #%d failed\n", i)
         }
 
-        i := i + 1
+        i = i + 1
     }
 
     return 0

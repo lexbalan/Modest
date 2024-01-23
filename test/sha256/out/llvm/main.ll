@@ -196,16 +196,16 @@ declare void @sha256_doHash([0 x i8]* %msg, i32 %len, [0 x i8]* %hash)
 
 
 
-%TestInputString = type [32 x i8]
+
 %SHA256_TestData = type {
-	%TestInputString,
+	[32 x i8],
 	i32,
 	[32 x i8]
 }
 
 
 @test0 = global %SHA256_TestData {
-    %TestInputString [
+    [32 x i8] [
         i8 97,
         i8 98,
         i8 99,
@@ -276,7 +276,7 @@ declare void @sha256_doHash([0 x i8]* %msg, i32 %len, [0 x i8]* %hash)
     ]
 }
 @test1 = global %SHA256_TestData {
-    %TestInputString [
+    [32 x i8] [
         i8 72,
         i8 101,
         i8 108,
@@ -356,13 +356,13 @@ declare void @sha256_doHash([0 x i8]* %msg, i32 %len, [0 x i8]* %hash)
 define i1 @sha256_doTest(%SHA256_TestData* %test) {
     %1 = alloca [32 x i8]
     %2 = getelementptr inbounds %SHA256_TestData, %SHA256_TestData* %test, i32 0, i32 0
-    %3 = bitcast %TestInputString* %2 to [0 x i8]*
+    %3 = bitcast [32 x i8]* %2 to [0 x i8]*
     %4 = getelementptr inbounds %SHA256_TestData, %SHA256_TestData* %test, i32 0, i32 1
     %5 = load i32, i32* %4
     %6 = bitcast [32 x i8]* %1 to [0 x i8]*
     call void ([0 x i8]*, i32, [0 x i8]*) @sha256_doHash([0 x i8]* %3, i32 %5, [0 x i8]* %6)
     %7 = getelementptr inbounds %SHA256_TestData, %SHA256_TestData* %test, i32 0, i32 0
-    %8 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str1 to [0 x i8]*), %TestInputString* %7)
+    %8 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str1 to [0 x i8]*), [32 x i8]* %7)
     %9 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str2 to [0 x i8]*))
     %10 = alloca i32
     store i32 0, i32* %10
