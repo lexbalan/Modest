@@ -15,18 +15,18 @@ const INPUT_LENGTH = 32
 const OUTPUT_LENGTH = 32
 
 type SHA256_TestCase record {
-    input: [INPUT_LENGTH]Char8
-    input_len: Nat32
+    input_data: [INPUT_LENGTH]Char8
+    input_data_len: Nat32
 
-    output: [OUTPUT_LENGTH]Nat8
+    expected_result: [OUTPUT_LENGTH]Nat8
 }
 
 
 var test0: SHA256_TestCase = {
-    input = "abc"
-    input_len = 3
+    input_data = "abc"
+    input_data_len = 3
 
-    output = [
+    expected_result = [
         0xBA, 0x78, 0x16, 0xBF, 0x8F, 0x01, 0xCF, 0xEA,
         0x41, 0x41, 0x40, 0xDE, 0x5D, 0xAE, 0x22, 0x23,
         0xB0, 0x03, 0x61, 0xA3, 0x96, 0x17, 0x7A, 0x9C,
@@ -35,10 +35,10 @@ var test0: SHA256_TestCase = {
 }
 
 var test1: SHA256_TestCase = {
-    input = "Hello World!"
-    input_len = 12
+    input_data = "Hello World!"
+    input_data_len = 12
 
-    output = [
+    expected_result = [
         0x7F, 0x83, 0xB1, 0x65, 0x7F, 0xF1, 0xFC, 0x53,
         0xB9, 0x2D, 0xC1, 0x81, 0x48, 0xA1, 0xD6, 0x5D,
         0xFC, 0x2D, 0x4B, 0x1F, 0xA3, 0xD6, 0x77, 0x28,
@@ -53,9 +53,9 @@ var sha256_tests: [nTests]*SHA256_TestCase = [&test0, &test1]
 
 func sha256_doTest(test : *SHA256_TestCase) -> Bool {
     var test_hash: [sha256HashSize]Nat8
-    sha256_doHash(&test.input to *[]Nat8, test.input_len, &test_hash)
+    sha256_doHash(&test.input_data to *[]Nat8, test.input_data_len, &test_hash)
 
-    printf("'%s'", &test.input)
+    printf("'%s'", &test.input_data)
     printf(" -> ")
 
     var i = 0
@@ -66,7 +66,7 @@ func sha256_doTest(test : *SHA256_TestCase) -> Bool {
 
     printf("\n")
 
-    let test_passed = memcmp(&test.output, &test_hash, sha256HashSize) == 0
+    let test_passed = memcmp(&test.expected_result, &test_hash, sha256HashSize) == 0
     return test_passed
 }
 
