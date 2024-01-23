@@ -9,10 +9,10 @@ from .value import *
 no_warning_cast_data_loss = False
 
 
-def check_width(vtype, t, method, ti):
+def check_width(from_type, t, method, ti):
     rv = True
 
-    if vtype['width'] > t['width']:
+    if from_type['width'] > t['width']:
         if method == 'explicit':
             if not no_warning_cast_data_loss:
                 from main import features
@@ -25,7 +25,7 @@ def check_width(vtype, t, method, ti):
             rv = False
 
     if not rv:
-        type_print(vtype)
+        type_print(from_type)
         print(" -> ", end="")
         type_print(t)
         print()
@@ -59,11 +59,11 @@ def do_cons_integer(v, t, method, ti):
 
 
 def value_cons_integer(v, t, ti, method):
-    vtype = v['type']
+    from_type = v['type']
 
-    if type.type_is_generic_integer(vtype):
+    if type.type_is_generic_integer(from_type):
         # GenericInt -> Int
-        check_width(vtype, t, method, ti)
+        check_width(from_type, t, method, ti)
 
         if not t['signed']:
             if v['imm'] < 0:
@@ -76,20 +76,28 @@ def value_cons_integer(v, t, ti, method):
         info("cannot implicit cons Int value", ti)
         return None
 
-	# (Int or Char) -> Int
-    if type.type_is_integer(vtype) or type.type_is_char(vtype) or type.type_is_bool(vtype):
+	# Int -> Int
+    if type.type_is_integer(from_type):
         return do_cons_integer(v, t, method, ti)
 
-	# Float -> Int
-    elif type.type_is_float(vtype):
+    # Float -> Int
+    elif type.type_is_float(from_type):
         return do_cons_integer(v, t, method, ti=ti)
 
+    # Char -> Int
+    elif type.type_is_char(from_type):
+        return do_cons_integer(v, t, method, ti)
+
+    # Bool -> Int
+    elif type.type_is_bool(from_type):
+        return do_cons_integer(v, t, method, ti)
+
     # Pointer -> Int
-    elif type.type_is_pointer(vtype):
+    elif type.type_is_pointer(from_type):
         return do_cons_integer(v, t, method, ti)
 
     # VA_List -> Int
-    elif type.type_is_va_list(vtype):
+    elif type.type_is_va_list(from_type):
         return hlir_value_cast(v, t, ti)
 
     return None

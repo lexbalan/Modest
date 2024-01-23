@@ -16,15 +16,13 @@ from .pointer import value_cons_pointer, cons_ptr_to_str_from_generic_str
 
 
 def value_cons_default(x, ti):
-    from trans import typeSysInt, typeSysFloat, typeSysChar, typeSysStr
-
     from_type = x['type']
 
     # ONLY FOR GENERIC
-
     if not type.type_is_generic(from_type):
         return x
 
+    from trans import typeSysInt, typeSysFloat, typeSysChar, typeSysStr
 
     if type.type_is_integer(from_type):
         return value_cons_integer(x, typeSysInt, ti, 'implicit')
@@ -40,6 +38,7 @@ def value_cons_default(x, ti):
 
     from error import fatal
     fatal("unimplemented value_cons_default case")
+
 
 
 # возвращает None если не может привести (!)
@@ -102,7 +101,6 @@ def value_cons_implicit(v, t, ti):
                 if from_type['id']['str'] != t['id']['str']:
                     #info("impl cast record", ti)
                     return hlir_value_cast(v, t, ti=ti)
-
 
     # for structural type system support
     if type.type_is_pointer_to_record(t):

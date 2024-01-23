@@ -23,10 +23,10 @@ def do_cons_char(v, t, ti):
 
 
 def value_cons_char(v, t, ti, method):
-    vtype = v['type']
+    from_type = v['type']
 
     # implicit casts
-    if type.type_is_generic_char(vtype):
+    if type.type_is_generic_char(from_type):
         return value_cons_char_immediate(v, t, ti)
 
 
@@ -35,12 +35,12 @@ def value_cons_char(v, t, ti, method):
         info("cannot implicit cons Char value", ti)
         return None
 
-    # (Char or Integer) -> Char
-    if type.type_is_char(vtype) or type.type_is_integer(vtype):
+    # Integer -> Char
+    if type.type_is_integer(from_type):
         return do_cons_char(v, t, ti)
 
     # VA_List -> Char
-    elif type.type_is_va_list(vtype):
+    elif type.type_is_va_list(from_type):
         return hlir_value_cast(v, t, ti)
 
     return None

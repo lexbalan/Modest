@@ -49,8 +49,7 @@ def value_cons_float(v, t, ti, method):
 
 
 
-
-
+# получаем 32 или 64 битное представление числа
 def float_value_pack(f_num, width):
     import struct
     z = 0
@@ -62,4 +61,5 @@ def float_value_pack(f_num, width):
         fatal("too big float, float_value_pack not implemented")
 
     return z
+
 

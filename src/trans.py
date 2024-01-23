@@ -913,17 +913,18 @@ def do_value_index(x):
     if value_is_bad(a):
         return hlir_value_bad(x['ti'])
 
-    typ = a['type']
+    array_typ = a['type']
 
     # check if left type is valid
-    if not (hlir_type.type_is_array(typ) or hlir_type.type_is_pointer(typ) or hlir_type.type_is_pointer_to_array_of_char(typ)):
+    ptr_access = False
+    if hlir_type.type_is_array(array_typ):
+        pass
+    elif hlir_type.type_is_pointer_to_array(array_typ):
+        ptr_access = True
+        array_typ = array_typ['to']
+    else:
         error("expected array or pointer to array", x)
         return hlir_value_bad(x['left']['ti'])
-
-
-    ptr_access = hlir_type.type_is_pointer(typ)
-    if ptr_access:
-        typ = typ['to']
 
 
     i = do_rvalue(x['index'])
@@ -951,14 +952,14 @@ def do_value_index(x):
         if value_is_immediate(i):
             index = i['imm']
 
-            if index >= typ['volume']['imm']:
+            if index >= array_typ['volume']['imm']:
                 error("array index out of bounds", x['index'])
 
             items = a['imm']
             item = items[index]
 
             #if hlir_type.type_is_char(item_type):
-            if hlir_type.type_is_char(typ['of']):
+            if hlir_type.type_is_char(array_typ['of']):
                 char_code = item
                 char = hlir_value_char(char_code, type=None, ti=x['ti'])
                 return char
@@ -1155,15 +1156,10 @@ bin_ops = [
 un_ops = ['ref', 'deref', 'plus', 'minus', 'not']
 
 
+
 def do_rvalue(x):
     v = do_value(x)
-
-    #if 'writeonly' in v['type']['att']:
-    #    error("attempt to read writeonly value", x['ti'])
-    #    return hlir_value_bad(x['ti'])
-
     return value_load(v)
-
 
 
 def do_value(x):
@@ -1368,7 +1364,7 @@ def do_stmt_let(x):
 
     const_value = hlir_value_const(id, v['type'], value=None, ti=x['id']['ti'])
     const_value['att'].append('local') # need for LLVM printer (!)
-    if 'imm' in v:
+    if value_is_immediate(v):
         const_value['imm'] = v['imm']
 
     if 'nl_end' in v:
@@ -1415,7 +1411,7 @@ def do_stmt_value(x):
 
     if not hlir_type.type_is_unit(v['type']):
         if not 'dispensable' in v['att']:
-            warning("expression result unused", v['ti'])
+            warning("unused result of %s expression" % x['value']['kind'], v['ti'])
 
     return hlir_stmt_value(v, ti=x['ti'])
 

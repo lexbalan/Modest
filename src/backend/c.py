@@ -6,7 +6,7 @@ from error import info, error, fatal
 from .common import *
 import hlir.type as hlir_type
 from hlir.type import type_print
-from value.value import value_attribute_check, value_is_zero, value_print, value_is_immediate_integer
+from value.value import value_attribute_check, value_is_zero, value_print
 from util import nbits_for_num, get_item_with_id, utf8_cc_arr_to_utf32_cc_arr, utf16_cc_arr_to_utf32_cc_arr
 from main import settings
 
@@ -691,8 +691,6 @@ def print_value_cast(x, ctx):
         return
 
 
-    #if not 'explicit_cast' in x['att']:
-    #if value_is_immediate_integer(value):
     if value['kind'] == 'literal':
         print_value(value)
         return
@@ -905,6 +903,9 @@ def _print_string_literal(utf32_codes, width=8):
     out("\"")
 
 
+
+
+
 def print_value_literal_str(x, ctx, char_width=8):
     utf32_codes = None
     if char_width == 8: utf32_codes = utf8_cc_arr_to_utf32_cc_arr(x['imm'])
@@ -912,7 +913,6 @@ def print_value_literal_str(x, ctx, char_width=8):
     elif char_width == 32: utf32_codes = x['imm']
     assert(utf32_codes != None)
     _print_string_literal(utf32_codes, char_width)
-
 
 
 

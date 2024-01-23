@@ -599,7 +599,7 @@ def do_reval(x):
 
 
 def do_eval_expr_bin(x):
-    if 'imm' in x:
+    if value_is_immediate(x):
         return llvm_value_num(x['type'], x['imm'])
 
     op = get_bin_opcode(x['kind'], x['left']['type'])
