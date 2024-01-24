@@ -645,12 +645,10 @@ def print_value_cast_immediate(v, ctx):
     from_type = value['type']
     to_type = v['type']
 
-    #out("/*^*/")
-
     if hlir_type.type_is_pointer_to_array_of_char(to_type):
         if hlir_type.type_is_array_of_char(from_type):
             char_width = to_type['to']['of']['width']
-            print_value_literal_str(v, ctx=[], char_width=char_width)
+            print_value_literal_string(v, ctx=[], char_width=char_width)
             return
 
     # GenericChar -> vast_immediate -> Char
@@ -658,13 +656,6 @@ def print_value_cast_immediate(v, ctx):
         if hlir_type.type_is_char(from_type):
             print_value_literal_char(v, ctx)
             return
-
-
-    """if 'explicit_cast' in v['att']:
-        # литералы явно не приводим
-        if value['kind'] != 'literal':
-            print_cast(to_type, value, ctx)
-            return"""
 
     # implicit_cast of immediate value
     #need_wrap = precedence(value) < precedenceMax
@@ -757,7 +748,7 @@ def print_array_values(values):
 
 
 
-def print_value_literal_arr(v, ctx):
+def print_value_literal_array(v, ctx):
     if hlir_type.type_is_array_of_char(v['type']):
         char_type = v['type']['of']
         char_width = char_type['width']
@@ -801,11 +792,13 @@ def print_value_literal_arr(v, ctx):
 
 
 
-
 def print_value_literal_record(v, ctx):
-    out("(")
-    print_type(v['type'])
-    out(")")
+
+    if cfunc != None:
+        # only for local record literals (!)
+        out("(")
+        print_type(v['type'])
+        out(")")
 
     initializers = v['imm']
 
@@ -904,7 +897,7 @@ def _print_string_literal(utf32_codes, width=8):
 
 
 
-def print_value_literal_str(x, ctx, char_width=8):
+def print_value_literal_string(x, ctx, char_width=8):
     utf32_codes = None
     if char_width == 8: utf32_codes = utf8_cc_arr_to_utf32_cc_arr(x['imm'])
     elif char_width == 16: utf32_codes = utf16_cc_arr_to_utf32_cc_arr(x['imm'])
@@ -1007,7 +1000,7 @@ def print_value_literal(x, ctx):
     if hlir_type.type_is_integer(t): print_value_literal_int(x, ctx)
     elif hlir_type.type_is_float(t): print_value_literal_flt(x, ctx)
     elif hlir_type.type_is_record(t): print_value_literal_record(x, ctx)
-    elif hlir_type.type_is_array(t): print_value_literal_arr(x, ctx)
+    elif hlir_type.type_is_array(t): print_value_literal_array(x, ctx)
     elif hlir_type.type_is_bool(t): print_value_literal_bool(x, ctx)
     elif hlir_type.type_is_char(t): print_value_literal_char(x, ctx)
     elif hlir_type.type_is_pointer(t): print_value_literal_ptr(x, ctx)
