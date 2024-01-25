@@ -1,10 +1,11 @@
+// examples/assignation/main.cm
 
 #include <string.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 
-// examples/assignation/main.cm
+
 
 
 // Simply record for records assignation test
@@ -17,11 +18,11 @@ typedef struct {
 int32_t glb_i0 = 0;
 int32_t glb_i1 = 321;
 
-Point glb_r0 = (Point) {};
-Point glb_r1 = (Point) {.x = 20, .y = 10};
+Point glb_r0 = {};
+Point glb_r1 = {.x = 20, .y = 10};
 
-int32_t glb_a0[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-int32_t glb_a1[10] = {64, 53, 42, 0, 0, 0, 0, 0, 0, 0};
+int32_t glb_a0[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};;
+int32_t glb_a1[10] = {64, 53, 42, 0, 0, 0, 0, 0, 0, 0};;
 
 
 int main(void)
@@ -78,8 +79,8 @@ int main(void)
 
     // copy records by value
     // C backend will be use memcpy()
-    Point loc_r0 = (Point) {};
-    Point loc_r1 = (Point) {.x = 10, .y = 20};
+    Point loc_r0 = (Point){};
+    Point loc_r1 = (Point){.x = 10, .y = 20};
 
     loc_r0 = loc_r1;
 

@@ -1,4 +1,6 @@
+// test/10.const/main.cm
 
+#include <string.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,7 +12,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-// test/10.const/main.cm
+
 
 
 
@@ -25,22 +27,30 @@ typedef struct {
 } Line;
 
 #define zero  0
-#define pointZero  (Point) {.x = zero, .y = zero}
-#define pointOne  (Point) {.x = 1.0, .y = 1.0}
+#define pointZero  {.x = zero, .y = zero}
+#define pointOne  {.x = 1.0, .y = 1.0}
 
-#define line0  (Line) { \
+#define line0  { \
     .a = pointZero, \
     .b = pointOne \
 }
 
-#define carr  (int8_t [5]){0, 10, 15, 20, 25}
 
-#define line1  (Line) { \
-    .a = (Point) {.x = carr[1], .y = carr[2]}, \
-    .b = (Point) {.x = carr[3], .y = carr[4]} \
+int8_t carr[5] = {0, 10, 15, 20, 25};
+
+#define line1  { \
+    .a = {.x = carr[1], .y = carr[2]}, \
+    .b = {.x = carr[3], .y = carr[4]} \
 }
 
-#define lines  (Line [2]){line0, line1}
+
+Line lines[2] = {{
+        .a = {.x = 0.0, .y = 0.0},
+        .b = {.x = 1.0, .y = 1.0}
+    }, {
+        .a = {.x = 10.0, .y = 15.0},
+        .b = {.x = 20.0, .y = 25.0}
+    }};
 
 
 // Pythagorean theorem

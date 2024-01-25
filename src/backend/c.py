@@ -397,20 +397,23 @@ def print_value_bin(v, ctx):
     # чтобы он не ругался, завернем такие выражения в скобки
 
     if op in ['shl', 'shr']:
-        need_wrap_left = precedence(left) < 10 #precedenceMax
-        need_wrap_right = precedence(right) < 10 #precedenceMax
+        need_wrap_left = precedence(left) < 10
+        need_wrap_right = precedence(right) < 10
     elif op == 'logic_or':
         if left['kind'] != 'logic_or':
-            need_wrap_left = precedence(left) < 10 #precedenceMax
+            need_wrap_left = precedence(left) < 10
         if right['kind'] != 'logic_or':
-            need_wrap_right = precedence(right) < 10 #precedenceMax
+            need_wrap_right = precedence(right) < 10
     elif op == 'logic_and':
         if left['kind'] != 'logic_and':
-            need_wrap_left = precedence(left) < 10 #precedenceMax
+            need_wrap_left = precedence(left) < 10
         if right['kind'] != 'logic_and':
-            need_wrap_right = precedence(right) < 10 #precedenceMax
+            need_wrap_right = precedence(right) < 10
     elif op in ['eq_str', 'ne_str']:
         print_value_literal_bool(v, ctx)
+        return
+    elif op == 'add_str':
+        _print_string_literal(v['imm'], width=v['type']['width'])
         return
 
     print_value(left, need_wrap=need_wrap_left)
@@ -720,7 +723,7 @@ def print_value_cast(x, ctx):
 
 
 
-def print_array_values(values):
+def print_array_values(values, ctx):
     i = 0
     n = len(values)
     while i < n:
@@ -738,9 +741,9 @@ def print_array_values(values):
                 out(" ")
 
         if hlir_type.type_is_defined_array(a['type']):
-            print_array_values(a['imm'])
+            print_array_values(a['imm'], ctx)
         else:
-            print_value(a)
+            print_value(a, ctx)
 
         i = i + 1
         if i < n:
@@ -782,7 +785,7 @@ def print_value_literal_array(v, ctx):
 
     values = v['imm']
 
-    print_array_values(values)
+    print_array_values(values, ctx)
 
     indent_down()
 
@@ -901,9 +904,12 @@ def _print_string_literal(utf32_codes, width=8):
 
 def print_value_literal_string(x, ctx, char_width=8):
     utf32_codes = None
-    if char_width == 8: utf32_codes = utf8_cc_arr_to_utf32_cc_arr(x['imm'])
-    elif char_width == 16: utf32_codes = utf16_cc_arr_to_utf32_cc_arr(x['imm'])
-    elif char_width == 32: utf32_codes = x['imm']
+    if char_width == 8:
+        utf32_codes = utf8_cc_arr_to_utf32_cc_arr(x['imm'])
+    elif char_width == 16:
+        utf32_codes = utf16_cc_arr_to_utf32_cc_arr(x['imm'])
+    elif char_width == 32:
+        utf32_codes = x['imm']
     assert(utf32_codes != None)
     _print_string_literal(utf32_codes, char_width)
 
@@ -949,9 +955,10 @@ def print_value_literal_bool(x, ctx):
 def print_value_literal_int(x, ctx):
     num = x['imm']
 
+    req_bits = nbits_for_num(num)
     # Big Number?
     if x['type']['width'] > 64:
-        if nbits_for_num(num):
+        if True:
             # print Big Numbers
             high64 = (num >> 64) & 0xFFFFFFFFFFFFFFFF
             low64 = num & 0xFFFFFFFFFFFFFFFF
@@ -974,7 +981,8 @@ def print_value_literal_int(x, ctx):
     nbits = x['type']['width']
 
     if hlir_type.type_is_unsigned(x['type']):
-        out("U")
+        if req_bits >= (nbits - 1):
+            out("U")
 
     if nbits > CC_INT_SIZE_BITS:
         if nbits <= CC_LONG_SIZE_BITS:
@@ -984,7 +992,7 @@ def print_value_literal_int(x, ctx):
 
 
 
-def print_value_literal_flt(x, ctx):
+def print_value_literal_float(x, ctx):
     out(str(float(x['imm'])))
 
 
@@ -1000,7 +1008,7 @@ def print_value_literal_ptr(x, ctx):
 def print_value_literal(x, ctx):
     t = x['type']
     if hlir_type.type_is_integer(t): print_value_literal_int(x, ctx)
-    elif hlir_type.type_is_float(t): print_value_literal_flt(x, ctx)
+    elif hlir_type.type_is_float(t): print_value_literal_float(x, ctx)
     elif hlir_type.type_is_record(t): print_value_literal_record(x, ctx)
     elif hlir_type.type_is_array(t): print_value_literal_array(x, ctx)
     elif hlir_type.type_is_bool(t): print_value_literal_bool(x, ctx)
@@ -1040,12 +1048,41 @@ def print_value_offsetof(x, ctx):
 
 
 
-def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
+def print_value_immediate(x, ctx):
+    #print("print_value_immediate")
+    if hlir_type.type_is_integer(x['type']):
+        print_value_literal_int(x, ctx)
+    elif hlir_type.type_is_char(x['type']):
+        print_value_literal_char(x, ctx)
+    elif hlir_type.type_is_bool(x['type']):
+        print_value_literal_bool(x, ctx)
+    elif hlir_type.type_is_float(x['type']):
+        print_value_literal_float(x, ctx)
+    elif hlir_type.type_is_array(x['type']):
+        print_value_literal_array(x, ctx)
+    elif hlir_type.type_is_record(x['type']):
+        print_value_literal_record(x, ctx)
+    elif hlir_type.type_is_pointer(x['type']):
+        print_value_literal_pointer(x, ctx)
+
+
+
+def print_value(x, ctx=[], need_wrap=False, just_print_id=True):
     # если у значения есть свойство 'id' то печатаем просто id
     # (используется для печати имени констант а не просто их значения)
-    # в LLVM перчаем просто значение
+    # в LLVM печатаем просто значение
 
-    if print_just_id:
+
+    # это нужно когда печатаем глобальные константы
+    # чтобы одна на другую не ссылалась тк это в си невозможно
+    # каждый раз печатаем литерал инициализвтора константы полностью
+    if 'print_immediate' in ctx:
+        if 'imm' in x:
+            print_value_immediate(x, ctx)
+            return
+
+
+    if just_print_id:
         if 'id' in x:
             print_value_by_id(x)
             return
@@ -1180,13 +1217,13 @@ def save_array(id_str, v, from_var):
         need_wrap = precedence(v) < precedence({'kind': 'cast'})
         out(id_str)
         out(" = ")
-        print_value(v, print_just_id=False)
+        print_value(v, just_print_id=False)
         out(";")
 
     else:
         # -> memcpy(&s0, &c, sizeof s0);
         out("memcpy(&%s, &" % id_str)
-        print_value(v, print_just_id=from_var)
+        print_value(v, just_print_id=from_var)
         out(", sizeof %s);" % id_str)
 
 
@@ -1204,7 +1241,7 @@ def print_stmt_let(x):
 
     print_field2(x['id'], v['type'])
     out(" = ")
-    print_value(x['init_value'], print_just_id=False)
+    print_value(x['init_value'], just_print_id=False)
     out(";")
 
 
@@ -1572,23 +1609,52 @@ def print_def_var(x):
 
     init_value = var['init']
     if init_value != None:
-        out(" = "); print_value(init_value, ctx=['no-literal-array-cast'])
+        out(" = ");
+
+        if hlir_type.type_is_array(init_value['type']):
+            print_value_literal_array(init_value, ['print_immediate'])
+            out(";")
+
+        else:
+            print_value(init_value, ctx=['no-literal-array-cast'])
 
     out(";")
 
 
+
 def print_def_const(x):
+    global nl_str
     const_value = x['value']
 
-    id_str = const_value['id']['str']
-    v = const_value['value']
-    out("#define %s  " % id_str)
+    if hlir_type.type_is_array_of_char(const_value['type']):
+        # не печатаем const xx = "xx"
+        return
 
+    if hlir_type.type_is_array(const_value['type']):
+        newline()
+        print_field(const_value)
+        out(" = ")
+        v = const_value['value']
+        print_value_literal_array(v, ['print_immediate'])
+        out(";")
+        return
+
+    else:
+        pass
+
+        id_str = const_value['id']['str']
+        out("#define %s  " % id_str)
+
+    v = const_value['value']
     need_wrap = precedence(v) < precedenceMax
-    global nl_str
     nl_str = " \\\n"
-    print_value(v, need_wrap=need_wrap, print_just_id=True)
+    print_value(v, need_wrap=need_wrap, just_print_id=True)
     nl_str = "\n"
+
+
+
+
+
 
 
 def print_include(x):

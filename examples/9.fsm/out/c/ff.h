@@ -1,11 +1,13 @@
+// lib/fastfood/main.hm
 
+#include <string.h>
 #ifndef FF_H
 #define FF_H
 
 #include <stdint.h>
 #include <stdbool.h>
 
-// lib/fastfood/main.hm
+
 
 void ff_memzero(void *mem, uint64_t len);
 void ff_memcpy(void *dst, void *src, uint64_t len);

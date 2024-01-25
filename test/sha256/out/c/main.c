@@ -1,4 +1,6 @@
+// test/sha256/main.cm
 
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,7 +11,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-// test/sha256/main.cm
+
 
 
 
@@ -24,7 +26,7 @@ typedef struct {
 } SHA256_TestCase;
 
 
-SHA256_TestCase test0 = (SHA256_TestCase) {
+SHA256_TestCase test0 = {
     .input_data = {'a', 'b', 'c', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'},
     .input_data_len = 3,
 
@@ -36,7 +38,7 @@ SHA256_TestCase test0 = (SHA256_TestCase) {
     }
 };
 
-SHA256_TestCase test1 = (SHA256_TestCase) {
+SHA256_TestCase test1 = {
     .input_data = {'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'},
     .input_data_len = 12,
 
@@ -50,7 +52,7 @@ SHA256_TestCase test1 = (SHA256_TestCase) {
 
 
 #define nTests  2
-SHA256_TestCase *sha256_tests[nTests] = {(SHA256_TestCase *)&test0, (SHA256_TestCase *)&test1};
+SHA256_TestCase *sha256_tests[nTests] = {(SHA256_TestCase *)&test0, (SHA256_TestCase *)&test1};;
 
 
 bool sha256_doTest(SHA256_TestCase *test)

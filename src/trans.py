@@ -1536,6 +1536,7 @@ def def_const(x):
             error("expected immediate value", v)
 
     const_value = hlir_value_const(id, v['type'], v, x['ti'])
+    const_value['att'].append('global')
 
     if value_is_immediate(v):
         const_value['imm'] = v['imm']

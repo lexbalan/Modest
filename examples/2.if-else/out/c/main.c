@@ -1,9 +1,11 @@
+// examples/2.if-else/main.cm
 
+#include <string.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 
-// examples/2.if-else/main.cm
+
 
 
 int main(void)

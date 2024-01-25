@@ -1,9 +1,11 @@
+// examples/4.many_sources/lib.cm
 
+#include <string.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 
-// examples/4.many_sources/lib.cm
+
 
 #include "./lib.h"
 

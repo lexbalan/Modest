@@ -1,11 +1,13 @@
+// examples/8.linked_list/linked_list.hm
 
+#include <string.h>
 #ifndef LINKED_LIST_H
 #define LINKED_LIST_H
 
 #include <stdint.h>
 #include <stdbool.h>
 
-// examples/8.linked_list/linked_list.hm
+
 
 struct List;
 typedef struct List List;

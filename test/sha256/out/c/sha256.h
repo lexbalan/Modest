@@ -1,4 +1,7 @@
+// ./out/c/sha256.h
 
+
+#include <string.h>
 #ifndef SHA256_H
 #define SHA256_H
 

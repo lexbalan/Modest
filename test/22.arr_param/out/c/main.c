@@ -1,10 +1,11 @@
+// examples/22.arr_param/main.cm
 
 #include <string.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 
-// examples/22.arr_param/main.cm
+
 
 
 struct swap_x {int32_t a[2];};
@@ -103,7 +104,7 @@ void kk(struct kk_x x)
 
 
 
-int32_t global_array[2] = {1, 2};
+int32_t global_array[2] = {1, 2};;
 
 
 typedef struct {

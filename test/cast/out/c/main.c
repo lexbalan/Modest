@@ -1,9 +1,11 @@
+// test/cast/main.cm
 
+#include <string.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 
-// test/cast/main.cm
+
 
 
 

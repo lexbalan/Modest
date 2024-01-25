@@ -17,11 +17,14 @@ type Point record {
     y : Nat32
 }
 
-const points = [
+
+const ps = [
     {x=0, y=0}
     {x=1, y=1}
     {x=2, y=2}
-] to [3]Point
+]
+
+const points = ps to [3]Point
 
 
 // есть проблема - в C глобальные переменные с модификатором const

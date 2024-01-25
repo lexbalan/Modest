@@ -1,4 +1,6 @@
+// for clock()
 
+#include <string.h>
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
@@ -9,7 +11,6 @@
 #include <stdbool.h>
 
 
-// for clock()
 
 // for printf
 

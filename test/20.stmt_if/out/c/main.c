@@ -1,9 +1,11 @@
+// test/stmt_if/main.cm
 
+#include <string.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 
-// test/stmt_if/main.cm
+
 
 
 int main(void)

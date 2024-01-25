@@ -1,4 +1,6 @@
+// examples/7.binary_file/main.cm
 
+#include <string.h>
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
@@ -8,7 +10,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-// examples/7.binary_file/main.cm
+
 
 
 // FIXIT: not worked LLVM result (!)

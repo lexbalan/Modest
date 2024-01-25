@@ -1,9 +1,11 @@
+// examples/fsm/fsm.cm
 
+#include <string.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 
-// examples/fsm/fsm.cm
+
 
 #include "./fsm.h"
 

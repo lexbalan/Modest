@@ -1,10 +1,12 @@
+// examples/
 
+#include <string.h>
 #include <stdio.h>
 #include "./print.h"
 #include <stdint.h>
 #include <stdbool.h>
 
-// examples/
+
 
 
 

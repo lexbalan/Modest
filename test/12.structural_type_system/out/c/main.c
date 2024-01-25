@@ -1,9 +1,11 @@
+// test/12.structural_type_system/main.cm
 
+#include <string.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 
-// test/12.structural_type_system/main.cm
+
 
 typedef struct {
     int32_t x;
@@ -61,9 +63,9 @@ void f3_ptr(struct {    int32_t x;
 }
 
 
-Type1 a = (Type1) {.x = 1};
-Type2 b = (Type2) {.x = 2};
-Type3 c = (Type3) {.x = 3};
+Type1 a = {.x = 1};
+Type2 b = {.x = 2};
+Type3 c = {.x = 3};
 
 
 

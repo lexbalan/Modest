@@ -1,24 +1,28 @@
+// test/11.unicode/main.cm
 
+#include <string.h>
 #include <stdio.h>
 #include "./utf.h"
 #include <stdint.h>
 #include <stdbool.h>
 
-// test/11.unicode/main.cm
 
 
 
-#define ratSymbolUTF8  (int16_t [4]){0xF0, 0x9F, 0x90, 0x80}
-#define ratSymbolUTF16  (int32_t [2]){0xD83D, 0xDC00}
+
+
+int16_t ratSymbolUTF8[4] = {0xF0, 0x9F, 0x90, 0x80};
+
+int32_t ratSymbolUTF16[2] = {0xD83D, 0xDC00};
 #define ratSymbolUTF32  0x0001F400
 
 
-char arr_utf8[8] = {'H', 'i', '!', '\xA', '\0', '\0', '\0', '\0'};
-uint16_t arr_utf16[8] = u"Hello!\n";
-uint32_t arr_utf32[8] = U"Hello!\n";
+char arr_utf8[8] = {'H', 'i', '!', '\xA', '\0', '\0', '\0', '\0'};;
+uint16_t arr_utf16[8] = u"Hello!\n";;
+uint32_t arr_utf32[8] = U"Hello!\n";;
 
 
-#define genericStringConst  {} /*GENERIC-STRING*/
+
 #define string8Const  "S-t-r-i-n-g-Ω 🐀🎉🦄"
 #define string16Const  u"S-t-r-i-n-g-Ω 🐀🎉🦄"
 #define string32Const  U"S-t-r-i-n-g-Ω 🐀🎉🦄"

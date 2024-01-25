@@ -1,11 +1,13 @@
+// examples/fsm/fsm.cm
 
+#include <string.h>
 #ifndef FSM_H
 #define FSM_H
 
 #include <stdint.h>
 #include <stdbool.h>
 
-// examples/fsm/fsm.cm
+
 
 
 #define fsmNameLength  8

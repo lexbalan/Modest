@@ -1,9 +1,11 @@
+// examples/3.multiply_table/main.cm
 
+#include <string.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 
-// examples/3.multiply_table/main.cm
+
 
 
 void mtab(int n)

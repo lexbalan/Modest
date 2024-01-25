@@ -1,0 +1,131 @@
+// examples/1.hello_world/main.cm
+
+@attribute("c-no-print")
+import "libc/stdio.hm"
+
+type Flt64 Nat64
+
+// 6 - pos
+// 58 - data
+
+
+func pack(dat: Nat64, pos: Nat8) -> Flt64 {
+    return dat or (pos to Nat64 << 58)
+}
+
+
+func set_bit(x: *Nat64, n: Nat8) -> Unit {
+    *x = *x or (1 to Nat64 << n to Nat64)
+}
+
+
+func bits_for_int_value(i: Nat64) -> Nat8 {
+    var x = i // to Nat64
+
+    var n = 1 to Nat8
+    var y = 1 to Nat64
+    while x > y {
+        y = (y << 1) + 1
+        n = n + 1
+    }
+
+    return n
+}
+
+
+
+const a1234 = [1, 2] + [3, 4]
+
+func code(x: Float64) -> Flt64 {
+    let int = x to Nat64
+    let rst = x - int to Float64
+    printf("Hello" + " World!\n")
+
+    printf("code int = %lld\n", int)
+    printf("code rst = %f\n", rst)
+
+    let bits_for_int = bits_for_int_value(int to Nat64)
+    printf("bits_for_int = %d\n", bits_for_int)
+
+    let bits_for_rest = 58 - bits_for_int
+
+
+    let z = 1 to Unit
+    z.k = 1
+
+    var res = 0 to Nat64
+    var e = rst
+    var i = 0
+
+    while (e != 0) and (i < 64) {
+        while e < 1 {
+            e = e * 2
+            i = i + 1
+        }
+
+        e = e - 1
+
+        set_bit(&res, i to Nat8)
+
+        printf("i = %d\n", i)
+    }
+
+    printf("iii = %d\n", i)
+    printf("res = %llx\n", res)
+
+    let nsigns = i to Nat64
+    var res2 = 0 to Nat64
+    var k = 0 to Nat64
+    while k < nsigns {
+        if (res and (1 to Nat64 << (nsigns - k))) != 0 {
+            let msk = (1 to Nat64 << k)
+            res2 = res2 or msk
+        }
+        k = k + 1
+    }
+
+
+    // сдвигаем влево рест чтобы нам хватило места для целого
+    while i > bits_for_rest to Int32 {
+        res2 = res2 >> 1
+        i = i - 1
+    }
+
+    var result: Flt64
+    result = int << bits_for_rest to Nat64 // int part
+    result = result or res2  // rest part
+    result = result or (bits_for_rest to Flt64 << 58 to Flt64)
+
+    printf("tot = %lli\n", i)
+    printf("res2 = %llx\n", res2)
+    printf("result = %llx\n", result)
+
+    return result
+}
+
+
+func decode(f: Flt64) -> Float64 {
+    let pos = ((f and 0xFC00000000000000) >> 58)// to Nat8 // error shift
+    printf("DEC pos = %d\n", pos)
+    let dat = f and 0x03FFFFFFFFFFFFFF
+    let msk = 0xFFFFFFFFFFFFFFFF to Nat64 << pos
+    let int = (dat and msk) >> pos
+    let rst = dat and not msk
+    printf("REST = %d\n", rst)
+    return int to Float64 + (1.0 to Float64 / (rst to Float64 + 1))
+}
+
+
+func main () -> Int {
+
+    code(3.25)
+
+    // pos = 2
+    let flt = pack(0x0FF0, 4)
+    printf("FLT = %08llx\n", flt)
+    let f2 = decode(flt)
+    printf("f2 = %f\n", f2)
+    return 0
+}
+
+

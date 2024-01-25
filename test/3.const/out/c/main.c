@@ -1,14 +1,16 @@
+// test/3.const/main.cm
 
+#include <string.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 
-// test/3.const/main.cm
+
 
 #define genericIntConst  42
 #define int32Const  ((int32_t)genericIntConst)
 
-#define genericStringConst  {} /*GENERIC-STRING*/
+
 #define string8Const  "Hello!"
 #define string16Const  u"Hello!"
 #define string32Const  U"Hello!"
@@ -19,18 +21,32 @@ typedef struct {
     uint32_t y;
 } Point;
 
-#define points  (Point [3]){ \
-    (Point) {.x = 0, .y = 0}, \
-    (Point) {.x = 1, .y = 1}, \
-    (Point) {.x = 2, .y = 2} \
-}
+
+
+struct {    int8_t x;    int8_t y;
+} ps[3] = {
+    {.x = 0, .y = 0},
+    {.x = 1, .y = 1},
+    {.x = 2, .y = 2}
+};
+
+
+Point points[3] = {
+    {.x = 0, .y = 0},
+    {.x = 1, .y = 1},
+    {.x = 2, .y = 2}
+};
 
 
 // есть проблема - в C глобальные переменные с модификатором const
 // не могут быть так инициализированы, поскольку points является приведением
 // непонятно существует ли хорошее решение
 //@property("c_prefix", "const")
-Point points2[3] = points;
+Point points2[3] = {
+    {.x = 0, .y = 0},
+    {.x = 1, .y = 1},
+    {.x = 2, .y = 2}
+};;
 
 
 // define function main

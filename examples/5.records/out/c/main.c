@@ -1,4 +1,6 @@
+// examples/5.records/main.cm
 
+#include <string.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,7 +11,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-// examples/5.records/main.cm
+
 
 
 typedef struct {
@@ -23,9 +25,9 @@ typedef struct {
 } Line;
 
 
-Line line = (Line) {
-    .a = (Point) {.x = 0, .y = 0},
-    .b = (Point) {.x = 1.0, .y = 1.0}
+Line line = {
+    .a = {.x = 0, .y = 0},
+    .b = {.x = 1.0, .y = 1.0}
 };
 
 

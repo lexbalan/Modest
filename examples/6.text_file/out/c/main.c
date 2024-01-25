@@ -1,9 +1,11 @@
+// examples/6.text_file/main.cm
 
+#include <string.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 
-// examples/6.text_file/main.cm
+
 
 
 #define filename  "file.txt"

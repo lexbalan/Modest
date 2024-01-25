@@ -1,4 +1,6 @@
+// test/arrays/main.cm
 
+#include <string.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,11 +12,11 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-// test/arrays/main.cm
 
 
 
-int32_t globalArray[3] = {1, 2, 3};
+
+int32_t globalArray[3] = {1, 2, 3};;
 
 
 

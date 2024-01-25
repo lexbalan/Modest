@@ -1,11 +1,13 @@
+// examples/4.many_sources/lib.hm
 
+#include <string.h>
 #ifndef LIB_H
 #define LIB_H
 
 #include <stdint.h>
 #include <stdbool.h>
 
-// examples/4.many_sources/lib.hm
+
 
 void lib_func(void);
 

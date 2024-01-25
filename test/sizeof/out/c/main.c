@@ -1,9 +1,11 @@
+// test/sizeof/main.cm
 
+#include <string.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 
-// test/sizeof/main.cm
+
 
 
 typedef struct {

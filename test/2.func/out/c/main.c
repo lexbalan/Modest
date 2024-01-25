@@ -1,9 +1,11 @@
+// test/2.func/main.cm
 
+#include <string.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 
-// test/2.func/main.cm
+
 
 
 // declare function f0

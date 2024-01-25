@@ -1,10 +1,12 @@
+// lib/fastfood/print.cm
 
 #include <stdarg.h>
+#include <string.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 
-// lib/fastfood/print.cm
+
 
 //@attribute("c-no-print")
 //import "./main.hm"
@@ -31,7 +33,7 @@ void put_str8(char *s)
 }
 
 
-void sprintf_dec_int32(char *buf, int x);
+void sprintf_dec_int32(char *buf, int32_t x);
 void sprintf_dec_nat32(char *buf, uint32_t x);
 void sprintf_hex_nat32(char *buf, uint32_t x);
 
@@ -61,7 +63,7 @@ void ff_printf(char *str, ...)
             if ((c == 'i') || (c == 'd')) {
                 // %i & %d for signed integer (Int)
                 const int32_t i = va_arg(va_list, const int32_t);
-                sprintf_dec_int32(sptr, (int)i);
+                sprintf_dec_int32(sptr, (int32_t)i);
             } else if (c == 'n') {
                 // %n for unsigned integer (Nat)
                 const uint32_t n = va_arg(va_list, const uint32_t);
@@ -142,7 +144,7 @@ void sprintf_hex_nat32(char *buf, uint32_t x)
 }
 
 
-void sprintf_dec_int32(char *buf, int x)
+void sprintf_dec_int32(char *buf, int32_t x)
 {
     char cc[11];
 

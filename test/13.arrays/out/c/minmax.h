@@ -1,4 +1,7 @@
+// ./out/c/minmax.h
 
+
+#include <string.h>
 #ifndef MINMAX_H
 #define MINMAX_H
 
