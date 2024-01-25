@@ -771,9 +771,11 @@ def print_value_literal_array(v, ctx):
 
 
     if not 'no-literal-array-cast' in ctx:
-        out("(")
-        print_type(v['type'], need_space_after=False, _print_array_asis=True)
-        out(")")
+        if cfunc != None:
+            # only for local record literals (!)
+            out("(")
+            print_type(v['type'], need_space_after=False, _print_array_asis=True)
+            out(")")
 
     out("{")
     indent_up()
@@ -802,7 +804,7 @@ def print_value_literal_record(v, ctx):
 
     initializers = v['imm']
 
-    out(" {")
+    out("{")
     indent_up()
 
     nitems = len(initializers)
@@ -1223,13 +1225,22 @@ def assign(left, right):
     # в си нельзя просто так присвоить массив
     # приходится использовать memcpy()
     if hlir_type.type_is_defined_array(right['type']):
-        if not 'wrapped_array_value' in right['att']:
-            memcopy(left, right)
-        else:
+        if 'wrapped_array_value' in right['att']:
+            # hard assignation
             print_cast_hard(right['func']['type']['to'], left)
             out(" = ")
             print_value(right)
             out(";")
+        else:
+            """from value.value import value_is_immediate
+            if value_is_immediate(right):
+                print_value(left)
+                out(" = ")
+                print_value(right)
+                out(";")
+            else:"""
+            memcopy(left, right)
+
         return
 
     print_value(left)
@@ -1649,11 +1660,25 @@ def run(module, outname):
 
     output_open(outname)
 
+
+    # before all print first comment (header) if present
+    if len(module['text']) > 0:
+        first = module['text'][0]
+        if first['isa'] == 'comment':
+            print_comment(first)
+            module['text'] = module['text'][1:]
+        else:
+            out("// %s\n" % outname)
+
+        out("\n")
+
+
     if 'use_arghack' in module['options']:
         out("\n#include <stdarg.h>")
 
-    if 'use_memcpy' in module['options']:
-        out("\n#include <string.h>")
+    #if 'use_memcpy' in module['options']:
+    # also used for NULL (!)
+    out("\n#include <string.h>")
 
     # search for @c_include("...")
     cdirectives(module)
