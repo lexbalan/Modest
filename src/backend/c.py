@@ -141,7 +141,7 @@ def print_id(x):
 
 
 
-def print_type_numeric(t):
+def print_type_id(t):
     if 'c_alias' in t:
         out(t['c_alias'])
         return
@@ -275,13 +275,7 @@ def print_type_array_asis(t):
 
 
 
-def print_type(t, need_space_after=False, _print_array_asis=False, print_as_const=False):
-
-    return print_type2(t, print_aka=True, need_space_after=need_space_after, _print_array_asis=_print_array_asis, print_as_const=print_as_const)
-
-
-
-def print_type2(t, print_aka, need_space_after, _print_array_asis, print_as_const=False):
+def print_type(t, need_space_after=False, print_array_asis=False, print_as_const=False):
     k = t['kind']
 
     if 'wrapped_array_type' in t['att']:
@@ -300,14 +294,7 @@ def print_type2(t, print_aka, need_space_after, _print_array_asis, print_as_cons
         if hlir_type.type_is_alias(t):
             tt = t['aliasof']
             if not hlir_type.type_is_record(tt):
-                print_type2(t['aliasof'], print_aka=True, need_space_after=need_space_after)
-
-    #if USE_BOOLEAN:
-    #    if hlir_type.type_is_bool(t):
-    #        out("bool")
-    #        if need_space_after:
-    #            out(" ")
-    #        return
+                print_type2(t['aliasof'], need_space_after=need_space_after)
 
 
     # hotfix for let generic value problem (let x = 1)
@@ -323,24 +310,28 @@ def print_type2(t, print_aka, need_space_after, _print_array_asis, print_as_cons
             t = nt
 
 
-    if print_aka:
-        if 'c_alias' in t:
-            out(t['c_alias'])
-            if need_space_after:
-                out(" ")
-            return
+    if 'c_alias' in t:
+        out(t['c_alias'])
+        if need_space_after:
+            out(" ")
+        return
 
-        if t['id'] != None:
-            if NO_TYPEDEF_STRUCTS:
-                if hlir_type.type_is_record(t):
-                    out("struct ")
-            print_id(t)
-            if need_space_after:
-                out(" ")
-            return
+    if t['id'] != None:
+        if NO_TYPEDEF_STRUCTS:
+            if hlir_type.type_is_record(t):
+                out("struct ")
+        print_id(t)
+        if need_space_after:
+            out(" ")
+        return
 
-    if hlir_type.type_is_integer(t) or hlir_type.type_is_float(t):
-        print_type_numeric(t)
+    if hlir_type.type_is_integer(t):
+        print_type_id(t)
+        if need_space_after:
+            out(" ")
+
+    elif hlir_type.type_is_float(t):
+        print_type_id(t)
         if need_space_after:
             out(" ")
 
@@ -353,7 +344,7 @@ def print_type2(t, print_aka, need_space_after, _print_array_asis, print_as_cons
         print_type_pointer(t, need_space_after, print_as_const)
 
     elif hlir_type.type_is_array(t):
-        if _print_array_asis:
+        if print_array_asis:
             print_type_array_asis(t)
             return
         print_type_array(t, print_as_pointer=True, need_space_after=need_space_after)
@@ -788,7 +779,7 @@ def print_value_literal_array(v, ctx):
         if cfunc != None:
             # only for local record literals (!)
             out("(")
-            print_type(v['type'], need_space_after=False, _print_array_asis=True)
+            print_type(v['type'], need_space_after=False, print_array_asis=True)
             out(")")
 
     out("{")
@@ -1041,19 +1032,19 @@ def print_value_let(x, ctx):
 
 def print_value_sizeof(x, ctx):
     out("sizeof(")
-    print_type(x['of'], need_space_after=False, _print_array_asis=True)
+    print_type(x['of'], need_space_after=False, print_array_asis=True)
     out(")")
 
 
 def print_value_alignof(x, ctx):
     out("__alignof(")
-    print_type(x['of'], need_space_after=False, _print_array_asis=True)
+    print_type(x['of'], need_space_after=False, print_array_asis=True)
     out(")")
 
 
 def print_value_offsetof(x, ctx):
     out("__offsetof(")
-    print_type(x['of'], need_space_after=False, _print_array_asis=True)
+    print_type(x['of'], need_space_after=False, print_array_asis=True)
     out(", ")
     out(x['field']['str'])
     out(")")
