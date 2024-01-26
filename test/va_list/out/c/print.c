@@ -27,7 +27,7 @@ void put_str8(char *s)
         if (c == '\0') {
             break;
         }
-        _putchar((char)c);
+        _putchar(c);
         i = i + 1;
     }
 }
@@ -62,24 +62,24 @@ void ff_printf(char *str, ...)
 
             if ((c == 'i') || (c == 'd')) {
                 // %i & %d for signed integer (Int)
-                const int32_t i = va_arg(va_list, const int32_t);
-                sprintf_dec_int32(sptr, (int32_t)i);
+                const int32_t i = va_arg(va_list, int32_t);
+                sprintf_dec_int32(sptr, i);
             } else if (c == 'n') {
                 // %n for unsigned integer (Nat)
-                const uint32_t n = va_arg(va_list, const uint32_t);
-                sprintf_dec_nat32(sptr, (uint32_t)n);
+                const uint32_t n = va_arg(va_list, uint32_t);
+                sprintf_dec_nat32(sptr, n);
             } else if ((c == 'x') || (c == 'p')) {
                 // %x for unsigned integer (Nat)
                 // %p for pointers
-                const uint32_t x = va_arg(va_list, const uint32_t);
-                sprintf_hex_nat32(sptr, (uint32_t)x);
+                const uint32_t x = va_arg(va_list, uint32_t);
+                sprintf_hex_nat32(sptr, x);
             } else if (c == 's') {
                 // %s pointer to string
-                char *const s = va_arg(va_list, char *const);
+                char *const s = va_arg(va_list, char *);
                 sptr = s;
             } else if (c == 'c') {
                 // %c for char
-                const char c = va_arg(va_list, const char);
+                const char c = va_arg(va_list, char);
                 sptr[0] = c;
                 sptr[1] = 0;
             } else if (c == '%') {

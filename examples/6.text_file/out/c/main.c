@@ -22,9 +22,9 @@ void write_example(void)
         return;
     }
 
-    fprintf((FILE *)fp, "some text.\n");
+    fprintf(fp, "some text.\n");
 
-    fclose((FILE *)fp);
+    fclose(fp);
 }
 
 
@@ -41,14 +41,14 @@ void read_example(void)
 
     printf("file '%s' contains: ", filename);
     while (true) {
-        const int ch = fgetc((FILE *)fp);
+        const int ch = fgetc(fp);
         if (ch == EOF) {
             break;
         }
-        putchar((int)ch);
+        putchar(ch);
     }
 
-    fclose((FILE *)fp);
+    fclose(fp);
 }
 
 

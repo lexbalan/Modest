@@ -33,7 +33,7 @@ const line0 = {
     b = pointOne
 } to Line
 
-const carr = [0, 10, 15, 20, 25]
+const carr = [0, 10, 15] + [20, 25, 30]
 
 const line1 = {
     a={x=carr[1], y=carr[2]}

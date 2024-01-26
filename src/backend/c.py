@@ -194,11 +194,11 @@ def print_type_array(t, print_as_pointer, need_space_after):
 
 
 
-def print_type_pointer(t, need_space_after):
+def print_type_pointer(t, need_space_after, print_as_const=False):
     # array was printed as *, we dont need to place another *
     if hlir_type.type_is_array(t['to']):
         print_type(t['to']['of'], need_space_after=True)
-        if 'const' in t['att']:
+        if print_as_const:
             out("*const")
             if need_space_after:
                 out(" ")
@@ -212,7 +212,7 @@ def print_type_pointer(t, need_space_after):
     else:
         print_type(t['to'], need_space_after=True)
 
-    if 'const' in t['att']:
+    if print_as_const:
         out("*const")
         if need_space_after:
             out(" ")
@@ -275,24 +275,26 @@ def print_type_array_asis(t):
 
 
 
-def print_type(t, need_space_after=False, _print_array_asis=False):
-    return print_type2(t, print_aka=True, need_space_after=need_space_after, _print_array_asis=_print_array_asis)
+def print_type(t, need_space_after=False, _print_array_asis=False, print_as_const=False):
+
+    return print_type2(t, print_aka=True, need_space_after=need_space_after, _print_array_asis=_print_array_asis, print_as_const=print_as_const)
 
 
-def print_type_full(t, _print_array_asis=False):
-    return print_type2(t, print_aka=False, need_space_after=False, _print_array_asis=_print_array_asis)
 
-
-def print_type2(t, print_aka, need_space_after, _print_array_asis):
+def print_type2(t, print_aka, need_space_after, _print_array_asis, print_as_const=False):
     k = t['kind']
 
     if 'wrapped_array_type' in t['att']:
         out(t['wrapped_id'])
         return
 
-    if 'const' in t['att']:
-        if not hlir_type.type_is_pointer(t):
+    if not hlir_type.type_is_pointer(t):
+        if print_as_const:
             out("const ")
+
+        if 'volatile' in t['att']:
+            out("volatile ")
+
 
     if NO_TYPEDEF_OTHERS:
         if hlir_type.type_is_alias(t):
@@ -348,7 +350,7 @@ def print_type2(t, print_aka, need_space_after, _print_array_asis):
             out(" ")
 
     elif hlir_type.type_is_pointer(t):
-        print_type_pointer(t, need_space_after)
+        print_type_pointer(t, need_space_after, print_as_const)
 
     elif hlir_type.type_is_array(t):
         if _print_array_asis:
@@ -1242,7 +1244,7 @@ def print_stmt_let(x):
         save_array(id_str, x['init_value'], from_var=False)
         return
 
-    print_field2(x['id'], v['type'])
+    print_field2(x['id'], v['type'], print_as_const=True)
     out(" = ")
     print_value(x['init_value'], just_print_id=False)
     out(";")
@@ -1529,13 +1531,13 @@ def print_def_type(x):
 
 
 
-def print_field_regular(t, id_str):
-    print_type(t, need_space_after=True)
+def print_field_regular(t, id_str, print_as_const):
+    print_type(t, need_space_after=True, print_as_const=print_as_const)
     out("%s" % id_str)
 
 
-def print_field_pointer(t, id_str):
-    print_type(t, need_space_after=True)
+def print_field_pointer(t, id_str, print_as_const):
+    print_type(t, need_space_after=True, print_as_const=print_as_const)
     out("%s" % id_str)
 
 
@@ -1554,7 +1556,7 @@ def print_field_array(t, id_str, do_wrapped=True):
 
     print_type(array_root_type, need_space_after=True)
 
-    out("%s" % id_str)
+    out(id_str)
 
     print_array_volume(t)
 
@@ -1569,24 +1571,26 @@ def print_field_array(t, id_str, do_wrapped=True):
 
 # из за того что с C типы записваются через жопу
 # приходится печатать типы ptr, arr & func вместе с именем поля
-def print_field(x):
-    print_field2(x['id'], x['type'])
+def print_field(x, print_as_const=False):
+    print_field2(x['id'], x['type'], print_as_const=print_as_const)
 
 
-def print_field2(_id, typ):
+def print_field2(_id, typ, print_as_const=False):
     assert (typ != None)
 
     id_str = _id['str']
     assert (id_str != "")
 
-
     if 'c_alias' in typ or typ['id'] != None:
-        print_field_regular(typ, id_str)
+        print_field_regular(typ, id_str, print_as_const)
         return
 
-    if hlir_type.type_is_pointer(typ): print_field_pointer(typ, id_str)
-    elif hlir_type.type_is_array(typ): print_field_array(typ, id_str)
-    else: print_field_regular(typ, id_str)
+    if hlir_type.type_is_pointer(typ):
+        print_field_pointer(typ, id_str, print_as_const)
+    elif hlir_type.type_is_array(typ):
+        print_field_array(typ, id_str)
+    else:
+        print_field_regular(typ, id_str, print_as_const)
 
 
 

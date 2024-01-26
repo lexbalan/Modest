@@ -44,9 +44,9 @@ void write_example(void)
     strcpy((char *)(char *)&chunk.data, (const char *)"data");
 
     // write chunk to file
-    fwrite((void *)&chunk, sizeof(Chunk), 1, (FILE *)fp);
+    fwrite((void *)&chunk, sizeof(Chunk), 1, fp);
 
-    fclose((FILE *)fp);
+    fclose(fp);
 }
 
 
@@ -62,13 +62,13 @@ void read_example(void)
     }
 
     Chunk chunk;
-    fread((void *)&chunk, sizeof(Chunk), 1, (FILE *)fp);
+    fread((void *)&chunk, sizeof(Chunk), 1, fp);
 
     printf("file \"%s\" contains:\n", filename);
     printf("chunk.id: \"%s\"\n", (char *)&chunk.id);
     printf("chunk.data: \"%s\"\n", (char *)&chunk.data);
 
-    fclose((FILE *)fp);
+    fclose(fp);
 }
 
 

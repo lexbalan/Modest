@@ -55,23 +55,23 @@ int main(void)
 {
     printf("test xor encrypting\n");
 
-    uint8_t *const tmsg = (uint8_t *const)(char *)&test_msg;
-    uint8_t *const tkey = (uint8_t *const)(char *)&test_key;
+    uint8_t *const tmsg = (uint8_t *)(char *)&test_msg;
+    uint8_t *const tkey = (uint8_t *)(char *)&test_key;
 
     printf("before encrypt test_msg: \n");
-    print_bytes((uint8_t *)tmsg, msg_length);
+    print_bytes(tmsg, msg_length);
 
     // encrypt test data
-    xor_encrypter((uint8_t *)tmsg, msg_length, (uint8_t *)tkey, key_length);
+    xor_encrypter(tmsg, msg_length, tkey, key_length);
 
     printf("after encrypt test_msg: \n");
-    print_bytes((uint8_t *)tmsg, msg_length);
+    print_bytes(tmsg, msg_length);
 
     // decrypt test data
-    xor_encrypter((uint8_t *)tmsg, msg_length, (uint8_t *)tkey, key_length);
+    xor_encrypter(tmsg, msg_length, tkey, key_length);
 
     printf("after decrypt test_msg: \n");
-    print_bytes((uint8_t *)tmsg, msg_length);
+    print_bytes(tmsg, msg_length);
 
     return 0;
 }

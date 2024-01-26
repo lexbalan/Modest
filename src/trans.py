@@ -588,7 +588,8 @@ def value_concat_arrays(l, r, ti):
 
     str_array_volume = hlir_value_int(length)
     generic = True  # не факт, анализируй a и b
-    genStrType = hlir_type_array(hlir_type.typeChar32, volume=str_array_volume, ti=ti)
+    item_type = l['type']['of'] #hlir_type.typeChar32
+    genStrType = hlir_type_array(item_type, volume=str_array_volume, ti=ti)
     genStrType['generic'] = True
 
     bin_value = hlir_value_bin('add_str', l, r, genStrType, ti=ti)
@@ -1345,7 +1346,7 @@ def do_stmt_let(x):
     # add 'const' attribute to type
     # (used by C printer)
     typ = hlir_type.type_copy(v['type'])
-    typ['att'].append('const')
+    #typ['att'].append('const')
     v['type'] = typ
 
     const_value = hlir_value_const(id, v['type'], value=None, ti=x['id']['ti'])

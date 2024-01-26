@@ -23,7 +23,7 @@ void ff_memzero(void *mem, uint64_t len)
 {
     const uint64_t len_words = len / sizeof(ArchNat);
 
-    ArchNat *const dst_word = (ArchNat *const)mem;
+    ArchNat *const dst_word = (ArchNat *)mem;
 
     uint64_t i = 0;
     while (i < len_words) {
@@ -34,7 +34,7 @@ void ff_memzero(void *mem, uint64_t len)
 
     const uint64_t len_bytes = len % sizeof(ArchNat);
 
-    uint8_t *const dst_byte = (uint8_t *const)&dst_word[i];
+    uint8_t *const dst_byte = (uint8_t *)&dst_word[i];
 
     i = 0;
     while (i < len_bytes) {
@@ -48,8 +48,8 @@ void ff_memcpy(void *dst, void *src, uint64_t len)
 {
     const uint64_t len_words = len / sizeof(ArchNat);
 
-    ArchNat *const src_w = (ArchNat *const)src;
-    ArchNat *const dst_w = (ArchNat *const)dst;
+    ArchNat *const src_w = (ArchNat *)src;
+    ArchNat *const dst_w = (ArchNat *)dst;
 
     uint64_t i = 0;
     while (i < len_words) {
@@ -60,8 +60,8 @@ void ff_memcpy(void *dst, void *src, uint64_t len)
 
     const uint64_t len_bytes = len % sizeof(ArchNat);
 
-    uint8_t *const src_b = (uint8_t *const)&src_w[i];
-    uint8_t *const dst_b = (uint8_t *const)&dst_w[i];
+    uint8_t *const src_b = (uint8_t *)&src_w[i];
+    uint8_t *const dst_b = (uint8_t *)&dst_w[i];
 
     i = 0;
     while (i < len_bytes) {
