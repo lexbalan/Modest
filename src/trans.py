@@ -1345,9 +1345,8 @@ def do_stmt_let(x):
 
     # add 'const' attribute to type
     # (used by C printer)
-    typ = hlir_type.type_copy(v['type'])
-    #typ['att'].append('const')
-    v['type'] = typ
+    typ = v['type']
+
 
     const_value = hlir_value_const(id, v['type'], value=None, ti=x['id']['ti'])
     const_value['att'].append('local') # need for LLVM printer (!)
