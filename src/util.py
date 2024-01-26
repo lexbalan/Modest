@@ -24,11 +24,17 @@ def nbits_for_num(x):
     return n
 
 
-def nbytes_for_bits(x):
+# 7 -> 8, 12 -> 16, 17 -> 32, etc.
+def align_bits_up(x):
     aligned_bits = 8
     while aligned_bits < x:
         aligned_bits = aligned_bits * 2
-    return aligned_bits // 8
+    return aligned_bits
+
+
+# 7 -> 1, 9 -> 2, 17 -> 32, etc.
+def nbytes_for_bits(x):
+    return align_bits_up(x) // 8
 
 
 def get_item_with_id(_list, name):

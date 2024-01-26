@@ -7,7 +7,7 @@ from .common import *
 import hlir.type as hlir_type
 from hlir.type import type_print
 from value.value import value_attribute_check, value_print
-from util import nbits_for_num, get_item_with_id, utf8_cc_arr_to_utf32_cc_arr, utf16_cc_arr_to_utf32_cc_arr
+from util import align_bits_up, nbits_for_num, get_item_with_id, utf8_cc_arr_to_utf32_cc_arr, utf16_cc_arr_to_utf32_cc_arr
 from main import settings
 
 import copy
@@ -301,13 +301,22 @@ def print_type(t, need_space_after=False, print_array_asis=False, print_as_const
     if hlir_type.type_is_generic_integer(t):
         # если пришел generic - подберем подходящий тип
         # ex: let x = 1; func(x)
-        width = t['width']
-        nt = hlir_type.type_select_integer(width, is_signed=hlir_type.type_is_signed(t))
-        if nt == None:
-            error("cannot select integer type for too big value", t['ti'])
-            return
+
+        pre = 'int'
+        if hlir_type.type_is_unsigned(t):
+            pre = 'uint'
+
+        width = align_bits_up(t['width'])
+
+        if width >= 128:
+            out("__%s%d" % (pre, width))
         else:
-            t = nt
+            out("%s%d_t" % (pre, width))
+
+        if need_space_after:
+            out(" ")
+
+        return
 
 
     if 'c_alias' in t:
