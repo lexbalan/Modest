@@ -540,13 +540,6 @@ def print_value_call(v, ctx):
 
 
 
-"""def print_array_index(x):
-    index = x['index']
-    out("[")
-    print_value(index)
-    out("]")"""
-
-
 def print_value_index(x, ctx):
     array = x['array']
 
@@ -558,19 +551,26 @@ def print_value_index(x, ctx):
         indexes.append(xx['index'])
         xx = a
 
-
     dims = []
     yy = xx['type']
     while hlir_type.type_is_defined_array(yy):
         dims.append(yy['volume'])
         yy = yy['of']
 
-    need_wrap = precedence(xx) < precedence(x)
-    print_value(xx, need_wrap=need_wrap)
-
     # поскольку индексация идет в обратном порядке,
     # приведем список к прямому порядку (так как индексация записывается)
     indexes.reverse()
+
+
+    # если имеем дело c дженерик массивом (глоб константа)
+    if hlir_type.type_is_generic(array['type']):
+        if 'imm' in x:
+            print_value_literal(x, ['print_immediate'])
+            return
+
+
+    need_wrap = precedence(xx) < precedence(x)
+    print_value(xx, need_wrap=need_wrap)
 
     out("[")
 
@@ -609,20 +609,29 @@ def print_value_index_ptr(x, ctx):
     out("]")
 
 
-def print_value_access(v, ctx):
-    left = v['record']
-    need_wrap = precedence(left) < precedence(v)
+
+def print_value_access(x, ctx):
+    left = x['record']
+
+    # если имеем дело c дженерик записью (глоб константа)
+    if hlir_type.type_is_generic(left['type']):
+        if 'imm' in x:
+            print_value_literal(x, ['print_immediate'])
+            return
+
+    need_wrap = precedence(left) < precedence(x)
     print_value(left, need_wrap=need_wrap)
     out('.')
-    print_id(v['field'])
+    print_id(x['field'])
 
 
-def print_value_access_ptr(v, ctx):
-    left = v['pointer']
-    need_wrap = precedence(left) < precedence(v)
+
+def print_value_access_ptr(x, ctx):
+    left = x['pointer']
+    need_wrap = precedence(left) < precedence(x)
     print_value(left, need_wrap=need_wrap)
     out("->")
-    print_id(v['field'])
+    print_id(x['field'])
 
 
 
@@ -850,9 +859,10 @@ def print_value_literal_record(v, ctx):
 
     indent_down()
 
-    if v['nl_end'] > 0:
-        newline(n=v['nl_end'])
-        indent()
+    if 'nl_end' in v:
+        if v['nl_end'] > 0:
+            newline(n=v['nl_end'])
+            indent()
 
     out("}")
 
@@ -1071,7 +1081,7 @@ def print_value(x, ctx=[], need_wrap=False, just_print_id=True):
     if x['kind'] == 'const':
         if x['value'] != None:
             if hlir_type.type_is_generic_array(x['value']['type']):
-                print_value_immediate(x['value'], ['print_immediate'])
+                print_value_literal(x['value'], ['print_immediate'])
                 return
 
 
