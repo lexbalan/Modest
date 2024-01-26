@@ -23,12 +23,6 @@ typedef struct {
 
 
 
-struct {    int8_t x;    int8_t y;
-} ps[3] = {
-    {.x = 0, .y = 0},
-    {.x = 1, .y = 1},
-    {.x = 2, .y = 2}
-};
 
 
 Point points[3] = {

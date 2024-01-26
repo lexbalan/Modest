@@ -1048,24 +1048,6 @@ def print_value_offsetof(x, ctx):
 
 
 
-def print_value_immediate(x, ctx):
-    #print("print_value_immediate")
-    if hlir_type.type_is_integer(x['type']):
-        print_value_literal_int(x, ctx)
-    elif hlir_type.type_is_char(x['type']):
-        print_value_literal_char(x, ctx)
-    elif hlir_type.type_is_bool(x['type']):
-        print_value_literal_bool(x, ctx)
-    elif hlir_type.type_is_float(x['type']):
-        print_value_literal_float(x, ctx)
-    elif hlir_type.type_is_array(x['type']):
-        print_value_literal_array(x, ctx)
-    elif hlir_type.type_is_record(x['type']):
-        print_value_literal_record(x, ctx)
-    elif hlir_type.type_is_pointer(x['type']):
-        print_value_literal_pointer(x, ctx)
-
-
 
 def print_value(x, ctx=[], need_wrap=False, just_print_id=True):
     # если у значения есть свойство 'id' то печатаем просто id
@@ -1078,8 +1060,19 @@ def print_value(x, ctx=[], need_wrap=False, just_print_id=True):
     # каждый раз печатаем литерал инициализвтора константы полностью
     if 'print_immediate' in ctx:
         if 'imm' in x:
-            print_value_immediate(x, ctx)
+            print_value_literal(x, ctx)
             return
+
+
+    # в C мы не печатаем определения для глобальных констант с типом
+    # GenericArray | GenericRecord; Тк C не умеет в это дело;
+    # А по месту использования такой константы печатаем само imm значение
+    # see print_def_const
+    if x['kind'] == 'const':
+        if x['value'] != None:
+            if hlir_type.type_is_generic_array(x['value']['type']):
+                print_value_immediate(x['value'], ['print_immediate'])
+                return
 
 
     if just_print_id:
@@ -1626,16 +1619,24 @@ def print_def_const(x):
     global nl_str
     const_value = x['value']
 
-    if hlir_type.type_is_array_of_char(const_value['type']):
-        # не печатаем const xx = "xx"
+    # Не печатаем GenericArray | GenericRecord константы
+    # тк C не умеет в это дело; В value_print смотрим -
+    # если пришла константа с вышеупомянутым типом - печатаем
+    # просто imm значение. Некрасиво но только так;
+    # see value_print
+    if hlir_type.type_is_generic_record(const_value['type']):
         return
 
-    if hlir_type.type_is_array(const_value['type']):
+    if hlir_type.type_is_generic_array(const_value['type']):
+        return
+
+
+    if hlir_type.type_is_array(const_value['type']) or hlir_type.type_is_record(const_value['type']):
         newline()
         print_field(const_value)
         out(" = ")
         v = const_value['value']
-        print_value_literal_array(v, ['print_immediate'])
+        print_value_literal(v, ['print_immediate'])
         out(";")
         return
 
