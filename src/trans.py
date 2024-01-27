@@ -288,6 +288,8 @@ def do_type_array(t):
     volume_expr = None
     if t['size'] != None:
         volume_expr = do_value(t['size'])
+        if value_is_bad(volume_expr):
+            return hlir_type_bad(t['ti'])
     return hlir_type_array(of, volume=volume_expr, ti=t['ti'])
 
 
