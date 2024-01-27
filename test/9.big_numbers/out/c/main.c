@@ -37,7 +37,7 @@ int main(void)
 
     uint32_t a = 0x1;
 
-    unsigned __int128 big_sum = big1 + big2 + ((unsigned __int128)(uint32_t)a);
+    unsigned __int128 big_sum = big1 + big2 + (unsigned __int128)a;
 
     printf("big0 = 0x%llX%llX\n", high_128(big0), low_128(big0));
     printf("big1 = 0x%llX%llX\n", high_128(big1), low_128(big1));

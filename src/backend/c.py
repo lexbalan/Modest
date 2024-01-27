@@ -716,16 +716,17 @@ def print_value_cast(x, ctx):
     # - in Cm int32(-1) -> uint64 => 0x00000000ffffffff
     # - in C  int32(-1) -> uint64 => 0xffffffffffffffff
     # required: (uint64_t)((uint32)int32_value)
-    if hlir_type.type_is_integer(to_type):
+    if hlir_type.type_is_integer(from_type) and hlir_type.type_is_integer(to_type):
         if hlir_type.type_is_unsigned(to_type):
-            if from_type['size'] < to_type['size']:
-                out("((")
-                print_type(to_type)
-                out(")")
-                nat_same_sz = hlir_type.type_select_nat(from_type['width'])
-                print_cast(nat_same_sz, value, ctx)
-                out(")")
-                return
+            if hlir_type.type_is_signed(from_type):
+                if from_type['size'] < to_type['size']:
+                    out("((")
+                    print_type(to_type)
+                    out(")")
+                    nat_same_sz = hlir_type.type_select_nat(from_type['width'])
+                    print_cast(nat_same_sz, value, ctx)
+                    out(")")
+                    return
 
 
     print_cast(to_type, value, ctx)

@@ -49,7 +49,7 @@ int main(void)
             break;
         }
 
-        printf("[%d]U16: 0x%x\n", i, ((uint32_t)(uint16_t)c));
+        printf("[%d]U16: 0x%x\n", i, (uint32_t)c);
 
         i = i + 1;
     }

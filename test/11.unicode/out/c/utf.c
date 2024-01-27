@@ -59,7 +59,7 @@ uint8_t utf32_to_utf8(uint32_t c, char *buf)
 // returns n-symbols from input stream
 uint8_t utf16_to_utf32(uint16_t *c, uint32_t *result)
 {
-    const uint32_t leading = ((uint32_t)(uint16_t)c[0]);
+    const uint32_t leading = (uint32_t)c[0];
 
     if ((leading < 0xD800) || (leading > 0xDFFF)) {
         *result = (uint32_t)leading;
@@ -69,7 +69,7 @@ uint8_t utf16_to_utf32(uint16_t *c, uint32_t *result)
     } else {
         uint32_t code;
         code = (leading & 0x3FF) << 10;
-        const uint32_t trailing = ((uint32_t)(uint16_t)c[1]);
+        const uint32_t trailing = (uint32_t)c[1];
         if ((trailing < 0xDC00) || (trailing > 0xDFFF)) {
             //error("Недопустимая кодовая последовательность.")
         } else {
