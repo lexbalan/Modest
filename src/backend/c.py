@@ -1114,7 +1114,8 @@ def print_value(x, ctx=[], need_wrap=False, just_print_id=True):
     elif k == 'offsetof': y = print_value_offsetof(x, ctx)
     else:
         out("<%s>" % k)
-        exit(1)
+        fatal("unknown opcode %s" % k)
+        exit(-1)
 
     if need_wrap:
         out(")")

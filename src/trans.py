@@ -674,12 +674,14 @@ def do_value_bin(x):
         if op == 'or': op = 'logic_or'
         elif op == 'and': op = 'logic_and'
 
+    return _bin(op, type_result, l, r, ti)
 
+
+def _bin(op, type_result, l, r, ti=None):
     # if left & right are immediate, we can fold const
     # and append field ['imm'] to bin_value
     if value_is_immediate(l) and value_is_immediate(r):
         return bin_imm(op, type_result, l, r, ti)
-
 
     return hlir_value_bin(op, l, r, type_result, ti=ti)
 
@@ -1388,6 +1390,26 @@ def do_stmt_assign(x):
     return hlir_stmt_assign(l, r, ti=x['ti'])
 
 
+def do_stmt_incdec(x, op='inc'):
+    v = do_value(x['value'])
+
+    if value_is_bad(v):
+        return hlir_stmt_bad()
+
+    if value_is_immutable(v):
+        error("immutable value", x['left']['ti'])
+        return hlir_stmt_bad()
+
+    if not hlir_type.type_is_integer(v['type']):
+        error("expected value with integer type", x['value']['ti'])
+        return hlir_stmt_bad()
+
+    one = hlir_value_int(1, typ=v['type'], ti=x['ti'])
+    v_plus = _bin(op, v['type'], v, one, x['ti'])
+
+    return hlir_stmt_assign(v, v_plus, ti=x['ti'])
+
+
 
 def do_stmt_value(x):
     v = do_rvalue(x['value'])
@@ -1437,6 +1459,8 @@ def do_stmt(x):
     elif k == 'return': s = do_stmt_return(x)
     elif k == 'again': s = do_stmt_again(x)
     elif k == 'break': s = do_stmt_break(x)
+    elif k == 'inc': s = do_stmt_incdec(x, 'add')
+    elif k == 'dec': s = do_stmt_incdec(x, 'sub')
     elif k == 'comment-line': s = do_stmt_comment_line(x)
     elif k == 'comment-block': s = do_stmt_comment_block(x)
     else: s = hlir_stmt_bad()

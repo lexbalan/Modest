@@ -797,7 +797,6 @@ class Parser:
         r = self.expr_value()
         return {'isa': 'stmt', 'kind': 'let', 'id': id, 'value': r}
 
-
     def stmt_if(self):
         c = self.expr_value()
         t = self.stmt_block()
@@ -867,6 +866,16 @@ class Parser:
         return {'isa': 'stmt', 'kind': 'break'}
 
 
+    def stmt_inc(self):
+        v = self.expr_value()
+        return {'isa': 'stmt', 'kind': 'inc', 'value': v}
+
+
+    def stmt_dec(self):
+        v = self.expr_value()
+        return {'isa': 'stmt', 'kind': 'inc', 'value': v}
+
+
     def stmt_expr_value(self):
         v = self.expr_value()
 
@@ -909,6 +918,10 @@ class Parser:
             s = self.stmt_again()
         elif self.match('break'):
             s = self.stmt_break()
+        elif self.match('++'):
+            s = self.stmt_inc()
+        elif self.match('--'):
+            s = self.stmt_dec()
         else:
 
             # comment?
