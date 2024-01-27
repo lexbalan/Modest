@@ -689,7 +689,6 @@ def print_value_cast(x, ctx):
     if hlir_type.type_is_pointer_to_record(from_type):
         if hlir_type.type_is_pointer_to_record(to_type):
             print_cast(to_type, value, ctx)
-            out('/**/')
             return
 
     # cast struct to another struct
