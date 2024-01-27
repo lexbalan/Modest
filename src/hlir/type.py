@@ -507,7 +507,14 @@ def type_eq_func(a, b, opt):
     return type_eq_fields(a['params'], b['params'], opt)
 
 
-def type_eq_record(a, b, opt):
+def type_eq_record(a, b, opt, nominative=False):
+    if nominative:
+        if ('id' in a) and ('id' in b):
+            if a['id']['str'] != b['id']['str']:
+                return False
+        elif ('id' in a) or ('id' in b):
+            return False
+
     if len(a['fields']) != len(b['fields']): return False
     return type_eq_fields(a['fields'], b['fields'], opt)
 
@@ -711,7 +718,7 @@ def type_is_generic(t):
 
 
 def type_is_alias(t):
-    return 'alias' in t['att']
+    return 'aliasof' in t
 
 
 def type_is_signed(t):
@@ -789,7 +796,6 @@ def create_alias(id_str, t, ti):
     if 'c_alias' in nt:
         del nt['c_alias']
 
-    nt['att'].append('alias')
     nt['aliasof'] = t
     nt['ti'] = ti
 

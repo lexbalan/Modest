@@ -653,7 +653,6 @@ def print_cast(t, v, ctx=[]):
     print_value(v, ctx=ctx, need_wrap=need_wrap)
 
 
-
 def print_value_cast_immediate(v, ctx):
     value = v['value']
     from_type = value['type']
@@ -690,6 +689,7 @@ def print_value_cast(x, ctx):
     if hlir_type.type_is_pointer_to_record(from_type):
         if hlir_type.type_is_pointer_to_record(to_type):
             print_cast(to_type, value, ctx)
+            out('/**/')
             return
 
     # cast struct to another struct

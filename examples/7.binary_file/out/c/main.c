@@ -29,7 +29,7 @@ void write_example(void)
 {
     printf("run write_example\n");
 
-    FILE *const fp = fopen((char *)filename, "wb");
+    FILE *const fp = fopen(filename, "wb");
 
     if (fp == NULL) {
         printf("error: cannot create file '%s'", filename);
@@ -40,8 +40,8 @@ void write_example(void)
 
     // pointers casting requires -funsafe translator option
     // (see Makefile)
-    strcpy((char *)(char *)&chunk.id, (const char *)"id");
-    strcpy((char *)(char *)&chunk.data, (const char *)"data");
+    strcpy((char *)(char *)&chunk.id, "id");
+    strcpy((char *)(char *)&chunk.data, "data");
 
     // write chunk to file
     fwrite((void *)&chunk, sizeof(Chunk), 1, fp);
@@ -54,7 +54,7 @@ void read_example(void)
 {
     printf("run read_example\n");
 
-    FILE *const fp = fopen((char *)filename, "rb");
+    FILE *const fp = fopen(filename, "rb");
 
     if (fp == NULL) {
         printf("error: cannot open file '%s'", filename);

@@ -165,8 +165,7 @@ then_0:
     br label %endif_0
 else_0:
     store i8 0, i8* @cnt
-    %6 = bitcast %FSM* %fsm to %FSM*
-    call void (%FSM*, i32) @fsm_switch(%FSM* %6, i32 1)
+    call void (%FSM*, i32) @fsm_switch(%FSM* %fsm, i32 1)
     br label %endif_0
 endif_0:
     ret void
@@ -196,8 +195,7 @@ then_0:
     br label %endif_0
 else_0:
     store i8 0, i8* @cnt
-    %6 = bitcast %FSM* %fsm to %FSM*
-    call void (%FSM*, i32) @fsm_switch(%FSM* %6, i32 2)
+    call void (%FSM*, i32) @fsm_switch(%FSM* %fsm, i32 2)
     br label %endif_0
 endif_0:
     ret void
@@ -211,11 +209,10 @@ define void @on_exit(%FSM* %fsm) {
 
 
 define void @beacon_entry(%FSM* %fsm) {
-    %1 = bitcast %FSM* %fsm to %FSM*
-    %2 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 1
-    %3 = load i32, i32* %2
-    %4 = call [0 x i8]* (%FSM*, i32) @fsm_state_no_name(%FSM* %1, i32 %3)
-    %5 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str3 to [0 x i8]*), [0 x i8]* %4)
+    %1 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 1
+    %2 = load i32, i32* %1
+    %3 = call [0 x i8]* (%FSM*, i32) @fsm_state_no_name(%FSM* %fsm, i32 %2)
+    %4 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str3 to [0 x i8]*), [0 x i8]* %3)
     ret void
 }
 
@@ -231,19 +228,17 @@ then_0:
     br label %endif_0
 else_0:
     store i8 0, i8* @cnt
-    %6 = bitcast %FSM* %fsm to %FSM*
-    call void (%FSM*, i32) @fsm_switch(%FSM* %6, i32 0)
+    call void (%FSM*, i32) @fsm_switch(%FSM* %fsm, i32 0)
     br label %endif_0
 endif_0:
     ret void
 }
 
 define void @beacon_exit(%FSM* %fsm) {
-    %1 = bitcast %FSM* %fsm to %FSM*
-    %2 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 2
-    %3 = load i32, i32* %2
-    %4 = call [0 x i8]* (%FSM*, i32) @fsm_state_no_name(%FSM* %1, i32 %3)
-    %5 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str5 to [0 x i8]*), [0 x i8]* %4)
+    %1 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 2
+    %2 = load i32, i32* %1
+    %3 = call [0 x i8]* (%FSM*, i32) @fsm_state_no_name(%FSM* %fsm, i32 %2)
+    %4 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str5 to [0 x i8]*), [0 x i8]* %3)
     ret void
 }
 
@@ -329,8 +324,7 @@ define i32 @main() {
 again_1:
     br i1 1 , label %body_1, label %break_1
 body_1:
-    %1 = bitcast %FSM* @fsm to %FSM*
-    call void (%FSM*) @fsm_run(%FSM* %1)
+    call void (%FSM*) @fsm_run(%FSM* @fsm)
     call void (i64) @delay(i64 500000)
     br label %again_1
 break_1:

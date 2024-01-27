@@ -105,11 +105,12 @@ def value_cons_implicit(v, t, ti):
     # for structural type system support
     if type.type_is_pointer_to_record(t):
         if type.type_is_pointer_to_record(from_type):
-
-            if type.type_eq_record(from_type['to'], t['to'], opt=[]):
-                return hlir_value_cast(v, t, ti=ti)
-            else:
+            if type.type_eq_record(from_type['to'], t['to'], opt=[], nominative=True):
+                # если номинативно равны - приведение не нужно
                 return v
+            elif type.type_eq_record(from_type['to'], t['to'], opt=[]):
+                # если равны но не номенативно - для C & LLVM нужно привдение
+                return hlir_value_cast(v, t, ti=ti)
 
 
     if type.type_eq(from_type, t):

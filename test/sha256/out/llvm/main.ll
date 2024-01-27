@@ -403,21 +403,20 @@ body_1:
     %5 = load i32, i32* %2
     %6 = getelementptr inbounds [2 x %SHA256_TestCase*], [2 x %SHA256_TestCase*]* @sha256_tests, i32 0, i32 %5
     %7 = load %SHA256_TestCase*, %SHA256_TestCase** %6
-    %8 = bitcast %SHA256_TestCase* %7 to %SHA256_TestCase*
-    %9 = call i1 (%SHA256_TestCase*) @sha256_doTest(%SHA256_TestCase* %8)
-    br i1 %9 , label %then_0, label %else_0
+    %8 = call i1 (%SHA256_TestCase*) @sha256_doTest(%SHA256_TestCase* %7)
+    br i1 %8 , label %then_0, label %else_0
 then_0:
-    %10 = load i32, i32* %2
-    %11 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str6 to [0 x i8]*), i32 %10)
+    %9 = load i32, i32* %2
+    %10 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str6 to [0 x i8]*), i32 %9)
     br label %endif_0
 else_0:
-    %12 = load i32, i32* %2
-    %13 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str7 to [0 x i8]*), i32 %12)
+    %11 = load i32, i32* %2
+    %12 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str7 to [0 x i8]*), i32 %11)
     br label %endif_0
 endif_0:
-    %14 = load i32, i32* %2
-    %15 = add i32 %14, 1
-    store i32 %15, i32* %2
+    %13 = load i32, i32* %2
+    %14 = add i32 %13, 1
+    store i32 %14, i32* %2
     br label %again_1
 break_1:
     ret i32 0

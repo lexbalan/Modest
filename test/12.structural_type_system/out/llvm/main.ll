@@ -238,26 +238,23 @@ define void @test_by_value() {
 }
 
 define void @test_by_pointer() {
-    %1 = bitcast %Type1* @a to %Type1*
-    call void (%Type1*) @f0_ptr(%Type1* %1)
-    %2 = bitcast %Type1* @a to %Type2*
-    call void (%Type2*) @f1_ptr(%Type2* %2)
-    %3 = bitcast %Type1* @a to %Type3*
-    call void (%Type3*) @f2_ptr(%Type3* %3)
+    call void (%Type1*) @f0_ptr(%Type1* @a)
+    %1 = bitcast %Type1* @a to %Type2*
+    call void (%Type2*) @f1_ptr(%Type2* %1)
+    %2 = bitcast %Type1* @a to %Type3*
+    call void (%Type3*) @f2_ptr(%Type3* %2)
     ;f3_ptr(&a)
-    %4 = bitcast %Type2* @b to %Type1*
-    call void (%Type1*) @f0_ptr(%Type1* %4)
-    %5 = bitcast %Type2* @b to %Type2*
-    call void (%Type2*) @f1_ptr(%Type2* %5)
-    %6 = bitcast %Type2* @b to %Type3*
-    call void (%Type3*) @f2_ptr(%Type3* %6)
+    %3 = bitcast %Type2* @b to %Type1*
+    call void (%Type1*) @f0_ptr(%Type1* %3)
+    call void (%Type2*) @f1_ptr(%Type2* @b)
+    %4 = bitcast %Type2* @b to %Type3*
+    call void (%Type3*) @f2_ptr(%Type3* %4)
     ;f3_ptr(&b)
-    %7 = bitcast %Type3* @c to %Type1*
-    call void (%Type1*) @f0_ptr(%Type1* %7)
-    %8 = bitcast %Type3* @c to %Type2*
-    call void (%Type2*) @f1_ptr(%Type2* %8)
-    %9 = bitcast %Type3* @c to %Type3*
-    call void (%Type3*) @f2_ptr(%Type3* %9)
+    %5 = bitcast %Type3* @c to %Type1*
+    call void (%Type1*) @f0_ptr(%Type1* %5)
+    %6 = bitcast %Type3* @c to %Type2*
+    call void (%Type2*) @f1_ptr(%Type2* %6)
+    call void (%Type3*) @f2_ptr(%Type3* @c)
     ;f3_ptr(&c)
     ret void
 }

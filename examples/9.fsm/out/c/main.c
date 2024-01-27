@@ -44,7 +44,7 @@ void off_loop(FSM *fsm)
         cnt = cnt + 1;
     } else {
         cnt = 0;
-        fsm_switch((FSM *)fsm, flashlightStateOn);
+        fsm_switch(fsm, flashlightStateOn);
     }
 }
 
@@ -75,7 +75,7 @@ void on_loop(FSM *fsm)
         cnt = cnt + 1;
     } else {
         cnt = 0;
-        fsm_switch((FSM *)fsm, flashlightStateBeacon);
+        fsm_switch(fsm, flashlightStateBeacon);
     }
 }
 
@@ -93,7 +93,7 @@ void on_exit(FSM *fsm)
 
 void beacon_entry(FSM *fsm)
 {
-    char *const from_name = fsm_state_no_name((FSM *)fsm, (uint32_t)fsm->state);
+    char *const from_name = fsm_state_no_name(fsm, fsm->state);
     printf("beacon_entry from %s\n", from_name);
 }
 
@@ -105,14 +105,14 @@ void beacon_loop(FSM *fsm)
         cnt = cnt + 1;
     } else {
         cnt = 0;
-        fsm_switch((FSM *)fsm, flashlightStateOff);
+        fsm_switch(fsm, flashlightStateOff);
     }
 }
 
 
 void beacon_exit(FSM *fsm)
 {
-    char *const to_name = fsm_state_no_name((FSM *)fsm, (uint32_t)fsm->nexstate);
+    char *const to_name = fsm_state_no_name(fsm, fsm->nexstate);
     printf("beacon_exit to %s\n", to_name);
 }
 
@@ -155,7 +155,7 @@ int main(void)
 {
 
     while (true) {
-        fsm_run((FSM *)&fsm);
+        fsm_run(&fsm);
         delay(500000);
     }
 

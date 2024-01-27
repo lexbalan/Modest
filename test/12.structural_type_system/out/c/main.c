@@ -90,19 +90,19 @@ void test_by_value(void)
 
 void test_by_pointer(void)
 {
-    f0_ptr((Type1 *)&a);
-    f1_ptr((Type2 *)&a);
-    f2_ptr((Type3 *)&a);
+    f0_ptr(&a);
+    f1_ptr((Type2 *)&a/**/);
+    f2_ptr((Type3 *)&a/**/);
     //f3_ptr(&a)
 
-    f0_ptr((Type1 *)&b);
-    f1_ptr((Type2 *)&b);
-    f2_ptr((Type3 *)&b);
+    f0_ptr((Type1 *)&b/**/);
+    f1_ptr(&b);
+    f2_ptr((Type3 *)&b/**/);
     //f3_ptr(&b)
 
-    f0_ptr((Type1 *)&c);
-    f1_ptr((Type2 *)&c);
-    f2_ptr((Type3 *)&c);
+    f0_ptr((Type1 *)&c/**/);
+    f1_ptr((Type2 *)&c/**/);
+    f2_ptr(&c);
     //f3_ptr(&c)
 }
 

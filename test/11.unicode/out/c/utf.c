@@ -92,7 +92,7 @@ void utf32_putchar(uint32_t c)
     while (i < n) {
         const char c = decoded_buf[i];
         if ((uint8_t)c == 0) {break;}
-        putchar((int)(int32_t)c);
+        putchar((int32_t)c);
         i = i + 1;
     }
 }

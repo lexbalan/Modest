@@ -52,7 +52,7 @@ SHA256_TestCase test1 = {
 
 
 #define nTests  2
-SHA256_TestCase *sha256_tests[nTests] = {(SHA256_TestCase *)&test0, (SHA256_TestCase *)&test1};;
+SHA256_TestCase *sha256_tests[nTests] = {&test0, &test1};;
 
 
 bool sha256_doTest(SHA256_TestCase *test)
@@ -83,7 +83,7 @@ int main(void)
     int32_t i = 0;
     while (i < nTests) {
         SHA256_TestCase *const test = sha256_tests[i];
-        const bool test_result = sha256_doTest((SHA256_TestCase *)test);
+        const bool test_result = sha256_doTest(test);
 
         if (test_result) {
             printf("test #%d passed\n", i);

@@ -40,7 +40,7 @@ List *linked_list_create(void)
     list->head = NULL;
     list->tail = NULL;
 
-    return (List *)list;
+    return list;
 }
 
 
@@ -60,7 +60,7 @@ Node *linked_list_first_get(List *list)
         return NULL;
     }
 
-    return (Node *)list->head;
+    return list->head;
 }
 
 
@@ -70,7 +70,7 @@ Node *linked_list_last_get(List *list)
         return NULL;
     }
 
-    return (Node *)list->tail;
+    return list->tail;
 }
 
 
@@ -86,7 +86,7 @@ Node *linked_list_node_create(void)
     node->next = NULL;
     node->link = NULL;
 
-    return (Node *)node;
+    return node;
 }
 
 
@@ -96,7 +96,7 @@ Node *linked_list_node_next_get(Node *node)
         return NULL;
     }
 
-    return (Node *)node->next;
+    return node->next;
 }
 
 
@@ -106,7 +106,7 @@ Node *linked_list_node_prev_get(Node *node)
         return NULL;
     }
 
-    return (Node *)node->prev;
+    return node->prev;
 }
 
 
@@ -127,19 +127,19 @@ Node *linked_list_insert_node(List *list, Node *new_node)
     }
 
     if (list->head == NULL) {
-        list->head = (Node *)new_node;
+        list->head = new_node;
     }
 
     if (list->tail != NULL) {
         Node *const old_tail = list->tail;
-        old_tail->next = (Node *)new_node;
-        new_node->prev = (Node *)old_tail;
+        old_tail->next = new_node;
+        new_node->prev = old_tail;
     }
 
-    list->tail = (Node *)new_node;
+    list->tail = new_node;
     list->size = list->size + 1;
 
-    return (Node *)new_node;
+    return new_node;
 }
 
 Node *linked_list_insert(List *list, void *link)
@@ -156,12 +156,12 @@ Node *linked_list_insert(List *list, void *link)
 
     new_node->link = link;
 
-    Node *const node = linked_list_insert_node((List *)list, (Node *)new_node);
+    Node *const node = linked_list_insert_node(list, new_node);
 
     if (node == NULL) {
         free((void *)new_node);
     }
 
-    return (Node *)node;
+    return node;
 }
 
