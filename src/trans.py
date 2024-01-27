@@ -1390,7 +1390,7 @@ def do_stmt_assign(x):
     return hlir_stmt_assign(l, r, ti=x['ti'])
 
 
-def do_stmt_incdec(x, op='inc'):
+def do_stmt_incdec(x, op='add'):
     v = do_value(x['value'])
 
     if value_is_bad(v):
