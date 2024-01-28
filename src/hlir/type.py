@@ -191,7 +191,10 @@ def hlir_type_array(of, volume=None, ti=None):
     }
 
 
+enum_uid = 0
 def hlir_type_enum(ti=None):
+    global enum_uid
+    enum_uid = enum_uid + 1
     return {
         'isa': 'type',
         'kind': 'enum',
@@ -200,6 +203,7 @@ def hlir_type_enum(ti=None):
         'items': [],
         'width': 32,
         'size': 4,
+        'uid': enum_uid,
         'ops': ENUM_OPS,
         'att': [],
         'ti': ti
@@ -535,7 +539,7 @@ def type_eq_record(a, b, opt, nominative=False):
 
 
 def type_eq_enum(a, b, opt, nominative=False):
-    return True
+    return a['uid'] == b['uid']
 
 
 def type_eq_float(a, b, opt):
@@ -901,7 +905,9 @@ def type_print(t, print_aka=True):
         print("\n}")
 
     elif type_is_enum(t):
-        print("enum", end='')
+        if t['id'] != None:
+            print(t['id'], end='')
+        print("enum_%s" % str(t['uid']), end='')
 
     elif type_is_pointer(t):
         print("*", end=''); type_print(t['to'])

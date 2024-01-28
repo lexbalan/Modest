@@ -9,6 +9,12 @@
 
 
 typedef enum {
+	objA,
+	objB,
+	objC,
+} Object;
+
+typedef enum {
 	modeOff,
 	modeStandby,
 	modeOn,
@@ -32,7 +38,7 @@ int main(void)
     printf("enum test");
 
     Mode m;
-    m = modeOff;
+    m = modeOn;
 
     printMode(m);
     return 0;

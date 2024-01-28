@@ -98,6 +98,7 @@ declare void @perror(%ConstCharStr* %str)
 
 
 
+%Object = type i32
 %Mode = type i32
 
 define void @printMode(%Mode %m) {
@@ -129,7 +130,7 @@ endif_0:
 define i32 @main() {
     %1 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str4 to [0 x i8]*))
     %2 = alloca %Mode
-    store i32 0, %Mode* %2
+    store i32 2, %Mode* %2
     %3 = load %Mode, %Mode* %2
     call void (%Mode) @printMode(%Mode %3)
     ret i32 0

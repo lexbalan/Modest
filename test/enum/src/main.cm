@@ -4,6 +4,12 @@
 import "libc/stdio.hm"
 
 
+type Object enum {
+    objA
+    objB
+    objC
+}
+
 type Mode enum {
 	modeOff
 	modeStandby
@@ -26,7 +32,7 @@ func main () -> Int {
     printf("enum test")
 
     var m: Mode
-    m = modeOff
+    m = modeOn
 
     printMode(m)
     return 0
