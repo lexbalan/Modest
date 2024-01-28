@@ -232,10 +232,9 @@ class Parser:
             while not self.match("}"):
                 self.skip_tokens([' ', '\t', '\n'])
                 ti = self.ti()
-                f = self.identifier()
+                id = self.identifier()
                 self.need_sep(separators=['\n', ','])
-                id = hlir_id(f, ti=ti)
-                items.append(id)
+                items.append({'id': id, 'ti': ti})
             return {'isa': 'type', 'kind': 'enum', 'items': items, 'ti': ti}
 
         elif self.match("["):

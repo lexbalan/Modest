@@ -143,7 +143,6 @@ def print_type_enum(t):
         item = items[i]
         out("\n\t")
         print_id(item)
-        out(',')
         i = i + 1
     out("\n}")
 

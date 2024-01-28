@@ -513,6 +513,10 @@ def print_list_with(lst, method):
 
 
 
+def print_type_enum(t):
+    out(t['llvm_alias'])
+
+
 def print_type_record(t):
     out("{")
     fields = t['fields']
@@ -578,6 +582,7 @@ def print_type(t, print_aka=True):
     elif hlir_type.type_is_record(t): print_type_record(t)
     elif hlir_type.type_is_pointer(t): print_type_pointer(t)
     elif hlir_type.type_is_array(t): print_type_array(t)
+    elif hlir_type.type_is_enum(t): print_type_enum(t)
 
     elif hlir_type.type_is_integer(t) or hlir_type.type_is_float(t) or hlir_type.type_is_char(t):
         if 'llvm_alias' in t:
@@ -620,7 +625,7 @@ def do_eval_expr_un(v):
     if v['kind'] == 'ref':
         if is_global_context():
             if v['value']['kind'] == 'var':
-                if 'global' in  v['value']['att']:
+                if 'global' in v['value']['att']:
                     id = v['value']['id']['str']
                     return llvm_value_mem(id, v['type'], v)
 
