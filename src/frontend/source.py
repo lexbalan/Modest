@@ -1,4 +1,7 @@
 
+# used for ti
+TAB_STOP = 4
+
 
 class Source:
     def __init__(self, filename):
@@ -14,6 +17,8 @@ class Source:
         if x == '\n':
             self.pos = 0
             self.line = self.line + 1
+        elif x == '\t':
+            self.pos = self.pos + TAB_STOP
         else:
             self.pos = self.pos + 1
         return x
