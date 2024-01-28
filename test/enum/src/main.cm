@@ -3,14 +3,20 @@
 @attribute("c-no-print")
 import "libc/stdio.hm"
 
+
 type Mode enum {
 	modeOff
 	modeStandby
 	modeOn
 }
 
+
 func main () -> Int {
     printf("enum test")
+
+    var m: Mode
+    m = modeOff
+
     return 0
 }
 

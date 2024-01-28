@@ -263,7 +263,7 @@ def hlir_type_opaque(id, ti=None):
 
 def hlir_type_generic_int_for(num, unsigned=False, ti=None):
     required_width = nbits_for_num(num)
-    t = hlir_type_integer(None, width=required_width, ti=ti)
+    t = hlir_type_integer("Integer", width=required_width, ti=ti)
     t['generic'] = True
     return t
 
@@ -519,6 +519,10 @@ def type_eq_record(a, b, opt, nominative=False):
     return type_eq_fields(a['fields'], b['fields'], opt)
 
 
+def type_eq_enum(a, b, opt, nominative=False):
+    return True
+
+
 def type_eq_float(a, b, opt):
     return a['width'] == b['width']
 
@@ -560,6 +564,7 @@ def type_eq(a, b, opt=[]):
     elif k == 'record': return type_eq_record(a, b, opt)
     elif k == 'pointer': return type_eq_pointer(a, b, opt)
     elif k == 'array': return type_eq_array(a, b, opt)
+    elif k == 'enum': return type_eq_enum(a, b, opt)
     elif k == 'float': return type_eq_float(a, b, opt)
     elif k == 'char': return type_eq_char(a, b, opt)
     elif k == 'opaque': return type_eq_opaque(a, b, opt)

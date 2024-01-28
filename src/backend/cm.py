@@ -327,11 +327,11 @@ def print_value_cast(v, ctx):
 
 
 
-def print_value_literal_arr(v, ctx):
+def print_value_literal_array(v, ctx):
 
     # FIXIT: это вообще херня
     if hlir_type.type_is_array_of_char(v['type']):
-        print_value_literal_arr_str(v, ctx=[])
+        print_value_literal_array_str(v, ctx=[])
         return
 
     out("[")
@@ -422,7 +422,7 @@ def print_value_literal_record(v, ctx):
 
 
 # FIXIT: это вообще херня
-def print_value_literal_arr_str(x, ctx):
+def print_value_literal_array_str(x, ctx):
     out("\"")
     for c in x['imm']:
         cc = c
@@ -526,10 +526,11 @@ def print_value_literal(x, ctx):
     if hlir_type.type_is_integer(t): print_value_literal_int(x, ctx)
     elif hlir_type.type_is_float(t): print_value_literal_flt(x, ctx)
     elif hlir_type.type_is_record(t): print_value_literal_record(x, ctx)
-    elif hlir_type.type_is_array(t): print_value_literal_arr(x, ctx)
+    elif hlir_type.type_is_array(t): print_value_literal_array(x, ctx)
     elif hlir_type.type_is_pointer(t): print_value_literal_ptr(x, ctx)
     elif hlir_type.type_is_bool(t): print_value_literal_bool(x, ctx)
     elif hlir_type.type_is_char(t): print_value_literal_char(x, ctx)
+    elif hlir_type.type_is_enum(t): print_value_literal_int(x, ctx)
 
 
 

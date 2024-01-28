@@ -7,11 +7,17 @@
 
 
 
+
 typedef uint32_t Mode;
+
 
 int main(void)
 {
     printf("enum test");
+
+    Mode m;
+    m = 0;
+
     return 0;
 }
 

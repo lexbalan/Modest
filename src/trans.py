@@ -429,7 +429,7 @@ def do_value_shift(x):
             if hlir_type.type_is_generic(l['type']):
                 # расширяем generic int тип чтобы в нем можно было сдвигать
                 l['type']['width'] = nbits #!
-                res_t = hlir_type_integer(None, width=nbits, ti=ti)
+                res_t = hlir_type_integer("Integer", width=nbits, ti=ti)
                 res_t['generic'] = True
             else:
                 if nbits > l['type']['width']:
@@ -449,7 +449,7 @@ def do_value_shift(x):
 
             t = l['type']
             if hlir_type.type_is_generic(l['type']):
-                t = hlir_type_integer(None, width=nbits, ti=ti)
+                t = hlir_type_integer("Integer", width=nbits, ti=ti)
                 t['generic'] = True
 
             v = hlir_value_bin(op, l, r, t, ti=ti)
