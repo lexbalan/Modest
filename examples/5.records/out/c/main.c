@@ -25,7 +25,7 @@ typedef struct {
 } Line;
 
 
-Line line = {
+static Line line = {
     .a = {.x = 0, .y = 0},
     .b = {.x = 1.0, .y = 1.0}
 };

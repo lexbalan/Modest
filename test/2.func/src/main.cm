@@ -22,7 +22,7 @@ func main () -> Int {
 
 // define function f0
 func f0() -> Unit {
-    printf("f0 was called\n")
+	printf(1) //("f0 was called\n")
 }
 
 

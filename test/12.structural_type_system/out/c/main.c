@@ -63,9 +63,9 @@ void f3_ptr(struct {    int32_t x;
 }
 
 
-Type1 a = {.x = 1};
-Type2 b = {.x = 2};
-Type3 c = {.x = 3};
+static Type1 a = {.x = 1};
+static Type2 b = {.x = 2};
+static Type3 c = {.x = 3};
 
 
 

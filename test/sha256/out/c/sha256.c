@@ -65,7 +65,7 @@ uint32_t sig1(uint32_t x)
 
 
 //const initMagic = [  // not worked & let; FIXIT
-uint32_t initMagic[8] = {
+static uint32_t initMagic[8] = {
     1779033703U, 3144134277U, 1013904242, 2773480762U,
     1359893119U, 2600822924U, 528734635, 1541459225U
 };;
@@ -80,7 +80,7 @@ void sha256_contextInit(SHA256_Context *ctx)
 
 
 //const k = [  // not worked; FIXIT!
-uint32_t k[64] = {
+static uint32_t k[64] = {
     1116352408U, 1899447441U, 3049323471U, 3921009573U,
     961987163, 1508970993U, 2453635748U, 2870763221U,
     3624381080U, 310598401, 607225278, 1426881987U,

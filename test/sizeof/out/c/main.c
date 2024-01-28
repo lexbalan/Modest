@@ -47,12 +47,12 @@ typedef struct {
 
 
 //var s : Mixed2
-char c;
-int32_t i;
-double f;
-int16_t i2;
-Point p[3];
-bool g;
+static char c;
+static int32_t i;
+static double f;
+static int16_t i2;
+static Point p[3];
+static bool g;
 
 typedef struct {
     char c;
@@ -63,7 +63,7 @@ typedef struct {
     bool g;
 } X;
 
-X x;
+static X x;
 
 int main(void)
 {

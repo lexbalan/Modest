@@ -1658,7 +1658,7 @@ def def_var(x):
 
     var = hlir_value_var(f['id'], var_type, init=init_value)
     var['att'].extend(attributes_get())
-    var['att'].append('global')
+    #var['att'].append('global')
     extend_props(var)
 
     module['context'].value_add(x['field']['id']['str'], var)

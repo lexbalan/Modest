@@ -104,7 +104,7 @@ void kk(struct kk_x x)
 
 
 
-int32_t global_array[2] = {1, 2};;
+static int32_t global_array[2] = {1, 2};;
 
 
 typedef struct {

@@ -21,7 +21,7 @@
 #define flashlightStateBeacon  2
 
 
-uint8_t cnt;
+static uint8_t cnt;
 
 
 //
@@ -118,7 +118,7 @@ void beacon_exit(FSM *fsm)
 
 
 
-FSM fsm = {
+static FSM fsm = {
     .name = {'F', 'l', 'a', 's', 'h', '\0', '\0', '\0'},
     .state = 0,
     .nexstate = 0,
