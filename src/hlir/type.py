@@ -200,8 +200,6 @@ def hlir_type_enum(ti=None):
         'items': [],
         'width': 32,
         'size': 4,
-        'c_alias': 'uint32_t',
-        'llvm_alias': 'i32',
         'ops': ENUM_OPS,
         'att': [],
         'ti': ti

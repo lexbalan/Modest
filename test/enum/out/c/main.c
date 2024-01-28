@@ -8,17 +8,20 @@
 
 
 
-typedef uint32_t Mode;
-
+typedef enum {
+	modeOff,
+	modeStandby,
+	modeOn,
+} Mode;
 
 
 void printMode(Mode m)
 {
-    if (m == 0) {
+    if (m == modeOff) {
         printf("modeOff\n");
-    } else if (m == 1) {
+    } else if (m == modeStandby) {
         printf("modeStandby\n");
-    } else if (m == 2) {
+    } else if (m == modeOn) {
         printf("modeOn\n");
     }
 }
@@ -29,7 +32,7 @@ int main(void)
     printf("enum test");
 
     Mode m;
-    m = 0;
+    m = modeOff;
 
     printMode(m);
     return 0;

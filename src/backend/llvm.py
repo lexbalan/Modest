@@ -514,7 +514,7 @@ def print_list_with(lst, method):
 
 
 def print_type_enum(t):
-    out(t['llvm_alias'])
+    out('i%d' % t['width'])
 
 
 def print_type_record(t):

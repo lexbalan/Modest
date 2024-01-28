@@ -100,20 +100,20 @@ declare void @perror(%ConstCharStr* %str)
 
 %Mode = type i32
 
-define void @printMode(i32 %m) {
-    %1 = icmp eq i32 %m, 0
+define void @printMode(%Mode %m) {
+    %1 = icmp eq %Mode %m, 0
     br i1 %1 , label %then_0, label %else_0
 then_0:
     %2 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str1 to [0 x i8]*))
     br label %endif_0
 else_0:
-    %3 = icmp eq i32 %m, 1
+    %3 = icmp eq %Mode %m, 1
     br i1 %3 , label %then_1, label %else_1
 then_1:
     %4 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*))
     br label %endif_1
 else_1:
-    %5 = icmp eq i32 %m, 2
+    %5 = icmp eq %Mode %m, 2
     br i1 %5 , label %then_2, label %endif_2
 then_2:
     %6 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str3 to [0 x i8]*))
@@ -128,10 +128,10 @@ endif_0:
 
 define i32 @main() {
     %1 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str4 to [0 x i8]*))
-    %2 = alloca i32
-    store i32 0, i32* %2
-    %3 = load i32, i32* %2
-    call void (i32) @printMode(i32 %3)
+    %2 = alloca %Mode
+    store i32 0, %Mode* %2
+    %3 = load %Mode, %Mode* %2
+    call void (%Mode) @printMode(%Mode %3)
     ret i32 0
 }
 

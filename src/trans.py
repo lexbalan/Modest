@@ -321,16 +321,18 @@ def do_type_enum(t):
 
     i = 0
     for item in t['items']:
+        id = item['id']
         enum_type['items'].append({
             'isa': 'enum_item',
-            'id': item['id'],
+            'id': id,
             'number': i,
             'ti': item['ti']
         })
 
         # add enum item to global context
         item_val = hlir_value_int(i, typ=enum_type, ti=item['ti'])
-        module['context'].value_add(item['id']['str'], item_val)
+        item_val['id'] = id
+        module['context'].value_add(id['str'], item_val)
 
         i = i + 1
 

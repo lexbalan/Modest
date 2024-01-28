@@ -358,6 +358,9 @@ def print_type(t, need_space_after=False, print_array_asis=False, print_as_const
             return
         print_type_array(t, print_as_pointer=True, need_space_after=need_space_after)
 
+    elif hlir_type.type_is_enum(t):
+        print_type_enum(t)
+
     elif hlir_type.type_is_func(t):
         out("void")
         if need_space_after:
@@ -963,6 +966,9 @@ def print_value_literal_bool(x, ctx):
         out(BOOL_FALSE_LITERAL)
 
 
+def print_value_literal_enum(x, ctx):
+    print_id(x)
+
 
 def print_value_literal_int(x, ctx):
     num = x['imm']
@@ -1026,7 +1032,7 @@ def print_value_literal(x, ctx):
     elif hlir_type.type_is_bool(t): print_value_literal_bool(x, ctx)
     elif hlir_type.type_is_char(t): print_value_literal_char(x, ctx)
     elif hlir_type.type_is_pointer(t): print_value_literal_ptr(x, ctx)
-    elif hlir_type.type_is_enum(t): print_value_literal_int(x, ctx)
+    elif hlir_type.type_is_enum(t): print_value_literal_enum(x, ctx)
     else: error("print_value_literal not implemented", x['ti'])
 
 
