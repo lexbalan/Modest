@@ -10,12 +10,25 @@ type Mode enum {
 }
 
 
+
+func printMode(m: Mode) -> Unit {
+    if m == 0 {
+        printf("modeOff\n")
+    } else if m == 1 {
+        printf("modeStandby\n")
+    } else if m == 2 {
+        printf("modeOn\n")
+    }
+}
+
+
 func main() -> Int {
     printf("enum test")
 
     var m: Mode
     m := 0
 
+    printMode(m)
     return 0
 }
 

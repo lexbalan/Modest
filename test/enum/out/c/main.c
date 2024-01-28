@@ -11,6 +11,19 @@
 typedef uint32_t Mode;
 
 
+
+void printMode(Mode m)
+{
+    if (m == 0) {
+        printf("modeOff\n");
+    } else if (m == 1) {
+        printf("modeStandby\n");
+    } else if (m == 2) {
+        printf("modeOn\n");
+    }
+}
+
+
 int main(void)
 {
     printf("enum test");
@@ -18,6 +31,7 @@ int main(void)
     Mode m;
     m = 0;
 
+    printMode(m);
     return 0;
 }
 

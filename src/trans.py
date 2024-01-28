@@ -317,19 +317,7 @@ def do_type_record(t):
 
 
 def do_type_enum(t):
-    enum_type = {
-        'isa': 'type',
-        'kind': 'enum',
-        'id': None,
-        'generic': False,
-        'items': [],
-        'width': 32,
-        'size': 4,
-        'c_alias': 'uint32_t',
-        'llvm_alias': 'i32',
-        'att': [],
-        'ti': t['ti']
-    }
+    enum_type = hlir_type_enum(t['ti'])
 
     i = 0
     for item in t['items']:

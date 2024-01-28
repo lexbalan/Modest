@@ -91,16 +91,47 @@ declare void @perror(%ConstCharStr* %str)
 
 ; -- SOURCE: src/main.cm
 
-@str1 = private constant [10 x i8] [i8 101, i8 110, i8 117, i8 109, i8 32, i8 116, i8 101, i8 115, i8 116, i8 0]
+@str1 = private constant [9 x i8] [i8 109, i8 111, i8 100, i8 101, i8 79, i8 102, i8 102, i8 10, i8 0]
+@str2 = private constant [13 x i8] [i8 109, i8 111, i8 100, i8 101, i8 83, i8 116, i8 97, i8 110, i8 100, i8 98, i8 121, i8 10, i8 0]
+@str3 = private constant [8 x i8] [i8 109, i8 111, i8 100, i8 101, i8 79, i8 110, i8 10, i8 0]
+@str4 = private constant [10 x i8] [i8 101, i8 110, i8 117, i8 109, i8 32, i8 116, i8 101, i8 115, i8 116, i8 0]
 
 
 
 %Mode = type i32
 
+define void @printMode(i32 %m) {
+    %1 = icmp eq i32 %m, 0
+    br i1 %1 , label %then_0, label %else_0
+then_0:
+    %2 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str1 to [0 x i8]*))
+    br label %endif_0
+else_0:
+    %3 = icmp eq i32 %m, 1
+    br i1 %3 , label %then_1, label %else_1
+then_1:
+    %4 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*))
+    br label %endif_1
+else_1:
+    %5 = icmp eq i32 %m, 2
+    br i1 %5 , label %then_2, label %endif_2
+then_2:
+    %6 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str3 to [0 x i8]*))
+    br label %endif_2
+endif_2:
+    br label %endif_1
+endif_1:
+    br label %endif_0
+endif_0:
+    ret void
+}
+
 define i32 @main() {
-    %1 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*))
+    %1 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str4 to [0 x i8]*))
     %2 = alloca i32
     store i32 0, i32* %2
+    %3 = load i32, i32* %2
+    call void (i32) @printMode(i32 %3)
     ret i32 0
 }
 

@@ -35,7 +35,7 @@ CHAR_OPS = CONS_OP + EQ_OPS
 PTR_OPS = CONS_OP + EQ_OPS + ['deref']
 ARR_OPS = CONS_OP + EQ_OPS + ['add', 'index']
 REC_OPS = CONS_OP + EQ_OPS + ['access']
-
+ENUM_OPS = CONS_OP + EQ_OPS
 
 
 def hlir_type_bad(ti=None):
@@ -186,6 +186,23 @@ def hlir_type_array(of, volume=None, ti=None):
         'of': of,
         'volume': volume,
         'ops': ARR_OPS,
+        'att': [],
+        'ti': ti
+    }
+
+
+def hlir_type_enum(ti=None):
+    return {
+        'isa': 'type',
+        'kind': 'enum',
+        'id': None,
+        'generic': False,
+        'items': [],
+        'width': 32,
+        'size': 4,
+        'c_alias': 'uint32_t',
+        'llvm_alias': 'i32',
+        'ops': ENUM_OPS,
         'att': [],
         'ti': ti
     }
