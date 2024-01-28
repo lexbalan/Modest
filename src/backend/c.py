@@ -258,10 +258,10 @@ def print_type_enum(t):
     items = t['items']
     i = 0
     while i < len(items):
+        if i > 0: out(',')
         item = items[i]
         out("\n\t")
         print_id(item)
-        out(',')
         i = i + 1
     out("\n}")
 

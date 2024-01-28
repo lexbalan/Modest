@@ -193,16 +193,21 @@ def hlir_type_array(of, volume=None, ti=None):
 
 enum_uid = 0
 def hlir_type_enum(ti=None):
+    enum_width = 32
+    enum_size = nbytes_for_bits(enum_width)
+
     global enum_uid
     enum_uid = enum_uid + 1
+
     return {
         'isa': 'type',
         'kind': 'enum',
         'id': None,
         'generic': False,
         'items': [],
-        'width': 32,
-        'size': 4,
+        'width': enum_width,
+        'size': enum_size,
+        'align': enum_size,
         'uid': enum_uid,
         'ops': ENUM_OPS,
         'att': [],

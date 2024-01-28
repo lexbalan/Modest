@@ -11,13 +11,13 @@
 typedef enum {
 	objA,
 	objB,
-	objC,
+	objC
 } Object;
 
 typedef enum {
 	modeOff,
 	modeStandby,
-	modeOn,
+	modeOn
 } Mode;
 
 
