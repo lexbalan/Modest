@@ -415,7 +415,7 @@ def print_value_bin(v, ctx):
             need_wrap_right = precedence(right) < 10
     elif op in ['eq', 'ne']:
         if hlir_type.type_is_record(left['type']):
-            memcmp(left, right, op='eq')
+            memcmp(left, right, op=op)
             return
     elif op in ['eq_str', 'ne_str']:
         print_value_literal_bool(v, ctx)
