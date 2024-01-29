@@ -414,6 +414,10 @@ def print_value_bin(v, ctx):
             need_wrap_left = precedence(left) < 10
         if right['kind'] != 'logic_and':
             need_wrap_right = precedence(right) < 10
+    elif op in ['eq', 'ne']:
+        if hlir_type.type_is_record(left['type']):
+            memcmp(left, right, op='eq')
+            return
     elif op in ['eq_str', 'ne_str']:
         print_value_literal_bool(v, ctx)
         return
@@ -1204,7 +1208,8 @@ def print_stmt_defvar(x):
             print_field_array(init_value['type'], id_str, do_wrapped=False)
             out(";\n")
             indent()
-            save_array(id_str, init_value, from_var=True)
+
+            save_array(x['var'], init_value, from_var=True)
             return
 
 
@@ -1218,26 +1223,24 @@ def print_stmt_defvar(x):
 
 
 
-def save_array(id_str, v, from_var):
+def save_array(left, right, from_var):
     # если справа массив (а C не умеет присваивать массивы)
     #print("save_array")
 
-    if 'wrapped_array_value' in v['att']:
+    if 'wrapped_array_value' in right['att']:
         # -> *(struct ret_str_retval *)&c = ret_str();
         out("*(")
-        print_type(v['type'])
+        print_type(right['type'])
         out(" *)&")
-        need_wrap = precedence(v) < precedence({'kind': 'cast'})
-        out(id_str)
+        need_wrap = precedence(right) < precedence({'kind': 'cast'})
+        #out(id_str)
+        print_value(left)
         out(" = ")
-        print_value(v, just_print_id=False)
+        print_value(right, just_print_id=False)
         out(";")
 
     else:
-        # -> memcpy(&s0, &c, sizeof s0);
-        out("memcpy(&%s, &" % id_str)
-        print_value(v, just_print_id=from_var)
-        out(", sizeof %s);" % id_str)
+        memcopy(left, right)
 
 
 
@@ -1249,7 +1252,7 @@ def print_stmt_let(x):
         print_field_array(v['type'], id_str, do_wrapped=False)
         out(";\n")
         indent()
-        save_array(id_str, x['init_value'], from_var=False)
+        save_array(v, x['init_value'], from_var=False)
         return
 
     print_field2(x['id'], v['type'], print_as_const=True)
@@ -1264,16 +1267,34 @@ def memcopy(left, right):
     print_value(left)
     out(", &")
     print_value(right)
-    out(", %d" % left['type']['size'])
-    #out(", sizeof ")
-    #print_value(right)
+    out(", sizeof ")
+
+    if left['kind'] in ['index']:
+        out("(")
+        print_type(right['type'], print_array_asis=True)
+        out(")")
+    else:
+        print_value(left)
+
     out(");")
 
+
+def memcmp(left, right, op='eq'):
+    out('memcmp(&')
+    print_value(left)
+    out(', &')
+    print_value(right)
+    out(', sizeof(')
+    print_type(left['type'])
+    if op == 'eq':
+        out(')) == 0')
+    else:
+        out(')) != 0')
 
 
 def assign(left, right):
     # в си нельзя просто так присвоить массив
-    # приходится использовать memcpy()
+    # приходится ухищряться
     if hlir_type.type_is_defined_array(right['type']):
         if 'wrapped_array_value' in right['att']:
             # hard assignation
@@ -1282,13 +1303,6 @@ def assign(left, right):
             print_value(right)
             out(";")
         else:
-            """from value.value import value_is_immediate
-            if value_is_immediate(right):
-                print_value(left)
-                out(" = ")
-                print_value(right)
-                out(";")
-            else:"""
             memcopy(left, right)
 
         return
@@ -1327,19 +1341,6 @@ def print_stmt(x):
     elif k == 'comment-line': print_comment_line(x)
     elif k == 'comment-block': print_comment_block(x)
     else: out("<stmt %s>" % str(x))
-
-
-# not works
-def print_arrays(arrays):
-    for array in arrays:
-        nl_indent()
-        array['value'] = None
-        print_stmt_defvar(array)
-        nl_indent()
-        dst = array['id']['str']
-        src = array['id']['str']
-        len = hlir_type.type_get_size(array['type'])
-        out("memcpy(%s, _%s, %d);" % (dst, src, len))
 
 
 
