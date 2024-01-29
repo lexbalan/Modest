@@ -1,18 +1,19 @@
-
-#include <stdio.h>
-#include <stdint.h>
-#include <string.h>
-#include <stdbool.h>
-
 // examples/0.endianness/main.cm
 
+#include <string.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <stdbool.h>
 
-int main(void)
+
+
+
+int main()
 {
     uint16_t check = 0x0001;
-    uint8_t *p_check = (uint8_t *)&check;
+    const bool is_le = *(uint8_t *)&check == 1;
 
-    if (*p_check == 1) {
+    if (is_le) {
         printf("little");
     } else {
         printf("big");
