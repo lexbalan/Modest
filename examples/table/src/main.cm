@@ -46,7 +46,7 @@ var table: Table = {
 }
 
 
-func main () -> Int {
+func main() -> Int {
     printf("Hello World!\n")
 
     show_table(&table)

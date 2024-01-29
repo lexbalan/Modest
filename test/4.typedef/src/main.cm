@@ -5,7 +5,7 @@ import "libc/stdio.hm"
 
 type NewInt32 Int32
 
-func main () -> Int {
+func main() -> Int {
     printf("test typedef\n")
 
     var newInt32 : NewInt32

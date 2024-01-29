@@ -4,7 +4,7 @@
 import "libc/stdio.hm"
 
 
-func mtab (n : Int) -> Unit {
+func mtab(n : Int) -> Unit {
     //var m : Nat32
     //m := 1
     var m := 1    // by default integer var get system int type (-mint option)
@@ -16,7 +16,7 @@ func mtab (n : Int) -> Unit {
 }
 
 
-func main () -> Int {
+func main() -> Int {
     let n = 2 * 2
     printf("multiply table for %d\n", n to Int32)
     mtab(n)

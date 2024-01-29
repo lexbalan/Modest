@@ -9,7 +9,7 @@ const world = " World!"
 const hello_world = hello + world
 
 
-func main () -> Int {
+func main() -> Int {
     var ch08 : Char8
     var ch16 : Char16
     var ch32 : Char32

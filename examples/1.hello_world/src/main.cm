@@ -3,7 +3,7 @@
 @attribute("c-no-print")
 import "libc/stdio.hm"
 
-func main () -> Int {
+func main() -> Int {
     printf("Hello World!\n")
     return 0
 }

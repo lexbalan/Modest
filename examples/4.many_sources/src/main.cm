@@ -5,7 +5,7 @@ import "libc/stdio.hm"
 
 import "./lib.hm"
 
-func main () -> Int {
+func main() -> Int {
 	printf("hello from main\n")
 	lib_func()
 	return 0

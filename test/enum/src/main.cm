@@ -28,8 +28,8 @@ func printMode(m: Mode) {
 }
 
 
-func main () -> Int {
-    printf("enum test")
+func main() -> Int {
+    printf("enum test\n")
 
     var m: Mode
     m = modeOn

@@ -71,7 +71,7 @@ func sha256_doTest(test : *SHA256_TestCase) -> Bool {
 }
 
 
-func main () -> Int {
+func main() -> Int {
     printf("test SHA256\n")
 
     var i = 0

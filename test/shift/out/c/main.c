@@ -8,7 +8,6 @@
 
 
 
-
 int main()
 {
     printf("test shift\n");

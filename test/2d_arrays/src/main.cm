@@ -37,7 +37,7 @@ func inc_items(x: [2][20]Int32) -> [2][20]Int32 {
 }
 
 
-func main () -> Int {
+func main() -> Int {
     let rec_with_2d_array = yy()
     let array_2d = rec_with_2d_array.x
 

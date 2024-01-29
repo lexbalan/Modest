@@ -10,7 +10,7 @@ const world = " World!\n"
 const hello_world = hello + world
 
 
-func main () -> Int {
+func main() -> Int {
     printf("%s", hello_world to *Str8)
     return 0
 }

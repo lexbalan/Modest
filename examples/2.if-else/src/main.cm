@@ -4,7 +4,7 @@
 import "libc/stdio.hm"
 
 
-func main () -> Int {
+func main() -> Int {
     printf("if-else example\n")
 
     var a : Int32
@@ -25,4 +25,5 @@ func main () -> Int {
 
     return 0
 }
+
 

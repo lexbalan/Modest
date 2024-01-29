@@ -11,7 +11,7 @@ import "./linked_list.hm"
 
 
 // wrap around linked list for List Nat64
-func nat64_list_insert (list : *List, x : Nat64) -> Unit {
+func nat64_list_insert(list : *List, x : Nat64) -> Unit {
     // alloc memory for Nat64 value
     let p_nat64 = malloc(sizeof(Nat64)) to *Nat64
     *p_nat64 := x
@@ -43,7 +43,7 @@ func list_print_backward(list : *List) -> Unit {
 }
 
 
-func main () -> Int {
+func main() -> Int {
     printf("linked list example\n")
 
     let list = linked_list_create()

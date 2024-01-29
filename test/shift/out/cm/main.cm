@@ -3,7 +3,6 @@
 import "libc/stdio.h"
 
 
-
 func main() -> Int {
     printf("test shift\n")
 
