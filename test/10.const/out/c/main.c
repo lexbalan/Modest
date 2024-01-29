@@ -66,7 +66,7 @@ float lineLength(Line line)
 }
 
 
-int main(void)
+int main()
 {
     const float lines_0_len = lineLength((Line){
         .a = (Point){.x = 0.0, .y = 0.0},

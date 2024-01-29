@@ -9,16 +9,16 @@
 
 
 // declare function f0
-void f0(void);
+void f0();
 
 // define function f1
-void f1(void)
+void f1()
 {
     printf("f1 was called\n");
 }
 
 // define function main
-int main(void)
+int main()
 {
     printf("test func\n");
     f0();
@@ -27,7 +27,7 @@ int main(void)
 }
 
 // define function f0
-void f0(void)
+void f0()
 {
     printf("f0 was called\n");
 }

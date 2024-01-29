@@ -13,7 +13,7 @@
 
 
 
-int main(void)
+int main()
 {
     char ch08;
     uint16_t ch16;

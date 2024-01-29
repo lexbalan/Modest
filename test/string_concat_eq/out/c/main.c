@@ -17,7 +17,7 @@
 
 
 
-int main(void)
+int main()
 {
     printf("%s\n", "Hello World");
 

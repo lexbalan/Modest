@@ -65,7 +65,7 @@ typedef struct {
 
 static X x;
 
-int main(void)
+int main()
 {
     printf("test cast operation\n");
 

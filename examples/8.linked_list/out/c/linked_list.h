@@ -14,12 +14,12 @@ typedef struct List List;
 struct Node;
 typedef struct Node Node;
 
-List *linked_list_create(void);
+List *linked_list_create();
 uint32_t linked_list_size_get(List *list);
 Node *linked_list_first_get(List *list);
 Node *linked_list_last_get(List *list);
 
-Node *linked_list_node_create(void);
+Node *linked_list_node_create();
 Node *linked_list_node_prev_get(Node *node);
 Node *linked_list_node_next_get(Node *node);
 void *linked_list_node_link_get(Node *node);

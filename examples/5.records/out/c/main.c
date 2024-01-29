@@ -65,7 +65,7 @@ float lineLength(Line line)
 }
 
 
-void ptr_example(void)
+void ptr_example()
 {
     Point *const ptr_p = (Point *)malloc(sizeof(Point));
 
@@ -77,7 +77,7 @@ void ptr_example(void)
 }
 
 
-int main(void)
+int main()
 {
     // by value
     const float len = lineLength(line);

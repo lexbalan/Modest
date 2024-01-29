@@ -51,7 +51,7 @@ void print_bytes(uint8_t *buf, uint32_t len)
 }
 
 
-int main(void)
+int main()
 {
     printf("test xor encrypting\n");
 

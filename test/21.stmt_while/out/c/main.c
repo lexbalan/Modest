@@ -8,7 +8,7 @@
 
 
 
-int main(void)
+int main()
 {
     printf("test stmt_while\n");
 

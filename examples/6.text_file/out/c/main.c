@@ -11,7 +11,7 @@
 #define filename  "file.txt"
 
 
-void write_example(void)
+void write_example()
 {
     printf("run write_example\n");
 
@@ -28,7 +28,7 @@ void write_example(void)
 }
 
 
-void read_example(void)
+void read_example()
 {
     printf("run read_example\n");
 
@@ -52,7 +52,7 @@ void read_example(void)
 }
 
 
-int main(void)
+int main()
 {
     printf("text_file example\n");
     write_example();

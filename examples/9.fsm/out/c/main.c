@@ -151,7 +151,7 @@ static FSM fsm = {
 
 
 
-int main(void)
+int main()
 {
 
     while (true) {

@@ -14,7 +14,6 @@ import copy
 
 INDENT_SYMBOL = " " * 4
 
-FUNC_EMPTY_PARAMLIST = "(void)"
 
 NO_TYPEDEF_STRUCTS = False
 NO_TYPEDEF_OTHERS = False
@@ -480,15 +479,11 @@ def print_fields(fields, before, after, between):
 
 
 def print_paramlist(parms, arghack=False):
-    if len(parms) == 0:
-        out(FUNC_EMPTY_PARAMLIST)
-
-    else:
-        out("(")
-        print_fields(parms, before="", after="", between=", ")
-        if arghack:
-            out(", ...")
-        out(")")
+    out("(")
+    print_fields(parms, before="", after="", between=", ")
+    if arghack:
+        out(", ...")
+    out(")")
 
 
 

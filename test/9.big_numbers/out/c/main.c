@@ -25,7 +25,7 @@ uint64_t low_128(unsigned __int128 x)
 }
 
 
-int main(void)
+int main()
 {
 
     const __int128 big1 = (((__int128)0xFFFFFFFFFFFFFFFF << 64) | ((__int128)0xFFFFFFFFFFFFFFFF));

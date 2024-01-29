@@ -9,6 +9,6 @@
 
 
 
-void lib_func(void);
+void lib_func();
 
 #endif  /* LIB_H */

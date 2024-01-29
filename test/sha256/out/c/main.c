@@ -76,7 +76,7 @@ bool sha256_doTest(SHA256_TestCase *test)
 }
 
 
-int main(void)
+int main()
 {
     printf("test SHA256\n");
 

@@ -8,7 +8,7 @@
 
 
 
-int main(void)
+int main()
 {
     printf("if-else example\n");
 

@@ -23,7 +23,7 @@ struct swap_retval swap(struct swap_x x)
 
 
 struct ret_str_retval {char a[8];};
-struct ret_str_retval ret_str(void)
+struct ret_str_retval ret_str()
 {
     return *(struct ret_str_retval *)&(struct ret_str_retval){'h', 'e', 'l', 'l', 'o', 'm', 'a', '!'};
 }
@@ -38,7 +38,7 @@ struct ret_str_retval ret_str(void)
 }*/
 
 struct ret_str2_retval {char a[2 * 10];};
-struct ret_str2_retval ret_str2(void)
+struct ret_str2_retval ret_str2()
 {
     return *(struct ret_str2_retval *)&(struct ret_str2_retval){'a', 'b', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', 'c', 'd', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'};
 }
@@ -116,7 +116,7 @@ typedef struct {
     char x[10];
 } Pod;
 
-int main(void)
+int main()
 {
     /*var local_array: [2]Int32
 

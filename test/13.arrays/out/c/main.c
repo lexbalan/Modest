@@ -27,7 +27,7 @@ void f0(struct f0_x x)
 
 
 
-int main(void)
+int main()
 {
 
     f0(*(struct f0_x *)&(struct f0_x){'h', 'i', '!', '\0', '\0', '\0', '\0', '\0', '\0', '\0'});

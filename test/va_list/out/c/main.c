@@ -10,7 +10,7 @@
 
 
 
-int main(void)
+int main()
 {
     ff_printf("Hello World!\n");
 

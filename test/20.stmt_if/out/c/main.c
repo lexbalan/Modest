@@ -8,7 +8,7 @@
 
 
 
-int main(void)
+int main()
 {
     printf("stmt_if example\n");
 

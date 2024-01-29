@@ -9,7 +9,7 @@
 
 #include "./lib.h"
 
-int main(void)
+int main()
 {
     printf("hello from main\n");
     lib_func();

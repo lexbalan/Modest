@@ -52,7 +52,7 @@ void list_print_backward(List *list)
 }
 
 
-int main(void)
+int main()
 {
     printf("linked list example\n");
 

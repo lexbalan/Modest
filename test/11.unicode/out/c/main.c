@@ -26,7 +26,7 @@ static uint32_t arr_utf32[8] = U"Hello!\n";;
 #define string32Const  U"S-t-r-i-n-g-Ω 🐀🎉🦄"
 
 
-int main(void)
+int main()
 {
     // indexing of GenericString returns #i symbol code
     // the symbols have GenericInteger type

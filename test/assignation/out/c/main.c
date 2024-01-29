@@ -25,7 +25,7 @@ static int32_t glb_a0[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};;
 static int32_t glb_a1[10] = {64, 53, 42, 0, 0, 0, 0, 0, 0, 0};;
 
 
-int main(void)
+int main()
 {
     printf("test assignation\n");
 
