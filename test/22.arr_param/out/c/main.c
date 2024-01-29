@@ -136,6 +136,7 @@ int main(void)
     /*var c = */
     char g[8];
     *(struct ret_str_retval *)&g = ret_str();
+
     //let d = c[0]
 
     //let s0 = c

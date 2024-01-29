@@ -1198,6 +1198,20 @@ def print_stmt_return(x):
 
 
 
+
+def save_array(left, right):
+    # если справа массив (а C не умеет присваивать массивы)
+    if 'wrapped_array_value' in right['att']:
+        # *(struct ret_str_retval *)&c = ret_str();
+        print_cast_hard(right['type'], left)
+        out(" = ")
+        print_value(right, just_print_id=False)
+        out(";")
+
+    else:
+        memcopy(left, right)
+
+
 def print_stmt_defvar(x):
     init_value = x['var']['init']
 
@@ -1209,7 +1223,7 @@ def print_stmt_defvar(x):
             out(";\n")
             indent()
 
-            save_array(x['var'], init_value, from_var=True)
+            save_array(x['var'], init_value)
             return
 
 
@@ -1223,27 +1237,6 @@ def print_stmt_defvar(x):
 
 
 
-def save_array(left, right, from_var):
-    # если справа массив (а C не умеет присваивать массивы)
-    #print("save_array")
-
-    if 'wrapped_array_value' in right['att']:
-        # -> *(struct ret_str_retval *)&c = ret_str();
-        out("*(")
-        print_type(right['type'])
-        out(" *)&")
-        need_wrap = precedence(right) < precedence({'kind': 'cast'})
-        #out(id_str)
-        print_value(left)
-        out(" = ")
-        print_value(right, just_print_id=False)
-        out(";")
-
-    else:
-        memcopy(left, right)
-
-
-
 def print_stmt_let(x):
     v = x['value']
 
@@ -1252,7 +1245,7 @@ def print_stmt_let(x):
         print_field_array(v['type'], id_str, do_wrapped=False)
         out(";\n")
         indent()
-        save_array(v, x['init_value'], from_var=False)
+        save_array(v, x['init_value'])
         return
 
     print_field2(x['id'], v['type'], print_as_const=True)

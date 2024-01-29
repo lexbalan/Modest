@@ -118,6 +118,7 @@ func main() -> Int {
 
     /*var c = */
     let g = ret_str()
+
     //let d = c[0]
 
     //let s0 = c
