@@ -22,7 +22,7 @@ USE_BOOLEAN = True
 USE_STDBOOL = True
 BOOL_TRUE_LITERAL = 'true'
 BOOL_FALSE_LITERAL = 'false'
-
+DONT_PRINT_UNUSED = True
 
 USE_STATIC_VARIABLES = True
 
@@ -1216,6 +1216,10 @@ def save_array(left, right):
 def print_stmt_defvar(x):
     init_value = x['var']['init']
 
+    if DONT_PRINT_UNUSED:
+        if x['var']['usecnt'] == 0:
+            return
+
     if init_value != None:
         if hlir_type.type_is_defined_array(x['var']['type']):
             id_str = x['var']['id']['str']
@@ -1240,6 +1244,10 @@ def print_stmt_defvar(x):
 
 def print_stmt_let(x):
     v = x['value']
+
+    if DONT_PRINT_UNUSED:
+        if v['usecnt'] == 0:
+            return
 
     if hlir_type.type_is_defined_array(v['type']):
         id_str = x['id']['str']
