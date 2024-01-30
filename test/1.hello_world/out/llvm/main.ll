@@ -97,8 +97,16 @@ declare void @perror(%ConstCharStr* %str)
 
 
 
+@ba = global [32 x i8] zeroinitializer
+
+define void @f([0 x i32]* %x) {
+    ret void
+}
+
 define i32 @main() {
     %1 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str1 to [0 x i8]*), [0 x i8]* bitcast ([14 x i8]* @str2 to [0 x i8]*))
+    %2 = bitcast [32 x i8]* @ba to [0 x i32]*
+    call void ([0 x i32]*) @f([0 x i32]* %2)
     ret i32 0
 }
 

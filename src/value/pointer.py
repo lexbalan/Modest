@@ -41,12 +41,6 @@ def do_cons_pointer(v, t, ti):
 
 
 
-
-"""
-
-"""
-
-
 def value_cons_pointer(v, t, ti, method):
     vtype = v['type']
     to_type = t
@@ -60,7 +54,8 @@ def value_cons_pointer(v, t, ti, method):
 
         # cons *[]X from *[n]X +
         if type.type_is_pointer_to_defined_array(from_type) and type.type_is_pointer_to_undefined_array(t):
-            return do_cons_pointer(v, t, ti)
+            if type.type_eq(from_type['to']['of'], t['to']['of']):
+                return do_cons_pointer(v, t, ti)
 
         # cons *X from Nil
         if type.type_is_free_pointer(from_type):
