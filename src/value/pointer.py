@@ -84,7 +84,7 @@ def value_cons_pointer(v, t, ti, method):
 
     if method != 'explicit':
         info("cannot implicit cons Pointer value", ti)
-        return None
+        return v
 
     from main import features
     if not features.get('unsafe'):
