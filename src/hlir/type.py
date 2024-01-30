@@ -32,10 +32,11 @@ INT_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS + LOGICAL_OPS
 BOOL_OPS = CONS_OP + EQ_OPS + LOGICAL_OPS
 FLOAT_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS
 CHAR_OPS = CONS_OP + EQ_OPS
+ENUM_OPS = CONS_OP + EQ_OPS
+BYTE_OPS = CONS_OP + EQ_OPS
 PTR_OPS = CONS_OP + EQ_OPS + ['deref']
 ARR_OPS = CONS_OP + EQ_OPS + ['add', 'index']
 REC_OPS = CONS_OP + EQ_OPS + ['access']
-ENUM_OPS = CONS_OP + EQ_OPS
 
 
 def hlir_type_bad(ti=None):
@@ -282,9 +283,6 @@ def hlir_type_opaque(id, ti=None):
     }
 
 
-
-
-
 def hlir_type_generic_int_for(num, unsigned=False, ti=None):
     required_width = nbits_for_num(num)
     t = hlir_type_integer("Integer", width=required_width, ti=ti)
@@ -293,9 +291,9 @@ def hlir_type_generic_int_for(num, unsigned=False, ti=None):
 
 
 
-
 typeUnit = None
 typeBool = None
+typeByte = None
 typeChar8 = None
 typeChar16 = None
 typeChar32 = None
@@ -325,6 +323,7 @@ typeVA_List = None
 def type_init():
     global typeUnit
     global typeBool
+    global typeByte
     global typeChar8, typeChar16, typeChar32
     global typeInt8, typeInt16, typeInt32, typeInt64, typeInt128
     global typeNat8, typeNat16, typeNat32, typeNat64, typeNat128
@@ -337,6 +336,12 @@ def type_init():
 
     typeUnit = hlir_type_unit()
     typeBool = hlir_type_bool()
+
+    typeByte = hlir_type_integer("Byte", width=8, signed=False)
+    typeByte['kind'] = 'byte'
+    typeByte['ops'] = BYTE_OPS
+    typeByte['c_alias'] = 'uint8_t'
+    typeByte['llvm_alias'] = 'i8'
 
     #
     typeChar8 = hlir_type_char("Char8", width=8)
@@ -584,6 +589,7 @@ def type_eq(a, b, opt=[]):
     if k == 'int': return type_eq_integer(a, b, opt)
     elif k == 'unit': return True
     elif k == 'bool': return True
+    elif k == 'byte': return True
     elif k == 'func': return type_eq_func(a, b, opt)
     elif k == 'record': return type_eq_record(a, b, opt)
     elif k == 'pointer': return type_eq_pointer(a, b, opt)
@@ -619,6 +625,10 @@ def type_is_unit(t):
 
 def type_is_bool(t):
     return t['kind'] == 'bool'
+
+
+def type_is_byte(t):
+    return t['kind'] == 'byte'
 
 
 def type_is_char(t):

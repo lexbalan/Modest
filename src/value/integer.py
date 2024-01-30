@@ -92,6 +92,10 @@ def value_cons_integer(v, t, ti, method):
     elif type.type_is_bool(from_type):
         return do_cons_integer(v, t, method, ti)
 
+    # Byte -> Int
+    elif type.type_is_byte(from_type):
+        return do_cons_integer(v, t, method, ti)
+
     # Pointer -> Int
     elif type.type_is_pointer(from_type):
         return do_cons_integer(v, t, method, ti)

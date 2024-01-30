@@ -185,6 +185,8 @@ def init():
     root_context.type_add('Unit', hlir_type.typeUnit)
     root_context.type_add('Bool', hlir_type.typeBool)
 
+    root_context.type_add('Byte', hlir_type.typeByte)
+
     root_context.type_add('Char8', hlir_type.typeChar8)
     root_context.type_add('Char16', hlir_type.typeChar16)
     root_context.type_add('Char32', hlir_type.typeChar32)

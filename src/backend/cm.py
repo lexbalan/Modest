@@ -531,6 +531,7 @@ def print_value_literal(x, ctx):
     elif hlir_type.type_is_bool(t): print_value_literal_bool(x, ctx)
     elif hlir_type.type_is_char(t): print_value_literal_char(x, ctx)
     elif hlir_type.type_is_enum(t): print_value_literal_int(x, ctx)
+    elif hlir_type.type_is_byte(t): print_value_literal_int(x, ctx)
 
 
 

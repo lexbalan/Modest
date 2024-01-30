@@ -6,6 +6,7 @@ from hlir.value import hlir_value_bad, hlir_value_cast
 from .value import *
 
 from .unit import value_cons_unit
+from .byte import value_cons_byte
 from .char import value_cons_char
 from .integer import value_cons_integer
 from .float import value_cons_float
@@ -58,6 +59,7 @@ def value_cons(v, t, ti, method):
     elif type.type_is_record(t): constructor = value_cons_record
     elif type.type_is_float(t): constructor = value_cons_float
     elif type.type_is_char(t): constructor = value_cons_char
+    elif type.type_is_byte(t): constructor = value_cons_byte
     elif type.type_is_unit(t): constructor = value_cons_unit
 
     if constructor != None:

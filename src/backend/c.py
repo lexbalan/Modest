@@ -1032,6 +1032,7 @@ def print_value_literal(x, ctx):
     elif hlir_type.type_is_char(t): print_value_literal_char(x, ctx)
     elif hlir_type.type_is_pointer(t): print_value_literal_ptr(x, ctx)
     elif hlir_type.type_is_enum(t): print_value_literal_enum(x, ctx)
+    elif hlir_type.type_is_byte(t): print_value_literal_int(x, ctx)
     else: error("print_value_literal not implemented", x['ti'])
 
 
