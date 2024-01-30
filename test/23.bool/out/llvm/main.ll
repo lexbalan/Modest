@@ -107,7 +107,7 @@ define i32 @main() {
     %3 = alloca i1
     store i8 1, i8* %2
     %4 = load i8, i8* %2
-    %5 = trunc i8 %4 to i1
+    %5 = icmp ne i8 %4, 0
     store i1 %5, i1* %3
     %6 = load i8, i8* %2
     %7 = zext i8 %6 to i32
@@ -117,7 +117,7 @@ define i32 @main() {
     %11 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str3 to [0 x i8]*), i32 %10)
     store i8 2, i8* %2
     %12 = load i8, i8* %2
-    %13 = trunc i8 %12 to i1
+    %13 = icmp ne i8 %12, 0
     store i1 %13, i1* %3
     %14 = load i8, i8* %2
     %15 = zext i8 %14 to i32
@@ -127,7 +127,7 @@ define i32 @main() {
     %19 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str5 to [0 x i8]*), i32 %18)
     store i8 3, i8* %2
     %20 = load i8, i8* %2
-    %21 = trunc i8 %20 to i1
+    %21 = icmp ne i8 %20, 0
     store i1 %21, i1* %3
     %22 = load i8, i8* %2
     %23 = zext i8 %22 to i32

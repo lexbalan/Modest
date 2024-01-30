@@ -871,6 +871,14 @@ def do_eval_expr_cast(x):
 
     v = do_reval(value)
 
+
+    # AnyNonZeroValue to Bool  ==  true  (!)
+    # the same as in C
+    if hlir_type.type_is_bool(to_type):
+        z = llvm_value_num(v['type'], 0)
+        return llvm_eval_binary('icmp ne', v, z, x)
+
+
     if is_global_context():
         return v
 
