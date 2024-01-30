@@ -1,0 +1,30 @@
+// examples/1.hello_world/main.cm
+@attribute("c-no-print")
+import "libc/stdio.h"
+
+
+
+func main() -> Int {
+    printf("bool check\nm")
+
+    var x: Nat8
+    var b: Bool
+
+    x := 1
+    b := x to Bool
+    printf("x = %i\n", x to Nat32)
+    printf("x to Bool = %i\n", b to Nat32)
+
+    x := 2
+    b := x to Bool
+    printf("x = %i\n", x to Nat32)
+    printf("x to Bool = %i\n", b to Nat32)
+
+    x := 3
+    b := x to Bool
+    printf("x = %i\n", x to Nat32)
+    printf("x to Bool = %i\n", b to Nat32)
+
+    return 0
+}
+

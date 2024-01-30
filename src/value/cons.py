@@ -139,7 +139,7 @@ def value_cons_explicit(v, t, ti):
         return hlir_value_bad(ti)
 
     if type.type_eq(v['type'], t):
-        info("explicit cast to the same type", ti)
+        warning("explicit cast to the same type", ti)
         return v
 
     y = value_cons(v, t, ti, method='explicit')

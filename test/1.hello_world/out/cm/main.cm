@@ -11,6 +11,7 @@ const hello_world = hello + world
 
 func main() -> Int {
     printf("%s", hello_world to *[]Char8)
+
     return 0
 }
 

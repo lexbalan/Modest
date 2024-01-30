@@ -91,14 +91,50 @@ declare void @perror(%ConstCharStr* %str)
 
 ; -- SOURCE: src/main.cm
 
-@str1 = private constant [3 x i8] [i8 37, i8 115, i8 0]
-@str2 = private constant [14 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 32, i8 87, i8 111, i8 114, i8 108, i8 100, i8 33, i8 10, i8 0]
-
+@str1 = private constant [13 x i8] [i8 98, i8 111, i8 111, i8 108, i8 32, i8 99, i8 104, i8 101, i8 99, i8 107, i8 10, i8 109, i8 0]
+@str2 = private constant [8 x i8] [i8 120, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str3 = private constant [16 x i8] [i8 120, i8 32, i8 116, i8 111, i8 32, i8 66, i8 111, i8 111, i8 108, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str4 = private constant [8 x i8] [i8 120, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str5 = private constant [16 x i8] [i8 120, i8 32, i8 116, i8 111, i8 32, i8 66, i8 111, i8 111, i8 108, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str6 = private constant [8 x i8] [i8 120, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str7 = private constant [16 x i8] [i8 120, i8 32, i8 116, i8 111, i8 32, i8 66, i8 111, i8 111, i8 108, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 
 
 
 define i32 @main() {
-    %1 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str1 to [0 x i8]*), [0 x i8]* bitcast ([14 x i8]* @str2 to [0 x i8]*))
+    %1 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str1 to [0 x i8]*))
+    %2 = alloca i8
+    %3 = alloca i1
+    store i8 1, i8* %2
+    %4 = load i8, i8* %2
+    %5 = trunc i8 %4 to i1
+    store i1 %5, i1* %3
+    %6 = load i8, i8* %2
+    %7 = zext i8 %6 to i32
+    %8 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), i32 %7)
+    %9 = load i1, i1* %3
+    %10 = zext i1 %9 to i32
+    %11 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str3 to [0 x i8]*), i32 %10)
+    store i8 2, i8* %2
+    %12 = load i8, i8* %2
+    %13 = trunc i8 %12 to i1
+    store i1 %13, i1* %3
+    %14 = load i8, i8* %2
+    %15 = zext i8 %14 to i32
+    %16 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str4 to [0 x i8]*), i32 %15)
+    %17 = load i1, i1* %3
+    %18 = zext i1 %17 to i32
+    %19 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str5 to [0 x i8]*), i32 %18)
+    store i8 3, i8* %2
+    %20 = load i8, i8* %2
+    %21 = trunc i8 %20 to i1
+    store i1 %21, i1* %3
+    %22 = load i8, i8* %2
+    %23 = zext i8 %22 to i32
+    %24 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str6 to [0 x i8]*), i32 %23)
+    %25 = load i1, i1* %3
+    %26 = zext i1 %25 to i32
+    %27 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str7 to [0 x i8]*), i32 %26)
     ret i32 0
 }
 

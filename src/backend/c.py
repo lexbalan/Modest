@@ -648,6 +648,12 @@ def print_cast_hard(t, v, ctx=[]):
 
 
 def print_cast(t, v, ctx=[]):
+
+    if 'c_alias' in v['type'] and 'c_alias' in t:
+        if v['type']['c_alias'] == t['c_alias']:
+            print_value(v, ctx)
+            return
+
     out("(")
     print_type(t)
     out(")")
@@ -729,7 +735,6 @@ def print_value_cast(x, ctx):
                     print_cast(nat_same_sz, value, ctx)
                     out(")")
                     return
-
 
     print_cast(to_type, value, ctx)
 
