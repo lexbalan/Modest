@@ -1,6 +1,5 @@
 // ./out/c/utf.c
 
-
 #include <string.h>
 #include <stdio.h>
 #include <stdint.h>

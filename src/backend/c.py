@@ -1775,19 +1775,17 @@ def run(module, outname):
         if first['isa'] == 'comment':
             print_comment(first)
             module['text'] = module['text'][1:]
+            out("\n")
         else:
             out("// %s\n" % outname)
-
-        out("\n")
 
 
     guardname = ''
     if is_header:
         guardname = outname.split("/")[-1]
         guardname = guardname[:-2].upper() + '_H'
-        out("\n#ifndef %s" % guardname)
-        out("\n#define %s" % guardname)
-        newline()
+        out("\n#ifndef %s\n" % guardname)
+        out("#define %s\n" % guardname)
 
     if 'use_arghack' in module['options']:
         out("\n#include <stdarg.h>")
