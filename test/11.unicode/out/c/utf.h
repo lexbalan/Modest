@@ -1,10 +1,10 @@
 // ./out/c/utf.h
 
 
-#include <string.h>
 #ifndef UTF_H
 #define UTF_H
 
+#include <string.h>
 #include <stdint.h>
 #include <stdbool.h>
 

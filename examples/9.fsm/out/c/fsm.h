@@ -1,9 +1,9 @@
 // examples/fsm/fsm.cm
 
-#include <string.h>
 #ifndef FSM_H
 #define FSM_H
 
+#include <string.h>
 #include <stdint.h>
 #include <stdbool.h>
 

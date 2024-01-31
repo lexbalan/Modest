@@ -235,7 +235,7 @@ def print_type_record(t, tag=""):
     for field in t['fields']:
         if 'comments' in field:
             for comment in field['comments']:
-                newline(n=comment['nl'])
+                #newline(n=comment['nl'])
                 print_comment(comment)
 
         newline(n=field['nl'])
@@ -1786,6 +1786,14 @@ def run(module, outname):
         out("\n")
 
 
+    guardname = ''
+    if is_header:
+        guardname = outname.split("/")[-1]
+        guardname = guardname[:-2].upper() + '_H'
+        out("\n#ifndef %s" % guardname)
+        out("\n#define %s" % guardname)
+        newline()
+
     if 'use_arghack' in module['options']:
         out("\n#include <stdarg.h>")
 
@@ -1795,14 +1803,6 @@ def run(module, outname):
 
     # search for @c_include("...")
     cdirectives(module)
-
-    guardname = ''
-    if is_header:
-        guardname = outname.split("/")[-1]
-        guardname = guardname[:-2].upper() + '_H'
-        out("\n#ifndef %s" % guardname)
-        out("\n#define %s" % guardname)
-        newline()
 
     out("\n#include <stdint.h>")
 

@@ -1,10 +1,10 @@
 // ./out/c/minmax.h
 
 
-#include <string.h>
 #ifndef MINMAX_H
 #define MINMAX_H
 
+#include <string.h>
 #include <stdint.h>
 #include <stdbool.h>
 

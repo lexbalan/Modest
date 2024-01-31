@@ -1,9 +1,9 @@
 // examples/8.linked_list/linked_list.hm
 
-#include <string.h>
 #ifndef LINKED_LIST_H
 #define LINKED_LIST_H
 
+#include <string.h>
 #include <stdint.h>
 #include <stdbool.h>
 
