@@ -6,7 +6,6 @@
 #include <stdbool.h>
 
 
-
 #include "./lib.h"
 
 void lib_func()

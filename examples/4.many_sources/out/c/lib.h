@@ -8,7 +8,6 @@
 #include <stdbool.h>
 
 
-
 void lib_func();
 
 #endif  /* LIB_H */

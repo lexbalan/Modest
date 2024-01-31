@@ -15,7 +15,6 @@
 
 
 
-
 static int32_t globalArray[3] = {1, 2, 3};;
 
 

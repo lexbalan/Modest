@@ -6,7 +6,6 @@
 #include <stdbool.h>
 
 
-
 typedef struct {
     int32_t x;
 } Type1;

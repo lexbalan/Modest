@@ -7,7 +7,6 @@
 
 
 
-
 // declare function f0
 void f0();
 

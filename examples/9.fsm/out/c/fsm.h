@@ -9,7 +9,6 @@
 
 
 
-
 #define fsmNameLength  8
 #define fsmMaxStates  16
 

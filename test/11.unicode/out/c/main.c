@@ -7,7 +7,6 @@
 #include <stdbool.h>
 
 
-
 #define ratSymbolUTF32  0x0001F400
 
 

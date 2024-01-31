@@ -7,7 +7,6 @@
 
 
 
-
 // Simply record for records assignation test
 typedef struct {
     int32_t x;

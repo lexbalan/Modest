@@ -8,7 +8,6 @@
 #include <stdbool.h>
 
 
-
 void ff_printf(char *str, ...);
 
 #endif  /* PRINT_H */

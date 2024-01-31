@@ -8,7 +8,6 @@
 #include <stdbool.h>
 
 
-
 struct List;
 typedef struct List List;
 struct Node;

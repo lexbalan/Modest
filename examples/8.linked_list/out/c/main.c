@@ -11,7 +11,6 @@
 #include <stdbool.h>
 
 
-
 #include "./linked_list.h"
 
 

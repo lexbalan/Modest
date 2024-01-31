@@ -8,7 +8,6 @@
 
 
 
-
 // декодирует символ UTF-32 в последовательность UTF-8
 uint8_t utf32_to_utf8(uint32_t c, char *buf)
 {
