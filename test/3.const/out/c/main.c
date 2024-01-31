@@ -9,8 +9,6 @@
 
 #define genericIntConst  42
 #define int32Const  ((int32_t)genericIntConst)
-
-
 #define string8Const  "Hello!"
 #define string16Const  u"Hello!"
 #define string32Const  U"Hello!"
@@ -20,9 +18,6 @@ typedef struct {
     uint32_t x;
     uint32_t y;
 } Point;
-
-
-
 
 
 Point points[3] = {

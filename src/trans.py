@@ -295,10 +295,10 @@ def do_type_array(t):
     return hlir_type_array(of, volume=volume_expr, ti=t['ti'])
 
 
-def do_type_record(t):
+def do_type_record(x):
     fields = []
 
-    for field in t['fields']:
+    for field in x['fields']:
         f = do_field(field)
 
         # redefinition?
@@ -314,7 +314,7 @@ def do_type_record(t):
 
         fields.append(f)
 
-    return hlir_type_record(fields, ti=t['ti'])
+    return hlir_type_record(fields, ti=x['ti'])
 
 
 

@@ -16,6 +16,7 @@ def hlir_stmt_block(stmts, ti=None, end_nl=1):
         # количество пустых строк перед закрывающей скобкой блока
         'end_nl': end_nl,
         'att': [],
+        'nl': 0,
         'ti': ti
     }
 
@@ -27,6 +28,7 @@ def hlir_stmt_def_var(var_value, init_value=None, ti=None):
         'var': var_value,
         'init_value': init_value,
         'att': [],
+        'nl': 0,
         'ti': ti
     }
 
@@ -38,6 +40,7 @@ def hlir_stmt_let(id, value, ti=None):
         'id': id,
         'value': value,
         'att': [],
+        'nl': 0,
         'ti': ti
     }
 
@@ -48,6 +51,7 @@ def hlir_stmt_value(value, ti=None):
         'kind': 'value',
         'value': value,
         'att': [],
+        'nl': 0,
         'ti': ti
     }
 
@@ -59,6 +63,7 @@ def hlir_stmt_assign(left, right, ti=None):
         'left': left,
         'right': right,
         'att': [],
+        'nl': 0,
         'ti': ti
     }
 
@@ -71,6 +76,7 @@ def hlir_stmt_if(cond, then, els=None, ti=None):
         'then': then,
         'else': els,
         'att': [],
+        'nl': 0,
         'ti': ti
     }
 
@@ -82,16 +88,17 @@ def hlir_stmt_while(cond, stmt, ti=None):
         'cond': cond,
         'stmt': stmt,
         'att': [],
+        'nl': 0,
         'ti': ti
     }
 
 
 def hlir_stmt_again(ti=None):
-    return {'isa': 'stmt', 'kind': 'again', 'att': [], 'ti': ti}
+    return {'isa': 'stmt', 'kind': 'again', 'att': [], 'nl': 0, 'ti': ti}
 
 
 def hlir_stmt_break(ti=None):
-    return {'isa': 'stmt', 'kind': 'break', 'att': [], 'ti': ti}
+    return {'isa': 'stmt', 'kind': 'break', 'att': [], 'nl': 0, 'ti': ti}
 
 
 def hlir_stmt_return(value=None, ti=None):
@@ -100,6 +107,7 @@ def hlir_stmt_return(value=None, ti=None):
         'kind': 'return',
         'value': value,
         'att': [],
+        'nl': 0,
         'ti': ti
     }
 

@@ -134,8 +134,6 @@ int main()
     printf("b[1] = %i\n", b[1])*/
 
     /*var c = */
-    char g[8];
-    *(struct ret_str_retval *)&g = ret_str();
 
     //let d = c[0]
 

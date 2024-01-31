@@ -39,14 +39,10 @@ Line line0 = {
 };
 
 
-
-
 Line line1 = {
     .a = {.x = 10.0, .y = 15.0},
     .b = {.x = 20.0, .y = 25.0}
 };
-
-
 
 
 // Pythagorean theorem

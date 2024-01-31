@@ -73,13 +73,10 @@ def indent():
     ind(INDENT_SYMBOL)
 
 
-def indent_if(x):
-    if x: indent()
-
-
-def nl_indent():
-    newline()
-    indent()
+def nlindent(nl=1):
+    newline(nl)
+    if nl > 0:
+        indent()
 
 
 
@@ -247,7 +244,8 @@ def print_type_record(t, tag=""):
         out(";")
 
     indent_down()
-    nl_indent()
+    #indent()
+    nlindent(1)
     out("}")
 
 
@@ -1135,10 +1133,11 @@ def print_value(x, ctx=[], need_wrap=False, just_print_id=True):
 
 
 def print_stmt_if(x, need_else_branch):
+    nlindent(x['nl'])
     out("if ("); print_value(x['cond']); out(")")
 
     if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
-        nl_indent()
+        indent()
     else:
         out(" ")
 
@@ -1147,7 +1146,7 @@ def print_stmt_if(x, need_else_branch):
     e = x['else']
     if e != None:
         if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
-            nl_indent()
+            indent()
         else:
             out(" ")
 
@@ -1157,7 +1156,7 @@ def print_stmt_if(x, need_else_branch):
         else:
             out("else")
             if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
-                nl_indent()
+                indent()
             else:
                 out(" ")
             print_stmt_block(e)
@@ -1165,10 +1164,11 @@ def print_stmt_if(x, need_else_branch):
 
 
 def print_stmt_while(x):
+    nlindent(x['nl'])
     out("while ("); print_value(x['cond']); out(")")
 
     if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
-        nl_indent()
+        indent()
     else:
         out(" ")
 
@@ -1177,7 +1177,7 @@ def print_stmt_while(x):
 
 
 def print_stmt_return(x):
-
+    nlindent(x['nl'])
     global va_id
     if va_id != None:
         out("va_end(%s);" % va_id)
@@ -1220,6 +1220,8 @@ def print_stmt_defvar(x):
         if x['var']['usecnt'] == 0:
             return
 
+    nlindent(x['nl'])
+
     if init_value != None:
         if hlir_type.type_is_defined_array(x['var']['type']):
             id_str = x['var']['id']['str']
@@ -1248,6 +1250,8 @@ def print_stmt_let(x):
     if DONT_PRINT_UNUSED:
         if v['usecnt'] == 0:
             return
+
+    nlindent(x['nl'])
 
     if hlir_type.type_is_defined_array(v['type']):
         id_str = x['id']['str']
@@ -1317,29 +1321,33 @@ def assign(left, right):
 
 
 def print_stmt_assign(x):
+    nlindent(x['nl'])
     assign(x['left'], x['right'])
 
 
 def print_stmt_value(x):
+    nlindent(x['nl'])
     print_value(x['value']); out(";")
+
+
 
 
 def print_stmt(x):
     k = x['kind']
 
-    nl = x['nl']
-    newline(n=nl)
+    #nl = x['nl']
+    #newline(n=nl)
 
     if k == 'block': print_stmt_block(x)
-    elif k == 'value': indent_if(nl > 0); print_stmt_value(x)
-    elif k == 'assign': indent_if(nl > 0); print_stmt_assign(x)
-    elif k == 'return': indent_if(nl > 0); print_stmt_return(x)
-    elif k == 'if': indent_if(nl > 0); print_stmt_if(x, need_else_branch=False)
-    elif k == 'while': indent_if(nl > 0); print_stmt_while(x)
-    elif k == 'def_var': indent_if(nl > 0); print_stmt_defvar(x)
-    elif k == 'let': indent_if(nl > 0); print_stmt_let(x)
-    elif k == 'break': indent_if(nl > 0); out('break;')
-    elif k == 'again': indent_if(nl > 0); out('continue;')
+    elif k == 'value': print_stmt_value(x)
+    elif k == 'assign': print_stmt_assign(x)
+    elif k == 'return': print_stmt_return(x)
+    elif k == 'if': print_stmt_if(x, need_else_branch=False)
+    elif k == 'while': print_stmt_while(x)
+    elif k == 'def_var': print_stmt_defvar(x)
+    elif k == 'let': print_stmt_let(x)
+    elif k == 'break': nlindent(x['nl']); out('break;')
+    elif k == 'again': nlindent(x['nl']); out('continue;')
     elif k == 'comment-line': print_comment_line(x)
     elif k == 'comment-block': print_comment_block(x)
     else: out("<stmt %s>" % str(x))
@@ -1416,6 +1424,8 @@ def print_decl_func(x):
     func = x['value']
     ft = func['type']
 
+    newline(n=x['nl'])
+
     print_func_wrappers(func)
 
     if 'extern' in func['att']: out("extern ")
@@ -1436,6 +1446,8 @@ def print_def_func(x):
 
     global cfunc
     cfunc = func
+
+    newline(n=x['nl'])
 
     ft = func['type']
     arghack = 'arghack' in ft['att']
@@ -1497,6 +1509,7 @@ def print_def_func(x):
 
 def print_decl_type(x):
     id_str = x['type']['id']['str']
+    newline(n=x['nl'])
     out("struct %s;" % id_str)
     if not NO_TYPEDEF_STRUCTS:
         out("\ntypedef struct %s %s;" % (id_str, id_str))
@@ -1505,6 +1518,12 @@ def print_decl_type(x):
 def print_def_type(x):
     id_str = x['type']['id']['str']
     t = x['type']['aliasof']
+
+    if NO_TYPEDEF_OTHERS:
+        if not hlir_type.type_is_record(t):
+            return
+
+    newline(n=x['nl'])
 
     # !
     if x['afterdef']:
@@ -1520,9 +1539,6 @@ def print_def_type(x):
             out(";")
             return
 
-    if NO_TYPEDEF_OTHERS:
-        if not hlir_type.type_is_record(t):
-            return
 
     is_defined_array = hlir_type.type_is_defined_array(t)
     out("typedef ")
@@ -1607,6 +1623,7 @@ def print_field2(_id, typ, print_as_const=False):
 
 
 def print_def_var(x):
+    newline(n=x['nl'])
     var = x['value']
     if USE_STATIC_VARIABLES:
         if not 'global' in var['att']:
@@ -1656,6 +1673,8 @@ def print_def_const(x):
         return
 
 
+    newline(n=x['nl'])
+
     if hlir_type.type_is_array(const_value['type']) or hlir_type.type_is_record(const_value['type']):
         newline()
         print_field(const_value)
@@ -1702,11 +1721,12 @@ def print_comment(x):
 
 
 def print_comment_block(x):
-    indent()
+    nlindent(x['nl'])
     out("/*%s*/" % x['text'])
 
 
 def print_comment_line(x):
+    newline(x['nl'])
     lines = x['lines']
     i = 0
     n = len(lines)
@@ -1738,6 +1758,7 @@ def cdirectives(module):
 
 def print_directive(x):
     k = x['kind']
+    newline(n=x['nl'])
     if k == 'import': print_include(x)
     elif k == 'insert': print_insert(x)
 
@@ -1806,12 +1827,6 @@ def run(module, outname):
             continue
 
 
-        if 'nl' in x:
-            newline(n=x['nl'])
-        else:
-            newline()
-            print('not NL in ' + str(x))
-
         isa = x['isa']
         if isa == 'def_var': print_def_var(x)
         elif isa == 'def_const': print_def_const(x)
@@ -1830,16 +1845,3 @@ def run(module, outname):
     output_close()
 
 
-
-
-"""def assign_record_by_fields(x):
-    # в си нельзя просто так присвоить запись
-    #print("assign_record_by_fields " + x['right']['kind'])
-    out("// record assignation")
-    for f in x['right']['type']['fields']:
-        f_id_str = f['id']['str']
-        nl_indent()
-        print_value(x['left']);
-        out(".%s = " % f_id_str)
-        print_value(x['right']);
-        out(".%s;" % f_id_str)"""
