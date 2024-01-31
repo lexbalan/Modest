@@ -1698,16 +1698,12 @@ def print_def_const(x):
 
 
 
-
-
-
-
 def print_include(x):
     if x['local']:
-        impline = "#include \"%s\"" % x['str']
+        include_line = "#include \"%s\"" % x['str']
     else:
-        impline = "#include <%s>" % x['str']
-    out(impline)
+        include_line = "#include <%s>" % x['str']
+    out(include_line)
 
 
 def print_insert(x):
@@ -1773,7 +1769,6 @@ def run(module, outname):
 
     output_open(outname)
 
-
     # before all print first comment (header) if present
     if len(module['text']) > 0:
         first = module['text'][0]
@@ -1812,20 +1807,10 @@ def run(module, outname):
     if USE_STDBOOL:
         out("\n#include <stdbool.h>")
 
-    #newline()
 
     for x in module['text']:
-        if 'value' in x:
-            if 'c-no-print' in x['value']['att']:
-                continue
-
-        elif 'type' in x:
-            if 'c-no-print' in x['type']['att']:
-                continue
-
-        elif 'c-no-print' in x['att']:
+        if 'c-no-print' in x['att']:
             continue
-
 
         isa = x['isa']
         if isa == 'def_var': print_def_var(x)
@@ -1838,10 +1823,8 @@ def run(module, outname):
         elif isa == 'directive': print_directive(x)
 
     newline()
-    if is_header:
-        out("\n#endif  /* %s */" % guardname)
+    if is_header: out("\n#endif  /* %s */" % guardname)
     newline()
-
     output_close()
 
 
