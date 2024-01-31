@@ -753,8 +753,6 @@ def run(module, outname):
             out("\n" * x['nl'])
 
         isa = x['isa']
-
-
         if isa == 'def_var': print_def_var(x)
         elif isa == 'def_const': print_def_const(x)
         elif isa == 'def_func': print_def_func(x)

@@ -590,6 +590,7 @@ def value_concat_arrays(l, r, ti):
 
     bin_value = hlir_value_bin('add_str', l, r, genStrType, ti=ti)
     bin_value['imm'] = imm_str
+    bin_value['nl_end'] = r['nl_end']
     return bin_value
 
 
