@@ -135,6 +135,17 @@ define i32 @main() {
     %25 = load i1, i1* %3
     %26 = zext i1 %25 to i32
     %27 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str7 to [0 x i8]*), i32 %26)
+    %28 = alloca i8
+    %29 = alloca i8
+    %30 = load i8, i8* %28
+    %31 = load i8, i8* %29
+    %32 = or i8 %30, %31
+    %33 = load i8, i8* %28
+    %34 = load i8, i8* %29
+    %35 = and i8 %33, %34
+    %36 = load i8, i8* %28
+    %37 = load i8, i8* %29
+    %38 = xor i8 %36, %37
     ret i32 0
 }
 

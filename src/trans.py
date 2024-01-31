@@ -632,12 +632,13 @@ def do_value_bin(x):
         return hlir_value_bad(ti)
 
 
-
-
     if not op in l['type']['ops']:
         error("unsuitable type", x['left']['ti'])
+        return hlir_value_bad(x['ti'])
+
     if not op in r['type']['ops']:
         error("unsuitable type", x['right']['ti'])
+        return hlir_value_bad(x['ti'])
 
 
     if hlir_type.type_is_pointer(l['type']) or hlir_type.type_is_pointer(r['type']):
