@@ -8,7 +8,6 @@
 #include <stdbool.h>
 
 
-
 #define fsmNameLength  8
 #define fsmMaxStates  16
 

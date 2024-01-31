@@ -8,7 +8,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-
 void utf32_to_utf8(uint32_t x, char *buf);
 
 uint8_t utf16_to_utf32(uint16_t *c, uint32_t *result);

@@ -1812,7 +1812,7 @@ def run(module, outname):
     if USE_STDBOOL:
         out("\n#include <stdbool.h>")
 
-    newline()
+    #newline()
 
     for x in module['text']:
         if 'value' in x:

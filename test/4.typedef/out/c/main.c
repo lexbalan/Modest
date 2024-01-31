@@ -5,7 +5,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-
 typedef int32_t NewInt32;
 
 int main()

@@ -6,7 +6,6 @@
 #include <stdbool.h>
 
 
-
 int main()
 {
     printf("test stmt_while\n");

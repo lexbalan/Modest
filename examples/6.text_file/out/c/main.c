@@ -6,7 +6,6 @@
 #include <stdbool.h>
 
 
-
 #define filename  "file.txt"
 
 

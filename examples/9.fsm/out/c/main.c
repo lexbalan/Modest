@@ -6,7 +6,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-
 // This is flashlight final state machine example
 // (just for compiler test and language demonstration)
 

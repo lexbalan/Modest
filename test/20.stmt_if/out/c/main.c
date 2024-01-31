@@ -6,7 +6,6 @@
 #include <stdbool.h>
 
 
-
 int main()
 {
     printf("stmt_if example\n");

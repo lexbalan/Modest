@@ -6,7 +6,6 @@
 #include <stdbool.h>
 
 
-
 struct swap_x {int32_t a[2];};
 struct swap_retval {int32_t a[2];};
 struct swap_retval swap(struct swap_x x);

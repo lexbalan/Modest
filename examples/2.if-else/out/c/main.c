@@ -6,7 +6,6 @@
 #include <stdbool.h>
 
 
-
 int main()
 {
     printf("if-else example\n");

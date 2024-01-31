@@ -6,7 +6,6 @@
 #include <stdbool.h>
 
 
-
 void mtab(int n)
 {
     //var m : Nat32

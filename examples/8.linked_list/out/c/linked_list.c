@@ -9,7 +9,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-
 #include "./linked_list.h"
 
 

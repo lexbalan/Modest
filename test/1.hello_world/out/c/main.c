@@ -6,7 +6,6 @@
 #include <stdbool.h>
 
 
-
 int main()
 {
     printf("%s", "Hello World!\n");
