@@ -1788,9 +1788,6 @@ def run(module, outname):
 
     out("\n#include <stdint.h>\n")
     out("#include <stdbool.h>\n")
-    #if 'use_string_h' in module['options']:
-    #if 'use_memcpy' in module['options']:
-    # also used for NULL (!)
     out("#include <string.h>\n")
 
     if 'use_arghack' in module['options']:
