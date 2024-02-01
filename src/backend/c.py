@@ -1787,23 +1787,21 @@ def run(module, outname):
         out("\n#ifndef %s\n" % guardname)
         out("#define %s\n" % guardname)
 
-    if 'use_arghack' in module['options']:
-        out("\n#include <stdarg.h>")
+    out("\n#include <stdint.h>\n")
 
+    if 'use_arghack' in module['options']:
+        out("#include <stdarg.h>\n")
+
+    #if 'use_string_h' in module['options']:
     #if 'use_memcpy' in module['options']:
     # also used for NULL (!)
-    out("\n#include <string.h>")
+    out("#include <string.h>\n")
+
+    if USE_STDBOOL:
+        out("#include <stdbool.h>\n")
 
     # search for @c_include("...")
     cdirectives(module)
-
-    out("\n#include <stdint.h>")
-
-    if 'use_string_h' in module['options']:
-        out("\n#include <string.h>")
-
-    if USE_STDBOOL:
-        out("\n#include <stdbool.h>")
 
 
     for x in module['text']:
