@@ -1,14 +1,15 @@
 // examples/8.linked_list/main.cm
 
+#include <stdint.h>
 #include <string.h>
+#include <stdbool.h>
+
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <time.h>
 #include <stdio.h>
-#include <stdint.h>
-#include <stdbool.h>
 
 #include "./linked_list.h"
 

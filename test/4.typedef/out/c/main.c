@@ -1,9 +1,10 @@
 // test/4.typedef/main.cm
 
-#include <string.h>
-#include <stdio.h>
 #include <stdint.h>
+#include <string.h>
 #include <stdbool.h>
+
+#include <stdio.h>
 
 typedef int32_t NewInt32;
 

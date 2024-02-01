@@ -1,9 +1,10 @@
 // examples/2.if-else/main.cm
 
-#include <string.h>
-#include <stdio.h>
 #include <stdint.h>
+#include <string.h>
 #include <stdbool.h>
+
+#include <stdio.h>
 
 
 int main()

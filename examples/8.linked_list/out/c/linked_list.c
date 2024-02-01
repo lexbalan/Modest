@@ -1,13 +1,14 @@
 // examples/8.linked_list/linked_list.cm
 
+#include <stdint.h>
 #include <string.h>
+#include <stdbool.h>
+
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <time.h>
-#include <stdint.h>
-#include <stdbool.h>
 
 #include "./linked_list.h"
 
@@ -139,6 +140,7 @@ Node *linked_list_insert_node(List *list, Node *new_node)
 
     return new_node;
 }
+
 
 Node *linked_list_insert(List *list, void *link)
 {

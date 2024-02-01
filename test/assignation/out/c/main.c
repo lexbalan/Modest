@@ -1,9 +1,10 @@
 // examples/assignation/main.cm
 
-#include <string.h>
-#include <stdio.h>
 #include <stdint.h>
+#include <string.h>
 #include <stdbool.h>
+
+#include <stdio.h>
 
 
 // Simply record for records assignation test

@@ -1,9 +1,10 @@
 // test/3.const/main.cm
 
-#include <string.h>
-#include <stdio.h>
 #include <stdint.h>
+#include <string.h>
 #include <stdbool.h>
+
+#include <stdio.h>
 
 #define genericIntConst  42
 #define int32Const  ((int32_t)genericIntConst)

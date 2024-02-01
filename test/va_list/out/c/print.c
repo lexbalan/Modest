@@ -1,10 +1,11 @@
 // lib/fastfood/print.cm
 
+#include <stdint.h>
 #include <stdarg.h>
 #include <string.h>
-#include <stdio.h>
-#include <stdint.h>
 #include <stdbool.h>
+
+#include <stdio.h>
 
 //@attribute("c-no-print")
 //import "./main.hm"

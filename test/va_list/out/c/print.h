@@ -3,9 +3,10 @@
 #ifndef PRINT_H
 #define PRINT_H
 
-#include <string.h>
 #include <stdint.h>
+#include <string.h>
 #include <stdbool.h>
+
 
 void ff_printf(char *str, ...);
 

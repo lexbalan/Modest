@@ -3,9 +3,10 @@
 #ifndef FF_H
 #define FF_H
 
-#include <string.h>
 #include <stdint.h>
+#include <string.h>
 #include <stdbool.h>
+
 
 void ff_memzero(void *mem, uint64_t len);
 void ff_memcpy(void *dst, void *src, uint64_t len);

@@ -3,9 +3,10 @@
 #ifndef SHA256_H
 #define SHA256_H
 
-#include <string.h>
 #include <stdint.h>
+#include <string.h>
 #include <stdbool.h>
+
 
 #define sha256HashSize  32
 

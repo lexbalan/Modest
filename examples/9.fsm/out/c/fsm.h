@@ -3,9 +3,10 @@
 #ifndef FSM_H
 #define FSM_H
 
-#include <string.h>
 #include <stdint.h>
+#include <string.h>
 #include <stdbool.h>
+
 
 
 #define fsmNameLength  8

@@ -3,9 +3,10 @@
 #ifndef LIB_H
 #define LIB_H
 
-#include <string.h>
 #include <stdint.h>
+#include <string.h>
 #include <stdbool.h>
+
 
 void lib_func();
 

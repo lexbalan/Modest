@@ -1,6 +1,9 @@
 // examples/5.records/main.cm
 
+#include <stdint.h>
 #include <string.h>
+#include <stdbool.h>
+
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,8 +11,6 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <time.h>
-#include <stdint.h>
-#include <stdbool.h>
 
 
 typedef struct {

@@ -1,10 +1,11 @@
 // test/11.unicode/main.cm
 
+#include <stdint.h>
 #include <string.h>
+#include <stdbool.h>
+
 #include <stdio.h>
 #include "./utf.h"
-#include <stdint.h>
-#include <stdbool.h>
 
 #define ratSymbolUTF32  0x0001F400
 

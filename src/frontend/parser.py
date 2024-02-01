@@ -1225,6 +1225,7 @@ class Parser:
             elif self.token_class_is('comment-line'):
                 x = self.parse_comment_line()
             elif self.token_class_is('directive'):
+                #spaceline_cnt = 0
                 x = self.parse_dir()
             elif self.match('import'):
                 error("import directive must be placed before definitions", self.ti())
@@ -1247,21 +1248,22 @@ class Parser:
 
             if isinstance(x, list):
                 x[0]['nl'] = spaceline_cnt
-                spaceline_cnt = 0
                 output.extend(x)
+                spaceline_cnt = 0
             else:
 
-                # CM директива не печатается в C
-                if x['isa'] != 'ast_directive':
-                    x['nl'] = spaceline_cnt
-                    spaceline_cnt = 0
-                else:
-                    x['nl'] = 1
-                    spaceline_cnt = spaceline_cnt - 1
+                x['nl'] = spaceline_cnt
 
-                #x['nl'] = spaceline_cnt
-                #spaceline_cnt = 0
+
+                # тк CM директива не печатается в C
+                if x['isa'] == 'ast_directive':
+                    spaceline_cnt = spaceline_cnt - 1
+                else:
+                    spaceline_cnt = 0
+
                 output.append(x)
+
+            #spaceline_cnt = 0
 
 
         return output

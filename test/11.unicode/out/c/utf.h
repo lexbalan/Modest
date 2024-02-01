@@ -3,9 +3,10 @@
 #ifndef UTF_H
 #define UTF_H
 
-#include <string.h>
 #include <stdint.h>
+#include <string.h>
 #include <stdbool.h>
+
 
 void utf32_to_utf8(uint32_t x, char *buf);
 

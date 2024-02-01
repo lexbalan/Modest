@@ -1,9 +1,10 @@
 // examples/1.hello_world/main.cm
 
-#include <string.h>
-#include <stdio.h>
 #include <stdint.h>
-#include <stdbool.h>//+ " " + party_corn
+#include <string.h>
+#include <stdbool.h>
+
+#include <stdio.h>//+ " " + party_corn
 
 
 int main()

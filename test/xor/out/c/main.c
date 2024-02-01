@@ -1,14 +1,15 @@
 // test/sha256/main.cm
 
+#include <stdint.h>
 #include <string.h>
+#include <stdbool.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <time.h>
-#include <stdint.h>
-#include <stdbool.h>
 
 
 void xor_encrypter(uint8_t *buf, uint32_t buflen, uint8_t *key, uint32_t keylen)

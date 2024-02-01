@@ -1,9 +1,10 @@
 // examples/22.arr_param/main.cm
 
-#include <string.h>
-#include <stdio.h>
 #include <stdint.h>
+#include <string.h>
 #include <stdbool.h>
+
+#include <stdio.h>
 
 
 struct swap_x {int32_t a[2];};

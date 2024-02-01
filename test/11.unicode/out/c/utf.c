@@ -1,9 +1,10 @@
 // ./out/c/utf.c
 
-#include <string.h>
-#include <stdio.h>
 #include <stdint.h>
+#include <string.h>
 #include <stdbool.h>
+
+#include <stdio.h>
 
 
 // декодирует символ UTF-32 в последовательность UTF-8

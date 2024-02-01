@@ -3,9 +3,10 @@
 #ifndef LINKED_LIST_H
 #define LINKED_LIST_H
 
-#include <string.h>
 #include <stdint.h>
+#include <string.h>
 #include <stdbool.h>
+
 
 struct List;
 typedef struct List List;

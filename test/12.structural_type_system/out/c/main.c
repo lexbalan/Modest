@@ -1,9 +1,10 @@
 // test/12.structural_type_system/main.cm
 
-#include <string.h>
-#include <stdio.h>
 #include <stdint.h>
+#include <string.h>
 #include <stdbool.h>
+
+#include <stdio.h>
 
 typedef struct {
     int32_t x;

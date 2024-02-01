@@ -1,10 +1,11 @@
 // examples/fsm/main.cm
 
+#include <stdint.h>
 #include <string.h>
+#include <stdbool.h>
+
 #include <stdio.h>
 #include "./ff.h"
-#include <stdint.h>
-#include <stdbool.h>
 
 // This is flashlight final state machine example
 // (just for compiler test and language demonstration)
