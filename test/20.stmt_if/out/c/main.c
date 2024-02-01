@@ -1,8 +1,8 @@
 // test/stmt_if/main.cm
 
 #include <stdint.h>
-#include <string.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include <stdio.h>
 

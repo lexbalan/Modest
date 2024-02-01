@@ -1,9 +1,9 @@
 // lib/fastfood/print.cm
 
 #include <stdint.h>
-#include <stdarg.h>
-#include <string.h>
 #include <stdbool.h>
+#include <string.h>
+#include <stdarg.h>
 
 #include <stdio.h>
 

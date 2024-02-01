@@ -1,8 +1,8 @@
 // examples/8.linked_list/linked_list.cm
 
 #include <stdint.h>
-#include <string.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include <stdlib.h>
 #include <string.h>

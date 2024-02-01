@@ -1,8 +1,8 @@
 // test/sha256/main.cm
 
 #include <stdint.h>
-#include <string.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include <stdio.h>
 #include <stdlib.h>

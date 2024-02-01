@@ -1,8 +1,8 @@
 // test/11.unicode/main.cm
 
 #include <stdint.h>
-#include <string.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include <stdio.h>
 #include "./utf.h"

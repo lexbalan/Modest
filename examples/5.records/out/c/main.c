@@ -1,8 +1,8 @@
 // examples/5.records/main.cm
 
 #include <stdint.h>
-#include <string.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include <math.h>
 #include <stdio.h>

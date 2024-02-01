@@ -1,8 +1,8 @@
 // examples/4.many_sources/main.cm
 
 #include <stdint.h>
-#include <string.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include <stdio.h>
 

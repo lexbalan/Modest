@@ -4,8 +4,8 @@
 #define LIB_H
 
 #include <stdint.h>
-#include <string.h>
 #include <stdbool.h>
+#include <string.h>
 
 
 void lib_func();

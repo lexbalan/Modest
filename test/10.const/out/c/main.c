@@ -1,8 +1,8 @@
 // test/10.const/main.cm
 
 #include <stdint.h>
-#include <string.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include <math.h>
 #include <stdio.h>

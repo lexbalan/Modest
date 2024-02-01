@@ -19,7 +19,6 @@ NO_TYPEDEF_STRUCTS = False
 NO_TYPEDEF_OTHERS = False
 
 USE_BOOLEAN = True
-USE_STDBOOL = True
 BOOL_TRUE_LITERAL = 'true'
 BOOL_FALSE_LITERAL = 'false'
 DONT_PRINT_UNUSED = True
@@ -1788,17 +1787,14 @@ def run(module, outname):
         out("#define %s\n" % guardname)
 
     out("\n#include <stdint.h>\n")
-
-    if 'use_arghack' in module['options']:
-        out("#include <stdarg.h>\n")
-
+    out("#include <stdbool.h>\n")
     #if 'use_string_h' in module['options']:
     #if 'use_memcpy' in module['options']:
     # also used for NULL (!)
     out("#include <string.h>\n")
 
-    if USE_STDBOOL:
-        out("#include <stdbool.h>\n")
+    if 'use_arghack' in module['options']:
+        out("#include <stdarg.h>\n")
 
     # search for @c_include("...")
     cdirectives(module)
