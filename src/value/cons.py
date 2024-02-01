@@ -43,6 +43,10 @@ def value_cons_default(x, ti):
 
 
 
+def value_cons_bad(v, t, ti, method):
+    return value_bad(ti)
+
+
 # возвращает None если не может привести (!)
 # не принтует ошибку (но может info)
 # это НЕ нужно для удобства приведения полей структур
@@ -63,6 +67,7 @@ def value_cons(v, t, ti, method):
     elif type.type_is_byte(t): constructor = value_cons_byte
     elif type.type_is_bool(t): constructor = value_cons_bool
     elif type.type_is_unit(t): constructor = value_cons_unit
+    elif type.type_is_bad(t): constructor = value_cons_bad
 
     if constructor != None:
         return constructor(v, t, ti, method)
