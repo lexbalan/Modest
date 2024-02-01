@@ -1231,7 +1231,7 @@ def do_stmt_return(x):
     global cfunc
 
     f_ret_type = cfunc['type']['to']
-    no_ret_func = hlir_type.type_eq(f_ret_type, hlir_type.typeUnit)
+    no_ret_func = hlir_type.type_is_unit(f_ret_type)
 
     if x['value'] == None:
         if not no_ret_func:
