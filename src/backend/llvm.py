@@ -1293,7 +1293,6 @@ def print_func_paramlist(func, only_types=False, with_attributes=True):
 
 
 def print_func_signature(func):
-    #arghack = func['type']['extra_args']
     sret = 'sret' in func['att']
 
     ftype = func['type']
@@ -1519,7 +1518,7 @@ def run(module, outname):
     out('\ntarget triple = "%s"\n\n' % LLVM_TARGET_TRIPLE)
 
     if module['options'] != []:
-        if 'use_arghack' in module['options']:
+        if 'use_extra_args' in module['options']:
             lo("declare void @llvm.va_start(i8*)")
             lo("declare void @llvm.va_copy(i8*, i8*)")
             lo("declare void @llvm.va_end(i8*)")

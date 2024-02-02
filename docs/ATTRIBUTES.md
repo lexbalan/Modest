@@ -19,8 +19,6 @@ func main () {
 
 **c-no-print** - entity must not be printed in C output
 
-**arghack** - function allows extra arguments
-
 **dispensable** - means that result of function call can be ignored
 
 **extern** - add C "extern"

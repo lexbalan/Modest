@@ -40,7 +40,7 @@ root_context = None
 module = None
 
 
-# добавляет опцию в модуль ('use_arghack', 'use_memcpy')
+# добавляет опцию в модуль ('use_extra_args', 'use_memcpy')
 def module_option(option):
     global module
     if not option in module['options']:
@@ -842,7 +842,7 @@ def do_value_call(x):
 
 
     j = 0
-    # arghack rest args
+    # extra_args rest args
     while i < nargs:
         a = x['args'][i]
         arg = do_rvalue(a)
@@ -1698,12 +1698,12 @@ def def_func(x):
     func_type = do_type_func(x['type'], func_id=func_id['str'])
 
     params = func_type['params']
-    arghack = False
+    extra_args = False
     va_id = ""
     if len(params) > 1:
         last_param = params[-1]
-        arghack = hlir_type.type_is_va_list(last_param['type'])
-        if arghack:
+        extra_args = hlir_type.type_is_va_list(last_param['type'])
+        if extra_args:
             va_id = last_param['id']
             params.pop()
 
@@ -1766,11 +1766,11 @@ def def_func(x):
         i = i + 1
 
 
-    if arghack:
+    if extra_args:
         cfunc['va_id'] = va_id
         func_type['extra_args'] = True
         add_local_var(va_id, last_param['type'], None, va_id['ti'])
-        module_option('use_arghack')
+        module_option('use_extra_args')
 
 
     fn['stmt'] = do_stmt_block(x['stmt'])

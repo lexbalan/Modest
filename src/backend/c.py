@@ -475,10 +475,10 @@ def print_fields(fields, before, after, between):
         if i < n: out(between)
 
 
-def print_paramlist(parms, arghack=False):
+def print_paramlist(parms, extra_args=False):
     out("(")
     print_fields(parms, before="", after="", between=", ")
-    if arghack:
+    if extra_args:
         out(", ...")
     out(")")
 
@@ -1375,7 +1375,7 @@ def print_stmt_block(s):
     out("}")
 
 
-def print_func_signature(id, typ, arghack=False):
+def print_func_signature(id, typ, extra_args=False):
     to = typ['to']
     t = to
 
@@ -1391,7 +1391,7 @@ def print_func_signature(id, typ, arghack=False):
     print_type(t)
     out(" " + "*" * ptr_level)
     out("%s" % id)
-    print_paramlist(typ['params'], arghack)
+    print_paramlist(typ['params'], extra_args)
 
 
 
@@ -1431,7 +1431,7 @@ def print_decl_func(x):
     if 'inline' in func['att']: out("inline ")
     if 'c_prefix' in func: out("%s " % func['c_prefix'])
 
-    print_func_signature(func['id']['str'], ft, arghack=ft['extra_args'])
+    print_func_signature(func['id']['str'], ft, extra_args=ft['extra_args'])
 
     out(";")
 
@@ -1446,7 +1446,7 @@ def print_def_func(x):
     newline(n=x['nl'])
 
     ft = func['type']
-    arghack = ft['extra_args']
+    extra_args = ft['extra_args']
 
     if not 'declared' in func['att']:
         print_func_wrappers(func)
@@ -1463,7 +1463,7 @@ def print_def_func(x):
     if 'static' in func['att']: out("static ")
     if 'inline' in func['att']: out("inline ")
 
-    print_func_signature(func['id']['str'], func['type'], arghack=arghack)
+    print_func_signature(func['id']['str'], func['type'], extra_args=extra_args)
 
     if styleguide['LINE_BREAK_BEFORE_FUNC_BRACE']:
         newline()
@@ -1476,7 +1476,7 @@ def print_def_func(x):
     indent_up()
 
 
-    if arghack:
+    if extra_args:
         global va_id
         va_id = func['va_id']['str']
         newline(); indent(); out("va_list %s;" % va_id)
@@ -1490,7 +1490,7 @@ def print_def_func(x):
     print_statements(stmts)
 
 
-    if arghack:
+    if extra_args:
         if stmts[-1]['kind'] != 'return':
             newline(); indent(); out("va_end(%s);" % va_id)
 
@@ -1787,7 +1787,7 @@ def run(module, outname):
     out("#include <stdbool.h>\n")
     out("#include <string.h>\n")
 
-    if 'use_arghack' in module['options']:
+    if 'use_extra_args' in module['options']:
         out("#include <stdarg.h>\n")
 
     # search for @c_include("...")

@@ -150,10 +150,10 @@ def print_type_enum(t):
 
 
 
-def print_type_func(t, arghack=False):
+def print_type_func(t, extra_args=False):
     out('(')
     print_fields(t['params'], before="", after="", separator=", ")
-    if arghack:
+    if extra_args:
         out(", va_list: VA_List")
     out(') -> ')
     print_type(t['to'])
@@ -680,10 +680,9 @@ def print_decl_func(x):
 def print_def_func(x):
     func = x['value']
     ft = func['type']
-    arghack = 'arghack' in ft['att']
     out('func ')
     print_id(func)
-    print_type_func(ft, arghack=arghack)
+    print_type_func(ft, extra_args=ft['extra_args'])
     print_stmt_block(func['stmt'])
 
 
