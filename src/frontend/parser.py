@@ -1045,7 +1045,7 @@ class Parser:
         return {'isa': 'ast_directive', 'kind': 'import', 'str': str, 'ti': ti}
 
 
-    def parse_func(self, extern=False):
+    def parse_def_func(self, extern=False):
         ti = self.ti()
         id = self.identifier()
         ftyp = self.expr_type()
@@ -1073,7 +1073,7 @@ class Parser:
         }
 
 
-    def parse_const(self):
+    def parse_def_const(self):
         ti = self.ti()
         id = self.identifier()
         self.need('=')
@@ -1087,7 +1087,7 @@ class Parser:
         }
 
 
-    def parse_var(self):
+    def parse_def_var(self):
         ff = self.parse_field()
         if ff == None:
             return None
@@ -1109,7 +1109,7 @@ class Parser:
         return vars
 
 
-    def parse_type(self, extern=False):
+    def parse_def_type(self, extern=False):
         ti = self.ti()
         id = self.identifier()
 
@@ -1205,20 +1205,21 @@ class Parser:
 
 
         while not self.is_end():
-            ti = self.ti()
 
             export = self.match('export')
             extern = self.match('extern')
+
+            ti = self.ti()
 
             x = None
 
             if self.match('\n'):
                 spaceline_cnt = spaceline_cnt + 1
                 continue
-            elif self.match('func'): x = self.parse_func()
-            elif self.match('const'): x = self.parse_const()
-            elif self.match('var'): x = self.parse_var()
-            elif self.match('type'): x = self.parse_type()
+            elif self.match('func'): x = self.parse_def_func()
+            elif self.match('const'): x = self.parse_def_const()
+            elif self.match('var'): x = self.parse_def_var()
+            elif self.match('type'): x = self.parse_def_type()
 
             elif self.token_class_is('comment-block'):
                 x = self.parse_comment_block()
@@ -1247,12 +1248,18 @@ class Parser:
                     x['extern'] = True
 
             if isinstance(x, list):
+
+                for subx in x:
+                    subx['nl'] = 1
+                    subx['ti'] = ti
+
                 x[0]['nl'] = spaceline_cnt
+
                 output.extend(x)
                 spaceline_cnt = 0
             else:
-
                 x['nl'] = spaceline_cnt
+                x['ti'] = ti
 
 
                 # тк CM директива не печатается в C
