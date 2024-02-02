@@ -9,21 +9,9 @@ const world = " World!\n"
 
 const hello_world = hello + world
 
-@attribute("type:volatile")
-//@property("type.c_alias", "Res")
-//@property("id.str", "Res")
-type Rec record {
-    v: Nat32
-}
-
-@attribute("value:volatile")
-var x: Bool
-
-var r : Rec
 
 func main() -> Int {
     printf("%s", hello_world to *Str8)
-
     return 0
 }
 

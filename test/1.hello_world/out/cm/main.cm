@@ -8,19 +8,9 @@ const world = " World!\n"
 
 const hello_world = hello + world
 
-//@property("type.c_alias", "Res")
-//@property("id.str", "Res")
-type Rec record {
-    v: Nat32
-}
-
-var x: Bool
-
-var r: Rec
 
 func main() -> Int {
     printf("%s", hello_world to *[]Char8)
-
     return 0
 }
 

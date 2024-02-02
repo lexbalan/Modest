@@ -3,7 +3,6 @@
 import "libc/libc.hm"
 
 
-
 type SHA256_Context record {
     data: [64]Nat8
     datalen: Nat32
