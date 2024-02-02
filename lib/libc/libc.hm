@@ -62,28 +62,28 @@ type TimeT Int32     /* time in seconds since 1970 */
 type DIR
 
 // from time.h
-extern func clock () -> Nat64
+func clock () -> Nat64
 
-extern func malloc (size: SizeT) -> Pointer
+func malloc (size: SizeT) -> Pointer
 @attribute("value:dispensable")
-extern func memset (mem: Pointer, c: Int, n: SizeT) -> Pointer
+func memset (mem: Pointer, c: Int, n: SizeT) -> Pointer
 @attribute("value:dispensable")
-extern func memcpy(dst: Pointer, src: Pointer, len: SizeT) -> Pointer
-extern func memcmp(ptr1: Pointer, ptr2: Pointer, num: SizeT) -> Int
-extern func free(ptr: Pointer) -> Unit
+func memcpy(dst: Pointer, src: Pointer, len: SizeT) -> Pointer
+func memcmp(ptr1: Pointer, ptr2: Pointer, num: SizeT) -> Int
+func free(ptr: Pointer) -> Unit
 
-extern func strncmp(s1: *[]ConstChar, s2: *[]ConstChar, n: SizeT) -> Int
-extern func strcmp(s1: *[]ConstChar, s2: *[]ConstChar) -> Int
+func strncmp(s1: *[]ConstChar, s2: *[]ConstChar, n: SizeT) -> Int
+func strcmp(s1: *[]ConstChar, s2: *[]ConstChar) -> Int
 @attribute("value:dispensable")
-extern func strcpy(dst: *[]Char, src: *[]ConstChar) -> *[]Char
-extern func strlen(s: *[]ConstChar) -> SizeT
+func strcpy(dst: *[]Char, src: *[]ConstChar) -> *[]Char
+func strlen(s: *[]ConstChar) -> SizeT
 
-//extern func mkdir (path : *Str, mode : Mode_T) -> Int
+//func mkdir (path : *Str, mode : Mode_T) -> Int
 
-extern func ftruncate (fd: Int, size: OffT) -> Int
+func ftruncate (fd: Int, size: OffT) -> Int
 
 // from unistd.h
-//extern func pause () -> Int
+//func pause () -> Int
 
 
 const c_O_RDONLY = 0x0000   // open for reading only
@@ -103,27 +103,27 @@ const s_IXUSR = 0x0000040   // X for owner
 
 
 @attribute("value:dispensable")
-extern func creat(path: *Str, mode: ModeT) -> Int
-extern func open(path: *Str, oflags: Int) -> Int
+func creat(path: *Str, mode: ModeT) -> Int
+func open(path: *Str, oflags: Int) -> Int
 @attribute("value:dispensable")
-extern func read(fd: Int, buf: *Nat8, len: Nat32) -> Int
+func read(fd: Int, buf: *Nat8, len: Nat32) -> Int
 @attribute("value:dispensable")
-extern func write(fd: Int, buf: *Nat8, len: Nat32) -> Int
+func write(fd: Int, buf: *Nat8, len: Nat32) -> Int
 @attribute("value:dispensable")
-extern func lseek(fd: Int, offset: OffT, whence: Int) -> OffT
+func lseek(fd: Int, offset: OffT, whence: Int) -> OffT
 @attribute("value:dispensable")
-extern func close(fd: Int) -> Int
-extern func exit(rc: Int) -> Unit
-//extern func fstat(fd: Int, buf: *Stat) -> Int
+func close(fd: Int) -> Int
+func exit(rc: Int) -> Unit
+//func fstat(fd: Int, buf: *Stat) -> Int
 
 
-extern func opendir(name: *Str) -> *DIR
-extern func closedir(dir: *DIR) -> Int
+func opendir(name: *Str) -> *DIR
+func closedir(dir: *DIR) -> Int
 
 // current working directory
-extern func getcwd(buf: *Str, size: SizeT) -> *Str
+func getcwd(buf: *Str, size: SizeT) -> *Str
 
-extern func getenv(name: *Str) -> *Str
+func getenv(name: *Str) -> *Str
 
 
 

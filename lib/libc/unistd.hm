@@ -15,89 +15,89 @@ const SEEK_SET = 0
 const SEEK_CUR = 1
 const SEEK_END = 2
 
-extern func access (*ConstChar, Int) -> Int
-extern func alarm (UnsignedInt) -> UnsignedInt
-extern func brk (Ptr) -> Int
-extern func chdir (*ConstChar) -> Int
-extern func chroot (*ConstChar) -> Int  // (LEGACY)
-extern func chown (*ConstChar, UidT, GidT) -> Int
-extern func close (Int) -> Int
-extern func confstr (Int, *Char, SizeT) -> SizeT
-extern func crypt (*ConstChar, *ConstChar) -> *Char
-extern func ctermid (*Char) -> *Char
-extern func cuserid (*Chars) -> *Char  // (LEGACY)
-extern func dup (Int) -> Int
-extern func dup2 (Int, Int) -> Int
-extern func encrypt ([64]Char, Int) -> Unit
-extern func execl (*ConstChar, *ConstChar, ...) -> Int
-extern func execle (*ConstChar, *ConstChar, ...) -> Int
-extern func execlp (*ConstChar, *ConstChar, ...) -> Int
-extern func execv (*ConstChar, *Charconst []) -> Int
-extern func execve (*ConstChar, *Charconst [], *Charconst []) -> Int
-extern func execvp (*ConstChar, *Charconst []) -> Int
-extern func _exit (Int) -> Void
-extern func fchown (Int, UidT, GidT) -> Int
-extern func fchdir (Int) -> Int
-extern func fdatasync (Int) -> Int
-extern func fork () -> PidT
-extern func fpathconf (Int, Int) -> LongInt
-extern func fsync (Int) -> Int
-extern func ftruncate (Int, OffT) -> Int
-extern func getcwd (*Char, SizeT) -> *Char
-extern func getdtablesize () -> Int //  (LEGACY)
-extern func getegid () -> GidT
-extern func geteuid () -> UidT
-extern func getgid () -> GidT
-extern func getgroups (Int, GidT []) -> Int
-extern func gethostid () -> Long
-extern func getlogin () -> *Char
-extern func getlogin_r (*Char, SizeT) -> Int
-extern func getopt (Int, *Char const [], *ConstChar) -> Int
-extern func getpagesize () -> Int //  (LEGACY)
-extern func getpass (*ConstChar) -> *Char //  (LEGACY)
-extern func getpgid (PidT) -> PidT
-extern func getpgrp () -> PidT
-extern func getpid () -> PidT
-extern func getppid () -> PidT
-extern func getsid (PidT) -> PidT
-extern func getuid () -> UidT
-extern func getwd (*Char) -> *Char
-extern func isatty (Int) -> Int
-extern func lchown (*ConstChar, UidT, GidT) -> Int
-extern func link (*ConstChar, *ConstChar) -> Int
-extern func lockf (Int, Int, OffT) -> Int
-extern func lseek (Int, OffT, Int) -> OffT
-extern func nice (Int) -> Int
-extern func pathconf (*ConstChar, Int) -> LongInt
-extern func pause () -> Int
-extern func pipe ([2]Int) -> Int
-extern func pread (Int, Ptr, SizeT, OffT) -> SSizeT
-extern func pthread_atfork (void  (*) (), void  (*) (), void (*) ()) -> Int
-extern func pwrite (Int, PtrConst, SizeT, OffT) -> SSizeT
-extern func read (Int, Ptr, SizeT) -> SSizeT
-extern func readlink (*ConstChar, *Char, SizeT) -> Int
-extern func rmdir (*ConstChar) -> Int
-extern func sbrk (Intptr_t) -> Ptr
-extern func setgid (GidT) -> Int
-extern func setpgid (PidT, PidT) -> Int
-extern func setpgrp () -> PidT
-extern func setregid (GidT, GidT) -> Int
-extern func setreuid (UidT, UidT) -> Int
-extern func setsid () -> PidT
-extern func setuid (UidT) -> Int
-extern func sleep (UnsignedInt) -> UnsignedInt
-extern func swab (PtrConst, Ptr, SSizeT) -> Unit
-extern func symlink (*ConstChar, *ConstChar) -> Int
-extern func sync () -> Unit
-extern func sysconf (Int) -> LongInt
-extern func tcgetpgrp (Int) -> PidT
-extern func tcsetpgrp (Int, PidT) -> Int
-extern func truncate (*ConstChar, OffT) -> Int
-extern func ttyname (Int) -> *Char
-extern func ttyname_r (Int, *Char, SizeT) -> Int
-extern func ualarm (USecondsT, USecondsT) -> USecondsT
-extern func unlink (*ConstChar) -> Int
-extern func usleep (USecondsT) -> Int
-extern func vfork () -> PidT
-extern func write (Int, PtrConst, SizeT) -> SSizeT
+func access (*ConstChar, Int) -> Int
+func alarm (UnsignedInt) -> UnsignedInt
+func brk (Ptr) -> Int
+func chdir (*ConstChar) -> Int
+func chroot (*ConstChar) -> Int  // (LEGACY)
+func chown (*ConstChar, UidT, GidT) -> Int
+func close (Int) -> Int
+func confstr (Int, *Char, SizeT) -> SizeT
+func crypt (*ConstChar, *ConstChar) -> *Char
+func ctermid (*Char) -> *Char
+func cuserid (*Chars) -> *Char  // (LEGACY)
+func dup (Int) -> Int
+func dup2 (Int, Int) -> Int
+func encrypt ([64]Char, Int) -> Unit
+func execl (*ConstChar, *ConstChar, ...) -> Int
+func execle (*ConstChar, *ConstChar, ...) -> Int
+func execlp (*ConstChar, *ConstChar, ...) -> Int
+func execv (*ConstChar, *Charconst []) -> Int
+func execve (*ConstChar, *Charconst [], *Charconst []) -> Int
+func execvp (*ConstChar, *Charconst []) -> Int
+func _exit (Int) -> Void
+func fchown (Int, UidT, GidT) -> Int
+func fchdir (Int) -> Int
+func fdatasync (Int) -> Int
+func fork () -> PidT
+func fpathconf (Int, Int) -> LongInt
+func fsync (Int) -> Int
+func ftruncate (Int, OffT) -> Int
+func getcwd (*Char, SizeT) -> *Char
+func getdtablesize () -> Int //  (LEGACY)
+func getegid () -> GidT
+func geteuid () -> UidT
+func getgid () -> GidT
+func getgroups (Int, GidT []) -> Int
+func gethostid () -> Long
+func getlogin () -> *Char
+func getlogin_r (*Char, SizeT) -> Int
+func getopt (Int, *Char const [], *ConstChar) -> Int
+func getpagesize () -> Int //  (LEGACY)
+func getpass (*ConstChar) -> *Char //  (LEGACY)
+func getpgid (PidT) -> PidT
+func getpgrp () -> PidT
+func getpid () -> PidT
+func getppid () -> PidT
+func getsid (PidT) -> PidT
+func getuid () -> UidT
+func getwd (*Char) -> *Char
+func isatty (Int) -> Int
+func lchown (*ConstChar, UidT, GidT) -> Int
+func link (*ConstChar, *ConstChar) -> Int
+func lockf (Int, Int, OffT) -> Int
+func lseek (Int, OffT, Int) -> OffT
+func nice (Int) -> Int
+func pathconf (*ConstChar, Int) -> LongInt
+func pause () -> Int
+func pipe ([2]Int) -> Int
+func pread (Int, Ptr, SizeT, OffT) -> SSizeT
+func pthread_atfork (void  (*) (), void  (*) (), void (*) ()) -> Int
+func pwrite (Int, PtrConst, SizeT, OffT) -> SSizeT
+func read (Int, Ptr, SizeT) -> SSizeT
+func readlink (*ConstChar, *Char, SizeT) -> Int
+func rmdir (*ConstChar) -> Int
+func sbrk (Intptr_t) -> Ptr
+func setgid (GidT) -> Int
+func setpgid (PidT, PidT) -> Int
+func setpgrp () -> PidT
+func setregid (GidT, GidT) -> Int
+func setreuid (UidT, UidT) -> Int
+func setsid () -> PidT
+func setuid (UidT) -> Int
+func sleep (UnsignedInt) -> UnsignedInt
+func swab (PtrConst, Ptr, SSizeT) -> Unit
+func symlink (*ConstChar, *ConstChar) -> Int
+func sync () -> Unit
+func sysconf (Int) -> LongInt
+func tcgetpgrp (Int) -> PidT
+func tcsetpgrp (Int, PidT) -> Int
+func truncate (*ConstChar, OffT) -> Int
+func ttyname (Int) -> *Char
+func ttyname_r (Int, *Char, SizeT) -> Int
+func ualarm (USecondsT, USecondsT) -> USecondsT
+func unlink (*ConstChar) -> Int
+func usleep (USecondsT) -> Int
+func vfork () -> PidT
+func write (Int, PtrConst, SizeT) -> SSizeT
 
