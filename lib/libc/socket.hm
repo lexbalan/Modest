@@ -7,19 +7,19 @@ import "./libc.hm"
 @c_include("arpa/inet.h")
 
 
-@property("c_alias", "struct sockaddr")
+@property("type.c_alias", "struct sockaddr")
 type Struct_sockaddr record {
     sa_family: UnsignedShort  /* address family */
     sa_data: [14]Char8        /*  up to 14 bytes of direct address */
 }
 
-@property("c_alias", "struct in_addr")
+@property("type.c_alias", "struct in_addr")
 type Struct_in_addr record {
     s_addr: UnsignedLong
 }
 
 
-@property("c_alias", "struct sockaddr_in")
+@property("type.c_alias", "struct sockaddr_in")
 type Struct_sockaddr_in record {
     sin_family: Short
     sin_port: UnsignedShort
@@ -83,13 +83,13 @@ const pseudo_AF_PIPEX = 35		/* PIPEX */
 const AF_MAX = 36
 
 
-@property("c_alias", "in_addr_t")
+@property("type.c_alias", "in_addr_t")
 type in_addr_t Nat32
 
-@property("c_alias", "in_port_t")
+@property("type.c_alias", "in_port_t")
 type in_port_t Nat16
 
-@property("c_alias", "socklen_t")
+@property("type.c_alias", "socklen_t")
 type socklen_t Nat32
 
 

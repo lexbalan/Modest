@@ -541,11 +541,10 @@ def print_type_array(t):
 
 
 def print_type_func(t):
-    arghack = 'arghack' in t['att']
     print_type(t['to'])
     out(" (")
     print_list_with(t['params'], lambda f: print_type(f['type']))
-    if arghack:
+    if t['extra_args']:
         out(", ...")
     out(")")
 
@@ -1246,7 +1245,6 @@ def print_stmt(x):
 
 
 def print_func_paramlist(func, only_types=False, with_attributes=True):
-    arghack = 'arghack' in func['type']['att']
     sret = 'sret' in func['att']
 
     ftype = func['type']
@@ -1290,12 +1288,12 @@ def print_func_paramlist(func, only_types=False, with_attributes=True):
 
     print_list_with(params, lambda param: method(param))
 
-    if arghack:
+    if func['type']['extra_args']:
         out(", ...")
 
 
 def print_func_signature(func):
-    arghack = 'arghack' in func['type']['att']
+    #arghack = func['type']['extra_args']
     sret = 'sret' in func['att']
 
     ftype = func['type']
@@ -1346,7 +1344,6 @@ def print_def_func(x):
 
     sret = 'sret' in func['att']
     ftype = func['type']
-    arghack = 'arghack' in ftype['att']
 
     if sret:
         reg_get() # get %0 reg for retval
@@ -1364,7 +1361,7 @@ def print_def_func(x):
 
     out(" {")
 
-    if arghack:
+    if ftype['extra_args']:
         global va_list
         id_str = func['va_id']['str'] # 'va_list'
         va_list = llvm_alloca(hlir_type.typeFreePointer, id_str=None)

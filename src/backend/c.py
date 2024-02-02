@@ -495,8 +495,7 @@ def print_value_call(v, ctx):
         # поскольку у нас указатели на функции это *void
         # при вызове приводим левое к указателю на функцию
         out("(("); print_type(ftype['to']); out("(*)")
-        arghack = 'arghack' in ftype['att']
-        print_paramlist(ftype['params'], arghack)
+        print_paramlist(ftype['params'], ftype['extra_args'])
         out(")")
         print_value(left)
         out(")")
@@ -1432,9 +1431,7 @@ def print_decl_func(x):
     if 'inline' in func['att']: out("inline ")
     if 'c_prefix' in func: out("%s " % func['c_prefix'])
 
-    arghack = 'arghack' in ft['att']
-
-    print_func_signature(func['id']['str'], ft, arghack=arghack)
+    print_func_signature(func['id']['str'], ft, arghack=ft['extra_args'])
 
     out(";")
 
@@ -1449,7 +1446,7 @@ def print_def_func(x):
     newline(n=x['nl'])
 
     ft = func['type']
-    arghack = 'arghack' in ft['att']
+    arghack = ft['extra_args']
 
     if not 'declared' in func['att']:
         print_func_wrappers(func)

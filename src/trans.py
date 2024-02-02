@@ -817,7 +817,7 @@ def do_value_call(x):
         return hlir_value_bad(x['ti'])
 
     if nargs > npars:
-        if not 'arghack' in ftype['att']:
+        if not ftype['extra_args']:
             error("too many args", x)
             return hlir_value_bad(x['ti'])
 
@@ -1768,7 +1768,7 @@ def def_func(x):
 
     if arghack:
         cfunc['va_id'] = va_id
-        func_type['att'].append('arghack')
+        func_type['extra_args'] = True
         add_local_var(va_id, last_param['type'], None, va_id['ti'])
         module_option('use_arghack')
 
@@ -1822,6 +1822,7 @@ def decl_type(x):
     if x['extern']:
         declaration['att'].append('extern')
 
+    do_properties(declaration)
     do_attributes(declaration)
     return declaration
 
@@ -1859,13 +1860,13 @@ def decl_func(x):
             module_option('use_memcpy')
 
     # check if last arg is VA_List
-    # (in this case add 'arghack' attribute)
+    # (in this case set ['extra_args'] = True)
     params = func_type['params']
     if len(params) > 1:
         last_param = params[-1]
         if hlir_type.type_is_va_list(last_param['type']):
             va_id = last_param['id']
-            func_type['att'].append('arghack')
+            func_type['extra_args'] = True
             params.pop()
 
 
