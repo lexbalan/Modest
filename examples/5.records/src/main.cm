@@ -27,7 +27,7 @@ var line : Line := {
 }
 
 
-@attribute(["static", "inline"])
+@attribute(["value:static", "value:inline"])
 func max(a : Float, b : Float) -> Float {
     if a > b {
         return a
@@ -35,7 +35,7 @@ func max(a : Float, b : Float) -> Float {
     return b
 }
 
-@attribute(["static", "inline"])
+@attribute(["value:static", "value:inline"])
 func min(a : Float, b : Float) -> Float {
     if a < b {
         return a

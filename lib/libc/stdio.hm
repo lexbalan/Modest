@@ -23,22 +23,22 @@ const SEEK_SET = 0
 const SEEK_CUR = 1
 const SEEK_END = 2
 
-@attribute("dispensable")
+@attribute("value:dispensable")
 extern func fclose(f: *FILE) -> Int
 extern func feof(f: *FILE) -> Int
 extern func ferror(f: *FILE) -> Int
-@attribute("dispensable")
+@attribute("value:dispensable")
 extern func fflush(f: *FILE) -> Int
-@attribute("dispensable")
+@attribute("value:dispensable")
 extern func fgetpos(f: *FILE, pos: *FposT) -> Int
 extern func fopen(fname: *ConstCharStr, mode: *ConstCharStr) -> *FILE
-@attribute("dispensable")
+@attribute("value:dispensable")
 extern func fread(buf: Pointer, size: SizeT, count: SizeT, f: *FILE) -> SizeT
-@attribute("dispensable")
+@attribute("value:dispensable")
 extern func fwrite(buf: Pointer, size: SizeT, count: SizeT, f: *FILE) -> SizeT
 extern func freopen(filename: *ConstCharStr, mode: *ConstCharStr, f: *FILE) -> *FILE
 
-@attribute("dispensable")
+@attribute("value:dispensable")
 extern func fseek(stream: *FILE, offset: LongInt, whence: Int) -> Int
 
 extern func fsetpos(f: *FILE, pos: *FposT) -> Int
@@ -53,22 +53,22 @@ extern func tmpfile() -> *FILE
 extern func tmpnam(str: *CharStr) -> *CharStr
 
 
-@attribute("dispensable")
+@attribute("value:dispensable")
 extern func printf(s: *ConstCharStr, va_list: VA_List) -> Int
 
-@attribute("dispensable")
+@attribute("value:dispensable")
 extern func scanf(s: *ConstCharStr, va_list: VA_List) -> Int
 
-@attribute("dispensable")
+@attribute("value:dispensable")
 extern func fprintf(stream: *FILE, format: *Str, va_list: VA_List) -> Int
 
-@attribute("dispensable")
+@attribute("value:dispensable")
 extern func fscanf(f: *FILE, format: *ConstCharStr, va_list: VA_List) -> Int
 
-@attribute("dispensable")
+@attribute("value:dispensable")
 extern func sscanf(buf: *ConstCharStr, format: *ConstCharStr, va_list: VA_List) -> Int
 
-@attribute("dispensable")
+@attribute("value:dispensable")
 extern func sprintf(buf: *CharStr, format: *ConstCharStr, va_list: VA_List) -> Int
 
 
@@ -86,11 +86,11 @@ extern func fputs(str: *ConstCharStr, f: *FILE) -> Int
 extern func getc(f: *FILE) -> Int
 extern func getchar() -> Int
 extern func gets(str: *CharStr) -> *CharStr
-@attribute("dispensable")
+@attribute("value:dispensable")
 extern func putc(char: Int, f: *FILE) -> Int
-@attribute("dispensable")
+@attribute("value:dispensable")
 extern func putchar(char: Int) -> Int
-@attribute("dispensable")
+@attribute("value:dispensable")
 extern func puts(str: *ConstCharStr) -> Int
 extern func ungetc(char: Int, f: *FILE) -> Int
 extern func perror(str: *ConstCharStr) -> Unit

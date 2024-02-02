@@ -1537,6 +1537,7 @@ def do_import(x):
         'local': True
     }
 
+    #do_attributes(directive) @^^
     return directive
 
 
@@ -1571,16 +1572,16 @@ def def_const(x):
     if 'nl_end' in v:
         const_value['nl_end'] = v['nl_end']
 
-    atts = attributes_get()
-    const_value['att'].extend(atts)
+
 
 
     extend_props(const_value)
 
     module['context'].value_add(id['str'], const_value)
 
-    return hlir_def_const(const_value, x['ti'])
-
+    obj = hlir_def_const(const_value, x['ti'])
+    do_attributes(obj)
+    return obj
 
 
 # удаляет ?? по имени
@@ -1612,7 +1613,9 @@ def def_type(x):
 
     nt = hlir_type.create_alias(id['str'], ty, id['ti'])
     extend_props(nt)
-    nt['att'].extend(attributes_get())
+
+
+
 
     if already_declared:
         # just overwrite existed 'opaque' type (for records)
@@ -1624,8 +1627,42 @@ def def_type(x):
     else:
         module['context'].type_add(id['str'], nt)
 
-    return hlir_def_type(nt, already_declared, ti=x['ti'])
+    obj = hlir_def_type(nt, already_declared, ti=x['ti'])
+    do_attributes(obj)
+    return obj
 
+
+
+def set_att(obj, path, att):
+    #print(path)
+    if len(path) == 1:
+        #for o in obj:
+        #    print(o)
+
+        p = path[0]
+        if p in obj:
+            obj[p]['att'].append(att)
+        else:
+            error("attribute error: field '%s' not found" % p, obj['ti'])
+
+    elif len(path) > 1:
+        set_att(obj[path[0]], path[1:], att)
+    else:
+        assert(False)
+
+
+def do_attributes(obj):
+    atts = attributes_get()
+    for att in atts:
+        lr = att.split(":")
+        if len(lr) == 1:
+            att = lr[0]
+            obj['att'].append(att)
+        elif len(lr) > 1:
+            att = lr[1]
+            path = lr[0].split(".")
+            #print([path, att])
+            set_att(obj, path, att)
 
 
 def def_var(x):
@@ -1653,13 +1690,15 @@ def def_var(x):
             hlir_type.check(var_type, init_value['type'], x['init']['ti'])
 
     var = hlir_value_var(f['id'], var_type, init=init_value)
-    var['att'].extend(attributes_get())
-    #var['att'].append('global')
+
+
     extend_props(var)
 
     module['context'].value_add(x['field']['id']['str'], var)
 
-    return hlir_def_var(var, x['ti'])
+    obj = hlir_def_var(var, x['ti'])
+    do_attributes(obj)
+    return obj
 
 
 
@@ -1758,7 +1797,6 @@ def def_func(x):
     # create params context
     module['context'] = module['context'].branch(domain='local')
 
-    fn['att'].extend(attributes_get())
 
     if already:
         fn['att'].append('declared')
@@ -1819,7 +1857,9 @@ def def_func(x):
     if settings.check('backend', 'llvm'):
         module_remove_node(module, 'value', func_id['str'])
 
-    return hlir_def_func(fn, x['ti'])
+    obj = hlir_def_func(fn, x['ti'])
+    do_attributes(obj)
+    return obj
 
 
 
@@ -1836,6 +1876,7 @@ def decl_type(x):
     if x['extern']:
         declaration['att'].append('extern')
 
+    do_attributes(declaration)
     return declaration
 
 
@@ -1881,13 +1922,17 @@ def decl_func(x):
             func_type['att'].append('arghack')
             params.pop()
 
-    func['att'].extend(attributes_get())
+
     if x['extern']:
         func['att'].append('extern')
+
+
+
     extend_props(func)
     module['context'].value_add(func_id['str'], func)
-    return hlir_decl_func(func, x['ti'])
-
+    obj = hlir_decl_func(func, x['ti'])
+    do_attributes(obj)
+    return obj
 
 
 def comm_line(x):
@@ -1898,7 +1943,6 @@ def comm_line(x):
         'att': []
     }
 
-    #y['att'].extend(attributes_get())
     return y
 
 
@@ -1910,7 +1954,6 @@ def comm_block(x):
         'att': []
     }
 
-    #y['att'].extend(attributes_get())
     return y
 
 

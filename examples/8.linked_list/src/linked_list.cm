@@ -126,7 +126,7 @@ func linked_list_insert_node (list : *List, new_node : *Node) -> *Node {
 }
 
 
-@attribute("dispensable")
+@attribute("value:dispensable")
 func linked_list_insert (list : *List, link : Pointer) -> *Node {
     if list == nil {
         return nil
