@@ -11,7 +11,6 @@
 #include <time.h>
 
 
-
 typedef struct {
     uint8_t data[64];
     uint32_t datalen;

@@ -1816,15 +1816,15 @@ def decl_type(x):
     module['context'].type_add(id['str'], nt)
 
     # С не печатает opaque, но LLVM печатает (!)
-    declaration = hlir_decl_type(nt, x['ti'])
-    nt['declaration'] = declaration
+    obj = hlir_decl_type(nt, x['ti'])
+    nt['declaration'] = obj
 
     if x['extern']:
-        declaration['att'].append('extern')
+        obj['att'].append('extern')
 
-    do_properties(declaration)
-    do_attributes(declaration)
-    return declaration
+    do_properties(obj)
+    do_attributes(obj)
+    return obj
 
 
 
