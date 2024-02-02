@@ -1812,7 +1812,6 @@ def def_func(x):
 
 def decl_type(x):
     id = x['id']
-    #info("decl_type " + id['str'], id['ti'])
     nt = hlir_type_opaque(id, id['ti'])
     module['context'].type_add(id['str'], nt)
 
