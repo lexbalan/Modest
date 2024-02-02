@@ -1548,13 +1548,13 @@ def def_const(x):
     v = do_value(x['value'])
 
     if value_is_bad(v):
-        return hlir_def_const(v, x['ti'])
+        return hlir_def_const(v, id['ti'])
 
     if not value_is_immediate(v):
         if not type_is_pointer_to_array_of_char(v['type']):
             error("expected immediate value", v)
 
-    const_value = hlir_value_const(id, v['type'], v, x['ti'])
+    const_value = hlir_value_const(id, v['type'], v, id['ti'])
     const_value['att'].append('global')
 
     if value_is_immediate(v):
@@ -1642,9 +1642,6 @@ def def_var(x):
 
     var = hlir_value_var(f['id'], var_type, init=init_value)
 
-
-
-
     module['context'].value_add(x['field']['id']['str'], var)
 
     obj = hlir_def_var(var, x['ti'])
@@ -1695,8 +1692,8 @@ def check_stmt(stmt):
 def def_func(x):
     global cfunc
 
-    func_ti = x['ti']
     func_id = x['id']
+    func_ti = func_id['ti']
 
     func_type = do_type_func(x['type'], func_id=func_id['str'])
 
@@ -1815,8 +1812,8 @@ def def_func(x):
 
 def decl_type(x):
     id = x['id']
-    #info("decl_type " + id['str'], x['ti'])
-    nt = hlir_type_opaque(id, x['ti'])
+    #info("decl_type " + id['str'], id['ti'])
+    nt = hlir_type_opaque(id, id['ti'])
     module['context'].type_add(id['str'], nt)
 
     # С не печатает opaque, но LLVM печатает (!)
@@ -1850,12 +1847,12 @@ def decl_func(x):
 
         # check type of already created function
         if not hlir_type.type_eq(already['type'], func_type):
-            error("definition not correspond to function type", x['ti'])
+            error("definition not correspond to function type", x['type']['ti'])
             info("firstly declared here", already['type']['ti'])
 
         return
 
-    func = hlir_value_func(func_id, func_type, ti=x['ti'])
+    func = hlir_value_func(func_id, func_type, ti=func_id['ti'])
 
     if already == None:
         if func_type['to']['size'] > RET_SIZE_MAX:
