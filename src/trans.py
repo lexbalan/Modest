@@ -1543,15 +1543,6 @@ def do_import(x):
 
 
 
-# form directive '@property'
-def extend_props(x):
-    global properties
-    x.update(properties)
-    properties = {}
-
-
-
-
 def def_const(x):
     id = x['id']
     v = do_value(x['value'])
@@ -1572,14 +1563,10 @@ def def_const(x):
     if 'nl_end' in v:
         const_value['nl_end'] = v['nl_end']
 
-
-
-
-    extend_props(const_value)
-
     module['context'].value_add(id['str'], const_value)
 
     obj = hlir_def_const(const_value, x['ti'])
+    do_properties(obj)
     do_attributes(obj)
     return obj
 
@@ -1612,10 +1599,6 @@ def def_type(x):
     already_declared = exist != None
 
     nt = hlir_type.create_alias(id['str'], ty, id['ti'])
-    extend_props(nt)
-
-
-
 
     if already_declared:
         # just overwrite existed 'opaque' type (for records)
@@ -1628,41 +1611,9 @@ def def_type(x):
         module['context'].type_add(id['str'], nt)
 
     obj = hlir_def_type(nt, already_declared, ti=x['ti'])
+    do_properties(obj)
     do_attributes(obj)
     return obj
-
-
-
-def set_att(obj, path, att):
-    #print(path)
-    if len(path) == 1:
-        #for o in obj:
-        #    print(o)
-
-        p = path[0]
-        if p in obj:
-            obj[p]['att'].append(att)
-        else:
-            error("attribute error: field '%s' not found" % p, obj['ti'])
-
-    elif len(path) > 1:
-        set_att(obj[path[0]], path[1:], att)
-    else:
-        assert(False)
-
-
-def do_attributes(obj):
-    atts = attributes_get()
-    for att in atts:
-        lr = att.split(":")
-        if len(lr) == 1:
-            att = lr[0]
-            obj['att'].append(att)
-        elif len(lr) > 1:
-            att = lr[1]
-            path = lr[0].split(".")
-            #print([path, att])
-            set_att(obj, path, att)
 
 
 def def_var(x):
@@ -1692,11 +1643,12 @@ def def_var(x):
     var = hlir_value_var(f['id'], var_type, init=init_value)
 
 
-    extend_props(var)
+
 
     module['context'].value_add(x['field']['id']['str'], var)
 
     obj = hlir_def_var(var, x['ti'])
+    do_properties(obj)
     do_attributes(obj)
     return obj
 
@@ -1802,9 +1754,6 @@ def def_func(x):
         fn['att'].append('declared')
 
 
-    extend_props(fn)
-
-
     i = 0
     while i < len(params):
         param = params[i]
@@ -1858,6 +1807,7 @@ def def_func(x):
         module_remove_node(module, 'value', func_id['str'])
 
     obj = hlir_def_func(fn, x['ti'])
+    do_properties(obj)
     do_attributes(obj)
     return obj
 
@@ -1926,11 +1876,10 @@ def decl_func(x):
     if x['extern']:
         func['att'].append('extern')
 
-
-
-    extend_props(func)
     module['context'].value_add(func_id['str'], func)
+
     obj = hlir_decl_func(func, x['ti'])
+    do_properties(obj)
     do_attributes(obj)
     return obj
 
@@ -2076,5 +2025,77 @@ def translate(srcname):
 
     return m
 
+
+
+
+
+
+
+
+
+def set_att(obj, path, att):
+    #print(path)
+    if len(path) == 1:
+        #for o in obj:
+        #    print(o)
+
+        p = path[0]
+        if p in obj:
+            obj[p]['att'].append(att)
+        else:
+            error("attribute error: field '%s' not found" % p, obj['ti'])
+
+    elif len(path) > 1:
+        set_att(obj[path[0]], path[1:], att)
+
+    else:
+        assert(False)
+
+
+def do_attributes(obj):
+    atts = attributes_get()
+    for att in atts:
+        lr = att.split(":")
+        if len(lr) == 1:
+            att = lr[0]
+            obj['att'].append(att)
+        elif len(lr) > 1:
+            att = lr[1]
+            path = lr[0].split(".")
+            #print([path, att])
+            set_att(obj, path, att)
+
+
+def set_prop(obj, path, val):
+    if len(path) == 1:
+        p = path[0]
+        obj[p] = val
+
+    elif len(path) > 1:
+        if path[0] in obj:
+            set_prop(obj[path[0]], path[1:], val)
+        else:
+            error("property error: field '%s' not found" % path[0], obj['ti'])
+
+    else:
+        assert(False)
+
+
+# form directive '@property'
+def do_properties(obj):
+    global properties
+    props = properties
+    properties = {}
+
+    for prop in props:
+        k = prop
+        v = props[prop]
+
+        path_array = prop.split(".")
+        if len(path_array) == 1:
+            obj[path_array[0]] = v
+
+        elif len(path_array) > 1:
+            set_prop(obj, path_array, v)
 
 
