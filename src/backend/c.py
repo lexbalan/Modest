@@ -1649,18 +1649,16 @@ def print_def_const(x):
         newline()
         print_variable(_id, const_value['type'])
         out(" = ")
-        v = const_value['value']
-        print_value_literal(v, ['print_immediate'])
+        print_value_literal(const_value, ['print_immediate'])
         out(";")
         return
 
     else:
         out("#define %s  " % _id['str'])
 
-    v = const_value['value']
-    need_wrap = precedence(v) < precedenceMax
+    need_wrap = precedence(const_value) < precedenceMax
     nl_str = " \\\n"
-    print_value(v, need_wrap=need_wrap, just_print_id=True)
+    print_value(const_value, need_wrap=need_wrap, just_print_id=True)
     nl_str = "\n"
 
 

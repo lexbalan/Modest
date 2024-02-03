@@ -1545,7 +1545,7 @@ def def_const(x):
     v = do_value(x['value'])
 
     if value_is_bad(v):
-        return hlir_def_const(v, id['ti'])
+        return hlir_def_const(id, v, v, id['ti'])
 
     if not value_is_immediate(v):
         if not type_is_pointer_to_array_of_char(v['type']):
@@ -1562,8 +1562,8 @@ def def_const(x):
 
     module['context'].value_add(id['str'], const_value)
 
-    obj = hlir_def_const(id, const_value, x['ti'])
-    return obj
+    return hlir_def_const(id, v, const_value, x['ti'])
+
 
 
 # удаляет ?? по имени
@@ -1574,8 +1574,8 @@ def module_remove_node(m, isa, id_str):
         module_remove_node(submodule, isa, id_str)
 
     for x in m['text']:
-        if isa in x:
-            if x[isa]['id']['str'] == id_str:
+        if 'id' in x:
+            if x['id']['str'] == id_str:
                 #print("REMOVE: " + id_str)
                 m['text'].remove(x)
                 break

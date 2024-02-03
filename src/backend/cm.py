@@ -710,17 +710,17 @@ def print_def_var(x):
 
 
 def print_def_const(x):
-    v = x['value']
+    #v = x['value']
 
     out("const ")
-    print_id(v)
+    print_id(x)
     out(" = ")
 
     # если есть оригинальное выражение, внутри, печатаем его
-    if 'value' in v:
-        v = v['value']
+    #if 'value' in v:
+    #    v = v['value']
 
-    print_value(v, ctx=['oneline'], print_just_id=False)
+    print_value(x['value'], ctx=['oneline'], print_just_id=False)
 
 
 def print_import(x):
