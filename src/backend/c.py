@@ -1243,6 +1243,7 @@ def print_stmt_defvar(x):
 
 
 def print_stmt_let(x):
+    id = x['id']
     v = x['newvalue']
 
     if DONT_PRINT_UNUSED:
@@ -1252,14 +1253,13 @@ def print_stmt_let(x):
     nlindent(x['nl'])
 
     if hlir_type.type_is_defined_array(v['type']):
-        id_str = x['id']['str']
-        print_variable_array(v['type'], id_str, do_wrapped=False)
+        print_variable_array(v['type'], id['str'], do_wrapped=False)
         out(";\n")
         indent()
         save_array(v, x['value'])
         return
 
-    print_variable(x['id'], v['type'], print_as_const=True)
+    print_variable(id, v['type'], print_as_const=True)
     out(" = ")
     print_value(x['value'], just_print_id=False)
     out(";")
