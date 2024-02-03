@@ -1361,10 +1361,7 @@ def do_stmt_let(x):
 
     module['context'].value_add(id['str'], const_value)
 
-    stmt_let = hlir_stmt_let(id, v, const_value, ti=x['ti'])
-    #stmt_let['init_value'] = v
-    return stmt_let
-
+    return hlir_stmt_let(id, v, const_value, ti=x['ti'])
 
 
 def do_stmt_assign(x):
@@ -1566,7 +1563,6 @@ def def_const(x):
     module['context'].value_add(id['str'], const_value)
 
     obj = hlir_def_const(id, const_value, x['ti'])
-    do_extend(obj)
     return obj
 
 
@@ -1609,9 +1605,7 @@ def def_type(x):
     else:
         module['context'].type_add(id['str'], nt)
 
-    obj = hlir_def_type(id, ty, nt, already_declared, ti=x['ti'])
-    do_extend(obj)
-    return obj
+    return hlir_def_type(id, ty, nt, already_declared, ti=x['ti'])
 
 
 def def_var(x):
@@ -1642,9 +1636,7 @@ def def_var(x):
 
     module['context'].value_add(x['field']['id']['str'], var)
 
-    obj = hlir_def_var(f['id'], var, x['ti'])
-    do_extend(obj)
-    return obj
+    return hlir_def_var(f['id'], var, x['ti'])
 
 
 
@@ -1799,9 +1791,7 @@ def def_func(x):
     if settings.check('backend', 'llvm'):
         module_remove_node(module, 'value', func_id['str'])
 
-    obj = hlir_def_func(func_id, fn, x['ti'])
-    do_extend(obj)
-    return obj
+    return hlir_def_func(func_id, fn, x['ti'])
 
 
 
@@ -1817,7 +1807,6 @@ def decl_type(x):
     if x['extern']:
         obj['att'].append('extern')
 
-    do_extend(obj)
     return obj
 
 
@@ -1869,9 +1858,7 @@ def decl_func(x):
 
     module['context'].value_add(func_id['str'], func)
 
-    obj = hlir_decl_func(func_id, func, x['ti'])
-    do_extend(obj)
-    return obj
+    return hlir_decl_func(func_id, func, x['ti'])
 
 
 
@@ -1922,9 +1909,13 @@ def proc(ast, source_info):
             elif kind == 'const': y = def_const(x)
             elif kind == 'var': y = def_var(x)
 
+            do_extend(y)
+
         elif isa == 'ast_declaration':
             if kind == 'func': y = decl_func(x)
             elif kind == 'type': y = decl_type(x)
+
+            do_extend(y)
 
         elif isa == 'ast_comment':
             if kind == 'line': y = comm_line(x)
