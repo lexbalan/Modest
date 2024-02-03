@@ -13,8 +13,19 @@ def init():
     pass
 
 
+def newline(n=1):
+    nl_str = '\n'
+    out(nl_str * n)
+
+
 def indent():
     ind(INDENT_SYMBOL)
+
+
+def nl_indent(nl=1):
+    newline(nl)
+    if nl > 0:
+        indent()
 
 
 aprecedence = [
@@ -54,24 +65,26 @@ def print_comment(x):
     k = x['kind']
     if k == 'line': print_comment_line(x)
     elif k == 'block': print_comment_block(x)
-    else: pass
 
 
 def print_comment_block(x):
-    indent()
+    nl_indent(x['nl'])
     out("/*%s*/" % x['text'])
 
 
 def print_comment_line(x):
+    newline(x['nl'])
     lines = x['lines']
-    n = len(lines)
     i = 0
+    n = len(lines)
     while i < n:
         line = lines[i]
-        indent(); out("//%s" % line['str'])
+        indent()
+        out("//%s" % line['str'])
         i = i + 1
         if i < n:
-            out("\n")
+            newline()
+
 
 
 def print_type_integer(t):
@@ -128,9 +141,7 @@ def print_type_record(t):
         print_field(field)
 
     indent_down()
-
-    out("\n")
-    indent()
+    nl_indent(1)
     out("}")
 
 
@@ -624,26 +635,34 @@ def print_stmt_assign(x):
     print_value(x['right'])
 
 
-
 def print_stmt_value(x):
     print_value(x['value'])
 
 
+def print_stmt_break(x):
+    out("break")
+
+
+def print_stmt_again(x):
+    out("again")
+
+
 def print_stmt(x):
-
-    out("\n" * x['nl'])
-
     k = x['kind']
-    if k == 'block': indent(); print_stmt_block(x)
-    elif k == 'value': indent(); print_stmt_value(x)
-    elif k == 'assign': indent(); print_stmt_assign(x)
-    elif k == 'return': indent(); print_stmt_return(x)
-    elif k == 'if': indent(); print_stmt_if(x)
-    elif k == 'while': indent(); print_stmt_while(x)
-    elif k == 'def_var': indent(); print_stmt_defvar(x)
-    elif k == 'let': indent(); print_stmt_let(x)
-    elif k == 'break': indent(); out('break')
-    elif k == 'again': indent(); out('continue')
+
+    if not k in ['block', 'comment-line', 'comment-block']:
+        nl_indent(x['nl'])
+
+    if k == 'block': print_stmt_block(x)
+    elif k == 'value': print_stmt_value(x)
+    elif k == 'assign': print_stmt_assign(x)
+    elif k == 'return': print_stmt_return(x)
+    elif k == 'if': print_stmt_if(x)
+    elif k == 'while': print_stmt_while(x)
+    elif k == 'def_var': print_stmt_defvar(x)
+    elif k == 'let': print_stmt_let(x)
+    elif k == 'break': print_stmt_break(x)
+    elif k == 'again': print_stmt_again(x)
     elif k == 'comment-line': print_comment_line(x)
     elif k == 'comment-block': print_comment_block(x)
     else: out("<stmt %s>" % str(x))
@@ -698,34 +717,25 @@ def print_def_type(x):
     print_type(x['type'], print_aka=False)
 
 
-
-
 def print_def_var(x):
     out("var ")
     var = x['value']
     print_field(var)
     iv = x['init_value']
     if iv != None:
-        out(" := "); print_value(iv)
+        out(" := ")
+        print_value(iv)
 
 
 def print_def_const(x):
-    #v = x['value']
-
     out("const ")
     print_id(x)
     out(" = ")
-
-    # если есть оригинальное выражение, внутри, печатаем его
-    #if 'value' in v:
-    #    v = v['value']
-
     print_value(x['value'], ctx=['oneline'], print_just_id=False)
 
 
 def print_import(x):
     s = x['str']
-
     if 'c-no-print' in x['att']:
         out("@attribute(\"c-no-print\")\n")
     out("import \"%s\"" % (s))
@@ -747,11 +757,11 @@ def run(module, outname):
 
 
     for x in module['text']:
-
-        if 'nl' in x:
-            out("\n" * x['nl'])
-
         isa = x['isa']
+
+        if isa != 'comment':
+            newline(n=x['nl'])
+
         if isa == 'def_var': print_def_var(x)
         elif isa == 'def_const': print_def_const(x)
         elif isa == 'def_func': print_def_func(x)

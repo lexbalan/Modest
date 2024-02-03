@@ -72,7 +72,7 @@ def indent():
     ind(INDENT_SYMBOL)
 
 
-def nlindent(nl=1):
+def nl_indent(nl=1):
     newline(nl)
     if nl > 0:
         indent()
@@ -243,8 +243,7 @@ def print_type_record(t, tag=""):
         out(";")
 
     indent_down()
-    #indent()
-    nlindent(1)
+    nl_indent(1)
     out("}")
 
 
@@ -1131,7 +1130,7 @@ def print_value(x, ctx=[], need_wrap=False, just_print_id=True):
 
 
 def print_stmt_if(x, need_else_branch):
-    nlindent(x['nl'])
+    nl_indent(x['nl'])
     out("if ("); print_value(x['cond']); out(")")
 
     if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
@@ -1162,7 +1161,7 @@ def print_stmt_if(x, need_else_branch):
 
 
 def print_stmt_while(x):
-    nlindent(x['nl'])
+    nl_indent(x['nl'])
     out("while ("); print_value(x['cond']); out(")")
 
     if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
@@ -1175,7 +1174,7 @@ def print_stmt_while(x):
 
 
 def print_stmt_return(x):
-    nlindent(x['nl'])
+    nl_indent(x['nl'])
     global va_id
     if va_id != None:
         out("va_end(%s);" % va_id)
@@ -1218,7 +1217,7 @@ def print_stmt_defvar(x):
         if x['var']['usecnt'] == 0:
             return
 
-    nlindent(x['nl'])
+    nl_indent(x['nl'])
 
     if init_value != None:
         if hlir_type.type_is_defined_array(x['var']['type']):
@@ -1250,7 +1249,7 @@ def print_stmt_let(x):
         if v['usecnt'] == 0:
             return
 
-    nlindent(x['nl'])
+    nl_indent(x['nl'])
 
     if hlir_type.type_is_defined_array(v['type']):
         print_variable_array(v['type'], id['str'], do_wrapped=False)
@@ -1263,37 +1262,6 @@ def print_stmt_let(x):
     out(" = ")
     print_value(x['value'], just_print_id=False)
     out(";")
-
-
-
-def memcopy(left, right):
-    out("memcpy(&")
-    print_value(left)
-    out(", &")
-    print_value(right)
-    out(", sizeof ")
-
-    if left['kind'] in ['index']:
-        out("(")
-        print_type(right['type'], print_array_asis=True)
-        out(")")
-    else:
-        print_value(left)
-
-    out(");")
-
-
-def memcmp(left, right, op='eq'):
-    out('memcmp(&')
-    print_value(left)
-    out(', &')
-    print_value(right)
-    out(', sizeof(')
-    print_type(left['type'])
-    if op == 'eq':
-        out(')) == 0')
-    else:
-        out(')) != 0')
 
 
 def assign(left, right):
@@ -1319,12 +1287,12 @@ def assign(left, right):
 
 
 def print_stmt_assign(x):
-    nlindent(x['nl'])
+    nl_indent(x['nl'])
     assign(x['left'], x['right'])
 
 
 def print_stmt_value(x):
-    nlindent(x['nl'])
+    nl_indent(x['nl'])
     print_value(x['value']); out(";")
 
 
@@ -1344,8 +1312,8 @@ def print_stmt(x):
     elif k == 'while': print_stmt_while(x)
     elif k == 'def_var': print_stmt_defvar(x)
     elif k == 'let': print_stmt_let(x)
-    elif k == 'break': nlindent(x['nl']); out('break;')
-    elif k == 'again': nlindent(x['nl']); out('continue;')
+    elif k == 'break': nl_indent(x['nl']); out('break;')
+    elif k == 'again': nl_indent(x['nl']); out('continue;')
     elif k == 'comment-line': print_comment_line(x)
     elif k == 'comment-block': print_comment_block(x)
     else: out("<stmt %s>" % str(x))
@@ -1682,7 +1650,7 @@ def print_comment(x):
 
 
 def print_comment_block(x):
-    nlindent(x['nl'])
+    nl_indent(x['nl'])
     out("/*%s*/" % x['text'])
 
 
@@ -1781,5 +1749,43 @@ def run(module, outname):
     if is_header: out("\n#endif  /* %s */" % guardname)
     newline()
     output_close()
+    return
+
+
+
+
+
+
+
+
+
+def memcopy(left, right):
+    out("memcpy(&")
+    print_value(left)
+    out(", &")
+    print_value(right)
+    out(", sizeof ")
+
+    if left['kind'] in ['index']:
+        out("(")
+        print_type(right['type'], print_array_asis=True)
+        out(")")
+    else:
+        print_value(left)
+
+    out(");")
+
+
+def memcmp(left, right, op='eq'):
+    out('memcmp(&')
+    print_value(left)
+    out(', &')
+    print_value(right)
+    out(', sizeof(')
+    print_type(left['type'])
+    if op == 'eq':
+        out(')) == 0')
+    else:
+        out(')) != 0')
 
 
