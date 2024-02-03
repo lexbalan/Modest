@@ -1487,7 +1487,6 @@ def print_decl_type(x):
 
 
 def print_def_type(x):
-    id_str = x['type']['id']['str']
     t = x['type']['aliasof']
 
     if NO_TYPEDEF_OTHERS:
@@ -1499,14 +1498,14 @@ def print_def_type(x):
     # !
     if x['afterdef']:
         if hlir_type.type_is_record(t):
-            print_type_record(t, tag=id_str)
+            print_type_record(t, tag=x['id']['str'])
             out(";")
-            return;
+            return
 
 
     if NO_TYPEDEF_STRUCTS:
         if hlir_type.type_is_record(t):
-            print_type_record(t, tag=xid_str)
+            print_type_record(t, tag=x['id']['str'])
             out(";")
             return
 
@@ -1522,9 +1521,11 @@ def print_def_type(x):
     else:
         print_type(t)
 
-    out(" %s" % id_str)
+    out(" %s" % x['id']['str'])
+
     if is_defined_array:
         print_array_volume(t)
+
     out(";")
 
 
