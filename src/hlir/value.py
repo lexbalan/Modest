@@ -133,13 +133,12 @@ def hlir_value_func(id, type, ti=None):
     }
 
 
-def hlir_value_var(id, type, init=None, ti=None):
+def hlir_value_var(id, type, ti=None):
     return {
         'isa': 'value',
         'kind': 'var',
         'id': id,
         'type': type,
-        'init': init,
         'usecnt': 0,
         'att': [],
         'ti': ti

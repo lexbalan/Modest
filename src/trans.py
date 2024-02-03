@@ -1309,13 +1309,13 @@ def do_stmt_var(x):
         error("local id redefinition", x['id']['ti'])
         return hlir_stmt_bad()
 
-    var_value = add_local_var(var_id, t, v, x['ti'])
+    var_value = add_local_var(var_id, t, x['ti'])
     return hlir_stmt_def_var(var_value, v, ti=x['ti'])
 
 
 
-def add_local_var(id, typ, init_value, ti):
-    var_value = hlir_value_var(id, typ, init_value, ti)
+def add_local_var(id, typ, ti):
+    var_value = hlir_value_var(id, typ, ti)
     var_value['att'].extend(['local'])
     module['context'].value_add(id['str'], var_value)
     return var_value
@@ -1632,11 +1632,11 @@ def def_var(x):
             init_value = value_cons_implicit(iv, var_type, x['init']['ti'])
             hlir_type.check(var_type, init_value['type'], x['init']['ti'])
 
-    var = hlir_value_var(f['id'], var_type, init=init_value)
+    var = hlir_value_var(f['id'], var_type)
 
     module['context'].value_add(x['field']['id']['str'], var)
 
-    return hlir_def_var(f['id'], var, x['ti'])
+    return hlir_def_var(f['id'], init_value, var, x['ti'])
 
 
 
@@ -1757,7 +1757,7 @@ def def_func(x):
     if extra_args:
         cfunc['va_id'] = va_id
         func_type['extra_args'] = True
-        add_local_var(va_id, last_param['type'], None, va_id['ti'])
+        add_local_var(va_id, last_param['type'], va_id['ti'])
         module_option('use_extra_args')
 
 

@@ -605,7 +605,7 @@ def print_stmt_defvar(x):
     out('var ')
     print_field(x['var'])
 
-    init_value = x['var']['init']
+    init_value = x['init_value']
     if init_value != None:
         out(" := ")
         print_value(init_value)
@@ -704,7 +704,7 @@ def print_def_var(x):
     out("var ")
     var = x['value']
     print_field(var)
-    iv = var['init']
+    iv = x['init_value']
     if iv != None:
         out(" := "); print_value(iv)
 

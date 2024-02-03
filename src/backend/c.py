@@ -1212,7 +1212,7 @@ def save_array(left, right):
 
 
 def print_stmt_defvar(x):
-    init_value = x['var']['init']
+    init_value = x['init_value']
 
     if DONT_PRINT_UNUSED:
         if x['var']['usecnt'] == 0:
@@ -1611,7 +1611,7 @@ def print_def_var(x):
 
     print_variable(id, var['type'])
 
-    init_value = var['init']
+    init_value = x['init_value']
     if init_value != None:
         out(" = ")
 

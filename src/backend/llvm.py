@@ -1165,8 +1165,8 @@ def print_stmt_return(x):
 def print_stmt_def_var(x):
     id_str = x['var']['id']['str']
     iv = None
-    if x['var']['init'] != None:
-        iv = do_reval(x['var']['init'])
+    if x['init_value'] != None:
+        iv = do_reval(x['init_value'])
     val = llvm_alloca(x['var']['type'], id_str=None, init_ll_value=iv)
     locals_add(id_str, val)
     return None
@@ -1405,9 +1405,9 @@ def print_def_var(x):
     out(var['id']['str'])
     out(" = %s " % mod)
     print_type(var['type'])
-    if var['init'] != None:
+    if x['init_value'] != None:
         out(" ")
-        llvm_print_value(do_eval(var['init']))
+        llvm_print_value(do_eval(x['init_value']))
     else:
         out(" zeroinitializer")
 
