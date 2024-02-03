@@ -1570,7 +1570,7 @@ def print_variable_array(t, id_str, do_wrapped=True):
 
 # из за того что с C типы записваются через жопу
 # приходится печатать типы ptr, arr & func вместе с именем поля
-def print_variable(_id, typ, print_as_const=False):
+def print_variable(_id, typ, print_as_const=False, init_value=None):
     assert (typ != None)
 
     id_str = _id['str']
@@ -1590,6 +1590,10 @@ def print_variable(_id, typ, print_as_const=False):
         print_variable_regular(typ, id_str, print_as_const)
 
 
+    if init_value != None:
+        out(" = ")
+        print_value(init_value)
+
 
 
 def print_def_var(x):
@@ -1607,7 +1611,7 @@ def print_def_var(x):
 
     init_value = var['init']
     if init_value != None:
-        out(" = ");
+        out(" = ")
 
         if hlir_type.type_is_array(init_value['type']):
             print_value_literal_array(init_value, ['print_immediate'])
