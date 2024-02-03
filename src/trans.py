@@ -1875,25 +1875,21 @@ def decl_func(x):
 
 
 def comm_line(x):
-    y = {
+    return {
         'isa': 'comment',
         'kind': 'line',
         'lines': x['lines'],
         'att': []
     }
 
-    return y
-
 
 def comm_block(x):
-    y = {
+    return {
         'isa': 'comment',
         'kind': 'block',
         'text': x['text'],
         'att': []
     }
-
-    return y
 
 
 def proc(ast, source_info):
