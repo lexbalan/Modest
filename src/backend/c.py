@@ -1479,14 +1479,15 @@ def print_def_func(x):
 
 
 def print_decl_type(x):
-    id_str = x['id']['str']
+    id = x['id']
     newline(n=x['nl'])
-    out("struct %s;" % id_str)
+    out("struct %s;" % id['str'])
     if not NO_TYPEDEF_STRUCTS:
-        out("\ntypedef struct %s %s;" % (id_str, id_str))
+        out("\ntypedef struct %s %s;" % (id['str'], id['str']))
 
 
 def print_def_type(x):
+    id = x['id']
     aliasif = x['type']
 
     if NO_TYPEDEF_OTHERS:
@@ -1498,14 +1499,14 @@ def print_def_type(x):
     # !
     if x['afterdef']:
         if hlir_type.type_is_record(aliasif):
-            print_type_record(aliasif, tag=x['id']['str'])
+            print_type_record(aliasif, tag=id['str'])
             out(";")
             return
 
 
     if NO_TYPEDEF_STRUCTS:
         if hlir_type.type_is_record(aliasif):
-            print_type_record(aliasif, tag=x['id']['str'])
+            print_type_record(aliasif, tag=id['str'])
             out(";")
             return
 
@@ -1521,7 +1522,7 @@ def print_def_type(x):
     else:
         print_type(aliasif)
 
-    out(" %s" % x['id']['str'])
+    out(" %s" % id['str'])
 
     if is_defined_array:
         print_array_volume(aliasif)
@@ -1598,6 +1599,7 @@ def print_variable(_id, typ, print_as_const=False, init_value=None):
 
 def print_def_var(x):
     newline(n=x['nl'])
+    id = x['id']
     var = x['value']
     if USE_STATIC_VARIABLES:
         if not 'global' in var['att']:
@@ -1607,7 +1609,7 @@ def print_def_var(x):
     if 'extern' in var['att']: out("extern ")
     if 'volatile' in var['att']: out("volatile ")
 
-    print_variable(x['id'], var['type'])
+    print_variable(id, var['type'])
 
     init_value = var['init']
     if init_value != None:
