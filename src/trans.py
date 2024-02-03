@@ -285,6 +285,7 @@ def do_type_pointer(t):
     return hlir_type_pointer(to, ti=t['ti'])
 
 
+
 def do_type_array(t):
     of = do_type(t['of'])
     volume_expr = None
@@ -293,6 +294,7 @@ def do_type_array(t):
         if value_is_bad(volume_expr):
             return hlir_type_bad(t['ti'])
     return hlir_type_array(of, volume=volume_expr, ti=t['ti'])
+
 
 
 def do_type_record(x):
@@ -536,7 +538,6 @@ def do_bin_op_with_pointers(op, l, r , ti):
 
 
 
-
 def bin_imm(op, type_result, l, r, ti):
     ops = {
         'logic_or': lambda a, b: a or b,
@@ -567,13 +568,7 @@ def bin_imm(op, type_result, l, r, ti):
         num_val = int(num_val)
 
     bin_value = hlir_value_bin(op, l, r, type_result, ti=ti)
-
-
-    if op == 'or':
-        print("num_val = %x" % num_val)
-
     bin_value['imm'] = num_val
-
     return bin_value
 
 
@@ -673,6 +668,7 @@ def do_value_bin(x):
         elif op == 'and': op = 'logic_and'
 
     return _bin(op, type_result, l, r, ti)
+
 
 
 def _bin(op, type_result, l, r, ti=None):
@@ -784,6 +780,7 @@ def get_forms(func_id_str, args):
 
         #print("printf forms = %s" % str(forms))
     return forms
+
 
 
 def do_value_call(x):
@@ -1078,6 +1075,7 @@ def do_value_array(x):
     return v
 
 
+
 def do_value_record(x):
     initializers = []
     fields = []
@@ -1261,6 +1259,7 @@ def do_stmt_break(x):
     return hlir_stmt_break(x['ti'])
 
 
+
 def do_stmt_var(x):
     id = x['id']
 
@@ -1312,6 +1311,7 @@ def do_stmt_var(x):
 
     var_value = add_local_var(id, t, v, x['ti'])
     return hlir_stmt_def_var(var_value, v, ti=x['ti'])
+
 
 
 def add_local_var(id, typ, init_value, ti):
@@ -1386,6 +1386,7 @@ def do_stmt_assign(x):
         module_option('use_memcpy')
 
     return hlir_stmt_assign(l, r, ti=x['ti'])
+
 
 
 def do_stmt_incdec(x, op='add'):
@@ -1872,6 +1873,7 @@ def decl_func(x):
     obj = hlir_decl_func(id, func, x['ti'])
     do_extend(obj)
     return obj
+
 
 
 def comm_line(x):
