@@ -4,8 +4,16 @@
 import "libc/stdio.hm"
 
 const hello = "Hello"
-const world = " World!\n"
-const hello_world = hello + world
+const world = "world!\n"
+
+const SYSTEM = 64
+
+@if SYSTEM == 64
+const hello_world = hello + " 32-bit " + world
+@else
+const hello_world = hello + " 64-bit " + world
+@endif /* SYSTEM == 64 */
+
 
 func main() -> Int {
     printf("%s", hello_world to *Str8)

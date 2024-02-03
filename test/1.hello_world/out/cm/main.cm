@@ -3,8 +3,13 @@
 import "libc/stdio.h"
 
 const hello = "Hello"
-const world = " World!\n"
-const hello_world = hello + world
+const world = "world!\n"
+
+const SYSTEM = 64
+
+const hello_world = hello + " 32-bit " + world
+const hello_world = hello + " 64-bit " + world
+
 
 func main() -> Int {
     printf("%s", hello_world to *[]Char8)

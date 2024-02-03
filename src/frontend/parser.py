@@ -1157,7 +1157,30 @@ class Parser:
     def parse_dir(self):
         ti = self.ti()
         x = self.gettok()
-        return {'isa': 'ast_directive', 'kind': 'pragma', 'text': x, 'ti': ti}
+
+        kind = 'pragma'
+        text = x
+
+        if x[:2] == 'if':
+            kind = 'if'
+            text = x[3:]
+        elif x[:5] == 'endif':
+            kind = 'endif'
+            text = x[6:]
+        elif x[:6] == 'elseif':
+            kind = 'elseif'
+            text = x[7:]
+        elif x[:4] == 'else':
+            kind = 'else'
+            text = x[5:]
+
+        return {
+            'isa': 'ast_directive',
+            'kind': kind,
+            'text': text,
+            'ti': ti
+        }
+
 
 
     def parse(self, source_info):

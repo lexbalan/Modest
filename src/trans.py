@@ -1926,6 +1926,15 @@ def proc(ast, source_info):
                 exec(x['text'])
                 continue
 
+            if kind == 'if':
+                print('IF')
+            if kind == 'else':
+                print('ELSE')
+            if kind == 'elseif':
+                print('ELSEIF')
+            if kind == 'endif':
+                print('ENDIF')
+
             elif kind == 'import':
                 y = do_import(x)
 

@@ -6,9 +6,12 @@
 
 #include <stdio.h>
 
+#define SYSTEM  64
+
+
 int main()
 {
-    printf("%s", "Hello World!\n");
+    printf("%s", "Hello 64-bit world!\n");
     return 0;
 }
 
