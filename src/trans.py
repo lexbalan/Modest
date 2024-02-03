@@ -1812,13 +1812,13 @@ def decl_type(x):
 
 
 def decl_func(x):
-    func_id = x['id']
-    func_type = do_type_func(x['type'], func_id=func_id['str'])
+    id = x['id']
+    func_type = do_type_func(x['type'], func_id=id['str'])
 
     #
     # Check if function already declared/defined
     #
-    already = value_get(func_id['str'])
+    already = value_get(id['str'])
     if already != None:
         if 'stmt' in already:
             # already defined function
@@ -1835,7 +1835,7 @@ def decl_func(x):
 
         return
 
-    func = hlir_value_func(func_id, func_type, ti=func_id['ti'])
+    func = hlir_value_func(id, func_type, ti=id['ti'])
 
     if already == None:
         if func_type['to']['size'] > RET_SIZE_MAX:
@@ -1856,9 +1856,9 @@ def decl_func(x):
     if x['extern']:
         func['att'].append('extern')
 
-    module['context'].value_add(func_id['str'], func)
+    module['context'].value_add(id['str'], func)
 
-    return hlir_decl_func(func_id, func, x['ti'])
+    return hlir_decl_func(id, func, x['ti'])
 
 
 
@@ -2007,16 +2007,8 @@ def translate(srcname):
 
 
 
-
-
-
-
 def set_att(obj, path, att):
-    #print(path)
     if len(path) == 1:
-        #for o in obj:
-        #    print(o)
-
         p = path[0]
         if p in obj:
             obj[p]['att'].append(att)
@@ -2030,6 +2022,7 @@ def set_att(obj, path, att):
         assert(False)
 
 
+# directive '@attribute'
 def do_attributes(obj):
     atts = attributes_get()
     for att in atts:
@@ -2048,6 +2041,7 @@ def set_prop(obj, path, val):
     if len(path) == 1:
         p = path[0]
         obj[p] = val
+
     elif len(path) > 1:
         if path[0] in obj:
             set_prop(obj[path[0]], path[1:], val)
@@ -2058,7 +2052,7 @@ def set_prop(obj, path, val):
         assert(False)
 
 
-# form directive '@property'
+# directive '@property'
 def do_properties(obj):
     global properties
     props = properties
