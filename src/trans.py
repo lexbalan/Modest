@@ -1869,7 +1869,7 @@ def decl_func(x):
 
     module['context'].value_add(func_id['str'], func)
 
-    obj = hlir_decl_func(id, func, x['ti'])
+    obj = hlir_decl_func(func_id, func, x['ti'])
     do_extend(obj)
     return obj
 

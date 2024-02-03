@@ -3,12 +3,9 @@
 @attribute("c-no-print")
 import "libc/stdio.hm"
 
-
 const hello = "Hello"
 const world = " World!\n"
-
 const hello_world = hello + world
-
 
 func main() -> Int {
     printf("%s", hello_world to *Str8)

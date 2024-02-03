@@ -1375,8 +1375,37 @@ def print_stmt_block(s):
     out("}")
 
 
-def print_func_signature(id, typ, extra_args=False):
-    to = typ['to']
+
+def print_wrapped_array(_type):
+    # -> struct ret_str_retval {char a[10];};
+    out(_type['wrapped_id'])
+    out (" {")
+    item_type = hlir_type.array_root_item_type(_type)
+    print_type(item_type, need_space_after=True)
+    out("a");
+    print_array_volume(_type)
+    out(";};\n")
+
+
+def print_func_wrappers(ftype):
+    ft = ftype#f['type']
+    # печатаем обернутые параметры-массивы и возврашаемые массивы
+    # (обернуты тк C не позволяет принимать возвращать массив по значению)
+    for param in ft['params']:
+        if hlir_type.type_is_defined_array(param['type']):
+            print_wrapped_array(param['type'])
+    if hlir_type.type_is_defined_array(ft['to']):
+        print_wrapped_array(ft['to'])
+
+
+def print_func_signature(id_str, ftype, atts, print_wrappers=True):
+    if print_wrappers:
+        print_func_wrappers(ftype)
+
+    if 'static' in atts: out("static ")
+    if 'inline' in atts: out("inline ")
+
+    to = ftype['to']
     t = to
 
     # поле является указателем?
@@ -1390,114 +1419,61 @@ def print_func_signature(id, typ, extra_args=False):
 
     print_type(t)
     out(" " + "*" * ptr_level)
-    out("%s" % id)
-    print_paramlist(typ['params'], extra_args)
-
-
-
-def print_wrapped_array(_type):
-    # -> struct ret_str_retval {char a[10];};
-    out(_type['wrapped_id'])
-    out (" {")
-    item_type = hlir_type.array_root_item_type(_type)
-    print_type(item_type, need_space_after=True)
-    out("a");
-    print_array_volume(_type)
-    out(";};\n")
-
-
-def print_func_wrappers(f):
-    ft = f['type']
-    # печатаем обернутые параметры-массивы и возврашаемые массивы
-    # (обернуты тк C не позволяет принимать возвращать массив по значению)
-    for param in ft['params']:
-        if hlir_type.type_is_defined_array(param['type']):
-            print_wrapped_array(param['type'])
-    if hlir_type.type_is_defined_array(ft['to']):
-        print_wrapped_array(ft['to'])
+    out("%s" % id_str)
+    print_paramlist(ftype['params'], extra_args=ftype['extra_args'])
 
 
 
 def print_decl_func(x):
-    func = x['value']
-    ft = func['type']
-
     newline(n=x['nl'])
-
-    print_func_wrappers(func)
-
-    if 'extern' in func['att']: out("extern ")
-    if 'static' in func['att']: out("static ")
-    if 'inline' in func['att']: out("inline ")
-
-    print_func_signature(func['id']['str'], ft, extra_args=ft['extra_args'])
-
+    print_func_signature(x['id']['str'], x['value']['type'], x['value']['att'])
     out(";")
-
 
 
 def print_def_func(x):
     func = x['value']
     id = x['id']
 
+    global va_id
     global cfunc
     cfunc = func
 
     newline(n=x['nl'])
 
-    ft = func['type']
-    extra_args = ft['extra_args']
+    ftype = func['type']
+    extra_args = ftype['extra_args']
 
-    if not 'declared' in func['att']:
-        print_func_wrappers(func)
-
-
-    if 'comment' in func:
-        if func['comment'] != '':
-            out("// %s" % func['comment'])
-            newline()
-
-    if 'static' in func['att']: out("static ")
-    if 'inline' in func['att']: out("inline ")
-
-    print_func_signature(id['str'], func['type'], extra_args=extra_args)
-
-
+    # если функция уже была определена, то обертки над ее типами
+    # уже были напечатаны (если они были), и их нельзя печатать еще раз
+    print_wrappers = not 'declared' in func['att']
+    print_func_signature(func['id']['str'], ftype, func['att'], print_wrappers)
 
     if styleguide['LINE_BREAK_BEFORE_FUNC_BRACE']:
         newline()
     else:
         out(" ")
 
-
     out("{")
-
     indent_up()
 
-
     if extra_args:
-        global va_id
+        # add va_list & va_start()
         va_id = func['va_id']['str']
         newline(); indent(); out("va_list %s;" % va_id)
-
-        last_param = func['type']['params'][-1]
-
+        last_param = ftype['params'][-1]
         newline(); indent(); out("va_start(%s, %s);" % (va_id, last_param['id']['str']))
-
 
     stmts = func['stmt']['stmts']
     print_statements(stmts)
-
 
     if extra_args:
         if stmts[-1]['kind'] != 'return':
             newline(); indent(); out("va_end(%s);" % va_id)
 
-    va_id = None
-
     indent_down()
     out("\n}")
 
+    va_id = None
     cfunc = None
 
 
