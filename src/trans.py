@@ -1542,7 +1542,6 @@ def do_import(x):
 
 
 
-
 def def_const(x):
     id = x['id']
     v = do_value(x['value'])
@@ -1566,8 +1565,7 @@ def def_const(x):
     module['context'].value_add(id['str'], const_value)
 
     obj = hlir_def_const(const_value, x['ti'])
-    do_properties(obj)
-    do_attributes(obj)
+    do_extend(obj)
     return obj
 
 
@@ -1611,8 +1609,7 @@ def def_type(x):
         module['context'].type_add(id['str'], nt)
 
     obj = hlir_def_type(nt, already_declared, ti=x['ti'])
-    do_properties(obj)
-    do_attributes(obj)
+    do_extend(obj)
     return obj
 
 
@@ -1645,8 +1642,7 @@ def def_var(x):
     module['context'].value_add(x['field']['id']['str'], var)
 
     obj = hlir_def_var(var, x['ti'])
-    do_properties(obj)
-    do_attributes(obj)
+    do_extend(obj)
     return obj
 
 
@@ -1804,8 +1800,7 @@ def def_func(x):
         module_remove_node(module, 'value', func_id['str'])
 
     obj = hlir_def_func(fn, x['ti'])
-    do_properties(obj)
-    do_attributes(obj)
+    do_extend(obj)
     return obj
 
 
@@ -1822,8 +1817,7 @@ def decl_type(x):
     if x['extern']:
         obj['att'].append('extern')
 
-    do_properties(obj)
-    do_attributes(obj)
+    do_extend(obj)
     return obj
 
 
@@ -1876,8 +1870,7 @@ def decl_func(x):
     module['context'].value_add(func_id['str'], func)
 
     obj = hlir_decl_func(func, x['ti'])
-    do_properties(obj)
-    do_attributes(obj)
+    do_extend(obj)
     return obj
 
 
@@ -2094,5 +2087,10 @@ def do_properties(obj):
 
         elif len(path_array) > 1:
             set_prop(obj, path_array, v)
+
+
+def do_extend(obj):
+    do_properties(obj)
+    do_attributes(obj)
 
 
