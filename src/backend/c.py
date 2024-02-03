@@ -239,7 +239,7 @@ def print_type_record(t, tag=""):
 
         newline(n=field['nl'])
         indent();
-        print_field(field)
+        print_variable(field['id'], field['type'])
         out(";")
 
     indent_down()
@@ -463,13 +463,13 @@ def print_value_un(v, ctx):
 
 
 
-def print_fields(fields, before, after, between):
+def print_variables(fields, before, after, between):
     i = 0
     n = len(fields)
     while i < n:
         param = fields[i]
         out(before)
-        print_field(param)
+        print_variable(param['id'], param['type'])
         out(after)
         i = i + 1
         if i < n: out(between)
@@ -477,7 +477,7 @@ def print_fields(fields, before, after, between):
 
 def print_paramlist(parms, extra_args=False):
     out("(")
-    print_fields(parms, before="", after="", between=", ")
+    print_variables(parms, before="", after="", between=", ")
     if extra_args:
         out(", ...")
     out(")")
@@ -1224,7 +1224,7 @@ def print_stmt_defvar(x):
         if hlir_type.type_is_defined_array(x['var']['type']):
             id_str = x['var']['id']['str']
 
-            print_field_array(init_value['type'], id_str, do_wrapped=False)
+            print_variable_array(init_value['type'], id_str, do_wrapped=False)
             out(";\n")
             indent()
 
@@ -1232,7 +1232,7 @@ def print_stmt_defvar(x):
             return
 
 
-    print_field(x['var'])
+    print_variable(x['var']['id'], x['var']['type'])
 
     if init_value != None:
         out(" = ")
@@ -1253,13 +1253,13 @@ def print_stmt_let(x):
 
     if hlir_type.type_is_defined_array(v['type']):
         id_str = x['id']['str']
-        print_field_array(v['type'], id_str, do_wrapped=False)
+        print_variable_array(v['type'], id_str, do_wrapped=False)
         out(";\n")
         indent()
         save_array(v, x['init_value'])
         return
 
-    print_field2(x['id'], v['type'], print_as_const=True)
+    print_variable(x['id'], v['type'], print_as_const=True)
     out(" = ")
     print_value(x['init_value'], just_print_id=False)
     out(";")
@@ -1530,18 +1530,18 @@ def print_def_type(x):
 
 
 
-def print_field_regular(t, id_str, print_as_const):
+def print_variable_regular(t, id_str, print_as_const):
     print_type(t, need_space_after=True, print_as_const=print_as_const)
     out("%s" % id_str)
 
 
-def print_field_pointer(t, id_str, print_as_const):
+def print_variable_pointer(t, id_str, print_as_const):
     print_type(t, need_space_after=True, print_as_const=print_as_const)
     out("%s" % id_str)
 
 
 
-def print_field_array(t, id_str, do_wrapped=True):
+def print_variable_array(t, id_str, do_wrapped=True):
 
     if do_wrapped:
         if 'wrapped_array_type' in t['att']:
@@ -1570,26 +1570,22 @@ def print_field_array(t, id_str, do_wrapped=True):
 
 # из за того что с C типы записваются через жопу
 # приходится печатать типы ptr, arr & func вместе с именем поля
-def print_field(x, print_as_const=False):
-    print_field2(x['id'], x['type'], print_as_const=print_as_const)
-
-
-def print_field2(_id, typ, print_as_const=False):
+def print_variable(_id, typ, print_as_const=False):
     assert (typ != None)
 
     id_str = _id['str']
     assert (id_str != "")
 
     if 'c_alias' in typ or typ['id'] != None:
-        print_field_regular(typ, id_str, print_as_const)
+        print_variable_regular(typ, id_str, print_as_const)
         return
 
     if hlir_type.type_is_pointer(typ):
-        print_field_pointer(typ, id_str, print_as_const)
+        print_variable_pointer(typ, id_str, print_as_const)
     elif hlir_type.type_is_array(typ):
-        print_field_array(typ, id_str)
+        print_variable_array(typ, id_str)
     else:
-        print_field_regular(typ, id_str, print_as_const)
+        print_variable_regular(typ, id_str, print_as_const)
 
 
 
@@ -1605,7 +1601,7 @@ def print_def_var(x):
     if 'extern' in var['att']: out("extern ")
     if 'volatile' in var['att']: out("volatile ")
 
-    print_field(var)
+    print_variable(x['id'], var['type'])
 
     init_value = var['init']
     if init_value != None:
@@ -1637,12 +1633,13 @@ def print_def_const(x):
     if hlir_type.type_is_generic_array(const_value['type']):
         return
 
-
     newline(n=x['nl'])
+
+    _id = x['id']
 
     if hlir_type.type_is_array(const_value['type']) or hlir_type.type_is_record(const_value['type']):
         newline()
-        print_field(const_value)
+        print_variable(_id, const_value['type'])
         out(" = ")
         v = const_value['value']
         print_value_literal(v, ['print_immediate'])
@@ -1650,8 +1647,7 @@ def print_def_const(x):
         return
 
     else:
-        id_str = x['id']['str']
-        out("#define %s  " % id_str)
+        out("#define %s  " % _id['str'])
 
     v = const_value['value']
     need_wrap = precedence(v) < precedenceMax

@@ -1261,7 +1261,7 @@ def do_stmt_break(x):
 
 
 def do_stmt_var(x):
-    id = x['id']
+    var_id = x['id']
 
     t = None
     v = None
@@ -1278,12 +1278,12 @@ def do_stmt_var(x):
 
     # error: no type, no init value
     if t == None and v == None:
-        module['context'].value_add(id['str'], hlir_value_bad())
+        module['context'].value_add(var_id['str'], hlir_value_bad())
         return hlir_stmt_bad()
 
     if t != None:
         if hlir_type.type_is_bad(t):
-            module['context'].value_add(id['str'], hlir_value_bad())
+            module['context'].value_add(var_id['str'], hlir_value_bad())
             return hlir_stmt_bad()
 
         if hlir_type.type_is_forbidden_var(t):
@@ -1304,12 +1304,12 @@ def do_stmt_var(x):
 
 
     # check if identifier is free (in current block)
-    already = value_get_here(id['str'])
+    already = value_get_here(var_id['str'])
     if already != None:
         error("local id redefinition", x['id']['ti'])
         return hlir_stmt_bad()
 
-    var_value = add_local_var(id, t, v, x['ti'])
+    var_value = add_local_var(var_id, t, v, x['ti'])
     return hlir_stmt_def_var(var_value, v, ti=x['ti'])
 
 
@@ -1642,7 +1642,7 @@ def def_var(x):
 
     module['context'].value_add(x['field']['id']['str'], var)
 
-    obj = hlir_def_var(id, var, x['ti'])
+    obj = hlir_def_var(f['id'], var, x['ti'])
     do_extend(obj)
     return obj
 
