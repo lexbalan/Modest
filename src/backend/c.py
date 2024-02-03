@@ -1429,7 +1429,6 @@ def print_decl_func(x):
     if 'extern' in func['att']: out("extern ")
     if 'static' in func['att']: out("static ")
     if 'inline' in func['att']: out("inline ")
-    if 'c_prefix' in func: out("%s " % func['c_prefix'])
 
     print_func_signature(func['id']['str'], ft, extra_args=ft['extra_args'])
 
@@ -1439,6 +1438,7 @@ def print_decl_func(x):
 
 def print_def_func(x):
     func = x['value']
+    id = x['id']
 
     global cfunc
     cfunc = func
@@ -1457,13 +1457,12 @@ def print_def_func(x):
             out("// %s" % func['comment'])
             newline()
 
-    if 'c_prefix' in func:
-        out("%s " % func['c_prefix'])
-
     if 'static' in func['att']: out("static ")
     if 'inline' in func['att']: out("inline ")
 
-    print_func_signature(func['id']['str'], func['type'], extra_args=extra_args)
+    print_func_signature(id['str'], func['type'], extra_args=extra_args)
+
+
 
     if styleguide['LINE_BREAK_BEFORE_FUNC_BRACE']:
         newline()
@@ -1626,15 +1625,8 @@ def print_def_var(x):
             if not 'extern' in var['att']:
                 out("static ")
 
-        if 'extern' in var['att']:
-            out("extern ")
-
-        if 'volatile' in var['att']:
-            out("volatile ")
-
-
-    if 'c_prefix' in var:
-        out("%s " % var['c_prefix'])
+    if 'extern' in var['att']: out("extern ")
+    if 'volatile' in var['att']: out("volatile ")
 
     print_field(var)
 
@@ -1681,9 +1673,7 @@ def print_def_const(x):
         return
 
     else:
-        pass
-
-        id_str = const_value['id']['str']
+        id_str = x['id']['str']
         out("#define %s  " % id_str)
 
     v = const_value['value']

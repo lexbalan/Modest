@@ -1747,7 +1747,6 @@ def def_func(x):
     if already:
         fn['att'].append('declared')
 
-
     i = 0
     while i < len(params):
         param = params[i]
@@ -1800,7 +1799,7 @@ def def_func(x):
     if settings.check('backend', 'llvm'):
         module_remove_node(module, 'value', func_id['str'])
 
-    obj = hlir_def_func(id, fn, x['ti'])
+    obj = hlir_def_func(func_id, fn, x['ti'])
     do_extend(obj)
     return obj
 
