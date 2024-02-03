@@ -2,7 +2,7 @@
 @attribute("c-no-print")
 import "libc/stdio.h"
 
-type NewInt32 NewInt32
+type NewInt32 Int32
 
 func main() -> Int {
     printf("test typedef\n")

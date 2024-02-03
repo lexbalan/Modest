@@ -1604,12 +1604,12 @@ def def_type(x):
         exist.update(nt)
         # and find and remove declaration instruction
         if settings.check('backend', 'llvm'):
-            module_remove_node(module, 'type', id['str'])
+            module_remove_node(module, 'newtype', id['str'])
 
     else:
         module['context'].type_add(id['str'], nt)
 
-    obj = hlir_def_type(id, nt, already_declared, ti=x['ti'])
+    obj = hlir_def_type(id, ty, nt, already_declared, ti=x['ti'])
     do_extend(obj)
     return obj
 
@@ -2057,7 +2057,6 @@ def set_prop(obj, path, val):
     if len(path) == 1:
         p = path[0]
         obj[p] = val
-
     elif len(path) > 1:
         if path[0] in obj:
             set_prop(obj[path[0]], path[1:], val)

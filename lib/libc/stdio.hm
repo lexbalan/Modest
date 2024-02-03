@@ -10,10 +10,10 @@ import "./ctypes.hm"
 type FposT
 type FILE
 
-@property("type.c_alias", "char *")
+@property("newtype.c_alias", "char *")
 type CharStr Str
 
-@property("type.c_alias", "const char *")
+@property("newtype.c_alias", "const char *")
 type ConstCharStr CharStr
 
 

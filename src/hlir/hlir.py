@@ -8,21 +8,22 @@ def hlir_init():
 
 
 
-def hlir_decl_type(id, type, ti):
+def hlir_decl_type(id, newtype, ti):
     return {
         'isa': 'decl_type',
         'id': id,
-        'type': type,
+        'newtype': newtype,
         'att': [],
         'ti': ti
     }
 
 
-def hlir_def_type(id, type, already_declared=False, ti=None):
+def hlir_def_type(id, type, newtype, already_declared=False, ti=None):
     return {
         'isa': 'def_type',
         'id': id,
-        'type': type,
+        'type': type,  # original type
+        'newtype': newtype,  # defined type
         'afterdef': already_declared,
         'att': [],
         'ti': ti

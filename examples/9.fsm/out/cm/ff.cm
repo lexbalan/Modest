@@ -8,8 +8,8 @@ import "libc/libc.h"
 import "libc/stdio.h"
 
 
-type ArchInt ArchInt
-type ArchNat ArchNat
+type ArchInt Int64
+type ArchNat Nat64
 
 
 func ff_memzero(mem: Pointer, len: Nat64) -> Unit {

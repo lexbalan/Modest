@@ -24,7 +24,7 @@ const fsmSubstateEntering = 0
 const fsmSubstateLoop = 1
 const fsmSubstateLeaving = 2
 
-type UInt32 UInt32
+type UInt32 Nat32
 
 type FSM record {
     name: [fsmNameLength]Char8

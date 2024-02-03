@@ -1387,11 +1387,11 @@ def print_def_func(x):
 
 
 def print_decl_type(x):
-    out("\n%%%s = type opaque" % x['type']['id']['str'])
+    out("\n%%%s = type opaque" % x['id']['str'])
 
 
 def print_def_type(x):
-    out("\n%%%s = type " % x['type']['id']['str'])
+    out("\n%%%s = type " % x['id']['str'])
     print_type(x['type'], print_aka=False)
     if hlir_type.type_is_record(x['type']):
         out("\n")

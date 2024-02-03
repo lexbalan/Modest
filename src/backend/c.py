@@ -1479,7 +1479,7 @@ def print_def_func(x):
 
 
 def print_decl_type(x):
-    id_str = x['type']['id']['str']
+    id_str = x['id']['str']
     newline(n=x['nl'])
     out("struct %s;" % id_str)
     if not NO_TYPEDEF_STRUCTS:
@@ -1487,44 +1487,44 @@ def print_decl_type(x):
 
 
 def print_def_type(x):
-    t = x['type']['aliasof']
+    aliasif = x['type']
 
     if NO_TYPEDEF_OTHERS:
-        if not hlir_type.type_is_record(t):
+        if not hlir_type.type_is_record(aliasif):
             return
 
     newline(n=x['nl'])
 
     # !
     if x['afterdef']:
-        if hlir_type.type_is_record(t):
-            print_type_record(t, tag=x['id']['str'])
+        if hlir_type.type_is_record(aliasif):
+            print_type_record(aliasif, tag=x['id']['str'])
             out(";")
             return
 
 
     if NO_TYPEDEF_STRUCTS:
-        if hlir_type.type_is_record(t):
-            print_type_record(t, tag=x['id']['str'])
+        if hlir_type.type_is_record(aliasif):
+            print_type_record(aliasif, tag=x['id']['str'])
             out(";")
             return
 
 
-    is_defined_array = hlir_type.type_is_defined_array(t)
+    is_defined_array = hlir_type.type_is_defined_array(aliasif)
     out("typedef ")
 
     if 'volatile' in x['type']['att']:
         out("volatile ")
 
     if is_defined_array:
-        print_type(t['of'])
+        print_type(aliasif['of'])
     else:
-        print_type(t)
+        print_type(aliasif)
 
     out(" %s" % x['id']['str'])
 
     if is_defined_array:
-        print_array_volume(t)
+        print_array_volume(aliasif)
 
     out(";")
 

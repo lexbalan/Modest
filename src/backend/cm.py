@@ -688,12 +688,12 @@ def print_def_func(x):
 
 def print_decl_type(x):
     out("type ")
-    print_id(x['type'])
+    print_id(x['newtype'])
 
 
 def print_def_type(x):
     out("type ")
-    print_id(x['type'])
+    print_id(x)
     out(" ")
     print_type(x['type'], print_aka=False)
 

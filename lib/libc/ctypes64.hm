@@ -1,74 +1,74 @@
 // libc/ctypes64.hm
 
-@property("type.c_alias", "char *")
+@property("newtype.c_alias", "char *")
 type Str Str8
 
-@property("type.c_alias", "char")
+@property("newtype.c_alias", "char")
 type Char Char8
 
-@property("type.c_alias", "const char")
+@property("newtype.c_alias", "const char")
 type ConstChar Char
 
-@property("type.c_alias", "signed char")
+@property("newtype.c_alias", "signed char")
 type SignedChar Int8
 
-@property("type.c_alias", "unsigned char")
+@property("newtype.c_alias", "unsigned char")
 type UnsignedChar Nat8
 
 
-@property("type.c_alias", "short")
+@property("newtype.c_alias", "short")
 type Short Int16
 
-@property("type.c_alias", "unsigned short")
+@property("newtype.c_alias", "unsigned short")
 type UnsignedShort Nat16
 
 
-@property("type.c_alias", "int")
+@property("newtype.c_alias", "int")
 type Int Int32
 
-@property("type.c_alias", "unsigned int")
+@property("newtype.c_alias", "unsigned int")
 type UnsignedInt Nat32
 
-@property("type.c_alias", "long int")
+@property("newtype.c_alias", "long int")
 type LongInt Int64
 
-@property("type.c_alias", "unsigned long int")
+@property("newtype.c_alias", "unsigned long int")
 type UnsignedLongInt Nat64
 
 
-@property("type.c_alias", "long")
+@property("newtype.c_alias", "long")
 type Long Int64
 
-@property("type.c_alias", "unsigned long")
+@property("newtype.c_alias", "unsigned long")
 type UnsignedLong Nat64
 
-@property("type.c_alias", "long long")
+@property("newtype.c_alias", "long long")
 type LongLong Int64
 
-@property("type.c_alias", "unsigned long long")
+@property("newtype.c_alias", "unsigned long long")
 type UnsignedLongLong Nat64
 
-@property("type.c_alias", "long long int")
+@property("newtype.c_alias", "long long int")
 type LongLongInt Int64
 
-@property("type.c_alias", "unsigned long long int")
+@property("newtype.c_alias", "unsigned long long int")
 type UnsignedLongLongInt Nat64
 
 
-@property("type.c_alias", "float")
+@property("newtype.c_alias", "float")
 type Float Float64
 
-@property("type.c_alias", "double")
+@property("newtype.c_alias", "double")
 type Double Float64
 
-@property("type.c_alias", "long double")
+@property("newtype.c_alias", "long double")
 type LongDouble Float64
 
 
-@property("type.c_alias", "size_t")
+@property("newtype.c_alias", "size_t")
 type SizeT Nat64
 
-@property("type.c_alias", "ssize_t")
+@property("newtype.c_alias", "ssize_t")
 type SSizeT Int64
 
 
