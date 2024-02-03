@@ -1564,7 +1564,7 @@ def def_const(x):
 
     module['context'].value_add(id['str'], const_value)
 
-    obj = hlir_def_const(const_value, x['ti'])
+    obj = hlir_def_const(id, const_value, x['ti'])
     do_extend(obj)
     return obj
 
@@ -1608,7 +1608,7 @@ def def_type(x):
     else:
         module['context'].type_add(id['str'], nt)
 
-    obj = hlir_def_type(nt, already_declared, ti=x['ti'])
+    obj = hlir_def_type(id, nt, already_declared, ti=x['ti'])
     do_extend(obj)
     return obj
 
@@ -1641,7 +1641,7 @@ def def_var(x):
 
     module['context'].value_add(x['field']['id']['str'], var)
 
-    obj = hlir_def_var(var, x['ti'])
+    obj = hlir_def_var(id, var, x['ti'])
     do_extend(obj)
     return obj
 
@@ -1799,7 +1799,7 @@ def def_func(x):
     if settings.check('backend', 'llvm'):
         module_remove_node(module, 'value', func_id['str'])
 
-    obj = hlir_def_func(fn, x['ti'])
+    obj = hlir_def_func(id, fn, x['ti'])
     do_extend(obj)
     return obj
 
@@ -1811,7 +1811,7 @@ def decl_type(x):
     module['context'].type_add(id['str'], nt)
 
     # С не печатает opaque, но LLVM печатает (!)
-    obj = hlir_decl_type(nt, x['ti'])
+    obj = hlir_decl_type(id, nt, x['ti'])
     nt['declaration'] = obj
 
     if x['extern']:
@@ -1869,7 +1869,7 @@ def decl_func(x):
 
     module['context'].value_add(func_id['str'], func)
 
-    obj = hlir_decl_func(func, x['ti'])
+    obj = hlir_decl_func(id, func, x['ti'])
     do_extend(obj)
     return obj
 
