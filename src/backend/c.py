@@ -1243,7 +1243,7 @@ def print_stmt_defvar(x):
 
 
 def print_stmt_let(x):
-    v = x['value']
+    v = x['newvalue']
 
     if DONT_PRINT_UNUSED:
         if v['usecnt'] == 0:
@@ -1256,12 +1256,12 @@ def print_stmt_let(x):
         print_variable_array(v['type'], id_str, do_wrapped=False)
         out(";\n")
         indent()
-        save_array(v, x['init_value'])
+        save_array(v, x['value'])
         return
 
     print_variable(x['id'], v['type'], print_as_const=True)
     out(" = ")
-    print_value(x['init_value'], just_print_id=False)
+    print_value(x['value'], just_print_id=False)
     out(";")
 
 

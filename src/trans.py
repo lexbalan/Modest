@@ -1361,8 +1361,8 @@ def do_stmt_let(x):
 
     module['context'].value_add(id['str'], const_value)
 
-    stmt_let = hlir_stmt_let(id, const_value, ti=x['ti'])
-    stmt_let['init_value'] = v
+    stmt_let = hlir_stmt_let(id, v, const_value, ti=x['ti'])
+    #stmt_let['init_value'] = v
     return stmt_let
 
 

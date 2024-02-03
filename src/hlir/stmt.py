@@ -33,12 +33,13 @@ def hlir_stmt_def_var(var_value, init_value=None, ti=None):
     }
 
 
-def hlir_stmt_let(id, value, ti=None):
+def hlir_stmt_let(id, value, new_value, ti=None):
     return {
         'isa': 'stmt',
         'kind': 'let',
         'id': id,
         'value': value,
+        'newvalue': new_value,
         'att': [],
         'nl': 0,
         'ti': ti

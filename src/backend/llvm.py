@@ -1173,8 +1173,8 @@ def print_stmt_def_var(x):
 
 
 def print_stmt_let(x):
-    id_str = x['value']['id']['str']
-    val = x['init_value']
+    id_str = x['id']['str']
+    val = x['value']
 
     if val['kind'] == 'call':
         if 'sret' in val['func']['att']:
