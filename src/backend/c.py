@@ -1582,8 +1582,10 @@ def print_variable(_id, typ, print_as_const=False):
 
     if hlir_type.type_is_pointer(typ):
         print_variable_pointer(typ, id_str, print_as_const)
+
     elif hlir_type.type_is_array(typ):
         print_variable_array(typ, id_str)
+
     else:
         print_variable_regular(typ, id_str, print_as_const)
 
