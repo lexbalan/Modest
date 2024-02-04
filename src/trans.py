@@ -2161,6 +2161,12 @@ def add_properties(obj):
 
 
 def add_spices(obj):
+    if obj == None:
+        global attributes
+        attributes = []
+        global properties
+        properties = {}
+        return
     add_properties(obj)
     add_attributes(obj)
 
