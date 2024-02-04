@@ -3,7 +3,7 @@
 
 #### Common view
 
-```golang
+```zig
   while condition {
     // do something while condition != 0
   }
@@ -11,7 +11,7 @@
 
 #### Examples
 
-```golang
+```zig
 var a : Int32
 
 func main () -> Unit {

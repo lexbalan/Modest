@@ -1,12 +1,12 @@
 # String value expression
 
-```golang
+```zig
 "Hello World!"
 ```
 
 #### Exmples
 
-```golang
+```zig
 func main () -> Unit {
   var s : Str
   s := "Hello World!"

@@ -2,7 +2,7 @@
 
 #### Common view
 
-```golang
+```zig
   if condition {
     // do something if condition != 0
   }
@@ -10,7 +10,7 @@
 
 #### Examples
 
-```golang
+```zig
 
 func main () -> Unit {
   var a : Int32

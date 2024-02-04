@@ -1,13 +1,13 @@
 # Numeric value expression
 
-```golang
+```zig
 42    // decimal number
 0x2A  // hexadecimal number
 ```
 
 #### Exmples
 
-```golang
+```zig
 func main () -> Unit {
   var x : Nat32
   x := 42

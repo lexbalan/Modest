@@ -2,13 +2,13 @@
 
 #### Common view
 
-```golang
+```zig
   var a : Int32
 ```
 
 #### Examples
 
-```golang
+```zig
 func mid (a : Int32, b : Int32) -> Int32 {
   var result : Int32
   result := a + b

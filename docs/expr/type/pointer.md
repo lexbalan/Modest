@@ -2,13 +2,13 @@
 
 #### Common view
 
-```golang
+```zig
   *Int32  // type 'pointer to Int32'
 ```
 
 #### Examples
 
-```golang
+```zig
 func main () -> Unit {
   var a : Int32
   var p : *Int32

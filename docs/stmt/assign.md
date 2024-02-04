@@ -2,13 +2,13 @@
 
 #### Common view
 
-```golang
+```zig
   a := 1
 ```
 
 #### Examples
 
-```golang
+```zig
 var a : Int32
 
 func main () -> Unit {

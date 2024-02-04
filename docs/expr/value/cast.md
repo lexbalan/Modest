@@ -7,7 +7,7 @@
 Generic types can be implicitly casted to correspond type
 
 
-```golang
+```zig
 // example: GenericInt -> Int
 
 var i : Int32
@@ -17,7 +17,7 @@ i := 1
 ```
 
 
-```golang
+```zig
 // example: GenericArray -> Array
 
 var a : [3]Int32
@@ -27,7 +27,7 @@ a = [1, 2, 3]
 ```
 
 
-```golang
+```zig
 // example: GenericRecord -> Record
 
 var r : record {x : Int32, y : Int32}
@@ -40,7 +40,7 @@ r := {x=0, y=0}
 ### Implicit cast 'pointer to sized array' -> 'pointer to unsized array'
 
 
-```golang
+```zig
 // example: Pointer to sized array -> pointer to unsized array
 
 var a : *[5]Int32
@@ -55,7 +55,7 @@ pa := &a
 
 All other kinds of type casting requires explicit type cast operator
 
-```golang
+```zig
 // example: explicit cast integer values
 
 var i : Int32
@@ -65,7 +65,7 @@ i := j to Int32
 j := i to Int64
 ```
 
-```golang
+```zig
 // example: explicit cast incomplete array
 
 var a : [10]Int32
@@ -74,7 +74,7 @@ var a : [10]Int32
 a := [1, 2, 3] to [10]Int32
 ```
 
-```golang
+```zig
 // example: explicit cast incomplete record
 
 type Point3D record {x : Int32, y : Int32, z : Int32}

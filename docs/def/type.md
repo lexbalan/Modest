@@ -1,14 +1,14 @@
 
 # Type Definition
 
-```golang
+```zig
 // the 'type' directive creates an alias for an existing type
 // (in this case - MyInt for built-in type Int32)
 type MyInt Int64
 ```
 
 Type declaration
-```golang
+```zig
 // type declared, but not defined
 // such types are called 'opaque'
 type MyOpaqueType
@@ -16,7 +16,7 @@ type MyOpaqueType
 
 #### Examples
 
-```golang
+```zig
 type MyInt Int32
 
 var x : MyInt

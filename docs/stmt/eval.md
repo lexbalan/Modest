@@ -2,13 +2,13 @@
 
 #### Common view
 
-```golang
+```zig
   1
 ```
 
 #### Examples
 
-```golang
+```zig
 func just () -> Unit {
   // you can eval value expression without result saving
   // it is senseless but you can

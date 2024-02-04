@@ -2,13 +2,13 @@
 
 #### Common view
 
-```golang
+```zig
   [10]Int32  // type 'array of 10 Int32'
 ```
 
 #### Examples
 
-```golang
+```zig
 
 var a : [3]Int32
 

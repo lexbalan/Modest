@@ -1,6 +1,6 @@
 # Function type expression
 
-```rust
+```zig
 // type 'function without params, without return value'
 () -> Unit
 
@@ -10,7 +10,7 @@
 
 #### Examples
 
-```golang
+```zig
 func sum32 (a : Int32, b : Int32) -> Int32 {
   return a + b
 }

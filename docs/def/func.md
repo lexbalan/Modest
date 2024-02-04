@@ -1,6 +1,6 @@
 # Function Definition
 
-```golang
+```zig
 // the 'func' directive creates a function
 
 func main () -> Unit {

@@ -1,2 +1,2 @@
-*.cm linguist-language=golang
-*.hm linguist-language=golang
+*.cm linguist-language=zig
+*.hm linguist-language=zig

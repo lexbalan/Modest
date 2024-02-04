@@ -1,12 +1,12 @@
 # Record type expression
 
-```pascal
+```zig
 record {x : Int32, y : Int32}  // type 'record with two fields x & y with type Int32'
 ```
 
 #### Examples
 
-```golang
+```zig
 type Point record {
   x : Int32
   y : Int32

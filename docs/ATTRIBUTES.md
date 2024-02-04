@@ -3,7 +3,7 @@
 
 Attribute can be added to defined new entity.
 
-```golang
+```zig
 @attribute("dispensable")
 func my_func () -> Int {
   return 0
