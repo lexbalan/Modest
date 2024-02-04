@@ -8,5 +8,7 @@ import "./ctypes32.hm"
 @elseif __SYSTEM == 64
 @attribute("c-no-print")
 import "./ctypes64.hm"
+@else
+@error("bad system bit depth")
 @endif
 

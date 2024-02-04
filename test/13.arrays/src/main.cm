@@ -17,15 +17,12 @@ import "misc/minmax.hm"
 var globalArray: [3]Int32 := [1, 2, 3]
 
 
-
 func f0(x: [10]Char8) {
-
+    //
 }
 
 
-
 func main() -> Int {
-
     f0("hi!")  // generic array [4]Char8 will be implicit casted to [10]Char8
 
     var i := 0

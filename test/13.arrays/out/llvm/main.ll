@@ -305,6 +305,7 @@ declare double @max_float64(double %a, double %b)
 ]
 
 define void @f0([10 x i8] %x) {
+    ;
     ret void
 }
 

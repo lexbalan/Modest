@@ -1884,9 +1884,10 @@ def comm_block(x):
 # пропускать остальные ветви (elseif & else) условной директивы
 # тк основная ветвь была выполнена
 skipp = False
+old_skipp = False
 
 def do_directive(x):
-    global skipp, production, old_production
+    global skipp, old_skipp, production, old_production
     kind = x['kind']
 
     if kind == 'import':
@@ -1910,8 +1911,11 @@ def do_directive(x):
             else:
                 cond = c['imm'] != 0
 
+        #print("IF: " + str(cond))
+
         production = cond
         if cond:
+            old_skipp = skipp
             skipp = True # skip another branches
 
     elif kind == 'elseif':
@@ -1926,16 +1930,20 @@ def do_directive(x):
             else:
                 cond = c['imm'] != 0
 
+        #print("ELSEIF: " + str(cond))
+
         if not skipp:
             if cond:
                 production = True
                 skipp = True # skip another branches
 
+        #print("skipp after elseif = " + str(skipp))
     elif kind == 'else':
+        #print("ELSE: " + str(skipp))
         production = not skipp
 
     elif kind == 'endif':
-        skipp = False # do not skip branches (for new if)
+        skipp = old_skipp # do not skip branches (for new if)
         production = old_production
 
     elif kind == 'info':
@@ -1955,6 +1963,7 @@ def do_directive(x):
         # (because v['imm'] is an array of UTF-32 codes)
         msg = str(bytes(v['imm']).decode())
         error(msg, x['ti'])
+        exit(-1)
 
     return None
 
@@ -1971,9 +1980,6 @@ def proc(ast, source_info):
     global module
     old_module = module
 
-
-    old_production = True
-    skipp = False
 
     new_context = root_context.branch()
 
@@ -2167,6 +2173,7 @@ def add_spices(obj):
         global properties
         properties = {}
         return
+
     add_properties(obj)
     add_attributes(obj)
 

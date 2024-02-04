@@ -13,15 +13,12 @@ import "misc/minmax.h"
 var globalArray: [3]Int32 := [1, 2, 3]
 
 
-
 func f0(x: [10]Char8) -> Unit {
-
+    //
 }
 
 
-
 func main() -> Int {
-
     f0("hi!\x0\x0\x0\x0\x0\x0\x0")
 
     var i: Int32 := 0
