@@ -183,22 +183,18 @@ def dodir(src):
 
             if len(text) == 2:
                 if text == 'if':
-                    #print("-IF")
                     return ('directive_if', text, ti)
             elif len(text) == 4:
                 if text == 'else':
                     c = src.lookup(2)
                     if c == 'if':
                         continue
-                    #print("-ELSE")
                     return ('directive_else', text, ti)
             elif len(text) == 5:
                 if text == 'endif':
-                    #print("-ENDIF")
                     return ('directive_endif', text, ti)
             elif len(text) == 6:
                 if text == 'elseif':
-                    #print("-ELSEIF")
                     return ('directive_elseif', text, ti)
 
 

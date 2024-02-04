@@ -1167,6 +1167,7 @@ class Parser:
             'ti': ti
         }
 
+
     def parse_dir_elseif(self):
         ti = self.ti()
         x = self.gettok() #token: elseif
@@ -1178,6 +1179,7 @@ class Parser:
             'ti': ti
         }
 
+
     def parse_dir_else(self):
         ti = self.ti()
         x = self.gettok() #token: else
@@ -1186,6 +1188,7 @@ class Parser:
             'kind': 'else',
             'ti': ti
         }
+
 
     def parse_dir_endif(self):
         ti = self.ti()
@@ -1196,11 +1199,10 @@ class Parser:
             'ti': ti
         }
 
+
     def parse_dir(self):
         ti = self.ti()
         x = self.gettok()
-
-
         return {
             'isa': 'ast_directive',
             'kind': 'pragma',
