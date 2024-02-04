@@ -7,12 +7,12 @@
 #include <stdio.h>
 
 
-#define __CPU_WORD_WIDTH  256
+#define __CPU_WORD_WIDTH  64
 
 
 int main()
 {
-    printf("%s", "Hello 'unknown-bit' world!\n");
+    printf("%s", "Hello '64-bit' world!\n");
     return 0;
 }
 

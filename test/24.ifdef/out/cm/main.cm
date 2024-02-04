@@ -3,11 +3,14 @@
 import "libc/stdio.h"
 
 
-const __CPU_WORD_WIDTH = 256
+const __CPU_WORD_WIDTH = 64
+
 
 const hello = "Hello"
 const world = "world!\n"
-const hello_world = hello + " 'unknown-bit' " + world
+const word_name = "'64-bit'"
+
+const hello_world = hello + " " + word_name + " " + world
 
 
 func main() -> Int {

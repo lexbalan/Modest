@@ -7,9 +7,6 @@ import "libc/stdio.hm"
 const __CPU_WORD_WIDTH = 64
 
 
-const hello = "Hello"
-const world = "world!\n"
-
 @if __CPU_WORD_WIDTH == 32
 const word_name = "'32-bit'"
 @elseif __CPU_WORD_WIDTH == 64
@@ -20,7 +17,7 @@ const word_name = "'128-bit'"
 const word_name = "'unknown-bit'"
 @endif
 
-const hello_world = hello + " " + word_name + " " + world
+const hello_world = "Hello " + word_name + " world!"
 
 
 func main() -> Int {
