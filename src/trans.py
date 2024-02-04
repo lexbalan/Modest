@@ -1885,6 +1885,12 @@ def comm_block(x):
 
 
 def proc(ast, source_info):
+
+    global properties
+    properties = {}
+    global attributes
+    attributes = []
+
     global production
     global module
     old_module = module
@@ -1914,8 +1920,11 @@ def proc(ast, source_info):
 
         y = None
 
-        if isa != 'ast_directive':
-            if not production:
+        if not production:
+            if isa == 'ast_directive':
+                if kind == 'pragma':
+                    continue
+            else:
                 continue
 
         if isa == 'ast_definition':

@@ -1,4 +1,4 @@
-// libc/ctypes64.hm
+// libc/ctypes32.hm
 
 @property("newtype.c_alias", "char *")
 type Str Str8
@@ -56,7 +56,7 @@ type UnsignedLongLongInt Nat64
 
 
 @property("newtype.c_alias", "float")
-type Float Float32
+type Float Float64
 
 @property("newtype.c_alias", "double")
 type Double Float64

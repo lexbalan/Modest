@@ -1300,7 +1300,7 @@ class Parser:
                 x = self.parse_dir_endif()
 
             elif self.match('import'):
-                error("import directive must be placed before definitions", self.ti())
+                warning("import directive must be placed before definitions", self.ti())
                 x = self.parse_import()
 
             else:

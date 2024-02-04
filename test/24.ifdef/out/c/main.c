@@ -12,7 +12,7 @@
 
 int main()
 {
-    printf("%s", "Hello '64-bit' world!\n");
+    printf("%s", "Hello '64-bit' world!");
     return 0;
 }
 

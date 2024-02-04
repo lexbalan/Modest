@@ -1,9 +1,12 @@
 // libc/ctypes.hm
 
-//@if system == "System32"
-//  @attribute("c-no-print")
-//  import "./ctypes32.hm"
-//@elif system == "System64"
-  @attribute("c-no-print")
-  import "./ctypes64.hm"
-//@endif
+import "./system.hm"
+
+@if __SYSTEM == 32
+@attribute("c-no-print")
+import "./ctypes32.hm"
+@elseif __SYSTEM == 64
+@attribute("c-no-print")
+import "./ctypes64.hm"
+@endif
+
