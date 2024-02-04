@@ -1302,7 +1302,7 @@ class Parser:
                 x = self.parse_import()
 
             else:
-                error("unexpected token", self.ti())
+                error("unexpected token %s" % self.ctok(), self.ti())
                 self.restore_top_level()
                 continue
 
