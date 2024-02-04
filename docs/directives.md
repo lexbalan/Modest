@@ -3,7 +3,7 @@
 
 ### Conditional Compilation
 
-```
+```zig
 const __SYSTEM = 64
 
 @if __SYSTEM == 32:
@@ -20,7 +20,7 @@ import "./system128.hm"
 
 ### Compiler messages
 
-```
+```zig
 @info("this is info message")
 @warning("this is warning message")
 @error("this is error message")
@@ -28,12 +28,12 @@ import "./system128.hm"
 
 ### Attributes & Properties
 
-```
+```zig
 @attribute("value:volatile")
 var byteFromUart: Byte
 ```
 
-```
+```zig
 @property("newtype.c_alias", "int")
 type Int Int32
 ```
