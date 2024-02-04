@@ -94,13 +94,8 @@ def value_get_here(id_str):
     return module['context'].value_get(id_str, recursive=False)
 
 
-def pragma(cmd, args):
-    exec("%s(%s)" % (cmd, str(args)))
-
-
 # used in metadirs
 def c_include(s):
-    #print("c_include %s" % s)
     global module
     local = s[0:2] == './'
     inc = {
@@ -1898,6 +1893,9 @@ def do_directive(x):
         return do_import(x)
 
     elif kind == 'pragma':
+        """def pragma(cmd, args):
+            exec("%s(%s)" % (cmd, str(args)))"""
+
         exec(x['text'])
 
     elif kind == 'if':
