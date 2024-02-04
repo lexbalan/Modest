@@ -12,6 +12,7 @@ cd 20.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
 cd 21.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
 cd 22.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
 cd 23.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
+cd 24.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
 cd cast && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
 cd sizeof && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
 cd xor && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..

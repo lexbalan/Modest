@@ -25,6 +25,10 @@ from hlir.stmt import *
 from hlir.hlir import *
 
 
+
+production = True
+
+
 RET_SIZE_MAX = 16
 
 # current file directory
@@ -1549,7 +1553,7 @@ def def_const(x):
 
     if not value_is_immediate(v):
         if not type_is_pointer_to_array_of_char(v['type']):
-            error("expected immediate value", v)
+            error("constant must be initialized by immediate value", x['value'])
 
     const_value = hlir_value_const(id, v['type'], v, id['ti'])
     const_value['att'].append('global')
@@ -1881,8 +1885,15 @@ def comm_block(x):
 
 
 def proc(ast, source_info):
+    global production
     global module
     old_module = module
+
+
+    old_production = True
+    skipp = False
+
+
 
     new_context = root_context.branch()
 
@@ -1902,6 +1913,10 @@ def proc(ast, source_info):
         kind = x['kind']
 
         y = None
+
+        if isa != 'ast_directive':
+            if not production:
+                continue
 
         if isa == 'ast_definition':
             if kind == 'func': y = def_func(x)
@@ -1927,13 +1942,48 @@ def proc(ast, source_info):
                 continue
 
             if kind == 'if':
-                print('IF')
-            if kind == 'else':
-                print('ELSE')
-            if kind == 'elseif':
-                print('ELSEIF')
-            if kind == 'endif':
-                print('ENDIF')
+                old_production = production
+                c = do_value(x['cond'])
+                cond = False
+                if not value_is_bad(c):
+                    if not value_is_immediate(c):
+                        error("expected immediate value", x['cond']['ti'])
+                    elif not type.type_is_bool(c['type']):
+                        error("expected Bool value", x['cond']['ti'])
+                    else:
+                        cond = c['imm'] != 0
+
+                production = cond
+                if cond:
+                    skipp = True # skip another branches
+                #print('IF == %d' % production)
+
+            elif kind == 'elseif':
+                production = False
+                c = do_value(x['cond'])
+                cond = False
+                if not value_is_bad(c):
+                    if not value_is_immediate(c):
+                        error("expected immediate value", x['cond']['ti'])
+                    elif not type.type_is_bool(c['type']):
+                        error("expected Bool value", x['cond']['ti'])
+                    else:
+                        cond = c['imm'] != 0
+
+                if not skipp:
+                    if cond:
+                        production = True
+                        skipp = True # skip another branches
+                #print('ELSEIF == %d' % production)
+
+            elif kind == 'else':
+                production = not skipp
+                #print('ELSE == %d' % production)
+
+            elif kind == 'endif':
+                skipp = False # do not skip branches (for new if)
+                production = old_production
+                #print('ENDIF')
 
             elif kind == 'import':
                 y = do_import(x)

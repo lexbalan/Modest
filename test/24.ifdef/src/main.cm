@@ -1,0 +1,27 @@
+// examples/34.ifdef/main.cm
+
+@attribute("c-no-print")
+import "libc/stdio.hm"
+
+
+const __CPU_WORD_WIDTH = 256
+
+const hello = "Hello"
+const world = "world!\n"
+
+@if __CPU_WORD_WIDTH == 32
+const hello_world = hello + " '32-bit' " + world
+@elseif __CPU_WORD_WIDTH == 64
+const hello_world = hello + " '64-bit' " + world
+@elseif __CPU_WORD_WIDTH == 128
+const hello_world = hello + " '128-bit' " + world
+@else
+const hello_world = hello + " 'unknown-bit' " + world
+@endif
+
+
+func main() -> Int {
+    printf("%s", hello_world to *Str8)
+    return 0
+}
+
