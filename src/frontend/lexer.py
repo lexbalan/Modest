@@ -183,19 +183,26 @@ def dodir(src):
 
             if len(text) == 2:
                 if text == 'if':
-                    return ('directive_if', text, ti)
+                    return ('directive', text, ti)
             elif len(text) == 4:
                 if text == 'else':
                     c = src.lookup(2)
                     if c == 'if':
                         continue
-                    return ('directive_else', text, ti)
+                    return ('directive', text, ti)
+                elif text == 'info':
+                    return ('directive', text, ti)
             elif len(text) == 5:
                 if text == 'endif':
-                    return ('directive_endif', text, ti)
+                    return ('directive', text, ti)
+                if text == 'error':
+                    return ('directive', text, ti)
             elif len(text) == 6:
                 if text == 'elseif':
-                    return ('directive_elseif', text, ti)
+                    return ('directive', text, ti)
+            elif len(text) == 7:
+                if text == 'warning':
+                    return ('directive', text, ti)
 
 
 

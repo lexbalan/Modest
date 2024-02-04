@@ -1,24 +1,24 @@
-cd 0.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
-cd 1.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
-cd 2.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
-cd 3.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
-cd 4.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
-cd 9.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
-cd 10.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
-cd 11.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
-cd 12.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
-cd 13.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
-cd 20.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
-cd 21.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
-cd 22.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
-cd 23.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
-cd 24.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
-cd cast && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
-cd sizeof && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
-cd xor && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
-cd sha256 && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
-cd shift && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
-cd string_concat_eq && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
-cd assignation && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
-cd va_list && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
+cd 0.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+cd 1.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+cd 2.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+cd 3.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+cd 4.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+cd 9.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+cd 10.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+cd 11.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+cd 12.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+cd 13.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+cd 20.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+cd 21.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+cd 22.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+cd 23.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+cd 24.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+cd cast && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+cd sizeof && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+cd xor && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+cd sha256 && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+cd shift && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+cd string_concat_eq && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+cd assignation && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+cd va_list && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd char && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..

@@ -8,9 +8,6 @@ declare void @llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)
 
 
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes32.hm
-
-
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
 
 

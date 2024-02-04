@@ -10,9 +10,6 @@ declare void @llvm.va_end(i8*)
 
 
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes32.hm
-
-
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
 
 

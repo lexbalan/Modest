@@ -53,6 +53,7 @@ class Source:
             'isa': 'ti',
             'file': self.filename,
             'line': self.line,
+            'len': 0,
             'pos': self.pos
         }
 

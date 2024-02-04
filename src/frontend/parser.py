@@ -152,7 +152,7 @@ class Parser:
                     spaceline_cnt = 0
                     comments.append(x)
                 elif self.token_class_is('directive'):
-                    x = self.parse_dir()
+                    x = self.parse_directive()
                     x['nl'] = spaceline_cnt
                     spaceline_cnt = 0
                     directives.append(x)
@@ -1156,59 +1156,46 @@ class Parser:
         return {'isa': 'ast_comment', 'kind': 'block', 'text': x, 'ti': ti}
 
 
-    def parse_dir_if(self):
-        ti = self.ti()
-        x = self.gettok() #token: if
-        c = self.expr_value()
-        return {
-            'isa': 'ast_directive',
-            'kind': 'if',
-            'cond': c,
-            'ti': ti
-        }
 
-
-    def parse_dir_elseif(self):
-        ti = self.ti()
-        x = self.gettok() #token: elseif
-        c = self.expr_value()
-        return {
-            'isa': 'ast_directive',
-            'kind': 'elseif',
-            'cond': c,
-            'ti': ti
-        }
-
-
-    def parse_dir_else(self):
-        ti = self.ti()
-        x = self.gettok() #token: else
-        return {
-            'isa': 'ast_directive',
-            'kind': 'else',
-            'ti': ti
-        }
-
-
-    def parse_dir_endif(self):
-        ti = self.ti()
-        x = self.gettok() #token: endif
-        return {
-            'isa': 'ast_directive',
-            'kind': 'endif',
-            'ti': ti
-        }
-
-
-    def parse_dir(self):
+    def parse_directive(self):
         ti = self.ti()
         x = self.gettok()
-        return {
+
+        dir = {
             'isa': 'ast_directive',
             'kind': 'pragma',
             'text': x,
             'ti': ti
         }
+
+        if x == 'if':
+            c = self.expr_value()
+            dir['kind'] = 'if'
+            dir['cond'] = c
+        elif x == 'elseif':
+            c = self.expr_value()
+            dir['kind'] = 'elseif'
+            dir['cond'] = c
+        elif x == 'else':
+            dir['kind'] = 'else'
+        elif x == 'endif':
+            dir['kind'] = 'endif'
+        elif x == 'info':
+            v = self.expr_value()
+            dir['kind'] = 'info'
+            dir['value'] = v
+        elif x == 'warning':
+            v = self.expr_value()
+            dir['kind'] = 'warning'
+            dir['value'] = v
+        elif x == 'error':
+            v = self.expr_value()
+            dir['kind'] = 'error'
+            dir['value'] = v
+        else:
+            dir['kind'] = 'pragma'
+
+        return dir
 
 
 
@@ -1231,15 +1218,7 @@ class Parser:
             elif self.token_class_is('comment-line'):
                 x = self.parse_comment_line()
             elif self.token_class_is('directive'):
-                x = self.parse_dir()
-            elif self.token_class_is('directive_if'):
-                x = self.parse_dir_if()
-            elif self.token_class_is('directive_else'):
-                x = self.parse_dir_else()
-            elif self.token_class_is('directive_elseif'):
-                x = self.parse_dir_elseif()
-            elif self.token_class_is('directive_endif'):
-                x = self.parse_dir_endif()
+                x = self.parse_directive()
 
             elif self.match('import'):
                 x = self.parse_import()
@@ -1255,12 +1234,6 @@ class Parser:
 
                 x['nl'] = spaceline_cnt
                 spaceline_cnt = 0
-
-                """if x['isa'] != 'ast_directive':
-                    x['nl'] = spaceline_cnt
-                    spaceline_cnt = 0
-                else:
-                    x['nl'] = 1"""
 
                 output.append(x)
 
@@ -1287,17 +1260,7 @@ class Parser:
             elif self.token_class_is('comment-line'):
                 x = self.parse_comment_line()
             elif self.token_class_is('directive'):
-                #spaceline_cnt = 0
-                x = self.parse_dir()
-
-            elif self.token_class_is('directive_if'):
-                x = self.parse_dir_if()
-            elif self.token_class_is('directive_else'):
-                x = self.parse_dir_else()
-            elif self.token_class_is('directive_elseif'):
-                x = self.parse_dir_elseif()
-            elif self.token_class_is('directive_endif'):
-                x = self.parse_dir_endif()
+                x = self.parse_directive()
 
             elif self.match('import'):
                 warning("import directive must be placed before definitions", self.ti())

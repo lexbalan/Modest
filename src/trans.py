@@ -27,6 +27,7 @@ from hlir.hlir import *
 
 
 production = True
+old_production = True
 
 
 RET_SIZE_MAX = 16
@@ -1884,22 +1885,97 @@ def comm_block(x):
     }
 
 
+
+# пропускать остальные ветви (elseif & else) условной директивы
+# тк основная ветвь была выполнена
+skipp = False
+
+def do_directive(x):
+    global skipp, production, old_production
+    kind = x['kind']
+
+    if kind == 'import':
+        return do_import(x)
+
+    elif kind == 'pragma':
+        exec(x['text'])
+
+    elif kind == 'if':
+        old_production = production
+        c = do_value(x['cond'])
+        cond = False
+        if not value_is_bad(c):
+            if not value_is_immediate(c):
+                error("expected immediate value", x['cond']['ti'])
+            elif not type.type_is_bool(c['type']):
+                error("expected Bool value", x['cond']['ti'])
+            else:
+                cond = c['imm'] != 0
+
+        production = cond
+        if cond:
+            skipp = True # skip another branches
+
+    elif kind == 'elseif':
+        production = False
+        c = do_value(x['cond'])
+        cond = False
+        if not value_is_bad(c):
+            if not value_is_immediate(c):
+                error("expected immediate value", x['cond']['ti'])
+            elif not type.type_is_bool(c['type']):
+                error("expected Bool value", x['cond']['ti'])
+            else:
+                cond = c['imm'] != 0
+
+        if not skipp:
+            if cond:
+                production = True
+                skipp = True # skip another branches
+
+    elif kind == 'else':
+        production = not skipp
+
+    elif kind == 'endif':
+        skipp = False # do not skip branches (for new if)
+        production = old_production
+
+    elif kind == 'info':
+        v = do_value(x['value'])
+        # (because v['imm'] is an array of UTF-32 codes)
+        msg = str(bytes(v['imm']).decode())
+        info(msg, x['ti'])
+
+    elif kind == 'warning':
+        v = do_value(x['value'])
+        # (because v['imm'] is an array of UTF-32 codes)
+        msg = str(bytes(v['imm']).decode())
+        warning(msg, x['ti'])
+
+    elif kind == 'error':
+        v = do_value(x['value'])
+        # (because v['imm'] is an array of UTF-32 codes)
+        msg = str(bytes(v['imm']).decode())
+        error(msg, x['ti'])
+
+    return None
+
+
+
 def proc(ast, source_info):
+    global skipp, production, old_production
 
     global properties
     properties = {}
     global attributes
     attributes = []
 
-    global production
     global module
     old_module = module
 
 
     old_production = True
     skipp = False
-
-
 
     new_context = root_context.branch()
 
@@ -1921,10 +1997,9 @@ def proc(ast, source_info):
         y = None
 
         if not production:
-            if isa == 'ast_directive':
-                if kind == 'pragma':
-                    continue
-            else:
+            if isa != 'ast_directive':
+                continue
+            elif not kind in ['elseif', 'else', 'endif']:
                 continue
 
         if isa == 'ast_definition':
@@ -1932,70 +2007,19 @@ def proc(ast, source_info):
             elif kind == 'type': y = def_type(x)
             elif kind == 'const': y = def_const(x)
             elif kind == 'var': y = def_var(x)
-
-            do_extend(y)
+            add_spices(y)
 
         elif isa == 'ast_declaration':
             if kind == 'func': y = decl_func(x)
             elif kind == 'type': y = decl_type(x)
-
-            do_extend(y)
+            add_spices(y)
 
         elif isa == 'ast_comment':
             if kind == 'line': y = comm_line(x)
             elif kind == 'block': y = comm_block(x)
 
         elif isa == 'ast_directive':
-            if kind == 'pragma':
-                exec(x['text'])
-                continue
-
-            if kind == 'if':
-                old_production = production
-                c = do_value(x['cond'])
-                cond = False
-                if not value_is_bad(c):
-                    if not value_is_immediate(c):
-                        error("expected immediate value", x['cond']['ti'])
-                    elif not type.type_is_bool(c['type']):
-                        error("expected Bool value", x['cond']['ti'])
-                    else:
-                        cond = c['imm'] != 0
-
-                production = cond
-                if cond:
-                    skipp = True # skip another branches
-                #print('IF == %d' % production)
-
-            elif kind == 'elseif':
-                production = False
-                c = do_value(x['cond'])
-                cond = False
-                if not value_is_bad(c):
-                    if not value_is_immediate(c):
-                        error("expected immediate value", x['cond']['ti'])
-                    elif not type.type_is_bool(c['type']):
-                        error("expected Bool value", x['cond']['ti'])
-                    else:
-                        cond = c['imm'] != 0
-
-                if not skipp:
-                    if cond:
-                        production = True
-                        skipp = True # skip another branches
-                #print('ELSEIF == %d' % production)
-
-            elif kind == 'else':
-                production = not skipp
-                #print('ELSE == %d' % production)
-
-            elif kind == 'endif':
-                skipp = False # do not skip branches (for new if)
-                production = old_production
-                #print('ENDIF')
-
-            elif kind == 'import':
-                y = do_import(x)
+            y = do_directive(x)
 
 
         if y == None:
@@ -2091,7 +2115,7 @@ def set_att(obj, path, att):
 
 
 # directive '@attribute'
-def do_attributes(obj):
+def add_attributes(obj):
     atts = attributes_get()
     for att in atts:
         lr = att.split(":")
@@ -2121,7 +2145,7 @@ def set_prop(obj, path, val):
 
 
 # directive '@property'
-def do_properties(obj):
+def add_properties(obj):
     global properties
     props = properties
     properties = {}
@@ -2138,8 +2162,8 @@ def do_properties(obj):
             set_prop(obj, path_array, v)
 
 
-def do_extend(obj):
-    do_properties(obj)
-    do_attributes(obj)
+def add_spices(obj):
+    add_properties(obj)
+    add_attributes(obj)
 
 

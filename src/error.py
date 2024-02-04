@@ -89,6 +89,10 @@ def note(s, ti=None):
 
 
 def info(s, ti=None):
+
+    if ti == None:
+        ti = c_ti
+
     pre = ''
     if ti != None:
         if ti['isa'] != 'ti':
@@ -106,6 +110,9 @@ def info(s, ti=None):
 
 
 def warning(s, ti=None):
+
+    if ti == None:
+        ti = c_ti
 
     from main import features
     if features.get('paranoid'):
@@ -136,6 +143,11 @@ def warning(s, ti=None):
 
 
 def error(s, ti=None):
+
+    if ti == None:
+        print("??WADSA " + str(ti))
+        ti = c_ti
+
     global errcnt
     errcnt = errcnt + 1
 

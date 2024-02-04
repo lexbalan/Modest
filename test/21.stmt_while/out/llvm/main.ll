@@ -6,9 +6,6 @@ target triple = "arm64-apple-macosx12.0.0"
 
 
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes32.hm
-
-
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
 
 
