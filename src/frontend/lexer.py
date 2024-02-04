@@ -179,7 +179,20 @@ def dodir(src):
             break
         else:
             text += c
-        src.getc()
+            src.getc()
+
+            if len(text) == 2:
+                if text == 'if':
+                    return ('directive_if', text, ti)
+            elif len(text) == 4:
+                if text == 'else':
+                    return ('directive_else', text, ti)
+            elif len(text) == 5:
+                if text == 'endif':
+                    return ('directive_endif', text, ti)
+            elif len(text) == 6:
+                if text == 'elseif':
+                    return ('directive_elseif', text, ti)
 
     return ('directive', text, ti)
 
