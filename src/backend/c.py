@@ -467,7 +467,7 @@ def print_value_call(v, ctx):
         # Вызов функции через указатель
         # поскольку у нас указатели на функции это *void
         # при вызове приводим левое к указателю на функцию
-        out("(("); print_type(ftype['to'], space_after=True); out("(*)")
+        out("(("); print_type(ftype['to']); out(" (*) ")
         print_paramlist(ftype['params'], ftype['extra_args'])
         out(")")
         print_value(left)
