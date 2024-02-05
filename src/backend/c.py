@@ -169,7 +169,7 @@ def print_array_volume(t):
 
 
 
-def _print_pointer_to(to, as_const, space_after):
+def _print_type_pointer_to(to, as_const, space_after):
     print_type(to, space_after=True)
     out("*")
     if as_const:
@@ -181,7 +181,7 @@ def _print_pointer_to(to, as_const, space_after):
 
 def print_type_array(t, print_as_pointer, space_after):
     if print_as_pointer:
-        _print_pointer_to(t['of'], as_const='const' in t['att'], space_after=space_after)
+        _print_type_pointer_to(t['of'], as_const='const' in t['att'], space_after=space_after)
 
     else:
         assert(t['volume'] != None)
@@ -193,10 +193,10 @@ def print_type_array(t, print_as_pointer, space_after):
 def print_type_pointer(t, space_after, as_const=False):
     # array was printed as *, we dont need to place another *
     if hlir_type.type_is_array(t['to']):
-        _print_pointer_to(t['to']['of'], as_const=as_const, space_after=space_after)
+        _print_type_pointer_to(t['to']['of'], as_const=as_const, space_after=space_after)
         return
 
-    _print_pointer_to(t['to'], as_const=as_const, space_after=space_after)
+    _print_type_pointer_to(t['to'], as_const=as_const, space_after=space_after)
 
 
 
@@ -250,6 +250,8 @@ def print_type(t, space_after=False, print_array_as_ptr=True, as_const=False):
 
     if 'wrapped_array_type' in t['att']:
         out(t['wrapped_id'])
+        if space_after:
+            out(" ")
         return
 
     if not hlir_type.type_is_pointer(t):
@@ -465,7 +467,7 @@ def print_value_call(v, ctx):
         # Вызов функции через указатель
         # поскольку у нас указатели на функции это *void
         # при вызове приводим левое к указателю на функцию
-        out("(("); print_type(ftype['to']); out("(*)")
+        out("(("); print_type(ftype['to'], space_after=True); out("(*)")
         print_paramlist(ftype['params'], ftype['extra_args'])
         out(")")
         print_value(left)
@@ -604,8 +606,8 @@ def print_value_access_ptr(x, ctx):
 
 def print_cast_hard(t, v, ctx=[]):
     out("*(")
-    print_type(t)
-    out(" *)&")
+    print_type(t, space_after=True)
+    out("*)&")
     need_wrap = precedence(v) < precedence({'kind': 'cast'})
     print_value(v, ctx=ctx, need_wrap=need_wrap)
 
@@ -758,7 +760,7 @@ def print_value_literal_array(v, ctx):
         if cfunc != None:
             # only for local record literals (!)
             out("(")
-            print_type(v['type'], space_after=False, print_array_as_ptr=False)
+            print_type(v['type'], print_array_as_ptr=False)
             out(")")
 
     out("{")
@@ -1016,19 +1018,19 @@ def print_value_let(x, ctx):
 
 def print_value_sizeof(x, ctx):
     out("sizeof(")
-    print_type(x['of'], space_after=False, print_array_as_ptr=False)
+    print_type(x['of'], print_array_as_ptr=False)
     out(")")
 
 
 def print_value_alignof(x, ctx):
     out("__alignof(")
-    print_type(x['of'], space_after=False, print_array_as_ptr=False)
+    print_type(x['of'], print_array_as_ptr=False)
     out(")")
 
 
 def print_value_offsetof(x, ctx):
     out("__offsetof(")
-    print_type(x['of'], space_after=False, print_array_as_ptr=False)
+    print_type(x['of'], print_array_as_ptr=False)
     out(", ")
     out(x['field']['str'])
     out(")")
@@ -1324,14 +1326,13 @@ def print_wrapped_array(_type):
 
 
 def print_func_wrappers(ftype):
-    ft = ftype#f['type']
     # печатаем обернутые параметры-массивы и возврашаемые массивы
     # (обернуты тк C не позволяет принимать возвращать массив по значению)
-    for param in ft['params']:
+    for param in ftype['params']:
         if hlir_type.type_is_defined_array(param['type']):
             print_wrapped_array(param['type'])
-    if hlir_type.type_is_defined_array(ft['to']):
-        print_wrapped_array(ft['to'])
+    if hlir_type.type_is_defined_array(ftype['to']):
+        print_wrapped_array(ftype['to'])
 
 
 def print_func_signature(id_str, ftype, atts, print_wrappers=True):
@@ -1353,8 +1354,8 @@ def print_func_signature(id_str, ftype, atts, print_wrappers=True):
         if t['kind'] == 'array':
             t = t['of']
 
-    print_type(t)
-    out(" " + "*" * ptr_level)
+    print_type(t, space_after=True)
+    out("*" * ptr_level)
     out("%s" % id_str)
     print_paramlist(ftype['params'], extra_args=ftype['extra_args'])
 
@@ -1453,12 +1454,13 @@ def print_def_type(x):
     if 'volatile' in x['type']['att']:
         out("volatile ")
 
+    t = aliasif
     if is_defined_array:
-        print_type(aliasif['of'])
-    else:
-        print_type(aliasif)
+        t = aliasif['of']
 
-    out(" %s" % id['str'])
+    print_type(t, space_after=True)
+
+    out(id['str'])
 
     if is_defined_array:
         print_array_volume(aliasif)

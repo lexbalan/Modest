@@ -16,7 +16,7 @@
 struct FSM;
 typedef struct FSM FSM;
 
-typedef void * FSM_Proc;
+typedef void *FSM_Proc;
 
 typedef struct {
 } FSM_Empty;
