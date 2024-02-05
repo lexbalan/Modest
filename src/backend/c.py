@@ -435,22 +435,14 @@ def print_value_un(v, ctx):
 
 
 
-
-def print_variables(fields, before, after, between):
-    i = 0
-    n = len(fields)
-    while i < n:
-        param = fields[i]
-        out(before)
-        print_variable(param['id'], param['type'])
-        out(after)
-        i = i + 1
-        if i < n: out(between)
-
-
-def print_paramlist(parms, extra_args=False):
+def print_paramlist(params, extra_args=False):
     out("(")
-    print_variables(parms, before="", after="", between=", ")
+    i = 0
+    for param in params:
+        if i > 0: out(", ")
+        print_variable(param['id'], param['type'])
+        i = i + 1
+
     if extra_args:
         out(", ...")
     out(")")
@@ -461,12 +453,11 @@ def print_value_call(v, ctx):
     left = v['func']
     ftype = left['type']
 
-    if hlir_type.type_is_pointer(left['type']):
-        ftype = left['type']['to']
-
+    if hlir_type.type_is_pointer(ftype):
         # Вызов функции через указатель
         # поскольку у нас указатели на функции это *void
         # при вызове приводим левое к указателю на функцию
+        ftype = ftype['to']
         out("(("); print_type(ftype['to']); out(" (*) ")
         print_paramlist(ftype['params'], ftype['extra_args'])
         out(")")
