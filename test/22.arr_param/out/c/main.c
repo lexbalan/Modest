@@ -198,8 +198,8 @@ int main()
     */
 
     char w[2 * 10];
-    memcpy(&w[0 * 10], &(char [10]){'h', 'e', 'l', 'l', 'o', '\0', '\0', '\0', '\0', '\0'}, sizeof (char [10]));
-    memcpy(&w[1 * 10], &(char [10]){'w', 'o', 'r', 'l', 'd', '\0', '\0', '\0', '\0', '\0'}, sizeof (char [10]));
+    memcpy(&w[0 * 10], &(char[10]){'h', 'e', 'l', 'l', 'o', '\0', '\0', '\0', '\0', '\0'}, sizeof (char[10]));
+    memcpy(&w[1 * 10], &(char[10]){'w', 'o', 'r', 'l', 'd', '\0', '\0', '\0', '\0', '\0'}, sizeof (char[10]));
     char u[2 * 10];
     memcpy(&u, &w, sizeof u);
     kk(*(struct kk_x *)&u);

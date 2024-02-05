@@ -132,10 +132,10 @@ int main()
     printf("alignof(*Str8) = %llu\n", ((uint64_t)(uint8_t)__alignof(char *)));
 
     // array size
-    printf("sizeof([10]Int32) = %llu\n", ((uint64_t)(uint8_t)sizeof(int32_t [10])));
-    printf("alignof([10]Int32) = %llu\n", ((uint64_t)(uint8_t)__alignof(int32_t [10])));
+    printf("sizeof([10]Int32) = %llu\n", ((uint64_t)(uint8_t)sizeof(int32_t[10])));
+    printf("alignof([10]Int32) = %llu\n", ((uint64_t)(uint8_t)__alignof(int32_t[10])));
 
-    printf("> alignof([3]Point) = %llu\n", ((uint64_t)(uint8_t)__alignof(Point [3])));
+    printf("> alignof([3]Point) = %llu\n", ((uint64_t)(uint8_t)__alignof(Point[3])));
 
 
 

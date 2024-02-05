@@ -169,47 +169,37 @@ def print_array_volume(t):
 
 
 
-def print_type_array(t, print_as_pointer, need_space_after):
-    print_type(t['of'], need_space_after=True)
-
-    if print_as_pointer:
-        out("*")
-        if 'const' in t['att']:
-            out("const")
-        if need_space_after:
+def _print_pointer_to(to, as_const, space_after):
+    print_type(to, need_space_after=True)
+    out("*")
+    if as_const:
+        out("const")
+        if space_after:
             out(" ")
-        return
 
-    assert(t['volume'] != None)
-    print_array_volume(t)
+
+
+def print_type_array(t, print_as_pointer, need_space_after):
+    if print_as_pointer:
+        _print_pointer_to(t['of'], as_const='const' in t['att'], space_after=need_space_after)
+
+    else:
+        assert(t['volume'] != None)
+        print_type(t['of'], need_space_after=need_space_after)
+        print_array_volume(t)
 
 
 
 def print_type_pointer(t, need_space_after, print_as_const=False):
     # array was printed as *, we dont need to place another *
     if hlir_type.type_is_array(t['to']):
-        print_type(t['to']['of'], need_space_after=True)
-        if print_as_const:
-            out("*const")
-            if need_space_after:
-                out(" ")
-        else:
-            out("*")
-        return
-
-    if hlir_type.type_is_free_pointer(t):
-        out("void ")
-
+        _print_pointer_to(t['to']['of'], as_const=print_as_const, space_after=need_space_after)
     else:
-        print_type(t['to'], need_space_after=True)
+        _print_pointer_to(t['to'], as_const=print_as_const, space_after=need_space_after)
 
-    if print_as_const:
-        out("*const")
-        if need_space_after:
-            out(" ")
+    #if need_space_after:
+    #    out(" ")
 
-    else:
-        out("*")
 
 
 
@@ -586,11 +576,7 @@ def print_value_index_ptr(x, ctx):
     ptr2array = x['pointer']
     need_wrap = precedence(ptr2array) < precedence(x)
     print_value(ptr2array, need_wrap=need_wrap)
-
-    index = x['index']
-    out("[")
-    print_value(index)
-    out("]")
+    out("["); print_value(x['index']); out("]")
 
 
 

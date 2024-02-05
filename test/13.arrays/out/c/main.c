@@ -39,7 +39,7 @@ int main()
     printf("------------------------------------\n");
 
     int32_t localArray[3];
-    memcpy(&localArray, &(int32_t [3]){4, 5, 6}, sizeof localArray);
+    memcpy(&localArray, &(int32_t[3]){4, 5, 6}, sizeof localArray);
 
     i = 0;
     while (i < 3) {
