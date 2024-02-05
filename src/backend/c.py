@@ -482,7 +482,7 @@ def print_value_call(v, ctx):
     while i < n:
         a = values[i]
 
-        # не всегда когда есть аргумент есть и параметер (!)
+        # не всегда когда есть аргумент есть и соотв ему параметер (!)
         try:
             # если тип аргумента отличается модификатором (const, volatile)
             # то явно приведем его к типу параметра, чтобы C не ругался
@@ -609,18 +609,19 @@ def print_cast_hard(t, v, ctx=[]):
     print_value(v, ctx=ctx, need_wrap=need_wrap)
 
 
+
 def print_cast(t, v, ctx=[]):
 
+    # if id(A) == id(B) => do not cast
     if 'c_alias' in v['type'] and 'c_alias' in t:
         if v['type']['c_alias'] == t['c_alias']:
             print_value(v, ctx)
             return
 
-    out("(")
-    print_type(t)
-    out(")")
+    out("("); print_type(t); out(")")
     need_wrap = precedence(v) < precedence({'kind': 'cast'})
     print_value(v, ctx=ctx, need_wrap=need_wrap)
+
 
 
 def print_value_cast_immediate(v, ctx):
@@ -628,21 +629,21 @@ def print_value_cast_immediate(v, ctx):
     from_type = value['type']
     to_type = v['type']
 
+    # String construction ([]Char -> *[]Char) - just print literal string
     if hlir_type.type_is_pointer_to_array_of_char(to_type):
         if hlir_type.type_is_array_of_char(from_type):
             char_width = to_type['to']['of']['width']
             print_value_literal_string(v, ctx=[], char_width=char_width)
             return
 
-    # GenericChar -> vast_immediate -> Char
+    # cast_immediate GenericChar -> Char
     elif hlir_type.type_is_char(to_type):
-        if hlir_type.type_is_char(from_type):
+        if hlir_type.type_is_generic_char(from_type):
             print_value_literal_char(v, ctx)
             return
 
     # implicit_cast of immediate value
-    #need_wrap = precedence(value) < precedenceMax
-    print_value(value, ctx)#, need_wrap=need_wrap)
+    print_value(value, ctx)
 
 
 
