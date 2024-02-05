@@ -199,6 +199,8 @@ def dodir(src):
             elif len(text) == 6:
                 if text == 'elseif':
                     break
+                if text == 'pragma':
+                    break
             elif len(text) == 7:
                 if text == 'warning':
                     break

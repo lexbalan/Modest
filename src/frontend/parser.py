@@ -1192,8 +1192,9 @@ class Parser:
             v = self.expr_value()
             dir['kind'] = 'error'
             dir['value'] = v
-        else:
+        elif x == 'pragma':
             dir['kind'] = 'pragma'
+
 
         return dir
 
