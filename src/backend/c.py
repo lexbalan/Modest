@@ -449,6 +449,12 @@ def print_paramlist(params, extra_args=False):
 
 
 
+def ptr2func(ftype):
+    print_type(ftype['to']);
+    out(" (*) ")
+    print_paramlist(ftype['params'], ftype['extra_args'])
+
+
 def print_value_call(v, ctx):
     left = v['func']
     ftype = left['type']
@@ -458,8 +464,8 @@ def print_value_call(v, ctx):
         # поскольку у нас указатели на функции это *void
         # при вызове приводим левое к указателю на функцию
         ftype = ftype['to']
-        out("(("); print_type(ftype['to']); out(" (*) ")
-        print_paramlist(ftype['params'], ftype['extra_args'])
+        out("((")
+        ptr2func(ftype)
         out(")")
         print_value(left)
         out(")")
