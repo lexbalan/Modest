@@ -173,21 +173,15 @@ def print_type_array(t, print_as_pointer, need_space_after):
     print_type(t['of'], need_space_after=True)
 
     if print_as_pointer:
+        out("*")
         if 'const' in t['att']:
-            out("*const")
-            if need_space_after:
-                out(" ")
-        else:
-            out("*")
+            out("const")
+        if need_space_after:
+            out(" ")
         return
 
     assert(t['volume'] != None)
     print_array_volume(t)
-
-    """if t['volume'] != None:
-        print_array_volume(t)
-    else:
-        out("*")"""
 
 
 
