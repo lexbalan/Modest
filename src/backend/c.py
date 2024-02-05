@@ -181,11 +181,13 @@ def print_type_array(t, print_as_pointer, need_space_after):
             out("*")
         return
 
+    assert(t['volume'] != None)
+    print_array_volume(t)
 
-    if t['volume'] != None:
+    """if t['volume'] != None:
         print_array_volume(t)
     else:
-        out("*")
+        out("*")"""
 
 
 
@@ -270,7 +272,7 @@ def print_type_array_asis(t):
 
 
 
-def print_type(t, need_space_after=False, print_array_asis=False, print_as_const=False):
+def print_type(t, need_space_after=False, print_array_as_ptr=True, print_as_const=False):
     k = t['kind']
 
     if 'wrapped_array_type' in t['att']:
@@ -348,10 +350,10 @@ def print_type(t, need_space_after=False, print_array_asis=False, print_as_const
         print_type_pointer(t, need_space_after, print_as_const)
 
     elif hlir_type.type_is_array(t):
-        if print_array_asis:
-            print_type_array_asis(t)
-            return
-        print_type_array(t, print_as_pointer=True, need_space_after=need_space_after)
+        #if print_array_as_ptr:
+        #    print_type_array_asis(t)
+        #    return
+        print_type_array(t, print_as_pointer=print_array_as_ptr, need_space_after=need_space_after)
 
     elif hlir_type.type_is_enum(t):
         print_type_enum(t)
@@ -790,7 +792,7 @@ def print_value_literal_array(v, ctx):
         if cfunc != None:
             # only for local record literals (!)
             out("(")
-            print_type(v['type'], need_space_after=False, print_array_asis=True)
+            print_type(v['type'], need_space_after=False, print_array_as_ptr=False)
             out(")")
 
     out("{")
@@ -1048,19 +1050,19 @@ def print_value_let(x, ctx):
 
 def print_value_sizeof(x, ctx):
     out("sizeof(")
-    print_type(x['of'], need_space_after=False, print_array_asis=True)
+    print_type(x['of'], need_space_after=False, print_array_as_ptr=False)
     out(")")
 
 
 def print_value_alignof(x, ctx):
     out("__alignof(")
-    print_type(x['of'], need_space_after=False, print_array_asis=True)
+    print_type(x['of'], need_space_after=False, print_array_as_ptr=False)
     out(")")
 
 
 def print_value_offsetof(x, ctx):
     out("__offsetof(")
-    print_type(x['of'], need_space_after=False, print_array_asis=True)
+    print_type(x['of'], need_space_after=False, print_array_as_ptr=False)
     out(", ")
     out(x['field']['str'])
     out(")")
@@ -1768,7 +1770,7 @@ def memcopy(left, right):
 
     if left['kind'] in ['index']:
         out("(")
-        print_type(right['type'], print_array_asis=True)
+        print_type(right['type'], print_array_as_ptr=False)
         out(")")
     else:
         print_value(left)
