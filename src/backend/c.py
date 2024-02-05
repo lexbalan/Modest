@@ -264,14 +264,6 @@ def print_type_enum(t):
 
 
 
-# исп. напр. для sizeof(uint32_t [10])
-def print_type_array_asis(t):
-    item_type = hlir_type.array_root_item_type(t)
-    print_type(item_type, need_space_after=True)
-    print_array_volume(t)
-
-
-
 def print_type(t, need_space_after=False, print_array_as_ptr=True, print_as_const=False):
     k = t['kind']
 
@@ -291,7 +283,7 @@ def print_type(t, need_space_after=False, print_array_as_ptr=True, print_as_cons
         if hlir_type.type_is_alias(t):
             tt = t['aliasof']
             if not hlir_type.type_is_record(tt):
-                print_type2(t['aliasof'], need_space_after=need_space_after)
+                print_type(t['aliasof'], need_space_after=need_space_after)
 
 
     # hotfix for let generic value problem (let x = 1)
@@ -350,9 +342,6 @@ def print_type(t, need_space_after=False, print_array_as_ptr=True, print_as_cons
         print_type_pointer(t, need_space_after, print_as_const)
 
     elif hlir_type.type_is_array(t):
-        #if print_array_as_ptr:
-        #    print_type_array_asis(t)
-        #    return
         print_type_array(t, print_as_pointer=print_array_as_ptr, need_space_after=need_space_after)
 
     elif hlir_type.type_is_enum(t):
