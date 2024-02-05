@@ -6,7 +6,7 @@ from error import info, error, fatal
 from .common import *
 import hlir.type as hlir_type
 from hlir.type import type_print
-from value.value import value_attribute_check, value_print
+from value.value import value_is_immediate, value_attribute_check, value_print
 from util import align_bits_up, nbits_for_num, get_item_with_id, utf8_cc_arr_to_utf32_cc_arr, utf16_cc_arr_to_utf32_cc_arr
 from main import settings
 
@@ -537,7 +537,7 @@ def print_value_index(x, ctx):
 
     # если имеем дело c дженерик массивом (глоб константа)
     if hlir_type.type_is_generic(array['type']):
-        if 'imm' in x:
+        if value_is_immediate(x):
             print_value_literal(x, ['print_immediate'])
             return
 
@@ -584,7 +584,7 @@ def print_value_access(x, ctx):
 
     # если имеем дело c дженерик записью (глоб константа)
     if hlir_type.type_is_generic(left['type']):
-        if 'imm' in x:
+        if value_is_immediate(x):
             print_value_literal(x, ['print_immediate'])
             return
 
@@ -765,17 +765,12 @@ def print_value_literal_array(v, ctx):
 
     out("{")
     indent_up()
-
     values = v['imm']
-
     print_array_values(values, ctx)
-
     indent_down()
-
     if v['nl_end'] > 0:
         newline(n=v['nl_end'])
         indent()
-
     out("}")
 
 
@@ -1048,7 +1043,7 @@ def print_value(x, ctx=[], need_wrap=False, just_print_id=True):
     # чтобы одна на другую не ссылалась тк это в си невозможно
     # каждый раз печатаем литерал инициализвтора константы полностью
     if 'print_immediate' in ctx:
-        if 'imm' in x:
+        if value_is_immediate(x):
             print_value_literal(x, ctx)
             return
 
