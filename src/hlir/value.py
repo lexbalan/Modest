@@ -93,6 +93,23 @@ def hlir_value_array(items, type=None, ti=None):
 
 
 
+def hlir_value_string(string, length=0, ti=None):
+    if length == 0:
+        length = len(string) + 1
+
+    vol = hlir_value_int(length)  # <=> len(string) + 1
+    genStrType = hlir_type_array(type.typeChar32, volume=vol, ti=ti)
+    genStrType['generic'] = True
+
+    chars = []
+    for ch in string:
+        chars.append(ord(ch))
+
+    # #imm of string literal is array of chars
+    return hlir_value_literal(genStrType, chars, ti)
+
+
+
 def hlir_value_record(typ, initializers=[], ti=None):
     return hlir_value_literal(typ, initializers, ti)
 
@@ -287,14 +304,6 @@ def hlir_value_offsetof(of, field_id, ti=None):
 
 
 
-def hlir_string_imm(string):
-    # imm of string - it just list of UTF-32 codes
-    items = []
-    for ch in string:
-        code = ord(ch)
-        items.append(code)
-
-    return items
 
 
 

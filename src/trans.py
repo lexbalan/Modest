@@ -220,6 +220,19 @@ def init():
     root_context.type_add('VA_List', hlir_type.typeVA_List)
 
 
+    compilerVersionMajor = hlir_value_int(1, typ=hlir_type.typeNat32)
+    compilerVersionMinor = hlir_value_int(7, typ=hlir_type.typeNat32)
+
+    root_context.value_add('__compilerVersionMajor', compilerVersionMajor)
+    root_context.value_add('__compilerVersionMinor', compilerVersionMinor)
+
+    import platform
+    __platformSystem = hlir_value_string(platform.system())
+    __platformRelease = hlir_value_string(platform.release())
+    root_context.value_add('__platformSystem', __platformSystem)
+    root_context.value_add('__platformRelease', __platformRelease)
+
+
     root_context.value_add('nil', valueNil)
     root_context.value_add('true', valueTrue)
     root_context.value_add('false', valueFalse)
@@ -1036,15 +1049,9 @@ def do_value_id(x):
 
 
 
+
 def do_value_str(x):
-    ti=x['ti']
-
-    vol = hlir_value_int(x['len'])  # <=> len(string) + 1
-    genStrType = hlir_type_array(hlir_type.typeChar32, volume=vol, ti=ti)
-    genStrType['generic'] = True
-
-    imm = hlir_string_imm(x['str'])
-    return hlir_value_literal(genStrType, imm, ti)
+    return hlir_value_string(x['str'], length=x['len'], ti=x['ti'])
 
 
 
@@ -1949,20 +1956,26 @@ def do_directive(x):
     elif kind == 'info':
         v = do_value(x['value'])
         # (because v['imm'] is an array of UTF-32 codes)
-        msg = str(bytes(v['imm']).decode())
-        info(msg, x['ti'])
+        if not value_is_bad(v):
+            if hlir_type.type_is_array_of_char(v['type']):
+                msg = str(bytes(v['imm']).decode())
+                info(msg, x['ti'])
 
     elif kind == 'warning':
         v = do_value(x['value'])
         # (because v['imm'] is an array of UTF-32 codes)
-        msg = str(bytes(v['imm']).decode())
-        warning(msg, x['ti'])
+        if not value_is_bad(v):
+            if hlir_type.type_is_array_of_char(v['type']):
+                msg = str(bytes(v['imm']).decode())
+                warning(msg, x['ti'])
 
     elif kind == 'error':
         v = do_value(x['value'])
         # (because v['imm'] is an array of UTF-32 codes)
-        msg = str(bytes(v['imm']).decode())
-        error(msg, x['ti'])
+        if not value_is_bad(v):
+            if hlir_type.type_is_array_of_char(v['type']):
+                msg = str(bytes(v['imm']).decode())
+                error(msg, x['ti'])
         exit(-1)
 
     return None
@@ -2003,7 +2016,7 @@ def proc(ast, source_info):
         if not production:
             if isa != 'ast_directive':
                 continue
-            elif not kind in ['if', 'elseif', 'else', 'endif']:
+            elif not kind in ['elseif', 'else', 'endif']:
                 continue
 
         if isa == 'ast_definition':
