@@ -170,7 +170,7 @@ def print_array_volume(t):
 
 
 def _print_pointer_to(to, as_const, space_after):
-    print_type(to, need_space_after=True)
+    print_type(to, space_after=True)
     out("*")
     if as_const:
         out("const")
@@ -179,27 +179,24 @@ def _print_pointer_to(to, as_const, space_after):
 
 
 
-def print_type_array(t, print_as_pointer, need_space_after):
+def print_type_array(t, print_as_pointer, space_after):
     if print_as_pointer:
-        _print_pointer_to(t['of'], as_const='const' in t['att'], space_after=need_space_after)
+        _print_pointer_to(t['of'], as_const='const' in t['att'], space_after=space_after)
 
     else:
         assert(t['volume'] != None)
-        print_type(t['of'], need_space_after=need_space_after)
+        print_type(t['of'], space_after=space_after)
         print_array_volume(t)
 
 
 
-def print_type_pointer(t, need_space_after, print_as_const=False):
+def print_type_pointer(t, space_after, as_const=False):
     # array was printed as *, we dont need to place another *
     if hlir_type.type_is_array(t['to']):
-        _print_pointer_to(t['to']['of'], as_const=print_as_const, space_after=need_space_after)
-    else:
-        _print_pointer_to(t['to'], as_const=print_as_const, space_after=need_space_after)
+        _print_pointer_to(t['to']['of'], as_const=as_const, space_after=space_after)
+        return
 
-    #if need_space_after:
-    #    out(" ")
-
+    _print_pointer_to(t['to'], as_const=as_const, space_after=space_after)
 
 
 
@@ -248,7 +245,7 @@ def print_type_enum(t):
 
 
 
-def print_type(t, need_space_after=False, print_array_as_ptr=True, print_as_const=False):
+def print_type(t, space_after=False, print_array_as_ptr=True, as_const=False):
     k = t['kind']
 
     if 'wrapped_array_type' in t['att']:
@@ -256,7 +253,7 @@ def print_type(t, need_space_after=False, print_array_as_ptr=True, print_as_cons
         return
 
     if not hlir_type.type_is_pointer(t):
-        if print_as_const:
+        if as_const:
             out("const ")
 
         if 'volatile' in t['att']:
@@ -267,7 +264,7 @@ def print_type(t, need_space_after=False, print_array_as_ptr=True, print_as_cons
         if hlir_type.type_is_alias(t):
             tt = t['aliasof']
             if not hlir_type.type_is_record(tt):
-                print_type(t['aliasof'], need_space_after=need_space_after)
+                print_type(t['aliasof'], space_after=space_after)
 
 
     # hotfix for let generic value problem (let x = 1)
@@ -286,7 +283,7 @@ def print_type(t, need_space_after=False, print_array_as_ptr=True, print_as_cons
         else:
             out("%s%d_t" % (pre, width))
 
-        if need_space_after:
+        if space_after:
             out(" ")
 
         return
@@ -294,7 +291,7 @@ def print_type(t, need_space_after=False, print_array_as_ptr=True, print_as_cons
 
     if 'c_alias' in t:
         out(t['c_alias'])
-        if need_space_after:
+        if space_after:
             out(" ")
         return
 
@@ -303,42 +300,42 @@ def print_type(t, need_space_after=False, print_array_as_ptr=True, print_as_cons
             if hlir_type.type_is_record(t):
                 out("struct ")
         print_id(t)
-        if need_space_after:
+        if space_after:
             out(" ")
         return
 
     if hlir_type.type_is_integer(t):
         print_type_id(t)
-        if need_space_after:
+        if space_after:
             out(" ")
 
     elif hlir_type.type_is_float(t):
         print_type_id(t)
-        if need_space_after:
+        if space_after:
             out(" ")
 
     elif hlir_type.type_is_record(t):
         print_type_record(t)
-        if need_space_after:
+        if space_after:
             out(" ")
 
     elif hlir_type.type_is_pointer(t):
-        print_type_pointer(t, need_space_after, print_as_const)
+        print_type_pointer(t, space_after, as_const)
 
     elif hlir_type.type_is_array(t):
-        print_type_array(t, print_as_pointer=print_array_as_ptr, need_space_after=need_space_after)
+        print_type_array(t, print_as_pointer=print_array_as_ptr, space_after=space_after)
 
     elif hlir_type.type_is_enum(t):
         print_type_enum(t)
 
     elif hlir_type.type_is_func(t):
         out("void")
-        if need_space_after:
+        if space_after:
             out(" ")
 
     elif k == 'opaque':
         out("void")
-        if need_space_after:
+        if space_after:
             out(" ")
 
     else: out("<type:" + str(t) + ">")
@@ -761,7 +758,7 @@ def print_value_literal_array(v, ctx):
         if cfunc != None:
             # only for local record literals (!)
             out("(")
-            print_type(v['type'], need_space_after=False, print_array_as_ptr=False)
+            print_type(v['type'], space_after=False, print_array_as_ptr=False)
             out(")")
 
     out("{")
@@ -1019,19 +1016,19 @@ def print_value_let(x, ctx):
 
 def print_value_sizeof(x, ctx):
     out("sizeof(")
-    print_type(x['of'], need_space_after=False, print_array_as_ptr=False)
+    print_type(x['of'], space_after=False, print_array_as_ptr=False)
     out(")")
 
 
 def print_value_alignof(x, ctx):
     out("__alignof(")
-    print_type(x['of'], need_space_after=False, print_array_as_ptr=False)
+    print_type(x['of'], space_after=False, print_array_as_ptr=False)
     out(")")
 
 
 def print_value_offsetof(x, ctx):
     out("__offsetof(")
-    print_type(x['of'], need_space_after=False, print_array_as_ptr=False)
+    print_type(x['of'], space_after=False, print_array_as_ptr=False)
     out(", ")
     out(x['field']['str'])
     out(")")
@@ -1229,7 +1226,7 @@ def print_stmt_let(x):
         save_array(v, x['value'])
         return
 
-    print_variable(id, v['type'], print_as_const=True)
+    print_variable(id, v['type'], as_const=True)
     out(" = ")
     print_value(x['value'], just_print_id=False)
     out(";")
@@ -1320,7 +1317,7 @@ def print_wrapped_array(_type):
     out(_type['wrapped_id'])
     out (" {")
     item_type = hlir_type.array_root_item_type(_type)
-    print_type(item_type, need_space_after=True)
+    print_type(item_type, space_after=True)
     out("a");
     print_array_volume(_type)
     out(";};\n")
@@ -1470,13 +1467,13 @@ def print_def_type(x):
 
 
 
-def print_variable_regular(t, id_str, print_as_const):
-    print_type(t, need_space_after=True, print_as_const=print_as_const)
+def print_variable_regular(t, id_str, as_const):
+    print_type(t, space_after=True, as_const=as_const)
     out("%s" % id_str)
 
 
-def print_variable_pointer(t, id_str, print_as_const):
-    print_type(t, need_space_after=True, print_as_const=print_as_const)
+def print_variable_pointer(t, id_str, as_const):
+    print_type(t, space_after=True, as_const=as_const)
     out("%s" % id_str)
 
 
@@ -1493,7 +1490,7 @@ def print_variable_array(t, id_str, do_wrapped=True):
     while array_root_type['kind'] == 'array':
         array_root_type = array_root_type['of']
 
-    print_type(array_root_type, need_space_after=True)
+    print_type(array_root_type, space_after=True)
 
     out(id_str)
 
@@ -1510,24 +1507,24 @@ def print_variable_array(t, id_str, do_wrapped=True):
 
 # из за того что с C типы записваются через жопу
 # приходится печатать типы ptr, arr & func вместе с именем поля
-def print_variable(_id, typ, print_as_const=False, init_value=None):
+def print_variable(_id, typ, as_const=False, init_value=None):
     assert (typ != None)
 
     id_str = _id['str']
     assert (id_str != "")
 
     if 'c_alias' in typ or typ['id'] != None:
-        print_variable_regular(typ, id_str, print_as_const)
+        print_variable_regular(typ, id_str, as_const)
         return
 
     if hlir_type.type_is_pointer(typ):
-        print_variable_pointer(typ, id_str, print_as_const)
+        print_variable_pointer(typ, id_str, as_const)
 
     elif hlir_type.type_is_array(typ):
         print_variable_array(typ, id_str)
 
     else:
-        print_variable_regular(typ, id_str, print_as_const)
+        print_variable_regular(typ, id_str, as_const)
 
 
     if init_value != None:
