@@ -1102,7 +1102,7 @@ def print_stmt_if(x, need_else_branch):
     out("if ("); print_value(x['cond']); out(")")
 
     if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
-        indent()
+        nl_indent()
     else:
         out(" ")
 
@@ -1111,7 +1111,7 @@ def print_stmt_if(x, need_else_branch):
     e = x['else']
     if e != None:
         if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
-            indent()
+            nl_indent()
         else:
             out(" ")
 
@@ -1121,7 +1121,7 @@ def print_stmt_if(x, need_else_branch):
         else:
             out("else")
             if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
-                indent()
+                nl_indent()
             else:
                 out(" ")
             print_stmt_block(e)
@@ -1133,7 +1133,7 @@ def print_stmt_while(x):
     out("while ("); print_value(x['cond']); out(")")
 
     if styleguide['LINE_BREAK_BEFORE_BLOCK_BRACE']:
-        indent()
+        nl_indent()
     else:
         out(" ")
 
