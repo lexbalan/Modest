@@ -2003,7 +2003,7 @@ def proc(ast, source_info):
         if not production:
             if isa != 'ast_directive':
                 continue
-            elif not kind in ['elseif', 'else', 'endif']:
+            elif not kind in ['if', 'elseif', 'else', 'endif']:
                 continue
 
         if isa == 'ast_definition':
