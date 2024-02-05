@@ -755,7 +755,6 @@ def print_value_literal_array(v, ctx):
                 _print_string_literal(utf32_codes, width=char_width)
                 return
 
-
     if not 'no-literal-array-cast' in ctx:
         if cfunc != None:
             # only for local record literals (!)
