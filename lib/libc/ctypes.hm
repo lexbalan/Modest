@@ -9,6 +9,6 @@ import "./ctypes32.hm"
 @attribute("c-no-print")
 import "./ctypes64.hm"
 @else
-@error("bad system bit depth")
+@error("C types not implemented")
 @endif
 
