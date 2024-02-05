@@ -656,20 +656,20 @@ def print_value_cast(x, ctx):
     # поэтому даже если структуры одинаковы, но имена разные
     # их нужно приводить
 
-    # cast pointer to struct to pointer to another struct
+    # *RecordA -> *RecordB
     if hlir_type.type_is_pointer_to_record(from_type):
         if hlir_type.type_is_pointer_to_record(to_type):
             print_cast(to_type, value, ctx)
             return
 
-    # cast struct to another struct
+    # RecordA -> RecordB
     if hlir_type.type_is_record(to_type):
         if hlir_type.type_is_record(from_type):
-            # *((RecordType *)&value)
+            # C cannot cast struct to struct (!)
             print_cast_hard(to_type, value)
             return
 
-
+    # VA_List -> AnyType
     if hlir_type.type_is_va_list(from_type):
         global va_id
         out("va_arg(%s, " % va_id)
@@ -688,16 +688,15 @@ def print_value_cast(x, ctx):
     # - in C  int32(-1) -> uint64 => 0xffffffffffffffff
     # required: (uint64_t)((uint32)int32_value)
     if hlir_type.type_is_integer(from_type) and hlir_type.type_is_integer(to_type):
-        if hlir_type.type_is_unsigned(to_type):
-            if hlir_type.type_is_signed(from_type):
-                if from_type['size'] < to_type['size']:
-                    out("((")
-                    print_type(to_type)
-                    out(")")
-                    nat_same_sz = hlir_type.type_select_nat(from_type['width'])
-                    print_cast(nat_same_sz, value, ctx)
-                    out(")")
-                    return
+        if hlir_type.type_is_signed(from_type) and hlir_type.type_is_unsigned(to_type):
+            if from_type['size'] < to_type['size']:
+                out("((")
+                print_type(to_type)
+                out(")")
+                nat_same_sz = hlir_type.type_select_nat(from_type['width'])
+                print_cast(nat_same_sz, value, ctx)
+                out(")")
+                return
 
     print_cast(to_type, value, ctx)
 
