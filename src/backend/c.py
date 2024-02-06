@@ -221,7 +221,7 @@ def print_type_record(t, tag=""):
                 print_comment(comment)
 
         newline(n=field['nl'])
-        indent();
+        indent()
         print_variable(field['id'], field['type'])
         out(";")
 
@@ -233,15 +233,18 @@ def print_type_record(t, tag=""):
 
 def print_type_enum(t):
     out("enum {")
+    indent_up()
     items = t['items']
     i = 0
     while i < len(items):
         if i > 0: out(',')
         item = items[i]
-        out("\n\t")
+        nl_ident()
         print_id(item)
         i = i + 1
-    out("\n}")
+    indent_down()
+    nl_ident()
+    out("}")
 
 
 
@@ -273,56 +276,30 @@ def print_type(t, space_after=False, array_as_ptr=True, as_const=False):
     if hlir_type.type_is_generic_integer(t):
         # если пришел generic - подберем подходящий тип
         # ex: let x = 1; func(x)
-
-        pre = 'int'
-        if hlir_type.type_is_unsigned(t):
-            pre = 'uint'
-
-        width = align_bits_up(t['width'])
-
-        if width >= 128:
-            out("__%s%d" % (pre, width))
-        else:
-            out("%s%d_t" % (pre, width))
-
-        if space_after:
-            out(" ")
-
-        return
+        t = hlir_type.type_select_int(t['width'])
 
 
     if 'c_alias' in t:
         out(t['c_alias'])
-        if space_after:
-            out(" ")
-        return
 
-    if t['id'] != None:
+    elif t['id'] != None:
         if NO_TYPEDEF_STRUCTS:
             if hlir_type.type_is_record(t):
                 out("struct ")
         print_id(t)
-        if space_after:
-            out(" ")
-        return
 
-    if hlir_type.type_is_integer(t):
+    elif hlir_type.type_is_integer(t):
         print_type_id(t)
-        if space_after:
-            out(" ")
 
     elif hlir_type.type_is_float(t):
         print_type_id(t)
-        if space_after:
-            out(" ")
 
     elif hlir_type.type_is_record(t):
         print_type_record(t)
-        if space_after:
-            out(" ")
 
     elif hlir_type.type_is_pointer(t):
         print_type_pointer(t, space_after, as_const)
+        return
 
     elif hlir_type.type_is_array(t):
         print_type_array(t, as_pointer=array_as_ptr, space_after=space_after)
@@ -332,15 +309,14 @@ def print_type(t, space_after=False, array_as_ptr=True, as_const=False):
 
     elif hlir_type.type_is_func(t):
         out("void")
-        if space_after:
-            out(" ")
 
     elif k == 'opaque':
         out("void")
-        if space_after:
-            out(" ")
 
     else: out("<type:" + str(t) + ">")
+
+    if space_after:
+        out(" ")
 
 
 
