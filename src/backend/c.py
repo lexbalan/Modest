@@ -587,7 +587,6 @@ def print_cast_hard(t, v, ctx=[]):
 
 
 def print_cast(t, v, ctx=[]):
-
     # if id(A) == id(B) => do not cast
     if 'c_alias' in v['type'] and 'c_alias' in t:
         if v['type']['c_alias'] == t['c_alias']:
@@ -653,11 +652,9 @@ def print_value_cast(x, ctx):
         out(")")
         return
 
-
     if value['kind'] == 'literal':
         print_value(value)
         return
-
 
     # (!) because
     # - in Cm int32(-1) -> uint64 => 0x00000000ffffffff
@@ -1511,6 +1508,7 @@ def print_def_var(x):
             if not 'extern' in var['att']:
                 out("static ")
 
+    #if 'static' in var['att']: out("static ")
     if 'extern' in var['att']: out("extern ")
     if 'volatile' in var['att']: out("volatile ")
 
@@ -1687,10 +1685,6 @@ def run(module, outname):
     newline()
     output_close()
     return
-
-
-
-
 
 
 
