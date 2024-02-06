@@ -179,8 +179,8 @@ def _print_type_pointer_to(to, as_const, space_after):
 
 
 
-def print_type_array(t, print_as_pointer, space_after):
-    if print_as_pointer:
+def print_type_array(t, as_pointer, space_after):
+    if as_pointer:
         _print_type_pointer_to(t['of'], as_const='const' in t['att'], space_after=space_after)
         return
 
@@ -245,7 +245,7 @@ def print_type_enum(t):
 
 
 
-def print_type(t, space_after=False, print_array_as_ptr=True, as_const=False):
+def print_type(t, space_after=False, array_as_ptr=True, as_const=False):
     k = t['kind']
 
     if 'wrapped_array_type' in t['att']:
@@ -325,7 +325,7 @@ def print_type(t, space_after=False, print_array_as_ptr=True, as_const=False):
         print_type_pointer(t, space_after, as_const)
 
     elif hlir_type.type_is_array(t):
-        print_type_array(t, print_as_pointer=print_array_as_ptr, space_after=space_after)
+        print_type_array(t, as_pointer=array_as_ptr, space_after=space_after)
 
     elif hlir_type.type_is_enum(t):
         print_type_enum(t)
@@ -756,7 +756,7 @@ def print_value_literal_array(v, ctx):
         if cfunc != None:
             # only for local record literals (!)
             out("(")
-            print_type(v['type'], print_array_as_ptr=False)
+            print_type(v['type'], array_as_ptr=False)
             out(")")
 
     out("{")
@@ -1009,19 +1009,19 @@ def print_value_let(x, ctx):
 
 def print_value_sizeof(x, ctx):
     out("sizeof(")
-    print_type(x['of'], print_array_as_ptr=False)
+    print_type(x['of'], array_as_ptr=False)
     out(")")
 
 
 def print_value_alignof(x, ctx):
     out("__alignof(")
-    print_type(x['of'], print_array_as_ptr=False)
+    print_type(x['of'], array_as_ptr=False)
     out(")")
 
 
 def print_value_offsetof(x, ctx):
     out("__offsetof(")
-    print_type(x['of'], print_array_as_ptr=False)
+    print_type(x['of'], array_as_ptr=False)
     out(", ")
     out(x['field']['str'])
     out(")")
@@ -1729,7 +1729,7 @@ def memcopy(left, right):
 
     if left['kind'] in ['index']:
         out("(")
-        print_type(right['type'], print_array_as_ptr=False)
+        print_type(right['type'], array_as_ptr=False)
         out(")")
     else:
         print_value(left)
