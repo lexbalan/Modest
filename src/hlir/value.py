@@ -14,6 +14,7 @@ def hlir_value_bad(ti=None):
         'isa': 'value',
         'kind': 'bad',
         'type': hlir_type_bad(),
+        'immutable': False,
         'att': [],
         'id': hlir_id('_', ti=ti),
         'ti': ti
@@ -26,6 +27,7 @@ def hlir_value_literal(t, imm, ti):
         'kind': 'literal',
         'type': t,
         'imm': imm,
+        'immutable': False,
         'att': [],
         'nl_end': 0,
         'nl': 0,
@@ -121,6 +123,7 @@ def hlir_value_un(k, value, type, ti=None):
         'kind': k,
         'value': value,
         'type': type,
+        'immutable': True,
         'att': [],
         'ti': ti
     }
@@ -133,6 +136,7 @@ def hlir_value_bin(op, l, r, t, ti):
         'left': l,
         'right': r,
         'type': t,
+        'immutable': True,
         'att': [],
         'ti': ti
     }
@@ -145,6 +149,7 @@ def hlir_value_func(id, type, ti=None):
         'id': id,
         'type': type,
         'usecnt': 0,
+        'immutable': True,
         'att': [],
         'ti': ti
     }
@@ -157,6 +162,7 @@ def hlir_value_var(id, type, ti=None):
         'id': id,
         'type': type,
         'usecnt': 0,
+        'immutable': False,
         'att': [],
         'ti': ti
     }
@@ -172,6 +178,7 @@ def hlir_value_const(id, type, value=None, ti=None):
         'type': type,
         'value': value,
         'usecnt': 0,
+        'immutable': True,
         'att': [],
         'ti': ti
     }
@@ -184,6 +191,7 @@ def hlir_value_call(func, rettype, args, ti=None):
         'func': func,
         'args': args,
         'type': rettype,
+        'immutable': True,
         'att': [],
         'ti': ti
     }
@@ -196,6 +204,7 @@ def hlir_value_index_array(array, index, ti=None):
         'array': array,
         'index': index,
         'type': array['type']['of'],
+        'immutable': False,
         'att': [],
         'ti': ti
     }
@@ -208,6 +217,7 @@ def hlir_value_index_array_by_ptr(ptr_to_array, index, ti=None):
         'pointer': ptr_to_array,
         'index': index,
         'type': ptr_to_array['type']['to']['of'],
+        'immutable': False,
         'att': [],
         'ti': ti
     }
@@ -221,6 +231,7 @@ def hlir_value_access_record(record, field, ti=None):
         'field': field,
         'record_type': record['type'],
         'type': field['type'],
+        'immutable': False,
         'att': [],
         'ti': ti
     }
@@ -234,6 +245,7 @@ def hlir_value_access_record_by_ptr(ptr_to_record, field, ti=None):
         'field': field,
         'record_type': ptr_to_record['type']['to'],
         'type': field['type'],
+        'immutable': False,
         'att': [],
         'ti': ti
     }
@@ -245,6 +257,7 @@ def hlir_value_cast(value, type, ti=None):
         'kind': 'cast',
         'value': value,
         'type': type,
+        'immutable': True,
         'att': [],
         'ti': ti
     }
@@ -267,8 +280,9 @@ def hlir_value_sizeof(of, ti=None):
         'kind': 'sizeof',
         'of': of,
         'type': typ,
-        'att': [],
         'imm': size,
+        'immutable': True,
+        'att': [],
         'ti': ti
     }
 
@@ -281,8 +295,9 @@ def hlir_value_alignof(of, ti=None):
         'kind': 'alignof',
         'of': of,
         'type': typ,
-        'att': [],
         'imm': align,
+        'immutable': True,
+        'att': [],
         'ti': ti
     }
 
@@ -297,8 +312,9 @@ def hlir_value_offsetof(of, field_id, ti=None):
         'of': of,
         'field': field_id,
         'type': typ,
-        'att': [],
         'imm': offset,
+        'immutable': True,
+        'att': [],
         'ti': ti
     }
 

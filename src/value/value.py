@@ -18,7 +18,7 @@ def value_is_immediate(x):
 # Any immediate value are immutable,
 # but not any immutable value are immediate
 def value_is_immutable(x):
-    if 'immutable' in x['att']:
+    if x['immutable']:
         return True
 
     if value_is_immediate(x):

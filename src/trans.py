@@ -692,7 +692,9 @@ def do_value_deref(v, ti):
     if hlir_type.type_is_func(to) or hlir_type.type_is_undefined_array(to):
         error("unsuitable type", v)
 
-    return hlir_value_un('deref', v, to, ti=ti)
+    nv = hlir_value_un('deref', v, to, ti=ti)
+    nv['immutable'] = False
+    return nv
 
 
 
@@ -905,17 +907,16 @@ def do_value_index(x):
         v = hlir_value_index_array(left, index, ti=x['ti'])
 
         if value_is_immutable(left):
-            v['att'].append('immutable')
+            v['immutable'] = True
 
         if value_is_immediate(left):
             if value_is_immediate(index):
-                _index = index['imm']
+                index_imm = index['imm']
 
-                if _index >= array_typ['volume']['imm']:
+                if index_imm >= array_typ['volume']['imm']:
                     error("array index out of bounds", x['index'])
 
-                items = left['imm']
-                item = items[_index]
+                item = left['imm'][index_imm]
 
                 #if hlir_type.type_is_char(item_type):
                 if hlir_type.type_is_char(array_typ['of']):
@@ -964,7 +965,7 @@ def do_value_access(x):
     else:
         v = hlir_value_access_record(left, field, ti=x['ti'])
         if value_is_immutable(left):
-            v['att'].append('immutable')
+            v['immutable'] = True
 
     # access to immediate object
     if value_is_immediate(left) and not via_pointer:
