@@ -648,6 +648,9 @@ def _bin(op, type_result, l, r, ti=None):
 
 
 def do_value_not(val, t, ti):
+    if not hlir_type.type_is_integer(val['type']) and not hlir_type.type_is_bool(val['type']):
+        error("expected value with Integer or Bool type", ti)
+
     v = hlir_value_un('not', val, t, ti=ti)
 
     if value_is_immediate(val):
@@ -658,8 +661,10 @@ def do_value_not(val, t, ti):
 
 
 def do_value_minus(val, t, ti):
-    if not type_is_integer(val['type']):
-        error("expected value with integer type", ti)
+    if not hlir_type.type_is_integer(val['type']):
+        error("expected value with Integer type", ti)
+    if not hlir_type.type_is_signed(val['type']):
+        error("expected value with Signed Integer type", ti)
 
     nv = hlir_value_un('minus', val, t, ti=ti)
 
@@ -668,10 +673,6 @@ def do_value_minus(val, t, ti):
 
         if hlir_type.type_is_generic(nv['type']):
             nv['type'] = hlir_type_generic_int_for(val['imm'], unsigned=False, ti=ti)
-
-        elif hlir_type.type_is_unsigned(nv['type']):
-            width = nbits_for_num(val['imm'])
-            nv['type'] = type_select_int(width)
 
     return nv
 
