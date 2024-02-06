@@ -13,10 +13,10 @@ def hlir_value_bad(ti=None):
     return {
         'isa': 'value',
         'kind': 'bad',
-        'type': hlir_type_bad(),
+        'id': hlir_id('_', ti=ti),
+        'type': hlir_type_bad(ti),
         'immutable': False,
         'att': [],
-        'id': hlir_id('_', ti=ti),
         'ti': ti
     }
 
