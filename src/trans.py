@@ -220,9 +220,8 @@ def init():
     root_context.type_add('VA_List', hlir_type.typeVA_List)
 
 
-    compilerVersionMajor = hlir_value_int(1, typ=hlir_type.typeNat32)
+    compilerVersionMajor = hlir_value_int(0, typ=hlir_type.typeNat32)
     compilerVersionMinor = hlir_value_int(7, typ=hlir_type.typeNat32)
-
     root_context.value_add('__compilerVersionMajor', compilerVersionMajor)
     root_context.value_add('__compilerVersionMinor', compilerVersionMinor)
 
@@ -1955,28 +1954,40 @@ def do_directive(x):
 
     elif kind == 'info':
         v = do_value(x['value'])
-        # (because v['imm'] is an array of UTF-32 codes)
         if not value_is_bad(v):
-            if hlir_type.type_is_array_of_char(v['type']):
+            if not hlir_type.type_is_array_of_char(v['type']):
+                fatal("required value with Str type", x['ti'])
+            elif not value_is_immediate(v):
+                fatal("required immediate value", x['ti'])
+            else:
+                # (because v['imm'] is an array of UTF-32 codes)
                 msg = str(bytes(v['imm']).decode())
                 info(msg, x['ti'])
 
     elif kind == 'warning':
         v = do_value(x['value'])
-        # (because v['imm'] is an array of UTF-32 codes)
         if not value_is_bad(v):
-            if hlir_type.type_is_array_of_char(v['type']):
+            if not hlir_type.type_is_array_of_char(v['type']):
+                fatal("required value with Str type", x['ti'])
+            elif not value_is_immediate(v):
+                fatal("required immediate value", x['ti'])
+            else:
+                # (because v['imm'] is an array of UTF-32 codes)
                 msg = str(bytes(v['imm']).decode())
                 warning(msg, x['ti'])
 
     elif kind == 'error':
         v = do_value(x['value'])
-        # (because v['imm'] is an array of UTF-32 codes)
         if not value_is_bad(v):
-            if hlir_type.type_is_array_of_char(v['type']):
+            if not hlir_type.type_is_array_of_char(v['type']):
+                fatal("required value with Str type", x['ti'])
+            elif not value_is_immediate(v):
+                fatal("required immediate value", x['ti'])
+            else:
+                # (because v['imm'] is an array of UTF-32 codes)
                 msg = str(bytes(v['imm']).decode())
                 error(msg, x['ti'])
-        exit(-1)
+            exit(-1)
 
     return None
 
