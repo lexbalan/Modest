@@ -520,7 +520,6 @@ def bin_imm(op, type_result, l, r, ti):
         'mul': lambda a, b: a * b,
         'div': lambda a, b: a / b,
         'rem': lambda a, b: a % b,
-
         'shl': lambda a, b: a << b,
         'shr': lambda a, b: a >> b,
     }
@@ -557,20 +556,20 @@ def value_concat_arrays(l, r, ti):
 
 
 # FIXIT: it is generic arrays EQ!
-def value_string_eq(l, r):
+def value_eq_arrays(l, r):
     if l['type']['volume']['imm'] != r['type']['volume']['imm']:
-        return 0
+        return False
 
     for a, b in zip(l['imm'], r['imm']):
         if a != b:
-            return 0
+            return False
 
-    return 1
+    return True
 
 
 
 def do_value_bin_str_eq(op, l, r, ti):
-    bool_result = value_string_eq(l, r)
+    bool_result = value_eq_arrays(l, r)
 
     if op == 'eq':
         op = 'eq_str'
@@ -580,7 +579,7 @@ def do_value_bin_str_eq(op, l, r, ti):
         bool_result = not bool_result
 
     bin_value = hlir_value_bin(op, l, r, hlir_type.typeBool, ti=ti)
-    bin_value['imm'] = bool_result
+    bin_value['imm'] = int(bool_result)
     return bin_value
 
 
