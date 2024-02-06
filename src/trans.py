@@ -647,11 +647,12 @@ def _bin(op, type_result, l, r, ti=None):
 
 
 
-def do_value_not(val, t, ti):
-    if not hlir_type.type_is_integer(val['type']) and not hlir_type.type_is_bool(val['type']):
+def do_value_not(val, ti):
+    vtype = val['type']
+    if not hlir_type.type_is_integer(vtype) and not hlir_type.type_is_bool(vtype):
         error("expected value with Integer or Bool type", ti)
 
-    v = hlir_value_un('not', val, t, ti=ti)
+    v = hlir_value_un('not', val, vtype, ti=ti)
 
     if value_is_immediate(val):
         v['imm'] = ~val['imm']
@@ -660,45 +661,48 @@ def do_value_not(val, t, ti):
 
 
 
-def do_value_minus(val, t, ti):
-    if not hlir_type.type_is_integer(val['type']):
+def do_value_minus(v, ti):
+    vtype = v['type']
+    if not hlir_type.type_is_integer(vtype):
         error("expected value with Integer type", ti)
-    if not hlir_type.type_is_signed(val['type']):
+    if not hlir_type.type_is_signed(vtype):
         error("expected value with Signed Integer type", ti)
 
-    nv = hlir_value_un('minus', val, t, ti=ti)
+    nv = hlir_value_un('minus', v, vtype, ti=ti)
 
-    if value_is_immediate(val):
-        nv['imm'] = -val['imm']
+    if value_is_immediate(v):
+        nv['imm'] = -v['imm']
 
         if hlir_type.type_is_generic(nv['type']):
-            nv['type'] = hlir_type_generic_int_for(val['imm'], unsigned=False, ti=ti)
+            nv['type'] = hlir_type_generic_int_for(v['imm'], unsigned=False, ti=ti)
 
     return nv
 
 
 
-def do_value_deref(val, t, ti):
-    if not hlir_type.type_is_pointer(t):
-        error("expected pointer", val)
+def do_value_deref(v, ti):
+    vtype = v['type']
+    if not hlir_type.type_is_pointer(vtype):
+        error("expected pointer", ti)
         return hlir_value_bad(ti)
 
-    to = t['to']
+    to = vtype['to']
     # you can't deref pointer to function
     # and pointer to undefined array
     if hlir_type.type_is_func(to) or hlir_type.type_is_undefined_array(to):
-        error("unsuitable type", val)
+        error("unsuitable type", v)
 
-    return hlir_value_un('deref', val, to, ti=ti)
+    return hlir_value_un('deref', v, to, ti=ti)
 
 
 
-def do_value_ref(val, t, ti):
-    if value_is_immutable(val):
-        if not hlir_type.type_is_func(t):
+def do_value_ref(v, ti):
+    vtype = v['type']
+    if value_is_immutable(v):
+        if not hlir_type.type_is_func(vtype):
             error("cannot get pointer to immutable value", ti)
-    vt = hlir_type_pointer(t, ti=ti)
-    return hlir_value_un('ref', val, vt, ti=ti)
+    vt = hlir_type_pointer(vtype, ti=ti)
+    return hlir_value_un('ref', v, vt, ti=ti)
 
 
 
@@ -716,13 +720,10 @@ def do_value_un(x):
         if not op in val['type']['ops']:
             error("unsuitable type", x['value']['ti'])
 
-
-    t = val['type']
-
-    if op == 'not': return do_value_not(val, t, ti)
-    elif op == 'minus': return do_value_minus(val, t, ti)
-    elif op == 'deref': return do_value_deref(val, t, ti)
-    elif op == 'ref': return do_value_ref(val, t, ti)
+    if op == 'not': return do_value_not(val, ti)
+    elif op == 'minus': return do_value_minus(val, ti)
+    elif op == 'deref': return do_value_deref(val, ti)
+    elif op == 'ref': return do_value_ref(val, ti)
 
 
 
