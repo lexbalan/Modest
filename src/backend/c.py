@@ -182,11 +182,11 @@ def _print_type_pointer_to(to, as_const, space_after):
 def print_type_array(t, print_as_pointer, space_after):
     if print_as_pointer:
         _print_type_pointer_to(t['of'], as_const='const' in t['att'], space_after=space_after)
+        return
 
-    else:
-        assert(t['volume'] != None)
-        print_type(t['of'], space_after=space_after)
-        print_array_volume(t)
+    assert(t['volume'] != None)
+    print_type(t['of'], space_after=space_after)
+    print_array_volume(t)
 
 
 
