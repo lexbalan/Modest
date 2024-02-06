@@ -651,26 +651,29 @@ def do_value_not(val, t, ti):
     v = hlir_value_un('not', val, t, ti=ti)
 
     if value_is_immediate(val):
-        num = ~val['imm']
-        v['imm'] = num
+        v['imm'] = ~val['imm']
 
     return v
 
 
 
 def do_value_minus(val, t, ti):
-    v = hlir_value_un('minus', val, t, ti=ti)
+    if not type_is_integer(val['type']):
+        error("expected value with integer type", ti)
+
+    nv = hlir_value_un('minus', val, t, ti=ti)
 
     if value_is_immediate(val):
-        num = -val['imm']
-        v['imm'] = num
+        nv['imm'] = -val['imm']
 
-    if hlir_type.type_is_generic(v['type']):
-        if hlir_type.type_is_unsigned(v['type']):
-            #hlir_type.set_signed()
-            v['type']['signed'] = True
+        if hlir_type.type_is_generic(nv['type']):
+            nv['type'] = hlir_type_generic_int_for(val['imm'], unsigned=False, ti=ti)
 
-    return v
+        elif hlir_type.type_is_unsigned(nv['type']):
+            width = nbits_for_num(val['imm'])
+            nv['type'] = type_select_int(width)
+
+    return nv
 
 
 
