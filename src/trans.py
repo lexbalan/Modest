@@ -715,7 +715,6 @@ def do_value_un(x):
 
     op = x['kind']
 
-
     if op != 'ref':
         if not op in val['type']['ops']:
             error("unsuitable type", x['value']['ti'])
@@ -727,7 +726,7 @@ def do_value_un(x):
 
 
 
-
+# for check printf/scanf params
 def get_forms(func_id_str, args):
     forms = None
     # check format
@@ -863,60 +862,60 @@ def do_value_call(x):
 
 
 def do_value_index(x):
-    a = do_rvalue(x['left'])
+    left = do_rvalue(x['left'])
 
-    if value_is_bad(a):
+    if value_is_bad(left):
         return hlir_value_bad(x['ti'])
 
-    array_typ = a['type']
+    left_typ = left['type']
 
-    # check if left type is valid
-    ptr_access = False
-    if hlir_type.type_is_array(array_typ):
-        pass
-    elif hlir_type.type_is_pointer_to_array(array_typ):
-        ptr_access = True
-        array_typ = array_typ['to']
-    else:
-        error("expected array or pointer to array", x)
+    via_pointer = hlir_type.type_is_pointer(left_typ)
+
+    array_typ = left_typ
+    if via_pointer:
+        array_typ = left_typ['to']
+
+
+    if not hlir_type.type_is_array(array_typ):
+        error("expected array or pointer to array", x['left']['ti'])
         return hlir_value_bad(x['left']['ti'])
 
 
-    i = do_rvalue(x['index'])
+    index = do_rvalue(x['index'])
 
-    if value_is_bad(i):
+    if value_is_bad(index):
         return hlir_value_bad(x['index']['ti'])
 
-    if not hlir_type.type_is_integer(i['type']):
+    if not hlir_type.type_is_integer(index['type']):
         error("expected integer value", x['index'])
 
-
-    i = value_cons_implicit(i, typeSysInt, i['ti'])
+    if hlir_type.type_is_generic(index['type']):
+        index = value_cons_implicit(index, typeSysInt, index['ti'])
 
     v = None
 
-    if ptr_access:
-        v = hlir_value_index_array_by_ptr(a, i, ti=x['ti'])
+    if via_pointer:
+        v = hlir_value_index_array_by_ptr(left, index, ti=x['ti'])
     else:
 
-        if type.type_is_generic(a['type']):
-            if not value_is_immediate(i):
+        if type.type_is_generic(left['type']):
+            if not value_is_immediate(index):
                 error("cannot index generic array by variable", x['ti'])
 
-        v = hlir_value_index_array(a, i, ti=x['ti'])
+        v = hlir_value_index_array(left, index, ti=x['ti'])
 
-        if value_is_immutable(a):
+        if value_is_immutable(left):
             v['att'].append('immutable')
 
-        if value_is_immediate(a):
-            if value_is_immediate(i):
-                index = i['imm']
+        if value_is_immediate(left):
+            if value_is_immediate(index):
+                _index = index['imm']
 
-                if index >= array_typ['volume']['imm']:
+                if _index >= array_typ['volume']['imm']:
                     error("array index out of bounds", x['index'])
 
-                items = a['imm']
-                item = items[index]
+                items = left['imm']
+                item = items[_index]
 
                 #if hlir_type.type_is_char(item_type):
                 if hlir_type.type_is_char(array_typ['of']):
@@ -931,19 +930,19 @@ def do_value_index(x):
 
 
 def do_value_access(x):
-    obj = do_rvalue(x['left'])
+    left = do_rvalue(x['left'])
 
-    if value_is_bad(obj):
+    if value_is_bad(left):
         return hlir_value_bad(x['ti'])
 
     field_id = x['field']
 
     # доступ через переменную-указатель
-    ptr_access = hlir_type.type_is_pointer(obj['type'])
+    via_pointer = hlir_type.type_is_pointer(left['type'])
 
-    record_type = obj['type']
-    if ptr_access:
-        record_type = obj['type']['to']
+    record_type = left['type']
+    if via_pointer:
+        record_type = left['type']['to']
 
     # check if is record
     if not hlir_type.type_is_record(record_type):
@@ -960,16 +959,16 @@ def do_value_access(x):
     if hlir_type.type_is_bad(field['type']):
         return hlir_value_bad(x['field']['ti'])
 
-    if ptr_access:
-        v = hlir_value_access_record_by_ptr(obj, field, ti=x['ti'])
+    if via_pointer:
+        v = hlir_value_access_record_by_ptr(left, field, ti=x['ti'])
     else:
-        v = hlir_value_access_record(obj, field, ti=x['ti'])
-        if value_is_immutable(obj):
+        v = hlir_value_access_record(left, field, ti=x['ti'])
+        if value_is_immutable(left):
             v['att'].append('immutable')
 
     # access to immediate object
-    if value_is_immediate(obj) and not ptr_access:
-        initializers = obj['imm']
+    if value_is_immediate(left) and not via_pointer:
+        initializers = left['imm']
         initializer = get_item_with_id(initializers, field_id['str'])
         v['imm'] = initializer['value']['imm']
 
