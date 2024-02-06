@@ -478,8 +478,8 @@ def do_bin_op_with_pointers(op, l, r , ti):
                 typ = r['type']
 
             num = 0
-            if op == 'add': num = l['imm'] + r['imm']
-            elif op == 'sub': num = l['imm'] - r['imm']
+            if op == 'add': num = l['asset'] + r['asset']
+            elif op == 'sub': num = l['asset'] - r['asset']
             return hlir_value_int(num, typ=typ, ti=ti)
 
         # указатель или число в рантайме
@@ -524,7 +524,7 @@ def bin_imm(op, type_result, l, r, ti):
         'shr': lambda a, b: a >> b,
     }
 
-    num_val = ops[op](l['imm'], r['imm'])
+    num_val = ops[op](l['asset'], r['asset'])
 
     if hlir_type.type_is_generic(type_result):
         # пересматриваем generic тип для нового значения (!)
@@ -534,13 +534,13 @@ def bin_imm(op, type_result, l, r, ti):
         num_val = int(num_val)
 
     bin_value = hlir_value_bin(op, l, r, type_result, ti=ti)
-    bin_value['imm'] = num_val
+    bin_value['asset'] = num_val
     return bin_value
 
 
 
 def value_concat_arrays(l, r, ti):
-    imm_str = l['imm'] + r['imm']
+    imm_str = l['asset'] + r['asset']
     length = len(imm_str) + 1  #!
 
     str_array_volume = hlir_value_int(length)
@@ -550,17 +550,17 @@ def value_concat_arrays(l, r, ti):
     genStrType['generic'] = True
 
     bin_value = hlir_value_bin('add_str', l, r, genStrType, ti=ti)
-    bin_value['imm'] = imm_str
+    bin_value['asset'] = imm_str
     bin_value['nl_end'] = r['nl_end']
     return bin_value
 
 
 # FIXIT: it is generic arrays EQ!
 def value_eq_arrays(l, r):
-    if l['type']['volume']['imm'] != r['type']['volume']['imm']:
+    if l['type']['volume']['asset'] != r['type']['volume']['asset']:
         return False
 
-    for a, b in zip(l['imm'], r['imm']):
+    for a, b in zip(l['asset'], r['asset']):
         if a != b:
             return False
 
@@ -579,7 +579,7 @@ def do_value_bin_str_eq(op, l, r, ti):
         bool_result = not bool_result
 
     bin_value = hlir_value_bin(op, l, r, hlir_type.typeBool, ti=ti)
-    bin_value['imm'] = int(bool_result)
+    bin_value['asset'] = int(bool_result)
     return bin_value
 
 
@@ -639,7 +639,7 @@ def do_value_bin(x):
 
 def _bin(op, type_result, l, r, ti=None):
     # if left & right are immediate, we can fold const
-    # and append field ['imm'] to bin_value
+    # and append field ['asset'] to bin_value
     if value_is_immediate(l) and value_is_immediate(r):
         return bin_imm(op, type_result, l, r, ti)
 
@@ -655,7 +655,7 @@ def do_value_not(val, ti):
     v = hlir_value_un('not', val, vtype, ti=ti)
 
     if value_is_immediate(val):
-        v['imm'] = ~val['imm']
+        v['asset'] = ~val['asset']
 
     return v
 
@@ -671,10 +671,10 @@ def do_value_minus(v, ti):
     nv = hlir_value_un('minus', v, vtype, ti=ti)
 
     if value_is_immediate(v):
-        nv['imm'] = -v['imm']
+        nv['asset'] = -v['asset']
 
         if hlir_type.type_is_generic(nv['type']):
-            nv['type'] = hlir_type_generic_int_for(v['imm'], unsigned=False, ti=ti)
+            nv['type'] = hlir_type_generic_int_for(v['asset'], unsigned=False, ti=ti)
 
     return nv
 
@@ -911,12 +911,12 @@ def do_value_index(x):
 
         if value_is_immediate(left):
             if value_is_immediate(index):
-                index_imm = index['imm']
+                index_imm = index['asset']
 
-                if index_imm >= array_typ['volume']['imm']:
+                if index_imm >= array_typ['volume']['asset']:
                     error("array index out of bounds", x['index'])
 
-                item = left['imm'][index_imm]
+                item = left['asset'][index_imm]
 
                 #if hlir_type.type_is_char(item_type):
                 if hlir_type.type_is_char(array_typ['of']):
@@ -924,7 +924,7 @@ def do_value_index(x):
                     char = hlir_value_char(char_code, type=None, ti=x['ti'])
                     return char
 
-                v['imm'] = item['imm']
+                v['asset'] = item['asset']
 
     return v
 
@@ -969,9 +969,9 @@ def do_value_access(x):
 
     # access to immediate object
     if value_is_immediate(left) and not via_pointer:
-        initializers = left['imm']
+        initializers = left['asset']
         initializer = get_item_with_id(initializers, field_id['str'])
-        v['imm'] = initializer['value']['imm']
+        v['asset'] = initializer['value']['asset']
 
     return v
 
@@ -1316,13 +1316,13 @@ def do_stmt_let(x):
     const_value = hlir_value_const(id, v['type'], value=None, ti=x['id']['ti'])
     const_value['att'].append('local') # need for LLVM printer (!)
     if value_is_immediate(v):
-        const_value['imm'] = v['imm']
+        const_value['asset'] = v['asset']
 
     if 'nl_end' in v:
         const_value['nl_end'] = v['nl_end']
 
     if value_is_immediate(v):
-        const_value['imm'] = v['imm']
+        const_value['asset'] = v['asset']
 
     module['context'].value_add(id['str'], const_value)
 
@@ -1520,7 +1520,7 @@ def def_const(x):
     const_value['att'].append('global')
 
     if value_is_immediate(v):
-        const_value['imm'] = v['imm']
+        const_value['asset'] = v['asset']
 
     if 'nl_end' in v:
         const_value['nl_end'] = v['nl_end']
@@ -1874,7 +1874,7 @@ def do_directive(x):
             elif not type.type_is_bool(c['type']):
                 error("expected Bool value", x['cond']['ti'])
             else:
-                cond = c['imm'] != 0
+                cond = c['asset'] != 0
 
         #print("IF: " + str(cond))
 
@@ -1893,7 +1893,7 @@ def do_directive(x):
             elif not type.type_is_bool(c['type']):
                 error("expected Bool value", x['cond']['ti'])
             else:
-                cond = c['imm'] != 0
+                cond = c['asset'] != 0
 
         #print("ELSEIF: " + str(cond))
 
@@ -1919,8 +1919,8 @@ def do_directive(x):
             elif not value_is_immediate(v):
                 fatal("required immediate value", x['ti'])
             else:
-                # (because v['imm'] is an array of UTF-32 codes)
-                msg = str(bytes(v['imm']).decode())
+                # (because v['asset'] is an array of UTF-32 codes)
+                msg = str(bytes(v['asset']).decode())
                 info(msg, x['ti'])
 
     elif kind == 'warning':
@@ -1931,8 +1931,8 @@ def do_directive(x):
             elif not value_is_immediate(v):
                 fatal("required immediate value", x['ti'])
             else:
-                # (because v['imm'] is an array of UTF-32 codes)
-                msg = str(bytes(v['imm']).decode())
+                # (because v['asset'] is an array of UTF-32 codes)
+                msg = str(bytes(v['asset']).decode())
                 warning(msg, x['ti'])
 
     elif kind == 'error':
@@ -1943,8 +1943,8 @@ def do_directive(x):
             elif not value_is_immediate(v):
                 fatal("required immediate value", x['ti'])
             else:
-                # (because v['imm'] is an array of UTF-32 codes)
-                msg = str(bytes(v['imm']).decode())
+                # (because v['asset'] is an array of UTF-32 codes)
+                msg = str(bytes(v['asset']).decode())
                 error(msg, x['ti'])
             exit(-1)
 

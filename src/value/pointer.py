@@ -17,17 +17,17 @@ def cons_ptr_to_str_from_generic_str(v, t, ti):
     char_pow = t['to']['of']['width']
 
     s_imm = []
-    if char_pow == 8: s_imm = str2utf8(v['imm'])
-    elif char_pow == 16: s_imm = str2utf16(v['imm'])
-    elif char_pow == 32: s_imm = str2utf32(v['imm'])
+    if char_pow == 8: s_imm = str2utf8(v['asset'])
+    elif char_pow == 16: s_imm = str2utf16(v['asset'])
+    elif char_pow == 32: s_imm = str2utf32(v['asset'])
 
     # получаем список кодов чаров для строки в целевой кодировке
     # из списка чар кодов в utf-32
-    #s_imm = method(v['imm'])
+    #s_imm = method(v['asset'])
     # массив кодов
     # длина полученной строки может отличаться от длины оригинала в utf-32
     nv = value_cons_pointer_immediate(v, t, ti=ti)
-    nv['imm'] = s_imm
+    nv['asset'] = s_imm
     module_strings_add(nv)
 
     return nv

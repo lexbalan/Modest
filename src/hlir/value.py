@@ -26,7 +26,7 @@ def hlir_value_literal(t, imm, ti):
         'isa': 'value',
         'kind': 'literal',
         'type': t,
-        'imm': imm,
+        'asset': imm,
         'immutable': False,
         'att': [],
         'nl_end': 0,
@@ -266,7 +266,7 @@ def hlir_value_cast(value, type, ti=None):
 def hlir_value_cast_immediate(v, t, ti=None):
     nv = hlir_value_cast(v, t, ti)
     nv['kind'] = 'cast_immediate'
-    nv['imm'] = v['imm']
+    nv['asset'] = v['asset']
     if 'nl_end' in v:
         nv['nl_end'] = v['nl_end']
     return nv
@@ -280,7 +280,7 @@ def hlir_value_sizeof(of, ti=None):
         'kind': 'sizeof',
         'of': of,
         'type': typ,
-        'imm': size,
+        'asset': size,
         'immutable': True,
         'att': [],
         'ti': ti
@@ -295,7 +295,7 @@ def hlir_value_alignof(of, ti=None):
         'kind': 'alignof',
         'of': of,
         'type': typ,
-        'imm': align,
+        'asset': align,
         'immutable': True,
         'att': [],
         'ti': ti
@@ -312,7 +312,7 @@ def hlir_value_offsetof(of, field_id, ti=None):
         'of': of,
         'field': field_id,
         'type': typ,
-        'imm': offset,
+        'asset': offset,
         'immutable': True,
         'att': [],
         'ti': ti

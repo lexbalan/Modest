@@ -347,9 +347,9 @@ def print_value_literal_array(v, ctx):
 
     out("[")
     indent_up()
-    #print_values(v['imm'], before=nl_indentation(INDENT_SYMBOL), after="", separator="")
+    #print_values(v['asset'], before=nl_indentation(INDENT_SYMBOL), after="", separator="")
 
-    values = v['imm']
+    values = v['asset']
     i = 0
     n = len(values)
     while i < n:
@@ -392,7 +392,7 @@ def print_value_literal_record(v, ctx):
 
     indent_up()
 
-    initializers = v['imm']
+    initializers = v['asset']
     nitems = len(initializers)
     i = 0
     while i < nitems:
@@ -435,12 +435,12 @@ def print_value_literal_record(v, ctx):
 # FIXIT: это вообще херня
 def print_value_literal_array_str(x, ctx):
     out("\"")
-    for c in x['imm']:
+    for c in x['asset']:
         cc = c
 
         # FIXIT: это вообще херня
         if isinstance(c, dict):
-            cc = c['imm']
+            cc = c['asset']
 
         sym = chr(cc)
 
@@ -466,14 +466,14 @@ def print_value_literal_array_str(x, ctx):
 
 
 def print_value_literal_bool(x, ctx):
-    if x['imm'] != 0:
+    if x['asset'] != 0:
         out('true')
     else:
         out('false')
 
 
 def print_value_literal_char(x, ctx):
-    num = x['imm']
+    num = x['asset']
     if num >= 0x20:
         out("\"%s\"[0]" % chr(num))
     elif num == 0:
@@ -483,7 +483,7 @@ def print_value_literal_char(x, ctx):
 
 
 def print_value_literal_int(x, ctx):
-    num = x['imm']
+    num = x['asset']
 
     if value_attribute_check(x, 'hexadecimal'):
 
@@ -499,14 +499,14 @@ def print_value_literal_int(x, ctx):
 
 
 def print_value_literal_flt(x, ctx):
-    out(str(float(x['imm'])))
+    out(str(float(x['asset'])))
 
 
 def print_value_literal_ptr(x, ctx):
-    if x['imm'] == 0:
+    if x['asset'] == 0:
         out("nil")
     else:
-        out("(0x%08X" % x['imm'])
+        out("(0x%08X" % x['asset'])
         out(" to ")
         print_type(x['type'])
         out(")")

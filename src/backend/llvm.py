@@ -107,7 +107,7 @@ def llvm_value_num(type, num):
         'isa': 'll_value',
         'kind': 'num',
         'type': type,
-        'imm': num,
+        'asset': num,
         'is_adr': False,
         'proto': None
     }
@@ -289,16 +289,16 @@ def llvm_print_value_str(x):
 
 
 def llvm_print_value_num(x):
-    num = x['imm']
+    num = x['asset']
     if not hlir_type.type_is_pointer(x['type']):
         # integer, float, bool, char
         out(str(num))
 
     else:
-        if x['imm'] == 0:
+        if x['asset'] == 0:
             out("null")
         else:
-            v = llvm_value_num(hlir_type.typeNat64, x['imm'])
+            v = llvm_value_num(hlir_type.typeNat64, x['asset'])
             llvm_inline_cast('inttoptr', x['type'], v)
 
 
@@ -534,7 +534,7 @@ def print_type_array(t):
     array_size = t['volume']
     sz = 0
     if array_size != None:
-        sz = array_size['imm']
+        sz = array_size['asset']
     out("%d x " % sz)
     print_type(t['of'])
     out("]")
@@ -604,7 +604,7 @@ def do_reval(x):
 
 def do_eval_expr_bin(x):
     if value_is_immediate(x):
-        return llvm_value_num(x['type'], x['imm'])
+        return llvm_value_num(x['type'], x['asset'])
 
     op = get_bin_opcode(x['kind'], x['left']['type'])
     l = do_reval(x['left'])
@@ -722,7 +722,7 @@ def do_eval_expr_index(v):
             error("expected immediate index value", v['ti'])
             return llvm_value_zero(v['ti'])
 
-        return llvm_extract_item(array, result_type, index['imm'])
+        return llvm_extract_item(array, result_type, index['asset'])
 
     return llvm_getelementptr(array, array_type, (llvm_value_num_zero, index), result_type)
 
@@ -814,7 +814,7 @@ def do_eval_expr_cast_immediate(x):
     if hlir_type.type_is_pointer_to_array_of_char(to_type):
         string_of = to_type['to']['of']
         char_pow = string_of['width']
-        return llvm_value_str(x['strid'], x['imm'], x['type'], value)
+        return llvm_value_str(x['strid'], x['asset'], x['type'], value)
 
     return do_eval_literal(x)
 
@@ -852,7 +852,7 @@ def do_eval_expr_cast(x):
     # (STUB?) nil -> zeroinitializer
     if hlir_type.type_is_free_pointer(from_type):
         if value_is_immediate(value):
-            return llvm_value_num(to_type, value['imm'])
+            return llvm_value_num(to_type, value['asset'])
 
     # Cm имеет структурную систему типов, тогда как llvm - номинативную
     # приведение структуры к структуре по значению не поддерживается LLVM
@@ -901,12 +901,12 @@ def do_eval_array(v):
     # сперва вычисляем все элементы массива в регистры
     # (кроме констант, они едут до последнего)
     items = []
-    for item in v['imm']:
+    for item in v['asset']:
         iv = do_reval(item)
         items.append(iv)
 
     # теперь добавим паддинг нулевыми значениями
-    fulllen = v['type']['volume']['imm']
+    fulllen = v['type']['volume']['asset']
 
     n_pad = fulllen - len(items)
     i = 0
@@ -943,7 +943,7 @@ def do_eval_record(v):
     # сперва вычисляем все иницифлизаторы поелей структуры в регистры
     # (кроме констант, ведь они едут до последнего)
     rec_type = v['type']
-    initializers = v['imm']
+    initializers = v['asset']
 
     if is_global_context():
         items = []
@@ -978,7 +978,7 @@ def do_eval_func_const_var(x):
     if k == 'const':
         if value_is_immediate(x): # TODO: wtf? (see begining of do_eval)
             if hlir_type.type_is_integer(x['type']) or hlir_type.type_is_float(x['type']):
-                return llvm_value_num(x['type'], x['imm'])
+                return llvm_value_num(x['type'], x['asset'])
 
         return do_eval(x['value'])
 
@@ -993,16 +993,16 @@ def do_eval_func_const_var(x):
 
 def do_eval_literal(x):
     xt = x['type']
-    if hlir_type.type_is_integer(xt): return llvm_value_num(xt, x['imm'])
-    elif hlir_type.type_is_float(xt): return llvm_value_num(xt, x['imm'])
+    if hlir_type.type_is_integer(xt): return llvm_value_num(xt, x['asset'])
+    elif hlir_type.type_is_float(xt): return llvm_value_num(xt, x['asset'])
     elif hlir_type.type_is_record(xt): return do_eval_record(x)
     elif hlir_type.type_is_array(xt): return do_eval_array(x)
-    elif hlir_type.type_is_bool(xt): return llvm_value_num(xt, x['imm'])
-    elif hlir_type.type_is_free_pointer(xt): return llvm_value_num(xt, x['imm'])
-    elif hlir_type.type_is_pointer(xt): return llvm_value_num(xt, x['imm'])
-    elif hlir_type.type_is_char(xt): return llvm_value_num(xt, x['imm'])
-    elif hlir_type.type_is_enum(xt): return llvm_value_num(xt, x['imm'])
-    elif hlir_type.type_is_byte(t): return llvm_value_num(xt, x['imm'])
+    elif hlir_type.type_is_bool(xt): return llvm_value_num(xt, x['asset'])
+    elif hlir_type.type_is_free_pointer(xt): return llvm_value_num(xt, x['asset'])
+    elif hlir_type.type_is_pointer(xt): return llvm_value_num(xt, x['asset'])
+    elif hlir_type.type_is_char(xt): return llvm_value_num(xt, x['asset'])
+    elif hlir_type.type_is_enum(xt): return llvm_value_num(xt, x['asset'])
+    elif hlir_type.type_is_byte(t): return llvm_value_num(xt, x['asset'])
     else:
         value_print(x)
         error("do_eval_literal: unknown literal", x['ti'])
@@ -1415,8 +1415,8 @@ def print_def_var(x):
 def print_string_ascii(strid, string):
     ss = ""
 
-    for c in string['imm']:
-        ss = ss + chr(c['imm'])
+    for c in string['asset']:
+        ss = ss + chr(c['asset'])
 
     slen = len(bytes(ss, 'utf-8')) + 1 # +1 (zero)
 
@@ -1436,10 +1436,10 @@ def print_string_ascii(strid, string):
 
 
 def print_string_as_array(strid, string, char_width):
-    slen = len(string['imm'])
+    slen = len(string['asset'])
     lo("@%s = private constant [%d x i%d] [" % (strid, slen, char_width))
     i = 0
-    for c in string['imm']:
+    for c in string['asset']:
         if i > 0:
             out(", ")
         out("i%d %d" % (char_width, c))

@@ -37,7 +37,7 @@ def check_width(from_type, t, method, ti):
 def value_cons_integer_immediate(v, t, ti):
     #info("value_cons_int_immediate", ti)
     width = t['width']
-    need_width = nbits_for_num(v['imm'])
+    need_width = nbits_for_num(v['asset'])
 
     if need_width > width:
         error("integer overflow", ti)
@@ -51,7 +51,7 @@ def do_cons_integer(v, t, method, ti):
     if value_is_immediate(v):
         if method == 'explicit':
             nv = hlir_value_cast(v, t, ti=ti)
-            nv['imm'] = int(v['imm'])  # here can be float
+            nv['asset'] = int(v['asset'])  # here can be float
             return nv
         return value_cons_integer_immediate(v, t, ti)
     return hlir_value_cast(v, t, ti=ti)
@@ -66,7 +66,7 @@ def value_cons_integer(v, t, ti, method):
         check_width(from_type, t, method, ti)
 
         if not t['signed']:
-            if v['imm'] < 0:
+            if v['asset'] < 0:
                 return None
 
         return do_cons_integer(v, t, method, ti)

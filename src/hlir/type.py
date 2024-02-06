@@ -174,7 +174,7 @@ def hlir_type_array(of, volume=None, ti=None):
 
     array_size = 0
     if volume != None:
-        array_size = item_size * volume['imm']
+        array_size = item_size * volume['asset']
 
     return {
         'isa': 'type',
@@ -515,7 +515,7 @@ def type_eq_array(a, b, opt):
             return type_eq(a['of'], b['of'], opt)
         return False
 
-    if a['volume']['imm'] != b['volume']['imm']:
+    if a['volume']['asset'] != b['volume']['asset']:
         return False
 
     if a['of'] == None or b['of'] == None:
@@ -793,7 +793,7 @@ def type_is_forbidden_var(t, zero_array_forbidden=True):
         from value.value import value_is_immediate
         if zero_array_forbidden or not features.get('unsafe'):
             if value_is_immediate(t['volume']):
-                if t['volume']['imm'] == 0:
+                if t['volume']['asset'] == 0:
                     return True
 
         return type_is_forbidden_var(t['of'])
@@ -938,7 +938,7 @@ def type_print(t, print_aka=True):
         array_size = t['volume']
 
         if array_size != None:
-            sz = array_size['imm']
+            sz = array_size['asset']
             print("%d" % sz, end='')
 
         print("]", end='')

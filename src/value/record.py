@@ -13,12 +13,12 @@ def value_cons_record_from_generic_record(v, t, ti, method):
         # все поля присутствовали (!)
         return hlir_value_cast(v, t, ti=ti)
 
-    if len(v['imm']) == 0:
+    if len(v['asset']) == 0:
         #info("cons record from empty record", ti)
         return {
             'isa': 'value',
             'kind': 'literal',
-            'imm': [],
+            'asset': [],
             'type': t,
             'att': [],
             'nl_end': v['nl_end'],
@@ -43,7 +43,7 @@ def value_cons_record_from_generic_record(v, t, ti, method):
             item_value = None
             nl = 0
 
-            initializers = v['imm']
+            initializers = v['asset']
             ini = get_item_with_id(initializers, field_name)
 
             if ini == None:
@@ -80,7 +80,7 @@ def value_cons_record_from_generic_record(v, t, ti, method):
     vx = {
         'isa': 'value',
         'kind': 'literal',
-        'imm': items,
+        'asset': items,
         'type': t,
         'att': [],
         'nl_end': v['nl_end'],

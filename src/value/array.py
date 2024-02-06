@@ -16,16 +16,16 @@ def value_cons_array_from_generic_array(v, t, ti, method):
     if t['volume'] == None:
         info("cons open array", ti)
 
-    elif len(v['imm']) > t['volume']['imm']:
+    elif len(v['asset']) > t['volume']['asset']:
         info("too many items", v['ti'])
         return None
 
-    elif len(v['imm']) < t['volume']['imm']:
-        pad = t['volume']['imm'] - len(v['imm'])
+    elif len(v['asset']) < t['volume']['asset']:
+        pad = t['volume']['asset'] - len(v['asset'])
 
 
     casted_items = []
-    items = v['imm']
+    items = v['asset']
     for item in items:
 
         if type.type_is_array_of_char(v['type']):
@@ -45,7 +45,7 @@ def value_cons_array_from_generic_array(v, t, ti, method):
     vx = {
         'isa': 'value',
         'kind': 'literal',
-        'imm': casted_items,
+        'asset': casted_items,
         'type': t,
         'att': [],
         'nl_end': v['nl_end'],
@@ -68,8 +68,8 @@ def value_cons_array_from_array(v, t, ti, method):
         return None
 
     # нельзя построить меньший массив из большего
-    n_from = v['type']['volume']['imm']
-    n_to = t['volume']['imm']
+    n_from = v['type']['volume']['asset']
+    n_to = t['volume']['asset']
     if n_from > n_to:
         return None
 
@@ -81,7 +81,7 @@ def value_cons_array_from_array(v, t, ti, method):
 
         # extend array with zero items
         padding = [hlir_value_zero(t['of'], ti=None)] * n
-        nv['imm'].extend(padding)
+        nv['asset'].extend(padding)
 
         return nv
 

@@ -12,7 +12,7 @@ def value_is_bad(x):
 
 
 def value_is_immediate(x):
-    return 'imm' in x
+    return 'asset' in x
 
 
 # Any immediate value are immutable,

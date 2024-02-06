@@ -367,7 +367,7 @@ def print_value_bin(v, ctx):
         print_value_literal_bool(v, ctx)
         return
     elif op == 'add_str':
-        _print_string_literal(v['imm'], width=v['type']['width'])
+        _print_string_literal(v['asset'], width=v['type']['width'])
         return
 
     print_value(left, need_wrap=need_wrap_left)
@@ -694,7 +694,7 @@ def print_array_values(values, ctx):
                 out(" ")
 
         if hlir_type.type_is_defined_array(a['type']):
-            print_array_values(a['imm'], ctx)
+            print_array_values(a['asset'], ctx)
         else:
             print_value(a, ctx)
 
@@ -715,12 +715,12 @@ def print_value_literal_array(v, ctx):
 
         # массивы чаров в конце которых только один терминальный ноль
         # печатаем в виде строковых литералов C
-        values = v['imm']
+        values = v['asset']
         if len(values) > 1:
-            if values[-1]['imm'] == 0 and values[-2]['imm'] != 0:
+            if values[-1]['asset'] == 0 and values[-2]['asset'] != 0:
                 utf32_codes = []
                 for c in values:
-                    xc = c['imm']
+                    xc = c['asset']
                     utf32_codes.append(xc)
                 _print_string_literal(utf32_codes, width=char_width)
                 return
@@ -734,7 +734,7 @@ def print_value_literal_array(v, ctx):
 
     out("{")
     indent_up()
-    values = v['imm']
+    values = v['asset']
     print_array_values(values, ctx)
     indent_down()
     if v['nl_end'] > 0:
@@ -752,7 +752,7 @@ def print_value_literal_record(v, ctx):
         print_type(v['type'])
         out(")")
 
-    initializers = v['imm']
+    initializers = v['asset']
 
     out("{")
     indent_up()
@@ -853,18 +853,18 @@ def _print_string_literal(utf32_codes, width=8):
 def print_value_literal_string(x, ctx, char_width=8):
     utf32_codes = None
     if char_width == 8:
-        utf32_codes = utf8_cc_arr_to_utf32_cc_arr(x['imm'])
+        utf32_codes = utf8_cc_arr_to_utf32_cc_arr(x['asset'])
     elif char_width == 16:
-        utf32_codes = utf16_cc_arr_to_utf32_cc_arr(x['imm'])
+        utf32_codes = utf16_cc_arr_to_utf32_cc_arr(x['asset'])
     elif char_width == 32:
-        utf32_codes = x['imm']
+        utf32_codes = x['asset']
     assert(utf32_codes != None)
     _print_string_literal(utf32_codes, char_width)
 
 
 
 def print_value_literal_char(x, ctx):
-    num = x['imm']
+    num = x['asset']
 
     if num == 0:
         out("'\\0'")
@@ -893,7 +893,7 @@ def print_value_literal_char(x, ctx):
 
 
 def print_value_literal_bool(x, ctx):
-    if x['imm']:
+    if x['asset']:
         out(BOOL_TRUE_LITERAL)
     else:
         out(BOOL_FALSE_LITERAL)
@@ -904,7 +904,7 @@ def print_value_literal_enum(x, ctx):
 
 
 def print_value_literal_int(x, ctx):
-    num = x['imm']
+    num = x['asset']
 
     req_bits = nbits_for_num(num)
     # Big Number?
@@ -944,16 +944,16 @@ def print_value_literal_int(x, ctx):
 
 
 def print_value_literal_float(x, ctx):
-    out(str(float(x['imm'])))
+    out(str(float(x['asset'])))
 
 
 
 def print_value_literal_ptr(x, ctx):
-    if x['imm'] == 0:
+    if x['asset'] == 0:
         out("NULL")
     else:
         out("(("); print_type(x['type']); out(")")
-        out("0x%08X)" % x['imm'])
+        out("0x%08X)" % x['asset'])
 
 
 def print_value_literal(x, ctx):

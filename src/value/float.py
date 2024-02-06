@@ -10,7 +10,7 @@ from .value import *
 
 def value_cons_float_immediate(v, t, ti):
     nv = hlir_value_cast_immediate(v, t, ti)
-    nv['imm'] = float_value_pack(float(nv['imm']), t['width'])
+    nv['asset'] = float_value_pack(float(nv['asset']), t['width'])
     return nv
 
 
