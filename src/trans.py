@@ -406,7 +406,7 @@ def do_type(t):
 #
 
 def do_value_shift(x):
-    op = x['kind']
+    op = x['kind']  # 'shl', 'shr'
     l = do_rvalue(x['left'])
     r = do_rvalue(x['right'])
     ti = x['ti']
@@ -417,57 +417,12 @@ def do_value_shift(x):
     if not hlir_type.type_is_integer(r['type']):
         error("type error", r)
 
-    # const folding
     if value_is_immediate(l) and value_is_immediate(r):
-        nl = l['imm']
-        nr = r['imm']
-
-        imm_result = 0
-
-        if op == 'shl':
-            # bits required for result storing
-            #nbits_req = nbits_for_num(nl) + nr
-            imm_result = nl << nr
-            nbits = nbits_for_num(imm_result)
-
-            # если тип Generic - расширим,
-            # иначе - проверим влезает ли результат
-            if hlir_type.type_is_generic(l['type']):
-                # расширяем generic int тип чтобы в нем можно было сдвигать
-                l['type']['width'] = nbits #!
-                res_t = hlir_type_integer("Integer", width=nbits, ti=ti)
-                res_t['generic'] = True
-            else:
-                if nbits > l['type']['width']:
-                    error("data loss left shift", ti)
-                res_t = l['type']
-
-            v = hlir_value_bin(op, l, r, res_t, ti=ti)
-            v['imm'] = imm_result
-            return v
-
-
-        elif op == 'shr':
-            imm_result = nl >> nr
-            nbits = nbits_for_num(imm_result)
-
-            # TODO: реализуй сдвиг вправо!
-
-            t = l['type']
-            if hlir_type.type_is_generic(l['type']):
-                t = hlir_type_integer("Integer", width=nbits, ti=ti)
-                t['generic'] = True
-
-            v = hlir_value_bin(op, l, r, t, ti=ti)
-            v['imm'] = imm_result
-
-            return v
-
+        return bin_imm(op, l['type'], l, r, ti)
 
     if hlir_type.type_is_generic(l['type']):
         error("required value with non-generic type", l)
         return hlir_value_bad(ti)
-
 
     return hlir_value_bin(op, l, r, l['type'], ti=ti)
 
@@ -568,6 +523,9 @@ def bin_imm(op, type_result, l, r, ti):
         'mul': lambda a, b: a * b,
         'div': lambda a, b: a / b,
         'rem': lambda a, b: a % b,
+
+        'shl': lambda a, b: a << b,
+        'shr': lambda a, b: a >> b,
     }
 
     num_val = ops[op](l['imm'], r['imm'])

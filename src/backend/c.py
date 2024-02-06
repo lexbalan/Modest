@@ -239,11 +239,11 @@ def print_type_enum(t):
     while i < len(items):
         if i > 0: out(',')
         item = items[i]
-        nl_ident()
+        nl_indent()
         print_id(item)
         i = i + 1
     indent_down()
-    nl_ident()
+    nl_indent()
     out("}")
 
 
