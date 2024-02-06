@@ -430,19 +430,16 @@ def do_value_shift(x):
 
 # select result type of common binary operation
 def bin_type_select(a, b):
-    if hlir_type.type_is_generic(a) and hlir_type.type_is_generic(b):
-        if a['width'] > b['width']:
-            return a
-        else:
-            return b
-
-    elif hlir_type.type_is_generic(a):
-        return b
-
-    elif hlir_type.type_is_generic(b):
+    if not hlir_type.type_is_generic(a):
         return a
 
-    return a
+    if not hlir_type.type_is_generic(b):
+        return b
+
+    if a['width'] > b['width']:
+        return a
+    else:
+        return b
 
 
 
