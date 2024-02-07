@@ -12,7 +12,7 @@ const greeting = hello + " " + world//+ " " + party_corn
 const test = "test"
 
 
-func main() -> Int {
+func main() -> IntInt {
     printf("%s\n", greeting to *[]Char8)
 
     if test == "test" {

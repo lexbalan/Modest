@@ -3,7 +3,7 @@
 import "libc/stdio.h"
 
 
-func main() -> Int {
+func main() -> IntInt {
     printf("test stmt_while\n")
 
     var a: Int32 = 0

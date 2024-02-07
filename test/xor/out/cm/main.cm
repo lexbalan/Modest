@@ -41,7 +41,7 @@ func print_bytes(buf: *[]Nat8, len: Nat32) -> Unit {
 }
 
 
-func main() -> Int {
+func main() -> IntInt {
     printf("test xor encrypting\n")
 
     let tmsg = &test_msg to *[]Nat8

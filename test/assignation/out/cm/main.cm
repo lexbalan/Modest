@@ -13,14 +13,20 @@ type Point record {
 var glb_i0: Int32 = 0
 var glb_i1: Int32 = 321
 
-var glb_r0: Point = {}
-var glb_r1: Point = {x = 20, y = 10}
+var glb_r0: Pointrecord {
+    x: Int32
+    y: Int32
+} = {}
+var glb_r1: Pointrecord {
+    x: Int32
+    y: Int32
+} = {x = 20, y = 10}
 
 var glb_a0: [10]Int32 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 var glb_a1: [10]Int32 = [64, 53, 42, 0, 0, 0, 0, 0, 0, 0]
 
 
-func main() -> Int {
+func main() -> IntInt {
     printf("test assignation\n")
 
     // -----------------------------------
@@ -71,8 +77,14 @@ func main() -> Int {
 
     // copy records by value
     // C backend will be use memcpy()
-    var loc_r0: Point = {}
-    var loc_r1: Point = {x = 10, y = 20}
+    var loc_r0: Pointrecord {
+        x: Int32
+        y: Int32
+    } = {}
+    var loc_r1: Pointrecord {
+        x: Int32
+        y: Int32
+    } = {x = 10, y = 20}
 
     loc_r0 = loc_r1
 

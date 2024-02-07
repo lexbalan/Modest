@@ -4,7 +4,7 @@ import "libc/stdio.h"
 
 
 
-func main() -> Int {
+func main() -> IntInt {
     printf("bool check\nm")
 
     var x: Nat8

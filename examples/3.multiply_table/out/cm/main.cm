@@ -3,7 +3,7 @@
 import "libc/stdio.h"
 
 
-func mtab(n: Int) -> Unit {
+func mtab(n: IntInt) -> Unit {
     //var m : Nat32
     //m = 1
     var m: Int32 = 1
@@ -15,7 +15,7 @@ func mtab(n: Int) -> Unit {
 }
 
 
-func main() -> Int {
+func main() -> IntInt {
     let n = 2 * 2
     printf("multiply table for %d\n", n to Int32)
     mtab(n)

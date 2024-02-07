@@ -16,8 +16,14 @@ type Point record {
 }
 
 type Line record {
-    a: Point
-    b: Point
+    a: Pointrecord {
+        x: Float64
+        y: Float64
+    }
+    b: Pointrecord {
+        x: Float64
+        y: Float64
+    }
 }
 
 const zero = 0
@@ -40,7 +46,13 @@ const lines = [line0, line1]
 
 
 // Pythagorean theorem
-func distance(a: Point, b: Point) -> Float {
+func distance(a: Pointrecord {
+    x: Float64
+    y: Float64
+}, b: Pointrecord {
+    x: Float64
+    y: Float64
+}) -> Float<type:{'isa': 'type', 'kind': 'float', 'id': {'isa': 'id', 'str': 'Float', 'ti': {'isa': 'ti', 'file': '/Users/alexbalan/p/Modest/lib/libc/ctypes64.hm', 'line': 59, 'len': 5, 'pos': 5}}, 'generic': False, 'width': 64, 'size': 8, 'align': 8, 'declaration': None, 'definition': {'isa': 'def_type', 'id': {'isa': 'id', 'str': 'Float', 'ti': {'isa': 'ti', 'file': '/Users/alexbalan/p/Modest/lib/libc/ctypes64.hm', 'line': 59, 'len': 5, 'pos': 5}}, 'newtype': {...}, 'type': {'isa': 'type', 'kind': 'float', 'id': {'isa': 'id', 'str': 'Float64', 'ti': None}, 'generic': False, 'width': 64, 'size': 8, 'align': 8, 'c_alias': 'double', 'declaration': None, 'definition': None, 'ops': ['cast', 'eq', 'ne', 'lt', 'gt', 'le', 'ge', 'add', 'sub', 'mul', 'div', 'rem', 'minus'], 'att': [], 'ti': None, 'llvm_alias': 'double'}, 'afterdef': False, 'att': [], 'ti': {'isa': 'ti', 'file': '/Users/alexbalan/p/Modest/lib/libc/ctypes64.hm', 'line': 59, 'len': 4, 'pos': 0}, 'c_alias': 'float', 'nl': 3}, 'ops': ['cast', 'eq', 'ne', 'lt', 'gt', 'le', 'ge', 'add', 'sub', 'mul', 'div', 'rem', 'minus'], 'att': [], 'ti': {'isa': 'ti', 'file': '/Users/alexbalan/p/Modest/lib/libc/ctypes64.hm', 'line': 59, 'len': 5, 'pos': 5}, 'llvm_alias': 'double', 'aliasof': {'isa': 'type', 'kind': 'float', 'id': {'isa': 'id', 'str': 'Float64', 'ti': None}, 'generic': False, 'width': 64, 'size': 8, 'align': 8, 'c_alias': 'double', 'declaration': None, 'definition': None, 'ops': ['cast', 'eq', 'ne', 'lt', 'gt', 'le', 'ge', 'add', 'sub', 'mul', 'div', 'rem', 'minus'], 'att': [], 'ti': None, 'llvm_alias': 'double'}}> {
     let dx = max_float64(a.x, b.x) - min_float64(a.x, b.x)
     let dy = max_float64(a.y, b.y) - min_float64(a.y, b.y)
     let dx2 = pow(dx, 2)
@@ -49,12 +61,21 @@ func distance(a: Point, b: Point) -> Float {
 }
 
 
-func lineLength(line: Line) -> Float {
+func lineLength(line: Linerecord {
+    a: Pointrecord {
+        x: Float64
+        y: Float64
+    }
+    b: Pointrecord {
+        x: Float64
+        y: Float64
+    }
+}) -> Float<type:{'isa': 'type', 'kind': 'float', 'id': {'isa': 'id', 'str': 'Float', 'ti': {'isa': 'ti', 'file': '/Users/alexbalan/p/Modest/lib/libc/ctypes64.hm', 'line': 59, 'len': 5, 'pos': 5}}, 'generic': False, 'width': 64, 'size': 8, 'align': 8, 'declaration': None, 'definition': {'isa': 'def_type', 'id': {'isa': 'id', 'str': 'Float', 'ti': {'isa': 'ti', 'file': '/Users/alexbalan/p/Modest/lib/libc/ctypes64.hm', 'line': 59, 'len': 5, 'pos': 5}}, 'newtype': {...}, 'type': {'isa': 'type', 'kind': 'float', 'id': {'isa': 'id', 'str': 'Float64', 'ti': None}, 'generic': False, 'width': 64, 'size': 8, 'align': 8, 'c_alias': 'double', 'declaration': None, 'definition': None, 'ops': ['cast', 'eq', 'ne', 'lt', 'gt', 'le', 'ge', 'add', 'sub', 'mul', 'div', 'rem', 'minus'], 'att': [], 'ti': None, 'llvm_alias': 'double'}, 'afterdef': False, 'att': [], 'ti': {'isa': 'ti', 'file': '/Users/alexbalan/p/Modest/lib/libc/ctypes64.hm', 'line': 59, 'len': 4, 'pos': 0}, 'c_alias': 'float', 'nl': 3}, 'ops': ['cast', 'eq', 'ne', 'lt', 'gt', 'le', 'ge', 'add', 'sub', 'mul', 'div', 'rem', 'minus'], 'att': [], 'ti': {'isa': 'ti', 'file': '/Users/alexbalan/p/Modest/lib/libc/ctypes64.hm', 'line': 59, 'len': 5, 'pos': 5}, 'llvm_alias': 'double', 'aliasof': {'isa': 'type', 'kind': 'float', 'id': {'isa': 'id', 'str': 'Float64', 'ti': None}, 'generic': False, 'width': 64, 'size': 8, 'align': 8, 'c_alias': 'double', 'declaration': None, 'definition': None, 'ops': ['cast', 'eq', 'ne', 'lt', 'gt', 'le', 'ge', 'add', 'sub', 'mul', 'div', 'rem', 'minus'], 'att': [], 'ti': None, 'llvm_alias': 'double'}}> {
     return distance(line.a, line.b)
 }
 
 
-func main() -> Int {
+func main() -> IntInt {
     let lines_0_len = lineLength(lines[0])
     let lines_1_len = lineLength(lines[1])
 

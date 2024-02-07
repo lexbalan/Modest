@@ -48,8 +48,10 @@ def hlir_type_bad(ti=None):
         'width': 0,
         'size': 0,
         'align': 0,
-        'att': [],
+        'declaration': None,
+        'definition': None,
         'ops': [],
+        'att': [],
         'ti': ti
     }
 
@@ -65,8 +67,10 @@ def hlir_type_unit():
         'align': 0,
         'c_alias': 'void',
         'llvm_alias': 'void',
-        'att': [],
+        'declaration': None,
+        'definition': None,
         'ops': CONS_OP,
+        'att': [],
         'ti': None
     }
 
@@ -84,6 +88,8 @@ def hlir_type_bool():
         'c_alias': 'bool',
         'llvm_alias': 'i1',
         'cm_alias': 'Bool',
+        'declaration': None,
+        'definition': None,
         'ops': BOOL_OPS,
         'att': [],
         'ti': None
@@ -106,6 +112,8 @@ def hlir_type_char(id_str, width, ti=None):
         'width': width,
         'size': size,
         'align': size,
+        'declaration': None,
+        'definition': None,
         'ops': CHAR_OPS,
         'att': [],
         'ti': ti
@@ -123,6 +131,8 @@ def hlir_type_integer(id_str, width, signed=True, ti=None):
         'size': size,
         'align': size,
         'signed': signed,
+        'declaration': None,
+        'definition': None,
         'ops': INT_OPS,
         'att': [],
         'ti': ti
@@ -141,6 +151,8 @@ def hlir_type_float(id_str, width, ti=None):
         'size': size,
         'align': size,
         'c_alias': 'double',
+        'declaration': None,
+        'definition': None,
         'ops': FLOAT_OPS,
         'att': [],
         'ti': ti
@@ -158,6 +170,8 @@ def hlir_type_pointer(to, ti=None):
         'size': size,
         'align': size,
         'to': to,
+        'declaration': None,
+        'definition': None,
         'ops': PTR_OPS,
         'att': [],
         'ti': ti
@@ -186,6 +200,8 @@ def hlir_type_array(of, volume=None, ti=None):
         'align': item_align,
         'of': of,
         'volume': volume,
+        'declaration': None,
+        'definition': None,
         'ops': ARR_OPS,
         'att': [],
         'ti': ti
@@ -210,6 +226,8 @@ def hlir_type_enum(ti=None):
         'size': enum_size,
         'align': enum_size,
         'uid': enum_uid,
+        'declaration': None,
+        'definition': None,
         'ops': ENUM_OPS,
         'att': [],
         'ti': ti
@@ -248,6 +266,8 @@ def hlir_type_record(fields, ti=None):
         'size': record_size,
         'align': record_align,
         'fields': fields,
+        'declaration': None,
+        'definition': None,
         'ops': REC_OPS,
         'att': [],
         'ti': ti
@@ -267,6 +287,8 @@ def hlir_type_func(params, to, ti=None):
         'params': params,
         'extra_args': False,
         'to': to,
+        'declaration': None,
+        'definition': None,
         'ops': [],
         'att': [],
         'ti': ti
@@ -279,6 +301,8 @@ def hlir_type_opaque(id, ti=None):
         'kind': 'opaque',
         'id': id,
         'generic': False,
+        'declaration': None,
+        'definition': None,
         'att': [],
         'ti': ti
     }
@@ -881,6 +905,11 @@ def type_print(t, print_aka=True):
     k = t['kind']
 
     if print_aka:
+
+        if 'definition' in t:
+            print(t['definition']['id']['str'])
+            return
+
         if t['id'] != None:
             id_str = t['id']['str']
 
@@ -897,6 +926,8 @@ def type_print(t, print_aka=True):
                     print('%d' % (t['width']), end='')
 
             return
+
+
 
     if type_is_record(t):
         if type_is_generic_record(t):

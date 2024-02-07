@@ -9,7 +9,7 @@ const word_name = "'64-bit'"
 const hello_world = "Hello " + word_name + " world!"
 
 
-func main() -> Int {
+func main() -> IntInt {
     printf("%s", hello_world to *[]Char8)
     return 0
 }

@@ -34,11 +34,14 @@ const points = [
 // не могут быть так инициализированы, поскольку points является приведением
 // непонятно существует ли хорошее решение
 //@property("c_prefix", "const")
-var points2: [3]Point = points
+var points2: [3]Pointrecord {
+    x: Nat32
+    y: Nat32
+} = points
 
 
 // define function main
-func main() -> Int {
+func main() -> IntInt {
     printf("test const\n")
 
     printf("genericIntConst = %d\n", genericIntConst to Int32)

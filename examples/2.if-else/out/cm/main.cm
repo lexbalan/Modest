@@ -3,7 +3,7 @@
 import "libc/stdio.h"
 
 
-func main() -> Int {
+func main() -> IntInt {
     printf("if-else example\n")
 
     var a: Int32

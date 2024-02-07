@@ -34,7 +34,7 @@ var byteFromUart: Byte
 ```
 
 ```zig
-@property("newtype.c_alias", "int")
+@property("c_alias", "int")
 type Int Int32
 ```
 

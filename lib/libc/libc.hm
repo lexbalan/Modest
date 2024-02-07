@@ -10,34 +10,34 @@
 import "./ctypes.hm"
 
 
-@property("newtype.c_alias", "dev_t")
+@property("c_alias", "dev_t")
 type DevT Nat16      /* holds (major|minor) device pair */
 
-@property("newtype.c_alias", "ino_t")
+@property("c_alias", "ino_t")
 type InoT Nat32      /* i-node number (or Nat32) */
 
-@property("newtype.c_alias", "blkcnt_t")
+@property("c_alias", "blkcnt_t")
 type BlkCntT Nat32   /* count of file blocks (or Nat32) */
 
-@property("newtype.c_alias", "off_t")
+@property("c_alias", "off_t")
 type OffT Int32      /* offset within a file (or Nat32) */
 
-@property("newtype.c_alias", "nlink_t")
+@property("c_alias", "nlink_t")
 type NlinkT Int16    /* number of links to a file (Int16) */
 
-@property("newtype.c_alias", "mode_t")
+@property("c_alias", "mode_t")
 type ModeT Nat32     /* file type and permissions bits */
 
-@property("newtype.c_alias", "uid_t")
+@property("c_alias", "uid_t")
 type UIDT Nat16      /* user id */
 
-@property("newtype.c_alias", "gid_t")
+@property("c_alias", "gid_t")
 type GIDT Int8       /* group id */
 
-@property("newtype.c_alias", "blksize_t")
+@property("c_alias", "blksize_t")
 type BlkSizeT Int16  /* used for block sizes */
 
-@property("newtype.c_alias", "time_t")
+@property("c_alias", "time_t")
 type TimeT Int32     /* time in seconds since 1970 */
 
 
@@ -57,7 +57,7 @@ type TimeT Int32     /* time in seconds since 1970 */
 //  ctime : TimeT       /* время последнего изменения */
 //}
 
-@property("newtype.c_alias", "DIR")
+@property("c_alias", "DIR")
 type DIR
 
 // from time.h

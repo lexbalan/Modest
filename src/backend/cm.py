@@ -159,8 +159,6 @@ def print_type_enum(t):
 
 
 
-
-
 def print_type_func(t, extra_args=False):
     out('(')
     print_fields(t['params'], before="", after="", separator=", ")
@@ -175,7 +173,13 @@ def print_type(t, print_aka=True):
     k = t['kind']
 
     if print_aka:
-        if t['id'] != None:
+        if t['definition'] != None:
+            out(t['definition']['id']['str'])
+
+        elif t['declaration'] != None:
+            out(t['declaration']['id']['str'])
+
+        elif t['id'] != None:
             print_id(t)
             return
 

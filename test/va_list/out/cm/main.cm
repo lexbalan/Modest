@@ -6,7 +6,7 @@ import "fastfood/print.h"
 @c_include "./print.h"
 
 
-func main() -> Int {
+func main() -> IntInt {
     ff_printf("Hello World!\n")
 
     let c = "$"[0] to Char8
