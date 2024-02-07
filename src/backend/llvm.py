@@ -556,6 +556,28 @@ def print_type_pointer(t):
         print_type(t['to']); out("*")
 
 
+
+def print_type_id(t):
+    if t['definition'] != None:
+        type_definition = t['definition']
+        if 'llvm_alias' in type_definition:
+            out(type_definition['llvm_alias'])
+        else:
+            out("%")
+            out(type_definition['id']['str'])
+        return True
+
+    elif t['declaration'] != None:
+        type_declaration = t['declaration']
+        if 'llvm_alias' in type_declaration:
+            out(type_declaration['llvm_alias'])
+        else:
+            out("%")
+            out(type_declaration['id']['str'])
+        return True
+
+    return False
+
 # функция может получать только указатель на массив
 # если же в CM она получает массив то тут и в СИ она получает
 # указатель на него, и потом копирует его во внутренний массив
@@ -563,9 +585,15 @@ def print_type(t, print_aka=True):
     k = t['kind']
 
     if print_aka:
-        if 'llvm_alias' in t:
-            out(t['llvm_alias'])
+        res = print_type_id(t)
+        if res:
             return
+
+
+
+        """if 'llvm_alias' in t:
+            out(t['llvm_alias'])
+            return"""
 
         # иногда сюда залетают дженерики например в to левое:
         # let p = 0x12345678 to *Nat32
@@ -573,9 +601,9 @@ def print_type(t, print_aka=True):
             out("i%d" % t['width'])
             return
 
-        if t['id'] != None:
-            out('%%%s' % t['id']['str'])
-            return
+        #if t['id'] != None:
+        #    out('%%%s' % t['id']['str'])
+        #    return
 
     if hlir_type.type_is_func(t): print_type_func(t)
     elif hlir_type.type_is_record(t): print_type_record(t)
@@ -583,9 +611,14 @@ def print_type(t, print_aka=True):
     elif hlir_type.type_is_array(t): print_type_array(t)
     elif hlir_type.type_is_enum(t): print_type_enum(t)
 
-    elif hlir_type.type_is_integer(t) or hlir_type.type_is_float(t) or hlir_type.type_is_char(t):
-        if 'llvm_alias' in t:
-            out(t['llvm_alias'])
+    elif hlir_type.type_is_integer(t):
+        out("i%d" % t['width'])
+
+    elif hlir_type.type_is_float(t):
+        print_type_id(t)
+
+    elif hlir_type.type_is_char(t):
+        out("i%d" % t['width'])
 
     elif hlir_type.type_is_opaque(t):
         out('opaque')
@@ -1516,6 +1549,26 @@ def run(module, outname):
 
     out('\ntarget datalayout = "%s"' % LLVM_TARGET_DATALAYOUT)
     out('\ntarget triple = "%s"\n\n' % LLVM_TARGET_TRIPLE)
+
+    lo("%Unit = type i1")
+    lo("%Bool = type i1")
+    lo("%Byte = type i8")
+    lo("%Char8 = type i8")
+    lo("%Char16 = type i16")
+    lo("%Char32 = type i32")
+    lo("%Int8 = type i8")
+    lo("%Int16 = type i16")
+    lo("%Int32 = type i32")
+    lo("%Int64 = type i64")
+    lo("%Int128 = type i128")
+    lo("%Nat8 = type i8")
+    lo("%Nat16 = type i16")
+    lo("%Nat32 = type i32")
+    lo("%Nat64 = type i64")
+    lo("%Nat128 = type i128")
+    lo("%Float32 = type float")
+    lo("%Float64 = type double")
+    lo("%Pointer = type i8*")
 
     if module['options'] != []:
         if 'use_extra_args' in module['options']:
