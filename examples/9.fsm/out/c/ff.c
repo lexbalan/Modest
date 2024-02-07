@@ -19,7 +19,7 @@ typedef int64_t ArchInt;
 typedef uint64_t ArchNat;
 
 
-void ff_memzero(void *mem, uint64_t len)
+void ff_memzero(void * mem, uint64_t len)
 {
     const uint64_t len_words = len / sizeof(ArchNat);
 
@@ -44,7 +44,7 @@ void ff_memzero(void *mem, uint64_t len)
 }
 
 
-void ff_memcpy(void *dst, void *src, uint64_t len)
+void ff_memcpy(void * dst, void * src, uint64_t len)
 {
     const uint64_t len_words = len / sizeof(ArchNat);
 

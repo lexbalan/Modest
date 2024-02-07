@@ -2,7 +2,30 @@
 target datalayout = "e-m:o-i64:64-i128:128-n32:64-S128"
 target triple = "arm64-apple-macosx12.0.0"
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/system.hm
+
+%Unit = type i1
+%Bool = type i1
+%Byte = type i8
+%Char8 = type i8
+%Char16 = type i16
+%Char32 = type i32
+%Int8 = type i8
+%Int16 = type i16
+%Int32 = type i32
+%Int64 = type i64
+%Int128 = type i128
+%Nat8 = type i8
+%Nat16 = type i16
+%Nat32 = type i32
+%Nat64 = type i64
+%Nat128 = type i128
+%Float32 = type float
+%Float64 = type double
+%Pointer = type i8*
+%Str8 = type [0 x %Char8]
+%Str16 = type [0 x %Char16]
+%Str32 = type [0 x %Char32]
+%VA_List = type i8*; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/system.hm
 
 
 
@@ -50,46 +73,46 @@ target triple = "arm64-apple-macosx12.0.0"
 %ConstCharStr = type [0 x i8]
 
 
-declare i32 @fclose(%FILE* %f)
-declare i32 @feof(%FILE* %f)
-declare i32 @ferror(%FILE* %f)
-declare i32 @fflush(%FILE* %f)
-declare i32 @fgetpos(%FILE* %f, %FposT* %pos)
+declare %Int @fclose(%FILE* %f)
+declare %Int @feof(%FILE* %f)
+declare %Int @ferror(%FILE* %f)
+declare %Int @fflush(%FILE* %f)
+declare %Int @fgetpos(%FILE* %f, %FposT* %pos)
 declare %FILE* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
-declare i64 @fread(i8* %buf, i64 %size, i64 %count, %FILE* %f)
-declare i64 @fwrite(i8* %buf, i64 %size, i64 %count, %FILE* %f)
+declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, %FILE* %f)
+declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, %FILE* %f)
 declare %FILE* @freopen(%ConstCharStr* %filename, %ConstCharStr* %mode, %FILE* %f)
-declare i32 @fseek(%FILE* %stream, i64 %offset, i32 %whence)
-declare i32 @fsetpos(%FILE* %f, %FposT* %pos)
-declare i64 @ftell(%FILE* %f)
-declare i32 @remove(%ConstCharStr* %filename)
-declare i32 @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
+declare %Int @fseek(%FILE* %stream, %LongInt %offset, %Int %whence)
+declare %Int @fsetpos(%FILE* %f, %FposT* %pos)
+declare %LongInt @ftell(%FILE* %f)
+declare %Int @remove(%ConstCharStr* %filename)
+declare %Int @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
 declare void @rewind(%FILE* %f)
 declare void @setbuf(%FILE* %f, %CharStr* %buffer)
 
 
-declare i32 @setvbuf(%FILE* %f, %CharStr* %buffer, i32 %mode, i64 %size)
+declare %Int @setvbuf(%FILE* %f, %CharStr* %buffer, %Int %mode, %SizeT %size)
 declare %FILE* @tmpfile()
 declare %CharStr* @tmpnam(%CharStr* %str)
-declare i32 @printf(%ConstCharStr* %s, ...)
-declare i32 @scanf(%ConstCharStr* %s, ...)
-declare i32 @fprintf(%FILE* %stream, %Str* %format, ...)
-declare i32 @fscanf(%FILE* %f, %ConstCharStr* %format, ...)
-declare i32 @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
-declare i32 @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @printf(%ConstCharStr* %s, ...)
+declare %Int @scanf(%ConstCharStr* %s, ...)
+declare %Int @fprintf(%FILE* %stream, %Str* %format, ...)
+declare %Int @fscanf(%FILE* %f, %ConstCharStr* %format, ...)
+declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
 
 
-declare i32 @fgetc(%FILE* %f)
-declare i32 @fputc(i32 %char, %FILE* %f)
-declare %CharStr* @fgets(%CharStr* %str, i32 %n, %FILE* %f)
-declare i32 @fputs(%ConstCharStr* %str, %FILE* %f)
-declare i32 @getc(%FILE* %f)
-declare i32 @getchar()
+declare %Int @fgetc(%FILE* %f)
+declare %Int @fputc(%Int %char, %FILE* %f)
+declare %CharStr* @fgets(%CharStr* %str, %Int %n, %FILE* %f)
+declare %Int @fputs(%ConstCharStr* %str, %FILE* %f)
+declare %Int @getc(%FILE* %f)
+declare %Int @getchar()
 declare %CharStr* @gets(%CharStr* %str)
-declare i32 @putc(i32 %char, %FILE* %f)
-declare i32 @putchar(i32 %char)
-declare i32 @puts(%ConstCharStr* %str)
-declare i32 @ungetc(i32 %char, %FILE* %f)
+declare %Int @putc(%Int %char, %FILE* %f)
+declare %Int @putchar(%Int %char)
+declare %Int @puts(%ConstCharStr* %str)
+declare %Int @ungetc(%Int %char, %FILE* %f)
 declare void @perror(%ConstCharStr* %str)
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/examples/4.many_sources/src/lib.hm
@@ -104,10 +127,10 @@ declare void @lib_func()
 
 
 
-define i32 @main() {
-    %1 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str1 to [0 x i8]*))
+define %Int @main() {
+    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str1 to [0 x i8]*))
     call void () @lib_func()
-    ret i32 0
+    ret %Int 0
 }
 
 

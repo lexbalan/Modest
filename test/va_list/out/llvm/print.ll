@@ -3,6 +3,29 @@ target datalayout = "e-m:o-i64:64-i128:128-n32:64-S128"
 target triple = "arm64-apple-macosx12.0.0"
 
 
+%Unit = type i1
+%Bool = type i1
+%Byte = type i8
+%Char8 = type i8
+%Char16 = type i16
+%Char32 = type i32
+%Int8 = type i8
+%Int16 = type i16
+%Int32 = type i32
+%Int64 = type i64
+%Int128 = type i128
+%Nat8 = type i8
+%Nat16 = type i16
+%Nat32 = type i32
+%Nat64 = type i64
+%Nat128 = type i128
+%Float32 = type float
+%Float64 = type double
+%Pointer = type i8*
+%Str8 = type [0 x %Char8]
+%Str16 = type [0 x %Char16]
+%Str32 = type [0 x %Char32]
+%VA_List = type i8*
 declare void @llvm.va_start(i8*)
 declare void @llvm.va_copy(i8*, i8*)
 declare void @llvm.va_end(i8*)
@@ -54,46 +77,46 @@ declare void @llvm.va_end(i8*)
 %ConstCharStr = type [0 x i8]
 
 
-declare i32 @fclose(%FILE* %f)
-declare i32 @feof(%FILE* %f)
-declare i32 @ferror(%FILE* %f)
-declare i32 @fflush(%FILE* %f)
-declare i32 @fgetpos(%FILE* %f, %FposT* %pos)
+declare %Int @fclose(%FILE* %f)
+declare %Int @feof(%FILE* %f)
+declare %Int @ferror(%FILE* %f)
+declare %Int @fflush(%FILE* %f)
+declare %Int @fgetpos(%FILE* %f, %FposT* %pos)
 declare %FILE* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
-declare i64 @fread(i8* %buf, i64 %size, i64 %count, %FILE* %f)
-declare i64 @fwrite(i8* %buf, i64 %size, i64 %count, %FILE* %f)
+declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, %FILE* %f)
+declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, %FILE* %f)
 declare %FILE* @freopen(%ConstCharStr* %filename, %ConstCharStr* %mode, %FILE* %f)
-declare i32 @fseek(%FILE* %stream, i64 %offset, i32 %whence)
-declare i32 @fsetpos(%FILE* %f, %FposT* %pos)
-declare i64 @ftell(%FILE* %f)
-declare i32 @remove(%ConstCharStr* %filename)
-declare i32 @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
+declare %Int @fseek(%FILE* %stream, %LongInt %offset, %Int %whence)
+declare %Int @fsetpos(%FILE* %f, %FposT* %pos)
+declare %LongInt @ftell(%FILE* %f)
+declare %Int @remove(%ConstCharStr* %filename)
+declare %Int @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
 declare void @rewind(%FILE* %f)
 declare void @setbuf(%FILE* %f, %CharStr* %buffer)
 
 
-declare i32 @setvbuf(%FILE* %f, %CharStr* %buffer, i32 %mode, i64 %size)
+declare %Int @setvbuf(%FILE* %f, %CharStr* %buffer, %Int %mode, %SizeT %size)
 declare %FILE* @tmpfile()
 declare %CharStr* @tmpnam(%CharStr* %str)
-declare i32 @printf(%ConstCharStr* %s, ...)
-declare i32 @scanf(%ConstCharStr* %s, ...)
-declare i32 @fprintf(%FILE* %stream, %Str* %format, ...)
-declare i32 @fscanf(%FILE* %f, %ConstCharStr* %format, ...)
-declare i32 @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
-declare i32 @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @printf(%ConstCharStr* %s, ...)
+declare %Int @scanf(%ConstCharStr* %s, ...)
+declare %Int @fprintf(%FILE* %stream, %Str* %format, ...)
+declare %Int @fscanf(%FILE* %f, %ConstCharStr* %format, ...)
+declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
 
 
-declare i32 @fgetc(%FILE* %f)
-declare i32 @fputc(i32 %char, %FILE* %f)
-declare %CharStr* @fgets(%CharStr* %str, i32 %n, %FILE* %f)
-declare i32 @fputs(%ConstCharStr* %str, %FILE* %f)
-declare i32 @getc(%FILE* %f)
-declare i32 @getchar()
+declare %Int @fgetc(%FILE* %f)
+declare %Int @fputc(%Int %char, %FILE* %f)
+declare %CharStr* @fgets(%CharStr* %str, %Int %n, %FILE* %f)
+declare %Int @fputs(%ConstCharStr* %str, %FILE* %f)
+declare %Int @getc(%FILE* %f)
+declare %Int @getchar()
 declare %CharStr* @gets(%CharStr* %str)
-declare i32 @putc(i32 %char, %FILE* %f)
-declare i32 @putchar(i32 %char)
-declare i32 @puts(%ConstCharStr* %str)
-declare i32 @ungetc(i32 %char, %FILE* %f)
+declare %Int @putc(%Int %char, %FILE* %f)
+declare %Int @putchar(%Int %char)
+declare %Int @puts(%ConstCharStr* %str)
+declare %Int @ungetc(%Int %char, %FILE* %f)
 declare void @perror(%ConstCharStr* %str)
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/fastfood/print.cm
@@ -103,8 +126,8 @@ declare void @perror(%ConstCharStr* %str)
 
 
 define void @_putchar(i8 %c) {
-    %1 = sext i8 %c to i32
-    %2 = call i32 (i32) @putchar(i32 %1)
+    %1 = sext i8 %c to %Int
+    %2 = call %Int (%Int) @putchar(%Int %1)
     ret void
 }
 
@@ -182,7 +205,7 @@ then_1:
     br i1 %27 , label %then_2, label %else_2
 then_2:
     ; %i & %d for signed integer (Int)
-    %28 = va_arg i8** %1, i32
+    %28 = va_arg %VA_List* %1, i32
     %29 = load [0 x i8]*, [0 x i8]** %19
     call void ([0 x i8]*, i32) @sprintf_dec_int32([0 x i8]* %29, i32 %28)
     br label %endif_2
@@ -192,7 +215,7 @@ else_2:
     br i1 %31 , label %then_3, label %else_3
 then_3:
     ; %n for unsigned integer (Nat)
-    %32 = va_arg i8** %1, i32
+    %32 = va_arg %VA_List* %1, i32
     %33 = load [0 x i8]*, [0 x i8]** %19
     call void ([0 x i8]*, i32) @sprintf_dec_nat32([0 x i8]* %33, i32 %32)
     br label %endif_3
@@ -206,7 +229,7 @@ else_3:
 then_4:
     ; %x for unsigned integer (Nat)
     ; %p for pointers
-    %39 = va_arg i8** %1, i32
+    %39 = va_arg %VA_List* %1, i32
     %40 = load [0 x i8]*, [0 x i8]** %19
     call void ([0 x i8]*, i32) @sprintf_hex_nat32([0 x i8]* %40, i32 %39)
     br label %endif_4
@@ -216,8 +239,8 @@ else_4:
     br i1 %42 , label %then_5, label %else_5
 then_5:
     ; %s pointer to string
-    %43 = va_arg i8** %1, [0 x i8]*
-    store [0 x i8]* %43, [0 x i8]** %19
+    %43 = va_arg %VA_List* %1, %Str8*
+    store %Str8* %43, [0 x i8]** %19
     br label %endif_5
 else_5:
     %44 = load i8, i8* %7
@@ -225,7 +248,7 @@ else_5:
     br i1 %45 , label %then_6, label %else_6
 then_6:
     ; %c for char
-    %46 = va_arg i8** %1, i8
+    %46 = va_arg %VA_List* %1, i8
     %47 = load [0 x i8]*, [0 x i8]** %19
     %48 = getelementptr inbounds [0 x i8], [0 x i8]* %47, i32 0, i32 0
     store i8 %46, i8* %48
@@ -265,7 +288,7 @@ endif_1:
     store i32 %56, i32* %3
     br label %again_1
 break_1:
-    %57 = bitcast i8** %1 to i8*
+    %57 = bitcast %VA_List* %1 to i8*
     call void @llvm.va_end(i8* %57)
     ret void
 }

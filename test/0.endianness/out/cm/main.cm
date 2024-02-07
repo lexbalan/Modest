@@ -3,7 +3,7 @@
 import "libc/stdio.h"
 
 
-func main() -> IntInt {
+func main() -> Int {
     var check: Nat16 = 0x0001
     let is_le = *&check to *Nat8 == 1
 

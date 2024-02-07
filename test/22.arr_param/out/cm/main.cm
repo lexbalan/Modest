@@ -100,7 +100,7 @@ type Pod record {
     x: [10]Char8
 }
 
-func main() -> IntInt {
+func main() -> Int {
     /*var local_array: [2]Int32
 
     local_array[0] = 10

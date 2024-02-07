@@ -37,15 +37,33 @@ typedef uint32_t UInt32;
 
 struct FSM {
     char name[fsmNameLength];
-    UInt32 state;
-    UInt32 nexstate;
-    UInt32 substate;
+    uint32_t state;
+    uint32_t nexstate;
+    uint32_t substate;
     FSM_StateDesc states[fsmMaxStates];
 };
 
 
-char *fsm_state_no_name(FSM *fsm, uint32_t state_no);
-void fsm_switch(FSM *fsm, uint32_t state);
-void fsm_run(FSM *fsm);
+char *fsm_state_no_name(struct {
+    char name[fsmNameLength];
+    uint32_t state;
+    uint32_t nexstate;
+    uint32_t substate;
+    FSM_StateDesc states[fsmMaxStates];
+} *fsm, uint32_t state_no);
+void fsm_switch(struct {
+    char name[fsmNameLength];
+    uint32_t state;
+    uint32_t nexstate;
+    uint32_t substate;
+    FSM_StateDesc states[fsmMaxStates];
+} *fsm, uint32_t state);
+void fsm_run(struct {
+    char name[fsmNameLength];
+    uint32_t state;
+    uint32_t nexstate;
+    uint32_t substate;
+    FSM_StateDesc states[fsmMaxStates];
+} *fsm);
 
 #endif  /* FSM_H */

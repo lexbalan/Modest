@@ -6,9 +6,9 @@ const genericIntConst = 42
 const int32Const = genericIntConst to Int32
 
 const genericStringConst = "Hello!"
-const string8Const = genericStringConst to *[]Char8
-const string16Const = genericStringConst to *[]Char16
-const string32Const = genericStringConst to *[]Char32
+const string8Const = genericStringConst to *Str8
+const string16Const = genericStringConst to *Str16
+const string32Const = genericStringConst to *Str32
 
 
 type Point record {
@@ -34,14 +34,11 @@ const points = [
 // не могут быть так инициализированы, поскольку points является приведением
 // непонятно существует ли хорошее решение
 //@property("c_prefix", "const")
-var points2: [3]Pointrecord {
-    x: Nat32
-    y: Nat32
-} = points
+var points2: [3]Point = points
 
 
 // define function main
-func main() -> IntInt {
+func main() -> Int {
     printf("test const\n")
 
     printf("genericIntConst = %d\n", genericIntConst to Int32)

@@ -2,7 +2,30 @@
 target datalayout = "e-m:o-i64:64-i128:128-n32:64-S128"
 target triple = "arm64-apple-macosx12.0.0"
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/system.hm
+
+%Unit = type i1
+%Bool = type i1
+%Byte = type i8
+%Char8 = type i8
+%Char16 = type i16
+%Char32 = type i32
+%Int8 = type i8
+%Int16 = type i16
+%Int32 = type i32
+%Int64 = type i64
+%Int128 = type i128
+%Nat8 = type i8
+%Nat16 = type i16
+%Nat32 = type i32
+%Nat64 = type i64
+%Nat128 = type i128
+%Float32 = type float
+%Float64 = type double
+%Pointer = type i8*
+%Str8 = type [0 x %Char8]
+%Str16 = type [0 x %Char16]
+%Str32 = type [0 x %Char32]
+%VA_List = type i8*; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/system.hm
 
 
 
@@ -77,21 +100,18 @@ target triple = "arm64-apple-macosx12.0.0"
 
 
 declare i64 @clock()
-declare i8* @malloc(i64 %size)
-declare i8* @memset(i8* %mem, i32 %c, i64 %n)
-declare i8* @memcpy(i8* %dst, i8* %src, i64 %len)
-declare i32 @memcmp(i8* %ptr1, i8* %ptr2, i64 %num)
+declare i8* @malloc(%SizeT %size)
+declare i8* @memset(i8* %mem, %Int %c, %SizeT %n)
+declare i8* @memcpy(i8* %dst, i8* %src, %SizeT %len)
+declare %Int @memcmp(i8* %ptr1, i8* %ptr2, %SizeT %num)
 declare void @free(i8* %ptr)
-declare i32 @strncmp([0 x i8]* %s1, [0 x i8]* %s2, i64 %n)
-declare i32 @strcmp([0 x i8]* %s1, [0 x i8]* %s2)
-declare [0 x i8]* @strcpy([0 x i8]* %dst, [0 x i8]* %src)
-declare i64 @strlen([0 x i8]* %s)
+declare %Int @strncmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
+declare %Int @strcmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2)
+declare [0 x %Char]* @strcpy([0 x %Char]* %dst, [0 x %ConstChar]* %src)
+declare %SizeT @strlen([0 x %ConstChar]* %s)
 
 
-declare i32 @ftruncate(i32 %fd, i32 %size)
-
-
-
+declare %Int @ftruncate(%Int %fd, %OffT %size)
 
 
 
@@ -105,27 +125,30 @@ declare i32 @ftruncate(i32 %fd, i32 %size)
 
 
 
-declare i32 @creat(%Str* %path, i32 %mode)
-declare i32 @open(%Str* %path, i32 %oflags)
-declare i32 @read(i32 %fd, i8* %buf, i32 %len)
-declare i32 @write(i32 %fd, i8* %buf, i32 %len)
-declare i32 @lseek(i32 %fd, i32 %offset, i32 %whence)
-declare i32 @close(i32 %fd)
-declare void @exit(i32 %rc)
+
+
+
+declare %Int @creat(%Str* %path, %ModeT %mode)
+declare %Int @open(%Str* %path, %Int %oflags)
+declare %Int @read(%Int %fd, i8* %buf, i32 %len)
+declare %Int @write(%Int %fd, i8* %buf, i32 %len)
+declare %OffT @lseek(%Int %fd, %OffT %offset, %Int %whence)
+declare %Int @close(%Int %fd)
+declare void @exit(%Int %rc)
 
 
 declare %DIR* @opendir(%Str* %name)
-declare i32 @closedir(%DIR* %dir)
+declare %Int @closedir(%DIR* %dir)
 
 
-declare %Str* @getcwd(%Str* %buf, i64 %size)
+declare %Str* @getcwd(%Str* %buf, %SizeT %size)
 declare %Str* @getenv(%Str* %name)
 
 
-declare void @bzero(i8* %s, i64 %n)
+declare void @bzero(i8* %s, %SizeT %n)
 
 
-declare void @bcopy(i8* %src, i8* %dst, i64 %n)
+declare void @bcopy(i8* %src, i8* %dst, %SizeT %n)
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/misc/sha256.cm
 
@@ -226,7 +249,7 @@ define void @sha256_contextInit(%SHA256_Context* %ctx) {
     %1 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 3
     %2 = bitcast [8 x i32]* %1 to i8*
     %3 = bitcast [8 x i32]* @initMagic to i8*
-    %4 = call i8* (i8*, i8*, i64) @memcpy(i8* %2, i8* %3, i64 32)
+    %4 = call i8* (i8*, i8*, %SizeT) @memcpy(i8* %2, i8* %3, %SizeT 32)
     ret void
 }
 
@@ -453,7 +476,7 @@ break_2:
     %131 = bitcast [8 x i32]* %130 to i8*
     %132 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 3
     %133 = bitcast [8 x i32]* %132 to i8*
-    %134 = call i8* (i8*, i8*, i64) @memcpy(i8* %131, i8* %133, i64 32)
+    %134 = call i8* (i8*, i8*, %SizeT) @memcpy(i8* %131, i8* %133, %SizeT 32)
     store i32 0, i32* %66
     br label %again_3
 again_3:
@@ -635,8 +658,8 @@ endif_0:
     %17 = load i32, i32* %4
     %18 = load i32, i32* %3
     %19 = sub i32 %17, %18
-    %20 = zext i32 %19 to i64
-    %21 = call i8* (i8*, i32, i64) @memset(i8* %16, i32 0, i64 %20)
+    %20 = zext i32 %19 to %SizeT
+    %21 = call i8* (i8*, %Int, %SizeT) @memset(i8* %16, %Int 0, %SizeT %20)
     %22 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 1
     %23 = load i32, i32* %22
     %24 = icmp uge i32 %23, 56
@@ -647,7 +670,7 @@ then_1:
     call void (%SHA256_Context*, [0 x i8]*) @sha256_transform(%SHA256_Context* %ctx, [0 x i8]* %26)
     %27 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 0
     %28 = bitcast [64 x i8]* %27 to i8*
-    %29 = call i8* (i8*, i32, i64) @memset(i8* %28, i32 0, i64 56)
+    %29 = call i8* (i8*, %Int, %SizeT) @memset(i8* %28, %Int 0, %SizeT 56)
     br label %endif_1
 endif_1:
     ; Append to the padding the total message's length in bits and transform.

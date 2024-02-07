@@ -524,6 +524,10 @@ def print_type_record(t):
     while i < len(fields):
         field = fields[i]
         if i > 0: out(',')
+
+        #if type_is_pointer_to_record(field['type']):
+        #    if field['type']['to']['']
+
         out("\n\t"); print_type(field['type'])
         i = i + 1
     out("\n}")
@@ -541,7 +545,11 @@ def print_type_array(t):
 
 
 def print_type_func(t):
-    print_type(t['to'])
+    if hlir_type.type_is_unit(t['to']):
+        out("void")
+    else:
+        print_type(t['to'])
+
     out(" (")
     print_list_with(t['params'], lambda f: print_type(f['type']))
     if t['extra_args']:
@@ -1333,7 +1341,10 @@ def print_func_signature(func):
     to = ftype['to']
 
     if not sret:
-        print_type(to)
+        if hlir_type.type_is_unit(to):
+            out("void")
+        else:
+            print_type(to)
     else:
         out("void")
 
@@ -1569,6 +1580,11 @@ def run(module, outname):
     lo("%Float32 = type float")
     lo("%Float64 = type double")
     lo("%Pointer = type i8*")
+    lo("%Str8 = type [0 x %Char8]")
+    lo("%Str16 = type [0 x %Char16]")
+    lo("%Str32 = type [0 x %Char32]")
+    lo("%VA_List = type i8*")
+
 
     if module['options'] != []:
         if 'use_extra_args' in module['options']:

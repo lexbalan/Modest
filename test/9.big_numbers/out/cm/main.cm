@@ -18,7 +18,7 @@ func low_128(x: Nat128) -> Nat64 {
 }
 
 
-func main() -> IntInt {
+func main() -> Int {
 
     let big1 = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
 

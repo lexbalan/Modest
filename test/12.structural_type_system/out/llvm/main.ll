@@ -2,7 +2,29 @@
 target datalayout = "e-m:o-i64:64-i128:128-n32:64-S128"
 target triple = "arm64-apple-macosx12.0.0"
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/system.hm
+
+%Unit = type i1
+%Bool = type i1
+%Byte = type i8
+%Char8 = type i8
+%Char16 = type i16
+%Char32 = type i32
+%Int8 = type i8
+%Int16 = type i16
+%Int32 = type i32
+%Int64 = type i64
+%Int128 = type i128
+%Nat8 = type i8
+%Nat16 = type i16
+%Nat32 = type i32
+%Nat64 = type i64
+%Nat128 = type i128
+%Float32 = type float
+%Float64 = type double
+%Pointer = type i8*
+%Str8 = type [0 x %Char8]
+%Str16 = type [0 x %Char16]
+%Str32 = type [0 x %Char32]; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/system.hm
 
 
 
@@ -50,46 +72,46 @@ target triple = "arm64-apple-macosx12.0.0"
 %ConstCharStr = type [0 x i8]
 
 
-declare i32 @fclose(%FILE* %f)
-declare i32 @feof(%FILE* %f)
-declare i32 @ferror(%FILE* %f)
-declare i32 @fflush(%FILE* %f)
-declare i32 @fgetpos(%FILE* %f, %FposT* %pos)
+declare %Int @fclose(%FILE* %f)
+declare %Int @feof(%FILE* %f)
+declare %Int @ferror(%FILE* %f)
+declare %Int @fflush(%FILE* %f)
+declare %Int @fgetpos(%FILE* %f, %FposT* %pos)
 declare %FILE* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
-declare i64 @fread(i8* %buf, i64 %size, i64 %count, %FILE* %f)
-declare i64 @fwrite(i8* %buf, i64 %size, i64 %count, %FILE* %f)
+declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, %FILE* %f)
+declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, %FILE* %f)
 declare %FILE* @freopen(%ConstCharStr* %filename, %ConstCharStr* %mode, %FILE* %f)
-declare i32 @fseek(%FILE* %stream, i64 %offset, i32 %whence)
-declare i32 @fsetpos(%FILE* %f, %FposT* %pos)
-declare i64 @ftell(%FILE* %f)
-declare i32 @remove(%ConstCharStr* %filename)
-declare i32 @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
+declare %Int @fseek(%FILE* %stream, %LongInt %offset, %Int %whence)
+declare %Int @fsetpos(%FILE* %f, %FposT* %pos)
+declare %LongInt @ftell(%FILE* %f)
+declare %Int @remove(%ConstCharStr* %filename)
+declare %Int @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
 declare void @rewind(%FILE* %f)
 declare void @setbuf(%FILE* %f, %CharStr* %buffer)
 
 
-declare i32 @setvbuf(%FILE* %f, %CharStr* %buffer, i32 %mode, i64 %size)
+declare %Int @setvbuf(%FILE* %f, %CharStr* %buffer, %Int %mode, %SizeT %size)
 declare %FILE* @tmpfile()
 declare %CharStr* @tmpnam(%CharStr* %str)
-declare i32 @printf(%ConstCharStr* %s, ...)
-declare i32 @scanf(%ConstCharStr* %s, ...)
-declare i32 @fprintf(%FILE* %stream, %Str* %format, ...)
-declare i32 @fscanf(%FILE* %f, %ConstCharStr* %format, ...)
-declare i32 @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
-declare i32 @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @printf(%ConstCharStr* %s, ...)
+declare %Int @scanf(%ConstCharStr* %s, ...)
+declare %Int @fprintf(%FILE* %stream, %Str* %format, ...)
+declare %Int @fscanf(%FILE* %f, %ConstCharStr* %format, ...)
+declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
 
 
-declare i32 @fgetc(%FILE* %f)
-declare i32 @fputc(i32 %char, %FILE* %f)
-declare %CharStr* @fgets(%CharStr* %str, i32 %n, %FILE* %f)
-declare i32 @fputs(%ConstCharStr* %str, %FILE* %f)
-declare i32 @getc(%FILE* %f)
-declare i32 @getchar()
+declare %Int @fgetc(%FILE* %f)
+declare %Int @fputc(%Int %char, %FILE* %f)
+declare %CharStr* @fgets(%CharStr* %str, %Int %n, %FILE* %f)
+declare %Int @fputs(%ConstCharStr* %str, %FILE* %f)
+declare %Int @getc(%FILE* %f)
+declare %Int @getchar()
 declare %CharStr* @gets(%CharStr* %str)
-declare i32 @putc(i32 %char, %FILE* %f)
-declare i32 @putchar(i32 %char)
-declare i32 @puts(%ConstCharStr* %str)
-declare i32 @ungetc(i32 %char, %FILE* %f)
+declare %Int @putc(%Int %char, %FILE* %f)
+declare %Int @putchar(%Int %char)
+declare %Int @puts(%ConstCharStr* %str)
+declare %Int @ungetc(%Int %char, %FILE* %f)
 declare void @perror(%ConstCharStr* %str)
 
 ; -- SOURCE: src/main.cm
@@ -120,19 +142,19 @@ declare void @perror(%ConstCharStr* %str)
 
 define void @f0_val(%Type1 %x) {
     %1 = extractvalue %Type1 %x, 0
-    %2 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str1 to [0 x i8]*), i32 %1)
+    %2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str1 to [0 x i8]*), i32 %1)
     ret void
 }
 
 define void @f1_val(%Type2 %x) {
     %1 = extractvalue %Type2 %x, 0
-    %2 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*), i32 %1)
+    %2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*), i32 %1)
     ret void
 }
 
 define void @f2_val(%Type3 %x) {
     %1 = extractvalue %Type3 %x, 0
-    %2 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str3 to [0 x i8]*), i32 %1)
+    %2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str3 to [0 x i8]*), i32 %1)
     ret void
 }
 
@@ -142,28 +164,28 @@ define void @f3_val({
     %1 = extractvalue {
 	i32
 } %x, 0
-    %2 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str4 to [0 x i8]*), i32 %1)
+    %2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str4 to [0 x i8]*), i32 %1)
     ret void
 }
 
 define void @f0_ptr(%Type1* %x) {
     %1 = getelementptr inbounds %Type1, %Type1* %x, i32 0, i32 0
     %2 = load i32, i32* %1
-    %3 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str5 to [0 x i8]*), i32 %2)
+    %3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str5 to [0 x i8]*), i32 %2)
     ret void
 }
 
 define void @f1_ptr(%Type2* %x) {
     %1 = getelementptr inbounds %Type2, %Type2* %x, i32 0, i32 0
     %2 = load i32, i32* %1
-    %3 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str6 to [0 x i8]*), i32 %2)
+    %3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str6 to [0 x i8]*), i32 %2)
     ret void
 }
 
 define void @f2_ptr(%Type3* %x) {
     %1 = getelementptr inbounds %Type3, %Type3* %x, i32 0, i32 0
     %2 = load i32, i32* %1
-    %3 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str7 to [0 x i8]*), i32 %2)
+    %3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str7 to [0 x i8]*), i32 %2)
     ret void
 }
 
@@ -176,7 +198,7 @@ define void @f3_ptr({
 	i32
 }* %x, i32 0, i32 0
     %2 = load i32, i32* %1
-    %3 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str8 to [0 x i8]*), i32 %2)
+    %3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str8 to [0 x i8]*), i32 %2)
     ret void
 }
 
@@ -195,47 +217,23 @@ define void @test_by_value() {
     %1 = load %Type1, %Type1* @a
     call void (%Type1) @f0_val(%Type1 %1)
     %2 = load %Type1, %Type1* @a
-    %3 = alloca %Type1
-    store %Type1 %2, %Type1* %3
-    %4 = bitcast %Type1* %3 to %Type2*
-    %5 = load %Type2, %Type2* %4
-    call void (%Type2) @f1_val(%Type2 %5)
-    %6 = load %Type1, %Type1* @a
-    %7 = alloca %Type1
-    store %Type1 %6, %Type1* %7
-    %8 = bitcast %Type1* %7 to %Type3*
-    %9 = load %Type3, %Type3* %8
-    call void (%Type3) @f2_val(%Type3 %9)
+    call void (%Type2) @f1_val(%Type1 %2)
+    %3 = load %Type1, %Type1* @a
+    call void (%Type3) @f2_val(%Type1 %3)
     ;f3_val(a)
-    %10 = load %Type2, %Type2* @b
-    %11 = alloca %Type2
-    store %Type2 %10, %Type2* %11
-    %12 = bitcast %Type2* %11 to %Type1*
-    %13 = load %Type1, %Type1* %12
-    call void (%Type1) @f0_val(%Type1 %13)
-    %14 = load %Type2, %Type2* @b
-    call void (%Type2) @f1_val(%Type2 %14)
-    %15 = load %Type2, %Type2* @b
-    %16 = alloca %Type2
-    store %Type2 %15, %Type2* %16
-    %17 = bitcast %Type2* %16 to %Type3*
-    %18 = load %Type3, %Type3* %17
-    call void (%Type3) @f2_val(%Type3 %18)
+    %4 = load %Type2, %Type2* @b
+    call void (%Type1) @f0_val(%Type2 %4)
+    %5 = load %Type2, %Type2* @b
+    call void (%Type2) @f1_val(%Type2 %5)
+    %6 = load %Type2, %Type2* @b
+    call void (%Type3) @f2_val(%Type2 %6)
     ;f3_val(b)
-    %19 = load %Type3, %Type3* @c
-    %20 = alloca %Type3
-    store %Type3 %19, %Type3* %20
-    %21 = bitcast %Type3* %20 to %Type1*
-    %22 = load %Type1, %Type1* %21
-    call void (%Type1) @f0_val(%Type1 %22)
-    %23 = load %Type3, %Type3* @c
-    %24 = alloca %Type3
-    store %Type3 %23, %Type3* %24
-    %25 = bitcast %Type3* %24 to %Type2*
-    %26 = load %Type2, %Type2* %25
-    call void (%Type2) @f1_val(%Type2 %26)
-    %27 = load %Type3, %Type3* @c
-    call void (%Type3) @f2_val(%Type3 %27)
+    %7 = load %Type3, %Type3* @c
+    call void (%Type1) @f0_val(%Type3 %7)
+    %8 = load %Type3, %Type3* @c
+    call void (%Type2) @f1_val(%Type3 %8)
+    %9 = load %Type3, %Type3* @c
+    call void (%Type3) @f2_val(%Type3 %9)
     ;f3_val(c)
     ret void
 }
@@ -262,10 +260,10 @@ define void @test_by_pointer() {
     ret void
 }
 
-define i32 @main() {
+define %Int @main() {
     call void () @test_by_value()
     call void () @test_by_pointer()
-    ret i32 0
+    ret %Int 0
 }
 
 

@@ -2,7 +2,30 @@
 target datalayout = "e-m:o-i64:64-i128:128-n32:64-S128"
 target triple = "arm64-apple-macosx12.0.0"
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/system.hm
+
+%Unit = type i1
+%Bool = type i1
+%Byte = type i8
+%Char8 = type i8
+%Char16 = type i16
+%Char32 = type i32
+%Int8 = type i8
+%Int16 = type i16
+%Int32 = type i32
+%Int64 = type i64
+%Int128 = type i128
+%Nat8 = type i8
+%Nat16 = type i16
+%Nat32 = type i32
+%Nat64 = type i64
+%Nat128 = type i128
+%Float32 = type float
+%Float64 = type double
+%Pointer = type i8*
+%Str8 = type [0 x %Char8]
+%Str16 = type [0 x %Char16]
+%Str32 = type [0 x %Char32]
+%VA_List = type i8*; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/system.hm
 
 
 
@@ -50,46 +73,46 @@ target triple = "arm64-apple-macosx12.0.0"
 %ConstCharStr = type [0 x i8]
 
 
-declare i32 @fclose(%FILE* %f)
-declare i32 @feof(%FILE* %f)
-declare i32 @ferror(%FILE* %f)
-declare i32 @fflush(%FILE* %f)
-declare i32 @fgetpos(%FILE* %f, %FposT* %pos)
+declare %Int @fclose(%FILE* %f)
+declare %Int @feof(%FILE* %f)
+declare %Int @ferror(%FILE* %f)
+declare %Int @fflush(%FILE* %f)
+declare %Int @fgetpos(%FILE* %f, %FposT* %pos)
 declare %FILE* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
-declare i64 @fread(i8* %buf, i64 %size, i64 %count, %FILE* %f)
-declare i64 @fwrite(i8* %buf, i64 %size, i64 %count, %FILE* %f)
+declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, %FILE* %f)
+declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, %FILE* %f)
 declare %FILE* @freopen(%ConstCharStr* %filename, %ConstCharStr* %mode, %FILE* %f)
-declare i32 @fseek(%FILE* %stream, i64 %offset, i32 %whence)
-declare i32 @fsetpos(%FILE* %f, %FposT* %pos)
-declare i64 @ftell(%FILE* %f)
-declare i32 @remove(%ConstCharStr* %filename)
-declare i32 @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
+declare %Int @fseek(%FILE* %stream, %LongInt %offset, %Int %whence)
+declare %Int @fsetpos(%FILE* %f, %FposT* %pos)
+declare %LongInt @ftell(%FILE* %f)
+declare %Int @remove(%ConstCharStr* %filename)
+declare %Int @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
 declare void @rewind(%FILE* %f)
 declare void @setbuf(%FILE* %f, %CharStr* %buffer)
 
 
-declare i32 @setvbuf(%FILE* %f, %CharStr* %buffer, i32 %mode, i64 %size)
+declare %Int @setvbuf(%FILE* %f, %CharStr* %buffer, %Int %mode, %SizeT %size)
 declare %FILE* @tmpfile()
 declare %CharStr* @tmpnam(%CharStr* %str)
-declare i32 @printf(%ConstCharStr* %s, ...)
-declare i32 @scanf(%ConstCharStr* %s, ...)
-declare i32 @fprintf(%FILE* %stream, %Str* %format, ...)
-declare i32 @fscanf(%FILE* %f, %ConstCharStr* %format, ...)
-declare i32 @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
-declare i32 @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @printf(%ConstCharStr* %s, ...)
+declare %Int @scanf(%ConstCharStr* %s, ...)
+declare %Int @fprintf(%FILE* %stream, %Str* %format, ...)
+declare %Int @fscanf(%FILE* %f, %ConstCharStr* %format, ...)
+declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
 
 
-declare i32 @fgetc(%FILE* %f)
-declare i32 @fputc(i32 %char, %FILE* %f)
-declare %CharStr* @fgets(%CharStr* %str, i32 %n, %FILE* %f)
-declare i32 @fputs(%ConstCharStr* %str, %FILE* %f)
-declare i32 @getc(%FILE* %f)
-declare i32 @getchar()
+declare %Int @fgetc(%FILE* %f)
+declare %Int @fputc(%Int %char, %FILE* %f)
+declare %CharStr* @fgets(%CharStr* %str, %Int %n, %FILE* %f)
+declare %Int @fputs(%ConstCharStr* %str, %FILE* %f)
+declare %Int @getc(%FILE* %f)
+declare %Int @getchar()
 declare %CharStr* @gets(%CharStr* %str)
-declare i32 @putc(i32 %char, %FILE* %f)
-declare i32 @putchar(i32 %char)
-declare i32 @puts(%ConstCharStr* %str)
-declare i32 @ungetc(i32 %char, %FILE* %f)
+declare %Int @putc(%Int %char, %FILE* %f)
+declare %Int @putchar(%Int %char)
+declare %Int @puts(%ConstCharStr* %str)
+declare %Int @ungetc(%Int %char, %FILE* %f)
 declare void @perror(%ConstCharStr* %str)
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/misc/utf.cm
@@ -255,7 +278,7 @@ endif_0:
 define void @utf32_putchar(i32 %c) {
     %1 = alloca [5 x i8]
     %2 = call i8 (i32, [5 x i8]*) @utf32_to_utf8(i32 %c, [5 x i8]* %1)
-    %3 = sext i8 %2 to i32
+    %3 = sext i8 %2 to %Int
     %4 = alloca i32
     store i32 0, i32* %4
     br label %again_1
@@ -275,7 +298,7 @@ then_0:
     br label %endif_0
 endif_0:
     %13 = sext i8 %9 to i32
-    %14 = call i32 (i32) @putchar(i32 %13)
+    %14 = call %Int (%Int) @putchar(i32 %13)
     %15 = load i32, i32* %4
     %16 = add i32 %15, 1
     store i32 %16, i32* %4
@@ -284,7 +307,7 @@ break_1:
     ret void
 }
 
-define void @utf32_puts([0 x i32]* %s) {
+define void @utf32_puts(%Str32* %s) {
     %1 = alloca i32
     store i32 0, i32* %1
     br label %again_1
@@ -292,7 +315,7 @@ again_1:
     br i1 1 , label %body_1, label %break_1
 body_1:
     %2 = load i32, i32* %1
-    %3 = getelementptr inbounds [0 x i32], [0 x i32]* %s, i32 0, i32 %2
+    %3 = getelementptr inbounds %Str32, %Str32* %s, i32 0, i32 %2
     %4 = load i32, i32* %3
     %5 = bitcast i32 %4 to i32
     %6 = icmp eq i32 %5, 0
@@ -310,7 +333,7 @@ break_1:
     ret void
 }
 
-define void @utf16_puts([0 x i16]* %s) {
+define void @utf16_puts(%Str16* %s) {
     %1 = alloca i32
     store i32 0, i32* %1
     br label %again_1
@@ -318,7 +341,7 @@ again_1:
     br i1 1 , label %body_1, label %break_1
 body_1:
     %2 = load i32, i32* %1
-    %3 = getelementptr inbounds [0 x i16], [0 x i16]* %s, i32 0, i32 %2
+    %3 = getelementptr inbounds %Str16, %Str16* %s, i32 0, i32 %2
     %4 = load i16, i16* %3
     %5 = bitcast i16 %4 to i16
     %6 = icmp eq i16 %5, 0
@@ -329,7 +352,7 @@ then_0:
 endif_0:
     %8 = alloca i32
     %9 = load i32, i32* %1
-    %10 = getelementptr inbounds [0 x i16], [0 x i16]* %s, i32 0, i32 %9
+    %10 = getelementptr inbounds %Str16, %Str16* %s, i32 0, i32 %9
     %11 = bitcast i16* %10 to [0 x i16]*
     %12 = call i8 ([0 x i16]*, i32*) @utf16_to_utf32([0 x i16]* %11, i32* %8)
     %13 = icmp eq i8 %12, 0
@@ -349,7 +372,7 @@ break_1:
     ret void
 }
 
-define void @utf8_puts([0 x i8]* %s) {
+define void @utf8_puts(%Str8* %s) {
     %1 = alloca i32
     store i32 0, i32* %1
     br label %again_1
@@ -357,7 +380,7 @@ again_1:
     br i1 1 , label %body_1, label %break_1
 body_1:
     %2 = load i32, i32* %1
-    %3 = getelementptr inbounds [0 x i8], [0 x i8]* %s, i32 0, i32 %2
+    %3 = getelementptr inbounds %Str8, %Str8* %s, i32 0, i32 %2
     %4 = load i8, i8* %3
     %5 = bitcast i8 %4 to i8
     %6 = icmp eq i8 %5, 0
@@ -366,8 +389,8 @@ then_0:
     br label %break_1
     br label %endif_0
 endif_0:
-    %8 = sext i8 %4 to i32
-    %9 = call i32 (i32) @putchar(i32 %8)
+    %8 = sext i8 %4 to %Int
+    %9 = call %Int (%Int) @putchar(%Int %8)
     %10 = load i32, i32* %1
     %11 = add i32 %10, 1
     store i32 %11, i32* %1

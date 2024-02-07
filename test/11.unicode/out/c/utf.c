@@ -10,7 +10,7 @@
 // декодирует символ UTF-32 в последовательность UTF-8
 uint8_t utf32_to_utf8(uint32_t c, char *buf)
 {
-    const uint32_t x = c;
+    const uint32_t x = (uint32_t)c;
 
     if (x <= 0x0000007F) {
         buf[0] = (char)x;
@@ -60,7 +60,7 @@ uint8_t utf16_to_utf32(uint16_t *c, uint32_t *result)
     const uint32_t leading = (uint32_t)c[0];
 
     if ((leading < 0xD800) || (leading > 0xDFFF)) {
-        *result = leading;
+        *result = (uint32_t)leading;
         return 1;
     } else if (leading >= 0xDC00) {
         //error("Недопустимая кодовая последовательность.")
@@ -72,7 +72,7 @@ uint8_t utf16_to_utf32(uint16_t *c, uint32_t *result)
             //error("Недопустимая кодовая последовательность.")
         } else {
             code = code | trailing & 0x3FF;
-            *result = code + 0x10000;
+            *result = (uint32_t)(code + 0x10000);
             return 2;
         }
     }
@@ -101,7 +101,7 @@ void utf32_puts(uint32_t *s)
     int32_t i = 0;
     while (true) {
         const uint32_t c = s[i];
-        if (c == 0) {break;}
+        if ((uint32_t)c == 0) {break;}
         utf32_putchar(c);
         i = i + 1;
     }
@@ -113,7 +113,7 @@ void utf16_puts(uint16_t *s)
     int32_t i = 0;
     while (true) {
         const uint16_t c = s[i];
-        if (c == 0) {break;}
+        if ((uint16_t)c == 0) {break;}
 
         uint32_t c32;
         const uint8_t n = utf16_to_utf32((uint16_t *)&s[i], &c32);

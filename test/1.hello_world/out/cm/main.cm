@@ -8,8 +8,8 @@ const world = "world!\n"
 const hello_world = hello + world
 
 
-func main() -> IntInt {
-    printf("%s", hello_world to *[]Char8)
+func main() -> Int {
+    printf("%s", hello_world to *Str8)
     return 0
 }
 

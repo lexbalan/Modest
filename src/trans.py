@@ -1547,22 +1547,46 @@ def module_remove_node(m, isa, id_str):
 
 
 
+
+
+def decl_type(x):
+    id = x['id']
+    nt = hlir_type_opaque(id, id['ti'])
+    module['context'].type_add(id['str'], nt)
+
+    # С не печатает opaque, но LLVM печатает (!)
+    obj = hlir_decl_type(id, nt, x['ti'])
+    nt['declaration'] = obj
+
+    if x['extern']:
+        obj['att'].append('extern')
+
+    return obj
+
+
+
 def def_type(x):
     id = x['id']
     #print("@type " + id['str'])
+
+    #_def = hlir_def_type(id, None, None, already_declared=False, ti=x['ti'])
+
+    pre_exist = type_get(id['str'])
+    already_declared = pre_exist != None
+
+    if already_declared:
+        pass
 
     ty = do_type(x['type'])
     if hlir_type.type_is_bad(ty):
         return None
 
-    exist = type_get(id['str'])
-    already_declared = exist != None
 
     nt = hlir_type.create_alias(id['str'], ty, id['ti'])
 
     if already_declared:
         # just overwrite existed 'opaque' type (for records)
-        exist.update(nt)
+        pre_exist.update(nt)
         # and find and remove declaration instruction
         if settings.check('backend', 'llvm'):
             module_remove_node(module, 'newtype', id['str'])
@@ -1570,7 +1594,10 @@ def def_type(x):
     else:
         module['context'].type_add(id['str'], nt)
 
+
     return hlir_def_type(id, ty, nt, already_declared, ti=x['ti'])
+
+
 
 
 def def_var(x):
@@ -1757,22 +1784,6 @@ def def_func(x):
         module_remove_node(module, 'value', func_id['str'])
 
     return hlir_def_func(func_id, fn, x['ti'])
-
-
-
-def decl_type(x):
-    id = x['id']
-    nt = hlir_type_opaque(id, id['ti'])
-    module['context'].type_add(id['str'], nt)
-
-    # С не печатает opaque, но LLVM печатает (!)
-    obj = hlir_decl_type(id, nt, x['ti'])
-    nt['declaration'] = obj
-
-    if x['extern']:
-        obj['att'].append('extern')
-
-    return obj
 
 
 

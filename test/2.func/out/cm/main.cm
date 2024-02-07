@@ -12,7 +12,7 @@ func f1() -> Unit {
 }
 
 // define function main
-func main() -> IntInt {
+func main() -> Int {
     printf("test func\n")
     f0()
     f1()

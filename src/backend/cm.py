@@ -88,7 +88,7 @@ def print_comment_line(x):
 
 
 def print_type_integer(t):
-    print_id(t)
+    print_type_id(t)
 
 
 def print_type_array(t):
@@ -168,20 +168,24 @@ def print_type_func(t, extra_args=False):
     print_type(t['to'])
 
 
+def print_type_id(t):
+    if t['definition'] != None:
+        out(t['definition']['id']['str'])
+        return True
+
+    elif t['declaration'] != None:
+        out(t['declaration']['id']['str'])
+        return True
+
+    return False
+
 
 def print_type(t, print_aka=True):
     k = t['kind']
 
     if print_aka:
-        if t['definition'] != None:
-            out(t['definition']['id']['str'])
-
-        elif t['declaration'] != None:
-            out(t['declaration']['id']['str'])
-
-        elif t['id'] != None:
-            print_id(t)
-            return
+        res = print_type_id(t)
+        if res: return
 
     if hlir_type.type_is_integer(t): print_type_integer(t)
     elif hlir_type.type_is_func(t): print_type_func(t)

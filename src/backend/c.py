@@ -294,14 +294,14 @@ def print_type(t, space_after=False, array_as_ptr=True, as_const=False):
         else:
             out(type_declaration['id']['str'])
 
-    elif 'c_alias' in t:
-        out(t['c_alias'])
+    #elif 'c_alias' in t:
+    #    out(t['c_alias'])
 
-    elif t['id'] != None:
-        if NO_TYPEDEF_STRUCTS:
-            if hlir_type.type_is_record(t):
-                out("struct ")
-        print_id(t)
+    #elif t['id'] != None:
+    #    if NO_TYPEDEF_STRUCTS:
+    #        if hlir_type.type_is_record(t):
+    #            out("struct ")
+    #    print_id(t)
 
     elif hlir_type.type_is_integer(t):
         print_type_id(t)
@@ -1494,7 +1494,7 @@ def print_variable(_id, typ, as_const=False, init_value=None):
     id_str = _id['str']
     assert (id_str != "")
 
-    if 'c_alias' in typ or typ['id'] != None:
+    if typ['declaration'] != None or typ['definition'] != None:
         print_variable_regular(typ, id_str, as_const)
         return
 

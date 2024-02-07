@@ -16,24 +16,42 @@
 #define fsmSubstateLeaving  2
 
 
-char *fsm_state_no_name(FSM *fsm, uint32_t state_no)
+char *fsm_state_no_name(struct {
+    char name[fsmNameLength];
+    uint32_t state;
+    uint32_t nexstate;
+    uint32_t substate;
+    FSM_StateDesc states[fsmMaxStates];
+} *fsm, uint32_t state_no)
 {
     return (char *)(char *)&fsm->states[state_no].name;
 }
 
 
-void fsm_switch(FSM *fsm, uint32_t state)
+void fsm_switch(struct {
+    char name[fsmNameLength];
+    uint32_t state;
+    uint32_t nexstate;
+    uint32_t substate;
+    FSM_StateDesc states[fsmMaxStates];
+} *fsm, uint32_t state)
 {
     fsm->nexstate = state;
     fsm->substate = fsmSubstateLeaving;
 }
 
 
-void fsm_run(FSM *fsm)
+void fsm_run(struct {
+    char name[fsmNameLength];
+    uint32_t state;
+    uint32_t nexstate;
+    uint32_t substate;
+    FSM_StateDesc states[fsmMaxStates];
+} *fsm)
 {
     printf("fsm_run()\n");
     if (fsm->substate == fsmSubstateEntering) {
-        const UInt32 nexstate = fsm->nexstate;
+        const uint32_t nexstate = fsm->nexstate;
         FSM_StateDesc *const s = &fsm->states[nexstate];
 
         if (fsmVerbose) {
@@ -42,7 +60,13 @@ void fsm_run(FSM *fsm)
         }
 
         if (s->entry != NULL) {
-            ((void (*) (FSM *fsm))s->entry)(fsm);
+            ((void (*) (struct {
+                char name[fsmNameLength];
+                uint32_t state;
+                uint32_t nexstate;
+                uint32_t substate;
+                FSM_StateDesc states[fsmMaxStates];
+            } *fsm))s->entry)(fsm);
         }
 
         fsm->state = nexstate;
@@ -52,7 +76,13 @@ void fsm_run(FSM *fsm)
         FSM_StateDesc *const s = &fsm->states[fsm->state];
 
         if (s->loop != NULL) {
-            ((void (*) (FSM *fsm))s->loop)(fsm);
+            ((void (*) (struct {
+                char name[fsmNameLength];
+                uint32_t state;
+                uint32_t nexstate;
+                uint32_t substate;
+                FSM_StateDesc states[fsmMaxStates];
+            } *fsm))s->loop)(fsm);
         }
 
     } else if (fsm->substate == fsmSubstateLeaving) {
@@ -63,7 +93,13 @@ void fsm_run(FSM *fsm)
         }
 
         if (s->exit != NULL) {
-            ((void (*) (FSM *fsm))s->exit)(fsm);
+            ((void (*) (struct {
+                char name[fsmNameLength];
+                uint32_t state;
+                uint32_t nexstate;
+                uint32_t substate;
+                FSM_StateDesc states[fsmMaxStates];
+            } *fsm))s->exit)(fsm);
         }
 
         fsm->substate = fsmSubstateEntering;

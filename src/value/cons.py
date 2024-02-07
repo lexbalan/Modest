@@ -104,12 +104,14 @@ def value_cons_implicit(v, t, ti):
     #    return v
 
     # потому что в C номинальные типы, а у нас - структурные
-    if type.type_is_record(t):
-        if type.type_is_record(from_type):
-            if from_type['id'] != None and t['id'] != None:
-                if from_type['id']['str'] != t['id']['str']:
-                    #info("impl cast record", ti)
-                    return hlir_value_cast(v, t, ti=ti)
+    if type.type_is_record(t) and type.type_is_record(from_type):
+        #if from_type['id'] != None and t['id'] != None:
+        #    if from_type['id']['str'] != t['id']['str']:
+                #info("impl cast record", ti)
+
+        if from_type['declaration'] != None and t['declaration'] != None:
+            if from_type['declaration'] == t['declaration']:
+                return hlir_value_cast(v, t, ti=ti)
 
     # for structural type system support
     if type.type_is_pointer_to_record(t):

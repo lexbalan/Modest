@@ -19,11 +19,7 @@ type Mixed2 record {
     c: Char8
     f: Float64
     c2: [3]Char8
-    m: Mixed1record {
-        c: Char8
-        i: Int32
-        f: Float64
-    }
+    m: Mixed1
 }
 
 type Mixed3 record {
@@ -34,32 +30,14 @@ type Mixed3 record {
 }
 
 type Mixed4 record {
-    s: Mixed2record {
-        i: Int32
-        c: Char8
-        f: Float64
-        c2: [3]Char8
-        m: Mixed1record {
-            c: Char8
-            i: Int32
-            f: Float64
-        }
-    }
+    s: Mixed2
     c: Char8
     i: Int32
     f: Float64
     c2: [9]Char8
     i2: Int16
-    p: [3]Pointrecord {
-        x: Nat32
-        y: Nat32
-    }
-    s2: Mixed3record {
-        c: Char8
-        i: Int32
-        f: Float64
-        c2: [9]Char8
-    }
+    p: [3]Point
+    s2: Mixed3
 }
 
 
@@ -68,10 +46,7 @@ var c: Char8
 var i: Int32
 var f: Float64
 var i2: Int16
-var p: [3]Pointrecord {
-    x: Nat32
-    y: Nat32
-}
+var p: [3]Point
 var g: Bool
 
 type X record {
@@ -79,26 +54,13 @@ type X record {
     i: Int32
     f: Float64
     i2: Int16
-    p: [3]Pointrecord {
-        x: Nat32
-        y: Nat32
-    }
+    p: [3]Point
     g: Bool
 }
 
-var x: Xrecord {
-    c: Char8
-    i: Int32
-    f: Float64
-    i2: Int16
-    p: [3]Pointrecord {
-        x: Nat32
-        y: Nat32
-    }
-    g: Bool
-}
+var x: X
 
-func main() -> IntInt {
+func main() -> Int {
     printf("test cast operation\n")
 
     let start_adr = &c to Nat64
@@ -110,72 +72,12 @@ func main() -> IntInt {
     printf("off(g) = %llu\n", &g to Nat64 - start_adr)
 
     // дженерики в с явно не приводятся, но нектороые нужно!
-    printf("offsetof(x.c) = %llu\n", offsetof(Xrecord {
-        c: Char8
-        i: Int32
-        f: Float64
-        i2: Int16
-        p: [3]Pointrecord {
-            x: Nat32
-            y: Nat32
-        }
-        g: Bool
-    }.c) to Nat64)
-    printf("offsetof(x.i) = %llu\n", offsetof(Xrecord {
-        c: Char8
-        i: Int32
-        f: Float64
-        i2: Int16
-        p: [3]Pointrecord {
-            x: Nat32
-            y: Nat32
-        }
-        g: Bool
-    }.i) to Nat64)
-    printf("offsetof(x.f) = %llu\n", offsetof(Xrecord {
-        c: Char8
-        i: Int32
-        f: Float64
-        i2: Int16
-        p: [3]Pointrecord {
-            x: Nat32
-            y: Nat32
-        }
-        g: Bool
-    }.f) to Nat64)
-    printf("offsetof(x.i2) = %llu\n", offsetof(Xrecord {
-        c: Char8
-        i: Int32
-        f: Float64
-        i2: Int16
-        p: [3]Pointrecord {
-            x: Nat32
-            y: Nat32
-        }
-        g: Bool
-    }.i2) to Nat64)
-    printf("offsetof(x.p) = %llu\n", offsetof(Xrecord {
-        c: Char8
-        i: Int32
-        f: Float64
-        i2: Int16
-        p: [3]Pointrecord {
-            x: Nat32
-            y: Nat32
-        }
-        g: Bool
-    }.p) to Nat64)
-    printf("offsetof(x.g) = %llu\n", offsetof(Xrecord {
-        c: Char8
-        i: Int32
-        f: Float64
-        i2: Int16
-        p: [3]Pointrecord {
-            x: Nat32
-            y: Nat32
-        }
-        g: Bool
-    }.g) to Nat64)
+    printf("offsetof(x.c) = %llu\n", offsetof(X.c) to Nat64)
+    printf("offsetof(x.i) = %llu\n", offsetof(X.i) to Nat64)
+    printf("offsetof(x.f) = %llu\n", offsetof(X.f) to Nat64)
+    printf("offsetof(x.i2) = %llu\n", offsetof(X.i2) to Nat64)
+    printf("offsetof(x.p) = %llu\n", offsetof(X.p) to Nat64)
+    printf("offsetof(x.g) = %llu\n", offsetof(X.g) to Nat64)
 
 
     // sizeof(void) in C  == 1
@@ -221,426 +123,53 @@ func main() -> IntInt {
     printf("alignof(Char32) = %llu\n", alignof(Char32) to Nat64)
 
     // pointer size (for example pointer to []Char8)
-    printf("sizeof(*Str8) = %llu\n", sizeof(*[]Char8) to Nat64)
-    printf("alignof(*Str8) = %llu\n", alignof(*[]Char8) to Nat64)
+    printf("sizeof(*Str8) = %llu\n", sizeof(*Str8) to Nat64)
+    printf("alignof(*Str8) = %llu\n", alignof(*Str8) to Nat64)
 
     // array size
     printf("sizeof([10]Int32) = %llu\n", sizeof([10]Int32) to Nat64)
     printf("alignof([10]Int32) = %llu\n", alignof([10]Int32) to Nat64)
 
-    printf("> alignof([3]Point) = %llu\n", alignof([3]Pointrecord {
-        x: Nat32
-        y: Nat32
-    }) to Nat64)
+    printf("> alignof([3]Point) = %llu\n", alignof([3]Point) to Nat64)
 
 
 
     // record size
-    printf("sizeof(Point) = %llu\n", sizeof(Pointrecord {
-        x: Nat32
-        y: Nat32
-    }) to Nat64)
-    printf("alignof(Point) = %llu\n", alignof(Pointrecord {
-        x: Nat32
-        y: Nat32
-    }) to Nat64)
+    printf("sizeof(Point) = %llu\n", sizeof(Point) to Nat64)
+    printf("alignof(Point) = %llu\n", alignof(Point) to Nat64)
 
-    printf("offsetof(Point.x) = %llu\n", offsetof(Pointrecord {
-        x: Nat32
-        y: Nat32
-    }.x) to Nat64)
-    printf("offsetof(Point.y) = %llu\n", offsetof(Pointrecord {
-        x: Nat32
-        y: Nat32
-    }.y) to Nat64)
+    printf("offsetof(Point.x) = %llu\n", offsetof(Point.x) to Nat64)
+    printf("offsetof(Point.y) = %llu\n", offsetof(Point.y) to Nat64)
 
 
-    printf("sizeof(Mixed1) = %llu\n", sizeof(Mixed1record {
-        c: Char8
-        i: Int32
-        f: Float64
-    }) to Nat64)
-    printf("alignof(Mixed1) = %llu\n", alignof(Mixed1record {
-        c: Char8
-        i: Int32
-        f: Float64
-    }) to Nat64)
+    printf("sizeof(Mixed1) = %llu\n", sizeof(Mixed1) to Nat64)
+    printf("alignof(Mixed1) = %llu\n", alignof(Mixed1) to Nat64)
 
-    printf("sizeof(Mixed2) = %llu\n", sizeof(Mixed2record {
-        i: Int32
-        c: Char8
-        f: Float64
-        c2: [3]Char8
-        m: Mixed1record {
-            c: Char8
-            i: Int32
-            f: Float64
-        }
-    }) to Nat64)
-    printf("alignof(Mixed2) = %llu\n", alignof(Mixed2record {
-        i: Int32
-        c: Char8
-        f: Float64
-        c2: [3]Char8
-        m: Mixed1record {
-            c: Char8
-            i: Int32
-            f: Float64
-        }
-    }) to Nat64)
+    printf("sizeof(Mixed2) = %llu\n", sizeof(Mixed2) to Nat64)
+    printf("alignof(Mixed2) = %llu\n", alignof(Mixed2) to Nat64)
 
 
-    printf("offsetof(Mixed2.i) = %llu\n", offsetof(Mixed2record {
-        i: Int32
-        c: Char8
-        f: Float64
-        c2: [3]Char8
-        m: Mixed1record {
-            c: Char8
-            i: Int32
-            f: Float64
-        }
-    }.i) to Nat64)
-    printf("offsetof(Mixed2.c) = %llu\n", offsetof(Mixed2record {
-        i: Int32
-        c: Char8
-        f: Float64
-        c2: [3]Char8
-        m: Mixed1record {
-            c: Char8
-            i: Int32
-            f: Float64
-        }
-    }.c) to Nat64)
-    printf("offsetof(Mixed2.f) = %llu\n", offsetof(Mixed2record {
-        i: Int32
-        c: Char8
-        f: Float64
-        c2: [3]Char8
-        m: Mixed1record {
-            c: Char8
-            i: Int32
-            f: Float64
-        }
-    }.f) to Nat64)
-    printf("offsetof(Mixed2.c2) = %llu\n", offsetof(Mixed2record {
-        i: Int32
-        c: Char8
-        f: Float64
-        c2: [3]Char8
-        m: Mixed1record {
-            c: Char8
-            i: Int32
-            f: Float64
-        }
-    }.c2) to Nat64)
-    printf("offsetof(Mixed2.m) = %llu\n", offsetof(Mixed2record {
-        i: Int32
-        c: Char8
-        f: Float64
-        c2: [3]Char8
-        m: Mixed1record {
-            c: Char8
-            i: Int32
-            f: Float64
-        }
-    }.m) to Nat64)
+    printf("offsetof(Mixed2.i) = %llu\n", offsetof(Mixed2.i) to Nat64)
+    printf("offsetof(Mixed2.c) = %llu\n", offsetof(Mixed2.c) to Nat64)
+    printf("offsetof(Mixed2.f) = %llu\n", offsetof(Mixed2.f) to Nat64)
+    printf("offsetof(Mixed2.c2) = %llu\n", offsetof(Mixed2.c2) to Nat64)
+    printf("offsetof(Mixed2.m) = %llu\n", offsetof(Mixed2.m) to Nat64)
 
 
-    printf("sizeof(Mixed3) = %llu\n", sizeof(Mixed3record {
-        c: Char8
-        i: Int32
-        f: Float64
-        c2: [9]Char8
-    }) to Nat64)
-    printf("alignof(Mixed3) = %llu\n", alignof(Mixed3record {
-        c: Char8
-        i: Int32
-        f: Float64
-        c2: [9]Char8
-    }) to Nat64)
+    printf("sizeof(Mixed3) = %llu\n", sizeof(Mixed3) to Nat64)
+    printf("alignof(Mixed3) = %llu\n", alignof(Mixed3) to Nat64)
 
-    printf("sizeof(Mixed4) = %llu\n", sizeof(Mixed4record {
-        s: Mixed2record {
-            i: Int32
-            c: Char8
-            f: Float64
-            c2: [3]Char8
-            m: Mixed1record {
-                c: Char8
-                i: Int32
-                f: Float64
-            }
-        }
-        c: Char8
-        i: Int32
-        f: Float64
-        c2: [9]Char8
-        i2: Int16
-        p: [3]Pointrecord {
-            x: Nat32
-            y: Nat32
-        }
-        s2: Mixed3record {
-            c: Char8
-            i: Int32
-            f: Float64
-            c2: [9]Char8
-        }
-    }) to Nat64)
-    printf("alignof(Mixed4) = %llu\n", alignof(Mixed4record {
-        s: Mixed2record {
-            i: Int32
-            c: Char8
-            f: Float64
-            c2: [3]Char8
-            m: Mixed1record {
-                c: Char8
-                i: Int32
-                f: Float64
-            }
-        }
-        c: Char8
-        i: Int32
-        f: Float64
-        c2: [9]Char8
-        i2: Int16
-        p: [3]Pointrecord {
-            x: Nat32
-            y: Nat32
-        }
-        s2: Mixed3record {
-            c: Char8
-            i: Int32
-            f: Float64
-            c2: [9]Char8
-        }
-    }) to Nat64)
+    printf("sizeof(Mixed4) = %llu\n", sizeof(Mixed4) to Nat64)
+    printf("alignof(Mixed4) = %llu\n", alignof(Mixed4) to Nat64)
 
-    printf("offsetof(Mixed4.s) = %llu\n", offsetof(Mixed4record {
-        s: Mixed2record {
-            i: Int32
-            c: Char8
-            f: Float64
-            c2: [3]Char8
-            m: Mixed1record {
-                c: Char8
-                i: Int32
-                f: Float64
-            }
-        }
-        c: Char8
-        i: Int32
-        f: Float64
-        c2: [9]Char8
-        i2: Int16
-        p: [3]Pointrecord {
-            x: Nat32
-            y: Nat32
-        }
-        s2: Mixed3record {
-            c: Char8
-            i: Int32
-            f: Float64
-            c2: [9]Char8
-        }
-    }.s) to Nat64)
-    printf("offsetof(Mixed4.c) = %llu\n", offsetof(Mixed4record {
-        s: Mixed2record {
-            i: Int32
-            c: Char8
-            f: Float64
-            c2: [3]Char8
-            m: Mixed1record {
-                c: Char8
-                i: Int32
-                f: Float64
-            }
-        }
-        c: Char8
-        i: Int32
-        f: Float64
-        c2: [9]Char8
-        i2: Int16
-        p: [3]Pointrecord {
-            x: Nat32
-            y: Nat32
-        }
-        s2: Mixed3record {
-            c: Char8
-            i: Int32
-            f: Float64
-            c2: [9]Char8
-        }
-    }.c) to Nat64)
-    printf("offsetof(Mixed4.i) = %llu\n", offsetof(Mixed4record {
-        s: Mixed2record {
-            i: Int32
-            c: Char8
-            f: Float64
-            c2: [3]Char8
-            m: Mixed1record {
-                c: Char8
-                i: Int32
-                f: Float64
-            }
-        }
-        c: Char8
-        i: Int32
-        f: Float64
-        c2: [9]Char8
-        i2: Int16
-        p: [3]Pointrecord {
-            x: Nat32
-            y: Nat32
-        }
-        s2: Mixed3record {
-            c: Char8
-            i: Int32
-            f: Float64
-            c2: [9]Char8
-        }
-    }.i) to Nat64)
-    printf("offsetof(Mixed4.f) = %llu\n", offsetof(Mixed4record {
-        s: Mixed2record {
-            i: Int32
-            c: Char8
-            f: Float64
-            c2: [3]Char8
-            m: Mixed1record {
-                c: Char8
-                i: Int32
-                f: Float64
-            }
-        }
-        c: Char8
-        i: Int32
-        f: Float64
-        c2: [9]Char8
-        i2: Int16
-        p: [3]Pointrecord {
-            x: Nat32
-            y: Nat32
-        }
-        s2: Mixed3record {
-            c: Char8
-            i: Int32
-            f: Float64
-            c2: [9]Char8
-        }
-    }.f) to Nat64)
-    printf("offsetof(Mixed4.c2) = %llu\n", offsetof(Mixed4record {
-        s: Mixed2record {
-            i: Int32
-            c: Char8
-            f: Float64
-            c2: [3]Char8
-            m: Mixed1record {
-                c: Char8
-                i: Int32
-                f: Float64
-            }
-        }
-        c: Char8
-        i: Int32
-        f: Float64
-        c2: [9]Char8
-        i2: Int16
-        p: [3]Pointrecord {
-            x: Nat32
-            y: Nat32
-        }
-        s2: Mixed3record {
-            c: Char8
-            i: Int32
-            f: Float64
-            c2: [9]Char8
-        }
-    }.c2) to Nat64)
-    printf("offsetof(Mixed4.i2) = %llu\n", offsetof(Mixed4record {
-        s: Mixed2record {
-            i: Int32
-            c: Char8
-            f: Float64
-            c2: [3]Char8
-            m: Mixed1record {
-                c: Char8
-                i: Int32
-                f: Float64
-            }
-        }
-        c: Char8
-        i: Int32
-        f: Float64
-        c2: [9]Char8
-        i2: Int16
-        p: [3]Pointrecord {
-            x: Nat32
-            y: Nat32
-        }
-        s2: Mixed3record {
-            c: Char8
-            i: Int32
-            f: Float64
-            c2: [9]Char8
-        }
-    }.i2) to Nat64)
-    printf("offsetof(Mixed4.p) = %llu\n", offsetof(Mixed4record {
-        s: Mixed2record {
-            i: Int32
-            c: Char8
-            f: Float64
-            c2: [3]Char8
-            m: Mixed1record {
-                c: Char8
-                i: Int32
-                f: Float64
-            }
-        }
-        c: Char8
-        i: Int32
-        f: Float64
-        c2: [9]Char8
-        i2: Int16
-        p: [3]Pointrecord {
-            x: Nat32
-            y: Nat32
-        }
-        s2: Mixed3record {
-            c: Char8
-            i: Int32
-            f: Float64
-            c2: [9]Char8
-        }
-    }.p) to Nat64)
-    printf("offsetof(Mixed4.s2) = %llu\n", offsetof(Mixed4record {
-        s: Mixed2record {
-            i: Int32
-            c: Char8
-            f: Float64
-            c2: [3]Char8
-            m: Mixed1record {
-                c: Char8
-                i: Int32
-                f: Float64
-            }
-        }
-        c: Char8
-        i: Int32
-        f: Float64
-        c2: [9]Char8
-        i2: Int16
-        p: [3]Pointrecord {
-            x: Nat32
-            y: Nat32
-        }
-        s2: Mixed3record {
-            c: Char8
-            i: Int32
-            f: Float64
-            c2: [9]Char8
-        }
-    }.s2) to Nat64)
+    printf("offsetof(Mixed4.s) = %llu\n", offsetof(Mixed4.s) to Nat64)
+    printf("offsetof(Mixed4.c) = %llu\n", offsetof(Mixed4.c) to Nat64)
+    printf("offsetof(Mixed4.i) = %llu\n", offsetof(Mixed4.i) to Nat64)
+    printf("offsetof(Mixed4.f) = %llu\n", offsetof(Mixed4.f) to Nat64)
+    printf("offsetof(Mixed4.c2) = %llu\n", offsetof(Mixed4.c2) to Nat64)
+    printf("offsetof(Mixed4.i2) = %llu\n", offsetof(Mixed4.i2) to Nat64)
+    printf("offsetof(Mixed4.p) = %llu\n", offsetof(Mixed4.p) to Nat64)
+    printf("offsetof(Mixed4.s2) = %llu\n", offsetof(Mixed4.s2) to Nat64)
 
     return 0
 }

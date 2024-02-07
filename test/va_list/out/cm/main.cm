@@ -6,11 +6,11 @@ import "fastfood/print.h"
 @c_include "./print.h"
 
 
-func main() -> IntInt {
+func main() -> Int {
     ff_printf("Hello World!\n")
 
     let c = "$"[0] to Char8
-    let s = "Hi!" to *[]Char8
+    let s = "Hi!" to *Str8
     let i = -1 to Int32
     let n = 123 to Nat32
     let x = 0x1234567F to Nat32

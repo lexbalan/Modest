@@ -3,7 +3,7 @@
 import "libc/stdio.h"
 
 
-func main() -> IntInt {
+func main() -> Int {
     printf("stmt_if example\n")
 
     var a: Int32

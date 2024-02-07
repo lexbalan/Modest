@@ -27,14 +27,26 @@ static uint8_t cnt;
 // State Off
 //
 
-void off_entry(FSM *fsm)
+void off_entry(struct {
+    char name[fsmNameLength];
+    uint32_t state;
+    uint32_t nexstate;
+    uint32_t substate;
+    FSM_StateDesc states[fsmMaxStates];
+} *fsm)
 {
     (void)fsm;
     //printf("off_entry\n")
 }
 
 
-void off_loop(FSM *fsm)
+void off_loop(struct {
+    char name[fsmNameLength];
+    uint32_t state;
+    uint32_t nexstate;
+    uint32_t substate;
+    FSM_StateDesc states[fsmMaxStates];
+} *fsm)
 {
     (void)fsm;
 
@@ -48,7 +60,13 @@ void off_loop(FSM *fsm)
 }
 
 
-void off_exit(FSM *fsm)
+void off_exit(struct {
+    char name[fsmNameLength];
+    uint32_t state;
+    uint32_t nexstate;
+    uint32_t substate;
+    FSM_StateDesc states[fsmMaxStates];
+} *fsm)
 {
     (void)fsm;
     //printf("off_exit\n")
@@ -59,14 +77,26 @@ void off_exit(FSM *fsm)
 // State On
 //
 
-void on_entry(FSM *fsm)
+void on_entry(struct {
+    char name[fsmNameLength];
+    uint32_t state;
+    uint32_t nexstate;
+    uint32_t substate;
+    FSM_StateDesc states[fsmMaxStates];
+} *fsm)
 {
     (void)fsm;
     //printf("on_entry\n")
 }
 
 
-void on_loop(FSM *fsm)
+void on_loop(struct {
+    char name[fsmNameLength];
+    uint32_t state;
+    uint32_t nexstate;
+    uint32_t substate;
+    FSM_StateDesc states[fsmMaxStates];
+} *fsm)
 {
     (void)fsm;
     printf("on_loop\n");
@@ -79,7 +109,13 @@ void on_loop(FSM *fsm)
 }
 
 
-void on_exit(FSM *fsm)
+void on_exit(struct {
+    char name[fsmNameLength];
+    uint32_t state;
+    uint32_t nexstate;
+    uint32_t substate;
+    FSM_StateDesc states[fsmMaxStates];
+} *fsm)
 {
     (void)fsm;
     //printf("on_exit\n")
@@ -90,14 +126,26 @@ void on_exit(FSM *fsm)
 // State Beacon
 //
 
-void beacon_entry(FSM *fsm)
+void beacon_entry(struct {
+    char name[fsmNameLength];
+    uint32_t state;
+    uint32_t nexstate;
+    uint32_t substate;
+    FSM_StateDesc states[fsmMaxStates];
+} *fsm)
 {
     char *const from_name = fsm_state_no_name(fsm, fsm->state);
     printf("beacon_entry from %s\n", from_name);
 }
 
 
-void beacon_loop(FSM *fsm)
+void beacon_loop(struct {
+    char name[fsmNameLength];
+    uint32_t state;
+    uint32_t nexstate;
+    uint32_t substate;
+    FSM_StateDesc states[fsmMaxStates];
+} *fsm)
 {
     printf("beacon_loop\n");
     if (cnt < 10) {
@@ -109,7 +157,13 @@ void beacon_loop(FSM *fsm)
 }
 
 
-void beacon_exit(FSM *fsm)
+void beacon_exit(struct {
+    char name[fsmNameLength];
+    uint32_t state;
+    uint32_t nexstate;
+    uint32_t substate;
+    FSM_StateDesc states[fsmMaxStates];
+} *fsm)
 {
     char *const to_name = fsm_state_no_name(fsm, fsm->nexstate);
     printf("beacon_exit to %s\n", to_name);
@@ -117,7 +171,13 @@ void beacon_exit(FSM *fsm)
 
 
 
-static FSM fsm = {
+static struct {
+    char name[fsmNameLength];
+    uint32_t state;
+    uint32_t nexstate;
+    uint32_t substate;
+    FSM_StateDesc states[fsmMaxStates];
+} fsm = {
     .name = {'F', 'l', 'a', 's', 'h', '\0', '\0', '\0'},
     .state = 0,
     .nexstate = 0,

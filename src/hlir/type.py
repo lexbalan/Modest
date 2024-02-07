@@ -4,6 +4,7 @@ import copy
 from error import info, warning, error, fatal
 import settings
 
+
 ptr_width = 0
 flt_width = 0
 
@@ -43,7 +44,7 @@ def hlir_type_bad(ti=None):
     return {
         'isa': 'type',
         'kind': 'bad',
-        'id': None,
+        #'id': None,
         'generic': False,
         'width': 0,
         'size': 0,
@@ -60,13 +61,13 @@ def hlir_type_unit():
     return {
         'isa': 'type',
         'kind': 'unit',
-        'id': hlir_id('Unit'),
+        #'id': hlir_id('Unit'),
         'generic': False,
         'width': 0,
         'size': 0,
         'align': 0,
-        'c_alias': 'void',
-        'llvm_alias': 'void',
+        #'c_alias': 'void',
+        #'llvm_alias': 'void',
         'declaration': None,
         'definition': None,
         'ops': CONS_OP,
@@ -80,13 +81,13 @@ def hlir_type_bool():
     return {
         'isa': 'type',
         'kind': 'bool',
-        'id': hlir_id('Bool'),
+        #'id': hlir_id('Bool'),
         'generic': False,
         'width': 1,
         'size': 1,
         'align': 1,
-        'c_alias': 'bool',
-        'llvm_alias': 'i1',
+        #'c_alias': 'bool',
+        #'llvm_alias': 'i1',
         'cm_alias': 'Bool',
         'declaration': None,
         'definition': None,
@@ -107,7 +108,7 @@ def hlir_type_char(id_str, width, ti=None):
     return {
         'isa': 'type',
         'kind': 'char',
-        'id': id,
+        #'id': id,
         'generic': False,
         'width': width,
         'size': size,
@@ -125,7 +126,7 @@ def hlir_type_integer(id_str, width, signed=True, ti=None):
     return {
         'isa': 'type',
         'kind': 'int',
-        'id': hlir_id(id_str),
+        #'id': hlir_id(id_str),
         'generic': False,
         'width': width,
         'size': size,
@@ -145,12 +146,12 @@ def hlir_type_float(id_str, width, ti=None):
     return {
         'isa': 'type',
         'kind': 'float',
-        'id': hlir_id(id_str),
+        #'id': hlir_id(id_str),
         'generic': False,
         'width': width,
         'size': size,
         'align': size,
-        'c_alias': 'double',
+        #'c_alias': 'double',
         'declaration': None,
         'definition': None,
         'ops': FLOAT_OPS,
@@ -164,7 +165,7 @@ def hlir_type_pointer(to, ti=None):
     return {
         'isa': 'type',
         'kind': 'pointer',
-        'id': None,
+        #'id': None,
         'generic': False,
         'width': ptr_width,
         'size': size,
@@ -193,7 +194,7 @@ def hlir_type_array(of, volume=None, ti=None):
     return {
         'isa': 'type',
         'kind': 'array',
-        'id': None,
+        #'id': None,
         'generic': False,
         'width': 0, #'width': array_size * 8,
         'size': array_size,
@@ -219,7 +220,7 @@ def hlir_type_enum(ti=None):
     return {
         'isa': 'type',
         'kind': 'enum',
-        'id': None,
+        #'id': None,
         'generic': False,
         'items': [],
         'width': enum_width,
@@ -260,7 +261,7 @@ def hlir_type_record(fields, ti=None):
     return {
         'isa': 'type',
         'kind': 'record',
-        'id': None,
+        #'id': None,
         'generic': False,
         'width': 0, #'width': record_size * 8,
         'size': record_size,
@@ -279,7 +280,7 @@ def hlir_type_func(params, to, ti=None):
     return {
         'isa': 'type',
         'kind': 'func',
-        'id': None,
+        #'id': None,
         'generic': False,
         'width': 0,
         'size': 0,
@@ -299,7 +300,7 @@ def hlir_type_opaque(id, ti=None):
     return {
         'isa': 'type',
         'kind': 'opaque',
-        'id': id,
+        #'id': id,
         'generic': False,
         'declaration': None,
         'definition': None,
@@ -345,6 +346,8 @@ typeFreePointer = None
 typeVA_List = None
 
 
+foundation = []
+
 def type_init():
     global typeUnit
     global typeBool
@@ -358,117 +361,188 @@ def type_init():
     global typeFreePointer
     global typeVA_List
 
+    from .hlir import hlir_decl_type
+    #from .id import hlir_id
 
     typeUnit = hlir_type_unit()
+    unit_decl = hlir_decl_type(hlir_id('Unit'), typeUnit, ti=None)
+    unit_decl['c_alias'] = 'void'
+    unit_decl['llvm_alias'] = 'void'
+    foundation.append(unit_decl)
+
     typeBool = hlir_type_bool()
+    bool_decl = hlir_decl_type(hlir_id('Bool'), typeBool, ti=None)
+    bool_decl['c_alias'] = 'bool'
+    bool_decl['llvm_alias'] = 'i1'
+    foundation.append(bool_decl)
 
     typeByte = hlir_type_integer("Byte", width=8, signed=False)
     typeByte['kind'] = 'byte'
     typeByte['ops'] = BYTE_OPS
-    typeByte['c_alias'] = 'uint8_t'
-    typeByte['llvm_alias'] = 'i8'
+    byte_decl = hlir_decl_type(hlir_id('Byte'), typeByte, ti=None)
+    byte_decl['c_alias'] = 'uint8_t'
+    byte_decl['llvm_alias'] = 'i8'
+    foundation.append(byte_decl)
 
     #
     typeChar8 = hlir_type_char("Char8", width=8)
-    typeChar8['c_alias'] = 'char'
-    typeChar8['llvm_alias'] = 'i8'
+    char8_decl = hlir_decl_type(hlir_id('Char8'), typeChar8, ti=None)
+    char8_decl['c_alias'] = 'char'
+    char8_decl['llvm_alias'] = 'i8'
+    foundation.append(char8_decl)
 
     typeChar16 = hlir_type_char("Char16", width=16)
-    typeChar16['c_alias'] = 'uint16_t'
-    typeChar16['llvm_alias'] = 'i16'
+    char16_decl = hlir_decl_type(hlir_id('Char16'), typeChar16, ti=None)
+    char16_decl['c_alias'] = 'uint16_t'
+    char16_decl['llvm_alias'] = 'i16'
+    foundation.append(typeChar16)
 
     typeChar32 = hlir_type_char("Char32", width=32)
-    typeChar32['c_alias'] = 'uint32_t'
-    typeChar32['llvm_alias'] = 'i32'
+    char32_decl = hlir_decl_type(hlir_id('Char32'), typeChar32, ti=None)
+    char32_decl['c_alias'] = 'uint32_t'
+    char32_decl['llvm_alias'] = 'i32'
+    foundation.append(char32_decl)
 
     #
     typeInt8 = hlir_type_integer("Int8", width=8)
-    typeInt8['c_alias'] = 'int8_t'
-    typeInt8['llvm_alias'] = 'i8'
+    int8_decl = hlir_decl_type(hlir_id('Int8'), typeInt8, ti=None)
+    int8_decl['c_alias'] = 'int8_t'
+    int8_decl['llvm_alias'] = 'i8'
+    foundation.append(int8_decl)
 
     typeInt16 = hlir_type_integer("Int16", width=16)
-    typeInt16['c_alias'] = 'int16_t'
-    typeInt16['llvm_alias'] = 'i16'
+    int16_decl = hlir_decl_type(hlir_id('Int16'), typeInt16, ti=None)
+    int16_decl['c_alias'] = 'int16_t'
+    int16_decl['llvm_alias'] = 'i16'
+    foundation.append(int16_decl)
 
     typeInt32 = hlir_type_integer("Int32", width=32)
-    typeInt32['c_alias'] = 'int32_t'
-    typeInt32['llvm_alias'] = 'i32'
+    int32_decl = hlir_decl_type(hlir_id('Int32'), typeInt32, ti=None)
+    int32_decl['c_alias'] = 'int32_t'
+    int32_decl['llvm_alias'] = 'i32'
+    foundation.append(int32_decl)
 
     typeInt64 = hlir_type_integer("Int64", width=64)
-    typeInt64['c_alias'] = 'int64_t'
-    typeInt64['llvm_alias'] = 'i64'
+    int64_decl = hlir_decl_type(hlir_id('Int64'), typeInt64, ti=None)
+    int64_decl['c_alias'] = 'int64_t'
+    int64_decl['llvm_alias'] = 'i64'
+    foundation.append(int64_decl)
 
     typeInt128 = hlir_type_integer("Int128", width=128)
-    typeInt128['c_alias'] = '__int128'
-    typeInt128['llvm_alias'] = 'i128'
+    int128_decl = hlir_decl_type(hlir_id('Int128'), typeInt128, ti=None)
+    int128_decl['c_alias'] = '__int128'
+    int128_decl['llvm_alias'] = 'i128'
+    foundation.append(typeInt128)
 
     #
     typeNat8 = hlir_type_integer("Nat8", width=8, signed=False)
-    typeNat8['c_alias'] = 'uint8_t'
-    typeNat8['llvm_alias'] = 'i8'
+    nat8_decl = hlir_decl_type(hlir_id('Nat8'), typeNat8, ti=None)
+    nat8_decl['c_alias'] = 'uint8_t'
+    nat8_decl['llvm_alias'] = 'i8'
+    foundation.append(nat8_decl)
 
     typeNat16 = hlir_type_integer("Nat16", width=16, signed=False)
-    typeNat16['c_alias'] = 'uint16_t'
-    typeNat16['llvm_alias'] = 'i16'
+    nat16_decl = hlir_decl_type(hlir_id('Nat16'), typeNat16, ti=None)
+    nat16_decl['c_alias'] = 'uint16_t'
+    nat16_decl['llvm_alias'] = 'i16'
+    foundation.append(nat16_decl)
 
     typeNat32 = hlir_type_integer("Nat32", width=32, signed=False)
-    typeNat32['c_alias'] = 'uint32_t'
-    typeNat32['llvm_alias'] = 'i32'
+    nat32_decl = hlir_decl_type(hlir_id('Nat32'), typeNat32, ti=None)
+    nat32_decl['c_alias'] = 'uint32_t'
+    nat32_decl['llvm_alias'] = 'i32'
+    foundation.append(nat32_decl)
 
     typeNat64 = hlir_type_integer("Nat64", width=64, signed=False)
-    typeNat64['c_alias'] = 'uint64_t'
-    typeNat64['llvm_alias'] = 'i64'
+    nat64_decl = hlir_decl_type(hlir_id('Nat64'), typeNat64, ti=None)
+    nat64_decl['c_alias'] = 'uint64_t'
+    nat64_decl['llvm_alias'] = 'i64'
+    foundation.append(nat64_decl)
 
     typeNat128 = hlir_type_integer("Nat128", width=128, signed=False)
-    typeNat128['c_alias'] = 'unsigned __int128'
-    typeNat128['llvm_alias'] = 'i128'
+    nat128_decl = hlir_decl_type(hlir_id('Nat128'), typeNat128, ti=None)
+    nat128_decl['c_alias'] = 'unsigned __int128'
+    nat128_decl['llvm_alias'] = 'i128'
+    foundation.append(nat128_decl)
 
     #
     typeFloat16 = hlir_type_float('Float16', width=16)
-    typeFloat16['c_alias'] = 'half'
-    typeFloat16['llvm_alias'] = 'half'
+    float16_decl = hlir_decl_type(hlir_id('Float16'), typeFloat16, ti=None)
+    float16_decl['c_alias'] = 'half'
+    float16_decl['llvm_alias'] = 'half'
+    foundation.append(float16_decl)
 
     typeFloat32 = hlir_type_float('Float32', width=32)
-    typeFloat32['c_alias'] = 'float'
-    typeFloat32['llvm_alias'] = 'float'
+    float32_decl = hlir_decl_type(hlir_id('Float32'), typeFloat32, ti=None)
+    float32_decl['c_alias'] = 'float'
+    float32_decl['llvm_alias'] = 'float'
+    foundation.append(float32_decl)
 
     typeFloat64 = hlir_type_float('Float64', width=64)
-    typeFloat64['c_alias'] = 'double'
-    typeFloat64['llvm_alias'] = 'double'
+    float64_decl = hlir_decl_type(hlir_id('Float64'), typeFloat64, ti=None)
+    float64_decl['c_alias'] = 'double'
+    float64_decl['llvm_alias'] = 'double'
+    foundation.append(float64_decl)
 
     #
     typeDecimal32 = hlir_type_float('Decimal32', width=32)
-    typeDecimal32['c_alias'] = '_Decimal32'
-    typeDecimal32['llvm_alias'] = 'float'
+    decimal32_decl = hlir_decl_type(hlir_id('Decimal32'), typeDecimal32, ti=None)
+    decimal32_decl['c_alias'] = '_Decimal32'
+    decimal32_decl['llvm_alias'] = 'float'
+    foundation.append(decimal32_decl)
 
     typeDecimal64 = hlir_type_float('Decimal64', width=64)
-    typeDecimal64['c_alias'] = '_Decimal64'
-    typeDecimal64['llvm_alias'] = 'double'
+    decimal64_decl = hlir_decl_type(hlir_id('Decimal64'), typeDecimal64, ti=None)
+    decimal64_decl['c_alias'] = '_Decimal64'
+    decimal64_decl['llvm_alias'] = 'double'
+    foundation.append(decimal64_decl)
 
     typeDecimal128 = hlir_type_float('Decimal128', width=128)
-    typeDecimal128['c_alias'] = '_Decimal128'
-    typeDecimal128['llvm_alias'] = 'double'
+    decimal128_decl = hlir_decl_type(hlir_id('Decimal128'), typeDecimal128, ti=None)
+    decimal128_decl['c_alias'] = '_Decimal128'
+    decimal128_decl['llvm_alias'] = 'double'
+    foundation.append(decimal128_decl)
 
 
     typeFreePointer = hlir_type_pointer(to=typeUnit)
+    free_pointer_decl = hlir_decl_type(hlir_id('Pointer'), typeFreePointer, ti=None)
+    free_pointer_decl['c_alias'] = 'void *'
+    free_pointer_decl['llvm_alias'] = 'i8*'
+    foundation.append(free_pointer_decl)
+
 
     typeStr8 = hlir_type_array(of=typeChar8)
+    typeStr8_decl = hlir_decl_type(hlir_id('Str8'), typeStr8, ti=None)
+    foundation.append(typeStr8_decl)
+
     typeStr16 = hlir_type_array(of=typeChar16)
+    typeStr16_decl = hlir_decl_type(hlir_id('Str16'), typeStr16, ti=None)
+    foundation.append(typeStr16_decl)
+
     typeStr32 = hlir_type_array(of=typeChar32)
+    typeStr32_decl = hlir_decl_type(hlir_id('Str32'), typeStr32, ti=None)
+    foundation.append(typeStr32_decl)
 
 
     typeVA_List = {
         'isa': 'type',
         'kind': 'va_list',
-        'id': None,
+        #'id': None,
         'generic': False,
         'size': 0,
         'align': 1,
         'width': 0,
+        'declaration': None,
+        'definition': None,
         'att': [],
         'ops': [],
         'ti': None
     }
+
+    type_va_list_decl = hlir_decl_type(hlir_id('VA_List'), typeVA_List, ti=None)
+    foundation.append(type_va_list_decl)
+
+    return
 
 
 
@@ -595,6 +669,9 @@ def type_eq(a, b, opt=[]):
     if a == b: return True
     if a['kind'] == 'bad' or b['kind'] == 'bad': return True
     if a['kind'] != b['kind']: return False
+
+    #if a['definition'] != None and b['definition'] != None:
+
 
     # проверять аттрибуты (volatile, const)
     # использую для C чтобы можно было более строго проверить типы
@@ -906,11 +983,15 @@ def type_print(t, print_aka=True):
 
     if print_aka:
 
-        if 'definition' in t:
+        if t['definition'] != None:
             print(t['definition']['id']['str'])
             return
 
-        if t['id'] != None:
+        elif t['declaration'] != None:
+            print(t['declaration']['id']['str'])
+            return
+
+        elif t['id'] != None:
             id_str = t['id']['str']
 
             if id_str == '<generic:int>':
