@@ -34,7 +34,7 @@ const points = [
 // не могут быть так инициализированы, поскольку points является приведением
 // непонятно существует ли хорошее решение
 //@property("c_prefix", "const")
-var points2: [3]Point := points
+var points2: [3]Point = points
 
 
 // define function main

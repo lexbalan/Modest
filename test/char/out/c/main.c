@@ -13,8 +13,8 @@ int main()
     uint16_t ch16;
     uint32_t ch32;
 
-    //ch08 := "🐀"[0]  // error
-    //ch16 := "🐀"[0]  // error
+    //ch08 = "🐀"[0]  // error
+    //ch16 = "🐀"[0]  // error
     ch32 = U'\x1F400';
 
     ch08 = 's';

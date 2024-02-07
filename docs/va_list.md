@@ -5,17 +5,17 @@ VA_List is a special type used for creating variable-arguments function. It must
 
 ```
 func _printf(fmt: *Str8, va: VA_List) {
-    var i := 0
+    var i = 0
 	while true {
-        var c := str[i]
+        var c = str[i]
 
 		if c == "\0"[0] {
 			break
 		}
 
 		if c == "%"[0] {
-            i := i + 1
-            c := str[i]
+            i = i + 1
+            c = str[i]
             
             ...
 
@@ -35,7 +35,7 @@ func _printf(fmt: *Str8, va: VA_List) {
 			_putchar(c)
 		}
 
-        i := i + 1
+        i = i + 1
 	}
 }
 

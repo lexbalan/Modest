@@ -10,18 +10,18 @@ func main() -> Int {
     var x: Nat8
     var b: Bool
 
-    x := 1
-    b := x to Bool
+    x = 1
+    b = x to Bool
     printf("x = %i\n", x to Nat32)
     printf("x to Bool = %i\n", b to Nat32)
 
-    x := 2
-    b := x to Bool
+    x = 2
+    b = x to Bool
     printf("x = %i\n", x to Nat32)
     printf("x to Bool = %i\n", b to Nat32)
 
-    x := 3
-    b := x to Bool
+    x = 3
+    b = x to Bool
     printf("x = %i\n", x to Nat32)
     printf("x to Bool = %i\n", b to Nat32)
 

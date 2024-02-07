@@ -13,7 +13,7 @@ Generic types can be implicitly casted to correspond type
 var i : Int32
 
 // implicit cast literal numeric value '1' with type GenericInt to type Int32 
-i := 1
+i = 1
 ```
 
 
@@ -34,7 +34,7 @@ var r : record {x : Int32, y : Int32}
 
 // implicit cast literal record value {x=0, y=0} with type GenericRecord {x : Int32, y : Int32}
 // to type record {x : Int32, y : Int32}
-r := {x=0, y=0}
+r = {x=0, y=0}
 ```
 
 ### Implicit cast 'pointer to sized array' -> 'pointer to unsized array'
@@ -47,7 +47,7 @@ var a : *[5]Int32
 var pa : *[]Int32
 
 // implicit cast *[3]Int32 to *[]Int32
-pa := &a
+pa = &a
 ```
 
 
@@ -61,8 +61,8 @@ All other kinds of type casting requires explicit type cast operator
 var i : Int32
 var j : Int64
 
-i := j to Int32
-j := i to Int64
+i = j to Int32
+j = i to Int64
 ```
 
 ```zig
@@ -71,7 +71,7 @@ j := i to Int64
 var a : [10]Int32
 // you can't implicit cast [4]Int -> [10]Int
 // but you can do explicit cast (all rest items will be filled with zeros)
-a := [1, 2, 3] to [10]Int32
+a = [1, 2, 3] to [10]Int32
 ```
 
 ```zig
@@ -82,5 +82,5 @@ type Point3D record {x : Int32, y : Int32, z : Int32}
 var r : Point3D
 // you can't implicit cast {x : GenericInt} -> record {x : Int32, y : Int32, z : Int32}
 // but you can do explicit cast (all rest fields will be filled with zeros)
-r := {x=0} to Point3D
+r = {x=0} to Point3D
 ```

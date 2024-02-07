@@ -5,12 +5,12 @@ import "libc/stdio.h"
 
 func mtab(n: Int) -> Unit {
     //var m : Nat32
-    //m := 1
-    var m: Int32 := 1
+    //m = 1
+    var m: Int32 = 1
     while m < 10 {
         let nm = n * m
         printf("%d * %d = %d\n", n, m, nm)
-        m := m + 1
+        m = m + 1
     }
 }
 

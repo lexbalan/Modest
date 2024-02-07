@@ -70,7 +70,7 @@ static uint32_t initMagic[8] = {
 
 void sha256_contextInit(SHA256_Context *ctx)
 {
-    //ctx.state := initMagic  // not worked; FIXIT!
+    //ctx.state = initMagic  // not worked; FIXIT!
     memcpy((void *)(uint32_t *)&ctx->state, (void *)(uint32_t *)&initMagic, 8 * 4);
 }
 

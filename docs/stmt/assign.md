@@ -3,7 +3,7 @@
 #### Common view
 
 ```zig
-  a := 1
+  a = 1
 ```
 
 #### Examples
@@ -12,7 +12,7 @@
 var a : Int32
 
 func main () -> Unit {
-  a := 10
+  a = 10
   printf("a = %d\n", a)
 }
 

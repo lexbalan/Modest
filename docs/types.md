@@ -74,10 +74,10 @@ func just (not_used_param: Int32) -> Unit {
 ```zig
 var b: Bool
 
-b := false
+b = false
 
 while not b {
-    b := check_condition()
+    b = check_condition()
 }
 
 ```
@@ -94,8 +94,8 @@ Int8, Int16, Int32, Int64, Int128
 func main () -> Unit {
 	var a, b : Int32
 	
-	a := -1
-	b := 1
+	a = -1
+	b = 1
 	
 	if a < b {
 		printf("a < b\n")
@@ -118,8 +118,8 @@ Nat8, Nat16, Nat32, Nat64, Nat128
 func main () -> Unit {
 	var a, b : Nat32
 	
-	a := -1 to Nat32
-	b := 1
+	a = -1 to Nat32
+	b = 1
 	
 	if a < b {
 		printf("a < b\n")
@@ -148,7 +148,7 @@ import "libc/math.hm"
 func main () -> Unit {
 	var pi: Float64
 	
-	pi := M_PI
+	pi = M_PI
 
 	printf("pi = %lf\n", pi)
 }
@@ -171,8 +171,8 @@ Char8, Char16, Char32
 var a : Char8
 var b : Char8
 
-a := "a"[0]
-b := "b"[0]
+a = "a"[0]
+b = "b"[0]
 
 if a == b {
     printf("'a' == 'b'\n")
@@ -214,17 +214,17 @@ var a : [5]Int32
 var i : Int32
 
 // fill array in cycle
-i := 0
+i = 0
 while i < 5 {
-    a[i] := i * 10
-    i := i + 1
+    a[i] = i * 10
+    i = i + 1
 }
 
 // print array in cycle
-i := 0
+i = 0
 while i < 5 {
     printf("a[%d] = %d\n", i, a[i])
-    i := i + 1
+    i = i + 1
 }
 
 ```
@@ -256,7 +256,7 @@ type Str32 = []Char32
 ```zig
 var s : *Str8
 
-s := "Hello World!\n"
+s = "Hello World!\n"
 
 printf(s)
 ```
@@ -282,7 +282,7 @@ type Point record {
 
 var p : Point
 
-p := {x=1, y=2}
+p = {x=1, y=2}
 
 printf("p.x = %f\n", p.x)
 printf("p.y = %f\n", p.y)

@@ -87,7 +87,7 @@ class Parser:
 
 
     def is_assign_operator(self):
-        return self.match("<-") or self.match(":=") or self.match("=")
+        return self.match("<-") or self.match("=") or self.match("=")
 
 
     def identifier(self):

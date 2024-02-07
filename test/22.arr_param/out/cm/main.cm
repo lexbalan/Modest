@@ -8,8 +8,8 @@ func swap(x: [2]Int32) -> [2]Int32
 
 func swap(x: [2]Int32) -> [2]Int32 {
     var out: [2]Int32
-    out[0] := x[1]
-    out[1] := x[0]
+    out[0] = x[1]
+    out[1] = x[0]
     return out
 }
 
@@ -88,7 +88,7 @@ func kk(x: [2][10]Char8) -> Unit {
 
 
 
-var global_array: [2]Int32 := [1, 2]
+var global_array: [2]Int32 = [1, 2]
 
 
 type Point record {
@@ -183,8 +183,8 @@ func main() -> Int {
     */
 
     var w: [2][10]Char8
-    w[0] := "hello\x0\x0\x0\x0\x0"
-    w[1] := "world\x0\x0\x0\x0\x0"
+    w[0] = "hello\x0\x0\x0\x0\x0"
+    w[1] = "world\x0\x0\x0\x0\x0"
     let u = w
     kk(u)
 

@@ -48,7 +48,7 @@ func main() -> Int {
 
     printf("[+] Server socket created. \n")
 
-    var server_addr: Struct_sockaddr_in := {
+    var server_addr: Struct_sockaddr_in = {
         sin_family = AF_INET
         sin_port = port
         sin_addr = {
@@ -57,7 +57,7 @@ func main() -> Int {
     }
 
     let s = &server_addr
-    var e: Int := connect(sockfd, s, (sizeof(Struct_sockaddr_in)))
+    var e: Int = connect(sockfd, s, (sizeof(Struct_sockaddr_in)))
     if e == (-1) {
         perror("[-] Error in Connecting")
         exit(1)

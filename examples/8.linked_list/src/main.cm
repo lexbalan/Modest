@@ -14,7 +14,7 @@ import "./linked_list.hm"
 func nat64_list_insert(list : *List, x : Nat64) -> Unit {
     // alloc memory for Nat64 value
     let p_nat64 = malloc(sizeof(Nat64)) to *Nat64
-    *p_nat64 := x
+    *p_nat64 = x
     linked_list_insert(list, p_nat64)
 }
 
@@ -22,11 +22,11 @@ func nat64_list_insert(list : *List, x : Nat64) -> Unit {
 // show list conent from first item to last
 func list_print_forward(list : *List) -> Unit {
     printf("list_print_forward:\n")
-    var pn := linked_list_first_get(list)
+    var pn = linked_list_first_get(list)
     while pn != nil {
         let x = linked_list_node_link_get(pn) to *Nat32
         printf("v = %d\n", *x)
-        pn := linked_list_node_next_get(pn)
+        pn = linked_list_node_next_get(pn)
     }
 }
 
@@ -34,11 +34,11 @@ func list_print_forward(list : *List) -> Unit {
 // show list conent from last item to first
 func list_print_backward(list : *List) -> Unit {
     printf("list_print_backward:\n")
-    var pn := linked_list_last_get(list)
+    var pn = linked_list_last_get(list)
     while pn != nil {
         let x = linked_list_node_link_get(pn) to *Nat32
         printf("v = %d\n", *x)
-        pn := linked_list_node_prev_get(pn)
+        pn = linked_list_node_prev_get(pn)
     }
 }
 

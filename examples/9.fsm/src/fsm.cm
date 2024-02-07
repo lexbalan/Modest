@@ -19,8 +19,8 @@ func fsm_state_no_name(fsm: *FSM, state_no: Nat32) -> *Str8 {
 
 
 func fsm_switch(fsm: *FSM, state: Nat32) {
-    fsm.nexstate := state
-    fsm.substate := fsmSubstateLeaving
+    fsm.nexstate = state
+    fsm.substate = fsmSubstateLeaving
 }
 
 
@@ -39,8 +39,8 @@ func fsm_run(fsm: *FSM) {
             s.entry(fsm)
         }
 
-        fsm.state := nexstate
-        fsm.substate := fsmSubstateLoop
+        fsm.state = nexstate
+        fsm.substate = fsmSubstateLoop
 
     } else if fsm.substate == fsmSubstateLoop {
         let s = &fsm.states[fsm.state]
@@ -60,7 +60,7 @@ func fsm_run(fsm: *FSM) {
             s.exit(fsm)
         }
 
-        fsm.substate := fsmSubstateEntering
+        fsm.substate = fsmSubstateEntering
     }
 }
 

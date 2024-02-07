@@ -28,8 +28,8 @@ func linked_list_create () -> *List {
 
     //list.size >= list.head
 
-    list.head := nil
-    list.tail := nil
+    list.head = nil
+    list.tail = nil
 
     return list
 }
@@ -69,9 +69,9 @@ func linked_list_node_create () -> *Node {
         return nil
     }
 
-    node.prev := nil
-    node.next := nil
-    node.link := nil
+    node.prev = nil
+    node.next = nil
+    node.link = nil
 
     return node
 }
@@ -110,17 +110,17 @@ func linked_list_insert_node (list : *List, new_node : *Node) -> *Node {
     }
 
     if list.head == nil {
-        list.head := new_node
+        list.head = new_node
     }
 
     if list.tail != nil {
         let old_tail = list.tail
-        old_tail.next := new_node
-        new_node.prev := old_tail
+        old_tail.next = new_node
+        new_node.prev = old_tail
     }
 
-    list.tail := new_node
-    list.size := list.size + 1
+    list.tail = new_node
+    list.size = list.size + 1
 
     return new_node
 }
@@ -138,7 +138,7 @@ func linked_list_insert (list : *List, link : Pointer) -> *Node {
         return nil
     }
 
-    new_node.link := link
+    new_node.link = link
 
     let node = linked_list_insert_node(list, new_node)
 

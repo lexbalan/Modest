@@ -5,7 +5,7 @@ import "libc/stdio.hm"
 
 
 
-var big0 : Nat128 := 0x0123456789ABCDEFFEDCBA9876543210
+var big0 : Nat128 = 0x0123456789ABCDEFFEDCBA9876543210
 
 
 
@@ -24,13 +24,13 @@ func main() -> Int {
     let big1 = 0xffffffffffffffffffffffffffffffff
 
     var big2 : Nat128
-    big2 := big1
+    big2 = big1
 
-    var big3 : Nat128 := 0x1
+    var big3 : Nat128 = 0x1
 
-    var a : Nat32 := 0x1
+    var a : Nat32 = 0x1
 
-    var big_sum := big1 + big2 + a to Nat128
+    var big_sum = big1 + big2 + a to Nat128
 
     printf("big0 = 0x%llX%llX\n", high_128(big0), low_128(big0))
     printf("big1 = 0x%llX%llX\n", high_128(big1), low_128(big1))
@@ -42,9 +42,9 @@ func main() -> Int {
     // signed big int test
     let sig0 = -1
 
-    var sig1 : Int128 := sig0
+    var sig1 : Int128 = sig0
 
-    sig1 := sig1 + 1
+    sig1 = sig1 + 1
 
     printf("sig1 = %lld\n", sig1 to Nat64)
 

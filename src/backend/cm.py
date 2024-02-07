@@ -618,7 +618,7 @@ def print_stmt_defvar(x):
 
     init_value = x['init_value']
     if init_value != None:
-        out(" := ")
+        out(" = ")
         print_value(init_value)
 
 
@@ -631,7 +631,7 @@ def print_stmt_let(x):
 
 def print_stmt_assign(x):
     print_value(x['left'])
-    out(" := ")
+    out(" = ")
     print_value(x['right'])
 
 
@@ -723,7 +723,7 @@ def print_def_var(x):
     print_field(var)
     iv = x['init_value']
     if iv != None:
-        out(" := ")
+        out(" = ")
         print_value(iv)
 
 

@@ -105,8 +105,8 @@ define i32 @main() {
     %1 = alloca i8
     %2 = alloca i16
     %3 = alloca i32
-    ;ch08 := "🐀"[0]  // error
-    ;ch16 := "🐀"[0]  // error
+    ;ch08 = "🐀"[0]  // error
+    ;ch16 = "🐀"[0]  // error
     store i32 128000, i32* %3
     store i8 115, i8* %1
     store i16 1040, i16* %2

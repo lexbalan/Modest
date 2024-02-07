@@ -222,7 +222,7 @@ define i32 @sig1(i32 %x) {
 ]
 
 define void @sha256_contextInit(%SHA256_Context* %ctx) {
-    ;ctx.state := initMagic  // not worked; FIXIT!
+    ;ctx.state = initMagic  // not worked; FIXIT!
     %1 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 3
     %2 = bitcast [8 x i32]* %1 to i8*
     %3 = bitcast [8 x i32]* @initMagic to i8*

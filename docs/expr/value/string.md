@@ -9,7 +9,7 @@
 ```zig
 func main () -> Unit {
   var s : Str
-  s := "Hello World!"
+  s = "Hello World!"
   printf("s = %s\n", s)
 }
 ```

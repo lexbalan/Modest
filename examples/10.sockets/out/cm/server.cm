@@ -46,7 +46,7 @@ func main() -> Int {
 
     printf("[+] Server socket created. \n")
 
-    var server_addr: Struct_sockaddr_in := {
+    var server_addr: Struct_sockaddr_in = {
         sin_family = AF_INET
         sin_port = port
         sin_addr = {
@@ -55,7 +55,7 @@ func main() -> Int {
     }
 
     let a = &server_addr
-    var e: Int := bind(sockfd, a, (sizeof(Struct_sockaddr_in)))
+    var e: Int = bind(sockfd, a, (sizeof(Struct_sockaddr_in)))
     if e < 0 {
         perror("[-] Error in Binding")
         exit(1)
@@ -63,7 +63,7 @@ func main() -> Int {
 
     printf("[+] Binding Successfull.\n")
 
-    e := listen(sockfd, 10)
+    e = listen(sockfd, 10)
     if e == 0 {
         printf("[+] Listening...\n")
     } else {
@@ -72,7 +72,7 @@ func main() -> Int {
     }
 
     var addr_size: socklen_t
-    addr_size := (sizeof(Struct_sockaddr_in))
+    addr_size = (sizeof(Struct_sockaddr_in))
     var new_addr: Struct_sockaddr_in
     let na = &new_addr
     let new_sock = accept(sockfd, na, &addr_size)

@@ -31,7 +31,7 @@ func main() -> Int {
     printf("enum test")
 
     var m: Mode
-    m := modeOn
+    m = modeOn
 
     printMode(m)
     return 0

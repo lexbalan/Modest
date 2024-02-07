@@ -37,9 +37,9 @@ func off_loop(fsm: *FSM) {
 
     printf("off_loop\n")
     if cnt < 10 {
-        cnt := cnt + 1
+        cnt = cnt + 1
     } else {
-        cnt := 0
+        cnt = 0
         fsm_switch(fsm, flashlightStateOn)
     }
 }
@@ -65,9 +65,9 @@ func on_loop(fsm: *FSM) {
     fsm to Unit  // ignore argument
     printf("on_loop\n")
     if cnt < 10 {
-        cnt := cnt + 1
+        cnt = cnt + 1
     } else {
-        cnt := 0
+        cnt = 0
         fsm_switch(fsm, flashlightStateBeacon)
     }
 }
@@ -92,9 +92,9 @@ func beacon_entry(fsm: *FSM) {
 func beacon_loop(fsm: *FSM) {
     printf("beacon_loop\n")
     if cnt < 10 {
-        cnt := cnt + 1
+        cnt = cnt + 1
     } else {
-        cnt := 0
+        cnt = 0
         fsm_switch(fsm, flashlightStateOff)
     }
 }
@@ -107,7 +107,7 @@ func beacon_exit(fsm: *FSM) {
 
 
 
-var fsm: FSM := {
+var fsm: FSM = {
     name = "Flash" to [fsmNameLength]Char8
     state = 0
     nexstate = 0

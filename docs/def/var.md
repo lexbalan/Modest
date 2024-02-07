@@ -12,7 +12,7 @@ var x : Int32
 var x : Int32
 
 func main () -> Unit {
-  x := 10
+  x = 10
   
   printf("x = %d\n", x)
 }

@@ -22,7 +22,7 @@ func main () -> Unit {
   printf("count for ");
   scanf("%d", &n);
  
-  i := 0
+  i = 0
   
   // print equation
   while i < n {

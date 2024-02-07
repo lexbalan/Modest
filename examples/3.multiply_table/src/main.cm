@@ -6,12 +6,12 @@ import "libc/stdio.hm"
 
 func mtab(n : Int) -> Unit {
     //var m : Nat32
-    //m := 1
-    var m := 1    // by default integer var get system int type (-mint option)
+    //m = 1
+    var m = 1    // by default integer var get system int type (-mint option)
     while m < 10 {
         let nm = n * m
         printf("%d * %d = %d\n", n, m, nm)
-        m := m + 1
+        m = m + 1
     }
 }
 

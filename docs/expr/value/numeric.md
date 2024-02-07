@@ -10,9 +10,9 @@
 ```zig
 func main () -> Unit {
   var x : Nat32
-  x := 42
+  x = 42
   printf("x = %d\n", x)
-  x := 0x2A  // 0x2A == 42
+  x = 0x2A  // 0x2A == 42
   printf("x = %d\n", x)
 }
 ```

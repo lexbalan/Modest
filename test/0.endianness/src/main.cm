@@ -5,7 +5,7 @@ import "libc/stdio.hm"
 
 
 func main() -> Int {
-    var check : Nat16 := 0x0001
+    var check : Nat16 = 0x0001
     let is_le = *(&check to *Nat8) == 1
 
     if is_le {

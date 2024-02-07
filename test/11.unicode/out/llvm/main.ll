@@ -154,8 +154,8 @@ define i32 @main() {
     ;    let ratCharCode = "Hello 🐀!\n"[6]
     ; you can assign omegaCharCode (937) to Nat32,
     ; but you can't assign ratCharCode (128000) to Nat16 (!)
-    ;    var omegaCode : Nat16 := omegaCharCode to Nat16
-    ;    var ratCode : Nat32 := ratCharCode to Nat32
+    ;    var omegaCode : Nat16 = omegaCharCode to Nat16
+    ;    var ratCode : Nat32 = ratCharCode to Nat32
     ;    printf("omegaCode = %d\n", omegaCode)
     ;    printf("ratCode = %d\n", ratCode)
     %1 = alloca i32

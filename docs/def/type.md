@@ -22,7 +22,7 @@ type MyInt Int32
 var x : MyInt
 
 func main () -> Unit {
-  x := 10
+  x = 10
   
   printf("x = %d\n", x)
 }
