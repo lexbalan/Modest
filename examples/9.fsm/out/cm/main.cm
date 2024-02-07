@@ -138,7 +138,7 @@ var fsm: FSM = {
 
 
 
-func main() -> IntInt {
+func main() -> Int {
 
     while true {
         fsm_run(&fsm)

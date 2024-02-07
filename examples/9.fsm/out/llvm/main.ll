@@ -120,13 +120,7 @@ declare void @perror(%ConstCharStr* %str)
 
 
 
-%FSM_Proc = type void ({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}*)*
+%FSM_Proc = type void (%FSM*)*
 %FSM_Empty = type {
 }
 
@@ -149,27 +143,9 @@ declare void @perror(%ConstCharStr* %str)
 }
 
 
-declare %Str8* @fsm_state_no_name({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}* %fsm, i32 %state_no)
-declare void @fsm_switch({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}* %fsm, i32 %state)
-declare void @fsm_run({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}* %fsm)
+declare %Str8* @fsm_state_no_name(%FSM* %fsm, i32 %state_no)
+declare void @fsm_switch(%FSM* %fsm, i32 %state)
+declare void @fsm_run(%FSM* %fsm)
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/fastfood/main.hm
 
@@ -198,24 +174,12 @@ declare void @ff_printf([0 x i8]* %str, ...)
 @cnt = global i8 zeroinitializer
 
 
-define void @off_entry({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}* %fsm) {
+define void @off_entry(%FSM* %fsm) {
     ;printf("off_entry\n")
     ret void
 }
 
-define void @off_loop({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}* %fsm) {
+define void @off_loop(%FSM* %fsm) {
     %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*))
     %2 = load i8, i8* @cnt
     %3 = icmp ult i8 %2, 10
@@ -227,55 +191,25 @@ then_0:
     br label %endif_0
 else_0:
     store i8 0, i8* @cnt
-    call void ({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}*, i32) @fsm_switch({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}* %fsm, i32 1)
+    call void (%FSM*, i32) @fsm_switch(%FSM* %fsm, i32 1)
     br label %endif_0
 endif_0:
     ret void
 }
 
-define void @off_exit({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}* %fsm) {
+define void @off_exit(%FSM* %fsm) {
     ;printf("off_exit\n")
     ret void
 }
 
 
 
-define void @on_entry({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}* %fsm) {
+define void @on_entry(%FSM* %fsm) {
     ;printf("on_entry\n")
     ret void
 }
 
-define void @on_loop({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}* %fsm) {
+define void @on_loop(%FSM* %fsm) {
     %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str2 to [0 x i8]*))
     %2 = load i8, i8* @cnt
     %3 = icmp ult i8 %2, 10
@@ -287,82 +221,28 @@ then_0:
     br label %endif_0
 else_0:
     store i8 0, i8* @cnt
-    call void ({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}*, i32) @fsm_switch({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}* %fsm, i32 2)
+    call void (%FSM*, i32) @fsm_switch(%FSM* %fsm, i32 2)
     br label %endif_0
 endif_0:
     ret void
 }
 
-define void @on_exit({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}* %fsm) {
+define void @on_exit(%FSM* %fsm) {
     ;printf("on_exit\n")
     ret void
 }
 
 
 
-define void @beacon_entry({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}* %fsm) {
-    %1 = getelementptr inbounds {
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}, {
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}* %fsm, i32 0, i32 1
+define void @beacon_entry(%FSM* %fsm) {
+    %1 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 1
     %2 = load i32, i32* %1
-    %3 = call %Str8* ({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}*, i32) @fsm_state_no_name({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}* %fsm, i32 %2)
+    %3 = call %Str8* (%FSM*, i32) @fsm_state_no_name(%FSM* %fsm, i32 %2)
     %4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str3 to [0 x i8]*), %Str8* %3)
     ret void
 }
 
-define void @beacon_loop({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}* %fsm) {
+define void @beacon_loop(%FSM* %fsm) {
     %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str4 to [0 x i8]*))
     %2 = load i8, i8* @cnt
     %3 = icmp ult i8 %2, 10
@@ -374,70 +254,22 @@ then_0:
     br label %endif_0
 else_0:
     store i8 0, i8* @cnt
-    call void ({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}*, i32) @fsm_switch({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}* %fsm, i32 0)
+    call void (%FSM*, i32) @fsm_switch(%FSM* %fsm, i32 0)
     br label %endif_0
 endif_0:
     ret void
 }
 
-define void @beacon_exit({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}* %fsm) {
-    %1 = getelementptr inbounds {
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}, {
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}* %fsm, i32 0, i32 2
+define void @beacon_exit(%FSM* %fsm) {
+    %1 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 2
     %2 = load i32, i32* %1
-    %3 = call %Str8* ({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}*, i32) @fsm_state_no_name({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}* %fsm, i32 %2)
+    %3 = call %Str8* (%FSM*, i32) @fsm_state_no_name(%FSM* %fsm, i32 %2)
     %4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str5 to [0 x i8]*), %Str8* %3)
     ret void
 }
 
 
-@fsm = global {
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-} {
+@fsm = global %FSM {
     [8 x i8] [
         i8 70,
         i8 108,
@@ -463,27 +295,9 @@ define void @beacon_exit({
                 i8 0,
                 i8 0
             ],
-            void ({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}*)* @off_entry,
-            void ({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}*)* @off_loop,
-            void ({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}*)* @off_exit
+            void (%FSM*)* @off_entry,
+            void (%FSM*)* @off_loop,
+            void (%FSM*)* @off_exit
         },
         %FSM_StateDesc {
             [8 x i8] [
@@ -496,27 +310,9 @@ define void @beacon_exit({
                 i8 0,
                 i8 0
             ],
-            void ({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}*)* @on_entry,
-            void ({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}*)* @on_loop,
-            void ({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}*)* @on_exit
+            void (%FSM*)* @on_entry,
+            void (%FSM*)* @on_loop,
+            void (%FSM*)* @on_exit
         },
         %FSM_StateDesc {
             [8 x i8] [
@@ -529,27 +325,9 @@ define void @beacon_exit({
                 i8 0,
                 i8 0
             ],
-            void ({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}*)* @beacon_entry,
-            void ({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}*)* @beacon_loop,
-            void ({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}*)* @beacon_exit
+            void (%FSM*)* @beacon_entry,
+            void (%FSM*)* @beacon_loop,
+            void (%FSM*)* @beacon_exit
         },
         %FSM_StateDesc zeroinitializer,
         %FSM_StateDesc zeroinitializer,
@@ -572,19 +350,7 @@ define %Int @main() {
 again_1:
     br i1 1 , label %body_1, label %break_1
 body_1:
-    call void ({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}*) @fsm_run({
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}* @fsm)
+    call void (%FSM*) @fsm_run(%FSM* @fsm)
     call void (i64) @delay(i64 500000)
     br label %again_1
 break_1:

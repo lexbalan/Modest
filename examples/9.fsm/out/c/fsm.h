@@ -14,7 +14,6 @@
 
 
 struct FSM;
-typedef struct FSM FSM;
 
 typedef void *FSM_Proc;
 
@@ -35,35 +34,17 @@ typedef struct {
 
 typedef uint32_t UInt32;
 
-struct FSM {
+typedef struct {
     char name[fsmNameLength];
     uint32_t state;
     uint32_t nexstate;
     uint32_t substate;
     FSM_StateDesc states[fsmMaxStates];
-};
+} FSM;
 
 
-char *fsm_state_no_name(struct {
-    char name[fsmNameLength];
-    uint32_t state;
-    uint32_t nexstate;
-    uint32_t substate;
-    FSM_StateDesc states[fsmMaxStates];
-} *fsm, uint32_t state_no);
-void fsm_switch(struct {
-    char name[fsmNameLength];
-    uint32_t state;
-    uint32_t nexstate;
-    uint32_t substate;
-    FSM_StateDesc states[fsmMaxStates];
-} *fsm, uint32_t state);
-void fsm_run(struct {
-    char name[fsmNameLength];
-    uint32_t state;
-    uint32_t nexstate;
-    uint32_t substate;
-    FSM_StateDesc states[fsmMaxStates];
-} *fsm);
+char *fsm_state_no_name(FSM *fsm, uint32_t state_no);
+void fsm_switch(FSM *fsm, uint32_t state);
+void fsm_run(FSM *fsm);
 
 #endif  /* FSM_H */

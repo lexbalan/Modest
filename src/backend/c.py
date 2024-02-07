@@ -1398,8 +1398,9 @@ def print_decl_type(x):
     newline(n=x['nl'])
     id = x['id']
     out("struct %s;" % id['str'])
-    if not NO_TYPEDEF_STRUCTS:
-        out("\ntypedef struct %s %s;" % (id['str'], id['str']))
+    # НАХ:
+    #if not NO_TYPEDEF_STRUCTS:
+    #    out("\ntypedef struct %s %s;" % (id['str'], id['str']))
 
 
 def print_def_type(x):

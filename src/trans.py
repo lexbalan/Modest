@@ -1531,7 +1531,7 @@ def def_const(x):
 
 
 
-# удаляет ?? по имени
+# удаляет hlir_node по isa & id_str
 def module_remove_node(m, isa, id_str):
     #print(f"module_remove_node: {id_str}")
 
@@ -1539,11 +1539,12 @@ def module_remove_node(m, isa, id_str):
         module_remove_node(submodule, isa, id_str)
 
     for x in m['text']:
-        if 'id' in x:
-            if x['id']['str'] == id_str:
-                #print("REMOVE: " + id_str)
-                m['text'].remove(x)
-                break
+        if x['isa'] == isa:
+            if 'id' in x:
+                if x['id']['str'] == id_str:
+                    #print("REMOVE: " + id_str)
+                    m['text'].remove(x)
+                    break
 
 
 
@@ -1568,34 +1569,65 @@ def decl_type(x):
 def def_type(x):
     id = x['id']
     #print("@type " + id['str'])
-
-    #_def = hlir_def_type(id, None, None, already_declared=False, ti=x['ti'])
+    # def - это и есть алиас для типа!
 
     pre_exist = type_get(id['str'])
     already_declared = pre_exist != None
 
-    if already_declared:
-        pass
 
+    _def = {
+        'isa': 'def_type',
+        'id': id,
+        'newtype': None,
+        'type': None,
+        'afterdef': False,
+        'att': [],
+        'ti': x['ti']
+    }
+
+
+    if already_declared:
+        # сохр ссылку на объявление в определении (пока просто на всякий)
+        _def['declaration'] = pre_exist['declaration']
+        # сохр в типе ссылку на определение (пока просто на всякий)
+        pre_exist['definition'] = _def
+
+
+    # только теперь обрабатываем поля,
+    # тк там могут быть указатели на саму себя
+    # а мы к этому заранее подготовлись
     ty = do_type(x['type'])
     if hlir_type.type_is_bad(ty):
         return None
 
+    _def['type'] = ty
 
     nt = hlir_type.create_alias(id['str'], ty, id['ti'])
+
+    _def['newtype'] = nt
+    nt['definition'] = _def
+
+
 
     if already_declared:
         # just overwrite existed 'opaque' type (for records)
         pre_exist.update(nt)
         # and find and remove declaration instruction
         if settings.check('backend', 'llvm'):
-            module_remove_node(module, 'newtype', id['str'])
+            # LLVM не допускает переопределения типа
+            # (после его декларации (как opaque))
+            # поэтому удаляем
+            module_remove_node(module, 'decl_type', id['str'])
+
+        # (на всякий)
+        nt['declaration'] = pre_exist['declaration']
 
     else:
         module['context'].type_add(id['str'], nt)
 
 
-    return hlir_def_type(id, ty, nt, already_declared, ti=x['ti'])
+    return _def
+    #return hlir_def_type(id, ty, nt, already_declared, ti=x['ti'])
 
 
 
@@ -1781,7 +1813,7 @@ def def_func(x):
     # в LLVM если делаем func definition нельзя писать func declaration
     # поэтому удалим все сделаные ранее декларации (если они есть)
     if settings.check('backend', 'llvm'):
-        module_remove_node(module, 'value', func_id['str'])
+        module_remove_node(module, 'decl_func', func_id['str'])
 
     return hlir_def_func(func_id, fn, x['ti'])
 

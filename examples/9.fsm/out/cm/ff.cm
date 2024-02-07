@@ -13,7 +13,7 @@ type ArchNat Nat64
 
 
 func ff_memzero(mem: Pointer, len: Nat64) -> Unit {
-    let len_words = len / (sizeof(ArchNatArchNat))
+    let len_words = len / (sizeof(ArchNat))
 
     let dst_word = mem
 
@@ -24,7 +24,7 @@ func ff_memzero(mem: Pointer, len: Nat64) -> Unit {
     }
 
 
-    let len_bytes = len % (sizeof(ArchNatArchNat))
+    let len_bytes = len % (sizeof(ArchNat))
 
     let dst_byte = &dst_word[i] to *[]Nat8
 
@@ -37,7 +37,7 @@ func ff_memzero(mem: Pointer, len: Nat64) -> Unit {
 
 
 func ff_memcpy(dst: Pointer, src: Pointer, len: Nat64) -> Unit {
-    let len_words = len / (sizeof(ArchNatArchNat))
+    let len_words = len / (sizeof(ArchNat))
 
     let src_w = src
     let dst_w = dst
@@ -49,7 +49,7 @@ func ff_memcpy(dst: Pointer, src: Pointer, len: Nat64) -> Unit {
     }
 
 
-    let len_bytes = len % (sizeof(ArchNatArchNat))
+    let len_bytes = len % (sizeof(ArchNat))
 
     let src_b = &src_w[i] to *[]Nat8
     let dst_b = &dst_w[i] to *[]Nat8
@@ -62,7 +62,7 @@ func ff_memcpy(dst: Pointer, src: Pointer, len: Nat64) -> Unit {
 }
 
 
-func ff_cstrlen(cstr: *[]Char8) -> Nat64 {
+func ff_cstrlen(cstr: *Str8) -> Nat64 {
     var i: Nat64 = 0 to Nat64
     while cstr[i] != "\x0"[0] {
         i = i + 1

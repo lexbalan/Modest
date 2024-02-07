@@ -14,9 +14,9 @@ type FSM_Empty record {
 
 type FSM_StateDesc record {
     name: [fsmNameLength]Char8
-    entry: FSM_Proc*(fsm: *FSM) -> Unit
-    loop: FSM_Proc*(fsm: *FSM) -> Unit
-    exit: FSM_Proc*(fsm: *FSM) -> Unit
+    entry: FSM_Proc
+    loop: FSM_Proc
+    exit: FSM_Proc
 }
 
 
@@ -28,19 +28,14 @@ type UInt32 Nat32
 
 type FSM record {
     name: [fsmNameLength]Char8
-    state: UInt32UInt32
-    nexstate: UInt32UInt32
-    substate: UInt32UInt32
-    states: [fsmMaxStates]FSM_StateDescrecord {
-        name: [fsmNameLength]Char8
-        entry: FSM_Proc*(fsm: *FSM) -> Unit
-        loop: FSM_Proc*(fsm: *FSM) -> Unit
-        exit: FSM_Proc*(fsm: *FSM) -> Unit
-    }
+    state: Nat32
+    nexstate: Nat32
+    substate: Nat32
+    states: [fsmMaxStates]FSM_StateDesc
 }
 
 
-func fsm_state_no_name(fsm: *FSM, state_no: Nat32) -> *[]Char8
+func fsm_state_no_name(fsm: *FSM, state_no: Nat32) -> *Str8
 func fsm_switch(fsm: *FSM, state: Nat32) -> Unit
 func fsm_run(fsm: *FSM) -> Unit
 
