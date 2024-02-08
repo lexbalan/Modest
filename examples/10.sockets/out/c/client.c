@@ -1,3 +1,8 @@
+/* from: https://github.com/pshashipreetham/File-Transfer-Using-TCP-Socket-in-C-Socket-Programming/tree/master */
+
+#include <stdint.h>
+#include <stdbool.h>
+#include <string.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,11 +11,6 @@
 #include <unistd.h>
 #include <time.h>
 #include <arpa/inet.h>
-#include <stdint.h>
-#include <string.h>
-#include <stdbool.h>
-
-/* from: https://github.com/pshashipreetham/File-Transfer-Using-TCP-Socket-in-C-Socket-Programming/tree/master */
 
 
 #define SIZE  1024
@@ -20,23 +20,20 @@ void send_file(FILE *fp, int sockfd)
 {
     char data[SIZE];
 
-    while (fgets((char *)&data[0], SIZE, fp) != NULL) {
-        if (send(sockfd, (void *)&data[0], sizeof(char [SIZE]), 0) == -1) {
+    while (fgets((char *)(char *)&data, SIZE, fp) != NULL) {
+        if (send(sockfd, (void *)(char *)&data, sizeof(char[SIZE]), 0) == -1) {
             perror("[-] Error in sendung data");
             exit(1);
         }
-        bzero((void *)&data[0], SIZE);
+        bzero((void *)(char *)&data, SIZE);
     }
 }
 
 
-#define role  {} /*GENERIC-STRING*/
-
-
-int main(void)
+int main()
 {
     char *const ip = "127.0.0.1";
-    const uint16_t port = 8080;
+    const int16_t port = 8080;
 
     if (true) {
         printf("role - CLIENT\n");
@@ -60,12 +57,12 @@ int main(void)
         .sin_family = AF_INET,
         .sin_port = port,
         .sin_addr = (struct in_addr){
-            .s_addr = ((unsigned long)(uint32_t)inet_addr((const char *)ip))
+            .s_addr = (unsigned long)inet_addr(ip)
         }
     };
 
-    struct sockaddr *const s = (struct sockaddr *const)(void *)&server_addr;
-    int e = connect((int)sockfd, (struct sockaddr *)s, sizeof(struct sockaddr_in));
+    struct sockaddr *const s = (struct sockaddr *)(void *)&server_addr;
+    int e = connect(sockfd, s, sizeof(struct sockaddr_in));
     if (e == -1) {
         perror("[-] Error in Connecting");
         exit(1);
@@ -73,17 +70,17 @@ int main(void)
 
     printf("[+] Connected to server.\n");
 
-    FILE *const fp = fopen((char *)filename, "r");
+    FILE *const fp = fopen(filename, "r");
     if (fp == NULL) {
         perror("[-] Error in reading file.");
         exit(1);
     }
 
-    send_file((FILE *)fp, (int)sockfd);
+    send_file(fp, sockfd);
 
     printf("[+] File data send successfully.\n");
 
-    close((int)sockfd);
+    close(sockfd);
 
     printf("[+] Disconnected from the server.\n");
 

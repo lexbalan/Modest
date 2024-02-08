@@ -1,3 +1,8 @@
+/* from: https://github.com/pshashipreetham/File-Transfer-Using-TCP-Socket-in-C-Socket-Programming/tree/master */
+
+#include <stdint.h>
+#include <stdbool.h>
+#include <string.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,11 +11,6 @@
 #include <unistd.h>
 #include <time.h>
 #include <arpa/inet.h>
-#include <stdint.h>
-#include <string.h>
-#include <stdbool.h>
-
-/* from: https://github.com/pshashipreetham/File-Transfer-Using-TCP-Socket-in-C-Socket-Programming/tree/master */
 
 
 
@@ -22,29 +22,29 @@ void write_file(int sockfd)
 
     char buffer[BUF_SIZE];
 
-    FILE *const fp = fopen((char *)filename, "w");
+    FILE *const fp = fopen(filename, "w");
     if (fp == NULL) {
         perror("[-] Error in creating file.");
         exit(1);
     }
 
     while (true) {
-        const ssize_t n = recv(sockfd, (void *)&buffer[0], BUF_SIZE, 0);
+        const ssize_t n = recv(sockfd, (void *)(char *)&buffer, BUF_SIZE, 0);
 
         if (n <= 0) {
             break;
         }
 
-        fprintf((FILE *)fp, "%s", buffer);
-        bzero((void *)&buffer[0], BUF_SIZE);
+        fprintf(fp, "%s", buffer);
+        bzero((void *)(char *)&buffer, BUF_SIZE);
     }
 }
 
 
-int main(void)
+int main()
 {
-    uint32_t ip[10] = {} /*GENERIC-STRING*/;
-    const uint16_t port = 8080;
+    char *const ip = "127.0.0.1";
+    const int16_t port = 8080;
 
     const int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) {
@@ -58,12 +58,12 @@ int main(void)
         .sin_family = AF_INET,
         .sin_port = port,
         .sin_addr = (struct in_addr){
-            .s_addr = ((unsigned long)(uint32_t)inet_addr("127.0.0.1"))
+            .s_addr = (unsigned long)inet_addr(ip)
         }
     };
 
-    struct sockaddr *const a = (struct sockaddr *const)(void *)&server_addr;
-    int e = bind((int)sockfd, (struct sockaddr *)a, sizeof(struct sockaddr_in));
+    struct sockaddr *const a = (struct sockaddr *)(void *)&server_addr;
+    int e = bind(sockfd, a, sizeof(struct sockaddr_in));
     if (e < 0) {
         perror("[-] Error in Binding");
         exit(1);
@@ -71,7 +71,7 @@ int main(void)
 
     printf("[+] Binding Successfull.\n");
 
-    e = listen((int)sockfd, 10);
+    e = listen(sockfd, 10);
     if (e == 0) {
         printf("[+] Listening...\n");
     } else {
@@ -82,10 +82,10 @@ int main(void)
     socklen_t addr_size;
     addr_size = sizeof(struct sockaddr_in);
     struct sockaddr_in new_addr;
-    struct sockaddr *const na = (struct sockaddr *const)(void *)&new_addr;
-    const int new_sock = accept((int)sockfd, (struct sockaddr *)na, &addr_size);
+    struct sockaddr *const na = (struct sockaddr *)(void *)&new_addr;
+    const int new_sock = accept(sockfd, na, &addr_size);
 
-    write_file((int)new_sock);
+    write_file(new_sock);
 
     printf("[+] Data written in the text file ");
 
