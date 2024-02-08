@@ -180,12 +180,11 @@ def print_type_id(t):
     return False
 
 
-def print_type(t, print_aka=True):
+def print_type(t):
     k = t['kind']
 
-    if print_aka:
-        res = print_type_id(t)
-        if res: return
+    res = print_type_id(t)
+    if res: return
 
     if hlir_type.type_is_integer(t): print_type_integer(t)
     elif hlir_type.type_is_func(t): print_type_func(t)
@@ -715,14 +714,14 @@ def print_def_func(x):
 
 def print_decl_type(x):
     out("type ")
-    print_id(x['newtype'])
-
+    #print_id(x['newtype'])
+    print_type(x['newtype'])
 
 def print_def_type(x):
     out("type ")
     print_id(x)
     out(" ")
-    print_type(x['type'], print_aka=False)
+    print_type(x['type'])
 
 
 def print_def_var(x):
