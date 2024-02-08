@@ -60,17 +60,17 @@ func test_by_value() -> Unit {
     f0_val(a)
     f1_val(a)
     f2_val(a)
-    //f3_val(a)
+    f3_val(a)
 
     f0_val(b)
     f1_val(b)
     f2_val(b)
-    //f3_val(b)
+    f3_val(b)
 
     f0_val(c)
     f1_val(c)
     f2_val(c)
-    //f3_val(c)
+    f3_val(c)
 }
 
 
@@ -78,17 +78,17 @@ func test_by_pointer() -> Unit {
     f0_ptr(&a)
     f1_ptr(&a)
     f2_ptr(&a)
-    //f3_ptr(&a)
+    f3_ptr(&a)
 
     f0_ptr(&b)
     f1_ptr(&b)
     f2_ptr(&b)
-    //f3_ptr(&b)
+    f3_ptr(&b)
 
     f0_ptr(&c)
     f1_ptr(&c)
     f2_ptr(&c)
-    //f3_ptr(&c)
+    f3_ptr(&c)
 }
 
 

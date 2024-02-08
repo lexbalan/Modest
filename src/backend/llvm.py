@@ -524,13 +524,11 @@ def print_type_record(t):
     while i < len(fields):
         field = fields[i]
         if i > 0: out(',')
-
-        #if type_is_pointer_to_record(field['type']):
-        #    if field['type']['to']['']
-
-        out("\n\t"); print_type(field['type'])
+        #out("\n\t");
+        print_type(field['type'])
         i = i + 1
-    out("\n}")
+    #out("\n}")
+    out("}")
 
 
 def print_type_array(t):

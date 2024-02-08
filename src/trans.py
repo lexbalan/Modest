@@ -1711,6 +1711,7 @@ def def_func(x):
 
     func_type = do_type_func(x['type'], func_id=func_id['str'])
 
+    # search for VA_List
     params = func_type['params']
     extra_args = False
     va_id = ""
@@ -1767,12 +1768,15 @@ def def_func(x):
     i = 0
     while i < len(params):
         param = params[i]
+        param_type = param['type']
         param_id = param['id']
 
-        param_value = hlir_value_const(param_id, param['type'], ti=param['ti'])
+        param_value = hlir_value_const(param_id, param_type, ti=param['ti'])
         param_value['att'].append('local')
 
-        if hlir_type.type_is_defined_array(param['type']):
+        #
+
+        if hlir_type.type_is_defined_array(param_type):
             param_value['att'].append('wrapped_array_value')
 
         module['context'].value_add(param_id['str'], param_value)
