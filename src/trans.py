@@ -1548,8 +1548,6 @@ def module_remove_node(m, isa, id_str):
 
 
 
-
-
 def decl_type(x):
     id = x['id']
     nt = hlir_type_opaque(id, id['ti'])
@@ -1608,8 +1606,8 @@ def def_type(x):
     nt['definition'] = _def
 
 
-
     if already_declared:
+        _def['afterdef'] = True
         # just overwrite existed 'opaque' type (for records)
         pre_exist.update(nt)
         # and find and remove declaration instruction
@@ -1634,7 +1632,6 @@ def def_type(x):
 
 def def_var(x):
     f = do_field(x['field'])
-
 
     # already defined?
     already = value_get(f['id']['str'])

@@ -218,7 +218,6 @@ define void @f3_ptr({
 define void @test_by_value() {
     %1 = load %Type1, %Type1* @a
     call void (%Type1) @f0_val(%Type1 %1)
-;cast_record_to_record
     %2 = load %Type1, %Type1* @a
     %3 = alloca %Type1
     store %Type1 %2, %Type1* %3
@@ -228,7 +227,6 @@ define void @test_by_value() {
     %6 = load %Type1, %Type1* @a
     call void (%Type1) @f2_val(%Type1 %6)
     ;f3_val(a)
-;cast_record_to_record
     %7 = load %Type2, %Type2* @b
     %8 = alloca %Type2
     store %Type2 %7, %Type2* %8
@@ -237,7 +235,6 @@ define void @test_by_value() {
     call void (%Type1) @f0_val(%Type1 %10)
     %11 = load %Type2, %Type2* @b
     call void (%Type2) @f1_val(%Type2 %11)
-;cast_record_to_record
     %12 = load %Type2, %Type2* @b
     %13 = alloca %Type2
     store %Type2 %12, %Type2* %13
@@ -247,7 +244,6 @@ define void @test_by_value() {
     ;f3_val(b)
     %16 = load %Type1, %Type1* @c
     call void (%Type1) @f0_val(%Type1 %16)
-;cast_record_to_record
     %17 = load %Type1, %Type1* @c
     %18 = alloca %Type1
     store %Type1 %17, %Type1* %18
