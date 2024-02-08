@@ -859,9 +859,10 @@ def do_eval_expr_cast_immediate(x):
 
     # строки печатаются ТОЛЬКО отсюда!
     if hlir_type.type_is_pointer_to_array_of_char(to_type):
-        string_of = to_type['to']['of']
-        char_pow = string_of['width']
-        return llvm_value_str(x['strid'], x['asset'], x['type'], value)
+        if hlir_type.type_is_array_of_char(from_type):
+            string_of = to_type['to']['of']
+            char_pow = string_of['width']
+            return llvm_value_str(x['strid'], x['asset'], x['type'], value)
 
     return do_eval_literal(x)
 
