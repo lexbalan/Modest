@@ -1089,7 +1089,7 @@ class Parser:
         }
 
 
-    def parse_def_var(self):
+    def parse_def_var(self, is_extern):
         ff = self.parse_field()
         if ff == None:
             return None
@@ -1104,6 +1104,7 @@ class Parser:
                 'isa': 'ast_definition',
                 'kind': 'var',
                 'field': f,
+                'extern': is_extern,
                 'init': iv,
                 'ti': f['ti']
             })
@@ -1253,7 +1254,7 @@ class Parser:
                 continue
             elif self.match('func'): x = self.parse_def_func()
             elif self.match('const'): x = self.parse_def_const()
-            elif self.match('var'): x = self.parse_def_var()
+            elif self.match('var'): x = self.parse_def_var(extern)
             elif self.match('type'): x = self.parse_def_type()
 
             elif self.token_class_is('comment-block'):

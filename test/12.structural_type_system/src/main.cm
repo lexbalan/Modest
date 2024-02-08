@@ -49,9 +49,9 @@ func f3_ptr(x : *record {x : Int32}) -> Unit {
 }
 
 
-var a : Type1 = {x=1}
-var b : Type2 = {x=2}
-var c : Type3 = {x=3}
+var a: Type1 = {x=1}
+var b: Type2 = {x=2}
+var c: Type3 = {x=3}
 
 
 

@@ -1635,6 +1635,7 @@ def def_type(x):
 def def_var(x):
     f = do_field(x['field'])
 
+
     # already defined?
     already = value_get(f['id']['str'])
     if already != None:
@@ -1657,6 +1658,9 @@ def def_var(x):
             hlir_type.check(var_type, init_value['type'], x['init']['ti'])
 
     var = hlir_value_var(f['id'], var_type)
+
+    if x['extern']:
+        var['att'].append('extern')
 
     module['context'].value_add(x['field']['id']['str'], var)
 

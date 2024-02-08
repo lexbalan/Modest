@@ -635,12 +635,41 @@ def type_eq_func(a, b, opt):
     return type_eq_fields(a['params'], b['params'], opt)
 
 
+
+def get_type_root_id(t):
+    if t['definition'] != None:
+        _def = t['definition']
+        rd = get_type_root_id(_def['type'])
+
+        if rd != None:
+            return rd
+        else:
+            return _def['id']
+
+
+    elif t['declaration'] != None:
+        _decl = t['declaration']
+        rd = get_type_root_id(_def['type'])
+
+        if rd != None:
+            return rd
+        else:
+            return _decl['id']
+
+    else:
+        return None
+
+
 def type_eq_record(a, b, opt, nominative=False):
     if nominative:
-        if ('id' in a) and ('id' in b):
-            if a['id']['str'] != b['id']['str']:
+        a_root_id = get_type_root_id(a)
+        b_root_id = get_type_root_id(b)
+        #print("A_ROOT: " + str(a_root_id))
+        #print("B_ROOT: " + str(b_root_id))
+        if a_root_id != None and b_root_id != None:
+            if a_root_id['str'] != b_root_id['str']:
                 return False
-        elif ('id' in a) or ('id' in b):
+        elif a_root_id != None or b_root_id != None:
             return False
 
     if len(a['fields']) != len(b['fields']): return False
@@ -991,7 +1020,7 @@ def type_print(t, print_aka=True):
             print(t['declaration']['id']['str'])
             return
 
-        elif t['id'] != None:
+        """elif t['id'] != None:
             id_str = t['id']['str']
 
             if id_str == '<generic:int>':
@@ -1006,7 +1035,7 @@ def type_print(t, print_aka=True):
                 if 'width' in t:
                     print('%d' % (t['width']), end='')
 
-            return
+            return"""
 
 
 
@@ -1064,9 +1093,9 @@ def type_print(t, print_aka=True):
         type_print(t['to'])
 
     elif type_is_integer(t):
-        print('%' + t['id']['str'], end='')
-        if type_is_generic(t):
-            print('%d' % t['width'], end='')
+        #print('integer' + t['id']['str'], end='')
+        #if type_is_generic(t):
+        print('Integer_%d' % t['width'], end='')
 
     elif type_is_opaque(t):
         print('opaque', end='')

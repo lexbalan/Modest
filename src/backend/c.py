@@ -593,6 +593,8 @@ def print_value_access_ptr(x, ctx):
 
 
 def print_cast_hard(t, v, ctx=[]):
+    # hard cast is possible only in function body
+    assert(cfunc != None)
     out("*(")
     print_type(t, space_after=True)
     out("*)&")
@@ -603,10 +605,10 @@ def print_cast_hard(t, v, ctx=[]):
 
 def print_cast(t, v, ctx=[]):
     # if id(A) == id(B) => do not cast
-    if 'c_alias' in v['type'] and 'c_alias' in t:
+    """if 'c_alias' in v['type'] and 'c_alias' in t:
         if v['type']['c_alias'] == t['c_alias']:
             print_value(v, ctx)
-            return
+            return"""
 
     out("("); print_type(t); out(")")
     need_wrap = precedence(v) < precedence({'kind': 'cast'})

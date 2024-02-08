@@ -109,9 +109,15 @@ def value_cons_implicit(v, t, ti):
         #    if from_type['id']['str'] != t['id']['str']:
                 #info("impl cast record", ti)
 
-        if from_type['declaration'] != None and t['declaration'] != None:
-            if from_type['declaration'] == t['declaration']:
-                return hlir_value_cast(v, t, ti=ti)
+        #if from_type['declaration'] != None and t['declaration'] != None:
+        #    if from_type['declaration'] != t['declaration']:
+        #if t != from_type:
+
+        if type.type_is_generic(from_type):
+            return value_cons_soft(v, t, ti)
+
+        if not type.type_eq_record(t, from_type, opt=[], nominative=True):
+            return hlir_value_cast(v, t, ti=ti)
 
     # for structural type system support
     if type.type_is_pointer_to_record(t):

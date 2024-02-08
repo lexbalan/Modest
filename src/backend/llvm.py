@@ -589,19 +589,25 @@ def print_type_id(t):
 # функция может получать только указатель на массив
 # если же в CM она получает массив то тут и в СИ она получает
 # указатель на него, и потом копирует его во внутренний массив
-def print_type(t, print_aka=True):
+def print_type(t):
+    print_aka=True
     k = t['kind']
 
     if print_aka:
+
+
+        # тупой LLVM не умеет делать алиасы структур
+        # он типа делает, но потом к переменной с таким типом
+        # хрен обратишься... дерьмо
+        if hlir_type.type_is_record(t):
+            root_id = hlir_type.get_type_root_id(t)
+            if root_id != None:
+                out("%" + root_id['str'])
+                return
+
         res = print_type_id(t)
         if res:
             return
-
-
-
-        """if 'llvm_alias' in t:
-            out(t['llvm_alias'])
-            return"""
 
         # иногда сюда залетают дженерики например в to левое:
         # let p = 0x12345678 to *Nat32
@@ -865,6 +871,7 @@ def do_eval_expr_cast_immediate(x):
 # (просто с другим именем, изза чего LLVM ее считает "другой")
 def cast_record_to_record(to_type, value, ti):
     #info("cast_record_to_record", ti)
+    #out("\n;cast_record_to_record")
     from_type = value['type']
     # создаем переменную под структуру A
     iv = do_reval(value)
@@ -1435,9 +1442,15 @@ def print_decl_type(x):
 
 
 def print_def_type(x):
+    xtype = x['type']
+    if hlir_type.type_is_record(xtype):
+        root_id = hlir_type.get_type_root_id(xtype)
+        if root_id != None:
+            return
+
     out("\n%%%s = type " % x['id']['str'])
-    print_type(x['type'], print_aka=False)
-    if hlir_type.type_is_record(x['type']):
+    print_type(xtype)
+    if hlir_type.type_is_record(xtype):
         out("\n")
 
 
@@ -1529,7 +1542,7 @@ def print_module(m):
         print_module(imported_module)
 
 
-    out("; -- SOURCE: %s\n" % m['source_info']['name'])
+    out("\n; -- SOURCE: %s\n" % m['source_info']['name'])
 
     print_strings(m['strings'])
 

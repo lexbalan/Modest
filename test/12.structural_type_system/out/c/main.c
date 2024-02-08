@@ -72,7 +72,7 @@ void test_by_value()
 {
     f0_val(a);
     f1_val(*(Type2 *)&a);
-    f2_val(*(Type3 *)&a);
+    f2_val(a);
     //f3_val(a)
 
     f0_val(*(Type1 *)&b);
@@ -80,7 +80,7 @@ void test_by_value()
     f2_val(*(Type3 *)&b);
     //f3_val(b)
 
-    f0_val(*(Type1 *)&c);
+    f0_val(c);
     f1_val(*(Type2 *)&c);
     f2_val(c);
     //f3_val(c)
@@ -91,7 +91,7 @@ void test_by_pointer()
 {
     f0_ptr(&a);
     f1_ptr((Type2 *)&a);
-    f2_ptr((Type3 *)&a);
+    f2_ptr(&a);
     //f3_ptr(&a)
 
     f0_ptr((Type1 *)&b);
@@ -99,7 +99,7 @@ void test_by_pointer()
     f2_ptr((Type3 *)&b);
     //f3_ptr(&b)
 
-    f0_ptr((Type1 *)&c);
+    f0_ptr(&c);
     f1_ptr((Type2 *)&c);
     f2_ptr(&c);
     //f3_ptr(&c)

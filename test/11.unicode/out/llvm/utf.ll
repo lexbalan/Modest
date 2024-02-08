@@ -25,7 +25,9 @@ target triple = "arm64-apple-macosx12.0.0"
 %Str8 = type [0 x %Char8]
 %Str16 = type [0 x %Char16]
 %Str32 = type [0 x %Char32]
-%VA_List = type i8*; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/system.hm
+%VA_List = type i8*
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/system.hm
+
 
 
 
@@ -33,9 +35,9 @@ target triple = "arm64-apple-macosx12.0.0"
 
 
 
-%Str = type [0 x i8]
+%Str = type %Str8
 %Char = type i8
-%ConstChar = type i8
+%ConstChar = type %Char
 %SignedChar = type i8
 %UnsignedChar = type i8
 %Short = type i16
@@ -56,7 +58,9 @@ target triple = "arm64-apple-macosx12.0.0"
 %SizeT = type i64
 %SSizeT = type i64
 
+
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
+
 
 
 
@@ -69,8 +73,8 @@ target triple = "arm64-apple-macosx12.0.0"
 %FposT = type opaque
 %FILE = type opaque
 
-%CharStr = type [0 x i8]
-%ConstCharStr = type [0 x i8]
+%CharStr = type %Str
+%ConstCharStr = type %CharStr
 
 
 declare %Int @fclose(%FILE* %f)
@@ -114,6 +118,7 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %FILE* %f)
 declare void @perror(%ConstCharStr* %str)
+
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/misc/utf.cm
 
