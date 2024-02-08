@@ -14,6 +14,7 @@
 
 
 struct FSM;
+typedef struct FSM FSM;
 
 typedef void *FSM_Proc;
 
@@ -34,13 +35,13 @@ typedef struct {
 
 typedef uint32_t UInt32;
 
-typedef struct {
+struct FSM {
     char name[fsmNameLength];
     uint32_t state;
     uint32_t nexstate;
     uint32_t substate;
     FSM_StateDesc states[fsmMaxStates];
-} FSM;
+};
 
 
 char *fsm_state_no_name(FSM *fsm, uint32_t state_no);

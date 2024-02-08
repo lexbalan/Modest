@@ -11,9 +11,7 @@ type Type2 record {
 }
 
 
-type Type3 record {
-    x: Int32
-}
+type Type3 Type1
 
 
 func f0_val(x: Type1) -> Unit {
