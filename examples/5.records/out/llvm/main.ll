@@ -307,9 +307,15 @@ declare void @bcopy(i8* %src, i8* %dst, %SizeT %n)
 
 
 
-%Point = type {%Float,%Float}
+%Point = type {
+	%Float,
+	%Float
+}
 
-%Line = type {%Point,%Point}
+%Line = type {
+	%Point,
+	%Point
+}
 
 
 @line = global %Line {

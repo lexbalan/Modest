@@ -231,7 +231,10 @@ declare void @perror(%ConstCharStr* %str)
 
 
 
-%Chunk = type {[100 x %Char],[1024 x %Char]}
+%Chunk = type {
+	[100 x %Char],
+	[1024 x %Char]
+}
 
 
 define void @write_example() {

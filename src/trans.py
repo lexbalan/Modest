@@ -1939,7 +1939,7 @@ def do_directive(x):
         if not skipp:
             if cond:
                 production = True
-                skipp = True # skip another branches
+                skipp = True  # skip another branches
 
         #print("skipp after elseif = " + str(skipp))
     elif kind == 'else':
@@ -1947,7 +1947,7 @@ def do_directive(x):
         production = not skipp
 
     elif kind == 'endif':
-        skipp = old_skipp # do not skip branches (for new if)
+        skipp = old_skipp  # do not skip branches (for new if)
         production = old_production
 
     elif kind == 'info':

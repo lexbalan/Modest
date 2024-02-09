@@ -165,9 +165,17 @@ declare void @bcopy(i8* %src, i8* %dst, %SizeT %n)
 
 
 
-%Node = type {%Node*,%Node*,i8*}
+%Node = type {
+	%Node*,
+	%Node*,
+	i8*
+}
 
-%List = type {%Node*,%Node*,i32}
+%List = type {
+	%Node*,
+	%Node*,
+	i32
+}
 
 
 define %List* @linked_list_create() {

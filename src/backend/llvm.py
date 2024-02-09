@@ -523,11 +523,16 @@ def print_type_record(t):
     i = 0
     while i < len(fields):
         field = fields[i]
+
         if i > 0: out(',')
-        #out("\n\t");
+        if is_global_context():
+            out("\n\t");
+        else:
+            out(" ")
         print_type(field['type'])
         i = i + 1
-    #out("\n}")
+    if is_global_context():
+        out("\n")
     out("}")
 
 

@@ -133,7 +133,10 @@ declare void @perror(%ConstCharStr* %str)
 
 
 
-%Point = type {i32,i32}
+%Point = type {
+	i32,
+	i32
+}
 
 
 
