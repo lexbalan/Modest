@@ -1664,7 +1664,6 @@ def run(module, outname):
         else:
             out("// %s\n" % outname)
 
-
     guardname = ''
     if is_header:
         guardname = outname.split("/")[-1]
@@ -1681,7 +1680,6 @@ def run(module, outname):
 
     # search for @c_include("...")
     cdirectives(module)
-
 
     for x in module['text']:
         if 'c-no-print' in x['att']:
@@ -1714,7 +1712,7 @@ def memcopy(left, right):
     print_value(right)
     out(", sizeof ")
 
-    if left['kind'] in ['index']:
+    if left['kind'] == 'index':
         out("(")
         print_type(right['type'], array_as_ptr=False)
         out(")")
