@@ -14,6 +14,14 @@ LLVM_TARGET_TRIPLE = ""
 LLVM_TARGET_DATALAYOUT = ""
 
 
+# LLVM не умеет нативно возвращать большие значения
+# Для этого есть механизм sret;
+# когда первым параметром идет указатель на возвращаемое значение (ABI)
+RET_SIZE_MAX = 16
+def need_sret(return_type):
+    return return_type['size'] > RET_SIZE_MAX
+
+
 INDENT_SYMBOL = " " * 4
 
 NL_INDENT = "\n%s" % INDENT_SYMBOL
@@ -712,6 +720,7 @@ def do_eval_expr_un(v):
 
 
 
+
 def do_eval_expr_call(v, retval=None):
     # eval all args
     args = []
@@ -722,7 +731,7 @@ def do_eval_expr_call(v, retval=None):
     func = v['func']
     ftype = func['type']
 
-    sret = 'sret' in ftype['att']
+    sret = need_sret(ftype['to'])
 
     # если просто вызвали и не забирают retval
     # сгенерим фейковый retval
@@ -1191,7 +1200,7 @@ def print_stmt_return(x):
         v = do_eval(x['value'])
 
     global cfunc
-    if 'sret' in cfunc['type']['att']:
+    if need_sret(cfunc['type']['to']):
         to = cfunc['type']['to']
         p2retval = llvm_value_reg("0", hlir_type_pointer(to))
 
@@ -1234,7 +1243,7 @@ def print_stmt_let(x):
     val = x['value']
 
     if val['kind'] == 'call':
-        if 'sret' in val['func']['type']['att']:
+        if need_sret(val['func']['type']['to']):
             v = llvm_alloca(val['type'], id_str=None)
             do_eval_expr_call(val, retval=v)
             locals_add(id_str, v)
@@ -1302,7 +1311,7 @@ def print_stmt(x):
 
 
 def print_func_paramlist(func, only_types=False, with_attributes=True):
-    sret = 'sret' in func['type']['att']
+    sret = need_sret(func['type']['to'])
 
     ftype = func['type']
 
@@ -1350,7 +1359,7 @@ def print_func_paramlist(func, only_types=False, with_attributes=True):
 
 
 def print_func_signature(func):
-    sret = 'sret' in func['type']['att']
+    sret = need_sret(func['type']['to'])
 
     ftype = func['type']
     params = ftype['params']
@@ -1401,7 +1410,7 @@ def print_def_func(x):
     out("\ndefine ")
     print_func_signature(func)
 
-    sret = 'sret' in func['type']['att']
+    sret = need_sret(func['type']['to'])
     ftype = func['type']
 
     if sret:

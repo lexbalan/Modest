@@ -30,8 +30,6 @@ production = True
 old_production = True
 
 
-RET_SIZE_MAX = 16
-
 # current file directory
 env_current_file_abspath = ""
 env_current_file_dir = ""
@@ -387,8 +385,6 @@ def do_type_func(t, func_id="_"):
         params.append(param)
 
 
-    sret = False  # возврат большого значения
-
     to = None
     if t['to'] != None:
         to = do_type(t['to'])
@@ -399,17 +395,10 @@ def do_type_func(t, func_id="_"):
             to['att'].append('wrapped_array_type')
             to['wrapped_id'] = 'struct ' + func_id + '_' + 'retval'
 
-        if to['size'] > RET_SIZE_MAX:
-            sret = True
-            module_option('use_memcpy')
-
     else:
         to = hlir_type.typeUnit
 
-    ft = hlir_type_func(params, to, var_args, va_list_id, ti=t['ti'])
-    if sret:
-        ft['att'].append('sret')
-    return ft
+    return hlir_type_func(params, to, var_args, va_list_id, ti=t['ti'])
 
 
 
