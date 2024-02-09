@@ -486,11 +486,6 @@ def type_init():
 
     typeFreePointer = hlir_type_pointer(to=typeUnit)
     # не нужно делать decl тк нет собственного имени у этого типа
-    # TODO: remove code below
-    #free_pointer_decl = hlir_decl_type(hlir_id('Pointer'), typeFreePointer, ti=None)
-    #free_pointer_decl['c_alias'] = 'void *'
-    #free_pointer_decl['llvm_alias'] = 'i8*'
-    #foundation.append(free_pointer_decl)
 
 
     typeStr8 = hlir_type_array(of=typeChar8)
