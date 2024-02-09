@@ -1585,10 +1585,10 @@ def print_def_const(x):
 
 def print_include(x):
     if x['local']:
-        include_line = "#include \"%s\"" % x['str']
+        include_text = "#include \"%s\"" % x['str']
     else:
-        include_line = "#include <%s>" % x['str']
-    out(include_line)
+        include_text = "#include <%s>" % x['str']
+    out(include_text)
 
 
 def print_insert(x):

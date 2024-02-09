@@ -1723,7 +1723,6 @@ def def_func(x):
     func_ti = func_id['ti']
 
     func_type = do_type_func(x['type'], func_id=func_id['str'])
-
     old_cfunc = cfunc
 
     fn = None
@@ -1775,8 +1774,6 @@ def def_func(x):
 
         param_value = hlir_value_const(param_id, param_type, ti=param['ti'])
         param_value['att'].append('local')
-
-        #
 
         if hlir_type.type_is_defined_array(param_type):
             param_value['att'].append('wrapped_array_value')
