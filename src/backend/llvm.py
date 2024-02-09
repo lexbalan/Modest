@@ -529,10 +529,14 @@ def print_type_record(t):
             out("\n\t");
         else:
             out(" ")
+
         print_type(field['type'])
+
         i = i + 1
+
     if is_global_context():
         out("\n")
+
     out("}")
 
 
