@@ -72,7 +72,6 @@ def hlir_type_unit():
     }
 
 
-
 def hlir_type_bool():
     return {
         'isa': 'type',
@@ -128,7 +127,6 @@ def hlir_type_integer(id_str, width, signed=True, ti=None):
         'att': [],
         'ti': ti
     }
-
 
 
 def hlir_type_float(id_str, width, ti=None):
@@ -345,7 +343,6 @@ def type_init():
     global typeVA_List
 
     from .hlir import hlir_decl_type
-    #from .id import hlir_id
 
     typeUnit = hlir_type_unit()
     unit_decl = hlir_decl_type(hlir_id('Unit'), typeUnit, ti=None)
