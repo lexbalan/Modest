@@ -259,7 +259,6 @@ def hlir_type_record(fields, ti=None):
     }
 
 
-# дефолт аргумент не работает!!!!
 def hlir_type_func(params, to, var_args, va_list_id, ti=None):
     return {
         'isa': 'type',
@@ -287,6 +286,7 @@ def hlir_type_opaque(id, ti=None):
         'generic': False,
         'declaration': None,
         'definition': None,
+        'ops': [],
         'att': [],
         'ti': ti
     }
