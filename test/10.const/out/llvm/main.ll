@@ -324,15 +324,9 @@ declare double @max_float64(double %a, double %b)
 
 
 
-%Point = type {
-	double,
-	double
-}
+%Point = type {double,double}
 
-%Line = type {
-	%Point,
-	%Point
-}
+%Line = type {%Point,%Point}
 
 
 

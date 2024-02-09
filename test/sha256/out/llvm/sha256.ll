@@ -159,12 +159,7 @@ declare void @bcopy(i8* %src, i8* %dst, %SizeT %n)
 
 
 
-%SHA256_Context = type {
-	[64 x i8],
-	i32,
-	i64,
-	[8 x i32]
-}
+%SHA256_Context = type {[64 x i8],i32,i64,[8 x i32]}
 
 
 define i32 @rotleft(i32 %a, i32 %b) {

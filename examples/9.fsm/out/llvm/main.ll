@@ -126,26 +126,14 @@ declare void @perror(%ConstCharStr* %str)
 
 
 %FSM_Proc = type void (%FSM*)*
-%FSM_Empty = type {
-}
+%FSM_Empty = type {}
 
-%FSM_StateDesc = type {
-	[8 x i8],
-	%FSM_Proc,
-	%FSM_Proc,
-	%FSM_Proc
-}
+%FSM_StateDesc = type {[8 x i8],%FSM_Proc,%FSM_Proc,%FSM_Proc}
 
 
 
 %UInt32 = type i32
-%FSM = type {
-	[8 x i8],
-	i32,
-	i32,
-	i32,
-	[16 x %FSM_StateDesc]
-}
+%FSM = type {[8 x i8],i32,i32,i32,[16 x %FSM_StateDesc]}
 
 
 declare %Str8* @fsm_state_no_name(%FSM* %fsm, i32 %state_no)

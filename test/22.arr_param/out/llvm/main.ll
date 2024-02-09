@@ -293,14 +293,9 @@ define void @kk([2 x [10 x i8]] %x) {
     i32 2
 ]
 
-%Point = type {
-	i32,
-	i32
-}
+%Point = type {i32,i32}
 
-%Pod = type {
-	[10 x i8]
-}
+%Pod = type {[10 x i8]}
 
 
 define %Int @main() {

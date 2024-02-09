@@ -276,7 +276,7 @@ def hlir_type_record(fields, ti=None):
 
 
 # дефолт аргумент не работает!!!!
-def hlir_type_func(params, to, ti=None):
+def hlir_type_func(params, to, var_args, va_list_id, ti=None):
     return {
         'isa': 'type',
         'kind': 'func',
@@ -286,7 +286,8 @@ def hlir_type_func(params, to, ti=None):
         'size': 0,
         'align': 0,
         'params': params,
-        'extra_args': False,
+        'extra_args': var_args,
+        'va_list_id': va_list_id,
         'to': to,
         'declaration': None,
         'definition': None,

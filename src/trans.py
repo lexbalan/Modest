@@ -357,11 +357,26 @@ def do_type_enum(t):
 
 
 def do_type_func(t, func_id="_"):
+    # check params
+    var_args = False
+    va_list_id = None
     params = []
-
     for _param in t['params']:
         param = do_field(_param)
+
+        if param == None:
+            continue
+
         pt = param['type']
+
+        if var_args:
+            error("VA_List must be last paramter", _param)
+
+        if hlir_type.type_is_va_list(pt):
+            var_args = True
+            va_list_id = param['id']
+            continue
+
         if hlir_type.type_is_array(pt):
             #info("array as function parameter", _param)
             nt = type_copy(pt)
@@ -369,9 +384,7 @@ def do_type_func(t, func_id="_"):
             pt['wrapped_id'] = 'struct ' + func_id + '_' + param['id']['str']
             param['type'] = pt
 
-        if param != None:
-            params.append(param)
-
+        params.append(param)
     to = None
     if t['to'] != None:
         to = do_type(t['to'])
@@ -385,7 +398,7 @@ def do_type_func(t, func_id="_"):
     else:
         to = hlir_type.typeUnit
 
-    return hlir_type_func(params, to, ti=t['ti'])
+    return hlir_type_func(params, to, var_args, va_list_id, ti=t['ti'])
 
 
 
@@ -1711,18 +1724,6 @@ def def_func(x):
 
     func_type = do_type_func(x['type'], func_id=func_id['str'])
 
-    # search for VA_List
-    params = func_type['params']
-    extra_args = False
-    va_id = ""
-    if len(params) > 1:
-        last_param = params[-1]
-        extra_args = hlir_type.type_is_va_list(last_param['type'])
-        if extra_args:
-            va_id = last_param['id']
-            params.pop()
-
-
     old_cfunc = cfunc
 
     fn = None
@@ -1765,6 +1766,7 @@ def def_func(x):
     if already:
         fn['att'].append('declared')
 
+    params = func_type['params']
     i = 0
     while i < len(params):
         param = params[i]
@@ -1783,10 +1785,9 @@ def def_func(x):
         i = i + 1
 
 
-    if extra_args:
-        cfunc['va_id'] = va_id
-        func_type['extra_args'] = True
-        add_local_var(va_id, last_param['type'], va_id['ti'])
+    if func_type['extra_args']:
+        va_id = func_type['va_list_id']
+        add_local_var(va_id, hlir_type.typeVA_List, va_id['ti'])
         module_option('use_extra_args')
 
 
@@ -1854,16 +1855,6 @@ def decl_func(x):
         if func_type['to']['size'] > RET_SIZE_MAX:
             func['att'].append('sret')
             module_option('use_memcpy')
-
-    # check if last arg is VA_List
-    # (in this case set ['extra_args'] = True)
-    params = func_type['params']
-    if len(params) > 1:
-        last_param = params[-1]
-        if hlir_type.type_is_va_list(last_param['type']):
-            va_id = last_param['id']
-            func_type['extra_args'] = True
-            params.pop()
 
 
     if x['extern']:

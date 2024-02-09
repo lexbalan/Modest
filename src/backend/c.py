@@ -1376,7 +1376,7 @@ def print_def_func(x):
 
     if extra_args:
         # add va_list & va_start()
-        va_id = func['va_id']['str']
+        va_id = ftype['va_list_id']['str']
         newline(); indent(); out("va_list %s;" % va_id)
         last_param = ftype['params'][-1]
         newline(); indent(); out("va_start(%s, %s);" % (va_id, last_param['id']['str']))

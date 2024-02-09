@@ -1412,7 +1412,7 @@ def print_def_func(x):
 
     if ftype['extra_args']:
         global va_list
-        id_str = func['va_id']['str'] # 'va_list'
+        id_str = ftype['va_list_id']['str'] # 'va_list'
         va_list = llvm_alloca(hlir_type.typeFreePointer, id_str=None)
         locals_add(id_str, va_list)
         llvm_va_start(va_list)

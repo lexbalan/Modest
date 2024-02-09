@@ -230,11 +230,7 @@ declare void @sha256_doHash([0 x i8]* %msg, i32 %len, [0 x i8]* %hash)
 
 
 
-%SHA256_TestCase = type {
-	[32 x i8],
-	i32,
-	[32 x i8]
-}
+%SHA256_TestCase = type {[32 x i8],i32,[32 x i8]}
 
 
 @test0 = global %SHA256_TestCase {

@@ -143,10 +143,7 @@ declare void @perror(%ConstCharStr* %str)
 
 
 
-%Point = type {
-	i32,
-	i32
-}
+%Point = type {i32,i32}
 
 
 @glb_i0 = global i32 0

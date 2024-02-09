@@ -216,20 +216,11 @@ declare void @bcopy(i8* %src, i8* %dst, %SizeT %n)
 
 
 
-%Struct_sockaddr = type {
-	%UnsignedShort,
-	[14 x i8]
-}
+%Struct_sockaddr = type {%UnsignedShort,[14 x i8]}
 
-%Struct_in_addr = type {
-	%UnsignedLong
-}
+%Struct_in_addr = type {%UnsignedLong}
 
-%Struct_sockaddr_in = type {
-	%Short,
-	%UnsignedShort,
-	%Struct_in_addr
-}
+%Struct_sockaddr_in = type {%Short,%UnsignedShort,%Struct_in_addr}
 
 
 
