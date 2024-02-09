@@ -526,7 +526,7 @@ def print_type_record(t):
 
         if i > 0: out(',')
         if is_global_context():
-            out("\n\t");
+            out("\n\t")
         else:
             out(" ")
 
