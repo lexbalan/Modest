@@ -1344,6 +1344,8 @@ def print_func_signature(id_str, ftype, atts, print_wrappers=True):
 
 def print_decl_func(x):
     newline(n=x['nl'])
+    if 'gnu_att' in x:
+        out('__attribute__((%s))\n' % x['gnu_att'])
     print_func_signature(x['id']['str'], x['value']['type'], x['value']['att'])
     out(";")
 
@@ -1357,6 +1359,9 @@ def print_def_func(x):
     cfunc = func
 
     newline(n=x['nl'])
+
+    if 'gnu_att' in x:
+        out('__attribute__((%s))\n' % x['gnu_att'])
 
     ftype = func['type']
     extra_args = ftype['extra_args']
@@ -1518,6 +1523,10 @@ def print_variable(_id, typ, as_const=False, init_value=None):
 
 def print_def_var(x):
     newline(n=x['nl'])
+
+    if 'gnu_att' in x:
+        out('__attribute__((%s))\n' % x['gnu_att'])
+
     id = x['id']
     var = x['value']
     if USE_STATIC_VARIABLES:

@@ -29,3 +29,22 @@ func main () {
 
 **global** - do not add "static" to top-level variable (by default - static)
 
+
+
+Property `gnu_att`
+```
+@property("gnu_att", "interrupt(\"WCH-Interrupt-fast\")")
+func wch_systick_interrupt() {
+    //
+}
+```
+
+will be translated into
+
+```
+__attribute__((interrupt("WCH-Interrupt-fast")))
+void wch_systick_interrupt()
+{
+    //
+}
+```
