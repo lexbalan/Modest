@@ -17,7 +17,7 @@ func main () {
 }
 ```
 
-**c-no-print** - entity must not be printed in C output
+**c-no-print** - entity definition must not be printed by C printer
 
 **dispensable** - means that result of function call can be ignored
 
