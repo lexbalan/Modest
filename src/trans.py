@@ -385,6 +385,10 @@ def do_type_func(t, func_id="_"):
             param['type'] = pt
 
         params.append(param)
+
+
+    sret = False
+
     to = None
     if t['to'] != None:
         to = do_type(t['to'])
@@ -395,10 +399,16 @@ def do_type_func(t, func_id="_"):
             to['att'].append('wrapped_array_type')
             to['wrapped_id'] = 'struct ' + func_id + '_' + 'retval'
 
+        if to['size'] > RET_SIZE_MAX:
+            sret = True
+            module_option('use_memcpy')
+
     else:
         to = hlir_type.typeUnit
 
-    return hlir_type_func(params, to, var_args, va_list_id, ti=t['ti'])
+    ft = hlir_type_func(params, to, var_args, va_list_id, ti=t['ti'])
+    ft['sret'] = sret
+    return ft
 
 
 
@@ -1749,10 +1759,6 @@ def def_func(x):
         # create new function definition
         fn = hlir_value_func(func_id, func_type, ti=func_ti)
 
-    if already == None:
-        if func_type['to']['size'] > RET_SIZE_MAX:
-            fn['att'].append('sret')
-            module_option('use_memcpy')
 
     cfunc = fn
 
@@ -1847,12 +1853,6 @@ def decl_func(x):
         return
 
     func = hlir_value_func(id, func_type, ti=id['ti'])
-
-    if already == None:
-        if func_type['to']['size'] > RET_SIZE_MAX:
-            func['att'].append('sret')
-            module_option('use_memcpy')
-
 
     if x['extern']:
         func['att'].append('extern')
