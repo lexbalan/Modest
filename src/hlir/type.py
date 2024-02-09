@@ -44,7 +44,6 @@ def hlir_type_bad(ti=None):
     return {
         'isa': 'type',
         'kind': 'bad',
-        #'id': None,
         'generic': False,
         'width': 0,
         'size': 0,
@@ -61,13 +60,10 @@ def hlir_type_unit():
     return {
         'isa': 'type',
         'kind': 'unit',
-        #'id': hlir_id('Unit'),
         'generic': False,
         'width': 0,
         'size': 0,
         'align': 0,
-        #'c_alias': 'void',
-        #'llvm_alias': 'void',
         'declaration': None,
         'definition': None,
         'ops': CONS_OP,
@@ -81,14 +77,10 @@ def hlir_type_bool():
     return {
         'isa': 'type',
         'kind': 'bool',
-        #'id': hlir_id('Bool'),
         'generic': False,
         'width': 1,
         'size': 1,
         'align': 1,
-        #'c_alias': 'bool',
-        #'llvm_alias': 'i1',
-        'cm_alias': 'Bool',
         'declaration': None,
         'definition': None,
         'ops': BOOL_OPS,
@@ -108,7 +100,6 @@ def hlir_type_char(id_str, width, ti=None):
     return {
         'isa': 'type',
         'kind': 'char',
-        #'id': id,
         'generic': False,
         'width': width,
         'size': size,
@@ -126,7 +117,6 @@ def hlir_type_integer(id_str, width, signed=True, ti=None):
     return {
         'isa': 'type',
         'kind': 'int',
-        #'id': hlir_id(id_str),
         'generic': False,
         'width': width,
         'size': size,
@@ -146,12 +136,10 @@ def hlir_type_float(id_str, width, ti=None):
     return {
         'isa': 'type',
         'kind': 'float',
-        #'id': hlir_id(id_str),
         'generic': False,
         'width': width,
         'size': size,
         'align': size,
-        #'c_alias': 'double',
         'declaration': None,
         'definition': None,
         'ops': FLOAT_OPS,
@@ -165,7 +153,6 @@ def hlir_type_pointer(to, ti=None):
     return {
         'isa': 'type',
         'kind': 'pointer',
-        #'id': None,
         'generic': False,
         'width': ptr_width,
         'size': size,
@@ -194,7 +181,6 @@ def hlir_type_array(of, volume=None, ti=None):
     return {
         'isa': 'type',
         'kind': 'array',
-        #'id': None,
         'generic': False,
         'width': 0, #'width': array_size * 8,
         'size': array_size,
@@ -220,7 +206,6 @@ def hlir_type_enum(ti=None):
     return {
         'isa': 'type',
         'kind': 'enum',
-        #'id': None,
         'generic': False,
         'items': [],
         'width': enum_width,
@@ -261,7 +246,6 @@ def hlir_type_record(fields, ti=None):
     return {
         'isa': 'type',
         'kind': 'record',
-        #'id': None,
         'generic': False,
         'width': 0, #'width': record_size * 8,
         'size': record_size,
@@ -280,7 +264,6 @@ def hlir_type_func(params, to, var_args, va_list_id, ti=None):
     return {
         'isa': 'type',
         'kind': 'func',
-        #'id': None,
         'generic': False,
         'width': 0,
         'size': 0,
@@ -301,7 +284,6 @@ def hlir_type_opaque(id, ti=None):
     return {
         'isa': 'type',
         'kind': 'opaque',
-        #'id': id,
         'generic': False,
         'declaration': None,
         'definition': None,
@@ -530,7 +512,6 @@ def type_init():
     typeVA_List = {
         'isa': 'type',
         'kind': 'va_list',
-        #'id': None,
         'generic': False,
         'size': 0,
         'align': 1,
@@ -963,15 +944,8 @@ def type_copy(t):
 def create_alias(id_str, t, ti):
     #info('type.create_alias ' + id, ti)
     nt = type_copy(t)
-
-    nt['id'] = hlir_id(id_str, ti=ti)
-
-    if 'c_alias' in nt:
-        del nt['c_alias']
-
     nt['aliasof'] = t
     nt['ti'] = ti
-
     return nt
 
 
