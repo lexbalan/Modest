@@ -1,10 +1,7 @@
 
 // for clock()
-@attribute("c-no-print")
 import "libc/libc.hm"
-
 // for printf
-@attribute("c-no-print")
 import "libc/stdio.hm"
 
 

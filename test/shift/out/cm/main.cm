@@ -1,5 +1,5 @@
 // test/shift/src/main.cm
-@attribute("c-no-print")
+
 import "libc/stdio.h"
 
 

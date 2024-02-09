@@ -1,5 +1,5 @@
 // examples/
-@attribute("c-no-print")
+
 import "libc/stdio.h"
 @attribute("c-no-print")
 import "fastfood/print.h"

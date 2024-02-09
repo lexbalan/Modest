@@ -1,5 +1,5 @@
 // test/3.const/main.cm
-@attribute("c-no-print")
+
 import "libc/stdio.h"
 
 const perfectIntConst = 42

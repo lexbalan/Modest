@@ -1,24 +1,18 @@
 /* from: https://github.com/pshashipreetham/File-Transfer-Using-TCP-Socket-in-C-Socket-Programming/tree/master */
 
-@attribute("c-no-print")
 import "libc/stdio.hm"
-
-@attribute("c-no-print")
 import "libc/libc.hm"
-
-@attribute("c-no-print")
 import "libc/socket.hm"
 
 
-
+const FILENAME = "file2.txt"
 const BUF_SIZE = 1024
 
-func write_file(sockfd: Int) {
-    let filename = "file2.txt" to *Str8
 
+func write_file(sockfd: Int) {
     var buffer: [BUF_SIZE]Char8
 
-    let fp = fopen(filename, "w")
+    let fp = fopen(FILENAME, "w")
     if fp == nil {
         perror("[-] Error in creating file.")
         exit(1)

@@ -1,6 +1,5 @@
 // examples/fsm/fsm.cm
 
-@attribute("c-no-print")
 import "libc/stdio.hm"
 
 import "./fsm.hm"

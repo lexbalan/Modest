@@ -1,5 +1,6 @@
 // libc/math.hm
 
+@pragma("c_ignore")
 
 @c_include("math.h")
 

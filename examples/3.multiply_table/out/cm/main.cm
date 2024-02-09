@@ -1,5 +1,5 @@
 // examples/3.multiply_table/main.cm
-@attribute("c-no-print")
+
 import "libc/stdio.h"
 
 

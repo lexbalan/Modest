@@ -1164,7 +1164,7 @@ class Parser:
 
         dir = {
             'isa': 'ast_directive',
-            'kind': 'pragma',
+            'kind': 'directive',
             'text': x,
             'ti': ti
         }
@@ -1193,8 +1193,8 @@ class Parser:
             v = self.expr_value()
             dir['kind'] = 'error'
             dir['value'] = v
-        elif x == 'pragma':
-            dir['kind'] = 'pragma'
+        #elif x == 'pragma':
+        #    dir['kind'] = 'pragma'
 
 
         return dir

@@ -1,11 +1,9 @@
 // examples/8.linked_list/main.cm
-@attribute("c-no-print")
+
 import "libc/libc.h"
-@attribute("c-no-print")
 import "libc/stdio.h"
 
 import "./linked_list.h"
-
 
 
 // wrap around linked list for List Nat64

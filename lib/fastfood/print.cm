@@ -4,7 +4,6 @@
 //import "./main.hm"
 //@c_include("./ff.h")
 
-@attribute("c-no-print")
 import "libc/stdio.hm"
 
 

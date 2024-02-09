@@ -1,5 +1,5 @@
 // examples/4.many_sources/main.cm
-@attribute("c-no-print")
+
 import "libc/stdio.h"
 
 import "./lib.h"

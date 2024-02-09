@@ -1,4 +1,5 @@
 
-@attribute("c-no-print")
+@pragma("c_ignore")
+
 const __SYSTEM = 64
 

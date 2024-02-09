@@ -1,9 +1,7 @@
 /* from: https://github.com/pshashipreetham/File-Transfer-Using-TCP-Socket-in-C-Socket-Programming/tree/master */
-@attribute("c-no-print")
+
 import "libc/stdio.h"
-@attribute("c-no-print")
 import "libc/libc.h"
-@attribute("c-no-print")
 import "libc/socket.h"
 
 

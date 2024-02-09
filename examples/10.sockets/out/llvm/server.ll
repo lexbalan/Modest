@@ -353,7 +353,7 @@ declare %Int @accept(%Int %s, %Struct_sockaddr* %addr, %socklen_t* %addrlen)
 
 define void @write_file(%Int %sockfd) {
     %1 = alloca [1024 x i8]
-    %2 = call %FILE* (%ConstCharStr*, %ConstCharStr*) @fopen(%Str8* bitcast ([10 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
+    %2 = call %FILE* (%ConstCharStr*, %ConstCharStr*) @fopen(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
     %3 = icmp eq %FILE* %2, null
     br i1 %3 , label %then_0, label %endif_0
 then_0:

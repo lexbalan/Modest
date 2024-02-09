@@ -1,5 +1,5 @@
 // examples/8.linked_list/linked_list.cm
-@attribute("c-no-print")
+
 import "libc/libc.h"
 
 import "./linked_list.h"

@@ -4,7 +4,9 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>//+ " " + party_corn
+#include <stdio.h>
+
+//+ " " + party_corn
 
 
 int main()

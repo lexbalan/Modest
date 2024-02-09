@@ -8,6 +8,7 @@
 
 
 
+
 int main()
 {
     printf("test cast operation\n");

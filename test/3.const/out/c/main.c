@@ -6,6 +6,8 @@
 
 #include <stdio.h>
 
+
+
 #define perfectIntConst  42
 #define int32Const  ((int32_t)perfectIntConst)
 #define string8Const  "Hello!"

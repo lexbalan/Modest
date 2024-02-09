@@ -1,8 +1,9 @@
 // libc/unistd.hm
 
+@pragma("c_ignore")
+
 @c_include("unistd.h")
 
-@attribute("c-no-print")
 import "./ctypes.hm"
 
 type PidT  Int  // ??

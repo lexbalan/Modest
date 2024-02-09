@@ -1,12 +1,12 @@
 // libc/ctypes.hm
 
+@pragma("c_ignore")
+
 import "./system.hm"
 
 @if __SYSTEM == 32
-@attribute("c-no-print")
 import "./ctypes32.hm"
 @elseif __SYSTEM == 64
-@attribute("c-no-print")
 import "./ctypes64.hm"
 @else
 @error("C types not implemented")

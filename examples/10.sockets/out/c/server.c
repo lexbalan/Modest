@@ -14,15 +14,15 @@
 
 
 
+
 #define BUF_SIZE  1024
+
 
 void write_file(int sockfd)
 {
-    char *const filename = "file2.txt";
-
     char buffer[BUF_SIZE];
 
-    FILE *const fp = fopen(filename, "w");
+    FILE *const fp = fopen("file2.txt", "w");
     if (fp == NULL) {
         perror("[-] Error in creating file.");
         exit(1);

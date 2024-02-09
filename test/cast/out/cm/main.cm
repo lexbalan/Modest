@@ -1,7 +1,6 @@
 // test/cast/main.cm
-@attribute("c-no-print")
-import "libc/stdio.h"
 
+import "libc/stdio.h"
 
 
 func main() -> Int {

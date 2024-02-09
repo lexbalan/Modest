@@ -1,12 +1,7 @@
 // examples/5.records/main.cm
 
-@attribute("c-no-print")
 import "libc/math.hm"
-
-@attribute("c-no-print")
 import "libc/stdio.hm"
-
-@attribute("c-no-print")
 import "libc/libc.hm"
 
 

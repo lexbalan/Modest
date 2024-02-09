@@ -1,6 +1,5 @@
 // examples/
 
-@attribute("c-no-print")
 import "libc/stdio.hm"
 
 @attribute("c-no-print")

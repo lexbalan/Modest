@@ -1,6 +1,5 @@
 // examples/2.if-else/main.cm
 
-@attribute("c-no-print")
 import "libc/stdio.hm"
 
 

@@ -1,5 +1,5 @@
 // examples/6.text_file/main.cm
-@attribute("c-no-print")
+
 import "libc/stdio.h"
 
 

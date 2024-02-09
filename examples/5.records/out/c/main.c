@@ -13,6 +13,10 @@
 #include <time.h>
 
 
+
+
+
+
 typedef struct {
     float x;
     float y;

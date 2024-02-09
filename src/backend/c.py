@@ -1593,6 +1593,12 @@ def print_def_const(x):
 
 
 def print_include(x):
+    # если в модуле включена опция c_ignore
+    if 'module' in x:
+        if x['module'] != None:
+            if 'c_ignore' in x['module']['att']:
+                return
+
     if x['local']:
         include_text = "#include \"%s\"" % x['str']
     else:

@@ -1,5 +1,5 @@
 
-@attribute("c-no-print")
+
 import "libc/stdio.hm"
 
 

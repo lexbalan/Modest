@@ -1,4 +1,5 @@
 
+@pragma("c_ignore")
 
 import "./libc.hm"
 

@@ -1,5 +1,5 @@
 // test/4.typedef/main.cm
-@attribute("c-no-print")
+
 import "libc/stdio.h"
 
 type NewInt32 Int32

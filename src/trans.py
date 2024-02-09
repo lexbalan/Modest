@@ -119,6 +119,13 @@ def property(id, value):
 
 
 
+def pragma(pg):
+    #print("@pragma " +  pg)
+    if pg == 'c_ignore':
+        module['att'].append('c_ignore')
+
+
+
 attributes = []
 
 def attribute(at):
@@ -1507,6 +1514,7 @@ def do_import(x):
         'kind': 'import',
         'str': impline[:-1],    # .hm -> .h
         'att': att,
+        'module': m, # ссылка на сам модуль (для c_ignore)
         'local': True
     }
 
@@ -1881,9 +1889,9 @@ def do_directive(x):
     if kind == 'import':
         return do_import(x)
 
-    elif kind == 'pragma':
-        """def pragma(cmd, args):
-            exec("%s(%s)" % (cmd, str(args)))"""
+    elif kind == 'directive':
+        #def pragma(cmd, args):
+        #    exec("%s(%s)" % (cmd, str(args)))
 
         exec(x['text'])
 
@@ -1997,6 +2005,7 @@ def proc(ast, source_info):
         'strings': [],  # (used in LLVM backend)
         'context': new_context,
         'options': [],
+        'att': [],
         'text': []
     }
 
