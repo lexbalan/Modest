@@ -26,7 +26,7 @@ def value_cons_char(v, t, ti, method):
     from_type = v['type']
 
     # implicit casts
-    if type.type_is_generic_char(from_type):
+    if type.type_is_perfect_char(from_type):
         return value_cons_char_immediate(v, t, ti)
 
     # explicit casts

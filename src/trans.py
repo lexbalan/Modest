@@ -236,7 +236,7 @@ def init():
 
 
     # Set taget depended Int & Nat types
-    # (used in index, extra agrs & generic numeric var definitions)
+    # (used in index, extra agrs & perfect numeric var definitions)
 
     char_width = int(settings.get('char_width'))
     int_width = int(settings.get('integer_width'))
@@ -433,8 +433,8 @@ def do_value_shift(x):
     if value_is_immediate(l) and value_is_immediate(r):
         return bin_imm(op, l['type'], l, r, ti)
 
-    if hlir_type.type_is_generic(l['type']):
-        error("required value with non-generic type", l)
+    if hlir_type.type_is_perfect(l['type']):
+        error("required value with non-perfect type", l)
         return hlir_value_bad(ti)
 
     return hlir_value_bin(op, l, r, l['type'], ti=ti)
@@ -443,10 +443,10 @@ def do_value_shift(x):
 
 # select result type of common binary operation
 def bin_type_select(a, b):
-    if not hlir_type.type_is_generic(a):
+    if not hlir_type.type_is_perfect(a):
         return a
 
-    if not hlir_type.type_is_generic(b):
+    if not hlir_type.type_is_perfect(b):
         return b
 
     if a['width'] > b['width']:
@@ -539,9 +539,9 @@ def bin_imm(op, type_result, l, r, ti):
 
     num_val = ops[op](l['asset'], r['asset'])
 
-    if hlir_type.type_is_generic(type_result):
-        # пересматриваем generic тип для нового значения (!)
-        type_result = hlir_type_generic_int_for(num_val, unsigned=True, ti=ti)
+    if hlir_type.type_is_perfect(type_result):
+        # пересматриваем perfect тип для нового значения (!)
+        type_result = hlir_type_perfect_int_for(num_val, unsigned=True, ti=ti)
 
     if not hlir_type.type_is_float(l['type']):
         num_val = int(num_val)
@@ -557,10 +557,10 @@ def value_concat_arrays(l, r, ti):
     length = len(imm_str) + 1  #!
 
     str_array_volume = hlir_value_int(length)
-    generic = True  # не факт, анализируй a и b
+    perfect = True  # не факт, анализируй a и b
     item_type = l['type']['of'] #hlir_type.typeChar32
     genStrType = hlir_type_array(item_type, volume=str_array_volume, ti=ti)
-    genStrType['generic'] = True
+    genStrType['perfect'] = True
 
     bin_value = hlir_value_bin('add_str', l, r, genStrType, ti=ti)
     bin_value['asset'] = imm_str
@@ -568,7 +568,7 @@ def value_concat_arrays(l, r, ti):
     return bin_value
 
 
-# FIXIT: it is generic arrays EQ!
+# FIXIT: it is perfect arrays EQ!
 def value_eq_arrays(l, r):
     if l['type']['volume']['asset'] != r['type']['volume']['asset']:
         return False
@@ -620,7 +620,7 @@ def do_value_bin(x):
         return do_bin_op_with_pointers(op, l, r, ti)
 
 
-    if hlir_type.type_is_generic_array(l['type']) and hlir_type.type_is_generic_array(r['type']):
+    if hlir_type.type_is_perfect_array(l['type']) and hlir_type.type_is_perfect_array(r['type']):
         if op == 'add':
             return value_concat_arrays(l, r, ti)
         elif op in ['eq', 'ne']:
@@ -686,8 +686,8 @@ def do_value_minus(v, ti):
     if value_is_immediate(v):
         nv['asset'] = -v['asset']
 
-        if hlir_type.type_is_generic(nv['type']):
-            nv['type'] = hlir_type_generic_int_for(v['asset'], unsigned=False, ti=ti)
+        if hlir_type.type_is_perfect(nv['type']):
+            nv['type'] = hlir_type_perfect_int_for(v['asset'], unsigned=False, ti=ti)
 
     return nv
 
@@ -854,8 +854,8 @@ def do_value_call(x):
 
 
 
-            if hlir_type.type_is_generic(arg_type):
-                warning("value with generic type as extra argument", a['ti'])
+            if hlir_type.type_is_perfect(arg_type):
+                warning("value with perfect type as extra argument", a['ti'])
                 arg = value_cons_default(arg, a['ti'])
 
             args.append(arg)
@@ -901,7 +901,7 @@ def do_value_index(x):
     if not hlir_type.type_is_integer(index['type']):
         error("expected integer value", x['index'])
 
-    if hlir_type.type_is_generic(index['type']):
+    if hlir_type.type_is_perfect(index['type']):
         index = value_cons_implicit(index, typeSysInt, index['ti'])
 
     v = None
@@ -910,9 +910,9 @@ def do_value_index(x):
         v = hlir_value_index_array_by_ptr(left, index, ti=x['ti'])
     else:
 
-        if type.type_is_generic(left['type']):
+        if type.type_is_perfect(left['type']):
             if not value_is_immediate(index):
-                error("cannot index generic array by variable", x['ti'])
+                error("cannot index perfect array by variable", x['ti'])
 
         v = hlir_value_index_array(left, index, ti=x['ti'])
 
@@ -1023,7 +1023,7 @@ def do_value_str(x):
 
 
 
-# было решено не пытаться приводить generic элементы массива
+# было решено не пытаться приводить perfect элементы массива
 # к общему знаменателю, а оставить как есть;
 # потом, когда массив будет приводиться к конкретному типу
 # всплывут ошибки типизации если они есть.
@@ -1069,13 +1069,13 @@ def do_value_record(x):
             'ti': item['ti']
         })
 
-        # создаем поле для generic record
+        # создаем поле для perfect record
         field = hlir_field(item_id, item_value['type'], ti=item['ti'])
         fields.append(field)
 
-    generic_record_type = hlir_type_record(fields, ti=x['ti'])
-    generic_record_type['generic'] = True
-    v = hlir_value_record(generic_record_type, initializers, ti=x['ti'])
+    perfect_record_type = hlir_type_record(fields, ti=x['ti'])
+    perfect_record_type['perfect'] = True
+    v = hlir_value_record(perfect_record_type, initializers, ti=x['ti'])
     v['nl_end'] = x['nl_end']
     return v
 
@@ -1272,7 +1272,7 @@ def do_stmt_var(x):
 
 
     if t == None:
-        if hlir_type.type_is_generic(v['type']):
+        if hlir_type.type_is_perfect(v['type']):
             v = value_cons_default(v, x['value']['ti'])
 
         t = v['type']

@@ -11,7 +11,7 @@ def value_cons_pointer_immediate(v, t, ti):
     return hlir_value_cast_immediate(v, t, ti)
 
 
-def cons_ptr_to_str_from_generic_str(v, t, ti):
+def cons_ptr_to_str_from_perfect_str(v, t, ti):
     from trans import module_strings_add
 
     char_pow = t['to']['of']['width']
@@ -70,9 +70,9 @@ def value_cons_pointer(v, t, ti, method):
     else:
         # implicit cons pointer from non-pointer value
 
-        if type.type_is_generic_array_of_char(vtype):
+        if type.type_is_perfect_array_of_char(vtype):
             if type.type_is_pointer_to_array_of_char(to_type):
-                return cons_ptr_to_str_from_generic_str(v, t, ti)
+                return cons_ptr_to_str_from_perfect_str(v, t, ti)
 
 
     ### EXPLICIT REGION ###

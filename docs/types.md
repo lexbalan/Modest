@@ -13,20 +13,20 @@
 | `rem` | `%` |
 
 
-## Generic types
+## Perfect types
 
-*Generic type* - compile time type, that can be *implicit* casted to real types for using in runtime.
+*Perfect type* - compile time type, that can be *implicit* casted to *Imperfect types* for using in runtime.
 
-| GenericType | Description | Examples |
+| PerfectType | Description | Examples |
 | ----------- | ----------- | -------- |
-| `GenericInteger` | type of integer literal | `0, 1, 2, ...` |
-| `GenericFloat` | type of floating point literal | `0.5, 2.7, 3.14, ...` |
-| `GenericChar` | type of char literal | `"a"[0], "b"[0], ...` |
-| `GenericArray` | type of array literal | `[1, 2, 3], ...` |
-| `GenericRecord` | type of record literal | `{x=1, y=2, z=3}, ...` |
+| `PerfectInteger` | type of integer literal | `0, 1, 2, ...` |
+| `PerfectFloat` | type of floating point literal | `0.5, 2.7, 3.14, ...` |
+| `PerfectChar` | type of char literal | `"a"[0], "b"[0], ...` |
+| `PerfectArray` | type of array literal | `[1, 2, 3], ...` |
+| `PerfectRecord` | type of record literal | `{x=1, y=2, z=3}, ...` |
 
 
-## Real *(non-generic)* types
+## Real *(non-perfect)* types
 
 | Type     |Size | Classes | Description |
 | :------: | :-: | ------- | --- |

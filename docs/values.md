@@ -3,12 +3,12 @@
 ## Literal values
 
 ### Numeric literals
-Numeric literals have type **GenericNumeric**
+Numeric literals have type **PerfectNumeric**
 ```swift
 42
 ```
 
-You can cast it to any real type (Int8, Int16, Int32, Nat8, etc.)
+You can cast it to any imperfect type (Int8, Int16, Int32, Nat8, etc.)
 
 ```swift
 var a : Int8
@@ -25,7 +25,7 @@ e = 256 // error (Nat8 = {0 .. 255})
 
 
 ### String literals
-String literals have type `[]GenericChar`
+String literals have type `[]PerfectChar`
 ```swift
 "Hello wolrd!"
 ```

@@ -23,7 +23,7 @@ def do_cons_float(v, t, ti):
 def value_cons_float(v, t, ti, method):
     vt = v['type']
 
-    if type.type_is_generic(vt):
+    if type.type_is_perfect(vt):
         # (GenericInt or GenericFloat) -> Float
         if type.type_is_integer(vt) or type.type_is_float(vt):
             return value_cons_float_immediate(v, t, ti)

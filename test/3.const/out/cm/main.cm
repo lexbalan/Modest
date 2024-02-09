@@ -2,13 +2,13 @@
 @attribute("c-no-print")
 import "libc/stdio.h"
 
-const genericIntConst = 42
-const int32Const = genericIntConst to Int32
+const perfectIntConst = 42
+const int32Const = perfectIntConst to Int32
 
-const genericStringConst = "Hello!"
-const string8Const = genericStringConst to *Str8
-const string16Const = genericStringConst to *Str16
-const string32Const = genericStringConst to *Str32
+const perfectStringConst = "Hello!"
+const string8Const = perfectStringConst to *Str8
+const string16Const = perfectStringConst to *Str16
+const string32Const = perfectStringConst to *Str32
 
 
 type Point record {
@@ -41,10 +41,10 @@ var points2: [3]Point = points
 func main() -> Int {
     printf("test const\n")
 
-    printf("genericIntConst = %d\n", genericIntConst to Int32)
+    printf("perfectIntConst = %d\n", perfectIntConst to Int32)
     printf("int32Const = %d\n", int32Const)
 
-    //	printf("genericStringConst = %s\n", genericStringConst)
+    //	printf("perfectStringConst = %s\n", perfectStringConst)
     printf("string8Const = %s\n", string8Const)
 
     return 0

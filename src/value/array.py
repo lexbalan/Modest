@@ -8,8 +8,8 @@ from .value import *
 
 # TODO: массив может НЕЯВНО быть построен только из
 # полного или из пустого дженерик массива
-def value_cons_array_from_generic_array(v, t, ti, method):
-    #info("value_cons_array_from_generic_array", ti)
+def value_cons_array_from_perfect_array(v, t, ti, method):
+    #info("value_cons_array_from_perfect_array", ti)
 
     pad = 0
 
@@ -96,8 +96,8 @@ def value_cons_array(v, t, ti, method):
     if type.type_is_array(from_type):
 
         # GenericArray -> Array
-        if type.type_is_generic(from_type):
-            return value_cons_array_from_generic_array(v, t, ti, method)
+        if type.type_is_perfect(from_type):
+            return value_cons_array_from_perfect_array(v, t, ti, method)
 
         if method != 'explicit':
             info("cannot implicit cons Array value", ti)

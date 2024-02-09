@@ -2,37 +2,37 @@
 
 ## Implicit type casting
 
-### Implicit cast generic -> regular type
+### Implicit cast perfect -> imperfect type
 
-Generic types can be implicitly casted to correspond type
+Perfect types can be implicitly casted to correspond type
 
 
 ```zig
-// example: GenericInt -> Int
+// example: PerfectInt -> Int
 
 var i : Int32
 
-// implicit cast literal numeric value '1' with type GenericInt to type Int32 
+// implicit cast literal numeric value '1' with type PerfectInt to type Int32 
 i = 1
 ```
 
 
 ```zig
-// example: GenericArray -> Array
+// example: PerfectArray -> Array
 
 var a : [3]Int32
 
-// implicit cast literal array value '[1, 2, 3]' with type Generic[3]GenericInt to type [3]Int32
+// implicit cast literal array value '[1, 2, 3]' with type Perfect[3]PerfectInt to type [3]Int32
 a = [1, 2, 3]
 ```
 
 
 ```zig
-// example: GenericRecord -> Record
+// example: PerfectRecord -> Record
 
 var r : record {x : Int32, y : Int32}
 
-// implicit cast literal record value {x=0, y=0} with type GenericRecord {x : Int32, y : Int32}
+// implicit cast literal record value {x=0, y=0} with type PerfectRecord {x : Int32, y : Int32}
 // to type record {x : Int32, y : Int32}
 r = {x=0, y=0}
 ```
@@ -80,7 +80,7 @@ a = [1, 2, 3] to [10]Int32
 type Point3D record {x : Int32, y : Int32, z : Int32}
 
 var r : Point3D
-// you can't implicit cast {x : GenericInt} -> record {x : Int32, y : Int32, z : Int32}
+// you can't implicit cast {x : PerfectInt} -> record {x : Int32, y : Int32, z : Int32}
 // but you can do explicit cast (all rest fields will be filled with zeros)
 r = {x=0} to Point3D
 ```

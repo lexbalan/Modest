@@ -7,7 +7,7 @@ from util import get_item_with_id
 from .value import *
 
 
-def value_cons_record_from_generic_record(v, t, ti, method):
+def value_cons_record_from_perfect_record(v, t, ti, method):
     if v['kind'] == 'const':
         # TODO: тут нужно проверить чтобы при implicit методе
         # все поля присутствовали (!)
@@ -105,8 +105,8 @@ def value_cons_record(v, t, ti, method):
 
     if type.type_is_record(from_type):
 		# GenericRecord -> Record  (implicit)
-        if type.type_is_generic(from_type):
-            return value_cons_record_from_generic_record(v, t, ti, method)
+        if type.type_is_perfect(from_type):
+            return value_cons_record_from_perfect_record(v, t, ti, method)
 
         if method != 'explicit':
             info("cannot implicit cons Record value", ti)

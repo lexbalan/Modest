@@ -26,7 +26,7 @@ def value_cons_byte(v, t, ti, method):
     from_type = v['type']
 
     # implicit casts
-    if type.type_is_generic_integer(from_type):
+    if type.type_is_perfect_integer(from_type):
         return value_cons_byte_immediate(v, t, ti)
 
     # explicit casts

@@ -6,8 +6,8 @@
 
 #include <stdio.h>
 
-#define genericIntConst  42
-#define int32Const  ((int32_t)genericIntConst)
+#define perfectIntConst  42
+#define int32Const  ((int32_t)perfectIntConst)
 #define string8Const  "Hello!"
 #define string16Const  u"Hello!"
 #define string32Const  U"Hello!"
@@ -42,10 +42,10 @@ int main()
 {
     printf("test const\n");
 
-    printf("genericIntConst = %d\n", (int32_t)genericIntConst);
+    printf("perfectIntConst = %d\n", (int32_t)perfectIntConst);
     printf("int32Const = %d\n", int32Const);
 
-    //	printf("genericStringConst = %s\n", genericStringConst)
+    //	printf("perfectStringConst = %s\n", perfectStringConst)
     printf("string8Const = %s\n", string8Const);
 
     return 0;
