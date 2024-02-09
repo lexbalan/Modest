@@ -387,7 +387,7 @@ def do_type_func(t, func_id="_"):
         params.append(param)
 
 
-    sret = False
+    sret = False  # возврат большого значения
 
     to = None
     if t['to'] != None:
@@ -407,7 +407,8 @@ def do_type_func(t, func_id="_"):
         to = hlir_type.typeUnit
 
     ft = hlir_type_func(params, to, var_args, va_list_id, ti=t['ti'])
-    ft['sret'] = sret
+    if sret:
+        ft['att'].append('sret')
     return ft
 
 

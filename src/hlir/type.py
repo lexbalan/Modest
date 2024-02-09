@@ -271,7 +271,6 @@ def hlir_type_func(params, to, var_args, va_list_id, ti=None):
 
         'extra_args': var_args,
         'va_list_id': va_list_id,
-        'sret': False,
 
         'declaration': None,
         'definition': None,

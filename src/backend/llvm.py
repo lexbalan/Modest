@@ -722,9 +722,7 @@ def do_eval_expr_call(v, retval=None):
     func = v['func']
     ftype = func['type']
 
-    sret = False
-    if 'sret' in ftype:
-        sret = ftype['sret']
+    sret = 'sret' in ftype['att']
 
     # если просто вызвали и не забирают retval
     # сгенерим фейковый retval
@@ -1193,7 +1191,7 @@ def print_stmt_return(x):
         v = do_eval(x['value'])
 
     global cfunc
-    if cfunc['type']['sret']:
+    if 'sret' in cfunc['type']['att']:
         to = cfunc['type']['to']
         p2retval = llvm_value_reg("0", hlir_type_pointer(to))
 
@@ -1236,7 +1234,7 @@ def print_stmt_let(x):
     val = x['value']
 
     if val['kind'] == 'call':
-        if val['func']['type']['sret']:
+        if 'sret' in val['func']['type']['att']:
             v = llvm_alloca(val['type'], id_str=None)
             do_eval_expr_call(val, retval=v)
             locals_add(id_str, v)
@@ -1304,7 +1302,7 @@ def print_stmt(x):
 
 
 def print_func_paramlist(func, only_types=False, with_attributes=True):
-    sret = func['type']['sret']
+    sret = 'sret' in func['type']['att']
 
     ftype = func['type']
 
@@ -1352,7 +1350,7 @@ def print_func_paramlist(func, only_types=False, with_attributes=True):
 
 
 def print_func_signature(func):
-    sret = func['type']['sret']
+    sret = 'sret' in func['type']['att']
 
     ftype = func['type']
     params = ftype['params']
@@ -1403,7 +1401,7 @@ def print_def_func(x):
     out("\ndefine ")
     print_func_signature(func)
 
-    sret = func['type']['sret']
+    sret = 'sret' in func['type']['att']
     ftype = func['type']
 
     if sret:
