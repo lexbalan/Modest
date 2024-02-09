@@ -15,6 +15,6 @@ func linked_list_node_link_get (node : *Node) -> Pointer
 
 func linked_list_insert_node (list : *List, new_node : *Node) -> *Node
 
-@attribute("value:dispensable")
+@attribute("value.type.to:dispensable")
 func linked_list_insert (list : *List, link : Pointer) -> *Node
 

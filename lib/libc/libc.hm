@@ -64,16 +64,16 @@ type DIR
 func clock () -> Nat64
 
 func malloc (size: SizeT) -> Pointer
-@attribute("value:dispensable")
+@attribute("value.type.to:dispensable")
 func memset (mem: Pointer, c: Int, n: SizeT) -> Pointer
-@attribute("value:dispensable")
+@attribute("value.type.to:dispensable")
 func memcpy(dst: Pointer, src: Pointer, len: SizeT) -> Pointer
 func memcmp(ptr1: Pointer, ptr2: Pointer, num: SizeT) -> Int
 func free(ptr: Pointer) -> Unit
 
 func strncmp(s1: *[]ConstChar, s2: *[]ConstChar, n: SizeT) -> Int
 func strcmp(s1: *[]ConstChar, s2: *[]ConstChar) -> Int
-@attribute("value:dispensable")
+@attribute("value.type.to:dispensable")
 func strcpy(dst: *[]Char, src: *[]ConstChar) -> *[]Char
 func strlen(s: *[]ConstChar) -> SizeT
 
@@ -101,16 +101,16 @@ const s_IWUSR = 0x0000080   // W for owner
 const s_IXUSR = 0x0000040   // X for owner
 
 
-@attribute("value:dispensable")
+@attribute("value.type.to:dispensable")
 func creat(path: *Str, mode: ModeT) -> Int
 func open(path: *Str, oflags: Int) -> Int
-@attribute("value:dispensable")
+@attribute("value.type.to:dispensable")
 func read(fd: Int, buf: *Nat8, len: Nat32) -> Int
-@attribute("value:dispensable")
+@attribute("value.type.to:dispensable")
 func write(fd: Int, buf: *Nat8, len: Nat32) -> Int
-@attribute("value:dispensable")
+@attribute("value.type.to:dispensable")
 func lseek(fd: Int, offset: OffT, whence: Int) -> OffT
-@attribute("value:dispensable")
+@attribute("value.type.to:dispensable")
 func close(fd: Int) -> Int
 func exit(rc: Int) -> Unit
 //func fstat(fd: Int, buf: *Stat) -> Int

@@ -866,9 +866,6 @@ def do_value_call(x):
 
     rv = hlir_value_call(f, ftype['to'], args, ti=x['ti'])
 
-    if 'dispensable' in f['att']:
-        rv['att'].append('dispensable')
-
     if hlir_type.type_is_defined_array(f['type']['to']):
         rv['att'].append('wrapped_array_value')
 
@@ -1392,7 +1389,7 @@ def do_stmt_value(x):
         return hlir_stmt_bad()
 
     if not hlir_type.type_is_unit(v['type']):
-        if not 'dispensable' in v['att']:
+        if not 'dispensable' in v['type']['att']:
             warning("unused result of %s expression" % x['value']['kind'], v['ti'])
 
     return hlir_stmt_value(v, ti=x['ti'])
