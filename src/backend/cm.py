@@ -721,7 +721,7 @@ def print_def_type(x):
     out("type ")
     print_id(x)
     out(" ")
-    print_type(x['type'])
+    print_type(x['type_'])
 
 
 def print_def_var(x):

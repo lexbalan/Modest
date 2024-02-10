@@ -25,7 +25,7 @@ def hlir_def_type(id, newtype, origtype=None, already_declared=False, ti=None):
         'isa': 'def_type',
         'id': id,
         'newtype': newtype,
-        'type': origtype,
+        'type_': origtype,
         'afterdef': already_declared,
         'att': [],
         'ti': ti

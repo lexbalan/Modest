@@ -354,7 +354,7 @@ def type_eq_func(a, b, opt):
 def get_type_root_id(t):
     if t['definition'] != None:
         _def = t['definition']
-        rd = get_type_root_id(_def['type'])
+        rd = get_type_root_id(_def['type_'])
 
         if rd != None:
             return rd
@@ -364,7 +364,7 @@ def get_type_root_id(t):
 
     elif t['declaration'] != None:
         _decl = t['declaration']
-        rd = get_type_root_id(_def['type'])
+        rd = get_type_root_id(_def['type_'])
 
         if rd != None:
             return rd

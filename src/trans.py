@@ -1622,7 +1622,7 @@ def def_type(x):
     if hlir_type.type_is_bad(ty):
         return None
 
-    _def['type'] = ty
+    _def['type_'] = ty
 
     nt = hlir_type.type_copy(ty)
     nt['aliasof'] = ty

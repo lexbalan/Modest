@@ -1412,7 +1412,7 @@ def print_decl_type(x):
 
 def print_def_type(x):
     id = x['id']
-    aliasif = x['type']
+    aliasif = x['type_']
 
     if NO_TYPEDEF_OTHERS:
         if not hlir_type.type_is_record(aliasif):
@@ -1438,7 +1438,7 @@ def print_def_type(x):
     is_defined_array = hlir_type.type_is_defined_array(aliasif)
     out("typedef ")
 
-    if 'volatile' in x['type']['att']:
+    if 'volatile' in x['type_']['att']:
         out("volatile ")
 
     t = aliasif

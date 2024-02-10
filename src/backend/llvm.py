@@ -1461,7 +1461,7 @@ def print_decl_type(x):
 
 
 def print_def_type(x):
-    xtype = x['type']
+    xtype = x['type_']
     if hlir_type.type_is_record(xtype):
         root_id = hlir_type.get_type_root_id(xtype)
         if root_id != None:
