@@ -9,6 +9,7 @@ from hlir.type import type_print
 from value.value import value_is_immediate, value_attribute_check, value_print
 from util import align_bits_up, nbits_for_num, get_item_with_id, utf8_cc_arr_to_utf32_cc_arr, utf16_cc_arr_to_utf32_cc_arr
 from main import settings
+import foundation
 
 import copy
 
@@ -276,7 +277,7 @@ def print_type(t, space_after=False, array_as_ptr=True, as_const=False):
     if hlir_type.type_is_perfect_integer(t):
         # если пришел perfect - подберем подходящий тип
         # ex: let x = 1; func(x)
-        t = hlir_type.type_select_int(t['width'])
+        t = foundation.type_select_int(t['width'])
 
 
     if t['definition'] != None:
@@ -406,7 +407,7 @@ def print_value_un(v, ctx):
     pv = precedence(value)
 
     if op == 'not':
-        if hlir_type.type_eq(value['type'], hlir_type.typeBool):
+        if hlir_type.type_eq(value['type'], foundation.typeBool):
             op = 'logic_not'
 
     if v['kind'] == 'ref':
@@ -683,7 +684,7 @@ def print_value_cast(x, ctx):
                 out("((")
                 print_type(to_type)
                 out(")")
-                nat_same_sz = hlir_type.type_select_nat(from_type['width'])
+                nat_same_sz = foundation.type_select_nat(from_type['width'])
                 print_cast(nat_same_sz, value, ctx)
                 out(")")
                 return

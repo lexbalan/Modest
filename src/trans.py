@@ -6,6 +6,7 @@ from util import get_item_with_id, align_to
 from main import settings
 from frontend.parser import Parser
 
+import foundation
 
 def is_local_context():
     global cfunc
@@ -182,56 +183,56 @@ def init():
 
     hlir_init()
 
-    hlir_type.type_init()
+    foundation.init()
 
-    valueNil = hlir_value_int(0, typ=hlir_type.typeFreePointer)
-    valueTrue = hlir_value_int(1, typ=hlir_type.typeBool)
-    valueFalse = hlir_value_int(0, typ=hlir_type.typeBool)
+    valueNil = hlir_value_int(0, typ=foundation.typeFreePointer)
+    valueTrue = hlir_value_int(1, typ=foundation.typeBool)
+    valueFalse = hlir_value_int(0, typ=foundation.typeBool)
 
     global root_context
     # init main context
     root_context = Symtab()
 
-    root_context.type_add('Unit', hlir_type.typeUnit)
-    root_context.type_add('Bool', hlir_type.typeBool)
+    root_context.type_add('Unit', foundation.typeUnit)
+    root_context.type_add('Bool', foundation.typeBool)
 
-    root_context.type_add('Byte', hlir_type.typeByte)
+    root_context.type_add('Byte', foundation.typeByte)
 
-    root_context.type_add('Char8', hlir_type.typeChar8)
-    root_context.type_add('Char16', hlir_type.typeChar16)
-    root_context.type_add('Char32', hlir_type.typeChar32)
+    root_context.type_add('Char8', foundation.typeChar8)
+    root_context.type_add('Char16', foundation.typeChar16)
+    root_context.type_add('Char32', foundation.typeChar32)
 
-    root_context.type_add('Int8', hlir_type.typeInt8)
-    root_context.type_add('Int16', hlir_type.typeInt16)
-    root_context.type_add('Int32', hlir_type.typeInt32)
-    root_context.type_add('Int64', hlir_type.typeInt64)
-    root_context.type_add('Int128', hlir_type.typeInt128)
+    root_context.type_add('Int8', foundation.typeInt8)
+    root_context.type_add('Int16', foundation.typeInt16)
+    root_context.type_add('Int32', foundation.typeInt32)
+    root_context.type_add('Int64', foundation.typeInt64)
+    root_context.type_add('Int128', foundation.typeInt128)
 
-    root_context.type_add('Nat8', hlir_type.typeNat8)
-    root_context.type_add('Nat16', hlir_type.typeNat16)
-    root_context.type_add('Nat32', hlir_type.typeNat32)
-    root_context.type_add('Nat64', hlir_type.typeNat64)
-    root_context.type_add('Nat128', hlir_type.typeNat128)
+    root_context.type_add('Nat8', foundation.typeNat8)
+    root_context.type_add('Nat16', foundation.typeNat16)
+    root_context.type_add('Nat32', foundation.typeNat32)
+    root_context.type_add('Nat64', foundation.typeNat64)
+    root_context.type_add('Nat128', foundation.typeNat128)
 
-    root_context.type_add('Float16', hlir_type.typeFloat16)
-    root_context.type_add('Float32', hlir_type.typeFloat32)
-    root_context.type_add('Float64', hlir_type.typeFloat64)
+    root_context.type_add('Float16', foundation.typeFloat16)
+    root_context.type_add('Float32', foundation.typeFloat32)
+    root_context.type_add('Float64', foundation.typeFloat64)
 
-    #root_context.type_add('Decimal32', hlir_type.typeDecimal32)
-    #root_context.type_add('Decimal64', hlir_type.typeDecimal64)
-    #root_context.type_add('Decimal128', hlir_type.typeDecimal128)
+    #root_context.type_add('Decimal32', foundation.typeDecimal32)
+    #root_context.type_add('Decimal64', foundation.typeDecimal64)
+    #root_context.type_add('Decimal128', foundation.typeDecimal128)
 
-    root_context.type_add('Str8', hlir_type.typeStr8)
-    root_context.type_add('Str16', hlir_type.typeStr16)
-    root_context.type_add('Str32', hlir_type.typeStr32)
+    root_context.type_add('Str8', foundation.typeStr8)
+    root_context.type_add('Str16', foundation.typeStr16)
+    root_context.type_add('Str32', foundation.typeStr32)
 
-    root_context.type_add('Pointer', hlir_type.typeFreePointer)
+    root_context.type_add('Pointer', foundation.typeFreePointer)
 
-    root_context.type_add('VA_List', hlir_type.typeVA_List)
+    root_context.type_add('VA_List', foundation.typeVA_List)
 
 
-    compilerVersionMajor = hlir_value_int(0, typ=hlir_type.typeNat32)
-    compilerVersionMinor = hlir_value_int(7, typ=hlir_type.typeNat32)
+    compilerVersionMajor = hlir_value_int(0, typ=foundation.typeNat32)
+    compilerVersionMinor = hlir_value_int(7, typ=foundation.typeNat32)
     root_context.value_add('__compilerVersionMajor', compilerVersionMajor)
     root_context.value_add('__compilerVersionMinor', compilerVersionMinor)
 
@@ -256,10 +257,10 @@ def init():
 
     global typeSysInt, typeSysNat, typeSysFloat, typeSysChar, typeSysStr
 
-    typeSysChar = hlir_type.type_select_char(char_width)
-    typeSysInt = hlir_type.type_select_int(int_width)
-    typeSysNat = hlir_type.type_select_nat(int_width)
-    typeSysFloat = hlir_type.typeFloat64
+    typeSysChar = foundation.type_select_char(char_width)
+    typeSysInt = foundation.type_select_int(int_width)
+    typeSysNat = foundation.type_select_nat(int_width)
+    typeSysFloat = foundation.typeFloat64
     typeSysStr = hlir_type_pointer(hlir_type_array(typeSysChar))
 
 
@@ -408,7 +409,7 @@ def do_type_func(t, func_id="_"):
             to['wrapped_id'] = 'struct ' + func_id + '_' + 'retval'
 
     else:
-        to = hlir_type.typeUnit
+        to = foundation.typeUnit
 
     return hlir_type_func(params, to, var_args, va_list_id, ti=t['ti'])
 
@@ -481,7 +482,7 @@ def do_bin_op_with_pointers(op, l, r , ti):
             elif hlir_type.type_is_free_pointer(r['type']):
                 r = value_cons_implicit(r, l['type'], ti)
 
-            return hlir_value_bin(op, l, r, hlir_type.typeBool, ti)
+            return hlir_value_bin(op, l, r, foundation.typeBool, ti)
 
     from main import features
     if not features.get('unsafe'):
@@ -570,7 +571,7 @@ def value_concat_arrays(l, r, ti):
 
     str_array_volume = hlir_value_int(length)
     perfect = True  # не факт, анализируй a и b
-    item_type = l['type']['of'] #hlir_type.typeChar32
+    item_type = l['type']['of'] #foundation.typeChar32
     genStrType = hlir_type_array(item_type, volume=str_array_volume, ti=ti)
     genStrType['perfect'] = True
 
@@ -603,7 +604,7 @@ def do_value_bin_str_eq(op, l, r, ti):
         op = 'ne_str'
         bool_result = not bool_result
 
-    bin_value = hlir_value_bin(op, l, r, hlir_type.typeBool, ti=ti)
+    bin_value = hlir_value_bin(op, l, r, foundation.typeBool, ti=ti)
     bin_value['asset'] = int(bool_result)
     return bin_value
 
@@ -651,10 +652,10 @@ def do_value_bin(x):
     type_result = common_type
 
     if op in (EQ_OPS + RELATIONAL_OPS):
-        type_result = hlir_type.typeBool
+        type_result = foundation.typeBool
 
 
-    if hlir_type.type_eq(type_result, hlir_type.typeBool):
+    if hlir_type.type_eq(type_result, foundation.typeBool):
         if op == 'or': op = 'logic_or'
         elif op == 'and': op = 'logic_and'
 
@@ -1184,8 +1185,8 @@ def do_stmt_if(x):
     if value_is_bad(c) or hlir_stmt_is_bad(t):
         return hlir_stmt_bad()
 
-    c = value_cons_implicit(c, hlir_type.typeBool, c['ti'])
-    hlir_type.check(c['type'], hlir_type.typeBool, x['cond']['ti'])
+    c = value_cons_implicit(c, foundation.typeBool, c['ti'])
+    hlir_type.check(c['type'], foundation.typeBool, x['cond']['ti'])
 
     e = None
     if x['else'] != None:
@@ -1204,8 +1205,8 @@ def do_stmt_while(x):
     if value_is_bad(c) or hlir_stmt_is_bad(s):
         return hlir_stmt_bad()
 
-    c = value_cons_implicit(c, hlir_type.typeBool, c['ti'])
-    if not hlir_type.check(c['type'], hlir_type.typeBool, x['cond']['ti']):
+    c = value_cons_implicit(c, foundation.typeBool, c['ti'])
+    if not hlir_type.check(c['type'], foundation.typeBool, x['cond']['ti']):
         return hlir_stmt_bad()
 
     return hlir_stmt_while(c, s, ti=x['ti'])
@@ -1789,7 +1790,7 @@ def def_func(x):
 
     if func_type['extra_args']:
         va_id = func_type['va_list_id']
-        add_local_var(va_id, hlir_type.typeVA_List, va_id['ti'])
+        add_local_var(va_id, foundation.typeVA_List, va_id['ti'])
         module_option('use_extra_args')
 
 

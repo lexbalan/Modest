@@ -9,6 +9,7 @@ from hlir.value import hlir_is_value, hlir_value_int
 from hlir.type import hlir_type_pointer
 import settings
 
+import foundation
 
 LLVM_TARGET_TRIPLE = ""
 LLVM_TARGET_DATALAYOUT = ""
@@ -43,7 +44,7 @@ def init():
     LLVM_TARGET_TRIPLE = settings.get('target_triple')
     LLVM_TARGET_DATALAYOUT = settings.get('target_datalayout')
 
-    llvm_value_num_zero = llvm_value_num(hlir_type.typeInt32, 0)
+    llvm_value_num_zero = llvm_value_num(foundation.typeInt32, 0)
 
 
 def indent():
@@ -227,14 +228,14 @@ def llvm_va_arg(va_list, typ):
 #"%16 = bitcast i8** %3 to i8*"
 #"call void @llvm.va_start(i8* %16)"
 def llvm_va_start(x):
-    y = llvm_cast('bitcast', hlir_type_pointer(x['type']), hlir_type.typeFreePointer, x)
+    y = llvm_cast('bitcast', hlir_type_pointer(x['type']), foundation.typeFreePointer, x)
     lo("call void @llvm.va_start(i8* %%%s)" % y['reg'])
 
 
 #"%96 = bitcast i8** %3 to i8*"
 #"call void @llvm.va_end(i8* %96)"
 def llvm_va_end(x):
-    y = llvm_cast('bitcast', hlir_type_pointer(x['type']), hlir_type.typeFreePointer, x)
+    y = llvm_cast('bitcast', hlir_type_pointer(x['type']), foundation.typeFreePointer, x)
     lo("call void @llvm.va_end(i8* %%%s)" % y['reg'])
 
 
@@ -306,7 +307,7 @@ def llvm_print_value_num(x):
         if x['asset'] == 0:
             out("null")
         else:
-            v = llvm_value_num(hlir_type.typeNat64, x['asset'])
+            v = llvm_value_num(foundation.typeNat64, x['asset'])
             llvm_inline_cast('inttoptr', x['type'], v)
 
 
@@ -423,8 +424,8 @@ def llvm_store(l, r):
 # получает два указателя, и размер
 def llvm_memcpy(dst, src, size, volatile=False):
     #"@llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)"
-    dst2 = llvm_cast('bitcast', dst['type'], hlir_type.typeFreePointer, dst)
-    src2 = llvm_cast('bitcast', src['type'], hlir_type.typeFreePointer, src)
+    dst2 = llvm_cast('bitcast', dst['type'], foundation.typeFreePointer, dst)
+    src2 = llvm_cast('bitcast', src['type'], foundation.typeFreePointer, src)
     out(NL_INDENT)
     out("call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(")
     llvm_print_type_value(dst2)
@@ -483,7 +484,7 @@ def llvm_dold(x):
 # носер поля (просто число)
 # возвращает value:address для поля этой структуры
 def llvm_eval_access_ptr(x, rec_type, field_no, result_type):
-    field_index = llvm_value_num(hlir_type.typeInt32, field_no)
+    field_index = llvm_value_num(foundation.typeInt32, field_no)
     return llvm_getelementptr(x, rec_type, (llvm_value_num_zero, field_index), result_type)
 
 
@@ -747,7 +748,7 @@ def do_eval_expr_call(v, retval=None):
         f = llvm_dold(f)
         ftype = ftype['to']
 
-    to_unit = hlir_type.type_eq(ftype['to'], hlir_type.typeUnit)
+    to_unit = hlir_type.type_eq(ftype['to'], foundation.typeUnit)
 
 
     # do call
@@ -1432,13 +1433,13 @@ def print_def_func(x):
     if ftype['extra_args']:
         global va_list
         id_str = ftype['va_list_id']['str'] # 'va_list'
-        va_list = llvm_alloca(hlir_type.typeFreePointer, id_str=None)
+        va_list = llvm_alloca(foundation.typeFreePointer, id_str=None)
         locals_add(id_str, va_list)
         llvm_va_start(va_list)
 
     print_stmt_block(func['stmt'])
 
-    if hlir_type.type_eq(ftype['to'], hlir_type.typeUnit):
+    if hlir_type.type_eq(ftype['to'], foundation.typeUnit):
         if va_list != None:
             llvm_va_end(va_list)
         lo("ret void")

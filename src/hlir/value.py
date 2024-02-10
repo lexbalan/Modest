@@ -6,6 +6,7 @@
 from util import nbits_for_num
 import hlir.type as type
 from hlir.type import *
+import foundation
 
 
 
@@ -100,7 +101,7 @@ def hlir_value_string(string, length=0, ti=None):
         length = len(string) + 1
 
     vol = hlir_value_int(length)  # <=> len(string) + 1
-    genStrType = hlir_type_array(type.typeChar32, volume=vol, ti=ti)
+    genStrType = hlir_type_array(foundation.typeChar32, volume=vol, ti=ti)
     genStrType['perfect'] = True
 
     chars = []
