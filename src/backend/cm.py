@@ -714,14 +714,14 @@ def print_def_func(x):
 
 def print_decl_type(x):
     out("type ")
-    #print_id(x['newtype'])
-    print_type(x['newtype'])
+    #print_id(x['type'])
+    print_type(x['type'])
 
 def print_def_type(x):
     out("type ")
     print_id(x)
     out(" ")
-    print_type(x['type_'])
+    print_type(x['original_type'])
 
 
 def print_def_var(x):

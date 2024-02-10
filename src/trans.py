@@ -1600,7 +1600,7 @@ def def_type(x):
     _def = {
         'isa': 'def_type',
         'id': id,
-        'newtype': None,
+        'type': None,
         'type': None,
         'afterdef': False,
         'att': [],
@@ -1622,13 +1622,13 @@ def def_type(x):
     if hlir_type.type_is_bad(ty):
         return None
 
-    _def['type_'] = ty
+    _def['original_type'] = ty
 
     nt = hlir_type.type_copy(ty)
     nt['aliasof'] = ty
     nt['ti'] = id['ti']
 
-    _def['newtype'] = nt
+    _def['type'] = nt
     nt['definition'] = _def
 
 

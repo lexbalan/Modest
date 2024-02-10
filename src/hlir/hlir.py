@@ -12,7 +12,7 @@ def hlir_decl_type(id, newtype, ti):
     newtype_declaration = {
         'isa': 'decl_type',
         'id': id,
-        'newtype': newtype,
+        'type': newtype,
         'att': [],
         'ti': ti
     }
@@ -24,8 +24,8 @@ def hlir_def_type(id, newtype, origtype=None, already_declared=False, ti=None):
     newtype_definition = {
         'isa': 'def_type',
         'id': id,
-        'newtype': newtype,
-        'type_': origtype,
+        'type': newtype,
+        'original_type': origtype,
         'afterdef': already_declared,
         'att': [],
         'ti': ti
