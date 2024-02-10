@@ -1,24 +1,23 @@
 
 @pragma("c_ignore")
 
+
 import "./libc.hm"
 
-
-//@c_include("sys/socket.h")
 @c_include("arpa/inet.h")
+//@c_include("sys/socket.h")
 
 
 @property("c_alias", "struct sockaddr")
 type Struct_sockaddr record {
     sa_family: UnsignedShort  /* address family */
-    sa_data: [14]Char8        /*  up to 14 bytes of direct address */
+    sa_data: [14]Char8        /* up to 14 bytes of direct address */
 }
 
 @property("c_alias", "struct in_addr")
 type Struct_in_addr record {
     s_addr: UnsignedLong
 }
-
 
 @property("c_alias", "struct sockaddr_in")
 type Struct_sockaddr_in record {
@@ -85,34 +84,33 @@ const AF_MAX = 36
 
 
 @property("c_alias", "in_addr_t")
-type in_addr_t Nat32
+type In_addr_t Nat32
 
 @property("c_alias", "in_port_t")
-type in_port_t Nat16
+type In_port_t Nat16
 
 @property("c_alias", "socklen_t")
-type socklen_t Nat32
+type Socklen_t Nat32
 
 
-func inet_addr(cp: *[]ConstChar) -> in_addr_t
+func inet_addr(cp: *[]ConstChar) -> In_addr_t
 /*
-func inet_lnaof(in: Struct_in_addr) -> in_addr_t
-func inet_makeaddr(net: in_addr_t, lna: in_addr_t) -> Struct_in_addr
-func inet_netof(in: Struct_in_addr) -> in_addr_t
-func inet_network(cp: *ConstChar) -> in_addr_t
+func inet_lnaof(in: Struct_in_addr) -> In_addr_t
+func inet_makeaddr(net: In_addr_t, lna: In_addr_t) -> Struct_in_addr
+func inet_netof(in: Struct_in_addr) -> In_addr_t
+func inet_network(cp: *ConstChar) -> In_addr_t
 func inet_ntoa(in: Struct_in_addr) -> *Char
 */
 
 
-
 func socket(domain: Int, type: Int, protocol: Int) -> Int
-func bind(sockfd: Int, addr: *Struct_sockaddr, addrlen: socklen_t) -> Int
+func bind(sockfd: Int, addr: *Struct_sockaddr, addrlen: Socklen_t) -> Int
 func listen(sockfd: Int, backlog: Int) -> Int
-func connect(sockfd: Int, addr: *Struct_sockaddr, addrlen: socklen_t) -> Int
+func connect(sockfd: Int, addr: *Struct_sockaddr, addrlen: Socklen_t) -> Int
 
 func send(socket: Int, buffer: Pointer, length: SizeT, flags: Int) -> SSizeT
 func recv(sockfd: Int, buf: Pointer, len: SizeT, flags: Int) -> SSizeT
 
 // вообще syscall, разберись
-func accept(s: Int, addr: *Struct_sockaddr, addrlen: *socklen_t) -> Int
+func accept(s: Int, addr: *Struct_sockaddr, addrlen: *Socklen_t) -> Int
 
