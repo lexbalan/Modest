@@ -1,5 +1,4 @@
 
-
 import copy
 from error import info, warning, error, fatal
 import settings
