@@ -17,7 +17,6 @@ INDENT_SYMBOL = " " * 4
 
 
 NO_TYPEDEF_STRUCTS = False
-NO_TYPEDEF_OTHERS = False
 
 USE_BOOLEAN = True
 BOOL_TRUE_LITERAL = 'true'
@@ -264,14 +263,6 @@ def print_type(t, space_after=False, array_as_ptr=True, as_const=False):
 
         if 'volatile' in t['att']:
             out("volatile ")
-
-
-    if NO_TYPEDEF_OTHERS:
-        if hlir_type.type_is_alias(t):
-            tt = t['aliasof']
-            if not hlir_type.type_is_record(tt):
-                print_type(t['aliasof'], space_after=space_after)
-
 
     # hotfix for let perfect value problem (let x = 1)
     if hlir_type.type_is_perfect_integer(t):
@@ -1413,10 +1404,6 @@ def print_decl_type(x):
 def print_def_type(x):
     id = x['id']
     aliasif = x['original_type']
-
-    if NO_TYPEDEF_OTHERS:
-        if not hlir_type.type_is_record(aliasif):
-            return
 
     newline(n=x['nl'])
 

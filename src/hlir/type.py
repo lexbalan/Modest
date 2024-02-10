@@ -602,9 +602,6 @@ def type_is_perfect(t):
     return t['perfect']
 
 
-def type_is_alias(t):
-    return 'aliasof' in t
-
 
 def type_is_signed(t):
     if 'signed' in t:

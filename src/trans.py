@@ -1625,7 +1625,6 @@ def def_type(x):
     _def['original_type'] = ty
 
     nt = hlir_type.type_copy(ty)
-    nt['aliasof'] = ty
     nt['ti'] = id['ti']
 
     _def['type'] = nt
