@@ -176,14 +176,15 @@ valueNil = None
 valueTrue = None
 valueFalse = None
 
+foundation_module = None
 
 def init():
-    global lib_path
+    global foundation_module, lib_path
     lib_path = settings.get('lib')
 
     hlir_init()
 
-    foundation.init()
+    foundation_module = foundation.init()
 
     valueNil = hlir_value_int(0, typ=foundation.typeFreePointer)
     valueTrue = hlir_value_int(1, typ=foundation.typeBool)
@@ -2004,8 +2005,9 @@ def proc(ast, source_info):
 
     module = {
         'isa': 'module',
-        'id': id,
+        'id': "id",
         'source_info': source_info,
+        #'imports': [foundation_module],  #
         'imports': [],  #
         'strings': [],  # (used in LLVM backend)
         'context': new_context,
