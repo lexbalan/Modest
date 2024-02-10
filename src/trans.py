@@ -1649,7 +1649,7 @@ def def_type(x):
         module['context'].type_add(id['str'], nt)
 
     return _def
-    #return hlir_def_type(id, ty, nt, already_declared, ti=x['ti'])
+    #return hlir_def_type(id, nt, ty, already_declared, ti=x['ti'])
 
 
 
