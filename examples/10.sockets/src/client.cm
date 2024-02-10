@@ -5,77 +5,65 @@ import "libc/libc.hm"
 import "libc/socket.hm"
 
 
-const SIZE = 1024
+const FILENAME = "file.txt"
+
+const IP_ADDRESS = "127.0.0.1"
+const PORT = 8080
+const BUF_SIZE = 1024
 
 
 func send_file(fp: *FILE, sockfd: Int) {
-    var data: [SIZE]Char8
+    var data: [BUF_SIZE]Char8
 
-    while fgets(&data, SIZE, fp) != nil {
-        if send(sockfd, &data, sizeof([SIZE]Char8), 0) == -1 {
+    while fgets(&data, BUF_SIZE, fp) != nil {
+        if send(sockfd, &data, sizeof([BUF_SIZE]Char8), 0) == -1 {
             perror("[-] Error in sendung data")
             exit(1)
         }
-        bzero(&data, SIZE)
+        bzero(&data, BUF_SIZE)
     }
 }
 
 
-const role = "client"
-
-
 func main() -> Int {
-    let ip = "127.0.0.1" to *Str8
-    let port = 8080
-
-    if role == "client" {
-        printf("role - CLIENT\n")
-    }
-
-    if role == "server" {
-        printf("role - SERVER\n")
-    }
-
-    let filename = "file.txt" to *Str8
-
     let sockfd = socket(AF_INET, SOCK_STREAM, 0)
     if sockfd < 0 {
         perror("[-] Error in socket")
         exit(1)
     }
 
-    printf("[+] Server socket created. \n")
+    printf("[+] Server socket created\n")
 
     var server_addr = {
         sin_family = AF_INET
-        sin_port = port
+        sin_port = PORT
         sin_addr = {
-            s_addr = inet_addr(ip) to UnsignedLong
+            s_addr = inet_addr(IP_ADDRESS) to UnsignedLong
         }
     } to Struct_sockaddr_in
 
-    let s = &server_addr to Pointer to *Struct_sockaddr
-    var e = connect(sockfd, s, sizeof(Struct_sockaddr_in))
-    if e == -1 {
+    let sockaddr = &server_addr to Pointer to *Struct_sockaddr
+    var e = connect(sockfd, sockaddr, sizeof(Struct_sockaddr_in))
+    if e < 0 {
          perror("[-] Error in Connecting")
          exit(1)
     }
 
-    printf("[+] Connected to server.\n")
+    printf("[+] Connected to server\n")
 
-    let fp = fopen(filename, "r")
+    let fp = fopen(FILENAME, "r")
     if fp == nil {
-        perror("[-] Error in reading file.")
+        perror("[-] Error in reading file")
         exit(1)
     }
 
     send_file(fp, sockfd)
 
-    printf("[+] File data send successfully.\n")
+    printf("[+] File data send successfully\n")
 
     close(sockfd)
 
-    printf("[+] Disconnected from the server.\n")
+    printf("[+] Disconnected from the server\n")
 
     return 0
 }

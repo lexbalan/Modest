@@ -6,6 +6,9 @@ import "libc/socket.h"
 
 
 const FILENAME = "file2.txt"
+
+const IP_ADDRESS = "127.0.0.1"
+const PORT = 8080
 const BUF_SIZE = 1024
 
 
@@ -14,7 +17,7 @@ func write_file(sockfd: Int) -> Unit {
 
     let fp = fopen(FILENAME, "w")
     if fp == nil {
-        perror("[-] Error in creating file.")
+        perror("[-] Error in creating file")
         exit(1)
     }
 
@@ -25,40 +28,37 @@ func write_file(sockfd: Int) -> Unit {
             break
         }
 
-        fprintf(fp, "%s", buffer)
+        fprintf(fp, "%s", &buffer)
         bzero(&buffer, BUF_SIZE)
     }
 }
 
 
 func main() -> Int {
-    let ip = "127.0.0.1" to *Str8
-    let port = 8080
-
     let sockfd = socket(AF_INET, SOCK_STREAM, 0)
     if sockfd < 0 {
         perror("[-] Error in socket")
         exit(1)
     }
 
-    printf("[+] Server socket created. \n")
+    printf("[+] Server socket created\n")
 
     var server_addr: Struct_sockaddr_in = {
         sin_family = AF_INET
-        sin_port = port
+        sin_port = PORT
         sin_addr = {
-            s_addr = inet_addr(ip) to UnsignedLong
+            s_addr = inet_addr(IP_ADDRESS) to UnsignedLong
         }
     }
 
-    let a = &server_addr
-    var e: Int = bind(sockfd, a, (sizeof(Struct_sockaddr_in)))
+    let sockaddr = &server_addr
+    var e: Int = bind(sockfd, sockaddr, (sizeof(Struct_sockaddr_in)))
     if e < 0 {
         perror("[-] Error in Binding")
         exit(1)
     }
 
-    printf("[+] Binding Successfull.\n")
+    printf("[+] Binding Successfull\n")
 
     e = listen(sockfd, 10)
     if e == 0 {
@@ -68,15 +68,15 @@ func main() -> Int {
         exit(1)
     }
 
-    var addr_size: socklen_t
+    var addr_size: Socklen_t
     addr_size = (sizeof(Struct_sockaddr_in))
     var new_addr: Struct_sockaddr_in
-    let na = &new_addr
-    let new_sock = accept(sockfd, na, &addr_size)
+    let sa = &new_addr
+    let new_sock = accept(sockfd, sa, &addr_size)
 
     write_file(new_sock)
 
-    printf("[+] Data written in the text file ")
+    printf("[+] Data written in the text file")
 
     return 0
 }
