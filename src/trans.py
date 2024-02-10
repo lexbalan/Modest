@@ -297,8 +297,7 @@ def do_type_id(t):
         error("undeclared type %s" % id_str, t)
         # create fake alias for unknown type
         tx = hlir_type_bad()
-        nt = hlir_type.create_alias(id_str, tx, t['ti'])
-        root_context.type_add(id_str, nt)
+        root_context.type_add(id_str, tx)
         return nt
     return tx
 
@@ -1625,7 +1624,9 @@ def def_type(x):
 
     _def['type'] = ty
 
-    nt = hlir_type.create_alias(id['str'], ty, id['ti'])
+    nt = hlir_type.type_copy(ty)
+    nt['aliasof'] = ty
+    nt['ti'] = id['ti']
 
     _def['newtype'] = nt
     nt['definition'] = _def

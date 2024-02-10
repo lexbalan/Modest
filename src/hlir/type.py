@@ -672,14 +672,6 @@ def type_copy(t):
     return nt
 
 
-def create_alias(id_str, t, ti):
-    #info('type.create_alias ' + id, ti)
-    nt = type_copy(t)
-    nt['aliasof'] = t
-    nt['ti'] = ti
-    return nt
-
-
 
 def type_get_size(t):
     return t['size']
