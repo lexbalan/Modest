@@ -92,6 +92,11 @@ def value_get_here(id_str):
     return module['context'].value_get(id_str, recursive=False)
 
 
+def module_append(definition):
+    global module
+    module['text'].append(definition)
+
+
 # used in metadirs
 def c_include(s):
     global module
@@ -105,7 +110,7 @@ def c_include(s):
         'nl': 1,
         'ti': None
     }
-    module['text'].append(inc)
+    module_append(inc)
 
 
 properties = {}
@@ -154,7 +159,7 @@ def insert(s):
         'nl': 1,
         'ti': None
     }
-    module['text'].append(directive_insert)
+    module_append(directive_insert)
 
 
 
@@ -1641,7 +1646,6 @@ def def_type(x):
     else:
         module['context'].type_add(id['str'], nt)
 
-
     return _def
     #return hlir_def_type(id, ty, nt, already_declared, ti=x['ti'])
 
@@ -2046,7 +2050,7 @@ def proc(ast, source_info):
 
         y['nl'] = x['nl']
 
-        module['text'].append(y)
+        module_append(y)
 
     m = module
     module = old_module
