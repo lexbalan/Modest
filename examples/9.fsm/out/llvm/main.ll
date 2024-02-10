@@ -126,9 +126,6 @@ declare void @perror(%ConstCharStr* %str)
 
 
 %FSM_Proc = type void (%FSM*)*
-%FSM_Empty = type {
-}
-
 %FSM_StateDesc = type {
 	[8 x i8],
 	%FSM_Proc,
@@ -141,9 +138,9 @@ declare void @perror(%ConstCharStr* %str)
 %UInt32 = type i32
 %FSM = type {
 	[8 x i8],
-	i32,
-	i32,
-	i32,
+	%UInt32,
+	%UInt32,
+	%UInt32,
 	[16 x %FSM_StateDesc]
 }
 
@@ -243,8 +240,8 @@ define void @on_exit(%FSM* %fsm) {
 
 define void @beacon_entry(%FSM* %fsm) {
     %1 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 1
-    %2 = load i32, i32* %1
-    %3 = call %Str8* (%FSM*, i32) @fsm_state_no_name(%FSM* %fsm, i32 %2)
+    %2 = load %UInt32, %UInt32* %1
+    %3 = call %Str8* (%FSM*, i32) @fsm_state_no_name(%FSM* %fsm, %UInt32 %2)
     %4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str3 to [0 x i8]*), %Str8* %3)
     ret void
 }
@@ -269,8 +266,8 @@ endif_0:
 
 define void @beacon_exit(%FSM* %fsm) {
     %1 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 2
-    %2 = load i32, i32* %1
-    %3 = call %Str8* (%FSM*, i32) @fsm_state_no_name(%FSM* %fsm, i32 %2)
+    %2 = load %UInt32, %UInt32* %1
+    %3 = call %Str8* (%FSM*, i32) @fsm_state_no_name(%FSM* %fsm, %UInt32 %2)
     %4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str5 to [0 x i8]*), %Str8* %3)
     ret void
 }
@@ -287,9 +284,9 @@ define void @beacon_exit(%FSM* %fsm) {
         i8 0,
         i8 0
     ],
-    i32 0,
-    i32 0,
-    i32 0,
+    %UInt32 0,
+    %UInt32 0,
+    %UInt32 0,
     [16 x %FSM_StateDesc] [
         %FSM_StateDesc {
             [8 x i8] [

@@ -19,9 +19,6 @@ typedef struct FSM FSM;
 typedef void *FSM_Proc;
 
 typedef struct {
-} FSM_Empty;
-
-typedef struct {
     char name[fsmNameLength];
     FSM_Proc entry;
     FSM_Proc loop;
@@ -37,9 +34,9 @@ typedef uint32_t UInt32;
 
 struct FSM {
     char name[fsmNameLength];
-    uint32_t state;
-    uint32_t nexstate;
-    uint32_t substate;
+    UInt32 state;
+    UInt32 nexstate;
+    UInt32 substate;
     FSM_StateDesc states[fsmMaxStates];
 };
 

@@ -35,7 +35,7 @@ void fsm_run(FSM *fsm)
 {
     printf("fsm_run()\n");
     if (fsm->substate == fsmSubstateEntering) {
-        const uint32_t nexstate = fsm->nexstate;
+        const UInt32 nexstate = fsm->nexstate;
         FSM_StateDesc *const s = &fsm->states[nexstate];
 
         if (fsmVerbose) {
