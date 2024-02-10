@@ -1,4 +1,4 @@
-/* from: https://github.com/pshashipreetham/File-Transfer-Using-TCP-Socket-in-C-Socket-Programming/tree/master */
+/* thx: https://github.com/pshashipreetham/File-Transfer-Using-TCP-Socket-in-C-Socket-Programming */
 
 import "libc/stdio.hm"
 import "libc/libc.hm"
