@@ -88,7 +88,7 @@ def init():
     bool_decl['llvm_alias'] = 'i1'
     foundation['text'].append(bool_decl)
 
-    typeByte = hlir_type_integer("Byte", width=8, signed=False)
+    typeByte = hlir_type_integer(width=8, signed=False)
     typeByte['kind'] = 'byte'
     typeByte['ops'] = BYTE_OPS
     byte_decl = hlir_def_type(hlir_id('Byte'), typeByte, ti=None)
@@ -98,21 +98,21 @@ def init():
     foundation['text'].append(byte_decl)
 
     #
-    typeChar8 = hlir_type_char("Char8", width=8)
+    typeChar8 = hlir_type_char(width=8)
     char8_decl = hlir_def_type(hlir_id('Char8'), typeChar8, ti=None)
     char8_decl['att'].append('c-no-print')
     char8_decl['c_alias'] = 'char'
     char8_decl['llvm_alias'] = 'i8'
     foundation['text'].append(char8_decl)
 
-    typeChar16 = hlir_type_char("Char16", width=16)
+    typeChar16 = hlir_type_char(width=16)
     char16_decl = hlir_def_type(hlir_id('Char16'), typeChar16, ti=None)
     char16_decl['att'].append('c-no-print')
     char16_decl['c_alias'] = 'uint16_t'
     char16_decl['llvm_alias'] = 'i16'
     foundation['text'].append(typeChar16)
 
-    typeChar32 = hlir_type_char("Char32", width=32)
+    typeChar32 = hlir_type_char(width=32)
     char32_decl = hlir_def_type(hlir_id('Char32'), typeChar32, ti=None)
     char32_decl['att'].append('c-no-print')
     char32_decl['c_alias'] = 'uint32_t'
@@ -120,35 +120,35 @@ def init():
     foundation['text'].append(char32_decl)
 
     #
-    typeInt8 = hlir_type_integer("Int8", width=8)
+    typeInt8 = hlir_type_integer(width=8)
     int8_decl = hlir_def_type(hlir_id('Int8'), typeInt8, ti=None)
     int8_decl['att'].append('c-no-print')
     int8_decl['c_alias'] = 'int8_t'
     int8_decl['llvm_alias'] = 'i8'
     foundation['text'].append(int8_decl)
 
-    typeInt16 = hlir_type_integer("Int16", width=16)
+    typeInt16 = hlir_type_integer(width=16)
     int16_decl = hlir_def_type(hlir_id('Int16'), typeInt16, ti=None)
     int16_decl['att'].append('c-no-print')
     int16_decl['c_alias'] = 'int16_t'
     int16_decl['llvm_alias'] = 'i16'
     foundation['text'].append(int16_decl)
 
-    typeInt32 = hlir_type_integer("Int32", width=32)
+    typeInt32 = hlir_type_integer(width=32)
     int32_decl = hlir_def_type(hlir_id('Int32'), typeInt32, ti=None)
     int32_decl['att'].append('c-no-print')
     int32_decl['c_alias'] = 'int32_t'
     int32_decl['llvm_alias'] = 'i32'
     foundation['text'].append(int32_decl)
 
-    typeInt64 = hlir_type_integer("Int64", width=64)
+    typeInt64 = hlir_type_integer(width=64)
     int64_decl = hlir_def_type(hlir_id('Int64'), typeInt64, ti=None)
     int64_decl['att'].append('c-no-print')
     int64_decl['c_alias'] = 'int64_t'
     int64_decl['llvm_alias'] = 'i64'
     foundation['text'].append(int64_decl)
 
-    typeInt128 = hlir_type_integer("Int128", width=128)
+    typeInt128 = hlir_type_integer(width=128)
     int128_decl = hlir_def_type(hlir_id('Int128'), typeInt128, ti=None)
     int128_decl['att'].append('c-no-print')
     int128_decl['c_alias'] = '__int128'
@@ -156,35 +156,35 @@ def init():
     foundation['text'].append(typeInt128)
 
     #
-    typeNat8 = hlir_type_integer("Nat8", width=8, signed=False)
+    typeNat8 = hlir_type_integer(width=8, signed=False)
     nat8_decl = hlir_def_type(hlir_id('Nat8'), typeNat8, ti=None)
     nat8_decl['att'].append('c-no-print')
     nat8_decl['c_alias'] = 'uint8_t'
     nat8_decl['llvm_alias'] = 'i8'
     foundation['text'].append(nat8_decl)
 
-    typeNat16 = hlir_type_integer("Nat16", width=16, signed=False)
+    typeNat16 = hlir_type_integer(width=16, signed=False)
     nat16_decl = hlir_def_type(hlir_id('Nat16'), typeNat16, ti=None)
     nat16_decl['att'].append('c-no-print')
     nat16_decl['c_alias'] = 'uint16_t'
     nat16_decl['llvm_alias'] = 'i16'
     foundation['text'].append(nat16_decl)
 
-    typeNat32 = hlir_type_integer("Nat32", width=32, signed=False)
+    typeNat32 = hlir_type_integer(width=32, signed=False)
     nat32_decl = hlir_def_type(hlir_id('Nat32'), typeNat32, ti=None)
     nat32_decl['att'].append('c-no-print')
     nat32_decl['c_alias'] = 'uint32_t'
     nat32_decl['llvm_alias'] = 'i32'
     foundation['text'].append(nat32_decl)
 
-    typeNat64 = hlir_type_integer("Nat64", width=64, signed=False)
+    typeNat64 = hlir_type_integer(width=64, signed=False)
     nat64_decl = hlir_def_type(hlir_id('Nat64'), typeNat64, ti=None)
     nat64_decl['att'].append('c-no-print')
     nat64_decl['c_alias'] = 'uint64_t'
     nat64_decl['llvm_alias'] = 'i64'
     foundation['text'].append(nat64_decl)
 
-    typeNat128 = hlir_type_integer("Nat128", width=128, signed=False)
+    typeNat128 = hlir_type_integer(width=128, signed=False)
     nat128_decl = hlir_def_type(hlir_id('Nat128'), typeNat128, ti=None)
     nat128_decl['att'].append('c-no-print')
     nat128_decl['c_alias'] = 'unsigned __int128'
@@ -192,21 +192,21 @@ def init():
     foundation['text'].append(nat128_decl)
 
     #
-    typeFloat16 = hlir_type_float('Float16', width=16)
+    typeFloat16 = hlir_type_float(width=16)
     float16_decl = hlir_def_type(hlir_id('Float16'), typeFloat16, ti=None)
     float16_decl['att'].append('c-no-print')
     float16_decl['c_alias'] = 'half'
     float16_decl['llvm_alias'] = 'half'
     foundation['text'].append(float16_decl)
 
-    typeFloat32 = hlir_type_float('Float32', width=32)
+    typeFloat32 = hlir_type_float(width=32)
     float32_decl = hlir_def_type(hlir_id('Float32'), typeFloat32, ti=None)
     float32_decl['att'].append('c-no-print')
     float32_decl['c_alias'] = 'float'
     float32_decl['llvm_alias'] = 'float'
     foundation['text'].append(float32_decl)
 
-    typeFloat64 = hlir_type_float('Float64', width=64)
+    typeFloat64 = hlir_type_float(width=64)
     float64_decl = hlir_def_type(hlir_id('Float64'), typeFloat64, ti=None)
     float64_decl['att'].append('c-no-print')
     float64_decl['c_alias'] = 'double'
@@ -214,21 +214,21 @@ def init():
     foundation['text'].append(float64_decl)
 
     #
-    typeDecimal32 = hlir_type_float('Decimal32', width=32)
+    typeDecimal32 = hlir_type_float(width=32)
     decimal32_decl = hlir_def_type(hlir_id('Decimal32'), typeDecimal32, ti=None)
     decimal32_decl['att'].append('c-no-print')
     decimal32_decl['c_alias'] = '_Decimal32'
     decimal32_decl['llvm_alias'] = 'float'
     foundation['text'].append(decimal32_decl)
 
-    typeDecimal64 = hlir_type_float('Decimal64', width=64)
+    typeDecimal64 = hlir_type_float(width=64)
     decimal64_decl = hlir_def_type(hlir_id('Decimal64'), typeDecimal64, ti=None)
     decimal64_decl['att'].append('c-no-print')
     decimal64_decl['c_alias'] = '_Decimal64'
     decimal64_decl['llvm_alias'] = 'double'
     foundation['text'].append(decimal64_decl)
 
-    typeDecimal128 = hlir_type_float('Decimal128', width=128)
+    typeDecimal128 = hlir_type_float(width=128)
     decimal128_decl = hlir_def_type(hlir_id('Decimal128'), typeDecimal128, ti=None)
     decimal128_decl['att'].append('c-no-print')
     decimal128_decl['c_alias'] = '_Decimal128'
@@ -281,7 +281,7 @@ def init():
 
 def hlir_type_perfect_int_for(num, unsigned=False, ti=None):
     required_width = nbits_for_num(num)
-    t = hlir_type_integer("Integer", width=required_width, ti=ti)
+    t = hlir_type_integer(width=required_width, ti=ti)
     t['perfect'] = True
     return t
 

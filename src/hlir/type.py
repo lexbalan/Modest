@@ -88,12 +88,8 @@ def hlir_type_bool():
 
 
 
-def hlir_type_char(id_str, width, ti=None):
+def hlir_type_char(width, ti=None):
     size = nbytes_for_bits(width)
-
-    id = None
-    if id_str != None:
-        id = hlir_id(id_str)
 
     return {
         'isa': 'type',
@@ -110,7 +106,7 @@ def hlir_type_char(id_str, width, ti=None):
     }
 
 
-def hlir_type_integer(id_str, width, signed=True, ti=None):
+def hlir_type_integer(width, signed=True, ti=None):
     size = nbytes_for_bits(width)
     return {
         'isa': 'type',
@@ -128,7 +124,7 @@ def hlir_type_integer(id_str, width, signed=True, ti=None):
     }
 
 
-def hlir_type_float(id_str, width, ti=None):
+def hlir_type_float(width, ti=None):
     size = nbytes_for_bits(width)
     return {
         'isa': 'type',
@@ -294,7 +290,7 @@ def hlir_type_opaque(id, ti=None):
 
 def hlir_type_perfect_int_for(num, unsigned=False, ti=None):
     required_width = nbits_for_num(num)
-    t = hlir_type_integer("Integer", width=required_width, ti=ti)
+    t = hlir_type_integer(width=required_width, ti=ti)
     t['perfect'] = True
     return t
 

@@ -49,7 +49,7 @@ def hlir_value_char(char_code, type=None, ti=None):
     if type == None:
         # if type not specified, set type as PerfectChar
         char_width = nbits_for_num(char_code)
-        type = hlir_type_char("PerfectChar", char_width, ti=ti)
+        type = hlir_type_char(char_width, ti=ti)
         type['perfect'] = True
 
     return hlir_value_literal(type, char_code, ti)
@@ -74,7 +74,7 @@ def hlir_value_int(num, typ=None, ti=None):
 
 
 def hlir_value_float(num, ti=None):
-    typ = hlir_type_float('Float', width=flt_width, ti=ti)
+    typ = hlir_type_float(width=flt_width, ti=ti)
     typ['perfect'] = True
     return hlir_value_literal(typ, num, ti)
 
