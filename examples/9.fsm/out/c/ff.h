@@ -19,4 +19,4 @@ void delay(uint64_t us);
 
 void ff_printf(char *str, ...);
 
-#endif  /* FF_H */
+#endif /* FF_H */

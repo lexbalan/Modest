@@ -10,4 +10,4 @@
 
 void lib_func();
 
-#endif  /* LIB_H */
+#endif /* LIB_H */

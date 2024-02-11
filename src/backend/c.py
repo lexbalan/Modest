@@ -1699,7 +1699,7 @@ def run(module, outname):
         elif isa == 'directive': print_directive(x)
 
     newline()
-    if is_header: out("\n#endif  /* %s */" % guardname)
+    if is_header: out("\n#endif /* %s */" % guardname)
     newline()
     output_close()
     return

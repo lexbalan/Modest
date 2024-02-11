@@ -12,4 +12,4 @@
 
 void sha256_doHash(uint8_t *msg, uint32_t len, uint8_t *hash);
 
-#endif  /* SHA256_H */
+#endif /* SHA256_H */

@@ -27,4 +27,4 @@ Node *linked_list_insert_node(List *list, Node *new_node);
 
 Node *linked_list_insert(List *list, void *link);
 
-#endif  /* LINKED_LIST_H */
+#endif /* LINKED_LIST_H */

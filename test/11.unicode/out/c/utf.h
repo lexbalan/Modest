@@ -19,4 +19,4 @@ void utf32_puts(uint32_t *s);
 
 void utf32_putchar(uint32_t c);
 
-#endif  /* UTF_H */
+#endif /* UTF_H */

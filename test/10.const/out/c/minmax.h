@@ -28,4 +28,4 @@ float max_float32(float a, float b);
 double min_float64(double a, double b);
 double max_float64(double a, double b);
 
-#endif  /* MINMAX_H */
+#endif /* MINMAX_H */

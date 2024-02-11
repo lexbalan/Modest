@@ -45,4 +45,4 @@ char *fsm_state_no_name(FSM *fsm, uint32_t state_no);
 void fsm_switch(FSM *fsm, uint32_t state);
 void fsm_run(FSM *fsm);
 
-#endif  /* FSM_H */
+#endif /* FSM_H */

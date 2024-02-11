@@ -10,4 +10,4 @@
 
 void ff_printf(char *str, ...);
 
-#endif  /* PRINT_H */
+#endif /* PRINT_H */
