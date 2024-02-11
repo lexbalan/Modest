@@ -255,7 +255,6 @@ def init():
     typeStr32_decl['att'].append('c-no-print')
     foundation['text'].append(typeStr32_decl)
 
-
     typeVA_List = {
         'isa': 'type',
         'kind': 'va_list',

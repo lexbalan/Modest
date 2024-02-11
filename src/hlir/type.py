@@ -416,7 +416,6 @@ def type_eq(a, b, opt=[]):
 
     #if a['definition'] != None and b['definition'] != None:
 
-
     # проверять аттрибуты (volatile, const)
     # использую для C чтобы можно было более строго проверить типы
     # напр для явного приведения в беканде C *volatile uint32_t -> uint32_t
