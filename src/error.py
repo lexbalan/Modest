@@ -1,29 +1,27 @@
-
+# error.py
 
 warncnt = 0
 errcnt = 0
 
+MAX_ERRORS = 10
 
-RED = '\033[91m'
-GREEN = '\033[92m'
-YELLOW = '\033[93m'
-BLUE = '\033[94m'
-MAGENTA = '\033[95m'
-CYAN = '\033[96m'
-BOLD = '\033[1m'
-ENDC = '\033[0m'
-UNDERLINE = '\033[4m'
 
+ENDC = 0
+BOLD = 1
+RED = 91
+GREEN = 92
+YELLOW = 93
+BLUE = 94
+MAGENTA = 95
+CYAN = 96
+
+COLOR_NOTE = BLUE
 COLOR_INFO = CYAN
 COLOR_WARNING = MAGENTA
 COLOR_ERROR = RED
 
+
 SIMPLE_MARK = True
-
-
-
-def colorize(text, color):
-    return '\033[%dm%s\033[0m' % (color, text)
 
 
 def getline(ti):
@@ -33,7 +31,6 @@ def getline(ti):
     lin = f.read().split("\n")[lineno - 1]
     f.close()
     return lin
-
 
 
 def left_start_pos(ti):
@@ -48,15 +45,20 @@ def right_end_pos(ti):
     return ti['pos'] - ti['len']# - 1
 
 
-def mark(pos, color):
-    print(" " * pos, end=''); print(colorize('^', color))
 
+
+def colorize(text, color):
+    return '\033[%dm%s\033[0m' % (color, text)
+
+
+def mark(pos, color):
+    print(" " * pos, end='')
+    print(colorize('^', color))
 
 
 def himark(lpos, pos, lenc, rpos, color):
     if SIMPLE_MARK:
-        print(" " * pos, end='')
-        print(colorize('^', color))
+        mark(pos, color)
         return
 
 
@@ -73,26 +75,12 @@ def himark(lpos, pos, lenc, rpos, color):
 
 def highlight(ti, color, offset):
     pos = ti['pos'] + offset
-    #mark(pos, color)
     start = left_start_pos(ti) + offset
     end = right_end_pos(ti) + offset
-    #print(ti)
-    #print("start = " + str(start))
-    #print("end = " + str(end))
     himark(start, pos, ti['len'], end - 1, color)
 
 
-
-
-def note(s, ti=None):
-    print(BOLD + 'note: ' + s + ENDC)
-
-
-def info(s, ti=None):
-
-    if ti == None:
-        ti = c_ti
-
+def common_message(mg, color, s, ti=None):
     pre = ''
     if ti != None:
         if ti['isa'] != 'ti':
@@ -100,80 +88,47 @@ def info(s, ti=None):
                 ti = ti['ti']
 
         pre = '\n%s:%d:%d:\n' % (ti['file'], ti['line'], ti['pos'])
-    print(pre + COLOR_INFO + 'info: ' + ENDC + s)
+
+    print(pre + colorize(mg, color) + s)
 
     if ti != None:
         prelin = "%d |" % ti['line']
         lin = getline(ti)
         print(prelin + lin)
-        highlight(ti, 96, offset=len(prelin))
+        highlight(ti, color, offset=len(prelin))
+
+
+
+def note(s, ti=None):
+    common_message('note: ', COLOR_NOTE, s, ti)
+
+
+def info(s, ti=None):
+    common_message('error: ', COLOR_INFO, s, ti)
 
 
 def warning(s, ti=None):
-
-    if ti == None:
-        ti = c_ti
-
     from main import features
     if features.get('paranoid'):
         error(s, ti)
-        #info("paranoid mode endbled")
         return
 
     global warncnt
     warncnt = warncnt + 1
 
-    pre = ""
-    if ti != None:
-        pre = '\n%s:%d:%d:\n' % (ti['file'], ti['line'], ti['pos'])
-
-    print(pre + COLOR_WARNING + 'warning: ' + ENDC + s)
-
-    if ti != None:
-        if ti['isa'] != 'ti':
-            if 'ti' in ti:
-                ti = ti['ti']
-
-        prelin = "%d |" % ti['line']
-        pre = '\n%s:%d:%d:\n' % (ti['file'], ti['line'], ti['pos'])
-
-        lin = getline(ti)
-        print(prelin + lin)
-        highlight(ti, 95, offset=len(prelin))
+    common_message('warning: ', COLOR_WARNING, s, ti)
 
 
 def error(s, ti=None):
-
-    if ti == None:
-        print("??WADSA " + str(ti))
-        ti = c_ti
-
     global errcnt
     errcnt = errcnt + 1
-
-    pre = ''
-    if ti != None:
-        if ti['isa'] != 'ti':
-            if 'ti' in ti:
-                ti = ti['ti']
-
-        pre = '\n%s:%d:%d:\n' % (ti['file'], ti['line'], ti['pos'])
-
-    print(pre + COLOR_ERROR + 'error: ' + ENDC + s)
-
-    if ti != None:
-        prelin = "%d |" % ti['line']
-
-        lin = getline(ti)
-        print(prelin + lin)
-        highlight(ti, 91, offset=len(prelin))
-
-    if errcnt >= 10:
+    common_message('error: ', COLOR_ERROR, s, ti)
+    if errcnt >= MAX_ERRORS:
         exit(-1)
 
 
-
-def fatal(s):
-    print('\033[91m' + 'fatal error: ' + '\033[0m' + s)
+def fatal(s, ti=None):
+    #print('\033[91m' + 'fatal error: ' + '\033[0m' + s)
+    common_message('fatal error: ', 91, s, ti)
     exit(1)
 

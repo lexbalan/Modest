@@ -333,7 +333,6 @@ def do_type_record(x):
             error("redefinition of '%s' field" % field_id_str, f)
             continue
 
-
         if 'comments' in field:
             f.update({'comments': field['comments']})
 
@@ -418,11 +417,11 @@ def do_type_func(t, func_id="_"):
 def do_type(t):
     k = t['kind']
     if k == 'id': return do_type_id(t)
+    elif k == 'func': return do_type_func(t)
     elif k == 'pointer': return do_type_pointer(t)
     elif k == 'array': return do_type_array(t)
     elif k == 'record': return do_type_record(t)
     elif k == 'enum': return do_type_enum(t)
-    elif k == 'func': return do_type_func(t)
     return bad_type(t['ti'])
 
 
@@ -438,10 +437,10 @@ def do_value_shift(x):
     ti = x['ti']
 
     if not hlir_type.type_is_integer(l['type']):
-        error("type error", l)
+        error("type error", x['left'])
 
     if not hlir_type.type_is_integer(r['type']):
-        error("type error", r)
+        error("type error", x['right'])
 
     if value_is_immediate(l) and value_is_immediate(r):
         return bin_imm(op, l['type'], l, r, ti)
@@ -454,7 +453,7 @@ def do_value_shift(x):
 
 
 
-# select result type of common binary operation
+# select result type of binary operation result
 def bin_type_select(a, b):
     if not hlir_type.type_is_perfect(a):
         return a
@@ -582,9 +581,14 @@ def value_concat_arrays(l, r, ti):
 
 
 # FIXIT: it is perfect arrays EQ!
-def value_eq_arrays(l, r):
-    if l['type']['volume']['asset'] != r['type']['volume']['asset']:
-        return False
+def value_eq_arrays(l, r, ti):
+    lvolume = l['type']['volume']
+    rvolume = r['type']['volume']
+    if value_is_immediate(lvolume) and value_is_immediate(rvolume):
+        if lvolume['asset'] != rvolume['asset']:
+            return False
+    else:
+        fatal("dynamic immediate array volume", ti)
 
     for a, b in zip(l['asset'], r['asset']):
         if a != b:
@@ -595,7 +599,7 @@ def value_eq_arrays(l, r):
 
 
 def do_value_bin_str_eq(op, l, r, ti):
-    bool_result = value_eq_arrays(l, r)
+    bool_result = value_eq_arrays(l, r, ti)
 
     if op == 'eq':
         op = 'eq_str'

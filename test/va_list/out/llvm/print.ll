@@ -130,13 +130,13 @@ declare void @perror(%ConstCharStr* %str)
 
 
 
-define void @_putchar(i8 %c) {
+define void @_put_char8(i8 %c) {
     %1 = sext i8 %c to %Int
     %2 = call %Int (%Int) @putchar(%Int %1)
     ret void
 }
 
-define void @put_str8([0 x i8]* %s) {
+define void @put_str8(%Str8* %s) {
     %1 = alloca i32
     store i32 0, i32* %1
     br label %again_1
@@ -144,7 +144,7 @@ again_1:
     br i1 1 , label %body_1, label %break_1
 body_1:
     %2 = load i32, i32* %1
-    %3 = getelementptr inbounds [0 x i8], [0 x i8]* %s, i32 0, i32 %2
+    %3 = getelementptr inbounds %Str8, %Str8* %s, i32 0, i32 %2
     %4 = load i8, i8* %3
     %5 = icmp eq i8 %4, 0
     br i1 %5 , label %then_0, label %endif_0
@@ -152,7 +152,7 @@ then_0:
     br label %break_1
     br label %endif_0
 endif_0:
-    call void (i8) @_putchar(i8 %4)
+    call void (i8) @_put_char8(i8 %4)
     %7 = load i32, i32* %1
     %8 = add i32 %7, 1
     store i32 %8, i32* %1
@@ -281,11 +281,11 @@ endif_3:
     br label %endif_2
 endif_2:
     %53 = load [0 x i8]*, [0 x i8]** %19
-    call void ([0 x i8]*) @put_str8([0 x i8]* %53)
+    call void (%Str8*) @put_str8([0 x i8]* %53)
     br label %endif_1
 else_1:
     %54 = load i8, i8* %7
-    call void (i8) @_putchar(i8 %54)
+    call void (i8) @_put_char8(i8 %54)
     br label %endif_1
 endif_1:
     %55 = load i32, i32* %3

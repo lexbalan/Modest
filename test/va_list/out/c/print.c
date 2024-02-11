@@ -14,7 +14,7 @@
 
 
 
-void _putchar(char c)
+void _put_char8(char c)
 {
     putchar((int)c);
 }
@@ -28,7 +28,7 @@ void put_str8(char *s)
         if (c == '\0') {
             break;
         }
-        _putchar(c);
+        _put_char8(c);
         i = i + 1;
     }
 }
@@ -91,7 +91,7 @@ void ff_printf(char *str, ...)
             put_str8(sptr);
 
         } else {
-            _putchar(c);
+            _put_char8(c);
         }
 
         i = i + 1;
