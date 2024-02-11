@@ -1069,7 +1069,7 @@ def do_eval_literal(x):
     elif hlir_type.type_is_pointer(xt): return llvm_value_num(xt, x['asset'])
     elif hlir_type.type_is_char(xt): return llvm_value_num(xt, x['asset'])
     elif hlir_type.type_is_enum(xt): return llvm_value_num(xt, x['asset'])
-    elif hlir_type.type_is_byte(t): return llvm_value_num(xt, x['asset'])
+    elif hlir_type.type_is_byte(xt): return llvm_value_num(xt, x['asset'])
     else:
         value_print(x)
         error("do_eval_literal: unknown literal", x['ti'])

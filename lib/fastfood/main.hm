@@ -9,5 +9,5 @@ func delay_s(s: Nat64) -> Unit
 func delay(us: Nat64) -> Unit
 
 
-func ff_printf(str: *[]Char8, va_list: VA_List)
+func ff_printf(str: *Str8, va_list: VA_List)
 

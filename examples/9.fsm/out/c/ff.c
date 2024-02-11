@@ -1,5 +1,4 @@
-
-// for clock()
+// ./out/c/ff.c
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -11,9 +10,8 @@
 #include <unistd.h>
 #include <time.h>
 #include <stdio.h>
-
+// for clock()
 // for printf
-
 
 
 typedef int64_t ArchInt;
@@ -23,7 +21,6 @@ typedef uint64_t ArchNat;
 void ff_memzero(void *mem, uint64_t len)
 {
     const uint64_t len_words = len / sizeof(ArchNat);
-
     ArchNat *const dst_word = (ArchNat *)mem;
 
     uint64_t i = 0;
@@ -32,9 +29,7 @@ void ff_memzero(void *mem, uint64_t len)
         i = i + 1;
     }
 
-
     const uint64_t len_bytes = len % sizeof(ArchNat);
-
     uint8_t *const dst_byte = (uint8_t *)&dst_word[i];
 
     i = 0;
@@ -48,7 +43,6 @@ void ff_memzero(void *mem, uint64_t len)
 void ff_memcpy(void *dst, void *src, uint64_t len)
 {
     const uint64_t len_words = len / sizeof(ArchNat);
-
     ArchNat *const src_w = (ArchNat *)src;
     ArchNat *const dst_w = (ArchNat *)dst;
 
@@ -60,7 +54,6 @@ void ff_memcpy(void *dst, void *src, uint64_t len)
 
 
     const uint64_t len_bytes = len % sizeof(ArchNat);
-
     uint8_t *const src_b = (uint8_t *)&src_w[i];
     uint8_t *const dst_b = (uint8_t *)&dst_w[i];
 
@@ -86,9 +79,8 @@ uint64_t ff_cstrlen(char *cstr)
 void delay_us(uint64_t us)
 {
     const uint64_t start_time = clock();
-
     while (clock() < start_time + us) {
-        // waiting
+        // just waiting
     }
 }
 

@@ -1,8 +1,6 @@
 
-// for clock()
-import "libc/libc.h"
-// for printf
-import "libc/stdio.h"
+import "libc/libc.h"// for clock()
+import "libc/stdio.h"// for printf
 
 
 type ArchInt Int64
@@ -11,7 +9,6 @@ type ArchNat Nat64
 
 func ff_memzero(mem: Pointer, len: Nat64) -> Unit {
     let len_words = len / (sizeof(ArchNat))
-
     let dst_word = mem
 
     var i: Nat64 = 0 to Nat64
@@ -20,10 +17,8 @@ func ff_memzero(mem: Pointer, len: Nat64) -> Unit {
         i = i + 1
     }
 
-
     let len_bytes = len % (sizeof(ArchNat))
-
-    let dst_byte = &dst_word[i] to *[]Nat8
+    let dst_byte = &dst_word[i] to *[]Byte
 
     i = 0
     while i < len_bytes {
@@ -35,7 +30,6 @@ func ff_memzero(mem: Pointer, len: Nat64) -> Unit {
 
 func ff_memcpy(dst: Pointer, src: Pointer, len: Nat64) -> Unit {
     let len_words = len / (sizeof(ArchNat))
-
     let src_w = src
     let dst_w = dst
 
@@ -47,9 +41,8 @@ func ff_memcpy(dst: Pointer, src: Pointer, len: Nat64) -> Unit {
 
 
     let len_bytes = len % (sizeof(ArchNat))
-
-    let src_b = &src_w[i] to *[]Nat8
-    let dst_b = &dst_w[i] to *[]Nat8
+    let src_b = &src_w[i] to *[]Byte
+    let dst_b = &dst_w[i] to *[]Byte
 
     i = 0
     while i < len_bytes {
@@ -71,9 +64,8 @@ func ff_cstrlen(cstr: *Str8) -> Nat64 {
 
 func delay_us(us: Nat64) -> Unit {
     let start_time = clock()
-
     while clock() < start_time + us {
-        // waiting
+        // just waiting
     }
 }
 

@@ -161,7 +161,7 @@ declare void @delay_us(i64 %us)
 declare void @delay_ms(i64 %ms)
 declare void @delay_s(i64 %s)
 declare void @delay(i64 %us)
-declare void @ff_printf([0 x i8]* %str, ...)
+declare void @ff_printf(%Str8* %str, ...)
 
 
 ; -- SOURCE: src/main.cm

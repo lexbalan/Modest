@@ -7,19 +7,19 @@
 import "libc/stdio.hm"
 
 
-func _putchar(c: Char8) {
+func _put_char8(c: Char8) {
     putchar(c to Int)
 }
 
 
-func put_str8(s: *[]Char8) {
+func put_str8(s: *Str8) {
     var i = 0
 	while true {
 		let c = s[i]
 		if c == "\0"[0] {
 			break
 		}
-		_putchar(c)
+		_put_char8(c)
         i = i + 1
 	}
 }
@@ -30,7 +30,7 @@ func sprintf_dec_nat32(buf: *[]Char8, x: Nat32)
 func sprintf_hex_nat32(buf: *[]Char8, x: Nat32)
 
 
-func ff_printf(str: *[]Char8, va_list: VA_List) {
+func ff_printf(str: *Str8, va_list: VA_List) {
     var i = 0
 	while true {
         var c = str[i]
@@ -79,7 +79,7 @@ func ff_printf(str: *[]Char8, va_list: VA_List) {
 			put_str8(sptr)
 
 		} else {
-			_putchar(c)
+			_put_char8(c)
 		}
 
         i = i + 1

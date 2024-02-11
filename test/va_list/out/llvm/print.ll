@@ -161,7 +161,7 @@ break_1:
     ret void
 }
 
-define void @ff_printf([0 x i8]* %str, ...) {
+define void @ff_printf(%Str8* %str, ...) {
     %1 = alloca i8*
     %2 = bitcast i8** %1 to i8*
     call void @llvm.va_start(i8* %2)
@@ -172,7 +172,7 @@ again_1:
     br i1 1 , label %body_1, label %break_1
 body_1:
     %4 = load i32, i32* %3
-    %5 = getelementptr inbounds [0 x i8], [0 x i8]* %str, i32 0, i32 %4
+    %5 = getelementptr inbounds %Str8, %Str8* %str, i32 0, i32 %4
     %6 = load i8, i8* %5
     %7 = alloca i8
     store i8 %6, i8* %7
@@ -191,7 +191,7 @@ then_1:
     %14 = add i32 %13, 1
     store i32 %14, i32* %3
     %15 = load i32, i32* %3
-    %16 = getelementptr inbounds [0 x i8], [0 x i8]* %str, i32 0, i32 %15
+    %16 = getelementptr inbounds %Str8, %Str8* %str, i32 0, i32 %15
     %17 = load i8, i8* %16
     store i8 %17, i8* %7
     ; буффер для печати всего, кроме строк
