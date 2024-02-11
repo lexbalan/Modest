@@ -1,5 +1,5 @@
 // examples/22.arr_param/main.cm
-@attribute("c-no-print")
+
 import "libc/stdio.h"
 
 

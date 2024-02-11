@@ -1,5 +1,5 @@
 // test/stmt_if/main.cm
-@attribute("c-no-print")
+
 import "libc/stdio.h"
 
 

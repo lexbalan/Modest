@@ -82,6 +82,7 @@ def highlight(ti, color, offset):
 
 def common_message(mg, color, s, ti=None):
     pre = ''
+
     if ti != None:
         if ti['isa'] != 'ti':
             if 'ti' in ti:

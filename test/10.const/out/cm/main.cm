@@ -1,10 +1,8 @@
 // test/10.const/main.cm
-@attribute("c-no-print")
-import "libc/math.h"
-@attribute("c-no-print")
+
 import "libc/stdio.h"
-@attribute("c-no-print")
 import "libc/libc.h"
+import "libc/math.h"
 @attribute("c-no-print")
 import "misc/minmax.h"
 @c_include "./minmax.h"

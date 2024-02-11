@@ -7,6 +7,8 @@
 #include <stdio.h>
 
 
+
+
 int main()
 {
     printf("test stmt_while\n");

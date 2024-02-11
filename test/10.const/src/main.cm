@@ -1,13 +1,8 @@
 // test/10.const/main.cm
 
-@attribute("c-no-print")
-import "libc/math.hm"
-
-@attribute("c-no-print")
 import "libc/stdio.hm"
-
-@attribute("c-no-print")
 import "libc/libc.hm"
+import "libc/math.hm"
 
 @attribute("c-no-print")
 import "misc/minmax.hm"

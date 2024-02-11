@@ -1,6 +1,5 @@
 // examples/34.ifdef/main.cm
 
-@attribute("c-no-print")
 import "libc/stdio.hm"
 
 
