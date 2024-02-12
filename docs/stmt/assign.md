@@ -9,7 +9,7 @@
 #### Examples
 
 ```zig
-var a : Int32
+var a: Int32
 
 func main () -> Unit {
   a = 10

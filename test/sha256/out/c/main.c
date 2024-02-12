@@ -20,6 +20,7 @@
 #define INPUT_LENGTH  32
 #define OUTPUT_LENGTH  32
 
+
 typedef struct {
     char input_data[INPUT_LENGTH];
     uint32_t input_data_len;

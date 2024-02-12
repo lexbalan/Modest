@@ -11,6 +11,7 @@ import "misc/sha256.hm"
 const INPUT_LENGTH = 32
 const OUTPUT_LENGTH = 32
 
+
 type SHA256_TestCase record {
     input_data: [INPUT_LENGTH]Char8
     input_data_len: Nat32
@@ -48,7 +49,7 @@ const nTests = 2
 var sha256_tests: [nTests]*SHA256_TestCase = [&test0, &test1]
 
 
-func sha256_doTest(test : *SHA256_TestCase) -> Bool {
+func sha256_doTest(test: *SHA256_TestCase) -> Bool {
     var test_hash: [sha256HashSize]Nat8
     sha256_doHash(&test.input_data to *[]Nat8, test.input_data_len, &test_hash)
 

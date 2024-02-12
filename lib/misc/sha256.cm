@@ -46,7 +46,7 @@ func sig1(x: Nat32) -> Nat32 {
 
 
 //const initMagic = [  // not worked & let; FIXIT
-var initMagic : [8]Nat32 = [
+var initMagic: [8]Nat32 = [
     0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
     0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
 ]
@@ -60,7 +60,7 @@ func sha256_contextInit(ctx: *SHA256_Context) -> Unit {
 
 
 //const k = [  // not worked; FIXIT!
-var k : [64]Nat32 = [
+var k: [64]Nat32 = [
     0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
     0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
     0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
@@ -81,7 +81,7 @@ var k : [64]Nat32 = [
 
 
 func sha256_transform(ctx: *SHA256_Context, data: *[]Nat8) -> Unit {
-    var m : [64]Nat32 = []
+    var m: [64]Nat32 = []
 
     var i = 0 to Nat32
     var j = 0 to Nat32
@@ -99,7 +99,7 @@ func sha256_transform(ctx: *SHA256_Context, data: *[]Nat8) -> Unit {
         i = i + 1
     }
 
-    var x : [8]Nat32// = ctx.state  // TODO: not worked
+    var x: [8]Nat32// = ctx.state  // TODO: not worked
     memcpy(&x, &ctx.state, 8 * 4)
 
     i = 0
@@ -143,7 +143,7 @@ func sha256_update(ctx: *SHA256_Context, data: *[]Nat8, len: Nat32) -> Unit {
 
 
 func sha256_final(ctx: *SHA256_Context, hash: *[]Nat8) -> Unit {
-    var i : Nat32 = ctx.datalen
+    var i: Nat32 = ctx.datalen
 
     // Pad whatever data is left in the buffer.
 

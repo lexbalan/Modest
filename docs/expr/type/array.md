@@ -10,7 +10,7 @@
 
 ```zig
 
-var a : [3]Int32
+var a: [3]Int32
 
 func main () -> Unit {
   a[0] = 0

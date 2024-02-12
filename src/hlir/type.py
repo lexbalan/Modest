@@ -735,7 +735,7 @@ def type_print(t, print_aka=True):
         if type_is_perfect_record(t):
             print("PerfectRecord {")
             for f in t['fields']:
-                print("\t%s : " % f['id']['str'], end='')
+                print("\t%s: " % f['id']['str'], end='')
                 type_print(f['type'])
                 print()
             print("}")

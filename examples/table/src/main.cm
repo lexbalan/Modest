@@ -15,9 +15,9 @@ func show_table(t: *Table) {
 
     let dt = t.data to *[t.size_x][t.size_y]*Str8
 
-    var i : Nat8 = 0
+    var i: Nat8 = 0
     while i < t.size_y {
-        var j : Nat8 = 0
+        var j: Nat8 = 0
         while j < t.size_x {
             printf("| %s ", "x" to *Str8)//t.data[i][j])
             j = j + 1

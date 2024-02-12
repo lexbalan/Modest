@@ -13,8 +13,8 @@
 ```zig
 
 func main () -> Unit {
-  var a : Int32
-  var b : Int32
+  var a: Int32
+  var b: Int32
   
   // input a
   printf("a = ");

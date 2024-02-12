@@ -12,11 +12,11 @@
 #### Examples
 
 ```zig
-var a : Int32
+var a: Int32
 
 func main () -> Unit {
-  var i : Int32
-  var n : Int32
+  var i: Int32
+  var n: Int32
   
   // input n
   printf("count for ");

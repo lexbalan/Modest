@@ -92,7 +92,7 @@ Int8, Int16, Int32, Int64, Int128
 
 ```zig
 func main () -> Unit {
-	var a, b : Int32
+	var a, b: Int32
 	
 	a = -1
 	b = 1
@@ -116,7 +116,7 @@ Nat8, Nat16, Nat32, Nat64, Nat128
 
 ```zig
 func main () -> Unit {
-	var a, b : Nat32
+	var a, b: Nat32
 	
 	a = -1 to Nat32
 	b = 1
@@ -168,8 +168,8 @@ Char8, Char16, Char32
 *Usage example:*
 
 ```zig
-var a : Char8
-var b : Char8
+var a: Char8
+var b: Char8
 
 a = "a"[0]
 b = "b"[0]
@@ -209,9 +209,9 @@ var s: *[]Char8  // pointer to undefined array of Char8
 *Usage example:*
 ```zig
 
-var a : [5]Int32
+var a: [5]Int32
 
-var i : Int32
+var i: Int32
 
 // fill array in cycle
 i = 0
@@ -254,7 +254,7 @@ type Str32 = []Char32
 
 *Usage example:*
 ```zig
-var s : *Str8
+var s: *Str8
 
 s = "Hello World!\n"
 
@@ -276,11 +276,11 @@ record {x: Float64, y: Float64}
 // it is good idea to use type definition statement
 // for bind identifier to record type  
 type Point record {
-    x : Float64
-    y : Float64
+    x: Float64
+    y: Float64
 }
 
-var p : Point
+var p: Point
 
 p = {x=1, y=2}
 

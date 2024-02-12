@@ -10,8 +10,8 @@
 
 ```zig
 func main () -> Unit {
-  var a : Int32
-  var p : *Int32
+  var a: Int32
+  var p: *Int32
   a = 0
   p = &a
   *p = 10

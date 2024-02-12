@@ -9,7 +9,7 @@
 #### Examples
 
 ```zig
-func mid (a : Int32, b : Int32) -> Int32 {
+func mid (a: Int32, b: Int32) -> Int32 {
   return (a + b) / 2
 }
 ```

@@ -44,19 +44,19 @@ type TimeT Int32     /* time in seconds since 1970 */
 
 
 //type Stat record {
-//  dev : DevT          /* устройство */
-//  ino : InoT          /* inode */
-//  mode : ModeT        /* режим доступа */
-//  nlink : NlinkT      /* количество жестких ссылок */
-//  uid : UIDT          /* идентификатор пользователя-владельца */
-//  gid : GIDT          /* идентификатор группы-владельца */
-//  rdev : DevT         /* тип устройства (если это устройство) */
-//  size : OffT         /* общий размер в байтах */
-//  blksize : BlkSizeT  /* размер блока ввода-вывода в файловой системе */
-//  blocks : BlkCntT    /* количество выделенных блоков */
-//  atime : TimeT       /* время последнего доступа */ // st_atime!!!???
-//  mtime : TimeT       /* время последней модификации */
-//  ctime : TimeT       /* время последнего изменения */
+//  dev: DevT          /* устройство */
+//  ino: InoT          /* inode */
+//  mode: ModeT        /* режим доступа */
+//  nlink: NlinkT      /* количество жестких ссылок */
+//  uid: UIDT          /* идентификатор пользователя-владельца */
+//  gid: GIDT          /* идентификатор группы-владельца */
+//  rdev: DevT         /* тип устройства (если это устройство) */
+//  size: OffT         /* общий размер в байтах */
+//  blksize: BlkSizeT  /* размер блока ввода-вывода в файловой системе */
+//  blocks: BlkCntT    /* количество выделенных блоков */
+//  atime: TimeT       /* время последнего доступа */ // st_atime!!!???
+//  mtime: TimeT       /* время последней модификации */
+//  ctime: TimeT       /* время последнего изменения */
 //}
 
 @property("c_alias", "DIR")
@@ -79,7 +79,7 @@ func strcmp(s1: *[]ConstChar, s2: *[]ConstChar) -> Int
 func strcpy(dst: *[]Char, src: *[]ConstChar) -> *[]Char
 func strlen(s: *[]ConstChar) -> SizeT
 
-//func mkdir (path : *Str, mode : Mode_T) -> Int
+//func mkdir (path: *Str, mode: Mode_T) -> Int
 
 func ftruncate (fd: Int, size: OffT) -> Int
 

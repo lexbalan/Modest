@@ -19,7 +19,7 @@ type MyOpaqueType
 ```zig
 type MyInt Int32
 
-var x : MyInt
+var x: MyInt
 
 func main () -> Unit {
   x = 10

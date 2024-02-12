@@ -10,6 +10,7 @@ import "misc/sha256.h"
 const INPUT_LENGTH = 32
 const OUTPUT_LENGTH = 32
 
+
 type SHA256_TestCase record {
     input_data: [INPUT_LENGTH]Char8
     input_data_len: Nat32
