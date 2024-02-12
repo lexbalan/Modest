@@ -89,10 +89,12 @@ class Parser:
     def is_assign_operator(self):
         return self.match("<-") or self.match("=") or self.match("=")
 
+    def is_identifier(self):
+        return self.ctok_class() == 'id'
 
     def identifier(self):
         ti = self.ti()
-        if self.ctok_class() != 'id':
+        if not self.is_identifier():
             self.skip()
             error("expected identifier", ti)
             return None
@@ -539,7 +541,7 @@ class Parser:
         self.need("[")
         while not self.match("]"):
             #self.skip_tokens([' ', '\t', '\n'])
-            nl_cnt = self.skipt()
+            nl_cnt = self.skip_blanks()
 
             while True:
                 if self.token_class_is('comment-block'):
@@ -552,7 +554,7 @@ class Parser:
                 # append comment to array 'items' list
                 items.append(x)
 
-            nl_cnt = nl_cnt + self.skipt()
+            nl_cnt = nl_cnt + self.skip_blanks()
 
             if self.match("]"):
                 break
@@ -583,7 +585,7 @@ class Parser:
         self.need("{")
         while not self.match("}"):
             #self.skip_tokens([' ', '\t', '\n'])
-            nl_cnt = self.skipt()
+            nl_cnt = self.skip_blanks()
 
             while True:
                 if self.token_class_is('comment-block'):
@@ -597,7 +599,7 @@ class Parser:
                 items.append(x)
 
 
-            nl_cnt = nl_cnt + self.skipt()
+            nl_cnt = nl_cnt + self.skip_blanks()
 
             if self.match("}"):
                 break
@@ -947,7 +949,7 @@ class Parser:
         return s
 
 
-    def skipt(self):
+    def skip_blanks(self):
         nl_cnt = 0
         while True:
             if self.look(" ") or self.look("\t"):
@@ -973,7 +975,7 @@ class Parser:
         while True:
             #self.skip_tokens([' ', '\t', '\n'])
 
-            nl_cnt = self.skipt()
+            nl_cnt = self.skip_blanks()
 
 
             if self.match('}'):
@@ -1012,10 +1014,39 @@ class Parser:
 
         objs = []
         while True:
+            nl_cnt = 0
+
+            comments_and_directives = []
+            while True:
+                nl_cnt = self.skip_blanks()
+
+                if self.is_identifier():
+                    break
+
+                x = None
+                if self.token_class_is('comment-block'):
+                    x = self.parse_comment_block()
+                    comments_and_directives.append(x)
+                elif self.token_class_is('comment-line'):
+                    x = self.parse_comment_line()
+                    comments_and_directives.append(x)
+                elif self.token_class_is('directive'):
+                    x = self.parse_directive()
+                    comments_and_directives.append(x)
+
+                if x != None:
+                    x['nl'] = nl_cnt
+
+
             id = self.identifier()
             if id == None:
                 break
-            objs.append({'id': id})
+
+            objs.append({
+                'id': id,
+                'comments_and_directives': comments_and_directives
+            })
+
             if self.match(','):
                 self.skip_tokens(["\n"])
                 continue
@@ -1035,7 +1066,13 @@ class Parser:
         fields = []
         for obj in objs:
             id = obj['id']
-            field = {'isa': 'field', 'id': id, 'type': t, 'ti': id['ti']}
+            field = {
+                'isa': 'field',
+                'id': id,
+                'type': t,
+                'comments_and_directives': obj['comments_and_directives'],
+                'ti': id['ti']
+            }
             fields.append(field)
 
         return fields
