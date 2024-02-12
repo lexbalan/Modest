@@ -631,6 +631,7 @@ def print_value_cast_immediate(v, ctx):
 
 
 
+
 def print_value_cast(x, ctx):
     to_type = x['type']
     value = x['value']
@@ -941,7 +942,7 @@ def print_value_literal_int(x, ctx):
             nsigns = x['nsigns']
         fmt = "0x%%0%dX" % nsigns
         out(fmt % num)
-
+        return  #? 0xXXXXXXXXUL is normal?
     else:
         out(str(num))
 

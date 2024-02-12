@@ -268,6 +268,10 @@ def hlir_value_cast_immediate(v, t, ti=None):
     nv = hlir_value_cast(v, t, ti)
     nv['kind'] = 'cast_immediate'
     nv['asset'] = v['asset']
+
+    if 'hexadecimal' in v['att']:
+        nv['att'].append('hexadecimal')
+
     if 'nl_end' in v:
         nv['nl_end'] = v['nl_end']
     return nv

@@ -855,7 +855,6 @@ def select_cast_operator(a, b):
         if hlir_type.type_is_pointer(b): return 'bitcast'
         elif hlir_type.type_is_integer(b): return 'ptrtoint'
 
-
     elif hlir_type.type_is_float(a):
         # Float -> Integer
         if hlir_type.type_is_integer(b):
