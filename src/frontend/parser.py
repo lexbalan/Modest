@@ -1010,16 +1010,19 @@ class Parser:
     def parse_field(self):
         ti = self.ti()
 
-        ids = []
+        objs = []
         while True:
             id = self.identifier()
             if id == None:
                 break
-            ids.append(id)
-            if not self.match(','):
-                break
+            objs.append({'id': id})
+            if self.match(','):
+                self.skip_tokens(["\n"])
+                continue
 
-        if ids == []:
+            break
+
+        if objs == []:
             self.restore(['\n', ','])
             return None
 
@@ -1030,7 +1033,8 @@ class Parser:
         t = self.expr_type()
 
         fields = []
-        for id in ids:
+        for obj in objs:
+            id = obj['id']
             field = {'isa': 'field', 'id': id, 'type': t, 'ti': id['ti']}
             fields.append(field)
 
