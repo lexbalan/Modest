@@ -80,7 +80,7 @@ void ff_printf(char *str, ...)
                 sptr = s;
             } else if (c == 'c') {
                 // %c for char
-                const char c = va_arg(va_list, char);
+                const char c = va_arg(va_list, int);
                 sptr[0] = c;
                 sptr[1] = 0;
             } else if (c == '%') {

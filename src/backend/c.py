@@ -25,6 +25,7 @@ DONT_PRINT_UNUSED = True
 
 USE_STATIC_VARIABLES = True
 
+VA_ARG_CHAR_AS_INT = True
 
 # for integer literals printing
 CC_INT_SIZE_BITS = 32
@@ -657,7 +658,15 @@ def print_value_cast(x, ctx):
     if hlir_type.type_is_va_list(from_type):
         global va_id
         out("va_arg(%s, " % va_id)
-        print_type(to_type)
+
+        if VA_ARG_CHAR_AS_INT:
+            if hlir_type.type_is_char(to_type):
+                out("int")
+            else:
+                print_type(to_type)
+        else:
+            print_type(to_type)
+
         out(")")
         return
 
