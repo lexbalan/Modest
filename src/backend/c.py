@@ -18,7 +18,7 @@ INDENT_SYMBOL = " " * 4
 
 NO_TYPEDEF_STRUCTS = False
 
-USE_BOOLEAN = True
+USE_STDBOOL = True
 BOOL_TRUE_LITERAL = 'true'
 BOOL_FALSE_LITERAL = 'false'
 DONT_PRINT_UNUSED = True
@@ -1684,7 +1684,8 @@ def run(module, outname):
         out("#define %s\n" % guardname)
 
     out("\n#include <stdint.h>\n")
-    out("#include <stdbool.h>\n")
+    if USE_STDBOOL:
+        out("#include <stdbool.h>\n")
     out("#include <string.h>\n")
 
     if 'use_extra_args' in module['options']:
