@@ -274,7 +274,6 @@ def print_type(t, space_after=False, array_as_ptr=True, as_const=False):
 
     if t['definition'] != None:
         type_definition = t['definition']
-
         if 'c_alias' in type_definition:
             out(type_definition['c_alias'])
         else:

@@ -61,15 +61,12 @@ def himark(lpos, pos, lenc, rpos, color):
         mark(pos, color)
         return
 
+    llen = pos - lpos  # длина подчеркивания слева
+    rlen = rpos - pos  # длина подчеркивания справа
 
     print(" " * lpos, end='')
-
-    llen = pos - lpos
     print(colorize('-' * llen, color), end='')
-
     print(colorize('^' * lenc, color), end='')
-
-    rlen = rpos - pos
     print(colorize('-' * rlen, color))
 
 
