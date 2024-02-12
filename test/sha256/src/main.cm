@@ -16,7 +16,7 @@ type SHA256_TestCase record {
     input_data: [INPUT_LENGTH]Char8
     input_data_len: Nat32
 
-    expected_result: [OUTPUT_LENGTH]Nat8
+    expected_result: [OUTPUT_LENGTH]Byte
 }
 
 
