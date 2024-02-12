@@ -6,7 +6,7 @@ import "libc/stdio.hm"
 func main() -> Int {
     printf("test shift\n")
 
-    var c : Int32
+    var c: Int32
 
     c = 1 << 31
     printf("1 << 31 = 0x%x\n", c)

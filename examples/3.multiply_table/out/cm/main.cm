@@ -4,7 +4,7 @@ import "libc/stdio.h"
 
 
 func mtab(n: Int) -> Unit {
-    //var m : Nat32
+    //var m: Nat32
     //m = 1
     var m: Int32 = 1
     while m < 10 {

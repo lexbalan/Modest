@@ -3,8 +3,8 @@
 import "libc/stdio.hm"
 
 
-func mtab(n : Int) -> Unit {
-    //var m : Nat32
+func mtab(n: Int) -> Unit {
+    //var m: Nat32
     //m = 1
     var m = 1    // by default integer var get system int type (-mint option)
     while m < 10 {

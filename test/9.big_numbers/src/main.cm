@@ -3,15 +3,15 @@
 import "libc/stdio.hm"
 
 
-var big0 : Nat128 = 0x0123456789ABCDEFFEDCBA9876543210
+var big0: Nat128 = 0x0123456789ABCDEFFEDCBA9876543210
 
 
-func high_128(x : Nat128) -> Nat64 {
+func high_128(x: Nat128) -> Nat64 {
     return (x >> 64) to Nat64
 }
 
 
-func low_128(x : Nat128) -> Nat64 {
+func low_128(x: Nat128) -> Nat64 {
     return (x and 0xFFFFFFFFFFFFFFFF) to Nat64
 }
 
@@ -20,12 +20,12 @@ func main() -> Int {
 
     let big1 = 0xffffffffffffffffffffffffffffffff
 
-    var big2 : Nat128
+    var big2: Nat128
     big2 = big1
 
-    var big3 : Nat128 = 0x1
+    var big3: Nat128 = 0x1
 
-    var a : Nat32 = 0x1
+    var a: Nat32 = 0x1
 
     var big_sum = big1 + big2 + a to Nat128
 
@@ -39,7 +39,7 @@ func main() -> Int {
     // signed big int test
     let sig0 = -1
 
-    var sig1 : Int128 = sig0
+    var sig1: Int128 = sig0
 
     sig1 = sig1 + 1
 

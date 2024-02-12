@@ -12,8 +12,8 @@ const string32Const = perfectStringConst to *Str32
 
 
 type Point record {
-    x : Nat32
-    y : Nat32
+    x: Nat32
+    y: Nat32
 }
 
 
@@ -30,7 +30,7 @@ const points = ps to [3]Point
 // не могут быть так инициализированы, поскольку points является приведением
 // непонятно существует ли хорошее решение
 //@property("c_prefix", "const")
-var points2 : [3]Point = points
+var points2: [3]Point = points
 
 
 // define function main

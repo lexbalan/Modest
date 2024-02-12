@@ -10,13 +10,13 @@ import "misc/minmax.hm"
 
 
 type Point record {
-    x : Float64
-    y : Float64
+    x: Float64
+    y: Float64
 }
 
 type Line record {
-    a : Point
-    b : Point
+    a: Point
+    b: Point
 }
 
 const zero = 0
@@ -39,7 +39,7 @@ const lines = [line0, line1]
 
 
 // Pythagorean theorem
-func distance(a : Point, b : Point) -> Float {
+func distance(a: Point, b: Point) -> Float {
     let dx = max_float64(a.x, b.x) - min_float64(a.x, b.x)
     let dy = max_float64(a.y, b.y) - min_float64(a.y, b.y)
     let dx2 = pow(dx, 2)
@@ -48,7 +48,7 @@ func distance(a : Point, b : Point) -> Float {
 }
 
 
-func lineLength (line : Line) -> Float {
+func lineLength (line: Line) -> Float {
     return distance(line.a, line.b)
 }
 

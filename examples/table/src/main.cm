@@ -31,7 +31,7 @@ func show_table(t: *Table) {
 
 
 
-var strings : [2][3]*Str8 = [
+var strings: [2][3]*Str8 = [
     ["a" to *Str8, "b" to *Str8, "c" to *Str8]
     ["d" to *Str8, "e" to *Str8, "f" to *Str8]
 ]

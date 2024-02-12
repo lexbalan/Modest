@@ -128,7 +128,7 @@ declare void @perror(%ConstCharStr* %str)
 
 
 define void @mtab(%Int %n) {
-    ;var m : Nat32
+    ;var m: Nat32
     ;m = 1
     %1 = alloca i32
     store i32 1, i32* %1
