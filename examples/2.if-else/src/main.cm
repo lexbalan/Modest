@@ -6,8 +6,8 @@ import "libc/stdio.hm"
 func main() -> Int {
     printf("if-else example\n")
 
-    var a : Int32
-    var b : Int32
+    var a: Int32
+    var b: Int32
 
     printf("enter a: ")
     scanf("%d", &a)

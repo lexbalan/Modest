@@ -18,7 +18,7 @@ const flashlightStateOn = 1
 const flashlightStateBeacon = 2
 
 
-var cnt : Nat8
+var cnt: Nat8
 
 
 //
