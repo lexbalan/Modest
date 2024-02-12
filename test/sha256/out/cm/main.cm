@@ -49,8 +49,8 @@ var sha256_tests: [nTests]*SHA256_TestCase = [&test0, &test1]
 
 
 func sha256_doTest(test: *SHA256_TestCase) -> Bool {
-    var test_hash: [sha256HashSize]Nat8
-    sha256_doHash(&test.input_data to *[]Nat8, test.input_data_len, &test_hash)
+    var test_hash: [sha256HashSize]Byte
+    sha256_doHash(&test.input_data to *[]Byte, test.input_data_len, &test_hash)
 
     printf("'%s'", &test.input_data)
     printf(" -> ")

@@ -4,7 +4,7 @@ import "libc/libc.hm"
 
 
 type SHA256_Context record {
-    data: [64]Nat8
+    data: [64]Byte
     datalen: Nat32
     bitlen: Nat64
     state: [8]Nat32
@@ -80,7 +80,7 @@ var k: [64]Nat32 = [
 ] to [64]Nat32
 
 
-func sha256_transform(ctx: *SHA256_Context, data: *[]Nat8) -> Unit {
+func sha256_transform(ctx: *SHA256_Context, data: *[]Byte) -> Unit {
     var m: [64]Nat32 = []
 
     var i = 0 to Nat32
@@ -127,7 +127,7 @@ func sha256_transform(ctx: *SHA256_Context, data: *[]Nat8) -> Unit {
 }
 
 
-func sha256_update(ctx: *SHA256_Context, data: *[]Nat8, len: Nat32) -> Unit {
+func sha256_update(ctx: *SHA256_Context, data: *[]Byte, len: Nat32) -> Unit {
     var i = 0 to Nat32
     while i < len {
         ctx.data[ctx.datalen] = data[i]
@@ -142,7 +142,7 @@ func sha256_update(ctx: *SHA256_Context, data: *[]Nat8, len: Nat32) -> Unit {
 }
 
 
-func sha256_final(ctx: *SHA256_Context, hash: *[]Nat8) -> Unit {
+func sha256_final(ctx: *SHA256_Context, hash: *[]Byte) -> Unit {
     var i: Nat32 = ctx.datalen
 
     // Pad whatever data is left in the buffer.
@@ -166,14 +166,14 @@ func sha256_final(ctx: *SHA256_Context, hash: *[]Nat8) -> Unit {
     // Append to the padding the total message's length in bits and transform.
     ctx.bitlen = ctx.bitlen + ctx.datalen to Nat64 * 8
 
-    ctx.data[63] = (ctx.bitlen >> 00) to Nat8
-    ctx.data[62] = (ctx.bitlen >> 08) to Nat8
-    ctx.data[61] = (ctx.bitlen >> 16) to Nat8
-    ctx.data[60] = (ctx.bitlen >> 24) to Nat8
-    ctx.data[59] = (ctx.bitlen >> 32) to Nat8
-    ctx.data[58] = (ctx.bitlen >> 40) to Nat8
-    ctx.data[57] = (ctx.bitlen >> 48) to Nat8
-    ctx.data[56] = (ctx.bitlen >> 56) to Nat8
+    ctx.data[63] = (ctx.bitlen >> 00) to Byte
+    ctx.data[62] = (ctx.bitlen >> 08) to Byte
+    ctx.data[61] = (ctx.bitlen >> 16) to Byte
+    ctx.data[60] = (ctx.bitlen >> 24) to Byte
+    ctx.data[59] = (ctx.bitlen >> 32) to Byte
+    ctx.data[58] = (ctx.bitlen >> 40) to Byte
+    ctx.data[57] = (ctx.bitlen >> 48) to Byte
+    ctx.data[56] = (ctx.bitlen >> 56) to Byte
 
     sha256_transform(ctx, &ctx.data)
 
@@ -184,21 +184,21 @@ func sha256_final(ctx: *SHA256_Context, hash: *[]Nat8) -> Unit {
     i = 0
     while i < 4 {
         let sh = 24 - i * 8
-        hash[i + 00] = (ctx.state[0] >> sh) to Nat8
-        hash[i + 04] = (ctx.state[1] >> sh) to Nat8
-        hash[i + 08] = (ctx.state[2] >> sh) to Nat8
-        hash[i + 12] = (ctx.state[3] >> sh) to Nat8
-        hash[i + 16] = (ctx.state[4] >> sh) to Nat8
-        hash[i + 20] = (ctx.state[5] >> sh) to Nat8
-        hash[i + 24] = (ctx.state[6] >> sh) to Nat8
-        hash[i + 28] = (ctx.state[7] >> sh) to Nat8
+        hash[i + 00] = (ctx.state[0] >> sh) to Byte
+        hash[i + 04] = (ctx.state[1] >> sh) to Byte
+        hash[i + 08] = (ctx.state[2] >> sh) to Byte
+        hash[i + 12] = (ctx.state[3] >> sh) to Byte
+        hash[i + 16] = (ctx.state[4] >> sh) to Byte
+        hash[i + 20] = (ctx.state[5] >> sh) to Byte
+        hash[i + 24] = (ctx.state[6] >> sh) to Byte
+        hash[i + 28] = (ctx.state[7] >> sh) to Byte
         i = i + 1
     }
 }
 
 
 // arg hash must be at least SHA256_BLOCK_SIZE
-func sha256_doHash(msg: *[]Nat8, len: Nat32, hash: *[]Nat8) -> Unit {
+func sha256_doHash(msg: *[]Byte, len: Nat32, hash: *[]Byte) -> Unit {
     var ctx = {} to SHA256_Context
     sha256_contextInit(&ctx)
     sha256_update(&ctx, msg, len)

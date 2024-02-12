@@ -832,8 +832,8 @@ def do_eval_expr_access_ptr(v):
 
 # cast type a to type b
 def select_cast_operator(a, b):
-    if hlir_type.type_is_integer(a) or hlir_type.type_is_char(a) or hlir_type.type_is_bool(a):
-        if hlir_type.type_is_integer(b) or hlir_type.type_is_char(b) or hlir_type.type_is_bool(b):
+    if hlir_type.type_is_integer(a) or hlir_type.type_is_char(a) or hlir_type.type_is_bool(a) or hlir_type.type_is_byte(a):
+        if hlir_type.type_is_integer(b) or hlir_type.type_is_char(b) or hlir_type.type_is_bool(b) or hlir_type.type_is_byte(b):
             signed = hlir_type.type_is_signed(b)
 
             if a['width'] < b['width']:
@@ -855,6 +855,7 @@ def select_cast_operator(a, b):
         if hlir_type.type_is_pointer(b): return 'bitcast'
         elif hlir_type.type_is_integer(b): return 'ptrtoint'
 
+
     elif hlir_type.type_is_float(a):
         # Float -> Integer
         if hlir_type.type_is_integer(b):
@@ -866,7 +867,8 @@ def select_cast_operator(a, b):
             elif a['width'] > b['width']: return 'fptrunc'
             else: return 'bitcast'
 
-    return 'uncast<%s -> %s>' % (a['kind'], b['kind'])
+
+    return 'cast <%s -> %s>' % (a['kind'], b['kind'])
 
 
 
