@@ -828,20 +828,23 @@ def print_value_literal_record(v, ctx):
 
 
 
+def code_spec_char(c):
+    if c == 0x07: return "\\a" # bell
+    elif c == 0x08: return "\\b" # backspace
+    elif c == 0x09: return "\\t" # horizontal tab
+    elif c == 0x0A: return "\\n" # line feed
+    elif c == 0x0B: return "\\v" # vertical tab
+    elif c == 0x0C: return "\\f" # form feed
+    elif c == 0x0D: return "\\r" # carriage return
+    elif c == 0x1B: return "\\e" # escape
+    else: return "\\x%X" % c
+
 
 def code_to_char(cc):
     sym = chr(cc)
 
     if cc < 0x20:
-        if cc == 0x07: return "\\a" # bell
-        elif cc == 0x08: return "\\b" # backspace
-        elif cc == 0x09: return "\\t" # horizontal tab
-        elif cc == 0x0A: return "\\n" # line feed
-        elif cc == 0x0B: return "\\v" # vertical tab
-        elif cc == 0x0C: return "\\f" # form feed
-        elif cc == 0x0D: return "\\r" # carriage return
-        elif cc == 0x1B: return "\\e" # escape
-        else: return "\\x%X" % cc
+        return code_spec_char(cc)
     elif cc <= 0x7E :
         if sym == '\\': return '\\\\'
         elif sym == '"': return '\\"'
@@ -897,13 +900,21 @@ def print_value_literal_char(x, ctx):
         prefix = "u"
 
     out(prefix)
-    if num >= 0x20 and num <= 0x7F:
-        if num == 39:
+    if num <= 0x7E:
+        if num < 0x20:
+            out("'%s'" % code_spec_char(num))
+
+        elif num == ord("'"):
             out("'\\''")
+
         else:
             out("'%c'" % (num))
     else:
-        out("'\\x%X'" % (num))
+
+        #TODO: .isprintable()
+        # print wide char
+        out("'%c'" % (num))
+        #out("'\\x%X'" % (num))
 
     return
 
@@ -1148,20 +1159,6 @@ def print_stmt_return(x):
 
 
 
-
-def save_array(left, right):
-    # если справа массив (а C не умеет присваивать массивы)
-    if 'wrapped_array_value' in right['att']:
-        # *(struct ret_str_retval *)&c = ret_str();
-        print_cast_hard(right['type'], left)
-        out(" = ")
-        print_value(right, just_print_id=False)
-        out(";")
-
-    else:
-        memcopy(left, right)
-
-
 def print_stmt_defvar(x):
     init_value = x['init_value']
 
@@ -1179,7 +1176,7 @@ def print_stmt_defvar(x):
             out(";\n")
             indent()
 
-            save_array(x['var'], init_value)
+            assign_array(x['var'], init_value)
             return
 
 
@@ -1207,7 +1204,7 @@ def print_stmt_let(x):
         print_variable_array(v['type'], id['str'], do_wrapped=False)
         out(";\n")
         indent()
-        save_array(v, x['value'])
+        assign_array(v, x['value'])
         return
 
     print_variable(id, v['type'], as_const=True)
@@ -1216,25 +1213,49 @@ def print_stmt_let(x):
     out(";")
 
 
-def assign(left, right):
-    # в си нельзя просто так присвоить массив
-    # приходится ухищряться
-    if hlir_type.type_is_defined_array(right['type']):
-        if 'wrapped_array_value' in right['att']:
-            # hard assignation
+
+
+def assign_array(left, right):
+    # если справа массив (а C не умеет присваивать массивы)
+    if 'wrapped_array_value' in right['att']:
+        if right['kind'] == 'call':
             print_cast_hard(right['func']['type']['to'], left)
             out(" = ")
             print_value(right)
             out(";")
         else:
-            memcopy(left, right)
+            # *(struct ret_str_retval *)&c = ret_str();
+            #print(">>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<")
+            print_cast_hard(right['type'], left)
+            out(" = ")
+            print_value(right, just_print_id=False)
+            out(";")
+        return
 
+
+    # если значение слева равно (memcpy)
+    # если значение слева больше (memcpy + memset)
+    l_vol = left['type']['volume']['asset']
+    r_vol = right['type']['volume']['asset']
+    memcopy(left, right)
+    if l_vol > r_vol:
+        memzero(left, l_vol-r_vol)
+
+
+
+
+def assign(left, right):
+    if hlir_type.type_is_defined_array(right['type']):
+        # в си нельзя просто так присвоить массив
+        assign_array(left, right)
         return
 
     print_value(left)
     out(" = ")
     print_value(right)
     out(";")
+
+
 
 
 
@@ -1733,6 +1754,13 @@ def memcopy(left, right):
         print_value(left)
 
     out(");")
+
+
+def memzero(left, sz):
+    out("memset(&")
+    print_value(left)
+    out(", 0, %d);" % sz)
+
 
 
 def memcmp(left, right, op='eq'):

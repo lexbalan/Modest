@@ -122,9 +122,8 @@ declare void @perror(%ConstCharStr* %str)
 
 ; -- SOURCE: src/main.cm
 
-@str1 = private constant [18 x i8] [i8 99, i8 104, i8 48, i8 56, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 120, i8 32, i8 40, i8 37, i8 99, i8 41, i8 10, i8 0]
-@str2 = private constant [4 x i8] [i8 37, i8 115, i8 10, i8 0]
-@str3 = private constant [13 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 32, i8 87, i8 111, i8 114, i8 108, i8 100, i8 33, i8 0]
+@str1 = private constant [4 x i8] [i8 37, i8 115, i8 10, i8 0]
+@str2 = private constant [13 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 32, i8 87, i8 111, i8 114, i8 108, i8 100, i8 33, i8 0]
 
 
 
@@ -133,19 +132,16 @@ define %Int @main() {
     %1 = alloca i8
     %2 = alloca i16
     %3 = alloca i32
+    store i8 115, i8* %1
+    ;ch08 = "Я"[0]  // error
+    store i16 1071, i16* %2
     ;ch08 = "🐀"[0]  // error
     ;ch16 = "🐀"[0]  // error
     store i32 128000, i32* %3
-    store i8 115, i8* %1
-    store i16 1040, i16* %2
-    store i32 1071, i32* %3
-    %4 = load i8, i8* %1
-    %5 = zext i8 %4 to i32
-    %6 = load i8, i8* %1
-    %7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str1 to [0 x i8]*), i32 %5, i8 %6)
+    ;printf("ch08 = 0x%x (%c)\n", ch08 to Nat32, ch08)
     ;printf("ch16 = 0x%x (%c)\n", ch16 to Nat32, ch16)
     ;printf("ch32 = 0x%x (%c)\n", ch32 to Nat32, ch32)
-    %8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str2 to [0 x i8]*), %Str8* bitcast ([13 x i8]* @str3 to [0 x i8]*))
+    %4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str1 to [0 x i8]*), %Str8* bitcast ([13 x i8]* @str2 to [0 x i8]*))
     ret %Int 0
 }
 

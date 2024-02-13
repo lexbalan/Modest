@@ -20,7 +20,7 @@ uint64_t high_128(unsigned __int128 x)
 
 uint64_t low_128(unsigned __int128 x)
 {
-    return (uint64_t)(x & 0xFFFFFFFFFFFFFFFFLL);
+    return (uint64_t)(x & 0xFFFFFFFFFFFFFFFF);
 }
 
 

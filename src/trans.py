@@ -1261,12 +1261,11 @@ def do_stmt_var(x):
     if x['type'] != None:
         t = do_type(x['type'])
 
+    v = None
     if x['value'] != None:
         v = do_value(x['value'])
         if value_is_bad(v):
-            return hlir_stmt_bad()
-            # TODO: создавай переменную с value_bad!
-            #return hlir_stmt_def_var(hlir_value_bad(x['ti']), None, ti=x['ti'])
+            v = None
 
     # error: no type, no init value
     if t == None and v == None:
@@ -1705,7 +1704,7 @@ def check_unuse(v):
         return
 
     id_str = v['id']['str']
-    info("value '%s' defined but not used" % (BOLD + id_str + ENDC), v['ti'])
+    info("value '%s' defined but not used" % id_str, v['ti'])
 
 
 

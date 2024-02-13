@@ -1,7 +1,8 @@
 
 import hlir.type as type
 from error import error, warning, info
-from hlir.value import hlir_value_cast_immediate, hlir_value_char, hlir_value_zero
+from hlir.value import hlir_value_cast, hlir_value_cast_immediate, hlir_value_char, hlir_value_zero
+
 from .value import *
 
 
@@ -84,6 +85,9 @@ def value_cons_array_from_array(v, t, ti, method):
         nv['asset'].extend(padding)
 
         return nv
+
+    # runtime cons
+    return hlir_value_cast(v, t, ti=ti)
 
     return None
 

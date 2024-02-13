@@ -53,10 +53,8 @@ var initMagic: [8]Nat32 = [
 
 
 func sha256_contextInit(ctx: *SHA256_Context) -> Unit {
-    //ctx.state = initMagic  // not worked; FIXIT!
-    memcpy(&ctx.state, &initMagic, 8*4)
+	ctx.state = initMagic  // assign array to array (by value!)
 }
-
 
 
 //const k = [  // not worked; FIXIT!
@@ -99,8 +97,7 @@ func sha256_transform(ctx: *SHA256_Context, data: *[]Byte) -> Unit {
         i = i + 1
     }
 
-    var x: [8]Nat32// = ctx.state  // TODO: not worked
-    memcpy(&x, &ctx.state, 8 * 4)
+    var x: [8]Nat32 = ctx.state
 
     i = 0
     while i < 64 {

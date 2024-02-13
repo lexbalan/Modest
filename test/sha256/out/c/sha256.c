@@ -72,10 +72,8 @@ static uint32_t initMagic[8] = {
 
 void sha256_contextInit(SHA256_Context *ctx)
 {
-    //ctx.state = initMagic  // not worked; FIXIT!
-    memcpy((void *)(uint32_t *)&ctx->state, (void *)(uint32_t *)&initMagic, 8 * 4);
+    memcpy(&ctx->state, &initMagic, sizeof ctx->state);
 }
-
 
 
 //const k = [  // not worked; FIXIT!
@@ -121,7 +119,7 @@ void sha256_transform(SHA256_Context *ctx, uint8_t *data)
     }
 
     uint32_t x[8];
-    memcpy((void *)(uint32_t *)&x, (void *)(uint32_t *)&ctx->state, 8 * 4);
+    memcpy(&x, &ctx->state, sizeof x);
 
     i = 0;
     while (i < 64) {
