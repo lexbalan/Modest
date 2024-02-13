@@ -87,14 +87,17 @@ int main()
     printf("b[2] = %i\n", b[2]);
 
     // assign array to array 2
-    /*var c: [3]Int32 = [1, 2, 3]
-    var d: [6]Int32 = c to [6]Int32
-    printf("d[0] = %i\n", d[0])
-    printf("d[1] = %i\n", d[1])
-    printf("d[2] = %i\n", d[2])
-    printf("d[3] = %i\n", d[3])
-    printf("d[4] = %i\n", d[4])
-    printf("d[5] = %i\n", d[5])*/
+    int32_t c[3];
+    memcpy(&c, &(int32_t[3]){1, 2, 3}, sizeof c);
+    int32_t d[6];
+    memset(&d, 0, sizeof d);
+    memcpy(&d, &c, sizeof c);
+    printf("d[0] = %i\n", d[0]);
+    printf("d[1] = %i\n", d[1]);
+    printf("d[2] = %i\n", d[2]);
+    printf("d[3] = %i\n", d[3]);
+    printf("d[4] = %i\n", d[4]);
+    printf("d[5] = %i\n", d[5]);
 
     return 0;
 }

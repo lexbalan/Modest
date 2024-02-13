@@ -1214,9 +1214,7 @@ def print_stmt_let(x):
 
 
 
-
 def assign_array(left, right):
-    # если справа массив (а C не умеет присваивать массивы)
     if 'wrapped_array_value' in right['att']:
         if right['kind'] == 'call':
             print_cast_hard(right['func']['type']['to'], left)
@@ -1233,13 +1231,29 @@ def assign_array(left, right):
         return
 
 
+    # если справа операция приведения - не будем ничего книструировать
+    # тк результат сразу придется копировать в левое от присваивания
+    # // example:
+    # var c: [3]Int32 = [1, 2, 3]
+    # var d: [6]Int32 = c to [6]Int32  // <<--
+    if right['kind'] == 'cast':
+        right = right['value']
+
     # если значение слева равно (memcpy)
     # если значение слева больше (memcpy + memset)
     l_vol = left['type']['volume']['asset']
     r_vol = right['type']['volume']['asset']
-    memcopy(left, right)
+
+    by = left
     if l_vol > r_vol:
-        memzero(left, l_vol-r_vol)
+        by = right
+        # не рационально занулять весь массив а не только хвост
+        # но пока так, тк это fastfix
+        memzero_sizeof(left)
+        nl_indent()
+
+    memcopy2(left, right, by)
+
 
 
 
@@ -1737,6 +1751,14 @@ def run(module, outname):
 
 
 
+def memcopy2(left, right, by):
+    out("memcpy(&")
+    print_value(left)
+    out(", &")
+    print_value(right)
+    out(", sizeof ")
+    print_value(by)
+    out(");")
 
 
 def memcopy(left, right):
@@ -1756,11 +1778,19 @@ def memcopy(left, right):
     out(");")
 
 
+
 def memzero(left, sz):
     out("memset(&")
     print_value(left)
     out(", 0, %d);" % sz)
 
+
+def memzero_sizeof(left):
+    out("memset(&")
+    print_value(left)
+    out(", 0, sizeof ")
+    print_value(left)
+    out(");")
 
 
 def memcmp(left, right, op='eq'):
