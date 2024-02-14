@@ -52,7 +52,7 @@ var initMagic: [8]Nat32 = [
 
 
 func sha256_contextInit(ctx: *SHA256_Context) {
-	ctx.state = initMagic  // assign array to array (by value!)
+	ctx.state = initMagic
 }
 
 
