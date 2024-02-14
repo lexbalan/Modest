@@ -163,8 +163,8 @@ declare void @bcopy(i8* %src, i8* %dst, %SizeT %n)
 
 
 
-%FposT = type opaque
 %FILE = type opaque
+%FposT = type opaque
 
 %CharStr = type %Str
 %ConstCharStr = type %CharStr

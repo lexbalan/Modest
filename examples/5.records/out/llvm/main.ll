@@ -163,8 +163,8 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 
 
 
-%FposT = type opaque
 %FILE = type opaque
+%FposT = type opaque
 
 %CharStr = type %Str
 %ConstCharStr = type %CharStr

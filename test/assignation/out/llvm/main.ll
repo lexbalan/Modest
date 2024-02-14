@@ -74,8 +74,8 @@ declare void @llvm.memset.p0.i32(i8*, i8, i32, i1)
 
 
 
-%FposT = type opaque
 %FILE = type opaque
+%FposT = type opaque
 
 %CharStr = type %Str
 %ConstCharStr = type %CharStr

@@ -8,8 +8,10 @@
 import "./ctypes.hm"
 
 
-type FposT
 type FILE
+
+@property("c_alias", "fpos_t")
+type FposT
 
 @property("c_alias", "char *")
 type CharStr Str

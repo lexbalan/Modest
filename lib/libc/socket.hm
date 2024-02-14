@@ -1,7 +1,6 @@
 
 @pragma("c_ignore")
 
-
 import "./libc.hm"
 
 @c_include("arpa/inet.h")
@@ -61,25 +60,25 @@ const AF_HYLINK = 15		/* NSC Hyperchannel */
 const AF_APPLETALK = 16		/* Apple Talk */
 const AF_ROUTE = 17		/* Internal Routing Protocol */
 const AF_LINK = 18		/* Link layer interface */
-const pseudo_AF_XTP = 19		/* eXpress Transfer Protocol (no AF) */
+const PSEUDO_AF_XTP = 19		/* eXpress Transfer Protocol (no AF) */
 const AF_COIP = 20		/* connection-oriented IP, aka ST II */
 const AF_CNT = 21		/* Computer Network Technology */
-const pseudo_AF_RTIP = 22		/* Help Identify RTIP packets */
+const PSEUDO_AF_RTIP = 22		/* Help Identify RTIP packets */
 const AF_IPX = 23		/* Novell Internet Protocol */
 const AF_INET6 = 24		/* IPv6 */
-const pseudo_AF_PIP = 25		/* Help Identify PIP packets */
+const PSEUDO_AF_PIP = 25		/* Help Identify PIP packets */
 const AF_ISDN = 26		/* Integrated Services Digital Network*/
 const AF_E164 = AF_ISDN		/* CCITT E.164 recommendation */
 const AF_NATM = 27		/* native ATM access */
 const AF_ENCAP = 28
 const AF_SIP = 29		/* Simple Internet Protocol */
 const AF_KEY = 30
-const pseudo_AF_HDRCMPLT = 31		/* Used by BPF to not rewrite headers
+const PSEUDO_AF_HDRCMPLT = 31		/* Used by BPF to not rewrite headers
 					   in interface output routine */
 const AF_BLUETOOTH = 32		/* Bluetooth */
 const AF_MPLS = 33              /* MPLS */
-const pseudo_AF_PFLOW = 34		/* pflow */
-const pseudo_AF_PIPEX = 35		/* PIPEX */
+const PSEUDO_AF_PFLOW = 34		/* pflow */
+const PSEUDO_AF_PIPEX = 35		/* PIPEX */
 const AF_MAX = 36
 
 
