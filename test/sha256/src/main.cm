@@ -45,8 +45,7 @@ var test1: SHA256_TestCase = {
 }
 
 
-const nTests = 2
-var sha256_tests: []*SHA256_TestCase = [&test0, &test1]
+var sha256_tests: []*SHA256_TestCase = [&test0, &test1, nil]
 
 
 func sha256_doTest(test: *SHA256_TestCase) -> Bool {
@@ -73,7 +72,7 @@ func main() -> Int {
     printf("test SHA256\n")
 
     var i = 0
-    while i < nTests {
+    while i < lengthof(sha256_tests) {
         let test = sha256_tests[i]
         let test_result = sha256_doTest(test)
 

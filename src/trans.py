@@ -786,6 +786,21 @@ def get_forms(func_id_str, args):
 
 
 def do_value_call(x):
+
+    if x['left']['kind'] == 'id':
+        if x['left']['id']['str'] == 'lengthof':
+            #print('lengthof')
+            arg = do_rvalue(x['args'][0])
+            length = 0
+            if not hlir_type.type_is_array(arg['type']):
+                error("lengthof argument must be an array", x['args'][0]['ti'])
+            else:
+                length = arg['type']['volume']['asset']
+            #print(" = %d" % length)
+            return hlir_value_int(length, ti=x['ti'])
+
+
+
     f = do_rvalue(x['left'])
 
     if value_is_bad(f):
@@ -794,7 +809,6 @@ def do_value_call(x):
     func_id_str = None
     if 'id' in f:
         func_id_str = f['id']['str']
-
 
     ftype = f['type']
 
@@ -1692,7 +1706,7 @@ def def_var(x):
             if arr_without_length:
                 init_arr_sz = iv['type']['volume']['asset']
                 var_type['volume'] = hlir_value_int(init_arr_sz)
-                print(init_arr_sz)
+                #print(init_arr_sz)
 
             init_value = value_cons_implicit(iv, var_type, x['init']['ti'])
             hlir_type.check(var_type, init_value['type'], x['init']['ti'])
