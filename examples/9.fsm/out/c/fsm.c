@@ -36,36 +36,35 @@ void fsm_run(FSM *fsm)
     printf("fsm_run()\n");
     if (fsm->substate == fsmSubstateEntering) {
         const UInt32 nexstate = fsm->nexstate;
-        FSM_StateDesc *const s = &fsm->states[nexstate];
+        FSM_StateDesc *const state = &fsm->states[nexstate];
 
         if (fsmVerbose) {
-            // &s.name, not just &s.name
-            printf("enter %s\n", (char *)&s->name);
+            printf("enter %s\n", (char *)&state->name);
         }
 
-        if (s->entry != NULL) {
-            ((void (*) (FSM *fsm))s->entry)(fsm);
+        if (state->entry != NULL) {
+            ((void (*) (FSM *fsm))state->entry)(fsm);
         }
 
         fsm->state = nexstate;
         fsm->substate = fsmSubstateLoop;
 
     } else if (fsm->substate == fsmSubstateLoop) {
-        FSM_StateDesc *const s = &fsm->states[fsm->state];
+        FSM_StateDesc *const state = &fsm->states[fsm->state];
 
-        if (s->loop != NULL) {
-            ((void (*) (FSM *fsm))s->loop)(fsm);
+        if (state->loop != NULL) {
+            ((void (*) (FSM *fsm))state->loop)(fsm);
         }
 
     } else if (fsm->substate == fsmSubstateLeaving) {
-        FSM_StateDesc *const s = &fsm->states[fsm->state];
+        FSM_StateDesc *const state = &fsm->states[fsm->state];
 
         if (fsmVerbose) {
-            printf("exit %s\n", (char *)&s->name);
+            printf("exit %s\n", (char *)&state->name);
         }
 
-        if (s->exit != NULL) {
-            ((void (*) (FSM *fsm))s->exit)(fsm);
+        if (state->exit != NULL) {
+            ((void (*) (FSM *fsm))state->exit)(fsm);
         }
 
         fsm->substate = fsmSubstateEntering;

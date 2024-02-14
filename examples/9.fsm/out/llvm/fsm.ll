@@ -187,7 +187,6 @@ then_0:
     %8 = getelementptr inbounds [16 x %FSM_StateDesc], [16 x %FSM_StateDesc]* %7, i32 0, %UInt32 %6
     br i1 1 , label %then_1, label %endif_1
 then_1:
-    ; &s.name, not just &s.name
     %9 = getelementptr inbounds %FSM_StateDesc, %FSM_StateDesc* %8, i32 0, i32 0
     %10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str2 to [0 x i8]*), [8 x i8]* %9)
     br label %endif_1
