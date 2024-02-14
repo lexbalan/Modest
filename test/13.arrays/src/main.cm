@@ -65,6 +65,7 @@ func main() -> Int {
     // 1. В LLVM нехрен создавать локальные массивы как insertvalue
 
     // assign array to array 1
+    // (with equal types)
     var a: [3]Int32 = [1, 2, 3]
     var b: [3]Int32 = a
     printf("b[0] = %i\n", b[0])
@@ -72,6 +73,7 @@ func main() -> Int {
     printf("b[2] = %i\n", b[2])
 
     // assign array to array 2
+    // (with array extending)
     var c: [3]Int32 = [10, 20, 30]
     var d: [6]Int32 = c to [6]Int32
     printf("d[0] = %i\n", d[0])
