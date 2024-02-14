@@ -1670,16 +1670,33 @@ def def_var(x):
     if hlir_type.type_is_bad(var_type):
         return None
 
-    if hlir_type.type_is_forbidden_var(var_type):
-        error("unsuitable type", x['type'])
+    # если размер массива не указан
+    # получим его из инициализатора
+    arr_without_length = False
+    if hlir_type.type_is_array(var_type):
+        if var_type['volume'] == None:
+            arr_without_length = True
+
+    if not arr_without_length:
+        if hlir_type.type_is_forbidden_var(var_type):
+            error("unsuitable type", x['type'])
 
     init_value = None
 
     if x['init'] != None:
         iv = do_value(x['init'])
         if not value_is_bad(iv):
+
+            # если размер массива не указан
+            # получаем его из инициализатора
+            if arr_without_length:
+                init_arr_sz = iv['type']['volume']['asset']
+                var_type['volume'] = hlir_value_int(init_arr_sz)
+                print(init_arr_sz)
+
             init_value = value_cons_implicit(iv, var_type, x['init']['ti'])
             hlir_type.check(var_type, init_value['type'], x['init']['ti'])
+
 
     var = hlir_value_var(f['id'], var_type)
 
