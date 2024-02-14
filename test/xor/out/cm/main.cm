@@ -4,7 +4,7 @@ import "libc/stdio.h"
 import "libc/libc.h"
 
 
-func xor_encrypter(buf: *[]Nat8, buflen: Nat32, key: *[]Nat8, keylen: Nat32) -> Unit {
+func xor_encrypter(buf: *[]Byte, buflen: Nat32, key: *[]Byte, keylen: Nat32) -> Unit {
     var i: Nat32 = 0 to Nat32
     var j: Nat32 = 0 to Nat32
     while i < buflen {
@@ -30,7 +30,7 @@ var test_msg: [msg_length + 1]Char8 = "Hello World!\x0"
 var test_key: [key_length + 1]Char8 = "abc\x0"
 
 
-func print_bytes(buf: *[]Nat8, len: Nat32) -> Unit {
+func print_bytes(buf: *[]Byte, len: Nat32) -> Unit {
     var i: Nat32 = 0 to Nat32
     while i < len {
         printf("0x%02X ", buf[i])
@@ -43,8 +43,8 @@ func print_bytes(buf: *[]Nat8, len: Nat32) -> Unit {
 func main() -> Int {
     printf("test xor encrypting\n")
 
-    let tmsg = &test_msg to *[]Nat8
-    let tkey = &test_key to *[]Nat8
+    let tmsg = &test_msg to *[]Byte
+    let tkey = &test_key to *[]Byte
 
     printf("before encrypt test_msg: \n")
     print_bytes(tmsg, msg_length)
