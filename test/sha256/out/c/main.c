@@ -83,7 +83,7 @@ int main()
     printf("test SHA256\n");
 
     int32_t i = 0;
-    while (i < 2) {
+    while (i < (sizeof(sha256_tests) / sizeof(sha256_tests[0]))) {
         SHA256_TestCase *const test = sha256_tests[i];
         const bool test_result = sha256_doTest(test);
 

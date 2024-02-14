@@ -382,10 +382,9 @@ declare void @sha256_doHash([0 x i8]* %msg, i32 %len, [0 x i8]* %hash)
         i8 105
     ]
 }
-@sha256_tests = global [3 x %SHA256_TestCase*] [
+@sha256_tests = global [2 x %SHA256_TestCase*] [
     %SHA256_TestCase* @test0,
-    %SHA256_TestCase* @test1,
-    %SHA256_TestCase* null
+    %SHA256_TestCase* @test1
 ]
 
 define i1 @sha256_doTest(%SHA256_TestCase* %test) {
@@ -432,11 +431,11 @@ define %Int @main() {
     br label %again_1
 again_1:
     %3 = load i32, i32* %2
-    %4 = icmp slt i32 %3, 3
+    %4 = icmp slt i32 %3, 2
     br i1 %4 , label %body_1, label %break_1
 body_1:
     %5 = load i32, i32* %2
-    %6 = getelementptr inbounds [3 x %SHA256_TestCase*], [3 x %SHA256_TestCase*]* @sha256_tests, i32 0, i32 %5
+    %6 = getelementptr inbounds [2 x %SHA256_TestCase*], [2 x %SHA256_TestCase*]* @sha256_tests, i32 0, i32 %5
     %7 = load %SHA256_TestCase*, %SHA256_TestCase** %6
     %8 = call i1 (%SHA256_TestCase*) @sha256_doTest(%SHA256_TestCase* %7)
     br i1 %8 , label %then_0, label %else_0

@@ -105,7 +105,7 @@ aprecedence = [
     ['shl', 'shr'], #7
     ['add', 'sub'], #8
     ['mul', 'div', 'rem'], #9
-    ['plus', 'minus', 'not', 'cast', 'cast_immediate', 'ref', 'deref', 'sizeof', 'alignof', 'offsetof'], #10
+    ['plus', 'minus', 'not', 'cast', 'cast_immediate', 'ref', 'deref', 'sizeof', 'alignof', 'offsetof', 'lengthof'], #10
     ['call', 'index', 'access'], #11
     ['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #12
 ]
@@ -1029,6 +1029,15 @@ def print_value_offsetof(x, ctx):
     out(")")
 
 
+def print_value_lengthof(x, ctx):
+    # sizeof(array) / sizeof(array[0])
+    v = x['of_value']
+    out("(sizeof(")
+    print_value(v)
+    out(") / sizeof(")
+    print_value(v)
+    out("[0]))")
+    pass
 
 
 def print_value(x, ctx=[], need_wrap=False, just_print_id=True):
@@ -1082,6 +1091,7 @@ def print_value(x, ctx=[], need_wrap=False, just_print_id=True):
     elif k == 'sizeof': print_value_sizeof(x, ctx)
     elif k == 'alignof': print_value_alignof(x, ctx)
     elif k == 'offsetof': y = print_value_offsetof(x, ctx)
+    elif k == 'lengthof': y = print_value_lengthof(x, ctx)
     else:
         out("<%s>" % k)
         fatal("unknown opcode %s" % k)

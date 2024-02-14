@@ -324,6 +324,21 @@ def hlir_value_offsetof(of, field_id, ti=None):
     }
 
 
+def hlir_value_lengthof(of_value, ti=None):
+    #field = type.record_field_get(of, field_id['str'])
+    #offset = field['offset']
+    length = of_value['type']['volume']['asset']
+    typ = hlir_type_perfect_int_for(length, unsigned=True, ti=ti)
+    return {
+        'isa': 'value',
+        'kind': 'lengthof',
+        'of_value': of_value,
+        'type': typ,
+        'asset': length,
+        'immutable': True,
+        'att': [],
+        'ti': ti
+    }
 
 
 

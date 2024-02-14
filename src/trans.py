@@ -791,12 +791,11 @@ def do_value_call(x):
     if x['left']['kind'] == 'id':
         if x['left']['id']['str'] == 'lengthof':
             arg = do_rvalue(x['args'][0])
-            length = 0
-            if not hlir_type.type_is_array(arg['type']):
-                error("lengthof argument must be an array", x['args'][0]['ti'])
+            if hlir_type.type_is_array(arg['type']):
+                return hlir_value_lengthof(arg, ti=x['ti'])
             else:
-                length = arg['type']['volume']['asset']
-            return hlir_value_int(length, ti=x['ti'])
+                error("lengthof argument must be an array", x['args'][0]['ti'])
+                return hlir_value_bad(x['ti'])
 
 
 
