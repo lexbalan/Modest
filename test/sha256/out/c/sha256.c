@@ -1,4 +1,4 @@
-// ./out/c/sha256.c
+// SHA256
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -73,6 +73,7 @@ static uint32_t initMagic[8] = {
 void sha256_contextInit(SHA256_Context *ctx)
 {
     memcpy(&ctx->state, &initMagic, sizeof ctx->state);
+    //memcpy(&ctx.state, &initMagic, 8*4)
 }
 
 

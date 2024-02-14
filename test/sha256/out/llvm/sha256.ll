@@ -163,6 +163,7 @@ declare void @bcopy(i8* %src, i8* %dst, %SizeT %n)
 
 
 
+
 %SHA256_Context = type {
 	[64 x i8],
 	i32,
@@ -254,6 +255,11 @@ define i32 @sig1(i32 %x) {
 ]
 
 define void @sha256_contextInit(%SHA256_Context* %ctx) {
+    %1 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 3
+    %2 = bitcast [8 x i32]* %1 to i8*
+    %3 = bitcast [8 x i32]* @initMagic to i8*
+    call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %2, i8* %3, i32 32, i1 0)
+    ;memcpy(&ctx.state, &initMagic, 8*4)
     ret void
 }
 
