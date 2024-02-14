@@ -128,7 +128,6 @@ static FSM fsm = {
     .substate = fsmSubstateEntering,
     .states = {
         {
-
             .name = {'O', 'f', 'f', '\0', '\0', '\0', '\0', '\0'},
             .entry = &off_entry,
             .loop = &off_loop,

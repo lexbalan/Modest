@@ -110,28 +110,27 @@ func beacon_exit(fsm: *FSM) {
 
 
 var fsm: FSM = {
-    name = "Flash" to [fsmNameLength]Char8
+    name = "Flash"
     state = 0
     nexstate = 0
     substate = fsmSubstateEntering
     states = [
         {
-            //
-            name = "Off" to [fsmNameLength]Char8
-            entry = &off_entry //
-            loop = &off_loop //
-            exit = &off_exit //
+            name = "Off"
+            entry = &off_entry
+            loop = &off_loop
+            exit = &off_exit
         }
 
         {
-            name = "On" to [fsmNameLength]Char8
+            name = "On"
             entry = &on_entry
             loop = &on_loop
             exit = &on_exit
         }
 
         {
-            name = "Beacon" to [fsmNameLength]Char8
+            name = "Beacon"
             entry = &beacon_entry
             loop = &beacon_loop
             exit = &beacon_exit
