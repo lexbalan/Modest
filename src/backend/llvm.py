@@ -1296,7 +1296,7 @@ def print_stmt_def_var(x):
 
             # вычисляем но не загружаем
             # тк если это value_adr то будем юзать memcpy
-            rright = do_eval(right)
+            _right = do_eval(right)
 
             ##type_print(rright['type'])
             ##print(rright['kind'])
@@ -1304,10 +1304,10 @@ def print_stmt_def_var(x):
             # если правое является адресом а не самим значением
             # то его можно сохранить с помощью memcpy
             if rright['is_adr']:
-                sz = rright['type']['size']
-                llvm_memcpy_immsize(left, rright, sz, volatile=False)
+                sz = _right['type']['size']
+                llvm_memcpy_immsize(left, _right, sz, volatile=False)
             else:
-                llvm_store(left, llvm_dold(rright))
+                llvm_store(left, llvm_dold(_right))
 
             return None
 
