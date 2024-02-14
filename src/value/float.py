@@ -33,7 +33,7 @@ def value_cons_float(v, t, ti, method):
         info("cannot implicit cons Float value", ti)
         return None
 
-	# Int -> Float
+    # Int -> Float
     if type.type_is_integer(vt):
         return do_cons_float(v, t, ti=ti)
 

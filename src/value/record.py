@@ -104,7 +104,7 @@ def value_cons_record(v, t, ti, method):
     from_type = v['type']
 
     if type.type_is_record(from_type):
-		# GenericRecord -> Record  (implicit)
+        # GenericRecord -> Record  (implicit)
         if type.type_is_perfect(from_type):
             return value_cons_record_from_perfect_record(v, t, ti, method)
 

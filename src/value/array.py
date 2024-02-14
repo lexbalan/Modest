@@ -107,7 +107,7 @@ def value_cons_array(v, t, ti, method):
             info("cannot implicit cons Array value", ti)
             return None
 
-		# Array -> Array
+        # Array -> Array
         if not type.type_eq(t['of'], v['type']['of']):
             error("cannot cons array from array with different item type", ti)
             return None

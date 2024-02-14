@@ -76,7 +76,7 @@ def value_cons_integer(v, t, ti, method):
         info("cannot implicit cons Int value", ti)
         return None
 
-	# Int -> Int
+    # Int -> Int
     if type.type_is_integer(from_type):
         return do_cons_integer(v, t, method, ti)
 
