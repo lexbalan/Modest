@@ -787,16 +787,15 @@ def get_forms(func_id_str, args):
 
 def do_value_call(x):
 
+    # for lengthof()
     if x['left']['kind'] == 'id':
         if x['left']['id']['str'] == 'lengthof':
-            #print('lengthof')
             arg = do_rvalue(x['args'][0])
             length = 0
             if not hlir_type.type_is_array(arg['type']):
                 error("lengthof argument must be an array", x['args'][0]['ti'])
             else:
                 length = arg['type']['volume']['asset']
-            #print(" = %d" % length)
             return hlir_value_int(length, ti=x['ti'])
 
 

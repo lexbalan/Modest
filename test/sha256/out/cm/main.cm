@@ -44,7 +44,6 @@ var test1: SHA256_TestCase = {
 }
 
 
-const nTests = 2
 var sha256_tests: [2]*SHA256_TestCase = [&test0, &test1]
 
 
@@ -72,7 +71,7 @@ func main() -> Int {
     printf("test SHA256\n")
 
     var i: Int32 = 0
-    while i < nTests {
+    while i < 2 {
         let test = sha256_tests[i]
         let test_result = sha256_doTest(test)
 

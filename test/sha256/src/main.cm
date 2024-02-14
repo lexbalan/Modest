@@ -45,7 +45,7 @@ var test1: SHA256_TestCase = {
 }
 
 
-var sha256_tests: []*SHA256_TestCase = [&test0, &test1, nil]
+var sha256_tests: []*SHA256_TestCase = [&test0, &test1]
 
 
 func sha256_doTest(test: *SHA256_TestCase) -> Bool {
