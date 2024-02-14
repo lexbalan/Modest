@@ -108,6 +108,10 @@ def value_cons_array(v, t, ti, method):
             return None
 
 		# Array -> Array
+        if not type.type_eq(t['of'], v['type']['of']):
+            error("cannot cons array from array with different item type", ti)
+            return None
+
         return value_cons_array_from_array(v, t, ti, method)
 
     return None
