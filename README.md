@@ -1,6 +1,9 @@
 # Modest
  Golang-like programming language, created for low level system and embedded development.
  
+* Modern syntax for clear and readable code
+* Strong type system protects your code from occasional bugs
+* Minimal runtime for true freedom
 
 Strong typed, concise syntax, low level programming language, that you can translate to LLVM IR or C language output (just choose backend).
 Now on research & development stage.

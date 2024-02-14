@@ -26,7 +26,7 @@ def hlir_stmt_def_var(var_value, init_value=None, ti=None):
         'isa': 'stmt',
         'kind': 'def_var',
         'var': var_value,
-        'init_value': init_value,
+        'default_value': init_value,
         'att': [],
         'nl': 0,
         'ti': ti

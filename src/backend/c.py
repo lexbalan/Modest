@@ -1160,7 +1160,7 @@ def print_stmt_return(x):
 
 
 def print_stmt_defvar(x):
-    init_value = x['init_value']
+    init_value = x['default_value']
 
     if DONT_PRINT_UNUSED:
         if x['var']['usecnt'] == 0:
@@ -1572,7 +1572,7 @@ def print_def_var(x):
 
     print_variable(id, var['type'])
 
-    init_value = x['init_value']
+    init_value = x['default_value']
     if init_value != None:
         out(" = ")
 

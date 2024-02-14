@@ -422,6 +422,19 @@ def llvm_store(l, r):
 
 
 # получает два указателя, и размер
+def llvm_memcpy_immsize(dst, src, size, volatile=False):
+    #"@llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)"
+    dst2 = llvm_cast('bitcast', dst['type'], foundation.typeFreePointer, dst)
+    src2 = llvm_cast('bitcast', src['type'], foundation.typeFreePointer, src)
+    out(NL_INDENT)
+    out("call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(")
+    llvm_print_type_value(dst2)
+    out(", "); llvm_print_type_value(src2)
+    out(", i32 %d" % size);
+    out(", i1 %d)" % volatile)
+
+
+# получает два указателя, и размер
 def llvm_memcpy(dst, src, size, volatile=False):
     #"@llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)"
     dst2 = llvm_cast('bitcast', dst['type'], foundation.typeFreePointer, dst)
@@ -432,6 +445,18 @@ def llvm_memcpy(dst, src, size, volatile=False):
     out(", "); llvm_print_type_value(src2)
     out(", "); llvm_print_type_value(size)
     out(", i1 %d)" % volatile)
+
+
+#declare void @llvm.memset.p0.i32(ptr <dest>, i8 <val>, i32 <len>, i1 <isvolatile>)
+def llvm_memzero(dst, size, volatile=False):
+    #"@llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)"
+    dst2 = llvm_cast('bitcast', dst['type'], foundation.typeFreePointer, dst)
+    out(NL_INDENT)
+    out("call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(")
+    llvm_print_type_value(dst2)
+    out(", i8 0, i32 %d" % size); #llvm_print_type_value(size)
+    out(", i1 %d)" % volatile)
+
 
 
 
@@ -990,16 +1015,17 @@ def do_eval_array(v):
 
     # local.
 
-    # если мы локальны то создадим иммутабельную структуру
-    # с массивом (insertvalue)
-    #%5 = insertvalue %Type24 zeroinitializer, %Int32 1, 0
-    xv = llvm_value_array([], v['type'])
+    if True:
+        # если мы локальны то создадим иммутабельную структуру
+        # с массивом (insertvalue)
+        #%5 = insertvalue %Type24 zeroinitializer, %Int32 1, 0
+        xv = llvm_value_array([], v['type'])
 
-    # набиваем массив
-    i = 0
-    while i < len(items):
-        xv = insertvalue(xv, items[i], i)
-        i = i + 1
+        # набиваем массив
+        i = 0
+        while i < len(items):
+            xv = insertvalue(xv, items[i], i)
+            i = i + 1
 
     return xv
 
@@ -1121,10 +1147,20 @@ def do_eval(x):
 #
 #
 
+def print_stmt_assign_array(x):
+    print("print_stmt_assign_array")
+    pass
+
+
 def print_stmt_assign(x):
+    if hlir_type.type_is_array(x['left']['type']):
+        print_stmt_assign_array(x)
+        return
+
     r = do_reval(x['right'])
     l = do_eval(x['left'])
     llvm_store(l, r)
+
 
 
 def print_stmt_if(x):
@@ -1227,17 +1263,61 @@ def print_stmt_return(x):
     else:
         out("ret void")
 
-    reg_get()    # for LLVM
+    reg_get()  # for LLVM
 
 
 def print_stmt_def_var(x):
     id_str = x['var']['id']['str']
     iv = None
-    if x['init_value'] != None:
-        iv = do_reval(x['init_value'])
+    if x['default_value'] != None:
+        right = x['default_value']
+        if hlir_type.type_is_array(x['default_value']['type']):
+            #print(">> not implemented")
+            #exit(-1)
+
+            val = llvm_alloca(x['var']['type'], id_str=None)
+            locals_add(id_str, val)
+            left = val
+
+            sz = x['var']['type']['size']
+            llvm_memzero(val, sz)
+
+            #print("@@")
+
+            if right['kind'] == 'cast':
+                right = right['value']
+
+            # если значение слева равно (memcpy)
+            # если значение слева больше (memcpy + memset)
+            l_vol = left['type']['volume']['asset']
+            r_vol = right['type']['volume']['asset']
+
+
+
+            # вычисляем но не загружаем
+            # тк если это value_adr то будем юзать memcpy
+            rright = do_eval(right)
+
+            ##type_print(rright['type'])
+            ##print(rright['kind'])
+
+            # если правое является адресом а не самим значением
+            # то его можно сохранить с помощью memcpy
+            if rright['is_adr']:
+                sz = rright['type']['size']
+                llvm_memcpy_immsize(left, rright, sz, volatile=False)
+            else:
+                llvm_store(left, llvm_dold(rright))
+
+            return None
+
+
+        iv = do_reval(x['default_value'])
+
     val = llvm_alloca(x['var']['type'], id_str=None, init_ll_value=iv)
     locals_add(id_str, val)
     return None
+
 
 
 def print_stmt_let(x):
@@ -1482,9 +1562,9 @@ def print_def_var(x):
     out(var['id']['str'])
     out(" = %s " % mod)
     print_type(var['type'])
-    if x['init_value'] != None:
+    if x['default_value'] != None:
         out(" ")
-        llvm_print_value(do_eval(x['init_value']))
+        llvm_print_value(do_eval(x['default_value']))
     else:
         out(" zeroinitializer")
 
@@ -1627,11 +1707,15 @@ def run(module, outname):
 
         # llvm.memcpy intrinsic
         # <dest> <src> <len> <isvolatile>
-        if 'use_memcpy' in module['options']:
-            lo("declare void @llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)")
+#        if 'use_memcpy' in module['options']:
+#            lo("declare void @llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)")
             #lo("declare void @llvm.memcpy.p0.p0.i64(ptr, ptr, i64, i1)")
 
+        #lo("declare void @llvm.memset.p0.i32(i8*, i8, i32, i1)")
         out("\n")
+
+    lo("declare void @llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)")
+    lo("declare void @llvm.memset.p0.i32(i8*, i8, i32, i1)\n")
 
     print_module(module)
     output_close()

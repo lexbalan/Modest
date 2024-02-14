@@ -50,7 +50,7 @@ def hlir_def_var(_id, init_value, var_value, ti):
     return {
         'isa': 'def_var',
         'id': _id,
-        'init_value': init_value,
+        'default_value': init_value,
         'value': var_value,
         'att': [],
         'ti': ti
