@@ -1303,7 +1303,7 @@ def print_stmt_def_var(x):
 
             # если правое является адресом а не самим значением
             # то его можно сохранить с помощью memcpy
-            if rright['is_adr']:
+            if _right['is_adr']:
                 sz = _right['type']['size']
                 llvm_memcpy_immsize(left, _right, sz, volatile=False)
             else:
