@@ -68,96 +68,6 @@ declare void @llvm.memset.p0.i32(i8*, i8, i32, i1)
 
 
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/libc.hm
-
-
-
-
-%DevT = type i16
-
-
-%InoT = type i32
-
-
-%BlkCntT = type i32
-
-
-%OffT = type i32
-
-
-%NlinkT = type i16
-
-
-%ModeT = type i32
-
-
-%UIDT = type i16
-
-
-%GIDT = type i8
-
-
-%BlkSizeT = type i16
-
-
-%TimeT = type i32
-
-
-%DIR = type opaque
-
-
-declare i64 @clock()
-declare i8* @malloc(%SizeT %size)
-declare i8* @memset(i8* %mem, %Int %c, %SizeT %n)
-declare i8* @memcpy(i8* %dst, i8* %src, %SizeT %len)
-declare %Int @memcmp(i8* %ptr1, i8* %ptr2, %SizeT %num)
-declare void @free(i8* %ptr)
-declare %Int @strncmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
-declare %Int @strcmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2)
-declare [0 x %Char]* @strcpy([0 x %Char]* %dst, [0 x %ConstChar]* %src)
-declare %SizeT @strlen([0 x %ConstChar]* %s)
-
-
-declare %Int @ftruncate(%Int %fd, %OffT %size)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-declare %Int @creat(%Str* %path, %ModeT %mode)
-declare %Int @open(%Str* %path, %Int %oflags)
-declare %Int @read(%Int %fd, i8* %buf, i32 %len)
-declare %Int @write(%Int %fd, i8* %buf, i32 %len)
-declare %OffT @lseek(%Int %fd, %OffT %offset, %Int %whence)
-declare %Int @close(%Int %fd)
-declare void @exit(%Int %rc)
-
-
-declare %DIR* @opendir(%Str* %name)
-declare %Int @closedir(%DIR* %dir)
-
-
-declare %Str* @getcwd(%Str* %buf, %SizeT %size)
-declare %Str* @getenv(%Str* %name)
-
-
-declare void @bzero(i8* %s, %SizeT %n)
-
-
-declare void @bcopy(i8* %src, i8* %dst, %SizeT %n)
-
-
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
 
 
@@ -214,8 +124,6 @@ declare void @perror(%ConstCharStr* %str)
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/fastfood/main.cm
-
-
 
 
 

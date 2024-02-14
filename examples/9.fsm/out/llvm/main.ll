@@ -157,14 +157,19 @@ declare void @fsm_run(%FSM* %fsm)
 
 
 
-declare void @ff_memzero(i8* %mem, i64 %len)
-declare void @ff_memcpy(i8* %dst, i8* %src, i64 %len)
-declare i64 @ff_cstrlen(%Str8* %cstr)
+declare void @memzero(i8* %mem, i64 %len)
+declare void @memcopy(i8* %dst, i8* %src, i64 %len)
+declare i64 @cstrlen(%Str8* %cstr)
+declare void @ff_printf(%Str8* %str, ...)
+
+
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/fastfood/delay.hm
+
+
+
 declare void @delay_us(i64 %us)
 declare void @delay_ms(i64 %ms)
 declare void @delay_s(i64 %s)
-declare void @delay(i64 %us)
-declare void @ff_printf(%Str8* %str, ...)
 
 
 ; -- SOURCE: src/main.cm
@@ -358,7 +363,7 @@ again_1:
     br i1 1 , label %body_1, label %break_1
 body_1:
     call void (%FSM*) @fsm_run(%FSM* @fsm)
-    call void (i64) @delay(i64 500000)
+    call void (i64) @delay_ms(i64 500)
     br label %again_1
 break_1:
     ret %Int 0

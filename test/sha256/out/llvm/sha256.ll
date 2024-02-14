@@ -263,7 +263,6 @@ define void @sha256_contextInit(%SHA256_Context* %ctx) {
 }
 
 
-
 @k = global [64 x i32] [
     i32 1116352408,
     i32 1899447441,

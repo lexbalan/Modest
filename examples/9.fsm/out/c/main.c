@@ -5,7 +5,8 @@
 #include <string.h>
 
 #include <stdio.h>
-#include "./ff.h"
+#include "./ff_main.h"
+#include "./ff_delay.h"
 
 // This is flashlight final state machine example
 // (just for compiler test and language demonstration)
@@ -13,6 +14,7 @@
 
 
 #include "./fsm.h"
+
 
 
 
@@ -157,7 +159,7 @@ int main()
 
     while (true) {
         fsm_run(&fsm);
-        delay(500000);
+        delay_ms(500);
     }
 
     return 0;

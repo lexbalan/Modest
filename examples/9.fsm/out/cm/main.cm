@@ -8,7 +8,10 @@ import "libc/stdio.h"
 import "./fsm.h"
 @attribute("c-no-print")
 import "fastfood/main.h"
-@c_include "./ff.h"
+@attribute("c-no-print")
+import "fastfood/delay.h"
+@c_include "./ff_main.h"
+@c_include "./ff_delay.h"
 
 
 
@@ -142,7 +145,7 @@ func main() -> Int {
 
     while true {
         fsm_run(&fsm)
-        delay(500000)
+        delay_ms(500)
     }
 
     return 0
