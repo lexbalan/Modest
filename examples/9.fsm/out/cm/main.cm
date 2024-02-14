@@ -134,7 +134,6 @@ var fsm: FSM = {
             loop = &beacon_loop
             exit = &beacon_exit
         } {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
-
     ]
 }
 

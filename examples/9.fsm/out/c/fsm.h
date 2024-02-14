@@ -9,7 +9,7 @@
 
 
 
-#define fsmNameLength  8
+#define fsmNameMaxLength  8
 #define fsmMaxStates  16
 
 
@@ -19,7 +19,7 @@ typedef struct FSM FSM;
 typedef void *FSM_Proc;
 
 typedef struct {
-    char name[fsmNameLength];
+    char name[fsmNameMaxLength];
     FSM_Proc entry;
     FSM_Proc loop;
     FSM_Proc exit;
@@ -33,7 +33,7 @@ typedef struct {
 typedef uint32_t UInt32;
 
 struct FSM {
-    char name[fsmNameLength];
+    char name[fsmNameMaxLength];
     UInt32 state;
     UInt32 nexstate;
     UInt32 substate;
