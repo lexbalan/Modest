@@ -26,7 +26,9 @@ target triple = "arm64-apple-macosx12.0.0"
 %Str16 = type [0 x %Char16]
 %Str32 = type [0 x %Char32]
 %VA_List = type i8*
+
 declare void @llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)
+declare void @llvm.memset.p0.i32(i8*, i8, i32, i1)
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/system.hm
 
@@ -191,72 +193,72 @@ define %Int @main() {
     %3 = load i32, i32* @glb_i0
     %4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*), i32 %3)
     ; copy arrays by value
-    %5 = load [10 x i32], [10 x i32]* @glb_a1
-    store [10 x i32] %5, [10 x i32]* @glb_a0
-    %6 = getelementptr inbounds [10 x i32], [10 x i32]* @glb_a0, i32 0, i32 0
-    %7 = load i32, i32* %6
-    %8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str3 to [0 x i8]*), i32 %7)
-    %9 = getelementptr inbounds [10 x i32], [10 x i32]* @glb_a0, i32 0, i32 1
-    %10 = load i32, i32* %9
-    %11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str4 to [0 x i8]*), i32 %10)
-    %12 = getelementptr inbounds [10 x i32], [10 x i32]* @glb_a0, i32 0, i32 2
-    %13 = load i32, i32* %12
-    %14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str5 to [0 x i8]*), i32 %13)
+    %5 = getelementptr inbounds [10 x i32], [10 x i32]* @glb_a0, i32 0, i32 0
+    %6 = load i32, i32* %5
+    %7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str3 to [0 x i8]*), i32 %6)
+    %8 = getelementptr inbounds [10 x i32], [10 x i32]* @glb_a0, i32 0, i32 1
+    %9 = load i32, i32* %8
+    %10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str4 to [0 x i8]*), i32 %9)
+    %11 = getelementptr inbounds [10 x i32], [10 x i32]* @glb_a0, i32 0, i32 2
+    %12 = load i32, i32* %11
+    %13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str5 to [0 x i8]*), i32 %12)
     ; copy records by value
-    %15 = load %Point, %Point* @glb_r1
-    store %Point %15, %Point* @glb_r0
-    %16 = getelementptr inbounds %Point, %Point* @glb_r0, i32 0, i32 0
-    %17 = load i32, i32* %16
-    %18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str6 to [0 x i8]*), i32 %17)
-    %19 = getelementptr inbounds %Point, %Point* @glb_r0, i32 0, i32 1
-    %20 = load i32, i32* %19
-    %21 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str7 to [0 x i8]*), i32 %20)
+    %14 = load %Point, %Point* @glb_r1
+    store %Point %14, %Point* @glb_r0
+    %15 = getelementptr inbounds %Point, %Point* @glb_r0, i32 0, i32 0
+    %16 = load i32, i32* %15
+    %17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str6 to [0 x i8]*), i32 %16)
+    %18 = getelementptr inbounds %Point, %Point* @glb_r0, i32 0, i32 1
+    %19 = load i32, i32* %18
+    %20 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str7 to [0 x i8]*), i32 %19)
     ; -----------------------------------
     ; Local
     ; copy integers by value
+    %21 = alloca i32
+    store i32 0, i32* %21
     %22 = alloca i32
-    store i32 0, i32* %22
-    %23 = alloca i32
-    store i32 123, i32* %23
-    %24 = load i32, i32* %23
-    store i32 %24, i32* %22
-    %25 = load i32, i32* %22
-    %26 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str8 to [0 x i8]*), i32 %25)
+    store i32 123, i32* %22
+    %23 = load i32, i32* %22
+    store i32 %23, i32* %21
+    %24 = load i32, i32* %21
+    %25 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str8 to [0 x i8]*), i32 %24)
     ; copy arrays by value
     ; C backend will be use memcpy()
-    %27 = insertvalue [10 x i32] zeroinitializer, i32 0, 0
-    %28 = insertvalue [10 x i32] %27, i32 0, 1
-    %29 = insertvalue [10 x i32] %28, i32 0, 2
-    %30 = insertvalue [10 x i32] %29, i32 0, 3
-    %31 = insertvalue [10 x i32] %30, i32 0, 4
-    %32 = insertvalue [10 x i32] %31, i32 0, 5
-    %33 = insertvalue [10 x i32] %32, i32 0, 6
-    %34 = insertvalue [10 x i32] %33, i32 0, 7
-    %35 = insertvalue [10 x i32] %34, i32 0, 8
-    %36 = insertvalue [10 x i32] %35, i32 0, 9
-    %37 = alloca [10 x i32]
-    store [10 x i32] %36, [10 x i32]* %37
-    %38 = insertvalue [10 x i32] zeroinitializer, i32 42, 0
-    %39 = insertvalue [10 x i32] %38, i32 53, 1
-    %40 = insertvalue [10 x i32] %39, i32 64, 2
-    %41 = insertvalue [10 x i32] %40, i32 0, 3
-    %42 = insertvalue [10 x i32] %41, i32 0, 4
-    %43 = insertvalue [10 x i32] %42, i32 0, 5
-    %44 = insertvalue [10 x i32] %43, i32 0, 6
-    %45 = insertvalue [10 x i32] %44, i32 0, 7
-    %46 = insertvalue [10 x i32] %45, i32 0, 8
-    %47 = insertvalue [10 x i32] %46, i32 0, 9
-    %48 = alloca [10 x i32]
-    store [10 x i32] %47, [10 x i32]* %48
-    %49 = load [10 x i32], [10 x i32]* %48
-    store [10 x i32] %49, [10 x i32]* %37
-    %50 = getelementptr inbounds [10 x i32], [10 x i32]* %37, i32 0, i32 0
+    %26 = alloca [10 x i32]
+    %27 = bitcast [10 x i32]* %26 to i8*
+    call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %27, i8 0, i32 40, i1 0)
+    %28 = insertvalue [10 x i32] zeroinitializer, i32 0, 0
+    %29 = insertvalue [10 x i32] %28, i32 0, 1
+    %30 = insertvalue [10 x i32] %29, i32 0, 2
+    %31 = insertvalue [10 x i32] %30, i32 0, 3
+    %32 = insertvalue [10 x i32] %31, i32 0, 4
+    %33 = insertvalue [10 x i32] %32, i32 0, 5
+    %34 = insertvalue [10 x i32] %33, i32 0, 6
+    %35 = insertvalue [10 x i32] %34, i32 0, 7
+    %36 = insertvalue [10 x i32] %35, i32 0, 8
+    %37 = insertvalue [10 x i32] %36, i32 0, 9
+    store [10 x i32] %37, [10 x i32]* %26
+    %38 = alloca [10 x i32]
+    %39 = bitcast [10 x i32]* %38 to i8*
+    call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %39, i8 0, i32 40, i1 0)
+    %40 = insertvalue [10 x i32] zeroinitializer, i32 42, 0
+    %41 = insertvalue [10 x i32] %40, i32 53, 1
+    %42 = insertvalue [10 x i32] %41, i32 64, 2
+    %43 = insertvalue [10 x i32] %42, i32 0, 3
+    %44 = insertvalue [10 x i32] %43, i32 0, 4
+    %45 = insertvalue [10 x i32] %44, i32 0, 5
+    %46 = insertvalue [10 x i32] %45, i32 0, 6
+    %47 = insertvalue [10 x i32] %46, i32 0, 7
+    %48 = insertvalue [10 x i32] %47, i32 0, 8
+    %49 = insertvalue [10 x i32] %48, i32 0, 9
+    store [10 x i32] %49, [10 x i32]* %38
+    %50 = getelementptr inbounds [10 x i32], [10 x i32]* %26, i32 0, i32 0
     %51 = load i32, i32* %50
     %52 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str9 to [0 x i8]*), i32 %51)
-    %53 = getelementptr inbounds [10 x i32], [10 x i32]* %37, i32 0, i32 1
+    %53 = getelementptr inbounds [10 x i32], [10 x i32]* %26, i32 0, i32 1
     %54 = load i32, i32* %53
     %55 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str10 to [0 x i8]*), i32 %54)
-    %56 = getelementptr inbounds [10 x i32], [10 x i32]* %37, i32 0, i32 2
+    %56 = getelementptr inbounds [10 x i32], [10 x i32]* %26, i32 0, i32 2
     %57 = load i32, i32* %56
     %58 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str11 to [0 x i8]*), i32 %57)
     ; copy records by value

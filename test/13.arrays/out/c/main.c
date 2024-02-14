@@ -79,6 +79,7 @@ int main()
     // 1. В LLVM нехрен создавать локальные массивы как insertvalue
 
     // assign array to array 1
+    // (with equal types)
     int32_t a[3];
     memcpy(&a, &(int32_t[3]){1, 2, 3}, sizeof a);
     int32_t b[3];
@@ -88,6 +89,7 @@ int main()
     printf("b[2] = %i\n", b[2]);
 
     // assign array to array 2
+    // (with array extending)
     int32_t c[3];
     memcpy(&c, &(int32_t[3]){10, 20, 30}, sizeof c);
     int32_t d[6];

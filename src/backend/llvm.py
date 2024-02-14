@@ -474,17 +474,12 @@ def llvm_label(label):
     out("\n%s:" % label)
 
 
-def llvm_alloca(typ, id_str=None, init_ll_value=None):
+def llvm_alloca(typ, id_str=None):
     assert(typ['isa'] == 'type')
     reg = llvm_operation("alloca", reg=id_str)
     print_type(typ)
     val = llvm_value_stk(reg, typ)
     val['is_adr'] = True
-
-    if init_ll_value != None:
-        assert(init_ll_value['isa'] == 'll_value')
-        llvm_store(val, init_ll_value)
-
     return val
 
 
@@ -920,7 +915,8 @@ def cast_record_to_record(to_type, value, ti):
     from_type = value['type']
     # создаем переменную под структуру A
     iv = do_reval(value)
-    struct = llvm_alloca(from_type, init_ll_value=iv)
+    struct = llvm_alloca(from_type)
+    llvm_store(struct, iv)
     # приводим указатель на нее к указателю на структуру B
     new_struct_ptr = llvm_cast("bitcast", hlir_type_pointer(from_type), hlir_type_pointer(to_type), struct)
     # загружаем структуру B и возвращаем ее
@@ -1275,7 +1271,7 @@ def print_stmt_def_var(x):
             #print(">> not implemented")
             #exit(-1)
 
-            val = llvm_alloca(x['var']['type'], id_str=None)
+            val = llvm_alloca(x['var']['type'])
             locals_add(id_str, val)
             left = val
 
@@ -1314,7 +1310,12 @@ def print_stmt_def_var(x):
 
         iv = do_reval(x['default_value'])
 
-    val = llvm_alloca(x['var']['type'], id_str=None, init_ll_value=iv)
+
+    val = llvm_alloca(x['var']['type'])
+
+    if iv != None:
+        llvm_store(val, iv)
+
     locals_add(id_str, val)
     return None
 
@@ -1326,7 +1327,7 @@ def print_stmt_let(x):
 
     if val['kind'] == 'call':
         if need_sret(val['func']['type']['to']):
-            v = llvm_alloca(val['type'], id_str=None)
+            v = llvm_alloca(val['type'])
             do_eval_expr_call(val, retval=v)
             locals_add(id_str, v)
             return
@@ -1337,7 +1338,9 @@ def print_stmt_let(x):
     # поскольку их могут индексировать переменной
     # а массив-значение в "регистре" невозможно индексировать переменной
     if hlir_type.type_is_defined_array(val['type']):
-        v = llvm_alloca(val['type'], id_str=None, init_ll_value=v)
+        nv = llvm_alloca(val['type'])
+        llvm_store(nv, v)
+        v = nv
 
     locals_add(id_str, v)
     return None
@@ -1514,7 +1517,7 @@ def print_def_func(x):
     if ftype['extra_args']:
         global va_list
         id_str = ftype['va_list_id']['str'] # 'va_list'
-        va_list = llvm_alloca(foundation.typeFreePointer, id_str=None)
+        va_list = llvm_alloca(foundation.typeFreePointer)
         locals_add(id_str, va_list)
         llvm_va_start(va_list)
 

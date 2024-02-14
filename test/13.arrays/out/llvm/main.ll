@@ -453,6 +453,7 @@ body_4:
 break_4:
     ; 1. В LLVM нехрен создавать локальные массивы как insertvalue
     ; assign array to array 1
+    ; (with equal types)
     %62 = alloca [3 x i32]
     %63 = bitcast [3 x i32]* %62 to i8*
     call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %63, i8 0, i32 12, i1 0)
@@ -476,6 +477,7 @@ break_4:
     %78 = load i32, i32* %77
     %79 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str10 to [0 x i8]*), i32 %78)
     ; assign array to array 2
+    ; (with array extending)
     %80 = alloca [3 x i32]
     %81 = bitcast [3 x i32]* %80 to i8*
     call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %81, i8 0, i32 12, i1 0)
