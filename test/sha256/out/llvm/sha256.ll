@@ -259,7 +259,6 @@ define void @sha256_contextInit(%SHA256_Context* %ctx) {
     %2 = bitcast [8 x i32]* %1 to i8*
     %3 = bitcast [8 x i32]* @initMagic to i8*
     call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %2, i8* %3, i32 32, i1 0)
-    ;memcpy(&ctx.state, &initMagic, 8*4)
     ret void
 }
 

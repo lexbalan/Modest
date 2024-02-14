@@ -62,8 +62,12 @@ uint32_t sig1(uint32_t x)
 }
 
 
+// not worked & let; FIXIT
+/*const initMagic = [
+    0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
+    0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
+]*/
 
-//const initMagic = [  // not worked & let; FIXIT
 static uint32_t initMagic[8] = {
     0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A,
     0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19
@@ -73,7 +77,6 @@ static uint32_t initMagic[8] = {
 void sha256_contextInit(SHA256_Context *ctx)
 {
     memcpy(&ctx->state, &initMagic, sizeof ctx->state);
-    //memcpy(&ctx.state, &initMagic, 8*4)
 }
 
 
