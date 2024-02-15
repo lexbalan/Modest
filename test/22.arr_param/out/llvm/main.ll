@@ -315,30 +315,30 @@ define %Int @main() {
     ; прикольно что имя массива чаров имеет тип char *
     ; а ziseof = char [n] ))
     %3 = alloca [2 x [10 x i8]]
-    %4 = getelementptr inbounds [2 x [10 x i8]], [2 x [10 x i8]]* %3, i32 0, i32 0
-    %5 = insertvalue [10 x i8] zeroinitializer, i8 104, 0
-    %6 = insertvalue [10 x i8] %5, i8 101, 1
-    %7 = insertvalue [10 x i8] %6, i8 108, 2
-    %8 = insertvalue [10 x i8] %7, i8 108, 3
-    %9 = insertvalue [10 x i8] %8, i8 111, 4
-    %10 = insertvalue [10 x i8] %9, i8 0, 5
-    %11 = insertvalue [10 x i8] %10, i8 0, 6
-    %12 = insertvalue [10 x i8] %11, i8 0, 7
-    %13 = insertvalue [10 x i8] %12, i8 0, 8
-    %14 = insertvalue [10 x i8] %13, i8 0, 9
-    store [10 x i8] %14, [10 x i8]* %4
-    %15 = getelementptr inbounds [2 x [10 x i8]], [2 x [10 x i8]]* %3, i32 0, i32 1
-    %16 = insertvalue [10 x i8] zeroinitializer, i8 119, 0
-    %17 = insertvalue [10 x i8] %16, i8 111, 1
-    %18 = insertvalue [10 x i8] %17, i8 114, 2
-    %19 = insertvalue [10 x i8] %18, i8 108, 3
-    %20 = insertvalue [10 x i8] %19, i8 100, 4
-    %21 = insertvalue [10 x i8] %20, i8 0, 5
-    %22 = insertvalue [10 x i8] %21, i8 0, 6
-    %23 = insertvalue [10 x i8] %22, i8 0, 7
-    %24 = insertvalue [10 x i8] %23, i8 0, 8
-    %25 = insertvalue [10 x i8] %24, i8 0, 9
-    store [10 x i8] %25, [10 x i8]* %15
+    %4 = insertvalue [10 x i8] zeroinitializer, i8 104, 0
+    %5 = insertvalue [10 x i8] %4, i8 101, 1
+    %6 = insertvalue [10 x i8] %5, i8 108, 2
+    %7 = insertvalue [10 x i8] %6, i8 108, 3
+    %8 = insertvalue [10 x i8] %7, i8 111, 4
+    %9 = insertvalue [10 x i8] %8, i8 0, 5
+    %10 = insertvalue [10 x i8] %9, i8 0, 6
+    %11 = insertvalue [10 x i8] %10, i8 0, 7
+    %12 = insertvalue [10 x i8] %11, i8 0, 8
+    %13 = insertvalue [10 x i8] %12, i8 0, 9
+    %14 = getelementptr inbounds [2 x [10 x i8]], [2 x [10 x i8]]* %3, i32 0, i32 0
+    store [10 x i8] %13, [10 x i8]* %14
+    %15 = insertvalue [10 x i8] zeroinitializer, i8 119, 0
+    %16 = insertvalue [10 x i8] %15, i8 111, 1
+    %17 = insertvalue [10 x i8] %16, i8 114, 2
+    %18 = insertvalue [10 x i8] %17, i8 108, 3
+    %19 = insertvalue [10 x i8] %18, i8 100, 4
+    %20 = insertvalue [10 x i8] %19, i8 0, 5
+    %21 = insertvalue [10 x i8] %20, i8 0, 6
+    %22 = insertvalue [10 x i8] %21, i8 0, 7
+    %23 = insertvalue [10 x i8] %22, i8 0, 8
+    %24 = insertvalue [10 x i8] %23, i8 0, 9
+    %25 = getelementptr inbounds [2 x [10 x i8]], [2 x [10 x i8]]* %3, i32 0, i32 1
+    store [10 x i8] %24, [10 x i8]* %25
     %26 = load [2 x [10 x i8]], [2 x [10 x i8]]* %3
     %27 = alloca [2 x [10 x i8]]
     store [2 x [10 x i8]] %26, [2 x [10 x i8]]* %27

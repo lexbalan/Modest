@@ -367,10 +367,10 @@ body_2:
     store i32 %21, i32* %3
     %22 = load i32, i32* %3
     %23 = getelementptr inbounds [8 x i8], [8 x i8]* %1, i32 0, i32 %22
-    %24 = load i8, i8* %23
-    %25 = load i32, i32* %17
-    %26 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %25
-    store i8 %24, i8* %26
+    %24 = load i32, i32* %17
+    %25 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %24
+    %26 = load i8, i8* %23
+    store i8 %26, i8* %25
     %27 = load i32, i32* %17
     %28 = add i32 %27, 1
     store i32 %28, i32* %17
@@ -446,10 +446,10 @@ body_2:
     store i32 %28, i32* %7
     %29 = load i32, i32* %7
     %30 = getelementptr inbounds [11 x i8], [11 x i8]* %1, i32 0, i32 %29
-    %31 = load i8, i8* %30
-    %32 = load i32, i32* %21
-    %33 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %32
-    store i8 %31, i8* %33
+    %31 = load i32, i32* %21
+    %32 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %31
+    %33 = load i8, i8* %30
+    store i8 %33, i8* %32
     %34 = load i32, i32* %21
     %35 = add i32 %34, 1
     store i32 %35, i32* %21
@@ -507,10 +507,10 @@ body_2:
     store i32 %21, i32* %3
     %22 = load i32, i32* %3
     %23 = getelementptr inbounds [11 x i8], [11 x i8]* %1, i32 0, i32 %22
-    %24 = load i8, i8* %23
-    %25 = load i32, i32* %17
-    %26 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %25
-    store i8 %24, i8* %26
+    %24 = load i32, i32* %17
+    %25 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %24
+    %26 = load i8, i8* %23
+    store i8 %26, i8* %25
     %27 = load i32, i32* %17
     %28 = add i32 %27, 1
     store i32 %28, i32* %17

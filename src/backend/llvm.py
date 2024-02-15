@@ -1143,11 +1143,15 @@ def do_eval(x):
 #
 #
 
-def print_stmt_assign_array(l, r):
-    print("print_stmt_assign_array")
+def print_stmt_assign_big_value(l, r):
+    print("print_stmt_assign_big_value")
     # если правое является адресом а не самим значением
     # то его можно сохранить с помощью memcpy
     if r['is_adr']:
+
+        sz = l['type']['size']
+        llvm_memzero(l, sz)
+
         sz = r['type']['size']
         llvm_memcpy_immsize(l, r, sz, volatile=False)
     else:
@@ -1163,10 +1167,10 @@ def print_stmt_assign(x):
     r = do_eval(x['right'])
     l = do_eval(x['left'])
 
-    if hlir_type.type_is_array(l['type']):
-        print_stmt_assign_array(l, r)
+    # большие структуры сохр с memcpy
+    if hlir_type.type_is_array(l['type']) or hlir_type.type_is_record(l['type']):
+        print_stmt_assign_big_value(l, r)
         return
-
 
     llvm_store(l, llvm_dold(r))
 
@@ -1288,8 +1292,7 @@ def print_stmt_def_var(x):
             locals_add(id_str, val)
             left = val
 
-            sz = x['var']['type']['size']
-            llvm_memzero(val, sz)
+
 
             #print("@@")
 
@@ -1307,17 +1310,9 @@ def print_stmt_def_var(x):
             # тк если это value_adr то будем юзать memcpy
             _right = do_eval(right)
 
-            ##type_print(rright['type'])
-            ##print(rright['kind'])
-
             # если правое является адресом а не самим значением
             # то его можно сохранить с помощью memcpy
-            if _right['is_adr']:
-                sz = _right['type']['size']
-                #out("\n; -- ?")
-                llvm_memcpy_immsize(left, _right, sz, volatile=False)
-            else:
-                llvm_store(left, llvm_dold(_right))
+            print_stmt_assign_big_value(left, _right)
 
             return None
 

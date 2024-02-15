@@ -187,10 +187,10 @@ again_1:
 body_1:
     %7 = load i64, i64* %4
     %8 = getelementptr inbounds [0 x %ArchNat], [0 x %ArchNat]* %2, i32 0, i64 %7
-    %9 = load %ArchNat, %ArchNat* %8
-    %10 = load i64, i64* %4
-    %11 = getelementptr inbounds [0 x %ArchNat], [0 x %ArchNat]* %3, i32 0, i64 %10
-    store %ArchNat %9, %ArchNat* %11
+    %9 = load i64, i64* %4
+    %10 = getelementptr inbounds [0 x %ArchNat], [0 x %ArchNat]* %3, i32 0, i64 %9
+    %11 = load %ArchNat, %ArchNat* %8
+    store %ArchNat %11, %ArchNat* %10
     %12 = load i64, i64* %4
     %13 = add i64 %12, 1
     store i64 %13, i64* %4
@@ -212,10 +212,10 @@ again_2:
 body_2:
     %23 = load i64, i64* %4
     %24 = getelementptr inbounds [0 x i8], [0 x i8]* %17, i32 0, i64 %23
-    %25 = load i8, i8* %24
-    %26 = load i64, i64* %4
-    %27 = getelementptr inbounds [0 x i8], [0 x i8]* %20, i32 0, i64 %26
-    store i8 %25, i8* %27
+    %25 = load i64, i64* %4
+    %26 = getelementptr inbounds [0 x i8], [0 x i8]* %20, i32 0, i64 %25
+    %27 = load i8, i8* %24
+    store i8 %27, i8* %26
     %28 = load i64, i64* %4
     %29 = add i64 %28, 1
     store i64 %29, i64* %4
