@@ -1188,8 +1188,10 @@ def _do_assign(l, rx):
             if l_vol > r_vol:
             """
 
-        sz = l['type']['size']
-        llvm_memzero(l, sz)
+        # TODO!
+        if zero_rest > 0:
+            sz = l['type']['size']
+            llvm_memzero(l, sz)
 
         sz = r['type']['size']
         llvm_memcpy_immsize(l, r, sz, volatile=False)

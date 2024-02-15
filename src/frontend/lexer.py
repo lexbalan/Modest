@@ -1,6 +1,5 @@
 
 from error import info
-
 from .source import Source
 from .tokenizer import Tokenizer
 
@@ -15,11 +14,36 @@ operators1 = [
     '=', '+', '-', '/', '*', '%%', '&', '<', '>'
 ]
 
+
 operators2 = [
     '==', '!=', '<=', '>=', '=', '::',
     '<-', '->', '=>', '<<', '>>',
     '++', '--', '<<=', '>>='
 ]
+
+
+
+def doBlank(src):
+    c = src.getc()
+    if not (c == ' ' or c == '\t'):
+        return False
+    return None
+
+
+
+def doNewline(src):
+    ti = src.get_ti()
+    c = src.getc()
+    if not c == '\n':
+        return False
+
+    global line, pos
+    line = line + 1
+    pos = 1
+
+    ti['len'] = 0
+    return ('nl', '\n', ti)
+
 
 
 def doId(src):
@@ -41,6 +65,7 @@ def doId(src):
     token = ''.join(s)
     ti['len'] = len(token)
     return ('id', token, ti)
+
 
 
 def doNumber(src):
@@ -79,31 +104,6 @@ def doNumber(src):
     return ('num', token, ti)
 
 
-def dosym(src):
-    c0, c1 = src.lookup(2)
-    #or c0 == '.'
-    if not ((c0 == '#') and (c1.isalpha() or c1.isdigit())):
-        return False
-
-    ti = src.get_ti()
-    #print("dosym")
-    # skip '#' / '.'
-    src.getc()
-
-    s = []
-    while True:
-        j = src.getpos()
-        c = src.getc()
-        if not (c.isalpha() or c.isdigit()):
-            src.setpos(j)
-            break
-        s.append(c)
-
-    token = ''.join(s)
-    ti['len'] = len(token)
-
-    return ('sym', token, ti)
-
 
 def doOperation2(src):
     ti = src.get_ti()
@@ -115,6 +115,7 @@ def doOperation2(src):
     return False
 
 
+
 def doOperation1(src):
     ti = src.get_ti()
     s = src.getc()
@@ -124,12 +125,6 @@ def doOperation1(src):
 
     return False
 
-
-def doBlank(src):
-    c = src.getc()
-    if not (c == ' ' or c == '\t'):
-        return False
-    return None
 
 
 def doString(src):
@@ -155,6 +150,7 @@ def doString(src):
     token = '"' + ''.join(s) + '"'
     ti['len'] = len(token) + 2  # "
     return ('str', token, ti)
+
 
 
 def doDirective(src):
@@ -206,7 +202,6 @@ def doDirective(src):
                     break
 
     return ('directive', text, ti)
-
 
 
 
@@ -286,20 +281,6 @@ def doBlockComment(src):
 
 
 
-def doNewline(src):
-    ti = src.get_ti()
-    c = src.getc()
-    if not c == '\n':
-        return False
-
-    global line, pos
-    line = line + 1
-    pos = 1
-
-    ti['len'] = 0
-    return ('nl', '\n', ti)
-
-
 def doBadSymbol(src):
     ti = src.get_ti()
     c = src.getc()
@@ -334,4 +315,30 @@ class Lexer:
         src = Source(filename)
         return self.tokenizer.run(src)
 
+
+
+"""def doSymbol(src):
+    c0, c1 = src.lookup(2)
+    #or c0 == '.'
+    if not ((c0 == '#') and (c1.isalpha() or c1.isdigit())):
+        return False
+
+    ti = src.get_ti()
+    #print("dosym")
+    # skip '#' / '.'
+    src.getc()
+
+    s = []
+    while True:
+        j = src.getpos()
+        c = src.getc()
+        if not (c.isalpha() or c.isdigit()):
+            src.setpos(j)
+            break
+        s.append(c)
+
+    token = ''.join(s)
+    ti['len'] = len(token)
+
+    return ('sym', token, ti)"""
 

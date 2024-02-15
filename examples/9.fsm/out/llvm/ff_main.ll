@@ -190,41 +190,37 @@ body_1:
     %9 = load i64, i64* %4
     %10 = getelementptr inbounds [0 x %ArchNat], [0 x %ArchNat]* %2, i32 0, i64 %9
     %11 = bitcast %ArchNat* %8 to i8*
-    call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %11, i8 0, i32 8, i1 0)
-    %12 = bitcast %ArchNat* %8 to i8*
-    %13 = bitcast %ArchNat* %10 to i8*
-    call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %12, i8* %13, i32 8, i1 0)
-    %14 = load i64, i64* %4
-    %15 = add i64 %14, 1
-    store i64 %15, i64* %4
+    %12 = bitcast %ArchNat* %10 to i8*
+    call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %11, i8* %12, i32 8, i1 0)
+    %13 = load i64, i64* %4
+    %14 = add i64 %13, 1
+    store i64 %14, i64* %4
     br label %again_1
 break_1:
-    %16 = urem i64 %len, 8
-    %17 = load i64, i64* %4
-    %18 = getelementptr inbounds [0 x %ArchNat], [0 x %ArchNat]* %2, i32 0, i64 %17
-    %19 = bitcast %ArchNat* %18 to [0 x i8]*
-    %20 = load i64, i64* %4
-    %21 = getelementptr inbounds [0 x %ArchNat], [0 x %ArchNat]* %3, i32 0, i64 %20
-    %22 = bitcast %ArchNat* %21 to [0 x i8]*
+    %15 = urem i64 %len, 8
+    %16 = load i64, i64* %4
+    %17 = getelementptr inbounds [0 x %ArchNat], [0 x %ArchNat]* %2, i32 0, i64 %16
+    %18 = bitcast %ArchNat* %17 to [0 x i8]*
+    %19 = load i64, i64* %4
+    %20 = getelementptr inbounds [0 x %ArchNat], [0 x %ArchNat]* %3, i32 0, i64 %19
+    %21 = bitcast %ArchNat* %20 to [0 x i8]*
     store i64 0, i64* %4
     br label %again_2
 again_2:
-    %23 = load i64, i64* %4
-    %24 = icmp ult i64 %23, %16
-    br i1 %24 , label %body_2, label %break_2
+    %22 = load i64, i64* %4
+    %23 = icmp ult i64 %22, %15
+    br i1 %23 , label %body_2, label %break_2
 body_2:
-    %25 = load i64, i64* %4
-    %26 = getelementptr inbounds [0 x i8], [0 x i8]* %22, i32 0, i64 %25
-    %27 = load i64, i64* %4
-    %28 = getelementptr inbounds [0 x i8], [0 x i8]* %19, i32 0, i64 %27
-    %29 = bitcast i8* %26 to i8*
-    call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %29, i8 0, i32 1, i1 0)
-    %30 = bitcast i8* %26 to i8*
-    %31 = bitcast i8* %28 to i8*
-    call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %30, i8* %31, i32 1, i1 0)
-    %32 = load i64, i64* %4
-    %33 = add i64 %32, 1
-    store i64 %33, i64* %4
+    %24 = load i64, i64* %4
+    %25 = getelementptr inbounds [0 x i8], [0 x i8]* %21, i32 0, i64 %24
+    %26 = load i64, i64* %4
+    %27 = getelementptr inbounds [0 x i8], [0 x i8]* %18, i32 0, i64 %26
+    %28 = bitcast i8* %25 to i8*
+    %29 = bitcast i8* %27 to i8*
+    call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %28, i8* %29, i32 1, i1 0)
+    %30 = load i64, i64* %4
+    %31 = add i64 %30, 1
+    store i64 %31, i64* %4
     br label %again_2
 break_2:
     ret void
