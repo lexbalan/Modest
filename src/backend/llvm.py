@@ -1143,33 +1143,32 @@ def do_eval(x):
 #
 #
 
-def print_stmt_assign_array(x):
+def print_stmt_assign_array(l, r):
     print("print_stmt_assign_array")
-    left = do_eval(x['left'])
-
-    # вычисляем но не загружаем
-    # тк если это value_adr то будем юзать memcpy
-    _right = do_eval(x['right'])
-
     # если правое является адресом а не самим значением
     # то его можно сохранить с помощью memcpy
-    if _right['is_adr']:
-        sz = _right['type']['size']
-        llvm_memcpy_immsize(left, _right, sz, volatile=False)
+    if r['is_adr']:
+        sz = r['type']['size']
+        llvm_memcpy_immsize(l, r, sz, volatile=False)
     else:
-        llvm_store(left, llvm_dold(_right))
+        llvm_store(l, llvm_dold(r))
 
 
 
 
 def print_stmt_assign(x):
-    if hlir_type.type_is_array(x['left']['type']):
-        print_stmt_assign_array(x)
+    # вычисляем но не загружаем
+    # тк если справа массив или запись
+    # придется использовать memcpy
+    r = do_eval(x['right'])
+    l = do_eval(x['left'])
+
+    if hlir_type.type_is_array(l['type']):
+        print_stmt_assign_array(l, r)
         return
 
-    r = do_reval(x['right'])
-    l = do_eval(x['left'])
-    llvm_store(l, r)
+
+    llvm_store(l, llvm_dold(r))
 
 
 
