@@ -1151,6 +1151,8 @@ def _do_assign(l, rx):
     assert(l['isa'] == 'll_value')
     assert(rx['isa'] == 'value')
 
+    zero_rest = 0
+    to_copy = 0
     if rx['kind'] == 'cast':
         # for case:
         # var x: [10]Int32
@@ -1158,6 +1160,18 @@ def _do_assign(l, rx):
         # x = y to [10]Int32
         if hlir_type.type_is_array(rx['type']):
             rx = rx['value']
+
+            # <??>
+            l_vol = l['type']['size']
+            r_vol = rx['type']['size']
+            if l_vol > r_vol:
+                zero_rest = l_vol - r_vol
+                to_copy = r_vol
+            else:
+                to_copy = l_vol
+
+            #print("REST ====== %d" % zero_rest)
+            #print("TO_COPY ====== %d" % to_copy)
 
 
     r = do_eval(rx)
