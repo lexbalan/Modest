@@ -1144,10 +1144,21 @@ def do_eval(x):
 #
 
 def print_stmt_assign_big_value(l, r):
-    print("print_stmt_assign_big_value")
+    #print("print_stmt_assign_big_value")
+
     # если правое является адресом а не самим значением
     # то его можно сохранить с помощью memcpy
     if r['is_adr']:
+
+        """if hlir_type.type_is_array(l['type']):
+
+            # если значение слева равно (memcpy)
+            # если значение слева больше (memcpy + memset)
+            l_vol = left['type']['volume']['asset']
+            r_vol = right['type']['volume']['asset']
+            if l_vol > r_vol:
+            """
+
 
         sz = l['type']['size']
         llvm_memzero(l, sz)
@@ -1161,11 +1172,27 @@ def print_stmt_assign_big_value(l, r):
 
 
 def print_stmt_assign(x):
+    right = x['right']
+    left = x['left']
+    do_stmt_assign(left, right)
+
+
+
+def do_stmt_assign(left, right):
+    assert(left['isa'] == 'value')
+    assert(right['isa'] == 'value')
+    # если правое - это приведение типа
+    # значит оригинал правого может отличаеться по размеру от левого
+    # и нужны особые (!) правила копирования (возм. с дополнением 0)
+    if right['kind'] == 'cast':
+        if hlir_type.type_is_array(right['value']['type']):
+            right = right['value']
+
     # вычисляем но не загружаем
     # тк если справа массив или запись
     # придется использовать memcpy
-    r = do_eval(x['right'])
-    l = do_eval(x['left'])
+    r = do_eval(right)
+    l = do_eval(left)
 
     # большие структуры сохр с memcpy
     if hlir_type.type_is_array(l['type']) or hlir_type.type_is_record(l['type']):
@@ -1292,9 +1319,8 @@ def print_stmt_def_var(x):
             locals_add(id_str, val)
             left = val
 
-
-
             #print("@@")
+
 
             if right['kind'] == 'cast':
                 right = right['value']
