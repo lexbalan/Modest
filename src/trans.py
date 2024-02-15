@@ -1545,6 +1545,10 @@ def do_import(x):
 
 def def_const(x):
     id = x['id']
+
+    #if id['str'][0].isupper():
+    #    warning("constant name must starts with small letter", id['ti'])
+
     v = do_value(x['value'])
 
     if value_is_bad(v):
@@ -1604,12 +1608,12 @@ def decl_type(x):
 
 def def_type(x):
     id = x['id']
-    #print("@type " + id['str'])
-    # def - это и есть алиас для типа!
+
+    if id['str'][0].islower():
+        error("type name must starts with big letter", id['ti'])
 
     pre_exist = type_get(id['str'])
     already_declared = pre_exist != None
-
 
     _def = {
         'isa': 'def_type',
@@ -1671,10 +1675,15 @@ def def_type(x):
 def def_var(x):
     f = do_field(x['field'])
 
+    id = f['id']
+
+    if id['str'][0].isupper():
+        error("variable name must starts with small letter", id['ti'])
+
     # already defined?
-    already = value_get(f['id']['str'])
+    already = value_get(id['str'])
     if already != None:
-        error("redefinition of '%s'" % f['id']['str'], x['field']['ti'])
+        error("redefinition of '%s'" % id['str'], x['field']['ti'])
 
     var_type = f['type']
 
@@ -1709,14 +1718,14 @@ def def_var(x):
             hlir_type.check(var_type, init_value['type'], x['init']['ti'])
 
 
-    var = hlir_value_var(f['id'], var_type)
+    var = hlir_value_var(id, var_type)
 
     if x['extern']:
         var['att'].append('extern')
 
     module['context'].value_add(x['field']['id']['str'], var)
 
-    return hlir_def_var(f['id'], init_value, var, x['ti'])
+    return hlir_def_var(id, init_value, var, x['ti'])
 
 
 
@@ -1762,6 +1771,10 @@ def def_func(x):
     global cfunc
 
     func_id = x['id']
+
+    if func_id['str'][0].isupper():
+        warning("function name must starts with small letter", func_id['ti'])
+
     func_ti = func_id['ti']
 
     func_type = do_type_func(x['type'], func_id=func_id['str'])
