@@ -1143,6 +1143,9 @@ def do_eval(x):
 #
 #
 
+# WARNING:
+# param l must be #ll_value
+# param rx must be #value (!)
 def _do_assign(l, rx):
     #print("_do_assign")
     assert(l['isa'] == 'll_value')
@@ -1171,12 +1174,12 @@ def _do_assign(l, rx):
             if l_vol > r_vol:
             """
 
-
         sz = l['type']['size']
         llvm_memzero(l, sz)
 
         sz = r['type']['size']
         llvm_memcpy_immsize(l, r, sz, volatile=False)
+
     else:
         llvm_store(l, llvm_dold(r))
 
@@ -1287,11 +1290,8 @@ def print_stmt_def_var(x):
     val = llvm_alloca(x['var']['type'])
     locals_add(id_str, val)
 
-    dv = x['default_value']
-    if dv != None:
-        # если правое является адресом а не самим значением
-        # то его можно сохранить с помощью memcpy
-        _do_assign(val, dv)
+    if x['default_value'] != None:
+        _do_assign(val, x['default_value'])
 
     return None
 
