@@ -387,20 +387,20 @@ then_0:
     br label %endif_0
 endif_0:
     %3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str3 to [0 x i8]*))
-    %4 = insertvalue %Struct_sockaddr_in zeroinitializer, %Short 2, 0
-    %5 = insertvalue %Struct_sockaddr_in %4, %UnsignedShort 8080, 1
-    %6 = call %In_addr_t ([0 x %ConstChar]*) @inet_addr([0 x %ConstChar]* bitcast ([10 x i8]* @str4 to [0 x i8]*))
-    %7 = zext %In_addr_t %6 to %UnsignedLong
-    %8 = insertvalue %Struct_in_addr zeroinitializer, %UnsignedLong %7, 0
-    %9 = insertvalue %Struct_sockaddr_in %5, %Struct_in_addr %8, 2
-    %10 = alloca %Struct_sockaddr_in
-    store %Struct_sockaddr_in %9, %Struct_sockaddr_in* %10
-    %11 = bitcast %Struct_sockaddr_in* %10 to i8*
+    %4 = alloca %Struct_sockaddr_in
+    %5 = insertvalue %Struct_sockaddr_in zeroinitializer, %Short 2, 0
+    %6 = insertvalue %Struct_sockaddr_in %5, %UnsignedShort 8080, 1
+    %7 = call %In_addr_t ([0 x %ConstChar]*) @inet_addr([0 x %ConstChar]* bitcast ([10 x i8]* @str4 to [0 x i8]*))
+    %8 = zext %In_addr_t %7 to %UnsignedLong
+    %9 = insertvalue %Struct_in_addr zeroinitializer, %UnsignedLong %8, 0
+    %10 = insertvalue %Struct_sockaddr_in %6, %Struct_in_addr %9, 2
+    store %Struct_sockaddr_in %10, %Struct_sockaddr_in* %4
+    %11 = bitcast %Struct_sockaddr_in* %4 to i8*
     %12 = bitcast i8* %11 to %Struct_sockaddr*
-    %13 = call %Int (%Int, %Struct_sockaddr*, %Socklen_t) @connect(%Int %1, %Struct_sockaddr* %12, %Socklen_t 16)
-    %14 = alloca %Int
-    store %Int %13, %Int* %14
-    %15 = load %Int, %Int* %14
+    %13 = alloca %Int
+    %14 = call %Int (%Int, %Struct_sockaddr*, %Socklen_t) @connect(%Int %1, %Struct_sockaddr* %12, %Socklen_t 16)
+    store %Int %14, %Int* %13
+    %15 = load %Int, %Int* %13
     %16 = icmp slt %Int %15, 0
     br i1 %16 , label %then_1, label %endif_1
 then_1:

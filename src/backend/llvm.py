@@ -1143,15 +1143,18 @@ def do_eval(x):
 #
 #
 
-def do_assign(l, rx):
-    #print("do_assign")
+def _do_assign(l, rx):
+    #print("_do_assign")
     assert(l['isa'] == 'll_value')
     assert(rx['isa'] == 'value')
 
-    #print("@@")
-
     if rx['kind'] == 'cast':
-        rx = rx['value']
+        # for case:
+        # var x: [10]Int32
+        # var y: [5]Int32
+        # x = y to [10]Int32
+        if hlir_type.type_is_array(rx['type']):
+            rx = rx['value']
 
 
     r = do_eval(rx)
@@ -1183,13 +1186,7 @@ def do_assign(l, rx):
 def print_stmt_assign(x):
     right = x['right']
     left = x['left']
-    do_stmt_assign(left, right)
 
-
-
-def do_stmt_assign(left, right):
-    assert(left['isa'] == 'value')
-    assert(right['isa'] == 'value')
     # если правое - это приведение типа
     # значит оригинал правого может отличаеться по размеру от левого
     # и нужны особые (!) правила копирования (возм. с дополнением 0)
@@ -1205,7 +1202,7 @@ def do_stmt_assign(left, right):
 
     # большие структуры сохр с memcpy
     if hlir_type.type_is_array(l['type']) or hlir_type.type_is_record(l['type']):
-        do_assign(l, right)
+        _do_assign(l, right)
         return
 
     llvm_store(l, do_reval(right))
@@ -1279,35 +1276,26 @@ def print_stmt_break(x):
 
 
 def print_stmt_return(x):
+    global cfunc
     if va_list != None:
         llvm_va_end(va_list)
 
-    v = None
-    if x['value'] != None:
-        v = do_eval(x['value'])
 
-    global cfunc
     if need_sret(cfunc['type']['to']):
         to = cfunc['type']['to']
         p2retval = llvm_value_reg("0", hlir_type_pointer(to))
-
-        if v['is_adr']:
-            # save value from local variable (by ptr)
-            size = llvm_value_num(hlir_type.type_select_nat(32), to['size'])
-            llvm_memcpy(p2retval, v, size)
-        else:
-            # save value from reg
-            llvm_store(p2retval, v)
+        _do_assign(p2retval, x['value'])
 
         lo("ret void")
         reg_get()  # for LLVM
         return
 
 
-    if v != None:
-        loaded_v = llvm_dold(v)
+    if x['value'] != None:
+        v = do_eval(x['value'])
+        xv = llvm_dold(v)
         lo("ret ")
-        llvm_print_type_value(loaded_v)
+        llvm_print_type_value(xv)
 
     else:
         out("ret void")
@@ -1315,34 +1303,18 @@ def print_stmt_return(x):
     reg_get()  # for LLVM
 
 
+
 def print_stmt_def_var(x):
     id_str = x['var']['id']['str']
-    iv = None
-    if x['default_value'] != None:
-        right = x['default_value']
-        if hlir_type.type_is_array(x['default_value']['type']):
-            #print(">> not implemented")
-            #exit(-1)
-
-            val = llvm_alloca(x['var']['type'])
-            locals_add(id_str, val)
-
-            # если правое является адресом а не самим значением
-            # то его можно сохранить с помощью memcpy
-            do_assign(val, right)
-
-            return None
-
-
-        iv = do_reval(x['default_value'])
-
-
     val = llvm_alloca(x['var']['type'])
-
-    if iv != None:
-        llvm_store(val, iv)
-
     locals_add(id_str, val)
+
+    dv = x['default_value']
+    if dv != None:
+        # если правое является адресом а не самим значением
+        # то его можно сохранить с помощью memcpy
+        _do_assign(val, dv)
+
     return None
 
 
@@ -1356,7 +1328,7 @@ def print_stmt_let(x):
             v = llvm_alloca(val['type'])
             do_eval_expr_call(val, retval=v)
             locals_add(id_str, v)
-            return
+            return None
 
     v = do_reval(val)
 

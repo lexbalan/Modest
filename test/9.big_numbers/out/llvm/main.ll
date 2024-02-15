@@ -155,13 +155,13 @@ define %Int @main() {
     store i128 1, i128* %2
     %3 = alloca i32
     store i32 1, i32* %3
-    %4 = load i128, i128* %1
-    %5 = add i128 340282366920938463463374607431768211455, %4
-    %6 = load i32, i32* %3
-    %7 = zext i32 %6 to i128
-    %8 = add i128 %5, %7
-    %9 = alloca i128
-    store i128 %8, i128* %9
+    %4 = alloca i128
+    %5 = load i128, i128* %1
+    %6 = add i128 340282366920938463463374607431768211455, %5
+    %7 = load i32, i32* %3
+    %8 = zext i32 %7 to i128
+    %9 = add i128 %6, %8
+    store i128 %9, i128* %4
     %10 = load i128, i128* @big0
     %11 = call i64 (i128) @high_128(i128 %10)
     %12 = load i128, i128* @big0
@@ -180,9 +180,9 @@ define %Int @main() {
     %25 = load i128, i128* %2
     %26 = call i64 (i128) @low_128(i128 %25)
     %27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str4 to [0 x i8]*), i64 %24, i64 %26)
-    %28 = load i128, i128* %9
+    %28 = load i128, i128* %4
     %29 = call i64 (i128) @high_128(i128 %28)
-    %30 = load i128, i128* %9
+    %30 = load i128, i128* %4
     %31 = call i64 (i128) @low_128(i128 %30)
     %32 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*), i64 %29, i64 %31)
     ; signed big int test

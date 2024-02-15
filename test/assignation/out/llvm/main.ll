@@ -274,14 +274,14 @@ define %Int @main() {
     ; C backend will be use memcpy()
     %65 = alloca %Point
     store %Point zeroinitializer, %Point* %65
-    %66 = insertvalue %Point zeroinitializer, i32 10, 0
-    %67 = insertvalue %Point %66, i32 20, 1
-    %68 = alloca %Point
-    store %Point %67, %Point* %68
+    %66 = alloca %Point
+    %67 = insertvalue %Point zeroinitializer, i32 10, 0
+    %68 = insertvalue %Point %67, i32 20, 1
+    store %Point %68, %Point* %66
     %69 = bitcast %Point* %65 to i8*
     call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %69, i8 0, i32 8, i1 0)
     %70 = bitcast %Point* %65 to i8*
-    %71 = bitcast %Point* %68 to i8*
+    %71 = bitcast %Point* %66 to i8*
     call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %70, i8* %71, i32 8, i1 0)
     %72 = getelementptr inbounds %Point, %Point* %65, i32 0, i32 0
     %73 = load i32, i32* %72
