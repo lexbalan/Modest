@@ -237,14 +237,14 @@ again_1:
 body_1:
     %5 = load i32, i32* %1
     %6 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %5
-    %7 = load i8, i8* %6
-    %8 = load i32, i32* %2
-    %9 = getelementptr inbounds [0 x i8], [0 x i8]* %key, i32 0, i32 %8
-    %10 = load i8, i8* %9
-    %11 = xor i8 %7, %10
-    %12 = load i32, i32* %1
-    %13 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %12
-    store i8 %11, i8* %13
+    %7 = load i32, i32* %1
+    %8 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %7
+    %9 = load i8, i8* %8
+    %10 = load i32, i32* %2
+    %11 = getelementptr inbounds [0 x i8], [0 x i8]* %key, i32 0, i32 %10
+    %12 = load i8, i8* %11
+    %13 = xor i8 %9, %12
+    store i8 %13, i8* %6
     %14 = load i32, i32* %1
     %15 = add i32 %14, 1
     store i32 %15, i32* %1

@@ -322,10 +322,10 @@ endif_2:
     %16 = getelementptr inbounds %List, %List* %list, i32 0, i32 1
     store %Node* %new_node, %Node** %16
     %17 = getelementptr inbounds %List, %List* %list, i32 0, i32 2
-    %18 = load i32, i32* %17
-    %19 = add i32 %18, 1
-    %20 = getelementptr inbounds %List, %List* %list, i32 0, i32 2
-    store i32 %19, i32* %20
+    %18 = getelementptr inbounds %List, %List* %list, i32 0, i32 2
+    %19 = load i32, i32* %18
+    %20 = add i32 %19, 1
+    store i32 %20, i32* %17
     ret %Node* %new_node
 }
 

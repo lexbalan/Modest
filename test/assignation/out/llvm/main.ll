@@ -307,13 +307,13 @@ again_2:
     br i1 %84 , label %body_2, label %break_2
 body_2:
     %85 = load i32, i32* %79
-    %86 = load i32, i32* %82
-    %87 = mul i32 %85, %86
-    %88 = load i32, i32* %79
-    %89 = getelementptr inbounds [15 x [16 x i32]], [15 x [16 x i32]]* %78, i32 0, i32 %88
+    %86 = getelementptr inbounds [15 x [16 x i32]], [15 x [16 x i32]]* %78, i32 0, i32 %85
+    %87 = load i32, i32* %82
+    %88 = getelementptr inbounds [16 x i32], [16 x i32]* %86, i32 0, i32 %87
+    %89 = load i32, i32* %79
     %90 = load i32, i32* %82
-    %91 = getelementptr inbounds [16 x i32], [16 x i32]* %89, i32 0, i32 %90
-    store i32 %87, i32* %91
+    %91 = mul i32 %89, %90
+    store i32 %91, i32* %88
     %92 = load i32, i32* %82
     %93 = add i32 %92, 1
     store i32 %93, i32* %82

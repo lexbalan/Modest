@@ -336,11 +336,11 @@ body_1:
     %6 = load i32, i32* %2
     %7 = udiv i32 %6, 16
     store i32 %7, i32* %2
-    %8 = trunc i32 %5 to i8
-    %9 = call i8 (i8) @n_to_sym(i8 %8)
-    %10 = load i32, i32* %3
-    %11 = getelementptr inbounds [8 x i8], [8 x i8]* %1, i32 0, i32 %10
-    store i8 %9, i8* %11
+    %8 = load i32, i32* %3
+    %9 = getelementptr inbounds [8 x i8], [8 x i8]* %1, i32 0, i32 %8
+    %10 = trunc i32 %5 to i8
+    %11 = call i8 (i8) @n_to_sym(i8 %10)
+    store i8 %11, i8* %9
     %12 = load i32, i32* %3
     %13 = add i32 %12, 1
     store i32 %13, i32* %3
@@ -365,12 +365,12 @@ body_2:
     %20 = load i32, i32* %3
     %21 = sub i32 %20, 1
     store i32 %21, i32* %3
-    %22 = load i32, i32* %3
-    %23 = getelementptr inbounds [8 x i8], [8 x i8]* %1, i32 0, i32 %22
-    %24 = load i32, i32* %17
-    %25 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %24
-    %26 = load i8, i8* %23
-    store i8 %26, i8* %25
+    %22 = load i32, i32* %17
+    %23 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %22
+    %24 = load i32, i32* %3
+    %25 = getelementptr inbounds [8 x i8], [8 x i8]* %1, i32 0, i32 %24
+    %26 = load i8, i8* %25
+    store i8 %26, i8* %23
     %27 = load i32, i32* %17
     %28 = add i32 %27, 1
     store i32 %28, i32* %17
@@ -407,11 +407,11 @@ body_1:
     %10 = load i32, i32* %2
     %11 = sdiv i32 %10, 10
     store i32 %11, i32* %2
-    %12 = trunc i32 %9 to i8
-    %13 = call i8 (i8) @n_to_sym(i8 %12)
-    %14 = load i32, i32* %7
-    %15 = getelementptr inbounds [11 x i8], [11 x i8]* %1, i32 0, i32 %14
-    store i8 %13, i8* %15
+    %12 = load i32, i32* %7
+    %13 = getelementptr inbounds [11 x i8], [11 x i8]* %1, i32 0, i32 %12
+    %14 = trunc i32 %9 to i8
+    %15 = call i8 (i8) @n_to_sym(i8 %14)
+    store i8 %15, i8* %13
     %16 = load i32, i32* %7
     %17 = add i32 %16, 1
     store i32 %17, i32* %7
@@ -444,12 +444,12 @@ body_2:
     %27 = load i32, i32* %7
     %28 = sub i32 %27, 1
     store i32 %28, i32* %7
-    %29 = load i32, i32* %7
-    %30 = getelementptr inbounds [11 x i8], [11 x i8]* %1, i32 0, i32 %29
-    %31 = load i32, i32* %21
-    %32 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %31
-    %33 = load i8, i8* %30
-    store i8 %33, i8* %32
+    %29 = load i32, i32* %21
+    %30 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %29
+    %31 = load i32, i32* %7
+    %32 = getelementptr inbounds [11 x i8], [11 x i8]* %1, i32 0, i32 %31
+    %33 = load i8, i8* %32
+    store i8 %33, i8* %30
     %34 = load i32, i32* %21
     %35 = add i32 %34, 1
     store i32 %35, i32* %21
@@ -477,11 +477,11 @@ body_1:
     %6 = load i32, i32* %2
     %7 = udiv i32 %6, 10
     store i32 %7, i32* %2
-    %8 = trunc i32 %5 to i8
-    %9 = call i8 (i8) @n_to_sym(i8 %8)
-    %10 = load i32, i32* %3
-    %11 = getelementptr inbounds [11 x i8], [11 x i8]* %1, i32 0, i32 %10
-    store i8 %9, i8* %11
+    %8 = load i32, i32* %3
+    %9 = getelementptr inbounds [11 x i8], [11 x i8]* %1, i32 0, i32 %8
+    %10 = trunc i32 %5 to i8
+    %11 = call i8 (i8) @n_to_sym(i8 %10)
+    store i8 %11, i8* %9
     %12 = load i32, i32* %3
     %13 = add i32 %12, 1
     store i32 %13, i32* %3
@@ -505,12 +505,12 @@ body_2:
     %20 = load i32, i32* %3
     %21 = sub i32 %20, 1
     store i32 %21, i32* %3
-    %22 = load i32, i32* %3
-    %23 = getelementptr inbounds [11 x i8], [11 x i8]* %1, i32 0, i32 %22
-    %24 = load i32, i32* %17
-    %25 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %24
-    %26 = load i8, i8* %23
-    store i8 %26, i8* %25
+    %22 = load i32, i32* %17
+    %23 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %22
+    %24 = load i32, i32* %3
+    %25 = getelementptr inbounds [11 x i8], [11 x i8]* %1, i32 0, i32 %24
+    %26 = load i8, i8* %25
+    store i8 %26, i8* %23
     %27 = load i32, i32* %17
     %28 = add i32 %27, 1
     store i32 %28, i32* %17
