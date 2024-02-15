@@ -1244,7 +1244,7 @@ class Parser:
 
     def parse(self, source_info):
 
-        self.tokens = self.lex.tokenize(source_info['path'])
+        self.tokens = self.lex.run(source_info['path'])
         self.ctoken = 0
 
         output = []

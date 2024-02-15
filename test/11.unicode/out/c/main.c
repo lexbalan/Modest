@@ -39,6 +39,7 @@ int main()
     int32_t i = 0;
     while (true) {
         const uint16_t c = string16Const[i];
+
         if (c == 0) {
             break;
         }

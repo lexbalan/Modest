@@ -22,7 +22,7 @@ operators2 = [
 ]
 
 
-def doid(src):
+def doId(src):
     c = src.lookup(1)
 
     if not (c.isalpha() or c == '_'):
@@ -43,7 +43,7 @@ def doid(src):
     return ('id', token, ti)
 
 
-def donum(src):
+def doNumber(src):
     isfloat = False
     c = src.lookup(2)
     if not c[0].isdigit():
@@ -105,7 +105,7 @@ def dosym(src):
     return ('sym', token, ti)
 
 
-def doop2(src):
+def doOperation2(src):
     ti = src.get_ti()
     s = src.getn(2)
     if s in operators2:
@@ -115,7 +115,7 @@ def doop2(src):
     return False
 
 
-def doop1(src):
+def doOperation1(src):
     ti = src.get_ti()
     s = src.getc()
     if s in operators1:
@@ -125,14 +125,14 @@ def doop1(src):
     return False
 
 
-def doblank(src):
+def doBlank(src):
     c = src.getc()
     if not (c == ' ' or c == '\t'):
         return False
     return None
 
 
-def dostr(src):
+def doString(src):
     ti = src.get_ti()
     c = src.getc()
     if not c == '"':
@@ -153,11 +153,11 @@ def dostr(src):
     # добавляем " чтобы match в парсере не путал "+" с оператором + (!)
     # поскольку match не учитывает класс
     token = '"' + ''.join(s) + '"'
-    ti['len'] = len(token) + 2    # "
+    ti['len'] = len(token) + 2  # "
     return ('str', token, ti)
 
 
-def dodir(src):
+def doDirective(src):
     global line, pos
 
     s = src.lookup(1)
@@ -210,7 +210,7 @@ def dodir(src):
 
 
 
-def dolcom(src):
+def doLineComment(src):
     global line, pos
 
     s = src.lookup(2)
@@ -255,7 +255,7 @@ def dolcom(src):
 
 
 
-def dobcom(src):
+def doBlockComment(src):
     global line, pos
     global f
 
@@ -286,7 +286,7 @@ def dobcom(src):
 
 
 
-def donl(src):
+def doNewline(src):
     ti = src.get_ti()
     c = src.getc()
     if not c == '\n':
@@ -300,7 +300,7 @@ def donl(src):
     return ('nl', '\n', ti)
 
 
-def dobadsym(src):
+def doBadSymbol(src):
     ti = src.get_ti()
     c = src.getc()
     ti['len'] = 1
@@ -312,26 +312,26 @@ class Lexer:
     def __init__(self):
 
         rules = (
-            donl,
-            doblank,
-            doid,
-            donum,
-            dolcom,
-            dobcom,
-            doop2,
-            doop1,
-            dostr,
-            dodir,
-            dobadsym,
+            doBlank,
+            doNewline,
+            doId,
+            doNumber,
+            doLineComment,
+            doBlockComment,
+            doOperation2,
+            doOperation1,
+            doString,
+            doDirective,
+            doBadSymbol,
         )
 
         self.tokenizer = Tokenizer(rules)
 
 
-    def tokenize(self, filename):
+    def run(self, filename):
         global fname
         fname = filename
         src = Source(filename)
-        return self.tokenizer.tokenize(src)
+        return self.tokenizer.run(src)
 
 

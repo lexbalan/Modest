@@ -7,7 +7,7 @@ class Tokenizer:
     def __init__(self, rules):
         self.rules = rules
 
-    def tokenize(self, src):
+    def run(self, src):
         tokens = []
         while True:
 
