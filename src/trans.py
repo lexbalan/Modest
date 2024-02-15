@@ -298,7 +298,6 @@ def do_type_id(t):
         # create fake alias for unknown type
         tx = hlir_type_bad()
         root_context.type_add(id_str, tx)
-        return nt
     return tx
 
 
