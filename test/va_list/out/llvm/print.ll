@@ -198,82 +198,85 @@ then_1:
     store i32 %16, i32* %3
     %17 = load i32, i32* %3
     %18 = getelementptr inbounds %Str8, %Str8* %str, i32 0, i32 %17
-    %19 = load i8, i8* %18
-    store i8 %19, i8* %4
+    %19 = bitcast i8* %4 to i8*
+    call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %19, i8 0, i32 1, i1 0)
+    %20 = bitcast i8* %4 to i8*
+    %21 = bitcast i8* %18 to i8*
+    call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %20, i8* %21, i32 1, i1 0)
     ; буффер для печати всего, кроме строк
-    %20 = alloca [11 x i8]
-    %21 = alloca [0 x i8]*
-    %22 = bitcast [11 x i8]* %20 to [0 x i8]*
-    store [0 x i8]* %22, [0 x i8]** %21
-    %23 = load [0 x i8]*, [0 x i8]** %21
-    %24 = getelementptr inbounds [0 x i8], [0 x i8]* %23, i32 0, i32 0
-    store i8 0, i8* %24
-    %25 = load i8, i8* %4
-    %26 = icmp eq i8 %25, 105
+    %22 = alloca [11 x i8]
+    %23 = alloca [0 x i8]*
+    %24 = bitcast [11 x i8]* %22 to [0 x i8]*
+    store [0 x i8]* %24, [0 x i8]** %23
+    %25 = load [0 x i8]*, [0 x i8]** %23
+    %26 = getelementptr inbounds [0 x i8], [0 x i8]* %25, i32 0, i32 0
+    store i8 0, i8* %26
     %27 = load i8, i8* %4
-    %28 = icmp eq i8 %27, 100
-    %29 = or i1 %26, %28
-    br i1 %29 , label %then_2, label %else_2
+    %28 = icmp eq i8 %27, 105
+    %29 = load i8, i8* %4
+    %30 = icmp eq i8 %29, 100
+    %31 = or i1 %28, %30
+    br i1 %31 , label %then_2, label %else_2
 then_2:
     ; %i & %d for signed integer (Int)
-    %30 = va_arg %VA_List* %1, i32
-    %31 = load [0 x i8]*, [0 x i8]** %21
-    call void ([0 x i8]*, i32) @sprintf_dec_int32([0 x i8]* %31, i32 %30)
+    %32 = va_arg %VA_List* %1, i32
+    %33 = load [0 x i8]*, [0 x i8]** %23
+    call void ([0 x i8]*, i32) @sprintf_dec_int32([0 x i8]* %33, i32 %32)
     br label %endif_2
 else_2:
-    %32 = load i8, i8* %4
-    %33 = icmp eq i8 %32, 110
-    br i1 %33 , label %then_3, label %else_3
+    %34 = load i8, i8* %4
+    %35 = icmp eq i8 %34, 110
+    br i1 %35 , label %then_3, label %else_3
 then_3:
     ; %n for unsigned integer (Nat)
-    %34 = va_arg %VA_List* %1, i32
-    %35 = load [0 x i8]*, [0 x i8]** %21
-    call void ([0 x i8]*, i32) @sprintf_dec_nat32([0 x i8]* %35, i32 %34)
+    %36 = va_arg %VA_List* %1, i32
+    %37 = load [0 x i8]*, [0 x i8]** %23
+    call void ([0 x i8]*, i32) @sprintf_dec_nat32([0 x i8]* %37, i32 %36)
     br label %endif_3
 else_3:
-    %36 = load i8, i8* %4
-    %37 = icmp eq i8 %36, 120
     %38 = load i8, i8* %4
-    %39 = icmp eq i8 %38, 112
-    %40 = or i1 %37, %39
-    br i1 %40 , label %then_4, label %else_4
+    %39 = icmp eq i8 %38, 120
+    %40 = load i8, i8* %4
+    %41 = icmp eq i8 %40, 112
+    %42 = or i1 %39, %41
+    br i1 %42 , label %then_4, label %else_4
 then_4:
     ; %x for unsigned integer (Nat)
     ; %p for pointers
-    %41 = va_arg %VA_List* %1, i32
-    %42 = load [0 x i8]*, [0 x i8]** %21
-    call void ([0 x i8]*, i32) @sprintf_hex_nat32([0 x i8]* %42, i32 %41)
+    %43 = va_arg %VA_List* %1, i32
+    %44 = load [0 x i8]*, [0 x i8]** %23
+    call void ([0 x i8]*, i32) @sprintf_hex_nat32([0 x i8]* %44, i32 %43)
     br label %endif_4
 else_4:
-    %43 = load i8, i8* %4
-    %44 = icmp eq i8 %43, 115
-    br i1 %44 , label %then_5, label %else_5
+    %45 = load i8, i8* %4
+    %46 = icmp eq i8 %45, 115
+    br i1 %46 , label %then_5, label %else_5
 then_5:
     ; %s pointer to string
-    %45 = va_arg %VA_List* %1, %Str8*
-    store %Str8* %45, [0 x i8]** %21
+    %47 = va_arg %VA_List* %1, %Str8*
+    store %Str8* %47, [0 x i8]** %23
     br label %endif_5
 else_5:
-    %46 = load i8, i8* %4
-    %47 = icmp eq i8 %46, 99
-    br i1 %47 , label %then_6, label %else_6
+    %48 = load i8, i8* %4
+    %49 = icmp eq i8 %48, 99
+    br i1 %49 , label %then_6, label %else_6
 then_6:
     ; %c for char
-    %48 = va_arg %VA_List* %1, i8
-    %49 = load [0 x i8]*, [0 x i8]** %21
-    %50 = getelementptr inbounds [0 x i8], [0 x i8]* %49, i32 0, i32 0
-    store i8 %48, i8* %50
-    %51 = load [0 x i8]*, [0 x i8]** %21
-    %52 = getelementptr inbounds [0 x i8], [0 x i8]* %51, i32 0, i32 1
-    store i8 0, i8* %52
+    %50 = va_arg %VA_List* %1, i8
+    %51 = load [0 x i8]*, [0 x i8]** %23
+    %52 = getelementptr inbounds [0 x i8], [0 x i8]* %51, i32 0, i32 0
+    store i8 %50, i8* %52
+    %53 = load [0 x i8]*, [0 x i8]** %23
+    %54 = getelementptr inbounds [0 x i8], [0 x i8]* %53, i32 0, i32 1
+    store i8 0, i8* %54
     br label %endif_6
 else_6:
-    %53 = load i8, i8* %4
-    %54 = icmp eq i8 %53, 37
-    br i1 %54 , label %then_7, label %endif_7
+    %55 = load i8, i8* %4
+    %56 = icmp eq i8 %55, 37
+    br i1 %56 , label %then_7, label %endif_7
 then_7:
     ; %% for PERCENT_SYMBOL
-    store [0 x i8]* bitcast ([2 x i8]* @str1 to [0 x i8]*), [0 x i8]** %21
+    store [0 x i8]* bitcast ([2 x i8]* @str1 to [0 x i8]*), [0 x i8]** %23
     br label %endif_7
 endif_7:
     br label %endif_6
@@ -286,21 +289,21 @@ endif_4:
 endif_3:
     br label %endif_2
 endif_2:
-    %55 = load [0 x i8]*, [0 x i8]** %21
-    call void (%Str8*) @put_str8([0 x i8]* %55)
+    %57 = load [0 x i8]*, [0 x i8]** %23
+    call void (%Str8*) @put_str8([0 x i8]* %57)
     br label %endif_1
 else_1:
-    %56 = load i8, i8* %4
-    call void (i8) @_put_char8(i8 %56)
+    %58 = load i8, i8* %4
+    call void (i8) @_put_char8(i8 %58)
     br label %endif_1
 endif_1:
-    %57 = load i32, i32* %3
-    %58 = add i32 %57, 1
-    store i32 %58, i32* %3
+    %59 = load i32, i32* %3
+    %60 = add i32 %59, 1
+    store i32 %60, i32* %3
     br label %again_1
 break_1:
-    %59 = bitcast %VA_List* %1 to i8*
-    call void @llvm.va_end(i8* %59)
+    %61 = bitcast %VA_List* %1 to i8*
+    call void @llvm.va_end(i8* %61)
     ret void
 }
 
@@ -372,16 +375,19 @@ body_2:
     %23 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %22
     %24 = load i32, i32* %3
     %25 = getelementptr inbounds [8 x i8], [8 x i8]* %1, i32 0, i32 %24
-    %26 = load i8, i8* %25
-    store i8 %26, i8* %23
-    %27 = load i32, i32* %17
-    %28 = add i32 %27, 1
-    store i32 %28, i32* %17
+    %26 = bitcast i8* %23 to i8*
+    call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %26, i8 0, i32 1, i1 0)
+    %27 = bitcast i8* %23 to i8*
+    %28 = bitcast i8* %25 to i8*
+    call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %27, i8* %28, i32 1, i1 0)
+    %29 = load i32, i32* %17
+    %30 = add i32 %29, 1
+    store i32 %30, i32* %17
     br label %again_2
 break_2:
-    %29 = load i32, i32* %17
-    %30 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %29
-    store i8 0, i8* %30
+    %31 = load i32, i32* %17
+    %32 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %31
+    store i8 0, i8* %32
     ;return buf
     ret void
 }
@@ -451,16 +457,19 @@ body_2:
     %30 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %29
     %31 = load i32, i32* %7
     %32 = getelementptr inbounds [11 x i8], [11 x i8]* %1, i32 0, i32 %31
-    %33 = load i8, i8* %32
-    store i8 %33, i8* %30
-    %34 = load i32, i32* %21
-    %35 = add i32 %34, 1
-    store i32 %35, i32* %21
+    %33 = bitcast i8* %30 to i8*
+    call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %33, i8 0, i32 1, i1 0)
+    %34 = bitcast i8* %30 to i8*
+    %35 = bitcast i8* %32 to i8*
+    call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %34, i8* %35, i32 1, i1 0)
+    %36 = load i32, i32* %21
+    %37 = add i32 %36, 1
+    store i32 %37, i32* %21
     br label %again_2
 break_2:
-    %36 = load i32, i32* %21
-    %37 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %36
-    store i8 0, i8* %37
+    %38 = load i32, i32* %21
+    %39 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %38
+    store i8 0, i8* %39
     ;return buf
     ret void
 }
@@ -512,16 +521,19 @@ body_2:
     %23 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %22
     %24 = load i32, i32* %3
     %25 = getelementptr inbounds [11 x i8], [11 x i8]* %1, i32 0, i32 %24
-    %26 = load i8, i8* %25
-    store i8 %26, i8* %23
-    %27 = load i32, i32* %17
-    %28 = add i32 %27, 1
-    store i32 %28, i32* %17
+    %26 = bitcast i8* %23 to i8*
+    call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %26, i8 0, i32 1, i1 0)
+    %27 = bitcast i8* %23 to i8*
+    %28 = bitcast i8* %25 to i8*
+    call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %27, i8* %28, i32 1, i1 0)
+    %29 = load i32, i32* %17
+    %30 = add i32 %29, 1
+    store i32 %30, i32* %17
     br label %again_2
 break_2:
-    %29 = load i32, i32* %17
-    %30 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %29
-    store i8 0, i8* %30
+    %31 = load i32, i32* %17
+    %32 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %31
+    store i8 0, i8* %32
     ;return buf
     ret void
 }

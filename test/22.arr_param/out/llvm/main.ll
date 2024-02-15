@@ -203,8 +203,7 @@ define void @ret_str2([2 x [10 x i8]]* noalias sret([2 x [10 x i8]]) %0) {
     %21 = insertvalue [10 x i8] %20, i8 0, 9
     %22 = insertvalue [2 x [10 x i8]] zeroinitializer, [10 x i8] %11, 0
     %23 = insertvalue [2 x [10 x i8]] %22, [10 x i8] %21, 1
-    store [2 x [10 x i8]] %23, [2 x [10 x i8]]* %0
-    ret void
+    store [2 x [10 x i8]] %23, [2 x [10 x i8]]* %0ret void
 }
 
 define void @ee([2 x [10 x i8]] %x) {

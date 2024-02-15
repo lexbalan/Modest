@@ -1184,28 +1184,8 @@ def _do_assign(l, rx):
 
 
 def print_stmt_assign(x):
-    right = x['right']
-    left = x['left']
-
-    # если правое - это приведение типа
-    # значит оригинал правого может отличаеться по размеру от левого
-    # и нужны особые (!) правила копирования (возм. с дополнением 0)
-    if right['kind'] == 'cast':
-        if hlir_type.type_is_array(right['value']['type']):
-            right = right['value']
-
-    # вычисляем но не загружаем
-    # тк если справа массив или запись
-    # придется использовать memcpy
-    #r = do_eval(right)
-    l = do_eval(left)
-
-    # большие структуры сохр с memcpy
-    if hlir_type.type_is_array(l['type']) or hlir_type.type_is_record(l['type']):
-        _do_assign(l, right)
-        return
-
-    llvm_store(l, do_reval(right))
+    l = do_eval(x['left'])
+    _do_assign(l, x['right'])
 
 
 
@@ -1281,26 +1261,24 @@ def print_stmt_return(x):
         llvm_va_end(va_list)
 
 
-    if need_sret(cfunc['type']['to']):
+    if x['value'] != None:
+        if not need_sret(cfunc['type']['to']):
+            v = do_eval(x['value'])
+            xv = llvm_dold(v)
+            lo("ret ")
+            llvm_print_type_value(xv)
+            reg_get()  # for LLVM
+            return None
+
+        # return via sret
         to = cfunc['type']['to']
         p2retval = llvm_value_reg("0", hlir_type_pointer(to))
         _do_assign(p2retval, x['value'])
 
-        lo("ret void")
-        reg_get()  # for LLVM
-        return
 
-
-    if x['value'] != None:
-        v = do_eval(x['value'])
-        xv = llvm_dold(v)
-        lo("ret ")
-        llvm_print_type_value(xv)
-
-    else:
-        out("ret void")
-
+    out("ret void")
     reg_get()  # for LLVM
+    return None
 
 
 
