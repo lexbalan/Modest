@@ -48,11 +48,19 @@ precedenceMax = len(aprecedence) - 1
 
 # приоритет операции
 def precedence(x):
+    k = x['kind']
+
+    # cast perfect не является 'оператором'
+    # его приоритет, это приоритет его содержимого (value)
+    if k == 'cast_immediate':
+        return precedence(x['value'])
+
     i = 0
     while i < precedenceMax + 1:
-        if x in aprecedence[i]:
+        if k in aprecedence[i]:
             break
         i = i + 1
+
     return i
 
 
@@ -211,9 +219,9 @@ def print_value_bin(v, ctx):
     right = v['right']
 
     # получаем приоритеты операции и операндов
-    p0 = precedence(op)
-    pl = precedence(left['kind'])
-    pr = precedence(right['kind'])
+    p0 = precedence({'kind': op})
+    pl = precedence(left)
+    pr = precedence(right)
     need_wrap_left = pl < p0
     need_wrap_right = pr < p0
 
@@ -221,8 +229,8 @@ def print_value_bin(v, ctx):
     # Что юзер имел в виду (1 << 2) + 2, а у << приоритет тние
     # чтобы он не ругался, завернем такие выражения в скобки
     if op in ['shl', 'shr']:
-        need_wrap_left = precedence(left['kind']) < precedenceMax
-        need_wrap_right = precedence(right['kind']) < precedenceMax
+        need_wrap_left = precedence(left) < precedenceMax
+        need_wrap_right = precedence(right) < precedenceMax
 
     print_value(left, need_wrap=need_wrap_left)
     out(' %s ' % bin_ops[op])
@@ -240,8 +248,8 @@ un_ops = {
 def print_value_un(v, ctx):
     op = v['kind']
     value = v['value']
-    p0 = precedence(op)
-    pv = precedence(value['kind'])
+    p0 = precedence({'kind': op})
+    pv = precedence(value)
     out(un_ops[op]); print_value(value, need_wrap=pv<p0)
 
 
@@ -268,7 +276,7 @@ def print_value_call(v, ctx):
 def print_value_index(v, ctx):
     array = v['array']
     index = v['index']
-    need_wrap = precedence(array['kind']) < precedence('index')
+    need_wrap = precedence(array) < precedence({'kind': 'index'})
     print_value(array, need_wrap=need_wrap)
     out("["); print_value(index); out("]")
 
@@ -276,14 +284,14 @@ def print_value_index(v, ctx):
 def print_value_index_ptr(v, ctx):
     array = v['pointer']
     index = v['index']
-    need_wrap = precedence(array['kind']) < precedence('index')
+    need_wrap = precedence(array) < precedence({'kind': 'index'})
     print_value(array, need_wrap=need_wrap)
     out("["); print_value(index); out("]")
 
 
 def print_value_access(v, ctx):
     left = v['record']
-    need_wrap = precedence(left['kind']) < precedence('access')
+    need_wrap = precedence(left) < precedence({'kind': 'access'})
     print_value(left, need_wrap=need_wrap)
     out(".")
     print_id(v['field'])
@@ -291,14 +299,15 @@ def print_value_access(v, ctx):
 
 def print_value_access_ptr(v, ctx):
     left = v['pointer']
-    need_wrap = precedence(left['kind']) < precedence('access')
+    need_wrap = precedence(left) < precedence({'kind': 'access'})
     print_value(left, need_wrap=need_wrap)
     out(".")
     print_id(v['field'])
 
 
 def print_cast(t, v, ctx=[]):
-    print_value(v, ctx=ctx)
+    need_wrap = precedence(v) < precedence({'kind': 'cast'})
+    print_value(v, ctx=ctx, need_wrap=need_wrap)
     out(' to ')
     print_type(t)
 
@@ -311,7 +320,7 @@ def print_value_cast_immediate(x, ctx):
         return
 
     # imm каст не печатаю, печатаю просто значение
-    need_wrap = precedence(x['value']['kind']) < precedenceMax
+    need_wrap = precedence(x['value']) < precedenceMax
     print_value(x['value'], ctx, need_wrap=need_wrap)
     return
 
