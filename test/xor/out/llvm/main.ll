@@ -239,18 +239,18 @@ body_1:
     %6 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %5
     %7 = load i32, i32* %1
     %8 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %7
-    %9 = load i8, i8* %8
-    %10 = load i32, i32* %2
-    %11 = getelementptr inbounds [0 x i8], [0 x i8]* %key, i32 0, i32 %10
-    %12 = load i8, i8* %11
-    %13 = xor i8 %9, %12
+    %9 = load i32, i32* %2
+    %10 = getelementptr inbounds [0 x i8], [0 x i8]* %key, i32 0, i32 %9
+    %11 = load i8, i8* %8
+    %12 = load i8, i8* %10
+    %13 = xor i8 %11, %12
     store i8 %13, i8* %6
     %14 = load i32, i32* %1
     %15 = add i32 %14, 1
     store i32 %15, i32* %1
-    %16 = load i32, i32* %2
-    %17 = sub i32 %keylen, 1
-    %18 = icmp ult i32 %16, %17
+    %16 = sub i32 %keylen, 1
+    %17 = load i32, i32* %2
+    %18 = icmp ult i32 %17, %16
     br i1 %18 , label %then_0, label %else_0
 then_0:
     %19 = load i32, i32* %2

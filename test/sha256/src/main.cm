@@ -63,7 +63,7 @@ func sha256_doTest(test: *SHA256_TestCase) -> Bool {
 
     printf("\n")
 
-    let test_passed = memcmp(&test.expected_result, &test_hash, sha256HashSize) == 0
+    let test_passed = test.expected_result == test_hash
     return test_passed
 }
 

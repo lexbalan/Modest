@@ -368,7 +368,7 @@ def print_value_bin(v, ctx):
             need_wrap_right = precedence(right) < 10
     elif op in ['eq', 'ne']:
         if hlir_type.type_is_record(left['type']) or hlir_type.type_is_array(left['type']):
-            memcmp(left, right, op=op)
+            memcmp_by(left, right, by=left, op=op)
             return
     elif op in ['eq_str', 'ne_str']:
         print_value_literal_bool(v, ctx)
@@ -1814,16 +1814,16 @@ def memzero_sizeof(left):
     out(");")
 
 
-def memcmp(left, right, op='eq'):
+def memcmp_by(left, right, by, op='eq'):
     out('memcmp(&')
     print_value(left)
     out(', &')
     print_value(right)
-    out(', sizeof(')
-    print_type(left['type'])
+    out(', sizeof ')
+    print_value(by)
     if op == 'eq':
-        out(')) == 0')
+        out(') == 0')
     else:
-        out(')) != 0')
+        out(') != 0')
 
 

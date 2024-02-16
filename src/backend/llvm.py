@@ -474,6 +474,26 @@ def llvm_memzero_off(dst, offset, size, volatile=False):
     llvm_memzero(dst3, size, volatile=volatile)
 
 
+# получает два указателя, и размер
+# LLVM не имеет интиринсика memcmp поэтому используем стандартный...
+def llvm_memcmp(p0, p1, size):
+    _p0 = llvm_cast('bitcast', p0['type'], foundation.typeFreePointer, p0)
+    _p1 = llvm_cast('bitcast', p1['type'], foundation.typeFreePointer, p1)
+    out(NL_INDENT)
+    reg = llvm_operation("call i32 (i8*, i8*, i64) @memcmp(")
+    llvm_print_type_value(_p0)
+    out(", ")
+    llvm_print_type_value(_p1)
+    out(", ")
+    llvm_print_type_value(size)
+    out(")")
+
+    rv = llvm_value_reg(reg, foundation.typeInt32, None)
+    z = llvm_value_num(foundation.typeInt32, 0)
+    rv2 = llvm_eval_binary('icmp eq', rv, z, {'type': foundation.typeBool})
+
+    return rv2
+
 
 def llvm_br(x, then_label, else_label):
     lo("br ")
@@ -704,10 +724,16 @@ def do_eval_expr_bin(x):
     if value_is_immediate(x):
         return llvm_value_num(x['type'], x['asset'])
 
+    l = do_eval(x['left'])
+    r = do_eval(x['right'])
+
+    if hlir_type.type_is_array(l['type']) or hlir_type.type_is_record(l['type']):
+        # mess
+        sz = llvm_value_num(foundation.typeInt64, l['type']['size'])
+        return llvm_memcmp(l, r, sz)
+
     op = get_bin_opcode(x['kind'], x['left']['type'])
-    l = do_reval(x['left'])
-    r = do_reval(x['right'])
-    return llvm_eval_binary(op, l, r, x)
+    return llvm_eval_binary(op, llvm_dold(l), llvm_dold(r), x)
 
 
 

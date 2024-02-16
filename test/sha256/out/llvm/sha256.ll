@@ -493,11 +493,11 @@ again_3:
     br i1 %135 , label %body_3, label %break_3
 body_3:
     %136 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 7
-    %137 = load i32, i32* %136
-    %138 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 4
-    %139 = load i32, i32* %138
-    %140 = call i32 (i32) @ep1(i32 %139)
-    %141 = add i32 %137, %140
+    %137 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 4
+    %138 = load i32, i32* %137
+    %139 = call i32 (i32) @ep1(i32 %138)
+    %140 = load i32, i32* %136
+    %141 = add i32 %140, %139
     %142 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 4
     %143 = load i32, i32* %142
     %144 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 5
@@ -575,11 +575,11 @@ body_4:
     %200 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 3
     %201 = load i32, i32* %66
     %202 = getelementptr inbounds [8 x i32], [8 x i32]* %200, i32 0, i32 %201
-    %203 = load i32, i32* %202
-    %204 = load i32, i32* %66
-    %205 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 %204
-    %206 = load i32, i32* %205
-    %207 = add i32 %203, %206
+    %203 = load i32, i32* %66
+    %204 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 %203
+    %205 = load i32, i32* %202
+    %206 = load i32, i32* %204
+    %207 = add i32 %205, %206
     store i32 %207, i32* %199
     %208 = load i32, i32* %66
     %209 = add i32 %208, 1
@@ -684,12 +684,12 @@ endif_1:
     ; Append to the padding the total message's length in bits and transform.
     %30 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 2
     %31 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 2
-    %32 = load i64, i64* %31
-    %33 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 1
-    %34 = load i32, i32* %33
-    %35 = zext i32 %34 to i64
-    %36 = mul i64 %35, 8
-    %37 = add i64 %32, %36
+    %32 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 1
+    %33 = load i32, i32* %32
+    %34 = zext i32 %33 to i64
+    %35 = mul i64 %34, 8
+    %36 = load i64, i64* %31
+    %37 = add i64 %36, %35
     store i64 %37, i64* %30
     %38 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 0
     %39 = getelementptr inbounds [64 x i8], [64 x i8]* %38, i32 0, i32 63

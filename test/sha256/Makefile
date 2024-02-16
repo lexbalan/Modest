@@ -12,6 +12,8 @@ all: LLVM
 
 CM:
 	mcc -o $(CMPREFIX)/main -mbackend=cm -funsafe $(INDIR)/main.cm
+	mcc -o $(CMPREFIX)/sha256 -mbackend=cm -funsafe ${MODEST_LIB}/misc/sha256.hm
+	mcc -o $(CMPREFIX)/sha256 -mbackend=cm -funsafe ${MODEST_LIB}/misc/sha256.cm
 
 
 LLVM:

@@ -1,0 +1,6 @@
+
+
+const sha256HashSize = 32
+
+func sha256_doHash(msg: *[]Byte, len: Nat32, hash: *[]Byte) -> Unit
+

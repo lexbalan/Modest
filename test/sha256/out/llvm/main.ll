@@ -419,8 +419,9 @@ break_1:
     %20 = getelementptr inbounds %SHA256_TestCase, %SHA256_TestCase* %test, i32 0, i32 2
     %21 = bitcast [32 x i8]* %20 to i8*
     %22 = bitcast [32 x i8]* %1 to i8*
-    %23 = call %Int (i8*, i8*, %SizeT) @memcmp(i8* %21, i8* %22, %SizeT 32)
-    %24 = icmp eq %Int %23, 0
+    
+    %23 = call i32 (i8*, i8*, i64) @memcmp( i8* %21, i8* %22, i64 32)
+    %24 = icmp eq i32 %23, 0
     ret i1 %24
 }
 
