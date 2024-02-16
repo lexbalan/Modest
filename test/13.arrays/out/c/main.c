@@ -77,17 +77,26 @@ int main()
         i = i + 1;
     }
 
-    // 1. В LLVM нехрен создавать локальные массивы как insertvalue
-
     // assign array to array 1
     // (with equal types)
     int32_t a[3];
     memcpy(&a, &(int32_t[3]){1, 2, 3}, 12);
+    printf("a[0] = %i\n", a[0]);
+    printf("a[1] = %i\n", a[1]);
+    printf("a[2] = %i\n", a[2]);
+
     int32_t b[3];
     memcpy(&b, &a, 12);
     printf("b[0] = %i\n", b[0]);
     printf("b[1] = %i\n", b[1]);
     printf("b[2] = %i\n", b[2]);
+
+    // check equality between two arrays (by value)
+    if (memcmp(&a, &b, sizeof a) == 0) {
+        printf("a == b\n");
+    } else {
+        printf("a != b\n");
+    }
 
     // assign array to array 2
     // (with array extending)
