@@ -417,8 +417,8 @@ body_1:
 break_1:
     %19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))
     %20 = getelementptr inbounds %SHA256_TestCase, %SHA256_TestCase* %test, i32 0, i32 2
-    %21 = bitcast [32 x i8]* %20 to i8*
-    %22 = bitcast [32 x i8]* %1 to i8*
+    %21 = bitcast [32 x i8]* %1 to i8*
+    %22 = bitcast [32 x i8]* %20 to i8*
     
     %23 = call i32 (i8*, i8*, i64) @memcmp( i8* %21, i8* %22, i64 32)
     %24 = icmp eq i32 %23, 0

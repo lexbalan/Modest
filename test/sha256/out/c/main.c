@@ -18,7 +18,7 @@
 
 
 #define INPUT_LENGTH  32
-#define OUTPUT_LENGTH  32
+#define OUTPUT_LENGTH  sha256HashSize
 
 
 typedef struct {
@@ -74,7 +74,8 @@ bool sha256_doTest(SHA256_TestCase *test)
 
     printf("\n");
 
-    const bool test_passed = memcmp(&test->expected_result, &test_hash, sizeof test->expected_result) == 0;
+    const bool test_passed = memcmp(&test_hash, &test->expected_result, sizeof test_hash) == 0;
+
     return test_passed;
 }
 

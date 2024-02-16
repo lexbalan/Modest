@@ -9,7 +9,7 @@ import "misc/sha256.hm"
 
 
 const INPUT_LENGTH = 32
-const OUTPUT_LENGTH = 32
+const OUTPUT_LENGTH = sha256HashSize
 
 
 type SHA256_TestCase record {
