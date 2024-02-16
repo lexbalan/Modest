@@ -32,11 +32,14 @@ int main()
     unsigned __int128 big2;
     big2 = big1;
 
-    unsigned __int128 big3 = 0x1;
+    unsigned __int128 big3;
+    big3 = 0x1;
 
-    uint32_t a = 0x1;
+    uint32_t a;
+    a = 0x1;
 
-    unsigned __int128 big_sum = big1 + big2 + (unsigned __int128)a;
+    unsigned __int128 big_sum;
+    big_sum = big1 + big2 + (unsigned __int128)a;
 
     printf("big0 = 0x%llX%llX\n", high_128(big0), low_128(big0));
     printf("big1 = 0x%llX%llX\n", high_128(big1), low_128(big1));
@@ -48,7 +51,8 @@ int main()
     // signed big int test
     const int8_t sig0 = -1;
 
-    __int128 sig1 = sig0;
+    __int128 sig1;
+    sig1 = sig0;
 
     sig1 = sig1 + 1;
 

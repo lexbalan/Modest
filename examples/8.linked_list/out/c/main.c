@@ -31,7 +31,8 @@ void nat64_list_insert(List *list, uint64_t x)
 void list_print_forward(List *list)
 {
     printf("list_print_forward:\n");
-    Node *pn = linked_list_first_get(list);
+    Node *pn;
+    pn = linked_list_first_get(list);
     while (pn != NULL) {
         uint32_t *const x = (uint32_t *)linked_list_node_link_get(pn);
         printf("v = %d\n", *x);
@@ -44,7 +45,8 @@ void list_print_forward(List *list)
 void list_print_backward(List *list)
 {
     printf("list_print_backward:\n");
-    Node *pn = linked_list_last_get(list);
+    Node *pn;
+    pn = linked_list_last_get(list);
     while (pn != NULL) {
         uint32_t *const x = (uint32_t *)linked_list_node_link_get(pn);
         printf("v = %d\n", *x);

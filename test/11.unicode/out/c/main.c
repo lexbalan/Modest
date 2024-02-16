@@ -36,7 +36,8 @@ int main()
     //    printf("ratCode = %d\n", ratCode)
 
 
-    int32_t i = 0;
+    int32_t i;
+    i = 0;
     while (true) {
         const uint16_t c = string16Const[i];
 
@@ -49,9 +50,12 @@ int main()
         i = i + 1;
     }
 
-    char *str8 = string8Const;
-    uint16_t *str16 = string16Const;
-    uint32_t *str32 = string32Const;
+    char *str8;
+    str8 = string8Const;
+    uint16_t *str16;
+    str16 = string16Const;
+    uint32_t *str32;
+    str32 = string32Const;
 
     utf8_puts(str8);
     utf8_puts("\n");

@@ -84,7 +84,7 @@ int main()
 {
 
     // function returns array
-    char returned_string[7];
+    struct ret_str_retval returned_string;
     *(struct ret_str_retval *)&returned_string = ret_str();
     printf("returned_string = %s", (char *)&returned_string);
 
@@ -109,10 +109,10 @@ int main()
 
 
     char w[2 * 10];
-    memcpy(&w[0 * 10], &(char[10]){'h', 'e', 'l', 'l', 'o', '\0', '\0', '\0', '\0', '\0'}, sizeof w[0 * 10]);
-    memcpy(&w[1 * 10], &(char[10]){'w', 'o', 'r', 'l', 'd', '\0', '\0', '\0', '\0', '\0'}, sizeof w[1 * 10]);
+    memcpy(&w[0 * 10], &(char[10]){'h', 'e', 'l', 'l', 'o', '\0', '\0', '\0', '\0', '\0'}, 10);
+    memcpy(&w[1 * 10], &(char[10]){'w', 'o', 'r', 'l', 'd', '\0', '\0', '\0', '\0', '\0'}, 10);
     char u[2 * 10];
-    memcpy(&u, &w, sizeof u);
+    memcpy(&u, &w, 20);
     kk(*(struct kk_x *)&u);
 
 

@@ -76,7 +76,7 @@ static uint32_t initMagic[8] = {
 
 void sha256_contextInit(SHA256_Context *ctx)
 {
-    memcpy(&ctx->state, &initMagic, sizeof ctx->state);
+    memcpy(&ctx->state, &initMagic, 32);
 }
 
 
@@ -103,10 +103,12 @@ static uint32_t k[64] = {
 void sha256_transform(SHA256_Context *ctx, uint8_t *data)
 {
     uint32_t m[64];
-    memcpy(&m, &(uint32_t[64]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, sizeof m);
+    memcpy(&m, &(uint32_t[64]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 256);
 
-    uint32_t i = 0;
-    uint32_t j = 0;
+    uint32_t i;
+    i = 0;
+    uint32_t j;
+    j = 0;
 
     while (i < 16) {
         const uint32_t x = (uint32_t)data[j + 0] << 24 | (uint32_t)data[j + 1] << 16 | (uint32_t)data[j + 2] << 8 | (uint32_t)data[j + 3] << 0;
@@ -122,7 +124,7 @@ void sha256_transform(SHA256_Context *ctx, uint8_t *data)
     }
 
     uint32_t x[8];
-    memcpy(&x, &ctx->state, sizeof x);
+    memcpy(&x, &ctx->state, 32);
 
     i = 0;
     while (i < 64) {
@@ -151,7 +153,8 @@ void sha256_transform(SHA256_Context *ctx, uint8_t *data)
 
 void sha256_update(SHA256_Context *ctx, uint8_t *data, uint32_t len)
 {
-    uint32_t i = 0;
+    uint32_t i;
+    i = 0;
     while (i < len) {
         ctx->data[ctx->datalen] = data[i];
         ctx->datalen = ctx->datalen + 1;
@@ -167,11 +170,13 @@ void sha256_update(SHA256_Context *ctx, uint8_t *data, uint32_t len)
 
 void sha256_final(SHA256_Context *ctx, uint8_t *hash)
 {
-    uint32_t i = ctx->datalen;
+    uint32_t i;
+    i = ctx->datalen;
 
     // Pad whatever data is left in the buffer.
 
-    uint32_t n = 64;
+    uint32_t n;
+    n = 64;
     if (ctx->datalen < 56) {
         n = 56;
     }
@@ -224,7 +229,8 @@ void sha256_final(SHA256_Context *ctx, uint8_t *hash)
 // arg hash must be at least SHA256_BLOCK_SIZE
 void sha256_doHash(uint8_t *msg, uint32_t len, uint8_t *hash)
 {
-    SHA256_Context ctx = (SHA256_Context){};
+    SHA256_Context ctx;
+    ctx = (SHA256_Context){};
     sha256_contextInit(&ctx);
     sha256_update(&ctx, msg, len);
     sha256_final(&ctx, hash);

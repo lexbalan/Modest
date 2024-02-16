@@ -1203,6 +1203,8 @@ def print_stmt_defvar(x):
 
     out(";")
 
+    return
+
 
 
 def print_stmt_let(x):
@@ -1226,6 +1228,8 @@ def print_stmt_let(x):
     out(" = ")
     print_value(x['value'], just_print_id=False)
     out(";")
+    return
+
 
 
 
@@ -1238,43 +1242,35 @@ def assign_array(left, right):
             out(";")
         else:
             # *(struct ret_str_retval *)&c = ret_str();
-            #print(">>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<")
             print_cast_hard(right['type'], left)
             out(" = ")
             print_value(right, just_print_id=False)
             out(";")
         return
 
+    to_copy = 0
+    zero_rest = 0
+    l_size = left['type']['size']
+    r_size = right['type']['size']
+    if l_size > r_size:
+        zero_rest = l_size - r_size
+        to_copy = r_size
+    else:
+        to_copy = l_size
 
-    # если справа операция приведения - не будем ничего книструировать
-    # тк результат сразу придется копировать в левое от присваивания
-    # // example:
-    # var c: [3]Int32 = [1, 2, 3]
-    # var d: [6]Int32 = c to [6]Int32  // <<--
-    if right['kind'] == 'cast':
-        right = right['value']
+    #print("to_copy = %d" % to_copy)
+    #print("zero_rest = %d" % zero_rest)
+    memcopy_len(left, right, to_copy)
 
-    # если значение слева равно (memcpy)
-    # если значение слева больше (memcpy + memset)
-    l_vol = left['type']['volume']['asset']
-    r_vol = right['type']['volume']['asset']
-
-    by = left
-    if l_vol > r_vol:
-        by = right
-        # не рационально занулять весь массив а не только хвост
-        # но пока так, тк это fastfix
-        memzero_sizeof(left)
+    if zero_rest > 0:
         nl_indent()
+        memzero_off(left, to_copy, zero_rest)
 
-    memcopy_by(left, right, by)
-
-
+    return
 
 
 
 def assign(left, right):
-
     if right['kind'] == 'cast':
         # for case:
         # var x: [10]Int32
@@ -1283,33 +1279,18 @@ def assign(left, right):
         cast_v = right['value']
         if hlir_type.type_is_array(cast_v['type']):
             right = cast_v
+            return assign_array(left, right)
 
     if hlir_type.type_is_array(right['type']):
-        to_copy = 0
-        zero_rest = 0
-        l_size = left['type']['size']
-        r_size = right['type']['size']
-        if l_size > r_size:
-            zero_rest = l_size - r_size
-            to_copy = r_size
-        else:
-            to_copy = l_size
-
-        print("to_copy = %d" % to_copy)
-        print("zero_rest = %d" % zero_rest)
-        memcopy_len(left, right, to_copy)
-
-        if zero_rest > 0:
-            nl_indent()
-            memzero_off(left, to_copy, zero_rest)
-
-        return
+        return assign_array(left, right)
 
 
     print_value(left)
     out(" = ")
     print_value(right)
     out(";")
+
+    return
 
 
 

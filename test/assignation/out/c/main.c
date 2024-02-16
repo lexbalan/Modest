@@ -39,7 +39,7 @@ int main()
 
 
     // copy arrays by value
-    memcpy(&glb_a0, &glb_a1, sizeof glb_a0);
+    memcpy(&glb_a0, &glb_a1, 40);
 
     printf("glb_a0[0] = %i\n", glb_a0[0]);
     printf("glb_a0[1] = %i\n", glb_a0[1]);
@@ -57,8 +57,10 @@ int main()
     // Local
 
     // copy integers by value
-    int32_t loc_i0 = 0;
-    int32_t loc_i1 = 123;
+    int32_t loc_i0;
+    loc_i0 = 0;
+    int32_t loc_i1;
+    loc_i1 = 123;
 
     loc_i0 = loc_i1;
 
@@ -67,11 +69,11 @@ int main()
     // copy arrays by value
     // C backend will be use memcpy()
     int32_t loc_a0[10];
-    memcpy(&loc_a0, &(int32_t[10]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, sizeof loc_a0);
+    memcpy(&loc_a0, &(int32_t[10]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 40);
     int32_t loc_a1[10];
-    memcpy(&loc_a1, &(int32_t[10]){42, 53, 64, 0, 0, 0, 0, 0, 0, 0}, sizeof loc_a1);
+    memcpy(&loc_a1, &(int32_t[10]){42, 53, 64, 0, 0, 0, 0, 0, 0, 0}, 40);
 
-    memcpy(&loc_a0, &loc_a1, sizeof loc_a0);
+    memcpy(&loc_a0, &loc_a1, 40);
 
     printf("loc_a0[0] = %i\n", loc_a0[0]);
     printf("loc_a0[1] = %i\n", loc_a0[1]);
@@ -80,8 +82,10 @@ int main()
 
     // copy records by value
     // C backend will be use memcpy()
-    Point loc_r0 = (Point){};
-    Point loc_r1 = (Point){.x = 10, .y = 20};
+    Point loc_r0;
+    loc_r0 = (Point){};
+    Point loc_r1;
+    loc_r1 = (Point){.x = 10, .y = 20};
 
     loc_r0 = loc_r1;
 
@@ -94,9 +98,11 @@ int main()
 
     int32_t aa[dim1 * dim2];
 
-    int32_t i = 0;
+    int32_t i;
+    i = 0;
     while (i < 16) {
-        int32_t j = 0;
+        int32_t j;
+        j = 0;
         while (j < 16) {
             aa[i * dim2 + j] = i * j;
             j = j + 1;
@@ -106,7 +112,8 @@ int main()
 
     i = 0;
     while (i < 16) {
-        int32_t k = 0;
+        int32_t k;
+        k = 0;
         while (k < 16) {
             printf("aa[%i][%i] = %i\n", i, k, aa[i * dim2 + k]);
             k = k + 1;
@@ -116,7 +123,7 @@ int main()
 
 
     int32_t xa[dim2];
-    memcpy(&xa, &aa[3 * dim2], sizeof xa);
+    memcpy(&xa, &aa[3 * dim2], 64);
 
     i = 0;
     while (i < dim2) {

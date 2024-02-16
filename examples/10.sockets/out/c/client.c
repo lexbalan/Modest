@@ -43,7 +43,8 @@ int main()
 
     printf("[+] Server socket created\n");
 
-    struct sockaddr_in server_addr = (struct sockaddr_in){
+    struct sockaddr_in server_addr;
+    server_addr = (struct sockaddr_in){
         .sin_family = AF_INET,
         .sin_port = PORT,
         .sin_addr = (struct in_addr){
@@ -52,7 +53,8 @@ int main()
     };
 
     struct sockaddr *const sockaddr = (struct sockaddr *)(void *)&server_addr;
-    int e = connect(sockfd, sockaddr, sizeof(struct sockaddr_in));
+    int e;
+    e = connect(sockfd, sockaddr, sizeof(struct sockaddr_in));
     if (e < 0) {
         perror("[-] Error in Connecting");
         exit(1);

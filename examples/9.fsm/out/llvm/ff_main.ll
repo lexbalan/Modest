@@ -189,38 +189,36 @@ body_1:
     %8 = getelementptr inbounds [0 x %ArchNat], [0 x %ArchNat]* %3, i32 0, i64 %7
     %9 = load i64, i64* %4
     %10 = getelementptr inbounds [0 x %ArchNat], [0 x %ArchNat]* %2, i32 0, i64 %9
-    %11 = bitcast %ArchNat* %8 to i8*
-    %12 = bitcast %ArchNat* %10 to i8*
-    call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %11, i8* %12, i32 8, i1 0)
-    %13 = load i64, i64* %4
-    %14 = add i64 %13, 1
-    store i64 %14, i64* %4
+    %11 = load %ArchNat, %ArchNat* %10
+    store %ArchNat %11, %ArchNat* %8
+    %12 = load i64, i64* %4
+    %13 = add i64 %12, 1
+    store i64 %13, i64* %4
     br label %again_1
 break_1:
-    %15 = urem i64 %len, 8
-    %16 = load i64, i64* %4
-    %17 = getelementptr inbounds [0 x %ArchNat], [0 x %ArchNat]* %2, i32 0, i64 %16
-    %18 = bitcast %ArchNat* %17 to [0 x i8]*
-    %19 = load i64, i64* %4
-    %20 = getelementptr inbounds [0 x %ArchNat], [0 x %ArchNat]* %3, i32 0, i64 %19
-    %21 = bitcast %ArchNat* %20 to [0 x i8]*
+    %14 = urem i64 %len, 8
+    %15 = load i64, i64* %4
+    %16 = getelementptr inbounds [0 x %ArchNat], [0 x %ArchNat]* %2, i32 0, i64 %15
+    %17 = bitcast %ArchNat* %16 to [0 x i8]*
+    %18 = load i64, i64* %4
+    %19 = getelementptr inbounds [0 x %ArchNat], [0 x %ArchNat]* %3, i32 0, i64 %18
+    %20 = bitcast %ArchNat* %19 to [0 x i8]*
     store i64 0, i64* %4
     br label %again_2
 again_2:
-    %22 = load i64, i64* %4
-    %23 = icmp ult i64 %22, %15
-    br i1 %23 , label %body_2, label %break_2
+    %21 = load i64, i64* %4
+    %22 = icmp ult i64 %21, %14
+    br i1 %22 , label %body_2, label %break_2
 body_2:
-    %24 = load i64, i64* %4
-    %25 = getelementptr inbounds [0 x i8], [0 x i8]* %21, i32 0, i64 %24
-    %26 = load i64, i64* %4
-    %27 = getelementptr inbounds [0 x i8], [0 x i8]* %18, i32 0, i64 %26
-    %28 = bitcast i8* %25 to i8*
-    %29 = bitcast i8* %27 to i8*
-    call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %28, i8* %29, i32 1, i1 0)
-    %30 = load i64, i64* %4
-    %31 = add i64 %30, 1
-    store i64 %31, i64* %4
+    %23 = load i64, i64* %4
+    %24 = getelementptr inbounds [0 x i8], [0 x i8]* %20, i32 0, i64 %23
+    %25 = load i64, i64* %4
+    %26 = getelementptr inbounds [0 x i8], [0 x i8]* %17, i32 0, i64 %25
+    %27 = load i8, i8* %26
+    store i8 %27, i8* %24
+    %28 = load i64, i64* %4
+    %29 = add i64 %28, 1
+    store i64 %29, i64* %4
     br label %again_2
 break_2:
     ret void

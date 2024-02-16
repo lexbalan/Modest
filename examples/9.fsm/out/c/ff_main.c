@@ -18,7 +18,8 @@ void memzero(void *mem, uint64_t len)
     const uint64_t len_words = len / sizeof(ArchNat);
     ArchNat *const dst_word = (ArchNat *)mem;
 
-    uint64_t i = 0;
+    uint64_t i;
+    i = 0;
     while (i < len_words) {
         dst_word[i] = 0;
         i = i + 1LL;
@@ -41,7 +42,8 @@ void memcopy(void *dst, void *src, uint64_t len)
     ArchNat *const src_w = (ArchNat *)src;
     ArchNat *const dst_w = (ArchNat *)dst;
 
-    uint64_t i = 0;
+    uint64_t i;
+    i = 0;
     while (i < len_words) {
         dst_w[i] = src_w[i];
         i = i + 1LL;
@@ -62,7 +64,8 @@ void memcopy(void *dst, void *src, uint64_t len)
 
 uint64_t cstrlen(char *cstr)
 {
-    uint64_t i = 0;
+    uint64_t i;
+    i = 0;
     while (cstr[i] != '\0') {
         i = i + 1LL;
     }

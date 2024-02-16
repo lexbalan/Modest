@@ -464,11 +464,11 @@ def llvm_memzero_off(dst, offset, size, volatile=False):
     ll_off = llvm_value_num(foundation.typeInt32, offset)
 
     # offset pointer
-    dst2 = llvm_cast("ptrtoint", hlir_type_pointer(dst['type']), foundation.typeInt32, dst)
+    dst2 = llvm_cast("ptrtoint", hlir_type_pointer(dst['type']), foundation.typeInt64, dst)
 
-    ll_dst_plus_off = llvm_eval_binary('add', dst2, ll_off, {'type':foundation.typeInt32})
+    ll_dst_plus_off = llvm_eval_binary('add', dst2, ll_off, {'type':foundation.typeInt64})
 
-    dst3 = llvm_cast("inttoptr", foundation.typeInt32, foundation.typeFreePointer, ll_dst_plus_off)
+    dst3 = llvm_cast("inttoptr", foundation.typeInt64, foundation.typeFreePointer, ll_dst_plus_off)
 
     # do memzero
     llvm_memzero(dst3, size, volatile=volatile)
@@ -1208,15 +1208,25 @@ def _do_assign(l, rx):
             else:
                 to_copy = l_size
 
-            print("to_copy = %d" % to_copy)
-            print("zero_rest = %d" % zero_rest)
+            #print("to_copy = %d" % to_copy)
+            #print("zero_rest = %d" % zero_rest)
             llvm_memcpy_immsize(l, r, to_copy, volatile=False)
 
             if zero_rest > 0:
-                out(";--?")
                 llvm_memzero_off(l, to_copy, zero_rest, volatile=False)
-                out(";--@")
-                pass
+
+            return
+
+        else:
+            llvm_store(l, llvm_dold(r))
+            return
+
+    if hlir_type.type_is_record(rx['type']):
+        r = do_eval(rx)
+
+        if r['is_adr']:
+            sz = r['type']['size']
+            llvm_memcpy_immsize(l, r, sz, volatile=False)
             return
 
         else:
@@ -1224,32 +1234,7 @@ def _do_assign(l, rx):
             return
 
 
-
-
-    r = do_eval(rx)
-    # если правое является адресом а не самим значением
-    # то его можно сохранить с помощью memcpy
-    if r['is_adr']:
-
-        """if hlir_type.type_is_array(l['type']):
-
-            # если значение слева равно (memcpy)
-            # если значение слева больше (memcpy + memset)
-            l_vol = left['type']['volume']['asset']
-            r_vol = right['type']['volume']['asset']
-            if l_vol > r_vol:
-            """
-
-        # TODO!
-        if zero_rest > 0:
-            sz = l['type']['size']
-            llvm_memzero(l, sz)
-
-        sz = r['type']['size']
-        llvm_memcpy_immsize(l, r, sz, volatile=False)
-
-    else:
-        llvm_store(l, llvm_dold(r))
+    llvm_store(l, do_reval(rx))
 
 
 

@@ -13,7 +13,8 @@ void mtab(int n)
 {
     //var m: Nat32
     //m = 1
-    int32_t m = 1;
+    int32_t m;
+    m = 1;
     while (m < 10) {
         const int nm = n * m;
         printf("%d * %d = %d\n", n, m, nm);
