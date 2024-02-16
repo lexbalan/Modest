@@ -90,10 +90,11 @@ int main()
         SHA256_TestCase *const test = sha256_tests[i];
         const bool test_result = sha256_doTest(test);
 
+        printf("test #%i: ", i);
         if (test_result) {
-            printf("test #%d passed\n", i);
+            printf("passed\n");
         } else {
-            printf("test #%d failed\n", i);
+            printf("failed\n");
         }
 
         i = i + 1;
