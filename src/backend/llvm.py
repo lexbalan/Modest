@@ -1214,7 +1214,7 @@ def _do_assign(l, rx):
 
             if zero_rest > 0:
                 out(";--?")
-                #llvm_memzero_off(l, to_copy, zero_rest, volatile=False)
+                llvm_memzero_off(l, to_copy, zero_rest, volatile=False)
                 out(";--@")
                 pass
             return
