@@ -1178,7 +1178,7 @@ def print_stmt_defvar(x):
 
     nl_indent(x['nl'])
 
-    if init_value != None:
+    """if init_value != None:
         if hlir_type.type_is_defined_array(x['var']['type']):
             id_str = x['var']['id']['str']
 
@@ -1187,14 +1187,19 @@ def print_stmt_defvar(x):
             indent()
 
             assign_array(x['var'], init_value)
-            return
+            return"""
+
 
 
     print_variable(x['var']['id'], x['var']['type'])
 
     if init_value != None:
-        out(" = ")
-        print_value(init_value)
+        out(";")
+        nl_indent()
+        assign(x['var'], init_value)
+        return
+        #out(" = ")
+        #print_value(init_value)
 
     out(";")
 
@@ -1262,17 +1267,44 @@ def assign_array(left, right):
         memzero_sizeof(left)
         nl_indent()
 
-    memcopy2(left, right, by)
+    memcopy_by(left, right, by)
 
 
 
 
 
 def assign(left, right):
-    if hlir_type.type_is_defined_array(right['type']):
-        # в си нельзя просто так присвоить массив
-        assign_array(left, right)
+
+    if right['kind'] == 'cast':
+        # for case:
+        # var x: [10]Int32
+        # var y: [5]Int32
+        # x = y to [10]Int32
+        cast_v = right['value']
+        if hlir_type.type_is_array(cast_v['type']):
+            right = cast_v
+
+    if hlir_type.type_is_array(right['type']):
+        to_copy = 0
+        zero_rest = 0
+        l_size = left['type']['size']
+        r_size = right['type']['size']
+        if l_size > r_size:
+            zero_rest = l_size - r_size
+            to_copy = r_size
+        else:
+            to_copy = l_size
+
+        print("to_copy = %d" % to_copy)
+        print("zero_rest = %d" % zero_rest)
+        memcopy_len(left, right, to_copy)
+
+        if zero_rest > 0:
+            nl_indent()
+            memzero_off(left, to_copy, zero_rest)
+
         return
+
 
     print_value(left)
     out(" = ")
@@ -1761,7 +1793,15 @@ def run(module, outname):
 
 
 
-def memcopy2(left, right, by):
+def memcopy_len(left, right, n):
+    out("memcpy(&")
+    print_value(left)
+    out(", &")
+    print_value(right)
+    out(", %i);" % n)
+
+
+def memcopy_by(left, right, by):
     out("memcpy(&")
     print_value(left)
     out(", &")
@@ -1792,6 +1832,13 @@ def memcopy(left, right):
 def memzero(left, sz):
     out("memset(&")
     print_value(left)
+    out(", 0, %d);" % sz)
+
+
+def memzero_off(left, offset, sz):
+    out("memset((((void *)&")
+    print_value(left)
+    out(") + %i)" % offset)
     out(", 0, %d);" % sz)
 
 

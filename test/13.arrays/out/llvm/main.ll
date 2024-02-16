@@ -479,28 +479,31 @@ break_4:
     store [3 x i32] %80, [3 x i32]* %77
     %81 = alloca [6 x i32]
     %82 = bitcast [6 x i32]* %81 to i8*
-    call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %82, i8 0, i32 24, i1 0)
-    %83 = bitcast [6 x i32]* %81 to i8*
-    %84 = bitcast [3 x i32]* %77 to i8*
-    call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %83, i8* %84, i32 12, i1 0)
-    %85 = getelementptr inbounds [6 x i32], [6 x i32]* %81, i32 0, i32 0
-    %86 = load i32, i32* %85
-    %87 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str11 to [0 x i8]*), i32 %86)
-    %88 = getelementptr inbounds [6 x i32], [6 x i32]* %81, i32 0, i32 1
+    %83 = bitcast [3 x i32]* %77 to i8*
+    call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %82, i8* %83, i32 12, i1 0);--?
+    %84 = ptrtoint [6 x i32]* %81 to i32
+    %85 = add i32 %84, 12
+    %86 = inttoptr i32 %85 to i8*
+    %87 = bitcast i8* %86 to i8*
+    call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %87, i8 0, i32 12, i1 0);--@
+    %88 = getelementptr inbounds [6 x i32], [6 x i32]* %81, i32 0, i32 0
     %89 = load i32, i32* %88
-    %90 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str12 to [0 x i8]*), i32 %89)
-    %91 = getelementptr inbounds [6 x i32], [6 x i32]* %81, i32 0, i32 2
+    %90 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str11 to [0 x i8]*), i32 %89)
+    %91 = getelementptr inbounds [6 x i32], [6 x i32]* %81, i32 0, i32 1
     %92 = load i32, i32* %91
-    %93 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str13 to [0 x i8]*), i32 %92)
-    %94 = getelementptr inbounds [6 x i32], [6 x i32]* %81, i32 0, i32 3
+    %93 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str12 to [0 x i8]*), i32 %92)
+    %94 = getelementptr inbounds [6 x i32], [6 x i32]* %81, i32 0, i32 2
     %95 = load i32, i32* %94
-    %96 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str14 to [0 x i8]*), i32 %95)
-    %97 = getelementptr inbounds [6 x i32], [6 x i32]* %81, i32 0, i32 4
+    %96 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str13 to [0 x i8]*), i32 %95)
+    %97 = getelementptr inbounds [6 x i32], [6 x i32]* %81, i32 0, i32 3
     %98 = load i32, i32* %97
-    %99 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str15 to [0 x i8]*), i32 %98)
-    %100 = getelementptr inbounds [6 x i32], [6 x i32]* %81, i32 0, i32 5
+    %99 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str14 to [0 x i8]*), i32 %98)
+    %100 = getelementptr inbounds [6 x i32], [6 x i32]* %81, i32 0, i32 4
     %101 = load i32, i32* %100
-    %102 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str16 to [0 x i8]*), i32 %101)
+    %102 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str15 to [0 x i8]*), i32 %101)
+    %103 = getelementptr inbounds [6 x i32], [6 x i32]* %81, i32 0, i32 5
+    %104 = load i32, i32* %103
+    %105 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str16 to [0 x i8]*), i32 %104)
     ret %Int 0
 }
 

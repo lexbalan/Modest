@@ -459,6 +459,21 @@ def llvm_memzero(dst, size, volatile=False):
 
 
 
+# memset with offset from start of dst
+def llvm_memzero_off(dst, offset, size, volatile=False):
+    ll_off = llvm_value_num(foundation.typeInt32, offset)
+
+    # offset pointer
+    dst2 = llvm_cast("ptrtoint", hlir_type_pointer(dst['type']), foundation.typeInt32, dst)
+
+    ll_dst_plus_off = llvm_eval_binary('add', dst2, ll_off, {'type':foundation.typeInt32})
+
+    dst3 = llvm_cast("inttoptr", foundation.typeInt32, foundation.typeFreePointer, ll_dst_plus_off)
+
+    # do memzero
+    llvm_memzero(dst3, size, volatile=volatile)
+
+
 
 def llvm_br(x, then_label, else_label):
     lo("br ")
@@ -1151,7 +1166,7 @@ def _do_assign(l, rx):
     assert(l['isa'] == 'll_value')
     assert(rx['isa'] == 'value')
 
-    zero_rest = 0
+    """zero_rest = 0
     to_copy = 0
     if rx['kind'] == 'cast':
         # for case:
@@ -1168,10 +1183,47 @@ def _do_assign(l, rx):
                 zero_rest = l_vol - r_vol
                 to_copy = r_vol
             else:
-                to_copy = l_vol
+                to_copy = l_vol"""
 
-            #print("REST ====== %d" % zero_rest)
-            #print("TO_COPY ====== %d" % to_copy)
+    if rx['kind'] == 'cast':
+        # for case:
+        # var x: [10]Int32
+        # var y: [5]Int32
+        # x = y to [10]Int32
+        cast_v = rx['value']
+        if hlir_type.type_is_array(cast_v['type']):
+            rx = cast_v
+
+    if hlir_type.type_is_array(rx['type']):
+        r = do_eval(rx)
+        if r['is_adr']:
+
+            to_copy = 0
+            zero_rest = 0
+            l_size = l['type']['size']
+            r_size = rx['type']['size']
+            if l_size > r_size:
+                zero_rest = l_size - r_size
+                to_copy = r_size
+            else:
+                to_copy = l_size
+
+            print("to_copy = %d" % to_copy)
+            print("zero_rest = %d" % zero_rest)
+            llvm_memcpy_immsize(l, r, to_copy, volatile=False)
+
+            if zero_rest > 0:
+                out(";--?")
+                #llvm_memzero_off(l, to_copy, zero_rest, volatile=False)
+                out(";--@")
+                pass
+            return
+
+        else:
+            llvm_store(l, llvm_dold(r))
+            return
+
+
 
 
     r = do_eval(rx)

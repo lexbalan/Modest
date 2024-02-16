@@ -33,7 +33,8 @@ int main()
 {
     f0(*(struct f0_x *)&(struct f0_x){'h', 'i', '!', '\0', '\0', '\0', '\0', '\0', '\0', '\0'});
 
-    int32_t i = 0;
+    int32_t i;
+    i = 0;
     while (i < 3) {
         const int32_t a = globalArray[i];
         printf("globalArray[%d] = %d\n", i, a);
@@ -43,7 +44,7 @@ int main()
     printf("------------------------------------\n");
 
     int32_t localArray[3];
-    memcpy(&localArray, &(int32_t[3]){4, 5, 6}, sizeof localArray);
+    memcpy(&localArray, &(int32_t[3]){4, 5, 6}, 12);
 
     i = 0;
     while (i < 3) {
@@ -81,9 +82,9 @@ int main()
     // assign array to array 1
     // (with equal types)
     int32_t a[3];
-    memcpy(&a, &(int32_t[3]){1, 2, 3}, sizeof a);
+    memcpy(&a, &(int32_t[3]){1, 2, 3}, 12);
     int32_t b[3];
-    memcpy(&b, &a, sizeof b);
+    memcpy(&b, &a, 12);
     printf("b[0] = %i\n", b[0]);
     printf("b[1] = %i\n", b[1]);
     printf("b[2] = %i\n", b[2]);
@@ -91,10 +92,10 @@ int main()
     // assign array to array 2
     // (with array extending)
     int32_t c[3];
-    memcpy(&c, &(int32_t[3]){10, 20, 30}, sizeof c);
+    memcpy(&c, &(int32_t[3]){10, 20, 30}, 12);
     int32_t d[6];
-    memset(&d, 0, sizeof d);
-    memcpy(&d, &c, sizeof c);
+    memcpy(&d, &c, 12);
+    memset((((void *)&d) + 12), 0, 12);
     printf("d[0] = %i\n", d[0]);
     printf("d[1] = %i\n", d[1]);
     printf("d[2] = %i\n", d[2]);
