@@ -1161,29 +1161,11 @@ def do_eval(x):
 # WARNING:
 # param l must be #ll_value
 # param rx must be #value (!)
-def _do_assign(l, rx):
-    #print("_do_assign")
+def assign(l, rx):
+    #print("assign")
     assert(l['isa'] == 'll_value')
     assert(rx['isa'] == 'value')
 
-    """zero_rest = 0
-    to_copy = 0
-    if rx['kind'] == 'cast':
-        # for case:
-        # var x: [10]Int32
-        # var y: [5]Int32
-        # x = y to [10]Int32
-        if hlir_type.type_is_array(rx['type']):
-            rx = rx['value']
-
-            # <??>
-            l_vol = l['type']['size']
-            r_vol = rx['type']['size']
-            if l_vol > r_vol:
-                zero_rest = l_vol - r_vol
-                to_copy = r_vol
-            else:
-                to_copy = l_vol"""
 
     if rx['kind'] == 'cast':
         # for case:
@@ -1241,7 +1223,7 @@ def _do_assign(l, rx):
 
 def print_stmt_assign(x):
     l = do_eval(x['left'])
-    _do_assign(l, x['right'])
+    assign(l, x['right'])
 
 
 
@@ -1329,7 +1311,7 @@ def print_stmt_return(x):
         # return via sret
         to = cfunc['type']['to']
         p2retval = llvm_value_reg("0", hlir_type_pointer(to))
-        _do_assign(p2retval, x['value'])
+        assign(p2retval, x['value'])
 
 
     out("ret void")
@@ -1344,7 +1326,7 @@ def print_stmt_def_var(x):
     locals_add(id_str, val)
 
     if x['default_value'] != None:
-        _do_assign(val, x['default_value'])
+        assign(val, x['default_value'])
 
     return None
 

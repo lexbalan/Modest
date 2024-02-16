@@ -1178,19 +1178,6 @@ def print_stmt_defvar(x):
 
     nl_indent(x['nl'])
 
-    """if init_value != None:
-        if hlir_type.type_is_defined_array(x['var']['type']):
-            id_str = x['var']['id']['str']
-
-            print_variable_array(init_value['type'], id_str, do_wrapped=False)
-            out(";\n")
-            indent()
-
-            assign_array(x['var'], init_value)
-            return"""
-
-
-
     print_variable(x['var']['id'], x['var']['type'])
 
     if init_value != None:
@@ -1198,11 +1185,8 @@ def print_stmt_defvar(x):
         nl_indent()
         assign(x['var'], init_value)
         return
-        #out(" = ")
-        #print_value(init_value)
 
     out(";")
-
     return
 
 
@@ -1258,8 +1242,7 @@ def assign_array(left, right):
     else:
         to_copy = l_size
 
-    #print("to_copy = %d" % to_copy)
-    #print("zero_rest = %d" % zero_rest)
+
     memcopy_len(left, right, to_copy)
 
     if zero_rest > 0:
