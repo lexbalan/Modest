@@ -243,7 +243,7 @@ Function parameter cannot be an array. But it can be a pointer to array.
 
 
 
-###### String types
+##### String types
 String types are builtin aliases for `[]Char8`, `[]Char16`, `[]Char32`
 String literal is an alternative form of Char array recording.
 ```zig
