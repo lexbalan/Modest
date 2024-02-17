@@ -33,7 +33,7 @@ func main () -> Unit {
     }
 
     // count (print) in cycle
-    var i = 0
+    var i: Int32 = 0
     while i < n {
         printf("i = %d\n", i)
     }
