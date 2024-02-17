@@ -1,4 +1,4 @@
-// lib/fastfood/delay.hm
+// lib/lightfood/delay.hm
 
 #ifndef FF_DELAY_H
 #define FF_DELAY_H

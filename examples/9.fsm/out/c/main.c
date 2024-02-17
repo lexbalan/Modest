@@ -15,7 +15,7 @@
 #include "./fsm.h"
 
 //@attribute("c-no-print")
-//import "fastfood/main.hm"
+//import "lightfood/main.hm"
 //@c_include("./ff_main.h")
 
 

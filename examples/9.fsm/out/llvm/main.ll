@@ -153,7 +153,7 @@ declare void @fsm_switch(%FSM* %fsm, i32 %state)
 declare void @fsm_run(%FSM* %fsm)
 
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/fastfood/delay.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/lightfood/delay.hm
 
 
 

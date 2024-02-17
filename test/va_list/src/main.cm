@@ -3,7 +3,7 @@
 import "libc/stdio.hm"
 
 @attribute("c-no-print")
-import "fastfood/print.hm"
+import "lightfood/print.hm"
 @c_include("./print.h")
 
 

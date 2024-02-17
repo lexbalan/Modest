@@ -1,0 +1,4 @@
+// lib/lightfood/print.hm
+
+func lf_printf(str: *[]Char8, va_list: VA_List)
+

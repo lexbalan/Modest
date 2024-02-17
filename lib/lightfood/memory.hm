@@ -1,4 +1,4 @@
-// lib/fastfood/memory.hm
+// lib/lightfood/memory.hm
 
 func memzero(mem: Pointer, len: Nat64) -> Unit
 func memcopy(dst: Pointer, src: Pointer, len: Nat64) -> Unit

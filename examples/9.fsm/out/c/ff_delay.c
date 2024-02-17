@@ -1,4 +1,4 @@
-// lib/fastfood/delay.cm
+// lib/lightfood/delay.cm
 
 #include <stdint.h>
 #include <stdbool.h>

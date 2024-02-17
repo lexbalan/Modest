@@ -1,4 +1,4 @@
-// lib/fastfood/print.cm
+// lib/lightfood/print.cm
 
 #include <stdint.h>
 #include <stdbool.h>

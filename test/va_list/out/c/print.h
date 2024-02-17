@@ -1,4 +1,4 @@
-// lib/fastfood/print.hm
+// lib/lightfood/print.hm
 
 #ifndef PRINT_H
 #define PRINT_H

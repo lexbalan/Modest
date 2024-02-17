@@ -158,7 +158,7 @@ declare void @bzero(i8* %s, %SizeT %n)
 declare void @bcopy(i8* %src, i8* %dst, %SizeT %n)
 
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/fastfood/delay.cm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/lightfood/delay.cm
 
 
 

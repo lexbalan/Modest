@@ -123,7 +123,7 @@ declare %Int @ungetc(%Int %char, %FILE* %f)
 declare void @perror(%ConstCharStr* %str)
 
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/fastfood/print.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/lightfood/print.hm
 
 
 

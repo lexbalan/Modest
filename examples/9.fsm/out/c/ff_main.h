@@ -1,4 +1,4 @@
-// lib/fastfood/main.hm
+// lib/lightfood/main.hm
 
 #ifndef FF_MAIN_H
 #define FF_MAIN_H

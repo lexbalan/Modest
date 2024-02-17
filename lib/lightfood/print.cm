@@ -1,4 +1,4 @@
-// lib/fastfood/print.cm
+// lib/lightfood/print.cm
 
 //@attribute("c-no-print")
 //import "./main.hm"
@@ -30,7 +30,7 @@ func sprintf_dec_nat32(buf: *[]Char8, x: Nat32)
 func sprintf_hex_nat32(buf: *[]Char8, x: Nat32)
 
 
-func ff_printf(str: *Str8, va_list: VA_List) {
+func lf_printf(str: *Str8, va_list: VA_List) {
     var i = 0
 	while true {
         var c = str[i]

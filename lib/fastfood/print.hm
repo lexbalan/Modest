@@ -1,4 +1,0 @@
-// lib/fastfood/print.hm
-
-func ff_printf(str: *[]Char8, va_list: VA_List)
-

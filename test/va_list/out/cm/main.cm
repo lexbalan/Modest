@@ -2,7 +2,7 @@
 
 import "libc/stdio.h"
 @attribute("c-no-print")
-import "fastfood/print.h"
+import "lightfood/print.h"
 @c_include "./print.h"
 
 

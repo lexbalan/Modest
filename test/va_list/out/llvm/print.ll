@@ -127,7 +127,7 @@ declare %Int @ungetc(%Int %char, %FILE* %f)
 declare void @perror(%ConstCharStr* %str)
 
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/fastfood/print.cm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/lightfood/print.cm
 
 @str1 = private constant [2 x i8] [i8 37, i8 0]
 
