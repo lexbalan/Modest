@@ -164,7 +164,7 @@ break_1:
     ret void
 }
 
-define void @ff_printf(%Str8* %str, ...) {
+define void @lf_printf(%Str8* %str, ...) {
     %1 = alloca i8*
     %2 = bitcast i8** %1 to i8*
     call void @llvm.va_start(i8* %2)

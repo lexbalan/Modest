@@ -13,7 +13,7 @@
 
 int main()
 {
-    ff_printf("Hello World!\n");
+    lf_printf("Hello World!\n");
 
     const char c = '$';
     char *const s = "Hi!";
@@ -21,12 +21,12 @@ int main()
     const uint32_t n = 123;
     const uint32_t x = 0x1234567F;
 
-    ff_printf("%% = '%%'\n");
-    ff_printf("c = '%c'\n", c);
-    ff_printf("s = \"%s\"\n", s);
-    ff_printf("i = %i\n", i);
-    ff_printf("n = %n\n", n);
-    ff_printf("x = 0x%x\n", x);
+    lf_printf("%% = '%%'\n");
+    lf_printf("c = '%c'\n", c);
+    lf_printf("s = \"%s\"\n", s);
+    lf_printf("i = %i\n", i);
+    lf_printf("n = %n\n", n);
+    lf_printf("x = 0x%x\n", x);
 
     return 0;
 }

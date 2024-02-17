@@ -40,7 +40,7 @@ void sprintf_dec_nat32(char *buf, uint32_t x);
 void sprintf_hex_nat32(char *buf, uint32_t x);
 
 
-void ff_printf(char *str, ...)
+void lf_printf(char *str, ...)
 {
     va_list va_list;
     va_start(va_list, str);
