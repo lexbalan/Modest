@@ -8,6 +8,7 @@ cd 10.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd 11.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 #cd 12.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd 13.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+#cd 14.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd 20.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd 21.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd 22.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
