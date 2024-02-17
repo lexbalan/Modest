@@ -13,7 +13,7 @@ Use `-o` option for set output file name (without file extension)
 
 *Usage example:*
 ```
-    mcc -o main main.cm
+mcc -o main main.cm
 ```
 
 #### Feature flags
@@ -27,7 +27,7 @@ Use `-o` option for set output file name (without file extension)
 
 *Usage example:*
 ```
-    mcc -o main -fparanoid main.cm
+mcc -o main -fparanoid main.cm
 ```
 
 
@@ -39,8 +39,8 @@ Use `-m` option to change compiler settings
 
 *Usage example:*
 ```
-    mcc -o main -mbackend=c main.cm
-    mcc -o main -mbackend=cm main.cm
-    mcc -o main -mbackend=llvm main.cm
+mcc -o main -mbackend=c main.cm
+mcc -o main -mbackend=cm main.cm
+mcc -o main -mbackend=llvm main.cm
 ```
 
