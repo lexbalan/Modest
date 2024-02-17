@@ -19,11 +19,11 @@ mcc -o main main.cm
 #### Feature flags
 Use `-f<feature_name>` flag for enable some compiler options
 
-**-funsafe** - Enables *unsafe* mode when
+***-funsafe*** - Enables *unsafe* mode when
   * You can cast pointer to another pointer
   * You can do *pointer arithmetics* (only with [*Pointer*](types.md) type value)
 
-**-fparanoid** - Every warning becomes error
+***-fparanoid*** - Every warning becomes error
 
 
 *Usage example:*
@@ -36,7 +36,7 @@ mcc -o io -fparanoid -funsafe io.cm  # warnings as errors + unsafe mode
 
 Use `-m<varname>=<value>` option to change compiler settings
 
-**-fbackend=<backend_name>** - backend switching
+***-fbackend=<backend_name>*** - backend switching
 
 *Usage example:*
 ```shell
