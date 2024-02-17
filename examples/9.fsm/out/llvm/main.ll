@@ -153,16 +153,6 @@ declare void @fsm_switch(%FSM* %fsm, i32 %state)
 declare void @fsm_run(%FSM* %fsm)
 
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/fastfood/main.hm
-
-
-
-declare void @memzero(i8* %mem, i64 %len)
-declare void @memcopy(i8* %dst, i8* %src, i64 %len)
-declare i64 @cstrlen(%Str8* %cstr)
-declare void @ff_printf(%Str8* %str, ...)
-
-
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/fastfood/delay.hm
 
 
@@ -179,6 +169,10 @@ declare void @delay_s(i64 %s)
 @str3 = private constant [22 x i8] [i8 98, i8 101, i8 97, i8 99, i8 111, i8 110, i8 95, i8 101, i8 110, i8 116, i8 114, i8 121, i8 32, i8 102, i8 114, i8 111, i8 109, i8 32, i8 37, i8 115, i8 10, i8 0]
 @str4 = private constant [13 x i8] [i8 98, i8 101, i8 97, i8 99, i8 111, i8 110, i8 95, i8 108, i8 111, i8 111, i8 112, i8 10, i8 0]
 @str5 = private constant [19 x i8] [i8 98, i8 101, i8 97, i8 99, i8 111, i8 110, i8 95, i8 101, i8 120, i8 105, i8 116, i8 32, i8 116, i8 111, i8 32, i8 37, i8 115, i8 10, i8 0]
+
+
+
+
 
 
 

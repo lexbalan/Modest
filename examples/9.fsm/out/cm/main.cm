@@ -6,11 +6,12 @@
 import "libc/stdio.h"
 
 import "./fsm.h"
-@attribute("c-no-print")
-import "fastfood/main.h"
+
+//@attribute("c-no-print")
+//import "fastfood/main.hm"
 @attribute("c-no-print")
 import "fastfood/delay.h"
-@c_include "./ff_main.h"
+//@c_include("./ff_main.h")
 @c_include "./ff_delay.h"
 
 

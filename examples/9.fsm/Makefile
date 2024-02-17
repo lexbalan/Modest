@@ -15,8 +15,8 @@ all: LLVM
 C_OPTIONS = -mstyle=legacy
 
 CM:
-	mcc -o $(CMPREFIX)/ff -mbackend=cm ${MODEST_LIB}/fastfood/main.hm
-	mcc -o $(CMPREFIX)/ff -mbackend=cm -funsafe ${MODEST_LIB}/fastfood/main.cm
+	#mcc -o $(CMPREFIX)/ff -mbackend=cm ${MODEST_LIB}/fastfood/main.hm
+	#mcc -o $(CMPREFIX)/ff -mbackend=cm -funsafe ${MODEST_LIB}/fastfood/main.cm
 	mcc -o $(CMPREFIX)/ff -mbackend=cm ${MODEST_LIB}/fastfood/delay.hm
 	mcc -o $(CMPREFIX)/ff -mbackend=cm ${MODEST_LIB}/fastfood/delay.cm
 	mcc -o $(CMPREFIX)/fsm -mbackend=cm $(INDIR)/fsm.hm
@@ -25,7 +25,7 @@ CM:
 
 
 LLVM:
-	mcc -o $(LLVMPREFIX)/ff_main -mbackend=llvm -funsafe ${MODEST_LIB}/fastfood/main.cm
+	#mcc -o $(LLVMPREFIX)/ff_main -mbackend=llvm -funsafe ${MODEST_LIB}/fastfood/main.cm
 	mcc -o $(LLVMPREFIX)/ff_delay -mbackend=llvm -funsafe ${MODEST_LIB}/fastfood/delay.cm
 	mcc -o $(LLVMPREFIX)/fsm -mbackend=llvm $(INDIR)/fsm.hm
 	mcc -o $(LLVMPREFIX)/fsm -mbackend=llvm $(INDIR)/fsm.cm
@@ -34,8 +34,8 @@ LLVM:
 
 
 C:
-	mcc -o $(CPREFIX)/ff_main -mbackend=c $(C_OPTIONS) ${MODEST_LIB}/fastfood/main.hm
-	mcc -o $(CPREFIX)/ff_main -mbackend=c $(C_OPTIONS) -funsafe ${MODEST_LIB}/fastfood/main.cm
+	#mcc -o $(CPREFIX)/ff_main -mbackend=c $(C_OPTIONS) ${MODEST_LIB}/fastfood/main.hm
+	#mcc -o $(CPREFIX)/ff_main -mbackend=c $(C_OPTIONS) -funsafe ${MODEST_LIB}/fastfood/main.cm
 	mcc -o $(CPREFIX)/ff_delay -mbackend=c $(C_OPTIONS) ${MODEST_LIB}/fastfood/delay.hm
 	mcc -o $(CPREFIX)/ff_delay -mbackend=c $(C_OPTIONS) ${MODEST_LIB}/fastfood/delay.cm
 	mcc -o $(CPREFIX)/print -mbackend=c $(C_OPTIONS) -funsafe ${MODEST_LIB}/fastfood/print.cm

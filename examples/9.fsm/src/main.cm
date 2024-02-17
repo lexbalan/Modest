@@ -7,11 +7,11 @@ import "libc/stdio.hm"
 
 import "./fsm.hm"
 
-@attribute("c-no-print")
-import "fastfood/main.hm"
+//@attribute("c-no-print")
+//import "fastfood/main.hm"
 @attribute("c-no-print")
 import "fastfood/delay.hm"
-@c_include("./ff_main.h")
+//@c_include("./ff_main.h")
 @c_include("./ff_delay.h")
 
 

@@ -5,7 +5,6 @@
 #include <string.h>
 
 #include <stdio.h>
-#include "./ff_main.h"
 #include "./ff_delay.h"
 
 // This is flashlight final state machine example
@@ -15,6 +14,9 @@
 
 #include "./fsm.h"
 
+//@attribute("c-no-print")
+//import "fastfood/main.hm"
+//@c_include("./ff_main.h")
 
 
 

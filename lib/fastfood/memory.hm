@@ -1,9 +1,6 @@
-// lib/fastfood/main.hm
-
+// lib/fastfood/memory.hm
 
 func memzero(mem: Pointer, len: Nat64) -> Unit
 func memcopy(dst: Pointer, src: Pointer, len: Nat64) -> Unit
-func cstrlen(cstr: *Str8) -> Nat64
-
-func ff_printf(str: *Str8, va_list: VA_List)
+func memeq(dst: Pointer, src: Pointer, len: Nat64) -> Bool
 
