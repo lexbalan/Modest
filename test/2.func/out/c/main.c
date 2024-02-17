@@ -24,6 +24,13 @@ int32_t sum(int32_t a, int32_t b)
     return a + b;
 }
 
+
+void print_ab(int32_t a, int32_t b)
+{
+    printf("print_ab(a=%i, b=%i)\n", a, b);
+}
+
+
 // define function main
 int main()
 {
@@ -31,10 +38,13 @@ int main()
     f0();
     f1();
 
-    const int32_t arg_a = 10;
-    const int32_t arg_b = 20;
+    // call function with two arguments and return value
+    const int32_t arg_a = 1;
+    const int32_t arg_b = 2;
     const int32_t sum_result = sum(arg_a, arg_b);
     printf("sum(%i, %i) == %i\n", arg_a, arg_b, sum_result);
+
+    print_ab(10, 20);
 
     return 0;
 }
