@@ -29,6 +29,7 @@ Use `-f` flag for enable some compiler options
 *Usage example:*
 ```
 mcc -o main -fparanoid main.cm
+mcc -o io -fparanoid -funsafe io.cm
 ```
 
 #### Modifier flags
