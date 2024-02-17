@@ -70,7 +70,7 @@ func just (not_used_param: Int32) -> Unit {
 ```
 
 
-#### Bool type
+### Bool type
 
 ```zig
 var b: Bool
@@ -84,9 +84,9 @@ while not b {
 ```
 
 
-#### Integer types
+### Integer types
 
-##### Signed integer types
+#### Signed integer types
 ```zig
 Int8, Int16, Int32, Int64, Int128
 ```
@@ -110,7 +110,7 @@ func main () -> Unit {
 > Result: `a < b`
 
 
-##### Unsigned integer types
+#### Unsigned integer types
 ```zig
 Nat8, Nat16, Nat32, Nat64, Nat128
 ```
@@ -135,7 +135,7 @@ func main () -> Unit {
 
 
 
-#### Float types
+### Float types
 
 Float types
 ```zig
@@ -157,7 +157,7 @@ func main () -> Unit {
 ```
 > Result: `pi = 3.14....`
 
-#### Char type
+### Char type
 
 > Classes: *equ*
 
@@ -186,7 +186,7 @@ if a == b {
 
 
 
-#### Array types
+### Array types
 There is *defined* arrays:
 ```zig
 [10]Int32  // array with ten Int32 elements
@@ -243,7 +243,7 @@ Function parameter cannot be an array. But it can be a pointer to array.
 
 
 
-##### String types
+#### String types
 String types are builtin aliases for `[]Char8`, `[]Char16`, `[]Char32`
 String literal is an alternative form of Char array recording.
 ```zig
@@ -266,7 +266,7 @@ printf(s)
 
 
 
-#### Record types
+### Record types
 Record type is a composite type, that can contain inside values of any *another* type.
 ```zig
 record {x: Float64, y: Float64}
@@ -295,5 +295,8 @@ printf("p.y = %f\n", p.y)
 
 
 
+### Pointer types
 
+
+#### Free pointer type
 

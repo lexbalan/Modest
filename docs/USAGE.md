@@ -20,7 +20,7 @@ mcc -o main main.cm
 
 **-funsafe** - Enables *unsafe* mode when
   * You can cast pointer to another pointer
-  * You can do *pointer arithmetics* with Pointer type value
+  * You can do *pointer arithmetics* (only with [*Pointer*](types.md) type value)
 
 **-fparanoid** - Every warning becomes error
 
