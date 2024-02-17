@@ -52,8 +52,11 @@ int main()
         printf("p2d2 != p2d3\n");
     }
 
+
+    // comparison between two anonymous record
     struct __anonymous_struct_4 p2d4;
     p2d4 = (struct __anonymous_struct_4){.x = 1, .y = 2};
+
     if (memcmp(&p2d3, &p2d4, sizeof p2d3) == 0) {
         printf("p2d3 == p2d4\n");
     } else {
@@ -61,7 +64,7 @@ int main()
     }
 
 
-    // cons Point3D from Point2D
+    // cons Point3D from Point2D (record extension)
     // (it is possible if dst record contained all fields from src record
     // and their types are equal)
     Point3D p3d;

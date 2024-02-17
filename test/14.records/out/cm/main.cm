@@ -39,7 +39,10 @@ func main() -> Int {
         printf("p2d2 != p2d3\n")
     }
 
+
+    // comparison between two anonymous record
     var p2d4: record {x: Nat32, y: Nat32} = {x = 1, y = 2}
+
     if p2d3 == p2d4 {
         printf("p2d3 == p2d4\n")
     } else {
@@ -47,9 +50,10 @@ func main() -> Int {
     }
 
 
-    // cons Point3D from Point2D
+    // cons Point3D from Point2D (record extension)
     // (it is possible if dst record contained all fields from src record
     // and their types are equal)
+    // TODO: not implemented
     var p3d: Point3D
     p3d = p2d2 to Point3D
 

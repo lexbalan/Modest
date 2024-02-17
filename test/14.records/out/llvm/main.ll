@@ -30,6 +30,8 @@ target triple = "arm64-apple-macosx12.0.0"
 declare void @llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)
 declare void @llvm.memset.p0.i32(i8*, i8, i32, i1)
 
+declare i32 @memcmp(i8* %ptr1, i8* %ptr2, i64 %num)
+
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/system.hm
 
 
@@ -198,6 +200,7 @@ else_1:
     %28 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str5 to [0 x i8]*))
     br label %endif_1
 endif_1:
+    ; comparison between two anonymous record
     %29 = alloca { i32, i32}
     %30 = insertvalue { i32, i32} zeroinitializer, i32 1, 0
     %31 = insertvalue { i32, i32} %30, i32 2, 1
@@ -215,7 +218,7 @@ else_2:
     %37 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str7 to [0 x i8]*))
     br label %endif_2
 endif_2:
-    ; cons Point3D from Point2D
+    ; cons Point3D from Point2D (record extension)
     ; (it is possible if dst record contained all fields from src record
     ; and their types are equal)
     %38 = alloca %Point3D
