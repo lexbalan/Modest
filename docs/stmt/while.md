@@ -16,9 +16,8 @@
 const nMax = 10
 
 func main () -> Unit {
-    // input n
     printf("count for: ")
-    
+
     var n: Int32
     while true {
         scanf("%d", &n)
