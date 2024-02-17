@@ -319,7 +319,9 @@ def do_type_array(t):
 
 
 
+anon_rec_cnt = 0
 def do_type_record(x):
+    global anon_rec_cnt
     fields = []
 
     for field in x['fields']:
@@ -337,7 +339,14 @@ def do_type_record(x):
 
         fields.append(f)
 
-    return hlir_type_record(fields, ti=x['ti'])
+    anon_rec_cnt = anon_rec_cnt + 1
+    rec = hlir_type_record(fields, ti=x['ti'])
+    rec['end_nl'] = x['end_nl']
+    # add anon record (before)
+    rec['anon'] = anon_rec_cnt
+    module['anon_rec'].append(rec)
+
+    return rec
 
 
 
@@ -1637,6 +1646,12 @@ def def_type(x):
     # тк там могут быть указатели на саму себя
     # а мы к этому заранее подготовлись
     ty = do_type(x['type'])
+
+    if 'anon' in ty:
+        del ty['anon']
+        if ty in module['anon_rec']:
+            module['anon_rec'].remove(ty)
+
     if hlir_type.type_is_bad(ty):
         return None
 
@@ -2056,6 +2071,7 @@ def proc(ast, source_info):
         'strings': [],  # (used in LLVM backend)
         'context': new_context,
         'options': [],
+        'anon_rec': [],  # anonymous records for C printer
         'att': [],
         'text': []
     }

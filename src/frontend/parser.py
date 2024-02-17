@@ -130,6 +130,9 @@ class Parser:
     def expr_type_record(self, ti):
         self.need("{")
         fields = []
+
+        spaceline_cnt = 0
+
         while True:
 
             #self.skip_tokens([' ', '\t', '\n'])
@@ -138,6 +141,7 @@ class Parser:
             directives = []
 
             spaceline_cnt = 0
+
             # skip spaces & comments before
             while True:
                 if self.match('\n'):
@@ -185,6 +189,7 @@ class Parser:
             'isa': 'type',
             'kind': 'record',
             'fields': fields,
+            'end_nl': spaceline_cnt,
             'ti': ti
         }
 

@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include <stdio.h>
+struct __anonymous_struct_3 {uint32_t x; uint32_t y;};
 
 
 
@@ -41,10 +42,8 @@ int main()
     // compare Point2D with anonymous record
     Point2D p2d2;
     p2d2 = p2d0;
-    struct {        uint32_t x;        uint32_t y;
-    } p2d3;
-    p2d3 = (struct {        uint32_t x;        uint32_t y;
-    }){.x = 1, .y = 2};
+    struct __anonymous_struct_3 p2d3;
+    p2d3 = (struct __anonymous_struct_3){.x = 1, .y = 2};
 
     if (memcmp(&p2d2, &*(Point2D *)&p2d3, sizeof p2d2) == 0) {
         printf("p2d2 == p2d3\n");

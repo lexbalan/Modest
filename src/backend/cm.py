@@ -137,19 +137,25 @@ def print_type_record(t):
 
     indent_up()
 
+    prev_nl = 1
     for field in t['fields']:
+
+        if prev_nl == 0:
+            out(", ")
+
         # print comments
         if 'comments' in field:
             for comment in field['comments']:
                 out("\n" * comment['nl'])
                 print_comment(comment)
 
-        out("\n" * field['nl'])
-        indent();
+        nl_indent(field['nl'])
+        prev_nl = field['nl']
+
         print_field(field)
 
     indent_down()
-    nl_indent(1)
+    nl_indent(t['end_nl'])
     out("}")
 
 

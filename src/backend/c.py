@@ -215,19 +215,27 @@ def print_type_record(t, tag=""):
     out("{")
     indent_up()
 
+
+    prev_nl = 1
     for field in t['fields']:
+
+        if prev_nl == 0:
+            out(" ")
+
         if 'comments' in field:
             for comment in field['comments']:
                 #newline(n=comment['nl'])
                 print_comment(comment)
 
-        newline(n=field['nl'])
-        indent()
+
+        nl_indent(field['nl'])
+        prev_nl = field['nl']
+
         print_variable(field['id'], field['type'])
         out(";")
 
     indent_down()
-    nl_indent(1)
+    nl_indent(t['end_nl'])
     out("}")
 
 
@@ -302,7 +310,10 @@ def print_type(t, space_after=False, array_as_ptr=True, as_const=False):
         print_type_id(t)
 
     elif hlir_type.type_is_record(t):
-        print_type_record(t)
+        if 'anon' in t:
+            out("struct __anonymous_struct_%d" % t['anon'])
+        else:
+            print_type_record(t)
 
     elif hlir_type.type_is_pointer(t):
         print_type_pointer(t, space_after, as_const)
@@ -1734,6 +1745,13 @@ def run(module, outname):
 
     # search for @c_include("...")
     cdirectives(module)
+
+
+    for anon_rec in module['anon_rec']:
+        nl_indent()
+        tag = '__anonymous_struct_%d' % anon_rec['anon']
+        print_type_record(anon_rec, tag=tag)
+        out(";")
 
     for x in module['text']:
         if 'c-no-print' in x['att']:

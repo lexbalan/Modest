@@ -247,6 +247,7 @@ def hlir_type_record(fields, ti=None):
         'declaration': None,
         'definition': None,
         'ops': REC_OPS,
+        'end_nl': 0,
         'att': [],
         'ti': ti
     }
