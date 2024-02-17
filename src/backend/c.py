@@ -1227,7 +1227,6 @@ def print_stmt_let(x):
 
 
 
-
 def assign_array(left, right):
     if 'wrapped_array_value' in right['att']:
         if right['kind'] == 'call':
@@ -1285,8 +1284,6 @@ def assign(left, right):
     out(";")
 
     return
-
-
 
 
 

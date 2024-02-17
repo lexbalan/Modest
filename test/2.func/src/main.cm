@@ -11,11 +11,22 @@ func f1() -> Unit {
     printf("f1 was called\n")
 }
 
+
+func sum(a: Int32, b: Int32) -> Int32 {
+    return a + b
+}
+
 // define function main
 func main() -> Int {
     printf("test func\n")
     f0()
     f1()
+
+    let arg_a = 10 to Int32
+    let arg_b = 20 to Int32
+    let sum_result = sum(arg_a, arg_b)
+    printf("sum(%i, %i) == %i\n", arg_a, arg_b, sum_result)
+
     return 0
 }
 
