@@ -12,19 +12,29 @@
 #### Examples
 
 ```zig
-var a: Int32
+
+const nMax = 10
 
 func main () -> Unit {
-    var i: Int32
-    var n: Int32
-
     // input n
-    printf("count for ")
-    scanf("%d", &n)
+    printf("count for: ")
+    
+    var n: Int32
+    while true {
+        scanf("%d", &n)
+        if n < 0 {
+            printf("enter positive number: ")
+            again
+        } else if n >= nMax {
+            printf("enter number less than %i: " % nMax)
+            again
+        } else {
+            break
+        }
+    }
 
-    i = 0
-
-    // print equation
+    // count (print) in cycle
+    var i = 0
     while i < n {
         printf("i = %d\n", i)
     }
