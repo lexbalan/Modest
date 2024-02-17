@@ -32,19 +32,20 @@
 | :------: | :-: | ------- | --- |
 | `Unit`   | `0` | `-`     | `Empty type` |
 | `Bool`   | `1` | `logical, equ` | |
+| `Byte`   | `1` | `logical, equ` | |
 | `Char8`  | `1` | `equ` | `UTF-8 character` |
 | `Char16` | `2` | `equ` | `UTF-16 character` |
 | `Char16` | `4` | `equ` | `UTF-32 character` |
-| `Int8`   | `1` | `equ, ord, math, rem` | `signed` |
-| `Int16`  | `2` | `equ, ord, math, rem` | `signed` |
-| `Int32`  | `4` | `equ, ord, math, rem` | `signed` |
-| `Int64`  | `8` | `equ, ord, math, rem` | `signed` |
-| `Int128` | `16` | `equ, ord, math, rem` | `signed` |
-| `Nat8`   | `1` | `equ, ord, math, rem` | `unsigned` |
-| `Nat16`  | `2` | `equ, ord, math, rem` | `unsigned` |
-| `Nat32`  | `4` | `equ, ord, math, rem` | `unsigned` |
-| `Nat64`  | `8` | `equ, ord, math, rem` | `unsigned` |
-| `Nat128` | `16` | `equ, ord, math, rem` | `unsigned` |
+| `Int8`   | `1` | `equ, ord, math, rem` | `signed integer` |
+| `Int16`  | `2` | `equ, ord, math, rem` | `signed integer` |
+| `Int32`  | `4` | `equ, ord, math, rem` | `signed integer` |
+| `Int64`  | `8` | `equ, ord, math, rem` | `signed integer` |
+| `Int128` | `16` | `equ, ord, math, rem` | `signed integer` |
+| `Nat8`   | `1` | `equ, ord, math, rem` | `unsigned integer` |
+| `Nat16`  | `2` | `equ, ord, math, rem` | `unsigned integer` |
+| `Nat32`  | `4` | `equ, ord, math, rem` | `unsigned integer` |
+| `Nat64`  | `8` | `equ, ord, math, rem` | `unsigned integer` |
+| `Nat128` | `16` | `equ, ord, math, rem` | `unsigned integer` |
 | `Float32`  | `4` | `equ, ord, math` | `floating point` |
 | `Float64`  | `8` | `equ, ord, math` | `floating point` |
 
