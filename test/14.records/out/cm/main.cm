@@ -8,6 +8,13 @@ type Point2D record {
     y: Nat32
 }
 
+type Point3D record {
+    x: Nat32
+    y: Nat32
+    z: Nat32
+}
+
+
 func main() -> Int {
     printf("records test\n")
 
@@ -23,7 +30,6 @@ func main() -> Int {
 
 
     // compare Point2D with anonymous record
-
     var p2d2: Point2D = p2d0
     var p2d3: record {        x: Nat32        y: Nat32
     } = {x = 1, y = 2}
@@ -34,6 +40,12 @@ func main() -> Int {
         printf("p2d2 != p2d3\n")
     }
 
+
+    // cons Point3D from Point2D
+    // (it is possible if dst record contained all fields from src record
+    // and their types are equal)
+    var p3d: Point3D
+    p3d = p2d2 to Point3D
 
 
     return 0

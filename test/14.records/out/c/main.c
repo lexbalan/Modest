@@ -14,6 +14,13 @@ typedef struct {
     uint32_t y;
 } Point2D;
 
+typedef struct {
+    uint32_t x;
+    uint32_t y;
+    uint32_t z;
+} Point3D;
+
+
 int main()
 {
     printf("records test\n");
@@ -32,7 +39,6 @@ int main()
 
 
     // compare Point2D with anonymous record
-
     Point2D p2d2;
     p2d2 = p2d0;
     struct {        uint32_t x;        uint32_t y;
@@ -46,6 +52,12 @@ int main()
         printf("p2d2 != p2d3\n");
     }
 
+
+    // cons Point3D from Point2D
+    // (it is possible if dst record contained all fields from src record
+    // and their types are equal)
+    Point3D p3d;
+    p3d = *(Point3D *)&p2d2;
 
 
     return 0;

@@ -26,10 +26,9 @@ target triple = "arm64-apple-macosx12.0.0"
 %Str16 = type [0 x %Char16]
 %Str32 = type [0 x %Char32]
 %VA_List = type i8*
+
 declare void @llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)
 declare void @llvm.memset.p0.i32(i8*, i8, i32, i1)
-
-declare i32 @memcmp(i8* %ptr1, i8* %ptr2, i64 %num)
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/system.hm
 
@@ -140,6 +139,12 @@ declare void @perror(%ConstCharStr* %str)
 	i32
 }
 
+%Point3D = type {
+	i32,
+	i32,
+	i32
+}
+
 
 define %Int @main() {
     %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*))
@@ -191,6 +196,17 @@ else_1:
     %28 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str5 to [0 x i8]*))
     br label %endif_1
 endif_1:
+    ; cons Point3D from Point2D
+    ; (it is possible if dst record contained all fields from src record
+    ; and their types are equal)
+    %29 = alloca %Point3D
+    %30 = load %Point2D, %Point2D* %14
+    %31 = alloca %Point2D
+    store %Point2D %30, %Point2D* %31
+    %32 = bitcast %Point2D* %31 to %Point3D*
+    %33 = bitcast %Point3D* %29 to i8*
+    %34 = bitcast %Point3D* %32 to i8*
+    call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %33, i8* %34, i32 12, i1 0)
     ret %Int 0
 }
 

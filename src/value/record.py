@@ -2,7 +2,8 @@
 import hlir.type as type
 from error import error, warning, info
 from hlir.hlir import *
-from hlir.value import hlir_value_zero
+from hlir.value import hlir_value_zero, hlir_value_cast
+from hlir.type import record_field_get
 from util import get_item_with_id
 from .value import *
 
@@ -100,6 +101,12 @@ def value_cons_record_from_generic_record(v, t, ti, method):
 
 
 
+
+def value_cons_record_from_record(v, t, ti, method):
+    return hlir_value_cast(v, t, ti=ti)
+
+
+
 def value_cons_record(v, t, ti, method):
     from_type = v['type']
 
@@ -112,7 +119,20 @@ def value_cons_record(v, t, ti, method):
             info("cannot implicit cons Record value", ti)
             return None
 
-        # Record -> Record  (explicit)
+
+        # check if all fields in from_type present in t
+        # and their types are equal (!)
+        for field in from_type['fields']:
+            field2 = record_field_get(t, field['id']['str'])
+            if field2 == None:
+                return None  # if no field with that name
+            if not type.type_eq(field['type'], field2['type']):
+                return None  # if field type not equal
+
+            #print(field['id']['str'])
+
+
+        # Record -> Record (explicit)
         return value_cons_record_from_record(v, t, ti, method)
 
     return None
