@@ -3,21 +3,44 @@
 
 ##### Example:
 ```Shell
-mcc -o $(OUTDIR)/main -mbackend=cm $(INDIR)/main.cm
+# For translation main.cm to main.c, just type
+mcc -o main -mbackend=c main.cm
 ```
 
 ## Compiler flags
 
+Use `-o` option for set output file name (without file extension)
+
+*Usage example:*
+```
+    mcc -o main main.cm
+```
+
 #### Feature flags
 
-**-funsafe** -Enable *unsafe* mode when
+**-funsafe** - Enables *unsafe* mode when
   * You can cast pointer to another pointer
-  * Enable pointer arithmetics for Pointer type
+  * You can do *pointer arithmetics* with Pointer type value
 
 **-fparanoid** - Every warning becomes error
 
 
+*Usage example:*
+```
+    mcc -o main -fparanoid main.cm
+```
+
+
 #### Modifier flags
 
-**-mbackend=backend_name** - 
+Use `-m` option to change compiler settings
+
+`-m<varname>=<value>`
+
+*Usage example:*
+```
+    mcc -o main -mbackend=c main.cm
+    mcc -o main -mbackend=cm main.cm
+    mcc -o main -mbackend=llvm main.cm
+```
 
