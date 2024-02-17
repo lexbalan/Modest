@@ -62,7 +62,7 @@ It used to indicate that function have no return value
 func no_return_func () -> Unit {
 }
 ```
-Also, you can construct *Unit* value from not used function parameter to prevent error message:
+Also, you can construct *Unit* value from not used function parameter to prevent warning(unused value) message:
 ```swift
 func just (not_used_param: Int32) -> Unit {
     not_used_param to Unit
