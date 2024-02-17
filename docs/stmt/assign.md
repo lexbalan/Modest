@@ -15,5 +15,4 @@ func main () -> Unit {
     a = 10
     printf("a = %d\n", a)
 }
-
 ```

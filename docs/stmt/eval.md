@@ -18,5 +18,4 @@ func just () -> Unit {
     // because we need only side effect (print line to stdout)
     printf("Hi there!\n")
 }
-
 ```

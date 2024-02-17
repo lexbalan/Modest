@@ -15,5 +15,4 @@ func mid (a: Int32, b: Int32) -> Int32 {
     result = result / 2
     return result
 }
-
 ```
