@@ -9,7 +9,7 @@ mcc -o main -mbackend=c main.cm
 
 ## Compiler flags
 
-Use `-o` option for set output file name (without file extension)
+Use `-o <output_file_name>` option for set output file name (without file extension)
 
 *Usage example:*
 ```shell
@@ -17,7 +17,7 @@ mcc -o main main.cm
 ```
 
 #### Feature flags
-Use `-f` flag for enable some compiler options
+Use `-f<feature_name>` flag for enable some compiler options
 
 **-funsafe** - Enables *unsafe* mode when
   * You can cast pointer to another pointer
@@ -34,9 +34,9 @@ mcc -o io -fparanoid -funsafe io.cm  # warnings as errors + unsafe mode
 
 #### Modifier flags
 
-Use `-m` option to change compiler settings
+Use `-m<varname>=<value>` option to change compiler settings
 
-`-m<varname>=<value>`
+**-fbackend=<backend_name>** - backend switching
 
 *Usage example:*
 ```shell
