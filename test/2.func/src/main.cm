@@ -22,6 +22,7 @@ func main() -> Int {
     f0()
     f1()
 
+    // call function with two arguments and return value
     let arg_a = 10 to Int32
     let arg_b = 20 to Int32
     let sum_result = sum(arg_a, arg_b)
