@@ -470,6 +470,9 @@ break_4:
     %71 = getelementptr inbounds [3 x i32], [3 x i32]* %61, i32 0, i32 2
     %72 = load i32, i32* %71
     %73 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str10 to [0 x i8]*), i32 %72)
+    ; create (and initialize) new variable b
+    ; (with type [3]Int32)
+    ; this variable are copy of array a
     %74 = alloca [3 x i32]
     %75 = bitcast [3 x i32]* %74 to i8*
     %76 = bitcast [3 x i32]* %61 to i8*

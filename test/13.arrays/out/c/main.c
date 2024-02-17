@@ -85,6 +85,9 @@ int main()
     printf("a[1] = %i\n", a[1]);
     printf("a[2] = %i\n", a[2]);
 
+    // create (and initialize) new variable b
+    // (with type [3]Int32)
+    // this variable are copy of array a
     int32_t b[3];
     memcpy(&b, &a, 12);
     printf("b[0] = %i\n", b[0]);

@@ -1,0 +1,37 @@
+// examples/14.records/main.cm
+
+import "libc/stdio.hm"
+
+
+type Point2D record {
+    x: Nat32
+    y: Nat32
+}
+
+func main() -> Int {
+    printf("records test\n")
+
+    // compare two Point2D records
+    var p2d0: Point2D = {x=1, y=2}
+    var p2d1: Point2D = {x=10, y = 20}
+
+    if p2d0 == p2d1 {
+        printf("p2d0 == p2d1\n")
+    } else {
+        printf("p2d0 != p2d1\n")
+    }
+
+
+    // compare Point2D with anonymous record
+    var p2d2 = p2d0  // record assignation
+    var p2d3 = {x=1, y=2} to record {x: Nat32, y: Nat32}
+
+    if p2d2 == p2d3 {
+        printf("p2d2 == p2d3\n")
+    } else {
+        printf("p2d2 != p2d3\n")
+    }
+
+    return 0
+}
+

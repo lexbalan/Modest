@@ -1756,6 +1756,7 @@ def run(module, outname):
 
     lo("declare void @llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)")
     lo("declare void @llvm.memset.p0.i32(i8*, i8, i32, i1)\n")
+    lo("declare i32 @memcmp(i8* %ptr1, i8* %ptr2, i64 %num)\n")
 
     print_module(module)
     output_close()
