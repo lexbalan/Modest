@@ -311,7 +311,7 @@ def print_type(t, space_after=False, array_as_ptr=True, as_const=False):
 
     elif hlir_type.type_is_record(t):
         if 'anon' in t:
-            out("struct __anonymous_struct_%d" % t['anon'])
+            out("struct %s" % t['anon'])
         else:
             print_type_record(t)
 
@@ -1747,10 +1747,9 @@ def run(module, outname):
     cdirectives(module)
 
 
-    for anon_rec in module['anon_rec']:
+    for anon_rec in module['anon_recs']:
         nl_indent()
-        tag = '__anonymous_struct_%d' % anon_rec['anon']
-        print_type_record(anon_rec, tag=tag)
+        print_type_record(anon_rec, tag=anon_rec['anon'])
         out(";")
 
     for x in module['text']:

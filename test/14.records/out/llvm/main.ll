@@ -131,6 +131,8 @@ declare void @perror(%ConstCharStr* %str)
 @str3 = private constant [14 x i8] [i8 112, i8 50, i8 100, i8 48, i8 32, i8 33, i8 61, i8 32, i8 112, i8 50, i8 100, i8 49, i8 10, i8 0]
 @str4 = private constant [14 x i8] [i8 112, i8 50, i8 100, i8 50, i8 32, i8 61, i8 61, i8 32, i8 112, i8 50, i8 100, i8 51, i8 10, i8 0]
 @str5 = private constant [14 x i8] [i8 112, i8 50, i8 100, i8 50, i8 32, i8 33, i8 61, i8 32, i8 112, i8 50, i8 100, i8 51, i8 10, i8 0]
+@str6 = private constant [14 x i8] [i8 112, i8 50, i8 100, i8 51, i8 32, i8 61, i8 61, i8 32, i8 112, i8 50, i8 100, i8 52, i8 10, i8 0]
+@str7 = private constant [14 x i8] [i8 112, i8 50, i8 100, i8 51, i8 32, i8 33, i8 61, i8 32, i8 112, i8 50, i8 100, i8 52, i8 10, i8 0]
 
 
 
@@ -196,17 +198,34 @@ else_1:
     %28 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str5 to [0 x i8]*))
     br label %endif_1
 endif_1:
+    %29 = alloca { i32, i32}
+    %30 = insertvalue { i32, i32} zeroinitializer, i32 1, 0
+    %31 = insertvalue { i32, i32} %30, i32 2, 1
+    store { i32, i32} %31, { i32, i32}* %29
+    %32 = bitcast { i32, i32}* %17 to i8*
+    %33 = bitcast { i32, i32}* %29 to i8*
+    
+    %34 = call i32 (i8*, i8*, i64) @memcmp( i8* %32, i8* %33, i64 8)
+    %35 = icmp eq i32 %34, 0
+    br i1 %35 , label %then_2, label %else_2
+then_2:
+    %36 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str6 to [0 x i8]*))
+    br label %endif_2
+else_2:
+    %37 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str7 to [0 x i8]*))
+    br label %endif_2
+endif_2:
     ; cons Point3D from Point2D
     ; (it is possible if dst record contained all fields from src record
     ; and their types are equal)
-    %29 = alloca %Point3D
-    %30 = load %Point2D, %Point2D* %14
-    %31 = alloca %Point2D
-    store %Point2D %30, %Point2D* %31
-    %32 = bitcast %Point2D* %31 to %Point3D*
-    %33 = bitcast %Point3D* %29 to i8*
-    %34 = bitcast %Point3D* %32 to i8*
-    call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %33, i8* %34, i32 12, i1 0)
+    %38 = alloca %Point3D
+    %39 = load %Point2D, %Point2D* %14
+    %40 = alloca %Point2D
+    store %Point2D %39, %Point2D* %40
+    %41 = bitcast %Point2D* %40 to %Point3D*
+    %42 = bitcast %Point3D* %38 to i8*
+    %43 = bitcast %Point3D* %41 to i8*
+    call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %42, i8* %43, i32 12, i1 0)
     ret %Int 0
 }
 

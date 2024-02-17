@@ -39,6 +39,13 @@ func main() -> Int {
         printf("p2d2 != p2d3\n")
     }
 
+    var p2d4: record {x: Nat32, y: Nat32} = {x = 1, y = 2}
+    if p2d3 == p2d4 {
+        printf("p2d3 == p2d4\n")
+    } else {
+        printf("p2d3 != p2d4\n")
+    }
+
 
     // cons Point3D from Point2D
     // (it is possible if dst record contained all fields from src record

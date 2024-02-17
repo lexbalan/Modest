@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 struct __anonymous_struct_3 {uint32_t x; uint32_t y;};
+struct __anonymous_struct_4 {uint32_t x; uint32_t y;};
 
 
 
@@ -49,6 +50,14 @@ int main()
         printf("p2d2 == p2d3\n");
     } else {
         printf("p2d2 != p2d3\n");
+    }
+
+    struct __anonymous_struct_4 p2d4;
+    p2d4 = (struct __anonymous_struct_4){.x = 1, .y = 2};
+    if (memcmp(&p2d3, &p2d4, sizeof p2d3) == 0) {
+        printf("p2d3 == p2d4\n");
+    } else {
+        printf("p2d3 != p2d4\n");
     }
 
 

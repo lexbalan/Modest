@@ -343,8 +343,9 @@ def do_type_record(x):
     rec = hlir_type_record(fields, ti=x['ti'])
     rec['end_nl'] = x['end_nl']
     # add anon record (before)
-    rec['anon'] = anon_rec_cnt
-    module['anon_rec'].append(rec)
+    anon_tag = '__anonymous_struct_%d' % anon_rec_cnt
+    rec['anon'] = anon_tag
+    module['anon_recs'].append(rec)
 
     return rec
 
@@ -1649,8 +1650,8 @@ def def_type(x):
 
     if 'anon' in ty:
         del ty['anon']
-        if ty in module['anon_rec']:
-            module['anon_rec'].remove(ty)
+        if ty in module['anon_recs']:
+            module['anon_recs'].remove(ty)
 
     if hlir_type.type_is_bad(ty):
         return None
@@ -2071,7 +2072,7 @@ def proc(ast, source_info):
         'strings': [],  # (used in LLVM backend)
         'context': new_context,
         'options': [],
-        'anon_rec': [],  # anonymous records for C printer
+        'anon_recs': [],  # anonymous records for C printer
         'att': [],
         'text': []
     }
