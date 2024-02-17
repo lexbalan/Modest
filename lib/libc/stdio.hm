@@ -1,6 +1,6 @@
 // libc/stdio.hm
 
-@pragma("c_ignore")
+@pragma("not_included")
 
 @c_include("stdio.h")
 

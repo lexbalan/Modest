@@ -39,4 +39,12 @@ type Int Int32
 ```
 
 
+### Pragmas
+
+```zig
+// this pragma makes compiler to
+// not print include directive for this file
+@pragma("not_included")
+```
+
 

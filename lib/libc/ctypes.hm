@@ -1,6 +1,6 @@
 // libc/ctypes.hm
 
-@pragma("c_ignore")
+@pragma("not_included")
 
 import "./system.hm"
 

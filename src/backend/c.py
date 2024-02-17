@@ -1639,10 +1639,10 @@ def print_def_const(x):
 
 
 def print_include(x):
-    # если в модуле включена опция c_ignore
+    # если в модуле включена опция not_included
     if 'module' in x:
         if x['module'] != None:
-            if 'c_ignore' in x['module']['att']:
+            if 'not_included' in x['module']['att']:
                 return
 
     if x['local']:

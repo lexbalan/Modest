@@ -1,6 +1,6 @@
 // libc/ctypes32.hm
 
-@pragma("c_ignore")
+@pragma("not_included")
 
 @property("c_alias", "char *")
 type Str Str8

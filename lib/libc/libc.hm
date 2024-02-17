@@ -1,6 +1,6 @@
 // libc/libc.hm
 
-@pragma("c_ignore")
+@pragma("not_included")
 
 @c_include("stdlib.h")
 @c_include("string.h")

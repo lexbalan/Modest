@@ -1,5 +1,5 @@
 
-@pragma("c_ignore")
+@pragma("not_included")
 
 const __SYSTEM = 64
 

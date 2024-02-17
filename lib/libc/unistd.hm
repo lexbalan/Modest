@@ -1,6 +1,6 @@
 // libc/unistd.hm
 
-@pragma("c_ignore")
+@pragma("not_included")
 
 @c_include("unistd.h")
 

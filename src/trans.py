@@ -127,8 +127,8 @@ def property(id, value):
 
 def pragma(pg):
     #print("@pragma " +  pg)
-    if pg == 'c_ignore':
-        module['att'].append('c_ignore')
+    if pg == 'not_included':
+        module['att'].append('not_included')
 
 
 
@@ -1544,7 +1544,7 @@ def do_import(x):
         'kind': 'import',
         'str': impline[:-1],    # .hm -> .h
         'att': att,
-        'module': m, # ссылка на сам модуль (для c_ignore)
+        'module': m, # ссылка на сам модуль (для not_included)
         'local': True
     }
 
