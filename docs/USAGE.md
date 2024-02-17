@@ -19,7 +19,7 @@ mcc -o main main.cm
 #### Feature flags
 Use `-f<feature_name>` flag for enable some compiler options
 
-***-funsafe*** - Enables *unsafe* mode when
+***-funsafe*** - Enables *unsafe* mode when:
   * You can cast pointer to another pointer
   * You can do *pointer arithmetics* (only with [*Pointer*](types.md) type value)
 
