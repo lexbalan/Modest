@@ -61,7 +61,7 @@ def do_cons_integer(v, t, method, ti):
 def value_cons_integer(v, t, ti, method):
     from_type = v['type']
 
-    if type.type_is_perfect_integer(from_type):
+    if type.type_is_generic_integer(from_type):
         # GenericInt -> Int
         check_width(from_type, t, method, ti)
 

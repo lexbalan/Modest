@@ -258,7 +258,7 @@ def init():
     typeVA_List = {
         'isa': 'type',
         'kind': 'va_list',
-        'perfect': False,
+        'generic': False,
         'width': 0,
         'size': 0,
         'align': 1,
@@ -279,10 +279,10 @@ def init():
 
 
 
-def hlir_type_perfect_int_for(num, unsigned=False, ti=None):
+def hlir_type_generic_int_for(num, unsigned=False, ti=None):
     required_width = nbits_for_num(num)
     t = hlir_type_integer(width=required_width, ti=ti)
-    t['perfect'] = True
+    t['generic'] = True
     return t
 
 

@@ -1,4 +1,4 @@
-# Есть проблема с массивом perfect int когда индексируешь и приводишь к инту
+# Есть проблема с массивом generic int когда индексируешь и приводишь к инту
 # но индексируешь переменной (в цикле например)
 
 
@@ -117,7 +117,7 @@ precedenceMax = len(aprecedence) - 1
 def precedence(x):
     k = x['kind']
 
-    # cast perfect не является 'оператором'
+    # cast generic не является 'оператором'
     # его приоритет, это приоритет его содержимого (value)
     if k == 'cast_immediate':
         return precedence(x['value'])
@@ -265,9 +265,9 @@ def print_type(t, space_after=False, array_as_ptr=True, as_const=False):
         if 'volatile' in t['att']:
             out("volatile ")
 
-    # hotfix for let perfect value problem (let x = 1)
-    if hlir_type.type_is_perfect_integer(t):
-        # если пришел perfect - подберем подходящий тип
+    # hotfix for let generic value problem (let x = 1)
+    if hlir_type.type_is_generic_integer(t):
+        # если пришел generic - подберем подходящий тип
         # ex: let x = 1; func(x)
         t = foundation.type_select_int(t['width'])
 
@@ -516,7 +516,7 @@ def print_value_index(x, ctx):
 
 
     # если имеем дело c дженерик массивом (глоб константа)
-    if hlir_type.type_is_perfect(array['type']):
+    if hlir_type.type_is_generic(array['type']):
         if value_is_immediate(x):
             print_value_literal(x, ['print_immediate'])
             return
@@ -563,7 +563,7 @@ def print_value_access(x, ctx):
     left = x['record']
 
     # если имеем дело c дженерик записью (глоб константа)
-    if hlir_type.type_is_perfect(left['type']):
+    if hlir_type.type_is_generic(left['type']):
         if value_is_immediate(x):
             print_value_literal(x, ['print_immediate'])
             return
@@ -620,9 +620,9 @@ def print_value_cast_immediate(v, ctx):
             print_value_literal_string(v, ctx=[], char_width=char_width)
             return
 
-    # cast_immediate PerfectChar -> Char
+    # cast_immediate GenericChar -> Char
     elif hlir_type.type_is_char(to_type):
-        if hlir_type.type_is_perfect_char(from_type):
+        if hlir_type.type_is_generic_char(from_type):
             print_value_literal_char(v, ctx)
             return
 
@@ -726,8 +726,8 @@ def print_value_literal_array(v, ctx):
     if hlir_type.type_is_array_of_char(v['type']):
         char_type = v['type']['of']
         char_width = char_type['width']
-        if hlir_type.type_is_perfect_array_of_char(v['type']):
-            # FIXIT: вообще нефиг печатать perfect string (!)
+        if hlir_type.type_is_generic_array_of_char(v['type']):
+            # FIXIT: вообще нефиг печатать generic string (!)
             out('{} /*GENERIC-STRING*/')
             return
 
@@ -1056,12 +1056,12 @@ def print_value(x, ctx=[], need_wrap=False, just_print_id=True):
 
 
     # в C мы не печатаем определения для глобальных констант с типом
-    # PerfectArray | PerfectRecord; Тк C не умеет в это дело;
+    # GenericArray | GenericRecord; Тк C не умеет в это дело;
     # А по месту использования такой константы печатаем само imm значение
     # see print_def_const
     if x['kind'] == 'const':
         if x['value'] != None:
-            if hlir_type.type_is_perfect_array(x['value']['type']):
+            if hlir_type.type_is_generic_array(x['value']['type']):
                 print_value_literal(x['value'], ['print_immediate'])
                 return
 
@@ -1597,15 +1597,15 @@ def print_def_const(x):
     global nl_str
     const_value = x['value']
 
-    # Не печатаем PerfectArray | PerfectRecord константы
+    # Не печатаем GenericArray | GenericRecord константы
     # тк C не умеет в это дело; В value_print смотрим -
     # если пришла константа с вышеупомянутым типом - печатаем
     # просто imm значение. Некрасиво но только так;
     # see value_print
-    if hlir_type.type_is_perfect_record(const_value['type']):
+    if hlir_type.type_is_generic_record(const_value['type']):
         return
 
-    if hlir_type.type_is_perfect_array(const_value['type']):
+    if hlir_type.type_is_generic_array(const_value['type']):
         return
 
     newline(n=x['nl'])

@@ -47,10 +47,10 @@ def hlir_value_zero(t, ti=None):
 
 def hlir_value_char(char_code, type=None, ti=None):
     if type == None:
-        # if type not specified, set type as PerfectChar
+        # if type not specified, set type as GenericChar
         char_width = nbits_for_num(char_code)
         type = hlir_type_char(char_width, ti=ti)
-        type['perfect'] = True
+        type['generic'] = True
 
     return hlir_value_literal(type, char_code, ti)
 
@@ -58,7 +58,7 @@ def hlir_value_char(char_code, type=None, ti=None):
 
 def hlir_value_int(num, typ=None, ti=None):
     if typ == None:
-        typ = hlir_type_perfect_int_for(num, unsigned=False, ti=ti)
+        typ = hlir_type_generic_int_for(num, unsigned=False, ti=ti)
     else:
         nbits = nbits_for_num(num)
 
@@ -75,7 +75,7 @@ def hlir_value_int(num, typ=None, ti=None):
 
 def hlir_value_float(num, ti=None):
     typ = hlir_type_float(width=flt_width, ti=ti)
-    typ['perfect'] = True
+    typ['generic'] = True
     return hlir_value_literal(typ, num, ti)
 
 
@@ -90,7 +90,7 @@ def hlir_value_array(items, type=None, ti=None):
 
         array_volume = hlir_value_int(length)
         type = hlir_type_array(of, volume=array_volume, ti=ti)
-        type['perfect'] = True
+        type['generic'] = True
 
     return hlir_value_literal(type, items, ti)
 
@@ -102,7 +102,7 @@ def hlir_value_string(string, length=0, ti=None):
 
     vol = hlir_value_int(length)  # <=> len(string) + 1
     genStrType = hlir_type_array(foundation.typeChar32, volume=vol, ti=ti)
-    genStrType['perfect'] = True
+    genStrType['generic'] = True
 
     chars = []
     for ch in string:
@@ -279,7 +279,7 @@ def hlir_value_cast_immediate(v, t, ti=None):
 
 def hlir_value_sizeof(of, ti=None):
     size = type.type_get_size(of)
-    typ = hlir_type_perfect_int_for(size, unsigned=True, ti=ti)
+    typ = hlir_type_generic_int_for(size, unsigned=True, ti=ti)
     return {
         'isa': 'value',
         'kind': 'sizeof',
@@ -294,7 +294,7 @@ def hlir_value_sizeof(of, ti=None):
 
 def hlir_value_alignof(of, ti=None):
     align = type.type_get_align(of)
-    typ = hlir_type_perfect_int_for(align, unsigned=True, ti=ti)
+    typ = hlir_type_generic_int_for(align, unsigned=True, ti=ti)
     return {
         'isa': 'value',
         'kind': 'alignof',
@@ -310,7 +310,7 @@ def hlir_value_alignof(of, ti=None):
 def hlir_value_offsetof(of, field_id, ti=None):
     field = type.record_field_get(of, field_id['str'])
     offset = field['offset']
-    typ = hlir_type_perfect_int_for(offset, unsigned=True, ti=ti)
+    typ = hlir_type_generic_int_for(offset, unsigned=True, ti=ti)
     return {
         'isa': 'value',
         'kind': 'offsetof',
@@ -328,7 +328,7 @@ def hlir_value_lengthof(of_value, ti=None):
     #field = type.record_field_get(of, field_id['str'])
     #offset = field['offset']
     length = of_value['type']['volume']['asset']
-    typ = hlir_type_perfect_int_for(length, unsigned=True, ti=ti)
+    typ = hlir_type_generic_int_for(length, unsigned=True, ti=ti)
     return {
         'isa': 'value',
         'kind': 'lengthof',

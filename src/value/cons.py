@@ -13,7 +13,7 @@ from .integer import value_cons_integer
 from .float import value_cons_float
 from .record import value_cons_record
 from .array import value_cons_array
-from .pointer import value_cons_pointer, cons_ptr_to_str_from_perfect_str
+from .pointer import value_cons_pointer, cons_ptr_to_str_from_generic_str
 
 
 
@@ -21,7 +21,7 @@ def value_cons_default(x, ti):
     from_type = x['type']
 
     # ONLY FOR GENERIC
-    if not type.type_is_perfect(from_type):
+    if not type.type_is_generic(from_type):
         return x
 
     from trans import typeSysInt, typeSysFloat, typeSysChar, typeSysStr
@@ -29,8 +29,8 @@ def value_cons_default(x, ti):
     if type.type_is_integer(from_type):
         return value_cons_integer(x, typeSysInt, ti, 'implicit')
 
-    elif type.type_is_perfect_array_of_char(from_type):
-        return cons_ptr_to_str_from_perfect_str(x, typeSysStr, ti)
+    elif type.type_is_generic_array_of_char(from_type):
+        return cons_ptr_to_str_from_generic_str(x, typeSysStr, ti)
 
     elif type.type_is_float(from_type):
         return value_cons_float(x, typeSysFloat, ti, 'implicit')
@@ -100,7 +100,7 @@ def value_cons_implicit(v, t, ti):
     # 4. AnyPointer -> FreePointer
     # 5. FreePointer -> AnyPointer
 
-    #if not type.type_is_perfect(from_type):
+    #if not type.type_is_generic(from_type):
     #    return v
 
     # потому что в C номинальные типы, а у нас - структурные
@@ -113,7 +113,7 @@ def value_cons_implicit(v, t, ti):
         #    if from_type['declaration'] != t['declaration']:
         #if t != from_type:
 
-        if type.type_is_perfect(from_type):
+        if type.type_is_generic(from_type):
             return value_cons_soft(v, t, ti)
 
         if not type.type_eq_record(t, from_type, opt=[], nominative=True):
@@ -134,7 +134,7 @@ def value_cons_implicit(v, t, ti):
         return v
 
 
-    if type.type_is_perfect(from_type):
+    if type.type_is_generic(from_type):
         return value_cons_soft(v, t, ti)
 
 

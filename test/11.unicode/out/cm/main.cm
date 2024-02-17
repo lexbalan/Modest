@@ -16,10 +16,10 @@ var arr_utf16: [8]Char16 = "Hello!\n\x0"
 var arr_utf32: [8]Char32 = "Hello!\n\x0"
 
 
-const perfectStringConst = "S-t-r-i-n-g-Ω 🐀🎉🦄"
-const string8Const = perfectStringConst to *Str8
-const string16Const = perfectStringConst to *Str16
-const string32Const = perfectStringConst to *Str32
+const genericStringConst = "S-t-r-i-n-g-Ω 🐀🎉🦄"
+const string8Const = genericStringConst to *Str8
+const string16Const = genericStringConst to *Str16
+const string32Const = genericStringConst to *Str32
 
 
 func main() -> Int {

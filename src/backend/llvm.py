@@ -682,7 +682,7 @@ def print_type(t):
 
         # иногда сюда залетают дженерики например в to левое:
         # let p = 0x12345678 to *Nat32
-        if hlir_type.type_is_perfect_integer(t):
+        if hlir_type.type_is_generic_integer(t):
             out("i%d" % t['width'])
             return
 
@@ -970,7 +970,7 @@ def do_eval_expr_cast(x):
     from_type = value['type']
     to_type = x['type']
 
-    if hlir_type.type_is_perfect_array_of_char(from_type):
+    if hlir_type.type_is_generic_array_of_char(from_type):
         if hlir_type.type_is_pointer_to_array_of_char(to_type):
             error("strings need to be printed through do_eval_expr_cast_immediate", x)
             exit(1)

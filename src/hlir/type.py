@@ -43,7 +43,7 @@ def hlir_type_bad(ti=None):
     return {
         'isa': 'type',
         'kind': 'bad',
-        'perfect': False,
+        'generic': False,
         'width': 0,
         'size': 0,
         'align': 0,
@@ -59,7 +59,7 @@ def hlir_type_unit():
     return {
         'isa': 'type',
         'kind': 'unit',
-        'perfect': False,
+        'generic': False,
         'width': 0,
         'size': 0,
         'align': 0,
@@ -75,7 +75,7 @@ def hlir_type_bool():
     return {
         'isa': 'type',
         'kind': 'bool',
-        'perfect': False,
+        'generic': False,
         'width': 1,
         'size': 1,
         'align': 1,
@@ -94,7 +94,7 @@ def hlir_type_char(width, ti=None):
     return {
         'isa': 'type',
         'kind': 'char',
-        'perfect': False,
+        'generic': False,
         'width': width,
         'size': size,
         'align': size,
@@ -111,7 +111,7 @@ def hlir_type_integer(width, signed=True, ti=None):
     return {
         'isa': 'type',
         'kind': 'int',
-        'perfect': False,
+        'generic': False,
         'width': width,
         'size': size,
         'align': size,
@@ -129,7 +129,7 @@ def hlir_type_float(width, ti=None):
     return {
         'isa': 'type',
         'kind': 'float',
-        'perfect': False,
+        'generic': False,
         'width': width,
         'size': size,
         'align': size,
@@ -146,7 +146,7 @@ def hlir_type_pointer(to, ti=None):
     return {
         'isa': 'type',
         'kind': 'pointer',
-        'perfect': False,
+        'generic': False,
         'width': ptr_width,
         'size': size,
         'align': size,
@@ -174,7 +174,7 @@ def hlir_type_array(of, volume=None, ti=None):
     return {
         'isa': 'type',
         'kind': 'array',
-        'perfect': False,
+        'generic': False,
         'width': 0, #'width': array_size * 8,
         'size': array_size,
         'align': item_align,
@@ -199,7 +199,7 @@ def hlir_type_enum(ti=None):
     return {
         'isa': 'type',
         'kind': 'enum',
-        'perfect': False,
+        'generic': False,
         'width': enum_width,
         'size': enum_size,
         'align': enum_size,
@@ -239,7 +239,7 @@ def hlir_type_record(fields, ti=None):
     return {
         'isa': 'type',
         'kind': 'record',
-        'perfect': False,
+        'generic': False,
         'width': 0, #'width': record_size * 8,
         'size': record_size,
         'align': record_align,
@@ -256,7 +256,7 @@ def hlir_type_func(params, to, var_args, va_list_id, ti=None):
     return {
         'isa': 'type',
         'kind': 'func',
-        'perfect': False,
+        'generic': False,
         'width': 0,
         'size': 0,
         'align': 0,
@@ -279,7 +279,7 @@ def hlir_type_opaque(id, ti=None):
     return {
         'isa': 'type',
         'kind': 'opaque',
-        'perfect': False,
+        'generic': False,
         'declaration': None,
         'definition': None,
         'ops': [],
@@ -288,10 +288,10 @@ def hlir_type_opaque(id, ti=None):
     }
 
 
-def hlir_type_perfect_int_for(num, unsigned=False, ti=None):
+def hlir_type_generic_int_for(num, unsigned=False, ti=None):
     required_width = nbits_for_num(num)
     t = hlir_type_integer(width=required_width, ti=ti)
-    t['perfect'] = True
+    t['generic'] = True
     return t
 
 
@@ -422,7 +422,7 @@ def type_eq(a, b, opt=[]):
     # дженерик и не дженерик типы не равны
     # это важно при конструировании записей из джененрков
     # в противном случае конструирование будет скипнуто (тк уже равны)
-    if type_is_perfect(a) != type_is_perfect(b):
+    if type_is_generic(a) != type_is_generic(b):
         return False
 
     # normal checking
@@ -513,24 +513,24 @@ def type_is_va_list(t):
 
 
 
-def type_is_perfect_char(t):
-    return type_is_perfect(t) and type_is_char(t)
+def type_is_generic_char(t):
+    return type_is_generic(t) and type_is_char(t)
 
 
-def type_is_perfect_integer(t):
-    return type_is_perfect(t) and type_is_integer(t)
+def type_is_generic_integer(t):
+    return type_is_generic(t) and type_is_integer(t)
 
 
-def type_is_perfect_record(t):
-    return type_is_perfect(t) and type_is_record(t)
+def type_is_generic_record(t):
+    return type_is_generic(t) and type_is_record(t)
 
 
-def type_is_perfect_array(t):
-    return type_is_perfect(t) and type_is_array(t)
+def type_is_generic_array(t):
+    return type_is_generic(t) and type_is_array(t)
 
 
-def type_is_perfect_array_of_char(t):
-    if type_is_perfect_array(t):
+def type_is_generic_array_of_char(t):
+    if type_is_generic_array(t):
         if t['of'] != None: # in case of empty array field #of == None
             return type_is_char(t['of'])
 
@@ -593,8 +593,8 @@ def type_is_pointer_to_array_of_char(t):
 
 
 
-def type_is_perfect(t):
-    return t['perfect']
+def type_is_generic(t):
+    return t['generic']
 
 
 
@@ -715,15 +715,15 @@ def type_print(t, print_aka=True):
         """elif t['id'] != None:
             id_str = t['id']['str']
 
-            if id_str == '<perfect:int>':
+            if id_str == '<generic:int>':
                 id_str = 'Int'
 
-            if type_is_perfect(t):
-                print('Perfect', end='')
+            if type_is_generic(t):
+                print('Generic', end='')
 
             print(id_str, end='')
 
-            if type_is_perfect(t):
+            if type_is_generic(t):
                 if 'width' in t:
                     print('%d' % (t['width']), end='')
 
@@ -732,8 +732,8 @@ def type_print(t, print_aka=True):
 
 
     if type_is_record(t):
-        if type_is_perfect_record(t):
-            print("PerfectRecord {")
+        if type_is_generic_record(t):
+            print("GenericRecord {")
             for f in t['fields']:
                 print("\t%s: " % f['id']['str'], end='')
                 type_print(f['type'])
@@ -763,7 +763,7 @@ def type_print(t, print_aka=True):
 
     elif type_is_array(t):
         if t['of'] == None:
-            print("PerfectEmptyArray", end='')
+            print("GenericEmptyArray", end='')
             return
 
 
@@ -786,7 +786,7 @@ def type_print(t, print_aka=True):
 
     elif type_is_integer(t):
         #print('integer' + t['id']['str'], end='')
-        #if type_is_perfect(t):
+        #if type_is_generic(t):
         print('Integer_%d' % t['width'], end='')
 
     elif type_is_opaque(t):

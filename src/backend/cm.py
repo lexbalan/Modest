@@ -50,7 +50,7 @@ precedenceMax = len(aprecedence) - 1
 def precedence(x):
     k = x['kind']
 
-    # cast perfect не является 'оператором'
+    # cast generic не является 'оператором'
     # его приоритет, это приоритет его содержимого (value)
     if k == 'cast_immediate':
         return precedence(x['value'])
