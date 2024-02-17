@@ -4,17 +4,15 @@ const __SYSTEM__ = 64
 
 // machine-depended typedefs
 @if __SYSTEM__ == 64
-type ArchInt Int64
-type ArchNat Nat64
+type CPU_Word Nat64
 @elseif __SYSTEM__ == 32
-type ArchInt Int32
-type ArchNat Nat32
+type CPU_Word Nat32
 @endif
 
 
 func memzero(mem: Pointer, len: Nat64) {
-    let len_words = len / sizeof(ArchNat)
-    let dst_word = mem to *[]ArchNat
+    let len_words = len / sizeof(CPU_Word)
+    let dst_word = mem to *[]CPU_Word
 
     var i = 0 to Nat64
     while i < len_words {
@@ -22,7 +20,7 @@ func memzero(mem: Pointer, len: Nat64) {
         ++i
     }
 
-    let len_bytes = len % sizeof(ArchNat)
+    let len_bytes = len % sizeof(CPU_Word)
     let dst_byte = &dst_word[i] to *[]Byte
 
     i = 0
@@ -34,9 +32,9 @@ func memzero(mem: Pointer, len: Nat64) {
 
 
 func memcopy(dst: Pointer, src: Pointer, len: Nat64) {
-    let len_words = len / sizeof(ArchNat)
-    let src_w = src to *[]ArchNat
-    let dst_w = dst to *[]ArchNat
+    let len_words = len / sizeof(CPU_Word)
+    let src_w = src to *[]CPU_Word
+    let dst_w = dst to *[]CPU_Word
 
     var i = 0 to Nat64
     while i < len_words {
@@ -45,7 +43,7 @@ func memcopy(dst: Pointer, src: Pointer, len: Nat64) {
     }
 
 
-    let len_bytes = len % sizeof(ArchNat)
+    let len_bytes = len % sizeof(CPU_Word)
     let src_b = &src_w[i] to *[]Byte
     let dst_b = &dst_w[i] to *[]Byte
 
@@ -57,27 +55,27 @@ func memcopy(dst: Pointer, src: Pointer, len: Nat64) {
 }
 
 
-func memeq(dst: Pointer, src: Pointer, len: Nat64) -> Bool {
-    let len_words = len / sizeof(ArchNat)
-    let src_w = src to *[]ArchNat
-    let dst_w = dst to *[]ArchNat
+func memeq(mem0: Pointer, mem1: Pointer, len: Nat64) -> Bool {
+    let len_words = len / sizeof(CPU_Word)
+    let mem0_w = mem0 to *[]CPU_Word
+    let mem1_w = mem1 to *[]CPU_Word
 
     var i = 0 to Nat64
     while i < len_words {
-        if dst_w[i] != src_w[i] {
+        if mem0_w[i] != mem1_w[i] {
             return false
         }
         ++i
     }
 
 
-    let len_bytes = len % sizeof(ArchNat)
-    let src_b = &src_w[i] to *[]Byte
-    let dst_b = &dst_w[i] to *[]Byte
+    let len_bytes = len % sizeof(CPU_Word)
+    let mem0_b = &mem0_w[i] to *[]Byte
+    let mem1_b = &mem1_w[i] to *[]Byte
 
     i = 0
     while i < len_bytes {
-        if dst_b[i] != src_b[i] {
+        if mem0_b[i] != mem1_b[i] {
             return false
         }
         ++i
