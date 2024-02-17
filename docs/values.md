@@ -48,7 +48,7 @@ var ptr_to_array: *[]Char8 = "Hello wolrd!"
 
 
 ### Array literals
-```
+```swift
     // Array of five GenericInt values
     [1, 2, 3, 4, 5]
     
@@ -58,7 +58,7 @@ var ptr_to_array: *[]Char8 = "Hello wolrd!"
 
 
 ### Record literals
-```
+```swift
     // Record with two fields
     // 'x' with type GenericInt and value 10
     // 'y' with type GenericInt and value 20
