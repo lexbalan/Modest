@@ -40,8 +40,8 @@ Use `-m` option to change compiler settings
 
 *Usage example:*
 ```shell
-mcc -o main -mbackend=c main.cm     # C backend for translation to main.c
-mcc -o main -mbackend=cm main.cm    # Modest backend for translation to main.cm
-mcc -o main -mbackend=llvm main.cm  # LLVM backend for translation to main.ll
+mcc -o main -mbackend=c main.cm     # use C backend for translation to main.c
+mcc -o main -mbackend=cm main.cm    # use Modest backend for translation to main.cm
+mcc -o main -mbackend=llvm main.cm  # use LLVM backend for translation to main.ll
 ```
 
