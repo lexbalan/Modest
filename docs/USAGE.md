@@ -17,6 +17,7 @@ mcc -o main main.cm
 ```
 
 #### Feature flags
+Use `-f` flag for enable some compiler options
 
 **-funsafe** - Enables *unsafe* mode when
   * You can cast pointer to another pointer
@@ -29,7 +30,6 @@ mcc -o main main.cm
 ```
 mcc -o main -fparanoid main.cm
 ```
-
 
 #### Modifier flags
 
