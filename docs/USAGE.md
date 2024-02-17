@@ -40,8 +40,8 @@ Use `-m` option to change compiler settings
 
 *Usage example:*
 ```
-mcc -o main -mbackend=c main.cm
-mcc -o main -mbackend=cm main.cm
-mcc -o main -mbackend=llvm main.cm
+mcc -o main -mbackend=c main.cm  # for translation to main.c
+mcc -o main -mbackend=cm main.cm  # for translation to main.cm
+mcc -o main -mbackend=llvm main.cm  # for translation to main.ll
 ```
 
