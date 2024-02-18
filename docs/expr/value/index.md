@@ -2,6 +2,9 @@
 # Value Expression Index
 
 
+
+#### Examples
+
 ```zig
 
 const arrayLength = 5
@@ -15,7 +18,7 @@ func main() -> Int {
         // index array
         let array_item = array[i]
     
-        printf("array[%i] = %i", i, array_item)
+        printf("array[%i] = %i\n", i, array_item)
         ++i
     }
     retutn 0
