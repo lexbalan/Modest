@@ -2,6 +2,10 @@
 
 import "libc/stdio.hm"
 
+//TODO: now runtime requires memcmp declaration
+// for records & arrays eq
+import "libc/libc.hm"
+
 
 type Point2D record {
     x: Nat32

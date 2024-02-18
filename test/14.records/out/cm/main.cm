@@ -2,6 +2,10 @@
 
 import "libc/stdio.h"
 
+//TODO: now runtime requires memcmp declaration
+// for records & arrays eq
+import "libc/libc.h"
+
 
 type Point2D record {
     x: Nat32
@@ -53,7 +57,6 @@ func main() -> Int {
     // cons Point3D from Point2D (record extension)
     // (it is possible if dst record contained all fields from src record
     // and their types are equal)
-    // TODO: not implemented
     var p3d: Point3D
     p3d = p2d2 to Point3D
 
