@@ -9,19 +9,20 @@
 #### Exmples
 
 ```zig
-func main () -> Unit {
-  var x: Nat32
-  var y: Nat32
-  var z: Nat32
-  
-  x = 123
-  printf("x = %d\n", x)
-  
-  y = 042
-  printf("y = %d\n", y)
-  
-  z = 0x2A  // 0x2A == 42
-  printf("z = %d\n", z)
+func main () -> Int32 {
+    var x: Nat32
+    x = 123
+    printf("x = %i\n", x)
+
+    var y: Nat32
+    y = 042
+    printf("y = %i\n", y)
+
+    var z: Nat32
+    z = 0x2A  // 0x2A == 42
+    printf("z = %i\n", z)
+
+    return 0
 }
 ```
 
