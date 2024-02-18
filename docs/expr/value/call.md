@@ -25,5 +25,7 @@ func main() -> Int {
     // and print result value
     let y = function_3(42)
     print("function_3 returns %i\n", y)
+    
+    return 0
 }
 ```
