@@ -1,12 +1,13 @@
 // lib/lightfood/memory.cm
 
-const __SYSTEM__ = 64
 
-// machine-depended typedefs
-@if __SYSTEM__ == 64
-type CPU_Word Nat64
-@elseif __SYSTEM__ == 32
-type CPU_Word Nat32
+const __SYSTEM_WIDTH__ = 64
+
+
+@if __SYSTEM_WIDTH__ == 64
+type CPU_Word Int64
+@elseif __SYSTEM_WIDTH__ == 32
+type CPU_Word Int32
 @endif
 
 
@@ -83,5 +84,4 @@ func memeq(mem0: Pointer, mem1: Pointer, len: Nat64) -> Bool {
 
     return true
 }
-
 
