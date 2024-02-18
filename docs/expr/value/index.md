@@ -46,7 +46,7 @@ var ptr_to_array = &array
 func main() -> Int {
     var i = 0
     while i < arrayLength {
-        // index array
+        // index pointer to array
         let array_item = ptr_to_array[i]
 
         printf("ptr_to_array[%i] = %i\n", i, array_item)
