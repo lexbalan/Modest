@@ -2,17 +2,17 @@
 
 ```zig
 func function_1() -> Unit {
-    //
+    printf("function_1()\n")
 }
 
 func function_2(x: Int32) {
-    //
+    printf("function_2(%i)\n", x)
 }
 
 func function_3(x: Int32) -> Int32 {
-    //
+    printf("function_3(%i)\n", x)
+    return x + 1
 }
-
 
 func main() -> Int {
     // just call
