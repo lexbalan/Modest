@@ -44,7 +44,7 @@ func main() -> Int {
 ```
 
 
-# Call of pointer to func value
+#### Call of pointer to func value
 
 ```zig
 func function_1() -> Unit {
