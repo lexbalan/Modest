@@ -54,11 +54,13 @@ int main()
 
     struct sockaddr_in server_addr;
     server_addr = (struct sockaddr_in){
+        .sin_len = 0,
         .sin_family = AF_INET,
         .sin_port = PORT,
         .sin_addr = (struct in_addr){
-            .s_addr = (unsigned long)inet_addr("127.0.0.1")
-        }
+            .s_addr = inet_addr("127.0.0.1")
+        },
+        .sin_zero = {}
     };
 
     struct sockaddr *const sockaddr = (struct sockaddr *)(void *)&server_addr;

@@ -102,7 +102,7 @@ def note(s, ti=None):
 
 
 def info(s, ti=None):
-    common_message('error: ', COLOR_INFO, s, ti)
+    common_message('info: ', COLOR_INFO, s, ti)
 
 
 def warning(s, ti=None):

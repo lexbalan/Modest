@@ -38,7 +38,7 @@ func main() -> Int {
         sin_family = AF_INET
         sin_port = PORT
         sin_addr = {
-            s_addr = inet_addr(IP_ADDRESS) to UnsignedLong
+            s_addr = inet_addr(IP_ADDRESS)
         }
     } to Struct_sockaddr_in
 
