@@ -9,7 +9,7 @@
     <pointer_to_array_value>[<index_value>]
 ```
 
-#### Examples
+### Examples
 
 ##### Array Index
 

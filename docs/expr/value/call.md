@@ -1,6 +1,4 @@
 
-
-
 # Value Expression Call
 
 ```
@@ -11,7 +9,7 @@
     <pointer_to_func_value>(<arglist>)
 ```
 
-#### Examples
+### Examples
 
 #### Call of func value
 
