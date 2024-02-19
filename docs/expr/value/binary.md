@@ -122,9 +122,15 @@ Returns result of ***xor*** operation between *left* and *right* arguments.
 
 # *Bitwise* operations
 
-> Valid arguments type: [*Byte*](../../types.md#Byte-type), [*Integer*](../../types.md#Integer-type)
+Result type will the same as type of received arguments.
+
+> Valid left argument type: [*Byte*](../../types.md#Byte-type), [*Integer*](../../types.md#Integer-type)
+
+> Valid right argument type: [*Integer*](../../types.md#Integer-type)
 
 ### ShL (Shift to the Left)
+
+Allow that type(left) will not be equal to type(right).
 
 ```zig
     a << b
@@ -133,6 +139,8 @@ Returns result of ***xor*** operation between *left* and *right* arguments.
 > type(a) can be different from type(b)
 
 ### ShR (Shift to the Right)
+
+Allow that type(left) will not be equal to type(right). 
 
 ```zig
     a >> b
