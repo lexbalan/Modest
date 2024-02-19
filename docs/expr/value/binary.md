@@ -23,12 +23,14 @@
 ```
 
 ### Eq (Equal)
-Comparison operation. Result type is [***Bool***](). Returns ***true*** when *left* argument is **equal** to the *right*, otherwise returns ***false***.
+Comparison operation. Result type is [***Bool***](../../types.md#Bool-type). Returns ***true*** when *left* argument is **equal** to the *right*, otherwise returns ***false***.
+You also can check for equality [***Array***](../../types.md#Array-type) and [***Record***](../../types.md#Record-type) values.
 ```zig
     let x = a == b
 ```
 
 ### NE (Not Equal)
+Similar to the [equality-comparison operator](#Eq), but returns ***true*** when *left* argument is **not-equal** to the *right*, otherwise returns ***false***.
 ```zig
     let x = a != b
 ```
