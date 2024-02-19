@@ -7,11 +7,12 @@
 
 
 
-## *Logical* & *Bitwise* operations
+## *Logical & Bitwise* operations
+
+> Valid types: [*Bool*](../../types.md#Bool-type), [*Byte*](../../types.md#Byte-type), [*Integer*](../../types.md#Integer-types)
 
 ### Or
 Is *Logical* when arguments are Bool, otherwise is *Bitwise*. Requires that **type(*left*)** will be equal to **type(*right*)**. Result type will the same as type of received arguments. Returns result of ***or*** operation between *left* and *right* arguments.
-> Valid types: [*Bool*](../../types.md#Bool-type), [*Byte*](../../types.md#Byte-type), [*Integer*](../../types.md#Integer-types)
 
 ```zig
     let x = a or b
@@ -32,11 +33,11 @@ Similar to the [Or](#Or-logical-bitwise), but returns result of ***xor*** operat
 
 ## *Equality* operations
 
+> Valid types: [*Bool*](../../types.md#Bool-type), [*Byte*](../../types.md#Byte-type), [*Integer*](../../types.md#Integer-type), [*Float*](../../types.md#Float-type), [*Char*](../../types.md#Char-type), [*Pointer*](../../types.md#Pointer-type), [*Array*](../../types.md#Array-type), [*Record*](../../types.md#Record-type)
+
 ### Eq (Equal)
 Requires that **type(*left*)** will be equal to **type(*right*)**. Result type is [***Bool***](../../types.md#Bool-type). Returns ***true*** when *left* is **equal** to the *right*, otherwise returns ***false***.
 You also can check for equality [***Array***](../../types.md#Array-type) and [***Record***](../../types.md#Record-type) values.
-
-> Valid types: [*Bool*](../../types.md#Bool-type), [*Byte*](../../types.md#Byte-type), [*Integer*](../../types.md#Integer-type), [*Float*](../../types.md#Float-type), [*Char*](../../types.md#Char-type), [*Pointer*](../../types.md#Pointer-type), [*Array*](../../types.md#Array-type), [*Record*](../../types.md#Record-type)
 
 ```zig
     let x = a == b
@@ -51,10 +52,10 @@ Similar to the [equality-comparison operator](#Eq-Equal), but returns ***true***
 
 ## *Comparison* operations
 
+> Valid types: [*Integer*](../../types.md#Integer-type), [*Float*](../../types.md#Float-type)
+
 ### LT (Less Than)
 Requires that **type(*left*)** will be equal to **type(*right*)**. Result type is [***Bool***](../../types.md#Bool-type). Returns ***true*** when *left* is **less than** *right*, otherwise returns ***false***.
-
-> Valid types: [*Integer*](../../types.md#Integer-type), [*Float*](../../types.md#Float-type)
 
 ```zig
     let x = a < b
@@ -81,10 +82,10 @@ Similar to the [LT](#LT-Less-Than), but returns ***true*** when *left* is **less
 
 # *Arithmetical* operations
 
+> Valid types: [*Integer*](../../types.md#Integer-type), [*Float*](../../types.md#Float-type)
+
 ### Add (addition)
 Requires that **type(*left*)** will be equal to **type(*right*)**. Result type will the same as type of received arguments. Returns ***sum*** of *left* and *right* arguments.
-
-> Valid types: [*Integer*](../../types.md#Integer-type), [*Float*](../../types.md#Float-type)
 
 ```zig
     let x = a + b
