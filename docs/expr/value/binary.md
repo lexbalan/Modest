@@ -72,6 +72,9 @@ You also can check for equality [***Array***](../../types.md#Array-type) and [**
 
 ### Add (addition)
 *Arithmetical* operation. Requires that **type(*left*)** will be equal to **type(*right*)**. Result type will the same as type of received arguments. Returns ***sum*** of *left* and *right* arguments.
+
+> Valid types: [*Integer*](../../types.md#Integer-type), [*Float*](../../types.md#Float-type)
+
 ```zig
     let x = a + b
 ```
