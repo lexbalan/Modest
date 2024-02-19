@@ -18,7 +18,7 @@
 |Comparison|Integer, Float|Bool|-|
 |Arithmetical|Integer, Float|type(left)|-|
 |Logical and Bitwise|Bool, Byte, Integer|type(left)|-|
-|Shift|Integer (& Byte only as left argument)| 
+|Shift|Integer (& Byte only as left argument)| type(left) |-|
 
 
 
