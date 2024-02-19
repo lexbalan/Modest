@@ -9,7 +9,7 @@
 - [*Equality* operations](#Equality-operations)
 - [*Comparison* operations](#Comparison-operations)
 - [*Arithmetical* operations](#Arithmetical-operations)
-- [*Logical & Bitwise* operations](#Logical-Bitwise-operations)
+- [*Logical & Bitwise* operations](#Logical-&-Bitwise-operations)
 - [*Bitwise* operations](#Bitwise-operations)
 
 
