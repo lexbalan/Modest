@@ -9,6 +9,7 @@
 
 ### Or (logical & bitwise)
 *Logical & Bitwise* operation. Is *Logical* when arguments are Bool, otherwise is *Bitwise*. Requires that **type(*left*)** will be equal to **type(*right*)**. Result type will the same as type of received arguments. Returns result of ***or*** operation between *left* and *right* arguments.
+> Valid types: [*Bool*](../../types.md#Bool-type), [*Byte*](../../types.md#Byte-type), [*Integer*](../../types.md#Integer-types)
 ```zig
     let x = a or b
 ```
