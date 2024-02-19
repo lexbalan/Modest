@@ -13,7 +13,7 @@
 - [*Bitwise* operations](#Bitwise-operations)
 
 
-#### Common form
+> Common form
 ```
     <left_value> <operator> <right_value>
 ```
