@@ -30,13 +30,13 @@
 
 
 - [Statements](./stmt/README.md)
+  * [If](./stmt/if.md)
+  * [While](./stmt/while.md)
+  * [Return](./stmt/return.md)
   * [Variable definiiton](./stmt/var.md)
   * [Constant definiiton](./stmt/const.md)
   * [Value evaluation](./stmt/eval.md)
   * [Variable assignation](./stmt/assign.md)
-  * [If](./stmt/if.md)
-  * [While](./stmt/while.md)
-  * [Return](./stmt/return.md)
 
 - [Compiler Optons]
   * [Usage](./USAGE.md)
