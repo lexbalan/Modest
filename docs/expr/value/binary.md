@@ -6,31 +6,6 @@
 * For all binary operations type of result is type of arguments. (Exception - ShL & ShR operations, when result type is type(left) and comparison operations, when result type is always [*Bool*](../../types.md#Bool-type))
 
 
-
-## *Logical & Bitwise* operations
-
-> Valid types for *Logical & Bitwise operations*: [*Bool*](../../types.md#Bool-type), [*Byte*](../../types.md#Byte-type), [*Integer*](../../types.md#Integer-types)
-
-### Or
-Is *Logical* when arguments are Bool, otherwise is *Bitwise*. Requires that **type(*left*)** will be equal to **type(*right*)**. Result type will the same as type of received arguments. Returns result of ***or*** operation between *left* and *right* arguments.
-
-```zig
-    let x = a or b
-```
-
-### And
-Similar to the [Or](#Or-logical-bitwise), but returns result of ***and*** operation between *left* and *right* arguments.
-```zig
-    let x = a and b
-```
-
-### XOR
-Similar to the [Or](#Or-logical-bitwise), but returns result of ***xor*** operation between *left* and *right* arguments.
-```zig
-    let x = a xor b
-```
-
-
 ## *Equality* operations
 
 > Valid types for *Equality operations*: [*Bool*](../../types.md#Bool-type), [*Byte*](../../types.md#Byte-type), [*Char*](../../types.md#Char-type), [*Integer*](../../types.md#Integer-type), [*Float*](../../types.md#Float-type), [*Array*](../../types.md#Array-type), [*Record*](../../types.md#Record-type), [*Pointer*](../../types.md#Pointer-type)
@@ -113,6 +88,30 @@ Similar to the [Add](#Add-addition), but returns the result of dividing the *lef
 Similar to the [Add](#Add-addition), but returns the remainder of dividing the *left* argument by the *right* argument.
 ```zig
     let x = a % b
+```
+
+
+## *Logical & Bitwise* operations
+
+> Valid types for *Logical & Bitwise operations*: [*Bool*](../../types.md#Bool-type), [*Byte*](../../types.md#Byte-type), [*Integer*](../../types.md#Integer-types)
+
+### Or
+Is *Logical* when arguments are Bool, otherwise is *Bitwise*. Requires that **type(*left*)** will be equal to **type(*right*)**. Result type will the same as type of received arguments. Returns result of ***or*** operation between *left* and *right* arguments.
+
+```zig
+    let x = a or b
+```
+
+### And
+Similar to the [Or](#Or-logical-bitwise), but returns result of ***and*** operation between *left* and *right* arguments.
+```zig
+    let x = a and b
+```
+
+### XOR
+Similar to the [Or](#Or-logical-bitwise), but returns result of ***xor*** operation between *left* and *right* arguments.
+```zig
+    let x = a xor b
 ```
 
 
