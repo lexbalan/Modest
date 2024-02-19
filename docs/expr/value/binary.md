@@ -1,16 +1,26 @@
 
 # Binary Value Expressions
 
-
-* All binary operations require that type(left) == type(right). (Only exception - ShL & ShR operations)
-* For all binary operations type of result is type of arguments. (Exception - ShL & ShR operations, when result type is type(left) and comparison operations, when result type is always [*Bool*](../../types.md#Bool-type))
+* Binary value experssion received two arguments and returns result of operation.
+* All binary operations require that type(left) == type(right) (Only exception - ShL & ShR operations).
 
 
 - [*Equality* operations](#Equality-operations)
 - [*Comparison* operations](#Comparison-operations)
 - [*Arithmetical* operations](#Arithmetical-operations)
 - [*Logical and Bitwise* operations](#Logical-and-Bitwise-operations)
-- [*Bitwise* operations](#Bitwise-operations)
+- [*Shift* operations](#Bitwise-operations)
+
+
+| Operation Kind | Valid Argument Types | Result type | Comment |
+| :------------: | :------------------: | :---------: | :-----: |
+|Equality|Bool, Byte, Char, Integer, Float, Array, Record, Pointer|Bool|-|
+|Comparison|Integer, Float|Bool|-|
+|Arithmetical|Integer, Float|type(left)|-|
+|Logical and Bitwise|Bool, Byte, Integer|type(left)|-|
+|Shift|Integer (& Byte only as left argument)| 
+
+
 
 
 #### Common form
@@ -133,7 +143,7 @@ Returns result of ***xor*** operation between *left* and *right* arguments.
 ```
 
 
-# *Bitwise* operations
+# *Shift* operations
 
 Result type will the same as *left* argument type.
 
