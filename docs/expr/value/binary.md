@@ -8,19 +8,19 @@
 
 
 ### Or (logical & bitwise)
-*Logical* operation. Requires that **type(*left*)** will be equal to **type(*right*)**. Result type will the same as type of received arguments. Returns result of ***or*** operation between *left* and *right* arguments.
+*Logical & Bitwise* operation. Is *Logical* when arguments are Bool, otherwise is *Bitwise*. Requires that **type(*left*)** will be equal to **type(*right*)**. Result type will the same as type of received arguments. Returns result of ***or*** operation between *left* and *right* arguments.
 ```zig
     let x = a or b
 ```
 
 ### And (logical & bitwise)
-*Logical* operation. Similar to the [Or](#Or-logical-bitwise), but returns result of ***and*** operation between *left* and *right* arguments.
+*Logical & Bitwise* operation. Similar to the [Or](#Or-logical-bitwise), but returns result of ***and*** operation between *left* and *right* arguments.
 ```zig
     let x = a and b
 ```
 
 ### XOR (eXclude Or) (logical & bitwise)
-*Logical* operation. Similar to the [Or](#Or-logical-bitwise), but returns result of ***xor*** operation between *left* and *right* arguments.
+*Logical & Bitwise* operation. Similar to the [Or](#Or-logical-bitwise), but returns result of ***xor*** operation between *left* and *right* arguments.
 ```zig
     let x = a xor b
 ```
@@ -93,6 +93,7 @@ You also can check for equality [***Array***](../../types.md#Array-type) and [**
 ```
 
 ### ShL (Shift to the Left)
+*Bitwise* operation.
 ```zig
     let x = a << b
 ```
@@ -100,6 +101,7 @@ You also can check for equality [***Array***](../../types.md#Array-type) and [**
 > type(a) can be different from type(b)
 
 ### ShR (Shift to the Right)
+*Bitwise* operation.
 ```zig
     let x = a >> b
 ```
