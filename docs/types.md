@@ -84,9 +84,9 @@ while not b {
 ```
 
 
-### Integer types
+### Integer type
 
-#### Signed integer types
+#### Signed integer type
 ```zig
 Int8, Int16, Int32, Int64, Int128
 ```
@@ -110,7 +110,7 @@ func main () -> Unit {
 > Result: `a < b`
 
 
-#### Unsigned integer types
+#### Unsigned integer type
 ```zig
 Nat8, Nat16, Nat32, Nat64, Nat128
 ```
@@ -135,7 +135,7 @@ func main () -> Unit {
 
 
 
-### Float types
+### Float type
 
 Float types
 ```zig
@@ -186,7 +186,7 @@ if a == b {
 
 
 
-### Array types
+### Array type
 There is *defined* arrays:
 ```zig
 [10]Int32  // array with ten Int32 elements
@@ -266,7 +266,7 @@ printf(s)
 
 
 
-### Record types
+### Record type
 Record type is a composite type, that can contain inside values of any *another* type.
 ```zig
 record {x: Float64, y: Float64}
