@@ -129,7 +129,7 @@ Returns result of ***xor*** operation between *left* and *right* arguments.
 
 # *Bitwise* operations
 
-Result type will the same as type of received arguments.
+Result type will the same as *left* argument type.
 
 > Valid left argument type: [*Byte*](../../types.md#Byte-type), [*Integer*](../../types.md#Integer-type)
 
