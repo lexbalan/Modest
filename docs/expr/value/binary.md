@@ -66,25 +66,25 @@ Arithmetical operation. Requires that **type(*left*)** will be equal to **type(*
 ```
 
 ### Sub (subtraction)
-Similar to the [Add](#Add-addition), but returns difference between *left* and *right* arguments.
+Arithmetical operation. Similar to the [Add](#Add-addition), but returns difference between *left* and *right* arguments.
 ```zig
     let x = a - b
 ```
 
 ### Mul (multiplication)
-Similar to the [Add](#Add-addition), but returns multiplication result of *left* and *right* arguments.
+Arithmetical operation. Similar to the [Add](#Add-addition), but returns multiplication result of *left* and *right* arguments.
 ```zig
     let x = a * b
 ```
 
 ### Div (division)
-Similar to the [Add](#Add-addition), but returns the result of dividing the *left* argument by the *right* argument.
+Arithmetical operation. Similar to the [Add](#Add-addition), but returns the result of dividing the *left* argument by the *right* argument.
 ```zig
     let x = a / b
 ```
 
 ### Rem (remainder of the division)
-Similar to the [Add](#Add-addition), but returns the remainder of dividing the *left* argument by the *right* argument.
+Arithmetical operation. Similar to the [Add](#Add-addition), but returns the remainder of dividing the *left* argument by the *right* argument.
 ```zig
     let x = a % b
 ```
