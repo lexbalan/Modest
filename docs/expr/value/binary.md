@@ -23,38 +23,38 @@
 ```
 
 ### Eq (Equal)
-Comparison operation. Result value type is [***Bool***](../../types.md#Bool-type). Returns ***true*** when *left* argument is **equal** to the *right*, otherwise returns ***false***.
+Comparison operation. Result value type is [***Bool***](../../types.md#Bool-type). Returns ***true*** when *left* is **equal** to the *right*, otherwise returns ***false***.
 You also can check for equality [***Array***](../../types.md#Array-type) and [***Record***](../../types.md#Record-type) values.
 ```zig
     let x = a == b
 ```
 
 ### NE (Not Equal)
-Similar to the [equality-comparison operator](#Eq-Equal), but returns ***true*** when *left* argument is **not equal** to the *right*, otherwise returns ***false***.
+Similar to the [equality-comparison operator](#Eq-Equal), but returns ***true*** when *left* is **not equal** to the *right*, otherwise returns ***false***.
 ```zig
     let x = a != b
 ```
 
 ### LT (Less Than)
-Comparison operation. Result value type is [***Bool***](../../types.md#Bool-type). Returns ***true*** when *left* argument is **less than** *right*, otherwise returns ***false***.
+Comparison operation. Result value type is [***Bool***](../../types.md#Bool-type). Returns ***true*** when *left* is **less than** *right*, otherwise returns ***false***.
 ```zig
     let x = a < b
 ```
 
 ### GT (Greater Than)
-Comparison operation. Result value type is [***Bool***](../../types.md#Bool-type). Returns ***true*** when *left* argument is **greater than** *right*, otherwise returns ***false***.
+Comparison operation. Result value type is [***Bool***](../../types.md#Bool-type). Returns ***true*** when *left* is **greater than** *right*, otherwise returns ***false***.
 ```zig
     let x = a > b
 ```
 
 ### LE (Greater than or Equal)
-Comparison operation. Result value type is [***Bool***](../../types.md#Bool-type). Returns ***true*** when *left* argument is **greater than or equal** *right*, otherwise returns ***false***.
+Comparison operation. Result value type is [***Bool***](../../types.md#Bool-type). Returns ***true*** when *left* is **greater than or equal** *right*, otherwise returns ***false***.
 ```zig
     let x = a <= b
 ```
 
 ### GE (Less than or Equal)
-Comparison operation. Result value type is [***Bool***](../../types.md#Bool-type). Returns ***true*** when *left* argument is **less than or equal** *right*, otherwise returns ***false***.
+Comparison operation. Result value type is [***Bool***](../../types.md#Bool-type). Returns ***true*** when *left* is **less than or equal** *right*, otherwise returns ***false***.
 ```zig
     let x = a >= b
 ```
