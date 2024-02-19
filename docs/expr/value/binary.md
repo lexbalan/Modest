@@ -9,7 +9,7 @@
 
 ## *Logical & Bitwise* operations
 
-> Valid types: [*Bool*](../../types.md#Bool-type), [*Byte*](../../types.md#Byte-type), [*Integer*](../../types.md#Integer-types)
+> Valid types for *Logical & Bitwise operations*: [*Bool*](../../types.md#Bool-type), [*Byte*](../../types.md#Byte-type), [*Integer*](../../types.md#Integer-types)
 
 ### Or
 Is *Logical* when arguments are Bool, otherwise is *Bitwise*. Requires that **type(*left*)** will be equal to **type(*right*)**. Result type will the same as type of received arguments. Returns result of ***or*** operation between *left* and *right* arguments.
@@ -33,7 +33,7 @@ Similar to the [Or](#Or-logical-bitwise), but returns result of ***xor*** operat
 
 ## *Equality* operations
 
-> Valid types: [*Bool*](../../types.md#Bool-type), [*Byte*](../../types.md#Byte-type), [*Char*](../../types.md#Char-type), [*Integer*](../../types.md#Integer-type), [*Float*](../../types.md#Float-type), [*Array*](../../types.md#Array-type), [*Record*](../../types.md#Record-type), [*Pointer*](../../types.md#Pointer-type)
+> Valid types for *Equality operations*: [*Bool*](../../types.md#Bool-type), [*Byte*](../../types.md#Byte-type), [*Char*](../../types.md#Char-type), [*Integer*](../../types.md#Integer-type), [*Float*](../../types.md#Float-type), [*Array*](../../types.md#Array-type), [*Record*](../../types.md#Record-type), [*Pointer*](../../types.md#Pointer-type)
 
 ### Eq (Equal)
 Requires that **type(*left*)** will be equal to **type(*right*)**. Result type is [***Bool***](../../types.md#Bool-type). Returns ***true*** when *left* is **equal** to the *right*, otherwise returns ***false***.
@@ -52,7 +52,7 @@ Similar to the [equality-comparison operator](#Eq-Equal), but returns ***true***
 
 ## *Comparison* operations
 
-> Valid types: [*Integer*](../../types.md#Integer-type), [*Float*](../../types.md#Float-type)
+> Valid types for *Comparison operations*: [*Integer*](../../types.md#Integer-type), [*Float*](../../types.md#Float-type)
 
 ### LT (Less Than)
 Requires that **type(*left*)** will be equal to **type(*right*)**. Result type is [***Bool***](../../types.md#Bool-type). Returns ***true*** when *left* is **less than** *right*, otherwise returns ***false***.
@@ -82,7 +82,7 @@ Similar to the [LT](#LT-Less-Than), but returns ***true*** when *left* is **less
 
 # *Arithmetical* operations
 
-> Valid types: [*Integer*](../../types.md#Integer-type), [*Float*](../../types.md#Float-type)
+> Valid types for *Arithmetical operations*: [*Integer*](../../types.md#Integer-type), [*Float*](../../types.md#Float-type)
 
 ### Add (addition)
 Requires that **type(*left*)** will be equal to **type(*right*)**. Result type will the same as type of received arguments. Returns ***sum*** of *left* and *right* arguments.
@@ -117,6 +117,8 @@ Similar to the [Add](#Add-addition), but returns the remainder of dividing the *
 
 
 # *Bitwise* operations
+
+> Valid types for *Bitwise operations*: [*Byte*](../../types.md#Byte-type), [*Integer*](../../types.md#Integer-type)
 
 ### ShL (Shift to the Left)
 
