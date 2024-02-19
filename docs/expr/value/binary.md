@@ -53,19 +53,19 @@ You also can check for equality [***Array***](../../types.md#Array-type) and [**
 ```
 
 ### GT (Greater Than)
-*Comparison* operation. Requires that **type(*left*)** will be equal to **type(*right*)**. Result type is [***Bool***](../../types.md#Bool-type). Returns ***true*** when *left* is **greater than** *right*, otherwise returns ***false***.
+*Comparison* operation. Similar to the [LT](#LT-Less-Than), but returns ***true*** when *left* is **greater than** *right*, otherwise returns ***false***.
 ```zig
     let x = a > b
 ```
 
 ### LE (Greater than or Equal)
-*Comparison* operation. Requires that **type(*left*)** will be equal to **type(*right*)**. Result type is [***Bool***](../../types.md#Bool-type). Returns ***true*** when *left* is **greater than or equal** *right*, otherwise returns ***false***.
+*Comparison* operation. Similar to the [LT](#LT-Less-Than), but returns ***true*** when *left* is **greater than or equal** *right*, otherwise returns ***false***.
 ```zig
     let x = a <= b
 ```
 
 ### GE (Less than or Equal)
-*Comparison* operation. Requires that **type(*left*)** will be equal to **type(*right*)**. Result type is [***Bool***](../../types.md#Bool-type). Returns ***true*** when *left* is **less than or equal** *right*, otherwise returns ***false***.
+*Comparison* operation. Similar to the [LT](#LT-Less-Than), but returns ***true*** when *left* is **less than or equal** *right*, otherwise returns ***false***.
 ```zig
     let x = a >= b
 ```
