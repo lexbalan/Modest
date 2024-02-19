@@ -8,22 +8,25 @@
 
 
 ### Or (logical & bitwise)
+*Logical* operation. Requires that **type(*left*)** will be equal to **type(*right*)**. Result type will the same as type of received arguments. Returns result of ***or*** operation between *left* and *right* arguments.
 ```zig
     let x = a or b
 ```
 
 ### And (logical & bitwise)
+*Logical* operation. Similar to the [Or](#Or-logical-bitwise), but returns result of ***and*** operation between *left* and *right* arguments.
 ```zig
     let x = a and b
 ```
 
 ### XOR (eXclude Or) (logical & bitwise)
+*Logical* operation. Similar to the [Or](#Or-logical-bitwise), but returns result of ***xor*** operation between *left* and *right* arguments.
 ```zig
     let x = a xor b
 ```
 
 ### Eq (Equal)
-*Comparison* operation. Result type is [***Bool***](../../types.md#Bool-type). Returns ***true*** when *left* is **equal** to the *right*, otherwise returns ***false***.
+*Comparison* operation. Requires that **type(*left*)** will be equal to **type(*right*)**. Result type is [***Bool***](../../types.md#Bool-type). Returns ***true*** when *left* is **equal** to the *right*, otherwise returns ***false***.
 You also can check for equality [***Array***](../../types.md#Array-type) and [***Record***](../../types.md#Record-type) values.
 ```zig
     let x = a == b
@@ -36,31 +39,31 @@ You also can check for equality [***Array***](../../types.md#Array-type) and [**
 ```
 
 ### LT (Less Than)
-*Comparison* operation. Result type is [***Bool***](../../types.md#Bool-type). Returns ***true*** when *left* is **less than** *right*, otherwise returns ***false***.
+*Comparison* operation. Requires that **type(*left*)** will be equal to **type(*right*)**. Result type is [***Bool***](../../types.md#Bool-type). Returns ***true*** when *left* is **less than** *right*, otherwise returns ***false***.
 ```zig
     let x = a < b
 ```
 
 ### GT (Greater Than)
-*Comparison* operation. Result type is [***Bool***](../../types.md#Bool-type). Returns ***true*** when *left* is **greater than** *right*, otherwise returns ***false***.
+*Comparison* operation. Requires that **type(*left*)** will be equal to **type(*right*)**. Result type is [***Bool***](../../types.md#Bool-type). Returns ***true*** when *left* is **greater than** *right*, otherwise returns ***false***.
 ```zig
     let x = a > b
 ```
 
 ### LE (Greater than or Equal)
-*Comparison* operation. Result type is [***Bool***](../../types.md#Bool-type). Returns ***true*** when *left* is **greater than or equal** *right*, otherwise returns ***false***.
+*Comparison* operation. Requires that **type(*left*)** will be equal to **type(*right*)**. Result type is [***Bool***](../../types.md#Bool-type). Returns ***true*** when *left* is **greater than or equal** *right*, otherwise returns ***false***.
 ```zig
     let x = a <= b
 ```
 
 ### GE (Less than or Equal)
-*Comparison* operation. Result type is [***Bool***](../../types.md#Bool-type). Returns ***true*** when *left* is **less than or equal** *right*, otherwise returns ***false***.
+*Comparison* operation. Requires that **type(*left*)** will be equal to **type(*right*)**. Result type is [***Bool***](../../types.md#Bool-type). Returns ***true*** when *left* is **less than or equal** *right*, otherwise returns ***false***.
 ```zig
     let x = a >= b
 ```
 
 ### Add (addition)
-*Arithmetical* operation. Requires that **type(*left*)** will be equal to **type(*right*)**. Result value type will the same as type of received arguments. Returns ***sum*** of *left* and *right* arguments.
+*Arithmetical* operation. Requires that **type(*left*)** will be equal to **type(*right*)**. Result type will the same as type of received arguments. Returns ***sum*** of *left* and *right* arguments.
 ```zig
     let x = a + b
 ```
