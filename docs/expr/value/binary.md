@@ -3,7 +3,7 @@
 
 
 * All binary operations require that type(left) == type(right). (Only exception - ShL & ShR operations)
-* For all binary operations type of result is type of arguments. (Exception - ShL & ShR operations, when result type is type(left) and comparison operations, when result type is always [*Bool*](../../type.md#Bool))
+* For all binary operations type of result is type of arguments. (Exception - ShL & ShR operations, when result type is type(left) and comparison operations, when result type is always [*Bool*](../../types.md#Bool))
 
 
 
