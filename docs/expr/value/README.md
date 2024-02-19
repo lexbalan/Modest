@@ -6,6 +6,16 @@
 * [Numeric value expression](./numeric.md)
 * [String value expression](./string.md)
 
+| Literal Kind | Examples | Type |
+| :----------: | :------: | :--: |
+| Numeric | `0, 1, 0xF` | GenericInteger |
+| Rational | `0.5, 3.14, .125` | GenericFloat |
+| Boolean | `false, true` | Bool |
+| String | `"Hello!"` | GenericArray |
+| Array | `[1, 2, 3]` | GenericArray |
+| Record | `{x=10, y=20}` | GenericRecord |
+
+
 ### Binary & Unary operations
 
 | Operation Kind | Operation| Valid Argument Types | Result type | Comment |
@@ -18,7 +28,7 @@
 
 * [Binary value expression](./binary.md)
 * [Unary value expression](./unary.md)
-  
+
 
 
 ### Special operations
@@ -27,8 +37,6 @@
 * [Access value expression](./access.md)
 * [Cast value expression](./cast.md)
 * [Sizeof value expression](./sizeof.md)
-
-
 
 
 
