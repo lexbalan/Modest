@@ -13,6 +13,12 @@
 - [*Bitwise* operations](#Bitwise-operations)
 
 
+#### Common form
+```
+    <left_value> <operator> <right_value>
+```
+
+
 ## *Equality* operations
 
 Requires that **type(*left*)** will be equal to **type(*right*)**. Result type is [***Bool***](../../types.md#Bool-type). 
