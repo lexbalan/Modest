@@ -295,7 +295,7 @@ printf("p.y = %f\n", p.y)
 
 
 
-### Pointer types
+### Pointer type
 
 
 #### Free pointer type
