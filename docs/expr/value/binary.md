@@ -31,7 +31,7 @@
 *Comparison* operation. Requires that **type(*left*)** will be equal to **type(*right*)**. Result type is [***Bool***](../../types.md#Bool-type). Returns ***true*** when *left* is **equal** to the *right*, otherwise returns ***false***.
 You also can check for equality [***Array***](../../types.md#Array-type) and [***Record***](../../types.md#Record-type) values.
 
-> Valid types: [*Bool*](../../types.md#Bool-type), [*Byte*](../../types.md#Byte-type), [*Integer*](../../types.md#Integer-type), [*Char*](../../types.md#Char-type), [*Pointer*](../../types.md#Pointer-type), [*Array*](../../types.md#Array-type), [*Record*](../../types.md#Record-type)
+> Valid types: [*Bool*](../../types.md#Bool-type), [*Byte*](../../types.md#Byte-type), [*Integer*](../../types.md#Integer-type), [*Float*](../../types.md#Float-type), [*Char*](../../types.md#Char-type), [*Pointer*](../../types.md#Pointer-type), [*Array*](../../types.md#Array-type), [*Record*](../../types.md#Record-type)
 
 ```zig
     let x = a == b
@@ -45,6 +45,9 @@ You also can check for equality [***Array***](../../types.md#Array-type) and [**
 
 ### LT (Less Than)
 *Comparison* operation. Requires that **type(*left*)** will be equal to **type(*right*)**. Result type is [***Bool***](../../types.md#Bool-type). Returns ***true*** when *left* is **less than** *right*, otherwise returns ***false***.
+
+> Valid types: [*Integer*](../../types.md#Integer-type), [*Float*](../../types.md#Float-type)
+
 ```zig
     let x = a < b
 ```
