@@ -9,7 +9,7 @@
 - [*Equality* operations](#Equality-operations)
 - [*Comparison* operations](#Comparison-operations)
 - [*Arithmetical* operations](#Arithmetical-operations)
-- [*Logical & Bitwise* operations](#Logical-&-Bitwise-operations)
+- [*Logical & Bitwise* operations](#Logical-and-Bitwise-operations)
 - [*Bitwise* operations](#Bitwise-operations)
 
 
@@ -102,7 +102,7 @@ Returns the remainder of dividing the *left* argument by the *right* argument.
 ```
 
 
-## *Logical & Bitwise* operations
+## *Logical and Bitwise* operations
 Is *Logical* when arguments type is Bool, otherwise is *Bitwise*. Requires that **type(*left*)** will be equal to **type(*right*)**. Result type will the same as type of received arguments.
 
 > Valid arguments type: [*Bool*](../../types.md#Bool-type), [*Byte*](../../types.md#Byte-type), [*Integer*](../../types.md#Integer-types)
