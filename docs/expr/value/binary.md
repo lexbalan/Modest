@@ -30,7 +30,7 @@ You also can check for equality [***Array***](../../types.md#Array-type) and [**
 ```
 
 ### NE (Not Equal)
-Similar to the [equality-comparison operator](#Eq-Equal), but returns ***true*** when *left* is **not equal** to the *right*, otherwise returns ***false***.
+Comparison operation. Similar to the [equality-comparison operator](#Eq-Equal), but returns ***true*** when *left* is **not equal** to the *right*, otherwise returns ***false***.
 ```zig
     let x = a != b
 ```
