@@ -15,7 +15,7 @@
 
 #### Common form
 ```
-    <left_value> <operator> <right_value>
+    <left_value_expression> <operator> <right_value_expression>
 ```
 
 
