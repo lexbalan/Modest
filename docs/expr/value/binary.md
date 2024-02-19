@@ -60,27 +60,31 @@ Comparison operation. Result value type is [***Bool***](../../types.md#Bool-type
 ```
 
 ### Add (addition)
-Arithmetical operation. Requires that **type(*left*)** will be equal to **type(*right*)**. Result value type will the same as type of received arguments. Returns ***sum*** of *left* and *right*.
+Arithmetical operation. Requires that **type(*left*)** will be equal to **type(*right*)**. Result value type will the same as type of received arguments. Returns ***sum*** of *left* and *right* arguments.
 ```zig
     let x = a + b
 ```
 
 ### Sub (subtraction)
+Similar to the [Add](#Add-addition), but returns difference between *left* and *right* arguments.
 ```zig
     let x = a - b
 ```
 
 ### Mul (multiplication)
+Similar to the [Add](#Add-addition), but returns multiplication result of *left* and *right* arguments.
 ```zig
     let x = a * b
 ```
 
 ### Div (division)
+Similar to the [Add](#Add-addition), but returns the result of dividing the *left* argument by the *right* argument.
 ```zig
     let x = a / b
 ```
 
 ### Rem (remainder of the division)
+Similar to the [Add](#Add-addition), but returns the remainder of dividing the *left* argument by the *right* argument.
 ```zig
     let x = a % b
 ```
