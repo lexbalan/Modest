@@ -16,14 +16,14 @@ Requires that **type(*left*)** will be equal to **type(*right*)**. Result type i
 Returns ***true*** when *left* is **equal** to the *right*, otherwise returns ***false***.
 
 ```zig
-    let x = a == b
+    a == b
 ```
 
 ### NE (Not Equal)
 Returns ***true*** when *left* is **not equal** to the *right*, otherwise returns ***false***.
 
 ```zig
-    let x = a != b
+    a != b
 ```
 
 
@@ -36,30 +36,30 @@ Requires that **type(*left*)** will be equal to **type(*right*)**. Result type i
 Returns ***true*** when *left* is **less than** *right*, otherwise returns ***false***.
 
 ```zig
-    let x = a < b
+    a < b
 ```
 
 ### GT (Greater Than)
 Returns ***true*** when *left* is **greater than** *right*, otherwise returns ***false***.
 ```zig
-    let x = a > b
+    a > b
 ```
 
 ### LE (Greater than or Equal)
 Returns ***true*** when *left* is **greater than or equal** *right*, otherwise returns ***false***.
 ```zig
-    let x = a <= b
+    a <= b
 ```
 
 ### GE (Less than or Equal)
 Returns ***true*** when *left* is **less than or equal** *right*, otherwise returns ***false***.
 ```zig
-    let x = a >= b
+    a >= b
 ```
 
 
 # *Arithmetical* operations
-Arithmetical operation requires that **type(*left*)** will be equal to **type(*right*)**. Result type will the same as type of received arguments.
+Requires that **type(*left*)** will be equal to **type(*right*)**. Result type will the same as type of received arguments.
 
 > Valid arguments type: [*Integer*](../../types.md#Integer-type), [*Float*](../../types.md#Float-type)
 
@@ -67,31 +67,31 @@ Arithmetical operation requires that **type(*left*)** will be equal to **type(*r
 Returns ***sum*** of *left* and *right* arguments.
 
 ```zig
-    let x = a + b
+    a + b
 ```
 
 ### Sub (subtraction)
 Returns difference between *left* and *right* arguments.
 ```zig
-    let x = a - b
+    a - b
 ```
 
 ### Mul (multiplication)
 Returns multiplication result of *left* and *right* arguments.
 ```zig
-    let x = a * b
+    a * b
 ```
 
 ### Div (division)
 Returns the result of dividing the *left* argument by the *right* argument.
 ```zig
-    let x = a / b
+    a / b
 ```
 
 ### Rem (remainder of the division)
 Returns the remainder of dividing the *left* argument by the *right* argument.
 ```zig
-    let x = a % b
+    a % b
 ```
 
 
@@ -104,19 +104,19 @@ Is *Logical* when arguments are Bool, otherwise is *Bitwise*. Requires that **ty
 Returns result of ***or*** operation between *left* and *right* arguments.
 
 ```zig
-    let x = a or b
+    a or b
 ```
 
 ### And
 Returns result of ***and*** operation between *left* and *right* arguments.
 ```zig
-    let x = a and b
+    a and b
 ```
 
 ### XOR
 Returns result of ***xor*** operation between *left* and *right* arguments.
 ```zig
-    let x = a xor b
+    a xor b
 ```
 
 
@@ -127,7 +127,7 @@ Returns result of ***xor*** operation between *left* and *right* arguments.
 ### ShL (Shift to the Left)
 
 ```zig
-    let x = a << b
+    a << b
 ```
 
 > type(a) can be different from type(b)
@@ -135,7 +135,7 @@ Returns result of ***xor*** operation between *left* and *right* arguments.
 ### ShR (Shift to the Right)
 
 ```zig
-    let x = a >> b
+    a >> b
 ```
 
 > type(a) can be different from type(b)
