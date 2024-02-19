@@ -30,27 +30,31 @@ You also can check for equality [***Array***](../../types.md#Array-type) and [**
 ```
 
 ### NE (Not Equal)
-Similar to the [equality-comparison operator](#Eq-Equal), but returns ***true*** when *left* argument is **not-equal** to the *right*, otherwise returns ***false***.
+Similar to the [equality-comparison operator](#Eq-Equal), but returns ***true*** when *left* argument is **not equal** to the *right*, otherwise returns ***false***.
 ```zig
     let x = a != b
 ```
 
 ### LT (Less Than)
+Similar to the [equality-comparison operator](#Eq-Equal), but returns ***true*** when *left* argument is **less than** to the *right*, otherwise returns ***false***.
 ```zig
     let x = a < b
 ```
 
 ### GT (Greater Than)
+Similar to the [equality-comparison operator](#Eq-Equal), but returns ***true*** when *left* argument is **greater than** to the *right*, otherwise returns ***false***.
 ```zig
     let x = a > b
 ```
 
 ### LE (Greater than or Equal)
+Similar to the [equality-comparison operator](#Eq-Equal), but returns ***true*** when *left* argument is **greater than or equal** to the *right*, otherwise returns ***false***.
 ```zig
     let x = a <= b
 ```
 
 ### GE (Less than or Equal)
+Similar to the [equality-comparison operator](#Eq-Equal), but returns ***true*** when *left* argument is **less than or equal** to the *right*, otherwise returns ***false***.
 ```zig
     let x = a >= b
 ```
