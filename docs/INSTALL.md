@@ -14,6 +14,7 @@ export MODEST_DIR=~/Modest
 export PATH=$PATH:$MODEST_DIR
 export MODEST_LIB=$MODEST_DIR/lib/
 
+# *or ~/.zshrc if you use zsh
 echo "export MODEST_DIR=~/Modest" >> ~/.bashrc
 echo "export PATH=$PATH:$MODEST_DIR" >> ~/.bashrc
 echo "export MODEST_LIB=$MODEST_DIR/lib/" >> ~/.bashrc
@@ -21,7 +22,7 @@ echo "export MODEST_LIB=$MODEST_DIR/lib/" >> ~/.bashrc
 
 > Restart your terminal after commands showed above
 
-3. Compile example:
+3. Compile some example for compiler installation test:
 ```
 cd ~/Modest/examples/hello_world
 make
