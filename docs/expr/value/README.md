@@ -9,7 +9,7 @@
 ### Binary & Unary operations
 
 | Operation Kind | Operation| Valid Argument Types | Result type | Comment |
-| :------------: | :------------------: | :---------: | :-----: |
+| :------------: | :--------| :------------------: | :---------: | :-----: |
 |Equality|Eq, NE|Bool, Byte, Char, Integer, Float, Array, Record, Pointer|Bool|-|
 |Comparison|LT, GT, LE, GE|Integer, Float|Bool|-|
 |Arithmetical|Add, Sub, Mul, Div, Rem, Neg|Integer, Float|type(left)|-|
