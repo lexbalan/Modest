@@ -12,15 +12,6 @@
 - [*Shift* operations](#Bitwise-operations)
 
 
-| Operation Kind | Valid Argument Types | Result type | Comment |
-| :------------: | :------------------: | :---------: | :-----: |
-|Equality|Bool, Byte, Char, Integer, Float, Array, Record, Pointer|Bool|-|
-|Comparison|Integer, Float|Bool|-|
-|Arithmetical|Integer, Float|type(left)|-|
-|Logical and Bitwise|Bool, Byte, Integer|type(left)|-|
-|Shift|Integer (& Byte only as left argument)| type(left) |-|
-
-
 
 
 #### Common form
