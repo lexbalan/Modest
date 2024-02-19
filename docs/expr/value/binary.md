@@ -60,6 +60,7 @@ Comparison operation. Result value type is [***Bool***](../../types.md#Bool-type
 ```
 
 ### Add (addition)
+Arithmetical operation. Requires that **type(*left*)** will be equal to **type(*right*)**. Result value type will the same as type of received arguments. Returns ***sum*** of *left* and *right*.
 ```zig
     let x = a + b
 ```
