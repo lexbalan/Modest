@@ -57,24 +57,24 @@ type Point record {
 var point: Point
 
 // create pointer to var point
-var pointer_to_point: *Point
+var ptr_to_point: *Point
 
 
 func main() -> Int32 {
-    pointer_to_point = &point
+    ptr_to_point = &point
     
     // or variant with type inference:
-    // var pointer_to_point = &point
+    // var ptr_to_point = &point
     
     // assign values to record fields
     // ('access operation' (by pointer) as lvalue)
-    pointer_to_point.x = 10
-    pointer_to_point.y = 20
+    ptr_to_point.x = 10
+    ptr_to_point.y = 20
     
     // read record fields
     // ('access operation' (by pointer) as rvalue)
-    let x = pointer_to_point.x
-    let y = pointer_to_point.y
+    let x = ptr_to_point.x
+    let y = ptr_to_point.y
     
     // print x & y for checking
     printf("x = %i\n", x)
