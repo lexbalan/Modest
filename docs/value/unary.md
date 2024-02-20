@@ -7,6 +7,7 @@
 <operator> <argument_value_expression>
 ```
 
+#### Brief
 
 | Operation | Code Example | Valid types | Result type | Comment |
 | :-------: | :----------: | :---------: | :---------: | :-----: |
