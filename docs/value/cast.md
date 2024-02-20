@@ -11,9 +11,18 @@
 
 ## Implicit type casting
 
-### Implicit cast generic -> imgeneric type
+### Implicit cast *generic* -> *non-generic* type
 
-Generic types can be implicitly casted to correspond type
+Generic types can be implicitly casted to corresponded type
+
+| Generic type | Can be implicit cast to |
+| :----------: | :---------------------: |
+| Generic Int  | Integer, Byte, Char, Float |
+| Generic Float| Float |
+| Generic Char | Char |
+| Generic Array | Array, Pointer to Array |
+| Generic Record | Record, Pointer to record |
+
 
 
 ```zig
