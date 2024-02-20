@@ -7,11 +7,19 @@ There is four unary operations:
 - [*Ref*](#Ref)
 - [*Deref*](#Deref)
 
-
 #### Common form
 ```
 <operator> <argument_value_expression>
 ```
+
+
+| Operation | Valid types |
+| :-------: | :---------: |
+| Not | Bool, Byte, Integer |
+| Neg | Integer, Float |
+| Ref | - |
+| Deref | Pointer |
+
 
 
 ### Not
