@@ -13,12 +13,12 @@ There is four unary operations:
 ```
 
 
-| Operation | Valid types |
-| :-------: | :---------: |
-| Not | Bool, Byte, Integer |
-| Neg | Integer, Float |
-| Ref | - |
-| Deref | Pointer |
+| Operation | Example | Valid types |
+| :-------: | :-----: | :---------: |
+| Not | `not x` | Bool, Byte, Integer |
+| Neg | `-x` | Integer, Float |
+| Ref | `&x` | - |
+| Deref | `*x` | Pointer |
 
 
 
