@@ -15,7 +15,7 @@
 
 Generic types can be implicitly casted to corresponded type
 
-| Generic type | Can be implicit cast to |
+| **Generic type** | **Can be implicit cast to** |
 | :----------: | :---------------------: |
 | Generic Int  | Integer, Byte, Char, Float |
 | Generic Float| Float |
