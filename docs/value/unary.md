@@ -1,11 +1,6 @@
 
 # Unary Value Expressions
 
-There is four unary operations:
-- [*Not*](#Not)
-- [*Neg*](#Neg)
-- [*Ref*](#Ref)
-- [*Deref*](#Deref)
 
 #### Common form
 ```
@@ -15,10 +10,10 @@ There is four unary operations:
 
 | Operation | Example | Valid types |
 | :-------: | :-----: | :---------: |
-| Not | `not x` | Bool, Byte, Integer |
-| Neg | `-x` | Integer, Float |
-| Ref | `&x` | - |
-| Deref | `*x` | Pointer |
+| [*Not*](#Not) | `not x` | Bool, Byte, Integer |
+| [*Neg*](#Neg) | `-x` | Integer, Float |
+| [*Ref*](#Ref) | `&x` | - |
+| [*Deref*](#Deref) | `*x` | Pointer |
 
 
 
