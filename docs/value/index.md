@@ -23,7 +23,7 @@ func main() -> Int {
     while i < arrayLength {
         // index array
         let array_item = array[i]
-    
+
         printf("array[%i] = %i\n", i, array_item)
         ++i
     }
