@@ -30,6 +30,8 @@ Returns ***true*** when *argument* is ***false***, otherwise returns ***false***
 ### Neg
 Returns ***true*** when *left* is **not equal** to the *right*, otherwise returns ***false***.
 
+> Valid arguments type: [*Integer*](../types.md#Integer-type), [*Float*](../types.md#Float-type)
+
 ```zig
     -x
 ```
