@@ -33,9 +33,9 @@
 | `Unit`   | `0` | `-`     | `Empty type` |
 | `Bool`   | `1` | `logical, equ` | |
 | `Byte`   | `1` | `logical, equ` | |
-| `Char8`  | `1` | `equ` | `UTF-8 character` |
-| `Char16` | `2` | `equ` | `UTF-16 character` |
-| `Char32` | `4` | `equ` | `UTF-32 character` |
+| `Char8`  | `1` | `equ` | `for 8-bit character` |
+| `Char16` | `2` | `equ` | `for 16-bit character` |
+| `Char32` | `4` | `equ` | `for 32-bit character` |
 | `Int8`   | `1` | `equ, ord, math, rem` | `signed integer` |
 | `Int16`  | `2` | `equ, ord, math, rem` | `signed integer` |
 | `Int32`  | `4` | `equ, ord, math, rem` | `signed integer` |
