@@ -3,8 +3,8 @@
 
 ### Common form
 ```
-    <array_value>[<index_value>]
-    <pointer_to_array_value>[<index_value>]
+<array_value>[<index_value>]
+<pointer_to_array_value>[<index_value>]
 ```
 
 ### Examples
