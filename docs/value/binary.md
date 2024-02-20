@@ -3,7 +3,7 @@
 
 
 * Binary value experssion received two arguments and returns result of operation.
-* All binary operations require that type(left) == type(right) (Only exception - ShL & ShR operations).
+* All binary operations require that ***type***(*left*) == ***type***(*right*) (Only exception - ShL & ShR operations).
 
 
 - [*Equality* operations](#Equality-operations)
@@ -156,7 +156,7 @@ Result type will the same as *left* argument type.
 
 ### Shl (Shift to the Left)
 
-Allow that type(left) will not be equal to type(right).
+Allow that ***type***(*left*) will not be equal to ***type***(*right*).
 
 ```zig
     a << b
@@ -166,7 +166,7 @@ Allow that type(left) will not be equal to type(right).
 
 ### Shr (Shift to the Right)
 
-Allow that type(left) will not be equal to type(right). 
+Allow that ***type***(*left*) will not be equal to ***type***(*right*). 
 
 ```zig
     a >> b
