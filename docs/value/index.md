@@ -40,11 +40,10 @@ const arrayLength = 5
 var array: [arrayLength]Int32 = [1, 2, 3, 4, 5]
 
 var ptr_to_array: *[]Nat32
-// or variant with type inference
-//var ptr_to_array = &array
+// or variant with type inference:
+// var ptr_to_array = &array
 
 func main() -> Int {
-    
     ptr_to_array = &array
 
     var i = 0

@@ -62,8 +62,8 @@ func main() -> Int32 {
     var pointer_to_point: *Point
     pointer_to_point = &point
     
-    // or variant with type inference
-    //var pointer_to_point = &point
+    // or variant with type inference:
+    // var pointer_to_point = &point
     
     
     // assign values to record fields

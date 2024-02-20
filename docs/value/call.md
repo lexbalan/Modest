@@ -64,10 +64,10 @@ var ptr_to_function_1: () -> Unit
 var ptr_to_function_2: (x: Int32) -> Unit
 var ptr_to_function_3: (x: Int32) -> Int32
 
-// or variant with type inference
-//var ptr_to_function_1 = &function_1
-//var ptr_to_function_2 = &function_2
-//var ptr_to_function_3 = &function_3
+// or variant with type inference:
+// var ptr_to_function_1 = &function_1
+// var ptr_to_function_2 = &function_2
+// var ptr_to_function_3 = &function_3
 
 
 func main() -> Int {
