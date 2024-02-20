@@ -1,15 +1,15 @@
 # Access value expression
 
 
-#### Common form
+### Common form
 ```
     <record_value>.<field_identifier>
     <pointer_to_record_value>.<field_identifier>
 ```
 
-#### Examples
+### Examples
 
-##### Access by value
+#### Access by value
 
 ```zig
 import "libc/stdio.hm"
@@ -20,6 +20,7 @@ type Point record {
 }
 
 func main() -> Int32 {
+    // create local instance of Point
     var point: Point
     
     // assign values to record fields
@@ -32,6 +33,7 @@ func main() -> Int32 {
     let x = point.x
     let y = point.y
     
+    // print x & y for checking
     printf("x = %i\n", x)
     printf("y = %i\n", y)
     
@@ -41,7 +43,7 @@ func main() -> Int32 {
 
 > Result: `x = 10` `y = 20`
 
-##### Access by pointer to value
+#### Access by pointer to value
 
 ```zig
 import "libc/stdio.hm"
@@ -52,8 +54,10 @@ type Point record {
 }
 
 func main() -> Int32 {
+    // create local instance of Point
     var point: Point
     
+    // create pointer to var point
     var pointer_to_point: *Point
     pointer_to_point = &point
     
@@ -67,6 +71,7 @@ func main() -> Int32 {
     let x = pointer_to_point.x
     let y = pointer_to_point.y
     
+    // print x & y for checking
     printf("x = %i\n", x)
     printf("y = %i\n", y)
     
