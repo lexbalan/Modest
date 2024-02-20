@@ -1,7 +1,7 @@
 
 # Unary Value Expressions
 
-
+There is four unary operations:
 - [*Not*](#Not)
 - [*Neg*](#Neg)
 - [*Ref*](#Ref)
