@@ -71,7 +71,6 @@ var ptr_to_function_3: (x: Int32) -> Int32
 
 
 func main() -> Int {
-
     ptr_to_function_1 = &function_1
     ptr_to_function_2 = &function_2
     ptr_to_function_3 = &function_3
