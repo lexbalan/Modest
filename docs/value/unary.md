@@ -8,12 +8,12 @@
 ```
 
 
-| Operation | Code Example | Valid types | Result type |
-| :-------: | :----------: | :---------: | :---------: |
-| [*Not*](#Not) | `not arg` | Bool, Byte, Integer | *type*(arg) |
-| [*Neg*](#Neg) | `-arg` | Integer, Float | *type*(arg) |
-| [*Ref*](#Ref) | `&arg` | *Any* | Pointer to *type*(arg)|
-| [*Deref*](#Deref) | `*arg` | Pointer | *type*(arg)#to |
+| Operation | Code Example | Valid types | Result type | Comment |
+| :-------: | :----------: | :---------: | :---------: | :-----: |
+| [*Not*](#Not) | `not arg` | Bool, Byte, Integer | *type*(arg) | |
+| [*Neg*](#Neg) | `-arg` | Integer, Float | *type*(arg) | |
+| [*Ref*](#Ref) | `&arg` | *Any* | Pointer to *type*(arg)| |
+| [*Deref*](#Deref) | `*arg` | Pointer | *type*(arg)#to | |
 
 
 
