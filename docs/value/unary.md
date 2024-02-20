@@ -2,15 +2,15 @@
 # Unary Value Expressions
 
 
-- [*Not* operations](#Not)
-- [*Neg* operations](#Neg)
-- [*Ref*](#Ref)
-- [*Deref*](#Deref)
+- [*Not* operation](#Not)
+- [*Neg* operation](#Neg)
+- [*Ref* operation](#Ref)
+- [*Deref* operation](#Deref)
 
 
 #### Common form
 ```
-    <operator> <value_expression>
+    <operator> <argument_value_expression>
 ```
 
 
