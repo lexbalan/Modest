@@ -31,7 +31,7 @@ Returns ***true*** when *argument* is ***false***, otherwise returns ***false***
 Returns ***true*** when *left* is **not equal** to the *right*, otherwise returns ***false***.
 
 ```zig
-    - x
+    -x
 ```
 
 ### Ref
