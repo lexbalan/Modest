@@ -29,6 +29,7 @@
 | [LT](#LT-Less-Than)<br>[GT](#GT-Greater-Than)<br>[LE](#LE-Greater-than-or-Equal)<br>[GE](#GE-Less-than-or-Equal) | `a < b`<br>`a > b`<br>`a <= b`<br>`a >= b` | Integer, Float | Bool | |
 | [Add](Add-addition)<br>[Sub](Sub-subtraction)<br>[Mul](Mul-multiplication)<br>[Div](Div-division)<br>[Rem](Rem-remainder-of-the-division) | `a + b`<br>`a - b`<br>`a * b`<br>`a / b`<br>`a % b` | Integer, Float | ***type***(*left*) | |
 | [Or](#Or)<br>[And](#And)<br>[Xor](#Xor) | `a or b`<br>`a and b`<br>`a xor b` | Bool, Byte, Integer | ***type***(*left*) | |
+| [Shl](#Shl-Shift-to-the-Left)<br>[Shr](Shl-Shift-to-the-Right) | `a << b`<br>`a >> b` | Byte, Integer | ***type***(*left*) | |
 
 
 ## *Equality* operations
@@ -153,7 +154,7 @@ Result type will the same as *left* argument type.
 
 > Valid right argument type: [*Integer*](../types.md#Integer-type)
 
-### ShL (Shift to the Left)
+### Shl (Shift to the Left)
 
 Allow that type(left) will not be equal to type(right).
 
@@ -163,7 +164,7 @@ Allow that type(left) will not be equal to type(right).
 
 > type(a) can be different from type(b)
 
-### ShR (Shift to the Right)
+### Shr (Shift to the Right)
 
 Allow that type(left) will not be equal to type(right). 
 
