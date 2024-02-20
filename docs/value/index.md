@@ -1,17 +1,15 @@
 
-# Value Expression Index
+# *Index* value expression
 
+### Common form
 ```
-    // index of array value
     <array_value>[<index_value>]
-
-    // index of pointer to array value
     <pointer_to_array_value>[<index_value>]
 ```
 
 ### Examples
 
-##### Array Index
+#### Index by array value
 
 ```zig
 
@@ -33,7 +31,7 @@ func main() -> Int {
 }
 ```
 
-##### Pointer to Array Index
+#### Index by pointer to array value
 
 ```zig
 
