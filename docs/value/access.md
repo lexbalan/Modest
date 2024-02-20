@@ -24,12 +24,12 @@ func main() -> Int32 {
     var point: Point
     
     // assign values to record fields
-    // (access operation (by value) as lvalue)
+    // ('access operation' (by value) as lvalue)
     point.x = 10
     point.y = 20
     
     // read record fields
-    // (access operation (by value) as rvalue)
+    // ('access operation' (by value) as rvalue)
     let x = point.x
     let y = point.y
     
@@ -62,12 +62,12 @@ func main() -> Int32 {
     pointer_to_point = &point
     
     // assign values to record fields
-    // (access operation (by pointer) as lvalue)
+    // ('access operation' (by pointer) as lvalue)
     pointer_to_point.x = 10
     pointer_to_point.y = 20
     
     // read record fields
-    // (access operation (by pointer) as rvalue)
+    // ('access operation' (by pointer) as rvalue)
     let x = pointer_to_point.x
     let y = pointer_to_point.y
     
