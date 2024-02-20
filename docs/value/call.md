@@ -1,17 +1,15 @@
 
-# Value Expression Call
+# *Call* value expression
 
+### Common form
 ```
-    // call of func value
     <func_value>(<arglist>)
-
-    // call of pointer to func value
     <pointer_to_func_value>(<arglist>)
 ```
 
 ### Examples
 
-#### Call of func value
+#### Call by func value
 
 ```zig
 func function_1() -> Unit {
@@ -44,7 +42,7 @@ func main() -> Int {
 ```
 
 
-#### Call of pointer to func value
+#### Call by pointer to func value
 
 ```zig
 func function_1() -> Unit {
@@ -61,11 +59,16 @@ func function_3(x: Int32) -> Int32 {
 }
 
 
-var ptr_to_function_1 = &function_1
-var ptr_to_function_2 = &function_2
-var ptr_to_function_3 = &function_3
+var ptr_to_function_1: () -> Unit
+var ptr_to_function_2: (x: Int32) -> Unit
+var ptr_to_function_3: (x: Int32) -> Int32
 
 func main() -> Int {
+
+    ptr_to_function_1 = &function_1
+    ptr_to_function_2 = &function_2
+    ptr_to_function_3 = &function_3
+
     // just call by pointer
     ptr_to_function_1()
 

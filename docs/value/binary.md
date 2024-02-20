@@ -1,5 +1,5 @@
 
-# Binary Value Expressions
+# *Binary* Value Expressions
 
 * Binary value experssion received two arguments and returns result of operation.
 * All binary operations require that type(left) == type(right) (Only exception - ShL & ShR operations).
