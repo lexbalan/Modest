@@ -54,17 +54,17 @@ type Point record {
     y: Int32
 }
 
+var point: Point
+
+// create pointer to var point
+var pointer_to_point: *Point
+
+
 func main() -> Int32 {
-    // create local instance of Point
-    var point: Point
-    
-    // create pointer to var point
-    var pointer_to_point: *Point
     pointer_to_point = &point
     
     // or variant with type inference:
     // var pointer_to_point = &point
-    
     
     // assign values to record fields
     // ('access operation' (by pointer) as lvalue)
