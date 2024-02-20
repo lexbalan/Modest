@@ -23,9 +23,9 @@
 
 #### Brief
 
-| Operation | Code Example | Valid types | Result type | Comment |
+| Operation | Code Example | Valid argument types | Result type | Comment |
 | :-------: | :----------: | :---------: | :---------: | :-----: |
-| Eq<br>NE | `a == b`<br>`a != b` | Bool, Byte, Char, Integer, Float, Array, Record, Pointer | Bool | |
+| [Eq](#Eq-Equal)<br>[NE](#NE-Not-Equal) | `a == b`<br>`a != b` | Bool, Byte, Char, Integer, Float, Array, Record, Pointer | Bool | |
 |  |  |
 
 
