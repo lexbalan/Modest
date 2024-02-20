@@ -2,10 +2,10 @@
 # Unary Value Expressions
 
 
-- [*Not* operation](#Not)
-- [*Neg* operation](#Neg)
-- [*Ref* operation](#Ref)
-- [*Deref* operation](#Deref)
+- [*Not*](#Not)
+- [*Neg*](#Neg)
+- [*Ref*](#Ref)
+- [*Deref*](#Deref)
 
 
 #### Common form
