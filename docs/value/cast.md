@@ -1,4 +1,13 @@
-# Cast value expression
+
+# *Cast* value expression
+
+
+### Common form
+```
+    <value_expression> to <type>
+```
+> This syntactic form is not very good, and will probably be changed to a more convenient one later
+
 
 ## Implicit type casting
 
