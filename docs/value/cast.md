@@ -26,11 +26,11 @@ Generic types can be implicitly casted to corresponded type
 
 
 ```zig
-// example: GenericInt -> Int
+// example: GenericInteger -> Int
 
 var i: Int32
 
-// implicit cast literal numeric value '1' with type GenericInt to type Int32 
+// implicit cast literal numeric value '1' with type GenericInteger to type Int32 
 i = 1
 ```
 
@@ -40,7 +40,7 @@ i = 1
 
 var a: [3]Int32
 
-// implicit cast literal array value '[1, 2, 3]' with type Generic[3]GenericInt to type [3]Int32
+// implicit cast literal array value '[1, 2, 3]' with type Generic[3]GenericInteger to type [3]Int32
 a = [1, 2, 3]
 ```
 
@@ -98,7 +98,7 @@ a = [1, 2, 3] to [10]Int32
 type Point3D record {x: Int32, y: Int32, z: Int32}
 
 var r: Point3D
-// you can't implicit cast {x: GenericInt} -> record {x: Int32, y: Int32, z: Int32}
+// you can't implicit cast {x: GenericInteger} -> record {x: Int32, y: Int32, z: Int32}
 // but you can do explicit cast (all rest fields will be filled with zeros)
 r = {x=0} to Point3D
 ```
