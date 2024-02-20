@@ -25,7 +25,7 @@ const literalString = "I am a string literal"
 
 var str_array8: []Char8 = literalString
 var str_array16: []Char16 = literalString
-var str_array32: []Char16 = literalString
+var str_array32: []Char32 = literalString
 ```
 
 
