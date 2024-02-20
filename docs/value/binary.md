@@ -26,7 +26,7 @@
 | Operation | Code Example | Valid argument types | Result type | Comment |
 | :-------: | :----------: | :---------: | :---------: | :-----: |
 | [Eq](#Eq-Equal)<br>[NE](#NE-Not-Equal) | `a == b`<br>`a != b` | Bool, Byte, Char, Integer, Float, Array, Record, Pointer | Bool | |
-|  |  |
+| [LT](#LT-Less-Than)<br>[GT](#GT-Greater-Than)<br>[LE](#LE-Greater-than-or-Equal)<br>[GE](#GE-Less-than-or-Equal) | `a < b`<br>`a > b`<br>`<=`<br>`>=` | Integer, Float | Bool | |
 
 
 
