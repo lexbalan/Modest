@@ -24,5 +24,5 @@ func str32_len(str: *Str32) -> Nat64
 
 ## Print
 ```zig
-func lf_printf(str: *[]Char8, va_list: VA_List)
+func lf_printf(str: *Str8, va_list: VA_List)
 ```
