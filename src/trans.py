@@ -280,7 +280,7 @@ def do_field(x):
     if 'nl' in x:
         f['nl'] = x['nl']
     else:
-        f['nl'] = 0
+        f['nl'] = 1
 
     return f
 
