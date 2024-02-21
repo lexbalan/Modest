@@ -1649,7 +1649,6 @@ def print_string_as_array(strid, string, char_width):
 def print_strings(strings):
     strno = 0
     for string in strings:
-
         strid = None
         if 'id' in string:
             # it is named constant

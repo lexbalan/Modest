@@ -883,11 +883,14 @@ def _print_string_literal(utf32_codes, width=8):
 
 
 def print_value_literal_string(x, ctx, char_width=8):
-
+    # получаем список кодов из списка char-значений
+    # (формат строки может быть разным UTF-8, UTF-16, UTF-32)
     codes = []
     for char in x['asset']:
         codes.append(char['asset'])
 
+    # получаем список кодов UTF-32
+    # (для распечатки нужны только UTF-32 коды)
     utf32_codes = None
     if char_width == 8:
         utf32_codes = utf8_cc_arr_to_utf32_cc_arr(codes)
@@ -896,6 +899,7 @@ def print_value_literal_string(x, ctx, char_width=8):
     elif char_width == 32:
         utf32_codes = codes
 
+    # распечатываем (для распечатки нужны только UTF-32 коды)
     assert(utf32_codes != None)
     _print_string_literal(utf32_codes, char_width)
 
