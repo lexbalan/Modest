@@ -100,13 +100,17 @@ def hlir_value_string(string, length=0, ti=None):
     if length == 0:
         length = len(string) + 1
 
+    #charType = foundation.typeChar32
+
     vol = hlir_value_int(length)  # <=> len(string) + 1
     genStrType = hlir_type_array(foundation.typeChar32, volume=vol, ti=ti)
     genStrType['generic'] = True
 
     chars = []
-    for ch in string:
-        chars.append(ord(ch))
+    for char in string:
+        char_code = ord(char)
+        value_char = hlir_value_char(char_code, type=None, ti=ti)
+        chars.append(value_char)
 
     # #imm of string literal is array of chars
     return hlir_value_literal(genStrType, chars, ti)

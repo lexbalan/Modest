@@ -1636,12 +1636,12 @@ def print_string_as_array(strid, string, char_width):
     slen = len(string['asset'])
     lo("@%s = private constant [%d x i%d] [" % (strid, slen, char_width))
     i = 0
-    for c in string['asset']:
+    for char in string['asset']:
+        code = char['asset']
         if i > 0:
             out(", ")
-        out("i%d %d" % (char_width, c))
+        out("i%d %d" % (char_width, code))
         i = i + 1
-
     out("]")
 
 

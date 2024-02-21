@@ -968,7 +968,7 @@ def do_value_index(x):
 
                 #if hlir_type.type_is_char(item_type):
                 if hlir_type.type_is_char(array_typ['of']):
-                    char_code = item
+                    char_code = item['asset']
                     char = hlir_value_char(char_code, type=None, ti=x['ti'])
                     return char
 

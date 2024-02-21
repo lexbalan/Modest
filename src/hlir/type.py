@@ -701,6 +701,9 @@ def type_print(t, print_aka=True):
     if 'const' in t['att']:
         print("const_", end='')
 
+    if t['generic']:
+        print("Generic:", end='')
+
     k = t['kind']
 
     if print_aka:
@@ -733,14 +736,14 @@ def type_print(t, print_aka=True):
 
 
     if type_is_record(t):
-        if type_is_generic_record(t):
-            print("GenericRecord {")
-            for f in t['fields']:
-                print("\t%s: " % f['id']['str'], end='')
-                type_print(f['type'])
-                print()
-            print("}")
-            return
+#        if type_is_generic_record(t):
+#            print("GenericRecord {")
+#            for f in t['fields']:
+#                print("\t%s: " % f['id']['str'], end='')
+#                type_print(f['type'])
+#                print()
+#            print("}")
+#            return
 
         print("record {")
         fields = t['fields']
@@ -786,8 +789,6 @@ def type_print(t, print_aka=True):
         type_print(t['to'])
 
     elif type_is_integer(t):
-        #print('integer' + t['id']['str'], end='')
-        #if type_is_generic(t):
         print('Integer_%d' % t['width'], end='')
 
     elif type_is_opaque(t):

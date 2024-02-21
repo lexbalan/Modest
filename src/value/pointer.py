@@ -108,25 +108,34 @@ def value_cons_pointer(v, t, ti, method):
 
 
 def str2utf8(string_items):
-    codes = []
+    chars8 = []
+    typeChar8 = foundation.typeChar8
+
     for cc in string_items:
-        c = chr(cc)
+        c = chr(cc['asset'])
         utf8_bytes = bytes(c, encoding='utf-8')
         i = 0
         while i < len(utf8_bytes):
             k = utf8_bytes[i]
-            codes.append(k)
+
+            char_code = k
+            value_char = hlir_value_char(char_code, type=typeChar8, ti=None)
+            chars8.append(value_char)
             i = i + 1
 
-    codes.append(0)
-    return codes
+    z = 0
+    chars8.append(hlir_value_char(z, type=typeChar8, ti=None))
+    return chars8
 
 
 
 def str2utf16(string_items):
-    codes = []
+    chars16 = []
+
+    typeChar16 = foundation.typeChar16
+
     for cc in string_items:
-        c = chr(cc)
+        c = chr(cc['asset'])
         utf16_bytes = bytes(c, encoding='utf-16')[2:]  # [2:] - skip BOM
 
         i = 0
@@ -141,19 +150,27 @@ def str2utf16(string_items):
                 k = first * 256 + second
             i = i + 2
 
-            codes.append(k)
+            char_code = k
+            value_char = hlir_value_char(char_code, type=typeChar16, ti=None)
+            chars16.append(value_char)
 
-    codes.append(0)
-    return codes
+    z = 0
+    chars16.append(hlir_value_char(z, type=typeChar16, ti=None))
+    return chars16
 
 
 
 def str2utf32(string_items):
     # (python uses utf32 by default)
-    codes = []
+    typeChar32 = foundation.typeChar32
+
+    chars32 = []
     for cc in string_items:
-        codes.append(cc)
-    codes.append(0)
-    return codes
+        chars32.append(cc)
+
+    z = 0
+    chars32.append(hlir_value_char(z, type=typeChar32, ti=None))
+
+    return chars32
 
 

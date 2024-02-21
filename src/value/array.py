@@ -30,7 +30,7 @@ def value_cons_array_from_generic_array(v, t, ti, method):
     for item in items:
 
         if type.type_is_array_of_char(v['type']):
-            char_code = item
+            char_code = item['asset']
             item = hlir_value_char(char_code, type=None, ti=ti)
 
         from .cons import value_cons_implicit

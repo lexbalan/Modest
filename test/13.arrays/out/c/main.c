@@ -25,12 +25,15 @@ static int32_t globalArray[3] = {1, 2, 3};;
 struct f0_x {char a[10];};
 void f0(struct f0_x x)
 {
-    //
+    struct f0_x local_copy_of_x;
+    *(struct f0_x *)&local_copy_of_x = x;
+    printf("f0(\"%s\")\n", (char *)&local_copy_of_x);
 }
 
 
 int main()
 {
+    // generic array [4]Char8 will be implicit casted to [10]Char8
     f0(*(struct f0_x *)&(struct f0_x){'h', 'i', '!', '\0', '\0', '\0', '\0', '\0', '\0', '\0'});
 
     int32_t i;

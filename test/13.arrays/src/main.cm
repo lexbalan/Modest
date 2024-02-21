@@ -13,12 +13,14 @@ var globalArray: [3]Int32 = [1, 2, 3]
 
 
 func f0(x: [10]Char8) {
-    //
+    var local_copy_of_x = x
+    printf("f0(\"%s\")\n", &local_copy_of_x)
 }
 
 
 func main() -> Int {
-    f0("hi!")  // generic array [4]Char8 will be implicit casted to [10]Char8
+    // generic array [4]Char8 will be implicit casted to [10]Char8
+    f0("hi!")
 
     var i = 0
     while i < 3 {

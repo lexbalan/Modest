@@ -13,7 +13,7 @@ int main()
 {
     printf("%s\n", "Hello World");
 
-    if (true) {
+    if (false) {
         printf("test ok.\n");
     } else {
         printf("test failed.\n");
