@@ -6,7 +6,7 @@ String value literal is a form of array with type GenericArray of GenericChar.
 "Hello World!"
 ```
 
-There is no special type for string, but you can construct an array or pointer to array from literal string value.
+There is no special type for string, but you can construct an *array* or *pointer to array* from literal string value.
 Also there is three built-in named type aliases for convenient usage of strings:
 ```zig
 // built-in type aliases:

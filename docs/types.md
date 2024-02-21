@@ -21,9 +21,9 @@
 | ----------- | ----------- | -------- |
 | `GenericInteger` | type of integer literal | `0, 1, 2, ...` |
 | `GenericFloat` | type of floating point literal | `0.5, 2.7, 3.14, ...` |
-| `GenericChar` | type of char literal | `"a"[0], "b"[0], ...` |
-| `GenericArray` | type of array literal | `[1, 2, 3], ...` |
-| `GenericRecord` | type of record literal | `{x=1, y=2, z=3}, ...` |
+| `GenericChar` | type of char literal (32-bit representation) | `"a"[0], "b"[0], ...` |
+| `GenericArray` | type of array literal | `[1, 2, 3], [1], ...` |
+| `GenericRecord` | type of record literal | `{x=1, y=2, z=3}, {a=10, b=20}, ...` |
 
 
 ## Real *(non-generic)* types
@@ -81,6 +81,22 @@ while not b {
     b = check_condition()
 }
 
+```
+
+
+### Byte type
+
+```zig
+func main () -> Int32 {
+    var byte: Byte
+
+    // GenericInteger will be implicit casted to Byte
+    byte = 42
+
+    printf("byte = %i", byte to Nat32)
+    
+    return 0
+}
 ```
 
 
