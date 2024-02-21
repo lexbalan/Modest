@@ -884,17 +884,18 @@ def _print_string_literal(utf32_codes, width=8):
 
 def print_value_literal_string(x, ctx, char_width=8):
 
-    codes32 = []
+    codes = []
     for char in x['asset']:
-        codes32.append(char['asset'])
+        codes.append(char['asset'])
 
     utf32_codes = None
     if char_width == 8:
-        utf32_codes = utf8_cc_arr_to_utf32_cc_arr(codes32)
+        utf32_codes = utf8_cc_arr_to_utf32_cc_arr(codes)
     elif char_width == 16:
-        utf32_codes = utf16_cc_arr_to_utf32_cc_arr(codes32)
+        utf32_codes = utf16_cc_arr_to_utf32_cc_arr(codes)
     elif char_width == 32:
-        utf32_codes = codes32
+        utf32_codes = codes
+
     assert(utf32_codes != None)
     _print_string_literal(utf32_codes, char_width)
 
