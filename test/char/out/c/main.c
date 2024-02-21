@@ -9,9 +9,9 @@
 
 
 
-#define UTF8_CHAR  's'
-#define UTF16_CHAR  u'Я'
-#define UTF32_CHAR  U'🐀'
+#define UTF8_CHAR  ('s')
+#define UTF16_CHAR  (u'Я')
+#define UTF32_CHAR  (U'🐀')
 
 int main()
 {

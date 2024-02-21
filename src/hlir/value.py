@@ -100,10 +100,12 @@ def hlir_value_string(string, length=0, ti=None):
     if length == 0:
         length = len(string) + 1
 
-    #charType = foundation.typeChar32
+    #TODO: должен иметь размер не 0 а размер наибольшего чара!
+    genericCharType = hlir_type_char(0, ti=ti)
+    genericCharType['generic'] = True
 
     vol = hlir_value_int(length)  # <=> len(string) + 1
-    genStrType = hlir_type_array(foundation.typeChar32, volume=vol, ti=ti)
+    genStrType = hlir_type_array(genericCharType, volume=vol, ti=ti)
     genStrType['generic'] = True
 
     chars = []

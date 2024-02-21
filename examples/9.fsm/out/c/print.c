@@ -107,9 +107,9 @@ char n_to_sym(uint8_t n)
 {
     char c;
     if (n <= 9) {
-        c = (char)('0' + n);
+        c = (char)((uint8_t)'0' + n);
     } else {
-        c = (char)('A' + n - 10);
+        c = (char)((uint8_t)'A' + n - 10);
     }
     return c;
 }

@@ -9,7 +9,7 @@ from util import nbits_for_num
 
 def value_cons_char_immediate(v, t, ti):
     if v['type']['width'] > t['width']:
-        error("char overflow", ti)
+        info("char overflow", ti)
 
     return hlir_value_cast_immediate(v, t, ti)
 
@@ -34,14 +34,21 @@ def value_cons_char(v, t, ti, method):
         info("cannot implicit cons Char value", ti)
         return None
 
+    # Char -> Char
+    if type.type_is_char(from_type):
+        return do_cons_char(v, t, ti)
+
     # Integer -> Char
-    if type.type_is_integer(from_type):
+    elif type.type_is_integer(from_type):
         return do_cons_char(v, t, ti)
 
     # VA_List -> Char
     elif type.type_is_va_list(from_type):
         return hlir_value_cast(v, t, ti)
 
+    #print("??")
+    #from hlir.type import type_print
+    #type_print(from_type)
     return None
 
 
