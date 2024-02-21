@@ -17,9 +17,9 @@ func delay_s(s: Nat64)
 
 ## String
 ```zig
-func str8_len(cstr: *Str8) -> Nat64
-func str16_len(cstr: *Str16) -> Nat64
-func str32_len(cstr: *Str32) -> Nat64
+func str8_len(str: *Str8) -> Nat64
+func str16_len(str: *Str16) -> Nat64
+func str32_len(str: *Str32) -> Nat64
 ```
 
 ## Print
