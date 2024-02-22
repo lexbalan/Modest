@@ -40,15 +40,15 @@ void sprintf_dec_nat32(char *buf, uint32_t x);
 void sprintf_hex_nat32(char *buf, uint32_t x);
 
 
-void lf_printf(char *str, ...)
+void print(char *form, ...)
 {
     va_list va_list;
-    va_start(va_list, str);
+    va_start(va_list, form);
     int32_t i;
     i = 0;
     while (true) {
         char c;
-        c = str[i];
+        c = form[i];
 
         if (c == '\0') {
             break;
@@ -56,7 +56,7 @@ void lf_printf(char *str, ...)
 
         if (c == '%') {
             i = i + 1;
-            c = str[i];
+            c = form[i];
 
             // буффер для печати всего, кроме строк
             char buf[10 + 1];

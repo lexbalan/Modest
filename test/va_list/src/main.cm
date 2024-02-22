@@ -8,7 +8,7 @@ import "lightfood/print.hm"
 
 
 func main() -> Int {
-    lf_printf("Hello World!\n")
+    print("Hello World!\n")
 
     let c = "$"[0] to Char8
     let s = "Hi!" to *Str8
@@ -16,12 +16,12 @@ func main() -> Int {
     let n = 123 to Nat32
     let x = 0x1234567F to Nat32
 
-	lf_printf("%% = '%%'\n")
-	lf_printf("c = '%c'\n", c)
-	lf_printf("s = \"%s\"\n", s)
-	lf_printf("i = %i\n", i)
-	lf_printf("n = %n\n", n)
-	lf_printf("x = 0x%x\n", x)
+	print("%% = '%%'\n")
+	print("c = '%c'\n", c)
+	print("s = \"%s\"\n", s)
+	print("i = %i\n", i)
+	print("n = %n\n", n)
+	print("x = 0x%x\n", x)
 
     return 0
 }

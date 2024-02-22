@@ -27,20 +27,27 @@ def value_cons_array_from_generic_array(v, t, ti, method):
         zero_pad = t['volume']['asset'] - len(v['asset'])
 
 
-    # check width
-    if v['type']['of']['width'] > t['of']['width']:
-        info("too big item width", ti)
-        return None
+    # in empty array literal type#of == None
+    if v['type']['of'] != None:
+        # check width
+        if v['type']['of']['width'] > t['of']['width']:
+            info("too big item width", ti)
+            return None
 
 
     casted_items = []
     items = v['asset']
     for item in items:
 
-        from value.value import value_is_immediate
-        if not value_is_immediate(item):
-            error("cons from not immediate item not implemented", ti)
-            return None
+
+#TODO: see: /test/sha256/src/main.cm:48:39:
+# var sha256_tests: []*SHA256_TestCase = [&test0, &test1]
+# Да не реализовано для локальных переменных, а в глоб контексте
+# сейчас норм идут например указатели на глоб преременные
+#        from value.value import value_is_immediate
+#        if not value_is_immediate(item):
+#            error("cons from not immediate item not implemented", ti)
+#            return None
 
         if type.type_is_array_of_char(v['type']):
             char_code = item['asset']

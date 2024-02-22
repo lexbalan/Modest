@@ -8,6 +8,6 @@
 #include <string.h>
 
 
-void lf_printf(char *str, ...);
+void print(char *form, ...);
 
 #endif /* PRINT_H */

@@ -127,7 +127,7 @@ declare void @perror(%ConstCharStr* %str)
 
 
 
-declare void @lf_printf(%Str8* %str, ...)
+declare void @print(%Str8* %form, ...)
 
 
 ; -- SOURCE: src/main.cm
@@ -144,13 +144,13 @@ declare void @lf_printf(%Str8* %str, ...)
 
 
 define %Int @main() {
-    call void (%Str8*, ...) @lf_printf(%Str8* bitcast ([14 x i8]* @str1 to [0 x i8]*))
-    call void (%Str8*, ...) @lf_printf(%Str8* bitcast ([11 x i8]* @str3 to [0 x i8]*))
-    call void (%Str8*, ...) @lf_printf(%Str8* bitcast ([10 x i8]* @str4 to [0 x i8]*), i8 36)
-    call void (%Str8*, ...) @lf_printf(%Str8* bitcast ([10 x i8]* @str5 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @str2 to [0 x i8]*))
-    call void (%Str8*, ...) @lf_printf(%Str8* bitcast ([8 x i8]* @str6 to [0 x i8]*), i32 -1)
-    call void (%Str8*, ...) @lf_printf(%Str8* bitcast ([8 x i8]* @str7 to [0 x i8]*), i32 123)
-    call void (%Str8*, ...) @lf_printf(%Str8* bitcast ([10 x i8]* @str8 to [0 x i8]*), i32 305419903)
+    call void (%Str8*, ...) @print(%Str8* bitcast ([14 x i8]* @str1 to [0 x i8]*))
+    call void (%Str8*, ...) @print(%Str8* bitcast ([11 x i8]* @str3 to [0 x i8]*))
+    call void (%Str8*, ...) @print(%Str8* bitcast ([10 x i8]* @str4 to [0 x i8]*), i8 36)
+    call void (%Str8*, ...) @print(%Str8* bitcast ([10 x i8]* @str5 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @str2 to [0 x i8]*))
+    call void (%Str8*, ...) @print(%Str8* bitcast ([8 x i8]* @str6 to [0 x i8]*), i32 -1)
+    call void (%Str8*, ...) @print(%Str8* bitcast ([8 x i8]* @str7 to [0 x i8]*), i32 123)
+    call void (%Str8*, ...) @print(%Str8* bitcast ([10 x i8]* @str8 to [0 x i8]*), i32 305419903)
     ret %Int 0
 }
 
