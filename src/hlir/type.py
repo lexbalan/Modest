@@ -702,37 +702,18 @@ def type_print(t, print_aka=True):
         print("const_", end='')
 
     if t['generic']:
-        print("Generic:", end='')
+        print("Generic(", end='')
 
     k = t['kind']
 
     if print_aka:
-
         if t['definition'] != None:
-            print(t['definition']['id']['str'])
+            print(t['definition']['id']['str'], end='')
             return
 
         elif t['declaration'] != None:
-            print(t['declaration']['id']['str'])
+            print(t['declaration']['id']['str'], end='')
             return
-
-        """elif t['id'] != None:
-            id_str = t['id']['str']
-
-            if id_str == '<generic:int>':
-                id_str = 'Int'
-
-            if type_is_generic(t):
-                print('Generic', end='')
-
-            print(id_str, end='')
-
-            if type_is_generic(t):
-                if 'width' in t:
-                    print('%d' % (t['width']), end='')
-
-            return"""
-
 
 
     if type_is_record(t):
@@ -757,6 +738,13 @@ def type_print(t, print_aka=True):
             i = i + 1
         print("\n}")
 
+    elif type_is_bool(t):
+        print("Bool", end='')
+    elif type_is_byte(t):
+        print("Byte", end='')
+    elif type_is_char(t):
+        print("Char%d" % t['width'], end='')
+
     elif type_is_enum(t):
         if t['id'] != None:
             print(t['id'], end='')
@@ -767,9 +755,10 @@ def type_print(t, print_aka=True):
 
     elif type_is_array(t):
         if t['of'] == None:
-            print("GenericEmptyArray", end='')
+            print("EmptyArray", end='')
+            if t['generic']:
+                print(")", end='')
             return
-
 
         print("[", end='')
         array_size = t['volume']
@@ -779,7 +768,7 @@ def type_print(t, print_aka=True):
             print("%d" % sz, end='')
 
         print("]", end='')
-        type_print(t['of'])
+
 
     elif type_is_func(t):
         print("(", end='')
@@ -789,7 +778,13 @@ def type_print(t, print_aka=True):
         type_print(t['to'])
 
     elif type_is_integer(t):
-        print('Integer_%d' % t['width'], end='')
+        if type_is_signed(t):
+            print('Int%d' % t['width'], end='')
+        else:
+            print('Nat%d' % t['width'], end='')
+
+    elif type_is_float(t):
+        print('Float%d' % t['width'], end='')
 
     elif type_is_opaque(t):
         print('opaque', end='')
@@ -797,5 +792,7 @@ def type_print(t, print_aka=True):
     else:
         print("<type:%s>" % k, end='')
 
+    if t['generic']:
+        print(")", end='')
 
 

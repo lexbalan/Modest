@@ -11,9 +11,11 @@ from .value import *
 # полного или из пустого дженерик массива
 def value_cons_array_from_generic_array(v, t, ti, method):
     #info("value_cons_array_from_generic_array", ti)
+    assert(type.type_is_generic_array(v['type']))
 
-    pad = 0
+    zero_pad = 0
 
+    # проверяем длину
     if t['volume'] == None:
         info("cons open array", ti)
 
@@ -22,12 +24,23 @@ def value_cons_array_from_generic_array(v, t, ti, method):
         return None
 
     elif len(v['asset']) < t['volume']['asset']:
-        pad = t['volume']['asset'] - len(v['asset'])
+        zero_pad = t['volume']['asset'] - len(v['asset'])
+
+
+    # check width
+    if v['type']['of']['width'] > t['of']['width']:
+        info("too big item width", ti)
+        return None
 
 
     casted_items = []
     items = v['asset']
     for item in items:
+
+        from value.value import value_is_immediate
+        if not value_is_immediate(item):
+            error("cons from not immediate item not implemented", ti)
+            return None
 
         if type.type_is_array_of_char(v['type']):
             char_code = item['asset']
@@ -41,7 +54,7 @@ def value_cons_array_from_generic_array(v, t, ti, method):
         casted_items.append(casted_item)
 
 
-    casted_items = casted_items + [hlir_value_zero(t['of'])] * pad
+    casted_items = casted_items + [hlir_value_zero(t['of'])] * zero_pad
 
     vx = {
         'isa': 'value',

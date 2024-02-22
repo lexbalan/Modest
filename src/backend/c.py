@@ -1195,7 +1195,8 @@ def print_stmt_defvar(x):
 
     if DONT_PRINT_UNUSED:
         if x['var']['usecnt'] == 0:
-            return
+            if init_value['kind'] != 'call':
+                return
 
     nl_indent(x['nl'])
 
@@ -1218,7 +1219,8 @@ def print_stmt_let(x):
 
     if DONT_PRINT_UNUSED:
         if v['usecnt'] == 0:
-            return
+            if x['value']['kind'] != 'call':
+                return
 
     nl_indent(x['nl'])
 
