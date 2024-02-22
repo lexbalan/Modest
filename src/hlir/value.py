@@ -100,19 +100,26 @@ def hlir_value_string(string, length=0, ti=None):
     if length == 0:
         length = len(string) + 1
 
-    #TODO: должен иметь размер не 0 а размер наибольшего чара!
-    genericCharType = hlir_type_char(0, ti=ti)
-    genericCharType['generic'] = True
-
-    vol = hlir_value_int(length)  # <=> len(string) + 1
-    genStrType = hlir_type_array(genericCharType, volume=vol, ti=ti)
-    genStrType['generic'] = True
-
+    max_char_width = 0
     chars = []
     for char in string:
         char_code = ord(char)
         value_char = hlir_value_char(char_code, type=None, ti=ti)
         chars.append(value_char)
+
+        # get max char width
+        char_width = value_char['type']['width']
+        max_char_width = max(char_width, max_char_width)
+
+
+    # тип массива литерала строки
+    # это наиболее широкий GenericChar в ней
+    genericCharType = hlir_type_char(max_char_width, ti=ti)
+    genericCharType['generic'] = True
+
+    vol = hlir_value_int(length)  # <=> len(string) + 1
+    genStrType = hlir_type_array(genericCharType, volume=vol, ti=ti)
+    genStrType['generic'] = True
 
     # #imm of string literal is array of chars
     return hlir_value_literal(genStrType, chars, ti)
