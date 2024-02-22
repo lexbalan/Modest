@@ -13,7 +13,8 @@ all: LLVM
 
 CM:
 	mcc -o $(CMPREFIX)/main -mbackend=cm $(INDIR)/main.cm
-	mcc -o $(CMPREFIX)/utf -mbackend=llvm -funsafe ${MODEST_LIB}/misc/utf.cm
+	mcc -o $(CMPREFIX)/utf -mbackend=cm -funsafe ${MODEST_LIB}/misc/utf.hm
+	mcc -o $(CMPREFIX)/utf -mbackend=cm -funsafe ${MODEST_LIB}/misc/utf.cm
 
 
 LLVM:

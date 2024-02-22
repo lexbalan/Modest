@@ -11,6 +11,7 @@
 
 #include "./utf.h"
 
+
 // декодирует символ UTF-32 в последовательность UTF-8
 uint8_t utf32_to_utf8(uint32_t c, char *buf)
 {
@@ -83,6 +84,11 @@ uint8_t utf16_to_utf32(uint16_t *c, uint32_t *result)
 }
 
 
+//
+// putchar
+//
+
+
 void utf8_putchar(char c)
 {
     putchar((int)(int32_t)c);
@@ -115,8 +121,9 @@ void utf32_putchar(uint32_t c)
 }
 
 
-
-
+//
+// puts
+//
 
 void utf8_puts(char *s)
 {

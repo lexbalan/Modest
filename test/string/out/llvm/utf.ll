@@ -288,6 +288,8 @@ endif_0:
     ret i8 0
 }
 
+
+
 define void @utf8_putchar(i8 %c) {
     %1 = sext i8 %c to i32
     %2 = call %Int (%Int) @putchar(i32 %1)
@@ -331,6 +333,8 @@ body_1:
 break_1:
     ret void
 }
+
+
 
 define void @utf8_puts(%Str8* %s) {
     %1 = alloca i32
