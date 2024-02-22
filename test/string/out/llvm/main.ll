@@ -128,12 +128,12 @@ declare void @perror(%ConstCharStr* %str)
 
 declare i8 @utf32_to_utf8(i32 %c, [4 x i8]* %buf)
 declare i8 @utf16_to_utf32([0 x i16]* %c, i32* %result)
-declare void @utf8_puts(%Str8* %s)
-declare void @utf16_puts(%Str16* %s)
-declare void @utf32_puts(%Str32* %s)
 declare void @utf8_putchar(i8 %c)
 declare void @utf16_putchar(i16 %c)
 declare void @utf32_putchar(i32 %c)
+declare void @utf8_puts(%Str8* %s)
+declare void @utf16_puts(%Str16* %s)
+declare void @utf32_puts(%Str32* %s)
 
 
 ; -- SOURCE: src/main.cm
