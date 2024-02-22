@@ -30,10 +30,10 @@ func sprintf_dec_nat32(buf: *[]Char8, x: Nat32)
 func sprintf_hex_nat32(buf: *[]Char8, x: Nat32)
 
 
-func lf_printf(str: *Str8, va_list: VA_List) {
+func print(form: *Str8, va_list: VA_List) {
     var i = 0
 	while true {
-        var c = str[i]
+        var c = form[i]
 
 		if c == "\0"[0] {
 			break
@@ -41,7 +41,7 @@ func lf_printf(str: *Str8, va_list: VA_List) {
 
 		if c == "%"[0] {
             i = i + 1
-            c = str[i]
+            c = form[i]
 
 			// буффер для печати всего, кроме строк
             var buf: [10+1]Char8
