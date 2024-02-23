@@ -839,28 +839,28 @@ def print_value_literal_record(v, ctx):
 
 
 
-def code_spec_char(c):
-    if c == 0x07: return "\\a" # bell
-    elif c == 0x08: return "\\b" # backspace
-    elif c == 0x09: return "\\t" # horizontal tab
-    elif c == 0x0A: return "\\n" # line feed
-    elif c == 0x0B: return "\\v" # vertical tab
-    elif c == 0x0C: return "\\f" # form feed
-    elif c == 0x0D: return "\\r" # carriage return
-    elif c == 0x1B: return "\\e" # escape
-    else: return "\\x%X" % c
-
-
 def code_to_char(cc):
-    sym = chr(cc)
+
 
     if cc < 0x20:
-        return code_spec_char(cc)
+        if cc == 0x07: return "\\a" # bell
+        elif cc == 0x08: return "\\b" # backspace
+        elif cc == 0x09: return "\\t" # horizontal tab
+        elif cc == 0x0A: return "\\n" # line feed
+        elif cc == 0x0B: return "\\v" # vertical tab
+        elif cc == 0x0C: return "\\f" # form feed
+        elif cc == 0x0D: return "\\r" # carriage return
+        elif cc == 0x1B: return "\\e" # escape
+        else: return "\\x%X" % cc
+
     elif cc <= 0x7E :
+        sym = chr(cc)
         if sym == '\\': return '\\\\'
         elif sym == '"': return '\\"'
         else: return sym
-    elif cc != 0: return sym
+
+    elif cc != 0:
+        return chr(cc)
 
 
 def _print_string_literal(utf32_codes, width=8):
