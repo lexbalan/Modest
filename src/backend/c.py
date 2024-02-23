@@ -864,6 +864,7 @@ def code_to_char(cc):
 
 
 def _print_string_literal(utf32_codes, width=8):
+    prefix = ""
     if width <= 8: prefix = ""
     elif width <= 16: prefix = "u"
     elif width <= 32: prefix = "U"
@@ -877,8 +878,6 @@ def _print_string_literal(utf32_codes, width=8):
         out(code_to_char(cc))
 
     out("\"")
-
-
 
 
 
@@ -906,19 +905,16 @@ def print_value_literal_string(x, ctx, char_width=8):
 
 
 def print_value_literal_char(x, ctx):
-    cc = x['asset']
-
     width = x['type']['width']
 
     prefix = ""
-    if width == 32 or cc > 0xFFFF:
-        prefix = "U"
-    elif width == 16 or cc > 0x7F:
-        prefix = "u"
+    if width <= 8: prefix = ""
+    elif width <= 16: prefix = "u"
+    elif width <= 32: prefix = "U"
 
     out(prefix)
     out("'")
-    out(code_to_char(cc))
+    out(code_to_char(x['asset']))
     out("'")
     return
 
