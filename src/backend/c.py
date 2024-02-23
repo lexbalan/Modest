@@ -906,37 +906,20 @@ def print_value_literal_string(x, ctx, char_width=8):
 
 
 def print_value_literal_char(x, ctx):
-    num = x['asset']
-
-    if num == 0:
-        out("'\\0'")
-        return
+    cc = x['asset']
 
     width = x['type']['width']
 
     prefix = ""
-    if width == 32 or num > 0xFFFF:
+    if width == 32 or cc > 0xFFFF:
         prefix = "U"
-    elif width == 16 or num > 0x7F:
+    elif width == 16 or cc > 0x7F:
         prefix = "u"
 
     out(prefix)
-    if num <= 0x7E:
-        if num < 0x20:
-            out("'%s'" % code_spec_char(num))
-
-        elif num == ord("'"):
-            out("'\\''")
-
-        else:
-            out("'%c'" % (num))
-    else:
-
-        #TODO: .isprintable()
-        # print wide char
-        out("'%c'" % (num))
-        #out("'\\x%X'" % (num))
-
+    out("'")
+    out(code_to_char(cc))
+    out("'")
     return
 
 

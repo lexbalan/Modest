@@ -34,7 +34,7 @@ void f0(struct f0_x x)
 int main()
 {
     // generic array [4]Char8 will be implicit casted to [10]Char8
-    f0(*(struct f0_x *)&(struct f0_x){'h', 'i', '!', '\0', '\0', '\0', '\0', '\0', '\0', '\0'});
+    f0(*(struct f0_x *)&(struct f0_x){'h', 'i', '!', '\x0', '\x0', '\x0', '\x0', '\x0', '\x0', '\x0'});
 
     int32_t i;
     i = 0;

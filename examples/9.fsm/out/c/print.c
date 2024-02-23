@@ -26,7 +26,7 @@ void put_str8(char *s)
     i = 0;
     while (true) {
         const char c = s[i];
-        if (c == '\0') {
+        if (c == '\x0') {
             break;
         }
         _put_char8(c);
@@ -50,19 +50,36 @@ void print(char *form, ...)
         char c;
         c = form[i];
 
-        if (c == '\0') {
+        if (c == '\x0') {
             break;
         }
 
-        if (c == '%') {
+        if (c == '\\') {
+            c = form[i + 1];
+            if (c == '{') {
+                // "\{" -> "{"
+                _put_char8(c);
+                i = i + 2;
+                continue;
+            } else if (c == '}') {
+                // "\}" -> "{"
+                _put_char8(c);
+                i = i + 2;
+                continue;
+            }
+        }
+
+        if (c == '{') {
             i = i + 1;
             c = form[i];
+            i = i + 1;
+
 
             // буффер для печати всего, кроме строк
             char buf[10 + 1];
             char *sptr;
             sptr = (char *)(char *)&buf;
-            sptr[0] = '\0';
+            sptr[0] = '\x0';
 
             if ((c == 'i') || (c == 'd')) {
                 // %i & %d for signed integer (Int)
@@ -86,9 +103,6 @@ void print(char *form, ...)
                 const char c = va_arg(va_list, int);
                 sptr[0] = c;
                 sptr[1] = 0;
-            } else if (c == '%') {
-                // %% for PERCENT_SYMBOL
-                sptr = "%";
             }
 
             put_str8(sptr);
@@ -191,7 +205,7 @@ void sprintf_dec_int32(char *buf, int32_t x)
         j = j + 1;
     }
 
-    buf[j] = '\0';
+    buf[j] = '\x0';
 
     //return buf
 }
@@ -225,7 +239,7 @@ void sprintf_dec_nat32(char *buf, uint32_t x)
         j = j + 1;
     }
 
-    buf[j] = '\0';
+    buf[j] = '\x0';
 
     //return buf
 }

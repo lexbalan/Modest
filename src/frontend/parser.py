@@ -647,7 +647,16 @@ class Parser:
                     i = i + 1
                     sym = s[i]
 
-                    if sym == '"':
+                    if sym == '{':
+                        # eat "\{" as is
+                        new_s = new_s + '\\{'
+                        continue
+                    elif sym == '}':
+                        # eat "\}" as is
+                        new_s = new_s + '\\}'
+                        continue
+                    elif sym == '"':
+                        # eat "\""
                         new_s = new_s + sym
                         str_len = str_len + 1
                         i = i + 1

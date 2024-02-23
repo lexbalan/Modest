@@ -124,27 +124,27 @@ void beacon_exit(FSM *fsm)
 
 
 static FSM fsm = {
-    .name = {'F', 'l', 'a', 's', 'h', '\0', '\0', '\0'},
+    .name = {'F', 'l', 'a', 's', 'h', '\x0', '\x0', '\x0'},
     .state = 0,
     .nexstate = 0,
     .substate = fsmSubstateEntering,
     .states = {
         {
-            .name = {'O', 'f', 'f', '\0', '\0', '\0', '\0', '\0'},
+            .name = {'O', 'f', 'f', '\x0', '\x0', '\x0', '\x0', '\x0'},
             .entry = &off_entry,
             .loop = &off_loop,
             .exit = &off_exit
         },
 
         {
-            .name = {'O', 'n', '\0', '\0', '\0', '\0', '\0', '\0'},
+            .name = {'O', 'n', '\x0', '\x0', '\x0', '\x0', '\x0', '\x0'},
             .entry = &on_entry,
             .loop = &on_loop,
             .exit = &on_exit
         },
 
         {
-            .name = {'B', 'e', 'a', 'c', 'o', 'n', '\0', '\0'},
+            .name = {'B', 'e', 'a', 'c', 'o', 'n', '\x0', '\x0'},
             .entry = &beacon_entry,
             .loop = &beacon_loop,
             .exit = &beacon_exit

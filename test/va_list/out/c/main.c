@@ -1,4 +1,4 @@
-// examples/
+// test/va_list
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -21,12 +21,12 @@ int main()
     const uint32_t n = 123;
     const uint32_t x = 0x1234567F;
 
-    print("%% = '%%'\n");
-    print("c = '%c'\n", c);
-    print("s = \"%s\"\n", s);
-    print("i = %i\n", i);
-    print("n = %n\n", n);
-    print("x = 0x%x\n", x);
+    print("\\{{\\}}\n");
+    print("c = '{c}'\n", c);
+    print("s = \"{s}\"\n", s);
+    print("i = {i}\n", i);
+    print("n = {n}\n", n);
+    print("x = 0x{x}\n", x);
 
     return 0;
 }

@@ -39,9 +39,26 @@ func print(form: *Str8, va_list: VA_List) {
 			break
 		}
 
-		if c == "%"[0] {
+        if c == "\\"[0] {
+            c = form[i + 1]
+            if c == "{"[0] {
+                // "\{" -> "{"
+                _put_char8(c)
+                i = i + 2
+                again
+            } else if c == "}"[0] {
+                // "\}" -> "{"
+                _put_char8(c)
+                i = i + 2
+                again
+            }
+        }
+
+        if c == "{"[0] {
             i = i + 1
             c = form[i]
+            i = i + 1
+
 
 			// буффер для печати всего, кроме строк
             var buf: [10+1]Char8
@@ -71,9 +88,6 @@ func print(form: *Str8, va_list: VA_List) {
                 let c = va_list to Char8
                 sptr[0] = c
                 sptr[1] = 0 to Char8
-			} else if c == "%"[0] {
-                // %% for PERCENT_SYMBOL
-                sptr = "%"
 			}
 
 			put_str8(sptr)
