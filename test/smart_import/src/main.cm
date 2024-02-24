@@ -3,11 +3,9 @@
 // how to find library
 const library = "libc"
 
-/*
-import library + "/stdio.hm"
-import library + "/libc.hm"
-import library + "/math.hm"
-*/
+//import library + "/stdio.hm"
+//import library + "/libc.hm"
+//import library + "/math.hm"
 
 // alternative syntax?
 import {

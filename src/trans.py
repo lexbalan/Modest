@@ -1518,7 +1518,7 @@ def do_import(x):
     # get abspath
     abspath = import_abspath(impline)
     if abspath == None:
-        error("module %s not found" % impline, x['expr'])
+        error("module %s not found" % impline, x['expr']['ti'])
         fatal("cannot import module")
         return None
 
@@ -1541,7 +1541,7 @@ def do_import(x):
     # но сперва проверим нет ли его уже среди импортированных модулей
     for imported_module in module['imports']:
         if imported_module['source_info']['path'] == m['source_info']['path']:
-            error("attempt to include module twice", x['ti'])
+            error("attempt to include module twice", x['expr']['ti'])
 
     if m != None:
         module['imports'].append(m)
