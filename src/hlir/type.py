@@ -355,6 +355,7 @@ def get_type_root_id(t):
 
         if rd != None:
             return rd
+
         else:
             return _def['id']
 
@@ -368,8 +369,9 @@ def get_type_root_id(t):
         else:
             return _decl['id']
 
-    else:
-        return None
+
+    return None
+
 
 
 def type_eq_record(a, b, opt, nominative=False):
@@ -692,6 +694,39 @@ def print_list_by(lst, method):
             print(", ")
         method(lst[i])
         i = i + 1
+    return
+
+
+
+
+def type_id(t):
+    if t['definition'] != None:
+        return t['definition']['id']['str']
+
+    elif t['declaration'] != None:
+        return t['declaration']['id']['str']
+
+    return None
+
+# возвращает корневой тип
+# например Int32 --> Int --> MyInt
+# type#id = MyInt
+# root#id = Int32
+def type_root_id(t):
+    if t['definition'] != None:
+        if t['definition']['original_type'] != None:
+            _id = type_root_id(t['definition']['original_type'])
+            if _id != None:
+                return _id
+        return t['definition']['id']['str']
+
+    elif t['declaration'] != None:
+        if t['declaration']['original_type'] != None:
+            _id = root_id(t['declaration']['original_type'])
+            if _id != None:
+                return _id
+        return t['declaration']['id']['str']
+
 
 
 def type_print(t, print_aka=True):
@@ -707,12 +742,15 @@ def type_print(t, print_aka=True):
     k = t['kind']
 
     if print_aka:
-        if t['definition'] != None:
-            print(t['definition']['id']['str'], end='')
-            return
+        _id = type_id(t)
 
-        elif t['declaration'] != None:
-            print(t['declaration']['id']['str'], end='')
+        if _id != None:
+            print(_id, end='')
+
+            _root_id = type_root_id(t)
+            if _root_id != None:
+                if _root_id != _id:
+                    print(" (alias of %s)" % _root_id, end='')
             return
 
 
