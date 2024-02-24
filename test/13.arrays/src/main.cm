@@ -98,6 +98,10 @@ func main() -> Int {
     printf("d[5] = %i\n", d[5])
 
 
+    //
+    // Check assination local literal array
+    //
+
     // cons literal array from var items
     var int1: Int = 100
     var int2: Int = 200
