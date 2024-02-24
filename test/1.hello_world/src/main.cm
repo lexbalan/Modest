@@ -8,12 +8,8 @@ const world = "world!\n"
 const hello_world = hello + world
 
 
-type MyInt Int16
-
 func main() -> Int {
     printf("%s", hello_world to *Str8)
-
-    var i: Int32 = 5 to MyInt
 
     return 0
 }
