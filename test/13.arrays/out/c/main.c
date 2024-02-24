@@ -126,16 +126,17 @@ int main()
     int2 = 200;
     int int3;
     int3 = 300;
-
     int init_array[3];
     memcpy(&init_array, &(int[3]){int1, int2, int3}, 12);
 
+    // check local literal array assignation to local array
     int32_t e[3];
     memcpy(&e, &init_array, 12);
     printf("e[0] = %i\n", e[0]);
     printf("e[1] = %i\n", e[1]);
     printf("e[2] = %i\n", e[2]);
 
+    // check local literal array assignation to global array
     memcpy(&globalArray, &init_array, 12);
     printf("globalArray[%i] = %i\n", 0, globalArray[0]);
     printf("globalArray[%i] = %i\n", 1, globalArray[1]);

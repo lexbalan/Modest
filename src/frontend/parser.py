@@ -935,6 +935,8 @@ class Parser:
             s = self.stmt_again()
         elif self.match('break'):
             s = self.stmt_break()
+        elif self.match('const'):
+            s = self.stmt_let()
         elif self.match('++'):
             s = self.stmt_inc()
         elif self.match('--'):

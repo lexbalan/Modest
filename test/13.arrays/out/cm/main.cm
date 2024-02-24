@@ -101,15 +101,16 @@ func main() -> Int {
     var int1: Int = 100
     var int2: Int = 200
     var int3: Int = 300
-
     let init_array = [int1, int2, int3]
 
+    // check local literal array assignation to local array
     var e: [3]Int32
     e = init_array
     printf("e[0] = %i\n", e[0])
     printf("e[1] = %i\n", e[1])
     printf("e[2] = %i\n", e[2])
 
+    // check local literal array assignation to global array
     globalArray = init_array
     printf("globalArray[%i] = %i\n", 0, globalArray[0])
     printf("globalArray[%i] = %i\n", 1, globalArray[1])

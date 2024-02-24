@@ -560,6 +560,7 @@ endif_0:
     %129 = insertvalue [3 x %Int] %128, %Int %126, 2
     %130 = alloca [3 x %Int]
     store [3 x %Int] %129, [3 x %Int]* %130
+    ; check local literal array assignation to local array
     %131 = alloca [3 x i32]
     %132 = load %Int, %Int* %121
     %133 = load %Int, %Int* %122
@@ -577,6 +578,7 @@ endif_0:
     %144 = getelementptr inbounds [3 x i32], [3 x i32]* %131, i32 0, i32 2
     %145 = load i32, i32* %144
     %146 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str25 to [0 x i8]*), i32 %145)
+    ; check local literal array assignation to global array
     %147 = load %Int, %Int* %121
     %148 = load %Int, %Int* %122
     %149 = load %Int, %Int* %123
