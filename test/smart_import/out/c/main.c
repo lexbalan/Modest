@@ -14,6 +14,11 @@
 
 // how to find library
 
+//import library + "/stdio.hm"
+//import library + "/libc.hm"
+//import library + "/math.hm"
+
+// alternative syntax?
 
 
 

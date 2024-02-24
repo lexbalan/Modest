@@ -1308,6 +1308,10 @@ class Parser:
             elif self.token_class_is('directive'):
                 x = self.parse_directive()
 
+            # we can do const definition before import?
+            elif self.match('const'):
+                x = self.parse_def_const()
+
             elif self.match('import'):
                 x = self.parse_import()
 
@@ -1316,6 +1320,10 @@ class Parser:
 
             if isinstance(x, list):
                 x[0]['nl'] = spaceline_cnt
+                # у остальных #nl = 1 (!)
+                for xx in x[1:]:
+                    xx['nl'] = 1
+
                 spaceline_cnt = 0
                 output.extend(x)
             else:
