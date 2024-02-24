@@ -344,7 +344,7 @@ def do_type_record(x):
     rec['end_nl'] = x['end_nl']
     # add anon record (before)
     anon_tag = '__anonymous_struct_%d' % anon_rec_cnt
-    rec['anon'] = anon_tag
+    rec['aka'] = anon_tag
     module['anon_recs'].append(rec)
 
     return rec
@@ -1644,8 +1644,8 @@ def def_type(x):
     # а мы к этому заранее подготовлись
     ty = do_type(x['type'])
 
-    if 'anon' in ty:
-        del ty['anon']
+    if 'aka' in ty:
+        del ty['aka']
         if ty in module['anon_recs']:
             module['anon_recs'].remove(ty)
 

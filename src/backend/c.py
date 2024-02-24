@@ -310,8 +310,8 @@ def print_type(t, space_after=False, array_as_ptr=True, as_const=False):
         print_type_id(t)
 
     elif hlir_type.type_is_record(t):
-        if 'anon' in t:
-            out("struct %s" % t['anon'])
+        if 'aka' in t:
+            out("struct %s" % t['aka'])
         else:
             print_type_record(t)
 
@@ -840,8 +840,6 @@ def print_value_literal_record(v, ctx):
 
 
 def code_to_char(cc):
-
-
     if cc < 0x20:
         if cc == 0x07: return "\\a" # bell
         elif cc == 0x08: return "\\b" # backspace
@@ -1737,7 +1735,7 @@ def run(module, outname):
 
     for anon_rec in module['anon_recs']:
         nl_indent()
-        print_type_record(anon_rec, tag=anon_rec['anon'])
+        print_type_record(anon_rec, tag=anon_rec['aka'])
         out(";")
 
     for x in module['text']:
