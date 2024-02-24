@@ -256,6 +256,10 @@ def init():
     int_width = int(settings.get('integer_width'))
     flt_width = int(settings.get('float_width'))
 
+    #print("system_char_width  = %d" % char_width)
+    #print("system_int_width  = %d" % int_width)
+    #print("system_flt_width  = %d" % flt_width)
+
     global typeSysInt, typeSysNat, typeSysFloat, typeSysChar, typeSysStr
 
     typeSysChar = foundation.type_select_char(char_width)
