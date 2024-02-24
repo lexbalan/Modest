@@ -545,6 +545,9 @@ endif_0:
     %118 = getelementptr inbounds [6 x i32], [6 x i32]* %96, i32 0, i32 5
     %119 = load i32, i32* %118
     %120 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str22 to [0 x i8]*), i32 %119)
+    ;
+    ; Check assination local literal array
+    ;
     ; cons literal array from var items
     %121 = alloca %Int
     store %Int 100, %Int* %121

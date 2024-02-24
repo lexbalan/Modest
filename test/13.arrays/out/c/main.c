@@ -119,15 +119,19 @@ int main()
     printf("d[5] = %i\n", d[5]);
 
 
+    //
+    // Check assination local literal array
+    //
+
     // cons literal array from var items
-    int int1;
-    int1 = 100;
-    int int2;
-    int2 = 200;
-    int int3;
-    int3 = 300;
+    int int100;
+    int100 = 100;
+    int int200;
+    int200 = 200;
+    int int300;
+    int300 = 300;
     int init_array[3];
-    memcpy(&init_array, &(int[3]){int1, int2, int3}, 12);
+    memcpy(&init_array, &(int[3]){int100, int200, int300}, 12);
 
     // check local literal array assignation to local array
     int32_t e[3];
