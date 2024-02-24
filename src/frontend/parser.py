@@ -1100,8 +1100,13 @@ class Parser:
 
     def parse_import(self):
         ti = self.ti()
-        str = self.gettok()
-        return {'isa': 'ast_directive', 'kind': 'import', 'str': str, 'ti': ti}
+        import_expr = self.expr_value()
+        return {
+            'isa': 'ast_directive',
+            'kind': 'import',
+            'expr': import_expr,
+            'ti': ti
+        }
 
 
     def parse_def_func(self, extern=False):

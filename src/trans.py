@@ -1493,9 +1493,21 @@ def do_stmt_block(x):
 
 included_modules = {}
 def do_import(x):
-    impline = x['str']
-    impline = impline[1:]
-    impline = impline[:-1]
+    import_expr = do_value(x['expr'])
+
+    if not value_is_immediate(import_expr):
+        error("expected immediate value expression", x['expr']['ti'])
+        return None
+
+    if not hlir_type.type_is_generic_array_of_char(import_expr['type']):
+        error("expected value with generic string type", x['expr']['ti'])
+        return None
+
+    # Literal string to python string
+    impline = ""
+    for char in import_expr['asset']:
+        impline = impline + chr(char['asset'])
+
 
     # (!) right here, before calling "do_import" (!)
     att = attributes_get()
@@ -1506,8 +1518,8 @@ def do_import(x):
     # get abspath
     abspath = import_abspath(impline)
     if abspath == None:
-        error("module not found", x)
-        fatal("module not found")
+        error("module %s not found" % impline, x['expr'])
+        fatal("cannot import module")
         return None
 
 

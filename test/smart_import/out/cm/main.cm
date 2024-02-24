@@ -1,0 +1,18 @@
+// examples/smart_import/main.cm
+
+// how to find library
+const library = "libc"
+
+import "libc/stdio.h"
+
+import "libc/libc.h"
+
+import "libc/math.h"
+
+
+
+func main() -> Int {
+    printf("Smart import test\n")
+    return 0
+}
+
