@@ -3,9 +3,18 @@
 // how to find library
 const library = "libc"
 
+/*
 import library + "/stdio.hm"
 import library + "/libc.hm"
 import library + "/math.hm"
+*/
+
+// alternative syntax?
+import {
+    library + "/stdio.hm"
+    library + "/libc.hm"
+    library + "/math.hm"
+}
 
 
 func main() -> Int {

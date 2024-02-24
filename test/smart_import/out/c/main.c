@@ -19,9 +19,6 @@
 
 
 
-
-
-
 int main()
 {
     printf("Smart import test\n");

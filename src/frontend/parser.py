@@ -1100,13 +1100,37 @@ class Parser:
 
     def parse_import(self):
         ti = self.ti()
-        import_expr = self.expr_value()
-        return {
-            'isa': 'ast_directive',
-            'kind': 'import',
-            'expr': import_expr,
-            'ti': ti
-        }
+
+        if not self.look("{"):
+            import_expr = self.expr_value()
+            return {
+                'isa': 'ast_directive',
+                'kind': 'import',
+                'expr': import_expr,
+                'ti': ti
+            }
+        else:
+
+            imports = []
+            self.skip()  # {
+            while True:
+                nl_cnt = self.skip_blanks()
+
+                if self.match('}'):
+                    break
+
+                import_expr = self.expr_value()
+                import_dir = {
+                    'isa': 'ast_directive',
+                    'kind': 'import',
+                    'expr': import_expr,
+                    'ti': ti
+                }
+
+                imports.append(import_dir)
+
+            return imports
+
 
 
     def parse_def_func(self, extern=False):
