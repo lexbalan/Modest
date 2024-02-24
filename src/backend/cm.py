@@ -453,25 +453,26 @@ def print_value_literal_record(v, ctx):
 
 
 
-def print_character(cc):
-    sym = chr(cc)
+def code_to_char(cc):
     if cc < 0x20:
-        if cc == 0x07: out("\\a") # bell
-        elif cc == 0x08: out("\\b") # backspace
-        elif cc == 0x09: out("\\t") # horizontal tab
-        elif cc == 0x0A: out("\\n") # line feed
-        elif cc == 0x0B: out("\\v") # vertical tab
-        elif cc == 0x0C: out("\\f") # form feed
-        elif cc == 0x0D: out("\\r") # carriage return
-        elif cc == 0x1B: out("\\e") # escape
-        else: out("\\x%X" % cc)
-    elif cc > 0x7E:
-        sym_utf8 = sym.encode('utf-8').decode('utf-8')
-        out("%s" % sym_utf8)
-    else:
-        if sym == '\\': out('\\\\')
-        elif sym == '"': out('\\"')
-        else: out(sym)
+        if cc == 0x07: return "\\a" # bell
+        elif cc == 0x08: return "\\b" # backspace
+        elif cc == 0x09: return "\\t" # horizontal tab
+        elif cc == 0x0A: return "\\n" # line feed
+        elif cc == 0x0B: return "\\v" # vertical tab
+        elif cc == 0x0C: return "\\f" # form feed
+        elif cc == 0x0D: return "\\r" # carriage return
+        elif cc == 0x1B: return "\\e" # escape
+        else: return "\\x%X" % cc
+
+    elif cc <= 0x7E :
+        sym = chr(cc)
+        if sym == '\\': return '\\\\'
+        elif sym == '"': return '\\"'
+        else: return sym
+
+    elif cc != 0:
+        return chr(cc)
 
 
 # FIXIT: это вообще херня
@@ -482,24 +483,25 @@ def print_value_literal_array_str(x, ctx):
     while i < len(x['asset']):
         char_value = asset[i]
 
-        code = char_value['asset']
+        cc = char_value['asset']
 
-
-        # if c is '0' - go to the end of string
+        # if cc is '0' - go to the end of string
         # and check if there is something (non-zero)
-        # if not - just end string, else - continue
-        if code == 0:
+        # if not - just end string,
+        # else - continue and print next
+        if cc == 0:
             i_befor = i
             while i < len(x['asset']):
-                cc = asset[i]
-                if cc != 0:
+                _cc = asset[i]
+                if _cc != 0:
                     i = i_befor
                     break
                 i = i + 1
             out("\"")
             return
 
-        print_character(code)
+        out(code_to_char(cc))
+
         i = i + 1
 
     out("\"")
