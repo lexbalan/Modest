@@ -2,7 +2,7 @@
 
 func str8_len(str: *Str8) -> Nat64 {
     var i = 0 to Nat64
-    while str[i] != "\0"[0] {
+    while str[i] != "\0" {
         ++i
     }
     return i
@@ -11,7 +11,7 @@ func str8_len(str: *Str8) -> Nat64 {
 
 func str16_len(str: *Str16) -> Nat64 {
     var i = 0 to Nat64
-    while str[i] != "\0"[0] {
+    while str[i] != "\0" {
         ++i
     }
     return i
@@ -20,7 +20,7 @@ func str16_len(str: *Str16) -> Nat64 {
 
 func str32_len(str: *Str32) -> Nat64 {
     var i = 0 to Nat64
-    while str[i] != "\0"[0] {
+    while str[i] != "\0" {
         ++i
     }
     return i

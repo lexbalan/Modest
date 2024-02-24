@@ -10,7 +10,7 @@ import "lightfood/print.hm"
 func main() -> Int {
     print("Hello World!\n")
 
-    let c = "$"[0] to Char8
+    let c = "$" to Char8
     let s = "Hi!" to *Str8
     let i = -1 to Int32
     let n = 123 to Nat32

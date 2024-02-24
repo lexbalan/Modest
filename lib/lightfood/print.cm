@@ -16,7 +16,7 @@ func put_str8(s: *Str8) {
     var i = 0
 	while true {
 		let c = s[i]
-		if c == "\0"[0] {
+		if c == "\0" {
 			break
 		}
 		_put_char8(c)
@@ -35,18 +35,18 @@ func print(form: *Str8, va_list: VA_List) {
 	while true {
         var c = form[i]
 
-		if c == "\0"[0] {
+		if c == "\0" {
 			break
 		}
 
-        if c == "\\"[0] {
+        if c == "\\" {
             c = form[i + 1]
-            if c == "{"[0] {
+            if c == "{" {
                 // "\{" -> "{"
                 _put_char8(c)
                 i = i + 2
                 again
-            } else if c == "}"[0] {
+            } else if c == "}" {
                 // "\}" -> "{"
                 _put_char8(c)
                 i = i + 2
@@ -54,7 +54,7 @@ func print(form: *Str8, va_list: VA_List) {
             }
         }
 
-        if c == "{"[0] {
+        if c == "{" {
             i = i + 1
             c = form[i]
             i = i + 1
@@ -64,26 +64,26 @@ func print(form: *Str8, va_list: VA_List) {
             var buf: [10+1]Char8
             var sptr: *[]Char8
             sptr = &buf
-            sptr[0] = "\0"[0]
+            sptr[0] = "\0"
 
-			if (c == "i"[0]) or (c == "d"[0]) {
+			if (c == "i") or (c == "d") {
                 // %i & %d for signed integer (Int)
                 let i = va_list to Int32
 				sprintf_dec_int32(sptr, i)
-            } else if c == "n"[0] {
+            } else if c == "n" {
                 // %n for unsigned integer (Nat)
                 let n = va_list to Nat32
 				sprintf_dec_nat32(sptr, n)
-			} else if (c == "x"[0]) or (c == "p"[0]) {
+			} else if (c == "x") or (c == "p") {
                 // %x for unsigned integer (Nat)
                 // %p for pointers
                 let x = va_list to Nat32
 				sprintf_hex_nat32(sptr, x)
-			} else if c == "s"[0] {
+			} else if c == "s" {
                 // %s pointer to string
                 let s = va_list to *Str8
                 sptr = s
-			} else if c == "c"[0] {
+			} else if c == "c" {
                 // %c for char
                 let c = va_list to Char8
                 sptr[0] = c
@@ -170,7 +170,7 @@ func sprintf_dec_int32(buf: *[]Char8, x: Int32) {
     var j = 0
 
 	if neg {
-        buf[0] = "-"[0]
+        buf[0] = "-"
         j = j + 1
 	}
 
@@ -180,7 +180,7 @@ func sprintf_dec_int32(buf: *[]Char8, x: Int32) {
         j = j + 1
 	}
 
-    buf[j] = "\0"[0]
+    buf[j] = "\0"
 
 	//return buf
 }
@@ -210,7 +210,7 @@ func sprintf_dec_nat32(buf: *[]Char8, x: Nat32) {
         j = j + 1
 	}
 
-    buf[j] = "\0"[0]
+    buf[j] = "\0"
 
 	//return buf
 }

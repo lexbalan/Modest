@@ -25,14 +25,26 @@ def do_cons_char(v, t, ti):
 def value_cons_char(v, t, ti, method):
     from_type = v['type']
 
+
+    # Generic([1]GenericChar) -> Char
+    # ex: var c: Char8 = "A"
+    if type.type_is_generic_array_of_char(from_type):
+        if from_type['volume']['asset'] == 2:
+            # extract GenericChar item for next cast step (see below)
+            v = v['asset'][0]
+            from_type = v['type']
+
+
     # implicit casts
     if type.type_is_generic_char(from_type):
         return value_cons_char_immediate(v, t, ti)
+
 
     # explicit casts
     if method != 'explicit':
         info("cannot implicit cons Char value", ti)
         return None
+
 
     # Char -> Char
     if type.type_is_char(from_type):
