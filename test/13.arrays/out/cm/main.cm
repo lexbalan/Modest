@@ -112,9 +112,9 @@ func main() -> Int {
 
     // check local literal array assignation to global array
     globalArray = init_array
-    printf("globalArray[%i] = %i\n", 0, globalArray[0])
-    printf("globalArray[%i] = %i\n", 1, globalArray[1])
-    printf("globalArray[%i] = %i\n", 2, globalArray[2])
+    printf("globalArray[%i] = %i\n", 0 to Int32, globalArray[0])
+    printf("globalArray[%i] = %i\n", 1 to Int32, globalArray[1])
+    printf("globalArray[%i] = %i\n", 2 to Int32, globalArray[2])
 
     return 0
 }
