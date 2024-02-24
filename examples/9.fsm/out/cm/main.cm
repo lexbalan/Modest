@@ -8,7 +8,7 @@ import "libc/stdio.h"
 import "./fsm.h"
 
 //@attribute("c-no-print")
-//import "lightfood/main.hm"
+//import "lightfood/main"
 @attribute("c-no-print")
 import "lightfood/delay.h"
 //@c_include("./ff_main.h")

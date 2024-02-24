@@ -1,8 +1,8 @@
 // examples/8.linked_list/linked_list.cm
 
-import "libc/libc.hm"
+import "libc/libc"
 
-import "./linked_list.hm"
+import "./linked_list"
 
 
 type Node record {

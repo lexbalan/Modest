@@ -1,9 +1,9 @@
 // test/11.unicode/main.cm
 
-import "libc/stdio.hm"
+import "libc/stdio"
 
 @attribute("c-no-print")
-import "misc/utf.hm"
+import "misc/utf"
 @c_include("./utf.h")
 
 

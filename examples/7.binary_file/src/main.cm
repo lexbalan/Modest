@@ -1,7 +1,7 @@
 // examples/7.binary_file/main.cm
 
-import "libc/libc.hm"
-import "libc/stdio.hm"
+import "libc/libc"
+import "libc/stdio"
 
 
 // FIXIT: not worked LLVM result (!)

@@ -1,6 +1,6 @@
 // examples/2.if-else/main.cm
 
-import "libc/stdio.hm"
+import "libc/stdio"
 
 
 func main() -> Int {

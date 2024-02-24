@@ -1,10 +1,10 @@
 // test/sha256/main.cm
 
-import "libc/stdio.hm"
-import "libc/libc.hm"
+import "libc/stdio"
+import "libc/libc"
 
 @attribute("c-no-print")
-import "misc/sha256.hm"
+import "misc/sha256"
 @c_include("./sha256.h")
 
 

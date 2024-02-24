@@ -1,9 +1,9 @@
 // algorithms from wikipedia
 // (https://ru.wikipedia.org/wiki/UTF-16)
 
-import "libc/stdio.hm"
+import "libc/stdio"
 
-import "./utf.hm"
+import "./utf"
 
 
 // декодирует символ UTF-32 в последовательность UTF-8

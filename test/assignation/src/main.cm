@@ -1,6 +1,6 @@
 // examples/assignation/main.cm
 
-import "libc/stdio.hm"
+import "libc/stdio"
 
 
 // Simply record for records assignation test

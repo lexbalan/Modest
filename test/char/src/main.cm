@@ -1,6 +1,6 @@
 // examples/1.hello_world/main.cm
 
-import "libc/stdio.hm"
+import "libc/stdio"
 
 const hello = "Hello"
 const world = " World!"

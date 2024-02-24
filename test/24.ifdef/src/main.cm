@@ -1,6 +1,6 @@
 // examples/34.ifdef/main.cm
 
-import "libc/stdio.hm"
+import "libc/stdio"
 
 
 const __CPU_WORD_WIDTH = 64

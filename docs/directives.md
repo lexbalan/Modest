@@ -7,11 +7,11 @@
 const __SYSTEM = 64
 
 @if __SYSTEM == 32:
-import "./system32.hm"
+import "./system32"
 @elseif __SYSTEM == 64:
-import "./system64.hm"
+import "./system64"
 @elseif __SYSTEM == 128:
-import "./system128.hm"
+import "./system128"
 @else
 @error("system not implemented")
 @endif

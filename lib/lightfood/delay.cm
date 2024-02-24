@@ -1,6 +1,6 @@
 // lib/lightfood/delay.cm
 
-import "libc/libc.hm"   // for clock()
+import "libc/libc"   // for clock()
 
 
 func delay_us(us: Nat64) {

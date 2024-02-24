@@ -2,12 +2,12 @@
 
 @pragma("not_included")
 
-import "./system.hm"
+import "./system"
 
 @if __SYSTEM == 32
-import "./ctypes32.hm"
+import "./ctypes32"
 @elseif __SYSTEM == 64
-import "./ctypes64.hm"
+import "./ctypes64"
 @else
 @error("C types not implemented")
 @endif

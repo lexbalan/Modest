@@ -1,6 +1,6 @@
 // test/4.typedef/main.cm
 
-import "libc/stdio.hm"
+import "libc/stdio"
 
 type NewInt32 Int32
 

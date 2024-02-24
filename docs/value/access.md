@@ -13,7 +13,7 @@
 #### Access by value
 
 ```zig
-import "libc/stdio.hm"
+import "libc/stdio"
 
 type Point record {
     x: Int32
@@ -47,7 +47,7 @@ func main() -> Int32 {
 #### Access by pointer to value
 
 ```zig
-import "libc/stdio.hm"
+import "libc/stdio"
 
 type Point record {
     x: Int32

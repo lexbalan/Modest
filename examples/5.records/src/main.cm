@@ -1,8 +1,8 @@
 // examples/5.records/main.cm
 
-import "libc/math.hm"
-import "libc/stdio.hm"
-import "libc/libc.hm"
+import "libc/math"
+import "libc/stdio"
+import "libc/libc"
 
 
 type Point record {

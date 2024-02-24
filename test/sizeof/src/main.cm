@@ -1,6 +1,6 @@
 // test/sizeof/main.cm
 
-import "libc/stdio.hm"
+import "libc/stdio"
 
 
 type Point record {

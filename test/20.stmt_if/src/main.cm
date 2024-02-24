@@ -1,6 +1,6 @@
 // test/stmt_if/main.cm
 
-import "libc/stdio.hm"
+import "libc/stdio"
 
 
 func main() -> Int {

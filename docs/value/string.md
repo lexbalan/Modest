@@ -52,7 +52,7 @@ var ptr_to_str32: *Str32 = literalString
 
 
 ```zig
-import "libc/stdio.hm"
+import "libc/stdio"
 
 func main () -> Int32 {
     // creating local variable with type *[]Char8 (aka *Str8)

@@ -5,7 +5,7 @@
 @c_include("stdio.h")
 
 
-import "./ctypes.hm"
+import "./ctypes"
 
 
 type FILE

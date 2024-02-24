@@ -1508,6 +1508,7 @@ def do_import(x):
     for char in import_expr['asset']:
         impline = impline + chr(char['asset'])
 
+    impline = impline + ".hm"
 
     # (!) right here, before calling "do_import" (!)
     att = attributes_get()

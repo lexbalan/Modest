@@ -1,9 +1,9 @@
 // test/va_list
 
-import "libc/stdio.hm"
+import "libc/stdio"
 
 @attribute("c-no-print")
-import "lightfood/print.hm"
+import "lightfood/print"
 @c_include("./print.h")
 
 

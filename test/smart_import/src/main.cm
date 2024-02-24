@@ -3,15 +3,15 @@
 // how to find library
 const library = "libc"
 
-//import library + "/stdio.hm"
-//import library + "/libc.hm"
-//import library + "/math.hm"
+//import library + "/stdio"
+//import library + "/libc"
+//import library + "/math"
 
 // alternative syntax?
 import {
-    library + "/stdio.hm"
-    library + "/libc.hm"
-    library + "/math.hm"
+    library + "/stdio"
+    library + "/libc"
+    library + "/math"
 }
 
 

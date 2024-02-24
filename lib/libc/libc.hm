@@ -9,7 +9,7 @@
 @c_include("time.h")
 
 
-import "./ctypes.hm"
+import "./ctypes"
 
 
 @property("c_alias", "dev_t")

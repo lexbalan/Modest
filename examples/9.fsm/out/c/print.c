@@ -8,7 +8,7 @@
 #include <stdio.h>
 
 //@attribute("c-no-print")
-//import "./main.hm"
+//import "./main"
 //@c_include("./ff.h")
 
 

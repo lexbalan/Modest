@@ -1,6 +1,6 @@
 // test/12.structural_type_system/main.cm
 
-import "libc/stdio.hm"
+import "libc/stdio"
 
 type Type1 record {
     x: Int32

@@ -4,7 +4,7 @@
 
 @c_include("unistd.h")
 
-import "./ctypes.hm"
+import "./ctypes"
 
 type PidT  Int  // ??
 type UidT  Int  // ??

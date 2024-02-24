@@ -159,8 +159,8 @@ Float32, Float64
 ```
 
 ```zig
-import "libc/stdio.hm"
-import "libc/math.hm"
+import "libc/stdio"
+import "libc/math"
 
 func main () -> Unit {
 	var pi: Float64

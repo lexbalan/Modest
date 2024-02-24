@@ -1,10 +1,10 @@
 // lib/lightfood/print.cm
 
 //@attribute("c-no-print")
-//import "./main.hm"
+//import "./main"
 //@c_include("./ff.h")
 
-import "libc/stdio.hm"
+import "libc/stdio"
 
 
 func _put_char8(c: Char8) {
