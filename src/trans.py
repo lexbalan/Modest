@@ -893,7 +893,7 @@ def do_value_call(x):
 
 
             if hlir_type.type_is_generic(arg_type):
-                warning("value with generic type as extra argument", a['ti'])
+                warning("extra argument with generic type", a['ti'])
                 arg = value_cons_default(arg, a['ti'])
 
             args.append(arg)
