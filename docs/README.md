@@ -38,6 +38,10 @@
   * [Value evaluation](./stmt/eval.md)
   * [Variable assignation](./stmt/assign.md)
 
-- [Compiler Optons]
+- [Compiler]
   * [Usage](./USAGE.md)
   * [Attributes](./ATTRIBUTES.md)
+  * [Directives](./directives.md)
+  * [Builtin constants](./builtin_constants.md)
+  
+  
