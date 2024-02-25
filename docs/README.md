@@ -1,4 +1,4 @@
-# Minor language documentation
+# Modest language documentation
 
 - [Values](./values.md)
 - [Types](./types.md)
