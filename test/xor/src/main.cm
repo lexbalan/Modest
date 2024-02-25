@@ -10,13 +10,13 @@ func xor_encrypter(buf: *[]Byte, buflen: Nat32, key: *[]Byte, keylen: Nat32) -> 
     while i < buflen {
         buf[i] = buf[i] xor key[j]
 
-        i = i + 1
-
-        if (j < (keylen - 1)) {
-            j = j + 1
+        if j < (keylen - 1) {
+            ++j
         } else {
             j = 0
         }
+
+        ++i
     }
 }
 
@@ -34,7 +34,7 @@ func print_bytes(buf: *[]Byte, len: Nat32) -> Unit {
     var i = 0 to Nat32
     while i < len {
         printf("0x%02X ", buf[i])
-        i = i + 1
+        ++i
     }
     printf("\n")
 }

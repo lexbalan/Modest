@@ -10,13 +10,13 @@ func xor_encrypter(buf: *[]Byte, buflen: Nat32, key: *[]Byte, keylen: Nat32) -> 
     while i < buflen {
         buf[i] = buf[i] xor key[j]
 
-        i = i + 1
-
         if j < keylen - 1 {
             j = j + 1
         } else {
             j = 0
         }
+
+        i = i + 1
     }
 }
 
