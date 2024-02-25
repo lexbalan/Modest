@@ -4,12 +4,35 @@
 #### Common view
 
 ```zig
-    while condition {
-        // do something while condition != 0
-    }
+while <condition_value_expression> {
+    // do something while condition is true
+}
 ```
 
 #### Examples
+
+```zig
+// see: examples/stmt_while/src/main.cm
+
+import "libc/stdio"
+
+
+func main() -> Int {
+    printf("while statement test\n")
+
+    var a = 0
+    let b = 10
+
+    while a < b {
+        printf("a = %d\n", a)
+        a = a + 1
+    }
+
+    return 0
+}
+
+```
+> *Result: `a = 0` `a = 1` `a = 2` `a = 3` `a = 4` `a = 5` `a = 6` `a = 7` `a = 8` `a = 9` 
 
 ```zig
 

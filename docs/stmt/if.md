@@ -3,9 +3,9 @@
 #### Common view
 
 ```zig
-  if condition {
-    // do something if condition != 0
-  }
+if <condition_value_expression> {
+    // do something if condition is true
+}
 ```
 
 #### Examples

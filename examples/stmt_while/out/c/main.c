@@ -1,4 +1,4 @@
-// example/stmt_while/src/main.cm
+// examples/stmt_while/src/main.cm
 
 #include <stdint.h>
 #include <stdbool.h>

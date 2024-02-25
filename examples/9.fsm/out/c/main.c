@@ -1,4 +1,4 @@
-// examples/fsm/main.cm
+// examples/fsm/src/main.cm
 
 #include <stdint.h>
 #include <stdbool.h>
