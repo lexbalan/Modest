@@ -38,10 +38,11 @@
   * [Value evaluation](./stmt/eval.md)
   * [Variable assignation](./stmt/assign.md)
 
+
 - [Compiler](./compiler.md)
   * [Usage](./USAGE.md)
-  * [Attributes](./ATTRIBUTES.md)
   * [Directives](./directives.md)
+  * [Attributes](./ATTRIBUTES.md)
   * [Builtin constants](./builtin_constants.md)
   
   
