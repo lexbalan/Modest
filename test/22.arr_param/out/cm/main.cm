@@ -1,4 +1,4 @@
-// examples/22.arr_param/main.cm
+// test/22.arr_param/src/main.cm
 
 import "libc/stdio.h"
 

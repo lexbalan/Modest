@@ -1,4 +1,4 @@
-// test/cast/main.cm
+// test/cast/src/main.cm
 
 #include <stdint.h>
 #include <stdbool.h>

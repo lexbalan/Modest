@@ -1,4 +1,4 @@
-// test/2.func/main.cm
+// test/2.func/src/main.cm
 
 #include <stdint.h>
 #include <stdbool.h>

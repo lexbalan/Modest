@@ -1,4 +1,4 @@
-// examples/34.ifdef/main.cm
+// test/34.ifdef/src/main.cm
 
 import "libc/stdio.h"
 

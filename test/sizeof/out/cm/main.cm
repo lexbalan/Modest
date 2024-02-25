@@ -1,4 +1,4 @@
-// test/sizeof/main.cm
+// test/sizeof/src/main.cm
 
 import "libc/stdio.h"
 

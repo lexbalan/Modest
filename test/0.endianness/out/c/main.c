@@ -1,4 +1,4 @@
-// examples/0.endianness/main.cm
+// examples/0.endianness/src/main.cm
 
 #include <stdint.h>
 #include <stdbool.h>

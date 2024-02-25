@@ -1,4 +1,4 @@
-// test/9.big_numbers/main.cm
+// test/9.big_numbers/src/main.cm
 
 #include <stdint.h>
 #include <stdbool.h>

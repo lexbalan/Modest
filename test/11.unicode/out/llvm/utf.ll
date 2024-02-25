@@ -141,86 +141,78 @@ then_0:
     %3 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
     %4 = trunc i32 %1 to i8
     store i8 %4, i8* %3
-    %5 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 1
-    store i8 0, i8* %5
     ret i8 1
     br label %endif_0
 else_0:
-    %7 = icmp ule i32 %1, 2047
-    br i1 %7 , label %then_1, label %else_1
+    %6 = icmp ule i32 %1, 2047
+    br i1 %6 , label %then_1, label %else_1
 then_1:
-    %8 = lshr i32 %1, 6
-    %9 = and i32 %8, 31
-    %10 = lshr i32 %1, 0
-    %11 = and i32 %10, 63
-    %12 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
-    %13 = or i32 192, %9
-    %14 = trunc i32 %13 to i8
-    store i8 %14, i8* %12
-    %15 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 1
-    %16 = or i32 128, %11
-    %17 = trunc i32 %16 to i8
-    store i8 %17, i8* %15
-    %18 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 2
-    store i8 0, i8* %18
+    %7 = lshr i32 %1, 6
+    %8 = and i32 %7, 31
+    %9 = lshr i32 %1, 0
+    %10 = and i32 %9, 63
+    %11 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
+    %12 = or i32 192, %8
+    %13 = trunc i32 %12 to i8
+    store i8 %13, i8* %11
+    %14 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 1
+    %15 = or i32 128, %10
+    %16 = trunc i32 %15 to i8
+    store i8 %16, i8* %14
     ret i8 2
     br label %endif_1
 else_1:
-    %20 = icmp ule i32 %1, 65535
-    br i1 %20 , label %then_2, label %else_2
+    %18 = icmp ule i32 %1, 65535
+    br i1 %18 , label %then_2, label %else_2
 then_2:
-    %21 = lshr i32 %1, 12
-    %22 = and i32 %21, 15
-    %23 = lshr i32 %1, 6
+    %19 = lshr i32 %1, 12
+    %20 = and i32 %19, 15
+    %21 = lshr i32 %1, 6
+    %22 = and i32 %21, 63
+    %23 = lshr i32 %1, 0
     %24 = and i32 %23, 63
-    %25 = lshr i32 %1, 0
-    %26 = and i32 %25, 63
-    %27 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
-    %28 = or i32 224, %22
-    %29 = trunc i32 %28 to i8
-    store i8 %29, i8* %27
-    %30 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 1
-    %31 = or i32 128, %24
-    %32 = trunc i32 %31 to i8
-    store i8 %32, i8* %30
-    %33 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 2
-    %34 = or i32 128, %26
-    %35 = trunc i32 %34 to i8
-    store i8 %35, i8* %33
-    %36 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 3
-    store i8 0, i8* %36
+    %25 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
+    %26 = or i32 224, %20
+    %27 = trunc i32 %26 to i8
+    store i8 %27, i8* %25
+    %28 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 1
+    %29 = or i32 128, %22
+    %30 = trunc i32 %29 to i8
+    store i8 %30, i8* %28
+    %31 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 2
+    %32 = or i32 128, %24
+    %33 = trunc i32 %32 to i8
+    store i8 %33, i8* %31
     ret i8 3
     br label %endif_2
 else_2:
-    %38 = icmp ule i32 %1, 1114111
-    br i1 %38 , label %then_3, label %endif_3
+    %35 = icmp ule i32 %1, 1114111
+    br i1 %35 , label %then_3, label %endif_3
 then_3:
-    %39 = lshr i32 %1, 18
-    %40 = and i32 %39, 7
-    %41 = lshr i32 %1, 12
-    %42 = and i32 %41, 63
-    %43 = lshr i32 %1, 6
-    %44 = and i32 %43, 63
-    %45 = lshr i32 %1, 0
-    %46 = and i32 %45, 63
-    %47 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
-    %48 = or i32 240, %40
+    %36 = lshr i32 %1, 18
+    %37 = and i32 %36, 7
+    %38 = lshr i32 %1, 12
+    %39 = and i32 %38, 63
+    %40 = lshr i32 %1, 6
+    %41 = and i32 %40, 63
+    %42 = lshr i32 %1, 0
+    %43 = and i32 %42, 63
+    %44 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
+    %45 = or i32 240, %37
+    %46 = trunc i32 %45 to i8
+    store i8 %46, i8* %44
+    %47 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 1
+    %48 = or i32 128, %39
     %49 = trunc i32 %48 to i8
     store i8 %49, i8* %47
-    %50 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 1
-    %51 = or i32 128, %42
+    %50 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 2
+    %51 = or i32 128, %41
     %52 = trunc i32 %51 to i8
     store i8 %52, i8* %50
-    %53 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 2
-    %54 = or i32 128, %44
+    %53 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 3
+    %54 = or i32 128, %43
     %55 = trunc i32 %54 to i8
     store i8 %55, i8* %53
-    %56 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 3
-    %57 = or i32 128, %46
-    %58 = trunc i32 %57 to i8
-    store i8 %58, i8* %56
-    %59 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 4
-    store i8 0, i8* %59
     ret i8 4
     br label %endif_3
 endif_3:

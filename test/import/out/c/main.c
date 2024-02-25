@@ -1,4 +1,4 @@
-// examples/import/main.cm
+// test/import/src/main.cm
 
 #include <stdint.h>
 #include <stdbool.h>

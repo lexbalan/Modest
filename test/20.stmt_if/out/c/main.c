@@ -1,4 +1,4 @@
-// test/stmt_if/main.cm
+// test/stmt_if/src/main.cm
 
 #include <stdint.h>
 #include <stdbool.h>

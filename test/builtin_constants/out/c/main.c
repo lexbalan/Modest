@@ -1,4 +1,4 @@
-// test/builtin_constants/main.cm
+// test/builtin_constants/src/main.cm
 
 #include <stdint.h>
 #include <stdbool.h>

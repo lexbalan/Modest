@@ -1,4 +1,4 @@
-// test/va_list
+// test/va_list/src/main.cm
 
 import "libc/stdio.h"
 @attribute("c-no-print")

@@ -1,4 +1,4 @@
-// examples/1.hello_world/main.cm
+// test/string_concat_eq/src/main.cm
 
 #include <stdint.h>
 #include <stdbool.h>

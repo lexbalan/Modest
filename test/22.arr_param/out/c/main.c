@@ -1,4 +1,4 @@
-// examples/22.arr_param/main.cm
+// test/22.arr_param/src/main.cm
 
 #include <stdint.h>
 #include <stdbool.h>

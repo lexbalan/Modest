@@ -1,4 +1,4 @@
-// test/4.typedef/main.cm
+// test/4.typedef/src/main.cm
 
 import "libc/stdio.h"
 

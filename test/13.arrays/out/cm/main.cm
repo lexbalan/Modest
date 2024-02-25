@@ -1,4 +1,4 @@
-// test/arrays/main.cm
+// test/arrays/src/main.cm
 
 import "libc/stdio.h"
 import "libc/libc.h"

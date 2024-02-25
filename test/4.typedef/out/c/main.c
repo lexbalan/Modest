@@ -1,4 +1,4 @@
-// test/4.typedef/main.cm
+// test/4.typedef/src/main.cm
 
 #include <stdint.h>
 #include <stdbool.h>

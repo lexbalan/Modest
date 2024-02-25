@@ -1,4 +1,4 @@
-// examples/import/main.cm
+// test/import/src/main.cm
 
 // how to find library
 const library = "libc"

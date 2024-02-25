@@ -1,4 +1,4 @@
-// test/3.const/main.cm
+// test/3.const/src/main.cm
 
 import "libc/stdio.h"
 

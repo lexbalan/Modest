@@ -1,4 +1,4 @@
-// test/arrays/main.cm
+// test/arrays/src/main.cm
 
 #include <stdint.h>
 #include <stdbool.h>

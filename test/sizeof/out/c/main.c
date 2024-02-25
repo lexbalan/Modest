@@ -1,4 +1,4 @@
-// test/sizeof/main.cm
+// test/sizeof/src/main.cm
 
 #include <stdint.h>
 #include <stdbool.h>

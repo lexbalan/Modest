@@ -1,4 +1,4 @@
-// test/10.const/main.cm
+// test/10.const/src/main.cm
 
 #include <stdint.h>
 #include <stdbool.h>

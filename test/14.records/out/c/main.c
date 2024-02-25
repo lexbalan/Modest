@@ -1,4 +1,4 @@
-// examples/14.records/main.cm
+// test/14.records/src/main.cm
 
 #include <stdint.h>
 #include <stdbool.h>

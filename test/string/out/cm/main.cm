@@ -1,4 +1,4 @@
-// examples/string/main.cm
+// test/string/src/main.cm
 
 import "libc/stdio.h"
 @attribute("c-no-print")

@@ -1,4 +1,4 @@
-// test/sha256/main.cm
+// test/xor/src/main.cm
 
 #include <stdint.h>
 #include <stdbool.h>
