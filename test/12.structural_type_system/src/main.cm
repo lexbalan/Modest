@@ -1,4 +1,4 @@
-// test/12.structural_type_system/main.cm
+// test/12.structural_type_system/src/main.cm
 
 import "libc/stdio"
 

@@ -1,4 +1,4 @@
-// test/stmt_while/main.cm
+// test/stmt_while/src/main.cm
 
 import "libc/stdio"
 

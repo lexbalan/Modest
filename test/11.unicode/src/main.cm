@@ -1,4 +1,4 @@
-// test/11.unicode/main.cm
+// test/11.unicode/src/main.cm
 
 import "libc/stdio"
 

@@ -1,9 +1,9 @@
 
 # default config will be loaded after compiler start
 [Default]
+pointer_width = 64
 char_width = 8
 integer_width = 32
-pointer_width = 64
 float_width = 64
 #stdlib_path = ""
 backend = "llvm"
@@ -14,8 +14,8 @@ target_triple = "arm64-apple-macosx12.0.0"
 # Custom config example (redefinition of default values)
 # use --setup=CortexM3 compiler flag
 [CortexM3]
-integer_width = 32
 pointer_width = 32
+integer_width = 32
 float_width = 32
 backend = "llvm"
 

@@ -233,14 +233,14 @@ def init():
 
 
     compilerVersionMajor = hlir_value_int(0, typ=foundation.typeNat32)
-    compilerVersionMinor = hlir_value_int(7, typ=foundation.typeNat32)
     root_context.value_add('__compilerVersionMajor', compilerVersionMajor)
+    compilerVersionMinor = hlir_value_int(7, typ=foundation.typeNat32)
     root_context.value_add('__compilerVersionMinor', compilerVersionMinor)
 
     import platform
     __platformSystem = hlir_value_string(platform.system())
-    __platformRelease = hlir_value_string(platform.release())
     root_context.value_add('__platformSystem', __platformSystem)
+    __platformRelease = hlir_value_string(platform.release())
     root_context.value_add('__platformRelease', __platformRelease)
 
 
@@ -255,6 +255,16 @@ def init():
     char_width = int(settings.get('char_width'))
     int_width = int(settings.get('integer_width'))
     flt_width = int(settings.get('float_width'))
+    pointer_width = int(settings.get('pointer_width'))
+
+    __systemCharWidth = hlir_value_int(char_width, typ=foundation.typeNat32)
+    root_context.value_add('__systemCharWidth', __systemCharWidth)
+    __systemIntWidth = hlir_value_int(int_width, typ=foundation.typeNat32)
+    root_context.value_add('__systemIntWidth', __systemIntWidth)
+    __systemFloatWidth = hlir_value_int(flt_width, typ=foundation.typeNat32)
+    root_context.value_add('__systemFloatWidth', __systemFloatWidth)
+    __systemPointerWidth = hlir_value_int(pointer_width, typ=foundation.typeNat32)
+    root_context.value_add('__systemPointerWidth', __systemPointerWidth)
 
     #print("system_char_width  = %d" % char_width)
     #print("system_int_width  = %d" % int_width)

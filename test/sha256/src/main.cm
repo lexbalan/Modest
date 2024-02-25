@@ -1,4 +1,4 @@
-// test/sha256/main.cm
+// test/sha256/src/main.cm
 
 import "libc/stdio"
 import "libc/libc"

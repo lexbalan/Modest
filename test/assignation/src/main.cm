@@ -1,4 +1,4 @@
-// examples/assignation/main.cm
+// test/assignation/src/main.cm
 
 import "libc/stdio"
 
