@@ -1,4 +1,4 @@
-// examples/smart_import/main.cm
+// examples/import/main.cm
 
 #include <stdint.h>
 #include <stdbool.h>

@@ -1,4 +1,4 @@
-// examples/smart_import/main.cm
+// examples/import/main.cm
 
 // how to find library
 const library = "libc"
@@ -8,11 +8,9 @@ const library = "libc"
 //import library + "/math"
 
 // alternative syntax?
-import {
-    library + "/stdio"
-    library + "/libc"
-    library + "/math"
-}
+import "libc/stdio.h"
+import "libc/libc.h"
+import "libc/math.h"
 
 
 func main() -> Int {
