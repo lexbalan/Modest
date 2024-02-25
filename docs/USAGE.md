@@ -9,7 +9,7 @@ mcc -o main -mbackend=c main.cm
 
 ## Compiler flags
 
-Use `-o <output_file_name>` option for set output file name (without file extension)
+Use `-o<output_file_name>` option for set output file name (without file extension)
 
 *Usage example:*
 ```shell
