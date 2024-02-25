@@ -1,10 +1,10 @@
-// examples/2.if-else/main.cm
+// test/stmt_if/src/main.cm
 
-import "libc/stdio.h"
+import "libc/stdio"
 
 
 func main() -> Int {
-    printf("if-else example\n")
+    printf("if statement example\n")
 
     var a: Int32
     var b: Int32

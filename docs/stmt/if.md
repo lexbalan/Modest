@@ -11,26 +11,31 @@
 #### Examples
 
 ```zig
+// see: examples/stmt_if/src/main.cm
 
-func main () -> Unit {
+import "libc/stdio"
+
+
+func main() -> Int {
+    printf("if statement example\n")
+
     var a: Int32
     var b: Int32
 
-    // input a
-    printf("a = ");
-    scanf("%d", &a);
+    printf("enter a: ")
+    scanf("%d", &a)
+    printf("enter b: ")
+    scanf("%d", &b)
 
-    // input b
-    printf("b = ");
-    scanf("%d", &b);
-
-    // print equation
     if a > b {
-    printf("a > b\n")
+        printf("a > b\n")
     } else if a < b {
-    printf("a < b\n")
+        printf("a < b\n")
     } else {
-    printf("a == b\n")
+        printf("a == b\n")
     }
+
+    return 0
 }
+
 ```

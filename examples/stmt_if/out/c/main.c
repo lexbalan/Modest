@@ -11,7 +11,7 @@
 
 int main()
 {
-    printf("stmt_if example\n");
+    printf("if statement example\n");
 
     int32_t a;
     int32_t b;

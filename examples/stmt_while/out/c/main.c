@@ -1,4 +1,4 @@
-// test/stmt_while/src/main.cm
+// example/stmt_while/src/main.cm
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -11,7 +11,7 @@
 
 int main()
 {
-    printf("test stmt_while\n");
+    printf("while statement test\n");
 
     int32_t a;
     a = 0;
