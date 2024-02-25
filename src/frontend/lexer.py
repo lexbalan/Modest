@@ -22,20 +22,25 @@ operators2 = [
 ]
 
 
+# Rule returns Product/None in case if it was triggered
+# And False in case if it wasnt triggered
+
 
 def doBlank(src):
-    c = src.getc()
-    if not (c == ' ' or c == '\t'):
-        return False
-    return None
+    c = src.lookup(1)
+    if (c == ' ' or c == '\t'):
+        src.getc()
+        return None
+    return False
 
 
 
 def doNewline(src):
     ti = src.get_ti()
-    c = src.getc()
+    c = src.lookup(1)
     if not c == '\n':
         return False
+    src.getc()
 
     global line, pos
     line = line + 1
@@ -129,9 +134,11 @@ def doOperation1(src):
 
 def doString(src):
     ti = src.get_ti()
-    c = src.getc()
-    if not c == '"':
+    c = src.lookup(1)
+    if not (c == '"' or c == "'"):
         return False
+
+    src.getc()
 
     par = c
 
