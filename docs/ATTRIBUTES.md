@@ -21,11 +21,11 @@ func main () {
 
 **dispensable** - means that result of function call can be ignored
 
-**extern** - add C "extern"
+**extern** - add C "extern" modifier
 
-**static** - add C "extern"
+**static** - add C "static" modifier
 
-**volatile** - add C "extern"
+**volatile** - add C "volatile" modifier
 
 **global** - do not add "static" to top-level variable (by default - static)
 
