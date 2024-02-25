@@ -87,7 +87,7 @@ j = i to Int64
 // example: explicit cast incomplete array
 
 var a: [10]Int32
-// you can't implicit cast [4]Int -> [10]Int
+// you can't implicit cast [3]Int -> [10]Int
 // but you can do explicit cast (all rest items will be filled with zeros)
 a = [1, 2, 3] to [10]Int32
 ```
