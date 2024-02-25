@@ -52,7 +52,7 @@ var r: record {x: Int32, y: Int32}
 
 // implicit cast literal record value {x=0, y=0} with type GenericRecord {x: Int32, y: Int32}
 // to type record {x: Int32, y: Int32}
-r = {x=0, y=0}
+r = {x = 0, y = 0}
 ```
 
 ### Implicit cast 'pointer to sized array' -> 'pointer to unsized array'
