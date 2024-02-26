@@ -1,4 +1,4 @@
-// examples/8.linked_list/main.cm
+// examples/8.linked_list/src/main.cm
 
 #include <stdint.h>
 #include <stdbool.h>

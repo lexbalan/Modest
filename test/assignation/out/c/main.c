@@ -93,8 +93,8 @@ int main()
     printf("loc_r0.y = %i\n", loc_r0.y);
 
 
-    const int8_t dim1 = 15;
-    const int8_t dim2 = 16;
+    #define dim1  15
+    #define dim2  16
 
     int32_t aa[dim1 * dim2];
 
@@ -133,5 +133,7 @@ int main()
 
 
     return 0;
+#undef dim1
+#undef dim2
 }
 

@@ -1,4 +1,4 @@
-// examples/7.binary_file/src/main.cm
+// examples/7.binary_file/main.cm
 
 #include <stdint.h>
 #include <stdbool.h>

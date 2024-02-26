@@ -15,7 +15,7 @@ int main()
 
     int32_t a;
     a = 0;
-    const int8_t b = 10;
+    #define b  10
 
     while (a < b) {
         printf("a = %d\n", a);
@@ -23,5 +23,6 @@ int main()
     }
 
     return 0;
+#undef b
 }
 

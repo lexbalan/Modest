@@ -27,7 +27,7 @@ uint64_t low_128(unsigned __int128 x)
 int main()
 {
 
-    const __int128 big1 = (((__int128)0xFFFFFFFFFFFFFFFF << 64) | ((__int128)0xFFFFFFFFFFFFFFFF));
+    #define big1  (((__int128)0xFFFFFFFFFFFFFFFF << 64) | ((__int128)0xFFFFFFFFFFFFFFFF))
 
     unsigned __int128 big2;
     big2 = big1;
@@ -49,7 +49,7 @@ int main()
 
 
     // signed big int test
-    const int8_t sig0 = -1;
+    #define sig0  (-1)
 
     __int128 sig1;
     sig1 = sig0;
@@ -59,5 +59,7 @@ int main()
     printf("sig1 = %lld\n", (uint64_t)sig1);
 
     return 0;
+#undef big1
+#undef sig0
 }
 

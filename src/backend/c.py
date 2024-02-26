@@ -33,6 +33,8 @@ CC_LONG_SIZE_BITS = 32
 CC_LONG_LONG_SIZE_BITS = 64
 
 
+func_undef_list = []
+
 legacy_style = {
     'LINE_BREAK_BEFORE_STRUCT_BRACE': False,
     'LINE_BREAK_BEFORE_FUNC_BRACE': True,
@@ -1190,6 +1192,14 @@ def print_stmt_defvar(x):
 
 
 
+def print_macro_definition(id, value):
+    out("#define %s  " % id['str'])
+    need_wrap = precedence(value) < precedenceMax
+    nl_str = " \\\n"
+    print_value(value, need_wrap=need_wrap, just_print_id=True)
+    nl_str = "\n"
+
+
 def print_stmt_let(x):
     id = x['id']
     v = x['newvalue']
@@ -1198,6 +1208,7 @@ def print_stmt_let(x):
         if v['usecnt'] == 0:
             if x['value']['kind'] != 'call':
                 return
+
 
     nl_indent(x['nl'])
 
@@ -1208,10 +1219,18 @@ def print_stmt_let(x):
         assign_array(v, x['value'])
         return
 
-    print_variable(id, v['type'], as_const=True)
-    out(" = ")
-    print_value(x['value'], just_print_id=False)
-    out(";")
+
+    if hlir_type.type_is_generic(v['type']):
+        print_macro_definition(id, x['value'])
+        global func_undef_list
+        func_undef_list.append(id['str'])
+
+    else:
+        print_variable(id, v['type'], as_const=True)
+        out(" = ")
+        print_value(x['value'], just_print_id=False)
+        out(";")
+
     return
 
 
@@ -1433,10 +1452,19 @@ def print_def_func(x):
             newline(); indent(); out("va_end(%s);" % va_id)
 
     indent_down()
+
+    global func_undef_list
+    for id_str in func_undef_list:
+        out("\n#undef %s" % id_str)
+
+    func_undef_list = []
+
     out("\n}")
 
     va_id = None
     cfunc = None
+
+
 
 
 
@@ -1615,15 +1643,9 @@ def print_def_const(x):
         out(" = ")
         print_value_literal(const_value, ['print_immediate'])
         out(";")
-        return
 
     else:
-        out("#define %s  " % _id['str'])
-
-    need_wrap = precedence(const_value) < precedenceMax
-    nl_str = " \\\n"
-    print_value(const_value, need_wrap=need_wrap, just_print_id=True)
-    nl_str = "\n"
+        print_macro_definition(_id, const_value)
 
 
 
