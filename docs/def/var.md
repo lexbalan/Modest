@@ -1,5 +1,10 @@
 # Variable Definition
 
+#### Common form
+```zig
+var <identifier> : <type_expression> [= <default_value_expression>]
+```
+
 ```zig
 // the 'var' directive creates a variable
 // (in this case - variable x with type Int32)

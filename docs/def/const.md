@@ -1,5 +1,11 @@
 # Constant Definition
 
+#### Common form
+```zig
+const <identifier> = <value_expression>
+```
+
+
 ```zig
 // the 'const' directive creates an alias for value expression result
 // (in this case - four with value 4)

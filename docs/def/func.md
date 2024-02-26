@@ -1,5 +1,12 @@
 # Function Definition
 
+#### Common form
+```zig
+func <identifier> <type_expression> {
+	// function block
+}
+```
+
 ```zig
 // the 'func' directive creates a function
 
