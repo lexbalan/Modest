@@ -56,11 +56,12 @@ type Point record {
 
 var point: Point
 
-// create pointer to var point
+// create var pointer to Point
 var ptr_to_point: *Point
 
 
 func main() -> Int32 {
+    // assign pointer to var point to ptr_to_point
     ptr_to_point = &point
 
     // or variant with type inference:
