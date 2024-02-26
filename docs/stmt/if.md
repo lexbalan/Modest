@@ -3,9 +3,9 @@
 #### Common view
 
 ```zig
-if <condition_value_expression> {
-    // do something if condition is true
-}
+    if <condition_value_expression> {
+        // do something if condition is true
+    }
 ```
 
 #### Examples

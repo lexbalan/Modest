@@ -3,7 +3,7 @@
 #### Common view
 
 ```zig
-    a = 1
+a = 1
 ```
 
 #### Examples

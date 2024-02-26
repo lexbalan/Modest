@@ -8,7 +8,7 @@ Numeric literals have type **GenericNumeric**
 42
 ```
 
-You can cast it to any generic type (Int8, Int16, Int32, Nat8, etc.)
+You can cast it to any non-generic type (Int8, Int16, Int32, Nat8, etc.)
 
 ```swift
 var a: Int8
@@ -25,13 +25,23 @@ e = 256 // error (Nat8 = {0 .. 255})
 ### Bool literals
 
 ```swift
-true
-false
+true, false
 ```
 
 
-### String literals
-String literals have type `[]GenericChar`
+### Array literals
+```swift
+    // Array of five GenericInt values
+    [1, 2, 3, 4, 5]
+    
+    // Array of tree Int32 values
+    [1 to Int32, 2 to Int32, 3 to Int32]
+```
+
+
+
+#### String literals
+String literal is a subkind of array literal and have type `Generic([]GenericChar)` (GenericArray of GenericChar)
 ```swift
 "Hello wolrd!"
 ```
@@ -46,15 +56,6 @@ var array: [12]Char8 = "Hello wolrd!"
 var ptr_to_array: *[]Char8 = "Hello wolrd!"
 ```
 
-
-### Array literals
-```swift
-    // Array of five GenericInt values
-    [1, 2, 3, 4, 5]
-    
-    // Array of tree Int32 values
-    [1 to Int32, 2 to Int32, 3 to Int32]
-```
 
 
 ### Record literals

@@ -4,9 +4,9 @@
 #### Common view
 
 ```zig
-while <condition_value_expression> {
-    // do something while condition is true
-}
+    while <condition_value_expression> {
+        // do something while condition is true
+    }
 ```
 
 #### Examples

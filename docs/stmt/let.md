@@ -3,7 +3,7 @@
 #### Common view
 
 ```zig
-let four = 4
+    let four = 4
 ```
 
 #### Examples
