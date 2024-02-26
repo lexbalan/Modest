@@ -9,8 +9,8 @@ cd 11.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd 12.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd 13.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd 14.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
-#cd 20.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
-#cd 21.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+cd let && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+cd var && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd 22.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd 23.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd 24.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
@@ -23,8 +23,6 @@ cd string && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd string_concat_eq && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd assignation && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd va_list && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
-cd char && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
-cd import && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
+cd char && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. &&\
+cd import && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. &&\
 cd builtin_constants && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
-cd let && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
-cd var && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
