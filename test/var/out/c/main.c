@@ -11,8 +11,10 @@
 
 int main()
 {
-    #define x  127
-    #define y  (x + 1)
+    int32_t x;
+    x = 127;
+    int32_t y;
+    y = x + 1;
 
     printf("y = %i\n", y);
 
@@ -23,7 +25,5 @@ int main()
     }
 
     return 0;
-#undef x
-#undef y
 }
 
