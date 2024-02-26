@@ -10,7 +10,8 @@
 #include <unistd.h>
 #include <time.h>
 
-// for clock()
+
+
 
 
 void delay_us(uint64_t us)

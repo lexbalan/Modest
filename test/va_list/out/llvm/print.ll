@@ -127,16 +127,19 @@ declare %Int @ungetc(%Int %char, %FILE* %f)
 declare void @perror(%ConstCharStr* %str)
 
 
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/lightfood/putchar.hm
+
+
+declare void @putchar8(i8 %c)
+declare void @putchar16(i16 %c)
+declare void @putchar32(i32 %c)
+
+
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/lightfood/print.cm
 
 
 
 
-define void @_put_char8(i8 %c) {
-    %1 = sext i8 %c to %Int
-    %2 = call %Int (%Int) @putchar(%Int %1)
-    ret void
-}
 
 define void @put_str8(%Str8* %s) {
     %1 = alloca i32
@@ -154,7 +157,7 @@ then_0:
     br label %break_1
     br label %endif_0
 endif_0:
-    call void (i8) @_put_char8(i8 %4)
+    call void (i8) @putchar8(i8 %4)
     %7 = load i32, i32* %1
     %8 = add i32 %7, 1
     store i32 %8, i32* %1
@@ -200,7 +203,7 @@ then_1:
 then_2:
     ; "\{" -> "{"
     %19 = load i8, i8* %4
-    call void (i8) @_put_char8(i8 %19)
+    call void (i8) @putchar8(i8 %19)
     %20 = load i32, i32* %3
     %21 = add i32 %20, 2
     store i32 %21, i32* %3
@@ -213,7 +216,7 @@ else_2:
 then_3:
     ; "\}" -> "{"
     %25 = load i8, i8* %4
-    call void (i8) @_put_char8(i8 %25)
+    call void (i8) @putchar8(i8 %25)
     %26 = load i32, i32* %3
     %27 = add i32 %26, 2
     store i32 %27, i32* %3
@@ -319,7 +322,7 @@ endif_5:
     br label %endif_4
 else_4:
     %72 = load i8, i8* %4
-    call void (i8) @_put_char8(i8 %72)
+    call void (i8) @putchar8(i8 %72)
     br label %endif_4
 endif_4:
     %73 = load i32, i32* %3

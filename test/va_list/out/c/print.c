@@ -6,6 +6,7 @@
 #include <stdarg.h>
 
 #include <stdio.h>
+#include "./putchar.h"
 
 //@attribute("c-no-print")
 //import "./main"
@@ -14,10 +15,10 @@
 
 
 
-void _put_char8(char c)
-{
-    putchar((int)c);
-}
+
+/*func _put_char8(c: Char8) {
+    putchar(c to Int)
+}*/
 
 
 void put_str8(char *s)
@@ -29,7 +30,7 @@ void put_str8(char *s)
         if (c == '\x0') {
             break;
         }
-        _put_char8(c);
+        putchar8(c);
         i = i + 1;
     }
 }
@@ -58,12 +59,12 @@ void print(char *form, ...)
             c = form[i + 1];
             if (c == '{') {
                 // "\{" -> "{"
-                _put_char8(c);
+                putchar8(c);
                 i = i + 2;
                 continue;
             } else if (c == '}') {
                 // "\}" -> "{"
-                _put_char8(c);
+                putchar8(c);
                 i = i + 2;
                 continue;
             }
@@ -108,7 +109,7 @@ void print(char *form, ...)
             put_str8(sptr);
 
         } else {
-            _put_char8(c);
+            putchar8(c);
         }
 
         i = i + 1;

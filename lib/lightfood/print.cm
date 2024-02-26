@@ -6,10 +6,14 @@
 
 import "libc/stdio"
 
+@attribute("c-no-print")
+import "lightfood/putchar"
+@c_include("./putchar.h")
 
-func _put_char8(c: Char8) {
+
+/*func _put_char8(c: Char8) {
     putchar(c to Int)
-}
+}*/
 
 
 func put_str8(s: *Str8) {
@@ -19,7 +23,7 @@ func put_str8(s: *Str8) {
 		if c == "\0" {
 			break
 		}
-		_put_char8(c)
+		putchar8(c)
         i = i + 1
 	}
 }
@@ -43,12 +47,12 @@ func print(form: *Str8, va_list: VA_List) {
             c = form[i + 1]
             if c == "{" {
                 // "\{" -> "{"
-                _put_char8(c)
+                putchar8(c)
                 i = i + 2
                 again
             } else if c == "}" {
                 // "\}" -> "{"
-                _put_char8(c)
+                putchar8(c)
                 i = i + 2
                 again
             }
@@ -93,7 +97,7 @@ func print(form: *Str8, va_list: VA_List) {
 			put_str8(sptr)
 
 		} else {
-			_put_char8(c)
+			putchar8(c)
 		}
 
         i = i + 1

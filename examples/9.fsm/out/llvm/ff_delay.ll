@@ -163,7 +163,6 @@ declare void @bcopy(i8* %src, i8* %dst, %SizeT %n)
 
 
 
-
 define void @delay_us(i64 %us) {
     %1 = call i64 () @clock()
     br label %again_1
