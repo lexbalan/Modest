@@ -4,7 +4,13 @@ from error import info, error
 from value.value import value_is_immediate
 from util import nbits_for_num
 from .value import value_cast, value_cast_immediate
+from .integer import value_integer
 
+import foundation
+
+
+def value_bool(num):
+    return value_integer(num, typ=foundation.typeBool)
 
 
 def value_cons_bool_immediate(v, t, ti):

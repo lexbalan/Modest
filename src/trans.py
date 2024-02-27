@@ -9,6 +9,7 @@ from frontend.parser import Parser
 #from hlir.type import *
 import foundation
 
+from value.bool import value_bool
 from value.integer import value_integer
 from value.float import value_float
 from value.array import value_array, value_string
@@ -194,8 +195,8 @@ def init():
     foundation_module = foundation.init()
 
     valueNil = value_integer(0, typ=foundation.typeFreePointer)
-    valueTrue = value_integer(1, typ=foundation.typeBool)
-    valueFalse = value_integer(0, typ=foundation.typeBool)
+    valueTrue = value_bool(1)
+    valueFalse = value_bool(0)
 
     global root_context
     # init main context
