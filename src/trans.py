@@ -6,6 +6,12 @@ from util import get_item_with_id, align_to
 from main import settings
 from frontend.parser import Parser
 
+from value.integer import hlir_value_int
+from value.float import hlir_value_float
+from value.array import hlir_value_array, hlir_value_string
+from value.record import hlir_value_record
+
+
 import foundation
 
 def is_local_context():

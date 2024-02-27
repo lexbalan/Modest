@@ -1,9 +1,31 @@
 
-import hlir.type as type
+import hlir.type as hlir_type
 from hlir.type import type_print
 from error import error, warning, info
 from hlir.value import *
 from .value import *
+
+
+
+
+def hlir_value_int(num, typ=None, ti=None):
+    if typ == None:
+        typ = hlir_type.hlir_type_generic_int_for(num, unsigned=False, ti=ti)
+    else:
+        nbits = nbits_for_num(num)
+
+        if nbits > typ['width']:
+            print(nbits)
+            print(typ)
+            from error import error
+            error("value size not corresponded type size", ti)
+            return hlir_value_bad(ti)
+
+    return hlir_value_literal(typ, num, ti)
+
+
+
+
 
 
 no_warning_cast_data_loss = False
@@ -61,7 +83,7 @@ def do_cons_integer(v, t, method, ti):
 def value_cons_integer(v, t, ti, method):
     from_type = v['type']
 
-    if type.type_is_generic_integer(from_type):
+    if hlir_type.type_is_generic_integer(from_type):
         # GenericInt -> Int
         check_width(from_type, t, method, ti)
 
@@ -77,31 +99,31 @@ def value_cons_integer(v, t, ti, method):
         return None
 
     # Int -> Int
-    if type.type_is_integer(from_type):
+    if hlir_type.type_is_integer(from_type):
         return do_cons_integer(v, t, method, ti)
 
     # Float -> Int
-    elif type.type_is_float(from_type):
+    elif hlir_type.type_is_float(from_type):
         return do_cons_integer(v, t, method, ti=ti)
 
     # Char -> Int
-    elif type.type_is_char(from_type):
+    elif hlir_type.type_is_char(from_type):
         return do_cons_integer(v, t, method, ti)
 
     # Bool -> Int
-    elif type.type_is_bool(from_type):
+    elif hlir_type.type_is_bool(from_type):
         return do_cons_integer(v, t, method, ti)
 
     # Byte -> Int
-    elif type.type_is_byte(from_type):
+    elif hlir_type.type_is_byte(from_type):
         return do_cons_integer(v, t, method, ti)
 
     # Pointer -> Int
-    elif type.type_is_pointer(from_type):
+    elif hlir_type.type_is_pointer(from_type):
         return do_cons_integer(v, t, method, ti)
 
     # VA_List -> Int
-    elif type.type_is_va_list(from_type):
+    elif hlir_type.type_is_va_list(from_type):
         return hlir_value_cast(v, t, ti)
 
     return None

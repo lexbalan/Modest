@@ -1,9 +1,62 @@
 
-import hlir.type as type
+import hlir.type as hlir_type
 from error import error, warning, info
-from hlir.value import hlir_value_cast, hlir_value_cast_immediate, hlir_value_char, hlir_value_zero
+from hlir.value import hlir_value_cast, hlir_value_literal, hlir_value_cast_immediate, hlir_value_zero
+from .char import hlir_value_char
+from .integer import hlir_value_int
 
 from .value import *
+
+
+
+
+
+def hlir_value_array(items, type=None, ti=None):
+    if type == None:
+        length = len(items)
+
+        of = None
+        if length > 0:
+            of = items[0]['type']
+
+        array_volume = hlir_value_int(length)
+        type = hlir_type.hlir_type_array(of, volume=array_volume, ti=ti)
+        type['generic'] = True
+
+    return hlir_value_literal(type, items, ti)
+
+
+
+
+
+def hlir_value_string(string, length=0, ti=None):
+    if length == 0:
+        length = len(string) + 1
+
+    max_char_width = 0
+    chars = []
+    for char in string:
+        char_code = ord(char)
+        value_char = hlir_value_char(char_code, _type=None, ti=ti)
+        chars.append(value_char)
+
+        # get max char width
+        char_width = value_char['type']['width']
+        max_char_width = max(char_width, max_char_width)
+
+
+    # тип массива литерала строки
+    # это наиболее широкий GenericChar в ней
+    genericCharType = hlir_type.hlir_type_char(max_char_width, ti=ti)
+    genericCharType['generic'] = True
+
+    vol = hlir_value_int(length)  # <=> len(string) + 1
+    genStrType = hlir_type.hlir_type_array(genericCharType, volume=vol, ti=ti)
+    genStrType['generic'] = True
+
+    # #imm of string literal is array of chars
+    return hlir_value_literal(genStrType, chars, ti)
+
 
 
 
@@ -11,7 +64,7 @@ from .value import *
 # полного или из пустого дженерик массива
 def value_cons_array_from_generic_array(v, t, ti, method):
     #info("value_cons_array_from_generic_array", ti)
-    assert(type.type_is_generic_array(v['type']))
+    assert(hlir_type.type_is_generic_array(v['type']))
 
     zero_pad = 0
 
@@ -49,13 +102,13 @@ def value_cons_array_from_generic_array(v, t, ti, method):
 #            error("cons from not immediate item not implemented", ti)
 #            return None
 
-        if type.type_is_array_of_char(v['type']):
+        if hlir_type.type_is_array_of_char(v['type']):
             char_code = item['asset']
-            item = hlir_value_char(char_code, type=None, ti=ti)
+            item = hlir_value_char(char_code, _type=None, ti=ti)
 
         from .cons import value_cons_implicit
         casted_item = value_cons_implicit(item, t['of'], item['ti'])
-        type.check(t['of'], casted_item['type'], item['ti'])
+        hlir_type.check(t['of'], casted_item['type'], item['ti'])
 
         casted_item['nl'] = item['nl']
         casted_items.append(casted_item)
@@ -85,7 +138,7 @@ def value_cons_array_from_generic_array(v, t, ti, method):
 # TODO: only for immediate array (!)
 def value_cons_array_from_array(v, t, ti, method):
     # нельзя построить массив из массива другого типа
-    if not type.type_eq(v['type']['of'], t['of']):
+    if not hlir_type.type_eq(v['type']['of'], t['of']):
         return None
 
     # нельзя построить меньший массив из большего
@@ -117,10 +170,10 @@ def value_cons_array(v, t, ti, method):
     from_type = v['type']
     to_type = t
 
-    if type.type_is_array(from_type):
+    if hlir_type.type_is_array(from_type):
 
         # GenericArray -> Array
-        if type.type_is_generic(from_type):
+        if hlir_type.type_is_generic(from_type):
             return value_cons_array_from_generic_array(v, t, ti, method)
 
         if method != 'explicit':
@@ -128,7 +181,7 @@ def value_cons_array(v, t, ti, method):
             return None
 
         # Array -> Array
-        if not type.type_eq(t['of'], v['type']['of']):
+        if not hlir_type.type_eq(t['of'], v['type']['of']):
             error("cannot cons array from array with different item type", ti)
             return None
 

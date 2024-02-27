@@ -1,9 +1,19 @@
 
 import hlir.type as type
 from error import info, error
-from hlir.value import hlir_value_cast, hlir_value_cast_immediate
-from value.value import value_is_immediate
+from hlir.value import hlir_value_literal, hlir_value_cast, hlir_value_cast_immediate
 from util import nbits_for_num
+
+
+
+def hlir_value_char(char_code, _type=None, ti=None):
+    if _type == None:
+        # if type not specified, set type as GenericChar
+        char_width = nbits_for_num(char_code)
+        _type = type.hlir_type_char(char_width, ti=ti)
+        _type['generic'] = True
+
+    return hlir_value_literal(_type, char_code, ti)
 
 
 
@@ -16,6 +26,7 @@ def value_cons_char_immediate(v, t, ti):
 
 
 def do_cons_char(v, t, ti):
+    from value.value import value_is_immediate
     if value_is_immediate(v):
         return value_cons_char_immediate(v, t, ti)
     return hlir_value_cast(v, t, ti=ti)

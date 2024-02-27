@@ -2,10 +2,18 @@
 import hlir.type as type
 from error import error, warning, info
 from hlir.hlir import *
-from hlir.value import hlir_value_zero, hlir_value_cast
+from hlir.value import hlir_value_literal, hlir_value_zero, hlir_value_cast
 from hlir.type import record_field_get
 from util import get_item_with_id
 from .value import *
+
+
+
+
+def hlir_value_record(typ, initializers=[], ti=None):
+    return hlir_value_literal(typ, initializers, ti)
+
+
 
 
 def value_cons_record_from_generic_record(v, t, ti, method):

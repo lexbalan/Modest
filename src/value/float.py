@@ -8,6 +8,15 @@ from .value import *
 
 
 
+
+def hlir_value_float(num, ti=None):
+    typ = hlir_type_float(width=flt_width, ti=ti)
+    typ['generic'] = True
+    return hlir_value_literal(typ, num, ti)
+
+
+
+
 def value_cons_float_immediate(v, t, ti):
     nv = hlir_value_cast_immediate(v, t, ti)
     nv['asset'] = float_value_pack(float(nv['asset']), t['width'])
