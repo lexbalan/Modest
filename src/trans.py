@@ -477,7 +477,7 @@ def do_value_shift(x):
 
     if hlir_type.type_is_generic(l['type']):
         error("required value with non-generic type", l)
-        return hlir_value_bad(ti)
+        return value_bad(ti)
 
     return hlir_value_bin(op, l, r, l['type'], ti=ti)
 
@@ -516,7 +516,7 @@ def do_bin_op_with_pointers(op, l, r , ti):
     from main import features
     if not features.get('unsafe'):
         error("illegal operation with pointers", ti)
-        return hlir_value_bad(ti)
+        return value_bad(ti)
 
 
     # если включен unsafe режим
@@ -553,7 +553,7 @@ def do_bin_op_with_pointers(op, l, r , ti):
                 return do_cast_runtime(result, r['type'], ti)
 
         error("illegal operation with pointers", ti)
-        return hlir_value_bad(ti)
+        return value_bad(ti)
 
 
 
@@ -651,16 +651,16 @@ def do_value_bin(x):
     ti = x['ti']
 
     if value_is_bad(l) or value_is_bad(r):
-        return hlir_value_bad(ti)
+        return value_bad(ti)
 
 
     if not op in l['type']['ops']:
         error("unsuitable type", x['left']['ti'])
-        return hlir_value_bad(x['ti'])
+        return value_bad(x['ti'])
 
     if not op in r['type']['ops']:
         error("unsuitable type", x['right']['ti'])
-        return hlir_value_bad(x['ti'])
+        return value_bad(x['ti'])
 
 
     if hlir_type.type_is_pointer(l['type']) or hlir_type.type_is_pointer(r['type']):
@@ -681,7 +681,7 @@ def do_value_bin(x):
 
     # After implicit cast types must be equal
     if not hlir_type.check(l['type'], r['type'], x['ti']):
-        return hlir_value_bad(x['ti'])
+        return value_bad(x['ti'])
 
     type_result = common_type
 
@@ -744,7 +744,7 @@ def do_value_deref(v, ti):
     vtype = v['type']
     if not hlir_type.type_is_pointer(vtype):
         error("expected pointer", ti)
-        return hlir_value_bad(ti)
+        return value_bad(ti)
 
     to = vtype['to']
     # you can't deref pointer to function
@@ -825,14 +825,14 @@ def do_value_call(x):
                 return hlir_value_lengthof(arg, ti=x['ti'])
             else:
                 error("lengthof argument must be an array", x['args'][0]['ti'])
-                return hlir_value_bad(x['ti'])
+                return value_bad(x['ti'])
 
 
 
     f = do_rvalue(x['left'])
 
     if value_is_bad(f):
-        return hlir_value_bad(x['ti'])
+        return value_bad(x['ti'])
 
     func_id_str = None
     if 'id' in f:
@@ -855,12 +855,12 @@ def do_value_call(x):
 
     if nargs < npars:
         error("not enough args", x)
-        return hlir_value_bad(x['ti'])
+        return value_bad(x['ti'])
 
     if nargs > npars:
         if not ftype['extra_args']:
             error("too many args", x)
-            return hlir_value_bad(x['ti'])
+            return value_bad(x['ti'])
 
     args = []
 
@@ -936,7 +936,7 @@ def do_value_index(x):
     left = do_rvalue(x['left'])
 
     if value_is_bad(left):
-        return hlir_value_bad(x['ti'])
+        return value_bad(x['ti'])
 
     left_typ = left['type']
 
@@ -949,13 +949,13 @@ def do_value_index(x):
 
     if not hlir_type.type_is_array(array_typ):
         error("expected array or pointer to array", x['left']['ti'])
-        return hlir_value_bad(x['left']['ti'])
+        return value_bad(x['left']['ti'])
 
 
     index = do_rvalue(x['index'])
 
     if value_is_bad(index):
-        return hlir_value_bad(x['index']['ti'])
+        return value_bad(x['index']['ti'])
 
     if not hlir_type.type_is_integer(index['type']):
         error("expected integer value", x['index'])
@@ -999,7 +999,7 @@ def do_value_access(x):
     left = do_rvalue(x['left'])
 
     if value_is_bad(left):
-        return hlir_value_bad(x['ti'])
+        return value_bad(x['ti'])
 
     field_id = x['field']
 
@@ -1013,17 +1013,17 @@ def do_value_access(x):
     # check if is record
     if not hlir_type.type_is_record(record_type):
         error("expected record or pointer to record", x)
-        return hlir_value_bad(x['left']['ti'])
+        return value_bad(x['left']['ti'])
 
     field = hlir_type.record_field_get(record_type, field_id['str'])
 
     # if field not found
     if field == None:
         error("undefined field '%s'" % field_id['str'], x)
-        return hlir_value_bad(x['field']['ti'])
+        return value_bad(x['field']['ti'])
 
     if hlir_type.type_is_bad(field['type']):
-        return hlir_value_bad(x['field']['ti'])
+        return value_bad(x['field']['ti'])
 
     if via_pointer:
         v = hlir_value_access_record_by_ptr(left, field, ti=x['ti'])
@@ -1046,7 +1046,7 @@ def do_value_to(x):
     v = do_rvalue(x['value'])
     t = do_type(x['type'])
     if value_is_bad(v) or hlir_type.type_is_bad(t):
-        return hlir_value_bad(x['ti'])
+        return value_bad(x['ti'])
     return value_cons_explicit(v, t, x['ti'])
 
 
@@ -1060,10 +1060,10 @@ def do_value_id(x):
 
         # чтобы не генерил ошибки дальше
         # создадим bad value и пропишем его глобально
-        v = hlir_value_bad(x['ti'])
+        v = value_bad(x['ti'])
         value_attribute_add(v, 'unknown')
         module['context'].value_add(id_str, v)
-        return hlir_value_bad(x['ti'])
+        return value_bad(x['ti'])
 
     if 'usecnt' in vx:
         vx['usecnt'] = vx['usecnt'] + 1
@@ -1208,7 +1208,7 @@ def do_value(x):
             elif k == 'shr': rv = do_value_shift(x)
 
     if rv == None:
-        rv = hlir_value_bad(x['ti'])
+        rv = value_bad(x['ti'])
 
     assert('ti' in rv)
 
@@ -1307,12 +1307,12 @@ def do_stmt_var(x):
 
     # error: no type, no init value
     if t == None and v == None:
-        module['context'].value_add(var_id['str'], hlir_value_bad())
+        module['context'].value_add(var_id['str'], value_bad())
         return hlir_stmt_bad()
 
     if t != None:
         if hlir_type.type_is_bad(t):
-            module['context'].value_add(var_id['str'], hlir_value_bad())
+            module['context'].value_add(var_id['str'], value_bad())
             return hlir_stmt_bad()
 
         if hlir_type.type_is_forbidden_var(t):
@@ -1364,7 +1364,7 @@ def do_stmt_let(x):
     v = do_rvalue(x['value'])
 
     if value_is_bad(v):
-        module['context'].value_add(id['str'], hlir_value_bad())
+        module['context'].value_add(id['str'], value_bad())
         return hlir_stmt_bad()
 
 

@@ -43,7 +43,7 @@ def value_load(x):
 
 
 
-def hlir_value_bad(ti=None):
+def value_bad(ti=None):
     return {
         'isa': 'value',
         'kind': 'bad',

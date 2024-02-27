@@ -87,7 +87,7 @@ def value_cons_soft(v, t, ti):
 
 def value_cons_implicit(v, t, ti):
     if value_is_bad(v) or type.type_is_bad(t):
-        return hlir_value_bad(ti)
+        return value_bad(ti)
 
     from_type = v['type']
     to_type = t
@@ -148,7 +148,7 @@ def value_cons_implicit(v, t, ti):
 
 def value_cons_explicit(v, t, ti):
     if value_is_bad(v) or type.type_is_bad(t):
-        return hlir_value_bad(ti)
+        return value_bad(ti)
 
     if type.type_eq(v['type'], t):
         warning("explicit cast to the same type", ti)
@@ -158,7 +158,7 @@ def value_cons_explicit(v, t, ti):
 
     if y == None:
         error("cast error", ti)
-        return hlir_value_bad(ti)
+        return value_bad(ti)
 
     y['att'].append('explicit_cast')  # used by CM backend
 
