@@ -6,7 +6,6 @@ import hlir.type as hlir_type
 from hlir.type import type_print
 from value.value import value_attribute_check, value_print, value_is_immediate
 from hlir.value import hlir_is_value
-from value.integer import hlir_value_int
 from hlir.type import hlir_type_pointer
 import settings
 

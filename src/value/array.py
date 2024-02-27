@@ -2,8 +2,8 @@
 import hlir.type as hlir_type
 from error import error, warning, info
 from hlir.value import hlir_value_cast, hlir_value_literal, hlir_value_cast_immediate, hlir_value_zero
-from .char import hlir_value_char
-from .integer import hlir_value_int
+from .char import value_char
+from .integer import value_int
 
 from .value import *
 
@@ -11,7 +11,7 @@ from .value import *
 
 
 
-def hlir_value_array(items, type=None, ti=None):
+def value_array(items, type=None, ti=None):
     if type == None:
         length = len(items)
 
@@ -19,7 +19,7 @@ def hlir_value_array(items, type=None, ti=None):
         if length > 0:
             of = items[0]['type']
 
-        array_volume = hlir_value_int(length)
+        array_volume = value_int(length)
         type = hlir_type.hlir_type_array(of, volume=array_volume, ti=ti)
         type['generic'] = True
 
@@ -29,7 +29,7 @@ def hlir_value_array(items, type=None, ti=None):
 
 
 
-def hlir_value_string(string, length=0, ti=None):
+def value_string(string, length=0, ti=None):
     if length == 0:
         length = len(string) + 1
 
@@ -37,11 +37,11 @@ def hlir_value_string(string, length=0, ti=None):
     chars = []
     for char in string:
         char_code = ord(char)
-        value_char = hlir_value_char(char_code, _type=None, ti=ti)
-        chars.append(value_char)
+        char = value_char(char_code, _type=None, ti=ti)
+        chars.append(char)
 
         # get max char width
-        char_width = value_char['type']['width']
+        char_width = char['type']['width']
         max_char_width = max(char_width, max_char_width)
 
 
@@ -50,7 +50,7 @@ def hlir_value_string(string, length=0, ti=None):
     genericCharType = hlir_type.hlir_type_char(max_char_width, ti=ti)
     genericCharType['generic'] = True
 
-    vol = hlir_value_int(length)  # <=> len(string) + 1
+    vol = value_int(length)  # <=> len(string) + 1
     genStrType = hlir_type.hlir_type_array(genericCharType, volume=vol, ti=ti)
     genStrType['generic'] = True
 
@@ -104,7 +104,7 @@ def value_cons_array_from_generic_array(v, t, ti, method):
 
         if hlir_type.type_is_array_of_char(v['type']):
             char_code = item['asset']
-            item = hlir_value_char(char_code, _type=None, ti=ti)
+            item = value_char(char_code, _type=None, ti=ti)
 
         from .cons import value_cons_implicit
         casted_item = value_cons_implicit(item, t['of'], item['ti'])

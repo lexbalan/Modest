@@ -8,7 +8,7 @@ from .value import *
 
 
 
-def hlir_value_int(num, typ=None, ti=None):
+def value_int(num, typ=None, ti=None):
     if typ == None:
         typ = hlir_type.hlir_type_generic_int_for(num, unsigned=False, ti=ti)
     else:

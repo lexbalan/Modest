@@ -6,10 +6,10 @@ from util import get_item_with_id, align_to
 from main import settings
 from frontend.parser import Parser
 
-from value.integer import hlir_value_int
-from value.float import hlir_value_float
-from value.array import hlir_value_array, hlir_value_string
-from value.record import hlir_value_record
+from value.integer import value_int
+from value.float import value_float
+from value.array import value_array, value_string
+from value.record import value_record
 
 
 import foundation
@@ -192,9 +192,9 @@ def init():
 
     foundation_module = foundation.init()
 
-    valueNil = hlir_value_int(0, typ=foundation.typeFreePointer)
-    valueTrue = hlir_value_int(1, typ=foundation.typeBool)
-    valueFalse = hlir_value_int(0, typ=foundation.typeBool)
+    valueNil = value_int(0, typ=foundation.typeFreePointer)
+    valueTrue = value_int(1, typ=foundation.typeBool)
+    valueFalse = value_int(0, typ=foundation.typeBool)
 
     global root_context
     # init main context
@@ -238,15 +238,15 @@ def init():
     root_context.type_add('VA_List', foundation.typeVA_List)
 
 
-    compilerVersionMajor = hlir_value_int(0, typ=foundation.typeNat32)
+    compilerVersionMajor = value_int(0, typ=foundation.typeNat32)
     root_context.value_add('__compilerVersionMajor', compilerVersionMajor)
-    compilerVersionMinor = hlir_value_int(7, typ=foundation.typeNat32)
+    compilerVersionMinor = value_int(7, typ=foundation.typeNat32)
     root_context.value_add('__compilerVersionMinor', compilerVersionMinor)
 
     import platform
-    __platformSystem = hlir_value_string(platform.system())
+    __platformSystem = value_string(platform.system())
     root_context.value_add('__platformSystem', __platformSystem)
-    __platformRelease = hlir_value_string(platform.release())
+    __platformRelease = value_string(platform.release())
     root_context.value_add('__platformRelease', __platformRelease)
 
 
@@ -263,13 +263,13 @@ def init():
     flt_width = int(settings.get('float_width'))
     pointer_width = int(settings.get('pointer_width'))
 
-    __systemCharWidth = hlir_value_int(char_width, typ=foundation.typeNat32)
+    __systemCharWidth = value_int(char_width, typ=foundation.typeNat32)
     root_context.value_add('__systemCharWidth', __systemCharWidth)
-    __systemIntWidth = hlir_value_int(int_width, typ=foundation.typeNat32)
+    __systemIntWidth = value_int(int_width, typ=foundation.typeNat32)
     root_context.value_add('__systemIntWidth', __systemIntWidth)
-    __systemFloatWidth = hlir_value_int(flt_width, typ=foundation.typeNat32)
+    __systemFloatWidth = value_int(flt_width, typ=foundation.typeNat32)
     root_context.value_add('__systemFloatWidth', __systemFloatWidth)
-    __systemPointerWidth = hlir_value_int(pointer_width, typ=foundation.typeNat32)
+    __systemPointerWidth = value_int(pointer_width, typ=foundation.typeNat32)
     root_context.value_add('__systemPointerWidth', __systemPointerWidth)
 
     #print("system_char_width  = %d" % char_width)
@@ -385,7 +385,7 @@ def do_type_enum(t):
         })
 
         # add enum item to global context
-        item_val = hlir_value_int(i, typ=enum_type, ti=item['ti'])
+        item_val = value_int(i, typ=enum_type, ti=item['ti'])
         item_val['id'] = id
         module['context'].value_add(id['str'], item_val)
 
@@ -534,7 +534,7 @@ def do_bin_op_with_pointers(op, l, r , ti):
             num = 0
             if op == 'add': num = l['asset'] + r['asset']
             elif op == 'sub': num = l['asset'] - r['asset']
-            return hlir_value_int(num, typ=typ, ti=ti)
+            return value_int(num, typ=typ, ti=ti)
 
         # указатель или число в рантайме
         else:
@@ -597,7 +597,7 @@ def value_concat_arrays(l, r, ti):
     imm_str = l['asset'] + r['asset']
     length = len(imm_str) + 1  #!
 
-    str_array_volume = hlir_value_int(length)
+    str_array_volume = value_int(length)
     generic = True  # не факт, анализируй a и b
     item_type = l['type']['of'] #foundation.typeChar32
     genStrType = hlir_type_array(item_type, volume=str_array_volume, ti=ti)
@@ -1073,7 +1073,7 @@ def do_value_id(x):
 
 
 def do_value_str(x):
-    return hlir_value_string(x['str'], length=x['len'], ti=x['ti'])
+    return value_string(x['str'], length=x['len'], ti=x['ti'])
 
 
 
@@ -1099,7 +1099,7 @@ def do_value_array(x):
     if length > 0:
         of = items[0]['type']
 
-    v = hlir_value_array(items, ti=x['ti'])
+    v = value_array(items, ti=x['ti'])
     v['nl_end'] = x['nl_end']
     return v
 
@@ -1129,14 +1129,14 @@ def do_value_record(x):
 
     generic_record_type = hlir_type_record(fields, ti=x['ti'])
     generic_record_type['generic'] = True
-    v = hlir_value_record(generic_record_type, initializers, ti=x['ti'])
+    v = value_record(generic_record_type, initializers, ti=x['ti'])
     v['nl_end'] = x['nl_end']
     return v
 
 
 
 def do_value_int(x):
-    v = hlir_value_int(x['num'], ti=x['ti'])
+    v = value_int(x['num'], ti=x['ti'])
     v['nsigns'] = x['nsigns']  # number of digits in literal (for printer)
 
     if 'hexadecimal' in x['att']:
@@ -1146,7 +1146,7 @@ def do_value_int(x):
 
 
 def do_value_float(x):
-    return hlir_value_float(x['num'], ti=x['ti'])
+    return value_float(x['num'], ti=x['ti'])
 
 
 def do_value_sizeof(x):
@@ -1428,7 +1428,7 @@ def do_stmt_incdec(x, op='add'):
         error("expected value with integer type", x['value']['ti'])
         return hlir_stmt_bad()
 
-    one = hlir_value_int(1, typ=v['type'], ti=x['ti'])
+    one = value_int(1, typ=v['type'], ti=x['ti'])
     v_plus = _bin(op, v['type'], v, one, x['ti'])
 
     return hlir_stmt_assign(v, v_plus, ti=x['ti'])
@@ -1756,7 +1756,7 @@ def def_var(x):
             # получаем его из инициализатора
             if arr_without_length:
                 init_arr_sz = iv['type']['volume']['asset']
-                var_type['volume'] = hlir_value_int(init_arr_sz)
+                var_type['volume'] = value_int(init_arr_sz)
                 #print(init_arr_sz)
 
             init_value = value_cons_implicit(iv, var_type, x['init']['ti'])

@@ -10,7 +10,7 @@ from .value import *
 
 
 
-def hlir_value_record(typ, initializers=[], ti=None):
+def value_record(typ, initializers=[], ti=None):
     return hlir_value_literal(typ, initializers, ti)
 
 

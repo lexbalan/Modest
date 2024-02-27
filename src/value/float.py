@@ -9,7 +9,7 @@ from .value import *
 
 
 
-def hlir_value_float(num, ti=None):
+def value_float(num, ti=None):
     typ = hlir_type_float(width=flt_width, ti=ti)
     typ['generic'] = True
     return hlir_value_literal(typ, num, ti)

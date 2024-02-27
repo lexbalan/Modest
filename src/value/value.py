@@ -4,7 +4,7 @@ from hlir.type import type_print
 from error import error, warning, info
 from hlir.hlir import *
 from util import get_item_with_id
-from .char import hlir_value_char
+from .char import value_char
 
 
 def value_is_bad(x):
