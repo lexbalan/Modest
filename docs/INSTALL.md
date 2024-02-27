@@ -8,19 +8,28 @@ cd ~
 git clone https://github.com/lexbalan/Modest.git
 ```
 
-2. Add environment variables:
+2. Set environment variables:
 ```
 export MODEST_DIR=~/Modest
 export PATH=$PATH:$MODEST_DIR
 export MODEST_LIB=$MODEST_DIR/lib/
+```
 
-# *or ~/.zshrc if you use zsh
+You can add this variables to your shell rc file
+```
+# for BASH
 echo "export MODEST_DIR=~/Modest" >> ~/.bashrc
 echo "export PATH=$PATH:$MODEST_DIR" >> ~/.bashrc
 echo "export MODEST_LIB=$MODEST_DIR/lib/" >> ~/.bashrc
+# Restart your terminal after...
+
+# for ZSH
+echo "export MODEST_DIR=~/Modest" >> ~/.zshrc
+echo "export PATH=$PATH:$MODEST_DIR" >> ~/.zshrc
+echo "export MODEST_LIB=$MODEST_DIR/lib/" >> ~/.zshrc
+# Restart your terminal after...
 ```
 
-> Restart your terminal after commands showed above
 
 3. Compile some example for compiler installation test:
 ```
