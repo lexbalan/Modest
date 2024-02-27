@@ -2,7 +2,7 @@
 import hlir.type as hlir_type
 from error import error, warning, info
 from .char import value_char
-from .integer import value_int
+from .integer import value_integer
 from .value import value_literal, value_cast_immediate
 from .value import *
 
@@ -18,7 +18,7 @@ def value_array(items, type=None, ti=None):
         if length > 0:
             of = items[0]['type']
 
-        array_volume = value_int(length)
+        array_volume = value_integer(length)
         type = hlir_type.hlir_type_array(of, volume=array_volume, ti=ti)
         type['generic'] = True
 
@@ -49,7 +49,7 @@ def value_string(string, length=0, ti=None):
     genericCharType = hlir_type.hlir_type_char(max_char_width, ti=ti)
     genericCharType['generic'] = True
 
-    vol = value_int(length)  # <=> len(string) + 1
+    vol = value_integer(length)  # <=> len(string) + 1
     genStrType = hlir_type.hlir_type_array(genericCharType, volume=vol, ti=ti)
     genStrType['generic'] = True
 
