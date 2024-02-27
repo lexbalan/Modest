@@ -130,21 +130,21 @@ declare void @perror(%ConstCharStr* %str)
 
 
 
-define void @mtab(%Int %n) {
-    ;var m: Nat32
-    ;m = 1
+define void @mtab(i32 %n) {
     %1 = alloca i32
     store i32 1, i32* %1
+    ; or
+    ;var m = 1   // by default integer var get system int type (-mint option)
     br label %again_1
 again_1:
     %2 = load i32, i32* %1
-    %3 = icmp slt i32 %2, 10
+    %3 = icmp ult i32 %2, 10
     br i1 %3 , label %body_1, label %break_1
 body_1:
     %4 = load i32, i32* %1
-    %5 = mul %Int %n, %4
+    %5 = mul i32 %n, %4
     %6 = load i32, i32* %1
-    %7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*), %Int %n, i32 %6, %Int %5)
+    %7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*), i32 %n, i32 %6, i32 %5)
     %8 = load i32, i32* %1
     %9 = add i32 %8, 1
     store i32 %9, i32* %1
@@ -155,7 +155,7 @@ break_1:
 
 define %Int @main() {
     %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str2 to [0 x i8]*), i32 4)
-    call void (%Int) @mtab(%Int 4)
+    call void (i32) @mtab(i32 4)
     ret %Int 0
 }
 

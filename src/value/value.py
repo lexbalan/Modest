@@ -1,4 +1,5 @@
 from error import info, warning, error
+from hlir.id import hlir_id
 from hlir.hlir import *
 from util import get_item_with_id
 import hlir.type as hlir_type
@@ -47,7 +48,7 @@ def value_bad(ti=None):
         'isa': 'value',
         'kind': 'bad',
         'id': hlir_id('_', ti=ti),
-        'type': hlir_type_bad(ti),
+        'type': hlir_type.hlir_type_bad(ti),
         'immutable': False,
         'att': [],
         'ti': ti

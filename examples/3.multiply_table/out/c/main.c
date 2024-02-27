@@ -1,4 +1,4 @@
-// examples/3.multiply_table/main.cm
+// examples/3.multiply_table/src/main.cm
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -9,14 +9,14 @@
 
 
 
-void mtab(int n)
+void mtab(uint32_t n)
 {
-    //var m: Nat32
-    //m = 1
-    int32_t m;
+    uint32_t m;
     m = 1;
+    // or
+    //var m = 1   // by default integer var get system int type (-mint option)
     while (m < 10) {
-        const int nm = n * m;
+        const uint32_t nm = n * m;
         printf("%d * %d = %d\n", n, m, nm);
         m = m + 1;
     }

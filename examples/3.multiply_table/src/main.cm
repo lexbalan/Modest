@@ -3,7 +3,7 @@
 import "libc/stdio"
 
 
-func mtab(n: Int) -> Unit {
+func mtab(n: Nat32) -> Unit {
     var m: Nat32 = 1
     // or
     //var m = 1   // by default integer var get system int type (-mint option)

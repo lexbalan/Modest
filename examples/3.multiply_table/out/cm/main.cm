@@ -1,12 +1,12 @@
-// examples/3.multiply_table/main.cm
+// examples/3.multiply_table/src/main.cm
 
 import "libc/stdio.h"
 
 
-func mtab(n: Int) -> Unit {
-    //var m: Nat32
-    //m = 1
-    var m: Int32 = 1
+func mtab(n: Nat32) -> Unit {
+    var m: Nat32 = 1
+    // or
+    //var m = 1   // by default integer var get system int type (-mint option)
     while m < 10 {
         let nm = n * m
         printf("%d * %d = %d\n", n, m, nm)
