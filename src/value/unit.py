@@ -1,10 +1,10 @@
 
 from error import error
 
-from .value import hlir_value_cast
+from .value import value_cast
 
 def value_cons_unit_immediate(v, t, ti):
-    return hlir_value_cast_immediate(v, t, ti)
+    return value_cast_immediate(v, t, ti)
 
 
 def value_cons_unit(v, t, ti, method):
@@ -12,6 +12,6 @@ def value_cons_unit(v, t, ti, method):
         error("cannot implicit cons Unit value", ti)
         return None
 
-    return hlir_value_cast(v, t, ti=ti)
+    return value_cast(v, t, ti=ti)
 
 

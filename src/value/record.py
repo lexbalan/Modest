@@ -20,7 +20,7 @@ def value_cons_record_from_generic_record(v, t, ti, method):
     if v['kind'] == 'const':
         # TODO: тут нужно проверить чтобы при implicit методе
         # все поля присутствовали (!)
-        return hlir_value_cast(v, t, ti=ti)
+        return value_cast(v, t, ti=ti)
 
     if len(v['asset']) == 0:
         #info("cons record from empty record", ti)
@@ -111,7 +111,7 @@ def value_cons_record_from_generic_record(v, t, ti, method):
 
 
 def value_cons_record_from_record(v, t, ti, method):
-    return hlir_value_cast(v, t, ti=ti)
+    return value_cast(v, t, ti=ti)
 
 
 

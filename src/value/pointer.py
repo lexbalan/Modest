@@ -8,7 +8,7 @@ import foundation
 
 def value_cons_pointer_immediate(v, t, ti):
     #info("value_cons_pointer_immediate", ti)
-    return hlir_value_cast_immediate(v, t, ti)
+    return value_cast_immediate(v, t, ti)
 
 
 def cons_ptr_to_str_from_generic_str(v, t, ti):
@@ -37,7 +37,7 @@ def cons_ptr_to_str_from_generic_str(v, t, ti):
 def do_cons_pointer(v, t, ti):
     if value_is_immediate(v):
         return value_cons_pointer_immediate(v, t, ti)
-    return hlir_value_cast(v, t, ti=ti)
+    return value_cast(v, t, ti=ti)
 
 
 
@@ -98,7 +98,7 @@ def value_cons_pointer(v, t, ti, method):
 
     # VA_List -> Ptr
     elif type.type_is_va_list(vtype):
-        return hlir_value_cast(v, t, ti)
+        return value_cast(v, t, ti)
 
 
     return None

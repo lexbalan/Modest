@@ -64,7 +64,7 @@ def value_cons_integer_immediate(v, t, ti):
     if need_width > width:
         error("integer overflow", ti)
 
-    return hlir_value_cast_immediate(v, t, ti)
+    return value_cast_immediate(v, t, ti)
 
 
 
@@ -72,11 +72,11 @@ def do_cons_integer(v, t, method, ti):
     check_width(v['type'], t, method, ti)
     if value_is_immediate(v):
         if method == 'explicit':
-            nv = hlir_value_cast(v, t, ti=ti)
+            nv = value_cast(v, t, ti=ti)
             nv['asset'] = int(v['asset'])  # here can be float
             return nv
         return value_cons_integer_immediate(v, t, ti)
-    return hlir_value_cast(v, t, ti=ti)
+    return value_cast(v, t, ti=ti)
 
 
 
@@ -124,7 +124,7 @@ def value_cons_integer(v, t, ti, method):
 
     # VA_List -> Int
     elif hlir_type.type_is_va_list(from_type):
-        return hlir_value_cast(v, t, ti)
+        return value_cast(v, t, ti)
 
     return None
 

@@ -17,7 +17,7 @@ def value_float(num, ti=None):
 
 
 def value_cons_float_immediate(v, t, ti):
-    nv = hlir_value_cast_immediate(v, t, ti)
+    nv = value_cast_immediate(v, t, ti)
     nv['asset'] = float_value_pack(float(nv['asset']), t['width'])
     return nv
 
@@ -25,7 +25,7 @@ def value_cons_float_immediate(v, t, ti):
 def do_cons_float(v, t, ti):
     if value_is_immediate(v):
         return value_cons_float_immediate(v, t, ti)
-    return hlir_value_cast(v, t, ti=ti)
+    return value_cast(v, t, ti=ti)
 
 
 def value_cons_float(v, t, ti, method):
@@ -51,7 +51,7 @@ def value_cons_float(v, t, ti, method):
 
     # VA_List -> Float
     elif type.type_is_va_list(vt):
-        return hlir_value_cast(v, t, ti)
+        return value_cast(v, t, ti)
 
     return None
 

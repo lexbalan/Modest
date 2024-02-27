@@ -479,7 +479,7 @@ def do_value_shift(x):
         error("required value with non-generic type", l)
         return value_bad(ti)
 
-    return hlir_value_bin(op, l, r, l['type'], ti=ti)
+    return value_bin(op, l, r, l['type'], ti=ti)
 
 
 
@@ -511,7 +511,7 @@ def do_bin_op_with_pointers(op, l, r , ti):
             elif hlir_type.type_is_free_pointer(r['type']):
                 r = value_cons_implicit(r, l['type'], ti)
 
-            return hlir_value_bin(op, l, r, foundation.typeBool, ti)
+            return value_bin(op, l, r, foundation.typeBool, ti)
 
     from main import features
     if not features.get('unsafe'):
@@ -543,13 +543,13 @@ def do_bin_op_with_pointers(op, l, r , ti):
             if ptr_n_int:
                 lnat = do_cast_runtime(l, typeSysNat, ti)
                 xr = value_cons_implicit(r, lnat['type'], ti)
-                result = hlir_value_bin(x['kind'], lnat, xr, xr['type'], ti)
+                result = value_bin(x['kind'], lnat, xr, xr['type'], ti)
                 return do_cast_runtime(result, l['type'], ti)
 
             if int_n_ptr:
                 rnat = do_cast_runtime(r, typeSysNat, ti)
                 xl = value_cons_implicit(l, rnat['type'], ti)
-                result = hlir_value_bin(x['kind'], rnat, xl, xl['type'], ti)
+                result = value_bin(x['kind'], rnat, xl, xl['type'], ti)
                 return do_cast_runtime(result, r['type'], ti)
 
         error("illegal operation with pointers", ti)
@@ -588,7 +588,7 @@ def bin_imm(op, type_result, l, r, ti):
     if not hlir_type.type_is_float(l['type']):
         num_val = int(num_val)
 
-    bin_value = hlir_value_bin(op, l, r, type_result, ti=ti)
+    bin_value = value_bin(op, l, r, type_result, ti=ti)
     bin_value['asset'] = num_val
     return bin_value
 
@@ -604,7 +604,7 @@ def value_concat_arrays(l, r, ti):
     genStrType = hlir_type_array(item_type, volume=str_array_volume, ti=ti)
     genStrType['generic'] = True
 
-    bin_value = hlir_value_bin('add_str', l, r, genStrType, ti=ti)
+    bin_value = value_bin('add_str', l, r, genStrType, ti=ti)
     bin_value['asset'] = imm_str
     bin_value['nl_end'] = r['nl_end']
     return bin_value
@@ -638,7 +638,7 @@ def do_value_bin_str_eq(op, l, r, ti):
         op = 'ne_str'
         bool_result = not bool_result
 
-    bin_value = hlir_value_bin(op, l, r, foundation.typeBool, ti=ti)
+    bin_value = value_bin(op, l, r, foundation.typeBool, ti=ti)
     bin_value['asset'] = int(bool_result)
     return bin_value
 
@@ -703,7 +703,7 @@ def _bin(op, type_result, l, r, ti=None):
     if value_is_immediate(l) and value_is_immediate(r):
         return bin_imm(op, type_result, l, r, ti)
 
-    return hlir_value_bin(op, l, r, type_result, ti=ti)
+    return value_bin(op, l, r, type_result, ti=ti)
 
 
 
@@ -712,7 +712,7 @@ def do_value_not(val, ti):
     if not hlir_type.type_is_integer(vtype) and not hlir_type.type_is_bool(vtype):
         error("expected value with Integer or Bool type", ti)
 
-    v = hlir_value_un('not', val, vtype, ti=ti)
+    v = value_un('not', val, vtype, ti=ti)
 
     if value_is_immediate(val):
         v['asset'] = ~val['asset']
@@ -728,7 +728,7 @@ def do_value_minus(v, ti):
     if not hlir_type.type_is_signed(vtype):
         error("expected value with Signed Integer type", ti)
 
-    nv = hlir_value_un('minus', v, vtype, ti=ti)
+    nv = value_un('minus', v, vtype, ti=ti)
 
     if value_is_immediate(v):
         nv['asset'] = -v['asset']
@@ -752,7 +752,7 @@ def do_value_deref(v, ti):
     if hlir_type.type_is_func(to) or hlir_type.type_is_undefined_array(to):
         error("unsuitable type", v)
 
-    nv = hlir_value_un('deref', v, to, ti=ti)
+    nv = value_un('deref', v, to, ti=ti)
     nv['immutable'] = False
     return nv
 
@@ -764,7 +764,7 @@ def do_value_ref(v, ti):
         if not hlir_type.type_is_func(vtype):
             error("cannot get pointer to immutable value", ti)
     vt = hlir_type_pointer(vtype, ti=ti)
-    return hlir_value_un('ref', v, vt, ti=ti)
+    return value_un('ref', v, vt, ti=ti)
 
 
 
@@ -822,7 +822,7 @@ def do_value_call(x):
         if x['left']['id']['str'] == 'lengthof':
             arg = do_rvalue(x['args'][0])
             if hlir_type.type_is_array(arg['type']):
-                return hlir_value_lengthof(arg, ti=x['ti'])
+                return value_lengthof(arg, ti=x['ti'])
             else:
                 error("lengthof argument must be an array", x['args'][0]['ti'])
                 return value_bad(x['ti'])
@@ -923,7 +923,7 @@ def do_value_call(x):
         j = j + 1
 
 
-    rv = hlir_value_call(f, ftype['to'], args, ti=x['ti'])
+    rv = value_call(f, ftype['to'], args, ti=x['ti'])
 
     if hlir_type.type_is_defined_array(f['type']['to']):
         rv['att'].append('wrapped_array_value')
@@ -966,14 +966,14 @@ def do_value_index(x):
     v = None
 
     if via_pointer:
-        v = hlir_value_index_array_by_ptr(left, index, ti=x['ti'])
+        v = value_index_array_by_ptr(left, index, ti=x['ti'])
     else:
 
         if type.type_is_generic(left['type']):
             if not value_is_immediate(index):
                 error("cannot index generic array by variable", x['ti'])
 
-        v = hlir_value_index_array(left, index, ti=x['ti'])
+        v = value_index_array(left, index, ti=x['ti'])
 
         if value_is_immutable(left):
             v['immutable'] = True
@@ -1026,9 +1026,9 @@ def do_value_access(x):
         return value_bad(x['field']['ti'])
 
     if via_pointer:
-        v = hlir_value_access_record_by_ptr(left, field, ti=x['ti'])
+        v = value_access_record_by_ptr(left, field, ti=x['ti'])
     else:
-        v = hlir_value_access_record(left, field, ti=x['ti'])
+        v = value_access_record(left, field, ti=x['ti'])
         if value_is_immutable(left):
             v['immutable'] = True
 
@@ -1152,18 +1152,18 @@ def do_value_float(x):
 
 def do_value_sizeof(x):
     of = do_type(x['type'])
-    return hlir_value_sizeof(of, ti=x['ti'])
+    return value_sizeof(of, ti=x['ti'])
 
 
 def do_value_alignof(x):
     of = do_type(x['type'])
-    return hlir_value_alignof(of, ti=x['ti'])
+    return value_alignof(of, ti=x['ti'])
 
 
 def do_value_offsetof(x):
     of = do_type(x['type'])
     field_id = x['field']
-    return hlir_value_offsetof(of, field_id, ti=x['ti'])
+    return value_offsetof(of, field_id, ti=x['ti'])
 
 
 
@@ -1848,7 +1848,7 @@ def def_func(x):
     else:
         # function already not declared & defined
         # create new function definition
-        fn = hlir_value_func(func_id, func_type, ti=func_ti)
+        fn = value_func(func_id, func_type, ti=func_ti)
 
 
     cfunc = fn
@@ -1943,7 +1943,7 @@ def decl_func(x):
 
         return
 
-    func = hlir_value_func(id, func_type, ti=id['ti'])
+    func = value_func(id, func_type, ti=id['ti'])
 
     if x['extern']:
         func['att'].append('extern')

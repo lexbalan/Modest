@@ -110,7 +110,7 @@ def value_const(id, type, value=None, ti=None):
     }
 
 
-def hlir_value_func(id, type, ti=None):
+def value_func(id, type, ti=None):
     return {
         'isa': 'value',
         'kind': 'func',
@@ -123,7 +123,7 @@ def hlir_value_func(id, type, ti=None):
     }
 
 
-def hlir_value_un(k, value, type, ti=None):
+def value_un(k, value, type, ti=None):
     return {
         'isa': 'value',
         'kind': k,
@@ -135,7 +135,7 @@ def hlir_value_un(k, value, type, ti=None):
     }
 
 
-def hlir_value_bin(op, l, r, t, ti):
+def value_bin(op, l, r, t, ti):
     return {
         'isa': 'value',
         'kind': op,
@@ -148,7 +148,7 @@ def hlir_value_bin(op, l, r, t, ti):
     }
 
 
-def hlir_value_call(func, rettype, args, ti=None):
+def value_call(func, rettype, args, ti=None):
     return {
         'isa': 'value',
         'kind': 'call',
@@ -161,7 +161,7 @@ def hlir_value_call(func, rettype, args, ti=None):
     }
 
 
-def hlir_value_index_array(array, index, ti=None):
+def value_index_array(array, index, ti=None):
     return {
         'isa': 'value',
         'kind': 'index',
@@ -174,7 +174,7 @@ def hlir_value_index_array(array, index, ti=None):
     }
 
 
-def hlir_value_index_array_by_ptr(ptr_to_array, index, ti=None):
+def value_index_array_by_ptr(ptr_to_array, index, ti=None):
     return {
         'isa': 'value',
         'kind': 'index_ptr',
@@ -187,7 +187,7 @@ def hlir_value_index_array_by_ptr(ptr_to_array, index, ti=None):
     }
 
 
-def hlir_value_access_record(record, field, ti=None):
+def value_access_record(record, field, ti=None):
     return {
         'isa': 'value',
         'kind': 'access',
@@ -201,7 +201,7 @@ def hlir_value_access_record(record, field, ti=None):
     }
 
 
-def hlir_value_access_record_by_ptr(ptr_to_record, field, ti=None):
+def value_access_record_by_ptr(ptr_to_record, field, ti=None):
     return {
         'isa': 'value',
         'kind': 'access_ptr',
@@ -215,7 +215,7 @@ def hlir_value_access_record_by_ptr(ptr_to_record, field, ti=None):
     }
 
 
-def hlir_value_cast(value, type, ti=None):
+def value_cast(value, type, ti=None):
     return {
         'isa': 'value',
         'kind': 'cast',
@@ -229,8 +229,8 @@ def hlir_value_cast(value, type, ti=None):
 
 
 
-def hlir_value_cast_immediate(v, t, ti=None):
-    nv = hlir_value_cast(v, t, ti)
+def value_cast_immediate(v, t, ti=None):
+    nv = value_cast(v, t, ti)
     nv['kind'] = 'cast_immediate'
     nv['asset'] = v['asset']
 
@@ -242,7 +242,7 @@ def hlir_value_cast_immediate(v, t, ti=None):
     return nv
 
 
-def hlir_value_sizeof(of, ti=None):
+def value_sizeof(of, ti=None):
     size = type.type_get_size(of)
     typ = hlir_type_generic_int_for(size, unsigned=True, ti=ti)
     return {
@@ -257,7 +257,7 @@ def hlir_value_sizeof(of, ti=None):
     }
 
 
-def hlir_value_alignof(of, ti=None):
+def value_alignof(of, ti=None):
     align = type.type_get_align(of)
     typ = hlir_type_generic_int_for(align, unsigned=True, ti=ti)
     return {
@@ -272,7 +272,7 @@ def hlir_value_alignof(of, ti=None):
     }
 
 
-def hlir_value_offsetof(of, field_id, ti=None):
+def value_offsetof(of, field_id, ti=None):
     field = type.record_field_get(of, field_id['str'])
     offset = field['offset']
     typ = hlir_type_generic_int_for(offset, unsigned=True, ti=ti)
@@ -289,7 +289,7 @@ def hlir_value_offsetof(of, field_id, ti=None):
     }
 
 
-def hlir_value_lengthof(of_value, ti=None):
+def value_lengthof(of_value, ti=None):
     #field = type.record_field_get(of, field_id['str'])
     #offset = field['offset']
     length = of_value['type']['volume']['asset']
@@ -304,9 +304,6 @@ def hlir_value_lengthof(of_value, ti=None):
         'att': [],
         'ti': ti
     }
-
-
-
 
 
 

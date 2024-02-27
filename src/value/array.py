@@ -3,7 +3,7 @@ import hlir.type as hlir_type
 from error import error, warning, info
 from .char import value_char
 from .integer import value_int
-from .value import value_literal, hlir_value_cast_immediate
+from .value import value_literal, value_cast_immediate
 from .value import *
 
 
@@ -159,7 +159,7 @@ def value_cons_array_from_array(v, t, ti, method):
         return nv
 
     # runtime cons
-    return hlir_value_cast(v, t, ti=ti)
+    return value_cast(v, t, ti=ti)
 
     return None
 
