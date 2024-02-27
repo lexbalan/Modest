@@ -38,19 +38,19 @@ def value_attribute_check(v, a):
 
 
 
-
 def value_load(x):
     return x
 
 
 
-
-
-
 def hlir_value_zero(t, ti=None):
     imm_val = 0
-    if type.type_is_record(t): imm_val = []
-    elif type.type_is_array(t): imm_val = []
+
+    if type.type_is_record(t):
+        imm_val = []
+    elif type.type_is_array(t):
+        imm_val = []
+
     return hlir_value_literal(t, imm_val, ti)
 
 
