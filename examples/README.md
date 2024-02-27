@@ -16,7 +16,7 @@ func main() -> Int {
 ### Multiply table
 
 ```zig
-// examples/3.multiply_table/src/main.cm
+// see: examples/3.multiply_table/src/main.cm
 
 import "libc/stdio"
 
