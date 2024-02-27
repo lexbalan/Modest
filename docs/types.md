@@ -28,7 +28,7 @@
 
 ## Real *(non-generic)* types
 
-| Type     |Size | Classes | Description |
+| Type     |Size (bytes) | Classes | Description |
 | :------: | :-: | ------- | --- |
 | `Unit`   | `0` | `-`     | `Empty type (void in C)` |
 | `Bool`   | `1` | `logical, equ` | `8-bit` |
