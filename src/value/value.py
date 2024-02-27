@@ -288,8 +288,6 @@ def value_offsetof(of, field_id, ti=None):
 
 
 def value_lengthof(of_value, ti=None):
-    #field = hlir_type.record_field_get(of, field_id['str'])
-    #offset = field['offset']
     length = of_value['type']['volume']['asset']
     typ = hlir_type.hlir_type_generic_int_for(length, unsigned=True, ti=ti)
     return {
@@ -302,8 +300,6 @@ def value_lengthof(of_value, ti=None):
         'att': [],
         'ti': ti
     }
-
-
 
 
 
