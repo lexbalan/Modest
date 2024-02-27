@@ -21,7 +21,7 @@ func main() -> Int {
 import "libc/stdio"
 
 
-func mtab(n: Int32) {
+func mtab(n: Nat32) {
     var m: Nat32 = 1
     while m < 10 {
         let nm = n * m
