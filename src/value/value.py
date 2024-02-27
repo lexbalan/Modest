@@ -69,7 +69,7 @@ def value_literal(t, imm, ti):
     }
 
 
-def hlir_value_zero(t, ti=None):
+def value_zero(t, ti=None):
     imm_val = 0
 
     if type.type_is_record(t):
@@ -81,7 +81,7 @@ def hlir_value_zero(t, ti=None):
 
 
 
-def hlir_value_var(id, type, ti=None):
+def value_var(id, type, ti=None):
     return {
         'isa': 'value',
         'kind': 'var',
@@ -96,7 +96,7 @@ def hlir_value_var(id, type, ti=None):
 
 # hlir_const is an immutable value
 # (not necessary immediate)
-def hlir_value_const(id, type, value=None, ti=None):
+def value_const(id, type, value=None, ti=None):
     return {
         'isa': 'value',
         'kind': 'const',

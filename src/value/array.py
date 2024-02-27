@@ -113,7 +113,7 @@ def value_cons_array_from_generic_array(v, t, ti, method):
         casted_items.append(casted_item)
 
 
-    casted_items = casted_items + [hlir_value_zero(t['of'])] * zero_pad
+    casted_items = casted_items + [value_zero(t['of'])] * zero_pad
 
     vx = {
         'isa': 'value',
@@ -153,7 +153,7 @@ def value_cons_array_from_array(v, t, ti, method):
         nv = value_cons_from_immediate(v, t, ti)
 
         # extend array with zero items
-        padding = [hlir_value_zero(t['of'], ti=None)] * n
+        padding = [value_zero(t['of'], ti=None)] * n
         nv['asset'].extend(padding)
 
         return nv

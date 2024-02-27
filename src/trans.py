@@ -1344,7 +1344,7 @@ def do_stmt_var(x):
 
 
 def add_local_var(id, typ, ti):
-    var_value = hlir_value_var(id, typ, ti)
+    var_value = value_var(id, typ, ti)
     var_value['att'].extend(['local'])
     module['context'].value_add(id['str'], var_value)
     return var_value
@@ -1377,7 +1377,7 @@ def do_stmt_let(x):
     typ = v['type']
 
 
-    const_value = hlir_value_const(id, v['type'], value=None, ti=x['id']['ti'])
+    const_value = value_const(id, v['type'], value=None, ti=x['id']['ti'])
     const_value['att'].append('local') # need for LLVM printer (!)
     if value_is_immediate(v):
         const_value['asset'] = v['asset']
@@ -1598,7 +1598,7 @@ def def_const(x):
         if not type_is_pointer_to_array_of_char(v['type']):
             error("constant must be initialized by immediate value", x['value'])
 
-    const_value = hlir_value_const(id, v['type'], v, id['ti'])
+    const_value = value_const(id, v['type'], v, id['ti'])
     const_value['att'].append('global')
 
     if value_is_immediate(v):
@@ -1764,7 +1764,7 @@ def def_var(x):
             hlir_type.check(var_type, init_value['type'], x['init']['ti'])
 
 
-    var = hlir_value_var(id, var_type)
+    var = value_var(id, var_type)
 
     if x['extern']:
         var['att'].append('extern')
@@ -1869,7 +1869,7 @@ def def_func(x):
         param_type = param['type']
         param_id = param['id']
 
-        param_value = hlir_value_const(param_id, param_type, ti=param['ti'])
+        param_value = value_const(param_id, param_type, ti=param['ti'])
         param_value['att'].append('local')
 
         if hlir_type.type_is_defined_array(param_type):
