@@ -2,7 +2,6 @@ import hlir.type as type
 from hlir.type import hlir_type_generic_int_for, type_print
 from error import error, warning, info
 from hlir.hlir import *
-from hlir.value import hlir_value_literal
 from util import get_item_with_id
 
 
@@ -41,6 +40,33 @@ def value_attribute_check(v, a):
 def value_load(x):
     return x
 
+
+
+
+def hlir_value_bad(ti=None):
+    return {
+        'isa': 'value',
+        'kind': 'bad',
+        'id': hlir_id('_', ti=ti),
+        'type': hlir_type_bad(ti),
+        'immutable': False,
+        'att': [],
+        'ti': ti
+    }
+
+
+def hlir_value_literal(t, imm, ti):
+    return {
+        'isa': 'value',
+        'kind': 'literal',
+        'type': t,
+        'asset': imm,
+        'immutable': False,
+        'att': [],
+        'nl_end': 0,
+        'nl': 0,
+        'ti': ti
+    }
 
 
 def hlir_value_zero(t, ti=None):

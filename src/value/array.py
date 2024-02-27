@@ -1,10 +1,8 @@
 
 import hlir.type as hlir_type
 from error import error, warning, info
-from hlir.value import hlir_value_literal
 from .char import value_char
 from .integer import value_int
-
 from .value import hlir_value_cast_immediate
 from .value import *
 
