@@ -1,7 +1,8 @@
 
 import hlir.type as type
 from error import info, error
-from hlir.value import hlir_value_literal, hlir_value_cast, hlir_value_cast_immediate
+from hlir.value import hlir_value_literal
+from .value import hlir_value_cast, hlir_value_cast_immediate
 from util import nbits_for_num
 
 

@@ -1,6 +1,7 @@
 
-from hlir.value import hlir_value_cast
 from error import error
+
+from .value import hlir_value_cast
 
 def value_cons_unit_immediate(v, t, ti):
     return hlir_value_cast_immediate(v, t, ti)
