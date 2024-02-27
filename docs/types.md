@@ -31,23 +31,23 @@
 | Type     |Size | Classes | Description |
 | :------: | :-: | ------- | --- |
 | `Unit`   | `0` | `-`     | `Empty type (void in C)` |
-| `Bool`   | `1` | `logical, equ` | |
-| `Byte`   | `1` | `logical, equ` | |
+| `Bool`   | `1` | `logical, equ` | `8-bit` |
+| `Byte`   | `1` | `logical, equ` | `unsigned 8-bit` |
 | `Char8`  | `1` | `equ` | `for 8-bit character` |
 | `Char16` | `2` | `equ` | `for 16-bit character` |
 | `Char32` | `4` | `equ` | `for 32-bit character` |
-| `Int8`   | `1` | `equ, ord, math, rem` | `signed integer` |
-| `Int16`  | `2` | `equ, ord, math, rem` | `signed integer` |
-| `Int32`  | `4` | `equ, ord, math, rem` | `signed integer` |
-| `Int64`  | `8` | `equ, ord, math, rem` | `signed integer` |
-| `Int128` | `16` | `equ, ord, math, rem` | `signed integer` |
-| `Nat8`   | `1` | `equ, ord, math, rem` | `unsigned integer` |
-| `Nat16`  | `2` | `equ, ord, math, rem` | `unsigned integer` |
-| `Nat32`  | `4` | `equ, ord, math, rem` | `unsigned integer` |
-| `Nat64`  | `8` | `equ, ord, math, rem` | `unsigned integer` |
-| `Nat128` | `16` | `equ, ord, math, rem` | `unsigned integer` |
-| `Float32`  | `4` | `equ, ord, math` | `floating point` |
-| `Float64`  | `8` | `equ, ord, math` | `floating point` |
+| `Int8`   | `1` | `equ, ord, math, rem` | `signed integer 8-bit` |
+| `Int16`  | `2` | `equ, ord, math, rem` | `signed integer 16-bit` |
+| `Int32`  | `4` | `equ, ord, math, rem` | `signed integer 32-bit` |
+| `Int64`  | `8` | `equ, ord, math, rem` | `signed integer 64-bit` |
+| `Int128` | `16` | `equ, ord, math, rem` | `signed integer 128-bit` |
+| `Nat8`   | `1` | `equ, ord, math, rem` | `unsigned integer 8-bit` |
+| `Nat16`  | `2` | `equ, ord, math, rem` | `unsigned integer 16-bit` |
+| `Nat32`  | `4` | `equ, ord, math, rem` | `unsigned integer 32-bit` |
+| `Nat64`  | `8` | `equ, ord, math, rem` | `unsigned integer 64-bit` |
+| `Nat128` | `16` | `equ, ord, math, rem` | `unsigned integer 128-bit` |
+| `Float32`  | `4` | `equ, ord, math` | `floating point 32-bit` |
+| `Float64`  | `8` | `equ, ord, math` | `floating point 64-bit` |
 
 
 > Alignment of any base type is equal to his size, **exclude the *Unit* type**.
