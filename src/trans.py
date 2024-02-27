@@ -6,7 +6,7 @@ from util import get_item_with_id, align_to
 from main import settings
 from frontend.parser import Parser
 
-from hlir.type import *
+#from hlir.type import *
 import foundation
 
 from value.integer import value_integer
@@ -27,7 +27,7 @@ from value.cons import value_cons_implicit, value_cons_explicit, value_cons_defa
 from symtab import Symtab
 from util import nbits_for_num, nbytes_for_bits
 
-import hlir.type as hlir_type
+#import hlir.type as hlir_type
 from hlir.field import hlir_field
 from hlir.stmt import *
 from hlir.hlir import *
@@ -283,7 +283,7 @@ def init():
     typeSysInt = foundation.type_select_int(int_width)
     typeSysNat = foundation.type_select_nat(int_width)
     typeSysFloat = foundation.typeFloat64
-    typeSysStr = hlir_type_pointer(hlir_type_array(typeSysChar))
+    typeSysStr = hlir_type.hlir_type_pointer(hlir_type.hlir_type_array(typeSysChar))
 
 
 # last fiels of record can be zero size array (!)
@@ -294,7 +294,7 @@ def do_field(x):
     t = do_type(x['type'])
 
     if hlir_type.type_is_bad(t):
-        t = hlir_type_bad(x['type']['ti'])
+        t = hlir_type.hlir_type_bad(x['type']['ti'])
 
     f = hlir_field(x['id'], t, ti=x['ti'])
 
@@ -317,7 +317,7 @@ def do_type_id(t):
     if tx == None:
         error("undeclared type %s" % id_str, t)
         # create fake alias for unknown type
-        tx = hlir_type_bad()
+        tx = hlir_type.hlir_type_bad()
         root_context.type_add(id_str, tx)
     return tx
 
@@ -325,7 +325,7 @@ def do_type_id(t):
 
 def do_type_pointer(t):
     to = do_type(t['to'])
-    return hlir_type_pointer(to, ti=t['ti'])
+    return hlir_type.hlir_type_pointer(to, ti=t['ti'])
 
 
 
@@ -335,8 +335,8 @@ def do_type_array(t):
     if t['size'] != None:
         volume_expr = do_value(t['size'])
         if value_is_bad(volume_expr):
-            return hlir_type_bad(t['ti'])
-    return hlir_type_array(of, volume=volume_expr, ti=t['ti'])
+            return hlir_type.hlir_type_bad(t['ti'])
+    return hlir_type.hlir_type_array(of, volume=volume_expr, ti=t['ti'])
 
 
 
@@ -361,7 +361,7 @@ def do_type_record(x):
         fields.append(f)
 
     anon_rec_cnt = anon_rec_cnt + 1
-    rec = hlir_type_record(fields, ti=x['ti'])
+    rec = hlir_type.hlir_type_record(fields, ti=x['ti'])
     rec['end_nl'] = x['end_nl']
     # add anon record (before)
     anon_tag = '__anonymous_struct_%d' % anon_rec_cnt
@@ -373,7 +373,7 @@ def do_type_record(x):
 
 
 def do_type_enum(t):
-    enum_type = hlir_type_enum(t['ti'])
+    enum_type = hlir_type.hlir_type_enum(t['ti'])
 
     i = 0
     for item in t['items']:
@@ -419,7 +419,7 @@ def do_type_func(t, func_id="_"):
 
         if hlir_type.type_is_array(pt):
             #info("array as function parameter", _param)
-            nt = type_copy(pt)
+            nt = hlir_type.type_copy(pt)
             pt['att'].append('wrapped_array_type')
             pt['wrapped_id'] = 'struct ' + func_id + '_' + param['id']['str']
             param['type'] = pt
@@ -433,14 +433,14 @@ def do_type_func(t, func_id="_"):
 
         if hlir_type.type_is_array(to):
             #info("array as function return value", t['to'])
-            to = type_copy(to)
+            to = hlir_type.type_copy(to)
             to['att'].append('wrapped_array_type')
             to['wrapped_id'] = 'struct ' + func_id + '_' + 'retval'
 
     else:
         to = foundation.typeUnit
 
-    return hlir_type_func(params, to, var_args, va_list_id, ti=t['ti'])
+    return hlir_type.hlir_type_func(params, to, var_args, va_list_id, ti=t['ti'])
 
 
 
@@ -583,7 +583,7 @@ def bin_imm(op, type_result, l, r, ti):
 
     if hlir_type.type_is_generic(type_result):
         # пересматриваем generic тип для нового значения (!)
-        type_result = hlir_type_generic_int_for(num_val, unsigned=True, ti=ti)
+        type_result = hlir_type.hlir_type_generic_int_for(num_val, unsigned=True, ti=ti)
 
     if not hlir_type.type_is_float(l['type']):
         num_val = int(num_val)
@@ -601,7 +601,7 @@ def value_concat_arrays(l, r, ti):
     str_array_volume = value_integer(length)
     generic = True  # не факт, анализируй a и b
     item_type = l['type']['of'] #foundation.typeChar32
-    genStrType = hlir_type_array(item_type, volume=str_array_volume, ti=ti)
+    genStrType = hlir_type.hlir_type_array(item_type, volume=str_array_volume, ti=ti)
     genStrType['generic'] = True
 
     bin_value = value_bin('add_str', l, r, genStrType, ti=ti)
@@ -685,7 +685,7 @@ def do_value_bin(x):
 
     type_result = common_type
 
-    if op in (EQ_OPS + RELATIONAL_OPS):
+    if op in (hlir_type.EQ_OPS + hlir_type.RELATIONAL_OPS):
         type_result = foundation.typeBool
 
 
@@ -734,7 +734,7 @@ def do_value_minus(v, ti):
         nv['asset'] = -v['asset']
 
         if hlir_type.type_is_generic(nv['type']):
-            nv['type'] = hlir_type_generic_int_for(v['asset'], unsigned=False, ti=ti)
+            nv['type'] = hlir_type.hlir_type_generic_int_for(v['asset'], unsigned=False, ti=ti)
 
     return nv
 
@@ -763,7 +763,7 @@ def do_value_ref(v, ti):
     if value_is_immutable(v):
         if not hlir_type.type_is_func(vtype):
             error("cannot get pointer to immutable value", ti)
-    vt = hlir_type_pointer(vtype, ti=ti)
+    vt = hlir_type.hlir_type_pointer(vtype, ti=ti)
     return value_un('ref', v, vt, ti=ti)
 
 
@@ -969,7 +969,7 @@ def do_value_index(x):
         v = value_index_array_by_ptr(left, index, ti=x['ti'])
     else:
 
-        if type.type_is_generic(left['type']):
+        if hlir_type.type_is_generic(left['type']):
             if not value_is_immediate(index):
                 error("cannot index generic array by variable", x['ti'])
 
@@ -1128,7 +1128,7 @@ def do_value_record(x):
         field = hlir_field(item_id, item_value['type'], ti=item['ti'])
         fields.append(field)
 
-    generic_record_type = hlir_type_record(fields, ti=x['ti'])
+    generic_record_type = hlir_type.hlir_type_record(fields, ti=x['ti'])
     generic_record_type['generic'] = True
     v = value_record(generic_record_type, initializers, ti=x['ti'])
     v['nl_end'] = x['nl_end']
@@ -1632,7 +1632,7 @@ def module_remove_node(m, isa, id_str):
 
 def decl_type(x):
     id = x['id']
-    nt = hlir_type_opaque(id, id['ti'])
+    nt = hlir_type.hlir_type_opaque(id, id['ti'])
     module['context'].type_add(id['str'], nt)
 
     # С не печатает opaque, но LLVM печатает (!)
@@ -1998,7 +1998,7 @@ def do_directive(x):
         if not value_is_bad(c):
             if not value_is_immediate(c):
                 error("expected immediate value", x['cond']['ti'])
-            elif not type.type_is_bool(c['type']):
+            elif not hlir_type.type_is_bool(c['type']):
                 error("expected Bool value", x['cond']['ti'])
             else:
                 cond = c['asset'] != 0
@@ -2017,7 +2017,7 @@ def do_directive(x):
         if not value_is_bad(c):
             if not value_is_immediate(c):
                 error("expected immediate value", x['cond']['ti'])
-            elif not type.type_is_bool(c['type']):
+            elif not hlir_type.type_is_bool(c['type']):
                 error("expected Bool value", x['cond']['ti'])
             else:
                 cond = c['asset'] != 0

@@ -1,5 +1,4 @@
-import hlir.type as type
-from hlir.type import hlir_type_generic_int_for, type_print
+import hlir.type as hlir_type
 from error import error, warning, info
 from hlir.hlir import *
 from util import get_item_with_id
@@ -72,9 +71,9 @@ def value_literal(t, imm, ti):
 def value_zero(t, ti=None):
     imm_val = 0
 
-    if type.type_is_record(t):
+    if hlir_type.type_is_record(t):
         imm_val = []
-    elif type.type_is_array(t):
+    elif hlir_type.type_is_array(t):
         imm_val = []
 
     return value_literal(t, imm_val, ti)
@@ -242,8 +241,8 @@ def value_cast_immediate(v, t, ti=None):
 
 
 def value_sizeof(of, ti=None):
-    size = type.type_get_size(of)
-    typ = hlir_type_generic_int_for(size, unsigned=True, ti=ti)
+    size = hlir_type.type_get_size(of)
+    typ = hlir_type.hlir_type_generic_int_for(size, unsigned=True, ti=ti)
     return {
         'isa': 'value',
         'kind': 'sizeof',
@@ -257,8 +256,8 @@ def value_sizeof(of, ti=None):
 
 
 def value_alignof(of, ti=None):
-    align = type.type_get_align(of)
-    typ = hlir_type_generic_int_for(align, unsigned=True, ti=ti)
+    align = hlir_type.type_get_align(of)
+    typ = hlir_type.hlir_type_generic_int_for(align, unsigned=True, ti=ti)
     return {
         'isa': 'value',
         'kind': 'alignof',
@@ -272,9 +271,9 @@ def value_alignof(of, ti=None):
 
 
 def value_offsetof(of, field_id, ti=None):
-    field = type.record_field_get(of, field_id['str'])
+    field = hlir_type.record_field_get(of, field_id['str'])
     offset = field['offset']
-    typ = hlir_type_generic_int_for(offset, unsigned=True, ti=ti)
+    typ = hlir_type.hlir_type_generic_int_for(offset, unsigned=True, ti=ti)
     return {
         'isa': 'value',
         'kind': 'offsetof',
@@ -289,10 +288,10 @@ def value_offsetof(of, field_id, ti=None):
 
 
 def value_lengthof(of_value, ti=None):
-    #field = type.record_field_get(of, field_id['str'])
+    #field = hlir_type.record_field_get(of, field_id['str'])
     #offset = field['offset']
     length = of_value['type']['volume']['asset']
-    typ = hlir_type_generic_int_for(length, unsigned=True, ti=ti)
+    typ = hlir_type.hlir_type_generic_int_for(length, unsigned=True, ti=ti)
     return {
         'isa': 'value',
         'kind': 'lengthof',
@@ -313,7 +312,7 @@ def value_print(x, msg="here"):
     print("\nvalue_print:")
     print("isa: " + str(x['isa']))
     print("kind: " + str(x['kind']))
-    print("type: ", end=""); type.type_print(x['type']); print()
+    print("type: ", end=""); hlir_type.type_print(x['type']); print()
     print("att: " + str(x['att']))
     print("additional properties:")
     for prop in x:
