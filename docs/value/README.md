@@ -2,7 +2,7 @@
 
 ## Brief
 
-### Literal values
+### [Literal values](./literal.md)
 * [Numeric value expression](./numeric.md)
 * [String value expression](./string.md)
 

@@ -1,11 +1,9 @@
-# Values
+# Literal values
 
-## Literal values
-
-### Numeric literals
-Numeric literals have type **GenericNumeric**
+## Integer literals
+Integer literals have type [**GenericNumeric**](./types.md#)
 ```swift
-42
+0, 1, 2, ...
 ```
 
 You can cast it to any non-generic type (Int8, Int16, Int32, Nat8, etc.)
@@ -22,14 +20,21 @@ var e: Nat8
 e = 256 // error (Nat8 = {0 .. 255})
 ```
 
-### Bool literals
+## Float literals
+Float literals have type **GenericFloat**
+```swift
+0.25, 1.5, 3.14, etc.
+```
 
+
+## Bool literals
+Float literals have type **Bool**
 ```swift
 true, false
 ```
 
 
-### Array literals
+## Array literals
 ```swift
     // Array of five GenericInt values
     [1, 2, 3, 4, 5]
@@ -39,8 +44,7 @@ true, false
 ```
 
 
-
-#### String literals
+### String literals
 String literal is a subkind of array literal and have type `Generic([]GenericChar)` (GenericArray of GenericChar)
 ```swift
 "Hello wolrd!"
@@ -58,19 +62,10 @@ var ptr_to_array: *[]Char8 = "Hello wolrd!"
 
 
 
-### Record literals
+## Record literals
 ```swift
     // Record with two fields
     // 'x' with type GenericInt and value 10
     // 'y' with type GenericInt and value 20
     {x = 10, y = 20}
 ```
-
-
-## Value expressions
-
-### Binary value expressions
-### Unary value expressions
-### Special value expressions
-
-

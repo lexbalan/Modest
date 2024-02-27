@@ -1,6 +1,5 @@
 # Modest language documentation
 
-- [Values](./values.md)
 - [Types](./types.md)
 
 - [Definitions](./def/README.md)
