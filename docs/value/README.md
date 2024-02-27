@@ -3,19 +3,10 @@
 ## Brief
 
 ### [Literal values](./literal.md)
-* [Numeric value expression](./numeric.md)
-* [String value expression](./string.md)
-
-| Literal Kind | Examples | Type |
-| :----------: | :------: | :--: |
-| Numeric | `0, 1, 0xF` | GenericInteger |
-| Rational | `0.5, 3.14, .125` | GenericFloat |
-| Boolean | `false, true` | Bool |
-| String | `"Hello!"` | GenericArray |
-| Array | `[1, 2, 3]` | GenericArray |
-| Record | `{x=10, y=20}` | GenericRecord |
-
-> Generic type can be implicit casted to value with [corresponded](./cast.md#Implicit-type-casting) non-generic type. 
+* [Integer value expression](./literal.md#Integer-literals)
+* [String value expression](./literal.md#String-literals)
+* [Array value expression](./literal.md#Array-literals)
+* [Record value expression](./literal.md#Record-literals)
 
 ### Binary & Unary operations
 

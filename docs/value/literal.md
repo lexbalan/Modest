@@ -1,9 +1,31 @@
 # Literal values
 
+## Brief
+
+
+| Literal Value Kind | Examples | Type |
+| :----------: | :------: | :--: |
+| Integer | `0, 1, 0xF` | GenericInteger |
+| Rational | `0.5, 3.14, .125` | GenericFloat |
+| Boolean | `false, true` | Bool |
+| String | `"Hello!"` | GenericArray |
+| Array | `[1, 2, 3]` | GenericArray |
+| Record | `{x=10, y=20}` | GenericRecord |
+
+> Generic type can be implicit casted to value with [corresponded](./cast.md#Implicit-type-casting) non-generic type. 
+
+
+
 ## Integer literals
 Integer literals have type [**GenericNumeric**](./types.md#)
 ```swift
 0, 1, 2, ...
+```
+
+```zig
+123   // decimal number
+042   // decimal number (there's not octal literals)
+0x2A  // hexadecimal number
 ```
 
 You can cast it to any non-generic type (Int8, Int16, Int32, Nat8, etc.)
@@ -19,6 +41,33 @@ c = 42
 var e: Nat8
 e = 256 // error (Nat8 = {0 .. 255})
 ```
+
+#### Exmples
+
+```zig
+func main () -> Int32 {
+    var x: Nat32
+    x = 123
+    printf("x = %i\n", x)
+
+    var y: Nat32
+    y = 042
+    printf("y = %i\n", y)
+
+    var z: Nat32
+    z = 0x2A  // 0x2A == 42
+    printf("z = %i\n", z)
+
+    return 0
+}
+```
+
+> Result:
+`x = 123`
+`y = 42`
+`z = 42`
+
+
 
 ## Float literals
 Float literals have type **GenericFloat**
@@ -45,20 +94,76 @@ true, false
 
 
 ### String literals
-String literal is a subkind of array literal and have type `Generic([]GenericChar)` (GenericArray of GenericChar)
-```swift
-"Hello wolrd!"
-```
-You can cons from it:
-1) Array of Char
-```swift
-var array: [12]Char8 = "Hello wolrd!"
+String literal is a subkind of array literal and have type `Generic([]GenericChar)` (GenericOpenArray of GenericChar)
+
+
+```zig
+"Hello World!"
 ```
 
-2) Pointer to Array of Char
-```swift
-var ptr_to_array: *[]Char8 = "Hello wolrd!"
+There is no special type for string, but you can construct an *array* or *pointer to array* from literal string value.
+Also there is three built-in named type aliases for convenient usage of strings:
+```zig
+// built-in type aliases:
+// type Str8 []Char8
+// type Str16 []Char16
+// type Str32 []Char32
 ```
+
+#### Exmples
+
+Creating three arrays of Char from string literal
+
+```zig
+const literalString = "I am a string literal"
+
+var str_array8: []Char8 = literalString
+var str_array16: []Char16 = literalString
+var str_array32: []Char32 = literalString
+```
+
+Creating three pointer to arrays of Char from string literal
+
+```zig
+const literalString = "I am a string literal"
+
+var ptr_to_str8: *[]Char8 = literalString
+var ptr_to_str16: *[]Char16 = literalString
+var ptr_to_str32: *[]Char32 = literalString
+```
+
+Or (the same):
+
+```zig
+const literalString = "I am a string literal"
+
+var ptr_to_str8: *Str8 = literalString
+var ptr_to_str16: *Str16 = literalString
+var ptr_to_str32: *Str32 = literalString
+```
+
+```zig
+import "libc/stdio"
+
+func main () -> Int32 {
+    // creating local variable with type *[]Char8 (aka *Str8)
+    var string: *Str8
+
+    // implicit cast string literal
+    // (GenericArray of GenericChar) to *Str8 
+    string = "Hello World!"
+
+    // print string via printf
+    printf("string = \"%s\"\n", string)
+
+    return 0
+}
+
+```
+> Result: `s = "Hello World!"`
+
+
+
 
 
 
