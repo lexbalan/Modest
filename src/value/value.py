@@ -227,8 +227,6 @@ def value_cast(value, type, ti=None):
     }
 
 
-
-
 def value_cast_immediate(v, t, ti=None):
     nv = value_cast(v, t, ti)
     nv['kind'] = 'cast_immediate'
@@ -240,6 +238,7 @@ def value_cast_immediate(v, t, ti=None):
     if 'nl_end' in v:
         nv['nl_end'] = v['nl_end']
     return nv
+
 
 
 def value_sizeof(of, ti=None):
