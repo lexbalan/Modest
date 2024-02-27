@@ -55,7 +55,7 @@ def hlir_value_bad(ti=None):
     }
 
 
-def hlir_value_literal(t, imm, ti):
+def value_literal(t, imm, ti):
     return {
         'isa': 'value',
         'kind': 'literal',
@@ -77,7 +77,7 @@ def hlir_value_zero(t, ti=None):
     elif type.type_is_array(t):
         imm_val = []
 
-    return hlir_value_literal(t, imm_val, ti)
+    return value_literal(t, imm_val, ti)
 
 
 

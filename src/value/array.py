@@ -3,7 +3,7 @@ import hlir.type as hlir_type
 from error import error, warning, info
 from .char import value_char
 from .integer import value_int
-from .value import hlir_value_cast_immediate
+from .value import value_literal, hlir_value_cast_immediate
 from .value import *
 
 
@@ -22,7 +22,7 @@ def value_array(items, type=None, ti=None):
         type = hlir_type.hlir_type_array(of, volume=array_volume, ti=ti)
         type['generic'] = True
 
-    return hlir_value_literal(type, items, ti)
+    return value_literal(type, items, ti)
 
 
 
@@ -54,7 +54,7 @@ def value_string(string, length=0, ti=None):
     genStrType['generic'] = True
 
     # #imm of string literal is array of chars
-    return hlir_value_literal(genStrType, chars, ti)
+    return value_literal(genStrType, chars, ti)
 
 
 

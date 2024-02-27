@@ -4,13 +4,14 @@ from error import error, warning, info
 from hlir.hlir import *
 from hlir.type import record_field_get
 from util import get_item_with_id
+from .value import value_literal
 from .value import *
 
 
 
 
 def value_record(typ, initializers=[], ti=None):
-    return hlir_value_literal(typ, initializers, ti)
+    return value_literal(typ, initializers, ti)
 
 
 

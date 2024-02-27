@@ -21,7 +21,7 @@ def value_int(num, typ=None, ti=None):
             error("value size not corresponded type size", ti)
             return hlir_value_bad(ti)
 
-    return hlir_value_literal(typ, num, ti)
+    return value_literal(typ, num, ti)
 
 
 

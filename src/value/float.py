@@ -3,6 +3,7 @@ import settings
 import hlir.type as type
 from hlir.type import hlir_type_float, type_print
 from error import error, warning, info
+from .value import value_literal
 from .value import *
 
 
@@ -11,7 +12,7 @@ def value_float(num, ti=None):
     flt_width = int(settings.get('float_width'))
     typ = hlir_type_float(width=flt_width, ti=ti)
     typ['generic'] = True
-    return hlir_value_literal(typ, num, ti)
+    return value_literal(typ, num, ti)
 
 
 

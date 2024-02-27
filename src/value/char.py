@@ -2,7 +2,7 @@
 import hlir.type as type
 from error import info, error
 from util import nbits_for_num
-from .value import hlir_value_literal, hlir_value_cast, hlir_value_cast_immediate
+from .value import value_literal, hlir_value_cast, hlir_value_cast_immediate
 
 
 
@@ -13,7 +13,7 @@ def value_char(char_code, _type=None, ti=None):
         _type = type.hlir_type_char(char_width, ti=ti)
         _type['generic'] = True
 
-    return hlir_value_literal(_type, char_code, ti)
+    return value_literal(_type, char_code, ti)
 
 
 
