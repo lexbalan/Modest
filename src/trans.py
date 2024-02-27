@@ -6,13 +6,14 @@ from util import get_item_with_id, align_to
 from main import settings
 from frontend.parser import Parser
 
+import foundation
+
 from value.integer import value_int
 from value.float import value_float
 from value.array import value_array, value_string
 from value.record import value_record
 
 
-import foundation
 
 def is_local_context():
     global cfunc
