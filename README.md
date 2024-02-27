@@ -1,5 +1,5 @@
 # Modest
- Swift&Golang-like programming language, created for low level system programming and embedded development.
+ Swift&Golang-like programming language, created for medium level system programming and embedded development.
  
 * Modern syntax for clear and readable code
 * Strong type system protects your code from occasional bugs
