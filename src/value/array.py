@@ -8,8 +8,6 @@ from .value import *
 
 
 
-
-
 def value_array(items, type=None, ti=None):
     if type == None:
         length = len(items)
@@ -23,8 +21,6 @@ def value_array(items, type=None, ti=None):
         type['generic'] = True
 
     return value_literal(type, items, ti)
-
-
 
 
 
