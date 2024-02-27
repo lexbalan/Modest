@@ -1,6 +1,6 @@
 
 import hlir.type as hlir_type
-from error import error, warning, info
+from error import info, error
 from .char import value_char
 from .integer import value_integer
 from .value import value_literal, value_is_immediate, value_cast, value_cast_immediate, value_zero

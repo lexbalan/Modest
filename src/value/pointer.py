@@ -1,6 +1,6 @@
 
+from error import info, warning, error
 import hlir.type as type
-from error import error, warning, info
 from .value import value_cast, value_is_immediate, value_cast, value_cast_immediate
 from .char import value_char
 import foundation

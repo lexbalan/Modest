@@ -1,7 +1,7 @@
 
 import hlir.type as type
 from hlir.type import type_print
-from error import error, warning, info
+from error import info, warning, error
 
 from .value import value_is_bad, value_is_immediate, value_cast
 from .unit import value_cons_unit

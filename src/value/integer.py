@@ -1,8 +1,8 @@
 
+from error import info, warning, error
 from util import nbits_for_num
 import hlir.type as hlir_type
 from hlir.type import type_print
-from error import error, warning, info
 from .value import value_literal, value_is_immediate, value_cast, value_cast_immediate
 
 

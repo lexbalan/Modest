@@ -1,8 +1,8 @@
 
 import settings
+from error import info, warning, error
 import hlir.type as type
 from hlir.type import hlir_type_float, type_print
-from error import error, warning, info
 from .value import value_literal, value_cast_immediate
 
 

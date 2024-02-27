@@ -1,6 +1,6 @@
 
+from error import info, warning, error
 import hlir.type as type
-from error import error, warning, info
 from hlir.hlir import *
 from hlir.type import record_field_get
 from util import get_item_with_id

@@ -1,7 +1,7 @@
-import hlir.type as hlir_type
-from error import error, warning, info
+from error import info, warning, error
 from hlir.hlir import *
 from util import get_item_with_id
+import hlir.type as hlir_type
 
 
 def value_is_bad(x):
