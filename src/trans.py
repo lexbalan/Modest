@@ -6,6 +6,7 @@ from util import get_item_with_id, align_to
 from main import settings
 from frontend.parser import Parser
 
+from hlir.type import *
 import foundation
 
 from value.integer import value_int
@@ -28,7 +29,6 @@ from util import nbits_for_num, nbytes_for_bits
 
 import hlir.type as hlir_type
 from hlir.field import hlir_field
-from hlir.value import *
 from hlir.stmt import *
 from hlir.hlir import *
 

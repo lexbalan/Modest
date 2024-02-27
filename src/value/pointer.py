@@ -1,10 +1,9 @@
 
 import hlir.type as type
 from error import error, warning, info
-from hlir.value import *
 from .value import *
 from .char import value_char
-
+import foundation
 
 
 def value_cons_pointer_immediate(v, t, ti):
