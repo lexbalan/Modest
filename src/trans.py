@@ -2,11 +2,10 @@
 import os
 
 from error import *
-from util import get_item_with_id, align_to
+from util import get_item_with_id
 from main import settings
 from frontend.parser import Parser
 
-#from hlir.type import *
 import foundation
 
 from value.bool import value_bool
