@@ -30,7 +30,7 @@
 
 | Type     |Size | Classes | Description |
 | :------: | :-: | ------- | --- |
-| `Unit`   | `0` | `-`     | `Empty type` |
+| `Unit`   | `0` | `-`     | `Empty type (void in C)` |
 | `Bool`   | `1` | `logical, equ` | |
 | `Byte`   | `1` | `logical, equ` | |
 | `Char8`  | `1` | `equ` | `for 8-bit character` |
