@@ -95,7 +95,7 @@ def value_cons_integer(v, t, ti, method):
 
 
     if method != 'explicit':
-        info("cannot implicit cons Int value", ti)
+        info("cannot implicitly cons Int value", ti)
         return None
 
     # Int -> Int

@@ -176,7 +176,7 @@ def value_cons_array(v, t, ti, method):
             return value_cons_array_from_generic_array(v, t, ti, method)
 
         if method != 'explicit':
-            info("cannot implicit cons Array value", ti)
+            info("cannot implicitly cons Array value", ti)
             return None
 
         # Array -> Array

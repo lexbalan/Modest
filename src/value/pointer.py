@@ -78,7 +78,7 @@ def value_cons_pointer(v, t, ti, method):
     ### EXPLICIT REGION ###
 
     if method != 'explicit':
-        info("cannot implicit cons Pointer value", ti)
+        info("cannot implicitly cons Pointer value", ti)
         return v
 
     from main import features

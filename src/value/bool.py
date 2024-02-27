@@ -28,7 +28,7 @@ def value_cons_bool(v, t, ti, method):
 
     # explicit casts
     if method != 'explicit':
-        info("cannot implicit cons Bool value", ti)
+        info("cannot implicitly cons Bool value", ti)
         return None
 
     # Integer -> Bool

@@ -30,7 +30,7 @@ def value_cons_byte(v, t, ti, method):
 
     # explicit casts
     if method != 'explicit':
-        info("cannot implicit cons Byte value", ti)
+        info("cannot implicitly cons Byte value", ti)
         return None
 
     # Integer -> Byte

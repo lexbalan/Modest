@@ -53,7 +53,7 @@ def value_cons_char(v, t, ti, method):
 
     # explicit casts
     if method != 'explicit':
-        info("cannot implicit cons Char value", ti)
+        info("cannot implicitly cons Char value", ti)
         return None
 
 

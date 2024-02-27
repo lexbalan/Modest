@@ -38,7 +38,7 @@ def value_cons_float(v, t, ti, method):
 
 
     if method != 'explicit':
-        info("cannot implicit cons Float value", ti)
+        info("cannot implicitly cons Float value", ti)
         return None
 
     # Int -> Float
