@@ -112,7 +112,7 @@ Also there is three built-in named type aliases for convenient usage of strings:
 
 #### Exmples
 
-Creating three arrays of Char from string literal
+Creating three variables with type *Array of Char* from string literal
 
 ```zig
 const literalString = "I am a string literal"
@@ -122,7 +122,7 @@ var str_array16: []Char16 = literalString
 var str_array32: []Char32 = literalString
 ```
 
-Creating three pointer to arrays of Char from string literal
+Creating three variables with type *Pointer to Array of Char* from string literal
 
 ```zig
 const literalString = "I am a string literal"
