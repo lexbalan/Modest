@@ -60,6 +60,7 @@
 It used to indicate that function have no return value
 ```swift
 func no_return_func () -> Unit {
+    // this function returns nothing
 }
 ```
 Also, you can construct *Unit* value from not used function parameter to prevent warning(unused value) message:
