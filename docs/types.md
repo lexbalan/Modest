@@ -53,9 +53,7 @@
 > Alignment of any base type is equal to his size, **exclude the *Unit* type**.
 
 
-#### Examples
-
-#### Unit type
+### Unit type
 *Unit* type is an analog of `void` type in C language.
 It used to indicate that function have no return value
 ```swift
@@ -260,7 +258,7 @@ Function parameter cannot be an array. But it can be a pointer to array.
 
 
 
-#### String types
+#### String type
 String types are builtin aliases for `[]Char8`, `[]Char16`, `[]Char32`
 String literal is an alternative form of Char array recording.
 ```zig
