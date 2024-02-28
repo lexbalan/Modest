@@ -76,16 +76,6 @@ func just (not_used_param: Int32) -> Unit {
 Unit type obtain another sense in context of *Pointer to Unit*. This type also
 called as [*FreePointer*](#Free-pointer-type).
 
-```swift
-    var a: Int32
-    var b: Int32
-    
-    // free pointer can point to value of any type
-    var freePointer: *Unit
-    freePointer = &a  // it's ok
-    freePointer = &b  // it's also ok
-```
-
 
 ### Bool type
 
@@ -332,4 +322,16 @@ printf("p.y = %f\n", p.y)
 
 
 #### Free pointer type
+*Free pointer type* (*Pointer to Unit*) can points to value of ***any type**.
+```swift
+    var a: Int32
+    var b: Int32
+    
+    // free pointer can point to value of any type
+    var freePointer: *Unit
+    freePointer = &a  // it's ok
+    freePointer = &b  // it's also ok
+```
+
+
 
