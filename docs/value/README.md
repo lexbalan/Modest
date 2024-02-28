@@ -17,8 +17,10 @@ Any [global variable](../def/var.md), defined without *default value*, after cre
 * [Array value expression](./literal.md#Array-literals)
 * [Record value expression](./literal.md#Record-literals)
 
+
 ### Immediate values
-*Immediate value* - is an value known in compile time. 
+*Immediate value* - is an value known in compile time. It can be a complex expression, but there is one rule: all values in this expression must be also **immediate**.
+
 
 ### Immutable values
 *Immutable value* - value that cannot be changed in runtime. 

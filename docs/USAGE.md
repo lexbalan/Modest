@@ -4,7 +4,7 @@
 ##### Example:
 ```shell
 # For translation main.cm to main.c, just type
-mcc -o main -mbackend=c main.cm
+mcc -omain -mbackend=c main.cm
 ```
 
 ## Compiler flags
@@ -21,7 +21,7 @@ Use `-f<feature_name>` flag for enable some compiler options
 
 ***-funsafe*** - Enables *unsafe* mode when:
   * You can cast pointer to another pointer
-  * You can do *pointer arithmetics* (only with [*Pointer*](types.md) type value)
+  * You can do *pointer arithmetics* (only with [*FreePointer*](./type/pointer.md#Free-pointer) type value)
 
 ***-fparanoid*** - Every warning becomes error
 
