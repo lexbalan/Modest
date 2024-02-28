@@ -1,6 +1,5 @@
 # Modest language documentation
 
-- [Types](./types.md)
 
 - [Definitions](./def/README.md)
   * [Type](./def/type.md)
