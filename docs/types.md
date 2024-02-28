@@ -17,13 +17,13 @@
 
 *Generic type* - compile time type, that can be *implicit* casted to *Imgeneric types* for using in runtime.
 
-| GenericType | Description | Examples |
+| GenericType | Represented Value | Examples |
 | ----------- | ----------- | -------- |
-| `GenericInteger` | type of integer literal | `0, 1, 2, ...` |
-| `GenericFloat` | type of floating point literal | `0.5, 2.7, 3.14, ...` |
-| `GenericChar` | type of char literal (32-bit representation) | `"a"[0], "b"[0], ...` |
-| `GenericArray` | type of array literal | `[1, 2, 3], [1], ...` |
-| `GenericRecord` | type of record literal | `{x=1, y=2, z=3}, {a=10, b=20}, ...` |
+| `GenericInteger` | integer literal | `0, 1, 2, ...` |
+| `GenericFloat` | floating point literal | `0.5, 2.7, 3.14, ...` |
+| `GenericChar` | char literal | `"a"[0], "b"[0], ...` |
+| `GenericArray` | array literal | `[1, 2, 3], [1], ...` |
+| `GenericRecord` | record literal | `{x=1, y=2, z=3}, {a=10, b=20}, ...` |
 
 
 ## Real *(non-generic)* types
