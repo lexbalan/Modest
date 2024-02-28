@@ -21,9 +21,9 @@
 | ----------- | ----------- | -------- |
 | `GenericInteger` | integer literal | `0, 1, 2, ...` |
 | `GenericFloat` | floating point literal | `0.5, 2.7, 3.14, ...` |
-| `GenericChar` | char literal | `"a"[0], "b"[0], ...` |
-| `GenericArray` | array literal | `[1, 2, 3], [1], ...` |
-| `GenericRecord` | record literal | `{x=1, y=2, z=3}, {a=10, b=20}, ...` |
+| `GenericChar` | char expression | `"a"[0], "b"[0], ...` |
+| `GenericArray` | array expression | `[1, 2, 3], [1], ...` |
+| `GenericRecord` | record expression | `{x=1, y=2, z=3}, {a=10, b=20}, ...` |
 
 
 ## Real *(non-generic)* types
