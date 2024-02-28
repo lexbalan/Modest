@@ -322,7 +322,7 @@ printf("p.y = %f\n", p.y)
 
 
 #### Free pointer type
-*Free pointer type* (*Pointer to Unit*) can points to value of ***any type**.
+*Pointer to Unit* (aka *Free pointer type*) can points to value of **any type**.
 ```swift
 
 func main () -> Int32 {
