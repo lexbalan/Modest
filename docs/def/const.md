@@ -1,9 +1,12 @@
 # Constant Definition
 
 #### Common form
+
 ```
 const <#identifier#> = <#value_expression#>
 ```
+
+> value_expression must be immediate
 
 
 ```zig
