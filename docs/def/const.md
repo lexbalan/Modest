@@ -2,7 +2,7 @@
 
 #### Common form
 ```zig
-const <identifier> = <value_expression>
+const <#identifier#> = <#value_expression#>
 ```
 
 

@@ -2,7 +2,7 @@
 
 #### Common form
 ```zig
-func <identifier> <type_expression> {
+func <#identifier#> <#type_expression#> {
 	// function block
 }
 ```

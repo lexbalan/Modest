@@ -3,7 +3,7 @@
 
 #### Common form
 ```zig
-type <identifier> <type_expression>
+type <#identifier#> <#type_expression#>
 ```
 
 

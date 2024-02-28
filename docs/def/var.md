@@ -1,15 +1,21 @@
 # Variable Definition
 
 #### Common form
+Variable definition without *default value*. *Global variable* will be initialized with ***zero*** value, *local variable* will not be initialized (after creation it will contains stack garbage).
 ```zig
-var <identifier> : <type_expression> [= <default_value_expression>]
+var <#identifier#> : <#type_expression#>
 ```
 
-```zig
-// the 'var' directive creates a variable
-// (in this case - variable x with type Int32)
-var x: Int32
+Variable definition, without explicit type definition, with *default value* (**it must have Non-Generic type**). Type of variable will be the same as *default value* type.
 ```
+var <#identifier#> = <#default_value_expression:non-generic#>
+```
+
+Variable definition, with explicit type definition and *default value*. *Default value* will be implicit casted to type of variable definition.
+```
+var <#identifier#> : <#type_expression#> = <#default_value_expression#>
+```
+
 
 #### Examples
 
