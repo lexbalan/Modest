@@ -2,6 +2,9 @@
 
 ## Brief
 
+#### Zero value
+Zero value means 0 for any Numeric types, empty array value and empty record value.
+
 ### [Literal values](./literal.md)
 * [Integer value expression](./literal.md#Integer-literals)
 * [String value expression](./literal.md#String-literals)

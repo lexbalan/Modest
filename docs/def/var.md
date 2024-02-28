@@ -1,7 +1,7 @@
 # Variable Definition
 
 #### Common forms
-Variable definition without *default value*. *Global variable* will be initialized with ***zero*** value, *local variable* will not be initialized (after creation it will contains stack garbage).
+Variable definition without *default value*. *Global variable* will be initialized with [***zero***](../value/README.md#Zero-value) value, *local variable* will not be initialized (after creation it will contains stack garbage).
 ```zig
 var <#identifier#> : <#type_expression#>
 ```
