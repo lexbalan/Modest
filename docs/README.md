@@ -1,6 +1,5 @@
 # Modest language documentation
 
-- [Types](./types.md)
 
 - [Definitions](./def/README.md)
   * [Type](./def/type.md)
@@ -8,24 +7,25 @@
   * [Variable](./def/var.md)
   * [Function](./def/func.md)
 
-
-- [Type Expressions](./type/README.md)
+- [Types](./type/README.md)
   * [Pointer](./type/pointer.md)
   * [Array](./type/array.md)
   * [Function](./type/func.md)
   * [Record](./type/record.md)
 
 
-- [Value Expression](./value/README.md)
+- [Values](./value/README.md)
+  <!--* [Numeric](./value/numeric.md)-->
+  <!--* [String](./value/string.md)-->
   * [Literal](./value/literal.md)
+  * [Binary](./value/binary.md)
   * [Cast](./value/cast.md)
   * [Unary](./value/unary.md)
   * [Binary](./value/binary.md)
   * [Call](./value/call.md)
-  * [Index](./value/index.md)
+  * [Index](./value/_index.md)
   * [Access](./value/access.md)
   * [Sizeof](./value/sizeof.md)
-
 
 - [Statements](./stmt/README.md)
   * [If](./stmt/if.md)

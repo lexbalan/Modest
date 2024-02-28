@@ -1,9 +1,11 @@
 
 # Type Definition
 
+Type definition bounds an *identifier* with a type.
+
 #### Common form
-```zig
-type <identifier> <type_expression>
+```
+type <#identifier#> <#type_expression#>
 ```
 
 
@@ -23,8 +25,8 @@ func main () -> Int {
 
 
 ### Type declaration
-```zig
-type <new_type_identifier>
+```
+type <#identifier#>
 ```
 
 #### Examples

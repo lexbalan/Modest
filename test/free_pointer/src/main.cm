@@ -1,32 +1,7 @@
-# Pointer type expression
-
-#### Common view
-
-```zig
-  *Int32  // type 'pointer to Int32'
-```
-
-#### Examples
-
-```zig
-func main () -> Unit {
-  var a: Int32
-  var p: *Int32
-  a = 0
-  p = &a
-  *p = 10
-  printf("a = %d\n", a) // result: a = 10
-}
-```
-
-
-## Free pointer
-
-*Pointer to Unit* (aka *Free pointer type*) can points to value of **any type**.
-```swift
-// see: test/free_pointer/src/main.cm
+// test/free_pointer/src/main.cm
 
 import "libc/stdio"
+
 
 func main () -> Int32 {
     var a: Bool
@@ -60,8 +35,4 @@ func main () -> Int32 {
 
     return 0
 }
-```
-> Result: `c = 0x123456789ABCDEF` `x = 0x123456789ABCDEF`
-
-
 

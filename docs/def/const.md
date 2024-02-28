@@ -1,14 +1,19 @@
 # Constant Definition
 
+Constant definition bounds an *identifier* with a [*immediate value*](../value/README.md).
+
 #### Common form
-```zig
-const <identifier> = <value_expression>
+
 ```
+const <#identifier#> = <#value_expression#>
+```
+
+> <#value_expression#> must be immediate
 
 
 ```zig
 // the 'const' directive creates an alias for value expression result
-// (in this case - four with value 4)
+// (in this case - identifier 'four' with value '4')
 const four = 2 + 2
 ```
 
