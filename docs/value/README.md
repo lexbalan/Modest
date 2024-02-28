@@ -1,6 +1,5 @@
 # Values
 
-
 ### Zero value
 Zero value means 0 for any Numeric types, empty array value and empty record value.
 
@@ -20,6 +19,15 @@ Any [global variable](../def/var.md), defined without *default value*, after cre
 
 ### Immediate values
 *Immediate value* - is an value known in compile time. It can be a complex expression, but there is one rule: all values in this expression must be also **immediate**.
+
+##### Example
+```swift
+// all theese values are immediate
+const x = 2  // 2
+const y = 6  // 6
+const z = (x * y) / (x + y)  // 1
+const w = z < 10  // true
+```
 
 
 ### Immutable values

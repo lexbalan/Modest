@@ -8,7 +8,7 @@ Constant definition bounds an *identifier* with a [*immediate value*](../value/R
 const <#identifier#> = <#value_expression#>
 ```
 
-> value_expression must be immediate
+> <#value_expression#> must be immediate
 
 
 ```zig
