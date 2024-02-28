@@ -1,28 +1,9 @@
 # Values
 
-### Zero value
-Zero value means 0 for any Numeric types, empty array value and empty record value.
-
-```
-    0, [], {}
-```
-
-Any [global variable](../def/var.md), defined without *default value*, after creation will be contains *zero value*.
-
-
-### [Literal values](./literal.md)
-* [Integer value expression](./literal.md#Integer-literals)
-* [String value expression](./literal.md#String-literals)
-* [Array value expression](./literal.md#Array-literals)
-* [Record value expression](./literal.md#Record-literals)
-
-
-### Immediate values
-*Immediate value* - is an value known in compile time. It can be a complex expression, but there is one rule: all values in this expression must be also **immediate**.
 
 ##### Example
 ```golang
-// all theese values are immediate
+// all these values are immediate
 const x = 2  // 2
 const y = 6  // 6
 const z = (x * y) / (x + y)  // 1
