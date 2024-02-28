@@ -24,7 +24,7 @@ func main () -> Int {
 
 ### Type declaration
 ```zig
-type <new_type_identifier>
+type <#identifier#>
 ```
 
 #### Examples

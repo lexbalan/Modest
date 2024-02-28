@@ -1,6 +1,6 @@
 # Variable Definition
 
-#### Common form
+#### Common forms
 Variable definition without *default value*. *Global variable* will be initialized with ***zero*** value, *local variable* will not be initialized (after creation it will contains stack garbage).
 ```zig
 var <#identifier#> : <#type_expression#>
@@ -19,12 +19,42 @@ var <#identifier#> : <#type_expression#> = <#default_value_expression#>
 
 #### Examples
 
-```zig
-var x: Int32
+##### Global variables example
+```swift
+var x: Int16
+var y = 10 to Int32
+var z: Int32 = 20
 
-func main () -> Unit {
-  x = 10
-  
-  printf("x = %d\n", x)
+func main () -> Int32 {
+    printf("x = %hd\n", x)
+    printf("y = %d\n", y)
+    printf("z = %d\n", z)
+
+    return 0
 }
 ```
+> Result: `x = 0` `y = 10` `z = 20`
+
+
+##### Local variables example
+```swift
+
+func main () -> Int32 {
+    var x: Int16
+    var y = 10 to Int32
+    var z: Int32 = 10
+    
+    // We need to initialize x with some value
+    // because local var without default value
+    // will contains 'garbage' value from stack
+    // (some kind of 'random' value)
+    x = 5
+    
+    printf("x = %hd\n", x)
+    printf("y = %d\n", y)
+    printf("z = %d\n", z)
+
+    return 0
+}
+```
+> Result: `x = 5` `y = 10` `z = 20`
