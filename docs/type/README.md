@@ -36,14 +36,14 @@
 | `Nat32`  | `4` | `equ, ord, math, rem` | `unsigned integer 32-bit` |
 | `Nat64`  | `8` | `equ, ord, math, rem` | `unsigned integer 64-bit` |
 | `Nat128` | `16` | `equ, ord, math, rem` | `unsigned integer 128-bit` |
-| `Float32`  | `4` | `equ, ord, math` | `floating point 32-bit` |
-| `Float64`  | `8` | `equ, ord, math` | `floating point 64-bit` |
+| `Float32` | `4` | `equ, ord, math` | `floating point 32-bit` |
+| `Float64` | `8` | `equ, ord, math` | `floating point 64-bit` |
 
 
 > Alignment of any base type is equal to his size, **exclude the *Unit* type**.
 
 
-### Operation classes
+#### Operation classes
 
 
 | Op Class  | Operations | Comment |
@@ -65,11 +65,25 @@ func no_return_func () -> Unit {
     // this function returns nothing
 }
 ```
+
 Also, you can construct *Unit* value from not used function parameter to prevent *warning(unused value)* compiler message:
 ```swift
 func just (not_used_param: Int32) -> Unit {
     not_used_param to Unit
 }
+```
+
+Unit type obtain another sense in context of *Pointer to Unit*. This type also
+called as [*FreePointer*](#Free-pointer-type).
+
+```swift
+    var a: Int32
+    var b: Int32
+    
+    // free pointer can point to value of any type
+    var freePointer: *Unit
+    freePointer = &a  // it's ok
+    freePointer = &b  // it's also ok
 ```
 
 
