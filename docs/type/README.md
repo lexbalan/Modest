@@ -359,7 +359,7 @@ func main () -> Int32 {
     return 0
 }
 ```
-
+> Result: `c = 0x123456789ABCDEF` `x = 0x123456789ABCDEF`
 
 
 
