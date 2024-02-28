@@ -749,7 +749,7 @@ def do_value_deref(v, ti):
     to = vtype['to']
     # you can't deref pointer to function
     # and pointer to undefined array
-    if hlir_type.type_is_func(to) or hlir_type.type_is_undefined_array(to):
+    if hlir_type.type_is_func(to) or hlir_type.type_is_undefined_array(to) or hlir_type.type_is_free_pointer(to):
         error("unsuitable type", v)
 
     nv = value_un('deref', v, to, ti=ti)
