@@ -5,6 +5,13 @@
 #### Zero value
 Zero value means 0 for any Numeric types, empty array value and empty record value.
 
+```
+    0, [], {}
+```
+
+Any [global variable](../def/var.md) defined without default value after creation will be contains *zero value*.
+
+
 ### [Literal values](./literal.md)
 * [Integer value expression](./literal.md#Integer-literals)
 * [String value expression](./literal.md#String-literals)
