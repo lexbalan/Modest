@@ -1,6 +1,8 @@
 
 # Type Definition
 
+Type definition bound an *identifier* with a type.
+
 #### Common form
 ```
 type <#identifier#> <#type_expression#>

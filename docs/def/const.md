@@ -1,5 +1,7 @@
 # Constant Definition
 
+Type definition bound an *identifier* with a [*immediate value*](../value/README.md#Immediate-values).
+
 #### Common form
 
 ```

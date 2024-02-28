@@ -1,5 +1,7 @@
 # Variable Definition
 
+Variable definition creates new variable instance.
+
 #### Common forms
 Variable definition without *default value*. *Global variable* will be initialized with [***zero***](../value/README.md#Zero-value) value, *local variable* will not be initialized (after creation it will contains stack garbage).
 ```

@@ -1,5 +1,7 @@
 # Function Definition
 
+Function definition creates new function.
+
 #### Common form
 ```
 func <#identifier#> <#type_expression#> {
