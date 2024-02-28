@@ -9,7 +9,7 @@ Zero value means 0 for any Numeric types, empty array value and empty record val
     0, [], {}
 ```
 
-Any [global variable](../def/var.md) defined without default value after creation will be contains *zero value*.
+Any [global variable](../def/var.md), defined without *default value*, after creation will be contains *zero value*.
 
 
 ### [Literal values](./literal.md)
