@@ -1,7 +1,7 @@
 # Function Definition
 
 #### Common form
-```zig
+```
 func <#identifier#> <#type_expression#> {
 	// function block
 }

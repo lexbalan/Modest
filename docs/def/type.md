@@ -2,7 +2,7 @@
 # Type Definition
 
 #### Common form
-```zig
+```
 type <#identifier#> <#type_expression#>
 ```
 
@@ -23,7 +23,7 @@ func main () -> Int {
 
 
 ### Type declaration
-```zig
+```
 type <#identifier#>
 ```
 

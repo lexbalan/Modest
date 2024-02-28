@@ -1,7 +1,7 @@
 # Constant Definition
 
 #### Common form
-```zig
+```
 const <#identifier#> = <#value_expression#>
 ```
 

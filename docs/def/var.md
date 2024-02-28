@@ -2,7 +2,7 @@
 
 #### Common forms
 Variable definition without *default value*. *Global variable* will be initialized with [***zero***](../value/README.md#Zero-value) value, *local variable* will not be initialized (after creation it will contains stack garbage).
-```zig
+```
 var <#identifier#> : <#type_expression#>
 ```
 
@@ -45,8 +45,8 @@ func main () -> Int32 {
     var z: Int32 = 10
     
     // We need to initialize x with some value
-    // because local var without default value
-    // will contains 'garbage' value from stack
+    // because local variable without default value
+    // will contains 'garbage' value from program stack
     // (some kind of 'random' value)
     x = 5
     
