@@ -19,7 +19,7 @@
   * [Binary](./value/binary.md)
   * [Unary](./value/unary.md)
   * [Call](./value/call.md)
-  * [Index](./value/index.md)
+  * [Index](./value/_index.md)
   * [Access](./value/access.md)
   * [Cast](./value/cast.md)
   * [Sizeof](./value/sizeof.md)
