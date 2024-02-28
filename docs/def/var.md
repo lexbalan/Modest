@@ -3,17 +3,17 @@
 Variable definition creates new variable instance.
 
 ### Common forms
-1. Variable definition without *default value*. *Global variable* will be initialized with [***zero***](../value/README.md#Zero-value) value, *local variable* will not be initialized (after creation it will contains stack garbage).
+1. Variable definition without *default value*. *Global variable* will be initialized with [***zero***](../value/README.md#Zero-value) value, *local variable* will not be initialized (after creation it will contains garbage of program stack).
 ```
 var <#identifier#> : <#type_expression#>
 ```
 
-2. Variable definition, without explicit type definition, with *default value* (**it must have Non-Generic type**). Type of variable will be the same as *default value* type.
+2. Variable definition, without explicit type specification, with *default value* (**it must have *Non-Generic type***). Type of variable will be the same as *default value* type.
 ```
 var <#identifier#> = <#default_value_expression#>
 ```
 
-3. Variable definition, with explicit type definition and *default value*. *Default value* will be implicit casted to type of variable definition.
+3. Variable definition, with explicit type specification and *default value*. *Default value* will be implicit casted to type of variable definition.
 ```
 var <#identifier#> : <#type_expression#> = <#default_value_expression#>
 ```
