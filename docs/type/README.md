@@ -1,21 +1,9 @@
 # Types
 
 
-### Operations
-
-
-| Op Class  | Operations |
-| :---: | -------- |
-| `equ` | `==, !=` |
-| `ord` | `<, >, <=, >=` |
-| `log` | `or, and, xor, not` |
-| `math` | `+, -, *, /` |
-| `rem` | `%` |
-
-
 ## Generic types
 
-*Generic type* - compile time type, that can be *implicit* casted to *Imgeneric types* for using in runtime.
+*Generic type* - compile time type, that can be *implicit* casted to *Non-Generic types* for using in runtime.
 
 | GenericType | Represented Value | Examples |
 | ----------- | ----------- | -------- |
@@ -27,6 +15,8 @@
 
 
 ## Real *(non-generic)* types
+
+
 
 | Type     |Size (bytes) | Classes | Description |
 | :------: | :-: | ------- | --- |
@@ -51,6 +41,20 @@
 
 
 > Alignment of any base type is equal to his size, **exclude the *Unit* type**.
+
+
+### Operation classes
+
+
+| Op Class  | Operations | Comment |
+| :---: | -------- | ------ |
+| `equ` | `==, !=` | equivalence operations |
+| `ord` | `<, >, <=, >=` | order operations |
+| `log` | `or, and, xor, not` | logical operations |
+| `math` | `+, -, *, /` | mathmatical operations |
+| `rem` | `%` | remainder of integer division operation |
+
+
 
 
 ### Unit type
