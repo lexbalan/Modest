@@ -1,6 +1,6 @@
 # Constant Definition
 
-Type definition bound an *identifier* with a [*immediate value*](../value/README.md#Immediate-values).
+Constant definition bounds an *identifier* with a [*immediate value*](../value/README.md#Immediate-values).
 
 #### Common form
 

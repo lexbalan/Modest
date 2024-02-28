@@ -1,7 +1,7 @@
 
 # Type Definition
 
-Type definition bound an *identifier* with a type.
+Type definition bounds an *identifier* with a type.
 
 #### Common form
 ```

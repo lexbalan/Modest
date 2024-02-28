@@ -2,7 +2,7 @@
 
 Variable definition creates new variable instance.
 
-#### Common forms
+### Common forms
 Variable definition without *default value*. *Global variable* will be initialized with [***zero***](../value/README.md#Zero-value) value, *local variable* will not be initialized (after creation it will contains stack garbage).
 ```
 var <#identifier#> : <#type_expression#>
@@ -19,7 +19,8 @@ var <#identifier#> : <#type_expression#> = <#default_value_expression#>
 ```
 
 
-#### Examples
+### Global variables
+
 
 ##### Global variables example
 ```swift
@@ -36,6 +37,10 @@ func main () -> Int32 {
 }
 ```
 > Result: `x = 0` `y = 10` `z = 20`
+
+
+
+### Local variables
 
 
 ##### Local variables example
