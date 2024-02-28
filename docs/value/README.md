@@ -1,16 +1,6 @@
 # Values
 
 
-##### Example
-```golang
-// all these values are immediate
-const x = 2  // 2
-const y = 6  // 6
-const z = (x * y) / (x + y)  // 1
-const w = z < 10  // true
-```
-
-
 ### Immutable values
 *Immutable value* - value that cannot be changed in runtime. 
 It is values *immediate values*, values created by `const` & `let` definitions, *parameters* of functions.
