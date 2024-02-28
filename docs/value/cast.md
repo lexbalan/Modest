@@ -21,7 +21,7 @@ Generic types can be implicitly casted to corresponded type
 | Generic Float    | Float |
 | Generic Char     | Char |
 | Generic Array    | Array, Pointer to Array |
-| Generic Record   | Record, Pointer to record |
+| Generic Record   | Record, Pointer to Record |
 
 
 
