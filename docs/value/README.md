@@ -21,7 +21,7 @@ Any [global variable](../def/var.md), defined without *default value*, after cre
 *Immediate value* - is an value known in compile time. It can be a complex expression, but there is one rule: all values in this expression must be also **immediate**.
 
 ##### Example
-```swift
+```golang
 // all theese values are immediate
 const x = 2  // 2
 const y = 6  // 6
