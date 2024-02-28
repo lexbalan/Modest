@@ -4,7 +4,7 @@
 
 #### Common form
 ```
-<operator> <argument_value_expression>
+<#operator#> <#argument_value_expression#>
 ```
 
 #### Brief

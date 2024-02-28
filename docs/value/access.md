@@ -4,8 +4,8 @@
 
 ### Common form
 ```
-<record_value>.<field_identifier>
-<pointer_to_record_value>.<field_identifier>
+<#record_value#>.<#field_identifier#>
+<#pointer_to_record_value#>.<#field_identifier#>
 ```
 
 ### Examples
