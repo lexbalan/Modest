@@ -14,8 +14,9 @@
   * [Record](./type/record.md)
 
 - [Values](./value/README.md)
-  * [Numeric](./value/numeric.md)
-  * [String](./value/string.md)
+  <!--* [Numeric](./value/numeric.md)-->
+  <!--* [String](./value/string.md)-->
+  * [Literal](./value/literal.md)
   * [Binary](./value/binary.md)
   * [Unary](./value/unary.md)
   * [Call](./value/call.md)
