@@ -1,8 +1,7 @@
-# Value expression
+# Values
 
-## Brief
 
-#### Zero value
+### Zero value
 Zero value means 0 for any Numeric types, empty array value and empty record value.
 
 ```
@@ -17,6 +16,15 @@ Any [global variable](../def/var.md), defined without *default value*, after cre
 * [String value expression](./literal.md#String-literals)
 * [Array value expression](./literal.md#Array-literals)
 * [Record value expression](./literal.md#Record-literals)
+
+### Immediate values
+*Immediate value* - is an value known in compile time. 
+
+### Immutable values
+*Immutable value* - value that cannot be changed in runtime. 
+It is values *immediate values*, values created by `const` & `let` definitions, *parameters* of functions.
+It is impossible to get pointer (ref operation) to immutable values.
+
 
 ### Binary & Unary operations
 
