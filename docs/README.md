@@ -17,14 +17,13 @@
 
 
 - [Value Expression](./value/README.md)
-  * [Numeric](./value/numeric.md)
-  * [String](./value/string.md)
-  * [Binary](./value/binary.md)
+  * [Literal](./value/literal.md)
+  * [Cast](./value/cast.md)
   * [Unary](./value/unary.md)
+  * [Binary](./value/binary.md)
   * [Call](./value/call.md)
   * [Index](./value/index.md)
   * [Access](./value/access.md)
-  * [Cast](./value/cast.md)
   * [Sizeof](./value/sizeof.md)
 
 
