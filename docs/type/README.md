@@ -324,22 +324,25 @@ printf("p.y = %f\n", p.y)
 #### Free pointer type
 *Pointer to Unit* (aka *Free pointer type*) can points to value of **any type**.
 ```swift
+// see: test/free_pointer/src/main.cm
+
+import "libc/stdio"
 
 func main () -> Int32 {
     var a: Bool
     var b: Int32
     var c: Int64
     
-    // 
+    // create var with name freePointer and type *Unit
     var freePointer: *Unit
     
-    // free pointer can point to value of any type
+    // free pointer can points to value of any type
     freePointer = &a  // it's ok (just for demonstration)
     freePointer = &b  // it's also ok
-    freePointer = &c  // after all it will be points to value b (with type Int64)
+    freePointer = &c  // after all it will be points to value c (with type Int64)
     
     // you can't do dereference operation with Free pointer
-    // (because runtime don't have any idea about value type it pointee)
+    // (because runtime doesn't have any idea about value type it pointee),
     // but you can construct another (non Free) pointer from it
     // and use it as usualy
     *(freePointer to *Int64) = 0x123456789ABCDEF
@@ -347,7 +350,7 @@ func main () -> Int32 {
     // Let's create new pointer to *Int64 from freePointer
     let px = freePointer to *Int64
     
-    // And will use it
+    // And will use it...
     let x = *px
     
     // for pointer mechanics checking
