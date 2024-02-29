@@ -10,7 +10,8 @@
 
 ```zig
 func mid (a: Int32, b: Int32) -> Int32 {
-    let result = (a + b) / 2
+    let sum = a + b
+    let result = sum / 2
     return result
 }
 ```

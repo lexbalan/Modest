@@ -5,7 +5,7 @@ Constant definition bounds an *identifier* with an [*immediate value*](../value/
 #### Common form
 
 ```
-const <#identifier#> = <#value_expression#>
+const <#identifier#> = <#immediate_value_expression#>
 ```
 
 > <#value_expression#> must be immediate

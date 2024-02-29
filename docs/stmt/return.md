@@ -1,5 +1,7 @@
 # Return statement
 
+*Return statement* breaks function execution and returns value (in case when function type declares non-*Unit* return type).
+
 #### Common view
 
 ```

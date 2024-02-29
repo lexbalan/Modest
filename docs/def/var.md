@@ -1,4 +1,4 @@
-# Variable Definition
+# Global Variable Definition
 
 Variable definition creates new *variable* instance.
 
@@ -40,28 +40,29 @@ func main () -> Int32 {
 
 
 
-### Local variables
+##### Global Variable
 
+```zig
 
-##### Local variables example
-```swift
+var counter: Int
 
-func main () -> Int32 {
-    var x: Int16
-    var y = 10 to Int32
-    var z: Int32 = 10
+func count() {
+    ++counter
+}
+
+func main() -> Int {
+    printf("before counter = %i\n", counter)
+
+    // call function count for ten times
+    var i = 0
+    while i < 10 {
+        count()
+        ++i
+    }
     
-    // We need to initialize x with some value
-    // because local variable without default value
-    // will contains 'garbage' value from memory
-    // (some kind of 'random' value)
-    x = 5
+    printf("after counter = %i\n", counter)
     
-    printf("x = %hd\n", x)
-    printf("y = %d\n", y)
-    printf("z = %d\n", z)
-
     return 0
 }
 ```
-> Result: `x = 5` `y = 10` `z = 20`
+
