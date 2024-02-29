@@ -12,7 +12,7 @@
 
 #### Call by func value
 
-```zig
+```swift
 func function_1() -> Unit {
     printf("function_1()\n")
 }
@@ -45,7 +45,7 @@ func main() -> Int {
 
 #### Call by pointer to func value
 
-```zig
+```swift
 func function_1() -> Unit {
     printf("function_1()\n")
 }
