@@ -1,14 +1,16 @@
 # Installation
 
-0. **Firstly you need to install Python3 & Clang** *(Clang optionally)*
+0. **Firstly you need to install Python3.11 & Clang** *(Clang optionally)*
 
 1. Download the repository into your home (or another) folder:
+
 ```
 cd ~
 git clone https://github.com/lexbalan/Modest.git
 ```
 
 2. Set environment variables:
+
 ```
 export MODEST_DIR=~/Modest
 export PATH=$PATH:$MODEST_DIR
