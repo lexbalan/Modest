@@ -33,7 +33,8 @@ echo "export MODEST_LIB=$MODEST_DIR/lib/" >> ~/.zshrc
 ```
 
 
-3. Compile some example for compiler installation test:
+3. Compile some example for compiler installation test
+
 ```
 cd ~/Modest/examples/hello_world
 make
@@ -50,7 +51,7 @@ make CM
 ```
 
 
-4. Run result:
+4. Run result
 ```
 ./a.out
 ```
