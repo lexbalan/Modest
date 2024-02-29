@@ -1,5 +1,5 @@
 
-# VA_List
+# VA_List type
 
 VA_List is a special type used for creating variable-arguments function. It must be last parameter in function param list. For getting next argument value, you just need cast it to desirable type.
 

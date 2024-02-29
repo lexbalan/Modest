@@ -8,10 +8,12 @@
   * [Function](./def/func.md)
 
 - [Types](./type/README.md)
+  * [Base](./type/base.md)
   * [Pointer](./type/pointer.md)
   * [Array](./type/array.md)
   * [Function](./type/func.md)
   * [Record](./type/record.md)
+  * [VA_List](./type/va_list.md)
 
 
 - [Values](./value/README.md)
