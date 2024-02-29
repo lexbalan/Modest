@@ -1,5 +1,4 @@
-# Modest language documentation
-
+# Modest language
 
 - [Definitions](./def/README.md)
   * [Type](./def/type.md)
