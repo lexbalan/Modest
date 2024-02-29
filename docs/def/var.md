@@ -1,6 +1,6 @@
 # Variable Definition
 
-Variable definition creates new variable instance.
+Variable definition creates new *variable* instance.
 
 ### Common forms
 1. Variable definition without *default value*. *Global variable* will be initialized with [***zero***](../value/README.md#Zero-value) value, *local variable* will not be initialized (after creation it will contains memory garbage).

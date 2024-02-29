@@ -1,6 +1,6 @@
 # Function Definition
 
-Function definition creates new function.
+Function definition creates new *function*.
 
 #### Common form
 ```

@@ -1,7 +1,7 @@
 
 # Type Definition
 
-Type definition bounds an *identifier* with a type.
+Type definition bounds an *identifier* with a *type*.
 
 #### Common form
 ```
@@ -25,6 +25,8 @@ func main () -> Int {
 
 
 ### Type declaration
+*Type declaration* creates new *undefined type* and bounds it with an *identifier*. This type can be defined after. You can create pointer to
+undefined type, but cannot create field with such type.
 ```
 type <#identifier#>
 ```
@@ -33,8 +35,11 @@ type <#identifier#>
 
 ```zig
 // type declared, but not defined
-// such types are called 'opaque'
-type MyOpaqueType
+type MyRecord
+
+type MyRecord record {
+    self: *MyRecord
+}
 ```
 
 
