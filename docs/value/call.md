@@ -4,8 +4,8 @@
 
 ### Common form
 ```
-<#func_value#>(<#arglist#>)
-<#pointer_to_func_value#>(<#arglist#>)
+<#func_value#> (<#arglist#>)
+<#pointer_to_func_value#> (<#arglist#>)
 ```
 
 ### Examples
