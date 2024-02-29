@@ -1586,6 +1586,12 @@ def do_import(x):
 def def_const(x):
     id = x['id']
 
+    # check if identifier is free
+    pre_exist = value_get(id['str'])
+    if pre_exist != None:
+        error("redefinition of '%s'" % id['str'], id['ti'])
+
+
     #if id['str'][0].isupper():
     #    warning("constant name must starts with small letter", id['ti'])
 
@@ -1653,6 +1659,13 @@ def def_type(x):
         error("type name must starts with big letter", id['ti'])
 
     pre_exist = type_get(id['str'])
+
+    # check if identifier is free
+    if pre_exist != None:
+        if pre_exist['definition'] != None:
+            error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
+
+
     already_declared = pre_exist != None
 
     _def = {
@@ -1838,7 +1851,7 @@ def def_func(x):
 
         if 'stmt' in already:
             # already defined function
-            error("redefinition of", x['ti'])
+            error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
         else:
             # already declared function
             if not hlir_type.type_eq(already['type'], func_type):
