@@ -6,18 +6,16 @@
 * Strong type system protects your code from occasional bugs
 * Minimal runtime for true freedom
 
-Strong typed, concise syntax, medium level programming language, that you can translate to LLVM IR or C language output ([just choose backend](./docs/USAGE.md)).
+Strong typed, concise syntax, medium level programming language, that you can translate to LLVM IR or C language output (just choose preferred backend).
 Now language and compiler on research & development stage.
 
 If you are interested with the project, write to me what you thought about it.
 You can contact me by telegram: t.me/@alexbalan.
 
 
-[Installation](./INSTALL.md)
-
-[Usage](./USAGE.md)
-
 [Language documentation](./lang/README.md)
 
-[Examples](../examples/README.md)
+[Installation](./INSTALL.md)
+[Usage](./USAGE.md)
+
 
