@@ -1,5 +1,11 @@
 # Function type expression
 
+#### Common form
+```
+    (<#field_list#>]) -> <#type_expression#>
+```
+
+
 ```zig
 // type 'function without params, without return value'
 () -> Unit

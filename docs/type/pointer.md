@@ -1,6 +1,6 @@
 # Pointer type expression
 
-#### Common view
+#### Common form
 ```
     *<#type_expression#>
 ```

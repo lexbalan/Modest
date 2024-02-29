@@ -2,8 +2,8 @@
 
 #### Common view
 
-```zig
-  [10]Int32  // type 'array of 10 Int32'
+```
+    [<#immediate_value_expression#>]<#type_expression#>
 ```
 
 #### Examples
