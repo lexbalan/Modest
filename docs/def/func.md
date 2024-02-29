@@ -9,15 +9,17 @@ func <#identifier#> <#func_type_expression#> {
 }
 ```
 
-```zig
+#### Examples
+
+```swift
 
 func sum_i32 (a: Int32, b: Int32) -> Int32 {
 	return a + b
 }
 
-func main () -> Unit {
+func main () -> Int32 {
 	printf("Hello World!\n")
+    return 0
 }
-
 
 ```
