@@ -11,18 +11,22 @@ const <#identifier#> = <#value_expression#>
 > <#value_expression#> must be immediate
 
 
+#### Examples
+
 ```zig
-// the 'const' directive creates an alias for value expression result
-// (in this case - identifier 'four' with value '4')
-const four = 2 + 2
+const one = 1
+const two = one + 1
+const three = one + two
+const four = two * 2
 ```
 
-#### Examples
+
 
 ```zig
 const message = "Hello World!\n"
 
-func main () -> Unit {
-  printf("%s\n", message)
+func main () -> Int32 {
+    printf("%s\n", message)
+    return 0
 }
 ```
