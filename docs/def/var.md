@@ -3,7 +3,7 @@
 Variable definition creates new variable instance.
 
 ### Common forms
-1. Variable definition without *default value*. *Global variable* will be initialized with [***zero***](../value/README.md#Zero-value) value, *local variable* will not be initialized (after creation it will contains garbage of program stack).
+1. Variable definition without *default value*. *Global variable* will be initialized with [***zero***](../value/README.md#Zero-value) value, *local variable* will not be initialized (after creation it will contains ьуьщкн garbage).
 ```
 var <#identifier#> : <#type_expression#>
 ```
@@ -53,7 +53,7 @@ func main () -> Int32 {
     
     // We need to initialize x with some value
     // because local variable without default value
-    // will contains 'garbage' value from program stack
+    // will contains 'garbage' value from memory
     // (some kind of 'random' value)
     x = 5
     
