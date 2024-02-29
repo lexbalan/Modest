@@ -9,10 +9,10 @@
 
 - [Types](./type/README.md)
   * [Base](./type/base.md)
-  * [Pointer](./type/pointer.md)
   * [Array](./type/array.md)
-  * [Function](./type/func.md)
   * [Record](./type/record.md)
+  * [Function](./type/func.md)
+  * [Pointer](./type/pointer.md)
   * [VA_List](./type/va_list.md)
 
 
