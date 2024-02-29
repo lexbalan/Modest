@@ -3,7 +3,7 @@
 #### Common view
 
 ```
-    [<#immediate_value_expression#>]<#type_expression#>
+    [<#immediate_value_expression#>] <#type_expression#>
 ```
 
 #### Examples

@@ -2,7 +2,7 @@
 
 #### Common form
 ```
-    *<#type_expression#>
+    * <#type_expression#>
 ```
 
 
