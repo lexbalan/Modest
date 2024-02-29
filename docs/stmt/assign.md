@@ -1,9 +1,9 @@
 # Variable assignation statement
 
-#### Common view
+#### Common form
 
-```zig
-a = 1
+```
+    <#lvalue_expression#> = <#value_expression#>
 ```
 
 #### Examples

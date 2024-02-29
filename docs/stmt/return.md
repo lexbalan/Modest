@@ -2,8 +2,8 @@
 
 #### Common view
 
-```zig
-    return 0
+```
+    return [<#value_expression#>]
 ```
 
 #### Examples

@@ -3,8 +3,8 @@
 
 #### Common view
 
-```zig
-    while <condition_value_expression> {
+```
+    while <#bool_value_expression#> {
         // do something while condition is true
     }
 ```

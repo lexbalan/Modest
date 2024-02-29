@@ -1,9 +1,9 @@
 # If statement
 
-#### Common view
+#### Common form
 
-```zig
-    if <condition_value_expression> {
+```
+    if <#bool_value_expression#> {
         // do something if condition is true
     }
 ```

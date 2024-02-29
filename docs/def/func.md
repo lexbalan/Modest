@@ -4,7 +4,7 @@ Function definition creates new *function*.
 
 #### Common form
 ```
-func <#identifier#> <#type_expression#> {
+func <#identifier#> <#func_type_expression#> {
 	// function block
 }
 ```

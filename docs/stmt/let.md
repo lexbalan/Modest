@@ -1,9 +1,9 @@
 # Constant definition statement
 
-#### Common view
+#### Common form
 
-```zig
-    let four = 4
+```
+    let <#identifier#> = <#immediate_value_expression#>
 ```
 
 #### Examples

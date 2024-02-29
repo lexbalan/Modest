@@ -2,8 +2,8 @@
 
 #### Common view
 
-```zig
-    var a: Int32
+```
+    var <#identifier#>: <#type_expression#>
 ```
 
 #### Examples

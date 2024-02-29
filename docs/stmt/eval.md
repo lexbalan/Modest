@@ -1,9 +1,9 @@
 # Value evaluation statement
 
-#### Common view
+#### Common form
 
-```zig
-    1
+```
+    <#value_expression#>
 ```
 
 #### Examples
