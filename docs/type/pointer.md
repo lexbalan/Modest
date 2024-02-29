@@ -1,21 +1,30 @@
 # Pointer type expression
 
 #### Common view
-
-```zig
-  *Int32  // type 'pointer to Int32'
 ```
+    *<#type_expression#>
+```
+
 
 #### Examples
 
-```zig
-func main () -> Unit {
+```swift
+  *Int32    // pointer to Int32
+  **Int32   // pointer to pointer to Int32
+  ***Int32  // pointer to pointer to pointer to Int32
+  ...
+```
+
+```swift
+func main () -> Int32 {
   var a: Int32
   var p: *Int32
   a = 0
   p = &a
   *p = 10
   printf("a = %d\n", a) // result: a = 10
+  
+  return 0
 }
 ```
 
