@@ -14,7 +14,7 @@ func <#identifier#> <#func_type_expression#> {
 ```swift
 
 func sum_i32 (a: Int32, b: Int32) -> Int32 {
-	return a + b
+    return a + b
 }
 
 func test_sum () {
@@ -29,7 +29,7 @@ func test_sum () {
 }
 
 func main () -> Int32 {
-	printf("Hello World!\n")
+    printf("Hello World!\n")
 
     test_sum()
 
