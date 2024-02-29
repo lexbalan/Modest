@@ -41,7 +41,7 @@ Returns ***true*** when *left* is **not equal** to the *right*, otherwise return
 ```
 
 ### Ref
-Returns pointer to type(argument).
+Returns pointer to ***type***(*argument*)
 
 ```zig
     &x
