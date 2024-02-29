@@ -22,3 +22,10 @@ func main () -> Unit {
   printf("a[2] = %d\n", a[2])
 }
 ```
+
+
+##### Open array type
+
+```
+    []<#type_expression#>
+```
