@@ -16,6 +16,6 @@ You can contact me by telegram: t.me/@alexbalan.
 
 [Usage](./docs/USAGE.md)
 
-[Language documentation](./docs/README.md)
+[Language documentation](./docs/lang/README.md)
 
 [Examples](./examples/README.md)
