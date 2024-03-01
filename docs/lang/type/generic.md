@@ -118,10 +118,12 @@ func main() -> Int {
     // can be implicit casted to Array with compatible type and same size
 
     // implicit cast Generic([4]GenericInteger) value to [4]Int32
-    var b: [4]Int32 = a
+    var b: [4]Int32
+    b = a
 
     // implicit cast Generic([4]GenericInteger) value to [4]Nat64
-    var c: [4]Int64 = a
+    var c: [4]Int64
+    c = a
 
 
     // explicit cast Generic([4]GenericInteger) value to [10]Int32
@@ -163,11 +165,14 @@ func main() -> Int {
 
     // implicit cast Generic(record {x: GenericInteger, y: GenericInteger})
     // to record {x: Int32, y: Int32}
-    var point_2d: Point2D = p
+    var point_2d: Point2D
+    point_2d = p
+
 
     // explicit cast Generic(record {x: GenericInteger, y: GenericInteger})
     // to record {x: Int32, y: Int32, z: Int32}
-    var point_3d: Point3D = p
+    var point_3d: Point3D
+    point_3d = p to Point3D
 
     return 0
 }
