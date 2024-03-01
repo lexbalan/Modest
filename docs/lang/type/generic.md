@@ -103,9 +103,9 @@ func main() -> Int {
 ```
 
 ## Generic Array
-*Generic array* value can be implicitly casted to Array with compatible type and same size. Explicitly it can be casted to to Array with compatible type and bigger (or equal) size.
+*Generic array* value can be implicitly casted to *Array* with compatible type and same size. Explicitly it can be casted to Array with compatible type and bigger (or equal) size.
 
-> Only exception - empty array value - it can be implicitly casted to any array
+> Only exception - *empty array* value - it can be implicitly casted to any array
 
 #### Example
 ```swift
@@ -134,5 +134,44 @@ func main() -> Int {
 
 
 ## Generic Record
+
+*Generic record* value can be implicitly casted to *Record* with same fields. Explicitly it can be casted to *Record* with extra fields.
+
+> Only exception - *empty record* value - it can be implicitly casted to any record
+
+#### Example
+```swift
+
+type Point2D record {
+    x: Int32
+    y: Int32
+}
+
+type Point3D record {
+    x: Int32
+    y: Int32
+    z: Int32
+}
+
+func main() -> Int {
+    // this record literal have type 
+    // Generic(record {x: GenericInteger, y: GenericInteger})
+    let p = {x = 10, y = 20}
+
+    // value with GenericRecord type
+    // can be implicit casted to Record with same fields. 
+
+    // implicit cast Generic(record {x: GenericInteger, y: GenericInteger})
+    // to record {x: Int32, y: Int32}
+    var point_2d: Point2D = p
+
+    // explicit cast Generic(record {x: GenericInteger, y: GenericInteger})
+    // to record {x: Int32, y: Int32, z: Int32}
+    var point_3d: Point3D = p
+
+    return 0
+}
+
+```
 
 
