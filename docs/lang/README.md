@@ -7,6 +7,7 @@
   * [Function](./def/func.md)
 
 - [Types](./type/README.md)
+  * [Generic](./type/generic.md)
   * [Base](./type/base.md)
   * [Array](./type/array.md)
   * [Record](./type/record.md)
