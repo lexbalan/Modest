@@ -1,7 +1,7 @@
 # Generic types
 
 
-*Generic type* - compile time type, that can be *implicit* casted to *Non-Generic types* for using in runtime.
+*Generic type* - compile time type, that can be *implicitly* casted to *Non-Generic types* for using in runtime.
 
 | GenericType | Represented Value | Examples |
 | ----------- | ----------- | -------- |
@@ -14,26 +14,29 @@
 
 ## Generic Integer
 
-Generic integer value can be implicit casted to Integer, Float and Byte types
+*Generic integer* value can be implicitly casted to *Integer*, *Float* and *Byte* types, and explicitly to *Unit*, *Bool* and *Char*.
 
 
 #### Example
 ```swift
 func main() -> Int {
     // integer literal have GenericInteger type
-    let valueOneWithGenericIntegerType = 1
+    let one = 1
 
-    // value with generic-type can be implicit casted to non-generic
-    // GenericInteger value can be casted to Integer:
-    var a: Int32 = valueOneWithGenericIntegerType
-    var b: Nat64 = valueOneWithGenericIntegerType
+    // result of such expressions also have generic type
+    let two = 1 + one
+
+    // GenericInteger value can be implicitly casted to any Integer
+    var a: Int32 = one  // implicit cast GenericInteger value to Int32
+    var b: Nat64 = one  // implicit cast GenericInteger value to INat64
+    ...
 
     // to Float
-    var f: Float32 = valueOneWithGenericIntegerType
-    var g: Float64 = valueOneWithGenericIntegerType
+    var f: Float32 = one  // implicit cast GenericInteger value to Float32
+    var g: Float64 = one  // implicit cast GenericInteger value to Float64
 
     // and to Byte (only if value is in range 0 .. 255)
-    var b: Byte = valueOneWithGenericIntegerType
+    var b: Byte = one  // implicit cast GenericInteger value to Byte
 
     return 0
 }
@@ -41,6 +44,49 @@ func main() -> Int {
 ```
 
 ## Generic Float
+
+*Generic float* value can be implicitly casted to *Float* type, and explicitly to *Unit* and *Integer*.
+
+#### Example
+```swift
+func main() -> Int {
+    // float literal have GenericFloat type
+    let pi = 3.141592653589793238462643383279502884
+    
+    // value with GenericFloat type
+    // can be implicit casted to any Float type
+    // (in this case value may lose precision)
+    var f: Float32 = pi  // implicit cast GenericFloat value to Float32
+    var g: Float64 = pi  // implicit cast GenericFloat value to Float64
+
+    return 0
+}
+
+```
+
+
 ## Generic Char
+
+*Generic char* value can be implicitly casted to *Char* type, and explicitly to *Unit* and *Integer*. In compiler generic char have 32-bit representation.
+
+#### Example
+```swift
+func main() -> Int {
+    // char literal have GenericChar type
+    // (you can pick GenericChar value by index of GenericString value)
+    let a = "A"[0]
+    
+    // value with GenericChar type
+    // can be implicit casted to any Char type
+    char b: Char8 = a   // implicit cast GenericChar value to Char8
+    char c: Char16 = a  // implicit cast GenericChar value to Char16
+    char d: Char32 = a  // implicit cast GenericChar value to Char32
+
+    return 0
+}
+
+```
+
+
 ## Generic Array
 ## Generic Record
