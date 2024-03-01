@@ -20,13 +20,13 @@
 #### Example
 ```swift
 func main() -> Int {
-    // integer literal have GenericInteger type
+    // Any integer literal have GenericInteger type
     let one = 1
 
     // result of such expressions also have generic type
     let two = 1 + one
 
-    // GenericInteger value can be implicitly casted to any Integer
+    // GenericInteger value can be implicitly casted to any Integer type
     var a: Int32 = one  // implicit cast GenericInteger value to Int32
     var b: Nat64 = one  // implicit cast GenericInteger value to INat64
     ...
@@ -35,7 +35,7 @@ func main() -> Int {
     var f: Float32 = one  // implicit cast GenericInteger value to Float32
     var g: Float64 = one  // implicit cast GenericInteger value to Float64
 
-    // and to Byte (only if value is in range 0 .. 255)
+    // and to Byte
     var x: Byte = one  // implicit cast GenericInteger value to Byte
 
 
@@ -59,7 +59,7 @@ func main() -> Int {
 #### Example
 ```swift
 func main() -> Int {
-    // float literal have GenericFloat type
+    // Any float literal have GenericFloat type
     let pi = 3.141592653589793238462643383279502884
 
     // value with GenericFloat type
@@ -84,7 +84,7 @@ func main() -> Int {
 #### Example
 ```swift
 func main() -> Int {
-    // char literal have GenericChar type
+    // Any char literal have GenericChar type
     // (you can pick GenericChar value by index of GenericString value)
     let a = "A"[0]
 
@@ -102,6 +102,37 @@ func main() -> Int {
 
 ```
 
-
 ## Generic Array
+*Generic array* value can be implicitly casted to Array with compatible type and same size. Explicitly it can be casted to to Array with compatible type and bigger (or equal) size.
+
+> Only exception - empty array value - it can be implicitly casted to any array
+
+#### Example
+```swift
+func main() -> Int {
+    // this array literal have Generic([4]GenericInteger) type
+    // (GenericArray of four GenericInteger items)
+    let a = [0, 1, 2, 3]
+
+    // value with GenericArray type
+    // can be implicit casted to Array with compatible type and same size
+
+    // implicit cast Generic([4]GenericInteger) value to [4]Int32
+    var b: [4]Int32 = a
+
+    // implicit cast Generic([4]GenericInteger) value to [4]Nat64
+    var c: [4]Int64 = a
+
+
+    // explicit cast Generic([4]GenericInteger) value to [10]Int32
+    var d: [10]Int32 = a to [10]Int32
+
+    return 0
+}
+
+```
+
+
 ## Generic Record
+
+
