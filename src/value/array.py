@@ -6,6 +6,8 @@ from .integer import value_integer
 from .value import value_literal, value_is_immediate, value_cast, value_cast_immediate, value_zero
 
 
+# TODO: переделай здесь все - тут все плохо...
+
 def value_array(items, type=None, ti=None):
     if type == None:
         length = len(items)
