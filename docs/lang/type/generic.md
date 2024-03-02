@@ -7,9 +7,9 @@
 | ----------- | ----------- | -------- |
 | `GenericInteger` | integer literal | `0, 1, 2, ...` |
 | `GenericFloat` | floating point literal | `0.5, 2.7, 3.14, ...` |
-| `GenericChar` | char expression | `"a"[0], "b"[0], ...` |
-| `GenericArray` | array expression | `[1, 2, 3], [1], ...` |
-| `GenericRecord` | record expression | `{x=1, y=2, z=3}, {a=10, b=20}, ...` |
+| `GenericChar` | char value expression | `"a"[0], "b"[0], ...` |
+| `GenericArray` | array value expression | `[1, 2, 3], [1], ...` |
+| `GenericRecord` | record value expression | `{x=1, y=2, z=3}, {a=10, b=20}, ...` |
 
 
 ## Generic Integer
@@ -84,7 +84,7 @@ func main() -> Int {
 #### Example
 ```swift
 func main() -> Int {
-    // Any char literal have GenericChar type
+    // Any char value expression have GenericChar type
     // (you can pick GenericChar value by index of GenericString value)
     let a = "A"[0]
 
