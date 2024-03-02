@@ -1163,8 +1163,8 @@ def do_value_integer(x):
 
 
 def do_value_float(x):
-    print(x['numstr'])
-    print(float(x['numstr']))
+    #print(x['numstr'])
+    #print(float(x['numstr']))
     return value_float(float(x['numstr']), ti=x['ti'])
 
 
