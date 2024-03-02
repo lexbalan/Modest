@@ -1,8 +1,8 @@
 # Base types
 
-| Type     |Size (bytes) | Classes | Description |
+| Type     | Size (in bytes) | Classes | Description |
 | :------: | :-: | ------- | --- |
-| `Unit`   | `0` | `-`     | `Empty type (void in C)` |
+| `Unit`   | `0` | `-` | `Empty type (void in C)` |
 | `Bool`   | `1` | `logical, equ` | `8-bit` |
 | `Byte`   | `1` | `logical, equ` | `unsigned 8-bit` |
 | `Char8`  | `1` | `equ` | `for 8-bit character` |

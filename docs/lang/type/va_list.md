@@ -1,7 +1,7 @@
 
 # VA_List type
 
-VA_List is a special type used for creating variable-arguments functions. It can be only type of last parameter in function param list. For getting next argument value, you just need to cast VA_List parameter to desirable type.
+VA_List is a special pseudo-type used for creating variable-arguments functions. It can be only type of last parameter in function param list. For getting next argument value, you just need to cast VA_List parameter to desirable type.
 
 ```swift
 func my_printf(fmt: *Str8, va: VA_List) {
