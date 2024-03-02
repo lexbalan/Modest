@@ -10,28 +10,39 @@ def value_array(items, type=None, ti=None):
     if type == None:
         length = len(items)
 
-        # 1. находим самый широкий эл-т в списке
-        max_item_type = None
+        item_type = None
+
         if length > 0:
-            max_item_type = items[0]['type']
+            if hlir_type.type_is_complex(items[0]['type']):
+                # TODO:
+                # что тоже неверно, тк записи и массивы тоже разные бывают!
+                item_type = items[0]['type']
+            else:
+                max_item_type = None
+                # 1. находим самый широкий эл-т в списке
+                if length > 0:
+                    max_item_type = items[0]['type']
 
-            for item in items:
-                if item['type']['width'] > max_item_type['width']:
-                    max_item_type = item['type']
+                    for item in items:
+                        if item['type']['width'] > max_item_type['width']:
+                            max_item_type = item['type']
 
-            array_volume = value_integer(length)
-            type = hlir_type.hlir_type_array(max_item_type, volume=array_volume, ti=ti)
-            type['generic'] = True
+                    item_type = max_item_type
 
-        # 2. приводим все эл-ты к самому широкому (иначе LLVM даст ошибку)
-        if max_item_type != None:
-            from .cons import value_cons_implicit
-            i = 0
-            while i < length:
-                item = items[i]
-                item = value_cons_implicit(item, max_item_type, item['ti'])
-                items[i] = item
-                i = i + 1
+                # 2. приводим все эл-ты к самому широкому (иначе LLVM даст ошибку)
+                if item_type != None:
+                    from .cons import value_cons_implicit
+                    i = 0
+                    while i < length:
+                        item = items[i]
+                        item = value_cons_implicit(item, item_type, item['ti'])
+                        items[i] = item
+                        i = i + 1
+
+
+        array_volume = value_integer(length)
+        type = hlir_type.hlir_type_array(item_type, volume=array_volume, ti=ti)
+        type['generic'] = True
 
     return value_literal(type, items, ti)
 

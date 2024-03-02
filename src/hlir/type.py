@@ -503,6 +503,10 @@ def type_is_array(t):
     return t['kind'] == 'array'
 
 
+def type_is_complex(t):
+    return t['kind'] in ['array', 'record']
+
+
 def type_is_pointer(t):
     return t['kind'] == 'pointer'
 
