@@ -4,7 +4,7 @@
 VA_List is a special type used for creating variable-arguments functions. It can be only type of last parameter in function param list. For getting next argument value, you just need to cast VA_List parameter to desirable type.
 
 ```swift
-func _printf(fmt: *Str8, va: VA_List) {
+func my_printf(fmt: *Str8, va: VA_List) {
     var i = 0
     while true {
         var c = str[i]
@@ -19,11 +19,11 @@ func _printf(fmt: *Str8, va: VA_List) {
             
             ...
 
-            if (c == "i"[0]) or (c == "d"[0]) {
-                // %i & %d for signed integer (Int)
+            if c == "i"[0] {
+                // %i for signed integer (Int)
                 let i = va_list to Int32
                 . . .
-            } else if (c == "x"[0]) {
+            } else if (c == "n"[0]) {
                 // %n for unsigned integer (Nat)
                 let n = va_list to Nat32
                 . . .
