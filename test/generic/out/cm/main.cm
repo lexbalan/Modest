@@ -9,6 +9,7 @@ func test_generic_char() -> Bool
 func test_generic_array() -> Bool
 func test_generic_record() -> Bool
 
+
 func main() -> Int {
     printf("generic types test\n")
 

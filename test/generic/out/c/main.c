@@ -15,6 +15,7 @@ bool test_generic_char();
 bool test_generic_array();
 bool test_generic_record();
 
+
 int main()
 {
     printf("generic types test\n");
