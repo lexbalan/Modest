@@ -39,6 +39,4 @@ func _printf(fmt: *Str8, va: VA_List) {
     }
 }
 
-}
-
 ```
