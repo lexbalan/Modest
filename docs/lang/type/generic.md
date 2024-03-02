@@ -110,8 +110,8 @@ func main() -> Int {
 #### Example
 ```swift
 func main() -> Int {
-    // this array literal have Generic([4]GenericInteger) type
-    // (GenericArray of four GenericInteger items)
+    // Any array expression have GenericArray type
+    // this array expression (GenericArray of four GenericInteger items)
     let a = [0, 1, 2, 3]
 
     // value with GenericArray type
@@ -156,7 +156,8 @@ type Point3D record {
 }
 
 func main() -> Int {
-    // this record literal have type 
+    // Any record expression have GenericRecord type
+    // this record expression have type:
     // Generic(record {x: GenericInteger, y: GenericInteger})
     let p = {x = 10, y = 20}
 
