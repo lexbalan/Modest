@@ -68,7 +68,10 @@ def value_cons(v, t, ti, method):
     elif type.type_is_bad(t): constructor = value_cons_bad
 
     if constructor != None:
-        return constructor(v, t, ti, method)
+        nv = constructor(v, t, ti, method)
+        if 'nl' in v:
+            nv['nl'] = v['nl']
+        return nv
 
     return None
 

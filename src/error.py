@@ -6,6 +6,9 @@ errcnt = 0
 MAX_ERRORS = 10
 
 
+NO_INFO = False
+NO_WARNING = False
+
 ENDC = 0
 BOLD = 1
 RED = 91
@@ -102,10 +105,16 @@ def note(s, ti=None):
 
 
 def info(s, ti=None):
+    if NO_INFO:
+        return
+
     common_message('info: ', COLOR_INFO, s, ti)
 
 
 def warning(s, ti=None):
+    if NO_WARNING:
+        return
+
     from main import features
     if features.get('paranoid'):
         error(s, ti)

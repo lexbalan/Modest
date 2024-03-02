@@ -203,12 +203,12 @@ define i1 @test_generic_char() {
 define i1 @test_generic_array() {
     ; Any array expression have GenericArray type
     ; this array expression (GenericArray of four GenericInteger items)
-    %1 = insertvalue [4 x i1] zeroinitializer, i1 0, 0
-    %2 = insertvalue [4 x i1] %1, i1 1, 1
-    %3 = insertvalue [4 x i1] %2, i2 2, 2
-    %4 = insertvalue [4 x i1] %3, i2 3, 3
-    %5 = alloca [4 x i1]
-    store [4 x i1] %4, [4 x i1]* %5
+    %1 = insertvalue [4 x i2] zeroinitializer, i2 0, 0
+    %2 = insertvalue [4 x i2] %1, i2 1, 1
+    %3 = insertvalue [4 x i2] %2, i2 2, 2
+    %4 = insertvalue [4 x i2] %3, i2 3, 3
+    %5 = alloca [4 x i2]
+    store [4 x i2] %4, [4 x i2]* %5
     ; value with GenericArray type
     ; can be implicit casted to Array with compatible type and same size
     ; implicit cast Generic([4]GenericInteger) value to [4]Int32
@@ -261,7 +261,7 @@ define i1 @test_generic_record() {
     %1 = insertvalue { i4, i5} zeroinitializer, i4 10, 0
     %2 = insertvalue { i4, i5} %1, i5 20, 1
     ; value with GenericRecord type
-    ; can be implicit casted to Record with same fields. 
+    ; can be implicit casted to Record with same fields.
     ; implicit cast Generic(record {x: GenericInteger, y: GenericInteger})
     ; to record {x: Int32, y: Int32}
     %3 = alloca %Point2D
