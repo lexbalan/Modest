@@ -740,37 +740,11 @@ class Parser:
 
         elif self.ctok_class() == 'num':
             numstr = self.gettok()
-
-            # количество символов в записи числа
-            # нужно для принтера (красивая печать)
-            nsigns = 0
-
-            att = []
-            base = 10
-            if len(numstr) > 2:
-                if numstr[1] == 'x':
-                    base = 16
-
-            k = 'int'
-            numval = 0
-            if '.' in numstr:
-                k = 'float'
-                numval = float(numstr)
-            else:
-                numval = int(numstr, base)
-                nsigns = len(numstr)
-                if base == 16:
-                    nsigns = nsigns -2
-
-            if base == 16:
-                att.append('hexadecimal')
-
             return {
                 'isa': 'value',
-                'kind': k,
-                'num': numval,
-                'nsigns': nsigns,
-                'att': att,
+                'kind': 'number',
+                'numstr': numstr,
+                'att': [],
                 'ti': ti
             }
 

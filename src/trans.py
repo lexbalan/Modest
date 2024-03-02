@@ -1136,18 +1136,36 @@ def do_value_record(x):
 
 
 
-def do_value_integer(x):
-    v = value_integer(x['num'], ti=x['ti'])
-    v['nsigns'] = x['nsigns']  # number of digits in literal (for printer)
+def do_value_number(x):
+    if '.' in x['numstr']:
+        return do_value_float(x)
+    else:
+        return do_value_integer(x)
 
-    if 'hexadecimal' in x['att']:
+
+def do_value_integer(x):
+    num_string_len = len(x['numstr'])
+    base = 10
+    if num_string_len > 2:
+        if x['numstr'][0] == '0':
+            if x['numstr'][1] == 'x':
+                num_string_len = num_string_len - 2
+                base = 16
+
+    num = int(x['numstr'], base)
+    v = value_integer(num, ti=x['ti'])
+    v['nsigns'] = num_string_len
+
+    if base == 16:
         value_attribute_add(v, 'hexadecimal')
 
     return v
 
 
 def do_value_float(x):
-    return value_float(x['num'], ti=x['ti'])
+    print(x['numstr'])
+    print(float(x['numstr']))
+    return value_float(float(x['numstr']), ti=x['ti'])
 
 
 def do_value_sizeof(x):
@@ -1190,8 +1208,7 @@ def do_value(x):
     if k in bin_ops: rv = do_value_bin(x)
     elif k in un_ops: rv = do_value_un(x)
     else:
-        if k == 'int': rv = do_value_integer(x)
-        elif k == 'float': rv = do_value_float(x)
+        if k == 'number': rv = do_value_number(x)
         elif k == 'id': rv = do_value_id(x)
         elif k == 'str': rv = do_value_str(x)
         elif k == 'record': rv = do_value_record(x)
