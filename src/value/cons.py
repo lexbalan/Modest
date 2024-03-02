@@ -2,7 +2,7 @@
 import hlir.type as type
 from error import info, warning, error
 
-from .value import value_is_bad, value_is_immediate, value_cast
+from .value import value_is_bad, value_bad, value_is_immediate, value_cast
 from .unit import value_cons_unit
 from .bool import value_cons_bool
 from .byte import value_cons_byte
