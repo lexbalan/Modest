@@ -3,7 +3,7 @@
 import "libc/stdio.h"
 import "libc/math.h"
 
-const mathPi = 3.14159265358979323846264338327950
+const mathPi = 3.141592653589793238462643383279502884
 
 func squareOfCircle(r: Float64) -> Float64 {
     return pow(r, 2) * mathPi

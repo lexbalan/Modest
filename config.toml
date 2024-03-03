@@ -1,6 +1,7 @@
 
 # default config will be loaded after compiler start
 [Default]
+#precision = 64  # floating point compile time precision
 pointer_width = 64
 char_width = 8
 integer_width = 32

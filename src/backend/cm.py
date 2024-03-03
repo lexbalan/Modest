@@ -541,16 +541,9 @@ def print_value_integer(x, ctx):
         out(str(num))
 
 
+
 def print_value_float(x, ctx):
-    sf = str(x['asset'])
-    sxf = sf.split(".")
-    int_part = sxf[0]
-    rest_part = sxf[1]
-
-    if len(rest_part) > 32:
-        rest_part = rest_part[:32]
-
-    out("%s.%s" % (int_part, rest_part))
+    out(str(x['asset']))
 
 
 

@@ -10,7 +10,7 @@
 
 
 
-#define mathPi  3.14159265358979323846264338327950
+#define mathPi  3.141592653589793238462643383279502884
 
 double squareOfCircle(double r)
 {
