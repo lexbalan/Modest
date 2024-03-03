@@ -13,11 +13,10 @@ func squareOfCircle(r: Float64) -> Float64 {
 func main() -> Int {
     printf("float test\n")
 
-    let r = 1
+    let r = 10
     let s = squareOfCircle(r)
 
-
-    printf("s = %F\n", s)
+    printf("s = %f\n", s)
 
     return 0
 }

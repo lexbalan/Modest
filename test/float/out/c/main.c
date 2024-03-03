@@ -22,11 +22,10 @@ int main()
 {
     printf("float test\n");
 
-    #define r  1
+    #define r  10
     const double s = squareOfCircle(r);
 
-
-    printf("s = %F\n", s);
+    printf("s = %f\n", s);
 
     return 0;
 #undef r
