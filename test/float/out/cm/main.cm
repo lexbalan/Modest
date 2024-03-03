@@ -3,9 +3,10 @@
 import "libc/stdio.h"
 import "libc/math.h"
 
+const mathPi = 3.14159265358979323846264338327950
 
 func squareOfCircle(r: Float64) -> Float64 {
-    return pow(r, 2) * M_PI
+    return pow(r, 2) * mathPi
 }
 
 
@@ -15,7 +16,8 @@ func main() -> Int {
     let r = 1
     let s = squareOfCircle(r)
 
-    printf("s = %lf\n", s)
+
+    printf("s = %F\n", s)
 
     return 0
 }

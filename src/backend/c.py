@@ -932,7 +932,7 @@ def print_value_literal_enum(x, ctx):
     print_id(x)
 
 
-def print_value_literal_int(x, ctx):
+def print_value_literal_integer(x, ctx):
     num = x['asset']
 
     req_bits = nbits_for_num(num)
@@ -977,6 +977,7 @@ def print_value_literal_float(x, ctx):
     sxf = sf.split(".")
     int_part = sxf[0]
     rest_part = sxf[1]
+
     if len(rest_part) > 32:
         rest_part = rest_part[:32]
 
@@ -994,7 +995,7 @@ def print_value_literal_ptr(x, ctx):
 
 def print_value_literal(x, ctx):
     t = x['type']
-    if hlir_type.type_is_integer(t): print_value_literal_int(x, ctx)
+    if hlir_type.type_is_integer(t): print_value_literal_integer(x, ctx)
     elif hlir_type.type_is_float(t): print_value_literal_float(x, ctx)
     elif hlir_type.type_is_record(t): print_value_literal_record(x, ctx)
     elif hlir_type.type_is_array(t): print_value_literal_array(x, ctx)
@@ -1002,7 +1003,7 @@ def print_value_literal(x, ctx):
     elif hlir_type.type_is_char(t): print_value_literal_char(x, ctx)
     elif hlir_type.type_is_pointer(t): print_value_literal_ptr(x, ctx)
     elif hlir_type.type_is_enum(t): print_value_literal_enum(x, ctx)
-    elif hlir_type.type_is_byte(t): print_value_literal_int(x, ctx)
+    elif hlir_type.type_is_byte(t): print_value_literal_integer(x, ctx)
     else: error("print_value_literal not implemented", x['ti'])
 
 
