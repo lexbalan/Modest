@@ -973,7 +973,14 @@ def print_value_literal_int(x, ctx):
 
 
 def print_value_literal_float(x, ctx):
-    out(str(float(x['asset'])))
+    sf = str(x['asset'])
+    sxf = sf.split(".")
+    int_part = sxf[0]
+    rest_part = sxf[1]
+    if len(rest_part) > 32:
+        rest_part = rest_part[:32]
+
+    out("%s.%s" % (int_part, rest_part))
 
 
 
@@ -1005,7 +1012,8 @@ def print_value_by_id(x):
         out(".a")
 
 
-def print_value_let(x, ctx):
+# & let
+def print_value_const(x, ctx):
     print_id(x)
 
 
@@ -1079,7 +1087,7 @@ def print_value(x, ctx=[], need_wrap=False, just_print_id=True):
     if k == 'literal': print_value_literal(x, ctx)
     elif k in bin_ops: print_value_bin(x, ctx)
     elif k in un_ops: print_value_un(x, ctx)
-    elif k == 'const': print_value_let(x, ctx)
+    elif k == 'const': print_value_const(x, ctx)
     elif k in ['func', 'var']: print_value_by_id(x)
     elif k == 'call': print_value_call(x, ctx)
     elif k == 'index': print_value_index(x, ctx)
@@ -1212,6 +1220,7 @@ def print_stmt_let(x):
 
     nl_indent(x['nl'])
 
+    # массивы печатаем как переменные
     if hlir_type.type_is_defined_array(v['type']):
         print_variable_array(v['type'], id['str'], do_wrapped=False)
         out(";\n")

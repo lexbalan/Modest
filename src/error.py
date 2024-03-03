@@ -6,7 +6,7 @@ errcnt = 0
 MAX_ERRORS = 10
 
 
-NO_INFO = False
+NO_INFO = True
 NO_WARNING = False
 
 ENDC = 0

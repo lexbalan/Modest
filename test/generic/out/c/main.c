@@ -119,6 +119,12 @@ bool test_generic_array()
     int8_t a[4];
     memcpy(&a, &(int8_t[4]){0, 1, 2, 3}, 4);
 
+
+    if (true) {
+        printf("a != [0, 1, 2, 3]\n");
+        return false;
+    }
+
     // value with GenericArray type
     // can be implicit casted to Array with compatible type and same size
 
@@ -126,12 +132,32 @@ bool test_generic_array()
     int32_t b[4];
     memcpy(&b, &a, 16);
 
+
+    if (memcmp(&b, &(int32_t[4]){0, 1, 2, 3}, sizeof b) != 0) {
+        printf("b != [0, 1, 2, 3]\n");
+        return false;
+    }
+
     // implicit cast Generic([4]GenericInteger) value to [4]Nat64
     int64_t c[4];
     memcpy(&c, &a, 32);
 
 
+    if (memcmp(&c, &(int64_t[4]){0, 1, 2, 3}, sizeof c) != 0) {
+        printf("c != [0, 1, 2, 3]\n");
+        return false;
+    }
+
+
     // explicit cast Generic([4]GenericInteger) value to [10]Int32
+    int32_t d[10];
+    memcpy(&d, &a, 40);
+
+
+    if (memcmp(&d, &(int32_t[10]){0, 1, 2, 3, 0, 0, 0, 0, 0, 0}, sizeof d) != 0) {
+        printf("d != [0, 1, 2, 3, 0, 0, 0, 0, 0, 0]\n");
+        return false;
+    }
 
     return true;
 }

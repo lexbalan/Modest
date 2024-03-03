@@ -1,0 +1,22 @@
+// test/float/src/main.cm
+
+import "libc/stdio.h"
+import "libc/math.h"
+
+
+func squareOfCircle(r: Float64) -> Float64 {
+    return pow(r, 2) * M_PI
+}
+
+
+func main() -> Int {
+    printf("float test\n")
+
+    let r = 1
+    let s = squareOfCircle(r)
+
+    printf("s = %lf\n", s)
+
+    return 0
+}
+

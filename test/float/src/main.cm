@@ -1,0 +1,24 @@
+// test/float/src/main.cm
+
+import "libc/stdio"
+import "libc/math"
+
+const mathPi = 3.141592653589793238462643383279502884
+
+func squareOfCircle(r: Float64) -> Float64 {
+    return pow(r, 2) * mathPi
+}
+
+
+func main() -> Int {
+    printf("float test\n")
+
+    let r = 1
+    let s = squareOfCircle(r)
+
+
+    printf("s = %F\n", s)
+
+    return 0
+}
+

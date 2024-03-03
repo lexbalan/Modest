@@ -14,6 +14,9 @@ from value.float import value_float
 from value.array import value_array, value_string
 from value.record import value_record
 
+# need for high-precision floats
+import gmpy2
+gmpy2.set_context(gmpy2.ieee(512))
 
 
 def is_local_context():
@@ -1163,9 +1166,10 @@ def do_value_integer(x):
 
 
 def do_value_float(x):
-    #print(x['numstr'])
-    #print(float(x['numstr']))
-    return value_float(float(x['numstr']), ti=x['ti'])
+    fval = gmpy2.mpfr(x['numstr'])
+    fv = value_float(fval, ti=x['ti'])
+    #print("fv['asset'] = " + str(fv['asset']))
+    return fv
 
 
 def do_value_sizeof(x):
