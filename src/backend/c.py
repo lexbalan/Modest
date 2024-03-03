@@ -380,7 +380,7 @@ def print_value_bin(v, ctx):
         if right['kind'] != 'logic_and':
             need_wrap_right = precedence(right) < 10
     elif op in ['eq', 'ne']:
-        if hlir_type.type_is_record(left['type']) or hlir_type.type_is_array(left['type']):
+        if hlir_type.type_is_composite(left['type']):
             memcmp_by(left, right, by=left, op=op)
             return
     elif op in ['eq_str', 'ne_str']:
@@ -1646,7 +1646,7 @@ def print_def_const(x):
 
     _id = x['id']
 
-    if hlir_type.type_is_array(const_value['type']) or hlir_type.type_is_record(const_value['type']):
+    if hlir_type.type_is_composite(const_value['type']):
         newline()
         print_variable(_id, const_value['type'])
         out(" = ")

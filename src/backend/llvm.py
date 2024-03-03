@@ -726,7 +726,7 @@ def do_eval_expr_bin(x):
     l = do_eval(x['left'])
     r = do_eval(x['right'])
 
-    if hlir_type.type_is_array(l['type']) or hlir_type.type_is_record(l['type']):
+    if hlir_type.type_is_composite(l['type']):
         # mess
         sz = llvm_value_num(foundation.typeInt64, l['type']['size'])
         return llvm_memcmp(l, r, sz)

@@ -503,7 +503,7 @@ def type_is_array(t):
     return t['kind'] == 'array'
 
 
-def type_is_complex(t):
+def type_is_composite(t):
     return t['kind'] in ['array', 'record']
 
 

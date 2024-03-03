@@ -15,7 +15,7 @@ def value_array(items, type=None, ti=None):
         item_type = None
 
         if length > 0:
-            if hlir_type.type_is_complex(items[0]['type']):
+            if hlir_type.type_is_composite(items[0]['type']):
                 # TODO:
                 # что тоже неверно, тк записи и массивы тоже разные бывают!
                 item_type = items[0]['type']

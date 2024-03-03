@@ -72,9 +72,7 @@ def value_literal(t, imm, ti):
 def value_zero(t, ti=None):
     imm_val = 0
 
-    if hlir_type.type_is_record(t):
-        imm_val = []
-    elif hlir_type.type_is_array(t):
+    if hlir_type.type_is_composite(t):
         imm_val = []
 
     return value_literal(t, imm_val, ti)

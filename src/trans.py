@@ -1389,7 +1389,7 @@ def do_stmt_let(x):
         return hlir_stmt_bad()
 
 
-    if hlir_type.type_is_record(v['type']) or hlir_type.type_is_array(v['type']):
+    if hlir_type.type_is_composite(v['type']):
         module_option('use_memcpy')
 
 
@@ -1429,7 +1429,7 @@ def do_stmt_assign(x):
     r = value_cons_implicit(r, l['type'], x['right']['ti'])
     hlir_type.check(l['type'], r['type'], x['ti'])
 
-    if hlir_type.type_is_record(l['type']) or hlir_type.type_is_array(l['type']):
+    if hlir_type.type_is_composite(l['type']):
         module_option('use_memcpy')
 
     return hlir_stmt_assign(l, r, ti=x['ti'])
