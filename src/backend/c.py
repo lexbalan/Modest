@@ -384,7 +384,7 @@ def print_value_bin(v, ctx):
             memcmp_by(left, right, by=left, op=op)
             return
     elif op in ['eq_str', 'ne_str']:
-        print_value_literal_bool(v, ctx)
+        print_value_bool(v, ctx)
         return
     elif op == 'add_str':
         _print_string_literal(v['asset'], width=v['type']['width'])
@@ -630,13 +630,13 @@ def print_value_cast_immediate(v, ctx):
     if hlir_type.type_is_pointer_to_array_of_char(to_type):
         if hlir_type.type_is_array_of_char(from_type):
             char_width = to_type['to']['of']['width']
-            print_value_literal_string(v, ctx=[], char_width=char_width)
+            print_value_string(v, ctx=[], char_width=char_width)
             return
 
     # cast_immediate GenericChar -> Char
     elif hlir_type.type_is_char(to_type):
         if hlir_type.type_is_generic_char(from_type):
-            print_value_literal_char(v, ctx)
+            print_value_char(v, ctx)
             return
 
     # implicit_cast of immediate value
@@ -735,7 +735,7 @@ def print_array_values(values, ctx):
 
 
 
-def print_value_literal_array(v, ctx):
+def print_value_array(v, ctx):
     if hlir_type.type_is_array_of_char(v['type']):
         char_type = v['type']['of']
         char_width = char_type['width']
@@ -775,7 +775,7 @@ def print_value_literal_array(v, ctx):
 
 
 
-def print_value_literal_record(v, ctx):
+def print_value_record(v, ctx):
 
     if cfunc != None:
         # only for local record literals (!)
@@ -881,7 +881,7 @@ def _print_string_literal(utf32_codes, width=8):
 
 
 
-def print_value_literal_string(x, ctx, char_width=8):
+def print_value_string(x, ctx, char_width=8):
     # получаем список кодов из списка char-значений
     # (формат строки может быть разным UTF-8, UTF-16, UTF-32)
     codes = []
@@ -904,7 +904,7 @@ def print_value_literal_string(x, ctx, char_width=8):
 
 
 
-def print_value_literal_char(x, ctx):
+def print_value_char(x, ctx):
     width = x['type']['width']
 
     prefix = ""
@@ -921,18 +921,18 @@ def print_value_literal_char(x, ctx):
 
 
 
-def print_value_literal_bool(x, ctx):
+def print_value_bool(x, ctx):
     if x['asset']:
         out(BOOL_TRUE_LITERAL)
     else:
         out(BOOL_FALSE_LITERAL)
 
 
-def print_value_literal_enum(x, ctx):
+def print_value_enum(x, ctx):
     print_id(x)
 
 
-def print_value_literal_integer(x, ctx):
+def print_value_integer(x, ctx):
     num = x['asset']
 
     req_bits = nbits_for_num(num)
@@ -972,7 +972,7 @@ def print_value_literal_integer(x, ctx):
 
 
 
-def print_value_literal_float(x, ctx):
+def print_value_float(x, ctx):
     sf = str(x['asset'])
     sxf = sf.split(".")
     int_part = sxf[0]
@@ -985,7 +985,7 @@ def print_value_literal_float(x, ctx):
 
 
 
-def print_value_literal_ptr(x, ctx):
+def print_value_ptr(x, ctx):
     if x['asset'] == 0:
         out("NULL")
     else:
@@ -995,15 +995,15 @@ def print_value_literal_ptr(x, ctx):
 
 def print_value_literal(x, ctx):
     t = x['type']
-    if hlir_type.type_is_integer(t): print_value_literal_integer(x, ctx)
-    elif hlir_type.type_is_float(t): print_value_literal_float(x, ctx)
-    elif hlir_type.type_is_record(t): print_value_literal_record(x, ctx)
-    elif hlir_type.type_is_array(t): print_value_literal_array(x, ctx)
-    elif hlir_type.type_is_bool(t): print_value_literal_bool(x, ctx)
-    elif hlir_type.type_is_char(t): print_value_literal_char(x, ctx)
-    elif hlir_type.type_is_pointer(t): print_value_literal_ptr(x, ctx)
-    elif hlir_type.type_is_enum(t): print_value_literal_enum(x, ctx)
-    elif hlir_type.type_is_byte(t): print_value_literal_integer(x, ctx)
+    if hlir_type.type_is_integer(t): print_value_integer(x, ctx)
+    elif hlir_type.type_is_float(t): print_value_float(x, ctx)
+    elif hlir_type.type_is_record(t): print_value_record(x, ctx)
+    elif hlir_type.type_is_array(t): print_value_array(x, ctx)
+    elif hlir_type.type_is_bool(t): print_value_bool(x, ctx)
+    elif hlir_type.type_is_char(t): print_value_char(x, ctx)
+    elif hlir_type.type_is_pointer(t): print_value_ptr(x, ctx)
+    elif hlir_type.type_is_enum(t): print_value_enum(x, ctx)
+    elif hlir_type.type_is_byte(t): print_value_integer(x, ctx)
     else: error("print_value_literal not implemented", x['ti'])
 
 
@@ -1618,7 +1618,7 @@ def print_def_var(x):
         out(" = ")
 
         if hlir_type.type_is_array(init_value['type']):
-            print_value_literal_array(init_value, ['print_immediate'])
+            print_value_array(init_value, ['print_immediate'])
             out(";")
 
         else:

@@ -360,11 +360,11 @@ def print_value_cast(v, ctx):
 
 
 
-def print_value_literal_array(v, ctx):
+def print_value_array(v, ctx):
 
     # FIXIT: это вообще херня
     if hlir_type.type_is_array_of_char(v['type']):
-        print_value_literal_array_str(v, ctx=[])
+        print_value_array_str(v, ctx=[])
         return
 
     out("[")
@@ -407,7 +407,7 @@ def print_value_literal_array(v, ctx):
 
 
 
-def print_value_literal_record(v, ctx):
+def print_value_record(v, ctx):
     multiline = not 'oneline' in ctx
 
     out("{")
@@ -476,7 +476,7 @@ def code_to_char(cc):
 
 
 # FIXIT: это вообще херня
-def print_value_literal_array_str(x, ctx):
+def print_value_array_str(x, ctx):
     out("\"")
     asset = x['asset']
     i = 0
@@ -508,14 +508,14 @@ def print_value_literal_array_str(x, ctx):
 
 
 
-def print_value_literal_bool(x, ctx):
+def print_value_bool(x, ctx):
     if x['asset'] != 0:
         out('true')
     else:
         out('false')
 
 
-def print_value_literal_char(x, ctx):
+def print_value_char(x, ctx):
     num = x['asset']
     if num >= 0x20:
         out("\"%s\"[0]" % chr(num))
@@ -525,7 +525,7 @@ def print_value_literal_char(x, ctx):
         out("\"\\x%x\"[0]" % num)
 
 
-def print_value_literal_integer(x, ctx):
+def print_value_integer(x, ctx):
     num = x['asset']
 
     if value_attribute_check(x, 'hexadecimal'):
@@ -541,7 +541,7 @@ def print_value_literal_integer(x, ctx):
         out(str(num))
 
 
-def print_value_literal_float(x, ctx):
+def print_value_float(x, ctx):
     sf = str(x['asset'])
     sxf = sf.split(".")
     int_part = sxf[0]
@@ -554,7 +554,7 @@ def print_value_literal_float(x, ctx):
 
 
 
-def print_value_literal_ptr(x, ctx):
+def print_value_ptr(x, ctx):
     if x['asset'] == 0:
         out("nil")
     else:
@@ -586,15 +586,15 @@ def print_value_let(x, ctx):
 
 def print_value_literal(x, ctx):
     t = x['type']
-    if hlir_type.type_is_integer(t): print_value_literal_integer(x, ctx)
-    elif hlir_type.type_is_float(t): print_value_literal_float(x, ctx)
-    elif hlir_type.type_is_record(t): print_value_literal_record(x, ctx)
-    elif hlir_type.type_is_array(t): print_value_literal_array(x, ctx)
-    elif hlir_type.type_is_pointer(t): print_value_literal_ptr(x, ctx)
-    elif hlir_type.type_is_bool(t): print_value_literal_bool(x, ctx)
-    elif hlir_type.type_is_char(t): print_value_literal_char(x, ctx)
-    elif hlir_type.type_is_enum(t): print_value_literal_integer(x, ctx)
-    elif hlir_type.type_is_byte(t): print_value_literal_integer(x, ctx)
+    if hlir_type.type_is_integer(t): print_value_integer(x, ctx)
+    elif hlir_type.type_is_float(t): print_value_float(x, ctx)
+    elif hlir_type.type_is_record(t): print_value_record(x, ctx)
+    elif hlir_type.type_is_array(t): print_value_array(x, ctx)
+    elif hlir_type.type_is_pointer(t): print_value_ptr(x, ctx)
+    elif hlir_type.type_is_bool(t): print_value_bool(x, ctx)
+    elif hlir_type.type_is_char(t): print_value_char(x, ctx)
+    elif hlir_type.type_is_enum(t): print_value_integer(x, ctx)
+    elif hlir_type.type_is_byte(t): print_value_integer(x, ctx)
 
 
 
