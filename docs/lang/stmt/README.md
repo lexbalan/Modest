@@ -1,18 +1,10 @@
 # Statements
 
-  * [variable definiiton statement](./var.md)
-  * [constant definiiton statement](./let.md)
-  * [value evaluation statement](./eval.md)
-  * [variable assignation statement](./assign.md)
-  * [if statement](./if.md)
-  * [while statement](./while.md)
-  * [return statement](./return.md)
-
 
 *Statement* is an command to computer to do an action.
 ```swift
 // this is a statement
-// (call function printf with an argument "Hello World!\n")
+// (calling function printf with an argument "Hello World!\n")
 printf("Hello World!\n")
 ```
 
@@ -27,7 +19,7 @@ Statements can be combined into one *block statement* with `{}` brackets
     // (most preferable way, as shown above)
     // or use semicolon for one-line recording
     
-    printf("How are you?\n"); printf("I hope you're good!\n")
+    printf("How are you?\n"); printf("I hope there's everything in its right place\n")
 }
 ```
 
@@ -37,7 +29,7 @@ After execution this example you're see on the screen:
 Hello World!
 I'm feeling good!
 How are you?
-I hope you're good!
+I hope there's everything in its right place
 ```
 
 Statements inside *block statement* are executed in our usual reading order from left to right, top to bottom. This abstract example shows order of execution:
@@ -51,6 +43,18 @@ Statements inside *block statement* are executed in our usual reading order from
     ...
 }
 ```
+
+
+
+  * [variable definiiton statement](./var.md)
+  * [constant definiiton statement](./let.md)
+  * [value evaluation statement](./eval.md)
+  * [variable assignation statement](./assign.md)
+  * [if statement](./if.md)
+  * [while statement](./while.md)
+  * [return statement](./return.md)
+
+
 
 ### Fast example
 
