@@ -543,8 +543,7 @@ def print_value_integer(x, ctx):
 
 
 def print_value_float(x, ctx):
-    out(str(x['asset']))
-
+    out('{0:f}'.format(x['asset']))
 
 
 def print_value_ptr(x, ctx):

@@ -3,7 +3,8 @@
 import "libc/stdio"
 import "libc/math"
 
-const mathPi = 3.141592653589793238462643383279502884
+const iota = 0.0000000000000000000000000000000000001
+const mathPi = 3.141592653589793238462643383279502884 + iota
 
 func squareOfCircle(r: Float64) -> Float64 {
     return pow(r, 2) * mathPi

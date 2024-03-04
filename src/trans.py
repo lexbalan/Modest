@@ -17,7 +17,8 @@ from value.record import value_record
 
 import decimal
 # max number of signs after .
-#decimal.getcontext().prec = settings.get('precision')
+# decimal operation precision
+decimal.getcontext().prec = settings.get('precision')
 
 
 def is_local_context():
