@@ -12,7 +12,7 @@
 
 #### Type Definition
 ```swift
-type AxisType Int32
+type AxisType Int64
 type MyArray [10]Int32
 type MyPoint2D record {x: AxisType, y: AxisType}
 type MyPoint3D record {
@@ -39,12 +39,22 @@ var pointerToMyPoint3D: *Point3D
 
 #### Function Definition
 ```swift
-func show_greeting () {
-    printf("%s\n", greetingText)
+func show_greeting (text: *Str8) {
+    printf("%s\n", text)
 }
 
-func main () -> Int {
-    show_greeting()
+func sum64 (a: Int64, b: Int64) -> Int64 {
+    return a + b
+}
+
+func main () -> Int32 {
+    show_greeting(greetingText)
+    
+    let a = 10
+    let b = 20
+    let s = sum64(a, b)
+    printf("sum64(%i, %i) -> %i", a, b, s)
+    
     return 0
 }
 ```
