@@ -19,7 +19,7 @@ Statements can be combined into one *block statement* with `{}` brackets
     // (most preferable way, as shown above)
     // or use semicolon for one-line recording
     
-    printf("How are you?\n"); printf("I hope there's everything in its right place\n")
+    printf("How are you?\n"); printf("I hope everything in its right place\n")
 }
 ```
 
@@ -29,7 +29,7 @@ After execution this example you're see on the screen:
 Hello World!
 I'm feeling good!
 How are you?
-I hope there's everything in its right place
+I hope everything in its right place
 ```
 
 Statements inside *block statement* are executed in our usual reading order from left to right, top to bottom. This abstract example shows order of execution:
