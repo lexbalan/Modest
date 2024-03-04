@@ -53,7 +53,7 @@ func main () -> Int32 {
     let a = 10
     let b = 20
     let s = sum64(a, b)
-    printf("sum64(%i, %i) -> %i", a, b, s)
+    printf("sum64(%i, %i) -> %i\n", a, b, s)
     
     return 0
 }

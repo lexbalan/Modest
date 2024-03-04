@@ -1,7 +1,7 @@
 
 # Type Definition
 
-Type definition bounds an *identifier* with a *type*.
+Type definition bounds an *identifier* with a [*type*](../type/README.md) (*type aliasing*).
 
 #### Common form
 ```
