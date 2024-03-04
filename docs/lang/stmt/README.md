@@ -45,17 +45,6 @@ Statements inside *block statement* are executed in our usual reading order from
 ```
 
 
-
-  * [variable definiiton statement](./var.md)
-  * [constant definiiton statement](./let.md)
-  * [value evaluation statement](./eval.md)
-  * [variable assignation statement](./assign.md)
-  * [if statement](./if.md)
-  * [while statement](./while.md)
-  * [return statement](./return.md)
-
-
-
 ### Fast example
 
 A Simple example that asks the user to enter a number from 0 to 9, and if it is within the specified limits, compares it with a constant *n* and prints result of this comparison. **This simple example shows all kinds of statement**
@@ -114,3 +103,16 @@ func main () -> Int32 {
     return 0
 }
 ```
+
+
+
+### More information
+
+  * [variable definiiton statement](./var.md)
+  * [constant definiiton statement](./let.md)
+  * [value evaluation statement](./eval.md)
+  * [variable assignation statement](./assign.md)
+  * [if statement](./if.md)
+  * [while statement](./while.md)
+  * [return statement](./return.md)
+
