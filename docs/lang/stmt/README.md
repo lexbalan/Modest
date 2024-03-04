@@ -1,7 +1,5 @@
 # Statements
 
-[go back](../README.md)
-
   * [variable definiiton statement](./var.md)
   * [constant definiiton statement](./let.md)
   * [value evaluation statement](./eval.md)
@@ -11,9 +9,52 @@
   * [return statement](./return.md)
 
 
+*Statement* is an command to computer to do an action.
+```swift
+// this is a statement
+// (call function printf with an argument "Hello World!\n")
+printf("Hello World!\n")
+```
+
+Statements can be combined into one *block statement* with `{}` brackets
+```swift
+// this four statements are combined into one logical statement by braces
+{
+    printf("Hello World!\n")
+    printf("I'm feeling good!\n")
+    
+    // you can separate statements by newline
+    // (most preferable way, as shown above)
+    // or use semicolon for one-line recording
+    
+    printf("How are you?\n"); printf("I hope you're good!\n")
+}
+```
+
+After execution this example you're see on the screen:
+
+```
+Hello World!
+I'm feeling good!
+How are you?
+I hope you're good!
+```
+
+Statements inside *block statement* are executed in our usual reading order from left to right, top to bottom. This abstract example shows order of execution:
+
+```
+{
+    <statement1>; <statement2>
+    <statement3>; <statement4>
+    <statement5>
+    <statement6>
+    ...
+}
+```
+
 ### Fast example
 
-A Simple example that asks the user to enter a number from 0 to 9, and if it is within the specified limits, compares it with a constant. This simple example shows all kinds of statement
+A Simple example that asks the user to enter a number from 0 to 9, and if it is within the specified limits, compares it with a constant *n* and prints result of this comparison. **This simple example shows all kinds of statement**
 
 ```swift
 import "libc/stdio"
