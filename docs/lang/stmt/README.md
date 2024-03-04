@@ -13,7 +13,7 @@
 
 ### Fast example
 
-A Simple example that asks the user to enter a number from 0 to 9, and if it is within the specified limits, compares it with a constant. 
+A Simple example that asks the user to enter a number from 0 to 9, and if it is within the specified limits, compares it with a constant. This simple example shows all kinds of statement
 
 ```swift
 import "libc/stdio"
