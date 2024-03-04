@@ -12,13 +12,13 @@
 
 #### Type Definition
 ```swift
-type MyInt Int32
+type AxisType Int32
 type MyArray [10]Int32
-type MyPoint2D record {x: Int64, y: Int64}
+type MyPoint2D record {x: AxisType, y: AxisType}
 type MyPoint3D record {
-    x: Int64
-    y: Int64
-    z: Int64
+    x: AxisType
+    y: AxisType
+    z: AxisType
 }
 ```
 
@@ -33,8 +33,8 @@ const greetingText = "Hello!"
 ```swift
 var myCounter: MyInt
 var pointerToMyCounter: *MyInt = &myCounter
-var myPoint2D: Point2D
-var pointerToMyPoint3D: *Point2D
+var myPoint2D: Point2D = {x = 0, y = 0}
+var pointerToMyPoint3D: *Point3D
 ```
 
 #### Function Definition
