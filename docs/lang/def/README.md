@@ -33,6 +33,8 @@ const greetingText = "Hello!"
 ```swift
 var myCounter: MyInt
 var pointerToMyCounter: *MyInt = &myCounter
+var myPoint2D: Point2D
+var pointerToMyPoint3D: *Point2D
 ```
 
 #### Function Definition
