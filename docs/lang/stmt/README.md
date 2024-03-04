@@ -106,7 +106,7 @@ func main () -> Int32 {
 
 
 
-### More information
+### More information about every statement
 
   * [Block statement](./block.md)
   * [variable definiiton statement](./var.md)
