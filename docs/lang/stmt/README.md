@@ -1,14 +1,14 @@
 # Statements
 
 
-*Statement* is an command to computer to do an action.
+*Statement* is a command to computer to do an action.
 ```swift
 // this is a statement
 // (calling function printf with an argument "Hello World!\n")
 printf("Hello World!\n")
 ```
 
-Statements can be combined into one *block statement* with `{}` brackets
+A few statement can be combined into one *block statement* with `{}` brackets
 ```swift
 // this four statements are combined into one logical statement by braces
 {
@@ -71,12 +71,12 @@ func main () -> Int32 {
         if number < 0 {
             // value evaluation statement
             printf("number must be greater than zero, try again\n")
-            // again statement (continue in C)
+            // again statement ('continue' in C)
             again
         } else if number > 9 {
             // value evaluation statement
             printf("number must be less than nine, try again\n")
-            // again statement (continue in C)
+            // again statement ('continue' in C)
             again
         } else {
             // break statement
@@ -108,6 +108,7 @@ func main () -> Int32 {
 
 ### More information
 
+  * [Block statement](./block.md)
   * [variable definiiton statement](./var.md)
   * [constant definiiton statement](./let.md)
   * [value evaluation statement](./eval.md)

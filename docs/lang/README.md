@@ -36,7 +36,7 @@
   * [Constant definiiton](./stmt/const.md)
   * [Value evaluation](./stmt/eval.md)
   * [Variable assignation](./stmt/assign.md)
-
+  * [Block statement](./stmt/block.md)
 
 ### Misc
   * [Directives](./directives.md)
