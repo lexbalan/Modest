@@ -1,8 +1,8 @@
 // test/va_list/src/main.cm
 
-import "libc/stdio.h"
+import "libc/stdio"
 @attribute("c-no-print")
-import "lightfood/print.h"
+import "lightfood/print"
 @c_include "./print.h"
 
 

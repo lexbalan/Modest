@@ -1,6 +1,6 @@
 // test/char/src/main.cm
 
-import "libc/stdio.h"
+import "libc/stdio"
 
 
 const UTF8_CHAR = "s"

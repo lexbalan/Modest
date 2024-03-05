@@ -1657,10 +1657,12 @@ def print_include(x):
             if 'not_included' in x['module']['att']:
                 return
 
+    ss = x['c_name']
+
     if x['local']:
-        include_text = "#include \"%s\"" % x['str']
+        include_text = "#include \"%s\"" % ss
     else:
-        include_text = "#include <%s>" % x['str']
+        include_text = "#include <%s>" % ss
     out(include_text)
 
 

@@ -7,7 +7,7 @@ func main() -> Int {
     let x = 127
     let y = x + 1
 
-    printf("y = %i\n", y)
+    printf("y = %i\n", y to Int32)
 
     if y == 128 {
         printf("test passed\n")

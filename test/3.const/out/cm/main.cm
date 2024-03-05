@@ -1,6 +1,6 @@
 // test/3.const/src/main.cm
 
-import "libc/stdio.h"
+import "libc/stdio"
 
 const genericIntConst = 42
 const int32Const = genericIntConst to Int32

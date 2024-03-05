@@ -13,12 +13,12 @@
 #define maxNumber  10
 
 
-int32_t input_integer(int32_t min, int32_t max);
+int32_t get_integer(int32_t min, int32_t max);
 
 
 int32_t main()
 {
-    const int32_t number = input_integer(minNumber, maxNumber);
+    const int32_t number = get_integer(minNumber, maxNumber);
 
     #define n  5
 
@@ -35,7 +35,7 @@ int32_t main()
 }
 
 
-int32_t input_integer(int32_t min, int32_t max)
+int32_t get_integer(int32_t min, int32_t max)
 {
     int32_t number;
     number = 0;

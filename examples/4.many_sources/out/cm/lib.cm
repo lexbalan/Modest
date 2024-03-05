@@ -1,8 +1,8 @@
 // examples/4.many_sources/lib.cm
 
-import "libc/stdio.h"
+import "libc/stdio"
 
-import "./lib.h"
+import "./lib"
 
 func lib_func() -> Unit {
     printf("hello from lib_func\n")

@@ -1,6 +1,6 @@
 // test/assignation/src/main.cm
 
-import "libc/stdio.h"
+import "libc/stdio"
 
 
 // Simply record for records assignation test

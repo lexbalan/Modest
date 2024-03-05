@@ -117,7 +117,7 @@ def c_include(s):
     inc = {
         'isa': 'directive',
         'kind': 'c_include',
-        'str': s,
+        'c_name': s,
         'local': local,
         'att': [],
         'nl': 1,
@@ -1553,7 +1553,7 @@ def do_import(x):
     for char in import_expr['asset']:
         impline = impline + chr(char['asset'])
 
-    impline = impline + ".hm"
+    name = impline + ".hm"
 
     # (!) right here, before calling "do_import" (!)
     att = attributes_get()
@@ -1562,7 +1562,7 @@ def do_import(x):
     #print("INCLUDE: %s" % (x['str']))
 
     # get abspath
-    abspath = import_abspath(impline)
+    abspath = import_abspath(name)
     if abspath == None:
         error("module %s not found" % impline, x['expr']['ti'])
         fatal("cannot import module")
@@ -1596,7 +1596,8 @@ def do_import(x):
     directive = {
         'isa': 'directive',
         'kind': 'import',
-        'str': impline[:-1],    # .hm -> .h
+        'str': impline,  # "libc/stdio"
+        'c_name': impline + '.h',    # "libc/stdio.h"
         'att': att,
         'module': m, # ссылка на сам модуль (для not_included)
         'local': True

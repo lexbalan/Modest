@@ -1,8 +1,8 @@
 // test/string/src/main.cm
 
-import "libc/stdio.h"
+import "libc/stdio"
 @attribute("c-no-print")
-import "misc/utf.h"
+import "misc/utf"
 @c_include "./utf.h"
 
 

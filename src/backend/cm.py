@@ -783,12 +783,12 @@ def print_import(x):
     s = x['str']
     if 'c-no-print' in x['att']:
         out("@attribute(\"c-no-print\")\n")
-    out("import \"%s\"" % (s))
+    out("import \"%s\"" % s)
 
 
 def print_directive(x):
     if x['kind'] == 'import': print_import(x)
-    elif x['kind'] == 'c_include': out("@c_include \"%s\"" % x['str'])
+    elif x['kind'] == 'c_include': out("@c_include \"%s\"" % x['c_name'])
 
 
 def run(module, outname):

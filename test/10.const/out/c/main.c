@@ -31,20 +31,20 @@ typedef struct {
 
 #define zero  0
 
-Point pointZero = {.x = 0.0, .y = 0.0};
+Point pointZero = {.x = 0.000000, .y = 0.000000};
 
-Point pointOne = {.x = 1.0, .y = 1.0};
+Point pointOne = {.x = 1.000000, .y = 1.000000};
 
 
 Line line0 = {
-    .a = {.x = 0.0, .y = 0.0},
-    .b = {.x = 1.0, .y = 1.0}
+    .a = {.x = 0.000000, .y = 0.000000},
+    .b = {.x = 1.000000, .y = 1.000000}
 };
 
 
 Line line1 = {
-    .a = {.x = 10.0, .y = 15.0},
-    .b = {.x = 20.0, .y = 25.0}
+    .a = {.x = 10.000000, .y = 15.000000},
+    .b = {.x = 20.000000, .y = 25.000000}
 };
 
 
@@ -68,11 +68,11 @@ float lineLength(Line line)
 int main()
 {
     const float lines_0_len = lineLength((Line){
-        .a = (Point){.x = 0.0, .y = 0.0},
-        .b = (Point){.x = 1.0, .y = 1.0}});
+        .a = (Point){.x = 0.000000, .y = 0.000000},
+        .b = (Point){.x = 1.000000, .y = 1.000000}});
     const float lines_1_len = lineLength((Line){
-        .a = (Point){.x = 10.0, .y = 15.0},
-        .b = (Point){.x = 20.0, .y = 25.0}});
+        .a = (Point){.x = 10.000000, .y = 15.000000},
+        .b = (Point){.x = 20.000000, .y = 25.000000}});
 
     printf("lines_0_len = %f\n", lines_0_len);
     printf("lines_1_len = %f\n", lines_1_len);

@@ -1,6 +1,6 @@
 // test/string_concat_eq/src/main.cm
 
-import "libc/stdio.h"
+import "libc/stdio"
 
 const hello = "Hello"
 const world = "World"

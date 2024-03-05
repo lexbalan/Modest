@@ -1,6 +1,6 @@
 // examples/6.text_file/main.cm
 
-import "libc/stdio.h"
+import "libc/stdio"
 
 
 const filename = "file.txt" to *Str8

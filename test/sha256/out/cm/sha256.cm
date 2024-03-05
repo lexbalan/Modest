@@ -1,6 +1,6 @@
 // SHA256
 
-import "libc/libc.h"
+import "libc/libc"
 
 
 type SHA256_Context record {

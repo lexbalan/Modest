@@ -1,9 +1,9 @@
 // test/sha256/src/main.cm
 
-import "libc/stdio.h"
-import "libc/libc.h"
+import "libc/stdio"
+import "libc/libc"
 @attribute("c-no-print")
-import "misc/sha256.h"
+import "misc/sha256"
 @c_include "./sha256.h"
 
 

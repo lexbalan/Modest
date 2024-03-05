@@ -1,6 +1,6 @@
 // test/bool/src/main.cm
 
-import "libc/stdio.h"
+import "libc/stdio"
 
 
 

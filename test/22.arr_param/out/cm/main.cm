@@ -1,6 +1,6 @@
 // test/22.arr_param/src/main.cm
 
-import "libc/stdio.h"
+import "libc/stdio"
 
 
 func swap(x: [2]Int32) -> [2]Int32

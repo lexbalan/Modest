@@ -1,6 +1,6 @@
 // examples/stmt_while/src/main.cm
 
-import "libc/stdio.h"
+import "libc/stdio"
 
 
 func main() -> Int {

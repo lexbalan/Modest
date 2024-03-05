@@ -1,8 +1,8 @@
 /* thx: https://github.com/pshashipreetham/File-Transfer-Using-TCP-Socket-in-C-Socket-Programming */
 
-import "libc/stdio.h"
-import "libc/libc.h"
-import "libc/socket.h"
+import "libc/stdio"
+import "libc/libc"
+import "libc/socket"
 
 
 const FILENAME = "file.txt"

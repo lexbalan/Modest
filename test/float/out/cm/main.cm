@@ -1,7 +1,7 @@
 // test/float/src/main.cm
 
-import "libc/stdio.h"
-import "libc/math.h"
+import "libc/stdio"
+import "libc/math"
 
 
 const mathPi = 3.141592653589793238462643383279502884

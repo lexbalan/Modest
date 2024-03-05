@@ -1,10 +1,10 @@
 // test/14.records/src/main.cm
 
-import "libc/stdio.h"
+import "libc/stdio"
 
 //TODO: now runtime requires memcmp declaration
 // for records & arrays eq
-import "libc/libc.h"
+import "libc/libc"
 
 
 type Point2D record {

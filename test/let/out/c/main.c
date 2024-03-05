@@ -14,7 +14,7 @@ int main()
     #define x  127
     #define y  (x + 1)
 
-    printf("y = %i\n", y);
+    printf("y = %i\n", (int32_t)y);
 
     if (y == 128) {
         printf("test passed\n");

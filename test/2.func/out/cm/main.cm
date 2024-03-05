@@ -1,6 +1,6 @@
 // test/2.func/src/main.cm
 
-import "libc/stdio.h"
+import "libc/stdio"
 
 
 // declare function f0

@@ -1,8 +1,8 @@
 // examples/fsm/fsm.cm
 
-import "libc/stdio.h"
+import "libc/stdio"
 
-import "./fsm.h"
+import "./fsm"
 
 
 const fsmVerbose = true

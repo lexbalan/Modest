@@ -3,14 +3,14 @@
 // This is flashlight final state machine example
 // (just for compiler test and language demonstration)
 
-import "libc/stdio.h"
+import "libc/stdio"
 
-import "./fsm.h"
+import "./fsm"
 
 //@attribute("c-no-print")
 //import "lightfood/main"
 @attribute("c-no-print")
-import "lightfood/delay.h"
+import "lightfood/delay"
 //@c_include("./ff_main.h")
 @c_include "./ff_delay.h"
 

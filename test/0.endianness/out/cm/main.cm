@@ -1,6 +1,6 @@
 // examples/0.endianness/src/main.cm
 
-import "libc/stdio.h"
+import "libc/stdio"
 
 
 func main() -> Int {
