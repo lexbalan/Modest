@@ -53,20 +53,20 @@ A Simple example that asks the user to enter a number from 0 to 9, and if it is 
 import "libc/stdio"
 
 func main () -> Int32 {
-    
+
     // variable definition statement
     var number: Int32
-    
+
     // assignation statement
     number = 0
-    
+
     // while statement
     while true {
         // value evaluation statement
         printf("enter a number (from 0 to 9): ")
         // value evaluation statement
         scanf("%d", &number)
-    
+
         // if-else statement
         if number < 0 {
             // value evaluation statement
@@ -83,22 +83,22 @@ func main () -> Int32 {
             break
         }
     }
-    
+
     // let statement
     let n = 5
-    
+
     // if-else statement
     if number < n {
         // value evaluation statement
         printf("entered number (%i) is less than %i\n", number, n)
-    } else number > n {
+    } else if number > n {
         // value evaluation statement
         printf("entered number (%i) is greater than %i\n", number, n)
     } else {
         // value evaluation statement
         printf("entered number (%i) is equal with %i\n", number, n)
     }
-    
+
     // return statement
     return 0
 }

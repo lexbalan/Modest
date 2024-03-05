@@ -1,0 +1,65 @@
+// test/1.hello_world/src/main.cm
+
+import "libc/stdio"
+
+
+const minNumber = 0
+const maxNumber = 10
+
+
+func input_integer(min: Int32, max: Int32) -> Int32 {
+    // variable definition statement
+    var number: Int32
+
+    // assignation statement
+    number = 0
+
+    // while statement
+    while true {
+        // value evaluation statement
+        printf("enter a number (%i .. %i): ", min, max)
+        // value evaluation statement
+        scanf("%d", &number)
+
+        // if-else statement
+        if number < min {
+            // value evaluation statement
+            printf("number must be greater than %i, try again\n", min)
+            // again statement ('continue' in C)
+            again
+        } else if number > max {
+            // value evaluation statement
+            printf("number must be less than %i, try again\n", max)
+            // again statement ('continue' in C)
+            again
+        } else {
+            // break statement
+            break
+        }
+    }
+
+    return number
+}
+
+
+func main () -> Int32 {
+    let number = input_integer(minNumber, maxNumber)
+
+    // let statement
+    let n = 5
+
+    // if-else statement
+    if number < n {
+        // value evaluation statement
+        printf("entered number (%i) is less than %i\n", number, n)
+    } else if number > n {
+        // value evaluation statement
+        printf("entered number (%i) is greater than %i\n", number, n)
+    } else {
+        // value evaluation statement
+        printf("entered number (%i) is equal with %i\n", number, n)
+    }
+
+    // return statement
+    return 0
+}

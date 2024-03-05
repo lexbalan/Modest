@@ -1,0 +1,16 @@
+// test/1.hello_world/src/main.cm
+
+import "libc/stdio.h"
+
+const hello = "Hello"
+const world = "world!\n"
+
+const hello_world = hello + world
+
+
+func main() -> Int {
+    printf("%s", hello_world to *Str8)
+
+    return 0
+}
+
