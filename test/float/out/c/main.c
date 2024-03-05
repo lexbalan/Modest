@@ -10,12 +10,13 @@
 
 
 
-#define iota  0.0000000000000000000000000000000000001
-#define mathPi  (3.141592653589793238462643383279502884 + iota)
 
-double squareOfCircle(double r)
+#define mathPi  3.141592653589793238462643383279502884
+
+
+double squareOfCircle(double radius)
 {
-    return pow(r, 2) * mathPi;
+    return pow(radius, 2) * mathPi;
 }
 
 

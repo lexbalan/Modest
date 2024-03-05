@@ -3,10 +3,12 @@
 import "libc/stdio.h"
 import "libc/math.h"
 
+
 const mathPi = 3.141592653589793238462643383279502884
 
-func squareOfCircle(r: Float64) -> Float64 {
-    return pow(r, 2) * mathPi
+
+func squareOfCircle(radius: Float64) -> Float64 {
+    return pow(radius, 2) * mathPi
 }
 
 
