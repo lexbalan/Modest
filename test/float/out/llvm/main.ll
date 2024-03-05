@@ -223,7 +223,7 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 
 define double @squareOfCircle(double %r) {
     %1 = call %Double (%Double, %Double) @pow(double %r, %Double 2.0)
-    %2 = fmul %Double %1, 4.141592653589793
+    %2 = fmul %Double %1, 3.141592653589793
     ret %Double %2
 }
 

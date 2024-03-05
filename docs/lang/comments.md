@@ -1,12 +1,12 @@
 # Comments
 
 ### Multi-line comment
-```Swift
+```swift
 /* This is a
    multiline comment */
 ```
 
 ### Single-line comment
-```Swift
+```swift
 // This is a single-line comment
 ```
