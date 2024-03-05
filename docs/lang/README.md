@@ -1,5 +1,6 @@
 # Modest language
 
+- [Comments](./comments.md)
 - [Definitions](./def/README.md)
   * [Type](./def/type.md)
   * [Constant](./def/const.md)

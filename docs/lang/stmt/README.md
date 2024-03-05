@@ -3,7 +3,7 @@
 
 *Statement* is a command to computer to do an action.
 ```swift
-// this is a statement
+// this is a statement (value evaluation statement 'call')
 // (calling function printf with an argument "Hello World!\n")
 printf("Hello World!\n")
 ```
