@@ -72,6 +72,27 @@ def doId(src):
     return ('id', token, ti)
 
 
+def doTag(src):
+    c = src.lookup(1)
+
+    if c != '#':
+        return False
+
+    ti = src.get_ti()
+    s = []
+    while True:
+        j = src.getpos()
+        c = src.getc()
+        if not (c.isalpha() or c.isdigit() or c == '_'):
+            src.setpos(j)
+            break
+        s.append(c)
+
+    token = ''.join(s)
+    ti['len'] = len(token)
+    return ('tag', token, ti)
+
+
 
 def doNumber(src):
     isfloat = False
@@ -154,7 +175,7 @@ def doString(src):
 
     # добавляем " чтобы match в парсере не путал "+" с оператором + (!)
     # поскольку match не учитывает класс
-    token = '"' + ''.join(s) + '"'
+    token = ''.join(s)
     ti['len'] = len(token) + 2  # "
     return ('str', token, ti)
 
@@ -310,6 +331,7 @@ class Lexer:
             doOperation1,
             doString,
             doDirective,
+            doTag,
             doBadSymbol,
         )
 
@@ -322,30 +344,4 @@ class Lexer:
         src = Source(filename)
         return self.tokenizer.run(src)
 
-
-
-"""def doSymbol(src):
-    c0, c1 = src.lookup(2)
-    #or c0 == '.'
-    if not ((c0 == '#') and (c1.isalpha() or c1.isdigit())):
-        return False
-
-    ti = src.get_ti()
-    #print("dosym")
-    # skip '#' / '.'
-    src.getc()
-
-    s = []
-    while True:
-        j = src.getpos()
-        c = src.getc()
-        if not (c.isalpha() or c.isdigit()):
-            src.setpos(j)
-            break
-        s.append(c)
-
-    token = ''.join(s)
-    ti['len'] = len(token)
-
-    return ('sym', token, ti)"""
 

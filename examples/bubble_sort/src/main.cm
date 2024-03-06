@@ -41,13 +41,13 @@ func print_array(array: *[]Int32, len: Int32)
 func main() -> Int32 {
     //fill_array(&array, numberOfItems)
 
-    printf("ARRAY BEFORE:\n")
+    printf("array before:\n")
     print_array(&array, numberOfItems)
     printf("\n")
 
     bubble_sort32(&array, numberOfItems)
 
-    printf("ARRAY AFTER:\n")
+    printf("array after:\n")
     print_array(&array, numberOfItems)
     printf("\n")
 

@@ -65,9 +65,13 @@ class Parser:
 
 
     def match(self, token):
+        if self.token_class_is('str'):
+            return False
+
         yes = self.look(token)
         if yes:
             self.skip()
+
         return yes
 
 
@@ -91,6 +95,9 @@ class Parser:
 
     def is_identifier(self):
         return self.ctok_class() == 'id'
+
+    def is_tag(self):
+        return self.ctok_class() == 'tag'
 
     def identifier(self):
         ti = self.ti()
@@ -749,15 +756,12 @@ class Parser:
             }
 
         elif self.ctok_class() == 'str':
-
             s = self.gettok()
-            s = s[1:]
-            s = s[:-1]
             return self.parse_value_string(s, ti)
 
-        elif self.ctok_class() == 'sym':
+        elif self.ctok_class() == 'tag':
             num = self.gettok()
-            return {'isa': 'value', 'kind': 'sym', 'sym': num, 'ti': ti}
+            return {'isa': 'value', 'kind': 'tag', 'tag': num, 'ti': ti}
 
         elif self.look("["):
             return self.parse_value_array(ti)

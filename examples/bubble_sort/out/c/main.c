@@ -51,13 +51,13 @@ int32_t main()
 {
     //fill_array(&array, numberOfItems)
 
-    printf("ARRAY BEFORE:\n");
+    printf("array before:\n");
     print_array((int32_t *)(int32_t *)&array, numberOfItems);
     printf("\n");
 
     bubble_sort32((int32_t *)(int32_t *)&array, numberOfItems);
 
-    printf("ARRAY AFTER:\n");
+    printf("array after:\n");
     print_array((int32_t *)(int32_t *)&array, numberOfItems);
     printf("\n");
 
