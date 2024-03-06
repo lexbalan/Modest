@@ -864,7 +864,7 @@ class Parser:
 
     def stmt_dec(self):
         v = self.expr_value()
-        return {'isa': 'stmt', 'kind': 'inc', 'value': v}
+        return {'isa': 'stmt', 'kind': 'dec', 'value': v}
 
 
     def stmt_expr_value(self):

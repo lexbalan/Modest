@@ -45,61 +45,59 @@
   * [Builtin constants](./builtin_constants.md)
 
 
+
 ### Example
 
+```swift
+// examples/demo1/src/main.cm
 
-```
 import "libc/stdio"
 
-func main () -> Int32 {
-    
-    // variable definition statement
+
+const minNumber = 0
+const maxNumber = 10
+
+
+func get_integer(min: Int32, max: Int32) -> Int32
+
+
+func main() -> Int32 {
+    let number = get_integer(minNumber, maxNumber)
+
+    let n = 5
+
+    if number < n {
+        printf("entered number (%i) is less than %i\n", number, n to Int32)
+    } else if number > n {
+        printf("entered number (%i) is greater than %i\n", number, n to Int32)
+    } else {
+        printf("entered number (%i) is equal with %i\n", number, n to Int32)
+    }
+
+    return 0
+}
+
+
+func get_integer(min: Int32, max: Int32) -> Int32 {
     var number: Int32
-    
-    // assignation statement
     number = 0
-    
-    // while statement
+
     while true {
-        // value evaluation statement
-        printf("enter a number (from 0 to 9): ")
-        // value evaluation statement
+        printf("enter a number (%i .. %i): ", min, max)
         scanf("%d", &number)
-    
-        // if-else statement
-        if number < 0 {
-            // value evaluation statement
-            printf("number must be greater than zero, try again\n")
-            // again statement ('continue' in C)
+
+        if number < min {
+            printf("number must be greater than %i, try again\n", min)
             again
-        } else if number > 9 {
-            // value evaluation statement
-            printf("number must be less than nine, try again\n")
-            // again statement ('continue' in C)
+        } else if number > max {
+            printf("number must be less than %i, try again\n", max)
             again
         } else {
-            // break statement
             break
         }
     }
-    
-    // let statement
-    let n = 5
-    
-    // if-else statement
-    if number < n {
-        // value evaluation statement
-        printf("entered number (%i) is less than %i\n", number, n)
-    } else number > n {
-        // value evaluation statement
-        printf("entered number (%i) is greater than %i\n", number, n)
-    } else {
-        // value evaluation statement
-        printf("entered number (%i) is equal with %i\n", number, n)
-    }
-    
-    // return statement
-    return 0
+
+    return number
 }
 
 ```
