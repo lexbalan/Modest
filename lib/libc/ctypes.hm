@@ -12,3 +12,20 @@ import "./ctypes64"
 @error("C types not implemented")
 @endif
 
+
+@property("c_alias", "clock_t")
+type Clock_T UnsignedLong
+
+@property("c_alias", "socklen_t")
+type Socklen_T Nat32
+
+@property("c_alias", "time_t")
+type Time_T LongInt
+
+@property("c_alias", "size_t")
+type SizeT UnsignedLongInt
+
+@property("c_alias", "ssize_t")
+type SSizeT LongInt
+
+

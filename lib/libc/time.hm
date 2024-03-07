@@ -1,0 +1,58 @@
+
+@pragma("not_included")
+
+import "./ctypes"
+
+@c_include("time.h")
+
+@property("c_alias", "struct tm")
+type Struct_tm record {
+    tm_sec: Int    // Seconds  [0-60]
+    tm_min: Int    // Minutes  [0-59]
+    tm_hour: Int   // Hours    [0-23]
+    tm_mday: Int   // Day      [1-31]
+    tm_mon: Int    // Month    [0-11]
+    tm_year: Int   // Year (from 1900)
+    tm_wday: Int   // Day of week  [0-6]
+    tm_yday: Int   // Days in year.[0-365]
+    tm_isdst: Int  // DST.  [-1/0/1]
+
+//@if __USE_MISC == 1
+    tm_gmtoff: LongInt     // Seconds east of UTC
+    tm_zone: *ConstChar    // Timezone abbreviation
+//@else
+//    __tm_gmtoff: LongInt   // Seconds east of UTC
+//    __tm_zone: *ConstChar  // Timezone abbreviation
+//@endif
+}
+
+
+// Clock program
+func clock() -> Clock_T
+
+// Return difference between two times
+func difftime(end: Time_T, beginning: Time_T) -> Double
+
+// Convert tm structure to time_t
+func mktime(timeptr: *Struct_tm) -> Time_T
+
+// Get current time
+@attribute("value.type.to:dispensable")
+func time(timer: *Time_T) -> Time_T
+
+// Convert tm structure to string
+func asctime(timeptr: *Struct_tm) -> *Char
+
+// Convert time_t value to string
+func ctime(timer: *Time_T) -> *Char
+
+// Convert time_t to tm as UTC time
+func gmtime(timer: *Time_T) -> *Struct_tm
+
+// Convert time_t to tm as local time
+func localtime(timer: *Time_T) -> *Struct_tm
+
+// Format time as string
+func strftime(ptr: *Char, maxsize: SizeT, format: *ConstChar, timeptr: *Struct_tm) -> SizeT
+
+

@@ -67,10 +67,3 @@ type Double Float64
 type LongDouble Float64
 
 
-@property("c_alias", "size_t")
-type SizeT Nat64
-
-@property("c_alias", "ssize_t")
-type SSizeT Int64
-
-
