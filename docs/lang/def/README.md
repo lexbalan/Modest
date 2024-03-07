@@ -1,6 +1,6 @@
 # Top Level Definitions
 
-*Top level definitions* create a top level entity (type alias, constant, variable or function). You can learn more about top-level definitions by clicking on the link below.
+*Top level definition* create a global entity (*type alias*, *constant*, *variable* or *function*). You can learn more about top-level definitions by clicking on the link below.
 
   * [type definition](./type.md)
   * [constant definition](./const.md)
