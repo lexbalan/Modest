@@ -1,4 +1,4 @@
-// test/1.hello_world/src/main.cm
+// test/ctime_test/src/main.cm
 
 import "libc/stdio"
 import "libc/time"
@@ -33,10 +33,6 @@ func main() -> Int {
     printf("tm.hour = %i\n", tm.tm_hour)
     printf("tm.min = %i\n", tm.tm_min)
     printf("tm.sec = %i\n", tm.tm_sec)
-
-
-    let stack_min = sysconf(_SC_CPUTIME)
-    printf("_SC_CPUTIME = %i\n", stack_min)
 
     return 0
 }

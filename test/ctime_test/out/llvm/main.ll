@@ -472,7 +472,6 @@ declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 @str7 = private constant [14 x i8] [i8 116, i8 109, i8 46, i8 104, i8 111, i8 117, i8 114, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 @str8 = private constant [13 x i8] [i8 116, i8 109, i8 46, i8 109, i8 105, i8 110, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 @str9 = private constant [13 x i8] [i8 116, i8 109, i8 46, i8 115, i8 101, i8 99, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
-@str10 = private constant [18 x i8] [i8 95, i8 83, i8 67, i8 95, i8 67, i8 80, i8 85, i8 84, i8 73, i8 77, i8 69, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 
 
 
@@ -535,8 +534,6 @@ define %Int @main() {
     %45 = getelementptr inbounds %Struct_tm, %Struct_tm* %44, i32 0, i32 0
     %46 = load %Int, %Int* %45
     %47 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str9 to [0 x i8]*), %Int %46)
-    %48 = call %LongInt (%Int) @sysconf(%Int 63)
-    %49 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str10 to [0 x i8]*), %LongInt %48)
     ret %Int 0
 }
 

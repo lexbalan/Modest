@@ -65,7 +65,7 @@ type DIR
 // from time.h
 func clock () -> Nat64
 
-func malloc (size: SizeT) -> Pointer
+func malloc(size: SizeT) -> Pointer
 @attribute("value.type.to:dispensable")
 func memset (mem: Pointer, c: Int, n: SizeT) -> Pointer
 @attribute("value.type.to:dispensable")

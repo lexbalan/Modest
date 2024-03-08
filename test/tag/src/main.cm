@@ -1,0 +1,16 @@
+// test/tag/src/main.cm
+
+import "libc/stdio"
+
+
+type State enum {0, 1, 2, 3}
+type State enum {#stateInit, #stateRun, #stateFault}
+
+func main() -> Int {
+    printf("tag test")
+
+    var s : Symbol = #justSymbol
+
+    return 0
+}
+

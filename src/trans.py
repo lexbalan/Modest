@@ -136,7 +136,6 @@ def property(id, value):
     properties[id] = value
 
 
-
 def pragma(pg):
     #print("@pragma " +  pg)
     if pg == 'not_included':

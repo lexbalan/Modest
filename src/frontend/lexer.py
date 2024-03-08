@@ -218,6 +218,8 @@ def doDirective(src):
                 elif text == 'info':
                     break
             elif len(text) == 5:
+                if text == 'ifdef':
+                    break
                 if text == 'endif':
                     break
                 if text == 'error':
