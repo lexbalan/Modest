@@ -104,9 +104,9 @@ const s_IXUSR = 0x0000040   // X for owner
 func creat(path: *Str, mode: ModeT) -> Int
 func open(path: *Str, oflags: Int) -> Int
 @attribute("value.type.to:dispensable")
-func read(fd: Int, buf: *Nat8, len: Nat32) -> Int
+func read(fd: Int, buf: Pointer, len: Nat32) -> Int
 @attribute("value.type.to:dispensable")
-func write(fd: Int, buf: *Nat8, len: Nat32) -> Int
+func write(fd: Int, buf: Pointer, len: Nat32) -> Int
 @attribute("value.type.to:dispensable")
 func lseek(fd: Int, offset: OffT, whence: Int) -> OffT
 @attribute("value.type.to:dispensable")
