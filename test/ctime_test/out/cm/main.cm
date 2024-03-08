@@ -3,7 +3,6 @@
 import "libc/stdio"
 import "libc/time"
 import "libc/unistd"
-var cnt: Int
 
 
 func main() -> Int {

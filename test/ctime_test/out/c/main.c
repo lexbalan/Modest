@@ -11,7 +11,6 @@
 
 
 
-static int cnt;
 
 
 int main()
