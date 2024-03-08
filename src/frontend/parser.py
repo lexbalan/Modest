@@ -1120,6 +1120,9 @@ class Parser:
         id = self.identifier()
         ftyp = self.expr_type()
 
+        if self.is_comment():
+            self.skip()
+
         # func declaration?
         if self.look("\n"):
             return {
