@@ -37,9 +37,9 @@ type UidT Nat32
 type GidT Nat32
 @property("c_alias", "useconds_t")
 type USecondsT Nat32
-
-
+@property("c_alias", "intptr_t")
 type IntptrT Nat64 // ?
+@property("c_alias", "off_t")
 type OffT Int64
 
 

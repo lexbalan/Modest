@@ -1594,18 +1594,32 @@ def print_def_type(x):
 
 
 def print_def_var(x):
-    #mods = ['external', 'global', 'constant']
+    is_extern = 'extern' in x['att']
+    is_static = 'static' in x['att']
+
+    #['private', 'internal', 'weak', 'external'] # etc..
+    linkage = ''
+    if is_extern:
+        linkage = 'external '
+    if is_static:
+        linkage = 'internal '
+
+    #mods = ['global', 'constant']
     mod = 'global'
+
     out("\n@")
     var = x['value']
     out(var['id']['str'])
-    out(" = %s " % mod)
+    out(" = ")
+    out(linkage + mod + ' ')
     print_type(var['type'])
-    if x['default_value'] != None:
-        out(" ")
-        llvm_print_value(do_eval(x['default_value']))
-    else:
-        out(" zeroinitializer")
+
+    if not is_extern:
+        if x['default_value'] != None:
+            out(" ")
+            llvm_print_value(do_eval(x['default_value']))
+        else:
+            out(" zeroinitializer")
 
 
 def print_string_ascii(strid, string):

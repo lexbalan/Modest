@@ -1670,10 +1670,6 @@ def decl_type(x):
     # С не печатает opaque, но LLVM печатает (!)
     obj = hlir_decl_type(id, nt, x['ti'])
     nt['declaration'] = obj
-
-    if x['extern']:
-        obj['att'].append('extern')
-
     return obj
 
 
@@ -1804,12 +1800,7 @@ def def_var(x):
 
 
     var = value_var(id, var_type)
-
-    if x['extern']:
-        var['att'].append('extern')
-
     module['context'].value_add(x['field']['id']['str'], var)
-
     return hlir_def_var(id, init_value, var, x['ti'])
 
 
@@ -1983,12 +1974,7 @@ def decl_func(x):
         return
 
     func = value_func(id, func_type, ti=id['ti'])
-
-    if x['extern']:
-        func['att'].append('extern')
-
     module['context'].value_add(id['str'], func)
-
     return hlir_decl_func(id, func, x['ti'])
 
 

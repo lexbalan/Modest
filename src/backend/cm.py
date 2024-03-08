@@ -734,8 +734,8 @@ def print_stmt_block(s):
 
 def print_decl_func(x):
     func = x['value']
-    if 'extern' in func['att']:
-        out("extern ")
+    #if 'extern' in func['att']:
+    #    out("extern ")
     out('func ')
     print_id(func)
     print_type(func['type'])

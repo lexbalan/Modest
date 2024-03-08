@@ -5,6 +5,9 @@ import "libc/time"
 import "libc/unistd"
 
 
+@attribute("static")
+var cnt: Int
+
 
 func main() -> Int {
     printf("ctime test\n")

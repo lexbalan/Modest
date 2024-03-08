@@ -11,7 +11,7 @@
 
 
 
-
+static int cnt;
 
 
 int main()
@@ -42,6 +42,10 @@ int main()
     printf("tm.hour = %i\n", tm->tm_hour);
     printf("tm.min = %i\n", tm->tm_min);
     printf("tm.sec = %i\n", tm->tm_sec);
+
+
+    const long int stack_min = sysconf(_SC_CPUTIME);
+    printf("_SC_CPUTIME = %i\n", stack_min);
 
     return 0;
 }

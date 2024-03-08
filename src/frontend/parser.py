@@ -1111,7 +1111,7 @@ class Parser:
 
 
 
-    def parse_def_func(self, extern=False):
+    def parse_def_func(self):
         ti = self.ti()
         id = self.identifier()
         ftyp = self.expr_type()
@@ -1123,7 +1123,6 @@ class Parser:
                 'kind': 'func',
                 'id': id,
                 'type': ftyp,
-                'extern': extern,
                 'ti': ti
             }
 
@@ -1153,7 +1152,7 @@ class Parser:
         }
 
 
-    def parse_def_var(self, is_extern):
+    def parse_def_var(self):
         ff = self.parse_field()
         if ff == None:
             return None
@@ -1168,7 +1167,6 @@ class Parser:
                 'isa': 'ast_definition',
                 'kind': 'var',
                 'field': f,
-                'extern': is_extern,
                 'init': iv,
                 'ti': f['ti']
             })
@@ -1176,7 +1174,7 @@ class Parser:
         return vars
 
 
-    def parse_def_type(self, extern=False):
+    def parse_def_type(self):
         ti = self.ti()
         id = self.identifier()
 
@@ -1186,7 +1184,6 @@ class Parser:
                 'isa': 'ast_declaration',
                 'kind': 'type',
                 'id': id,
-                'extern': extern,
                 'ti': ti
             }
 
@@ -1313,9 +1310,8 @@ class Parser:
 
 
         while not self.is_end():
-
-            export = self.match('export')
-            extern = self.match('extern')
+            #export = self.match('export')
+            #extern = self.match('extern')
 
             ti = self.ti()
 
@@ -1326,7 +1322,7 @@ class Parser:
                 continue
             elif self.match('func'): x = self.parse_def_func()
             elif self.match('const'): x = self.parse_def_const()
-            elif self.match('var'): x = self.parse_def_var(extern)
+            elif self.match('var'): x = self.parse_def_var()
             elif self.match('type'): x = self.parse_def_type()
 
             elif self.token_class_is('comment-block'):
@@ -1347,13 +1343,6 @@ class Parser:
 
             if x == None:
                 continue
-
-            if extern:
-                if isinstance(x, list):
-                    for item in x:
-                        item['extern'] = True
-                else:
-                    x['extern'] = True
 
             if isinstance(x, list):
 
