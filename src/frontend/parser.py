@@ -25,6 +25,10 @@ class Parser:
     #def is_blank(self, c):
     #    return c == ' ' or c == '\t' or c == '\n'
 
+    def is_comment(self):
+        c = self.ctok_class()
+        return c in ['comment-line', 'comment-block']
+
 
     def skip(self):
         if self.ctoken < (len(self.tokens) - 1):
@@ -1177,6 +1181,9 @@ class Parser:
     def parse_def_type(self):
         ti = self.ti()
         id = self.identifier()
+
+        if self.is_comment():
+            self.skip()
 
         # type declaration
         if self.look("\n"):
