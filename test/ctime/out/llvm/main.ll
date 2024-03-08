@@ -70,6 +70,14 @@ declare void @llvm.memset.p0.i32(i8*, i8, i32, i1)
 %Time_T = type %LongInt
 %SizeT = type %UnsignedLongInt
 %SSizeT = type %LongInt
+%PidT = type i32
+%UidT = type i32
+%GidT = type i32
+%USecondsT = type i32
+%IntptrT = type i64
+
+
+%OffT = type i64
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
@@ -172,6 +180,266 @@ declare %Struct_tm* @localtime(%Time_T* %timer)
 
 
 declare %SizeT @strftime(%Char* %ptr, %SizeT %maxsize, %ConstChar* %format, %Struct_tm* %timeptr)
+
+
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/unistd.hm
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+declare %Int @access([0 x %ConstChar]* %path, %Int %amode)
+
+
+declare %UnsignedInt @alarm(%UnsignedInt %seconds)
+
+
+declare %Int @brk(i8* %end_data_segment)
+
+
+declare %Int @chdir([0 x %ConstChar]* %path)
+
+
+declare %Int @chroot([0 x %ConstChar]* %path)
+
+
+declare %Int @chown([0 x %ConstChar]* %pathname, %UidT %owner, %GidT %group)
+
+
+declare %Int @close(%Int %fildes)
+
+
+declare %SizeT @confstr(%Int %name, [0 x %Char]* %buf, %SizeT %len)
+
+
+declare [0 x %Char]* @crypt([0 x %ConstChar]* %key, [0 x %ConstChar]* %salt)
+
+
+declare [0 x %Char]* @ctermid([0 x %Char]* %s)
+
+
+declare [0 x %Char]* @cuserid([0 x %Char]* %s)
+
+
+declare %Int @dup(%Int %fildes)
+
+
+declare %Int @dup2(%Int %fildes, %Int %fildes2)
+
+
+declare void @encrypt([64 x %Char]* %block, %Int %edflag)
+
+
+declare %Int @execl([0 x %ConstChar]* %path, [0 x %ConstChar]* %arg0, ...)
+declare %Int @execle([0 x %ConstChar]* %path, [0 x %ConstChar]* %arg0, ...)
+declare %Int @execlp([0 x %ConstChar]* %file, [0 x %ConstChar]* %arg0, ...)
+declare %Int @execv([0 x %ConstChar]* %path, [0 x %ConstChar]* %argv)
+declare %Int @execve([0 x %ConstChar]* %path, [0 x %ConstChar]* %argv, [0 x %ConstChar]* %envp)
+declare %Int @execvp([0 x %ConstChar]* %file, [0 x %ConstChar]* %argv)
+
+
+declare void @_exit(%Int %status)
+
+
+declare %Int @fchown(%Int %fildes, %UidT %owner, %GidT %group)
+
+
+declare %Int @fchdir(%Int %fildes)
+
+
+declare %Int @fdatasync(%Int %fildes)
+
+
+declare %PidT @fork()
+
+
+declare %LongInt @fpathconf(%Int %fildes, %Int %name)
+
+
+declare %Int @fsync(%Int %fildes)
+
+
+declare %Int @ftruncate(%Int %fildes, %OffT %length)
+
+
+declare [0 x %Char]* @getcwd([0 x %Char]* %buf, %SizeT %size)
+
+
+declare %Int @getdtablesize()
+
+
+declare %GidT @getegid()
+
+
+declare %UidT @geteuid()
+
+
+declare %GidT @getgid()
+
+
+declare %Int @getgroups(%Int %gidsetsize, [0 x %GidT]* %grouplist)
+
+
+declare %Long @gethostid()
+
+
+declare [0 x %Char]* @getlogin()
+
+
+declare %Int @getlogin_r([0 x %Char]* %name, %SizeT %namesize)
+
+
+declare %Int @getopt(%Int %argc, [0 x %ConstChar]* %argv, [0 x %ConstChar]* %optstring)
+
+
+declare %Int @getpagesize()
+
+
+declare [0 x %Char]* @getpass([0 x %ConstChar]* %prompt)
+
+
+declare %PidT @getpgid(%PidT %pid)
+
+
+declare %PidT @getpgrp()
+
+
+declare %PidT @getpid()
+
+
+declare %PidT @getppid()
+
+
+declare %PidT @getsid(%PidT %pid)
+
+
+declare %UidT @getuid()
+
+
+declare [0 x %Char]* @getwd([0 x %Char]* %path_name)
+
+
+declare %Int @isatty(%Int %fildes)
+
+
+declare %Int @lchown([0 x %ConstChar]* %path, %UidT %owner, %GidT %group)
+
+
+declare %Int @link([0 x %ConstChar]* %path1, [0 x %ConstChar]* %path2)
+
+
+declare %Int @lockf(%Int %fildes, %Int %function, %OffT %size)
+
+
+declare %OffT @lseek(%Int %fildes, %OffT %offset, %Int %whence)
+
+
+declare %Int @nice(%Int %incr)
+
+
+declare %LongInt @pathconf([0 x %ConstChar]* %path, %Int %name)
+
+
+declare %Int @pause()
+
+
+declare %Int @pipe([2 x %Int]* %fildes)
+
+
+declare %SSizeT @pread(%Int %fildes, i8* %buf, %SizeT %nbyte, %OffT %offset)
+
+
+declare %Int @pthread_atfork(void ()* %prepare, void ()* %parent, void ()* %child)
+
+
+declare %SSizeT @pwrite(%Int %fildes, i8* %buf, %SizeT %nbyte, %OffT %offset)
+
+
+declare %SSizeT @read(%Int %fildes, i8* %buf, %SizeT %nbyte)
+
+
+declare %Int @readlink([0 x %ConstChar]* %path, [0 x %Char]* %buf, %SizeT %bufsize)
+
+
+declare %Int @rmdir([0 x %ConstChar]* %path)
+
+
+declare i8* @sbrk(%IntptrT %incr)
+
+
+declare %Int @setgid(%GidT %gid)
+
+
+declare %Int @setpgid(%PidT %pid, %PidT %pgid)
+
+
+declare %PidT @setpgrp()
+
+
+declare %Int @setregid(%GidT %rgid, %GidT %egid)
+
+
+declare %Int @setreuid(%UidT %ruid, %UidT %euid)
+
+
+declare %PidT @setsid()
+
+
+declare %Int @setuid(%UidT %uid)
+
+
+declare %UnsignedInt @sleep(%UnsignedInt %seconds)
+
+
+declare void @swab(i8* %src, i8* %dst, %SSizeT %nbytes)
+
+
+declare %Int @symlink([0 x %ConstChar]* %path1, [0 x %ConstChar]* %path2)
+
+
+declare void @sync()
+
+
+declare %LongInt @sysconf(%Int %name)
+
+
+declare %PidT @tcgetpgrp(%Int %fildes)
+
+
+declare %Int @tcsetpgrp(%Int %fildes, %PidT %pgid_id)
+
+
+declare %Int @truncate([0 x %ConstChar]* %path, %OffT %length)
+
+
+declare [0 x %Char]* @ttyname(%Int %fildes)
+
+
+declare %Int @ttyname_r(%Int %fildes, [0 x %Char]* %name, %SizeT %namesize)
+
+
+declare %USecondsT @ualarm(%USecondsT %useconds, %USecondsT %interval)
+
+
+declare %Int @unlink([0 x %ConstChar]* %path)
+
+
+declare %Int @usleep(%USecondsT %useconds)
+
+
+declare %PidT @vfork()
+
+
+declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 
 
 ; -- SOURCE: src/main.cm

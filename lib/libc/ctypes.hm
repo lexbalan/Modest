@@ -29,3 +29,17 @@ type SizeT UnsignedLongInt
 type SSizeT LongInt
 
 
+@property("c_alias", "pid_t")
+type PidT Int32
+@property("c_alias", "uid_t")
+type UidT Nat32
+@property("c_alias", "gid_t")
+type GidT Nat32
+@property("c_alias", "useconds_t")
+type USecondsT Nat32
+
+
+type IntptrT Nat64 // ?
+type OffT Int64
+
+

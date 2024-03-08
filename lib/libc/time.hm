@@ -5,6 +5,7 @@ import "./ctypes"
 
 @c_include("time.h")
 
+
 @property("c_alias", "struct tm")
 type Struct_tm record {
     tm_sec: Int    // Seconds  [0-60]

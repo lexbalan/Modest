@@ -1,4 +1,5 @@
 // libc/unistd.hm
+// thx: https://pubs.opengroup.org/onlinepubs/7908799/xsh/unistd.h.html
 
 @pragma("not_included")
 
@@ -6,99 +7,263 @@
 
 import "./ctypes"
 
-type PidT  Int  // ??
-type UidT  Int  // ??
-type GidT  Int  // ??
-type USecondsT  Int  // ??
-
 
 const SEEK_SET = 0
 const SEEK_CUR = 1
 const SEEK_END = 2
 
-func access (*ConstChar, Int) -> Int
-func alarm (UnsignedInt) -> UnsignedInt
-func brk (Ptr) -> Int
-func chdir (*ConstChar) -> Int
-func chroot (*ConstChar) -> Int  // (LEGACY)
-func chown (*ConstChar, UidT, GidT) -> Int
-func close (Int) -> Int
-func confstr (Int, *Char, SizeT) -> SizeT
-func crypt (*ConstChar, *ConstChar) -> *Char
-func ctermid (*Char) -> *Char
-func cuserid (*Chars) -> *Char  // (LEGACY)
-func dup (Int) -> Int
-func dup2 (Int, Int) -> Int
-func encrypt ([64]Char, Int) -> Unit
-func execl (*ConstChar, *ConstChar, ...) -> Int
-func execle (*ConstChar, *ConstChar, ...) -> Int
-func execlp (*ConstChar, *ConstChar, ...) -> Int
-func execv (*ConstChar, *Charconst []) -> Int
-func execve (*ConstChar, *Charconst [], *Charconst []) -> Int
-func execvp (*ConstChar, *Charconst []) -> Int
-func _exit (Int) -> Void
-func fchown (Int, UidT, GidT) -> Int
-func fchdir (Int) -> Int
-func fdatasync (Int) -> Int
+
+// lockf function - record locking on files
+// VALUES ????$$$
+const F_ULOCK = 0  // unlock locked sections
+const F_LOCK = 1   // lock a section for exclusive use
+const F_TLOCK = 2  // test and lock a section for exclusive use
+const F_TEST = 3
+
+
+// access - determine accessibility of a file
+func access (path: *[]ConstChar, amode: Int) -> Int
+
+// alarm - schedule an alarm signal
+func alarm (seconds: UnsignedInt) -> UnsignedInt
+
+// brk, sbrk - change data segment size
+func brk (end_data_segment: Pointer) -> Int
+
+// chdir - change working directory
+func chdir (path: *[]ConstChar) -> Int
+
+// chroot - change root directory (LEGACY)
+func chroot (path: *[]ConstChar) -> Int
+
+// chown — change the owner or group of a file or directory
+func chown (pathname: *[]ConstChar, owner: UidT, group: GidT) -> Int
+
+// close - close a file descriptor
+func close (fildes: Int) -> Int
+
+// confstr - get configurable variables
+func confstr (name: Int, buf: *[]Char, len: SizeT) -> SizeT
+
+// crypt - string encoding function
+func crypt (key: *[]ConstChar, salt: *[]ConstChar) -> *[]Char
+
+// ctermid - generate a pathname for the controlling terminal
+func ctermid (s: *[]Char) -> *[]Char
+
+// cuserid - character login name of the user (LEGACY)
+func cuserid (s: *[]Char) -> *[]Char
+
+// dup, dup2 - duplicate an open file descriptor
+func dup (fildes: Int) -> Int
+
+// dup, dup2 - duplicate an open file descriptor
+func dup2 (fildes: Int, fildes2: Int) -> Int
+
+// encrypt - encoding function
+func encrypt (block: *[64]Char, edflag: Int) -> Unit
+
+//
+func execl (path: *[]ConstChar, arg0: *[]ConstChar, va: VA_List) -> Int
+func execle (path: *[]ConstChar, arg0: *[]ConstChar, va: VA_List) -> Int
+func execlp (file: *[]ConstChar, arg0: *[]ConstChar, va: VA_List) -> Int
+func execv (path: *[]ConstChar, argv: *[]ConstChar) -> Int
+func execve (path: *[]ConstChar, argv: *[]ConstChar, envp: *[]ConstChar) -> Int
+func execvp (file: *[]ConstChar, argv: *[]ConstChar) -> Int
+
+// _exit - terminate a process
+func _exit (status: Int) -> Unit
+
+// fchown - change owner and group of a file
+func fchown (fildes: Int, owner: UidT, group: GidT) -> Int
+
+// fchdir - change working directory
+func fchdir (fildes: Int) -> Int
+
+// fdatasync - synchronise the data of a file (REALTIME)
+func fdatasync (fildes: Int) -> Int
+
+// fork - create a new process
 func fork () -> PidT
-func fpathconf (Int, Int) -> LongInt
-func fsync (Int) -> Int
-func ftruncate (Int, OffT) -> Int
-func getcwd (*Char, SizeT) -> *Char
-func getdtablesize () -> Int //  (LEGACY)
+
+// fpathconf, pathconf - get configurable pathname variables
+func fpathconf (fildes: Int, name: Int) -> LongInt
+
+// fsync - synchronise changes to a file
+func fsync (fildes: Int) -> Int
+
+// ftruncate, truncate - truncate a file to a specified length
+func ftruncate (fildes: Int, length: OffT) -> Int
+
+// getcwd - get the pathname of the current working directory
+func getcwd (buf: *[]Char, size: SizeT) -> *[]Char
+
+// getdtablesize - get the file descriptor table size (LEGACY)
+func getdtablesize () -> Int
+
+// getegid - get the effective group ID
 func getegid () -> GidT
+
+// geteuid - get the effective user ID
 func geteuid () -> UidT
+
+// getgid - get the real group ID
 func getgid () -> GidT
-func getgroups (Int, GidT []) -> Int
+
+// getgroups - get supplementary group IDs
+func getgroups (gidsetsize: Int, grouplist: *[]GidT) -> Int
+
+// gethostid - get an identifier for the current host
 func gethostid () -> Long
-func getlogin () -> *Char
-func getlogin_r (*Char, SizeT) -> Int
-func getopt (Int, *Char const [], *ConstChar) -> Int
-func getpagesize () -> Int //  (LEGACY)
-func getpass (*ConstChar) -> *Char //  (LEGACY)
-func getpgid (PidT) -> PidT
+
+// getlogin - get login name
+func getlogin () -> *[]Char
+
+// getlogin_r - get login name
+func getlogin_r (name: *[]Char, namesize: SizeT) -> Int
+
+// getopt, optarg, optind, opterr, optopt - command option parsing
+func getopt (argc: Int, argv: *[]ConstChar, optstring: *[]ConstChar) -> Int
+
+// getpagesize - get the current page size (LEGACY)
+func getpagesize () -> Int
+
+// getpass - read a string of characters without echo (LEGACY)
+func getpass (prompt: *[]ConstChar) -> *[]Char
+
+// getpgid - get the process group ID for a process
+func getpgid (pid: PidT) -> PidT
+
+// getpgrp - get the process group ID of the calling process
 func getpgrp () -> PidT
+
+// getpid - get the process ID
 func getpid () -> PidT
+
+// getppid - get the parent process ID
 func getppid () -> PidT
-func getsid (PidT) -> PidT
+
+// getsid - get the process group ID of session leader
+func getsid (pid: PidT) -> PidT
+
+// getuid - get a real user ID
 func getuid () -> UidT
-func getwd (*Char) -> *Char
-func isatty (Int) -> Int
-func lchown (*ConstChar, UidT, GidT) -> Int
-func link (*ConstChar, *ConstChar) -> Int
-func lockf (Int, Int, OffT) -> Int
-func lseek (Int, OffT, Int) -> OffT
-func nice (Int) -> Int
-func pathconf (*ConstChar, Int) -> LongInt
+
+// getwd - get the current working directory pathname
+func getwd (path_name: *[]Char) -> *[]Char
+
+// isatty - test for a terminal device
+func isatty (fildes: Int) -> Int
+
+// lchown - change the owner and group of a symbolic link
+func lchown (path: *[]ConstChar, owner: UidT, group: GidT) -> Int
+
+// link - link to a file
+func link (path1: *[]ConstChar, path2: *[]ConstChar) -> Int
+
+// lockf - record locking on files
+func lockf (fildes: Int, function: Int, size: OffT) -> Int
+
+// lseek - move the read/write file offset
+func lseek (fildes: Int, offset: OffT, whence: Int) -> OffT
+
+// nice - change nice value of a process
+func nice (incr: Int) -> Int
+
+// pathconf - get configurable pathname variables
+func pathconf (path: *[]ConstChar, name: Int) -> LongInt
+
+// pause - suspend the thread until signal is received
 func pause () -> Int
-func pipe ([2]Int) -> Int
-func pread (Int, Ptr, SizeT, OffT) -> SSizeT
-func pthread_atfork (void  (*) (), void  (*) (), void (*) ()) -> Int
-func pwrite (Int, PtrConst, SizeT, OffT) -> SSizeT
-func read (Int, Ptr, SizeT) -> SSizeT
-func readlink (*ConstChar, *Char, SizeT) -> Int
-func rmdir (*ConstChar) -> Int
-func sbrk (Intptr_t) -> Ptr
-func setgid (GidT) -> Int
-func setpgid (PidT, PidT) -> Int
+
+// pipe - create an interprocess channel
+func pipe (fildes: *[2]Int) -> Int
+
+// pread - read from a file
+func pread (fildes: Int, buf: Pointer, nbyte: SizeT, offset: OffT) -> SSizeT
+
+// pthread_atfork - register fork handlers
+func pthread_atfork (prepare: *()->Unit, parent: *()->Unit, child: *()->Unit) -> Int
+
+// pwrite - write on a file
+func pwrite (fildes: Int, buf: Pointer, nbyte: SizeT, offset: OffT) -> SSizeT
+
+// read, readv, pread - read from a file
+func read (fildes: Int, buf: Pointer, nbyte: SizeT) -> SSizeT
+
+// readlink - read the contents of a symbolic link
+func readlink (path: *[]ConstChar, buf: *[]Char, bufsize: SizeT) -> Int
+
+// rmdir - remove a directory
+func rmdir (path: *[]ConstChar) -> Int
+
+// sbrk - change space allocation
+func sbrk (incr: IntptrT) -> Pointer
+
+// setgid - set-group-ID
+func setgid (gid: GidT) -> Int
+
+// setpgid - set process group ID for job control
+func setpgid (pid: PidT, pgid: PidT) -> Int
+
+// setpgrp - set process group ID
 func setpgrp () -> PidT
-func setregid (GidT, GidT) -> Int
-func setreuid (UidT, UidT) -> Int
+
+// setregid - set real and effective group IDs
+func setregid (rgid: GidT, egid: GidT) -> Int
+
+// setreuid - set real and effective user IDs
+func setreuid (ruid: UidT, euid: UidT) -> Int
+
+// setsid - create session and set process group ID
 func setsid () -> PidT
-func setuid (UidT) -> Int
-func sleep (UnsignedInt) -> UnsignedInt
-func swab (PtrConst, Ptr, SSizeT) -> Unit
-func symlink (*ConstChar, *ConstChar) -> Int
+
+// setuid - set-user-ID
+func setuid (uid: UidT) -> Int
+
+// sleep - suspend execution for an interval of time
+func sleep (seconds: UnsignedInt) -> UnsignedInt
+
+// swab - swap bytes
+func swab (src: Pointer, dst: Pointer, nbytes: SSizeT) -> Unit
+
+// symlink - make symbolic link to a file
+func symlink (path1: *[]ConstChar, path2: *[]ConstChar) -> Int
+
+// sync - schedule filesystem updates
 func sync () -> Unit
-func sysconf (Int) -> LongInt
-func tcgetpgrp (Int) -> PidT
-func tcsetpgrp (Int, PidT) -> Int
-func truncate (*ConstChar, OffT) -> Int
-func ttyname (Int) -> *Char
-func ttyname_r (Int, *Char, SizeT) -> Int
-func ualarm (USecondsT, USecondsT) -> USecondsT
-func unlink (*ConstChar) -> Int
-func usleep (USecondsT) -> Int
+
+// sysconf - get configurable system variables
+func sysconf (name: Int) -> LongInt
+
+// tcgetpgrp - get the foreground process group ID
+func tcgetpgrp (fildes: Int) -> PidT
+
+// tcsetpgrp - set the foreground process group ID
+func tcsetpgrp (fildes: Int, pgid_id: PidT) -> Int
+
+// truncate - truncate a file to a specified length
+func truncate (path: *[]ConstChar, length: OffT) -> Int
+
+// ttyname - find pathname of a terminal
+func ttyname (fildes: Int) -> *[]Char
+
+// ttyname_r - find pathname of a terminal
+func ttyname_r (fildes: Int, name: *[]Char, namesize: SizeT) -> Int
+
+// ualarm - set the interval timer
+func ualarm (useconds: USecondsT, interval: USecondsT) -> USecondsT
+
+// unlink - remove a directory entry
+func unlink (path: *[]ConstChar) -> Int
+
+// usleep - suspend execution for an interval
+func usleep (useconds: USecondsT) -> Int
+
+// vfork - create new process; share virtual memory
 func vfork () -> PidT
-func write (Int, PtrConst, SizeT) -> SSizeT
+
+// write, writev, pwrite - write on a file
+func write (fildes: Int, buf: Pointer, nbyte: SizeT) -> SSizeT
+
 
