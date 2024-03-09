@@ -74,10 +74,14 @@ pa = &a
 
 
 ```swift
+// fast examples
 Int32 1234
 Nat16 0xFFFF
 Float64 0.1234
 Char32 "A"
+Point {x=0, y=0}
+[2]Point [{x=0, y=0}, {x=1, y=1}]
+*Point nil
 ```
 
 
