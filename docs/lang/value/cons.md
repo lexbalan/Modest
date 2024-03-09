@@ -2,13 +2,13 @@
 # *Cons* value expression
 
 
-## Implicit type casting
+## Implicit value construction
 
-### Implicit cast *generic* -> *non-generic* type
+### Implicit value construction *generic*-type value
 
-Generic types can be implicitly casted to corresponded type
+Value can be implicitly constructed from another value with *generic* type
 
-| **Generic type** | **Can be implicit cast to** |
+| **Generic type** | **Can be implicitly cast to** |
 | :--------------: | :---------------------: |
 | Generic Integer  | Byte, Char, Integer, Float |
 | Generic Float    | Float |
@@ -19,32 +19,33 @@ Generic types can be implicitly casted to corresponded type
 
 
 ```zig
-// example: GenericInteger -> Int
+// example: cons Int from GenericInteger
 
 var i: Int32
 
-// implicit cast literal numeric value '1' with type GenericInteger to type Int32 
+// implicit cons Int32 value '1' from literal value with GenericInteger type
 i = 1
 ```
 
 
 ```zig
-// example: GenericArray -> Array
+// example: cons Array from GenericArray
 
 var a: [3]Int32
 
-// implicit cast literal array value '[1, 2, 3]' with type Generic[3]GenericInteger to type [3]Int32
+// implicit cons [3]Int32 array value from Generic[3]GenericInteger literal
 a = [1, 2, 3]
 ```
 
 
 ```zig
-// example: GenericRecord -> Record
+// example: cons Record from GenericRecord
 
 var r: record {x: Int32, y: Int32}
 
-// implicit cast literal record value {x=0, y=0} with type GenericRecord {x: Int32, y: Int32}
-// to type record {x: Int32, y: Int32}
+// implicit cons value with type record {x: Int32, y: Int32}
+// from literal record value {x=0, y=0}
+// with type GenericRecord {x: Int32, y: Int32}
 r = {x = 0, y = 0}
 ```
 
@@ -52,12 +53,13 @@ r = {x = 0, y = 0}
 
 
 ```zig
-// example: Pointer to sized array -> pointer to unsized array
+// example: cons pointer to unsized array from Pointer to sized array
 
 var a: *[5]Int32
 var pa: *[]Int32
 
-// implicit cast *[3]Int32 -> *[]Int32
+// implicit cons value with type *[]Int32
+// from value with type *[3]Int32
 pa = &a
 ```
 
@@ -80,7 +82,7 @@ Char32 "A"
 All other kinds of type casting requires explicit type cast operator
 
 ```zig
-// example: explicit cast integer values
+// example: explicit cons integer values
 
 var i: Int32
 var j: Int64
@@ -90,7 +92,7 @@ j = Int64 i
 ```
 
 ```zig
-// example: explicit cast incomplete array
+// example: explicit cons array
 
 var a: [10]Int32
 // you can't implicit cast [3]Int -> [10]Int
