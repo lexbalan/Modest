@@ -5,7 +5,7 @@ Type identifiers must starts from uppercese letter
 
 #### Example
 
-```
+```golang
 type MyInt Int64
 type PointerToMyInt *MyInt
 ```
@@ -14,7 +14,7 @@ type PointerToMyInt *MyInt
 Value identifiers must starts from lowercase letter
 
 #### Example
-```
+```swift
 const myConst = 10
 
 var myVar: MyInt
