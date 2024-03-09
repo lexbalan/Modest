@@ -51,7 +51,7 @@ func no_return_func () -> Unit {
 Also, you can construct *Unit* value from not used function parameter to prevent *warning(unused value)* compiler message:
 ```swift
 func just (not_used_param: Int32) -> Unit {
-    not_used_param to Unit
+    Unit not_used_param
 }
 ```
 
