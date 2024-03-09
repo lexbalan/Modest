@@ -4,7 +4,7 @@
 
 ## Implicit value construction
 
-### Implicit value construction *generic*-type value
+### Implicit value construction from *generic*-type value
 
 Value can be implicitly constructed from another value with *generic* type
 
@@ -64,7 +64,8 @@ pa = &a
 ```
 
 
-## Explicit type casting
+## Explicit value construction
+
 
 ### Common form
 ```
@@ -79,7 +80,7 @@ Float64 0.1234
 Char32 "A"
 ```
 
-All other kinds of type casting requires explicit type cast operator
+
 
 ```zig
 // example: explicit cons integer values
@@ -92,21 +93,23 @@ j = Int64 i
 ```
 
 ```zig
-// example: explicit cons array
+// example: explicit cons array from incomplete array
 
 var a: [10]Int32
-// you can't implicit cast [3]Int -> [10]Int
-// but you can do explicit cast (all rest items will be filled with zeros)
+// you can't implicitly cons [10]Int from [3]Int
+// but you can do it explicitly (extra items will be filled with zeros)
 a = [10]Int32 [1, 2, 3]
 ```
 
 ```zig
-// example: explicit cast incomplete record
+// example: explicit cons record from incomplete record
 
 type Point3D record {x: Int32, y: Int32, z: Int32}
 
 var r: Point3D
-// you can't implicit cast {x: GenericInteger} -> record {x: Int32, y: Int32, z: Int32}
-// but you can do explicit cast (all rest fields will be filled with zeros)
-r = Point3D {x=0}
+// you can't implicitly cons record {x: Int32, y: Int32, z: Int32} 
+// from {x: GenericInteger} but you can do it explicitly
+// (all rest fields will be filled with zeros)
+r = Point3D {x=10}
 ```
+
