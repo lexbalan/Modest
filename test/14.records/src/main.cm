@@ -35,7 +35,7 @@ func main() -> Int {
 
     // compare Point2D with anonymous record
     var p2d2 = p2d0  // record assignation
-    var p2d3 = {x=1, y=2} to record {x: Nat32, y: Nat32}
+    var p2d3 = record {x: Nat32, y: Nat32} {x=1, y=2}
 
     if p2d2 == p2d3 {
         printf("p2d2 == p2d3\n")
@@ -45,7 +45,7 @@ func main() -> Int {
 
 
     // comparison between two anonymous record
-    var p2d4 = {x=1, y=2} to record {x: Nat32, y: Nat32}
+    var p2d4 = record {x: Nat32, y: Nat32} {x=1, y=2}
 
     if p2d3 == p2d4 {
         printf("p2d3 == p2d4\n")
@@ -58,7 +58,7 @@ func main() -> Int {
     // (it is possible if dst record contained all fields from src record
     // and their types are equal)
     var p3d: Point3D
-    p3d = p2d2 to Point3D
+    p3d = Point3D p2d2
 
 
     return 0

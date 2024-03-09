@@ -15,20 +15,20 @@
 
 
 
-#define PORT  8080
-#define BUF_SIZE  1024
+#define port  8080
+#define bufSize  1024
 
 
 void send_file(FILE *fp, int sockfd)
 {
-    char data[BUF_SIZE];
+    char data[bufSize];
 
-    while (fgets((char *)(char *)&data, BUF_SIZE, fp) != NULL) {
-        if (send(sockfd, (void *)(char *)&data, sizeof(char[BUF_SIZE]), 0) == -1) {
+    while (fgets((char *)(char *)&data, bufSize, fp) != NULL) {
+        if (send(sockfd, (void *)(char *)&data, sizeof(char[bufSize]), 0) == -1) {
             perror("[-] Error in sendung data");
             exit(1);
         }
-        bzero((void *)(char *)&data, BUF_SIZE);
+        bzero((void *)(char *)&data, bufSize);
     }
 }
 
@@ -47,7 +47,7 @@ int main()
     server_addr = (struct sockaddr_in){
         .sin_len = 0,
         .sin_family = AF_INET,
-        .sin_port = PORT,
+        .sin_port = port,
         .sin_addr = (struct in_addr){
             .s_addr = inet_addr("127.0.0.1")
         },

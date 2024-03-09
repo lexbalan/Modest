@@ -69,8 +69,9 @@ def value_cons(v, t, ti, method):
 
     if constructor != None:
         nv = constructor(v, t, ti, method)
-        if 'nl' in v:
-            nv['nl'] = v['nl']
+        if nv != None:
+            if 'nl' in v:
+                nv['nl'] = v['nl']
         return nv
 
     return None

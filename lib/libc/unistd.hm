@@ -11,27 +11,39 @@ import "./ctypes"
 //@attribute("extern")
 //var environ: *[]*Char
 
+@property("value.c_alias", "SEEK_SET")
+const c_SEEK_SET = 0
+@property("value.c_alias", "SEEK_CUR")
+const c_SEEK_CUR = 1
+@property("value.c_alias", "SEEK_END")
+const c_SEEK_END = 2
 
-const SEEK_SET = 0
-const SEEK_CUR = 1
-const SEEK_END = 2
-
-
-const STDIN_FILENO = 0
-const STDOUT_FILENO = 1
-const STDERR_FILENO = 2
+@property("value.c_alias", "STDIN_FILENO")
+const c_STDIN_FILENO = 0
+@property("value.c_alias", "STDOUT_FILENO")
+const c_STDOUT_FILENO = 1
+@property("value.c_alias", "STDERR_FILENO")
+const c_STDERR_FILENO = 2
 
 
 // lockf function - record locking on files
-const F_ULOCK = 0  // unlock locked sections
-const F_LOCK = 1   // lock a section for exclusive use
-const F_TLOCK = 2  // test and lock a section for exclusive use
-const F_TEST = 3
+@property("value.c_alias", "F_ULOCK")
+const c_F_ULOCK = 0  // unlock locked sections
+@property("value.c_alias", "F_LOCK")
+const c_F_LOCK = 1   // lock a section for exclusive use
+@property("value.c_alias", "F_TLOCK")
+const c_F_TLOCK = 2  // test and lock a section for exclusive use
+@property("value.c_alias", "F_TEST")
+const c_F_TEST = 3
 
-const F_OK = 0  // Test for existence of file
-const R_OK = 4  // Test for read permission
-const W_OK = 2  // Test for write permission
-const X_OK = 1  // Test for execute (search) permission
+@property("value.c_alias", "F_OK")
+const c_F_OK = 0  // Test for existence of file
+@property("value.c_alias", "R_OK")
+const c_R_OK = 4  // Test for read permission
+@property("value.c_alias", "W_OK")
+const c_W_OK = 2  // Test for write permission
+@property("value.c_alias", "X_OK")
+const c_X_OK = 1  // Test for execute (search) permission
 
 
 

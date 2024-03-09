@@ -89,7 +89,7 @@ true, false
     [1, 2, 3, 4, 5]
     
     // Array of tree Int32 values
-    [1 to Int32, 2 to Int32, 3 to Int32]
+    [Int32 1, Int32 2, Int32 3]
 ```
 
 

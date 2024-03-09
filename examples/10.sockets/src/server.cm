@@ -5,37 +5,37 @@ import "libc/libc"
 import "libc/socket"
 
 
-const FILENAME = "file2.txt"
+const filename = "file2.txt"
 
-const IP_ADDRESS = "127.0.0.1"
-const PORT = 8080
-const BUF_SIZE = 1024
+const ipAddress = "127.0.0.1"
+const port = 8080
+const bufSize = 1024
 
 
 func write_file(sockfd: Int) {
-    var buffer: [BUF_SIZE]Char8
+    var buffer: [bufSize]Char8
 
-    let fp = fopen(FILENAME, "w")
+    let fp = fopen(filename, "w")
     if fp == nil {
         perror("[-] Error in creating file")
         exit(1)
     }
 
     while true {
-        let n = recv(sockfd, &buffer, BUF_SIZE, 0)
+        let n = recv(sockfd, &buffer, bufSize, 0)
 
         if n <= 0 {
             break
         }
 
         fprintf(fp, "%s", &buffer)
-        bzero(&buffer, BUF_SIZE)
+        bzero(&buffer, bufSize)
     }
 }
 
 
 func main() -> Int {
-    let sockfd = socket(AF_INET, SOCK_STREAM, 0)
+    let sockfd = socket(c_AF_INET, c_SOCK_STREAM, 0)
     if sockfd < 0 {
         perror("[-] Error in socket")
         exit(1)
@@ -44,14 +44,14 @@ func main() -> Int {
     printf("[+] Server socket created\n")
 
     var server_addr = {
-        sin_family = AF_INET
-        sin_port = PORT
+        sin_family = c_AF_INET
+        sin_port = port
         sin_addr = {
-            s_addr = inet_addr(IP_ADDRESS)
+            s_addr = inet_addr(ipAddress)
         }
     } to Struct_sockaddr_in
 
-    let sockaddr = &server_addr to Pointer to *Struct_sockaddr
+    let sockaddr = *Struct_sockaddr Pointer &server_addr
     var e = bind(sockfd, sockaddr, sizeof(Struct_sockaddr_in))
     if e < 0 {
         perror("[-] Error in Binding")
@@ -71,7 +71,7 @@ func main() -> Int {
     var addr_size: Socklen_t
     addr_size = sizeof(Struct_sockaddr_in)
     var new_addr: Struct_sockaddr_in
-    let sa = &new_addr to Pointer to *Struct_sockaddr
+    let sa = *Struct_sockaddr Pointer &new_addr
     let new_sock = accept(sockfd, sa, &addr_size)
 
     write_file(new_sock)

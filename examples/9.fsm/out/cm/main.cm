@@ -29,13 +29,13 @@ var cnt: Nat8
 //
 
 func off_entry(fsm: *FSM) -> Unit {
-    fsm to Unit
+    Unit fsm
     //printf("off_entry\n")
 }
 
 
 func off_loop(fsm: *FSM) -> Unit {
-    fsm to Unit
+    Unit fsm
 
     printf("off_loop\n")
     if cnt < 10 {
@@ -48,7 +48,7 @@ func off_loop(fsm: *FSM) -> Unit {
 
 
 func off_exit(fsm: *FSM) -> Unit {
-    fsm to Unit
+    Unit fsm
     //printf("off_exit\n")
 }
 
@@ -58,13 +58,13 @@ func off_exit(fsm: *FSM) -> Unit {
 //
 
 func on_entry(fsm: *FSM) -> Unit {
-    fsm to Unit
+    Unit fsm
     //printf("on_entry\n")
 }
 
 
 func on_loop(fsm: *FSM) -> Unit {
-    fsm to Unit
+    Unit fsm
     printf("on_loop\n")
     if cnt < 10 {
         cnt = cnt + 1
@@ -76,7 +76,7 @@ func on_loop(fsm: *FSM) -> Unit {
 
 
 func on_exit(fsm: *FSM) -> Unit {
-    fsm to Unit
+    Unit fsm
     //printf("on_exit\n")
 }
 

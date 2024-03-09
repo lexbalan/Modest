@@ -5,28 +5,28 @@ import "libc/libc"
 import "libc/socket"
 
 
-const FILENAME = "file.txt"
+const filename = "file.txt"
 
-const IP_ADDRESS = "127.0.0.1"
-const PORT = 8080
-const BUF_SIZE = 1024
+const ipAddress = "127.0.0.1"
+const port = 8080
+const bufSize = 1024
 
 
 func send_file(fp: *FILE, sockfd: Int) -> Unit {
-    var data: [BUF_SIZE]Char8
+    var data: [bufSize]Char8
 
-    while fgets(&data, BUF_SIZE, fp) != nil {
-        if send(sockfd, &data, (sizeof([BUF_SIZE]Char8)), 0) == (-1) {
+    while fgets(&data, bufSize, fp) != nil {
+        if send(sockfd, &data, (sizeof([bufSize]Char8)), 0) == (-1) {
             perror("[-] Error in sendung data")
             exit(1)
         }
-        bzero(&data, BUF_SIZE)
+        bzero(&data, bufSize)
     }
 }
 
 
 func main() -> Int {
-    let sockfd = socket(AF_INET, SOCK_STREAM, 0)
+    let sockfd = socket(c_AF_INET, c_SOCK_STREAM, 0)
     if sockfd < 0 {
         perror("[-] Error in socket")
         exit(1)
@@ -36,10 +36,10 @@ func main() -> Int {
 
     var server_addr: Struct_sockaddr_in = {
         sin_len = 0
-        sin_family = AF_INET
-        sin_port = PORT
+        sin_family = c_AF_INET
+        sin_port = port
         sin_addr = {
-            s_addr = inet_addr(IP_ADDRESS)
+            s_addr = inet_addr(ipAddress)
         }
         sin_zero = []
     }
@@ -53,7 +53,7 @@ func main() -> Int {
 
     printf("[+] Connected to server\n")
 
-    let fp = fopen(FILENAME, "r")
+    let fp = fopen(filename, "r")
     if fp == nil {
         perror("[-] Error in reading file")
         exit(1)

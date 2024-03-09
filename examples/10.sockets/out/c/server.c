@@ -15,13 +15,13 @@
 
 
 
-#define PORT  8080
-#define BUF_SIZE  1024
+#define port  8080
+#define bufSize  1024
 
 
 void write_file(int sockfd)
 {
-    char buffer[BUF_SIZE];
+    char buffer[bufSize];
 
     FILE *const fp = fopen("file2.txt", "w");
     if (fp == NULL) {
@@ -30,14 +30,14 @@ void write_file(int sockfd)
     }
 
     while (true) {
-        const ssize_t n = recv(sockfd, (void *)(char *)&buffer, BUF_SIZE, 0);
+        const ssize_t n = recv(sockfd, (void *)(char *)&buffer, bufSize, 0);
 
         if (n <= 0) {
             break;
         }
 
         fprintf(fp, "%s", (char *)&buffer);
-        bzero((void *)(char *)&buffer, BUF_SIZE);
+        bzero((void *)(char *)&buffer, bufSize);
     }
 }
 
@@ -56,7 +56,7 @@ int main()
     server_addr = (struct sockaddr_in){
         .sin_len = 0,
         .sin_family = AF_INET,
-        .sin_port = PORT,
+        .sin_port = port,
         .sin_addr = (struct in_addr){
             .s_addr = inet_addr("127.0.0.1")
         },

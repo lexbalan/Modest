@@ -3,9 +3,9 @@
 import "libc/stdio"
 
 
-const UTF8_CHAR = "s"
-const UTF16_CHAR = "Я"
-const UTF32_CHAR = "🐀"
+const utf8Char = "s"
+const utf16Char = "Я"
+const utf32Char = "🐀"
 
 
 func main() -> Int {
@@ -15,13 +15,13 @@ func main() -> Int {
     var ch16: Char16
     var ch32: Char32
 
-    ch08 = UTF8_CHAR
-    ch16 = UTF16_CHAR
-    ch32 = UTF32_CHAR
+    ch08 = utf8Char
+    ch16 = utf16Char
+    ch32 = utf32Char
 
-    //printf("ch08 = 0x%x (%c)\n", ch08 to Nat32, ch08)
-    //printf("ch16 = 0x%x (%c)\n", ch16 to Nat32, ch16)
-    //printf("ch32 = 0x%x (%c)\n", ch32 to Nat32, ch32)
+    //printf("ch08 = 0x%x (%c)\n", Nat32 ch08, ch08)
+    //printf("ch16 = 0x%x (%c)\n", Nat32 ch16, ch16)
+    //printf("ch32 = 0x%x (%c)\n", Nat32 ch32, ch32)
 
     return 0
 }

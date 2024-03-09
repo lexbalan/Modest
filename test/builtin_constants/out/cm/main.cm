@@ -12,8 +12,8 @@ func main() -> Int {
     printf("__systemIntWidth = %i\n", 32)
     printf("__systemFloatWidth = %i\n", 64)
 
-    printf("__platformSystem = %s\n", "Darwin" to *Str8)
-    printf("__platformRelease = %s\n", "21.6.0" to *Str8)
+    printf("__platformSystem = %s\n", *Str8 "Darwin")
+    printf("__platformRelease = %s\n", *Str8 "21.6.0")
 
     return 0
 }

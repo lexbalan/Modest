@@ -3,12 +3,12 @@
 import "libc/stdio"
 
 const genericIntConst = 42
-const int32Const = genericIntConst to Int32
+const int32Const = Int32 genericIntConst
 
 const genericStringConst = "Hello!"
-const string8Const = genericStringConst to *Str8
-const string16Const = genericStringConst to *Str16
-const string32Const = genericStringConst to *Str32
+const string8Const = *Str8 genericStringConst
+const string16Const = *Str16 genericStringConst
+const string32Const = *Str32 genericStringConst
 
 
 type Point record {
@@ -23,7 +23,7 @@ const ps = [
     {x=2, y=2}
 ]
 
-const points = ps to [3]Point
+const points = [3]Point ps
 
 
 // есть проблема - в C глобальные переменные с модификатором const
@@ -37,7 +37,7 @@ var points2: [3]Point = points
 func main() -> Int {
     printf("test const\n")
 
-	printf("genericIntConst = %d\n", genericIntConst to Int32)
+	printf("genericIntConst = %d\n", Int32 genericIntConst)
 	printf("int32Const = %d\n", int32Const)
 
 //	printf("genericStringConst = %s\n", genericStringConst)

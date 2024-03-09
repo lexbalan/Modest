@@ -19,7 +19,7 @@ type List record {
 
 
 func linked_list_create () -> *List {
-    let list = malloc(sizeof(List)) to *List
+    let list = *List malloc(sizeof(List))
 
     if list == nil {
         return nil
@@ -62,7 +62,7 @@ func linked_list_last_get (list: *List) -> *Node {
 
 
 func linked_list_node_create () -> *Node {
-    let node = malloc(sizeof(Node)) to *Node
+    let node = *Node malloc(sizeof(Node))
 
     if node == nil {
         return nil

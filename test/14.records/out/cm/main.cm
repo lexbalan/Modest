@@ -58,7 +58,7 @@ func main() -> Int {
     // (it is possible if dst record contained all fields from src record
     // and their types are equal)
     var p3d: Point3D
-    p3d = p2d2 to Point3D
+    p3d = Point3D p2d2
 
 
     return 0

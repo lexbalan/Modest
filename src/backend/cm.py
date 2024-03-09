@@ -313,9 +313,13 @@ def print_value_access_ptr(v, ctx):
 
 def print_cast(t, v, ctx=[]):
     need_wrap = precedence(v) < precedence({'kind': 'cast'})
-    print_value(v, ctx=ctx, need_wrap=need_wrap)
-    out(' to ')
     print_type(t)
+    out(" ")
+    print_value(v, ctx=ctx, need_wrap=need_wrap)
+
+    """print_value(v, ctx=ctx, need_wrap=need_wrap)
+    out(' to ')
+    print_type(t)"""
 
 
 

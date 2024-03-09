@@ -20,11 +20,15 @@ type CharStr Str
 type ConstCharStr CharStr
 
 
-const EOF = -1
+@property("value.c_alias", "EOF")
+const c_EOF = -1
 
-const SEEK_SET = 0
-const SEEK_CUR = 1
-const SEEK_END = 2
+@property("value.c_alias", "SEEK_SET")
+const c_SEEK_SET = 0
+@property("value.c_alias", "SEEK_CUR")
+const c_SEEK_CUR = 1
+@property("value.c_alias", "SEEK_END")
+const c_SEEK_END = 2
 
 @attribute("value.type.to:dispensable")
 func fclose(f: *FILE) -> Int

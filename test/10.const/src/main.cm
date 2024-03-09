@@ -20,20 +20,20 @@ type Line record {
 }
 
 const zero = 0
-const pointZero = {x = zero, y = zero} to Point
-const pointOne = {x = 1.0, y = 1.0} to Point
+const pointZero = Point {x = zero, y = zero}
+const pointOne = Point {x = 1.0, y = 1.0}
 
-const line0 = {
+const line0 = Line {
     a = pointZero
     b = pointOne
-} to Line
+}
 
 const carr = [0, 10, 15] + [20, 25, 30]
 
-const line1 = {
+const line1 = Line {
     a={x=carr[1], y=carr[2]}
     b={x=carr[3], y=carr[4]}
-} to Line
+}
 
 const lines = [line0, line1]
 
@@ -62,4 +62,5 @@ func main() -> Int {
 
     return 0
 }
+
 

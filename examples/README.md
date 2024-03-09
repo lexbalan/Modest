@@ -106,7 +106,7 @@ func lineLength (line: Line) -> Float {
 
 
 func ptr_example() -> Unit {
-    let ptr_p = malloc(sizeof(Point)) to *Point
+    let ptr_p = *Point malloc(sizeof(Point))
 
     // access by pointer
     ptr_p.x = 10
@@ -139,7 +139,7 @@ func main() -> Int {
 import "libc/stdio"
 
 
-const filename = "file.txt" to *Str8
+const filename = *Str8 "file.txt"
 
 
 func write_example() -> Unit {
@@ -171,7 +171,7 @@ func read_example() -> Unit {
     printf("file '%s' contains: ", filename)
     while true {
         let ch = fgetc(fp)
-        if ch == EOF {
+        if ch == c_EOF {
             break
         }
         putchar(ch)

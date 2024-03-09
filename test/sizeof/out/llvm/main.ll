@@ -317,7 +317,7 @@ define %Int @main() {
     %39 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str26 to [0 x i8]*), i64 16)
     %40 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str27 to [0 x i8]*), i64 16)
     ; type Nat256 not implemented
-    ;printf("sizeof(Nat256) = %llu\n", sizeof(Nat256) to Nat64)
+    ;printf("sizeof(Nat256) = %llu\n", Nat64 sizeof(Nat256))
     %41 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str28 to [0 x i8]*), i64 1)
     %42 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str29 to [0 x i8]*), i64 1)
     %43 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str30 to [0 x i8]*), i64 2)
@@ -329,7 +329,7 @@ define %Int @main() {
     %49 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str36 to [0 x i8]*), i64 16)
     %50 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str37 to [0 x i8]*), i64 16)
     ; type Int256 not implemented
-    ;printf("sizeof(Int256) = %llu\n", sizeof(Int256) to Nat64)
+    ;printf("sizeof(Int256) = %llu\n", Nat64 sizeof(Int256))
     %51 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str38 to [0 x i8]*), i64 1)
     %52 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str39 to [0 x i8]*), i64 1)
     %53 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str40 to [0 x i8]*), i64 2)

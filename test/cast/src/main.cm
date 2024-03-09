@@ -6,11 +6,11 @@ import "libc/stdio"
 func main() -> Int {
     printf("test cast operation\n")
 
-    let x0 = -1 to Int32
-    let x1 = -1 to Int64
+    let x0 = Int32 -1
+    let x1 = Int64 -1
 
-    let y0 = x0 to Nat64
-    let y1 = x1 to Nat64
+    let y0 = Nat64 x0
+    let y1 = Nat64 x1
 
     printf("x0 = %llx\n", y0)
     printf("x1 = %llx\n", y1)

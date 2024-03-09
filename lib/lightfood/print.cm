@@ -12,7 +12,7 @@ import "lightfood/putchar"
 
 
 /*func _put_char8(c: Char8) {
-    putchar(c to Int)
+    putchar(Int c)
 }*/
 
 
@@ -72,26 +72,26 @@ func print(form: *Str8, va_list: VA_List) {
 
 			if (c == "i") or (c == "d") {
                 // %i & %d for signed integer (Int)
-                let i = va_list to Int32
+                let i = Int32 va_list
 				sprintf_dec_int32(sptr, i)
             } else if c == "n" {
                 // %n for unsigned integer (Nat)
-                let n = va_list to Nat32
+                let n = Nat32 va_list
 				sprintf_dec_nat32(sptr, n)
 			} else if (c == "x") or (c == "p") {
                 // %x for unsigned integer (Nat)
                 // %p for pointers
-                let x = va_list to Nat32
+                let x = Nat32 va_list
 				sprintf_hex_nat32(sptr, x)
 			} else if c == "s" {
                 // %s pointer to string
-                let s = va_list to *Str8
+                let s = *Str8 va_list
                 sptr = s
 			} else if c == "c" {
                 // %c for char
-                let c = va_list to Char8
+                let c = Char8 va_list
                 sptr[0] = c
-                sptr[1] = 0 to Char8
+                sptr[1] = Char8 0
 			}
 
 			put_str8(sptr)
@@ -108,9 +108,9 @@ func print(form: *Str8, va_list: VA_List) {
 func n_to_sym(n: Nat8) -> Char8 {
     var c: Char8
     if n <= 9 {
-        c = ("0"[0] to Nat8 + n) to Char8
+        c = Char8 (Nat8 "0"[0] + n)
     } else {
-        c = ("A"[0] to Nat8 + (n - 10)) to Char8
+        c = Char8 (Nat8 "A"[0] + (n - 10))
     }
     return c
 }
@@ -126,7 +126,7 @@ func sprintf_hex_nat32(buf: *[]Char8, x: Nat32) {
 		let n = d % 16
         d = d / 16
 
-        cc[i] = n_to_sym(n to Nat8)
+        cc[i] = n_to_sym(Nat8 n)
         i = i + 1
 
         if d == 0 {
@@ -142,7 +142,7 @@ func sprintf_hex_nat32(buf: *[]Char8, x: Nat32) {
         j = j + 1
 	}
 
-    buf[j] = 0 to Char8
+    buf[j] = Char8 0
 
 	//return buf
 }
@@ -163,7 +163,7 @@ func sprintf_dec_int32(buf: *[]Char8, x: Int32) {
 	while true {
 		let n = d % 10
         d = d / 10
-        cc[i] = n_to_sym(n to Nat8)
+        cc[i] = n_to_sym(Nat8 n)
 		i = i + 1
 
         if d == 0 {
@@ -199,7 +199,7 @@ func sprintf_dec_nat32(buf: *[]Char8, x: Nat32) {
 	while true {
 		let n = d % 10
         d = d / 10
-        cc[i] = n_to_sym(n to Nat8)
+        cc[i] = n_to_sym(Nat8 n)
 		i = i + 1
 
         if d == 0 {

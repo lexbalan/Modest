@@ -82,8 +82,8 @@ func main () -> Int32 {
     // GenericInteger will be implicit casted to Byte
     byte = 42
 
-    printf("byte = %i", byte to Nat32)
-    
+    printf("byte = %i", Nat32 byte)
+
     return 0
 }
 ```
@@ -123,10 +123,10 @@ Nat8, Nat16, Nat32, Nat64, Nat128
 ```zig
 func main () -> Unit {
 	var a, b: Nat32
-	
-	a = -1 to Nat32
+
+	a = Nat32 -1
 	b = 1
-	
+
 	if a < b {
 		printf("a < b\n")
 	} else if a > b {
@@ -327,12 +327,12 @@ func main () -> Int32 {
     // (because runtime doesn't have any idea about value type it pointee),
     // but you can construct another (non Free) pointer from it
     // and use it as usualy
-    *(freePointer to *Int64) = 0x123456789ABCDEF
+    *(*Int64 freePointer) = 0x123456789ABCDEF
 
     printf("c = 0x%llX\n", c)
 
     // Let's create new pointer to *Int64 from freePointer
-    let px = freePointer to *Int64
+    let px = *Int64 freePointer
 
     // And will use it...
     let x = *px

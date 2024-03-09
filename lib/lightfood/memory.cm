@@ -13,16 +13,16 @@ type CPU_Word Int32
 
 func memzero(mem: Pointer, len: Nat64) {
     let len_words = len / sizeof(CPU_Word)
-    let dst_word = mem to *[]CPU_Word
+    let dst_word = *[]CPU_Word mem
 
-    var i = 0 to Nat64
+    var i = Nat64 0
     while i < len_words {
         dst_word[i] = 0
         ++i
     }
 
     let len_bytes = len % sizeof(CPU_Word)
-    let dst_byte = &dst_word[i] to *[]Byte
+    let dst_byte = *[]Byte &dst_word[i]
 
     i = 0
     while i < len_bytes {
@@ -34,10 +34,10 @@ func memzero(mem: Pointer, len: Nat64) {
 
 func memcopy(dst: Pointer, src: Pointer, len: Nat64) {
     let len_words = len / sizeof(CPU_Word)
-    let src_w = src to *[]CPU_Word
-    let dst_w = dst to *[]CPU_Word
+    let src_w = *[]CPU_Word src
+    let dst_w = *[]CPU_Word dst
 
-    var i = 0 to Nat64
+    var i = Nat64 0
     while i < len_words {
         dst_w[i] = src_w[i]
         ++i
@@ -45,8 +45,8 @@ func memcopy(dst: Pointer, src: Pointer, len: Nat64) {
 
 
     let len_bytes = len % sizeof(CPU_Word)
-    let src_b = &src_w[i] to *[]Byte
-    let dst_b = &dst_w[i] to *[]Byte
+    let src_b = *[]Byte &src_w[i]
+    let dst_b = *[]Byte &dst_w[i]
 
     i = 0
     while i < len_bytes {
@@ -58,10 +58,10 @@ func memcopy(dst: Pointer, src: Pointer, len: Nat64) {
 
 func memeq(mem0: Pointer, mem1: Pointer, len: Nat64) -> Bool {
     let len_words = len / sizeof(CPU_Word)
-    let mem0_w = mem0 to *[]CPU_Word
-    let mem1_w = mem1 to *[]CPU_Word
+    let mem0_w = *[]CPU_Word mem0
+    let mem1_w = *[]CPU_Word mem1
 
-    var i = 0 to Nat64
+    var i = Nat64 0
     while i < len_words {
         if mem0_w[i] != mem1_w[i] {
             return false
@@ -71,8 +71,8 @@ func memeq(mem0: Pointer, mem1: Pointer, len: Nat64) -> Bool {
 
 
     let len_bytes = len % sizeof(CPU_Word)
-    let mem0_b = &mem0_w[i] to *[]Byte
-    let mem1_b = &mem1_w[i] to *[]Byte
+    let mem0_b = *[]Byte &mem0_w[i]
+    let mem1_b = *[]Byte &mem1_w[i]
 
     i = 0
     while i < len_bytes {

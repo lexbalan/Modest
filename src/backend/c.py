@@ -135,15 +135,15 @@ def precedence(x):
 
 
 def print_id(x):
+    if 'c_alias' in x:
+        out(x['c_alias'])
+        return
+
     out(x['id']['str'])
 
 
 
 def print_type_id(t):
-    if 'c_alias' in t:
-        out(t['c_alias'])
-        return
-
     print_id(t)
 
 
@@ -1006,6 +1006,8 @@ def print_value_by_id(x):
 
 # & let
 def print_value_const(x, ctx):
+    if 'c_alias' in x:
+        print(x['c_alias'])
     print_id(x)
 
 

@@ -42,6 +42,15 @@ class Parser:
     def ctok(self):
         return self.tokens[self.ctoken][1]
 
+
+    def getpos(self):
+        return self.ctoken
+
+
+    def setpos(self, pos):
+        self.ctoken = pos
+
+
     def nextok(self):
         if self.ctoken + 1 > len(self.tokens):
             pass # TODO
@@ -99,6 +108,9 @@ class Parser:
 
     def is_identifier(self):
         return self.ctok_class() == 'id'
+
+    def is_operator(self):
+        return self.ctok_class() == 'op'
 
     def is_tag(self):
         return self.ctok_class() == 'tag'
@@ -206,8 +218,80 @@ class Parser:
 
 
 
+    def check_is_field(self):
+        if self.is_identifier():
+            token = self.gettok()
+            if not token[0].islower():
+                return False
+            if not self.match(':'):
+                return False
+
+            return True
+
+
+    def check_is_type(self):
+        if self.is_identifier():
+            token = self.gettok()
+            if token[0].isupper():
+                return True
+            return token in ['record', 'enum']
+
+        elif self.is_operator():
+            token = self.gettok()
+            if token == '*':
+                # maybe it is pointer? (or it's 'deref' operation)
+                return self.is_type_expr()
+
+            elif token == '[':
+                # maybe it is array?
+                while not self.match(']'):
+                    self.skip()
+                return self.is_type_expr()
+
+            elif token == '(':
+                #print("ok")
+                # is ` ( <#type_expr#> ) ` ?
+                if self.is_type_expr():
+                    return self.match(')')
+
+                if self.match(")"):
+                    return self.match("->") or self.match("{")
+
+                # maybe it's func?
+                if not self.match(")"):
+                    if self.check_is_field():
+                        return True
+
+                return False
+
+            return False
+
+        else:
+            return False
+
+        return False
+
+
+
+    def is_type_expr(self):
+        pos = self.getpos()            # save position
+        result = self.check_is_type()  # check
+        self.setpos(pos)               # restore position
+        return result
+
+    def is_value_expr(self):
+        pos = self.getpos()                # save position
+        result = not self.check_is_type()  # check
+        self.setpos(pos)                   # restore position
+        return result
+
+
     def expr_type(self):
         ti = self.ti()
+
+        if not self.is_type_expr():
+            error("expected type expr", ti)
+
         if self.match("("):
             fields = []
             while not self.match(")"):
@@ -283,7 +367,7 @@ class Parser:
         v = self.expr_value_1()
         ti = self.ti()
         if self.match("or"):
-            r = self.expr_value_0()
+            r = self.expr_value()
             ti['start'] = v['ti']
             ti['end'] = r['ti']
             return {'isa': 'value', 'kind': 'or', 'left': v, 'right': r, 'ti': ti}
@@ -428,8 +512,9 @@ class Parser:
         return v
 
 
+    # cons ('to' form)
     def expr_value_8(self):
-        v = self.expr_value_9()
+        v = self.expr_value_88()
         ti = self.ti()
         while self.look("to"):
             ti = self.ti()
@@ -449,9 +534,29 @@ class Parser:
         return v
 
 
+    # cons
+    def expr_value_88(self):
+        if self.is_type_expr():
+            ti = self.ti()
+            t = self.expr_type()
+            v = self.expr_value_8()
+            return {
+                'isa': 'value',
+                'kind': 'cons',
+                'value': v,
+                'type': t,
+                'ti': ti
+            }
+
+        else:
+            return self.expr_value_9()
+
+
+
     def expr_value_9(self):
         ti = self.ti()
         if self.match("*"):
+            #self.skip()  # "*"
             v = self.expr_value_9()
             ti['end'] = v['ti']
             return {'isa': 'value', 'kind': 'deref', 'value': v, 'ti': ti}
@@ -524,7 +629,9 @@ class Parser:
                     'field': field_id,
                     'ti': ti
                 }
+            #elif self.look("[") and self.is_value_expr():
             elif self.match("["):
+                #self.skip()  # "[":
                 i = self.expr_value()
                 self.need("]")
                 ti['start'] = v['ti']
@@ -545,6 +652,7 @@ class Parser:
         if self.match("("):
             v = self.expr_value()
             self.need(")")
+            v['ti'] = ti
             return v
         return self.parse_value_term()
 

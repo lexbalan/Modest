@@ -659,11 +659,11 @@ def do_value_bin(x):
 
 
     if not op in l['type']['ops']:
-        error("unsuitable type", x['left']['ti'])
+        error("unsuitable type1", x['left']['ti'])
         return value_bad(x['ti'])
 
     if not op in r['type']['ops']:
-        error("unsuitable type", x['right']['ti'])
+        error("unsuitable type2", x['right']['ti'])
         return value_bad(x['ti'])
 
 
@@ -1225,6 +1225,7 @@ def do_value(x):
             elif k == 'index': rv = do_value_index(x)
             elif k == 'access': rv = do_value_access(x)
             elif k == 'cast': rv = do_value_to(x)
+            elif k == 'cons': rv = do_value_to(x)
             elif k == 'sizeof': rv = do_value_sizeof(x)
             elif k == 'alignof': rv = do_value_alignof(x)
             elif k == 'offsetof': rv = do_value_offsetof(x)
@@ -1617,7 +1618,7 @@ def def_const(x):
         error("redefinition of '%s'" % id['str'], id['ti'])
 
     if id['str'][0].isupper():
-        #warning("constant name must starts with small letter", id['ti'])
+        warning("constant name must starts with small letter", id['ti'])
         pass
 
     iv = do_value(x['value'])
@@ -1830,7 +1831,7 @@ def check_block(block):
 def check_stmt(stmt):
     k = stmt['kind']
     if k == 'let':
-        check_unuse(stmt['value'])
+        check_unuse(stmt['init_value'])
     elif k == 'def_var':
         check_unuse(stmt['var'])
     elif k == 'if':
@@ -2272,8 +2273,9 @@ def add_attributes(obj):
 
 def set_prop(obj, path, val):
     if len(path) == 1:
-        p = path[0]
-        obj[p] = val
+        f = path[0]
+        obj[f] = val
+        #print("-- SET %s %s" % (f, val))
 
     elif len(path) > 1:
         if path[0] in obj:
@@ -2296,11 +2298,8 @@ def add_properties(obj):
         v = props[prop]
 
         path_array = prop.split(".")
-        if len(path_array) == 1:
-            obj[path_array[0]] = v
+        set_prop(obj, path_array, v)
 
-        elif len(path_array) > 1:
-            set_prop(obj, path_array, v)
 
 
 def add_spices(obj):

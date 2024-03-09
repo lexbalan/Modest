@@ -107,7 +107,7 @@ int main()
     printf("sizeof(Nat128) = %llu\n", ((uint64_t)(uint8_t)sizeof(unsigned __int128)));
     printf("alignof(Nat128) = %llu\n", ((uint64_t)(uint8_t)__alignof(unsigned __int128)));
     // type Nat256 not implemented
-    //printf("sizeof(Nat256) = %llu\n", sizeof(Nat256) to Nat64)
+    //printf("sizeof(Nat256) = %llu\n", Nat64 sizeof(Nat256))
 
     printf("sizeof(Int8) = %llu\n", ((uint64_t)(uint8_t)sizeof(int8_t)));
     printf("alignof(Int8) = %llu\n", ((uint64_t)(uint8_t)__alignof(int8_t)));
@@ -120,7 +120,7 @@ int main()
     printf("sizeof(Int128) = %llu\n", ((uint64_t)(uint8_t)sizeof(__int128)));
     printf("alignof(Int128) = %llu\n", ((uint64_t)(uint8_t)__alignof(__int128)));
     // type Int256 not implemented
-    //printf("sizeof(Int256) = %llu\n", sizeof(Int256) to Nat64)
+    //printf("sizeof(Int256) = %llu\n", Nat64 sizeof(Int256))
 
     printf("sizeof(Char8) = %llu\n", ((uint64_t)(uint8_t)sizeof(char)));
     printf("alignof(Char8) = %llu\n", ((uint64_t)(uint8_t)__alignof(char)));

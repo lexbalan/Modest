@@ -4,7 +4,7 @@
 
 ### Common form
 ```
-<#value_expression#> to <#type#>
+<#type#> <#value_expression#>
 ```
 > This syntactic form is not very good, and will probably be changed to a more convenient one later
 
@@ -64,7 +64,7 @@ r = {x = 0, y = 0}
 var a: *[5]Int32
 var pa: *[]Int32
 
-// implicit cast *[3]Int32 to *[]Int32
+// implicit cast *[3]Int32 -> *[]Int32
 pa = &a
 ```
 
@@ -79,8 +79,8 @@ All other kinds of type casting requires explicit type cast operator
 var i: Int32
 var j: Int64
 
-i = j to Int32
-j = i to Int64
+i = Int32 j
+j = Int64 i
 ```
 
 ```zig
@@ -89,7 +89,7 @@ j = i to Int64
 var a: [10]Int32
 // you can't implicit cast [3]Int -> [10]Int
 // but you can do explicit cast (all rest items will be filled with zeros)
-a = [1, 2, 3] to [10]Int32
+a = [10]Int32 [1, 2, 3]
 ```
 
 ```zig
@@ -100,5 +100,5 @@ type Point3D record {x: Int32, y: Int32, z: Int32}
 var r: Point3D
 // you can't implicit cast {x: GenericInteger} -> record {x: Int32, y: Int32, z: Int32}
 // but you can do explicit cast (all rest fields will be filled with zeros)
-r = {x=0} to Point3D
+r = Point3D {x=0}
 ```

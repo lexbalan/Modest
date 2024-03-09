@@ -7,15 +7,15 @@ import "misc/sha256"
 @c_include "./sha256.h"
 
 
-const INPUT_LENGTH = 32
-const OUTPUT_LENGTH = sha256HashSize
+const inputLength = 32
+const outputLength = sha256HashSize
 
 
 type SHA256_TestCase record {
-    input_data: [INPUT_LENGTH]Char8
+    input_data: [inputLength]Char8
     input_data_len: Nat32
 
-    expected_result: [OUTPUT_LENGTH]Byte
+    expected_result: [outputLength]Byte
 }
 
 
@@ -49,7 +49,7 @@ var sha256_tests: [2]*SHA256_TestCase = [&test0, &test1]
 
 func sha256_doTest(test: *SHA256_TestCase) -> Bool {
     var test_hash: [sha256HashSize]Byte
-    sha256_doHash(&test.input_data to *[]Byte, test.input_data_len, &test_hash)
+    sha256_doHash(*[]Byte &test.input_data, test.input_data_len, &test_hash)
 
     printf("'%s'", &test.input_data)
     printf(" -> ")

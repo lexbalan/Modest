@@ -12,15 +12,15 @@ const ratSymbolUTF16 = [0xD83D, 0xDC00]
 const ratSymbolUTF32 = 0x0001F400
 
 
-var arr_utf8: [8]Char8 = "Hi!\n" to [8]Char8
+var arr_utf8: [8]Char8 = [8]Char8 "Hi!\n"
 var arr_utf16: [8]Char16 = "Hello!\n"
 var arr_utf32: [8]Char32 = "Hello!\n"
 
 
 const genericStringConst = "S-t-r-i-n-g-Ω 🐀🎉🦄"
-const string8Const = genericStringConst to *Str8
-const string16Const = genericStringConst to *Str16
-const string32Const = genericStringConst to *Str32
+const string8Const = *Str8 genericStringConst
+const string16Const = *Str16 genericStringConst
+const string32Const = *Str32 genericStringConst
 
 
 func main() -> Int {
@@ -31,8 +31,8 @@ func main() -> Int {
 
     // you can assign omegaCharCode (937) to Nat32,
     // but you can't assign ratCharCode (128000) to Nat16 (!)
-//    var omegaCode: Nat16 = omegaCharCode to Nat16
-//    var ratCode: Nat32 = ratCharCode to Nat32
+//    var omegaCode: Nat16 = Nat16 omegaCharCode
+//    var ratCode: Nat32 = Nat32 ratCharCode
 
 //    printf("omegaCode = %d\n", omegaCode)
 //    printf("ratCode = %d\n", ratCode)
@@ -42,11 +42,11 @@ func main() -> Int {
     while true {
         let c = string16Const[i]
 
-        if c == 0 to Char16 {
+        if c == Char16 0 {
             break
         }
 
-        printf("[%d]U16: 0x%x\n", i, c to Nat32)
+        printf("[%d]U16: 0x%x\n", i, Nat32 c)
 
         i = i + 1
     }

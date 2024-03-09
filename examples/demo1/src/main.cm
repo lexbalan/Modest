@@ -16,11 +16,11 @@ func main() -> Int32 {
     let n = 5
 
     if number < n {
-        printf("entered number (%i) is less than %i\n", number, n to Int32)
+        printf("entered number (%i) is less than %i\n", number, Int32 n)
     } else if number > n {
-        printf("entered number (%i) is greater than %i\n", number, n to Int32)
+        printf("entered number (%i) is greater than %i\n", number, Int32 n)
     } else {
-        printf("entered number (%i) is equal with %i\n", number, n to Int32)
+        printf("entered number (%i) is equal with %i\n", number, Int32 n)
     }
 
     return 0

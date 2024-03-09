@@ -12,8 +12,8 @@ func main() -> Int {
     printf("__systemIntWidth = %i\n", __systemIntWidth)
     printf("__systemFloatWidth = %i\n", __systemFloatWidth)
 
-    printf("__platformSystem = %s\n", __platformSystem to *Str8)
-    printf("__platformRelease = %s\n", __platformRelease to *Str8)
+    printf("__platformSystem = %s\n", *Str8 __platformSystem)
+    printf("__platformRelease = %s\n", *Str8 __platformRelease)
 
     return 0
 }

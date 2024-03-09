@@ -21,11 +21,11 @@ func my_printf(fmt: *Str8, va_list: VA_List) {
 
             if c == "i"[0] {
                 // %i for signed integer (Int)
-                let i = va_list to Int32
+                let i = Int32 va_list
                 . . .
             } else if (c == "n"[0]) {
                 // %n for unsigned integer (Nat)
-                let n = va_list to Nat32
+                let n = Nat32 va_list
                 . . .
             }
             

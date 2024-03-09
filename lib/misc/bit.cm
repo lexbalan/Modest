@@ -5,13 +5,13 @@
 //
 
 func bit_set32(x: Nat32, bit_no: Nat8) -> Nat32 {
-    let mask = 1 to Nat32 << bit_no
+    let mask = Nat32 1 << bit_no
     return x or mask
 }
 
 
 func bit_reset32(x: Nat32, bit_no: Nat8) -> Nat32 {
-    let mask = 1 to Nat32 << bit_no
+    let mask = Nat32 1 << bit_no
     return x and not mask
 }
 
@@ -27,7 +27,7 @@ func bit_switch32(x: Nat32, bit_no: Nat8, bitval: Bool) -> Nat32 {
 
 
 func bit_check32(x: Nat32, bit_no: Nat8) -> Bool {
-    let mask = 1 to Nat32 << bit_no
+    let mask = Nat32 1 << bit_no
     return (x and mask) to Bool
 }
 
@@ -37,13 +37,13 @@ func bit_check32(x: Nat32, bit_no: Nat8) -> Bool {
 //
 
 func bit_set64(x: Nat64, bit_no: Nat8) -> Nat64 {
-    let mask = 1 to Nat64 << bit_no
+    let mask = Nat64 1 << bit_no
     return x or mask
 }
 
 
 func bit_reset64(x: Nat64, bit_no: Nat8) -> Nat64 {
-    let mask = 1 to Nat64 << bit_no
+    let mask = Nat64 1 << bit_no
     return x and not mask
 }
 
@@ -59,7 +59,7 @@ func bit_switch64(x: Nat64, bit_no: Nat8, bitval: Bool) -> Nat64 {
 
 
 func bit_check64(x: Nat64, bit_no: Nat8) -> Bool {
-    let mask = 1 to Nat64 << bit_no
+    let mask = Nat64 1 << bit_no
     return (x and mask) to Bool
 }
 

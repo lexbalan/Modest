@@ -17,15 +17,15 @@
 
 
 
-#define INPUT_LENGTH  32
-#define OUTPUT_LENGTH  sha256HashSize
+#define inputLength  32
+#define outputLength  sha256HashSize
 
 
 typedef struct {
-    char input_data[INPUT_LENGTH];
+    char input_data[inputLength];
     uint32_t input_data_len;
 
-    uint8_t expected_result[OUTPUT_LENGTH];
+    uint8_t expected_result[outputLength];
 } SHA256_TestCase;
 
 

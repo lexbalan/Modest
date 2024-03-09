@@ -3,9 +3,9 @@
 import "libc/stdio"
 
 
-const UTF8_CHAR = "s"
-const UTF16_CHAR = "Я"
-const UTF32_CHAR = "🐀"
+const utf8Char = "s"
+const utf16Char = "Я"
+const utf32Char = "🐀"
 
 
 func main() -> Int {

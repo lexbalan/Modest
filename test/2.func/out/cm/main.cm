@@ -35,8 +35,8 @@ func main() -> Int {
     print_ab(10, 20)
 
     // call function with two arguments and return value
-    let arg_a = 1 to Int32
-    let arg_b = 2 to Int32
+    let arg_a = Int32 1
+    let arg_b = Int32 2
     let sum_result = sum(arg_a, arg_b)
     printf("sum(%i, %i) == %i\n", arg_a, arg_b, sum_result)
 
