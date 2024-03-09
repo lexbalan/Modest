@@ -11,17 +11,17 @@ func main() -> Int {
     var b: Bool
 
     x = 1
-    b = x to Bool
+    b = Bool x
     printf("x = %i\n", Nat32 x)
     printf("x to Bool = %i\n", Nat32 b)
 
     x = 2
-    b = x to Bool
+    b = Bool x
     printf("x = %i\n", Nat32 x)
     printf("x to Bool = %i\n", Nat32 b)
 
     x = 3
-    b = x to Bool
+    b = Bool x
     printf("x = %i\n", Nat32 x)
     printf("x to Bool = %i\n", Nat32 b)
 

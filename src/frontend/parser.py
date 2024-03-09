@@ -512,11 +512,12 @@ class Parser:
         return v
 
 
-    # cons ('to' form)
+    """# cons ('to' form)
     def expr_value_8(self):
         v = self.expr_value_88()
         ti = self.ti()
         while self.look("to"):
+            warning("to", ti)
             ti = self.ti()
             self.skip()
             t = self.expr_type()
@@ -531,11 +532,11 @@ class Parser:
                 'ti': ti
             }
 
-        return v
+        return v"""
 
 
     # cons
-    def expr_value_88(self):
+    def expr_value_8(self):
         if self.is_type_expr():
             ti = self.ti()
             t = self.expr_type()

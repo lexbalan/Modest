@@ -8,7 +8,7 @@ func main() -> Int {
     printf("test typedef\n")
 
     var newInt32: NewInt32
-    newInt32 = 0 to NewInt32
+    newInt32 = NewInt32 0
 
     return 0
 }
