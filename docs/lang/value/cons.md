@@ -18,7 +18,7 @@ Value can be implicitly constructed from another value with *generic* type
 
 
 
-```zig
+```swift
 // example: cons Int from GenericInteger
 
 var i: Int32
@@ -28,7 +28,7 @@ i = 1
 ```
 
 
-```zig
+```swift
 // example: cons Array from GenericArray
 
 var a: [3]Int32
@@ -38,7 +38,7 @@ a = [1, 2, 3]
 ```
 
 
-```zig
+```swift
 // example: cons Record from GenericRecord
 
 var r: record {x: Int32, y: Int32}
@@ -52,7 +52,7 @@ r = {x = 0, y = 0}
 ### Implicit cast 'pointer to sized array' -> 'pointer to unsized array'
 
 
-```zig
+```swift
 // example: cons pointer to unsized array from Pointer to sized array
 
 var a: *[5]Int32
@@ -86,7 +86,7 @@ Point {x=0, y=0}
 
 
 
-```zig
+```swift
 // example: explicit cons integer values
 
 var i: Int32
@@ -96,7 +96,7 @@ i = Int32 j
 j = Int64 i
 ```
 
-```zig
+```swift
 // example: explicit cons array from incomplete array
 
 var a: [10]Int32
@@ -105,7 +105,7 @@ var a: [10]Int32
 a = [10]Int32 [1, 2, 3]
 ```
 
-```zig
+```swift
 // example: explicit cons record from incomplete record
 
 type Point3D record {x: Int32, y: Int32, z: Int32}
