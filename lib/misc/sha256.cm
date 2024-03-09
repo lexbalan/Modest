@@ -156,7 +156,7 @@ func sha256_final(ctx: *SHA256_Context, hash: *[]Byte) {
 
     ++i
 
-    memset(&ctx.data[i], 0, (n - i) to SizeT)
+    memset(&ctx.data[i], 0, SizeT (n - i))
 
     if ctx.datalen >= 56 {
         sha256_transform(ctx, &ctx.data)
@@ -166,14 +166,14 @@ func sha256_final(ctx: *SHA256_Context, hash: *[]Byte) {
     // Append to the padding the total message's length in bits and transform.
     ctx.bitlen = ctx.bitlen + Nat64 ctx.datalen * 8
 
-    ctx.data[63] = (ctx.bitlen >> 00) to Byte
-    ctx.data[62] = (ctx.bitlen >> 08) to Byte
-    ctx.data[61] = (ctx.bitlen >> 16) to Byte
-    ctx.data[60] = (ctx.bitlen >> 24) to Byte
-    ctx.data[59] = (ctx.bitlen >> 32) to Byte
-    ctx.data[58] = (ctx.bitlen >> 40) to Byte
-    ctx.data[57] = (ctx.bitlen >> 48) to Byte
-    ctx.data[56] = (ctx.bitlen >> 56) to Byte
+    ctx.data[63] = Byte (ctx.bitlen >> 00)
+    ctx.data[62] = Byte (ctx.bitlen >> 08)
+    ctx.data[61] = Byte (ctx.bitlen >> 16)
+    ctx.data[60] = Byte (ctx.bitlen >> 24)
+    ctx.data[59] = Byte (ctx.bitlen >> 32)
+    ctx.data[58] = Byte (ctx.bitlen >> 40)
+    ctx.data[57] = Byte (ctx.bitlen >> 48)
+    ctx.data[56] = Byte (ctx.bitlen >> 56)
 
     sha256_transform(ctx, &ctx.data)
 
@@ -184,14 +184,14 @@ func sha256_final(ctx: *SHA256_Context, hash: *[]Byte) {
     i = 0
     while i < 4 {
         let sh = 24 - i * 8
-        hash[i + 00] = (ctx.state[0] >> sh) to Byte
-        hash[i + 04] = (ctx.state[1] >> sh) to Byte
-        hash[i + 08] = (ctx.state[2] >> sh) to Byte
-        hash[i + 12] = (ctx.state[3] >> sh) to Byte
-        hash[i + 16] = (ctx.state[4] >> sh) to Byte
-        hash[i + 20] = (ctx.state[5] >> sh) to Byte
-        hash[i + 24] = (ctx.state[6] >> sh) to Byte
-        hash[i + 28] = (ctx.state[7] >> sh) to Byte
+        hash[i + 00] = Byte (ctx.state[0] >> sh)
+        hash[i + 04] = Byte (ctx.state[1] >> sh)
+        hash[i + 08] = Byte (ctx.state[2] >> sh)
+        hash[i + 12] = Byte (ctx.state[3] >> sh)
+        hash[i + 16] = Byte (ctx.state[4] >> sh)
+        hash[i + 20] = Byte (ctx.state[5] >> sh)
+        hash[i + 24] = Byte (ctx.state[6] >> sh)
+        hash[i + 28] = Byte (ctx.state[7] >> sh)
         ++i
     }
 }
@@ -199,7 +199,7 @@ func sha256_final(ctx: *SHA256_Context, hash: *[]Byte) {
 
 // arg hash must be at least SHA256_BLOCK_SIZE
 func sha256_doHash(msg: *[]Byte, len: Nat32, hash: *[]Byte) {
-    var ctx = {} to SHA256_Context
+    var ctx = SHA256_Context {}
     sha256_contextInit(&ctx)
     sha256_update(&ctx, msg, len)
     sha256_final(&ctx, hash)

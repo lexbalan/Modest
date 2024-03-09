@@ -150,9 +150,9 @@ define %Int @main() {
     store i8 115, i8* %2
     store i16 1071, i16* %3
     store i32 128000, i32* %4
-    ;printf("ch08 = 0x%x (%c)\n", ch08 to Nat32, ch08)
-    ;printf("ch16 = 0x%x (%c)\n", ch16 to Nat32, ch16)
-    ;printf("ch32 = 0x%x (%c)\n", ch32 to Nat32, ch32)
+    ;printf("ch08 = 0x%x (%c)\n", Nat32 ch08, ch08)
+    ;printf("ch16 = 0x%x (%c)\n", Nat32 ch16, ch16)
+    ;printf("ch32 = 0x%x (%c)\n", Nat32 ch32, ch32)
     ret %Int 0
 }
 

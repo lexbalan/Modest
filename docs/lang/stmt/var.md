@@ -38,7 +38,7 @@ func mid (a: Int32, b: Int32) -> Int32 {
 
 func main () -> Int32 {
     var x: Int16
-    var y = 10 to Int32
+    var y = Int32 10
     var z: Int32 = 10
     
     // We need to initialize x with some value

@@ -25,7 +25,7 @@ var <#identifier#> : <#type_expression#> = <#default_value_expression#>
 ##### Global variables example
 ```swift
 var x: Int16
-var y = 10 to Int32
+var y = Int32 10
 var z: Int32 = 20
 
 func main () -> Int32 {

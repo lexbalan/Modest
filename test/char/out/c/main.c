@@ -21,9 +21,9 @@ int main()
     ch16 = u'Я';
     ch32 = U'🐀';
 
-    //printf("ch08 = 0x%x (%c)\n", ch08 to Nat32, ch08)
-    //printf("ch16 = 0x%x (%c)\n", ch16 to Nat32, ch16)
-    //printf("ch32 = 0x%x (%c)\n", ch32 to Nat32, ch32)
+    //printf("ch08 = 0x%x (%c)\n", Nat32 ch08, ch08)
+    //printf("ch16 = 0x%x (%c)\n", Nat32 ch16, ch16)
+    //printf("ch32 = 0x%x (%c)\n", Nat32 ch32, ch32)
 
     return 0;
 }

@@ -41,11 +41,11 @@ func main() -> Int {
 
     // explicit cast GenericInteger value
 
-    var c: Char8 = one to Char8    // explicit cast GenericInteger value to Char8
-    var d: Char16 = one to Char16  // explicit cast GenericInteger value to Char16
-    var e: Char32 = one to Char32  // explicit cast GenericInteger value to Char32
+    var c: Char8 = Char8 one    // explicit cast GenericInteger value to Char8
+    var d: Char16 = Char16 one  // explicit cast GenericInteger value to Char16
+    var e: Char32 = Char32 one  // explicit cast GenericInteger value to Char32
 
-    var k: Bool = one to Bool  // explicit cast GenericInteger value to Bool
+    var k: Bool = Bool one  // explicit cast GenericInteger value to Bool
 
     return 0
 }
@@ -69,7 +69,7 @@ func main() -> Int {
     var g: Float64 = pi  // implicit cast GenericFloat value to Float64
 
     // explicit cast GenericFloat value to Int32
-    var x: Int32 = pi to Int32
+    var x: Int32 = Int32 pi
 
     return 0
 }
@@ -95,7 +95,7 @@ func main() -> Int {
     var d: Char32 = a  // implicit cast GenericChar value to Char32
 
     // explicit cast GenericChar value to Int32
-    var char_code: Int32 = a to Int32
+    var char_code: Int32 = Int32 a
 
     return 0
 }
@@ -127,7 +127,7 @@ func main() -> Int {
 
 
     // explicit cast Generic([4]GenericInteger) value to [10]Int32
-    var d: [10]Int32 = a to [10]Int32
+    var d: [10]Int32 = [10]Int32 a
 
     return 0
 }
@@ -173,7 +173,7 @@ func main() -> Int {
     // explicit cast Generic(record {x: GenericInteger, y: GenericInteger})
     // to record {x: Int32, y: Int32, z: Int32}
     var point_3d: Point3D
-    point_3d = p to Point3D
+    point_3d = Point3D p
 
     return 0
 }
