@@ -1374,7 +1374,6 @@ def add_local_var(id, typ, ti):
     return var_value
 
 
-
 def do_stmt_let(x):
     id = x['id']
 
@@ -1415,6 +1414,7 @@ def do_stmt_let(x):
     module['context'].value_add(id['str'], const_value)
 
     return hlir_stmt_let(id, v, const_value, ti=x['ti'])
+
 
 
 def do_stmt_assign(x):
@@ -1616,31 +1616,31 @@ def def_const(x):
     if pre_exist != None:
         error("redefinition of '%s'" % id['str'], id['ti'])
 
+    if id['str'][0].isupper():
+        #warning("constant name must starts with small letter", id['ti'])
+        pass
 
-    #if id['str'][0].isupper():
-    #    warning("constant name must starts with small letter", id['ti'])
+    iv = do_value(x['value'])
 
-    v = do_value(x['value'])
+    if value_is_bad(iv):
+        return hlir_def_const(id, iv, iv, id['ti'])
 
-    if value_is_bad(v):
-        return hlir_def_const(id, v, v, id['ti'])
-
-    if not value_is_immediate(v):
-        if not type_is_pointer_to_array_of_char(v['type']):
+    if not value_is_immediate(iv):
+        if not type_is_pointer_to_array_of_char(iv['type']):
             error("constant must be initialized by immediate value", x['value'])
 
-    const_value = value_const(id, v['type'], v, id['ti'])
+    const_value = value_const(id, iv['type'], iv, id['ti'])
     const_value['att'].append('global')
 
-    if value_is_immediate(v):
-        const_value['asset'] = v['asset']
 
-    if 'nl_end' in v:
-        const_value['nl_end'] = v['nl_end']
+    if value_is_immediate(iv):
+        const_value['asset'] = iv['asset']
+
+    if 'nl_end' in iv:
+        const_value['nl_end'] = iv['nl_end']
 
     module['context'].value_add(id['str'], const_value)
-
-    return hlir_def_const(id, v, const_value, x['ti'])
+    return hlir_def_const(id, iv, const_value, x['ti'])
 
 
 

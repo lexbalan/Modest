@@ -1202,13 +1202,13 @@ def print_macro_definition(id, value):
 
 def print_stmt_let(x):
     id = x['id']
-    v = x['newvalue']
+    v = x['value']
+    iv = x['init_value']
 
     if DONT_PRINT_UNUSED:
         if v['usecnt'] == 0:
-            if x['value']['kind'] != 'call':
+            if iv['kind'] != 'call':
                 return
-
 
     nl_indent(x['nl'])
 
@@ -1217,19 +1217,19 @@ def print_stmt_let(x):
         print_variable_array(v['type'], id['str'], do_wrapped=False)
         out(";\n")
         indent()
-        assign_array(v, x['value'])
+        assign_array(v, iv)
         return
 
 
     if hlir_type.type_is_generic(v['type']):
-        print_macro_definition(id, x['value'])
+        print_macro_definition(id, iv)
         global func_undef_list
         func_undef_list.append(id['str'])
 
     else:
         print_variable(id, v['type'], as_const=True)
         out(" = ")
-        print_value(x['value'], just_print_id=False)
+        print_value(iv, just_print_id=False)
         out(";")
 
     return
@@ -1622,6 +1622,7 @@ def print_def_var(x):
 def print_def_const(x):
     global nl_str
     const_value = x['value']
+    init_value = x['init_value']
 
     # Не печатаем GenericArray | GenericRecord константы
     # тк C не умеет в это дело; В value_print смотрим -
@@ -1642,12 +1643,11 @@ def print_def_const(x):
         newline()
         print_variable(_id, const_value['type'])
         out(" = ")
-        print_value_literal(const_value, ['print_immediate'])
+        print_value_literal(init_value, ['print_immediate'])
         out(";")
 
     else:
-        print_macro_definition(_id, const_value)
-
+        print_macro_definition(_id, init_value)
 
 
 def print_include(x):

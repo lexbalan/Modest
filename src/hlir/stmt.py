@@ -38,8 +38,8 @@ def hlir_stmt_let(id, value, new_value, ti=None):
         'isa': 'stmt',
         'kind': 'let',
         'id': id,
-        'value': value,
-        'newvalue': new_value,
+        'init_value': value,
+        'value': new_value,
         'att': [],
         'nl': 0,
         'ti': ti

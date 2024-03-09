@@ -1359,7 +1359,7 @@ def print_stmt_def_var(x):
 
 def print_stmt_let(x):
     id_str = x['id']['str']
-    val = x['value']
+    val = x['init_value']
 
     if val['kind'] == 'call':
         if need_sret(val['func']['type']['to']):
