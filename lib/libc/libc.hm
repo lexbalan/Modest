@@ -21,8 +21,6 @@ type InoT Nat32      /* i-node number (or Nat32) */
 @property("c_alias", "blkcnt_t")
 type BlkCntT Nat32   /* count of file blocks (or Nat32) */
 
-@property("c_alias", "off_t")
-type OffT Int32      /* offset within a file (or Nat32) */
 
 @property("c_alias", "nlink_t")
 type NlinkT Int16    /* number of links to a file (Int16) */

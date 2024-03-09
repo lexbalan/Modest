@@ -35,12 +35,12 @@ def hlir_def_type(id, newtype, origtype=None, already_declared=False, ti=None):
     return newtype_definition
 
 
-def hlir_def_const(_id, value, value_const, ti):
+def hlir_def_const(_id, init_value, value_const, ti):
     return {
         'isa': 'def_const',
         'id': _id,
-        'value': value,  # value of initializer
-        'newvalue': value_const,  # value wrapped into 'const'
+        'init_value': init_value,  # value of initializer
+        'value': value_const,  # value wrapped into 'const'
         'att': [],
         'ti': ti
     }

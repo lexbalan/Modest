@@ -671,7 +671,7 @@ def print_stmt_let(x):
     out("let ")
     print_id(x)
     out(" = ")
-    print_value(x['value'], print_just_id=False)
+    print_value(x['init_value'], print_just_id=False)
 
 
 def print_stmt_assign(x):
@@ -776,7 +776,7 @@ def print_def_const(x):
     out("const ")
     print_id(x)
     out(" = ")
-    print_value(x['value'], ctx=['oneline'], print_just_id=False)
+    print_value(x['init_value'], ctx=['oneline'], print_just_id=False)
 
 
 def print_import(x):
