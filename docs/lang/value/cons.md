@@ -1,12 +1,5 @@
 
-# *Cast* value expression
-
-
-### Common form
-```
-<#type#> <#value_expression#>
-```
-> This syntactic form is not very good, and will probably be changed to a more convenient one later
+# *Cons* value expression
 
 
 ## Implicit type casting
@@ -70,6 +63,19 @@ pa = &a
 
 
 ## Explicit type casting
+
+### Common form
+```
+<#type#> <#value_expression#>
+```
+
+
+```swift
+Int32 1234
+Nat16 0xFFFF
+Float64 0.1234
+Char32 "A"
+```
 
 All other kinds of type casting requires explicit type cast operator
 
