@@ -21,7 +21,7 @@ def value_cons_record_from_generic_record(v, t, ti, method):
         # все поля присутствовали (!)
         return value_cast(v, t, ti=ti)
 
-    if len(v['asset']) == 0:
+    """if len(v['asset']) == 0:
         #info("cons record from empty record", ti)
         return {
             'isa': 'value',
@@ -31,7 +31,7 @@ def value_cons_record_from_generic_record(v, t, ti, method):
             'att': [],
             'nl_end': v['nl_end'],
             'ti': ti
-        }
+        }"""
 
     items = []
     if len(v['type']['fields']) > 0:

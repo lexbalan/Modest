@@ -119,6 +119,7 @@ def value_cons_integer(v, t, ti, method):
 
     # Pointer -> Int
     elif hlir_type.type_is_pointer(from_type):
+        from main import features
         if not (features.get('unsafe') or features.get("unsafe-ptr-to-int")):
             info("explicit typecast to pointer is forbidden in safe mode", ti)
             pass
