@@ -5,43 +5,43 @@
 
 
 ```
-@if <# condition_value_expression #>
-    // code activated only when condition_value_expression is true
+@if <# value_expression #>
+    // code activated only when value_expression is true
 @endif
 ```
 
 ```
-@if <# condition_value_expression1 #>
-    // code activated only when condition_value_expression is true
+@if <# value_expression1 #>
+    // code activated only when value_expression is true
 @else
-    // code activated only when condition_value_expression is false
+    // code activated only when value_expression is false
 @endif
 ```
 
 ```
-@if <# condition_value_expression_1 #>
-    // code activated only when condition_value_expression_1 is true
-@elseif <# condition_value_expression_2 #>
+@if <# value_expression_1 #>
+    // code activated only when value_expression_1 is true
+@elseif <# value_expression_2 #>
     // code activated 
-    // only when condition_value_expression_1 is false
-    // and condition_value_expression_2 is true
+    // only when value_expression_1 is false
+    // and value_expression_2 is true
 @endif
 ```
 
 ```
-@if <# condition_value_expression_1 #>
-    // code activated only when condition_value_expression_1 is true
-@elseif <# condition_value_expression_2 #>
+@if <# value_expression_1 #>
+    // code activated only when value_expression_1 is true
+@elseif <# value_expression_2 #>
     // code activated
-    // only when condition_value_expression_1 is false
-    // and condition_value_expression_2 is true
+    // only when value_expression_1 is false
+    // and value_expression_2 is true
 ...
-@elseif <# condition_value_expression_n #>
+@elseif <# value_expression_n #>
     // code activated
-    // only when all condition_value_expressions before are false
-    // and condition_value_expression_n is true
+    // only when all value_expressions before are false
+    // and value_expression_n is true
 @else
-    // code activated only when all condition_value_expressions are false
+    // code activated only when all value_expressions are false
 @endif
 ```
 
