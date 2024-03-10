@@ -8,7 +8,7 @@
 
 
 
-#include "./lib.h"
+#include "lib.h"
 
 void lib_func()
 {
