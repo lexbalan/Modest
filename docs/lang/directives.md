@@ -9,7 +9,8 @@
 
 ```
 @if <# value_expression #>
-    // code activated when value_expression is true
+    // code activated
+    // when value_expression is true
 @endif
 ```
 
