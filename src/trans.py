@@ -1612,6 +1612,8 @@ def do_import(x):
 def def_const(x):
     id = x['id']
 
+    log("def_const %s" % id['str'])
+
     # check if identifier is free
     pre_exist = value_get(id['str'])
     if pre_exist != None:
@@ -1664,6 +1666,8 @@ def module_remove_node(m, isa, id_str):
 
 def decl_type(x):
     id = x['id']
+    log("decl_type %s" % id['str'])
+
     nt = hlir_type.hlir_type_opaque(id, id['ti'])
     module['context'].type_add(id['str'], nt)
 
@@ -1676,6 +1680,7 @@ def decl_type(x):
 
 def def_type(x):
     id = x['id']
+    log("def_type %s" % id['str'])
 
     if id['str'][0].islower():
         error("type name must starts with big letter", id['ti'])
@@ -1755,8 +1760,9 @@ def def_type(x):
 
 def def_var(x):
     f = do_field(x['field'])
-
     id = f['id']
+
+    log("def_var %s" % id['str'])
 
     if id['str'][0].isupper():
         error("variable name must starts with small letter", id['ti'])

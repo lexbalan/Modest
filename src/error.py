@@ -5,7 +5,7 @@ errcnt = 0
 
 MAX_ERRORS = 10
 
-
+verbose_mode = False
 NO_INFO = True
 NO_WARNING = False
 
@@ -102,6 +102,11 @@ def common_message(mg, color, s, ti=None):
 
 def note(s, ti=None):
     common_message('note: ', COLOR_NOTE, s, ti)
+
+
+def log(s):
+    if verbose_mode:
+        print(s)
 
 
 def info(s, ti=None):
