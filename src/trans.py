@@ -174,6 +174,10 @@ def insert(s):
     module_append(directive_insert)
 
 
+def feature(s):
+    from main import features
+    features.set(s)
+
 
 lib_path = ""
 

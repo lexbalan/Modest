@@ -82,8 +82,8 @@ def value_cons_pointer(v, t, ti, method):
         return v
 
     from main import features
-    if not features.get('unsafe'):
-        info("explicit typecast to pointer is forbidden in safe mode", ti)
+    if not (features.get('unsafe') or features.get('unsafe-int-to-ptr')):
+        info("explicit typecast pointer to integer is forbidden in safe mode", ti)
         return None
 
     ### UNSAFE REGION ###

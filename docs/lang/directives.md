@@ -47,4 +47,12 @@ type Int Int32
 @pragma("not_included")
 ```
 
-
+### Feature
+Enable compiler feature for curent source file (analog of *-f* compiler option)
+```
+@feature("unsafe")
+@feature("unsafe-downcast")
+@feature("unsafe-int-to-ptr")
+@feature("unsafe-ptr-to-int")
+...
+```

@@ -37,7 +37,7 @@ def check_width(from_type, t, method, ti):
         if method == 'explicit':
             if not no_warning_cast_data_loss:
                 from main import features
-                if not features.get('unsafe'):
+                if not (features.get('unsafe') or features.get('unsafe-downcast')):
                     warning("casting with potential data loss", ti)
                 pass
 
@@ -119,6 +119,9 @@ def value_cons_integer(v, t, ti, method):
 
     # Pointer -> Int
     elif hlir_type.type_is_pointer(from_type):
+        if not (features.get('unsafe') or features.get("unsafe-ptr-to-int")):
+            info("explicit typecast to pointer is forbidden in safe mode", ti)
+            pass
         return do_cons_integer(v, t, method, ti)
 
     # VA_List -> Int
