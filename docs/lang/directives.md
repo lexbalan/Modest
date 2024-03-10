@@ -19,18 +19,27 @@
 ```
 
 ```
-@if <# condition_value_expression1 #>
-    // code activated only when condition_value_expression1 is true
-@elseif <# condition_value_expression2 #>
-    // code activated only when condition_value_expression2 is true
+@if <# condition_value_expression_1 #>
+    // code activated only when condition_value_expression_1 is true
+@elseif <# condition_value_expression_2 #>
+    // code activated 
+    // only when condition_value_expression_1 is false
+    // and condition_value_expression_2 is true
 @endif
 ```
 
 ```
-@if <# condition_value_expression1 #>
-    // code activated only when condition_value_expression1 is true
-@elseif <# condition_value_expression2 #>
-    // code activated only when condition_value_expression2 is true
+@if <# condition_value_expression_1 #>
+    // code activated only when condition_value_expression_1 is true
+@elseif <# condition_value_expression_2 #>
+    // code activated
+    // only when condition_value_expression_1 is false
+    // and condition_value_expression_2 is true
+...
+@elseif <# condition_value_expression_n #>
+    // code activated
+    // only when all condition_value_expressions before are false
+    // and condition_value_expression_n is true
 @else
     // code activated only when all condition_value_expressions are false
 @endif
