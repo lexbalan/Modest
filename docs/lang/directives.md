@@ -96,7 +96,7 @@ type Int Int32
 
 ```zig
 // this pragma makes compiler to
-// not print include directive for this file
+// not print include directive (only for C backend) for this file
 @pragma("not_included")
 ```
 
