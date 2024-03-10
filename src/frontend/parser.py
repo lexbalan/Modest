@@ -291,6 +291,7 @@ class Parser:
 
         if not self.is_type_expr():
             error("expected type expr", ti)
+            return None
 
         if self.match("("):
             fields = []

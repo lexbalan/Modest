@@ -75,7 +75,11 @@ import "./system128"
 
 ```zig
 @info("this is info message")
+```
+```zig
 @warning("this is warning message")
+```
+```zig
 @error("this is error message")
 ```
 
@@ -101,7 +105,7 @@ type Int Int32
 ```
 
 ## Compiler Feature
-Enable compiler feature for curent source file (analog of *-f* compiler option)
+Directive *feature* enables compiler feature for curent source file (analog of *-f* compiler option)
 ```
 @feature("unsafe")
 @feature("unsafe-downcast")
