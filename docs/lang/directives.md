@@ -3,6 +3,9 @@
 
 ## Conditional Compilation
 
+*Conditional compilation* directives allows to activate/deactivate top level code dependently of some conditions. This conditions must be immediate value expressions with Bool type.
+
+### Common form
 
 ```
 @if <# value_expression #>
@@ -50,7 +53,7 @@
 @endif
 ```
 
-#### Example
+### Examples
 
 ```zig
 const __SYSTEM = 64
