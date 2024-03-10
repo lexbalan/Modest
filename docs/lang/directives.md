@@ -3,6 +3,41 @@
 
 ### Conditional Compilation
 
+
+```
+@if <# condition_value_expression #>
+    // code activated only when condition_value_expression is true
+@endif
+```
+
+```
+@if <# condition_value_expression1 #>
+    // code activated only when condition_value_expression is true
+@else
+    // code activated only when condition_value_expression is false
+@endif
+```
+
+```
+@if <# condition_value_expression1 #>
+    // code activated only when condition_value_expression1 is true
+@elseif <# condition_value_expression2 #>
+    // code activated only when condition_value_expression2 is true
+@endif
+```
+
+```
+@if <# condition_value_expression1 #>
+    // code activated only when condition_value_expression1 is true
+@elseif <# condition_value_expression2 #>
+    // code activated only when condition_value_expression2 is true
+@else
+    // code activated only when all condition_value_expressions are false
+@endif
+```
+
+#### Example
+
 ```zig
 const __SYSTEM = 64
 
