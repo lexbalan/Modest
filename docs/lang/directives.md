@@ -106,7 +106,7 @@ type Int Int32
 
 ## Compiler Feature
 Directive *feature* enables compiler feature for curent source file (analog of *-f* compiler option)
-```
+```swift
 @feature("unsafe")
 @feature("unsafe-downcast")
 @feature("unsafe-int-to-ptr")
