@@ -9,27 +9,27 @@
 
 ```
 @if <# value_expression #>
-    // code activated only when value_expression is true
+    // code activated when value_expression is true
 @endif
 ```
 
 ```
 @if <# value_expression #>
     // code activated
-    // only when value_expression is true
+    // when value_expression is true
 @else
     // code activated
-    // only when value_expression is false
+    // when value_expression is false
 @endif
 ```
 
 ```
 @if <# value_expression_1 #>
     // code activated
-    // only when value_expression_1 is true
+    // when value_expression_1 is true
 @elseif <# value_expression_2 #>
     // code activated 
-    // only when value_expression_1 is false
+    // when value_expression_1 is false
     // and value_expression_2 is true
 @endif
 ```
@@ -37,19 +37,19 @@
 ```
 @if <# value_expression_1 #>
     // code activated
-    // only when value_expression_1 is true
+    // when value_expression_1 is true
 @elseif <# value_expression_2 #>
     // code activated
-    // only when value_expression_1 is false
+    // when value_expression_1 is false
     // and value_expression_2 is true
 ...
 @elseif <# value_expression_n #>
     // code activated
-    // only when all value_expressions before are false
+    // when all value_expressions before are false
     // and value_expression_n is true
 @else
     // code activated
-    // only when all value_expressions are false
+    // when all value_expressions are false
 @endif
 ```
 
