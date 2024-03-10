@@ -1554,20 +1554,17 @@ def do_import(x):
         return None
 
     # Literal string to python string
-    impline = ""
+    impline = ''
     for char in import_expr['asset']:
         impline = impline + chr(char['asset'])
 
-    name = impline + ".hm"
+    log('import "%s"' % impline)
 
     # (!) right here, before calling "do_import" (!)
     att = attributes_get()
     # (!) ^^
 
-    #print("INCLUDE: %s" % (x['str']))
-
-    # get abspath
-    abspath = import_abspath(name)
+    abspath = import_abspath(impline)
     if abspath == None:
         error("module %s not found" % impline, x['expr']['ti'])
         fatal("cannot import module")
@@ -1601,8 +1598,8 @@ def do_import(x):
     directive = {
         'isa': 'directive',
         'kind': 'import',
-        'str': impline,  # "libc/stdio"
-        'c_name': impline + '.h',    # "libc/stdio.h"
+        'str': impline,            # ex: "libc/stdio"
+        'c_name': impline + '.h',  # ex: "libc/stdio.h"
         'att': att,
         'module': m, # ссылка на сам модуль (для not_included)
         'local': True
@@ -2187,25 +2184,43 @@ def proc(ast, source_info):
     return m
 
 
-
+imp_paths = []
 
 # получает строку импорта (и неявно глобальный контекст)
 # и возвращает полный путь к модулю
 def import_abspath(s):
+    s = s + ".hm"
+
     is_local = s[0:2] == './' or s[0:3] == '../'
 
-    f = ''
+    full_name = ''
+
+    local_name = env_current_file_dir + '/' + s
     if is_local:
-        f = env_current_file_dir + '/' + s #[1:]
+        full_name = local_name
 
-    else: # (global)
-        f = lib_path + '/' + s
+    elif os.path.exists(local_name):
+        full_name = local_name
 
-    if not os.path.exists(f):
-        print("%s not exist" % f)
+    else:
+        # imp_paths or lib_path
+
+        # ищем в imp_paths
+        for imp_path in imp_paths:
+            p = imp_path + '/' + s
+            if os.path.exists(p):
+                full_name = p
+                break
+
+        if full_name == '':
+            full_name = lib_path + '/' + s
+
+
+    if not os.path.exists(full_name):
+        print("%s not exist" % full_name)
         return None
 
-    return os.path.abspath(f)
+    return os.path.abspath(full_name)
 
 
 
