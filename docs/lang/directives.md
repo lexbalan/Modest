@@ -1,7 +1,7 @@
 # Compiler Directives
 
 
-### Conditional Compilation
+## Conditional Compilation
 
 
 ```
@@ -11,16 +11,19 @@
 ```
 
 ```
-@if <# value_expression1 #>
-    // code activated only when value_expression is true
+@if <# value_expression #>
+    // code activated
+    // only when value_expression is true
 @else
-    // code activated only when value_expression is false
+    // code activated
+    // only when value_expression is false
 @endif
 ```
 
 ```
 @if <# value_expression_1 #>
-    // code activated only when value_expression_1 is true
+    // code activated
+    // only when value_expression_1 is true
 @elseif <# value_expression_2 #>
     // code activated 
     // only when value_expression_1 is false
@@ -30,7 +33,8 @@
 
 ```
 @if <# value_expression_1 #>
-    // code activated only when value_expression_1 is true
+    // code activated
+    // only when value_expression_1 is true
 @elseif <# value_expression_2 #>
     // code activated
     // only when value_expression_1 is false
@@ -41,7 +45,8 @@
     // only when all value_expressions before are false
     // and value_expression_n is true
 @else
-    // code activated only when all value_expressions are false
+    // code activated
+    // only when all value_expressions are false
 @endif
 ```
 
@@ -62,7 +67,7 @@ import "./system128"
 ```
 
 
-### Compiler messages
+## Compiler messages
 
 ```zig
 @info("this is info message")
@@ -70,7 +75,7 @@ import "./system128"
 @error("this is error message")
 ```
 
-### Attributes & Properties
+## Attributes & Properties
 
 ```zig
 @attribute("value:volatile")
@@ -83,7 +88,7 @@ type Int Int32
 ```
 
 
-### Pragmas
+## Pragmas
 
 ```zig
 // this pragma makes compiler to
@@ -91,7 +96,7 @@ type Int Int32
 @pragma("not_included")
 ```
 
-### Feature
+## Compiler Feature
 Enable compiler feature for curent source file (analog of *-f* compiler option)
 ```
 @feature("unsafe")
@@ -100,3 +105,5 @@ Enable compiler feature for curent source file (analog of *-f* compiler option)
 @feature("unsafe-ptr-to-int")
 ...
 ```
+
+
