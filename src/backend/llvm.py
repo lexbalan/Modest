@@ -943,6 +943,13 @@ def do_eval_expr_cast_immediate(x):
             char_pow = string_of['width']
             return llvm_value_str(x['strid'], x['asset'], x['type'], value)
 
+    if hlir_type.type_is_pointer(to_type):
+        if hlir_type.type_is_integer(from_type):
+            # immediate Int -> Ptr
+            # нельзя просто так напечатать числовой литерал
+            # и использовать его как указатель
+            return do_eval_expr_cast(x)
+
     return do_eval_literal(x)
 
 
