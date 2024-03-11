@@ -2,70 +2,8 @@
 # *Cons* value expression
 
 
-## Implicit value construction
-
-### Implicit value construction from *generic*-type value
-
-Value can be implicitly constructed from another value with *generic* type
-
-| **Generic type** | **Can be implicitly cast to** |
-| :--------------: | :---------------------: |
-| Generic Integer  | Byte, Char, Integer, Float |
-| Generic Float    | Float |
-| Generic Char     | Char |
-| Generic Array    | Array, Pointer to Array |
-| Generic Record   | Record, Pointer to Record |
-
-
-
-```swift
-// example: cons Int from GenericInteger
-
-var i: Int32
-
-// implicit cons Int32 value '1' from literal value with GenericInteger type
-i = 1
-```
-
-
-```swift
-// example: cons Array from GenericArray
-
-var a: [3]Int32
-
-// implicit cons [3]Int32 array value from Generic[3]GenericInteger literal
-a = [1, 2, 3]
-```
-
-
-```swift
-// example: cons Record from GenericRecord
-
-var r: record {x: Int32, y: Int32}
-
-// implicit cons value with type record {x: Int32, y: Int32}
-// from literal record value {x=0, y=0}
-// with type GenericRecord {x: Int32, y: Int32}
-r = {x = 0, y = 0}
-```
-
-### Implicit cast 'pointer to sized array' -> 'pointer to unsized array'
-
-
-```swift
-// example: cons pointer to unsized array from Pointer to sized array
-
-var a: *[5]Int32
-var pa: *[]Int32
-
-// implicit cons value with type *[]Int32
-// from value with type *[3]Int32
-pa = &a
-```
-
-
 ## Explicit value construction
-
+*Explicit value construction* operation creates new value based on another.
 
 ### Common form
 ```
@@ -115,5 +53,81 @@ var r: Point3D
 // from {x: GenericInteger} but you can do it explicitly
 // (all rest fields will be filled with zeros)
 r = Point3D {x=10}
+```
+
+
+
+
+| Cons Value Type | Can be constructed from value with type | Action | Comment |
+| ---- | ---------------------------------- | --- | --- |
+| Unit | *Any* | Annihilation of argument value | Can be constructed from any type. Used for warning suppression |
+| Bool | Byte, Int, Nat | returns ***true*** if argument != 0, else - ***false*** | |
+| Byte | Bool, IntY, NatY | Byte representation of argument lower byte | Requires *unsafe* feature for warning suppression |
+| CharX | IntY, NatY | bit representation will not changed | Y must be Equal to X |
+| IntX | Bool, NatY, Byte, FloatZ |  | Compiler warning if Y > X |
+| NatX | Bool, IntY, Byte, FloatZ |  | Compiler warning if Y > X |
+| FloatX | IntY, NatY, FloatY | | | |
+
+
+
+
+## Implicit value construction
+
+### Implicit value construction from *generic*-type value
+
+Value can be implicitly constructed from another value with *generic* type
+
+| **Generic type** | **Can be implicitly cast to** |
+| :--------------: | :---------------------: |
+| Generic Integer  | Byte, Char, Integer, Float |
+| Generic Float    | Float |
+| Generic Char     | Char |
+| Generic Array    | Array, Pointer to Array |
+| Generic Record   | Record, Pointer to Record |
+
+
+```swift
+// example: cons Int from GenericInteger
+
+var i: Int32
+
+// implicit cons Int32 value '1' from literal value with GenericInteger type
+i = 1
+```
+
+
+```swift
+// example: cons Array from GenericArray
+
+var a: [3]Int32
+
+// implicit cons [3]Int32 array value from Generic[3]GenericInteger literal
+a = [1, 2, 3]
+```
+
+
+```swift
+// example: cons Record from GenericRecord
+
+var r: record {x: Int32, y: Int32}
+
+// implicit cons value with type record {x: Int32, y: Int32}
+// from literal record value {x=0, y=0}
+// with type GenericRecord {x: Int32, y: Int32}
+r = {x = 0, y = 0}
+```
+
+### Implicit cast 'pointer to sized array' -> 'pointer to unsized array'
+
+
+```swift
+// example: cons pointer to unsized array from Pointer to sized array
+
+var a: *[5]Int32
+var pa: *[]Int32
+
+// implicit cons value with type *[]Int32
+// from value with type *[3]Int32
+pa = &a
 ```
 
