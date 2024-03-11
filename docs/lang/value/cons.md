@@ -64,7 +64,7 @@ r = Point3D {x=10}
 | **Unit** | *Any* | Annihilation of argument value | Can be constructed from any type. Used for warning suppression |
 | **Bool** | **Byte**, **Int**Y, **Nat**Y | returns ***true*** if argument != 0, else - ***false*** | |
 | **Byte** | **Bool**, **Int**Y, **Nat**Y | Byte representation of argument lower byte | Requires *unsafe* feature for warning suppression |
-| **Char**X | **Int**Y, **Nat**Y | bit representation will not changed | Y must be Equal to X |
+| **Char**X | **Int**Y, **Nat**Y | Creating character value with the same code as argument | Compiler error if Y != X |
 | **Int**X | **Bool**, **Byte**, **Nat**Y, **Float**Z | - | Compiler warning if Y > X |
 | **Nat**X | **Bool**, **Byte**, **Int**Y, **Float**Z | - | Compiler warning if Y > X |
 | **Float**X | **Int**Y, **Nat**Y, **Float**Y | - | - |
