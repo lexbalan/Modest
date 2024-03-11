@@ -64,20 +64,20 @@ It is impossible to get pointer (ref operation) to immutable values.
 
 Operation precedence
 
-| Precedence | Operations |
-| :----------: | :----------: |
-| 1  | `or` |
-| 2  | `xor` |
-| 3  | `and` |
-| 4  | `==`, `!=` |
-| 5  | `<`, `>`, `<=`, `>=` |
-| 6  | `<<`, `>>` |
-| 7  | `+`, `-` |
-| 8  | `*`, `/`, `%` |
-| 9 | *cons* |
-| 10 | *ref*, *deref*, `not`, `+`, `-` |
-| 11 | *call*, *index*, *access* |
-| 12 | *subexpr*, *literal* |
+| Precedence | Operations | Examples |
+| :----------: | :----------: | :------: |
+| 1  | `or` | `a or b` |
+| 2  | `xor` | `a xor b` |
+| 3  | `and` | `a and b` |
+| 4  | `==`, `!=` | `a == b`, `a != b` |
+| 5  | `<`, `>`, `<=`, `>=` | `a < b`, `a > b`, `a <= b`, `a >= b` |
+| 6  | `<<`, `>>` | `a << b`, `a >> b` |
+| 7  | `+`, `-` | `a + b`, `a - b` |
+| 8  | `*`, `/`, `%` | `a * b`, `a / b`, `a % b` |
+| 9 | *cons* | `Int 5` |
+| 10 | *ref*, *deref*, `not`, `+`, `-` | `&a`, `*b`, `not c`, `+d`, `-e` |
+| 11 | *call*, *index*, *access* | `init()`, `arr[0]`, `user.name` |
+| 12 | *subexpr*, *literal* | `(2 + 2)`, `a` |
 
 
 
