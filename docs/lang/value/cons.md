@@ -64,9 +64,9 @@ r = Point3D {x=10}
 | Bool | Byte, Int, Nat | returns ***true*** if argument != 0, else - ***false*** | |
 | Byte | Bool, IntY, NatY | Byte representation of argument lower byte | Requires *unsafe* feature for warning suppression |
 | CharX | IntY, NatY | bit representation will not changed | Y must be Equal to X |
-| IntX | Bool, NatY, Byte, FloatZ |  | Compiler warning if Y > X |
-| NatX | Bool, IntY, Byte, FloatZ |  | Compiler warning if Y > X |
-| FloatX | IntY, NatY, FloatY | | | |
+| IntX | Bool, NatY, Byte, FloatZ | - | Compiler warning if Y > X |
+| NatX | Bool, IntY, Byte, FloatZ | - | Compiler warning if Y > X |
+| FloatX | IntY, NatY, FloatY | - | - |
 
 
 
