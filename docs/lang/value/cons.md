@@ -58,7 +58,7 @@ r = Point3D {x=10}
 
 
 
-| Cons Value Type | Can be constructed from value with type | Action | Comment |
+| Cons Value Type | Allowable argument type | Action | Comment |
 | ---- | ---------------------------------- | --- | --- |
 | Unit | *Any* | Annihilation of argument value | Can be constructed from any type. Used for warning suppression |
 | Bool | Byte, Int, Nat | returns ***true*** if argument != 0, else - ***false*** | |
