@@ -61,5 +61,24 @@ It is impossible to get pointer (ref operation) to immutable values.
 
 
 
-[go back](../../README.md)
+
+Operation precedence
+
+| Precedence | Operations |
+| :----------: | :----------: |
+| 1  | `or` |
+| 2  | `xor` |
+| 3  | `and` |
+| 4  | `==`, `!=` |
+| 5  | `<`, `>`, `<=`, `>=` |
+| 6  | `<<`, `>>` |
+| 7  | `+`, `-` |
+| 8  | `*`, `/`, `%` |
+| 9 | *cons* |
+| 10 | *ref*, *deref*, `not`, `+`, `-` |
+| 11 | *call*, *index*, *access* |
+| 12 | *subexpr*, *literal* |
+
+
+
 

@@ -361,11 +361,11 @@ class Parser:
     #
 
     def expr_value(self):
-        return self.expr_value_0()
+        return self.expr_value_1()
 
 
-    def expr_value_0(self):
-        v = self.expr_value_1()
+    def expr_value_1(self):
+        v = self.expr_value_2()
         ti = self.ti()
         if self.match("or"):
             r = self.expr_value()
@@ -376,11 +376,11 @@ class Parser:
             return v
 
 
-    def expr_value_1(self):
-        v = self.expr_value_2()
+    def expr_value_2(self):
+        v = self.expr_value_3()
         ti = self.ti()
         if self.match("xor"):
-            r = self.expr_value_1()
+            r = self.expr_value_2()
             ti['start'] = v['ti']
             ti['end'] = r['ti']
             return {'isa': 'value', 'kind': 'xor', 'left': v, 'right': r, 'ti': ti}
@@ -388,11 +388,11 @@ class Parser:
             return v
 
 
-    def expr_value_2(self):
-        v = self.expr_value_3()
+    def expr_value_3(self):
+        v = self.expr_value_4()
         ti = self.ti()
         if self.match("and"):
-            r = self.expr_value_2()
+            r = self.expr_value_3()
             ti['start'] = v['ti']
             ti['end'] = r['ti']
             return {'isa': 'value', 'kind': 'and', 'left': v, 'right': r, 'ti': ti}
@@ -400,17 +400,17 @@ class Parser:
             return v
 
 
-    def expr_value_3(self):
-        v = self.expr_value_4()
+    def expr_value_4(self):
+        v = self.expr_value_5()
         while True:
             ti = self.ti()
             if self.match("=="):
-                r = self.expr_value_4()
+                r = self.expr_value_5()
                 ti['start'] = v['ti']
                 ti['end'] = r['ti']
                 v = {'isa': 'value', 'kind': 'eq', 'left': v, 'right': r, 'ti': ti}
             elif self.match("!="):
-                r = self.expr_value_4()
+                r = self.expr_value_5()
                 ti['start'] = v['ti']
                 ti['end'] = r['ti']
                 v = {'isa': 'value', 'kind': 'ne', 'left': v, 'right': r, 'ti': ti}
@@ -419,52 +419,30 @@ class Parser:
         return v
 
 
-    def expr_value_4(self):
-        v = self.expr_value_5()
+    def expr_value_5(self):
+        v = self.expr_value_6()
         while True:
             ti = self.ti()
             if self.match("<"):
-                r = self.expr_value_5()
+                r = self.expr_value_6()
                 ti['start'] = v['ti']
                 ti['end'] = r['ti']
                 v = {'isa': 'value', 'kind': 'lt', 'left': v, 'right': r, 'ti': ti}
             elif self.match(">"):
-                r = self.expr_value_5()
+                r = self.expr_value_6()
                 ti['start'] = v['ti']
                 ti['end'] = r['ti']
                 v = {'isa': 'value', 'kind': 'gt', 'left': v, 'right': r, 'ti': ti}
             if self.match("<="):
-                r = self.expr_value_5()
+                r = self.expr_value_6()
                 ti['start'] = v['ti']
                 ti['end'] = r['ti']
                 v = {'isa': 'value', 'kind': 'le', 'left': v, 'right': r, 'ti': ti}
             elif self.match(">="):
-                r = self.expr_value_5()
+                r = self.expr_value_6()
                 ti['start'] = v['ti']
                 ti['end'] = r['ti']
                 v = {'isa': 'value', 'kind': 'ge', 'left': v, 'right': r, 'ti': ti}
-            else:
-                break
-        return v
-
-
-    def expr_value_5(self):
-        #ti_start = self.ti()
-        v = self.expr_value_6()
-        while True:
-            ti = self.ti()
-            if self.match("<<"):
-                l = v
-                r = self.expr_value_6()
-                ti['start'] = l['ti']
-                ti['end'] = r['ti']
-                v = {'isa': 'value', 'kind': 'shl', 'left': v, 'right': r, 'ti': ti}
-            elif self.match(">>"):
-                l = v
-                r = self.expr_value_6()
-                ti['start'] = l['ti']
-                ti['end'] = r['ti']
-                v = {'isa': 'value', 'kind': 'shr', 'left': v, 'right': r, 'ti': ti}
             else:
                 break
         return v
@@ -474,16 +452,18 @@ class Parser:
         v = self.expr_value_7()
         while True:
             ti = self.ti()
-            if self.match("+"):
+            if self.match("<<"):
+                l = v
                 r = self.expr_value_7()
-                ti['start'] = v['ti']
+                ti['start'] = l['ti']
                 ti['end'] = r['ti']
-                v = {'isa': 'value', 'kind': 'add', 'left': v, 'right': r, 'ti': ti}
-            elif self.match("-"):
+                v = {'isa': 'value', 'kind': 'shl', 'left': v, 'right': r, 'ti': ti}
+            elif self.match(">>"):
+                l = v
                 r = self.expr_value_7()
-                ti['start'] = v['ti']
+                ti['start'] = l['ti']
                 ti['end'] = r['ti']
-                v = {'isa': 'value', 'kind': 'sub', 'left': v, 'right': r, 'ti': ti}
+                v = {'isa': 'value', 'kind': 'shr', 'left': v, 'right': r, 'ti': ti}
             else:
                 break
         return v
@@ -493,18 +473,37 @@ class Parser:
         v = self.expr_value_8()
         while True:
             ti = self.ti()
-            if self.match("*"):
+            if self.match("+"):
                 r = self.expr_value_8()
+                ti['start'] = v['ti']
+                ti['end'] = r['ti']
+                v = {'isa': 'value', 'kind': 'add', 'left': v, 'right': r, 'ti': ti}
+            elif self.match("-"):
+                r = self.expr_value_8()
+                ti['start'] = v['ti']
+                ti['end'] = r['ti']
+                v = {'isa': 'value', 'kind': 'sub', 'left': v, 'right': r, 'ti': ti}
+            else:
+                break
+        return v
+
+
+    def expr_value_8(self):
+        v = self.expr_value_9()
+        while True:
+            ti = self.ti()
+            if self.match("*"):
+                r = self.expr_value_9()
                 ti['start'] = v['ti']
                 ti['end'] = r['ti']
                 v = {'isa': 'value', 'kind': 'mul', 'left': v, 'right': r, 'ti': ti}
             elif self.match("/"):
-                r = self.expr_value_8()
+                r = self.expr_value_9()
                 ti['start'] = v['ti']
                 ti['end'] = r['ti']
                 v = {'isa': 'value', 'kind': 'div', 'left': v, 'right': r, 'ti': ti}
             elif self.match("%"):
-                r = self.expr_value_8()
+                r = self.expr_value_9()
                 ti['start'] = v['ti']
                 ti['end'] = r['ti']
                 v = {'isa': 'value', 'kind': 'rem', 'left': v, 'right': r, 'ti': ti}
@@ -513,35 +512,12 @@ class Parser:
         return v
 
 
-    """# cons ('to' form)
-    def expr_value_8(self):
-        v = self.expr_value_88()
-        ti = self.ti()
-        while self.look("to"):
-            warning("to", ti)
-            ti = self.ti()
-            self.skip()
-            t = self.expr_type()
-            lv = v
-            ti['start'] = lv['ti']
-            ti['end'] = t['ti']
-            v = {
-                'isa': 'value',
-                'kind': 'cast',
-                'value': lv,
-                'type': t,
-                'ti': ti
-            }
-
-        return v"""
-
-
     # cons
-    def expr_value_8(self):
+    def expr_value_9(self):
         if self.is_type_expr():
             ti = self.ti()
             t = self.expr_type()
-            v = self.expr_value_8()
+            v = self.expr_value_9()
             return {
                 'isa': 'value',
                 'kind': 'cons',
@@ -551,31 +527,30 @@ class Parser:
             }
 
         else:
-            return self.expr_value_9()
+            return self.expr_value_10()
 
 
 
-    def expr_value_9(self):
+    def expr_value_10(self):
         ti = self.ti()
         if self.match("*"):
-            #self.skip()  # "*"
-            v = self.expr_value_9()
+            v = self.expr_value_10()
             ti['end'] = v['ti']
             return {'isa': 'value', 'kind': 'deref', 'value': v, 'ti': ti}
         elif self.match("&"):
-            v = self.expr_value_10()
+            v = self.expr_value_11()
             ti['end'] = v['ti']
             return {'isa': 'value', 'kind': 'ref', 'value': v, 'ti': ti}
         elif self.match("not"):
-            v = self.expr_value_9()
+            v = self.expr_value_11()
             ti['end'] = v['ti']
             return {'isa': 'value', 'kind': 'not', 'value': v, 'ti': ti}
         elif self.match("+"):
-            v = self.expr_value_10()
+            v = self.expr_value_11()
             ti['end'] = v['ti']
             return {'isa': 'value', 'kind': 'plus', 'value': v, 'ti': ti}
         elif self.match("-"):
-            v = self.expr_value_10()
+            v = self.expr_value_11()
             ti['end'] = v['ti']
             return {'isa': 'value', 'kind': 'minus', 'value': v, 'ti': ti}
         elif self.match("sizeof"):
@@ -596,12 +571,12 @@ class Parser:
             self.need(")")
             return {'isa': 'value', 'kind': 'offsetof', 'type': t, 'field': f, 'ti': ti}
         else:
-            y = self.expr_value_10()
+            y = self.expr_value_11()
             return y
 
 
-    def expr_value_10(self):
-        v = self.expr_value_11()
+    def expr_value_11(self):
+        v = self.expr_value_term()
         while True:
             ti = self.ti()
             if self.match("("):
@@ -648,15 +623,6 @@ class Parser:
             else:
                 return v
 
-
-    def expr_value_11(self):
-        ti = self.ti()
-        if self.match("("):
-            v = self.expr_value()
-            self.need(")")
-            v['ti'] = ti
-            return v
-        return self.parse_value_term()
 
 
     def parse_value_array(self, ti):
@@ -844,10 +810,18 @@ class Parser:
             }
 
 
-    def parse_value_term(self):
+
+
+    def expr_value_term(self):
         ti = self.ti()
 
-        if self.ctok_class() == 'id':
+        if self.match("("):
+            v = self.expr_value()
+            self.need(")")
+            v['ti'] = ti
+            return v
+
+        elif self.ctok_class() == 'id':
             id = self.identifier()
 
             if self.match("::"):
@@ -895,6 +869,8 @@ class Parser:
             error("unexpected token '%s'" % tokstr, self.ti())
             self.skip()
             return {'isa': 'value', 'kind': 'bad', 'ti': ti}
+
+
 
     #
     # Parse Statement
