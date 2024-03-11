@@ -13,13 +13,13 @@
 
 ```swift
 // fast examples
-Int32 1234
-Nat16 0xFFFF
-Float64 0.1234
-Char32 "A"
-Point {x=0, y=0}
-[2]Point [{x=0, y=0}, {x=1, y=1}]
-*Point nil
+let i = Int32 1234
+let n = Nat16 0xFFFF
+let f = Float64 0.1234
+let c = Char32 "A"
+let r = Point {x=0, y=0}
+let a = [2]Point [{x=0, y=0}, {x=1, y=1}]
+let p = *Point nil
 ```
 
 
