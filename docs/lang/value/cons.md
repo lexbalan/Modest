@@ -33,7 +33,9 @@ var j: Int64
 
 i = Int32 j
 j = Int64 i
+var k = Nat128 i
 ```
+
 
 ```swift
 // example: explicit cons array from incomplete array
