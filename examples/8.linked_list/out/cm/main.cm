@@ -21,7 +21,7 @@ func list_print_forward(list: *List) -> Unit {
     var pn: *Node = linked_list_first_get(list)
     while pn != nil {
         let x = linked_list_node_link_get(pn)
-        printf("v = %d\n", *x)
+        printf("v = %u\n", *x)
         pn = linked_list_node_next_get(pn)
     }
 }
@@ -33,7 +33,7 @@ func list_print_backward(list: *List) -> Unit {
     var pn: *Node = linked_list_last_get(list)
     while pn != nil {
         let x = linked_list_node_link_get(pn)
-        printf("v = %d\n", *x)
+        printf("v = %u\n", *x)
         pn = linked_list_node_prev_get(pn)
     }
 }
@@ -64,7 +64,7 @@ func main() -> Int {
 
     // print list size
     let list_size = linked_list_size_get(list)
-    printf("linked list size: %d\n", list_size)
+    printf("linked list size: %u\n", list_size)
 
     // print list forward
     list_print_forward(list)

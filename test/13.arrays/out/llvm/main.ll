@@ -599,15 +599,18 @@ endif_0:
     %151 = insertvalue [3 x i32] %150, %Int %148, 1
     %152 = insertvalue [3 x i32] %151, %Int %149, 2
     store [3 x i32] %152, [3 x i32]* @globalArray
-    %153 = getelementptr inbounds [3 x i32], [3 x i32]* @globalArray, i32 0, i32 0
-    %154 = load i32, i32* %153
-    %155 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str26 to [0 x i8]*), i32 0, i32 %154)
-    %156 = getelementptr inbounds [3 x i32], [3 x i32]* @globalArray, i32 0, i32 1
-    %157 = load i32, i32* %156
-    %158 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str27 to [0 x i8]*), i32 1, i32 %157)
-    %159 = getelementptr inbounds [3 x i32], [3 x i32]* @globalArray, i32 0, i32 2
-    %160 = load i32, i32* %159
-    %161 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str28 to [0 x i8]*), i32 2, i32 %160)
+    %153 = sext i1 0 to i32
+    %154 = getelementptr inbounds [3 x i32], [3 x i32]* @globalArray, i32 0, i32 0
+    %155 = load i32, i32* %154
+    %156 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str26 to [0 x i8]*), i32 %153, i32 %155)
+    %157 = sext i1 1 to i32
+    %158 = getelementptr inbounds [3 x i32], [3 x i32]* @globalArray, i32 0, i32 1
+    %159 = load i32, i32* %158
+    %160 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str27 to [0 x i8]*), i32 %157, i32 %159)
+    %161 = sext i2 2 to i32
+    %162 = getelementptr inbounds [3 x i32], [3 x i32]* @globalArray, i32 0, i32 2
+    %163 = load i32, i32* %162
+    %164 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str28 to [0 x i8]*), i32 %161, i32 %163)
     ret %Int 0
 }
 

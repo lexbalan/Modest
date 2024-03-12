@@ -137,16 +137,24 @@ declare void @perror(%ConstCharStr* %str)
 
 ; -- SOURCE: src/main.cm
 
-@str1 = private constant [21 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 99, i8 97, i8 115, i8 116, i8 32, i8 111, i8 112, i8 101, i8 114, i8 97, i8 116, i8 105, i8 111, i8 110, i8 10, i8 0]
-@str2 = private constant [11 x i8] [i8 120, i8 48, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 120, i8 10, i8 0]
-@str3 = private constant [11 x i8] [i8 120, i8 49, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 120, i8 10, i8 0]
+@str1 = private constant [21 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 99, i8 111, i8 110, i8 115, i8 32, i8 111, i8 112, i8 101, i8 114, i8 97, i8 116, i8 105, i8 111, i8 110, i8 10, i8 0]
+@str2 = private constant [8 x i8] [i8 97, i8 32, i8 61, i8 32, i8 37, i8 117, i8 10, i8 0]
+@str3 = private constant [8 x i8] [i8 98, i8 32, i8 61, i8 32, i8 37, i8 117, i8 10, i8 0]
 
 
 
 define %Int @main() {
     %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str1 to [0 x i8]*))
-    %2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str2 to [0 x i8]*), i64 -1)
-    %3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str3 to [0 x i8]*), i64 -1)
+    %2 = bitcast i8 255 to i8
+    %3 = zext i8 %2 to i32
+    %4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), i8 %2)
+    %5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str3 to [0 x i8]*), i32 %3)
+    ;    let c = Int32 a
+    ;    let d = Int32 Int8 -1
+    ;    let e = Int32 Int8 255
+    ;    printf("c = %i\n", c)
+    ;    printf("d = %i\n", d)
+    ;    printf("e = %i\n", e)
     ret %Int 0
 }
 

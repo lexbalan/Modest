@@ -25,7 +25,7 @@ func mtab(n: Nat32) {
     var m: Nat32 = 1
     while m < 10 {
         let nm = n * m
-        printf("%d * %d = %d\n", n, m, nm)
+        printf("%u * %u = %u\n", n, m, nm)
         // there is only prefix form of ++
         // and it is Statement (!)
         ++m

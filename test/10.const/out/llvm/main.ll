@@ -386,16 +386,34 @@ define %Int @main() {
     %4 = insertvalue %Point zeroinitializer, double 1.0, 0
     %5 = insertvalue %Point %4, double 1.0, 1
     %6 = insertvalue %Line %3, %Point %5, 1
-    %7 = call %Float (%Line) @lineLength(%Line %6)
-    %8 = insertvalue %Point zeroinitializer, double 10.0, 0
-    %9 = insertvalue %Point %8, double 15.0, 1
-    %10 = insertvalue %Line zeroinitializer, %Point %9, 0
-    %11 = insertvalue %Point zeroinitializer, double 20.0, 0
-    %12 = insertvalue %Point %11, double 25.0, 1
-    %13 = insertvalue %Line %10, %Point %12, 1
-    %14 = call %Float (%Line) @lineLength(%Line %13)
-    %15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str1 to [0 x i8]*), %Float %7)
-    %16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str2 to [0 x i8]*), %Float %14)
+    %7 = insertvalue %Point zeroinitializer, double 10.0, 0
+    %8 = insertvalue %Point %7, double 15.0, 1
+    %9 = insertvalue %Line zeroinitializer, %Point %8, 0
+    %10 = insertvalue %Point zeroinitializer, double 20.0, 0
+    %11 = insertvalue %Point %10, double 25.0, 1
+    %12 = insertvalue %Line %9, %Point %11, 1
+    %13 = insertvalue [2 x %Line] zeroinitializer, %Line %6, 0
+    %14 = insertvalue [2 x %Line] %13, %Line %12, 1
+    %15 = extractvalue [2 x %Line] %14, 0
+    %16 = call %Float (%Line) @lineLength(%Line %15)
+    %17 = insertvalue %Point zeroinitializer, double 0.0, 0
+    %18 = insertvalue %Point %17, double 0.0, 1
+    %19 = insertvalue %Line zeroinitializer, %Point %18, 0
+    %20 = insertvalue %Point zeroinitializer, double 1.0, 0
+    %21 = insertvalue %Point %20, double 1.0, 1
+    %22 = insertvalue %Line %19, %Point %21, 1
+    %23 = insertvalue %Point zeroinitializer, double 10.0, 0
+    %24 = insertvalue %Point %23, double 15.0, 1
+    %25 = insertvalue %Line zeroinitializer, %Point %24, 0
+    %26 = insertvalue %Point zeroinitializer, double 20.0, 0
+    %27 = insertvalue %Point %26, double 25.0, 1
+    %28 = insertvalue %Line %25, %Point %27, 1
+    %29 = insertvalue [2 x %Line] zeroinitializer, %Line %22, 0
+    %30 = insertvalue [2 x %Line] %29, %Line %28, 1
+    %31 = extractvalue [2 x %Line] %30, 1
+    %32 = call %Float (%Line) @lineLength(%Line %31)
+    %33 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str1 to [0 x i8]*), %Float %16)
+    %34 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str2 to [0 x i8]*), %Float %32)
     ret %Int 0
 }
 

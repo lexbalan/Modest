@@ -873,9 +873,6 @@ def do_value_call(x):
 
     args = []
 
-    # список спецификаторов для проверки расширеных аргументов
-    forms = get_forms(func_id_str, x['args'])
-
     # normal args
     i = 0
     while i < npars:
@@ -891,6 +888,13 @@ def do_value_call(x):
         i = i + 1
 
 
+    #
+    # extra args
+    #
+
+    # список спецификаторов для проверки расширеных аргументов
+    forms = get_forms(func_id_str, x['args'])
+
     j = 0
     # extra_args rest args
     while i < nargs:
@@ -899,23 +903,40 @@ def do_value_call(x):
         arg_type = arg['type']
 
         if not value_is_bad(arg):
-
             # check extra args
             if forms != None:
                 if forms != []:
                     form = forms[j]
-                    if form in ['i', 'd', 'x']:
+                    if form in ['i', 'd']:
+                        if hlir_type.type_is_integer(arg_type):
+                            if not hlir_type.type_is_signed(arg_type):
+                                warning("expected signed integer value", a['ti'])
+                        else:
+                            warning("expected integer value", a['ti'])
+
+                    elif form == 'x':
                         if not hlir_type.type_is_integer(arg_type):
-                            warning("expected numeric value", a['ti'])
+                            warning("expected integer value", a['ti'])
+
+                    elif form == 'u':
+                        if hlir_type.type_is_integer(arg_type):
+                            if hlir_type.type_is_signed(arg_type):
+                                warning("expected unsigned integer value", a['ti'])
+                        else:
+                            warning("expected integer value", a['ti'])
+
                     elif form == 's':
                         if not hlir_type.type_is_pointer_to_array_of_char(arg_type):
                             warning("expected pointer to string", a['ti'])
+
                     elif form == 'f':
                         if not hlir_type.type_is_float(arg_type):
                             warning("expected float value", a['ti'])
+
                     elif form == 'c':
                         if not hlir_type.type_is_char(arg_type):
                             warning("expected char value", a['ti'])
+
                     elif form == 'p':
                         if not hlir_type.type_is_pointer(arg_type):
                             warning("expected pointer value", a['ti'])

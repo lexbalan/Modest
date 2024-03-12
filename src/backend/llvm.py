@@ -950,6 +950,8 @@ def do_eval_expr_cast_immediate(x):
             # и использовать его как указатель
             return do_eval_expr_cast(x)
 
+
+    #return do_reval(x)
     return do_eval_literal(x)
 
 
@@ -975,6 +977,16 @@ def do_eval_expr_cast(x):
     value = x['value']
     from_type = value['type']
     to_type = x['type']
+
+    """if value_is_immediate(x):
+        # сюда попадают литералы,
+        # и любые другие значения с immediate полем
+        if hlir_type.type_is_free_pointer(x['type']):
+            return do_eval_literal(x)
+
+        if not hlir_type.type_is_pointer(x['type']):
+            return do_eval_literal(x)"""
+
 
     if hlir_type.type_is_generic_array_of_char(from_type):
         if hlir_type.type_is_pointer_to_array_of_char(to_type):
@@ -1151,17 +1163,9 @@ def do_eval(x):
     assert(x != None)
     assert(x['isa'] == 'value')
 
-    if value_is_immediate(x):
-        # сюда попадают литералы,
-        # и любые другие значения с immediate полем
-        if hlir_type.type_is_free_pointer(x['type']):
-            return do_eval_literal(x)
-
-        if not hlir_type.type_is_pointer(x['type']):
-            return do_eval_literal(x)
-
     k = x['kind']
-    if k in bin_ops: y = do_eval_expr_bin(x)
+    if k == 'literal': y = do_eval_literal(x)
+    elif k in bin_ops: y = do_eval_expr_bin(x)
     elif k in un_ops: y = do_eval_expr_un(x)
     elif k in ['func', 'const', 'var']: y = do_eval_func_const_var(x)
     elif k == 'call': y = do_eval_expr_call(x)
@@ -1171,6 +1175,8 @@ def do_eval(x):
     elif k == 'access_ptr': y = do_eval_expr_access_ptr(x)
     elif k == 'cast_immediate': y = do_eval_expr_cast_immediate(x)
     elif k == 'cast': y = do_eval_expr_cast(x)
+    elif k in ['sizeof', 'lengthof', 'alignof', 'offsetof', 'eq_str']:
+         y = do_eval_literal(x)
     else:
         out("<%s>" % k)
         y = None
@@ -1179,7 +1185,7 @@ def do_eval(x):
         y['type'] = x['type']  # TODO: wtf?
 
     else:
-        print("do_eval_x cannot eval value")
+        error("llvm do_eval cannot eval this value", x['ti'])
         value_print(x)
         return llvm_value_zero(x['type'])
 
@@ -1377,7 +1383,7 @@ def print_stmt_let(x):
 
     v = do_reval(val)
 
-    # для let-массивов выделяем память
+    # для let-массивов выделяем память (alloca)
     # поскольку их могут индексировать переменной
     # а массив-значение в "регистре" невозможно индексировать переменной
     if hlir_type.type_is_defined_array(val['type']):

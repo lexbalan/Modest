@@ -138,12 +138,12 @@ declare void @perror(%ConstCharStr* %str)
 ; -- SOURCE: src/main.cm
 
 @str1 = private constant [13 x i8] [i8 98, i8 111, i8 111, i8 108, i8 32, i8 99, i8 104, i8 101, i8 99, i8 107, i8 10, i8 109, i8 0]
-@str2 = private constant [8 x i8] [i8 120, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
-@str3 = private constant [16 x i8] [i8 120, i8 32, i8 116, i8 111, i8 32, i8 66, i8 111, i8 111, i8 108, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
-@str4 = private constant [8 x i8] [i8 120, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
-@str5 = private constant [16 x i8] [i8 120, i8 32, i8 116, i8 111, i8 32, i8 66, i8 111, i8 111, i8 108, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
-@str6 = private constant [8 x i8] [i8 120, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
-@str7 = private constant [16 x i8] [i8 120, i8 32, i8 116, i8 111, i8 32, i8 66, i8 111, i8 111, i8 108, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str2 = private constant [8 x i8] [i8 120, i8 32, i8 61, i8 32, i8 37, i8 117, i8 10, i8 0]
+@str3 = private constant [16 x i8] [i8 120, i8 32, i8 116, i8 111, i8 32, i8 66, i8 111, i8 111, i8 108, i8 32, i8 61, i8 32, i8 37, i8 117, i8 10, i8 0]
+@str4 = private constant [8 x i8] [i8 120, i8 32, i8 61, i8 32, i8 37, i8 117, i8 10, i8 0]
+@str5 = private constant [16 x i8] [i8 120, i8 32, i8 116, i8 111, i8 32, i8 66, i8 111, i8 111, i8 108, i8 32, i8 61, i8 32, i8 37, i8 117, i8 10, i8 0]
+@str6 = private constant [8 x i8] [i8 120, i8 32, i8 61, i8 32, i8 37, i8 117, i8 10, i8 0]
+@str7 = private constant [16 x i8] [i8 120, i8 32, i8 116, i8 111, i8 32, i8 66, i8 111, i8 111, i8 108, i8 32, i8 61, i8 32, i8 37, i8 117, i8 10, i8 0]
 
 
 

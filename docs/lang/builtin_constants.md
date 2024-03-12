@@ -4,8 +4,8 @@
 import "libc/stdio"
 
 func main() -> Int {
-    printf("__compilerVersionMajor = %i\n", __compilerVersionMajor)
-    printf("__compilerVersionMinor = %i\n", __compilerVersionMinor)
+    printf("__compilerVersionMajor = %u\n", __compilerVersionMajor)
+    printf("__compilerVersionMinor = %u\n", __compilerVersionMinor)
 
     printf("__systemPointerWidth = %i\n", __systemPointerWidth)
     printf("__systemCharWidth = %i\n", __systemCharWidth)

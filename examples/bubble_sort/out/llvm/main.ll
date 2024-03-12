@@ -265,23 +265,24 @@ break_1:
 }
 
 define void @fill_array([0 x i32]* %array, i32 %len) {
-    %1 = alloca i32
-    store i32 0, i32* %1
+    %1 = sub i10 0, 1000
+    %2 = alloca i32
+    store i32 0, i32* %2
     br label %again_1
 again_1:
-    %2 = load i32, i32* %1
-    %3 = icmp slt i32 %2, %len
-    br i1 %3 , label %body_1, label %break_1
+    %3 = load i32, i32* %2
+    %4 = icmp slt i32 %3, %len
+    br i1 %4 , label %body_1, label %break_1
 body_1:
-    %4 = load i32, i32* %1
-    %5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str7 to [0 x i8]*), i32 %4)
-    %6 = call i32 (i32, i32) @get_integer(i32 -1000, i32 1000)
-    %7 = load i32, i32* %1
-    %8 = getelementptr inbounds [0 x i32], [0 x i32]* %array, i32 0, i32 %7
-    store i32 %6, i32* %8
-    %9 = load i32, i32* %1
-    %10 = add i32 %9, 1
-    store i32 %10, i32* %1
+    %5 = load i32, i32* %2
+    %6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str7 to [0 x i8]*), i32 %5)
+    %7 = call i32 (i32, i32) @get_integer(i32 -1000, i32 1000)
+    %8 = load i32, i32* %2
+    %9 = getelementptr inbounds [0 x i32], [0 x i32]* %array, i32 0, i32 %8
+    store i32 %7, i32* %9
+    %10 = load i32, i32* %2
+    %11 = add i32 %10, 1
+    store i32 %11, i32* %2
     br label %again_1
 break_1:
     ret void

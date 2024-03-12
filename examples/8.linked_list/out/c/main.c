@@ -35,7 +35,7 @@ void list_print_forward(List *list)
     pn = linked_list_first_get(list);
     while (pn != NULL) {
         uint32_t *const x = (uint32_t *)linked_list_node_link_get(pn);
-        printf("v = %d\n", *x);
+        printf("v = %u\n", *x);
         pn = linked_list_node_next_get(pn);
     }
 }
@@ -49,7 +49,7 @@ void list_print_backward(List *list)
     pn = linked_list_last_get(list);
     while (pn != NULL) {
         uint32_t *const x = (uint32_t *)linked_list_node_link_get(pn);
-        printf("v = %d\n", *x);
+        printf("v = %u\n", *x);
         pn = linked_list_node_prev_get(pn);
     }
 }
@@ -81,7 +81,7 @@ int main()
 
     // print list size
     const uint32_t list_size = linked_list_size_get(list);
-    printf("linked list size: %d\n", list_size);
+    printf("linked list size: %u\n", list_size);
 
     // print list forward
     list_print_forward(list);

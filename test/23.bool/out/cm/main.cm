@@ -12,18 +12,18 @@ func main() -> Int {
 
     x = 1
     b = Bool x
-    printf("x = %i\n", Nat32 x)
-    printf("x to Bool = %i\n", Nat32 b)
+    printf("x = %u\n", Nat32 x)
+    printf("x to Bool = %u\n", Nat32 b)
 
     x = 2
     b = Bool x
-    printf("x = %i\n", Nat32 x)
-    printf("x to Bool = %i\n", Nat32 b)
+    printf("x = %u\n", Nat32 x)
+    printf("x to Bool = %u\n", Nat32 b)
 
     x = 3
     b = Bool x
-    printf("x = %i\n", Nat32 x)
-    printf("x to Bool = %i\n", Nat32 b)
+    printf("x = %u\n", Nat32 x)
+    printf("x to Bool = %u\n", Nat32 b)
 
     return 0
 }

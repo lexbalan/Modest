@@ -352,19 +352,27 @@ define i8 @n_to_sym(i8 %n) {
     %2 = icmp ule i8 %n, 9
     br i1 %2 , label %then_0, label %else_0
 then_0:
-    %3 = add i8 48, %n
-    %4 = bitcast i8 %3 to i8
-    store i8 %4, i8* %1
+    %3 = insertvalue [2 x i6] zeroinitializer, i6 48, 0
+    %4 = insertvalue [2 x i6] %3, i6 0, 1
+    %5 = extractvalue [2 x i6] %4, 0
+    %6 = zext i6 %5 to i8
+    %7 = add i8 %6, %n
+    %8 = bitcast i8 %7 to i8
+    store i8 %8, i8* %1
     br label %endif_0
 else_0:
-    %5 = sub i8 %n, 10
-    %6 = add i8 65, %5
-    %7 = bitcast i8 %6 to i8
-    store i8 %7, i8* %1
+    %9 = insertvalue [2 x i7] zeroinitializer, i7 65, 0
+    %10 = insertvalue [2 x i7] %9, i7 0, 1
+    %11 = extractvalue [2 x i7] %10, 0
+    %12 = zext i7 %11 to i8
+    %13 = sub i8 %n, 10
+    %14 = add i8 %12, %13
+    %15 = bitcast i8 %14 to i8
+    store i8 %15, i8* %1
     br label %endif_0
 endif_0:
-    %8 = load i8, i8* %1
-    ret i8 %8
+    %16 = load i8, i8* %1
+    ret i8 %16
 }
 
 define void @sprintf_hex_nat32([0 x i8]* %buf, i32 %x) {
