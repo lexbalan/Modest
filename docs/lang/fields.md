@@ -2,7 +2,7 @@
 
 *Field* is a combination of *identifier* & *type*. Fields used in *variable definitions*, *function* & *record types*. 
 
-#### Example
+#### Examples
 
 Field in variable definition
 ```swift
@@ -10,7 +10,7 @@ var a : Int32
 ```
 
 Fields in record type expression
-```
+```swift
 record {
     x : Int64
     y : Int64
