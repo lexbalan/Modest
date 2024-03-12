@@ -9,7 +9,7 @@
 ```
 
 ```
-    if <#bool_value_expression#> {
+    if <#condition#> {
         // do something if condition is true
     } else {
         // do something if condition is false
@@ -17,15 +17,15 @@
 ```
 
 ```
-    if <#bool_value_expression_1#> {
+    if <#condition_1#> {
         // do something if condition_1 is true
-    } else if <#bool_value_expression_2#> {
+    } else if <#condition_2#> {
         // do something if condition_1 is false and condition_2 is true
 
     ...
 
     } else {
-        // do something if condition is false
+        // do something if all conditions abowe is false
     }
 ```
 
