@@ -13,10 +13,10 @@ If you are interested with the project, write to me what you thought about it.
 You can contact me by telegram: t.me/@alexbalan.
 
 
-[Language documentation](./lang/README.md)
+[Language documentation](https://lexbalan.github.io/Modest/lang/)
 
-[Installation](./INSTALL.md)
+[Installation](https://lexbalan.github.io/Modest/INSTALL.html)
 
-[Usage](./USAGE.md)
+[Usage](https://lexbalan.github.io/Modest/USAGE.html)
 
 
