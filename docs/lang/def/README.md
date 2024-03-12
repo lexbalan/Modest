@@ -10,7 +10,7 @@
 
 ## Short Examples
 
-#### Type Definition
+#### [Type Definition](./type.md)
 ```swift
 type AxisType Int64
 type MyArray [10]Int32
@@ -22,14 +22,14 @@ type MyPoint3D record {
 }
 ```
 
-#### Constant Definition
+#### [Constant Definition](./const.md)
 ```golang
 const myConst = 2 + 2
 const anotherConst = myConst + 2 * 2
 const greetingText = "Hello!"
 ```
 
-#### Variable Definition
+#### [Variable Definition](./var.md)
 ```swift
 var myCounter: MyInt
 var pointerToMyCounter: *MyInt = &myCounter
@@ -37,7 +37,7 @@ var myPoint2D: Point2D = {x = 0, y = 0}
 var pointerToMyPoint3D: *Point3D
 ```
 
-#### Function Definition
+#### [Function Definition](./func.md)
 ```swift
 func show_greeting (text: *Str8) {
     printf("%s\n", text)
