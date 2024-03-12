@@ -3,7 +3,7 @@
 #### Common form
 
 ```
-    if <#bool_value_expression#> {
+    if <#condition#> {
         // do something if condition is true
     }
 ```
