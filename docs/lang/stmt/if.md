@@ -25,7 +25,7 @@
     ...
 
     } else {
-        // do something if all conditions abowe is false
+        // do something if all conditions above are false
     }
 ```
 
