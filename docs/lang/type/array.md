@@ -29,6 +29,6 @@ func main () -> Unit {
 ##### Open array type
 
 ```
-    [] <#type_expression#>
+    [ ] <#type_expression#>
 ```
 
