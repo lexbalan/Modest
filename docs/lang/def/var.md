@@ -1,4 +1,4 @@
-# Global Variable Definition
+# Variable Definition
 
 Variable definition creates new *variable* instance.
 

@@ -8,7 +8,7 @@
   * [function definition](./func.md)
 
 
-## Short Examples
+## Fast Examples
 
 #### [Type Definition](./type.md)
 ```swift

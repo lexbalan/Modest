@@ -9,7 +9,6 @@ type <#identifier#> <#type_expression#>
 ```
 
 
-
 #### Examples
 
 ```zig

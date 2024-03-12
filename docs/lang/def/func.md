@@ -20,9 +20,12 @@ func sum_i32 (a: Int32, b: Int32) -> Int32 {
 func test_sum () {
     let a = 10
     let b = 20
+
+    let expected_result = a + b
     let sum_result = sum_i32(a, b)
-    if sum_result == a + b {
-        printf("sum works fine!\n")
+
+    if sum_result == expected_result {
+        printf("function sum works fine!\n")
     } else {
         printf("something go wrong...\n")
     }
