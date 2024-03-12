@@ -1,13 +1,18 @@
-# Record type expression
+# Record type
 
-``` record { <#fields#> }```
+## Record type expression
 
+```
+record { <#fields#> }
+```
+
+
+#### Examples
 
 ```swift
 record {x: Int32, y: Int32}  // type 'record with two fields x & y with type Int32'
 ```
 
-#### Examples
 
 ```swift
 type Point record {
