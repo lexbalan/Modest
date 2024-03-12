@@ -8,6 +8,27 @@
     }
 ```
 
+```
+    if <#bool_value_expression#> {
+        // do something if condition is true
+    } else {
+        // do something if condition is false
+    }
+```
+
+```
+    if <#bool_value_expression_1#> {
+        // do something if condition_1 is true
+    } else if <#bool_value_expression_2#> {
+        // do something if condition_1 is false and condition_2 is true
+
+    ...
+
+    } else {
+        // do something if condition is false
+    }
+```
+
 #### Examples
 
 ```zig
