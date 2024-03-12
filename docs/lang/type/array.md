@@ -1,4 +1,6 @@
-# Array type expression
+# Array type
+
+## Array type expression
 
 #### Common view
 
@@ -27,5 +29,6 @@ func main () -> Unit {
 ##### Open array type
 
 ```
-    []<#type_expression#>
+    [] <#type_expression#>
 ```
+

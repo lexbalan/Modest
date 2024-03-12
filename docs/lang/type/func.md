@@ -1,4 +1,6 @@
-# Function type expression
+# Function type
+
+## Function type expression
 
 #### Common form
 ```

@@ -2,6 +2,8 @@
 
 ## Record type expression
 
+#### Common view
+
 ```
 record { <#fields#> }
 ```

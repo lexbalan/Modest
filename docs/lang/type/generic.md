@@ -1,7 +1,7 @@
 # Generic types
 
-
 *Generic type* - compile time type, that can be *implicitly* casted to *Non-Generic types* for using in runtime.
+
 
 | GenericType | Represented Value | Examples |
 | ----------- | ----------- | -------- |

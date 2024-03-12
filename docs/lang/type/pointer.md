@@ -1,4 +1,6 @@
-# Pointer type expression
+# Pointer type
+
+## Pointer type expression
 
 #### Common form
 ```
