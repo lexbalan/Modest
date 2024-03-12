@@ -26,7 +26,7 @@ func mid (a: Int32, b: Int32) -> Int32 {
 ```
 
 ```swift
-func do_nothing() -> Unit {
+func do_nothing () -> Unit {
     // in this case return statement cannot returns some value,
     // (because function defined as function to Unit)
     // but it also stops function execution
