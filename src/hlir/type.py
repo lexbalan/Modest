@@ -133,6 +133,7 @@ def hlir_type_float(width, ti=None):
         'width': width,
         'size': size,
         'align': size,
+        'signed': True,
         'declaration': None,
         'definition': None,
         'ops': FLOAT_OPS,
@@ -485,6 +486,11 @@ def type_is_integer(t):
 
 def type_is_float(t):
     return t['kind'] == 'float'
+
+
+# numeric type supports arithmetical operations
+def type_is_numeric(t):
+    return t['kind'] == ['int', 'float']
 
 
 def type_is_func(t):

@@ -484,7 +484,7 @@ def do_value_shift(x):
         return bin_imm(op, l['type'], l, r, ti)
 
     if hlir_type.type_is_generic(l['type']):
-        error("required value with non-generic type", l)
+        error("expected value with non-generic type", l)
         return value_bad(ti)
 
     return value_bin(op, l, r, l['type'], ti=ti)
@@ -731,10 +731,10 @@ def do_value_not(val, ti):
 
 def do_value_minus(v, ti):
     vtype = v['type']
-    if not hlir_type.type_is_integer(vtype):
-        error("expected value with Integer type", ti)
-    if not hlir_type.type_is_signed(vtype):
-        error("expected value with Signed Integer type", ti)
+    if not hlir_type.type_is_numeric(vtype):
+        error("expected numeric value", ti)
+    else if not hlir_type.type_is_signed(vtype):
+        error("expected signed numeric value", ti)
 
     nv = value_un('minus', v, vtype, ti=ti)
 
@@ -833,7 +833,7 @@ def do_value_call(x):
             if hlir_type.type_is_array(arg['type']):
                 return value_lengthof(arg, ti=x['ti'])
             else:
-                error("lengthof argument must be an array", x['args'][0]['ti'])
+                error("expected an argument with array type", x['args'][0]['ti'])
                 return value_bad(x['ti'])
 
 
@@ -1451,7 +1451,7 @@ def do_stmt_assign(x):
         return hlir_stmt_bad()
 
     if value_is_immutable(l):
-        error("immutable left", x['left']['ti'])
+        error("expected mutable value", x['left']['ti'])
         return hlir_stmt_bad()
 
     # type check
@@ -1472,7 +1472,7 @@ def do_stmt_incdec(x, op='add'):
         return hlir_stmt_bad()
 
     if value_is_immutable(v):
-        error("immutable value", x['left']['ti'])
+        error("expected mutable value", x['left']['ti'])
         return hlir_stmt_bad()
 
     if not hlir_type.type_is_integer(v['type']):
@@ -1567,7 +1567,7 @@ def do_import(x):
     import_expr = do_value(x['expr'])
 
     if not value_is_immediate(import_expr):
-        error("expected immediate value expression", x['expr']['ti'])
+        error("expected immediate value", x['expr']['ti'])
         return None
 
     if not hlir_type.type_is_generic_array_of_char(import_expr['type']):
@@ -1642,7 +1642,7 @@ def def_const(x):
         error("redefinition of '%s'" % id['str'], id['ti'])
 
     if id['str'][0].isupper():
-        warning("constant name must starts with small letter", id['ti'])
+        error("constant id must starts with small letter", id['ti'])
         pass
 
     iv = do_value(x['value'])
@@ -1652,7 +1652,7 @@ def def_const(x):
 
     if not value_is_immediate(iv):
         if not type_is_pointer_to_array_of_char(iv['type']):
-            error("constant must be initialized by immediate value", x['value'])
+            error("expected immediate value", x['value'])
 
     const_value = value_const(id, iv['type'], iv, id['ti'])
     const_value['att'].append('global')
@@ -1705,7 +1705,7 @@ def def_type(x):
     log("def_type %s" % id['str'])
 
     if id['str'][0].islower():
-        error("type name must starts with big letter", id['ti'])
+        error("type id must starts with big letter", id['ti'])
 
     pre_exist = type_get(id['str'])
 
@@ -1787,7 +1787,7 @@ def def_var(x):
     log("def_var %s" % id['str'])
 
     if id['str'][0].isupper():
-        error("variable name must starts with small letter", id['ti'])
+        error("variable id must starts with small letter", id['ti'])
 
     # already defined?
     already = value_get(id['str'])
@@ -1877,7 +1877,7 @@ def def_func(x):
     func_id = x['id']
 
     if func_id['str'][0].isupper():
-        warning("function name must starts with small letter", func_id['ti'])
+        error("function id must starts with small letter", func_id['ti'])
 
     func_ti = func_id['ti']
 
