@@ -2,11 +2,32 @@
 
 import "libc/stdio"
 
+//@feature("unsafe")
+@feature("unsafe-downcast")
+@feature("unsafe-int-to-ptr")
+
+
+type Point record {
+    x: Int32
+    y: Int32
+}
 
 func main() -> Int {
     printf("tag test")
 
-    var s : Tag = #justSymbol
+    let p = *Int32 0
+    printf("*p = %i\n", *p)
+
+    var a : Int32
+    var b : Int16 = Int16 a
+
+    var arr: [10]Int32
+    arr = []
+
+    var p0: Point
+    p0 = {}
+
+    //var s : Tag = #justSymbol
 
     return 0
 }

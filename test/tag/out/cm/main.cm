@@ -1,11 +1,20 @@
-// test/1.hello_world/src/main.cm
+// test/tag/src/main.cm
 
 import "libc/stdio"
 
+//@feature("unsafe")
+
 
 func main() -> Int {
+    printf("tag test")
 
-    //printf("%s", *Str8 hello_world)
+    let p = *Int32 0
+    printf("*p = %i\n", *p)
+
+    var a: Int32
+    var b: Int16 = Int16 a
+
+    //var s : Tag = #justSymbol
 
     return 0
 }

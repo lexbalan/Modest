@@ -26,6 +26,7 @@ target triple = "arm64-apple-macosx12.0.0"
 %Str16 = type [0 x %Char16]
 %Str32 = type [0 x %Char32]
 %VA_List = type i8*
+
 declare void @llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)
 declare void @llvm.memset.p0.i32(i8*, i8, i32, i1)
 
@@ -58,14 +59,26 @@ declare void @llvm.memset.p0.i32(i8*, i8, i32, i1)
 %Float = type double
 %Double = type double
 %LongDouble = type double
-%SizeT = type i64
-%SSizeT = type i64
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
 
 
 
+
+%Clock_T = type %UnsignedLong
+%Socklen_T = type i32
+%Time_T = type %LongInt
+%SizeT = type %UnsignedLongInt
+%SSizeT = type %LongInt
+%PidT = type i32
+%UidT = type i32
+%GidT = type i32
+%USecondsT = type i32
+%IntptrT = type i64
+
+
+%OffT = type i64
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
@@ -125,11 +138,43 @@ declare void @perror(%ConstCharStr* %str)
 
 ; -- SOURCE: src/main.cm
 
+@str1 = private constant [9 x i8] [i8 116, i8 97, i8 103, i8 32, i8 116, i8 101, i8 115, i8 116, i8 0]
+@str2 = private constant [9 x i8] [i8 42, i8 112, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 
+
+
+
+%Point = type {
+	i32,
+	i32
+}
 
 
 define %Int @main() {
-    ;printf("%s", hello_world to *Str8)
+    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str1 to [0 x i8]*))
+    %2 = inttoptr i1 0 to i32*
+    %3 = load i32, i32* %2
+    %4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str2 to [0 x i8]*), i32 %3)
+    %5 = alloca i32
+    %6 = alloca i16
+    %7 = load i32, i32* %5
+    %8 = trunc i32 %7 to i16
+    store i16 %8, i16* %6
+    %9 = alloca [10 x i32]
+    %10 = insertvalue [10 x i32] zeroinitializer, i32 0, 0
+    %11 = insertvalue [10 x i32] %10, i32 0, 1
+    %12 = insertvalue [10 x i32] %11, i32 0, 2
+    %13 = insertvalue [10 x i32] %12, i32 0, 3
+    %14 = insertvalue [10 x i32] %13, i32 0, 4
+    %15 = insertvalue [10 x i32] %14, i32 0, 5
+    %16 = insertvalue [10 x i32] %15, i32 0, 6
+    %17 = insertvalue [10 x i32] %16, i32 0, 7
+    %18 = insertvalue [10 x i32] %17, i32 0, 8
+    %19 = insertvalue [10 x i32] %18, i32 0, 9
+    store [10 x i32] %19, [10 x i32]* %9
+    %20 = alloca %Point
+    store %Point zeroinitializer, %Point* %20
+    ;var s : Tag = #justSymbol
     ret %Int 0
 }
 
