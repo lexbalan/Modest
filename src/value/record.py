@@ -59,7 +59,7 @@ def value_cons_record_from_generic_record(v, t, ti, method):
                 item_value = value_zero(field_type, ti=None)
                 if method == 'implicit':
                     # implicit cast требует наличия всех полей
-                    error("expected field '%s'" % field_name, v['ti'])
+                    error("required field '%s'" % field_name, v['ti'])
                     return None  # это cast, а cast не выдает ошибки
                 nl = prev_nl
                 ti = None

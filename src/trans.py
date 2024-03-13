@@ -484,7 +484,7 @@ def do_value_shift(x):
         return bin_imm(op, l['type'], l, r, ti)
 
     if hlir_type.type_is_generic(l['type']):
-        error("expected value with non-generic type", l)
+        error("expected non-generic value", l)
         return value_bad(ti)
 
     return value_bin(op, l, r, l['type'], ti=ti)
@@ -718,7 +718,7 @@ def _bin(op, type_result, l, r, ti=None):
 def do_value_not(val, ti):
     vtype = val['type']
     if not hlir_type.type_is_integer(vtype) and not hlir_type.type_is_bool(vtype):
-        error("expected value with Integer or Bool type", ti)
+        error("expected integer or bool value", ti)
 
     v = value_un('not', val, vtype, ti=ti)
 
@@ -733,7 +733,7 @@ def do_value_minus(v, ti):
     vtype = v['type']
     if not hlir_type.type_is_numeric(vtype):
         error("expected numeric value", ti)
-    else if not hlir_type.type_is_signed(vtype):
+    elif not hlir_type.type_is_signed(vtype):
         error("expected signed numeric value", ti)
 
     nv = value_un('minus', v, vtype, ti=ti)
@@ -751,7 +751,7 @@ def do_value_minus(v, ti):
 def do_value_deref(v, ti):
     vtype = v['type']
     if not hlir_type.type_is_pointer(vtype):
-        error("expected pointer", ti)
+        error("expected pointer value", ti)
         return value_bad(ti)
 
     to = vtype['to']
@@ -777,6 +777,7 @@ def do_value_ref(v, ti):
 
 
 
+# TODO: убери это - все раскидай по do_value_...
 def do_value_un(x):
     val = do_rvalue(x['value'])
     ti = x['ti']
@@ -833,7 +834,7 @@ def do_value_call(x):
             if hlir_type.type_is_array(arg['type']):
                 return value_lengthof(arg, ti=x['ti'])
             else:
-                error("expected an argument with array type", x['args'][0]['ti'])
+                error("expected array value", x['args'][0]['ti'])
                 return value_bad(x['ti'])
 
 
@@ -854,7 +855,7 @@ def do_value_call(x):
         ftype = ftype['to']
 
     if not hlir_type.type_is_func(ftype):
-        error("expected function", x)
+        error("expected function or pointer to function", x)
 
     params = ftype['params']
     args = x['args']
@@ -1277,8 +1278,9 @@ def do_stmt_if(x):
     if value_is_bad(c) or hlir_stmt_is_bad(t):
         return hlir_stmt_bad()
 
-    c = value_cons_implicit(c, foundation.typeBool, c['ti'])
-    hlir_type.check(c['type'], foundation.typeBool, x['cond']['ti'])
+    if not hlir_type.type_is_bool(c['type']):
+        error("expected bool value", x['cond']['ti'])
+        return hlir_stmt_bad()
 
     e = None
     if x['else'] != None:
@@ -1297,8 +1299,8 @@ def do_stmt_while(x):
     if value_is_bad(c) or hlir_stmt_is_bad(s):
         return hlir_stmt_bad()
 
-    c = value_cons_implicit(c, foundation.typeBool, c['ti'])
-    if not hlir_type.check(c['type'], foundation.typeBool, x['cond']['ti']):
+    if not hlir_type.type_is_bool(c['type']):
+        error("expected bool value", x['cond']['ti'])
         return hlir_stmt_bad()
 
     return hlir_stmt_while(c, s, ti=x['ti'])
@@ -1476,7 +1478,7 @@ def do_stmt_incdec(x, op='add'):
         return hlir_stmt_bad()
 
     if not hlir_type.type_is_integer(v['type']):
-        error("expected value with integer type", x['value']['ti'])
+        error("expected integer value", x['value']['ti'])
         return hlir_stmt_bad()
 
     one = value_integer(1, typ=v['type'], ti=x['ti'])
@@ -1571,7 +1573,7 @@ def do_import(x):
         return None
 
     if not hlir_type.type_is_generic_array_of_char(import_expr['type']):
-        error("expected value with generic string type", x['expr']['ti'])
+        error("expected value with string type", x['expr']['ti'])
         return None
 
     # Literal string to python string
@@ -2052,7 +2054,7 @@ def do_directive(x):
             if not value_is_immediate(c):
                 error("expected immediate value", x['cond']['ti'])
             elif not hlir_type.type_is_bool(c['type']):
-                error("expected Bool value", x['cond']['ti'])
+                error("expected bool value", x['cond']['ti'])
             else:
                 cond = c['asset'] != 0
 
@@ -2071,7 +2073,7 @@ def do_directive(x):
             if not value_is_immediate(c):
                 error("expected immediate value", x['cond']['ti'])
             elif not hlir_type.type_is_bool(c['type']):
-                error("expected Bool value", x['cond']['ti'])
+                error("expected bool value", x['cond']['ti'])
             else:
                 cond = c['asset'] != 0
 

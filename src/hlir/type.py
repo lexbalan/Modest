@@ -490,7 +490,7 @@ def type_is_float(t):
 
 # numeric type supports arithmetical operations
 def type_is_numeric(t):
-    return t['kind'] == ['int', 'float']
+    return t['kind'] in ['int', 'float']
 
 
 def type_is_func(t):
