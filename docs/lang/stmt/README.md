@@ -45,7 +45,7 @@ Statements inside *block statement* are executed in our usual reading order from
 ```
 
 
-### Fast example
+### Examples
 
 A Simple example that asks the user to enter a number from 0 to 9, and if it is within the specified limits, compares it with a constant *n* and prints result of this comparison. **This simple example shows all kinds of statement**
 

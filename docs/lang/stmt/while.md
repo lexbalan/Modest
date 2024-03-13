@@ -4,7 +4,7 @@
 #### Common view
 
 ```
-    while <#bool_value_expression#> {
+    while <#condition#> {
         // do something while condition is true
     }
 ```
