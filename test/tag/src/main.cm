@@ -2,28 +2,16 @@
 
 import "libc/stdio"
 
+@feature("unsafe")
 
 func main() -> Int {
     printf("tag test")
 
-<<<<<<< Updated upstream
-    var s : Tag = #justSymbol
-=======
+    //var s : Tag = #justSymbol
+
     let p = *Int32 0
     printf("*p = %i\n", *p)
 
-    var a : Int32
-    var b : Int16 = Int16 a
-
-    var arr: [10]Int32
-    arr = []
-
-    var p0: Point
-    p0 = {}
-
-
-    //var s : Tag = #justSymbol
->>>>>>> Stashed changes
 
     return 0
 }
