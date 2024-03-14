@@ -164,7 +164,7 @@ def value_cons_explicit(v, t, ti):
     y = value_cons(v, t, ti, method='explicit')
 
     if y == None:
-        error("cast error", ti)
+        error("cannot construct value", ti)
         return value_bad(ti)
 
     y['att'].append('explicit_cast')  # used by CM backend

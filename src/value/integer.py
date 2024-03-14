@@ -38,11 +38,11 @@ def check_width(from_type, t, method, ti):
             if not no_warning_cast_data_loss:
                 from main import features
                 if not (features.get('unsafe') or features.get('unsafe-downcast')):
-                    warning("casting with potential data loss", ti)
+                    warning("value cons with potential data loss", ti)
                 pass
 
         else:
-            error("casting with potential data loss", ti)
+            error("value cons with potential data loss", ti)
             rv = False
 
     if not rv:
