@@ -153,14 +153,14 @@ def print_array_volume(t):
 
     # многомерные массивы в C не существуют, поэтому печатаем один массив
     # размер которого будет произведением всех измерений
-    if hlir_type.type_is_defined_array(t['of']):
+    if hlir_type.type_is_closed_array(t['of']):
 
         # if it is array of arrays, print volume as:
         # [n * m * ...]
         t2 = t
         while True:
             print_value(t2['volume'])
-            if not hlir_type.type_is_defined_array(t2['of']):
+            if not hlir_type.type_is_closed_array(t2['of']):
                 break
             t2 = t2['of']
             out(" * ")
@@ -519,7 +519,7 @@ def print_value_index(x, ctx):
 
     dims = []
     yy = xx['type']
-    while hlir_type.type_is_defined_array(yy):
+    while hlir_type.type_is_closed_array(yy):
         dims.append(yy['volume'])
         yy = yy['of']
 
@@ -725,7 +725,7 @@ def print_array_values(values, ctx):
             if i > 0:
                 out(" ")
 
-        if hlir_type.type_is_defined_array(a['type']):
+        if hlir_type.type_is_closed_array(a['type']):
             print_array_values(a['asset'], ctx)
         else:
             print_value(a, ctx)
@@ -1163,7 +1163,7 @@ def print_stmt_return(x):
 
         global cfunc
         to = cfunc['type']['to']
-        if hlir_type.type_is_defined_array(to):
+        if hlir_type.type_is_closed_array(to):
             print_cast_hard(to, x['value'])
         else:
             print_value(x['value'])
@@ -1216,7 +1216,7 @@ def print_stmt_let(x):
     nl_indent(x['nl'])
 
     # массивы печатаем как переменные
-    if hlir_type.type_is_defined_array(v['type']):
+    if hlir_type.type_is_closed_array(v['type']):
         print_variable_array(v['type'], id['str'], do_wrapped=False)
         out(";\n")
         indent()
@@ -1372,9 +1372,9 @@ def print_func_wrappers(ftype):
     # печатаем обернутые параметры-массивы и возврашаемые массивы
     # (обернуты тк C не позволяет принимать возвращать массив по значению)
     for param in ftype['params']:
-        if hlir_type.type_is_defined_array(param['type']):
+        if hlir_type.type_is_closed_array(param['type']):
             print_wrapped_array(param['type'])
-    if hlir_type.type_is_defined_array(ftype['to']):
+    if hlir_type.type_is_closed_array(ftype['to']):
         print_wrapped_array(ftype['to'])
 
 
@@ -1501,7 +1501,7 @@ def print_def_type(x):
             return
 
 
-    is_defined_array = hlir_type.type_is_defined_array(orig_type)
+    is_defined_array = hlir_type.type_is_closed_array(orig_type)
     out("typedef ")
 
     if 'volatile' in x['original_type']['att']:

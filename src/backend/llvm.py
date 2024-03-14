@@ -1386,7 +1386,7 @@ def print_stmt_let(x):
     # для let-массивов выделяем память (alloca)
     # поскольку их могут индексировать переменной
     # а массив-значение в "регистре" невозможно индексировать переменной
-    if hlir_type.type_is_defined_array(val['type']):
+    if hlir_type.type_is_closed_array(val['type']):
         nv = llvm_alloca(val['type'])
         llvm_store(nv, v)
         v = nv

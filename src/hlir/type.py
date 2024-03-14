@@ -545,13 +545,13 @@ def type_is_generic_array_of_char(t):
 
 
 
-def type_is_defined_array(t):
+def type_is_closed_array(t):
     if type_is_array(t):
         return t['volume'] != None
     return False
 
 
-def type_is_undefined_array(t):
+def type_is_open_array(t):
     if type_is_array(t):
         return t['volume'] == None
     return False
@@ -583,13 +583,13 @@ def type_is_pointer_to_array(t):
 
 def type_is_pointer_to_defined_array(t):
     if type_is_pointer(t):
-        return type_is_defined_array(t['to'])
+        return type_is_closed_array(t['to'])
     return False
 
 
 def type_is_pointer_to_undefined_array(t):
     if type_is_pointer(t):
-        return type_is_undefined_array(t['to'])
+        return type_is_open_array(t['to'])
     return False
 
 
@@ -629,7 +629,7 @@ def type_is_forbidden_var(t, zero_array_forbidden=True):
             return True
 
         # []Int
-        if type_is_undefined_array(t):
+        if type_is_open_array(t):
             return True
 
         # [0]Int

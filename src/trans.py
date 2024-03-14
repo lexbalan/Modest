@@ -715,82 +715,72 @@ def _bin(op, type_result, l, r, ti=None):
 
 
 
-def do_value_not(val, ti):
-    vtype = val['type']
-    v = value_un('not', val, vtype, ti=ti)
-
-    if value_is_immediate(val):
-        v['asset'] = ~val['asset']
-
-    return v
-
-
-
-def do_value_minus(v, ti):
-    vtype = v['type']
-    if not hlir_type.type_is_integer(vtype):
-        error("expected value with Integer type", ti)
-    if not hlir_type.type_is_signed(vtype):
-        error("expected value with Signed Integer type", ti)
-
-    nv = value_un('minus', v, vtype, ti=ti)
-
-    if value_is_immediate(v):
-        nv['asset'] = -v['asset']
-
-        if hlir_type.type_is_generic(nv['type']):
-            nv['type'] = hlir_type.hlir_type_generic_int_for(v['asset'], unsigned=False, ti=ti)
-
-    return nv
-
-
-
-def do_value_deref(v, ti):
-    vtype = v['type']
-    if not hlir_type.type_is_pointer(vtype):
-        error("expected pointer", ti)
-        return value_bad(ti)
-
-    to = vtype['to']
-    # you can't deref pointer to function
-    # and pointer to undefined array
-    if hlir_type.type_is_func(to) or hlir_type.type_is_undefined_array(to) or hlir_type.type_is_free_pointer(to):
-        error("unsuitable type", v)
-
-    nv = value_un('deref', v, to, ti=ti)
-    nv['immutable'] = False
-    return nv
-
-
-
-def do_value_ref(v, ti):
-    vtype = v['type']
-    if value_is_immutable(v):
-        if not hlir_type.type_is_func(vtype):
-            error("expected mutable value or function", ti)
-            return value_bad(ti)
-    vt = hlir_type.hlir_type_pointer(vtype, ti=ti)
-    return value_un('ref', v, vt, ti=ti)
-
-
-
 def do_value_un(x):
-    val = do_rvalue(x['value'])
+    v = do_value(x['value'])
     ti = x['ti']
 
-    if value_is_bad(val):
-        return val
+    if value_is_bad(v):
+        return v
 
     op = x['kind']
+    vtype = v['type']
 
-    if op != 'ref':
-        if not op in val['type']['ops']:
+    if op == 'ref': #return do_value_ref(val, ti)
+        if value_is_immutable(v):
+            if not hlir_type.type_is_func(vtype):
+                error("expected mutable value or function", x['value']['ti'])
+                return value_bad(ti)
+        vt = hlir_type.hlir_type_pointer(vtype, ti=ti)
+        return value_un('ref', v, vt, ti=ti)
+
+    else:
+
+        if not op in v['type']['ops']:
             error("unsuitable type", x['value']['ti'])
+            return value_bad(ti)
 
-    if op == 'not': return do_value_not(val, ti)
-    elif op == 'minus': return do_value_minus(val, ti)
-    elif op == 'deref': return do_value_deref(val, ti)
-    elif op == 'ref': return do_value_ref(val, ti)
+        v = value_load(v)
+
+
+        if op == 'not':
+            nv = value_un('not', v, vtype, ti=ti)
+
+            if value_is_immediate(v):
+                nv['asset'] = ~v['asset']
+
+            return nv
+
+        elif op == 'minus':
+            if not hlir_type.type_is_signed(vtype):
+                error("expected value with signed type", x['value']['ti'])
+
+            nv = value_un('minus', v, vtype, ti=ti)
+
+            if value_is_immediate(v):
+                nv['asset'] = -v['asset']
+
+                if hlir_type.type_is_generic(nv['type']):
+                    nv['type'] = hlir_type.hlir_type_generic_int_for(v['asset'], unsigned=False, ti=ti)
+
+            return nv
+
+        elif op == 'deref':
+            to = vtype['to']
+
+            # you can't deref:
+            #   - pointer to Unit
+            #   - pointer to function
+            #   - pointer to open array
+            is_func_ptr = hlir_type.type_is_func(to)
+            is_free_ptr = hlir_type.type_is_free_pointer(to)
+            is_open_array_ptr =  hlir_type.type_is_open_array(to)
+            if is_func_ptr or is_free_ptr or is_open_array_ptr:
+                error("unsuitable type", x['value']['ti'])
+
+            nv = value_un('deref', v, to, ti=ti)
+            nv['immutable'] = False
+            return nv
+
 
 
 
@@ -952,7 +942,7 @@ def do_value_call(x):
 
     rv = value_call(f, ftype['to'], args, ti=x['ti'])
 
-    if hlir_type.type_is_defined_array(f['type']['to']):
+    if hlir_type.type_is_closed_array(f['type']['to']):
         rv['att'].append('wrapped_array_value')
 
     return rv
@@ -1927,7 +1917,7 @@ def def_func(x):
         param_value = value_const(param_id, param_type, ti=param['ti'])
         param_value['att'].append('local')
 
-        if hlir_type.type_is_defined_array(param_type):
+        if hlir_type.type_is_closed_array(param_type):
             param_value['att'].append('wrapped_array_value')
 
         module['context'].value_add(param_id['str'], param_value)
