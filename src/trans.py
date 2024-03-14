@@ -523,7 +523,7 @@ def do_bin_op_with_pointers(op, l, r , ti):
 
     from main import features
     if not features.get('unsafe'):
-        error("illegal operation with pointers", ti)
+        error("unsafe operation", ti)
         return value_bad(ti)
 
 
@@ -560,7 +560,7 @@ def do_bin_op_with_pointers(op, l, r , ti):
                 result = value_bin(x['kind'], rnat, xl, xl['type'], ti)
                 return do_cast_runtime(result, r['type'], ti)
 
-        error("illegal operation with pointers", ti)
+        error("invalid operation", ti)
         return value_bad(ti)
 
 
@@ -717,8 +717,11 @@ def _bin(op, type_result, l, r, ti=None):
 
 def do_value_not(val, ti):
     vtype = val['type']
+<<<<<<< Updated upstream
     if not hlir_type.type_is_integer(vtype) and not hlir_type.type_is_bool(vtype):
         error("expected value with Integer or Bool type", ti)
+=======
+>>>>>>> Stashed changes
 
     v = value_un('not', val, vtype, ti=ti)
 
@@ -770,7 +773,7 @@ def do_value_ref(v, ti):
     vtype = v['type']
     if value_is_immutable(v):
         if not hlir_type.type_is_func(vtype):
-            error("cannot get pointer to immutable value", ti)
+            error("expected mutable value or function", ti)
             return value_bad(ti)
     vt = hlir_type.hlir_type_pointer(vtype, ti=ti)
     return value_un('ref', v, vt, ti=ti)
@@ -1571,7 +1574,11 @@ def do_import(x):
         return None
 
     if not hlir_type.type_is_generic_array_of_char(import_expr['type']):
+<<<<<<< Updated upstream
         error("expected value with generic string type", x['expr']['ti'])
+=======
+        error("expected string value", x['expr']['ti'])
+>>>>>>> Stashed changes
         return None
 
     # Literal string to python string
