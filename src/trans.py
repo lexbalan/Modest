@@ -717,12 +717,6 @@ def _bin(op, type_result, l, r, ti=None):
 
 def do_value_not(val, ti):
     vtype = val['type']
-<<<<<<< Updated upstream
-    if not hlir_type.type_is_integer(vtype) and not hlir_type.type_is_bool(vtype):
-        error("expected value with Integer or Bool type", ti)
-=======
->>>>>>> Stashed changes
-
     v = value_un('not', val, vtype, ti=ti)
 
     if value_is_immediate(val):
@@ -1574,11 +1568,7 @@ def do_import(x):
         return None
 
     if not hlir_type.type_is_generic_array_of_char(import_expr['type']):
-<<<<<<< Updated upstream
-        error("expected value with generic string type", x['expr']['ti'])
-=======
         error("expected string value", x['expr']['ti'])
->>>>>>> Stashed changes
         return None
 
     # Literal string to python string
