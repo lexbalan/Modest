@@ -1632,6 +1632,9 @@ def print_def_const(x):
     if hlir_type.type_is_generic_record(const_value['type']):
         return
 
+    if hlir_type.type_is_generic_array_of_char(const_value['type']):
+        return
+
     newline(n=x['nl'])
 
     _id = x['id']
