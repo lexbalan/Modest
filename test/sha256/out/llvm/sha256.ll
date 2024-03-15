@@ -168,12 +168,17 @@ declare void @bzero(i8* %s, %SizeT %n)
 declare void @bcopy(i8* %src, i8* %dst, %SizeT %n)
 
 
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/misc/sha256.hm
+
+
+
+
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/misc/sha256.cm
 
 
 
 
-%SHA256_Context = type {
+%Context = type {
 	[64 x i8],
 	i32,
 	i64,
@@ -252,24 +257,21 @@ define i32 @sig1(i32 %x) {
 
 
 
-@initMagic = global [8 x i32] [
-    i32 1779033703,
-    i32 3144134277,
-    i32 1013904242,
-    i32 2773480762,
-    i32 1359893119,
-    i32 2600822924,
-    i32 528734635,
-    i32 1541459225
-]
 
-define void @sha256_contextInit(%SHA256_Context* %ctx) {
-    %1 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 3
-    %2 = bitcast [8 x i32]* %1 to i8*
-    %3 = bitcast [8 x i32]* @initMagic to i8*
-    call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %2, i8* %3, i32 32, i1 0)
+define void @sha256_contextInit(%Context* %ctx) {
+    %1 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
+    %2 = insertvalue [8 x i32] zeroinitializer, i32 1779033703, 0
+    %3 = insertvalue [8 x i32] %2, i32 3144134277, 1
+    %4 = insertvalue [8 x i32] %3, i32 1013904242, 2
+    %5 = insertvalue [8 x i32] %4, i32 2773480762, 3
+    %6 = insertvalue [8 x i32] %5, i32 1359893119, 4
+    %7 = insertvalue [8 x i32] %6, i32 2600822924, 5
+    %8 = insertvalue [8 x i32] %7, i32 528734635, 6
+    %9 = insertvalue [8 x i32] %8, i32 1541459225, 7
+    store [8 x i32] %9, [8 x i32]* %1
     ret void
 }
+
 
 
 @k = global [64 x i32] [
@@ -339,7 +341,7 @@ define void @sha256_contextInit(%SHA256_Context* %ctx) {
     i32 3329325298
 ]
 
-define void @sha256_transform(%SHA256_Context* %ctx, [0 x i8]* %data) {
+define void @sha256_transform(%Context* %ctx, [0 x i8]* %data) {
     %1 = alloca [64 x i32]
     %2 = insertvalue [64 x i32] zeroinitializer, i32 0, 0
     %3 = insertvalue [64 x i32] %2, i32 0, 1
@@ -492,7 +494,7 @@ body_2:
     br label %again_2
 break_2:
     %132 = alloca [8 x i32]
-    %133 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 3
+    %133 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
     %134 = bitcast [8 x i32]* %132 to i8*
     %135 = bitcast [8 x i32]* %133 to i8*
     call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %134, i8* %135, i32 32, i1 0)
@@ -580,10 +582,10 @@ again_4:
     %198 = icmp ult i32 %197, 8
     br i1 %198 , label %body_4, label %break_4
 body_4:
-    %199 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 3
+    %199 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
     %200 = load i32, i32* %66
     %201 = getelementptr inbounds [8 x i32], [8 x i32]* %199, i32 0, i32 %200
-    %202 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 3
+    %202 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
     %203 = load i32, i32* %66
     %204 = getelementptr inbounds [8 x i32], [8 x i32]* %202, i32 0, i32 %203
     %205 = load i32, i32* %66
@@ -600,43 +602,43 @@ break_4:
     ret void
 }
 
-define void @sha256_update(%SHA256_Context* %ctx, [0 x i8]* %data, i32 %len) {
+define void @sha256_update(%Context* %ctx, [0 x i8]* %msg, i32 %msg_len) {
     %1 = alloca i32
     %2 = zext i1 0 to i32
     store i32 %2, i32* %1
     br label %again_1
 again_1:
     %3 = load i32, i32* %1
-    %4 = icmp ult i32 %3, %len
+    %4 = icmp ult i32 %3, %msg_len
     br i1 %4 , label %body_1, label %break_1
 body_1:
-    %5 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 0
-    %6 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 1
+    %5 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
+    %6 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
     %7 = load i32, i32* %6
     %8 = getelementptr inbounds [64 x i8], [64 x i8]* %5, i32 0, i32 %7
     %9 = load i32, i32* %1
-    %10 = getelementptr inbounds [0 x i8], [0 x i8]* %data, i32 0, i32 %9
+    %10 = getelementptr inbounds [0 x i8], [0 x i8]* %msg, i32 0, i32 %9
     %11 = load i8, i8* %10
     store i8 %11, i8* %8
-    %12 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 1
-    %13 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 1
+    %12 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
+    %13 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
     %14 = load i32, i32* %13
     %15 = add i32 %14, 1
     store i32 %15, i32* %12
-    %16 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 1
+    %16 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
     %17 = load i32, i32* %16
     %18 = icmp eq i32 %17, 64
     br i1 %18 , label %then_0, label %endif_0
 then_0:
-    %19 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 0
+    %19 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
     %20 = bitcast [64 x i8]* %19 to [0 x i8]*
-    call void (%SHA256_Context*, [0 x i8]*) @sha256_transform(%SHA256_Context* %ctx, [0 x i8]* %20)
-    %21 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 2
-    %22 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 2
+    call void (%Context*, [0 x i8]*) @sha256_transform(%Context* %ctx, [0 x i8]* %20)
+    %21 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
+    %22 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
     %23 = load i64, i64* %22
     %24 = add i64 %23, 512
     store i64 %24, i64* %21
-    %25 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 1
+    %25 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
     store i32 0, i32* %25
     br label %endif_0
 endif_0:
@@ -648,16 +650,16 @@ break_1:
     ret void
 }
 
-define void @sha256_final(%SHA256_Context* %ctx, [0 x i8]* %hash) {
+define void @sha256_final(%Context* %ctx, [32 x i8]* %out_hash) {
     %1 = alloca i32
-    %2 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 1
+    %2 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
     %3 = load i32, i32* %2
     store i32 %3, i32* %1
     ; Pad whatever data is left in the buffer.
     %4 = alloca i32
     %5 = zext i7 64 to i32
     store i32 %5, i32* %4
-    %6 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 1
+    %6 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
     %7 = load i32, i32* %6
     %8 = icmp ult i32 %7, 56
     br i1 %8 , label %then_0, label %endif_0
@@ -665,14 +667,14 @@ then_0:
     store i32 56, i32* %4
     br label %endif_0
 endif_0:
-    %9 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 0
+    %9 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
     %10 = load i32, i32* %1
     %11 = getelementptr inbounds [64 x i8], [64 x i8]* %9, i32 0, i32 %10
     store i8 128, i8* %11
     %12 = load i32, i32* %1
     %13 = add i32 %12, 1
     store i32 %13, i32* %1
-    %14 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 0
+    %14 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
     %15 = load i32, i32* %1
     %16 = getelementptr inbounds [64 x i8], [64 x i8]* %14, i32 0, i32 %15
     %17 = bitcast i8* %16 to i8*
@@ -681,88 +683,88 @@ endif_0:
     %20 = sub i32 %18, %19
     %21 = zext i32 %20 to %SizeT
     %22 = call i8* (i8*, %Int, %SizeT) @memset(i8* %17, %Int 0, %SizeT %21)
-    %23 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 1
+    %23 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
     %24 = load i32, i32* %23
     %25 = icmp uge i32 %24, 56
     br i1 %25 , label %then_1, label %endif_1
 then_1:
-    %26 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 0
+    %26 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
     %27 = bitcast [64 x i8]* %26 to [0 x i8]*
-    call void (%SHA256_Context*, [0 x i8]*) @sha256_transform(%SHA256_Context* %ctx, [0 x i8]* %27)
-    %28 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 0
+    call void (%Context*, [0 x i8]*) @sha256_transform(%Context* %ctx, [0 x i8]* %27)
+    %28 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
     %29 = bitcast [64 x i8]* %28 to i8*
     %30 = call i8* (i8*, %Int, %SizeT) @memset(i8* %29, %Int 0, %SizeT 56)
     br label %endif_1
 endif_1:
     ; Append to the padding the total message's length in bits and transform.
-    %31 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 2
-    %32 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 2
-    %33 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 1
+    %31 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
+    %32 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
+    %33 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
     %34 = load i32, i32* %33
     %35 = zext i32 %34 to i64
     %36 = mul i64 %35, 8
     %37 = load i64, i64* %32
     %38 = add i64 %37, %36
     store i64 %38, i64* %31
-    %39 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 0
+    %39 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
     %40 = getelementptr inbounds [64 x i8], [64 x i8]* %39, i32 0, i32 63
-    %41 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 2
+    %41 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
     %42 = load i64, i64* %41
     %43 = lshr i64 %42, 0
     %44 = trunc i64 %43 to i8
     store i8 %44, i8* %40
-    %45 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 0
+    %45 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
     %46 = getelementptr inbounds [64 x i8], [64 x i8]* %45, i32 0, i32 62
-    %47 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 2
+    %47 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
     %48 = load i64, i64* %47
     %49 = lshr i64 %48, 8
     %50 = trunc i64 %49 to i8
     store i8 %50, i8* %46
-    %51 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 0
+    %51 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
     %52 = getelementptr inbounds [64 x i8], [64 x i8]* %51, i32 0, i32 61
-    %53 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 2
+    %53 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
     %54 = load i64, i64* %53
     %55 = lshr i64 %54, 16
     %56 = trunc i64 %55 to i8
     store i8 %56, i8* %52
-    %57 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 0
+    %57 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
     %58 = getelementptr inbounds [64 x i8], [64 x i8]* %57, i32 0, i32 60
-    %59 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 2
+    %59 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
     %60 = load i64, i64* %59
     %61 = lshr i64 %60, 24
     %62 = trunc i64 %61 to i8
     store i8 %62, i8* %58
-    %63 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 0
+    %63 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
     %64 = getelementptr inbounds [64 x i8], [64 x i8]* %63, i32 0, i32 59
-    %65 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 2
+    %65 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
     %66 = load i64, i64* %65
     %67 = lshr i64 %66, 32
     %68 = trunc i64 %67 to i8
     store i8 %68, i8* %64
-    %69 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 0
+    %69 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
     %70 = getelementptr inbounds [64 x i8], [64 x i8]* %69, i32 0, i32 58
-    %71 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 2
+    %71 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
     %72 = load i64, i64* %71
     %73 = lshr i64 %72, 40
     %74 = trunc i64 %73 to i8
     store i8 %74, i8* %70
-    %75 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 0
+    %75 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
     %76 = getelementptr inbounds [64 x i8], [64 x i8]* %75, i32 0, i32 57
-    %77 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 2
+    %77 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
     %78 = load i64, i64* %77
     %79 = lshr i64 %78, 48
     %80 = trunc i64 %79 to i8
     store i8 %80, i8* %76
-    %81 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 0
+    %81 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
     %82 = getelementptr inbounds [64 x i8], [64 x i8]* %81, i32 0, i32 56
-    %83 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 2
+    %83 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
     %84 = load i64, i64* %83
     %85 = lshr i64 %84, 56
     %86 = trunc i64 %85 to i8
     store i8 %86, i8* %82
-    %87 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 0
+    %87 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
     %88 = bitcast [64 x i8]* %87 to [0 x i8]*
-    call void (%SHA256_Context*, [0 x i8]*) @sha256_transform(%SHA256_Context* %ctx, [0 x i8]* %88)
+    call void (%Context*, [0 x i8]*) @sha256_transform(%Context* %ctx, [0 x i8]* %88)
     ; Since this implementation uses little endian byte ordering
     ; and SHA uses big endian, reverse all the bytes
     ; when copying the final state to the output hash.
@@ -778,8 +780,8 @@ body_1:
     %93 = sub i32 24, %92
     %94 = load i32, i32* %1
     %95 = add i32 %94, 0
-    %96 = getelementptr inbounds [0 x i8], [0 x i8]* %hash, i32 0, i32 %95
-    %97 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 3
+    %96 = getelementptr inbounds [32 x i8], [32 x i8]* %out_hash, i32 0, i32 %95
+    %97 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
     %98 = getelementptr inbounds [8 x i32], [8 x i32]* %97, i32 0, i32 0
     %99 = load i32, i32* %98
     %100 = lshr i32 %99, %93
@@ -787,8 +789,8 @@ body_1:
     store i8 %101, i8* %96
     %102 = load i32, i32* %1
     %103 = add i32 %102, 4
-    %104 = getelementptr inbounds [0 x i8], [0 x i8]* %hash, i32 0, i32 %103
-    %105 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 3
+    %104 = getelementptr inbounds [32 x i8], [32 x i8]* %out_hash, i32 0, i32 %103
+    %105 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
     %106 = getelementptr inbounds [8 x i32], [8 x i32]* %105, i32 0, i32 1
     %107 = load i32, i32* %106
     %108 = lshr i32 %107, %93
@@ -796,8 +798,8 @@ body_1:
     store i8 %109, i8* %104
     %110 = load i32, i32* %1
     %111 = add i32 %110, 8
-    %112 = getelementptr inbounds [0 x i8], [0 x i8]* %hash, i32 0, i32 %111
-    %113 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 3
+    %112 = getelementptr inbounds [32 x i8], [32 x i8]* %out_hash, i32 0, i32 %111
+    %113 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
     %114 = getelementptr inbounds [8 x i32], [8 x i32]* %113, i32 0, i32 2
     %115 = load i32, i32* %114
     %116 = lshr i32 %115, %93
@@ -805,8 +807,8 @@ body_1:
     store i8 %117, i8* %112
     %118 = load i32, i32* %1
     %119 = add i32 %118, 12
-    %120 = getelementptr inbounds [0 x i8], [0 x i8]* %hash, i32 0, i32 %119
-    %121 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 3
+    %120 = getelementptr inbounds [32 x i8], [32 x i8]* %out_hash, i32 0, i32 %119
+    %121 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
     %122 = getelementptr inbounds [8 x i32], [8 x i32]* %121, i32 0, i32 3
     %123 = load i32, i32* %122
     %124 = lshr i32 %123, %93
@@ -814,8 +816,8 @@ body_1:
     store i8 %125, i8* %120
     %126 = load i32, i32* %1
     %127 = add i32 %126, 16
-    %128 = getelementptr inbounds [0 x i8], [0 x i8]* %hash, i32 0, i32 %127
-    %129 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 3
+    %128 = getelementptr inbounds [32 x i8], [32 x i8]* %out_hash, i32 0, i32 %127
+    %129 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
     %130 = getelementptr inbounds [8 x i32], [8 x i32]* %129, i32 0, i32 4
     %131 = load i32, i32* %130
     %132 = lshr i32 %131, %93
@@ -823,8 +825,8 @@ body_1:
     store i8 %133, i8* %128
     %134 = load i32, i32* %1
     %135 = add i32 %134, 20
-    %136 = getelementptr inbounds [0 x i8], [0 x i8]* %hash, i32 0, i32 %135
-    %137 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 3
+    %136 = getelementptr inbounds [32 x i8], [32 x i8]* %out_hash, i32 0, i32 %135
+    %137 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
     %138 = getelementptr inbounds [8 x i32], [8 x i32]* %137, i32 0, i32 5
     %139 = load i32, i32* %138
     %140 = lshr i32 %139, %93
@@ -832,8 +834,8 @@ body_1:
     store i8 %141, i8* %136
     %142 = load i32, i32* %1
     %143 = add i32 %142, 24
-    %144 = getelementptr inbounds [0 x i8], [0 x i8]* %hash, i32 0, i32 %143
-    %145 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 3
+    %144 = getelementptr inbounds [32 x i8], [32 x i8]* %out_hash, i32 0, i32 %143
+    %145 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
     %146 = getelementptr inbounds [8 x i32], [8 x i32]* %145, i32 0, i32 6
     %147 = load i32, i32* %146
     %148 = lshr i32 %147, %93
@@ -841,8 +843,8 @@ body_1:
     store i8 %149, i8* %144
     %150 = load i32, i32* %1
     %151 = add i32 %150, 28
-    %152 = getelementptr inbounds [0 x i8], [0 x i8]* %hash, i32 0, i32 %151
-    %153 = getelementptr inbounds %SHA256_Context, %SHA256_Context* %ctx, i32 0, i32 3
+    %152 = getelementptr inbounds [32 x i8], [32 x i8]* %out_hash, i32 0, i32 %151
+    %153 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
     %154 = getelementptr inbounds [8 x i32], [8 x i32]* %153, i32 0, i32 7
     %155 = load i32, i32* %154
     %156 = lshr i32 %155, %93
@@ -858,12 +860,12 @@ break_1:
 
 
 
-define void @sha256_doHash([0 x i8]* %msg, i32 %len, [0 x i8]* %hash) {
-    %1 = alloca %SHA256_Context
-    store %SHA256_Context zeroinitializer, %SHA256_Context* %1
-    call void (%SHA256_Context*) @sha256_contextInit(%SHA256_Context* %1)
-    call void (%SHA256_Context*, [0 x i8]*, i32) @sha256_update(%SHA256_Context* %1, [0 x i8]* %msg, i32 %len)
-    call void (%SHA256_Context*, [0 x i8]*) @sha256_final(%SHA256_Context* %1, [0 x i8]* %hash)
+define void @sha256_doHash([0 x i8]* %msg, i32 %msg_len, [32 x i8]* %out_hash) {
+    %1 = alloca %Context
+    store %Context zeroinitializer, %Context* %1
+    call void (%Context*) @sha256_contextInit(%Context* %1)
+    call void (%Context*, [0 x i8]*, i32) @sha256_update(%Context* %1, [0 x i8]* %msg, i32 %msg_len)
+    call void (%Context*, [32 x i8]*) @sha256_final(%Context* %1, [32 x i8]* %out_hash)
     ret void
 }
 

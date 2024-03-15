@@ -1533,8 +1533,7 @@ def print_variable_pointer(t, id_str, as_const):
 
 
 
-def print_variable_array(t, id_str, do_wrapped=True):
-
+def print_variable_array(t, id_str, do_wrapped=True, as_const=False):
     if do_wrapped:
         if 'wrapped_array_type' in t['att']:
             out("%s %s" % (t['wrapped_id'], id_str))
@@ -1545,10 +1544,8 @@ def print_variable_array(t, id_str, do_wrapped=True):
     while array_root_type['kind'] == 'array':
         array_root_type = array_root_type['of']
 
-    print_type(array_root_type, space_after=True)
-
+    print_type(array_root_type, space_after=True, as_const=as_const)
     out(id_str)
-
     print_array_volume(t)
 
     """# print arrays dimensions
@@ -1576,7 +1573,7 @@ def print_variable(_id, typ, as_const=False, init_value=None):
         print_variable_pointer(typ, id_str, as_const)
 
     elif hlir_type.type_is_array(typ):
-        print_variable_array(typ, id_str)
+        print_variable_array(typ, id_str, as_const=as_const)
 
     else:
         print_variable_regular(typ, id_str, as_const)
@@ -1635,16 +1632,13 @@ def print_def_const(x):
     if hlir_type.type_is_generic_record(const_value['type']):
         return
 
-    if hlir_type.type_is_generic_array(const_value['type']):
-        return
-
     newline(n=x['nl'])
 
     _id = x['id']
 
     if hlir_type.type_is_composite(const_value['type']):
         newline()
-        print_variable(_id, const_value['type'])
+        print_variable(_id, const_value['type'], as_const=True)
         out(" = ")
         print_value_literal(init_value, ['print_immediate'])
         out(";")

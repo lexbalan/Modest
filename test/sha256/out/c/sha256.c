@@ -12,13 +12,14 @@
 
 
 
+#include "sha256.h"
 
 typedef struct {
     uint8_t data[64];
     uint32_t datalen;
     uint64_t bitlen;
     uint32_t state[8];
-} SHA256_Context;
+} Context;
 
 
 uint32_t rotleft(uint32_t a, uint32_t b)
@@ -63,23 +64,20 @@ uint32_t sig1(uint32_t x)
 
 
 // not worked & let; FIXIT
-/*const initMagic = [
-    0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
-    0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
-]*/
 
-static uint32_t initMagic[8] = {
+const int32_t initMagic[8] = {
     0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A,
     0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19
-};;
+};
 
 
-void sha256_contextInit(SHA256_Context *ctx)
+void sha256_contextInit(Context *ctx)
 {
     memcpy(&ctx->state, &initMagic, 32);
 }
 
-
+/*[64]Nat32*/
+//const k = [
 static uint32_t k[64] = {
     0x428A2F98, 0x71374491, 0xB5C0FBCF, 0xE9B5DBA5,
     0x3956C25B, 0x59F111F1, 0x923F82A4, 0xAB1C5ED5,
@@ -100,7 +98,7 @@ static uint32_t k[64] = {
 };;
 
 
-void sha256_transform(SHA256_Context *ctx, uint8_t *data)
+void sha256_transform(Context *ctx, uint8_t *data)
 {
     uint32_t m[64];
     memcpy(&m, &(uint32_t[64]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 256);
@@ -151,12 +149,12 @@ void sha256_transform(SHA256_Context *ctx, uint8_t *data)
 }
 
 
-void sha256_update(SHA256_Context *ctx, uint8_t *data, uint32_t len)
+void sha256_update(Context *ctx, uint8_t *msg, uint32_t msg_len)
 {
     uint32_t i;
     i = 0;
-    while (i < len) {
-        ctx->data[ctx->datalen] = data[i];
+    while (i < msg_len) {
+        ctx->data[ctx->datalen] = msg[i];
         ctx->datalen = ctx->datalen + 1;
         if (ctx->datalen == 64) {
             sha256_transform(ctx, (uint8_t *)(uint8_t *)&ctx->data);
@@ -168,7 +166,7 @@ void sha256_update(SHA256_Context *ctx, uint8_t *data, uint32_t len)
 }
 
 
-void sha256_final(SHA256_Context *ctx, uint8_t *hash)
+void sha256_final(Context *ctx, uint8_t *out_hash)
 {
     uint32_t i;
     i = ctx->datalen;
@@ -213,26 +211,26 @@ void sha256_final(SHA256_Context *ctx, uint8_t *hash)
     i = 0;
     while (i < 4) {
         const uint32_t sh = 24 - i * 8;
-        hash[i + 0] = (uint8_t)(ctx->state[0] >> sh);
-        hash[i + 4] = (uint8_t)(ctx->state[1] >> sh);
-        hash[i + 8] = (uint8_t)(ctx->state[2] >> sh);
-        hash[i + 12] = (uint8_t)(ctx->state[3] >> sh);
-        hash[i + 16] = (uint8_t)(ctx->state[4] >> sh);
-        hash[i + 20] = (uint8_t)(ctx->state[5] >> sh);
-        hash[i + 24] = (uint8_t)(ctx->state[6] >> sh);
-        hash[i + 28] = (uint8_t)(ctx->state[7] >> sh);
+        out_hash[i + 0] = (uint8_t)(ctx->state[0] >> sh);
+        out_hash[i + 4] = (uint8_t)(ctx->state[1] >> sh);
+        out_hash[i + 8] = (uint8_t)(ctx->state[2] >> sh);
+        out_hash[i + 12] = (uint8_t)(ctx->state[3] >> sh);
+        out_hash[i + 16] = (uint8_t)(ctx->state[4] >> sh);
+        out_hash[i + 20] = (uint8_t)(ctx->state[5] >> sh);
+        out_hash[i + 24] = (uint8_t)(ctx->state[6] >> sh);
+        out_hash[i + 28] = (uint8_t)(ctx->state[7] >> sh);
         i = i + 1;
     }
 }
 
 
 // arg hash must be at least SHA256_BLOCK_SIZE
-void sha256_doHash(uint8_t *msg, uint32_t len, uint8_t *hash)
+void sha256_doHash(uint8_t *msg, uint32_t msg_len, uint8_t *out_hash)
 {
-    SHA256_Context ctx;
-    ctx = (SHA256_Context){};
+    Context ctx;
+    ctx = (Context){};
     sha256_contextInit(&ctx);
-    sha256_update(&ctx, msg, len);
-    sha256_final(&ctx, hash);
+    sha256_update(&ctx, msg, msg_len);
+    sha256_final(&ctx, out_hash);
 }
 

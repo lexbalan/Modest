@@ -60,7 +60,7 @@ static SHA256_TestCase *sha256_tests[2] = {&test0, &test1};;
 bool sha256_doTest(SHA256_TestCase *test)
 {
     uint8_t test_hash[sha256HashSize];
-    sha256_doHash((uint8_t *)(char *)&test->input_data, test->input_data_len, (uint8_t *)(uint8_t *)&test_hash);
+    sha256_doHash((uint8_t *)(char *)&test->input_data, test->input_data_len, (uint8_t *)&test_hash);
 
     printf("'%s'", (char *)&test->input_data);
     printf(" -> ");
