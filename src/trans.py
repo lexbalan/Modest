@@ -966,16 +966,17 @@ def do_value_index(x):
 
     if not hlir_type.type_is_array(array_typ):
         error("expected array or pointer to array", x['left']['ti'])
-        return value_bad(x['left']['ti'])
+        return value_bad(x['ti'])
 
 
     index = do_rvalue(x['index'])
 
     if value_is_bad(index):
-        return value_bad(x['index']['ti'])
+        return value_bad(x['ti'])
 
     if not hlir_type.type_is_integer(index['type']):
         error("expected integer value", x['index'])
+        return value_bad(x['ti'])
 
     if hlir_type.type_is_generic(index['type']):
         index = value_cons_implicit(index, typeSysInt, index['ti'])
@@ -989,6 +990,7 @@ def do_value_index(x):
         if hlir_type.type_is_generic(left['type']):
             if not value_is_immediate(index):
                 error("cannot index generic array by variable", x['ti'])
+                return value_bad(x['ti'])
 
         v = value_index_array(left, index, ti=x['ti'])
 
@@ -1001,6 +1003,7 @@ def do_value_index(x):
 
                 if index_imm >= array_typ['volume']['asset']:
                     error("array index out of bounds", x['index'])
+                    return value_bad(x['ti'])
 
                 item = left['asset'][index_imm]
 

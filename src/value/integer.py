@@ -87,6 +87,10 @@ def value_cons_integer(v, t, ti, method):
         check_width(from_type, t, method, ti)
 
         if not t['signed']:
+            if not 'asset' in v:
+                from .value import value_print
+                value_print(v)
+
             if v['asset'] < 0:
                 return None
 
