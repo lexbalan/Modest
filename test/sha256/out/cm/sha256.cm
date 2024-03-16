@@ -85,7 +85,7 @@ func sha256_transform(ctx: *Context, data: *[]Byte) -> Unit {
     var j: Nat32 = Nat32 0
 
     while i < 16 {
-        let x = (Nat32 data[j + 0]) << 24 or (Nat32 data[j + 1]) << 16 or (Nat32 data[j + 2]) << 8 or (Nat32 data[j + 3]) << 0
+        let x = (Nat32 data[j + 0]) << 24 or (Nat32 data[j + 1]) << 16 or (Nat32 data[j + 2]) << 08 or (Nat32 data[j + 3]) << 00
 
         m[i] = x
         j = j + 4
@@ -163,8 +163,8 @@ func sha256_final(ctx: *Context, out_hash: *[sha256HashSize]Byte) -> Unit {
     // Append to the padding the total message's length in bits and transform.
     ctx.bitlen = ctx.bitlen + Nat64 ctx.datalen * 8
 
-    ctx.data[63] = Byte (ctx.bitlen >> 0)
-    ctx.data[62] = Byte (ctx.bitlen >> 8)
+    ctx.data[63] = Byte (ctx.bitlen >> 00)
+    ctx.data[62] = Byte (ctx.bitlen >> 08)
     ctx.data[61] = Byte (ctx.bitlen >> 16)
     ctx.data[60] = Byte (ctx.bitlen >> 24)
     ctx.data[59] = Byte (ctx.bitlen >> 32)
@@ -181,9 +181,9 @@ func sha256_final(ctx: *Context, out_hash: *[sha256HashSize]Byte) -> Unit {
     i = 0
     while i < 4 {
         let sh = 24 - i * 8
-        out_hash[i + 0] = Byte ((ctx.state[0]) >> sh)
-        out_hash[i + 4] = Byte ((ctx.state[1]) >> sh)
-        out_hash[i + 8] = Byte ((ctx.state[2]) >> sh)
+        out_hash[i + 00] = Byte ((ctx.state[0]) >> sh)
+        out_hash[i + 04] = Byte ((ctx.state[1]) >> sh)
+        out_hash[i + 08] = Byte ((ctx.state[2]) >> sh)
         out_hash[i + 12] = Byte ((ctx.state[3]) >> sh)
         out_hash[i + 16] = Byte ((ctx.state[4]) >> sh)
         out_hash[i + 20] = Byte ((ctx.state[5]) >> sh)

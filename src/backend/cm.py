@@ -542,20 +542,23 @@ def print_value_char(x, ctx):
         out("\"\\x%x\"[0]" % num)
 
 
+
 def print_value_integer(x, ctx):
     num = x['asset']
 
+    nsigns = 0
+    if 'nsigns' in x:
+        nsigns = x['nsigns']
+    #print(nsigns)
+
+    spec = 'd'
+    pre = ''
     if value_attribute_check(x, 'hexadecimal'):
+        spec = 'X'
+        pre = '0x'
 
-        nsigns = 0
-        if 'nsigns' in x:
-            nsigns = x['nsigns']
-
-        fmt = "0x%%0%dX" % nsigns
-        out(fmt % num)
-
-    else:
-        out(str(num))
+    fmt = "%s%%0%d%s" % (pre, nsigns, spec)
+    out(fmt % num)
 
 
 

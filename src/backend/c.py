@@ -654,7 +654,6 @@ def print_value_cast(x, ctx):
     value = x['value']
     from_type = value['type']
 
-
     # в у нас типы структурные, в си - номинальные
     # поэтому даже если структуры одинаковы, но имена разные
     # их нужно приводить
@@ -966,8 +965,14 @@ def print_value_enum(x, ctx):
     print_id(x)
 
 
+
 def print_value_integer(x, ctx):
     num = x['asset']
+
+    nsigns = 0
+    if 'nsigns' in x:
+        nsigns = x['nsigns']
+    #print(nsigns)
 
     req_bits = nbits_for_num(num)
     # Big Number?
@@ -982,9 +987,6 @@ def print_value_integer(x, ctx):
 
 
     if value_attribute_check(x, 'hexadecimal'):
-        nsigns = 0
-        if 'nsigns' in x:
-            nsigns = x['nsigns']
         fmt = "0x%%0%dX" % nsigns
         out(fmt % num)
         return  #? 0xXXXXXXXXUL is normal?
