@@ -152,36 +152,11 @@ declare void @perror(%ConstCharStr* %str)
 
 define %Int @main() {
     %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str1 to [0 x i8]*))
-<<<<<<< HEAD
-    %2 = inttoptr i1 0 to i32*
-    %3 = load i32, i32* %2
-    %4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str2 to [0 x i8]*), i32 %3)
-    %5 = alloca i32
-    %6 = alloca i16
-    %7 = load i32, i32* %5
-    %8 = trunc i32 %7 to i16
-    store i16 %8, i16* %6
-    %9 = alloca [10 x i32]
-    %10 = insertvalue [10 x i32] zeroinitializer, i32 0, 0
-    %11 = insertvalue [10 x i32] %10, i32 0, 1
-    %12 = insertvalue [10 x i32] %11, i32 0, 2
-    %13 = insertvalue [10 x i32] %12, i32 0, 3
-    %14 = insertvalue [10 x i32] %13, i32 0, 4
-    %15 = insertvalue [10 x i32] %14, i32 0, 5
-    %16 = insertvalue [10 x i32] %15, i32 0, 6
-    %17 = insertvalue [10 x i32] %16, i32 0, 7
-    %18 = insertvalue [10 x i32] %17, i32 0, 8
-    %19 = insertvalue [10 x i32] %18, i32 0, 9
-    store [10 x i32] %19, [10 x i32]* %9
-    %20 = alloca %Point
-    store %Point zeroinitializer, %Point* %20
-    ;var s : Tag = #justSymbol
-=======
     ;var s : Tag = #justSymbol
     %2 = inttoptr i1 0 to i32*
     %3 = load i32, i32* %2
     %4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str2 to [0 x i8]*), i32 %3)
->>>>>>> dev
+
     ret %Int 0
 }
 
