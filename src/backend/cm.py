@@ -2,7 +2,7 @@
 import hlir.type as hlir_type
 from error import info
 from .common import *
-from value.value import value_attribute_check, value_print
+from value.value import value_is_zero, value_attribute_check, value_print
 from util import get_item_with_id
 
 
@@ -363,6 +363,17 @@ def print_value_cast(v, ctx):
 
 
 
+def is_zero_tail(values, i, n):
+    # если это значание - zero, проверим все остальные справа
+    # и если они тоже zero - их можно не печатать (zero tail)
+    # ex: {'a', 'b', '\0', '\0', '\0'} -> {'a', 'b', '\0'}
+    while i < n:
+        v = values[i]
+        if not value_is_zero(v):
+            return False
+        i = i + 1
+    return True
+
 
 def print_value_array(v, ctx):
 
@@ -381,6 +392,10 @@ def print_value_array(v, ctx):
     while i < n:
         a = values[i]
 
+        if value_is_zero(a):
+            if is_zero_tail(values, i, n):
+                break
+
         nl = 0
         if 'nl' in a:
             nl = a['nl']
@@ -390,15 +405,13 @@ def print_value_array(v, ctx):
             indent()
         else:
             if i > 0:
-                out(" ")
+                out(', ')
 
         print_value(a, ctx=ctx)
 
         i = i + 1
 
-        if nl == 0:
-            if i < n:
-                out(',')
+
 
 
     indent_down()

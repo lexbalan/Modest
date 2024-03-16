@@ -762,7 +762,6 @@ def print_array_values(values, ctx):
 
 def print_value_array(v, ctx):
     if hlir_type.type_is_array_of_char(v['type']):
-        print("A")
         char_type = v['type']['of']
         char_width = char_type['width']
         if hlir_type.type_is_generic_array_of_char(v['type']):
@@ -770,7 +769,6 @@ def print_value_array(v, ctx):
             out('{} /*GENERIC-STRING*/')
             return
 
-        print("B")
         # массивы чаров в конце которых только один терминальный ноль
         # печатаем в виде строковых литералов C
         values = v['asset']
