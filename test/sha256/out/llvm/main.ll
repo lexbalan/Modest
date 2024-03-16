@@ -226,7 +226,7 @@ declare void @bcopy(i8* %src, i8* %dst, %SizeT %n)
 
 
 
-declare void @sha256_doHash([0 x i8]* %msg, i32 %len, [0 x i8]* %hash)
+declare void @sha256_doHash([0 x i8]* %msg, i32 %msg_len, [32 x i8]* %out_hash)
 
 
 ; -- SOURCE: src/main.cm
@@ -403,36 +403,35 @@ define i1 @sha256_doTest(%SHA256_TestCase* %test) {
     %3 = bitcast [32 x i8]* %2 to [0 x i8]*
     %4 = getelementptr inbounds %SHA256_TestCase, %SHA256_TestCase* %test, i32 0, i32 1
     %5 = load i32, i32* %4
-    %6 = bitcast [32 x i8]* %1 to [0 x i8]*
-    call void ([0 x i8]*, i32, [0 x i8]*) @sha256_doHash([0 x i8]* %3, i32 %5, [0 x i8]* %6)
-    %7 = getelementptr inbounds %SHA256_TestCase, %SHA256_TestCase* %test, i32 0, i32 0
-    %8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str1 to [0 x i8]*), [32 x i8]* %7)
-    %9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str2 to [0 x i8]*))
-    %10 = alloca i32
-    store i32 0, i32* %10
+    call void ([0 x i8]*, i32, [32 x i8]*) @sha256_doHash([0 x i8]* %3, i32 %5, [32 x i8]* %1)
+    %6 = getelementptr inbounds %SHA256_TestCase, %SHA256_TestCase* %test, i32 0, i32 0
+    %7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str1 to [0 x i8]*), [32 x i8]* %6)
+    %8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str2 to [0 x i8]*))
+    %9 = alloca i32
+    store i32 0, i32* %9
     br label %again_1
 again_1:
-    %11 = load i32, i32* %10
-    %12 = icmp slt i32 %11, 32
-    br i1 %12 , label %body_1, label %break_1
+    %10 = load i32, i32* %9
+    %11 = icmp slt i32 %10, 32
+    br i1 %11 , label %body_1, label %break_1
 body_1:
-    %13 = load i32, i32* %10
-    %14 = getelementptr inbounds [32 x i8], [32 x i8]* %1, i32 0, i32 %13
-    %15 = load i8, i8* %14
-    %16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str3 to [0 x i8]*), i8 %15)
-    %17 = load i32, i32* %10
-    %18 = add i32 %17, 1
-    store i32 %18, i32* %10
+    %12 = load i32, i32* %9
+    %13 = getelementptr inbounds [32 x i8], [32 x i8]* %1, i32 0, i32 %12
+    %14 = load i8, i8* %13
+    %15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str3 to [0 x i8]*), i8 %14)
+    %16 = load i32, i32* %9
+    %17 = add i32 %16, 1
+    store i32 %17, i32* %9
     br label %again_1
 break_1:
-    %19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))
-    %20 = getelementptr inbounds %SHA256_TestCase, %SHA256_TestCase* %test, i32 0, i32 2
-    %21 = bitcast [32 x i8]* %1 to i8*
-    %22 = bitcast [32 x i8]* %20 to i8*
+    %18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))
+    %19 = getelementptr inbounds %SHA256_TestCase, %SHA256_TestCase* %test, i32 0, i32 2
+    %20 = bitcast [32 x i8]* %1 to i8*
+    %21 = bitcast [32 x i8]* %19 to i8*
     
-    %23 = call i32 (i8*, i8*, i64) @memcmp( i8* %21, i8* %22, i64 32)
-    %24 = icmp eq i32 %23, 0
-    ret i1 %24
+    %22 = call i32 (i8*, i8*, i64) @memcmp( i8* %20, i8* %21, i64 32)
+    %23 = icmp eq i32 %22, 0
+    ret i1 %23
 }
 
 define %Int @main() {

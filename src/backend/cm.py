@@ -2,7 +2,7 @@
 import hlir.type as hlir_type
 from error import info
 from .common import *
-from value.value import value_attribute_check, value_print
+from value.value import value_is_zero, value_attribute_check, value_print
 from util import get_item_with_id
 
 
@@ -146,7 +146,7 @@ def print_type_record(t):
         # print comments
         if 'comments' in field:
             for comment in field['comments']:
-                out("\n" * comment['nl'])
+                newline(comment['nl'])
                 print_comment(comment)
 
         nl_indent(field['nl'])
@@ -363,6 +363,17 @@ def print_value_cast(v, ctx):
 
 
 
+def is_zero_tail(values, i, n):
+    # если это значание - zero, проверим все остальные справа
+    # и если они тоже zero - их можно не печатать (zero tail)
+    # ex: {'a', 'b', '\0', '\0', '\0'} -> {'a', 'b', '\0'}
+    while i < n:
+        v = values[i]
+        if not value_is_zero(v):
+            return False
+        i = i + 1
+    return True
+
 
 def print_value_array(v, ctx):
 
@@ -381,30 +392,32 @@ def print_value_array(v, ctx):
     while i < n:
         a = values[i]
 
+        if value_is_zero(a):
+            if is_zero_tail(values, i, n):
+                break
+
         nl = 0
         if 'nl' in a:
             nl = a['nl']
 
         if nl > 0:
-            out("\n" * nl)
+            newline(nl)
             indent()
         else:
             if i > 0:
-                out(" ")
+                out(', ')
 
         print_value(a, ctx=ctx)
 
         i = i + 1
 
-        if nl == 0:
-            if i < n:
-                out(',')
+
 
 
     indent_down()
 
     if v['nl_end'] > 0:
-        out("\n" * v['nl_end'])
+        newline(v['nl_end'])
         indent()
 
     out("]")
@@ -432,7 +445,7 @@ def print_value_record(v, ctx):
             nl = ini['nl']
 
         if nl > 0:
-            out("\n" * nl)
+            newline(nl)
             indent()
         else:
             if i > 0:
@@ -450,7 +463,7 @@ def print_value_record(v, ctx):
     indent_down()
 
     if v['nl_end'] > 0:
-        out("\n" * v['nl_end'])
+        newline(v['nl_end'])
         indent()
 
     out("}")
@@ -529,20 +542,23 @@ def print_value_char(x, ctx):
         out("\"\\x%x\"[0]" % num)
 
 
+
 def print_value_integer(x, ctx):
     num = x['asset']
 
+    nsigns = 0
+    if 'nsigns' in x:
+        nsigns = x['nsigns']
+    #print(nsigns)
+
+    spec = 'd'
+    pre = ''
     if value_attribute_check(x, 'hexadecimal'):
+        spec = 'X'
+        pre = '0x'
 
-        nsigns = 0
-        if 'nsigns' in x:
-            nsigns = x['nsigns']
-
-        fmt = "0x%%0%dX" % nsigns
-        out(fmt % num)
-
-    else:
-        out(str(num))
+    fmt = "%s%%0%d%s" % (pre, nsigns, spec)
+    out(fmt % num)
 
 
 
@@ -729,7 +745,7 @@ def print_stmt_block(s):
     indent_down()
 
     endnl = s['end_nl']
-    out("\n" * endnl)
+    newline(endnl)
     if endnl:
         indent()
     out("}")

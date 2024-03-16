@@ -6,7 +6,7 @@ from error import info, error, fatal
 from .common import *
 import hlir.type as hlir_type
 from hlir.type import type_print
-from value.value import value_is_immediate, value_attribute_check, value_print
+from value.value import value_is_immediate, value_is_zero, value_attribute_check, value_print
 from util import align_bits_up, nbits_for_num, get_item_with_id, utf8_cc_arr_to_utf32_cc_arr, utf16_cc_arr_to_utf32_cc_arr
 from main import settings
 import foundation
@@ -81,6 +81,10 @@ def nl_indent(nl=1):
         indent()
 
 
+def is_local_context():
+    global cfunc
+    return cfunc != None
+
 
 def init():
     global styleguide
@@ -153,14 +157,14 @@ def print_array_volume(t):
 
     # многомерные массивы в C не существуют, поэтому печатаем один массив
     # размер которого будет произведением всех измерений
-    if hlir_type.type_is_defined_array(t['of']):
+    if hlir_type.type_is_closed_array(t['of']):
 
         # if it is array of arrays, print volume as:
         # [n * m * ...]
         t2 = t
         while True:
             print_value(t2['volume'])
-            if not hlir_type.type_is_defined_array(t2['of']):
+            if not hlir_type.type_is_closed_array(t2['of']):
                 break
             t2 = t2['of']
             out(" * ")
@@ -519,7 +523,7 @@ def print_value_index(x, ctx):
 
     dims = []
     yy = xx['type']
-    while hlir_type.type_is_defined_array(yy):
+    while hlir_type.type_is_closed_array(yy):
         dims.append(yy['volume'])
         yy = yy['of']
 
@@ -599,7 +603,7 @@ def print_value_access_ptr(x, ctx):
 
 def print_cast_hard(t, v, ctx=[]):
     # hard cast is possible only in function body
-    assert(cfunc != None)
+    assert(is_local_context())
     out("*(")
     print_type(t, space_after=True)
     out("*)&")
@@ -649,7 +653,6 @@ def print_value_cast(x, ctx):
     to_type = x['type']
     value = x['value']
     from_type = value['type']
-
 
     # в у нас типы структурные, в си - номинальные
     # поэтому даже если структуры одинаковы, но имена разные
@@ -707,6 +710,17 @@ def print_value_cast(x, ctx):
 
 
 
+def is_zero_tail(values, i, n):
+    # если это значание - zero, проверим все остальные справа
+    # и если они тоже zero - их можно не печатать (zero tail)
+    # ex: {'a', 'b', '\0', '\0', '\0'} -> {'a', 'b', '\0'}
+    while i < n:
+        v = values[i]
+        if not value_is_zero(v):
+            return False
+        i = i + 1
+    return True
+
 
 def print_array_values(values, ctx):
     i = 0
@@ -725,12 +739,21 @@ def print_array_values(values, ctx):
             if i > 0:
                 out(" ")
 
-        if hlir_type.type_is_defined_array(a['type']):
+        if hlir_type.type_is_closed_array(a['type']):
             print_array_values(a['asset'], ctx)
         else:
             print_value(a, ctx)
 
         i = i + 1
+
+
+        # если это значание - zero, проверим все остальные справа
+        # и если они тоже zero - их можно не печатать (zero tail)
+        # ex: {'a', 'b', '\0', '\0', '\0'} -> {'a', 'b', '\0'}
+        if value_is_zero(a):
+            if is_zero_tail(values, i, n):
+                return
+
         if i < n:
             out(',')
 
@@ -748,21 +771,29 @@ def print_value_array(v, ctx):
         # массивы чаров в конце которых только один терминальный ноль
         # печатаем в виде строковых литералов C
         values = v['asset']
-        if len(values) > 1:
-            if values[-1]['asset'] == 0 and values[-2]['asset'] != 0:
-                utf32_codes = []
-                for c in values:
-                    xc = c['asset']
-                    utf32_codes.append(xc)
-                _print_string_literal(utf32_codes, width=char_width)
-                return
+        n = len(values)
+        if n > 0:
+            utf32_codes = []
+            i = 0
+            while i < n:
+                cc = values[i]['asset']
+                utf32_codes.append(cc)
+                if cc == 0:
+                    if is_zero_tail(values, i, n):
+                        break
+
+                i = i + 1
+
+            _print_string_literal(utf32_codes, width=char_width)
+            return
 
     if not 'no-literal-array-cast' in ctx:
-        if cfunc != None:
+        if is_local_context():
             # only for local record literals (!)
             out("(")
             print_type(v['type'], array_as_ptr=False)
             out(")")
+
 
     out("{")
     indent_up()
@@ -778,13 +809,14 @@ def print_value_array(v, ctx):
 
 def print_value_record(v, ctx):
 
-    if cfunc != None:
+    if is_local_context():
         # only for local record literals (!)
         out("(")
         print_type(v['type'])
         out(")")
 
     initializers = v['asset']
+
 
     out("{")
     indent_up()
@@ -933,8 +965,14 @@ def print_value_enum(x, ctx):
     print_id(x)
 
 
+
 def print_value_integer(x, ctx):
     num = x['asset']
+
+    nsigns = 0
+    if 'nsigns' in x:
+        nsigns = x['nsigns']
+    #print(nsigns)
 
     req_bits = nbits_for_num(num)
     # Big Number?
@@ -949,9 +987,6 @@ def print_value_integer(x, ctx):
 
 
     if value_attribute_check(x, 'hexadecimal'):
-        nsigns = 0
-        if 'nsigns' in x:
-            nsigns = x['nsigns']
         fmt = "0x%%0%dX" % nsigns
         out(fmt % num)
         return  #? 0xXXXXXXXXUL is normal?
@@ -1007,6 +1042,7 @@ def print_value_by_id(x):
 
 # & let
 def print_value_const(x, ctx):
+    print("print_value_const")
     if 'c_alias' in x:
         print(x['c_alias'])
     print_id(x)
@@ -1163,7 +1199,7 @@ def print_stmt_return(x):
 
         global cfunc
         to = cfunc['type']['to']
-        if hlir_type.type_is_defined_array(to):
+        if hlir_type.type_is_closed_array(to):
             print_cast_hard(to, x['value'])
         else:
             print_value(x['value'])
@@ -1216,7 +1252,7 @@ def print_stmt_let(x):
     nl_indent(x['nl'])
 
     # массивы печатаем как переменные
-    if hlir_type.type_is_defined_array(v['type']):
+    if hlir_type.type_is_closed_array(v['type']):
         print_variable_array(v['type'], id['str'], do_wrapped=False)
         out(";\n")
         indent()
@@ -1372,9 +1408,9 @@ def print_func_wrappers(ftype):
     # печатаем обернутые параметры-массивы и возврашаемые массивы
     # (обернуты тк C не позволяет принимать возвращать массив по значению)
     for param in ftype['params']:
-        if hlir_type.type_is_defined_array(param['type']):
+        if hlir_type.type_is_closed_array(param['type']):
             print_wrapped_array(param['type'])
-    if hlir_type.type_is_defined_array(ftype['to']):
+    if hlir_type.type_is_closed_array(ftype['to']):
         print_wrapped_array(ftype['to'])
 
 
@@ -1501,7 +1537,7 @@ def print_def_type(x):
             return
 
 
-    is_defined_array = hlir_type.type_is_defined_array(orig_type)
+    is_defined_array = hlir_type.type_is_closed_array(orig_type)
     out("typedef ")
 
     if 'volatile' in x['original_type']['att']:
@@ -1533,8 +1569,7 @@ def print_variable_pointer(t, id_str, as_const):
 
 
 
-def print_variable_array(t, id_str, do_wrapped=True):
-
+def print_variable_array(t, id_str, do_wrapped=True, as_const=False):
     if do_wrapped:
         if 'wrapped_array_type' in t['att']:
             out("%s %s" % (t['wrapped_id'], id_str))
@@ -1545,10 +1580,8 @@ def print_variable_array(t, id_str, do_wrapped=True):
     while array_root_type['kind'] == 'array':
         array_root_type = array_root_type['of']
 
-    print_type(array_root_type, space_after=True)
-
+    print_type(array_root_type, space_after=True, as_const=as_const)
     out(id_str)
-
     print_array_volume(t)
 
     """# print arrays dimensions
@@ -1576,7 +1609,7 @@ def print_variable(_id, typ, as_const=False, init_value=None):
         print_variable_pointer(typ, id_str, as_const)
 
     elif hlir_type.type_is_array(typ):
-        print_variable_array(typ, id_str)
+        print_variable_array(typ, id_str, as_const=as_const)
 
     else:
         print_variable_regular(typ, id_str, as_const)
@@ -1613,8 +1646,6 @@ def print_def_var(x):
 
         if hlir_type.type_is_array(init_value['type']):
             print_value_array(init_value, ['print_immediate'])
-            out(";")
-
         else:
             print_value(init_value, ctx=['no-literal-array-cast'])
 
@@ -1635,7 +1666,7 @@ def print_def_const(x):
     if hlir_type.type_is_generic_record(const_value['type']):
         return
 
-    if hlir_type.type_is_generic_array(const_value['type']):
+    if hlir_type.type_is_generic_array_of_char(const_value['type']):
         return
 
     newline(n=x['nl'])
@@ -1644,7 +1675,7 @@ def print_def_const(x):
 
     if hlir_type.type_is_composite(const_value['type']):
         newline()
-        print_variable(_id, const_value['type'])
+        print_variable(_id, const_value['type'], as_const=True)
         out(" = ")
         print_value_literal(init_value, ['print_immediate'])
         out(";")
@@ -1789,6 +1820,8 @@ def run(module, outname):
 
 
 def memcopy_len(left, right, n):
+    if n <= 0:
+        return
     out("memcpy(&")
     print_value(left)
     out(", &")

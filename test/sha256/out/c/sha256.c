@@ -12,13 +12,14 @@
 
 
 
+#include "sha256.h"
 
 typedef struct {
     uint8_t data[64];
     uint32_t datalen;
     uint64_t bitlen;
     uint32_t state[8];
-} SHA256_Context;
+} Context;
 
 
 uint32_t rotleft(uint32_t a, uint32_t b)
@@ -63,24 +64,22 @@ uint32_t sig1(uint32_t x)
 
 
 // not worked & let; FIXIT
-/*const initMagic = [
-    0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
-    0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
-]*/
 
-static uint32_t initMagic[8] = {
+const int32_t initMagic[8] = {
     0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A,
     0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19
-};;
+};
 
 
-void sha256_contextInit(SHA256_Context *ctx)
+void sha256_contextInit(Context *ctx)
 {
     memcpy(&ctx->state, &initMagic, 32);
 }
 
+/*[64]Nat32*/
 
-static uint32_t k[64] = {
+const int32_t k[64] = {
+
     0x428A2F98, 0x71374491, 0xB5C0FBCF, 0xE9B5DBA5,
     0x3956C25B, 0x59F111F1, 0x923F82A4, 0xAB1C5ED5,
     0xD807AA98, 0x12835B01, 0x243185BE, 0x550C7DC3,
@@ -97,13 +96,13 @@ static uint32_t k[64] = {
     0x391C0CB3, 0x4ED8AA4A, 0x5B9CCA4F, 0x682E6FF3,
     0x748F82EE, 0x78A5636F, 0x84C87814, 0x8CC70208,
     0x90BEFFFA, 0xA4506CEB, 0xBEF9A3F7, 0xC67178F2
-};;
+};
 
 
-void sha256_transform(SHA256_Context *ctx, uint8_t *data)
+void sha256_transform(Context *ctx, uint8_t *data)
 {
     uint32_t m[64];
-    memcpy(&m, &(uint32_t[64]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 256);
+    memcpy(&m, &(uint32_t[64]){0}, 256);
 
     uint32_t i;
     i = 0;
@@ -128,7 +127,25 @@ void sha256_transform(SHA256_Context *ctx, uint8_t *data)
 
     i = 0;
     while (i < 64) {
-        const uint32_t t1 = x[7] + ep1(x[4]) + ch(x[4], x[5], x[6]) + k[i] + m[i];
+        const uint32_t t1 = x[7] + ep1(x[4]) + ch(x[4], x[5], x[6]) + (uint32_t)(int32_t[64]){
+
+            0x428A2F98, 0x71374491, 0xB5C0FBCF, 0xE9B5DBA5,
+            0x3956C25B, 0x59F111F1, 0x923F82A4, 0xAB1C5ED5,
+            0xD807AA98, 0x12835B01, 0x243185BE, 0x550C7DC3,
+            0x72BE5D74, 0x80DEB1FE, 0x9BDC06A7, 0xC19BF174,
+            0xE49B69C1, 0xEFBE4786, 0xFC19DC6, 0x240CA1CC,
+            0x2DE92C6F, 0x4A7484AA, 0x5CB0A9DC, 0x76F988DA,
+            0x983E5152, 0xA831C66D, 0xB00327C8, 0xBF597FC7,
+            0xC6E00BF3, 0xD5A79147, 0x6CA6351, 0x14292967,
+            0x27B70A85, 0x2E1B2138, 0x4D2C6DFC, 0x53380D13,
+            0x650A7354, 0x766A0ABB, 0x81C2C92E, 0x92722C85,
+            0xA2BFE8A1, 0xA81A664B, 0xC24B8B70, 0xC76C51A3,
+            0xD192E819, 0xD6990624, 0xF40E3585, 0x106AA070,
+            0x19A4C116, 0x1E376C08, 0x2748774C, 0x34B0BCB5,
+            0x391C0CB3, 0x4ED8AA4A, 0x5B9CCA4F, 0x682E6FF3,
+            0x748F82EE, 0x78A5636F, 0x84C87814, 0x8CC70208,
+            0x90BEFFFA, 0xA4506CEB, 0xBEF9A3F7, 0xC67178F2
+        }[i] + m[i];
         const uint32_t t2 = ep0(x[0]) + maj(x[0], x[1], x[2]);
 
         x[7] = x[6];
@@ -151,12 +168,12 @@ void sha256_transform(SHA256_Context *ctx, uint8_t *data)
 }
 
 
-void sha256_update(SHA256_Context *ctx, uint8_t *data, uint32_t len)
+void sha256_update(Context *ctx, uint8_t *msg, uint32_t msg_len)
 {
     uint32_t i;
     i = 0;
-    while (i < len) {
-        ctx->data[ctx->datalen] = data[i];
+    while (i < msg_len) {
+        ctx->data[ctx->datalen] = msg[i];
         ctx->datalen = ctx->datalen + 1;
         if (ctx->datalen == 64) {
             sha256_transform(ctx, (uint8_t *)(uint8_t *)&ctx->data);
@@ -168,7 +185,7 @@ void sha256_update(SHA256_Context *ctx, uint8_t *data, uint32_t len)
 }
 
 
-void sha256_final(SHA256_Context *ctx, uint8_t *hash)
+void sha256_final(Context *ctx, uint8_t *out_hash)
 {
     uint32_t i;
     i = ctx->datalen;
@@ -213,26 +230,26 @@ void sha256_final(SHA256_Context *ctx, uint8_t *hash)
     i = 0;
     while (i < 4) {
         const uint32_t sh = 24 - i * 8;
-        hash[i + 0] = (uint8_t)(ctx->state[0] >> sh);
-        hash[i + 4] = (uint8_t)(ctx->state[1] >> sh);
-        hash[i + 8] = (uint8_t)(ctx->state[2] >> sh);
-        hash[i + 12] = (uint8_t)(ctx->state[3] >> sh);
-        hash[i + 16] = (uint8_t)(ctx->state[4] >> sh);
-        hash[i + 20] = (uint8_t)(ctx->state[5] >> sh);
-        hash[i + 24] = (uint8_t)(ctx->state[6] >> sh);
-        hash[i + 28] = (uint8_t)(ctx->state[7] >> sh);
+        out_hash[i + 0] = (uint8_t)(ctx->state[0] >> sh);
+        out_hash[i + 4] = (uint8_t)(ctx->state[1] >> sh);
+        out_hash[i + 8] = (uint8_t)(ctx->state[2] >> sh);
+        out_hash[i + 12] = (uint8_t)(ctx->state[3] >> sh);
+        out_hash[i + 16] = (uint8_t)(ctx->state[4] >> sh);
+        out_hash[i + 20] = (uint8_t)(ctx->state[5] >> sh);
+        out_hash[i + 24] = (uint8_t)(ctx->state[6] >> sh);
+        out_hash[i + 28] = (uint8_t)(ctx->state[7] >> sh);
         i = i + 1;
     }
 }
 
 
 // arg hash must be at least SHA256_BLOCK_SIZE
-void sha256_doHash(uint8_t *msg, uint32_t len, uint8_t *hash)
+void sha256_doHash(uint8_t *msg, uint32_t msg_len, uint8_t *out_hash)
 {
-    SHA256_Context ctx;
-    ctx = (SHA256_Context){};
+    Context ctx;
+    ctx = (Context){};
     sha256_contextInit(&ctx);
-    sha256_update(&ctx, msg, len);
-    sha256_final(&ctx, hash);
+    sha256_update(&ctx, msg, msg_len);
+    sha256_final(&ctx, out_hash);
 }
 

@@ -2,8 +2,9 @@
 
 import "libc/libc"
 
+import "sha256"
 
-type SHA256_Context record {
+type Context record {
     data: [64]Byte
     datalen: Nat32
     bitlen: Nat64
@@ -45,23 +46,19 @@ func sig1(x: Nat32) -> Nat32 {
 
 
 // not worked & let; FIXIT
-/*const initMagic = [
-    0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
-    0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
-]*/
-
-var initMagic: [8]Nat32 = [
+const initMagic = [
     0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
     0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
 ]
 
 
-func sha256_contextInit(ctx: *SHA256_Context) {
+func sha256_contextInit(ctx: *Context) {
     ctx.state = initMagic
 }
 
-
-var k: [64]Nat32 = [
+/*[64]Nat32*/
+const k = [
+//var k: [64]Nat32 = [
     0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,
     0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
     0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
@@ -81,8 +78,8 @@ var k: [64]Nat32 = [
 ]
 
 
-func sha256_transform(ctx: *SHA256_Context, data: *[]Byte) {
-    var m: [64]Nat32 = []
+func sha256_transform(ctx: *Context, data: *[]Byte) {
+    var m = [64]Nat32 []
 
     var i = Nat32 0
     var j = Nat32 0
@@ -127,10 +124,10 @@ func sha256_transform(ctx: *SHA256_Context, data: *[]Byte) {
 }
 
 
-func sha256_update(ctx: *SHA256_Context, data: *[]Byte, len: Nat32) {
+func sha256_update(ctx: *Context, msg: *[]Byte, msg_len: Nat32) {
     var i = Nat32 0
-    while i < len {
-        ctx.data[ctx.datalen] = data[i]
+    while i < msg_len {
+        ctx.data[ctx.datalen] = msg[i]
         ctx.datalen = ctx.datalen + 1
         if ctx.datalen == 64 {
             sha256_transform(ctx, &ctx.data)
@@ -142,7 +139,7 @@ func sha256_update(ctx: *SHA256_Context, data: *[]Byte, len: Nat32) {
 }
 
 
-func sha256_final(ctx: *SHA256_Context, hash: *[]Byte) {
+func sha256_final(ctx: *Context, out_hash: *[sha256HashSize]Byte) {
     var i: Nat32 = ctx.datalen
 
     // Pad whatever data is left in the buffer.
@@ -184,25 +181,25 @@ func sha256_final(ctx: *SHA256_Context, hash: *[]Byte) {
     i = 0
     while i < 4 {
         let sh = 24 - i * 8
-        hash[i + 00] = Byte (ctx.state[0] >> sh)
-        hash[i + 04] = Byte (ctx.state[1] >> sh)
-        hash[i + 08] = Byte (ctx.state[2] >> sh)
-        hash[i + 12] = Byte (ctx.state[3] >> sh)
-        hash[i + 16] = Byte (ctx.state[4] >> sh)
-        hash[i + 20] = Byte (ctx.state[5] >> sh)
-        hash[i + 24] = Byte (ctx.state[6] >> sh)
-        hash[i + 28] = Byte (ctx.state[7] >> sh)
+        out_hash[i + 00] = Byte (ctx.state[0] >> sh)
+        out_hash[i + 04] = Byte (ctx.state[1] >> sh)
+        out_hash[i + 08] = Byte (ctx.state[2] >> sh)
+        out_hash[i + 12] = Byte (ctx.state[3] >> sh)
+        out_hash[i + 16] = Byte (ctx.state[4] >> sh)
+        out_hash[i + 20] = Byte (ctx.state[5] >> sh)
+        out_hash[i + 24] = Byte (ctx.state[6] >> sh)
+        out_hash[i + 28] = Byte (ctx.state[7] >> sh)
         ++i
     }
 }
 
 
 // arg hash must be at least SHA256_BLOCK_SIZE
-func sha256_doHash(msg: *[]Byte, len: Nat32, hash: *[]Byte) {
-    var ctx = SHA256_Context {}
+func sha256_doHash(msg: *[]Byte, msg_len: Nat32, out_hash: *[sha256HashSize]Byte) {
+    var ctx = Context {}
     sha256_contextInit(&ctx)
-    sha256_update(&ctx, msg, len)
-    sha256_final(&ctx, hash)
+    sha256_update(&ctx, msg, msg_len)
+    sha256_final(&ctx, out_hash)
 }
 
 

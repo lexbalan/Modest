@@ -40,8 +40,8 @@ void xor_encrypter(uint8_t *buf, uint32_t buflen, uint8_t *key, uint32_t keylen)
 #define msg_length  12
 #define key_length  3
 
-static char test_msg[msg_length + 1] = "Hello World!";;
-static char test_key[key_length + 1] = "abc";;
+static char test_msg[msg_length + 1] = "Hello World!";
+static char test_key[key_length + 1] = "abc";
 
 
 void print_bytes(uint8_t *buf, uint32_t len)
