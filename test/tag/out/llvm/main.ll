@@ -152,6 +152,7 @@ declare void @perror(%ConstCharStr* %str)
 
 define %Int @main() {
     %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str1 to [0 x i8]*))
+<<<<<<< HEAD
     %2 = inttoptr i1 0 to i32*
     %3 = load i32, i32* %2
     %4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str2 to [0 x i8]*), i32 %3)
@@ -175,6 +176,12 @@ define %Int @main() {
     %20 = alloca %Point
     store %Point zeroinitializer, %Point* %20
     ;var s : Tag = #justSymbol
+=======
+    ;var s : Tag = #justSymbol
+    %2 = inttoptr i1 0 to i32*
+    %3 = load i32, i32* %2
+    %4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str2 to [0 x i8]*), i32 %3)
+>>>>>>> dev
     ret %Int 0
 }
 
