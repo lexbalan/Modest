@@ -711,6 +711,17 @@ def print_value_cast(x, ctx):
 
 
 
+def is_zero_tail(values, i, n):
+    # если это значание - zero, проверим все остальные справа
+    # и если они тоже zero - их можно не печатать (zero tail)
+    # ex: {'a', 'b', '\0', '\0', '\0'} -> {'a', 'b', '\0'}
+    while i < n:
+        v = values[i]
+        if not value_is_zero(v):
+            return False
+        i = i + 1
+    return True
+
 
 def print_array_values(values, ctx):
     i = 0
@@ -741,15 +752,8 @@ def print_array_values(values, ctx):
         # и если они тоже zero - их можно не печатать (zero tail)
         # ex: {'a', 'b', '\0', '\0', '\0'} -> {'a', 'b', '\0'}
         if value_is_zero(a):
-            k = i + 1
-            while k < n:
-                va = values[k]
-                if not value_is_zero(va):
-                    break
-                k = k + 1
-            if k == n:
+            if is_zero_tail(values, i, n):
                 return
-
 
         if i < n:
             out(',')
@@ -758,6 +762,7 @@ def print_array_values(values, ctx):
 
 def print_value_array(v, ctx):
     if hlir_type.type_is_array_of_char(v['type']):
+        print("A")
         char_type = v['type']['of']
         char_width = char_type['width']
         if hlir_type.type_is_generic_array_of_char(v['type']):
@@ -765,17 +770,25 @@ def print_value_array(v, ctx):
             out('{} /*GENERIC-STRING*/')
             return
 
+        print("B")
         # массивы чаров в конце которых только один терминальный ноль
         # печатаем в виде строковых литералов C
         values = v['asset']
-        if len(values) > 1:
-            if values[-1]['asset'] == 0 and values[-2]['asset'] != 0:
-                utf32_codes = []
-                for c in values:
-                    xc = c['asset']
-                    utf32_codes.append(xc)
-                _print_string_literal(utf32_codes, width=char_width)
-                return
+        n = len(values)
+        if n > 0:
+            utf32_codes = []
+            i = 0
+            while i < n:
+                cc = values[i]['asset']
+                utf32_codes.append(cc)
+                if cc == 0:
+                    if is_zero_tail(values, i, n):
+                        break
+
+                i = i + 1
+
+            _print_string_literal(utf32_codes, width=char_width)
+            return
 
     if not 'no-literal-array-cast' in ctx:
         if is_local_context():

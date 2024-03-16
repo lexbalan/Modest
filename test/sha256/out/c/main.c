@@ -30,7 +30,7 @@ typedef struct {
 
 
 static SHA256_TestCase test0 = {
-    .input_data = {'a', 'b', 'c', '\x0'},
+    .input_data = "abc",
     .input_data_len = 3,
 
     .expected_result = {
@@ -42,7 +42,7 @@ static SHA256_TestCase test0 = {
 };
 
 static SHA256_TestCase test1 = {
-    .input_data = {'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!', '\x0'},
+    .input_data = "Hello World!",
     .input_data_len = 12,
 
     .expected_result = {

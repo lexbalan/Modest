@@ -26,7 +26,7 @@ struct swap_retval swap(struct swap_x x)
 struct ret_str_retval {char a[7];};
 struct ret_str_retval ret_str()
 {
-    return *(struct ret_str_retval *)&(struct ret_str_retval){'h', 'e', 'l', 'l', 'o', '!', '\n'};
+    return *(struct ret_str_retval *)&"hello!\n";
 }
 
 
@@ -109,8 +109,8 @@ int main()
 
 
     char w[2 * 10];
-    memcpy(&w[0 * 10], &(char[10]){'h', 'e', 'l', 'l', 'o', '\x0'}, 10);
-    memcpy(&w[1 * 10], &(char[10]){'w', 'o', 'r', 'l', 'd', '\x0'}, 10);
+    memcpy(&w[0 * 10], &"hello", 10);
+    memcpy(&w[1 * 10], &"world", 10);
     char u[2 * 10];
     memcpy(&u, &w, 20);
     kk(*(struct kk_x *)&u);

@@ -18,7 +18,7 @@ const int16_t ratSymbolUTF16[2] = {0xD83D, 0xDC00};
 #define ratSymbolUTF32  0x0001F400
 
 
-static char arr_utf8[8] = {'H', 'i', '!', '\n', '\x0'};
+static char arr_utf8[8] = "Hi!\n";
 static uint16_t arr_utf16[8] = u"Hello!\n";
 static uint32_t arr_utf32[8] = U"Hello!\n";
 #define string8Const  "S-t-r-i-n-g-Ω 🐀🎉🦄"
