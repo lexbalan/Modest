@@ -987,15 +987,17 @@ def do_value_index(x):
         v = value_index_array_by_ptr(left, index, ti=x['ti'])
     else:
 
-        if hlir_type.type_is_generic(left['type']):
-            if not value_is_immediate(index):
-                error("cannot index generic array by variable", x['ti'])
-                return value_bad(x['ti'])
+        # error: cannot index generic array by variable
+        #if hlir_type.type_is_generic(left['type']):
+        #    if not value_is_immediate(index):
+        #        error("cannot index generic array by variable", x['ti'])
+        #        return value_bad(x['ti'])
 
         v = value_index_array(left, index, ti=x['ti'])
 
         if value_is_immutable(left):
             v['immutable'] = True
+
 
         if value_is_immediate(left):
             if value_is_immediate(index):

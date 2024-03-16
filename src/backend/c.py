@@ -6,7 +6,7 @@ from error import info, error, fatal
 from .common import *
 import hlir.type as hlir_type
 from hlir.type import type_print
-from value.value import value_is_immediate, value_attribute_check, value_print
+from value.value import value_is_immediate, value_is_zero, value_attribute_check, value_print
 from util import align_bits_up, nbits_for_num, get_item_with_id, utf8_cc_arr_to_utf32_cc_arr, utf16_cc_arr_to_utf32_cc_arr
 from main import settings
 import foundation
@@ -80,6 +80,10 @@ def nl_indent(nl=1):
     if nl > 0:
         indent()
 
+
+def is_local_context():
+    global cfunc
+    return cfunc != None
 
 
 def init():
@@ -599,7 +603,7 @@ def print_value_access_ptr(x, ctx):
 
 def print_cast_hard(t, v, ctx=[]):
     # hard cast is possible only in function body
-    assert(cfunc != None)
+    assert(is_local_context())
     out("*(")
     print_type(t, space_after=True)
     out("*)&")
@@ -731,6 +735,22 @@ def print_array_values(values, ctx):
             print_value(a, ctx)
 
         i = i + 1
+
+
+        # если это значание - zero, проверим все остальные справа
+        # и если они тоже zero - их можно не печатать (zero tail)
+        # ex: {'a', 'b', '\0', '\0', '\0'} -> {'a', 'b', '\0'}
+        if value_is_zero(a):
+            k = i + 1
+            while k < n:
+                va = values[k]
+                if not value_is_zero(va):
+                    break
+                k = k + 1
+            if k == n:
+                return
+
+
         if i < n:
             out(',')
 
@@ -758,11 +778,12 @@ def print_value_array(v, ctx):
                 return
 
     if not 'no-literal-array-cast' in ctx:
-        if cfunc != None:
+        if is_local_context():
             # only for local record literals (!)
             out("(")
             print_type(v['type'], array_as_ptr=False)
             out(")")
+
 
     out("{")
     indent_up()
@@ -778,13 +799,14 @@ def print_value_array(v, ctx):
 
 def print_value_record(v, ctx):
 
-    if cfunc != None:
+    if is_local_context():
         # only for local record literals (!)
         out("(")
         print_type(v['type'])
         out(")")
 
     initializers = v['asset']
+
 
     out("{")
     indent_up()
@@ -1007,6 +1029,7 @@ def print_value_by_id(x):
 
 # & let
 def print_value_const(x, ctx):
+    print("print_value_const")
     if 'c_alias' in x:
         print(x['c_alias'])
     print_id(x)
@@ -1610,8 +1633,6 @@ def print_def_var(x):
 
         if hlir_type.type_is_array(init_value['type']):
             print_value_array(init_value, ['print_immediate'])
-            out(";")
-
         else:
             print_value(init_value, ctx=['no-literal-array-cast'])
 
@@ -1786,6 +1807,8 @@ def run(module, outname):
 
 
 def memcopy_len(left, right, n):
+    if n <= 0:
+        return
     out("memcpy(&")
     print_value(left)
     out(", &")

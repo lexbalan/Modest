@@ -21,17 +21,13 @@ def value_cons_record_from_generic_record(v, t, ti, method):
         # все поля присутствовали (!)
         return value_cast(v, t, ti=ti)
 
-    """if len(v['asset']) == 0:
+    """
+    if len(v['asset']) == 0:
         #info("cons record from empty record", ti)
-        return {
-            'isa': 'value',
-            'kind': 'literal',
-            'asset': [],
-            'type': t,
-            'att': [],
-            'nl_end': v['nl_end'],
-            'ti': ti
-        }"""
+        vx = value_literal(t, [], ti)
+        vx['nl_end'] = v['nl_end']
+        return vx
+    """
 
     items = []
     if len(v['type']['fields']) > 0:
@@ -85,16 +81,8 @@ def value_cons_record_from_generic_record(v, t, ti, method):
             })
 
 
-    vx = {
-        'isa': 'value',
-        'kind': 'literal',
-        'asset': items,
-        'type': t,
-        'att': [],
-        'nl_end': v['nl_end'],
-        'ti': ti
-    }
-
+    vx = value_literal(t, items, ti)
+    vx['nl_end'] = v['nl_end']
 
     # если это не сделать то принтер C не сможет сослаться
     # на именованную константу и станет печатать ее по месту

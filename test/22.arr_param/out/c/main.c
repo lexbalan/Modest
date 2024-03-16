@@ -33,7 +33,7 @@ struct ret_str_retval ret_str()
 struct ret_str2_retval {char a[2 * 10];};
 struct ret_str2_retval ret_str2()
 {
-    return *(struct ret_str2_retval *)&(struct ret_str2_retval){'a', 'b', '\x0', '\x0', '\x0', '\x0', '\x0', '\x0', '\x0', '\x0', 'c', 'd', '\x0', '\x0', '\x0', '\x0', '\x0', '\x0', '\x0', '\x0'};
+    return *(struct ret_str2_retval *)&(struct ret_str2_retval){'a', 'b', '\x0', 'c', 'd', '\x0'};
 }
 
 
@@ -67,7 +67,7 @@ void kk(struct kk_x x)
 
 
 
-static int32_t global_array[2] = {1, 2};;
+static int32_t global_array[2] = {1, 2};
 
 
 typedef struct {
@@ -109,8 +109,8 @@ int main()
 
 
     char w[2 * 10];
-    memcpy(&w[0 * 10], &(char[10]){'h', 'e', 'l', 'l', 'o', '\x0', '\x0', '\x0', '\x0', '\x0'}, 10);
-    memcpy(&w[1 * 10], &(char[10]){'w', 'o', 'r', 'l', 'd', '\x0', '\x0', '\x0', '\x0', '\x0'}, 10);
+    memcpy(&w[0 * 10], &(char[10]){'h', 'e', 'l', 'l', 'o', '\x0'}, 10);
+    memcpy(&w[1 * 10], &(char[10]){'w', 'o', 'r', 'l', 'd', '\x0'}, 10);
     char u[2 * 10];
     memcpy(&u, &w, 20);
     kk(*(struct kk_x *)&u);

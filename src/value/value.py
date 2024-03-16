@@ -28,6 +28,44 @@ def value_is_immutable(x):
 
 
 
+
+def value_is_zero_array(x):
+    if not value_is_immediate(x):
+        return False
+    for item in x['asset']:
+        if not value_is_zero(item):
+            return False
+    return True
+
+
+def value_is_zero_record(x):
+    if not value_is_immediate(x):
+        return False
+    for item in x['asset']:
+        if not value_is_zero(item['value']):
+            return False
+    return True
+
+
+# Only for immediate value (!)
+def value_is_zero(x):
+    if not value_is_immediate(x):
+        return False
+    t = x['type']
+    if hlir_type.type_is_array(t):
+        return value_is_zero_array(x)
+    elif hlir_type.type_is_record(t):
+        return value_is_zero_record(x)
+
+    if not 'asset' in x:
+        value_print(x)
+
+    return x['asset'] == 0
+
+
+
+
+
 def value_attribute_add(v, a):
     v['att'].append(a)
 

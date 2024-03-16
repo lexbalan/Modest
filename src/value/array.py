@@ -137,15 +137,9 @@ def value_cons_array_from_generic_array(v, t, ti, method):
 
     casted_items = casted_items + [value_zero(t['of'])] * zero_pad
 
-    vx = {
-        'isa': 'value',
-        'kind': 'literal',
-        'asset': casted_items,
-        'type': t,
-        'att': [],
-        'nl_end': v['nl_end'],
-        'ti': ti
-    }
+    vx = value_literal(t, casted_items, ti)
+    vx['nl_end'] = v['nl_end']
+
 
     # если это не сделать то принтер C не сможет сослаться
     # на именованную константу и станет печатать ее по месту

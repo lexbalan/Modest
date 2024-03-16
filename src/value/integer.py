@@ -82,24 +82,31 @@ def do_cons_integer(v, t, method, ti):
 def value_cons_integer(v, t, ti, method):
     from_type = v['type']
 
+    if value_is_immediate(v):
+        if hlir_type.type_is_generic_integer(from_type):
+            # GenericInt -> Int
+            check_width(from_type, t, method, ti)
+
+            if not t['signed']:
+                if not 'asset' in v:
+                    from .value import value_print
+                    value_print(v)
+
+                if v['asset'] < 0:
+                    return None
+
+            return do_cons_integer(v, t, method, ti)
+
+
+    # runtime cast generic-integer to integer
     if hlir_type.type_is_generic_integer(from_type):
-        # GenericInt -> Int
-        check_width(from_type, t, method, ti)
-
-        if not t['signed']:
-            if not 'asset' in v:
-                from .value import value_print
-                value_print(v)
-
-            if v['asset'] < 0:
-                return None
-
         return do_cons_integer(v, t, method, ti)
 
 
     if method != 'explicit':
         info("cannot implicitly cons Int value", ti)
         return None
+
 
     # Int -> Int
     if hlir_type.type_is_integer(from_type):
