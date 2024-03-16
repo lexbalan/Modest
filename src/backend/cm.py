@@ -146,7 +146,7 @@ def print_type_record(t):
         # print comments
         if 'comments' in field:
             for comment in field['comments']:
-                out("\n" * comment['nl'])
+                newline(comment['nl'])
                 print_comment(comment)
 
         nl_indent(field['nl'])
@@ -401,7 +401,7 @@ def print_value_array(v, ctx):
             nl = a['nl']
 
         if nl > 0:
-            out("\n" * nl)
+            newline(nl)
             indent()
         else:
             if i > 0:
@@ -417,7 +417,7 @@ def print_value_array(v, ctx):
     indent_down()
 
     if v['nl_end'] > 0:
-        out("\n" * v['nl_end'])
+        newline(v['nl_end'])
         indent()
 
     out("]")
@@ -445,7 +445,7 @@ def print_value_record(v, ctx):
             nl = ini['nl']
 
         if nl > 0:
-            out("\n" * nl)
+            newline(nl)
             indent()
         else:
             if i > 0:
@@ -463,7 +463,7 @@ def print_value_record(v, ctx):
     indent_down()
 
     if v['nl_end'] > 0:
-        out("\n" * v['nl_end'])
+        newline(v['nl_end'])
         indent()
 
     out("}")
@@ -742,7 +742,7 @@ def print_stmt_block(s):
     indent_down()
 
     endnl = s['end_nl']
-    out("\n" * endnl)
+    newline(endnl)
     if endnl:
         indent()
     out("}")
