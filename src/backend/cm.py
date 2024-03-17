@@ -670,10 +670,18 @@ def print_stmt_return(x):
 
 
 def print_stmt_defvar(x):
-    out('var ')
-    print_field(x['var'])
-
     init_value = x['default_value']
+    out('var ')
+
+    if init_value == None:
+        print_field(x['var'])
+        return
+
+    if init_value['kind'] == 'cast':
+        print_id(x['var'])
+    else:
+        print_field(x['var'])
+
     if init_value != None:
         out(" = ")
         print_value(init_value)

@@ -5,8 +5,8 @@ import "libc/libc"
 
 
 func xor_encrypter(buf: *[]Byte, buflen: Nat32, key: *[]Byte, keylen: Nat32) -> Unit {
-    var i: Nat32 = Nat32 0
-    var j: Nat32 = Nat32 0
+    var i = Nat32 0
+    var j = Nat32 0
     while i < buflen {
         buf[i] = buf[i] xor key[j]
 
@@ -31,7 +31,7 @@ var test_key: [key_length + 1]Char8 = "abc"
 
 
 func print_bytes(buf: *[]Byte, len: Nat32) -> Unit {
-    var i: Nat32 = Nat32 0
+    var i = Nat32 0
     while i < len {
         printf("0x%02X ", buf[i])
         i = i + 1
