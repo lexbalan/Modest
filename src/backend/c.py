@@ -972,7 +972,6 @@ def print_value_integer(x, ctx):
     nsigns = 0
     if 'nsigns' in x:
         nsigns = x['nsigns']
-    #print(nsigns)
 
     req_bits = nbits_for_num(num)
     # Big Number?
@@ -1090,7 +1089,10 @@ def print_value(x, ctx=[], need_wrap=False, just_print_id=True):
     # каждый раз печатаем литерал инициализвтора константы полностью
     if 'print_immediate' in ctx:
         if value_is_immediate(x):
-            print_value_literal(x, ctx)
+            k = x['kind']
+            if k == 'cast_immediate': print_value_cast_immediate(x, ctx)
+            elif k == 'const': print_value_literal(x['value'], ctx)
+            else: print_value_literal(x, ctx)
             return
 
 

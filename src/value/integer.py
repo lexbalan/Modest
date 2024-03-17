@@ -20,7 +20,9 @@ def value_integer(num, typ=None, ti=None):
             error("value size not corresponded type size", ti)
             return value_bad(ti)
 
-    return value_literal(typ, num, ti)
+    v = value_literal(typ, num, ti)
+    v['nsigns'] = 0 # add field nsigns
+    return v
 
 
 

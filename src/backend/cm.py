@@ -549,7 +549,6 @@ def print_value_integer(x, ctx):
     nsigns = 0
     if 'nsigns' in x:
         nsigns = x['nsigns']
-    #print(nsigns)
 
     spec = 'd'
     pre = ''

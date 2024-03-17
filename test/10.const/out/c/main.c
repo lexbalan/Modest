@@ -31,14 +31,14 @@ typedef struct {
 
 #define zero  0
 
-const Point pointZero = {.x = 0.000000, .y = 0.000000};
+const Point pointZero = {.x = 0, .y = 0};
 
-const Point pointOne = {.x = 1.000000, .y = 1.000000};
+const Point pointOne = {.x = 1.0, .y = 1.0};
 
 
 const Line line0 = {
-    .a = {.x = 0.000000, .y = 0.000000},
-    .b = {.x = 1.000000, .y = 1.000000}
+    .a = {.x = 0, .y = 0},
+    .b = {.x = 1.0, .y = 1.0}
 };
 
 
@@ -46,17 +46,17 @@ const int8_t carr[7] = {0, 10, 15, 20, 25, 30};
 
 
 const Line line1 = {
-    .a = {.x = 10.000000, .y = 15.000000},
-    .b = {.x = 20.000000, .y = 25.000000}
+    .a = {.x = 10, .y = 15},
+    .b = {.x = 20, .y = 25}
 };
 
 
 const Line lines[2] = {{
-        .a = {.x = 0.000000, .y = 0.000000},
-        .b = {.x = 1.000000, .y = 1.000000}
+        .a = {.x = 0, .y = 0},
+        .b = {.x = 1.0, .y = 1.0}
     }, {
-        .a = {.x = 10.000000, .y = 15.000000},
-        .b = {.x = 20.000000, .y = 25.000000}
+        .a = {.x = 10, .y = 15},
+        .b = {.x = 20, .y = 25}
     }};
 
 
@@ -80,11 +80,11 @@ float lineLength(Line line)
 int main()
 {
     const float lines_0_len = lineLength((Line){
-        .a = (Point){.x = 0.000000, .y = 0.000000},
-        .b = (Point){.x = 1.000000, .y = 1.000000}});
+        .a = (Point){.x = 0, .y = 0},
+        .b = (Point){.x = 1.0, .y = 1.0}});
     const float lines_1_len = lineLength((Line){
-        .a = (Point){.x = 10.000000, .y = 15.000000},
-        .b = (Point){.x = 20.000000, .y = 25.000000}});
+        .a = (Point){.x = 10, .y = 15},
+        .b = (Point){.x = 20, .y = 25}});
 
     printf("lines_0_len = %f\n", lines_0_len);
     printf("lines_1_len = %f\n", lines_1_len);

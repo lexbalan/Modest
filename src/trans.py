@@ -1166,6 +1166,7 @@ def do_value_number(x):
         return do_value_integer(x)
 
 
+
 def do_value_integer(x):
     num_string_len = len(x['numstr'])
     base = 10
