@@ -1637,12 +1637,13 @@ def print_def_var(x):
 
 def print_def_const(x):
     const_value = x['value']
-    init_value = x['init_value']
 
     if hlir_type.type_is_composite(const_value['type']):
-        var = x['value']
-        out("\n@%s = constant " % var['id']['str'])
-        llvm_print_value(do_eval(init_value))
+        init_value = x['init_value']
+        _id = x['id']
+        out("\n@%s = constant " % _id['str'])
+        #llvm_print_type(const_value['type'])
+        llvm_print_type_value(do_eval(init_value))
 
     return
 

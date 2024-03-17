@@ -257,7 +257,7 @@ define i32 @sig1(i32 %x) {
 
 
 
-@initMagic = constant [
+@initMagic = constant [8 x i32] [
     i32 1779033703,
     i32 3144134277,
     i32 1013904242,
@@ -284,7 +284,7 @@ define void @sha256_contextInit(%Context* %ctx) {
 
 
 
-@k = constant [
+@k = constant [64 x i32] [
     i32 1116352408,
     i32 1899447441,
     i32 3049323471,
