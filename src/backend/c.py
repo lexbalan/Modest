@@ -999,8 +999,8 @@ def print_value_integer(x, ctx):
         if req_bits >= (nbits - 1):
             out("U")
 
-    if nbits > CC_INT_SIZE_BITS:
-        if nbits <= CC_LONG_SIZE_BITS:
+    if req_bits > CC_INT_SIZE_BITS:
+        if req_bits <= CC_LONG_SIZE_BITS:
             out("L")
         else:
             out("LL")
