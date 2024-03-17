@@ -807,6 +807,7 @@ def print_value_array(v, ctx):
 
 
 
+
 def print_value_record(v, ctx):
 
     if is_local_context():
@@ -1090,9 +1091,12 @@ def print_value(x, ctx=[], need_wrap=False, just_print_id=True):
     if 'print_immediate' in ctx:
         if value_is_immediate(x):
             k = x['kind']
-            if k == 'cast_immediate': print_value_cast_immediate(x, ctx)
-            elif k == 'const': print_value_literal(x['value'], ctx)
-            else: print_value_literal(x, ctx)
+            if k == 'cast_immediate':
+                print_value_cast_immediate(x, ctx)
+            elif k == 'const':
+                print_value_literal(x['value'], ctx)
+            else:
+                print_value_literal(x, ctx)
             return
 
 
@@ -1100,11 +1104,13 @@ def print_value(x, ctx=[], need_wrap=False, just_print_id=True):
     # GenericArray | GenericRecord; Тк C не умеет в это дело;
     # А по месту использования такой константы печатаем само imm значение
     # see print_def_const
-    if x['kind'] == 'const':
+    #  НЕТ!, уже печатаем,
+    """if x['kind'] == 'const':
         if x['value'] != None:
             if hlir_type.type_is_generic_array(x['value']['type']):
                 print_value_literal(x['value'], ['print_immediate'])
-                return
+                out("/**/")
+                return"""
 
 
     if just_print_id:
