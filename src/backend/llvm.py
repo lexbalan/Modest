@@ -1620,10 +1620,8 @@ def print_def_var(x):
     #mods = ['global', 'constant']
     mod = 'global'
 
-    out("\n@")
     var = x['value']
-    out(var['id']['str'])
-    out(" = ")
+    out("\n@%s = " % var['id']['str'])
     out(linkage + mod + ' ')
     print_type(var['type'])
 
@@ -1633,6 +1631,20 @@ def print_def_var(x):
             llvm_print_value(do_eval(x['default_value']))
         else:
             out(" zeroinitializer")
+    return
+
+
+
+def print_def_const(x):
+    const_value = x['value']
+    init_value = x['init_value']
+
+    if hlir_type.type_is_composite(const_value['type']):
+        var = x['value']
+        out("\n@%s = constant " % var['id']['str'])
+        llvm_print_value(do_eval(init_value))
+
+    return
 
 
 def print_string_ascii(strid, string):
@@ -1723,7 +1735,7 @@ def print_module(m):
         if isa == 'decl_func': print_decl_func(x)
         elif isa == 'decl_type': print_decl_type(x)
         elif isa == 'def_var': print_def_var(x)
-        #elif isa == 'def_const': print_def_const(x)
+        elif isa == 'def_const': print_def_const(x)
         elif isa == 'def_func': print_def_func(x)
         elif isa == 'def_type': print_def_type(x)
         elif isa == 'directive': pass
