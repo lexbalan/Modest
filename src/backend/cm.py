@@ -219,24 +219,17 @@ bin_ops = {
     'add_str': '+', 'eq_str': '==', 'ne_str': '!='
 }
 
-def print_value_bin(v, ctx):
-    op = v['kind']
-    left = v['left']
-    right = v['right']
+def print_value_bin(x, ctx):
+    op = x['kind']
+    left = x['left']
+    right = x['right']
 
     # получаем приоритеты операции и операндов
-    p0 = precedence({'kind': op})
+    p0 = precedence(x)
     pl = precedence(left)
     pr = precedence(right)
     need_wrap_left = pl < p0
     need_wrap_right = pr < p0
-
-    # GCC выдает warning например в: 1 << 2 + 2, тк считает
-    # Что юзер имел в виду (1 << 2) + 2, а у << приоритет тние
-    # чтобы он не ругался, завернем такие выражения в скобки
-    if op in ['shl', 'shr']:
-        need_wrap_left = precedence(left) < precedenceMax
-        need_wrap_right = precedence(right) < precedenceMax
 
     print_value(left, need_wrap=need_wrap_left)
     out(' %s ' % bin_ops[op])
