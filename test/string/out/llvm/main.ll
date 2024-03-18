@@ -167,6 +167,39 @@ declare void @utf32_puts(%Str32* %s)
 
 
 
+@hello = constant [6 x i8] [
+    i8 72,
+    i8 101,
+    i8 108,
+    i8 108,
+    i8 111,
+    i8 0
+]
+@world = constant [8 x i8] [
+    i8 119,
+    i8 111,
+    i8 114,
+    i8 108,
+    i8 100,
+    i8 33,
+    i8 10,
+    i8 0
+]
+@hello_world = constant [13 x i8] [
+    i8 72,
+    i8 101,
+    i8 108,
+    i8 108,
+    i8 111,
+    i8 119,
+    i8 111,
+    i8 114,
+    i8 108,
+    i8 100,
+    i8 33,
+    i8 10,
+    i8 0
+]
 
 @string8 = global [12 x i8] [
     i8 83,

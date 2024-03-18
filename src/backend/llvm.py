@@ -6,6 +6,7 @@ import hlir.type as hlir_type
 from hlir.type import type_print
 from value.value import value_attribute_check, value_print, value_is_immediate
 from hlir.type import hlir_type_pointer
+from util import align_bits_up
 import settings
 
 import foundation
@@ -255,6 +256,9 @@ def llvm_print_value_array(x):
         out("zeroinitializer")
         return
 
+    item_type = x['type']['of']
+    is_generic_items = hlir_type.type_is_generic(item_type)
+
     out("[\n")
     indent_up()
     n = len(x['items'])
@@ -262,7 +266,13 @@ def llvm_print_value_array(x):
     while i < n:
         item = x['items'][i]
         if i > 0: out(",\n")
-        indent(); llvm_print_type_value(item);
+        if is_generic_items:
+            indent();
+            print_type(item_type)
+            out(" ")
+            llvm_print_value(item)
+        else:
+            indent(); llvm_print_type_value(item);
         i = i + 1
     indent_down()
     out("\n"); indent(); out("]")
@@ -656,6 +666,15 @@ def print_type_id(t):
 
     return False
 
+
+
+
+def print_int_type_for(width):
+    # Generic int can have width (for example) 6 bit, etc.
+    w = align_bits_up(width)
+    out("i%d" % w)
+
+
 # функция может получать только указатель на массив
 # если же в CM она получает массив то тут и в СИ она получает
 # указатель на него, и потом копирует его во внутренний массив
@@ -664,8 +683,6 @@ def print_type(t):
     k = t['kind']
 
     if print_aka:
-
-
         # тупой LLVM не умеет делать алиасы структур
         # он типа делает, но потом к переменной с таким типом
         # хрен обратишься... дерьмо
@@ -682,12 +699,13 @@ def print_type(t):
         # иногда сюда залетают дженерики например в to левое:
         # let p = 0x12345678 to *Nat32
         if hlir_type.type_is_generic_integer(t):
-            out("i%d" % t['width'])
+            print_int_type_for(t['width'])
             return
 
         #if t['id'] != None:
         #    out('%%%s' % t['id']['str'])
         #    return
+
 
     if hlir_type.type_is_func(t): print_type_func(t)
     elif hlir_type.type_is_record(t): print_type_record(t)
@@ -696,13 +714,13 @@ def print_type(t):
     elif hlir_type.type_is_enum(t): print_type_enum(t)
 
     elif hlir_type.type_is_integer(t):
-        out("i%d" % t['width'])
+        print_int_type_for(t['width'])
 
     elif hlir_type.type_is_float(t):
         print_type_id(t)
 
     elif hlir_type.type_is_char(t):
-        out("i%d" % t['width'])
+        print_int_type_for(t['width'])
 
     elif hlir_type.type_is_opaque(t):
         out('opaque')
@@ -896,10 +914,13 @@ def select_cast_operator(a, b):
         if hlir_type.type_is_integer(b) or hlir_type.type_is_char(b) or hlir_type.type_is_bool(b) or hlir_type.type_is_byte(b):
             signed = hlir_type.type_is_signed(b)
 
-            if a['width'] < b['width']:
+            aw = align_bits_up(a['width'])
+            bw = align_bits_up(b['width'])
+
+            if aw < bw:
                 return 'sext' if signed else 'zext'
 
-            elif a['width'] > b['width']:
+            elif aw > bw:
                 return 'trunc'
 
             else:
@@ -1116,7 +1137,7 @@ def do_eval_record(v):
 
 
 
-def do_eval_func_const_var(x):
+def do_eval_var_func(x):
     k = x['kind']
 
     if value_attribute_check(x, 'local'):
@@ -1124,19 +1145,37 @@ def do_eval_func_const_var(x):
         y = locals_get(localname)
         return y
 
-    if k == 'const':
-        if value_is_immediate(x): # TODO: wtf? (see begining of do_eval)
-            if hlir_type.type_is_integer(x['type']) or hlir_type.type_is_float(x['type']):
-                return llvm_value_num(x['type'], x['asset'])
-
-        return do_eval(x['value'])
-
-    elif k == 'var':
+    if k == 'var':
         rv = llvm_value_mem(x['id']['str'], x['type'], x)
         rv['is_adr'] = True
         return rv
 
     return llvm_value_mem(x['id']['str'], x['type'], x)
+
+
+
+def do_eval_const(x):
+    if value_attribute_check(x, 'local'):
+        localname = x['id']['str']
+        y = locals_get(localname)
+        return y
+
+
+    if not is_global_context():
+        # Аргументы функуции это константы но у них поле value == None!
+        if x['value'] != None:
+            # константные массивы (даже дженерик)
+            # печатаются и их можео индексировать
+            if hlir_type.type_is_array(x['value']['type']):
+                rv = llvm_value_mem(x['id']['str'], x['type'], x)
+                rv['is_adr'] = True
+                return rv
+
+    if value_is_immediate(x): # TODO: wtf? (see begining of do_eval)
+        if hlir_type.type_is_numeric(x['type']):
+            return llvm_value_num(x['type'], x['asset'])
+
+    return do_eval(x['value'])
 
 
 
@@ -1156,6 +1195,9 @@ def do_eval_literal(x):
         value_print(x)
         error("do_eval_literal: unknown literal", x['ti'])
         exit(1)
+    return
+
+
 
 
 
@@ -1163,11 +1205,14 @@ def do_eval(x):
     assert(x != None)
     assert(x['isa'] == 'value')
 
+    y = None
+
     k = x['kind']
     if k == 'literal': y = do_eval_literal(x)
     elif k in bin_ops: y = do_eval_expr_bin(x)
     elif k in un_ops: y = do_eval_expr_un(x)
-    elif k in ['func', 'const', 'var']: y = do_eval_func_const_var(x)
+    elif k == 'const': y = do_eval_const(x)
+    elif k in ['func', 'var']: y = do_eval_var_func(x)
     elif k == 'call': y = do_eval_expr_call(x)
     elif k == 'index': y = do_eval_expr_index(x)
     elif k == 'index_ptr': y = do_eval_expr_index_ptr(x)
@@ -1175,11 +1220,11 @@ def do_eval(x):
     elif k == 'access_ptr': y = do_eval_expr_access_ptr(x)
     elif k == 'cast_immediate': y = do_eval_expr_cast_immediate(x)
     elif k == 'cast': y = do_eval_expr_cast(x)
+    elif k == 'add_str': y = do_eval_literal(x)
     elif k in ['sizeof', 'lengthof', 'alignof', 'offsetof', 'eq_str']:
          y = do_eval_literal(x)
     else:
         out("<%s>" % k)
-        y = None
 
     if y != None:
         y['type'] = x['type']  # TODO: wtf?
@@ -1640,9 +1685,8 @@ def print_def_const(x):
 
     if hlir_type.type_is_composite(const_value['type']):
         init_value = x['init_value']
-        _id = x['id']
-        out("\n@%s = constant " % _id['str'])
-        #llvm_print_type(const_value['type'])
+        id = x['id']
+        out("\n@%s = constant " % id['str'])
         llvm_print_type_value(do_eval(init_value))
 
     return
@@ -1679,7 +1723,8 @@ def print_string_as_array(strid, string, char_width):
         code = char['asset']
         if i > 0:
             out(", ")
-        out("i%d %d" % (char_width, code))
+        print_int_type_for(char_width)
+        out(" %d" % code)
         i = i + 1
     out("]")
 

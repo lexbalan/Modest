@@ -147,6 +147,15 @@ declare void @perror(%ConstCharStr* %str)
 
 
 
+@genericStringConst = constant [7 x i8] [
+    i8 72,
+    i8 101,
+    i8 108,
+    i8 108,
+    i8 111,
+    i8 33,
+    i8 0
+]
 
 %Point = type {
 	i32,
@@ -154,6 +163,46 @@ declare void @perror(%ConstCharStr* %str)
 }
 
 
+@ps = constant [3 x {
+	i8,
+	i8
+}] [
+    {
+	i8,
+	i8
+} {
+        i8 0,
+        i8 0
+    },
+    {
+	i8,
+	i8
+} {
+        i8 1,
+        i8 1
+    },
+    {
+	i8,
+	i8
+} {
+        i8 2,
+        i8 2
+    }
+]
+@points = constant [3 x %Point] [
+    %Point {
+        i32 0,
+        i32 0
+    },
+    %Point {
+        i32 1,
+        i32 1
+    },
+    %Point {
+        i32 2,
+        i32 2
+    }
+]
 
 
 @points2 = global [3 x %Point] [
@@ -174,7 +223,7 @@ declare void @perror(%ConstCharStr* %str)
 
 define %Int @main() {
     %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str4 to [0 x i8]*))
-    %2 = sext i6 42 to i32
+    %2 = sext i8 42 to i32
     %3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*), i32 %2)
     %4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str6 to [0 x i8]*), i32 42)
     ;	printf("genericStringConst = %s\n", genericStringConst)

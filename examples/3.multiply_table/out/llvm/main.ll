@@ -166,7 +166,7 @@ break_1:
 }
 
 define %Int @main() {
-    %1 = sext i3 4 to i32
+    %1 = sext i8 4 to i32
     %2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str2 to [0 x i8]*), i32 %1)
     call void (i32) @mtab(i32 4)
     ret %Int 0

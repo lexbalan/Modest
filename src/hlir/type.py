@@ -816,7 +816,7 @@ def type_print(t, print_aka=True):
             print("%d" % sz, end='')
 
         print("]", end='')
-
+        type_print(t['of'])
 
     elif type_is_func(t):
         print("(", end='')

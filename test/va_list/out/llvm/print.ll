@@ -352,19 +352,19 @@ define i8 @n_to_sym(i8 %n) {
     %2 = icmp ule i8 %n, 9
     br i1 %2 , label %then_0, label %else_0
 then_0:
-    %3 = insertvalue [2 x i6] zeroinitializer, i6 48, 0
-    %4 = insertvalue [2 x i6] %3, i6 0, 1
-    %5 = extractvalue [2 x i6] %4, 0
-    %6 = zext i6 %5 to i8
+    %3 = insertvalue [2 x i8] zeroinitializer, i8 48, 0
+    %4 = insertvalue [2 x i8] %3, i8 0, 1
+    %5 = extractvalue [2 x i8] %4, 0
+    %6 = bitcast i8 %5 to i8
     %7 = add i8 %6, %n
     %8 = bitcast i8 %7 to i8
     store i8 %8, i8* %1
     br label %endif_0
 else_0:
-    %9 = insertvalue [2 x i7] zeroinitializer, i7 65, 0
-    %10 = insertvalue [2 x i7] %9, i7 0, 1
-    %11 = extractvalue [2 x i7] %10, 0
-    %12 = zext i7 %11 to i8
+    %9 = insertvalue [2 x i8] zeroinitializer, i8 65, 0
+    %10 = insertvalue [2 x i8] %9, i8 0, 1
+    %11 = extractvalue [2 x i8] %10, 0
+    %12 = bitcast i8 %11 to i8
     %13 = sub i8 %n, 10
     %14 = add i8 %12, %13
     %15 = bitcast i8 %14 to i8

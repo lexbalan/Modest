@@ -198,7 +198,7 @@ define %Int @main() {
     %31 = call i64 (i128) @low_128(i128 %30)
     %32 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*), i64 %29, i64 %31)
     ; signed big int test
-    %33 = sub i1 0, 1
+    %33 = sub i8 0, 1
     %34 = alloca i128
     store i128 -1, i128* %34
     %35 = load i128, i128* %34

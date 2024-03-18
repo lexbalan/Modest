@@ -141,6 +141,18 @@ declare void @perror(%ConstCharStr* %str)
 
 
 
+@utf8Char = constant [2 x i8] [
+    i8 115,
+    i8 0
+]
+@utf16Char = constant [2 x i16] [
+    i16 1071,
+    i16 0
+]
+@utf32Char = constant [2 x i32] [
+    i32 128000,
+    i32 0
+]
 
 define %Int @main() {
     %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str1 to [0 x i8]*))

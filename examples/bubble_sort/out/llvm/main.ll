@@ -265,7 +265,7 @@ break_1:
 }
 
 define void @fill_array([0 x i32]* %array, i32 %len) {
-    %1 = sub i10 0, 1000
+    %1 = sub i16 0, 1000
     %2 = alloca i32
     store i32 0, i32* %2
     br label %again_1

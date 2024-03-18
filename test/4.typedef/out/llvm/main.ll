@@ -146,7 +146,7 @@ declare void @perror(%ConstCharStr* %str)
 define %Int @main() {
     %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*))
     %2 = alloca %NewInt32
-    %3 = sext i1 0 to %NewInt32
+    %3 = sext i8 0 to %NewInt32
     store %NewInt32 %3, %NewInt32* %2
     ret %Int 0
 }

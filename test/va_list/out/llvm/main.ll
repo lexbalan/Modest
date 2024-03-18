@@ -157,10 +157,10 @@ declare void @print(%Str8* %form, ...)
 
 define %Int @main() {
     call void (%Str8*, ...) @print(%Str8* bitcast ([14 x i8]* @str1 to [0 x i8]*))
-    %1 = sub i1 0, 1
-    %2 = sext i1 %1 to i32
-    %3 = zext i7 123 to i32
-    %4 = zext i29 305419903 to i32
+    %1 = sub i8 0, 1
+    %2 = sext i8 %1 to i32
+    %3 = zext i8 123 to i32
+    %4 = bitcast i32 305419903 to i32
     call void (%Str8*, ...) @print(%Str8* bitcast ([8 x i8]* @str3 to [0 x i8]*))
     call void (%Str8*, ...) @print(%Str8* bitcast ([11 x i8]* @str4 to [0 x i8]*), i8 36)
     call void (%Str8*, ...) @print(%Str8* bitcast ([11 x i8]* @str5 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @str2 to [0 x i8]*))
