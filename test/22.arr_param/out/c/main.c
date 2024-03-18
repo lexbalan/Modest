@@ -30,40 +30,38 @@ struct ret_str_retval ret_str()
 }
 
 
-struct ret_str2_retval {char a[2 * 10];};
-struct ret_str2_retval ret_str2()
-{
-    return *(struct ret_str2_retval *)&(struct ret_str2_retval){'a', 'b', '\x0', 'c', 'd', '\x0'};
-}
+// error: closed arrays of closed arrays are denied
+/*func ret_str2() -> [2][10]Char8 {
+    return ["ab", "cd"]
+}*/
 
 
-struct kk_x {char a[2 * 10];};
-void kk(struct kk_x x)
-{
-    printf("%c\n", x.a[0 * 10 + 0]);
-    printf("%c\n", x.a[0 * 10 + 1]);
-    printf("%c\n", x.a[0 * 10 + 2]);
-    printf("%c\n", x.a[0 * 10 + 3]);
-    printf("%c\n", x.a[0 * 10 + 4]);
-    printf("%c\n", x.a[0 * 10 + 5]);
-    printf("%c\n", x.a[0 * 10 + 6]);
-    printf("%c\n", x.a[0 * 10 + 7]);
-    printf("%c\n", x.a[0 * 10 + 8]);
-    printf("%c\n", x.a[0 * 10 + 9]);
-    printf("\n");
+// error: closed arrays of closed arrays are denied
+/*func kk(x: [2][10]Char8) {
+    printf("%c\n", x[0][0])
+    printf("%c\n", x[0][1])
+    printf("%c\n", x[0][2])
+    printf("%c\n", x[0][3])
+    printf("%c\n", x[0][4])
+    printf("%c\n", x[0][5])
+    printf("%c\n", x[0][6])
+    printf("%c\n", x[0][7])
+    printf("%c\n", x[0][8])
+    printf("%c\n", x[0][9])
+    printf("\n")
 
-    printf("%c\n", x.a[1 * 10 + 0]);
-    printf("%c\n", x.a[1 * 10 + 1]);
-    printf("%c\n", x.a[1 * 10 + 2]);
-    printf("%c\n", x.a[1 * 10 + 3]);
-    printf("%c\n", x.a[1 * 10 + 4]);
-    printf("%c\n", x.a[1 * 10 + 5]);
-    printf("%c\n", x.a[1 * 10 + 6]);
-    printf("%c\n", x.a[1 * 10 + 7]);
-    printf("%c\n", x.a[1 * 10 + 8]);
-    printf("%c\n", x.a[1 * 10 + 9]);
-    printf("\n");
-}
+    printf("%c\n", x[1][0])
+    printf("%c\n", x[1][1])
+    printf("%c\n", x[1][2])
+    printf("%c\n", x[1][3])
+    printf("%c\n", x[1][4])
+    printf("%c\n", x[1][5])
+    printf("%c\n", x[1][6])
+    printf("%c\n", x[1][7])
+    printf("%c\n", x[1][8])
+    printf("%c\n", x[1][9])
+    printf("\n")
+}*/
 
 
 
@@ -108,12 +106,11 @@ int main()
 
 
 
-    char w[2 * 10];
-    memcpy(&w[0 * 10], &"hello", 10);
-    memcpy(&w[1 * 10], &"world", 10);
-    char u[2 * 10];
-    memcpy(&u, &w, 20);
-    kk(*(struct kk_x *)&u);
+    /*var w: [2][10]Char8
+    w[0] = "hello"
+    w[1] = "world"
+    let u = w
+    kk(u)*/
 
 
     return 0;

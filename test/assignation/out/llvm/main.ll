@@ -151,8 +151,6 @@ declare void @perror(%ConstCharStr* %str)
 @str11 = private constant [16 x i8] [i8 108, i8 111, i8 99, i8 95, i8 97, i8 48, i8 91, i8 50, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 @str12 = private constant [15 x i8] [i8 108, i8 111, i8 99, i8 95, i8 114, i8 48, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 @str13 = private constant [15 x i8] [i8 108, i8 111, i8 99, i8 95, i8 114, i8 48, i8 46, i8 121, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
-@str14 = private constant [17 x i8] [i8 97, i8 97, i8 91, i8 37, i8 105, i8 93, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
-@str15 = private constant [13 x i8] [i8 120, i8 97, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 
 
 
@@ -293,95 +291,7 @@ define %Int @main() {
     %71 = getelementptr inbounds %Point, %Point* %62, i32 0, i32 1
     %72 = load i32, i32* %71
     %73 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str13 to [0 x i8]*), i32 %72)
-    %74 = alloca [15 x [16 x i32]]
-    %75 = alloca i32
-    store i32 0, i32* %75
-    br label %again_1
-again_1:
-    %76 = load i32, i32* %75
-    %77 = icmp slt i32 %76, 16
-    br i1 %77 , label %body_1, label %break_1
-body_1:
-    %78 = alloca i32
-    store i32 0, i32* %78
-    br label %again_2
-again_2:
-    %79 = load i32, i32* %78
-    %80 = icmp slt i32 %79, 16
-    br i1 %80 , label %body_2, label %break_2
-body_2:
-    %81 = load i32, i32* %75
-    %82 = getelementptr inbounds [15 x [16 x i32]], [15 x [16 x i32]]* %74, i32 0, i32 %81
-    %83 = load i32, i32* %78
-    %84 = getelementptr inbounds [16 x i32], [16 x i32]* %82, i32 0, i32 %83
-    %85 = load i32, i32* %75
-    %86 = load i32, i32* %78
-    %87 = mul i32 %85, %86
-    store i32 %87, i32* %84
-    %88 = load i32, i32* %78
-    %89 = add i32 %88, 1
-    store i32 %89, i32* %78
-    br label %again_2
-break_2:
-    %90 = load i32, i32* %75
-    %91 = add i32 %90, 1
-    store i32 %91, i32* %75
-    br label %again_1
-break_1:
-    store i32 0, i32* %75
-    br label %again_3
-again_3:
-    %92 = load i32, i32* %75
-    %93 = icmp slt i32 %92, 16
-    br i1 %93 , label %body_3, label %break_3
-body_3:
-    %94 = alloca i32
-    store i32 0, i32* %94
-    br label %again_4
-again_4:
-    %95 = load i32, i32* %94
-    %96 = icmp slt i32 %95, 16
-    br i1 %96 , label %body_4, label %break_4
-body_4:
-    %97 = load i32, i32* %75
-    %98 = load i32, i32* %94
-    %99 = load i32, i32* %75
-    %100 = getelementptr inbounds [15 x [16 x i32]], [15 x [16 x i32]]* %74, i32 0, i32 %99
-    %101 = load i32, i32* %94
-    %102 = getelementptr inbounds [16 x i32], [16 x i32]* %100, i32 0, i32 %101
-    %103 = load i32, i32* %102
-    %104 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str14 to [0 x i8]*), i32 %97, i32 %98, i32 %103)
-    %105 = load i32, i32* %94
-    %106 = add i32 %105, 1
-    store i32 %106, i32* %94
-    br label %again_4
-break_4:
-    %107 = load i32, i32* %75
-    %108 = add i32 %107, 1
-    store i32 %108, i32* %75
-    br label %again_3
-break_3:
-    %109 = getelementptr inbounds [15 x [16 x i32]], [15 x [16 x i32]]* %74, i32 0, i32 3
-    %110 = load [16 x i32], [16 x i32]* %109
-    %111 = alloca [16 x i32]
-    store [16 x i32] %110, [16 x i32]* %111
-    store i32 0, i32* %75
-    br label %again_5
-again_5:
-    %112 = load i32, i32* %75
-    %113 = icmp slt i32 %112, 16
-    br i1 %113 , label %body_5, label %break_5
-body_5:
-    %114 = load i32, i32* %75
-    %115 = load i32, i32* %75
-    %116 = getelementptr inbounds [16 x i32], [16 x i32]* %111, i32 0, i32 %115
-    %117 = load i32, i32* %116
-    %118 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str15 to [0 x i8]*), i32 %114, i32 %117)
-    %119 = load i32, i32* %75
-    %120 = add i32 %119, 1
-    store i32 %120, i32* %75
-    br label %again_5
-break_5:
+    ; error: closed arrays of closed arrays are denied
     ret %Int 0
 }
 

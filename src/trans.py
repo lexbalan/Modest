@@ -338,12 +338,21 @@ def do_type_pointer(t):
 
 
 def do_type_array(t):
-    of = do_type(t['of'])
+
     volume_expr = None
     if t['size'] != None:
         volume_expr = do_value(t['size'])
         if value_is_bad(volume_expr):
             return hlir_type.hlir_type_bad(t['ti'])
+
+    of = do_type(t['of'])
+
+    # closed arrays of closed arrays are denied NOW
+    if volume_expr != None:
+        if hlir_type.type_is_closed_array(of):
+            error("closed arrays of closed arrays are denied", t['ti'])
+            return hlir_type.hlir_type_bad(t['ti'])
+
     return hlir_type.hlir_type_array(of, volume=volume_expr, ti=t['ti'])
 
 

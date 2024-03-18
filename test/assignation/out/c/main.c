@@ -93,47 +93,42 @@ int main()
     printf("loc_r0.y = %i\n", loc_r0.y);
 
 
-    #define dim1  15
-    #define dim2  16
+    // error: closed arrays of closed arrays are denied
+    /*let dim1 = 15
+    let dim2 = 16
 
-    int32_t aa[dim1 * dim2];
+    var aa: [dim1][dim2]Int32
 
-    int32_t i;
-    i = 0;
-    while (i < 16) {
-        int32_t j;
-        j = 0;
-        while (j < 16) {
-            aa[i * dim2 + j] = i * j;
-            j = j + 1;
+    var i = 0
+    while i < 16 {
+        var j = 0
+        while j < 16 {
+            aa[i][j] = i * j
+            j = j + 1
         }
-        i = i + 1;
+        i = i + 1
     }
 
-    i = 0;
-    while (i < 16) {
-        int32_t k;
-        k = 0;
-        while (k < 16) {
-            printf("aa[%i][%i] = %i\n", i, k, aa[i * dim2 + k]);
-            k = k + 1;
+    i = 0
+    while i < 16 {
+        var k = 0
+        while k < 16 {
+            printf("aa[%i][%i] = %i\n", i, k, aa[i][k])
+            k = k + 1
         }
-        i = i + 1;
+        i = i + 1
     }
 
 
-    int32_t xa[dim2];
-    memcpy(&xa, &aa[3 * dim2], 64);
+    let xa = aa[3]
 
-    i = 0;
-    while (i < dim2) {
-        printf("xa[%i] = %i\n", i, xa[i]);
-        i = i + 1;
-    }
+    i = 0
+    while i < dim2 {
+        printf("xa[%i] = %i\n", i, xa[i])
+        i = i + 1
+    }*/
 
 
     return 0;
-#undef dim1
-#undef dim2
 }
 

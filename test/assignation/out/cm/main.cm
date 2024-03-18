@@ -80,14 +80,15 @@ func main() -> Int {
     printf("loc_r0.y = %i\n", loc_r0.y)
 
 
-    let dim1 = 15
+    // error: closed arrays of closed arrays are denied
+    /*let dim1 = 15
     let dim2 = 16
 
     var aa: [dim1][dim2]Int32
 
-    var i: Int32 = 0
+    var i = 0
     while i < 16 {
-        var j: Int32 = 0
+        var j = 0
         while j < 16 {
             aa[i][j] = i * j
             j = j + 1
@@ -97,7 +98,7 @@ func main() -> Int {
 
     i = 0
     while i < 16 {
-        var k: Int32 = 0
+        var k = 0
         while k < 16 {
             printf("aa[%i][%i] = %i\n", i, k, aa[i][k])
             k = k + 1
@@ -112,7 +113,7 @@ func main() -> Int {
     while i < dim2 {
         printf("xa[%i] = %i\n", i, xa[i])
         i = i + 1
-    }
+    }*/
 
 
     return 0

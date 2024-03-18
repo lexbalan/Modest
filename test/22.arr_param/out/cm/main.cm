@@ -19,12 +19,14 @@ func ret_str() -> [7]Char8 {
 }
 
 
-func ret_str2() -> [2][10]Char8 {
+// error: closed arrays of closed arrays are denied
+/*func ret_str2() -> [2][10]Char8 {
     return ["ab", "cd"]
-}
+}*/
 
 
-func kk(x: [2][10]Char8) -> Unit {
+// error: closed arrays of closed arrays are denied
+/*func kk(x: [2][10]Char8) {
     printf("%c\n", x[0][0])
     printf("%c\n", x[0][1])
     printf("%c\n", x[0][2])
@@ -48,7 +50,7 @@ func kk(x: [2][10]Char8) -> Unit {
     printf("%c\n", x[1][8])
     printf("%c\n", x[1][9])
     printf("\n")
-}
+}*/
 
 
 
@@ -90,11 +92,11 @@ func main() -> Int {
 
 
 
-    var w: [2][10]Char8
+    /*var w: [2][10]Char8
     w[0] = "hello"
     w[1] = "world"
     let u = w
-    kk(u)
+    kk(u)*/
 
 
     return 0
