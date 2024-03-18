@@ -1812,7 +1812,7 @@ def def_var(x):
 
     if not arr_without_length:
         if hlir_type.type_is_forbidden_var(var_type):
-            error("unsuitable type", x['type'])
+            error("unsuitable type", x['field']['type']['ti'])
 
     init_value = None
 

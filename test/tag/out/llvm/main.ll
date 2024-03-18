@@ -140,6 +140,7 @@ declare void @perror(%ConstCharStr* %str)
 
 @str1 = private constant [9 x i8] [i8 116, i8 97, i8 103, i8 32, i8 116, i8 101, i8 115, i8 116, i8 0]
 @str2 = private constant [9 x i8] [i8 42, i8 112, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str3 = private constant [10 x i8] [i8 42, i8 112, i8 112, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 
 
 
@@ -150,14 +151,4 @@ declare void @perror(%ConstCharStr* %str)
 }
 
 
-define %Int @main() {
-    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str1 to [0 x i8]*))
-    ;var s : Tag = #justSymbol
-    %2 = inttoptr i1 0 to i32*
-    %3 = load i32, i32* %2
-    %4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str2 to [0 x i8]*), i32 %3)
-
-    ret %Int 0
-}
-
-
+@ab = global [2 x [0 x i32]] 

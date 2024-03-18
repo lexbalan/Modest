@@ -11,6 +11,7 @@
 | String | `"Hello!"` | GenericArray |
 | Array | `[1, 2, 3]` | GenericArray |
 | Record | `{x=10, y=20}` | GenericRecord |
+| Nil | `nil` | *Unit |
 
 > Generic type can be implicit casted to value with [corresponded](./cast.md#Implicit-type-casting) non-generic type. 
 

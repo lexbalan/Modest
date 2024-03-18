@@ -13,6 +13,11 @@ type Point record {
     y: Int32
 }
 
+var ab: [10][10]Nat32 = [
+    [1, 2]
+    [3, 4]
+]
+
 
 func main() -> Int {
     printf("tag test")
@@ -32,8 +37,8 @@ func main() -> Int {
 
     //var s : Tag = #justSymbol
 
-    let p = *Int32 0
-    printf("*p = %i\n", *p)
+    let pp = *Int32 0
+    printf("*pp = %i\n", *pp)
 
 
     return 0
