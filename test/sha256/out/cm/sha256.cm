@@ -193,7 +193,6 @@ func sha256_final(ctx: *Context, out_hash: *[sha256HashSize]Byte) -> Unit {
 }
 
 
-// arg hash must be at least SHA256_BLOCK_SIZE
 func sha256_doHash(msg: *[]Byte, msg_len: Nat32, out_hash: *[sha256HashSize]Byte) -> Unit {
     var ctx: Context = {}
     sha256_contextInit(&ctx)

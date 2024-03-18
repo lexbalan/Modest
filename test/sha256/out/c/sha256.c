@@ -224,7 +224,6 @@ void sha256_final(Context *ctx, uint8_t *out_hash)
 }
 
 
-// arg hash must be at least SHA256_BLOCK_SIZE
 void sha256_doHash(uint8_t *msg, uint32_t msg_len, uint8_t *out_hash)
 {
     Context ctx;

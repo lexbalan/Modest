@@ -867,8 +867,6 @@ break_1:
     ret void
 }
 
-
-
 define void @sha256_doHash([0 x i8]* %msg, i32 %msg_len, [32 x i8]* %out_hash) {
     %1 = alloca %Context
     store %Context zeroinitializer, %Context* %1
