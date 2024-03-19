@@ -153,6 +153,12 @@ def value_cons_implicit(v, t, ti):
 
 
 
+def value_cons_implicit_check(v, t, ti):
+    nv = value_cons_implicit(v, t, ti)
+    type.check(nv['type'], t, ti)
+    return nv
+
+
 def value_cons_explicit(v, t, ti):
     if value_is_bad(v) or type.type_is_bad(t):
         return value_bad(ti)

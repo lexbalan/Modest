@@ -27,7 +27,7 @@ def is_local_context():
 
 
 from value.value import *
-from value.cons import value_cons_implicit, value_cons_explicit, value_cons_default
+from value.cons import value_cons_implicit, value_cons_implicit_check, value_cons_explicit, value_cons_default
 
 from symtab import Symtab
 from util import nbits_for_num, nbytes_for_bits
@@ -873,12 +873,10 @@ def do_value_call(x):
         arg = do_rvalue(aa)
 
         if not value_is_bad(arg):
-            arg = value_cons_implicit(arg, param['type'], aa['ti'])
-            hlir_type.check(param['type'], arg['type'], aa['ti'])
+            arg = value_cons_implicit_check(arg, param['type'], aa['ti'])
             args.append(arg)
 
         i = i + 1
-
 
     #
     # extra args
@@ -984,7 +982,7 @@ def do_value_index(x):
         return value_bad(x)
 
     if hlir_type.type_is_generic(index['type']):
-        index = value_cons_implicit(index, typeSysInt, index['ti'])
+        index = value_cons_implicit_check(index, typeSysInt, index['ti'])
 
     v = None
 
@@ -1325,25 +1323,25 @@ def do_stmt_while(x):
 def do_stmt_return(x):
     global cfunc
 
-    f_ret_type = cfunc['type']['to']
-    no_ret_func = hlir_type.type_is_unit(f_ret_type)
-
-    if x['value'] == None:
-        if not no_ret_func:
-            error("expected return value", x)
-        return hlir_stmt_return(ti=x['ti'])
+    func_ret_type = cfunc['type']['to']
+    no_ret_func = hlir_type.type_is_unit(func_ret_type)
 
     if no_ret_func:
-        error("unexpected return value", x)
+        if x['value'] != None:
+            error("unexpected return value", x['value']['ti'])
+        return hlir_stmt_return(value=None, ti=x['ti'])
+
+    if x['value'] == None:
+        error("expected return value", x['ti'])
+        return hlir_stmt_return(ti=x['ti'])
+
 
     v = do_rvalue(x['value'])
 
     if value_is_bad(v):
         return hlir_stmt_bad(x)
 
-    v = value_cons_implicit(v, f_ret_type, v['ti'])
-    hlir_type.check(v['type'], f_ret_type, x['value']['ti'])
-
+    v = value_cons_implicit_check(v, func_ret_type, x['value']['ti'])
     return hlir_stmt_return(v, ti=x['ti'])
 
 
@@ -1388,9 +1386,7 @@ def do_stmt_var(x):
     # type & init value present
     if t != None and v != None:
         # type check
-        v = value_cons_implicit(v, t, x['value']['ti'])
-        hlir_type.check(t, v['type'], x['value']['ti'])
-
+        v = value_cons_implicit_check(v, t, x['value']['ti'])
 
     if t == None:
         if hlir_type.type_is_generic(v['type']):
@@ -1472,8 +1468,7 @@ def do_stmt_assign(x):
         return hlir_stmt_bad(x)
 
     # type check
-    r = value_cons_implicit(r, l['type'], x['right']['ti'])
-    hlir_type.check(l['type'], r['type'], x['ti'])
+    r = value_cons_implicit_check(r, l['type'], x['right']['ti'])
 
     if hlir_type.type_is_composite(l['type']):
         module_option('use_memcpy')
@@ -1832,9 +1827,7 @@ def def_var(x):
                 var_type['volume'] = value_integer(init_arr_sz)
                 #print(init_arr_sz)
 
-            init_value = value_cons_implicit(iv, var_type, x['init']['ti'])
-            hlir_type.check(var_type, init_value['type'], x['init']['ti'])
-
+            init_value = value_cons_implicit_check(iv, var_type, x['init']['ti'])
 
     var = value_var(id, var_type)
     module['context'].value_add(x['field']['id']['str'], var)
