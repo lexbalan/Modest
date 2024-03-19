@@ -1252,34 +1252,33 @@ def do_rvalue(x):
 def do_value(x):
     k = x['kind']
 
-    rv = None
+    v = None
 
-    if k in bin_ops: rv = do_value_bin(x)
-    elif k in un_ops: rv = do_value_un(x)
+    if k == 'number': v = do_value_number(x)
+    elif k == 'id': v = do_value_id(x)
+    elif k == 'str': v = do_value_str(x)
+    elif k == 'record': v = do_value_record(x)
+    elif k == 'array': v = do_value_array(x)
     else:
-        if k == 'number': rv = do_value_number(x)
-        elif k == 'id': rv = do_value_id(x)
-        elif k == 'str': rv = do_value_str(x)
-        elif k == 'record': rv = do_value_record(x)
-        elif k == 'array': rv = do_value_array(x)
-        else:
-            if k == 'call': rv = do_value_call(x)
-            elif k == 'index': rv = do_value_index(x)
-            elif k == 'access': rv = do_value_access(x)
-            elif k == 'cast': rv = do_value_to(x)
-            elif k == 'cons': rv = do_value_to(x)
-            elif k == 'sizeof': rv = do_value_sizeof(x)
-            elif k == 'alignof': rv = do_value_alignof(x)
-            elif k == 'offsetof': rv = do_value_offsetof(x)
-            elif k == 'shl': rv = do_value_shift(x)
-            elif k == 'shr': rv = do_value_shift(x)
+        if k == 'call': v = do_value_call(x)
+        elif k in bin_ops: v = do_value_bin(x)
+        elif k in un_ops: v = do_value_un(x)
+        elif k == 'index': v = do_value_index(x)
+        elif k == 'access': v = do_value_access(x)
+        elif k == 'cast': v = do_value_to(x)
+        elif k == 'cons': v = do_value_to(x)
+        elif k == 'sizeof': v = do_value_sizeof(x)
+        elif k == 'alignof': v = do_value_alignof(x)
+        elif k == 'offsetof': v = do_value_offsetof(x)
+        elif k == 'shl': v = do_value_shift(x)
+        elif k == 'shr': v = do_value_shift(x)
 
-    if rv == None:
-        rv = value_bad(x)
+    if v == None:
+        v = value_bad(x)
 
-    assert('ti' in rv)
+    assert('ti' in v)
 
-    return rv
+    return v
 
 
 
