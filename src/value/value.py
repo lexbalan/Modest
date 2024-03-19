@@ -76,6 +76,19 @@ def value_attribute_check(v, a):
 
 
 def value_load(x):
+    if x['kind'] == 'var':
+        x['att'].append('load')
+        pass
+    elif x['kind'] == 'index':
+        x['att'].append('load')
+        pass
+    elif x['kind'] == 'access':
+        x['att'].append('load')
+        pass
+    elif x['kind'] == 'deref':
+        x['att'].append('load')
+        pass
+
     return x
 
 

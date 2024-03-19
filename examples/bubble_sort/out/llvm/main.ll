@@ -189,9 +189,9 @@ body_1:
     store i32 0, i32* %3
     br label %again_2
 again_2:
-    %4 = sub i32 %len, 1
-    %5 = load i32, i32* %3
-    %6 = icmp slt i32 %5, %4
+    %4 = load i32, i32* %3
+    %5 = sub i32 %len, 1
+    %6 = icmp slt i32 %4, %5
     br i1 %6 , label %body_2, label %break_2
 body_2:
     %7 = load i32, i32* %3

@@ -755,11 +755,11 @@ def do_value_un(x):
 
             return nv
 
-        elif op == 'minus':
+        elif op == 'negative':
             if not hlir_type.type_is_signed(vtype):
                 error("expected value with signed type", x['value']['ti'])
 
-            nv = value_un('minus', v, vtype, ti=ti)
+            nv = value_un('negative', v, vtype, ti=ti)
 
             if value_is_immediate(v):
                 nv['asset'] = -v['asset']
@@ -1212,7 +1212,7 @@ bin_ops = [
     'add', 'sub', 'mul', 'div', 'rem'
 ]
 
-un_ops = ['ref', 'deref', 'plus', 'minus', 'not']
+un_ops = ['ref', 'deref', 'positive', 'negative', 'not']
 
 
 

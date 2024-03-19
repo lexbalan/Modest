@@ -737,70 +737,63 @@ def do_reval(x):
     return llvm_dold(do_eval(x))
 
 
-def do_eval_expr_bin(x):
+def do_eval_bin(x):
     if value_is_immediate(x):
         return llvm_value_num(x['type'], x['asset'])
 
-    l = do_eval(x['left'])
-    r = do_eval(x['right'])
-
-    if hlir_type.type_is_composite(l['type']):
-        # mess
+    # eq between arrays or records?
+    if hlir_type.type_is_composite(x['left']['type']):
+        # do eq between arrays or records
+        l = do_eval(x['left'])
+        r = do_eval(x['right'])
         sz = llvm_value_num(foundation.typeInt64, l['type']['size'])
         return llvm_memcmp(l, r, sz)
 
+
+    l = do_reval(x['left'])
+    r = do_reval(x['right'])
+
     op = get_bin_opcode(x['kind'], x['left']['type'])
-    return llvm_eval_binary(op, llvm_dold(l), llvm_dold(r), x)
+    return llvm_eval_binary(op, l, r, x)
 
 
 
-def do_eval_expr_deref(x):
+def do_eval_deref(x):
     return llvm_deref(do_reval(x['value']))
 
 
-
-def do_eval_expr_un(v):
+def do_eval_ref(v):
     ve = do_eval(v['value'])
 
-    if v['kind'] == 'ref':
-        if is_global_context():
-            if v['value']['kind'] == 'var':
-                if 'global' in v['value']['att']:
-                    id = v['value']['id']['str']
-                    return llvm_value_mem(id, v['type'], v)
+    if is_global_context():
+        if v['value']['kind'] == 'var':
+            if 'global' in v['value']['att']:
+                id = v['value']['id']['str']
+                return llvm_value_mem(id, v['type'], v)
 
-        nv = copy.copy(ve)
-        nv['is_adr'] = False
-        nv['proto'] = v    # for type
-        return nv
+    nv = copy.copy(ve)
+    nv['is_adr'] = False
+    nv['proto'] = v    # for type
+    return nv
 
 
-    vx = llvm_dold(ve) #!
+def do_eval_not(v):
+    #%10 = xor i32 %9, -1
+    ve = do_reval(v['value'])
+    minus_one = llvm_value_num(v['type'], -1)
+    return llvm_eval_binary('xor', ve, minus_one, v)
 
-    if v['kind'] == 'deref':
-        return do_eval_expr_deref(v)
 
-    reg = None
-    if v['kind'] == 'not':
-        #%10 = xor i32 %9, -1
-        reg = llvm_operation('xor');
-        llvm_print_type_value(vx)
-        out(", -1")
-
-    elif v['kind'] == 'minus':
-        #%10 = sub i32 0, %9
-        z = llvm_value_num(v['type'], 0)
-        return llvm_eval_binary('sub', z, vx, v)
-
-    else:
-        reg = llvm_operation(v['kind']); out(" "); llvm_print_value(vx)
-
-    return llvm_value_reg(reg, v['type'], v)
+def do_eval_neg(v):
+    #%10 = sub i32 0, %9
+    ve = do_reval(v['value'])
+    z = llvm_value_num(v['type'], 0)
+    return llvm_eval_binary('sub', z, ve, v)
 
 
 
 
-def do_eval_expr_call(v, retval=None):
+def do_eval_call(v, retval=None):
     # eval all args
     args = []
     for a in v['args']:
@@ -853,7 +846,7 @@ def do_eval_expr_call(v, retval=None):
 
 
 
-def do_eval_expr_index(v):
+def do_eval_index(v):
     array = do_eval(v['array'])
     array_type = array['type']
     result_type = v['type']
@@ -870,7 +863,7 @@ def do_eval_expr_index(v):
     return llvm_getelementptr(array, array_type, (llvm_value_num_zero, index), result_type)
 
 
-def do_eval_expr_index_ptr(v):
+def do_eval_index_ptr(v):
     pointer = do_reval(v['pointer'])
     array_type = pointer['type']['to']
     index = do_reval(v['index'])
@@ -878,14 +871,14 @@ def do_eval_expr_index_ptr(v):
     return llvm_getelementptr(pointer, array_type, (llvm_value_num_zero, index), result_type)
 
 
-def do_eval_expr_access(v):
+def do_eval_access(v):
     rec = do_eval(v['record'])
     pos = v['field']['field_no']
     result_type = v['type']
     return llvm_eval_access(rec, pos, result_type)
 
 
-def do_eval_expr_access_ptr(v):
+def do_eval_access_ptr(v):
     ptr = do_reval(v['pointer'])
     rt = ptr['type']['to']
     pos = v['field']['field_no']
@@ -952,7 +945,7 @@ def select_cast_operator(a, b):
 
 
 
-def do_eval_expr_cast_immediate(x):
+def do_eval_cast_immediate(x):
     value = x['value']
     from_type = value['type']
     to_type = x['type']
@@ -969,7 +962,7 @@ def do_eval_expr_cast_immediate(x):
             # immediate Int -> Ptr
             # нельзя просто так напечатать числовой литерал
             # и использовать его как указатель
-            return do_eval_expr_cast(x)
+            return do_eval_cast(x)
 
 
     #return do_reval(x)
@@ -994,7 +987,7 @@ def cast_record_to_record(to_type, value, ti):
     return new_struct
 
 
-def do_eval_expr_cast(x):
+def do_eval_cast(x):
     value = x['value']
     from_type = value['type']
     to_type = x['type']
@@ -1011,7 +1004,7 @@ def do_eval_expr_cast(x):
 
     if hlir_type.type_is_generic_array_of_char(from_type):
         if hlir_type.type_is_pointer_to_array_of_char(to_type):
-            error("strings need to be printed through do_eval_expr_cast_immediate", x)
+            error("strings need to be printed through do_eval_cast_immediate", x)
             exit(1)
 
     # cast any type to Unit type
@@ -1062,7 +1055,7 @@ bin_ops = [
     'add', 'sub', 'mul', 'div', 'rem',
 ]
 
-un_ops = ['ref', 'deref', 'plus', 'minus', 'not']
+un_ops = ['ref', 'deref', 'positive', 'negative', 'not']
 
 
 
@@ -1209,17 +1202,20 @@ def do_eval(x):
 
     k = x['kind']
     if k == 'literal': y = do_eval_literal(x)
-    elif k in bin_ops: y = do_eval_expr_bin(x)
-    elif k in un_ops: y = do_eval_expr_un(x)
+    elif k in bin_ops: y = do_eval_bin(x)
+    elif k == 'ref': y = do_eval_ref(x)
+    elif k == 'not': y = do_eval_not(x)
+    elif k == 'negative': y = do_eval_neg(x)
+    elif k == 'deref': y = do_eval_deref(x)
     elif k == 'const': y = do_eval_const(x)
     elif k in ['func', 'var']: y = do_eval_var_func(x)
-    elif k == 'call': y = do_eval_expr_call(x)
-    elif k == 'index': y = do_eval_expr_index(x)
-    elif k == 'index_ptr': y = do_eval_expr_index_ptr(x)
-    elif k == 'access': y = do_eval_expr_access(x)
-    elif k == 'access_ptr': y = do_eval_expr_access_ptr(x)
-    elif k == 'cast_immediate': y = do_eval_expr_cast_immediate(x)
-    elif k == 'cast': y = do_eval_expr_cast(x)
+    elif k == 'call': y = do_eval_call(x)
+    elif k == 'index': y = do_eval_index(x)
+    elif k == 'index_ptr': y = do_eval_index_ptr(x)
+    elif k == 'access': y = do_eval_access(x)
+    elif k == 'access_ptr': y = do_eval_access_ptr(x)
+    elif k == 'cast_immediate': y = do_eval_cast_immediate(x)
+    elif k == 'cast': y = do_eval_cast(x)
     elif k == 'add_str': y = do_eval_literal(x)
     elif k in ['sizeof', 'lengthof', 'alignof', 'offsetof', 'eq_str']:
          y = do_eval_literal(x)
@@ -1422,7 +1418,7 @@ def print_stmt_let(x):
     if val['kind'] == 'call':
         if need_sret(val['func']['type']['to']):
             v = llvm_alloca(val['type'])
-            do_eval_expr_call(val, retval=v)
+            do_eval_call(val, retval=v)
             locals_add(id_str, v)
             return None
 

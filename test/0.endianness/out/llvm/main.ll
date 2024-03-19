@@ -147,18 +147,17 @@ define %Int @main() {
     %1 = alloca i16
     store i16 1, i16* %1
     %2 = bitcast i16* %1 to i8*
-    %3 = bitcast i16* %1 to i8*
-    %4 = load i8, i8* %3
-    %5 = icmp eq i8 %4, 1
-    br i1 %5 , label %then_0, label %else_0
+    %3 = load i8, i8* %2
+    %4 = icmp eq i8 %3, 1
+    br i1 %4 , label %then_0, label %else_0
 then_0:
-    %6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str1 to [0 x i8]*))
+    %5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str1 to [0 x i8]*))
     br label %endif_0
 else_0:
-    %7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str2 to [0 x i8]*))
+    %6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str2 to [0 x i8]*))
     br label %endif_0
 endif_0:
-    %8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str3 to [0 x i8]*))
+    %7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str3 to [0 x i8]*))
     ret %Int 0
 }
 

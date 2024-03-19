@@ -274,9 +274,9 @@ then_2:
     ;error("Недопустимая кодовая последовательность.")
     br label %endif_2
 else_2:
-    %19 = and i32 %15, 1023
-    %20 = load i32, i32* %10
-    %21 = or i32 %20, %19
+    %19 = load i32, i32* %10
+    %20 = and i32 %15, 1023
+    %21 = or i32 %19, %20
     store i32 %21, i32* %10
     %22 = load i32, i32* %10
     %23 = add i32 %22, 65536
@@ -396,9 +396,9 @@ then_1:
 endif_1:
     %14 = load i32, i32* %7
     call void (i32) @utf32_putchar(i32 %14)
-    %15 = sext i8 %11 to i32
-    %16 = load i32, i32* %1
-    %17 = add i32 %16, %15
+    %15 = load i32, i32* %1
+    %16 = sext i8 %11 to i32
+    %17 = add i32 %15, %16
     store i32 %17, i32* %1
     br label %again_1
 break_1:

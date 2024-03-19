@@ -514,11 +514,11 @@ again_3:
     br i1 %137 , label %body_3, label %break_3
 body_3:
     %138 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 7
-    %139 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 4
-    %140 = load i32, i32* %139
-    %141 = call i32 (i32) @ep1(i32 %140)
-    %142 = load i32, i32* %138
-    %143 = add i32 %142, %141
+    %139 = load i32, i32* %138
+    %140 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 4
+    %141 = load i32, i32* %140
+    %142 = call i32 (i32) @ep1(i32 %141)
+    %143 = add i32 %139, %142
     %144 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 4
     %145 = load i32, i32* %144
     %146 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 5
@@ -597,11 +597,11 @@ body_4:
     %203 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
     %204 = load i32, i32* %66
     %205 = getelementptr inbounds [8 x i32], [8 x i32]* %203, i32 0, i32 %204
-    %206 = load i32, i32* %66
-    %207 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 %206
-    %208 = load i32, i32* %205
-    %209 = load i32, i32* %207
-    %210 = add i32 %208, %209
+    %206 = load i32, i32* %205
+    %207 = load i32, i32* %66
+    %208 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 %207
+    %209 = load i32, i32* %208
+    %210 = add i32 %206, %209
     store i32 %210, i32* %202
     %211 = load i32, i32* %66
     %212 = add i32 %211, 1
@@ -708,12 +708,12 @@ endif_1:
     ; Append to the padding the total message's length in bits and transform.
     %31 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
     %32 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
-    %33 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
-    %34 = load i32, i32* %33
-    %35 = zext i32 %34 to i64
-    %36 = mul i64 %35, 8
-    %37 = load i64, i64* %32
-    %38 = add i64 %37, %36
+    %33 = load i64, i64* %32
+    %34 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
+    %35 = load i32, i32* %34
+    %36 = zext i32 %35 to i64
+    %37 = mul i64 %36, 8
+    %38 = add i64 %33, %37
     store i64 %38, i64* %31
     %39 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
     %40 = getelementptr inbounds [64 x i8], [64 x i8]* %39, i32 0, i32 63

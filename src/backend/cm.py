@@ -39,7 +39,7 @@ aprecedence = [
     ['shl', 'shr'], #7
     ['add', 'sub'], #8
     ['mul', 'div', 'rem'], #9
-    ['plus', 'minus', 'not', 'cast', 'cast_immediate', 'ref', 'deref', 'sizeof', 'alignof', 'offsetof', 'lengthof'], #10
+    ['positive', 'negative', 'not', 'cast', 'cast_immediate', 'ref', 'deref', 'sizeof', 'alignof', 'offsetof', 'lengthof'], #10
     ['call', 'index', 'access'], #11
     ['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #12
 ]
@@ -239,7 +239,7 @@ def print_value_bin(x, ctx):
 
 un_ops = {
     'ref': '&', 'deref': '*',
-    'plus': '+', 'minus': '-',
+    'positive': '+', 'negative': '-',
     'not': 'not', 'logic_not': 'not'
 }
 

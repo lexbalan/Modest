@@ -548,11 +548,11 @@ class Parser:
         elif self.match("+"):
             v = self.expr_value_11()
             ti['end'] = v['ti']
-            return {'isa': 'value', 'kind': 'plus', 'value': v, 'ti': ti}
+            return {'isa': 'value', 'kind': 'positive', 'value': v, 'ti': ti}
         elif self.match("-"):
             v = self.expr_value_11()
             ti['end'] = v['ti']
-            return {'isa': 'value', 'kind': 'minus', 'value': v, 'ti': ti}
+            return {'isa': 'value', 'kind': 'negative', 'value': v, 'ti': ti}
         elif self.match("sizeof"):
             self.match("(")
             t = self.expr_type()
