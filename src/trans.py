@@ -477,7 +477,6 @@ def do_value_shift(x):
     op = x['kind']  # 'shl', 'shr'
     l = do_rvalue(x['left'])
     r = do_rvalue(x['right'])
-    ti = x['ti']
 
     if not hlir_type.type_is_integer(l['type']):
         error("expected integer value", x['left'])
@@ -486,13 +485,13 @@ def do_value_shift(x):
         error("expected integer value", x['right'])
 
     if value_is_immediate(l) and value_is_immediate(r):
-        return bin_imm(op, l['type'], l, r, ti)
+        return bin_imm(op, l['type'], l, r, x['ti'])
 
     if hlir_type.type_is_generic(l['type']):
         error("expected non-generic value", l)
-        return value_bad(ti)
+        return value_bad(x['ti'])
 
-    return value_bin(op, l, r, l['type'], ti=ti)
+    return value_bin(op, l, r, l['type'], ti=x['ti'])
 
 
 
