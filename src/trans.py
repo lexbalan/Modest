@@ -299,12 +299,16 @@ def init():
 # pos - position #
 # offset - real offset (address inside container struct)
 def do_field(x):
+    id = x['id']
+    if id['str'][0].isupper():
+        error("field id must starts with small letter", id['ti'])
+
     t = do_type(x['type'])
 
     if hlir_type.type_is_bad(t):
         t = hlir_type.hlir_type_bad(x['type'])
 
-    f = hlir_field(x['id'], t, ti=x['ti'])
+    f = hlir_field(id, t, ti=x['ti'])
 
     nl = 1
     if 'nl' in x:
@@ -1789,9 +1793,6 @@ def def_var(x):
     id = f['id']
 
     log("def_var %s" % id['str'])
-
-    if id['str'][0].isupper():
-        error("variable id must starts with small letter", id['ti'])
 
     # already defined?
     already = value_get(id['str'])
