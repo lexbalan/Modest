@@ -443,7 +443,7 @@ def do_type_func(t, func_id="_"):
         params.append(param)
 
 
-    to = None
+    to = foundation.typeUnit
     if t['to'] != None:
         to = do_type(t['to'])
 
@@ -452,9 +452,6 @@ def do_type_func(t, func_id="_"):
             to = hlir_type.type_copy(to)
             to['att'].append('wrapped_array_type')
             to['wrapped_id'] = 'struct ' + func_id + '_' + 'retval'
-
-    else:
-        to = foundation.typeUnit
 
     return hlir_type.hlir_type_func(params, to, var_args, va_list_id, ti=t['ti'])
 
