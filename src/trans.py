@@ -479,10 +479,10 @@ def do_value_shift(x):
     ti = x['ti']
 
     if not hlir_type.type_is_integer(l['type']):
-        error("type error", x['left'])
+        error("expected integer value", x['left'])
 
     if not hlir_type.type_is_integer(r['type']):
-        error("type error", x['right'])
+        error("expected integer value", x['right'])
 
     if value_is_immediate(l) and value_is_immediate(r):
         return bin_imm(op, l['type'], l, r, ti)
