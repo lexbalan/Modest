@@ -8,6 +8,9 @@
     [ <#immediate_value_expression#> ] <#type_expression#>
 ```
 
+> There's no way to create array of array but you can create array of pointers to arrays
+
+
 #### Examples
 
 ```zig
