@@ -1694,7 +1694,7 @@ def decl_type(x):
     id = x['id']
     log("decl_type %s" % id['str'])
 
-    nt = hlir_type.hlir_type_opaque(id, id['ti'])
+    nt = hlir_type.hlir_type_opaque(id['ti'])
     module['context'].type_add(id['str'], nt)
 
     # С не печатает opaque, но LLVM печатает (!)

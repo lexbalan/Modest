@@ -278,7 +278,7 @@ def hlir_type_func(params, to, var_args, va_list_id, ti=None):
     }
 
 
-def hlir_type_opaque(id, ti=None):
+def hlir_type_opaque(ti=None):
     return {
         'isa': 'type',
         'kind': 'opaque',
