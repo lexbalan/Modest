@@ -1055,9 +1055,6 @@ bin_ops = [
     'add', 'sub', 'mul', 'div', 'rem',
 ]
 
-un_ops = ['ref', 'deref', 'positive', 'negative', 'not']
-
-
 
 def do_eval_array(v):
     # сперва вычисляем все элементы массива в регистры
@@ -1258,7 +1255,6 @@ def assign(l, rx):
     if hlir_type.type_is_array(rx['type']):
         r = do_eval(rx)
         if r['is_adr']:
-
             to_copy = 0
             zero_rest = 0
             l_size = l['type']['size']
