@@ -2,6 +2,12 @@
 
 import "libc/stdio"
 
+// FAILED!
+
+// There's no way to create array of array
+// but you can create array of pointers to arrays
+
+// FAILED!
 
 type RecordWith2DArray record {
     x: [2][20]Int32
