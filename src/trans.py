@@ -306,10 +306,10 @@ def do_field(x):
 
     f = hlir_field(x['id'], t, ti=x['ti'])
 
+    nl = 1
     if 'nl' in x:
-        f['nl'] = x['nl']
-    else:
-        f['nl'] = 1
+        nl = x['nl']
+    f['nl'] = nl
 
     return f
 
@@ -322,7 +322,7 @@ def do_type_id(t):
     id_str = t['id']['str']
     tx = type_get(id_str)
     if tx == None:
-        error("undeclared type %s" % id_str, t)
+        error("undeclared type '%s'" % id_str, t['ti'])
         # create fake alias for unknown type
         tx = hlir_type.hlir_type_bad(t)
         root_context.type_add(id_str, tx)
@@ -333,33 +333,6 @@ def do_type_id(t):
 def do_type_pointer(t):
     to = do_type(t['to'])
     return hlir_type.hlir_type_pointer(to, ti=t['ti'])
-
-
-
-def do_value_immediate(x):
-    v = do_value(x)
-
-    if value_is_bad(v):
-        return v
-
-    if not value_is_immediate(v):
-        error("expected immediate value", x['ti'])
-        return value_bad(x)
-
-    return v
-
-
-def do_value_immediate_string(x):
-    v = do_value_immediate(x)
-
-    if value_is_bad(v):
-        return v
-
-    if not hlir_type.type_is_array_of_char(v['type']):
-        error("expected string value", x['ti'])
-
-    return v
-
 
 
 def do_type_array(t):
@@ -748,7 +721,7 @@ def _bin(op, type_result, l, r, ti=None):
 
 
 def do_value_un(x):
-    v = do_value(x['value'])
+    v = do_rvalue(x['value'])
     ti = x['ti']
 
     if value_is_bad(v):
@@ -1137,7 +1110,7 @@ def do_value_array(x):
         if item['isa'] == 'ast_comment':
             continue
 
-        item_value = do_value(item)
+        item_value = do_rvalue(item)
         item_value['nl'] = item['nl']
         items.append(item_value)
 
@@ -1161,7 +1134,7 @@ def do_value_record(x):
             continue
 
         item_id = item['id']
-        item_value = do_value(item['value'])
+        item_value = do_rvalue(item['value'])
         initializers.append({
             'isa': 'initializer',
             'id': item_id,
@@ -1186,8 +1159,8 @@ def do_value_record(x):
 def do_value_number(x):
     if '.' in x['numstr']:
         return do_value_float(x)
-    else:
-        return do_value_integer(x)
+
+    return do_value_integer(x)
 
 
 
@@ -1245,6 +1218,32 @@ un_ops = ['ref', 'deref', 'plus', 'minus', 'not']
 
 
 
+def do_value_immediate(x):
+    v = do_value(x)
+
+    if value_is_bad(v):
+        return v
+
+    if not value_is_immediate(v):
+        error("expected immediate value", x['ti'])
+        return value_bad(x)
+
+    return v
+
+
+def do_value_immediate_string(x):
+    v = do_value_immediate(x)
+
+    if value_is_bad(v):
+        return v
+
+    if not hlir_type.type_is_array_of_char(v['type']):
+        error("expected string value", x['ti'])
+
+    return v
+
+
+
 def do_rvalue(x):
     v = do_value(x)
     return value_load(v)
@@ -1289,7 +1288,7 @@ def do_value(x):
 #
 
 def do_stmt_if(x):
-    c = do_value(x['cond'])
+    c = do_rvalue(x['cond'])
     t = do_stmt(x['then'])
 
     if value_is_bad(c) or hlir_stmt_is_bad(t):
@@ -1310,7 +1309,7 @@ def do_stmt_if(x):
 
 
 def do_stmt_while(x):
-    c = do_value(x['cond'])
+    c = do_rvalue(x['cond'])
     s = do_stmt(x['stmt'])
 
     if value_is_bad(c) or hlir_stmt_is_bad(s):
@@ -1338,7 +1337,7 @@ def do_stmt_return(x):
     if no_ret_func:
         error("unexpected return value", x)
 
-    v = do_value(x['value'])
+    v = do_rvalue(x['value'])
 
     if value_is_bad(v):
         return hlir_stmt_bad(x)
@@ -1370,7 +1369,7 @@ def do_stmt_var(x):
 
     v = None
     if x['value'] != None:
-        v = do_value(x['value'])
+        v = do_rvalue(x['value'])
         if value_is_bad(v):
             v = None
 
@@ -1464,7 +1463,7 @@ def do_stmt_let(x):
 
 def do_stmt_assign(x):
     l = do_value(x['left'])
-    r = do_value(x['right'])
+    r = do_rvalue(x['right'])
 
     if value_is_bad(l) or value_is_bad(r):
         return hlir_stmt_bad(x)
@@ -1824,7 +1823,7 @@ def def_var(x):
     init_value = None
 
     if x['init'] != None:
-        iv = do_value(x['init'])
+        iv = do_rvalue(x['init'])
         if not value_is_bad(iv):
 
             # если размер массива не указан
