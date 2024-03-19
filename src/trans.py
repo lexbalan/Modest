@@ -806,8 +806,9 @@ def get_forms(func_id_str, args):
         if func_id_str == 'printf':
             forms = []
             aa = args[0]
-            if aa['kind'] != 'str':
+            if not hlir_type.type_is_array_of_char(aa['type']):
                 warning("expected string literal", aa['ti'])
+                hlir_type.type_print(aa['type'])
             else:
                 s = aa['str']
                 i = 0
@@ -838,15 +839,10 @@ def do_value_call(x):
                 return value_bad(x)
 
 
-
     f = do_rvalue(x['left'])
 
     if value_is_bad(f):
         return value_bad(x)
-
-    func_id_str = None
-    if 'id' in f:
-        func_id_str = f['id']['str']
 
     ftype = f['type']
 
@@ -891,14 +887,46 @@ def do_value_call(x):
     # extra args
     #
 
-    # список спецификаторов для проверки расширеных аргументов
-    forms = get_forms(func_id_str, x['args'])
+    i_before_extra = i
 
-    j = 0
     # extra_args rest args
     while i < nargs:
         a = x['args'][i]
         arg = do_rvalue(a)
+        arg_type = arg['type']
+
+        if hlir_type.type_is_generic(arg_type):
+            warning("extra argument with generic type", a['ti'])
+            arg = value_cons_default(arg, a['ti'])
+
+        args.append(arg)
+
+        i = i + 1
+
+
+    #if 'id' in f:
+    #    func_id_str = f['id']['str']
+    #    extra_args_check(func_id_str, i_before_extra, nargs, x['args'])
+
+
+    rv = value_call(f, ftype['to'], args, ti=x['ti'])
+
+    if hlir_type.type_is_closed_array(f['type']['to']):
+        rv['att'].append('wrapped_array_value')
+
+    return rv
+
+
+
+
+def extra_args_check(func_id_str, i, nargs, args):
+    # список спецификаторов для проверки расширеных аргументов
+    forms = get_forms(func_id_str, args)
+
+    j = 0
+    # extra_args rest args
+    while i < nargs:
+        arg = args[i]
         arg_type = arg['type']
 
         if not value_is_bad(arg):
@@ -941,24 +969,8 @@ def do_value_call(x):
                             warning("expected pointer value", a['ti'])
 
 
-
-            if hlir_type.type_is_generic(arg_type):
-                warning("extra argument with generic type", a['ti'])
-                arg = value_cons_default(arg, a['ti'])
-
-            args.append(arg)
-
         i = i + 1
         j = j + 1
-
-
-    rv = value_call(f, ftype['to'], args, ti=x['ti'])
-
-    if hlir_type.type_is_closed_array(f['type']['to']):
-        rv['att'].append('wrapped_array_value')
-
-    return rv
-
 
 
 def do_value_index(x):
