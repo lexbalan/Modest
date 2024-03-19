@@ -755,6 +755,15 @@ def do_value_un(x):
 
             return nv
 
+
+        elif op == 'positive':
+            if not hlir_type.type_is_signed(vtype):
+                error("expected value with signed type", x['value']['ti'])
+
+            nv = v
+
+            return nv
+
         elif op == 'negative':
             if not hlir_type.type_is_signed(vtype):
                 error("expected value with signed type", x['value']['ti'])
