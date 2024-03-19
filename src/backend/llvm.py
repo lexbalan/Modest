@@ -1126,21 +1126,24 @@ def do_eval_record(v):
     return xv
 
 
+def do_eval_func(x):
+    k = x['kind']
+    return llvm_value_mem(x['id']['str'], x['type'], x)
 
-def do_eval_var_func(x):
+
+
+def do_eval_var(x):
     k = x['kind']
 
     if value_attribute_check(x, 'local'):
         localname = x['id']['str']
         y = locals_get(localname)
+        y['is_adr'] = True
         return y
 
-    if k == 'var':
-        rv = llvm_value_mem(x['id']['str'], x['type'], x)
-        rv['is_adr'] = True
-        return rv
-
-    return llvm_value_mem(x['id']['str'], x['type'], x)
+    rv = llvm_value_mem(x['id']['str'], x['type'], x)
+    rv['is_adr'] = True
+    return rv
 
 
 
@@ -1205,7 +1208,8 @@ def do_eval(x):
     elif k == 'negative': y = do_eval_neg(x)
     elif k == 'deref': y = do_eval_deref(x)
     elif k == 'const': y = do_eval_const(x)
-    elif k in ['func', 'var']: y = do_eval_var_func(x)
+    elif k == 'func': y = do_eval_func(x)
+    elif k == 'var': y = do_eval_var(x)
     elif k == 'call': y = do_eval_call(x)
     elif k == 'index': y = do_eval_index(x)
     elif k == 'index_ptr': y = do_eval_index_ptr(x)
