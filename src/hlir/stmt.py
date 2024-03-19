@@ -4,8 +4,14 @@
 
 
 
-def hlir_stmt_bad(ti=None):
-    return {'isa': 'stmt', 'kind': 'bad', 'att': [], 'ti': ti}
+def hlir_stmt_bad(x):
+    return {
+        'isa': 'stmt',
+        'kind': 'bad',
+        'ast_stmt': x,
+        'att': [],
+        'ti': x['ti']
+    }
 
 
 def hlir_stmt_block(stmts, ti=None, end_nl=1):

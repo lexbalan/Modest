@@ -302,7 +302,7 @@ def do_field(x):
     t = do_type(x['type'])
 
     if hlir_type.type_is_bad(t):
-        t = hlir_type.hlir_type_bad(x['type']['ti'])
+        t = hlir_type.hlir_type_bad(x['type'])
 
     f = hlir_field(x['id'], t, ti=x['ti'])
 
@@ -312,7 +312,6 @@ def do_field(x):
         f['nl'] = 1
 
     return f
-
 
 
 #
@@ -325,7 +324,7 @@ def do_type_id(t):
     if tx == None:
         error("undeclared type %s" % id_str, t)
         # create fake alias for unknown type
-        tx = hlir_type.hlir_type_bad()
+        tx = hlir_type.hlir_type_bad(t)
         root_context.type_add(id_str, tx)
     return tx
 
@@ -337,13 +336,36 @@ def do_type_pointer(t):
 
 
 
-def do_type_array(t):
+def do_value_immediate(x):
+    v = do_value(x)
 
+    if value_is_bad(v):
+        return v
+
+    if not value_is_immediate(v):
+        error("expected immediate value", x['ti'])
+        return value_bad(x)
+
+    return v
+
+
+def do_value_immediate_string(x):
+    v = do_value_immediate(x)
+
+    if value_is_bad(v):
+        return v
+
+    if not hlir_type.type_is_array_of_char(v['type']):
+        error("expected string value", x['ti'])
+
+    return v
+
+
+
+def do_type_array(t):
     volume_expr = None
     if t['size'] != None:
-        volume_expr = do_value(t['size'])
-        if value_is_bad(volume_expr):
-            return hlir_type.hlir_type_bad(t['ti'])
+        volume_expr = do_value_immediate(t['size'])
 
     of = do_type(t['of'])
 
@@ -351,7 +373,7 @@ def do_type_array(t):
     if volume_expr != None:
         if hlir_type.type_is_closed_array(of):
             error("closed arrays of closed arrays are denied", t['ti'])
-            return hlir_type.hlir_type_bad(t['ti'])
+            return hlir_type.hlir_type_bad(t)
 
     return hlir_type.hlir_type_array(of, volume=volume_expr, ti=t['ti'])
 
@@ -673,11 +695,11 @@ def do_value_bin(x):
 
     if not op in l['type']['ops']:
         error("unsuitable type1", x['left']['ti'])
-        return value_bad(x['ti'])
+        return value_bad(x)
 
     if not op in r['type']['ops']:
         error("unsuitable type2", x['right']['ti'])
-        return value_bad(x['ti'])
+        return value_bad(x)
 
 
     if hlir_type.type_is_pointer(l['type']) or hlir_type.type_is_pointer(r['type']):
@@ -698,7 +720,7 @@ def do_value_bin(x):
 
     # After implicit cast types must be equal
     if not hlir_type.check(l['type'], r['type'], x['ti']):
-        return value_bad(x['ti'])
+        return value_bad(x)
 
     type_result = common_type
 
@@ -831,14 +853,14 @@ def do_value_call(x):
                 return value_lengthof(arg, ti=x['ti'])
             else:
                 error("expected array value", x['args'][0]['ti'])
-                return value_bad(x['ti'])
+                return value_bad(x)
 
 
 
     f = do_rvalue(x['left'])
 
     if value_is_bad(f):
-        return value_bad(x['ti'])
+        return value_bad(x)
 
     func_id_str = None
     if 'id' in f:
@@ -861,12 +883,12 @@ def do_value_call(x):
 
     if nargs < npars:
         error("not enough args", x)
-        return value_bad(x['ti'])
+        return value_bad(x)
 
     if nargs > npars:
         if not ftype['extra_args']:
             error("too many args", x)
-            return value_bad(x['ti'])
+            return value_bad(x)
 
     args = []
 
@@ -963,7 +985,7 @@ def do_value_index(x):
     left = do_rvalue(x['left'])
 
     if value_is_bad(left):
-        return value_bad(x['ti'])
+        return value_bad(x)
 
     left_typ = left['type']
 
@@ -976,17 +998,17 @@ def do_value_index(x):
 
     if not hlir_type.type_is_array(array_typ):
         error("expected array or pointer to array", x['left']['ti'])
-        return value_bad(x['ti'])
+        return value_bad(x)
 
 
     index = do_rvalue(x['index'])
 
     if value_is_bad(index):
-        return value_bad(x['ti'])
+        return value_bad(x)
 
     if not hlir_type.type_is_integer(index['type']):
         error("expected integer value", x['index'])
-        return value_bad(x['ti'])
+        return value_bad(x)
 
     if hlir_type.type_is_generic(index['type']):
         index = value_cons_implicit(index, typeSysInt, index['ti'])
@@ -996,13 +1018,6 @@ def do_value_index(x):
     if via_pointer:
         v = value_index_array_by_ptr(left, index, ti=x['ti'])
     else:
-
-        # error: cannot index generic array by variable
-        #if hlir_type.type_is_generic(left['type']):
-        #    if not value_is_immediate(index):
-        #        error("cannot index generic array by variable", x['ti'])
-        #        return value_bad(x['ti'])
-
         v = value_index_array(left, index, ti=x['ti'])
 
         if value_is_immutable(left):
@@ -1015,7 +1030,7 @@ def do_value_index(x):
 
                 if index_imm >= array_typ['volume']['asset']:
                     error("array index out of bounds", x['index'])
-                    return value_bad(x['ti'])
+                    return value_bad(x)
 
                 item = left['asset'][index_imm]
 
@@ -1031,7 +1046,7 @@ def do_value_access(x):
     left = do_rvalue(x['left'])
 
     if value_is_bad(left):
-        return value_bad(x['ti'])
+        return value_bad(x)
 
     field_id = x['field']
 
@@ -1078,7 +1093,7 @@ def do_value_to(x):
     v = do_rvalue(x['value'])
     t = do_type(x['type'])
     if value_is_bad(v) or hlir_type.type_is_bad(t):
-        return value_bad(x['ti'])
+        return value_bad(x)
     return value_cons_explicit(v, t, x['ti'])
 
 
@@ -1092,10 +1107,10 @@ def do_value_id(x):
 
         # чтобы не генерил ошибки дальше
         # создадим bad value и пропишем его глобально
-        v = value_bad(x['ti'])
+        v = value_bad(x)
         value_attribute_add(v, 'unknown')
         module['context'].value_add(id_str, v)
-        return value_bad(x['ti'])
+        return value_bad(x)
 
     if 'usecnt' in vx:
         vx['usecnt'] = vx['usecnt'] + 1
@@ -1261,7 +1276,7 @@ def do_value(x):
             elif k == 'shr': rv = do_value_shift(x)
 
     if rv == None:
-        rv = value_bad(x['ti'])
+        rv = value_bad(x)
 
     assert('ti' in rv)
 
@@ -1278,17 +1293,17 @@ def do_stmt_if(x):
     t = do_stmt(x['then'])
 
     if value_is_bad(c) or hlir_stmt_is_bad(t):
-        return hlir_stmt_bad()
+        return hlir_stmt_bad(x)
 
     if not hlir_type.type_is_bool(c['type']):
         error("expected bool value", x['cond']['ti'])
-        return hlir_stmt_bad()
+        return hlir_stmt_bad(x)
 
     e = None
     if x['else'] != None:
         e = do_stmt(x['else'])
         if hlir_stmt_is_bad(e):
-            return hlir_stmt_bad()
+            return hlir_stmt_bad(x['else']['ti'])
 
     return hlir_stmt_if(c, t, e, ti=x['ti'])
 
@@ -1299,11 +1314,11 @@ def do_stmt_while(x):
     s = do_stmt(x['stmt'])
 
     if value_is_bad(c) or hlir_stmt_is_bad(s):
-        return hlir_stmt_bad()
+        return hlir_stmt_bad(x)
 
     if not hlir_type.type_is_bool(c['type']):
         error("expected bool value", x['cond']['ti'])
-        return hlir_stmt_bad()
+        return hlir_stmt_bad(x)
 
     return hlir_stmt_while(c, s, ti=x['ti'])
 
@@ -1326,7 +1341,7 @@ def do_stmt_return(x):
     v = do_value(x['value'])
 
     if value_is_bad(v):
-        return hlir_stmt_bad()
+        return hlir_stmt_bad(x)
 
     v = value_cons_implicit(v, f_ret_type, v['ti'])
     hlir_type.check(v['type'], f_ret_type, x['value']['ti'])
@@ -1361,13 +1376,13 @@ def do_stmt_var(x):
 
     # error: no type, no init value
     if t == None and v == None:
-        module['context'].value_add(var_id['str'], value_bad())
-        return hlir_stmt_bad()
+        module['context'].value_add(var_id['str'], value_bad(x))
+        return hlir_stmt_bad(x)
 
     if t != None:
         if hlir_type.type_is_bad(t):
-            module['context'].value_add(var_id['str'], value_bad())
-            return hlir_stmt_bad()
+            module['context'].value_add(var_id['str'], value_bad(x))
+            return hlir_stmt_bad(x)
 
         if hlir_type.type_is_forbidden_var(t):
             error("unsuitable type", x['type'])
@@ -1390,7 +1405,7 @@ def do_stmt_var(x):
     already = value_get_here(var_id['str'])
     if already != None:
         error("local id redefinition", x['id']['ti'])
-        return hlir_stmt_bad()
+        return hlir_stmt_bad(x)
 
     var_value = add_local_var(var_id, t, x['ti'])
     return hlir_stmt_def_var(var_value, v, ti=x['ti'])
@@ -1411,14 +1426,14 @@ def do_stmt_let(x):
     already = value_get_here(id['str'])
     if already != None:
         error("local id redefinition", x['id']['ti'])
-        return hlir_stmt_bad()
+        return hlir_stmt_bad(x)
 
 
     v = do_rvalue(x['value'])
 
     if value_is_bad(v):
-        module['context'].value_add(id['str'], value_bad())
-        return hlir_stmt_bad()
+        module['context'].value_add(id['str'], value_bad(x))
+        return hlir_stmt_bad(x)
 
 
     if hlir_type.type_is_composite(v['type']):
@@ -1452,11 +1467,11 @@ def do_stmt_assign(x):
     r = do_value(x['right'])
 
     if value_is_bad(l) or value_is_bad(r):
-        return hlir_stmt_bad()
+        return hlir_stmt_bad(x)
 
     if value_is_immutable(l):
         error("expected mutable value", x['left']['ti'])
-        return hlir_stmt_bad()
+        return hlir_stmt_bad(x)
 
     # type check
     r = value_cons_implicit(r, l['type'], x['right']['ti'])
@@ -1473,15 +1488,15 @@ def do_stmt_incdec(x, op='add'):
     v = do_value(x['value'])
 
     if value_is_bad(v):
-        return hlir_stmt_bad()
+        return hlir_stmt_bad(x)
 
     if value_is_immutable(v):
         error("expected mutable value", x['left']['ti'])
-        return hlir_stmt_bad()
+        return hlir_stmt_bad(x)
 
     if not hlir_type.type_is_integer(v['type']):
         error("expected integer value", x['value']['ti'])
-        return hlir_stmt_bad()
+        return hlir_stmt_bad(x)
 
     one = value_integer(1, typ=v['type'], ti=x['ti'])
     v_plus = _bin(op, v['type'], v, one, x['ti'])
@@ -1494,7 +1509,7 @@ def do_stmt_value(x):
     v = do_rvalue(x['value'])
 
     if value_is_bad(v):
-        return hlir_stmt_bad()
+        return hlir_stmt_bad(x)
 
     if not hlir_type.type_is_unit(v['type']):
         if not 'dispensable' in v['type']['att']:
@@ -1542,7 +1557,7 @@ def do_stmt(x):
     elif k == 'dec': s = do_stmt_incdec(x, 'sub')
     elif k == 'comment-line': s = do_stmt_comment_line(x)
     elif k == 'comment-block': s = do_stmt_comment_block(x)
-    else: s = hlir_stmt_bad()
+    else: s = hlir_stmt_bad(x)
 
     if 'nl' in x:
         s['nl'] = x['nl']
@@ -1568,14 +1583,9 @@ def do_stmt_block(x):
 
 included_modules = {}
 def do_import(x):
-    import_expr = do_value(x['expr'])
+    import_expr = do_value_immediate_string(x['expr'])
 
-    if not value_is_immediate(import_expr):
-        error("expected immediate value", x['expr']['ti'])
-        return None
-
-    if not hlir_type.type_is_generic_array_of_char(import_expr['type']):
-        error("expected string value", x['expr']['ti'])
+    if value_is_bad(import_expr):
         return None
 
     # Literal string to python string
@@ -1649,21 +1659,18 @@ def def_const(x):
         error("constant id must starts with small letter", id['ti'])
         pass
 
-    iv = do_value(x['value'])
+    iv = do_value_immediate(x['value'])
 
     if value_is_bad(iv):
         return hlir_def_const(id, iv, iv, id['ti'])
 
-    if not value_is_immediate(iv):
-        if not type_is_pointer_to_array_of_char(iv['type']):
-            error("expected immediate value", x['value'])
+    #if not value_is_immediate(iv):
+    #    if not type_is_pointer_to_array_of_char(iv['type']):
+    #        error("expected immediate value", x['value'])
 
     const_value = value_const(id, iv['type'], iv, id['ti'])
     const_value['att'].append('global')
-
-
-    if value_is_immediate(iv):
-        const_value['asset'] = iv['asset']
+    const_value['asset'] = iv['asset']
 
     if 'nl_end' in iv:
         const_value['nl_end'] = iv['nl_end']
@@ -2050,15 +2057,16 @@ def do_directive(x):
 
     elif kind == 'if':
         old_production = production
-        c = do_value(x['cond'])
-        cond = False
-        if not value_is_bad(c):
-            if not value_is_immediate(c):
-                error("expected immediate value", x['cond']['ti'])
-            elif not hlir_type.type_is_bool(c['type']):
-                error("expected bool value", x['cond']['ti'])
-            else:
-                cond = c['asset'] != 0
+        c = do_value_immediate(x['cond'])
+
+        if value_is_bad(c):
+            return None
+
+        if not hlir_type.type_is_bool(c['type']):
+            error("expected bool value", x['cond']['ti'])
+            return None
+
+        cond = c['asset'] != 0
 
         #print("IF: " + str(cond))
 
@@ -2069,15 +2077,16 @@ def do_directive(x):
 
     elif kind == 'elseif':
         production = False
-        c = do_value(x['cond'])
-        cond = False
-        if not value_is_bad(c):
-            if not value_is_immediate(c):
-                error("expected immediate value", x['cond']['ti'])
-            elif not hlir_type.type_is_bool(c['type']):
-                error("expected bool value", x['cond']['ti'])
-            else:
-                cond = c['asset'] != 0
+        c = do_value_immediate(x['cond'])
+
+        if value_is_bad(c):
+            return None
+
+        if not hlir_type.type_is_bool(c['type']):
+            error("expected bool value", x['cond']['ti'])
+            return None
+
+        cond = c['asset'] != 0
 
         #print("ELSEIF: " + str(cond))
 
@@ -2096,41 +2105,35 @@ def do_directive(x):
         production = old_production
 
     elif kind == 'info':
-        v = do_value(x['value'])
-        if not value_is_bad(v):
-            if not hlir_type.type_is_array_of_char(v['type']):
-                fatal("required value with Str type", x['ti'])
-            elif not value_is_immediate(v):
-                fatal("required immediate value", x['ti'])
-            else:
-                # (because v['asset'] is an array of UTF-32 codes)
-                msg = str(bytes(v['asset']).decode())
-                info(msg, x['ti'])
+        v = do_value_immediate_string(x['value'])
+
+        if value_is_bad(v):
+            fatal("unsuitable value", x['ti'])
+
+        # (because v['asset'] is an array of UTF-32 codes)
+        msg = str(bytes(v['asset']).decode())
+        info(msg, x['ti'])
 
     elif kind == 'warning':
-        v = do_value(x['value'])
-        if not value_is_bad(v):
-            if not hlir_type.type_is_array_of_char(v['type']):
-                fatal("required value with Str type", x['ti'])
-            elif not value_is_immediate(v):
-                fatal("required immediate value", x['ti'])
-            else:
-                # (because v['asset'] is an array of UTF-32 codes)
-                msg = str(bytes(v['asset']).decode())
-                warning(msg, x['ti'])
+        v = do_value_immediate_string(x['value'])
+
+        if value_is_bad(v):
+            fatal("unsuitable value", x['ti'])
+
+        # (because v['asset'] is an array of UTF-32 codes)
+        msg = str(bytes(v['asset']).decode())
+        warning(msg, x['ti'])
 
     elif kind == 'error':
-        v = do_value(x['value'])
-        if not value_is_bad(v):
-            if not hlir_type.type_is_array_of_char(v['type']):
-                fatal("required value with Str type", x['ti'])
-            elif not value_is_immediate(v):
-                fatal("required immediate value", x['ti'])
-            else:
-                # (because v['asset'] is an array of UTF-32 codes)
-                msg = str(bytes(v['asset']).decode())
-                error(msg, x['ti'])
-            exit(-1)
+        v = do_value_immediate_string(x['value'])
+
+        if value_is_bad(v):
+            fatal("unsuitable value", x['ti'])
+
+        # (because v['asset'] is an array of UTF-32 codes)
+        msg = str(bytes(v['asset']).decode())
+        error(msg, x['ti'])
+        exit(-1)
 
     return None
 

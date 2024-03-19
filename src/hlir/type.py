@@ -39,7 +39,7 @@ ARR_OPS = CONS_OP + EQ_OPS + ['add', 'index']
 REC_OPS = CONS_OP + EQ_OPS + ['access']
 
 
-def hlir_type_bad(ti=None):
+def hlir_type_bad(x):
     return {
         'isa': 'type',
         'kind': 'bad',
@@ -49,9 +49,10 @@ def hlir_type_bad(ti=None):
         'align': 0,
         'declaration': None,
         'definition': None,
+        'ast_type': x,
         'ops': [],
         'att': [],
-        'ti': ti
+        'ti': x['ti']
     }
 
 
