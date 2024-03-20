@@ -799,20 +799,17 @@ def do_value_un(x):
 
 
 # for check printf/scanf params
-def get_forms(func_id_str, s):
-    forms = []
-
+def get_specs(func_id_str, s):
+    specs = []
     i = 0
     while i < len(s):
         c = s[i]
         if c == '%':
             i = i + 1
             c = s[i]
-            forms.append(c)
-
+            specs.append(c)
         i = i + 1
-
-    return forms
+    return specs
 
 
 
@@ -899,8 +896,8 @@ def do_value_call(x):
     if 'id' in f:
         func_id_str = f['id']['str']
         if func_id_str == 'printf':
-            forms = get_forms(func_id_str, x['args'][0]['str'])
-            extra_args_check(forms, extra_args)
+            specs = get_specs(func_id_str, x['args'][0]['str'])
+            extra_args_check(specs, extra_args)
 
 
     rv = value_call(f, ftype['to'], args + extra_args, ti=x['ti'])
@@ -911,57 +908,59 @@ def do_value_call(x):
     return rv
 
 
-
-
-def extra_args_check(forms, extra_args):
+def extra_args_check(specs, extra_args):
     i = 0
     # extra_args rest args
     nargs = len(extra_args)
+    nspec = len(specs)
     while i < nargs:
         arg = extra_args[i]
         arg_type = arg['type']
 
-        if not value_is_bad(arg):
-            # check extra args
-            if forms != None:
-                if forms != []:
-                    form = forms[i]
-                    if form in ['i', 'd']:
-                        if hlir_type.type_is_integer(arg_type):
-                            if not hlir_type.type_is_signed(arg_type):
-                                warning("expected signed integer value", a['ti'])
-                        else:
-                            warning("expected integer value", a['ti'])
+        if value_is_bad(arg):
+            i = i + 1
+            continue
 
-                    elif form == 'x':
-                        if not hlir_type.type_is_integer(arg_type):
-                            warning("expected integer value", a['ti'])
+        if i < nspec:
+            spec = specs[i]
 
-                    elif form == 'u':
-                        if hlir_type.type_is_integer(arg_type):
-                            if hlir_type.type_is_signed(arg_type):
-                                warning("expected unsigned integer value", a['ti'])
-                        else:
-                            warning("expected integer value", a['ti'])
+            if spec in ['i', 'd']:
+                if hlir_type.type_is_integer(arg_type):
+                    if not hlir_type.type_is_signed(arg_type):
+                        warning("expected signed integer value", a['ti'])
+                else:
+                    warning("expected integer value", a['ti'])
 
-                    elif form == 's':
-                        if not hlir_type.type_is_pointer_to_array_of_char(arg_type):
-                            warning("expected pointer to string", a['ti'])
+            elif spec == 'x':
+                if not hlir_type.type_is_integer(arg_type):
+                    warning("expected integer value", a['ti'])
 
-                    elif form == 'f':
-                        if not hlir_type.type_is_float(arg_type):
-                            warning("expected float value", a['ti'])
+            elif spec == 'u':
+                if hlir_type.type_is_integer(arg_type):
+                    if hlir_type.type_is_signed(arg_type):
+                        warning("expected unsigned integer value", a['ti'])
+                else:
+                    warning("expected integer value", a['ti'])
 
-                    elif form == 'c':
-                        if not hlir_type.type_is_char(arg_type):
-                            warning("expected char value", a['ti'])
+            elif spec == 's':
+                if not hlir_type.type_is_pointer_to_array_of_char(arg_type):
+                    warning("expected pointer to string", a['ti'])
 
-                    elif form == 'p':
-                        if not hlir_type.type_is_pointer(arg_type):
-                            warning("expected pointer value", a['ti'])
+            elif spec == 'f':
+                if not hlir_type.type_is_float(arg_type):
+                    warning("expected float value", a['ti'])
 
+            elif spec == 'c':
+                if not hlir_type.type_is_char(arg_type):
+                    warning("expected char value", a['ti'])
+
+            elif spec == 'p':
+                if not hlir_type.type_is_pointer(arg_type):
+                    warning("expected pointer value", a['ti'])
 
         i = i + 1
+    return
+
 
 
 def do_value_index(x):
