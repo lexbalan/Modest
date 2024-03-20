@@ -304,10 +304,6 @@ def do_field(x):
         error("field id must starts with small letter", id['ti'])
 
     t = do_type(x['type'])
-
-    if hlir_type.type_is_bad(t):
-        t = hlir_type.hlir_type_bad(x['type'])
-
     f = hlir_field(id, t, ti=x['ti'])
 
     nl = 1
@@ -383,7 +379,6 @@ def do_type_record(x):
     anon_tag = '__anonymous_struct_%d' % anon_rec_cnt
     rec['aka'] = anon_tag
     module['anon_recs'].append(rec)
-
     return rec
 
 
@@ -754,7 +749,6 @@ def do_value_un(x):
                 nv['asset'] = ~v['asset']
 
             return nv
-
 
         elif op == 'positive':
             if not hlir_type.type_is_signed(vtype):
@@ -1301,7 +1295,6 @@ def do_stmt_break(x):
     return hlir_stmt_break(x['ti'])
 
 
-
 def do_stmt_var(x):
     var_id = x['id']
 
@@ -1332,7 +1325,6 @@ def do_stmt_var(x):
 
     # type & init value present
     if t != None and v != None:
-        # type check
         v = value_cons_implicit_check(v, t, x['value']['ti'])
 
     if t == None:
