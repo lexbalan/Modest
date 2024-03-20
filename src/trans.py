@@ -715,6 +715,24 @@ def _bin(op, type_result, l, r, ti=None):
 
 
 
+def do_value_ref(x):
+    v = do_value(x['value'])
+
+    if value_is_bad(v):
+        return v
+
+    ti = x['ti']
+    op = x['kind']
+    vtype = v['type']
+
+    if value_is_immutable(v):
+        if not hlir_type.type_is_func(vtype):
+            error("expected mutable value or function", x['value']['ti'])
+            return value_bad(ti)
+    vt = hlir_type.hlir_type_pointer(vtype, ti=ti)
+    return value_un('ref', v, vt, ti=ti)
+
+
 def do_value_un(x):
     v = do_rvalue(x['value'])
     ti = x['ti']
@@ -1153,7 +1171,7 @@ bin_ops = [
     'add', 'sub', 'mul', 'div', 'rem'
 ]
 
-un_ops = ['ref', 'deref', 'positive', 'negative', 'not']
+un_ops = ['deref', 'positive', 'negative', 'not']
 
 
 
@@ -1202,6 +1220,7 @@ def do_value(x):
         if k == 'call': v = do_value_call(x)
         elif k in bin_ops: v = do_value_bin(x)
         elif k in un_ops: v = do_value_un(x)
+        elif k == 'ref': v = do_value_ref(x)
         elif k == 'index': v = do_value_index(x)
         elif k == 'access': v = do_value_access(x)
         elif k == 'cast': v = do_value_to(x)
