@@ -484,7 +484,7 @@ def do_value_shift(x):
 
     if hlir_type.type_is_generic(l['type']):
         error("expected non-generic value", l)
-        return value_bad(x['ti'])
+        return value_bad(x)
 
     return value_bin(op, l, r, l['type'], ti=x['ti'])
 
@@ -523,7 +523,7 @@ def do_bin_op_with_pointers(op, l, r , ti):
     from main import features
     if not features.get('unsafe'):
         error("unsafe operation", ti)
-        return value_bad(ti)
+        return value_bad({'ti': ti})
 
 
     # если включен unsafe режим
@@ -560,7 +560,7 @@ def do_bin_op_with_pointers(op, l, r , ti):
                 return do_cast_runtime(result, r['type'], ti)
 
         error("invalid operation", ti)
-        return value_bad(ti)
+        return value_bad({'ti': ti})
 
 
 
@@ -658,7 +658,7 @@ def do_value_bin(x):
     ti = x['ti']
 
     if value_is_bad(l) or value_is_bad(r):
-        return value_bad(ti)
+        return value_bad(x)
 
 
     if not op in l['type']['ops']:
@@ -714,7 +714,6 @@ def _bin(op, type_result, l, r, ti=None):
 
 
 
-
 def do_value_ref(x):
     v = do_value(x['value'])
 
@@ -728,84 +727,106 @@ def do_value_ref(x):
     if value_is_immutable(v):
         if not hlir_type.type_is_func(vtype):
             error("expected mutable value or function", x['value']['ti'])
-            return value_bad(ti)
+            return value_bad(x)
+
     vt = hlir_type.hlir_type_pointer(vtype, ti=ti)
     return value_un('ref', v, vt, ti=ti)
 
 
-def do_value_un(x):
+
+def do_value_not(x):
     v = do_rvalue(x['value'])
-    ti = x['ti']
 
     if value_is_bad(v):
         return v
 
-    op = x['kind']
     vtype = v['type']
 
-    if op == 'ref': #return do_value_ref(val, ti)
-        if value_is_immutable(v):
-            if not hlir_type.type_is_func(vtype):
-                error("expected mutable value or function", x['value']['ti'])
-                return value_bad(ti)
-        vt = hlir_type.hlir_type_pointer(vtype, ti=ti)
-        return value_un('ref', v, vt, ti=ti)
+    if not 'not' in vtype['ops']:
+        error("unsuitable type", x['value']['ti'])
+        return value_bad(x)
 
-    else:
+    nv = value_un('not', v, vtype, ti=x['ti'])
 
-        if not op in v['type']['ops']:
-            error("unsuitable type", x['value']['ti'])
-            return value_bad(ti)
+    if value_is_immediate(v):
+        nv['asset'] = ~v['asset']
 
-        v = value_load(v)
+    return nv
 
 
-        if op == 'not':
-            nv = value_un('not', v, vtype, ti=ti)
 
-            if value_is_immediate(v):
-                nv['asset'] = ~v['asset']
+def do_value_neg(x):
+    v = do_rvalue(x['value'])
 
-            return nv
+    if value_is_bad(v):
+        return v
 
-        elif op == 'positive':
-            if not hlir_type.type_is_signed(vtype):
-                error("expected value with signed type", x['value']['ti'])
+    vtype = v['type']
 
-            nv = v
+    if not hlir_type.type_is_signed(vtype):
+        error("expected value with signed type", x['value']['ti'])
 
-            return nv
+    nv = value_un('negative', v, vtype, ti=x['ti'])
 
-        elif op == 'negative':
-            if not hlir_type.type_is_signed(vtype):
-                error("expected value with signed type", x['value']['ti'])
+    if value_is_immediate(v):
+        nv['asset'] = -v['asset']
 
-            nv = value_un('negative', v, vtype, ti=ti)
+        if hlir_type.type_is_generic(nv['type']):
+            nv['type'] = hlir_type.hlir_type_generic_int_for(v['asset'], unsigned=False, ti=x['ti'])
 
-            if value_is_immediate(v):
-                nv['asset'] = -v['asset']
+    return nv
 
-                if hlir_type.type_is_generic(nv['type']):
-                    nv['type'] = hlir_type.hlir_type_generic_int_for(v['asset'], unsigned=False, ti=ti)
 
-            return nv
 
-        elif op == 'deref':
-            to = vtype['to']
+def do_value_pos(x):
+    v = do_rvalue(x['value'])
 
-            # you can't deref:
-            #   - pointer to Unit
-            #   - pointer to function
-            #   - pointer to open array
-            is_func_ptr = hlir_type.type_is_func(to)
-            is_free_ptr = hlir_type.type_is_free_pointer(to)
-            is_open_array_ptr =  hlir_type.type_is_open_array(to)
-            if is_func_ptr or is_free_ptr or is_open_array_ptr:
-                error("unsuitable type", x['value']['ti'])
+    if value_is_bad(v):
+        return v
 
-            nv = value_un('deref', v, to, ti=ti)
-            nv['immutable'] = False
-            return nv
+    vtype = v['type']
+
+    if not hlir_type.type_is_signed(vtype):
+        error("expected value with signed type", x['value']['ti'])
+
+    nv = value_un('positive', v, vtype, ti=ti)
+
+    if value_is_immediate(v):
+        nv['asset'] = +v['asset']
+
+        if hlir_type.type_is_generic(nv['type']):
+            nv['type'] = hlir_type.hlir_type_generic_int_for(v['asset'], unsigned=False, ti=ti)
+
+    return nv
+
+
+
+def do_value_deref(x):
+    v = do_rvalue(x['value'])
+
+    if value_is_bad(v):
+        return v
+
+    vtype = v['type']
+    if not hlir_type.type_is_pointer(vtype):
+        error("expected pointer value", x['value']['ti'])
+        return value_bad(x)
+
+    to = vtype['to']
+
+    # you can't deref:
+    #   - pointer to Unit
+    #   - pointer to function
+    #   - pointer to open array
+    is_func_ptr = hlir_type.type_is_func(to)
+    is_free_ptr = hlir_type.type_is_free_pointer(to)
+    is_open_array_ptr =  hlir_type.type_is_open_array(to)
+    if is_func_ptr or is_free_ptr or is_open_array_ptr:
+        error("unsuitable type", x['value']['ti'])
+
+    nv = value_un('deref', v, to, ti=x['ti'])
+    nv['immutable'] = False
+    return nv
 
 
 
@@ -990,17 +1011,17 @@ def do_value_access(x):
     # check if is record
     if not hlir_type.type_is_record(record_type):
         error("expected record or pointer to record", x)
-        return value_bad(x['left']['ti'])
+        return value_bad(x)
 
     field = hlir_type.record_field_get(record_type, field_id['str'])
 
     # if field not found
     if field == None:
         error("undefined field '%s'" % field_id['str'], x)
-        return value_bad(x['field']['ti'])
+        return value_bad(x)
 
     if hlir_type.type_is_bad(field['type']):
-        return value_bad(x['field']['ti'])
+        return value_bad(x)
 
     if via_pointer:
         v = value_access_record_by_ptr(left, field, ti=x['ti'])
@@ -1171,9 +1192,6 @@ bin_ops = [
     'add', 'sub', 'mul', 'div', 'rem'
 ]
 
-un_ops = ['deref', 'positive', 'negative', 'not']
-
-
 
 def do_value_immediate(x):
     v = do_value(x)
@@ -1219,8 +1237,11 @@ def do_value(x):
     else:
         if k == 'call': v = do_value_call(x)
         elif k in bin_ops: v = do_value_bin(x)
-        elif k in un_ops: v = do_value_un(x)
         elif k == 'ref': v = do_value_ref(x)
+        elif k == 'not': v = do_value_not(x)
+        elif k == 'negative': v = do_value_neg(x)
+        elif k == 'positive': v = do_value_pos(x)
+        elif k == 'deref': v = do_value_deref(x)
         elif k == 'index': v = do_value_index(x)
         elif k == 'access': v = do_value_access(x)
         elif k == 'cast': v = do_value_to(x)

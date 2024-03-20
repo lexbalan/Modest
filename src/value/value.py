@@ -98,8 +98,8 @@ def value_bad(x):
     return {
         'isa': 'value',
         'kind': 'bad',
-        'id': hlir_id('_', ti=ti),
-        'type': None,
+        'id': hlir_id('_', ti=x['ti']),
+        'type': hlir_type.hlir_type_bad({'ti': x['ti']}),
         'immutable': False,
         'att': [],
         'ast_value': x,

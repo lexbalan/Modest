@@ -1679,6 +1679,9 @@ def print_def_var(x):
 def print_def_const(x):
     const_value = x['value']
 
+    if const_value['type'] == None:
+        print(const_value)
+
     if hlir_type.type_is_composite(const_value['type']):
         init_value = x['init_value']
         id = x['id']
