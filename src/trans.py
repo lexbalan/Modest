@@ -797,22 +797,6 @@ def do_value_un(x):
 
 
 
-
-# for check printf/scanf params
-def get_cspecs(s):
-    specs = []
-    i = 0
-    while i < len(s):
-        c = s[i]
-        if c == '%':
-            i = i + 1
-            c = s[i]
-            specs.append(c)
-        i = i + 1
-    return specs
-
-
-
 def do_value_call(x):
 
     # for lengthof()
@@ -896,10 +880,11 @@ def do_value_call(x):
     if 'id' in f:
         func_id_str = f['id']['str']
         if func_id_str in ['printf', 'scanf', 'print']:
+            expected_pointers = func_id_str == 'scanf'
             first_arg = x['args'][0]
             if first_arg['kind'] == 'str':
                 specs = get_cspecs(first_arg['str'])
-                extra_args_check(specs, extra_args)
+                extra_args_check(specs, extra_args, expected_pointers)
             else:
                 error("expected literal string argument", first_arg['ti'])
 
@@ -911,59 +896,6 @@ def do_value_call(x):
 
     return rv
 
-
-def extra_args_check(specs, extra_args):
-    i = 0
-    # extra_args rest args
-    nargs = len(extra_args)
-    nspec = len(specs)
-    while i < nargs:
-        arg = extra_args[i]
-        arg_type = arg['type']
-
-        if value_is_bad(arg):
-            i = i + 1
-            continue
-
-        if i < nspec:
-            spec = specs[i]
-
-            if spec in ['i', 'd']:
-                if hlir_type.type_is_integer(arg_type):
-                    if not hlir_type.type_is_signed(arg_type):
-                        warning("expected signed integer value", a['ti'])
-                else:
-                    warning("expected integer value", a['ti'])
-
-            elif spec == 'x':
-                if not hlir_type.type_is_integer(arg_type):
-                    warning("expected integer value", a['ti'])
-
-            elif spec == 'u':
-                if hlir_type.type_is_integer(arg_type):
-                    if hlir_type.type_is_signed(arg_type):
-                        warning("expected unsigned integer value", a['ti'])
-                else:
-                    warning("expected integer value", a['ti'])
-
-            elif spec == 's':
-                if not hlir_type.type_is_pointer_to_array_of_char(arg_type):
-                    warning("expected pointer to string", a['ti'])
-
-            elif spec == 'f':
-                if not hlir_type.type_is_float(arg_type):
-                    warning("expected float value", a['ti'])
-
-            elif spec == 'c':
-                if not hlir_type.type_is_char(arg_type):
-                    warning("expected char value", a['ti'])
-
-            elif spec == 'p':
-                if not hlir_type.type_is_pointer(arg_type):
-                    warning("expected pointer value", a['ti'])
-
-        i = i + 1
-    return
 
 
 
@@ -2369,4 +2301,86 @@ def add_spices(obj):
     add_properties(obj)
     add_attributes(obj)
 
+
+
+
+
+# for check printf/scanf params
+# returns list of specifiers
+# ex: "%s = %d" -> ['c', 'd']
+def get_cspecs(s):
+    specs = []
+    i = 0
+    while i < len(s):
+        c = s[i]
+        if c == '%':
+            i = i + 1
+            c = s[i]
+            specs.append(c)
+        i = i + 1
+    return specs
+
+
+# check extra arguments of printf, scanf, etc.
+# requires specs from get_cspecs & extra_args list
+# expected_pointers for case of scanf("%d", &x)
+def extra_args_check(specs, extra_args, expected_pointers):
+    i = 0
+    # extra_args rest args
+    nargs = len(extra_args)
+    nspec = len(specs)
+    while i < nargs and i < nspec:
+        arg = extra_args[i]
+        arg_type = arg['type']
+
+        if value_is_bad(arg):
+            i = i + 1
+            continue
+
+        spec = specs[i]
+
+        if expected_pointers:
+            if not hlir_type.type_is_pointer(arg_type):
+                warning("expected pointer", arg['ti'])
+                i = i + 1
+                continue
+
+            arg_type = arg_type['to']
+
+        if spec in ['i', 'd']:
+            if hlir_type.type_is_integer(arg_type):
+                if not hlir_type.type_is_signed(arg_type):
+                    warning("expected signed integer value", arg['ti'])
+            else:
+                warning("expected integer value", arg['ti'])
+
+        elif spec == 'x':
+            if not hlir_type.type_is_integer(arg_type):
+                warning("expected integer value", arg['ti'])
+
+        elif spec == 'u':
+            if hlir_type.type_is_integer(arg_type):
+                if hlir_type.type_is_signed(arg_type):
+                    warning("expected unsigned integer value", arg['ti'])
+            else:
+                warning("expected integer value", arg['ti'])
+
+        elif spec == 's':
+            if not hlir_type.type_is_pointer_to_array_of_char(arg_type):
+                warning("expected pointer to string", arg['ti'])
+
+        elif spec == 'f':
+            if not hlir_type.type_is_float(arg_type):
+                warning("expected float value", arg['ti'])
+
+        elif spec == 'c':
+            if not hlir_type.type_is_char(arg_type):
+                warning("expected char value", arg['ti'])
+
+        elif spec == 'p':
+            if not hlir_type.type_is_pointer(arg_type):
+                warning("expected pointer value", arg['ti'])
+
+        i = i + 1
+    return
 
