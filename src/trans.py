@@ -799,7 +799,7 @@ def do_value_un(x):
 
 
 # for check printf/scanf params
-def get_specs(func_id_str, s):
+def get_cspecs(s):
     specs = []
     i = 0
     while i < len(s):
@@ -895,9 +895,13 @@ def do_value_call(x):
 
     if 'id' in f:
         func_id_str = f['id']['str']
-        if func_id_str == 'printf':
-            specs = get_specs(func_id_str, x['args'][0]['str'])
-            extra_args_check(specs, extra_args)
+        if func_id_str in ['printf', 'scanf', 'print']:
+            first_arg = x['args'][0]
+            if first_arg['kind'] == 'str':
+                specs = get_cspecs(first_arg['str'])
+                extra_args_check(specs, extra_args)
+            else:
+                error("expected literal string argument", first_arg['ti'])
 
 
     rv = value_call(f, ftype['to'], args + extra_args, ti=x['ti'])
