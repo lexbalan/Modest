@@ -799,29 +799,19 @@ def do_value_un(x):
 
 
 # for check printf/scanf params
-def get_forms(func_id_str, args):
-    forms = None
-    # check format
-    if func_id_str != None:
-        if func_id_str == 'printf':
-            forms = []
-            aa = args[0]
-            if not hlir_type.type_is_array_of_char(aa['type']):
-                warning("expected string literal", aa['ti'])
-                hlir_type.type_print(aa['type'])
-            else:
-                s = aa['str']
-                i = 0
-                while i < len(s):
-                    c = s[i]
-                    if c == '%':
-                        i = i + 1
-                        c = s[i]
-                        forms.append(c)
+def get_forms(func_id_str, s):
+    forms = []
 
-                    i = i + 1
+    i = 0
+    while i < len(s):
+        c = s[i]
+        if c == '%':
+            i = i + 1
+            c = s[i]
+            forms.append(c)
 
-        #print("printf forms = %s" % str(forms))
+        i = i + 1
+
     return forms
 
 
@@ -887,6 +877,8 @@ def do_value_call(x):
     # extra args
     #
 
+    extra_args = []
+
     i_before_extra = i
 
     # extra_args rest args
@@ -899,17 +891,19 @@ def do_value_call(x):
             warning("extra argument with generic type", a['ti'])
             arg = value_cons_default(arg, a['ti'])
 
-        args.append(arg)
+        extra_args.append(arg)
 
         i = i + 1
 
 
-    #if 'id' in f:
-    #    func_id_str = f['id']['str']
-    #    extra_args_check(func_id_str, i_before_extra, nargs, x['args'])
+    if 'id' in f:
+        func_id_str = f['id']['str']
+        if func_id_str == 'printf':
+            forms = get_forms(func_id_str, x['args'][0]['str'])
+            extra_args_check(forms, extra_args)
 
 
-    rv = value_call(f, ftype['to'], args, ti=x['ti'])
+    rv = value_call(f, ftype['to'], args + extra_args, ti=x['ti'])
 
     if hlir_type.type_is_closed_array(f['type']['to']):
         rv['att'].append('wrapped_array_value')
@@ -919,21 +913,19 @@ def do_value_call(x):
 
 
 
-def extra_args_check(func_id_str, i, nargs, args):
-    # список спецификаторов для проверки расширеных аргументов
-    forms = get_forms(func_id_str, args)
-
-    j = 0
+def extra_args_check(forms, extra_args):
+    i = 0
     # extra_args rest args
+    nargs = len(extra_args)
     while i < nargs:
-        arg = args[i]
+        arg = extra_args[i]
         arg_type = arg['type']
 
         if not value_is_bad(arg):
             # check extra args
             if forms != None:
                 if forms != []:
-                    form = forms[j]
+                    form = forms[i]
                     if form in ['i', 'd']:
                         if hlir_type.type_is_integer(arg_type):
                             if not hlir_type.type_is_signed(arg_type):
@@ -970,7 +962,6 @@ def extra_args_check(func_id_str, i, nargs, args):
 
 
         i = i + 1
-        j = j + 1
 
 
 def do_value_index(x):
