@@ -660,15 +660,13 @@ def do_value_bin(x):
     if value_is_bad(l) or value_is_bad(r):
         return value_bad(x)
 
-
     if not op in l['type']['ops']:
-        error("unsuitable type1", x['left']['ti'])
+        error("unsuitable value type", l['expr_ti'])
         return value_bad(x)
 
     if not op in r['type']['ops']:
-        error("unsuitable type2", x['right']['ti'])
+        error("unsuitable value type", r['expr_ti'])
         return value_bad(x)
-
 
     if hlir_type.type_is_pointer(l['type']) or hlir_type.type_is_pointer(r['type']):
         return do_bin_op_with_pointers(op, l, r, ti)
@@ -683,8 +681,8 @@ def do_value_bin(x):
 
     common_type = bin_type_select(l['type'], r['type'])
 
-    l = value_cons_implicit(l, common_type, x['left']['ti'])
-    r = value_cons_implicit(r, common_type, x['right']['ti'])
+    l = value_cons_implicit(l, common_type, l['expr_ti'])
+    r = value_cons_implicit(r, common_type, r['expr_ti'])
 
     # After implicit cast types must be equal
     if not hlir_type.check(l['type'], r['type'], x['ti']):
@@ -726,7 +724,7 @@ def do_value_ref(x):
 
     if value_is_immutable(v):
         if not hlir_type.type_is_func(vtype):
-            error("expected mutable value or function", x['value']['ti'])
+            error("expected mutable value or function", v['expr_ti'])
             return value_bad(x)
 
     vt = hlir_type.hlir_type_pointer(vtype, ti=ti)
@@ -743,7 +741,7 @@ def do_value_not(x):
     vtype = v['type']
 
     if not 'not' in vtype['ops']:
-        error("unsuitable type", x['value']['ti'])
+        error("unsuitable type", v['expr_ti'])
         return value_bad(x)
 
     nv = value_un('not', v, vtype, ti=x['ti'])
@@ -764,7 +762,7 @@ def do_value_neg(x):
     vtype = v['type']
 
     if not hlir_type.type_is_signed(vtype):
-        error("expected value with signed type", x['value']['ti'])
+        error("expected value with signed type", v['expr_ti'])
 
     nv = value_un('negative', v, vtype, ti=x['ti'])
 
@@ -787,7 +785,7 @@ def do_value_pos(x):
     vtype = v['type']
 
     if not hlir_type.type_is_signed(vtype):
-        error("expected value with signed type", x['value']['ti'])
+        error("expected value with signed type", v['expr_ti'])
 
     nv = value_un('positive', v, vtype, ti=ti)
 
@@ -809,7 +807,7 @@ def do_value_deref(x):
 
     vtype = v['type']
     if not hlir_type.type_is_pointer(vtype):
-        error("expected pointer value", x['value']['ti'])
+        error("expected pointer value", v['expr_ti'])
         return value_bad(x)
 
     to = vtype['to']
@@ -822,7 +820,7 @@ def do_value_deref(x):
     is_free_ptr = hlir_type.type_is_free_pointer(to)
     is_open_array_ptr =  hlir_type.type_is_open_array(to)
     if is_func_ptr or is_free_ptr or is_open_array_ptr:
-        error("unsuitable type", x['value']['ti'])
+        error("unsuitable type", v['expr_ti'])
 
     nv = value_un('deref', v, to, ti=x['ti'])
     nv['immutable'] = False
@@ -948,7 +946,7 @@ def do_value_index(x):
 
 
     if not hlir_type.type_is_array(array_typ):
-        error("expected array or pointer to array", x['left']['ti'])
+        error("expected array or pointer to array", left['expr_ti'])
         return value_bad(x)
 
 
@@ -1257,6 +1255,8 @@ def do_value(x):
 
     assert('ti' in v)
 
+    v['expr_ti'] = x['ti']
+
     return v
 
 
@@ -1273,14 +1273,14 @@ def do_stmt_if(x):
         return hlir_stmt_bad(x)
 
     if not hlir_type.type_is_bool(c['type']):
-        error("expected bool value", x['cond']['ti'])
+        error("expected bool value", c['expr_ti'])
         return hlir_stmt_bad(x)
 
     e = None
     if x['else'] != None:
         e = do_stmt(x['else'])
         if hlir_stmt_is_bad(e):
-            return hlir_stmt_bad(x['else']['ti'])
+            return hlir_stmt_bad(e['expr_ti'])
 
     return hlir_stmt_if(c, t, e, ti=x['ti'])
 
@@ -1294,7 +1294,7 @@ def do_stmt_while(x):
         return hlir_stmt_bad(x)
 
     if not hlir_type.type_is_bool(c['type']):
-        error("expected bool value", x['cond']['ti'])
+        error("expected bool value", c['expr_ti'])
         return hlir_stmt_bad(x)
 
     return hlir_stmt_while(c, s, ti=x['ti'])
@@ -1322,7 +1322,7 @@ def do_stmt_return(x):
     if value_is_bad(v):
         return hlir_stmt_bad(x)
 
-    v = value_cons_implicit_check(v, func_ret_type, x['value']['ti'])
+    v = value_cons_implicit_check(v, func_ret_type, v['expr_ti'])
     return hlir_stmt_return(v, ti=x['ti'])
 
 
@@ -1365,11 +1365,11 @@ def do_stmt_var(x):
 
     # type & init value present
     if t != None and v != None:
-        v = value_cons_implicit_check(v, t, x['value']['ti'])
+        v = value_cons_implicit_check(v, t, v['expr_ti'])
 
     if t == None:
         if hlir_type.type_is_generic(v['type']):
-            v = value_cons_default(v, x['value']['ti'])
+            v = value_cons_default(v, v['expr_ti'])
 
         t = v['type']
 
@@ -1443,11 +1443,11 @@ def do_stmt_assign(x):
         return hlir_stmt_bad(x)
 
     if value_is_immutable(l):
-        error("expected mutable value", x['left']['ti'])
+        error("expected mutable value", l['expr_ti'])
         return hlir_stmt_bad(x)
 
     # type check
-    r = value_cons_implicit_check(r, l['type'], x['right']['ti'])
+    r = value_cons_implicit_check(r, l['type'], r['expr_ti'])
 
     if hlir_type.type_is_composite(l['type']):
         module_option('use_memcpy')
@@ -1463,11 +1463,11 @@ def do_stmt_incdec(x, op='add'):
         return hlir_stmt_bad(x)
 
     if value_is_immutable(v):
-        error("expected mutable value", x['left']['ti'])
+        error("expected mutable value", v['expr_ti'])
         return hlir_stmt_bad(x)
 
     if not hlir_type.type_is_integer(v['type']):
-        error("expected integer value", x['value']['ti'])
+        error("expected integer value", v['expr_ti'])
         return hlir_stmt_bad(x)
 
     one = value_integer(1, typ=v['type'], ti=x['ti'])
@@ -1573,7 +1573,7 @@ def do_import(x):
 
     abspath = import_abspath(impline)
     if abspath == None:
-        error("module %s not found" % impline, x['expr']['ti'])
+        error("module %s not found" % impline, import_expr['expr_ti'])
         fatal("cannot import module")
         return None
 
@@ -1596,7 +1596,7 @@ def do_import(x):
     # но сперва проверим нет ли его уже среди импортированных модулей
     for imported_module in module['imports']:
         if imported_module['source_info']['path'] == m['source_info']['path']:
-            error("attempt to include module twice", x['expr']['ti'])
+            error("attempt to include module twice", import_expr['expr_ti'])
 
     if m != None:
         module['imports'].append(m)
@@ -1803,7 +1803,7 @@ def def_var(x):
                 var_type['volume'] = value_integer(init_arr_sz)
                 #print(init_arr_sz)
 
-            init_value = value_cons_implicit_check(iv, var_type, x['init']['ti'])
+            init_value = value_cons_implicit_check(iv, var_type, iv['expr_ti'])
 
     var = value_var(id, var_type)
     module['context'].value_add(x['field']['id']['str'], var)
@@ -2030,7 +2030,7 @@ def do_directive(x):
             return None
 
         if not hlir_type.type_is_bool(c['type']):
-            error("expected bool value", x['cond']['ti'])
+            error("expected bool value", c['expr_ti'])
             return None
 
         cond = c['asset'] != 0
@@ -2050,7 +2050,7 @@ def do_directive(x):
             return None
 
         if not hlir_type.type_is_bool(c['type']):
-            error("expected bool value", x['cond']['ti'])
+            error("expected bool value", c['expr_ti'])
             return None
 
         cond = c['asset'] != 0
@@ -2373,45 +2373,46 @@ def extra_args_check(specs, extra_args, expected_pointers):
 
         if expected_pointers:
             if not hlir_type.type_is_pointer(arg_type):
-                warning("expected pointer", arg['ti'])
+                warning("expected pointer", arg['expr_ti'])
                 i = i + 1
                 continue
 
             arg_type = arg_type['to']
 
+
         if spec in ['i', 'd']:
             if hlir_type.type_is_integer(arg_type):
                 if not hlir_type.type_is_signed(arg_type):
-                    warning("expected signed integer value", arg['ti'])
+                    warning("expected signed integer value", arg['expr_ti'])
             else:
-                warning("expected integer value", arg['ti'])
+                warning("expected integer value", arg['expr_ti'])
 
         elif spec == 'x':
             if not hlir_type.type_is_integer(arg_type):
-                warning("expected integer value", arg['ti'])
+                warning("expected integer value", arg['expr_ti'])
 
         elif spec == 'u':
             if hlir_type.type_is_integer(arg_type):
                 if hlir_type.type_is_signed(arg_type):
-                    warning("expected unsigned integer value", arg['ti'])
+                    warning("expected unsigned integer value", arg['expr_ti'])
             else:
-                warning("expected integer value", arg['ti'])
+                warning("expected integer value", arg['expr_ti'])
 
         elif spec == 's':
             if not hlir_type.type_is_pointer_to_array_of_char(arg_type):
-                warning("expected pointer to string", arg['ti'])
+                warning("expected pointer to string", arg['expr_ti'])
 
         elif spec == 'f':
             if not hlir_type.type_is_float(arg_type):
-                warning("expected float value", arg['ti'])
+                warning("expected float value", arg['expr_ti'])
 
         elif spec == 'c':
             if not hlir_type.type_is_char(arg_type):
-                warning("expected char value", arg['ti'])
+                warning("expected char value", arg['expr_ti'])
 
         elif spec == 'p':
             if not hlir_type.type_is_pointer(arg_type):
-                warning("expected pointer value", arg['ti'])
+                warning("expected pointer value", arg['expr_ti'])
 
         i = i + 1
     return
