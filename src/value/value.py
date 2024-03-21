@@ -103,6 +103,7 @@ def value_bad(x):
         'immutable': False,
         'att': [],
         'ast_value': x,
+        'expr_ti': x['ti'],
         'ti': x['ti']
     }
 
@@ -117,6 +118,7 @@ def value_literal(t, imm, ti):
         'att': [],
         'nl_end': 0,
         'nl': 0,
+        'expr_ti': ti,
         'ti': ti
     }
 
@@ -140,6 +142,7 @@ def value_var(id, type, ti=None):
         'usecnt': 0,
         'immutable': False,
         'att': [],
+        'expr_ti': ti,
         'ti': ti
     }
 
@@ -156,6 +159,7 @@ def value_const(id, type, value=None, ti=None):
         'usecnt': 0,
         'immutable': True,
         'att': [],
+        'expr_ti': ti,
         'ti': ti
     }
 
@@ -169,6 +173,7 @@ def value_func(id, type, ti=None):
         'usecnt': 0,
         'immutable': True,
         'att': [],
+        'expr_ti': ti,
         'ti': ti
     }
 
@@ -181,6 +186,7 @@ def value_un(k, value, type, ti=None):
         'type': type,
         'immutable': True,
         'att': [],
+        'expr_ti': ti,
         'ti': ti
     }
 
@@ -194,6 +200,7 @@ def value_bin(op, l, r, t, ti):
         'type': t,
         'immutable': True,
         'att': [],
+        'expr_ti': ti,
         'ti': ti
     }
 
@@ -207,6 +214,7 @@ def value_call(func, rettype, args, ti=None):
         'type': rettype,
         'immutable': True,
         'att': [],
+        'expr_ti': ti,
         'ti': ti
     }
 
@@ -220,6 +228,7 @@ def value_index_array(array, index, ti=None):
         'type': array['type']['of'],
         'immutable': False,
         'att': [],
+        'expr_ti': ti,
         'ti': ti
     }
 
@@ -233,6 +242,7 @@ def value_index_array_by_ptr(ptr_to_array, index, ti=None):
         'type': ptr_to_array['type']['to']['of'],
         'immutable': False,
         'att': [],
+        'expr_ti': ti,
         'ti': ti
     }
 
@@ -247,6 +257,7 @@ def value_access_record(record, field, ti=None):
         'type': field['type'],
         'immutable': False,
         'att': [],
+        'expr_ti': ti,
         'ti': ti
     }
 
@@ -261,6 +272,7 @@ def value_access_record_by_ptr(ptr_to_record, field, ti=None):
         'type': field['type'],
         'immutable': False,
         'att': [],
+        'expr_ti': ti,
         'ti': ti
     }
 
@@ -273,6 +285,7 @@ def value_cast(value, type, ti=None):
         'type': type,
         'immutable': True,
         'att': [],
+        'expr_ti': ti,
         'ti': ti
     }
 
@@ -303,6 +316,7 @@ def value_sizeof(of, ti=None):
         'asset': size,
         'immutable': True,
         'att': [],
+        'expr_ti': ti,
         'ti': ti
     }
 
@@ -318,6 +332,7 @@ def value_alignof(of, ti=None):
         'asset': align,
         'immutable': True,
         'att': [],
+        'expr_ti': ti,
         'ti': ti
     }
 
@@ -335,6 +350,7 @@ def value_offsetof(of, field_id, ti=None):
         'asset': offset,
         'immutable': True,
         'att': [],
+        'expr_ti': ti,
         'ti': ti
     }
 
@@ -350,6 +366,7 @@ def value_lengthof(of_value, ti=None):
         'asset': length,
         'immutable': True,
         'att': [],
+        'expr_ti': ti,
         'ti': ti
     }
 

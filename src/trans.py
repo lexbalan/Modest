@@ -514,9 +514,9 @@ def do_bin_op_with_pointers(op, l, r , ti):
 
             # what about typeFreePointer?
             if hlir_type.type_is_free_pointer(l['type']):
-                l = value_cons_implicit(l, r['type'], ti)
+                l = value_cons_implicit(l, r['type'])
             elif hlir_type.type_is_free_pointer(r['type']):
-                r = value_cons_implicit(r, l['type'], ti)
+                r = value_cons_implicit(r, l['type'])
 
             return value_bin(op, l, r, foundation.typeBool, ti)
 
@@ -549,13 +549,13 @@ def do_bin_op_with_pointers(op, l, r , ti):
 
             if ptr_n_int:
                 lnat = do_cast_runtime(l, typeSysNat, ti)
-                xr = value_cons_implicit(r, lnat['type'], ti)
+                xr = value_cons_implicit(r, lnat['type'])
                 result = value_bin(x['kind'], lnat, xr, xr['type'], ti)
                 return do_cast_runtime(result, l['type'], ti)
 
             if int_n_ptr:
                 rnat = do_cast_runtime(r, typeSysNat, ti)
-                xl = value_cons_implicit(l, rnat['type'], ti)
+                xl = value_cons_implicit(l, rnat['type'])
                 result = value_bin(x['kind'], rnat, xl, xl['type'], ti)
                 return do_cast_runtime(result, r['type'], ti)
 
@@ -681,8 +681,8 @@ def do_value_bin(x):
 
     common_type = bin_type_select(l['type'], r['type'])
 
-    l = value_cons_implicit(l, common_type, l['expr_ti'])
-    r = value_cons_implicit(r, common_type, r['expr_ti'])
+    l = value_cons_implicit(l, common_type)
+    r = value_cons_implicit(r, common_type)
 
     # After implicit cast types must be equal
     if not hlir_type.check(l['type'], r['type'], x['ti']):
@@ -880,7 +880,7 @@ def do_value_call(x):
         arg = do_rvalue(aa)
 
         if not value_is_bad(arg):
-            arg = value_cons_implicit_check(arg, param['type'], aa['ti'])
+            arg = value_cons_implicit_check(arg, param['type'])
             args.append(arg)
 
         i = i + 1
@@ -960,7 +960,7 @@ def do_value_index(x):
         return value_bad(x)
 
     if hlir_type.type_is_generic(index['type']):
-        index = value_cons_implicit_check(index, typeSysInt, index['ti'])
+        index = value_cons_implicit_check(index, typeSysInt)
 
     v = None
 
@@ -1322,7 +1322,7 @@ def do_stmt_return(x):
     if value_is_bad(v):
         return hlir_stmt_bad(x)
 
-    v = value_cons_implicit_check(v, func_ret_type, v['expr_ti'])
+    v = value_cons_implicit_check(v, func_ret_type)
     return hlir_stmt_return(v, ti=x['ti'])
 
 
@@ -1365,7 +1365,7 @@ def do_stmt_var(x):
 
     # type & init value present
     if t != None and v != None:
-        v = value_cons_implicit_check(v, t, v['expr_ti'])
+        v = value_cons_implicit_check(v, t)
 
     if t == None:
         if hlir_type.type_is_generic(v['type']):
@@ -1447,7 +1447,7 @@ def do_stmt_assign(x):
         return hlir_stmt_bad(x)
 
     # type check
-    r = value_cons_implicit_check(r, l['type'], r['expr_ti'])
+    r = value_cons_implicit_check(r, l['type'])
 
     if hlir_type.type_is_composite(l['type']):
         module_option('use_memcpy')
@@ -1803,7 +1803,7 @@ def def_var(x):
                 var_type['volume'] = value_integer(init_arr_sz)
                 #print(init_arr_sz)
 
-            init_value = value_cons_implicit_check(iv, var_type, iv['expr_ti'])
+            init_value = value_cons_implicit_check(iv, var_type)
 
     var = value_var(id, var_type)
     module['context'].value_add(x['field']['id']['str'], var)

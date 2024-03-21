@@ -37,7 +37,7 @@ def value_array(items, type=None, ti=None):
                     i = 0
                     while i < length:
                         item = items[i]
-                        item = value_cons_implicit(item, item_type, item['ti'])
+                        item = value_cons_implicit(item, item_type)
                         items[i] = item
                         i = i + 1
 
@@ -128,7 +128,7 @@ def value_cons_array_from_generic_array(v, t, ti, method):
             item = value_char(char_code, _type=None, ti=ti)
 
         from .cons import value_cons_implicit
-        casted_item = value_cons_implicit(item, t['of'], item['ti'])
+        casted_item = value_cons_implicit(item, t['of'])
         hlir_type.check(t['of'], casted_item['type'], item['ti'])
 
         casted_item['nl'] = item['nl']

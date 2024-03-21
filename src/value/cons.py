@@ -92,9 +92,11 @@ def value_cons_soft(v, t, ti):
 
 
 
-def value_cons_implicit(v, t, ti):
+def value_cons_implicit(v, t):
     if value_is_bad(v) or type.type_is_bad(t):
         return value_bad(ti)
+
+    ti = v['expr_ti']
 
     from_type = v['type']
     to_type = t
@@ -153,9 +155,9 @@ def value_cons_implicit(v, t, ti):
 
 
 
-def value_cons_implicit_check(v, t, ti):
-    nv = value_cons_implicit(v, t, ti)
-    type.check(nv['type'], t, ti)
+def value_cons_implicit_check(v, t):
+    nv = value_cons_implicit(v, t)
+    type.check(nv['type'], t, v['expr_ti'])
     return nv
 
 
