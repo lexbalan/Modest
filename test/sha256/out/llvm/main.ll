@@ -236,9 +236,9 @@ declare void @sha256_doHash([0 x i8]* %msg, i32 %msg_len, [32 x i8]* %out_hash)
 @str3 = private constant [5 x i8] [i8 37, i8 48, i8 50, i8 88, i8 0]
 @str4 = private constant [2 x i8] [i8 10, i8 0]
 @str5 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 83, i8 72, i8 65, i8 50, i8 53, i8 54, i8 10, i8 0]
-@str6 = private constant [11 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 35, i8 37, i8 105, i8 58, i8 32, i8 0]
-@str7 = private constant [8 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
-@str8 = private constant [8 x i8] [i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
+@str6 = private constant [7 x i8] [i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 0]
+@str7 = private constant [7 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 0]
+@str8 = private constant [14 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 35, i8 37, i8 105, i8 58, i8 32, i8 37, i8 115, i8 10, i8 0]
 
 
 
@@ -448,16 +448,16 @@ body_1:
     %6 = getelementptr inbounds [2 x %SHA256_TestCase*], [2 x %SHA256_TestCase*]* @sha256_tests, i32 0, i32 %5
     %7 = load %SHA256_TestCase*, %SHA256_TestCase** %6
     %8 = call i1 (%SHA256_TestCase*) @sha256_doTest(%SHA256_TestCase* %7)
-    %9 = load i32, i32* %2
-    %10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str6 to [0 x i8]*), i32 %9)
-    br i1 %8 , label %then_0, label %else_0
+    %9 = alloca %Str8*
+    store %Str8* bitcast ([7 x i8]* @str6 to [0 x i8]*), %Str8** %9
+    br i1 %8 , label %then_0, label %endif_0
 then_0:
-    %11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str7 to [0 x i8]*))
-    br label %endif_0
-else_0:
-    %12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str8 to [0 x i8]*))
+    store %Str8* bitcast ([7 x i8]* @str7 to [0 x i8]*), %Str8** %9
     br label %endif_0
 endif_0:
+    %10 = load i32, i32* %2
+    %11 = load %Str8*, %Str8** %9
+    %12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str8 to [0 x i8]*), i32 %10, %Str8* %11)
     %13 = load i32, i32* %2
     %14 = add i32 %13, 1
     store i32 %14, i32* %2
