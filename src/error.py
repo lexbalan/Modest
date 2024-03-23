@@ -6,8 +6,7 @@ errcnt = 0
 MAX_ERRORS = 10
 
 verbose_mode = False
-NO_INFO = True
-NO_WARNING = False
+
 
 ENDC = 0
 BOLD = 1
@@ -110,16 +109,10 @@ def log(s):
 
 
 def info(s, ti=None):
-    if NO_INFO:
-        return
-
     common_message('info: ', COLOR_INFO, s, ti)
 
 
 def warning(s, ti=None):
-    if NO_WARNING:
-        return
-
     from main import features
     if features.get('paranoid'):
         error(s, ti)

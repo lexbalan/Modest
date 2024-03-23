@@ -19,6 +19,10 @@ def value_cons_record_from_generic_record(v, t, ti, method):
     if v['kind'] == 'const':
         # TODO: тут нужно проверить чтобы при implicit методе
         # все поля присутствовали (!)
+
+        #for field in t['fields']:
+        #    print(field['id']['str'])
+
         return value_cast(v, t, ti=ti)
 
     """
@@ -28,6 +32,8 @@ def value_cons_record_from_generic_record(v, t, ti, method):
         vx['nl_end'] = v['nl_end']
         return vx
     """
+
+    #warning("value_cons_record_from_generic_record", ti)
 
     items = []
     if len(v['type']['fields']) > 0:
