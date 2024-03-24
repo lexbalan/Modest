@@ -364,7 +364,7 @@ def do_type_record(x):
         field_id_str = f['id']['str']
         field_already_exist = get_item_with_id(fields, field_id_str)
         if field_already_exist != None:
-            error("redefinition of '%s' field" % field_id_str, f)
+            error("redefinition of '%s' field" % field_id_str, field['ti'])
             continue
 
         if 'comments' in field:

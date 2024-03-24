@@ -311,7 +311,6 @@ class Parser:
                     'ti': ti
                 }
             else:
-                #error("???", ti)
                 return {
                     'isa': 'type',
                     'kind': 'func',
