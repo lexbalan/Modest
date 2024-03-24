@@ -2,7 +2,7 @@
 
 - [Comments](./comments.md)
 - [Identifiers](./identifiers.md)
-- [Fields](./fields.md)
+<!--- [Fields](./fields.md)-->
 - [Definitions](./def/README.md)
   * [Type](./def/type.md)
   * [Constant](./def/const.md)
