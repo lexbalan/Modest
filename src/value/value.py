@@ -339,6 +339,10 @@ def value_alignof(of, ti=None):
 
 def value_offsetof(of, field_id, ti=None):
     field = hlir_type.record_field_get(of, field_id['str'])
+    if field == None:
+        error("undefined field '%s'" % field_id['str'], field_id['ti'])
+        return value_bad({'ti': ti})
+
     offset = field['offset']
     typ = hlir_type.hlir_type_generic_int_for(offset, unsigned=True, ti=ti)
     return {
