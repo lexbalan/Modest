@@ -1,8 +1,7 @@
 
 
 def align_to(x, y):
-    if y == 0:
-        return 0
+    assert(y != 0)
 
     while x % y != 0:
         x = x + 1

@@ -295,15 +295,15 @@ define %Int @main() {
     ; дженерики в с явно не приводятся, но нектороые нужно!
     %21 = zext i8 0 to i64
     %22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str8 to [0 x i8]*), i64 %21)
-    %23 = zext i8 1 to i64
+    %23 = zext i8 4 to i64
     %24 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str9 to [0 x i8]*), i64 %23)
-    %25 = zext i8 5 to i64
+    %25 = zext i8 8 to i64
     %26 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str10 to [0 x i8]*), i64 %25)
-    %27 = zext i8 13 to i64
+    %27 = zext i8 16 to i64
     %28 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str11 to [0 x i8]*), i64 %27)
-    %29 = zext i8 15 to i64
+    %29 = zext i8 20 to i64
     %30 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str12 to [0 x i8]*), i64 %29)
-    %31 = zext i8 39 to i64
+    %31 = zext i8 44 to i64
     %32 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str13 to [0 x i8]*), i64 %31)
     ; sizeof(void) in C  == 1
     ; sizeof(Unit) in CM == 0
@@ -397,7 +397,7 @@ define %Int @main() {
     %112 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str53 to [0 x i8]*), i64 %111)
     %113 = zext i8 8 to i64
     %114 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str54 to [0 x i8]*), i64 %113)
-    %115 = zext i8 32 to i64
+    %115 = zext i8 40 to i64
     %116 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str55 to [0 x i8]*), i64 %115)
     %117 = zext i8 8 to i64
     %118 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str56 to [0 x i8]*), i64 %117)
@@ -405,35 +405,35 @@ define %Int @main() {
     %120 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str57 to [0 x i8]*), i64 %119)
     %121 = zext i8 4 to i64
     %122 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str58 to [0 x i8]*), i64 %121)
-    %123 = zext i8 5 to i64
+    %123 = zext i8 8 to i64
     %124 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str59 to [0 x i8]*), i64 %123)
-    %125 = zext i8 13 to i64
+    %125 = zext i8 16 to i64
     %126 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([28 x i8]* @str60 to [0 x i8]*), i64 %125)
-    %127 = zext i8 16 to i64
+    %127 = zext i8 24 to i64
     %128 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str61 to [0 x i8]*), i64 %127)
-    %129 = zext i8 24 to i64
+    %129 = zext i8 32 to i64
     %130 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str62 to [0 x i8]*), i64 %129)
     %131 = zext i8 8 to i64
     %132 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str63 to [0 x i8]*), i64 %131)
-    %133 = zext i8 104 to i64
+    %133 = zext i8 128 to i64
     %134 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str64 to [0 x i8]*), i64 %133)
     %135 = zext i8 8 to i64
     %136 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str65 to [0 x i8]*), i64 %135)
     %137 = zext i8 0 to i64
     %138 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str66 to [0 x i8]*), i64 %137)
-    %139 = zext i8 32 to i64
+    %139 = zext i8 40 to i64
     %140 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str67 to [0 x i8]*), i64 %139)
-    %141 = zext i8 33 to i64
+    %141 = zext i8 44 to i64
     %142 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str68 to [0 x i8]*), i64 %141)
-    %143 = zext i8 37 to i64
+    %143 = zext i8 48 to i64
     %144 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str69 to [0 x i8]*), i64 %143)
-    %145 = zext i8 45 to i64
+    %145 = zext i8 56 to i64
     %146 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([28 x i8]* @str70 to [0 x i8]*), i64 %145)
-    %147 = zext i8 54 to i64
+    %147 = zext i8 66 to i64
     %148 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([28 x i8]* @str71 to [0 x i8]*), i64 %147)
-    %149 = zext i8 56 to i64
+    %149 = zext i8 68 to i64
     %150 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str72 to [0 x i8]*), i64 %149)
-    %151 = zext i8 80 to i64
+    %151 = zext i8 96 to i64
     %152 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([28 x i8]* @str73 to [0 x i8]*), i64 %151)
     ret %Int 0
 }

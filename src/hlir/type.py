@@ -217,32 +217,35 @@ def hlir_type_enum(ti=None):
 
 from util import align_to
 def hlir_type_record(fields, ti=None):
-    record_size = 0
-    record_align = 0
 
-    if fields != []:
-        field_no = 0
-        field_offset = 0
-        for field in fields:
-            field['field_no'] = field_no
-            field['offset'] = record_size
+    field_no = 0
+    offset = 0
+    record_align = 1
 
-            field_size = type_get_size(field['type'])
-            field_align = type_get_align(field['type'])
+    for field in fields:
+        field['field_no'] = field_no
+        field_no = field_no + 1
 
-            record_size = record_size + field_size
-            record_align = max(record_align, field_align)
+        field_size = type_get_size(field['type'])
+        field_align = type_get_align(field['type'])
 
-            field_no = field_no + 1
+        # смещение поля должно быть выровнено
+        # по требуемому для него шагу выравнивания
+        offset = align_to(offset, field_align)
+        field['offset'] = offset
+        offset = offset + field_size
 
-        # Afterall we need to align record_size to record_align (!)
-        record_size = align_to(record_size, record_align)
+        # выравнивание структуры - макс выравнивание в ней
+        record_align = max(record_align, field_align)
+
+    # Afterall we need to align record_size to record_align (!)
+    record_size = align_to(offset, record_align)
 
     return {
         'isa': 'type',
         'kind': 'record',
         'generic': False,
-        'width': 0, #'width': record_size * 8,
+        'width': record_size * 8,
         'size': record_size,
         'align': record_align,
         'fields': fields,
