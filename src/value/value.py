@@ -307,12 +307,19 @@ def value_cast_immediate(v, t, ti=None):
 
 def value_sizeof(of, ti=None):
     size = hlir_type.type_get_size(of)
-    typ = hlir_type.hlir_type_generic_int_for(size, unsigned=True, ti=ti)
+
+    from main import settings
+    sizeof_width = int(settings.get('sizeof_width'))
+    typeSizeof = hlir_type.hlir_type_integer(width=sizeof_width, ti=ti)
+    typeSizeof['generic'] = True
+    typeSizeof['signed'] = False
+
+    #typ = hlir_type.hlir_type_generic_int_for(size, unsigned=True, ti=ti)
     return {
         'isa': 'value',
         'kind': 'sizeof',
         'of': of,
-        'type': typ,
+        'type': typeSizeof,
         'asset': size,
         'immutable': True,
         'att': [],
