@@ -54,7 +54,7 @@ func main() -> Int {
     }
 
     let sockaddr = &server_addr
-    var e: Int = bind(sockfd, sockaddr, (sizeof(Struct_sockaddr_in)))
+    var e: Int = bind(sockfd, sockaddr, Socklen_t sizeof(Struct_sockaddr_in))
     if e < 0 {
         perror("[-] Error in Binding")
         exit(1)
@@ -70,8 +70,7 @@ func main() -> Int {
         exit(1)
     }
 
-    var addr_size: Socklen_t
-    addr_size = (sizeof(Struct_sockaddr_in))
+    var addr_size = Socklen_t sizeof(Struct_sockaddr_in)
     var new_addr: Struct_sockaddr_in
     let sa = &new_addr
     let new_sock = accept(sockfd, sa, &addr_size)

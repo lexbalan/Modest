@@ -88,7 +88,7 @@ int main()
 
     int32_t i;
     i = 0;
-    while (i < (sizeof(sha256_tests) / sizeof(sha256_tests[0]))) {
+    while (i < (int)(sizeof(sha256_tests) / sizeof(sha256_tests[0]))) {
         SHA256_TestCase *const test = sha256_tests[i];
         const bool test_result = sha256_doTest(test);
 

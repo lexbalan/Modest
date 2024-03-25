@@ -590,7 +590,7 @@ def bin_imm(op, type_result, l, r, ti):
 
     if hlir_type.type_is_generic(type_result):
         # пересматриваем generic тип для нового значения (!)
-        type_result = hlir_type.hlir_type_generic_int_for(num_val, unsigned=True, ti=ti)
+        type_result = hlir_type.hlir_type_generic_int_for(num_val, signed=False, ti=ti)
 
     if not hlir_type.type_is_float(l['type']):
         num_val = int(num_val)
@@ -770,7 +770,7 @@ def do_value_neg(x):
         nv['asset'] = -v['asset']
 
         if hlir_type.type_is_generic(nv['type']):
-            nv['type'] = hlir_type.hlir_type_generic_int_for(v['asset'], unsigned=False, ti=x['ti'])
+            nv['type'] = hlir_type.hlir_type_generic_int_for(v['asset'], signed=True, ti=x['ti'])
 
     return nv
 
@@ -793,7 +793,7 @@ def do_value_pos(x):
         nv['asset'] = +v['asset']
 
         if hlir_type.type_is_generic(nv['type']):
-            nv['type'] = hlir_type.hlir_type_generic_int_for(v['asset'], unsigned=False, ti=ti)
+            nv['type'] = hlir_type.hlir_type_generic_int_for(v['asset'], signed=True, ti=ti)
 
     return nv
 

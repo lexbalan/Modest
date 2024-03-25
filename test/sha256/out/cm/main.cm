@@ -74,7 +74,7 @@ func main() -> Int {
     printf("test SHA256\n")
 
     var i: Int32 = 0
-    while i < (lengthof(sha256_tests)) {
+    while i < Int lengthof(sha256_tests) {
         let test = sha256_tests[i]
         let test_result = sha256_doTest(test)
 

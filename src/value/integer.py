@@ -9,7 +9,7 @@ from .value import value_literal, value_is_immediate, value_cast, value_cast_imm
 
 def value_integer(num, typ=None, ti=None):
     if typ == None:
-        typ = hlir_type.hlir_type_generic_int_for(num, unsigned=False, ti=ti)
+        typ = hlir_type.hlir_type_generic_int_for(num, signed=True, ti=ti)
     else:
         nbits = nbits_for_num(num)
 
@@ -48,9 +48,10 @@ def check_width(from_type, t, method, ti):
             rv = False
 
     if not rv:
-        type_print(from_type)
-        print(" -> ", end="")
+        print("attempt to construct ", end='')
         type_print(t)
+        print(" from ", end='')
+        type_print(from_type)
         print()
 
     return rv

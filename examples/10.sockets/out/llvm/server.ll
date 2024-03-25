@@ -447,38 +447,40 @@ endif_0:
     %20 = bitcast %Struct_sockaddr_in* %4 to i8*
     %21 = bitcast i8* %20 to %Struct_sockaddr*
     %22 = alloca %Int
-    %23 = call %Int (%Int, %Struct_sockaddr*, %Socklen_t) @bind(%Int %1, %Struct_sockaddr* %21, %Socklen_t 16)
-    store %Int %23, %Int* %22
-    %24 = load %Int, %Int* %22
-    %25 = icmp slt %Int %24, 0
-    br i1 %25 , label %then_1, label %endif_1
+    %23 = trunc i64 16 to %Socklen_t
+    %24 = call %Int (%Int, %Struct_sockaddr*, %Socklen_t) @bind(%Int %1, %Struct_sockaddr* %21, %Socklen_t %23)
+    store %Int %24, %Int* %22
+    %25 = load %Int, %Int* %22
+    %26 = icmp slt %Int %25, 0
+    br i1 %26 , label %then_1, label %endif_1
 then_1:
     call void (%ConstCharStr*) @perror(%ConstCharStr* bitcast ([21 x i8]* @str8 to [0 x i8]*))
     call void (%Int) @exit(%Int 1)
     br label %endif_1
 endif_1:
-    %26 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str9 to [0 x i8]*))
-    %27 = call %Int (%Int, %Int) @listen(%Int %1, %Int 10)
-    store %Int %27, %Int* %22
-    %28 = load %Int, %Int* %22
-    %29 = icmp eq %Int %28, 0
-    br i1 %29 , label %then_2, label %else_2
+    %27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str9 to [0 x i8]*))
+    %28 = call %Int (%Int, %Int) @listen(%Int %1, %Int 10)
+    store %Int %28, %Int* %22
+    %29 = load %Int, %Int* %22
+    %30 = icmp eq %Int %29, 0
+    br i1 %30 , label %then_2, label %else_2
 then_2:
-    %30 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str10 to [0 x i8]*))
+    %31 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str10 to [0 x i8]*))
     br label %endif_2
 else_2:
     call void (%ConstCharStr*) @perror(%ConstCharStr* bitcast ([21 x i8]* @str11 to [0 x i8]*))
     call void (%Int) @exit(%Int 1)
     br label %endif_2
 endif_2:
-    %31 = alloca %Socklen_t
-    store %Socklen_t 16, %Socklen_t* %31
-    %32 = alloca %Struct_sockaddr_in
-    %33 = bitcast %Struct_sockaddr_in* %32 to i8*
-    %34 = bitcast i8* %33 to %Struct_sockaddr*
-    %35 = call %Int (%Int, %Struct_sockaddr*, %Socklen_t*) @accept(%Int %1, %Struct_sockaddr* %34, %Socklen_t* %31)
-    call void (%Int) @write_file(%Int %35)
-    %36 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @str12 to [0 x i8]*))
+    %32 = alloca %Socklen_t
+    %33 = trunc i64 16 to %Socklen_t
+    store %Socklen_t %33, %Socklen_t* %32
+    %34 = alloca %Struct_sockaddr_in
+    %35 = bitcast %Struct_sockaddr_in* %34 to i8*
+    %36 = bitcast i8* %35 to %Struct_sockaddr*
+    %37 = call %Int (%Int, %Struct_sockaddr*, %Socklen_t*) @accept(%Int %1, %Struct_sockaddr* %36, %Socklen_t* %32)
+    call void (%Int) @write_file(%Int %37)
+    %38 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @str12 to [0 x i8]*))
     ret %Int 0
 }
 

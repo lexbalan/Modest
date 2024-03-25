@@ -24,7 +24,7 @@ void send_file(FILE *fp, int sockfd)
     char data[bufSize];
 
     while (fgets((char *)(char *)&data, bufSize, fp) != NULL) {
-        if (send(sockfd, (void *)(char *)&data, sizeof(char[bufSize]), 0) == -1) {
+        if (send(sockfd, (void *)(char *)&data, (size_t)sizeof(char[bufSize]), 0) == -1) {
             perror("[-] Error in sendung data");
             exit(1);
         }
@@ -56,7 +56,7 @@ int main()
 
     struct sockaddr *const sockaddr = (struct sockaddr *)(void *)&server_addr;
     int e;
-    e = connect(sockfd, sockaddr, sizeof(struct sockaddr_in));
+    e = connect(sockfd, sockaddr, (socklen_t)sizeof(struct sockaddr_in));
     if (e < 0) {
         perror("[-] Error in Connecting");
         exit(1);

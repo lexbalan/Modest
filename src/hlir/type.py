@@ -294,10 +294,11 @@ def hlir_type_opaque(ti=None):
     }
 
 
-def hlir_type_generic_int_for(num, unsigned=False, ti=None):
+def hlir_type_generic_int_for(num, signed=True, ti=None):
     required_width = nbits_for_num(num)
     t = hlir_type_integer(width=required_width, ti=ti)
     t['generic'] = True
+    t['signed'] = signed
     return t
 
 

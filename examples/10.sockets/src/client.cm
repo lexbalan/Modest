@@ -16,7 +16,7 @@ func send_file(fp: *FILE, sockfd: Int) {
     var data: [bufSize]Char8
 
     while fgets(&data, bufSize, fp) != nil {
-        if send(sockfd, &data, sizeof([bufSize]Char8), 0) == -1 {
+        if send(sockfd, &data, SizeT sizeof([bufSize]Char8), 0) == -1 {
             perror("[-] Error in sendung data")
             exit(1)
         }
@@ -43,7 +43,7 @@ func main() -> Int {
     }
 
     let sockaddr = *Struct_sockaddr Pointer &server_addr
-    var e = connect(sockfd, sockaddr, sizeof(Struct_sockaddr_in))
+    var e = connect(sockfd, sockaddr, Socklen_t sizeof(Struct_sockaddr_in))
     if e < 0 {
          perror("[-] Error in Connecting")
          exit(1)

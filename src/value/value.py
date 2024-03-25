@@ -307,14 +307,7 @@ def value_cast_immediate(v, t, ti=None):
 
 def value_sizeof(of, ti=None):
     size = hlir_type.type_get_size(of)
-
-    from main import settings
-    sizeof_width = int(settings.get('sizeof_width'))
-    typeSizeof = hlir_type.hlir_type_integer(width=sizeof_width, ti=ti)
-    typeSizeof['generic'] = True
-    typeSizeof['signed'] = False
-
-    #typ = hlir_type.hlir_type_generic_int_for(size, unsigned=True, ti=ti)
+    from foundation import typeSizeof
     return {
         'isa': 'value',
         'kind': 'sizeof',
@@ -330,12 +323,12 @@ def value_sizeof(of, ti=None):
 
 def value_alignof(of, ti=None):
     align = hlir_type.type_get_align(of)
-    typ = hlir_type.hlir_type_generic_int_for(align, unsigned=True, ti=ti)
+    from foundation import typeSizeof
     return {
         'isa': 'value',
         'kind': 'alignof',
         'of': of,
-        'type': typ,
+        'type': typeSizeof,
         'asset': align,
         'immutable': True,
         'att': [],
@@ -351,13 +344,13 @@ def value_offsetof(of, field_id, ti=None):
         return value_bad({'ti': ti})
 
     offset = field['offset']
-    typ = hlir_type.hlir_type_generic_int_for(offset, unsigned=True, ti=ti)
+    from foundation import typeSizeof
     return {
         'isa': 'value',
         'kind': 'offsetof',
         'of': of,
         'field': field_id,
-        'type': typ,
+        'type': typeSizeof,
         'asset': offset,
         'immutable': True,
         'att': [],
@@ -368,12 +361,12 @@ def value_offsetof(of, field_id, ti=None):
 
 def value_lengthof(of_value, ti=None):
     length = of_value['type']['volume']['asset']
-    typ = hlir_type.hlir_type_generic_int_for(length, unsigned=True, ti=ti)
+    from foundation import typeSizeof
     return {
         'isa': 'value',
         'kind': 'lengthof',
         'of_value': of_value,
-        'type': typ,
+        'type': typeSizeof,
         'asset': length,
         'immutable': True,
         'att': [],

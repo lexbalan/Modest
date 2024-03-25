@@ -31,6 +31,7 @@ typeStr16 = None
 typeStr32 = None
 typeFreePointer = None
 typeVA_List = None
+typeSizeof = None
 
 
 
@@ -67,6 +68,7 @@ def init():
     global typeStr8, typeStr16, typeStr32
     global typeFreePointer
     global typeVA_List
+    global typeSizeof
 
     #from trans import hlir_def_type
 
@@ -274,16 +276,24 @@ def init():
     type_va_list_decl['att'].append('c-no-print')
     foundation['text'].append(type_va_list_decl)
 
+
+    from main import settings
+    sizeof_width = int(settings.get('sizeof_width'))
+    typeSizeof = hlir_type_integer(width=sizeof_width)
+    typeSizeof['generic'] = True
+    typeSizeof['signed'] = False
+
     return foundation
 
 
 
 
-def hlir_type_generic_int_for(num, unsigned=False, ti=None):
+"""def hlir_type_generic_int_for(num, signed=True, ti=None):
     required_width = nbits_for_num(num)
     t = hlir_type_integer(width=required_width, ti=ti)
     t['generic'] = True
-    return t
+    t['signed'] = unsigned
+    return t"""
 
 
 def type_select_char(sz):
