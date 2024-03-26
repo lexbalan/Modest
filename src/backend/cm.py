@@ -115,31 +115,19 @@ def print_type_pointer(t):
 
 
 
-
 def print_field(x):
     print_id(x)
     out(": ")
     print_type(x['type'])
 
 
-def print_fields(fields, before, after, separator):
-    i = 0
-    n = len(fields)
-    while i < n:
-        param = fields[i]
-        out(before); print_field(param); out(after)
-        i = i + 1
-        if i < n: out(separator)
-
 
 def print_type_record(t):
     out("record {")
-
     indent_up()
 
     prev_nl = 1
     for field in t['fields']:
-
         if prev_nl == 0:
             out(", ")
 
@@ -151,7 +139,6 @@ def print_type_record(t):
 
         nl_indent(field['nl'])
         prev_nl = field['nl']
-
         print_field(field)
 
     indent_down()
@@ -175,11 +162,20 @@ def print_type_enum(t):
 
 def print_type_func(t, extra_args=False):
     out('(')
-    print_fields(t['params'], before="", after="", separator=", ")
+    fields = t['params']
+    i = 0
+    n = len(fields)
+    while i < n:
+        if i > 0: out(", ")
+        print_field(fields[i])
+        i = i + 1
+
     if extra_args:
         out(", va_list: VA_List")
+
     out(') -> ')
     print_type(t['to'])
+
 
 
 def print_type_id(t):
@@ -192,6 +188,7 @@ def print_type_id(t):
         return True
 
     return False
+
 
 
 def print_type(t):
@@ -252,23 +249,17 @@ def print_value_un(v, ctx):
     out(un_ops[op]); print_value(value, need_wrap=pv<p0)
 
 
-def print_values(values, before, after, separator):
-    i = 0
-    n = len(values)
-    while i < n:
-        a = values[i]
-        out(before)
-        print_value(a)
-        out(after)
-        i = i + 1
-        if i < n:
-            out(separator)
-
 
 def print_value_call(v, ctx):
     print_value(v['func'])
     out("(")
-    print_values(v['args'], before="", after="", separator=", ")
+    i = 0
+    values = v['args']
+    n = len(values)
+    while i < n:
+        if i > 0: out(", ")
+        print_value(values[i])
+        i = i + 1
     out(")")
 
 
@@ -310,14 +301,8 @@ def print_cast(t, v, ctx=[]):
     out(" ")
     print_value(v, ctx=ctx, need_wrap=need_wrap)
 
-    """print_value(v, ctx=ctx, need_wrap=need_wrap)
-    out(' to ')
-    print_type(t)"""
-
-
 
 def print_value_cast_immediate(x, ctx):
-
     if 'explicit_cast' in x['att']:
         print_cast(x['type'], x['value'], ctx=[])
         return
@@ -377,7 +362,6 @@ def print_value_array(v, ctx):
 
     out("[")
     indent_up()
-    #print_values(v['asset'], before=nl_indentation(INDENT_SYMBOL), after="", separator="")
 
     values = v['asset']
     i = 0
