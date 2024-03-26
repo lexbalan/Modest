@@ -33,7 +33,7 @@ def ind(symbol):
 
 def out(s):
     global f
-    f.write(s)
+    f.write(str(s))
 
 
 def output_open(fname):

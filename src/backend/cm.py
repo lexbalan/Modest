@@ -96,7 +96,7 @@ def print_comment_line(x):
 
 
 def print_type_integer(t):
-    print_type_id(t)
+    out(get_type_id(t))
 
 
 def print_type_array(t):
@@ -178,25 +178,28 @@ def print_type_func(t, extra_args=False):
 
 
 
-def print_type_id(t):
+def get_type_id(t):
     if t['definition'] != None:
-        out(t['definition']['id']['str'])
-        return True
+        return t['definition']['id']['str']
 
-    elif t['declaration'] != None:
-        out(t['declaration']['id']['str'])
-        return True
+    if t['declaration'] != None:
+        return t['declaration']['id']['str']
 
-    return False
+    return None
 
 
 
 def print_type(t):
     k = t['kind']
 
-    res = print_type_id(t)
-    if res: return
+    # Если тип связан с идентификатором - распечатаем его
+    id_str = get_type_id(t)
+    if id_str != None:
+        out(id_str)
+        return
 
+    # Если у типа нет связанного идентификатора
+    # распечатаем полное выражение типа
     if hlir_type.type_is_integer(t): print_type_integer(t)
     elif hlir_type.type_is_func(t): print_type_func(t)
     elif hlir_type.type_is_array(t): print_type_array(t)
@@ -749,17 +752,7 @@ def print_def_func(x):
 
 def print_decl_type(x):
     out("type ")
-
-    t = x['type']
-
-    id_str = "<unknown_id>"
-    if t['definition'] != None:
-        id_str = t['definition']['id']['str']
-
-    if t['declaration'] != None:
-        id_str = t['declaration']['id']['str']
-
-    out(id_str)
+    out(get_type_id(x['type']))
 
 
 
