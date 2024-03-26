@@ -76,7 +76,7 @@ def value_attribute_check(v, a):
 
 
 def value_load(x):
-    if x['kind'] == 'var':
+    """if x['kind'] == 'var':
         x['att'].append('load')
         pass
     elif x['kind'] == 'index':
@@ -87,7 +87,7 @@ def value_load(x):
         pass
     elif x['kind'] == 'deref':
         x['att'].append('load')
-        pass
+        pass"""
 
     return x
 
