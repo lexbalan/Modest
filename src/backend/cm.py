@@ -318,11 +318,9 @@ def print_value_cast(v, ctx):
     from_type = value['type']
     to_type = v['type']
 
-
     if not 'explicit_cast' in v['att']:
         print_value(value)
         return
-
 
     # NO need cast ptr to *void
     if hlir_type.type_is_pointer(from_type):
@@ -340,7 +338,6 @@ def print_value_cast(v, ctx):
 
 
 
-
 def is_zero_tail(values, i, n):
     # если это значание - zero, проверим все остальные справа
     # и если они тоже zero - их можно не печатать (zero tail)
@@ -353,9 +350,8 @@ def is_zero_tail(values, i, n):
     return True
 
 
+# print Array literal
 def print_value_array(v, ctx):
-
-    # FIXIT: это вообще херня
     if hlir_type.type_is_array_of_char(v['type']):
         print_value_array_str(v, ctx=[])
         return
@@ -389,8 +385,6 @@ def print_value_array(v, ctx):
         i = i + 1
 
 
-
-
     indent_down()
 
     if v['nl_end'] > 0:
@@ -401,6 +395,61 @@ def print_value_array(v, ctx):
 
 
 
+def code_to_char(cc):
+    if cc < 0x20:
+        if cc == 0x07: return "\\a" # bell
+        elif cc == 0x08: return "\\b" # backspace
+        elif cc == 0x09: return "\\t" # horizontal tab
+        elif cc == 0x0A: return "\\n" # line feed
+        elif cc == 0x0B: return "\\v" # vertical tab
+        elif cc == 0x0C: return "\\f" # form feed
+        elif cc == 0x0D: return "\\r" # carriage return
+        elif cc == 0x1B: return "\\e" # escape
+        else: return "\\x%X" % cc
+
+    elif cc <= 0x7E :
+        sym = chr(cc)
+        if sym == '\\': return '\\\\'
+        elif sym == '"': return '\\"'
+        else: return sym
+
+    elif cc != 0:
+        return chr(cc)
+
+
+# print Array of Char literal
+def print_value_array_str(x, ctx):
+    out("\"")
+    asset = x['asset']
+    i = 0
+    while i < len(x['asset']):
+        char_value = asset[i]
+
+        cc = char_value['asset']
+
+        # if cc is '0' - go to the end of string
+        # and check if there is something (non-zero)
+        # if not - just end string,
+        # else - continue and print next
+        if cc == 0:
+            i_befor = i
+            while i < len(x['asset']):
+                _cc = asset[i]
+                if _cc != 0:
+                    i = i_befor
+                    break
+                i = i + 1
+            out("\"")
+            return
+
+        out(code_to_char(cc))
+
+        i = i + 1
+
+    out("\"")
+
+
+# print Record literal
 def print_value_record(v, ctx):
     multiline = not 'oneline' in ctx
 
@@ -446,62 +495,7 @@ def print_value_record(v, ctx):
     out("}")
 
 
-
-def code_to_char(cc):
-    if cc < 0x20:
-        if cc == 0x07: return "\\a" # bell
-        elif cc == 0x08: return "\\b" # backspace
-        elif cc == 0x09: return "\\t" # horizontal tab
-        elif cc == 0x0A: return "\\n" # line feed
-        elif cc == 0x0B: return "\\v" # vertical tab
-        elif cc == 0x0C: return "\\f" # form feed
-        elif cc == 0x0D: return "\\r" # carriage return
-        elif cc == 0x1B: return "\\e" # escape
-        else: return "\\x%X" % cc
-
-    elif cc <= 0x7E :
-        sym = chr(cc)
-        if sym == '\\': return '\\\\'
-        elif sym == '"': return '\\"'
-        else: return sym
-
-    elif cc != 0:
-        return chr(cc)
-
-
-# FIXIT: это вообще херня
-def print_value_array_str(x, ctx):
-    out("\"")
-    asset = x['asset']
-    i = 0
-    while i < len(x['asset']):
-        char_value = asset[i]
-
-        cc = char_value['asset']
-
-        # if cc is '0' - go to the end of string
-        # and check if there is something (non-zero)
-        # if not - just end string,
-        # else - continue and print next
-        if cc == 0:
-            i_befor = i
-            while i < len(x['asset']):
-                _cc = asset[i]
-                if _cc != 0:
-                    i = i_befor
-                    break
-                i = i + 1
-            out("\"")
-            return
-
-        out(code_to_char(cc))
-
-        i = i + 1
-
-    out("\"")
-
-
-
+# print Bool literal
 def print_value_bool(x, ctx):
     if x['asset'] != 0:
         out('true')
@@ -509,6 +503,7 @@ def print_value_bool(x, ctx):
         out('false')
 
 
+# print Char literal
 def print_value_char(x, ctx):
     num = x['asset']
     if num >= 0x20:
@@ -519,7 +514,7 @@ def print_value_char(x, ctx):
         out("\"\\x%x\"[0]" % num)
 
 
-
+# print Int literal
 def print_value_integer(x, ctx):
     num = x['asset']
 
@@ -538,20 +533,21 @@ def print_value_integer(x, ctx):
 
 
 
+# print Float literal
 def print_value_float(x, ctx):
     out('{0:f}'.format(x['asset']))
 
 
+# print Pointer literal
 def print_value_ptr(x, ctx):
     if x['asset'] == 0:
         out("nil")
     else:
-        out("(0x%08X" % x['asset'])
-        out(" to ")
         print_type(x['type'])
-        out(")")
+        out(" 0x%08X" % x['asset'])
 
 
+# print Zero literal
 def print_value_zero(x, ctx):
     t = x['type']
     if hlir_type.type_is_array(t): out("[]")
