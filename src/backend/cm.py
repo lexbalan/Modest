@@ -635,7 +635,6 @@ def print_stmt_if(x):
             print_stmt_block(e)
 
 
-
 def print_stmt_while(x):
     out("while ")
     print_value(x['cond'])
@@ -734,8 +733,6 @@ def print_stmt_block(s):
 
 def print_decl_func(x):
     func = x['value']
-    #if 'extern' in func['att']:
-    #    out("extern ")
     out('func ')
     print_id(func)
     print_type(func['type'])
@@ -752,8 +749,19 @@ def print_def_func(x):
 
 def print_decl_type(x):
     out("type ")
-    #print_id(x['type'])
-    print_type(x['type'])
+
+    t = x['type']
+
+    id_str = "<unknown_id>"
+    if t['definition'] != None:
+        id_str = t['definition']['id']['str']
+
+    if t['declaration'] != None:
+        id_str = t['declaration']['id']['str']
+
+    out(id_str)
+
+
 
 def print_def_type(x):
     out("type ")
