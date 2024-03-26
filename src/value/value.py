@@ -95,16 +95,19 @@ def value_load(x):
 
 
 def value_bad(x):
+    ti = None
+    if 'ti' in x:
+        ti = x['ti']
     return {
         'isa': 'value',
         'kind': 'bad',
-        'id': hlir_id('_', ti=x['ti']),
-        'type': hlir_type.hlir_type_bad({'ti': x['ti']}),
+        'id': hlir_id('_', ti=ti),
+        'type': hlir_type.hlir_type_bad({'ti': ti}),
         'immutable': False,
         'att': [],
         'ast_value': x,
-        'expr_ti': x['ti'],
-        'ti': x['ti']
+        'expr_ti': ti,
+        'ti': ti
     }
 
 
