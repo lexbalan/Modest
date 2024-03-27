@@ -10,10 +10,10 @@ type FSM
 type FSM_Proc *(fsm: *FSM) -> Unit
 
 type FSM_StateDesc record {
-  name: [fsmNameMaxLength]Char8
-  entry: FSM_Proc
-  loop: FSM_Proc
-  exit: FSM_Proc
+    name: [fsmNameMaxLength]Char8
+    entry: FSM_Proc
+    loop: FSM_Proc
+    exit: FSM_Proc
 }
 
 
@@ -24,11 +24,11 @@ const fsmSubstateLeaving = 2
 type UInt32 Nat32
 
 type FSM record {
-  name: [fsmNameMaxLength]Char8
-  state: UInt32
-  nexstate: UInt32
-  substate: UInt32
-  states: [fsmMaxStates]FSM_StateDesc
+    name: [fsmNameMaxLength]Char8
+    state: UInt32
+    nexstate: UInt32
+    substate: UInt32
+    states: [fsmMaxStates]FSM_StateDesc
 }
 
 
