@@ -143,9 +143,9 @@ declare void @perror(%ConstCharStr* %str)
 @str4 = private constant [24 x i8] [i8 95, i8 95, i8 115, i8 121, i8 115, i8 116, i8 101, i8 109, i8 67, i8 104, i8 97, i8 114, i8 87, i8 105, i8 100, i8 116, i8 104, i8 32, i8 61, i8 32, i8 37, i8 117, i8 10, i8 0]
 @str5 = private constant [23 x i8] [i8 95, i8 95, i8 115, i8 121, i8 115, i8 116, i8 101, i8 109, i8 73, i8 110, i8 116, i8 87, i8 105, i8 100, i8 116, i8 104, i8 32, i8 61, i8 32, i8 37, i8 117, i8 10, i8 0]
 @str6 = private constant [25 x i8] [i8 95, i8 95, i8 115, i8 121, i8 115, i8 116, i8 101, i8 109, i8 70, i8 108, i8 111, i8 97, i8 116, i8 87, i8 105, i8 100, i8 116, i8 104, i8 32, i8 61, i8 32, i8 37, i8 117, i8 10, i8 0]
-@str7 = private constant [23 x i8] [i8 95, i8 95, i8 112, i8 108, i8 97, i8 116, i8 102, i8 111, i8 114, i8 109, i8 83, i8 121, i8 115, i8 116, i8 101, i8 109, i8 32, i8 61, i8 32, i8 37, i8 115, i8 10, i8 0]
+@str7 = private constant [25 x i8] [i8 95, i8 95, i8 112, i8 108, i8 97, i8 116, i8 102, i8 111, i8 114, i8 109, i8 83, i8 121, i8 115, i8 116, i8 101, i8 109, i8 32, i8 61, i8 32, i8 34, i8 37, i8 115, i8 34, i8 10, i8 0]
 @str8 = private constant [7 x i8] [i8 68, i8 97, i8 114, i8 119, i8 105, i8 110, i8 0]
-@str9 = private constant [24 x i8] [i8 95, i8 95, i8 112, i8 108, i8 97, i8 116, i8 102, i8 111, i8 114, i8 109, i8 82, i8 101, i8 108, i8 101, i8 97, i8 115, i8 101, i8 32, i8 61, i8 32, i8 37, i8 115, i8 10, i8 0]
+@str9 = private constant [26 x i8] [i8 95, i8 95, i8 112, i8 108, i8 97, i8 116, i8 102, i8 111, i8 114, i8 109, i8 82, i8 101, i8 108, i8 101, i8 97, i8 115, i8 101, i8 32, i8 61, i8 32, i8 34, i8 37, i8 115, i8 34, i8 10, i8 0]
 @str10 = private constant [7 x i8] [i8 50, i8 49, i8 46, i8 54, i8 46, i8 48, i8 0]
 
 
@@ -157,8 +157,8 @@ define %Int @main() {
     %4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str4 to [0 x i8]*), i32 8)
     %5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str5 to [0 x i8]*), i32 32)
     %6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str6 to [0 x i8]*), i32 64)
-    %7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str7 to [0 x i8]*), %Str8* bitcast ([7 x i8]* @str8 to [0 x i8]*))
-    %8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str9 to [0 x i8]*), %Str8* bitcast ([7 x i8]* @str10 to [0 x i8]*))
+    %7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str7 to [0 x i8]*), %Str8* bitcast ([7 x i8]* @str8 to [0 x i8]*))
+    %8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str9 to [0 x i8]*), %Str8* bitcast ([7 x i8]* @str10 to [0 x i8]*))
     ret %Int 0
 }
 

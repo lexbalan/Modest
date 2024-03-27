@@ -19,8 +19,8 @@ int main()
     printf("__systemIntWidth = %u\n", 32);
     printf("__systemFloatWidth = %u\n", 64);
 
-    printf("__platformSystem = %s\n", "Darwin");
-    printf("__platformRelease = %s\n", "21.6.0");
+    printf("__platformSystem = \"%s\"\n", "Darwin");
+    printf("__platformRelease = \"%s\"\n", "21.6.0");
 
     return 0;
 }
