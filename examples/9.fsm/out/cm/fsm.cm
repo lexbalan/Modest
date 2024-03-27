@@ -21,6 +21,7 @@ func fsm_switch(fsm: *FSM, state: Nat32) -> Unit {
 
 func fsm_run(fsm: *FSM) -> Unit {
     printf("fsm_run()\n")
+
     if fsm.substate == fsmSubstateEntering {
         let nexstate = fsm.nexstate
         let state = &fsm.states[nexstate]
