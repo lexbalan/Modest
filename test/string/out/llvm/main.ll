@@ -175,7 +175,8 @@ declare void @utf32_puts(%Str32* %s)
     i8 111,
     i8 0
 ]
-@world = constant [8 x i8] [
+@world = constant [9 x i8] [
+    i8 32,
     i8 119,
     i8 111,
     i8 114,
@@ -185,12 +186,13 @@ declare void @utf32_puts(%Str32* %s)
     i8 10,
     i8 0
 ]
-@hello_world = constant [13 x i8] [
+@hello_world = constant [14 x i8] [
     i8 72,
     i8 101,
     i8 108,
     i8 108,
     i8 111,
+    i8 32,
     i8 119,
     i8 111,
     i8 114,

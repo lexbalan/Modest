@@ -617,6 +617,11 @@ def value_concat_arrays(l, r, ti):
     return bin_value
 
 
+
+def value_eq_immediate(a, b):
+    return a['asset'] == b['asset']
+
+
 # FIXIT: it is generic arrays EQ!
 def value_eq_arrays(l, r, ti):
     lvolume = l['type']['volume']
@@ -625,9 +630,11 @@ def value_eq_arrays(l, r, ti):
         if lvolume['asset'] != rvolume['asset']:
             return False
     else:
-        fatal("dynamic immediate array volume", ti)
+        fatal("dynamic immediate array volume not implemented", ti)
 
     for a, b in zip(l['asset'], r['asset']):
+        print("a = " + str(a))
+        print("b = " + str(b))
         if a != b:
             return False
 

@@ -7,7 +7,7 @@ from .common import *
 import hlir.type as hlir_type
 from hlir.type import type_print
 from value.value import value_is_immediate, value_is_zero, value_attribute_check, value_print
-from util import align_bits_up, nbits_for_num, get_item_with_id, utf8_cc_arr_to_utf32_cc_arr, utf16_cc_arr_to_utf32_cc_arr
+from util import align_bits_up, nbits_for_num, get_item_with_id, utf8_cc_arr_to_utf32_cc_arr, utf16_cc_arr_to_utf32_cc_arr, align_to
 from main import settings
 import foundation
 
@@ -300,20 +300,16 @@ def print_type(t, space_after=False, array_as_ptr=True, as_const=False):
         else:
             out(type_declaration['id']['str'])
 
-    #elif 'c_alias' in t:
-    #    out(t['c_alias'])
-
-    #elif t['id'] != None:
-    #    if NO_TYPEDEF_STRUCTS:
-    #        if hlir_type.type_is_record(t):
-    #            out("struct ")
-    #    print_id(t)
-
     elif hlir_type.type_is_integer(t):
-        print_type_id(t)
+        if not t['signed']:
+            out("u")
+        out("int%d_t", align_to(t['width'], 8))
 
     elif hlir_type.type_is_float(t):
-        print_type_id(t)
+        if t['width'] <= 32:
+            out("float")
+        else:
+            out("double")
 
     elif hlir_type.type_is_record(t):
         if 'aka' in t:
@@ -333,6 +329,14 @@ def print_type(t, space_after=False, array_as_ptr=True, as_const=False):
 
     elif hlir_type.type_is_func(t):
         out("void")
+
+    elif hlir_type.type_is_char(t):
+        if t['width'] <= 8:
+            out("char")
+        elif t['width'] <= 16:
+            out("int16_t")
+        elif t['width'] <= 32:
+            out("int32_t")
 
     elif k == 'opaque':
         out("void")
@@ -763,10 +767,11 @@ def print_value_array(v, ctx):
     if hlir_type.type_is_array_of_char(v['type']):
         char_type = v['type']['of']
         char_width = char_type['width']
-        if hlir_type.type_is_generic_array_of_char(v['type']):
+
+        """if hlir_type.type_is_generic_array_of_char(v['type']):
             # FIXIT: вообще нефиг печатать generic string (!)
             out('{} /*GENERIC-STRING*/')
-            return
+            return"""
 
         # массивы чаров в конце которых только один терминальный ноль
         # печатаем в виде строковых литералов C
@@ -1690,6 +1695,8 @@ def print_def_const(x):
 
     else:
         print_macro_definition(_id, init_value)
+
+    return
 
 
 def print_include(x):
