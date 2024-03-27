@@ -1223,13 +1223,12 @@ def do_eval(x):
     else:
         out("<%s>" % k)
 
-    if y != None:
-        y['type'] = x['type']  # TODO: wtf?
-
-    else:
+    if y == None:
         error("llvm do_eval cannot eval this value", x['ti'])
         value_print(x)
         return llvm_value_zero(x['type'])
+
+    y['type'] = x['type']
 
     return y
 
