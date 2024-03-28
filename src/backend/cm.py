@@ -216,7 +216,7 @@ bin_ops = {
     'eq': '==', 'ne': '!=', 'lt': '<', 'gt': '>', 'le': '<=', 'ge': '>=',
     'add': '+', 'sub': '-', 'mul': '*', 'div': '/', 'rem': '%',
     'logic_and': 'and', 'logic_or': 'or',
-    'add_str': '+', 'eq_str': '==', 'ne_str': '!='
+    'add_arr': '+', 'eq_str': '==', 'ne_str': '!='
 }
 
 def print_value_bin(x, ctx):

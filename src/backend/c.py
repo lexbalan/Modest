@@ -354,7 +354,7 @@ bin_ops = {
     'eq': '==', 'ne': '!=', 'lt': '<', 'gt': '>', 'le': '<=', 'ge': '>=',
     'add': '+', 'sub': '-', 'mul': '*', 'div': '/', 'rem': '%',
     'logic_and': '&&', 'logic_or': '||',
-    'add_str': '', 'eq_str': '', 'ne_str': ''
+    'add_arr': '', 'eq_str': '', 'ne_str': ''
 }
 
 
@@ -394,8 +394,8 @@ def print_value_bin(v, ctx):
     elif op in ['eq_str', 'ne_str']:
         print_value_bool(v, ctx)
         return
-    elif op == 'add_str':
-        _print_string_literal(v['asset'], width=v['type']['width'])
+    elif op == 'add_arr':
+        print_value_array(v, ctx)
         return
 
     print_value(left, need_wrap=need_wrap_left)

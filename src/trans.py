@@ -136,6 +136,10 @@ def property(id, value):
     properties[id] = value
 
 
+def output_id(id):
+    property()
+
+
 def pragma(pg):
     #print("@pragma " +  pg)
     if pg == 'not_included':
@@ -611,7 +615,7 @@ def value_concat_arrays(l, r, ti):
     genStrType = hlir_type.hlir_type_array(item_type, volume=str_array_volume, ti=ti)
     genStrType['generic'] = True
 
-    bin_value = value_bin('add_str', l, r, genStrType, ti=ti)
+    bin_value = value_bin('add_arr', l, r, genStrType, ti=ti)
     bin_value['asset'] = imm_str
     bin_value['nl_end'] = r['nl_end']
     return bin_value
@@ -794,13 +798,13 @@ def do_value_pos(x):
     if not hlir_type.type_is_signed(vtype):
         error("expected value with signed type", v['expr_ti'])
 
-    nv = value_un('positive', v, vtype, ti=ti)
+    nv = value_un('positive', v, vtype, ti=x['ti'])
 
     if value_is_immediate(v):
         nv['asset'] = +v['asset']
 
         if hlir_type.type_is_generic(nv['type']):
-            nv['type'] = hlir_type.hlir_type_generic_int_for(v['asset'], signed=True, ti=ti)
+            nv['type'] = hlir_type.hlir_type_generic_int_for(v['asset'], signed=True, ti=x['ti'])
 
     return nv
 

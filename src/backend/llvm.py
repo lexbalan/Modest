@@ -1217,7 +1217,7 @@ def do_eval(x):
     elif k == 'access_ptr': y = do_eval_access_ptr(x)
     elif k == 'cast_immediate': y = do_eval_cast_immediate(x)
     elif k == 'cast': y = do_eval_cast(x)
-    elif k == 'add_str': y = do_eval_literal(x)
+    elif k == 'add_arr': y = do_eval_literal(x)
     elif k in ['sizeof', 'lengthof', 'alignof', 'offsetof', 'eq_str']:
          y = do_eval_literal(x)
     else:

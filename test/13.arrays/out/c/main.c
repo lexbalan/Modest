@@ -19,7 +19,10 @@
 
 
 
-static int32_t globalArray[3] = {1, 2, 3};
+
+const int8_t constantArray[11] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+static int32_t globalArray[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
 
 struct f0_x {char a[10];};
@@ -38,7 +41,7 @@ int main()
 
     int32_t i;
     i = 0;
-    while (i < 3) {
+    while (i < 10) {
         const int32_t a = globalArray[i];
         printf("globalArray[%i] = %i\n", i, a);
         i = i + 1;
@@ -123,6 +126,8 @@ int main()
     // Check assination local literal array
     //
 
+
+    //let aa = [111] + [222] + [333]
     // cons literal array from var items
     int int100;
     int100 = 100;
@@ -134,14 +139,14 @@ int main()
     memcpy(&init_array, &(int[3]){int100, int200, int300}, 12);
 
     // check local literal array assignation to local array
-    int32_t e[3];
-    memcpy(&e, &init_array, 12);
+    int32_t e[4];
+    memcpy(&e, &init_array, 16);
     printf("e[0] = %i\n", e[0]);
     printf("e[1] = %i\n", e[1]);
     printf("e[2] = %i\n", e[2]);
 
     // check local literal array assignation to global array
-    memcpy(&globalArray, &init_array, 12);
+    memcpy(&globalArray, &init_array, 40);
     printf("globalArray[%i] = %i\n", 0, globalArray[0]);
     printf("globalArray[%i] = %i\n", 1, globalArray[1]);
     printf("globalArray[%i] = %i\n", 2, globalArray[2]);

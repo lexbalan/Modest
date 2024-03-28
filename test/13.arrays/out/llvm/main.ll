@@ -364,10 +364,31 @@ declare double @max_float64(double %a, double %b)
 
 
 
-@globalArray = global [3 x i32] [
+@constantArray = constant [11 x i8] [
+    i8 1,
+    i8 2,
+    i8 3,
+    i8 4,
+    i8 5,
+    i8 6,
+    i8 7,
+    i8 8,
+    i8 9,
+    i8 10,
+    i8 0
+]
+
+@globalArray = global [10 x i32] [
     i32 1,
     i32 2,
-    i32 3
+    i32 3,
+    i32 4,
+    i32 5,
+    i32 6,
+    i32 7,
+    i32 8,
+    i32 9,
+    i32 10
 ]
 
 define void @f0([10 x i8] %x) {
@@ -395,11 +416,11 @@ define %Int @main() {
     br label %again_1
 again_1:
     %12 = load i32, i32* %11
-    %13 = icmp slt i32 %12, 3
+    %13 = icmp slt i32 %12, 10
     br i1 %13 , label %body_1, label %break_1
 body_1:
     %14 = load i32, i32* %11
-    %15 = getelementptr inbounds [3 x i32], [3 x i32]* @globalArray, i32 0, i32 %14
+    %15 = getelementptr inbounds [10 x i32], [10 x i32]* @globalArray, i32 0, i32 %14
     %16 = load i32, i32* %15
     %17 = load i32, i32* %11
     %18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str2 to [0 x i8]*), i32 %17, i32 %16)
@@ -433,7 +454,7 @@ body_2:
 break_2:
     %35 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str5 to [0 x i8]*))
     %36 = alloca [0 x i32]*
-    %37 = bitcast [3 x i32]* @globalArray to [0 x i32]*
+    %37 = bitcast [10 x i32]* @globalArray to [0 x i32]*
     store [0 x i32]* %37, [0 x i32]** %36
     store i32 0, i32* %11
     br label %again_3
@@ -558,6 +579,7 @@ endif_0:
     ;
     ; Check assination local literal array
     ;
+    ;let aa = [111] + [222] + [333]
     ; cons literal array from var items
     %121 = alloca %Int
     store %Int 100, %Int* %121
@@ -574,43 +596,51 @@ endif_0:
     %130 = alloca [3 x %Int]
     store [3 x %Int] %129, [3 x %Int]* %130
     ; check local literal array assignation to local array
-    %131 = alloca [3 x i32]
+    %131 = alloca [4 x i32]
     %132 = load %Int, %Int* %121
     %133 = load %Int, %Int* %122
     %134 = load %Int, %Int* %123
-    %135 = insertvalue [3 x i32] zeroinitializer, %Int %132, 0
-    %136 = insertvalue [3 x i32] %135, %Int %133, 1
-    %137 = insertvalue [3 x i32] %136, %Int %134, 2
-    store [3 x i32] %137, [3 x i32]* %131
-    %138 = getelementptr inbounds [3 x i32], [3 x i32]* %131, i32 0, i32 0
-    %139 = load i32, i32* %138
-    %140 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str23 to [0 x i8]*), i32 %139)
-    %141 = getelementptr inbounds [3 x i32], [3 x i32]* %131, i32 0, i32 1
-    %142 = load i32, i32* %141
-    %143 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str24 to [0 x i8]*), i32 %142)
-    %144 = getelementptr inbounds [3 x i32], [3 x i32]* %131, i32 0, i32 2
-    %145 = load i32, i32* %144
-    %146 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str25 to [0 x i8]*), i32 %145)
+    %135 = insertvalue [4 x i32] zeroinitializer, %Int %132, 0
+    %136 = insertvalue [4 x i32] %135, %Int %133, 1
+    %137 = insertvalue [4 x i32] %136, %Int %134, 2
+    %138 = insertvalue [4 x i32] %137, i32 0, 3
+    store [4 x i32] %138, [4 x i32]* %131
+    %139 = getelementptr inbounds [4 x i32], [4 x i32]* %131, i32 0, i32 0
+    %140 = load i32, i32* %139
+    %141 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str23 to [0 x i8]*), i32 %140)
+    %142 = getelementptr inbounds [4 x i32], [4 x i32]* %131, i32 0, i32 1
+    %143 = load i32, i32* %142
+    %144 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str24 to [0 x i8]*), i32 %143)
+    %145 = getelementptr inbounds [4 x i32], [4 x i32]* %131, i32 0, i32 2
+    %146 = load i32, i32* %145
+    %147 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str25 to [0 x i8]*), i32 %146)
     ; check local literal array assignation to global array
-    %147 = load %Int, %Int* %121
-    %148 = load %Int, %Int* %122
-    %149 = load %Int, %Int* %123
-    %150 = insertvalue [3 x i32] zeroinitializer, %Int %147, 0
-    %151 = insertvalue [3 x i32] %150, %Int %148, 1
-    %152 = insertvalue [3 x i32] %151, %Int %149, 2
-    store [3 x i32] %152, [3 x i32]* @globalArray
-    %153 = sext i8 0 to i32
-    %154 = getelementptr inbounds [3 x i32], [3 x i32]* @globalArray, i32 0, i32 0
-    %155 = load i32, i32* %154
-    %156 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str26 to [0 x i8]*), i32 %153, i32 %155)
-    %157 = sext i8 1 to i32
-    %158 = getelementptr inbounds [3 x i32], [3 x i32]* @globalArray, i32 0, i32 1
-    %159 = load i32, i32* %158
-    %160 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str27 to [0 x i8]*), i32 %157, i32 %159)
-    %161 = sext i8 2 to i32
-    %162 = getelementptr inbounds [3 x i32], [3 x i32]* @globalArray, i32 0, i32 2
+    %148 = load %Int, %Int* %121
+    %149 = load %Int, %Int* %122
+    %150 = load %Int, %Int* %123
+    %151 = insertvalue [10 x i32] zeroinitializer, %Int %148, 0
+    %152 = insertvalue [10 x i32] %151, %Int %149, 1
+    %153 = insertvalue [10 x i32] %152, %Int %150, 2
+    %154 = insertvalue [10 x i32] %153, i32 0, 3
+    %155 = insertvalue [10 x i32] %154, i32 0, 4
+    %156 = insertvalue [10 x i32] %155, i32 0, 5
+    %157 = insertvalue [10 x i32] %156, i32 0, 6
+    %158 = insertvalue [10 x i32] %157, i32 0, 7
+    %159 = insertvalue [10 x i32] %158, i32 0, 8
+    %160 = insertvalue [10 x i32] %159, i32 0, 9
+    store [10 x i32] %160, [10 x i32]* @globalArray
+    %161 = sext i8 0 to i32
+    %162 = getelementptr inbounds [10 x i32], [10 x i32]* @globalArray, i32 0, i32 0
     %163 = load i32, i32* %162
-    %164 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str28 to [0 x i8]*), i32 %161, i32 %163)
+    %164 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str26 to [0 x i8]*), i32 %161, i32 %163)
+    %165 = sext i8 1 to i32
+    %166 = getelementptr inbounds [10 x i32], [10 x i32]* @globalArray, i32 0, i32 1
+    %167 = load i32, i32* %166
+    %168 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str27 to [0 x i8]*), i32 %165, i32 %167)
+    %169 = sext i8 2 to i32
+    %170 = getelementptr inbounds [10 x i32], [10 x i32]* @globalArray, i32 0, i32 2
+    %171 = load i32, i32* %170
+    %172 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str28 to [0 x i8]*), i32 %169, i32 %171)
     ret %Int 0
 }
 

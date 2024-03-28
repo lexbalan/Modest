@@ -8,7 +8,9 @@ import "misc/minmax"
 @c_include "./minmax.h"
 
 
-var globalArray: [3]Int32 = [1, 2, 3]
+const constantArray = [1, 2, 3, 4, 5] + [6, 7, 8, 9, 10]
+
+var globalArray: [10]Int32 = constantArray
 
 
 func f0(x: [10]Char8) -> Unit {
@@ -22,7 +24,7 @@ func main() -> Int {
     f0("hi!")
 
     var i: Int32 = 0
-    while i < 3 {
+    while i < 10 {
         let a = globalArray[i]
         printf("globalArray[%i] = %i\n", i, a)
         i = i + 1
@@ -101,6 +103,8 @@ func main() -> Int {
     // Check assination local literal array
     //
 
+
+    //let aa = [111] + [222] + [333]
     // cons literal array from var items
     var int100: Int = 100
     var int200: Int = 200
@@ -108,7 +112,7 @@ func main() -> Int {
     let init_array = [int100, int200, int300]
 
     // check local literal array assignation to local array
-    var e: [3]Int32
+    var e: [4]Int32
     e = init_array
     printf("e[0] = %i\n", e[0])
     printf("e[1] = %i\n", e[1])
