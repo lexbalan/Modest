@@ -1,4 +1,4 @@
-# Variable definition statement
+# Local variable definition statement
 
 Variable definition creates new *local variable* instance.
 

@@ -1,4 +1,4 @@
-# Constant definition statement
+# Local constant definition statement
 
 #### Common form
 
