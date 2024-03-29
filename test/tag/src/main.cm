@@ -22,7 +22,6 @@ var ab: [10][10]Nat32 = [
 func main() -> Int {
     printf("tag test")
 
-
     let p = *Int32 0
     printf("*p = %i\n", *p)
 
