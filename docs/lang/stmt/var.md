@@ -24,7 +24,7 @@ var <#identifier#> : <#type_expression#> = <#default_value_expression#>
 #### Examples
 
 
-```zig
+```swift
 func mid (a: Int32, b: Int32) -> Int32 {
     var result: Int32
     result = a + b

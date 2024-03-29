@@ -8,7 +8,7 @@
 
 #### Examples
 
-```zig
+```swift
 func main () -> Int32 {
     // usually we discard printf return value
     // because we need only side its effect (print line to stdout)

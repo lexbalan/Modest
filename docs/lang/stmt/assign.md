@@ -8,7 +8,7 @@
 
 #### Examples
 
-```zig
+```swift
 var a: Int32
 
 func main () -> Unit {

@@ -31,7 +31,7 @@
 
 #### Examples
 
-```zig
+```swift
 // see: examples/stmt_if/src/main.cm
 
 import "libc/stdio"
