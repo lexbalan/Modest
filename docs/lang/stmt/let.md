@@ -2,7 +2,7 @@
 
 #### Common form
 
-Local constant creates with `let` keyword.
+Local constant can be created with `let` keyword. Unlike global constants (they requires *immediate* value), local constant can be created from any kind of value.
 
 ```
     let <#identifier#> = <#immediate_value_expression#>
