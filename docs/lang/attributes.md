@@ -1,9 +1,9 @@
 
 # Attributes
 
-Attribute can be added to defined new entity.
+Attributes are a way to change (or add) meta information of defined entities. Using the attribute mechanism allows you to influence the compilation process
 
-```zig
+```swift
 @attribute("dispensable")
 func my_func () -> Int {
   return 0
@@ -32,7 +32,7 @@ func main () {
 
 
 Property `gnu_att`
-```
+```swift
 @property("gnu_att", "interrupt(\"WCH-Interrupt-fast\")")
 func wch_systick_interrupt() {
     //
