@@ -9,6 +9,16 @@
     }
 ```
 
+
+## Break statement
+`break`
+
+
+## Again statement
+`again`
+
+
+
 #### Examples
 
 ```swift
