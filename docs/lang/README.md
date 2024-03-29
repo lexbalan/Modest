@@ -46,6 +46,9 @@
   * [Builtin constants](./builtin_constants.md)
 
 
+### Keywords
+`import`, `type`, `const`, `var`, `func`, `let`, `if`, `while`, `return`, `break`, `again`
+
 
 ### Example
 
@@ -102,4 +105,6 @@ func get_integer(min: Int32, max: Int32) -> Int32 {
 }
 
 ```
+
+
 
