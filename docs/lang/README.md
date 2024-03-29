@@ -48,7 +48,7 @@
 
 
 ### Keywords
-`import`, `type`, `const`, `var`, `func`, `let`, `if`, `while`, `return`, `break`, `again`
+[`import`](./import.md), [`type`](./def/type.md), [`const`](./def/const.md), `var`, `func`, `let`, `if`, `while`, `return`, `break`, `again`
 
 
 ### Example
