@@ -1379,7 +1379,7 @@ class Parser:
                 x = self.parse_directive()
 
             # we can do const definition before import?
-            elif self.match('const'):
+            elif self.match('const') or self.match('let'):
                 x = self.parse_def_const()
 
             elif self.match('import'):
@@ -1417,6 +1417,7 @@ class Parser:
                 continue
             elif self.match('func'): x = self.parse_def_func()
             elif self.match('const'): x = self.parse_def_const()
+            elif self.match('let'): x = self.parse_def_const()
             elif self.match('var'): x = self.parse_def_var()
             elif self.match('type'): x = self.parse_def_type()
 
