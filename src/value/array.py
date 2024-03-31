@@ -24,9 +24,15 @@ def value_array(items, ti=None):
     # Получаем наиболее подходящий общий тип элементов массива
     array_item_type = items[0]['type']
 
+    is_immediate = True
+
     i = 0
     while i < length:
         item = items[i]
+
+        if is_immediate:
+            is_immediate = value_is_immediate(item)
+
         item_type = item['type']
         common_type = select_common_type(array_item_type, item_type)
         if common_type == None:
@@ -50,10 +56,13 @@ def value_array(items, ti=None):
         i = i + 1
 
 
-    return _value_array(casted_items, array_item_type, length, ti)
+    v = _value_array(casted_items, array_item_type, length, ti)
+    #v['immediate'] = is_immediate  #TODO: need to implement 'immediate' flag
+    return v
 
 
 
+# concatenation of two immediate arrays
 def value_array_concat(l, r, ti):
     imm_str = l['asset'] + r['asset']
     length = len(imm_str) + 1  #!
