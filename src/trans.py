@@ -596,12 +596,11 @@ def value_concat_arrays(l, r, ti):
     length = len(imm_str) + 1  #!
 
     str_array_volume = value_integer(length)
-    generic = True  # не факт, анализируй a и b
-    item_type = l['type']['of'] #foundation.typeChar32
-    genStrType = hlir_type.hlir_type_array(item_type, volume=str_array_volume, ti=ti)
-    genStrType['generic'] = True
+    item_type = select_common_type(l['type']['of'], r['type']['of'])
+    t = hlir_type.hlir_type_array(item_type, volume=str_array_volume, ti=ti)
+    t['generic'] = True
 
-    bin_value = value_bin('add_arr', l, r, genStrType, ti=ti)
+    bin_value = value_bin('add_arr', l, r, t, ti=ti)
     bin_value['asset'] = imm_str
     bin_value['nl_end'] = r['nl_end']
     return bin_value
