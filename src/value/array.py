@@ -4,7 +4,7 @@ from hlir.type import select_common_type
 from error import info, error
 from .char import value_char
 from .integer import value_integer
-from .value import value_literal, value_is_immediate, value_cast, value_cast_immediate, value_zero
+from .value import value_literal, value_is_immediate, value_cast, value_cast_immediate, value_zero, value_bin
 
 
 def _value_array(items, item_type, length, ti):
@@ -51,6 +51,22 @@ def value_array(items, ti=None):
 
 
     return _value_array(casted_items, array_item_type, length, ti)
+
+
+
+def value_array_concat(l, r, ti):
+    imm_str = l['asset'] + r['asset']
+    length = len(imm_str) + 1  #!
+
+    str_array_volume = value_integer(length)
+    item_type = select_common_type(l['type']['of'], r['type']['of'])
+    t = hlir_type.hlir_type_array(item_type, volume=str_array_volume, ti=ti)
+    t['generic'] = True
+
+    bin_value = value_bin('add_arr', l, r, t, ti=ti)
+    bin_value['asset'] = imm_str
+    bin_value['nl_end'] = r['nl_end']
+    return bin_value
 
 
 

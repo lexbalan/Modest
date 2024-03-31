@@ -12,7 +12,7 @@ import foundation
 from value.bool import value_bool
 from value.integer import value_integer
 from value.float import value_float
-from value.array import value_array, value_string
+from value.array import value_array, value_array_concat, value_string
 from value.record import value_record
 
 
@@ -590,23 +590,6 @@ def bin_imm(op, type_result, l, r, ti):
     return bin_value
 
 
-
-def value_concat_arrays(l, r, ti):
-    imm_str = l['asset'] + r['asset']
-    length = len(imm_str) + 1  #!
-
-    str_array_volume = value_integer(length)
-    item_type = select_common_type(l['type']['of'], r['type']['of'])
-    t = hlir_type.hlir_type_array(item_type, volume=str_array_volume, ti=ti)
-    t['generic'] = True
-
-    bin_value = value_bin('add_arr', l, r, t, ti=ti)
-    bin_value['asset'] = imm_str
-    bin_value['nl_end'] = r['nl_end']
-    return bin_value
-
-
-
 def value_eq_immediate(a, b):
     return a['asset'] == b['asset']
 
@@ -670,7 +653,7 @@ def do_value_bin(x):
 
     if hlir_type.type_is_generic_array(l['type']) and hlir_type.type_is_generic_array(r['type']):
         if op == 'add':
-            return value_concat_arrays(l, r, ti)
+            return value_array_concat(l, r, ti)
         elif op in ['eq', 'ne']:
             return do_value_bin_str_eq(op, l, r, ti)
 
