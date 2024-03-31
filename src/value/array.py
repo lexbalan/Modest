@@ -1,52 +1,56 @@
 
 import hlir.type as hlir_type
+from hlir.type import select_common_type
 from error import info, error
 from .char import value_char
 from .integer import value_integer
 from .value import value_literal, value_is_immediate, value_cast, value_cast_immediate, value_zero
 
 
+def _value_array(items, item_type, length, ti):
+    array_volume = value_integer(length)
+    array_type = hlir_type.hlir_type_array(item_type, volume=array_volume, ti=ti)
+    array_type['generic'] = True
+    return value_literal(array_type, items, ti)
+
+
 # TODO: переделай здесь все - тут все плохо...
-
-def value_array(items, type=None, ti=None):
-    if type == None:
-        length = len(items)
-
-        item_type = None
-
-        if length > 0:
-            if hlir_type.type_is_composite(items[0]['type']):
-                # TODO:
-                # что тоже неверно, тк записи и массивы тоже разные бывают!
-                item_type = items[0]['type']
-            else:
-                max_item_type = None
-                # 1. находим самый широкий эл-т в списке
-                if length > 0:
-                    max_item_type = items[0]['type']
-
-                    for item in items:
-                        if item['type']['width'] > max_item_type['width']:
-                            max_item_type = item['type']
-
-                    item_type = max_item_type
-
-                # 2. приводим все эл-ты к самому широкому (иначе LLVM даст ошибку)
-                if item_type != None:
-                    from .cons import value_cons_implicit
-                    i = 0
-                    while i < length:
-                        item = items[i]
-                        item = value_cons_implicit(item, item_type)
-                        items[i] = item
-                        i = i + 1
+def value_array(items, ti=None):
+    length = len(items)
+    if length == 0:
+        return _value_array([], None, 0, ti)
 
 
-        array_volume = value_integer(length)
-        type = hlir_type.hlir_type_array(item_type, volume=array_volume, ti=ti)
-        type['generic'] = True
+    # Получаем наиболее подходящий общий тип элементов массива
+    array_item_type = items[0]['type']
 
-    return value_literal(type, items, ti)
+    i = 0
+    while i < length:
+        item = items[i]
+        item_type = item['type']
+        common_type = select_common_type(array_item_type, item_type)
+        if common_type == None:
+            error("value with unsuitable type", item['expr_ti'])
+        else:
+            array_item_type = common_type
+        i = i + 1
+
+#    info("ARR ITEM TYPE = ", ti)
+#    hlir_type.type_print(array_item_type)
+
+    # неявно приводим все элементы к этому типу
+    casted_items = []
+
+    from .cons import value_cons_implicit
+    i = 0
+    while i < length:
+        item = items[i]
+        casted_item = value_cons_implicit(item, array_item_type)
+        casted_items.append(casted_item)
+        i = i + 1
+
+
+    return _value_array(casted_items, array_item_type, length, ti)
 
 
 
@@ -129,10 +133,15 @@ def value_cons_array_from_generic_array(v, t, ti, method):
 
         from .cons import value_cons_implicit
         casted_item = value_cons_implicit(item, t['of'])
-        hlir_type.check(t['of'], casted_item['type'], item['ti'])
+        if hlir_type.type_eq(t['of'], casted_item['type']):
+            casted_item['nl'] = item['nl']
+            casted_items.append(casted_item)
+        else:
+            if method == 'explicit':
+                error("cannot construct value", ti)
 
-        casted_item['nl'] = item['nl']
-        casted_items.append(casted_item)
+        #hlir_type.check(t['of'], casted_item['type'], item['expr_ti'])
+
 
 
     casted_items = casted_items + [value_zero(t['of'])] * zero_pad

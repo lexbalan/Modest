@@ -5,6 +5,7 @@ from error import *
 from util import get_item_with_id
 from main import settings
 from frontend.parser import Parser
+from hlir.type import select_common_type
 
 import foundation
 
@@ -494,21 +495,6 @@ def do_value_shift(x):
 
 
 
-# select result type of binary operation result
-def bin_type_select(a, b):
-    if not hlir_type.type_is_generic(a):
-        return a
-
-    if not hlir_type.type_is_generic(b):
-        return b
-
-    if a['width'] > b['width']:
-        return a
-    else:
-        return b
-
-
-
 # бинарные операции с указателями имеют особые правила
 def do_bin_op_with_pointers(op, l, r , ti):
     # единственная безопасная операция для указателей - это сравнение
@@ -637,8 +623,8 @@ def value_eq_arrays(l, r, ti):
         fatal("dynamic immediate array volume not implemented", ti)
 
     for a, b in zip(l['asset'], r['asset']):
-        print("a = " + str(a))
-        print("b = " + str(b))
+        #print("a = " + str(a))
+        #print("b = " + str(b))
         if a != b:
             return False
 
@@ -690,7 +676,11 @@ def do_value_bin(x):
             return do_value_bin_str_eq(op, l, r, ti)
 
 
-    common_type = bin_type_select(l['type'], r['type'])
+    common_type = select_common_type(l['type'], r['type'])
+
+    if common_type == None:
+        error("unsuitable value type", r['expr_ti'])
+        return value_bad(x)
 
     l = value_cons_implicit(l, common_type)
     r = value_cons_implicit(r, common_type)

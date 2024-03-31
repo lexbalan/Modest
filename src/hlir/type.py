@@ -849,3 +849,41 @@ def type_print(t, print_aka=True):
         print(")", end='')
 
 
+
+
+
+# выбирает наиболее подходящий тип для двух входных
+# (наименьшее общее кратное)
+def select_common_type(a, b):
+
+    # вид типа должен совпадать
+    if a['kind'] != b['kind']:
+        # но есть исключения
+
+        # c == "A"
+        if a['kind'] == 'char':
+            if type_is_generic_array_of_char(b):
+                return a
+
+        # "A" == c
+        if b['kind'] == 'char':
+            if type_is_generic_array_of_char(a):
+                return b
+
+        return None
+
+
+    if type_is_generic(a) != type_is_generic(b):
+        if type_is_generic(a):
+            return b
+
+        if type_is_generic(b):
+            return a
+
+
+    if a['width'] > b['width']:
+        return a
+    else:
+        return b
+
+

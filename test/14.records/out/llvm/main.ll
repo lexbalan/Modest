@@ -282,12 +282,12 @@ endif_0:
     %18 = insertvalue { i32, i32} zeroinitializer, i32 1, 0
     %19 = insertvalue { i32, i32} %18, i32 2, 1
     store { i32, i32} %19, { i32, i32}* %17
-    %20 = load { i32, i32}, { i32, i32}* %17
-    %21 = alloca { i32, i32}
-    store { i32, i32} %20, { i32, i32}* %21
-    %22 = bitcast { i32, i32}* %21 to %Point2D*
-    %23 = bitcast %Point2D* %14 to i8*
-    %24 = bitcast %Point2D* %22 to i8*
+    %20 = load %Point2D, %Point2D* %14
+    %21 = alloca %Point2D
+    store %Point2D %20, %Point2D* %21
+    %22 = bitcast %Point2D* %21 to { i32, i32}*
+    %23 = bitcast { i32, i32}* %22 to i8*
+    %24 = bitcast { i32, i32}* %17 to i8*
     
     %25 = call i32 (i8*, i8*, i64) @memcmp( i8* %23, i8* %24, i64 8)
     %26 = icmp eq i32 %25, 0

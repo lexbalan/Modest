@@ -311,8 +311,8 @@ def print_value_cast_immediate(x, ctx):
         return
 
     # imm каст не печатаю, печатаю просто значение
-    need_wrap = precedence(x['value']) < precedenceMax
-    print_value(x['value'], ctx, need_wrap=need_wrap)
+    #need_wrap = precedence(x['value']) < precedenceMax
+    print_value(x['value'], ctx)#, need_wrap=need_wrap)
     return
 
 

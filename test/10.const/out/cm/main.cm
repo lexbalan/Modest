@@ -30,8 +30,8 @@ const line0 = {
 const carr = [0, 10, 15] + [20, 25, 30]
 
 const line1 = {
-    a = {x = (carr[1]), y = (carr[2])}
-    b = {x = (carr[3]), y = (carr[4])}
+    a = {x = carr[1], y = carr[2]}
+    b = {x = carr[3], y = carr[4]}
 }
 
 const lines = [line0, line1]

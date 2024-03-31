@@ -16,7 +16,7 @@ func send_file(fp: *FILE, sockfd: Int) -> Unit {
     var data: [bufSize]Char8
 
     while fgets(&data, bufSize, fp) != nil {
-        if send(sockfd, &data, SizeT sizeof([bufSize]Char8), 0) == (-1) {
+        if send(sockfd, &data, SizeT sizeof([bufSize]Char8), 0) == -1 {
             perror("[-] Error in sendung data")
             exit(1)
         }

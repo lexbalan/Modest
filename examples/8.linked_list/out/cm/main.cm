@@ -9,7 +9,7 @@ import "./linked_list"
 // wrap around linked list for List Nat64
 func nat64_list_insert(list: *List, x: Nat64) -> Unit {
     // alloc memory for Nat64 value
-    let p_nat64 = malloc((sizeof(Nat64)))
+    let p_nat64 = malloc(sizeof(Nat64))
     *p_nat64 = x
     linked_list_insert(list, p_nat64)
 }
