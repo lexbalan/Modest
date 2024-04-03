@@ -10,7 +10,9 @@ def value_is_bad(x):
 
 
 def value_is_immediate(x):
-    return 'asset' in x
+    if not 'immediate' in x:
+        value_print(x)
+    return x['immediate']
 
 
 # Any immediate value are immutable,
@@ -117,6 +119,7 @@ def value_literal(t, imm, ti):
         'kind': 'literal',
         'type': t,
         'asset': imm,
+        'immediate': False,
         'immutable': False,
         'att': [],
         'nl_end': 0,
@@ -143,6 +146,7 @@ def value_var(id, type, ti=None):
         'id': id,
         'type': type,
         'usecnt': 0,
+        'immediate': False,
         'immutable': False,
         'att': [],
         'expr_ti': ti,
@@ -160,6 +164,7 @@ def value_const(id, type, value=None, ti=None):
         'type': type,
         'value': value,
         'usecnt': 0,
+        'immediate': False,
         'immutable': True,
         'att': [],
         'expr_ti': ti,
@@ -174,6 +179,7 @@ def value_func(id, type, ti=None):
         'id': id,
         'type': type,
         'usecnt': 0,
+        'immediate': False,
         'immutable': True,
         'att': [],
         'expr_ti': ti,
@@ -187,6 +193,7 @@ def value_un(k, value, type, ti=None):
         'kind': k,
         'value': value,
         'type': type,
+        'immediate': False,
         'immutable': True,
         'att': [],
         'expr_ti': ti,
@@ -201,6 +208,7 @@ def value_bin(op, l, r, t, ti):
         'left': l,
         'right': r,
         'type': t,
+        'immediate': False,
         'immutable': True,
         'att': [],
         'expr_ti': ti,
@@ -215,6 +223,7 @@ def value_call(func, rettype, args, ti=None):
         'func': func,
         'args': args,
         'type': rettype,
+        'immediate': False,
         'immutable': True,
         'att': [],
         'expr_ti': ti,
@@ -229,6 +238,7 @@ def value_index_array(array, index, ti=None):
         'array': array,
         'index': index,
         'type': array['type']['of'],
+        'immediate': False,
         'immutable': False,
         'att': [],
         'expr_ti': ti,
@@ -243,6 +253,7 @@ def value_index_array_by_ptr(ptr_to_array, index, ti=None):
         'pointer': ptr_to_array,
         'index': index,
         'type': ptr_to_array['type']['to']['of'],
+        'immediate': False,
         'immutable': False,
         'att': [],
         'expr_ti': ti,
@@ -258,6 +269,7 @@ def value_access_record(record, field, ti=None):
         'field': field,
         'record_type': record['type'],
         'type': field['type'],
+        'immediate': False,
         'immutable': False,
         'att': [],
         'expr_ti': ti,
@@ -273,6 +285,7 @@ def value_access_record_by_ptr(ptr_to_record, field, ti=None):
         'field': field,
         'record_type': ptr_to_record['type']['to'],
         'type': field['type'],
+        'immediate': False,
         'immutable': False,
         'att': [],
         'expr_ti': ti,
@@ -286,6 +299,7 @@ def value_cast(value, type, ti=None):
         'kind': 'cast',
         'value': value,
         'type': type,
+        'immediate': False,
         'immutable': True,
         'att': [],
         'expr_ti': ti,
@@ -298,6 +312,7 @@ def value_cast_immediate(v, t, ti=None):
 
     nv['kind'] = 'cast_immediate'
     nv['asset'] = v['asset']
+    nv['immediate'] = True
 
     if 'hexadecimal' in v['att']:
         nv['att'].append('hexadecimal')
@@ -317,6 +332,7 @@ def value_sizeof(of, ti=None):
         'of': of,
         'type': typeSizeof,
         'asset': size,
+        'immediate': True,
         'immutable': True,
         'att': [],
         'expr_ti': ti,
@@ -333,6 +349,7 @@ def value_alignof(of, ti=None):
         'of': of,
         'type': typeSizeof,
         'asset': align,
+        'immediate': True,
         'immutable': True,
         'att': [],
         'expr_ti': ti,
@@ -355,6 +372,7 @@ def value_offsetof(of, field_id, ti=None):
         'field': field_id,
         'type': typeSizeof,
         'asset': offset,
+        'immediate': True,
         'immutable': True,
         'att': [],
         'expr_ti': ti,
@@ -371,6 +389,7 @@ def value_lengthof(of_value, ti=None):
         'of_value': of_value,
         'type': typeSizeof,
         'asset': length,
+        'immediate': True,
         'immutable': True,
         'att': [],
         'expr_ti': ti,
@@ -386,10 +405,16 @@ def value_print(x, msg="here"):
     print("kind: " + str(x['kind']))
     print("type: ", end=""); hlir_type.type_print(x['type']); print()
     print("att: " + str(x['att']))
+
     print("additional properties:")
+
     for prop in x:
         if not prop in ['isa', 'kind', 'type', 'att', 'ti']:
             print(" - %s" % prop)
-    info(msg, x['ti'])
+
+    if 'expr_ti' in x:
+        info(msg, x['expr_ti'])
+    else:
+        info(msg, x['ti'])
 
 

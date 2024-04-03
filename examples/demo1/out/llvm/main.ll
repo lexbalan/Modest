@@ -150,22 +150,24 @@ declare void @perror(%ConstCharStr* %str)
 
 define i32 @main() {
     %1 = call i32 (i32, i32) @get_integer(i32 0, i32 10)
-    %2 = icmp slt i32 %1, 5
-    br i1 %2 , label %then_0, label %else_0
+    %2 = sext i8 5 to i32
+    %3 = icmp slt i32 %1, %2
+    br i1 %3 , label %then_0, label %else_0
 then_0:
-    %3 = sext i8 5 to i32
-    %4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([37 x i8]* @str1 to [0 x i8]*), i32 %1, i32 %3)
+    %4 = sext i8 5 to i32
+    %5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([37 x i8]* @str1 to [0 x i8]*), i32 %1, i32 %4)
     br label %endif_0
 else_0:
-    %5 = icmp sgt i32 %1, 5
-    br i1 %5 , label %then_1, label %else_1
-then_1:
     %6 = sext i8 5 to i32
-    %7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([40 x i8]* @str2 to [0 x i8]*), i32 %1, i32 %6)
+    %7 = icmp sgt i32 %1, %6
+    br i1 %7 , label %then_1, label %else_1
+then_1:
+    %8 = sext i8 5 to i32
+    %9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([40 x i8]* @str2 to [0 x i8]*), i32 %1, i32 %8)
     br label %endif_1
 else_1:
-    %8 = sext i8 5 to i32
-    %9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str3 to [0 x i8]*), i32 %1, i32 %8)
+    %10 = sext i8 5 to i32
+    %11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str3 to [0 x i8]*), i32 %1, i32 %10)
     br label %endif_1
 endif_1:
     br label %endif_0

@@ -94,7 +94,8 @@ def value_cons_soft(v, t, ti):
 
 def value_cons_implicit(v, t):
     if value_is_bad(v) or type.type_is_bad(t):
-        return value_bad(ti)
+        return value_bad(v['expr_ti'])
+
 
     ti = v['expr_ti']
 
@@ -143,12 +144,14 @@ def value_cons_implicit(v, t):
 
 
     if type.type_is_generic(from_type):
+        # сюда приходит без 'asset'!
         return value_cons_soft(v, t, ti)
 
 
     # cons Pointer from:
     if type.type_is_pointer(t):
         return value_cons_pointer(v, t, ti, method='implicit')
+
 
 
     return v
@@ -163,7 +166,7 @@ def value_cons_implicit_check(v, t):
 
 def value_cons_explicit(v, t, ti):
     if value_is_bad(v) or type.type_is_bad(t):
-        return value_bad(ti)
+        return value_bad(v['expr_ti'])
 
     if type.type_eq(v['type'], t):
         warning("explicit cast to the same type", ti)
@@ -173,7 +176,7 @@ def value_cons_explicit(v, t, ti):
 
     if y == None:
         error("cannot construct value", ti)
-        return value_bad(ti)
+        return value_bad(v['expr_ti'])
 
     y['att'].append('explicit_cast')  # used by CM backend
 

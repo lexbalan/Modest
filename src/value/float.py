@@ -11,13 +11,16 @@ def value_float(num, ti=None):
     flt_width = int(settings.get('float_width'))
     typ = hlir_type_float(width=flt_width, ti=ti)
     typ['generic'] = True
-    return value_literal(typ, num, ti)
+    v = value_literal(typ, num, ti)
+    v['immediate'] = True
+    return v
 
 
 
 def value_cons_float_immediate(v, t, ti):
     nv = value_cast_immediate(v, t, ti)
     nv['asset'] = float_value_pack(float(nv['asset']), t['width'])
+    nv['immediate'] = True
     return nv
 
 

@@ -21,7 +21,8 @@ def value_integer(num, typ=None, ti=None):
             return value_bad(ti)
 
     v = value_literal(typ, num, ti)
-    v['nsigns'] = 0 # add field nsigns
+    v['nsigns'] = 0  # add field nsigns
+    v['immediate'] = True
     return v
 
 
@@ -76,6 +77,7 @@ def do_cons_integer(v, t, method, ti):
         if method == 'explicit':
             nv = value_cast(v, t, ti=ti)
             nv['asset'] = int(v['asset'])  # here can be float
+            nv['immediate'] = True
             return nv
         return value_cons_integer_immediate(v, t, ti)
     return value_cast(v, t, ti=ti)

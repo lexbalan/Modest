@@ -87,7 +87,7 @@ void fill_array(int32_t *array, int32_t len)
     i = 0;
     while (i < len) {
         printf("[%i] ", i);
-        const int32_t x = get_integer(min, max);
+        const int32_t x = get_integer((int32_t)min, (int32_t)max);
         array[i] = x;
         i = i + 1;
     }

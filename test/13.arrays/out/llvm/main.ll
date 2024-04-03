@@ -587,6 +587,7 @@ endif_0:
     store %Int 200, %Int* %122
     %123 = alloca %Int
     store %Int 300, %Int* %123
+    ; immutable, non immediate value (array)
     %124 = load %Int, %Int* %121
     %125 = load %Int, %Int* %122
     %126 = load %Int, %Int* %123

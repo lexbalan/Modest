@@ -28,6 +28,7 @@ def cons_ptr_to_str_from_generic_str(v, t, ti):
     # длина полученной строки может отличаться от длины оригинала в utf-32
     nv = value_cons_pointer_immediate(v, t, ti=ti)
     nv['asset'] = s_imm
+    nv['immediate'] = True
     module_strings_add(nv)
 
     return nv

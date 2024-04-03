@@ -4,14 +4,16 @@ from hlir.type import select_common_type
 from error import info, error
 from .char import value_char
 from .integer import value_integer
-from .value import value_literal, value_is_immediate, value_cast, value_cast_immediate, value_zero, value_bin
+from .value import value_literal, value_is_immediate, value_cast, value_cast_immediate, value_zero, value_bin, value_print
 
 
 def _value_array(items, item_type, length, ti):
     array_volume = value_integer(length)
     array_type = hlir_type.hlir_type_array(item_type, volume=array_volume, ti=ti)
     array_type['generic'] = True
-    return value_literal(array_type, items, ti)
+    v = value_literal(array_type, items, ti)
+    assert('asset' in v)
+    return v
 
 
 # TODO: переделай здесь все - тут все плохо...
@@ -57,15 +59,16 @@ def value_array(items, ti=None):
 
 
     v = _value_array(casted_items, array_item_type, length, ti)
-    #v['immediate'] = is_immediate  #TODO: need to implement 'immediate' flag
+    v['immediate'] = is_immediate  #TODO: need to implement 'immediate' flag
+    assert('asset' in v)
     return v
 
 
 
 # concatenation of two immediate arrays
 def value_array_concat(l, r, ti):
-    imm_str = l['asset'] + r['asset']
-    length = len(imm_str) + 1  #!
+    asset = l['asset'] + r['asset']
+    length = len(asset) + 1  #!
 
     str_array_volume = value_integer(length)
     item_type = select_common_type(l['type']['of'], r['type']['of'])
@@ -73,7 +76,8 @@ def value_array_concat(l, r, ti):
     t['generic'] = True
 
     bin_value = value_bin('add_arr', l, r, t, ti=ti)
-    bin_value['asset'] = imm_str
+    bin_value['asset'] = asset
+    bin_value['immediate'] = True
     bin_value['nl_end'] = r['nl_end']
     return bin_value
 
@@ -105,7 +109,9 @@ def value_string(string, length=0, ti=None):
     genStrType['generic'] = True
 
     # #imm of string literal is array of chars
-    return value_literal(genStrType, chars, ti)
+    nv = value_literal(genStrType, chars, ti)
+    nv['immediate'] = True
+    return nv
 
 
 
@@ -121,6 +127,7 @@ def value_cons_array_from_generic_array(v, t, ti, method):
     # проверяем длину
     if t['volume'] == None:
         info("cons open array", ti)
+
 
     elif len(v['asset']) > t['volume']['asset']:
         info("too many items", v['ti'])
@@ -141,7 +148,6 @@ def value_cons_array_from_generic_array(v, t, ti, method):
     casted_items = []
     items = v['asset']
     for item in items:
-
 
 #TODO: see: /test/sha256/src/main.cm:48:39:
 # var sha256_tests: []*SHA256_TestCase = [&test0, &test1]
@@ -167,20 +173,22 @@ def value_cons_array_from_generic_array(v, t, ti, method):
 
         #hlir_type.check(t['of'], casted_item['type'], item['expr_ti'])
 
-
-
     casted_items = casted_items + [value_zero(t['of'])] * zero_pad
 
-    vx = value_literal(t, casted_items, ti)
-    vx['nl_end'] = v['nl_end']
+    nv = value_literal(t, casted_items, ti)
+    nv['nl_end'] = v['nl_end']
 
+    if value_is_immediate(v):
+        nv['immediate'] = True
 
     # если это не сделать то принтер C не сможет сослаться
     # на именованную константу и станет печатать ее по месту
     if 'id' in v:
-        vx['id'] = v['id']
+        nv['id'] = v['id']
 
-    return vx
+    assert('asset' in nv)
+
+    return nv
 
 
 
@@ -197,7 +205,7 @@ def value_cons_array_from_array(v, t, ti, method):
         return None
 
     # если массив идет как непосредственное значение
-    if value_is_immediate(v):
+    if 'asset' in v:
         n = n_to - n_from
 
         nv = value_cons_from_immediate(v, t, ti)
@@ -216,6 +224,7 @@ def value_cons_array_from_array(v, t, ti, method):
 
 
 def value_cons_array(v, t, ti, method):
+    #info("value_cons_array", ti)
     from_type = v['type']
     to_type = t
 
@@ -223,7 +232,8 @@ def value_cons_array(v, t, ti, method):
 
         # GenericArray -> Array
         if hlir_type.type_is_generic(from_type):
-            return value_cons_array_from_generic_array(v, t, ti, method)
+            nv = value_cons_array_from_generic_array(v, t, ti, method)
+            return nv
 
         if method != 'explicit':
             info("cannot implicitly cons Array value", ti)

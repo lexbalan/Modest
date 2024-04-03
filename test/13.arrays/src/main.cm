@@ -110,6 +110,7 @@ func main() -> Int {
     var int100: Int = 100
     var int200: Int = 200
     var int300: Int = 300
+    // immutable, non immediate value (array)
     let init_array = [int100, int200, int300]
 
     // check local literal array assignation to local array

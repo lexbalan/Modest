@@ -854,7 +854,7 @@ def do_eval_index(v):
 
     # если сам массив находится в регистре: (let rec = get_rec())
     if not array['is_adr']:
-        if not value_is_immediate(index):
+        if not value_is_immediate(v['index']):
             error("expected immediate index value", v['ti'])
             return llvm_value_zero(v['ti'])
 

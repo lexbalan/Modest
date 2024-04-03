@@ -149,14 +149,15 @@ define %Int @main() {
     br label %again_1
 again_1:
     %3 = load i32, i32* %2
-    %4 = icmp slt i32 %3, 10
-    br i1 %4 , label %body_1, label %break_1
+    %4 = sext i8 10 to i32
+    %5 = icmp slt i32 %3, %4
+    br i1 %5 , label %body_1, label %break_1
 body_1:
-    %5 = load i32, i32* %2
-    %6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), i32 %5)
-    %7 = load i32, i32* %2
-    %8 = add i32 %7, 1
-    store i32 %8, i32* %2
+    %6 = load i32, i32* %2
+    %7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), i32 %6)
+    %8 = load i32, i32* %2
+    %9 = add i32 %8, 1
+    store i32 %9, i32* %2
     br label %again_1
 break_1:
     ret %Int 0

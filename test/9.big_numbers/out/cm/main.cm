@@ -39,7 +39,7 @@ func main() -> Int {
     // signed big int test
     let sig0 = -1
 
-    var sig1: Int128 = sig0
+    var sig1 = sig0
 
     sig1 = sig1 + 1
 

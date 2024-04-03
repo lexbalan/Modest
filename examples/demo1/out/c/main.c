@@ -22,9 +22,9 @@ int32_t main()
 
     #define n  5
 
-    if (number < n) {
+    if (number < (int32_t)n) {
         printf("entered number (%i) is less than %i\n", number, (int32_t)n);
-    } else if (number > n) {
+    } else if (number > (int32_t)n) {
         printf("entered number (%i) is greater than %i\n", number, (int32_t)n);
     } else {
         printf("entered number (%i) is equal with %i\n", number, (int32_t)n);

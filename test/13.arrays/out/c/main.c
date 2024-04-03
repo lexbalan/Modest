@@ -135,6 +135,7 @@ int main()
     int200 = 200;
     int int300;
     int300 = 300;
+    // immutable, non immediate value (array)
     int init_array[3];
     memcpy(&init_array, &(int[3]){int100, int200, int300}, 12);
 

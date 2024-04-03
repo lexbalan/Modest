@@ -16,7 +16,7 @@ int main()
 
     printf("y = %i\n", (int32_t)y);
 
-    if (y == 128) {
+    if ((int8_t)y == 128) {
         printf("test passed\n");
     } else {
         printf("test failed\n");

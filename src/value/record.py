@@ -4,7 +4,7 @@ import hlir.type as type
 from hlir.hlir import *
 from hlir.type import record_field_get
 from util import get_item_with_id
-from .value import value_literal, value_literal, value_cast, value_zero
+from .value import value_literal, value_literal, value_cast, value_zero, value_is_immediate
 
 
 
@@ -25,13 +25,6 @@ def value_cons_record_from_generic_record(v, t, ti, method):
 
         return value_cast(v, t, ti=ti)
 
-    """
-    if len(v['asset']) == 0:
-        #info("cons record from empty record", ti)
-        vx = value_literal(t, [], ti)
-        vx['nl_end'] = v['nl_end']
-        return vx
-    """
 
     #warning("value_cons_record_from_generic_record", ti)
 
@@ -87,18 +80,22 @@ def value_cons_record_from_generic_record(v, t, ti, method):
             })
 
 
-    vx = value_literal(t, items, ti)
-    vx['nl_end'] = v['nl_end']
+    nv = value_literal(t, items, ti)
+    nv['nl_end'] = v['nl_end']
+
+
+    if value_is_immediate(v):
+        nv['immediate'] = True
 
     # если это не сделать то принтер C не сможет сослаться
     # на именованную константу и станет печатать ее по месту
     if 'id' in v:
-        vx['id'] = v['id']
+        nv['id'] = v['id']
 
     if 'nl' in v:
-        vx['nl'] = v['nl']
+        nv['nl'] = v['nl']
 
-    return vx
+    return nv
 
 
 

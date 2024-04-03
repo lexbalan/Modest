@@ -587,6 +587,7 @@ def bin_imm(op, type_result, l, r, ti):
 
     bin_value = value_bin(op, l, r, type_result, ti=ti)
     bin_value['asset'] = num_val
+    bin_value['immediate'] = True
     return bin_value
 
 
@@ -626,6 +627,7 @@ def do_value_bin_str_eq(op, l, r, ti):
 
     bin_value = value_bin(op, l, r, foundation.typeBool, ti=ti)
     bin_value['asset'] = int(bool_result)
+    bin_value['immediate'] = True
     return bin_value
 
 
@@ -731,6 +733,7 @@ def do_value_not(x):
 
     if value_is_immediate(v):
         nv['asset'] = ~v['asset']
+        nv['immediate'] = True
 
     return nv
 
@@ -751,6 +754,7 @@ def do_value_neg(x):
 
     if value_is_immediate(v):
         nv['asset'] = -v['asset']
+        nv['immediate'] = True
 
         if hlir_type.type_is_generic(nv['type']):
             nv['type'] = hlir_type.hlir_type_generic_int_for(v['asset'], signed=True, ti=x['ti'])
@@ -774,6 +778,7 @@ def do_value_pos(x):
 
     if value_is_immediate(v):
         nv['asset'] = +v['asset']
+        nv['immediate'] = True
 
         if hlir_type.type_is_generic(nv['type']):
             nv['type'] = hlir_type.hlir_type_generic_int_for(v['asset'], signed=True, ti=x['ti'])
@@ -969,6 +974,7 @@ def do_value_index(x):
                 #return item
 
                 v['asset'] = item['asset']
+                v['immediate'] = True
 
     return v
 
@@ -1016,6 +1022,7 @@ def do_value_access(x):
         initializers = left['asset']
         initializer = get_item_with_id(initializers, field_id['str'])
         v['asset'] = initializer['value']['asset']
+        v['immediate'] = True
 
     return v
 
@@ -1032,9 +1039,9 @@ def do_value_to(x):
 
 def do_value_id(x):
     id_str = x['id']['str']
-    vx = value_get(id_str)
+    v = value_get(id_str)
 
-    if vx == None:
+    if v == None:
         error("undeclared value '%s'" % id_str, x)
 
         # чтобы не генерил ошибки дальше
@@ -1044,10 +1051,10 @@ def do_value_id(x):
         module['context'].value_add(id_str, v)
         return value_bad(x)
 
-    if 'usecnt' in vx:
-        vx['usecnt'] = vx['usecnt'] + 1
+    if 'usecnt' in v:
+        v['usecnt'] = v['usecnt'] + 1
 
-    return vx
+    return v
 
 
 
@@ -1088,12 +1095,17 @@ def do_value_array(x):
 def do_value_record(x):
     initializers = []
     fields = []
+    is_immediate = True
     for item in x['items']:
         if item['isa'] == 'ast_comment':
             continue
 
         item_id = item['id']
         item_value = do_rvalue(item['value'])
+
+        if is_immediate:
+            is_immediate = value_is_immediate(item_value)
+
         initializers.append({
             'isa': 'initializer',
             'id': item_id,
@@ -1111,6 +1123,7 @@ def do_value_record(x):
     generic_record_type['generic'] = True
     v = value_record(generic_record_type, initializers, ti=x['ti'])
     v['nl_end'] = x['nl_end']
+    v['immediate'] = is_immediate
     return v
 
 
@@ -1391,7 +1404,6 @@ def do_stmt_let(x):
         module['context'].value_add(id['str'], value_bad(x))
         return hlir_stmt_bad(x)
 
-
     if hlir_type.type_is_composite(v['type']):
         module_option('use_memcpy')
 
@@ -1403,14 +1415,12 @@ def do_stmt_let(x):
 
     const_value = value_const(id, v['type'], value=None, ti=x['id']['ti'])
     const_value['att'].append('local') # need for LLVM printer (!)
-    if value_is_immediate(v):
+
+    if 'asset' in v:
         const_value['asset'] = v['asset']
 
     if 'nl_end' in v:
         const_value['nl_end'] = v['nl_end']
-
-    if value_is_immediate(v):
-        const_value['asset'] = v['asset']
 
     module['context'].value_add(id['str'], const_value)
 
@@ -1429,8 +1439,10 @@ def do_stmt_assign(x):
         error("expected mutable value", l['expr_ti'])
         return hlir_stmt_bad(x)
 
+
     # type check
     r = value_cons_implicit_check(r, l['type'])
+
 
     if hlir_type.type_is_composite(l['type']):
         module_option('use_memcpy')
@@ -1626,6 +1638,7 @@ def def_const(x):
     const_value = value_const(id, iv['type'], iv, id['ti'])
     const_value['att'].append('global')
     const_value['asset'] = iv['asset']
+    const_value['immediate'] = True
 
     if 'nl_end' in iv:
         const_value['nl_end'] = iv['nl_end']
@@ -2061,7 +2074,7 @@ def do_directive(x):
             fatal("unsuitable value", x['ti'])
 
         # (because v['asset'] is an array of UTF-32 codes)
-        msg = str(bytes(v['asset']).decode())
+        msg = str_asset_to_str(v['asset'])
         info(msg, x['ti'])
 
     elif kind == 'warning':
@@ -2071,7 +2084,7 @@ def do_directive(x):
             fatal("unsuitable value", x['ti'])
 
         # (because v['asset'] is an array of UTF-32 codes)
-        msg = str(bytes(v['asset']).decode())
+        msg = str_asset_to_str(v['asset'])
         warning(msg, x['ti'])
 
     elif kind == 'error':
@@ -2081,11 +2094,20 @@ def do_directive(x):
             fatal("unsuitable value", x['ti'])
 
         # (because v['asset'] is an array of UTF-32 codes)
-        msg = str(bytes(v['asset']).decode())
+        msg = str_asset_to_str(v['asset'])
         error(msg, x['ti'])
         exit(-1)
 
     return None
+
+
+
+def str_asset_to_str(a):
+    chars = []
+    for char in a:
+        cc = char['asset']
+        chars.append(chr(cc))
+    return "". join(chars)
 
 
 

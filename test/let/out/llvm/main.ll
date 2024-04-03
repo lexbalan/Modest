@@ -144,14 +144,17 @@ declare void @perror(%ConstCharStr* %str)
 
 
 define %Int @main() {
-    %1 = sext i8 128 to i32
-    %2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str1 to [0 x i8]*), i32 %1)
-    br i1 1 , label %then_0, label %else_0
+    %1 = add i8 127, 1
+    %2 = sext i8 %1 to i32
+    %3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str1 to [0 x i8]*), i32 %2)
+    %4 = bitcast i8 %1 to i8
+    %5 = icmp eq i8 %4, 128
+    br i1 %5 , label %then_0, label %else_0
 then_0:
-    %3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*))
+    %6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*))
     br label %endif_0
 else_0:
-    %4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str3 to [0 x i8]*))
+    %7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str3 to [0 x i8]*))
     br label %endif_0
 endif_0:
     ret %Int 0
