@@ -82,7 +82,7 @@ def value_cons(v, t, ti, method):
 
 
 
-def value_cons_soft(v, t, ti):
+def implicit_cons_if_possible(v, t, ti):
     c = value_cons(v, t, ti, method='implicit')
 
     if c == None:
@@ -112,21 +112,16 @@ def value_cons_implicit(v, t):
     #if not type.type_is_generic(from_type):
     #    return v
 
-    # потому что в C номинальные типы, а у нас - структурные
-    if type.type_is_record(t) and type.type_is_record(from_type):
-        #if from_type['id'] != None and t['id'] != None:
-        #    if from_type['id']['str'] != t['id']['str']:
-                #info("impl cast record", ti)
+    # (!) потому что в C номинальные типы, а у нас - структурные
 
-        #if from_type['declaration'] != None and t['declaration'] != None:
-        #    if from_type['declaration'] != t['declaration']:
-        #if t != from_type:
+    # for structural type system support
+    if type.type_is_record(t) and type.type_is_record(from_type):
 
         if type.type_is_generic(from_type):
-            return value_cons_soft(v, t, ti)
+            return implicit_cons_if_possible(v, t, ti)
 
         if not type.type_eq_record(t, from_type, opt=[], nominative=True):
-            return value_cast(v, t, ti=ti)
+            return value_cast(v, t, ti=ti)  # value_cast!
 
     # for structural type system support
     if type.type_is_pointer_to_record(t):
@@ -136,22 +131,19 @@ def value_cons_implicit(v, t):
                 return v
             elif type.type_eq_record(from_type['to'], t['to'], opt=[]):
                 # если равны но не номенативно - для C & LLVM нужно привдение
-                return value_cast(v, t, ti=ti)
+                return value_cast(v, t, ti=ti)  # value_cast!
 
 
     if type.type_eq(from_type, t):
         return v
 
-
     if type.type_is_generic(from_type):
-        # сюда приходит без 'asset'!
-        return value_cons_soft(v, t, ti)
-
+        return implicit_cons_if_possible(v, t, ti)
 
     # cons Pointer from:
     if type.type_is_pointer(t):
+        #return implicit_cons_if_possible(v, t, ti) #?
         return value_cons_pointer(v, t, ti, method='implicit')
-
 
 
     return v
