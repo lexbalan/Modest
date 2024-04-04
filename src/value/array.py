@@ -91,11 +91,11 @@ def value_string(string, length=0, ti=None):
     chars = []
     for char in string:
         char_code = ord(char)
-        char = value_char(char_code, _type=None, ti=ti)
-        chars.append(char)
+        char_value = value_char(char_code, _type=None, ti=ti)
+        chars.append(char_value)
 
         # get max char width
-        char_width = char['type']['width']
+        char_width = char_value['type']['width']
         max_char_width = max(char_width, max_char_width)
 
 
@@ -104,11 +104,9 @@ def value_string(string, length=0, ti=None):
     genericCharType = hlir_type.hlir_type_char(max_char_width, ti=ti)
     genericCharType['generic'] = True
 
-    vol = value_integer(length)  # <=> len(string) + 1
-    genStrType = hlir_type.hlir_type_array(genericCharType, volume=vol, ti=ti)
+    volume = value_integer(length)  # <=> len(string) + 1
+    genStrType = hlir_type.hlir_type_array(genericCharType, volume=volume, ti=ti)
     genStrType['generic'] = True
-
-    # #imm of string literal is array of chars
     nv = value_terminal(genStrType, chars, ti)
     nv['immediate'] = True
     return nv
