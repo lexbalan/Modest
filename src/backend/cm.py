@@ -305,7 +305,7 @@ def print_cast(t, v, ctx=[]):
     print_value(v, ctx=ctx, need_wrap=need_wrap)
 
 
-def print_value_cast_immediate(x, ctx):
+def print_value_cons_immediate(x, ctx):
     if 'explicit_cast' in x['att']:
         print_cast(x['type'], x['value'], ctx=[])
         return
@@ -610,7 +610,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
     elif k == 'index_ptr': print_value_index_ptr(x, ctx)
     elif k == 'access': print_value_access(x, ctx)
     elif k == 'access_ptr': print_value_access_ptr(x, ctx)
-    elif k == 'cast_immediate': print_value_cast_immediate(x, ctx)
+    elif k == 'cast_immediate': print_value_cons_immediate(x, ctx)
     elif k == 'cons': print_value_cast(x, ctx)
     elif k == 'sizeof': out("sizeof("); print_type(x['of']); out(")")
     elif k == 'alignof': out("alignof("); print_type(x['of']); out(")")

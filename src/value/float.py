@@ -3,7 +3,7 @@ import settings
 from error import info, warning, error
 import hlir.type as type
 from hlir.type import hlir_type_float, type_print
-from .value import value_literal, value_cast_immediate
+from .value import value_literal, value_cons_immediate
 
 
 
@@ -18,7 +18,7 @@ def value_float(num, ti=None):
 
 
 def value_cons_float_immediate(v, t, ti):
-    nv = value_cast_immediate(v, t, ti)
+    nv = value_cons_immediate(v, t, ti)
     nv['asset'] = float_value_pack(float(nv['asset']), t['width'])
     nv['immediate'] = True
     return nv

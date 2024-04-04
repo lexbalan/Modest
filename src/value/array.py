@@ -4,7 +4,7 @@ from hlir.type import select_common_type
 from error import info, error
 from .char import value_char
 from .integer import value_integer
-from .value import value_literal, value_is_immediate, value_cast, value_cast_immediate, value_zero, value_bin, value_print
+from .value import value_literal, value_is_immediate, value_cast, value_cons_immediate, value_zero, value_bin, value_print
 
 
 def _value_array(items, item_type, length, ti):

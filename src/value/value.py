@@ -307,7 +307,7 @@ def value_cast(value, type, ti=None):
     }
 
 
-def value_cast_immediate(v, t, ti=None):
+def value_cons_immediate(v, t, ti=None):
     nv = value_cast(v, t, ti)
 
     nv['kind'] = 'cast_immediate'

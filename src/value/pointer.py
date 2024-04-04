@@ -1,14 +1,14 @@
 
 from error import info, warning, error
 import hlir.type as type
-from .value import value_cast, value_is_immediate, value_cast, value_cast_immediate
+from .value import value_cast, value_is_immediate, value_cast, value_cons_immediate
 from .char import value_char
 import foundation
 
 
 def value_cons_pointer_immediate(v, t, ti):
     #info("value_cons_pointer_immediate", ti)
-    return value_cast_immediate(v, t, ti)
+    return value_cons_immediate(v, t, ti)
 
 
 def cons_ptr_to_str_from_generic_str(v, t, ti):

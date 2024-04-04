@@ -2,7 +2,7 @@
 from error import info, warning, error
 import hlir.type as type
 from util import nbits_for_num
-from .value import value_literal, value_cast, value_cast_immediate
+from .value import value_literal, value_cast, value_cons_immediate
 
 
 
@@ -21,7 +21,7 @@ def value_cons_char_immediate(v, t, ti):
     if v['type']['width'] > t['width']:
         info("char overflow", ti)
 
-    return value_cast_immediate(v, t, ti)
+    return value_cons_immediate(v, t, ti)
 
 
 
