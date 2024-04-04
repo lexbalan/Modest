@@ -4,7 +4,7 @@ import hlir.type as type
 from hlir.hlir import *
 from hlir.type import record_field_get
 from util import get_item_with_id
-from .value import value_literal, value_literal, value_cast, value_zero, value_is_immediate
+from .value import value_literal, value_literal, value_cons_node, value_zero, value_is_immediate
 
 
 
@@ -23,7 +23,7 @@ def value_cons_record_from_generic_record(v, t, ti, method):
         #for field in t['fields']:
         #    print(field['id']['str'])
 
-        return value_cast(v, t, ti=ti)
+        return value_cons_node(v, t, ti=ti)
 
 
     #warning("value_cons_record_from_generic_record", ti)
@@ -101,7 +101,7 @@ def value_cons_record_from_generic_record(v, t, ti, method):
 
 
 def value_cons_record_from_record(v, t, ti, method):
-    return value_cast(v, t, ti=ti)
+    return value_cons_node(v, t, ti=ti)
 
 
 

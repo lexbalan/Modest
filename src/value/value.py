@@ -293,7 +293,7 @@ def value_access_record_by_ptr(ptr_to_record, field, ti=None):
     }
 
 
-def value_cast(value, type, ti=None):
+def value_cons_node(value, type, ti=None):
     return {
         'isa': 'value',
         'kind': 'cons',
@@ -308,7 +308,7 @@ def value_cast(value, type, ti=None):
 
 
 def value_cons_immediate(v, t, ti=None):
-    nv = value_cast(v, t, ti)
+    nv = value_cons_node(v, t, ti)
 
     nv['kind'] = 'cons_immediate'
     nv['asset'] = v['asset']

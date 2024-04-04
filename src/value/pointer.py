@@ -1,7 +1,7 @@
 
 from error import info, warning, error
 import hlir.type as type
-from .value import value_cast, value_is_immediate, value_cast, value_cons_immediate
+from .value import value_cons_node, value_is_immediate, value_cons_node, value_cons_immediate
 from .char import value_char
 import foundation
 
@@ -38,7 +38,7 @@ def cons_ptr_to_str_from_generic_str(v, t, ti):
 def do_cons_pointer(v, t, ti):
     if value_is_immediate(v):
         return value_cons_pointer_immediate(v, t, ti)
-    return value_cast(v, t, ti=ti)
+    return value_cons_node(v, t, ti=ti)
 
 
 
@@ -99,7 +99,7 @@ def value_cons_pointer(v, t, ti, method):
 
     # VA_List -> Ptr
     elif type.type_is_va_list(vtype):
-        return value_cast(v, t, ti)
+        return value_cons_node(v, t, ti)
 
 
     return None

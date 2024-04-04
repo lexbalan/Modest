@@ -3,7 +3,7 @@ from error import info, warning, error
 from util import nbits_for_num
 import hlir.type as hlir_type
 from hlir.type import type_print
-from .value import value_literal, value_is_immediate, value_cast, value_cons_immediate
+from .value import value_literal, value_is_immediate, value_cons_node, value_cons_immediate
 
 
 
@@ -75,12 +75,12 @@ def do_cons_integer(v, t, method, ti):
     check_width(v['type'], t, method, ti)
     if value_is_immediate(v):
         if method == 'explicit':
-            nv = value_cast(v, t, ti=ti)
+            nv = value_cons_node(v, t, ti=ti)
             nv['asset'] = int(v['asset'])  # here can be float
             nv['immediate'] = True
             return nv
         return value_cons_integer_immediate(v, t, ti)
-    return value_cast(v, t, ti=ti)
+    return value_cons_node(v, t, ti=ti)
 
 
 
@@ -143,7 +143,7 @@ def value_cons_integer(v, t, ti, method):
 
     # VA_List -> Int
     elif hlir_type.type_is_va_list(from_type):
-        return value_cast(v, t, ti)
+        return value_cons_node(v, t, ti)
 
     return None
 

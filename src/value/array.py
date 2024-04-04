@@ -4,7 +4,7 @@ from hlir.type import select_common_type
 from error import info, error
 from .char import value_char
 from .integer import value_integer
-from .value import value_literal, value_is_immediate, value_cast, value_cons_immediate, value_zero, value_bin, value_print
+from .value import value_literal, value_is_immediate, value_cons_node, value_cons_immediate, value_zero, value_bin, value_print
 
 
 def _value_array(items, item_type, length, ti):
@@ -217,7 +217,7 @@ def value_cons_array_from_array(v, t, ti, method):
         return nv
 
     # runtime cons
-    return value_cast(v, t, ti=ti)
+    return value_cons_node(v, t, ti=ti)
 
     return None
 

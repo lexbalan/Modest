@@ -2,7 +2,7 @@
 from error import info, warning, error
 import hlir.type as type
 from util import nbits_for_num
-from .value import value_literal, value_cast, value_cons_immediate
+from .value import value_literal, value_cons_node, value_cons_immediate
 
 
 
@@ -29,7 +29,7 @@ def do_cons_char(v, t, ti):
     from value.value import value_is_immediate
     if value_is_immediate(v):
         return value_cons_char_immediate(v, t, ti)
-    return value_cast(v, t, ti=ti)
+    return value_cons_node(v, t, ti=ti)
 
 
 
@@ -67,7 +67,7 @@ def value_cons_char(v, t, ti, method):
 
     # VA_List -> Char
     elif type.type_is_va_list(from_type):
-        return value_cast(v, t, ti)
+        return value_cons_node(v, t, ti)
 
     #print("??")
     #from hlir.type import type_print

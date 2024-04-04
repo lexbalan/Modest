@@ -2,7 +2,7 @@
 import hlir.type as type
 from error import info, warning, error
 
-from .value import value_is_bad, value_bad, value_is_immediate, value_cast
+from .value import value_is_bad, value_bad, value_is_immediate, value_cons_node
 from .unit import value_cons_unit
 from .bool import value_cons_bool
 from .byte import value_cons_byte
@@ -121,7 +121,7 @@ def value_cons_implicit(v, t):
             return implicit_cons_if_possible(v, t, ti)
 
         if not type.type_eq_record(t, from_type, opt=[], nominative=True):
-            return value_cast(v, t, ti=ti)  # value_cast!
+            return value_cons_node(v, t, ti=ti)  # value_cast!
 
     # for structural type system support
     if type.type_is_pointer_to_record(t):
@@ -131,7 +131,7 @@ def value_cons_implicit(v, t):
                 return v
             elif type.type_eq_record(from_type['to'], t['to'], opt=[]):
                 # если равны но не номенативно - для C & LLVM нужно привдение
-                return value_cast(v, t, ti=ti)  # value_cast!
+                return value_cons_node(v, t, ti=ti)  # value_cast!
 
 
     if type.type_eq(from_type, t):
