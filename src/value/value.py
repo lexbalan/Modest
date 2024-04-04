@@ -113,7 +113,7 @@ def value_bad(x):
     }
 
 
-def value_literal(t, imm, ti):
+def value_terminal(t, imm, ti):
     return {
         'isa': 'value',
         'kind': 'literal',
@@ -135,7 +135,7 @@ def value_zero(t, ti=None):
     if hlir_type.type_is_composite(t):
         imm_val = []
 
-    return value_literal(t, imm_val, ti)
+    return value_terminal(t, imm_val, ti)
 
 
 

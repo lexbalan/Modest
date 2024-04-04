@@ -33,7 +33,6 @@ from value.cons import value_cons_implicit, value_cons_implicit_check, value_con
 from symtab import Symtab
 from util import nbits_for_num, nbytes_for_bits
 
-#import hlir.type as hlir_type
 from hlir.field import hlir_field
 from hlir.stmt import *
 from hlir.hlir import *

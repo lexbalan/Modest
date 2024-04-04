@@ -4,13 +4,13 @@ import hlir.type as type
 from hlir.hlir import *
 from hlir.type import record_field_get
 from util import get_item_with_id
-from .value import value_literal, value_literal, value_cons_node, value_zero, value_is_immediate
+from .value import value_terminal, value_terminal, value_cons_node, value_zero, value_is_immediate
 
 
 
 
 def value_record(typ, initializers=[], ti=None):
-    return value_literal(typ, initializers, ti)
+    return value_terminal(typ, initializers, ti)
 
 
 
@@ -80,7 +80,7 @@ def value_cons_record_from_generic_record(v, t, ti, method):
             })
 
 
-    nv = value_literal(t, items, ti)
+    nv = value_terminal(t, items, ti)
     nv['nl_end'] = v['nl_end']
 
 

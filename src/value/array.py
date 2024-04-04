@@ -4,14 +4,14 @@ from hlir.type import select_common_type
 from error import info, error
 from .char import value_char
 from .integer import value_integer
-from .value import value_literal, value_is_immediate, value_cons_node, value_cons_immediate, value_zero, value_bin, value_print
+from .value import value_terminal, value_is_immediate, value_cons_node, value_cons_immediate, value_zero, value_bin, value_print
 
 
-def _value_array(items, item_type, length, ti):
+def create_value_array(items, item_type, length, ti):
     array_volume = value_integer(length)
     array_type = hlir_type.hlir_type_array(item_type, volume=array_volume, ti=ti)
     array_type['generic'] = True
-    v = value_literal(array_type, items, ti)
+    v = value_terminal(array_type, items, ti)
     assert('asset' in v)
     return v
 
@@ -20,7 +20,7 @@ def _value_array(items, item_type, length, ti):
 def value_array(items, ti=None):
     length = len(items)
     if length == 0:
-        return _value_array([], None, 0, ti)
+        return create_value_array([], None, 0, ti)
 
 
     # Получаем наиболее подходящий общий тип элементов массива
@@ -58,7 +58,7 @@ def value_array(items, ti=None):
         i = i + 1
 
 
-    v = _value_array(casted_items, array_item_type, length, ti)
+    v = create_value_array(casted_items, array_item_type, length, ti)
     v['immediate'] = is_immediate  #TODO: need to implement 'immediate' flag
     assert('asset' in v)
     return v
@@ -109,7 +109,7 @@ def value_string(string, length=0, ti=None):
     genStrType['generic'] = True
 
     # #imm of string literal is array of chars
-    nv = value_literal(genStrType, chars, ti)
+    nv = value_terminal(genStrType, chars, ti)
     nv['immediate'] = True
     return nv
 
@@ -120,7 +120,6 @@ def value_string(string, length=0, ti=None):
 # полного или из пустого дженерик массива
 def value_cons_array_from_generic_array(v, t, ti, method):
     #info("value_cons_array_from_generic_array", ti)
-    assert(hlir_type.type_is_generic_array(v['type']))
 
     zero_pad = 0
 
@@ -175,7 +174,7 @@ def value_cons_array_from_generic_array(v, t, ti, method):
 
     casted_items = casted_items + [value_zero(t['of'])] * zero_pad
 
-    nv = value_literal(t, casted_items, ti)
+    nv = value_terminal(t, casted_items, ti)
     nv['nl_end'] = v['nl_end']
 
     if value_is_immediate(v):
@@ -228,24 +227,25 @@ def value_cons_array(v, t, ti, method):
     from_type = v['type']
     to_type = t
 
-    if hlir_type.type_is_array(from_type):
+    # you can construct array only from another array
+    if not hlir_type.type_is_array(from_type):
+        return None
 
-        # GenericArray -> Array
-        if hlir_type.type_is_generic(from_type):
-            nv = value_cons_array_from_generic_array(v, t, ti, method)
-            return nv
+    # GenericArray -> Array
+    if hlir_type.type_is_generic(from_type):
+        return value_cons_array_from_generic_array(v, t, ti, method)
 
-        if method != 'explicit':
-            info("cannot implicitly cons Array value", ti)
-            return None
+    if method != 'explicit':
+        info("cannot implicitly cons Array value", ti)
+        return None
 
-        # Array -> Array
-        if not hlir_type.type_eq(t['of'], v['type']['of']):
-            error("cannot cons array from array with different item type", ti)
-            return None
+    # Array -> Array
+    if not hlir_type.type_eq(t['of'], v['type']['of']):
+        error("cannot cons array from array with different item type", ti)
+        return None
 
-        return value_cons_array_from_array(v, t, ti, method)
+    return value_cons_array_from_array(v, t, ti, method)
 
-    return None
+
 
 

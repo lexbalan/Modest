@@ -2,7 +2,7 @@
 from error import info, warning, error
 import hlir.type as type
 from util import nbits_for_num
-from .value import value_literal, value_cons_node, value_cons_immediate
+from .value import value_terminal, value_cons_node, value_cons_immediate
 
 
 
@@ -13,7 +13,7 @@ def value_char(char_code, _type=None, ti=None):
         _type = type.hlir_type_char(char_width, ti=ti)
         _type['generic'] = True
 
-    return value_literal(_type, char_code, ti)
+    return value_terminal(_type, char_code, ti)
 
 
 

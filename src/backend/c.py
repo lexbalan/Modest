@@ -539,7 +539,7 @@ def print_value_index(x, ctx):
     # если имеем дело c дженерик массивом (глоб константа)
     if hlir_type.type_is_generic(array['type']):
         if value_is_immediate(x):
-            print_value_literal(x, ['print_immediate'])
+            print_value_terminal(x, ['print_immediate'])
             return
 
 
@@ -586,7 +586,7 @@ def print_value_access(x, ctx):
     # если имеем дело c дженерик записью (глоб константа)
     if hlir_type.type_is_generic(left['type']):
         if value_is_immediate(x):
-            print_value_literal(x, ['print_immediate'])
+            print_value_terminal(x, ['print_immediate'])
             return
 
     need_wrap = precedence(left) < precedence(x)
@@ -1025,7 +1025,7 @@ def print_value_ptr(x, ctx):
         out("0x%08X)" % x['asset'])
 
 
-def print_value_literal(x, ctx):
+def print_value_terminal(x, ctx):
     t = x['type']
     if hlir_type.type_is_integer(t): print_value_integer(x, ctx)
     elif hlir_type.type_is_float(t): print_value_float(x, ctx)
@@ -1036,7 +1036,7 @@ def print_value_literal(x, ctx):
     elif hlir_type.type_is_pointer(t): print_value_ptr(x, ctx)
     elif hlir_type.type_is_enum(t): print_value_enum(x, ctx)
     elif hlir_type.type_is_byte(t): print_value_integer(x, ctx)
-    else: error("print_value_literal not implemented", x['ti'])
+    else: error("print_value_terminal not implemented", x['ti'])
 
 
 def print_value_by_id(x):
@@ -1099,9 +1099,9 @@ def print_value(x, ctx=[], need_wrap=False, just_print_id=True):
             if k == 'cons_immediate':
                 print_value_cons_immediate(x, ctx)
             elif k == 'const':
-                print_value_literal(x['value'], ctx)
+                print_value_terminal(x['value'], ctx)
             else:
-                print_value_literal(x, ctx)
+                print_value_terminal(x, ctx)
             return
 
 
@@ -1113,7 +1113,7 @@ def print_value(x, ctx=[], need_wrap=False, just_print_id=True):
     """if x['kind'] == 'const':
         if x['value'] != None:
             if hlir_type.type_is_generic_array(x['value']['type']):
-                print_value_literal(x['value'], ['print_immediate'])
+                print_value_terminal(x['value'], ['print_immediate'])
                 out("/**/")
                 return"""
 
@@ -1128,7 +1128,7 @@ def print_value(x, ctx=[], need_wrap=False, just_print_id=True):
 
     k = x['kind']
 
-    if k == 'literal': print_value_literal(x, ctx)
+    if k == 'literal': print_value_terminal(x, ctx)
     elif k in bin_ops: print_value_bin(x, ctx)
     elif k in un_ops: print_value_un(x, ctx)
     elif k == 'const': print_value_const(x, ctx)
@@ -1690,7 +1690,7 @@ def print_def_const(x):
         newline()
         print_variable(_id, const_value['type'], as_const=True)
         out(" = ")
-        print_value_literal(init_value, ['print_immediate'])
+        print_value_terminal(init_value, ['print_immediate'])
         out(";")
 
     else:

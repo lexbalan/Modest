@@ -61,13 +61,13 @@ def value_cons(v, t, ti, method):
 
     constructor = None
     if type.type_is_integer(t): constructor = value_cons_integer
-    elif type.type_is_pointer(t): constructor = value_cons_pointer
+    elif type.type_is_float(t): constructor = value_cons_float
     elif type.type_is_array(t): constructor = value_cons_array
     elif type.type_is_record(t): constructor = value_cons_record
-    elif type.type_is_float(t): constructor = value_cons_float
     elif type.type_is_char(t): constructor = value_cons_char
     elif type.type_is_byte(t): constructor = value_cons_byte
     elif type.type_is_bool(t): constructor = value_cons_bool
+    elif type.type_is_pointer(t): constructor = value_cons_pointer
     elif type.type_is_unit(t): constructor = value_cons_unit
     elif type.type_is_bad(t): constructor = value_cons_bad
 

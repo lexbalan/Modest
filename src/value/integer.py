@@ -3,7 +3,7 @@ from error import info, warning, error
 from util import nbits_for_num
 import hlir.type as hlir_type
 from hlir.type import type_print
-from .value import value_literal, value_is_immediate, value_cons_node, value_cons_immediate
+from .value import value_terminal, value_is_immediate, value_cons_node, value_cons_immediate
 
 
 
@@ -20,7 +20,7 @@ def value_integer(num, typ=None, ti=None):
             error("value size not corresponded type size", ti)
             return value_bad(ti)
 
-    v = value_literal(typ, num, ti)
+    v = value_terminal(typ, num, ti)
     v['nsigns'] = 0  # add field nsigns
     v['immediate'] = True
     return v

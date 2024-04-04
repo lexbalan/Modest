@@ -571,7 +571,7 @@ def print_value_let(x, ctx):
 
 
 
-def print_value_literal(x, ctx):
+def print_value_terminal(x, ctx):
     t = x['type']
     if hlir_type.type_is_integer(t): print_value_integer(x, ctx)
     elif hlir_type.type_is_float(t): print_value_float(x, ctx)
@@ -600,7 +600,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 
     k = x['kind']
 
-    if k == 'literal': print_value_literal(x, ctx)
+    if k == 'literal': print_value_terminal(x, ctx)
     elif k in bin_ops: print_value_bin(x, ctx)
     elif k in un_ops: print_value_un(x, ctx)
     elif k == 'const': print_value_let(x, ctx)
