@@ -12,8 +12,8 @@ import foundation
 from value.bool import value_bool
 from value.integer import value_integer
 from value.float import value_float
-from value.array import value_array, value_array_concat, value_string
-from value.record import value_record
+from value.array import value_array_terminal, value_array_concat, value_string
+from value.record import value_record_terminal
 
 
 import decimal
@@ -1085,7 +1085,7 @@ def do_value_array(x):
     if length > 0:
         of = items[0]['type']
 
-    v = value_array(items, ti=x['ti'])
+    v = value_array_terminal(items, ti=x['ti'])
     v['nl_end'] = x['nl_end']
     return v
 
@@ -1093,35 +1093,24 @@ def do_value_array(x):
 
 def do_value_record(x):
     initializers = []
-    fields = []
-    is_immediate = True
+
     for item in x['items']:
         if item['isa'] == 'ast_comment':
             continue
 
-        item_id = item['id']
         item_value = do_rvalue(item['value'])
-
-        if is_immediate:
-            is_immediate = value_is_immediate(item_value)
 
         initializers.append({
             'isa': 'initializer',
-            'id': item_id,
+            'id': item['id'],
             'value': item_value,
             'nl': item['nl'],
             'att': [],
             'ti': item['ti']
         })
 
-        # создаем поле для generic record
-        field = hlir_field(item_id, item_value['type'], ti=item['ti'])
-        fields.append(field)
 
-    generic_record_type = hlir_type.hlir_type_record(fields, ti=x['ti'])
-    generic_record_type['generic'] = True
-    v = value_record(generic_record_type, initializers, ti=x['ti'])
-    v['immediate'] = is_immediate
+    v = value_record_terminal(initializers, ti=x['ti'])
     v['nl_end'] = x['nl_end']
     return v
 

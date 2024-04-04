@@ -2,15 +2,41 @@
 from error import info, warning, error
 import hlir.type as type
 from hlir.hlir import *
+from hlir.field import hlir_field
 from hlir.type import record_field_get
 from util import get_item_with_id
 from .value import value_terminal, value_terminal, value_cons_node, value_zero, value_is_immediate
 
 
 
+# получает на вход список инициализаторов
+# конструирует и возвращает GenericRecord value
+def value_record_terminal(initializers=[], ti=None):
+    # структура метится как immediate только когда все ее поля immediate
+    is_immediate = True
 
-def value_record(typ, initializers=[], ti=None):
-    return value_terminal(typ, initializers, ti)
+    # сперва пройдемся по инициализаторам и выясним какие поля у нас есть
+    fields = []
+    for initializer in initializers:
+        field_id = initializer['id']
+        init_value = initializer['value']
+        field_type = init_value['type']
+        field_ti = init_value['ti']
+
+        if is_immediate:
+            is_immediate = value_is_immediate(init_value)
+
+        # создаем поле для generic record
+        field = hlir_field(field_id, field_type, ti=field_ti)
+        fields.append(field)
+
+
+    record_type = type.hlir_type_record(fields, ti)
+    record_type['generic'] = True
+
+    v = value_terminal(record_type, initializers, ti)
+    v['immediate'] = is_immediate
+    return v
 
 
 

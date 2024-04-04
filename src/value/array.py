@@ -7,18 +7,14 @@ from .integer import value_integer
 from .value import value_terminal, value_is_immediate, value_cons_node, value_cons_immediate, value_zero, value_bin, value_print
 
 
-def create_value_array(items, item_type, length, ti):
-    array_volume = value_integer(length)
-    array_type = hlir_type.hlir_type_array(item_type, volume=array_volume, ti=ti)
-    array_type['generic'] = True
-    return value_terminal(array_type, items, ti)
-
 
 # TODO: переделай здесь все - тут все плохо...
-def value_array(items, ti=None):
+# получает на вход список элементов
+# конструирует и возвращает GenericArray value
+def value_array_terminal(items, ti=None):
     length = len(items)
     if length == 0:
-        return create_value_array([], None, 0, ti)
+        return _create_value_array([], None, 0, True, ti)
 
 
     # Получаем наиболее подходящий общий тип элементов массива
@@ -56,9 +52,10 @@ def value_array(items, ti=None):
         i = i + 1
 
 
-    v = create_value_array(casted_items, array_item_type, length, ti)
+    v = _create_value_array(casted_items, array_item_type, length, True, ti)
     v['immediate'] = is_immediate  #TODO: need to implement 'immediate' flag
     return v
+
 
 
 
@@ -72,11 +69,11 @@ def value_array_concat(l, r, ti):
     t = hlir_type.hlir_type_array(item_type, volume=str_array_volume, ti=ti)
     t['generic'] = True
 
-    bin_value = value_bin('add_arr', l, r, t, ti=ti)
-    bin_value['asset'] = asset
-    bin_value['immediate'] = True
-    bin_value['nl_end'] = r['nl_end']
-    return bin_value
+    nv = value_bin('add_arr', l, r, t, ti=ti)
+    nv['asset'] = asset
+    nv['immediate'] = True
+    nv['nl_end'] = r['nl_end']
+    return nv
 
 
 
@@ -238,5 +235,15 @@ def value_cons_array(v, t, ti, method):
     return value_cons_array_from_array(v, t, ti, method)
 
 
+
+
+
+
+
+def _create_value_array(items, item_type, length, is_generic, ti):
+    array_volume = value_integer(length)
+    array_type = hlir_type.hlir_type_array(item_type, volume=array_volume, ti=ti)
+    array_type['generic'] = is_generic
+    return value_terminal(array_type, items, ti)
 
 
