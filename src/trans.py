@@ -1122,8 +1122,8 @@ def do_value_record(x):
     generic_record_type = hlir_type.hlir_type_record(fields, ti=x['ti'])
     generic_record_type['generic'] = True
     v = value_record(generic_record_type, initializers, ti=x['ti'])
-    v['nl_end'] = x['nl_end']
     v['immediate'] = is_immediate
+    v['nl_end'] = x['nl_end']
     return v
 
 
@@ -1218,6 +1218,7 @@ def do_rvalue(x):
     return value_load(v)
 
 
+
 def do_value(x):
     k = x['kind']
 
@@ -1238,7 +1239,7 @@ def do_value(x):
         elif k == 'deref': v = do_value_deref(x)
         elif k == 'index': v = do_value_index(x)
         elif k == 'access': v = do_value_access(x)
-        elif k == 'cast': v = do_value_to(x)
+        elif k == 'cons': v = do_value_to(x)
         elif k == 'cons': v = do_value_to(x)
         elif k == 'sizeof': v = do_value_sizeof(x)
         elif k == 'alignof': v = do_value_alignof(x)
@@ -1262,38 +1263,48 @@ def do_value(x):
 #
 
 def do_stmt_if(x):
-    c = do_rvalue(x['cond'])
-    t = do_stmt(x['then'])
+    cond = do_rvalue(x['cond'])
 
-    if value_is_bad(c) or hlir_stmt_is_bad(t):
+    if value_is_bad(cond):
         return hlir_stmt_bad(x)
 
-    if not hlir_type.type_is_bool(c['type']):
-        error("expected bool value", c['expr_ti'])
+    if not hlir_type.type_is_bool(cond['type']):
+        error("expected bool value", cond['expr_ti'])
         return hlir_stmt_bad(x)
 
-    e = None
+
+    _then = do_stmt(x['then'])
+
+    if hlir_stmt_is_bad(_then):
+        return hlir_stmt_bad(x)
+
+    _else = None
     if x['else'] != None:
-        e = do_stmt(x['else'])
-        if hlir_stmt_is_bad(e):
-            return hlir_stmt_bad(e['expr_ti'])
+        _else = do_stmt(x['else'])
+        if hlir_stmt_is_bad(_else):
+            return hlir_stmt_bad(_else['expr_ti'])
 
-    return hlir_stmt_if(c, t, e, ti=x['ti'])
+    return hlir_stmt_if(cond, _then, _else, ti=x['ti'])
 
 
 
 def do_stmt_while(x):
-    c = do_rvalue(x['cond'])
-    s = do_stmt(x['stmt'])
+    cond = do_rvalue(x['cond'])
 
-    if value_is_bad(c) or hlir_stmt_is_bad(s):
+    if value_is_bad(cond):
         return hlir_stmt_bad(x)
 
-    if not hlir_type.type_is_bool(c['type']):
-        error("expected bool value", c['expr_ti'])
+    if not hlir_type.type_is_bool(cond['type']):
+        error("expected bool value", cond['expr_ti'])
         return hlir_stmt_bad(x)
 
-    return hlir_stmt_while(c, s, ti=x['ti'])
+
+    block = do_stmt(x['stmt'])
+
+    if hlir_stmt_is_bad(block):
+        return hlir_stmt_bad(x)
+
+    return hlir_stmt_while(cond, block, ti=x['ti'])
 
 
 
@@ -1301,25 +1312,28 @@ def do_stmt_return(x):
     global cfunc
 
     func_ret_type = cfunc['type']['to']
-    no_ret_func = hlir_type.type_is_unit(func_ret_type)
 
-    if no_ret_func:
-        if x['value'] != None:
-            error("unexpected return value", x['value']['ti'])
-        return hlir_stmt_return(value=None, ti=x['ti'])
+    is_no_ret_func = hlir_type.type_is_unit(func_ret_type)
+    ret_val_present = x['value'] != None
 
-    if x['value'] == None:
-        error("expected return value", x['ti'])
-        return hlir_stmt_return(ti=x['ti'])
-
-
-    v = do_rvalue(x['value'])
-
-    if value_is_bad(v):
+    # если забыли вернуть значение
+    # или возвращаем его там, где оно не ожидется
+    if ret_val_present == is_no_ret_func:
+        if ret_val_present:
+            error("unexpected return value", x['value']['expr_ti'])
+        else:
+            error("expected return value", x['ti'])
         return hlir_stmt_bad(x)
 
-    v = value_cons_implicit_check(v, func_ret_type)
-    return hlir_stmt_return(v, ti=x['ti'])
+
+    # (!) in return statement retval can be None (!)
+    retval = None
+    if ret_val_present:
+        rv = do_rvalue(x['value'])
+        if not value_is_bad(rv):
+            retval = value_cons_implicit_check(rv, func_ret_type)
+
+    return hlir_stmt_return(retval, ti=x['ti'])
 
 
 

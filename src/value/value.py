@@ -296,7 +296,7 @@ def value_access_record_by_ptr(ptr_to_record, field, ti=None):
 def value_cast(value, type, ti=None):
     return {
         'isa': 'value',
-        'kind': 'cast',
+        'kind': 'cons',
         'value': value,
         'type': type,
         'immediate': False,

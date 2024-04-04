@@ -111,7 +111,7 @@ aprecedence = [
     ['shl', 'shr'], #7
     ['add', 'sub'], #8
     ['mul', 'div', 'rem'], #9
-    ['positive', 'negative', 'not', 'cast', 'cast_immediate', 'ref', 'deref', 'sizeof', 'alignof', 'offsetof', 'lengthof'], #10
+    ['positive', 'negative', 'not', 'cons', 'cast_immediate', 'ref', 'deref', 'sizeof', 'alignof', 'offsetof', 'lengthof'], #10
     ['call', 'index', 'access'], #11
     ['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #12
 ]
@@ -611,7 +611,7 @@ def print_cast_hard(t, v, ctx=[]):
     out("*(")
     print_type(t, space_after=True)
     out("*)&")
-    need_wrap = precedence(v) < precedence({'kind': 'cast'})
+    need_wrap = precedence(v) < precedence({'kind': 'cons'})
     print_value(v, ctx=ctx, need_wrap=need_wrap)
 
 
@@ -624,12 +624,12 @@ def print_cast(t, v, ctx=[]):
             return"""
 
     out("("); print_type(t); out(")")
-    need_wrap = precedence(v) < precedence({'kind': 'cast'})
+    need_wrap = precedence(v) < precedence({'kind': 'cons'})
     print_value(v, ctx=ctx, need_wrap=need_wrap)
 
 
 
-def print_value_cast_immediate(v, ctx):
+def print_value_cons_immediate(v, ctx):
     value = v['value']
     from_type = value['type']
     to_type = v['type']
@@ -653,7 +653,7 @@ def print_value_cast_immediate(v, ctx):
 
 
 
-def print_value_cast(x, ctx):
+def print_value_cons(x, ctx):
     to_type = x['type']
     value = x['value']
     from_type = value['type']
@@ -1097,7 +1097,7 @@ def print_value(x, ctx=[], need_wrap=False, just_print_id=True):
         if value_is_immediate(x):
             k = x['kind']
             if k == 'cast_immediate':
-                print_value_cast_immediate(x, ctx)
+                print_value_cons_immediate(x, ctx)
             elif k == 'const':
                 print_value_literal(x['value'], ctx)
             else:
@@ -1138,8 +1138,8 @@ def print_value(x, ctx=[], need_wrap=False, just_print_id=True):
     elif k == 'index_ptr': print_value_index_ptr(x, ctx)
     elif k == 'access': print_value_access(x, ctx)
     elif k == 'access_ptr': print_value_access_ptr(x, ctx)
-    elif k == 'cast_immediate': print_value_cast_immediate(x, ctx)
-    elif k == 'cast': print_value_cast(x, ctx)
+    elif k == 'cast_immediate': print_value_cons_immediate(x, ctx)
+    elif k == 'cons': print_value_cons(x, ctx)
     elif k == 'sizeof': print_value_sizeof(x, ctx)
     elif k == 'alignof': print_value_alignof(x, ctx)
     elif k == 'offsetof': y = print_value_offsetof(x, ctx)
@@ -1325,7 +1325,7 @@ def assign_array(left, right):
 
 
 def assign(left, right):
-    if right['kind'] == 'cast':
+    if right['kind'] == 'cons':
         # for case:
         # var x: [10]Int32
         # var y: [5]Int32

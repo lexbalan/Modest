@@ -343,7 +343,7 @@ def llvm_print_value(x):
     elif k == 'str': llvm_print_value_str(x)
     elif k == 'array': llvm_print_value_array(x)
     elif k == 'record': llvm_print_value_record(x)
-    elif k == 'cast': llvm_print_value_inlinecast(x)
+    elif k == 'cons': llvm_print_value_inlinecast(x)
     elif k == 'zero': llvm_print_value_zero(x)
     else:
         out("<unknown_value::%s>" % c)
@@ -1216,7 +1216,7 @@ def do_eval(x):
     elif k == 'access': y = do_eval_access(x)
     elif k == 'access_ptr': y = do_eval_access_ptr(x)
     elif k == 'cast_immediate': y = do_eval_cast_immediate(x)
-    elif k == 'cast': y = do_eval_cast(x)
+    elif k == 'cons': y = do_eval_cast(x)
     elif k == 'add_arr': y = do_eval_literal(x)
     elif k in ['sizeof', 'lengthof', 'alignof', 'offsetof', 'eq_str']:
          y = do_eval_literal(x)
@@ -1246,7 +1246,7 @@ def assign(l, rx):
     assert(rx['isa'] == 'value')
 
 
-    if rx['kind'] == 'cast':
+    if rx['kind'] == 'cons':
         # for case:
         # var x: [10]Int32
         # var y: [5]Int32
