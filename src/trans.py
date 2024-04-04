@@ -669,7 +669,7 @@ def do_value_bin(x):
     l = value_cons_implicit(l, common_type)
     r = value_cons_implicit(r, common_type)
 
-    # After implicit cast types must be equal
+    # After implicit cons types must be equal
     if not hlir_type.check(l['type'], r['type'], x['ti']):
         return value_bad(x)
 
