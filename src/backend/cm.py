@@ -316,7 +316,7 @@ def print_value_cons_immediate(x, ctx):
     return
 
 
-def print_value_cast(v, ctx):
+def print_value_cons(v, ctx):
     value = v['value']
     from_type = value['type']
     to_type = v['type']
@@ -611,7 +611,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
     elif k == 'access': print_value_access(x, ctx)
     elif k == 'access_ptr': print_value_access_ptr(x, ctx)
     elif k == 'cons_immediate': print_value_cons_immediate(x, ctx)
-    elif k == 'cons': print_value_cast(x, ctx)
+    elif k == 'cons': print_value_cons(x, ctx)
     elif k == 'sizeof': out("sizeof("); print_type(x['of']); out(")")
     elif k == 'alignof': out("alignof("); print_type(x['of']); out(")")
     elif k == 'offsetof': out("offsetof("); print_type(x['of']); out('.%s' % x['field']['str']); out(")")

@@ -538,16 +538,16 @@ def do_bin_op_with_pointers(op, l, r , ti):
         else:
 
             if ptr_n_int:
-                lnat = do_cast_runtime(l, typeSysNat, ti)
+                lnat = do_cons_runtime(l, typeSysNat, ti)
                 xr = value_cons_implicit(r, lnat['type'])
                 result = value_bin(x['kind'], lnat, xr, xr['type'], ti)
-                return do_cast_runtime(result, l['type'], ti)
+                return do_cons_runtime(result, l['type'], ti)
 
             if int_n_ptr:
-                rnat = do_cast_runtime(r, typeSysNat, ti)
+                rnat = do_cons_runtime(r, typeSysNat, ti)
                 xl = value_cons_implicit(l, rnat['type'])
                 result = value_bin(x['kind'], rnat, xl, xl['type'], ti)
-                return do_cast_runtime(result, r['type'], ti)
+                return do_cons_runtime(result, r['type'], ti)
 
         error("invalid operation", ti)
         return value_bad({'ti': ti})
