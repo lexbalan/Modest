@@ -39,7 +39,7 @@ aprecedence = [
     ['shl', 'shr'], #7
     ['add', 'sub'], #8
     ['mul', 'div', 'rem'], #9
-    ['positive', 'negative', 'not', 'cons', 'cast_immediate', 'ref', 'deref', 'sizeof', 'alignof', 'offsetof', 'lengthof'], #10
+    ['positive', 'negative', 'not', 'cons', 'cons_immediate', 'ref', 'deref', 'sizeof', 'alignof', 'offsetof', 'lengthof'], #10
     ['call', 'index', 'access'], #11
     ['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #12
 ]
@@ -52,7 +52,7 @@ def precedence(x):
 
     # cast generic не является 'оператором'
     # его приоритет, это приоритет его содержимого (value)
-    if k == 'cast_immediate':
+    if k == 'cons_immediate':
         return precedence(x['value'])
 
     i = 0
@@ -610,7 +610,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
     elif k == 'index_ptr': print_value_index_ptr(x, ctx)
     elif k == 'access': print_value_access(x, ctx)
     elif k == 'access_ptr': print_value_access_ptr(x, ctx)
-    elif k == 'cast_immediate': print_value_cons_immediate(x, ctx)
+    elif k == 'cons_immediate': print_value_cons_immediate(x, ctx)
     elif k == 'cons': print_value_cast(x, ctx)
     elif k == 'sizeof': out("sizeof("); print_type(x['of']); out(")")
     elif k == 'alignof': out("alignof("); print_type(x['of']); out(")")
