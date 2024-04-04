@@ -11,9 +11,7 @@ def create_value_array(items, item_type, length, ti):
     array_volume = value_integer(length)
     array_type = hlir_type.hlir_type_array(item_type, volume=array_volume, ti=ti)
     array_type['generic'] = True
-    v = value_terminal(array_type, items, ti)
-    assert('asset' in v)
-    return v
+    return value_terminal(array_type, items, ti)
 
 
 # TODO: переделай здесь все - тут все плохо...
@@ -60,7 +58,6 @@ def value_array(items, ti=None):
 
     v = create_value_array(casted_items, array_item_type, length, ti)
     v['immediate'] = is_immediate  #TODO: need to implement 'immediate' flag
-    assert('asset' in v)
     return v
 
 
@@ -183,8 +180,6 @@ def value_cons_array_from_generic_array(v, t, ti, method):
     if 'id' in v:
         nv['id'] = v['id']
 
-    assert('asset' in nv)
-
     return nv
 
 
@@ -215,8 +210,6 @@ def value_cons_array_from_array(v, t, ti, method):
 
     # runtime cons
     return value_cons_node(v, t, ti=ti)
-
-    return None
 
 
 
