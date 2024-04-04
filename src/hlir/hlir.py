@@ -77,3 +77,17 @@ def hlir_def_func(_id, value_func, ti):
     }
 
 
+
+
+def hlir_initializer(id, value, ti=None, nl=0):
+    return {
+        'isa': 'initializer',
+        'id': id,
+        'value': value,
+        'att': [],
+        'nl': nl,
+        'ti': ti
+    }
+
+
+

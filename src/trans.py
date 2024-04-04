@@ -6,6 +6,7 @@ from util import get_item_with_id
 from main import settings
 from frontend.parser import Parser
 from hlir.type import select_common_type
+from hlir.hlir import hlir_initializer
 
 import foundation
 
@@ -196,6 +197,8 @@ valueTrue = None
 valueFalse = None
 
 foundation_module = None
+
+
 
 def init():
     global foundation_module, lib_path
@@ -1100,14 +1103,8 @@ def do_value_record(x):
 
         item_value = do_rvalue(item['value'])
 
-        initializers.append({
-            'isa': 'initializer',
-            'id': item['id'],
-            'value': item_value,
-            'nl': item['nl'],
-            'att': [],
-            'ti': item['ti']
-        })
+        p = hlir_initializer(item['id'], item_value, item['ti'], item['nl'])
+        initializers.append(p)
 
 
     v = value_record_terminal(initializers, ti=x['ti'])

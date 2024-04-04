@@ -8,14 +8,15 @@ from util import get_item_with_id
 from .value import value_terminal, value_terminal, value_cons_node, value_zero, value_is_immediate
 
 
-
 # получает на вход список инициализаторов
 # конструирует и возвращает GenericRecord value
 def value_record_terminal(initializers=[], ti=None):
     # структура метится как immediate только когда все ее поля immediate
     is_immediate = True
 
-    # сперва пройдемся по инициализаторам и выясним какие поля у нас есть
+    # сперва пройдемся по инициализаторам
+    # и выясним какие поля у нас тут есть
+    # (для того чтобы сконструировать тип записи)
     fields = []
     for initializer in initializers:
         field_id = initializer['id']
@@ -37,7 +38,6 @@ def value_record_terminal(initializers=[], ti=None):
     v = value_terminal(record_type, initializers, ti)
     v['immediate'] = is_immediate
     return v
-
 
 
 
@@ -96,14 +96,8 @@ def value_cons_record_from_generic_record(v, t, ti, method):
 
             type.check(field_type, item_value2['type'], item_value2)
 
-            items.append({
-                'isa': 'initizlizer',
-                'id': field['id'],
-                'value': item_value2,
-                'att': [],
-                'nl': nl,
-                'ti': ti
-            })
+            p = hlir_initializer(field['id'], item_value2, ti=ti, nl=nl)
+            items.append(p)
 
 
     nv = value_terminal(t, items, ti)
@@ -154,7 +148,6 @@ def value_cons_record(v, t, ti, method):
                 return None  # if field type not equal
 
             #print(field['id']['str'])
-
 
         # Record -> Record (explicit)
         return value_cons_record_from_record(v, t, ti, method)
