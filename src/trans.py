@@ -13,8 +13,8 @@ import foundation
 from value.bool import value_bool
 from value.integer import value_integer
 from value.float import value_float
-from value.array import value_array_terminal, value_array_concat, value_string
-from value.record import value_record_terminal
+from value.array import value_array_create, value_array_concat, value_string
+from value.record import value_record_create
 
 
 import decimal
@@ -208,7 +208,7 @@ def init():
 
     foundation_module = foundation.init()
 
-    valueNil = value_integer(0, typ=foundation.typeFreePointer)
+    valueNil = value_integer_create(0, typ=foundation.typeFreePointer)
     valueTrue = value_bool(1)
     valueFalse = value_bool(0)
 
@@ -254,9 +254,9 @@ def init():
     root_context.type_add('VA_List', foundation.typeVA_List)
 
 
-    compilerVersionMajor = value_integer(0, typ=foundation.typeNat32)
+    compilerVersionMajor = value_integer_create(0, typ=foundation.typeNat32)
     root_context.value_add('__compilerVersionMajor', compilerVersionMajor)
-    compilerVersionMinor = value_integer(7, typ=foundation.typeNat32)
+    compilerVersionMinor = value_integer_create(7, typ=foundation.typeNat32)
     root_context.value_add('__compilerVersionMinor', compilerVersionMinor)
 
     import platform
@@ -279,13 +279,13 @@ def init():
     flt_width = int(settings.get('float_width'))
     pointer_width = int(settings.get('pointer_width'))
 
-    __systemCharWidth = value_integer(char_width, typ=foundation.typeNat32)
+    __systemCharWidth = value_integer_create(char_width, typ=foundation.typeNat32)
     root_context.value_add('__systemCharWidth', __systemCharWidth)
-    __systemIntWidth = value_integer(int_width, typ=foundation.typeNat32)
+    __systemIntWidth = value_integer_create(int_width, typ=foundation.typeNat32)
     root_context.value_add('__systemIntWidth', __systemIntWidth)
-    __systemFloatWidth = value_integer(flt_width, typ=foundation.typeNat32)
+    __systemFloatWidth = value_integer_create(flt_width, typ=foundation.typeNat32)
     root_context.value_add('__systemFloatWidth', __systemFloatWidth)
-    __systemPointerWidth = value_integer(pointer_width, typ=foundation.typeNat32)
+    __systemPointerWidth = value_integer_create(pointer_width, typ=foundation.typeNat32)
     root_context.value_add('__systemPointerWidth', __systemPointerWidth)
 
     #print("system_char_width  = %d" % char_width)
@@ -404,7 +404,7 @@ def do_type_enum(t):
         })
 
         # add enum item to global context
-        item_val = value_integer(i, typ=enum_type, ti=item['ti'])
+        item_val = value_integer_create(i, typ=enum_type, ti=item['ti'])
         item_val['id'] = id
         module['context'].value_add(id['str'], item_val)
 
@@ -534,7 +534,7 @@ def do_bin_op_with_pointers(op, l, r , ti):
             num = 0
             if op == 'add': num = l['asset'] + r['asset']
             elif op == 'sub': num = l['asset'] - r['asset']
-            return value_integer(num, typ=typ, ti=ti)
+            return value_integer_create(num, typ=typ, ti=ti)
 
         # указатель или число в рантайме
         else:
@@ -973,10 +973,22 @@ def do_value_index(x):
 
                 item = left['asset'][index_imm]
 
-                #return item
+                info("INDEX HERE", x['ti'])
+                value_print(item)
+                print("END ITEM")
 
-                v['asset'] = item['asset']
-                v['immediate'] = True
+                if 'asset' in item:
+                    print("asset in !")
+                    v['asset'] = item['asset']
+                    v['immediate'] = item['immediate']
+                    return v
+
+                #return item
+                """if 'asset' in item:
+                    v['asset'] = item['asset']
+                    v['immediate'] = True
+                else:
+                    return item"""
 
     return v
 
@@ -1024,7 +1036,7 @@ def do_value_access(x):
         initializers = left['asset']
         initializer = get_item_with_id(initializers, field_id['str'])
         v['asset'] = initializer['value']['asset']
-        v['immediate'] = True
+        v['immediate'] = initializer['value']['immediate']
 
     return v
 
@@ -1088,7 +1100,7 @@ def do_value_array(x):
     if length > 0:
         of = items[0]['type']
 
-    v = value_array_terminal(items, ti=x['ti'])
+    v = value_array_create(items, ti=x['ti'])
     v['nl_end'] = x['nl_end']
     return v
 
@@ -1107,7 +1119,7 @@ def do_value_record(x):
         initializers.append(p)
 
 
-    v = value_record_terminal(initializers, ti=x['ti'])
+    v = value_record_create(initializers, ti=x['ti'])
     v['nl_end'] = x['nl_end']
     return v
 
@@ -1131,7 +1143,7 @@ def do_value_integer(x):
                 base = 16
 
     num = int(x['numstr'], base)
-    v = value_integer(num, ti=x['ti'])
+    v = value_integer_create(num, ti=x['ti'])
     v['nsigns'] = num_string_len
 
     if base == 16:
@@ -1464,7 +1476,7 @@ def do_stmt_incdec(x, op='add'):
         error("expected integer value", v['expr_ti'])
         return hlir_stmt_bad(x)
 
-    one = value_integer(1, typ=v['type'], ti=x['ti'])
+    one = value_integer_create(1, typ=v['type'], ti=x['ti'])
     v_plus = _bin(op, v['type'], v, one, x['ti'])
 
     return hlir_stmt_assign(v, v_plus, ti=x['ti'])
@@ -1795,7 +1807,7 @@ def def_var(x):
             # получаем его из инициализатора
             if arr_without_length:
                 init_arr_sz = iv['type']['volume']['asset']
-                var_type['volume'] = value_integer(init_arr_sz)
+                var_type['volume'] = value_integer_create(init_arr_sz)
                 #print(init_arr_sz)
 
             init_value = value_cons_implicit_check(iv, var_type)

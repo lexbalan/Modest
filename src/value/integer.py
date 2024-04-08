@@ -7,7 +7,7 @@ from .value import value_terminal, value_is_immediate, value_cons_node, value_co
 
 
 
-def value_integer(num, typ=None, ti=None):
+def value_integer_create(num, typ=None, ti=None):
     if typ == None:
         typ = hlir_type.hlir_type_generic_int_for(num, signed=True, ti=ti)
     else:

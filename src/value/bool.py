@@ -10,7 +10,7 @@ import foundation
 
 
 def value_bool(num):
-    return value_integer(num, typ=foundation.typeBool)
+    return value_integer_create(num, typ=foundation.typeBool)
 
 
 def value_cons_bool_immediate(v, t, ti):

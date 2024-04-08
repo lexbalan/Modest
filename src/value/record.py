@@ -5,12 +5,12 @@ from hlir.hlir import *
 from hlir.field import hlir_field
 from hlir.type import record_field_get
 from util import get_item_with_id
-from .value import value_terminal, value_terminal, value_cons_node, value_zero, value_is_immediate
+from .value import value_terminal, value_terminal, value_cons_node, value_zero, value_is_immediate, value_print, value_cons_immediate
 
 
 # получает на вход список инициализаторов
 # конструирует и возвращает GenericRecord value
-def value_record_terminal(initializers=[], ti=None):
+def value_record_create(initializers=[], ti=None):
     # структура метится как immediate только когда все ее поля immediate
     is_immediate = True
 
@@ -39,6 +39,12 @@ def value_record_terminal(initializers=[], ti=None):
     v['immediate'] = is_immediate
     return v
 
+
+
+def value_cons_record_immediate(v, t, ti):
+    info("value_cons_record_immediate", ti)
+    # TODO
+    return value_cons_immediate(v, t, ti)
 
 
 def value_cons_record_from_generic_record(v, t, ti, method):
@@ -72,6 +78,9 @@ def value_cons_record_from_generic_record(v, t, ti, method):
             item_value = None
             nl = 0
 
+            if not 'asset' in v:
+                value_print(v)
+
             initializers = v['asset']
             ini = get_item_with_id(initializers, field_name)
 
@@ -101,8 +110,10 @@ def value_cons_record_from_generic_record(v, t, ti, method):
 
 
     nv = value_terminal(t, items, ti)
-    nv['nl_end'] = v['nl_end']
 
+
+    if 'nl_end' in v: #FIXIT: nl_end должен быть взде!
+        nv['nl_end'] = v['nl_end']
 
     if value_is_immediate(v):
         nv['immediate'] = True
@@ -127,6 +138,9 @@ def value_cons_record_from_record(v, t, ti, method):
 
 def value_cons_record(v, t, ti, method):
     from_type = v['type']
+
+    if value_is_immediate(v):
+        return value_cons_record_immediate(v, t, ti)
 
     if type.type_is_record(from_type):
         # GenericRecord -> Record  (implicit)

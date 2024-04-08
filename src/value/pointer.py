@@ -120,12 +120,12 @@ def str2utf8(string_items):
             k = utf8_bytes[i]
 
             char_code = k
-            char = value_char(char_code, _type=typeChar8, ti=None)
+            char = value_char_create(char_code, _type=typeChar8, ti=None)
             chars8.append(char)
             i = i + 1
 
     z = 0
-    chars8.append(value_char(z, _type=typeChar8, ti=None))
+    chars8.append(value_char_create(z, _type=typeChar8, ti=None))
     return chars8
 
 
@@ -152,11 +152,11 @@ def str2utf16(string_items):
             i = i + 2
 
             char_code = k
-            char = value_char(char_code, _type=typeChar16, ti=None)
+            char = value_char_create(char_code, _type=typeChar16, ti=None)
             chars16.append(char)
 
     z = 0
-    chars16.append(value_char(z, _type=typeChar16, ti=None))
+    chars16.append(value_char_create(z, _type=typeChar16, ti=None))
     return chars16
 
 
@@ -170,7 +170,7 @@ def str2utf32(string_items):
         chars32.append(cc)
 
     z = 0
-    chars32.append(value_char(z, _type=typeChar32, ti=None))
+    chars32.append(value_char_create(z, _type=typeChar32, ti=None))
 
     return chars32
 

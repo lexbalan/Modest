@@ -96,7 +96,6 @@ def value_cons_implicit(v, t):
     if value_is_bad(v) or type.type_is_bad(t):
         return value_bad(v['expr_ti'])
 
-
     ti = v['expr_ti']
 
     from_type = v['type']

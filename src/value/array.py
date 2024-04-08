@@ -11,7 +11,7 @@ from .value import value_terminal, value_is_immediate, value_cons_node, value_co
 # TODO: переделай здесь все - тут все плохо...
 # получает на вход список элементов
 # конструирует и возвращает GenericArray value
-def value_array_terminal(items, ti=None):
+def value_array_create(items, ti=None):
     length = len(items)
     if length == 0:
         return _create_value_array([], None, 0, True, ti)
@@ -48,6 +48,13 @@ def value_array_terminal(items, ti=None):
     while i < length:
         item = items[i]
         casted_item = value_cons_implicit(item, array_item_type)
+
+        if 'asset' in item:
+            casted_item['asset'] = item['asset']
+
+        if 'nl_end' in item:
+            casted_item['nl_end'] = item['nl_end']
+
         casted_items.append(casted_item)
         i = i + 1
 
@@ -57,6 +64,10 @@ def value_array_terminal(items, ti=None):
     return v
 
 
+def value_cons_array_immediate(v, t, ti):
+    info("value_cons_array_immediate", ti)
+    # TODO
+    return value_cons_immediate(v, t, ti)
 
 
 # concatenation of two immediate arrays
@@ -64,7 +75,7 @@ def value_array_concat(l, r, ti):
     asset = l['asset'] + r['asset']
     length = len(asset) + 1  #!
 
-    str_array_volume = value_integer(length)
+    str_array_volume = value_integer_create(length)
     item_type = select_common_type(l['type']['of'], r['type']['of'])
     t = hlir_type.hlir_type_array(item_type, volume=str_array_volume, ti=ti)
     t['generic'] = True
@@ -85,7 +96,7 @@ def value_string(string, length=0, ti=None):
     chars = []
     for char in string:
         char_code = ord(char)
-        char_value = value_char(char_code, _type=None, ti=ti)
+        char_value = value_char_create(char_code, _type=None, ti=ti)
         chars.append(char_value)
 
         # get max char width
@@ -98,7 +109,7 @@ def value_string(string, length=0, ti=None):
     genericCharType = hlir_type.hlir_type_char(max_char_width, ti=ti)
     genericCharType['generic'] = True
 
-    volume = value_integer(length)  # <=> len(string) + 1
+    volume = value_integer_create(length)  # <=> len(string) + 1
     genStrType = hlir_type.hlir_type_array(genericCharType, volume=volume, ti=ti)
     genStrType['generic'] = True
     nv = value_terminal(genStrType, chars, ti)
@@ -151,7 +162,7 @@ def value_cons_array_from_generic_array(v, t, ti, method):
 
         if hlir_type.type_is_array_of_char(v['type']):
             char_code = item['asset']
-            item = value_char(char_code, _type=None, ti=ti)
+            item = value_char_create(char_code, _type=None, ti=ti)
 
         from .cons import value_cons_implicit
         casted_item = value_cons_implicit(item, t['of'])
@@ -187,6 +198,7 @@ def value_cons_array_from_array(v, t, ti, method):
     if not hlir_type.type_eq(v['type']['of'], t['of']):
         return None
 
+
     # нельзя построить меньший массив из большего
     n_from = v['type']['volume']['asset']
     n_to = t['volume']['asset']
@@ -215,9 +227,9 @@ def value_cons_array(v, t, ti, method):
     from_type = v['type']
     to_type = t
 
-    # you can construct array only from another array
-    if not hlir_type.type_is_array(from_type):
-        return None
+
+    if value_is_immediate(v):
+        return value_cons_array_immediate(v, t, ti)
 
     # GenericArray -> Array
     if hlir_type.type_is_generic(from_type):
@@ -241,7 +253,7 @@ def value_cons_array(v, t, ti, method):
 
 
 def _create_value_array(items, item_type, length, is_generic, ti):
-    array_volume = value_integer(length)
+    array_volume = value_integer_create(length)
     array_type = hlir_type.hlir_type_array(item_type, volume=array_volume, ti=ti)
     array_type['generic'] = is_generic
     return value_terminal(array_type, items, ti)

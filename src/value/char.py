@@ -6,7 +6,7 @@ from .value import value_terminal, value_cons_node, value_cons_immediate
 
 
 
-def value_char(char_code, _type=None, ti=None):
+def value_char_create(char_code, _type=None, ti=None):
     if _type == None:
         # if type not specified, set type as GenericChar
         char_width = nbits_for_num(char_code)

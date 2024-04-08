@@ -82,6 +82,7 @@ free_reg = 0
 
 def reg_get():
     global func_context
+    assert(not is_global_context())  # we can get reg only locally!
     reg = func_context['free_reg']
     func_context['free_reg'] = func_context['free_reg'] + 1
     return str(reg)

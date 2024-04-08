@@ -2,6 +2,7 @@
 import copy
 from error import info, warning, error, fatal
 import settings
+from hlir.field import hlir_field
 
 
 ptr_width = 0
@@ -851,6 +852,30 @@ def type_print(t, print_aka=True):
 
 
 
+# получает на вход два типа GenericRecord
+# и создает третий тип который является общим для двух входных
+# (тк в случае записей ни один из двух может не подходить как общий)
+def select_common_record_type(a, b):
+    print("select_common_record_type")
+    if len(a['fields']) != len(b['fields']):
+        return None
+
+    fields = []
+    for fieldA, fieldB in zip(a['fields'], b['fields']):
+        if fieldA['id']['str'] != fieldB['id']['str']:
+            return None
+
+        fieldId = fieldA['id']
+        fieldType = select_common_type(fieldA['type'], fieldB['type'])
+        newField = hlir_field(fieldId, fieldType, ti=fieldId['ti'])
+        fields.append(newField)
+
+    newRecord = hlir_type_record(fields, ti=a['ti'])
+    newRecord['generic'] = True
+    return newRecord
+
+
+
 
 # выбирает наиболее подходящий тип для двух входных
 # (наименьшее общее кратное)
@@ -870,8 +895,25 @@ def select_common_type(a, b):
             if type_is_generic_array_of_char(a):
                 return b
 
+
+        if a['kind'] == 'byte':
+            if b['kind'] == 'int':
+                return a
+
+
+        if b['kind'] == 'byte':
+            if a['kind'] == 'int':
+                return b
+
         return None
 
+
+    if type_is_record(a) and type_is_record(b):
+        print("RECORD!")
+        return select_common_record_type(a, b)
+
+    if type_is_array(a) and type_is_array(b):
+        print("ARRAY!")
 
     if type_is_generic(a) != type_is_generic(b):
         if type_is_generic(a):

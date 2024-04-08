@@ -349,21 +349,21 @@ declare double @max_float64(double %a, double %b)
 
 
 @pointZero = constant %Point {
-    double 0.0,
-    double 0.0
+    i8 0,
+    i8 0
 }
 @pointOne = constant %Point {
-    double 1.0,
-    double 1.0
+     1.0,
+     1.0
 }
 @line0 = constant %Line {
     %Point {
-        double 0.0,
-        double 0.0
+        i8 0,
+        i8 0
     },
     %Point {
-        double 1.0,
-        double 1.0
+         1.0,
+         1.0
     }
 }
 @carr = constant [7 x i8] [
@@ -375,79 +375,4 @@ declare double @max_float64(double %a, double %b)
     i8 30,
     i8 0
 ]
-@line1 = constant %Line {
-    %Point {
-        double 10.0,
-        double 15.0
-    },
-    %Point {
-        double 20.0,
-        double 25.0
-    }
-}
-@lines = constant [2 x %Line] [
-    %Line {
-        %Point {
-            double 0.0,
-            double 0.0
-        },
-        %Point {
-            double 1.0,
-            double 1.0
-        }
-    },
-    %Line {
-        %Point {
-            double 10.0,
-            double 15.0
-        },
-        %Point {
-            double 20.0,
-            double 25.0
-        }
-    }
-]
-
-
-define %Float @distance(%Point %a, %Point %b) {
-    %1 = extractvalue %Point %a, 0
-    %2 = extractvalue %Point %b, 0
-    %3 = call double (double, double) @max_float64(double %1, double %2)
-    %4 = extractvalue %Point %a, 0
-    %5 = extractvalue %Point %b, 0
-    %6 = call double (double, double) @min_float64(double %4, double %5)
-    %7 = fsub double %3, %6
-    %8 = extractvalue %Point %a, 1
-    %9 = extractvalue %Point %b, 1
-    %10 = call double (double, double) @max_float64(double %8, double %9)
-    %11 = extractvalue %Point %a, 1
-    %12 = extractvalue %Point %b, 1
-    %13 = call double (double, double) @min_float64(double %11, double %12)
-    %14 = fsub double %10, %13
-    %15 = call %Double (%Double, %Double) @pow(double %7, %Double 2.0)
-    %16 = call %Double (%Double, %Double) @pow(double %14, %Double 2.0)
-    %17 = fadd %Double %15, %16
-    %18 = call %Double (%Double) @sqrt(%Double %17)
-    ret %Double %18
-}
-
-define %Float @lineLength(%Line %line) {
-    %1 = extractvalue %Line %line, 0
-    %2 = extractvalue %Line %line, 1
-    %3 = call %Float (%Point, %Point) @distance(%Point %1, %Point %2)
-    ret %Float %3
-}
-
-define %Int @main() {
-    %1 = getelementptr inbounds [2 x %Line], [2 x %Line]* @lines, i32 0, i32 0
-    %2 = load %Line, %Line* %1
-    %3 = call %Float (%Line) @lineLength(%Line %2)
-    %4 = getelementptr inbounds [2 x %Line], [2 x %Line]* @lines, i32 0, i32 1
-    %5 = load %Line, %Line* %4
-    %6 = call %Float (%Line) @lineLength(%Line %5)
-    %7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str1 to [0 x i8]*), %Float %3)
-    %8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str2 to [0 x i8]*), %Float %6)
-    ret %Int 0
-}
-
-
+@line1 = constant 

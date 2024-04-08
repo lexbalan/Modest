@@ -644,7 +644,7 @@ def print_value_cons_immediate(v, ctx):
     # cast_immediate GenericChar -> Char
     elif hlir_type.type_is_char(to_type):
         if hlir_type.type_is_generic_char(from_type):
-            print_value_char(v, ctx)
+            print_value_char_create(v, ctx)
             return
 
     # implicit_cast of immediate value
@@ -943,7 +943,7 @@ def print_value_string(x, ctx, char_width=8):
 
 
 
-def print_value_char(x, ctx):
+def print_value_char_create(x, ctx):
     width = x['type']['width']
 
     prefix = ""
@@ -1032,7 +1032,7 @@ def print_value_terminal(x, ctx):
     elif hlir_type.type_is_record(t): print_value_record(x, ctx)
     elif hlir_type.type_is_array(t): print_value_array(x, ctx)
     elif hlir_type.type_is_bool(t): print_value_bool(x, ctx)
-    elif hlir_type.type_is_char(t): print_value_char(x, ctx)
+    elif hlir_type.type_is_char(t): print_value_char_create(x, ctx)
     elif hlir_type.type_is_pointer(t): print_value_ptr(x, ctx)
     elif hlir_type.type_is_enum(t): print_value_enum(x, ctx)
     elif hlir_type.type_is_byte(t): print_value_integer(x, ctx)

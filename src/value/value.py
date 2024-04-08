@@ -10,8 +10,7 @@ def value_is_bad(x):
 
 
 def value_is_immediate(x):
-    if not 'immediate' in x:
-        value_print(x)
+    assert('immediate' in x)
     return x['immediate']
 
 
@@ -58,9 +57,6 @@ def value_is_zero(x):
         return value_is_zero_array(x)
     elif hlir_type.type_is_record(t):
         return value_is_zero_record(x)
-
-    if not 'asset' in x:
-        value_print(x)
 
     return x['asset'] == 0
 
@@ -399,22 +395,32 @@ def value_lengthof(of_value, ti=None):
 
 
 
-def value_print(x, msg="here"):
-    print("\nvalue_print:")
-    print("isa: " + str(x['isa']))
-    print("kind: " + str(x['kind']))
-    print("type: ", end=""); hlir_type.type_print(x['type']); print()
-    print("att: " + str(x['att']))
-
-    print("additional properties:")
-
-    for prop in x:
-        if not prop in ['isa', 'kind', 'type', 'att', 'ti']:
-            print(" - %s" % prop)
+def value_print(x, msg="value_print"):
+    print("\n\nvalue_print:")
 
     if 'expr_ti' in x:
         info(msg, x['expr_ti'])
     else:
         info(msg, x['ti'])
+
+    print("isa: " + str(x['isa']))
+    print("kind: " + str(x['kind']))
+    print("type: ", end=""); hlir_type.type_print(x['type']); print()
+    print("att: " + str(x['att']))
+
+
+    if 'immediate' in x:
+        print('immediate = ' + str(x['immediate']))
+
+    if 'immutable' in x:
+        print('immutable = ' + str(x['immutable']))
+
+    print("additional fields:")
+
+    for prop in x:
+        if not prop in ['isa', 'kind', 'type', 'att', 'ti', 'immediate', 'immutable', 'expr_ti']:
+            print(" - %s" % prop)
+
+    print()
 
 
