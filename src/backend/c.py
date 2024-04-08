@@ -638,7 +638,7 @@ def print_value_cons_immediate(v, ctx):
     if hlir_type.type_is_pointer_to_array_of_char(to_type):
         if hlir_type.type_is_array_of_char(from_type):
             char_width = to_type['to']['of']['width']
-            print_value_string(v, ctx=[], char_width=char_width)
+            print_value_string_create(v, ctx=[], char_width=char_width)
             return
 
     # cast_immediate GenericChar -> Char
@@ -920,7 +920,7 @@ def _print_string_literal(utf32_codes, width=8):
 
 
 
-def print_value_string(x, ctx, char_width=8):
+def print_value_string_create(x, ctx, char_width=8):
     # получаем список кодов из списка char-значений
     # (формат строки может быть разным UTF-8, UTF-16, UTF-32)
     codes = []

@@ -88,7 +88,7 @@ def value_array_concat(l, r, ti):
 
 
 
-def value_string(string, length=0, ti=None):
+def value_string_create(string, length=0, ti=None):
     if length == 0:
         length = len(string) + 1
 

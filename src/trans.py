@@ -13,7 +13,7 @@ import foundation
 from value.bool import value_bool_create
 from value.integer import value_integer_create
 from value.float import value_float_create
-from value.array import value_array_create, value_array_concat, value_string
+from value.array import value_array_create, value_array_concat, value_string_create
 from value.record import value_record_create
 
 
@@ -260,9 +260,9 @@ def init():
     root_context.value_add('__compilerVersionMinor', compilerVersionMinor)
 
     import platform
-    __platformSystem = value_string(platform.system())
+    __platformSystem = value_string_create(platform.system())
     root_context.value_add('__platformSystem', __platformSystem)
-    __platformRelease = value_string(platform.release())
+    __platformRelease = value_string_create(platform.release())
     root_context.value_add('__platformRelease', __platformRelease)
 
 
@@ -1074,7 +1074,7 @@ def do_value_id(x):
 
 
 def do_value_str(x):
-    return value_string(x['str'], length=x['len'], ti=x['ti'])
+    return value_string_create(x['str'], length=x['len'], ti=x['ti'])
 
 
 
