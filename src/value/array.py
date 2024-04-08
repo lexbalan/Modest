@@ -2,8 +2,8 @@
 import hlir.type as hlir_type
 from hlir.type import select_common_type
 from error import info, error
-from .char import value_char
-from .integer import value_integer
+from .char import value_char_create
+from .integer import value_integer_create
 from .value import value_terminal, value_is_immediate, value_cons_node, value_cons_immediate, value_zero, value_bin, value_print
 
 

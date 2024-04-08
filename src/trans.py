@@ -10,9 +10,9 @@ from hlir.hlir import hlir_initializer
 
 import foundation
 
-from value.bool import value_bool
-from value.integer import value_integer
-from value.float import value_float
+from value.bool import value_bool_create
+from value.integer import value_integer_create
+from value.float import value_float_create
 from value.array import value_array_create, value_array_concat, value_string
 from value.record import value_record_create
 
@@ -209,8 +209,8 @@ def init():
     foundation_module = foundation.init()
 
     valueNil = value_integer_create(0, typ=foundation.typeFreePointer)
-    valueTrue = value_bool(1)
-    valueFalse = value_bool(0)
+    valueTrue = value_bool_create(1)
+    valueFalse = value_bool_create(0)
 
     global root_context
     # init main context
@@ -1156,7 +1156,7 @@ def do_value_integer(x):
 def do_value_float(x):
     # in compile time floats stores as decimal (!)
     fval = decimal.Decimal(x['numstr'])
-    fv = value_float(fval, ti=x['ti'])
+    fv = value_float_create(fval, ti=x['ti'])
     return fv
 
 

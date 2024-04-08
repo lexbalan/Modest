@@ -392,7 +392,7 @@ def print_value_bin(v, ctx):
             memcmp_by(left, right, by=left, op=op)
             return
     elif op in ['eq_str', 'ne_str']:
-        print_value_bool(v, ctx)
+        print_value_bool_create(v, ctx)
         return
     elif op == 'add_arr':
         print_value_array(v, ctx)
@@ -960,7 +960,7 @@ def print_value_char_create(x, ctx):
 
 
 
-def print_value_bool(x, ctx):
+def print_value_bool_create(x, ctx):
     if x['asset']:
         out(BOOL_TRUE_LITERAL)
     else:
@@ -1031,7 +1031,7 @@ def print_value_terminal(x, ctx):
     elif hlir_type.type_is_float(t): print_value_float(x, ctx)
     elif hlir_type.type_is_record(t): print_value_record(x, ctx)
     elif hlir_type.type_is_array(t): print_value_array(x, ctx)
-    elif hlir_type.type_is_bool(t): print_value_bool(x, ctx)
+    elif hlir_type.type_is_bool(t): print_value_bool_create(x, ctx)
     elif hlir_type.type_is_char(t): print_value_char_create(x, ctx)
     elif hlir_type.type_is_pointer(t): print_value_ptr(x, ctx)
     elif hlir_type.type_is_enum(t): print_value_enum(x, ctx)

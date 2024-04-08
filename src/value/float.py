@@ -7,7 +7,7 @@ from .value import value_terminal, value_cons_immediate
 
 
 
-def value_float(num, ti=None):
+def value_float_create(num, ti=None):
     flt_width = int(settings.get('float_width'))
     typ = hlir_type_float(width=flt_width, ti=ti)
     typ['generic'] = True

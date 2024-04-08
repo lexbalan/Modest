@@ -2,7 +2,7 @@
 from error import info, warning, error
 import hlir.type as type
 from .value import value_cons_node, value_is_immediate, value_cons_node, value_cons_immediate
-from .char import value_char
+from .char import value_char_create
 import foundation
 
 

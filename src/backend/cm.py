@@ -499,7 +499,7 @@ def print_value_record(v, ctx):
 
 
 # print Bool literal
-def print_value_bool(x, ctx):
+def print_value_bool_create(x, ctx):
     if x['asset'] != 0:
         out('true')
     else:
@@ -578,7 +578,7 @@ def print_value_terminal(x, ctx):
     elif hlir_type.type_is_record(t): print_value_record(x, ctx)
     elif hlir_type.type_is_array(t): print_value_array(x, ctx)
     elif hlir_type.type_is_pointer(t): print_value_ptr(x, ctx)
-    elif hlir_type.type_is_bool(t): print_value_bool(x, ctx)
+    elif hlir_type.type_is_bool(t): print_value_bool_create(x, ctx)
     elif hlir_type.type_is_char(t): print_value_char_create(x, ctx)
     elif hlir_type.type_is_enum(t): print_value_integer(x, ctx)
     elif hlir_type.type_is_byte(t): print_value_integer(x, ctx)
