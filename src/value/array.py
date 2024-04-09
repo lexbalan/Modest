@@ -64,14 +64,24 @@ def value_array_create(items, ti=None):
     return v
 
 
+
 def value_cons_array_immediate(v, t, ti):
     info("value_cons_array_immediate", ti)
     # TODO
-    return value_cons_immediate(v, t, ti)
+    casted_items = []
+    from value.cons import value_cons_implicit
+    for item in v['asset']:
+        iv = value_cons_implicit(item, t['of'])
+        casted_items.append(iv)
+
+    nv = value_cons_immediate(v, t, ti)
+    nv['asset'] = casted_items
+    return nv
 
 
 # concatenation of two immediate arrays
 def value_array_concat(l, r, ti):
+    #info("value_array_concat", ti)
     asset = l['asset'] + r['asset']
     length = len(asset) + 1  #!
 

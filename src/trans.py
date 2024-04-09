@@ -965,6 +965,7 @@ def do_value_index(x):
 
         if value_is_immediate(left):
             if value_is_immediate(index):
+                #info("immediate index", x['ti'])
                 index_imm = index['asset']
 
                 if index_imm >= array_typ['volume']['asset']:
@@ -973,22 +974,9 @@ def do_value_index(x):
 
                 item = left['asset'][index_imm]
 
-                info("INDEX HERE", x['ti'])
-                value_print(item)
-                print("END ITEM")
+                v['asset'] = item['asset']
+                v['immediate'] = item['immediate']
 
-                if 'asset' in item:
-                    print("asset in !")
-                    v['asset'] = item['asset']
-                    v['immediate'] = item['immediate']
-                    return v
-
-                #return item
-                """if 'asset' in item:
-                    v['asset'] = item['asset']
-                    v['immediate'] = True
-                else:
-                    return item"""
 
     return v
 

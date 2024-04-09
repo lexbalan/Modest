@@ -192,6 +192,19 @@ def llvm_value_str(strid, _str, type, proto=None):
 
 
 
+def llvm_value_immediate(x):
+    if hlir_type.type_is_array(x['type']):
+        return do_eval_array(x)
+
+    elif hlir_type.type_is_record(x['type']):
+        return do_eval_record(x)
+
+    return llvm_value_num(x['type'], x['asset'])
+
+
+
+
+
 def llvm_print_type_value(x):
     assert(x['isa'] == 'll_value')
 
@@ -389,6 +402,8 @@ def llvm_getelementptr(rec, rt, indexes, vt):
 
 # возвращает значение поля из 'структуры по значению'
 def llvm_extract_item(x, ft, field_no):
+    if is_global_context():
+        info("???", x['proto']['ti'])
     reg = llvm_operation('extractvalue')
     llvm_print_type_value(x)
     out(', %d' % field_no)
@@ -848,6 +863,9 @@ def do_eval_call(v, retval=None):
 
 
 def do_eval_index(v):
+    if value_is_immediate(v):
+        return llvm_value_immediate(v)
+
     array = do_eval(v['array'])
     array_type = array['type']
     result_type = v['type']
@@ -873,6 +891,9 @@ def do_eval_index_ptr(v):
 
 
 def do_eval_access(v):
+    if value_is_immediate(v):
+        return llvm_value_immediate(v)
+
     rec = do_eval(v['record'])
     pos = v['field']['field_no']
     result_type = v['type']
@@ -975,6 +996,13 @@ def do_eval_cast_immediate(x):
 # (просто с другим именем, изза чего LLVM ее считает "другой")
 def cast_record_to_record(to_type, value, ti):
     #info("cast_record_to_record", ti)
+
+    if value_is_immediate(value):
+        # тупо и жестко переписываем тип!
+        value = copy.copy(value)
+        value['type'] = to_type
+        return llvm_value_immediate(value)
+
     #out("\n;cast_record_to_record")
     from_type = value['type']
     # создаем переменную под структуру A
@@ -1064,6 +1092,8 @@ def do_eval_array(v):
     for item in v['asset']:
         iv = do_reval(item)
         items.append(iv)
+
+
 
     # теперь добавим паддинг нулевыми значениями
     fulllen = v['type']['volume']['asset']
@@ -1165,11 +1195,13 @@ def do_eval_const(x):
                 rv['is_adr'] = True
                 return rv
 
-    if value_is_immediate(x): # TODO: wtf? (see begining of do_eval)
-        if hlir_type.type_is_numeric(x['type']):
-            return llvm_value_num(x['type'], x['asset'])
+    if value_is_immediate(x):  # TODO: wtf? (see begining of do_eval)
+        return llvm_value_immediate(x)
+        #if hlir_type.type_is_numeric(x['type']):
+        #    return llvm_value_num(x['type'], x['asset'])
 
     return do_eval(x['value'])
+
 
 
 
@@ -1186,8 +1218,8 @@ def do_eval_literal(x):
     elif hlir_type.type_is_enum(xt): return llvm_value_num(xt, x['asset'])
     elif hlir_type.type_is_byte(xt): return llvm_value_num(xt, x['asset'])
     else:
-        value_print(x)
         error("do_eval_literal: unknown literal", x['ti'])
+        value_print(x)
         exit(1)
     return
 
@@ -1218,7 +1250,20 @@ def do_eval(x):
     elif k == 'access_ptr': y = do_eval_access_ptr(x)
     elif k == 'cons_immediate': y = do_eval_cast_immediate(x)
     elif k == 'cons': y = do_eval_cast(x)
-    elif k == 'add_arr': y = do_eval_literal(x)
+    elif k == 'add_arr':
+        """if not 'asset' in x:
+            print("NOT ASSET IN X!")
+            print(x)
+            exit(1)
+        else:
+            #info("OK ASSET!", x['expr_ti'])
+            #print(x['type']['kind'])
+            pass
+        print("START")
+        y = do_eval_literal(x)
+        print(y['kind'])
+        print("END")"""
+
     elif k in ['sizeof', 'lengthof', 'alignof', 'offsetof', 'eq_str']:
          y = do_eval_literal(x)
     else:
@@ -1682,7 +1727,10 @@ def print_def_const(x):
     if const_value['type'] == None:
         print(const_value)
 
-    if hlir_type.type_is_composite(const_value['type']):
+    #if hlir_type.type_is_composite(const_value['type']):
+    # записи нельзя так печатать, да и не нужно - тк это LLVM
+    # печатаем только
+    if hlir_type.type_is_array_of_char(const_value['type']):
         init_value = x['init_value']
         id = x['id']
         out("\n@%s = constant " % id['str'])

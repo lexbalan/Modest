@@ -19,19 +19,19 @@ type Line record {
 }
 
 const zero = 0
-const pointZero = {x = zero, y = zero}
-const pointOne = {x = 1.0, y = 1.0}
+const pointZero = Point {x = zero, y = zero}
+const pointOne = Point {x = 1.0, y = 1.0}
 
-const line0 = {
+const line0 = Line {
     a = pointZero
     b = pointOne
 }
 
 const carr = [0, 10, 15] + [20, 25, 30]
 
-const line1 = {
-    a = {x = carr[1], y = carr[2]}
-    b = {x = carr[3], y = carr[4]}
+const line1 = Line {
+    a = {x = 10, y = 20}
+    b = {x = 30, y = 40}
 }
 
 const lines = [line0, line1]
@@ -53,8 +53,12 @@ func lineLength(line: Line) -> Float {
 
 
 func main() -> Int {
-    let lines_0_len = lineLength(lines[0])
-    let lines_1_len = lineLength(lines[1])
+    let lines_0_len = lineLength({
+        a = pointZero
+        b = pointOne})
+    let lines_1_len = lineLength({
+        a = {x = 10, y = 20}
+        b = {x = 30, y = 40}})
 
     printf("lines_0_len = %f\n", lines_0_len)
     printf("lines_1_len = %f\n", lines_1_len)

@@ -856,7 +856,7 @@ def type_print(t, print_aka=True):
 # и создает третий тип который является общим для двух входных
 # (тк в случае записей ни один из двух может не подходить как общий)
 def select_common_record_type(a, b):
-    print("select_common_record_type")
+    #print("select_common_record_type")
     if len(a['fields']) != len(b['fields']):
         return None
 
@@ -909,11 +909,12 @@ def select_common_type(a, b):
 
 
     if type_is_record(a) and type_is_record(b):
-        print("RECORD!")
+        #print("RECORD!")
         return select_common_record_type(a, b)
 
     if type_is_array(a) and type_is_array(b):
-        print("ARRAY!")
+        #print("ARRAY!")
+        pass
 
     if type_is_generic(a) != type_is_generic(b):
         if type_is_generic(a):

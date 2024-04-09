@@ -44,7 +44,22 @@ def value_record_create(initializers=[], ti=None):
 def value_cons_record_immediate(v, t, ti):
     info("value_cons_record_immediate", ti)
     # TODO
-    return value_cons_immediate(v, t, ti)
+    #assets = []
+    from value.cons import value_cons_implicit
+    for initializer in v['asset']:
+        field_id = initializer['id']
+        init_value = initializer['value']
+        # получаем поле с таким именем
+        f = get_item_with_id(t['fields'], field_id['str'])
+        iv = value_cons_implicit(init_value, f['type'])
+        initializer['value'] = iv
+
+    nv = value_cons_immediate(v, t, ti)
+
+    #from hlir.type import type_print
+    #type_print(nv['type'])
+
+    return nv
 
 
 def value_cons_record_from_generic_record(v, t, ti, method):
@@ -78,8 +93,8 @@ def value_cons_record_from_generic_record(v, t, ti, method):
             item_value = None
             nl = 0
 
-            if not 'asset' in v:
-                value_print(v)
+            #if not 'asset' in v:
+            #    value_print(v)
 
             initializers = v['asset']
             ini = get_item_with_id(initializers, field_name)
