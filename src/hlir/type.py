@@ -47,7 +47,7 @@ def hlir_type_bad(x):
         'generic': False,
         'width': 0,
         'size': 0,
-        'align': 0,
+        'align': 1,
         'declaration': None,
         'definition': None,
         'ast_type': x,
@@ -746,6 +746,7 @@ def type_root_id(t):
 
 
 def type_print(t, print_aka=True):
+    assert(t['isa'] == 'type')
 
     if 'volatile' in t['att']:
         print("volatile_", end='')
@@ -910,7 +911,27 @@ def select_common_type(a, b):
 
     if type_is_record(a) and type_is_record(b):
         #print("RECORD!")
+
+        if type_is_generic(a) != type_is_generic(b):
+            if type_is_generic(a):
+                return b
+
+            if type_is_generic(b):
+                return a
+
+        if not type_is_generic(a):
+            # если мы здесь значит оба - не generic
+            if type_eq_record(a, b, []):
+                # оба не дженерик и равны
+                return a
+
+            # оба не дженерик и не равны
+            return None
+
+        # оба дженерик
         return select_common_record_type(a, b)
+
+
 
     if type_is_array(a) and type_is_array(b):
         #print("ARRAY!")

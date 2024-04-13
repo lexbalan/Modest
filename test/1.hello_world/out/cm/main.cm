@@ -3,13 +3,13 @@
 import "libc/stdio"
 
 const hello = "Hello"
-const world = "world!\n"
+const world = "World!"
 
-const hello_world = hello + world
+const hello_world = hello + " " + world
 
 
 func main() -> Int {
-    printf("%s", *Str8 hello_world)
+    printf("%s\n", *Str8 hello_world)
 
     return 0
 }

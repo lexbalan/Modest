@@ -41,39 +41,82 @@ def value_record_create(initializers=[], ti=None):
 
 
 
-def value_cons_record_immediate(v, t, ti):
-    info("value_cons_record_immediate", ti)
-    # TODO
+
+
+def cons_initializers(initializers, rec_type, method):
+    from value.cons import value_cons, value_cons_implicit
+    import copy
+
+    initializers2 = []
+    for initializer in initializers:
+        field_id = initializer['id']
+        init_value = initializer['value']
+        # получаем поле с таким именем
+        f = get_item_with_id(rec_type['fields'], field_id['str'])
+
+        # приводим инициализатор к типу поля
+        #iv = value_cons_implicit(init_value, f['type'])
+        iv = value_cons(init_value, f['type'], init_value['expr_ti'], method)
+
+        ni = copy.copy(initializer)
+        ni['value'] = iv
+        initializers2.append(ni)
+
+    return initializers2
+
+
+
+#def value_cons_record_immediate(v, t, ti, method):
+#    info("value_cons_record_immediate", ti)
+
+#    return value_cons_record_from_generic_record(v, t, ti, method)
+
+    """# TODO
     #assets = []
-    from value.cons import value_cons_implicit
+    from value.cons import value_cons, value_cons_implicit
+    import copy
+
+    #initializers = cons_initializers(v['asset'], t, method)
+
+    initializers = []
     for initializer in v['asset']:
         field_id = initializer['id']
         init_value = initializer['value']
         # получаем поле с таким именем
         f = get_item_with_id(t['fields'], field_id['str'])
-        iv = value_cons_implicit(init_value, f['type'])
-        initializer['value'] = iv
+
+        # приводим инициализатор к типу поля
+        #iv = value_cons_implicit(init_value, f['type'])
+        iv = value_cons(init_value, f['type'], init_value['expr_ti'], method)
+
+        info("cons to", v['expr_ti'])
+        type.type_print(f['type'])
+
+        ni = copy.copy(initializer)
+        ni['value'] = iv
+        initializers.append(ni)
 
     nv = value_cons_immediate(v, t, ti)
+    nv['asset'] = initializers
 
     #from hlir.type import type_print
     #type_print(nv['type'])
 
-    return nv
+    return nv"""
 
 
 def value_cons_record_from_generic_record(v, t, ti, method):
-    if v['kind'] == 'const':
+    #if v['kind'] == 'const':
         # TODO: тут нужно проверить чтобы при implicit методе
         # все поля присутствовали (!)
 
         #for field in t['fields']:
         #    print(field['id']['str'])
 
-        return value_cons_node(v, t, ti=ti)
+     #   return value_cons_node(v, t, ti=ti)
 
 
-    #warning("value_cons_record_from_generic_record", ti)
+    warning("value_cons_record_from_generic_record", ti)
 
     items = []
     if len(v['type']['fields']) > 0:
@@ -115,8 +158,8 @@ def value_cons_record_from_generic_record(v, t, ti, method):
 
             prev_nl = nl
 
-            from .cons import value_cons_implicit
-            item_value2 = value_cons_implicit(item_value, field_type)
+            from .cons import value_cons
+            item_value2 = value_cons(item_value, field_type, v['expr_ti'], method)
 
             type.check(field_type, item_value2['type'], item_value2)
 
@@ -126,6 +169,8 @@ def value_cons_record_from_generic_record(v, t, ti, method):
 
     nv = value_terminal(t, items, ti)
 
+    #items = cons_initializers(v['asset'], t, method)
+    #nv['asset'] = initializers
 
     if 'nl_end' in v: #FIXIT: nl_end должен быть взде!
         nv['nl_end'] = v['nl_end']
@@ -154,8 +199,8 @@ def value_cons_record_from_record(v, t, ti, method):
 def value_cons_record(v, t, ti, method):
     from_type = v['type']
 
-    if value_is_immediate(v):
-        return value_cons_record_immediate(v, t, ti)
+    #if value_is_immediate(v):
+    #    return value_cons_record_immediate(v, t, ti, method)
 
     if type.type_is_record(from_type):
         # GenericRecord -> Record  (implicit)

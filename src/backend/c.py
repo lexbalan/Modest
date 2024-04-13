@@ -634,15 +634,8 @@ def print_value_cons_immediate(v, ctx):
     from_type = value['type']
     to_type = v['type']
 
-    # String construction ([]Char -> *[]Char) - just print literal string
-    if hlir_type.type_is_pointer_to_array_of_char(to_type):
-        if hlir_type.type_is_array_of_char(from_type):
-            char_width = to_type['to']['of']['width']
-            print_value_string_create(v, ctx=[], char_width=char_width)
-            return
-
     # cast_immediate GenericChar -> Char
-    elif hlir_type.type_is_char(to_type):
+    if hlir_type.type_is_char(to_type):
         if hlir_type.type_is_generic_char(from_type):
             print_value_char_create(v, ctx)
             return
@@ -658,6 +651,20 @@ def print_value_cons(x, ctx):
     value = x['value']
     from_type = value['type']
 
+
+    # String construction ([]Char -> *[]Char) - just print literal string
+    if hlir_type.type_is_pointer_to_array_of_char(to_type):
+        if hlir_type.type_is_array_of_char(from_type):
+            char_width = to_type['to']['of']['width']
+            print_value_string_create(x, ctx=[], char_width=char_width)
+            return
+
+    """if hlir_type.type_is_generic(to_type):
+        if hlir_type.type_is_generic(from_type):
+            print_cast(to_type, value, ctx)"""
+            #nv = copy.copy(x['value'])
+            #nv['type'] = to_type
+
     # в у нас типы структурные, в си - номинальные
     # поэтому даже если структуры одинаковы, но имена разные
     # их нужно приводить
@@ -672,7 +679,15 @@ def print_value_cons(x, ctx):
     if hlir_type.type_is_record(to_type):
         if hlir_type.type_is_record(from_type):
             # C cannot cast struct to struct (!)
-            print_cast_hard(to_type, value)
+
+            try:
+                print_cast_hard(to_type, value)
+            except:
+                value_print(value)
+                """type_print(value['type'])
+                print("TO")
+                type_print(to_type)"""
+
             return
 
     # VA_List -> AnyType
@@ -1245,6 +1260,7 @@ def print_stmt_defvar(x):
 
 
 def print_macro_definition(id, value):
+    global nl_str
     out("#define %s  " % id['str'])
     need_wrap = precedence(value) < precedenceMax
     nl_str = " \\\n"
@@ -1267,7 +1283,8 @@ def print_stmt_let(x):
     # массивы печатаем как переменные
     if hlir_type.type_is_closed_array(v['type']):
         print_variable_array(v['type'], id['str'], do_wrapped=False)
-        out(";\n")
+        out(";")
+        newline()
         indent()
         assign_array(v, iv)
         return
@@ -1414,7 +1431,8 @@ def print_wrapped_array(_type):
     print_type(item_type, space_after=True)
     out("a");
     print_array_volume(_type)
-    out(";};\n")
+    out(";};")
+    newline()
 
 
 def print_func_wrappers(ftype):
@@ -1512,7 +1530,8 @@ def print_def_func(x):
 
     func_undef_list = []
 
-    out("\n}")
+    newline()
+    out("}")
 
     va_id = None
     cfunc = None
@@ -1658,7 +1677,7 @@ def print_def_var(x):
         out(" = ")
 
         if hlir_type.type_is_array(init_value['type']):
-            print_value_array(init_value, ['print_immediate'])
+            print_value_array(init_value, ctx=[])#, ['print_immediate'])
         else:
             print_value(init_value, ctx=['no-literal-array-cast'])
 
@@ -1686,15 +1705,20 @@ def print_def_const(x):
 
     _id = x['id']
 
-    if hlir_type.type_is_composite(const_value['type']):
+    """if hlir_type.type_is_generic(const_value['type']):
+        print_macro_definition(_id, init_value)
+        return"""
+
+    """if hlir_type.type_is_composite(const_value['type']):
         newline()
         print_variable(_id, const_value['type'], as_const=True)
         out(" = ")
-        print_value_terminal(init_value, ['print_immediate'])
+        print_value_terminal(init_value, ctx=[])#, ['print_immediate'])
         out(";")
 
     else:
-        print_macro_definition(_id, init_value)
+        print_macro_definition(_id, init_value)"""
+    print_macro_definition(_id, init_value)
 
     return
 
@@ -1784,9 +1808,9 @@ def run(module, outname):
         if first['isa'] == 'comment':
             print_comment(first)
             module['text'] = module['text'][1:]
-            out("\n")
         else:
-            out("// %s\n" % outname)
+            out("// %s" % outname)
+        newline()
 
     guardname = ''
     if is_header:

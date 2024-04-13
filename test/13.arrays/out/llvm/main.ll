@@ -364,19 +364,6 @@ declare double @max_float64(double %a, double %b)
 
 
 
-@constantArray = constant [11 x i8] [
-    i8 1,
-    i8 2,
-    i8 3,
-    i8 4,
-    i8 5,
-    i8 6,
-    i8 7,
-    i8 8,
-    i8 9,
-    i8 10,
-    i8 0
-]
 
 @globalArray = global [10 x i32] [
     i32 1,

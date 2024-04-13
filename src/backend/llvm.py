@@ -199,6 +199,9 @@ def llvm_value_immediate(x):
     elif hlir_type.type_is_record(x['type']):
         return do_eval_record(x)
 
+    elif hlir_type.type_is_pointer(x['type']):
+        return do_eval_pointer(x)
+
     return llvm_value_num(x['type'], x['asset'])
 
 
@@ -972,12 +975,12 @@ def do_eval_cast_immediate(x):
     from_type = value['type']
     to_type = x['type']
 
-    # строки печатаются ТОЛЬКО отсюда!
-    if hlir_type.type_is_pointer_to_array_of_char(to_type):
+    """if hlir_type.type_is_pointer_to_array_of_char(to_type):
         if hlir_type.type_is_array_of_char(from_type):
+            print("S!")
             string_of = to_type['to']['of']
             char_pow = string_of['width']
-            return llvm_value_str(x['strid'], x['asset'], x['type'], value)
+            return llvm_value_str(x['strid'], x['asset'], x['type'], value)"""
 
     if hlir_type.type_is_pointer(to_type):
         if hlir_type.type_is_integer(from_type):
@@ -1033,7 +1036,10 @@ def do_eval_cast(x):
 
     if hlir_type.type_is_generic_array_of_char(from_type):
         if hlir_type.type_is_pointer_to_array_of_char(to_type):
-            error("strings need to be printed through do_eval_cast_immediate", x)
+            #error("strings need to be printed through do_eval_cast_immediate", x)
+            string_of = to_type['to']['of']
+            char_pow = string_of['width']
+            return llvm_value_str(x['strid'], x['asset'], x['type'], value)
             exit(1)
 
     # cast any type to Unit type
@@ -1157,6 +1163,22 @@ def do_eval_record(v):
     return xv
 
 
+
+def do_eval_pointer(x):
+
+    #FIXIT КАПЕЦ костыль! сюда попадают например константы
+    # которые содержат в какой то итерации указатель на строку
+    # и это жопа
+    # это связано с do_eval_cast_immediate (!) строки так же идут оттуда!
+    if hlir_type.type_is_pointer_to_array_of_char(x['type']):
+        while not 'strid' in x:
+            x = x['value']
+        return llvm_value_str(x['strid'], x['asset'], x['type'], x['value'])
+
+
+    return llvm_value_num(x['type'], x['asset'])
+
+
 def do_eval_func(x):
     k = x['kind']
     return llvm_value_mem(x['id']['str'], x['type'], x)
@@ -1213,7 +1235,7 @@ def do_eval_literal(x):
     elif hlir_type.type_is_array(xt): return do_eval_array(x)
     elif hlir_type.type_is_bool(xt): return llvm_value_num(xt, x['asset'])
     elif hlir_type.type_is_free_pointer(xt): return llvm_value_num(xt, x['asset'])
-    elif hlir_type.type_is_pointer(xt): return llvm_value_num(xt, x['asset'])
+    elif hlir_type.type_is_pointer(xt): return do_eval_pointer(x)
     elif hlir_type.type_is_char(xt): return llvm_value_num(xt, x['asset'])
     elif hlir_type.type_is_enum(xt): return llvm_value_num(xt, x['asset'])
     elif hlir_type.type_is_byte(xt): return llvm_value_num(xt, x['asset'])
@@ -1250,20 +1272,7 @@ def do_eval(x):
     elif k == 'access_ptr': y = do_eval_access_ptr(x)
     elif k == 'cons_immediate': y = do_eval_cast_immediate(x)
     elif k == 'cons': y = do_eval_cast(x)
-    elif k == 'add_arr':
-        """if not 'asset' in x:
-            print("NOT ASSET IN X!")
-            print(x)
-            exit(1)
-        else:
-            #info("OK ASSET!", x['expr_ti'])
-            #print(x['type']['kind'])
-            pass
-        print("START")
-        y = do_eval_literal(x)
-        print(y['kind'])
-        print("END")"""
-
+    elif k == 'add_arr': y = do_eval_literal(x)
     elif k in ['sizeof', 'lengthof', 'alignof', 'offsetof', 'eq_str']:
          y = do_eval_literal(x)
     else:
@@ -1747,13 +1756,14 @@ def print_string_ascii(strid, string):
 
     slen = len(bytes(ss, 'utf-8')) + 1 # +1 (zero)
 
+
     ss = ss.replace("\a", "\\07")
     ss = ss.replace("\b", "\\08")
     ss = ss.replace("\t", "\\09")
     ss = ss.replace("\n", "\\0A")
     ss = ss.replace("\v", "\\0B")
     ss = ss.replace("\r", "\\0D")
-    ss = ss.replace("\e", "\\1B")
+    #ss = ss.replace("\e", "\\1B")
     ss = ss.replace("\"", "\\22")
     ss = ss.replace("\'", "\\27")
 

@@ -10,6 +10,8 @@ def value_is_bad(x):
 
 
 def value_is_immediate(x):
+    if not 'immediate' in x:
+        print(x)
     assert('immediate' in x)
     return x['immediate']
 
@@ -102,6 +104,7 @@ def value_bad(x):
         'id': hlir_id('_', ti=ti),
         'type': hlir_type.hlir_type_bad({'ti': ti}),
         'immutable': False,
+        'immediate': False,
         'att': [],
         'ast_value': x,
         'expr_ti': ti,
@@ -396,6 +399,7 @@ def value_lengthof(of_value, ti=None):
 
 
 def value_print(x, msg="value_print"):
+    assert(x['isa'] == 'value')
     print("\n\nvalue_print:")
 
     if 'expr_ti' in x:

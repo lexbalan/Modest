@@ -394,8 +394,22 @@ define %Int @main() {
     %12 = insertvalue %Point %11, double 40.0, 1
     %13 = insertvalue %Line %10, %Point %12, 1
     %14 = call %Float (%Line) @lineLength(%Line %13)
-    %15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str1 to [0 x i8]*), %Float %7)
-    %16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str2 to [0 x i8]*), %Float %14)
+    %15 = insertvalue %Point zeroinitializer, double 0.0, 0
+    %16 = insertvalue %Point %15, double 0.0, 1
+    %17 = insertvalue %Line zeroinitializer, %Point %16, 0
+    %18 = insertvalue %Point zeroinitializer, double 1.0, 0
+    %19 = insertvalue %Point %18, double 1.0, 1
+    %20 = insertvalue %Line %17, %Point %19, 1
+    %21 = call %Float (%Line) @lineLength(%Line %20)
+    %22 = insertvalue %Point zeroinitializer, double 10.0, 0
+    %23 = insertvalue %Point %22, double 20.0, 1
+    %24 = insertvalue %Line zeroinitializer, %Point %23, 0
+    %25 = insertvalue %Point zeroinitializer, double 30.0, 0
+    %26 = insertvalue %Point %25, double 40.0, 1
+    %27 = insertvalue %Line %24, %Point %26, 1
+    %28 = call %Float (%Line) @lineLength(%Line %27)
+    %29 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str1 to [0 x i8]*), %Float %7)
+    %30 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str2 to [0 x i8]*), %Float %14)
     ret %Int 0
 }
 

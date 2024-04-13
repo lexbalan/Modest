@@ -30,34 +30,33 @@ typedef struct {
 } Line;
 
 #define zero  0
+#define pointZero  {.x = zero, .y = zero}
+#define pointOne  {.x = 1.0, .y = 1.0}
 
-const Point pointZero = {.x = 0, .y = 0};
+#define line0  { \
+    .a = pointZero, \
+    .b = pointOne \
+}
 
-const Point pointOne = {.x = 1.0, .y = 1.0};
+#define carr  {0, 10, 15, 20, 25, 30}
 
-
-const Line line0 = {
-    .a = {.x = 0, .y = 0},
-    .b = {.x = 1.0, .y = 1.0}
-};
-
-
-const int8_t carr[7] = {0, 10, 15, 20, 25, 30};
-
-
-const Line line1 = {
-    .a = {.x = 10, .y = 15},
-    .b = {.x = 20, .y = 25}
-};
+#define line1  { \
+    .a = {.x = 10, .y = 20}, \
+    .b = {.x = 30, .y = 40} \
+}
 
 
-const Line lines[2] = {{
-        .a = {.x = 0, .y = 0},
-        .b = {.x = 1.0, .y = 1.0}
-    }, {
-        .a = {.x = 10, .y = 15},
-        .b = {.x = 20, .y = 25}
-    }};
+#define line2  { \
+    .a = pointZero, \
+    .b = pointOne \
+}
+
+#define line3  { \
+    .a = {.x = 10, .y = 20}, \
+    .b = {.x = 30, .y = 40} \
+}
+
+#define lines  {line0, line1, line2, line3}
 
 
 // Pythagorean theorem
@@ -83,8 +82,14 @@ int main()
         .a = (Point){.x = 0, .y = 0},
         .b = (Point){.x = 1.0, .y = 1.0}});
     const float lines_1_len = lineLength((Line){
-        .a = (Point){.x = 10, .y = 15},
-        .b = (Point){.x = 20, .y = 25}});
+        .a = (Point){.x = 10, .y = 20},
+        .b = (Point){.x = 30, .y = 40}});
+    const float lines_2_len = lineLength((Line){
+        .a = (Point){.x = 0, .y = 0},
+        .b = (Point){.x = 1.0, .y = 1.0}});
+    const float lines_3_len = lineLength((Line){
+        .a = (Point){.x = 10, .y = 20},
+        .b = (Point){.x = 30, .y = 40}});
 
     printf("lines_0_len = %f\n", lines_0_len);
     printf("lines_1_len = %f\n", lines_1_len);

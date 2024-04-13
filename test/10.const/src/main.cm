@@ -35,7 +35,18 @@ const line1 = Line {
     b={x=30, y=40}
 }
 
-const lines = [line0, line1]
+
+const line2 = Line {
+    a = pointZero
+    b = pointOne
+}
+
+const line3 = Line {
+    a={x=10, y=20}
+    b={x=30, y=40}
+}
+
+const lines = [line0, line1, line2, line3]
 
 
 // Pythagorean theorem
@@ -56,6 +67,8 @@ func lineLength (line: Line) -> Float {
 func main() -> Int {
     let lines_0_len = lineLength(lines[0])
     let lines_1_len = lineLength(lines[1])
+    let lines_2_len = lineLength(lines[2])
+    let lines_3_len = lineLength(lines[3])
 
     printf("lines_0_len = %f\n", lines_0_len)
     printf("lines_1_len = %f\n", lines_1_len)

@@ -55,7 +55,7 @@ int main()
     struct __anonymous_struct_3 p2d3;
     p2d3 = (struct __anonymous_struct_3){.x = 1, .y = 2};
 
-    if (memcmp(&*(struct __anonymous_struct_3 *)&p2d2, &p2d3, sizeof *(struct __anonymous_struct_3 *)&p2d2) == 0) {
+    if (memcmp(&p2d2, &*(Point2D *)&p2d3, sizeof p2d2) == 0) {
         printf("p2d2 == p2d3\n");
     } else {
         printf("p2d2 != p2d3\n");

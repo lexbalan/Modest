@@ -965,7 +965,7 @@ def do_value_index(x):
 
         if value_is_immediate(left):
             if value_is_immediate(index):
-                #info("immediate index", x['ti'])
+                info("immediate index", x['ti'])
                 index_imm = index['asset']
 
                 if index_imm >= array_typ['volume']['asset']:
@@ -1172,13 +1172,16 @@ bin_ops = [
 ]
 
 
-def do_value_immediate(x):
+def do_value_immediate(x, allow_ptr_to_str=False):
     v = do_value(x)
 
     if value_is_bad(v):
         return v
 
     if not value_is_immediate(v):
+        if allow_ptr_to_str:
+            if hlir_type.type_is_pointer_to_array_of_char(v['type']):
+                return v
         error("expected immediate value", x['ti'])
         return value_bad(x)
 
@@ -1625,7 +1628,7 @@ def def_const(x):
         error("constant id must starts with small letter", id['ti'])
         pass
 
-    iv = do_value_immediate(x['value'])
+    iv = do_value_immediate(x['value'], allow_ptr_to_str=True)
 
     if value_is_bad(iv):
         return hlir_def_const(id, iv, iv, id['ti'])

@@ -12,6 +12,7 @@ def value_cons_pointer_immediate(v, t, ti):
 
 
 def cons_ptr_to_str_from_generic_str(v, t, ti):
+    #info("cons_ptr_to_str_from_generic_str", ti)
     from trans import module_strings_add
 
     char_pow = t['to']['of']['width']
@@ -26,9 +27,9 @@ def cons_ptr_to_str_from_generic_str(v, t, ti):
     #s_imm = method(v['asset'])
     # массив кодов
     # длина полученной строки может отличаться от длины оригинала в utf-32
-    nv = value_cons_pointer_immediate(v, t, ti=ti)
+    # именно value_cons_node чтобы не пошел как immediate! тк *StrX это не immed
+    nv = value_cons_node(v, t, ti=ti)
     nv['asset'] = s_imm
-    nv['immediate'] = True
     module_strings_add(nv)
 
     return nv

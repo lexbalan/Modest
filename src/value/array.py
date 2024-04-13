@@ -37,8 +37,8 @@ def value_array_create(items, ti=None):
             array_item_type = common_type
         i = i + 1
 
-#    info("ARR ITEM TYPE = ", ti)
-#    hlir_type.type_print(array_item_type)
+    #info("ARR ITEM TYPE = ", ti)
+    #hlir_type.type_print(array_item_type)
 
     # неявно приводим все элементы к этому типу
     casted_items = []
@@ -48,6 +48,13 @@ def value_array_create(items, ti=None):
     while i < length:
         item = items[i]
         casted_item = value_cons_implicit(item, array_item_type)
+
+        if hlir_type.type_is_record(casted_item['type']):
+            info("here", item['expr_ti'])
+            hlir_type.type_print(casted_item['type'])
+            for ini in casted_item['asset']:
+                hlir_type.type_print(ini['value']['type'])
+            print()
 
         if 'asset' in item:
             casted_item['asset'] = item['asset']
@@ -66,7 +73,7 @@ def value_array_create(items, ti=None):
 
 
 def value_cons_array_immediate(v, t, ti):
-    info("value_cons_array_immediate", ti)
+    #info("value_cons_array_immediate", ti)
     # TODO
     casted_items = []
     from value.cons import value_cons_implicit
