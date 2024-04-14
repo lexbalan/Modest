@@ -137,22 +137,22 @@ declare void @perror(%ConstCharStr* %str)
 
 ; -- SOURCE: src/main.cm
 
-@str1 = private constant [19 x i8] [i8 102, i8 117, i8 110, i8 99, i8 49, i8 32, i8 119, i8 97, i8 115, i8 32, i8 99, i8 97, i8 108, i8 108, i8 101, i8 100, i8 10, i8 0, i8 0]
-@str2 = private constant [23 x i8] [i8 112, i8 114, i8 105, i8 110, i8 116, i8 95, i8 97, i8 98, i8 40, i8 97, i8 61, i8 37, i8 105, i8 44, i8 32, i8 98, i8 61, i8 37, i8 105, i8 41, i8 10, i8 0, i8 0]
-@str3 = private constant [12 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 117, i8 110, i8 99, i8 10, i8 0, i8 0]
-@str4 = private constant [20 x i8] [i8 115, i8 117, i8 109, i8 40, i8 37, i8 105, i8 44, i8 32, i8 37, i8 105, i8 41, i8 32, i8 61, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0, i8 0]
-@str5 = private constant [19 x i8] [i8 102, i8 117, i8 110, i8 99, i8 48, i8 32, i8 119, i8 97, i8 115, i8 32, i8 99, i8 97, i8 108, i8 108, i8 101, i8 100, i8 10, i8 0, i8 0]
+@str1 = private constant [18 x i8] [i8 102, i8 117, i8 110, i8 99, i8 49, i8 32, i8 119, i8 97, i8 115, i8 32, i8 99, i8 97, i8 108, i8 108, i8 101, i8 100, i8 10, i8 0]
+@str2 = private constant [22 x i8] [i8 112, i8 114, i8 105, i8 110, i8 116, i8 95, i8 97, i8 98, i8 40, i8 97, i8 61, i8 37, i8 105, i8 44, i8 32, i8 98, i8 61, i8 37, i8 105, i8 41, i8 10, i8 0]
+@str3 = private constant [11 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 117, i8 110, i8 99, i8 10, i8 0]
+@str4 = private constant [19 x i8] [i8 115, i8 117, i8 109, i8 40, i8 37, i8 105, i8 44, i8 32, i8 37, i8 105, i8 41, i8 32, i8 61, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str5 = private constant [18 x i8] [i8 102, i8 117, i8 110, i8 99, i8 48, i8 32, i8 119, i8 97, i8 115, i8 32, i8 99, i8 97, i8 108, i8 108, i8 101, i8 100, i8 10, i8 0]
 
 
 
 
 define void @func1() {
-    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str1 to [0 x i8]*))
+    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str1 to [0 x i8]*))
     ret void
 }
 
 define void @print_ab(i32 %a, i32 %b) {
-    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str2 to [0 x i8]*), i32 %a, i32 %b)
+    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str2 to [0 x i8]*), i32 %a, i32 %b)
     ret void
 }
 
@@ -164,7 +164,7 @@ define i32 @sum(i32 %a, i32 %b) {
 
 
 define %Int @main() {
-    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str3 to [0 x i8]*))
+    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str3 to [0 x i8]*))
     ; call declared & defined functions
     call void () @func0()
     call void () @func1()
@@ -174,14 +174,14 @@ define %Int @main() {
     %2 = sext i8 1 to i32
     %3 = sext i8 2 to i32
     %4 = call i32 (i32, i32) @sum(i32 %2, i32 %3)
-    %5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str4 to [0 x i8]*), i32 %2, i32 %3, i32 %4)
+    %5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str4 to [0 x i8]*), i32 %2, i32 %3, i32 %4)
     ret %Int 0
 }
 
 
 
 define void @func0() {
-    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str5 to [0 x i8]*))
+    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str5 to [0 x i8]*))
     ret void
 }
 

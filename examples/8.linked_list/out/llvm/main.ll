@@ -243,13 +243,13 @@ declare %Node* @linked_list_insert(%List* %list, i8* %link)
 
 ; -- SOURCE: src/main.cm
 
-@str1 = private constant [22 x i8] [i8 108, i8 105, i8 115, i8 116, i8 95, i8 112, i8 114, i8 105, i8 110, i8 116, i8 95, i8 102, i8 111, i8 114, i8 119, i8 97, i8 114, i8 100, i8 58, i8 10, i8 0, i8 0]
-@str2 = private constant [9 x i8] [i8 118, i8 32, i8 61, i8 32, i8 37, i8 117, i8 10, i8 0, i8 0]
-@str3 = private constant [23 x i8] [i8 108, i8 105, i8 115, i8 116, i8 95, i8 112, i8 114, i8 105, i8 110, i8 116, i8 95, i8 98, i8 97, i8 99, i8 107, i8 119, i8 97, i8 114, i8 100, i8 58, i8 10, i8 0, i8 0]
-@str4 = private constant [9 x i8] [i8 118, i8 32, i8 61, i8 32, i8 37, i8 117, i8 10, i8 0, i8 0]
-@str5 = private constant [22 x i8] [i8 108, i8 105, i8 110, i8 107, i8 101, i8 100, i8 32, i8 108, i8 105, i8 115, i8 116, i8 32, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0, i8 0]
-@str6 = private constant [27 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 99, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 99, i8 114, i8 101, i8 97, i8 116, i8 101, i8 32, i8 108, i8 105, i8 115, i8 116, i8 0, i8 0]
-@str7 = private constant [23 x i8] [i8 108, i8 105, i8 110, i8 107, i8 101, i8 100, i8 32, i8 108, i8 105, i8 115, i8 116, i8 32, i8 115, i8 105, i8 122, i8 101, i8 58, i8 32, i8 37, i8 117, i8 10, i8 0, i8 0]
+@str1 = private constant [21 x i8] [i8 108, i8 105, i8 115, i8 116, i8 95, i8 112, i8 114, i8 105, i8 110, i8 116, i8 95, i8 102, i8 111, i8 114, i8 119, i8 97, i8 114, i8 100, i8 58, i8 10, i8 0]
+@str2 = private constant [8 x i8] [i8 118, i8 32, i8 61, i8 32, i8 37, i8 117, i8 10, i8 0]
+@str3 = private constant [22 x i8] [i8 108, i8 105, i8 115, i8 116, i8 95, i8 112, i8 114, i8 105, i8 110, i8 116, i8 95, i8 98, i8 97, i8 99, i8 107, i8 119, i8 97, i8 114, i8 100, i8 58, i8 10, i8 0]
+@str4 = private constant [8 x i8] [i8 118, i8 32, i8 61, i8 32, i8 37, i8 117, i8 10, i8 0]
+@str5 = private constant [21 x i8] [i8 108, i8 105, i8 110, i8 107, i8 101, i8 100, i8 32, i8 108, i8 105, i8 115, i8 116, i8 32, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
+@str6 = private constant [26 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 99, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 99, i8 114, i8 101, i8 97, i8 116, i8 101, i8 32, i8 108, i8 105, i8 115, i8 116, i8 0]
+@str7 = private constant [22 x i8] [i8 108, i8 105, i8 110, i8 107, i8 101, i8 100, i8 32, i8 108, i8 105, i8 115, i8 116, i8 32, i8 115, i8 105, i8 122, i8 101, i8 58, i8 32, i8 37, i8 117, i8 10, i8 0]
 
 
 
@@ -267,7 +267,7 @@ define void @nat64_list_insert(%List* %list, i64 %x) {
 
 
 define void @list_print_forward(%List* %list) {
-    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str1 to [0 x i8]*))
+    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str1 to [0 x i8]*))
     %2 = alloca %Node*
     %3 = call %Node* (%List*) @linked_list_first_get(%List* %list)
     store %Node* %3, %Node** %2
@@ -281,7 +281,7 @@ body_1:
     %7 = call i8* (%Node*) @linked_list_node_link_get(%Node* %6)
     %8 = bitcast i8* %7 to i32*
     %9 = load i32, i32* %8
-    %10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str2 to [0 x i8]*), i32 %9)
+    %10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), i32 %9)
     %11 = load %Node*, %Node** %2
     %12 = call %Node* (%Node*) @linked_list_node_next_get(%Node* %11)
     store %Node* %12, %Node** %2
@@ -293,7 +293,7 @@ break_1:
 
 
 define void @list_print_backward(%List* %list) {
-    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str3 to [0 x i8]*))
+    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str3 to [0 x i8]*))
     %2 = alloca %Node*
     %3 = call %Node* (%List*) @linked_list_last_get(%List* %list)
     store %Node* %3, %Node** %2
@@ -307,7 +307,7 @@ body_1:
     %7 = call i8* (%Node*) @linked_list_node_link_get(%Node* %6)
     %8 = bitcast i8* %7 to i32*
     %9 = load i32, i32* %8
-    %10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str4 to [0 x i8]*), i32 %9)
+    %10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str4 to [0 x i8]*), i32 %9)
     %11 = load %Node*, %Node** %2
     %12 = call %Node* (%Node*) @linked_list_node_prev_get(%Node* %11)
     store %Node* %12, %Node** %2
@@ -317,12 +317,12 @@ break_1:
 }
 
 define %Int @main() {
-    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*))
+    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str5 to [0 x i8]*))
     %2 = call %List* () @linked_list_create()
     %3 = icmp eq %List* %2, null
     br i1 %3 , label %then_0, label %endif_0
 then_0:
-    %4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str6 to [0 x i8]*))
+    %4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str6 to [0 x i8]*))
     ret %Int 1
     br label %endif_0
 endif_0:
@@ -340,7 +340,7 @@ endif_0:
     call void (%List*, i64) @nat64_list_insert(%List* %2, i64 100)
     ; print list size
     %6 = call i32 (%List*) @linked_list_size_get(%List* %2)
-    %7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str7 to [0 x i8]*), i32 %6)
+    %7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str7 to [0 x i8]*), i32 %6)
     ; print list forward
     call void (%List*) @list_print_forward(%List* %2)
     ; print list backward

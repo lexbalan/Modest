@@ -150,13 +150,13 @@ declare void @utf32_puts(%Str32* %s)
 
 ; -- SOURCE: src/main.cm
 
-@str1 = private constant [29 x i8] [i8 83, i8 45, i8 116, i8 45, i8 114, i8 45, i8 105, i8 45, i8 110, i8 45, i8 103, i8 45, i8 206, i8 169, i8 32, i8 240, i8 159, i8 144, i8 128, i8 240, i8 159, i8 142, i8 137, i8 240, i8 159, i8 166, i8 132, i8 0, i8 0]
-@str2 = private constant [22 x i16] [i16 83, i16 45, i16 116, i16 45, i16 114, i16 45, i16 105, i16 45, i16 110, i16 45, i16 103, i16 45, i16 937, i16 32, i16 55357, i16 56320, i16 55356, i16 57225, i16 55358, i16 56708, i16 0, i16 0]
-@str3 = private constant [19 x i32] [i32 83, i32 45, i32 116, i32 45, i32 114, i32 45, i32 105, i32 45, i32 110, i32 45, i32 103, i32 45, i32 937, i32 32, i32 128000, i32 127881, i32 129412, i32 0, i32 0]
-@str4 = private constant [16 x i8] [i8 91, i8 37, i8 100, i8 93, i8 85, i8 49, i8 54, i8 58, i8 32, i8 48, i8 120, i8 37, i8 120, i8 10, i8 0, i8 0]
-@str5 = private constant [3 x i8] [i8 10, i8 0, i8 0]
-@str6 = private constant [3 x i8] [i8 10, i8 0, i8 0]
-@str7 = private constant [3 x i8] [i8 10, i8 0, i8 0]
+@str1 = private constant [28 x i8] [i8 83, i8 45, i8 116, i8 45, i8 114, i8 45, i8 105, i8 45, i8 110, i8 45, i8 103, i8 45, i8 206, i8 169, i8 32, i8 240, i8 159, i8 144, i8 128, i8 240, i8 159, i8 142, i8 137, i8 240, i8 159, i8 166, i8 132, i8 0]
+@str2 = private constant [21 x i16] [i16 83, i16 45, i16 116, i16 45, i16 114, i16 45, i16 105, i16 45, i16 110, i16 45, i16 103, i16 45, i16 937, i16 32, i16 55357, i16 56320, i16 55356, i16 57225, i16 55358, i16 56708, i16 0]
+@str3 = private constant [18 x i32] [i32 83, i32 45, i32 116, i32 45, i32 114, i32 45, i32 105, i32 45, i32 110, i32 45, i32 103, i32 45, i32 937, i32 32, i32 128000, i32 127881, i32 129412, i32 0]
+@str4 = private constant [15 x i8] [i8 91, i8 37, i8 100, i8 93, i8 85, i8 49, i8 54, i8 58, i8 32, i8 48, i8 120, i8 37, i8 120, i8 10, i8 0]
+@str5 = private constant [2 x i8] [i8 10, i8 0]
+@str6 = private constant [2 x i8] [i8 10, i8 0]
+@str7 = private constant [2 x i8] [i8 10, i8 0]
 
 
 
@@ -230,7 +230,7 @@ again_1:
     br i1 1 , label %body_1, label %break_1
 body_1:
     %2 = load i32, i32* %1
-    %3 = getelementptr inbounds %Str16, %Str16* bitcast ([22 x i16]* @str2 to [0 x i16]*), i32 0, i32 %2
+    %3 = getelementptr inbounds %Str16, %Str16* bitcast ([21 x i16]* @str2 to [0 x i16]*), i32 0, i32 %2
     %4 = load i16, i16* %3
     %5 = icmp eq i16 %4, 0
     br i1 %5 , label %then_0, label %endif_0
@@ -240,27 +240,27 @@ then_0:
 endif_0:
     %7 = load i32, i32* %1
     %8 = zext i16 %4 to i32
-    %9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str4 to [0 x i8]*), i32 %7, i32 %8)
+    %9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str4 to [0 x i8]*), i32 %7, i32 %8)
     %10 = load i32, i32* %1
     %11 = add i32 %10, 1
     store i32 %11, i32* %1
     br label %again_1
 break_1:
     %12 = alloca %Str8*
-    store %Str8* bitcast ([29 x i8]* @str1 to [0 x i8]*), %Str8** %12
+    store %Str8* bitcast ([28 x i8]* @str1 to [0 x i8]*), %Str8** %12
     %13 = alloca %Str16*
-    store %Str16* bitcast ([22 x i16]* @str2 to [0 x i16]*), %Str16** %13
+    store %Str16* bitcast ([21 x i16]* @str2 to [0 x i16]*), %Str16** %13
     %14 = alloca %Str32*
-    store %Str32* bitcast ([19 x i32]* @str3 to [0 x i32]*), %Str32** %14
+    store %Str32* bitcast ([18 x i32]* @str3 to [0 x i32]*), %Str32** %14
     %15 = load %Str8*, %Str8** %12
     call void (%Str8*) @utf8_puts(%Str8* %15)
-    call void (%Str8*) @utf8_puts(%Str8* bitcast ([3 x i8]* @str5 to [0 x i8]*))
+    call void (%Str8*) @utf8_puts(%Str8* bitcast ([2 x i8]* @str5 to [0 x i8]*))
     %16 = load %Str16*, %Str16** %13
     call void (%Str16*) @utf16_puts(%Str16* %16)
-    call void (%Str8*) @utf8_puts(%Str8* bitcast ([3 x i8]* @str6 to [0 x i8]*))
+    call void (%Str8*) @utf8_puts(%Str8* bitcast ([2 x i8]* @str6 to [0 x i8]*))
     %17 = load %Str32*, %Str32** %14
     call void (%Str32*) @utf32_puts(%Str32* %17)
-    call void (%Str8*) @utf8_puts(%Str8* bitcast ([3 x i8]* @str7 to [0 x i8]*))
+    call void (%Str8*) @utf8_puts(%Str8* bitcast ([2 x i8]* @str7 to [0 x i8]*))
     ret %Int 0
 }
 

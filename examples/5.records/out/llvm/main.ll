@@ -314,8 +314,8 @@ declare void @bcopy(i8* %src, i8* %dst, %SizeT %n)
 
 ; -- SOURCE: src/main.cm
 
-@str1 = private constant [16 x i8] [i8 112, i8 111, i8 105, i8 110, i8 116, i8 40, i8 37, i8 102, i8 44, i8 32, i8 37, i8 102, i8 41, i8 10, i8 0, i8 0]
-@str2 = private constant [19 x i8] [i8 108, i8 105, i8 110, i8 101, i8 32, i8 108, i8 101, i8 110, i8 103, i8 116, i8 104, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0, i8 0]
+@str1 = private constant [15 x i8] [i8 112, i8 111, i8 105, i8 110, i8 116, i8 40, i8 37, i8 102, i8 44, i8 32, i8 37, i8 102, i8 41, i8 10, i8 0]
+@str2 = private constant [18 x i8] [i8 108, i8 105, i8 110, i8 101, i8 32, i8 108, i8 101, i8 110, i8 103, i8 116, i8 104, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
 
 
 
@@ -404,7 +404,7 @@ define void @ptr_example() {
     %6 = load %Float, %Float* %5
     %7 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 1
     %8 = load %Float, %Float* %7
-    %9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str1 to [0 x i8]*), %Float %6, %Float %8)
+    %9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*), %Float %6, %Float %8)
     ret void
 }
 
@@ -412,7 +412,7 @@ define %Int @main() {
     ; by value
     %1 = load %Line, %Line* @line
     %2 = call %Float (%Line) @lineLength(%Line %1)
-    %3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str2 to [0 x i8]*), %Float %2)
+    %3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str2 to [0 x i8]*), %Float %2)
     call void () @ptr_example()
     ret %Int 0
 }

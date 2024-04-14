@@ -144,29 +144,29 @@ declare void @print(%Str8* %form, ...)
 
 ; -- SOURCE: src/main.cm
 
-@str1 = private constant [15 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 32, i8 87, i8 111, i8 114, i8 108, i8 100, i8 33, i8 10, i8 0, i8 0]
-@str2 = private constant [5 x i8] [i8 72, i8 105, i8 33, i8 0, i8 0]
-@str3 = private constant [9 x i8] [i8 92, i8 123, i8 123, i8 92, i8 125, i8 125, i8 10, i8 0, i8 0]
-@str4 = private constant [12 x i8] [i8 99, i8 32, i8 61, i8 32, i8 39, i8 123, i8 99, i8 125, i8 39, i8 10, i8 0, i8 0]
-@str5 = private constant [12 x i8] [i8 115, i8 32, i8 61, i8 32, i8 34, i8 123, i8 115, i8 125, i8 34, i8 10, i8 0, i8 0]
-@str6 = private constant [10 x i8] [i8 105, i8 32, i8 61, i8 32, i8 123, i8 105, i8 125, i8 10, i8 0, i8 0]
-@str7 = private constant [10 x i8] [i8 110, i8 32, i8 61, i8 32, i8 123, i8 110, i8 125, i8 10, i8 0, i8 0]
-@str8 = private constant [12 x i8] [i8 120, i8 32, i8 61, i8 32, i8 48, i8 120, i8 123, i8 120, i8 125, i8 10, i8 0, i8 0]
+@str1 = private constant [14 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 32, i8 87, i8 111, i8 114, i8 108, i8 100, i8 33, i8 10, i8 0]
+@str2 = private constant [4 x i8] [i8 72, i8 105, i8 33, i8 0]
+@str3 = private constant [8 x i8] [i8 92, i8 123, i8 123, i8 92, i8 125, i8 125, i8 10, i8 0]
+@str4 = private constant [11 x i8] [i8 99, i8 32, i8 61, i8 32, i8 39, i8 123, i8 99, i8 125, i8 39, i8 10, i8 0]
+@str5 = private constant [11 x i8] [i8 115, i8 32, i8 61, i8 32, i8 34, i8 123, i8 115, i8 125, i8 34, i8 10, i8 0]
+@str6 = private constant [9 x i8] [i8 105, i8 32, i8 61, i8 32, i8 123, i8 105, i8 125, i8 10, i8 0]
+@str7 = private constant [9 x i8] [i8 110, i8 32, i8 61, i8 32, i8 123, i8 110, i8 125, i8 10, i8 0]
+@str8 = private constant [11 x i8] [i8 120, i8 32, i8 61, i8 32, i8 48, i8 120, i8 123, i8 120, i8 125, i8 10, i8 0]
 
 
 
 define %Int @main() {
-    call void (%Str8*, ...) @print(%Str8* bitcast ([15 x i8]* @str1 to [0 x i8]*))
+    call void (%Str8*, ...) @print(%Str8* bitcast ([14 x i8]* @str1 to [0 x i8]*))
     %1 = sub i8 0, 1
     %2 = sext i8 %1 to i32
     %3 = zext i8 123 to i32
     %4 = bitcast i32 305419903 to i32
-    call void (%Str8*, ...) @print(%Str8* bitcast ([9 x i8]* @str3 to [0 x i8]*))
-    call void (%Str8*, ...) @print(%Str8* bitcast ([12 x i8]* @str4 to [0 x i8]*), i8 36)
-    call void (%Str8*, ...) @print(%Str8* bitcast ([12 x i8]* @str5 to [0 x i8]*), %Str8* bitcast ([5 x i8]* @str2 to [0 x i8]*))
-    call void (%Str8*, ...) @print(%Str8* bitcast ([10 x i8]* @str6 to [0 x i8]*), i32 %2)
-    call void (%Str8*, ...) @print(%Str8* bitcast ([10 x i8]* @str7 to [0 x i8]*), i32 %3)
-    call void (%Str8*, ...) @print(%Str8* bitcast ([12 x i8]* @str8 to [0 x i8]*), i32 %4)
+    call void (%Str8*, ...) @print(%Str8* bitcast ([8 x i8]* @str3 to [0 x i8]*))
+    call void (%Str8*, ...) @print(%Str8* bitcast ([11 x i8]* @str4 to [0 x i8]*), i8 36)
+    call void (%Str8*, ...) @print(%Str8* bitcast ([11 x i8]* @str5 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @str2 to [0 x i8]*))
+    call void (%Str8*, ...) @print(%Str8* bitcast ([9 x i8]* @str6 to [0 x i8]*), i32 %2)
+    call void (%Str8*, ...) @print(%Str8* bitcast ([9 x i8]* @str7 to [0 x i8]*), i32 %3)
+    call void (%Str8*, ...) @print(%Str8* bitcast ([11 x i8]* @str8 to [0 x i8]*), i32 %4)
     ret %Int 0
 }
 

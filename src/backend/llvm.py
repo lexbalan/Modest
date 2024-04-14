@@ -980,13 +980,6 @@ def do_eval_cast_immediate(x):
     from_type = value['type']
     to_type = x['type']
 
-    """if hlir_type.type_is_pointer_to_array_of_char(to_type):
-        if hlir_type.type_is_array_of_char(from_type):
-            print("S!")
-            string_of = to_type['to']['of']
-            char_pow = string_of['width']
-            return llvm_value_str(x['strid'], x['asset'], x['type'], value)"""
-
     if hlir_type.type_is_pointer(to_type):
         if hlir_type.type_is_integer(from_type):
             # immediate Int -> Ptr

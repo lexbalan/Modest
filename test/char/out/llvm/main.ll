@@ -137,7 +137,7 @@ declare void @perror(%ConstCharStr* %str)
 
 ; -- SOURCE: src/main.cm
 
-@str1 = private constant [12 x i8] [i8 116, i8 101, i8 115, i8 116, i8 47, i8 99, i8 104, i8 97, i8 114, i8 10, i8 0, i8 0]
+@str1 = private constant [11 x i8] [i8 116, i8 101, i8 115, i8 116, i8 47, i8 99, i8 104, i8 97, i8 114, i8 10, i8 0]
 
 
 
@@ -152,7 +152,7 @@ declare void @perror(%ConstCharStr* %str)
 ]
 
 define %Int @main() {
-    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*))
+    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str1 to [0 x i8]*))
     %2 = alloca i8
     %3 = alloca i16
     %4 = alloca i32

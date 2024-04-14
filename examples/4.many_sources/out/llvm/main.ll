@@ -144,12 +144,12 @@ declare void @lib_func()
 
 ; -- SOURCE: src/main.cm
 
-@str1 = private constant [18 x i8] [i8 104, i8 101, i8 108, i8 108, i8 111, i8 32, i8 102, i8 114, i8 111, i8 109, i8 32, i8 109, i8 97, i8 105, i8 110, i8 10, i8 0, i8 0]
+@str1 = private constant [17 x i8] [i8 104, i8 101, i8 108, i8 108, i8 111, i8 32, i8 102, i8 114, i8 111, i8 109, i8 32, i8 109, i8 97, i8 105, i8 110, i8 10, i8 0]
 
 
 
 define %Int @main() {
-    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str1 to [0 x i8]*))
+    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str1 to [0 x i8]*))
     call void () @lib_func()
     ret %Int 0
 }

@@ -333,34 +333,34 @@ declare double @max_float64(double %a, double %b)
 
 ; -- SOURCE: src/main.cm
 
-@str1 = private constant [11 x i8] [i8 102, i8 48, i8 40, i8 34, i8 37, i8 115, i8 34, i8 41, i8 10, i8 0, i8 0]
-@str2 = private constant [23 x i8] [i8 103, i8 108, i8 111, i8 98, i8 97, i8 108, i8 65, i8 114, i8 114, i8 97, i8 121, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0, i8 0]
-@str3 = private constant [39 x i8] [i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 10, i8 0, i8 0]
-@str4 = private constant [22 x i8] [i8 108, i8 111, i8 99, i8 97, i8 108, i8 65, i8 114, i8 114, i8 97, i8 121, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0, i8 0]
-@str5 = private constant [39 x i8] [i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 10, i8 0, i8 0]
-@str6 = private constant [26 x i8] [i8 103, i8 108, i8 111, i8 98, i8 97, i8 108, i8 65, i8 114, i8 114, i8 97, i8 121, i8 80, i8 116, i8 114, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0, i8 0]
-@str7 = private constant [39 x i8] [i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 10, i8 0, i8 0]
-@str8 = private constant [25 x i8] [i8 108, i8 111, i8 99, i8 97, i8 108, i8 65, i8 114, i8 114, i8 97, i8 121, i8 80, i8 116, i8 114, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0, i8 0]
-@str9 = private constant [12 x i8] [i8 97, i8 91, i8 48, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0, i8 0]
-@str10 = private constant [12 x i8] [i8 97, i8 91, i8 49, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0, i8 0]
-@str11 = private constant [12 x i8] [i8 97, i8 91, i8 50, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0, i8 0]
-@str12 = private constant [12 x i8] [i8 98, i8 91, i8 48, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0, i8 0]
-@str13 = private constant [12 x i8] [i8 98, i8 91, i8 49, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0, i8 0]
-@str14 = private constant [12 x i8] [i8 98, i8 91, i8 50, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0, i8 0]
-@str15 = private constant [9 x i8] [i8 97, i8 32, i8 61, i8 61, i8 32, i8 98, i8 10, i8 0, i8 0]
-@str16 = private constant [9 x i8] [i8 97, i8 32, i8 33, i8 61, i8 32, i8 98, i8 10, i8 0, i8 0]
-@str17 = private constant [12 x i8] [i8 100, i8 91, i8 48, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0, i8 0]
-@str18 = private constant [12 x i8] [i8 100, i8 91, i8 49, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0, i8 0]
-@str19 = private constant [12 x i8] [i8 100, i8 91, i8 50, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0, i8 0]
-@str20 = private constant [12 x i8] [i8 100, i8 91, i8 51, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0, i8 0]
-@str21 = private constant [12 x i8] [i8 100, i8 91, i8 52, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0, i8 0]
-@str22 = private constant [12 x i8] [i8 100, i8 91, i8 53, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0, i8 0]
-@str23 = private constant [12 x i8] [i8 101, i8 91, i8 48, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0, i8 0]
-@str24 = private constant [12 x i8] [i8 101, i8 91, i8 49, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0, i8 0]
-@str25 = private constant [12 x i8] [i8 101, i8 91, i8 50, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0, i8 0]
-@str26 = private constant [23 x i8] [i8 103, i8 108, i8 111, i8 98, i8 97, i8 108, i8 65, i8 114, i8 114, i8 97, i8 121, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0, i8 0]
-@str27 = private constant [23 x i8] [i8 103, i8 108, i8 111, i8 98, i8 97, i8 108, i8 65, i8 114, i8 114, i8 97, i8 121, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0, i8 0]
-@str28 = private constant [23 x i8] [i8 103, i8 108, i8 111, i8 98, i8 97, i8 108, i8 65, i8 114, i8 114, i8 97, i8 121, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0, i8 0]
+@str1 = private constant [10 x i8] [i8 102, i8 48, i8 40, i8 34, i8 37, i8 115, i8 34, i8 41, i8 10, i8 0]
+@str2 = private constant [22 x i8] [i8 103, i8 108, i8 111, i8 98, i8 97, i8 108, i8 65, i8 114, i8 114, i8 97, i8 121, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str3 = private constant [38 x i8] [i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 10, i8 0]
+@str4 = private constant [21 x i8] [i8 108, i8 111, i8 99, i8 97, i8 108, i8 65, i8 114, i8 114, i8 97, i8 121, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str5 = private constant [38 x i8] [i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 10, i8 0]
+@str6 = private constant [25 x i8] [i8 103, i8 108, i8 111, i8 98, i8 97, i8 108, i8 65, i8 114, i8 114, i8 97, i8 121, i8 80, i8 116, i8 114, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str7 = private constant [38 x i8] [i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 10, i8 0]
+@str8 = private constant [24 x i8] [i8 108, i8 111, i8 99, i8 97, i8 108, i8 65, i8 114, i8 114, i8 97, i8 121, i8 80, i8 116, i8 114, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str9 = private constant [11 x i8] [i8 97, i8 91, i8 48, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str10 = private constant [11 x i8] [i8 97, i8 91, i8 49, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str11 = private constant [11 x i8] [i8 97, i8 91, i8 50, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str12 = private constant [11 x i8] [i8 98, i8 91, i8 48, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str13 = private constant [11 x i8] [i8 98, i8 91, i8 49, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str14 = private constant [11 x i8] [i8 98, i8 91, i8 50, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str15 = private constant [8 x i8] [i8 97, i8 32, i8 61, i8 61, i8 32, i8 98, i8 10, i8 0]
+@str16 = private constant [8 x i8] [i8 97, i8 32, i8 33, i8 61, i8 32, i8 98, i8 10, i8 0]
+@str17 = private constant [11 x i8] [i8 100, i8 91, i8 48, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str18 = private constant [11 x i8] [i8 100, i8 91, i8 49, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str19 = private constant [11 x i8] [i8 100, i8 91, i8 50, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str20 = private constant [11 x i8] [i8 100, i8 91, i8 51, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str21 = private constant [11 x i8] [i8 100, i8 91, i8 52, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str22 = private constant [11 x i8] [i8 100, i8 91, i8 53, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str23 = private constant [11 x i8] [i8 101, i8 91, i8 48, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str24 = private constant [11 x i8] [i8 101, i8 91, i8 49, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str25 = private constant [11 x i8] [i8 101, i8 91, i8 50, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str26 = private constant [22 x i8] [i8 103, i8 108, i8 111, i8 98, i8 97, i8 108, i8 65, i8 114, i8 114, i8 97, i8 121, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str27 = private constant [22 x i8] [i8 103, i8 108, i8 111, i8 98, i8 97, i8 108, i8 65, i8 114, i8 114, i8 97, i8 121, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str28 = private constant [22 x i8] [i8 103, i8 108, i8 111, i8 98, i8 97, i8 108, i8 65, i8 114, i8 114, i8 97, i8 121, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 
 
 
@@ -381,7 +381,7 @@ declare double @max_float64(double %a, double %b)
 define void @f0([10 x i8] %x) {
     %1 = alloca [10 x i8]
     store [10 x i8] %x, [10 x i8]* %1
-    %2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str1 to [0 x i8]*), [10 x i8]* %1)
+    %2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*), [10 x i8]* %1)
     ret void
 }
 
@@ -410,13 +410,13 @@ body_1:
     %15 = getelementptr inbounds [10 x i32], [10 x i32]* @globalArray, i32 0, i32 %14
     %16 = load i32, i32* %15
     %17 = load i32, i32* %11
-    %18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str2 to [0 x i8]*), i32 %17, i32 %16)
+    %18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str2 to [0 x i8]*), i32 %17, i32 %16)
     %19 = load i32, i32* %11
     %20 = add i32 %19, 1
     store i32 %20, i32* %11
     br label %again_1
 break_1:
-    %21 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([39 x i8]* @str3 to [0 x i8]*))
+    %21 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str3 to [0 x i8]*))
     %22 = alloca [3 x i32]
     %23 = insertvalue [3 x i32] zeroinitializer, i32 4, 0
     %24 = insertvalue [3 x i32] %23, i32 5, 1
@@ -433,13 +433,13 @@ body_2:
     %29 = getelementptr inbounds [3 x i32], [3 x i32]* %22, i32 0, i32 %28
     %30 = load i32, i32* %29
     %31 = load i32, i32* %11
-    %32 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str4 to [0 x i8]*), i32 %31, i32 %30)
+    %32 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str4 to [0 x i8]*), i32 %31, i32 %30)
     %33 = load i32, i32* %11
     %34 = add i32 %33, 1
     store i32 %34, i32* %11
     br label %again_2
 break_2:
-    %35 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([39 x i8]* @str5 to [0 x i8]*))
+    %35 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str5 to [0 x i8]*))
     %36 = alloca [0 x i32]*
     %37 = bitcast [10 x i32]* @globalArray to [0 x i32]*
     store [0 x i32]* %37, [0 x i32]** %36
@@ -455,13 +455,13 @@ body_3:
     %42 = getelementptr inbounds [0 x i32], [0 x i32]* %40, i32 0, i32 %41
     %43 = load i32, i32* %42
     %44 = load i32, i32* %11
-    %45 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str6 to [0 x i8]*), i32 %44, i32 %43)
+    %45 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str6 to [0 x i8]*), i32 %44, i32 %43)
     %46 = load i32, i32* %11
     %47 = add i32 %46, 1
     store i32 %47, i32* %11
     br label %again_3
 break_3:
-    %48 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([39 x i8]* @str7 to [0 x i8]*))
+    %48 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str7 to [0 x i8]*))
     %49 = alloca [0 x i32]*
     %50 = bitcast [3 x i32]* %22 to [0 x i32]*
     store [0 x i32]* %50, [0 x i32]** %49
@@ -477,7 +477,7 @@ body_4:
     %55 = getelementptr inbounds [0 x i32], [0 x i32]* %53, i32 0, i32 %54
     %56 = load i32, i32* %55
     %57 = load i32, i32* %11
-    %58 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str8 to [0 x i8]*), i32 %57, i32 %56)
+    %58 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str8 to [0 x i8]*), i32 %57, i32 %56)
     %59 = load i32, i32* %11
     %60 = add i32 %59, 1
     store i32 %60, i32* %11
@@ -492,13 +492,13 @@ break_4:
     store [3 x i32] %64, [3 x i32]* %61
     %65 = getelementptr inbounds [3 x i32], [3 x i32]* %61, i32 0, i32 0
     %66 = load i32, i32* %65
-    %67 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str9 to [0 x i8]*), i32 %66)
+    %67 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str9 to [0 x i8]*), i32 %66)
     %68 = getelementptr inbounds [3 x i32], [3 x i32]* %61, i32 0, i32 1
     %69 = load i32, i32* %68
-    %70 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str10 to [0 x i8]*), i32 %69)
+    %70 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str10 to [0 x i8]*), i32 %69)
     %71 = getelementptr inbounds [3 x i32], [3 x i32]* %61, i32 0, i32 2
     %72 = load i32, i32* %71
-    %73 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str11 to [0 x i8]*), i32 %72)
+    %73 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str11 to [0 x i8]*), i32 %72)
     ; create (and initialize) new variable b
     ; (with type [3]Int32)
     ; this variable are copy of array a
@@ -508,13 +508,13 @@ break_4:
     call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %75, i8* %76, i32 12, i1 0)
     %77 = getelementptr inbounds [3 x i32], [3 x i32]* %74, i32 0, i32 0
     %78 = load i32, i32* %77
-    %79 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str12 to [0 x i8]*), i32 %78)
+    %79 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str12 to [0 x i8]*), i32 %78)
     %80 = getelementptr inbounds [3 x i32], [3 x i32]* %74, i32 0, i32 1
     %81 = load i32, i32* %80
-    %82 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str13 to [0 x i8]*), i32 %81)
+    %82 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str13 to [0 x i8]*), i32 %81)
     %83 = getelementptr inbounds [3 x i32], [3 x i32]* %74, i32 0, i32 2
     %84 = load i32, i32* %83
-    %85 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str14 to [0 x i8]*), i32 %84)
+    %85 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str14 to [0 x i8]*), i32 %84)
     ; check equality between two arrays (by value)
     %86 = bitcast [3 x i32]* %61 to i8*
     %87 = bitcast [3 x i32]* %74 to i8*
@@ -523,10 +523,10 @@ break_4:
     %89 = icmp eq i32 %88, 0
     br i1 %89 , label %then_0, label %else_0
 then_0:
-    %90 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str15 to [0 x i8]*))
+    %90 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str15 to [0 x i8]*))
     br label %endif_0
 else_0:
-    %91 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str16 to [0 x i8]*))
+    %91 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str16 to [0 x i8]*))
     br label %endif_0
 endif_0:
     ; assign array to array 2
@@ -547,22 +547,22 @@ endif_0:
     call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %102, i8 0, i32 12, i1 0)
     %103 = getelementptr inbounds [6 x i32], [6 x i32]* %96, i32 0, i32 0
     %104 = load i32, i32* %103
-    %105 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str17 to [0 x i8]*), i32 %104)
+    %105 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str17 to [0 x i8]*), i32 %104)
     %106 = getelementptr inbounds [6 x i32], [6 x i32]* %96, i32 0, i32 1
     %107 = load i32, i32* %106
-    %108 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str18 to [0 x i8]*), i32 %107)
+    %108 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str18 to [0 x i8]*), i32 %107)
     %109 = getelementptr inbounds [6 x i32], [6 x i32]* %96, i32 0, i32 2
     %110 = load i32, i32* %109
-    %111 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str19 to [0 x i8]*), i32 %110)
+    %111 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str19 to [0 x i8]*), i32 %110)
     %112 = getelementptr inbounds [6 x i32], [6 x i32]* %96, i32 0, i32 3
     %113 = load i32, i32* %112
-    %114 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str20 to [0 x i8]*), i32 %113)
+    %114 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str20 to [0 x i8]*), i32 %113)
     %115 = getelementptr inbounds [6 x i32], [6 x i32]* %96, i32 0, i32 4
     %116 = load i32, i32* %115
-    %117 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str21 to [0 x i8]*), i32 %116)
+    %117 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str21 to [0 x i8]*), i32 %116)
     %118 = getelementptr inbounds [6 x i32], [6 x i32]* %96, i32 0, i32 5
     %119 = load i32, i32* %118
-    %120 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str22 to [0 x i8]*), i32 %119)
+    %120 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str22 to [0 x i8]*), i32 %119)
     ;
     ; Check assination local literal array
     ;
@@ -595,13 +595,13 @@ endif_0:
     store [4 x i32] %138, [4 x i32]* %131
     %139 = getelementptr inbounds [4 x i32], [4 x i32]* %131, i32 0, i32 0
     %140 = load i32, i32* %139
-    %141 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str23 to [0 x i8]*), i32 %140)
+    %141 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str23 to [0 x i8]*), i32 %140)
     %142 = getelementptr inbounds [4 x i32], [4 x i32]* %131, i32 0, i32 1
     %143 = load i32, i32* %142
-    %144 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str24 to [0 x i8]*), i32 %143)
+    %144 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str24 to [0 x i8]*), i32 %143)
     %145 = getelementptr inbounds [4 x i32], [4 x i32]* %131, i32 0, i32 2
     %146 = load i32, i32* %145
-    %147 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str25 to [0 x i8]*), i32 %146)
+    %147 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str25 to [0 x i8]*), i32 %146)
     ; check local literal array assignation to global array
     %148 = load %Int, %Int* %121
     %149 = load %Int, %Int* %122
@@ -620,15 +620,15 @@ endif_0:
     %161 = sext i8 0 to i32
     %162 = getelementptr inbounds [10 x i32], [10 x i32]* @globalArray, i32 0, i32 0
     %163 = load i32, i32* %162
-    %164 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str26 to [0 x i8]*), i32 %161, i32 %163)
+    %164 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str26 to [0 x i8]*), i32 %161, i32 %163)
     %165 = sext i8 1 to i32
     %166 = getelementptr inbounds [10 x i32], [10 x i32]* @globalArray, i32 0, i32 1
     %167 = load i32, i32* %166
-    %168 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str27 to [0 x i8]*), i32 %165, i32 %167)
+    %168 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str27 to [0 x i8]*), i32 %165, i32 %167)
     %169 = sext i8 2 to i32
     %170 = getelementptr inbounds [10 x i32], [10 x i32]* @globalArray, i32 0, i32 2
     %171 = load i32, i32* %170
-    %172 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str28 to [0 x i8]*), i32 %169, i32 %171)
+    %172 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str28 to [0 x i8]*), i32 %169, i32 %171)
     ret %Int 0
 }
 
