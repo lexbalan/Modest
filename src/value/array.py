@@ -72,25 +72,11 @@ def value_array_create(items, ti=None):
 
 
 
-def value_cons_array_immediate(v, t, ti):
-    #info("value_cons_array_immediate", ti)
-    # TODO
-    casted_items = []
-    from value.cons import value_cons_implicit
-    for item in v['asset']:
-        iv = value_cons_implicit(item, t['of'])
-        casted_items.append(iv)
-
-    nv = value_cons_immediate(v, t, ti)
-    nv['asset'] = casted_items
-    return nv
-
-
 # concatenation of two immediate arrays
 def value_array_concat(l, r, ti):
     #info("value_array_concat", ti)
     asset = l['asset'] + r['asset']
-    length = len(asset) + 1  #!
+    length = len(asset)
 
     str_array_volume = value_integer_create(length)
     item_type = select_common_type(l['type']['of'], r['type']['of'])
@@ -106,8 +92,9 @@ def value_array_concat(l, r, ti):
 
 
 def value_string_create(string, length=0, ti=None):
+    #info("value_string_create %d" % length, ti)
     if length == 0:
-        length = len(string) + 1
+        length = len(string)
 
     max_char_width = 0
     chars = []
@@ -126,7 +113,7 @@ def value_string_create(string, length=0, ti=None):
     genericCharType = hlir_type.hlir_type_char(max_char_width, ti=ti)
     genericCharType['generic'] = True
 
-    volume = value_integer_create(length)  # <=> len(string) + 1
+    volume = value_integer_create(length)  # <=> len(string)
     genStrType = hlir_type.hlir_type_array(genericCharType, volume=volume, ti=ti)
     genStrType['generic'] = True
     nv = value_terminal(genStrType, chars, ti)
@@ -138,21 +125,12 @@ def value_string_create(string, length=0, ti=None):
 
 # TODO: массив может НЕЯВНО быть построен только из
 # полного или из пустого дженерик массива
-def value_cons_array_from_generic_array(v, t, ti, method):
-    #info("value_cons_array_from_generic_array", ti)
+def do_cons_array_asset(v, t, ti, method):
+    #info("do_cons_array_asset", ti)
 
     zero_pad = 0
 
-    # проверяем длину
-    if t['volume'] == None:
-        info("cons open array", ti)
-
-
-    elif len(v['asset']) > t['volume']['asset']:
-        info("too many items", v['ti'])
-        return None
-
-    elif len(v['asset']) < t['volume']['asset']:
+    if v['type']['volume']['asset'] < t['volume']['asset']:
         zero_pad = t['volume']['asset'] - len(v['asset'])
 
 
@@ -210,10 +188,10 @@ def value_cons_array_from_generic_array(v, t, ti, method):
 
 
 # TODO: only for immediate array (!)
-def value_cons_array_from_array(v, t, ti, method):
-    # нельзя построить массив из массива другого типа
-    if not hlir_type.type_eq(v['type']['of'], t['of']):
-        return None
+def do_cons_array(v, t, ti, method):
+
+    if 'asset' in v:
+        return do_cons_array_asset(v, t, ti, method)
 
 
     # нельзя построить меньший массив из большего
@@ -244,26 +222,41 @@ def value_cons_array(v, t, ti, method):
     from_type = v['type']
     to_type = t
 
+    if not hlir_type.type_is_array(from_type):
+        return None  # cannot cons array value from non-array value
 
-    if value_is_immediate(v):
-        return value_cons_array_immediate(v, t, ti)
+    # Check item type
+    if v['type']['of'] != None:
+        # проверяем может ли тип элемента из v
+        # быть приведен к типу элемента t
+        # (это обязательное требование к типу v)
+        ct = select_common_type(t['of'], v['type']['of'])
+        if not hlir_type.type_eq(t['of'], ct):
+            info("unsuitable item type", ti)
+            return None
 
-    # GenericArray -> Array
+
+    # Check array length & get zero padding len
+    zero_pad = 0
+    vvol = v['type']['volume']['asset']
+    tvol = t['volume']['asset']
+    if vvol > tvol:
+        info("too many items (%d, %d)" % (vvol, tvol), v['ti'])
+        return None
+
+
     if hlir_type.type_is_generic(from_type):
-        return value_cons_array_from_generic_array(v, t, ti, method)
+        # GenericArray -> Array
+        return do_cons_array(v, t, ti, method)
+
 
     if method != 'explicit':
         info("cannot implicitly cons Array value", ti)
         return None
 
+
     # Array -> Array
-    if not hlir_type.type_eq(t['of'], v['type']['of']):
-        error("cannot cons array from array with different item type", ti)
-        return None
-
-    return value_cons_array_from_array(v, t, ti, method)
-
-
+    return do_cons_array(v, t, ti, method)
 
 
 

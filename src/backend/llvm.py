@@ -178,13 +178,16 @@ def llvm_value_array(items, type, proto=None):
     }
 
 
-def llvm_value_str(strid, _str, type, proto=None):
+def llvm_value_str(strid, _str, type, proto=None, isz=True):
+    length = len(_str)
+    if isz:
+        length = length + 1
     return {
         'isa': 'll_value',
         'kind': 'str',
         'type': type,
         'id': strid,
-        'len': len(_str),
+        'len': length,
         'str': _str,
         'is_adr': False,
         'proto': proto
@@ -320,6 +323,7 @@ def llvm_print_value_str(x):
     string_of = x['type']['to']['of']
     char_width = string_of['width']
     str_len = x['len']
+
     out("bitcast ([%d x i%d]* @%s to [0 x i%d]*)" % (str_len, char_width, x['id'], char_width))
 
 
@@ -1040,8 +1044,7 @@ def do_eval_cast(x):
             #error("strings need to be printed through do_eval_cast_immediate", x)
             string_of = to_type['to']['of']
             char_pow = string_of['width']
-            return llvm_value_str(x['strid'], x['asset'], x['type'], value)
-            exit(1)
+            return llvm_value_str(x['strid'], x['asset'], x['type'], value, isz='zstring' in x['att'])
 
     # cast any type to Unit type
     if hlir_type.type_is_unit(to_type):
@@ -1744,8 +1747,10 @@ def print_string_ascii(strid, string):
     for c in string['asset']:
         ss = ss + chr(c['asset'])
 
-    slen = len(bytes(ss, 'utf-8')) + 1 # +1 (zero)
+    slen = len(bytes(ss, 'utf-8')) #+ 1 # +1 (zero)
 
+    if 'zstring' in string['att']:
+        slen = slen + 1
 
     ss = ss.replace("\a", "\\07")
     ss = ss.replace("\b", "\\08")
@@ -1764,6 +1769,10 @@ def print_string_ascii(strid, string):
 
 def print_string_as_array(strid, string, char_width):
     slen = len(string['asset'])
+
+    if 'zstring' in string['att']:
+        slen = slen + 1
+
     lo("@%s = private constant [%d x i%d] [" % (strid, slen, char_width))
     i = 0
     for char in string['asset']:
@@ -1773,6 +1782,12 @@ def print_string_as_array(strid, string, char_width):
         print_int_type_for(char_width)
         out(" %d" % code)
         i = i + 1
+
+    if 'zstring' in string['att']:
+        out(", ")
+        print_int_type_for(char_width)
+        out(" 0")
+
     out("]")
 
 

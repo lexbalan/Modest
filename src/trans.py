@@ -1065,7 +1065,7 @@ def do_value_id(x):
 
 
 
-def do_value_str(x):
+def do_value_string(x):
     return value_string_create(x['str'], length=x['len'], ti=x['ti'])
 
 
@@ -1218,7 +1218,7 @@ def do_value(x):
 
     if k == 'number': v = do_value_number(x)
     elif k == 'id': v = do_value_id(x)
-    elif k == 'str': v = do_value_str(x)
+    elif k == 'str': v = do_value_string(x)
     elif k == 'record': v = do_value_record(x)
     elif k == 'array': v = do_value_array(x)
     else:

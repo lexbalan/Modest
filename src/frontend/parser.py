@@ -797,7 +797,6 @@ class Parser:
                 str_len = str_len + 1
                 i = i + 1
 
-            str_len = str_len + 1
             string = ''.join(new_s)
 
             return {

@@ -137,9 +137,9 @@ declare void @perror(%ConstCharStr* %str)
 
 ; -- SOURCE: src/main.cm
 
-@str1 = private constant [7 x i8] [i8 108, i8 105, i8 116, i8 116, i8 108, i8 101, i8 0]
-@str2 = private constant [4 x i8] [i8 98, i8 105, i8 103, i8 0]
-@str3 = private constant [9 x i8] [i8 45, i8 101, i8 110, i8 100, i8 105, i8 97, i8 110, i8 10, i8 0]
+@str1 = private constant [8 x i8] [i8 108, i8 105, i8 116, i8 116, i8 108, i8 101, i8 0, i8 0]
+@str2 = private constant [5 x i8] [i8 98, i8 105, i8 103, i8 0, i8 0]
+@str3 = private constant [10 x i8] [i8 45, i8 101, i8 110, i8 100, i8 105, i8 97, i8 110, i8 10, i8 0, i8 0]
 
 
 
@@ -151,13 +151,13 @@ define %Int @main() {
     %4 = icmp eq i8 %3, 1
     br i1 %4 , label %then_0, label %else_0
 then_0:
-    %5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str1 to [0 x i8]*))
+    %5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str1 to [0 x i8]*))
     br label %endif_0
 else_0:
-    %6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str2 to [0 x i8]*))
+    %6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str2 to [0 x i8]*))
     br label %endif_0
 endif_0:
-    %7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str3 to [0 x i8]*))
+    %7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str3 to [0 x i8]*))
     ret %Int 0
 }
 

@@ -30,8 +30,10 @@ def cons_ptr_to_str_from_generic_str(v, t, ti):
     # именно value_cons_node чтобы не пошел как immediate! тк *StrX это не immed
     nv = value_cons_node(v, t, ti=ti)
     nv['asset'] = s_imm
+    # 'zstring' означает что строка должна быть нуль-терминирована
+    # TODO: хотя - может это стоит переложить на бекенд? надо подумать
+    nv['att'].append('zstring')
     module_strings_add(nv)
-
     return nv
 
 

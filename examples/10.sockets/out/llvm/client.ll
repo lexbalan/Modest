@@ -347,21 +347,21 @@ declare %Int @accept(%Int %s, %Struct_sockaddr* %addr, %Socklen_t* %addrlen)
 
 ; -- SOURCE: src/client.cm
 
-@str1 = private constant [26 x i8] [i8 91, i8 45, i8 93, i8 32, i8 69, i8 114, i8 114, i8 111, i8 114, i8 32, i8 105, i8 110, i8 32, i8 115, i8 101, i8 110, i8 100, i8 117, i8 110, i8 103, i8 32, i8 100, i8 97, i8 116, i8 97, i8 0]
-@str2 = private constant [20 x i8] [i8 91, i8 45, i8 93, i8 32, i8 69, i8 114, i8 114, i8 111, i8 114, i8 32, i8 105, i8 110, i8 32, i8 115, i8 111, i8 99, i8 107, i8 101, i8 116, i8 0]
-@str3 = private constant [27 x i8] [i8 91, i8 43, i8 93, i8 32, i8 83, i8 101, i8 114, i8 118, i8 101, i8 114, i8 32, i8 115, i8 111, i8 99, i8 107, i8 101, i8 116, i8 32, i8 99, i8 114, i8 101, i8 97, i8 116, i8 101, i8 100, i8 10, i8 0]
-@str4 = private constant [10 x i8] [i8 49, i8 50, i8 55, i8 46, i8 48, i8 46, i8 48, i8 46, i8 49, i8 0]
-@str5 = private constant [24 x i8] [i8 91, i8 45, i8 93, i8 32, i8 69, i8 114, i8 114, i8 111, i8 114, i8 32, i8 105, i8 110, i8 32, i8 67, i8 111, i8 110, i8 110, i8 101, i8 99, i8 116, i8 105, i8 110, i8 103, i8 0]
-@str6 = private constant [25 x i8] [i8 91, i8 43, i8 93, i8 32, i8 67, i8 111, i8 110, i8 110, i8 101, i8 99, i8 116, i8 101, i8 100, i8 32, i8 116, i8 111, i8 32, i8 115, i8 101, i8 114, i8 118, i8 101, i8 114, i8 10, i8 0]
-@str7 = private constant [9 x i8] [i8 102, i8 105, i8 108, i8 101, i8 46, i8 116, i8 120, i8 116, i8 0]
-@str8 = private constant [2 x i8] [i8 114, i8 0]
-@str9 = private constant [26 x i8] [i8 91, i8 45, i8 93, i8 32, i8 69, i8 114, i8 114, i8 111, i8 114, i8 32, i8 105, i8 110, i8 32, i8 114, i8 101, i8 97, i8 100, i8 105, i8 110, i8 103, i8 32, i8 102, i8 105, i8 108, i8 101, i8 0]
-@str10 = private constant [33 x i8] [i8 91, i8 43, i8 93, i8 32, i8 70, i8 105, i8 108, i8 101, i8 32, i8 100, i8 97, i8 116, i8 97, i8 32, i8 115, i8 101, i8 110, i8 100, i8 32, i8 115, i8 117, i8 99, i8 99, i8 101, i8 115, i8 115, i8 102, i8 117, i8 108, i8 108, i8 121, i8 10, i8 0]
-@str11 = private constant [34 x i8] [i8 91, i8 43, i8 93, i8 32, i8 68, i8 105, i8 115, i8 99, i8 111, i8 110, i8 110, i8 101, i8 99, i8 116, i8 101, i8 100, i8 32, i8 102, i8 114, i8 111, i8 109, i8 32, i8 116, i8 104, i8 101, i8 32, i8 115, i8 101, i8 114, i8 118, i8 101, i8 114, i8 10, i8 0]
+@str1 = private constant [27 x i8] [i8 91, i8 45, i8 93, i8 32, i8 69, i8 114, i8 114, i8 111, i8 114, i8 32, i8 105, i8 110, i8 32, i8 115, i8 101, i8 110, i8 100, i8 117, i8 110, i8 103, i8 32, i8 100, i8 97, i8 116, i8 97, i8 0, i8 0]
+@str2 = private constant [21 x i8] [i8 91, i8 45, i8 93, i8 32, i8 69, i8 114, i8 114, i8 111, i8 114, i8 32, i8 105, i8 110, i8 32, i8 115, i8 111, i8 99, i8 107, i8 101, i8 116, i8 0, i8 0]
+@str3 = private constant [28 x i8] [i8 91, i8 43, i8 93, i8 32, i8 83, i8 101, i8 114, i8 118, i8 101, i8 114, i8 32, i8 115, i8 111, i8 99, i8 107, i8 101, i8 116, i8 32, i8 99, i8 114, i8 101, i8 97, i8 116, i8 101, i8 100, i8 10, i8 0, i8 0]
+@str4 = private constant [11 x i8] [i8 49, i8 50, i8 55, i8 46, i8 48, i8 46, i8 48, i8 46, i8 49, i8 0, i8 0]
+@str5 = private constant [25 x i8] [i8 91, i8 45, i8 93, i8 32, i8 69, i8 114, i8 114, i8 111, i8 114, i8 32, i8 105, i8 110, i8 32, i8 67, i8 111, i8 110, i8 110, i8 101, i8 99, i8 116, i8 105, i8 110, i8 103, i8 0, i8 0]
+@str6 = private constant [26 x i8] [i8 91, i8 43, i8 93, i8 32, i8 67, i8 111, i8 110, i8 110, i8 101, i8 99, i8 116, i8 101, i8 100, i8 32, i8 116, i8 111, i8 32, i8 115, i8 101, i8 114, i8 118, i8 101, i8 114, i8 10, i8 0, i8 0]
+@str7 = private constant [10 x i8] [i8 102, i8 105, i8 108, i8 101, i8 46, i8 116, i8 120, i8 116, i8 0, i8 0]
+@str8 = private constant [3 x i8] [i8 114, i8 0, i8 0]
+@str9 = private constant [27 x i8] [i8 91, i8 45, i8 93, i8 32, i8 69, i8 114, i8 114, i8 111, i8 114, i8 32, i8 105, i8 110, i8 32, i8 114, i8 101, i8 97, i8 100, i8 105, i8 110, i8 103, i8 32, i8 102, i8 105, i8 108, i8 101, i8 0, i8 0]
+@str10 = private constant [34 x i8] [i8 91, i8 43, i8 93, i8 32, i8 70, i8 105, i8 108, i8 101, i8 32, i8 100, i8 97, i8 116, i8 97, i8 32, i8 115, i8 101, i8 110, i8 100, i8 32, i8 115, i8 117, i8 99, i8 99, i8 101, i8 115, i8 115, i8 102, i8 117, i8 108, i8 108, i8 121, i8 10, i8 0, i8 0]
+@str11 = private constant [35 x i8] [i8 91, i8 43, i8 93, i8 32, i8 68, i8 105, i8 115, i8 99, i8 111, i8 110, i8 110, i8 101, i8 99, i8 116, i8 101, i8 100, i8 32, i8 102, i8 114, i8 111, i8 109, i8 32, i8 116, i8 104, i8 101, i8 32, i8 115, i8 101, i8 114, i8 118, i8 101, i8 114, i8 10, i8 0, i8 0]
 
 
 
-@filename = constant [9 x i8] [
+@filename = constant [8 x i8] [
     i8 102,
     i8 105,
     i8 108,
@@ -369,10 +369,9 @@ declare %Int @accept(%Int %s, %Struct_sockaddr* %addr, %Socklen_t* %addrlen)
     i8 46,
     i8 116,
     i8 120,
-    i8 116,
-    i8 0
+    i8 116
 ]
-@ipAddress = constant [10 x i8] [
+@ipAddress = constant [9 x i8] [
     i8 49,
     i8 50,
     i8 55,
@@ -381,8 +380,7 @@ declare %Int @accept(%Int %s, %Struct_sockaddr* %addr, %Socklen_t* %addrlen)
     i8 46,
     i8 48,
     i8 46,
-    i8 49,
-    i8 0
+    i8 49
 ]
 
 define void @send_file(%FILE* %fp, %Int %sockfd) {
@@ -400,7 +398,7 @@ body_1:
     %8 = icmp eq %SSizeT %7, -1
     br i1 %8 , label %then_0, label %endif_0
 then_0:
-    call void (%ConstCharStr*) @perror(%ConstCharStr* bitcast ([26 x i8]* @str1 to [0 x i8]*))
+    call void (%ConstCharStr*) @perror(%ConstCharStr* bitcast ([27 x i8]* @str1 to [0 x i8]*))
     call void (%Int) @exit(%Int 1)
     br label %endif_0
 endif_0:
@@ -416,18 +414,18 @@ define %Int @main() {
     %2 = icmp slt %Int %1, 0
     br i1 %2 , label %then_0, label %endif_0
 then_0:
-    call void (%ConstCharStr*) @perror(%ConstCharStr* bitcast ([20 x i8]* @str2 to [0 x i8]*))
+    call void (%ConstCharStr*) @perror(%ConstCharStr* bitcast ([21 x i8]* @str2 to [0 x i8]*))
     call void (%Int) @exit(%Int 1)
     br label %endif_0
 endif_0:
-    %3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str3 to [0 x i8]*))
+    %3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([28 x i8]* @str3 to [0 x i8]*))
     %4 = alloca %Struct_sockaddr_in
     %5 = insertvalue %Struct_sockaddr_in zeroinitializer, i8 0, 0
     %6 = bitcast i8 2 to i8
     %7 = insertvalue %Struct_sockaddr_in %5, i8 %6, 1
     %8 = bitcast i16 8080 to %UnsignedShort
     %9 = insertvalue %Struct_sockaddr_in %7, %UnsignedShort %8, 2
-    %10 = call %In_addr_t ([0 x %ConstChar]*) @inet_addr([0 x %ConstChar]* bitcast ([10 x i8]* @str4 to [0 x i8]*))
+    %10 = call %In_addr_t ([0 x %ConstChar]*) @inet_addr([0 x %ConstChar]* bitcast ([11 x i8]* @str4 to [0 x i8]*))
     %11 = insertvalue %Struct_in_addr zeroinitializer, %In_addr_t %10, 0
     %12 = insertvalue %Struct_sockaddr_in %9, %Struct_in_addr %11, 3
     %13 = insertvalue [8 x i8] zeroinitializer, i8 0, 0
@@ -450,23 +448,23 @@ endif_0:
     %28 = icmp slt %Int %27, 0
     br i1 %28 , label %then_1, label %endif_1
 then_1:
-    call void (%ConstCharStr*) @perror(%ConstCharStr* bitcast ([24 x i8]* @str5 to [0 x i8]*))
+    call void (%ConstCharStr*) @perror(%ConstCharStr* bitcast ([25 x i8]* @str5 to [0 x i8]*))
     call void (%Int) @exit(%Int 1)
     br label %endif_1
 endif_1:
-    %29 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str6 to [0 x i8]*))
-    %30 = call %FILE* (%ConstCharStr*, %ConstCharStr*) @fopen(%ConstCharStr* bitcast ([9 x i8]* @str7 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str8 to [0 x i8]*))
+    %29 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str6 to [0 x i8]*))
+    %30 = call %FILE* (%ConstCharStr*, %ConstCharStr*) @fopen(%ConstCharStr* bitcast ([10 x i8]* @str7 to [0 x i8]*), %ConstCharStr* bitcast ([3 x i8]* @str8 to [0 x i8]*))
     %31 = icmp eq %FILE* %30, null
     br i1 %31 , label %then_2, label %endif_2
 then_2:
-    call void (%ConstCharStr*) @perror(%ConstCharStr* bitcast ([26 x i8]* @str9 to [0 x i8]*))
+    call void (%ConstCharStr*) @perror(%ConstCharStr* bitcast ([27 x i8]* @str9 to [0 x i8]*))
     call void (%Int) @exit(%Int 1)
     br label %endif_2
 endif_2:
     call void (%FILE*, %Int) @send_file(%FILE* %30, %Int %1)
-    %32 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([33 x i8]* @str10 to [0 x i8]*))
+    %32 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @str10 to [0 x i8]*))
     %33 = call %Int (%Int) @close(%Int %1)
-    %34 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @str11 to [0 x i8]*))
+    %34 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([35 x i8]* @str11 to [0 x i8]*))
     ret %Int 0
 }
 

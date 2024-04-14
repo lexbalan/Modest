@@ -40,7 +40,7 @@ def value_cons_char(v, t, ti, method):
     # Generic([1]GenericChar) -> Char
     # ex: var c: Char8 = "A"
     if type.type_is_generic_array_of_char(from_type):
-        if from_type['volume']['asset'] == 2:
+        if from_type['volume']['asset'] == 1:
             # extract GenericChar item for next cast step (see below)
             v = v['asset'][0]
             from_type = v['type']

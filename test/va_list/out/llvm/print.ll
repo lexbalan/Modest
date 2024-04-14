@@ -352,27 +352,25 @@ define i8 @n_to_sym(i8 %n) {
     %2 = icmp ule i8 %n, 9
     br i1 %2 , label %then_0, label %else_0
 then_0:
-    %3 = insertvalue [2 x i8] zeroinitializer, i8 48, 0
-    %4 = insertvalue [2 x i8] %3, i8 0, 1
-    %5 = extractvalue [2 x i8] %4, 0
-    %6 = bitcast i8 %5 to i8
-    %7 = add i8 %6, %n
-    %8 = bitcast i8 %7 to i8
-    store i8 %8, i8* %1
+    %3 = insertvalue [1 x i8] zeroinitializer, i8 48, 0
+    %4 = extractvalue [1 x i8] %3, 0
+    %5 = bitcast i8 %4 to i8
+    %6 = add i8 %5, %n
+    %7 = bitcast i8 %6 to i8
+    store i8 %7, i8* %1
     br label %endif_0
 else_0:
-    %9 = insertvalue [2 x i8] zeroinitializer, i8 65, 0
-    %10 = insertvalue [2 x i8] %9, i8 0, 1
-    %11 = extractvalue [2 x i8] %10, 0
-    %12 = bitcast i8 %11 to i8
-    %13 = sub i8 %n, 10
-    %14 = add i8 %12, %13
-    %15 = bitcast i8 %14 to i8
-    store i8 %15, i8* %1
+    %8 = insertvalue [1 x i8] zeroinitializer, i8 65, 0
+    %9 = extractvalue [1 x i8] %8, 0
+    %10 = bitcast i8 %9 to i8
+    %11 = sub i8 %n, 10
+    %12 = add i8 %10, %11
+    %13 = bitcast i8 %12 to i8
+    store i8 %13, i8* %1
     br label %endif_0
 endif_0:
-    %16 = load i8, i8* %1
-    ret i8 %16
+    %14 = load i8, i8* %1
+    ret i8 %14
 }
 
 define void @sprintf_hex_nat32([0 x i8]* %buf, i32 %x) {

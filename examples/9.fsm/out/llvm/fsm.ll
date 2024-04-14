@@ -163,9 +163,9 @@ declare void @perror(%ConstCharStr* %str)
 
 ; -- SOURCE: src/fsm.cm
 
-@str1 = private constant [11 x i8] [i8 102, i8 115, i8 109, i8 95, i8 114, i8 117, i8 110, i8 40, i8 41, i8 10, i8 0]
-@str2 = private constant [10 x i8] [i8 101, i8 110, i8 116, i8 101, i8 114, i8 32, i8 37, i8 115, i8 10, i8 0]
-@str3 = private constant [9 x i8] [i8 101, i8 120, i8 105, i8 116, i8 32, i8 37, i8 115, i8 10, i8 0]
+@str1 = private constant [12 x i8] [i8 102, i8 115, i8 109, i8 95, i8 114, i8 117, i8 110, i8 40, i8 41, i8 10, i8 0, i8 0]
+@str2 = private constant [11 x i8] [i8 101, i8 110, i8 116, i8 101, i8 114, i8 32, i8 37, i8 115, i8 10, i8 0, i8 0]
+@str3 = private constant [10 x i8] [i8 101, i8 120, i8 105, i8 116, i8 32, i8 37, i8 115, i8 10, i8 0, i8 0]
 
 
 
@@ -187,7 +187,7 @@ define void @fsm_switch(%FSM* %fsm, i32 %state) {
 }
 
 define void @fsm_run(%FSM* %fsm) {
-    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str1 to [0 x i8]*))
+    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*))
     %2 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 3
     %3 = load %UInt32, %UInt32* %2
     %4 = icmp eq %UInt32 %3, 0
@@ -200,7 +200,7 @@ then_0:
     br i1 1 , label %then_1, label %endif_1
 then_1:
     %9 = getelementptr inbounds %FSM_StateDesc, %FSM_StateDesc* %8, i32 0, i32 0
-    %10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str2 to [0 x i8]*), [8 x i8]* %9)
+    %10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str2 to [0 x i8]*), [8 x i8]* %9)
     br label %endif_1
 endif_1:
     %11 = getelementptr inbounds %FSM_StateDesc, %FSM_StateDesc* %8, i32 0, i32 1
@@ -252,7 +252,7 @@ then_5:
     br i1 1 , label %then_6, label %endif_6
 then_6:
     %37 = getelementptr inbounds %FSM_StateDesc, %FSM_StateDesc* %36, i32 0, i32 0
-    %38 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str3 to [0 x i8]*), [8 x i8]* %37)
+    %38 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str3 to [0 x i8]*), [8 x i8]* %37)
     br label %endif_6
 endif_6:
     %39 = getelementptr inbounds %FSM_StateDesc, %FSM_StateDesc* %36, i32 0, i32 3

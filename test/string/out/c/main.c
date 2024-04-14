@@ -11,9 +11,9 @@
 
 
 
-static char string8[12] = "S-t-r-i-n-g";
-static uint16_t string16[14] = u"S-t-r-i-n-g-Ω";
-static uint32_t string32[18] = U"S-t-r-i-n-g-Ω 🐀🎉🦄";
+static char string8[11] = "S-t-r-i-n-g";
+static uint16_t string16[13] = u"S-t-r-i-n-g-Ω";
+static uint32_t string32[17] = U"S-t-r-i-n-g-Ω 🐀🎉🦄";
 
 static char *ptr_to_string8 = "S-t-r-i-n-g";
 static uint16_t *ptr_to_string16 = u"S-t-r-i-n-g-Ω";
