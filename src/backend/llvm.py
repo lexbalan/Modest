@@ -1166,19 +1166,6 @@ def do_eval_record(v):
 
 
 def do_eval_pointer(x):
-    #FIXIT КАПЕЦ костыль! сюда попадают например константы
-    # которые содержат в какой то итерации указатель на строку
-    # и это жопа
-    # это связано с do_eval_cast_immediate (!) строки так же идут оттуда!
-    if hlir_type.type_is_pointer_to_array_of_char(x['type']):
-        1 / 0
-        while not 'strid' in x:
-            if not 'value' in x:
-                value_print(x)
-            x = x['value']
-        return llvm_value_str(x['strid'], x['asset'], x['type'], x['value'])
-    #"""
-
     return llvm_value_num(x['type'], x['asset'])
 
 
