@@ -93,9 +93,11 @@ int main()
         const bool test_result = sha256_doTest(test);
 
         char *res;
-        res = "failed";
+        memcpy(&res, &"failed", 7);
+        memset((((void *)&res) + 7), 0, 1);
         if (test_result) {
-            res = "passed";
+            memcpy(&res, &"passed", 7);
+            memset((((void *)&res) + 7), 0, 1);
         }
 
         printf("test #%i: %s\n", i, res);

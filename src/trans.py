@@ -965,7 +965,7 @@ def do_value_index(x):
 
         if value_is_immediate(left):
             if value_is_immediate(index):
-                info("immediate index", x['ti'])
+                #info("immediate index", x['ti'])
                 index_imm = index['asset']
 
                 if index_imm >= array_typ['volume']['asset']:
@@ -974,6 +974,7 @@ def do_value_index(x):
 
                 item = left['asset'][index_imm]
 
+                v['immval'] = item
                 v['asset'] = item['asset']
                 v['immediate'] = item['immediate']
 
@@ -1023,7 +1024,10 @@ def do_value_access(x):
     if value_is_immediate(left) and not via_pointer:
         initializers = left['asset']
         initializer = get_item_with_id(initializers, field_id['str'])
+
+        v['immval'] = initializer['value']
         v['asset'] = initializer['value']['asset']
+        # (!) #asset of immediate index & access contains VALUE (!)
         v['immediate'] = initializer['value']['immediate']
 
     return v

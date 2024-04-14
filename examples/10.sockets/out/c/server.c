@@ -55,8 +55,8 @@ int main()
     struct sockaddr_in server_addr;
     server_addr = (struct sockaddr_in){
         .sin_len = 0,
-        .sin_family = AF_INET,
-        .sin_port = port,
+        .sin_family = (uint8_t)AF_INET,
+        .sin_port = (unsigned short)port,
         .sin_addr = (struct in_addr){
             .s_addr = inet_addr("127.0.0.1")
         },

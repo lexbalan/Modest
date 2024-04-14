@@ -116,7 +116,7 @@ def value_cons_record_from_generic_record(v, t, ti, method):
      #   return value_cons_node(v, t, ti=ti)
 
 
-    warning("value_cons_record_from_generic_record", ti)
+    #info("value_cons_record_from_generic_record", ti)
 
     items = []
     if len(v['type']['fields']) > 0:

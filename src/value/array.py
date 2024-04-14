@@ -49,12 +49,12 @@ def value_array_create(items, ti=None):
         item = items[i]
         casted_item = value_cons_implicit(item, array_item_type)
 
-        if hlir_type.type_is_record(casted_item['type']):
-            info("here", item['expr_ti'])
-            hlir_type.type_print(casted_item['type'])
-            for ini in casted_item['asset']:
-                hlir_type.type_print(ini['value']['type'])
-            print()
+        #if hlir_type.type_is_record(casted_item['type']):
+            #info("here^^", item['expr_ti'])
+            #hlir_type.type_print(casted_item['type'])
+            #for ini in casted_item['asset']:
+            #    hlir_type.type_print(ini['value']['type'])
+            #print()
 
         if 'asset' in item:
             casted_item['asset'] = item['asset']

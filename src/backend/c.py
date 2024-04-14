@@ -683,7 +683,7 @@ def print_value_cons(x, ctx):
             try:
                 print_cast_hard(to_type, value)
             except:
-                value_print(value)
+                value_print(value, msg='cannot cast hard')
                 """type_print(value['type'])
                 print("TO")
                 type_print(to_type)"""
