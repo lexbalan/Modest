@@ -1291,9 +1291,9 @@ def assign(l, rx):
         # for case:
         # var x: [10]Int32
         # var y: [5]Int32
-        # x = y to [10]Int32
+        # x = [10]Int32 y
         cast_v = rx['value']
-        if hlir_type.type_is_array(cast_v['type']):
+        if hlir_type.type_is_array(rx['type']):
             rx = cast_v
 
     if hlir_type.type_is_array(rx['type']):

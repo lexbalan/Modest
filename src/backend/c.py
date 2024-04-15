@@ -1346,9 +1346,9 @@ def assign(left, right):
         # for case:
         # var x: [10]Int32
         # var y: [5]Int32
-        # x = y to [10]Int32
+        # x = [10]Int32 y
         cast_v = right['value']
-        if hlir_type.type_is_array(cast_v['type']):
+        if hlir_type.type_is_array(right['type']):
             right = cast_v
             return assign_array(left, right)
 

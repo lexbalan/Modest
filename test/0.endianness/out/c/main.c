@@ -15,13 +15,14 @@ int main()
     check = 0x0001;
     const bool is_le = *(uint8_t *)&check == 1;
 
+    char *kind;
     if (is_le) {
-        printf("little");
+        kind = "little";
     } else {
-        printf("big");
+        kind = "big";
     }
 
-    printf("-endian\n");
+    printf("%s-endian\n", kind);
 
     return 0;
 }
