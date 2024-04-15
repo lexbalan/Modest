@@ -255,9 +255,27 @@ def init():
 
 
     compilerVersionMajor = value_integer_create(0, typ=foundation.typeNat32)
-    root_context.value_add('__compilerVersionMajor', compilerVersionMajor)
     compilerVersionMinor = value_integer_create(7, typ=foundation.typeNat32)
-    root_context.value_add('__compilerVersionMinor', compilerVersionMinor)
+
+
+    compilerNameString = "m2"
+    compilerName = value_string_create(compilerNameString, length=3, ti=None)
+
+    # '__compiler.version' record
+    compiler_version_initializers=[
+        hlir_initializer({'str': 'major'}, compilerVersionMajor),
+        hlir_initializer({'str': 'minor'}, compilerVersionMinor)
+    ]
+    compilerVersion = value_record_create(compiler_version_initializers)
+
+    # '__compiler' record
+    compiler_initializers=[
+        hlir_initializer({'str': 'name'}, compilerName),
+        hlir_initializer({'str': 'version'}, compilerVersion),
+    ]
+    compiler = value_record_create(compiler_initializers)
+    root_context.value_add('__compiler', compiler)
+
 
     import platform
     __platformSystem = value_string_create(platform.system())
@@ -280,13 +298,19 @@ def init():
     pointer_width = int(settings.get('pointer_width'))
 
     __systemCharWidth = value_integer_create(char_width, typ=foundation.typeNat32)
-    root_context.value_add('__systemCharWidth', __systemCharWidth)
     __systemIntWidth = value_integer_create(int_width, typ=foundation.typeNat32)
-    root_context.value_add('__systemIntWidth', __systemIntWidth)
     __systemFloatWidth = value_integer_create(flt_width, typ=foundation.typeNat32)
-    root_context.value_add('__systemFloatWidth', __systemFloatWidth)
     __systemPointerWidth = value_integer_create(pointer_width, typ=foundation.typeNat32)
-    root_context.value_add('__systemPointerWidth', __systemPointerWidth)
+
+    # '__system' record
+    target_initializers=[
+        hlir_initializer({'str': 'charWidth'}, __systemCharWidth),
+        hlir_initializer({'str': 'intWidth'}, __systemIntWidth),
+        hlir_initializer({'str': 'floatWidth'}, __systemFloatWidth),
+        hlir_initializer({'str': 'pointerWidth'}, __systemPointerWidth),
+    ]
+    target = value_record_create(target_initializers)
+    root_context.value_add('__target', target)
 
     #print("system_char_width  = %d" % char_width)
     #print("system_int_width  = %d" % int_width)

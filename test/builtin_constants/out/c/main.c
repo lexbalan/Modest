@@ -11,13 +11,14 @@
 
 int main()
 {
-    printf("__compilerVersionMajor = %u\n", 0);
-    printf("__compilerVersionMinor = %u\n", 7);
+    printf("__compiler.name = %s\n", "m2");
+    printf("__compiler.version.major = %u\n", 0);
+    printf("__compiler.version.minor = %u\n", 7);
 
-    printf("__systemPointerWidth = %u\n", 64);
-    printf("__systemCharWidth = %u\n", 8);
-    printf("__systemIntWidth = %u\n", 32);
-    printf("__systemFloatWidth = %u\n", 64);
+    printf("__target.pointerWidth = %u\n", 64);
+    printf("__target.charWidth = %u\n", 8);
+    printf("__target.intWidth = %u\n", 32);
+    printf("__target.floatWidth = %u\n", 64);
 
     printf("__platformSystem = \"%s\"\n", "Darwin");
     printf("__platformRelease = \"%s\"\n", "21.6.0");
