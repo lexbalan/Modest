@@ -254,67 +254,21 @@ def init():
     root_context.type_add('VA_List', foundation.typeVA_List)
 
 
-    compilerVersionMajor = value_integer_create(0, typ=foundation.typeNat32)
-    compilerVersionMinor = value_integer_create(7, typ=foundation.typeNat32)
-
-
-    compilerNameString = "m2"
-    compilerName = value_string_create(compilerNameString, length=3, ti=None)
-
-    # '__compiler.version' record
-    compiler_version_initializers=[
-        hlir_initializer({'str': 'major'}, compilerVersionMajor),
-        hlir_initializer({'str': 'minor'}, compilerVersionMinor)
-    ]
-    compilerVersion = value_record_create(compiler_version_initializers)
-
-    # '__compiler' record
-    compiler_initializers=[
-        hlir_initializer({'str': 'name'}, compilerName),
-        hlir_initializer({'str': 'version'}, compilerVersion),
-    ]
-    compiler = value_record_create(compiler_initializers)
-    root_context.value_add('__compiler', compiler)
-
-
-    import platform
-    __platformSystem = value_string_create(platform.system())
-    root_context.value_add('__platformSystem', __platformSystem)
-    __platformRelease = value_string_create(platform.release())
-    root_context.value_add('__platformRelease', __platformRelease)
-
 
     root_context.value_add('nil', valueNil)
     root_context.value_add('true', valueTrue)
     root_context.value_add('false', valueFalse)
 
 
-    # Set taget depended Int & Nat types
-    # (used in index, extra agrs & generic numeric var definitions)
-
+    target_name = str(settings.get('target_name'))
     char_width = int(settings.get('char_width'))
     int_width = int(settings.get('integer_width'))
     flt_width = int(settings.get('float_width'))
     pointer_width = int(settings.get('pointer_width'))
 
-    __systemCharWidth = value_integer_create(char_width, typ=foundation.typeNat32)
-    __systemIntWidth = value_integer_create(int_width, typ=foundation.typeNat32)
-    __systemFloatWidth = value_integer_create(flt_width, typ=foundation.typeNat32)
-    __systemPointerWidth = value_integer_create(pointer_width, typ=foundation.typeNat32)
-
-    # '__system' record
-    target_initializers=[
-        hlir_initializer({'str': 'charWidth'}, __systemCharWidth),
-        hlir_initializer({'str': 'intWidth'}, __systemIntWidth),
-        hlir_initializer({'str': 'floatWidth'}, __systemFloatWidth),
-        hlir_initializer({'str': 'pointerWidth'}, __systemPointerWidth),
-    ]
-    target = value_record_create(target_initializers)
-    root_context.value_add('__target', target)
-
-    #print("system_char_width  = %d" % char_width)
-    #print("system_int_width  = %d" % int_width)
-    #print("system_flt_width  = %d" % flt_width)
+    #print("char_width  = %d" % char_width)
+    #print("int_width  = %d" % int_width)
+    #print("float_width  = %d" % flt_width)
 
     global typeSysInt, typeSysNat, typeSysFloat, typeSysChar, typeSysStr
 
@@ -323,6 +277,90 @@ def init():
     typeSysNat = foundation.type_select_nat(int_width)
     typeSysFloat = foundation.typeFloat64
     typeSysStr = hlir_type.hlir_type_pointer(hlir_type.hlir_type_array(typeSysChar))
+
+    init_builtin_values()
+
+
+
+
+def init_builtin_values():
+    # Set taget depended Int & Nat types
+    # (used in index, extra agrs & generic numeric var definitions)
+
+
+
+    #
+    # __compiler
+    #
+
+    # compiler name
+    compilerNameString = "m2"
+    compilerName = value_string_create(compilerNameString, length=3, ti=None)
+
+    # compiler version
+    compilerVersionMajor = value_integer_create(0, typ=foundation.typeNat32)
+    compilerVersionMinor = value_integer_create(7, typ=foundation.typeNat32)
+
+    compiler_version_initializers = [
+        hlir_initializer({'str': 'major'}, compilerVersionMajor),
+        hlir_initializer({'str': 'minor'}, compilerVersionMinor)
+    ]
+    compilerVersion = value_record_create(compiler_version_initializers)
+
+    # '__compiler' record
+    compiler_initializers = [
+        hlir_initializer({'str': 'name'}, compilerName),
+        hlir_initializer({'str': 'version'}, compilerVersion),
+    ]
+    compiler = value_record_create(compiler_initializers)
+    root_context.value_add('__compiler', compiler)
+
+
+    """import platform
+    __platformSystem = value_string_create(platform.system())
+    root_context.value_add('__platformSystem', __platformSystem)
+    __platformRelease = value_string_create(platform.release())
+    root_context.value_add('__platformRelease', __platformRelease)
+
+    target_system_initializers = [
+        hlir_initializer({'str': 'name'}, compilerName),
+        hlir_initializer({'str': 'version'}, compilerVersion),
+    ]
+    target_system = value_record_create(target_system_initializers)
+    """
+
+    #
+    # __target
+    #
+
+    target_name = str(settings.get('target_name'))
+    char_width = int(settings.get('char_width'))
+    int_width = int(settings.get('integer_width'))
+    flt_width = int(settings.get('float_width'))
+    pointer_width = int(settings.get('pointer_width'))
+
+
+    __targetName = value_string_create(target_name)
+    __targetCharWidth = value_integer_create(char_width, typ=foundation.typeNat32)
+    __targetIntWidth = value_integer_create(int_width, typ=foundation.typeNat32)
+    __targetFloatWidth = value_integer_create(flt_width, typ=foundation.typeNat32)
+    __targetPointerWidth = value_integer_create(pointer_width, typ=foundation.typeNat32)
+
+    # '__target' record
+    target_initializers = [
+        hlir_initializer({'str': 'name'}, __targetName),
+        hlir_initializer({'str': 'charWidth'}, __targetCharWidth),
+        hlir_initializer({'str': 'intWidth'}, __targetIntWidth),
+        hlir_initializer({'str': 'floatWidth'}, __targetFloatWidth),
+        hlir_initializer({'str': 'pointerWidth'}, __targetPointerWidth),
+    ]
+    target = value_record_create(target_initializers)
+    root_context.value_add('__target', target)
+
+
+
+
+
 
 
 # last fiels of record can be zero size array (!)

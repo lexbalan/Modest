@@ -5,6 +5,7 @@ precision = 256  # decimal floating point compile time precision
 pointer_width = 64
 char_width = 8
 integer_width = 32
+target_name = 'Default'
 float_width = 64
 sizeof_width = 64
 #stdlib_path = ""
@@ -16,6 +17,7 @@ target_triple = "arm64-apple-macosx12.0.0"
 # Custom config example (redefinition of default values)
 # use --setup=CortexM3 compiler flag
 [CortexM3]
+target_name = 'CortexM3'
 pointer_width = 32
 integer_width = 32
 float_width = 32
