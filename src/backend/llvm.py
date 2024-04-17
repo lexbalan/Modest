@@ -277,9 +277,6 @@ def llvm_print_value_array(x):
         out("zeroinitializer")
         return
 
-    item_type = x['type']['of']
-    is_generic_items = hlir_type.type_is_generic(item_type)
-
     out("[\n")
     indent_up()
     n = len(x['items'])
@@ -1014,8 +1011,9 @@ def cast_record_to_record(to_type, value, ti):
 
 def cast_array_to_array(to_type, value, ti):
     info("cast_array_to_array", ti)
-    mass
-    out(";")
+    #mass
+    out(";cast_array_to_array??")
+
 
 def do_eval_cast(x):
     value = x['value']
