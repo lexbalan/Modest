@@ -287,13 +287,8 @@ def llvm_print_value_array(x):
     while i < n:
         item = x['items'][i]
         if i > 0: out(",\n")
-        if is_generic_items:
-            indent();
-            print_type(item_type)
-            out(" ")
-            llvm_print_value(item)
-        else:
-            indent(); llvm_print_type_value(item);
+        indent()
+        llvm_print_type_value(item)
         i = i + 1
     indent_down()
     out("\n"); indent(); out("]")
@@ -1017,6 +1012,11 @@ def cast_record_to_record(to_type, value, ti):
     return new_struct
 
 
+def cast_array_to_array(to_type, value, ti):
+    info("cast_array_to_array", ti)
+    mass
+    out(";")
+
 def do_eval_cast(x):
     value = x['value']
     from_type = value['type']
@@ -1030,7 +1030,6 @@ def do_eval_cast(x):
 
         if not hlir_type.type_is_pointer(x['type']):
             return do_eval_literal(x)"""
-
 
     if hlir_type.type_is_generic_array_of_char(from_type):
         if hlir_type.type_is_pointer_to_array_of_char(to_type):
@@ -1055,6 +1054,11 @@ def do_eval_cast(x):
         if hlir_type.type_is_record(to_type):
             return cast_record_to_record(to_type, value, x['ti'])
 
+
+    if hlir_type.type_is_array(from_type):
+        if hlir_type.type_is_array(to_type):
+            return cast_array_to_array(to_type, value, x['ti'])
+
     if hlir_type.type_is_va_list(from_type):
         # приведение объекта типа va_list особенное
         # оно дает доступ к следующему элементу списка
@@ -1063,6 +1067,7 @@ def do_eval_cast(x):
 
 
     v = do_reval(value)
+
 
 
     # AnyNonZeroValue to Bool  ==  true  (!)

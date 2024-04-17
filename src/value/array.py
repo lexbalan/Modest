@@ -86,33 +86,15 @@ def value_array_concat(l, r, ti):
 
 def value_string_create(string, length=0, ti=None):
     #info("value_string_create %d" % length, ti)
-    if length == 0:
-        length = len(string)
-
-    max_char_width = 0
     chars = []
     for char in string:
-        char_code = ord(char)
-        char_value = value_char_create(char_code, _type=None, ti=ti)
+        cc = ord(char)
+        char_value = value_char_create(cc, _type=None, ti=ti)
         chars.append(char_value)
 
-        # get max char width
-        char_width = char_value['type']['width']
-        max_char_width = max(char_width, max_char_width)
-
-
-    # тип массива литерала строки
-    # это наиболее широкий GenericChar в ней
-    genericCharType = hlir_type.hlir_type_char(max_char_width, ti=ti)
-    genericCharType['generic'] = True
-
-    volume = value_integer_create(length)  # <=> len(string)
-    genStrType = hlir_type.hlir_type_array(genericCharType, volume=volume, ti=ti)
-    genStrType['generic'] = True
-    nv = value_terminal(genStrType, chars, ti)
+    nv = value_array_create(chars, ti)
     nv['immediate'] = True
     return nv
-
 
 
 
@@ -166,6 +148,11 @@ def do_cons_array_asset(v, t, ti, method):
     casted_items = casted_items + [value_zero(t['of'])] * zero_pad
 
     nv = value_terminal(t, casted_items, ti)
+    #nv = value_cons_node(v, t, ti=ti)
+    from hlir.type import type_print
+    #type_print(t); print()
+    #type_print(casted_items[0]['type']); print()
+    nv['asset'] = casted_items
     nv['nl_end'] = v['nl_end']
 
     if value_is_immediate(v):
@@ -182,10 +169,8 @@ def do_cons_array_asset(v, t, ti, method):
 
 # TODO: only for immediate array (!)
 def do_cons_array(v, t, ti, method):
-
     if 'asset' in v:
         return do_cons_array_asset(v, t, ti, method)
-
 
     # нельзя построить меньший массив из большего
     n_from = v['type']['volume']['asset']
