@@ -273,16 +273,18 @@ def llvm_inline_cast(op, to_type, val):
 
 
 def llvm_print_value_array(x):
-    if len(x['items']) == 0:
+    items = x['items']
+
+    if len(items) == 0:
         out("zeroinitializer")
         return
 
     out("[\n")
     indent_up()
-    n = len(x['items'])
+    n = len(items)
     i = 0
     while i < n:
-        item = x['items'][i]
+        item = items[i]
         if i > 0: out(",\n")
         indent()
         llvm_print_type_value(item)
@@ -1009,10 +1011,11 @@ def cast_record_to_record(to_type, value, ti):
     return new_struct
 
 
-def cast_array_to_array(to_type, value, ti):
-    info("cast_array_to_array", ti)
+def cast_array_to_array(x):
+    info("cast_array_to_array", x['ti'])
     #mass
-    out(";cast_array_to_array??")
+
+    #out(";cast_array_to_array??")
 
 
 def do_eval_cast(x):
@@ -1053,9 +1056,9 @@ def do_eval_cast(x):
             return cast_record_to_record(to_type, value, x['ti'])
 
 
-    if hlir_type.type_is_array(from_type):
-        if hlir_type.type_is_array(to_type):
-            return cast_array_to_array(to_type, value, x['ti'])
+    #if hlir_type.type_is_array(from_type):
+    #    if hlir_type.type_is_array(to_type):
+    #        return cast_array_to_array(x)
 
     if hlir_type.type_is_va_list(from_type):
         # приведение объекта типа va_list особенное

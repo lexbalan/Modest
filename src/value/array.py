@@ -147,8 +147,8 @@ def do_cons_array_asset(v, t, ti, method):
 
     casted_items = casted_items + [value_zero(t['of'])] * zero_pad
 
-    nv = value_terminal(t, casted_items, ti)
-    #nv = value_cons_node(v, t, ti=ti)
+    #nv = value_terminal(t, casted_items, ti)
+    nv = value_cons_node(v, t, ti=ti)
     from hlir.type import type_print
     #type_print(t); print()
     #type_print(casted_items[0]['type']); print()
