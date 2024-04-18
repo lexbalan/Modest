@@ -1,5 +1,6 @@
 
 import hlir.type as hlir_type
+import foundation
 from hlir.type import select_common_type
 from error import info, error
 from .char import value_char_create
@@ -14,7 +15,10 @@ from .value import value_terminal, value_is_immediate, value_cons_node, value_co
 def value_array_create(items, ti=None):
     length = len(items)
     if length == 0:
-        return _create_value_array([], None, 0, True, ti)
+        item_type = foundation.typeUnit  # not Null, becase it fail
+        v = _create_value_array([], item_type, 0, True, ti)
+        v['immediate'] = True  #!
+        return v
 
 
     # Получаем наиболее подходящий общий тип элементов массива
@@ -73,6 +77,7 @@ def value_array_concat(l, r, ti):
 
     str_array_volume = value_integer_create(length)
     item_type = select_common_type(l['type']['of'], r['type']['of'])
+    assert(item_type != None)
     t = hlir_type.hlir_type_array(item_type, volume=str_array_volume, ti=ti)
     t['generic'] = True
 
@@ -163,12 +168,16 @@ def do_cons_array_asset(v, t, ti, method):
     if 'id' in v:
         nv['id'] = v['id']
 
+    #info("do_cons_array_asset %s %d" % (nv['kind'], len(nv['asset'])), ti)
+
     return nv
 
 
 
 # TODO: only for immediate array (!)
 def do_cons_array(v, t, ti, method):
+    #info("do_cons_array", ti)
+
     if 'asset' in v:
         return do_cons_array_asset(v, t, ti, method)
 
@@ -209,6 +218,7 @@ def value_cons_array(v, t, ti, method):
         # быть приведен к типу элемента t
         # (это обязательное требование к типу v)
         ct = select_common_type(t['of'], v['type']['of'])
+        assert(ct != None)
         if not hlir_type.type_eq(t['of'], ct):
             info("unsuitable item type", ti)
             return None

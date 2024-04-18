@@ -1150,10 +1150,6 @@ def do_value_array(x):
 
     length = len(x['items'])
 
-    of = None
-    if length > 0:
-        of = items[0]['type']
-
     v = value_array_create(items, ti=x['ti'])
     v['nl_end'] = x['nl_end']
     return v
@@ -1768,7 +1764,6 @@ def def_type(x):
         'isa': 'def_type',
         'id': id,
         'type': None,
-        'type': None,
         'afterdef': False,
         'att': [],
         'ti': x['ti']
@@ -1866,8 +1861,10 @@ def def_var(x):
                 init_arr_sz = iv['type']['volume']['asset']
                 var_type['volume'] = value_integer_create(init_arr_sz)
                 #print(init_arr_sz)
-
-            init_value = value_cons_implicit_check(iv, var_type)
+            try:
+                init_value = value_cons_implicit_check(iv, var_type)
+            except:
+                warning('???', x['ti'])
 
     var = value_var(id, var_type)
     module['context'].value_add(x['field']['id']['str'], var)

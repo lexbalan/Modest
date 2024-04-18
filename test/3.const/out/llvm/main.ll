@@ -165,26 +165,17 @@ declare void @perror(%ConstCharStr* %str)
 
 
 @points2 = global [3 x %Point] [
-    {
-	i8,
-	i8
-} {
-        i8 0,
-        i8 0
+    %Point {
+        i32 0,
+        i32 0
     },
-    {
-	i8,
-	i8
-} {
-        i8 1,
-        i8 1
+    %Point {
+        i32 1,
+        i32 1
     },
-    {
-	i8,
-	i8
-} {
-        i8 2,
-        i8 2
+    %Point {
+        i32 2,
+        i32 2
     }
 ]
 

@@ -880,6 +880,7 @@ def select_common_record_type(a, b):
 
 # выбирает наиболее подходящий тип для двух входных
 # (наименьшее общее кратное)
+# CAN RETURN NONE!
 def select_common_type(a, b):
 
     # вид типа должен совпадать
@@ -905,6 +906,19 @@ def select_common_type(a, b):
         if b['kind'] == 'byte':
             if a['kind'] == 'int':
                 return b
+
+        if a['kind'] == 'unit':
+            return b
+
+        if b['kind'] == 'unit':
+            return a
+
+        if a['kind'] == 'bad':
+            return b
+
+        if b['kind'] == 'bad':
+            return a
+
 
         return None
 

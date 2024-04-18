@@ -4,7 +4,7 @@ from .common import *
 from error import info, warning, error
 import hlir.type as hlir_type
 from hlir.type import type_print
-from value.value import value_attribute_check, value_print, value_is_immediate
+from value.value import value_attribute_check, value_print, value_is_immediate, value_terminal
 from hlir.type import hlir_type_pointer
 from util import align_bits_up
 import settings
@@ -638,6 +638,8 @@ def print_type_array(t):
     if array_size != None:
         sz = array_size['asset']
     out("%d x " % sz)
+    if t['of'] == None:
+        info("wtf?", t['ti'])
     print_type(t['of'])
     out("]")
 
@@ -981,7 +983,6 @@ def do_eval_cast_immediate(x):
             # и использовать его как указатель
             return do_eval_cast(x)
 
-
     #return do_reval(x)
     return do_eval_literal(x)
 
@@ -1012,8 +1013,11 @@ def cast_record_to_record(to_type, value, ti):
 
 
 def cast_array_to_array(x):
-    info("cast_array_to_array", x['ti'])
+    #info("LLVM::cast_array_to_array", x['ti'])
     #mass
+    if value_is_immediate(x):
+        vt = value_terminal(x['type'], x['asset'], x['ti'])
+        return do_eval_literal(vt)
 
     #out(";cast_array_to_array??")
 
@@ -1056,9 +1060,9 @@ def do_eval_cast(x):
             return cast_record_to_record(to_type, value, x['ti'])
 
 
-    #if hlir_type.type_is_array(from_type):
-    #    if hlir_type.type_is_array(to_type):
-    #        return cast_array_to_array(x)
+    if hlir_type.type_is_array(from_type):
+        if hlir_type.type_is_array(to_type):
+            return cast_array_to_array(x)
 
     if hlir_type.type_is_va_list(from_type):
         # приведение объекта типа va_list особенное
@@ -1271,7 +1275,7 @@ def do_eval(x):
         out("<%s>" % k)
 
     if y == None:
-        error("llvm do_eval cannot eval this value", x['ti'])
+        error("llvm do_eval cannot eval this (%s) value" % k, x['ti'])
         value_print(x)
         return llvm_value_zero(x['type'])
 
@@ -1292,6 +1296,11 @@ def assign(l, rx):
     assert(l['isa'] == 'll_value')
     assert(rx['isa'] == 'value')
 
+    if value_is_immediate(rx):
+        # очень важно! - cons array_immediate приходит с полем 'asset'
+        # и в этом 'asset' все уже приведено как положено
+        llvm_store(l, do_reval(rx))
+        return
 
     if rx['kind'] == 'cons':
         # for case:
