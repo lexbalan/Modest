@@ -59,8 +59,8 @@ func main() -> Int {
 
     // copy arrays by value
     // C backend will be use memcpy()
-    var loc_a0 = []
-    var loc_a1 = [42, 53, 64]
+    var loc_a0: [10]Int32 = []
+    var loc_a1: [10]Int32 = [42, 53, 64]
 
     loc_a0 = loc_a1
 

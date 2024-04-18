@@ -111,7 +111,7 @@ aprecedence = [
     ['shl', 'shr'], #7
     ['add', 'sub'], #8
     ['mul', 'div', 'rem'], #9
-    ['positive', 'negative', 'not', 'cons', 'cons_immediate', 'ref', 'deref', 'sizeof', 'alignof', 'offsetof', 'lengthof'], #10
+    ['positive', 'negative', 'not', 'cons', 'ref', 'deref', 'sizeof', 'alignof', 'offsetof', 'lengthof'], #10
     ['call', 'index', 'access'], #11
     ['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #12
 ]
@@ -122,11 +122,6 @@ precedenceMax = len(aprecedence) - 1
 # приоритет операции
 def precedence(x):
     k = x['kind']
-
-    # cast generic не является 'оператором'
-    # его приоритет, это приоритет его содержимого (value)
-    if k == 'cons_immediate':
-        return precedence(x['value'])
 
     i = 0
     while i < precedenceMax + 1:
@@ -629,23 +624,6 @@ def print_cast(t, v, ctx=[]):
 
 
 
-def print_value_cons_immediate(v, ctx):
-    value = v['value']
-    from_type = value['type']
-    to_type = v['type']
-
-    # cast_immediate GenericChar -> Char
-    if hlir_type.type_is_char(to_type):
-        if hlir_type.type_is_generic_char(from_type):
-            print_value_char_create(v, ctx)
-            return
-
-    # implicit_cast of immediate value
-    print_value(value, ctx)
-
-
-
-
 def print_value_cons(x, ctx):
     to_type = x['type']
     value = x['value']
@@ -1111,9 +1089,7 @@ def print_value(x, ctx=[], need_wrap=False, just_print_id=True):
     if 'print_immediate' in ctx:
         if value_is_immediate(x):
             k = x['kind']
-            if k == 'cons_immediate':
-                print_value_cons_immediate(x, ctx)
-            elif k == 'const':
+            if k == 'const':
                 print_value_terminal(x['value'], ctx)
             else:
                 print_value_terminal(x, ctx)
@@ -1153,7 +1129,6 @@ def print_value(x, ctx=[], need_wrap=False, just_print_id=True):
     elif k == 'index_ptr': print_value_index_ptr(x, ctx)
     elif k == 'access': print_value_access(x, ctx)
     elif k == 'access_ptr': print_value_access_ptr(x, ctx)
-    elif k == 'cons_immediate': print_value_cons_immediate(x, ctx)
     elif k == 'cons': print_value_cons(x, ctx)
     elif k == 'sizeof': print_value_sizeof(x, ctx)
     elif k == 'alignof': print_value_alignof(x, ctx)

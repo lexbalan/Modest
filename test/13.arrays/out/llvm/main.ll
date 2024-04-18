@@ -611,18 +611,15 @@ endif_0:
     %151 = inttoptr i64 %150 to i8*
     %152 = bitcast i8* %151 to i8*
     call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %152, i8 0, i32 28, i1 0)
-    %153 = sext i8 0 to i32
-    %154 = getelementptr inbounds [10 x i32], [10 x i32]* @globalArray, i32 0, i32 0
-    %155 = load i32, i32* %154
-    %156 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str26 to [0 x i8]*), i32 %153, i32 %155)
-    %157 = sext i8 1 to i32
-    %158 = getelementptr inbounds [10 x i32], [10 x i32]* @globalArray, i32 0, i32 1
-    %159 = load i32, i32* %158
-    %160 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str27 to [0 x i8]*), i32 %157, i32 %159)
-    %161 = sext i8 2 to i32
-    %162 = getelementptr inbounds [10 x i32], [10 x i32]* @globalArray, i32 0, i32 2
-    %163 = load i32, i32* %162
-    %164 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str28 to [0 x i8]*), i32 %161, i32 %163)
+    %153 = getelementptr inbounds [10 x i32], [10 x i32]* @globalArray, i32 0, i32 0
+    %154 = load i32, i32* %153
+    %155 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str26 to [0 x i8]*), i32 0, i32 %154)
+    %156 = getelementptr inbounds [10 x i32], [10 x i32]* @globalArray, i32 0, i32 1
+    %157 = load i32, i32* %156
+    %158 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str27 to [0 x i8]*), i32 1, i32 %157)
+    %159 = getelementptr inbounds [10 x i32], [10 x i32]* @globalArray, i32 0, i32 2
+    %160 = load i32, i32* %159
+    %161 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str28 to [0 x i8]*), i32 2, i32 %160)
     ret %Int 0
 }
 

@@ -2,7 +2,7 @@
 import hlir.type as hlir_type
 from error import info
 from .common import *
-from value.value import value_is_zero, value_attribute_check, value_print
+from value.value import value_is_zero, value_is_immediate, value_attribute_check, value_print
 from util import get_item_with_id
 
 
@@ -39,7 +39,7 @@ aprecedence = [
     ['shl', 'shr'], #7
     ['add', 'sub'], #8
     ['mul', 'div', 'rem'], #9
-    ['positive', 'negative', 'not', 'cons', 'cons_immediate', 'ref', 'deref', 'sizeof', 'alignof', 'offsetof', 'lengthof'], #10
+    ['positive', 'negative', 'not', 'cons', 'ref', 'deref', 'sizeof', 'alignof', 'offsetof', 'lengthof'], #10
     ['call', 'index', 'access'], #11
     ['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #12
 ]
@@ -49,11 +49,6 @@ precedenceMax = len(aprecedence) - 1
 # приоритет операции
 def precedence(x):
     k = x['kind']
-
-    # cast generic не является 'оператором'
-    # его приоритет, это приоритет его содержимого (value)
-    if k == 'cons_immediate':
-        return precedence(x['value'])
 
     i = 0
     while i < precedenceMax + 1:
@@ -305,21 +300,11 @@ def print_cast(t, v, ctx=[]):
     print_value(v, ctx=ctx, need_wrap=need_wrap)
 
 
-def print_value_cons_immediate(x, ctx):
-    if 'explicit_cast' in x['att']:
-        print_cast(x['type'], x['value'], ctx=[])
-        return
-
-    # imm каст не печатаю, печатаю просто значение
-    #need_wrap = precedence(x['value']) < precedenceMax
-    print_value(x['value'], ctx)#, need_wrap=need_wrap)
-    return
-
-
 def print_value_cons(v, ctx):
     value = v['value']
     from_type = value['type']
     to_type = v['type']
+
 
     if not 'explicit_cast' in v['att']:
         print_value(value)
@@ -610,7 +595,6 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
     elif k == 'index_ptr': print_value_index_ptr(x, ctx)
     elif k == 'access': print_value_access(x, ctx)
     elif k == 'access_ptr': print_value_access_ptr(x, ctx)
-    elif k == 'cons_immediate': print_value_cons_immediate(x, ctx)
     elif k == 'cons': print_value_cons(x, ctx)
     elif k == 'sizeof': out("sizeof("); print_type(x['of']); out(")")
     elif k == 'alignof': out("alignof("); print_type(x['of']); out(")")
@@ -655,14 +639,8 @@ def print_stmt_defvar(x):
     init_value = x['default_value']
     out('var ')
 
-    if init_value == None:
-        print_field(x['var'])
-        return
 
-    if init_value['kind'] == 'cons':
-        print_id(x['var'])
-    else:
-        print_field(x['var'])
+    print_field(x['var'])
 
     if init_value != None:
         out(" = ")

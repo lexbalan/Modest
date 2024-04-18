@@ -971,23 +971,6 @@ def select_cast_operator(a, b):
 
 
 
-def do_eval_cast_immediate(x):
-    value = x['value']
-    from_type = value['type']
-    to_type = x['type']
-
-    if hlir_type.type_is_pointer(to_type):
-        if hlir_type.type_is_integer(from_type):
-            # immediate Int -> Ptr
-            # нельзя просто так напечатать числовой литерал
-            # и использовать его как указатель
-            return do_eval_cast(x)
-
-    #return do_reval(x)
-    return do_eval_literal(x)
-
-
-
 # перепаковываем структуру в такую же структуру
 # (просто с другим именем, изза чего LLVM ее считает "другой")
 def cast_record_to_record(to_type, value, ti):
@@ -1027,18 +1010,13 @@ def do_eval_cast(x):
     from_type = value['type']
     to_type = x['type']
 
-    """if value_is_immediate(x):
-        # сюда попадают литералы,
-        # и любые другие значения с immediate полем
-        if hlir_type.type_is_free_pointer(x['type']):
-            return do_eval_literal(x)
+    #!
+    if value_is_immediate(x):
+        return do_eval_literal(x)
 
-        if not hlir_type.type_is_pointer(x['type']):
-            return do_eval_literal(x)"""
 
     if hlir_type.type_is_generic_array_of_char(from_type):
         if hlir_type.type_is_pointer_to_array_of_char(to_type):
-            #error("strings need to be printed through do_eval_cast_immediate", x)
             string_of = to_type['to']['of']
             char_pow = string_of['width']
             return llvm_value_str(x['strid'], x['asset'], x['type'], value, isz='zstring' in x['att'])
@@ -1266,7 +1244,6 @@ def do_eval(x):
     elif k == 'index_ptr': y = do_eval_index_ptr(x)
     elif k == 'access': y = do_eval_access(x)
     elif k == 'access_ptr': y = do_eval_access_ptr(x)
-    elif k == 'cons_immediate': y = do_eval_cast_immediate(x)
     elif k == 'cons': y = do_eval_cast(x)
     elif k == 'add_arr': y = do_eval_literal(x)
     elif k in ['sizeof', 'lengthof', 'alignof', 'offsetof', 'eq_str']:

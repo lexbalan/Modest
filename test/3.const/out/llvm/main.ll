@@ -182,12 +182,10 @@ declare void @perror(%ConstCharStr* %str)
 
 define %Int @main() {
     %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str4 to [0 x i8]*))
-    %2 = sext i8 42 to i32
-    %3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*), i32 %2)
-    %4 = sext i8 42 to i32
-    %5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str6 to [0 x i8]*), i32 %4)
+    %2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*), i32 42)
+    %3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str6 to [0 x i8]*), i32 42)
     ;	printf("genericStringConst = %s\n", genericStringConst)
-    %6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str7 to [0 x i8]*), %Str8* bitcast ([7 x i8]* @str1 to [0 x i8]*))
+    %4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str7 to [0 x i8]*), %Str8* bitcast ([7 x i8]* @str1 to [0 x i8]*))
     ret %Int 0
 }
 

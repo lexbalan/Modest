@@ -18,7 +18,7 @@ int32_t get_integer(int32_t min, int32_t max);
 
 int32_t main()
 {
-    const int32_t number = get_integer(minNumber, maxNumber);
+    const int32_t number = get_integer((int32_t)minNumber, (int32_t)maxNumber);
 
     #define n  5
 

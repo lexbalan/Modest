@@ -306,10 +306,14 @@ def value_cons_node(value, type, ti=None):
     }
 
 
+# cons immediate такой же cons
+# но поскольку у него value immediate, мы можем его asset
+# привести и взять себе; Таким образом мы идем как литерал нода
+# и в то же время как cons нода
 def value_cons_immediate(v, t, ti=None):
     nv = value_cons_node(v, t, ti)
 
-    nv['kind'] = 'cons_immediate'
+    nv['kind'] = 'cons'
     nv['asset'] = v['asset']
     nv['immediate'] = True
 
@@ -318,6 +322,7 @@ def value_cons_immediate(v, t, ti=None):
 
     if 'nl_end' in v:
         nv['nl_end'] = v['nl_end']
+
     return nv
 
 

@@ -33,11 +33,11 @@ void putc16(uint16_t c)
 
 int main()
 {
-    utf8_putchar('A');
+    utf8_putchar((char)"A"[0]);
     printf("\n");
-    utf16_putchar(u'Ω');
+    utf16_putchar((uint16_t)u"Ω"[0]);
     printf("\n");
-    utf32_putchar(U'🦄');
+    utf32_putchar((uint32_t)U"🦄"[0]);
 
     printf("\n\n");
 

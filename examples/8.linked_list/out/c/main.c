@@ -21,7 +21,7 @@
 void nat64_list_insert(List *list, uint64_t x)
 {
     // alloc memory for Nat64 value
-    uint64_t *const p_nat64 = (uint64_t *)malloc(sizeof(uint64_t));
+    uint64_t *const p_nat64 = (uint64_t *)malloc((size_t)sizeof(uint64_t));
     *p_nat64 = x;
     linked_list_insert(list, (void *)p_nat64);
 }

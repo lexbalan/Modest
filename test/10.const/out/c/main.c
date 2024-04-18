@@ -30,7 +30,7 @@ typedef struct {
 } Line;
 
 #define zero  0
-#define pointZero  {.x = zero, .y = zero}
+#define pointZero  {.x = (double)zero, .y = (double)zero}
 #define pointOne  {.x = 1.0, .y = 1.0}
 
 #define line0  { \
@@ -79,17 +79,17 @@ float lineLength(Line line)
 int main()
 {
     const float lines_0_len = lineLength((Line){
-        .a = (Point){.x = 0, .y = 0},
-        .b = (Point){.x = 1.0, .y = 1.0}});
+        .a = (Point){.x = 0.000000, .y = 0.000000},
+        .b = (Point){.x = 1.000000, .y = 1.000000}});
     const float lines_1_len = lineLength((Line){
-        .a = (Point){.x = 10, .y = 20},
-        .b = (Point){.x = 30, .y = 40}});
+        .a = (Point){.x = 10.000000, .y = 20.000000},
+        .b = (Point){.x = 30.000000, .y = 40.000000}});
     const float lines_2_len = lineLength((Line){
-        .a = (Point){.x = 0, .y = 0},
-        .b = (Point){.x = 1.0, .y = 1.0}});
+        .a = (Point){.x = 0.000000, .y = 0.000000},
+        .b = (Point){.x = 1.000000, .y = 1.000000}});
     const float lines_3_len = lineLength((Line){
-        .a = (Point){.x = 10, .y = 20},
-        .b = (Point){.x = 30, .y = 40}});
+        .a = (Point){.x = 10.000000, .y = 20.000000},
+        .b = (Point){.x = 30.000000, .y = 40.000000}});
 
     printf("lines_0_len = %f\n", lines_0_len);
     printf("lines_1_len = %f\n", lines_1_len);

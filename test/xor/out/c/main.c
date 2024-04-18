@@ -64,19 +64,19 @@ int main()
     uint8_t *const tkey = (uint8_t *)(char *)&test_key;
 
     printf("before encrypt test_msg: \n");
-    print_bytes(tmsg, msg_length);
+    print_bytes(tmsg, ((uint32_t)(uint8_t)msg_length));
 
     // encrypt test data
-    xor_encrypter(tmsg, msg_length, tkey, key_length);
+    xor_encrypter(tmsg, ((uint32_t)(uint8_t)msg_length), tkey, ((uint32_t)(uint8_t)key_length));
 
     printf("after encrypt test_msg: \n");
-    print_bytes(tmsg, msg_length);
+    print_bytes(tmsg, ((uint32_t)(uint8_t)msg_length));
 
     // decrypt test data
-    xor_encrypter(tmsg, msg_length, tkey, key_length);
+    xor_encrypter(tmsg, ((uint32_t)(uint8_t)msg_length), tkey, ((uint32_t)(uint8_t)key_length));
 
     printf("after decrypt test_msg: \n");
-    print_bytes(tmsg, msg_length);
+    print_bytes(tmsg, ((uint32_t)(uint8_t)msg_length));
 
     return 0;
 }

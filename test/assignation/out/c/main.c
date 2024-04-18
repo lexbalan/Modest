@@ -23,7 +23,7 @@ static Point glb_r0 = {};
 static Point glb_r1 = {.x = 20, .y = 10};
 
 static int32_t glb_a0[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-static int32_t glb_a1[10] = {64, 53, 42, 0, 0, 0, 0, 0, 0, 0};
+static int32_t glb_a1[10] = {64, (int32_t)53, (int32_t)42, 0, 0, 0, 0, 0, 0, 0};
 
 
 int main()

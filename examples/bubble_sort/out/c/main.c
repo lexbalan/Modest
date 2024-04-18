@@ -12,8 +12,8 @@
 #define numberOfItems  21
 
 static int32_t array[numberOfItems] = {
-    -3, -5, 2, 1, -1, 0, -2, 3, -4, 4,
-    11, 9, 6, -7, -8, 5, 7, 10, 8, -6, -9
+    (int32_t)(int8_t)-3, (int32_t)(int8_t)-5, (int32_t)2, (int32_t)1, (int32_t)(int8_t)-1, (int32_t)0, (int32_t)(int8_t)-2, (int32_t)3, (int32_t)(int8_t)-4, (int32_t)4,
+    11, 9, (int32_t)6, (int32_t)(int8_t)-7, (int32_t)-8, (int32_t)5, (int32_t)7, 10, 8, (int32_t)(int8_t)-6, (int32_t)-9
 };
 
 
@@ -52,13 +52,13 @@ int32_t main()
     //fill_array(&array, numberOfItems)
 
     printf("array before:\n");
-    print_array((int32_t *)(int32_t *)&array, numberOfItems);
+    print_array((int32_t *)(int32_t *)&array, (int32_t)numberOfItems);
     printf("\n");
 
-    bubble_sort32((int32_t *)(int32_t *)&array, numberOfItems);
+    bubble_sort32((int32_t *)(int32_t *)&array, (int32_t)numberOfItems);
 
     printf("array after:\n");
-    print_array((int32_t *)(int32_t *)&array, numberOfItems);
+    print_array((int32_t *)(int32_t *)&array, (int32_t)numberOfItems);
     printf("\n");
 
     return 0;

@@ -70,7 +70,7 @@ func main() -> Int {
         exit(1)
     }
 
-    var addr_size = Socklen_t sizeof(Struct_sockaddr_in)
+    var addr_size: Socklen_t = Socklen_t sizeof(Struct_sockaddr_in)
     var new_addr: Struct_sockaddr_in
     let sa = &new_addr
     let new_sock = accept(sockfd, sa, &addr_size)

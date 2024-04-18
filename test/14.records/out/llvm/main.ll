@@ -279,59 +279,55 @@ endif_0:
     %16 = bitcast %Point2D* %2 to i8*
     call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %15, i8* %16, i32 8, i1 0)
     %17 = alloca { i32, i32}
-    %18 = zext i8 1 to i32
-    %19 = insertvalue { i32, i32} zeroinitializer, i32 %18, 0
-    %20 = zext i8 2 to i32
-    %21 = insertvalue { i32, i32} %19, i32 %20, 1
-    store { i32, i32} %21, { i32, i32}* %17
-    %22 = load { i32, i32}, { i32, i32}* %17
-    %23 = alloca { i32, i32}
-    store { i32, i32} %22, { i32, i32}* %23
-    %24 = bitcast { i32, i32}* %23 to %Point2D*
-    %25 = bitcast %Point2D* %14 to i8*
-    %26 = bitcast %Point2D* %24 to i8*
+    %18 = insertvalue { i32, i32} zeroinitializer, i32 1, 0
+    %19 = insertvalue { i32, i32} %18, i32 2, 1
+    store { i32, i32} %19, { i32, i32}* %17
+    %20 = load { i32, i32}, { i32, i32}* %17
+    %21 = alloca { i32, i32}
+    store { i32, i32} %20, { i32, i32}* %21
+    %22 = bitcast { i32, i32}* %21 to %Point2D*
+    %23 = bitcast %Point2D* %14 to i8*
+    %24 = bitcast %Point2D* %22 to i8*
     
-    %27 = call i32 (i8*, i8*, i64) @memcmp( i8* %25, i8* %26, i64 8)
-    %28 = icmp eq i32 %27, 0
-    br i1 %28 , label %then_1, label %else_1
+    %25 = call i32 (i8*, i8*, i64) @memcmp( i8* %23, i8* %24, i64 8)
+    %26 = icmp eq i32 %25, 0
+    br i1 %26 , label %then_1, label %else_1
 then_1:
-    %29 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str4 to [0 x i8]*))
+    %27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str4 to [0 x i8]*))
     br label %endif_1
 else_1:
-    %30 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str5 to [0 x i8]*))
+    %28 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str5 to [0 x i8]*))
     br label %endif_1
 endif_1:
     ; comparison between two anonymous record
-    %31 = alloca { i32, i32}
-    %32 = zext i8 1 to i32
-    %33 = insertvalue { i32, i32} zeroinitializer, i32 %32, 0
-    %34 = zext i8 2 to i32
-    %35 = insertvalue { i32, i32} %33, i32 %34, 1
-    store { i32, i32} %35, { i32, i32}* %31
-    %36 = bitcast { i32, i32}* %17 to i8*
-    %37 = bitcast { i32, i32}* %31 to i8*
+    %29 = alloca { i32, i32}
+    %30 = insertvalue { i32, i32} zeroinitializer, i32 1, 0
+    %31 = insertvalue { i32, i32} %30, i32 2, 1
+    store { i32, i32} %31, { i32, i32}* %29
+    %32 = bitcast { i32, i32}* %17 to i8*
+    %33 = bitcast { i32, i32}* %29 to i8*
     
-    %38 = call i32 (i8*, i8*, i64) @memcmp( i8* %36, i8* %37, i64 8)
-    %39 = icmp eq i32 %38, 0
-    br i1 %39 , label %then_2, label %else_2
+    %34 = call i32 (i8*, i8*, i64) @memcmp( i8* %32, i8* %33, i64 8)
+    %35 = icmp eq i32 %34, 0
+    br i1 %35 , label %then_2, label %else_2
 then_2:
-    %40 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str6 to [0 x i8]*))
+    %36 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str6 to [0 x i8]*))
     br label %endif_2
 else_2:
-    %41 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str7 to [0 x i8]*))
+    %37 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str7 to [0 x i8]*))
     br label %endif_2
 endif_2:
     ; cons Point3D from Point2D (record extension)
     ; (it is possible if dst record contained all fields from src record
     ; and their types are equal)
-    %42 = alloca %Point3D
-    %43 = load %Point2D, %Point2D* %14
-    %44 = alloca %Point2D
-    store %Point2D %43, %Point2D* %44
-    %45 = bitcast %Point2D* %44 to %Point3D*
-    %46 = bitcast %Point3D* %42 to i8*
-    %47 = bitcast %Point3D* %45 to i8*
-    call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %46, i8* %47, i32 12, i1 0)
+    %38 = alloca %Point3D
+    %39 = load %Point2D, %Point2D* %14
+    %40 = alloca %Point2D
+    store %Point2D %39, %Point2D* %40
+    %41 = bitcast %Point2D* %40 to %Point3D*
+    %42 = bitcast %Point3D* %38 to i8*
+    %43 = bitcast %Point3D* %41 to i8*
+    call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %42, i8* %43, i32 12, i1 0)
     ret %Int 0
 }
 

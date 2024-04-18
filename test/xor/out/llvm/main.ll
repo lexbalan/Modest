@@ -235,43 +235,41 @@ declare void @bcopy(i8* %src, i8* %dst, %SizeT %n)
 
 define void @xor_encrypter([0 x i8]* %buf, i32 %buflen, [0 x i8]* %key, i32 %keylen) {
     %1 = alloca i32
-    %2 = zext i8 0 to i32
-    store i32 %2, i32* %1
-    %3 = alloca i32
-    %4 = zext i8 0 to i32
-    store i32 %4, i32* %3
+    store i32 0, i32* %1
+    %2 = alloca i32
+    store i32 0, i32* %2
     br label %again_1
 again_1:
-    %5 = load i32, i32* %1
-    %6 = icmp ult i32 %5, %buflen
-    br i1 %6 , label %body_1, label %break_1
+    %3 = load i32, i32* %1
+    %4 = icmp ult i32 %3, %buflen
+    br i1 %4 , label %body_1, label %break_1
 body_1:
+    %5 = load i32, i32* %1
+    %6 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %5
     %7 = load i32, i32* %1
     %8 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %7
-    %9 = load i32, i32* %1
-    %10 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %9
-    %11 = load i8, i8* %10
-    %12 = load i32, i32* %3
-    %13 = getelementptr inbounds [0 x i8], [0 x i8]* %key, i32 0, i32 %12
-    %14 = load i8, i8* %13
-    %15 = xor i8 %11, %14
-    store i8 %15, i8* %8
-    %16 = load i32, i32* %3
-    %17 = sub i32 %keylen, 1
-    %18 = icmp ult i32 %16, %17
-    br i1 %18 , label %then_0, label %else_0
+    %9 = load i8, i8* %8
+    %10 = load i32, i32* %2
+    %11 = getelementptr inbounds [0 x i8], [0 x i8]* %key, i32 0, i32 %10
+    %12 = load i8, i8* %11
+    %13 = xor i8 %9, %12
+    store i8 %13, i8* %6
+    %14 = load i32, i32* %2
+    %15 = sub i32 %keylen, 1
+    %16 = icmp ult i32 %14, %15
+    br i1 %16 , label %then_0, label %else_0
 then_0:
-    %19 = load i32, i32* %3
-    %20 = add i32 %19, 1
-    store i32 %20, i32* %3
+    %17 = load i32, i32* %2
+    %18 = add i32 %17, 1
+    store i32 %18, i32* %2
     br label %endif_0
 else_0:
-    store i32 0, i32* %3
+    store i32 0, i32* %2
     br label %endif_0
 endif_0:
-    %21 = load i32, i32* %1
-    %22 = add i32 %21, 1
-    store i32 %22, i32* %1
+    %19 = load i32, i32* %1
+    %20 = add i32 %19, 1
+    store i32 %20, i32* %1
     br label %again_1
 break_1:
     ret void
@@ -304,24 +302,23 @@ break_1:
 
 define void @print_bytes([0 x i8]* %buf, i32 %len) {
     %1 = alloca i32
-    %2 = zext i8 0 to i32
-    store i32 %2, i32* %1
+    store i32 0, i32* %1
     br label %again_1
 again_1:
-    %3 = load i32, i32* %1
-    %4 = icmp ult i32 %3, %len
-    br i1 %4 , label %body_1, label %break_1
+    %2 = load i32, i32* %1
+    %3 = icmp ult i32 %2, %len
+    br i1 %3 , label %body_1, label %break_1
 body_1:
-    %5 = load i32, i32* %1
-    %6 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %5
-    %7 = load i8, i8* %6
-    %8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str1 to [0 x i8]*), i8 %7)
-    %9 = load i32, i32* %1
-    %10 = add i32 %9, 1
-    store i32 %10, i32* %1
+    %4 = load i32, i32* %1
+    %5 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %4
+    %6 = load i8, i8* %5
+    %7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str1 to [0 x i8]*), i8 %6)
+    %8 = load i32, i32* %1
+    %9 = add i32 %8, 1
+    store i32 %9, i32* %1
     br label %again_1
 break_1:
-    %11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
+    %10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
     ret void
 }
 

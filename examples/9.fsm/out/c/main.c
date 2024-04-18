@@ -49,7 +49,7 @@ void off_loop(FSM *fsm)
         cnt = cnt + 1;
     } else {
         cnt = 0;
-        fsm_switch(fsm, flashlightStateOn);
+        fsm_switch(fsm, ((uint32_t)(uint8_t)flashlightStateOn));
     }
 }
 
@@ -80,7 +80,7 @@ void on_loop(FSM *fsm)
         cnt = cnt + 1;
     } else {
         cnt = 0;
-        fsm_switch(fsm, flashlightStateBeacon);
+        fsm_switch(fsm, ((uint32_t)(uint8_t)flashlightStateBeacon));
     }
 }
 
@@ -110,7 +110,7 @@ void beacon_loop(FSM *fsm)
         cnt = cnt + 1;
     } else {
         cnt = 0;
-        fsm_switch(fsm, flashlightStateOff);
+        fsm_switch(fsm, ((uint32_t)(uint8_t)flashlightStateOff));
     }
 }
 
@@ -127,7 +127,7 @@ static FSM fsm = {
     .name = "Flash",
     .state = 0,
     .nexstate = 0,
-    .substate = fsmSubstateEntering,
+    .substate = ((UInt32)(uint8_t)fsmSubstateEntering),
     .states = {
         {
             .name = "Off",

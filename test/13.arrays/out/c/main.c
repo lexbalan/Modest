@@ -21,7 +21,7 @@
 
 #define constantArray  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
-static int32_t globalArray[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+static int32_t globalArray[10] = {(int32_t)1, (int32_t)2, (int32_t)3, 4, 5, (int32_t)6, (int32_t)7, 8, 9, 10};
 
 
 struct f0_x {char a[10];};

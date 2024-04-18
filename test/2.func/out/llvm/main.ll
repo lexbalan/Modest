@@ -171,10 +171,8 @@ define %Int @main() {
     ; call function with two arguments
     call void (i32, i32) @print_ab(i32 10, i32 20)
     ; call function with two arguments and return value
-    %2 = sext i8 1 to i32
-    %3 = sext i8 2 to i32
-    %4 = call i32 (i32, i32) @sum(i32 %2, i32 %3)
-    %5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str4 to [0 x i8]*), i32 %2, i32 %3, i32 %4)
+    %2 = call i32 (i32, i32) @sum(i32 1, i32 2)
+    %3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str4 to [0 x i8]*), i32 1, i32 2, i32 %2)
     ret %Int 0
 }
 
