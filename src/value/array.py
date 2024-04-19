@@ -151,15 +151,13 @@ def do_cons_array(v, t, ti, method):
 
 def value_cons_array(v, t, ti, method):
     #info("value_cons_array", ti)
-    from_type = v['type']
-    to_type = t
-
-    if not hlir_type.type_is_array(from_type):
-        return None  # cannot cons array value from non-array value
 
     #
     # Check
     #
+
+    if not hlir_type.type_is_array(v['type']):
+        return None  # cannot cons array value from non-array value
 
     # Check item type
     # проверяем может ли тип элемента из v
@@ -186,7 +184,7 @@ def value_cons_array(v, t, ti, method):
     # Implicit cons
     #
 
-    if hlir_type.type_is_generic(from_type):
+    if hlir_type.type_is_generic(v['type']):
         # GenericArray -> Array
         return do_cons_array(v, t, ti, method)
 
