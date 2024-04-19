@@ -27,7 +27,7 @@ typedef struct {
     {.x = 2, .y = 2} \
 }
 
-#define points  ps
+#define points  ((Point *)ps)
 
 
 // есть проблема - в C глобальные переменные с модификатором const

@@ -103,74 +103,22 @@ def value_string_create(string, length=0, ti=None):
 
 
 
-# TODO: массив может НЕЯВНО быть построен только из
-# полного или из пустого дженерик массива
-def do_cons_array_asset(v, t, ti, method):
-    #info("do_cons_array_asset", ti)
-
-    zero_pad = 0
-
-    if v['type']['volume']['asset'] < t['volume']['asset']:
-        zero_pad = t['volume']['asset'] - len(v['asset'])
-
-
-    # in empty array literal type#of == None
-    if v['type']['of'] != None:
-        # check width
-        if v['type']['of']['width'] > t['of']['width']:
-            info("too big item width", ti)
-            return None
-
-
+def cast_values(values, to_type):
     casted_items = []
-    items = v['asset']
-    for item in items:
-
-#TODO: see: /test/sha256/src/main.cm:48:39:
-# var sha256_tests: []*SHA256_TestCase = [&test0, &test1]
-# Да не реализовано для локальных переменных, а в глоб контексте
-# сейчас норм идут например указатели на глоб преременные
-#        from value.value import value_is_immediate
-#        if not value_is_immediate(item):
-#            error("cons from not immediate item not implemented", ti)
-#            return None
-
-        if hlir_type.type_is_array_of_char(v['type']):
-            char_code = item['asset']
-            item = value_char_create(char_code, _type=None, ti=ti)
-
+    for item in values:
         from .cons import value_cons_implicit
-        casted_item = value_cons_implicit(item, t['of'])
-        if hlir_type.type_eq(t['of'], casted_item['type']):
-            casted_item['nl'] = item['nl']
-            casted_items.append(casted_item)
-        else:
+        casted_item = value_cons_implicit(item, to_type)
+
+        if not hlir_type.type_eq(to_type, casted_item['type']):
             if method == 'explicit':
-                error("cannot construct value", ti)
+                error("cannot construct value", item['ti'])
+                continue
 
-        #hlir_type.check(t['of'], casted_item['type'], item['expr_ti'])
+        casted_item['nl'] = item['nl']
+        casted_items.append(casted_item)
 
-    casted_items = casted_items + [value_zero(t['of'])] * zero_pad
+    return casted_items
 
-    #nv = value_terminal(t, casted_items, ti)
-    nv = value_cons_node(v, t, ti=ti)
-    from hlir.type import type_print
-    #type_print(t); print()
-    #type_print(casted_items[0]['type']); print()
-    nv['asset'] = casted_items
-    nv['nl_end'] = v['nl_end']
-
-    if value_is_immediate(v):
-        nv['immediate'] = True
-
-    # если это не сделать то принтер C не сможет сослаться
-    # на именованную константу и станет печатать ее по месту
-    if 'id' in v:
-        nv['id'] = v['id']
-
-    #info("do_cons_array_asset %s %d" % (nv['kind'], len(nv['asset'])), ti)
-
-    return nv
 
 
 
@@ -178,29 +126,25 @@ def do_cons_array_asset(v, t, ti, method):
 def do_cons_array(v, t, ti, method):
     #info("do_cons_array", ti)
 
-    if 'asset' in v:
-        return do_cons_array_asset(v, t, ti, method)
+    nv = value_cons_node(v, t, ti=ti)
 
-    # нельзя построить меньший массив из большего
-    n_from = v['type']['volume']['asset']
-    n_to = t['volume']['asset']
-    if n_from > n_to:
-        return None
+    if value_is_immediate(v):
+        casted_items = cast_values(v['asset'], t['of'])
 
-    # если массив идет как непосредственное значение
-    if 'asset' in v:
-        n = n_to - n_from
+        # add Zero Pad (if need)
+        zero_pad = 0
+        if v['type']['volume']['asset'] < t['volume']['asset']:
+            zero_pad = t['volume']['asset'] - len(v['asset'])
+        casted_items = casted_items + [value_zero(t['of'])] * zero_pad
 
-        nv = value_cons_from_immediate(v, t, ti)
+        nv['asset'] = casted_items
+        nv['immediate'] = True
 
-        # extend array with zero items
-        padding = [value_zero(t['of'], ti=None)] * n
-        nv['asset'].extend(padding)
 
-        return nv
+    if 'nl_end' in v:
+        nv['nl_end'] = v['nl_end']
 
-    # runtime cons
-    return value_cons_node(v, t, ti=ti)
+    return nv
 
 
 
@@ -212,26 +156,34 @@ def value_cons_array(v, t, ti, method):
     if not hlir_type.type_is_array(from_type):
         return None  # cannot cons array value from non-array value
 
+    #
+    # Check
+    #
+
     # Check item type
-    if v['type']['of'] != None:
-        # проверяем может ли тип элемента из v
-        # быть приведен к типу элемента t
-        # (это обязательное требование к типу v)
-        ct = select_common_type(t['of'], v['type']['of'])
-        assert(ct != None)
-        if not hlir_type.type_eq(t['of'], ct):
-            info("unsuitable item type", ti)
-            return None
+    # проверяем может ли тип элемента из v
+    # быть приведен к типу элемента t
+    # (это обязательное требование к типу v)
+    ct = select_common_type(t['of'], v['type']['of'])
 
+    if ct == None:
+        return None
 
-    # Check array length & get zero padding len
-    zero_pad = 0
-    vvol = v['type']['volume']['asset']
-    tvol = t['volume']['asset']
-    if vvol > tvol:
+    if not hlir_type.type_eq(t['of'], ct):
+        info("unsuitable item type", ti)
+        return None
+
+    # Check array length
+    # нельзя построить меньший массив из большего
+    n_from = v['type']['volume']['asset']
+    n_to = t['volume']['asset']
+    if n_from > n_to:
         info("too many items (%d, %d)" % (vvol, tvol), v['ti'])
         return None
 
+    #
+    # Implicit cons
+    #
 
     if hlir_type.type_is_generic(from_type):
         # GenericArray -> Array
@@ -242,6 +194,9 @@ def value_cons_array(v, t, ti, method):
         info("cannot implicitly cons Array value", ti)
         return None
 
+    #
+    # Explicit cons
+    #
 
     # Array -> Array
     return do_cons_array(v, t, ti, method)
