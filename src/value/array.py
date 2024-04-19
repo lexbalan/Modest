@@ -131,9 +131,12 @@ def do_cons_array(v, t, ti, method):
 
         # add Zero Pad (if need)
         zero_pad = 0
-        if v['type']['volume']['asset'] < t['volume']['asset']:
-            zero_pad = t['volume']['asset'] - len(v['asset'])
-        casted_items = casted_items + [value_zero(t['of'])] * zero_pad
+        vlen = v['type']['volume']['asset']
+        tlen = t['volume']['asset']
+        if vlen < tlen:
+            zero_pad_len = tlen - vlen
+            zero_pad = [value_zero(t['of'])] * zero_pad_len
+            casted_items = casted_items + zero_pad
 
         nv['asset'] = casted_items
         nv['immediate'] = True
