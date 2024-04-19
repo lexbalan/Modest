@@ -69,6 +69,20 @@ def value_array_create(items, ti=None):
 
 
 
+def value_string_create(string, length=0, ti=None):
+    #info("value_string_create %d" % length, ti)
+    chars = []
+    for char in string:
+        cc = ord(char)
+        char_value = value_char_create(cc, _type=None, ti=ti)
+        chars.append(char_value)
+
+    nv = value_array_create(chars, ti)
+    nv['immediate'] = True
+    return nv
+
+
+
 # concatenation of two immediate arrays
 def value_array_concat(l, r, ti):
     #info("value_array_concat", ti)
@@ -85,20 +99,6 @@ def value_array_concat(l, r, ti):
     nv['asset'] = asset
     nv['immediate'] = True
     nv['nl_end'] = r['nl_end']
-    return nv
-
-
-
-def value_string_create(string, length=0, ti=None):
-    #info("value_string_create %d" % length, ti)
-    chars = []
-    for char in string:
-        cc = ord(char)
-        char_value = value_char_create(cc, _type=None, ti=ti)
-        chars.append(char_value)
-
-    nv = value_array_create(chars, ti)
-    nv['immediate'] = True
     return nv
 
 
@@ -121,8 +121,6 @@ def cast_values(values, to_type):
 
 
 
-
-# TODO: only for immediate array (!)
 def do_cons_array(v, t, ti, method):
     #info("do_cons_array", ti)
 
