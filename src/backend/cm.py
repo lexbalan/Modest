@@ -305,8 +305,7 @@ def print_value_cons(v, ctx):
     from_type = value['type']
     to_type = v['type']
 
-
-    if not 'explicit_cast' in v['att']:
+    if v['method'] == 'implicit':
         print_value(value)
         return
 

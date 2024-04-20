@@ -169,8 +169,6 @@ def value_cons_explicit(v, t, ti):
         error("cannot construct value", ti)
         return value_bad(v['expr_ti'])
 
-    y['att'].append('explicit_cast')  # used by CM backend
-
     return y
 
 

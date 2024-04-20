@@ -64,7 +64,7 @@ def value_record_create(initializers=[], ti=None):
 """
 
 
-def _doitems(v, t, ti, method):
+def _doitems(v, t, method, ti):
     items = []
     if len(v['type']['fields']) > 0:
         # 1. проходим по порядку определения по всем полям типа t (целевого)
@@ -103,7 +103,7 @@ def _doitems(v, t, ti, method):
             prev_nl = nl
 
             from .cons import value_cons
-            nv = value_cons(item_value, field_type, v['expr_ti'], method)
+            nv = value_cons(item_value, field_type, v['expr_ti'], 'implicit')
 
             type.check(field_type, nv['type'], nv['ti'])
 
@@ -115,7 +115,7 @@ def _doitems(v, t, ti, method):
 
 
 def value_cons_record_from_generic_record(v, t, ti, method):
-    items = _doitems(v, t, ti, method)
+    items = _doitems(v, t, method, ti)
 
     nv = value_terminal(t, items, ti)
 

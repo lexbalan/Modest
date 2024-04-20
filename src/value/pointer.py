@@ -76,7 +76,7 @@ def value_cons_pointer(v, t, ti, method):
 
         if type.type_is_generic_array_of_char(vtype):
             if type.type_is_pointer_to_array_of_char(to_type):
-                return cons_ptr_to_str_from_generic_str(v, t, 'implicit', ti)
+                return cons_ptr_to_str_from_generic_str(v, t, method, ti)
 
 
     ### EXPLICIT REGION ###
