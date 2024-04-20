@@ -124,20 +124,11 @@ def value_cons_record_from_generic_record(v, t, ti, method):
 
     nv = value_terminal(t, items, ti)
 
-    if 'nl_end' in v: #FIXIT: nl_end должен быть везде!
-        nv['nl_end'] = v['nl_end']
-
     if value_is_immediate(v):
         nv['immediate'] = True
 
-    # если это не сделать то принтер C не сможет сослаться
-    # на именованную константу и станет печатать ее по месту
-    if 'id' in v:
-        nv['id'] = v['id']
-
-    if 'nl' in v:
-        nv['nl'] = v['nl']
-
+    nv['nl'] = v['nl']
+    nv['nl_end'] = v['nl_end']
     return nv
 
 
@@ -151,10 +142,6 @@ def do_cons_record(v, t, ti, method):
 
 def value_cons_record(v, t, ti, method):
     from_type = v['type']
-
-    #if value_is_immediate(v):
-    #    return value_cons_record_immediate(v, t, ti, method)
-
 
     if not type.type_is_record(from_type):
         return None
