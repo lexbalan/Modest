@@ -302,48 +302,46 @@ define void @beacon_exit(%FSM* %fsm) {
     %UInt32 0,
     %UInt32 0,
     [16 x %FSM_StateDesc] [
-        {
-	[6 x i8],
-	void (%FSM*)*,
-	void (%FSM*)*,
-	void (%FSM*)*
-} {
-            [3 x i8] [
+        %FSM_StateDesc {
+            [8 x i8] [
                 i8 79,
                 i8 102,
-                i8 102
+                i8 102,
+                i8 0,
+                i8 0,
+                i8 0,
+                i8 0,
+                i8 0
             ],
             void (%FSM*)* @off_entry,
             void (%FSM*)* @off_loop,
             void (%FSM*)* @off_exit
         },
-        {
-	[6 x i8],
-	void (%FSM*)*,
-	void (%FSM*)*,
-	void (%FSM*)*
-} {
-            [2 x i8] [
+        %FSM_StateDesc {
+            [8 x i8] [
                 i8 79,
-                i8 110
+                i8 110,
+                i8 0,
+                i8 0,
+                i8 0,
+                i8 0,
+                i8 0,
+                i8 0
             ],
             void (%FSM*)* @on_entry,
             void (%FSM*)* @on_loop,
             void (%FSM*)* @on_exit
         },
-        {
-	[6 x i8],
-	void (%FSM*)*,
-	void (%FSM*)*,
-	void (%FSM*)*
-} {
-            [6 x i8] [
+        %FSM_StateDesc {
+            [8 x i8] [
                 i8 66,
                 i8 101,
                 i8 97,
                 i8 99,
                 i8 111,
-                i8 110
+                i8 110,
+                i8 0,
+                i8 0
             ],
             void (%FSM*)* @beacon_entry,
             void (%FSM*)* @beacon_loop,

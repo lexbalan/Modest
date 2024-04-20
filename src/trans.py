@@ -777,7 +777,16 @@ def do_value_ref(x):
             return value_bad(x)
 
     vt = hlir_type.hlir_type_pointer(vtype, ti=ti)
-    return value_un('ref', v, vt, ti=ti)
+    nv = value_un('ref', v, vt, ti=ti)
+
+    #? временно считвем указатель на глоб переменную immediate значением
+    # это нужно для глобальных immediate структур, пока не знаю правильно ли это
+    if 'is_global' in v:
+        nv['immediate'] = v['is_global']
+    elif hlir_type.type_is_func(vtype):
+        nv['immediate'] = True
+
+    return nv
 
 
 
@@ -1866,6 +1875,7 @@ def def_var(x):
                 warning('???', x['ti'])
 
     var = value_var(id, var_type)
+    var['is_global'] = True
     module['context'].value_add(x['field']['id']['str'], var)
     return hlir_def_var(id, init_value, var, x['ti'])
 
