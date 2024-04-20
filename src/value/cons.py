@@ -26,33 +26,33 @@ def value_cons_default(x, ti):
 
     if type.type_is_integer(from_type):
         if type.type_is_signed(from_type):
-            return value_cons_integer(x, typeSysInt, ti, 'implicit')
+            return value_cons_integer(x, typeSysInt, 'implicit', ti)
         else:
-            return value_cons_integer(x, typeSysNat, ti, 'implicit')
+            return value_cons_integer(x, typeSysNat, 'implicit', ti)
 
 
     elif type.type_is_generic_array_of_char(from_type):
         return cons_ptr_to_str_from_generic_str(x, typeSysStr, ti)
 
     elif type.type_is_float(from_type):
-        return value_cons_float(x, typeSysFloat, ti, 'implicit')
+        return value_cons_float(x, typeSysFloat, 'implicit', ti)
 
     elif type.type_is_char(from_type):
-        return value_cons_char(x, typeSysChar, ti, 'implicit')
+        return value_cons_char(x, typeSysChar, 'implicit', ti)
 
     from error import fatal
     fatal("unimplemented value_cons_default case")
 
 
 
-def value_cons_bad(v, t, ti, method):
+def value_cons_bad(v, t, method, ti):
     return value_bad(ti)
 
 
 # возвращает None если не может привести (!)
 # не принтует ошибку (но может info)
 # это НЕ нужно для удобства приведения полей структур
-def value_cons(v, t, ti, method):
+def value_cons(v, t, method, ti):
     if value_is_bad(v) or type.type_is_bad(t):
         return None
 
@@ -72,7 +72,7 @@ def value_cons(v, t, ti, method):
     elif type.type_is_bad(t): constructor = value_cons_bad
 
     if constructor != None:
-        nv = constructor(v, t, ti, method)
+        nv = constructor(v, t, method, ti)
         if nv != None:
             if 'nl' in v:
                 nv['nl'] = v['nl']
@@ -83,7 +83,7 @@ def value_cons(v, t, ti, method):
 
 
 def implicit_cons_if_possible(v, t, ti):
-    c = value_cons(v, t, ti, method='implicit')
+    c = value_cons(v, t, 'implicit', ti)
 
     if c == None:
         return v
@@ -142,7 +142,7 @@ def value_cons_implicit(v, t):
     # cons Pointer from:
     if type.type_is_pointer(t):
         #return implicit_cons_if_possible(v, t, ti) #?
-        return value_cons_pointer(v, t, ti, method='implicit')
+        return value_cons_pointer(v, t, 'implicit', ti)
 
 
     return v
@@ -163,7 +163,7 @@ def value_cons_explicit(v, t, ti):
         warning("explicit cast to the same type", ti)
         return v
 
-    y = value_cons(v, t, ti, method='explicit')
+    y = value_cons(v, t, 'explicit', ti)
 
     if y == None:
         error("cannot construct value", ti)

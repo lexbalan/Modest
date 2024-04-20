@@ -28,7 +28,7 @@ def do_cons_bool(v, t, method, ti):
 
 
 
-def value_cons_bool(v, t, ti, method):
+def value_cons_bool(v, t, method, ti):
     from_type = v['type']
 
 

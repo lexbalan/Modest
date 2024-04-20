@@ -121,7 +121,7 @@ def cast_values(values, to_type):
 
 
 
-def do_cons_array(v, t, ti, method):
+def do_cons_array(v, t, method, ti):
     #info("do_cons_array", ti)
 
     if hlir_type.type_is_generic(v['type']):
@@ -152,7 +152,7 @@ def do_cons_array(v, t, ti, method):
 
 
 
-def value_cons_array(v, t, ti, method):
+def value_cons_array(v, t, method, ti):
     #info("value_cons_array", ti)
 
     #
@@ -189,7 +189,7 @@ def value_cons_array(v, t, ti, method):
 
     if hlir_type.type_is_generic(v['type']):
         # GenericArray -> Array
-        return do_cons_array(v, t, ti, method)
+        return do_cons_array(v, t, method, ti)
 
 
     if method != 'explicit':
@@ -201,7 +201,7 @@ def value_cons_array(v, t, ti, method):
     #
 
     # Array -> Array
-    return do_cons_array(v, t, ti, method)
+    return do_cons_array(v, t, method, ti)
 
 
 

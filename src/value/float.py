@@ -30,7 +30,7 @@ def do_cons_float(v, t, method, ti):
     return value_cons_node(v, t, method, ti=ti)
 
 
-def value_cons_float(v, t, ti, method):
+def value_cons_float(v, t, method, ti):
     vt = v['type']
 
     if type.type_is_generic(vt):

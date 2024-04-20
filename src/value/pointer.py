@@ -45,7 +45,7 @@ def do_cons_pointer(v, t, method, ti):
 
 
 
-def value_cons_pointer(v, t, ti, method):
+def value_cons_pointer(v, t, method, ti):
     vtype = v['type']
     to_type = t
 

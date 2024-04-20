@@ -103,7 +103,7 @@ def _doitems(v, t, method, ti):
             prev_nl = nl
 
             from .cons import value_cons
-            nv = value_cons(item_value, field_type, v['expr_ti'], 'implicit')
+            nv = value_cons(item_value, field_type, 'implicit', v['expr_ti'])
 
             type.check(field_type, nv['type'], nv['ti'])
 
@@ -114,7 +114,7 @@ def _doitems(v, t, method, ti):
 
 
 
-def value_cons_record_from_generic_record(v, t, ti, method):
+def value_cons_record_from_generic_record(v, t, method, ti):
     items = _doitems(v, t, method, ti)
 
     nv = value_terminal(t, items, ti)
@@ -128,13 +128,13 @@ def value_cons_record_from_generic_record(v, t, ti, method):
 
 
 
-def do_cons_record(v, t, ti, method):
+def do_cons_record(v, t, method, ti):
     nv = value_cons_node(v, t, method, ti=ti)
     return nv
 
 
 
-def value_cons_record(v, t, ti, method):
+def value_cons_record(v, t, method, ti):
     from_type = v['type']
 
     if not type.type_is_record(from_type):
@@ -146,7 +146,7 @@ def value_cons_record(v, t, ti, method):
 
     # GenericRecord -> Record (implicit)
     if type.type_is_generic(from_type):
-        return value_cons_record_from_generic_record(v, t, ti, method)
+        return value_cons_record_from_generic_record(v, t, method, ti)
 
 
     if method != 'explicit':
@@ -168,6 +168,6 @@ def value_cons_record(v, t, ti, method):
 
 
     # Record -> Record (explicit)
-    return do_cons_record(v, t, ti, method)
+    return do_cons_record(v, t, method, ti)
 
 

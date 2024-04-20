@@ -33,7 +33,7 @@ def do_cons_char(v, t, method, ti):
 
 
 
-def value_cons_char(v, t, ti, method):
+def value_cons_char(v, t, method, ti):
     from_type = v['type']
 
 

@@ -84,7 +84,7 @@ def do_cons_integer(v, t, method, ti):
 
 
 
-def value_cons_integer(v, t, ti, method):
+def value_cons_integer(v, t, method, ti):
     from_type = v['type']
 
     if value_is_immediate(v):
