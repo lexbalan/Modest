@@ -24,7 +24,7 @@ def value_cons_float_immediate(t, v, method, ti):
     return nv
 
 
-def do_cons_float(t, v, method, ti):
+def _do_cons_float(t, v, method, ti):
     if value_is_immediate(v):
         return value_cons_float_immediate(t, v, method, ti)
     return value_cons_node(t, v, method, ti=ti)
@@ -45,11 +45,11 @@ def value_cons_float(t, v, method, ti):
 
     # Int -> Float
     if type.type_is_integer(vt):
-        return do_cons_float(t, v, method, ti=ti)
+        return _do_cons_float(t, v, method, ti=ti)
 
     # Float -> Float
     elif type.type_is_float(vt):
-        return do_cons_float(t, v, method, ti=ti)
+        return _do_cons_float(t, v, method, ti=ti)
 
     # VA_List -> Float
     elif type.type_is_va_list(vt):

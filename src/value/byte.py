@@ -14,7 +14,7 @@ def value_cons_byte_immediate(t, v, method, ti):
 
 
 
-def do_cons_byte(t, v, method, ti):
+def _do_cons_byte(t, v, method, ti):
     if value_is_immediate(v):
         return value_cons_byte_immediate(t, v, method, ti)
     return value_cons_node(t, v, method, ti=ti)
@@ -35,7 +35,7 @@ def value_cons_byte(t, v, method, ti):
 
     # Integer -> Byte
     if type.type_is_integer(from_type):
-        return do_cons_byte(t, v, method, ti)
+        return _do_cons_byte(t, v, method, ti)
 
     # VA_List -> Byte
     elif type.type_is_va_list(from_type):

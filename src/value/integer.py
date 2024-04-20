@@ -71,7 +71,7 @@ def value_cons_integer_immediate(t, v, method, ti):
 
 
 
-def do_cons_integer(t, v, method, ti):
+def _do_cons_integer(t, v, method, ti):
     check_width(v['type'], t, method, ti)
     if value_is_immediate(v):
         if method == 'explicit':
@@ -96,12 +96,12 @@ def value_cons_integer(t, v, method, ti):
                 if v['asset'] < 0:
                     return None
 
-            return do_cons_integer(t, v, method, ti)
+            return _do_cons_integer(t, v, method, ti)
 
 
     # runtime cast generic-integer to integer
     if hlir_type.type_is_generic_integer(from_type):
-        return do_cons_integer(t, v, method, ti)
+        return _do_cons_integer(t, v, method, ti)
 
 
     if method != 'explicit':
@@ -111,23 +111,23 @@ def value_cons_integer(t, v, method, ti):
 
     # Int -> Int
     if hlir_type.type_is_integer(from_type):
-        return do_cons_integer(t, v, method, ti)
+        return _do_cons_integer(t, v, method, ti)
 
     # Float -> Int
     elif hlir_type.type_is_float(from_type):
-        return do_cons_integer(t, v, method, ti=ti)
+        return _do_cons_integer(t, v, method, ti=ti)
 
     # Char -> Int
     elif hlir_type.type_is_char(from_type):
-        return do_cons_integer(t, v, method, ti)
+        return _do_cons_integer(t, v, method, ti)
 
     # Bool -> Int
     elif hlir_type.type_is_bool(from_type):
-        return do_cons_integer(t, v, method, ti)
+        return _do_cons_integer(t, v, method, ti)
 
     # Byte -> Int
     elif hlir_type.type_is_byte(from_type):
-        return do_cons_integer(t, v, method, ti)
+        return _do_cons_integer(t, v, method, ti)
 
     # Pointer -> Int
     elif hlir_type.type_is_pointer(from_type):
@@ -135,7 +135,7 @@ def value_cons_integer(t, v, method, ti):
         if not (features.get('unsafe') or features.get("unsafe-ptr-to-int")):
             info("explicit typecast to pointer is forbidden in safe mode", ti)
             pass
-        return do_cons_integer(t, v, method, ti)
+        return _do_cons_integer(t, v, method, ti)
 
     # VA_List -> Int
     elif hlir_type.type_is_va_list(from_type):

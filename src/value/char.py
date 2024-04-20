@@ -25,7 +25,7 @@ def value_cons_char_immediate(t, v, method, ti):
 
 
 
-def do_cons_char(t, v, method, ti):
+def _do_cons_char(t, v, method, ti):
     from value.value import value_is_immediate
     if value_is_immediate(v):
         return value_cons_char_immediate(t, v, method, ti)
@@ -59,11 +59,11 @@ def value_cons_char(t, v, method, ti):
 
     # Char -> Char
     if type.type_is_char(from_type):
-        return do_cons_char(t, v, method, ti)
+        return _do_cons_char(t, v, method, ti)
 
     # Integer -> Char
     elif type.type_is_integer(from_type):
-        return do_cons_char(t, v, method, ti)
+        return _do_cons_char(t, v, method, ti)
 
     # VA_List -> Char
     elif type.type_is_va_list(from_type):

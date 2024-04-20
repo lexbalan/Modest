@@ -121,8 +121,8 @@ def cast_values(values, to_type):
 
 
 
-def do_cons_array(t, v, method, ti):
-    #info("do_cons_array", ti)
+def _do_cons_array(t, v, method, ti):
+    #info("_do_cons_array", ti)
 
     if hlir_type.type_is_generic(v['type']):
         nv = value_terminal(t, v['asset'], ti)
@@ -189,7 +189,7 @@ def value_cons_array(t, v, method, ti):
 
     if hlir_type.type_is_generic(v['type']):
         # GenericArray -> Array
-        return do_cons_array(t, v, method, ti)
+        return _do_cons_array(t, v, method, ti)
 
 
     if method != 'explicit':
@@ -201,7 +201,7 @@ def value_cons_array(t, v, method, ti):
     #
 
     # Array -> Array
-    return do_cons_array(t, v, method, ti)
+    return _do_cons_array(t, v, method, ti)
 
 
 

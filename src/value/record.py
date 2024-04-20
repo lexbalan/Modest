@@ -128,7 +128,7 @@ def value_cons_record_from_generic_record(t, v, method, ti):
 
 
 
-def do_cons_record(t, v, method, ti):
+def _do_cons_record(t, v, method, ti):
     nv = value_cons_node(t, v, method, ti=ti)
     return nv
 
@@ -168,6 +168,6 @@ def value_cons_record(t, v, method, ti):
 
 
     # Record -> Record (explicit)
-    return do_cons_record(t, v, method, ti)
+    return _do_cons_record(t, v, method, ti)
 
 
