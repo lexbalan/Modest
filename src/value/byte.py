@@ -6,17 +6,17 @@ from util import nbits_for_num
 from .value import value_cons_node, value_cons_immediate
 
 
-def value_cons_byte_immediate(v, t, ti):
+def value_cons_byte_immediate(v, t, method, ti):
     if v['type']['width'] > t['width']:
         error("byte overflow", ti)
 
-    return value_cons_immediate(v, t, ti)
+    return value_cons_immediate(v, t, method, ti)
 
 
 
 def do_cons_byte(v, t, method, ti):
     if value_is_immediate(v):
-        return value_cons_byte_immediate(v, t, ti)
+        return value_cons_byte_immediate(v, t, method, ti)
     return value_cons_node(v, t, method, ti=ti)
 
 
@@ -26,7 +26,7 @@ def value_cons_byte(v, t, method, ti):
 
     # implicit casts
     if type.type_is_generic_integer(from_type):
-        return value_cons_byte_immediate(v, t, ti)
+        return value_cons_byte_immediate(v, t, method, ti)
 
     # explicit casts
     if method != 'explicit':

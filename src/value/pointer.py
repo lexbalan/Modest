@@ -6,9 +6,9 @@ from .char import value_char_create
 import foundation
 
 
-def value_cons_pointer_immediate(v, t, ti):
+def value_cons_pointer_immediate(v, t, method, ti):
     #info("value_cons_pointer_immediate", ti)
-    return value_cons_immediate(v, t, ti)
+    return value_cons_immediate(v, t, method, ti)
 
 
 def cons_ptr_to_str_from_generic_str(v, t, method, ti):
@@ -40,7 +40,7 @@ def cons_ptr_to_str_from_generic_str(v, t, method, ti):
 
 def do_cons_pointer(v, t, method, ti):
     if value_is_immediate(v):
-        return value_cons_pointer_immediate(v, t, ti)
+        return value_cons_pointer_immediate(v, t, method, ti)
     return value_cons_node(v, t, method, ti=ti)
 
 
