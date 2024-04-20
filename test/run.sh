@@ -17,7 +17,6 @@ cd 24.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd cons && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd sizeof && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd xor && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
-#cd sha256 && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd shift && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd string && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd string_concat_eq && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
@@ -26,7 +25,8 @@ cd va_list && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd char && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. &&\
 cd import && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. &&\
 cd float && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
-cd builtin_constants && echo "\nBUILD:" "$PWD" && make && make C && make CM
+cd builtin_constants && echo "\nBUILD:" "$PWD" && make && make C && make CM \
+#cd sha256 && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 #cd float && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
 #cd free_pointer && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. \
 #cd generic && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..

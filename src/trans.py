@@ -786,8 +786,10 @@ def do_value_ref(x):
     if not is_local_context():
         if 'is_global' in v:
             nv['immediate'] = v['is_global']
+            nv['asset'] = None
         elif hlir_type.type_is_func(vtype):
             nv['immediate'] = True
+            nv['asset'] = None
 
     return nv
 
