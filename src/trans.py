@@ -779,12 +779,15 @@ def do_value_ref(x):
     vt = hlir_type.hlir_type_pointer(vtype, ti=ti)
     nv = value_un('ref', v, vt, ti=ti)
 
-    #? временно считвем указатель на глоб переменную immediate значением
-    # это нужно для глобальных immediate структур, пока не знаю правильно ли это
-    if 'is_global' in v:
-        nv['immediate'] = v['is_global']
-    elif hlir_type.type_is_func(vtype):
-        nv['immediate'] = True
+    # HOTFIX, BADFIX
+    # временно считвем указатель на глоб переменную/функцию immediate значением
+    # это нужно для глобальных immediate структур,
+    # пока не знаю как это лучше сделать, но мне это вообще не нравится!
+    if not is_local_context():
+        if 'is_global' in v:
+            nv['immediate'] = v['is_global']
+        elif hlir_type.type_is_func(vtype):
+            nv['immediate'] = True
 
     return nv
 

@@ -997,7 +997,6 @@ def cast_record_to_record(to_type, value, ti):
 
 def cast_array_to_array(x):
     #info("LLVM::cast_array_to_array", x['ti'])
-    #mass
     if value_is_immediate(x):
         vt = value_terminal(x['type'], x['asset'], x['ti'])
         return do_eval_literal(vt)
@@ -1007,13 +1006,12 @@ def cast_array_to_array(x):
 
 def do_eval_cast(x):
     value = x['value']
-    from_type = value['type']
     to_type = x['type']
 
-    #!
     if value_is_immediate(x):
         return do_eval_literal(x)
 
+    from_type = value['type']
 
     if hlir_type.type_is_generic_array_of_char(from_type):
         if hlir_type.type_is_pointer_to_array_of_char(to_type):
