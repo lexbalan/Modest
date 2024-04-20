@@ -45,15 +45,15 @@ def value_cons_float(t, v, method, ti):
 
     # Int -> Float
     if type.type_is_integer(vt):
-        return _do_cons_float(t, v, method, ti=ti)
+        return _do_cons_float(t, v, 'explicit', ti=ti)
 
     # Float -> Float
     elif type.type_is_float(vt):
-        return _do_cons_float(t, v, method, ti=ti)
+        return _do_cons_float(t, v, 'explicit', ti=ti)
 
     # VA_List -> Float
     elif type.type_is_va_list(vt):
-        return value_cons_node(t, v, method, ti)
+        return value_cons_node(t, v, 'explicit', ti)
 
     return None
 

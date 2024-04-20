@@ -31,7 +31,6 @@ def _do_cons_bool(t, v, method, ti):
 def value_cons_bool(t, v, method, ti):
     from_type = v['type']
 
-
     # explicit casts
     if method != 'explicit':
         info("cannot implicitly cons Bool value", ti)
@@ -39,15 +38,15 @@ def value_cons_bool(t, v, method, ti):
 
     # Integer -> Bool
     if type.type_is_integer(from_type):
-        return _do_cons_bool(t, v, method, ti)
+        return _do_cons_bool(t, v, 'explicit', ti)
 
     # Byte -> Bool
     elif type.type_is_byte(from_type):
-        return _do_cons_bool(t, v, method, ti)
+        return _do_cons_bool(t, v, 'explicit', ti)
 
     # VA_List -> Bool
     elif type.type_is_va_list(from_type):
-        return value_cons_node(t, v, method, ti)
+        return value_cons_node(t, v, 'explicit', ti)
 
     return None
 

@@ -201,9 +201,7 @@ def value_cons_array(t, v, method, ti):
     #
 
     # Array -> Array
-    return _do_cons_array(t, v, method, ti)
-
-
+    return _do_cons_array(t, v, 'explicit', ti)
 
 
 

@@ -27,10 +27,7 @@ def value_integer_create(num, typ=None, ti=None):
 
 
 
-
-
-
-no_warning_cast_data_loss = False
+warning_cast_data_loss = True
 
 
 def check_width(from_type, t, method, ti):
@@ -38,7 +35,7 @@ def check_width(from_type, t, method, ti):
 
     if from_type['width'] > t['width']:
         if method == 'explicit':
-            if not no_warning_cast_data_loss:
+            if warning_cast_data_loss:
                 from main import features
                 if not (features.get('unsafe') or features.get('unsafe-downcast')):
                     warning("value cons with potential data loss", ti)
@@ -108,26 +105,25 @@ def value_cons_integer(t, v, method, ti):
         info("cannot implicitly cons Int value", ti)
         return None
 
-
     # Int -> Int
     if hlir_type.type_is_integer(from_type):
-        return _do_cons_integer(t, v, method, ti)
+        return _do_cons_integer(t, v, 'explicit', ti)
 
     # Float -> Int
     elif hlir_type.type_is_float(from_type):
-        return _do_cons_integer(t, v, method, ti=ti)
+        return _do_cons_integer(t, v, 'explicit', ti=ti)
 
     # Char -> Int
     elif hlir_type.type_is_char(from_type):
-        return _do_cons_integer(t, v, method, ti)
+        return _do_cons_integer(t, v, 'explicit', ti)
 
     # Bool -> Int
     elif hlir_type.type_is_bool(from_type):
-        return _do_cons_integer(t, v, method, ti)
+        return _do_cons_integer(t, v, 'explicit', ti)
 
     # Byte -> Int
     elif hlir_type.type_is_byte(from_type):
-        return _do_cons_integer(t, v, method, ti)
+        return _do_cons_integer(t, v, 'explicit', ti)
 
     # Pointer -> Int
     elif hlir_type.type_is_pointer(from_type):
@@ -135,11 +131,11 @@ def value_cons_integer(t, v, method, ti):
         if not (features.get('unsafe') or features.get("unsafe-ptr-to-int")):
             info("explicit typecast to pointer is forbidden in safe mode", ti)
             pass
-        return _do_cons_integer(t, v, method, ti)
+        return _do_cons_integer(t, v, 'explicit', ti)
 
     # VA_List -> Int
     elif hlir_type.type_is_va_list(from_type):
-        return value_cons_node(t, v, method, ti)
+        return value_cons_node(t, v, 'explicit', ti)
 
     return None
 

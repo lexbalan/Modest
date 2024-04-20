@@ -35,11 +35,11 @@ def value_cons_byte(t, v, method, ti):
 
     # Integer -> Byte
     if type.type_is_integer(from_type):
-        return _do_cons_byte(t, v, method, ti)
+        return _do_cons_byte(t, v, 'explicit', ti)
 
     # VA_List -> Byte
     elif type.type_is_va_list(from_type):
-        return value_cons_node(t, v, method, ti)
+        return value_cons_node(t, v, 'explicit', ti)
 
     return None
 

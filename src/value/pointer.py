@@ -94,15 +94,15 @@ def value_cons_pointer(t, v, method, ti):
 
     # Ptr -> Ptr
     if type.type_is_pointer(vtype):
-        return _do_cons_pointer(t, v, method, ti=ti)
+        return _do_cons_pointer(t, v, 'explicit', ti=ti)
 
     # Int -> Ptr
     elif type.type_is_integer(vtype):
-        return _do_cons_pointer(t, v, method, ti=ti)
+        return _do_cons_pointer(t, v, 'explicit', ti=ti)
 
     # VA_List -> Ptr
     elif type.type_is_va_list(vtype):
-        return value_cons_node(t, v, method, ti)
+        return value_cons_node(t, v, 'explicit', ti)
 
 
     return None

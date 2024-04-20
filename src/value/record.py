@@ -168,6 +168,6 @@ def value_cons_record(t, v, method, ti):
 
 
     # Record -> Record (explicit)
-    return _do_cons_record(t, v, method, ti)
+    return _do_cons_record(t, v, 'explicit', ti)
 
 

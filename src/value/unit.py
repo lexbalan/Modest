@@ -12,6 +12,6 @@ def value_cons_unit(t, v, method, ti):
         error("cannot implicitly cons Unit value", ti)
         return None
 
-    return value_cons_node(t, v, method, ti=ti)
+    return value_cons_node(t, v, 'explicit', ti=ti)
 
 

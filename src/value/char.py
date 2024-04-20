@@ -59,15 +59,15 @@ def value_cons_char(t, v, method, ti):
 
     # Char -> Char
     if type.type_is_char(from_type):
-        return _do_cons_char(t, v, method, ti)
+        return _do_cons_char(t, v, 'explicit', ti)
 
     # Integer -> Char
     elif type.type_is_integer(from_type):
-        return _do_cons_char(t, v, method, ti)
+        return _do_cons_char(t, v, 'explicit', ti)
 
     # VA_List -> Char
     elif type.type_is_va_list(from_type):
-        return value_cons_node(t, v, method, ti)
+        return value_cons_node(t, v, 'explicit', ti)
 
     #print("??")
     #from hlir.type import type_print
