@@ -17,17 +17,17 @@ def value_float_create(num, ti=None):
 
 
 
-def value_cons_float_immediate(v, t, ti):
-    nv = value_cons_immediate(v, t, ti)
+def value_cons_float_immediate(v, t, method, ti):
+    nv = value_cons_immediate(v, t, method, ti)
     nv['asset'] = float_value_pack(float(nv['asset']), t['width'])
     nv['immediate'] = True
     return nv
 
 
-def do_cons_float(v, t, ti):
+def do_cons_float(v, t, method, ti):
     if value_is_immediate(v):
-        return value_cons_float_immediate(v, t, ti)
-    return value_cons_node(v, t, ti=ti)
+        return value_cons_float_immediate(v, t, method, ti)
+    return value_cons_node(v, t, method, ti=ti)
 
 
 def value_cons_float(v, t, ti, method):
@@ -36,7 +36,7 @@ def value_cons_float(v, t, ti, method):
     if type.type_is_generic(vt):
         # (GenericInt or GenericFloat) -> Float
         if type.type_is_integer(vt) or type.type_is_float(vt):
-            return value_cons_float_immediate(v, t, ti)
+            return value_cons_float_immediate(v, t, method, ti)
 
 
     if method != 'explicit':
@@ -45,15 +45,15 @@ def value_cons_float(v, t, ti, method):
 
     # Int -> Float
     if type.type_is_integer(vt):
-        return do_cons_float(v, t, ti=ti)
+        return do_cons_float(v, t, method, ti=ti)
 
     # Float -> Float
     elif type.type_is_float(vt):
-        return do_cons_float(v, t, ti=ti)
+        return do_cons_float(v, t, method, ti=ti)
 
     # VA_List -> Float
     elif type.type_is_va_list(vt):
-        return value_cons_node(v, t, ti)
+        return value_cons_node(v, t, method, ti)
 
     return None
 

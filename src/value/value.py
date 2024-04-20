@@ -292,8 +292,8 @@ def value_access_record_by_ptr(ptr_to_record, field, ti=None):
     }
 
 
-def value_cons_node(value, type, ti=None):
-    return {
+def value_cons_node(value, type, method='explicit', ti=None):
+    nv = {
         'isa': 'value',
         'kind': 'cons',
         'value': value,
@@ -301,17 +301,23 @@ def value_cons_node(value, type, ti=None):
         'immediate': False,
         'immutable': True,
         'att': [],
+        'method': method,
         'expr_ti': ti,
         'ti': ti
     }
+
+    if 'nl_end' in value:
+        nv['nl_end'] = value['nl_end']
+
+    return nv
 
 
 # cons immediate такой же cons
 # но поскольку у него value immediate, мы можем его asset
 # привести и взять себе; Таким образом мы идем как литерал нода
 # и в то же время как cons нода
-def value_cons_immediate(v, t, ti=None):
-    nv = value_cons_node(v, t, ti)
+def value_cons_immediate(v, t, method='explicit', ti=None):
+    nv = value_cons_node(v, t, method, ti)
 
     nv['kind'] = 'cons'
     nv['asset'] = v['asset']

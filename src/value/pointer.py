@@ -11,7 +11,7 @@ def value_cons_pointer_immediate(v, t, ti):
     return value_cons_immediate(v, t, ti)
 
 
-def cons_ptr_to_str_from_generic_str(v, t, ti):
+def cons_ptr_to_str_from_generic_str(v, t, method, ti):
     #info("cons_ptr_to_str_from_generic_str", ti)
     from trans import module_strings_add
 
@@ -28,7 +28,7 @@ def cons_ptr_to_str_from_generic_str(v, t, ti):
     # массив кодов
     # длина полученной строки может отличаться от длины оригинала в utf-32
     # именно value_cons_node чтобы не пошел как immediate! тк *StrX это не immed
-    nv = value_cons_node(v, t, ti=ti)
+    nv = value_cons_node(v, t, method, ti=ti)
     nv['asset'] = s_imm
     # 'zstring' означает что строка должна быть нуль-терминирована
     # TODO: хотя - может это стоит переложить на бекенд? надо подумать
@@ -38,10 +38,10 @@ def cons_ptr_to_str_from_generic_str(v, t, ti):
 
 
 
-def do_cons_pointer(v, t, ti):
+def do_cons_pointer(v, t, method, ti):
     if value_is_immediate(v):
         return value_cons_pointer_immediate(v, t, ti)
-    return value_cons_node(v, t, ti=ti)
+    return value_cons_node(v, t, method, ti=ti)
 
 
 
@@ -59,16 +59,16 @@ def value_cons_pointer(v, t, ti, method):
         # cons *[]X from *[n]X +
         if type.type_is_pointer_to_defined_array(from_type) and type.type_is_pointer_to_undefined_array(t):
             if type.type_eq(from_type['to']['of'], t['to']['of']):
-                return do_cons_pointer(v, t, ti)
+                return do_cons_pointer(v, t, method, ti)
 
         # cons *X from Nil
         if type.type_is_free_pointer(from_type):
-            return do_cons_pointer(v, t, ti)
+            return do_cons_pointer(v, t, method, ti)
 
         # cons FreePointer from *X
         if type.type_is_pointer(from_type):
             if type.type_is_free_pointer(t):
-                return do_cons_pointer(v, t, ti=ti)
+                return do_cons_pointer(v, t, method, ti=ti)
 
 
     else:
@@ -76,7 +76,7 @@ def value_cons_pointer(v, t, ti, method):
 
         if type.type_is_generic_array_of_char(vtype):
             if type.type_is_pointer_to_array_of_char(to_type):
-                return cons_ptr_to_str_from_generic_str(v, t, ti)
+                return cons_ptr_to_str_from_generic_str(v, t, 'implicit', ti)
 
 
     ### EXPLICIT REGION ###
@@ -94,15 +94,15 @@ def value_cons_pointer(v, t, ti, method):
 
     # Ptr -> Ptr
     if type.type_is_pointer(vtype):
-        return do_cons_pointer(v, t, ti=ti)
+        return do_cons_pointer(v, t, method, ti=ti)
 
     # Int -> Ptr
     elif type.type_is_integer(vtype):
-        return do_cons_pointer(v, t, ti=ti)
+        return do_cons_pointer(v, t, method, ti=ti)
 
     # VA_List -> Ptr
     elif type.type_is_va_list(vtype):
-        return value_cons_node(v, t, ti)
+        return value_cons_node(v, t, method, ti)
 
 
     return None

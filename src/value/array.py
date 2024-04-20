@@ -126,8 +126,9 @@ def do_cons_array(v, t, ti, method):
 
     if hlir_type.type_is_generic(v['type']):
         nv = value_terminal(t, v['asset'], ti)
+        nv['nl_end'] = v['nl_end'] # 'nl_end' present only in generic values
     else:
-        nv = value_cons_node(v, t, ti)
+        nv = value_cons_node(v, t, method, ti)
 
     if value_is_immediate(v):
         casted_items = cast_values(v['asset'], t['of'])
@@ -144,9 +145,8 @@ def do_cons_array(v, t, ti, method):
         nv['asset'] = casted_items
         nv['immediate'] = True
 
-
-    if 'nl_end' in v:
-        nv['nl_end'] = v['nl_end']
+    if 'id' in v:
+        nv['id'] = v['id']
 
     return nv
 

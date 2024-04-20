@@ -5,7 +5,7 @@ from hlir.hlir import *
 from hlir.field import hlir_field
 from hlir.type import record_field_get
 from util import get_item_with_id
-from .value import value_terminal, value_terminal, value_cons_node, value_zero, value_is_immediate, value_print, value_cons_immediate
+from .value import value_terminal, value_cons_node, value_zero, value_is_immediate, value_print, value_cons_immediate
 
 
 # получает на вход список инициализаторов
@@ -129,7 +129,7 @@ def value_cons_record_from_generic_record(v, t, ti, method):
 
 
 def do_cons_record(v, t, ti, method):
-    nv = value_cons_node(v, t, ti=ti)
+    nv = value_cons_node(v, t, method, ti=ti)
     return nv
 
 

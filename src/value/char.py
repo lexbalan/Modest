@@ -17,19 +17,19 @@ def value_char_create(char_code, _type=None, ti=None):
 
 
 
-def value_cons_char_immediate(v, t, ti):
+def value_cons_char_immediate(v, t, method, ti):
     if v['type']['width'] > t['width']:
         info("char overflow", ti)
 
-    return value_cons_immediate(v, t, ti)
+    return value_cons_immediate(v, t, method, ti)
 
 
 
-def do_cons_char(v, t, ti):
+def do_cons_char(v, t, method, ti):
     from value.value import value_is_immediate
     if value_is_immediate(v):
-        return value_cons_char_immediate(v, t, ti)
-    return value_cons_node(v, t, ti=ti)
+        return value_cons_char_immediate(v, t, method, ti)
+    return value_cons_node(v, t, method, ti=ti)
 
 
 
@@ -48,7 +48,7 @@ def value_cons_char(v, t, ti, method):
 
     # implicit casts
     if type.type_is_generic_char(from_type):
-        return value_cons_char_immediate(v, t, ti)
+        return value_cons_char_immediate(v, t, method, ti)
 
 
     # explicit casts
@@ -59,15 +59,15 @@ def value_cons_char(v, t, ti, method):
 
     # Char -> Char
     if type.type_is_char(from_type):
-        return do_cons_char(v, t, ti)
+        return do_cons_char(v, t, method, ti)
 
     # Integer -> Char
     elif type.type_is_integer(from_type):
-        return do_cons_char(v, t, ti)
+        return do_cons_char(v, t, method, ti)
 
     # VA_List -> Char
     elif type.type_is_va_list(from_type):
-        return value_cons_node(v, t, ti)
+        return value_cons_node(v, t, method, ti)
 
     #print("??")
     #from hlir.type import type_print

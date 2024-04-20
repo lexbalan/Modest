@@ -59,7 +59,7 @@ def check_width(from_type, t, method, ti):
 
 
 
-def value_cons_integer_immediate(v, t, ti):
+def value_cons_integer_immediate(v, t, method, ti):
     #info("value_cons_int_immediate", ti)
     width = t['width']
     need_width = nbits_for_num(v['asset'])
@@ -67,7 +67,7 @@ def value_cons_integer_immediate(v, t, ti):
     if need_width > width:
         error("integer overflow", ti)
 
-    return value_cons_immediate(v, t, ti)
+    return value_cons_immediate(v, t, method, ti)
 
 
 
@@ -75,12 +75,12 @@ def do_cons_integer(v, t, method, ti):
     check_width(v['type'], t, method, ti)
     if value_is_immediate(v):
         if method == 'explicit':
-            nv = value_cons_node(v, t, ti=ti)
+            nv = value_cons_node(v, t, method, ti=ti)
             nv['asset'] = int(v['asset'])  # here can be float
             nv['immediate'] = True
             return nv
-        return value_cons_integer_immediate(v, t, ti)
-    return value_cons_node(v, t, ti=ti)
+        return value_cons_integer_immediate(v, t, method, ti)
+    return value_cons_node(v, t, method, ti=ti)
 
 
 
@@ -139,7 +139,7 @@ def value_cons_integer(v, t, ti, method):
 
     # VA_List -> Int
     elif hlir_type.type_is_va_list(from_type):
-        return value_cons_node(v, t, ti)
+        return value_cons_node(v, t, method, ti)
 
     return None
 
