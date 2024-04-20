@@ -568,9 +568,9 @@ def do_bin_op_with_pointers(op, l, r , ti):
 
             # what about typeFreePointer?
             if hlir_type.type_is_free_pointer(l['type']):
-                l = value_cons_implicit(l, r['type'])
+                l = value_cons_implicit(r['type'], l)
             elif hlir_type.type_is_free_pointer(r['type']):
-                r = value_cons_implicit(r, l['type'])
+                r = value_cons_implicit(l['type'], r)
 
             return value_bin(op, l, r, foundation.typeBool, ti)
 
@@ -603,13 +603,13 @@ def do_bin_op_with_pointers(op, l, r , ti):
 
             if ptr_n_int:
                 lnat = do_cons_runtime(l, typeSysNat, ti)
-                xr = value_cons_implicit(r, lnat['type'])
+                xr = value_cons_implicit(lnat['type'], r)
                 result = value_bin(x['kind'], lnat, xr, xr['type'], ti)
                 return do_cons_runtime(result, l['type'], ti)
 
             if int_n_ptr:
                 rnat = do_cons_runtime(r, typeSysNat, ti)
-                xl = value_cons_implicit(l, rnat['type'])
+                xl = value_cons_implicit(rnat['type'], l)
                 result = value_bin(x['kind'], rnat, xl, xl['type'], ti)
                 return do_cons_runtime(result, r['type'], ti)
 
@@ -730,8 +730,8 @@ def do_value_bin(x):
         error("unsuitable value type", r['expr_ti'])
         return value_bad(x)
 
-    l = value_cons_implicit(l, common_type)
-    r = value_cons_implicit(r, common_type)
+    l = value_cons_implicit(common_type, l)
+    r = value_cons_implicit(common_type, r)
 
     # After implicit cons types must be equal
     if not hlir_type.check(l['type'], r['type'], x['ti']):
@@ -932,7 +932,7 @@ def do_value_call(x):
         arg = do_rvalue(aa)
 
         if not value_is_bad(arg):
-            arg = value_cons_implicit_check(arg, param['type'])
+            arg = value_cons_implicit_check(param['type'], arg)
             args.append(arg)
 
         i = i + 1
@@ -1012,7 +1012,7 @@ def do_value_index(x):
         return value_bad(x)
 
     if hlir_type.type_is_generic(index['type']):
-        index = value_cons_implicit_check(index, typeSysInt)
+        index = value_cons_implicit_check(typeSysInt, index)
 
     v = None
 
@@ -1096,12 +1096,12 @@ def do_value_access(x):
 
 
 
-def do_value_to(x):
+def do_value_cons(x):
     v = do_rvalue(x['value'])
     t = do_type(x['type'])
     if value_is_bad(v) or hlir_type.type_is_bad(t):
         return value_bad(x)
-    return value_cons_explicit(v, t, x['ti'])
+    return value_cons_explicit(t, v, x['ti'])
 
 
 
@@ -1289,8 +1289,7 @@ def do_value(x):
         elif k == 'deref': v = do_value_deref(x)
         elif k == 'index': v = do_value_index(x)
         elif k == 'access': v = do_value_access(x)
-        elif k == 'cons': v = do_value_to(x)
-        elif k == 'cons': v = do_value_to(x)
+        elif k == 'cons': v = do_value_cons(x)
         elif k == 'sizeof': v = do_value_sizeof(x)
         elif k == 'alignof': v = do_value_alignof(x)
         elif k == 'offsetof': v = do_value_offsetof(x)
@@ -1381,7 +1380,7 @@ def do_stmt_return(x):
     if ret_val_present:
         rv = do_rvalue(x['value'])
         if not value_is_bad(rv):
-            retval = value_cons_implicit_check(rv, func_ret_type)
+            retval = value_cons_implicit_check(func_ret_type, rv)
 
     return hlir_stmt_return(retval, ti=x['ti'])
 
@@ -1425,7 +1424,7 @@ def do_stmt_var(x):
 
     # type & init value present
     if t != None and v != None:
-        v = value_cons_implicit_check(v, t)
+        v = value_cons_implicit_check(t, v)
 
     if t == None:
         if hlir_type.type_is_generic(v['type']):
@@ -1505,7 +1504,7 @@ def do_stmt_assign(x):
 
 
     # type check
-    r = value_cons_implicit_check(r, l['type'])
+    r = value_cons_implicit_check(l['type'], r)
 
 
     if hlir_type.type_is_composite(l['type']):
@@ -1862,7 +1861,7 @@ def def_var(x):
                 var_type['volume'] = value_integer_create(init_arr_sz)
                 #print(init_arr_sz)
             try:
-                init_value = value_cons_implicit_check(iv, var_type)
+                init_value = value_cons_implicit_check(var_type, iv)
             except:
                 warning('???', x['ti'])
 

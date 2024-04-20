@@ -59,7 +59,7 @@ def check_width(from_type, t, method, ti):
 
 
 
-def value_cons_integer_immediate(v, t, method, ti):
+def value_cons_integer_immediate(t, v, method, ti):
     #info("value_cons_int_immediate", ti)
     width = t['width']
     need_width = nbits_for_num(v['asset'])
@@ -67,24 +67,24 @@ def value_cons_integer_immediate(v, t, method, ti):
     if need_width > width:
         error("integer overflow", ti)
 
-    return value_cons_immediate(v, t, method, ti)
+    return value_cons_immediate(t, v, method, ti)
 
 
 
-def do_cons_integer(v, t, method, ti):
+def do_cons_integer(t, v, method, ti):
     check_width(v['type'], t, method, ti)
     if value_is_immediate(v):
         if method == 'explicit':
-            nv = value_cons_node(v, t, method, ti=ti)
+            nv = value_cons_node(t, v, method, ti=ti)
             nv['asset'] = int(v['asset'])  # here can be float
             nv['immediate'] = True
             return nv
-        return value_cons_integer_immediate(v, t, method, ti)
-    return value_cons_node(v, t, method, ti=ti)
+        return value_cons_integer_immediate(t, v, method, ti)
+    return value_cons_node(t, v, method, ti=ti)
 
 
 
-def value_cons_integer(v, t, method, ti):
+def value_cons_integer(t, v, method, ti):
     from_type = v['type']
 
     if value_is_immediate(v):
@@ -96,12 +96,12 @@ def value_cons_integer(v, t, method, ti):
                 if v['asset'] < 0:
                     return None
 
-            return do_cons_integer(v, t, method, ti)
+            return do_cons_integer(t, v, method, ti)
 
 
     # runtime cast generic-integer to integer
     if hlir_type.type_is_generic_integer(from_type):
-        return do_cons_integer(v, t, method, ti)
+        return do_cons_integer(t, v, method, ti)
 
 
     if method != 'explicit':
@@ -111,23 +111,23 @@ def value_cons_integer(v, t, method, ti):
 
     # Int -> Int
     if hlir_type.type_is_integer(from_type):
-        return do_cons_integer(v, t, method, ti)
+        return do_cons_integer(t, v, method, ti)
 
     # Float -> Int
     elif hlir_type.type_is_float(from_type):
-        return do_cons_integer(v, t, method, ti=ti)
+        return do_cons_integer(t, v, method, ti=ti)
 
     # Char -> Int
     elif hlir_type.type_is_char(from_type):
-        return do_cons_integer(v, t, method, ti)
+        return do_cons_integer(t, v, method, ti)
 
     # Bool -> Int
     elif hlir_type.type_is_bool(from_type):
-        return do_cons_integer(v, t, method, ti)
+        return do_cons_integer(t, v, method, ti)
 
     # Byte -> Int
     elif hlir_type.type_is_byte(from_type):
-        return do_cons_integer(v, t, method, ti)
+        return do_cons_integer(t, v, method, ti)
 
     # Pointer -> Int
     elif hlir_type.type_is_pointer(from_type):
@@ -135,11 +135,11 @@ def value_cons_integer(v, t, method, ti):
         if not (features.get('unsafe') or features.get("unsafe-ptr-to-int")):
             info("explicit typecast to pointer is forbidden in safe mode", ti)
             pass
-        return do_cons_integer(v, t, method, ti)
+        return do_cons_integer(t, v, method, ti)
 
     # VA_List -> Int
     elif hlir_type.type_is_va_list(from_type):
-        return value_cons_node(v, t, method, ti)
+        return value_cons_node(t, v, method, ti)
 
     return None
 

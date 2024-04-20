@@ -51,7 +51,7 @@ def value_array_create(items, ti=None):
     i = 0
     while i < length:
         item = items[i]
-        casted_item = value_cons_implicit(item, array_item_type)
+        casted_item = value_cons_implicit(array_item_type, item)
 
         if 'asset' in item:
             casted_item['asset'] = item['asset']
@@ -107,7 +107,7 @@ def cast_values(values, to_type):
     casted_items = []
     for item in values:
         from .cons import value_cons_implicit
-        casted_item = value_cons_implicit(item, to_type)
+        casted_item = value_cons_implicit(to_type, item)
 
         if not hlir_type.type_eq(to_type, casted_item['type']):
             if method == 'explicit':
@@ -121,14 +121,14 @@ def cast_values(values, to_type):
 
 
 
-def do_cons_array(v, t, method, ti):
+def do_cons_array(t, v, method, ti):
     #info("do_cons_array", ti)
 
     if hlir_type.type_is_generic(v['type']):
         nv = value_terminal(t, v['asset'], ti)
         nv['nl_end'] = v['nl_end'] # 'nl_end' present only in generic values
     else:
-        nv = value_cons_node(v, t, method, ti)
+        nv = value_cons_node(t, v, method, ti)
 
     if value_is_immediate(v):
         casted_items = cast_values(v['asset'], t['of'])
@@ -152,7 +152,7 @@ def do_cons_array(v, t, method, ti):
 
 
 
-def value_cons_array(v, t, method, ti):
+def value_cons_array(t, v, method, ti):
     #info("value_cons_array", ti)
 
     #
@@ -189,7 +189,7 @@ def value_cons_array(v, t, method, ti):
 
     if hlir_type.type_is_generic(v['type']):
         # GenericArray -> Array
-        return do_cons_array(v, t, method, ti)
+        return do_cons_array(t, v, method, ti)
 
 
     if method != 'explicit':
@@ -201,7 +201,7 @@ def value_cons_array(v, t, method, ti):
     #
 
     # Array -> Array
-    return do_cons_array(v, t, method, ti)
+    return do_cons_array(t, v, method, ti)
 
 
 

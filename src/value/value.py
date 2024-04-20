@@ -292,7 +292,7 @@ def value_access_record_by_ptr(ptr_to_record, field, ti=None):
     }
 
 
-def value_cons_node(value, type, method='explicit', ti=None):
+def value_cons_node(type, value, method='explicit', ti=None):
     assert(method in ['implicit', 'explicit'])
     assert(value['isa'] == 'value')
     assert(type['isa'] == 'type')
@@ -319,9 +319,9 @@ def value_cons_node(value, type, method='explicit', ti=None):
 # но поскольку у него value immediate, мы можем его asset
 # привести и взять себе; Таким образом мы идем как литерал нода
 # и в то же время как cons нода
-def value_cons_immediate(v, t, method='explicit', ti=None):
+def value_cons_immediate(t, v, method='explicit', ti=None):
     assert(method in ['implicit', 'explicit'])
-    nv = value_cons_node(v, t, method, ti)
+    nv = value_cons_node(t, v, method, ti)
 
     nv['kind'] = 'cons'
     nv['asset'] = v['asset']

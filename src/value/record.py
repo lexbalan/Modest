@@ -52,7 +52,7 @@ def value_record_create(initializers=[], ti=None):
         f = get_item_with_id(rec_type['fields'], field_id['str'])
 
         # приводим инициализатор к типу поля
-        #iv = value_cons_implicit(init_value, f['type'])
+        #iv = value_cons_implicit(f['type'], init_value)
         iv = value_cons(init_value, f['type'], init_value['expr_ti'], method)
 
         ni = copy.copy(initializer)
@@ -64,7 +64,7 @@ def value_record_create(initializers=[], ti=None):
 """
 
 
-def _doitems(v, t, method, ti):
+def _doitems(t, v, method, ti):
     items = []
     if len(v['type']['fields']) > 0:
         # 1. проходим по порядку определения по всем полям типа t (целевого)
@@ -103,7 +103,7 @@ def _doitems(v, t, method, ti):
             prev_nl = nl
 
             from .cons import value_cons
-            nv = value_cons(item_value, field_type, 'implicit', v['expr_ti'])
+            nv = value_cons(field_type, item_value, 'implicit', v['expr_ti'])
 
             type.check(field_type, nv['type'], nv['ti'])
 
@@ -114,8 +114,8 @@ def _doitems(v, t, method, ti):
 
 
 
-def value_cons_record_from_generic_record(v, t, method, ti):
-    items = _doitems(v, t, method, ti)
+def value_cons_record_from_generic_record(t, v, method, ti):
+    items = _doitems(t, v, method, ti)
 
     nv = value_terminal(t, items, ti)
 
@@ -128,13 +128,13 @@ def value_cons_record_from_generic_record(v, t, method, ti):
 
 
 
-def do_cons_record(v, t, method, ti):
-    nv = value_cons_node(v, t, method, ti=ti)
+def do_cons_record(t, v, method, ti):
+    nv = value_cons_node(t, v, method, ti=ti)
     return nv
 
 
 
-def value_cons_record(v, t, method, ti):
+def value_cons_record(t, v, method, ti):
     from_type = v['type']
 
     if not type.type_is_record(from_type):
@@ -146,7 +146,7 @@ def value_cons_record(v, t, method, ti):
 
     # GenericRecord -> Record (implicit)
     if type.type_is_generic(from_type):
-        return value_cons_record_from_generic_record(v, t, method, ti)
+        return value_cons_record_from_generic_record(t, v, method, ti)
 
 
     if method != 'explicit':
@@ -168,6 +168,6 @@ def value_cons_record(v, t, method, ti):
 
 
     # Record -> Record (explicit)
-    return do_cons_record(v, t, method, ti)
+    return do_cons_record(t, v, method, ti)
 
 
