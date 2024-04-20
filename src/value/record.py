@@ -31,7 +31,6 @@ def value_record_create(initializers=[], ti=None):
         field = hlir_field(field_id, field_type, ti=field_ti)
         fields.append(field)
 
-
     record_type = type.hlir_type_record(fields, ti)
     record_type['generic'] = True
 
@@ -66,13 +65,12 @@ def value_record_create(initializers=[], ti=None):
 
 
 def _doitems(v, t, ti, method):
-
     items = []
     if len(v['type']['fields']) > 0:
         # 1. проходим по порядку определения по всем полям типа t (целевого)
         # 2. если поля с таким именеи нет в v:
             # 2.1 конструируем нулевое значение соотв типа
-            # 2.2 if method == 'implicit' - это ошибка (!)
+            # 2.2 При этом if method == 'implicit' - это ошибка (!)
         # 3. делаем implicit_cast() для поля из v к соотв полю из t
         # 4. проверяем тип
         # 5. пакуем
@@ -84,9 +82,6 @@ def _doitems(v, t, ti, method):
             # получаем элемент с соотв именем из исходного значения
             item_value = None
             nl = 0
-
-            #if not 'asset' in v:
-            #    value_print(v)
 
             initializers = v['asset']
             ini = get_item_with_id(initializers, field_name)
@@ -108,11 +103,11 @@ def _doitems(v, t, ti, method):
             prev_nl = nl
 
             from .cons import value_cons
-            item_value2 = value_cons(item_value, field_type, v['expr_ti'], method)
+            nv = value_cons(item_value, field_type, v['expr_ti'], method)
 
-            type.check(field_type, item_value2['type'], item_value2)
+            type.check(field_type, nv['type'], nv['ti'])
 
-            p = hlir_initializer(field['id'], item_value2, ti=ti, nl=nl)
+            p = hlir_initializer(field['id'], nv, ti=ti, nl=nl)
             items.append(p)
 
     return items
@@ -130,7 +125,6 @@ def value_cons_record_from_generic_record(v, t, ti, method):
     nv['nl'] = v['nl']
     nv['nl_end'] = v['nl_end']
     return nv
-
 
 
 
