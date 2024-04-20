@@ -801,7 +801,7 @@ class Parser:
 
             return {
                 'isa': 'value',
-                'kind': 'str',
+                'kind': 'string',
                 'len': str_len,
                 'str': string,
                 'ti': ti

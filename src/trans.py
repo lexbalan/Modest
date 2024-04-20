@@ -965,7 +965,7 @@ def do_value_call(x):
         if func_id_str in ['printf', 'scanf', 'print']:
             expected_pointers = func_id_str == 'scanf'
             first_arg = x['args'][0]
-            if first_arg['kind'] == 'str':
+            if first_arg['kind'] == 'string':
                 specs = get_cspecs(first_arg['str'])
                 extra_args_check(specs, extra_args, expected_pointers)
             else:
@@ -1274,27 +1274,26 @@ def do_value(x):
 
     v = None
 
-    if k == 'number': v = do_value_number(x)
-    elif k == 'id': v = do_value_id(x)
-    elif k == 'str': v = do_value_string(x)
+    if k == 'id': v = do_value_id(x)
+    elif k == 'number': v = do_value_number(x)
+    elif k == 'string': v = do_value_string(x)
     elif k == 'record': v = do_value_record(x)
     elif k == 'array': v = do_value_array(x)
-    else:
-        if k == 'call': v = do_value_call(x)
-        elif k in bin_ops: v = do_value_bin(x)
-        elif k == 'ref': v = do_value_ref(x)
-        elif k == 'not': v = do_value_not(x)
-        elif k == 'negative': v = do_value_neg(x)
-        elif k == 'positive': v = do_value_pos(x)
-        elif k == 'deref': v = do_value_deref(x)
-        elif k == 'index': v = do_value_index(x)
-        elif k == 'access': v = do_value_access(x)
-        elif k == 'cons': v = do_value_cons(x)
-        elif k == 'sizeof': v = do_value_sizeof(x)
-        elif k == 'alignof': v = do_value_alignof(x)
-        elif k == 'offsetof': v = do_value_offsetof(x)
-        elif k == 'shl': v = do_value_shift(x)
-        elif k == 'shr': v = do_value_shift(x)
+    elif k == 'call': v = do_value_call(x)
+    elif k in bin_ops: v = do_value_bin(x)
+    elif k == 'ref': v = do_value_ref(x)
+    elif k == 'not': v = do_value_not(x)
+    elif k == 'negative': v = do_value_neg(x)
+    elif k == 'positive': v = do_value_pos(x)
+    elif k == 'deref': v = do_value_deref(x)
+    elif k == 'index': v = do_value_index(x)
+    elif k == 'access': v = do_value_access(x)
+    elif k == 'cons': v = do_value_cons(x)
+    elif k == 'sizeof': v = do_value_sizeof(x)
+    elif k == 'alignof': v = do_value_alignof(x)
+    elif k == 'offsetof': v = do_value_offsetof(x)
+    elif k == 'shl': v = do_value_shift(x)
+    elif k == 'shr': v = do_value_shift(x)
 
     if v == None:
         v = value_bad(x)
