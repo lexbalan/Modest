@@ -69,11 +69,9 @@ int main()
     // copy arrays by value
     // C backend will be use memcpy()
     int32_t loc_a0[10];
-
-    memset((((void *)&loc_a0) + 0), 0, 40);
+    memcpy(&loc_a0, &(int32_t[10]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 40);
     int32_t loc_a1[10];
-    memcpy(&loc_a1, &(int8_t[3]){42, 53, 64}, 3);
-    memset((((void *)&loc_a1) + 3), 0, 37);
+    memcpy(&loc_a1, &(int32_t[10]){(int32_t)42, (int32_t)53, 64, 0, 0, 0, 0, 0, 0, 0}, 40);
 
     memcpy(&loc_a0, &loc_a1, 40);
 

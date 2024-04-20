@@ -124,7 +124,10 @@ def cast_values(values, to_type):
 def do_cons_array(v, t, ti, method):
     #info("do_cons_array", ti)
 
-    nv = value_cons_node(v, t, ti=ti)
+    if hlir_type.type_is_generic(v['type']):
+        nv = value_terminal(t, v['asset'], ti)
+    else:
+        nv = value_cons_node(v, t, ti)
 
     if value_is_immediate(v):
         casted_items = cast_values(v['asset'], t['of'])

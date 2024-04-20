@@ -15,7 +15,7 @@ def value_record_create(initializers=[], ti=None):
     is_immediate = True
 
     # сперва пройдемся по инициализаторам
-    # и выясним какие поля у нас тут есть
+    # и выясним какие поля у нас здесь имеются
     # (для того чтобы сконструировать тип записи)
     fields = []
     for initializer in initializers:
