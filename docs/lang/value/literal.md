@@ -5,13 +5,13 @@
 
 | Literal Value Kind | Examples | Type |
 | :----------: | :------: | :--: |
-| Integer | `0, 1, 0xF` | GenericInteger |
-| Rational | `0.5, 3.14, .125` | GenericFloat |
-| Boolean | `false, true` | Bool |
-| String | `"Hello!"` | GenericArray |
-| Array | `[1, 2, 3]` | GenericArray |
-| Record | `{x=10, y=20}` | GenericRecord |
-| Nil | `nil` | *Unit |
+| Integer Literal | `0, 1, 0xF` | GenericInteger |
+| Rational Literal | `0.5, 3.14, .125` | GenericFloat |
+| Boolean Literal | `false, true` | Bool |
+| String Literal | `"Hello!"` | GenericArray |
+| Array Literal | `[1, 2, 3]` | GenericArray |
+| Record Literal | `{x=10, y=20}` | GenericRecord |
+| Nil Literal | `nil` | *Unit |
 
 > Generic type can be implicit casted to value with [corresponded](./cast.md#Implicit-type-casting) non-generic type. 
 
@@ -78,7 +78,7 @@ Float literals have type **GenericFloat**
 
 
 ## Bool literals
-Float literals have type **Bool**
+Bool literals have type **Bool**
 ```swift
 true, false
 ```
