@@ -441,41 +441,26 @@ define %Int @main() {
     br label %again_1
 again_1:
     %3 = load i32, i32* %2
-    %4 = trunc i64 2 to %Int
-    %5 = icmp slt i32 %3, %4
-    br i1 %5 , label %body_1, label %break_1
+    %4 = icmp slt i32 %3, 2
+    br i1 %4 , label %body_1, label %break_1
 body_1:
-    %6 = load i32, i32* %2
-    %7 = getelementptr inbounds [2 x %SHA256_TestCase*], [2 x %SHA256_TestCase*]* @sha256_tests, i32 0, i32 %6
-    %8 = load %SHA256_TestCase*, %SHA256_TestCase** %7
-    %9 = call i1 (%SHA256_TestCase*) @sha256_doTest(%SHA256_TestCase* %8)
-    %10 = alloca %Str8*
-    %11 = insertvalue [7 x i8] zeroinitializer, i8 102, 0
-    %12 = insertvalue [7 x i8] %11, i8 97, 1
-    %13 = insertvalue [7 x i8] %12, i8 105, 2
-    %14 = insertvalue [7 x i8] %13, i8 108, 3
-    %15 = insertvalue [7 x i8] %14, i8 101, 4
-    %16 = insertvalue [7 x i8] %15, i8 100, 5
-    %17 = insertvalue [7 x i8] %16, i8 0, 6
-    store [7 x i8] %17, %Str8** %10
-    br i1 %9 , label %then_0, label %endif_0
+    %5 = load i32, i32* %2
+    %6 = getelementptr inbounds [2 x %SHA256_TestCase*], [2 x %SHA256_TestCase*]* @sha256_tests, i32 0, i32 %5
+    %7 = load %SHA256_TestCase*, %SHA256_TestCase** %6
+    %8 = call i1 (%SHA256_TestCase*) @sha256_doTest(%SHA256_TestCase* %7)
+    %9 = alloca %Str8*
+    store %Str8* bitcast ([7 x i8]* @str6 to [0 x i8]*), %Str8** %9
+    br i1 %8 , label %then_0, label %endif_0
 then_0:
-    %18 = insertvalue [7 x i8] zeroinitializer, i8 112, 0
-    %19 = insertvalue [7 x i8] %18, i8 97, 1
-    %20 = insertvalue [7 x i8] %19, i8 115, 2
-    %21 = insertvalue [7 x i8] %20, i8 115, 3
-    %22 = insertvalue [7 x i8] %21, i8 101, 4
-    %23 = insertvalue [7 x i8] %22, i8 100, 5
-    %24 = insertvalue [7 x i8] %23, i8 0, 6
-    store [7 x i8] %24, %Str8** %10
+    store %Str8* bitcast ([7 x i8]* @str7 to [0 x i8]*), %Str8** %9
     br label %endif_0
 endif_0:
-    %25 = load i32, i32* %2
-    %26 = load %Str8*, %Str8** %10
-    %27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str8 to [0 x i8]*), i32 %25, %Str8* %26)
-    %28 = load i32, i32* %2
-    %29 = add i32 %28, 1
-    store i32 %29, i32* %2
+    %10 = load i32, i32* %2
+    %11 = load %Str8*, %Str8** %9
+    %12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str8 to [0 x i8]*), i32 %10, %Str8* %11)
+    %13 = load i32, i32* %2
+    %14 = add i32 %13, 1
+    store i32 %14, i32* %2
     br label %again_1
 break_1:
     ret %Int 0

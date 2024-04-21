@@ -78,7 +78,7 @@ func main() -> Int {
         let test = sha256_tests[i]
         let test_result = sha256_doTest(test)
 
-        var res = *Str8 "failed"
+        var res: *Str8 = *Str8 "failed"
         if test_result {
             res = "passed"
         }

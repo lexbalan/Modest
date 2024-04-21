@@ -12,7 +12,9 @@
 
 
 #define ratSymbolUTF8  {0xF0, 0x9F, 0x90, 0x80}
+const int8_t _ratSymbolUTF8[4] = ratSymbolUTF8;
 #define ratSymbolUTF16  {0xD83D, 0xDC00}
+const int16_t _ratSymbolUTF16[2] = ratSymbolUTF16;
 #define ratSymbolUTF32  0x0001F400
 
 

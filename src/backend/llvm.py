@@ -1707,18 +1707,14 @@ def print_def_var(x):
 
 
 def print_def_const(x):
-    const_value = x['value']
-
-    if const_value['type'] == None:
-        print(const_value)
+    init_value = x['init_value']
 
     #if hlir_type.type_is_composite(const_value['type']):
-    # записи нельзя так печатать, да и не нужно - тк это LLVM
-    # печатаем только
-    if hlir_type.type_is_array_of_char(const_value['type']):
-        init_value = x['init_value']
-        id = x['id']
-        out("\n@%s = constant " % id['str'])
+    # В LLVM мы не печатаем константы, но массивы - вынуждены
+    # тк доступ к ним может идти в рантайме по индкусу;
+    # НО! В константной записи может быть массив! (хз как быть пока)
+    if hlir_type.type_is_array(init_value['type']):
+        out("\n@%s = constant " % x['id']['str'])
         llvm_print_type_value(do_eval(init_value))
 
     return

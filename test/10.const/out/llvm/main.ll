@@ -348,6 +348,56 @@ declare double @max_float64(double %a, double %b)
 }
 
 
+@carr = constant [6 x i8] [
+    i8 0,
+    i8 10,
+    i8 15,
+    i8 20,
+    i8 25,
+    i8 30
+]
+@lines = constant [4 x %Line] [
+    %Line {
+        %Point {
+            double 0.0,
+            double 0.0
+        },
+        %Point {
+            double 1.0,
+            double 1.0
+        }
+    },
+    %Line {
+        %Point {
+            double 10.0,
+            double 20.0
+        },
+        %Point {
+            double 30.0,
+            double 40.0
+        }
+    },
+    %Line {
+        %Point {
+            double 0.0,
+            double 0.0
+        },
+        %Point {
+            double 1.0,
+            double 1.0
+        }
+    },
+    %Line {
+        %Point {
+            double 10.0,
+            double 20.0
+        },
+        %Point {
+            double 30.0,
+            double 40.0
+        }
+    }
+]
 
 
 define %Float @distance(%Point %a, %Point %b) {

@@ -256,6 +256,16 @@ define i32 @sig1(i32 %x) {
 }
 
 
+@initMagic = constant [8 x i32] [
+    i32 1779033703,
+    i32 3144134277,
+    i32 1013904242,
+    i32 2773480762,
+    i32 1359893119,
+    i32 2600822924,
+    i32 528734635,
+    i32 1541459225
+]
 
 define void @sha256_contextInit(%Context* %ctx) {
     %1 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
@@ -272,6 +282,72 @@ define void @sha256_contextInit(%Context* %ctx) {
 }
 
 
+@k = constant [64 x i32] [
+    i32 1116352408,
+    i32 1899447441,
+    i32 3049323471,
+    i32 3921009573,
+    i32 961987163,
+    i32 1508970993,
+    i32 2453635748,
+    i32 2870763221,
+    i32 3624381080,
+    i32 310598401,
+    i32 607225278,
+    i32 1426881987,
+    i32 1925078388,
+    i32 2162078206,
+    i32 2614888103,
+    i32 3248222580,
+    i32 3835390401,
+    i32 4022224774,
+    i32 264347078,
+    i32 604807628,
+    i32 770255983,
+    i32 1249150122,
+    i32 1555081692,
+    i32 1996064986,
+    i32 2554220882,
+    i32 2821834349,
+    i32 2952996808,
+    i32 3210313671,
+    i32 3336571891,
+    i32 3584528711,
+    i32 113926993,
+    i32 338241895,
+    i32 666307205,
+    i32 773529912,
+    i32 1294757372,
+    i32 1396182291,
+    i32 1695183700,
+    i32 1986661051,
+    i32 2177026350,
+    i32 2456956037,
+    i32 2730485921,
+    i32 2820302411,
+    i32 3259730800,
+    i32 3345764771,
+    i32 3516065817,
+    i32 3600352804,
+    i32 4094571909,
+    i32 275423344,
+    i32 430227734,
+    i32 506948616,
+    i32 659060556,
+    i32 883997877,
+    i32 958139571,
+    i32 1322822218,
+    i32 1537002063,
+    i32 1747873779,
+    i32 1955562222,
+    i32 2024104815,
+    i32 2227730452,
+    i32 2361852424,
+    i32 2428436474,
+    i32 2756734187,
+    i32 3204031479,
+    i32 3329325298
+]
 
 define void @sha256_transform(%Context* %ctx, [0 x i8]* %data) {
     %1 = alloca [64 x i32]
@@ -341,195 +417,193 @@ define void @sha256_transform(%Context* %ctx, [0 x i8]* %data) {
     %65 = insertvalue [64 x i32] %64, i32 0, 63
     store [64 x i32] %65, [64 x i32]* %1
     %66 = alloca i32
-    %67 = zext i8 0 to i32
-    store i32 %67, i32* %66
-    %68 = alloca i32
-    %69 = zext i8 0 to i32
-    store i32 %69, i32* %68
+    store i32 0, i32* %66
+    %67 = alloca i32
+    store i32 0, i32* %67
     br label %again_1
 again_1:
-    %70 = load i32, i32* %66
-    %71 = icmp ult i32 %70, 16
-    br i1 %71 , label %body_1, label %break_1
+    %68 = load i32, i32* %66
+    %69 = icmp ult i32 %68, 16
+    br i1 %69 , label %body_1, label %break_1
 body_1:
-    %72 = load i32, i32* %68
-    %73 = add i32 %72, 0
-    %74 = getelementptr inbounds [0 x i8], [0 x i8]* %data, i32 0, i32 %73
-    %75 = load i8, i8* %74
-    %76 = zext i8 %75 to i32
-    %77 = shl i32 %76, 24
-    %78 = load i32, i32* %68
-    %79 = add i32 %78, 1
-    %80 = getelementptr inbounds [0 x i8], [0 x i8]* %data, i32 0, i32 %79
-    %81 = load i8, i8* %80
-    %82 = zext i8 %81 to i32
-    %83 = shl i32 %82, 16
-    %84 = load i32, i32* %68
-    %85 = add i32 %84, 2
-    %86 = getelementptr inbounds [0 x i8], [0 x i8]* %data, i32 0, i32 %85
-    %87 = load i8, i8* %86
-    %88 = zext i8 %87 to i32
-    %89 = shl i32 %88, 8
-    %90 = load i32, i32* %68
-    %91 = add i32 %90, 3
-    %92 = getelementptr inbounds [0 x i8], [0 x i8]* %data, i32 0, i32 %91
-    %93 = load i8, i8* %92
-    %94 = zext i8 %93 to i32
-    %95 = shl i32 %94, 0
-    %96 = or i32 %89, %95
-    %97 = or i32 %83, %96
-    %98 = or i32 %77, %97
-    %99 = load i32, i32* %66
-    %100 = getelementptr inbounds [64 x i32], [64 x i32]* %1, i32 0, i32 %99
-    store i32 %98, i32* %100
-    %101 = load i32, i32* %68
-    %102 = add i32 %101, 4
-    store i32 %102, i32* %68
-    %103 = load i32, i32* %66
-    %104 = add i32 %103, 1
-    store i32 %104, i32* %66
+    %70 = load i32, i32* %67
+    %71 = add i32 %70, 0
+    %72 = getelementptr inbounds [0 x i8], [0 x i8]* %data, i32 0, i32 %71
+    %73 = load i8, i8* %72
+    %74 = zext i8 %73 to i32
+    %75 = shl i32 %74, 24
+    %76 = load i32, i32* %67
+    %77 = add i32 %76, 1
+    %78 = getelementptr inbounds [0 x i8], [0 x i8]* %data, i32 0, i32 %77
+    %79 = load i8, i8* %78
+    %80 = zext i8 %79 to i32
+    %81 = shl i32 %80, 16
+    %82 = load i32, i32* %67
+    %83 = add i32 %82, 2
+    %84 = getelementptr inbounds [0 x i8], [0 x i8]* %data, i32 0, i32 %83
+    %85 = load i8, i8* %84
+    %86 = zext i8 %85 to i32
+    %87 = shl i32 %86, 8
+    %88 = load i32, i32* %67
+    %89 = add i32 %88, 3
+    %90 = getelementptr inbounds [0 x i8], [0 x i8]* %data, i32 0, i32 %89
+    %91 = load i8, i8* %90
+    %92 = zext i8 %91 to i32
+    %93 = shl i32 %92, 0
+    %94 = or i32 %87, %93
+    %95 = or i32 %81, %94
+    %96 = or i32 %75, %95
+    %97 = load i32, i32* %66
+    %98 = getelementptr inbounds [64 x i32], [64 x i32]* %1, i32 0, i32 %97
+    store i32 %96, i32* %98
+    %99 = load i32, i32* %67
+    %100 = add i32 %99, 4
+    store i32 %100, i32* %67
+    %101 = load i32, i32* %66
+    %102 = add i32 %101, 1
+    store i32 %102, i32* %66
     br label %again_1
 break_1:
     br label %again_2
 again_2:
-    %105 = load i32, i32* %66
-    %106 = icmp ult i32 %105, 64
-    br i1 %106 , label %body_2, label %break_2
+    %103 = load i32, i32* %66
+    %104 = icmp ult i32 %103, 64
+    br i1 %104 , label %body_2, label %break_2
 body_2:
+    %105 = load i32, i32* %66
+    %106 = getelementptr inbounds [64 x i32], [64 x i32]* %1, i32 0, i32 %105
     %107 = load i32, i32* %66
-    %108 = getelementptr inbounds [64 x i32], [64 x i32]* %1, i32 0, i32 %107
-    %109 = load i32, i32* %66
-    %110 = sub i32 %109, 2
-    %111 = getelementptr inbounds [64 x i32], [64 x i32]* %1, i32 0, i32 %110
-    %112 = load i32, i32* %111
-    %113 = call i32 (i32) @sig1(i32 %112)
-    %114 = load i32, i32* %66
-    %115 = sub i32 %114, 7
-    %116 = getelementptr inbounds [64 x i32], [64 x i32]* %1, i32 0, i32 %115
-    %117 = load i32, i32* %116
-    %118 = add i32 %113, %117
-    %119 = load i32, i32* %66
-    %120 = sub i32 %119, 15
-    %121 = getelementptr inbounds [64 x i32], [64 x i32]* %1, i32 0, i32 %120
-    %122 = load i32, i32* %121
-    %123 = call i32 (i32) @sig0(i32 %122)
-    %124 = add i32 %118, %123
-    %125 = load i32, i32* %66
-    %126 = sub i32 %125, 16
-    %127 = getelementptr inbounds [64 x i32], [64 x i32]* %1, i32 0, i32 %126
-    %128 = load i32, i32* %127
-    %129 = add i32 %124, %128
-    store i32 %129, i32* %108
-    %130 = load i32, i32* %66
-    %131 = add i32 %130, 1
-    store i32 %131, i32* %66
+    %108 = sub i32 %107, 2
+    %109 = getelementptr inbounds [64 x i32], [64 x i32]* %1, i32 0, i32 %108
+    %110 = load i32, i32* %109
+    %111 = call i32 (i32) @sig1(i32 %110)
+    %112 = load i32, i32* %66
+    %113 = sub i32 %112, 7
+    %114 = getelementptr inbounds [64 x i32], [64 x i32]* %1, i32 0, i32 %113
+    %115 = load i32, i32* %114
+    %116 = add i32 %111, %115
+    %117 = load i32, i32* %66
+    %118 = sub i32 %117, 15
+    %119 = getelementptr inbounds [64 x i32], [64 x i32]* %1, i32 0, i32 %118
+    %120 = load i32, i32* %119
+    %121 = call i32 (i32) @sig0(i32 %120)
+    %122 = add i32 %116, %121
+    %123 = load i32, i32* %66
+    %124 = sub i32 %123, 16
+    %125 = getelementptr inbounds [64 x i32], [64 x i32]* %1, i32 0, i32 %124
+    %126 = load i32, i32* %125
+    %127 = add i32 %122, %126
+    store i32 %127, i32* %106
+    %128 = load i32, i32* %66
+    %129 = add i32 %128, 1
+    store i32 %129, i32* %66
     br label %again_2
 break_2:
-    %132 = alloca [8 x i32]
-    %133 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
-    %134 = bitcast [8 x i32]* %132 to i8*
-    %135 = bitcast [8 x i32]* %133 to i8*
-    call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %134, i8* %135, i32 32, i1 0)
+    %130 = alloca [8 x i32]
+    %131 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
+    %132 = bitcast [8 x i32]* %130 to i8*
+    %133 = bitcast [8 x i32]* %131 to i8*
+    call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %132, i8* %133, i32 32, i1 0)
     store i32 0, i32* %66
     br label %again_3
 again_3:
-    %136 = load i32, i32* %66
-    %137 = icmp ult i32 %136, 64
-    br i1 %137 , label %body_3, label %break_3
+    %134 = load i32, i32* %66
+    %135 = icmp ult i32 %134, 64
+    br i1 %135 , label %body_3, label %break_3
 body_3:
-    %138 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 7
+    %136 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 7
+    %137 = load i32, i32* %136
+    %138 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 4
     %139 = load i32, i32* %138
-    %140 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 4
-    %141 = load i32, i32* %140
-    %142 = call i32 (i32) @ep1(i32 %141)
-    %143 = add i32 %139, %142
-    %144 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 4
+    %140 = call i32 (i32) @ep1(i32 %139)
+    %141 = add i32 %137, %140
+    %142 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 4
+    %143 = load i32, i32* %142
+    %144 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 5
     %145 = load i32, i32* %144
-    %146 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 5
+    %146 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 6
     %147 = load i32, i32* %146
-    %148 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 6
-    %149 = load i32, i32* %148
-    %150 = call i32 (i32, i32, i32) @ch(i32 %145, i32 %147, i32 %149)
-    %151 = add i32 %143, %150
-    %152 = load i32, i32* %66
-    %153 = getelementptr inbounds [64 x i32], [64 x i32]* @k, i32 0, i32 %152
-    %154 = load i32, i32* %153
-    %155 = bitcast i32 %154 to i32
-    %156 = add i32 %151, %155
-    %157 = load i32, i32* %66
-    %158 = getelementptr inbounds [64 x i32], [64 x i32]* %1, i32 0, i32 %157
-    %159 = load i32, i32* %158
-    %160 = add i32 %156, %159
-    %161 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 0
-    %162 = load i32, i32* %161
-    %163 = call i32 (i32) @ep0(i32 %162)
-    %164 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 0
+    %148 = call i32 (i32, i32, i32) @ch(i32 %143, i32 %145, i32 %147)
+    %149 = add i32 %141, %148
+    %150 = load i32, i32* %66
+    %151 = getelementptr inbounds [64 x i32], [64 x i32]* @k, i32 0, i32 %150
+    %152 = load i32, i32* %151
+    %153 = bitcast i32 %152 to i32
+    %154 = add i32 %149, %153
+    %155 = load i32, i32* %66
+    %156 = getelementptr inbounds [64 x i32], [64 x i32]* %1, i32 0, i32 %155
+    %157 = load i32, i32* %156
+    %158 = add i32 %154, %157
+    %159 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 0
+    %160 = load i32, i32* %159
+    %161 = call i32 (i32) @ep0(i32 %160)
+    %162 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 0
+    %163 = load i32, i32* %162
+    %164 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 1
     %165 = load i32, i32* %164
-    %166 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 1
+    %166 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 2
     %167 = load i32, i32* %166
-    %168 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 2
-    %169 = load i32, i32* %168
-    %170 = call i32 (i32, i32, i32) @maj(i32 %165, i32 %167, i32 %169)
-    %171 = add i32 %163, %170
-    %172 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 7
-    %173 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 6
-    %174 = load i32, i32* %173
-    store i32 %174, i32* %172
-    %175 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 6
-    %176 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 5
-    %177 = load i32, i32* %176
-    store i32 %177, i32* %175
-    %178 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 5
-    %179 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 4
-    %180 = load i32, i32* %179
-    store i32 %180, i32* %178
-    %181 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 4
-    %182 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 3
-    %183 = load i32, i32* %182
-    %184 = add i32 %183, %160
-    store i32 %184, i32* %181
-    %185 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 3
-    %186 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 2
-    %187 = load i32, i32* %186
-    store i32 %187, i32* %185
-    %188 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 2
-    %189 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 1
-    %190 = load i32, i32* %189
-    store i32 %190, i32* %188
-    %191 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 1
-    %192 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 0
-    %193 = load i32, i32* %192
-    store i32 %193, i32* %191
-    %194 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 0
-    %195 = add i32 %160, %171
-    store i32 %195, i32* %194
-    %196 = load i32, i32* %66
-    %197 = add i32 %196, 1
-    store i32 %197, i32* %66
+    %168 = call i32 (i32, i32, i32) @maj(i32 %163, i32 %165, i32 %167)
+    %169 = add i32 %161, %168
+    %170 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 7
+    %171 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 6
+    %172 = load i32, i32* %171
+    store i32 %172, i32* %170
+    %173 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 6
+    %174 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 5
+    %175 = load i32, i32* %174
+    store i32 %175, i32* %173
+    %176 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 5
+    %177 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 4
+    %178 = load i32, i32* %177
+    store i32 %178, i32* %176
+    %179 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 4
+    %180 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 3
+    %181 = load i32, i32* %180
+    %182 = add i32 %181, %158
+    store i32 %182, i32* %179
+    %183 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 3
+    %184 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 2
+    %185 = load i32, i32* %184
+    store i32 %185, i32* %183
+    %186 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 2
+    %187 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 1
+    %188 = load i32, i32* %187
+    store i32 %188, i32* %186
+    %189 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 1
+    %190 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 0
+    %191 = load i32, i32* %190
+    store i32 %191, i32* %189
+    %192 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 0
+    %193 = add i32 %158, %169
+    store i32 %193, i32* %192
+    %194 = load i32, i32* %66
+    %195 = add i32 %194, 1
+    store i32 %195, i32* %66
     br label %again_3
 break_3:
     store i32 0, i32* %66
     br label %again_4
 again_4:
-    %198 = load i32, i32* %66
-    %199 = icmp ult i32 %198, 8
-    br i1 %199 , label %body_4, label %break_4
+    %196 = load i32, i32* %66
+    %197 = icmp ult i32 %196, 8
+    br i1 %197 , label %body_4, label %break_4
 body_4:
-    %200 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
-    %201 = load i32, i32* %66
-    %202 = getelementptr inbounds [8 x i32], [8 x i32]* %200, i32 0, i32 %201
-    %203 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
-    %204 = load i32, i32* %66
-    %205 = getelementptr inbounds [8 x i32], [8 x i32]* %203, i32 0, i32 %204
-    %206 = load i32, i32* %205
-    %207 = load i32, i32* %66
-    %208 = getelementptr inbounds [8 x i32], [8 x i32]* %132, i32 0, i32 %207
-    %209 = load i32, i32* %208
-    %210 = add i32 %206, %209
-    store i32 %210, i32* %202
-    %211 = load i32, i32* %66
-    %212 = add i32 %211, 1
-    store i32 %212, i32* %66
+    %198 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
+    %199 = load i32, i32* %66
+    %200 = getelementptr inbounds [8 x i32], [8 x i32]* %198, i32 0, i32 %199
+    %201 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
+    %202 = load i32, i32* %66
+    %203 = getelementptr inbounds [8 x i32], [8 x i32]* %201, i32 0, i32 %202
+    %204 = load i32, i32* %203
+    %205 = load i32, i32* %66
+    %206 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 %205
+    %207 = load i32, i32* %206
+    %208 = add i32 %204, %207
+    store i32 %208, i32* %200
+    %209 = load i32, i32* %66
+    %210 = add i32 %209, 1
+    store i32 %210, i32* %66
     br label %again_4
 break_4:
     ret void
@@ -537,47 +611,46 @@ break_4:
 
 define void @sha256_update(%Context* %ctx, [0 x i8]* %msg, i32 %msg_len) {
     %1 = alloca i32
-    %2 = zext i8 0 to i32
-    store i32 %2, i32* %1
+    store i32 0, i32* %1
     br label %again_1
 again_1:
-    %3 = load i32, i32* %1
-    %4 = icmp ult i32 %3, %msg_len
-    br i1 %4 , label %body_1, label %break_1
+    %2 = load i32, i32* %1
+    %3 = icmp ult i32 %2, %msg_len
+    br i1 %3 , label %body_1, label %break_1
 body_1:
-    %5 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
-    %6 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
-    %7 = load i32, i32* %6
-    %8 = getelementptr inbounds [64 x i8], [64 x i8]* %5, i32 0, i32 %7
-    %9 = load i32, i32* %1
-    %10 = getelementptr inbounds [0 x i8], [0 x i8]* %msg, i32 0, i32 %9
-    %11 = load i8, i8* %10
-    store i8 %11, i8* %8
+    %4 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
+    %5 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
+    %6 = load i32, i32* %5
+    %7 = getelementptr inbounds [64 x i8], [64 x i8]* %4, i32 0, i32 %6
+    %8 = load i32, i32* %1
+    %9 = getelementptr inbounds [0 x i8], [0 x i8]* %msg, i32 0, i32 %8
+    %10 = load i8, i8* %9
+    store i8 %10, i8* %7
+    %11 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
     %12 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
-    %13 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
-    %14 = load i32, i32* %13
-    %15 = add i32 %14, 1
-    store i32 %15, i32* %12
-    %16 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
-    %17 = load i32, i32* %16
-    %18 = icmp eq i32 %17, 64
-    br i1 %18 , label %then_0, label %endif_0
+    %13 = load i32, i32* %12
+    %14 = add i32 %13, 1
+    store i32 %14, i32* %11
+    %15 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
+    %16 = load i32, i32* %15
+    %17 = icmp eq i32 %16, 64
+    br i1 %17 , label %then_0, label %endif_0
 then_0:
-    %19 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
-    %20 = bitcast [64 x i8]* %19 to [0 x i8]*
-    call void (%Context*, [0 x i8]*) @sha256_transform(%Context* %ctx, [0 x i8]* %20)
+    %18 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
+    %19 = bitcast [64 x i8]* %18 to [0 x i8]*
+    call void (%Context*, [0 x i8]*) @sha256_transform(%Context* %ctx, [0 x i8]* %19)
+    %20 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
     %21 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
-    %22 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
-    %23 = load i64, i64* %22
-    %24 = add i64 %23, 512
-    store i64 %24, i64* %21
-    %25 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
-    store i32 0, i32* %25
+    %22 = load i64, i64* %21
+    %23 = add i64 %22, 512
+    store i64 %23, i64* %20
+    %24 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
+    store i32 0, i32* %24
     br label %endif_0
 endif_0:
-    %26 = load i32, i32* %1
-    %27 = add i32 %26, 1
-    store i32 %27, i32* %1
+    %25 = load i32, i32* %1
+    %26 = add i32 %25, 1
+    store i32 %26, i32* %1
     br label %again_1
 break_1:
     ret void
@@ -590,202 +663,201 @@ define void @sha256_final(%Context* %ctx, [32 x i8]* %out_hash) {
     store i32 %3, i32* %1
     ; Pad whatever data is left in the buffer.
     %4 = alloca i32
-    %5 = zext i8 64 to i32
-    store i32 %5, i32* %4
-    %6 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
-    %7 = load i32, i32* %6
-    %8 = icmp ult i32 %7, 56
-    br i1 %8 , label %then_0, label %endif_0
+    store i32 64, i32* %4
+    %5 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
+    %6 = load i32, i32* %5
+    %7 = icmp ult i32 %6, 56
+    br i1 %7 , label %then_0, label %endif_0
 then_0:
     store i32 56, i32* %4
     br label %endif_0
 endif_0:
-    %9 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
-    %10 = load i32, i32* %1
-    %11 = getelementptr inbounds [64 x i8], [64 x i8]* %9, i32 0, i32 %10
-    store i8 128, i8* %11
-    %12 = load i32, i32* %1
-    %13 = add i32 %12, 1
-    store i32 %13, i32* %1
-    %14 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
-    %15 = load i32, i32* %1
-    %16 = getelementptr inbounds [64 x i8], [64 x i8]* %14, i32 0, i32 %15
-    %17 = bitcast i8* %16 to i8*
-    %18 = load i32, i32* %4
-    %19 = load i32, i32* %1
-    %20 = sub i32 %18, %19
-    %21 = zext i32 %20 to %SizeT
-    %22 = call i8* (i8*, %Int, %SizeT) @memset(i8* %17, %Int 0, %SizeT %21)
-    %23 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
-    %24 = load i32, i32* %23
-    %25 = icmp uge i32 %24, 56
-    br i1 %25 , label %then_1, label %endif_1
+    %8 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
+    %9 = load i32, i32* %1
+    %10 = getelementptr inbounds [64 x i8], [64 x i8]* %8, i32 0, i32 %9
+    store i8 128, i8* %10
+    %11 = load i32, i32* %1
+    %12 = add i32 %11, 1
+    store i32 %12, i32* %1
+    %13 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
+    %14 = load i32, i32* %1
+    %15 = getelementptr inbounds [64 x i8], [64 x i8]* %13, i32 0, i32 %14
+    %16 = bitcast i8* %15 to i8*
+    %17 = load i32, i32* %4
+    %18 = load i32, i32* %1
+    %19 = sub i32 %17, %18
+    %20 = zext i32 %19 to %SizeT
+    %21 = call i8* (i8*, %Int, %SizeT) @memset(i8* %16, %Int 0, %SizeT %20)
+    %22 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
+    %23 = load i32, i32* %22
+    %24 = icmp uge i32 %23, 56
+    br i1 %24 , label %then_1, label %endif_1
 then_1:
-    %26 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
-    %27 = bitcast [64 x i8]* %26 to [0 x i8]*
-    call void (%Context*, [0 x i8]*) @sha256_transform(%Context* %ctx, [0 x i8]* %27)
-    %28 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
-    %29 = bitcast [64 x i8]* %28 to i8*
-    %30 = call i8* (i8*, %Int, %SizeT) @memset(i8* %29, %Int 0, %SizeT 56)
+    %25 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
+    %26 = bitcast [64 x i8]* %25 to [0 x i8]*
+    call void (%Context*, [0 x i8]*) @sha256_transform(%Context* %ctx, [0 x i8]* %26)
+    %27 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
+    %28 = bitcast [64 x i8]* %27 to i8*
+    %29 = call i8* (i8*, %Int, %SizeT) @memset(i8* %28, %Int 0, %SizeT 56)
     br label %endif_1
 endif_1:
     ; Append to the padding the total message's length in bits and transform.
+    %30 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
     %31 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
-    %32 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
-    %33 = load i64, i64* %32
-    %34 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
-    %35 = load i32, i32* %34
-    %36 = zext i32 %35 to i64
-    %37 = mul i64 %36, 8
-    %38 = add i64 %33, %37
-    store i64 %38, i64* %31
-    %39 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
-    %40 = getelementptr inbounds [64 x i8], [64 x i8]* %39, i32 0, i32 63
-    %41 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
-    %42 = load i64, i64* %41
-    %43 = lshr i64 %42, 0
-    %44 = trunc i64 %43 to i8
-    store i8 %44, i8* %40
-    %45 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
-    %46 = getelementptr inbounds [64 x i8], [64 x i8]* %45, i32 0, i32 62
-    %47 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
-    %48 = load i64, i64* %47
-    %49 = lshr i64 %48, 8
-    %50 = trunc i64 %49 to i8
-    store i8 %50, i8* %46
-    %51 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
-    %52 = getelementptr inbounds [64 x i8], [64 x i8]* %51, i32 0, i32 61
-    %53 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
-    %54 = load i64, i64* %53
-    %55 = lshr i64 %54, 16
-    %56 = trunc i64 %55 to i8
-    store i8 %56, i8* %52
-    %57 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
-    %58 = getelementptr inbounds [64 x i8], [64 x i8]* %57, i32 0, i32 60
-    %59 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
-    %60 = load i64, i64* %59
-    %61 = lshr i64 %60, 24
-    %62 = trunc i64 %61 to i8
-    store i8 %62, i8* %58
-    %63 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
-    %64 = getelementptr inbounds [64 x i8], [64 x i8]* %63, i32 0, i32 59
-    %65 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
-    %66 = load i64, i64* %65
-    %67 = lshr i64 %66, 32
-    %68 = trunc i64 %67 to i8
-    store i8 %68, i8* %64
-    %69 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
-    %70 = getelementptr inbounds [64 x i8], [64 x i8]* %69, i32 0, i32 58
-    %71 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
-    %72 = load i64, i64* %71
-    %73 = lshr i64 %72, 40
-    %74 = trunc i64 %73 to i8
-    store i8 %74, i8* %70
-    %75 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
-    %76 = getelementptr inbounds [64 x i8], [64 x i8]* %75, i32 0, i32 57
-    %77 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
-    %78 = load i64, i64* %77
-    %79 = lshr i64 %78, 48
-    %80 = trunc i64 %79 to i8
-    store i8 %80, i8* %76
-    %81 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
-    %82 = getelementptr inbounds [64 x i8], [64 x i8]* %81, i32 0, i32 56
-    %83 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
-    %84 = load i64, i64* %83
-    %85 = lshr i64 %84, 56
-    %86 = trunc i64 %85 to i8
-    store i8 %86, i8* %82
-    %87 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
-    %88 = bitcast [64 x i8]* %87 to [0 x i8]*
-    call void (%Context*, [0 x i8]*) @sha256_transform(%Context* %ctx, [0 x i8]* %88)
+    %32 = load i64, i64* %31
+    %33 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
+    %34 = load i32, i32* %33
+    %35 = zext i32 %34 to i64
+    %36 = mul i64 %35, 8
+    %37 = add i64 %32, %36
+    store i64 %37, i64* %30
+    %38 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
+    %39 = getelementptr inbounds [64 x i8], [64 x i8]* %38, i32 0, i32 63
+    %40 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
+    %41 = load i64, i64* %40
+    %42 = lshr i64 %41, 0
+    %43 = trunc i64 %42 to i8
+    store i8 %43, i8* %39
+    %44 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
+    %45 = getelementptr inbounds [64 x i8], [64 x i8]* %44, i32 0, i32 62
+    %46 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
+    %47 = load i64, i64* %46
+    %48 = lshr i64 %47, 8
+    %49 = trunc i64 %48 to i8
+    store i8 %49, i8* %45
+    %50 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
+    %51 = getelementptr inbounds [64 x i8], [64 x i8]* %50, i32 0, i32 61
+    %52 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
+    %53 = load i64, i64* %52
+    %54 = lshr i64 %53, 16
+    %55 = trunc i64 %54 to i8
+    store i8 %55, i8* %51
+    %56 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
+    %57 = getelementptr inbounds [64 x i8], [64 x i8]* %56, i32 0, i32 60
+    %58 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
+    %59 = load i64, i64* %58
+    %60 = lshr i64 %59, 24
+    %61 = trunc i64 %60 to i8
+    store i8 %61, i8* %57
+    %62 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
+    %63 = getelementptr inbounds [64 x i8], [64 x i8]* %62, i32 0, i32 59
+    %64 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
+    %65 = load i64, i64* %64
+    %66 = lshr i64 %65, 32
+    %67 = trunc i64 %66 to i8
+    store i8 %67, i8* %63
+    %68 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
+    %69 = getelementptr inbounds [64 x i8], [64 x i8]* %68, i32 0, i32 58
+    %70 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
+    %71 = load i64, i64* %70
+    %72 = lshr i64 %71, 40
+    %73 = trunc i64 %72 to i8
+    store i8 %73, i8* %69
+    %74 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
+    %75 = getelementptr inbounds [64 x i8], [64 x i8]* %74, i32 0, i32 57
+    %76 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
+    %77 = load i64, i64* %76
+    %78 = lshr i64 %77, 48
+    %79 = trunc i64 %78 to i8
+    store i8 %79, i8* %75
+    %80 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
+    %81 = getelementptr inbounds [64 x i8], [64 x i8]* %80, i32 0, i32 56
+    %82 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
+    %83 = load i64, i64* %82
+    %84 = lshr i64 %83, 56
+    %85 = trunc i64 %84 to i8
+    store i8 %85, i8* %81
+    %86 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
+    %87 = bitcast [64 x i8]* %86 to [0 x i8]*
+    call void (%Context*, [0 x i8]*) @sha256_transform(%Context* %ctx, [0 x i8]* %87)
     ; Since this implementation uses little endian byte ordering
     ; and SHA uses big endian, reverse all the bytes
     ; when copying the final state to the output hash.
     store i32 0, i32* %1
     br label %again_1
 again_1:
-    %89 = load i32, i32* %1
-    %90 = icmp ult i32 %89, 4
-    br i1 %90 , label %body_1, label %break_1
+    %88 = load i32, i32* %1
+    %89 = icmp ult i32 %88, 4
+    br i1 %89 , label %body_1, label %break_1
 body_1:
-    %91 = load i32, i32* %1
-    %92 = mul i32 %91, 8
-    %93 = sub i32 24, %92
-    %94 = load i32, i32* %1
-    %95 = add i32 %94, 0
-    %96 = getelementptr inbounds [32 x i8], [32 x i8]* %out_hash, i32 0, i32 %95
-    %97 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
-    %98 = getelementptr inbounds [8 x i32], [8 x i32]* %97, i32 0, i32 0
-    %99 = load i32, i32* %98
-    %100 = lshr i32 %99, %93
-    %101 = trunc i32 %100 to i8
-    store i8 %101, i8* %96
-    %102 = load i32, i32* %1
-    %103 = add i32 %102, 4
-    %104 = getelementptr inbounds [32 x i8], [32 x i8]* %out_hash, i32 0, i32 %103
-    %105 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
-    %106 = getelementptr inbounds [8 x i32], [8 x i32]* %105, i32 0, i32 1
-    %107 = load i32, i32* %106
-    %108 = lshr i32 %107, %93
-    %109 = trunc i32 %108 to i8
-    store i8 %109, i8* %104
-    %110 = load i32, i32* %1
-    %111 = add i32 %110, 8
-    %112 = getelementptr inbounds [32 x i8], [32 x i8]* %out_hash, i32 0, i32 %111
-    %113 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
-    %114 = getelementptr inbounds [8 x i32], [8 x i32]* %113, i32 0, i32 2
-    %115 = load i32, i32* %114
-    %116 = lshr i32 %115, %93
-    %117 = trunc i32 %116 to i8
-    store i8 %117, i8* %112
-    %118 = load i32, i32* %1
-    %119 = add i32 %118, 12
-    %120 = getelementptr inbounds [32 x i8], [32 x i8]* %out_hash, i32 0, i32 %119
-    %121 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
-    %122 = getelementptr inbounds [8 x i32], [8 x i32]* %121, i32 0, i32 3
-    %123 = load i32, i32* %122
-    %124 = lshr i32 %123, %93
-    %125 = trunc i32 %124 to i8
-    store i8 %125, i8* %120
-    %126 = load i32, i32* %1
-    %127 = add i32 %126, 16
-    %128 = getelementptr inbounds [32 x i8], [32 x i8]* %out_hash, i32 0, i32 %127
-    %129 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
-    %130 = getelementptr inbounds [8 x i32], [8 x i32]* %129, i32 0, i32 4
-    %131 = load i32, i32* %130
-    %132 = lshr i32 %131, %93
-    %133 = trunc i32 %132 to i8
-    store i8 %133, i8* %128
-    %134 = load i32, i32* %1
-    %135 = add i32 %134, 20
-    %136 = getelementptr inbounds [32 x i8], [32 x i8]* %out_hash, i32 0, i32 %135
-    %137 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
-    %138 = getelementptr inbounds [8 x i32], [8 x i32]* %137, i32 0, i32 5
-    %139 = load i32, i32* %138
-    %140 = lshr i32 %139, %93
-    %141 = trunc i32 %140 to i8
-    store i8 %141, i8* %136
-    %142 = load i32, i32* %1
-    %143 = add i32 %142, 24
-    %144 = getelementptr inbounds [32 x i8], [32 x i8]* %out_hash, i32 0, i32 %143
-    %145 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
-    %146 = getelementptr inbounds [8 x i32], [8 x i32]* %145, i32 0, i32 6
-    %147 = load i32, i32* %146
-    %148 = lshr i32 %147, %93
-    %149 = trunc i32 %148 to i8
-    store i8 %149, i8* %144
-    %150 = load i32, i32* %1
-    %151 = add i32 %150, 28
-    %152 = getelementptr inbounds [32 x i8], [32 x i8]* %out_hash, i32 0, i32 %151
-    %153 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
-    %154 = getelementptr inbounds [8 x i32], [8 x i32]* %153, i32 0, i32 7
-    %155 = load i32, i32* %154
-    %156 = lshr i32 %155, %93
-    %157 = trunc i32 %156 to i8
-    store i8 %157, i8* %152
-    %158 = load i32, i32* %1
-    %159 = add i32 %158, 1
-    store i32 %159, i32* %1
+    %90 = load i32, i32* %1
+    %91 = mul i32 %90, 8
+    %92 = sub i32 24, %91
+    %93 = load i32, i32* %1
+    %94 = add i32 %93, 0
+    %95 = getelementptr inbounds [32 x i8], [32 x i8]* %out_hash, i32 0, i32 %94
+    %96 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
+    %97 = getelementptr inbounds [8 x i32], [8 x i32]* %96, i32 0, i32 0
+    %98 = load i32, i32* %97
+    %99 = lshr i32 %98, %92
+    %100 = trunc i32 %99 to i8
+    store i8 %100, i8* %95
+    %101 = load i32, i32* %1
+    %102 = add i32 %101, 4
+    %103 = getelementptr inbounds [32 x i8], [32 x i8]* %out_hash, i32 0, i32 %102
+    %104 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
+    %105 = getelementptr inbounds [8 x i32], [8 x i32]* %104, i32 0, i32 1
+    %106 = load i32, i32* %105
+    %107 = lshr i32 %106, %92
+    %108 = trunc i32 %107 to i8
+    store i8 %108, i8* %103
+    %109 = load i32, i32* %1
+    %110 = add i32 %109, 8
+    %111 = getelementptr inbounds [32 x i8], [32 x i8]* %out_hash, i32 0, i32 %110
+    %112 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
+    %113 = getelementptr inbounds [8 x i32], [8 x i32]* %112, i32 0, i32 2
+    %114 = load i32, i32* %113
+    %115 = lshr i32 %114, %92
+    %116 = trunc i32 %115 to i8
+    store i8 %116, i8* %111
+    %117 = load i32, i32* %1
+    %118 = add i32 %117, 12
+    %119 = getelementptr inbounds [32 x i8], [32 x i8]* %out_hash, i32 0, i32 %118
+    %120 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
+    %121 = getelementptr inbounds [8 x i32], [8 x i32]* %120, i32 0, i32 3
+    %122 = load i32, i32* %121
+    %123 = lshr i32 %122, %92
+    %124 = trunc i32 %123 to i8
+    store i8 %124, i8* %119
+    %125 = load i32, i32* %1
+    %126 = add i32 %125, 16
+    %127 = getelementptr inbounds [32 x i8], [32 x i8]* %out_hash, i32 0, i32 %126
+    %128 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
+    %129 = getelementptr inbounds [8 x i32], [8 x i32]* %128, i32 0, i32 4
+    %130 = load i32, i32* %129
+    %131 = lshr i32 %130, %92
+    %132 = trunc i32 %131 to i8
+    store i8 %132, i8* %127
+    %133 = load i32, i32* %1
+    %134 = add i32 %133, 20
+    %135 = getelementptr inbounds [32 x i8], [32 x i8]* %out_hash, i32 0, i32 %134
+    %136 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
+    %137 = getelementptr inbounds [8 x i32], [8 x i32]* %136, i32 0, i32 5
+    %138 = load i32, i32* %137
+    %139 = lshr i32 %138, %92
+    %140 = trunc i32 %139 to i8
+    store i8 %140, i8* %135
+    %141 = load i32, i32* %1
+    %142 = add i32 %141, 24
+    %143 = getelementptr inbounds [32 x i8], [32 x i8]* %out_hash, i32 0, i32 %142
+    %144 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
+    %145 = getelementptr inbounds [8 x i32], [8 x i32]* %144, i32 0, i32 6
+    %146 = load i32, i32* %145
+    %147 = lshr i32 %146, %92
+    %148 = trunc i32 %147 to i8
+    store i8 %148, i8* %143
+    %149 = load i32, i32* %1
+    %150 = add i32 %149, 28
+    %151 = getelementptr inbounds [32 x i8], [32 x i8]* %out_hash, i32 0, i32 %150
+    %152 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
+    %153 = getelementptr inbounds [8 x i32], [8 x i32]* %152, i32 0, i32 7
+    %154 = load i32, i32* %153
+    %155 = lshr i32 %154, %92
+    %156 = trunc i32 %155 to i8
+    store i8 %156, i8* %151
+    %157 = load i32, i32* %1
+    %158 = add i32 %157, 1
+    store i32 %158, i32* %1
     br label %again_1
 break_1:
     ret void

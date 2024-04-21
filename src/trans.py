@@ -1713,9 +1713,10 @@ def def_const(x):
     #        error("expected immediate value", x['value'])
 
     const_value = value_const(id, iv['type'], iv, id['ti'])
-    const_value['att'].append('global')
-    const_value['asset'] = iv['asset']
     const_value['immediate'] = True
+    const_value['asset'] = iv['asset']
+    const_value['att'].append('global')
+    const_value['att'].append('global_const')
 
     if 'nl_end' in iv:
         const_value['nl_end'] = iv['nl_end']

@@ -160,6 +160,16 @@ declare void @utf32_puts(%Str32* %s)
 
 
 
+@ratSymbolUTF8 = constant [4 x i8] [
+    i8 240,
+    i8 159,
+    i8 144,
+    i8 128
+]
+@ratSymbolUTF16 = constant [2 x i16] [
+    i16 55357,
+    i16 56320
+]
 
 @arr_utf8 = global [8 x i8] [
     i8 72,

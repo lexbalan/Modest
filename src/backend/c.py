@@ -133,12 +133,12 @@ def precedence(x):
 
 
 
-def print_id(x):
+def print_id(x, prefix=''):
     if 'c_alias' in x:
         out(x['c_alias'])
         return
 
-    out(x['id']['str'])
+    out(prefix + x['id']['str'])
 
 
 
@@ -539,7 +539,7 @@ def print_value_index(x, ctx):
 
 
     need_wrap = precedence(xx) < precedence(x)
-    print_value(xx, need_wrap=need_wrap)
+    print_value(xx, ctx=['do_unwrap', 'need_mangle'], need_wrap=need_wrap)
 
     out("[")
 
@@ -570,7 +570,7 @@ def print_value_index(x, ctx):
 def print_value_index_ptr(x, ctx):
     ptr2array = x['pointer']
     need_wrap = precedence(ptr2array) < precedence(x)
-    print_value(ptr2array, need_wrap=need_wrap)
+    print_value(ptr2array, ctx=['do_unwrap', 'need_mangle'], need_wrap=need_wrap)
     out("["); print_value(x['index']); out("]")
 
 
@@ -1032,18 +1032,36 @@ def print_value_terminal(x, ctx):
     else: error("print_value_terminal not implemented", x['ti'])
 
 
-def print_value_by_id(x):
-    print_id(x)
-    if 'wrapped_array_value' in x['att']:
-        out(".a")
+def print_value_by_id(x, ctx=[], prefix=''):
+    if 'c_alias' in x:
+        out(x['c_alias'])
+    else:
+        print_id(x, prefix)
+
+    if 'do_unwrap' in ctx:
+        if 'wrapped_array_value' in x['att']:
+            out(".a")
 
 
 # & let
 def print_value_const(x, ctx):
-    print("print_value_const")
-    if 'c_alias' in x:
-        print(x['c_alias'])
-    print_id(x)
+    prefix=''
+
+    if x['kind'] == 'const':
+        if 'need_mangle' in ctx:
+            if 'global_const' in x['att']: # <- костыль!
+                if hlir_type.type_is_composite(x['type']):
+                    prefix = '_'
+
+    return print_value_by_id(x, ctx, prefix)
+
+
+def print_value_func(x, ctx):
+    return print_value_by_id(x, ctx, prefix='')
+
+
+def print_value_var(x, ctx):
+    return print_value_by_id(x, ctx, prefix='')
 
 
 def print_value_sizeof(x, ctx):
@@ -1077,11 +1095,10 @@ def print_value_lengthof(x, ctx):
     pass
 
 
-def print_value(x, ctx=[], need_wrap=False, just_print_id=True):
+def print_value(x, ctx=[], need_wrap=False):
     # если у значения есть свойство 'id' то печатаем просто id
     # (используется для печати имени констант а не просто их значения)
     # в LLVM печатаем просто значение
-
 
     # это нужно когда печатаем глобальные константы
     # чтобы одна на другую не ссылалась тк это в си невозможно
@@ -1096,24 +1113,11 @@ def print_value(x, ctx=[], need_wrap=False, just_print_id=True):
             return
 
 
-    # в C мы не печатаем определения для глобальных констант с типом
-    # GenericArray | GenericRecord; Тк C не умеет в это дело;
-    # А по месту использования такой константы печатаем само imm значение
-    # see print_def_const
-    #  НЕТ!, уже печатаем,
-    """if x['kind'] == 'const':
-        if x['value'] != None:
-            if hlir_type.type_is_generic_array(x['value']['type']):
-                print_value_terminal(x['value'], ['print_immediate'])
-                out("/**/")
-                return"""
+    print_value2(x, ctx, need_wrap)
 
 
-    if just_print_id:
-        if 'id' in x:
-            print_value_by_id(x)
-            return
 
+def print_value2(x, ctx=[], need_wrap=False):
     if need_wrap:
         out("(")
 
@@ -1123,7 +1127,8 @@ def print_value(x, ctx=[], need_wrap=False, just_print_id=True):
     elif k in bin_ops: print_value_bin(x, ctx)
     elif k in un_ops: print_value_un(x, ctx)
     elif k == 'const': print_value_const(x, ctx)
-    elif k in ['func', 'var']: print_value_by_id(x)
+    elif k == 'func': print_value_func(x, ctx)
+    elif k == 'var': print_value_var(x, ctx)
     elif k == 'call': print_value_call(x, ctx)
     elif k == 'index': print_value_index(x, ctx)
     elif k == 'index_ptr': print_value_index_ptr(x, ctx)
@@ -1234,12 +1239,12 @@ def print_stmt_defvar(x):
 
 
 
-def print_macro_definition(id, value):
+def print_macro_definition(id, value, prefix=''):
     global nl_str
-    out("#define %s  " % id['str'])
+    out("#define %s%s  " % (prefix, id['str']))
     need_wrap = precedence(value) < precedenceMax
     nl_str = " \\\n"
-    print_value(value, need_wrap=need_wrap, just_print_id=True)
+    print_value(value, need_wrap=need_wrap)
     nl_str = "\n"
 
 
@@ -1273,7 +1278,7 @@ def print_stmt_let(x):
     else:
         print_variable(id, v['type'], as_const=True)
         out(" = ")
-        print_value(iv, just_print_id=False)
+        print_value(iv)
         out(";")
 
     return
@@ -1291,7 +1296,7 @@ def assign_array(left, right):
             # *(struct ret_str_retval *)&c = ret_str();
             print_cast_hard(right['type'], left)
             out(" = ")
-            print_value(right, just_print_id=False)
+            print_value2(right)
             out(";")
         return
 
@@ -1602,11 +1607,12 @@ def print_variable_array(t, id_str, do_wrapped=True, as_const=False):
 
 # из за того что с C типы записваются через жопу
 # приходится печатать типы ptr, arr & func вместе с именем поля
-def print_variable(_id, typ, as_const=False, init_value=None):
+def print_variable(_id, typ, as_const=False, init_value=None, prefix=''):
     assert (typ != None)
 
     id_str = _id['str']
     assert (id_str != "")
+    id_str = prefix + id_str
 
     if typ['declaration'] != None or typ['definition'] != None:
         print_variable_regular(typ, id_str, as_const)
@@ -1665,35 +1671,38 @@ def print_def_const(x):
     const_value = x['value']
     init_value = x['init_value']
 
+    #"""
     # Не печатаем GenericArray | GenericRecord константы
     # тк C не умеет в это дело; В value_print смотрим -
     # если пришла константа с вышеупомянутым типом - печатаем
-    # просто imm значение. Некрасиво но только так;
+    # просто imm значение. Некрасиво но пока так;
     # see value_print
     if hlir_type.type_is_generic_record(const_value['type']):
         return
 
     if hlir_type.type_is_generic_array_of_char(const_value['type']):
         return
+    #"""
+
 
     newline(n=x['nl'])
 
     _id = x['id']
 
-    """if hlir_type.type_is_generic(const_value['type']):
-        print_macro_definition(_id, init_value)
-        return"""
-
-    """if hlir_type.type_is_composite(const_value['type']):
-        newline()
-        print_variable(_id, const_value['type'], as_const=True)
-        out(" = ")
-        print_value_terminal(init_value, ctx=[])#, ['print_immediate'])
-        out(";")
-
-    else:
-        print_macro_definition(_id, init_value)"""
     print_macro_definition(_id, init_value)
+
+    if not hlir_type.type_is_composite(const_value['type']):
+        return
+
+    newline()
+    print_variable(_id, const_value['type'], as_const=True, prefix='_')
+    out(" = %s;" % _id['str'])
+
+    """
+    out(" = ")
+    print_value_terminal(init_value, ctx=[])#, ['print_immediate'])
+    out(";")
+    #"""
 
     return
 

@@ -80,7 +80,7 @@ void print(char *form, ...)
             char buf[10 + 1];
             char *sptr;
             sptr = (char *)(char *)&buf;
-            sptr[0] = '\x0';
+            (sptr)[0] = '\x0';
 
             if ((c == 'i') || (c == 'd')) {
                 // %i & %d for signed integer (Int)
@@ -102,8 +102,8 @@ void print(char *form, ...)
             } else if (c == 'c') {
                 // %c for char
                 const char c = va_arg(va_list, int);
-                sptr[0] = c;
-                sptr[1] = 0;
+                (sptr)[0] = c;
+                (sptr)[1] = 0;
             }
 
             put_str8(sptr);

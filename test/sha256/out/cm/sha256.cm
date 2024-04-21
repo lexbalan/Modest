@@ -80,8 +80,8 @@ const k = [
 func sha256_transform(ctx: *Context, data: *[]Byte) -> Unit {
     var m: [64]Nat32 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-    var i = Nat32 0
-    var j = Nat32 0
+    var i: Nat32 = Nat32 0
+    var j: Nat32 = Nat32 0
 
     while i < 16 {
         let x = Nat32 data[j + 0] << 24 or Nat32 data[j + 1] << 16 or Nat32 data[j + 2] << 08 or Nat32 data[j + 3] << 00
@@ -124,7 +124,7 @@ func sha256_transform(ctx: *Context, data: *[]Byte) -> Unit {
 
 
 func sha256_update(ctx: *Context, msg: *[]Byte, msg_len: Nat32) -> Unit {
-    var i = Nat32 0
+    var i: Nat32 = Nat32 0
     while i < msg_len {
         ctx.data[ctx.datalen] = msg[i]
         ctx.datalen = ctx.datalen + 1
@@ -143,7 +143,7 @@ func sha256_final(ctx: *Context, out_hash: *[sha256HashSize]Byte) -> Unit {
 
     // Pad whatever data is left in the buffer.
 
-    var n = Nat32 64
+    var n: Nat32 = Nat32 64
     if ctx.datalen < 56 {
         n = 56
     }
