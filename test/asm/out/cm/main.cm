@@ -1,0 +1,17 @@
+// test/asm/src/main.cm
+
+import "libc/stdio"
+
+
+func sum64(a: Nat64, b: Nat64) -> Nat64 {
+    return a + b
+}
+
+func main() -> Int {
+    printf("asm test")
+
+    __asm("nop")
+
+    return 0
+}
+

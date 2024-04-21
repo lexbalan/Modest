@@ -412,6 +412,20 @@ def value_lengthof(of_value, ti=None):
     }
 
 
+def value_asm(ti=None):
+    from foundation import typeUnit
+    return {
+        'isa': 'value',
+        'kind': 'asm',
+        'type': typeUnit,
+        'immediate': False,
+        'immutable': False,
+        'att': [],
+        'expr_ti': ti,
+        'ti': ti
+    }
+
+
 
 
 def value_print(x, msg="value_print"):

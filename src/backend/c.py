@@ -7,7 +7,7 @@ from .common import *
 import hlir.type as hlir_type
 from hlir.type import type_print
 from value.value import value_is_immediate, value_is_zero, value_attribute_check, value_print
-from util import align_bits_up, nbits_for_num, get_item_with_id, utf8_cc_arr_to_utf32_cc_arr, utf16_cc_arr_to_utf32_cc_arr, align_to
+from util import align_bits_up, nbits_for_num, get_item_with_id, utfx_chars_to_utf32_chars, align_to, utf32_chars_to_string
 from main import settings
 import foundation
 
@@ -920,15 +920,8 @@ def print_value_string_create(x, ctx, char_width=8):
     for char in x['asset']:
         codes.append(char['asset'])
 
-    # получаем список кодов UTF-32
     # (для распечатки нужны только UTF-32 коды)
-    utf32_codes = None
-    if char_width == 8:
-        utf32_codes = utf8_cc_arr_to_utf32_cc_arr(codes)
-    elif char_width == 16:
-        utf32_codes = utf16_cc_arr_to_utf32_cc_arr(codes)
-    elif char_width == 32:
-        utf32_codes = codes
+    utf32_codes = utfx_chars_to_utf32_chars(codes, char_width)
 
     # распечатываем (для распечатки нужны только UTF-32 коды)
     assert(utf32_codes != None)
@@ -1092,7 +1085,13 @@ def print_value_lengthof(x, ctx):
     out(") / sizeof(")
     print_value(v)
     out("[0]))")
-    pass
+    return
+
+
+def print_value_asm(x, ctx):
+    s0 = utf32_chars_to_string(x['str0'])
+    out('asm("%s")' % s0)
+    return
 
 
 def print_value(x, ctx=[], need_wrap=False):
@@ -1139,9 +1138,10 @@ def print_value2(x, ctx=[], need_wrap=False):
     elif k == 'alignof': print_value_alignof(x, ctx)
     elif k == 'offsetof': y = print_value_offsetof(x, ctx)
     elif k == 'lengthof': y = print_value_lengthof(x, ctx)
+    elif k == 'asm': y = print_value_asm(x, ctx)
     else:
         out("<%s>" % k)
-        fatal("unknown opcode %s" % k)
+        fatal("unknown opcode '%s'" % k)
         exit(-1)
 
     if need_wrap:

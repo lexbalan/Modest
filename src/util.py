@@ -97,3 +97,24 @@ def utf16_cc_arr_to_utf32_cc_arr(arr):
 
 
 
+# получаем список кодов UTF-32 из кодов utf8/16/32
+def utfx_chars_to_utf32_chars(codes, char_width):
+    utf32_codes = []
+    if char_width == 8: utf32_codes = utf8_cc_arr_to_utf32_cc_arr(codes)
+    elif char_width == 16: utf32_codes = utf16_cc_arr_to_utf32_cc_arr(codes)
+    elif char_width == 32: utf32_codes = codes
+    return utf32_codes
+
+
+# принимает массив кодов символов в кодировке utf-32
+# возвращает питоновскую строку с этими символами
+def utf32_chars_to_string(chars):
+    ccodes = []
+    for char in chars:
+        cc = char['asset']
+        ccodes.append(chr(cc))
+    return ''.join(ccodes)
+
+
+
+

@@ -3,7 +3,7 @@ import hlir.type as hlir_type
 from error import info
 from .common import *
 from value.value import value_is_zero, value_is_immediate, value_attribute_check, value_print
-from util import get_item_with_id
+from util import get_item_with_id, utf32_chars_to_string
 
 
 INDENT_SYMBOL = " " * 4
@@ -324,6 +324,11 @@ def print_value_cons(v, ctx):
     print_cast(v['type'], v['value'], ctx)
 
 
+def print_value_asm(x, ctx):
+    s0 = utf32_chars_to_string(x['str0'])
+    out('__asm("%s")' % s0)
+    return
+
 
 def is_zero_tail(values, i, n):
     # если это значание - zero, проверим все остальные справа
@@ -599,6 +604,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
     elif k == 'alignof': out("alignof("); print_type(x['of']); out(")")
     elif k == 'offsetof': out("offsetof("); print_type(x['of']); out('.%s' % x['field']['str']); out(")")
     elif k == 'lengthof': out("lengthof("); print_value(x['of_value']); out(")")
+    elif k == 'asm': y = print_value_asm(x, ctx)
     else: out("<%s>" % k)
 
     if need_wrap:

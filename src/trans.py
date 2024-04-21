@@ -901,11 +901,18 @@ def do_value_call(x):
         if x['left']['id']['str'] == 'lengthof':
             arg = do_rvalue(x['args'][0])
             if hlir_type.type_is_array(arg['type']):
-                return value_lengthof(arg, ti=x['ti'])
+                return value_lengthof(arg, x['ti'])
             else:
                 error("expected array value", x['args'][0]['ti'])
                 return value_bad(x)
 
+        elif x['left']['id']['str'] == '__asm':
+            text = do_rvalue(x['args'][0])
+            nv = value_asm(x['ti'])
+            nv['str0'] = text['asset']
+            nv['str1'] = []
+            nv['str2'] = []
+            return nv
 
     f = do_rvalue(x['left'])
 
