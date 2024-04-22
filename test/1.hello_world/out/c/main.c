@@ -8,10 +8,15 @@
 
 
 
+#define hello  "Hello"
+#define world  "World!"
+
+#define hello_world  "Hello World!"
+
 
 int main()
 {
-    printf("%s\n", "Hello World!");
+    printf("%s\n", (char *)hello_world);
     return 0;
 }
 
