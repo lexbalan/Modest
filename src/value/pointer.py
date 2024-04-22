@@ -11,8 +11,8 @@ def value_cons_pointer_immediate(t, v, method, ti):
     return value_cons_immediate(t, v, method, ti)
 
 
-def cons_ptr_to_str_from_generic_str(t, v, method, ti):
-    #info("cons_ptr_to_str_from_generic_str", ti)
+def cons_ptr_to_str_from_string(t, v, method, ti):
+    #info("cons_ptr_to_str_from_string", ti)
     from trans import module_strings_add
 
     char_pow = t['to']['of']['width']
@@ -74,9 +74,9 @@ def value_cons_pointer(t, v, method, ti):
     else:
         # implicit cons pointer from non-pointer value
 
-        if type.type_is_generic_array_of_char(vtype):
+        if type.type_is_string(vtype):
             if type.type_is_pointer_to_array_of_char(to_type):
-                return cons_ptr_to_str_from_generic_str(t, v, method, ti)
+                return cons_ptr_to_str_from_string(t, v, method, ti)
 
 
     ### EXPLICIT REGION ###
@@ -111,12 +111,12 @@ def value_cons_pointer(t, v, method, ti):
 
 
 
-def str2utf8(string_items):
+def str2utf8(string_asset):
     chars8 = []
     typeChar8 = foundation.typeChar8
 
-    for cc in string_items:
-        c = chr(cc['asset'])
+    for c in string_asset:
+        #c = chr(cc['asset'])
         utf8_bytes = bytes(c, encoding='utf-8')
         i = 0
         while i < len(utf8_bytes):
@@ -131,13 +131,13 @@ def str2utf8(string_items):
 
 
 
-def str2utf16(string_items):
+def str2utf16(string_asset):
     chars16 = []
 
     typeChar16 = foundation.typeChar16
 
-    for cc in string_items:
-        c = chr(cc['asset'])
+    for c in string_asset:
+        #c = chr(cc['asset'])
         utf16_bytes = bytes(c, encoding='utf-16')[2:]  # [2:] - skip BOM
 
         i = 0
@@ -160,14 +160,16 @@ def str2utf16(string_items):
 
 
 
-def str2utf32(string_items):
+def str2utf32(string_asset):
     # (python uses utf32 by default)
-    typeChar32 = foundation.typeChar32
+    return string_asset
+
+    """typeChar32 = foundation.typeChar32
 
     chars32 = []
-    for cc in string_items:
+    for cc in string_asset:
         chars32.append(cc)
 
-    return chars32
+    return chars32"""
 
 

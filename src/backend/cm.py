@@ -339,8 +339,10 @@ def is_zero_tail(values, i, n):
 
 # print Array literal
 def print_value_array(v, ctx):
+
+    #?
     if hlir_type.type_is_array_of_char(v['type']):
-        print_value_array_str(v, ctx=[])
+        print_value_string(v, ctx=[])
         return
 
     out("[")
@@ -405,14 +407,14 @@ def code_to_char(cc):
 
 
 # print Array of Char literal
-def print_value_array_str(x, ctx):
+def print_value_string(x, ctx):
     out("\"")
     asset = x['asset']
     i = 0
     while i < len(x['asset']):
-        char_value = asset[i]
-
-        cc = char_value['asset']
+        cc = ord(asset[i])
+        #char_value = asset[i]
+        #cc = char_value['asset']
 
         # if cc is '0' - go to the end of string
         # and check if there is something (non-zero)
@@ -525,6 +527,7 @@ def print_value_float(x, ctx):
     out('{0:f}'.format(x['asset']))
 
 
+
 # print Pointer literal
 def print_value_ptr(x, ctx):
     if x['asset'] == 0:
@@ -559,6 +562,7 @@ def print_value_terminal(x, ctx):
     t = x['type']
     if hlir_type.type_is_integer(t): print_value_integer(x, ctx)
     elif hlir_type.type_is_float(t): print_value_float(x, ctx)
+    elif hlir_type.type_is_string(t): print_value_string(x, ctx)
     elif hlir_type.type_is_record(t): print_value_record(x, ctx)
     elif hlir_type.type_is_array(t): print_value_array(x, ctx)
     elif hlir_type.type_is_pointer(t): print_value_ptr(x, ctx)

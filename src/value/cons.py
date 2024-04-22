@@ -11,7 +11,7 @@ from .integer import value_cons_integer
 from .float import value_cons_float
 from .record import value_cons_record
 from .array import value_cons_array
-from .pointer import value_cons_pointer, cons_ptr_to_str_from_generic_str
+from .pointer import value_cons_pointer, cons_ptr_to_str_from_string
 
 
 
@@ -31,8 +31,8 @@ def value_cons_default(x, ti):
             return value_cons_integer(typeSysNat, x, 'implicit', ti)
 
 
-    elif type.type_is_generic_array_of_char(from_type):
-        return cons_ptr_to_str_from_generic_str(typeSysStr, x, ti)
+    elif type.type_is_string(from_type):
+        return cons_ptr_to_str_from_string(typeSysStr, x, ti)
 
     elif type.type_is_float(from_type):
         return value_cons_float(typeSysFloat, x, 'implicit', ti)

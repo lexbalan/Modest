@@ -38,7 +38,7 @@ ENUM_OPS = CONS_OP + EQ_OPS
 PTR_OPS = CONS_OP + EQ_OPS + ['deref']
 ARR_OPS = CONS_OP + EQ_OPS + ['add', 'index']
 REC_OPS = CONS_OP + EQ_OPS + ['access']
-
+STR_OPS = CONS_OP + EQ_OPS + ['add']
 
 def hlir_type_bad(x):
     return {
@@ -266,7 +266,7 @@ def hlir_type_func(params, to, var_args, va_list_id, ti=None):
         'generic': False,
         'width': 0,
         'size': 0,
-        'align': 0,
+        'align': 1,
 
         'params': params,
         'to': to,
@@ -287,12 +287,33 @@ def hlir_type_opaque(ti=None):
         'isa': 'type',
         'kind': 'opaque',
         'generic': False,
+        'width': 0,
+        'size': 0,
+        'align': 1,
         'declaration': None,
         'definition': None,
         'ops': [],
         'att': [],
         'ti': ti
     }
+
+
+def hlir_type_string(width, ti=None):
+    size = nbytes_for_bits(width)
+    return {
+        'isa': 'type',
+        'kind': 'string',
+        'generic': True,  # 'string' is always generic!
+        'width': width,
+        'size': size,
+        'align': size,
+        'declaration': None,
+        'definition': None,
+        'ops': STR_OPS,
+        'att': [],
+        'ti': ti
+    }
+
 
 
 def hlir_type_generic_int_for(num, signed=True, ti=None):
@@ -441,6 +462,7 @@ def type_eq(a, b, opt=[]):
     elif k == 'unit': return True
     elif k == 'bool': return True
     elif k == 'byte': return True
+    elif k == 'string': return True
     elif k == 'func': return type_eq_func(a, b, opt)
     elif k == 'record': return type_eq_record(a, b, opt)
     elif k == 'pointer': return type_eq_pointer(a, b, opt)
@@ -484,6 +506,10 @@ def type_is_byte(t):
 
 def type_is_char(t):
     return t['kind'] == 'char'
+
+
+def type_is_string(t):
+    return t['kind'] == 'string'
 
 
 def type_is_integer(t):

@@ -37,13 +37,13 @@ def value_cons_char(t, v, method, ti):
     from_type = v['type']
 
 
-    # Generic([1]GenericChar) -> Char
+    # String -> Char
     # ex: var c: Char8 = "A"
-    if type.type_is_generic_array_of_char(from_type):
-        if from_type['volume']['asset'] == 1:
+    if type.type_is_string(from_type):
+        if len(from_type['asset']) == 1:
             # extract GenericChar item for next cast step (see below)
-            v = v['asset'][0]
-            from_type = v['type']
+            cv = value_char_create(v['asset'][0])
+            return _do_cons_char(t, cv, method, ti)
 
 
     # implicit casts

@@ -13,7 +13,8 @@ import foundation
 from value.bool import value_bool_create
 from value.integer import value_integer_create
 from value.float import value_float_create
-from value.array import value_array_create, value_array_concat, value_string_create
+from value.array import value_array_create, value_array_concat
+from value.string import value_string_create, value_string_concat
 from value.record import value_record_create
 
 
@@ -295,7 +296,7 @@ def init_builtin_values():
 
     # compiler name
     compilerNameString = "m2"
-    compilerName = value_string_create(compilerNameString, length=3, ti=None)
+    compilerName = value_string_create(compilerNameString, ti=None)
 
     # compiler version
     compilerVersionMajor = value_integer_create(0, typ=foundation.typeNat32)
@@ -679,8 +680,24 @@ def value_eq_arrays(l, r, ti):
 
 
 
-def do_value_bin_str_eq(op, l, r, ti):
+def do_value_bin_arr_eq(op, l, r, ti):
     bool_result = value_eq_arrays(l, r, ti)
+
+    if op == 'eq':
+        op = 'eq_str'
+
+    elif op == 'ne':
+        op = 'ne_str'
+        bool_result = not bool_result
+
+    bin_value = value_bin(op, l, r, foundation.typeBool, ti=ti)
+    bin_value['asset'] = int(bool_result)
+    bin_value['immediate'] = True
+    return bin_value
+
+
+def do_value_bin_str_eq(op, l, r, ti):
+    bool_result = l['asset'] == r['asset']
 
     if op == 'eq':
         op = 'eq_str'
@@ -720,6 +737,12 @@ def do_value_bin(x):
     if hlir_type.type_is_generic_array(l['type']) and hlir_type.type_is_generic_array(r['type']):
         if op == 'add':
             return value_array_concat(l, r, ti)
+        elif op in ['eq', 'ne']:
+            return do_value_bin_arr_eq(op, l, r, ti)
+
+    if hlir_type.type_is_string(l['type']) and hlir_type.type_is_string(r['type']):
+        if op == 'add':
+            return value_string_concat(l, r, ti)
         elif op in ['eq', 'ne']:
             return do_value_bin_str_eq(op, l, r, ti)
 
@@ -1142,7 +1165,8 @@ def do_value_id(x):
 
 
 def do_value_string(x):
-    return value_string_create(x['str'], length=x['len'], ti=x['ti'])
+    #length=x['len']
+    return value_string_create(x['str'], ti=x['ti'])
 
 
 
@@ -1270,7 +1294,7 @@ def do_value_immediate_string(x):
     if value_is_bad(v):
         return v
 
-    if not hlir_type.type_is_array_of_char(v['type']):
+    if not hlir_type.type_is_string(v['type']):
         error("expected string value", x['ti'])
 
     return v
@@ -1647,9 +1671,9 @@ def do_import(x):
         return None
 
     # Literal string to python string
-    impline = ''
-    for char in import_expr['asset']:
-        impline = impline + chr(char['asset'])
+    impline = import_expr['asset']
+    #for char in import_expr['asset']:
+    #    impline = impline + char
 
     log('import "%s"' % impline)
 
@@ -2197,11 +2221,8 @@ def do_directive(x):
 
 
 def str_asset_to_str(a):
-    chars = []
-    for char in a:
-        cc = char['asset']
-        chars.append(chr(cc))
-    return "". join(chars)
+    return a
+
 
 
 

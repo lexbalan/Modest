@@ -756,6 +756,13 @@ def print_array_values(values, ctx):
 
 
 
+def print_value_string(x, ctx):
+    utf32_codes = []
+    for c in x['asset']:
+        utf32_codes.append(ord(c))
+    _print_string_literal(utf32_codes, width=x['type']['width'])
+
+
 def print_value_array(v, ctx):
     if hlir_type.type_is_array_of_char(v['type']):
         char_type = v['type']['of']
@@ -1015,6 +1022,7 @@ def print_value_terminal(x, ctx):
     t = x['type']
     if hlir_type.type_is_integer(t): print_value_integer(x, ctx)
     elif hlir_type.type_is_float(t): print_value_float(x, ctx)
+    elif hlir_type.type_is_string(t): print_value_string(x, ctx)
     elif hlir_type.type_is_record(t): print_value_record(x, ctx)
     elif hlir_type.type_is_array(t): print_value_array(x, ctx)
     elif hlir_type.type_is_bool(t): print_value_bool_create(x, ctx)
