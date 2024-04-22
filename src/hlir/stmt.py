@@ -119,6 +119,17 @@ def hlir_stmt_return(value=None, ti=None):
     }
 
 
+def hlir_stmt_asm(args, ti=None):
+    return {
+        'isa': 'stmt',
+        'kind': 'asm',
+        'args': args,
+        'att': [],
+        'nl': 0,
+        'ti': ti
+    }
+
+
 
 def hlir_stmt_is_bad(x):
     return x['kind'] == 'bad'

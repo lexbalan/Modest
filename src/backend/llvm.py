@@ -348,11 +348,6 @@ def llvm_print_value_zero(x):
     else: out("0")
 
 
-"""
-def llvm_print_asm_call(x):
-    print("llvm_print_asm_call")
-    out('call void asm sideeffect "nop", ""()')
-"""
 
 
 def llvm_print_value(x):
@@ -367,7 +362,6 @@ def llvm_print_value(x):
     elif k == 'record': llvm_print_value_record(x)
     elif k == 'cons': llvm_print_value_inlinecast(x)
     elif k == 'zero': llvm_print_value_zero(x)
-    #elif k == 'asm_call': llvm_print_asm_call(x)
     else:
         out("<unknown_value::%s>" % c)
         info("<llvm::unknown_value::%s>" % c, x['ti'])
@@ -1226,28 +1220,6 @@ def do_eval_literal(x):
 
 
 
-def do_eval_asm(x):
-    s0 = utf32_chars_to_string(x['str0'])
-
-    s1 = ''
-    if x['str1'] != None:
-        s1 = utf32_chars_to_string(x['str1'])
-
-    lo('call void asm sideeffect "%s", "%s"()' % (s0, s1))
-
-    # похоже что нет смысла разделять asm на eval/print
-    return llvm_value_zero(foundation.typeUnit)
-
-    """return {
-        'isa': 'll_value',
-        'kind': 'asm_call',
-        'type': type,
-        'str': x['asset'],
-        'is_adr': False,
-        'proto': None
-    }"""
-
-
 
 def do_eval(x):
     assert(x != None)
@@ -1274,7 +1246,6 @@ def do_eval(x):
     elif k == 'add_arr': y = do_eval_literal(x)
     elif k in ['sizeof', 'lengthof', 'alignof', 'offsetof', 'eq_str']:
          y = do_eval_literal(x)
-    elif k == 'asm': y = do_eval_asm(x)
     else:
         out("<%s>" % k)
 
@@ -1524,14 +1495,15 @@ def print_comment_line(x):
         if i < n:
             out("\n")
 
+def print_stmt_asm(x):
+    s0 = utf32_chars_to_string(x['args'][0]['asset'])
+    s1 = ''
+    lo('call void asm sideeffect "%s", "%s"()' % (s0, s1))
 
 def print_stmt(x):
     k = x['kind']
     if k == 'block': print_stmt_block(x)
-    elif k == 'value':
-        y = do_eval(x['value'])
-        #if y['kind'] == 'asm_call':
-        #    llvm_print_value(y)
+    elif k == 'value': do_eval(x['value'])
     elif k == 'assign': print_stmt_assign(x)
     elif k == 'return': print_stmt_return(x)
     elif k == 'if': print_stmt_if(x)
@@ -1542,6 +1514,7 @@ def print_stmt(x):
     elif k == 'again': print_stmt_again(x)
     elif k == 'comment-line': print_comment_line(x)
     elif k == 'comment-block': print_comment_block(x)
+    elif k == 'asm': print_stmt_asm(x)
     else: lo("<stmt %s>" % str(x))
 
 

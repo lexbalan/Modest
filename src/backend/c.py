@@ -1088,11 +1088,6 @@ def print_value_lengthof(x, ctx):
     return
 
 
-def print_value_asm(x, ctx):
-    s0 = utf32_chars_to_string(x['str0'])
-    out('asm("%s")' % s0)
-    return
-
 
 def print_value(x, ctx=[], need_wrap=False):
     # если у значения есть свойство 'id' то печатаем просто id
@@ -1138,7 +1133,6 @@ def print_value2(x, ctx=[], need_wrap=False):
     elif k == 'alignof': print_value_alignof(x, ctx)
     elif k == 'offsetof': y = print_value_offsetof(x, ctx)
     elif k == 'lengthof': y = print_value_lengthof(x, ctx)
-    elif k == 'asm': y = print_value_asm(x, ctx)
     else:
         out("<%s>" % k)
         fatal("unknown opcode '%s'" % k)
@@ -1285,6 +1279,14 @@ def print_stmt_let(x):
 
 
 
+def print_stmt_asm(x):
+    s0 = utf32_chars_to_string(x['args'][0]['asset'])
+    nl_indent(x['nl'])
+    out('asm("%s");' % s0)
+    return
+
+
+
 def assign_array(left, right):
     if 'wrapped_array_value' in right['att']:
         if right['kind'] == 'call':
@@ -1375,6 +1377,7 @@ def print_stmt(x):
     elif k == 'again': nl_indent(x['nl']); out('continue;')
     elif k == 'comment-line': print_comment_line(x)
     elif k == 'comment-block': print_comment_block(x)
+    elif k == 'asm': print_stmt_asm(x)
     else: out("<stmt %s>" % str(x))
 
 

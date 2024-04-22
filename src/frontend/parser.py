@@ -959,6 +959,11 @@ class Parser:
         return {'isa': 'stmt', 'kind': 'dec', 'value': v}
 
 
+    def stmt_asm(self):
+        v = self.expr_value()
+        return {'isa': 'stmt', 'kind': 'asm', 'args': v['args']}
+
+
     def stmt_expr_value(self):
         v = self.expr_value()
 
@@ -1007,6 +1012,8 @@ class Parser:
             s = self.stmt_inc()
         elif self.match('--'):
             s = self.stmt_dec()
+        elif self.look('__asm'):
+            s = self.stmt_asm()
         else:
 
             # comment?

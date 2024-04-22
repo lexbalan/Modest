@@ -324,11 +324,6 @@ def print_value_cons(v, ctx):
     print_cast(v['type'], v['value'], ctx)
 
 
-def print_value_asm(x, ctx):
-    s0 = utf32_chars_to_string(x['str0'])
-    out('__asm("%s")' % s0)
-    return
-
 
 def is_zero_tail(values, i, n):
     # если это значание - zero, проверим все остальные справа
@@ -604,7 +599,6 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
     elif k == 'alignof': out("alignof("); print_type(x['of']); out(")")
     elif k == 'offsetof': out("offsetof("); print_type(x['of']); out('.%s' % x['field']['str']); out(")")
     elif k == 'lengthof': out("lengthof("); print_value(x['of_value']); out(")")
-    elif k == 'asm': y = print_value_asm(x, ctx)
     else: out("<%s>" % k)
 
     if need_wrap:
@@ -677,6 +671,12 @@ def print_stmt_again(x):
     out("again")
 
 
+def print_stmt_asm(x):
+    s0 = utf32_chars_to_string(x['args'][0]['asset'])
+    out('__asm("%s")' % s0)
+    return
+
+
 def print_stmt(x):
     k = x['kind']
 
@@ -695,6 +695,7 @@ def print_stmt(x):
     elif k == 'again': print_stmt_again(x)
     elif k == 'comment-line': print_comment_line(x)
     elif k == 'comment-block': print_comment_block(x)
+    elif k == 'asm': print_stmt_asm(x)
     else: out("<stmt %s>" % str(x))
 
 

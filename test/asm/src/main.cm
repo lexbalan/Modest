@@ -3,14 +3,19 @@
 import "libc/stdio"
 
 
-func sum64(a: Nat64, b: Nat64) -> Nat64 {
-    return a + b
+func sum64(a: Int64, b: Int64) -> Int64 {
+    var sum: Int64
+    __asm("add %0, %1, %2", "=r", sum, "r", a, "r", b)
+    return sum
 }
 
 func main() -> Int {
     printf("asm test")
 
-    __asm("nop")
+    var a: Int64 = 10
+    var b: Int64 = 20
+    var sum: Int64 = sum64(a, b)
+    printf("sum(%lld, lld) = %lld\n", a, b, sum)
 
     return 0
 }

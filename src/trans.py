@@ -906,13 +906,6 @@ def do_value_call(x):
                 error("expected array value", x['args'][0]['ti'])
                 return value_bad(x)
 
-        elif x['left']['id']['str'] == '__asm':
-            text = do_rvalue(x['args'][0])
-            nv = value_asm(x['ti'])
-            nv['str0'] = text['asset']
-            nv['str1'] = []
-            nv['str2'] = []
-            return nv
 
     f = do_rvalue(x['left'])
 
@@ -1590,6 +1583,16 @@ def do_stmt_comment_block(x):
     }
 
 
+def do_stmt_asm(x):
+    args = []
+    for arg in x['args']:
+        a = do_rvalue(arg)
+        args.append(a)
+
+    return hlir_stmt_asm(args, x['ti'])
+
+
+
 def do_stmt(x):
     k = x['kind']
 
@@ -1608,7 +1611,11 @@ def do_stmt(x):
     elif k == 'dec': s = do_stmt_incdec(x, 'sub')
     elif k == 'comment-line': s = do_stmt_comment_line(x)
     elif k == 'comment-block': s = do_stmt_comment_block(x)
+    elif k == 'asm': s = do_stmt_asm(x)
     else: s = hlir_stmt_bad(x)
+
+    if s == None:
+        return hlir_stmt_bad(x)
 
     if 'nl' in x:
         s['nl'] = x['nl']

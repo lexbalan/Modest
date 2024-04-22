@@ -138,17 +138,33 @@ declare void @perror(%ConstCharStr* %str)
 ; -- SOURCE: src/main.cm
 
 @str1 = private constant [9 x i8] [i8 97, i8 115, i8 109, i8 32, i8 116, i8 101, i8 115, i8 116, i8 0]
+@str2 = private constant [23 x i8] [i8 115, i8 117, i8 109, i8 40, i8 37, i8 108, i8 108, i8 100, i8 44, i8 32, i8 108, i8 108, i8 100, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
 
 
 
 define i64 @sum64(i64 %a, i64 %b) {
-    %1 = add i64 %a, %b
-    ret i64 %1
+    ;return a + b
+    %1 = alloca i64
+    call void asm sideeffect "add %0, %1, %2", ""()
+    %2 = load i64, i64* %1
+    ret i64 %2
 }
 
 define %Int @main() {
     %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str1 to [0 x i8]*))
-    call void asm sideeffect "nop", ""()
+    %2 = alloca i64
+    store i64 10, i64* %2
+    %3 = alloca i64
+    store i64 20, i64* %3
+    %4 = alloca i64
+    %5 = load i64, i64* %2
+    %6 = load i64, i64* %3
+    %7 = call i64 (i64, i64) @sum64(i64 %5, i64 %6)
+    store i64 %7, i64* %4
+    %8 = load i64, i64* %2
+    %9 = load i64, i64* %3
+    %10 = load i64, i64* %4
+    %11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str2 to [0 x i8]*), i64 %8, i64 %9, i64 %10)
     ret %Int 0
 }
 

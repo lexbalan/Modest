@@ -18,7 +18,10 @@ int main()
 {
     printf("asm test");
 
-    asm("nop");
+    int64_t a;
+    int64_t b;
+    int64_t sum;
+    asm("add %0, %1, %2");
 
     return 0;
 }
