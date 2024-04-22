@@ -116,14 +116,11 @@ def str2utf8(string_asset):
     typeChar8 = foundation.typeChar8
 
     for c in string_asset:
-        #c = chr(cc['asset'])
         utf8_bytes = bytes(c, encoding='utf-8')
         i = 0
         while i < len(utf8_bytes):
-            k = utf8_bytes[i]
-
-            char_code = k
-            char = value_char_create(char_code, _type=typeChar8, ti=None)
+            сс = utf8_bytes[i]
+            char = value_char_create(сс, _type=typeChar8, ti=None)
             chars8.append(char)
             i = i + 1
 
@@ -131,29 +128,26 @@ def str2utf8(string_asset):
 
 
 
-def str2utf16(string_asset):
+def str2utf16(string_asset, encode='big-endian'):
     chars16 = []
 
     typeChar16 = foundation.typeChar16
 
     for c in string_asset:
-        #c = chr(cc['asset'])
         utf16_bytes = bytes(c, encoding='utf-16')[2:]  # [2:] - skip BOM
 
         i = 0
-        encode = 'big-endian'
         while i < len(utf16_bytes):
             first = utf16_bytes[i+0]
             second = utf16_bytes[i+1]
-            k = 0
+            сс = 0
             if encode == 'big-endian':
-                k = second * 256 + first
+                сс = second * 256 + first
             else:
-                k = first * 256 + second
+                сс = first * 256 + second
             i = i + 2
 
-            char_code = k
-            char = value_char_create(char_code, _type=typeChar16, ti=None)
+            char = value_char_create(сс, _type=typeChar16, ti=None)
             chars16.append(char)
 
     return chars16
@@ -162,14 +156,16 @@ def str2utf16(string_asset):
 
 def str2utf32(string_asset):
     # (python uses utf32 by default)
-    return string_asset
-
-    """typeChar32 = foundation.typeChar32
-
     chars32 = []
-    for cc in string_asset:
-        chars32.append(cc)
 
-    return chars32"""
+    typeChar32 = foundation.typeChar32
+
+    for c in string_asset:
+        cc = ord(c)
+        char = value_char_create(cc, _type=typeChar32, ti=None)
+        chars32.append(char)
+
+    return chars32
+
 
 

@@ -106,6 +106,7 @@ def utfx_chars_to_utf32_chars(codes, char_width):
     return utf32_codes
 
 
+
 # принимает массив кодов символов в кодировке utf-32
 # возвращает питоновскую строку с этими символами
 def utf32_chars_to_string(chars):

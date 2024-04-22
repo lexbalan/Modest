@@ -1014,7 +1014,7 @@ def do_eval_cast(x):
 
     from_type = value['type']
 
-    if hlir_type.type_is_generic_array_of_char(from_type):
+    if hlir_type.type_is_string(from_type):
         if hlir_type.type_is_pointer_to_array_of_char(to_type):
             string_of = to_type['to']['of']
             char_pow = string_of['width']
@@ -1073,6 +1073,12 @@ bin_ops = [
     'eq', 'ne', 'lt', 'gt', 'le', 'ge',
     'add', 'sub', 'mul', 'div', 'rem',
 ]
+
+
+
+def do_eval_string(x):
+    info("from here", x['ti'])
+    mass
 
 
 def do_eval_array(v):
@@ -1204,6 +1210,7 @@ def do_eval_literal(x):
     xt = x['type']
     if hlir_type.type_is_integer(xt): return llvm_value_num(xt, x['asset'])
     elif hlir_type.type_is_float(xt): return llvm_value_num(xt, x['asset'])
+    elif hlir_type.type_is_string(xt): return do_eval_string(x)
     elif hlir_type.type_is_record(xt): return do_eval_record(x)
     elif hlir_type.type_is_array(xt): return do_eval_array(x)
     elif hlir_type.type_is_bool(xt): return llvm_value_num(xt, x['asset'])
@@ -1760,7 +1767,16 @@ def print_string_as_array(strid, string, char_width):
     lo("@%s = private constant [%d x i%d] [" % (strid, slen, char_width))
     i = 0
     for char in string['asset']:
-        code = char['asset']
+
+        # TODO
+        # FIXIT!
+        # КОСТЫЛИЩЕ НИЖЕ!
+        code = 0
+        if 'asset' in char:
+            code = char['asset']
+        else:
+            code = char
+
         if i > 0:
             out(", ")
         print_int_type_for(char_width)
@@ -1792,7 +1808,12 @@ def print_strings(strings):
 
         string['strid'] = strid
 
-        print_string_as_array(strid, string, char_width)
+        try:
+            print_string_as_array(strid, string, char_width)
+        except:
+            info("????wtf", string['ti'])
+            #value_print(string)
+            print(string['asset'])
 
 
 

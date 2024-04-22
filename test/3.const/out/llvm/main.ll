@@ -147,14 +147,6 @@ declare void @perror(%ConstCharStr* %str)
 
 
 
-@genericStringConst = constant [6 x i8] [
-    i8 72,
-    i8 101,
-    i8 108,
-    i8 108,
-    i8 111,
-    i8 33
-]
 
 %Point = type {
 	i32,
