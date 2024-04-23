@@ -9,6 +9,7 @@ func sum64(a: Int64, b: Int64) -> Int64 {
     return sum
 }
 
+
 func main() -> Int {
     printf("asm test")
 

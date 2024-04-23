@@ -422,20 +422,13 @@ def print_value_str(x, ctx):
 
 
 def print_str_literal(char_codes):
+
+    out("\"")
+
     i = 0
     while i < len(char_codes):
-
-
-        #else:
-        #print(asset)
         cc = char_codes[i]
-        #char_value = asset[i]
-        #cc = char_value['asset']
 
-        # if cc is '0' - go to the end of string
-        # and check if there is something (non-zero)
-        # if not - just end string,
-        # else - continue and print next
         if cc == 0:
             i_before = i
             while i < len(x['asset']):
@@ -700,9 +693,44 @@ def print_stmt_again(x):
     out("again")
 
 
+# for print_stmt_asm:
+# prints pairs: <specifier> <value>
+def print_pairs(args):
+    i = 0
+    while i < len(args):
+        pair = args[i]
+        if i > 0:
+            out(', ')
+        print_value(pair[0])
+        out(', ')
+        print_value(pair[1])
+        i = i + 1
+    return
+
+
 def print_stmt_asm(x):
-    s0 = utf32_chars_to_string(x['args'][0]['asset'])
-    out('__asm("%s")' % s0)
+    a0 = x['args'][0]['asset']
+
+    out('__asm("%s"' % a0)
+
+    # print 'out' pairs
+    args1 = x['args'][1]
+    if len(args1) > 0:
+        out(', ')
+        print_pairs(args1)
+
+    # print 'in' pairs
+    args2 = x['args'][2]
+    if len(args2) > 0:
+        out(', ')
+        print_pairs(args2)
+
+    # print clobber list
+    for clobber in x['args'][3]:
+        out(', ')
+        print_value(clobber)
+
+    out(")")
     return
 
 

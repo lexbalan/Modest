@@ -1291,7 +1291,7 @@ def print_stmt_let(x):
 def print_stmt_asm(x):
     s0 = utf32_chars_to_string(x['args'][0]['asset'])
     nl_indent(x['nl'])
-    out('asm("%s");' % s0)
+    out('__asm__("%s");' % s0)
     return
 
 

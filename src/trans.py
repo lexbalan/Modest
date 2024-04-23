@@ -1608,12 +1608,41 @@ def do_stmt_comment_block(x):
 
 
 def do_stmt_asm(x):
-    args = []
-    for arg in x['args']:
-        a = do_rvalue(arg)
-        args.append(a)
+    xargs = x['args']
+    a0 = do_rvalue(xargs[0])
 
-    return hlir_stmt_asm(args, x['ti'])
+    args1 = []  # out args
+    args2 = []  # in args
+    args3 = []  # clobber list
+
+    i = 1
+    while i < len(xargs):
+        arg = do_rvalue(xargs[i])
+        if not hlir_type.type_is_string(arg['type']):
+            error("expected string literal", arg['expr_ti'])
+            i = i + 1
+            continue
+
+        i = i + 1
+
+        arg2 = do_rvalue(xargs[i])
+
+        p = (arg, arg2)
+
+        #print(p)
+
+        if arg['asset'] == '=r':
+            args1.append(p)
+        elif arg['asset'] == 'r':
+            args2.append(p)
+
+        i = i + 1
+
+
+    args = (a0, args1, args2, args3)
+    s = hlir_stmt_asm(args, x['ti'])
+
+    return s
 
 
 

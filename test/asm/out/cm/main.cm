@@ -4,11 +4,11 @@ import "libc/stdio"
 
 
 func sum64(a: Int64, b: Int64) -> Int64 {
-    //return a + b
     var sum: Int64
-    __asm("add %0, %1, %2")
+    __asm("add %0, %1, %2", "=r", sum, "r", a, "r", b)
     return sum
 }
+
 
 func main() -> Int {
     printf("asm test")
