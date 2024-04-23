@@ -6,7 +6,8 @@ import hlir.type as hlir_type
 from hlir.type import type_print
 from value.value import value_attribute_check, value_print, value_is_immediate, value_terminal
 from hlir.type import hlir_type_pointer
-from util import utf32_chars_to_string, align_bits_up
+from util import align_bits_up
+from unicode import utf32_chars_to_string
 import settings
 
 import foundation
@@ -1767,20 +1768,11 @@ def print_string_as_array(strid, string, char_width):
     lo("@%s = private constant [%d x i%d] [" % (strid, slen, char_width))
     i = 0
     for char in string['asset']:
-
-        # TODO
-        # FIXIT!
-        # КОСТЫЛИЩЕ НИЖЕ!
-        code = 0
-        if 'asset' in char:
-            code = char['asset']
-        else:
-            code = char
-
+        char_code = char['asset']
         if i > 0:
             out(", ")
         print_int_type_for(char_width)
-        out(" %d" % code)
+        out(" %d" % char_code)
         i = i + 1
 
     if 'zstring' in string['att']:

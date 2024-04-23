@@ -1,10 +1,8 @@
 
 from error import info, warning, error
 import hlir.type as type
-from .value import value_cons_node, value_is_immediate, value_cons_node, value_cons_immediate
-from .char import value_char_create
-import foundation
-from util import utf32_chars_to_utfx_chars
+from .value import value_cons_node, value_is_immediate, value_cons_immediate
+from .char import utf32_chars_to_utfx_chars
 
 
 def value_cons_pointer_immediate(t, v, method, ti):
@@ -17,9 +15,7 @@ def cons_ptr_to_str_from_string(t, v, method, ti):
     #info("cons_ptr_to_str_from_string", ti)
     from trans import module_strings_add
 
-    char_width = t['to']['of']['width']
-
-    s_imm = utf32_chars_to_utfx_chars(v['asset'], char_width)
+    s_imm = utf32_chars_to_utfx_chars(v['asset'], t['to']['of'], ti)
 
     # получаем список кодов чаров для строки в целевой кодировке
     # из списка чар кодов в utf-32

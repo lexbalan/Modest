@@ -25,11 +25,10 @@ def value_cons_default(x, ti):
     from trans import typeSysInt, typeSysFloat, typeSysChar, typeSysStr
 
     if type.type_is_integer(from_type):
-        if type.type_is_signed(from_type):
-            return value_cons_integer(typeSysInt, x, 'implicit', ti)
-        else:
-            return value_cons_integer(typeSysNat, x, 'implicit', ti)
-
+        t = typeSysInt
+        if not type.type_is_signed(from_type):
+            t = typeSysNat
+        return value_cons_integer(t, x, 'implicit', ti)
 
     elif type.type_is_string(from_type):
         return cons_ptr_to_str_from_string(typeSysStr, x, ti)

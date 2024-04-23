@@ -3,11 +3,10 @@ import hlir.type as hlir_type
 import foundation
 from hlir.type import select_common_type
 from error import info, error
-from .char import value_char_create
+from .char import utf32_chars_to_utfx_chars
 from .integer import value_integer_create
 from .value import value_terminal, value_is_immediate, value_cons_node, value_cons_immediate, value_zero, value_bin, value_print
 
-from util import utf32_chars_to_utfx_chars
 
 
 # TODO: переделай здесь все - тут все плохо...
@@ -42,8 +41,6 @@ def value_array_create(items, ti=None):
             array_item_type = common_type
         i = i + 1
 
-    #info("ARR ITEM TYPE = ", ti)
-    #hlir_type.type_print(array_item_type)
 
     # неявно приводим все элементы к этому типу
     casted_items = []
@@ -77,15 +74,9 @@ def value_create_array_from_string(t, v, method, ti=None):
     length = t['volume']['asset']
     assert(length != None)
 
-    chars = utf32_chars_to_utfx_chars(v['asset'], char_type['width'])
-    """for char in v['asset']:
-        cc = ord(char)
-        char_value = value_char_create(cc, char_type, ti)
-        chars.append(char_value)"""
-
-    #v = _create_value_array(chars, t['of'], length, True, ti)
+    chars = utf32_chars_to_utfx_chars(v['asset'], char_type, ti)
     v = value_terminal(t, chars, ti)
-    v['immediate'] = True  #TODO: need to implement 'immediate' flag
+    v['immediate'] = True
     return v
 
 

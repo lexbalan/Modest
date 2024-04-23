@@ -3,7 +3,7 @@ from error import info, warning, error
 import hlir.type as type
 from util import nbits_for_num
 from .value import value_terminal, value_cons_node, value_cons_immediate
-
+from unicode import utf32_str_to_utfx_char_codes
 
 
 def value_char_create(char_code, _type=None, ti=None):
@@ -74,4 +74,16 @@ def value_cons_char(t, v, method, ti):
     #type_print(from_type)
     return None
 
+
+
+
+def utf32_chars_to_utfx_chars(str_asset, char_type, ti):
+    char_codes = utf32_str_to_utfx_char_codes(str_asset, char_type['width'])
+
+    chars = []
+    for cc in char_codes:
+        char = value_char_create(cc, _type=char_type, ti=ti)
+        chars.append(char)
+
+    return chars
 

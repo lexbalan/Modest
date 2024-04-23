@@ -3,7 +3,8 @@ import hlir.type as hlir_type
 from error import info
 from .common import *
 from value.value import value_is_zero, value_is_immediate, value_attribute_check, value_print
-from util import get_item_with_id, utf32_chars_to_string
+from unicode import utf32_chars_to_string
+from util import get_item_with_id
 
 
 INDENT_SYMBOL = " " * 4
