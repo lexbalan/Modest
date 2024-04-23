@@ -108,9 +108,9 @@ func print(form: *Str8, va_list: VA_List) {
 func n_to_sym(n: Nat8) -> Char8 {
     var c: Char8
     if n <= 9 {
-        c = Char8 (Nat8 "0"[0] + n)
+        c = Char8 (Nat8 Char8 "0" + n)
     } else {
-        c = Char8 (Nat8 "A"[0] + (n - 10))
+        c = Char8 (Nat8 Char8 "A" + (n - 10))
     }
     return c
 }

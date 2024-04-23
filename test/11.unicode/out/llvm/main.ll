@@ -202,25 +202,6 @@ declare void @utf32_puts(%Str32* %s)
     i32 0
 ]
 
-@genericStringConst = constant [17 x i32] [
-    i32 83,
-    i32 45,
-    i32 116,
-    i32 45,
-    i32 114,
-    i32 45,
-    i32 105,
-    i32 45,
-    i32 110,
-    i32 45,
-    i32 103,
-    i32 45,
-    i32 937,
-    i32 32,
-    i32 128000,
-    i32 127881,
-    i32 129412
-]
 
 define %Int @main() {
     ; indexing of GenericString returns #i symbol code

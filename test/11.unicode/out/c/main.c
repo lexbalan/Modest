@@ -21,9 +21,12 @@ const int16_t _ratSymbolUTF16[2] = ratSymbolUTF16;
 static char arr_utf8[8] = "Hi!\n";
 static uint16_t arr_utf16[8] = u"Hello!\n";
 static uint32_t arr_utf32[8] = U"Hello!\n";
-#define string8Const  ("S-t-r-i-n-g-Ω 🐀🎉🦄")
-#define string16Const  (u"S-t-r-i-n-g-Ω 🐀🎉🦄")
-#define string32Const  (U"S-t-r-i-n-g-Ω 🐀🎉🦄")
+
+
+#define genericStringConst  U"S-t-r-i-n-g-Ω 🐀🎉🦄"
+#define string8Const  ((char *)genericStringConst)
+#define string16Const  ((uint16_t *)genericStringConst)
+#define string32Const  ((uint32_t *)genericStringConst)
 
 
 int main()

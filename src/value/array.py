@@ -7,6 +7,7 @@ from .char import value_char_create
 from .integer import value_integer_create
 from .value import value_terminal, value_is_immediate, value_cons_node, value_cons_immediate, value_zero, value_bin, value_print
 
+from util import utf32_chars_to_utfx_chars
 
 
 # TODO: переделай здесь все - тут все плохо...
@@ -70,20 +71,21 @@ def value_array_create(items, ti=None):
 
 
 def value_create_array_from_string(t, v, method, ti=None):
-    info("value_create_array_from_string", ti)
+    #info("value_create_array_from_string", ti)
 
     char_type = t['of']
     length = t['volume']['asset']
     assert(length != None)
 
-    chars = []
-    for char in string['asset']:
+    chars = utf32_chars_to_utfx_chars(v['asset'], char_type['width'])
+    """for char in v['asset']:
         cc = ord(char)
         char_value = value_char_create(cc, char_type, ti)
-        chars.append(char_value)
+        chars.append(char_value)"""
 
-    v = _create_value_array(chars, t['of'], length, True, ti)
-    v['immediate'] = is_immediate  #TODO: need to implement 'immediate' flag
+    #v = _create_value_array(chars, t['of'], length, True, ti)
+    v = value_terminal(t, chars, ti)
+    v['immediate'] = True  #TODO: need to implement 'immediate' flag
     return v
 
 
@@ -164,6 +166,10 @@ def value_cons_array(t, v, method, ti):
     # Check
     #
 
+    if hlir_type.type_is_string(v['type']):
+        return value_create_array_from_string(t, v, method, ti)
+
+
     if not hlir_type.type_is_array(v['type']):
         return None  # cannot cons array value from non-array value
 
@@ -196,8 +202,6 @@ def value_cons_array(t, v, method, ti):
         # GenericArray -> Array
         return _do_cons_array(t, v, method, ti)
 
-    if hlir_type.type_is_string(v['type']):
-        return value_create_array_from_string(t, v, method, ti)
 
     if method != 'explicit':
         info("cannot implicitly cons Array value", ti)

@@ -157,8 +157,9 @@ declare void @print(%Str8* %form, ...)
 
 define %Int @main() {
     call void (%Str8*, ...) @print(%Str8* bitcast ([14 x i8]* @str1 to [0 x i8]*))
+    %1 = bitcast i8 36 to i8
     call void (%Str8*, ...) @print(%Str8* bitcast ([8 x i8]* @str3 to [0 x i8]*))
-    call void (%Str8*, ...) @print(%Str8* bitcast ([11 x i8]* @str4 to [0 x i8]*), i8 36)
+    call void (%Str8*, ...) @print(%Str8* bitcast ([11 x i8]* @str4 to [0 x i8]*), i8 %1)
     call void (%Str8*, ...) @print(%Str8* bitcast ([11 x i8]* @str5 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @str2 to [0 x i8]*))
     call void (%Str8*, ...) @print(%Str8* bitcast ([9 x i8]* @str6 to [0 x i8]*), i32 -1)
     call void (%Str8*, ...) @print(%Str8* bitcast ([9 x i8]* @str7 to [0 x i8]*), i32 123)

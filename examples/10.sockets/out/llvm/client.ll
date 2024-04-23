@@ -361,27 +361,6 @@ declare %Int @accept(%Int %s, %Struct_sockaddr* %addr, %Socklen_t* %addrlen)
 
 
 
-@filename = constant [8 x i8] [
-    i8 102,
-    i8 105,
-    i8 108,
-    i8 101,
-    i8 46,
-    i8 116,
-    i8 120,
-    i8 116
-]
-@ipAddress = constant [9 x i8] [
-    i8 49,
-    i8 50,
-    i8 55,
-    i8 46,
-    i8 48,
-    i8 46,
-    i8 48,
-    i8 46,
-    i8 49
-]
 
 define void @send_file(%FILE* %fp, %Int %sockfd) {
     %1 = alloca [1024 x i8]

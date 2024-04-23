@@ -40,9 +40,9 @@ def value_cons_char(t, v, method, ti):
     # String -> Char
     # ex: var c: Char8 = "A"
     if type.type_is_string(from_type):
-        if len(from_type['asset']) == 1:
+        if len(v['asset']) == 1:
             # extract GenericChar item for next cast step (see below)
-            cv = value_char_create(v['asset'][0])
+            cv = value_char_create(ord(v['asset'][0]))
             return _do_cons_char(t, cv, method, ti)
 
 

@@ -11,6 +11,12 @@
 
 
 
+#define hello  "Hello"
+#define world  " world!\n"
+
+#define hello_world  "Hello world!\n"
+
+
 static char string8[11] = "S-t-r-i-n-g";
 static uint16_t string16[13] = u"S-t-r-i-n-g-Ω";
 static uint32_t string32[17] = U"S-t-r-i-n-g-Ω 🐀🎉🦄";
@@ -33,11 +39,11 @@ void putc16(uint16_t c)
 
 int main()
 {
-    utf8_putchar((char)"A"[0]);
+    utf8_putchar('A');
     printf("\n");
-    utf16_putchar((uint16_t)u"Ω"[0]);
+    utf16_putchar(u'Ω');
     printf("\n");
-    utf32_putchar((uint32_t)U"🦄"[0]);
+    utf32_putchar(U'🦄');
 
     printf("\n\n");
 

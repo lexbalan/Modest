@@ -15,6 +15,11 @@
 
 
 
+
+
+#define filename  "file.txt"
+
+#define ipAddress  "127.0.0.1"
 #define port  8080
 #define bufSize  1024
 
@@ -49,7 +54,7 @@ int main()
         .sin_family = (uint8_t)AF_INET,
         .sin_port = (unsigned short)port,
         .sin_addr = (struct in_addr){
-            .s_addr = inet_addr("127.0.0.1")
+            .s_addr = inet_addr((const char *)ipAddress)
         },
         .sin_zero = {}
     };
@@ -64,7 +69,7 @@ int main()
 
     printf("[+] Connected to server\n");
 
-    FILE *const fp = fopen("file.txt", "r");
+    FILE *const fp = fopen((char *)filename, "r");
     if (fp == NULL) {
         perror("[-] Error in reading file");
         exit(1);

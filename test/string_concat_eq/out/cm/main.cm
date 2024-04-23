@@ -2,23 +2,23 @@
 
 import "libc/stdio"
 
-const hello = "Hello"
-const world = "World"
-const party_corn = "🎉"
+const hello = Hello"
+const world = World"
+const party_corn = 🎉"
 
-const greeting = hello + " " + world//+ " " + party_corn
+const greeting = Hello World"//+ " " + party_corn
 
 
-const test = "test"
+const test = test"
 
 
 func main() -> Int {
-    printf("%s\n", *Str8 greeting)
+    printf(%s\n", *Str8 greeting)
 
-    if test == "test" {
-        printf("test ok.\n")
+    if test == test" {
+        printf(test ok.\n")
     } else {
-        printf("test failed.\n")
+        printf(test failed.\n")
     }
 
     return 0

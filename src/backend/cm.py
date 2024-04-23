@@ -342,7 +342,7 @@ def print_value_array(v, ctx):
 
     #?
     if hlir_type.type_is_array_of_char(v['type']):
-        print_value_string(v, ctx=[])
+        print_value_str(v, ctx=[])
         return
 
     out("[")
@@ -407,12 +407,27 @@ def code_to_char(cc):
 
 
 # print Array of Char literal
-def print_value_string(x, ctx):
+def print_value_str(x, ctx):
     out("\"")
     asset = x['asset']
+
+    char_codes = []
     i = 0
     while i < len(x['asset']):
-        cc = ord(asset[i])
+        cc = x['asset'][i]['asset']
+        char_codes.append(cc)
+        i = i + 1
+    print_str_literal(char_codes)
+
+
+def print_str_literal(char_codes):
+    i = 0
+    while i < len(char_codes):
+
+
+        #else:
+        #print(asset)
+        cc = char_codes[i]
         #char_value = asset[i]
         #cc = char_value['asset']
 
@@ -421,11 +436,11 @@ def print_value_string(x, ctx):
         # if not - just end string,
         # else - continue and print next
         if cc == 0:
-            i_befor = i
+            i_before = i
             while i < len(x['asset']):
                 _cc = asset[i]
                 if _cc != 0:
-                    i = i_befor
+                    i = i_before
                     break
                 i = i + 1
             out("\"")
@@ -557,12 +572,21 @@ def print_value_let(x, ctx):
     print_id(x)
 
 
+# Сделал отдельный метод печати строк и есть отдельный для печати
+def print_value_string2(x, ctx):
+    char_codes = []
+    for char in x['asset']:
+        cc = ord(char)
+        char_codes.append(cc)
+
+    print_str_literal(char_codes)
+
 
 def print_value_terminal(x, ctx):
     t = x['type']
     if hlir_type.type_is_integer(t): print_value_integer(x, ctx)
     elif hlir_type.type_is_float(t): print_value_float(x, ctx)
-    elif hlir_type.type_is_string(t): print_value_string(x, ctx)
+    elif hlir_type.type_is_string(t): print_value_string2(x, ctx)
     elif hlir_type.type_is_record(t): print_value_record(x, ctx)
     elif hlir_type.type_is_array(t): print_value_array(x, ctx)
     elif hlir_type.type_is_pointer(t): print_value_ptr(x, ctx)

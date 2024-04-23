@@ -7,20 +7,20 @@ import "lightfood/print"
 
 
 func main() -> Int {
-    print("Hello World!\n")
+    print(Hello World!\n")
 
     let c = Char8 "$"[0]
-    let s = *Str8 "Hi!"
+    let s = *Str8 Hi!"
     let i = Int32 -1
     let n = Nat32 123
     let x = Nat32 0x1234567F
 
-    print("\\{{\\}}\n")
-    print("c = '{c}'\n", c)
-    print("s = \"{s}\"\n", s)
-    print("i = {i}\n", i)
-    print("n = {n}\n", n)
-    print("x = 0x{x}\n", x)
+    print(\\{{\\}}\n")
+    print(c = '{c}'\n", c)
+    print(s = \"{s}\"\n", s)
+    print(i = {i}\n", i)
+    print(n = {n}\n", n)
+    print(x = 0x{x}\n", x)
 
     return 0
 }

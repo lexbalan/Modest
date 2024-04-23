@@ -15,6 +15,11 @@
 
 
 
+
+
+#define filename  "file2.txt"
+
+#define ipAddress  "127.0.0.1"
 #define port  8080
 #define bufSize  1024
 
@@ -23,7 +28,7 @@ void write_file(int sockfd)
 {
     char buffer[bufSize];
 
-    FILE *const fp = fopen("file2.txt", "w");
+    FILE *const fp = fopen((char *)filename, "w");
     if (fp == NULL) {
         perror("[-] Error in creating file");
         exit(1);
@@ -58,7 +63,7 @@ int main()
         .sin_family = (uint8_t)AF_INET,
         .sin_port = (unsigned short)port,
         .sin_addr = (struct in_addr){
-            .s_addr = inet_addr("127.0.0.1")
+            .s_addr = inet_addr((const char *)ipAddress)
         },
         .sin_zero = {}
     };

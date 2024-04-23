@@ -53,16 +53,16 @@ func sha256_doTest(test: *SHA256_TestCase) -> Bool {
     let msg_len = test.input_data_len
     sha256_doHash(msg, msg_len, &test_hash)
 
-    printf("'%s'", &test.input_data)
-    printf(" -> ")
+    printf('%s'", &test.input_data)
+    printf( -> ")
 
     var i: Int32 = 0
     while i < sha256HashSize {
-        printf("%02X", test_hash[i])
+        printf(%02X", test_hash[i])
         i = i + 1
     }
 
-    printf("\n")
+    printf(\n")
 
     let test_passed = test_hash == test.expected_result
 
@@ -71,19 +71,19 @@ func sha256_doTest(test: *SHA256_TestCase) -> Bool {
 
 
 func main() -> Int {
-    printf("test SHA256\n")
+    printf(test SHA256\n")
 
     var i: Int32 = 0
     while i < Int lengthof(sha256_tests) {
         let test = sha256_tests[i]
         let test_result = sha256_doTest(test)
 
-        var res: *Str8 = *Str8 "failed"
+        var res: *Str8 = *Str8 failed"
         if test_result {
-            res = "passed"
+            res = passed"
         }
 
-        printf("test #%i: %s\n", i, res)
+        printf(test #%i: %s\n", i, res)
 
         i = i + 1
     }

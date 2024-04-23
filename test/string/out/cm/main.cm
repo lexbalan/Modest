@@ -6,53 +6,53 @@ import "misc/utf"
 @c_include "./utf.h"
 
 
-const hello = "Hello"
-const world = " world!\n"
+const hello = Hello"
+const world =  world!\n"
 
-const hello_world = hello + world
+const hello_world = Hello world!\n"
 
 
 var string8: [11]Char8 = "S-t-r-i-n-g"
 var string16: [13]Char16 = "S-t-r-i-n-g-Ω"
 var string32: [17]Char32 = "S-t-r-i-n-g-Ω 🐀🎉🦄"
 
-var ptr_to_string8: *[]Char8 = "S-t-r-i-n-g"
-var ptr_to_string16: *[]Char16 = "S-t-r-i-n-g-Ω"
-var ptr_to_string32: *[]Char32 = "S-t-r-i-n-g-Ω 🐀🎉🦄"
+var ptr_to_string8: *[]Char8 = S-t-r-i-n-g"
+var ptr_to_string16: *[]Char16 = S-t-r-i-n-g-Ω"
+var ptr_to_string32: *[]Char32 = S-t-r-i-n-g-Ω 🐀🎉🦄"
 
 
 func putc8(c: Char8) -> Unit {
-    printf("%c", c)
+    printf(%c", c)
 }
 
 func putc16(c: Char16) -> Unit {
-    printf("%c", c)
+    printf(%c", c)
 }
 
 
 func main() -> Int {
     utf8_putchar("A"[0])
-    printf("\n")
+    printf(\n")
     utf16_putchar("Ω"[0])
-    printf("\n")
+    printf(\n")
     utf32_putchar("🦄"[0])
 
-    printf("\n\n")
+    printf(\n\n")
 
     utf8_puts(&string8)
-    printf("\n")
+    printf(\n")
     utf16_puts(&string16)
-    printf("\n")
+    printf(\n")
     utf32_puts(&string32)
 
-    printf("\n\n")
+    printf(\n\n")
 
     utf8_puts(ptr_to_string8)
-    printf("\n")
+    printf(\n")
     utf16_puts(ptr_to_string16)
-    printf("\n")
+    printf(\n")
     utf32_puts(ptr_to_string32)
-    printf("\n")
+    printf(\n")
 
     return 0
 }

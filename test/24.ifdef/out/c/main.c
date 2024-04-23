@@ -10,11 +10,14 @@
 
 
 #define __CPU_WORD_WIDTH  64
+#define word_name  "'64-bit'"
+
+#define hello_world  "Hello '64-bit' world!"
 
 
 int main()
 {
-    printf("%s", "Hello '64-bit' world!");
+    printf("%s", (char *)hello_world);
     return 0;
 }
 

@@ -144,48 +144,12 @@ declare void @perror(%ConstCharStr* %str)
 
 
 
-@hello = constant [5 x i8] [
-    i8 72,
-    i8 101,
-    i8 108,
-    i8 108,
-    i8 111
-]
-@world = constant [5 x i8] [
-    i8 87,
-    i8 111,
-    i8 114,
-    i8 108,
-    i8 100
-]
-@party_corn = constant [1 x i32] [
-    i32 127881
-]
-@greeting = constant [11 x i8] [
-    i8 72,
-    i8 101,
-    i8 108,
-    i8 108,
-    i8 111,
-    i8 32,
-    i8 87,
-    i8 111,
-    i8 114,
-    i8 108,
-    i8 100
-]
 
 
-@test = constant [4 x i8] [
-    i8 116,
-    i8 101,
-    i8 115,
-    i8 116
-]
 
 define %Int @main() {
     %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str1 to [0 x i8]*), %Str8* bitcast ([12 x i8]* @str2 to [0 x i8]*))
-    br i1 0 , label %then_0, label %else_0
+    br i1 1 , label %then_0, label %else_0
 then_0:
     %2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str3 to [0 x i8]*))
     br label %endif_0

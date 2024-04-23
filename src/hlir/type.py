@@ -298,7 +298,8 @@ def hlir_type_opaque(ti=None):
     }
 
 
-def hlir_type_string(width, ti=None):
+def hlir_type_string(char_width,  ti=None):
+    width = char_width
     size = nbytes_for_bits(width)
     return {
         'isa': 'type',
@@ -307,6 +308,7 @@ def hlir_type_string(width, ti=None):
         'width': width,
         'size': size,
         'align': size,
+        'char_width': char_width,
         'declaration': None,
         'definition': None,
         'ops': STR_OPS,
@@ -915,12 +917,12 @@ def select_common_type(a, b):
 
         # c == "A"
         if a['kind'] == 'char':
-            if type_is_generic_array_of_char(b):
+            if type_is_string(b):
                 return a
 
         # "A" == c
         if b['kind'] == 'char':
-            if type_is_generic_array_of_char(a):
+            if type_is_string(a):
                 return b
 
 

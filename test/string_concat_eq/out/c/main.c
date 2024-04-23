@@ -6,14 +6,23 @@
 
 #include <stdio.h>
 
-//+ " " + party_corn
+
+
+#define hello  "Hello"
+#define world  "World"
+#define party_corn  U"🎉"
+
+#define greeting  "Hello World"//+ " " + party_corn
+
+
+#define test  "test"
 
 
 int main()
 {
-    printf("%s\n", "Hello World");
+    printf("%s\n", (char *)greeting);
 
-    if (false) {
+    if (true) {
         printf("test ok.\n");
     } else {
         printf("test failed.\n");

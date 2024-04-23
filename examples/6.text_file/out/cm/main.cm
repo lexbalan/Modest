@@ -3,36 +3,36 @@
 import "libc/stdio"
 
 
-const filename = *Str8 "file.txt"
+const filename = *Str8 file.txt"
 
 
 func write_example() -> Unit {
-    printf("run write_example\n")
+    printf(run write_example\n")
 
-    let fp = fopen(filename, "w")
+    let fp = fopen(filename, w")
 
     if fp == nil {
-        printf("error: cannot create file '%s'", filename)
+        printf(error: cannot create file '%s'", filename)
         return
     }
 
-    fprintf(fp, "some text.\n")
+    fprintf(fp, some text.\n")
 
     fclose(fp)
 }
 
 
 func read_example() -> Unit {
-    printf("run read_example\n")
+    printf(run read_example\n")
 
-    let fp = fopen(filename, "r")
+    let fp = fopen(filename, r")
 
     if fp == nil {
-        printf("error: cannot open file '%s'", filename)
+        printf(error: cannot open file '%s'", filename)
         return
     }
 
-    printf("file '%s' contains: ", filename)
+    printf(file '%s' contains: ", filename)
     while true {
         let ch = fgetc(fp)
         if ch == c_EOF {
@@ -46,7 +46,7 @@ func read_example() -> Unit {
 
 
 func main() -> Int {
-    printf("text_file example\n")
+    printf(text_file example\n")
     write_example()
     read_example()
     return 0

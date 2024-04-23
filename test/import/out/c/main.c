@@ -13,6 +13,7 @@
 #include <math.h>
 
 // how to find library
+#define library  "libc"
 
 //import library + "/stdio"
 //import library + "/libc"

@@ -1,7 +1,7 @@
 // test/import/src/main.cm
 
 // how to find library
-const library = "libc"
+const library = libc"
 
 //import library + "/stdio"
 //import library + "/libc"
@@ -14,7 +14,7 @@ import "libc/math"
 
 
 func main() -> Int {
-    printf("Smart import test\n")
+    printf(Smart import test\n")
     return 0
 }
 

@@ -4,13 +4,13 @@ import "libc/stdio"
 
 
 const __CPU_WORD_WIDTH = 64
-const word_name = "'64-bit'"
+const word_name = '64-bit'"
 
-const hello_world = "Hello " + word_name + " world!"
+const hello_world = Hello '64-bit' world!"
 
 
 func main() -> Int {
-    printf("%s", *Str8 hello_world)
+    printf(%s", *Str8 hello_world)
     return 0
 }
 

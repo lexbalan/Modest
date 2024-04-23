@@ -69,8 +69,8 @@ func main() -> Int {
     let lines_2_len = lineLength(lines[2])
     let lines_3_len = lineLength(lines[3])
 
-    printf("lines_0_len = %f\n", lines_0_len)
-    printf("lines_1_len = %f\n", lines_1_len)
+    printf(lines_0_len = %f\n", lines_0_len)
+    printf(lines_1_len = %f\n", lines_1_len)
 
     return 0
 }

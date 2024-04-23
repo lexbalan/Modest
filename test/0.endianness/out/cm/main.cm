@@ -9,12 +9,12 @@ func main() -> Int {
 
     var kind: *Str8
     if is_le {
-        kind = "little"
+        kind = little"
     } else {
-        kind = "big"
+        kind = big"
     }
 
-    printf("%s-endian\n", kind)
+    printf(%s-endian\n", kind)
 
     return 0
 }

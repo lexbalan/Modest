@@ -20,16 +20,16 @@ type Point3D record {
 
 
 func main() -> Int {
-    printf("records test\n")
+    printf(records test\n")
 
     // compare two Point2D records
     var p2d0: Point2D = {x = 1, y = 2}
     var p2d1: Point2D = {x = 10, y = 20}
 
     if p2d0 == p2d1 {
-        printf("p2d0 == p2d1\n")
+        printf(p2d0 == p2d1\n")
     } else {
-        printf("p2d0 != p2d1\n")
+        printf(p2d0 != p2d1\n")
     }
 
 
@@ -38,9 +38,9 @@ func main() -> Int {
     var p2d3: record {x: Nat32, y: Nat32} = {x = 1, y = 2}
 
     if p2d2 == p2d3 {
-        printf("p2d2 == p2d3\n")
+        printf(p2d2 == p2d3\n")
     } else {
-        printf("p2d2 != p2d3\n")
+        printf(p2d2 != p2d3\n")
     }
 
 
@@ -48,9 +48,9 @@ func main() -> Int {
     var p2d4: record {x: Nat32, y: Nat32} = {x = 1, y = 2}
 
     if p2d3 == p2d4 {
-        printf("p2d3 == p2d4\n")
+        printf(p2d3 == p2d4\n")
     } else {
-        printf("p2d3 != p2d4\n")
+        printf(p2d3 != p2d4\n")
     }
 
 

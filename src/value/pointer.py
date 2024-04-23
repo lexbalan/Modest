@@ -4,6 +4,7 @@ import hlir.type as type
 from .value import value_cons_node, value_is_immediate, value_cons_node, value_cons_immediate
 from .char import value_char_create
 import foundation
+from util import utf32_chars_to_utfx_chars
 
 
 def value_cons_pointer_immediate(t, v, method, ti):
@@ -11,16 +12,14 @@ def value_cons_pointer_immediate(t, v, method, ti):
     return value_cons_immediate(t, v, method, ti)
 
 
+
 def cons_ptr_to_str_from_string(t, v, method, ti):
     #info("cons_ptr_to_str_from_string", ti)
     from trans import module_strings_add
 
-    char_pow = t['to']['of']['width']
+    char_width = t['to']['of']['width']
 
-    s_imm = []
-    if char_pow == 8: s_imm = str2utf8(v['asset'])
-    elif char_pow == 16: s_imm = str2utf16(v['asset'])
-    elif char_pow == 32: s_imm = str2utf32(v['asset'])
+    s_imm = utf32_chars_to_utfx_chars(v['asset'], char_width)
 
     # получаем список кодов чаров для строки в целевой кодировке
     # из списка чар кодов в utf-32
@@ -107,65 +106,6 @@ def value_cons_pointer(t, v, method, ti):
 
     return None
 
-
-
-
-
-def str2utf8(string_asset):
-    chars8 = []
-    typeChar8 = foundation.typeChar8
-
-    for c in string_asset:
-        utf8_bytes = bytes(c, encoding='utf-8')
-        i = 0
-        while i < len(utf8_bytes):
-            сс = utf8_bytes[i]
-            char = value_char_create(сс, _type=typeChar8, ti=None)
-            chars8.append(char)
-            i = i + 1
-
-    return chars8
-
-
-
-def str2utf16(string_asset, encode='big-endian'):
-    chars16 = []
-
-    typeChar16 = foundation.typeChar16
-
-    for c in string_asset:
-        utf16_bytes = bytes(c, encoding='utf-16')[2:]  # [2:] - skip BOM
-
-        i = 0
-        while i < len(utf16_bytes):
-            first = utf16_bytes[i+0]
-            second = utf16_bytes[i+1]
-            сс = 0
-            if encode == 'big-endian':
-                сс = second * 256 + first
-            else:
-                сс = first * 256 + second
-            i = i + 2
-
-            char = value_char_create(сс, _type=typeChar16, ti=None)
-            chars16.append(char)
-
-    return chars16
-
-
-
-def str2utf32(string_asset):
-    # (python uses utf32 by default)
-    chars32 = []
-
-    typeChar32 = foundation.typeChar32
-
-    for c in string_asset:
-        cc = ord(c)
-        char = value_char_create(cc, _type=typeChar32, ti=None)
-        chars32.append(char)
-
-    return chars32
 
 
 

@@ -1910,7 +1910,12 @@ def def_var(x):
             # если размер массива не указан
             # получаем его из инициализатора
             if arr_without_length:
-                init_arr_sz = iv['type']['volume']['asset']
+                init_arr_sz = 0
+                if hlir_type.type_is_array(iv['type']):
+                    init_arr_sz = iv['type']['volume']['asset']
+                elif hlir_type.type_is_string(iv['type']):
+                    init_arr_sz = len(iv['asset'])
+
                 var_type['volume'] = value_integer_create(init_arr_sz)
                 #print(init_arr_sz)
             try:

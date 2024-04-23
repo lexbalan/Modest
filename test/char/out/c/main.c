@@ -9,6 +9,11 @@
 
 
 
+#define utf8Char  "s"
+#define utf16Char  u"Я"
+#define utf32Char  U"🐀"
+
+
 int main()
 {
     printf("test/char\n");
