@@ -1320,6 +1320,8 @@ def print_stmt_asm(x):
         nl_indent(1)
         out(': ')
         print_pairs(args1)
+    else:
+        out(':')
 
     # print 'in' pairs
     args2 = x['inputs']
@@ -1327,12 +1329,16 @@ def print_stmt_asm(x):
         nl_indent(1)
         out(': ')
         print_pairs(args2)
+    else:
+        out(':')
 
     # print clobber list
     for clobber in x['clobber_list']:
         nl_indent(1)
         out(': ')
         print_value(clobber)
+
+
     indent_down()
     nl_indent(1)
     out(");")
