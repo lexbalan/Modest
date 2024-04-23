@@ -16,6 +16,7 @@ int64_t sum64(int64_t a, int64_t b)
         "add %0, %1, %2"
         : "=r" (sum)
         : "r" (a), "r" (b)
+        : "cc"
     );
     return sum;
 }

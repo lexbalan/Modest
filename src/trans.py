@@ -1618,12 +1618,17 @@ def do_stmt_asm(x):
     i = 1
     while i < len(xargs):
         arg = do_rvalue(xargs[i])
+
         if not hlir_type.type_is_string(arg['type']):
             error("expected string literal", arg['expr_ti'])
             i = i + 1
             continue
 
         i = i + 1
+
+        if i == len(xargs):
+            args3.append(arg)
+            break
 
         arg2 = do_rvalue(xargs[i])
 
