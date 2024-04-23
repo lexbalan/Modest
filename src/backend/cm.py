@@ -709,24 +709,24 @@ def print_pairs(args):
 
 
 def print_stmt_asm(x):
-    a0 = x['args'][0]['asset']
+    asm_text = x['text']['asset']
 
-    out('__asm("%s"' % a0)
+    out('__asm("%s"' % asm_text)
 
     # print 'out' pairs
-    args1 = x['args'][1]
+    args1 = x['outputs']
     if len(args1) > 0:
         out(', ')
         print_pairs(args1)
 
     # print 'in' pairs
-    args2 = x['args'][2]
+    args2 = x['inputs']
     if len(args2) > 0:
         out(', ')
         print_pairs(args2)
 
     # print clobber list
-    for clobber in x['args'][3]:
+    for clobber in x['clobber_list']:
         out(', ')
         print_value(clobber)
 

@@ -1609,11 +1609,12 @@ def do_stmt_comment_block(x):
 
 def do_stmt_asm(x):
     xargs = x['args']
-    a0 = do_rvalue(xargs[0])
 
-    args1 = []  # out args
-    args2 = []  # in args
-    args3 = []  # clobber list
+    text = do_rvalue(xargs[0])
+
+    outputs = []
+    inputs = []
+    clobber_list = []
 
     i = 1
     while i < len(xargs):
@@ -1627,25 +1628,22 @@ def do_stmt_asm(x):
         i = i + 1
 
         if i == len(xargs):
-            args3.append(arg)
+            clobber_list.append(arg)
             break
 
         arg2 = do_rvalue(xargs[i])
 
         p = (arg, arg2)
 
-        #print(p)
-
         if arg['asset'] == '=r':
-            args1.append(p)
+            outputs.append(p)
         elif arg['asset'] == 'r':
-            args2.append(p)
+            inputs.append(p)
 
         i = i + 1
 
 
-    args = (a0, args1, args2, args3)
-    s = hlir_stmt_asm(args, x['ti'])
+    s = hlir_stmt_asm(text, outputs, inputs, clobber_list, x['ti'])
 
     return s
 
