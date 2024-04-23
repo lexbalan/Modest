@@ -16,7 +16,7 @@ func main() -> Int {
     var a: Int64 = 10
     var b: Int64 = 20
     var sum: Int64 = sum64(a, b)
-    printf("sum(%lld, lld) = %lld\n", a, b, sum)
+    printf("sum(%lld, %lld) = %lld\n", a, b, sum)
 
     return 0
 }

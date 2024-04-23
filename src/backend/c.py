@@ -1288,10 +1288,54 @@ def print_stmt_let(x):
 
 
 
+
+# for print_stmt_asm:
+# prints pairs: <specifier> <value>
+def print_pairs(args):
+    i = 0
+    while i < len(args):
+        pair = args[i]
+        if i > 0:
+            out(', ')
+        print_value(pair[0])
+        out(' (')
+        print_value(pair[1])
+        out(')')
+        i = i + 1
+    return
+
+
 def print_stmt_asm(x):
-    s0 = utf32_chars_to_string(x['args'][0]['asset'])
+    a0 = x['args'][0]['asset']
+
     nl_indent(x['nl'])
-    out('__asm__("%s");' % s0)
+    out('__asm__ volatile (')
+    indent_up()
+    nl_indent(1)
+    out('"%s"' % a0)
+
+    # print 'out' pairs
+    args1 = x['args'][1]
+    if len(args1) > 0:
+        nl_indent(1)
+        out(': ')
+        print_pairs(args1)
+
+    # print 'in' pairs
+    args2 = x['args'][2]
+    if len(args2) > 0:
+        nl_indent(1)
+        out(': ')
+        print_pairs(args2)
+
+    # print clobber list
+    for clobber in x['args'][3]:
+        nl_indent(1)
+        out(': ')
+        print_value(clobber)
+    indent_down()
+    nl_indent(1)
+    out(");")
     return
 
 

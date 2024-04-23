@@ -9,19 +9,29 @@
 
 
 
-uint64_t sum64(uint64_t a, uint64_t b)
+int64_t sum64(int64_t a, int64_t b)
 {
-    return a + b;
+    int64_t sum;
+    __asm__ volatile (
+        "add %0, %1, %2"
+        : "=r" (sum)
+        : "r" (a), "r" (b)
+    );
+    return sum;
 }
+
 
 int main()
 {
     printf("asm test");
 
     int64_t a;
+    a = 10;
     int64_t b;
+    b = 20;
     int64_t sum;
-    asm("add %0, %1, %2");
+    sum = sum64(a, b);
+    printf("sum(%lld, %lld) = %lld\n", a, b, sum);
 
     return 0;
 }
