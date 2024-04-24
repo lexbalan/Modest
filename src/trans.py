@@ -1610,42 +1610,39 @@ def do_stmt_comment_block(x):
 def do_stmt_asm(x):
     xargs = x['args']
 
-    text = do_rvalue(xargs[0])
+    asm_text = do_rvalue(xargs[0])
+
+    #outputs = do_value(xargs[1])
+    #inputs = do_value(xargs[2])
+    #clobber_list = do_rvalue(xargs[3])
+    #return hlir_stmt_asm(asm_text, outputs, inputs, clobber_list, x['ti'])
+
+    xoutputs = xargs[1]
+    xinputs = xargs[2]
+    xclobber_list = xargs[3]
 
     outputs = []
+    for x in xoutputs['items']:
+        items = x['items']
+        spec = do_rvalue(items[0])
+        val = do_rvalue(items[1])
+        pair = (spec, val)
+        outputs.append(pair)
+
     inputs = []
+    for x in xinputs['items']:
+        items = x['items']
+        spec = do_rvalue(items[0])
+        val = do_rvalue(items[1])
+        pair = (spec, val)
+        inputs.append(pair)
+
     clobber_list = []
+    for x in xclobber_list['items']:
+        spec = do_rvalue(x)
+        clobber_list.append(spec)
 
-    i = 1
-    while i < len(xargs):
-        arg = do_rvalue(xargs[i])
-
-        if not hlir_type.type_is_string(arg['type']):
-            error("expected string literal", arg['expr_ti'])
-            i = i + 1
-            continue
-
-        i = i + 1
-
-        if i == len(xargs):
-            clobber_list.append(arg)
-            break
-
-        arg2 = do_rvalue(xargs[i])
-
-        p = (arg, arg2)
-
-        if arg['asset'] == '=r':
-            outputs.append(p)
-        elif arg['asset'] == 'r':
-            inputs.append(p)
-
-        i = i + 1
-
-
-    s = hlir_stmt_asm(text, outputs, inputs, clobber_list, x['ti'])
-
-    return s
+    return hlir_stmt_asm(asm_text, outputs, inputs, clobber_list, x['ti'])
 
 
 
