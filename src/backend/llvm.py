@@ -1510,33 +1510,32 @@ def print_comment_line(x):
 "store i64 %13, i64* %7, align 8"
 def print_stmt_asm(x):
     asm_text = x['text']['asset']
-    outputs = x['outputs']
-    inputs = x['inputs']
-    clobbers = x['clobbers']
-
     asm_text = asm_text.replace("%", "$")
 
-    specs = []
-    outs = []
+    specs = [] # list of spec & clobber strings
+    outs = []  # llvm values ti output
 
     lo('')
     reg = '00'  # '00' - bad reg
-    if len(outputs) > 0:
+    if len(x['outputs']) > 0:
         # у нас есть output значит будет возврат значения
         reg = reg_get()
         out("%%%s = " % (reg))
 
-        for pair in outputs:
+        for pair in x['outputs']:
             specs.append(pair[0]['asset'])
             arg = do_eval(pair[1])
             outs.append(arg)
 
     args = []
-    if len(inputs) > 0:
-        for pair in inputs:
+    if len(x['inputs']) > 0:
+        for pair in x['inputs']:
             specs.append(pair[0]['asset'])
             arg = do_eval(pair[1])
             args.append(arg)
+
+    for clobber in x['clobbers']:
+        specs.append("~{%s}" % clobber['asset'])
 
     out('call ')
 
@@ -1568,25 +1567,11 @@ def print_stmt_asm(x):
     print_str_literal(asm_text)
     out(', "')
 
-    i = 0
-    while i < len(specs):
-        if i > 0:
-            out(",") # without space between (LLVM bug)
-        spec = specs[i]
-        out(spec)
-        i = i + 1
-
-    #out(",~{w0},~{cc}")
+    # separator=',' WITHOUT SPACE
+    print_list_by(specs, out, separator=',')
 
     out('" (')
-    i = 0
-    while i < len(args):
-        if i > 0:
-            out(", ")
-        arg = args[i]
-        llvm_print_type_value(arg)
-        i = i + 1
-
+    print_list_by(args, llvm_print_type_value)
     out(")")
 
     if len(outs) == 1:
