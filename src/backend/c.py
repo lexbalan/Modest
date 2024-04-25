@@ -424,7 +424,8 @@ def print_value_un(v, ctx):
             print_type(v['type'])
             out(")")
 
-    out(un_ops[op]); print_value(value, need_wrap=pv<p0)
+    out(un_ops[op])
+    print_value(value, need_wrap=pv<p0)
 
     # указатель на массив в сях берем как &array[0]
     # поскольку у нас указатель на массив сейчас печатается как *<item_type>

@@ -19,7 +19,7 @@ int64_t sumsub64(int64_t a, int64_t b)
         "add %0, %2, %3\nsub %1, %2, %3\n"
         : "=r" (sum), "=r" (sub)
         : "r" (a), "r" (b)
-        : "cc", "x0", "x1"
+        : "cc"
     );
 
     printf("sumsub64 sum = %lld\n", sum);
