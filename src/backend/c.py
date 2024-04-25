@@ -1288,21 +1288,12 @@ def print_stmt_let(x):
 
 
 
-
-# for print_stmt_asm:
-# prints pairs: <specifier> <value>
-def print_pairs(args):
-    i = 0
-    while i < len(args):
-        pair = args[i]
-        if i > 0:
-            out(', ')
-        print_value(pair[0])
-        out(' (')
-        print_value(pair[1])
-        out(')')
-        i = i + 1
-    return
+# prints pair: <specifier> (<value>)
+def print_asm_pair(pair):
+    print_value(pair[0])
+    out(' (')
+    print_value(pair[1])
+    out(')')
 
 
 def print_stmt_asm(x):
@@ -1317,7 +1308,7 @@ def print_stmt_asm(x):
     if len(args1) > 0:
         nl_indent(1)
         out(': ')
-        print_pairs(args1)
+        print_list_by(args1, print_asm_pair)
     else:
         out(':')
 
@@ -1326,15 +1317,15 @@ def print_stmt_asm(x):
     if len(args2) > 0:
         nl_indent(1)
         out(': ')
-        print_pairs(args2)
+        print_list_by(args2, print_asm_pair)
     else:
         out(':')
 
     # print clobber list
-    for clobber in x['clobbers']:
+    if len(x['clobbers']) > 0:
         nl_indent(1)
         out(': ')
-        print_value(clobber)
+        print_list_by(x['clobbers'], print_value)
 
 
     indent_down()

@@ -701,15 +701,6 @@ def print_stmt_again(x):
     out("again")
 
 
-def print_comma_list_by(items, method):
-    i = 0
-    while i < len(items):
-        if i > 0:
-            out(', ')
-        item = items[i]
-        method(item)
-        i = i + 1
-
 
 def print_asm_pair(pair):
     out('[')
@@ -722,7 +713,7 @@ def print_asm_pair(pair):
 # prints pairs: <specifier> <value>
 def print_asm_pairs(args):
     out('[')
-    print_comma_list_by(args, print_asm_pair)
+    print_list_by(args, print_asm_pair)
     out(']')
 
 
@@ -743,7 +734,7 @@ def print_stmt_asm(x):
     # print clobber list
     if len(x['clobbers']) > 0:
         out(', [')
-        print_comma_list_by(x['clobbers'], print_value)
+        print_list_by(x['clobbers'], print_value)
         out(']')
 
     out(")")

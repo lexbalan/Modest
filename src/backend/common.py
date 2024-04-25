@@ -49,6 +49,15 @@ def output_close():
     f.close()
 
 
+def print_list_by(items, method, separator=', '):
+    i = 0
+    while i < len(items):
+        if i > 0:
+            out(separator)
+        item = items[i]
+        method(item)
+        i = i + 1
+
 
 
 

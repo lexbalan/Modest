@@ -6,28 +6,28 @@ import "libc/stdio"
 func sumsub64(a: Int64, b: Int64) -> Int64 {
     var sum: Int64
     var sub: Int64
-    __asm('add %0, %2, %3\n\tsub %1, %2, %3\n\t', [['=r', sum], ['=r', sub]], [['r', a], ['r', b]], ['cc'])
+    __asm("add %0, %2, %3\n\tsub %1, %2, %3\n\t", [["=r", sum], ["=r", sub]], [["r", a], ["r", b]], ["cc"])
     return sum + sub
 }
 
 
 func sum64(a: Int64, b: Int64) -> Int64 {
     var sum: Int64
-    __asm('add %0, %1, %2', [['=r', sum]], [['r', a], ['r', b]], ['cc'])
+    __asm("add %0, %1, %2", [["=r", sum]], [["r", a], ["r", b]], ["cc"])
     return sum
 }
 
 
 func main() -> Int {
-    printf('asm test')
+    printf("asm test")
 
     var a: Int64 = 10
     var b: Int64 = 20
     let sum = sum64(a, b)
-    printf('sum(%lld, %lld) = %lld\n', a, b, sum)
+    printf("sum(%lld, %lld) = %lld\n", a, b, sum)
 
     let sumsub = sumsub64(a, b)
-    printf('sumsub64(%lld, %lld) = %lld\n', a, b, sumsub)
+    printf("sumsub64(%lld, %lld) = %lld\n", a, b, sumsub)
 
     return 0
 }
