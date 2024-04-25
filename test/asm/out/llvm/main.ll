@@ -139,16 +139,30 @@ declare void @perror(%ConstCharStr* %str)
 
 @str1 = private constant [9 x i8] [i8 97, i8 115, i8 109, i8 32, i8 116, i8 101, i8 115, i8 116, i8 0]
 @str2 = private constant [24 x i8] [i8 115, i8 117, i8 109, i8 40, i8 37, i8 108, i8 108, i8 100, i8 44, i8 32, i8 37, i8 108, i8 108, i8 100, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
+@str3 = private constant [29 x i8] [i8 115, i8 117, i8 109, i8 115, i8 117, i8 98, i8 54, i8 52, i8 40, i8 37, i8 108, i8 108, i8 100, i8 44, i8 32, i8 37, i8 108, i8 108, i8 100, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
 
 
+
+define i64 @sumsub64(i64 %a, i64 %b) {
+    %1 = alloca i64
+    %2 = alloca i64
+    %3 = call {i64, i64} asm sideeffect "add $0, $2, $3\0A\09sub $1, $2, $3\0A\09", "=r,=r,r,r" (i64 %a, i64 %b)
+    %4 = extractvalue {i64, i64} %3, 0
+    store i64 %4, i64* %1
+    %5 = extractvalue {i64, i64} %3, 1
+    store i64 %5, i64* %2
+    %6 = load i64, i64* %1
+    %7 = load i64, i64* %2
+    %8 = add i64 %6, %7
+    ret i64 %8
+}
 
 define i64 @sum64(i64 %a, i64 %b) {
     %1 = alloca i64
-    %2 = alloca i64
-    ;__asm("add %0, %1, %2", [["=r", sum]], [["r", a], ["r", b]], ["cc"])
-    %3 = call {i64, i64} asm sideeffect "add $0, $2, $3\0A\09sub $1, $2, $3\0A\09", "=r,=r,r,r" (i64 %a, i64 %b)
-    %4 = load i64, i64* %1
-    ret i64 %4
+    %2 = call i64 asm sideeffect "add $0, $1, $2", "=r,r,r" (i64 %a, i64 %b)
+    store i64 %2, i64* %1
+    %3 = load i64, i64* %1
+    ret i64 %3
 }
 
 define %Int @main() {
@@ -157,15 +171,18 @@ define %Int @main() {
     store i64 10, i64* %2
     %3 = alloca i64
     store i64 20, i64* %3
-    %4 = alloca i64
-    %5 = load i64, i64* %2
-    %6 = load i64, i64* %3
-    %7 = call i64 (i64, i64) @sum64(i64 %5, i64 %6)
-    store i64 %7, i64* %4
-    %8 = load i64, i64* %2
-    %9 = load i64, i64* %3
-    %10 = load i64, i64* %4
-    %11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str2 to [0 x i8]*), i64 %8, i64 %9, i64 %10)
+    %4 = load i64, i64* %2
+    %5 = load i64, i64* %3
+    %6 = call i64 (i64, i64) @sum64(i64 %4, i64 %5)
+    %7 = load i64, i64* %2
+    %8 = load i64, i64* %3
+    %9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str2 to [0 x i8]*), i64 %7, i64 %8, i64 %6)
+    %10 = load i64, i64* %2
+    %11 = load i64, i64* %3
+    %12 = call i64 (i64, i64) @sumsub64(i64 %10, i64 %11)
+    %13 = load i64, i64* %2
+    %14 = load i64, i64* %3
+    %15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([29 x i8]* @str3 to [0 x i8]*), i64 %13, i64 %14, i64 %12)
     ret %Int 0
 }
 

@@ -407,8 +407,8 @@ def llvm_getelementptr(rec, rt, indexes, vt):
 
 # возвращает значение поля из 'структуры по значению'
 def llvm_extract_item(x, ft, field_no):
-    if is_global_context():
-        info("???", x['proto']['ti'])
+    #if is_global_context():
+    #    info("???", x['proto']['ti'])
     reg = llvm_operation('extractvalue')
     llvm_print_type_value(x)
     out(', %d' % field_no)
@@ -618,11 +618,9 @@ def print_type_record(t):
     while i < len(fields):
         field = fields[i]
 
-        if i > 0: out(',')
+        if i > 0: out(', ')
         if is_global_context():
             out("\n\t")
-        else:
-            out(" ")
 
         print_type(field['type'])
 
@@ -1518,15 +1516,16 @@ def print_stmt_asm(x):
 
     asm_text = asm_text.replace("%", "$")
 
+    specs = []
+    outs = []
+
     lo('')
-    reg = '00'
+    reg = '00'  # '00' - bad reg
     if len(outputs) > 0:
+        # у нас есть output значит будет возврат значения
         reg = reg_get()
         out("%%%s = " % (reg))
 
-    specs = []
-    outs = []
-    if len(outputs) > 0:
         for pair in outputs:
             specs.append(pair[0]['asset'])
             arg = do_eval(pair[1])
@@ -1541,19 +1540,29 @@ def print_stmt_asm(x):
 
     out('call ')
 
+    rv = None
     if len(outs) == 0:
         out("void")
     elif len(outs) == 1:
-        print_type(outs[0]['type'])
+        # если возврат один он идет как есть
+        rt = outs[0]['type']
+        rv = llvm_value_reg(reg, rt, proto=None)
+        print_type(rt)
     else:
-        out("{")
-        i = 0
-        while i < len(outs):
-            if i > 0:
-                out(", ")
-            print_type(outs[i]['type'])
-            i = i + 1
-        out("}")
+        # если возвратов несколько
+        # они возвращаются завернутые в структуру
+        fields = []
+        for o in outs:
+            field_type = o['type']
+            from hlir.id import hlir_id
+            from hlir.field import hlir_field
+            field_id = hlir_id('<noname>')
+            f = hlir_field(field_id, field_type, ti=x['ti'])
+            fields.append(f)
+
+        rt = hlir_type.hlir_type_record(fields)
+        rv = llvm_value_reg(reg, rt, proto=None)
+        print_type(rt)
 
     out(' asm sideeffect ')
     print_str_literal(asm_text)
@@ -1581,8 +1590,15 @@ def print_stmt_asm(x):
     out(")")
 
     if len(outs) == 1:
-        res = llvm_value_reg(reg, outs[0]['type'])
-        llvm_store(outs[0], res)
+        llvm_store(outs[0], rv)
+    elif len(outs) > 1:
+        n = 0
+        for o in outs:
+            extracted_rv = llvm_extract_item(rv, o['type'], n)
+            llvm_store(o, extracted_rv)
+            n = n + 1
+        pass
+
 
 
 

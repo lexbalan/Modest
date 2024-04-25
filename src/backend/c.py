@@ -1306,13 +1306,11 @@ def print_pairs(args):
 
 
 def print_stmt_asm(x):
-    asm_text = x['text']['asset']
-
     nl_indent(x['nl'])
     out('__asm__ volatile (')
     indent_up()
     nl_indent(1)
-    out('"%s"' % asm_text)
+    print_value_string(x['text'], [])
 
     # print 'out' pairs
     args1 = x['outputs']

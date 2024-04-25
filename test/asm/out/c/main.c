@@ -9,6 +9,18 @@
 
 
 
+void sumsub(int64_t a, int64_t b)
+{
+    int64_t sum;
+    int64_t sub;
+    __asm__ volatile (
+        "add %0, %2, %3\n\tsub %1, %2, %3\n\t"
+        : "=r" (sum), "=r" (sub)
+        : "r" (a), "r" (b)
+        : "cc"
+    );
+}
+
 int64_t sum64(int64_t a, int64_t b)
 {
     int64_t sum;

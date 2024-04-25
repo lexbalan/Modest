@@ -420,7 +420,15 @@ def print_value_str(x, ctx):
         i = i + 1
     print_str_literal(char_codes)
 
+# print value with type String
+def print_strx(string):
+    char_codes = []
+    for c in string['asset']:
+        cc = ord(c)
+        char_codes.append(cc)
+    print_str_literal(char_codes)
 
+# print Array of Char codes literal
 def print_str_literal(char_codes):
 
     out("\"")
@@ -693,42 +701,50 @@ def print_stmt_again(x):
     out("again")
 
 
-# for print_stmt_asm:
-# prints pairs: <specifier> <value>
-def print_pairs(args):
+def print_comma_list_by(items, method):
     i = 0
-    while i < len(args):
-        pair = args[i]
+    while i < len(items):
         if i > 0:
             out(', ')
-        print_value(pair[0])
-        out(', ')
-        print_value(pair[1])
+        item = items[i]
+        method(item)
         i = i + 1
-    return
+
+
+def print_asm_pair(pair):
+    out('[')
+    print_value(pair[0])
+    out(', ')
+    print_value(pair[1])
+    out(']')
+
+# for print_stmt_asm:
+# prints pairs: <specifier> <value>
+def print_asm_pairs(args):
+    out('[')
+    print_comma_list_by(args, print_asm_pair)
+    out(']')
 
 
 def print_stmt_asm(x):
-    asm_text = x['text']['asset']
-
-    out('__asm("%s"' % asm_text)
+    out('__asm(')
+    print_strx(x['text'])
 
     # print 'out' pairs
-    args1 = x['outputs']
-    if len(args1) > 0:
+    if len(x['outputs']) > 0:
         out(', ')
-        print_pairs(args1)
+        print_asm_pairs(x['outputs'])
 
     # print 'in' pairs
-    args2 = x['inputs']
-    if len(args2) > 0:
+    if len(x['inputs']) > 0:
         out(', ')
-        print_pairs(args2)
+        print_asm_pairs(x['inputs'])
 
     # print clobber list
-    for clobber in x['clobbers']:
-        out(', ')
-        print_value(clobber)
+    if len(x['clobbers']) > 0:
+        out(', [')
+        print_comma_list_by(x['clobbers'], print_value)
+        out(']')
 
     out(")")
     return
