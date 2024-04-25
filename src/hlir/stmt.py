@@ -119,14 +119,14 @@ def hlir_stmt_return(value=None, ti=None):
     }
 
 
-def hlir_stmt_asm(text, outputs, inputs, clobber_list, ti=None):
+def hlir_stmt_asm(text, outputs, inputs, clobbers, ti=None):
     return {
         'isa': 'stmt',
         'kind': 'asm',
         'text': text,
         'outputs': outputs,
         'inputs': inputs,
-        'clobber_list': clobber_list,
+        'clobbers': clobbers,
         'att': [],
         'nl': 0,
         'ti': ti

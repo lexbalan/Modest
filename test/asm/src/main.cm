@@ -5,7 +5,9 @@ import "libc/stdio"
 
 func sum64(a: Int64, b: Int64) -> Int64 {
     var sum: Int64
-    __asm("add %0, %1, %2", [["=r", sum]], [["r", a], ["r", b]], ["cc"])
+    var sum2: Int64
+    //__asm("add %0, %1, %2", [["=r", sum]], [["r", a], ["r", b]], ["cc"])
+    __asm("add %0, %2, %3\n\tsub %1, %2, %3\n\t", [["=r", sum], ['=r', sum2]], [["r", a], ["r", b]], ["cc"])
     return sum
 }
 

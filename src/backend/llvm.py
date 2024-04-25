@@ -353,6 +353,7 @@ def llvm_print_value_zero(x):
 
 def llvm_print_value(x):
     assert(x['isa'] == 'll_value')
+
     k = x['kind']
     if k == 'reg': out('%%%s' % x['reg'])
     elif k == 'stk': out('%%%s' % x['id'])
@@ -701,6 +702,7 @@ def print_int_type_for(width):
 # если же в CM она получает массив то тут и в СИ она получает
 # указатель на него, и потом копирует его во внутренний массив
 def print_type(t):
+    assert(t['isa'] == 'type')
     print_aka=True
     k = t['kind']
 
@@ -1503,12 +1505,91 @@ def print_comment_line(x):
         if i < n:
             out("\n")
 
+
+"""
+%12 = call { i64, i64 } asm sideeffect "add $0, $2, $3\0A\09add $0, $0, $4\0A\09add $1, $0, $4\0A\09", "=r,=r,r,r,r,~{w0},~{cc}"(i64 %9, i64 %10, i64 %11)
+"""
+"store i64 %13, i64* %7, align 8"
 def print_stmt_asm(x):
-    s0 = utf32_chars_to_string(x['args'][0]['asset'])
-    s1 = ''
-    lo('call void asm sideeffect "%s", "%s"()' % (s0, s1))
+    asm_text = x['text']['asset']
+    outputs = x['outputs']
+    inputs = x['inputs']
+    clobbers = x['clobbers']
+
+    asm_text = asm_text.replace("%", "$")
+
+    lo('')
+    reg = '00'
+    if len(outputs) > 0:
+        reg = reg_get()
+        out("%%%s = " % (reg))
+
+    specs = []
+    outs = []
+    if len(outputs) > 0:
+        for pair in outputs:
+            specs.append(pair[0]['asset'])
+            arg = do_eval(pair[1])
+            outs.append(arg)
+
+    args = []
+    if len(inputs) > 0:
+        for pair in inputs:
+            specs.append(pair[0]['asset'])
+            arg = do_eval(pair[1])
+            args.append(arg)
+
+    out('call ')
+
+    if len(outs) == 0:
+        out("void")
+    elif len(outs) == 1:
+        print_type(outs[0]['type'])
+    else:
+        out("{")
+        i = 0
+        while i < len(outs):
+            if i > 0:
+                out(", ")
+            print_type(outs[i]['type'])
+            i = i + 1
+        out("}")
+
+    out(' asm sideeffect ')
+    print_str_literal(asm_text)
+    out(', "')
+
+    i = 0
+    while i < len(specs):
+        if i > 0:
+            out(",") # without space between (LLVM bug)
+        spec = specs[i]
+        out(spec)
+        i = i + 1
+
+    #out(",~{w0},~{cc}")
+
+    out('" (')
+    i = 0
+    while i < len(args):
+        if i > 0:
+            out(", ")
+        arg = args[i]
+        llvm_print_type_value(arg)
+        i = i + 1
+
+    out(")")
+
+    if len(outs) == 1:
+        res = llvm_value_reg(reg, outs[0]['type'])
+        llvm_store(outs[0], res)
+
+
+
 
 def print_stmt(x):
+    assert(x['isa'] == 'stmt')
+
     k = x['kind']
     if k == 'block': print_stmt_block(x)
     elif k == 'value': do_eval(x['value'])
@@ -1731,6 +1812,55 @@ def print_def_const(x):
         llvm_print_type_value(do_eval(init_value))
 
     return
+
+
+
+
+def code_to_char(cc):
+    if cc < 0x20:
+        if cc == 0x07: return "\\07" # bell
+        elif cc == 0x08: return "\\08" # backspace
+        elif cc == 0x09: return "\\09" # horizontal tab
+        elif cc == 0x0A: return "\\0A" # line feed
+        elif cc == 0x0B: return "\\0B" # vertical tab
+        elif cc == 0x0C: return "\\0C" # form feed
+        elif cc == 0x0D: return "\\0D" # carriage return
+        elif cc == 0x1B: return "\\1B" # escape
+        else: return "\\%02X" % cc
+
+    elif cc <= 0x7E :
+        sym = chr(cc)
+        if sym == '\\': return '\\\\'
+        elif sym == '"': return '\\"'
+        else: return sym
+
+    elif cc != 0:
+        return chr(cc)
+
+
+def print_str_literal(char_codes):
+    out("\"")
+
+    i = 0
+    while i < len(char_codes):
+        cc = ord(char_codes[i])
+
+        if cc == 0:
+            i_before = i
+            while i < len(x['asset']):
+                _cc = asset[i]
+                if _cc != 0:
+                    i = i_before
+                    break
+                i = i + 1
+            out("\"")
+            return
+
+        out(code_to_char(cc))
+
+        i = i + 1
+
+    out("\"")
 
 
 def print_string_ascii(strid, string):

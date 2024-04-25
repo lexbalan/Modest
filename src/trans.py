@@ -1612,14 +1612,9 @@ def do_stmt_asm(x):
 
     asm_text = do_rvalue(xargs[0])
 
-    #outputs = do_value(xargs[1])
-    #inputs = do_value(xargs[2])
-    #clobber_list = do_rvalue(xargs[3])
-    #return hlir_stmt_asm(asm_text, outputs, inputs, clobber_list, x['ti'])
-
     xoutputs = xargs[1]
     xinputs = xargs[2]
-    xclobber_list = xargs[3]
+    xclobbers = xargs[3]
 
     outputs = []
     for x in xoutputs['items']:
@@ -1637,12 +1632,12 @@ def do_stmt_asm(x):
         pair = (spec, val)
         inputs.append(pair)
 
-    clobber_list = []
-    for x in xclobber_list['items']:
+    clobbers = []
+    for x in xclobbers['items']:
         spec = do_rvalue(x)
-        clobber_list.append(spec)
+        clobbers.append(spec)
 
-    return hlir_stmt_asm(asm_text, outputs, inputs, clobber_list, x['ti'])
+    return hlir_stmt_asm(asm_text, outputs, inputs, clobbers, x['ti'])
 
 
 

@@ -1333,7 +1333,7 @@ def print_stmt_asm(x):
         out(':')
 
     # print clobber list
-    for clobber in x['clobber_list']:
+    for clobber in x['clobbers']:
         nl_indent(1)
         out(': ')
         print_value(clobber)

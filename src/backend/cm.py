@@ -726,7 +726,7 @@ def print_stmt_asm(x):
         print_pairs(args2)
 
     # print clobber list
-    for clobber in x['clobber_list']:
+    for clobber in x['clobbers']:
         out(', ')
         print_value(clobber)
 
