@@ -437,6 +437,7 @@ def print_value_un(v, ctx):
 
 def print_paramlist(params, extra_args=False):
     out("(")
+
     i = 0
     for param in params:
         if i > 0: out(", ")
@@ -445,6 +446,7 @@ def print_paramlist(params, extra_args=False):
 
     if extra_args:
         out(", ...")
+
     out(")")
 
 

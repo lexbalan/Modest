@@ -709,6 +709,7 @@ def print_asm_pair(pair):
     print_value(pair[1])
     out(']')
 
+
 # for print_stmt_asm:
 # prints pairs: <specifier> <value>
 def print_asm_pairs(args):
