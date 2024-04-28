@@ -116,4 +116,5 @@ func main () -> Int32 {
   * [if statement](./if.md)
   * [while statement](./while.md)
   * [return statement](./return.md)
+  * [asm statement](./asm.md)
 
