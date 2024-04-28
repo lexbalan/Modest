@@ -9,7 +9,7 @@ func sumsub64(a: Int64, b: Int64) -> Int64 {
     var sum: Int64
     var sub: Int64
 
-    __asm('add %0, %2, %3\nsub %1, %2, %3\n', [['=r', sum], ['=r', sub]], [['r', a], ['r', b]], ['cc']) //, 'x0', 'x1']) //!!
+    __asm('add %0, %2, %3\nsub %1, %2, %3\n', [['=&r', sum], ['=&r', sub]], [['r', a], ['r', b]], ['cc'])//, 'x0', 'x1', 'memory']) //!!
 
     printf("sumsub64 sum = %lld\n", sum)
     printf("sumsub64 sub = %lld\n", sub)
