@@ -6,7 +6,6 @@
     __asm(<# asm_text #>, <# outputs #>, <# inputs #>, <# clobbers #>)
 ```
 
-```
 
 #### Examples
 
