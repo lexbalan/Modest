@@ -40,7 +40,7 @@
   * [Value evaluation](./stmt/eval.md)
   * [Variable assignation](./stmt/assign.md)
   * [Block statement](./stmt/block.md)
-  * [Asm statement](./stmt/asm.md)
+  * [Asm statement](./stmt/asm_inline.md)
 
 ### Misc
   * [Directives](./directives.md)
