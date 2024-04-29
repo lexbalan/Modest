@@ -109,12 +109,12 @@ func main () -> Int32 {
 ### More information every statements
 
   * [Block statement](./block.md)
-  * [variable definiiton statement](./var.md)
-  * [constant definiiton statement](./let.md)
-  * [value evaluation statement](./eval.md)
-  * [variable assignation statement](./assign.md)
-  * [if statement](./if.md)
-  * [while statement](./while.md)
-  * [return statement](./return.md)
-  * [asm statement](./asm.md)
+  * [Variable definiiton statement](./var.md)
+  * [Constant definiiton statement](./let.md)
+  * [Value evaluation statement](./eval.md)
+  * [Variable assignation statement](./assign.md)
+  * [If statement](./if.md)
+  * [While statement](./while.md)
+  * [Return statement](./return.md)
+  * [Asm statement](./asm.md)
 

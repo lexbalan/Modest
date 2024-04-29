@@ -64,10 +64,10 @@ func main() -> Int {
 ```
 
 > Result:
-> inline asm test
-> sumsub64 sum = 30
-> sumsub64 sub = -10
-sumsub64(10, 20) = 20
+> inline asm test <br/>
+> sumsub64 sum = 30  <br/>
+> sumsub64 sub = -10 <br/>
+> sumsub64(10, 20) = 20  <br/>
 
 
 
