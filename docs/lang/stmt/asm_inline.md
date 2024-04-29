@@ -64,7 +64,7 @@ func main() -> Int {
 
 ```
 
-> Result:
+*Result:*
 > inline asm test <br/>
 > sumsub64 sum = 30  <br/>
 > sumsub64 sub = -10 <br/>
