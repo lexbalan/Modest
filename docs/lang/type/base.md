@@ -112,7 +112,8 @@ func main () -> Unit {
 	}
 }
 ```
-> Result: `a < b`
+*Result:*
+> `a < b`
 
 
 #### Unsigned integer type
@@ -160,7 +161,8 @@ func main () -> Unit {
 }
 
 ```
-> Result: `pi = 3.14....`
+*Result:*
+> `pi = 3.14....`
 
 ### Char type
 
@@ -186,8 +188,8 @@ if a == b {
     printf("'a' != 'b'\n")
 }
 ```
-
-> Result: `'a' != 'b'`
+*Result:*
+> `'a' != 'b'`
 
 
 
@@ -235,12 +237,12 @@ while i < 5 {
 
 ```
 
-> Result:
-`a[0] = 0`
-`a[1] = 10`
-`a[2] = 20`
-`a[3] = 30`
-`a[4] = 40`
+*Result:*
+> `a[0] = 0`</br>
+> `a[1] = 10`</br>
+> `a[2] = 20`</br>
+> `a[3] = 30`</br>
+> `a[4] = 40`</br>
 
 
 
@@ -266,8 +268,8 @@ s = "Hello World!\n"
 
 printf(s)
 ```
-
-> Result: `Hello World!`
+*Result:*
+> `Hello World!`
 
 
 
@@ -294,9 +296,9 @@ printf("p.x = %f\n", p.x)
 printf("p.y = %f\n", p.y)
 ```
 
-> Result:
-`p.x = 1.0`
-`p.y = 2.0`
+*Result:*
+> `p.x = 1.0`</br>
+> `p.y = 2.0`</br>
 
 
 
@@ -343,7 +345,9 @@ func main () -> Int32 {
     return 0
 }
 ```
-> Result: `c = 0x123456789ABCDEF` `x = 0x123456789ABCDEF`
+*Result:*
+> `c = 0x123456789ABCDEF`</br>
+> `x = 0x123456789ABCDEF`</br>
 
 
 

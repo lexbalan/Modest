@@ -54,4 +54,7 @@ func main () -> Int32 {
     return 0
 }
 ```
-> Result: `x = 5` `y = 10` `z = 20`
+*Result:*
+> `x = 5`</br>
+> `y = 10`</br>
+> `z = 20`</br>
