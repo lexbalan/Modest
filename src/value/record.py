@@ -114,7 +114,7 @@ def _doitems(t, v, method, ti):
 
 
 
-def value_cons_record_from_generic_record(t, v, method, ti):
+def _value_record_cons_record_from_generic(t, v, method, ti):
     items = _doitems(t, v, method, ti)
 
     nv = value_terminal(t, items, ti)
@@ -134,7 +134,7 @@ def _do_cons_record(t, v, method, ti):
 
 
 
-def value_cons_record(t, v, method, ti):
+def value_record_cons(t, v, method, ti):
     from_type = v['type']
 
     if not type.type_is_record(from_type):
@@ -146,7 +146,7 @@ def value_cons_record(t, v, method, ti):
 
     # GenericRecord -> Record (implicit)
     if type.type_is_generic(from_type):
-        return value_cons_record_from_generic_record(t, v, method, ti)
+        return _value_record_cons_record_from_generic(t, v, method, ti)
 
 
     if method != 'explicit':
