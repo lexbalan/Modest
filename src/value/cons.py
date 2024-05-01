@@ -7,8 +7,8 @@ from .unit import value_cons_unit
 from .bool import value_bool_cons
 from .byte import value_byte_cons
 from .char import value_char_cons
-from .integer import value_cons_integer
-from .float import value_cons_float
+from .integer import value_integer_cons
+from .float import value_float_cons
 from .record import value_cons_record
 from .array import value_array_cons
 from .pointer import value_cons_pointer, cons_ptr_to_str_from_string
@@ -27,8 +27,8 @@ def _value_cons(t, v, method, ti):
             return v
 
     constructor = None
-    if type.type_is_integer(t): constructor = value_cons_integer
-    elif type.type_is_float(t): constructor = value_cons_float
+    if type.type_is_integer(t): constructor = value_integer_cons
+    elif type.type_is_float(t): constructor = value_float_cons
     elif type.type_is_array(t): constructor = value_array_cons
     elif type.type_is_record(t): constructor = value_cons_record
     elif type.type_is_char(t): constructor = value_char_cons

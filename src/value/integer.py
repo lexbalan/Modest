@@ -30,7 +30,7 @@ def value_integer_create(num, typ=None, ti=None):
 warning_cast_data_loss = True
 
 
-def check_width(from_type, t, method, ti):
+def _check_width(from_type, t, method, ti):
     rv = True
 
     if from_type['width'] > t['width']:
@@ -56,7 +56,7 @@ def check_width(from_type, t, method, ti):
 
 
 
-def value_cons_integer_immediate(t, v, method, ti):
+def _value_integer_cons_immediate(t, v, method, ti):
     #info("value_cons_int_immediate", ti)
     width = t['width']
     need_width = nbits_for_num(v['asset'])
@@ -69,25 +69,25 @@ def value_cons_integer_immediate(t, v, method, ti):
 
 
 def _do_cons_integer(t, v, method, ti):
-    check_width(v['type'], t, method, ti)
+    _check_width(v['type'], t, method, ti)
     if value_is_immediate(v):
         if method == 'explicit':
             nv = value_cons_node(t, v, method, ti=ti)
             nv['asset'] = int(v['asset'])  # here can be float
             nv['immediate'] = True
             return nv
-        return value_cons_integer_immediate(t, v, method, ti)
+        return _value_integer_cons_immediate(t, v, method, ti)
     return value_cons_node(t, v, method, ti=ti)
 
 
 
-def value_cons_integer(t, v, method, ti):
+def value_integer_cons(t, v, method, ti):
     from_type = v['type']
 
     if value_is_immediate(v):
         if hlir_type.type_is_generic_integer(from_type):
             # GenericInt -> Int
-            check_width(from_type, t, method, ti)
+            _check_width(from_type, t, method, ti)
 
             if not t['signed']:
                 if v['asset'] < 0:

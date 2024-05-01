@@ -17,26 +17,26 @@ def value_float_create(num, ti=None):
 
 
 
-def value_cons_float_immediate(t, v, method, ti):
+def _value_float_cons_immediate(t, v, method, ti):
     nv = value_cons_immediate(t, v, method, ti)
-    nv['asset'] = float_value_pack(float(nv['asset']), t['width'])
+    nv['asset'] = _float_value_pack(float(nv['asset']), t['width'])
     nv['immediate'] = True
     return nv
 
 
 def _do_cons_float(t, v, method, ti):
     if value_is_immediate(v):
-        return value_cons_float_immediate(t, v, method, ti)
+        return _value_float_cons_immediate(t, v, method, ti)
     return value_cons_node(t, v, method, ti=ti)
 
 
-def value_cons_float(t, v, method, ti):
+def value_float_cons(t, v, method, ti):
     vt = v['type']
 
     if type.type_is_generic(vt):
         # (GenericInt or GenericFloat) -> Float
         if type.type_is_integer(vt) or type.type_is_float(vt):
-            return value_cons_float_immediate(t, v, method, ti)
+            return _value_float_cons_immediate(t, v, method, ti)
 
 
     if method != 'explicit':
@@ -60,7 +60,7 @@ def value_cons_float(t, v, method, ti):
 
 
 # получаем 32 или 64 битное представление числа
-def float_value_pack(f_num, width):
+def _float_value_pack(f_num, width):
     import struct
     z = 0
     if width == 32:
@@ -68,7 +68,7 @@ def float_value_pack(f_num, width):
     elif width == 64:
         z = struct.unpack('<d', struct.pack('<d', f_num))[0]
     else:
-        fatal("too big float, float_value_pack not implemented")
+        fatal("too big float, _float_value_pack not implemented")
 
     return z
 
