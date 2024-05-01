@@ -238,13 +238,13 @@ declare void @bcopy(i8* %src, i8* %dst, %SizeT %n)
 
 
 %Point2D = type {
-	i32,
+	i32, 
 	i32
 }
 
 %Point3D = type {
-	i32,
-	i32,
+	i32, 
+	i32, 
 	i32
 }
 
@@ -278,14 +278,14 @@ endif_0:
     %15 = bitcast %Point2D* %14 to i8*
     %16 = bitcast %Point2D* %2 to i8*
     call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %15, i8* %16, i32 8, i1 0)
-    %17 = alloca { i32, i32}
-    %18 = insertvalue { i32, i32} zeroinitializer, i32 1, 0
-    %19 = insertvalue { i32, i32} %18, i32 2, 1
-    store { i32, i32} %19, { i32, i32}* %17
-    %20 = load { i32, i32}, { i32, i32}* %17
-    %21 = alloca { i32, i32}
-    store { i32, i32} %20, { i32, i32}* %21
-    %22 = bitcast { i32, i32}* %21 to %Point2D*
+    %17 = alloca {i32, i32}
+    %18 = insertvalue {i32, i32} zeroinitializer, i32 1, 0
+    %19 = insertvalue {i32, i32} %18, i32 2, 1
+    store {i32, i32} %19, {i32, i32}* %17
+    %20 = load {i32, i32}, {i32, i32}* %17
+    %21 = alloca {i32, i32}
+    store {i32, i32} %20, {i32, i32}* %21
+    %22 = bitcast {i32, i32}* %21 to %Point2D*
     %23 = bitcast %Point2D* %14 to i8*
     %24 = bitcast %Point2D* %22 to i8*
     
@@ -300,12 +300,12 @@ else_1:
     br label %endif_1
 endif_1:
     ; comparison between two anonymous record
-    %29 = alloca { i32, i32}
-    %30 = insertvalue { i32, i32} zeroinitializer, i32 1, 0
-    %31 = insertvalue { i32, i32} %30, i32 2, 1
-    store { i32, i32} %31, { i32, i32}* %29
-    %32 = bitcast { i32, i32}* %17 to i8*
-    %33 = bitcast { i32, i32}* %29 to i8*
+    %29 = alloca {i32, i32}
+    %30 = insertvalue {i32, i32} zeroinitializer, i32 1, 0
+    %31 = insertvalue {i32, i32} %30, i32 2, 1
+    store {i32, i32} %31, {i32, i32}* %29
+    %32 = bitcast {i32, i32}* %17 to i8*
+    %33 = bitcast {i32, i32}* %29 to i8*
     
     %34 = call i32 (i8*, i8*, i64) @memcmp( i8* %32, i8* %33, i64 8)
     %35 = icmp eq i32 %34, 0

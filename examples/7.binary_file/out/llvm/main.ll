@@ -244,7 +244,7 @@ declare void @perror(%ConstCharStr* %str)
 
 
 %Chunk = type {
-	[100 x %Char],
+	[100 x %Char], 
 	[1024 x %Char]
 }
 

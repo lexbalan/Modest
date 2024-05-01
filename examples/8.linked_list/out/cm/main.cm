@@ -17,11 +17,11 @@ func nat64_list_insert(list: *List, x: Nat64) -> Unit {
 
 // show list conent from first item to last
 func list_print_forward(list: *List) -> Unit {
-    printf(list_print_forward:\n")
+    printf("list_print_forward:\n")
     var pn: *Node = linked_list_first_get(list)
     while pn != nil {
         let x = linked_list_node_link_get(pn)
-        printf(v = %u\n", *x)
+        printf("v = %u\n", *x)
         pn = linked_list_node_next_get(pn)
     }
 }
@@ -29,23 +29,23 @@ func list_print_forward(list: *List) -> Unit {
 
 // show list conent from last item to first
 func list_print_backward(list: *List) -> Unit {
-    printf(list_print_backward:\n")
+    printf("list_print_backward:\n")
     var pn: *Node = linked_list_last_get(list)
     while pn != nil {
         let x = linked_list_node_link_get(pn)
-        printf(v = %u\n", *x)
+        printf("v = %u\n", *x)
         pn = linked_list_node_prev_get(pn)
     }
 }
 
 
 func main() -> Int {
-    printf(linked list example\n")
+    printf("linked list example\n")
 
     let list = linked_list_create()
 
     if list == nil {
-        printf(error: cannot create list")
+        printf("error: cannot create list")
         return 1
     }
 
@@ -64,7 +64,7 @@ func main() -> Int {
 
     // print list size
     let list_size = linked_list_size_get(list)
-    printf(linked list size: %u\n", list_size)
+    printf("linked list size: %u\n", list_size)
 
     // print list forward
     list_print_forward(list)

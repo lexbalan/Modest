@@ -4,13 +4,13 @@ import "libc/stdio"
 
 
 func main() -> Int {
-    printf(while statement test\n")
+    printf("while statement test\n")
 
     var a: Int32 = 0
     let b = 10
 
     while a < b {
-        printf(a = %d\n", a)
+        printf("a = %d\n", a)
         a = a + 1
     }
 

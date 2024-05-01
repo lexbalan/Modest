@@ -102,8 +102,8 @@ def _doitems(t, v, method, ti):
 
             prev_nl = nl
 
-            from .cons import value_cons
-            nv = value_cons(field_type, item_value, 'implicit', v['expr_ti'])
+            from .cons import value_cons_implicit
+            nv = value_cons_implicit(field_type, item_value)
 
             type.check(field_type, nv['type'], nv['ti'])
 

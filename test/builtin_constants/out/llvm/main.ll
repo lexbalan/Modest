@@ -154,11 +154,11 @@ declare void @perror(%ConstCharStr* %str)
 define %Int @main() {
     ; __compiler
     %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str1 to [0 x i8]*), %Str8* bitcast ([3 x i8]* @str2 to [0 x i8]*))
-    %2 = insertvalue { i32, i32} zeroinitializer, i32 0, 0
-    %3 = insertvalue { i32, i32} %2, i32 7, 1
-    %4 = extractvalue { i32, i32} %3, 0
+    %2 = insertvalue {i32, i32} zeroinitializer, i32 0, 0
+    %3 = insertvalue {i32, i32} %2, i32 7, 1
+    %4 = extractvalue {i32, i32} %3, 0
     %5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @str3 to [0 x i8]*), i32 %4)
-    %6 = extractvalue { i32, i32} %3, 1
+    %6 = extractvalue {i32, i32} %3, 1
     %7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @str4 to [0 x i8]*), i32 %6)
     ; __target
     %8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str5 to [0 x i8]*), %Str* bitcast ([8 x i8]* @str6 to [0 x i8]*))

@@ -149,31 +149,31 @@ declare void @perror(%ConstCharStr* %str)
 
 
 %Point = type {
-	i32,
+	i32, 
 	i32
 }
 
 
 @ps = constant [3 x {
-	i8,
+	i8, 
 	i8
 }] [
     {
-	i8,
+	i8, 
 	i8
 } {
         i8 0,
         i8 0
     },
     {
-	i8,
+	i8, 
 	i8
 } {
         i8 1,
         i8 1
     },
     {
-	i8,
+	i8, 
 	i8
 } {
         i8 2,

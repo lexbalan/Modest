@@ -142,9 +142,9 @@ declare void @perror(%ConstCharStr* %str)
 
 %FSM_Proc = type void (%FSM*)*
 %FSM_StateDesc = type {
-	[8 x i8],
-	%FSM_Proc,
-	%FSM_Proc,
+	[8 x i8], 
+	%FSM_Proc, 
+	%FSM_Proc, 
 	%FSM_Proc
 }
 
@@ -152,10 +152,10 @@ declare void @perror(%ConstCharStr* %str)
 
 %UInt32 = type i32
 %FSM = type {
-	[8 x i8],
-	%UInt32,
-	%UInt32,
-	%UInt32,
+	[8 x i8], 
+	%UInt32, 
+	%UInt32, 
+	%UInt32, 
 	[16 x %FSM_StateDesc]
 }
 

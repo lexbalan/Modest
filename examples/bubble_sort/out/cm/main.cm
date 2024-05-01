@@ -41,25 +41,25 @@ func print_array(array: *[]Int32, len: Int32) -> Unit
 func main() -> Int32 {
     //fill_array(&array, numberOfItems)
 
-    printf(array before:\n")
+    printf("array before:\n")
     print_array(&array, numberOfItems)
-    printf(\n")
+    printf("\n")
 
     bubble_sort32(&array, numberOfItems)
 
-    printf(array after:\n")
+    printf("array after:\n")
     print_array(&array, numberOfItems)
-    printf(\n")
+    printf("\n")
 
     return 0
 }
 
 
 func print_array(array: *[]Int32, len: Int32) -> Unit {
-    printf(\n")
+    printf("\n")
     var i: Int32 = 0
     while i < len {
-        printf(array[%i] = %i\n", i, array[i])
+        printf("array[%i] = %i\n", i, array[i])
         i = i + 1
     }
 }
@@ -72,7 +72,7 @@ func fill_array(array: *[]Int32, len: Int32) -> Unit {
     let max = 1000
     var i: Int32 = 0
     while i < len {
-        printf([%i] ", i)
+        printf("[%i] ", i)
         let x = get_integer(min, max)
         array[i] = x
         i = i + 1
@@ -85,14 +85,14 @@ func get_integer(min: Int32, max: Int32) -> Int32 {
     number = 0
 
     while true {
-        printf(enter a number (%i .. %i): ", min, max)
-        scanf(%d", &number)
+        printf("enter a number (%i .. %i): ", min, max)
+        scanf("%d", &number)
 
         if number < min {
-            printf(number must be greater than %i, try again\n", min)
+            printf("number must be greater than %i, try again\n", min)
             again
         } else if number > max {
-            printf(number must be less than %i, try again\n", max)
+            printf("number must be less than %i, try again\n", max)
             again
         } else {
             break

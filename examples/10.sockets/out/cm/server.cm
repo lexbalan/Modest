@@ -5,9 +5,9 @@ import "libc/libc"
 import "libc/socket"
 
 
-const filename = file2.txt"
+const filename = "file2.txt"
 
-const ipAddress = 127.0.0.1"
+const ipAddress = "127.0.0.1"
 const port = 8080
 const bufSize = 1024
 
@@ -15,9 +15,9 @@ const bufSize = 1024
 func write_file(sockfd: Int) -> Unit {
     var buffer: [bufSize]Char8
 
-    let fp = fopen(filename, w")
+    let fp = fopen(filename, "w")
     if fp == nil {
-        perror([-] Error in creating file")
+        perror("[-] Error in creating file")
         exit(1)
     }
 
@@ -28,7 +28,7 @@ func write_file(sockfd: Int) -> Unit {
             break
         }
 
-        fprintf(fp, %s", &buffer)
+        fprintf(fp, "%s", &buffer)
         bzero(&buffer, bufSize)
     }
 }
@@ -37,11 +37,11 @@ func write_file(sockfd: Int) -> Unit {
 func main() -> Int {
     let sockfd = socket(c_AF_INET, c_SOCK_STREAM, 0)
     if sockfd < 0 {
-        perror([-] Error in socket")
+        perror("[-] Error in socket")
         exit(1)
     }
 
-    printf([+] Server socket created\n")
+    printf("[+] Server socket created\n")
 
     var server_addr: Struct_sockaddr_in = {
         sin_len = 0
@@ -56,17 +56,17 @@ func main() -> Int {
     let sockaddr = &server_addr
     var e: Int = bind(sockfd, sockaddr, Socklen_t sizeof(Struct_sockaddr_in))
     if e < 0 {
-        perror([-] Error in Binding")
+        perror("[-] Error in Binding")
         exit(1)
     }
 
-    printf([+] Binding Successfull\n")
+    printf("[+] Binding Successfull\n")
 
     e = listen(sockfd, 10)
     if e == 0 {
-        printf([+] Listening...\n")
+        printf("[+] Listening...\n")
     } else {
-        perror([-] Error in Binding")
+        perror("[-] Error in Binding")
         exit(1)
     }
 
@@ -77,7 +77,7 @@ func main() -> Int {
 
     write_file(new_sock)
 
-    printf([+] Data written in the text file")
+    printf("[+] Data written in the text file")
 
     return 0
 }

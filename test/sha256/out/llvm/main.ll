@@ -244,8 +244,8 @@ declare void @sha256_doHash([0 x i8]* %msg, i32 %msg_len, [32 x i8]* %out_hash)
 
 
 %SHA256_TestCase = type {
-	[32 x i8],
-	i32,
+	[32 x i8], 
+	i32, 
 	[32 x i8]
 }
 

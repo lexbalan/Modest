@@ -14,49 +14,17 @@ from .array import value_cons_array
 from .pointer import value_cons_pointer, cons_ptr_to_str_from_string
 
 
-
-def value_cons_default(x, ti):
-    from_type = x['type']
-
-    # ONLY FOR GENERIC
-    if not type.type_is_generic(from_type):
-        return x
-
-    from trans import typeSysInt, typeSysFloat, typeSysChar, typeSysStr
-
-    if type.type_is_integer(from_type):
-        t = typeSysInt
-        if not type.type_is_signed(from_type):
-            t = typeSysNat
-        return value_cons_integer(t, x, 'implicit', ti)
-
-    elif type.type_is_string(from_type):
-        return cons_ptr_to_str_from_string(typeSysStr, x, ti)
-
-    elif type.type_is_float(from_type):
-        return value_cons_float(typeSysFloat, x, 'implicit', ti)
-
-    elif type.type_is_char(from_type):
-        return value_cons_char(typeSysChar, x, 'implicit', ti)
-
-    from error import fatal
-    fatal("unimplemented value_cons_default case")
-
-
-
-def value_cons_bad(t, v, method, ti):
-    return value_bad(ti)
-
-
+# данная локальная функция пытается привести v к t
 # возвращает None если не может привести (!)
 # не принтует ошибку (но может info)
 # это НЕ нужно для удобства приведения полей структур
-def value_cons(t, v, method, ti):
+def _value_cons(t, v, method, ti):
     if value_is_bad(v) or type.type_is_bad(t):
         return None
 
-    if type.type_eq(v['type'], t):
-        return v
+    if method == 'implicit':
+        if type.type_eq(v['type'], t):
+            return v
 
     constructor = None
     if type.type_is_integer(t): constructor = value_cons_integer
@@ -81,8 +49,8 @@ def value_cons(t, v, method, ti):
 
 
 
-def implicit_cons_if_possible(t, v, ti):
-    c = value_cons(t, v, 'implicit', ti)
+def _implicit_cons_if_possible(t, v, ti):
+    c = _value_cons(t, v, 'implicit', ti)
 
     if c == None:
         return v
@@ -118,7 +86,7 @@ def value_cons_implicit(t, v):
     if type.type_is_record(t) and type.type_is_record(from_type):
 
         if type.type_is_generic(from_type):
-            return implicit_cons_if_possible(t, v, ti)
+            return _implicit_cons_if_possible(t, v, ti)
 
         if not type.type_eq_record(t, from_type, opt=[], nominative=True):
             return value_cons_node(t, v, 'implicit', ti=ti)  # value_cast!
@@ -138,11 +106,11 @@ def value_cons_implicit(t, v):
         return v
 
     if type.type_is_generic(from_type):
-        return implicit_cons_if_possible(t, v, ti)
+        return _implicit_cons_if_possible(t, v, ti)
 
     # cons Pointer from:
     if type.type_is_pointer(t):
-        #return implicit_cons_if_possible(t, v, ti) #?
+        #return _implicit_cons_if_possible(t, v, ti) #?
         return value_cons_pointer(t, v, 'implicit', ti)
 
 
@@ -164,7 +132,7 @@ def value_cons_explicit(t, v, ti):
         warning("explicit cast to the same type", ti)
         return v
 
-    y = value_cons(t, v, 'explicit', ti)
+    y = _value_cons(t, v, 'explicit', ti)
 
     if y == None:
         error("cannot construct value", ti)
@@ -172,4 +140,37 @@ def value_cons_explicit(t, v, ti):
 
     return y
 
+
+
+def value_cons_default(x, ti):
+    from_type = x['type']
+
+    # ONLY FOR GENERIC
+    if not type.type_is_generic(from_type):
+        return x
+
+    from trans import typeSysInt, typeSysFloat, typeSysChar, typeSysStr
+
+    if type.type_is_integer(from_type):
+        t = typeSysInt
+        if not type.type_is_signed(from_type):
+            t = typeSysNat
+        return value_cons_integer(t, x, 'implicit', ti)
+
+    elif type.type_is_string(from_type):
+        return cons_ptr_to_str_from_string(typeSysStr, x, ti)
+
+    elif type.type_is_float(from_type):
+        return value_cons_float(typeSysFloat, x, 'implicit', ti)
+
+    elif type.type_is_char(from_type):
+        return value_cons_char(typeSysChar, x, 'implicit', ti)
+
+    from error import fatal
+    fatal("unimplemented value_cons_default case")
+
+
+
+def value_cons_bad(t, v, method, ti):
+    return value_bad(ti)
 

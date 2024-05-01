@@ -179,7 +179,7 @@ define [7 x i8] @ret_str() {
 ]
 
 %Point = type {
-	i32,
+	i32, 
 	i32
 }
 

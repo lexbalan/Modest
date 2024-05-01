@@ -3,13 +3,13 @@
 import "libc/stdio"
 
 
-const utf8Char = s"
-const utf16Char = Я"
-const utf32Char = 🐀"
+const utf8Char = "s"
+const utf16Char = "Я"
+const utf32Char = "🐀"
 
 
 func main() -> Int {
-    printf(test/char\n")
+    printf("test/char\n")
 
     var ch08: Char8
     var ch16: Char16

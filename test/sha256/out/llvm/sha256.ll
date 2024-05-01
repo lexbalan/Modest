@@ -179,9 +179,9 @@ declare void @bcopy(i8* %src, i8* %dst, %SizeT %n)
 
 
 %Context = type {
-	[64 x i8],
-	i32,
-	i64,
+	[64 x i8], 
+	i32, 
+	i64, 
 	[8 x i32]
 }
 

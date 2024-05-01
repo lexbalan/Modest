@@ -11,12 +11,12 @@ const ratSymbolUTF16 = [0xD83D, 0xDC00]
 const ratSymbolUTF32 = 0x0001F400
 
 
-var arr_utf8: [8]Char8 = "Hi!\n"
-var arr_utf16: [8]Char16 = "Hello!\n"
-var arr_utf32: [8]Char32 = "Hello!\n"
+var arr_utf8: [8]Char8 = ""Hi!\n"
+var arr_utf16: [8]Char16 = ""Hello!\n"
+var arr_utf32: [8]Char32 = ""Hello!\n"
 
 
-const genericStringConst = S-t-r-i-n-g-Ω 🐀🎉🦄"
+const genericStringConst = "S-t-r-i-n-g-Ω 🐀🎉🦄"
 const string8Const = *Str8 genericStringConst
 const string16Const = *Str16 genericStringConst
 const string32Const = *Str32 genericStringConst
@@ -45,7 +45,7 @@ func main() -> Int {
             break
         }
 
-        printf([%d]U16: 0x%x\n", i, Nat32 c)
+        printf("[%d]U16: 0x%x\n", i, Nat32 c)
 
         i = i + 1
     }
@@ -55,13 +55,13 @@ func main() -> Int {
     var str32: *Str32 = string32Const
 
     utf8_puts(str8)
-    utf8_puts(\n")
+    utf8_puts("\n")
 
     utf16_puts(str16)
-    utf8_puts(\n")
+    utf8_puts("\n")
 
     utf32_puts(str32)
-    utf8_puts(\n")
+    utf8_puts("\n")
 
     return 0
 }

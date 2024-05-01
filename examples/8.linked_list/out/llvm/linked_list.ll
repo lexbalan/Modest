@@ -178,14 +178,14 @@ declare void @bcopy(i8* %src, i8* %dst, %SizeT %n)
 
 
 %Node = type {
-	%Node*,
-	%Node*,
+	%Node*, 
+	%Node*, 
 	i8*
 }
 
 %List = type {
-	%Node*,
-	%Node*,
+	%Node*, 
+	%Node*, 
 	i32
 }
 

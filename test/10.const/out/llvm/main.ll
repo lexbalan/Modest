@@ -338,12 +338,12 @@ declare double @max_float64(double %a, double %b)
 
 
 %Point = type {
-	double,
+	double, 
 	double
 }
 
 %Line = type {
-	%Point,
+	%Point, 
 	%Point
 }
 

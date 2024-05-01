@@ -214,39 +214,39 @@ declare void @perror(%ConstCharStr* %str)
 
 
 %Point = type {
-	i32,
+	i32, 
 	i32
 }
 
 %Mixed1 = type {
-	i8,
-	i32,
+	i8, 
+	i32, 
 	double
 }
 
 %Mixed2 = type {
-	i32,
-	i8,
-	double,
-	[3 x i8],
+	i32, 
+	i8, 
+	double, 
+	[3 x i8], 
 	%Mixed1
 }
 
 %Mixed3 = type {
-	i8,
-	i32,
-	double,
+	i8, 
+	i32, 
+	double, 
 	[9 x i8]
 }
 
 %Mixed4 = type {
-	%Mixed2,
-	i8,
-	i32,
-	double,
-	[9 x i8],
-	i16,
-	[3 x %Point],
+	%Mixed2, 
+	i8, 
+	i32, 
+	double, 
+	[9 x i8], 
+	i16, 
+	[3 x %Point], 
 	%Mixed3
 }
 
@@ -260,11 +260,11 @@ declare void @perror(%ConstCharStr* %str)
 @g = global i1 zeroinitializer
 
 %X = type {
-	i8,
-	i32,
-	double,
-	i16,
-	[3 x %Point],
+	i8, 
+	i32, 
+	double, 
+	i16, 
+	[3 x %Point], 
 	i1
 }
 

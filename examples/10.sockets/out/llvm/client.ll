@@ -231,7 +231,7 @@ declare void @bcopy(i8* %src, i8* %dst, %SizeT %n)
 %In_port_t = type i16
 %Socklen_t = type i32
 %Struct_sockaddr = type {
-	%UnsignedShort,
+	%UnsignedShort, 
 	[14 x i8]
 }
 
@@ -240,10 +240,10 @@ declare void @bcopy(i8* %src, i8* %dst, %SizeT %n)
 }
 
 %Struct_sockaddr_in = type {
-	i8,
-	i8,
-	%UnsignedShort,
-	%Struct_in_addr,
+	i8, 
+	i8, 
+	%UnsignedShort, 
+	%Struct_in_addr, 
 	[8 x i8]
 }
 
