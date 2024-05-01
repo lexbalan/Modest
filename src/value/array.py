@@ -100,55 +100,6 @@ def value_array_concat(l, r, ti):
 
 
 
-def _cast_values(values, to_type):
-    casted_items = []
-    for item in values:
-        from .cons import value_cons_implicit
-        casted_item = value_cons_implicit(to_type, item)
-
-        if not hlir_type.type_eq(to_type, casted_item['type']):
-            if method == 'explicit':
-                error("cannot construct value", item['ti'])
-                continue
-
-        casted_item['nl'] = item['nl']
-        casted_items.append(casted_item)
-
-    return casted_items
-
-
-
-def _do_cons_array(t, v, method, ti):
-    #info("_do_cons_array", ti)
-
-    if hlir_type.type_is_generic(v['type']):
-        nv = value_terminal(t, v['asset'], ti)
-        nv['nl_end'] = v['nl_end'] # 'nl_end' present only in generic values
-    else:
-        nv = value_cons_node(t, v, method, ti)
-
-    if value_is_immediate(v):
-        casted_items = _cast_values(v['asset'], t['of'])
-
-        # add Zero Pad (if need)
-        zero_pad = 0
-        vlen = v['type']['volume']['asset']
-        tlen = t['volume']['asset']
-        if vlen < tlen:
-            zero_pad_len = tlen - vlen
-            zero_pad = [value_zero(t['of'])] * zero_pad_len
-            casted_items = casted_items + zero_pad
-
-        nv['asset'] = casted_items
-        nv['immediate'] = True
-
-    if 'id' in v:
-        nv['id'] = v['id']
-
-    return nv
-
-
-
 def value_array_cons(t, v, method, ti):
     #info("value_array_cons", ti)
 
@@ -203,6 +154,55 @@ def value_array_cons(t, v, method, ti):
 
     # Array -> Array
     return _do_cons_array(t, v, 'explicit', ti)
+
+
+
+def _cast_values(values, to_type):
+    casted_items = []
+    for item in values:
+        from .cons import value_cons_implicit
+        casted_item = value_cons_implicit(to_type, item)
+
+        if not hlir_type.type_eq(to_type, casted_item['type']):
+            if method == 'explicit':
+                error("cannot construct value", item['ti'])
+                continue
+
+        casted_item['nl'] = item['nl']
+        casted_items.append(casted_item)
+
+    return casted_items
+
+
+
+def _do_cons_array(t, v, method, ti):
+    #info("_do_cons_array", ti)
+
+    if hlir_type.type_is_generic(v['type']):
+        nv = value_terminal(t, v['asset'], ti)
+        nv['nl_end'] = v['nl_end'] # 'nl_end' present only in generic values
+    else:
+        nv = value_cons_node(t, v, method, ti)
+
+    if value_is_immediate(v):
+        casted_items = _cast_values(v['asset'], t['of'])
+
+        # add Zero Pad (if need)
+        zero_pad = 0
+        vlen = v['type']['volume']['asset']
+        tlen = t['volume']['asset']
+        if vlen < tlen:
+            zero_pad_len = tlen - vlen
+            zero_pad = [value_zero(t['of'])] * zero_pad_len
+            casted_items = casted_items + zero_pad
+
+        nv['asset'] = casted_items
+        nv['immediate'] = True
+
+    if 'id' in v:
+        nv['id'] = v['id']
+
+    return nv
 
 
 
