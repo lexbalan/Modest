@@ -30,14 +30,3 @@ def value_string_concat(l, r, ti):
     newstring = l['asset'] + r['asset']
     return value_string_create(newstring, ti)
 
-    """str_array_volume = value_integer_create(length)
-    item_type = select_common_type(l['type']['of'], r['type']['of'])
-    assert(item_type != None)
-    t = hlir_type.hlir_type_array(item_type, volume=str_array_volume, ti=ti)
-    t['generic'] = True
-
-    nv = value_bin('add_arr', l, r, t, ti=ti)
-    nv['asset'] = asset
-    nv['immediate'] = True
-    nv['nl_end'] = r['nl_end']
-    return nv"""

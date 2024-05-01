@@ -3,7 +3,7 @@ import hlir.type as type
 from error import info, warning, error
 
 from .value import value_is_bad, value_bad, value_is_immediate, value_cons_node
-from .unit import value_cons_unit
+from .unit import value_unit_cons
 from .bool import value_bool_cons
 from .byte import value_byte_cons
 from .char import value_char_cons
@@ -35,7 +35,7 @@ def _value_cons(t, v, method, ti):
     elif type.type_is_byte(t): constructor = value_byte_cons
     elif type.type_is_bool(t): constructor = value_bool_cons
     elif type.type_is_pointer(t): constructor = value_pointer_cons
-    elif type.type_is_unit(t): constructor = value_cons_unit
+    elif type.type_is_unit(t): constructor = value_unit_cons
     elif type.type_is_bad(t): constructor = value_cons_bad
     else: assert False, "unknown type kind '%s'" % t['kind']
 
