@@ -36,7 +36,7 @@ def _value_cons(t, v, method, ti):
     elif type.type_is_bool(t): constructor = value_bool_cons
     elif type.type_is_pointer(t): constructor = value_pointer_cons
     elif type.type_is_unit(t): constructor = value_unit_cons
-    elif type.type_is_bad(t): constructor = value_cons_bad
+    elif type.type_is_bad(t): constructor = value_bad_cons
     else: assert False, "unknown type kind '%s'" % t['kind']
 
     if constructor == None:
@@ -170,6 +170,6 @@ def value_cons_implicit_check(t, v):
 
 
 
-def value_cons_bad(t, v, method, ti):
+def value_bad_cons(t, v, method, ti):
     return value_bad(ti)
 
