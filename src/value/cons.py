@@ -38,14 +38,16 @@ def _value_cons(t, v, method, ti):
     elif type.type_is_unit(t): constructor = value_cons_unit
     elif type.type_is_bad(t): constructor = value_cons_bad
 
-    if constructor != None:
-        nv = constructor(t, v, method, ti)
-        if nv != None:
-            if 'nl' in v:
-                nv['nl'] = v['nl']
-        return nv
+    if constructor == None:
+        return None
 
-    return None
+    nv = constructor(t, v, method, ti)
+    if nv != None:
+        if 'nl' in v:
+            nv['nl'] = v['nl']
+
+    return nv
+
 
 
 
