@@ -9,23 +9,6 @@
 
 
 
-void sumsub64(int64_t a, int64_t b)
-{
-    int64_t sum;
-    int64_t sub;
-
-    __asm__ volatile (
-        "add %0, %2, %3\nsub %1, %2, %3\n"
-        : "=&r" (sum), "=&r" (sub)
-        : "r" (a), "r" (b)
-        : "cc"
-    );
-
-    printf("sumsub64 sum = %lld\n", sum);
-    printf("sumsub64 sub = %lld\n", sub);
-}
-
-
 int64_t sum64(int64_t a, int64_t b)
 {
     int64_t sum;
@@ -49,6 +32,23 @@ int64_t sub64(int64_t a, int64_t b)
         : "cc"
     );
     return sub;
+}
+
+
+void sumsub64(int64_t a, int64_t b)
+{
+    int64_t sum;
+    int64_t sub;
+
+    __asm__ volatile (
+        "add %0, %2, %3\nsub %1, %2, %3\n"
+        : "=&r" (sum), "=&r" (sub)
+        : "r" (a), "r" (b)
+        : "cc"
+    );
+
+    printf("sumsub64 sum = %lld\n", sum);
+    printf("sumsub64 sub = %lld\n", sub);
 }
 
 
