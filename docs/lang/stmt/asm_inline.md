@@ -16,7 +16,7 @@
 import "libc/stdio"
 
 
-func sumsub64(a: Int64, b: Int64) -> Int64 {
+func sumsub64(a: Int64, b: Int64) -> Unit {
     //printf("sumsub64(%lld, %lld)\n", a, b)
 
     var sum: Int64
@@ -26,8 +26,6 @@ func sumsub64(a: Int64, b: Int64) -> Int64 {
 
     printf("sumsub64 sum = %lld\n", sum)
     printf("sumsub64 sub = %lld\n", sub)
-
-    return sum + sub
 }
 
 
@@ -36,6 +34,7 @@ func sum64(a: Int64, b: Int64) -> Int64 {
     __asm("add %0, %1, %2", [["=r", sum]], [["r", a], ["r", b]], ["cc"])
     return sum
 }
+
 
 func sub64(a: Int64, b: Int64) -> Int64 {
     var sub: Int64
@@ -56,8 +55,7 @@ func main() -> Int {
     printf("sum(%lld, %lld) = %lld\n", a, b, sum)
     printf("sub(%lld, %lld) = %lld\n", a, b, sub)
 
-    let sumsub = sumsub64(a, b)
-    printf("sumsub64(%lld, %lld) = %lld\n", a, b, sumsub)
+    sumsub64(a, b)
 
     return 0
 }
@@ -65,9 +63,10 @@ func main() -> Int {
 ```
 
 *Result:*
-> inline asm test <br/>
-> sumsub64 sum = 30  <br/>
-> sumsub64 sub = -10 <br/>
-> sumsub64(10, 20) = 20  <br/>
+> inline asm test<br/>
+sum(10, 20) = 30<br/>
+sub(10, 20) = -10<br/>
+sumsub64 sum = 30<br/>
+sumsub64 sub = -10<br/>
 
 

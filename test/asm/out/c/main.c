@@ -9,7 +9,7 @@
 
 
 
-int64_t sumsub64(int64_t a, int64_t b)
+void sumsub64(int64_t a, int64_t b)
 {
     //printf("sumsub64(%lld, %lld)\n", a, b)
 
@@ -25,8 +25,6 @@ int64_t sumsub64(int64_t a, int64_t b)
 
     printf("sumsub64 sum = %lld\n", sum);
     printf("sumsub64 sub = %lld\n", sub);
-
-    return sum + sub;
 }
 
 
@@ -41,6 +39,7 @@ int64_t sum64(int64_t a, int64_t b)
     );
     return sum;
 }
+
 
 int64_t sub64(int64_t a, int64_t b)
 {
@@ -64,14 +63,13 @@ int main()
     int64_t b;
     b = 20;
 
-    /*let sum = sum64(a, b)
-    let sub = sub64(a, b)
+    const int64_t sum = sum64(a, b);
+    const int64_t sub = sub64(a, b);
 
-    printf('sum(%lld, %lld) = %lld\n', a, b, sum)
-    printf('sub(%lld, %lld) = %lld\n', a, b, sub)*/
+    printf("sum(%lld, %lld) = %lld\n", a, b, sum);
+    printf("sub(%lld, %lld) = %lld\n", a, b, sub);
 
-    const int64_t sumsub = sumsub64(a, b);
-    printf("sumsub64(%lld, %lld) = %lld\n", a, b, sumsub);
+    sumsub64(a, b);
 
     return 0;
 }

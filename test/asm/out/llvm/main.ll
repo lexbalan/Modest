@@ -140,11 +140,12 @@ declare void @perror(%ConstCharStr* %str)
 @str1 = private constant [21 x i8] [i8 115, i8 117, i8 109, i8 115, i8 117, i8 98, i8 54, i8 52, i8 32, i8 115, i8 117, i8 109, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
 @str2 = private constant [21 x i8] [i8 115, i8 117, i8 109, i8 115, i8 117, i8 98, i8 54, i8 52, i8 32, i8 115, i8 117, i8 98, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
 @str3 = private constant [17 x i8] [i8 105, i8 110, i8 108, i8 105, i8 110, i8 101, i8 32, i8 97, i8 115, i8 109, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
-@str4 = private constant [29 x i8] [i8 115, i8 117, i8 109, i8 115, i8 117, i8 98, i8 54, i8 52, i8 40, i8 37, i8 108, i8 108, i8 100, i8 44, i8 32, i8 37, i8 108, i8 108, i8 100, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
+@str4 = private constant [24 x i8] [i8 115, i8 117, i8 109, i8 40, i8 37, i8 108, i8 108, i8 100, i8 44, i8 32, i8 37, i8 108, i8 108, i8 100, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
+@str5 = private constant [24 x i8] [i8 115, i8 117, i8 98, i8 40, i8 37, i8 108, i8 108, i8 100, i8 44, i8 32, i8 37, i8 108, i8 108, i8 100, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
 
 
 
-define i64 @sumsub64(i64 %a, i64 %b) {
+define void @sumsub64(i64 %a, i64 %b) {
     ;printf("sumsub64(%lld, %lld)\n", a, b)
     %1 = alloca i64
     %2 = alloca i64
@@ -157,10 +158,7 @@ define i64 @sumsub64(i64 %a, i64 %b) {
     %7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str1 to [0 x i8]*), i64 %6)
     %8 = load i64, i64* %2
     %9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str2 to [0 x i8]*), i64 %8)
-    %10 = load i64, i64* %1
-    %11 = load i64, i64* %2
-    %12 = add i64 %10, %11
-    ret i64 %12
+    ret void
 }
 
 define i64 @sum64(i64 %a, i64 %b) {
@@ -187,10 +185,19 @@ define %Int @main() {
     store i64 20, i64* %3
     %4 = load i64, i64* %2
     %5 = load i64, i64* %3
-    %6 = call i64 (i64, i64) @sumsub64(i64 %4, i64 %5)
+    %6 = call i64 (i64, i64) @sum64(i64 %4, i64 %5)
     %7 = load i64, i64* %2
     %8 = load i64, i64* %3
-    %9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([29 x i8]* @str4 to [0 x i8]*), i64 %7, i64 %8, i64 %6)
+    %9 = call i64 (i64, i64) @sub64(i64 %7, i64 %8)
+    %10 = load i64, i64* %2
+    %11 = load i64, i64* %3
+    %12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str4 to [0 x i8]*), i64 %10, i64 %11, i64 %6)
+    %13 = load i64, i64* %2
+    %14 = load i64, i64* %3
+    %15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str5 to [0 x i8]*), i64 %13, i64 %14, i64 %9)
+    %16 = load i64, i64* %2
+    %17 = load i64, i64* %3
+    call void (i64, i64) @sumsub64(i64 %16, i64 %17)
     ret %Int 0
 }
 

@@ -114,6 +114,9 @@ def value_cons_implicit(t, v):
 
 
 def value_cons_explicit(t, v, ti):
+    assert(t['isa'] == 'type')
+    assert(v['isa'] == 'value')
+
     if value_is_bad(v) or type.type_is_bad(t):
         return value_bad(v['expr_ti'])
 
@@ -134,7 +137,7 @@ def value_cons_explicit(t, v, ti):
 def value_cons_default(x, ti):
     from_type = x['type']
 
-    # ONLY FOR GENERIC
+    # THIS FUNCTION WORKS ONLY FOR GENERIC VALUES
     if not type.type_is_generic(from_type):
         return x
 
@@ -144,7 +147,6 @@ def value_cons_default(x, ti):
         t = typeSysInt
         if not type.type_is_signed(from_type):
             t = typeSysNat
-        #return value_cons_integer(t, x, 'implicit', ti)
         return _try_to_implicit_cons(t, x, ti)
 
     elif type.type_is_string(from_type):
