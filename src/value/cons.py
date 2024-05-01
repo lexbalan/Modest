@@ -11,7 +11,7 @@ from .integer import value_integer_cons
 from .float import value_float_cons
 from .record import value_cons_record
 from .array import value_array_cons
-from .pointer import value_cons_pointer, cons_ptr_to_str_from_string
+from .pointer import value_pointer_cons, cons_ptr_to_str_from_string
 
 
 # данная локальная функция пытается привести v к t
@@ -34,7 +34,7 @@ def _value_cons(t, v, method, ti):
     elif type.type_is_char(t): constructor = value_char_cons
     elif type.type_is_byte(t): constructor = value_byte_cons
     elif type.type_is_bool(t): constructor = value_bool_cons
-    elif type.type_is_pointer(t): constructor = value_cons_pointer
+    elif type.type_is_pointer(t): constructor = value_pointer_cons
     elif type.type_is_unit(t): constructor = value_cons_unit
     elif type.type_is_bad(t): constructor = value_cons_bad
     else: assert False, "unknown type kind '%s'" % t['kind']
