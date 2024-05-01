@@ -6,7 +6,7 @@ from .value import value_is_bad, value_bad, value_is_immediate, value_cons_node
 from .unit import value_cons_unit
 from .bool import value_bool_cons
 from .byte import value_byte_cons
-from .char import value_cons_char
+from .char import value_char_cons
 from .integer import value_cons_integer
 from .float import value_cons_float
 from .record import value_cons_record
@@ -31,7 +31,7 @@ def _value_cons(t, v, method, ti):
     elif type.type_is_float(t): constructor = value_cons_float
     elif type.type_is_array(t): constructor = value_array_cons
     elif type.type_is_record(t): constructor = value_cons_record
-    elif type.type_is_char(t): constructor = value_cons_char
+    elif type.type_is_char(t): constructor = value_char_cons
     elif type.type_is_byte(t): constructor = value_byte_cons
     elif type.type_is_bool(t): constructor = value_bool_cons
     elif type.type_is_pointer(t): constructor = value_cons_pointer
