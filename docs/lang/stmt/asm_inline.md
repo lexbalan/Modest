@@ -17,8 +17,6 @@ import "libc/stdio"
 
 
 func sumsub64(a: Int64, b: Int64) -> Unit {
-    //printf("sumsub64(%lld, %lld)\n", a, b)
-
     var sum: Int64
     var sub: Int64
 

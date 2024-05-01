@@ -146,7 +146,6 @@ declare void @perror(%ConstCharStr* %str)
 
 
 define void @sumsub64(i64 %a, i64 %b) {
-    ;printf("sumsub64(%lld, %lld)\n", a, b)
     %1 = alloca i64
     %2 = alloca i64
     %3 = call {i64, i64} asm sideeffect "add $0, $2, $3\0Asub $1, $2, $3\0A", "=&r,=&r,r,r,~{cc}" (i64 %a, i64 %b)

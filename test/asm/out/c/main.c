@@ -11,8 +11,6 @@
 
 void sumsub64(int64_t a, int64_t b)
 {
-    //printf("sumsub64(%lld, %lld)\n", a, b)
-
     int64_t sum;
     int64_t sub;
 
