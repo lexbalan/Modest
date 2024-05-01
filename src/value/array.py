@@ -16,7 +16,7 @@ def value_array_create(items, ti=None):
     length = len(items)
     if length == 0:
         item_type = foundation.typeUnit  # not Null, becase it fail
-        v = _create_value_array([], item_type, 0, True, ti)
+        v = _value_array_create([], item_type, 0, True, ti)
         v['immediate'] = True  #!
         return v
 
@@ -61,15 +61,14 @@ def value_array_create(items, ti=None):
         i = i + 1
 
 
-    v = _create_value_array(casted_items, array_item_type, length, True, ti)
+    v = _value_array_create(casted_items, array_item_type, length, True, ti)
     v['immediate'] = is_immediate  #TODO: need to implement 'immediate' flag
     return v
 
 
 
-def value_create_array_from_string(t, v, method, ti=None):
-    #info("value_create_array_from_string", ti)
-
+def value_array_create_from_string(t, v, method, ti=None):
+    #info("value_array_create_from_string", ti)
     char_type = t['of']
     length = t['volume']['asset']
     assert(length != None)
@@ -101,7 +100,7 @@ def value_array_concat(l, r, ti):
 
 
 
-def cast_values(values, to_type):
+def _cast_values(values, to_type):
     casted_items = []
     for item in values:
         from .cons import value_cons_implicit
@@ -129,7 +128,7 @@ def _do_cons_array(t, v, method, ti):
         nv = value_cons_node(t, v, method, ti)
 
     if value_is_immediate(v):
-        casted_items = cast_values(v['asset'], t['of'])
+        casted_items = _cast_values(v['asset'], t['of'])
 
         # add Zero Pad (if need)
         zero_pad = 0
@@ -150,15 +149,15 @@ def _do_cons_array(t, v, method, ti):
 
 
 
-def value_cons_array(t, v, method, ti):
-    #info("value_cons_array", ti)
+def value_array_cons(t, v, method, ti):
+    #info("value_array_cons", ti)
 
     #
     # Check
     #
 
     if hlir_type.type_is_string(v['type']):
-        return value_create_array_from_string(t, v, method, ti)
+        return value_array_create_from_string(t, v, method, ti)
 
 
     if not hlir_type.type_is_array(v['type']):
@@ -207,7 +206,7 @@ def value_cons_array(t, v, method, ti):
 
 
 
-def _create_value_array(items, item_type, length, is_generic, ti):
+def _value_array_create(items, item_type, length, is_generic, ti):
     array_volume = value_integer_create(length)
     array_type = hlir_type.hlir_type_array(item_type, volume=array_volume, ti=ti)
     array_type['generic'] = is_generic

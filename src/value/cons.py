@@ -10,7 +10,7 @@ from .char import value_cons_char
 from .integer import value_cons_integer
 from .float import value_cons_float
 from .record import value_cons_record
-from .array import value_cons_array
+from .array import value_array_cons
 from .pointer import value_cons_pointer, cons_ptr_to_str_from_string
 
 
@@ -29,7 +29,7 @@ def _value_cons(t, v, method, ti):
     constructor = None
     if type.type_is_integer(t): constructor = value_cons_integer
     elif type.type_is_float(t): constructor = value_cons_float
-    elif type.type_is_array(t): constructor = value_cons_array
+    elif type.type_is_array(t): constructor = value_array_cons
     elif type.type_is_record(t): constructor = value_cons_record
     elif type.type_is_char(t): constructor = value_cons_char
     elif type.type_is_byte(t): constructor = value_cons_byte
