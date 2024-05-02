@@ -1,43 +1,35 @@
 #
 # ../mcc -o main -mbackend=printer_c -mopt=speed -funsafe main.cm
 #
+
 import os
 import argparse
 import importlib
 import tomllib
-from error import fatal
-
-CONFIG_PATH = os.path.expandvars("${MODEST_DIR}/config.toml")
-
-toml_dict = None
-# Opening a Toml file using tomlib
-with open(CONFIG_PATH, "rb") as toml:
-	toml_dict = tomllib.load(toml)
-
-
 import settings
+import error
 
 
-def load_config(setup_name):
-	#print("load_setup %s" % setup_name)
+def load_config(config_name):
+	config = {}
 
-	config = toml_dict[setup_name]
+	# Opening a Toml file using tomlib
+	cfg_path = os.path.expandvars("${MODEST_DIR}/cfg/%s.toml" % config_name)
+	with open(cfg_path, "rb") as toml:
+		config = tomllib.load(toml)
 
 	for k in config:
 		v = config[k]
-		#print("SET %s = %s" % (k, v))
 		settings.set(k, v)
 
 
 #print("WTF?")  # за каким то хером вызываетс два раза, видимо из-за импорта
-load_config('Default')
+load_config('default')
 
 
-import error
 import trans
-
-
 import features
+
 
 parser = argparse.ArgumentParser(
 	prog = 'ProgramName',
@@ -60,7 +52,7 @@ args, files = parser.parse_known_args()
 
 def do_file(src_name):
 	if not os.path.isfile(src_name):
-		fatal("file %s not found" % src_name)
+		error.fatal("file %s not found" % src_name)
 
 	file_base_name = os.path.basename(src_name)
 	root_name = file_base_name.split(".")[0]
@@ -79,7 +71,7 @@ def do_file(src_name):
 
 	# loading backend
 	backend_name = settings.get('backend')
-	backend = importlib.import_module("backend." + backend_name)
+	backend = importlib.import_module("backend.%s" % backend_name)
 
 	trans.init()
 
@@ -107,7 +99,7 @@ def main():
 	if path_lib != None:
 		settings.set('lib', path_lib)
 	else:
-		fatal("MODEST_LIB required")
+		error.fatal("MODEST_LIB required")
 
 
 	# parse features (ex. -funsafe)
