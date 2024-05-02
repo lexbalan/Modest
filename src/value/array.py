@@ -193,7 +193,7 @@ def _do_cons_array(t, v, method, ti):
         tlen = t['volume']['asset']
         if vlen < tlen:
             zero_pad_len = tlen - vlen
-            zero_pad = [value_zero(t['of'])] * zero_pad_len
+            zero_pad = [value_zero(t['of'], None)] * zero_pad_len
             casted_items = casted_items + zero_pad
 
         nv['asset'] = casted_items

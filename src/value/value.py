@@ -128,7 +128,7 @@ def value_terminal(t, imm, ti):
     }
 
 
-def value_zero(t, ti=None):
+def value_zero(t, ti):
     imm_val = 0
 
     if hlir_type.type_is_composite(t):
@@ -138,7 +138,7 @@ def value_zero(t, ti=None):
 
 
 
-def value_var(id, type, ti=None):
+def value_var(id, type, ti):
     return {
         'isa': 'value',
         'kind': 'var',
@@ -156,7 +156,7 @@ def value_var(id, type, ti=None):
 
 # hlir_const is an immutable value
 # (not necessary immediate)
-def value_const(id, type, value=None, ti=None):
+def value_const(id, type, value, ti):
     return {
         'isa': 'value',
         'kind': 'const',
@@ -172,7 +172,7 @@ def value_const(id, type, value=None, ti=None):
     }
 
 
-def value_func(id, type, ti=None):
+def value_func(id, type, ti):
     return {
         'isa': 'value',
         'kind': 'func',
@@ -187,7 +187,7 @@ def value_func(id, type, ti=None):
     }
 
 
-def value_un(k, value, type, ti=None):
+def value_un(k, value, type, ti):
     return {
         'isa': 'value',
         'kind': k,
@@ -216,7 +216,7 @@ def value_bin(op, l, r, t, ti):
     }
 
 
-def value_call(func, rettype, args, ti=None):
+def value_call(func, rettype, args, ti):
     return {
         'isa': 'value',
         'kind': 'call',
@@ -231,7 +231,7 @@ def value_call(func, rettype, args, ti=None):
     }
 
 
-def value_index_array(array, index, ti=None):
+def value_index_array(array, index, ti):
     return {
         'isa': 'value',
         'kind': 'index',
@@ -246,7 +246,7 @@ def value_index_array(array, index, ti=None):
     }
 
 
-def value_index_array_ptr(ptr_to_array, index, ti=None):
+def value_index_array_ptr(ptr_to_array, index, ti):
     return {
         'isa': 'value',
         'kind': 'index_ptr',
@@ -261,7 +261,7 @@ def value_index_array_ptr(ptr_to_array, index, ti=None):
     }
 
 
-def value_access_record(record, field, ti=None):
+def value_access_record(record, field, ti):
     return {
         'isa': 'value',
         'kind': 'access',
@@ -277,7 +277,7 @@ def value_access_record(record, field, ti=None):
     }
 
 
-def value_access_record_ptr(ptr_to_record, field, ti=None):
+def value_access_record_ptr(ptr_to_record, field, ti):
     return {
         'isa': 'value',
         'kind': 'access_ptr',
@@ -293,7 +293,7 @@ def value_access_record_ptr(ptr_to_record, field, ti=None):
     }
 
 
-def value_cons_node(type, value, method='explicit', ti=None):
+def value_cons_node(type, value, method, ti):
     assert(method in ['implicit', 'explicit'])
     assert(value['isa'] == 'value')
     assert(type['isa'] == 'type')
@@ -320,7 +320,7 @@ def value_cons_node(type, value, method='explicit', ti=None):
 # но поскольку у него value immediate, мы можем его asset
 # привести и взять себе; Таким образом мы идем как литерал нода
 # и в то же время как cons нода
-def value_cons_immediate(t, v, method='explicit', ti=None):
+def value_cons_immediate(t, v, method, ti):
     assert(method in ['implicit', 'explicit'])
     nv = value_cons_node(t, v, method, ti)
 
@@ -338,7 +338,7 @@ def value_cons_immediate(t, v, method='explicit', ti=None):
 
 
 
-def value_sizeof(of, ti=None):
+def value_sizeof(of, ti):
     size = hlir_type.type_get_size(of)
     from foundation import typeSizeof
     return {
@@ -355,7 +355,7 @@ def value_sizeof(of, ti=None):
     }
 
 
-def value_alignof(of, ti=None):
+def value_alignof(of, ti):
     align = hlir_type.type_get_align(of)
     from foundation import typeSizeof
     return {
@@ -372,7 +372,7 @@ def value_alignof(of, ti=None):
     }
 
 
-def value_offsetof(of, field_id, ti=None):
+def value_offsetof(of, field_id, ti):
     field = hlir_type.record_field_get(of, field_id['str'])
     if field == None:
         error("undefined field '%s'" % field_id['str'], field_id['ti'])
@@ -395,7 +395,7 @@ def value_offsetof(of, field_id, ti=None):
     }
 
 
-def value_lengthof(of_value, ti=None):
+def value_lengthof(of_value, ti):
     length = of_value['type']['volume']['asset']
     from foundation import typeSizeof
     return {

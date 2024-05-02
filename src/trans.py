@@ -1947,7 +1947,7 @@ def def_var(x):
             except:
                 warning('???', x['ti'])
 
-    var = value_var(id, var_type)
+    var = value_var(id, var_type, x['field']['id']['ti'])
     var['is_global'] = True
     module['context'].value_add(x['field']['id']['str'], var)
     return hlir_def_var(id, init_value, var, x['ti'])
@@ -2048,7 +2048,7 @@ def def_func(x):
         param_type = param['type']
         param_id = param['id']
 
-        param_value = value_const(param_id, param_type, ti=param['ti'])
+        param_value = value_const(param_id, param_type, None, param['ti'])
         param_value['att'].append('local')
 
         if hlir_type.type_is_closed_array(param_type):
