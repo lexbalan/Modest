@@ -95,38 +95,38 @@ int main()
 
     // error: closed arrays of closed arrays are denied
     /*let dim1 = 15
-    let dim2 = 16
+	let dim2 = 16
 
-    var aa: [dim1][dim2]Int32
+	var aa: [dim1][dim2]Int32
 
-    var i = 0
-    while i < 16 {
-        var j = 0
-        while j < 16 {
-            aa[i][j] = i * j
-            j = j + 1
-        }
-        i = i + 1
-    }
+	var i = 0
+	while i < 16 {
+		var j = 0
+		while j < 16 {
+			aa[i][j] = i * j
+			j = j + 1
+		}
+		i = i + 1
+	}
 
-    i = 0
-    while i < 16 {
-        var k = 0
-        while k < 16 {
-            printf("aa[%i][%i] = %i\n", i, k, aa[i][k])
-            k = k + 1
-        }
-        i = i + 1
-    }
+	i = 0
+	while i < 16 {
+		var k = 0
+		while k < 16 {
+			printf("aa[%i][%i] = %i\n", i, k, aa[i][k])
+			k = k + 1
+		}
+		i = i + 1
+	}
 
 
-    let xa = aa[3]
+	let xa = aa[3]
 
-    i = 0
-    while i < dim2 {
-        printf("xa[%i] = %i\n", i, xa[i])
-        i = i + 1
-    }*/
+	i = 0
+	while i < dim2 {
+		printf("xa[%i] = %i\n", i, xa[i])
+		i = i + 1
+	}*/
 
 
     return 0;

@@ -4,9 +4,9 @@ import "libc/stdio"
 
 
 type Object enum {
-    objA
-    objB
-    objC
+	objA
+	objB
+	objC
 }
 
 type Mode enum {
@@ -17,24 +17,24 @@ type Mode enum {
 
 
 func printMode(m: Mode) {
-    if m == modeOff {
-        printf("modeOff\n")
-    } else if m == modeStandby {
-        printf("modeStandby\n")
-    } else if m == modeOn {
-        printf("modeOn\n")
-    }
+	if m == modeOff {
+		printf("modeOff\n")
+	} else if m == modeStandby {
+		printf("modeStandby\n")
+	} else if m == modeOn {
+		printf("modeOn\n")
+	}
 }
 
 
 func main() -> Int {
-    printf("enum test\n")
+	printf("enum test\n")
 
-    var m: Mode
-    m = modeOn
+	var m: Mode
+	m = modeOn
 
-    printMode(m)
-    return 0
+	printMode(m)
+	return 0
 }
 
 

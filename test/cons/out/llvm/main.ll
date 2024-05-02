@@ -148,12 +148,12 @@ define %Int @main() {
     %2 = zext i8 255 to i32
     %3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), i8 255)
     %4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str3 to [0 x i8]*), i32 %2)
-    ;    let c = Int32 a
-    ;    let d = Int32 Int8 -1
-    ;    let e = Int32 Int8 255
-    ;    printf("c = %i\n", c)
-    ;    printf("d = %i\n", d)
-    ;    printf("e = %i\n", e)
+    ;	let c = Int32 a
+    ;	let d = Int32 Int8 -1
+    ;	let e = Int32 Int8 255
+    ;	printf("c = %i\n", c)
+    ;	printf("d = %i\n", d)
+    ;	printf("e = %i\n", e)
     ret %Int 0
 }
 

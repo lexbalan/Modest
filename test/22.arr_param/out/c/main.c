@@ -32,35 +32,35 @@ struct ret_str_retval ret_str()
 
 // error: closed arrays of closed arrays are denied
 /*func ret_str2() -> [2][10]Char8 {
-    return ["ab", "cd"]
+	return ["ab", "cd"]
 }*/
 
 
 // error: closed arrays of closed arrays are denied
 /*func kk(x: [2][10]Char8) {
-    printf("%c\n", x[0][0])
-    printf("%c\n", x[0][1])
-    printf("%c\n", x[0][2])
-    printf("%c\n", x[0][3])
-    printf("%c\n", x[0][4])
-    printf("%c\n", x[0][5])
-    printf("%c\n", x[0][6])
-    printf("%c\n", x[0][7])
-    printf("%c\n", x[0][8])
-    printf("%c\n", x[0][9])
-    printf("\n")
+	printf("%c\n", x[0][0])
+	printf("%c\n", x[0][1])
+	printf("%c\n", x[0][2])
+	printf("%c\n", x[0][3])
+	printf("%c\n", x[0][4])
+	printf("%c\n", x[0][5])
+	printf("%c\n", x[0][6])
+	printf("%c\n", x[0][7])
+	printf("%c\n", x[0][8])
+	printf("%c\n", x[0][9])
+	printf("\n")
 
-    printf("%c\n", x[1][0])
-    printf("%c\n", x[1][1])
-    printf("%c\n", x[1][2])
-    printf("%c\n", x[1][3])
-    printf("%c\n", x[1][4])
-    printf("%c\n", x[1][5])
-    printf("%c\n", x[1][6])
-    printf("%c\n", x[1][7])
-    printf("%c\n", x[1][8])
-    printf("%c\n", x[1][9])
-    printf("\n")
+	printf("%c\n", x[1][0])
+	printf("%c\n", x[1][1])
+	printf("%c\n", x[1][2])
+	printf("%c\n", x[1][3])
+	printf("%c\n", x[1][4])
+	printf("%c\n", x[1][5])
+	printf("%c\n", x[1][6])
+	printf("%c\n", x[1][7])
+	printf("%c\n", x[1][8])
+	printf("%c\n", x[1][9])
+	printf("\n")
 }*/
 
 
@@ -107,10 +107,10 @@ int main()
 
 
     /*var w: [2][10]Char8
-    w[0] = "hello"
-    w[1] = "world"
-    let u = w
-    kk(u)*/
+	w[0] = "hello"
+	w[1] = "world"
+	let u = w
+	kk(u)*/
 
 
     return 0;

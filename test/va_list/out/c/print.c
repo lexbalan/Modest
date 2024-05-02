@@ -17,7 +17,7 @@
 
 
 /*func _put_char8(c: Char8) {
-    putchar(Int c)
+	putchar(Int c)
 }*/
 
 

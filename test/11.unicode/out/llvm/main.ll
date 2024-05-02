@@ -206,14 +206,14 @@ declare void @utf32_puts(%Str32* %s)
 define %Int @main() {
     ; indexing of GenericString returns #i symbol code
     ; the symbols have GenericInteger type
-    ;    let omegaCharCode = "Hello Ω!\n"[6]
-    ;    let ratCharCode = "Hello 🐀!\n"[6]
+    ;	let omegaCharCode = "Hello Ω!\n"[6]
+    ;	let ratCharCode = "Hello 🐀!\n"[6]
     ; you can assign omegaCharCode (937) to Nat32,
     ; but you can't assign ratCharCode (128000) to Nat16 (!)
-    ;    var omegaCode: Nat16 = Nat16 omegaCharCode
-    ;    var ratCode: Nat32 = Nat32 ratCharCode
-    ;    printf("omegaCode = %d\n", omegaCode)
-    ;    printf("ratCode = %d\n", ratCode)
+    ;	var omegaCode: Nat16 = Nat16 omegaCharCode
+    ;	var ratCode: Nat32 = Nat32 ratCharCode
+    ;	printf("omegaCode = %d\n", omegaCode)
+    ;	printf("ratCode = %d\n", ratCode)
     %1 = alloca i32
     store i32 0, i32* %1
     br label %again_1

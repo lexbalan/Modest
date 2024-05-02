@@ -9,7 +9,7 @@ const hello_world = hello + " " + world
 
 
 func main() -> Int {
-    printf('%s\n', *Str8 hello_world)
-    return 0
+	printf('%s\n', *Str8 hello_world)
+	return 0
 }
 

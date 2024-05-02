@@ -6,8 +6,8 @@ import "libc/unistd"
 
 
 func main() -> Int {
-    printf("unistd test\n")
+	printf("unistd test\n")
 
-    return 0
+	return 0
 }
 

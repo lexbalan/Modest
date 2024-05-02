@@ -20,7 +20,7 @@ const hello_world = "Hello " + word_name + " world!"
 
 
 func main() -> Int {
-    printf("%s", *Str8 hello_world)
-    return 0
+	printf("%s", *Str8 hello_world)
+	return 0
 }
 

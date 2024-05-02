@@ -19,38 +19,38 @@ type Socklen_t Nat32
 
 @property("c_alias", "struct sockaddr")
 type Struct_sockaddr record {
-    sa_family: UnsignedShort  /* address family */
-    sa_data: [14]Char8        /* up to 14 bytes of direct address */
+	sa_family: UnsignedShort  /* address family */
+	sa_data: [14]Char8		/* up to 14 bytes of direct address */
 }
 
 
 @property("c_alias", "struct in_addr")
 type Struct_in_addr record {
-    s_addr: In_addr_t
+	s_addr: In_addr_t
 }
 
 
 @property("c_alias", "struct sockaddr_in")
 type Struct_sockaddr_in record {
-    // @if APPLE
-    sin_len: Nat8
-    sin_family: Nat8
-    // @else
-    //sin_family: Short
-    // @endif APPLE
-    sin_port: UnsignedShort
-    sin_addr: Struct_in_addr
-    sin_zero: [8]Nat8
+	// @if APPLE
+	sin_len: Nat8
+	sin_family: Nat8
+	// @else
+	//sin_family: Short
+	// @endif APPLE
+	sin_port: UnsignedShort
+	sin_addr: Struct_in_addr
+	sin_zero: [8]Nat8
 }
 
 @property("value.c_alias", "SOCK_STREAM")
-const c_SOCK_STREAM = 1     /* stream socket */
+const c_SOCK_STREAM = 1	 /* stream socket */
 @property("value.c_alias", "SOCK_DGRAM")
-const c_SOCK_DGRAM = 2      /* datagram socket */
+const c_SOCK_DGRAM = 2	  /* datagram socket */
 @property("value.c_alias", "SOCK_RAW")
-const c_SOCK_RAW = 3        /* raw-protocol interface */
+const c_SOCK_RAW = 3		/* raw-protocol interface */
 @property("value.c_alias", "SOCK_RDM")
-const c_SOCK_RDM = 4        /* reliably-delivered message */
+const c_SOCK_RDM = 4		/* reliably-delivered message */
 @property("value.c_alias", "SOCK_SEQPACKET")
 const c_SOCK_SEQPACKET = 5  /* sequenced packet stream */
 //#ifdef _KERNEL
@@ -101,7 +101,7 @@ const c_AF_KEY = 30
 const c_PSEUDO_AF_HDRCMPLT = 31		/* Used by BPF to not rewrite headers
 					   in interface output routine */
 const c_AF_BLUETOOTH = 32		/* Bluetooth */
-const c_AF_MPLS = 33              /* MPLS */
+const c_AF_MPLS = 33			  /* MPLS */
 const c_PSEUDO_AF_PFLOW = 34		/* pflow */
 const c_PSEUDO_AF_PIPEX = 35		/* PIPEX */
 const c_AF_MAX = 36

@@ -15,117 +15,117 @@ var globalArray: [10]Int32 = constantArray
 
 
 func f0(x: [10]Char8) {
-    var local_copy_of_x = x
-    printf("f0(\"%s\")\n", &local_copy_of_x)
+	var local_copy_of_x = x
+	printf("f0(\"%s\")\n", &local_copy_of_x)
 }
 
 
 func main() -> Int {
-    // generic array [4]Char8 will be implicit casted to [10]Char8
-    f0("hi!")
+	// generic array [4]Char8 will be implicit casted to [10]Char8
+	f0("hi!")
 
-    var i = 0
-    while i < 10 {
-        let a = globalArray[i]
-        printf("globalArray[%i] = %i\n", i, a)
-        i = i + 1
-    }
+	var i = 0
+	while i < 10 {
+		let a = globalArray[i]
+		printf("globalArray[%i] = %i\n", i, a)
+		i = i + 1
+	}
 
-    printf("------------------------------------\n")
+	printf("------------------------------------\n")
 
-    var localArray: [3]Int32 = [4, 5, 6]
+	var localArray: [3]Int32 = [4, 5, 6]
 
-    i = 0
-    while i < 3 {
-        let a = localArray[i]
-        printf("localArray[%i] = %i\n", i, a)
-        i = i + 1
-    }
+	i = 0
+	while i < 3 {
+		let a = localArray[i]
+		printf("localArray[%i] = %i\n", i, a)
+		i = i + 1
+	}
 
-    printf("------------------------------------\n")
+	printf("------------------------------------\n")
 
-    var globalArrayPtr: *[]Int32
-    globalArrayPtr = &globalArray
+	var globalArrayPtr: *[]Int32
+	globalArrayPtr = &globalArray
 
-    i = 0
-    while i < 3 {
-        let a = globalArrayPtr[i]
-        printf("globalArrayPtr[%i] = %i\n", i, a)
-        i = i + 1
-    }
+	i = 0
+	while i < 3 {
+		let a = globalArrayPtr[i]
+		printf("globalArrayPtr[%i] = %i\n", i, a)
+		i = i + 1
+	}
 
-    printf("------------------------------------\n")
+	printf("------------------------------------\n")
 
-    var localArrayPtr: *[]Int32
-    localArrayPtr = &localArray
+	var localArrayPtr: *[]Int32
+	localArrayPtr = &localArray
 
-    i = 0
-    while i < 3 {
-        let a = localArrayPtr[i]
-        printf("localArrayPtr[%i] = %i\n", i, a)
-        i = i + 1
-    }
+	i = 0
+	while i < 3 {
+		let a = localArrayPtr[i]
+		printf("localArrayPtr[%i] = %i\n", i, a)
+		i = i + 1
+	}
 
-    // assign array to array 1
-    // (with equal types)
-    var a: [3]Int32 = [1, 2, 3]
-    printf("a[0] = %i\n", a[0])
-    printf("a[1] = %i\n", a[1])
-    printf("a[2] = %i\n", a[2])
+	// assign array to array 1
+	// (with equal types)
+	var a: [3]Int32 = [1, 2, 3]
+	printf("a[0] = %i\n", a[0])
+	printf("a[1] = %i\n", a[1])
+	printf("a[2] = %i\n", a[2])
 
-    // create (and initialize) new variable b
-    // (with type [3]Int32)
-    // this variable are copy of array a
-    var b = a
-    printf("b[0] = %i\n", b[0])
-    printf("b[1] = %i\n", b[1])
-    printf("b[2] = %i\n", b[2])
+	// create (and initialize) new variable b
+	// (with type [3]Int32)
+	// this variable are copy of array a
+	var b = a
+	printf("b[0] = %i\n", b[0])
+	printf("b[1] = %i\n", b[1])
+	printf("b[2] = %i\n", b[2])
 
-    // check equality between two arrays (by value)
-    if a == b {
-        printf("a == b\n")
-    } else {
-        printf("a != b\n")
-    }
+	// check equality between two arrays (by value)
+	if a == b {
+		printf("a == b\n")
+	} else {
+		printf("a != b\n")
+	}
 
-    // assign array to array 2
-    // (with array extending)
-    var c: [3]Int32 = [10, 20, 30]
-    var d: [6]Int32 = [6]Int32 c
-    printf("d[0] = %i\n", d[0])
-    printf("d[1] = %i\n", d[1])
-    printf("d[2] = %i\n", d[2])
-    printf("d[3] = %i\n", d[3])
-    printf("d[4] = %i\n", d[4])
-    printf("d[5] = %i\n", d[5])
-
-
-    //
-    // Check assination local literal array
-    //
+	// assign array to array 2
+	// (with array extending)
+	var c: [3]Int32 = [10, 20, 30]
+	var d: [6]Int32 = [6]Int32 c
+	printf("d[0] = %i\n", d[0])
+	printf("d[1] = %i\n", d[1])
+	printf("d[2] = %i\n", d[2])
+	printf("d[3] = %i\n", d[3])
+	printf("d[4] = %i\n", d[4])
+	printf("d[5] = %i\n", d[5])
 
 
-    //let aa = [111] + [222] + [333]
-    // cons literal array from var items
-    var int100: Int = 100
-    var int200: Int = 200
-    var int300: Int = 300
-    // immutable, non immediate value (array)
-    let init_array = [int100, int200, int300]
+	//
+	// Check assination local literal array
+	//
 
-    // check local literal array assignation to local array
-    var e: [4]Int32
-    e = init_array
-    printf("e[0] = %i\n", e[0])
-    printf("e[1] = %i\n", e[1])
-    printf("e[2] = %i\n", e[2])
 
-    // check local literal array assignation to global array
-    globalArray = init_array
-    printf("globalArray[%i] = %i\n", Int32 0, globalArray[0])
-    printf("globalArray[%i] = %i\n", Int32 1, globalArray[1])
-    printf("globalArray[%i] = %i\n", Int32 2, globalArray[2])
+	//let aa = [111] + [222] + [333]
+	// cons literal array from var items
+	var int100: Int = 100
+	var int200: Int = 200
+	var int300: Int = 300
+	// immutable, non immediate value (array)
+	let init_array = [int100, int200, int300]
 
-    return 0
+	// check local literal array assignation to local array
+	var e: [4]Int32
+	e = init_array
+	printf("e[0] = %i\n", e[0])
+	printf("e[1] = %i\n", e[1])
+	printf("e[2] = %i\n", e[2])
+
+	// check local literal array assignation to global array
+	globalArray = init_array
+	printf("globalArray[%i] = %i\n", Int32 0, globalArray[0])
+	printf("globalArray[%i] = %i\n", Int32 1, globalArray[1])
+	printf("globalArray[%i] = %i\n", Int32 2, globalArray[2])
+
+	return 0
 }
 

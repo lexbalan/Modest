@@ -24,22 +24,22 @@ var ptr_to_string32: *[]Char32 = "S-t-r-i-n-g-Ω 🐀🎉🦄"
 
 
 func putc8(c: Char8) {
-    printf("%c", c)
+	printf("%c", c)
 }
 
 func putc16(c: Char16) {
-    printf("%c", c)
+	printf("%c", c)
 }
 
 
 func main() -> Int {
-    utf8_putchar("A")
-    printf("\n")
+	utf8_putchar("A")
+	printf("\n")
 	utf16_putchar("Ω")
-    printf("\n")
+	printf("\n")
 	utf32_putchar("🦄")
 
-    printf("\n\n")
+	printf("\n\n")
 
 	utf8_puts(&string8)
 	printf("\n")
@@ -56,6 +56,6 @@ func main() -> Int {
 	utf32_puts(ptr_to_string32)
 	printf("\n")
 
-    return 0
+	return 0
 }
 

@@ -6,16 +6,16 @@ import "libc/stdio"
 
 
 func main() -> Int {
-    printf("tag test")
+	printf("tag test")
 
-    let p = *Int32 0
-    printf("*p = %i\n", *p)
+	let p = *Int32 0
+	printf("*p = %i\n", *p)
 
-    var a: Int32
-    var b: Int16 = Int16 a
+	var a: Int32
+	var b: Int16 = Int16 a
 
-    //var s : Tag = #justSymbol
+	//var s : Tag = #justSymbol
 
-    return 0
+	return 0
 }
 

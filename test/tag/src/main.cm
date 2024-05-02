@@ -9,37 +9,37 @@ import "libc/stdio"
 
 
 type Point record {
-    x: Int32
-    y: Int32
+	x: Int32
+	y: Int32
 }
 
 var ab: [10][10]Nat32 = [
-    [1, 2]
-    [3, 4]
+	[1, 2]
+	[3, 4]
 ]
 
 
 func main() -> Int {
-    printf("tag test")
+	printf("tag test")
 
-    let p = *Int32 0
-    printf("*p = %i\n", *p)
+	let p = *Int32 0
+	printf("*p = %i\n", *p)
 
-    var a : Int32
-    var b : Int16 = Int16 a
+	var a : Int32
+	var b : Int16 = Int16 a
 
-    var arr: [10]Int32
-    arr = []
+	var arr: [10]Int32
+	arr = []
 
-    var p0: Point
-    p0 = {}
+	var p0: Point
+	p0 = {}
 
-    //var s : Tag = #justSymbol
+	//var s : Tag = #justSymbol
 
-    let pp = *Int32 0
-    printf("*pp = %i\n", *pp)
+	let pp = *Int32 0
+	printf("*pp = %i\n", *pp)
 
 
-    return 0
+	return 0
 }
 

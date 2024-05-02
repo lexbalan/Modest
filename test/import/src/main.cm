@@ -9,14 +9,14 @@ const library = "libc"
 
 // alternative syntax?
 import {
-    library + "/stdio"
-    library + "/libc"
-    library + "/math"
+	library + "/stdio"
+	library + "/libc"
+	library + "/math"
 }
 
 
 func main() -> Int {
-    printf("Smart import test\n")
-    return 0
+	printf("Smart import test\n")
+	return 0
 }
 
