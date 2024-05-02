@@ -31,7 +31,7 @@ typeStr16 = None
 typeStr32 = None
 typeFreePointer = None
 typeVA_List = None
-typeSizeof = None
+#typeSizeof = None
 
 
 
