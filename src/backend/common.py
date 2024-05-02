@@ -7,56 +7,56 @@ f = None
 indent_level = 0
 
 def indent_up():
-    global indent_level
-    indent_level = indent_level + 1
+	global indent_level
+	indent_level = indent_level + 1
 
 
 def indent_down():
-    global indent_level
-    indent_level = indent_level - 1
+	global indent_level
+	indent_level = indent_level - 1
 
 
 def indentation(symbol):
-    global indent_level
-    return symbol * indent_level
+	global indent_level
+	return symbol * indent_level
 
 
 def nl_indentation(symbol):
-    global indent_level
-    return "\n" + symbol * indent_level
+	global indent_level
+	return "\n" + symbol * indent_level
 
 
 def ind(symbol):
-    f.write(indentation(symbol))
+	f.write(indentation(symbol))
 
 
 
 def out(s):
-    global f
-    f.write(str(s))
+	global f
+	f.write(str(s))
 
 
 def output_open(fname):
-    global f
-    dirname = os.path.dirname(fname)
-    if dirname != '':
-        os.makedirs(dirname, exist_ok=True)
-    f = open(fname, "w")
+	global f
+	dirname = os.path.dirname(fname)
+	if dirname != '':
+		os.makedirs(dirname, exist_ok=True)
+	f = open(fname, "w")
 
 
 def output_close():
-    global f
-    f.close()
+	global f
+	f.close()
 
 
 def print_list_by(items, method, separator=', '):
-    i = 0
-    while i < len(items):
-        if i > 0:
-            out(separator)
-        item = items[i]
-        method(item)
-        i = i + 1
+	i = 0
+	while i < len(items):
+		if i > 0:
+			out(separator)
+		item = items[i]
+		method(item)
+		i = i + 1
 
 
 

@@ -4,31 +4,31 @@ from error import info
 EOF_TOKEN = ('eof', '', None)
 
 class Tokenizer:
-    def __init__(self, rules):
-        self.rules = rules
+	def __init__(self, rules):
+		self.rules = rules
 
-    def run(self, src):
-        tokens = []
-        while True:
+	def run(self, src):
+		tokens = []
+		while True:
 
-            # EOF?
-            if src.lookup(1) == '':
-                return tokens + [EOF_TOKEN]
+			# EOF?
+			if src.lookup(1) == '':
+				return tokens + [EOF_TOKEN]
 
-            pos_before = src.getpos()
-            for rule in self.rules:
+			pos_before = src.getpos()
+			for rule in self.rules:
 
-                result = rule(src)
+				result = rule(src)
 
-                if result == False:
-                    src.setpos(pos_before)
-                    continue
+				if result == False:
+					src.setpos(pos_before)
+					continue
 
-                if result != None:
-                    tokens.append(result)
+				if result != None:
+					tokens.append(result)
 
-                break
+				break
 
-        return None
+		return None
 
 

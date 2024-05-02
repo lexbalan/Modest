@@ -6,314 +6,314 @@ import hlir.type as hlir_type
 
 
 def value_is_bad(x):
-    return x['kind'] == 'bad'
+	return x['kind'] == 'bad'
 
 
 def value_is_immediate(x):
-    if not 'immediate' in x:
-        print(x)
-    assert('immediate' in x)
-    return x['immediate']
+	if not 'immediate' in x:
+		print(x)
+	assert('immediate' in x)
+	return x['immediate']
 
 
 # Any immediate value are immutable,
 # but not any immutable value are immediate
 def value_is_immutable(x):
-    if x['immutable']:
-        return True
+	if x['immutable']:
+		return True
 
-    if value_is_immediate(x):
-        return True
+	if value_is_immediate(x):
+		return True
 
-    return not x['kind'] in [
-        'var', 'access', 'access_ptr', 'index', 'index_ptr', 'deref'
-    ]
+	return not x['kind'] in [
+		'var', 'access', 'access_ptr', 'index', 'index_ptr', 'deref'
+	]
 
 
 
 
 def _value_is_zero_array(x):
-    if not value_is_immediate(x):
-        return False
-    for item in x['asset']:
-        if not value_is_zero(item):
-            return False
-    return True
+	if not value_is_immediate(x):
+		return False
+	for item in x['asset']:
+		if not value_is_zero(item):
+			return False
+	return True
 
 
 def _value_is_zero_record(x):
-    if not value_is_immediate(x):
-        return False
-    for item in x['asset']:
-        if not value_is_zero(item['value']):
-            return False
-    return True
+	if not value_is_immediate(x):
+		return False
+	for item in x['asset']:
+		if not value_is_zero(item['value']):
+			return False
+	return True
 
 
 # Only for immediate value (!)
 def value_is_zero(x):
-    if not value_is_immediate(x):
-        return False
-    t = x['type']
-    if hlir_type.type_is_array(t):
-        return _value_is_zero_array(x)
-    elif hlir_type.type_is_record(t):
-        return _value_is_zero_record(x)
+	if not value_is_immediate(x):
+		return False
+	t = x['type']
+	if hlir_type.type_is_array(t):
+		return _value_is_zero_array(x)
+	elif hlir_type.type_is_record(t):
+		return _value_is_zero_record(x)
 
-    return x['asset'] == 0
+	return x['asset'] == 0
 
 
 
 
 
 def value_attribute_add(v, a):
-    v['att'].append(a)
+	v['att'].append(a)
 
 
 def value_attribute_check(v, a):
-    return a in v['att']
+	return a in v['att']
 
 
 
 def value_load(x):
-    """if x['kind'] == 'var':
-        x['att'].append('load')
-        pass
-    elif x['kind'] == 'index':
-        x['att'].append('load')
-        pass
-    elif x['kind'] == 'access':
-        x['att'].append('load')
-        pass
-    elif x['kind'] == 'deref':
-        x['att'].append('load')
-        pass"""
+	"""if x['kind'] == 'var':
+		x['att'].append('load')
+		pass
+	elif x['kind'] == 'index':
+		x['att'].append('load')
+		pass
+	elif x['kind'] == 'access':
+		x['att'].append('load')
+		pass
+	elif x['kind'] == 'deref':
+		x['att'].append('load')
+		pass"""
 
-    return x
+	return x
 
 
 
 
 def value_bad(x):
-    ti = None
-    if 'ti' in x:
-        ti = x['ti']
-    return {
-        'isa': 'value',
-        'kind': 'bad',
-        'id': hlir_id('_', ti=ti),
-        'type': hlir_type.hlir_type_bad({'ti': ti}),
-        'immutable': False,
-        'immediate': False,
-        'att': [],
-        'ast_value': x,
-        'expr_ti': ti,
-        'ti': ti
-    }
+	ti = None
+	if 'ti' in x:
+		ti = x['ti']
+	return {
+		'isa': 'value',
+		'kind': 'bad',
+		'id': hlir_id('_', ti=ti),
+		'type': hlir_type.hlir_type_bad({'ti': ti}),
+		'immutable': False,
+		'immediate': False,
+		'att': [],
+		'ast_value': x,
+		'expr_ti': ti,
+		'ti': ti
+	}
 
 
 def value_terminal(t, imm, ti):
-    return {
-        'isa': 'value',
-        'kind': 'literal',
-        'type': t,
-        'asset': imm,
-        'immediate': False,
-        'immutable': False,
-        'att': [],
-        'nl_end': 0,
-        'nl': 0,
-        'expr_ti': ti,
-        'ti': ti
-    }
+	return {
+		'isa': 'value',
+		'kind': 'literal',
+		'type': t,
+		'asset': imm,
+		'immediate': False,
+		'immutable': False,
+		'att': [],
+		'nl_end': 0,
+		'nl': 0,
+		'expr_ti': ti,
+		'ti': ti
+	}
 
 
 def value_zero(t, ti):
-    imm_val = 0
+	imm_val = 0
 
-    if hlir_type.type_is_composite(t):
-        imm_val = []
+	if hlir_type.type_is_composite(t):
+		imm_val = []
 
-    return value_terminal(t, imm_val, ti)
+	return value_terminal(t, imm_val, ti)
 
 
 
 def value_var(id, type, ti):
-    return {
-        'isa': 'value',
-        'kind': 'var',
-        'id': id,
-        'type': type,
-        'usecnt': 0,
-        'immediate': False,
-        'immutable': False,
-        'is_global': False,
-        'att': [],
-        'expr_ti': ti,
-        'ti': ti
-    }
+	return {
+		'isa': 'value',
+		'kind': 'var',
+		'id': id,
+		'type': type,
+		'usecnt': 0,
+		'immediate': False,
+		'immutable': False,
+		'is_global': False,
+		'att': [],
+		'expr_ti': ti,
+		'ti': ti
+	}
 
 
 # hlir_const is an immutable value
 # (not necessary immediate)
 def value_const(id, type, value, ti):
-    return {
-        'isa': 'value',
-        'kind': 'const',
-        'id': id,
-        'type': type,
-        'value': value,
-        'usecnt': 0,
-        'immediate': False,
-        'immutable': True,
-        'att': [],
-        'expr_ti': ti,
-        'ti': ti
-    }
+	return {
+		'isa': 'value',
+		'kind': 'const',
+		'id': id,
+		'type': type,
+		'value': value,
+		'usecnt': 0,
+		'immediate': False,
+		'immutable': True,
+		'att': [],
+		'expr_ti': ti,
+		'ti': ti
+	}
 
 
 def value_func(id, type, ti):
-    return {
-        'isa': 'value',
-        'kind': 'func',
-        'id': id,
-        'type': type,
-        'usecnt': 0,
-        'immediate': False,
-        'immutable': True,
-        'att': [],
-        'expr_ti': ti,
-        'ti': ti
-    }
+	return {
+		'isa': 'value',
+		'kind': 'func',
+		'id': id,
+		'type': type,
+		'usecnt': 0,
+		'immediate': False,
+		'immutable': True,
+		'att': [],
+		'expr_ti': ti,
+		'ti': ti
+	}
 
 
 def value_un(k, value, type, ti):
-    return {
-        'isa': 'value',
-        'kind': k,
-        'value': value,
-        'type': type,
-        'immediate': False,
-        'immutable': True,
-        'att': [],
-        'expr_ti': ti,
-        'ti': ti
-    }
+	return {
+		'isa': 'value',
+		'kind': k,
+		'value': value,
+		'type': type,
+		'immediate': False,
+		'immutable': True,
+		'att': [],
+		'expr_ti': ti,
+		'ti': ti
+	}
 
 
 def value_bin(op, l, r, t, ti):
-    return {
-        'isa': 'value',
-        'kind': op,
-        'left': l,
-        'right': r,
-        'type': t,
-        'immediate': False,
-        'immutable': True,
-        'att': [],
-        'expr_ti': ti,
-        'ti': ti
-    }
+	return {
+		'isa': 'value',
+		'kind': op,
+		'left': l,
+		'right': r,
+		'type': t,
+		'immediate': False,
+		'immutable': True,
+		'att': [],
+		'expr_ti': ti,
+		'ti': ti
+	}
 
 
 def value_call(func, rettype, args, ti):
-    return {
-        'isa': 'value',
-        'kind': 'call',
-        'func': func,
-        'args': args,
-        'type': rettype,
-        'immediate': False,
-        'immutable': True,
-        'att': [],
-        'expr_ti': ti,
-        'ti': ti
-    }
+	return {
+		'isa': 'value',
+		'kind': 'call',
+		'func': func,
+		'args': args,
+		'type': rettype,
+		'immediate': False,
+		'immutable': True,
+		'att': [],
+		'expr_ti': ti,
+		'ti': ti
+	}
 
 
 def value_index_array(array, index, ti):
-    return {
-        'isa': 'value',
-        'kind': 'index',
-        'array': array,
-        'index': index,
-        'type': array['type']['of'],
-        'immediate': False,
-        'immutable': False,
-        'att': [],
-        'expr_ti': ti,
-        'ti': ti
-    }
+	return {
+		'isa': 'value',
+		'kind': 'index',
+		'array': array,
+		'index': index,
+		'type': array['type']['of'],
+		'immediate': False,
+		'immutable': False,
+		'att': [],
+		'expr_ti': ti,
+		'ti': ti
+	}
 
 
 def value_index_array_ptr(ptr_to_array, index, ti):
-    return {
-        'isa': 'value',
-        'kind': 'index_ptr',
-        'pointer': ptr_to_array,
-        'index': index,
-        'type': ptr_to_array['type']['to']['of'],
-        'immediate': False,
-        'immutable': False,
-        'att': [],
-        'expr_ti': ti,
-        'ti': ti
-    }
+	return {
+		'isa': 'value',
+		'kind': 'index_ptr',
+		'pointer': ptr_to_array,
+		'index': index,
+		'type': ptr_to_array['type']['to']['of'],
+		'immediate': False,
+		'immutable': False,
+		'att': [],
+		'expr_ti': ti,
+		'ti': ti
+	}
 
 
 def value_access_record(record, field, ti):
-    return {
-        'isa': 'value',
-        'kind': 'access',
-        'record': record,
-        'field': field,
-        'record_type': record['type'],
-        'type': field['type'],
-        'immediate': False,
-        'immutable': False,
-        'att': [],
-        'expr_ti': ti,
-        'ti': ti
-    }
+	return {
+		'isa': 'value',
+		'kind': 'access',
+		'record': record,
+		'field': field,
+		'record_type': record['type'],
+		'type': field['type'],
+		'immediate': False,
+		'immutable': False,
+		'att': [],
+		'expr_ti': ti,
+		'ti': ti
+	}
 
 
 def value_access_record_ptr(ptr_to_record, field, ti):
-    return {
-        'isa': 'value',
-        'kind': 'access_ptr',
-        'pointer': ptr_to_record,
-        'field': field,
-        'record_type': ptr_to_record['type']['to'],
-        'type': field['type'],
-        'immediate': False,
-        'immutable': False,
-        'att': [],
-        'expr_ti': ti,
-        'ti': ti
-    }
+	return {
+		'isa': 'value',
+		'kind': 'access_ptr',
+		'pointer': ptr_to_record,
+		'field': field,
+		'record_type': ptr_to_record['type']['to'],
+		'type': field['type'],
+		'immediate': False,
+		'immutable': False,
+		'att': [],
+		'expr_ti': ti,
+		'ti': ti
+	}
 
 
 def value_cons_node(type, value, method, ti):
-    assert(method in ['implicit', 'explicit'])
-    assert(value['isa'] == 'value')
-    assert(type['isa'] == 'type')
-    nv = {
-        'isa': 'value',
-        'kind': 'cons',
-        'value': value,
-        'type': type,
-        'immediate': False,
-        'immutable': True,
-        'att': [],
-        'method': method,
-        'expr_ti': ti,
-        'ti': ti
-    }
+	assert(method in ['implicit', 'explicit'])
+	assert(value['isa'] == 'value')
+	assert(type['isa'] == 'type')
+	nv = {
+		'isa': 'value',
+		'kind': 'cons',
+		'value': value,
+		'type': type,
+		'immediate': False,
+		'immutable': True,
+		'att': [],
+		'method': method,
+		'expr_ti': ti,
+		'ti': ti
+	}
 
-    if 'nl_end' in value:
-        nv['nl_end'] = value['nl_end']
+	if 'nl_end' in value:
+		nv['nl_end'] = value['nl_end']
 
-    return nv
+	return nv
 
 
 # cons immediate такой же cons
@@ -321,126 +321,126 @@ def value_cons_node(type, value, method, ti):
 # привести и взять себе; Таким образом мы идем как литерал нода
 # и в то же время как cons нода
 def value_cons_immediate(t, v, method, ti):
-    assert(method in ['implicit', 'explicit'])
-    nv = value_cons_node(t, v, method, ti)
+	assert(method in ['implicit', 'explicit'])
+	nv = value_cons_node(t, v, method, ti)
 
-    nv['kind'] = 'cons'
-    nv['asset'] = v['asset']
-    nv['immediate'] = True
+	nv['kind'] = 'cons'
+	nv['asset'] = v['asset']
+	nv['immediate'] = True
 
-    if 'hexadecimal' in v['att']:
-        nv['att'].append('hexadecimal')
+	if 'hexadecimal' in v['att']:
+		nv['att'].append('hexadecimal')
 
-    if 'nl_end' in v:
-        nv['nl_end'] = v['nl_end']
+	if 'nl_end' in v:
+		nv['nl_end'] = v['nl_end']
 
-    return nv
+	return nv
 
 
 
 def value_sizeof(of, ti):
-    size = hlir_type.type_get_size(of)
-    from foundation import typeSizeof
-    return {
-        'isa': 'value',
-        'kind': 'sizeof',
-        'of': of,
-        'type': typeSizeof,
-        'asset': size,
-        'immediate': True,
-        'immutable': True,
-        'att': [],
-        'expr_ti': ti,
-        'ti': ti
-    }
+	size = hlir_type.type_get_size(of)
+	from foundation import typeSizeof
+	return {
+		'isa': 'value',
+		'kind': 'sizeof',
+		'of': of,
+		'type': typeSizeof,
+		'asset': size,
+		'immediate': True,
+		'immutable': True,
+		'att': [],
+		'expr_ti': ti,
+		'ti': ti
+	}
 
 
 def value_alignof(of, ti):
-    align = hlir_type.type_get_align(of)
-    from foundation import typeSizeof
-    return {
-        'isa': 'value',
-        'kind': 'alignof',
-        'of': of,
-        'type': typeSizeof,
-        'asset': align,
-        'immediate': True,
-        'immutable': True,
-        'att': [],
-        'expr_ti': ti,
-        'ti': ti
-    }
+	align = hlir_type.type_get_align(of)
+	from foundation import typeSizeof
+	return {
+		'isa': 'value',
+		'kind': 'alignof',
+		'of': of,
+		'type': typeSizeof,
+		'asset': align,
+		'immediate': True,
+		'immutable': True,
+		'att': [],
+		'expr_ti': ti,
+		'ti': ti
+	}
 
 
 def value_offsetof(of, field_id, ti):
-    field = hlir_type.record_field_get(of, field_id['str'])
-    if field == None:
-        error("undefined field '%s'" % field_id['str'], field_id['ti'])
-        return value_bad({'ti': ti})
+	field = hlir_type.record_field_get(of, field_id['str'])
+	if field == None:
+		error("undefined field '%s'" % field_id['str'], field_id['ti'])
+		return value_bad({'ti': ti})
 
-    offset = field['offset']
-    from foundation import typeSizeof
-    return {
-        'isa': 'value',
-        'kind': 'offsetof',
-        'of': of,
-        'field': field_id,
-        'type': typeSizeof,
-        'asset': offset,
-        'immediate': True,
-        'immutable': True,
-        'att': [],
-        'expr_ti': ti,
-        'ti': ti
-    }
+	offset = field['offset']
+	from foundation import typeSizeof
+	return {
+		'isa': 'value',
+		'kind': 'offsetof',
+		'of': of,
+		'field': field_id,
+		'type': typeSizeof,
+		'asset': offset,
+		'immediate': True,
+		'immutable': True,
+		'att': [],
+		'expr_ti': ti,
+		'ti': ti
+	}
 
 
 def value_lengthof(of_value, ti):
-    length = of_value['type']['volume']['asset']
-    from foundation import typeSizeof
-    return {
-        'isa': 'value',
-        'kind': 'lengthof',
-        'of_value': of_value,
-        'type': typeSizeof,
-        'asset': length,
-        'immediate': True,
-        'immutable': True,
-        'att': [],
-        'expr_ti': ti,
-        'ti': ti
-    }
+	length = of_value['type']['volume']['asset']
+	from foundation import typeSizeof
+	return {
+		'isa': 'value',
+		'kind': 'lengthof',
+		'of_value': of_value,
+		'type': typeSizeof,
+		'asset': length,
+		'immediate': True,
+		'immutable': True,
+		'att': [],
+		'expr_ti': ti,
+		'ti': ti
+	}
 
 
 
 
 def value_print(x, msg="value_print"):
-    assert(x['isa'] == 'value')
-    print("\n\nvalue_print:")
+	assert(x['isa'] == 'value')
+	print("\n\nvalue_print:")
 
-    if 'expr_ti' in x:
-        info(msg, x['expr_ti'])
-    else:
-        info(msg, x['ti'])
+	if 'expr_ti' in x:
+		info(msg, x['expr_ti'])
+	else:
+		info(msg, x['ti'])
 
-    print("isa: " + str(x['isa']))
-    print("kind: " + str(x['kind']))
-    print("type: ", end=""); hlir_type.type_print(x['type']); print()
-    print("att: " + str(x['att']))
+	print("isa: " + str(x['isa']))
+	print("kind: " + str(x['kind']))
+	print("type: ", end=""); hlir_type.type_print(x['type']); print()
+	print("att: " + str(x['att']))
 
 
-    if 'immediate' in x:
-        print('immediate = ' + str(x['immediate']))
+	if 'immediate' in x:
+		print('immediate = ' + str(x['immediate']))
 
-    if 'immutable' in x:
-        print('immutable = ' + str(x['immutable']))
+	if 'immutable' in x:
+		print('immutable = ' + str(x['immutable']))
 
-    print("additional fields:")
+	print("additional fields:")
 
-    for prop in x:
-        if not prop in ['isa', 'kind', 'type', 'att', 'ti', 'immediate', 'immutable', 'expr_ti']:
-            print(" - %s" % prop)
+	for prop in x:
+		if not prop in ['isa', 'kind', 'type', 'att', 'ti', 'immediate', 'immutable', 'expr_ti']:
+			print(" - %s" % prop)
 
-    print()
+	print()
 
 
