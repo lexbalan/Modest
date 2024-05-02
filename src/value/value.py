@@ -5,6 +5,7 @@ from util import get_item_with_id
 import hlir.type as hlir_type
 
 
+
 def value_is_bad(x):
 	return x['kind'] == 'bad'
 
@@ -61,8 +62,6 @@ def value_is_zero(x):
 		return _value_is_zero_record(x)
 
 	return x['asset'] == 0
-
-
 
 
 
@@ -340,13 +339,12 @@ def value_cons_immediate(t, v, method, ti):
 
 def value_sizeof(of, ti):
 	size = hlir_type.type_get_size(of)
-	#from foundation import typeSizeof
-	type_result = hlir_type.hlir_type_generic_int_for(size, signed=False, ti=ti)
+	type = hlir_type.hlir_type_generic_int_for(size, signed=False, ti=ti)
 	return {
 		'isa': 'value',
 		'kind': 'sizeof',
 		'of': of,
-		'type': type_result,
+		'type': type,
 		'asset': size,
 		'immediate': True,
 		'immutable': True,
@@ -358,13 +356,12 @@ def value_sizeof(of, ti):
 
 def value_alignof(of, ti):
 	align = hlir_type.type_get_align(of)
-	#from foundation import typeSizeof
-	type_result = hlir_type.hlir_type_generic_int_for(align, signed=False, ti=ti)
+	type = hlir_type.hlir_type_generic_int_for(align, signed=False, ti=ti)
 	return {
 		'isa': 'value',
 		'kind': 'alignof',
 		'of': of,
-		'type': type_result,
+		'type': type,
 		'asset': align,
 		'immediate': True,
 		'immutable': True,
@@ -381,14 +378,13 @@ def value_offsetof(of, field_id, ti):
 		return value_bad({'ti': ti})
 
 	offset = field['offset']
-	#from foundation import typeSizeof
-	type_result = hlir_type.hlir_type_generic_int_for(offset, signed=False, ti=ti)
+	type = hlir_type.hlir_type_generic_int_for(offset, signed=False, ti=ti)
 	return {
 		'isa': 'value',
 		'kind': 'offsetof',
 		'of': of,
 		'field': field_id,
-		'type': type_result,
+		'type': type,
 		'asset': offset,
 		'immediate': True,
 		'immutable': True,
@@ -400,13 +396,12 @@ def value_offsetof(of, field_id, ti):
 
 def value_lengthof(of_value, ti):
 	length = of_value['type']['volume']['asset']
-	#from foundation import typeSizeof
-	type_result = hlir_type.hlir_type_generic_int_for(length, signed=False, ti=ti)
+	type = hlir_type.hlir_type_generic_int_for(length, signed=False, ti=ti)
 	return {
 		'isa': 'value',
 		'kind': 'lengthof',
 		'of_value': of_value,
-		'type': type_result,
+		'type': type,
 		'asset': length,
 		'immediate': True,
 		'immutable': True,
