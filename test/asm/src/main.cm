@@ -21,7 +21,14 @@ func sumsub64(a: Int64, b: Int64) -> Unit {
 	var sum: Int64
 	var sub: Int64
 
-	__asm("add %0, %2, %3\nsub %1, %2, %3\n", [["=&r", sum], ["=&r", sub]], [["r", a], ["r", b]], ["cc"])
+	//let s = 1 + 2
+
+	__asm(
+		text = "add %0, %2, %3\nsub %1, %2, %3\n"
+		outputs = [["=&r", sum], ["=&r", sub]]
+		inputs = [["r", a], ["r", b]]
+		clobbers = ["cc"]
+	)
 
 	printf("sumsub64 sum = %lld\n", sum)
 	printf("sumsub64 sub = %lld\n", sub)

@@ -1,4 +1,4 @@
-// test/1.hello_world/src/main.cm
+// test/let/src/main.cm
 
 #include <stdint.h>
 #include <stdbool.h>

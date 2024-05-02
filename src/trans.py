@@ -922,11 +922,11 @@ def do_value_call(x):
 	# for lengthof()
 	if x['left']['kind'] == 'id':
 		if x['left']['id']['str'] == 'lengthof':
-			arg = do_rvalue(x['args'][0])
+			arg = do_rvalue(x['args'][0][1])
 			if hlir_type.type_is_array(arg['type']):
 				return value_lengthof(arg, x['ti'])
 			else:
-				error("expected array value", x['args'][0]['ti'])
+				error("expected array value", x['args'][0][1]['ti'])
 				return value_bad(x)
 
 
@@ -959,13 +959,14 @@ def do_value_call(x):
 			error("too many args", x)
 			return value_bad(x)
 
+
 	args = []
 
 	# normal args
 	i = 0
 	while i < npars:
 		param = params[i]
-		aa = x['args'][i]
+		aa = x['args'][i][1]
 		arg = do_rvalue(aa)
 
 		if not value_is_bad(arg):
@@ -984,7 +985,7 @@ def do_value_call(x):
 
 	# extra_args rest args
 	while i < nargs:
-		a = x['args'][i]
+		a = x['args'][i][1]
 		arg = do_rvalue(a)
 		arg_type = arg['type']
 
@@ -1001,7 +1002,7 @@ def do_value_call(x):
 		func_id_str = f['id']['str']
 		if func_id_str in ['printf', 'scanf', 'print']:
 			expected_pointers = func_id_str == 'scanf'
-			first_arg = x['args'][0]
+			first_arg = x['args'][0][1]
 			if first_arg['kind'] == 'string':
 				specs = get_cspecs(first_arg['str'])
 				extra_args_check(specs, extra_args, expected_pointers)
@@ -1610,11 +1611,11 @@ def do_stmt_comment_block(x):
 def do_stmt_asm(x):
 	xargs = x['args']
 
-	asm_text = do_rvalue(xargs[0])
+	asm_text = do_rvalue(xargs[0][1])
 
-	xoutputs = xargs[1]
-	xinputs = xargs[2]
-	xclobbers = xargs[3]
+	xoutputs = xargs[1][1]
+	xinputs = xargs[2][1]
+	xclobbers = xargs[3][1]
 
 	outputs = []
 	for x in xoutputs['items']:
