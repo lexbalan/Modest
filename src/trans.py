@@ -1307,8 +1307,9 @@ def do_rvalue(x):
 	return value_load(v)
 
 
-
 def do_value(x):
+	assert(x['isa'] == 'ast_value')
+
 	k = x['kind']
 
 	v = None
