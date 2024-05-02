@@ -918,7 +918,6 @@ def do_value_deref(x):
 
 
 def do_value_call(x):
-
 	# for lengthof()
 	if x['left']['kind'] == 'id':
 		if x['left']['id']['str'] == 'lengthof':
@@ -966,8 +965,20 @@ def do_value_call(x):
 	i = 0
 	while i < npars:
 		param = params[i]
-		aa = x['args'][i][1]
-		arg = do_rvalue(aa)
+		aa = x['args'][i]
+
+
+		# check param name (if assigned)
+		if aa[0] != None:
+			if aa[0] != 'id':
+				pass
+			param_id_str = param['id']['str']
+			tasrget_param_id_str = aa[0]['id']['str']
+			if tasrget_param_id_str != param_id_str:
+				error("bad parameter id", aa[0]['ti'])
+
+
+		arg = do_rvalue(aa[1])
 
 		if not value_is_bad(arg):
 			arg = value_cons_implicit_check(param['type'], arg)
