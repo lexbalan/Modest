@@ -1054,7 +1054,7 @@ def do_value_index(x):
     v = None
 
     if via_pointer:
-        v = value_index_array_by_ptr(left, index, ti=x['ti'])
+        v = value_index_array_ptr(left, index, ti=x['ti'])
     else:
         v = value_index_array(left, index, ti=x['ti'])
 
@@ -1113,7 +1113,7 @@ def do_value_access(x):
         return value_bad(x)
 
     if via_pointer:
-        v = value_access_record_by_ptr(left, field, ti=x['ti'])
+        v = value_access_record_ptr(left, field, ti=x['ti'])
     else:
         v = value_access_record(left, field, ti=x['ti'])
         if value_is_immutable(left):

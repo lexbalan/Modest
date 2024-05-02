@@ -53,7 +53,7 @@ def value_record_create(initializers=[], ti=None):
 
         # приводим инициализатор к типу поля
         #iv = value_cons_implicit(f['type'], init_value)
-        iv = value_cons(init_value, f['type'], init_value['expr_ti'], method)
+        iv = _value_cons(init_value, f['type'], init_value['expr_ti'], method)
 
         ni = copy.copy(initializer)
         ni['value'] = iv

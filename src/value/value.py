@@ -32,7 +32,7 @@ def value_is_immutable(x):
 
 
 
-def value_is_zero_array(x):
+def _value_is_zero_array(x):
     if not value_is_immediate(x):
         return False
     for item in x['asset']:
@@ -41,7 +41,7 @@ def value_is_zero_array(x):
     return True
 
 
-def value_is_zero_record(x):
+def _value_is_zero_record(x):
     if not value_is_immediate(x):
         return False
     for item in x['asset']:
@@ -56,9 +56,9 @@ def value_is_zero(x):
         return False
     t = x['type']
     if hlir_type.type_is_array(t):
-        return value_is_zero_array(x)
+        return _value_is_zero_array(x)
     elif hlir_type.type_is_record(t):
-        return value_is_zero_record(x)
+        return _value_is_zero_record(x)
 
     return x['asset'] == 0
 
@@ -246,7 +246,7 @@ def value_index_array(array, index, ti=None):
     }
 
 
-def value_index_array_by_ptr(ptr_to_array, index, ti=None):
+def value_index_array_ptr(ptr_to_array, index, ti=None):
     return {
         'isa': 'value',
         'kind': 'index_ptr',
@@ -277,7 +277,7 @@ def value_access_record(record, field, ti=None):
     }
 
 
-def value_access_record_by_ptr(ptr_to_record, field, ti=None):
+def value_access_record_ptr(ptr_to_record, field, ti=None):
     return {
         'isa': 'value',
         'kind': 'access_ptr',
