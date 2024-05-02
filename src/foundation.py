@@ -277,11 +277,11 @@ def init():
 	foundation['text'].append(type_va_list_decl)
 
 
-	from main import settings
-	sizeof_width = int(settings.get('sizeof_width'))
-	typeSizeof = hlir_type_integer(width=sizeof_width)
-	typeSizeof['generic'] = True
-	typeSizeof['signed'] = False
+	#from main import settings
+	#sizeof_width = int(settings.get('sizeof_width'))
+	#typeSizeof = hlir_type_integer(width=sizeof_width)
+	#typeSizeof['generic'] = True
+	#typeSizeof['signed'] = False
 
 	return foundation
 

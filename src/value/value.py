@@ -340,12 +340,13 @@ def value_cons_immediate(t, v, method, ti):
 
 def value_sizeof(of, ti):
 	size = hlir_type.type_get_size(of)
-	from foundation import typeSizeof
+	#from foundation import typeSizeof
+	type_result = hlir_type.hlir_type_generic_int_for(size, signed=False, ti=ti)
 	return {
 		'isa': 'value',
 		'kind': 'sizeof',
 		'of': of,
-		'type': typeSizeof,
+		'type': type_result,
 		'asset': size,
 		'immediate': True,
 		'immutable': True,
@@ -357,12 +358,13 @@ def value_sizeof(of, ti):
 
 def value_alignof(of, ti):
 	align = hlir_type.type_get_align(of)
-	from foundation import typeSizeof
+	#from foundation import typeSizeof
+	type_result = hlir_type.hlir_type_generic_int_for(align, signed=False, ti=ti)
 	return {
 		'isa': 'value',
 		'kind': 'alignof',
 		'of': of,
-		'type': typeSizeof,
+		'type': type_result,
 		'asset': align,
 		'immediate': True,
 		'immutable': True,
@@ -379,13 +381,14 @@ def value_offsetof(of, field_id, ti):
 		return value_bad({'ti': ti})
 
 	offset = field['offset']
-	from foundation import typeSizeof
+	#from foundation import typeSizeof
+	type_result = hlir_type.hlir_type_generic_int_for(offset, signed=False, ti=ti)
 	return {
 		'isa': 'value',
 		'kind': 'offsetof',
 		'of': of,
 		'field': field_id,
-		'type': typeSizeof,
+		'type': type_result,
 		'asset': offset,
 		'immediate': True,
 		'immutable': True,
@@ -397,12 +400,13 @@ def value_offsetof(of, field_id, ti):
 
 def value_lengthof(of_value, ti):
 	length = of_value['type']['volume']['asset']
-	from foundation import typeSizeof
+	#from foundation import typeSizeof
+	type_result = hlir_type.hlir_type_generic_int_for(length, signed=False, ti=ti)
 	return {
 		'isa': 'value',
 		'kind': 'lengthof',
 		'of_value': of_value,
-		'type': typeSizeof,
+		'type': type_result,
 		'asset': length,
 		'immediate': True,
 		'immutable': True,
