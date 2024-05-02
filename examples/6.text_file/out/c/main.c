@@ -14,50 +14,50 @@
 
 void write_example()
 {
-    printf("run write_example\n");
+	printf("run write_example\n");
 
-    FILE *const fp = fopen(filename, "w");
+	FILE *const fp = fopen(filename, "w");
 
-    if (fp == NULL) {
-        printf("error: cannot create file '%s'", filename);
-        return;
-    }
+	if (fp == NULL) {
+		printf("error: cannot create file '%s'", filename);
+		return;
+	}
 
-    fprintf(fp, "some text.\n");
+	fprintf(fp, "some text.\n");
 
-    fclose(fp);
+	fclose(fp);
 }
 
 
 void read_example()
 {
-    printf("run read_example\n");
+	printf("run read_example\n");
 
-    FILE *const fp = fopen(filename, "r");
+	FILE *const fp = fopen(filename, "r");
 
-    if (fp == NULL) {
-        printf("error: cannot open file '%s'", filename);
-        return;
-    }
+	if (fp == NULL) {
+		printf("error: cannot open file '%s'", filename);
+		return;
+	}
 
-    printf("file '%s' contains: ", filename);
-    while (true) {
-        const int ch = fgetc(fp);
-        if (ch == (int)EOF) {
-            break;
-        }
-        putchar(ch);
-    }
+	printf("file '%s' contains: ", filename);
+	while (true) {
+		const int ch = fgetc(fp);
+		if (ch == (int)EOF) {
+			break;
+		}
+		putchar(ch);
+	}
 
-    fclose(fp);
+	fclose(fp);
 }
 
 
 int main()
 {
-    printf("text_file example\n");
-    write_example();
-    read_example();
-    return 0;
+	printf("text_file example\n");
+	write_example();
+	read_example();
+	return 0;
 }
 

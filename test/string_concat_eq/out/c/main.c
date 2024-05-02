@@ -20,14 +20,14 @@
 
 int main()
 {
-    printf("%s\n", (char *)greeting);
+	printf("%s\n", (char *)greeting);
 
-    if (true) {
-        printf("test ok.\n");
-    } else {
-        printf("test failed.\n");
-    }
+	if (true) {
+		printf("test ok.\n");
+	} else {
+		printf("test failed.\n");
+	}
 
-    return 0;
+	return 0;
 }
 

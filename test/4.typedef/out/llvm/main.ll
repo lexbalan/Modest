@@ -144,10 +144,10 @@ declare void @perror(%ConstCharStr* %str)
 %NewInt32 = type i32
 
 define %Int @main() {
-    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*))
-    %2 = alloca %NewInt32
-    store %NewInt32 0, %NewInt32* %2
-    ret %Int 0
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*))
+	%2 = alloca %NewInt32
+	store %NewInt32 0, %NewInt32* %2
+	ret %Int 0
 }
 
 

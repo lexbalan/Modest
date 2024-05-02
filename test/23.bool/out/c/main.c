@@ -12,26 +12,26 @@
 
 int main()
 {
-    printf("bool check\nm");
+	printf("bool check\nm");
 
-    uint8_t x;
-    bool b;
+	uint8_t x;
+	bool b;
 
-    x = 1;
-    b = (bool)x;
-    printf("x = %u\n", (uint32_t)x);
-    printf("x to Bool = %u\n", (uint32_t)b);
+	x = 1;
+	b = (bool)x;
+	printf("x = %u\n", (uint32_t)x);
+	printf("x to Bool = %u\n", (uint32_t)b);
 
-    x = 2;
-    b = (bool)x;
-    printf("x = %u\n", (uint32_t)x);
-    printf("x to Bool = %u\n", (uint32_t)b);
+	x = 2;
+	b = (bool)x;
+	printf("x = %u\n", (uint32_t)x);
+	printf("x to Bool = %u\n", (uint32_t)b);
 
-    x = 3;
-    b = (bool)x;
-    printf("x = %u\n", (uint32_t)x);
-    printf("x to Bool = %u\n", (uint32_t)b);
+	x = 3;
+	b = (bool)x;
+	printf("x = %u\n", (uint32_t)x);
+	printf("x to Bool = %u\n", (uint32_t)b);
 
-    return 0;
+	return 0;
 }
 

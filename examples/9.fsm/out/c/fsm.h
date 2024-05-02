@@ -19,10 +19,10 @@ typedef struct FSM FSM;
 typedef void *FSM_Proc;
 
 typedef struct {
-    char name[fsmNameMaxLength];
-    FSM_Proc entry;
-    FSM_Proc loop;
-    FSM_Proc exit;
+	char name[fsmNameMaxLength];
+	FSM_Proc entry;
+	FSM_Proc loop;
+	FSM_Proc exit;
 } FSM_StateDesc;
 
 
@@ -33,11 +33,11 @@ typedef struct {
 typedef uint32_t UInt32;
 
 struct FSM {
-    char name[fsmNameMaxLength];
-    UInt32 state;
-    UInt32 nexstate;
-    UInt32 substate;
-    FSM_StateDesc states[fsmMaxStates];
+	char name[fsmNameMaxLength];
+	UInt32 state;
+	UInt32 nexstate;
+	UInt32 substate;
+	FSM_StateDesc states[fsmMaxStates];
 };
 
 

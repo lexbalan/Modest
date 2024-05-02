@@ -11,9 +11,9 @@
 
 int main()
 {
-    printf("test cons operation\n");
+	printf("test cons operation\n");
 
-    /*let x0 = Int32 -1
+	/*let x0 = Int32 -1
 	let x1 = Int64 -1
 
 	let y0 = Nat64 x0
@@ -23,19 +23,19 @@ int main()
 	printf("x1 = %llx\n", y1)*/
 
 
-    const uint8_t a = 0xFF;
-    const uint32_t b = (uint32_t)a;
-    printf("a = %u\n", a);
-    printf("b = %u\n", b);
+	const uint8_t a = 0xFF;
+	const uint32_t b = (uint32_t)a;
+	printf("a = %u\n", a);
+	printf("b = %u\n", b);
 
-    //	let c = Int32 a
-    //	let d = Int32 Int8 -1
-    //	let e = Int32 Int8 255
+	//	let c = Int32 a
+	//	let d = Int32 Int8 -1
+	//	let e = Int32 Int8 255
 
-    //	printf("c = %i\n", c)
-    //	printf("d = %i\n", d)
-    //	printf("e = %i\n", e)
+	//	printf("c = %i\n", c)
+	//	printf("d = %i\n", d)
+	//	printf("e = %i\n", e)
 
-    return 0;
+	return 0;
 }
 

@@ -13,60 +13,60 @@ const bufSize = 1024
 
 
 func send_file(fp: *FILE, sockfd: Int) -> Unit {
-    var data: [bufSize]Char8
+	var data: [bufSize]Char8
 
-    while fgets(&data, bufSize, fp) != nil {
-        if send(sockfd, &data, SizeT sizeof([bufSize]Char8), 0) == -1 {
-            perror("[-] Error in sendung data")
-            exit(1)
-        }
-        bzero(&data, bufSize)
-    }
+	while fgets(&data, bufSize, fp) != nil {
+		if send(sockfd, &data, SizeT sizeof([bufSize]Char8), 0) == -1 {
+			perror("[-] Error in sendung data")
+			exit(1)
+		}
+		bzero(&data, bufSize)
+	}
 }
 
 
 func main() -> Int {
-    let sockfd = socket(c_AF_INET, c_SOCK_STREAM, 0)
-    if sockfd < 0 {
-        perror("[-] Error in socket")
-        exit(1)
-    }
+	let sockfd = socket(c_AF_INET, c_SOCK_STREAM, 0)
+	if sockfd < 0 {
+		perror("[-] Error in socket")
+		exit(1)
+	}
 
-    printf("[+] Server socket created\n")
+	printf("[+] Server socket created\n")
 
-    var server_addr: Struct_sockaddr_in = {
-        sin_len = 0
-        sin_family = c_AF_INET
-        sin_port = port
-        sin_addr = {
-            s_addr = inet_addr(ipAddress)
-        }
-        sin_zero = []
-    }
+	var server_addr: Struct_sockaddr_in = {
+		sin_len = 0
+		sin_family = c_AF_INET
+		sin_port = port
+		sin_addr = {
+			s_addr = inet_addr(ipAddress)
+		}
+		sin_zero = []
+	}
 
-    let sockaddr = &server_addr
-    var e: Int = connect(sockfd, sockaddr, Socklen_t sizeof(Struct_sockaddr_in))
-    if e < 0 {
-        perror("[-] Error in Connecting")
-        exit(1)
-    }
+	let sockaddr = &server_addr
+	var e: Int = connect(sockfd, sockaddr, Socklen_t sizeof(Struct_sockaddr_in))
+	if e < 0 {
+		perror("[-] Error in Connecting")
+		exit(1)
+	}
 
-    printf("[+] Connected to server\n")
+	printf("[+] Connected to server\n")
 
-    let fp = fopen(filename, "r")
-    if fp == nil {
-        perror("[-] Error in reading file")
-        exit(1)
-    }
+	let fp = fopen(filename, "r")
+	if fp == nil {
+		perror("[-] Error in reading file")
+		exit(1)
+	}
 
-    send_file(fp, sockfd)
+	send_file(fp, sockfd)
 
-    printf("[+] File data send successfully\n")
+	printf("[+] File data send successfully\n")
 
-    close(sockfd)
+	close(sockfd)
 
-    printf("[+] Disconnected from the server\n")
+	printf("[+] Disconnected from the server\n")
 
-    return 0
+	return 0
 }
 

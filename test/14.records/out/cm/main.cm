@@ -8,59 +8,59 @@ import "libc/libc"
 
 
 type Point2D record {
-    x: Nat32
-    y: Nat32
+	x: Nat32
+	y: Nat32
 }
 
 type Point3D record {
-    x: Nat32
-    y: Nat32
-    z: Nat32
+	x: Nat32
+	y: Nat32
+	z: Nat32
 }
 
 
 func main() -> Int {
-    printf("records test\n")
+	printf("records test\n")
 
-    // compare two Point2D records
-    var p2d0: Point2D = {x = 1, y = 2}
-    var p2d1: Point2D = {x = 10, y = 20}
+	// compare two Point2D records
+	var p2d0: Point2D = {x = 1, y = 2}
+	var p2d1: Point2D = {x = 10, y = 20}
 
-    if p2d0 == p2d1 {
-        printf("p2d0 == p2d1\n")
-    } else {
-        printf("p2d0 != p2d1\n")
-    }
-
-
-    // compare Point2D with anonymous record
-    var p2d2: Point2D = p2d0
-    var p2d3: record {x: Nat32, y: Nat32} = {x = 1, y = 2}
-
-    if p2d2 == p2d3 {
-        printf("p2d2 == p2d3\n")
-    } else {
-        printf("p2d2 != p2d3\n")
-    }
+	if p2d0 == p2d1 {
+		printf("p2d0 == p2d1\n")
+	} else {
+		printf("p2d0 != p2d1\n")
+	}
 
 
-    // comparison between two anonymous record
-    var p2d4: record {x: Nat32, y: Nat32} = {x = 1, y = 2}
+	// compare Point2D with anonymous record
+	var p2d2: Point2D = p2d0
+	var p2d3: record {x: Nat32, y: Nat32} = {x = 1, y = 2}
 
-    if p2d3 == p2d4 {
-        printf("p2d3 == p2d4\n")
-    } else {
-        printf("p2d3 != p2d4\n")
-    }
-
-
-    // cons Point3D from Point2D (record extension)
-    // (it is possible if dst record contained all fields from src record
-    // and their types are equal)
-    var p3d: Point3D
-    p3d = Point3D p2d2
+	if p2d2 == p2d3 {
+		printf("p2d2 == p2d3\n")
+	} else {
+		printf("p2d2 != p2d3\n")
+	}
 
 
-    return 0
+	// comparison between two anonymous record
+	var p2d4: record {x: Nat32, y: Nat32} = {x = 1, y = 2}
+
+	if p2d3 == p2d4 {
+		printf("p2d3 == p2d4\n")
+	} else {
+		printf("p2d3 != p2d4\n")
+	}
+
+
+	// cons Point3D from Point2D (record extension)
+	// (it is possible if dst record contained all fields from src record
+	// and their types are equal)
+	var p3d: Point3D
+	p3d = Point3D p2d2
+
+
+	return 0
 }
 

@@ -143,24 +143,24 @@ declare void @perror(%ConstCharStr* %str)
 
 
 define %Int @main() {
-    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str1 to [0 x i8]*))
-    %2 = alloca i32
-    store i32 0, i32* %2
-    br label %again_1
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str1 to [0 x i8]*))
+	%2 = alloca i32
+	store i32 0, i32* %2
+	br label %again_1
 again_1:
-    %3 = load i32, i32* %2
-    %4 = sext i8 10 to i32
-    %5 = icmp slt i32 %3, %4
-    br i1 %5 , label %body_1, label %break_1
+	%3 = load i32, i32* %2
+	%4 = sext i8 10 to i32
+	%5 = icmp slt i32 %3, %4
+	br i1 %5 , label %body_1, label %break_1
 body_1:
-    %6 = load i32, i32* %2
-    %7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), i32 %6)
-    %8 = load i32, i32* %2
-    %9 = add i32 %8, 1
-    store i32 %9, i32* %2
-    br label %again_1
+	%6 = load i32, i32* %2
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), i32 %6)
+	%8 = load i32, i32* %2
+	%9 = add i32 %8, 1
+	store i32 %9, i32* %2
+	br label %again_1
 break_1:
-    ret %Int 0
+	ret %Int 0
 }
 
 

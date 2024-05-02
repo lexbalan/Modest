@@ -12,8 +12,8 @@
 
 int main()
 {
-    printf("hello from main\n");
-    lib_func();
-    return 0;
+	printf("hello from main\n");
+	lib_func();
+	return 0;
 }
 

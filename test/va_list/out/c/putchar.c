@@ -10,18 +10,18 @@
 
 void putchar8(char c)
 {
-    utf8_putchar(c);
+	utf8_putchar(c);
 }
 
 
 void putchar16(uint16_t c)
 {
-    utf16_putchar(c);
+	utf16_putchar(c);
 }
 
 
 void putchar32(uint32_t c)
 {
-    utf32_putchar(c);
+	utf32_putchar(c);
 }
 

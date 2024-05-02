@@ -11,19 +11,19 @@
 
 int main()
 {
-    int32_t x;
-    x = 127;
-    int32_t y;
-    y = x + 1;
+	int32_t x;
+	x = 127;
+	int32_t y;
+	y = x + 1;
 
-    printf("y = %i\n", y);
+	printf("y = %i\n", y);
 
-    if (y == 128) {
-        printf("test passed\n");
-    } else {
-        printf("test failed\n");
-    }
+	if (y == 128) {
+		printf("test passed\n");
+	} else {
+		printf("test failed\n");
+	}
 
-    return 0;
+	return 0;
 }
 

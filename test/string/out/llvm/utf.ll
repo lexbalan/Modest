@@ -146,288 +146,288 @@ declare void @perror(%ConstCharStr* %str)
 
 
 define i8 @utf32_to_utf8(i32 %c, [4 x i8]* %buf) {
-    %1 = bitcast i32 %c to i32
-    %2 = icmp ule i32 %1, 127
-    br i1 %2 , label %then_0, label %else_0
+	%1 = bitcast i32 %c to i32
+	%2 = icmp ule i32 %1, 127
+	br i1 %2 , label %then_0, label %else_0
 then_0:
-    %3 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
-    %4 = trunc i32 %1 to i8
-    store i8 %4, i8* %3
-    ret i8 1
-    br label %endif_0
+	%3 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
+	%4 = trunc i32 %1 to i8
+	store i8 %4, i8* %3
+	ret i8 1
+	br label %endif_0
 else_0:
-    %6 = icmp ule i32 %1, 2047
-    br i1 %6 , label %then_1, label %else_1
+	%6 = icmp ule i32 %1, 2047
+	br i1 %6 , label %then_1, label %else_1
 then_1:
-    %7 = lshr i32 %1, 6
-    %8 = and i32 %7, 31
-    %9 = lshr i32 %1, 0
-    %10 = and i32 %9, 63
-    %11 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
-    %12 = or i32 192, %8
-    %13 = trunc i32 %12 to i8
-    store i8 %13, i8* %11
-    %14 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 1
-    %15 = or i32 128, %10
-    %16 = trunc i32 %15 to i8
-    store i8 %16, i8* %14
-    ret i8 2
-    br label %endif_1
+	%7 = lshr i32 %1, 6
+	%8 = and i32 %7, 31
+	%9 = lshr i32 %1, 0
+	%10 = and i32 %9, 63
+	%11 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
+	%12 = or i32 192, %8
+	%13 = trunc i32 %12 to i8
+	store i8 %13, i8* %11
+	%14 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 1
+	%15 = or i32 128, %10
+	%16 = trunc i32 %15 to i8
+	store i8 %16, i8* %14
+	ret i8 2
+	br label %endif_1
 else_1:
-    %18 = icmp ule i32 %1, 65535
-    br i1 %18 , label %then_2, label %else_2
+	%18 = icmp ule i32 %1, 65535
+	br i1 %18 , label %then_2, label %else_2
 then_2:
-    %19 = lshr i32 %1, 12
-    %20 = and i32 %19, 15
-    %21 = lshr i32 %1, 6
-    %22 = and i32 %21, 63
-    %23 = lshr i32 %1, 0
-    %24 = and i32 %23, 63
-    %25 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
-    %26 = or i32 224, %20
-    %27 = trunc i32 %26 to i8
-    store i8 %27, i8* %25
-    %28 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 1
-    %29 = or i32 128, %22
-    %30 = trunc i32 %29 to i8
-    store i8 %30, i8* %28
-    %31 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 2
-    %32 = or i32 128, %24
-    %33 = trunc i32 %32 to i8
-    store i8 %33, i8* %31
-    ret i8 3
-    br label %endif_2
+	%19 = lshr i32 %1, 12
+	%20 = and i32 %19, 15
+	%21 = lshr i32 %1, 6
+	%22 = and i32 %21, 63
+	%23 = lshr i32 %1, 0
+	%24 = and i32 %23, 63
+	%25 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
+	%26 = or i32 224, %20
+	%27 = trunc i32 %26 to i8
+	store i8 %27, i8* %25
+	%28 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 1
+	%29 = or i32 128, %22
+	%30 = trunc i32 %29 to i8
+	store i8 %30, i8* %28
+	%31 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 2
+	%32 = or i32 128, %24
+	%33 = trunc i32 %32 to i8
+	store i8 %33, i8* %31
+	ret i8 3
+	br label %endif_2
 else_2:
-    %35 = icmp ule i32 %1, 1114111
-    br i1 %35 , label %then_3, label %endif_3
+	%35 = icmp ule i32 %1, 1114111
+	br i1 %35 , label %then_3, label %endif_3
 then_3:
-    %36 = lshr i32 %1, 18
-    %37 = and i32 %36, 7
-    %38 = lshr i32 %1, 12
-    %39 = and i32 %38, 63
-    %40 = lshr i32 %1, 6
-    %41 = and i32 %40, 63
-    %42 = lshr i32 %1, 0
-    %43 = and i32 %42, 63
-    %44 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
-    %45 = or i32 240, %37
-    %46 = trunc i32 %45 to i8
-    store i8 %46, i8* %44
-    %47 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 1
-    %48 = or i32 128, %39
-    %49 = trunc i32 %48 to i8
-    store i8 %49, i8* %47
-    %50 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 2
-    %51 = or i32 128, %41
-    %52 = trunc i32 %51 to i8
-    store i8 %52, i8* %50
-    %53 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 3
-    %54 = or i32 128, %43
-    %55 = trunc i32 %54 to i8
-    store i8 %55, i8* %53
-    ret i8 4
-    br label %endif_3
+	%36 = lshr i32 %1, 18
+	%37 = and i32 %36, 7
+	%38 = lshr i32 %1, 12
+	%39 = and i32 %38, 63
+	%40 = lshr i32 %1, 6
+	%41 = and i32 %40, 63
+	%42 = lshr i32 %1, 0
+	%43 = and i32 %42, 63
+	%44 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
+	%45 = or i32 240, %37
+	%46 = trunc i32 %45 to i8
+	store i8 %46, i8* %44
+	%47 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 1
+	%48 = or i32 128, %39
+	%49 = trunc i32 %48 to i8
+	store i8 %49, i8* %47
+	%50 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 2
+	%51 = or i32 128, %41
+	%52 = trunc i32 %51 to i8
+	store i8 %52, i8* %50
+	%53 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 3
+	%54 = or i32 128, %43
+	%55 = trunc i32 %54 to i8
+	store i8 %55, i8* %53
+	ret i8 4
+	br label %endif_3
 endif_3:
-    br label %endif_2
+	br label %endif_2
 endif_2:
-    br label %endif_1
+	br label %endif_1
 endif_1:
-    br label %endif_0
+	br label %endif_0
 endif_0:
-    ret i8 0
+	ret i8 0
 }
 
 
 
 define i8 @utf16_to_utf32([0 x i16]* %c, i32* %result) {
-    %1 = getelementptr inbounds [0 x i16], [0 x i16]* %c, i32 0, i32 0
-    %2 = load i16, i16* %1
-    %3 = zext i16 %2 to i32
-    %4 = icmp ult i32 %3, 55296
-    %5 = icmp ugt i32 %3, 57343
-    %6 = or i1 %4, %5
-    br i1 %6 , label %then_0, label %else_0
+	%1 = getelementptr inbounds [0 x i16], [0 x i16]* %c, i32 0, i32 0
+	%2 = load i16, i16* %1
+	%3 = zext i16 %2 to i32
+	%4 = icmp ult i32 %3, 55296
+	%5 = icmp ugt i32 %3, 57343
+	%6 = or i1 %4, %5
+	br i1 %6 , label %then_0, label %else_0
 then_0:
-    %7 = bitcast i32 %3 to i32
-    store i32 %7, i32* %result
-    ret i8 1
-    br label %endif_0
+	%7 = bitcast i32 %3 to i32
+	store i32 %7, i32* %result
+	ret i8 1
+	br label %endif_0
 else_0:
-    %9 = icmp uge i32 %3, 56320
-    br i1 %9 , label %then_1, label %else_1
+	%9 = icmp uge i32 %3, 56320
+	br i1 %9 , label %then_1, label %else_1
 then_1:
-    ;error("Недопустимая кодовая последовательность.")
-    br label %endif_1
+	;error("Недопустимая кодовая последовательность.")
+	br label %endif_1
 else_1:
-    %10 = alloca i32
-    %11 = and i32 %3, 1023
-    %12 = shl i32 %11, 10
-    store i32 %12, i32* %10
-    %13 = getelementptr inbounds [0 x i16], [0 x i16]* %c, i32 0, i32 1
-    %14 = load i16, i16* %13
-    %15 = zext i16 %14 to i32
-    %16 = icmp ult i32 %15, 56320
-    %17 = icmp ugt i32 %15, 57343
-    %18 = or i1 %16, %17
-    br i1 %18 , label %then_2, label %else_2
+	%10 = alloca i32
+	%11 = and i32 %3, 1023
+	%12 = shl i32 %11, 10
+	store i32 %12, i32* %10
+	%13 = getelementptr inbounds [0 x i16], [0 x i16]* %c, i32 0, i32 1
+	%14 = load i16, i16* %13
+	%15 = zext i16 %14 to i32
+	%16 = icmp ult i32 %15, 56320
+	%17 = icmp ugt i32 %15, 57343
+	%18 = or i1 %16, %17
+	br i1 %18 , label %then_2, label %else_2
 then_2:
-    ;error("Недопустимая кодовая последовательность.")
-    br label %endif_2
+	;error("Недопустимая кодовая последовательность.")
+	br label %endif_2
 else_2:
-    %19 = load i32, i32* %10
-    %20 = and i32 %15, 1023
-    %21 = or i32 %19, %20
-    store i32 %21, i32* %10
-    %22 = load i32, i32* %10
-    %23 = add i32 %22, 65536
-    %24 = bitcast i32 %23 to i32
-    store i32 %24, i32* %result
-    ret i8 2
-    br label %endif_2
+	%19 = load i32, i32* %10
+	%20 = and i32 %15, 1023
+	%21 = or i32 %19, %20
+	store i32 %21, i32* %10
+	%22 = load i32, i32* %10
+	%23 = add i32 %22, 65536
+	%24 = bitcast i32 %23 to i32
+	store i32 %24, i32* %result
+	ret i8 2
+	br label %endif_2
 endif_2:
-    br label %endif_1
+	br label %endif_1
 endif_1:
-    br label %endif_0
+	br label %endif_0
 endif_0:
-    ret i8 0
+	ret i8 0
 }
 
 
 
 define void @utf8_putchar(i8 %c) {
-    %1 = sext i8 %c to i32
-    %2 = call %Int (%Int) @putchar(i32 %1)
-    ret void
+	%1 = sext i8 %c to i32
+	%2 = call %Int (%Int) @putchar(i32 %1)
+	ret void
 }
 
 define void @utf16_putchar(i16 %c) {
-    %1 = alloca [2 x i16]
-    %2 = getelementptr inbounds [2 x i16], [2 x i16]* %1, i32 0, i32 0
-    store i16 %c, i16* %2
-    %3 = getelementptr inbounds [2 x i16], [2 x i16]* %1, i32 0, i32 1
-    store i16 0, i16* %3
-    %4 = alloca i32
-    %5 = bitcast [2 x i16]* %1 to [0 x i16]*
-    %6 = call i8 ([0 x i16]*, i32*) @utf16_to_utf32([0 x i16]* %5, i32* %4)
-    %7 = load i32, i32* %4
-    call void (i32) @utf32_putchar(i32 %7)
-    ret void
+	%1 = alloca [2 x i16]
+	%2 = getelementptr inbounds [2 x i16], [2 x i16]* %1, i32 0, i32 0
+	store i16 %c, i16* %2
+	%3 = getelementptr inbounds [2 x i16], [2 x i16]* %1, i32 0, i32 1
+	store i16 0, i16* %3
+	%4 = alloca i32
+	%5 = bitcast [2 x i16]* %1 to [0 x i16]*
+	%6 = call i8 ([0 x i16]*, i32*) @utf16_to_utf32([0 x i16]* %5, i32* %4)
+	%7 = load i32, i32* %4
+	call void (i32) @utf32_putchar(i32 %7)
+	ret void
 }
 
 define void @utf32_putchar(i32 %c) {
-    %1 = alloca [4 x i8]
-    %2 = call i8 (i32, [4 x i8]*) @utf32_to_utf8(i32 %c, [4 x i8]* %1)
-    %3 = sext i8 %2 to %Int
-    %4 = alloca i32
-    store i32 0, i32* %4
-    br label %again_1
+	%1 = alloca [4 x i8]
+	%2 = call i8 (i32, [4 x i8]*) @utf32_to_utf8(i32 %c, [4 x i8]* %1)
+	%3 = sext i8 %2 to %Int
+	%4 = alloca i32
+	store i32 0, i32* %4
+	br label %again_1
 again_1:
-    %5 = load i32, i32* %4
-    %6 = icmp slt i32 %5, %3
-    br i1 %6 , label %body_1, label %break_1
+	%5 = load i32, i32* %4
+	%6 = icmp slt i32 %5, %3
+	br i1 %6 , label %body_1, label %break_1
 body_1:
-    %7 = load i32, i32* %4
-    %8 = getelementptr inbounds [4 x i8], [4 x i8]* %1, i32 0, i32 %7
-    %9 = load i8, i8* %8
-    call void (i8) @utf8_putchar(i8 %9)
-    %10 = load i32, i32* %4
-    %11 = add i32 %10, 1
-    store i32 %11, i32* %4
-    br label %again_1
+	%7 = load i32, i32* %4
+	%8 = getelementptr inbounds [4 x i8], [4 x i8]* %1, i32 0, i32 %7
+	%9 = load i8, i8* %8
+	call void (i8) @utf8_putchar(i8 %9)
+	%10 = load i32, i32* %4
+	%11 = add i32 %10, 1
+	store i32 %11, i32* %4
+	br label %again_1
 break_1:
-    ret void
+	ret void
 }
 
 
 
 define void @utf8_puts(%Str8* %s) {
-    %1 = alloca i32
-    store i32 0, i32* %1
-    br label %again_1
+	%1 = alloca i32
+	store i32 0, i32* %1
+	br label %again_1
 again_1:
-    br i1 1 , label %body_1, label %break_1
+	br i1 1 , label %body_1, label %break_1
 body_1:
-    %2 = load i32, i32* %1
-    %3 = getelementptr inbounds %Str8, %Str8* %s, i32 0, i32 %2
-    %4 = load i8, i8* %3
-    %5 = icmp eq i8 %4, 0
-    br i1 %5 , label %then_0, label %endif_0
+	%2 = load i32, i32* %1
+	%3 = getelementptr inbounds %Str8, %Str8* %s, i32 0, i32 %2
+	%4 = load i8, i8* %3
+	%5 = icmp eq i8 %4, 0
+	br i1 %5 , label %then_0, label %endif_0
 then_0:
-    br label %break_1
-    br label %endif_0
+	br label %break_1
+	br label %endif_0
 endif_0:
-    call void (i8) @utf8_putchar(i8 %4)
-    %7 = load i32, i32* %1
-    %8 = add i32 %7, 1
-    store i32 %8, i32* %1
-    br label %again_1
+	call void (i8) @utf8_putchar(i8 %4)
+	%7 = load i32, i32* %1
+	%8 = add i32 %7, 1
+	store i32 %8, i32* %1
+	br label %again_1
 break_1:
-    ret void
+	ret void
 }
 
 define void @utf16_puts(%Str16* %s) {
-    %1 = alloca i32
-    store i32 0, i32* %1
-    br label %again_1
+	%1 = alloca i32
+	store i32 0, i32* %1
+	br label %again_1
 again_1:
-    br i1 1 , label %body_1, label %break_1
+	br i1 1 , label %body_1, label %break_1
 body_1:
-    ; нельзя просто так взять и вызвать utf16_putchar
-    ; тк в строке может быть суррогатная пара UTF_16 символов
-    %2 = load i32, i32* %1
-    %3 = getelementptr inbounds %Str16, %Str16* %s, i32 0, i32 %2
-    %4 = load i16, i16* %3
-    %5 = icmp eq i16 %4, 0
-    br i1 %5 , label %then_0, label %endif_0
+	; нельзя просто так взять и вызвать utf16_putchar
+	; тк в строке может быть суррогатная пара UTF_16 символов
+	%2 = load i32, i32* %1
+	%3 = getelementptr inbounds %Str16, %Str16* %s, i32 0, i32 %2
+	%4 = load i16, i16* %3
+	%5 = icmp eq i16 %4, 0
+	br i1 %5 , label %then_0, label %endif_0
 then_0:
-    br label %break_1
-    br label %endif_0
+	br label %break_1
+	br label %endif_0
 endif_0:
-    %7 = alloca i32
-    %8 = load i32, i32* %1
-    %9 = getelementptr inbounds %Str16, %Str16* %s, i32 0, i32 %8
-    %10 = bitcast i16* %9 to [0 x i16]*
-    %11 = call i8 ([0 x i16]*, i32*) @utf16_to_utf32([0 x i16]* %10, i32* %7)
-    %12 = icmp eq i8 %11, 0
-    br i1 %12 , label %then_1, label %endif_1
+	%7 = alloca i32
+	%8 = load i32, i32* %1
+	%9 = getelementptr inbounds %Str16, %Str16* %s, i32 0, i32 %8
+	%10 = bitcast i16* %9 to [0 x i16]*
+	%11 = call i8 ([0 x i16]*, i32*) @utf16_to_utf32([0 x i16]* %10, i32* %7)
+	%12 = icmp eq i8 %11, 0
+	br i1 %12 , label %then_1, label %endif_1
 then_1:
-    br label %break_1
-    br label %endif_1
+	br label %break_1
+	br label %endif_1
 endif_1:
-    %14 = load i32, i32* %7
-    call void (i32) @utf32_putchar(i32 %14)
-    %15 = load i32, i32* %1
-    %16 = sext i8 %11 to i32
-    %17 = add i32 %15, %16
-    store i32 %17, i32* %1
-    br label %again_1
+	%14 = load i32, i32* %7
+	call void (i32) @utf32_putchar(i32 %14)
+	%15 = load i32, i32* %1
+	%16 = sext i8 %11 to i32
+	%17 = add i32 %15, %16
+	store i32 %17, i32* %1
+	br label %again_1
 break_1:
-    ret void
+	ret void
 }
 
 define void @utf32_puts(%Str32* %s) {
-    %1 = alloca i32
-    store i32 0, i32* %1
-    br label %again_1
+	%1 = alloca i32
+	store i32 0, i32* %1
+	br label %again_1
 again_1:
-    br i1 1 , label %body_1, label %break_1
+	br i1 1 , label %body_1, label %break_1
 body_1:
-    %2 = load i32, i32* %1
-    %3 = getelementptr inbounds %Str32, %Str32* %s, i32 0, i32 %2
-    %4 = load i32, i32* %3
-    %5 = icmp eq i32 %4, 0
-    br i1 %5 , label %then_0, label %endif_0
+	%2 = load i32, i32* %1
+	%3 = getelementptr inbounds %Str32, %Str32* %s, i32 0, i32 %2
+	%4 = load i32, i32* %3
+	%5 = icmp eq i32 %4, 0
+	br i1 %5 , label %then_0, label %endif_0
 then_0:
-    br label %break_1
-    br label %endif_0
+	br label %break_1
+	br label %endif_0
 endif_0:
-    call void (i32) @utf32_putchar(i32 %4)
-    %7 = load i32, i32* %1
-    %8 = add i32 %7, 1
-    store i32 %8, i32* %1
-    br label %again_1
+	call void (i32) @utf32_putchar(i32 %4)
+	%7 = load i32, i32* %1
+	%8 = add i32 %7, 1
+	store i32 %8, i32* %1
+	br label %again_1
 break_1:
-    ret void
+	ret void
 }
 
 

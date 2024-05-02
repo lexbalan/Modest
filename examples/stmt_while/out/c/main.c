@@ -11,18 +11,18 @@
 
 int main()
 {
-    printf("while statement test\n");
+	printf("while statement test\n");
 
-    int32_t a;
-    a = 0;
-    #define b  10
+	int32_t a;
+	a = 0;
+	#define b  10
 
-    while (a < (int32_t)b) {
-        printf("a = %d\n", a);
-        a = a + 1;
-    }
+	while (a < (int32_t)b) {
+		printf("a = %d\n", a);
+		a = a + 1;
+	}
 
-    return 0;
+	return 0;
 #undef b
 }
 

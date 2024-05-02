@@ -149,9 +149,9 @@ declare void @lib_func()
 
 
 define %Int @main() {
-    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str1 to [0 x i8]*))
-    call void () @lib_func()
-    ret %Int 0
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str1 to [0 x i8]*))
+	call void () @lib_func()
+	ret %Int 0
 }
 
 

@@ -143,20 +143,20 @@ declare void @perror(%ConstCharStr* %str)
 
 
 define %Int @main() {
-    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str1 to [0 x i8]*))
-    %2 = alloca i8
-    %3 = alloca i16
-    %4 = alloca i32
-    %5 = bitcast i8 115 to i8
-    store i8 %5, i8* %2
-    %6 = bitcast i16 1071 to i16
-    store i16 %6, i16* %3
-    %7 = bitcast i32 128000 to i32
-    store i32 %7, i32* %4
-    ;printf("ch08 = 0x%x (%c)\n", Nat32 ch08, ch08)
-    ;printf("ch16 = 0x%x (%c)\n", Nat32 ch16, ch16)
-    ;printf("ch32 = 0x%x (%c)\n", Nat32 ch32, ch32)
-    ret %Int 0
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str1 to [0 x i8]*))
+	%2 = alloca i8
+	%3 = alloca i16
+	%4 = alloca i32
+	%5 = bitcast i8 115 to i8
+	store i8 %5, i8* %2
+	%6 = bitcast i16 1071 to i16
+	store i16 %6, i16* %3
+	%7 = bitcast i32 128000 to i32
+	store i32 %7, i32* %4
+	;printf("ch08 = 0x%x (%c)\n", Nat32 ch08, ch08)
+	;printf("ch16 = 0x%x (%c)\n", Nat32 ch16, ch16)
+	;printf("ch32 = 0x%x (%c)\n", Nat32 ch32, ch32)
+	ret %Int 0
 }
 
 

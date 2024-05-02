@@ -17,7 +17,7 @@
 
 int main()
 {
-    printf("%s", (char *)hello_world);
-    return 0;
+	printf("%s", (char *)hello_world);
+	return 0;
 }
 

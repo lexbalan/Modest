@@ -12,11 +12,11 @@ typedef int32_t NewInt32;
 
 int main()
 {
-    printf("test typedef\n");
+	printf("test typedef\n");
 
-    NewInt32 newInt32;
-    newInt32 = 0;
+	NewInt32 newInt32;
+	newInt32 = 0;
 
-    return 0;
+	return 0;
 }
 

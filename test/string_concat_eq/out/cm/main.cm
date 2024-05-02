@@ -13,14 +13,14 @@ const test = "test"
 
 
 func main() -> Int {
-    printf("%s\n", *Str8 greeting)
+	printf("%s\n", *Str8 greeting)
 
-    if test == "test" {
-        printf("test ok.\n")
-    } else {
-        printf("test failed.\n")
-    }
+	if test == "test" {
+		printf("test ok.\n")
+	} else {
+		printf("test failed.\n")
+	}
 
-    return 0
+	return 0
 }
 

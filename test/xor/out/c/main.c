@@ -17,21 +17,21 @@
 
 void xor_encrypter(uint8_t *buf, uint32_t buflen, uint8_t *key, uint32_t keylen)
 {
-    uint32_t i;
-    i = 0;
-    uint32_t j;
-    j = 0;
-    while (i < buflen) {
-        buf[i] = buf[i] ^ key[j];
+	uint32_t i;
+	i = 0;
+	uint32_t j;
+	j = 0;
+	while (i < buflen) {
+		buf[i] = buf[i] ^ key[j];
 
-        if (j < keylen - 1) {
-            j = j + 1;
-        } else {
-            j = 0;
-        }
+		if (j < keylen - 1) {
+			j = j + 1;
+		} else {
+			j = 0;
+		}
 
-        i = i + 1;
-    }
+		i = i + 1;
+	}
 }
 
 //xor_encrypt = xor_encrypter
@@ -46,38 +46,38 @@ static char test_key[key_length + 1] = "abc";
 
 void print_bytes(uint8_t *buf, uint32_t len)
 {
-    uint32_t i;
-    i = 0;
-    while (i < len) {
-        printf("0x%02X ", buf[i]);
-        i = i + 1;
-    }
-    printf("\n");
+	uint32_t i;
+	i = 0;
+	while (i < len) {
+		printf("0x%02X ", buf[i]);
+		i = i + 1;
+	}
+	printf("\n");
 }
 
 
 int main()
 {
-    printf("test xor encrypting\n");
+	printf("test xor encrypting\n");
 
-    uint8_t *const tmsg = (uint8_t *)(char *)&test_msg;
-    uint8_t *const tkey = (uint8_t *)(char *)&test_key;
+	uint8_t *const tmsg = (uint8_t *)(char *)&test_msg;
+	uint8_t *const tkey = (uint8_t *)(char *)&test_key;
 
-    printf("before encrypt test_msg: \n");
-    print_bytes(tmsg, ((uint32_t)(uint8_t)msg_length));
+	printf("before encrypt test_msg: \n");
+	print_bytes(tmsg, ((uint32_t)(uint8_t)msg_length));
 
-    // encrypt test data
-    xor_encrypter(tmsg, ((uint32_t)(uint8_t)msg_length), tkey, ((uint32_t)(uint8_t)key_length));
+	// encrypt test data
+	xor_encrypter(tmsg, ((uint32_t)(uint8_t)msg_length), tkey, ((uint32_t)(uint8_t)key_length));
 
-    printf("after encrypt test_msg: \n");
-    print_bytes(tmsg, ((uint32_t)(uint8_t)msg_length));
+	printf("after encrypt test_msg: \n");
+	print_bytes(tmsg, ((uint32_t)(uint8_t)msg_length));
 
-    // decrypt test data
-    xor_encrypter(tmsg, ((uint32_t)(uint8_t)msg_length), tkey, ((uint32_t)(uint8_t)key_length));
+	// decrypt test data
+	xor_encrypter(tmsg, ((uint32_t)(uint8_t)msg_length), tkey, ((uint32_t)(uint8_t)key_length));
 
-    printf("after decrypt test_msg: \n");
-    print_bytes(tmsg, ((uint32_t)(uint8_t)msg_length));
+	printf("after decrypt test_msg: \n");
+	print_bytes(tmsg, ((uint32_t)(uint8_t)msg_length));
 
-    return 0;
+	return 0;
 }
 

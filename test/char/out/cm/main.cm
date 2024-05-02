@@ -9,20 +9,20 @@ const utf32Char = "🐀"
 
 
 func main() -> Int {
-    printf("test/char\n")
+	printf("test/char\n")
 
-    var ch08: Char8
-    var ch16: Char16
-    var ch32: Char32
+	var ch08: Char8
+	var ch16: Char16
+	var ch32: Char32
 
-    ch08 = "s"[0]
-    ch16 = "Я"[0]
-    ch32 = "🐀"[0]
+	ch08 = "s"[0]
+	ch16 = "Я"[0]
+	ch32 = "🐀"[0]
 
-    //printf("ch08 = 0x%x (%c)\n", Nat32 ch08, ch08)
-    //printf("ch16 = 0x%x (%c)\n", Nat32 ch16, ch16)
-    //printf("ch32 = 0x%x (%c)\n", Nat32 ch32, ch32)
+	//printf("ch08 = 0x%x (%c)\n", Nat32 ch08, ch08)
+	//printf("ch16 = 0x%x (%c)\n", Nat32 ch16, ch16)
+	//printf("ch32 = 0x%x (%c)\n", Nat32 ch32, ch32)
 
-    return 0
+	return 0
 }
 

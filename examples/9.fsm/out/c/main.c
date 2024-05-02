@@ -35,29 +35,29 @@ static uint8_t cnt;
 
 void off_entry(FSM *fsm)
 {
-    (void)fsm;
-    //printf("off_entry\n")
+	(void)fsm;
+	//printf("off_entry\n")
 }
 
 
 void off_loop(FSM *fsm)
 {
-    (void)fsm;
+	(void)fsm;
 
-    printf("off_loop\n");
-    if (cnt < 10) {
-        cnt = cnt + 1;
-    } else {
-        cnt = 0;
-        fsm_switch(fsm, ((uint32_t)(uint8_t)flashlightStateOn));
-    }
+	printf("off_loop\n");
+	if (cnt < 10) {
+		cnt = cnt + 1;
+	} else {
+		cnt = 0;
+		fsm_switch(fsm, ((uint32_t)(uint8_t)flashlightStateOn));
+	}
 }
 
 
 void off_exit(FSM *fsm)
 {
-    (void)fsm;
-    //printf("off_exit\n")
+	(void)fsm;
+	//printf("off_exit\n")
 }
 
 
@@ -67,28 +67,28 @@ void off_exit(FSM *fsm)
 
 void on_entry(FSM *fsm)
 {
-    (void)fsm;
-    //printf("on_entry\n")
+	(void)fsm;
+	//printf("on_entry\n")
 }
 
 
 void on_loop(FSM *fsm)
 {
-    (void)fsm;
-    printf("on_loop\n");
-    if (cnt < 10) {
-        cnt = cnt + 1;
-    } else {
-        cnt = 0;
-        fsm_switch(fsm, ((uint32_t)(uint8_t)flashlightStateBeacon));
-    }
+	(void)fsm;
+	printf("on_loop\n");
+	if (cnt < 10) {
+		cnt = cnt + 1;
+	} else {
+		cnt = 0;
+		fsm_switch(fsm, ((uint32_t)(uint8_t)flashlightStateBeacon));
+	}
 }
 
 
 void on_exit(FSM *fsm)
 {
-    (void)fsm;
-    //printf("on_exit\n")
+	(void)fsm;
+	//printf("on_exit\n")
 }
 
 
@@ -98,58 +98,58 @@ void on_exit(FSM *fsm)
 
 void beacon_entry(FSM *fsm)
 {
-    char *const from_name = fsm_state_no_name(fsm, fsm->state);
-    printf("beacon_entry from %s\n", from_name);
+	char *const from_name = fsm_state_no_name(fsm, fsm->state);
+	printf("beacon_entry from %s\n", from_name);
 }
 
 
 void beacon_loop(FSM *fsm)
 {
-    printf("beacon_loop\n");
-    if (cnt < 10) {
-        cnt = cnt + 1;
-    } else {
-        cnt = 0;
-        fsm_switch(fsm, ((uint32_t)(uint8_t)flashlightStateOff));
-    }
+	printf("beacon_loop\n");
+	if (cnt < 10) {
+		cnt = cnt + 1;
+	} else {
+		cnt = 0;
+		fsm_switch(fsm, ((uint32_t)(uint8_t)flashlightStateOff));
+	}
 }
 
 
 void beacon_exit(FSM *fsm)
 {
-    char *const to_name = fsm_state_no_name(fsm, fsm->nexstate);
-    printf("beacon_exit to %s\n", to_name);
+	char *const to_name = fsm_state_no_name(fsm, fsm->nexstate);
+	printf("beacon_exit to %s\n", to_name);
 }
 
 
 
 static FSM fsm = {
-    .name = "Flash",
-    .state = 0,
-    .nexstate = 0,
-    .substate = ((UInt32)(uint8_t)fsmSubstateEntering),
-    .states = {
-        {
-            .name = "Off",
-            .entry = &off_entry,
-            .loop = &off_loop,
-            .exit = &off_exit
-        },
+	.name = "Flash",
+	.state = 0,
+	.nexstate = 0,
+	.substate = ((UInt32)(uint8_t)fsmSubstateEntering),
+	.states = {
+		{
+			.name = "Off",
+			.entry = &off_entry,
+			.loop = &off_loop,
+			.exit = &off_exit
+		},
 
-        {
-            .name = "On",
-            .entry = &on_entry,
-            .loop = &on_loop,
-            .exit = &on_exit
-        },
+		{
+			.name = "On",
+			.entry = &on_entry,
+			.loop = &on_loop,
+			.exit = &on_exit
+		},
 
-        {
-            .name = "Beacon",
-            .entry = &beacon_entry,
-            .loop = &beacon_loop,
-            .exit = &beacon_exit
-        }, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
-    }
+		{
+			.name = "Beacon",
+			.entry = &beacon_entry,
+			.loop = &beacon_loop,
+			.exit = &beacon_exit
+		}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
+	}
 };
 
 
@@ -157,11 +157,11 @@ static FSM fsm = {
 int main()
 {
 
-    while (true) {
-        fsm_run(&fsm);
-        delay_ms(500);
-    }
+	while (true) {
+		fsm_run(&fsm);
+		delay_ms(500);
+	}
 
-    return 0;
+	return 0;
 }
 

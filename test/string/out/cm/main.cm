@@ -22,38 +22,38 @@ var ptr_to_string32: *[]Char32 = "S-t-r-i-n-g-Ω 🐀🎉🦄"
 
 
 func putc8(c: Char8) -> Unit {
-    printf("%c", c)
+	printf("%c", c)
 }
 
 func putc16(c: Char16) -> Unit {
-    printf("%c", c)
+	printf("%c", c)
 }
 
 
 func main() -> Int {
-    utf8_putchar("A"[0])
-    printf("\n")
-    utf16_putchar("Ω"[0])
-    printf("\n")
-    utf32_putchar("🦄"[0])
+	utf8_putchar("A"[0])
+	printf("\n")
+	utf16_putchar("Ω"[0])
+	printf("\n")
+	utf32_putchar("🦄"[0])
 
-    printf("\n\n")
+	printf("\n\n")
 
-    utf8_puts(&string8)
-    printf("\n")
-    utf16_puts(&string16)
-    printf("\n")
-    utf32_puts(&string32)
+	utf8_puts(&string8)
+	printf("\n")
+	utf16_puts(&string16)
+	printf("\n")
+	utf32_puts(&string32)
 
-    printf("\n\n")
+	printf("\n\n")
 
-    utf8_puts(ptr_to_string8)
-    printf("\n")
-    utf16_puts(ptr_to_string16)
-    printf("\n")
-    utf32_puts(ptr_to_string32)
-    printf("\n")
+	utf8_puts(ptr_to_string8)
+	printf("\n")
+	utf16_puts(ptr_to_string16)
+	printf("\n")
+	utf32_puts(ptr_to_string32)
+	printf("\n")
 
-    return 0
+	return 0
 }
 

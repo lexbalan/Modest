@@ -11,16 +11,16 @@
 
 int main()
 {
-    printf("test shift\n");
+	printf("test shift\n");
 
-    int32_t c;
+	int32_t c;
 
-    c = (int32_t)(1 << 31);
-    printf("1 << 31 = 0x%x\n", c);
+	c = (int32_t)(1 << 31);
+	printf("1 << 31 = 0x%x\n", c);
 
-    c = (int32_t)(0x80000000 >> 31);
-    printf("0x80000000 >> 31 = 0x%x\n", c);
+	c = (int32_t)(0x80000000 >> 31);
+	printf("0x80000000 >> 31 = 0x%x\n", c);
 
-    return 0;
+	return 0;
 }
 

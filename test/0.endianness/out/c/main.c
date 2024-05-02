@@ -11,19 +11,19 @@
 
 int main()
 {
-    uint16_t check;
-    check = 0x0001;
-    const bool is_le = *(uint8_t *)&check == 1;
+	uint16_t check;
+	check = 0x0001;
+	const bool is_le = *(uint8_t *)&check == 1;
 
-    char *kind;
-    if (is_le) {
-        kind = "little";
-    } else {
-        kind = "big";
-    }
+	char *kind;
+	if (is_le) {
+		kind = "little";
+	} else {
+		kind = "big";
+	}
 
-    printf("%s-endian\n", kind);
+	printf("%s-endian\n", kind);
 
-    return 0;
+	return 0;
 }
 

@@ -10,7 +10,7 @@ const hello_world = "Hello '64-bit' world!"
 
 
 func main() -> Int {
-    printf("%s", *Str8 hello_world)
-    return 0
+	printf("%s", *Str8 hello_world)
+	return 0
 }
 

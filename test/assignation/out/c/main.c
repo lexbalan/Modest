@@ -11,8 +11,8 @@
 
 // Simply record for records assignation test
 typedef struct {
-    int32_t x;
-    int32_t y;
+	int32_t x;
+	int32_t y;
 } Point;
 
 
@@ -28,73 +28,73 @@ static int32_t glb_a1[10] = {64, (int32_t)53, (int32_t)42, 0, 0, 0, 0, 0, 0, 0};
 
 int main()
 {
-    printf("test assignation\n");
+	printf("test assignation\n");
 
-    // -----------------------------------
-    // Global
+	// -----------------------------------
+	// Global
 
-    // copy integers by value
-    glb_i0 = glb_i1;
-    printf("glb_i0 = %i\n", glb_i0);
-
-
-    // copy arrays by value
-    memcpy(&glb_a0, &glb_a1, 40);
-
-    printf("glb_a0[0] = %i\n", glb_a0[0]);
-    printf("glb_a0[1] = %i\n", glb_a0[1]);
-    printf("glb_a0[2] = %i\n", glb_a0[2]);
+	// copy integers by value
+	glb_i0 = glb_i1;
+	printf("glb_i0 = %i\n", glb_i0);
 
 
-    // copy records by value
-    glb_r0 = glb_r1;
+	// copy arrays by value
+	memcpy(&glb_a0, &glb_a1, 40);
 
-    printf("glb_r0.x = %i\n", glb_r0.x);
-    printf("glb_r0.y = %i\n", glb_r0.y);
-
-
-    // -----------------------------------
-    // Local
-
-    // copy integers by value
-    int32_t loc_i0;
-    loc_i0 = 0;
-    int32_t loc_i1;
-    loc_i1 = 123;
-
-    loc_i0 = loc_i1;
-
-    printf("loc_i0 = %i\n", loc_i0);
-
-    // copy arrays by value
-    // C backend will be use memcpy()
-    int32_t loc_a0[10];
-    memcpy(&loc_a0, &(int32_t[10]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 40);
-    int32_t loc_a1[10];
-    memcpy(&loc_a1, &(int32_t[10]){(int32_t)42, (int32_t)53, 64, 0, 0, 0, 0, 0, 0, 0}, 40);
-
-    memcpy(&loc_a0, &loc_a1, 40);
-
-    printf("loc_a0[0] = %i\n", loc_a0[0]);
-    printf("loc_a0[1] = %i\n", loc_a0[1]);
-    printf("loc_a0[2] = %i\n", loc_a0[2]);
+	printf("glb_a0[0] = %i\n", glb_a0[0]);
+	printf("glb_a0[1] = %i\n", glb_a0[1]);
+	printf("glb_a0[2] = %i\n", glb_a0[2]);
 
 
-    // copy records by value
-    // C backend will be use memcpy()
-    Point loc_r0;
-    loc_r0 = (Point){};
-    Point loc_r1;
-    loc_r1 = (Point){.x = 10, .y = 20};
+	// copy records by value
+	glb_r0 = glb_r1;
 
-    loc_r0 = loc_r1;
-
-    printf("loc_r0.x = %i\n", loc_r0.x);
-    printf("loc_r0.y = %i\n", loc_r0.y);
+	printf("glb_r0.x = %i\n", glb_r0.x);
+	printf("glb_r0.y = %i\n", glb_r0.y);
 
 
-    // error: closed arrays of closed arrays are denied
-    /*let dim1 = 15
+	// -----------------------------------
+	// Local
+
+	// copy integers by value
+	int32_t loc_i0;
+	loc_i0 = 0;
+	int32_t loc_i1;
+	loc_i1 = 123;
+
+	loc_i0 = loc_i1;
+
+	printf("loc_i0 = %i\n", loc_i0);
+
+	// copy arrays by value
+	// C backend will be use memcpy()
+	int32_t loc_a0[10];
+	memcpy(&loc_a0, &(int32_t[10]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 40);
+	int32_t loc_a1[10];
+	memcpy(&loc_a1, &(int32_t[10]){(int32_t)42, (int32_t)53, 64, 0, 0, 0, 0, 0, 0, 0}, 40);
+
+	memcpy(&loc_a0, &loc_a1, 40);
+
+	printf("loc_a0[0] = %i\n", loc_a0[0]);
+	printf("loc_a0[1] = %i\n", loc_a0[1]);
+	printf("loc_a0[2] = %i\n", loc_a0[2]);
+
+
+	// copy records by value
+	// C backend will be use memcpy()
+	Point loc_r0;
+	loc_r0 = (Point){};
+	Point loc_r1;
+	loc_r1 = (Point){.x = 10, .y = 20};
+
+	loc_r0 = loc_r1;
+
+	printf("loc_r0.x = %i\n", loc_r0.x);
+	printf("loc_r0.y = %i\n", loc_r0.y);
+
+
+	// error: closed arrays of closed arrays are denied
+	/*let dim1 = 15
 	let dim2 = 16
 
 	var aa: [dim1][dim2]Int32
@@ -129,6 +129,6 @@ int main()
 	}*/
 
 
-    return 0;
+	return 0;
 }
 

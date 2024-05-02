@@ -16,47 +16,47 @@ void func0();
 // define function f1
 void func1()
 {
-    printf("func1 was called\n");
+	printf("func1 was called\n");
 }
 
 
 void print_ab(int32_t a, int32_t b)
 {
-    printf("print_ab(a=%i, b=%i)\n", a, b);
+	printf("print_ab(a=%i, b=%i)\n", a, b);
 }
 
 
 int32_t sum(int32_t a, int32_t b)
 {
-    return a + b;
+	return a + b;
 }
 
 
 // define function main
 int main()
 {
-    printf("test func\n");
+	printf("test func\n");
 
-    // call declared & defined functions
-    func0();
-    func1();
+	// call declared & defined functions
+	func0();
+	func1();
 
-    // call function with two arguments
-    print_ab(10, 20);
+	// call function with two arguments
+	print_ab(10, 20);
 
-    // call function with two arguments and return value
-    const int32_t arg_a = 1;
-    const int32_t arg_b = 2;
-    const int32_t sum_result = sum(arg_a, arg_b);
-    printf("sum(%i, %i) == %i\n", arg_a, arg_b, sum_result);
+	// call function with two arguments and return value
+	const int32_t arg_a = 1;
+	const int32_t arg_b = 2;
+	const int32_t sum_result = sum(arg_a, arg_b);
+	printf("sum(%i, %i) == %i\n", arg_a, arg_b, sum_result);
 
-    return 0;
+	return 0;
 }
 
 
 // define function f0
 void func0()
 {
-    printf("func0 was called\n");
+	printf("func0 was called\n");
 }
 

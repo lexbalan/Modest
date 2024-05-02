@@ -27,7 +27,7 @@
 
 int main()
 {
-    printf("Smart import test\n");
-    return 0;
+	printf("Smart import test\n");
+	return 0;
 }
 

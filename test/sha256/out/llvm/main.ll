@@ -251,219 +251,219 @@ declare void @sha256_doHash([0 x i8]* %msg, i32 %msg_len, [32 x i8]* %out_hash)
 
 
 @test0 = global %SHA256_TestCase {
-    [32 x i8] [
-        i8 97,
-        i8 98,
-        i8 99,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0
-    ],
-    i32 3,
-    [32 x i8] [
-        i8 186,
-        i8 120,
-        i8 22,
-        i8 191,
-        i8 143,
-        i8 1,
-        i8 207,
-        i8 234,
-        i8 65,
-        i8 65,
-        i8 64,
-        i8 222,
-        i8 93,
-        i8 174,
-        i8 34,
-        i8 35,
-        i8 176,
-        i8 3,
-        i8 97,
-        i8 163,
-        i8 150,
-        i8 23,
-        i8 122,
-        i8 156,
-        i8 180,
-        i8 16,
-        i8 255,
-        i8 97,
-        i8 242,
-        i8 0,
-        i8 21,
-        i8 173
-    ]
+	[32 x i8] [
+		i8 97,
+		i8 98,
+		i8 99,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0
+	],
+	i32 3,
+	[32 x i8] [
+		i8 186,
+		i8 120,
+		i8 22,
+		i8 191,
+		i8 143,
+		i8 1,
+		i8 207,
+		i8 234,
+		i8 65,
+		i8 65,
+		i8 64,
+		i8 222,
+		i8 93,
+		i8 174,
+		i8 34,
+		i8 35,
+		i8 176,
+		i8 3,
+		i8 97,
+		i8 163,
+		i8 150,
+		i8 23,
+		i8 122,
+		i8 156,
+		i8 180,
+		i8 16,
+		i8 255,
+		i8 97,
+		i8 242,
+		i8 0,
+		i8 21,
+		i8 173
+	]
 }
 @test1 = global %SHA256_TestCase {
-    [32 x i8] [
-        i8 72,
-        i8 101,
-        i8 108,
-        i8 108,
-        i8 111,
-        i8 32,
-        i8 87,
-        i8 111,
-        i8 114,
-        i8 108,
-        i8 100,
-        i8 33,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0,
-        i8 0
-    ],
-    i32 12,
-    [32 x i8] [
-        i8 127,
-        i8 131,
-        i8 177,
-        i8 101,
-        i8 127,
-        i8 241,
-        i8 252,
-        i8 83,
-        i8 185,
-        i8 45,
-        i8 193,
-        i8 129,
-        i8 72,
-        i8 161,
-        i8 214,
-        i8 93,
-        i8 252,
-        i8 45,
-        i8 75,
-        i8 31,
-        i8 163,
-        i8 214,
-        i8 119,
-        i8 40,
-        i8 74,
-        i8 221,
-        i8 210,
-        i8 0,
-        i8 18,
-        i8 109,
-        i8 144,
-        i8 105
-    ]
+	[32 x i8] [
+		i8 72,
+		i8 101,
+		i8 108,
+		i8 108,
+		i8 111,
+		i8 32,
+		i8 87,
+		i8 111,
+		i8 114,
+		i8 108,
+		i8 100,
+		i8 33,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0
+	],
+	i32 12,
+	[32 x i8] [
+		i8 127,
+		i8 131,
+		i8 177,
+		i8 101,
+		i8 127,
+		i8 241,
+		i8 252,
+		i8 83,
+		i8 185,
+		i8 45,
+		i8 193,
+		i8 129,
+		i8 72,
+		i8 161,
+		i8 214,
+		i8 93,
+		i8 252,
+		i8 45,
+		i8 75,
+		i8 31,
+		i8 163,
+		i8 214,
+		i8 119,
+		i8 40,
+		i8 74,
+		i8 221,
+		i8 210,
+		i8 0,
+		i8 18,
+		i8 109,
+		i8 144,
+		i8 105
+	]
 }
 @sha256_tests = global [2 x %SHA256_TestCase*] [
-    %SHA256_TestCase* @test0,
-    %SHA256_TestCase* @test1
+	%SHA256_TestCase* @test0,
+	%SHA256_TestCase* @test1
 ]
 
 define i1 @sha256_doTest(%SHA256_TestCase* %test) {
-    %1 = alloca [32 x i8]
-    %2 = getelementptr inbounds %SHA256_TestCase, %SHA256_TestCase* %test, i32 0, i32 0
-    %3 = bitcast [32 x i8]* %2 to [0 x i8]*
-    %4 = getelementptr inbounds %SHA256_TestCase, %SHA256_TestCase* %test, i32 0, i32 1
-    %5 = load i32, i32* %4
-    call void ([0 x i8]*, i32, [32 x i8]*) @sha256_doHash([0 x i8]* %3, i32 %5, [32 x i8]* %1)
-    %6 = getelementptr inbounds %SHA256_TestCase, %SHA256_TestCase* %test, i32 0, i32 0
-    %7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str1 to [0 x i8]*), [32 x i8]* %6)
-    %8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str2 to [0 x i8]*))
-    %9 = alloca i32
-    store i32 0, i32* %9
-    br label %again_1
+	%1 = alloca [32 x i8]
+	%2 = getelementptr inbounds %SHA256_TestCase, %SHA256_TestCase* %test, i32 0, i32 0
+	%3 = bitcast [32 x i8]* %2 to [0 x i8]*
+	%4 = getelementptr inbounds %SHA256_TestCase, %SHA256_TestCase* %test, i32 0, i32 1
+	%5 = load i32, i32* %4
+	call void ([0 x i8]*, i32, [32 x i8]*) @sha256_doHash([0 x i8]* %3, i32 %5, [32 x i8]* %1)
+	%6 = getelementptr inbounds %SHA256_TestCase, %SHA256_TestCase* %test, i32 0, i32 0
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str1 to [0 x i8]*), [32 x i8]* %6)
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str2 to [0 x i8]*))
+	%9 = alloca i32
+	store i32 0, i32* %9
+	br label %again_1
 again_1:
-    %10 = load i32, i32* %9
-    %11 = icmp slt i32 %10, 32
-    br i1 %11 , label %body_1, label %break_1
+	%10 = load i32, i32* %9
+	%11 = icmp slt i32 %10, 32
+	br i1 %11 , label %body_1, label %break_1
 body_1:
-    %12 = load i32, i32* %9
-    %13 = getelementptr inbounds [32 x i8], [32 x i8]* %1, i32 0, i32 %12
-    %14 = load i8, i8* %13
-    %15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str3 to [0 x i8]*), i8 %14)
-    %16 = load i32, i32* %9
-    %17 = add i32 %16, 1
-    store i32 %17, i32* %9
-    br label %again_1
+	%12 = load i32, i32* %9
+	%13 = getelementptr inbounds [32 x i8], [32 x i8]* %1, i32 0, i32 %12
+	%14 = load i8, i8* %13
+	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str3 to [0 x i8]*), i8 %14)
+	%16 = load i32, i32* %9
+	%17 = add i32 %16, 1
+	store i32 %17, i32* %9
+	br label %again_1
 break_1:
-    %18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))
-    %19 = getelementptr inbounds %SHA256_TestCase, %SHA256_TestCase* %test, i32 0, i32 2
-    %20 = bitcast [32 x i8]* %1 to i8*
-    %21 = bitcast [32 x i8]* %19 to i8*
-    
-    %22 = call i32 (i8*, i8*, i64) @memcmp( i8* %20, i8* %21, i64 32)
-    %23 = icmp eq i32 %22, 0
-    ret i1 %23
+	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))
+	%19 = getelementptr inbounds %SHA256_TestCase, %SHA256_TestCase* %test, i32 0, i32 2
+	%20 = bitcast [32 x i8]* %1 to i8*
+	%21 = bitcast [32 x i8]* %19 to i8*
+	
+	%22 = call i32 (i8*, i8*, i64) @memcmp( i8* %20, i8* %21, i64 32)
+	%23 = icmp eq i32 %22, 0
+	ret i1 %23
 }
 
 define %Int @main() {
-    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str5 to [0 x i8]*))
-    %2 = alloca i32
-    store i32 0, i32* %2
-    br label %again_1
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str5 to [0 x i8]*))
+	%2 = alloca i32
+	store i32 0, i32* %2
+	br label %again_1
 again_1:
-    %3 = load i32, i32* %2
-    %4 = icmp slt i32 %3, 2
-    br i1 %4 , label %body_1, label %break_1
+	%3 = load i32, i32* %2
+	%4 = icmp slt i32 %3, 2
+	br i1 %4 , label %body_1, label %break_1
 body_1:
-    %5 = load i32, i32* %2
-    %6 = getelementptr inbounds [2 x %SHA256_TestCase*], [2 x %SHA256_TestCase*]* @sha256_tests, i32 0, i32 %5
-    %7 = load %SHA256_TestCase*, %SHA256_TestCase** %6
-    %8 = call i1 (%SHA256_TestCase*) @sha256_doTest(%SHA256_TestCase* %7)
-    %9 = alloca %Str8*
-    store %Str8* bitcast ([7 x i8]* @str6 to [0 x i8]*), %Str8** %9
-    br i1 %8 , label %then_0, label %endif_0
+	%5 = load i32, i32* %2
+	%6 = getelementptr inbounds [2 x %SHA256_TestCase*], [2 x %SHA256_TestCase*]* @sha256_tests, i32 0, i32 %5
+	%7 = load %SHA256_TestCase*, %SHA256_TestCase** %6
+	%8 = call i1 (%SHA256_TestCase*) @sha256_doTest(%SHA256_TestCase* %7)
+	%9 = alloca %Str8*
+	store %Str8* bitcast ([7 x i8]* @str6 to [0 x i8]*), %Str8** %9
+	br i1 %8 , label %then_0, label %endif_0
 then_0:
-    store %Str8* bitcast ([7 x i8]* @str7 to [0 x i8]*), %Str8** %9
-    br label %endif_0
+	store %Str8* bitcast ([7 x i8]* @str7 to [0 x i8]*), %Str8** %9
+	br label %endif_0
 endif_0:
-    %10 = load i32, i32* %2
-    %11 = load %Str8*, %Str8** %9
-    %12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str8 to [0 x i8]*), i32 %10, %Str8* %11)
-    %13 = load i32, i32* %2
-    %14 = add i32 %13, 1
-    store i32 %14, i32* %2
-    br label %again_1
+	%10 = load i32, i32* %2
+	%11 = load %Str8*, %Str8** %9
+	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str8 to [0 x i8]*), i32 %10, %Str8* %11)
+	%13 = load i32, i32* %2
+	%14 = add i32 %13, 1
+	store i32 %14, i32* %2
+	br label %again_1
 break_1:
-    ret %Int 0
+	ret %Int 0
 }
 
 

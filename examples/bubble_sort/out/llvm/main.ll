@@ -153,177 +153,177 @@ declare void @perror(%ConstCharStr* %str)
 
 
 @array = global [21 x i32] [
-    i32 -3,
-    i32 -5,
-    i32 2,
-    i32 1,
-    i32 -1,
-    i32 0,
-    i32 -2,
-    i32 3,
-    i32 -4,
-    i32 4,
-    i32 11,
-    i32 9,
-    i32 6,
-    i32 -7,
-    i32 -8,
-    i32 5,
-    i32 7,
-    i32 10,
-    i32 8,
-    i32 -6,
-    i32 -9
+	i32 -3,
+	i32 -5,
+	i32 2,
+	i32 1,
+	i32 -1,
+	i32 0,
+	i32 -2,
+	i32 3,
+	i32 -4,
+	i32 4,
+	i32 11,
+	i32 9,
+	i32 6,
+	i32 -7,
+	i32 -8,
+	i32 5,
+	i32 7,
+	i32 10,
+	i32 8,
+	i32 -6,
+	i32 -9
 ]
 
 define void @bubble_sort32([0 x i32]* %array, i32 %len) {
-    %1 = alloca i1
-    store i1 1, i1* %1
-    br label %again_1
+	%1 = alloca i1
+	store i1 1, i1* %1
+	br label %again_1
 again_1:
-    %2 = load i1, i1* %1
-    br i1 %2 , label %body_1, label %break_1
+	%2 = load i1, i1* %1
+	br i1 %2 , label %body_1, label %break_1
 body_1:
-    store i1 0, i1* %1
-    %3 = alloca i32
-    store i32 0, i32* %3
-    br label %again_2
+	store i1 0, i1* %1
+	%3 = alloca i32
+	store i32 0, i32* %3
+	br label %again_2
 again_2:
-    %4 = load i32, i32* %3
-    %5 = sub i32 %len, 1
-    %6 = icmp slt i32 %4, %5
-    br i1 %6 , label %body_2, label %break_2
+	%4 = load i32, i32* %3
+	%5 = sub i32 %len, 1
+	%6 = icmp slt i32 %4, %5
+	br i1 %6 , label %body_2, label %break_2
 body_2:
-    %7 = load i32, i32* %3
-    %8 = getelementptr inbounds [0 x i32], [0 x i32]* %array, i32 0, i32 %7
-    %9 = load i32, i32* %8
-    %10 = load i32, i32* %3
-    %11 = add i32 %10, 1
-    %12 = getelementptr inbounds [0 x i32], [0 x i32]* %array, i32 0, i32 %11
-    %13 = load i32, i32* %12
-    %14 = icmp sgt i32 %9, %13
-    br i1 %14 , label %then_0, label %endif_0
+	%7 = load i32, i32* %3
+	%8 = getelementptr inbounds [0 x i32], [0 x i32]* %array, i32 0, i32 %7
+	%9 = load i32, i32* %8
+	%10 = load i32, i32* %3
+	%11 = add i32 %10, 1
+	%12 = getelementptr inbounds [0 x i32], [0 x i32]* %array, i32 0, i32 %11
+	%13 = load i32, i32* %12
+	%14 = icmp sgt i32 %9, %13
+	br i1 %14 , label %then_0, label %endif_0
 then_0:
-    ; swap
-    %15 = load i32, i32* %3
-    %16 = getelementptr inbounds [0 x i32], [0 x i32]* %array, i32 0, i32 %15
-    store i32 %13, i32* %16
-    %17 = load i32, i32* %3
-    %18 = add i32 %17, 1
-    %19 = getelementptr inbounds [0 x i32], [0 x i32]* %array, i32 0, i32 %18
-    store i32 %9, i32* %19
-    store i1 1, i1* %1
-    br label %break_2
-    br label %endif_0
+	; swap
+	%15 = load i32, i32* %3
+	%16 = getelementptr inbounds [0 x i32], [0 x i32]* %array, i32 0, i32 %15
+	store i32 %13, i32* %16
+	%17 = load i32, i32* %3
+	%18 = add i32 %17, 1
+	%19 = getelementptr inbounds [0 x i32], [0 x i32]* %array, i32 0, i32 %18
+	store i32 %9, i32* %19
+	store i1 1, i1* %1
+	br label %break_2
+	br label %endif_0
 endif_0:
-    %21 = load i32, i32* %3
-    %22 = add i32 %21, 1
-    store i32 %22, i32* %3
-    br label %again_2
+	%21 = load i32, i32* %3
+	%22 = add i32 %21, 1
+	store i32 %22, i32* %3
+	br label %again_2
 break_2:
-    br label %again_1
+	br label %again_1
 break_1:
-    ret void
+	ret void
 }
 
 define i32 @main() {
-    ;fill_array(&array, numberOfItems)
-    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
-    %2 = bitcast [21 x i32]* @array to [0 x i32]*
-    call void ([0 x i32]*, i32) @print_array([0 x i32]* %2, i32 21)
-    %3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
-    %4 = bitcast [21 x i32]* @array to [0 x i32]*
-    call void ([0 x i32]*, i32) @bubble_sort32([0 x i32]* %4, i32 21)
-    %5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str3 to [0 x i8]*))
-    %6 = bitcast [21 x i32]* @array to [0 x i32]*
-    call void ([0 x i32]*, i32) @print_array([0 x i32]* %6, i32 21)
-    %7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))
-    ret i32 0
+	;fill_array(&array, numberOfItems)
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
+	%2 = bitcast [21 x i32]* @array to [0 x i32]*
+	call void ([0 x i32]*, i32) @print_array([0 x i32]* %2, i32 21)
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
+	%4 = bitcast [21 x i32]* @array to [0 x i32]*
+	call void ([0 x i32]*, i32) @bubble_sort32([0 x i32]* %4, i32 21)
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str3 to [0 x i8]*))
+	%6 = bitcast [21 x i32]* @array to [0 x i32]*
+	call void ([0 x i32]*, i32) @print_array([0 x i32]* %6, i32 21)
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))
+	ret i32 0
 }
 
 define void @print_array([0 x i32]* %array, i32 %len) {
-    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str5 to [0 x i8]*))
-    %2 = alloca i32
-    store i32 0, i32* %2
-    br label %again_1
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str5 to [0 x i8]*))
+	%2 = alloca i32
+	store i32 0, i32* %2
+	br label %again_1
 again_1:
-    %3 = load i32, i32* %2
-    %4 = icmp slt i32 %3, %len
-    br i1 %4 , label %body_1, label %break_1
+	%3 = load i32, i32* %2
+	%4 = icmp slt i32 %3, %len
+	br i1 %4 , label %body_1, label %break_1
 body_1:
-    %5 = load i32, i32* %2
-    %6 = load i32, i32* %2
-    %7 = getelementptr inbounds [0 x i32], [0 x i32]* %array, i32 0, i32 %6
-    %8 = load i32, i32* %7
-    %9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str6 to [0 x i8]*), i32 %5, i32 %8)
-    %10 = load i32, i32* %2
-    %11 = add i32 %10, 1
-    store i32 %11, i32* %2
-    br label %again_1
+	%5 = load i32, i32* %2
+	%6 = load i32, i32* %2
+	%7 = getelementptr inbounds [0 x i32], [0 x i32]* %array, i32 0, i32 %6
+	%8 = load i32, i32* %7
+	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str6 to [0 x i8]*), i32 %5, i32 %8)
+	%10 = load i32, i32* %2
+	%11 = add i32 %10, 1
+	store i32 %11, i32* %2
+	br label %again_1
 break_1:
-    ret void
+	ret void
 }
 
 define void @fill_array([0 x i32]* %array, i32 %len) {
-    %1 = sub i16 0, 1000
-    %2 = alloca i32
-    store i32 0, i32* %2
-    br label %again_1
+	%1 = sub i16 0, 1000
+	%2 = alloca i32
+	store i32 0, i32* %2
+	br label %again_1
 again_1:
-    %3 = load i32, i32* %2
-    %4 = icmp slt i32 %3, %len
-    br i1 %4 , label %body_1, label %break_1
+	%3 = load i32, i32* %2
+	%4 = icmp slt i32 %3, %len
+	br i1 %4 , label %body_1, label %break_1
 body_1:
-    %5 = load i32, i32* %2
-    %6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str7 to [0 x i8]*), i32 %5)
-    %7 = sext i16 %1 to i32
-    %8 = sext i16 1000 to i32
-    %9 = call i32 (i32, i32) @get_integer(i32 %7, i32 %8)
-    %10 = load i32, i32* %2
-    %11 = getelementptr inbounds [0 x i32], [0 x i32]* %array, i32 0, i32 %10
-    store i32 %9, i32* %11
-    %12 = load i32, i32* %2
-    %13 = add i32 %12, 1
-    store i32 %13, i32* %2
-    br label %again_1
+	%5 = load i32, i32* %2
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str7 to [0 x i8]*), i32 %5)
+	%7 = sext i16 %1 to i32
+	%8 = sext i16 1000 to i32
+	%9 = call i32 (i32, i32) @get_integer(i32 %7, i32 %8)
+	%10 = load i32, i32* %2
+	%11 = getelementptr inbounds [0 x i32], [0 x i32]* %array, i32 0, i32 %10
+	store i32 %9, i32* %11
+	%12 = load i32, i32* %2
+	%13 = add i32 %12, 1
+	store i32 %13, i32* %2
+	br label %again_1
 break_1:
-    ret void
+	ret void
 }
 
 define i32 @get_integer(i32 %min, i32 %max) {
-    %1 = alloca i32
-    store i32 0, i32* %1
-    br label %again_1
+	%1 = alloca i32
+	store i32 0, i32* %1
+	br label %again_1
 again_1:
-    br i1 1 , label %body_1, label %break_1
+	br i1 1 , label %body_1, label %break_1
 body_1:
-    %2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([28 x i8]* @str8 to [0 x i8]*), i32 %min, i32 %max)
-    %3 = call %Int (%ConstCharStr*, ...) @scanf(%ConstCharStr* bitcast ([3 x i8]* @str9 to [0 x i8]*), i32* %1)
-    %4 = load i32, i32* %1
-    %5 = icmp slt i32 %4, %min
-    br i1 %5 , label %then_0, label %else_0
+	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([28 x i8]* @str8 to [0 x i8]*), i32 %min, i32 %max)
+	%3 = call %Int (%ConstCharStr*, ...) @scanf(%ConstCharStr* bitcast ([3 x i8]* @str9 to [0 x i8]*), i32* %1)
+	%4 = load i32, i32* %1
+	%5 = icmp slt i32 %4, %min
+	br i1 %5 , label %then_0, label %else_0
 then_0:
-    %6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([43 x i8]* @str10 to [0 x i8]*), i32 %min)
-    br label %again_1
-    br label %endif_0
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([43 x i8]* @str10 to [0 x i8]*), i32 %min)
+	br label %again_1
+	br label %endif_0
 else_0:
-    %8 = load i32, i32* %1
-    %9 = icmp sgt i32 %8, %max
-    br i1 %9 , label %then_1, label %else_1
+	%8 = load i32, i32* %1
+	%9 = icmp sgt i32 %8, %max
+	br i1 %9 , label %then_1, label %else_1
 then_1:
-    %10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([40 x i8]* @str11 to [0 x i8]*), i32 %max)
-    br label %again_1
-    br label %endif_1
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([40 x i8]* @str11 to [0 x i8]*), i32 %max)
+	br label %again_1
+	br label %endif_1
 else_1:
-    br label %break_1
-    br label %endif_1
+	br label %break_1
+	br label %endif_1
 endif_1:
-    br label %endif_0
+	br label %endif_0
 endif_0:
-    br label %again_1
+	br label %again_1
 break_1:
-    %13 = load i32, i32* %1
-    ret i32 %13
+	%13 = load i32, i32* %1
+	ret i32 %13
 }
 
 

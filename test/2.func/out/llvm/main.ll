@@ -147,40 +147,40 @@ declare void @perror(%ConstCharStr* %str)
 
 
 define void @func1() {
-    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str1 to [0 x i8]*))
-    ret void
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str1 to [0 x i8]*))
+	ret void
 }
 
 define void @print_ab(i32 %a, i32 %b) {
-    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str2 to [0 x i8]*), i32 %a, i32 %b)
-    ret void
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str2 to [0 x i8]*), i32 %a, i32 %b)
+	ret void
 }
 
 define i32 @sum(i32 %a, i32 %b) {
-    %1 = add i32 %a, %b
-    ret i32 %1
+	%1 = add i32 %a, %b
+	ret i32 %1
 }
 
 
 
 define %Int @main() {
-    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str3 to [0 x i8]*))
-    ; call declared & defined functions
-    call void () @func0()
-    call void () @func1()
-    ; call function with two arguments
-    call void (i32, i32) @print_ab(i32 10, i32 20)
-    ; call function with two arguments and return value
-    %2 = call i32 (i32, i32) @sum(i32 1, i32 2)
-    %3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str4 to [0 x i8]*), i32 1, i32 2, i32 %2)
-    ret %Int 0
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str3 to [0 x i8]*))
+	; call declared & defined functions
+	call void () @func0()
+	call void () @func1()
+	; call function with two arguments
+	call void (i32, i32) @print_ab(i32 10, i32 20)
+	; call function with two arguments and return value
+	%2 = call i32 (i32, i32) @sum(i32 1, i32 2)
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str4 to [0 x i8]*), i32 1, i32 2, i32 %2)
+	ret %Int 0
 }
 
 
 
 define void @func0() {
-    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str5 to [0 x i8]*))
-    ret void
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str5 to [0 x i8]*))
+	ret void
 }
 
 

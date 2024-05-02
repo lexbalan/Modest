@@ -13,6 +13,6 @@
 
 void lib_func()
 {
-    printf("hello from lib_func\n");
+	printf("hello from lib_func\n");
 }
 

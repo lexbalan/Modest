@@ -18,22 +18,22 @@
 
 
 typedef struct {
-    uint32_t x;
-    uint32_t y;
+	uint32_t x;
+	uint32_t y;
 } Point;
 
 
 #define ps  { \
-    {.x = 0, .y = 0}, \
-    {.x = 1, .y = 1}, \
-    {.x = 2, .y = 2} \
+	{.x = 0, .y = 0}, \
+	{.x = 1, .y = 1}, \
+	{.x = 2, .y = 2} \
 }
 const struct {int8_t x; int8_t y;} _ps[3] = ps;
 
 #define points  { \
-    {.x = 0, .y = 0}, \
-    {.x = 1, .y = 1}, \
-    {.x = 2, .y = 2} \
+	{.x = 0, .y = 0}, \
+	{.x = 1, .y = 1}, \
+	{.x = 2, .y = 2} \
 }
 const Point _points[3] = points;
 
@@ -43,23 +43,23 @@ const Point _points[3] = points;
 // непонятно существует ли хорошее решение
 //@property("c_prefix", "const")
 static Point points2[3] = {
-    {.x = 0, .y = 0},
-    {.x = 1, .y = 1},
-    {.x = 2, .y = 2}
+	{.x = 0, .y = 0},
+	{.x = 1, .y = 1},
+	{.x = 2, .y = 2}
 };
 
 
 // define function main
 int main()
 {
-    printf("test const\n");
+	printf("test const\n");
 
-    printf("genericIntConst = %d\n", (int32_t)genericIntConst);
-    printf("int32Const = %d\n", int32Const);
+	printf("genericIntConst = %d\n", (int32_t)genericIntConst);
+	printf("int32Const = %d\n", int32Const);
 
-    //	printf("genericStringConst = %s\n", genericStringConst)
-    printf("string8Const = %s\n", string8Const);
+	//	printf("genericStringConst = %s\n", genericStringConst)
+	printf("string8Const = %s\n", string8Const);
 
-    return 0;
+	return 0;
 }
 

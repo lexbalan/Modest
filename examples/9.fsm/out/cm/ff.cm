@@ -5,24 +5,24 @@ import "libc/libc"
 
 
 func delay_us(us: Nat64) -> Unit {
-    let start_time = clock()
-    while clock() < start_time + us {
-        // just waiting
-    }
+	let start_time = clock()
+	while clock() < start_time + us {
+		// just waiting
+	}
 }
 
 
 func delay(us: Nat64) -> Unit {
-    delay_us(us)
+	delay_us(us)
 }
 
 
 func delay_ms(ms: Nat64) -> Unit {
-    delay_us(ms * 1000)
+	delay_us(ms * 1000)
 }
 
 
 func delay_s(s: Nat64) -> Unit {
-    delay_ms(s * 1000)
+	delay_ms(s * 1000)
 }
 

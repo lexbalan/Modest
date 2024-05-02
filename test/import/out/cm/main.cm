@@ -14,7 +14,7 @@ import "libc/math"
 
 
 func main() -> Int {
-    printf("Smart import test\n")
-    return 0
+	printf("Smart import test\n")
+	return 0
 }
 

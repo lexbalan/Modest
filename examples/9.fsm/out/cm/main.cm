@@ -29,27 +29,27 @@ var cnt: Nat8
 //
 
 func off_entry(fsm: *FSM) -> Unit {
-    Unit fsm
-    //printf("off_entry\n")
+	Unit fsm
+	//printf("off_entry\n")
 }
 
 
 func off_loop(fsm: *FSM) -> Unit {
-    Unit fsm
+	Unit fsm
 
-    printf("off_loop\n")
-    if cnt < 10 {
-        cnt = cnt + 1
-    } else {
-        cnt = 0
-        fsm_switch(fsm, flashlightStateOn)
-    }
+	printf("off_loop\n")
+	if cnt < 10 {
+		cnt = cnt + 1
+	} else {
+		cnt = 0
+		fsm_switch(fsm, flashlightStateOn)
+	}
 }
 
 
 func off_exit(fsm: *FSM) -> Unit {
-    Unit fsm
-    //printf("off_exit\n")
+	Unit fsm
+	//printf("off_exit\n")
 }
 
 
@@ -58,26 +58,26 @@ func off_exit(fsm: *FSM) -> Unit {
 //
 
 func on_entry(fsm: *FSM) -> Unit {
-    Unit fsm
-    //printf("on_entry\n")
+	Unit fsm
+	//printf("on_entry\n")
 }
 
 
 func on_loop(fsm: *FSM) -> Unit {
-    Unit fsm
-    printf("on_loop\n")
-    if cnt < 10 {
-        cnt = cnt + 1
-    } else {
-        cnt = 0
-        fsm_switch(fsm, flashlightStateBeacon)
-    }
+	Unit fsm
+	printf("on_loop\n")
+	if cnt < 10 {
+		cnt = cnt + 1
+	} else {
+		cnt = 0
+		fsm_switch(fsm, flashlightStateBeacon)
+	}
 }
 
 
 func on_exit(fsm: *FSM) -> Unit {
-    Unit fsm
-    //printf("on_exit\n")
+	Unit fsm
+	//printf("on_exit\n")
 }
 
 
@@ -86,67 +86,67 @@ func on_exit(fsm: *FSM) -> Unit {
 //
 
 func beacon_entry(fsm: *FSM) -> Unit {
-    let from_name = fsm_state_no_name(fsm, fsm.state)
-    printf("beacon_entry from %s\n", from_name)
+	let from_name = fsm_state_no_name(fsm, fsm.state)
+	printf("beacon_entry from %s\n", from_name)
 }
 
 
 func beacon_loop(fsm: *FSM) -> Unit {
-    printf("beacon_loop\n")
-    if cnt < 10 {
-        cnt = cnt + 1
-    } else {
-        cnt = 0
-        fsm_switch(fsm, flashlightStateOff)
-    }
+	printf("beacon_loop\n")
+	if cnt < 10 {
+		cnt = cnt + 1
+	} else {
+		cnt = 0
+		fsm_switch(fsm, flashlightStateOff)
+	}
 }
 
 
 func beacon_exit(fsm: *FSM) -> Unit {
-    let to_name = fsm_state_no_name(fsm, fsm.nexstate)
-    printf("beacon_exit to %s\n", to_name)
+	let to_name = fsm_state_no_name(fsm, fsm.nexstate)
+	printf("beacon_exit to %s\n", to_name)
 }
 
 
 
 var fsm: FSM = {
-    name = ""Flash"
-    state = 0
-    nexstate = 0
-    substate = fsmSubstateEntering
-    states = [
-        {
-            name = ""Off"
-            entry = &off_entry
-            loop = &off_loop
-            exit = &off_exit
-        }
+	name = ""Flash"
+	state = 0
+	nexstate = 0
+	substate = fsmSubstateEntering
+	states = [
+		{
+			name = ""Off"
+			entry = &off_entry
+			loop = &off_loop
+			exit = &off_exit
+		}
 
-        {
-            name = ""On"
-            entry = &on_entry
-            loop = &on_loop
-            exit = &on_exit
-        }
+		{
+			name = ""On"
+			entry = &on_entry
+			loop = &on_loop
+			exit = &on_exit
+		}
 
-        {
-            name = ""Beacon"
-            entry = &beacon_entry
-            loop = &beacon_loop
-            exit = &beacon_exit
-        }, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
-    ]
+		{
+			name = ""Beacon"
+			entry = &beacon_entry
+			loop = &beacon_loop
+			exit = &beacon_exit
+		}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
+	]
 }
 
 
 
 func main() -> Int {
 
-    while true {
-        fsm_run(&fsm)
-        delay_ms(500)
-    }
+	while true {
+		fsm_run(&fsm)
+		delay_ms(500)
+	}
 
-    return 0
+	return 0
 }
 

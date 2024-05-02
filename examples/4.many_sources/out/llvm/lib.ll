@@ -147,8 +147,8 @@ declare void @perror(%ConstCharStr* %str)
 
 
 define void @lib_func() {
-    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str1 to [0 x i8]*))
-    ret void
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str1 to [0 x i8]*))
+	ret void
 }
 
 

@@ -158,67 +158,67 @@ declare void @perror(%ConstCharStr* %str)
 	i8, 
 	i8
 }] [
-    {
+	{
 	i8, 
 	i8
 } {
-        i8 0,
-        i8 0
-    },
-    {
+		i8 0,
+		i8 0
+	},
+	{
 	i8, 
 	i8
 } {
-        i8 1,
-        i8 1
-    },
-    {
+		i8 1,
+		i8 1
+	},
+	{
 	i8, 
 	i8
 } {
-        i8 2,
-        i8 2
-    }
+		i8 2,
+		i8 2
+	}
 ]
 @points = constant [3 x %Point] [
-    %Point {
-        i32 0,
-        i32 0
-    },
-    %Point {
-        i32 1,
-        i32 1
-    },
-    %Point {
-        i32 2,
-        i32 2
-    }
+	%Point {
+		i32 0,
+		i32 0
+	},
+	%Point {
+		i32 1,
+		i32 1
+	},
+	%Point {
+		i32 2,
+		i32 2
+	}
 ]
 
 
 @points2 = global [3 x %Point] [
-    %Point {
-        i32 0,
-        i32 0
-    },
-    %Point {
-        i32 1,
-        i32 1
-    },
-    %Point {
-        i32 2,
-        i32 2
-    }
+	%Point {
+		i32 0,
+		i32 0
+	},
+	%Point {
+		i32 1,
+		i32 1
+	},
+	%Point {
+		i32 2,
+		i32 2
+	}
 ]
 
 
 define %Int @main() {
-    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str4 to [0 x i8]*))
-    %2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*), i32 42)
-    %3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str6 to [0 x i8]*), i32 42)
-    ;	printf("genericStringConst = %s\n", genericStringConst)
-    %4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str7 to [0 x i8]*), %Str8* bitcast ([7 x i8]* @str1 to [0 x i8]*))
-    ret %Int 0
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str4 to [0 x i8]*))
+	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*), i32 42)
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str6 to [0 x i8]*), i32 42)
+	;	printf("genericStringConst = %s\n", genericStringConst)
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str7 to [0 x i8]*), %Str8* bitcast ([7 x i8]* @str1 to [0 x i8]*))
+	ret %Int 0
 }
 
 

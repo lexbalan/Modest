@@ -9,53 +9,53 @@ const fsmVerbose = true
 
 
 func fsm_state_no_name(fsm: *FSM, state_no: Nat32) -> *Str8 {
-    return &fsm.states[state_no].name
+	return &fsm.states[state_no].name
 }
 
 
 func fsm_switch(fsm: *FSM, state: Nat32) -> Unit {
-    fsm.nexstate = state
-    fsm.substate = fsmSubstateLeaving
+	fsm.nexstate = state
+	fsm.substate = fsmSubstateLeaving
 }
 
 
 func fsm_run(fsm: *FSM) -> Unit {
-    printf("fsm_run()\n")
+	printf("fsm_run()\n")
 
-    if fsm.substate == fsmSubstateEntering {
-        let nexstate = fsm.nexstate
-        let state = &fsm.states[nexstate]
+	if fsm.substate == fsmSubstateEntering {
+		let nexstate = fsm.nexstate
+		let state = &fsm.states[nexstate]
 
-        if fsmVerbose {
-            printf("enter %s\n", &state.name)
-        }
+		if fsmVerbose {
+			printf("enter %s\n", &state.name)
+		}
 
-        if state.entry != nil {
-            state.entry(fsm)
-        }
+		if state.entry != nil {
+			state.entry(fsm)
+		}
 
-        fsm.state = nexstate
-        fsm.substate = fsmSubstateLoop
+		fsm.state = nexstate
+		fsm.substate = fsmSubstateLoop
 
-    } else if fsm.substate == fsmSubstateLoop {
-        let state = &fsm.states[fsm.state]
+	} else if fsm.substate == fsmSubstateLoop {
+		let state = &fsm.states[fsm.state]
 
-        if state.loop != nil {
-            state.loop(fsm)
-        }
+		if state.loop != nil {
+			state.loop(fsm)
+		}
 
-    } else if fsm.substate == fsmSubstateLeaving {
-        let state = &fsm.states[fsm.state]
+	} else if fsm.substate == fsmSubstateLeaving {
+		let state = &fsm.states[fsm.state]
 
-        if fsmVerbose {
-            printf("exit %s\n", &state.name)
-        }
+		if fsmVerbose {
+			printf("exit %s\n", &state.name)
+		}
 
-        if state.exit != nil {
-            state.exit(fsm)
-        }
+		if state.exit != nil {
+			state.exit(fsm)
+		}
 
-        fsm.substate = fsmSubstateEntering
-    }
+		fsm.substate = fsmSubstateEntering
+	}
 }
 

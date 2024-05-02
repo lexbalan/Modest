@@ -161,98 +161,98 @@ declare void @utf32_puts(%Str32* %s)
 
 
 @ratSymbolUTF8 = constant [4 x i8] [
-    i8 240,
-    i8 159,
-    i8 144,
-    i8 128
+	i8 240,
+	i8 159,
+	i8 144,
+	i8 128
 ]
 @ratSymbolUTF16 = constant [2 x i16] [
-    i16 55357,
-    i16 56320
+	i16 55357,
+	i16 56320
 ]
 
 @arr_utf8 = global [8 x i8] [
-    i8 72,
-    i8 105,
-    i8 33,
-    i8 10,
-    i8 0,
-    i8 0,
-    i8 0,
-    i8 0
+	i8 72,
+	i8 105,
+	i8 33,
+	i8 10,
+	i8 0,
+	i8 0,
+	i8 0,
+	i8 0
 ]
 @arr_utf16 = global [8 x i16] [
-    i16 72,
-    i16 101,
-    i16 108,
-    i16 108,
-    i16 111,
-    i16 33,
-    i16 10,
-    i16 0
+	i16 72,
+	i16 101,
+	i16 108,
+	i16 108,
+	i16 111,
+	i16 33,
+	i16 10,
+	i16 0
 ]
 @arr_utf32 = global [8 x i32] [
-    i32 72,
-    i32 101,
-    i32 108,
-    i32 108,
-    i32 111,
-    i32 33,
-    i32 10,
-    i32 0
+	i32 72,
+	i32 101,
+	i32 108,
+	i32 108,
+	i32 111,
+	i32 33,
+	i32 10,
+	i32 0
 ]
 
 
 define %Int @main() {
-    ; indexing of GenericString returns #i symbol code
-    ; the symbols have GenericInteger type
-    ;	let omegaCharCode = "Hello Ω!\n"[6]
-    ;	let ratCharCode = "Hello 🐀!\n"[6]
-    ; you can assign omegaCharCode (937) to Nat32,
-    ; but you can't assign ratCharCode (128000) to Nat16 (!)
-    ;	var omegaCode: Nat16 = Nat16 omegaCharCode
-    ;	var ratCode: Nat32 = Nat32 ratCharCode
-    ;	printf("omegaCode = %d\n", omegaCode)
-    ;	printf("ratCode = %d\n", ratCode)
-    %1 = alloca i32
-    store i32 0, i32* %1
-    br label %again_1
+	; indexing of GenericString returns #i symbol code
+	; the symbols have GenericInteger type
+	;	let omegaCharCode = "Hello Ω!\n"[6]
+	;	let ratCharCode = "Hello 🐀!\n"[6]
+	; you can assign omegaCharCode (937) to Nat32,
+	; but you can't assign ratCharCode (128000) to Nat16 (!)
+	;	var omegaCode: Nat16 = Nat16 omegaCharCode
+	;	var ratCode: Nat32 = Nat32 ratCharCode
+	;	printf("omegaCode = %d\n", omegaCode)
+	;	printf("ratCode = %d\n", ratCode)
+	%1 = alloca i32
+	store i32 0, i32* %1
+	br label %again_1
 again_1:
-    br i1 1 , label %body_1, label %break_1
+	br i1 1 , label %body_1, label %break_1
 body_1:
-    %2 = load i32, i32* %1
-    %3 = getelementptr inbounds %Str16, %Str16* bitcast ([21 x i16]* @str2 to [0 x i16]*), i32 0, i32 %2
-    %4 = load i16, i16* %3
-    %5 = icmp eq i16 %4, 0
-    br i1 %5 , label %then_0, label %endif_0
+	%2 = load i32, i32* %1
+	%3 = getelementptr inbounds %Str16, %Str16* bitcast ([21 x i16]* @str2 to [0 x i16]*), i32 0, i32 %2
+	%4 = load i16, i16* %3
+	%5 = icmp eq i16 %4, 0
+	br i1 %5 , label %then_0, label %endif_0
 then_0:
-    br label %break_1
-    br label %endif_0
+	br label %break_1
+	br label %endif_0
 endif_0:
-    %7 = load i32, i32* %1
-    %8 = zext i16 %4 to i32
-    %9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str4 to [0 x i8]*), i32 %7, i32 %8)
-    %10 = load i32, i32* %1
-    %11 = add i32 %10, 1
-    store i32 %11, i32* %1
-    br label %again_1
+	%7 = load i32, i32* %1
+	%8 = zext i16 %4 to i32
+	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str4 to [0 x i8]*), i32 %7, i32 %8)
+	%10 = load i32, i32* %1
+	%11 = add i32 %10, 1
+	store i32 %11, i32* %1
+	br label %again_1
 break_1:
-    %12 = alloca %Str8*
-    store %Str8* bitcast ([28 x i8]* @str1 to [0 x i8]*), %Str8** %12
-    %13 = alloca %Str16*
-    store %Str16* bitcast ([21 x i16]* @str2 to [0 x i16]*), %Str16** %13
-    %14 = alloca %Str32*
-    store %Str32* bitcast ([18 x i32]* @str3 to [0 x i32]*), %Str32** %14
-    %15 = load %Str8*, %Str8** %12
-    call void (%Str8*) @utf8_puts(%Str8* %15)
-    call void (%Str8*) @utf8_puts(%Str8* bitcast ([2 x i8]* @str5 to [0 x i8]*))
-    %16 = load %Str16*, %Str16** %13
-    call void (%Str16*) @utf16_puts(%Str16* %16)
-    call void (%Str8*) @utf8_puts(%Str8* bitcast ([2 x i8]* @str6 to [0 x i8]*))
-    %17 = load %Str32*, %Str32** %14
-    call void (%Str32*) @utf32_puts(%Str32* %17)
-    call void (%Str8*) @utf8_puts(%Str8* bitcast ([2 x i8]* @str7 to [0 x i8]*))
-    ret %Int 0
+	%12 = alloca %Str8*
+	store %Str8* bitcast ([28 x i8]* @str1 to [0 x i8]*), %Str8** %12
+	%13 = alloca %Str16*
+	store %Str16* bitcast ([21 x i16]* @str2 to [0 x i16]*), %Str16** %13
+	%14 = alloca %Str32*
+	store %Str32* bitcast ([18 x i32]* @str3 to [0 x i32]*), %Str32** %14
+	%15 = load %Str8*, %Str8** %12
+	call void (%Str8*) @utf8_puts(%Str8* %15)
+	call void (%Str8*) @utf8_puts(%Str8* bitcast ([2 x i8]* @str5 to [0 x i8]*))
+	%16 = load %Str16*, %Str16** %13
+	call void (%Str16*) @utf16_puts(%Str16* %16)
+	call void (%Str8*) @utf8_puts(%Str8* bitcast ([2 x i8]* @str6 to [0 x i8]*))
+	%17 = load %Str32*, %Str32** %14
+	call void (%Str32*) @utf32_puts(%Str32* %17)
+	call void (%Str8*) @utf8_puts(%Str8* bitcast ([2 x i8]* @str7 to [0 x i8]*))
+	ret %Int 0
 }
 
 

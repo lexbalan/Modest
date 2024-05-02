@@ -234,16 +234,16 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 
 
 define double @squareOfCircle(double %radius) {
-    %1 = call %Double (%Double, %Double) @pow(double %radius, %Double 2.0)
-    %2 = fmul %Double %1, 3.141592653589793
-    ret %Double %2
+	%1 = call %Double (%Double, %Double) @pow(double %radius, %Double 2.0)
+	%2 = fmul %Double %1, 3.141592653589793
+	ret %Double %2
 }
 
 define %Int @main() {
-    %1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*))
-    %2 = call double (double) @squareOfCircle(double 10.0)
-    %3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), double %2)
-    ret %Int 0
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*))
+	%2 = call double (double) @squareOfCircle(double 10.0)
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), double %2)
+	ret %Int 0
 }
 
 

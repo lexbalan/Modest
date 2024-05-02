@@ -331,90 +331,90 @@ declare void @bcopy(i8* %src, i8* %dst, %SizeT %n)
 
 
 @line = global %Line {
-    %Point {
-        %Float 0.0,
-        %Float 0.0
-    },
-    %Point {
-        %Float 1.0,
-        %Float 1.0
-    }
+	%Point {
+		%Float 0.0,
+		%Float 0.0
+	},
+	%Point {
+		%Float 1.0,
+		%Float 1.0
+	}
 }
 
 define %Float @max(%Float %a, %Float %b) {
-    %1 = fcmp ogt %Float %a, %b
-    br i1 %1 , label %then_0, label %endif_0
+	%1 = fcmp ogt %Float %a, %b
+	br i1 %1 , label %then_0, label %endif_0
 then_0:
-    ret %Float %a
-    br label %endif_0
+	ret %Float %a
+	br label %endif_0
 endif_0:
-    ret %Float %b
+	ret %Float %b
 }
 
 define %Float @min(%Float %a, %Float %b) {
-    %1 = fcmp olt %Float %a, %b
-    br i1 %1 , label %then_0, label %endif_0
+	%1 = fcmp olt %Float %a, %b
+	br i1 %1 , label %then_0, label %endif_0
 then_0:
-    ret %Float %a
-    br label %endif_0
+	ret %Float %a
+	br label %endif_0
 endif_0:
-    ret %Float %b
+	ret %Float %b
 }
 
 
 
 define %Float @distance(%Point %a, %Point %b) {
-    %1 = extractvalue %Point %a, 0
-    %2 = extractvalue %Point %b, 0
-    %3 = call %Float (%Float, %Float) @max(%Float %1, %Float %2)
-    %4 = extractvalue %Point %a, 0
-    %5 = extractvalue %Point %b, 0
-    %6 = call %Float (%Float, %Float) @min(%Float %4, %Float %5)
-    %7 = fsub %Float %3, %6
-    %8 = extractvalue %Point %a, 1
-    %9 = extractvalue %Point %b, 1
-    %10 = call %Float (%Float, %Float) @max(%Float %8, %Float %9)
-    %11 = extractvalue %Point %a, 1
-    %12 = extractvalue %Point %b, 1
-    %13 = call %Float (%Float, %Float) @min(%Float %11, %Float %12)
-    %14 = fsub %Float %10, %13
-    %15 = call %Double (%Double, %Double) @pow(%Float %7, %Double 2.0)
-    %16 = call %Double (%Double, %Double) @pow(%Float %14, %Double 2.0)
-    %17 = fadd %Double %15, %16
-    %18 = call %Double (%Double) @sqrt(%Double %17)
-    ret %Double %18
+	%1 = extractvalue %Point %a, 0
+	%2 = extractvalue %Point %b, 0
+	%3 = call %Float (%Float, %Float) @max(%Float %1, %Float %2)
+	%4 = extractvalue %Point %a, 0
+	%5 = extractvalue %Point %b, 0
+	%6 = call %Float (%Float, %Float) @min(%Float %4, %Float %5)
+	%7 = fsub %Float %3, %6
+	%8 = extractvalue %Point %a, 1
+	%9 = extractvalue %Point %b, 1
+	%10 = call %Float (%Float, %Float) @max(%Float %8, %Float %9)
+	%11 = extractvalue %Point %a, 1
+	%12 = extractvalue %Point %b, 1
+	%13 = call %Float (%Float, %Float) @min(%Float %11, %Float %12)
+	%14 = fsub %Float %10, %13
+	%15 = call %Double (%Double, %Double) @pow(%Float %7, %Double 2.0)
+	%16 = call %Double (%Double, %Double) @pow(%Float %14, %Double 2.0)
+	%17 = fadd %Double %15, %16
+	%18 = call %Double (%Double) @sqrt(%Double %17)
+	ret %Double %18
 }
 
 define %Float @lineLength(%Line %line) {
-    %1 = extractvalue %Line %line, 0
-    %2 = extractvalue %Line %line, 1
-    %3 = call %Float (%Point, %Point) @distance(%Point %1, %Point %2)
-    ret %Float %3
+	%1 = extractvalue %Line %line, 0
+	%2 = extractvalue %Line %line, 1
+	%3 = call %Float (%Point, %Point) @distance(%Point %1, %Point %2)
+	ret %Float %3
 }
 
 define void @ptr_example() {
-    %1 = call i8* (%SizeT) @malloc(%SizeT 16)
-    %2 = bitcast i8* %1 to %Point*
-    ; access by pointer
-    %3 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 0
-    store %Float 10.0, %Float* %3
-    %4 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 1
-    store %Float 20.0, %Float* %4
-    %5 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 0
-    %6 = load %Float, %Float* %5
-    %7 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 1
-    %8 = load %Float, %Float* %7
-    %9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*), %Float %6, %Float %8)
-    ret void
+	%1 = call i8* (%SizeT) @malloc(%SizeT 16)
+	%2 = bitcast i8* %1 to %Point*
+	; access by pointer
+	%3 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 0
+	store %Float 10.0, %Float* %3
+	%4 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 1
+	store %Float 20.0, %Float* %4
+	%5 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 0
+	%6 = load %Float, %Float* %5
+	%7 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 1
+	%8 = load %Float, %Float* %7
+	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*), %Float %6, %Float %8)
+	ret void
 }
 
 define %Int @main() {
-    ; by value
-    %1 = load %Line, %Line* @line
-    %2 = call %Float (%Line) @lineLength(%Line %1)
-    %3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str2 to [0 x i8]*), %Float %2)
-    call void () @ptr_example()
-    ret %Int 0
+	; by value
+	%1 = load %Line, %Line* @line
+	%2 = call %Float (%Line) @lineLength(%Line %1)
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str2 to [0 x i8]*), %Float %2)
+	call void () @ptr_example()
+	ret %Int 0
 }
 
 

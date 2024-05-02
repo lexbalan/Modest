@@ -143,34 +143,34 @@ declare void @perror(%ConstCharStr* %str)
 
 
 define void @mtab(i32 %n) {
-    %1 = alloca i32
-    store i32 1, i32* %1
-    ; or
-    ;var m = 1   // by default integer var get system int type (-mint option)
-    br label %again_1
+	%1 = alloca i32
+	store i32 1, i32* %1
+	; or
+	;var m = 1   // by default integer var get system int type (-mint option)
+	br label %again_1
 again_1:
-    %2 = load i32, i32* %1
-    %3 = icmp ult i32 %2, 10
-    br i1 %3 , label %body_1, label %break_1
+	%2 = load i32, i32* %1
+	%3 = icmp ult i32 %2, 10
+	br i1 %3 , label %body_1, label %break_1
 body_1:
-    %4 = load i32, i32* %1
-    %5 = mul i32 %n, %4
-    %6 = load i32, i32* %1
-    %7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*), i32 %n, i32 %6, i32 %5)
-    %8 = load i32, i32* %1
-    %9 = add i32 %8, 1
-    store i32 %9, i32* %1
-    br label %again_1
+	%4 = load i32, i32* %1
+	%5 = mul i32 %n, %4
+	%6 = load i32, i32* %1
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*), i32 %n, i32 %6, i32 %5)
+	%8 = load i32, i32* %1
+	%9 = add i32 %8, 1
+	store i32 %9, i32* %1
+	br label %again_1
 break_1:
-    ret void
+	ret void
 }
 
 define %Int @main() {
-    %1 = sext i8 4 to i32
-    %2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str2 to [0 x i8]*), i32 %1)
-    %3 = zext i8 4 to i32
-    call void (i32) @mtab(i32 %3)
-    ret %Int 0
+	%1 = sext i8 4 to i32
+	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str2 to [0 x i8]*), i32 %1)
+	%3 = zext i8 4 to i32
+	call void (i32) @mtab(i32 %3)
+	ret %Int 0
 }
 
 

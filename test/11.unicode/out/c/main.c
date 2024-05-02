@@ -31,50 +31,50 @@ static uint32_t arr_utf32[8] = U"Hello!\n";
 
 int main()
 {
-    // indexing of GenericString returns #i symbol code
-    // the symbols have GenericInteger type
-    //	let omegaCharCode = "Hello Ω!\n"[6]
-    //	let ratCharCode = "Hello 🐀!\n"[6]
+	// indexing of GenericString returns #i symbol code
+	// the symbols have GenericInteger type
+	//	let omegaCharCode = "Hello Ω!\n"[6]
+	//	let ratCharCode = "Hello 🐀!\n"[6]
 
-    // you can assign omegaCharCode (937) to Nat32,
-    // but you can't assign ratCharCode (128000) to Nat16 (!)
-    //	var omegaCode: Nat16 = Nat16 omegaCharCode
-    //	var ratCode: Nat32 = Nat32 ratCharCode
+	// you can assign omegaCharCode (937) to Nat32,
+	// but you can't assign ratCharCode (128000) to Nat16 (!)
+	//	var omegaCode: Nat16 = Nat16 omegaCharCode
+	//	var ratCode: Nat32 = Nat32 ratCharCode
 
-    //	printf("omegaCode = %d\n", omegaCode)
-    //	printf("ratCode = %d\n", ratCode)
+	//	printf("omegaCode = %d\n", omegaCode)
+	//	printf("ratCode = %d\n", ratCode)
 
 
-    int32_t i;
-    i = 0;
-    while (true) {
-        const uint16_t c = string16Const[i];
+	int32_t i;
+	i = 0;
+	while (true) {
+		const uint16_t c = string16Const[i];
 
-        if (c == 0) {
-            break;
-        }
+		if (c == 0) {
+			break;
+		}
 
-        printf("[%d]U16: 0x%x\n", i, (uint32_t)c);
+		printf("[%d]U16: 0x%x\n", i, (uint32_t)c);
 
-        i = i + 1;
-    }
+		i = i + 1;
+	}
 
-    char *str8;
-    str8 = string8Const;
-    uint16_t *str16;
-    str16 = string16Const;
-    uint32_t *str32;
-    str32 = string32Const;
+	char *str8;
+	str8 = string8Const;
+	uint16_t *str16;
+	str16 = string16Const;
+	uint32_t *str32;
+	str32 = string32Const;
 
-    utf8_puts(str8);
-    utf8_puts("\n");
+	utf8_puts(str8);
+	utf8_puts("\n");
 
-    utf16_puts(str16);
-    utf8_puts("\n");
+	utf16_puts(str16);
+	utf8_puts("\n");
 
-    utf32_puts(str32);
-    utf8_puts("\n");
+	utf32_puts(str32);
+	utf8_puts("\n");
 
-    return 0;
+	return 0;
 }
 
