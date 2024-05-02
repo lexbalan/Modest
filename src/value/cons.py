@@ -16,9 +16,8 @@ from .pointer import value_pointer_cons, cons_ptr_to_str_from_string
 
 # данная локальная функция пытается привести v к t
 # возвращает None если не может привести (!)
-# не принтует ошибку (но может info)
-# это НЕ нужно для удобства приведения полей структур
-def _value_cons(t, v, method, ti):
+# не принтует ошибку (но может выдать info)
+def _do_value_cons(t, v, method, ti):
 	if value_is_bad(v) or type.type_is_bad(t):
 		return None
 
@@ -52,7 +51,7 @@ def _value_cons(t, v, method, ti):
 
 
 def _try_to_implicit_cons(t, v, ti):
-	nv = _value_cons(t, v, 'implicit', ti)
+	nv = _do_value_cons(t, v, 'implicit', ti)
 	return nv if (nv != None) else v
 
 
@@ -124,7 +123,7 @@ def value_cons_explicit(t, v, ti):
 		warning("explicit cast to the same type", ti)
 		return v
 
-	nv = _value_cons(t, v, 'explicit', ti)
+	nv = _do_value_cons(t, v, 'explicit', ti)
 
 	if nv == None:
 		error("cannot construct value", ti)
