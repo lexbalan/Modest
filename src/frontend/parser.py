@@ -600,6 +600,9 @@ class Parser:
 					self.skip_tokens([' ', '\t', '\n'])
 					a = self.expr_value()
 					if self.match("="):
+						if a['kind'] != 'id':
+							error("expected identifier", a['ti'])
+
 						b = self.expr_value()
 						args.append((a, b))
 					else:
