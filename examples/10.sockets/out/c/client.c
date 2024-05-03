@@ -28,19 +28,19 @@ void send_file(FILE *fp, int sockfd)
 {
 	char data[bufSize];
 
-	while (fgets((char *)(char *)&data, (int)bufSize, fp) != NULL) {
-		if (send(sockfd, (void *)(char *)&data, (size_t)sizeof(char[bufSize]), 0) == (ssize_t)-1) {
+	while (fgets((char *)&data, bufSize, fp) != NULL) {
+		if (send(sockfd, (char *)&data, (size_t)sizeof(char[bufSize]), 0) == -1) {
 			perror("[-] Error in sendung data");
 			exit(1);
 		}
-		bzero((void *)(char *)&data, ((size_t)(uint16_t)bufSize));
+		bzero((char *)&data, bufSize);
 	}
 }
 
 
 int main()
 {
-	const int sockfd = socket((int)AF_INET, (int)SOCK_STREAM, 0);
+	const int sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd < 0) {
 		perror("[-] Error in socket");
 		exit(1);
@@ -51,10 +51,10 @@ int main()
 	struct sockaddr_in server_addr;
 	server_addr = (struct sockaddr_in){
 		.sin_len = 0,
-		.sin_family = (uint8_t)AF_INET,
-		.sin_port = (unsigned short)port,
+		.sin_family = AF_INET,
+		.sin_port = port,
 		.sin_addr = (struct in_addr){
-			.s_addr = inet_addr((const char *)ipAddress)
+			.s_addr = inet_addr(ipAddress)
 		},
 		.sin_zero = {}
 	};
@@ -69,7 +69,7 @@ int main()
 
 	printf("[+] Connected to server\n");
 
-	FILE *const fp = fopen((char *)filename, "r");
+	FILE *const fp = fopen(filename, "r");
 	if (fp == NULL) {
 		perror("[-] Error in reading file");
 		exit(1);

@@ -12,8 +12,8 @@
 #define numberOfItems  21
 
 static int32_t array[numberOfItems] = {
-	(int32_t)(int8_t)-3, (int32_t)(int8_t)-5, (int32_t)2, (int32_t)1, (int32_t)(int8_t)-1, (int32_t)0, (int32_t)(int8_t)-2, (int32_t)3, (int32_t)(int8_t)-4, (int32_t)4,
-	11, 9, (int32_t)6, (int32_t)(int8_t)-7, (int32_t)-8, (int32_t)5, (int32_t)7, 10, 8, (int32_t)(int8_t)-6, (int32_t)-9
+	-3, -5, 2, 1, -1, 0, -2, 3, -4, 4,
+	11, 9, 6, -7, -8, 5, 7, 10, 8, -6, -9
 };
 
 
@@ -52,13 +52,13 @@ int32_t main()
 	//fill_array(&array, numberOfItems)
 
 	printf("array before:\n");
-	print_array((int32_t *)(int32_t *)&array, (int32_t)numberOfItems);
+	print_array((int32_t *)&array, numberOfItems);
 	printf("\n");
 
-	bubble_sort32((int32_t *)(int32_t *)&array, (int32_t)numberOfItems);
+	bubble_sort32((int32_t *)&array, numberOfItems);
 
 	printf("array after:\n");
-	print_array((int32_t *)(int32_t *)&array, (int32_t)numberOfItems);
+	print_array((int32_t *)&array, numberOfItems);
 	printf("\n");
 
 	return 0;
@@ -87,7 +87,7 @@ void fill_array(int32_t *array, int32_t len)
 	i = 0;
 	while (i < len) {
 		printf("[%i] ", i);
-		const int32_t x = get_integer((int32_t)min, (int32_t)max);
+		const int32_t x = get_integer(min, max);
 		array[i] = x;
 		i = i + 1;
 	}

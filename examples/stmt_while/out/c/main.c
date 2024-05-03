@@ -17,7 +17,7 @@ int main()
 	a = 0;
 	#define b  10
 
-	while (a < (int32_t)b) {
+	while (a < b) {
 		printf("a = %d\n", a);
 		a = a + 1;
 	}

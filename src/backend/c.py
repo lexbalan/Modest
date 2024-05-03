@@ -688,6 +688,13 @@ def print_value_cons(x, ctx):
 		out(")")
 		return
 
+
+	if x['method'] == 'implicit':
+		# не печатаем обычный implicit_cast
+		# (это не касается того что выше ^^)
+		print_value(value)
+		return
+
 	if value['kind'] == 'literal':
 		print_value(value)
 		return

@@ -74,8 +74,8 @@ const int32_t _initMagic[8] = initMagic;
 void sha256_contextInit(Context *ctx)
 {
 	memcpy(&ctx->state, &(uint32_t[8]){
-		(uint32_t)0x6A09E667, 0xBB67AE85, (uint32_t)0x3C6EF372, 0xA54FF53A,
-		(uint32_t)0x510E527F, 0x9B05688C, (uint32_t)0x1F83D9AB, (uint32_t)0x5BE0CD19
+		0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A,
+		0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19
 	}, 32);
 }
 
@@ -129,7 +129,7 @@ void sha256_transform(Context *ctx, uint8_t *data)
 
 	i = 0;
 	while (i < 64) {
-		const uint32_t t1 = x[7] + ep1(x[4]) + ch(x[4], x[5], x[6]) + (uint32_t)_k[i] + m[i];
+		const uint32_t t1 = x[7] + ep1(x[4]) + ch(x[4], x[5], x[6]) + _k[i] + m[i];
 		const uint32_t t2 = ep0(x[0]) + maj(x[0], x[1], x[2]);
 
 		x[7] = x[6];
@@ -160,7 +160,7 @@ void sha256_update(Context *ctx, uint8_t *msg, uint32_t msg_len)
 		ctx->data[ctx->datalen] = msg[i];
 		ctx->datalen = ctx->datalen + 1;
 		if (ctx->datalen == 64) {
-			sha256_transform(ctx, (uint8_t *)(uint8_t *)&ctx->data);
+			sha256_transform(ctx, (uint8_t *)&ctx->data);
 			ctx->bitlen = ctx->bitlen + 512;
 			ctx->datalen = 0;
 		}
@@ -186,11 +186,11 @@ void sha256_final(Context *ctx, uint8_t *out_hash)
 
 	i = i + 1;
 
-	memset((void *)&ctx->data[i], 0, (size_t)(n - i));
+	memset(&ctx->data[i], 0, (size_t)(n - i));
 
 	if (ctx->datalen >= 56) {
-		sha256_transform(ctx, (uint8_t *)(uint8_t *)&ctx->data);
-		memset((void *)(uint8_t *)&ctx->data, 0, 56);
+		sha256_transform(ctx, (uint8_t *)&ctx->data);
+		memset((uint8_t *)&ctx->data, 0, 56);
 	}
 
 	// Append to the padding the total message's length in bits and transform.
@@ -205,7 +205,7 @@ void sha256_final(Context *ctx, uint8_t *out_hash)
 	ctx->data[57] = (uint8_t)(ctx->bitlen >> 48);
 	ctx->data[56] = (uint8_t)(ctx->bitlen >> 56);
 
-	sha256_transform(ctx, (uint8_t *)(uint8_t *)&ctx->data);
+	sha256_transform(ctx, (uint8_t *)&ctx->data);
 
 	// Since this implementation uses little endian byte ordering
 	// and SHA uses big endian, reverse all the bytes

@@ -79,7 +79,7 @@ void print(char *form, ...)
 			// буффер для печати всего, кроме строк
 			char buf[10 + 1];
 			char *sptr;
-			sptr = (char *)(char *)&buf;
+			sptr = (char *)&buf;
 			(sptr)[0] = '\x0';
 
 			if ((c == 'i') || (c == 'd')) {

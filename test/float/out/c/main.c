@@ -16,7 +16,7 @@
 
 double squareOfCircle(double radius)
 {
-	return pow(radius, 2) * (double)mathPi;
+	return pow(radius, 2) * mathPi;
 }
 
 
@@ -25,7 +25,7 @@ int main()
 	printf("float test\n");
 
 	#define r  10
-	const double s = squareOfCircle((double)r);
+	const double s = squareOfCircle(r);
 
 	printf("s = %f\n", s);
 

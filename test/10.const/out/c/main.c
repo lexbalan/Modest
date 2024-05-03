@@ -30,7 +30,7 @@ typedef struct {
 } Line;
 
 #define zero  0
-#define pointZero  {.x = (double)zero, .y = (double)zero}
+#define pointZero  {.x = zero, .y = zero}
 const Point _pointZero = pointZero;
 #define pointOne  {.x = 1.0, .y = 1.0}
 const Point _pointOne = pointOne;

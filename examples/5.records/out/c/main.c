@@ -70,7 +70,7 @@ float lineLength(Line line)
 
 void ptr_example()
 {
-	Point *const ptr_p = (Point *)malloc((size_t)sizeof(Point));
+	Point *const ptr_p = (Point *)malloc(sizeof(Point));
 
 	// access by pointer
 	ptr_p->x = 10;

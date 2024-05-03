@@ -96,7 +96,7 @@ void utf16_putchar(uint16_t c)
 	cc[0] = c;
 	cc[1] = 0;
 	uint32_t char32;
-	const uint8_t n = utf16_to_utf32((uint16_t *)(uint16_t *)&cc, &char32);
+	const uint8_t n = utf16_to_utf32((uint16_t *)&cc, &char32);
 	utf32_putchar(char32);
 }
 

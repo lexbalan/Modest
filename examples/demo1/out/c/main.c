@@ -18,13 +18,13 @@ int32_t get_integer(int32_t min, int32_t max);
 
 int32_t main()
 {
-	const int32_t number = get_integer((int32_t)minNumber, (int32_t)maxNumber);
+	const int32_t number = get_integer(minNumber, maxNumber);
 
 	#define n  5
 
-	if (number < (int32_t)n) {
+	if (number < n) {
 		printf("entered number (%i) is less than %i\n", number, (int32_t)n);
-	} else if (number > (int32_t)n) {
+	} else if (number > n) {
 		printf("entered number (%i) is greater than %i\n", number, (int32_t)n);
 	} else {
 		printf("entered number (%i) is equal with %i\n", number, (int32_t)n);

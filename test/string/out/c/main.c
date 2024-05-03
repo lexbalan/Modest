@@ -47,11 +47,11 @@ int main()
 
 	printf("\n\n");
 
-	utf8_puts((char *)(char *)&string8);
+	utf8_puts((char *)&string8);
 	printf("\n");
-	utf16_puts((uint16_t *)(uint16_t *)&string16);
+	utf16_puts((uint16_t *)&string16);
 	printf("\n");
-	utf32_puts((uint32_t *)(uint32_t *)&string32);
+	utf32_puts((uint32_t *)&string32);
 
 	printf("\n\n");
 
