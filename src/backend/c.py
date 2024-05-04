@@ -1344,20 +1344,21 @@ def print_stmt_asm(x):
 
 
 def assign_array(left, right):
+	# если справа 'обернутое' значение
+	# (для того чтобы в C вернуть массив из функции
+	# его нужно 'обернуть' в структуру)
 	if 'wrapped_array_value' in right['att']:
+		to_type = right['type']
 		if right['kind'] == 'call':
-			print_cast_hard(right['func']['type']['to'], left)
-			out(" = ")
-			print_value(right)
-			out(";")
-		else:
-			# *(struct ret_str_retval *)&c = ret_str();
-			print_cast_hard(right['type'], left)
-			out(" = ")
-			print_value2(right)
-			out(";")
+			to_type = right['func']['type']['to']
+
+		print_cast_hard(to_type, left)
+		out(" = ")
+		print_value2(right)
+		out(";")
 		return
 
+	# Assign array by memcopy
 	to_copy = 0
 	zero_rest = 0
 	l_size = left['type']['size']
