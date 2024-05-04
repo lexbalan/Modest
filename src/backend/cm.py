@@ -419,6 +419,7 @@ def print_value_str(x, ctx):
 		i = i + 1
 	print_str_literal(char_codes)
 
+
 # print value with type String
 def print_strx(string):
 	char_codes = []
@@ -426,6 +427,7 @@ def print_strx(string):
 		cc = ord(c)
 		char_codes.append(cc)
 	print_str_literal(char_codes)
+
 
 # print Array of Char codes literal
 def print_str_literal(char_codes):
@@ -512,11 +514,11 @@ def print_value_bool_create(x, ctx):
 def print_value_char_create(x, ctx):
 	num = x['asset']
 	if num >= 0x20:
-		out("\"%s\"[0]" % chr(num))
+		out("\"%s\"" % chr(num))
 	elif num == 0:
-		out("\"\\x%x\"[0]" % num)
+		out("\"\\x%x\"" % num)
 	else:
-		out("\"\\x%x\"[0]" % num)
+		out("\"\\x%x\"" % num)
 
 
 # print Int literal

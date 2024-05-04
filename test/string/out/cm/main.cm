@@ -31,11 +31,11 @@ func putc16(c: Char16) -> Unit {
 
 
 func main() -> Int {
-	utf8_putchar("A"[0])
+	utf8_putchar("A")
 	printf("\n")
-	utf16_putchar("Ω"[0])
+	utf16_putchar("Ω")
 	printf("\n")
-	utf32_putchar("🦄"[0])
+	utf32_putchar("🦄")
 
 	printf("\n\n")
 

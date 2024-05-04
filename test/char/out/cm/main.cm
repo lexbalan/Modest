@@ -15,9 +15,9 @@ func main() -> Int {
 	var ch16: Char16
 	var ch32: Char32
 
-	ch08 = "s"[0]
-	ch16 = "Я"[0]
-	ch32 = "🐀"[0]
+	ch08 = "s"
+	ch16 = "Я"
+	ch32 = "🐀"
 
 	//printf("ch08 = 0x%x (%c)\n", Nat32 ch08, ch08)
 	//printf("ch16 = 0x%x (%c)\n", Nat32 ch16, ch16)
