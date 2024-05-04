@@ -58,7 +58,6 @@ int main()
 		printf("localArray test failed\n");
 	}
 
-
 	return 0;
 }
 

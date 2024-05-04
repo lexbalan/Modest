@@ -17,6 +17,7 @@ CM:
 
 LLVM:
 	mcc -funsafe -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.cm
+	#mcc -o $(LLVMPREFIX)/memory -funsafe -mbackend=llvm ${MODEST_LIB}/lightfood/memory.cm
 	clang $(LLVMPREFIX)/main.ll
 
 
