@@ -420,6 +420,9 @@ def print_value_un(v, ctx):
 
 	if v['kind'] == 'ref':
 		if hlir_type.type_is_array(value['type']):
+			# to prevent:
+			# "warning: incompatible pointer types passing 'uint8_t (*)[10]' to
+			# parameter of type 'uint8_t *'"
 			out("(")
 			print_type(v['type'])
 			out(")")
@@ -689,6 +692,7 @@ def print_value_cons(x, ctx):
 		return
 
 
+
 	if x['method'] == 'implicit':
 		# не печатаем обычный implicit_cast
 		# (это не касается того что выше ^^)
@@ -698,6 +702,7 @@ def print_value_cons(x, ctx):
 	if value['kind'] == 'literal':
 		print_value(value)
 		return
+
 
 	# (!) because
 	# - in Cm int32(-1) -> uint64 => 0x00000000ffffffff
