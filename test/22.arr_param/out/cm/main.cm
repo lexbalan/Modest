@@ -15,7 +15,7 @@ func swap(x: [2]Int32) -> [2]Int32 {
 
 
 func ret_str() -> [7]Char8 {
-	return ""hello!\n"
+	return "hello!\n"
 }
 
 

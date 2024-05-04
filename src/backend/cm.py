@@ -409,7 +409,6 @@ def code_to_char(cc):
 
 # print Array of Char literal
 def print_value_str(x, ctx):
-	out("\"")
 	asset = x['asset']
 
 	char_codes = []

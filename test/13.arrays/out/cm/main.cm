@@ -21,7 +21,7 @@ func f0(x: [10]Char8) -> Unit {
 
 func main() -> Int {
 	// generic array [4]Char8 will be implicit casted to [10]Char8
-	f0(""hi!")
+	f0("hi!")
 
 	var i: Int32 = 0
 	while i < 10 {
