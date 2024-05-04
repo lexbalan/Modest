@@ -69,9 +69,6 @@ def value_char_cons(t, v, method, ti):
 	elif type.type_is_va_list(from_type):
 		return value_cons_node(t, v, 'explicit', ti)
 
-	#print("??")
-	#from hlir.type import type_print
-	#type_print(from_type)
 	return None
 
 
@@ -82,7 +79,7 @@ def utf32_chars_to_utfx_chars(str_asset, char_type, ti):
 
 	chars = []
 	for cc in char_codes:
-		char = value_char_create(cc, _type=char_type, ti=ti)
+		char = value_char_create(cc, char_type, ti)
 		chars.append(char)
 
 	return chars
