@@ -12,7 +12,9 @@ func main() -> Int {
 
 	globalArray1 = globalArray0
 
-	var i = 0
+	var i: Int32
+
+	i = 0
 	while i < 10 {
 		let v = globalArray1[i]
 		printf("globalArray1[%d] = %d\n", i, v)
@@ -20,10 +22,33 @@ func main() -> Int {
 	}
 
 	if globalArray0 == globalArray1 {
-		printf("test passed\n")
+		printf("globalArray test passed\n")
 	} else {
-		printf("test failed\n")
+		printf("globalArray test failed\n")
 	}
+
+
+	// local
+
+	var localArray0: [10]Int32 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+	var localArray1: [10]Int32 = []
+
+
+	localArray1 = localArray0
+
+	i = 0
+	while i < 10 {
+		let v = localArray1[i]
+		printf("localArray1[%d] = %d\n", i, v)
+		++i
+	}
+
+	if localArray0 == localArray1 {
+		printf("localArray test passed\n")
+	} else {
+		printf("localArray test failed\n")
+	}
+
 
 	return 0
 }

@@ -142,8 +142,11 @@ declare void @perror(%ConstCharStr* %str)
 
 @str1 = private constant [19 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 97, i8 115, i8 115, i8 105, i8 103, i8 110, i8 95, i8 97, i8 114, i8 114, i8 97, i8 121, i8 10, i8 0]
 @str2 = private constant [23 x i8] [i8 103, i8 108, i8 111, i8 98, i8 97, i8 108, i8 65, i8 114, i8 114, i8 97, i8 121, i8 49, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str3 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
-@str4 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
+@str3 = private constant [25 x i8] [i8 103, i8 108, i8 111, i8 98, i8 97, i8 108, i8 65, i8 114, i8 114, i8 97, i8 121, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
+@str4 = private constant [25 x i8] [i8 103, i8 108, i8 111, i8 98, i8 97, i8 108, i8 65, i8 114, i8 114, i8 97, i8 121, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
+@str5 = private constant [22 x i8] [i8 108, i8 111, i8 99, i8 97, i8 108, i8 65, i8 114, i8 114, i8 97, i8 121, i8 49, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str6 = private constant [24 x i8] [i8 108, i8 111, i8 99, i8 97, i8 108, i8 65, i8 114, i8 114, i8 97, i8 121, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
+@str7 = private constant [24 x i8] [i8 108, i8 111, i8 99, i8 97, i8 108, i8 65, i8 114, i8 114, i8 97, i8 121, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 
 
 
@@ -202,12 +205,70 @@ break_1:
 	%17 = icmp eq i32 %16, 0
 	br i1 %17 , label %then_0, label %else_0
 then_0:
-	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str3 to [0 x i8]*))
+	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str3 to [0 x i8]*))
 	br label %endif_0
 else_0:
-	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str4 to [0 x i8]*))
+	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str4 to [0 x i8]*))
 	br label %endif_0
 endif_0:
+	; local
+	%20 = alloca [10 x i32]
+	%21 = insertvalue [10 x i32] zeroinitializer, i32 0, 0
+	%22 = insertvalue [10 x i32] %21, i32 1, 1
+	%23 = insertvalue [10 x i32] %22, i32 2, 2
+	%24 = insertvalue [10 x i32] %23, i32 3, 3
+	%25 = insertvalue [10 x i32] %24, i32 4, 4
+	%26 = insertvalue [10 x i32] %25, i32 5, 5
+	%27 = insertvalue [10 x i32] %26, i32 6, 6
+	%28 = insertvalue [10 x i32] %27, i32 7, 7
+	%29 = insertvalue [10 x i32] %28, i32 8, 8
+	%30 = insertvalue [10 x i32] %29, i32 9, 9
+	store [10 x i32] %30, [10 x i32]* %20
+	%31 = alloca [10 x i32]
+	%32 = insertvalue [10 x i32] zeroinitializer, i32 0, 0
+	%33 = insertvalue [10 x i32] %32, i32 0, 1
+	%34 = insertvalue [10 x i32] %33, i32 0, 2
+	%35 = insertvalue [10 x i32] %34, i32 0, 3
+	%36 = insertvalue [10 x i32] %35, i32 0, 4
+	%37 = insertvalue [10 x i32] %36, i32 0, 5
+	%38 = insertvalue [10 x i32] %37, i32 0, 6
+	%39 = insertvalue [10 x i32] %38, i32 0, 7
+	%40 = insertvalue [10 x i32] %39, i32 0, 8
+	%41 = insertvalue [10 x i32] %40, i32 0, 9
+	store [10 x i32] %41, [10 x i32]* %31
+	%42 = bitcast [10 x i32]* %31 to i8*
+	%43 = bitcast [10 x i32]* %20 to i8*
+	call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %42, i8* %43, i32 40, i1 0)
+	store i32 0, i32* %4
+	br label %again_2
+again_2:
+	%44 = load i32, i32* %4
+	%45 = icmp slt i32 %44, 10
+	br i1 %45 , label %body_2, label %break_2
+body_2:
+	%46 = load i32, i32* %4
+	%47 = getelementptr inbounds [10 x i32], [10 x i32]* %31, i32 0, i32 %46
+	%48 = load i32, i32* %47
+	%49 = load i32, i32* %4
+	%50 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*), i32 %49, i32 %48)
+	%51 = load i32, i32* %4
+	%52 = add i32 %51, 1
+	store i32 %52, i32* %4
+	br label %again_2
+break_2:
+	%53 = bitcast [10 x i32]* %20 to i8*
+	%54 = bitcast [10 x i32]* %31 to i8*
+	
+	%55 = call i32 (i8*, i8*, i64) @memcmp( i8* %53, i8* %54, i64 40)
+	%56 = icmp eq i32 %55, 0
+	br i1 %56 , label %then_1, label %else_1
+then_1:
+	%57 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str6 to [0 x i8]*))
+	br label %endif_1
+else_1:
+	%58 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str7 to [0 x i8]*))
+	br label %endif_1
+endif_1:
 	ret %Int 0
 }
 
