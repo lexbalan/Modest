@@ -430,13 +430,6 @@ def print_value_un(v, ctx):
 	out(un_ops[op])
 	print_value(value, need_wrap=pv<p0)
 
-	# указатель на массив в сях берем как &array[0]
-	# поскольку у нас указатель на массив сейчас печатается как *<item_type>
-	# а &array дает нам *array[n]
-	#if v['kind'] == 'ref':
-	#	if value['type']['kind'] == 'array':
-	#		out("[0]")
-
 
 
 def print_paramlist(params, extra_args=False):
