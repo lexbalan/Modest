@@ -820,7 +820,7 @@ def do_eval_call(v, retval=None):
 	# eval all args
 	args = []
 	for a in v['args']:
-		arg = do_reval(a)
+		arg = do_reval(a['value'])
 		args.append(arg)
 
 	func = v['func']

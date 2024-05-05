@@ -475,11 +475,11 @@ def print_value_call(v, ctx):
 	params = ftype['params']
 
 	out("(")
-	values = v['args']
+	args = v['args']
 	i = 0
-	n = len(values)
+	n = len(args)
 	while i < n:
-		a = values[i]
+		a = args[i]['value']
 
 		# не всегда когда есть аргумент есть и соотв ему параметер (!)
 		try:

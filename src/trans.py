@@ -978,10 +978,11 @@ def do_value_call(x):
 				error("bad parameter id", aa[0]['ti'])
 
 
-		arg = do_rvalue(aa[1])
+		argval = do_rvalue(aa[1])
 
-		if not value_is_bad(arg):
-			arg = value_cons_implicit_check(param['type'], arg)
+		if not value_is_bad(argval):
+			argval = value_cons_implicit_check(param['type'], argval)
+			arg = hlir_initializer(param['id'], argval)
 			args.append(arg)
 
 		i = i + 1
@@ -997,13 +998,11 @@ def do_value_call(x):
 	# extra_args rest args
 	while i < nargs:
 		a = x['args'][i][1]
-		arg = do_rvalue(a)
-		arg_type = arg['type']
-
-		if hlir_type.type_is_generic(arg_type):
+		argval = do_rvalue(a)
+		if hlir_type.type_is_generic(argval['type']):
 			warning("extra argument with generic type", a['ti'])
-			arg = value_cons_default(arg, a['ti'])
-
+			argval = value_cons_default(argval, a['ti'])
+		arg = hlir_initializer(None, argval)
 		extra_args.append(arg)
 
 		i = i + 1
@@ -2524,7 +2523,7 @@ def extra_args_check(specs, extra_args, expected_pointers):
 	nargs = len(extra_args)
 	nspec = len(specs)
 	while i < nargs and i < nspec:
-		arg = extra_args[i]
+		arg = extra_args[i]['value']
 		arg_type = arg['type']
 
 		if value_is_bad(arg):
@@ -2547,18 +2546,18 @@ def extra_args_check(specs, extra_args, expected_pointers):
 				if not hlir_type.type_is_signed(arg_type):
 					warning("expected signed integer value", arg['expr_ti'])
 			else:
-				warning("expected integer value", arg['expr_ti'])
+				warning("expected integer value2", arg['expr_ti'])
 
 		elif spec == 'x':
 			if not hlir_type.type_is_integer(arg_type):
-				warning("expected integer value", arg['expr_ti'])
+				warning("expected integer value3", arg['expr_ti'])
 
 		elif spec == 'u':
 			if hlir_type.type_is_integer(arg_type):
 				if hlir_type.type_is_signed(arg_type):
 					warning("expected unsigned integer value", arg['expr_ti'])
 			else:
-				warning("expected integer value", arg['expr_ti'])
+				warning("expected integer value4", arg['expr_ti'])
 
 		elif spec == 's':
 			if not hlir_type.type_is_pointer_to_array_of_char(arg_type):

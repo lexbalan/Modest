@@ -253,11 +253,14 @@ def print_value_call(v, ctx):
 	print_value(v['func'])
 	out("(")
 	i = 0
-	values = v['args']
-	n = len(values)
+	args = v['args']
+	n = len(args)
 	while i < n:
+		arg = args[i]
 		if i > 0: out(", ")
-		print_value(values[i])
+		if arg['id'] != None:
+			out("%s = " % arg['id']['str'])
+		print_value(arg['value'])
 		i = i + 1
 	out(")")
 
