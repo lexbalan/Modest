@@ -1,0 +1,21 @@
+// test/named_args/src/main.cm
+
+import "libc/stdio"
+
+
+func print_name_age(name: *Str8, age: Nat32) {
+	printf("name = %s\n", name)
+	printf("age = %u\n", age)
+}
+
+func main() -> Int {
+	printf('test named_args\n')
+
+	print_name_age(
+		name = "Alex"
+		age = 34
+	)
+
+	return 0
+}
+
