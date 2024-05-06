@@ -967,7 +967,6 @@ def do_value_call(x):
 		param = params[i]
 		aa = x['args'][i]
 
-
 		# check param name (if assigned)
 		if aa[0] != None:
 			if aa[0] != 'id':
