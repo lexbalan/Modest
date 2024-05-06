@@ -9,19 +9,31 @@
 
 
 
-void print_name_age(char *name, uint32_t age, uint32_t x)
+int32_t named_args_test(int32_t a, int32_t b, int32_t c)
 {
-	printf("name = %s\n", name);
-	printf("age = %u\n", age);
-	printf("x = %u\n", x);
+	return (a - b) * c;
 }
+
 
 int main()
 {
-	//printf('test named_args\n')
+	printf("test named_args\n");
 
-	print_name_age("Alex", 34, 12);
+	#define a  25
+	#define b  15
+	#define c  3
+
+	const int32_t x = named_args_test(a, b, c);
+
+	if (x == (a - b) * c) {
+		printf("test passed\n");
+	} else {
+		printf("test failed\n");
+	}
 
 	return 0;
+#undef a
+#undef b
+#undef c
 }
 

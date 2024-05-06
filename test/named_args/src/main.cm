@@ -3,20 +3,29 @@
 import "libc/stdio"
 
 
-func print_name_age(name: *Str8, age: Nat32, x: Nat32) {
-	printf("name = %s\n", name)
-	printf("age = %u\n", age)
-	printf("x = %u\n", x)
+func named_args_test(a: Int32, b: Int32, c: Int32) -> Int32 {
+	return (a - b) * c
 }
+
 
 func main() -> Int {
 	printf('test named_args\n')
 
-	print_name_age(
-		age = 34
-		12
-		name = "Alex"
+	let a = 25
+	let b = 15
+	let c = 3
+
+	let x = named_args_test(
+		c = c
+		a = a
+		b = b
 	)
+
+	if x == (a - b) * c {
+		printf("test passed\n")
+	} else {
+		printf("test failed\n")
+	}
 
 	return 0
 }

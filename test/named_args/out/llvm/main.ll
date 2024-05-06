@@ -202,23 +202,38 @@ declare void @perror(%ConstCharStr* %str)
 
 ; -- SOURCE: src/main.cm
 
-@str1 = private constant [11 x i8] [i8 110, i8 97, i8 109, i8 101, i8 32, i8 61, i8 32, i8 37, i8 115, i8 10, i8 0]
-@str2 = private constant [10 x i8] [i8 97, i8 103, i8 101, i8 32, i8 61, i8 32, i8 37, i8 117, i8 10, i8 0]
-@str3 = private constant [8 x i8] [i8 120, i8 32, i8 61, i8 32, i8 37, i8 117, i8 10, i8 0]
-@str4 = private constant [5 x i8] [i8 65, i8 108, i8 101, i8 120, i8 0]
+@str1 = private constant [17 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 110, i8 97, i8 109, i8 101, i8 100, i8 95, i8 97, i8 114, i8 103, i8 115, i8 10, i8 0]
+@str2 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
+@str3 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 
 
 
-define void @print_name_age(%Str8* %name, i32 %age, i32 %x) {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str1 to [0 x i8]*), %Str8* %name)
-	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str2 to [0 x i8]*), i32 %age)
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str3 to [0 x i8]*), i32 %x)
-	ret void
+define i32 @named_args_test(i32 %a, i32 %b, i32 %c) {
+	%1 = sub i32 %a, %b
+	%2 = mul i32 %1, %c
+	ret i32 %2
 }
 
 define %Int @main() {
-	;printf('test named_args\n')
-	call void (%Str8*, i32, i32) @print_name_age(%Str8* bitcast ([5 x i8]* @str4 to [0 x i8]*), i32 34, i32 12)
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str1 to [0 x i8]*))
+	%2 = sext i8 25 to i32
+	%3 = sext i8 15 to i32
+	%4 = sext i8 3 to i32
+	%5 = call i32 (i32, i32, i32) @named_args_test(i32 %2, i32 %3, i32 %4)
+	%6 = bitcast i8 15 to i8
+	%7 = sub i8 25, %6
+	%8 = bitcast i8 3 to i8
+	%9 = mul i8 %7, %8
+	%10 = sext i8 %9 to i32
+	%11 = icmp eq i32 %5, %10
+	br i1 %11 , label %then_0, label %else_0
+then_0:
+	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*))
+	br label %endif_0
+else_0:
+	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str3 to [0 x i8]*))
+	br label %endif_0
+endif_0:
 	ret %Int 0
 }
 
