@@ -3,15 +3,16 @@
 import "libc/stdio"
 
 
-func print_name_age(name: *Str8, age: Nat32) -> Unit {
-	printf(s = "name = %s\n", name)
-	printf(s = "age = %u\n", age)
+func print_name_age(name: *Str8, age: Nat32, x: Nat32) -> Unit {
+	printf("name = %s\n", name)
+	printf("age = %u\n", age)
+	printf("x = %u\n", x)
 }
 
 func main() -> Int {
-	printf(s = "test named_args\n")
+	printf("test named_args\n")
 
-	print_name_age(name = "Alex", age = 34)
+	print_name_age(name = "Alex", age = 34, 12)
 
 	return 0
 }

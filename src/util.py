@@ -36,11 +36,23 @@ def nbytes_for_bits(x):
 	return align_bits_up(x) // 8
 
 
-def get_item_with_id(_list, name):
-	for x in _list:
-		if x['id']['str'] == name:
-			return x
-	return None
+# returns -1 if not found
+def get_index_of_item_with_id(_list, id):
+	i = 0
+	while i < len(_list):
+		item = _list[i]
+		if item != None:
+			if item['id']['str'] == id:
+				return i
+		i = i + 1
+	return -1
+
+
+def get_item_with_id(_list, id):
+	i = get_index_of_item_with_id(_list, id)
+	if i < 0:
+		return None
+	return _list[i]
 
 
 

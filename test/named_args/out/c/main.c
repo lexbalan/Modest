@@ -9,17 +9,18 @@
 
 
 
-void print_name_age(char *name, uint32_t age)
+void print_name_age(char *name, uint32_t age, uint32_t x)
 {
 	printf("name = %s\n", name);
 	printf("age = %u\n", age);
+	printf("x = %u\n", x);
 }
 
 int main()
 {
-	printf("test named_args\n");
+	//printf('test named_args\n')
 
-	print_name_age("Alex", 34);
+	print_name_age("Alex", 34, 12);
 
 	return 0;
 }

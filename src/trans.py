@@ -2,7 +2,7 @@
 import os
 
 from error import *
-from util import get_item_with_id
+from util import get_item_with_id, get_index_of_item_with_id
 from main import settings
 from frontend.parser import Parser
 from hlir.type import select_common_type
@@ -917,6 +917,49 @@ def do_value_deref(x):
 
 
 
+
+
+
+
+
+def sort_args(params, args):
+	# выходной вектор в котором лежат отсортированные аргументы
+	# в порядке их реальной преедачи в функцию
+	outvec = []
+
+	# получаем направляющий вектор
+	vec0=[]
+	for param in params:
+		vec0.append(param['id']['str'])
+
+	# получаем вектор идентификаторов (или None)
+	vec1=[]
+	vec1.extend(args)
+
+	# теперь разбрасываем аргументы
+	for param_id_str in vec0:
+		k = -1
+		i = 0
+		while i < len(vec1):
+			item = vec1[i]
+			if item[0] != None:
+				if item[0]['id']['str'] == param_id_str:
+					k = i
+					break
+			i = i + 1
+
+		j = 0
+		if k >= 0:
+			j = k
+
+		arg = vec1[j]
+		vec1.pop(j)
+		outvec.append(arg)
+
+	return outvec
+
+
+
 def do_value_call(x):
 	# for lengthof()
 	if x['left']['kind'] == 'id':
@@ -958,6 +1001,7 @@ def do_value_call(x):
 			error("too many args", x)
 			return value_bad(x)
 
+	sorted_args = sort_args(params, x['args'])
 
 	args = []
 
@@ -965,23 +1009,27 @@ def do_value_call(x):
 	i = 0
 	while i < npars:
 		param = params[i]
-		aa = x['args'][i]
+		param_id_str = param['id']['str']
+		#aa = x['args'][i]
+		aa = sorted_args[i]
 
 		# check param name (if assigned)
 		if aa[0] != None:
 			if aa[0] != 'id':
 				pass
-			param_id_str = param['id']['str']
+
 			tasrget_param_id_str = aa[0]['id']['str']
 			if tasrget_param_id_str != param_id_str:
 				error("bad parameter id", aa[0]['ti'])
-
 
 		argval = do_rvalue(aa[1])
 
 		if not value_is_bad(argval):
 			argval = value_cons_implicit_check(param['type'], argval)
-			arg = hlir_initializer(param['id'], argval)
+			s = None
+			if aa[0] != None:
+				s = aa[0]['id']
+			arg = hlir_initializer(s, argval)
 			args.append(arg)
 
 		i = i + 1

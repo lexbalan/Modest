@@ -204,20 +204,21 @@ declare void @perror(%ConstCharStr* %str)
 
 @str1 = private constant [11 x i8] [i8 110, i8 97, i8 109, i8 101, i8 32, i8 61, i8 32, i8 37, i8 115, i8 10, i8 0]
 @str2 = private constant [10 x i8] [i8 97, i8 103, i8 101, i8 32, i8 61, i8 32, i8 37, i8 117, i8 10, i8 0]
-@str3 = private constant [17 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 110, i8 97, i8 109, i8 101, i8 100, i8 95, i8 97, i8 114, i8 103, i8 115, i8 10, i8 0]
+@str3 = private constant [8 x i8] [i8 120, i8 32, i8 61, i8 32, i8 37, i8 117, i8 10, i8 0]
 @str4 = private constant [5 x i8] [i8 65, i8 108, i8 101, i8 120, i8 0]
 
 
 
-define void @print_name_age(%Str8* %name, i32 %age) {
+define void @print_name_age(%Str8* %name, i32 %age, i32 %x) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str1 to [0 x i8]*), %Str8* %name)
 	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str2 to [0 x i8]*), i32 %age)
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str3 to [0 x i8]*), i32 %x)
 	ret void
 }
 
 define %Int @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str3 to [0 x i8]*))
-	call void (%Str8*, i32) @print_name_age(%Str8* bitcast ([5 x i8]* @str4 to [0 x i8]*), i32 34)
+	;printf('test named_args\n')
+	call void (%Str8*, i32, i32) @print_name_age(%Str8* bitcast ([5 x i8]* @str4 to [0 x i8]*), i32 34, i32 12)
 	ret %Int 0
 }
 
