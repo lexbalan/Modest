@@ -23,9 +23,11 @@ int main()
 	#define b  15
 	#define c  3
 
-	const int32_t x = named_args_test(a, b, c);
+	#define x0  ((a - b) * c)
 
-	if (x == (a - b) * c) {
+	const int32_t x1 = named_args_test(a, b, c);
+
+	if (x0 == x1) {
 		printf("test passed\n");
 	} else {
 		printf("test failed\n");
@@ -35,5 +37,6 @@ int main()
 #undef a
 #undef b
 #undef c
+#undef x0
 }
 

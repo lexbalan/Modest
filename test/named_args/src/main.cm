@@ -15,13 +15,15 @@ func main() -> Int {
 	let b = 15
 	let c = 3
 
-	let x = named_args_test(
+	let x0 = (a - b) * c
+
+	let x1 = named_args_test(
 		c = c
 		a = a
 		b = b
 	)
 
-	if x == (a - b) * c {
+	if x0 == x1 {
 		printf("test passed\n")
 	} else {
 		printf("test failed\n")
