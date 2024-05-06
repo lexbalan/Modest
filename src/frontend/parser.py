@@ -597,16 +597,28 @@ class Parser:
 			if self.match("("):
 				args = []
 				while not self.match(")"):
+					arg = None
 					self.skip_tokens([' ', '\t', '\n'])
-					a = self.expr_value()
+
+					arg_ti = self.ti()
+					arg_value = self.expr_value()
+					nl_cnt = 0
+					arg_id = None
 					if self.match("="):
-						if a['kind'] != 'id':
+						if arg_value['kind'] != 'id':
 							error("expected identifier", a['ti'])
 
-						b = self.expr_value()
-						args.append((a, b))
-					else:
-						args.append((None, a))
+						arg_id = arg_value['id']
+						arg_value = self.expr_value()
+
+					arg = {
+						'isa': 'ast_item',
+						'id': arg_id,
+						'value': arg_value,
+						'nl': nl_cnt,
+						'ti': arg_ti
+					}
+					args.append(arg)
 
 					self.need_sep(separators=[',', '\n'], stoppers=[')'])
 
@@ -726,13 +738,14 @@ class Parser:
 			if not self.look("\n"):
 				self.need_sep(separators=[',', '\n'], stoppers=['}'])
 
-			items.append({
-				'isa': 'item',
+			item = {
+				'isa': 'ast_item',
 				'id': field_id,
 				'value': field_value,
 				'nl': nl_cnt,
 				'ti': item_ti
-			})
+			}
+			items.append(item)
 
 		return {
 			'isa': 'ast_value',

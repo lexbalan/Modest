@@ -942,8 +942,8 @@ def sort_args(params, args):
 		i = 0
 		while i < len(vec1):
 			item = vec1[i]
-			if item[0] != None:
-				if item[0]['id']['str'] == param_id_str:
+			if item['id'] != None:
+				if item['id']['str'] == param_id_str:
 					k = i
 					break
 			i = i + 1
@@ -964,11 +964,11 @@ def do_value_call(x):
 	# for lengthof()
 	if x['left']['kind'] == 'id':
 		if x['left']['id']['str'] == 'lengthof':
-			arg = do_rvalue(x['args'][0][1])
+			arg = do_rvalue(x['args'][0]['value'])
 			if hlir_type.type_is_array(arg['type']):
 				return value_lengthof(arg, x['ti'])
 			else:
-				error("expected array value", x['args'][0][1]['ti'])
+				error("expected array value", x['args'][0]['value']['ti'])
 				return value_bad(x)
 
 
@@ -1010,25 +1010,21 @@ def do_value_call(x):
 	while i < npars:
 		param = params[i]
 		param_id_str = param['id']['str']
-		#aa = x['args'][i]
 		aa = sorted_args[i]
 
 		# check param name (if assigned)
-		if aa[0] != None:
-			if aa[0] != 'id':
-				pass
-
-			tasrget_param_id_str = aa[0]['id']['str']
+		if aa['id'] != None:
+			tasrget_param_id_str = aa['id']['str']
 			if tasrget_param_id_str != param_id_str:
-				error("bad parameter id", aa[0]['ti'])
+				error("bad parameter id", aa['id']['ti'])
 
-		argval = do_rvalue(aa[1])
+		argval = do_rvalue(aa['value'])
 
 		if not value_is_bad(argval):
 			argval = value_cons_implicit_check(param['type'], argval)
 			s = None
-			if aa[0] != None:
-				s = aa[0]['id']
+			if aa['id'] != None:
+				s = aa['id']
 			arg = hlir_initializer(s, argval)
 			args.append(arg)
 
@@ -1044,7 +1040,7 @@ def do_value_call(x):
 
 	# extra_args rest args
 	while i < nargs:
-		a = x['args'][i][1]
+		a = x['args'][i]['value']
 		argval = do_rvalue(a)
 		if hlir_type.type_is_generic(argval['type']):
 			warning("extra argument with generic type", a['ti'])
@@ -1059,7 +1055,7 @@ def do_value_call(x):
 		func_id_str = f['id']['str']
 		if func_id_str in ['printf', 'scanf', 'print']:
 			expected_pointers = func_id_str == 'scanf'
-			first_arg = x['args'][0][1]
+			first_arg = x['args'][0]['value']
 			if first_arg['kind'] == 'string':
 				specs = get_cspecs(first_arg['str'])
 				extra_args_check(specs, extra_args, expected_pointers)
