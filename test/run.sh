@@ -17,6 +17,7 @@ cd 24.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd cons && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd sizeof && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd xor && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+cd named_args && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd shift && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd string && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd string_concat_eq && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
