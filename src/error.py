@@ -93,8 +93,9 @@ def common_message(mg, color, s, ti=None):
 
 	if ti != None:
 		prelin = "%d |" % ti['line']
-		lin = getline(ti)
-		print(prelin + lin)
+		line = getline(ti)
+		line = line.replace('\t', ' ' * 4)
+		print(prelin + line)
 		highlight(ti, color, offset=len(prelin))
 
 
