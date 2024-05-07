@@ -12,7 +12,7 @@
 #define __CPU_WORD_WIDTH  64
 #define word_name  "'64-bit'"
 
-#define hello_world  "Hello '64-bit' world!"
+#define hello_world  "Hello "  word_name  " world!"
 
 
 int main()

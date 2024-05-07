@@ -9,7 +9,7 @@ import "misc/utf"
 const hello = "Hello"
 const world = " world!\n"
 
-const hello_world = "Hello world!\n"
+const hello_world = hello + world
 
 
 var string8: [11]Char8 = "S-t-r-i-n-g"

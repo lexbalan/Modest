@@ -350,7 +350,7 @@ bin_ops = {
 	'eq': '==', 'ne': '!=', 'lt': '<', 'gt': '>', 'le': '<=', 'ge': '>=',
 	'add': '+', 'sub': '-', 'mul': '*', 'div': '/', 'rem': '%',
 	'logic_and': '&&', 'logic_or': '||',
-	'add_arr': '', 'eq_str': '', 'ne_str': ''
+	'add_arr': '', 'add_str': '', 'eq_str': '', 'ne_str': ''
 }
 
 

@@ -2,7 +2,7 @@
 from .value import value_terminal
 from util import nbits_for_num
 from hlir.type import hlir_type_string
-
+from .value import value_bin
 
 def value_string_create(string, ti=None):
 	#info("value_string_create %d" % length, ti)
@@ -28,5 +28,12 @@ def value_string_create(string, ti=None):
 def value_string_concat(l, r, ti):
 	#info("value_array_concat", ti)
 	newstring = l['asset'] + r['asset']
-	return value_string_create(newstring, ti)
+	#return value_string_create(newstring, ti)
+	max_char_width = max(l['type']['width'], r['type']['width'])
+	string_type = hlir_type_string(max_char_width, ti)
+	nv = value_bin('add_str', l, r, string_type, ti=ti)
+	nv['asset'] = newstring
+	nv['immediate'] = True
+	nv['nl_end'] = r['nl_end']
+	return nv
 

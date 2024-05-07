@@ -1751,9 +1751,6 @@ def do_import(x):
 
 	# Literal string to python string
 	impline = import_expr['asset']
-	#for char in import_expr['asset']:
-	#	impline = impline + char
-
 	log('import "%s"' % impline)
 
 	# (!) right here, before calling "do_import" (!)

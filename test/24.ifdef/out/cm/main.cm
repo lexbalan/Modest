@@ -6,7 +6,7 @@ import "libc/stdio"
 const __CPU_WORD_WIDTH = 64
 const word_name = "'64-bit'"
 
-const hello_world = "Hello '64-bit' world!"
+const hello_world = "Hello " + word_name + " world!"
 
 
 func main() -> Int {

@@ -14,7 +14,7 @@
 #define hello  "Hello"
 #define world  " world!\n"
 
-#define hello_world  "Hello world!\n"
+#define hello_world  hello  world
 
 
 static char string8[11] = "S-t-r-i-n-g";
