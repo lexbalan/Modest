@@ -5,38 +5,38 @@ VA_List is a special pseudo-type used for creating variable-arguments functions.
 
 ```swift
 func my_printf(fmt: *Str8, va_list: VA_List) {
-    var i = 0
-    while true {
-        var c = str[i]
+	var i = 0
+	while true {
+		var c = str[i]
 
-        if c == "\0"[0] {
-            break
-        }
+		if c == "\0"[0] {
+			break
+		}
 
-        if c == "%"[0] {
-            i = i + 1
-            c = str[i]
-            
-            ...
+		if c == "%"[0] {
+			i = i + 1
+			c = str[i]
+			
+			...
 
-            if c == "i"[0] {
-                // %i for signed integer (Int)
-                let i = Int32 va_list
-                . . .
-            } else if (c == "n"[0]) {
-                // %n for unsigned integer (Nat)
-                let n = Nat32 va_list
-                . . .
-            }
-            
-            . . .
+			if c == "i"[0] {
+				// %i for signed integer (Int)
+				let i = Int32 va_list
+				. . .
+			} else if (c == "n"[0]) {
+				// %n for unsigned integer (Nat)
+				let n = Nat32 va_list
+				. . .
+			}
+			
+			. . .
 
-        } else {
-            _putchar(c)
-        }
+		} else {
+			_putchar(c)
+		}
 
-        i = i + 1
-    }
+		i = i + 1
+	}
 }
 
 ```

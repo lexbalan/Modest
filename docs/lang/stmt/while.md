@@ -4,9 +4,9 @@
 #### Common view
 
 ```
-    while <#condition#> {
-        // do something while condition is true
-    }
+	while <#condition#> {
+		// do something while condition is true
+	}
 ```
 
 
@@ -28,17 +28,17 @@ import "libc/stdio"
 
 
 func main() -> Int {
-    printf("while statement test\n")
+	printf("while statement test\n")
 
-    var a = 0
-    let b = 10
+	var a = 0
+	let b = 10
 
-    while a < b {
-        printf("a = %d\n", a)
-        a = a + 1
-    }
+	while a < b {
+		printf("a = %d\n", a)
+		a = a + 1
+	}
 
-    return 0
+	return 0
 }
 
 ```
@@ -59,27 +59,27 @@ func main() -> Int {
 const nMax = 10
 
 func main () -> Unit {
-    printf("count for: ")
+	printf("count for: ")
 
-    var n: Int32
-    while true {
-        scanf("%d", &n)
-        if n < 0 {
-            printf("enter positive number: ")
-            again
-        } else if n >= nMax {
-            printf("enter number less than %i: " % nMax)
-            again
-        } else {
-            break
-        }
-    }
+	var n: Int32
+	while true {
+		scanf("%d", &n)
+		if n < 0 {
+			printf("enter positive number: ")
+			again
+		} else if n >= nMax {
+			printf("enter number less than %i: " % nMax)
+			again
+		} else {
+			break
+		}
+	}
 
-    // count (print) in cycle
-    var i: Int32 = 0
-    while i < n {
-        printf("i = %d\n", i)
-    }
+	// count (print) in cycle
+	var i: Int32 = 0
+	while i < n {
+		printf("i = %d\n", i)
+	}
 }
 ```
 

@@ -37,7 +37,7 @@ type <#identifier#>
 type MyRecord
 
 type MyRecord record {
-    self: *MyRecord
+	self: *MyRecord
 }
 ```
 

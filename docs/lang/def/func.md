@@ -14,29 +14,29 @@ func <#identifier#> <#func_type_expression#> {
 ```swift
 
 func sum_i32 (a: Int32, b: Int32) -> Int32 {
-    return a + b
+	return a + b
 }
 
 func test_sum () {
-    let a = 10
-    let b = 20
+	let a = 10
+	let b = 20
 
-    let expected_result = a + b
-    let sum_result = sum_i32(a, b)
+	let expected_result = a + b
+	let sum_result = sum_i32(a, b)
 
-    if sum_result == expected_result {
-        printf("function sum works fine!\n")
-    } else {
-        printf("something go wrong...\n")
-    }
+	if sum_result == expected_result {
+		printf("function sum works fine!\n")
+	} else {
+		printf("something go wrong...\n")
+	}
 }
 
 func main () -> Int32 {
-    printf("Hello World!\n")
+	printf("Hello World!\n")
 
-    test_sum()
+	test_sum()
 
-    return 0
+	return 0
 }
 
 ```

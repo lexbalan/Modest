@@ -26,10 +26,10 @@ var <#identifier#> : <#type_expression#> = <#default_value_expression#>
 
 ```swift
 func mid (a: Int32, b: Int32) -> Int32 {
-    var result: Int32
-    result = a + b
-    result = result / 2
-    return result
+	var result: Int32
+	result = a + b
+	result = result / 2
+	return result
 }
 ```
 
@@ -37,21 +37,21 @@ func mid (a: Int32, b: Int32) -> Int32 {
 ```swift
 
 func main () -> Int32 {
-    var x: Int16
-    var y = Int32 10
-    var z: Int32 = 10
-    
-    // We need to initialize x with some value
-    // because local variable without default value
-    // will contains 'garbage' value from memory
-    // (some kind of 'random' value)
-    x = 5
-    
-    printf("x = %hd\n", x)
-    printf("y = %d\n", y)
-    printf("z = %d\n", z)
+	var x: Int16
+	var y = Int32 10
+	var z: Int32 = 10
+	
+	// We need to initialize x with some value
+	// because local variable without default value
+	// will contains 'garbage' value from memory
+	// (some kind of 'random' value)
+	x = 5
+	
+	printf("x = %hd\n", x)
+	printf("y = %d\n", y)
+	printf("z = %d\n", z)
 
-    return 0
+	return 0
 }
 ```
 *Result:*

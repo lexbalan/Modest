@@ -28,7 +28,7 @@ Returns ***true*** when *argument* is ***false***, otherwise returns ***false***
 > Valid argument type: [*Bool*](../types.md#Bool-type), [*Byte*](../types.md#Byte-type), [*Integer*](../types.md#Integer-type)
 
 ```zig
-    not x
+	not x
 ```
 
 ### Neg
@@ -37,14 +37,14 @@ Returns ***true*** when *left* is **not equal** to the *right*, otherwise return
 > Valid argument type: [*Integer*](../types.md#Integer-type), [*Float*](../types.md#Float-type)
 
 ```zig
-    -x
+	-x
 ```
 
 ### Ref
 Returns pointer to ***type***(*argument*)
 
 ```zig
-    &x
+	&x
 ```
 
 ### Deref
@@ -53,6 +53,6 @@ Returns the value pointed to by the argument
 > Valid argument type: [*Pointer*](../types.md#Pointer-type)
 
 ```zig
-    *x
+	*x
 ```
 

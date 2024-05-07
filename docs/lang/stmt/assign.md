@@ -3,7 +3,7 @@
 #### Common form
 
 ```
-    <#lvalue_expression#> = <#value_expression#>
+	<#lvalue_expression#> = <#value_expression#>
 ```
 
 #### Examples
@@ -12,7 +12,7 @@
 var a: Int32
 
 func main () -> Unit {
-    a = 10
-    printf("a = %d\n", a)
+	a = 10
+	printf("a = %d\n", a)
 }
 ```

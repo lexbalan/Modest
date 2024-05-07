@@ -12,14 +12,14 @@ A few statement can be combined into one *block statement* with `{}` brackets
 ```swift
 // this four statements are combined into one logical statement by braces
 {
-    printf("Hello World!\n")
-    printf("I'm feeling good!\n")
-    
-    // you can separate statements by newline
-    // (most preferable way, as shown above)
-    // or use semicolon for one-line recording
-    
-    printf("How are you?\n"); printf("I hope everything in its right place\n")
+	printf("Hello World!\n")
+	printf("I'm feeling good!\n")
+	
+	// you can separate statements by newline
+	// (most preferable way, as shown above)
+	// or use semicolon for one-line recording
+	
+	printf("How are you?\n"); printf("I hope everything in its right place\n")
 }
 ```
 
@@ -36,11 +36,11 @@ Statements inside *block statement* are executed in our usual reading order from
 
 ```
 {
-    <statement1>; <statement2>
-    <statement3>; <statement4>
-    <statement5>
-    <statement6>
-    ...
+	<statement1>; <statement2>
+	<statement3>; <statement4>
+	<statement5>
+	<statement6>
+	...
 }
 ```
 
@@ -54,53 +54,53 @@ import "libc/stdio"
 
 func main () -> Int32 {
 
-    // variable definition statement
-    var number: Int32
+	// variable definition statement
+	var number: Int32
 
-    // assignation statement
-    number = 0
+	// assignation statement
+	number = 0
 
-    // while statement
-    while true {
-        // value evaluation statement
-        printf("enter a number (from 0 to 9): ")
-        // value evaluation statement
-        scanf("%d", &number)
+	// while statement
+	while true {
+		// value evaluation statement
+		printf("enter a number (from 0 to 9): ")
+		// value evaluation statement
+		scanf("%d", &number)
 
-        // if-else statement
-        if number < 0 {
-            // value evaluation statement
-            printf("number must be greater than zero, try again\n")
-            // again statement ('continue' in C)
-            again
-        } else if number > 9 {
-            // value evaluation statement
-            printf("number must be less than nine, try again\n")
-            // again statement ('continue' in C)
-            again
-        } else {
-            // break statement
-            break
-        }
-    }
+		// if-else statement
+		if number < 0 {
+			// value evaluation statement
+			printf("number must be greater than zero, try again\n")
+			// again statement ('continue' in C)
+			again
+		} else if number > 9 {
+			// value evaluation statement
+			printf("number must be less than nine, try again\n")
+			// again statement ('continue' in C)
+			again
+		} else {
+			// break statement
+			break
+		}
+	}
 
-    // let statement
-    let n = 5
+	// let statement
+	let n = 5
 
-    // if-else statement
-    if number < n {
-        // value evaluation statement
-        printf("entered number (%i) is less than %i\n", number, n)
-    } else if number > n {
-        // value evaluation statement
-        printf("entered number (%i) is greater than %i\n", number, n)
-    } else {
-        // value evaluation statement
-        printf("entered number (%i) is equal with %i\n", number, n)
-    }
+	// if-else statement
+	if number < n {
+		// value evaluation statement
+		printf("entered number (%i) is less than %i\n", number, n)
+	} else if number > n {
+		// value evaluation statement
+		printf("entered number (%i) is greater than %i\n", number, n)
+	} else {
+		// value evaluation statement
+		printf("entered number (%i) is equal with %i\n", number, n)
+	}
 
-    // return statement
-    return 0
+	// return statement
+	return 0
 }
 ```
 

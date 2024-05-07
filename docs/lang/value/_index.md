@@ -19,15 +19,15 @@ var array: [arrayLength]Int32 = [1, 2, 3, 4, 5]
 
 
 func main() -> Int {
-    var i = 0
-    while i < arrayLength {
-        // index array
-        let array_item = array[i]
+	var i = 0
+	while i < arrayLength {
+		// index array
+		let array_item = array[i]
 
-        printf("array[%i] = %i\n", i, array_item)
-        ++i
-    }
-    retutn 0
+		printf("array[%i] = %i\n", i, array_item)
+		++i
+	}
+	retutn 0
 }
 ```
 
@@ -44,16 +44,16 @@ var ptr_to_array: *[]Nat32
 // var ptr_to_array = &array
 
 func main() -> Int {
-    ptr_to_array = &array
+	ptr_to_array = &array
 
-    var i = 0
-    while i < arrayLength {
-        // index pointer to array
-        let array_item = ptr_to_array[i]
+	var i = 0
+	while i < arrayLength {
+		// index pointer to array
+		let array_item = ptr_to_array[i]
 
-        printf("ptr_to_array[%i] = %i\n", i, array_item)
-        ++i
-    }
-    retutn 0
+		printf("ptr_to_array[%i] = %i\n", i, array_item)
+		++i
+	}
+	retutn 0
 }
 ```

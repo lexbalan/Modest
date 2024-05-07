@@ -47,19 +47,19 @@ e = 256 // error (Nat8 = {0 .. 255})
 
 ```zig
 func main () -> Int32 {
-    var x: Nat32
-    x = 123
-    printf("x = %i\n", x)
+	var x: Nat32
+	x = 123
+	printf("x = %i\n", x)
 
-    var y: Nat32
-    y = 042
-    printf("y = %i\n", y)
+	var y: Nat32
+	y = 042
+	printf("y = %i\n", y)
 
-    var z: Nat32
-    z = 0x2A  // 0x2A == 42
-    printf("z = %i\n", z)
+	var z: Nat32
+	z = 0x2A  // 0x2A == 42
+	printf("z = %i\n", z)
 
-    return 0
+	return 0
 }
 ```
 
@@ -86,11 +86,11 @@ true, false
 
 ## Array literals
 ```swift
-    // Array of five GenericInt values
-    [1, 2, 3, 4, 5]
-    
-    // Array of tree Int32 values
-    [Int32 1, Int32 2, Int32 3]
+	// Array of five GenericInt values
+	[1, 2, 3, 4, 5]
+	
+	// Array of tree Int32 values
+	[Int32 1, Int32 2, Int32 3]
 ```
 
 
@@ -147,17 +147,17 @@ var ptr_to_str32: *Str32 = literalString
 import "libc/stdio"
 
 func main () -> Int32 {
-    // creating local variable with type *[]Char8 (aka *Str8)
-    var string: *Str8
+	// creating local variable with type *[]Char8 (aka *Str8)
+	var string: *Str8
 
-    // implicit cast string literal
-    // (GenericArray of GenericChar) to *Str8 
-    string = "Hello World!"
+	// implicit cast string literal
+	// (GenericArray of GenericChar) to *Str8 
+	string = "Hello World!"
 
-    // print string via printf
-    printf("string = \"%s\"\n", string)
+	// print string via printf
+	printf("string = \"%s\"\n", string)
 
-    return 0
+	return 0
 }
 
 ```
@@ -170,8 +170,8 @@ func main () -> Int32 {
 
 ## Record literals
 ```swift
-    // Record with two fields
-    // 'x' with type GenericInt and value 10
-    // 'y' with type GenericInt and value 20
-    {x = 10, y = 20}
+	// Record with two fields
+	// 'x' with type GenericInt and value 10
+	// 'y' with type GenericInt and value 20
+	{x = 10, y = 20}
 ```

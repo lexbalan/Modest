@@ -28,7 +28,7 @@ Use `-f<feature_name>` flag for enable some compiler options
 
 *Usage example:*
 ```shell
-mcc -o main -fparanoid main.cm       # warnings as errors
+mcc -o main -fparanoid main.cm	   # warnings as errors
 mcc -o io -fparanoid -funsafe io.cm  # warnings as errors + unsafe mode
 ```
 
@@ -40,8 +40,8 @@ Use `-m<varname>=<value>` option to change compiler settings
 
 *Usage example:*
 ```shell
-mcc -o main -mbackend=c main.cm     # use C backend for translation to main.c
-mcc -o main -mbackend=cm main.cm    # use Modest backend for translation to main.cm
+mcc -o main -mbackend=c main.cm	 # use C backend for translation to main.c
+mcc -o main -mbackend=cm main.cm	# use Modest backend for translation to main.cm
 mcc -o main -mbackend=llvm main.cm  # use LLVM backend for translation to main.ll
 ```
 

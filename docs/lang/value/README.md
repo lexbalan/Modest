@@ -4,7 +4,7 @@
 Zero value means 0 for any Numeric types, empty array value and empty record value.
 
 ```
-    0, [], {}
+	0, [], {}
 ```
 
 Any [global variable](../def/var.md), defined without *default value*, after creation will contains a *zero value*.

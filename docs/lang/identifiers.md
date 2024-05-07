@@ -23,7 +23,7 @@ const myConst = 10
 var myVar: MyInt
 
 func main () -> Int32 {
-    return 0
+	return 0
 }
 
 ```

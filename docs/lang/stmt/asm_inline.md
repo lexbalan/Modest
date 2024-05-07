@@ -3,7 +3,7 @@
 #### Common form
 
 ```
-    __asm(<# asm_text #>, <# outputs #>, <# inputs #>, <# clobbers #>)
+	__asm(<# asm_text #>, <# outputs #>, <# inputs #>, <# clobbers #>)
 ```
 
 
@@ -17,45 +17,45 @@ import "libc/stdio"
 
 
 func sum64(a: Int64, b: Int64) -> Int64 {
-    var sum: Int64
-    __asm("add %0, %1, %2", [["=r", sum]], [["r", a], ["r", b]], ["cc"])
-    return sum
+	var sum: Int64
+	__asm("add %0, %1, %2", [["=r", sum]], [["r", a], ["r", b]], ["cc"])
+	return sum
 }
 
 
 func sub64(a: Int64, b: Int64) -> Int64 {
-    var sub: Int64
-    __asm("sub %0, %1, %2", [["=r", sub]], [["r", a], ["r", b]], ["cc"])
-    return sub
+	var sub: Int64
+	__asm("sub %0, %1, %2", [["=r", sub]], [["r", a], ["r", b]], ["cc"])
+	return sub
 }
 
 
 func sumsub64(a: Int64, b: Int64) -> Unit {
-    var sum: Int64
-    var sub: Int64
+	var sum: Int64
+	var sub: Int64
 
-    __asm("add %0, %2, %3\nsub %1, %2, %3\n", [["=&r", sum], ["=&r", sub]], [["r", a], ["r", b]], ["cc"])
+	__asm("add %0, %2, %3\nsub %1, %2, %3\n", [["=&r", sum], ["=&r", sub]], [["r", a], ["r", b]], ["cc"])
 
-    printf("sumsub64 sum = %lld\n", sum)
-    printf("sumsub64 sub = %lld\n", sub)
+	printf("sumsub64 sum = %lld\n", sum)
+	printf("sumsub64 sub = %lld\n", sub)
 }
 
 
 func main() -> Int {
-    printf("inline asm test\n")
+	printf("inline asm test\n")
 
-    var a: Int64 = 10
-    var b: Int64 = 20
+	var a: Int64 = 10
+	var b: Int64 = 20
 
-    let sum = sum64(a, b)
-    let sub = sub64(a, b)
+	let sum = sum64(a, b)
+	let sub = sub64(a, b)
 
-    printf("sum(%lld, %lld) = %lld\n", a, b, sum)
-    printf("sub(%lld, %lld) = %lld\n", a, b, sub)
+	printf("sum(%lld, %lld) = %lld\n", a, b, sum)
+	printf("sub(%lld, %lld) = %lld\n", a, b, sub)
 
-    sumsub64(a, b)
+	sumsub64(a, b)
 
-    return 0
+	return 0
 }
 
 ```

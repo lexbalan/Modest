@@ -26,7 +26,7 @@ const four = two * 2
 const message = "Hello World!\n"
 
 func main () -> Int32 {
-    printf("%s\n", message)
-    return 0
+	printf("%s\n", message)
+	return 0
 }
 ```

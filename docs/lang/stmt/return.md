@@ -6,12 +6,12 @@
 
 Return statement with *return value*
 ```
-    return <#value_expression#>
+	return <#value_expression#>
 ```
 
 Return statement without *return value*
 ```
-    return
+	return
 ```
 
 #### Examples
@@ -19,18 +19,18 @@ Return statement without *return value*
 ```swift
 
 func mid (a: Int32, b: Int32) -> Int32 {
-    // in this case return statement stops function execution
-    // and returns result of evaluation return value expression
-    return (a + b) / 2
+	// in this case return statement stops function execution
+	// and returns result of evaluation return value expression
+	return (a + b) / 2
 }
 ```
 
 ```swift
 func do_nothing () -> Unit {
-    // in this case return statement cannot returns some value,
-    // (because function defined as function to Unit)
-    // but it also stops function execution
-    return
+	// in this case return statement cannot returns some value,
+	// (because function defined as function to Unit)
+	// but it also stops function execution
+	return
 }
 
 ```

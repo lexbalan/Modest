@@ -1,6 +1,6 @@
 # Base types
 
-| Type     | Size (in bytes) | Classes | Description |
+| Type	 | Size (in bytes) | Classes | Description |
 | :------: | :-: | ------- | --- |
 | `Unit`   | `0` | `-` | `Empty type (void in C)` |
 | `Bool`   | `1` | `logical, equ` | `8-bit` |
@@ -44,14 +44,14 @@
 It used to indicate that function have no return value
 ```swift
 func no_return_func () -> Unit {
-    // this function returns nothing
+	// this function returns nothing
 }
 ```
 
 Also, you can construct *Unit* value from not used function parameter to prevent *warning(unused value)* compiler message:
 ```swift
 func just (not_used_param: Int32) -> Unit {
-    Unit not_used_param
+	Unit not_used_param
 }
 ```
 
@@ -67,7 +67,7 @@ var b: Bool
 b = false
 
 while not b {
-    b = check_condition()
+	b = check_condition()
 }
 
 ```
@@ -77,14 +77,14 @@ while not b {
 
 ```zig
 func main () -> Int32 {
-    var byte: Byte
+	var byte: Byte
 
-    // GenericInteger will be implicit casted to Byte
-    byte = 42
+	// GenericInteger will be implicit casted to Byte
+	byte = 42
 
-    printf("byte = %i", Nat32 byte)
+	printf("byte = %i", Nat32 byte)
 
-    return 0
+	return 0
 }
 ```
 
@@ -183,9 +183,9 @@ a = "a"[0]
 b = "b"[0]
 
 if a == b {
-    printf("'a' == 'b'\n")
+	printf("'a' == 'b'\n")
 } else {
-    printf("'a' != 'b'\n")
+	printf("'a' != 'b'\n")
 }
 ```
 *Result:*
@@ -224,15 +224,15 @@ var i: Int32
 // fill array in cycle
 i = 0
 while i < 5 {
-    a[i] = i * 10
-    i = i + 1
+	a[i] = i * 10
+	i = i + 1
 }
 
 // print array in cycle
 i = 0
 while i < 5 {
-    printf("a[%d] = %d\n", i, a[i])
-    i = i + 1
+	printf("a[%d] = %d\n", i, a[i])
+	i = i + 1
 }
 
 ```
@@ -284,8 +284,8 @@ record {x: Float64, y: Float64}
 // it is good idea to use type definition statement
 // for bind identifier to record type  
 type Point record {
-    x: Float64
-    y: Float64
+	x: Float64
+	y: Float64
 }
 
 var p: Point
@@ -313,36 +313,36 @@ printf("p.y = %f\n", p.y)
 import "libc/stdio"
 
 func main () -> Int32 {
-    var a: Bool
-    var b: Int32
-    var c: Int64
+	var a: Bool
+	var b: Int32
+	var c: Int64
 
-    //
-    var freePointer: *Unit
+	//
+	var freePointer: *Unit
 
-    // free pointer can points to value of any type
-    freePointer = &a  // it's ok (just for demonstration)
-    freePointer = &b  // it's also ok
-    freePointer = &c  // after all it will be points to value c (with type Int64)
+	// free pointer can points to value of any type
+	freePointer = &a  // it's ok (just for demonstration)
+	freePointer = &b  // it's also ok
+	freePointer = &c  // after all it will be points to value c (with type Int64)
 
-    // you can't do dereference operation with Free pointer
-    // (because runtime doesn't have any idea about value type it pointee),
-    // but you can construct another (non Free) pointer from it
-    // and use it as usualy
-    *(*Int64 freePointer) = 0x123456789ABCDEF
+	// you can't do dereference operation with Free pointer
+	// (because runtime doesn't have any idea about value type it pointee),
+	// but you can construct another (non Free) pointer from it
+	// and use it as usualy
+	*(*Int64 freePointer) = 0x123456789ABCDEF
 
-    printf("c = 0x%llX\n", c)
+	printf("c = 0x%llX\n", c)
 
-    // Let's create new pointer to *Int64 from freePointer
-    let px = *Int64 freePointer
+	// Let's create new pointer to *Int64 from freePointer
+	let px = *Int64 freePointer
 
-    // And will use it...
-    let x = *px
+	// And will use it...
+	let x = *px
 
-    // for pointer mechanics checking
-    printf("x = 0x%llX\n", x)
+	// for pointer mechanics checking
+	printf("x = 0x%llX\n", x)
 
-    return 0
+	return 0
 }
 ```
 *Result:*

@@ -20,34 +20,34 @@
 #### Example
 ```swift
 func main() -> Int {
-    // Any integer literal have GenericInteger type
-    let one = 1
+	// Any integer literal have GenericInteger type
+	let one = 1
 
-    // result of such expressions also have generic type
-    let two = 1 + one
+	// result of such expressions also have generic type
+	let two = 1 + one
 
-    // GenericInteger value can be implicitly casted to any Integer type
-    var a: Int32 = one  // implicit cast GenericInteger value to Int32
-    var b: Nat64 = one  // implicit cast GenericInteger value to INat64
-    ...
+	// GenericInteger value can be implicitly casted to any Integer type
+	var a: Int32 = one  // implicit cast GenericInteger value to Int32
+	var b: Nat64 = one  // implicit cast GenericInteger value to INat64
+	...
 
-    // to Float
-    var f: Float32 = one  // implicit cast GenericInteger value to Float32
-    var g: Float64 = one  // implicit cast GenericInteger value to Float64
+	// to Float
+	var f: Float32 = one  // implicit cast GenericInteger value to Float32
+	var g: Float64 = one  // implicit cast GenericInteger value to Float64
 
-    // and to Byte
-    var x: Byte = one  // implicit cast GenericInteger value to Byte
+	// and to Byte
+	var x: Byte = one  // implicit cast GenericInteger value to Byte
 
 
-    // explicit cast GenericInteger value
+	// explicit cast GenericInteger value
 
-    var c: Char8 = Char8 one    // explicit cast GenericInteger value to Char8
-    var d: Char16 = Char16 one  // explicit cast GenericInteger value to Char16
-    var e: Char32 = Char32 one  // explicit cast GenericInteger value to Char32
+	var c: Char8 = Char8 one	// explicit cast GenericInteger value to Char8
+	var d: Char16 = Char16 one  // explicit cast GenericInteger value to Char16
+	var e: Char32 = Char32 one  // explicit cast GenericInteger value to Char32
 
-    var k: Bool = Bool one  // explicit cast GenericInteger value to Bool
+	var k: Bool = Bool one  // explicit cast GenericInteger value to Bool
 
-    return 0
+	return 0
 }
 
 ```
@@ -59,19 +59,19 @@ func main() -> Int {
 #### Example
 ```swift
 func main() -> Int {
-    // Any float literal have GenericFloat type
-    let pi = 3.141592653589793238462643383279502884
+	// Any float literal have GenericFloat type
+	let pi = 3.141592653589793238462643383279502884
 
-    // value with GenericFloat type
-    // can be implicit casted to any Float type
-    // (in this case value may lose precision)
-    var f: Float32 = pi  // implicit cast GenericFloat value to Float32
-    var g: Float64 = pi  // implicit cast GenericFloat value to Float64
+	// value with GenericFloat type
+	// can be implicit casted to any Float type
+	// (in this case value may lose precision)
+	var f: Float32 = pi  // implicit cast GenericFloat value to Float32
+	var g: Float64 = pi  // implicit cast GenericFloat value to Float64
 
-    // explicit cast GenericFloat value to Int32
-    var x: Int32 = Int32 pi
+	// explicit cast GenericFloat value to Int32
+	var x: Int32 = Int32 pi
 
-    return 0
+	return 0
 }
 
 ```
@@ -84,20 +84,20 @@ func main() -> Int {
 #### Example
 ```swift
 func main() -> Int {
-    // Any char value expression have GenericChar type
-    // (you can pick GenericChar value by index of GenericString value)
-    let a = "A"[0]
+	// Any char value expression have GenericChar type
+	// (you can pick GenericChar value by index of GenericString value)
+	let a = "A"[0]
 
-    // value with GenericChar type
-    // can be implicit casted to any Char type
-    var b: Char8 = a   // implicit cast GenericChar value to Char8
-    var c: Char16 = a  // implicit cast GenericChar value to Char16
-    var d: Char32 = a  // implicit cast GenericChar value to Char32
+	// value with GenericChar type
+	// can be implicit casted to any Char type
+	var b: Char8 = a   // implicit cast GenericChar value to Char8
+	var c: Char16 = a  // implicit cast GenericChar value to Char16
+	var d: Char32 = a  // implicit cast GenericChar value to Char32
 
-    // explicit cast GenericChar value to Int32
-    var char_code: Int32 = Int32 a
+	// explicit cast GenericChar value to Int32
+	var char_code: Int32 = Int32 a
 
-    return 0
+	return 0
 }
 
 ```
@@ -110,26 +110,26 @@ func main() -> Int {
 #### Example
 ```swift
 func main() -> Int {
-    // Any array expression have GenericArray type
-    // this array expression (GenericArray of four GenericInteger items)
-    let a = [0, 1, 2, 3]
+	// Any array expression have GenericArray type
+	// this array expression (GenericArray of four GenericInteger items)
+	let a = [0, 1, 2, 3]
 
-    // value with GenericArray type
-    // can be implicit casted to Array with compatible type and same size
+	// value with GenericArray type
+	// can be implicit casted to Array with compatible type and same size
 
-    // implicit cast Generic([4]GenericInteger) value to [4]Int32
-    var b: [4]Int32
-    b = a
+	// implicit cast Generic([4]GenericInteger) value to [4]Int32
+	var b: [4]Int32
+	b = a
 
-    // implicit cast Generic([4]GenericInteger) value to [4]Nat64
-    var c: [4]Int64
-    c = a
+	// implicit cast Generic([4]GenericInteger) value to [4]Nat64
+	var c: [4]Int64
+	c = a
 
 
-    // explicit cast Generic([4]GenericInteger) value to [10]Int32
-    var d: [10]Int32 = [10]Int32 a
+	// explicit cast Generic([4]GenericInteger) value to [10]Int32
+	var d: [10]Int32 = [10]Int32 a
 
-    return 0
+	return 0
 }
 
 ```
@@ -145,37 +145,37 @@ func main() -> Int {
 ```swift
 
 type Point2D record {
-    x: Int32
-    y: Int32
+	x: Int32
+	y: Int32
 }
 
 type Point3D record {
-    x: Int32
-    y: Int32
-    z: Int32
+	x: Int32
+	y: Int32
+	z: Int32
 }
 
 func main() -> Int {
-    // Any record expression have GenericRecord type
-    // this record expression have type:
-    // Generic(record {x: GenericInteger, y: GenericInteger})
-    let p = {x = 10, y = 20}
+	// Any record expression have GenericRecord type
+	// this record expression have type:
+	// Generic(record {x: GenericInteger, y: GenericInteger})
+	let p = {x = 10, y = 20}
 
-    // value with GenericRecord type
-    // can be implicit casted to Record with same fields. 
+	// value with GenericRecord type
+	// can be implicit casted to Record with same fields. 
 
-    // implicit cast Generic(record {x: GenericInteger, y: GenericInteger})
-    // to record {x: Int32, y: Int32}
-    var point_2d: Point2D
-    point_2d = p
+	// implicit cast Generic(record {x: GenericInteger, y: GenericInteger})
+	// to record {x: Int32, y: Int32}
+	var point_2d: Point2D
+	point_2d = p
 
 
-    // explicit cast Generic(record {x: GenericInteger, y: GenericInteger})
-    // to record {x: Int32, y: Int32, z: Int32}
-    var point_3d: Point3D
-    point_3d = Point3D p
+	// explicit cast Generic(record {x: GenericInteger, y: GenericInteger})
+	// to record {x: Int32, y: Int32, z: Int32}
+	var point_3d: Point3D
+	point_3d = Point3D p
 
-    return 0
+	return 0
 }
 
 ```

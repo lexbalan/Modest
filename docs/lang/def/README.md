@@ -16,9 +16,9 @@ type AxisType Int64
 type MyArray [10]Int32
 type MyPoint2D record {x: AxisType, y: AxisType}
 type MyPoint3D record {
-    x: AxisType
-    y: AxisType
-    z: AxisType
+	x: AxisType
+	y: AxisType
+	z: AxisType
 }
 ```
 
@@ -40,22 +40,22 @@ var pointerToMyPoint3D: *Point3D
 #### [Function Definition](./func.md)
 ```swift
 func show_greeting (text: *Str8) {
-    printf("%s\n", text)
+	printf("%s\n", text)
 }
 
 func sum64 (a: Int64, b: Int64) -> Int64 {
-    return a + b
+	return a + b
 }
 
 func main () -> Int32 {
-    show_greeting(greetingText)
-    
-    let a = 10
-    let b = 20
-    let s = sum64(a, b)
-    printf("sum64(%i, %i) -> %i\n", a, b, s)
-    
-    return 0
+	show_greeting(greetingText)
+	
+	let a = 10
+	let b = 20
+	let s = sum64(a, b)
+	printf("sum64(%i, %i) -> %i\n", a, b, s)
+	
+	return 0
 }
 ```
 

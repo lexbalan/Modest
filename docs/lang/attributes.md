@@ -35,7 +35,7 @@ Property `gnu_att`
 ```swift
 @property("gnu_att", "interrupt(\"WCH-Interrupt-fast\")")
 func wch_systick_interrupt() {
-    //
+	//
 }
 ```
 
@@ -45,6 +45,6 @@ will be translated into
 __attribute__((interrupt("WCH-Interrupt-fast")))
 void wch_systick_interrupt()
 {
-    //
+	//
 }
 ```

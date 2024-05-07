@@ -16,8 +16,8 @@ var a : Int32
 Fields in record type expression
 ```swift
 record {
-    x : Int64
-    y : Int64
+	x : Int64
+	y : Int64
 }
 ```
 

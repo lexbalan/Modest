@@ -29,11 +29,11 @@ var y = Int32 10
 var z: Int32 = 20
 
 func main () -> Int32 {
-    printf("x = %hd\n", x)
-    printf("y = %d\n", y)
-    printf("z = %d\n", z)
+	printf("x = %hd\n", x)
+	printf("y = %d\n", y)
+	printf("z = %d\n", z)
 
-    return 0
+	return 0
 }
 ```
 > Result: `x = 0` `y = 10` `z = 20`
@@ -47,22 +47,22 @@ func main () -> Int32 {
 var counter: Int
 
 func count() {
-    ++counter
+	++counter
 }
 
 func main() -> Int {
-    printf("before counter = %i\n", counter)
+	printf("before counter = %i\n", counter)
 
-    // call function count for ten times
-    var i = 0
-    while i < 10 {
-        count()
-        ++i
-    }
-    
-    printf("after counter = %i\n", counter)
-    
-    return 0
+	// call function count for ten times
+	var i = 0
+	while i < 10 {
+		count()
+		++i
+	}
+	
+	printf("after counter = %i\n", counter)
+	
+	return 0
 }
 ```
 

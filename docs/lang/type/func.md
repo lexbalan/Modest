@@ -4,7 +4,7 @@
 
 #### Common form
 ```
-    ( <#field_list#>] ) -> <#type_expression#>
+	( <#field_list#>] ) -> <#type_expression#>
 ```
 
 
@@ -20,13 +20,13 @@
 
 ```swift
 func sum32 (a: Int32, b: Int32) -> Int32 {
-    return a + b
+	return a + b
 }
 
 func main () -> Int32 {
-    let x = sum32 (1, 2)
-    printf("sum32 (1, 2) = %d\n", x)
-    return 0
+	let x = sum32 (1, 2)
+	printf("sum32 (1, 2) = %d\n", x)
+	return 0
 }
 
 ```

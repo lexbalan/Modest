@@ -86,9 +86,9 @@ Value can be implicitly constructed from another value with *generic* type
 | **Generic type** | **Can be implicitly cast to** |
 | :--------------: | :---------------------: |
 | Generic Integer  | Byte, Char, Integer, Float |
-| Generic Float    | Float |
-| Generic Char     | Char |
-| Generic Array    | Array, Pointer to Array |
+| Generic Float	| Float |
+| Generic Char	 | Char |
+| Generic Array	| Array, Pointer to Array |
 | Generic Record   | Record, Pointer to Record |
 
 

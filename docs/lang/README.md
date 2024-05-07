@@ -68,42 +68,42 @@ func get_integer(min: Int32, max: Int32) -> Int32
 
 
 func main() -> Int32 {
-    let number = get_integer(minNumber, maxNumber)
+	let number = get_integer(minNumber, maxNumber)
 
-    let n = 5
+	let n = 5
 
-    if number < n {
-        printf("entered number (%i) is less than %i\n", number, Int32 n)
-    } else if number > n {
-        printf("entered number (%i) is greater than %i\n", number, Int32 n)
-    } else {
-        printf("entered number (%i) is equal with %i\n", number, Int32 n)
-    }
+	if number < n {
+		printf("entered number (%i) is less than %i\n", number, Int32 n)
+	} else if number > n {
+		printf("entered number (%i) is greater than %i\n", number, Int32 n)
+	} else {
+		printf("entered number (%i) is equal with %i\n", number, Int32 n)
+	}
 
-    return 0
+	return 0
 }
 
 
 func get_integer(min: Int32, max: Int32) -> Int32 {
-    var number: Int32
-    number = 0
+	var number: Int32
+	number = 0
 
-    while true {
-        printf("enter a number (%i .. %i): ", min, max)
-        scanf("%d", &number)
+	while true {
+		printf("enter a number (%i .. %i): ", min, max)
+		scanf("%d", &number)
 
-        if number < min {
-            printf("number must be greater than %i, try again\n", min)
-            again
-        } else if number > max {
-            printf("number must be less than %i, try again\n", max)
-            again
-        } else {
-            break
-        }
-    }
+		if number < min {
+			printf("number must be greater than %i, try again\n", min)
+			again
+		} else if number > max {
+			printf("number must be less than %i, try again\n", max)
+			again
+		} else {
+			break
+		}
+	}
 
-    return number
+	return number
 }
 
 ```
