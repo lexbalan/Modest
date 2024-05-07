@@ -92,7 +92,7 @@ def value_array_concat(l, r, ti):
 	t = hlir_type.hlir_type_array(item_type, volume=str_array_volume, ti=ti)
 	t['generic'] = True
 
-	nv = value_bin('add_arr', l, r, t, ti=ti)
+	nv = value_bin('concat_array', l, r, t, ti=ti)
 	nv['asset'] = asset
 	nv['immediate'] = True
 	nv['nl_end'] = r['nl_end']

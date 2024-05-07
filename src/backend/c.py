@@ -350,7 +350,7 @@ bin_ops = {
 	'eq': '==', 'ne': '!=', 'lt': '<', 'gt': '>', 'le': '<=', 'ge': '>=',
 	'add': '+', 'sub': '-', 'mul': '*', 'div': '/', 'rem': '%',
 	'logic_and': '&&', 'logic_or': '||',
-	'add_str': '', 'eq_str': '', 'ne_str': ''
+	'concat_string': '', 'eq_str': '', 'ne_str': ''
 }
 
 
@@ -1147,7 +1147,7 @@ def print_value2(x, ctx=[], need_wrap=False):
 	elif k == 'alignof': print_value_alignof(x, ctx)
 	elif k == 'offsetof': y = print_value_offsetof(x, ctx)
 	elif k == 'lengthof': y = print_value_lengthof(x, ctx)
-	elif k == 'add_arr': print_value_terminal(x, ctx)
+	elif k == 'concat_array': print_value_terminal(x, ctx)
 	else:
 		out("<%s>" % k)
 		fatal("unknown opcode '%s'" % k)

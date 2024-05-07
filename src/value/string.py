@@ -31,7 +31,7 @@ def value_string_concat(l, r, ti):
 	#return value_string_create(newstring, ti)
 	max_char_width = max(l['type']['width'], r['type']['width'])
 	string_type = hlir_type_string(max_char_width, ti)
-	nv = value_bin('add_str', l, r, string_type, ti=ti)
+	nv = value_bin('concat_string', l, r, string_type, ti=ti)
 	nv['asset'] = newstring
 	nv['immediate'] = True
 	nv['nl_end'] = r['nl_end']

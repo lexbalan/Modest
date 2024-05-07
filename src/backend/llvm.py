@@ -1252,8 +1252,8 @@ def do_eval(x):
 	elif k == 'access': y = do_eval_access(x)
 	elif k == 'access_ptr': y = do_eval_access_ptr(x)
 	elif k == 'cons': y = do_eval_cast(x)
-	elif k == 'add_arr': y = do_eval_literal(x)
-	elif k == 'add_str': y = do_eval_literal(x)
+	elif k == 'concat_array': y = do_eval_literal(x)
+	elif k == 'concat_string': y = do_eval_literal(x)
 	elif k in ['sizeof', 'lengthof', 'alignof', 'offsetof', 'eq_str']:
 		 y = do_eval_literal(x)
 	else:
