@@ -925,7 +925,8 @@ def sort_args(params, args):
 
 	# теперь разбрасываем аргументы
 	for param_id_str in vec0:
-		k = -1
+		# ищем аргумент с именем параметра (param_id_str)
+		k = -1 # -1 значит не найден
 		i = 0
 		while i < len(vec1):
 			item = vec1[i]
