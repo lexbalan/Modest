@@ -255,7 +255,6 @@ def init():
 	root_context.type_add('VA_List', foundation.typeVA_List)
 
 
-
 	root_context.value_add('nil', valueNil)
 	root_context.value_add('true', valueTrue)
 	root_context.value_add('false', valueFalse)
@@ -266,10 +265,6 @@ def init():
 	int_width = int(settings.get('integer_width'))
 	flt_width = int(settings.get('float_width'))
 	pointer_width = int(settings.get('pointer_width'))
-
-	#print("char_width  = %d" % char_width)
-	#print("int_width  = %d" % int_width)
-	#print("float_width  = %d" % flt_width)
 
 	global typeSysInt, typeSysNat, typeSysFloat, typeSysChar, typeSysStr
 
@@ -287,8 +282,6 @@ def init():
 def init_builtin_values():
 	# Set taget depended Int & Nat types
 	# (used in index, extra agrs & generic numeric var definitions)
-
-
 
 	#
 	# __compiler
@@ -361,12 +354,9 @@ def init_builtin_values():
 
 
 
-
-
-
 # last fiels of record can be zero size array (!)
 # (only with -funsafe key)
-# pos - position #
+# pos - position no
 # offset - real offset (address inside container struct)
 def do_field(x):
 	id = x['id']
@@ -533,7 +523,6 @@ def do_type(t):
 	return bad_type(t['ti'])
 
 
-
 #
 # Do Statement
 #
@@ -671,8 +660,6 @@ def value_eq_arrays(l, r, ti):
 		fatal("dynamic immediate array volume not implemented", ti)
 
 	for a, b in zip(l['asset'], r['asset']):
-		#print("a = " + str(a))
-		#print("b = " + str(b))
 		if a != b:
 			return False
 
