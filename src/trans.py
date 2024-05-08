@@ -930,10 +930,11 @@ def sort_args(params, args):
 		i = 0
 		while i < len(vec1):
 			item = vec1[i]
-			if item['id'] != None:
-				if item['id']['str'] == param_id_str:
-					k = i
-					break
+			if item != None:
+				if item['id'] != None:
+					if item['id']['str'] == param_id_str:
+						k = i
+						break
 			i = i + 1
 
 		j = 0
@@ -942,6 +943,7 @@ def sort_args(params, args):
 
 		arg = vec1[j]
 		vec1.pop(j)
+		#vec1[j] = None
 		outvec.append(arg)
 
 	return outvec
@@ -1653,11 +1655,11 @@ def do_stmt_comment_block(x):
 def do_stmt_asm(x):
 	xargs = x['args']
 
-	asm_text = do_rvalue(xargs[0][1])
+	asm_text = do_rvalue(xargs[0]['value'])
 
-	xoutputs = xargs[1][1]
-	xinputs = xargs[2][1]
-	xclobbers = xargs[3][1]
+	xoutputs = xargs[1]['value']
+	xinputs = xargs[2]['value']
+	xclobbers = xargs[3]['value']
 
 	outputs = []
 	for x in xoutputs['items']:
