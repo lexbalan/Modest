@@ -22,7 +22,7 @@ type MyPoint3D record {
 }
 ```
 
-#### [Constant Definition](./const.md)
+#### [Constant Definition](./let.md)
 ```golang
 let one = 1
 let two = one + 1

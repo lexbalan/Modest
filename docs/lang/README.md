@@ -6,7 +6,7 @@
 - [Import](./import.md)
 - [Definitions](./def/README.md)
   * [Type](./def/type.md)
-  * [Constant](./def/const.md)
+  * [Constant](./def/let.md)
   * [Variable](./def/var.md)
   * [Function](./def/func.md)
 
@@ -49,7 +49,7 @@
 
 
 ### Keywords
-[`import`](./import.md), [`type`](./def/type.md), [`const`](./def/const.md), [`var`](./def/var.md), [`func`](./def/func.md), [`let`](./stmt/let.md), [`if`](./stmt/if.md), [`while`](./stmt/while.md), [`break`](./stmt/while.md#break), [`again`](./stmt/while.md#again), [`return`](./stmt/return.md)
+[`import`](./import.md), [`type`](./def/type.md), [`const`](./def/let.md), [`var`](./def/var.md), [`func`](./def/func.md), [`let`](./stmt/let.md), [`if`](./stmt/if.md), [`while`](./stmt/while.md), [`break`](./stmt/while.md#break), [`again`](./stmt/while.md#again), [`return`](./stmt/return.md)
 
 
 ### Example
