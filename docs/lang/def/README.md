@@ -2,10 +2,10 @@
 
 *Top level definition* create a global entity (*type alias*, *constant*, *variable* or *function*). You can learn more about top-level definitions by clicking on the link below.
 
-  * [type definition](./type.md)
-  * [constant definition](./const.md)
-  * [variable definition](./var.md)
-  * [function definition](./func.md)
+  * [Type definition](./type.md)
+  * [Constant definition](./let.md)
+  * [Variable definition](./var.md)
+  * [Function definition](./func.md)
 
 
 ## Fast Examples
