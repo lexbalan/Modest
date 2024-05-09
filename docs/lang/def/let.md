@@ -12,7 +12,6 @@ let <#identifier#> = <#value_expression#>
 
 Global constant definition bounds an [*identifier*](../identifier.md) with an [*immediate value*](../value/README.md).
 
-> <#value_expression#> must be immediate
 
 #### Examples
 
