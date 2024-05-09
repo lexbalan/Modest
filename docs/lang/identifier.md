@@ -1,10 +1,10 @@
 # Identifiers
 
 Identifier is a combination of small & big letters, digits and '_' sign.
-Every identifier must starts from letter.
+Every identifier must starts from letter or '_' sign.
 
 ## Type identifier
-*Type identifier* must starts from **uppercese** letter (*Pascal Case* or *Upper Camel Case*).
+*Type identifier* must starts from **uppercese** letter (*PascalCase* or *UpperCamelCase*).
 
 #### Example
 

@@ -1,7 +1,7 @@
 # Modest language
 
 - [Comments](./comments.md)
-- [Identifiers](./identifiers.md)
+- [Identifiers](./identifier.md)
 <!--- [Fields](./fields.md)-->
 - [Import](./import.md)
 - [Definitions](./def/README.md)
@@ -43,8 +43,8 @@
   * [Asm statement](./stmt/asm_inline.md)
 
 ### Misc
-  * [Directives](./directives.md)
-  * [Attributes](./attributes.md)
+  * [Directives](./directive.md)
+  * [Attributes](./attribute.md)
   * [Builtin constants](./builtin_constants.md)
 
 

@@ -32,10 +32,7 @@ func test_sum () {
 }
 
 func main () -> Int32 {
-	printf("Hello World!\n")
-
 	test_sum()
-
 	return 0
 }
 
