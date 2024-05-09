@@ -21,6 +21,7 @@ var <#identifier#> : <#type_expression#> = <#default_value_expression#>
 
 ## Global variables
 
+Variable definition outside function body creates new *local variable* instance.
 
 ##### Global variables example
 ```swift
@@ -36,7 +37,10 @@ func main () -> Int32 {
 	return 0
 }
 ```
-> Result: `x = 0` `y = 10` `z = 20`
+*Result:*
+>`x = 0`<br/>
+>`y = 10`<br/>
+>`z = 20`<br/>
 
 
 ```swift
@@ -66,7 +70,7 @@ func main() -> Int {
 
 ## Local variables
 
-Variable definition creates new *local variable* instance.
+Variable definition inside function body creates new *local variable* instance.
 
 
 ##### Global variables example
