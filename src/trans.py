@@ -1046,7 +1046,7 @@ def do_value_call(x):
 		if func_id_str in ['printf', 'scanf', 'print']:
 			expected_pointers = func_id_str == 'scanf'
 			first_arg = x['args'][0]['value']
-			if first_arg['kind'] == 'string':
+			if first_arg['kind'] in ['string', 'string_concat']:
 				specs = get_cspecs(first_arg['str'])
 				extra_args_check(specs, extra_args, expected_pointers)
 			else:
