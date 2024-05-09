@@ -70,14 +70,14 @@ func get_integer(min: Int32, max: Int32) -> Int32
 func main() -> Int32 {
 	let number = get_integer(minNumber, maxNumber)
 
-	let n = 5
+	let n = Int32 5
 
 	if number < n {
-		printf("entered number (%i) is less than %i\n", number, Int32 n)
+		printf("entered number (%i) is less than %i\n", number, n)
 	} else if number > n {
-		printf("entered number (%i) is greater than %i\n", number, Int32 n)
+		printf("entered number (%i) is greater than %i\n", number, n)
 	} else {
-		printf("entered number (%i) is equal with %i\n", number, Int32 n)
+		printf("entered number (%i) is equal with %i\n", number, n)
 	}
 
 	return 0
