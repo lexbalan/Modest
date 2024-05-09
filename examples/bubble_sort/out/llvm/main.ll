@@ -343,7 +343,7 @@ body_1:
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str7 to [0 x i8]*), i32 %5)
 	%7 = sext i16 %1 to i32
 	%8 = sext i16 1000 to i32
-	%9 = call i32 (i32, i32) @get_integer(i32 %7, i32 %8)
+	%9 = call i32 (i32, i32) @get_number(i32 %7, i32 %8)
 	%10 = load i32, i32* %2
 	%11 = getelementptr inbounds [0 x i32], [0 x i32]* %array, i32 0, i32 %10
 	store i32 %9, i32* %11
@@ -355,7 +355,7 @@ break_1:
 	ret void
 }
 
-define i32 @get_integer(i32 %min, i32 %max) {
+define i32 @get_number(i32 %min, i32 %max) {
 	%1 = alloca i32
 	store i32 0, i32* %1
 	br label %again_1

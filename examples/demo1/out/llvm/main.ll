@@ -214,7 +214,7 @@ declare void @perror(%ConstCharStr* %str)
 
 
 define i32 @main() {
-	%1 = call i32 (i32, i32) @get_integer(i32 0, i32 10)
+	%1 = call i32 (i32, i32) @get_number(i32 0, i32 10)
 	%2 = icmp slt i32 %1, 5
 	br i1 %2 , label %then_0, label %else_0
 then_0:
@@ -235,7 +235,7 @@ endif_0:
 	ret i32 0
 }
 
-define i32 @get_integer(i32 %min, i32 %max) {
+define i32 @get_number(i32 %min, i32 %max) {
 	%1 = alloca i32
 	store i32 0, i32* %1
 	br label %again_1

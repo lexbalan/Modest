@@ -65,7 +65,7 @@ func print_array(array: *[]Int32, len: Int32) -> Unit {
 }
 
 
-func get_integer(min: Int32, max: Int32) -> Int32
+func get_number(min: Int32, max: Int32) -> Int32
 
 func fill_array(array: *[]Int32, len: Int32) -> Unit {
 	let min = -1000
@@ -73,14 +73,14 @@ func fill_array(array: *[]Int32, len: Int32) -> Unit {
 	var i: Int32 = 0
 	while i < len {
 		printf("[%i] ", i)
-		let x = get_integer(min, max)
+		let x = get_number(min, max)
 		array[i] = x
 		i = i + 1
 	}
 }
 
 
-func get_integer(min: Int32, max: Int32) -> Int32 {
+func get_number(min: Int32, max: Int32) -> Int32 {
 	var number: Int32
 	number = 0
 

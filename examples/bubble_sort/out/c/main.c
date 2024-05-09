@@ -77,7 +77,7 @@ void print_array(int32_t *array, int32_t len)
 }
 
 
-int32_t get_integer(int32_t min, int32_t max);
+int32_t get_number(int32_t min, int32_t max);
 
 void fill_array(int32_t *array, int32_t len)
 {
@@ -87,7 +87,7 @@ void fill_array(int32_t *array, int32_t len)
 	i = 0;
 	while (i < len) {
 		printf("[%i] ", i);
-		const int32_t x = get_integer(min, max);
+		const int32_t x = get_number(min, max);
 		array[i] = x;
 		i = i + 1;
 	}
@@ -96,7 +96,7 @@ void fill_array(int32_t *array, int32_t len)
 }
 
 
-int32_t get_integer(int32_t min, int32_t max)
+int32_t get_number(int32_t min, int32_t max)
 {
 	int32_t number;
 	number = 0;
