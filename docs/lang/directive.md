@@ -57,7 +57,7 @@
 ### Examples
 
 ```zig
-const __SYSTEM = 64
+let __SYSTEM = 64
 
 @if __SYSTEM == 32:
 import "./system32"

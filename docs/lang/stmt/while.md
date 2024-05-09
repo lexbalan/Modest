@@ -56,7 +56,7 @@ func main() -> Int {
 
 ```swift
 
-const nMax = 10
+let nMax = 10
 
 func main () -> Unit {
 	printf("count for: ")

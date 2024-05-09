@@ -13,7 +13,7 @@
 
 ```zig
 
-const arrayLength = 5
+let arrayLength = 5
 
 var array: [arrayLength]Int32 = [1, 2, 3, 4, 5]
 
@@ -35,7 +35,7 @@ func main() -> Int {
 
 ```zig
 
-const arrayLength = 5
+let arrayLength = 5
 
 var array: [arrayLength]Int32 = [1, 2, 3, 4, 5]
 

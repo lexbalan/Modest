@@ -24,9 +24,9 @@ type MyPoint3D record {
 
 #### [Constant Definition](./const.md)
 ```golang
-const one = 1
-const two = one + 1
-const greetingText = "Hello!"
+let one = 1
+let two = one + 1
+let greetingText = "Hello!"
 ```
 
 #### [Variable Definition](./var.md)

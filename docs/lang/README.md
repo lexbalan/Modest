@@ -60,8 +60,8 @@
 import "libc/stdio"
 
 
-const minNumber = 0
-const maxNumber = 10
+let minNumber = 0
+let maxNumber = 10
 
 
 func get_integer(min: Int32, max: Int32) -> Int32

@@ -24,10 +24,10 @@ Any [global variable](../def/var.md), defined without *default value*, after cre
 ##### Example
 ```golang
 // all these values are immediate
-const x = 2  // 2
-const y = 6  // 6
-const z = (x * y) / (x + y)  // 1
-const w = z < 10  // true
+let x = 2  // 2
+let y = 6  // 6
+let z = (x * y) / (x + y)  // 1
+let w = z < 10  // true
 ```
 
 

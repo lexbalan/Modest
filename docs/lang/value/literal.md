@@ -116,7 +116,7 @@ Also there is three built-in named type aliases for convenient usage of strings:
 Creating three variables with type *Array of Char* from string literal
 
 ```zig
-const literalString = "I am a string literal"
+let literalString = "I am a string literal"
 
 var str_array8: []Char8 = literalString
 var str_array16: []Char16 = literalString
@@ -126,7 +126,7 @@ var str_array32: []Char32 = literalString
 Creating three variables with type *Pointer to Array of Char* from string literal
 
 ```zig
-const literalString = "I am a string literal"
+let literalString = "I am a string literal"
 
 var ptr_to_str8: *[]Char8 = literalString
 var ptr_to_str16: *[]Char16 = literalString
@@ -136,7 +136,7 @@ var ptr_to_str32: *[]Char32 = literalString
 Or (the same):
 
 ```zig
-const literalString = "I am a string literal"
+let literalString = "I am a string literal"
 
 var ptr_to_str8: *Str8 = literalString
 var ptr_to_str16: *Str16 = literalString

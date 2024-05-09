@@ -18,7 +18,7 @@ type PointerToMyInt *MyInt
 
 #### Example
 ```swift
-const myConst = 10
+let myConst = 10
 
 var myVar: MyInt
 
