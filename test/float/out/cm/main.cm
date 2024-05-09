@@ -4,7 +4,7 @@ import "libc/stdio"
 import "libc/math"
 
 
-const mathPi = 3.141592653589793238462643383279502884
+let mathPi = 3.141592653589793238462643383279502884
 
 
 func squareOfCircle(radius: Float64) -> Float64 {

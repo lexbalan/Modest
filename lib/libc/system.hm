@@ -1,5 +1,5 @@
 
 @pragma("not_included")
 
-const __SYSTEM = 64
+let __SYSTEM = 64
 

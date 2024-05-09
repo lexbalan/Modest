@@ -3,10 +3,10 @@
 import "libc/stdio"
 
 
-const __CPU_WORD_WIDTH = 64
-const word_name = "'64-bit'"
+let __CPU_WORD_WIDTH = 64
+let word_name = "'64-bit'"
 
-const hello_world = "Hello " + word_name + " world!"
+let hello_world = "Hello " + word_name + " world!"
 
 
 func main() -> Int {

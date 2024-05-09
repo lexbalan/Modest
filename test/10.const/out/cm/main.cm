@@ -18,34 +18,34 @@ type Line record {
 	b: Point
 }
 
-const zero = 0
-const pointZero = {x = zero, y = zero}
-const pointOne = {x = 1.0, y = 1.0}
+let zero = 0
+let pointZero = {x = zero, y = zero}
+let pointOne = {x = 1.0, y = 1.0}
 
-const line0 = {
+let line0 = {
 	a = pointZero
 	b = pointOne
 }
 
-const carr = [0, 10, 15] + [20, 25, 30]
+let carr = [0, 10, 15] + [20, 25, 30]
 
-const line1 = {
+let line1 = {
 	a = {x = 10, y = 20}
 	b = {x = 30, y = 40}
 }
 
 
-const line2 = {
+let line2 = {
 	a = pointZero
 	b = pointOne
 }
 
-const line3 = {
+let line3 = {
 	a = {x = 10, y = 20}
 	b = {x = 30, y = 40}
 }
 
-const lines = [line0, line1, line2, line3]
+let lines = [line0, line1, line2, line3]
 
 
 // Pythagorean theorem

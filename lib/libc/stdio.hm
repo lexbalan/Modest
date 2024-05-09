@@ -16,19 +16,19 @@ type FposT
 @property("c_alias", "char *")
 type CharStr Str
 
-@property("c_alias", "const char *")
+@property("c_alias", "let char *")
 type ConstCharStr CharStr
 
 
 @property("value.c_alias", "EOF")
-const c_EOF = -1
+let c_EOF = -1
 
 @property("value.c_alias", "SEEK_SET")
-const c_SEEK_SET = 0
+let c_SEEK_SET = 0
 @property("value.c_alias", "SEEK_CUR")
-const c_SEEK_CUR = 1
+let c_SEEK_CUR = 1
 @property("value.c_alias", "SEEK_END")
-const c_SEEK_END = 2
+let c_SEEK_END = 2
 
 @attribute("value.type.to:dispensable")
 func fclose(f: *FILE) -> Int

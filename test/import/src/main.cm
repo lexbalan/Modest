@@ -1,7 +1,7 @@
 // test/import/src/main.cm
 
 // how to find library
-const library = "libc"
+let library = "libc"
 
 //import library + "/stdio"
 //import library + "/libc"

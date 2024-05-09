@@ -8,10 +8,10 @@ import "misc/utf"
 @c_include("./utf.h")
 
 
-const hello = "Hello"
-const world = " world!\n"
+let hello = "Hello"
+let world = " world!\n"
 
-const hello_world = hello + world
+let hello_world = hello + world
 
 
 var string8: []Char8 = "S-t-r-i-n-g"

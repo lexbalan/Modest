@@ -1,8 +1,8 @@
 // examples/fsm/fsm.cm
 
 
-const fsmNameMaxLength = 8
-const fsmMaxStates = 16
+let fsmNameMaxLength = 8
+let fsmMaxStates = 16
 
 
 type FSM
@@ -17,9 +17,9 @@ type FSM_StateDesc record {
 }
 
 
-const fsmSubstateEntering = 0
-const fsmSubstateLoop = 1
-const fsmSubstateLeaving = 2
+let fsmSubstateEntering = 0
+let fsmSubstateLoop = 1
+let fsmSubstateLeaving = 2
 
 type UInt32 Nat32
 

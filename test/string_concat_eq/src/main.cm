@@ -2,14 +2,14 @@
 
 import "libc/stdio"
 
-const hello = "Hello"
-const world = "World"
-const party_corn = "🎉"
+let hello = "Hello"
+let world = "World"
+let party_corn = "🎉"
 
-const greeting = hello + " " + world //+ " " + party_corn
+let greeting = hello + " " + world //+ " " + party_corn
 
 
-const test = "test"
+let test = "test"
 
 
 func main() -> Int {

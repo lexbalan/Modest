@@ -1,6 +1,6 @@
 
 
-const sha256HashSize = 32
+let sha256HashSize = 32
 
 func sha256_doHash(msg: *[]Byte, msg_len: Nat32, out_hash: *[sha256HashSize]Byte) -> Unit
 

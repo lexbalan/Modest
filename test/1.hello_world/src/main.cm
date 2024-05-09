@@ -2,10 +2,10 @@
 
 import "libc/stdio"
 
-const hello = "Hello"
-const world = "World!"
+let hello = "Hello"
+let world = "World!"
 
-const hello_world = hello + " " + world
+let hello_world = hello + " " + world
 
 
 func main() -> Int {

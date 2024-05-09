@@ -5,7 +5,7 @@ import "libc/stdio"
 import "./fsm"
 
 
-const fsmVerbose = true
+let fsmVerbose = true
 
 
 func fsm_state_no_name(fsm: *FSM, state_no: Nat32) -> *Str8 {

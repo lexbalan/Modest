@@ -3,7 +3,7 @@
 import "libc/stdio"
 
 
-const filename = *Str8 "file.txt"
+let filename = *Str8 "file.txt"
 
 
 func write_example() -> Unit {

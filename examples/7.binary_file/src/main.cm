@@ -6,7 +6,7 @@ import "libc/stdio"
 
 // FIXIT: not worked LLVM result (!)
 
-const filename =  *Str8 "file.bin"
+let filename =  *Str8 "file.bin"
 
 
 // chunk of data for read/write operations in file

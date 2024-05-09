@@ -1,7 +1,7 @@
 // lib/lightfood/memory.cm
 
 
-const __SYSTEM_WIDTH__ = 64
+let __SYSTEM_WIDTH__ = 64
 
 
 @if __SYSTEM_WIDTH__ == 64

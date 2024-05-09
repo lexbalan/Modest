@@ -827,7 +827,7 @@ def print_def_var(x):
 
 
 def print_def_const(x):
-	out("const ")
+	out("let ")
 	print_id(x)
 	out(" = ")
 	print_value(x['init_value'], ctx=['oneline'], print_just_id=False)

@@ -3,20 +3,20 @@
 import "libc/stdio"
 
 
-const __CPU_WORD_WIDTH = 64
+let __CPU_WORD_WIDTH = 64
 
 
 @if __CPU_WORD_WIDTH == 32
-const word_name = "'32-bit'"
+let word_name = "'32-bit'"
 @elseif __CPU_WORD_WIDTH == 64
-const word_name = "'64-bit'"
+let word_name = "'64-bit'"
 @elseif __CPU_WORD_WIDTH == 128
-const word_name = "'128-bit'"
+let word_name = "'128-bit'"
 @else
-const word_name = "'unknown-bit'"
+let word_name = "'unknown-bit'"
 @endif
 
-const hello_world = "Hello " + word_name + " world!"
+let hello_world = "Hello " + word_name + " world!"
 
 
 func main() -> Int {

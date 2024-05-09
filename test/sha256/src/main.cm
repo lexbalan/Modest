@@ -8,8 +8,8 @@ import "misc/sha256"
 @c_include("./sha256.h")
 
 
-const inputLength = 32
-const outputLength = sha256HashSize
+let inputLength = 32
+let outputLength = sha256HashSize
 
 
 type SHA256_TestCase record {

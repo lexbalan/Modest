@@ -5,11 +5,11 @@ import "libc/libc"
 import "libc/socket"
 
 
-const filename = "file.txt"
+let filename = "file.txt"
 
-const ipAddress = "127.0.0.1"
-const port = 8080
-const bufSize = 1024
+let ipAddress = "127.0.0.1"
+let port = 8080
+let bufSize = 1024
 
 
 func send_file(fp: *FILE, sockfd: Int) {

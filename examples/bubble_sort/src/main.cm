@@ -3,7 +3,7 @@
 import "libc/stdio"
 
 
-const numberOfItems = 21
+let numberOfItems = 21
 
 var array: [numberOfItems]Int32 = [
 	-3, -5, 2, 1, -1, 0, -2, 3, -4, 4
