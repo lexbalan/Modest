@@ -20,18 +20,17 @@ int32_t main()
 {
 	const int32_t number = get_integer(minNumber, maxNumber);
 
-	#define n  5
+	const int32_t n = 5;
 
 	if (number < n) {
-		printf("entered number (%i) is less than %i\n", number, (int32_t)n);
+		printf("entered number (%i) is less than %i\n", number, n);
 	} else if (number > n) {
-		printf("entered number (%i) is greater than %i\n", number, (int32_t)n);
+		printf("entered number (%i) is greater than %i\n", number, n);
 	} else {
-		printf("entered number (%i) is equal with %i\n", number, (int32_t)n);
+		printf("entered number (%i) is equal with %i\n", number, n);
 	}
 
 	return 0;
-#undef n
 }
 
 
