@@ -5,15 +5,14 @@ Constant definition bounds an [*identifier*](../identifier.md) with an [*immedia
 #### Common form
 
 ```
-let <#identifier#> = <#immediate_value_expression#>
+let <#identifier#> = <#value_expression#>
 ```
-
-> <#value_expression#> must be immediate
-
 
 ## Global constant definition
 
 Global constant definition bounds an [*identifier*](../identifier.md) with an [*immediate value*](../value/README.md).
+
+> <#value_expression#> must be immediate
 
 #### Examples
 
