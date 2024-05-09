@@ -13,7 +13,7 @@ let <#identifier#> = <#immediate_value_expression#>
 
 ## Global constant definition
 
-Global constant definition bounds an [*identifier*](../identifier.md) with an [*immediate value*](../value/README.md) (*value aliasing*).
+Global constant definition bounds an [*identifier*](../identifier.md) with an [*immediate value*](../value/README.md).
 
 #### Examples
 
@@ -36,7 +36,7 @@ func main () -> Int32 {
 
 ## Local constant definition
 
-Local constant definition bounds an [*identifier*](../identifier.md) with an [*immediate value*](../value/README.md) (*value aliasing*).
+Local constant definition bounds an [*identifier*](../identifier.md) with an value.
 
 #### Examples
 
