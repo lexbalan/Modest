@@ -109,8 +109,6 @@ func main () -> Int32 {
 ### More information every statements
 
   * [Block statement](./block.md)
-  * [Variable definiiton statement](../def/var.md#Local-variables)
-  * [Constant definiiton statement](../def/let.md)
   * [Value evaluation statement](./eval.md)
   * [Variable assignation statement](./assign.md)
   * [If statement](./if.md)
