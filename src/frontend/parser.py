@@ -1290,24 +1290,9 @@ class Parser:
 
 
 	def parse_def_var(self):
-		ff = self.parse_field()
-		if ff == None:
-			return None
-
-		iv = None
-		if self.is_assign_operator():
-			iv = self.expr_value()
-
-		vars = []
-		for f in ff:
-			vars.append({
-				'isa': 'ast_definition',
-				'kind': 'var',
-				'field': f,
-				'init': iv,
-				'ti': f['ti']
-			})
-
+		vars = self.stmt_var()
+		for var in vars:
+			var['isa'] = 'ast_definition'
 		return vars
 
 

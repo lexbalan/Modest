@@ -457,6 +457,8 @@ declare void @sha256_doHash([0 x i8]* %msg, i32 %msgLen, [32 x i8]* %outHash)
 		i8 105
 	]
 }
+
+
 @sha256_tests = global [2 x %SHA256_TestCase*] [
 	%SHA256_TestCase* @test0,
 	%SHA256_TestCase* @test1

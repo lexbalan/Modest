@@ -1945,37 +1945,43 @@ def def_type(x):
 
 
 def def_var(x):
-	f = do_field(x['field'])
-	id = f['id']
-
+	id = x['id']
 	log("def_var %s" % id['str'])
+
+	var_type = None
+	if x['type'] != None:
+		var_type = do_type(x['type'])
 
 	# already defined?
 	already = value_get(id['str'])
 	if already != None:
-		error("redefinition of '%s'" % id['str'], x['field']['ti'])
+		error("redefinition of '%s'" % id['str'], x['id']['ti'])
 
-	var_type = f['type']
 
-	if hlir_type.type_is_bad(var_type):
-		return None
 
 	# если размер массива не указан
 	# получим его из инициализатора
 	arr_without_length = False
-	if hlir_type.type_is_array(var_type):
-		if var_type['volume'] == None:
-			arr_without_length = True
 
-	if not arr_without_length:
-		if hlir_type.type_is_forbidden_var(var_type):
-			error("unsuitable type", x['field']['type']['ti'])
+	if var_type != None:
+		if hlir_type.type_is_bad(var_type):
+			return None
+
+
+		if hlir_type.type_is_array(var_type):
+			if var_type['volume'] == None:
+				arr_without_length = True
+
+		if not arr_without_length:
+			if hlir_type.type_is_forbidden_var(var_type):
+				error("unsuitable type", x['field']['type']['ti'])
 
 	init_value = None
-
-	if x['init'] != None:
-		iv = do_rvalue(x['init'])
+	if x['value'] != None:
+		iv = do_rvalue(x['value'])
 		if not value_is_bad(iv):
+			if var_type == None:
+				var_type = iv['type']
 
 			# если размер массива не указан
 			# получаем его из инициализатора
@@ -1993,9 +1999,11 @@ def def_var(x):
 			except:
 				warning('???', x['ti'])
 
-	var = value_var(id, var_type, x['field']['id']['ti'])
+
+
+	var = value_var(id, var_type, x['id']['ti'])
 	var['is_global'] = True
-	module['context'].value_add(x['field']['id']['str'], var)
+	module['context'].value_add(x['id']['str'], var)
 	return hlir_def_var(id, init_value, var, x['ti'])
 
 
