@@ -3,30 +3,30 @@
 #### Common form
 
 ```
-	if <#condition#> {
-		// do something if condition is true
-	}
+if <#condition#> {
+	// do something if condition is true
+}
 ```
 
 ```
-	if <#condition#> {
-		// do something if condition is true
-	} else {
-		// do something if condition is false
-	}
+if <#condition#> {
+	// do something if condition is true
+} else {
+	// do something if condition is false
+}
 ```
 
 ```
-	if <#condition_1#> {
-		// do something if condition_1 is true
-	} else if <#condition_2#> {
-		// do something if condition_1 is false and condition_2 is true
+if <#condition_1#> {
+	// do something if condition_1 is true
+} else if <#condition_2#> {
+	// do something if condition_1 is false and condition_2 is true
 
-	...
+...
 
-	} else {
-		// do something if all conditions above are false
-	}
+} else {
+	// do something if all conditions above are false
+}
 ```
 
 #### Examples

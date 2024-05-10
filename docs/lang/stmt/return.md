@@ -6,12 +6,12 @@
 
 Return statement with *return value*
 ```
-	return <#value_expression#>
+return <#value_expression#>
 ```
 
 Return statement without *return value*
 ```
-	return
+return
 ```
 
 #### Examples

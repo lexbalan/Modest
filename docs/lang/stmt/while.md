@@ -4,9 +4,9 @@
 #### Common view
 
 ```
-	while <#condition#> {
-		// do something while condition is true
-	}
+while <#condition#> {
+	// do something while condition is true
+}
 ```
 
 
