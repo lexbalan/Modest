@@ -14,6 +14,7 @@
 
 #include "sha256.h"
 
+
 typedef struct {
 	uint8_t data[64];
 	uint32_t datalen;
@@ -152,11 +153,11 @@ void sha256_transform(Context *ctx, uint8_t *data)
 }
 
 
-void sha256_update(Context *ctx, uint8_t *msg, uint32_t msg_len)
+void sha256_update(Context *ctx, uint8_t *msg, uint32_t msgLen)
 {
 	uint32_t i;
 	i = 0;
-	while (i < msg_len) {
+	while (i < msgLen) {
 		ctx->data[ctx->datalen] = msg[i];
 		ctx->datalen = ctx->datalen + 1;
 		if (ctx->datalen == 64) {
@@ -169,7 +170,7 @@ void sha256_update(Context *ctx, uint8_t *msg, uint32_t msg_len)
 }
 
 
-void sha256_final(Context *ctx, uint8_t *out_hash)
+void sha256_final(Context *ctx, uint8_t *outHash)
 {
 	uint32_t i;
 	i = ctx->datalen;
@@ -214,25 +215,25 @@ void sha256_final(Context *ctx, uint8_t *out_hash)
 	i = 0;
 	while (i < 4) {
 		const uint32_t sh = 24 - i * 8;
-		out_hash[i + 0] = (uint8_t)(ctx->state[0] >> sh);
-		out_hash[i + 4] = (uint8_t)(ctx->state[1] >> sh);
-		out_hash[i + 8] = (uint8_t)(ctx->state[2] >> sh);
-		out_hash[i + 12] = (uint8_t)(ctx->state[3] >> sh);
-		out_hash[i + 16] = (uint8_t)(ctx->state[4] >> sh);
-		out_hash[i + 20] = (uint8_t)(ctx->state[5] >> sh);
-		out_hash[i + 24] = (uint8_t)(ctx->state[6] >> sh);
-		out_hash[i + 28] = (uint8_t)(ctx->state[7] >> sh);
+		outHash[i + 0] = (uint8_t)(ctx->state[0] >> sh);
+		outHash[i + 4] = (uint8_t)(ctx->state[1] >> sh);
+		outHash[i + 8] = (uint8_t)(ctx->state[2] >> sh);
+		outHash[i + 12] = (uint8_t)(ctx->state[3] >> sh);
+		outHash[i + 16] = (uint8_t)(ctx->state[4] >> sh);
+		outHash[i + 20] = (uint8_t)(ctx->state[5] >> sh);
+		outHash[i + 24] = (uint8_t)(ctx->state[6] >> sh);
+		outHash[i + 28] = (uint8_t)(ctx->state[7] >> sh);
 		i = i + 1;
 	}
 }
 
 
-void sha256_doHash(uint8_t *msg, uint32_t msg_len, uint8_t *out_hash)
+void sha256_doHash(uint8_t *msg, uint32_t msgLen, uint8_t *outHash)
 {
 	Context ctx;
 	ctx = (Context){};
 	sha256_contextInit(&ctx);
-	sha256_update(&ctx, msg, msg_len);
-	sha256_final(&ctx, out_hash);
+	sha256_update(&ctx, msg, msgLen);
+	sha256_final(&ctx, outHash);
 }
 

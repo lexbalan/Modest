@@ -4,6 +4,7 @@ import "libc/libc"
 
 import "sha256"
 
+
 type Context record {
 	data: [64]Byte
 	datalen: Nat32
@@ -123,9 +124,9 @@ func sha256_transform(ctx: *Context, data: *[]Byte) -> Unit {
 }
 
 
-func sha256_update(ctx: *Context, msg: *[]Byte, msg_len: Nat32) -> Unit {
+func sha256_update(ctx: *Context, msg: *[]Byte, msgLen: Nat32) -> Unit {
 	var i: Nat32 = Nat32 0
-	while i < msg_len {
+	while i < msgLen {
 		ctx.data[ctx.datalen] = msg[i]
 		ctx.datalen = ctx.datalen + 1
 		if ctx.datalen == 64 {
@@ -138,7 +139,7 @@ func sha256_update(ctx: *Context, msg: *[]Byte, msg_len: Nat32) -> Unit {
 }
 
 
-func sha256_final(ctx: *Context, out_hash: *[sha256HashSize]Byte) -> Unit {
+func sha256_final(ctx: *Context, outHash: *[sha256HashSize]Byte) -> Unit {
 	var i: Nat32 = ctx.datalen
 
 	// Pad whatever data is left in the buffer.
@@ -180,23 +181,23 @@ func sha256_final(ctx: *Context, out_hash: *[sha256HashSize]Byte) -> Unit {
 	i = 0
 	while i < 4 {
 		let sh = 24 - i * 8
-		out_hash[i + 00] = Byte (ctx.state[0] >> sh)
-		out_hash[i + 04] = Byte (ctx.state[1] >> sh)
-		out_hash[i + 08] = Byte (ctx.state[2] >> sh)
-		out_hash[i + 12] = Byte (ctx.state[3] >> sh)
-		out_hash[i + 16] = Byte (ctx.state[4] >> sh)
-		out_hash[i + 20] = Byte (ctx.state[5] >> sh)
-		out_hash[i + 24] = Byte (ctx.state[6] >> sh)
-		out_hash[i + 28] = Byte (ctx.state[7] >> sh)
+		outHash[i + 00] = Byte (ctx.state[0] >> sh)
+		outHash[i + 04] = Byte (ctx.state[1] >> sh)
+		outHash[i + 08] = Byte (ctx.state[2] >> sh)
+		outHash[i + 12] = Byte (ctx.state[3] >> sh)
+		outHash[i + 16] = Byte (ctx.state[4] >> sh)
+		outHash[i + 20] = Byte (ctx.state[5] >> sh)
+		outHash[i + 24] = Byte (ctx.state[6] >> sh)
+		outHash[i + 28] = Byte (ctx.state[7] >> sh)
 		i = i + 1
 	}
 }
 
 
-func sha256_doHash(msg: *[]Byte, msg_len: Nat32, out_hash: *[sha256HashSize]Byte) -> Unit {
+func sha256_doHash(msg: *[]Byte, msgLen: Nat32, outHash: *[sha256HashSize]Byte) -> Unit {
 	var ctx: Context = {}
 	sha256_contextInit(&ctx)
-	sha256_update(&ctx, msg, msg_len)
-	sha256_final(&ctx, out_hash)
+	sha256_update(&ctx, msg, msgLen)
+	sha256_final(&ctx, outHash)
 }
 

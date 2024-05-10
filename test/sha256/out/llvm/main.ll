@@ -291,7 +291,7 @@ declare void @bcopy(i8* %src, i8* %dst, %SizeT %n)
 
 
 
-declare void @sha256_doHash([0 x i8]* %msg, i32 %msg_len, [32 x i8]* %out_hash)
+declare void @sha256_doHash([0 x i8]* %msg, i32 %msgLen, [32 x i8]* %outHash)
 
 
 ; -- SOURCE: src/main.cm

@@ -10,6 +10,6 @@
 
 #define sha256HashSize  32
 
-void sha256_doHash(uint8_t *msg, uint32_t msg_len, uint8_t *out_hash);
+void sha256_doHash(uint8_t *msg, uint32_t msgLen, uint8_t *outHash);
 
 #endif /* SHA256_H */
