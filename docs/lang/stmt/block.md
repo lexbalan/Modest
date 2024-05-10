@@ -3,7 +3,7 @@
 #### Common form
 
 ```
-{ <#statements#> }
+{ <# statements #> }
 ```
 
 #### Examples

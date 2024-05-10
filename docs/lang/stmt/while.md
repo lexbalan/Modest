@@ -4,7 +4,7 @@
 #### Common view
 
 ```
-while <#condition#> {
+while <# condition #> {
 	// do something while condition is true
 }
 ```

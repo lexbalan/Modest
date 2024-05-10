@@ -3,7 +3,7 @@
 #### Common form
 
 ```
-<#value_expression#>
+<# value_expression #>
 ```
 
 #### Examples

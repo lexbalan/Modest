@@ -3,7 +3,7 @@
 #### Common form
 
 ```
-<#lvalue_expression#> = <#value_expression#>
+<# lvalue_expression #> = <# value_expression #>
 ```
 
 #### Examples

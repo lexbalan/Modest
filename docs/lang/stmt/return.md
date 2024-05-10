@@ -6,7 +6,7 @@
 
 Return statement with *return value*
 ```
-return <#value_expression#>
+return <# return_value #>
 ```
 
 Return statement without *return value*
