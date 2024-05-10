@@ -1484,7 +1484,6 @@ class Parser:
 				x['nl'] = spaceline_cnt
 				x['ti'] = ti
 
-
 				# тк CM директива не печатается в C
 				if x['isa'] == 'ast_directive':
 					spaceline_cnt = spaceline_cnt - 1
@@ -1494,7 +1493,6 @@ class Parser:
 				output.append(x)
 
 			#spaceline_cnt = 0
-
 
 		return output
 
