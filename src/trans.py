@@ -1034,7 +1034,7 @@ def do_value_call(x):
 		argval = do_rvalue(a)
 		if hlir_type.type_is_generic(argval['type']):
 			warning("extra argument with generic type", a['ti'])
-			argval = value_cons_default(argval, a['ti'])
+			argval = value_cons_default(argval)
 		arg = hlir_initializer(None, argval)
 		extra_args.append(arg)
 
@@ -1514,7 +1514,7 @@ def do_stmt_var(x):
 
 	if t == None:
 		if hlir_type.type_is_generic(v['type']):
-			v = value_cons_default(v, v['expr_ti'])
+			v = value_cons_default(v)
 
 		t = v['type']
 
@@ -1958,7 +1958,6 @@ def def_var(x):
 		error("redefinition of '%s'" % id['str'], x['id']['ti'])
 
 
-
 	# если размер массива не указан
 	# получим его из инициализатора
 	arr_without_length = False
@@ -1981,6 +1980,7 @@ def def_var(x):
 		iv = do_rvalue(x['value'])
 		if not value_is_bad(iv):
 			if var_type == None:
+				iv = value_cons_default(iv)
 				var_type = iv['type']
 
 			# если размер массива не указан
@@ -1993,11 +1993,8 @@ def def_var(x):
 					init_arr_sz = len(iv['asset'])
 
 				var_type['volume'] = value_integer_create(init_arr_sz)
-				#print(init_arr_sz)
-			try:
-				init_value = value_cons_implicit_check(var_type, iv)
-			except:
-				warning('???', x['ti'])
+
+			init_value = value_cons_implicit_check(var_type, iv)
 
 
 

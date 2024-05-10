@@ -132,9 +132,10 @@ def value_cons_explicit(t, v, ti):
 	return nv
 
 
-
-def value_cons_default(x, ti):
+# избавляемся от generic
+def value_cons_default(x):
 	from_type = x['type']
+	ti = x['expr_ti']
 
 	# THIS FUNCTION WORKS ONLY FOR GENERIC VALUES
 	if not type.type_is_generic(from_type):
@@ -157,8 +158,7 @@ def value_cons_default(x, ti):
 	elif type.type_is_char(from_type):
 		return _try_to_implicit_cons(typeSysChar, x, ti)
 
-	from error import fatal
-	fatal("unimplemented value_cons_default case")
+	return x
 
 
 
