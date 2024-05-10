@@ -105,7 +105,6 @@ func main () -> Int32 {
 ```
 
 
-
 ### More information every statements
 
   * [Block statement](./block.md)
