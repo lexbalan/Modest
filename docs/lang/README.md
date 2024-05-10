@@ -35,8 +35,6 @@
   * [If](./stmt/if.md)
   * [While](./stmt/while.md)
   * [Return](./stmt/return.md)
-  * [Local variable definiiton](./def/var.md)
-  * [Local constant definiiton](./def/let.md)
   * [Value evaluation](./stmt/eval.md)
   * [Variable assignation](./stmt/assign.md)
   * [Block statement](./stmt/block.md)
