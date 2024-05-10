@@ -1468,6 +1468,9 @@ def do_stmt_return(x):
 	return hlir_stmt_return(retval, ti=x['ti'])
 
 
+def do_stmt_type(x):
+	print("do_stmt_type\n")
+
 
 def do_stmt_again(x):
 	return hlir_stmt_again(x['ti'])
@@ -1698,6 +1701,7 @@ def do_stmt(x):
 	elif k == 'if': s = do_stmt_if(x)
 	elif k == 'while': s = do_stmt_while(x)
 	elif k == 'return': s = do_stmt_return(x)
+	elif k == 'type': s = do_stmt_type(x)
 	elif k == 'again': s = do_stmt_again(x)
 	elif k == 'break': s = do_stmt_break(x)
 	elif k == 'inc': s = do_stmt_incdec(x, 'add')
