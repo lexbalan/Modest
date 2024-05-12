@@ -7,7 +7,7 @@ from .unit import value_unit_cons
 from .bool import value_bool_cons
 from .byte import value_byte_cons
 from .char import value_char_cons
-from .integer import value_integer_cons
+from .integer import value_integer_cons, value_integer_create
 from .float import value_float_cons
 from .record import value_record_cons
 from .array import value_array_cons
@@ -157,6 +157,19 @@ def value_cons_default(x):
 
 	elif type.type_is_char(from_type):
 		return _try_to_implicit_cons(typeSysChar, x, ti)
+
+
+	# Generic array with non-generic items -> Array
+	elif type.type_is_array(from_type):
+		if type.type_is_generic(from_type):
+			if not type.type_is_generic(from_type['of']):
+				# GenericArray -> Array
+				#print("- DEFAULT CONS ARRAY")
+				item_type = from_type['of']
+				length = len(x['asset'])
+				volume = value_integer_create(length)
+				t = type.hlir_type_array(item_type, volume, x['ti'])
+				return _try_to_implicit_cons(t, x, ti)
 
 	return x
 
