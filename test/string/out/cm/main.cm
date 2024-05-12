@@ -11,7 +11,6 @@ let world = " world!\n"
 
 let hello_world = hello + world
 
-
 var string8: [11]Char8 = "S-t-r-i-n-g"
 var string16: [13]Char16 = "S-t-r-i-n-g-Ω"
 var string32: [17]Char32 = "S-t-r-i-n-g-Ω 🐀🎉🦄"

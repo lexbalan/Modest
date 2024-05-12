@@ -202,11 +202,27 @@ declare void @perror(%ConstCharStr* %str)
 
 ; -- SOURCE: src/main.cm
 
-@str1 = private constant [8 x i8] [i8 121, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
-@str2 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
-@str3 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
+@str1 = private constant [7 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 33, i8 0]
+@str2 = private constant [8 x i8] [i8 121, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str3 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
+@str4 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 
 
+
+@arr = constant [2 x i32] [
+	i32 1,
+	i32 2
+]
+
+@arr0 = global [2 x i32] [
+	i32 1,
+	i32 2
+]
+@arr1 = global [2 x i32] [
+	i32 1,
+	i32 2
+]
+@str = global [0 x i8]* bitcast ([7 x i8]* @str1 to [0 x i8]*)
 
 define %Int @main() {
 	%1 = alloca i32
@@ -216,15 +232,15 @@ define %Int @main() {
 	%4 = add i32 %3, 1
 	store i32 %4, i32* %2
 	%5 = load i32, i32* %2
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str1 to [0 x i8]*), i32 %5)
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), i32 %5)
 	%7 = load i32, i32* %2
 	%8 = icmp eq i32 %7, 128
 	br i1 %8 , label %then_0, label %else_0
 then_0:
-	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*))
+	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str3 to [0 x i8]*))
 	br label %endif_0
 else_0:
-	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str3 to [0 x i8]*))
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str4 to [0 x i8]*))
 	br label %endif_0
 endif_0:
 	ret %Int 0

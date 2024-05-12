@@ -70,8 +70,14 @@ def value_array_create(items, ti=None):
 def value_array_create_from_string(t, v, method, ti=None):
 	#info("value_array_create_from_string", ti)
 	char_type = t['of']
-	length = t['volume']['asset']
-	assert(length != None)
+
+	length = 0
+	if t['volume'] != None:
+		length = t['volume']['asset']
+	else:
+		length = len(v['asset'])
+		volume = value_integer_create(length)
+		t = hlir_type.hlir_type_array(char_type, volume, ti)
 
 	chars = utf32_chars_to_utfx_chars(v['asset'], char_type, ti)
 	v = value_terminal(t, chars, ti)

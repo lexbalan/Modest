@@ -1948,61 +1948,55 @@ def def_var(x):
 	id = x['id']
 	log("def_var %s" % id['str'])
 
-	var_type = None
-	if x['type'] != None:
-		var_type = do_type(x['type'])
-
-	# already defined?
+	# already defined? (check identifier)
 	already = value_get(id['str'])
 	if already != None:
-		error("redefinition of '%s'" % id['str'], x['id']['ti'])
+		error("redefinition of '%s'" % id['str'], id['ti'])
 
+	t = None
+	if x['type'] != None:
+		t = do_type(x['type'])
+		#if hlir_type.type_is_bad(t):
+		#	return None
 
-	# если размер массива не указан
-	# получим его из инициализатора
-	arr_without_length = False
-
-	if var_type != None:
-		if hlir_type.type_is_bad(var_type):
-			return None
-
-
-		if hlir_type.type_is_array(var_type):
-			if var_type['volume'] == None:
-				arr_without_length = True
-
-		if not arr_without_length:
-			if hlir_type.type_is_forbidden_var(var_type):
-				error("unsuitable type", x['field']['type']['ti'])
-
-	init_value = None
+	v = None
 	if x['value'] != None:
-		iv = do_rvalue(x['value'])
-		if not value_is_bad(iv):
-			if var_type == None:
-				iv = value_cons_default(iv)
-				var_type = iv['type']
-
-			# если размер массива не указан
-			# получаем его из инициализатора
-			if arr_without_length:
-				init_arr_sz = 0
-				if hlir_type.type_is_array(iv['type']):
-					init_arr_sz = iv['type']['volume']['asset']
-				elif hlir_type.type_is_string(iv['type']):
-					init_arr_sz = len(iv['asset'])
-
-				var_type['volume'] = value_integer_create(init_arr_sz)
-
-			init_value = value_cons_implicit_check(var_type, iv)
+		v = do_rvalue(x['value'])
+		#if value_is_bad(v):
+		#	return None
 
 
+		if t != None:
+			##
+			if hlir_type.type_is_open_array(t):
+				#print("VAR WITH OPEN ARRAY TYPE!")
 
-	var = value_var(id, var_type, x['id']['ti'])
+				item_type = None
+				length = 0
+				if hlir_type.type_is_string(v['type']):
+					item_type = t['of']
+					length = len(v['asset'])
+				elif hlir_type.type_is_array(v['type']):
+					item_type = t['of']
+					length = v['type']['volume']['asset']
+
+				assert(item_type != None)
+				volume = value_integer_create(length)
+				t = hlir_type.hlir_type_array(item_type, volume, x['ti'])
+			##
+
+			v = value_cons_implicit_check(t, v)
+		else:
+			v = value_cons_default(v)
+			t = v['type']
+
+		if hlir_type.type_is_generic(v['type']):
+			error("cannot cons variable", x['ti'])
+
+	var = value_var(id, t, id['ti'])
 	var['is_global'] = True
-	module['context'].value_add(x['id']['str'], var)
-	return hlir_def_var(id, init_value, var, x['ti'])
-
+	module['context'].value_add(id['str'], var)
+	return hlir_def_var(id, v, var, x['ti'])
 
 
 

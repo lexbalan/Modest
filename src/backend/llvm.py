@@ -1092,16 +1092,20 @@ def do_eval_array(v):
 		items.append(iv)
 
 
-
-	# теперь добавим паддинг нулевыми значениями
-	fulllen = v['type']['volume']['asset']
+	fulllen = 0
+	if v['type']['volume'] != None:
+		# теперь добавим паддинг нулевыми значениями
+		fulllen = v['type']['volume']['asset']
+	else:
+		fulllen = len(v['asset'])
 
 	n_pad = fulllen - len(items)
-	i = 0
-	while i < n_pad:
-		z = llvm_value_zero(v['type']['of'])
-		items.append(z)
-		i = i + 1
+	if n_pad > 0:
+		i = 0
+		while i < n_pad:
+			z = llvm_value_zero(v['type']['of'])
+			items.append(z)
+			i = i + 1
 
 	# global?
 	# глобальный массив распечатает print_value как литерал

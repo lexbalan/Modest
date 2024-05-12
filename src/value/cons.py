@@ -150,7 +150,7 @@ def value_cons_default(x):
 		return _try_to_implicit_cons(t, x, ti)
 
 	elif type.type_is_string(from_type):
-		return cons_ptr_to_str_from_string(typeSysStr, x, ti)
+		return cons_ptr_to_str_from_string(typeSysStr, x, 'implicit', ti)
 
 	elif type.type_is_float(from_type):
 		return _try_to_implicit_cons(typeSysFloat, x, ti)
@@ -160,6 +160,8 @@ def value_cons_default(x):
 
 
 	# Generic array with non-generic items -> Array
+	# example:
+	#   var a = [Int32 1, Int32 2]  // -> [2]Int32
 	elif type.type_is_array(from_type):
 		if type.type_is_generic(from_type):
 			if not type.type_is_generic(from_type['of']):

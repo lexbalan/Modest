@@ -16,7 +16,6 @@
 
 #define hello_world  hello  world
 
-
 static char string8[11] = "S-t-r-i-n-g";
 static uint16_t string16[13] = u"S-t-r-i-n-g-Ω";
 static uint32_t string32[17] = U"S-t-r-i-n-g-Ω 🐀🎉🦄";
