@@ -35,7 +35,7 @@ def hlir_def_type(id, newtype, origtype=None, already_declared=False, ti=None):
 	return newtype_definition
 
 
-def hlir_def_const(_id, init_value, value_const, ti):
+def hlir_def_const(_id, value_const, init_value, ti):
 	return {
 		'isa': 'def_const',
 		'id': _id,

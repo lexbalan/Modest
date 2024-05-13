@@ -215,63 +215,48 @@ declare void @utf32_puts(%Str32* %s)
 
 ; -- SOURCE: src/main.cm
 
-@str1 = private constant [12 x i8] [i8 83, i8 45, i8 116, i8 45, i8 114, i8 45, i8 105, i8 45, i8 110, i8 45, i8 103, i8 0]
-@str2 = private constant [14 x i16] [i16 83, i16 45, i16 116, i16 45, i16 114, i16 45, i16 105, i16 45, i16 110, i16 45, i16 103, i16 45, i16 937, i16 0]
-@str3 = private constant [18 x i32] [i32 83, i32 45, i32 116, i32 45, i32 114, i32 45, i32 105, i32 45, i32 110, i32 45, i32 103, i32 45, i32 937, i32 32, i32 128000, i32 127881, i32 129412, i32 0]
-@str4 = private constant [3 x i8] [i8 37, i8 99, i8 0]
-@str5 = private constant [3 x i8] [i8 37, i8 99, i8 0]
-@str6 = private constant [2 x i8] [i8 10, i8 0]
+@str1 = private constant [7 x i8] [i8 83, i8 116, i8 114, i8 105, i8 110, i8 103, i8 0]
+@str2 = private constant [9 x i16] [i16 83, i16 116, i16 114, i16 105, i16 110, i16 103, i16 45, i16 937, i16 0]
+@str3 = private constant [13 x i32] [i32 83, i32 116, i32 114, i32 105, i32 110, i32 103, i32 45, i32 937, i32 32, i32 128000, i32 127881, i32 129412, i32 0]
+@str4 = private constant [2 x i8] [i8 10, i8 0]
+@str5 = private constant [2 x i8] [i8 10, i8 0]
+@str6 = private constant [3 x i8] [i8 10, i8 10, i8 0]
 @str7 = private constant [2 x i8] [i8 10, i8 0]
-@str8 = private constant [3 x i8] [i8 10, i8 10, i8 0]
-@str9 = private constant [2 x i8] [i8 10, i8 0]
+@str8 = private constant [2 x i8] [i8 10, i8 0]
+@str9 = private constant [3 x i8] [i8 10, i8 10, i8 0]
 @str10 = private constant [2 x i8] [i8 10, i8 0]
-@str11 = private constant [3 x i8] [i8 10, i8 10, i8 0]
+@str11 = private constant [2 x i8] [i8 10, i8 0]
 @str12 = private constant [2 x i8] [i8 10, i8 0]
-@str13 = private constant [2 x i8] [i8 10, i8 0]
-@str14 = private constant [2 x i8] [i8 10, i8 0]
 
 
 
 
-@string8 = global [11 x i8] [
+
+
+@string8 = global [6 x i8] [
 	i8 83,
-	i8 45,
 	i8 116,
-	i8 45,
 	i8 114,
-	i8 45,
 	i8 105,
-	i8 45,
 	i8 110,
-	i8 45,
 	i8 103
 ]
-@string16 = global [13 x i16] [
+@string16 = global [8 x i16] [
 	i16 83,
-	i16 45,
 	i16 116,
-	i16 45,
 	i16 114,
-	i16 45,
 	i16 105,
-	i16 45,
 	i16 110,
-	i16 45,
 	i16 103,
 	i16 45,
 	i16 937
 ]
-@string32 = global [17 x i32] [
+@string32 = global [12 x i32] [
 	i32 83,
-	i32 45,
 	i32 116,
-	i32 45,
 	i32 114,
-	i32 45,
 	i32 105,
-	i32 45,
 	i32 110,
-	i32 45,
 	i32 103,
 	i32 45,
 	i32 937,
@@ -280,48 +265,40 @@ declare void @utf32_puts(%Str32* %s)
 	i32 127881,
 	i32 129412
 ]
-@ptr_to_string8 = global [0 x i8]* bitcast ([12 x i8]* @str1 to [0 x i8]*)
-@ptr_to_string16 = global [0 x i16]* bitcast ([14 x i16]* @str2 to [0 x i16]*)
-@ptr_to_string32 = global [0 x i32]* bitcast ([18 x i32]* @str3 to [0 x i32]*)
 
-define void @putc8(i8 %c) {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str4 to [0 x i8]*), i8 %c)
-	ret void
-}
 
-define void @putc16(i16 %c) {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str5 to [0 x i8]*), i16 %c)
-	ret void
-}
+@ptr_to_string8 = global [0 x i8]* bitcast ([7 x i8]* @str1 to [0 x i8]*)
+@ptr_to_string16 = global [0 x i16]* bitcast ([9 x i16]* @str2 to [0 x i16]*)
+@ptr_to_string32 = global [0 x i32]* bitcast ([13 x i32]* @str3 to [0 x i32]*)
 
 define %Int @main() {
 	%1 = bitcast i8 65 to i8
 	call void (i8) @utf8_putchar(i8 %1)
-	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str6 to [0 x i8]*))
+	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))
 	%3 = bitcast i16 937 to i16
 	call void (i16) @utf16_putchar(i16 %3)
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str7 to [0 x i8]*))
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str5 to [0 x i8]*))
 	%5 = bitcast i32 129412 to i32
 	call void (i32) @utf32_putchar(i32 %5)
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str8 to [0 x i8]*))
-	%7 = bitcast [11 x i8]* @string8 to %Str8*
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str6 to [0 x i8]*))
+	%7 = bitcast [6 x i8]* @string8 to %Str8*
 	call void (%Str8*) @utf8_puts(%Str8* %7)
-	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str9 to [0 x i8]*))
-	%9 = bitcast [13 x i16]* @string16 to %Str16*
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str7 to [0 x i8]*))
+	%9 = bitcast [8 x i16]* @string16 to %Str16*
 	call void (%Str16*) @utf16_puts(%Str16* %9)
-	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str10 to [0 x i8]*))
-	%11 = bitcast [17 x i32]* @string32 to %Str32*
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str8 to [0 x i8]*))
+	%11 = bitcast [12 x i32]* @string32 to %Str32*
 	call void (%Str32*) @utf32_puts(%Str32* %11)
-	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str11 to [0 x i8]*))
+	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str9 to [0 x i8]*))
 	%13 = load [0 x i8]*, [0 x i8]** @ptr_to_string8
 	call void (%Str8*) @utf8_puts([0 x i8]* %13)
-	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str12 to [0 x i8]*))
+	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str10 to [0 x i8]*))
 	%15 = load [0 x i16]*, [0 x i16]** @ptr_to_string16
 	call void (%Str16*) @utf16_puts([0 x i16]* %15)
-	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str13 to [0 x i8]*))
+	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str11 to [0 x i8]*))
 	%17 = load [0 x i32]*, [0 x i32]** @ptr_to_string32
 	call void (%Str32*) @utf32_puts([0 x i32]* %17)
-	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str14 to [0 x i8]*))
+	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str12 to [0 x i8]*))
 	ret %Int 0
 }
 

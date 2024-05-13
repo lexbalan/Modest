@@ -224,6 +224,7 @@ declare void @perror(%ConstCharStr* %str)
 ]
 @str = global [0 x i8]* bitcast ([7 x i8]* @str1 to [0 x i8]*)
 
+
 define %Int @main() {
 	%1 = alloca i32
 	store i32 127, i32* %1

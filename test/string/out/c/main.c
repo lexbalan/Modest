@@ -11,29 +11,20 @@
 
 
 
-#define hello  "Hello"
-#define world  " world!\n"
+// constants with type String(Generic)
+#define str8_example  "String"
+#define str16_example  str8_example  u"-Ω"
+#define str32_example  str16_example  U" 🐀🎉🦄"
 
-#define hello_world  hello  world
+// variables with type Array of Chars
+static char string8[6] = "String";
+static uint16_t string16[8] = u"String-Ω";
+static uint32_t string32[12] = U"String-Ω 🐀🎉🦄";
 
-static char string8[11] = "S-t-r-i-n-g";
-static uint16_t string16[13] = u"S-t-r-i-n-g-Ω";
-static uint32_t string32[17] = U"S-t-r-i-n-g-Ω 🐀🎉🦄";
-
-static char *ptr_to_string8 = "S-t-r-i-n-g";
-static uint16_t *ptr_to_string16 = u"S-t-r-i-n-g-Ω";
-static uint32_t *ptr_to_string32 = U"S-t-r-i-n-g-Ω 🐀🎉🦄";
-
-
-void putc8(char c)
-{
-	printf("%c", c);
-}
-
-void putc16(uint16_t c)
-{
-	printf("%c", c);
-}
+// variables with type Pointer to Array of Chars
+static char *ptr_to_string8 = str8_example;
+static uint16_t *ptr_to_string16 = str16_example;
+static uint32_t *ptr_to_string32 = str32_example;
 
 
 int main()

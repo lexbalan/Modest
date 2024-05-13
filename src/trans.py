@@ -1207,7 +1207,6 @@ def do_value_id(x):
 
 
 
-
 def do_value_string(x):
 	#length=x['len']
 	return value_string_create(x['str'], ti=x['ti'])
@@ -1830,7 +1829,7 @@ def def_const(x):
 		const_value['nl_end'] = iv['nl_end']
 
 	module['context'].value_add(id['str'], const_value)
-	return hlir_def_const(id, iv, const_value, x['ti'])
+	return hlir_def_const(id, const_value, iv, x['ti'])
 
 
 

@@ -527,13 +527,11 @@ def print_value_index(x, ctx):
 	# приведем список к прямому порядку (так как индексация записывается)
 	indexes.reverse()
 
-
 	# если имеем дело c дженерик массивом (глоб константа)
 	if hlir_type.type_is_generic(array['type']):
 		if value_is_immediate(x):
 			print_value_terminal(x, ['print_immediate'])
 			return
-
 
 	need_wrap = precedence(xx) < precedence(x)
 	print_value(xx, ctx=['do_unwrap', 'need_mangle'], need_wrap=need_wrap)
@@ -1716,7 +1714,8 @@ def print_def_var(x):
 		out(" = ")
 
 		if hlir_type.type_is_array(init_value['type']):
-			print_value_array(init_value, ctx=[])#, ['print_immediate'])
+			print_value_array(init_value, ctx=[])
+			#print_value(init_value, ctx=['no-literal-array-cast'])
 		else:
 			print_value(init_value, ctx=['no-literal-array-cast'])
 
@@ -1738,16 +1737,6 @@ def print_def_const(x):
 	if hlir_type.type_is_generic_record(const_value['type']):
 		return
 
-	#???
-	#if hlir_type.type_is_generic_array_of_char(const_value['type']):
-	#	return
-
-	#if hlir_type.type_is_string(const_value['type']):
-	#	return
-
-	#"""
-
-
 	newline(n=x['nl'])
 
 	_id = x['id']
@@ -1760,13 +1749,6 @@ def print_def_const(x):
 	newline()
 	print_variable(_id, const_value['type'], as_const=True, prefix='_')
 	out(" = %s;" % _id['str'])
-
-	"""
-	out(" = ")
-	print_value_terminal(init_value, ctx=[])#, ['print_immediate'])
-	out(";")
-	#"""
-
 	return
 
 

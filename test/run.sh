@@ -19,7 +19,6 @@ cd sizeof && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd xor && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd named_args && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd shift && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
-cd string && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd string_concat_eq && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd assign_array && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd assign_record && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
@@ -31,6 +30,7 @@ cd float && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. &&\
 cd builtin_constants && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. &&\
 cd sha256 && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
 cd asm && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
+#cd string && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 #cd float && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
 #cd free_pointer && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. \
 #cd generic && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..

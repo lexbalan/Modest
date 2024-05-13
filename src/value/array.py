@@ -80,9 +80,17 @@ def value_array_create_from_string(t, v, method, ti=None):
 		t = hlir_type.hlir_type_array(char_type, volume, ti)
 
 	chars = utf32_chars_to_utfx_chars(v['asset'], char_type, ti)
+
+	"""
 	v = value_terminal(t, chars, ti)
 	v['immediate'] = True
 	return v
+	"""
+
+	nv = value_cons_node(t, v, method, ti)
+	nv['immediate'] = True
+	nv['asset'] = chars
+	return nv
 
 
 
