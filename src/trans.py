@@ -1413,7 +1413,7 @@ def do_stmt_if(x):
 	if x['else'] != None:
 		_else = do_stmt(x['else'])
 		if hlir_stmt_is_bad(_else):
-			return hlir_stmt_bad(_else['expr_ti'])
+			return hlir_stmt_bad(x['else'])
 
 	return hlir_stmt_if(cond, _then, _else, ti=x['ti'])
 
