@@ -42,11 +42,7 @@ const Point _points[3] = points;
 // не могут быть так инициализированы, поскольку points является приведением
 // непонятно существует ли хорошее решение
 //@property("c_prefix", "const")
-static Point points2[3] = {
-	{.x = 0, .y = 0},
-	{.x = 1, .y = 1},
-	{.x = 2, .y = 2}
-};
+static Point points2[3] = points;
 
 
 // define function main

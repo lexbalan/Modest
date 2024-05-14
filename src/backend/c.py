@@ -390,6 +390,19 @@ def print_value_bin(v, ctx):
 	elif op in ['eq_str', 'ne_str']:
 		print_value_bool_create(v, ctx)
 		return
+	elif op == 'concat_string':
+		if left['type']['width'] != right['type']['width']:
+			# для случаев вроде "Hello" + U"World!"
+			# (печатаем сам литерал, тк C иначе не умеет)
+			# (U"Hello World!")
+			print_lit_string(v['asset'], v['type']['width'])
+			return
+
+		print_value(left, need_wrap=need_wrap_left)
+		out(' ')
+		print_value(right, need_wrap=need_wrap_right)
+		return
+
 
 	print_value(left, need_wrap=need_wrap_left)
 	out(' %s ' % bin_ops[op])
@@ -625,12 +638,11 @@ def print_value_cons(x, ctx):
 	from_type = value['type']
 
 
-	# String construction ([]Char -> *[]Char) - just print literal string
-	if hlir_type.type_is_pointer_to_array_of_char(to_type):
-		if hlir_type.type_is_array_of_char(from_type):
-			char_width = to_type['to']['of']['width']
-			print_value_string_create(x, ctx=[], char_width=char_width)
-			return
+	if hlir_type.type_is_array_of_char(to_type):
+		if hlir_type.type_is_string(from_type):
+			if to_type['of']['width'] != from_type['width']:
+				print_lit_string(value['asset'], to_type['of']['width'])
+				return
 
 	"""if hlir_type.type_is_generic(to_type):
 		if hlir_type.type_is_generic(from_type):
@@ -760,11 +772,15 @@ def print_array_values(values, ctx):
 
 
 
-def print_value_string(x, ctx):
+def print_lit_string(asset, width):
 	utf32_codes = []
-	for c in x['asset']:
+	for c in asset:
 		utf32_codes.append(ord(c))
-	_print_string_literal(utf32_codes, width=x['type']['width'])
+	_print_string_literal(utf32_codes, width)
+
+
+def print_value_string(x, ctx):
+	print_lit_string(x['asset'], x['type']['width'])
 
 
 def print_value_array(v, ctx):
@@ -1714,8 +1730,8 @@ def print_def_var(x):
 		out(" = ")
 
 		if hlir_type.type_is_array(init_value['type']):
-			print_value_array(init_value, ctx=[])
-			#print_value(init_value, ctx=['no-literal-array-cast'])
+			#print_value_array(init_value, ctx=[])
+			print_value(init_value, ctx=['no-literal-array-cast'])
 		else:
 			print_value(init_value, ctx=['no-literal-array-cast'])
 
