@@ -122,7 +122,9 @@ def _value_record_cons_record_from_generic(t, v, method, ti):
 	if value_is_immediate(v):
 		nv['immediate'] = True
 
-	nv['nl'] = v['nl']
+	if 'nl' in v:
+		nv['nl'] = v['nl']
+
 	nv['nl_end'] = v['nl_end']
 	return nv
 

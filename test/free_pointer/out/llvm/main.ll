@@ -29,6 +29,71 @@ target triple = "arm64-apple-macosx12.0.0"
 declare void @llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)
 declare void @llvm.memset.p0.i32(i8*, i8, i32, i1)
 
+%CPU.Word = type i64
+define weak i1 @memeq(i8* %mem0, i8* %mem1, i64 %len) {
+	%1 = udiv i64 %len, 8
+	%2 = bitcast i8* %mem0 to [0 x %CPU.Word]*
+	%3 = bitcast i8* %mem1 to [0 x %CPU.Word]*
+	%4 = alloca i64
+	store i64 0, i64* %4
+	br label %again_1
+again_1:
+	%5 = load i64, i64* %4
+	%6 = icmp ult i64 %5, %1
+	br i1 %6 , label %body_1, label %break_1
+body_1:
+	%7 = load i64, i64* %4
+	%8 = getelementptr inbounds [0 x %CPU.Word], [0 x %CPU.Word]* %2, i32 0, i64 %7
+	%9 = load %CPU.Word, %CPU.Word* %8
+	%10 = load i64, i64* %4
+	%11 = getelementptr inbounds [0 x %CPU.Word], [0 x %CPU.Word]* %3, i32 0, i64 %10
+	%12 = load %CPU.Word, %CPU.Word* %11
+	%13 = icmp ne %CPU.Word %9, %12
+	br i1 %13 , label %then_0, label %endif_0
+then_0:
+	ret i1 0
+	br label %endif_0
+endif_0:
+	%15 = load i64, i64* %4
+	%16 = add i64 %15, 1
+	store i64 %16, i64* %4
+	br label %again_1
+break_1:
+	%17 = urem i64 %len, 8
+	%18 = load i64, i64* %4
+	%19 = getelementptr inbounds [0 x %CPU.Word], [0 x %CPU.Word]* %2, i32 0, i64 %18
+	%20 = bitcast %CPU.Word* %19 to [0 x i8]*
+	%21 = load i64, i64* %4
+	%22 = getelementptr inbounds [0 x %CPU.Word], [0 x %CPU.Word]* %3, i32 0, i64 %21
+	%23 = bitcast %CPU.Word* %22 to [0 x i8]*
+	store i64 0, i64* %4
+	br label %again_2
+again_2:
+	%24 = load i64, i64* %4
+	%25 = icmp ult i64 %24, %17
+	br i1 %25 , label %body_2, label %break_2
+body_2:
+	%26 = load i64, i64* %4
+	%27 = getelementptr inbounds [0 x i8], [0 x i8]* %20, i32 0, i64 %26
+	%28 = load i8, i8* %27
+	%29 = load i64, i64* %4
+	%30 = getelementptr inbounds [0 x i8], [0 x i8]* %23, i32 0, i64 %29
+	%31 = load i8, i8* %30
+	%32 = icmp ne i8 %28, %31
+	br i1 %32 , label %then_1, label %endif_1
+then_1:
+	ret i1 0
+	br label %endif_1
+endif_1:
+	%34 = load i64, i64* %4
+	%35 = add i64 %34, 1
+	store i64 %35, i64* %4
+	br label %again_2
+break_2:
+	ret i1 1
+}
+
+
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/system.hm
 
 
@@ -58,14 +123,26 @@ declare void @llvm.memset.p0.i32(i8*, i8, i32, i1)
 %Float = type double
 %Double = type double
 %LongDouble = type double
-%SizeT = type i64
-%SSizeT = type i64
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
 
 
 
+
+%Clock_T = type %UnsignedLong
+%Socklen_T = type i32
+%Time_T = type %LongInt
+%SizeT = type %UnsignedLongInt
+%SSizeT = type %LongInt
+%PidT = type i32
+%UidT = type i32
+%GidT = type i32
+%USecondsT = type i32
+%IntptrT = type i64
+
+
+%OffT = type i64
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
@@ -131,37 +208,35 @@ declare void @perror(%ConstCharStr* %str)
 
 
 define i32 @main() {
-    %1 = alloca i1
-    %2 = alloca i32
-    %3 = alloca i64
-    ; 
-    %4 = alloca i8*
-    ; free pointer can points to value of any type
-    %5 = bitcast i1* %1 to i8*
-    store i8* %5, i8** %4
-    %6 = bitcast i32* %2 to i8*
-    store i8* %6, i8** %4
-    %7 = bitcast i64* %3 to i8*
-    store i8* %7, i8** %4
-    ; you can't do dereference operation with Free pointer
-    ; (because runtime doesn't have any idea about value type it pointee),
-    ; but you can construct another (non Free) pointer from it
-    ; and use it as usualy
-    %8 = load i8*, i8** %4
-    %9 = bitcast i8* %8 to i64*
-    %10 = load i8*, i8** %4
-    %11 = bitcast i8* %10 to i64*
-    store i64 81985529216486895, i64* %11
-    %12 = load i64, i64* %3
-    %13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*), i64 %12)
-    ; Let's create new pointer to *Int64 from freePointer
-    %14 = load i8*, i8** %4
-    %15 = bitcast i8* %14 to i64*
-    ; And will use it...
-    %16 = load i64, i64* %15
-    ; for pointer mechanics checking
-    %17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str2 to [0 x i8]*), i64 %16)
-    ret i32 0
+	%1 = alloca i1
+	%2 = alloca i32
+	%3 = alloca i64
+	;
+	%4 = alloca i8*
+	; free pointer can points to value of any type
+	%5 = bitcast i1* %1 to i8*
+	store i8* %5, i8** %4
+	%6 = bitcast i32* %2 to i8*
+	store i8* %6, i8** %4
+	%7 = bitcast i64* %3 to i8*
+	store i8* %7, i8** %4
+	; you can't do dereference operation with Free pointer
+	; (because runtime doesn't have any idea about value type it pointee),
+	; but you can construct another (non Free) pointer from it
+	; and use it as usualy
+	%8 = load i8*, i8** %4
+	%9 = bitcast i8* %8 to i64*
+	store i64 81985529216486895, i64* %9
+	%10 = load i64, i64* %3
+	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*), i64 %10)
+	; Let's create new pointer to *Int64 from freePointer
+	%12 = load i8*, i8** %4
+	%13 = bitcast i8* %12 to i64*
+	; And will use it...
+	%14 = load i64, i64* %13
+	; for pointer mechanics checking
+	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str2 to [0 x i8]*), i64 %14)
+	ret i32 0
 }
 
 

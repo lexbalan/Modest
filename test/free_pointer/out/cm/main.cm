@@ -1,6 +1,7 @@
-// test/1.hello_world/src/main.cm
+// test/free_pointer/src/main.cm
 
-import "libc/stdio.h"
+import "libc/stdio"
+
 
 func main() -> Int32 {
 	var a: Bool

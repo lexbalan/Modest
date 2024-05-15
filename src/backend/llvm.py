@@ -740,7 +740,10 @@ def print_type(t):
 		print_int_type_for(t['width'])
 
 	elif hlir_type.type_is_float(t):
-		print_type_id(t)
+		if hlir_type.type_is_generic(t):
+			out("double")
+		else:
+			print_type_id(t)
 
 	elif hlir_type.type_is_char(t):
 		print_int_type_for(t['width'])
@@ -1080,7 +1083,7 @@ bin_ops = [
 
 def do_eval_string(x):
 	info("from here", x['ti'])
-	mass
+
 
 
 def do_eval_array(v):
@@ -1258,7 +1261,7 @@ def do_eval(x):
 	elif k == 'cons': y = do_eval_cast(x)
 	elif k == 'concat_array': y = do_eval_literal(x)
 	elif k == 'concat_string': y = do_eval_literal(x)
-	elif k in ['sizeof', 'lengthof', 'alignof', 'offsetof', 'eq_str']:
+	elif k in ['sizeof', 'lengthof', 'alignof', 'offsetof', 'eq_str', 'ne_str']:
 		 y = do_eval_literal(x)
 	else:
 		out("<%s>" % k)
@@ -1458,6 +1461,9 @@ def print_stmt_def_var(x):
 def print_stmt_let(x):
 	id_str = x['id']['str']
 	val = x['init_value']
+
+	if hlir_type.type_is_string(val['type']):
+		return None
 
 	if val['kind'] == 'call':
 		if need_sret(val['func']['type']['to']):
