@@ -37,7 +37,6 @@ func main() -> Int {
 //	printf("omegaCode = %d\n", omegaCode)
 //	printf("ratCode = %d\n", ratCode)
 
-
 	var i = 0
 	while true {
 		let c = string16Const[i]

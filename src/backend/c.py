@@ -638,17 +638,22 @@ def print_value_cons(x, ctx):
 	from_type = value['type']
 
 
-	if hlir_type.type_is_array_of_char(to_type):
-		if hlir_type.type_is_string(from_type):
+	if hlir_type.type_is_string(from_type):
+
+		# cast <string literal> to <array of chars>:
+		if hlir_type.type_is_array_of_char(to_type):
 			if to_type['of']['width'] != from_type['width']:
 				print_lit_string(value['asset'], to_type['of']['width'])
 				return
 
-	"""if hlir_type.type_is_generic(to_type):
-		if hlir_type.type_is_generic(from_type):
-			print_cast(to_type, value, ctx)"""
-			#nv = copy.copy(x['value'])
-			#nv['type'] = to_type
+		# cast <string literal> to <pointer to array of chars>:
+		if hlir_type.type_is_pointer(to_type):
+			# let genericStringConst = "S-t-r-i-n-g-Ω 🐀🎉🦄"
+			# let string8Const = *Str8 genericStringConst  // <-
+			if to_type['to']['of']['width'] != from_type['width']:
+				print_lit_string(value['asset'], to_type['to']['of']['width'])
+				return
+
 
 	# в у нас типы структурные, в си - номинальные
 	# поэтому даже если структуры одинаковы, но имена разные
@@ -719,6 +724,7 @@ def print_value_cons(x, ctx):
 				out(")")
 				return
 
+	#out("/*?%s?*/" % value['type']['kind'])
 	print_cast(to_type, value, ctx)
 
 

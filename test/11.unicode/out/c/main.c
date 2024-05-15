@@ -24,9 +24,9 @@ static uint32_t arr_utf32[8] = U"Hello!\n";
 
 
 #define genericStringConst  U"S-t-r-i-n-g-Ω 🐀🎉🦄"
-#define string8Const  ((char *)genericStringConst)
-#define string16Const  ((uint16_t *)genericStringConst)
-#define string32Const  ((uint32_t *)genericStringConst)
+#define string8Const  ("S-t-r-i-n-g-Ω 🐀🎉🦄")
+#define string16Const  (u"S-t-r-i-n-g-Ω 🐀🎉🦄")
+#define string32Const  (U"S-t-r-i-n-g-Ω 🐀🎉🦄")
 
 
 int main()
@@ -43,7 +43,6 @@ int main()
 
 	//	printf("omegaCode = %d\n", omegaCode)
 	//	printf("ratCode = %d\n", ratCode)
-
 
 	int32_t i;
 	i = 0;
