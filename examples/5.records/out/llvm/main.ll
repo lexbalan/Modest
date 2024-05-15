@@ -240,53 +240,53 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 
 
 
-%FILE = type opaque
+%File = type opaque
 %FposT = type opaque
 
 %CharStr = type %Str
 %ConstCharStr = type %CharStr
 
 
-declare %Int @fclose(%FILE* %f)
-declare %Int @feof(%FILE* %f)
-declare %Int @ferror(%FILE* %f)
-declare %Int @fflush(%FILE* %f)
-declare %Int @fgetpos(%FILE* %f, %FposT* %pos)
-declare %FILE* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
-declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, %FILE* %f)
-declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, %FILE* %f)
-declare %FILE* @freopen(%ConstCharStr* %filename, %ConstCharStr* %mode, %FILE* %f)
-declare %Int @fseek(%FILE* %stream, %LongInt %offset, %Int %whence)
-declare %Int @fsetpos(%FILE* %f, %FposT* %pos)
-declare %LongInt @ftell(%FILE* %f)
+declare %Int @fclose(%File* %f)
+declare %Int @feof(%File* %f)
+declare %Int @ferror(%File* %f)
+declare %Int @fflush(%File* %f)
+declare %Int @fgetpos(%File* %f, %FposT* %pos)
+declare %File* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
+declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
+declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
+declare %File* @freopen(%ConstCharStr* %filename, %ConstCharStr* %mode, %File* %f)
+declare %Int @fseek(%File* %stream, %LongInt %offset, %Int %whence)
+declare %Int @fsetpos(%File* %f, %FposT* %pos)
+declare %LongInt @ftell(%File* %f)
 declare %Int @remove(%ConstCharStr* %filename)
 declare %Int @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
-declare void @rewind(%FILE* %f)
-declare void @setbuf(%FILE* %f, %CharStr* %buffer)
+declare void @rewind(%File* %f)
+declare void @setbuf(%File* %f, %CharStr* %buffer)
 
 
-declare %Int @setvbuf(%FILE* %f, %CharStr* %buffer, %Int %mode, %SizeT %size)
-declare %FILE* @tmpfile()
+declare %Int @setvbuf(%File* %f, %CharStr* %buffer, %Int %mode, %SizeT %size)
+declare %File* @tmpfile()
 declare %CharStr* @tmpnam(%CharStr* %str)
 declare %Int @printf(%ConstCharStr* %s, ...)
 declare %Int @scanf(%ConstCharStr* %s, ...)
-declare %Int @fprintf(%FILE* %stream, %Str* %format, ...)
-declare %Int @fscanf(%FILE* %f, %ConstCharStr* %format, ...)
+declare %Int @fprintf(%File* %stream, %Str* %format, ...)
+declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
 declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
 
 
-declare %Int @fgetc(%FILE* %f)
-declare %Int @fputc(%Int %char, %FILE* %f)
-declare %CharStr* @fgets(%CharStr* %str, %Int %n, %FILE* %f)
-declare %Int @fputs(%ConstCharStr* %str, %FILE* %f)
-declare %Int @getc(%FILE* %f)
+declare %Int @fgetc(%File* %f)
+declare %Int @fputc(%Int %char, %File* %f)
+declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
+declare %Int @fputs(%ConstCharStr* %str, %File* %f)
+declare %Int @getc(%File* %f)
 declare %Int @getchar()
 declare %CharStr* @gets(%CharStr* %str)
-declare %Int @putc(%Int %char, %FILE* %f)
+declare %Int @putc(%Int %char, %File* %f)
 declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
-declare %Int @ungetc(%Int %char, %FILE* %f)
+declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
 
 

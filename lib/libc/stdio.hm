@@ -7,8 +7,8 @@
 
 import "./ctypes"
 
-
-type FILE
+@property("c_alias", "FILE")
+type File
 
 @property("c_alias", "fpos_t")
 type FposT
@@ -31,32 +31,32 @@ let c_SEEK_CUR = 1
 let c_SEEK_END = 2
 
 @attribute("value.type.to:dispensable")
-func fclose(f: *FILE) -> Int
-func feof(f: *FILE) -> Int
-func ferror(f: *FILE) -> Int
+func fclose(f: *File) -> Int
+func feof(f: *File) -> Int
+func ferror(f: *File) -> Int
 @attribute("value.type.to:dispensable")
-func fflush(f: *FILE) -> Int
+func fflush(f: *File) -> Int
 @attribute("value.type.to:dispensable")
-func fgetpos(f: *FILE, pos: *FposT) -> Int
-func fopen(fname: *ConstCharStr, mode: *ConstCharStr) -> *FILE
+func fgetpos(f: *File, pos: *FposT) -> Int
+func fopen(fname: *ConstCharStr, mode: *ConstCharStr) -> *File
 @attribute("value.type.to:dispensable")
-func fread(buf: Pointer, size: SizeT, count: SizeT, f: *FILE) -> SizeT
+func fread(buf: Pointer, size: SizeT, count: SizeT, f: *File) -> SizeT
 @attribute("value.type.to:dispensable")
-func fwrite(buf: Pointer, size: SizeT, count: SizeT, f: *FILE) -> SizeT
-func freopen(filename: *ConstCharStr, mode: *ConstCharStr, f: *FILE) -> *FILE
+func fwrite(buf: Pointer, size: SizeT, count: SizeT, f: *File) -> SizeT
+func freopen(filename: *ConstCharStr, mode: *ConstCharStr, f: *File) -> *File
 
 @attribute("value.type.to:dispensable")
-func fseek(stream: *FILE, offset: LongInt, whence: Int) -> Int
+func fseek(stream: *File, offset: LongInt, whence: Int) -> Int
 
-func fsetpos(f: *FILE, pos: *FposT) -> Int
-func ftell(f: *FILE) -> LongInt
+func fsetpos(f: *File, pos: *FposT) -> Int
+func ftell(f: *File) -> LongInt
 func remove(filename: *ConstCharStr) -> Int
 func rename(old_filename: *ConstCharStr, new_filename: *ConstCharStr) -> Int
-func rewind(f: *FILE) -> Unit
-func setbuf(f: *FILE, buffer: *CharStr) -> Unit
+func rewind(f: *File) -> Unit
+func setbuf(f: *File, buffer: *CharStr) -> Unit
 //int setvbuf(FILE *stream, char *buffer, int mode, size_t size)
-func setvbuf(f: *FILE, buffer: *CharStr, mode: Int, size: SizeT) -> Int
-func tmpfile() -> *FILE
+func setvbuf(f: *File, buffer: *CharStr, mode: Int, size: SizeT) -> Int
+func tmpfile() -> *File
 func tmpnam(str: *CharStr) -> *CharStr
 
 
@@ -67,10 +67,10 @@ func printf(s: *ConstCharStr, va_list: VA_List) -> Int
 func scanf(s: *ConstCharStr, va_list: VA_List) -> Int
 
 @attribute("value.type.to:dispensable")
-func fprintf(stream: *FILE, format: *Str, va_list: VA_List) -> Int
+func fprintf(stream: *File, format: *Str, va_list: VA_List) -> Int
 
 @attribute("value.type.to:dispensable")
-func fscanf(f: *FILE, format: *ConstCharStr, va_list: VA_List) -> Int
+func fscanf(f: *File, format: *ConstCharStr, va_list: VA_List) -> Int
 
 @attribute("value.type.to:dispensable")
 func sscanf(buf: *ConstCharStr, format: *ConstCharStr, va_list: VA_List) -> Int
@@ -80,26 +80,26 @@ func sprintf(buf: *CharStr, format: *ConstCharStr, va_list: VA_List) -> Int
 
 
 
-//func vfprintf(f: *FILE, format: *ConstCharStr, arg: VaList) -> Int
+//func vfprintf(f: *File, format: *ConstCharStr, arg: VaList) -> Int
 //func vprintf(format: *ConstCharStr, arg: VaList) -> Int
 //func vsprintf(str: *CharStr, format: *ConstCharStr, arg: VaList) -> Int
 
-func fgetc(f: *FILE) -> Int
-func fputc(char: Int, f: *FILE) -> Int
+func fgetc(f: *File) -> Int
+func fputc(char: Int, f: *File) -> Int
 
-func fgets(str: *CharStr, n: Int, f: *FILE) -> *CharStr
-func fputs(str: *ConstCharStr, f: *FILE) -> Int
+func fgets(str: *CharStr, n: Int, f: *File) -> *CharStr
+func fputs(str: *ConstCharStr, f: *File) -> Int
 
-func getc(f: *FILE) -> Int
+func getc(f: *File) -> Int
 func getchar() -> Int
 func gets(str: *CharStr) -> *CharStr
 @attribute("value.type.to:dispensable")
-func putc(char: Int, f: *FILE) -> Int
+func putc(char: Int, f: *File) -> Int
 @attribute("value.type.to:dispensable")
 func putchar(char: Int) -> Int
 @attribute("value.type.to:dispensable")
 func puts(str: *ConstCharStr) -> Int
-func ungetc(char: Int, f: *FILE) -> Int
+func ungetc(char: Int, f: *File) -> Int
 func perror(str: *ConstCharStr) -> Unit
 
 

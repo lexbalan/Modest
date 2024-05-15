@@ -150,53 +150,53 @@ break_2:
 
 
 
-%FILE = type opaque
+%File = type opaque
 %FposT = type opaque
 
 %CharStr = type %Str
 %ConstCharStr = type %CharStr
 
 
-declare %Int @fclose(%FILE* %f)
-declare %Int @feof(%FILE* %f)
-declare %Int @ferror(%FILE* %f)
-declare %Int @fflush(%FILE* %f)
-declare %Int @fgetpos(%FILE* %f, %FposT* %pos)
-declare %FILE* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
-declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, %FILE* %f)
-declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, %FILE* %f)
-declare %FILE* @freopen(%ConstCharStr* %filename, %ConstCharStr* %mode, %FILE* %f)
-declare %Int @fseek(%FILE* %stream, %LongInt %offset, %Int %whence)
-declare %Int @fsetpos(%FILE* %f, %FposT* %pos)
-declare %LongInt @ftell(%FILE* %f)
+declare %Int @fclose(%File* %f)
+declare %Int @feof(%File* %f)
+declare %Int @ferror(%File* %f)
+declare %Int @fflush(%File* %f)
+declare %Int @fgetpos(%File* %f, %FposT* %pos)
+declare %File* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
+declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
+declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
+declare %File* @freopen(%ConstCharStr* %filename, %ConstCharStr* %mode, %File* %f)
+declare %Int @fseek(%File* %stream, %LongInt %offset, %Int %whence)
+declare %Int @fsetpos(%File* %f, %FposT* %pos)
+declare %LongInt @ftell(%File* %f)
 declare %Int @remove(%ConstCharStr* %filename)
 declare %Int @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
-declare void @rewind(%FILE* %f)
-declare void @setbuf(%FILE* %f, %CharStr* %buffer)
+declare void @rewind(%File* %f)
+declare void @setbuf(%File* %f, %CharStr* %buffer)
 
 
-declare %Int @setvbuf(%FILE* %f, %CharStr* %buffer, %Int %mode, %SizeT %size)
-declare %FILE* @tmpfile()
+declare %Int @setvbuf(%File* %f, %CharStr* %buffer, %Int %mode, %SizeT %size)
+declare %File* @tmpfile()
 declare %CharStr* @tmpnam(%CharStr* %str)
 declare %Int @printf(%ConstCharStr* %s, ...)
 declare %Int @scanf(%ConstCharStr* %s, ...)
-declare %Int @fprintf(%FILE* %stream, %Str* %format, ...)
-declare %Int @fscanf(%FILE* %f, %ConstCharStr* %format, ...)
+declare %Int @fprintf(%File* %stream, %Str* %format, ...)
+declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
 declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
 
 
-declare %Int @fgetc(%FILE* %f)
-declare %Int @fputc(%Int %char, %FILE* %f)
-declare %CharStr* @fgets(%CharStr* %str, %Int %n, %FILE* %f)
-declare %Int @fputs(%ConstCharStr* %str, %FILE* %f)
-declare %Int @getc(%FILE* %f)
+declare %Int @fgetc(%File* %f)
+declare %Int @fputc(%Int %char, %File* %f)
+declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
+declare %Int @fputs(%ConstCharStr* %str, %File* %f)
+declare %Int @getc(%File* %f)
 declare %Int @getchar()
 declare %CharStr* @gets(%CharStr* %str)
-declare %Int @putc(%Int %char, %FILE* %f)
+declare %Int @putc(%Int %char, %File* %f)
 declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
-declare %Int @ungetc(%Int %char, %FILE* %f)
+declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
 
 
@@ -218,22 +218,22 @@ declare void @perror(%ConstCharStr* %str)
 
 define void @write_example() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str2 to [0 x i8]*))
-	%2 = call %FILE* (%ConstCharStr*, %ConstCharStr*) @fopen(%Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str3 to [0 x i8]*))
-	%3 = icmp eq %FILE* %2, null
+	%2 = call %File* (%ConstCharStr*, %ConstCharStr*) @fopen(%Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str3 to [0 x i8]*))
+	%3 = icmp eq %File* %2, null
 	br i1 %3 , label %then_0, label %endif_0
 then_0:
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @str4 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))ret void
 	br label %endif_0
 endif_0:
-	%6 = call %Int (%FILE*, %Str*, ...) @fprintf(%FILE* %2, %Str* bitcast ([12 x i8]* @str5 to [0 x i8]*))
-	%7 = call %Int (%FILE*) @fclose(%FILE* %2)
+	%6 = call %Int (%File*, %Str*, ...) @fprintf(%File* %2, %Str* bitcast ([12 x i8]* @str5 to [0 x i8]*))
+	%7 = call %Int (%File*) @fclose(%File* %2)
 	ret void
 }
 
 define void @read_example() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str6 to [0 x i8]*))
-	%2 = call %FILE* (%ConstCharStr*, %ConstCharStr*) @fopen(%Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str7 to [0 x i8]*))
-	%3 = icmp eq %FILE* %2, null
+	%2 = call %File* (%ConstCharStr*, %ConstCharStr*) @fopen(%Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str7 to [0 x i8]*))
+	%3 = icmp eq %File* %2, null
 	br i1 %3 , label %then_0, label %endif_0
 then_0:
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([29 x i8]* @str8 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))ret void
@@ -244,7 +244,7 @@ endif_0:
 again_1:
 	br i1 1 , label %body_1, label %break_1
 body_1:
-	%7 = call %Int (%FILE*) @fgetc(%FILE* %2)
+	%7 = call %Int (%File*) @fgetc(%File* %2)
 	%8 = icmp eq %Int %7, -1
 	br i1 %8 , label %then_1, label %endif_1
 then_1:
@@ -254,7 +254,7 @@ endif_1:
 	%10 = call %Int (%Int) @putchar(%Int %7)
 	br label %again_1
 break_1:
-	%11 = call %Int (%FILE*) @fclose(%FILE* %2)
+	%11 = call %Int (%File*) @fclose(%File* %2)
 	ret void
 }
 

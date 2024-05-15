@@ -12,7 +12,7 @@ let port = 8080
 let bufSize = 1024
 
 
-func send_file(fp: *FILE, sockfd: Int) {
+func send_file(fp: *File, sockfd: Int) {
 	var data: [bufSize]Char8
 
 	while fgets(&data, bufSize, fp) != nil {
