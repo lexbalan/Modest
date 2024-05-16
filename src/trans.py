@@ -1451,7 +1451,7 @@ def do_stmt_return(x):
 	# или возвращаем его там, где оно не ожидется
 	if ret_val_present == is_no_ret_func:
 		if ret_val_present:
-			error("unexpected return value", x['value']['expr_ti'])
+			error("unexpected return value", x['value']['ti'])
 		else:
 			error("expected return value", x['ti'])
 		return hlir_stmt_bad(x)
