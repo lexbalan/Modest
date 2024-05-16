@@ -574,9 +574,6 @@ def print_value_by_id(x, ctx):
 	print_id(x)
 
 
-def print_value_let(x, ctx):
-	print_id(x)
-
 
 # Сделал отдельный метод печати строк и есть отдельный для печати
 def print_value_string2(x, ctx):
@@ -621,8 +618,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 	if k == 'literal': print_value_terminal(x, ctx)
 	elif k in bin_ops: print_value_bin(x, ctx)
 	elif k in un_ops: print_value_un(x, ctx)
-	elif k == 'const': print_value_let(x, ctx)
-	elif k in ['func', 'var']: print_value_by_id(x, ctx)
+	elif k in ['const', 'func', 'var']: print_value_by_id(x, ctx)
 	elif k == 'call': print_value_call(x, ctx)
 	elif k == 'index': print_value_index(x, ctx)
 	elif k == 'index_ptr': print_value_index_ptr(x, ctx)

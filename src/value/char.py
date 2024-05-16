@@ -36,14 +36,14 @@ def _do_cons_char(t, v, method, ti):
 def value_char_cons(t, v, method, ti):
 	from_type = v['type']
 
-
 	# String -> Char
 	# ex: var c: Char8 = "A"
 	if type.type_is_string(from_type):
 		if len(v['asset']) == 1:
-			# extract GenericChar item for next cast step (see below)
-			cv = value_char_create(ord(v['asset'][0]))
-			return _do_cons_char(t, cv, method, ti)
+			cc = ord(v['asset'][0])
+			nv = value_cons_immediate(t, v, method, ti)
+			nv['asset'] = cc
+			return nv
 
 
 	# implicit casts
