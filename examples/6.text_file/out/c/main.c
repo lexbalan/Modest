@@ -9,7 +9,7 @@
 
 
 
-#define filename  ("file.txt")
+#define filename  "file.txt"
 
 
 void write_example()

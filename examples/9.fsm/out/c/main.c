@@ -148,7 +148,7 @@ static FSM fsm = {
 			.entry = &beacon_entry,
 			.loop = &beacon_loop,
 			.exit = &beacon_exit
-		}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
+		}
 	}
 };
 

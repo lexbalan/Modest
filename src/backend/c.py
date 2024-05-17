@@ -546,8 +546,17 @@ def print_value_index(x, ctx):
 			print_value_terminal(x, ['print_immediate'])
 			return
 
+
 	need_wrap = precedence(xx) < precedence(x)
-	print_value(xx, ctx=['do_unwrap', 'need_mangle'], need_wrap=need_wrap)
+
+	ctx=['do_unwrap']
+	if value_is_immediate(xx) and value_is_immediate(indexes[0]):
+		# индексация immediate массива при помощи imm индекса
+		# приводит к тому что мы индексируем массив с префиксом _ (макро)
+		# нужно это для того чтобы получить чисто константное выражение C
+		ctx.append('immediate_context')
+
+	print_value(xx, ctx=ctx, need_wrap=need_wrap)
 
 	out("[")
 
@@ -578,7 +587,7 @@ def print_value_index(x, ctx):
 def print_value_index_ptr(x, ctx):
 	ptr2array = x['pointer']
 	need_wrap = precedence(ptr2array) < precedence(x)
-	print_value(ptr2array, ctx=['do_unwrap', 'need_mangle'], need_wrap=need_wrap)
+	print_value(ptr2array, ctx=['do_unwrap'], need_wrap=need_wrap)
 	out("["); print_value(x['index']); out("]")
 
 
@@ -654,7 +663,7 @@ def print_value_cons(x, ctx):
 				return
 
 		if hlir_type.type_is_char(to_type):
-			print_value_char(x, [])
+			print_value_char(x, ctx)
 			return
 
 	# в у нас типы структурные, в си - номинальные
@@ -681,6 +690,14 @@ def print_value_cons(x, ctx):
 				type_print(to_type)"""
 
 			return
+
+
+
+	if hlir_type.type_is_array(to_type):
+		if hlir_type.type_is_generic_array(from_type):
+			print_value(value, ctx)
+			return
+
 
 	# VA_List -> AnyType
 	if hlir_type.type_is_va_list(from_type):
@@ -1078,11 +1095,12 @@ def print_value_by_id(x, ctx=[], prefix=''):
 def print_value_const(x, ctx):
 	prefix=''
 
-	if x['kind'] == 'const':
-		if 'need_mangle' in ctx:
-			if 'global_const' in x['att']: # <- костыль!
-				if hlir_type.type_is_composite(x['type']):
-					prefix = '_'
+
+	if hlir_type.type_is_array(x['type']):
+		if 'immediate_context' in ctx:
+			if 'global_const' in x['att']: # <- костыль?
+				prefix = '_'
+
 
 	return print_value_by_id(x, ctx, prefix)
 
@@ -1145,7 +1163,7 @@ def print_value(x, ctx=[], need_wrap=False):
 			return
 
 
-	print_value2(x, ctx, need_wrap)
+	print_value2(x, ctx=ctx, need_wrap=need_wrap)
 
 
 
@@ -1272,12 +1290,13 @@ def print_stmt_defvar(x):
 
 
 
-def print_macro_definition(id, value, prefix=''):
+def print_macro_definition(id, value, val_ctx=[], prefix=''):
 	global nl_str
 	out("#define %s%s  " % (prefix, id['str']))
-	need_wrap = precedence(value) < precedenceMax
+	#out("/*%s*/" % value['kind'])
+	need_wrap = False#precedence(value) < precedenceMax
 	nl_str = " \\\n"
-	print_value(value, need_wrap=need_wrap)
+	print_value(value, need_wrap=need_wrap, ctx=['immediate_context'])
 	nl_str = "\n"
 
 
@@ -1739,11 +1758,11 @@ def print_def_var(x):
 	if init_value != None:
 		out(" = ")
 
-		if hlir_type.type_is_array(init_value['type']):
+		#if hlir_type.type_is_array(init_value['type']):
 			#print_value_array(init_value, ctx=[])
-			print_value(init_value, ctx=['no-literal-array-cast'])
-		else:
-			print_value(init_value, ctx=['no-literal-array-cast'])
+		#	print_value(init_value, ctx=['no-literal-array-cast'])
+		#else:
+		print_value(init_value, ctx=['no-literal-array-cast', 'immediate_context'])
 
 	out(";")
 
@@ -1767,14 +1786,15 @@ def print_def_const(x):
 
 	_id = x['id']
 
-	print_macro_definition(_id, init_value)
+	init_value_ctx = ['immediate_context']
+	if hlir_type.type_is_array(const_value['type']):
+		print_macro_definition(_id, init_value, val_ctx=init_value_ctx, prefix='_')
+		newline()
+		print_variable(_id, const_value['type'], as_const=True)
+		out(" = _%s;" % _id['str'])
+	else:
+		print_macro_definition(_id, init_value, val_ctx=init_value_ctx)
 
-	if not hlir_type.type_is_composite(const_value['type']):
-		return
-
-	newline()
-	print_variable(_id, const_value['type'], as_const=True, prefix='_')
-	out(" = %s;" % _id['str'])
 	return
 
 

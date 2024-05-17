@@ -10,7 +10,7 @@
 
 
 static int32_t globalArray0[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-static int32_t globalArray1[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+static int32_t globalArray1[10] = {};
 
 
 int main()
@@ -38,9 +38,11 @@ int main()
 	// local
 
 	int32_t localArray0[10];
-	memcpy(&localArray0, &(int32_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, 40);
+	memcpy(&localArray0, &(int8_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, 10);
+	memset((((void *)&localArray0) + 10), 0, 30);
 	int32_t localArray1[10];
-	memcpy(&localArray1, &(int32_t[10]){0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 40);
+
+	memset((((void *)&localArray1) + 0), 0, 40);
 
 
 	memcpy(&localArray1, &localArray0, 40);

@@ -81,7 +81,7 @@ int32_t get_number(int32_t min, int32_t max);
 
 void fill_array(int32_t *array, int32_t len)
 {
-	#define min  (-1000)
+	#define min  -1000
 	#define max  1000
 	int32_t i;
 	i = 0;

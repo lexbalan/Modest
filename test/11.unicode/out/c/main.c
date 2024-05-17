@@ -11,10 +11,10 @@
 
 
 
-#define ratSymbolUTF8  {0xF0, 0x9F, 0x90, 0x80}
-const int8_t _ratSymbolUTF8[4] = ratSymbolUTF8;
-#define ratSymbolUTF16  {0xD83D, 0xDC00}
-const int16_t _ratSymbolUTF16[2] = ratSymbolUTF16;
+#define _ratSymbolUTF8  {0xF0, 0x9F, 0x90, 0x80}
+const int8_t ratSymbolUTF8[4] = _ratSymbolUTF8;
+#define _ratSymbolUTF16  {0xD83D, 0xDC00}
+const int16_t ratSymbolUTF16[2] = _ratSymbolUTF16;
 #define ratSymbolUTF32  0x0001F400
 
 
@@ -24,9 +24,9 @@ static uint32_t arr_utf32[8] = U"Hello!\n";
 
 
 #define genericStringConst  U"S-t-r-i-n-g-Ω 🐀🎉🦄"
-#define string8Const  ("S-t-r-i-n-g-Ω 🐀🎉🦄")
-#define string16Const  (u"S-t-r-i-n-g-Ω 🐀🎉🦄")
-#define string32Const  (U"S-t-r-i-n-g-Ω 🐀🎉🦄")
+#define string8Const  "S-t-r-i-n-g-Ω 🐀🎉🦄"
+#define string16Const  u"S-t-r-i-n-g-Ω 🐀🎉🦄"
+#define string32Const  U"S-t-r-i-n-g-Ω 🐀🎉🦄"
 
 
 int main()

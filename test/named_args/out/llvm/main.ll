@@ -216,22 +216,14 @@ define i32 @named_args_test(i32 %a, i32 %b, i32 %c) {
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str1 to [0 x i8]*))
-	%2 = bitcast i8 15 to i8
-	%3 = sub i8 25, %2
-	%4 = bitcast i8 3 to i8
-	%5 = mul i8 %3, %4
-	%6 = sext i8 25 to i32
-	%7 = sext i8 15 to i32
-	%8 = sext i8 3 to i32
-	%9 = call i32 (i32, i32, i32) @named_args_test(i32 %6, i32 %7, i32 %8)
-	%10 = sext i8 %5 to i32
-	%11 = icmp eq i32 %10, %9
-	br i1 %11 , label %then_0, label %else_0
+	%2 = call i32 (i32, i32, i32) @named_args_test(i32 25, i32 15, i32 3)
+	%3 = icmp eq i32 30, %2
+	br i1 %3 , label %then_0, label %else_0
 then_0:
-	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*))
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*))
 	br label %endif_0
 else_0:
-	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str3 to [0 x i8]*))
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str3 to [0 x i8]*))
 	br label %endif_0
 endif_0:
 	ret %Int 0

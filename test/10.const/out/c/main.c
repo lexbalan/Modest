@@ -31,40 +31,34 @@ typedef struct {
 
 #define zero  0
 #define pointZero  {.x = zero, .y = zero}
-const Point _pointZero = pointZero;
 #define pointOne  {.x = 1.0, .y = 1.0}
-const Point _pointOne = pointOne;
 
 #define line0  { \
 	.a = pointZero, \
 	.b = pointOne \
 }
-const Line _line0 = line0;
 
-#define carr  {0, 10, 15, 20, 25, 30}
-const int8_t _carr[6] = carr;
+#define _carr  {0, 10, 15, 20, 25, 30}
+const int8_t carr[6] = _carr;
 
 #define line1  { \
 	.a = {.x = 10, .y = 20}, \
 	.b = {.x = 30, .y = 40} \
 }
-const Line _line1 = line1;
 
 
 #define line2  { \
 	.a = pointZero, \
 	.b = pointOne \
 }
-const Line _line2 = line2;
 
 #define line3  { \
 	.a = {.x = 10, .y = 20}, \
 	.b = {.x = 30, .y = 40} \
 }
-const Line _line3 = line3;
 
-#define lines  {line0, line1, line2, line3}
-const Line _lines[4] = lines;
+#define _lines  {line0, line1, line2, line3}
+const Line lines[4] = _lines;
 
 
 // Pythagorean theorem

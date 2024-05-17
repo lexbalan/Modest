@@ -49,7 +49,7 @@ int main()
 
 
 	// signed big int test
-	#define sig0  (-1)
+	#define sig0  -1
 
 	__int128 sig1;
 	sig1 = sig0;

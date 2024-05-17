@@ -341,15 +341,13 @@ again_1:
 body_1:
 	%5 = load i32, i32* %2
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str7 to [0 x i8]*), i32 %5)
-	%7 = sext i16 %1 to i32
-	%8 = sext i16 1000 to i32
-	%9 = call i32 (i32, i32) @get_number(i32 %7, i32 %8)
+	%7 = call i32 (i32, i32) @get_number(i32 -1000, i32 1000)
+	%8 = load i32, i32* %2
+	%9 = getelementptr inbounds [0 x i32], [0 x i32]* %array, i32 0, i32 %8
+	store i32 %7, i32* %9
 	%10 = load i32, i32* %2
-	%11 = getelementptr inbounds [0 x i32], [0 x i32]* %array, i32 0, i32 %10
-	store i32 %9, i32* %11
-	%12 = load i32, i32* %2
-	%13 = add i32 %12, 1
-	store i32 %13, i32* %2
+	%11 = add i32 %10, 1
+	store i32 %11, i32* %2
 	br label %again_1
 break_1:
 	ret void

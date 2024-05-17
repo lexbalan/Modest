@@ -14,9 +14,9 @@ int main()
 
 	// __compiler
 	printf("__compiler.name = %s\n", (char *)"m2");
-	#define ver  ((struct {uint32_t major; uint32_t minor;}){.major = 0, .minor = 7})
-	printf("__compiler.version.major = %u\n", ver.major);
-	printf("__compiler.version.minor = %u\n", ver.minor);
+	#define ver  (struct {uint32_t major; uint32_t minor;}){.major = 0, .minor = 7}
+	printf("__compiler.version.major = %u\n", 0);
+	printf("__compiler.version.minor = %u\n", 7);
 
 	// __target
 	printf("__target.name = %s\n", (char *)"Default");

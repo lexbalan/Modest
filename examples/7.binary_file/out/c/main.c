@@ -17,7 +17,7 @@
 
 // FIXIT: not worked LLVM result (!)
 
-#define filename  ("file.bin")
+#define filename  "file.bin"
 
 
 // chunk of data for read/write operations in file

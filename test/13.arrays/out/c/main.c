@@ -19,10 +19,10 @@
 
 
 
-#define constantArray  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-const int8_t _constantArray[10] = constantArray;
+#define _constantArray  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+const int8_t constantArray[10] = _constantArray;
 
-static int32_t globalArray[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+static int32_t globalArray[10] = _constantArray;
 
 
 struct f0_x {char a[10];};
@@ -50,7 +50,8 @@ int main()
 	printf("------------------------------------\n");
 
 	int32_t localArray[3];
-	memcpy(&localArray, &(int32_t[3]){4, 5, 6}, 12);
+	memcpy(&localArray, &(int8_t[3]){4, 5, 6}, 3);
+	memset((((void *)&localArray) + 3), 0, 9);
 
 	i = 0;
 	while (i < 3) {
@@ -86,7 +87,8 @@ int main()
 	// assign array to array 1
 	// (with equal types)
 	int32_t a[3];
-	memcpy(&a, &(int32_t[3]){1, 2, 3}, 12);
+	memcpy(&a, &(int8_t[3]){1, 2, 3}, 3);
+	memset((((void *)&a) + 3), 0, 9);
 	printf("a[0] = %i\n", a[0]);
 	printf("a[1] = %i\n", a[1]);
 	printf("a[2] = %i\n", a[2]);
@@ -110,7 +112,8 @@ int main()
 	// assign array to array 2
 	// (with array extending)
 	int32_t c[3];
-	memcpy(&c, &(int32_t[3]){10, 20, 30}, 12);
+	memcpy(&c, &(int8_t[3]){10, 20, 30}, 3);
+	memset((((void *)&c) + 3), 0, 9);
 	int32_t d[6];
 	memcpy(&d, &c, 12);
 	memset((((void *)&d) + 12), 0, 12);
@@ -141,13 +144,15 @@ int main()
 
 	// check local literal array assignation to local array
 	int32_t e[4];
-	memcpy(&e, &(int32_t[4]){int100, int200, int300}, 16);
+	memcpy(&e, &init_array, 12);
+	memset((((void *)&e) + 12), 0, 4);
 	printf("e[0] = %i\n", e[0]);
 	printf("e[1] = %i\n", e[1]);
 	printf("e[2] = %i\n", e[2]);
 
 	// check local literal array assignation to global array
-	memcpy(&globalArray, &(int32_t[10]){int100, int200, int300}, 40);
+	memcpy(&globalArray, &init_array, 12);
+	memset((((void *)&globalArray) + 12), 0, 28);
 	printf("globalArray[%i] = %i\n", 0, globalArray[0]);
 	printf("globalArray[%i] = %i\n", 1, globalArray[1]);
 	printf("globalArray[%i] = %i\n", 2, globalArray[2]);
