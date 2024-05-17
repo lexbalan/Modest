@@ -1525,11 +1525,6 @@ def do_stmt_var(x):
 		return hlir_stmt_bad(x)
 
 	var_value = add_local_var(var_id, t, x['ti'])
-
-	if v != None:
-		if v['kind'] == 'cons':
-			warning(">>>>cons<<<<", v['expr_ti'])
-
 	return hlir_stmt_def_var(var_value, v, ti=x['ti'])
 
 

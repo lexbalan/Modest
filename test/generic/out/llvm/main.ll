@@ -274,35 +274,28 @@ endif_4:
 define i1 @test_generic_integer() {
 	; Any integer literal have GenericInteger type
 	; result of such expressions also have generic type
-	%1 = add i8 1, 1
 	; GenericInteger value can be implicitly casted to any Integer type
-	%2 = alloca i32
-	%3 = sext i8 1 to i32
-	store i32 %3, i32* %2
-	%4 = alloca i64
-	%5 = zext i8 1 to i64
-	store i64 %5, i64* %4
+	%1 = alloca i32
+	store i32 1, i32* %1
+	%2 = alloca i64
+	store i64 1, i64* %2
 	; to Float
-	%6 = alloca float
-	store float 1.0, float* %6
-	%7 = alloca double
-	store double 1.0, double* %7
+	%3 = alloca float
+	store float 1.0, float* %3
+	%4 = alloca double
+	store double 1.0, double* %4
 	; and to Byte
-	%8 = alloca i8
-	store i8 1, i8* %8
+	%5 = alloca i8
+	store i8 1, i8* %5
 	; explicit cast GenericInteger value
-	%9 = alloca i8
-	%10 = bitcast i8 1 to i8
-	store i8 %10, i8* %9
-	%11 = alloca i16
-	%12 = zext i8 1 to i16
-	store i16 %12, i16* %11
-	%13 = alloca i32
-	%14 = zext i8 1 to i32
-	store i32 %14, i32* %13
-	%15 = alloca i1
-	%16 = icmp ne i8 1, 0
-	store i1 %16, i1* %15
+	%6 = alloca i8
+	store i8 1, i8* %6
+	%7 = alloca i16
+	store i16 1, i16* %7
+	%8 = alloca i32
+	store i32 1, i32* %8
+	%9 = alloca i1
+	store i1 1, i1* %9
 	ret i1 1
 }
 
@@ -317,8 +310,7 @@ define i1 @test_generic_float() {
 	store double 3.141592653589793, double* %2
 	; explicit cast GenericFloat value to Int32
 	%3 = alloca i32
-	%4 = fptosi double 3.141592653589793238462643383279502884 to i32
-	store i32 %4, i32* %3
+	store i32 3, i32* %3
 	ret i1 1
 }
 
@@ -328,19 +320,14 @@ define i1 @test_generic_char() {
 	; value with GenericChar type
 	; can be implicit casted to any Char type
 	%1 = alloca i8
-	%2 = bitcast i8 65 to i8
-	store i8 %2, i8* %1
-	%3 = alloca i16
-	%4 = zext i8 65 to i16
-	store i16 %4, i16* %3
-	%5 = alloca i32
-	%6 = zext i8 65 to i32
-	store i32 %6, i32* %5
+	store i8 65, i8* %1
+	%2 = alloca i16
+	store i16 65, i16* %2
+	%3 = alloca i32
+	store i32 65, i32* %3
 	; explicit cast GenericChar value to Int32
-	%7 = alloca i32
-	%8 = zext i8 65 to i32
-	%9 = bitcast i32 %8 to i32
-	store i32 %9, i32* %7
+	%4 = alloca i32
+	store i32 65, i32* %4
 	ret i1 1
 }
 
@@ -363,10 +350,10 @@ endif_0:
 	; can be implicit casted to Array with compatible type and same size
 	; implicit cast Generic([4]GenericInteger) value to [4]Int32
 	%8 = alloca [4 x i32]
-	%9 = insertvalue [4 x i32] zeroinitializer, i8 0, 0
-	%10 = insertvalue [4 x i32] %9, i8 1, 1
-	%11 = insertvalue [4 x i32] %10, i8 2, 2
-	%12 = insertvalue [4 x i32] %11, i8 3, 3
+	%9 = insertvalue [4 x i32] zeroinitializer, i32 0, 0
+	%10 = insertvalue [4 x i32] %9, i32 1, 1
+	%11 = insertvalue [4 x i32] %10, i32 2, 2
+	%12 = insertvalue [4 x i32] %11, i32 3, 3
 	store [4 x i32] %12, [4 x i32]* %8
 	%13 = insertvalue [4 x i32] zeroinitializer, i32 0, 0
 	%14 = insertvalue [4 x i32] %13, i32 1, 1
@@ -385,10 +372,10 @@ then_1:
 endif_1:
 	; implicit cast Generic([4]GenericInteger) value to [4]Nat64
 	%23 = alloca [4 x i64]
-	%24 = insertvalue [4 x i64] zeroinitializer, i8 0, 0
-	%25 = insertvalue [4 x i64] %24, i8 1, 1
-	%26 = insertvalue [4 x i64] %25, i8 2, 2
-	%27 = insertvalue [4 x i64] %26, i8 3, 3
+	%24 = insertvalue [4 x i64] zeroinitializer, i64 0, 0
+	%25 = insertvalue [4 x i64] %24, i64 1, 1
+	%26 = insertvalue [4 x i64] %25, i64 2, 2
+	%27 = insertvalue [4 x i64] %26, i64 3, 3
 	store [4 x i64] %27, [4 x i64]* %23
 	%28 = insertvalue [4 x i64] zeroinitializer, i64 0, 0
 	%29 = insertvalue [4 x i64] %28, i64 1, 1
@@ -407,10 +394,10 @@ then_2:
 endif_2:
 	; explicit cast Generic([4]GenericInteger) value to [10]Int32
 	%38 = alloca [10 x i32]
-	%39 = insertvalue [10 x i32] zeroinitializer, i8 0, 0
-	%40 = insertvalue [10 x i32] %39, i8 1, 1
-	%41 = insertvalue [10 x i32] %40, i8 2, 2
-	%42 = insertvalue [10 x i32] %41, i8 3, 3
+	%39 = insertvalue [10 x i32] zeroinitializer, i32 0, 0
+	%40 = insertvalue [10 x i32] %39, i32 1, 1
+	%41 = insertvalue [10 x i32] %40, i32 2, 2
+	%42 = insertvalue [10 x i32] %41, i32 3, 3
 	%43 = insertvalue [10 x i32] %42, i32 0, 4
 	%44 = insertvalue [10 x i32] %43, i32 0, 5
 	%45 = insertvalue [10 x i32] %44, i32 0, 6

@@ -129,27 +129,30 @@ bool test_generic_array()
 
 	// implicit cast Generic([4]GenericInteger) value to [4]Int32
 	int32_t b[4];
-	memcpy(&b, &(int32_t[4]){0, 1, 2, 3}, 16);
+	memcpy(&b, &a, 4);
+	memset((((void *)&b) + 4), 0, 12);
 
-	if (memcmp(&b, &(int32_t[4]){0, 1, 2, 3}, sizeof b) != 0) {
+	if (memcmp(&b, &(int8_t[4]){0, 1, 2, 3}, sizeof b) != 0) {
 		printf("b != [0, 1, 2, 3]\n");
 		return false;
 	}
 
 	// implicit cast Generic([4]GenericInteger) value to [4]Nat64
 	int64_t c[4];
-	memcpy(&c, &(int64_t[4]){0, 1, 2, 3}, 32);
+	memcpy(&c, &a, 4);
+	memset((((void *)&c) + 4), 0, 28);
 
-	if (memcmp(&c, &(int64_t[4]){0, 1, 2, 3}, sizeof c) != 0) {
+	if (memcmp(&c, &(int8_t[4]){0, 1, 2, 3}, sizeof c) != 0) {
 		printf("c != [0, 1, 2, 3]\n");
 		return false;
 	}
 
 	// explicit cast Generic([4]GenericInteger) value to [10]Int32
 	int32_t d[10];
-	memcpy(&d, &(int32_t[10]){0, 1, 2, 3}, 40);
+	memcpy(&d, &a, 4);
+	memset((((void *)&d) + 4), 0, 36);
 
-	if (memcmp(&d, &(int32_t[10]){0, 1, 2, 3, 0}, sizeof d) != 0) {
+	if (memcmp(&d, &(int8_t[10]){0, 1, 2, 3, 0}, sizeof d) != 0) {
 		printf("d != [0, 1, 2, 3, 0, 0, 0, 0, 0, 0]\n");
 		return false;
 	}
