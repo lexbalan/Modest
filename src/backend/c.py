@@ -1757,11 +1757,6 @@ def print_def_var(x):
 	init_value = x['default_value']
 	if init_value != None:
 		out(" = ")
-
-		#if hlir_type.type_is_array(init_value['type']):
-			#print_value_array(init_value, ctx=[])
-		#	print_value(init_value, ctx=['no-literal-array-cast'])
-		#else:
 		print_value(init_value, ctx=['no-literal-array-cast', 'immediate_context'])
 
 	out(";")
