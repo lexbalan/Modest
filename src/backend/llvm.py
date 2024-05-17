@@ -1261,7 +1261,7 @@ def do_eval(x):
 	elif k == 'cons': y = do_eval_cast(x)
 	elif k == 'concat_array': y = do_eval_literal(x)
 	elif k == 'concat_string': y = do_eval_literal(x)
-	elif k in ['sizeof', 'lengthof', 'alignof', 'offsetof', 'eq_str', 'ne_str']:
+	elif k in ['sizeof', 'lengthof', 'alignof', 'offsetof', 'eq_str', 'ne_str', 'eq_arr', 'ne_arr']:
 		 y = do_eval_literal(x)
 	else:
 		out("<%s>" % k)

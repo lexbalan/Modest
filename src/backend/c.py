@@ -350,7 +350,7 @@ bin_ops = {
 	'eq': '==', 'ne': '!=', 'lt': '<', 'gt': '>', 'le': '<=', 'ge': '>=',
 	'add': '+', 'sub': '-', 'mul': '*', 'div': '/', 'rem': '%',
 	'logic_and': '&&', 'logic_or': '||',
-	'concat_string': '', 'eq_str': '', 'ne_str': ''
+	'concat_string': '', 'eq_str': '', 'ne_str': '', 'eq_arr': '', 'ne_arr': ''
 }
 
 
@@ -388,8 +388,13 @@ def print_value_bin(v, ctx):
 			memcmp_by(left, right, by=left, op=op)
 			return
 	elif op in ['eq_str', 'ne_str']:
-		print_value_bool_create(v, ctx)
+		print_value_bool_lit(v, ctx)
 		return
+
+	elif op in ['eq_arr', 'ne_arr']:
+		print_value_bool_lit(v, ctx)
+		return
+
 	elif op == 'concat_string':
 		if left['type']['width'] != right['type']['width']:
 			# для случаев вроде "Hello" + U"World!"
@@ -1000,7 +1005,7 @@ def print_char_lit(cc, width):
 
 
 
-def print_value_bool_create(x, ctx):
+def print_value_bool_lit(x, ctx):
 	if x['asset']:
 		out(BOOL_TRUE_LITERAL)
 	else:
@@ -1072,7 +1077,7 @@ def print_value_terminal(x, ctx):
 	elif hlir_type.type_is_string(t): print_value_string(x, ctx)
 	elif hlir_type.type_is_record(t): print_value_record(x, ctx)
 	elif hlir_type.type_is_array(t): print_value_array(x, ctx)
-	elif hlir_type.type_is_bool(t): print_value_bool_create(x, ctx)
+	elif hlir_type.type_is_bool(t): print_value_bool_lit(x, ctx)
 	elif hlir_type.type_is_char(t): print_value_char(x, ctx)
 	elif hlir_type.type_is_pointer(t): print_value_ptr(x, ctx)
 	elif hlir_type.type_is_enum(t): print_value_enum(x, ctx)

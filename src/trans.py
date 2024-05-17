@@ -660,7 +660,7 @@ def value_eq_arrays(l, r, ti):
 		fatal("dynamic immediate array volume not implemented", ti)
 
 	for a, b in zip(l['asset'], r['asset']):
-		if a != b:
+		if a['asset'] != b['asset']:  #FIXIT! -> value_eq(l, r)
 			return False
 
 	return True
@@ -670,11 +670,13 @@ def value_eq_arrays(l, r, ti):
 def do_value_bin_arr_eq(op, l, r, ti):
 	bool_result = value_eq_arrays(l, r, ti)
 
+	info("eq_arr = %d" % int(bool_result), ti)
+
 	if op == 'eq':
-		op = 'eq_str'
+		op = 'eq_arr'
 
 	elif op == 'ne':
-		op = 'ne_str'
+		op = 'ne_arr'
 		bool_result = not bool_result
 
 	bin_value = value_bin(op, l, r, foundation.typeBool, ti=ti)
@@ -2006,6 +2008,8 @@ def def_var(x):
 
 
 def check_unuse(v):
+	#return  # Off
+
 	if v == None:
 		return
 
