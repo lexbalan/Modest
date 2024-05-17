@@ -2,7 +2,7 @@
 import hlir.type as hlir_type
 import foundation
 from hlir.type import select_common_type
-from error import info, error
+from error import info, warning, error
 from .char import utf32_chars_to_utfx_chars
 from .integer import value_integer_create
 from .value import value_terminal, value_is_immediate, value_cons_node, value_cons_immediate, value_zero, value_bin, value_print
@@ -155,6 +155,7 @@ def value_array_cons(t, v, method, ti):
 
 	if hlir_type.type_is_generic(v['type']):
 		# GenericArray -> Array
+		#warning("value_array_cons %s" % method, ti)
 		return _do_cons_array(t, v, method, ti)
 
 
@@ -192,13 +193,21 @@ def _cast_values(values, to_type):
 def _do_cons_array(t, v, method, ti):
 	#info("_do_cons_array", ti)
 
-	if hlir_type.type_is_generic(v['type']):
-		nv = value_terminal(t, v['asset'], ti)
-		nv['nl_end'] = v['nl_end'] # 'nl_end' present only in generic values
-	else:
-		nv = value_cons_node(t, v, method, ti)
+	nv = value_cons_node(t, v, method, ti)
+
+	#if hlir_type.type_is_generic(v['type']):
+	#	warning("IMM? %d" % v['immediate'], v['expr_ti'])
+
+	"""if hlir_type.type_is_generic(v['type']):
+	#if value_is_immediate(v):  # не проканало почему-то
+		warning("_do_cons_array immediate?", ti)
+		#nv = value_terminal(t, v['asset'], ti)
+		nv['immediate'] = True
+		nv['asset'] = v['asset']
+		nv['nl_end'] = v['nl_end'] # 'nl_end' present only in generic values"""
 
 	if value_is_immediate(v):
+		#warning("_do_cons_array immediate?", ti)
 		casted_items = _cast_values(v['asset'], t['of'])
 
 		# add Zero Pad (if need)

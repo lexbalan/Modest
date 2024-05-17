@@ -601,15 +601,6 @@ def print_value_terminal(x, ctx):
 
 
 def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
-	# если у значения есть свойство 'id' то печатаем просто id
-	# (используется для печати имени констант а не просто их значения)
-	# в LLVM перчаем просто значение
-
-	if print_just_id:
-		if 'id' in x:
-			print_value_by_id(x, ctx)
-			return
-
 	if need_wrap:
 		out("(")
 
@@ -667,7 +658,6 @@ def print_stmt_return(x):
 def print_stmt_defvar(x):
 	init_value = x['default_value']
 	out('var ')
-
 
 	print_field(x['var'])
 
