@@ -119,7 +119,7 @@ bool test_generic_array()
 	int8_t a[4];
 	memcpy(&a, &(int8_t[4]){0, 1, 2, 3}, 4);
 
-	if (false) {
+	if (true) {
 		printf("error: a != [0, 1, 2, 3]\n");
 		return false;
 	}
@@ -129,8 +129,8 @@ bool test_generic_array()
 
 	// implicit cast Generic([4]GenericInteger) value to [4]Int32
 	int32_t b[4];
-	memcpy(&b, &a, 4*4);
-	memset((((void *)&b) + 4*4), 0, 0);
+	memcpy(&b, &a, 4);
+	memset((((void *)&b) + 4), 0, 12);
 
 	if (memcmp(&b, &(int8_t[4]){0, 1, 2, 3}, sizeof b) != 0) {
 		printf("b != [0, 1, 2, 3]\n");

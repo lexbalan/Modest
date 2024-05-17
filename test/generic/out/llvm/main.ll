@@ -340,7 +340,7 @@ define i1 @test_generic_array() {
 	%4 = insertvalue [4 x i8] %3, i8 3, 3
 	%5 = alloca [4 x i8]
 	store [4 x i8] %4, [4 x i8]* %5
-	br i1 0 , label %then_0, label %endif_0
+	br i1 1 , label %then_0, label %endif_0
 then_0:
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str12 to [0 x i8]*))
 	ret i1 0

@@ -645,25 +645,40 @@ def bin_imm(op, type_result, l, r, ti):
 	return bin_value
 
 
-def value_eq_immediate(a, b):
+def value_eq_immediate(a, b, ti):
+	if isinstance(a, dict) and isinstance(b, dict):
+		if not hlir_type.type_eq(a['type'], b['type']):
+			return False
+
+		# eq composite values
+		if hlir_type.type_is_array(a['type']):
+			return value_eq_arrays(a, b, ti)
+		elif hlir_type.type_is_record(a['type']):
+			return value_eq_records(a, b, ti)
+
 	return a['asset'] == b['asset']
 
 
 # FIXIT: it is generic arrays EQ!
-def value_eq_arrays(l, r, ti):
-	lvolume = l['type']['volume']
-	rvolume = r['type']['volume']
-	if value_is_immediate(lvolume) and value_is_immediate(rvolume):
-		if lvolume['asset'] != rvolume['asset']:
+def value_eq_arrays(a, b, ti):
+	avolume = a['type']['volume']
+	bvolume = b['type']['volume']
+	if value_is_immediate(avolume) and value_is_immediate(bvolume):
+		if avolume['asset'] != bvolume['asset']:
 			return False
 	else:
 		fatal("dynamic immediate array volume not implemented", ti)
 
-	for a, b in zip(l['asset'], r['asset']):
-		if a['asset'] != b['asset']:  #FIXIT! -> value_eq(l, r)
+	for ax, bx in zip(a['asset'], b['asset']):
+		if value_eq_immediate(ax, bx, ti):
 			return False
 
 	return True
+
+
+def value_eq_records(l, r, ti):
+	assert(False, "value_eq_records() not implemented!")
+	return False # TODO!
 
 
 
