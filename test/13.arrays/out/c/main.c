@@ -103,7 +103,7 @@ int main()
 	printf("b[2] = %i\n", b[2]);
 
 	// check equality between two arrays (by value)
-	if (memcmp(&a, &b, sizeof a) == 0) {
+	if (/*eq*/memcmp(&a, &b, sizeof a) == 0) {
 		printf("a == b\n");
 	} else {
 		printf("a != b\n");

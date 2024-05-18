@@ -179,7 +179,7 @@ def value_cons_default(x):
 
 def value_cons_implicit_check(t, v):
 	nv = value_cons_implicit(t, v)
-	type.check(nv['type'], t, v['expr_ti'])
+	type.check(t, nv['type'], v['expr_ti'])
 	return nv
 
 

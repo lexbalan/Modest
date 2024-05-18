@@ -764,17 +764,29 @@ def do_reval(x):
 
 
 def do_eval_bin(x):
+
+	if hlir_type.type_is_composite(x['left']['type']):
+		op = x['kind']
+
+		if value_is_immediate(x):
+			return do_eval_literal(x)
+
+		if op == 'add':
+			pass
+
+		elif op in ['eq', 'ne']:
+			# do eq between arrays or records
+			l = do_eval(x['left'])
+			r = do_eval(x['right'])
+			sz = llvm_value_num(foundation.typeInt64, l['type']['size'])
+			return llvm_memcmp(l, r, sz)
+
+		return None
+
+
+	# HOT!
 	if value_is_immediate(x):
 		return llvm_value_num(x['type'], x['asset'])
-
-	# eq between arrays or records?
-	if hlir_type.type_is_composite(x['left']['type']):
-		# do eq between arrays or records
-		l = do_eval(x['left'])
-		r = do_eval(x['right'])
-		sz = llvm_value_num(foundation.typeInt64, l['type']['size'])
-		return llvm_memcmp(l, r, sz)
-
 
 	l = do_reval(x['left'])
 	r = do_reval(x['right'])
@@ -1259,8 +1271,8 @@ def do_eval(x):
 	elif k == 'access': y = do_eval_access(x)
 	elif k == 'access_ptr': y = do_eval_access_ptr(x)
 	elif k == 'cons': y = do_eval_cast(x)
-	elif k == 'concat_array': y = do_eval_literal(x)
-	elif k == 'concat_string': y = do_eval_literal(x)
+	#elif k == 'concat_array': y = do_eval_literal(x)
+	#elif k == 'concat_string': y = do_eval_literal(x)
 	elif k in ['sizeof', 'lengthof', 'alignof', 'offsetof', 'eq_str', 'ne_str', 'eq_arr', 'ne_arr']:
 		 y = do_eval_literal(x)
 	else:

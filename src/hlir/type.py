@@ -947,7 +947,7 @@ def select_common_type(a, b):
 		if b['kind'] == 'bad':
 			return a
 
-
+		print("%s %s" % (a['kind'], b['kind']))
 		return None
 
 
@@ -986,6 +986,11 @@ def select_common_type(a, b):
 		if type_is_generic(b):
 			return a
 
+	if type_is_string(a) and type_is_string(b):
+		if a['char_width'] > b['char_width']:
+			return a
+		else:
+			return b
 
 	if a['width'] > b['width']:
 		return a

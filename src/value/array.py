@@ -94,26 +94,6 @@ def value_array_create_from_string(t, v, method, ti=None):
 
 
 
-# concatenation of two immediate arrays
-def value_array_concat(l, r, ti):
-	#info("value_array_concat", ti)
-	asset = l['asset'] + r['asset']
-	length = len(asset)
-
-	str_array_volume = value_integer_create(length)
-	item_type = select_common_type(l['type']['of'], r['type']['of'])
-	assert(item_type != None)
-	t = hlir_type.hlir_type_array(item_type, volume=str_array_volume, ti=ti)
-	t['generic'] = True
-
-	nv = value_bin('concat_array', l, r, t, ti=ti)
-	nv['asset'] = asset
-	nv['immediate'] = True
-	nv['nl_end'] = r['nl_end']
-	return nv
-
-
-
 def value_array_cons(t, v, method, ti):
 	#info("value_array_cons", ti)
 
@@ -123,7 +103,6 @@ def value_array_cons(t, v, method, ti):
 
 	if hlir_type.type_is_string(v['type']):
 		return value_array_create_from_string(t, v, method, ti)
-
 
 	if not hlir_type.type_is_array(v['type']):
 		return None  # cannot cons array value from non-array value

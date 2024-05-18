@@ -211,8 +211,7 @@ bin_ops = {
 	'or': 'or', 'xor': 'xor', 'and': 'and', 'shl': '<<', 'shr': '>>',
 	'eq': '==', 'ne': '!=', 'lt': '<', 'gt': '>', 'le': '<=', 'ge': '>=',
 	'add': '+', 'sub': '-', 'mul': '*', 'div': '/', 'rem': '%',
-	'logic_and': 'and', 'logic_or': 'or',
-	'concat_array': '+', 'concat_string': '+',
+	'logic_and': 'and', 'logic_or': 'or'
 }
 
 def print_value_bin(x, ctx):

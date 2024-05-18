@@ -13,8 +13,8 @@ import foundation
 from value.bool import value_bool_create
 from value.integer import value_integer_create
 from value.float import value_float_create
-from value.array import value_array_create, value_array_concat
-from value.string import value_string_create, value_string_concat
+from value.array import value_array_create
+from value.string import value_string_create
 from value.record import value_record_create
 
 
@@ -631,44 +631,65 @@ def bin_imm(op, type_result, l, r, ti):
 		'shr': lambda a, b: a >> b,
 	}
 
-	num_val = 0
+	asset = 0
 
-	if hlir_type.type_is_array(l['type']):
-		info("eq_arrays", ti)
-		bool_result = value_eq_arrays(l, r, ti)
-		if op == 'ne':
-			bool_result = not bool_result
-		num_val = int(bool_result)
 
-	elif hlir_type.type_is_record(l['type']):
-		info("eq_records", ti)
-		bool_result = value_eq_records(l, r, ti)
-		if op == 'ne':
-			bool_result = not bool_result
-		num_val = int(bool_result)
+	if op == 'add' and hlir_type.type_is_array(l['type']):
+		asset = l['asset'] + r['asset']
+		length = len(asset)
+		str_array_volume = value_integer_create(length)
+		item_type = select_common_type(l['type']['of'], r['type']['of'])
+		assert(item_type != None)
 
-	elif hlir_type.type_is_string(l['type']):
-		bool_result = l['asset'] == r['asset']
-		if op == 'ne':
-			bool_result = not bool_result
-		num_val = int(bool_result)
+		type_result = hlir_type.hlir_type_array(item_type, volume=str_array_volume, ti=ti)
+
+		type_result['generic'] = True  # FIXIT!
+
+	elif op == 'add' and hlir_type.type_is_string(l['type']):
+		asset = l['asset'] + r['asset']
+		max_char_width = max(l['type']['width'], r['type']['width'])
+		type_result = hlir_type.hlir_type_string(max_char_width, ti)
+
+	elif op in ['eq', 'ne']:
+		if hlir_type.type_is_array(l['type']):
+			info("eq_arrays", ti)
+			bool_result = value_eq_arrays(l, r, ti)
+			if op == 'ne':
+				bool_result = not bool_result
+			asset = int(bool_result)
+
+		elif hlir_type.type_is_record(l['type']):
+			info("eq_records", ti)
+			bool_result = value_eq_records(l, r, ti)
+			if op == 'ne':
+				bool_result = not bool_result
+			asset = int(bool_result)
+
+		elif hlir_type.type_is_string(l['type']):
+			bool_result = l['asset'] == r['asset']
+			if op == 'ne':
+				bool_result = not bool_result
+			asset = int(bool_result)
+
+		else:
+			asset = ops[op](l['asset'], r['asset'])
 
 	else:
-		num_val = ops[op](l['asset'], r['asset'])
+		asset = ops[op](l['asset'], r['asset'])
 
 
-	if hlir_type.type_is_generic(type_result):
+	if hlir_type.type_is_generic(type_result) and not hlir_type.type_is_string(type_result) and not hlir_type.type_is_array(type_result):
 		# (для операций типа 1 + 2)
 		# Пересматриваем generic тип для нового значения
-		type_result = hlir_type.hlir_type_generic_int_for(num_val, signed=False, ti=ti)
+		type_result = hlir_type.hlir_type_generic_int_for(asset, signed=False, ti=ti)
 
-	if not hlir_type.type_is_float(l['type']):
-		num_val = int(num_val)
+	if hlir_type.type_is_integer(l['type']):
+		asset = int(asset)
 
-	bin_value = value_bin(op, l, r, type_result, ti=ti)
-	bin_value['asset'] = num_val
-	bin_value['immediate'] = True
-	return bin_value
+	nv = value_bin(op, l, r, type_result, ti=ti)
+	nv['asset'] = asset
+	nv['immediate'] = True
+	return nv
 
 
 
@@ -704,7 +725,7 @@ def value_eq_arrays(a, b, ti):
 
 
 def value_eq_records(l, r, ti):
-	assert(False, "value_eq_records() not implemented!")
+	fatal("value_eq_records() not implemented!", ti)
 	return False # TODO!
 
 
@@ -719,11 +740,11 @@ def do_value_bin(x):
 		return value_bad(x)
 
 	if not op in l['type']['ops']:
-		error("unsuitable value type", l['expr_ti'])
+		error("unsuitable value type for '%s' operation" % op, l['expr_ti'])
 		return value_bad(x)
 
 	if not op in r['type']['ops']:
-		error("unsuitable value type", r['expr_ti'])
+		error("unsuitable value type for '%s' operation" % op, r['expr_ti'])
 		return value_bad(x)
 
 	if hlir_type.type_is_pointer(l['type']) or hlir_type.type_is_pointer(r['type']):
@@ -733,7 +754,7 @@ def do_value_bin(x):
 	common_type = select_common_type(l['type'], r['type'])
 
 	if common_type == None:
-		error("unsuitable value type", r['expr_ti'])
+		error("unsuitable value type for '%s' operation" % op, r['expr_ti'])
 		return value_bad(x)
 
 	l = value_cons_implicit(common_type, l)
@@ -744,14 +765,6 @@ def do_value_bin(x):
 		return value_bad(x)
 
 	type_result = common_type
-
-
-	if op == 'add':
-		if hlir_type.type_is_array(l['type']):
-			return value_array_concat(l, r, ti)
-
-		if hlir_type.type_is_string(l['type']):
-			return value_string_concat(l, r, ti)
 
 
 	if op in (hlir_type.EQ_OPS + hlir_type.RELATIONAL_OPS):
@@ -1598,10 +1611,8 @@ def do_stmt_assign(x):
 		error("expected mutable value", l['expr_ti'])
 		return hlir_stmt_bad(x)
 
-
 	# type check
 	r = value_cons_implicit_check(l['type'], r)
-
 
 	if hlir_type.type_is_composite(l['type']):
 		module_option('use_memcpy')

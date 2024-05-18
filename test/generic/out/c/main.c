@@ -119,7 +119,7 @@ bool test_generic_array()
 	int8_t a[4];
 	memcpy(&a, &(int8_t[4]){0, 1, 2, 3}, 4);
 
-	if (true) {
+	if (/*ne*/true) {
 		printf("error: a != [0, 1, 2, 3]\n");
 		return false;
 	}
@@ -132,7 +132,7 @@ bool test_generic_array()
 	memcpy(&b, &a, 4);
 	memset((((void *)&b) + 4), 0, 12);
 
-	if (memcmp(&b, &(int8_t[4]){0, 1, 2, 3}, sizeof b) != 0) {
+	if (/*ne*/memcmp(&b, &(int8_t[4]){0, 1, 2, 3}, sizeof b) != 0) {
 		printf("b != [0, 1, 2, 3]\n");
 		return false;
 	}
@@ -142,7 +142,7 @@ bool test_generic_array()
 	memcpy(&c, &a, 4);
 	memset((((void *)&c) + 4), 0, 28);
 
-	if (memcmp(&c, &(int8_t[4]){0, 1, 2, 3}, sizeof c) != 0) {
+	if (/*ne*/memcmp(&c, &(int8_t[4]){0, 1, 2, 3}, sizeof c) != 0) {
 		printf("c != [0, 1, 2, 3]\n");
 		return false;
 	}
@@ -152,7 +152,7 @@ bool test_generic_array()
 	memcpy(&d, &a, 4);
 	memset((((void *)&d) + 4), 0, 36);
 
-	if (memcmp(&d, &(int8_t[10]){0, 1, 2, 3, 0}, sizeof d) != 0) {
+	if (/*ne*/memcmp(&d, &(int8_t[10]){0, 1, 2, 3, 0}, sizeof d) != 0) {
 		printf("d != [0, 1, 2, 3, 0, 0, 0, 0, 0, 0]\n");
 		return false;
 	}
