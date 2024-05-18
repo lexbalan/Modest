@@ -608,7 +608,6 @@ def do_bin_op_with_pointers(op, l, r , ti):
 
 
 
-
 def bin_imm(op, type_result, l, r, ti):
 	ops = {
 		'logic_or': lambda a, b: a or b,
@@ -616,12 +615,12 @@ def bin_imm(op, type_result, l, r, ti):
 		'or': lambda a, b: a | b,
 		'and': lambda a, b: a & b,
 		'xor': lambda a, b: a ^ b,
-		'eq': lambda a, b: 1 if a == b else 0,
-		'ne': lambda a, b: 1 if a != b else 0,
-		'lt': lambda a, b: 1 if a < b else 0,
-		'gt': lambda a, b: 1 if a > b else 0,
-		'le': lambda a, b: 1 if a <= b else 0,
-		'ge': lambda a, b: 1 if a >= b else 0,
+		'eq': lambda a, b: a == b,
+		'ne': lambda a, b: a != b,
+		'lt': lambda a, b: a < b,
+		'gt': lambda a, b: a > b,
+		'le': lambda a, b: a <= b,
+		'ge': lambda a, b: a >= b,
 		'add': lambda a, b: a + b,
 		'sub': lambda a, b: a - b,
 		'mul': lambda a, b: a * b,
@@ -633,46 +632,42 @@ def bin_imm(op, type_result, l, r, ti):
 
 	asset = 0
 
+	if hlir_type.type_is_array(l['type']):
+		if op == 'add':
+			asset = l['asset'] + r['asset']
+			length = len(asset)
+			str_array_volume = value_integer_create(length)
+			item_type = select_common_type(l['type']['of'], r['type']['of'])
+			assert(item_type != None)
+			type_result = hlir_type.hlir_type_array(item_type, volume=str_array_volume, ti=ti)
+			type_result['generic'] = True  # FIXIT!
 
-	if op == 'add' and hlir_type.type_is_array(l['type']):
-		asset = l['asset'] + r['asset']
-		length = len(asset)
-		str_array_volume = value_integer_create(length)
-		item_type = select_common_type(l['type']['of'], r['type']['of'])
-		assert(item_type != None)
+		elif op in ['eq', 'ne']:
+			asset = value_eq_arrays(l, r, ti)
+			if op == 'ne':
+				asset = not asset
 
-		type_result = hlir_type.hlir_type_array(item_type, volume=str_array_volume, ti=ti)
 
-		type_result['generic'] = True  # FIXIT!
+	elif hlir_type.type_is_string(l['type']):
+		if op == 'add':
+			asset = l['asset'] + r['asset']
+			max_char_width = max(l['type']['width'], r['type']['width'])
+			type_result = hlir_type.hlir_type_string(max_char_width, ti)
+		elif op in ['eq', 'ne']:
+			asset = l['asset'] == r['asset']
+			if op == 'ne':
+				asset = not asset
 
-	elif op == 'add' and hlir_type.type_is_string(l['type']):
-		asset = l['asset'] + r['asset']
-		max_char_width = max(l['type']['width'], r['type']['width'])
-		type_result = hlir_type.hlir_type_string(max_char_width, ti)
-
-	elif op in ['eq', 'ne']:
 		if hlir_type.type_is_array(l['type']):
 			info("eq_arrays", ti)
-			bool_result = value_eq_arrays(l, r, ti)
-			if op == 'ne':
-				bool_result = not bool_result
-			asset = int(bool_result)
 
-		elif hlir_type.type_is_record(l['type']):
+
+	elif hlir_type.type_is_record(l['type']):
+		if op in ['eq', 'ne']:
 			info("eq_records", ti)
-			bool_result = value_eq_records(l, r, ti)
+			asset = value_eq_records(l, r, ti)
 			if op == 'ne':
-				bool_result = not bool_result
-			asset = int(bool_result)
-
-		elif hlir_type.type_is_string(l['type']):
-			bool_result = l['asset'] == r['asset']
-			if op == 'ne':
-				bool_result = not bool_result
-			asset = int(bool_result)
-
-		else:
-			asset = ops[op](l['asset'], r['asset'])
+				asset = not asset
 
 	else:
 		asset = ops[op](l['asset'], r['asset'])

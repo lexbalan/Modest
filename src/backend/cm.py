@@ -506,7 +506,7 @@ def print_value_record(v, ctx):
 
 # print Bool literal
 def print_value_bool_create(x, ctx):
-	if x['asset'] != 0:
+	if x['asset']:
 		out('true')
 	else:
 		out('false')

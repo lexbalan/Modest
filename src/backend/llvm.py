@@ -764,7 +764,6 @@ def do_reval(x):
 
 
 def do_eval_bin(x):
-
 	if hlir_type.type_is_composite(x['left']['type']):
 		op = x['kind']
 
@@ -786,7 +785,7 @@ def do_eval_bin(x):
 
 	# HOT!
 	if value_is_immediate(x):
-		return llvm_value_num(x['type'], x['asset'])
+		return do_eval_literal(x)
 
 	l = do_reval(x['left'])
 	r = do_reval(x['right'])
@@ -1225,6 +1224,8 @@ def do_eval_const(x):
 	return do_eval(x['value'])
 
 
+def do_eval_bool(x):
+	return llvm_value_num(x['type'], 1 if x['asset'] else 0)
 
 
 def do_eval_literal(x):
@@ -1234,7 +1235,7 @@ def do_eval_literal(x):
 	elif hlir_type.type_is_string(xt): return do_eval_string(x)
 	elif hlir_type.type_is_record(xt): return do_eval_record(x)
 	elif hlir_type.type_is_array(xt): return do_eval_array(x)
-	elif hlir_type.type_is_bool(xt): return llvm_value_num(xt, x['asset'])
+	elif hlir_type.type_is_bool(xt): return do_eval_bool(x)
 	elif hlir_type.type_is_free_pointer(xt): return llvm_value_num(xt, x['asset'])
 	elif hlir_type.type_is_pointer(xt): return do_eval_pointer(x)
 	elif hlir_type.type_is_char(xt): return llvm_value_num(xt, x['asset'])
@@ -1273,8 +1274,8 @@ def do_eval(x):
 	elif k == 'cons': y = do_eval_cast(x)
 	#elif k == 'concat_array': y = do_eval_literal(x)
 	#elif k == 'concat_string': y = do_eval_literal(x)
-	elif k in ['sizeof', 'lengthof', 'alignof', 'offsetof', 'eq_str', 'ne_str', 'eq_arr', 'ne_arr']:
-		 y = do_eval_literal(x)
+	elif k in ['sizeof', 'lengthof', 'alignof', 'offsetof']:
+		y = do_eval_literal(x)
 	else:
 		out("<%s>" % k)
 
