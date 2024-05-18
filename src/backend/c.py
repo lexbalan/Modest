@@ -354,13 +354,13 @@ bin_ops = {
 }
 
 
-def print_value_bin(v, ctx):
-	op = v['kind']
-	left = v['left']
-	right = v['right']
+def print_value_bin(x, ctx):
+	op = x['kind']
+	left = x['left']
+	right = x['right']
 
 	# получаем приоритеты операции и операндов
-	p0 = precedence(v)
+	p0 = precedence(x)
 	pl = precedence(left)
 	pr = precedence(right)
 	need_wrap_left = pl < p0
@@ -369,6 +369,15 @@ def print_value_bin(v, ctx):
 	# GCC выдает warning например в: 1 << 2 + 2, тк считает
 	# Что юзер имел в виду (1 << 2) + 2, а у << приоритет тние
 	# чтобы он не ругался, завернем такие выражения в скобки
+
+	if op in ['eq', 'ne']:
+		if hlir_type.type_is_record(left['type']):
+			return print_value_record_eq(x, ctx)
+		elif hlir_type.type_is_array(left['type']):
+			return print_value_array_eq(x, ctx)
+		elif hlir_type.type_is_string(left['type']):
+			return print_value_bool_lit(x, ctx)
+
 
 	if op in ['shl', 'shr']:
 		need_wrap_left = precedence(left) < 10
@@ -383,24 +392,13 @@ def print_value_bin(v, ctx):
 			need_wrap_left = precedence(left) < 10
 		if right['kind'] != 'logic_and':
 			need_wrap_right = precedence(right) < 10
-	elif op in ['eq', 'ne']:
-		if hlir_type.type_is_composite(left['type']):
-			memcmp_by(left, right, by=left, op=op)
-			return
-	elif op in ['eq_str', 'ne_str']:
-		print_value_bool_lit(v, ctx)
-		return
-
-	elif op in ['eq_arr', 'ne_arr']:
-		print_value_bool_lit(v, ctx)
-		return
 
 	elif op == 'concat_string':
 		if left['type']['width'] != right['type']['width']:
 			# для случаев вроде "Hello" + U"World!"
 			# (печатаем сам литерал, тк C иначе не умеет)
 			# (U"Hello World!")
-			print_lit_string(v['asset'], v['type']['width'])
+			print_lit_string(x['asset'], x['type']['width'])
 			return
 
 		print_value(left, need_wrap=need_wrap_left)
@@ -412,6 +410,29 @@ def print_value_bin(v, ctx):
 	print_value(left, need_wrap=need_wrap_left)
 	out(' %s ' % bin_ops[op])
 	print_value(right, need_wrap=need_wrap_right)
+
+
+
+def print_value_record_eq(x, ctx):
+	return print_value_composite_eq(x, ctx)
+
+def print_value_array_eq(x, ctx):
+	return print_value_composite_eq(x, ctx)
+
+def print_value_composite_eq(x, ctx):
+	op = x['kind']
+	left = x['left']
+	right = x['right']
+
+	out("/*%s*/" % op)
+
+	if value_is_immediate(x):
+		print_value_bool_lit(x, ctx)
+	else:
+		memcmp_by(left, right, by=left, op=op)
+
+	return
+
 
 
 
@@ -559,7 +580,7 @@ def print_value_index(x, ctx):
 		# индексация immediate массива при помощи imm индекса
 		# приводит к тому что мы индексируем массив с префиксом _ (макро)
 		# нужно это для того чтобы получить чисто константное выражение C
-		ctx.append('immediate_context')
+		ctx = ctx + ['immediate_context']
 
 	print_value(xx, ctx=ctx, need_wrap=need_wrap)
 

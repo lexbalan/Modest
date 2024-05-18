@@ -682,35 +682,26 @@ def value_eq_records(l, r, ti):
 
 
 
+# TODO: Эти функции оч похожи и вообще похоже что они не нужны!!
+# нужно просто слегка модифицировать do_value_bin
+
 def do_value_bin_arr_eq(op, l, r, ti):
-	bool_result = value_eq_arrays(l, r, ti)
-
-	info("eq_arr = %d" % int(bool_result), ti)
-
-	if op == 'eq':
-		op = 'eq_arr'
-
-	elif op == 'ne':
-		op = 'ne_arr'
-		bool_result = not bool_result
-
+	info("do_value_bin_arr_eq", ti)
 	bin_value = value_bin(op, l, r, foundation.typeBool, ti=ti)
-	bin_value['asset'] = int(bool_result)
-	bin_value['immediate'] = True
+	if value_is_immediate(l) and value_is_immediate(r):
+		bool_result = value_eq_arrays(l, r, ti)
+		if op == 'ne_arr':
+			bool_result = not bool_result
+		bin_value['asset'] = int(bool_result)
+		bin_value['immediate'] = True
 	return bin_value
 
-
 def do_value_bin_str_eq(op, l, r, ti):
-	bool_result = l['asset'] == r['asset']
-
-	if op == 'eq':
-		op = 'eq_str'
-
-	elif op == 'ne':
-		op = 'ne_str'
-		bool_result = not bool_result
-
+	info("do_value_bin_str_eq", ti)
 	bin_value = value_bin(op, l, r, foundation.typeBool, ti=ti)
+	bool_result = l['asset'] == r['asset']
+	if op == 'ne':
+		bool_result = not bool_result
 	bin_value['asset'] = int(bool_result)
 	bin_value['immediate'] = True
 	return bin_value
@@ -738,7 +729,7 @@ def do_value_bin(x):
 		return do_bin_op_with_pointers(op, l, r, ti)
 
 
-	if hlir_type.type_is_generic_array(l['type']) and hlir_type.type_is_generic_array(r['type']):
+	if hlir_type.type_is_array(l['type']) and hlir_type.type_is_array(r['type']):
 		if op == 'add':
 			return value_array_concat(l, r, ti)
 		elif op in ['eq', 'ne']:
