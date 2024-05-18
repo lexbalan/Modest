@@ -1124,12 +1124,10 @@ def print_value_by_id(x, ctx=[], prefix=''):
 def print_value_const(x, ctx):
 	prefix=''
 
-
 	if hlir_type.type_is_array(x['type']):
 		if 'immediate_context' in ctx:
 			if 'global_const' in x['att']: # <- костыль?
 				prefix = '_'
-
 
 	return print_value_by_id(x, ctx, prefix)
 
