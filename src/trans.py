@@ -608,6 +608,7 @@ def do_bin_op_with_pointers(op, l, r , ti):
 
 
 
+
 def bin_imm(op, type_result, l, r, ti):
 	ops = {
 		'logic_or': lambda a, b: a or b,
@@ -630,10 +631,35 @@ def bin_imm(op, type_result, l, r, ti):
 		'shr': lambda a, b: a >> b,
 	}
 
-	num_val = ops[op](l['asset'], r['asset'])
+	num_val = 0
+
+	if hlir_type.type_is_array(l['type']):
+		info("eq_arrays", ti)
+		bool_result = value_eq_arrays(l, r, ti)
+		if op == 'ne':
+			bool_result = not bool_result
+		num_val = int(bool_result)
+
+	elif hlir_type.type_is_record(l['type']):
+		info("eq_records", ti)
+		bool_result = value_eq_records(l, r, ti)
+		if op == 'ne':
+			bool_result = not bool_result
+		num_val = int(bool_result)
+
+	elif hlir_type.type_is_string(l['type']):
+		bool_result = l['asset'] == r['asset']
+		if op == 'ne':
+			bool_result = not bool_result
+		num_val = int(bool_result)
+
+	else:
+		num_val = ops[op](l['asset'], r['asset'])
+
 
 	if hlir_type.type_is_generic(type_result):
-		# пересматриваем generic тип для нового значения (!)
+		# (для операций типа 1 + 2)
+		# Пересматриваем generic тип для нового значения
 		type_result = hlir_type.hlir_type_generic_int_for(num_val, signed=False, ti=ti)
 
 	if not hlir_type.type_is_float(l['type']):
@@ -643,6 +669,7 @@ def bin_imm(op, type_result, l, r, ti):
 	bin_value['asset'] = num_val
 	bin_value['immediate'] = True
 	return bin_value
+
 
 
 def value_eq_immediate(a, b, ti):
@@ -682,32 +709,6 @@ def value_eq_records(l, r, ti):
 
 
 
-# TODO: Эти функции оч похожи и вообще похоже что они не нужны!!
-# нужно просто слегка модифицировать do_value_bin
-
-def do_value_bin_arr_eq(op, l, r, ti):
-	info("do_value_bin_arr_eq", ti)
-	bin_value = value_bin(op, l, r, foundation.typeBool, ti=ti)
-	if value_is_immediate(l) and value_is_immediate(r):
-		bool_result = value_eq_arrays(l, r, ti)
-		if op == 'ne_arr':
-			bool_result = not bool_result
-		bin_value['asset'] = int(bool_result)
-		bin_value['immediate'] = True
-	return bin_value
-
-def do_value_bin_str_eq(op, l, r, ti):
-	info("do_value_bin_str_eq", ti)
-	bin_value = value_bin(op, l, r, foundation.typeBool, ti=ti)
-	bool_result = l['asset'] == r['asset']
-	if op == 'ne':
-		bool_result = not bool_result
-	bin_value['asset'] = int(bool_result)
-	bin_value['immediate'] = True
-	return bin_value
-
-
-
 def do_value_bin(x):
 	op = x['kind']
 	l = do_rvalue(x['left'])
@@ -729,17 +730,12 @@ def do_value_bin(x):
 		return do_bin_op_with_pointers(op, l, r, ti)
 
 
-	if hlir_type.type_is_array(l['type']) and hlir_type.type_is_array(r['type']):
-		if op == 'add':
+	if op == 'add':
+		if hlir_type.type_is_array(l['type']) and hlir_type.type_is_array(r['type']):
 			return value_array_concat(l, r, ti)
-		elif op in ['eq', 'ne']:
-			return do_value_bin_arr_eq(op, l, r, ti)
 
-	if hlir_type.type_is_string(l['type']) and hlir_type.type_is_string(r['type']):
-		if op == 'add':
+		if hlir_type.type_is_string(l['type']) and hlir_type.type_is_string(r['type']):
 			return value_string_concat(l, r, ti)
-		elif op in ['eq', 'ne']:
-			return do_value_bin_str_eq(op, l, r, ti)
 
 
 	common_type = select_common_type(l['type'], r['type'])
