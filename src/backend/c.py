@@ -349,8 +349,7 @@ bin_ops = {
 	'or': '|', 'xor': '^', 'and': '&', 'shl': '<<', 'shr': '>>',
 	'eq': '==', 'ne': '!=', 'lt': '<', 'gt': '>', 'le': '<=', 'ge': '>=',
 	'add': '+', 'sub': '-', 'mul': '*', 'div': '/', 'rem': '%',
-	'logic_and': '&&', 'logic_or': '||',
-	'concat_string': '', 'eq_str': '', 'ne_str': '', 'eq_arr': '', 'ne_arr': ''
+	'logic_and': '&&', 'logic_or': '||'
 }
 
 
@@ -393,18 +392,22 @@ def print_value_bin(x, ctx):
 		if right['kind'] != 'logic_and':
 			need_wrap_right = precedence(right) < 10
 
-	elif op == 'concat_string':
-		if left['type']['width'] != right['type']['width']:
-			# для случаев вроде "Hello" + U"World!"
-			# (печатаем сам литерал, тк C иначе не умеет)
-			# (U"Hello World!")
-			print_lit_string(x['asset'], x['type']['width'])
-			return
+	elif op == 'add':
+		if hlir_type.type_is_array(left['type']):
+			return print_value_terminal(x, ctx)
 
-		print_value(left, need_wrap=need_wrap_left)
-		out(' ')
-		print_value(right, need_wrap=need_wrap_right)
-		return
+		if hlir_type.type_is_string(left['type']):
+			if left['type']['width'] != right['type']['width']:
+				# для случаев вроде "Hello" + U"World!"
+				# (печатаем сам литерал, тк C иначе не умеет)
+				# (U"Hello World!")
+				print_lit_string(x['asset'], x['type']['width'])
+				return
+
+			print_value(left, need_wrap=need_wrap_left)
+			out(' ')
+			print_value(right, need_wrap=need_wrap_right)
+			return
 
 
 	print_value(left, need_wrap=need_wrap_left)
@@ -711,9 +714,6 @@ def print_value_cons(x, ctx):
 				print_cast_hard(to_type, value)
 			except:
 				value_print(value, msg='cannot cast hard')
-				"""type_print(value['type'])
-				print("TO")
-				type_print(to_type)"""
 
 			return
 
@@ -876,9 +876,12 @@ def print_value_array(v, ctx):
 	values = v['asset']
 	print_array_values(values, ctx)
 	indent_down()
-	if v['nl_end'] > 0:
-		newline(n=v['nl_end'])
-		indent()
+
+	if 'nl_end' in v:
+		if v['nl_end'] > 0:
+			newline(n=v['nl_end'])
+			indent()
+
 	out("}")
 
 
@@ -1215,7 +1218,6 @@ def print_value2(x, ctx=[], need_wrap=False):
 	elif k == 'alignof': print_value_alignof(x, ctx)
 	elif k == 'offsetof': y = print_value_offsetof(x, ctx)
 	elif k == 'lengthof': y = print_value_lengthof(x, ctx)
-	elif k == 'concat_array': print_value_terminal(x, ctx)
 	else:
 		out("<%s>" % k)
 		fatal("unknown opcode '%s'" % k)
