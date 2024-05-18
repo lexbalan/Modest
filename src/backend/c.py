@@ -419,8 +419,10 @@ def print_value_bin(x, ctx):
 def print_value_record_eq(x, ctx):
 	return print_value_composite_eq(x, ctx)
 
+
 def print_value_array_eq(x, ctx):
 	return print_value_composite_eq(x, ctx)
+
 
 def print_value_composite_eq(x, ctx):
 	op = x['kind']
@@ -1129,7 +1131,8 @@ def print_value_const(x, ctx):
 			if 'global_const' in x['att']: # <- костыль?
 				prefix = '_'
 
-	return print_value_by_id(x, ctx, prefix)
+	print_value_by_id(x, ctx, prefix)
+	return
 
 
 def print_value_func(x, ctx):

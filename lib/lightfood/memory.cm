@@ -5,28 +5,44 @@ let __SYSTEM_WIDTH__ = 64
 
 
 @if __SYSTEM_WIDTH__ == 64
-type CPU_Word Int64
+type CPU_Word Nat64
 @elseif __SYSTEM_WIDTH__ == 32
-type CPU_Word Int32
+type CPU_Word Nat32
 @endif
 
 
-func memzero(mem: Pointer, len: Nat64) {
-	let len_words = len / sizeof(CPU_Word)
-	let dst_word = *[]CPU_Word mem
+let memoryAlignment = __SYSTEM_WIDTH__ / 8
 
+
+func memzero(mem: Pointer, len: Nat64) {
+	let z = CPU_Word mem % memoryAlignment
+
+	// align the pointer
 	var i = Nat64 0
+	while i < z {
+		dst_byte0[i] = 0
+		++i
+	}
+
+	// word operation
+
+	let len_words = (len - z) / sizeof(CPU_Word)
+	let dst_word = *[]CPU_Word &mem[i]
+
+	i = 0
 	while i < len_words {
 		dst_word[i] = 0
 		++i
 	}
 
-	let len_bytes = len % sizeof(CPU_Word)
-	let dst_byte = *[]Byte &dst_word[i]
+	// byte operation
+
+	let len_bytes = (len - z) % sizeof(CPU_Word)
+	let dst_byte1 = *[]Byte &dst_word[i]
 
 	i = 0
 	while i < len_bytes {
-		dst_byte[i] = 0
+		dst_byte1[i] = 0
 		++i
 	}
 }
