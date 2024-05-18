@@ -57,13 +57,13 @@
 ### Examples
 
 ```zig
-let __SYSTEM = 64
+let systemWidth = 64
 
-@if __SYSTEM == 32:
+@if systemWidth == 32:
 import "./system32"
-@elseif __SYSTEM == 64:
+@elseif systemWidth == 64:
 import "./system64"
-@elseif __SYSTEM == 128:
+@elseif systemWidth == 128:
 import "./system128"
 @else
 @error("system not implemented")

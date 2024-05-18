@@ -1,17 +1,17 @@
 // lib/lightfood/memory.cm
 
 
-let __SYSTEM_WIDTH__ = 64
+let systemWidth = 64
 
 
-@if __SYSTEM_WIDTH__ == 64
+@if systemWidth == 64
 type CPU_Word Nat64
-@elseif __SYSTEM_WIDTH__ == 32
+@elseif systemWidth == 32
 type CPU_Word Nat32
 @endif
 
 
-let memoryAlignment = __SYSTEM_WIDTH__ / 8
+let memoryAlignment = systemWidth / 8
 
 
 func memzero(mem: Pointer, len: Nat64) {

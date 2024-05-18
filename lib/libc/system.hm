@@ -1,5 +1,5 @@
 
 @pragma("not_included")
 
-let __SYSTEM = 64
+let systemWidth = 64
 
