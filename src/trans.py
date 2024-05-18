@@ -730,14 +730,6 @@ def do_value_bin(x):
 		return do_bin_op_with_pointers(op, l, r, ti)
 
 
-	if op == 'add':
-		if hlir_type.type_is_array(l['type']) and hlir_type.type_is_array(r['type']):
-			return value_array_concat(l, r, ti)
-
-		if hlir_type.type_is_string(l['type']) and hlir_type.type_is_string(r['type']):
-			return value_string_concat(l, r, ti)
-
-
 	common_type = select_common_type(l['type'], r['type'])
 
 	if common_type == None:
@@ -752,6 +744,15 @@ def do_value_bin(x):
 		return value_bad(x)
 
 	type_result = common_type
+
+
+	if op == 'add':
+		if hlir_type.type_is_array(l['type']):
+			return value_array_concat(l, r, ti)
+
+		if hlir_type.type_is_string(l['type']):
+			return value_string_concat(l, r, ti)
+
 
 	if op in (hlir_type.EQ_OPS + hlir_type.RELATIONAL_OPS):
 		type_result = foundation.typeBool
