@@ -97,12 +97,11 @@ int main()
 	printf("a[0] = %i\n", a[0]);
 	printf("a[1] = %i\n", a[1]);
 
-	int32_t b[2];
-	*(struct swap_retval *)&b = swap(*(struct swap_x *)&a);
+	struct swap_retval b = swap(*(struct swap_x *)&a);
 
 	printf("after swap:\n");
-	printf("b[0] = %i\n", b[0]);
-	printf("b[1] = %i\n", b[1]);
+	printf("b[0] = %i\n", b.a[0]);
+	printf("b[1] = %i\n", b.a[1]);
 
 
 

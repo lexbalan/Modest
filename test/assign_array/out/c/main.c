@@ -28,7 +28,7 @@ int main()
 		i = i + 1;
 	}
 
-	if (/*eq*/memcmp(&globalArray0, &globalArray1, sizeof globalArray0) == 0) {
+	if (/*eq*//*var, var*/memcmp(&globalArray0, &globalArray1, sizeof globalArray0) == 0) {
 		printf("globalArray test passed\n");
 	} else {
 		printf("globalArray test failed\n");
@@ -38,11 +38,9 @@ int main()
 	// local
 
 	int32_t localArray0[10];
-	memcpy(&localArray0, &(int8_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, 10);
-	memset((((void *)&localArray0) + 10), 0, 30);
+	memcpy(&localArray0, &((int32_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9}), 40);
 	int32_t localArray1[10];
-
-	memset((((void *)&localArray1) + 0), 0, 40);
+	memcpy(&localArray1, &((int32_t[10]){}), 40);
 
 
 	memcpy(&localArray1, &localArray0, 40);
@@ -54,7 +52,7 @@ int main()
 		i = i + 1;
 	}
 
-	if (/*eq*/memcmp(&localArray0, &localArray1, sizeof localArray0) == 0) {
+	if (/*eq*//*var, var*/memcmp(&localArray0, &localArray1, sizeof localArray0) == 0) {
 		printf("localArray test passed\n");
 	} else {
 		printf("localArray test failed\n");

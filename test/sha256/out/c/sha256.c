@@ -69,12 +69,12 @@ uint32_t sig1(uint32_t x)
 	0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A, \
 	0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19 \
 }
-const int32_t initMagic[8] = _initMagic;
+int32_t initMagic[8] = _initMagic;
 
 
 void sha256_contextInit(Context *ctx)
 {
-	memcpy(&ctx->state, &initMagic, 32);
+	memcpy(&ctx->state, &((uint32_t[8])_initMagic), 32);
 }
 
 
@@ -96,14 +96,13 @@ void sha256_contextInit(Context *ctx)
 	0x748F82EE, 0x78A5636F, 0x84C87814, 0x8CC70208, \
 	0x90BEFFFA, 0xA4506CEB, 0xBEF9A3F7, 0xC67178F2 \
 }
-const int32_t k[64] = _k;
+int32_t k[64] = _k;
 
 
 void sha256_transform(Context *ctx, uint8_t *data)
 {
 	uint32_t m[64];
-
-	memset((((void *)&m) + 0), 0, 256);
+	memcpy(&m, &((uint32_t[64]){}), 256);
 
 	uint32_t i;
 	i = 0;

@@ -432,9 +432,11 @@ def print_value_composite_eq(x, ctx):
 	out("/*%s*/" % op)
 
 	if value_is_immediate(x):
-		print_value_bool_lit(x, ctx)
-	else:
-		memcmp_by(left, right, by=left, op=op)
+		return print_value_bool_lit(x, ctx)
+
+	out("/*%s, %s*/" % (left['kind'], right['kind']))
+
+	memcmp_by(left, right, by=left, op=op)
 
 	return
 
@@ -467,6 +469,11 @@ def print_value_un(v, ctx):
 			out("(")
 			print_type(v['type'])
 			out(")")
+
+	#elif v['kind'] == 'deref':
+	#	if 'arr_as_ptr' in ctx:
+	#		print_value(value, need_wrap=pv<p0)
+
 
 	out(un_ops[op])
 	print_value(value, need_wrap=pv<p0)
@@ -572,6 +579,7 @@ def print_value_index(x, ctx):
 	indexes.reverse()
 
 	# если имеем дело c дженерик массивом (глоб константа)
+	#???
 	if hlir_type.type_is_generic(array['type']):
 		if value_is_immediate(x):
 			print_value_terminal(x, ['print_immediate'])
@@ -587,6 +595,7 @@ def print_value_index(x, ctx):
 		# нужно это для того чтобы получить чисто константное выражение C
 		ctx = ctx + ['immediate_context']
 
+	#out("/*? %s ?*/" % xx['kind'])
 	print_value(xx, ctx=ctx, need_wrap=need_wrap)
 
 	out("[")
@@ -666,7 +675,8 @@ def print_cast(t, v, ctx=[]):
 			print_value(v, ctx)
 			return"""
 
-	out("("); print_type(t); out(")")
+	array_as_ptr = not 'array_as_array' in ctx
+	out("("); print_type(t, array_as_ptr=array_as_ptr); out(")")
 	need_wrap = precedence(v) < precedence({'kind': 'cons'})
 	print_value(v, ctx=ctx, need_wrap=need_wrap)
 
@@ -721,9 +731,23 @@ def print_value_cons(x, ctx):
 
 
 
+	# Local:
+	# В C мы не можем просто напечатать {0, 1, 2, 3} и получить массив
+	# Но мы можем сделать так: (<item_type>[4]){0, 1, 2, 3}
+	# But in Global:
+	# печатаем как есть, иначе ошибка (о Боже C это нечто!):
+	# {0, 1, 2, 3}
 	if hlir_type.type_is_array(to_type):
 		if hlir_type.type_is_generic_array(from_type):
-			print_value(value, ctx)
+			#out("/*$$$*/")
+			if is_local_context():
+				out("((")
+				print_type(to_type, array_as_ptr=False)
+				out(")")
+				print_value(value, ctx=ctx)
+				out(")")
+			else:
+				print_value(value, ctx=ctx)
 			return
 
 
@@ -772,6 +796,11 @@ def print_value_cons(x, ctx):
 				return
 
 	#out("/*?%s?*/" % value['type']['kind'])
+	"""type_print(value['type'])
+	print(" -> ", end='')
+	type_print(x['type'])
+	print()"""
+
 	print_cast(to_type, value, ctx)
 
 
@@ -865,12 +894,13 @@ def print_value_array(v, ctx):
 			_print_string_literal(utf32_codes, width=char_width)
 			return
 
-	if not 'no-literal-array-cast' in ctx:
+	#mass
+	"""if not 'no-literal-array-cast' in ctx:
 		if is_local_context():
 			# only for local record literals (!)
 			out("(")
 			print_type(v['type'], array_as_ptr=False)
-			out(")")
+			out(")")"""
 
 
 	out("{")
@@ -1183,14 +1213,15 @@ def print_value(x, ctx=[], need_wrap=False):
 	# это нужно когда печатаем глобальные константы
 	# чтобы одна на другую не ссылалась тк это в си невозможно
 	# каждый раз печатаем литерал инициализвтора константы полностью
-	if 'print_immediate' in ctx:
+	#mass
+	"""if 'print_immediate' in ctx:
 		if value_is_immediate(x):
 			k = x['kind']
 			if k == 'const':
 				print_value_terminal(x['value'], ctx)
 			else:
 				print_value_terminal(x, ctx)
-			return
+			return"""
 
 
 	print_value2(x, ctx=ctx, need_wrap=need_wrap)
@@ -1322,7 +1353,6 @@ def print_stmt_defvar(x):
 def print_macro_definition(id, value, val_ctx=[], prefix=''):
 	global nl_str
 	out("#define %s%s  " % (prefix, id['str']))
-	#out("/*%s*/" % value['kind'])
 	need_wrap = False#precedence(value) < precedenceMax
 	nl_str = " \\\n"
 	print_value(value, need_wrap=need_wrap, ctx=['immediate_context'])
@@ -1342,13 +1372,15 @@ def print_stmt_let(x):
 	nl_indent(x['nl'])
 
 	# массивы печатаем как переменные
-	if hlir_type.type_is_closed_array(v['type']):
+	# mass
+	# нет не печатаем!
+	"""if hlir_type.type_is_closed_array(v['type']):
 		print_variable_array(v['type'], id['str'], do_wrapped=False)
 		out(";")
 		newline()
 		indent()
 		assign_array(v, iv)
-		return
+		return"""
 
 
 	if hlir_type.type_is_generic(v['type']):
@@ -1451,7 +1483,8 @@ def assign_array(left, right):
 
 
 def assign(left, right):
-	if right['kind'] == 'cons':
+	#mass
+	"""if right['kind'] == 'cons':
 		# for case:
 		# var x: [10]Int32
 		# var y: [5]Int32
@@ -1459,7 +1492,7 @@ def assign(left, right):
 		cast_v = right['value']
 		if hlir_type.type_is_array(right['type']):
 			right = cast_v
-			return assign_array(left, right)
+			return assign_array(left, right)"""
 
 	if hlir_type.type_is_array(right['type']):
 		return assign_array(left, right)
@@ -1814,7 +1847,7 @@ def print_def_const(x):
 	if hlir_type.type_is_array(const_value['type']):
 		print_macro_definition(_id, init_value, val_ctx=init_value_ctx, prefix='_')
 		newline()
-		print_variable(_id, const_value['type'], as_const=True)
+		print_variable(_id, const_value['type'], as_const=False) # False!
 		out(" = _%s;" % _id['str'])
 	else:
 		print_macro_definition(_id, init_value, val_ctx=init_value_ctx)
@@ -1963,7 +1996,14 @@ def memcopy_len(left, right, n):
 	out("memcpy(&")
 	print_value(left)
 	out(", &")
-	print_value(right)
+	#out("/*$ %s $*/" % right['kind'])
+
+	ctx = ['immediate_context']
+	if right['kind'] == 'cons' and not right['value']['kind'] in ['const', 'literal', 'add']:
+		print_value(right['value'], ctx=ctx)
+	else:
+		print_value(right, ctx=ctx)
+
 	out(", %i);" % n)
 
 
@@ -2016,11 +2056,18 @@ def memzero_sizeof(left):
 	out(");")
 
 
+
+def print_value_as_ptr(x):
+	# значение может быть [assess, index, deref, const, var]
+	out("&")
+	print_value(x, ctx=['arr_as_ptr'])
+
+
 def memcmp_by(left, right, by, op='eq'):
-	out('memcmp(&')
-	print_value(left)
-	out(', &')
-	print_value(right)
+	out('memcmp(')
+	print_value_as_ptr(left)
+	out(', ')
+	print_value_as_ptr(right)
 	out(', sizeof ')
 	print_value(by)
 	if op == 'eq':

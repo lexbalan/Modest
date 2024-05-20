@@ -704,6 +704,7 @@ def value_eq_immediate(a, b, ti):
 
 # FIXIT: it is generic arrays EQ!
 def value_eq_arrays(a, b, ti):
+	warning("value_eq_arrays", ti)
 	avolume = a['type']['volume']
 	bvolume = b['type']['volume']
 	if value_is_immediate(avolume) and value_is_immediate(bvolume):
@@ -713,7 +714,7 @@ def value_eq_arrays(a, b, ti):
 		fatal("dynamic immediate array volume not implemented", ti)
 
 	for ax, bx in zip(a['asset'], b['asset']):
-		if value_eq_immediate(ax, bx, ti):
+		if not value_eq_immediate(ax, bx, ti):
 			return False
 
 	return True
@@ -1056,7 +1057,7 @@ def do_value_call(x):
 
 	if 'id' in f:
 		func_id_str = f['id']['str']
-		if func_id_str in ['printf', 'scanf', 'print']:
+		if func_id_str in ['print', 'scanf', 'print']:
 			expected_pointers = func_id_str == 'scanf'
 			first_arg = x['args'][0]['value']
 			if first_arg['kind'] in ['string', 'string_concat']:
@@ -1068,6 +1069,7 @@ def do_value_call(x):
 
 	rv = value_call(f, ftype['to'], args + extra_args, ti=x['ti'])
 
+	# for C backend only (maybe mv to C?)
 	if hlir_type.type_is_closed_array(f['type']['to']):
 		rv['att'].append('wrapped_array_value')
 
@@ -1585,13 +1587,16 @@ def do_stmt_let(x):
 
 	module['context'].value_add(id['str'], const_value)
 
-
 	# Now let can be immediate!
 	if v['immediate']:
 		const_value['immediate'] = True
 		const_value['asset'] = v['asset']
 
-	return hlir_stmt_let(id, v, const_value, ti=x['ti'])
+	# не знаю правильно ли это, но перносим аттрибуты значения-инициализатора
+	# на константу. Пока это необходимо для 'wrapped_array_value' (!)
+	const_value['att'].extend(v['att'])
+
+	return hlir_stmt_let(id, const_value, v, ti=x['ti'])
 
 
 
@@ -2114,6 +2119,7 @@ def def_func(x):
 		param_value = value_const(param_id, param_type, None, param['ti'])
 		param_value['att'].append('local')
 
+		# for C backend only (maybe mv to C?)
 		if hlir_type.type_is_closed_array(param_type):
 			param_value['att'].append('wrapped_array_value')
 
@@ -2549,7 +2555,7 @@ def add_spices(obj):
 
 
 
-# for check printf/scanf params
+# for check print/scanf params
 # returns list of specifiers
 # ex: "%s = %d" -> ['c', 'd']
 def get_cspecs(s):
@@ -2565,7 +2571,7 @@ def get_cspecs(s):
 	return specs
 
 
-# check extra arguments of printf, scanf, etc.
+# check extra arguments of print, scanf, etc.
 # requires specs from get_cspecs & extra_args list
 # expected_pointers for case of scanf("%d", &x)
 def extra_args_check(specs, extra_args, expected_pointers):

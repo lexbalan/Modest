@@ -39,7 +39,7 @@ typedef struct {
 }
 
 #define _carr  {0, 10, 15, 20, 25, 30}
-const int8_t carr[6] = _carr;
+int8_t carr[6] = _carr;
 
 #define line1  { \
 	.a = {.x = 10, .y = 20}, \
@@ -58,7 +58,7 @@ const int8_t carr[6] = _carr;
 }
 
 #define _lines  {line0, line1, line2, line3}
-const Line lines[4] = _lines;
+Line lines[4] = _lines;
 
 
 // Pythagorean theorem
@@ -81,17 +81,17 @@ float lineLength(Line line)
 int main()
 {
 	const float lines_0_len = lineLength((Line){
-		.a = (Point){.x = 0.000000, .y = 0.000000},
-		.b = (Point){.x = 1.000000, .y = 1.000000}});
+		.a = pointZero,
+		.b = pointOne});
 	const float lines_1_len = lineLength((Line){
-		.a = (Point){.x = 10.000000, .y = 20.000000},
-		.b = (Point){.x = 30.000000, .y = 40.000000}});
+		.a = (Point){.x = 10, .y = 20},
+		.b = (Point){.x = 30, .y = 40}});
 	const float lines_2_len = lineLength((Line){
-		.a = (Point){.x = 0.000000, .y = 0.000000},
-		.b = (Point){.x = 1.000000, .y = 1.000000}});
+		.a = pointZero,
+		.b = pointOne});
 	const float lines_3_len = lineLength((Line){
-		.a = (Point){.x = 10.000000, .y = 20.000000},
-		.b = (Point){.x = 30.000000, .y = 40.000000}});
+		.a = (Point){.x = 10, .y = 20},
+		.b = (Point){.x = 30, .y = 40}});
 
 	printf("lines_0_len = %f\n", lines_0_len);
 	printf("lines_1_len = %f\n", lines_1_len);

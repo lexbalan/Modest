@@ -20,7 +20,7 @@
 
 
 #define _constantArray  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-const int8_t constantArray[10] = _constantArray;
+int8_t constantArray[10] = _constantArray;
 
 static int32_t globalArray[10] = _constantArray;
 
@@ -50,8 +50,7 @@ int main()
 	printf("------------------------------------\n");
 
 	int32_t localArray[3];
-	memcpy(&localArray, &(int8_t[3]){4, 5, 6}, 3);
-	memset((((void *)&localArray) + 3), 0, 9);
+	memcpy(&localArray, &((int32_t[3]){4, 5, 6}), 12);
 
 	i = 0;
 	while (i < 3) {
@@ -87,8 +86,7 @@ int main()
 	// assign array to array 1
 	// (with equal types)
 	int32_t a[3];
-	memcpy(&a, &(int8_t[3]){1, 2, 3}, 3);
-	memset((((void *)&a) + 3), 0, 9);
+	memcpy(&a, &((int32_t[3]){1, 2, 3}), 12);
 	printf("a[0] = %i\n", a[0]);
 	printf("a[1] = %i\n", a[1]);
 	printf("a[2] = %i\n", a[2]);
@@ -103,7 +101,7 @@ int main()
 	printf("b[2] = %i\n", b[2]);
 
 	// check equality between two arrays (by value)
-	if (/*eq*/memcmp(&a, &b, sizeof a) == 0) {
+	if (/*eq*//*var, var*/memcmp(&a, &b, sizeof a) == 0) {
 		printf("a == b\n");
 	} else {
 		printf("a != b\n");
@@ -112,11 +110,9 @@ int main()
 	// assign array to array 2
 	// (with array extending)
 	int32_t c[3];
-	memcpy(&c, &(int8_t[3]){10, 20, 30}, 3);
-	memset((((void *)&c) + 3), 0, 9);
+	memcpy(&c, &((int32_t[3]){10, 20, 30}), 12);
 	int32_t d[6];
-	memcpy(&d, &c, 12);
-	memset((((void *)&d) + 12), 0, 12);
+	memcpy(&d, &c, 24);
 	printf("d[0] = %i\n", d[0]);
 	printf("d[1] = %i\n", d[1]);
 	printf("d[2] = %i\n", d[2]);
@@ -139,24 +135,22 @@ int main()
 	int int300;
 	int300 = 300;
 	// immutable, non immediate value (array)
-	int init_array[3];
-	memcpy(&init_array, &(int[3]){int100, int200, int300}, 12);
+	#define init_array  {int100, int200, int300}
 
 	// check local literal array assignation to local array
 	int32_t e[4];
-	memcpy(&e, &init_array, 12);
-	memset((((void *)&e) + 12), 0, 4);
+	memcpy(&e, &((int32_t[4])init_array), 16);
 	printf("e[0] = %i\n", e[0]);
 	printf("e[1] = %i\n", e[1]);
 	printf("e[2] = %i\n", e[2]);
 
 	// check local literal array assignation to global array
-	memcpy(&globalArray, &init_array, 12);
-	memset((((void *)&globalArray) + 12), 0, 28);
+	memcpy(&globalArray, &((int32_t[10])init_array), 40);
 	printf("globalArray[%i] = %i\n", 0, globalArray[0]);
 	printf("globalArray[%i] = %i\n", 1, globalArray[1]);
 	printf("globalArray[%i] = %i\n", 2, globalArray[2]);
 
 	return 0;
+#undef init_array
 }
 

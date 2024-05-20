@@ -28,10 +28,10 @@ typedef struct {
 	{.x = 1, .y = 1}, \
 	{.x = 2, .y = 2} \
 }
-const struct {int8_t x; int8_t y;} ps[3] = _ps;
+struct {int8_t x; int8_t y;} ps[3] = _ps;
 
 #define _points  _ps
-const Point points[3] = _points;
+Point points[3] = _points;
 
 
 // есть проблема - в C глобальные переменные с модификатором const
