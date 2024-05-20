@@ -704,7 +704,7 @@ def value_eq_immediate(a, b, ti):
 
 # FIXIT: it is generic arrays EQ!
 def value_eq_arrays(a, b, ti):
-	warning("value_eq_arrays", ti)
+	#info("value_eq_arrays", ti)
 	avolume = a['type']['volume']
 	bvolume = b['type']['volume']
 	if value_is_immediate(avolume) and value_is_immediate(bvolume):
