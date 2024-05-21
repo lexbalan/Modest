@@ -448,6 +448,7 @@ def llvm_store(l, r):
 	llvm_print_type_value(r)
 	out(", ")
 	llvm_print_type_value(l)
+	return l
 
 
 
@@ -506,9 +507,13 @@ def llvm_memzero_off(dst, offset, size, volatile=False):
 
 # получает два указателя, и размер
 # LLVM не имеет интиринсика memcmp поэтому используем стандартный...
-def llvm_memcmp(p0, p1, size):
+# @param op = ['eq', 'ne']
+def llvm_memcmp(op, p0, p1, size):
+
 	_p0 = llvm_cast('bitcast', p0['type'], foundation.typeFreePointer, p0)
 	_p1 = llvm_cast('bitcast', p1['type'], foundation.typeFreePointer, p1)
+
+
 	out(NL_INDENT)
 	#reg = llvm_operation("call i32 (i8*, i8*, i64) @memcmp(")
 	reg = llvm_operation("call i1 (i8*, i8*, i64) @memeq(")
@@ -518,10 +523,13 @@ def llvm_memcmp(p0, p1, size):
 	out(", ")
 	llvm_print_type_value(size)
 	out(")")
-
 	rv = llvm_value_reg(reg, foundation.typeBool, None)
+	#rv = llvm_value_reg(reg, foundation.typeNat32, None)
+
+
 	z = llvm_value_num(foundation.typeBool, 0)
-	rv2 = llvm_eval_binary('icmp ne', rv, z, {'type': foundation.typeBool})
+	op = 'ne' if op == 'eq' else 'eq'
+	rv2 = llvm_eval_binary('icmp %s' % op, rv, z, {'type': foundation.typeBool})
 
 	return rv2
 
@@ -548,6 +556,10 @@ def llvm_alloca(typ, id_str=None):
 	val['is_adr'] = True
 	return val
 
+
+def llvm_alloca_store(typ, id_str=None, init_value=None):
+	nv = llvm_alloca(typ, id_str=id_str)
+	return llvm_store(nv, init_value)
 
 
 # получает на вход llvm_value
@@ -775,13 +787,43 @@ def do_eval_bin(x):
 
 		elif op in ['eq', 'ne']:
 			# do eq between arrays or records
+			out("\n; PASS")
+
+			out("\n; %s" % x['left']['kind'])
 			l = do_eval(x['left'])
+
+
+			out("\n; %s" % x['right']['kind'])
 			r = do_eval(x['right'])
+
+
+			type_print(l['type'])
+			print("(%s) & (%s)" % (l['kind'], r['kind']), end='')
+			type_print(r['type'])
+			print()
+
+			out("\n; MASS")
+			a = l['kind'] == 'reg' and not hlir_type.type_is_pointer(l['type'])
+			b = r['kind'] == 'reg' and not hlir_type.type_is_pointer(r['type'])
+
+			type_print(r['type'])
+			print("\n\n\n")
+			if a or b:
+				print("HIITITHITHITIH %s" % r['type']['kind'])
+				# если одно из сравниваемых композитных значений уже в регистре
+				# нужно выделить память на стеке и сохранить его туда
+				# тк мы не можем получить указатель на регистр, но можем на стек
+				if l['kind'] == 'reg':
+					nl = llvm_alloca(l['type'], id_str=None)
+					l = llvm_store(nl, l)
+				if r['kind'] == 'reg':
+					nr = llvm_alloca(r['type'], id_str=None)
+					r = llvm_store(nr, r)
+
 			sz = llvm_value_num(foundation.typeInt64, l['type']['size'])
-			return llvm_memcmp(l, r, sz)
+			return llvm_memcmp(op, l, r, sz)
 
 		return None
-
 
 	# HOT!
 	if value_is_immediate(x):
@@ -992,24 +1034,12 @@ def select_cast_operator(a, b):
 # (просто с другим именем, изза чего LLVM ее считает "другой")
 def cast_record_to_record(to_type, value, ti):
 	#info("cast_record_to_record", ti)
-
-	#if value_is_immediate(value):
-	#	# тупо и жестко переписываем тип!
-	#	value = copy.copy(value)
-	#	value['type'] = to_type
-	#	return llvm_value_immediate(value)
-
-	#out("\n;cast_record_to_record")
-	from_type = value['type']
-	# создаем переменную под структуру A
-	iv = do_reval(value)
-	struct = llvm_alloca(from_type)
-	llvm_store(struct, iv)
-	# приводим указатель на нее к указателю на структуру B
-	new_struct_ptr = llvm_cast("bitcast", hlir_type_pointer(from_type), hlir_type_pointer(to_type), struct)
-	# загружаем структуру B и возвращаем ее
-	new_struct = llvm_deref(new_struct_ptr)
-	return new_struct
+	out("\n; cast_record_to_record")
+	iv = do_eval(value)
+	casted_ptr = llvm_cast("bitcast", hlir_type_pointer(value['type']), hlir_type_pointer(to_type), iv)
+	casted_ptr['type'] = to_type
+	casted_ptr['is_adr'] = True
+	return llvm_load(casted_ptr)
 
 
 def cast_array_to_array(x):
@@ -1354,7 +1384,6 @@ def assign(l, rx):
 			llvm_store(l, llvm_dold(r))
 			return
 
-
 	llvm_store(l, do_reval(rx))
 
 
@@ -1492,8 +1521,7 @@ def print_stmt_let(x):
 	# а массив-значение в "регистре" невозможно индексировать переменной
 	if hlir_type.type_is_closed_array(val['type']):
 		nv = llvm_alloca(val['type'])
-		llvm_store(nv, v)
-		v = nv
+		v = llvm_store(nv, v)
 
 	locals_add(id_str, v)
 	return None
@@ -2054,7 +2082,7 @@ def run(module, outname):
 
 	lo("declare void @llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)")
 	lo("declare void @llvm.memset.p0.i32(i8*, i8, i32, i1)\n")
-	#lo("declare weak i32 @memcmp(i8* %ptr1, i8* %ptr2, i64 %len)\n")
+	#lo("declare i32 @memcmp(i8* %ptr1, i8* %ptr2, i64 %len)\n")
 	out(memeq_impl)
 
 	print_module(module)
