@@ -288,56 +288,35 @@ define void @f3_ptr({i32}* %x) {
 define void @test_by_value() {
 	%1 = load %Type1, %Type1* @a
 	call void (%Type1) @f0_val(%Type1 %1)
-	%2 = load %Type1, %Type1* @a
-	%3 = alloca %Type1
-	store %Type1 %2, %Type1* %3
-	%4 = bitcast %Type1* %3 to %Type2*
-	%5 = load %Type2, %Type2* %4
-	call void (%Type2) @f1_val(%Type2 %5)
-	%6 = load %Type1, %Type1* @a
-	call void (%Type1) @f2_val(%Type1 %6)
-	%7 = load %Type1, %Type1* @a
-	%8 = alloca %Type1
-	store %Type1 %7, %Type1* %8
-	%9 = bitcast %Type1* %8 to {i32}*
-	%10 = load {i32}, {i32}* %9
-	call void ({i32}) @f3_val({i32} %10)
-	%11 = load %Type2, %Type2* @b
-	%12 = alloca %Type2
-	store %Type2 %11, %Type2* %12
-	%13 = bitcast %Type2* %12 to %Type1*
-	%14 = load %Type1, %Type1* %13
+	%2 = bitcast %Type1* @a to %Type2*
+	%3 = load %Type2, %Type2* %2
+	call void (%Type2) @f1_val(%Type2 %3)
+	%4 = load %Type1, %Type1* @a
+	call void (%Type1) @f2_val(%Type1 %4)
+	%5 = bitcast %Type1* @a to {i32}*
+	%6 = load {i32}, {i32}* %5
+	call void ({i32}) @f3_val({i32} %6)
+	%7 = bitcast %Type2* @b to %Type1*
+	%8 = load %Type1, %Type1* %7
+	call void (%Type1) @f0_val(%Type1 %8)
+	%9 = load %Type2, %Type2* @b
+	call void (%Type2) @f1_val(%Type2 %9)
+	%10 = bitcast %Type2* @b to %Type1*
+	%11 = load %Type1, %Type1* %10
+	call void (%Type1) @f2_val(%Type1 %11)
+	%12 = bitcast %Type2* @b to {i32}*
+	%13 = load {i32}, {i32}* %12
+	call void ({i32}) @f3_val({i32} %13)
+	%14 = load %Type1, %Type1* @c
 	call void (%Type1) @f0_val(%Type1 %14)
-	%15 = load %Type2, %Type2* @b
-	call void (%Type2) @f1_val(%Type2 %15)
-	%16 = load %Type2, %Type2* @b
-	%17 = alloca %Type2
-	store %Type2 %16, %Type2* %17
-	%18 = bitcast %Type2* %17 to %Type1*
-	%19 = load %Type1, %Type1* %18
-	call void (%Type1) @f2_val(%Type1 %19)
-	%20 = load %Type2, %Type2* @b
-	%21 = alloca %Type2
-	store %Type2 %20, %Type2* %21
-	%22 = bitcast %Type2* %21 to {i32}*
-	%23 = load {i32}, {i32}* %22
-	call void ({i32}) @f3_val({i32} %23)
-	%24 = load %Type1, %Type1* @c
-	call void (%Type1) @f0_val(%Type1 %24)
-	%25 = load %Type1, %Type1* @c
-	%26 = alloca %Type1
-	store %Type1 %25, %Type1* %26
-	%27 = bitcast %Type1* %26 to %Type2*
-	%28 = load %Type2, %Type2* %27
-	call void (%Type2) @f1_val(%Type2 %28)
-	%29 = load %Type1, %Type1* @c
-	call void (%Type1) @f2_val(%Type1 %29)
-	%30 = load %Type1, %Type1* @c
-	%31 = alloca %Type1
-	store %Type1 %30, %Type1* %31
-	%32 = bitcast %Type1* %31 to {i32}*
-	%33 = load {i32}, {i32}* %32
-	call void ({i32}) @f3_val({i32} %33)
+	%15 = bitcast %Type1* @c to %Type2*
+	%16 = load %Type2, %Type2* %15
+	call void (%Type2) @f1_val(%Type2 %16)
+	%17 = load %Type1, %Type1* @c
+	call void (%Type1) @f2_val(%Type1 %17)
+	%18 = bitcast %Type1* @c to {i32}*
+	%19 = load {i32}, {i32}* %18
+	call void ({i32}) @f3_val({i32} %19)
 	ret void
 }
 

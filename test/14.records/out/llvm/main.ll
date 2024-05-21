@@ -347,10 +347,10 @@ endif_0:
 	%18 = insertvalue {i32, i32} zeroinitializer, i32 1, 0
 	%19 = insertvalue {i32, i32} %18, i32 2, 1
 	store {i32, i32} %19, {i32, i32}* %17
-	%20 = load {i32, i32}, {i32, i32}* %17
-	%21 = alloca {i32, i32}
-	store {i32, i32} %20, {i32, i32}* %21
-	%22 = bitcast {i32, i32}* %21 to %Point2D*
+	%20 = bitcast {i32, i32}* %17 to %Point2D*
+	%21 = load %Point2D, %Point2D* %20
+	%22 = alloca %Point2D
+	store %Point2D %21, %Point2D* %22
 	%23 = bitcast %Point2D* %14 to i8*
 	%24 = bitcast %Point2D* %22 to i8*
 	
@@ -386,13 +386,9 @@ endif_2:
 	; (it is possible if dst record contained all fields from src record
 	; and their types are equal)
 	%38 = alloca %Point3D
-	%39 = load %Point2D, %Point2D* %14
-	%40 = alloca %Point2D
-	store %Point2D %39, %Point2D* %40
-	%41 = bitcast %Point2D* %40 to %Point3D*
-	%42 = bitcast %Point3D* %38 to i8*
-	%43 = bitcast %Point3D* %41 to i8*
-	call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %42, i8* %43, i32 12, i1 0)
+	%39 = bitcast %Point2D* %14 to %Point3D*
+	%40 = load %Point3D, %Point3D* %39
+	store %Point3D %40, %Point3D* %38
 	ret %Int 0
 }
 

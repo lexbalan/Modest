@@ -559,7 +559,9 @@ def llvm_alloca(typ, id_str=None):
 
 def llvm_alloca_store(typ, id_str=None, init_value=None):
 	nv = llvm_alloca(typ, id_str=id_str)
-	return llvm_store(nv, init_value)
+	if init_value != None:
+		return llvm_store(nv, init_value)
+	return nv
 
 
 # получает на вход llvm_value
@@ -786,39 +788,22 @@ def do_eval_bin(x):
 			pass
 
 		elif op in ['eq', 'ne']:
-			# do eq between arrays or records
-			out("\n; PASS")
+			# do eq between composite types
 
-			out("\n; %s" % x['left']['kind'])
 			l = do_eval(x['left'])
-
-
-			out("\n; %s" % x['right']['kind'])
 			r = do_eval(x['right'])
 
+			# если левое или правое САМО находится в регистре -
+			# выделим под него память на стеке, загрузим его туда,
+			# и будем использовать указатель на эту память
 
-			type_print(l['type'])
-			print("(%s) & (%s)" % (l['kind'], r['kind']), end='')
-			type_print(r['type'])
-			print()
+			if l['kind'] == 'reg' and not l['is_adr']:
+				l = llvm_alloca_store(l['type'], id_str=None, init_value=l)
 
-			out("\n; MASS")
-			a = l['kind'] == 'reg' and not hlir_type.type_is_pointer(l['type'])
-			b = r['kind'] == 'reg' and not hlir_type.type_is_pointer(r['type'])
+			if r['kind'] == 'reg' and not r['is_adr']:
+				r = llvm_alloca_store(r['type'], id_str=None, init_value=r)
 
-			type_print(r['type'])
-			print("\n\n\n")
-			if a or b:
-				print("HIITITHITHITIH %s" % r['type']['kind'])
-				# если одно из сравниваемых композитных значений уже в регистре
-				# нужно выделить память на стеке и сохранить его туда
-				# тк мы не можем получить указатель на регистр, но можем на стек
-				if l['kind'] == 'reg':
-					nl = llvm_alloca(l['type'], id_str=None)
-					l = llvm_store(nl, l)
-				if r['kind'] == 'reg':
-					nr = llvm_alloca(r['type'], id_str=None)
-					r = llvm_store(nr, r)
+			# Теперь сравниваем значения по указателям и длине (memcmp)
 
 			sz = llvm_value_num(foundation.typeInt64, l['type']['size'])
 			return llvm_memcmp(op, l, r, sz)
@@ -1030,25 +1015,26 @@ def select_cast_operator(a, b):
 
 
 
-# перепаковываем структуру в такую же структуру
-# (просто с другим именем, изза чего LLVM ее считает "другой")
-def cast_record_to_record(to_type, value, ti):
-	#info("cast_record_to_record", ti)
-	out("\n; cast_record_to_record")
-	iv = do_eval(value)
-	casted_ptr = llvm_cast("bitcast", hlir_type_pointer(value['type']), hlir_type_pointer(to_type), iv)
+
+def cast_composite_to_composite(to_type, value, ti):
+	v = do_eval(value)
+	casted_ptr = llvm_cast("bitcast", hlir_type_pointer(value['type']), hlir_type_pointer(to_type), v)
 	casted_ptr['type'] = to_type
 	casted_ptr['is_adr'] = True
 	return llvm_load(casted_ptr)
 
 
-def cast_array_to_array(x):
-	#info("LLVM::cast_array_to_array", x['ti'])
-	if value_is_immediate(x):
-		vt = value_terminal(x['type'], x['asset'], x['ti'])
-		return do_eval_literal(vt)
+def cast_record_to_record(to_type, value, ti):
+	#info("cast_record_to_record", ti)
+	#out("\n; cast_record_to_record")
+	return cast_composite_to_composite(to_type, value, ti)
 
-	#out(";cast_array_to_array??")
+
+def cast_array_to_array(to_type, value, ti):
+	#info("cast_array_to_array", ti)
+	#out("\n; cast_array_to_array")
+	return cast_composite_to_composite(to_type, value, ti)
+
 
 
 def do_eval_cast(x):
@@ -1085,7 +1071,7 @@ def do_eval_cast(x):
 
 	if hlir_type.type_is_array(from_type):
 		if hlir_type.type_is_array(to_type):
-			return cast_array_to_array(x)
+			return cast_array_to_array(to_type, value, x['ti'])
 
 	if hlir_type.type_is_va_list(from_type):
 		# приведение объекта типа va_list особенное
@@ -1520,8 +1506,7 @@ def print_stmt_let(x):
 	# поскольку их могут индексировать переменной
 	# а массив-значение в "регистре" невозможно индексировать переменной
 	if hlir_type.type_is_closed_array(val['type']):
-		nv = llvm_alloca(val['type'])
-		v = llvm_store(nv, v)
+		v = llvm_alloca_store(val['type'], id_str=None, init_value=v)
 
 	locals_add(id_str, v)
 	return None
