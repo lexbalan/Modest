@@ -669,12 +669,6 @@ def print_cast_hard(t, v, ctx=[]):
 
 
 def print_cast(t, v, ctx=[]):
-	# if id(A) == id(B) => do not cast
-	"""if 'c_alias' in v['type'] and 'c_alias' in t:
-		if v['type']['c_alias'] == t['c_alias']:
-			print_value(v, ctx)
-			return"""
-
 	array_as_ptr = not 'array_as_array' in ctx
 	out("("); print_type(t, array_as_ptr=array_as_ptr); out(")")
 	need_wrap = precedence(v) < precedence({'kind': 'cons'})
@@ -870,11 +864,6 @@ def print_value_array(v, ctx):
 		char_type = v['type']['of']
 		char_width = char_type['width']
 
-		"""if hlir_type.type_is_generic_array_of_char(v['type']):
-			# FIXIT: вообще нефиг печатать generic string (!)
-			out('{} /*GENERIC-STRING*/')
-			return"""
-
 		# массивы чаров в конце которых только один терминальный ноль
 		# печатаем в виде строковых литералов C
 		values = v['asset']
@@ -893,15 +882,6 @@ def print_value_array(v, ctx):
 
 			_print_string_literal(utf32_codes, width=char_width)
 			return
-
-	#mass
-	"""if not 'no-literal-array-cast' in ctx:
-		if is_local_context():
-			# only for local record literals (!)
-			out("(")
-			print_type(v['type'], array_as_ptr=False)
-			out(")")"""
-
 
 	out("{")
 	indent_up()
@@ -1206,29 +1186,6 @@ def print_value_lengthof(x, ctx):
 
 
 def print_value(x, ctx=[], need_wrap=False):
-	# если у значения есть свойство 'id' то печатаем просто id
-	# (используется для печати имени констант а не просто их значения)
-	# в LLVM печатаем просто значение
-
-	# это нужно когда печатаем глобальные константы
-	# чтобы одна на другую не ссылалась тк это в си невозможно
-	# каждый раз печатаем литерал инициализвтора константы полностью
-	#mass
-	"""if 'print_immediate' in ctx:
-		if value_is_immediate(x):
-			k = x['kind']
-			if k == 'const':
-				print_value_terminal(x['value'], ctx)
-			else:
-				print_value_terminal(x, ctx)
-			return"""
-
-
-	print_value2(x, ctx=ctx, need_wrap=need_wrap)
-
-
-
-def print_value2(x, ctx=[], need_wrap=False):
 	if need_wrap:
 		out("(")
 
@@ -1371,9 +1328,8 @@ def print_stmt_let(x):
 
 	nl_indent(x['nl'])
 
-	# массивы печатаем как переменные
-	# mass
-	# нет не печатаем!
+	# Локальные константы (втч. -массивы) печатаем как переменные
+	# ПОТОМУ ЧТО: они должны заморозить свои значения по месту
 	"""if hlir_type.type_is_closed_array(v['type']):
 		print_variable_array(v['type'], id['str'], do_wrapped=False)
 		out(";")
@@ -1381,7 +1337,6 @@ def print_stmt_let(x):
 		indent()
 		assign_array(v, iv)
 		return"""
-
 
 	if hlir_type.type_is_generic(v['type']):
 		print_macro_definition(id, iv)
@@ -1456,7 +1411,7 @@ def assign_array(left, right):
 
 		print_cast_hard(to_type, left)
 		out(" = ")
-		print_value2(right)
+		print_value(right)
 		out(";")
 		return
 
@@ -1483,7 +1438,6 @@ def assign_array(left, right):
 
 
 def assign(left, right):
-	#mass
 	"""if right['kind'] == 'cons':
 		# for case:
 		# var x: [10]Int32
