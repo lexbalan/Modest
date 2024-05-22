@@ -74,7 +74,7 @@ int32_t initMagic[8] = _initMagic;
 
 void sha256_contextInit(Context *ctx)
 {
-	memcpy(&ctx->state, &((uint32_t[8])_initMagic), 32);
+	memcpy(&ctx->state, &initMagic, 32);
 }
 
 

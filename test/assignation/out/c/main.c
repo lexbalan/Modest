@@ -22,8 +22,8 @@ static int32_t glb_i1 = 321;
 static Point glb_r0 = {};
 static Point glb_r1 = {.x = 20, .y = 10};
 
-static int32_t glb_a0[10] = {};
-static int32_t glb_a1[10] = {64, 53, 42};
+static int32_t glb_a0[10] = ((int32_t[10]){});
+static int32_t glb_a1[10] = ((int32_t[10]){64, 53, 42});
 
 
 int main()

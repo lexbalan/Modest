@@ -86,6 +86,10 @@ def is_local_context():
 	global cfunc
 	return cfunc != None
 
+def is_global_context():
+	global cfunc
+	return cfunc == None
+
 
 def init():
 	global styleguide
@@ -573,19 +577,11 @@ def print_value_index(x, ctx):
 	# приведем список к прямому порядку (так как индексация записывается)
 	indexes.reverse()
 
-	# если имеем дело c дженерик массивом (глоб константа)
-	#???
-	#if hlir_type.type_is_generic(array['type']):
-	#	if value_is_immediate(x):
-	#		print_value_terminal(x, ['print_immediate'])
-	#		return
-
-
 	need_wrap = precedence(xx) < precedence(x)
 
 	ctx=['do_unwrap']
 	#if value_is_immediate(xx) and value_is_immediate(indexes[0]):
-	if not is_local_context():
+	if is_global_context():
 		# индексация immediate массива при помощи imm индекса
 		# приводит к тому что мы индексируем массив с префиксом _ (макро)
 		# нужно это для того чтобы получить чисто константное выражение C
@@ -677,6 +673,8 @@ def print_value_cons(x, ctx):
 	value = x['value']
 	from_type = value['type']
 
+
+
 	if hlir_type.type_is_string(from_type):
 		# cast <string literal> to <array of chars>:
 		if hlir_type.type_is_array_of_char(to_type):
@@ -713,9 +711,13 @@ def print_value_cons(x, ctx):
 	# But in Global:
 	# печатаем как есть, иначе ошибка (о Боже C это нечто!):
 	# {0, 1, 2, 3}
+	#if is_global_context():
 	if hlir_type.type_is_array(to_type):
 		if hlir_type.type_is_generic_array(from_type):
-			if is_local_context():
+			#if is_local_context():
+			# если это литеральная (и не глобальная) константа-массив
+			# то мы должны ее привести к требуемому типу
+			if not 'global_const' in value['att']: # <- костыль?
 				out("((")
 				print_type(to_type, array_as_ptr=False)
 				out(")")
@@ -739,22 +741,17 @@ def print_value_cons(x, ctx):
 			return
 
 
-
-
 	# RecordA -> RecordB
 	if hlir_type.type_is_record(to_type):
 		if hlir_type.type_is_record(from_type):
 			# C cannot cast struct to struct (!)
 
 			try:
-				out("/*hard*/")
 				print_cast_hard(to_type, value)
 			except:
 				value_print(value, msg='cannot cast hard')
 
 			return
-
-
 
 
 	# VA_List -> AnyType
@@ -774,12 +771,12 @@ def print_value_cons(x, ctx):
 		return
 
 
-
 	if x['method'] == 'implicit':
 		# не печатаем обычный implicit_cast
 		# (это не касается того что выше ^^)
 		print_value(value)
 		return
+
 
 	if value['kind'] == 'literal':
 		print_value(value)
@@ -802,10 +799,11 @@ def print_value_cons(x, ctx):
 				return
 
 	#out("/*?%s?*/" % value['type']['kind'])
-	"""type_print(value['type'])
-	print(" -> ", end='')
-	type_print(x['type'])
-	print()"""
+
+	#type_print(value['type'])
+	#print(" -> ", end='')
+	#type_print(x['type'])
+	#print()
 
 	print_cast(to_type, value, ctx)
 
@@ -1141,8 +1139,8 @@ def print_value_const(x, ctx):
 	prefix=''
 
 	if hlir_type.type_is_array(x['type']):
-		if 'immediate_context' in ctx:
-		#if not is_local_context():
+		#if 'immediate_context' in ctx:
+		if is_global_context():
 			if 'global_const' in x['att']: # <- костыль?
 				prefix = '_'
 
