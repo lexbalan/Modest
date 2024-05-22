@@ -23,7 +23,7 @@ int main()
 	#define b  15
 	#define c  3
 
-	#define x0  (a - b) * c
+	#define x0  ((a - b) * c)
 
 	const int32_t x1 = named_args_test(a, b, c);
 

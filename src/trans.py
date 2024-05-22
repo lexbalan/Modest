@@ -138,6 +138,11 @@ def property(id, value):
 	properties[id] = value
 
 
+def calias(id):
+	property("value.c_alias", id)
+	property("id.str", id)
+
+
 def output_id(id):
 	property()
 
@@ -746,6 +751,12 @@ def do_value_bin(x):
 	if hlir_type.type_is_pointer(l['type']) or hlir_type.type_is_pointer(r['type']):
 		return do_bin_op_with_pointers(op, l, r, ti)
 
+	# FIXME
+	# HOTFIX (не могу выбрать common_type для двух generic массивов)
+	# поэтому сделал этот хотфикс! Но это - кривой костыль!
+	if op == 'add':
+		if hlir_type.type_is_array(l['type']) and 	hlir_type.type_is_array(r['type']):
+			return _bin(op, None, l, r, ti)
 
 	common_type = select_common_type(l['type'], r['type'])
 

@@ -18,6 +18,7 @@ type Point3D record {
 	z: Nat32
 }
 
+let yy = {x = 1, y = 2}
 
 func main() -> Int {
 	printf("records test\n")
@@ -51,6 +52,16 @@ func main() -> Int {
 		printf("p2d3 == p2d4\n")
 	} else {
 		printf("p2d3 != p2d4\n")
+	}
+
+	// comparison between two record (by pointer)
+	let pr2 = &p2d2
+	let pr3 = &p2d3
+
+	if *pr2 == *pr3 {
+		printf("*pr2 == *pr3\n")
+	} else {
+		printf("*pr2 != *pr3\n")
 	}
 
 

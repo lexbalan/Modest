@@ -13,8 +13,8 @@
 
 // constants with type String(Generic)
 #define str8_example  "String"
-#define str16_example  u"String-Ω"
-#define str32_example  U"String-Ω 🐀🎉🦄"
+#define str16_example  (u"String-Ω")
+#define str32_example  (U"String-Ω 🐀🎉🦄")
 
 // variables with type Array of Chars
 static char string8[6] = str8_example;

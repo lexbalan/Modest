@@ -509,10 +509,8 @@ def llvm_memzero_off(dst, offset, size, volatile=False):
 # LLVM не имеет интиринсика memcmp поэтому используем стандартный...
 # @param op = ['eq', 'ne']
 def llvm_memcmp(op, p0, p1, size):
-
 	_p0 = llvm_cast('bitcast', p0['type'], foundation.typeFreePointer, p0)
 	_p1 = llvm_cast('bitcast', p1['type'], foundation.typeFreePointer, p1)
-
 
 	out(NL_INDENT)
 	#reg = llvm_operation("call i32 (i8*, i8*, i64) @memcmp(")
@@ -790,10 +788,24 @@ def do_eval_bin(x):
 		elif op in ['eq', 'ne']:
 			# do eq between composite types
 
-			l = do_eval(x['left'])
-			r = do_eval(x['right'])
+			left = x['left']
+			right = x['right']
 
-			# если левое или правое САМО находится в регистре -
+			"""if left['kind'] == 'cons':
+				print("LEFT CONS")
+
+			if right['kind'] == 'cons':
+				print("RIGHT CONS")"""
+
+			#print(right['kind'])
+
+			# поскольку делаем здесь просто eval (без загрузки)
+			# ситуация *pa == *pb не вызывает реальной загрузки объекта
+			# и все разруливается само собой!
+			l = do_eval(left)
+			r = do_eval(right)
+
+			# если левое или правое уже находится в регистре (само) -
 			# выделим под него память на стеке, загрузим его туда,
 			# и будем использовать указатель на эту память
 

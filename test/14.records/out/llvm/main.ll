@@ -297,6 +297,8 @@ declare void @bcopy(i8* %src, i8* %dst, %SizeT %n)
 @str5 = private constant [14 x i8] [i8 112, i8 50, i8 100, i8 50, i8 32, i8 33, i8 61, i8 32, i8 112, i8 50, i8 100, i8 51, i8 10, i8 0]
 @str6 = private constant [14 x i8] [i8 112, i8 50, i8 100, i8 51, i8 32, i8 61, i8 61, i8 32, i8 112, i8 50, i8 100, i8 52, i8 10, i8 0]
 @str7 = private constant [14 x i8] [i8 112, i8 50, i8 100, i8 51, i8 32, i8 33, i8 61, i8 32, i8 112, i8 50, i8 100, i8 52, i8 10, i8 0]
+@str8 = private constant [14 x i8] [i8 42, i8 112, i8 114, i8 50, i8 32, i8 61, i8 61, i8 32, i8 42, i8 112, i8 114, i8 51, i8 10, i8 0]
+@str9 = private constant [14 x i8] [i8 42, i8 112, i8 114, i8 50, i8 32, i8 33, i8 61, i8 32, i8 42, i8 112, i8 114, i8 51, i8 10, i8 0]
 
 
 
@@ -312,6 +314,7 @@ declare void @bcopy(i8* %src, i8* %dst, %SizeT %n)
 	i32, 
 	i32
 }
+
 
 
 define %Int @main() {
@@ -382,13 +385,31 @@ else_2:
 	%37 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str7 to [0 x i8]*))
 	br label %endif_2
 endif_2:
+	; comparison between two record (by pointer)
+	%38 = bitcast {i32, i32}* %17 to %Point2D*
+	%39 = load %Point2D, %Point2D* %38
+	%40 = alloca %Point2D
+	store %Point2D %39, %Point2D* %40
+	%41 = bitcast %Point2D* %14 to i8*
+	%42 = bitcast %Point2D* %40 to i8*
+	
+	%43 = call i1 (i8*, i8*, i64) @memeq( i8* %41, i8* %42, i64 8)
+	%44 = icmp ne i1 %43, 0
+	br i1 %44 , label %then_3, label %else_3
+then_3:
+	%45 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str8 to [0 x i8]*))
+	br label %endif_3
+else_3:
+	%46 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str9 to [0 x i8]*))
+	br label %endif_3
+endif_3:
 	; cons Point3D from Point2D (record extension)
 	; (it is possible if dst record contained all fields from src record
 	; and their types are equal)
-	%38 = alloca %Point3D
-	%39 = bitcast %Point2D* %14 to %Point3D*
-	%40 = load %Point3D, %Point3D* %39
-	store %Point3D %40, %Point3D* %38
+	%47 = alloca %Point3D
+	%48 = bitcast %Point2D* %14 to %Point3D*
+	%49 = load %Point3D, %Point3D* %48
+	store %Point3D %49, %Point3D* %47
 	ret %Int 0
 }
 

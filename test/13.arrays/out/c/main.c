@@ -121,6 +121,17 @@ int main()
 	printf("d[5] = %i\n", d[5]);
 
 
+	// check equality between two arrays (by pointer)
+	int32_t *const pa = (int32_t *)&a;
+	int32_t *const pb = (int32_t *)&b;
+
+	if (/*eq*//*deref, deref*/memcmp(&*pa, &*pb, sizeof *pa) == 0) {
+		printf("*pa == *pb\n");
+	} else {
+		printf("*pa != *pb\n");
+	}
+
+
 	//
 	// Check assination local literal array
 	//

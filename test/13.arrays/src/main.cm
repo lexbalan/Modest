@@ -100,6 +100,17 @@ func main() -> Int {
 	printf("d[5] = %i\n", d[5])
 
 
+	// check equality between two arrays (by pointer)
+	let pa = &a
+	let pb = &b
+
+	if *pa == *pb {
+		printf("*pa == *pb\n")
+	} else {
+		printf("*pa != *pb\n")
+	}
+
+
 	//
 	// Check assination local literal array
 	//

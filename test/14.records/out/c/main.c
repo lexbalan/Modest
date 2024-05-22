@@ -31,7 +31,6 @@ typedef struct {
 	uint32_t z;
 } Point3D;
 
-
 int main()
 {
 	printf("records test\n");
@@ -70,6 +69,16 @@ int main()
 		printf("p2d3 == p2d4\n");
 	} else {
 		printf("p2d3 != p2d4\n");
+	}
+
+	// comparison between two record (by pointer)
+	Point2D *const pr2 = &p2d2;
+	struct __anonymous_struct_3 *const pr3 = &p2d3;
+
+	if (/*eq*//*deref, cons*/memcmp(&*pr2, &*(Point2D *)&*pr3, sizeof *pr2) == 0) {
+		printf("*pr2 == *pr3\n");
+	} else {
+		printf("*pr2 != *pr3\n");
 	}
 
 

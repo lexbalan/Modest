@@ -1310,7 +1310,22 @@ def print_stmt_defvar(x):
 def print_macro_definition(id, value, val_ctx=[], prefix=''):
 	global nl_str
 	out("#define %s%s  " % (prefix, id['str']))
-	need_wrap = False#precedence(value) < precedenceMax
+
+	# нельзя оборачивать круглыми скобками литерал массива или структуры
+	# иначе при его прведении по месту к конкретному типу си сойдет с ума
+	need_wrap = False
+
+	# Не берем в скобки литералы, композитные значения и строки
+	literal = value['kind'] == 'literal'
+	is_comp = hlir_type.type_is_composite(value['type'])
+
+	is_str = False
+	if value['kind'] == 'cons':
+		is_str = hlir_type.type_is_string(value['value']['type'])
+
+	if not (literal or is_comp or is_str):
+		need_wrap = precedence(value) < precedenceMax
+
 	nl_str = " \\\n"
 	print_value(value, need_wrap=need_wrap, ctx=['immediate_context'])
 	nl_str = "\n"
