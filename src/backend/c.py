@@ -580,12 +580,6 @@ def print_value_index(x, ctx):
 	need_wrap = precedence(xx) < precedence(x)
 
 	ctx=['do_unwrap']
-	#if value_is_immediate(xx) and value_is_immediate(indexes[0]):
-	if is_global_context():
-		# индексация immediate массива при помощи imm индекса
-		# приводит к тому что мы индексируем массив с префиксом _ (макро)
-		# нужно это для того чтобы получить чисто константное выражение C
-		ctx = ctx + ['immediate_context']
 
 	#out("/*? %s ?*/" % xx['kind'])
 	print_value(xx, ctx=ctx, need_wrap=need_wrap)
@@ -1139,7 +1133,6 @@ def print_value_const(x, ctx):
 	prefix=''
 
 	if hlir_type.type_is_array(x['type']):
-		#if 'immediate_context' in ctx:
 		if is_global_context():
 			if 'global_const' in x['att']: # <- костыль?
 				prefix = '_'
@@ -1330,7 +1323,7 @@ def print_macro_definition(id, value, val_ctx=[], prefix=''):
 		need_wrap = precedence(value) < precedenceMax
 
 	nl_str = " \\\n"
-	print_value(value, need_wrap=need_wrap, ctx=['immediate_context'])
+	print_value(value, need_wrap=need_wrap)
 	nl_str = "\n"
 
 
@@ -1791,7 +1784,7 @@ def print_def_var(x):
 	init_value = x['default_value']
 	if init_value != None:
 		out(" = ")
-		print_value(init_value, ctx=['no-literal-array-cast', 'immediate_context'])
+		print_value(init_value, ctx=['no-literal-array-cast'])
 
 	out(";")
 
@@ -1806,14 +1799,13 @@ def print_def_const(x):
 
 	_id = x['id']
 
-	init_value_ctx = ['immediate_context']
 	if hlir_type.type_is_array(const_value['type']):
-		print_macro_definition(_id, init_value, val_ctx=init_value_ctx, prefix='_')
+		print_macro_definition(_id, init_value, val_ctx=[], prefix='_')
 		newline()
 		print_variable(_id, const_value['type'], as_const=False) # False!
 		out(" = _%s;" % _id['str'])
 	else:
-		print_macro_definition(_id, init_value, val_ctx=init_value_ctx)
+		print_macro_definition(_id, init_value, val_ctx=[])
 
 	return
 
@@ -1961,11 +1953,10 @@ def memcopy_len(left, right, n):
 	out(", &")
 	#out("/*$ %s $*/" % right['kind'])
 
-	ctx = ['immediate_context']
 	if right['kind'] == 'cons' and not right['value']['kind'] in ['const', 'literal', 'add']:
-		print_value(right['value'], ctx=ctx)
+		print_value(right['value'])
 	else:
-		print_value(right, ctx=ctx)
+		print_value(right)
 
 	out(", %i);" % n)
 
