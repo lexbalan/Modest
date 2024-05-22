@@ -118,7 +118,7 @@ bool test_generic_array()
 	// this array expression (GenericArray of four GenericInteger items)
 	#define a  {0, 1, 2, 3}
 
-	if (/*ne*/false) {
+	if (false) {
 		printf("error: a != [0, 1, 2, 3]\n");
 		return false;
 	}
@@ -130,7 +130,7 @@ bool test_generic_array()
 	int32_t b[4];
 	memcpy(&b, &((int32_t[4])a), 16);
 
-	if (/*ne*//*var, cons*/memcmp(&b, &((int32_t[4]){0, 1, 2, 3}), sizeof b) != 0) {
+	if (memcmp(&b, &((int32_t[4]){0, 1, 2, 3}), sizeof b) != 0) {
 		printf("b != [0, 1, 2, 3]\n");
 		return false;
 	}
@@ -139,7 +139,7 @@ bool test_generic_array()
 	int64_t c[4];
 	memcpy(&c, &((int64_t[4])a), 32);
 
-	if (/*ne*//*var, cons*/memcmp(&c, &((int64_t[4]){0, 1, 2, 3}), sizeof c) != 0) {
+	if (memcmp(&c, &((int64_t[4]){0, 1, 2, 3}), sizeof c) != 0) {
 		printf("c != [0, 1, 2, 3]\n");
 		return false;
 	}
@@ -148,7 +148,7 @@ bool test_generic_array()
 	int32_t d[10];
 	memcpy(&d, &((int32_t[10])a), 40);
 
-	if (/*ne*//*var, cons*/memcmp(&d, &((int32_t[10]){0, 1, 2, 3, 0}), sizeof d) != 0) {
+	if (memcmp(&d, &((int32_t[10]){0, 1, 2, 3, 0}), sizeof d) != 0) {
 		printf("d != [0, 1, 2, 3, 0, 0, 0, 0, 0, 0]\n");
 		return false;
 	}
@@ -176,7 +176,7 @@ bool test_generic_record()
 	// Any record expression have GenericRecord type
 	// this record expression have type:
 	// Generic(record {x: GenericInteger, y: GenericInteger})
-	#define p  (struct {int8_t x; int8_t y;}){.x = 10, .y = 20}
+	#define p  {.x = 10, .y = 20}
 
 	// value with GenericRecord type
 	// can be implicit casted to Record with same fields.
@@ -184,13 +184,13 @@ bool test_generic_record()
 	// implicit cast Generic(record {x: GenericInteger, y: GenericInteger})
 	// to record {x: Int32, y: Int32}
 	Point2D point_2d;
-	point_2d = (Point2D){.x = 10, .y = 20};
+	point_2d = ((Point2D)p);
 
 
 	// explicit cast Generic(record {x: GenericInteger, y: GenericInteger})
 	// to record {x: Int32, y: Int32, z: Int32}
 	Point3D point_3d;
-	point_3d = (Point3D){.x = 10, .y = 20, .z = 0};
+	point_3d = ((Point3D)p);
 
 	return true;
 #undef p

@@ -116,11 +116,9 @@ def _doitems(t, v, method, ti):
 
 def _value_record_cons_record_from_generic(t, v, method, ti):
 	items = _doitems(t, v, method, ti)
-
-	nv = value_terminal(t, items, ti)
-
-	if value_is_immediate(v):
-		nv['immediate'] = True
+	nv = value_cons_node(t, v, method, ti)
+	nv['asset'] = items
+	nv['immediate'] = True
 
 	if 'nl' in v:
 		nv['nl'] = v['nl']

@@ -371,9 +371,9 @@ def print_value_bin(x, ctx):
 
 	if op in ['eq', 'ne']:
 		if hlir_type.type_is_record(left['type']):
-			return print_value_record_eq(x, ctx)
+			return print_value_eq_record(x, ctx)
 		elif hlir_type.type_is_array(left['type']):
-			return print_value_array_eq(x, ctx)
+			return print_value_eq_array(x, ctx)
 		elif hlir_type.type_is_string(left['type']):
 			return print_value_bool_lit(x, ctx)
 
@@ -416,28 +416,23 @@ def print_value_bin(x, ctx):
 
 
 
-def print_value_record_eq(x, ctx):
-	return print_value_composite_eq(x, ctx)
+def print_value_eq_record(x, ctx):
+	return print_value_eq_composite(x, ctx)
 
 
-def print_value_array_eq(x, ctx):
-	return print_value_composite_eq(x, ctx)
+def print_value_eq_array(x, ctx):
+	return print_value_eq_composite(x, ctx)
 
 
-def print_value_composite_eq(x, ctx):
+def print_value_eq_composite(x, ctx):
 	op = x['kind']
 	left = x['left']
 	right = x['right']
 
-	out("/*%s*/" % op)
-
 	if value_is_immediate(x):
 		return print_value_bool_lit(x, ctx)
 
-	out("/*%s, %s*/" % (left['kind'], right['kind']))
-
 	memcmp_by(left, right, by=left, op=op)
-
 	return
 
 
@@ -580,16 +575,17 @@ def print_value_index(x, ctx):
 
 	# если имеем дело c дженерик массивом (глоб константа)
 	#???
-	if hlir_type.type_is_generic(array['type']):
-		if value_is_immediate(x):
-			print_value_terminal(x, ['print_immediate'])
-			return
+	#if hlir_type.type_is_generic(array['type']):
+	#	if value_is_immediate(x):
+	#		print_value_terminal(x, ['print_immediate'])
+	#		return
 
 
 	need_wrap = precedence(xx) < precedence(x)
 
 	ctx=['do_unwrap']
-	if value_is_immediate(xx) and value_is_immediate(indexes[0]):
+	#if value_is_immediate(xx) and value_is_immediate(indexes[0]):
+	if not is_local_context():
 		# индексация immediate массива при помощи imm индекса
 		# приводит к тому что мы индексируем массив с префиксом _ (макро)
 		# нужно это для того чтобы получить чисто константное выражение C
@@ -681,7 +677,6 @@ def print_value_cons(x, ctx):
 	value = x['value']
 	from_type = value['type']
 
-
 	if hlir_type.type_is_string(from_type):
 		# cast <string literal> to <array of chars>:
 		if hlir_type.type_is_array_of_char(to_type):
@@ -711,19 +706,6 @@ def print_value_cons(x, ctx):
 			print_cast(to_type, value, ctx)
 			return
 
-	# RecordA -> RecordB
-	if hlir_type.type_is_record(to_type):
-		if hlir_type.type_is_record(from_type):
-			# C cannot cast struct to struct (!)
-
-			try:
-				print_cast_hard(to_type, value)
-			except:
-				value_print(value, msg='cannot cast hard')
-
-			return
-
-
 
 	# Local:
 	# В C мы не можем просто напечатать {0, 1, 2, 3} и получить массив
@@ -733,7 +715,6 @@ def print_value_cons(x, ctx):
 	# {0, 1, 2, 3}
 	if hlir_type.type_is_array(to_type):
 		if hlir_type.type_is_generic_array(from_type):
-			#out("/*$$$*/")
 			if is_local_context():
 				out("((")
 				print_type(to_type, array_as_ptr=False)
@@ -743,6 +724,37 @@ def print_value_cons(x, ctx):
 			else:
 				print_value(value, ctx=ctx)
 			return
+
+
+	if hlir_type.type_is_record(to_type):
+		if hlir_type.type_is_generic_record(from_type):
+			if is_local_context():
+				out("((")
+				print_type(to_type, array_as_ptr=False)
+				out(")")
+				print_value(value, ctx=ctx)
+				out(")")
+			else:
+				print_value(value, ctx=ctx)
+			return
+
+
+
+
+	# RecordA -> RecordB
+	if hlir_type.type_is_record(to_type):
+		if hlir_type.type_is_record(from_type):
+			# C cannot cast struct to struct (!)
+
+			try:
+				out("/*hard*/")
+				print_cast_hard(to_type, value)
+			except:
+				value_print(value, msg='cannot cast hard')
+
+			return
+
+
 
 
 	# VA_List -> AnyType
@@ -900,15 +912,7 @@ def print_value_array(v, ctx):
 
 
 def print_value_record(v, ctx):
-
-	if is_local_context():
-		# only for local record literals (!)
-		out("(")
-		print_type(v['type'])
-		out(")")
-
 	initializers = v['asset']
-
 
 	out("{")
 	indent_up()
@@ -1138,6 +1142,7 @@ def print_value_const(x, ctx):
 
 	if hlir_type.type_is_array(x['type']):
 		if 'immediate_context' in ctx:
+		#if not is_local_context():
 			if 'global_const' in x['att']: # <- костыль?
 				prefix = '_'
 
@@ -1798,15 +1803,6 @@ def print_def_const(x):
 	global nl_str
 	const_value = x['value']
 	init_value = x['init_value']
-
-	#"""
-	# Не печатаем GenericArray | GenericRecord константы
-	# тк C не умеет в это дело; В value_print смотрим -
-	# если пришла константа с вышеупомянутым типом - печатаем
-	# просто imm значение. Некрасиво но пока так;
-	# see value_print
-	if hlir_type.type_is_generic_record(const_value['type']):
-		return
 
 	newline(n=x['nl'])
 

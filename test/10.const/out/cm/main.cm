@@ -19,28 +19,28 @@ type Line record {
 }
 
 let zero = 0
-let pointZero = {x = zero, y = zero}
-let pointOne = {x = 1.0, y = 1.0}
+let pointZero = Point {x = zero, y = zero}
+let pointOne = Point {x = 1.0, y = 1.0}
 
-let line0 = {
+let line0 = Line {
 	a = pointZero
 	b = pointOne
 }
 
 let carr = [0, 10, 15] + [20, 25, 30]
 
-let line1 = {
+let line1 = Line {
 	a = {x = 10, y = 20}
 	b = {x = 30, y = 40}
 }
 
 
-let line2 = {
+let line2 = Line {
 	a = pointZero
 	b = pointOne
 }
 
-let line3 = {
+let line3 = Line {
 	a = {x = 10, y = 20}
 	b = {x = 30, y = 40}
 }

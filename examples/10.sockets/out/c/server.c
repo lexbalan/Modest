@@ -58,15 +58,13 @@ int main()
 	printf("[+] Server socket created\n");
 
 	struct sockaddr_in server_addr;
-	server_addr = (struct sockaddr_in){
-		.sin_len = 0,
+	server_addr = ((struct sockaddr_in){
 		.sin_family = AF_INET,
 		.sin_port = port,
-		.sin_addr = (struct in_addr){
+		.sin_addr = {
 			.s_addr = inet_addr(ipAddress)
-		},
-		.sin_zero = {}
-	};
+		}
+	});
 
 	struct sockaddr *const sockaddr = (struct sockaddr *)(void *)&server_addr;
 	int e;

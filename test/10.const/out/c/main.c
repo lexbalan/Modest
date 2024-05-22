@@ -80,18 +80,10 @@ float lineLength(Line line)
 
 int main()
 {
-	const float lines_0_len = lineLength((Line){
-		.a = pointZero,
-		.b = pointOne});
-	const float lines_1_len = lineLength((Line){
-		.a = (Point){.x = 10, .y = 20},
-		.b = (Point){.x = 30, .y = 40}});
-	const float lines_2_len = lineLength((Line){
-		.a = pointZero,
-		.b = pointOne});
-	const float lines_3_len = lineLength((Line){
-		.a = (Point){.x = 10, .y = 20},
-		.b = (Point){.x = 30, .y = 40}});
+	const float lines_0_len = lineLength(lines[0]);
+	const float lines_1_len = lineLength(lines[1]);
+	const float lines_2_len = lineLength(lines[2]);
+	const float lines_3_len = lineLength(lines[3]);
 
 	printf("lines_0_len = %f\n", lines_0_len);
 	printf("lines_1_len = %f\n", lines_1_len);

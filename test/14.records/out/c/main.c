@@ -31,17 +31,19 @@ typedef struct {
 	uint32_t z;
 } Point3D;
 
+#define yy  {.x = 1, .y = 2}
+
 int main()
 {
 	printf("records test\n");
 
 	// compare two Point2D records
 	Point2D p2d0;
-	p2d0 = (Point2D){.x = 1, .y = 2};
+	p2d0 = ((Point2D){.x = 1, .y = 2});
 	Point2D p2d1;
-	p2d1 = (Point2D){.x = 10, .y = 20};
+	p2d1 = ((Point2D){.x = 10, .y = 20});
 
-	if (/*eq*//*var, var*/memcmp(&p2d0, &p2d1, sizeof p2d0) == 0) {
+	if (memcmp(&p2d0, &p2d1, sizeof p2d0) == 0) {
 		printf("p2d0 == p2d1\n");
 	} else {
 		printf("p2d0 != p2d1\n");
@@ -52,9 +54,9 @@ int main()
 	Point2D p2d2;
 	p2d2 = p2d0;
 	struct __anonymous_struct_3 p2d3;
-	p2d3 = (struct __anonymous_struct_3){.x = 1, .y = 2};
+	p2d3 = ((struct __anonymous_struct_3)yy);
 
-	if (/*eq*//*var, cons*/memcmp(&p2d2, &*(Point2D *)&p2d3, sizeof p2d2) == 0) {
+	if (memcmp(&p2d2, &/*hard*/*(Point2D *)&p2d3, sizeof p2d2) == 0) {
 		printf("p2d2 == p2d3\n");
 	} else {
 		printf("p2d2 != p2d3\n");
@@ -63,9 +65,9 @@ int main()
 
 	// comparison between two anonymous record
 	struct __anonymous_struct_4 p2d4;
-	p2d4 = (struct __anonymous_struct_4){.x = 1, .y = 2};
+	p2d4 = ((struct __anonymous_struct_4){.x = 1, .y = 2});
 
-	if (/*eq*//*var, var*/memcmp(&p2d3, &p2d4, sizeof p2d3) == 0) {
+	if (memcmp(&p2d3, &p2d4, sizeof p2d3) == 0) {
 		printf("p2d3 == p2d4\n");
 	} else {
 		printf("p2d3 != p2d4\n");
@@ -75,7 +77,7 @@ int main()
 	Point2D *const pr2 = &p2d2;
 	struct __anonymous_struct_3 *const pr3 = &p2d3;
 
-	if (/*eq*//*deref, cons*/memcmp(&*pr2, &*(Point2D *)&*pr3, sizeof *pr2) == 0) {
+	if (memcmp(&*pr2, &/*hard*/*(Point2D *)&*pr3, sizeof *pr2) == 0) {
 		printf("*pr2 == *pr3\n");
 	} else {
 		printf("*pr2 != *pr3\n");
@@ -86,7 +88,7 @@ int main()
 	// (it is possible if dst record contained all fields from src record
 	// and their types are equal)
 	Point3D p3d;
-	p3d = *(Point3D *)&p2d2;
+	p3d = /*hard*/*(Point3D *)&p2d2;
 
 
 	return 0;
