@@ -128,27 +128,27 @@ bool test_generic_array()
 
 	// implicit cast Generic([4]GenericInteger) value to [4]Int32
 	int32_t b[4];
-	memcpy(&b, &((int32_t[4])a), 16);
+	memcpy(&b, &(int32_t[4])a, 16);
 
-	if (memcmp(&b, &((int32_t[4]){0, 1, 2, 3}), sizeof b) != 0) {
+	if (memcmp(&b, &(int32_t[4]){0, 1, 2, 3}, sizeof b) != 0) {
 		printf("b != [0, 1, 2, 3]\n");
 		return false;
 	}
 
 	// implicit cast Generic([4]GenericInteger) value to [4]Nat64
 	int64_t c[4];
-	memcpy(&c, &((int64_t[4])a), 32);
+	memcpy(&c, &(int64_t[4])a, 32);
 
-	if (memcmp(&c, &((int64_t[4]){0, 1, 2, 3}), sizeof c) != 0) {
+	if (memcmp(&c, &(int64_t[4]){0, 1, 2, 3}, sizeof c) != 0) {
 		printf("c != [0, 1, 2, 3]\n");
 		return false;
 	}
 
 	// explicit cast Generic([4]GenericInteger) value to [10]Int32
 	int32_t d[10];
-	memcpy(&d, &((int32_t[10])a), 40);
+	memcpy(&d, &(int32_t[10])a, 40);
 
-	if (memcmp(&d, &((int32_t[10]){0, 1, 2, 3, 0}), sizeof d) != 0) {
+	if (memcmp(&d, &(int32_t[10]){0, 1, 2, 3, 0}, sizeof d) != 0) {
 		printf("d != [0, 1, 2, 3, 0, 0, 0, 0, 0, 0]\n");
 		return false;
 	}
@@ -184,13 +184,13 @@ bool test_generic_record()
 	// implicit cast Generic(record {x: GenericInteger, y: GenericInteger})
 	// to record {x: Int32, y: Int32}
 	Point2D point_2d;
-	point_2d = ((Point2D)p);
+	point_2d = (Point2D)p;
 
 
 	// explicit cast Generic(record {x: GenericInteger, y: GenericInteger})
 	// to record {x: Int32, y: Int32, z: Int32}
 	Point3D point_3d;
-	point_3d = ((Point3D)p);
+	point_3d = (Point3D)p;
 
 	return true;
 #undef p

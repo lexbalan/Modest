@@ -18,7 +18,10 @@ type Point3D record {
 	z: Nat32
 }
 
-let yy = {x=1, y=2}
+
+let xx = {x=1, y=2}
+let yy = Point2D {x=1, y=2}
+
 
 func main() -> Int {
 	printf("records test\n")
@@ -36,7 +39,7 @@ func main() -> Int {
 
 	// compare Point2D with anonymous record
 	var p2d2 = p2d0  // record assignation
-	var p2d3 = record {x: Nat32, y: Nat32} yy
+	var p2d3 = record {x: Nat32, y: Nat32} xx
 
 	if p2d2 == p2d3 {
 		printf("p2d2 == p2d3\n")

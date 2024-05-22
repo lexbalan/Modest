@@ -22,8 +22,8 @@ static int32_t glb_i1 = 321;
 static Point glb_r0 = {};
 static Point glb_r1 = {.x = 20, .y = 10};
 
-static int32_t glb_a0[10] = ((int32_t[10]){});
-static int32_t glb_a1[10] = ((int32_t[10]){64, 53, 42});
+static int32_t glb_a0[10] = (int32_t[10]){};
+static int32_t glb_a1[10] = (int32_t[10]){64, 53, 42};
 
 
 int main()
@@ -69,9 +69,9 @@ int main()
 	// copy arrays by value
 	// C backend will be use memcpy()
 	int32_t loc_a0[10];
-	memcpy(&loc_a0, &((int32_t[10]){}), 40);
+	memcpy(&loc_a0, &(int32_t[10]){}, 40);
 	int32_t loc_a1[10];
-	memcpy(&loc_a1, &((int32_t[10]){42, 53, 64}), 40);
+	memcpy(&loc_a1, &(int32_t[10]){42, 53, 64}, 40);
 
 	memcpy(&loc_a0, &loc_a1, 40);
 
@@ -83,9 +83,9 @@ int main()
 	// copy records by value
 	// C backend will be use memcpy()
 	Point loc_r0;
-	loc_r0 = ((Point){});
+	loc_r0 = (Point){};
 	Point loc_r1;
-	loc_r1 = ((Point){.x = 10, .y = 20});
+	loc_r1 = (Point){.x = 10, .y = 20};
 
 	loc_r0 = loc_r1;
 

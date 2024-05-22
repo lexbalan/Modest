@@ -55,7 +55,7 @@ static SHA256_TestCase test1 = {
 
 
 //var sha256_tests: []*SHA256_TestCase = [&test0, &test1]
-static SHA256_TestCase *sha256_tests[2] = ((SHA256_TestCase *[2]){&test0, &test1});
+static SHA256_TestCase *sha256_tests[2] = (SHA256_TestCase *[2]){&test0, &test1};
 
 
 bool sha256_doTest(SHA256_TestCase *test)

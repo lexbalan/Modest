@@ -102,7 +102,7 @@ int32_t k[64] = _k;
 void sha256_transform(Context *ctx, uint8_t *data)
 {
 	uint32_t m[64];
-	memcpy(&m, &((uint32_t[64]){}), 256);
+	memcpy(&m, &(uint32_t[64]){}, 256);
 
 	uint32_t i;
 	i = 0;
@@ -228,7 +228,7 @@ void sha256_final(Context *ctx, uint8_t *outHash)
 void sha256_doHash(uint8_t *msg, uint32_t msgLen, uint8_t *outHash)
 {
 	Context ctx;
-	ctx = ((Context){});
+	ctx = (Context){};
 	sha256_contextInit(&ctx);
 	sha256_update(&ctx, msg, msgLen);
 	sha256_final(&ctx, outHash);

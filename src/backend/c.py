@@ -712,11 +712,7 @@ def print_value_cons(x, ctx):
 			# если это литеральная (и не глобальная) константа-массив
 			# то мы должны ее привести к требуемому типу
 			if not 'global_const' in value['att']: # <- костыль?
-				out("((")
-				print_type(to_type, array_as_ptr=False)
-				out(")")
-				print_value(value, ctx=ctx)
-				out(")")
+				print_cast(to_type, value, ctx = ['array_as_array'])
 			else:
 				print_value(value, ctx=ctx)
 			return
@@ -725,11 +721,7 @@ def print_value_cons(x, ctx):
 	if hlir_type.type_is_record(to_type):
 		if hlir_type.type_is_generic_record(from_type):
 			if is_local_context():
-				out("((")
-				print_type(to_type, array_as_ptr=False)
-				out(")")
-				print_value(value, ctx=ctx)
-				out(")")
+				print_cast(to_type, value)
 			else:
 				print_value(value, ctx=ctx)
 			return

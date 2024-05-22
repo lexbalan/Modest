@@ -65,7 +65,7 @@ struct ret_str_retval ret_str()
 
 
 
-static int32_t global_array[2] = ((int32_t[2]){1, 2});
+static int32_t global_array[2] = (int32_t[2]){1, 2};
 
 
 typedef struct {
