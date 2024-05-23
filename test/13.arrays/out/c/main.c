@@ -161,6 +161,9 @@ int main()
 	printf("globalArray[%i] = %i\n", 1, globalArray[1]);
 	printf("globalArray[%i] = %i\n", 2, globalArray[2]);
 
+
+	memcpy(&globalArray, &(int32_t[10]){}, sizeof(int32_t[10]));
+
 	return 0;
 #undef init_array
 }

@@ -713,6 +713,17 @@ endif_1:
 	%165 = getelementptr inbounds [10 x i32], [10 x i32]* @globalArray, i32 0, i32 2
 	%166 = load i32, i32* %165
 	%167 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str30 to [0 x i8]*), i32 2, i32 %166)
+	%168 = insertvalue [10 x i32] zeroinitializer, i32 0, 0
+	%169 = insertvalue [10 x i32] %168, i32 0, 1
+	%170 = insertvalue [10 x i32] %169, i32 0, 2
+	%171 = insertvalue [10 x i32] %170, i32 0, 3
+	%172 = insertvalue [10 x i32] %171, i32 0, 4
+	%173 = insertvalue [10 x i32] %172, i32 0, 5
+	%174 = insertvalue [10 x i32] %173, i32 0, 6
+	%175 = insertvalue [10 x i32] %174, i32 0, 7
+	%176 = insertvalue [10 x i32] %175, i32 0, 8
+	%177 = insertvalue [10 x i32] %176, i32 0, 9
+	store [10 x i32] %177, [10 x i32]* @globalArray
 	ret %Int 0
 }
 

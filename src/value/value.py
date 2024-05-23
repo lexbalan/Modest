@@ -55,10 +55,10 @@ def _value_is_zero_record(x):
 def value_is_zero(x):
 	if not value_is_immediate(x):
 		return False
-	t = x['type']
-	if hlir_type.type_is_array(t):
+
+	if hlir_type.type_is_array(x['type']):
 		return _value_is_zero_array(x)
-	elif hlir_type.type_is_record(t):
+	if hlir_type.type_is_record(x['type']):
 		return _value_is_zero_record(x)
 
 	return x['asset'] == 0

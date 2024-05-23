@@ -407,6 +407,7 @@ endif_3:
 	%47 = insertvalue %Point2D zeroinitializer, i32 100, 0
 	%48 = insertvalue %Point2D %47, i32 200, 1
 	store %Point2D %48, %Point2D* %14
+	store {i32, i32} zeroinitializer, {i32, i32}* %17
 	; cons Point3D from Point2D (record extension)
 	; (it is possible if dst record contained all fields from src record
 	; and their types are equal)

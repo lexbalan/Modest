@@ -1960,6 +1960,10 @@ def memcopy_assign(left, right):
 	else:
 		to_copy = l_size"""
 
+	rv = get_root_value(right)
+	if value_is_zero(rv):
+		return memzero_sizeof(left)
+
 	out("memcpy(")
 	print_value_as_ptr(left)
 	out(", ")

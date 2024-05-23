@@ -136,6 +136,9 @@ func main() -> Int {
 	printf("globalArray[%i] = %i\n", Int32 1, globalArray[1])
 	printf("globalArray[%i] = %i\n", Int32 2, globalArray[2])
 
+
+	globalArray = []
+
 	return 0
 }
 

@@ -89,7 +89,7 @@ int main()
 
 	// assign record by pointer
 	*pr2 = (Point2D){.x = 100, .y = 200};
-
+	*pr3 = (struct __anonymous_struct_3){};
 
 	// cons Point3D from Point2D (record extension)
 	// (it is possible if dst record contained all fields from src record
