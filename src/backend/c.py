@@ -437,7 +437,7 @@ def print_value_eq_composite(x, ctx):
 	if value_is_immediate(x):
 		return print_value_bool_lit(x, ctx)
 
-	memcmp_by(left, right, by=left, op=op)
+	memcmp_eq(left, right, op=op)
 	return
 
 
@@ -1995,13 +1995,15 @@ def memzero_sizeof(left):
 	out(");")
 
 
-def memcmp_by(left, right, by, op='eq'):
+def memcmp_eq(left, right, op='eq'):
 	out('memcmp(')
 	print_value_as_ptr(left)
 	out(', ')
 	print_value_as_ptr(right)
-	out(', sizeof ')
-	print_value(by)
+	out(", sizeof(")
+	common_type = select_common_type(left['type'], right['type'])
+	print_type(common_type, array_as_ptr=False)
+	out(")")
 	if op == 'eq':
 		out(') == 0')
 	else:
