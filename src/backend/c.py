@@ -1978,12 +1978,6 @@ def memcopy_assign(left, right):
 		memzero_off(left, to_copy, zero_rest)"""
 
 
-def memzero(left, sz):
-	out("memset(")
-	print_value_as_ptr(left)
-	out(", 0, %d);" % sz)
-
-
 def memzero_off(left, offset, sz):
 	out("memset((((void *)&")
 	print_value(left)
