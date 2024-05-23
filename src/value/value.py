@@ -11,8 +11,6 @@ def value_is_bad(x):
 
 
 def value_is_immediate(x):
-	if not 'immediate' in x:
-		print(x)
 	assert('immediate' in x)
 	return x['immediate']
 
@@ -117,7 +115,7 @@ def value_terminal(t, imm, ti):
 		'kind': 'literal',
 		'type': t,
 		'asset': imm,
-		'immediate': False,
+		'immediate': True,
 		'immutable': False,
 		'att': [],
 		'nl_end': 0,
