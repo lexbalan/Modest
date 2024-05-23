@@ -470,10 +470,6 @@ def print_value_un(v, ctx):
 			print_type(v['type'])
 			out(")")
 
-	#elif v['kind'] == 'deref':
-	#	if 'arr_as_ptr' in ctx:
-	#		print_value(value, need_wrap=pv<p0)
-
 
 	out(un_ops[op])
 	print_value(value, need_wrap=pv<p0)
@@ -1417,24 +1413,7 @@ def assign_array(left, right):
 		out(";")
 		return
 
-	# Assign array by memcopy
-	to_copy = 0
-	zero_rest = 0
-	l_size = left['type']['size']
-	r_size = right['type']['size']
-	if l_size > r_size:
-		zero_rest = l_size - r_size
-		to_copy = r_size
-	else:
-		to_copy = l_size
-
-
-	memcopy_len(left, right, to_copy)
-
-	if zero_rest > 0:
-		nl_indent()
-		memzero_off(left, to_copy, zero_rest)
-
+	memcopy_assign(left, right)
 	return
 
 
@@ -1936,53 +1915,68 @@ def run(module, outname):
 
 
 
-def memcopy_len(left, right, n):
-	if n <= 0:
-		return
-	out("memcpy(&")
-	print_value(left)
-	out(", &")
-	#out("/*$ %s $*/" % right['kind'])
 
-	if right['kind'] == 'cons' and not right['value']['kind'] in ['const', 'literal', 'add']:
-		print_value(right['value'])
+
+
+
+
+
+
+
+# возвращает само значение из цепочки cons
+# (если только это не cons который приводит generic_composite,
+# тк такой cons нужно печатать)
+def get_root_value(x):
+	if x['kind'] == 'cons':
+		if hlir_type.type_is_generic(x['value']['type']):
+			return x
+		return get_root_value(x['value'])
+	return x
+
+# получает значение, печатает указатель на его корень (корневое значение)
+def print_value_as_ptr(x):
+	x = get_root_value(x)
+
+	if x['kind'] == 'deref':
+		x = x['value']
+		print_value(x)
 	else:
-		print_value(right)
-
-	out(", %i);" % n)
-
-
-def memcopy_by(left, right, by):
-	out("memcpy(&")
-	print_value(left)
-	out(", &")
-	print_value(right)
-	out(", sizeof ")
-	print_value(by)
-	out(");")
+		out("&")
+		print_value(x)
 
 
-def memcopy(left, right):
-	out("memcpy(&")
-	print_value(left)
-	out(", &")
-	print_value(right)
-	out(", sizeof ")
 
-	if left['kind'] == 'index':
-		out("(")
-		print_type(right['type'], array_as_ptr=False)
-		out(")")
+from hlir.type import select_common_type
+
+def memcopy_assign(left, right):
+	"""# Assign array by memcopy
+	to_copy = 0
+	zero_rest = 0
+	l_size = left['type']['size']
+	r_size = right['type']['size']
+	if l_size > r_size:
+		zero_rest = l_size - r_size
+		to_copy = r_size
 	else:
-		print_value(left)
+		to_copy = l_size"""
 
-	out(");")
+	out("memcpy(")
+	print_value_as_ptr(left)
+	out(", ")
+	print_value_as_ptr(right)
+	out(", sizeof(")
+	common_type = select_common_type(left['type'], right['type'])
+	print_type(common_type, array_as_ptr=False)
+	out("));")
 
+	"""if zero_rest > 0:
+		nl_indent()
+		memzero_off(left, to_copy, zero_rest)"""
 
 
 def memzero(left, sz):
-	out("memset(&")
-	print_value(left)
+	out("memset(")
+	print_value_as_ptr(left)
 	out(", 0, %d);" % sz)
 
 
@@ -1999,29 +1993,6 @@ def memzero_sizeof(left):
 	out(", 0, sizeof ")
 	print_value(left)
 	out(");")
-
-
-
-# возвращает само значение из цепочки cons
-# (если только это не cons который приводит generic_composite,
-# тк такой cons нужно печатать)
-def get_root_value(x):
-	if x['kind'] == 'cons':
-		if hlir_type.type_is_generic(x['value']['type']):
-			return x
-		return get_root_value(x['value'])
-	return x
-
-
-def print_value_as_ptr(x):
-	x = get_root_value(x)
-
-	if x['kind'] == 'deref':
-		x = x['value']
-		print_value(x, ctx=['arr_as_ptr'])
-	else:
-		out("&")
-		print_value(x)
 
 
 def memcmp_by(left, right, by, op='eq'):

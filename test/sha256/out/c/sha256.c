@@ -74,7 +74,7 @@ int32_t initMagic[8] = _initMagic;
 
 void sha256_contextInit(Context *ctx)
 {
-	memcpy(&ctx->state, &initMagic, 32);
+	memcpy(&ctx->state, &initMagic, sizeof(uint32_t[8]));
 }
 
 
@@ -102,7 +102,7 @@ int32_t k[64] = _k;
 void sha256_transform(Context *ctx, uint8_t *data)
 {
 	uint32_t m[64];
-	memcpy(&m, &(uint32_t[64]){}, 256);
+	memcpy(&m, &(uint32_t[64]){}, sizeof(uint32_t[64]));
 
 	uint32_t i;
 	i = 0;
@@ -123,7 +123,7 @@ void sha256_transform(Context *ctx, uint8_t *data)
 	}
 
 	uint32_t x[8];
-	memcpy(&x, &ctx->state, 32);
+	memcpy(&x, &ctx->state, sizeof(uint32_t[8]));
 
 	i = 0;
 	while (i < 64) {
