@@ -125,7 +125,7 @@ int main()
 	int32_t *const pa = (int32_t *)&a;
 	int32_t *const pb = (int32_t *)&b;
 
-	if (memcmp(&*pa, &*pb, sizeof *pa) == 0) {
+	if (memcmp(pa, pb, sizeof *pa) == 0) {
 		printf("*pa == *pb\n");
 	} else {
 		printf("*pa != *pb\n");

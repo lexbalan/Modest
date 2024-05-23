@@ -421,6 +421,7 @@ def print_value_bin(x, ctx):
 
 
 def print_value_eq_record(x, ctx):
+
 	return print_value_eq_composite(x, ctx)
 
 
@@ -666,8 +667,6 @@ def print_value_cons(x, ctx):
 	to_type = x['type']
 	value = x['value']
 	from_type = value['type']
-
-
 
 	if hlir_type.type_is_string(from_type):
 		# cast <string literal> to <array of chars>:
@@ -2003,10 +2002,26 @@ def memzero_sizeof(left):
 
 
 
+# возвращает само значение из цепочки cons
+# (если только это не cons который приводит generic_composite,
+# тк такой cons нужно печатать)
+def get_root_value(x):
+	if x['kind'] == 'cons':
+		if hlir_type.type_is_generic(x['value']['type']):
+			return x
+		return get_root_value(x['value'])
+	return x
+
+
 def print_value_as_ptr(x):
-	# значение может быть [assess, index, deref, const, var]
-	out("&")
-	print_value(x, ctx=['arr_as_ptr'])
+	x = get_root_value(x)
+
+	if x['kind'] == 'deref':
+		x = x['value']
+		print_value(x, ctx=['arr_as_ptr'])
+	else:
+		out("&")
+		print_value(x)
 
 
 def memcmp_by(left, right, by, op='eq'):

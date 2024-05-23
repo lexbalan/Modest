@@ -403,13 +403,17 @@ else_3:
 	%46 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str9 to [0 x i8]*))
 	br label %endif_3
 endif_3:
+	; assign record by pointer
+	%47 = insertvalue %Point2D zeroinitializer, i32 100, 0
+	%48 = insertvalue %Point2D %47, i32 200, 1
+	store %Point2D %48, %Point2D* %14
 	; cons Point3D from Point2D (record extension)
 	; (it is possible if dst record contained all fields from src record
 	; and their types are equal)
-	%47 = alloca %Point3D
-	%48 = bitcast %Point2D* %14 to %Point3D*
-	%49 = load %Point3D, %Point3D* %48
-	store %Point3D %49, %Point3D* %47
+	%49 = alloca %Point3D
+	%50 = bitcast %Point2D* %14 to %Point3D*
+	%51 = load %Point3D, %Point3D* %50
+	store %Point3D %51, %Point3D* %49
 	ret %Int 0
 }
 

@@ -59,7 +59,7 @@ int main()
 	struct __anonymous_struct_3 p2d3;
 	p2d3 = (struct __anonymous_struct_3)xx;
 
-	if (memcmp(&p2d2, &*(Point2D *)&p2d3, sizeof p2d2) == 0) {
+	if (memcmp(&p2d2, &p2d3, sizeof p2d2) == 0) {
 		printf("p2d2 == p2d3\n");
 	} else {
 		printf("p2d2 != p2d3\n");
@@ -80,11 +80,15 @@ int main()
 	Point2D *const pr2 = &p2d2;
 	struct __anonymous_struct_3 *const pr3 = &p2d3;
 
-	if (memcmp(&*pr2, &*(Point2D *)&*pr3, sizeof *pr2) == 0) {
+	if (memcmp(pr2, pr3, sizeof *pr2) == 0) {
 		printf("*pr2 == *pr3\n");
 	} else {
 		printf("*pr2 != *pr3\n");
 	}
+
+
+	// assign record by pointer
+	*pr2 = (Point2D){.x = 100, .y = 200};
 
 
 	// cons Point3D from Point2D (record extension)
