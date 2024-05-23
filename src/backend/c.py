@@ -1994,9 +1994,9 @@ def memzero_off(left, offset, sz):
 def memzero_sizeof(left):
 	out("memset(&")
 	print_value(left)
-	out(", 0, sizeof ")
-	print_value(left)
-	out(");")
+	out(", 0, sizeof(")
+	print_type(left['type'], array_as_ptr=False)
+	out("));")
 
 
 def memcmp_eq(left, right, op='eq'):

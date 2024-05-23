@@ -102,7 +102,7 @@ int32_t k[64] = _k;
 void sha256_transform(Context *ctx, uint8_t *data)
 {
 	uint32_t m[64];
-	memcpy(&m, &(uint32_t[64]){}, sizeof(uint32_t[64]));
+	memset(&m, 0, sizeof(uint32_t[64]));
 
 	uint32_t i;
 	i = 0;
