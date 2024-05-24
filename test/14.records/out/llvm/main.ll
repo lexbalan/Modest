@@ -299,6 +299,10 @@ declare void @bcopy(i8* %src, i8* %dst, %SizeT %n)
 @str7 = private constant [14 x i8] [i8 112, i8 50, i8 100, i8 51, i8 32, i8 33, i8 61, i8 32, i8 112, i8 50, i8 100, i8 52, i8 10, i8 0]
 @str8 = private constant [14 x i8] [i8 42, i8 112, i8 114, i8 50, i8 32, i8 61, i8 61, i8 32, i8 42, i8 112, i8 114, i8 51, i8 10, i8 0]
 @str9 = private constant [14 x i8] [i8 42, i8 112, i8 114, i8 50, i8 32, i8 33, i8 61, i8 32, i8 42, i8 112, i8 114, i8 51, i8 10, i8 0]
+@str10 = private constant [24 x i8] [i8 112, i8 120, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 105, i8 32, i8 40, i8 109, i8 117, i8 115, i8 116, i8 32, i8 98, i8 101, i8 32, i8 49, i8 48, i8 41, i8 10, i8 0]
+@str11 = private constant [24 x i8] [i8 112, i8 120, i8 46, i8 121, i8 32, i8 61, i8 32, i8 37, i8 105, i8 32, i8 40, i8 109, i8 117, i8 115, i8 116, i8 32, i8 98, i8 101, i8 32, i8 50, i8 48, i8 41, i8 10, i8 0]
+@str12 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
+@str13 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 
 
 
@@ -415,6 +419,41 @@ endif_3:
 	%50 = bitcast %Point2D* %14 to %Point3D*
 	%51 = load %Point3D, %Point3D* %50
 	store %Point3D %51, %Point3D* %49
+	; проверка того как локальная константа-массив
+	; "замораживает" свои элементы
+	%52 = alloca i32
+	store i32 10, i32* %52
+	%53 = alloca i32
+	store i32 20, i32* %53
+	%54 = load i32, i32* %52
+	%55 = insertvalue {i32, i32} zeroinitializer, i32 %54, 0
+	%56 = load i32, i32* %53
+	%57 = insertvalue {i32, i32} %55, i32 %56, 1
+	store i32 111, i32* %52
+	store i32 222, i32* %53
+	%58 = extractvalue {i32, i32} %57, 0
+	%59 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str10 to [0 x i8]*), i32 %58)
+	%60 = extractvalue {i32, i32} %57, 1
+	%61 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str11 to [0 x i8]*), i32 %60)
+	%62 = insertvalue {i32, i32} zeroinitializer, i32 10, 0
+	%63 = insertvalue {i32, i32} %62, i32 20, 1
+	%64 = alloca {i32, i32}
+	store {i32, i32} %57, {i32, i32}* %64
+	%65 = alloca {i32, i32}
+	store {i32, i32} %63, {i32, i32}* %65
+	%66 = bitcast {i32, i32}* %64 to i8*
+	%67 = bitcast {i32, i32}* %65 to i8*
+	
+	%68 = call i1 (i8*, i8*, i64) @memeq( i8* %66, i8* %67, i64 8)
+	%69 = icmp ne i1 %68, 0
+	br i1 %69 , label %then_4, label %else_4
+then_4:
+	%70 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str12 to [0 x i8]*))
+	br label %endif_4
+else_4:
+	%71 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str13 to [0 x i8]*))
+	br label %endif_4
+endif_4:
 	ret %Int 0
 }
 

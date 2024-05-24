@@ -1262,8 +1262,6 @@ def do_value_array(x):
 
 def do_value_record(x):
 	initializers = []
-
-	immediate_items = True
 	for item in x['items']:
 		if item['isa'] == 'ast_comment':
 			continue
@@ -1277,7 +1275,6 @@ def do_value_record(x):
 		initializers.append(p)
 
 	v = value_record_create(initializers, ti=x['ti'])
-	v['immediate'] = immediate_items
 	v['nl_end'] = x['nl_end']
 	return v
 

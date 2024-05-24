@@ -79,6 +79,27 @@ func main() -> Int {
 	p3d = Point3D p2d2
 
 
+	// проверка того как локальная константа-массив
+	// "замораживает" свои элементы
+
+	var ax: Int32 = Int32 10
+	var bx: Int32 = Int32 20
+
+	let px = {x = ax, y = bx}
+
+	ax = 111
+	bx = 222
+
+	printf("px.x = %i (must be 10)\n", px.x)
+	printf("px.y = %i (must be 20)\n", px.y)
+
+	if px == {x = 10, y = 20} {
+		printf("test passed\n")
+	} else {
+		printf("test failed\n")
+	}
+
+
 	return 0
 }
 

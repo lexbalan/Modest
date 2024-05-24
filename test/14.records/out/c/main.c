@@ -98,6 +98,29 @@ int main()
 	p3d = *(Point3D *)&p2d2;
 
 
+	// проверка того как локальная константа-массив
+	// "замораживает" свои элементы
+
+	int32_t ax;
+	ax = 10;
+	int32_t bx;
+	bx = 20;
+
+	const struct {int32_t x; int32_t y;} px = {.x = ax, .y = bx};
+
+	ax = 111;
+	bx = 222;
+
+	printf("px.x = %i (must be 10)\n", px.x);
+	printf("px.y = %i (must be 20)\n", px.y);
+
+	if (memcmp(&px, &(struct {int32_t x; int32_t y;}){.x = 10, .y = 20}, sizeof(struct {int32_t x; int32_t y;})) == 0) {
+		printf("test passed\n");
+	} else {
+		printf("test failed\n");
+	}
+
+
 	return 0;
 }
 

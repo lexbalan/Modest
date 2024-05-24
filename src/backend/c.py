@@ -1327,22 +1327,14 @@ def print_stmt_let(x):
 
 	nl_indent(x['nl'])
 
-	# Локальные константы (втч. -массивы) печатаем как переменные
-	# ПОТОМУ ЧТО: они должны заморозить свои значения по месту
-	"""if hlir_type.type_is_closed_array(v['type']):
-		print_variable_array(v['type'], id['str'], do_wrapped=False)
-		out(";")
-		newline()
-		indent()
-		assign_array(v, iv)
-		return"""
-
 	if value_is_generic_immediate(v):
 		print_macro_definition(id, iv)
 		global func_undef_list
 		func_undef_list.append(id['str'])
 
 	else:
+		# Локальные константы (втч. композитные) печатаем как переменные
+		# ПОТОМУ ЧТО: они должны "заморозить" свои значения по месту
 		print_variable(id, v['type'], as_const=True)
 		out(" = ")
 		print_value(iv)

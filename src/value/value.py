@@ -16,7 +16,7 @@ def value_is_immediate(x):
 
 
 def value_is_generic_immediate(x):
-	return hlir_type.type_is_generic(x['type']) and value_is_immediate(x)
+	return value_is_immediate(x) and hlir_type.type_is_generic(x['type'])
 
 
 # Any immediate value are immutable,
