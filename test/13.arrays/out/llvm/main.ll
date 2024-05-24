@@ -431,6 +431,8 @@ declare double @max_float64(double %a, double %b)
 @str31 = private constant [25 x i8] [i8 121, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 32, i8 40, i8 109, i8 117, i8 115, i8 116, i8 32, i8 98, i8 101, i8 32, i8 49, i8 48, i8 41, i8 10, i8 0]
 @str32 = private constant [25 x i8] [i8 121, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 32, i8 40, i8 109, i8 117, i8 115, i8 116, i8 32, i8 98, i8 101, i8 32, i8 50, i8 48, i8 41, i8 10, i8 0]
 @str33 = private constant [25 x i8] [i8 121, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 32, i8 40, i8 109, i8 117, i8 115, i8 116, i8 32, i8 98, i8 101, i8 32, i8 51, i8 48, i8 41, i8 10, i8 0]
+@str34 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
+@str35 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 
 
 
@@ -755,6 +757,24 @@ endif_1:
 	%194 = getelementptr inbounds [3 x i32], [3 x i32]* %187, i32 0, i32 2
 	%195 = load i32, i32* %194
 	%196 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str33 to [0 x i8]*), i32 2, i32 %195)
+	%197 = insertvalue [3 x i32] zeroinitializer, i32 10, 0
+	%198 = insertvalue [3 x i32] %197, i32 20, 1
+	%199 = insertvalue [3 x i32] %198, i32 30, 2
+	%200 = alloca [3 x i32]
+	store [3 x i32] %199, [3 x i32]* %200
+	%201 = bitcast [3 x i32]* %187 to i8*
+	%202 = bitcast [3 x i32]* %200 to i8*
+	
+	%203 = call i1 (i8*, i8*, i64) @memeq( i8* %201, i8* %202, i64 12)
+	%204 = icmp ne i1 %203, 0
+	br i1 %204 , label %then_2, label %else_2
+then_2:
+	%205 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str34 to [0 x i8]*))
+	br label %endif_2
+else_2:
+	%206 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str35 to [0 x i8]*))
+	br label %endif_2
+endif_2:
 	ret %Int 0
 }
 

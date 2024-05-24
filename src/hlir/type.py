@@ -976,8 +976,25 @@ def select_common_type(a, b):
 
 
 	if type_is_array(a) and type_is_array(b):
-		#print("ARRAY!")
-		pass
+		if type_is_generic(a) != type_is_generic(b):
+			if type_is_generic(a):
+				return b
+
+			if type_is_generic(b):
+				return a
+
+		if type_is_generic(a) and type_is_generic(b):
+			# TODO: тут все плохо (тк должна быть рекурсия но пока без нее)
+			if type_is_generic(a['of']):
+				return b
+			if type_is_generic(b['of']):
+				return a
+
+			# not implemented!
+			return a
+
+
+
 
 	if type_is_generic(a) != type_is_generic(b):
 		if type_is_generic(a):

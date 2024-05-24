@@ -185,6 +185,12 @@ int main()
 	printf("y[%i] = %i (must be 20)\n", 1, y[1]);
 	printf("y[%i] = %i (must be 30)\n", 2, y[2]);
 
+	if (memcmp(&y, &(int32_t[3]){10, 20, 30}, sizeof(int32_t[3])) == 0) {
+		printf("test passed\n");
+	} else {
+		printf("test failed\n");
+	}
+
 
 	return 0;
 }

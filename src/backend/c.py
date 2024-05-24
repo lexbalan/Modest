@@ -1922,6 +1922,9 @@ def run(module, outname):
 # тк такой cons нужно печатать)
 def get_root_value(x):
 	if x['kind'] == 'cons':
+		# конструирование complex_immediate печатаем
+		# for: (uint32_t[3]){1, 2, 3}
+		# for: (Point){.x=1, .y=2}
 		if value_is_immediate(x['value']):
 			return x
 		return get_root_value(x['value'])
