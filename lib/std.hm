@@ -11,4 +11,3 @@ type Nat Nat64
 @error "bad __systemIntWidth"
 @endif
 
-// вскрылась проблема импорта однго и того же типа из разных модулей
