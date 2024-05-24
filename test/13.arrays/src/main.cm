@@ -140,6 +140,25 @@ func main() -> Int {
 
 	globalArray = []
 
+
+	// проверка того как локальная константа-массив
+	// "замораживает" свои элементы
+
+	var ax = Int32 10
+	var bx = Int32 20
+	var cx = Int32 30
+
+	let y = [ax, bx, cx]
+
+	ax = 111
+	bx = 222
+	cx = 333
+
+	printf("y[%i] = %i (must be 10)\n", Int32 0, y[0])
+	printf("y[%i] = %i (must be 20)\n", Int32 1, y[1])
+	printf("y[%i] = %i (must be 30)\n", Int32 2, y[2])
+
+
 	return 0
 }
 

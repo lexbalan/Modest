@@ -24,8 +24,10 @@ def value_record_create(initializers=[], ti=None):
 		field_type = init_value['type']
 		field_ti = init_value['ti']
 
-		if is_immediate:
-			is_immediate = value_is_immediate(init_value)
+		# если хотя бы один элемент - не immediate
+		# -> весь литерал записи - не immediate
+		if not value_is_immediate(init_value):
+			is_immediate = False
 
 		# создаем поле для generic record
 		field = hlir_field(field_id, field_type, ti=field_ti)

@@ -30,8 +30,10 @@ def value_array_create(items, ti=None):
 	while i < length:
 		item = items[i]
 
-		if is_immediate:
-			is_immediate = value_is_immediate(item)
+		# если хотя бы один элемент - не immediate
+		# -> весь литерал массива - не immediate
+		if not value_is_immediate(item):
+			is_immediate = False
 
 		item_type = item['type']
 		common_type = select_common_type(array_item_type, item_type)
@@ -190,10 +192,6 @@ def _do_cons_array(t, v, method, ti):
 		nv['asset'] = casted_items
 		nv['immediate'] = True
 		#if len(casted_items) == 0:
-		#	nv['zero'] = True
-
-	#if 'id' in v:
-	#	nv['id'] = v['id']
 
 	return nv
 

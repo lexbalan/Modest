@@ -6,7 +6,7 @@ from error import info, error, fatal
 from .common import *
 import hlir.type as hlir_type
 from hlir.type import type_print
-from value.value import value_is_immediate, value_is_zero, value_attribute_check, value_print
+from value.value import value_is_immediate, value_is_generic_immediate, value_is_zero, value_attribute_check, value_print
 from util import align_bits_up, nbits_for_num, get_item_with_id, align_to
 from unicode import utfx_chars_to_utf32_chars, utf32_chars_to_string
 from main import settings
@@ -619,10 +619,11 @@ def print_value_access(x, ctx):
 	left = x['record']
 
 	# если имеем дело c дженерик записью (глоб константа)
-	if hlir_type.type_is_generic(left['type']):
-		if value_is_immediate(x):
-			print_value_terminal(x, ['print_immediate'])
-			return
+	#if hlir_type.type_is_generic(left['type']):
+	#	if value_is_immediate(x):
+	if value_is_generic_immediate(left):
+		print_value_terminal(x, ['print_immediate'])
+		return
 
 	need_wrap = precedence(left) < precedence(x)
 	print_value(left, need_wrap=need_wrap)
@@ -1336,7 +1337,7 @@ def print_stmt_let(x):
 		assign_array(v, iv)
 		return"""
 
-	if hlir_type.type_is_generic(v['type']):
+	if value_is_generic_immediate(v):
 		print_macro_definition(id, iv)
 		global func_undef_list
 		func_undef_list.append(id['str'])
@@ -1916,22 +1917,16 @@ def run(module, outname):
 
 
 
-
-
-
-
-
-
-
 # возвращает само значение из цепочки cons
 # (если только это не cons который приводит generic_composite,
 # тк такой cons нужно печатать)
 def get_root_value(x):
 	if x['kind'] == 'cons':
-		if hlir_type.type_is_generic(x['value']['type']):
+		if value_is_immediate(x['value']):
 			return x
 		return get_root_value(x['value'])
 	return x
+
 
 # получает значение, печатает указатель на его корень (корневое значение)
 def print_value_as_ptr(x):
@@ -1976,6 +1971,7 @@ def memcopy_assign(left, right):
 	"""if zero_rest > 0:
 		nl_indent()
 		memzero_off(left, to_copy, zero_rest)"""
+
 
 
 def memzero_off(left, offset, sz):

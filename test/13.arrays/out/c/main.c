@@ -146,17 +146,17 @@ int main()
 	int int300;
 	int300 = 300;
 	// immutable, non immediate value (array)
-	#define init_array  {int100, int200, int300}
+	const int init_array[3] = {int100, int200, int300};
 
 	// check local literal array assignation to local array
 	int32_t e[4];
-	memcpy(&e, &(int32_t[4])init_array, sizeof(int32_t[4]));
+	memcpy(&e, &init_array, sizeof(int32_t[4]));
 	printf("e[0] = %i\n", e[0]);
 	printf("e[1] = %i\n", e[1]);
 	printf("e[2] = %i\n", e[2]);
 
 	// check local literal array assignation to global array
-	memcpy(&globalArray, &(int32_t[10])init_array, sizeof(int32_t[10]));
+	memcpy(&globalArray, &init_array, sizeof(int32_t[10]));
 	printf("globalArray[%i] = %i\n", 0, globalArray[0]);
 	printf("globalArray[%i] = %i\n", 1, globalArray[1]);
 	printf("globalArray[%i] = %i\n", 2, globalArray[2]);
@@ -164,7 +164,28 @@ int main()
 
 	memset(&globalArray, 0, sizeof(int32_t[10]));
 
+
+	// проверка того как локальная константа-массив
+	// "замораживает" свои элементы
+
+	int32_t ax;
+	ax = 10;
+	int32_t bx;
+	bx = 20;
+	int32_t cx;
+	cx = 30;
+
+	const int32_t y[3] = {ax, bx, cx};
+
+	ax = 111;
+	bx = 222;
+	cx = 333;
+
+	printf("y[%i] = %i (must be 10)\n", 0, y[0]);
+	printf("y[%i] = %i (must be 20)\n", 1, y[1]);
+	printf("y[%i] = %i (must be 30)\n", 2, y[2]);
+
+
 	return 0;
-#undef init_array
 }
 

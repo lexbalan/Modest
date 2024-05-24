@@ -1250,12 +1250,9 @@ def do_value_array(x):
 	for item in x['items']:
 		if item['isa'] == 'ast_comment':
 			continue
-
 		item_value = do_rvalue(item)
 		item_value['nl'] = item['nl']
 		items.append(item_value)
-
-	length = len(x['items'])
 
 	v = value_array_create(items, ti=x['ti'])
 	v['nl_end'] = x['nl_end']
@@ -1266,17 +1263,21 @@ def do_value_array(x):
 def do_value_record(x):
 	initializers = []
 
+	immediate_items = True
 	for item in x['items']:
 		if item['isa'] == 'ast_comment':
 			continue
 
 		item_value = do_rvalue(item['value'])
-
-		p = hlir_initializer(item['id'], item_value, item['ti'], item['nl'])
+		p = hlir_initializer(
+			item['id'],
+			item_value, item['ti'],
+			item['nl']
+		)
 		initializers.append(p)
 
-
 	v = value_record_create(initializers, ti=x['ti'])
+	v['immediate'] = immediate_items
 	v['nl_end'] = x['nl_end']
 	return v
 

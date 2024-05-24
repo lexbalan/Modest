@@ -15,6 +15,10 @@ def value_is_immediate(x):
 	return x['immediate']
 
 
+def value_is_generic_immediate(x):
+	return hlir_type.type_is_generic(x['type']) and value_is_immediate(x)
+
+
 # Any immediate value are immutable,
 # but not any immutable value are immediate
 def value_is_immutable(x):
@@ -115,6 +119,9 @@ def value_terminal(t, imm, ti):
 		'kind': 'literal',
 		'type': t,
 		'asset': imm,
+		# Literal - не всегда immediate!
+		# Литерал композитного типа может быть не immediate
+		# (см: do_value_record, do_value_array)
 		'immediate': True,
 		'immutable': False,
 		'att': [],
