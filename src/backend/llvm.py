@@ -1044,12 +1044,12 @@ def cast_record_to_record(to_type, value, ti):
 
 def cast_array_to_array(to_type, value, ti):
 	#info("cast_array_to_array", ti)
-	#out("\n; cast_array_to_array")
+	out("\n; cast_array_to_array")
 	return cast_composite_to_composite(to_type, value, ti)
 
 
 
-def do_eval_cast(x):
+def do_eval_cons(x):
 	value = x['value']
 	to_type = x['type']
 
@@ -1299,7 +1299,7 @@ def do_eval(x):
 	elif k == 'index_ptr': y = do_eval_index_ptr(x)
 	elif k == 'access': y = do_eval_access(x)
 	elif k == 'access_ptr': y = do_eval_access_ptr(x)
-	elif k == 'cons': y = do_eval_cast(x)
+	elif k == 'cons': y = do_eval_cons(x)
 	#elif k == 'concat_array': y = do_eval_literal(x)
 	#elif k == 'concat_string': y = do_eval_literal(x)
 	elif k in ['sizeof', 'lengthof', 'alignof', 'offsetof']:
@@ -1330,19 +1330,11 @@ def assign(l, rx):
 	assert(rx['isa'] == 'value')
 
 	if value_is_immediate(rx):
-		# очень важно! - cons array_immediate приходит с полем 'asset'
+		# cons array_immediate приходит с полем 'asset'
 		# и в этом 'asset' все уже приведено как положено
 		llvm_store(l, do_reval(rx))
 		return
 
-	if rx['kind'] == 'cons':
-		# for case:
-		# var x: [10]Int32
-		# var y: [5]Int32
-		# x = [10]Int32 y
-		cast_v = rx['value']
-		if hlir_type.type_is_array(rx['type']):
-			rx = cast_v
 
 	if hlir_type.type_is_array(rx['type']):
 		r = do_eval(rx)
