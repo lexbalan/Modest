@@ -21,8 +21,6 @@ func sumsub64(a: Int64, b: Int64) -> Unit {
 	var sum: Int64
 	var sub: Int64
 
-	//let s = 1 + 2
-
 	__asm(
 		text = "add %0, %2, %3\nsub %1, %2, %3\n"
 		outputs = [["=&r", sum], ["=&r", sub]]
