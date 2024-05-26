@@ -433,28 +433,9 @@ def print_strx(string):
 
 # print Array of Char codes literal
 def print_str_literal(char_codes):
-
 	out("\"")
-
-	i = 0
-	while i < len(char_codes):
-		cc = char_codes[i]
-
-		if cc == 0:
-			i_before = i
-			while i < len(x['asset']):
-				_cc = asset[i]
-				if _cc != 0:
-					i = i_before
-					break
-				i = i + 1
-			out("\"")
-			return
-
+	for cc in char_codes:
 		out(code_to_char(cc))
-
-		i = i + 1
-
 	out("\"")
 
 
@@ -580,8 +561,13 @@ def print_value_string2(x, ctx):
 	for char in x['asset']:
 		cc = ord(char)
 		char_codes.append(cc)
-
-	print_str_literal(char_codes)
+	try:
+		print(char_codes)
+		print_str_literal(char_codes)
+	except:
+		info("?", x['ti'])
+		print(char_codes)
+		print(x)
 
 
 def print_value_terminal(x, ctx):
