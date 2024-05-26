@@ -291,7 +291,7 @@ def llvm_print_value_array(x):
 		llvm_print_type_value(item)
 		i = i + 1
 	indent_down()
-	out("\n"); indent(); out("]")
+	out("\n\t"); indent(); out("]")
 
 
 
@@ -310,7 +310,7 @@ def llvm_print_value_record(x):
 		indent(); llvm_print_type_value(item['value'])
 		i = i + 1
 	indent_down()
-	out("\n"); indent(); out("}")
+	out("\n\t"); indent(); out("}")
 
 
 
@@ -433,8 +433,10 @@ def llvm_load(x):
 	result_type = None
 	if x['is_adr']:
 		result_type = x['type'] # if it just 'is_adr' ll_value
-	else:
+	elif hlir_type.type_is_pointer(x['type']):
 		result_type = x['type']['to'] # if it's real pointer
+	else:
+		assert(False, "expected address or pointer")
 	assert(result_type != None)
 
 	return llvm_value_reg(reg, result_type, x)
@@ -543,7 +545,7 @@ def llvm_jump(label):
 
 
 def llvm_label(label):
-	out("\n%s:" % label)
+	out("\n\t%s:" % label)
 
 
 def llvm_alloca(typ, id_str=None):
@@ -633,14 +635,14 @@ def print_type_record(t):
 
 		if i > 0: out(', ')
 		if is_global_context():
-			out("\n\t")
+			out("\n\t\t")
 
 		print_type(field['type'])
 
 		i = i + 1
 
 	if is_global_context():
-		out("\n")
+		out("\n\t")
 
 	out("}")
 
@@ -662,9 +664,17 @@ def print_type_func(t):
 	if hlir_type.type_is_unit(t['to']):
 		out("void")
 	else:
-		print_type(t['to'])
+		if hlir_type.type_is_array(t['to']):
+			out("void")
+		else:
+			print_type(t['to'])
 
 	out(" (")
+	if hlir_type.type_is_array(t['to']):
+		print_type(t['to'])
+		out("*")
+		if len(t['params']) > 0:
+			out(", ")
 	print_list_with(t['params'], lambda f: print_type(f['type']))
 	if t['extra_args']:
 		out(", ...")
@@ -918,6 +928,9 @@ def do_eval_call(v, retval=None):
 	print_list_with(args, llvm_print_type_value)
 	out(")")
 
+	if sret:
+		return retval
+
 	return llvm_value_reg(reg, v['type'], v)
 
 
@@ -1026,25 +1039,58 @@ def select_cast_operator(a, b):
 	return 'cast <%s -> %s>' % (a['kind'], b['kind'])
 
 
+def is_adrptr(x):
+	assert(x['isa'] == 'll_value')
+	return x['is_adr'] or hlir_type.type_is_pointer(x['type'])
 
 
 def cast_composite_to_composite(to_type, value, ti):
 	v = do_eval(value)
+	out("\n\t; cast_composite_to_composite")
+
+	if not is_adrptr(v):
+		# если значение из которого конструируем идет 'по значению'
+		# сохраним значение в память
+#		xv = llvm_alloca_store(v['type'], id_str=None, init_value=v)
+		# выделим память под новое значение
+		nv = llvm_alloca(to_type)
+
+		# приведем указатели
+		if to_type['size'] > value['type']['size']:
+			out("\n\t; extend")
+			# from, to, val
+			# приводим указатель на слот к указателю на (меньшее) значенее
+			xnv = llvm_cast("bitcast", hlir_type_pointer(v['type']), hlir_type_pointer(v['type']), nv)
+			# сохраняем туда это самое меньшее значение
+			llvm_store(xnv, v)
+			return llvm_load(nv)
+		else:
+			out("\n\t; trunk")
+			nv = llvm_cast("bitcast", v['type'], hlir_type_pointer(to_type), nv)
+
+		# и сохраним
+
+		return nv
+
+	out("\n\t; JUST")
+	#if v['is_adr'] or hlir_type.type_is_pointer(v['type']):
+	out("\n\t; as ptr")
 	casted_ptr = llvm_cast("bitcast", hlir_type_pointer(value['type']), hlir_type_pointer(to_type), v)
 	casted_ptr['type'] = to_type
 	casted_ptr['is_adr'] = True
 	return llvm_load(casted_ptr)
 
 
+
 def cast_record_to_record(to_type, value, ti):
 	#info("cast_record_to_record", ti)
-	#out("\n; cast_record_to_record")
+	#out("\n\t; cast_record_to_record")
 	return cast_composite_to_composite(to_type, value, ti)
 
 
 def cast_array_to_array(to_type, value, ti):
 	#info("cast_array_to_array", ti)
-	out("\n; cast_array_to_array")
+	out("\n\t; cast_array_to_array")
 	return cast_composite_to_composite(to_type, value, ti)
 
 
@@ -1083,7 +1129,9 @@ def do_eval_cons(x):
 
 	if hlir_type.type_is_array(from_type):
 		if hlir_type.type_is_array(to_type):
-			return cast_array_to_array(to_type, value, x['ti'])
+			nv = cast_array_to_array(to_type, value, x['ti'])
+			out("\n\t;???")
+			return nv
 
 	if hlir_type.type_is_va_list(from_type):
 		# приведение объекта типа va_list особенное
@@ -1359,6 +1407,7 @@ def assign(l, rx):
 			return
 
 		else:
+			out("\n; -???- ")
 			llvm_store(l, llvm_dold(r))
 			return
 
@@ -1472,7 +1521,7 @@ def print_stmt_return(x):
 		assign(p2retval, x['value'])
 
 
-	out("ret void")
+	lo("ret void")
 	reg_get()  # for LLVM
 	return None
 
@@ -1526,13 +1575,13 @@ def print_stmt_block(s):
 
 
 def print_comment_block(x):
-	#out("\n");
+	#out("\n\t");
 	#out("/*%s*/" % x['text'])
 	pass
 
 
 def print_comment_line(x):
-	out("\n")
+	out("\n\t")
 	lines = x['lines']
 	i = 0
 	n = len(lines)
@@ -1543,7 +1592,7 @@ def print_comment_line(x):
 		out(";%s" % line['str'])
 		i = i + 1
 		if i < n:
-			out("\n")
+			out("\n\t")
 
 
 """
@@ -1722,7 +1771,7 @@ def print_func_signature(func):
 
 
 def print_decl_func(x):
-	out("\ndeclare ")
+	out("\n\tdeclare ")
 	print_func_signature(x['value'])
 
 
@@ -1749,7 +1798,7 @@ def print_def_func(x):
 	global cfunc
 	cfunc = func
 
-	out("\ndefine ")
+	out("\n\tdefine ")
 	print_func_signature(func)
 
 	sret = need_sret(func['type']['to'])
@@ -1798,7 +1847,7 @@ def print_def_func(x):
 
 
 def print_decl_type(x):
-	out("\n%%%s = type opaque" % x['id']['str'])
+	out("\n\t%%%s = type opaque" % x['id']['str'])
 
 
 def print_def_type(x):
@@ -1808,10 +1857,10 @@ def print_def_type(x):
 		if root_id != None:
 			return
 
-	out("\n%%%s = type " % x['id']['str'])
+	out("\n\t%%%s = type " % x['id']['str'])
 	print_type(xtype)
 	if hlir_type.type_is_record(xtype):
-		out("\n")
+		out("\n\t")
 
 
 def print_def_var(x):
@@ -1829,7 +1878,7 @@ def print_def_var(x):
 	mod = 'global'
 
 	var = x['value']
-	out("\n@%s = " % var['id']['str'])
+	out("\n\t@%s = " % var['id']['str'])
 	out(linkage + mod + ' ')
 	print_type(var['type'])
 
@@ -1851,7 +1900,7 @@ def print_def_const(x):
 	# тк доступ к ним может идти в рантайме по индкусу;
 	# НО! В константной записи может быть массив! (хз как быть пока)
 	if hlir_type.type_is_array(init_value['type']):
-		out("\n@%s = constant " % x['id']['str'])
+		out("\n\t@%s = constant " % x['id']['str'])
 		llvm_print_type_value(do_eval(init_value))
 
 	return
@@ -1997,7 +2046,7 @@ def print_module(m):
 		print_module(imported_module)
 
 
-	out("\n; -- SOURCE: %s\n" % m['source_info']['name'])
+	out("\n\t; -- SOURCE: %s\n" % m['source_info']['name'])
 
 	print_strings(m['strings'])
 
@@ -2007,7 +2056,7 @@ def print_module(m):
 		isa = x['isa']
 
 		if isa_prev != isa:
-			out("\n")
+			out("\n\t")
 			isa_prev = isa
 
 		if isa == 'decl_func': print_decl_func(x)
@@ -2019,7 +2068,7 @@ def print_module(m):
 		elif isa == 'directive': pass
 		elif isa == 'comment': pass
 
-	out("\n\n")
+	out("\n\t\n")
 
 
 def run(module, outname):
@@ -2067,7 +2116,7 @@ def run(module, outname):
 			#lo("declare void @llvm.memcpy.p0.p0.i64(ptr, ptr, i64, i1)")
 
 		#lo("declare void @llvm.memset.p0.i32(i8*, i8, i32, i1)")
-		out("\n")
+		out("\n\t")
 
 	lo("declare void @llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)")
 	lo("declare void @llvm.memset.p0.i32(i8*, i8, i32, i1)\n")
