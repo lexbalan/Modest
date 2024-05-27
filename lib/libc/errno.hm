@@ -2,153 +2,152 @@
 /*
  * Error codes
  */
-let EPERM = 1	 // Operation not permitted
-let ENOENT = 2	// No such file or directory
-let ESRCH = 3	 // No such process
-let EINTR = 4	 // Interrupted system call
-let EIO = 5	   // Input/output error
-let ENXIO = 6	 // Device not configured
-let E2BIG = 7	 // Argument list too long
-let ENOEXEC = 8   // Exec format error
-let EBADF = 9	 // Bad file descriptor
-let ECHILD = 10   // No child processes
-let EDEADLK = 11  // Resource deadlock avoided
+let ePERM = 1	 // Operation not permitted
+let eNOENT = 2	// No such file or directory
+let eSRCH = 3	 // No such process
+let eINTR = 4	 // Interrupted system call
+let eIO = 5	   // Input/output error
+let eNXIO = 6	 // Device not configured
+let e2BIG = 7	 // Argument list too long
+let eNOEXEC = 8   // Exec format error
+let eBADF = 9	 // Bad file descriptor
+let eCHILD = 10   // No child processes
+let eDEADLK = 11  // Resource deadlock avoided
 					// 11 was EAGAIN
-let ENOMEM = 12   // Cannot allocate memory
-let EACCES = 13   // Permission denied
-let EFAULT = 14   // Bad address
+let eNOMEM = 12   // Cannot allocate memory
+let eACCES = 13   // Permission denied
+let eFAULT = 14   // Bad address
 
-//let ENOTBLK = 15  // Block device required
+//let eNOTBLK = 15  // Block device required
 
-let EBUSY = 16	// Device / Resource busy
-let EEXIST = 17   // File exists
-let EXDEV = 18	// Cross-device link
-let ENODEV = 19   // Operation not supported by device
-let ENOTDIR = 20  // Not a directory
-let EISDIR = 21   // Is a directory
-let EINVAL = 22   // Invalid argument
-let ENFILE = 23   // Too many open files in system
-let EMFILE = 24   // Too many open files
-let ENOTTY = 25   // Inappropriate ioctl for device
-let ETXTBSY = 26  // Text file busy
-let EFBIG = 27	// File too large
-let ENOSPC = 28   // No space left on device
-let ESPIPE = 29   // Illegal seek
-let EROFS = 30	// Read-only file system
-let EMLINK = 31   // Too many links
-let EPIPE = 32	// Broken pipe
+let eBUSY = 16	// Device / Resource busy
+let eEXIST = 17   // File exists
+let eXDEV = 18	// Cross-device link
+let eNODEV = 19   // Operation not supported by device
+let eNOTDIR = 20  // Not a directory
+let eISDIR = 21   // Is a directory
+let eINVAL = 22   // Invalid argument
+let eNFILE = 23   // Too many open files in system
+let eMFILE = 24   // Too many open files
+let eNOTTY = 25   // Inappropriate ioctl for device
+let eTXTBSY = 26  // Text file busy
+let eFBIG = 27	// File too large
+let eNOSPC = 28   // No space left on device
+let eSPIPE = 29   // Illegal seek
+let eROFS = 30	// Read-only file system
+let eMLINK = 31   // Too many links
+let ePIPE = 32	// Broken pipe
 
 /* math software */
-let EDOM = 33	 // Numerical argument out of domain
-let ERANGE = 34   // Result too large
+let eDOM = 33	 // Numerical argument out of domain
+let eRANGE = 34   // Result too large
 
 /* non-blocking and interrupt i/o */
-let EAGAIN = 35		   // Resource temporarily unavailable
-let EWOULDBLOCK = EAGAIN  // Operation would block
-let EINPROGRESS = 36	  // Operation now in progress
-let EALREADY = 37		 // Operation already in progress
+let eAGAIN = 35		   // Resource temporarily unavailable
+let eWOULDBLOCK = EAGAIN  // Operation would block
+let eINPROGRESS = 36	  // Operation now in progress
+let eALREADY = 37		 // Operation already in progress
 
 /* ipc/network software -- argument errors */
-let ENOTSOCK = 38		 // Socket operation on non-socket
-let EDESTADDRREQ = 39	 // Destination address required
-let EMSGSIZE = 40		 // Message too long
-let EPROTOTYPE = 41	   // Protocol wrong type for socket
-let ENOPROTOOPT = 42	  // Protocol not available
-let EPROTONOSUPPORT = 43  // Protocol not supported
+let eNOTSOCK = 38		 // Socket operation on non-socket
+let eDESTADDRREQ = 39	 // Destination address required
+let eMSGSIZE = 40		 // Message too long
+let ePROTOTYPE = 41	   // Protocol wrong type for socket
+let eNOPROTOOPT = 42	  // Protocol not available
+let ePROTONOSUPPORT = 43  // Protocol not supported
 
-//let ESOCKTNOSUPPORT = 44  // Socket type not supported
+//let eSOCKTNOSUPPORT = 44  // Socket type not supported
 
-let ENOTSUP = 45  // Operation not supported
+let eNOTSUP = 45  // Operation not supported
 
-//let EPFNOSUPPORT = 46  // Protocol family not supported
+//let ePFNOSUPPORT = 46  // Protocol family not supported
 
-let EAFNOSUPPORT = 47   // Address family not supported by protocol family
-let EADDRINUSE = 48	 // Address already in use
-let EADDRNOTAVAIL = 49  // Can't assign requested address
+let eAFNOSUPPORT = 47   // Address family not supported by protocol family
+let eADDRINUSE = 48	 // Address already in use
+let eADDRNOTAVAIL = 49  // Can't assign requested address
 
 /* ipc/network software -- operational errors */
-let ENETDOWN = 50	  // Network is down
-let ENETUNREACH = 51   // Network is unreachable
-let ENETRESET = 52	 // Network dropped connection on reset
-let ECONNABORTED = 53  // Software caused connection abort
-let ECONNRESET = 54	// Connection reset by peer
-let ENOBUFS = 55	   // No buffer space available
-let EISCONN = 56	   // Socket is already connected
-let ENOTCONN = 57	  // Socket is not connected
-//let ESHUTDOWN = 58   // Can't send after socket shutdown
-//let ETOOMANYREFS = 59  // Too many references: can't splice
-let ETIMEDOUT = 60	 // Operation timed out
-let ECONNREFUSED = 61  // Connection refused
+let eNETDOWN = 50	  // Network is down
+let eNETUNREACH = 51   // Network is unreachable
+let eNETRESET = 52	 // Network dropped connection on reset
+let eCONNABORTED = 53  // Software caused connection abort
+let eCONNRESET = 54	// Connection reset by peer
+let eNOBUFS = 55	   // No buffer space available
+let eISCONN = 56	   // Socket is already connected
+let eNOTCONN = 57	  // Socket is not connected
+//let eSHUTDOWN = 58   // Can't send after socket shutdown
+//let eTOOMANYREFS = 59  // Too many references: can't splice
+let eTIMEDOUT = 60	 // Operation timed out
+let eCONNREFUSED = 61  // Connection refused
 
-let ELOOP = 62		 // Too many levels of symbolic links
-let ENAMETOOLONG = 63  // File name too long
+let eLOOP = 62		 // Too many levels of symbolic links
+let eNAMETOOLONG = 63  // File name too long
 
 /* should be rearranged */
-let EHOSTDOWN = 64	 // Host is down
-let EHOSTUNREACH = 65  // No route to host
-let ENOTEMPTY = 66	 // Directory not empty
+let eHOSTDOWN = 64	 // Host is down
+let eHOSTUNREACH = 65  // No route to host
+let eNOTEMPTY = 66	 // Directory not empty
 
 /* quotas & mush */
-//let EPROCLIM = 67  // Too many processes
-//let EUSERS = 68	// Too many users
-let EDQUOT = 69	  // Disc quota exceeded
+//let ePROCLIM = 67  // Too many processes
+//let eUSERS = 68	// Too many users
+let eDQUOT = 69	  // Disc quota exceeded
 
 /* Network File System */
-let ESTALE = 70  // Stale NFS file handle
-//let EREMOTE = 71  // Too many levels of remote in path
-//let EBADRPC = 72  // RPC struct is bad
-//let ERPCMISMATCH = 73  // RPC version wrong
-//let EPROGUNAVAIL = 74  // RPC prog. not avail
-//let EPROGMISMATCH = 75  // Program version wrong
-//let EPROCUNAVAIL = 76  // Bad procedure for program
+let eSTALE = 70  // Stale NFS file handle
+//let eREMOTE = 71  // Too many levels of remote in path
+//let eBADRPC = 72  // RPC struct is bad
+//let eRPCMISMATCH = 73  // RPC version wrong
+//let ePROGUNAVAIL = 74  // RPC prog. not avail
+//let ePROGMISMATCH = 75  // Program version wrong
+//let ePROCUNAVAIL = 76  // Bad procedure for program
 
-let ENOLCK = 77  // No locks available
-let ENOSYS = 78  // Function not implemented
+let eNOLCK = 77  // No locks available
+let eNOSYS = 78  // Function not implemented
 
-//let EFTYPE = 79  // Inappropriate file type or format
-//let EAUTH = 80  // Authentication error
-//let ENEEDAUTH = 81  // Need authenticator
+//let eFTYPE = 79  // Inappropriate file type or format
+//let eAUTH = 80  // Authentication error
+//let eNEEDAUTH = 81  // Need authenticator
 //
 ///* Intelligent device errors */
-//let EPWROFF = 82  // Device power is off
-//let EDEVERR = 83  // Device error, e.g. paper out
+//let ePWROFF = 82  // Device power is off
+//let eDEVERR = 83  // Device error, e.g. paper out
 
 
-let EOVERFLOW = 84  // Value too large to be stored in data type
+let eOVERFLOW = 84  // Value too large to be stored in data type
 
 /* Program loading errors */
-//let EBADEXEC = 85	// Bad executable
-//let EBADARCH = 86	// Bad CPU type in executable
-//let ESHLIBVERS = 87  // Shared library version mismatch
-//let EBADMACHO = 88   // Malformed Macho file
+//let eBADEXEC = 85	// Bad executable
+//let eBADARCH = 86	// Bad CPU type in executable
+//let eSHLIBVERS = 87  // Shared library version mismatch
+//let eBADMACHO = 88   // Malformed Macho file
 
 
-let ECANCELED = 89  // Operation canceled
+let eCANCELED = 89  // Operation canceled
 
-let EIDRM = 90   // Identifier removed
-let ENOMSG = 91  // No message of desired type
-let EILSEQ = 92  // Illegal byte sequence
+let eIDRM = 90   // Identifier removed
+let eNOMSG = 91  // No message of desired type
+let eILSEQ = 92  // Illegal byte sequence
 
-//let ENOATTR = 93  // Attribute not found
+//let eNOATTR = 93  // Attribute not found
 
 
-let EBADMSG = 94	// Bad message
-let EMULTIHOP = 95  // Reserved
-let ENODATA = 96	// No message available on STREAM
-let ENOLINK = 97	// Reserved
-let ENOSR = 98	  // No STREAM resources
-let ENOSTR = 99	 // Not a STREAM
-let EPROTO = 100	// Protocol error
-let ETIME = 101	 // STREAM ioctl timeout
+let eBADMSG = 94	// Bad message
+let eMULTIHOP = 95  // Reserved
+let eNODATA = 96	// No message available on STREAM
+let eNOLINK = 97	// Reserved
+let eNOSR = 98	  // No STREAM resources
+let eNOSTR = 99	 // Not a STREAM
+let ePROTO = 100	// Protocol error
+let eTIME = 101	 // STREAM ioctl timeout
 
 /* This value is only discrete when compiling __DARWIN_UNIX03, or KERNEL
-let EOPNOTSUPP = 102  // Operation not supported on socket
+let eOPNOTSUPP = 102  // Operation not supported on socket
 
-let ENOPOLICY = 103  // No such policy registered
-
+let eNOPOLICY = 103  // No such policy registered
 
 /* pseudo-errors returned inside kernel to modify return to process
-let ERESTART = -1	 // restart syscall
-let EJUSTRETURN = -2  // don't modify regs, just return
+let eRESTART = -1	 // restart syscall
+let eJUSTRETURN = -2  // don't modify regs, just return
 
 
