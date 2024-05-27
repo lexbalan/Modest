@@ -268,9 +268,10 @@ define %Int @main() {
 	%3 = load i32, i32* @glb_i0
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*), i32 %3)
 	; copy arrays by value
-	%5 = bitcast [10 x i32]* @glb_a0 to i8*
-	%6 = bitcast [10 x i32]* @glb_a1 to i8*
-	call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %5, i8* %6, i32 40, i1 0)
+	%5 = load [10 x i32], [10 x i32]* @glb_a1
+	store [10 x i32] %5, [10 x i32]* @glb_a0
+	%6 = load [10 x i32], [10 x i32]* @glb_a1
+	store [10 x i32] %6, [10 x i32]* @glb_a0
 	%7 = getelementptr inbounds [10 x i32], [10 x i32]* @glb_a0, i32 0, i32 0
 	%8 = load i32, i32* %7
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str3 to [0 x i8]*), i32 %8)
@@ -327,9 +328,10 @@ define %Int @main() {
 	%49 = insertvalue [10 x i32] %48, i32 0, 8
 	%50 = insertvalue [10 x i32] %49, i32 0, 9
 	store [10 x i32] %50, [10 x i32]* %40
-	%51 = bitcast [10 x i32]* %29 to i8*
-	%52 = bitcast [10 x i32]* %40 to i8*
-	call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %51, i8* %52, i32 40, i1 0)
+	%51 = load [10 x i32], [10 x i32]* %40
+	store [10 x i32] %51, [10 x i32]* %29
+	%52 = load [10 x i32], [10 x i32]* %40
+	store [10 x i32] %52, [10 x i32]* %29
 	%53 = getelementptr inbounds [10 x i32], [10 x i32]* %29, i32 0, i32 0
 	%54 = load i32, i32* %53
 	%55 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str9 to [0 x i8]*), i32 %54)

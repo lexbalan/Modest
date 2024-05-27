@@ -240,9 +240,10 @@ declare void @perror(%ConstCharStr* %str)
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str1 to [0 x i8]*))
-	%2 = bitcast [10 x i32]* @globalArray1 to i8*
-	%3 = bitcast [10 x i32]* @globalArray0 to i8*
-	call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %2, i8* %3, i32 40, i1 0)
+	%2 = load [10 x i32], [10 x i32]* @globalArray0
+	store [10 x i32] %2, [10 x i32]* @globalArray1
+	%3 = load [10 x i32], [10 x i32]* @globalArray0
+	store [10 x i32] %3, [10 x i32]* @globalArray1
 	%4 = alloca i32
 	store i32 0, i32* %4
 	br label %again_1
@@ -299,9 +300,10 @@ endif_0:
 	%40 = insertvalue [10 x i32] %39, i32 0, 8
 	%41 = insertvalue [10 x i32] %40, i32 0, 9
 	store [10 x i32] %41, [10 x i32]* %31
-	%42 = bitcast [10 x i32]* %31 to i8*
-	%43 = bitcast [10 x i32]* %20 to i8*
-	call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %42, i8* %43, i32 40, i1 0)
+	%42 = load [10 x i32], [10 x i32]* %20
+	store [10 x i32] %42, [10 x i32]* %31
+	%43 = load [10 x i32], [10 x i32]* %20
+	store [10 x i32] %43, [10 x i32]* %31
 	store i32 0, i32* %4
 	br label %again_2
 again_2:

@@ -561,13 +561,7 @@ def print_value_string2(x, ctx):
 	for char in x['asset']:
 		cc = ord(char)
 		char_codes.append(cc)
-	try:
-		print(char_codes)
-		print_str_literal(char_codes)
-	except:
-		info("?", x['ti'])
-		print(char_codes)
-		print(x)
+	print_str_literal(char_codes)
 
 
 def print_value_terminal(x, ctx):

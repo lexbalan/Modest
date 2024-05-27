@@ -14,15 +14,35 @@ let constantArray = [1, 2, 3, 4, 5] + [6, 7, 8, 9, 10]
 var globalArray: [10]Int32 = constantArray
 
 
-func f0(x: [10]Char8) {
+func f0(x: [20]Char8) -> [30]Char8 {
 	var local_copy_of_x = x
 	printf("f0(\"%s\")\n", &local_copy_of_x)
+
+	// truncate array
+	var mic = [6]Char8 x
+	mic[5] = '\x0'
+
+	printf("f0 mic = \"%s\"\n", &mic)
+
+	// extend array
+	var res = [30]Char8 x
+	res[6] = 'M'
+	res[7] = 'o'
+	res[8] = 'd'
+	res[9] = 'e'
+	res[10] = 's'
+	res[11] = 't'
+	res[12] = '!'
+	res[13] = '\0'
+	return res
 }
 
 
 func main() -> Int {
 	// generic array [4]Char8 will be implicit casted to [10]Char8
-	f0("hi!")
+
+	var em = f0("Hello World!")
+	printf("em = %s\n", &em)
 
 	var i = 0
 	while i < 10 {

@@ -40,8 +40,6 @@ void sumsub64(int64_t a, int64_t b)
 	int64_t sum;
 	int64_t sub;
 
-	//let s = 1 + 2
-
 	__asm__ volatile (
 		"add %0, %2, %3\nsub %1, %2, %3\n"
 		: "=&r" (sum), "=&r" (sub)

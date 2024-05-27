@@ -25,19 +25,43 @@ int8_t constantArray[10] = _constantArray;
 static int32_t globalArray[10] = _constantArray;
 
 
-struct f0_x {char a[10];};
-void f0(struct f0_x x)
+struct f0_x {char a[20];};
+struct f0_retval {char a[30];};
+struct f0_retval f0(struct f0_x x)
 {
 	struct f0_x local_copy_of_x;
 	*(struct f0_x *)&local_copy_of_x = x;
 	printf("f0(\"%s\")\n", (char *)&local_copy_of_x);
+
+	// truncate array
+	char mic[6];
+	memcpy(&mic, &x, sizeof(char[6]));
+	mic[5] = '\x0';
+
+	printf("f0 mic = \"%s\"\n", (char *)&mic);
+
+	// extend array
+	char res[30];
+	memcpy(&res, &x, sizeof(char[30]));
+	res[6] = 'M';
+	res[7] = 'o';
+	res[8] = 'd';
+	res[9] = 'e';
+	res[10] = 's';
+	res[11] = 't';
+	res[12] = '!';
+	res[13] = '\x0';
+	return *(struct f0_retval *)&res;
 }
 
 
 int main()
 {
 	// generic array [4]Char8 will be implicit casted to [10]Char8
-	f0(*(struct f0_x *)&"hi!");
+
+	struct f0_retval em;
+	*(struct f0_retval *)&em = f0(*(struct f0_x *)&"Hello World!");
+	printf("em = %s\n", (char *)&em);
 
 	int32_t i;
 	i = 0;

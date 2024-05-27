@@ -288,32 +288,53 @@ define void @f3_ptr({i32}* %x) {
 define void @test_by_value() {
 	%1 = load %Type1, %Type1* @a
 	call void (%Type1) @f0_val(%Type1 %1)
+	; cast_composite_to_composite
+	; JUST
+	; as ptr
 	%2 = bitcast %Type1* @a to %Type2*
 	%3 = load %Type2, %Type2* %2
 	call void (%Type2) @f1_val(%Type2 %3)
 	%4 = load %Type1, %Type1* @a
 	call void (%Type1) @f2_val(%Type1 %4)
+	; cast_composite_to_composite
+	; JUST
+	; as ptr
 	%5 = bitcast %Type1* @a to {i32}*
 	%6 = load {i32}, {i32}* %5
 	call void ({i32}) @f3_val({i32} %6)
+	; cast_composite_to_composite
+	; JUST
+	; as ptr
 	%7 = bitcast %Type2* @b to %Type1*
 	%8 = load %Type1, %Type1* %7
 	call void (%Type1) @f0_val(%Type1 %8)
 	%9 = load %Type2, %Type2* @b
 	call void (%Type2) @f1_val(%Type2 %9)
+	; cast_composite_to_composite
+	; JUST
+	; as ptr
 	%10 = bitcast %Type2* @b to %Type1*
 	%11 = load %Type1, %Type1* %10
 	call void (%Type1) @f2_val(%Type1 %11)
+	; cast_composite_to_composite
+	; JUST
+	; as ptr
 	%12 = bitcast %Type2* @b to {i32}*
 	%13 = load {i32}, {i32}* %12
 	call void ({i32}) @f3_val({i32} %13)
 	%14 = load %Type1, %Type1* @c
 	call void (%Type1) @f0_val(%Type1 %14)
+	; cast_composite_to_composite
+	; JUST
+	; as ptr
 	%15 = bitcast %Type1* @c to %Type2*
 	%16 = load %Type2, %Type2* %15
 	call void (%Type2) @f1_val(%Type2 %16)
 	%17 = load %Type1, %Type1* @c
 	call void (%Type1) @f2_val(%Type1 %17)
+	; cast_composite_to_composite
+	; JUST
+	; as ptr
 	%18 = bitcast %Type1* @c to {i32}*
 	%19 = load {i32}, {i32}* %18
 	call void ({i32}) @f3_val({i32} %19)

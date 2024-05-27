@@ -65,16 +65,16 @@ uint32_t sig1(uint32_t x)
 
 
 
-#define _initMagic  { \
+#define _initalState  { \
 	0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A, \
 	0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19 \
 }
-int32_t initMagic[8] = _initMagic;
+int32_t initalState[8] = _initalState;
 
 
 void sha256_contextInit(Context *ctx)
 {
-	memcpy(&ctx->state, &initMagic, sizeof(uint32_t[8]));
+	memcpy(&ctx->state, &initalState, sizeof(uint32_t[8]));
 }
 
 

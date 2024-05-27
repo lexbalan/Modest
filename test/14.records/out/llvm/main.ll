@@ -354,6 +354,9 @@ endif_0:
 	%18 = insertvalue {i32, i32} zeroinitializer, i32 1, 0
 	%19 = insertvalue {i32, i32} %18, i32 2, 1
 	store {i32, i32} %19, {i32, i32}* %17
+	; cast_composite_to_composite
+	; JUST
+	; as ptr
 	%20 = bitcast {i32, i32}* %17 to %Point2D*
 	%21 = load %Point2D, %Point2D* %20
 	%22 = alloca %Point2D
@@ -390,6 +393,9 @@ else_2:
 	br label %endif_2
 endif_2:
 	; comparison between two record (by pointer)
+	; cast_composite_to_composite
+	; JUST
+	; as ptr
 	%38 = bitcast {i32, i32}* %17 to %Point2D*
 	%39 = load %Point2D, %Point2D* %38
 	%40 = alloca %Point2D
@@ -416,6 +422,9 @@ endif_3:
 	; (it is possible if dst record contained all fields from src record
 	; and their types are equal)
 	%49 = alloca %Point3D
+	; cast_composite_to_composite
+	; JUST
+	; as ptr
 	%50 = bitcast %Point2D* %14 to %Point3D*
 	%51 = load %Point3D, %Point3D* %50
 	store %Point3D %51, %Point3D* %49

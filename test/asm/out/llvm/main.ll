@@ -229,7 +229,6 @@ define i64 @sub64(i64 %a, i64 %b) {
 define void @sumsub64(i64 %a, i64 %b) {
 	%1 = alloca i64
 	%2 = alloca i64
-	;let s = 1 + 2
 	%3 = call {i64, i64} asm sideeffect "add $0, $2, $3\0Asub $1, $2, $3\0A", "=&r,=&r,r,r,~{cc}" (i64 %a, i64 %b)
 	%4 = extractvalue {i64, i64} %3, 0
 	store i64 %4, i64* %1

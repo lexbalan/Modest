@@ -123,12 +123,12 @@ def value_array_cons(t, v, method, ti):
 		return None
 
 	# Check array length
-	# нельзя построить меньший массив из большего
+	# нельзя построить меньший массив из большего (ВРЕМЕННО МОЖНО)
 	n_from = v['type']['volume']['asset']
 	n_to = t['volume']['asset']
-	if n_from > n_to:
-		info("too many items (%d, %d)" % (vvol, tvol), v['ti'])
-		return None
+	#if n_from > n_to:
+	#	info("too many items (%d, %d)" % (n_from, n_to), ti)
+	#	return None
 
 	#
 	# Implicit cons
