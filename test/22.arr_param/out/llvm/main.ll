@@ -240,7 +240,6 @@ define void @ret_str([8 x i8]* noalias sret([8 x i8]) %0) {
 }
 
 
-
 @global_array = global [2 x i32] [
 	i32 1,
 	i32 2
