@@ -1359,21 +1359,17 @@ def do_eval(x):
 #
 #
 
-# WARNING:
-# param l must be #ll_value
-# param rx must be #value (!)
-def assign(l, rx):
-	#print("assign")
-	assert(l['isa'] == 'll_value')
-	assert(rx['isa'] == 'value')
-	llvm_store(l, do_reval(rx))
 
+def do_assign(l, r):
+	assert(l['isa'] == 'll_value')
+	assert(r['isa'] == 'll_value')
+	llvm_store(l, r)
 
 
 def print_stmt_assign(x):
 	l = do_eval(x['left'])
-	assign(l, x['right'])
-
+	r = do_reval(x['right'])
+	do_assign(l, r)
 
 
 def print_stmt_if(x):
@@ -1448,18 +1444,18 @@ def print_stmt_return(x):
 		llvm_va_end(va_list)
 
 	if x['value'] != None:
+		v = do_reval(x['value'])
 		if not need_sret(cfunc['type']):
-			v = do_eval(x['value'])
-			xv = llvm_dold(v)
+			#xv = llvm_dold(v)
 			lo("ret ")
-			llvm_print_type_value(xv)
+			llvm_print_type_value(v)
 			reg_get()  # for LLVM
 			return None
 
 		# return via sret
 		to = cfunc['type']['to']
 		p2retval = llvm_value_reg("0", hlir_type_pointer(to))
-		assign(p2retval, x['value'])
+		do_assign(p2retval, v)
 
 
 	lo("ret void")
@@ -1474,7 +1470,7 @@ def print_stmt_def_var(x):
 	locals_add(id_str, val)
 
 	if x['default_value'] != None:
-		assign(val, x['default_value'])
+		do_assign(val, do_reval(x['default_value']))
 
 	return None
 
