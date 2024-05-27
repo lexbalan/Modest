@@ -1366,33 +1366,7 @@ def assign(l, rx):
 	#print("assign")
 	assert(l['isa'] == 'll_value')
 	assert(rx['isa'] == 'value')
-
-	if value_is_immediate(rx):
-		# cons array_immediate приходит с полем 'asset'
-		# и в этом 'asset' все уже приведено как положено
-		llvm_store(l, do_reval(rx))
-		return
-
-
-	if hlir_type.type_is_array(rx['type']):
-		r = do_eval(rx)
-		llvm_store(l, llvm_dold(r))
-
-
-	if hlir_type.type_is_record(rx['type']):
-		r = do_eval(rx)
-
-		if r['is_adr']:
-			sz = r['type']['size']
-			llvm_memcpy_immsize(l, r, sz, volatile=False)
-			return
-
-		else:
-			llvm_store(l, llvm_dold(r))
-			return
-
 	llvm_store(l, do_reval(rx))
-
 
 
 

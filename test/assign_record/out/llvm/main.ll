@@ -229,55 +229,53 @@ declare void @perror(%ConstCharStr* %str)
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str1 to [0 x i8]*))
-	%2 = bitcast %Point* @globalPoint1 to i8*
-	%3 = bitcast %Point* @globalPoint0 to i8*
-	call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %2, i8* %3, i32 8, i1 0)
-	%4 = getelementptr inbounds %Point, %Point* @globalPoint1, i32 0, i32 0
-	%5 = load i32, i32* %4
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str2 to [0 x i8]*), i32 %5)
-	%7 = getelementptr inbounds %Point, %Point* @globalPoint1, i32 0, i32 1
-	%8 = load i32, i32* %7
-	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str3 to [0 x i8]*), i32 %8)
-	%10 = bitcast %Point* @globalPoint0 to i8*
-	%11 = bitcast %Point* @globalPoint1 to i8*
+	%2 = load %Point, %Point* @globalPoint0
+	store %Point %2, %Point* @globalPoint1
+	%3 = getelementptr inbounds %Point, %Point* @globalPoint1, i32 0, i32 0
+	%4 = load i32, i32* %3
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str2 to [0 x i8]*), i32 %4)
+	%6 = getelementptr inbounds %Point, %Point* @globalPoint1, i32 0, i32 1
+	%7 = load i32, i32* %6
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str3 to [0 x i8]*), i32 %7)
+	%9 = bitcast %Point* @globalPoint0 to i8*
+	%10 = bitcast %Point* @globalPoint1 to i8*
 	
-	%12 = call i1 (i8*, i8*, i64) @memeq( i8* %10, i8* %11, i64 8)
-	%13 = icmp ne i1 %12, 0
-	br i1 %13 , label %then_0, label %else_0
+	%11 = call i1 (i8*, i8*, i64) @memeq( i8* %9, i8* %10, i64 8)
+	%12 = icmp ne i1 %11, 0
+	br i1 %12 , label %then_0, label %else_0
 then_0:
-	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str4 to [0 x i8]*))
+	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str4 to [0 x i8]*))
 	br label %endif_0
 else_0:
-	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str5 to [0 x i8]*))
+	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str5 to [0 x i8]*))
 	br label %endif_0
 endif_0:
 	; local
-	%16 = alloca %Point
-	%17 = insertvalue %Point zeroinitializer, i32 10, 0
-	%18 = insertvalue %Point %17, i32 20, 1
-	store %Point %18, %Point* %16
-	%19 = alloca %Point
-	store %Point zeroinitializer, %Point* %19
-	%20 = bitcast %Point* %19 to i8*
-	%21 = bitcast %Point* %16 to i8*
-	call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(i8* %20, i8* %21, i32 8, i1 0)
-	%22 = getelementptr inbounds %Point, %Point* %19, i32 0, i32 0
-	%23 = load i32, i32* %22
-	%24 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str6 to [0 x i8]*), i32 %23)
-	%25 = getelementptr inbounds %Point, %Point* %19, i32 0, i32 1
-	%26 = load i32, i32* %25
-	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str7 to [0 x i8]*), i32 %26)
-	%28 = bitcast %Point* %16 to i8*
-	%29 = bitcast %Point* %19 to i8*
+	%15 = alloca %Point
+	%16 = insertvalue %Point zeroinitializer, i32 10, 0
+	%17 = insertvalue %Point %16, i32 20, 1
+	store %Point %17, %Point* %15
+	%18 = alloca %Point
+	store %Point zeroinitializer, %Point* %18
+	%19 = load %Point, %Point* %15
+	store %Point %19, %Point* %18
+	%20 = getelementptr inbounds %Point, %Point* %18, i32 0, i32 0
+	%21 = load i32, i32* %20
+	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str6 to [0 x i8]*), i32 %21)
+	%23 = getelementptr inbounds %Point, %Point* %18, i32 0, i32 1
+	%24 = load i32, i32* %23
+	%25 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str7 to [0 x i8]*), i32 %24)
+	%26 = bitcast %Point* %15 to i8*
+	%27 = bitcast %Point* %18 to i8*
 	
-	%30 = call i1 (i8*, i8*, i64) @memeq( i8* %28, i8* %29, i64 8)
-	%31 = icmp ne i1 %30, 0
-	br i1 %31 , label %then_1, label %else_1
+	%28 = call i1 (i8*, i8*, i64) @memeq( i8* %26, i8* %27, i64 8)
+	%29 = icmp ne i1 %28, 0
+	br i1 %29 , label %then_1, label %else_1
 then_1:
-	%32 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str8 to [0 x i8]*))
+	%30 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str8 to [0 x i8]*))
 	br label %endif_1
 else_1:
-	%33 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str9 to [0 x i8]*))
+	%31 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str9 to [0 x i8]*))
 	br label %endif_1
 endif_1:
 	ret %Int 0
