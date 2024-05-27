@@ -9,21 +9,21 @@
 
 
 
-struct swap_x {int32_t a[2];};
+struct swap_in {int32_t a[2];};
 struct swap_retval {int32_t a[2];};
-struct swap_retval swap(struct swap_x x);
+struct swap_retval swap(struct swap_in in);
 
 
-struct swap_retval swap(struct swap_x x)
+struct swap_retval swap(struct swap_in in)
 {
 	int32_t out[2];
-	out[0] = x.a[1];
-	out[1] = x.a[0];
+	out[0] = in.a[1];
+	out[1] = in.a[0];
 	return *(struct swap_retval *)&out;
 }
 
 
-struct ret_str_retval {char a[7];};
+struct ret_str_retval {char a[8];};
 struct ret_str_retval ret_str()
 {
 	return *(struct ret_str_retval *)&"hello!\n";
@@ -97,7 +97,7 @@ int main()
 	printf("a[0] = %i\n", a[0]);
 	printf("a[1] = %i\n", a[1]);
 
-	struct swap_retval b = swap(*(struct swap_x *)&a);
+	struct swap_retval b = swap(*(struct swap_in *)&a);
 
 	printf("after swap:\n");
 	printf("b[0] = %i\n", b.a[0]);

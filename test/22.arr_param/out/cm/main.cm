@@ -3,18 +3,18 @@
 import "libc/stdio"
 
 
-func swap(x: [2]Int32) -> [2]Int32
+func swap(in: [2]Int32) -> [2]Int32
 
 
-func swap(x: [2]Int32) -> [2]Int32 {
+func swap(in: [2]Int32) -> [2]Int32 {
 	var out: [2]Int32
-	out[0] = x[1]
-	out[1] = x[0]
+	out[0] = in[1]
+	out[1] = in[0]
 	return out
 }
 
 
-func ret_str() -> [7]Char8 {
+func ret_str() -> [8]Char8 {
 	return "hello!\n"
 }
 
@@ -70,7 +70,7 @@ type Pod record {
 func main() -> Int {
 
 	// function returns array
-	var returned_string: [7]Char8 = ret_str()
+	var returned_string: [8]Char8 = ret_str()
 	printf("returned_string = %s", &returned_string)
 
 
