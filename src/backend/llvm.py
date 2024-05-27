@@ -1446,7 +1446,6 @@ def print_stmt_return(x):
 	if x['value'] != None:
 		v = do_reval(x['value'])
 		if not need_sret(cfunc['type']):
-			#xv = llvm_dold(v)
 			lo("ret ")
 			llvm_print_type_value(v)
 			reg_get()  # for LLVM
@@ -1456,7 +1455,6 @@ def print_stmt_return(x):
 		to = cfunc['type']['to']
 		p2retval = llvm_value_reg("0", hlir_type_pointer(to))
 		do_assign(p2retval, v)
-
 
 	lo("ret void")
 	reg_get()  # for LLVM
@@ -1468,10 +1466,9 @@ def print_stmt_def_var(x):
 	id_str = x['var']['id']['str']
 	val = llvm_alloca(x['var']['type'])
 	locals_add(id_str, val)
-
 	if x['default_value'] != None:
-		do_assign(val, do_reval(x['default_value']))
-
+		iv = do_reval(x['default_value'])
+		do_assign(val, iv)
 	return None
 
 
