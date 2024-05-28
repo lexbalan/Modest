@@ -46,7 +46,7 @@ def hlir_def_const(_id, value_const, init_value, ti):
 	}
 
 
-def hlir_def_var(_id, init_value, var_value, ti):
+def hlir_def_var(_id, var_value, init_value, ti):
 	return {
 		'isa': 'def_var',
 		'id': _id,

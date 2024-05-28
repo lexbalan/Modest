@@ -2000,10 +2000,10 @@ def def_var(x):
 		if hlir_type.type_is_generic(v['type']):
 			error("cannot cons variable", x['ti'])
 
-	var = value_var(id, t, id['ti'])
-	var['is_global'] = True
-	module['context'].value_add(id['str'], var)
-	return hlir_def_var(id, v, var, x['ti'])
+	var_value = value_var(id, t, id['ti'])
+	var_value['is_global'] = True
+	module['context'].value_add(id['str'], var_value)
+	return hlir_def_var(id, var_value, v, x['ti'])
 
 
 
