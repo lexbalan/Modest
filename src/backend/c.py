@@ -221,7 +221,6 @@ def print_type_record(t, tag=""):
 	out("{")
 	indent_up()
 
-
 	prev_nl = 1
 	for field in t['fields']:
 
