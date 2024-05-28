@@ -349,7 +349,7 @@ endif_0:
 	ret %Node* %4
 }
 
-define i8* @linked_list_node_link_get(%Node* %node) {
+define i8* @linked_list_node_data_get(%Node* %node) {
 	%1 = icmp eq %Node* %node, null
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
@@ -361,7 +361,7 @@ endif_0:
 	ret i8* %4
 }
 
-define %Node* @linked_list_insert_node(%List* %list, %Node* %new_node) {
+define %Node* @linked_list_node_append(%List* %list, %Node* %new_node) {
 	%1 = icmp eq %List* %list, null
 	%2 = icmp eq %Node* %new_node, null
 	%3 = or i1 %1, %2
@@ -402,7 +402,7 @@ endif_2:
 	ret %Node* %new_node
 }
 
-define %Node* @linked_list_insert(%List* %list, i8* %link) {
+define %Node* @linked_list_append(%List* %list, i8* %data) {
 	%1 = icmp eq %List* %list, null
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
@@ -417,8 +417,8 @@ then_1:
 	br label %endif_1
 endif_1:
 	%6 = getelementptr inbounds %Node, %Node* %3, i32 0, i32 2
-	store i8* %link, i8** %6
-	%7 = call %Node* (%List*, %Node*) @linked_list_insert_node(%List* %list, %Node* %3)
+	store i8* %data, i8** %6
+	%7 = call %Node* (%List*, %Node*) @linked_list_node_append(%List* %list, %Node* %3)
 	%8 = icmp eq %Node* %7, null
 	br i1 %8 , label %then_2, label %endif_2
 then_2:

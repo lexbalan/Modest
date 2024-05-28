@@ -21,10 +21,10 @@ Node *linked_list_last_get(List *list);
 Node *linked_list_node_create();
 Node *linked_list_node_prev_get(Node *node);
 Node *linked_list_node_next_get(Node *node);
-void *linked_list_node_link_get(Node *node);
+void *linked_list_node_data_get(Node *node);
 
-Node *linked_list_insert_node(List *list, Node *new_node);
+Node *linked_list_node_append(List *list, Node *new_node);
 
-Node *linked_list_insert(List *list, void *link);
+Node *linked_list_append(List *list, void *data);
 
 #endif /* LINKED_LIST_H */

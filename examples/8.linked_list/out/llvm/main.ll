@@ -301,9 +301,9 @@ declare %Node* @linked_list_last_get(%List* %list)
 declare %Node* @linked_list_node_create()
 declare %Node* @linked_list_node_prev_get(%Node* %node)
 declare %Node* @linked_list_node_next_get(%Node* %node)
-declare i8* @linked_list_node_link_get(%Node* %node)
-declare %Node* @linked_list_insert_node(%List* %list, %Node* %new_node)
-declare %Node* @linked_list_insert(%List* %list, i8* %link)
+declare i8* @linked_list_node_data_get(%Node* %node)
+declare %Node* @linked_list_node_append(%List* %list, %Node* %new_node)
+declare %Node* @linked_list_append(%List* %list, i8* %data)
 
 
 ; -- SOURCE: src/main.cm
@@ -325,7 +325,7 @@ define void @nat64_list_insert(%List* %list, i64 %x) {
 	%2 = bitcast i8* %1 to i64*
 	store i64 %x, i64* %2
 	%3 = bitcast i64* %2 to i8*
-	%4 = call %Node* (%List*, i8*) @linked_list_insert(%List* %list, i8* %3)
+	%4 = call %Node* (%List*, i8*) @linked_list_append(%List* %list, i8* %3)
 	ret void
 }
 
@@ -343,7 +343,7 @@ again_1:
 	br i1 %5 , label %body_1, label %break_1
 body_1:
 	%6 = load %Node*, %Node** %2
-	%7 = call i8* (%Node*) @linked_list_node_link_get(%Node* %6)
+	%7 = call i8* (%Node*) @linked_list_node_data_get(%Node* %6)
 	%8 = bitcast i8* %7 to i32*
 	%9 = load i32, i32* %8
 	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), i32 %9)
@@ -369,7 +369,7 @@ again_1:
 	br i1 %5 , label %body_1, label %break_1
 body_1:
 	%6 = load %Node*, %Node** %2
-	%7 = call i8* (%Node*) @linked_list_node_link_get(%Node* %6)
+	%7 = call i8* (%Node*) @linked_list_node_data_get(%Node* %6)
 	%8 = bitcast i8* %7 to i32*
 	%9 = load i32, i32* %8
 	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str4 to [0 x i8]*), i32 %9)

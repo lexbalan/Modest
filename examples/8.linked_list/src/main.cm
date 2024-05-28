@@ -11,7 +11,7 @@ func nat64_list_insert(list: *List, x: Nat64) -> Unit {
 	// alloc memory for Nat64 value
 	let p_nat64 = *Nat64 malloc(sizeof(Nat64))
 	*p_nat64 = x
-	linked_list_insert(list, p_nat64)
+	linked_list_append(list, p_nat64)
 }
 
 
@@ -20,7 +20,7 @@ func list_print_forward(list: *List) -> Unit {
 	printf("list_print_forward:\n")
 	var pn = linked_list_first_get(list)
 	while pn != nil {
-		let x = *Nat32 linked_list_node_link_get(pn)
+		let x = *Nat32 linked_list_node_data_get(pn)
 		printf("v = %u\n", *x)
 		pn = linked_list_node_next_get(pn)
 	}
@@ -32,7 +32,7 @@ func list_print_backward(list: *List) -> Unit {
 	printf("list_print_backward:\n")
 	var pn = linked_list_last_get(list)
 	while pn != nil {
-		let x = *Nat32 linked_list_node_link_get(pn)
+		let x = *Nat32 linked_list_node_data_get(pn)
 		printf("v = %u\n", *x)
 		pn = linked_list_node_prev_get(pn)
 	}

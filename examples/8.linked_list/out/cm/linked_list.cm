@@ -8,7 +8,7 @@ import "./linked_list"
 type Node record {
 	next: *Node
 	prev: *Node
-	link: Pointer
+	data: Pointer
 }
 
 type List record {
@@ -68,7 +68,7 @@ func linked_list_node_create() -> *Node {
 
 	node.prev = nil
 	node.next = nil
-	node.link = nil
+	node.data = nil
 
 	return node
 }
@@ -92,16 +92,16 @@ func linked_list_node_prev_get(node: *Node) -> *Node {
 }
 
 
-func linked_list_node_link_get(node: *Node) -> Pointer {
+func linked_list_node_data_get(node: *Node) -> Pointer {
 	if node == nil {
 		return nil
 	}
 
-	return node.link
+	return node.data
 }
 
 
-func linked_list_insert_node(list: *List, new_node: *Node) -> *Node {
+func linked_list_node_append(list: *List, new_node: *Node) -> *Node {
 	if list == nil or new_node == nil {
 		return nil
 	}
@@ -123,7 +123,7 @@ func linked_list_insert_node(list: *List, new_node: *Node) -> *Node {
 }
 
 
-func linked_list_insert(list: *List, link: Pointer) -> *Node {
+func linked_list_append(list: *List, data: Pointer) -> *Node {
 	if list == nil {
 		return nil
 	}
@@ -134,9 +134,9 @@ func linked_list_insert(list: *List, link: Pointer) -> *Node {
 		return nil
 	}
 
-	new_node.link = link
+	new_node.data = data
 
-	let node = linked_list_insert_node(list, new_node)
+	let node = linked_list_node_append(list, new_node)
 
 	if node == nil {
 		free(new_node)

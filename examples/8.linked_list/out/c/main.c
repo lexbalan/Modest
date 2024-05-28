@@ -23,7 +23,7 @@ void nat64_list_insert(List *list, uint64_t x)
 	// alloc memory for Nat64 value
 	uint64_t *const p_nat64 = (uint64_t *)malloc(sizeof(uint64_t));
 	*p_nat64 = x;
-	linked_list_insert(list, p_nat64);
+	linked_list_append(list, p_nat64);
 }
 
 
@@ -34,7 +34,7 @@ void list_print_forward(List *list)
 	Node *pn;
 	pn = linked_list_first_get(list);
 	while (pn != NULL) {
-		uint32_t *const x = (uint32_t *)linked_list_node_link_get(pn);
+		uint32_t *const x = (uint32_t *)linked_list_node_data_get(pn);
 		printf("v = %u\n", *x);
 		pn = linked_list_node_next_get(pn);
 	}
@@ -48,7 +48,7 @@ void list_print_backward(List *list)
 	Node *pn;
 	pn = linked_list_last_get(list);
 	while (pn != NULL) {
-		uint32_t *const x = (uint32_t *)linked_list_node_link_get(pn);
+		uint32_t *const x = (uint32_t *)linked_list_node_data_get(pn);
 		printf("v = %u\n", *x);
 		pn = linked_list_node_prev_get(pn);
 	}

@@ -18,7 +18,7 @@
 struct Node {
 	Node *next;
 	Node *prev;
-	void *link;
+	void *data;
 };
 
 struct List {
@@ -83,7 +83,7 @@ Node *linked_list_node_create()
 
 	node->prev = NULL;
 	node->next = NULL;
-	node->link = NULL;
+	node->data = NULL;
 
 	return node;
 }
@@ -109,17 +109,17 @@ Node *linked_list_node_prev_get(Node *node)
 }
 
 
-void *linked_list_node_link_get(Node *node)
+void *linked_list_node_data_get(Node *node)
 {
 	if (node == NULL) {
 		return NULL;
 	}
 
-	return node->link;
+	return node->data;
 }
 
 
-Node *linked_list_insert_node(List *list, Node *new_node)
+Node *linked_list_node_append(List *list, Node *new_node)
 {
 	if ((list == NULL) || (new_node == NULL)) {
 		return NULL;
@@ -142,7 +142,7 @@ Node *linked_list_insert_node(List *list, Node *new_node)
 }
 
 
-Node *linked_list_insert(List *list, void *link)
+Node *linked_list_append(List *list, void *data)
 {
 	if (list == NULL) {
 		return NULL;
@@ -154,9 +154,9 @@ Node *linked_list_insert(List *list, void *link)
 		return NULL;
 	}
 
-	new_node->link = link;
+	new_node->data = data;
 
-	Node *const node = linked_list_insert_node(list, new_node);
+	Node *const node = linked_list_node_append(list, new_node);
 
 	if (node == NULL) {
 		free(new_node);

@@ -1283,7 +1283,7 @@ def print_stmt_defvar(x):
 	if init_value != None:
 		out(";")
 		nl_indent()
-		assign(x['var'], init_value)
+		do_assign(x['var'], init_value)
 		return
 
 	out(";")
@@ -1410,41 +1410,25 @@ def assign_array(left, right):
 	return
 
 
-
-def assign(left, right):
-	"""if right['kind'] == 'cons':
-		# for case:
-		# var x: [10]Int32
-		# var y: [5]Int32
-		# x = [10]Int32 y
-		cast_v = right['value']
-		if hlir_type.type_is_array(right['type']):
-			right = cast_v
-			return assign_array(left, right)"""
-
+def do_assign(left, right):
 	if hlir_type.type_is_array(right['type']):
 		return assign_array(left, right)
-
 
 	print_value(left)
 	out(" = ")
 	print_value(right)
 	out(";")
-
 	return
-
 
 
 def print_stmt_assign(x):
 	nl_indent(x['nl'])
-	assign(x['left'], x['right'])
+	do_assign(x['left'], x['right'])
 
 
 def print_stmt_value(x):
 	nl_indent(x['nl'])
 	print_value(x['value']); out(";")
-
-
 
 
 def print_stmt(x):
