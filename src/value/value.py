@@ -151,7 +151,6 @@ def value_var(id, type, ti):
 		'usecnt': 0,
 		'immediate': False,
 		'immutable': False,
-		'is_global': False,
 		'att': [],
 		'expr_ti': ti,
 		'ti': ti

@@ -703,10 +703,11 @@ def print_value_cons(x, ctx):
 	#if is_global_context():
 	if hlir_type.type_is_array(to_type):
 		if hlir_type.type_is_generic_array(from_type):
-			#if is_local_context():
 			# если это литеральная (и не глобальная) константа-массив
 			# то мы должны ее привести к требуемому типу
-			if not (value['kind'] == 'const' and 'global' in value['att']): # <- костыль?
+			is_const = value['kind'] == 'const'
+			is_top_level = 'top_level_value' in value['att']
+			if not (is_const and is_top_level):
 				print_cast(to_type, value, ctx=['array_as_array'])
 			else:
 				print_value(value, ctx=ctx)
@@ -1121,8 +1122,7 @@ def print_value_const(x, ctx):
 
 	if hlir_type.type_is_array(x['type']):
 		if is_global_context():
-			if 'global' in x['att']: # <- костыль?
-				prefix = '_'
+			prefix = '_'
 
 	print_value_by_id(x, ctx, prefix)
 	return

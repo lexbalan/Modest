@@ -817,12 +817,8 @@ def do_value_ref(x):
 	# это нужно для глобальных immediate структур,
 	# пока не знаю как это лучше сделать, но мне это вообще не нравится!
 	if not is_local_context():
-		if 'is_global' in v:
-			nv['immediate'] = v['is_global']
-			nv['asset'] = None
-		elif hlir_type.type_is_func(vtype):
-			nv['immediate'] = True
-			nv['asset'] = None
+		nv['immediate'] = True
+		nv['asset'] = None
 
 	return nv
 
@@ -1830,7 +1826,7 @@ def def_const(x):
 
 	const_value = value_const(id, v['type'], v, id['ti'])
 	const_value['att'].extend(v['att'])
-	const_value['att'].append('global')
+	const_value['att'].append('top_level_value')
 
 	# Now let can be immediate!
 	if value_is_immediate(v):
@@ -1992,7 +1988,7 @@ def def_var(x):
 			error("cannot cons variable", x['ti'])
 
 	var_value = value_var(id, t, id['ti'])
-	var_value['is_global'] = True
+	#var_value['att'].append('top_level_value')
 	module['context'].value_add(id['str'], var_value)
 	return hlir_def_var(id, var_value, v, x['ti'])
 
