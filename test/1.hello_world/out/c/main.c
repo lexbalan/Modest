@@ -13,7 +13,6 @@
 
 #define hello_world  (hello " " world)
 
-//var arrayOfChars = [Char8 "a", 'b', 'c']
 
 int main()
 {

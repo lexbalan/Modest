@@ -14,6 +14,7 @@ var globalArray: [10]Int32 = constantArray
 
 var arrayFromString: [3]Char8 = "abc"
 
+
 //var arrayOfChars = [Char8 "a", 'b', 'c']
 
 

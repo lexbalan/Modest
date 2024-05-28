@@ -26,6 +26,7 @@ static int32_t globalArray[10] = _constantArray;
 
 static char arrayFromString[3] = "abc";
 
+
 //var arrayOfChars = [Char8 "a", 'b', 'c']
 
 
