@@ -58,7 +58,6 @@ root_context = None
 module = None
 
 
-# добавляет опцию в модуль ('use_extra_args', 'use_memcpy')
 def module_option(option):
 	global module
 	if not option in module['options']:
@@ -69,7 +68,6 @@ def module_option(option):
 # тепреь вызывается только из конструктора строки (value)
 def module_strings_add(v):
 	module['strings'].append(v)
-
 
 
 def module_type_get(m, id_str):
@@ -1082,7 +1080,7 @@ def do_value_call(x):
 
 	# for C backend only (maybe mv to C?)
 	if hlir_type.type_is_closed_array(f['type']['to']):
-		rv['att'].append('wrapped_array_value')
+		rv['att'].append('wrapped_array')
 
 	return rv
 
@@ -1560,15 +1558,19 @@ def add_local_var(id, typ, ti):
 	return var_value
 
 
+
 def do_stmt_let(x):
 	id = x['id']
 
 	# check if identifier is free (in current block)
 	already = value_get_here(id['str'])
 	if already != None:
-		error("local id redefinition", x['id']['ti'])
+		error("redefinition of '%s'" % id['str'], id['ti'])
 		return hlir_stmt_bad(x)
 
+	if id['str'][0].isupper():
+		error("value id must starts with small letter", id['ti'])
+		pass
 
 	v = do_rvalue(x['value'])
 
@@ -1576,35 +1578,18 @@ def do_stmt_let(x):
 		module['context'].value_add(id['str'], value_bad(x))
 		return hlir_stmt_bad(x)
 
-	if hlir_type.type_is_composite(v['type']):
-		module_option('use_memcpy')
-
-
-	# add 'const' attribute to type
-	# (used by C printer)
-	typ = v['type']
-
-
-	const_value = value_const(id, v['type'], value=None, ti=x['id']['ti'])
+	const_value = value_const(id, v['type'], value=v, ti=x['id']['ti'])
+	# не знаю правильно ли это, но перносим аттрибуты значения-инициализатора
+	# на константу. Пока это необходимо для 'wrapped_array' (!)
+	const_value['att'].extend(v['att'])
 	const_value['att'].append('local') # need for LLVM printer (!)
 
-	if 'asset' in v:
-		const_value['asset'] = v['asset']
-
-	if 'nl_end' in v:
-		const_value['nl_end'] = v['nl_end']
-
-	module['context'].value_add(id['str'], const_value)
-
 	# Now let can be immediate!
-	if v['immediate']:
+	if value_is_immediate(v):
 		const_value['immediate'] = True
 		const_value['asset'] = v['asset']
 
-	# не знаю правильно ли это, но перносим аттрибуты значения-инициализатора
-	# на константу. Пока это необходимо для 'wrapped_array_value' (!)
-	const_value['att'].extend(v['att'])
-
+	module['context'].value_add(id['str'], const_value)
 	return hlir_stmt_let(id, const_value, v, ti=x['ti'])
 
 
@@ -1622,10 +1607,6 @@ def do_stmt_assign(x):
 
 	# type check
 	r = value_cons_implicit_check(l['type'], r)
-
-	if hlir_type.type_is_composite(l['type']):
-		module_option('use_memcpy')
-
 	return hlir_stmt_assign(l, r, ti=x['ti'])
 
 
@@ -1833,34 +1814,30 @@ def def_const(x):
 	log("def_const %s" % id['str'])
 
 	# check if identifier is free
-	pre_exist = value_get(id['str'])
+	pre_exist = value_get_here(id['str'])
 	if pre_exist != None:
 		error("redefinition of '%s'" % id['str'], id['ti'])
 
 	if id['str'][0].isupper():
-		error("constant id must starts with small letter", id['ti'])
+		error("value id must starts with small letter", id['ti'])
 		pass
 
-	iv = do_value_immediate(x['value'], allow_ptr_to_str=True)
+	v = do_value_immediate(x['value'], allow_ptr_to_str=True)
 
-	if value_is_bad(iv):
-		return hlir_def_const(id, iv, iv, id['ti'])
+	if value_is_bad(v):
+		module['context'].value_add(id['str'], v)
+		return hlir_def_const(id, v, v, x['ti'])
 
-	#if not value_is_immediate(iv):
-	#	if not type_is_pointer_to_array_of_char(iv['type']):
-	#		error("expected immediate value", x['value'])
-
-	const_value = value_const(id, iv['type'], iv, id['ti'])
-	const_value['immediate'] = True
-	const_value['asset'] = iv['asset']
+	const_value = value_const(id, v['type'], v, id['ti'])
 	const_value['att'].append('global')
-	const_value['att'].append('global_const')
 
-	if 'nl_end' in iv:
-		const_value['nl_end'] = iv['nl_end']
+	# Now let can be immediate!
+	if value_is_immediate(v):
+		const_value['immediate'] = True
+		const_value['asset'] = v['asset']
 
 	module['context'].value_add(id['str'], const_value)
-	return hlir_def_const(id, const_value, iv, x['ti'])
+	return hlir_def_const(id, const_value, v, x['ti'])
 
 
 
@@ -2130,7 +2107,7 @@ def def_func(x):
 
 		# for C backend only (maybe mv to C?)
 		if hlir_type.type_is_closed_array(param_type):
-			param_value['att'].append('wrapped_array_value')
+			param_value['att'].append('wrapped_array')
 
 		module['context'].value_add(param_id['str'], param_value)
 		i = i + 1

@@ -121,11 +121,8 @@ def _value_record_cons_record_from_generic(t, v, method, ti):
 	nv = value_cons_node(t, v, method, ti)
 	nv['asset'] = items
 	nv['immediate'] = True
-
 	if 'nl' in v:
 		nv['nl'] = v['nl']
-
-	nv['nl_end'] = v['nl_end']
 	return nv
 
 

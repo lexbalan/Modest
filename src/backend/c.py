@@ -707,7 +707,7 @@ def print_value_cons(x, ctx):
 			#if is_local_context():
 			# если это литеральная (и не глобальная) константа-массив
 			# то мы должны ее привести к требуемому типу
-			if not 'global_const' in value['att']: # <- костыль?
+			if not (value['kind'] == 'const' and 'global' in value['att']): # <- костыль?
 				print_cast(to_type, value, ctx = ['array_as_array'])
 			else:
 				print_value(value, ctx=ctx)
@@ -1112,7 +1112,7 @@ def print_value_by_id(x, ctx=[], prefix=''):
 		print_id(x, prefix)
 
 	if 'do_unwrap' in ctx:
-		if 'wrapped_array_value' in x['att']:
+		if 'wrapped_array' in x['att']:
 			out(".a")
 
 
@@ -1122,7 +1122,7 @@ def print_value_const(x, ctx):
 
 	if hlir_type.type_is_array(x['type']):
 		if is_global_context():
-			if 'global_const' in x['att']: # <- костыль?
+			if 'global' in x['att']: # <- костыль?
 				prefix = '_'
 
 	print_value_by_id(x, ctx, prefix)
@@ -1395,7 +1395,7 @@ def assign_array(left, right):
 	# если справа 'обернутое' значение
 	# (для того чтобы в C вернуть массив из функции
 	# его нужно 'обернуть' в структуру)
-	if 'wrapped_array_value' in right['att']:
+	if 'wrapped_array' in right['att']:
 		to_type = right['type']
 		if right['kind'] == 'call':
 			to_type = right['func']['type']['to']
