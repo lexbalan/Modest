@@ -708,7 +708,7 @@ def print_value_cons(x, ctx):
 			# если это литеральная (и не глобальная) константа-массив
 			# то мы должны ее привести к требуемому типу
 			if not (value['kind'] == 'const' and 'global' in value['att']): # <- костыль?
-				print_cast(to_type, value, ctx = ['array_as_array'])
+				print_cast(to_type, value, ctx=['array_as_array'])
 			else:
 				print_value(value, ctx=ctx)
 			return
