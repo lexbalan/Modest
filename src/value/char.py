@@ -42,6 +42,7 @@ def value_char_cons(t, v, method, ti):
 		if len(v['asset']) == 1:
 			cc = ord(v['asset'][0])
 			nv = value_cons_immediate(t, v, method, ti)
+			nv['immediate'] = True
 			nv['asset'] = cc
 			return nv
 

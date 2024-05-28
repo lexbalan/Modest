@@ -43,7 +43,6 @@ def value_array_create(items, ti=None):
 			array_item_type = common_type
 		i = i + 1
 
-
 	# неявно приводим все элементы к этому типу
 	casted_items = []
 
@@ -53,15 +52,11 @@ def value_array_create(items, ti=None):
 		item = items[i]
 		casted_item = value_cons_implicit(array_item_type, item)
 
-		if 'asset' in item:
-			casted_item['asset'] = item['asset']
-
 		if 'nl_end' in item:
 			casted_item['nl_end'] = item['nl_end']
 
 		casted_items.append(casted_item)
 		i = i + 1
-
 
 	v = _value_array_create(casted_items, array_item_type, length, True, ti)
 	v['immediate'] = is_immediate  #TODO: need to implement 'immediate' flag

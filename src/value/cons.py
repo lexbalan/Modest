@@ -132,6 +132,7 @@ def value_cons_explicit(t, v, ti):
 	return nv
 
 
+
 # избавляемся от generic
 def value_cons_default(x):
 	from_type = x['type']

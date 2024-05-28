@@ -14,6 +14,9 @@ var globalArray: [10]Int32 = constantArray
 
 var arrayFromString: [3]Char8 = "abc"
 
+//var arrayOfChars = [Char8 "a", 'b', 'c']
+
+
 func f0(x: [20]Char8) -> [30]Char8 {
 	var local_copy_of_x: [20]Char8 = x
 	printf("f0(\"%s\")\n", &local_copy_of_x)

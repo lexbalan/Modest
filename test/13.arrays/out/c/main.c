@@ -26,6 +26,9 @@ static int32_t globalArray[10] = _constantArray;
 
 static char arrayFromString[3] = "abc";
 
+//var arrayOfChars = [Char8 "a", 'b', 'c']
+
+
 struct f0_x {char a[20];};
 struct f0_retval {char a[30];};
 struct f0_retval f0(struct f0_x x)

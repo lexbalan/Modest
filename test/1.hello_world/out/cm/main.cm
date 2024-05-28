@@ -7,6 +7,7 @@ let world = "World!"
 
 let hello_world = hello + " " + world
 
+//var arrayOfChars = [Char8 "a", 'b', 'c']
 
 func main() -> Int {
 	printf("%s\n", *Str8 hello_world)
