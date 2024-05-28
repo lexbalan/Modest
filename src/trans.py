@@ -1969,28 +1969,19 @@ def def_var(x):
 	v = None
 	if x['value'] != None:
 		v = do_rvalue(x['value'])
-		#if value_is_bad(v):
-		#	return None
-
 
 		if t != None:
-			##
+			# for case like:
+			# var a: Int[] = [1, 2, 3] // -> Int[3]
 			if hlir_type.type_is_open_array(t):
-				#print("VAR WITH OPEN ARRAY TYPE!")
-
-				item_type = None
 				length = 0
 				if hlir_type.type_is_string(v['type']):
-					item_type = t['of']
 					length = len(v['asset'])
 				elif hlir_type.type_is_array(v['type']):
-					item_type = t['of']
 					length = v['type']['volume']['asset']
 
-				assert(item_type != None)
 				volume = value_integer_create(length)
-				t = hlir_type.hlir_type_array(item_type, volume, x['ti'])
-			##
+				t = hlir_type.hlir_type_array(t['of'], volume, x['ti'])
 
 			v = value_cons_implicit_check(t, v)
 		else:

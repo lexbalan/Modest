@@ -24,6 +24,7 @@ int8_t constantArray[10] = _constantArray;
 
 static int32_t globalArray[10] = _constantArray;
 
+static char arrayFromString[3] = "abc";
 
 struct f0_x {char a[20];};
 struct f0_retval {char a[30];};

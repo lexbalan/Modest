@@ -462,6 +462,11 @@ declare double @max_float64(double %a, double %b)
 	i32 9,
 	i32 10
 ]
+@arrayFromString = global [3 x i8] [
+	i8 97,
+	i8 98,
+	i8 99
+]
 
 define void @f0([30 x i8]* noalias sret([30 x i8]) %0, [20 x i8] %x) {
 	%2 = alloca [20 x i8]

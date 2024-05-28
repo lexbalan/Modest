@@ -13,6 +13,7 @@ let constantArray = [1, 2, 3, 4, 5] + [6, 7, 8, 9, 10]
 
 var globalArray: [10]Int32 = constantArray
 
+var arrayFromString: []Char8 = "abc"
 
 func f0(x: [20]Char8) -> [30]Char8 {
 	var local_copy_of_x = x
