@@ -1829,6 +1829,7 @@ def def_const(x):
 		return hlir_def_const(id, v, v, x['ti'])
 
 	const_value = value_const(id, v['type'], v, id['ti'])
+	const_value['att'].extend(v['att'])
 	const_value['att'].append('global')
 
 	# Now let can be immediate!
@@ -1897,7 +1898,6 @@ def def_type(x):
 		'att': [],
 		'ti': x['ti']
 	}
-
 
 	if already_declared:
 		# сохр ссылку на объявление в определении (пока просто на всякий)
