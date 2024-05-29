@@ -94,19 +94,19 @@ int main()
 
 	// test linked_list_node_get
 	int32_t i;
-	i = -12;
-	while (i <= 0) {
+	i = 0;
+	while (i >= -12) {
 		Node *const node = linked_list_node_get(list, i);
 
 		if (node == NULL) {
 			printf("node %i not exist\n", i);
-			i = i + 1;
+			i = i - 1;
 			continue;
 		}
 
 		uint32_t *const px = (uint32_t *)linked_list_node_data_get(node);
 		printf("list(%i) = %i\n", i, *px);
-		i = i + 1;
+		i = i - 1;
 	}
 
 	printf("-----------------------------------------\n");

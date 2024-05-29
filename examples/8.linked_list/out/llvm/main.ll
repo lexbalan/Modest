@@ -423,11 +423,11 @@ endif_0:
 	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([37 x i8]* @str8 to [0 x i8]*))
 	; test linked_list_node_get
 	%9 = alloca i32
-	store i32 -12, i32* %9
+	store i32 0, i32* %9
 	br label %again_1
 again_1:
 	%10 = load i32, i32* %9
-	%11 = icmp sle i32 %10, 0
+	%11 = icmp sge i32 %10, -12
 	br i1 %11 , label %body_1, label %break_1
 body_1:
 	%12 = load i32, i32* %9
@@ -438,7 +438,7 @@ then_1:
 	%15 = load i32, i32* %9
 	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str9 to [0 x i8]*), i32 %15)
 	%17 = load i32, i32* %9
-	%18 = add i32 %17, 1
+	%18 = sub i32 %17, 1
 	store i32 %18, i32* %9
 	br label %again_1
 	br label %endif_1
@@ -449,7 +449,7 @@ endif_1:
 	%23 = load i32, i32* %21
 	%24 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str10 to [0 x i8]*), i32 %22, i32 %23)
 	%25 = load i32, i32* %9
-	%26 = add i32 %25, 1
+	%26 = sub i32 %25, 1
 	store i32 %26, i32* %9
 	br label %again_1
 break_1:

@@ -76,19 +76,19 @@ func main() -> Int {
 	printf("\nlinked_list_node_get(list, n) test\n")
 
 	// test linked_list_node_get
-	var i = -12
-	while i <= 0 {
+	var i = 0
+	while i >= -12 {
 		let node = linked_list_node_get(list, i)
 
 		if node == nil {
 			printf("node %i not exist\n", i)
-			++i
+			--i
 			again
 		}
 
 		let px = *Nat32 linked_list_node_data_get(node)
 		printf("list(%i) = %i\n", i, *px)
-		++i
+		--i
 	}
 
 	printf("-----------------------------------------\n")
