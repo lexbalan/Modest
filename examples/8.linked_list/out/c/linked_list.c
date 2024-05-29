@@ -40,6 +40,7 @@ List *linked_list_create()
 
 	list->head = NULL;
 	list->tail = NULL;
+	list->size = 0;
 
 	return list;
 }
@@ -55,7 +56,7 @@ uint32_t linked_list_size_get(List *list)
 }
 
 
-Node *linked_list_first_get(List *list)
+Node *linked_list_first_node_get(List *list)
 {
 	if (list == NULL) {
 		return NULL;
@@ -65,7 +66,7 @@ Node *linked_list_first_get(List *list)
 }
 
 
-Node *linked_list_last_get(List *list)
+Node *linked_list_last_node_get(List *list)
 {
 	if (list == NULL) {
 		return NULL;

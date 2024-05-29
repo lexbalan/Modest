@@ -18,7 +18,7 @@ func nat32_list_insert(list: *List, x: Nat32) -> Unit {
 // show list conent from first item to last
 func list_print_forward(list: *List) -> Unit {
 	printf("list_print_forward:\n")
-	var pn: *Node = linked_list_first_get(list)
+	var pn: *Node = linked_list_first_node_get(list)
 	while pn != nil {
 		let x = linked_list_node_data_get(pn)
 		printf("v = %u\n", *x)
@@ -30,7 +30,7 @@ func list_print_forward(list: *List) -> Unit {
 // show list conent from last item to first
 func list_print_backward(list: *List) -> Unit {
 	printf("list_print_backward:\n")
-	var pn: *Node = linked_list_last_get(list)
+	var pn: *Node = linked_list_last_node_get(list)
 	while pn != nil {
 		let x = linked_list_node_data_get(pn)
 		printf("v = %u\n", *x)

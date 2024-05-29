@@ -327,6 +327,8 @@ endif_0:
 	store %Node* null, %Node** %5
 	%6 = getelementptr inbounds %List, %List* %2, i32 0, i32 1
 	store %Node* null, %Node** %6
+	%7 = getelementptr inbounds %List, %List* %2, i32 0, i32 2
+	store i32 0, i32* %7
 	ret %List* %2
 }
 
@@ -342,7 +344,7 @@ endif_0:
 	ret i32 %4
 }
 
-define %Node* @linked_list_first_get(%List* %list) {
+define %Node* @linked_list_first_node_get(%List* %list) {
 	%1 = icmp eq %List* %list, null
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
@@ -354,7 +356,7 @@ endif_0:
 	ret %Node* %4
 }
 
-define %Node* @linked_list_last_get(%List* %list) {
+define %Node* @linked_list_last_node_get(%List* %list) {
 	%1 = icmp eq %List* %list, null
 	br i1 %1 , label %then_0, label %endif_0
 then_0:

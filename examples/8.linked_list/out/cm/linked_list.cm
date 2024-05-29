@@ -28,6 +28,7 @@ func linked_list_create() -> *List {
 
 	list.head = nil
 	list.tail = nil
+	list.size = 0
 
 	return list
 }
@@ -42,7 +43,7 @@ func linked_list_size_get(list: *List) -> Nat32 {
 }
 
 
-func linked_list_first_get(list: *List) -> *Node {
+func linked_list_first_node_get(list: *List) -> *Node {
 	if list == nil {
 		return nil
 	}
@@ -51,7 +52,7 @@ func linked_list_first_get(list: *List) -> *Node {
 }
 
 
-func linked_list_last_get(list: *List) -> *Node {
+func linked_list_last_node_get(list: *List) -> *Node {
 	if list == nil {
 		return nil
 	}

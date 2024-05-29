@@ -15,8 +15,8 @@ typedef struct Node Node;
 
 List *linked_list_create();
 uint32_t linked_list_size_get(List *list);
-Node *linked_list_first_get(List *list);
-Node *linked_list_last_get(List *list);
+Node *linked_list_first_node_get(List *list);
+Node *linked_list_last_node_get(List *list);
 
 Node *linked_list_node_create();
 Node *linked_list_node_prev_get(Node *node);

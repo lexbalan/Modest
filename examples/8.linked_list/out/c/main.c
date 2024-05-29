@@ -32,7 +32,7 @@ void list_print_forward(List *list)
 {
 	printf("list_print_forward:\n");
 	Node *pn;
-	pn = linked_list_first_get(list);
+	pn = linked_list_first_node_get(list);
 	while (pn != NULL) {
 		uint32_t *const x = (uint32_t *)linked_list_node_data_get(pn);
 		printf("v = %u\n", *x);
@@ -46,7 +46,7 @@ void list_print_backward(List *list)
 {
 	printf("list_print_backward:\n");
 	Node *pn;
-	pn = linked_list_last_get(list);
+	pn = linked_list_last_node_get(list);
 	while (pn != NULL) {
 		uint32_t *const x = (uint32_t *)linked_list_node_data_get(pn);
 		printf("v = %u\n", *x);
