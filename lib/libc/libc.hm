@@ -41,6 +41,7 @@ type BlkSizeT Int16  /* used for block sizes */
 type TimeT Int32	 /* time in seconds since 1970 */
 
 
+
 //type Stat record {
 //  dev: DevT		  /* устройство */
 //  ino: InoT		  /* inode */
@@ -64,10 +65,13 @@ type DIR
 func clock () -> Nat64
 
 func malloc(size: SizeT) -> Pointer
+func calloc(num: SizeT, size: SizeT) -> Pointer
 @attribute("value.type.to:dispensable")
 func memset (mem: Pointer, c: Int, n: SizeT) -> Pointer
 @attribute("value.type.to:dispensable")
-func memcpy(dst: Pointer, src: Pointer, len: SizeT) -> Pointer
+func memcpy(dst: Pointer, src: PointerToConst, len: SizeT) -> Pointer
+@attribute("value.type.to:dispensable")
+func memmove (dst: Pointer, source: PointerToConst, n: SizeT) -> Pointer
 func memcmp(ptr1: Pointer, ptr2: Pointer, num: SizeT) -> Int
 func free(ptr: Pointer) -> Unit
 
