@@ -323,12 +323,7 @@ then_0:
 	ret %List* null
 	br label %endif_0
 endif_0:
-	%5 = getelementptr inbounds %List, %List* %2, i32 0, i32 0
-	store %Node* null, %Node** %5
-	%6 = getelementptr inbounds %List, %List* %2, i32 0, i32 1
-	store %Node* null, %Node** %6
-	%7 = getelementptr inbounds %List, %List* %2, i32 0, i32 2
-	store i32 0, i32* %7
+	store %List zeroinitializer, %List* %2
 	ret %List* %2
 }
 

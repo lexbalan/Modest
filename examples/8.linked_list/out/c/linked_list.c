@@ -38,9 +38,7 @@ List *linked_list_create()
 		return NULL;
 	}
 
-	list->head = NULL;
-	list->tail = NULL;
-	list->size = 0;
+	*list = (List){};
 
 	return list;
 }

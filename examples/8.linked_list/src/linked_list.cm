@@ -26,9 +26,7 @@ func linked_list_create () -> *List {
 		return nil
 	}
 
-	list.head = nil
-	list.tail = nil
-	list.size = 0
+	*list = {}
 
 	return list
 }
