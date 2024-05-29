@@ -18,12 +18,12 @@
 
 
 // wrap around linked list for List Nat64
-void nat64_list_insert(List *list, uint64_t x)
+void nat64_list_insert(List *list, uint32_t x)
 {
 	// alloc memory for Nat64 value
-	uint64_t *const p_nat64 = (uint64_t *)malloc(sizeof(uint64_t));
-	*p_nat64 = x;
-	linked_list_append(list, p_nat64);
+	uint32_t *const p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
+	*p_nat32 = x;
+	linked_list_append(list, p_nat32);
 }
 
 
@@ -88,6 +88,43 @@ int main()
 
 	// print list backward
 	list_print_backward(list);
+
+
+	printf("\nlinked_list_node_get(list, n) test\n");
+
+	// test linked_list_node_get
+	int32_t i;
+	i = -12;
+	while (i <= 0) {
+		Node *const node = linked_list_node_get(list, i);
+
+		if (node == NULL) {
+			printf("node %i not exist\n", i);
+			i = i + 1;
+			continue;
+		}
+
+		uint32_t *const px = (uint32_t *)linked_list_node_data_get(node);
+		printf("list(%i) = %i\n", i, *px);
+		i = i + 1;
+	}
+
+	printf("-----------------------------------------\n");
+
+	i = 0;
+	while (i <= 12) {
+		Node *const node = linked_list_node_get(list, i);
+
+		if (node == NULL) {
+			printf("node %i not exist\n", i);
+			i = i + 1;
+			continue;
+		}
+
+		uint32_t *const px = (uint32_t *)linked_list_node_data_get(node);
+		printf("list(%i) = %i\n", i, *px);
+		i = i + 1;
+	}
 
 	return 0;
 }

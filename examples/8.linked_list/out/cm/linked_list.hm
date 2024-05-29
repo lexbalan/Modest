@@ -12,6 +12,7 @@ func linked_list_node_create() -> *Node
 func linked_list_node_prev_get(node: *Node) -> *Node
 func linked_list_node_next_get(node: *Node) -> *Node
 func linked_list_node_data_get(node: *Node) -> Pointer
+func linked_list_node_get(list: *List, pos: Int32) -> *Node
 
 func linked_list_node_append(list: *List, new_node: *Node) -> *Node
 

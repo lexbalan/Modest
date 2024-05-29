@@ -305,6 +305,7 @@ declare %Node* @linked_list_node_create()
 declare %Node* @linked_list_node_prev_get(%Node* %node)
 declare %Node* @linked_list_node_next_get(%Node* %node)
 declare i8* @linked_list_node_data_get(%Node* %node)
+declare %Node* @linked_list_node_get(%List* %list, i32 %pos)
 declare %Node* @linked_list_node_append(%List* %list, %Node* %new_node)
 declare %Node* @linked_list_append(%List* %list, i8* %data)
 
@@ -318,16 +319,22 @@ declare %Node* @linked_list_append(%List* %list, i8* %data)
 @str5 = private constant [21 x i8] [i8 108, i8 105, i8 110, i8 107, i8 101, i8 100, i8 32, i8 108, i8 105, i8 115, i8 116, i8 32, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
 @str6 = private constant [26 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 99, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 99, i8 114, i8 101, i8 97, i8 116, i8 101, i8 32, i8 108, i8 105, i8 115, i8 116, i8 0]
 @str7 = private constant [22 x i8] [i8 108, i8 105, i8 110, i8 107, i8 101, i8 100, i8 32, i8 108, i8 105, i8 115, i8 116, i8 32, i8 115, i8 105, i8 122, i8 101, i8 58, i8 32, i8 37, i8 117, i8 10, i8 0]
+@str8 = private constant [37 x i8] [i8 10, i8 108, i8 105, i8 110, i8 107, i8 101, i8 100, i8 95, i8 108, i8 105, i8 115, i8 116, i8 95, i8 110, i8 111, i8 100, i8 101, i8 95, i8 103, i8 101, i8 116, i8 40, i8 108, i8 105, i8 115, i8 116, i8 44, i8 32, i8 110, i8 41, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
+@str9 = private constant [19 x i8] [i8 110, i8 111, i8 100, i8 101, i8 32, i8 37, i8 105, i8 32, i8 110, i8 111, i8 116, i8 32, i8 101, i8 120, i8 105, i8 115, i8 116, i8 10, i8 0]
+@str10 = private constant [15 x i8] [i8 108, i8 105, i8 115, i8 116, i8 40, i8 37, i8 105, i8 41, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str11 = private constant [43 x i8] [i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 10, i8 0]
+@str12 = private constant [19 x i8] [i8 110, i8 111, i8 100, i8 101, i8 32, i8 37, i8 105, i8 32, i8 110, i8 111, i8 116, i8 32, i8 101, i8 120, i8 105, i8 115, i8 116, i8 10, i8 0]
+@str13 = private constant [15 x i8] [i8 108, i8 105, i8 115, i8 116, i8 40, i8 37, i8 105, i8 41, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 
 
 
 
-define void @nat64_list_insert(%List* %list, i64 %x) {
+define void @nat64_list_insert(%List* %list, i32 %x) {
 	; alloc memory for Nat64 value
-	%1 = call i8* (%SizeT) @malloc(%SizeT 8)
-	%2 = bitcast i8* %1 to i64*
-	store i64 %x, i64* %2
-	%3 = bitcast i64* %2 to i8*
+	%1 = call i8* (%SizeT) @malloc(%SizeT 4)
+	%2 = bitcast i8* %1 to i32*
+	store i32 %x, i32* %2
+	%3 = bitcast i32* %2 to i8*
 	%4 = call %Node* (%List*, i8*) @linked_list_append(%List* %list, i8* %3)
 	ret void
 }
@@ -395,17 +402,17 @@ then_0:
 	br label %endif_0
 endif_0:
 	; add some Nat64 values to list
-	call void (%List*, i64) @nat64_list_insert(%List* %2, i64 0)
-	call void (%List*, i64) @nat64_list_insert(%List* %2, i64 10)
-	call void (%List*, i64) @nat64_list_insert(%List* %2, i64 20)
-	call void (%List*, i64) @nat64_list_insert(%List* %2, i64 30)
-	call void (%List*, i64) @nat64_list_insert(%List* %2, i64 40)
-	call void (%List*, i64) @nat64_list_insert(%List* %2, i64 50)
-	call void (%List*, i64) @nat64_list_insert(%List* %2, i64 60)
-	call void (%List*, i64) @nat64_list_insert(%List* %2, i64 70)
-	call void (%List*, i64) @nat64_list_insert(%List* %2, i64 80)
-	call void (%List*, i64) @nat64_list_insert(%List* %2, i64 90)
-	call void (%List*, i64) @nat64_list_insert(%List* %2, i64 100)
+	call void (%List*, i32) @nat64_list_insert(%List* %2, i32 0)
+	call void (%List*, i32) @nat64_list_insert(%List* %2, i32 10)
+	call void (%List*, i32) @nat64_list_insert(%List* %2, i32 20)
+	call void (%List*, i32) @nat64_list_insert(%List* %2, i32 30)
+	call void (%List*, i32) @nat64_list_insert(%List* %2, i32 40)
+	call void (%List*, i32) @nat64_list_insert(%List* %2, i32 50)
+	call void (%List*, i32) @nat64_list_insert(%List* %2, i32 60)
+	call void (%List*, i32) @nat64_list_insert(%List* %2, i32 70)
+	call void (%List*, i32) @nat64_list_insert(%List* %2, i32 80)
+	call void (%List*, i32) @nat64_list_insert(%List* %2, i32 90)
+	call void (%List*, i32) @nat64_list_insert(%List* %2, i32 100)
 	; print list size
 	%6 = call i32 (%List*) @linked_list_size_get(%List* %2)
 	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str7 to [0 x i8]*), i32 %6)
@@ -413,6 +420,70 @@ endif_0:
 	call void (%List*) @list_print_forward(%List* %2)
 	; print list backward
 	call void (%List*) @list_print_backward(%List* %2)
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([37 x i8]* @str8 to [0 x i8]*))
+	; test linked_list_node_get
+	%9 = alloca i32
+	store i32 -12, i32* %9
+	br label %again_1
+again_1:
+	%10 = load i32, i32* %9
+	%11 = icmp sle i32 %10, 0
+	br i1 %11 , label %body_1, label %break_1
+body_1:
+	%12 = load i32, i32* %9
+	%13 = call %Node* (%List*, i32) @linked_list_node_get(%List* %2, i32 %12)
+	%14 = icmp eq %Node* %13, null
+	br i1 %14 , label %then_1, label %endif_1
+then_1:
+	%15 = load i32, i32* %9
+	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str9 to [0 x i8]*), i32 %15)
+	%17 = load i32, i32* %9
+	%18 = add i32 %17, 1
+	store i32 %18, i32* %9
+	br label %again_1
+	br label %endif_1
+endif_1:
+	%20 = call i8* (%Node*) @linked_list_node_data_get(%Node* %13)
+	%21 = bitcast i8* %20 to i32*
+	%22 = load i32, i32* %9
+	%23 = load i32, i32* %21
+	%24 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str10 to [0 x i8]*), i32 %22, i32 %23)
+	%25 = load i32, i32* %9
+	%26 = add i32 %25, 1
+	store i32 %26, i32* %9
+	br label %again_1
+break_1:
+	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([43 x i8]* @str11 to [0 x i8]*))
+	store i32 0, i32* %9
+	br label %again_2
+again_2:
+	%28 = load i32, i32* %9
+	%29 = icmp sle i32 %28, 12
+	br i1 %29 , label %body_2, label %break_2
+body_2:
+	%30 = load i32, i32* %9
+	%31 = call %Node* (%List*, i32) @linked_list_node_get(%List* %2, i32 %30)
+	%32 = icmp eq %Node* %31, null
+	br i1 %32 , label %then_2, label %endif_2
+then_2:
+	%33 = load i32, i32* %9
+	%34 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str12 to [0 x i8]*), i32 %33)
+	%35 = load i32, i32* %9
+	%36 = add i32 %35, 1
+	store i32 %36, i32* %9
+	br label %again_2
+	br label %endif_2
+endif_2:
+	%38 = call i8* (%Node*) @linked_list_node_data_get(%Node* %31)
+	%39 = bitcast i8* %38 to i32*
+	%40 = load i32, i32* %9
+	%41 = load i32, i32* %39
+	%42 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str13 to [0 x i8]*), i32 %40, i32 %41)
+	%43 = load i32, i32* %9
+	%44 = add i32 %43, 1
+	store i32 %44, i32* %9
+	br label %again_2
+break_2:
 	ret %Int 0
 }
 

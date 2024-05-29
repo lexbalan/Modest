@@ -22,6 +22,7 @@ Node *linked_list_node_create();
 Node *linked_list_node_prev_get(Node *node);
 Node *linked_list_node_next_get(Node *node);
 void *linked_list_node_data_get(Node *node);
+Node *linked_list_node_get(List *list, int32_t pos);
 
 Node *linked_list_node_append(List *list, Node *new_node);
 

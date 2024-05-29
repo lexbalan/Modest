@@ -9,6 +9,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <time.h>
+#include <stdio.h>
+
 
 
 
@@ -119,23 +121,83 @@ void *linked_list_node_data_get(Node *node)
 }
 
 
+void node_insert_right(Node *left, Node *new_right)
+{
+	printf("node_insert_right\n");
+
+	Node *const old_right = left->next;
+	left->next = new_right;
+
+	if (old_right != NULL) {
+		old_right->prev = new_right;
+	}
+
+	new_right->next = old_right;
+	new_right->prev = left;
+}
+
+
+// get list node by number
+// if number is out of range returns nil
+// if number < 0 - go backward
+Node *linked_list_node_get(List *list, int32_t pos)
+{
+	if ((list == NULL) || (list->size == 0)) {
+		return NULL;
+	}
+
+	Node *node;
+
+	if (pos >= 0) {
+		// go forward
+		node = list->head;
+		const uint32_t n = (uint32_t)pos;
+
+		if (n > list->size) {
+			return NULL;
+		}
+
+		uint32_t i;
+		i = 0;
+		while (i < n) {
+			node = (node)->next;
+			i = i + 1;
+		}
+	} else {
+		// go backward
+		node = list->tail;
+		const uint32_t n = (uint32_t)-pos - 1;
+
+		if (n > list->size) {
+			return NULL;
+		}
+
+		uint32_t i;
+		i = 0;
+		while (i < n) {
+			node = (node)->prev;
+			i = i + 1;
+		}
+	}
+
+	return node;
+}
+
+
 Node *linked_list_node_append(List *list, Node *new_node)
 {
 	if ((list == NULL) || (new_node == NULL)) {
 		return NULL;
 	}
 
-	if (list->head == NULL) {
+	if (list->tail == NULL) {
 		list->head = new_node;
-	}
-
-	if (list->tail != NULL) {
-		Node *const old_tail = list->tail;
-		old_tail->next = new_node;
-		new_node->prev = old_tail;
+	} else {
+		node_insert_right(list->tail, new_node);
 	}
 
 	list->tail = new_node;
+
 	list->size = list->size + 1;
 
 	return new_node;

@@ -7,11 +7,11 @@ import "./linked_list"
 
 
 // wrap around linked list for List Nat64
-func nat64_list_insert(list: *List, x: Nat64) -> Unit {
+func nat64_list_insert(list: *List, x: Nat32) -> Unit {
 	// alloc memory for Nat64 value
-	let p_nat64 = *Nat64 malloc(sizeof(Nat64))
-	*p_nat64 = x
-	linked_list_append(list, p_nat64)
+	let p_nat32 = *Nat32 malloc(sizeof(Nat32))
+	*p_nat32 = x
+	linked_list_append(list, p_nat32)
 }
 
 
@@ -71,6 +71,42 @@ func main() -> Int {
 
 	// print list backward
 	list_print_backward(list)
+
+
+	printf("\nlinked_list_node_get(list, n) test\n")
+
+	// test linked_list_node_get
+	var i = -12
+	while i <= 0 {
+		let node = linked_list_node_get(list, i)
+
+		if node == nil {
+			printf("node %i not exist\n", i)
+			++i
+			again
+		}
+
+		let px = *Nat32 linked_list_node_data_get(node)
+		printf("list(%i) = %i\n", i, *px)
+		++i
+	}
+
+	printf("-----------------------------------------\n")
+
+	i = 0
+	while i <= 12 {
+		let node = linked_list_node_get(list, i)
+
+		if node == nil {
+			printf("node %i not exist\n", i)
+			++i
+			again
+		}
+
+		let px = *Nat32 linked_list_node_data_get(node)
+		printf("list(%i) = %i\n", i, *px)
+		++i
+	}
 
 	return 0
 }
