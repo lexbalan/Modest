@@ -377,12 +377,7 @@ then_0:
 	ret %Node* null
 	br label %endif_0
 endif_0:
-	%5 = getelementptr inbounds %Node, %Node* %2, i32 0, i32 1
-	store %Node* null, %Node** %5
-	%6 = getelementptr inbounds %Node, %Node* %2, i32 0, i32 0
-	store %Node* null, %Node** %6
-	%7 = getelementptr inbounds %Node, %Node* %2, i32 0, i32 2
-	store i8* null, i8** %7
+	store %Node zeroinitializer, %Node* %2
 	ret %Node* %2
 }
 

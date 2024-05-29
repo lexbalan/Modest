@@ -84,9 +84,7 @@ Node *linked_list_node_create()
 		return NULL;
 	}
 
-	node->prev = NULL;
-	node->next = NULL;
-	node->data = NULL;
+	*node = (Node){};
 
 	return node;
 }

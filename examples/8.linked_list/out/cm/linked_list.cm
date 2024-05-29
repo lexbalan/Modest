@@ -68,9 +68,7 @@ func linked_list_node_create() -> *Node {
 		return nil
 	}
 
-	node.prev = nil
-	node.next = nil
-	node.data = nil
+	*node = {}
 
 	return node
 }
