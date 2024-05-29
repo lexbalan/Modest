@@ -329,8 +329,8 @@ declare %Node* @linked_list_append(%List* %list, i8* %data)
 
 
 
-define void @nat64_list_insert(%List* %list, i32 %x) {
-	; alloc memory for Nat64 value
+define void @nat32_list_insert(%List* %list, i32 %x) {
+	; alloc memory for Nat32 value
 	%1 = call i8* (%SizeT) @malloc(%SizeT 4)
 	%2 = bitcast i8* %1 to i32*
 	store i32 %x, i32* %2
@@ -401,18 +401,18 @@ then_0:
 	ret %Int 1
 	br label %endif_0
 endif_0:
-	; add some Nat64 values to list
-	call void (%List*, i32) @nat64_list_insert(%List* %2, i32 0)
-	call void (%List*, i32) @nat64_list_insert(%List* %2, i32 10)
-	call void (%List*, i32) @nat64_list_insert(%List* %2, i32 20)
-	call void (%List*, i32) @nat64_list_insert(%List* %2, i32 30)
-	call void (%List*, i32) @nat64_list_insert(%List* %2, i32 40)
-	call void (%List*, i32) @nat64_list_insert(%List* %2, i32 50)
-	call void (%List*, i32) @nat64_list_insert(%List* %2, i32 60)
-	call void (%List*, i32) @nat64_list_insert(%List* %2, i32 70)
-	call void (%List*, i32) @nat64_list_insert(%List* %2, i32 80)
-	call void (%List*, i32) @nat64_list_insert(%List* %2, i32 90)
-	call void (%List*, i32) @nat64_list_insert(%List* %2, i32 100)
+	; add some Nat32 values to list
+	call void (%List*, i32) @nat32_list_insert(%List* %2, i32 0)
+	call void (%List*, i32) @nat32_list_insert(%List* %2, i32 10)
+	call void (%List*, i32) @nat32_list_insert(%List* %2, i32 20)
+	call void (%List*, i32) @nat32_list_insert(%List* %2, i32 30)
+	call void (%List*, i32) @nat32_list_insert(%List* %2, i32 40)
+	call void (%List*, i32) @nat32_list_insert(%List* %2, i32 50)
+	call void (%List*, i32) @nat32_list_insert(%List* %2, i32 60)
+	call void (%List*, i32) @nat32_list_insert(%List* %2, i32 70)
+	call void (%List*, i32) @nat32_list_insert(%List* %2, i32 80)
+	call void (%List*, i32) @nat32_list_insert(%List* %2, i32 90)
+	call void (%List*, i32) @nat32_list_insert(%List* %2, i32 100)
 	; print list size
 	%6 = call i32 (%List*) @linked_list_size_get(%List* %2)
 	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str7 to [0 x i8]*), i32 %6)

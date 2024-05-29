@@ -17,10 +17,10 @@
 #include "./linked_list.h"
 
 
-// wrap around linked list for List Nat64
-void nat64_list_insert(List *list, uint32_t x)
+// wrap around linked list for List Nat32
+void nat32_list_insert(List *list, uint32_t x)
 {
-	// alloc memory for Nat64 value
+	// alloc memory for Nat32 value
 	uint32_t *const p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
 	*p_nat32 = x;
 	linked_list_append(list, p_nat32);
@@ -66,18 +66,18 @@ int main()
 		return 1;
 	}
 
-	// add some Nat64 values to list
-	nat64_list_insert(list, 0);
-	nat64_list_insert(list, 10);
-	nat64_list_insert(list, 20);
-	nat64_list_insert(list, 30);
-	nat64_list_insert(list, 40);
-	nat64_list_insert(list, 50);
-	nat64_list_insert(list, 60);
-	nat64_list_insert(list, 70);
-	nat64_list_insert(list, 80);
-	nat64_list_insert(list, 90);
-	nat64_list_insert(list, 100);
+	// add some Nat32 values to list
+	nat32_list_insert(list, 0);
+	nat32_list_insert(list, 10);
+	nat32_list_insert(list, 20);
+	nat32_list_insert(list, 30);
+	nat32_list_insert(list, 40);
+	nat32_list_insert(list, 50);
+	nat32_list_insert(list, 60);
+	nat32_list_insert(list, 70);
+	nat32_list_insert(list, 80);
+	nat32_list_insert(list, 90);
+	nat32_list_insert(list, 100);
 
 	// print list size
 	const uint32_t list_size = linked_list_size_get(list);

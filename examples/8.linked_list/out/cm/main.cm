@@ -6,9 +6,9 @@ import "libc/stdio"
 import "./linked_list"
 
 
-// wrap around linked list for List Nat64
-func nat64_list_insert(list: *List, x: Nat32) -> Unit {
-	// alloc memory for Nat64 value
+// wrap around linked list for List Nat32
+func nat32_list_insert(list: *List, x: Nat32) -> Unit {
+	// alloc memory for Nat32 value
 	let p_nat32 = malloc(sizeof(Nat32))
 	*p_nat32 = x
 	linked_list_append(list, p_nat32)
@@ -49,18 +49,18 @@ func main() -> Int {
 		return 1
 	}
 
-	// add some Nat64 values to list
-	nat64_list_insert(list, 0)
-	nat64_list_insert(list, 10)
-	nat64_list_insert(list, 20)
-	nat64_list_insert(list, 30)
-	nat64_list_insert(list, 40)
-	nat64_list_insert(list, 50)
-	nat64_list_insert(list, 60)
-	nat64_list_insert(list, 70)
-	nat64_list_insert(list, 80)
-	nat64_list_insert(list, 90)
-	nat64_list_insert(list, 100)
+	// add some Nat32 values to list
+	nat32_list_insert(list, 0)
+	nat32_list_insert(list, 10)
+	nat32_list_insert(list, 20)
+	nat32_list_insert(list, 30)
+	nat32_list_insert(list, 40)
+	nat32_list_insert(list, 50)
+	nat32_list_insert(list, 60)
+	nat32_list_insert(list, 70)
+	nat32_list_insert(list, 80)
+	nat32_list_insert(list, 90)
+	nat32_list_insert(list, 100)
 
 	// print list size
 	let list_size = linked_list_size_get(list)
