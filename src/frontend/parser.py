@@ -645,9 +645,22 @@ class Parser:
 			elif self.match("["):
 				#self.skip()  # "[":
 				i = self.expr_value()
+				if self.match(".."):
+					j = self.expr_value()
+					self.need("]")
+					ti['start'] = v['ti']
+					v = {
+						'isa': 'ast_value',
+						'kind': 'slice',
+						'left': v,
+						'index_from': i,
+						'index_to': j,
+						'ti': ti
+					}
+					return v
+
 				self.need("]")
 				ti['start'] = v['ti']
-				#ti['end'] =
 				v = {
 					'isa': 'ast_value',
 					'kind': 'index',

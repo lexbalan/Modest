@@ -1145,6 +1145,35 @@ def do_value_index(x):
 	return v
 
 
+def do_value_slice(x):
+	info("slice operation", x['ti'])
+	left = do_value(x['left'])
+	index_from = do_rvalue(x['index_from'])
+	index_to = do_rvalue(x['index_to'])
+
+	if value_is_bad(left) or value_is_bad(index_from) or value_is_bad(index_to):
+		return value_bad(x)
+
+
+	left_type = left['type']
+	via_pointer = hlir_type.type_is_pointer(left_type)
+	array_type = left_type
+	if via_pointer:
+		array_type = left_type['to']
+
+	if not hlir_type.type_is_array(array_type):
+		error("expected array or pointer to array", left['expr_ti'])
+		return value_bad(x)
+
+
+	if not value_is_immediate(index_from):
+		error("expected immediate value", index_from['expr_ti'])
+	if not value_is_immediate(index_to):
+		error("expected immediate value", index_to['expr_ti'])
+
+
+	return value_bad(x)
+
 
 def do_value_access(x):
 	left = do_rvalue(x['left'])
@@ -1386,6 +1415,7 @@ def do_value(x):
 	elif k == 'not': v = do_value_not(x)
 	elif k == 'deref': v = do_value_deref(x)
 	elif k == 'index': v = do_value_index(x)
+	elif k == 'slice': v = do_value_slice(x)
 	elif k == 'access': v = do_value_access(x)
 	elif k == 'negative': v = do_value_neg(x)
 	elif k == 'positive': v = do_value_pos(x)
