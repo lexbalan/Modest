@@ -1579,8 +1579,10 @@ def print_def_func(x):
 	indent_down()
 
 	global func_undef_list
-	for id_str in func_undef_list:
-		out("\n#undef %s" % id_str)
+	if len(func_undef_list) > 0:
+		out("\n\n\t// undef local macro")
+		for id_str in func_undef_list:
+			out("\n\t#undef %s" % id_str)
 
 	func_undef_list = []
 

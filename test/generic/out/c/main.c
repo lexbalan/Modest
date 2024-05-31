@@ -76,7 +76,9 @@ bool test_generic_integer()
 	// explicit cast GenericInteger value
 
 	return true;
-#undef one
+
+	// undef local macro
+	#undef one
 }
 
 
@@ -92,7 +94,9 @@ bool test_generic_float()
 	// explicit cast GenericFloat value to Int32
 
 	return true;
-#undef pi
+
+	// undef local macro
+	#undef pi
 }
 
 
@@ -108,7 +112,9 @@ bool test_generic_char()
 	// explicit cast GenericChar value to Int32
 
 	return true;
-#undef a
+
+	// undef local macro
+	#undef a
 }
 
 
@@ -154,7 +160,9 @@ bool test_generic_array()
 	}
 
 	return true;
-#undef a
+
+	// undef local macro
+	#undef a
 }
 
 
@@ -193,6 +201,8 @@ bool test_generic_record()
 	point_3d = (Point3D)p;
 
 	return true;
-#undef p
+
+	// undef local macro
+	#undef p
 }
 

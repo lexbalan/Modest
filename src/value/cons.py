@@ -142,7 +142,7 @@ def value_cons_default(x):
 	if not type.type_is_generic(from_type):
 		return x
 
-	from trans import typeSysInt, typeSysFloat, typeSysChar, typeSysStr
+	from trans import typeSysNat, typeSysInt, typeSysFloat, typeSysChar, typeSysStr
 
 	if type.type_is_integer(from_type):
 		t = typeSysInt

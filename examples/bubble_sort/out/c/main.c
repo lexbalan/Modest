@@ -91,8 +91,10 @@ void fill_array(int32_t *array, int32_t len)
 		array[i] = x;
 		i = i + 1;
 	}
-#undef min
-#undef max
+
+	// undef local macro
+	#undef min
+	#undef max
 }
 
 

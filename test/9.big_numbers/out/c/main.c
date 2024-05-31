@@ -59,7 +59,9 @@ int main()
 	printf("sig1 = %lld\n", (uint64_t)sig1);
 
 	return 0;
-#undef big1
-#undef sig0
+
+	// undef local macro
+	#undef big1
+	#undef sig0
 }
 

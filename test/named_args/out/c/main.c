@@ -34,9 +34,11 @@ int main()
 	}
 
 	return 0;
-#undef a
-#undef b
-#undef c
-#undef x0
+
+	// undef local macro
+	#undef a
+	#undef b
+	#undef c
+	#undef x0
 }
 

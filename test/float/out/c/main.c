@@ -30,6 +30,8 @@ int main()
 	printf("s = %f\n", s);
 
 	return 0;
-#undef r
+
+	// undef local macro
+	#undef r
 }
 
