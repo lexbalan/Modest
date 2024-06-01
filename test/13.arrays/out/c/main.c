@@ -184,6 +184,8 @@ int main()
 	printf("e[1] = %i\n", e[1]);
 	printf("e[2] = %i\n", e[2]);
 
+	//let yh = init_array[2 .. 4]
+
 	// check local literal array assignation to global array
 	memcpy(&globalArray, &init_array, sizeof(int32_t[10]));
 	printf("globalArray[%i] = %i\n", 0, globalArray[0]);

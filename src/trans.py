@@ -1167,7 +1167,23 @@ def do_value_slice(x):
 	if not value_is_immediate(index_to):
 		error("expected immediate value", index_to['expr_ti'])
 
-	#return value_slice_array(left, index_from, index_to, ['ti'])
+	i = index_from['asset']
+	j = index_to['asset']
+
+	if i > j:
+		error("wrong slice direction", x['ti'])
+		return value_bad(x)
+
+	slice_len = j - i + 1
+
+	type_of = left['type']['of']
+	volume = value_integer_create(slice_len)
+	type = hlir_type.hlir_type_array(type_of, volume, x['ti'])
+
+	hlir_type.type_print(type)
+	print()
+
+	return value_slice_array(left, type, index_from, index_to, x['ti'])
 	return value_bad(x)
 
 

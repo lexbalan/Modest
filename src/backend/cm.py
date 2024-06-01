@@ -41,7 +41,7 @@ aprecedence = [
 	['add', 'sub'], #8
 	['mul', 'div', 'rem'], #9
 	['positive', 'negative', 'not', 'cons', 'ref', 'deref', 'sizeof', 'alignof', 'offsetof', 'lengthof'], #10
-	['call', 'index', 'access'], #11
+	['call', 'index', 'access', 'slice'], #11
 	['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #12
 ]
 
@@ -278,6 +278,16 @@ def print_value_index(v, ctx):
 	print_value(array, need_wrap=need_wrap)
 	out("["); print_value(index); out("]")
 
+
+def print_value_slice(x, ctx):
+	left = x['left']
+	need_wrap = precedence(left) < precedence({'kind': 'index'})
+	print_value(left, need_wrap=need_wrap)
+	out("[")
+	print_value(x['index_from'])
+	out(" .. ")
+	print_value(x['index_to'])
+	out("]")
 
 
 def print_value_access(v, ctx):
@@ -589,10 +599,11 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 	elif k in bin_ops: print_value_bin(x, ctx)
 	elif k in un_ops: print_value_un(x, ctx)
 	elif k in ['const', 'func', 'var']: print_value_by_id(x, ctx)
+	elif k == 'cons': print_value_cons(x, ctx)
 	elif k == 'call': print_value_call(x, ctx)
 	elif k == 'index': print_value_index(x, ctx)
 	elif k == 'access': print_value_access(x, ctx)
-	elif k == 'cons': print_value_cons(x, ctx)
+	elif k == 'slice': print_value_slice(x, ctx)
 	elif k == 'sizeof': out("sizeof("); print_type(x['of']); out(")")
 	elif k == 'alignof': out("alignof("); print_type(x['of']); out(")")
 	elif k == 'offsetof': out("offsetof("); print_type(x['of']); out('.%s' % x['field']['str']); out(")")

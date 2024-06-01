@@ -251,14 +251,14 @@ def value_index_array(array, type, index, ti):
 
 
 
-def value_slice_array(array, index_from, index_to, ti):
+def value_slice_array(left, type, index_from, index_to, ti):
 	return {
 		'isa': 'value',
 		'kind': 'slice',
-		'array': array,
-		'from': index_from,
-		'to': index_to,
-		'type': array['type']['of'],
+		'left': left,
+		'index_from': index_from,
+		'index_to': index_to,
+		'type': type,
 		'immediate': False,
 		'immutable': False,
 		'att': [],

@@ -767,6 +767,7 @@ endif_1:
 	%155 = getelementptr inbounds [4 x i32], [4 x i32]* %146, i32 0, i32 2
 	%156 = load i32, i32* %155
 	%157 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str29 to [0 x i8]*), i32 %156)
+	;let yh = init_array[2 .. 4]
 	; check local literal array assignation to global array
 	; cast_array_to_array
 	; cast_composite_to_composite

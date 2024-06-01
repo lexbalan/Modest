@@ -156,7 +156,7 @@ func main() -> Int {
 	printf("e[1] = %i\n", e[1])
 	printf("e[2] = %i\n", e[2])
 
-	let yh = init_array[2 .. 4]
+	//let yh = init_array[2 .. 4]
 
 	// check local literal array assignation to global array
 	globalArray = init_array
