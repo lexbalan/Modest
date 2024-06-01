@@ -157,7 +157,7 @@ Node *linked_list_node_get(List *list, int32_t pos)
 		uint32_t i;
 		i = 0;
 		while (i < n) {
-			node = (node)->next;
+			node = node->next;
 			i = i + 1;
 		}
 	} else {
@@ -172,7 +172,7 @@ Node *linked_list_node_get(List *list, int32_t pos)
 		uint32_t i;
 		i = 0;
 		while (i < n) {
-			node = (node)->prev;
+			node = node->prev;
 			i = i + 1;
 		}
 	}

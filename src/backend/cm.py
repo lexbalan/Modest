@@ -265,6 +265,13 @@ def print_value_call(v, ctx):
 
 
 def print_value_index(v, ctx):
+	if hlir_type.type_is_pointer(v['array']['type']):
+		array = v['array']
+		index = v['index']
+		need_wrap = precedence(array) < precedence({'kind': 'index'})
+		print_value(array, need_wrap=need_wrap)
+		out("["); print_value(index); out("]")
+		return
 	array = v['array']
 	index = v['index']
 	need_wrap = precedence(array) < precedence({'kind': 'index'})
@@ -272,28 +279,21 @@ def print_value_index(v, ctx):
 	out("["); print_value(index); out("]")
 
 
-def print_value_index_ptr(v, ctx):
-	array = v['pointer']
-	index = v['index']
-	need_wrap = precedence(array) < precedence({'kind': 'index'})
-	print_value(array, need_wrap=need_wrap)
-	out("["); print_value(index); out("]")
-
 
 def print_value_access(v, ctx):
 	left = v['record']
+	if hlir_type.type_is_pointer(left['type']):
+		need_wrap = precedence(left) < precedence({'kind': 'access'})
+		print_value(left, need_wrap=need_wrap)
+		out(".")
+		print_id(v['field'])
+		return
+
 	need_wrap = precedence(left) < precedence({'kind': 'access'})
 	print_value(left, need_wrap=need_wrap)
 	out(".")
 	print_id(v['field'])
 
-
-def print_value_access_ptr(v, ctx):
-	left = v['pointer']
-	need_wrap = precedence(left) < precedence({'kind': 'access'})
-	print_value(left, need_wrap=need_wrap)
-	out(".")
-	print_id(v['field'])
 
 
 def print_cast(t, v, ctx=[]):
@@ -591,9 +591,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 	elif k in ['const', 'func', 'var']: print_value_by_id(x, ctx)
 	elif k == 'call': print_value_call(x, ctx)
 	elif k == 'index': print_value_index(x, ctx)
-	elif k == 'index_ptr': print_value_index_ptr(x, ctx)
 	elif k == 'access': print_value_access(x, ctx)
-	elif k == 'access_ptr': print_value_access_ptr(x, ctx)
 	elif k == 'cons': print_value_cons(x, ctx)
 	elif k == 'sizeof': out("sizeof("); print_type(x['of']); out(")")
 	elif k == 'alignof': out("alignof("); print_type(x['of']); out(")")

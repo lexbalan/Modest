@@ -95,7 +95,7 @@ int main()
 
 	i = 0;
 	while (i < 3) {
-		const int32_t a = (globalArrayPtr)[i];
+		const int32_t a = globalArrayPtr[i];
 		printf("globalArrayPtr[%i] = %i\n", i, a);
 		i = i + 1;
 	}
@@ -107,7 +107,7 @@ int main()
 
 	i = 0;
 	while (i < 3) {
-		const int32_t a = (localArrayPtr)[i];
+		const int32_t a = localArrayPtr[i];
 		printf("localArrayPtr[%i] = %i\n", i, a);
 		i = i + 1;
 	}

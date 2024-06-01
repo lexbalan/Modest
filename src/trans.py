@@ -1117,11 +1117,9 @@ def do_value_index(x):
 
 	v = None
 
-	if via_pointer:
-		v = value_index_array_ptr(left, index, ti=x['ti'])
-	else:
-		v = value_index_array(left, index, ti=x['ti'])
+	v = value_index_array(left, array_typ['of'], index, ti=x['ti'])
 
+	if not via_pointer:
 		if value_is_immutable(left):
 			v['immutable'] = True
 
@@ -1204,22 +1202,20 @@ def do_value_access(x):
 	if hlir_type.type_is_bad(field['type']):
 		return value_bad(x)
 
-	if via_pointer:
-		v = value_access_record_ptr(left, field, ti=x['ti'])
-	else:
-		v = value_access_record(left, field, ti=x['ti'])
+	v = value_access_record(left, field['type'], field, ti=x['ti'])
+	if not via_pointer:
 		if value_is_immutable(left):
 			v['immutable'] = True
 
-	# access to immediate object
-	if value_is_immediate(left) and not via_pointer:
-		initializers = left['asset']
-		initializer = get_item_with_id(initializers, field_id['str'])
+		# access to immediate object
+		if value_is_immediate(left):
+			initializers = left['asset']
+			initializer = get_item_with_id(initializers, field_id['str'])
 
-		v['immval'] = initializer['value']
-		v['asset'] = initializer['value']['asset']
-		# (!) #asset of immediate index & access contains VALUE (!)
-		v['immediate'] = initializer['value']['immediate']
+			v['immval'] = initializer['value']
+			v['asset'] = initializer['value']['asset']
+			# (!) #asset of immediate index & access contains VALUE (!)
+			v['immediate'] = initializer['value']['immediate']
 
 	return v
 

@@ -929,6 +929,13 @@ def do_eval_index(v):
 	if value_is_immediate(v):
 		return do_eval(v['immval'])
 
+	if hlir_type.type_is_pointer(v['array']['type']):
+		pointer = do_reval(v['array'])
+		array_type = pointer['type']['to']
+		index = do_reval(v['index'])
+		result_type = v['type']
+		return llvm_getelementptr(pointer, array_type, (llvm_value_num_zero, index), result_type)
+
 	array = do_eval(v['array'])
 	array_type = array['type']
 	result_type = v['type']
@@ -945,15 +952,15 @@ def do_eval_index(v):
 	return llvm_getelementptr(array, array_type, (llvm_value_num_zero, index), result_type)
 
 
-def do_eval_index_ptr(v):
-	pointer = do_reval(v['pointer'])
-	array_type = pointer['type']['to']
-	index = do_reval(v['index'])
-	result_type = v['type']
-	return llvm_getelementptr(pointer, array_type, (llvm_value_num_zero, index), result_type)
-
 
 def do_eval_access(v):
+	if hlir_type.type_is_pointer(v['record']['type']):
+		ptr = do_reval(v['record'])
+		rt = ptr['type']['to']
+		pos = v['field']['field_no']
+		result_type = v['type']
+		return llvm_eval_access_ptr(ptr, rt, pos, result_type)
+
 	if value_is_immediate(v):
 		return do_eval(v['immval'])
 
@@ -1334,9 +1341,7 @@ def do_eval(x):
 	elif k == 'var': y = do_eval_var(x)
 	elif k == 'call': y = do_eval_call(x)
 	elif k == 'index': y = do_eval_index(x)
-	elif k == 'index_ptr': y = do_eval_index_ptr(x)
 	elif k == 'access': y = do_eval_access(x)
-	elif k == 'access_ptr': y = do_eval_access_ptr(x)
 	elif k == 'cons': y = do_eval_cons(x)
 	#elif k == 'concat_array': y = do_eval_literal(x)
 	#elif k == 'concat_string': y = do_eval_literal(x)

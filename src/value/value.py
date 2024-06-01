@@ -234,13 +234,13 @@ def value_call(func, rettype, args, ti):
 	}
 
 
-def value_index_array(array, index, ti):
+def value_index_array(array, type, index, ti):
 	return {
 		'isa': 'value',
 		'kind': 'index',
 		'array': array,
 		'index': index,
-		'type': array['type']['of'],
+		'type': type,
 		'immediate': False,
 		'immutable': False,
 		'att': [],
@@ -249,19 +249,6 @@ def value_index_array(array, index, ti):
 	}
 
 
-def value_index_array_ptr(ptr_to_array, index, ti):
-	return {
-		'isa': 'value',
-		'kind': 'index_ptr',
-		'pointer': ptr_to_array,
-		'index': index,
-		'type': ptr_to_array['type']['to']['of'],
-		'immediate': False,
-		'immutable': False,
-		'att': [],
-		'expr_ti': ti,
-		'ti': ti
-	}
 
 
 def value_slice_array(array, index_from, index_to, ti):
@@ -280,13 +267,13 @@ def value_slice_array(array, index_from, index_to, ti):
 	}
 
 
-def value_access_record(record, field, ti):
+def value_access_record(record, type, field, ti):
 	return {
 		'isa': 'value',
 		'kind': 'access',
 		'record': record,
 		'field': field,
-		'record_type': record['type'],
+		'record_type': type,
 		'type': field['type'],
 		'immediate': False,
 		'immutable': False,

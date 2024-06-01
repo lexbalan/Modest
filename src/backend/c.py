@@ -555,6 +555,13 @@ def print_value_call(v, ctx):
 def print_value_index(x, ctx):
 	array = x['array']
 
+	if hlir_type.type_is_pointer(array['type']):
+		ptr2array = array
+		need_wrap = precedence(ptr2array) < precedence(x)
+		print_value(ptr2array, ctx=['do_unwrap'], need_wrap=need_wrap)
+		out("["); print_value(x['index']); out("]")
+		return
+
 	indexes = []
 
 	xx = x
@@ -606,16 +613,15 @@ def print_value_index(x, ctx):
 
 
 
-def print_value_index_ptr(x, ctx):
-	ptr2array = x['pointer']
-	need_wrap = precedence(ptr2array) < precedence(x)
-	print_value(ptr2array, ctx=['do_unwrap'], need_wrap=need_wrap)
-	out("["); print_value(x['index']); out("]")
-
-
-
 def print_value_access(x, ctx):
 	left = x['record']
+
+	if hlir_type.type_is_pointer(left['type']):
+		need_wrap = precedence(left) < precedence(x)
+		print_value(left, need_wrap=need_wrap)
+		out("->")
+		print_id(x['field'])
+		return
 
 	# если имеем дело c дженерик записью (глоб константа)
 	#if hlir_type.type_is_generic(left['type']):
@@ -627,15 +633,6 @@ def print_value_access(x, ctx):
 	need_wrap = precedence(left) < precedence(x)
 	print_value(left, need_wrap=need_wrap)
 	out('.')
-	print_id(x['field'])
-
-
-
-def print_value_access_ptr(x, ctx):
-	left = x['pointer']
-	need_wrap = precedence(left) < precedence(x)
-	print_value(left, need_wrap=need_wrap)
-	out("->")
 	print_id(x['field'])
 
 
@@ -1182,9 +1179,7 @@ def print_value(x, ctx=[], need_wrap=False):
 	elif k == 'var': print_value_var(x, ctx)
 	elif k == 'call': print_value_call(x, ctx)
 	elif k == 'index': print_value_index(x, ctx)
-	elif k == 'index_ptr': print_value_index_ptr(x, ctx)
 	elif k == 'access': print_value_access(x, ctx)
-	elif k == 'access_ptr': print_value_access_ptr(x, ctx)
 	elif k == 'cons': print_value_cons(x, ctx)
 	elif k == 'sizeof': print_value_sizeof(x, ctx)
 	elif k == 'alignof': print_value_alignof(x, ctx)
