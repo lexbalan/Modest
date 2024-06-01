@@ -417,7 +417,7 @@ define void @sha256_contextInit(%Context* %ctx) {
 ]
 
 define void @sha256_transform(%Context* %ctx, [0 x i8]* %data) {
-	%1 = alloca [64 x i32]
+	%1 = alloca [64 x i32], align 4
 	%2 = insertvalue [64 x i32] zeroinitializer, i32 0, 0
 	%3 = insertvalue [64 x i32] %2, i32 0, 1
 	%4 = insertvalue [64 x i32] %3, i32 0, 2
@@ -483,9 +483,9 @@ define void @sha256_transform(%Context* %ctx, [0 x i8]* %data) {
 	%64 = insertvalue [64 x i32] %63, i32 0, 62
 	%65 = insertvalue [64 x i32] %64, i32 0, 63
 	store [64 x i32] %65, [64 x i32]* %1
-	%66 = alloca i32
+	%66 = alloca i32, align 4
 	store i32 0, i32* %66
-	%67 = alloca i32
+	%67 = alloca i32, align 4
 	store i32 0, i32* %67
 	br label %again_1
 again_1:
@@ -566,7 +566,7 @@ body_2:
 	store i32 %129, i32* %66
 	br label %again_2
 break_2:
-	%130 = alloca [8 x i32]
+	%130 = alloca [8 x i32], align 4
 	%131 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
 	%132 = load [8 x i32], [8 x i32]* %131
 	store [8 x i32] %132, [8 x i32]* %130
@@ -676,7 +676,7 @@ break_4:
 }
 
 define void @sha256_update(%Context* %ctx, [0 x i8]* %msg, i32 %msgLen) {
-	%1 = alloca i32
+	%1 = alloca i32, align 4
 	store i32 0, i32* %1
 	br label %again_1
 again_1:
@@ -723,12 +723,12 @@ break_1:
 }
 
 define void @sha256_final(%Context* %ctx, [32 x i8]* %outHash) {
-	%1 = alloca i32
+	%1 = alloca i32, align 4
 	%2 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
 	%3 = load i32, i32* %2
 	store i32 %3, i32* %1
 	; Pad whatever data is left in the buffer.
-	%4 = alloca i32
+	%4 = alloca i32, align 4
 	store i32 64, i32* %4
 	%5 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
 	%6 = load i32, i32* %5
@@ -930,7 +930,7 @@ break_1:
 }
 
 define void @sha256_doHash([0 x i8]* %msg, i32 %msgLen, [32 x i8]* %outHash) {
-	%1 = alloca %Context
+	%1 = alloca %Context, align 8
 	store %Context zeroinitializer, %Context* %1
 	call void (%Context*) @sha256_contextInit(%Context* %1)
 	call void (%Context*, [0 x i8]*, i32) @sha256_update(%Context* %1, [0 x i8]* %msg, i32 %msgLen)

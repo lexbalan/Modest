@@ -445,7 +445,7 @@ then_0:
 	ret %Node* null
 	br label %endif_0
 endif_0:
-	%7 = alloca %Node*
+	%7 = alloca %Node*, align 8
 	%8 = icmp sge i32 %pos, 0
 	br i1 %8 , label %then_1, label %else_1
 then_1:
@@ -462,7 +462,7 @@ then_2:
 	ret %Node* null
 	br label %endif_2
 endif_2:
-	%16 = alloca i32
+	%16 = alloca i32, align 4
 	store i32 0, i32* %16
 	br label %again_1
 again_1:
@@ -496,7 +496,7 @@ then_3:
 	ret %Node* null
 	br label %endif_3
 endif_3:
-	%33 = alloca i32
+	%33 = alloca i32, align 4
 	store i32 0, i32* %33
 	br label %again_2
 again_2:

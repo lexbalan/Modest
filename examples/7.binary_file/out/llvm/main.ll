@@ -327,7 +327,7 @@ then_0:
 	ret void
 	br label %endif_0
 endif_0:
-	%6 = alloca %Chunk
+	%6 = alloca %Chunk, align 1
 	; pointers casting requires -funsafe translator option
 	; (see Makefile)
 	%7 = getelementptr inbounds %Chunk, %Chunk* %6, i32 0, i32 0
@@ -353,7 +353,7 @@ then_0:
 	ret void
 	br label %endif_0
 endif_0:
-	%6 = alloca %Chunk
+	%6 = alloca %Chunk, align 1
 	%7 = bitcast %Chunk* %6 to i8*
 	%8 = call %SizeT (i8*, %SizeT, %SizeT, %File*) @fread(i8* %7, %SizeT 1124, %SizeT 1, %File* %2)
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str10 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))

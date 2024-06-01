@@ -325,7 +325,7 @@ then_1:
 	;error("Недопустимая кодовая последовательность.")
 	br label %endif_1
 else_1:
-	%10 = alloca i32
+	%10 = alloca i32, align 4
 	%11 = and i32 %3, 1023
 	%12 = shl i32 %11, 10
 	store i32 %12, i32* %10
@@ -367,12 +367,12 @@ define void @utf8_putchar(i8 %c) {
 }
 
 define void @utf16_putchar(i16 %c) {
-	%1 = alloca [2 x i16]
+	%1 = alloca [2 x i16], align 2
 	%2 = getelementptr inbounds [2 x i16], [2 x i16]* %1, i32 0, i32 0
 	store i16 %c, i16* %2
 	%3 = getelementptr inbounds [2 x i16], [2 x i16]* %1, i32 0, i32 1
 	store i16 0, i16* %3
-	%4 = alloca i32
+	%4 = alloca i32, align 4
 	%5 = bitcast [2 x i16]* %1 to [0 x i16]*
 	%6 = call i8 ([0 x i16]*, i32*) @utf16_to_utf32([0 x i16]* %5, i32* %4)
 	%7 = load i32, i32* %4
@@ -381,10 +381,10 @@ define void @utf16_putchar(i16 %c) {
 }
 
 define void @utf32_putchar(i32 %c) {
-	%1 = alloca [4 x i8]
+	%1 = alloca [4 x i8], align 1
 	%2 = call i8 (i32, [4 x i8]*) @utf32_to_utf8(i32 %c, [4 x i8]* %1)
 	%3 = sext i8 %2 to %Int
-	%4 = alloca i32
+	%4 = alloca i32, align 4
 	store i32 0, i32* %4
 	br label %again_1
 again_1:
@@ -407,7 +407,7 @@ break_1:
 
 
 define void @utf8_puts(%Str8* %s) {
-	%1 = alloca i32
+	%1 = alloca i32, align 4
 	store i32 0, i32* %1
 	br label %again_1
 again_1:
@@ -432,7 +432,7 @@ break_1:
 }
 
 define void @utf16_puts(%Str16* %s) {
-	%1 = alloca i32
+	%1 = alloca i32, align 4
 	store i32 0, i32* %1
 	br label %again_1
 again_1:
@@ -449,7 +449,7 @@ then_0:
 	br label %break_1
 	br label %endif_0
 endif_0:
-	%7 = alloca i32
+	%7 = alloca i32, align 4
 	%8 = load i32, i32* %1
 	%9 = getelementptr inbounds %Str16, %Str16* %s, i32 0, i32 %8
 	%10 = bitcast i16* %9 to [0 x i16]*
@@ -472,7 +472,7 @@ break_1:
 }
 
 define void @utf32_puts(%Str32* %s) {
-	%1 = alloca i32
+	%1 = alloca i32, align 4
 	store i32 0, i32* %1
 	br label %again_1
 again_1:

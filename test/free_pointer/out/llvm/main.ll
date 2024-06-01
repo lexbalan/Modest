@@ -209,11 +209,11 @@ declare void @perror(%ConstCharStr* %str)
 
 
 define i32 @main() {
-	%1 = alloca i1
-	%2 = alloca i32
-	%3 = alloca i64
+	%1 = alloca i1, align 1
+	%2 = alloca i32, align 4
+	%3 = alloca i64, align 8
 	;
-	%4 = alloca i8*
+	%4 = alloca i8*, align 8
 	; free pointer can points to value of any type
 	%5 = bitcast i1* %1 to i8*
 	store i8* %5, i8** %4

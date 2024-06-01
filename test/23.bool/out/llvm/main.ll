@@ -215,8 +215,8 @@ declare void @perror(%ConstCharStr* %str)
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str1 to [0 x i8]*))
-	%2 = alloca i8
-	%3 = alloca i1
+	%2 = alloca i8, align 1
+	%3 = alloca i1, align 1
 	store i8 1, i8* %2
 	%4 = load i8, i8* %2
 	%5 = icmp ne i8 %4, 0

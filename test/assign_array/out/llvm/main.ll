@@ -242,7 +242,7 @@ define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str1 to [0 x i8]*))
 	%2 = load [10 x i32], [10 x i32]* @globalArray0
 	store [10 x i32] %2, [10 x i32]* @globalArray1
-	%3 = alloca i32
+	%3 = alloca i32, align 4
 	store i32 0, i32* %3
 	br label %again_1
 again_1:
@@ -274,7 +274,7 @@ else_0:
 	br label %endif_0
 endif_0:
 	; local
-	%19 = alloca [10 x i32]
+	%19 = alloca [10 x i32], align 4
 	%20 = insertvalue [10 x i32] zeroinitializer, i32 0, 0
 	%21 = insertvalue [10 x i32] %20, i32 1, 1
 	%22 = insertvalue [10 x i32] %21, i32 2, 2
@@ -286,7 +286,7 @@ endif_0:
 	%28 = insertvalue [10 x i32] %27, i32 8, 8
 	%29 = insertvalue [10 x i32] %28, i32 9, 9
 	store [10 x i32] %29, [10 x i32]* %19
-	%30 = alloca [10 x i32]
+	%30 = alloca [10 x i32], align 4
 	%31 = insertvalue [10 x i32] zeroinitializer, i32 0, 0
 	%32 = insertvalue [10 x i32] %31, i32 0, 1
 	%33 = insertvalue [10 x i32] %32, i32 0, 2

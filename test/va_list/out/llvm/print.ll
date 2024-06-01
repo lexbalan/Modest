@@ -220,7 +220,7 @@ declare void @putchar32(i32 %c)
 
 
 define void @put_str8(%Str8* %s) {
-	%1 = alloca i32
+	%1 = alloca i32, align 4
 	store i32 0, i32* %1
 	br label %again_1
 again_1:
@@ -248,13 +248,13 @@ define void @print(%Str8* %form, ...) {
 	%1 = alloca i8*
 	%2 = bitcast i8** %1 to i8*
 	call void @llvm.va_start(i8* %2)
-	%3 = alloca i32
+	%3 = alloca i32, align 4
 	store i32 0, i32* %3
 	br label %again_1
 again_1:
 	br i1 1 , label %body_1, label %break_1
 body_1:
-	%4 = alloca i8
+	%4 = alloca i8, align 1
 	%5 = load i32, i32* %3
 	%6 = getelementptr inbounds %Str8, %Str8* %form, i32 0, i32 %5
 	%7 = load i8, i8* %6
@@ -320,8 +320,8 @@ then_4:
 	%37 = add i32 %36, 1
 	store i32 %37, i32* %3
 	; буффер для печати всего, кроме строк
-	%38 = alloca [11 x i8]
-	%39 = alloca [0 x i8]*
+	%38 = alloca [11 x i8], align 1
+	%39 = alloca [0 x i8]*, align 8
 	%40 = bitcast [11 x i8]* %38 to [0 x i8]*
 	store [0 x i8]* %40, [0 x i8]** %39
 	%41 = load [0 x i8]*, [0 x i8]** %39
@@ -414,7 +414,7 @@ break_1:
 }
 
 define i8 @n_to_sym(i8 %n) {
-	%1 = alloca i8
+	%1 = alloca i8, align 1
 	%2 = icmp ule i8 %n, 9
 	br i1 %2 , label %then_0, label %else_0
 then_0:
@@ -434,10 +434,10 @@ endif_0:
 }
 
 define void @sprintf_hex_nat32([0 x i8]* %buf, i32 %x) {
-	%1 = alloca [8 x i8]
-	%2 = alloca i32
+	%1 = alloca [8 x i8], align 1
+	%2 = alloca i32, align 4
 	store i32 %x, i32* %2
-	%3 = alloca i32
+	%3 = alloca i32, align 4
 	store i32 0, i32* %3
 	br label %again_1
 again_1:
@@ -466,7 +466,7 @@ endif_0:
 	br label %again_1
 break_1:
 	; mirroring into buffer
-	%17 = alloca i32
+	%17 = alloca i32, align 4
 	store i32 0, i32* %17
 	br label %again_2
 again_2:
@@ -496,8 +496,8 @@ break_2:
 }
 
 define void @sprintf_dec_int32([0 x i8]* %buf, i32 %x) {
-	%1 = alloca [11 x i8]
-	%2 = alloca i32
+	%1 = alloca [11 x i8], align 1
+	%2 = alloca i32, align 4
 	store i32 %x, i32* %2
 	%3 = load i32, i32* %2
 	%4 = icmp slt i32 %3, 0
@@ -508,7 +508,7 @@ then_0:
 	store i32 %6, i32* %2
 	br label %endif_0
 endif_0:
-	%7 = alloca i32
+	%7 = alloca i32, align 4
 	store i32 0, i32* %7
 	br label %again_1
 again_1:
@@ -536,7 +536,7 @@ then_1:
 endif_1:
 	br label %again_1
 break_1:
-	%21 = alloca i32
+	%21 = alloca i32, align 4
 	store i32 0, i32* %21
 	br i1 %4 , label %then_2, label %endif_2
 then_2:
@@ -575,10 +575,10 @@ break_2:
 }
 
 define void @sprintf_dec_nat32([0 x i8]* %buf, i32 %x) {
-	%1 = alloca [11 x i8]
-	%2 = alloca i32
+	%1 = alloca [11 x i8], align 1
+	%2 = alloca i32, align 4
 	store i32 %x, i32* %2
-	%3 = alloca i32
+	%3 = alloca i32, align 4
 	store i32 0, i32* %3
 	br label %again_1
 again_1:
@@ -606,7 +606,7 @@ then_0:
 endif_0:
 	br label %again_1
 break_1:
-	%17 = alloca i32
+	%17 = alloca i32, align 4
 	store i32 0, i32* %17
 	br label %again_2
 again_2:

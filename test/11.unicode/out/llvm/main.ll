@@ -280,7 +280,7 @@ define %Int @main() {
 	;	var ratCode: Nat32 = Nat32 ratCharCode
 	;	printf("omegaCode = %d\n", omegaCode)
 	;	printf("ratCode = %d\n", ratCode)
-	%1 = alloca i32
+	%1 = alloca i32, align 4
 	store i32 0, i32* %1
 	br label %again_1
 again_1:
@@ -303,11 +303,11 @@ endif_0:
 	store i32 %11, i32* %1
 	br label %again_1
 break_1:
-	%12 = alloca %Str8*
+	%12 = alloca %Str8*, align 8
 	store %Str8* bitcast ([28 x i8]* @str1 to [0 x i8]*), %Str8** %12
-	%13 = alloca %Str16*
+	%13 = alloca %Str16*, align 8
 	store %Str16* bitcast ([21 x i16]* @str2 to [0 x i16]*), %Str16** %13
-	%14 = alloca %Str32*
+	%14 = alloca %Str32*, align 8
 	store %Str32* bitcast ([18 x i32]* @str3 to [0 x i32]*), %Str32** %14
 	%15 = load %Str8*, %Str8** %12
 	call void (%Str8*) @utf8_puts(%Str8* %15)

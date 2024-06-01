@@ -326,11 +326,11 @@ declare void @bcopy(i8* %src, i8* %dst, %SizeT %n)
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*))
 	; compare two Point2D records
-	%2 = alloca %Point2D
+	%2 = alloca %Point2D, align 4
 	%3 = insertvalue %Point2D zeroinitializer, i32 1, 0
 	%4 = insertvalue %Point2D %3, i32 2, 1
 	store %Point2D %4, %Point2D* %2
-	%5 = alloca %Point2D
+	%5 = alloca %Point2D, align 4
 	%6 = insertvalue %Point2D zeroinitializer, i32 10, 0
 	%7 = insertvalue %Point2D %6, i32 20, 1
 	store %Point2D %7, %Point2D* %5
@@ -348,10 +348,10 @@ else_0:
 	br label %endif_0
 endif_0:
 	; compare Point2D with anonymous record
-	%14 = alloca %Point2D
+	%14 = alloca %Point2D, align 4
 	%15 = load %Point2D, %Point2D* %2
 	store %Point2D %15, %Point2D* %14
-	%16 = alloca {i32, i32}
+	%16 = alloca {i32, i32}, align 4
 	%17 = insertvalue {i32, i32} zeroinitializer, i32 1, 0
 	%18 = insertvalue {i32, i32} %17, i32 2, 1
 	store {i32, i32} %18, {i32, i32}* %16
@@ -376,7 +376,7 @@ else_1:
 	br label %endif_1
 endif_1:
 	; comparison between two anonymous record
-	%28 = alloca {i32, i32}
+	%28 = alloca {i32, i32}, align 4
 	%29 = insertvalue {i32, i32} zeroinitializer, i32 1, 0
 	%30 = insertvalue {i32, i32} %29, i32 2, 1
 	store {i32, i32} %30, {i32, i32}* %28
@@ -422,7 +422,7 @@ endif_3:
 	; cons Point3D from Point2D (record extension)
 	; (it is possible if dst record contained all fields from src record
 	; and their types are equal)
-	%48 = alloca %Point3D
+	%48 = alloca %Point3D, align 4
 	; cast_composite_to_composite
 	; JUST
 	; as ptr
@@ -431,9 +431,9 @@ endif_3:
 	store %Point3D %50, %Point3D* %48
 	; проверка того как локальная константа-массив
 	; "замораживает" свои элементы
-	%51 = alloca i32
+	%51 = alloca i32, align 4
 	store i32 10, i32* %51
-	%52 = alloca i32
+	%52 = alloca i32, align 4
 	store i32 20, i32* %52
 	%53 = load i32, i32* %51
 	%54 = insertvalue {i32, i32} zeroinitializer, i32 %53, 0

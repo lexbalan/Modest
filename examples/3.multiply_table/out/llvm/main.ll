@@ -209,7 +209,7 @@ declare void @perror(%ConstCharStr* %str)
 
 
 define void @mtab(i32 %n) {
-	%1 = alloca i32
+	%1 = alloca i32, align 4
 	store i32 1, i32* %1
 	; or
 	;var m = 1   // by default integer var get system int type (-mint option)

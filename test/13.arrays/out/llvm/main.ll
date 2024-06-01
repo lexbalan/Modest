@@ -473,11 +473,11 @@ declare double @max_float64(double %a, double %b)
 
 
 define void @f0([30 x i8]* noalias sret([30 x i8]) %0, [20 x i8] %x) {
-	%2 = alloca [20 x i8]
+	%2 = alloca [20 x i8], align 1
 	store [20 x i8] %x, [20 x i8]* %2
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*), [20 x i8]* %2)
 	; truncate array
-	%4 = alloca [6 x i8]
+	%4 = alloca [6 x i8], align 1
 	; cast_array_to_array
 	; cast_composite_to_composite
 	; trunk
@@ -491,7 +491,7 @@ define void @f0([30 x i8]* noalias sret([30 x i8]) %0, [20 x i8] %x) {
 	store i8 0, i8* %8
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str2 to [0 x i8]*), [6 x i8]* %4)
 	; extend array
-	%10 = alloca [30 x i8]
+	%10 = alloca [30 x i8], align 1
 	; cast_array_to_array
 	; cast_composite_to_composite
 	; extend
@@ -524,7 +524,7 @@ define void @f0([30 x i8]* noalias sret([30 x i8]) %0, [20 x i8] %x) {
 
 define %Int @main() {
 	; generic array [4]Char8 will be implicit casted to [10]Char8
-	%1 = alloca [30 x i8]
+	%1 = alloca [30 x i8], align 1
 	%2 = insertvalue [20 x i8] zeroinitializer, i8 72, 0
 	%3 = insertvalue [20 x i8] %2, i8 101, 1
 	%4 = insertvalue [20 x i8] %3, i8 108, 2
@@ -550,7 +550,7 @@ define %Int @main() {
 	%23 = load [30 x i8], [30 x i8]* %22
 	store [30 x i8] %23, [30 x i8]* %1
 	%24 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str3 to [0 x i8]*), [30 x i8]* %1)
-	%25 = alloca i32
+	%25 = alloca i32, align 4
 	store i32 0, i32* %25
 	br label %again_1
 again_1:
@@ -569,7 +569,7 @@ body_1:
 	br label %again_1
 break_1:
 	%35 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str5 to [0 x i8]*))
-	%36 = alloca [3 x i32]
+	%36 = alloca [3 x i32], align 4
 	%37 = insertvalue [3 x i32] zeroinitializer, i32 4, 0
 	%38 = insertvalue [3 x i32] %37, i32 5, 1
 	%39 = insertvalue [3 x i32] %38, i32 6, 2
@@ -592,7 +592,7 @@ body_2:
 	br label %again_2
 break_2:
 	%49 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str7 to [0 x i8]*))
-	%50 = alloca [0 x i32]*
+	%50 = alloca [0 x i32]*, align 8
 	%51 = bitcast [10 x i32]* @globalArray to [0 x i32]*
 	store [0 x i32]* %51, [0 x i32]** %50
 	store i32 0, i32* %25
@@ -614,7 +614,7 @@ body_3:
 	br label %again_3
 break_3:
 	%62 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str9 to [0 x i8]*))
-	%63 = alloca [0 x i32]*
+	%63 = alloca [0 x i32]*, align 8
 	%64 = bitcast [3 x i32]* %36 to [0 x i32]*
 	store [0 x i32]* %64, [0 x i32]** %63
 	store i32 0, i32* %25
@@ -637,7 +637,7 @@ body_4:
 break_4:
 	; assign array to array 1
 	; (with equal types)
-	%75 = alloca [3 x i32]
+	%75 = alloca [3 x i32], align 4
 	%76 = insertvalue [3 x i32] zeroinitializer, i32 1, 0
 	%77 = insertvalue [3 x i32] %76, i32 2, 1
 	%78 = insertvalue [3 x i32] %77, i32 3, 2
@@ -654,7 +654,7 @@ break_4:
 	; create (and initialize) new variable b
 	; (with type [3]Int32)
 	; this variable are copy of array a
-	%88 = alloca [3 x i32]
+	%88 = alloca [3 x i32], align 4
 	%89 = load [3 x i32], [3 x i32]* %75
 	store [3 x i32] %89, [3 x i32]* %88
 	%90 = getelementptr inbounds [3 x i32], [3 x i32]* %88, i32 0, i32 0
@@ -682,12 +682,12 @@ else_0:
 endif_0:
 	; assign array to array 2
 	; (with array extending)
-	%105 = alloca [3 x i32]
+	%105 = alloca [3 x i32], align 4
 	%106 = insertvalue [3 x i32] zeroinitializer, i32 10, 0
 	%107 = insertvalue [3 x i32] %106, i32 20, 1
 	%108 = insertvalue [3 x i32] %107, i32 30, 2
 	store [3 x i32] %108, [3 x i32]* %105
-	%109 = alloca [6 x i32]
+	%109 = alloca [6 x i32], align 4
 	; cast_array_to_array
 	; cast_composite_to_composite
 	; JUST
@@ -733,11 +733,11 @@ endif_1:
 	;
 	;let aa = [111] + [222] + [333]
 	; cons literal array from var items
-	%136 = alloca %Int
+	%136 = alloca %Int, align 4
 	store %Int 100, %Int* %136
-	%137 = alloca %Int
+	%137 = alloca %Int, align 4
 	store %Int 200, %Int* %137
-	%138 = alloca %Int
+	%138 = alloca %Int, align 4
 	store %Int 300, %Int* %138
 	; immutable, non immediate value (array)
 	%139 = load %Int, %Int* %136
@@ -749,7 +749,7 @@ endif_1:
 	%145 = alloca [3 x %Int]
 	store [3 x %Int] %144, [3 x %Int]* %145
 	; check local literal array assignation to local array
-	%146 = alloca [4 x i32]
+	%146 = alloca [4 x i32], align 4
 	; cast_array_to_array
 	; cast_composite_to_composite
 	; JUST
@@ -798,11 +798,11 @@ endif_1:
 	store [10 x i32] %178, [10 x i32]* @globalArray
 	; проверка того как локальная константа-массив
 	; "замораживает" свои элементы
-	%179 = alloca i32
+	%179 = alloca i32, align 4
 	store i32 10, i32* %179
-	%180 = alloca i32
+	%180 = alloca i32, align 4
 	store i32 20, i32* %180
-	%181 = alloca i32
+	%181 = alloca i32, align 4
 	store i32 30, i32* %181
 	%182 = load i32, i32* %179
 	%183 = load i32, i32* %180

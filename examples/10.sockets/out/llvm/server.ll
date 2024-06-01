@@ -432,7 +432,7 @@ declare %Int @accept(%Int %s, %Struct_sockaddr* %addr, %Socklen_t* %addrlen)
 
 
 define void @write_file(%Int %sockfd) {
-	%1 = alloca [1024 x i8]
+	%1 = alloca [1024 x i8], align 1
 	%2 = call %File* (%ConstCharStr*, %ConstCharStr*) @fopen(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
 	%3 = icmp eq %File* %2, null
 	br i1 %3 , label %then_0, label %endif_0
@@ -471,7 +471,7 @@ then_0:
 	br label %endif_0
 endif_0:
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str6 to [0 x i8]*))
-	%4 = alloca %Struct_sockaddr_in
+	%4 = alloca %Struct_sockaddr_in, align 4
 	%5 = insertvalue %Struct_sockaddr_in zeroinitializer, i8 0, 0
 	%6 = insertvalue %Struct_sockaddr_in %5, i8 2, 1
 	%7 = insertvalue %Struct_sockaddr_in %6, %UnsignedShort 8080, 2
@@ -490,7 +490,7 @@ endif_0:
 	store %Struct_sockaddr_in %19, %Struct_sockaddr_in* %4
 	%20 = bitcast %Struct_sockaddr_in* %4 to i8*
 	%21 = bitcast i8* %20 to %Struct_sockaddr*
-	%22 = alloca %Int
+	%22 = alloca %Int, align 4
 	%23 = call %Int (%Int, %Struct_sockaddr*, %Socklen_t) @bind(%Int %1, %Struct_sockaddr* %21, %Socklen_t 16)
 	store %Int %23, %Int* %22
 	%24 = load %Int, %Int* %22
@@ -515,9 +515,9 @@ else_2:
 	call void (%Int) @exit(%Int 1)
 	br label %endif_2
 endif_2:
-	%31 = alloca %Socklen_t
+	%31 = alloca %Socklen_t, align 4
 	store %Socklen_t 16, %Socklen_t* %31
-	%32 = alloca %Struct_sockaddr_in
+	%32 = alloca %Struct_sockaddr_in, align 4
 	%33 = bitcast %Struct_sockaddr_in* %32 to i8*
 	%34 = bitcast i8* %33 to %Struct_sockaddr*
 	%35 = call %Int (%Int, %Struct_sockaddr*, %Socklen_t*) @accept(%Int %1, %Struct_sockaddr* %34, %Socklen_t* %31)

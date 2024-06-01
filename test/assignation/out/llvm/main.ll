@@ -291,9 +291,9 @@ define %Int @main() {
 	; -----------------------------------
 	; Local
 	; copy integers by value
-	%22 = alloca i32
+	%22 = alloca i32, align 4
 	store i32 0, i32* %22
-	%23 = alloca i32
+	%23 = alloca i32, align 4
 	store i32 123, i32* %23
 	%24 = load i32, i32* %23
 	store i32 %24, i32* %22
@@ -301,7 +301,7 @@ define %Int @main() {
 	%26 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str8 to [0 x i8]*), i32 %25)
 	; copy arrays by value
 	; C backend will be use memcpy()
-	%27 = alloca [10 x i32]
+	%27 = alloca [10 x i32], align 4
 	%28 = insertvalue [10 x i32] zeroinitializer, i32 0, 0
 	%29 = insertvalue [10 x i32] %28, i32 0, 1
 	%30 = insertvalue [10 x i32] %29, i32 0, 2
@@ -313,7 +313,7 @@ define %Int @main() {
 	%36 = insertvalue [10 x i32] %35, i32 0, 8
 	%37 = insertvalue [10 x i32] %36, i32 0, 9
 	store [10 x i32] %37, [10 x i32]* %27
-	%38 = alloca [10 x i32]
+	%38 = alloca [10 x i32], align 4
 	%39 = insertvalue [10 x i32] zeroinitializer, i32 42, 0
 	%40 = insertvalue [10 x i32] %39, i32 53, 1
 	%41 = insertvalue [10 x i32] %40, i32 64, 2
@@ -338,9 +338,9 @@ define %Int @main() {
 	%58 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str11 to [0 x i8]*), i32 %57)
 	; copy records by value
 	; C backend will be use memcpy()
-	%59 = alloca %Point
+	%59 = alloca %Point, align 4
 	store %Point zeroinitializer, %Point* %59
-	%60 = alloca %Point
+	%60 = alloca %Point, align 4
 	%61 = insertvalue %Point zeroinitializer, i32 10, 0
 	%62 = insertvalue %Point %61, i32 20, 1
 	store %Point %62, %Point* %60

@@ -214,7 +214,7 @@ declare void @perror(%ConstCharStr* %str)
 
 
 define void @swap([2 x i32]* noalias sret([2 x i32]) %0, [2 x i32] %in) {
-	%2 = alloca [2 x i32]
+	%2 = alloca [2 x i32], align 4
 	%3 = getelementptr inbounds [2 x i32], [2 x i32]* %2, i32 0, i32 0
 	%4 = extractvalue [2 x i32] %in, 1
 	store i32 %4, i32* %3
@@ -257,14 +257,14 @@ define void @ret_str([8 x i8]* noalias sret([8 x i8]) %0) {
 
 define %Int @main() {
 	; function returns array
-	%1 = alloca [8 x i8]; alloca memory for return value
+	%1 = alloca [8 x i8], align 1; alloca memory for return value
 	%2 = alloca [8 x i8]
 	call void ([8 x i8]*) @ret_str([8 x i8]* %2)
 	%3 = load [8 x i8], [8 x i8]* %2
 	store [8 x i8] %3, [8 x i8]* %1
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str1 to [0 x i8]*), [8 x i8]* %1)
 	; function receive array & return array
-	%5 = alloca [2 x i32]
+	%5 = alloca [2 x i32], align 4
 	%6 = getelementptr inbounds [2 x i32], [2 x i32]* %5, i32 0, i32 0
 	store i32 10, i32* %6
 	%7 = getelementptr inbounds [2 x i32], [2 x i32]* %5, i32 0, i32 1

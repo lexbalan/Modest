@@ -227,13 +227,13 @@ define i64 @low_128(i128 %x) {
 }
 
 define %Int @main() {
-	%1 = alloca i128
+	%1 = alloca i128, align 16
 	store i128 340282366920938463463374607431768211455, i128* %1
-	%2 = alloca i128
+	%2 = alloca i128, align 16
 	store i128 1, i128* %2
-	%3 = alloca i32
+	%3 = alloca i32, align 4
 	store i32 1, i32* %3
-	%4 = alloca i128
+	%4 = alloca i128, align 16
 	%5 = load i128, i128* %1
 	%6 = add i128 340282366920938463463374607431768211455, %5
 	%7 = load i32, i32* %3
@@ -265,7 +265,7 @@ define %Int @main() {
 	%32 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*), i64 %29, i64 %31)
 	; signed big int test
 	%33 = sub i8 0, 1
-	%34 = alloca i128
+	%34 = alloca i128, align 16
 	store i128 -1, i128* %34
 	%35 = load i128, i128* %34
 	%36 = add i128 %35, 1

@@ -227,9 +227,9 @@ declare void @perror(%ConstCharStr* %str)
 
 
 define %Int @main() {
-	%1 = alloca i32
+	%1 = alloca i32, align 4
 	store i32 127, i32* %1
-	%2 = alloca i32
+	%2 = alloca i32, align 4
 	%3 = load i32, i32* %1
 	%4 = add i32 %3, 1
 	store i32 %4, i32* %2

@@ -237,7 +237,7 @@ endif_0:
 }
 
 define i32 @get_number(i32 %min, i32 %max) {
-	%1 = alloca i32
+	%1 = alloca i32, align 4
 	store i32 0, i32* %1
 	br label %again_1
 again_1:

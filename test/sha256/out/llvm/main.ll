@@ -468,7 +468,7 @@ declare void @sha256_doHash([0 x i8]* %msg, i32 %msgLen, [32 x i8]* %outHash)
 ]
 
 define i1 @sha256_doTest(%SHA256_TestCase* %test) {
-	%1 = alloca [32 x i8]
+	%1 = alloca [32 x i8], align 1
 	%2 = getelementptr inbounds %SHA256_TestCase, %SHA256_TestCase* %test, i32 0, i32 0
 	%3 = bitcast [32 x i8]* %2 to [0 x i8]*
 	%4 = getelementptr inbounds %SHA256_TestCase, %SHA256_TestCase* %test, i32 0, i32 1
@@ -477,7 +477,7 @@ define i1 @sha256_doTest(%SHA256_TestCase* %test) {
 	%6 = getelementptr inbounds %SHA256_TestCase, %SHA256_TestCase* %test, i32 0, i32 0
 	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str1 to [0 x i8]*), [32 x i8]* %6)
 	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str2 to [0 x i8]*))
-	%9 = alloca i32
+	%9 = alloca i32, align 4
 	store i32 0, i32* %9
 	br label %again_1
 again_1:
@@ -506,7 +506,7 @@ break_1:
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str5 to [0 x i8]*))
-	%2 = alloca i32
+	%2 = alloca i32, align 4
 	store i32 0, i32* %2
 	br label %again_1
 again_1:
@@ -518,7 +518,7 @@ body_1:
 	%6 = getelementptr inbounds [2 x %SHA256_TestCase*], [2 x %SHA256_TestCase*]* @sha256_tests, i32 0, i32 %5
 	%7 = load %SHA256_TestCase*, %SHA256_TestCase** %6
 	%8 = call i1 (%SHA256_TestCase*) @sha256_doTest(%SHA256_TestCase* %7)
-	%9 = alloca %Str8*
+	%9 = alloca %Str8*, align 8
 	store %Str8* bitcast ([7 x i8]* @str6 to [0 x i8]*), %Str8** %9
 	br i1 %8 , label %then_0, label %endif_0
 then_0:

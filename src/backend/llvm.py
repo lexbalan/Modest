@@ -557,10 +557,12 @@ def llvm_label(label):
 	out("\n%s:" % label)
 
 
-def llvm_alloca(typ, id_str=None):
+def llvm_alloca(typ, id_str=None, alignment=0):
 	assert(typ['isa'] == 'type')
 	reg = llvm_operation("alloca", reg=id_str)
 	print_type(typ)
+	if alignment != 0:
+		out(", align %d" % alignment)
 	val = llvm_value_stk(reg, typ)
 	val['is_adr'] = True
 	return val
@@ -1469,7 +1471,7 @@ def print_stmt_return(x):
 
 def print_stmt_def_var(x):
 	id_str = x['var']['id']['str']
-	val = llvm_alloca(x['var']['type'])
+	val = llvm_alloca(x['var']['type'], alignment=x['var']['type']['align'])
 	locals_add(id_str, val)
 	if x['default_value'] != None:
 		iv = do_reval(x['default_value'])

@@ -343,7 +343,7 @@ define void @nat32_list_insert(%List* %list, i32 %x) {
 
 define void @list_print_forward(%List* %list) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str1 to [0 x i8]*))
-	%2 = alloca %Node*
+	%2 = alloca %Node*, align 8
 	%3 = call %Node* (%List*) @linked_list_first_node_get(%List* %list)
 	store %Node* %3, %Node** %2
 	br label %again_1
@@ -369,7 +369,7 @@ break_1:
 
 define void @list_print_backward(%List* %list) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str3 to [0 x i8]*))
-	%2 = alloca %Node*
+	%2 = alloca %Node*, align 8
 	%3 = call %Node* (%List*) @linked_list_last_node_get(%List* %list)
 	store %Node* %3, %Node** %2
 	br label %again_1
@@ -422,7 +422,7 @@ endif_0:
 	call void (%List*) @list_print_backward(%List* %2)
 	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([37 x i8]* @str8 to [0 x i8]*))
 	; test linked_list_node_get
-	%9 = alloca i32
+	%9 = alloca i32, align 4
 	store i32 0, i32* %9
 	br label %again_1
 again_1:

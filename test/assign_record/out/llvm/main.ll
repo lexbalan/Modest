@@ -251,11 +251,11 @@ else_0:
 	br label %endif_0
 endif_0:
 	; local
-	%15 = alloca %Point
+	%15 = alloca %Point, align 4
 	%16 = insertvalue %Point zeroinitializer, i32 10, 0
 	%17 = insertvalue %Point %16, i32 20, 1
 	store %Point %17, %Point* %15
-	%18 = alloca %Point
+	%18 = alloca %Point, align 4
 	store %Point zeroinitializer, %Point* %18
 	%19 = load %Point, %Point* %15
 	store %Point %19, %Point* %18

@@ -212,7 +212,7 @@ declare void @perror(%ConstCharStr* %str)
 
 
 define i64 @sum64(i64 %a, i64 %b) {
-	%1 = alloca i64
+	%1 = alloca i64, align 8
 	%2 = call i64 asm sideeffect "add $0, $1, $2", "=r,r,r,~{cc}" (i64 %a, i64 %b)
 	store i64 %2, i64* %1
 	%3 = load i64, i64* %1
@@ -220,7 +220,7 @@ define i64 @sum64(i64 %a, i64 %b) {
 }
 
 define i64 @sub64(i64 %a, i64 %b) {
-	%1 = alloca i64
+	%1 = alloca i64, align 8
 	%2 = call i64 asm sideeffect "sub $0, $1, $2", "=r,r,r,~{cc}" (i64 %a, i64 %b)
 	store i64 %2, i64* %1
 	%3 = load i64, i64* %1
@@ -228,8 +228,8 @@ define i64 @sub64(i64 %a, i64 %b) {
 }
 
 define void @sumsub64(i64 %a, i64 %b) {
-	%1 = alloca i64
-	%2 = alloca i64
+	%1 = alloca i64, align 8
+	%2 = alloca i64, align 8
 	%3 = call {i64, i64} asm sideeffect "add $0, $2, $3\0Asub $1, $2, $3\0A", "=&r,=&r,r,r,~{cc}" (i64 %a, i64 %b)
 	%4 = extractvalue {i64, i64} %3, 0
 	store i64 %4, i64* %1
@@ -244,9 +244,9 @@ define void @sumsub64(i64 %a, i64 %b) {
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str3 to [0 x i8]*))
-	%2 = alloca i64
+	%2 = alloca i64, align 8
 	store i64 10, i64* %2
-	%3 = alloca i64
+	%3 = alloca i64, align 8
 	store i64 20, i64* %3
 	%4 = load i64, i64* %2
 	%5 = load i64, i64* %3

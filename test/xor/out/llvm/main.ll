@@ -302,9 +302,9 @@ declare void @bcopy(i8* %src, i8* %dst, %SizeT %n)
 
 
 define void @xor_encrypter([0 x i8]* %buf, i32 %buflen, [0 x i8]* %key, i32 %keylen) {
-	%1 = alloca i32
+	%1 = alloca i32, align 4
 	store i32 0, i32* %1
-	%2 = alloca i32
+	%2 = alloca i32, align 4
 	store i32 0, i32* %2
 	br label %again_1
 again_1:
@@ -369,7 +369,7 @@ break_1:
 ]
 
 define void @print_bytes([0 x i8]* %buf, i32 %len) {
-	%1 = alloca i32
+	%1 = alloca i32, align 4
 	store i32 0, i32* %1
 	br label %again_1
 again_1:

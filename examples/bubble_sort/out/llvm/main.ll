@@ -243,7 +243,7 @@ declare void @perror(%ConstCharStr* %str)
 ]
 
 define void @bubble_sort32([0 x i32]* %array, i32 %len) {
-	%1 = alloca i1
+	%1 = alloca i1, align 1
 	store i1 1, i1* %1
 	br label %again_1
 again_1:
@@ -251,7 +251,7 @@ again_1:
 	br i1 %2 , label %body_1, label %break_1
 body_1:
 	store i1 0, i1* %1
-	%3 = alloca i32
+	%3 = alloca i32, align 4
 	store i32 0, i32* %3
 	br label %again_2
 again_2:
@@ -309,7 +309,7 @@ define i32 @main() {
 
 define void @print_array([0 x i32]* %array, i32 %len) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str5 to [0 x i8]*))
-	%2 = alloca i32
+	%2 = alloca i32, align 4
 	store i32 0, i32* %2
 	br label %again_1
 again_1:
@@ -332,7 +332,7 @@ break_1:
 
 define void @fill_array([0 x i32]* %array, i32 %len) {
 	%1 = sub i16 0, 1000
-	%2 = alloca i32
+	%2 = alloca i32, align 4
 	store i32 0, i32* %2
 	br label %again_1
 again_1:
@@ -355,7 +355,7 @@ break_1:
 }
 
 define i32 @get_number(i32 %min, i32 %max) {
-	%1 = alloca i32
+	%1 = alloca i32, align 4
 	store i32 0, i32* %1
 	br label %again_1
 again_1:

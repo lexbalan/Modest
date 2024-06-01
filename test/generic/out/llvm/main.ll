@@ -275,26 +275,26 @@ define i1 @test_generic_integer() {
 	; Any integer literal have GenericInteger type
 	; result of such expressions also have generic type
 	; GenericInteger value can be implicitly casted to any Integer type
-	%1 = alloca i32
+	%1 = alloca i32, align 4
 	store i32 1, i32* %1
-	%2 = alloca i64
+	%2 = alloca i64, align 8
 	store i64 1, i64* %2
 	; to Float
-	%3 = alloca float
+	%3 = alloca float, align 4
 	store float 1.0, float* %3
-	%4 = alloca double
+	%4 = alloca double, align 8
 	store double 1.0, double* %4
 	; and to Byte
-	%5 = alloca i8
+	%5 = alloca i8, align 1
 	store i8 1, i8* %5
 	; explicit cast GenericInteger value
-	%6 = alloca i8
+	%6 = alloca i8, align 1
 	store i8 1, i8* %6
-	%7 = alloca i16
+	%7 = alloca i16, align 2
 	store i16 1, i16* %7
-	%8 = alloca i32
+	%8 = alloca i32, align 4
 	store i32 1, i32* %8
-	%9 = alloca i1
+	%9 = alloca i1, align 1
 	store i1 1, i1* %9
 	ret i1 1
 }
@@ -304,12 +304,12 @@ define i1 @test_generic_float() {
 	; value with GenericFloat type
 	; can be implicit casted to any Float type
 	; (in this case value may lose precision)
-	%1 = alloca float
+	%1 = alloca float, align 4
 	store float 3.1415927410125732, float* %1
-	%2 = alloca double
+	%2 = alloca double, align 8
 	store double 3.141592653589793, double* %2
 	; explicit cast GenericFloat value to Int32
-	%3 = alloca i32
+	%3 = alloca i32, align 4
 	store i32 3, i32* %3
 	ret i1 1
 }
@@ -319,14 +319,14 @@ define i1 @test_generic_char() {
 	; (you can pick GenericChar value by index of GenericString value)
 	; value with GenericChar type
 	; can be implicit casted to any Char type
-	%1 = alloca i8
+	%1 = alloca i8, align 1
 	store i8 65, i8* %1
-	%2 = alloca i16
+	%2 = alloca i16, align 2
 	store i16 65, i16* %2
-	%3 = alloca i32
+	%3 = alloca i32, align 4
 	store i32 65, i32* %3
 	; explicit cast GenericChar value to Int32
-	%4 = alloca i32
+	%4 = alloca i32, align 4
 	store i32 65, i32* %4
 	ret i1 1
 }
@@ -349,7 +349,7 @@ endif_0:
 	; value with GenericArray type
 	; can be implicit casted to Array with compatible type and same size
 	; implicit cast Generic([4]GenericInteger) value to [4]Int32
-	%8 = alloca [4 x i32]
+	%8 = alloca [4 x i32], align 4
 	%9 = insertvalue [4 x i32] zeroinitializer, i32 0, 0
 	%10 = insertvalue [4 x i32] %9, i32 1, 1
 	%11 = insertvalue [4 x i32] %10, i32 2, 2
@@ -373,7 +373,7 @@ then_1:
 	br label %endif_1
 endif_1:
 	; implicit cast Generic([4]GenericInteger) value to [4]Nat64
-	%24 = alloca [4 x i64]
+	%24 = alloca [4 x i64], align 8
 	%25 = insertvalue [4 x i64] zeroinitializer, i64 0, 0
 	%26 = insertvalue [4 x i64] %25, i64 1, 1
 	%27 = insertvalue [4 x i64] %26, i64 2, 2
@@ -397,7 +397,7 @@ then_2:
 	br label %endif_2
 endif_2:
 	; explicit cast Generic([4]GenericInteger) value to [10]Int32
-	%40 = alloca [10 x i32]
+	%40 = alloca [10 x i32], align 4
 	%41 = insertvalue [10 x i32] zeroinitializer, i32 0, 0
 	%42 = insertvalue [10 x i32] %41, i32 1, 1
 	%43 = insertvalue [10 x i32] %42, i32 2, 2
@@ -458,13 +458,13 @@ define i1 @test_generic_record() {
 	; can be implicit casted to Record with same fields.
 	; implicit cast Generic(record {x: GenericInteger, y: GenericInteger})
 	; to record {x: Int32, y: Int32}
-	%3 = alloca %Point2D
+	%3 = alloca %Point2D, align 4
 	%4 = insertvalue %Point2D zeroinitializer, i32 10, 0
 	%5 = insertvalue %Point2D %4, i32 20, 1
 	store %Point2D %5, %Point2D* %3
 	; explicit cast Generic(record {x: GenericInteger, y: GenericInteger})
 	; to record {x: Int32, y: Int32, z: Int32}
-	%6 = alloca %Point3D
+	%6 = alloca %Point3D, align 4
 	%7 = insertvalue %Point3D zeroinitializer, i32 10, 0
 	%8 = insertvalue %Point3D %7, i32 20, 1
 	%9 = insertvalue %Point3D %8, i32 0, 2
