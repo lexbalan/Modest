@@ -393,15 +393,15 @@ def llvm_deref(x):
 
 # индекс не может быть i64 (!) (а только i32)
 # t - тип самой записи или массива (без указателя)
-def llvm_getelementptr(rec, rt, indexes, vt):
-	# Прикол в том что индекс (i) структуры
+def llvm_getelementptr(v, object_type, indexes, result_type):
+	# Есть такой прикол в том что индекс (i) структуры
 	# не может быть i64 (!) (а только i32)
-	reg = llvm_operation_with_type("getelementptr inbounds", rt)
+	reg = llvm_operation_with_type("getelementptr inbounds", object_type)
 	out(", ")
-	llvm_print_type_value(rec)
+	llvm_print_type_value(v)
 	out(", ")
 	print_list_with(indexes, llvm_print_type_value)
-	rv = llvm_value_reg(reg, vt)
+	rv = llvm_value_reg(reg, result_type)
 	rv['is_adr'] = True
 	return rv
 
@@ -955,6 +955,45 @@ def do_eval_index(v):
 
 
 
+def do_eval_slice(v):
+	if value_is_immediate(v):
+		return do_eval(v['immval'])
+
+	varray = v['left']
+	if hlir_type.type_is_pointer(varray['type']):
+		pointer = do_reval(varray)
+		array_type = pointer['type']['to']
+		index = do_reval(v['index_from'])
+		result_type = v['type']
+		ptr_to_item = llvm_getelementptr(pointer, array_type, (llvm_value_num_zero, index), array_type['of'])
+		out("\n;")
+
+		pnv = llvm_cast("bitcast", ptr_to_item['type'], hlir_type_pointer(v['type']), ptr_to_item)
+		pnv['is_adr'] = True
+		return pnv
+
+
+	array = do_eval(varray)
+	array_type = array['type']
+	result_type = v['type']
+	index = do_reval(v['index_from'])
+
+	# если сам массив находится в регистре: (let rec = get_rec())
+	if not array['is_adr']:
+		if not value_is_immediate(v['index']):
+			error("expected immediate index value", v['ti'])
+			return llvm_value_zero(v['ti'])
+
+		return llvm_extract_item(array, result_type, index['asset'])
+
+	ptr_to_item = llvm_getelementptr(array, array_type, (llvm_value_num_zero, index), array_type['of'])
+	pnv = llvm_cast("bitcast", ptr_to_item['type'], hlir_type_pointer(v['type']), ptr_to_item)
+	pnv['is_adr'] = True
+	return pnv
+
+
+
+
 def do_eval_access(v):
 	if hlir_type.type_is_pointer(v['record']['type']):
 		ptr = do_reval(v['record'])
@@ -1334,6 +1373,7 @@ def do_eval(x):
 	k = x['kind']
 	if k == 'literal': y = do_eval_literal(x)
 	elif k in bin_ops: y = do_eval_bin(x)
+	elif k == 'cons': y = do_eval_cons(x)
 	elif k == 'ref': y = do_eval_ref(x)
 	elif k == 'not': y = do_eval_not(x)
 	elif k == 'negative': y = do_eval_neg(x)
@@ -1344,7 +1384,7 @@ def do_eval(x):
 	elif k == 'call': y = do_eval_call(x)
 	elif k == 'index': y = do_eval_index(x)
 	elif k == 'access': y = do_eval_access(x)
-	elif k == 'cons': y = do_eval_cons(x)
+	elif k == 'slice': y = do_eval_slice(x)
 	#elif k == 'concat_array': y = do_eval_literal(x)
 	#elif k == 'concat_string': y = do_eval_literal(x)
 	elif k in ['sizeof', 'lengthof', 'alignof', 'offsetof']:

@@ -1144,7 +1144,7 @@ def do_value_index(x):
 
 
 def do_value_slice(x):
-	info("slice operation", x['ti'])
+	#info("do_value_slice", x['ti'])
 	left = do_value(x['left'])
 	index_from = do_rvalue(x['index_from'])
 	index_to = do_rvalue(x['index_to'])
@@ -1176,12 +1176,12 @@ def do_value_slice(x):
 
 	slice_len = j - i + 1
 
-	type_of = left['type']['of']
+	array_of = array_type['of']
 	volume = value_integer_create(slice_len)
-	type = hlir_type.hlir_type_array(type_of, volume, x['ti'])
+	type = hlir_type.hlir_type_array(array_of, volume, x['ti'])
 
-	hlir_type.type_print(type)
-	print()
+	#hlir_type.type_print(type)
+	#print()
 
 	return value_slice_array(left, type, index_from, index_to, x['ti'])
 	return value_bad(x)
