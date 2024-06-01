@@ -264,6 +264,22 @@ def value_index_array_ptr(ptr_to_array, index, ti):
 	}
 
 
+def value_slice_array(array, index_from, index_to, ti):
+	return {
+		'isa': 'value',
+		'kind': 'slice',
+		'array': array,
+		'from': index_from,
+		'to': index_to,
+		'type': array['type']['of'],
+		'immediate': False,
+		'immutable': False,
+		'att': [],
+		'expr_ti': ti,
+		'ti': ti
+	}
+
+
 def value_access_record(record, field, ti):
 	return {
 		'isa': 'value',

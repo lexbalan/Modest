@@ -1154,7 +1154,6 @@ def do_value_slice(x):
 	if value_is_bad(left) or value_is_bad(index_from) or value_is_bad(index_to):
 		return value_bad(x)
 
-
 	left_type = left['type']
 	via_pointer = hlir_type.type_is_pointer(left_type)
 	array_type = left_type
@@ -1165,14 +1164,14 @@ def do_value_slice(x):
 		error("expected array or pointer to array", left['expr_ti'])
 		return value_bad(x)
 
-
 	if not value_is_immediate(index_from):
 		error("expected immediate value", index_from['expr_ti'])
 	if not value_is_immediate(index_to):
 		error("expected immediate value", index_to['expr_ti'])
 
-
+	#return value_slice_array(left, index_from, index_to, ['ti'])
 	return value_bad(x)
+
 
 
 def do_value_access(x):
