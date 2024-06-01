@@ -283,22 +283,6 @@ def value_access_record(record, type, field, ti):
 	}
 
 
-def value_access_record_ptr(ptr_to_record, field, ti):
-	return {
-		'isa': 'value',
-		'kind': 'access_ptr',
-		'pointer': ptr_to_record,
-		'field': field,
-		'record_type': ptr_to_record['type']['to'],
-		'type': field['type'],
-		'immediate': False,
-		'immutable': False,
-		'att': [],
-		'expr_ti': ti,
-		'ti': ti
-	}
-
-
 def value_cons_node(type, value, method, ti):
 	assert(method in ['implicit', 'explicit'])
 	assert(value['isa'] == 'value')
