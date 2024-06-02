@@ -1098,13 +1098,17 @@ def cast_composite_to_composite(to_type, value, ti):
 			xnv = llvm_cast("bitcast", hlir_type_pointer(v['type']), hlir_type_pointer(v['type']), pnv)
 			# сохраняем туда это самое меньшее значение
 			llvm_store(xnv, v)
-			nv = llvm_load(pnv)
+			#nv = llvm_load(pnv)
+			nv = pnv
+			nv['is_adr'] = True
 		else:
 			out("\n\t; trunk")
 			nv = llvm_alloca_store(v['type'], init_value=v)
 			# from, to, val
 			pnv = llvm_cast("bitcast", v['type'], hlir_type_pointer(to_type), nv)
-			nv = llvm_deref(pnv)
+			#nv = llvm_deref(pnv)
+			nv = pnv
+			nv['is_adr'] = True
 
 		# и сохраним
 

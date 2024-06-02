@@ -6,7 +6,8 @@ from error import info, error, fatal
 from .common import *
 import hlir.type as hlir_type
 from hlir.type import type_print
-from value.value import value_is_immediate, value_is_generic_immediate, value_is_zero, value_attribute_check, value_print
+from value.value import value_is_immediate, value_is_generic_immediate, value_is_zero, value_attribute_check, value_print, value_index_array
+from value.integer import value_integer_create
 from util import align_bits_up, nbits_for_num, get_item_with_id, align_to
 from unicode import utfx_chars_to_utf32_chars, utf32_chars_to_string
 from main import settings
@@ -549,6 +550,19 @@ def print_value_call(v, ctx):
 			out(", ")
 
 	out(")")
+
+
+
+def print_value_slice(x, ctx):
+	#out("/* slice */")
+	varray = x['left']
+	#if hlir_type.type_is_pointer(varray['type']):
+
+	out("&")
+	index = value_integer_create(x['index_from']['asset'])
+	y = value_index_array(varray, x['type'], index, ti=None)
+	print_value_index(y, ctx)
+
 
 
 
@@ -1174,13 +1188,14 @@ def print_value(x, ctx=[], need_wrap=False):
 	if k == 'literal': print_value_terminal(x, ctx)
 	elif k in bin_ops: print_value_bin(x, ctx)
 	elif k in un_ops: print_value_un(x, ctx)
+	elif k == 'cons': print_value_cons(x, ctx)
 	elif k == 'const': print_value_const(x, ctx)
 	elif k == 'func': print_value_func(x, ctx)
 	elif k == 'var': print_value_var(x, ctx)
 	elif k == 'call': print_value_call(x, ctx)
 	elif k == 'index': print_value_index(x, ctx)
+	elif k == 'slice': print_value_slice(x, ctx)
 	elif k == 'access': print_value_access(x, ctx)
-	elif k == 'cons': print_value_cons(x, ctx)
 	elif k == 'sizeof': print_value_sizeof(x, ctx)
 	elif k == 'alignof': print_value_alignof(x, ctx)
 	elif k == 'offsetof': y = print_value_offsetof(x, ctx)

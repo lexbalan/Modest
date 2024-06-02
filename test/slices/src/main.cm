@@ -32,8 +32,10 @@ func main() -> Int {
 		++i
 	}
 
-	var vyh = s1
-	var vyh2 = s2
+	var vs1 = s1
+	var vs2 = s2
+
+	a[2 .. 5] = [10, 20, 30, 40]
 
 	return 0
 }

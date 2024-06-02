@@ -498,8 +498,8 @@ define void @f0([30 x i8]* noalias sret([30 x i8]) %0, [20 x i8] %x) {
 	%11 = alloca [30 x i8]
 	%12 = bitcast [30 x i8]* %11 to [20 x i8]*
 	store [20 x i8] %x, [20 x i8]* %12
-	%13 = load [30 x i8], [30 x i8]* %11
 	;???
+	%13 = load [30 x i8], [30 x i8]* %11
 	store [30 x i8] %13, [30 x i8]* %10
 	%14 = getelementptr inbounds [30 x i8], [30 x i8]* %10, i32 0, i32 6
 	store i8 77, i8* %14
