@@ -1642,7 +1642,6 @@ def do_stmt_assign(x):
 		error("expected mutable value", l['expr_ti'])
 		return hlir_stmt_bad(x)
 
-	# type check
 	r = value_cons_implicit_check(l['type'], r)
 	return hlir_stmt_assign(l, r, ti=x['ti'])
 

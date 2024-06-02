@@ -306,7 +306,9 @@ declare %Node* @linked_list_node_prev_get(%Node* %node)
 declare %Node* @linked_list_node_next_get(%Node* %node)
 declare i8* @linked_list_node_data_get(%Node* %node)
 declare %Node* @linked_list_node_get(%List* %list, i32 %pos)
+declare %Node* @linked_list_node_insert(%List* %list, i32 %pos, %Node* %new_node)
 declare %Node* @linked_list_node_append(%List* %list, %Node* %new_node)
+declare %Node* @linked_list_insert(%List* %list, i32 %pos, i8* %data)
 declare %Node* @linked_list_append(%List* %list, i8* %data)
 
 
@@ -325,6 +327,7 @@ declare %Node* @linked_list_append(%List* %list, i8* %data)
 @str11 = private constant [43 x i8] [i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 10, i8 0]
 @str12 = private constant [19 x i8] [i8 110, i8 111, i8 100, i8 101, i8 32, i8 37, i8 105, i8 32, i8 110, i8 111, i8 116, i8 32, i8 101, i8 120, i8 105, i8 115, i8 116, i8 10, i8 0]
 @str13 = private constant [15 x i8] [i8 108, i8 105, i8 115, i8 116, i8 40, i8 37, i8 105, i8 41, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+@str14 = private constant [43 x i8] [i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 10, i8 0]
 
 
 
@@ -484,6 +487,13 @@ endif_2:
 	store i32 %44, i32* %9
 	br label %again_2
 break_2:
+	%45 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([43 x i8]* @str14 to [0 x i8]*))
+	%46 = call i8* (%SizeT) @malloc(%SizeT 4)
+	%47 = bitcast i8* %46 to i32*
+	store i32 1234, i32* %47
+	%48 = bitcast i32* %47 to i8*
+	%49 = call %Node* (%List*, i32, i8*) @linked_list_insert(%List* %2, i32 4, i8* %48)
+	call void (%List*) @list_print_forward(%List* %2)
 	ret %Int 0
 }
 

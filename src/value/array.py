@@ -118,12 +118,8 @@ def value_array_cons(t, v, method, ti):
 		return None
 
 	# Check array length
-	# нельзя построить меньший массив из большего (ВРЕМЕННО МОЖНО)
 	n_from = v['type']['volume']['asset']
 	n_to = t['volume']['asset']
-	#if n_from > n_to:
-	#	info("too many items (%d, %d)" % (n_from, n_to), ti)
-	#	return None
 
 	#
 	# Implicit cons
@@ -131,6 +127,12 @@ def value_array_cons(t, v, method, ti):
 
 	if hlir_type.type_is_generic(v['type']):
 		# GenericArray -> Array
+
+		# нельзя неявно построить меньший массив из большего
+		if n_from > n_to:
+			info("too many items (%d, %d)" % (n_from, n_to), ti)
+			return None
+
 		#warning("value_array_cons %s" % method, ti)
 		return _do_cons_array(t, v, method, ti)
 

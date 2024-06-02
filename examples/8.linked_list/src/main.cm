@@ -108,6 +108,15 @@ func main() -> Int {
 		++i
 	}
 
+	printf("-----------------------------------------\n")
+
+
+	let p_nat32 = *Nat32 malloc(sizeof(Nat32))
+	*p_nat32 = 1234
+	linked_list_insert(list, pos=4, data=p_nat32)
+
+	list_print_forward(list)
+
 	return 0
 }
 
