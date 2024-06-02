@@ -1277,7 +1277,7 @@ def print_stmt_return(x):
 
 
 
-def print_stmt_defvar(x):
+def print_stmt_var(x):
 	init_value = x['default_value']
 
 	if DONT_PRINT_UNUSED:
@@ -1335,6 +1335,17 @@ def print_stmt_let(x):
 				return
 
 	nl_indent(x['nl'])
+
+	if iv['kind'] == 'slice':
+		out("/*let slice*/")
+		nl_indent()
+		print_variable(id, v['type'], as_const=False)
+		out(";")
+		nl_indent()
+		memcopy_assign(v, iv)
+		nl_indent()
+		out("/*end let slice*/")
+		return
 
 	if value_is_generic_immediate(v):
 		print_macro_definition(id, iv)
@@ -1452,7 +1463,7 @@ def print_stmt(x):
 	elif k == 'return': print_stmt_return(x)
 	elif k == 'if': print_stmt_if(x, need_else_branch=False)
 	elif k == 'while': print_stmt_while(x)
-	elif k == 'def_var': print_stmt_defvar(x)
+	elif k == 'var': print_stmt_var(x)
 	elif k == 'let': print_stmt_let(x)
 	elif k == 'break': nl_indent(x['nl']); out('break;')
 	elif k == 'again': nl_indent(x['nl']); out('continue;')
@@ -1924,6 +1935,8 @@ def print_value_as_ptr(x):
 
 	if x['kind'] == 'deref':
 		x = x['value']
+		print_value(x)
+	elif x['kind'] == 'slice':
 		print_value(x)
 	else:
 		out("&")

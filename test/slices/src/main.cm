@@ -37,6 +37,12 @@ func main() -> Int {
 
 	a[2 .. 5] = [10, 20, 30, 40]
 
+	i = 0
+	while i < lengthof(a) {
+		printf("a[%d] = %d\n", i, a[i])
+		++i
+	}
+
 	return 0
 }
 

@@ -484,7 +484,6 @@ define void @f0([30 x i8]* noalias sret([30 x i8]) %0, [20 x i8] %x) {
 	%5 = alloca [20 x i8]
 	store [20 x i8] %x, [20 x i8]* %5
 	%6 = bitcast [20 x i8]* %5 to [6 x i8]*
-	;???
 	%7 = load [6 x i8], [6 x i8]* %6
 	store [6 x i8] %7, [6 x i8]* %4
 	%8 = getelementptr inbounds [6 x i8], [6 x i8]* %4, i32 0, i32 5
@@ -498,7 +497,6 @@ define void @f0([30 x i8]* noalias sret([30 x i8]) %0, [20 x i8] %x) {
 	%11 = alloca [30 x i8]
 	%12 = bitcast [30 x i8]* %11 to [20 x i8]*
 	store [20 x i8] %x, [20 x i8]* %12
-	;???
 	%13 = load [30 x i8], [30 x i8]* %11
 	store [30 x i8] %13, [30 x i8]* %10
 	%14 = getelementptr inbounds [30 x i8], [30 x i8]* %10, i32 0, i32 6
@@ -694,7 +692,6 @@ endif_0:
 	; as ptr
 	%110 = bitcast [3 x i32]* %105 to [6 x i32]*
 	%111 = load [6 x i32], [6 x i32]* %110
-	;???
 	store [6 x i32] %111, [6 x i32]* %109
 	%112 = getelementptr inbounds [6 x i32], [6 x i32]* %109, i32 0, i32 0
 	%113 = load i32, i32* %112
@@ -756,7 +753,6 @@ endif_1:
 	; as ptr
 	%147 = bitcast [3 x %Int]* %145 to [4 x i32]*
 	%148 = load [4 x i32], [4 x i32]* %147
-	;???
 	store [4 x i32] %148, [4 x i32]* %146
 	%149 = getelementptr inbounds [4 x i32], [4 x i32]* %146, i32 0, i32 0
 	%150 = load i32, i32* %149
@@ -774,7 +770,6 @@ endif_1:
 	; as ptr
 	%158 = bitcast [3 x %Int]* %145 to [10 x i32]*
 	%159 = load [10 x i32], [10 x i32]* %158
-	;???
 	store [10 x i32] %159, [10 x i32]* @globalArray
 	%160 = getelementptr inbounds [10 x i32], [10 x i32]* @globalArray, i32 0, i32 0
 	%161 = load i32, i32* %160

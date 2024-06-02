@@ -206,6 +206,7 @@ declare void @perror(%ConstCharStr* %str)
 @str1 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 115, i8 108, i8 105, i8 99, i8 101, i8 115, i8 10, i8 0]
 @str2 = private constant [13 x i8] [i8 115, i8 49, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 @str3 = private constant [13 x i8] [i8 115, i8 50, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str4 = private constant [12 x i8] [i8 97, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 
 
 
@@ -281,6 +282,30 @@ break_2:
 	%42 = alloca [4 x i32], align 4
 	%43 = load [4 x i32], [4 x i32]* %30
 	store [4 x i32] %43, [4 x i32]* %42
+	%44 = getelementptr inbounds [10 x i32], [10 x i32]* %2, i32 0, i8 2
+	%45 = bitcast i32* %44 to [4 x i32]*
+	%46 = insertvalue [4 x i32] zeroinitializer, i32 10, 0
+	%47 = insertvalue [4 x i32] %46, i32 20, 1
+	%48 = insertvalue [4 x i32] %47, i32 30, 2
+	%49 = insertvalue [4 x i32] %48, i32 40, 3
+	store [4 x i32] %49, [4 x i32]* %45
+	store i32 0, i32* %17
+	br label %again_3
+again_3:
+	%50 = load i32, i32* %17
+	%51 = icmp slt i32 %50, 10
+	br i1 %51 , label %body_3, label %break_3
+body_3:
+	%52 = load i32, i32* %17
+	%53 = load i32, i32* %17
+	%54 = getelementptr inbounds [10 x i32], [10 x i32]* %2, i32 0, i32 %53
+	%55 = load i32, i32* %54
+	%56 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str4 to [0 x i8]*), i32 %52, i32 %55)
+	%57 = load i32, i32* %17
+	%58 = add i32 %57, 1
+	store i32 %58, i32* %17
+	br label %again_3
+break_3:
 	ret %Int 0
 }
 

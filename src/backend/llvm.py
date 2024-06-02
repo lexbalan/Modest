@@ -1110,8 +1110,6 @@ def cast_composite_to_composite(to_type, value, ti):
 			nv = pnv
 			nv['is_adr'] = True
 
-		# и сохраним
-
 		return nv
 
 	out("\n\t; JUST")
@@ -1172,7 +1170,6 @@ def do_eval_cons(x):
 	if hlir_type.type_is_array(from_type):
 		if hlir_type.type_is_array(to_type):
 			nv = cast_array_to_array(to_type, value, x['ti'])
-			out("\n\t;???")
 			return nv
 
 	if hlir_type.type_is_va_list(from_type):
@@ -1513,7 +1510,7 @@ def print_stmt_return(x):
 
 
 
-def print_stmt_def_var(x):
+def print_stmt_var(x):
 	id_str = x['var']['id']['str']
 	val = llvm_alloca(x['var']['type'], alignment=x['var']['type']['align'])
 	locals_add(id_str, val)
@@ -1673,7 +1670,7 @@ def print_stmt(x):
 	elif k == 'return': print_stmt_return(x)
 	elif k == 'if': print_stmt_if(x)
 	elif k == 'while': print_stmt_while(x)
-	elif k == 'def_var': print_stmt_def_var(x)
+	elif k == 'var': print_stmt_var(x)
 	elif k == 'let': print_stmt_let(x)
 	elif k == 'break': print_stmt_break(x)
 	elif k == 'again': print_stmt_again(x)

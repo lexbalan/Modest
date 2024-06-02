@@ -22,15 +22,14 @@ def value_is_generic_immediate(x):
 # Any immediate value are immutable,
 # but not any immutable value are immediate
 def value_is_immutable(x):
-	if x['immutable']:
-		return True
-
 	if value_is_immediate(x):
+		#if not x['immutable']:
+		#	error("imm not imm", x['ti'])
+		#	1 / 0
 		return True
 
-	return not x['kind'] in [
-		'var', 'access', 'access_ptr', 'index', 'index_ptr', 'deref'
-	]
+	return x['immutable']
+
 
 
 

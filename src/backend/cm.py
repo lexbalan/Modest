@@ -643,7 +643,7 @@ def print_stmt_return(x):
 		print_value(x['value'])
 
 
-def print_stmt_defvar(x):
+def print_stmt_var(x):
 	init_value = x['default_value']
 	out('var ')
 
@@ -732,7 +732,7 @@ def print_stmt(x):
 	elif k == 'return': print_stmt_return(x)
 	elif k == 'if': print_stmt_if(x)
 	elif k == 'while': print_stmt_while(x)
-	elif k == 'def_var': print_stmt_defvar(x)
+	elif k == 'var': print_stmt_var(x)
 	elif k == 'let': print_stmt_let(x)
 	elif k == 'break': print_stmt_break(x)
 	elif k == 'again': print_stmt_again(x)

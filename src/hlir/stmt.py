@@ -30,7 +30,7 @@ def hlir_stmt_block(stmts, ti=None, end_nl=1):
 def hlir_stmt_def_var(var_value, init_value=None, ti=None):
 	return {
 		'isa': 'stmt',
-		'kind': 'def_var',
+		'kind': 'var',
 		'var': var_value,
 		'default_value': init_value,
 		'att': [],
