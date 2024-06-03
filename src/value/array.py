@@ -91,69 +91,55 @@ def value_array_create_from_string(t, v, method, ti=None):
 
 
 
+# TODO: see select_common_type!
 def array_can(to, from_type, method):
+	if hlir_type.type_is_string(from_type):
+		return hlir_type.type_is_char(to['of'])
 
-	return False
-
-
-def value_array_cons(t, v, method, ti):
-	#info("value_array_cons", ti)
-
-	#
-	# Check
-	#
-
-	if hlir_type.type_is_string(v['type']):
-		return _do_cons_array(t, v, method, ti)
-
-	if not hlir_type.type_is_array(v['type']):
-		return None  # cannot cons array value from non-array value
+	if not hlir_type.type_is_array(from_type):
+		return False
 
 	# Check item type
 	# проверяем может ли тип элемента из v
 	# быть приведен к типу элемента t
 	# (это обязательное требование к типу v)
-	ct = select_common_type(t['of'], v['type']['of'])
+	ct = select_common_type(to['of'], from_type['of'])
 
 	if ct == None:
 		return None
 
-	if not hlir_type.type_eq(t['of'], ct):
+	if not hlir_type.type_eq(to['of'], ct):
 		info("unsuitable item type", ti)
 		return None
 
-	# Check array length
-	n_from = v['type']['volume']['asset']
-	n_to = t['volume']['asset']
 
-	#
-	# Implicit cons
-	#
-
-	if hlir_type.type_is_generic(v['type']):
+	if hlir_type.type_is_generic(from_type):
 		# GenericArray -> Array
 
-		# нельзя неявно построить меньший массив из большего
-		if n_from > n_to:
-			info("too many items (%d, %d)" % (n_from, n_to), ti)
-			return None
+		# Check array length
+		n_from = from_type['volume']['asset']
+		n_to = to['volume']['asset']
 
-		#warning("value_array_cons %s" % method, ti)
-		return _do_cons_array(t, v, method, ti)
+		# (нельзя неявно построить меньший массив из большего)
+		return n_from <= n_to
 
 
 	if method == 'implicit':
-		info("cannot implicitly cons Array value", ti)
-		return None
+		return False
 
-	#
-	# Explicit cons
-	#
-
-	# Array -> Array
-	return _do_cons_array(t, v, 'explicit', ti)
+	# Array From Array
+	return True
 
 
+
+def value_array_cons(t, v, method, ti):
+	#info("value_array_cons", ti)
+	from_type = v['type']
+
+	if array_can(t, from_type, method):
+		return _do_cons_array(t, v, method, ti)
+
+	return None
 
 
 
