@@ -718,9 +718,11 @@ def print_value_cons(x, ctx):
 			# то мы должны ее привести к требуемому типу
 			is_const = value['kind'] == 'const'
 			is_top_level = 'top_level_value' in value['att']
-			if not (is_const and is_top_level):
+			if not is_const: #and is_top_level):
+				out("/*DO*/")
 				print_cast(to_type, value, ctx=['array_as_array'])
 			else:
+				out("/*NO*/")
 				print_value(value, ctx=ctx)
 			return
 
@@ -797,6 +799,8 @@ def print_value_cons(x, ctx):
 	#print(" -> ", end='')
 	#type_print(x['type'])
 	#print()
+
+	out("/*LO*/")
 
 	print_cast(to_type, value, ctx)
 
@@ -1931,6 +1935,7 @@ def get_root_value(x):
 
 # получает значение, печатает указатель на его корень (корневое значение)
 def print_value_as_ptr(x):
+	yy = x
 	x = get_root_value(x)
 
 	if x['kind'] == 'deref':
@@ -1940,6 +1945,13 @@ def print_value_as_ptr(x):
 		print_value(x)
 	else:
 		out("&")
+		# КОСТЫЛЬ!
+		if x['kind'] in ['literal', 'add']:
+			if x['type']['generic'] and value_is_immediate(x):
+				out("(")
+				print_type(yy['type'], array_as_ptr=False)
+				out(")")
+
 		print_value(x)
 
 
