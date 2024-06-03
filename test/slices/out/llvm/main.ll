@@ -309,40 +309,41 @@ body_3:
 	br label %again_3
 break_3:
 	%59 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @str5 to [0 x i8]*))
-	%60 = alloca [9 x i8], align 1
-	%61 = insertvalue [9 x i8] zeroinitializer, i8 10, 0
-	%62 = insertvalue [9 x i8] %61, i8 20, 1
-	%63 = insertvalue [9 x i8] %62, i8 30, 2
-	%64 = insertvalue [9 x i8] %63, i8 40, 3
-	%65 = insertvalue [9 x i8] %64, i8 50, 4
-	%66 = insertvalue [9 x i8] %65, i8 60, 5
-	%67 = insertvalue [9 x i8] %66, i8 70, 6
-	%68 = insertvalue [9 x i8] %67, i8 80, 7
-	%69 = insertvalue [9 x i8] %68, i8 90, 8
-	store [9 x i8] %69, [9 x i8]* %60
-	%70 = getelementptr inbounds [9 x i8], [9 x i8]* %60, i32 0, i8 2
-	%71 = bitcast i8* %70 to [4 x i8]*
-	%72 = insertvalue [4 x i8] zeroinitializer, i8 0, 0
-	%73 = insertvalue [4 x i8] %72, i8 0, 1
-	%74 = insertvalue [4 x i8] %73, i8 0, 2
-	%75 = insertvalue [4 x i8] %74, i8 0, 3
-	store [4 x i8] %75, [4 x i8]* %71
+	%60 = alloca [10 x i8], align 1
+	%61 = insertvalue [10 x i8] zeroinitializer, i8 10, 0
+	%62 = insertvalue [10 x i8] %61, i8 20, 1
+	%63 = insertvalue [10 x i8] %62, i8 30, 2
+	%64 = insertvalue [10 x i8] %63, i8 40, 3
+	%65 = insertvalue [10 x i8] %64, i8 50, 4
+	%66 = insertvalue [10 x i8] %65, i8 60, 5
+	%67 = insertvalue [10 x i8] %66, i8 70, 6
+	%68 = insertvalue [10 x i8] %67, i8 80, 7
+	%69 = insertvalue [10 x i8] %68, i8 90, 8
+	%70 = insertvalue [10 x i8] %69, i8 100, 9
+	store [10 x i8] %70, [10 x i8]* %60
+	%71 = getelementptr inbounds [10 x i8], [10 x i8]* %60, i32 0, i8 2
+	%72 = bitcast i8* %71 to [4 x i8]*
+	%73 = insertvalue [4 x i8] zeroinitializer, i8 0, 0
+	%74 = insertvalue [4 x i8] %73, i8 0, 1
+	%75 = insertvalue [4 x i8] %74, i8 0, 2
+	%76 = insertvalue [4 x i8] %75, i8 0, 3
+	store [4 x i8] %76, [4 x i8]* %72
 	store i32 0, i32* %17
 	br label %again_4
 again_4:
-	%76 = load i32, i32* %17
-	%77 = icmp slt i32 %76, 9
-	br i1 %77 , label %body_4, label %break_4
+	%77 = load i32, i32* %17
+	%78 = icmp slt i32 %77, 10
+	br i1 %78 , label %body_4, label %break_4
 body_4:
-	%78 = load i32, i32* %17
 	%79 = load i32, i32* %17
-	%80 = getelementptr inbounds [9 x i8], [9 x i8]* %60, i32 0, i32 %79
-	%81 = load i8, i8* %80
-	%82 = zext i8 %81 to i32
-	%83 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str6 to [0 x i8]*), i32 %78, i32 %82)
-	%84 = load i32, i32* %17
-	%85 = add i32 %84, 1
-	store i32 %85, i32* %17
+	%80 = load i32, i32* %17
+	%81 = getelementptr inbounds [10 x i8], [10 x i8]* %60, i32 0, i32 %80
+	%82 = load i8, i8* %81
+	%83 = zext i8 %82 to i32
+	%84 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str6 to [0 x i8]*), i32 %79, i32 %83)
+	%85 = load i32, i32* %17
+	%86 = add i32 %85, 1
+	store i32 %86, i32* %17
 	br label %again_4
 break_4:
 	ret %Int 0

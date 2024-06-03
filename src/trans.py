@@ -1115,14 +1115,10 @@ def do_value_index(x):
 	if hlir_type.type_is_generic(index['type']):
 		index = value_cons_implicit_check(typeSysInt, index)
 
-	v = None
-
-	v = value_index_array(left, array_typ['of'], index, ti=x['ti'])
+	nv = value_index_array(left, array_typ['of'], index, ti=x['ti'])
 
 	if not via_pointer:
-		if value_is_immutable(left):
-			v['immutable'] = True
-
+		nv['immutable'] = left['immutable']
 
 		if value_is_immediate(left):
 			if value_is_immediate(index):
@@ -1135,12 +1131,11 @@ def do_value_index(x):
 
 				item = left['asset'][index_imm]
 
-				v['immval'] = item
-				v['asset'] = item['asset']
-				v['immediate'] = item['immediate']
+				nv['immval'] = item
+				nv['asset'] = item['asset']
+				nv['immediate'] = item['immediate']
 
-
-	return v
+	return nv
 
 
 def do_value_slice(x):
@@ -1186,8 +1181,13 @@ def do_value_slice(x):
 	#hlir_type.type_print(type)
 	#print()
 
-	return value_slice_array(left, type, index_from, index_to, x['ti'])
-	return value_bad(x)
+	nv = value_slice_array(left, type, index_from, index_to, x['ti'])
+
+	if not via_pointer:
+		nv['immutable'] = left['immutable']
+
+	return nv
+
 
 
 
@@ -1221,22 +1221,21 @@ def do_value_access(x):
 	if hlir_type.type_is_bad(field['type']):
 		return value_bad(x)
 
-	v = value_access_record(left, field['type'], field, ti=x['ti'])
+	nv = value_access_record(left, field['type'], field, ti=x['ti'])
 	if not via_pointer:
-		if value_is_immutable(left):
-			v['immutable'] = True
+		nv['immutable'] = left['immutable']
 
 		# access to immediate object
 		if value_is_immediate(left):
 			initializers = left['asset']
 			initializer = get_item_with_id(initializers, field_id['str'])
 
-			v['immval'] = initializer['value']
-			v['asset'] = initializer['value']['asset']
+			nv['immval'] = initializer['value']
+			nv['asset'] = initializer['value']['asset']
 			# (!) #asset of immediate index & access contains VALUE (!)
-			v['immediate'] = initializer['value']['immediate']
+			nv['immediate'] = initializer['value']['immediate']
 
-	return v
+	return nv
 
 
 

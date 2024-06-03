@@ -531,6 +531,7 @@ define void @f0([30 x i8]* noalias sret([30 x i8]) %0, [20 x i8] %x) {
 ]
 
 define void @test() {
+	; тестируем работу с локальным generic массивом
 	%1 = alloca [6 x i8], align 1
 	%2 = insertvalue [6 x i8] zeroinitializer, i8 170, 0
 	%3 = insertvalue [6 x i8] %2, i8 85, 1
