@@ -126,47 +126,47 @@ def _value_record_cons_record_from_generic(t, v, method, ti):
 	return nv
 
 
-
 def _do_cons_record(t, v, method, ti):
+	from_type = v['type']
+	if type.type_is_generic(from_type):
+		return _value_record_cons_record_from_generic(t, v, method, ti)
+
 	nv = value_cons_node(t, v, method, ti=ti)
 	return nv
+
+
+
+def record_can(to, from_type, method):
+	if not type.type_is_record(from_type):
+		return False
+
+	if type.type_is_generic(from_type):
+		return True
+
+	if method == 'implicit':
+		return False
+
+	# check if all fields in from_type present in t
+	# and their types are equal (!)
+	for field in from_type['fields']:
+		field2 = record_field_get(to, field['id']['str'])
+		if field2 == None:
+			return False  # if no field with that name
+		if not type.type_eq(field['type'], field2['type']):
+			return False  # if field type not equal
+
+	return True # Record to Record
+
 
 
 
 def value_record_cons(t, v, method, ti):
 	from_type = v['type']
 
-	if not type.type_is_record(from_type):
-		return None
+	if record_can(t, from_type, method):
+		return _do_cons_record(t, v, method, ti)
 
-	#
-	# Implicit cons
-	#
+	return False
 
-	# GenericRecord -> Record (implicit)
-	if type.type_is_generic(from_type):
-		return _value_record_cons_record_from_generic(t, v, method, ti)
-
-
-	if method == 'implicit':
-		info("cannot implicitly cons Record value", ti)
-		return None
-
-	#
-	# Explicit cons
-	#
-
-	# check if all fields in from_type present in t
-	# and their types are equal (!)
-	for field in from_type['fields']:
-		field2 = record_field_get(t, field['id']['str'])
-		if field2 == None:
-			return None  # if no field with that name
-		if not type.type_eq(field['type'], field2['type']):
-			return None  # if field type not equal
-
-
-	# Record -> Record (explicit)
-	return _do_cons_record(t, v, 'explicit', ti)
 
 
