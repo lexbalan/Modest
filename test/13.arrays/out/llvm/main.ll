@@ -520,6 +520,44 @@ define void @f0([30 x i8]* noalias sret([30 x i8]) %0, [20 x i8] %x) {
 	ret void
 }
 
+
+@startSequence = constant [3 x i8] [
+	i8 170,
+	i8 85,
+	i8 2
+]
+@stopSequence = constant [1 x i8] [
+	i8 22
+]
+
+define void @test() {
+	%1 = alloca [6 x i8], align 1
+	%2 = insertvalue [6 x i8] zeroinitializer, i8 170, 0
+	%3 = insertvalue [6 x i8] %2, i8 85, 1
+	%4 = insertvalue [6 x i8] %3, i8 2, 2
+	%5 = insertvalue [6 x i8] %4, i8 0, 3
+	%6 = insertvalue [6 x i8] %5, i8 0, 4
+	%7 = insertvalue [6 x i8] %6, i8 22, 5
+	store [6 x i8] %7, [6 x i8]* %1
+	%8 = alloca i32, align 4
+	store i32 0, i32* %8
+	br label %again_1
+again_1:
+	%9 = load i32, i32* %8
+	%10 = icmp slt i32 %9, 6
+	br i1 %10 , label %body_1, label %break_1
+body_1:
+	%11 = load i32, i32* %8
+	%12 = getelementptr inbounds [6 x i8], [6 x i8]* %1, i32 0, i32 %11
+	%13 = load i8, i8* %12
+	%14 = load i32, i32* %8
+	%15 = add i32 %14, 1
+	store i32 %15, i32* %8
+	br label %again_1
+break_1:
+	ret void
+}
+
 define %Int @main() {
 	; generic array [4]Char8 will be implicit casted to [10]Char8
 	%1 = alloca [30 x i8], align 1

@@ -665,7 +665,11 @@ def print_cast_hard(t, v, ctx=[]):
 def print_cast(t, v, ctx=[]):
 	array_as_ptr = not 'array_as_array' in ctx
 	out("("); print_type(t, array_as_ptr=array_as_ptr); out(")")
+
 	need_wrap = precedence(v) < precedence({'kind': 'cons'})
+	if v['kind'] in ['literal', 'add']:
+		need_wrap = not hlir_type.type_is_composite(v['type'])
+
 	print_value(v, ctx=ctx, need_wrap=need_wrap)
 
 
@@ -716,13 +720,10 @@ def print_value_cons(x, ctx):
 		if hlir_type.type_is_generic_array(from_type):
 			# если это литеральная (и не глобальная) константа-массив
 			# то мы должны ее привести к требуемому типу
-			is_const = value['kind'] == 'const'
-			is_top_level = 'top_level_value' in value['att']
-			if not is_const: #and is_top_level):
-				out("/*DO*/")
+			is_const = value['kind'] in ['const', 'literal']
+			if is_const and not 'kostil' in value['att']:
 				print_cast(to_type, value, ctx=['array_as_array'])
 			else:
-				out("/*NO*/")
 				print_value(value, ctx=ctx)
 			return
 
@@ -800,10 +801,7 @@ def print_value_cons(x, ctx):
 	#type_print(x['type'])
 	#print()
 
-	out("/*LO*/")
-
 	print_cast(to_type, value, ctx)
-
 
 
 def is_zero_tail(values, i, n):
@@ -1435,6 +1433,7 @@ def assign_array(left, right):
 
 
 def do_assign(left, right):
+	#out("/*%s*/" % right['kind'])
 	if hlir_type.type_is_array(right['type']):
 		return assign_array(left, right)
 
@@ -1777,6 +1776,7 @@ def print_def_const(x):
 		newline()
 		print_variable(_id, const_value['type'], as_const=False) # False!
 		out(" = _%s;" % _id['str'])
+		const_value['att'].append('kostil')
 	else:
 		print_macro_definition(_id, init_value, val_ctx=[])
 
