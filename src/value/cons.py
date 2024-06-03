@@ -135,7 +135,7 @@ def value_cons_explicit(t, v, ti):
 	nv = _do_value_cons(t, v, 'explicit', ti)
 
 	if nv == None:
-		error("cannot construct value", ti)
+		error("cannot do construct value", ti)
 		return value_bad(v['expr_ti'])
 
 	return nv

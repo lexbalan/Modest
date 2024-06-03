@@ -9,65 +9,65 @@ import "./utf"
 func utf32_to_utf8(c: Char32, buf: *[4]Char8) -> Nat8 {
 	let x = Nat32 c
 
-	if x <= Nat32 0x0000007F {
-		buf[Int32 0] = Char8 x
-		return Nat8 1
+	if x <= 0x0000007F {
+		buf[0] = Char8 x
+		return 1
 
-	} else if x <= Nat32 0x000007FF {
-		let c0 = x >> 6 and Nat32 0x1F
-		let c1 = x >> 0 and Nat32 0x3F
-		buf[Int32 0] = Char8 (Nat32 0xC0 or c0)
-		buf[Int32 1] = Char8 (Nat32 0x80 or c1)
-		return Nat8 2
+	} else if x <= 0x000007FF {
+		let c0 = x >> 6 and 0x1F
+		let c1 = x >> 0 and 0x3F
+		buf[0] = Char8 (0xC0 or c0)
+		buf[1] = Char8 (0x80 or c1)
+		return 2
 
-	} else if x <= Nat32 0x0000FFFF {
-		let c0 = x >> 12 and Nat32 0x0F
-		let c1 = x >> 06 and Nat32 0x3F
-		let c2 = x >> 00 and Nat32 0x3F
-		buf[Int32 0] = Char8 (Nat32 0xE0 or c0)
-		buf[Int32 1] = Char8 (Nat32 0x80 or c1)
-		buf[Int32 2] = Char8 (Nat32 0x80 or c2)
-		return Nat8 3
+	} else if x <= 0x0000FFFF {
+		let c0 = x >> 12 and 0x0F
+		let c1 = x >> 06 and 0x3F
+		let c2 = x >> 00 and 0x3F
+		buf[0] = Char8 (0xE0 or c0)
+		buf[1] = Char8 (0x80 or c1)
+		buf[2] = Char8 (0x80 or c2)
+		return 3
 
-	} else if x <= Nat32 0x0010FFFF {
-		let c0 = x >> 18 and Nat32 0x07
-		let c1 = x >> 12 and Nat32 0x3F
-		let c2 = x >> 06 and Nat32 0x3F
-		let c3 = x >> 00 and Nat32 0x3F
-		buf[Int32 0] = Char8 (Nat32 0xF0 or c0)
-		buf[Int32 1] = Char8 (Nat32 0x80 or c1)
-		buf[Int32 2] = Char8 (Nat32 0x80 or c2)
-		buf[Int32 3] = Char8 (Nat32 0x80 or c3)
-		return Nat8 4
+	} else if x <= 0x0010FFFF {
+		let c0 = x >> 18 and 0x07
+		let c1 = x >> 12 and 0x3F
+		let c2 = x >> 06 and 0x3F
+		let c3 = x >> 00 and 0x3F
+		buf[0] = Char8 (0xF0 or c0)
+		buf[1] = Char8 (0x80 or c1)
+		buf[2] = Char8 (0x80 or c2)
+		buf[3] = Char8 (0x80 or c3)
+		return 4
 	}
 
-	return Nat8 0
+	return 0
 }
 
 
 // returns n-symbols from input stream
 func utf16_to_utf32(c: *[]Char16, result: *Char32) -> Nat8 {
-	let leading = Nat32 c[Int32 0]
+	let leading = Nat32 c[0]
 
-	if leading < Nat32 0xD800 or leading > Nat32 0xDFFF {
+	if leading < 0xD800 or leading > 0xDFFF {
 		*result = Char32 leading
-		return Nat8 1
-	} else if leading >= Nat32 0xDC00 {
+		return 1
+	} else if leading >= 0xDC00 {
 		//error("Недопустимая кодовая последовательность.")
 	} else {
 		var code: Nat32
-		code = (leading and Nat32 0x3FF) << 10
-		let trailing = Nat32 c[Int32 1]
-		if trailing < Nat32 0xDC00 or trailing > Nat32 0xDFFF {
+		code = (leading and 0x3FF) << 10
+		let trailing = Nat32 c[1]
+		if trailing < 0xDC00 or trailing > 0xDFFF {
 			//error("Недопустимая кодовая последовательность.")
 		} else {
-			code = code or trailing and Nat32 0x3FF
-			*result = Char32 (code + Nat32 0x10000)
-			return Nat8 2
+			code = code or trailing and 0x3FF
+			*result = Char32 (code + 0x10000)
+			return 2
 		}
 	}
 
-	return Nat8 0
+	return 0
 }
 
 
@@ -83,8 +83,8 @@ func utf8_putchar(c: Char8) -> Unit {
 
 func utf16_putchar(c: Char16) -> Unit {
 	var cc: [2]Char16
-	cc[Int32 0] = c
-	cc[Int32 1] = Char16 0
+	cc[0] = c
+	cc[1] = Char16 0
 	var char32: Char32
 	let n = utf16_to_utf32(&cc, &char32)
 	utf32_putchar(char32)
@@ -95,11 +95,11 @@ func utf32_putchar(c: Char32) -> Unit {
 	var decoded_buf: [4]Char8
 	let n = Int utf32_to_utf8(c, &decoded_buf)
 
-	var i: Int32 = Int32 0
+	var i: Int32 = 0
 	while i < n {
 		let c = decoded_buf[i]
 		utf8_putchar(c)
-		i = i + Int32 1
+		i = i + 1
 	}
 }
 
@@ -109,18 +109,18 @@ func utf32_putchar(c: Char32) -> Unit {
 //
 
 func utf8_puts(s: *Str8) -> Unit {
-	var i: Int32 = Int32 0
+	var i: Int32 = 0
 	while true {
 		let c = s[i]
 		if c == Char8 0 {break}
 		utf8_putchar(c)
-		i = i + Int32 1
+		i = i + 1
 	}
 }
 
 
 func utf16_puts(s: *Str16) -> Unit {
-	var i: Int32 = Int32 0
+	var i: Int32 = 0
 	while true {
 		// нельзя просто так взять и вызвать utf16_putchar
 		// тк в строке может быть суррогатная пара UTF_16 символов
@@ -130,7 +130,7 @@ func utf16_puts(s: *Str16) -> Unit {
 
 		var char32: Char32
 		let n = utf16_to_utf32(*[]Char16 &s[i], &char32)
-		if n == Nat8 0 {break}
+		if n == 0 {break}
 
 		utf32_putchar(char32)
 
@@ -140,12 +140,12 @@ func utf16_puts(s: *Str16) -> Unit {
 
 
 func utf32_puts(s: *Str32) -> Unit {
-	var i: Int32 = Int32 0
+	var i: Int32 = 0
 	while true {
 		let c = s[i]
 		if c == Char32 0 {break}
 		utf32_putchar(c)
-		i = i + Int32 1
+		i = i + 1
 	}
 }
 

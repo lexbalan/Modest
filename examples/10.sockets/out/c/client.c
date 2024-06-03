@@ -28,19 +28,19 @@ void send_file(FILE *fp, int sockfd)
 {
 	char data[bufSize];
 
-	while (fgets((char *)&data, (int)bufSize, fp) != NULL) {
-		if (send(sockfd, (char *)&data, (size_t)sizeof(char[bufSize]), 0) == (ssize_t)-1) {
+	while (fgets((char *)&data, bufSize, fp) != NULL) {
+		if (send(sockfd, (char *)&data, (size_t)sizeof(char[bufSize]), 0) == -1) {
 			perror("[-] Error in sendung data");
 			exit(1);
 		}
-		bzero((char *)&data, ((size_t)(uint16_t)bufSize));
+		bzero((char *)&data, bufSize);
 	}
 }
 
 
 int main()
 {
-	const int sockfd = socket((int)AF_INET, (int)SOCK_STREAM, 0);
+	const int sockfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockfd < 0) {
 		perror("[-] Error in socket");
 		exit(1);

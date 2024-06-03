@@ -36,7 +36,7 @@ int main()
 	/*end let slice*/
 	int32_t i;
 	i = 0;
-	while (i < (int32_t)(sizeof(s1) / sizeof(s1[0]))) {
+	while (i < (sizeof(s1) / sizeof(s1[0]))) {
 		printf("s1[%d] = %d\n", i, s1[i]);
 		i = i + 1;
 	}
@@ -52,7 +52,7 @@ int main()
 	memcpy(&s2, &pa[5], sizeof(int32_t[4]));
 	/*end let slice*/
 	i = 0;
-	while (i < (int32_t)(sizeof(s2) / sizeof(s2[0]))) {
+	while (i < (sizeof(s2) / sizeof(s2[0]))) {
 		printf("s2[%d] = %d\n", i, s2[i]);
 		i = i + 1;
 	}
@@ -62,7 +62,7 @@ int main()
 	memcpy(&a[2], &(int32_t[4]){10, 20, 30, 40}, sizeof(int32_t[4]));
 
 	i = 0;
-	while (i < (int32_t)(sizeof(a) / sizeof(a[0]))) {
+	while (i < (sizeof(a) / sizeof(a[0]))) {
 		printf("a[%d] = %d\n", i, a[i]);
 		i = i + 1;
 	}
@@ -76,7 +76,7 @@ int main()
 	memset(&s[2], 0, sizeof(int8_t[4]));
 
 	i = 0;
-	while (i < (int32_t)(sizeof(s) / sizeof(s[0]))) {
+	while (i < (sizeof(s) / sizeof(s[0]))) {
 		printf("s[%d] = %d\n", i, ((uint32_t)(uint8_t)s[i]));
 		i = i + 1;
 	}

@@ -7,6 +7,9 @@ from .char import utf32_chars_to_utfx_chars
 
 def _value_pointer_cons_immediate(t, v, method, ti):
 	#info("_value_pointer_cons_immediate", ti)
+	if type.type_is_string(v['type']):
+		return cons_ptr_to_str_from_string(t, v, method, ti)
+
 	return value_cons_immediate(t, v, method, ti)
 
 
@@ -42,8 +45,40 @@ def _do_cons_pointer(t, v, method, ti):
 
 
 def pointer_can(to, from_type, method):
+	if type.type_is_free_pointer(from_type):
+		return True  # cons *X from Nil
+
 	if type.type_is_pointer(from_type):
+		# implicit cons pointer from another pointer
+
+		if type.type_is_free_pointer(to):
+			return True  # cons FreePointer from *X
+
+		# cons *[]X from *[n]X +
+		if type.type_is_pointer_to_defined_array(from_type) and type.type_is_pointer_to_undefined_array(to):
+			if method == 'unsafe':
+				return True  #! *[]X from *[n]Y !
+			return type.type_eq(from_type['to']['of'], to['to']['of'])
+
+	else:
+		# implicit cons pointer from non-pointer
+		# "string" -> *[]CharX
+		if type.type_is_string(from_type):
+			return type.type_is_pointer_to_array_of_char(to)
+
+
+	if method == 'implicit':
 		return False
+
+	if method == 'explicit':
+		return False
+
+	# unsafe region
+
+	if type.type_is_pointer(from_type):
+		return True  # Ptr -> Ptr
+	elif type.type_is_integer(from_type):
+		return True  # Int -> Ptr
 
 	return False
 
@@ -51,64 +86,15 @@ def pointer_can(to, from_type, method):
 
 def value_pointer_cons(t, v, method, ti):
 	from_type = v['type']
-	to_type = t
-
-	if type.type_is_pointer(from_type):
-		v_pointer_to = from_type['to']
-
-		# Implicit cons pointer from pointer
-
-		# cons *[]X from *[n]X +
-		if type.type_is_pointer_to_defined_array(from_type) and type.type_is_pointer_to_undefined_array(t):
-			if type.type_eq(from_type['to']['of'], t['to']['of']):
-				return _do_cons_pointer(t, v, method, ti)
-
-		# cons *X from Nil
-		if type.type_is_free_pointer(from_type):
-			return _do_cons_pointer(t, v, method, ti)
-
-		# cons FreePointer from *X
-		if type.type_is_pointer(from_type):
-			if type.type_is_free_pointer(t):
-				return _do_cons_pointer(t, v, method, ti=ti)
-
-
-	else:
-		# implicit cons pointer from non-pointer value
-
-		if type.type_is_string(from_type):
-			if type.type_is_pointer_to_array_of_char(to_type):
-				return cons_ptr_to_str_from_string(t, v, method, ti)
-
-
-	### EXPLICIT REGION ###
-
-	if method == 'implicit':
-		info("cannot implicitly cons Pointer value", ti)
-		return v
 
 	from main import features
-	if not (features.get('unsafe') or features.get('unsafe-int-to-ptr')):
-		info("explicit typecast pointer to integer is forbidden in safe mode", ti)
-		return None
+	if method == 'explicit' and features.get('unsafe'):
+		method = 'unsafe'
 
-	### UNSAFE REGION ###
+	if pointer_can(t, from_type, method):
+		return _do_cons_pointer(t, v, method, ti)
 
-	# Ptr -> Ptr
-	if type.type_is_pointer(from_type):
-		return _do_cons_pointer(t, v, 'explicit', ti=ti)
-
-	# Int -> Ptr
-	elif type.type_is_integer(from_type):
-		return _do_cons_pointer(t, v, 'explicit', ti=ti)
-
-	# VA_List -> Ptr
 	elif type.type_is_va_list(from_type):
-		return value_cons_node(t, v, 'explicit', ti)
-
+		return value_cons_node(t, v, 'explicit', ti)  # VA_List -> Ptr
 
 	return None
-
-
-
-

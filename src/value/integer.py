@@ -114,7 +114,7 @@ def value_integer_cons(t, v, method, ti):
 	from_type = v['type']
 
 	from main import features
-	if features.get('unsafe'):
+	if method == 'explicit' and features.get('unsafe'):
 		method = 'unsafe'
 
 

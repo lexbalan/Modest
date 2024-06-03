@@ -4,8 +4,8 @@ import "libc/stdio"
 
 
 func main() -> Int {
-	var check: Nat16 = Nat16 0x0001
-	let is_le = **Nat8 &check == Nat8 1
+	var check: Nat16 = 0x0001
+	let is_le = **Nat8 &check == 1
 
 	var kind: *Str8
 	if is_le {
@@ -16,6 +16,6 @@ func main() -> Int {
 
 	printf("%s-endian\n", kind)
 
-	return Int 0
+	return 0
 }
 
