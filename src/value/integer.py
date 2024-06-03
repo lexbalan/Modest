@@ -113,13 +113,12 @@ def integer_can(to, from_type, method):
 def value_integer_cons(t, v, method, ti):
 	from_type = v['type']
 
-	from main import features
-	if method == 'explicit' and features.get('unsafe'):
-		method = 'unsafe'
+	#from main import features
+	#if method == 'explicit' and features.get('unsafe'):
+	#	method = 'unsafe'
 
 
 	if integer_can(t, from_type, method):
-
 		if value_is_immediate(v):
 			# GenericInt -> Int
 			_check_width(from_type, t, method, ti)

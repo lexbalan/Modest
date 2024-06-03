@@ -2,6 +2,7 @@
 
 import "libc/stdio"
 
+@feature("unsafe")
 
 func main() -> Int {
 	var check: Nat16 = 0x0001
