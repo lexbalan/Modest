@@ -42,20 +42,21 @@ def _do_cons_pointer(t, v, method, ti):
 
 
 def pointer_can(to, from_type, method):
+	if type.type_is_pointer(from_type):
+		return False
+
 	return False
 
 
 
 def value_pointer_cons(t, v, method, ti):
-	vtype = v['type']
+	from_type = v['type']
 	to_type = t
 
-	if type.type_is_pointer(vtype):
-		v_pointer_to = vtype['to']
+	if type.type_is_pointer(from_type):
+		v_pointer_to = from_type['to']
 
 		# Implicit cons pointer from pointer
-
-		from_type = v['type']
 
 		# cons *[]X from *[n]X +
 		if type.type_is_pointer_to_defined_array(from_type) and type.type_is_pointer_to_undefined_array(t):
@@ -75,7 +76,7 @@ def value_pointer_cons(t, v, method, ti):
 	else:
 		# implicit cons pointer from non-pointer value
 
-		if type.type_is_string(vtype):
+		if type.type_is_string(from_type):
 			if type.type_is_pointer_to_array_of_char(to_type):
 				return cons_ptr_to_str_from_string(t, v, method, ti)
 
@@ -94,15 +95,15 @@ def value_pointer_cons(t, v, method, ti):
 	### UNSAFE REGION ###
 
 	# Ptr -> Ptr
-	if type.type_is_pointer(vtype):
+	if type.type_is_pointer(from_type):
 		return _do_cons_pointer(t, v, 'explicit', ti=ti)
 
 	# Int -> Ptr
-	elif type.type_is_integer(vtype):
+	elif type.type_is_integer(from_type):
 		return _do_cons_pointer(t, v, 'explicit', ti=ti)
 
 	# VA_List -> Ptr
-	elif type.type_is_va_list(vtype):
+	elif type.type_is_va_list(from_type):
 		return value_cons_node(t, v, 'explicit', ti)
 
 
