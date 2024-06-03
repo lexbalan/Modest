@@ -40,6 +40,12 @@ def _do_cons_pointer(t, v, method, ti):
 
 
 
+
+def pointer_can(to, from_type, method):
+	return False
+
+
+
 def value_pointer_cons(t, v, method, ti):
 	vtype = v['type']
 	to_type = t

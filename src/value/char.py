@@ -33,38 +33,42 @@ def _do_cons_char(t, v, method, ti):
 
 
 
+def char_can(to, from_type, method):
+	if type.type_is_string(from_type):
+		return from_type['length'] == 1
+
+	if type.type_is_generic_char(from_type):
+		return _do_cons_char(t, v, method, ti)
+
+	if method == 'implicit':
+		return False
+
+	if type.type_is_char(from_type):
+		return True
+	elif type.type_is_integer(from_type):
+		return True
+
+	return False
+
+
+
 def value_char_cons(t, v, method, ti):
 	from_type = v['type']
 
-	# String -> Char
-	# ex: var c: Char8 = "A"
-	if type.type_is_string(from_type):
-		if len(v['asset']) == 1:
-			cc = ord(v['asset'][0])
-			nv = value_cons_immediate(t, v, method, ti)
-			nv['immediate'] = True
-			nv['asset'] = cc
-			return nv
-
-
-	# implicit casts
-	if type.type_is_generic_char(from_type):
-		return _value_char_cons_immediate(t, v, method, ti)
-
-
-	# explicit casts
-	if method == 'implicit':
-		info("cannot implicitly cons Char value", ti)
-		return None
-
-
 	# Char -> Char
-	if type.type_is_char(from_type):
-		return _do_cons_char(t, v, 'explicit', ti)
+	if char_can(t, from_type, method):
 
-	# Integer -> Char
-	elif type.type_is_integer(from_type):
-		return _do_cons_char(t, v, 'explicit', ti)
+		# String -> Char
+		# ex: var c: Char8 = "A"
+		if type.type_is_string(from_type):
+			if len(v['asset']) == 1:
+				cc = ord(v['asset'][0])
+				nv = value_cons_immediate(t, v, method, ti)
+				nv['immediate'] = True
+				nv['asset'] = cc
+				return nv
+
+		return _do_cons_char(t, v, method, ti)
 
 	# VA_List -> Char
 	elif type.type_is_va_list(from_type):

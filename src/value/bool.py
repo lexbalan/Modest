@@ -27,21 +27,22 @@ def _do_cons_bool(t, v, method, ti):
 	return value_cons_node(t, v, method, ti=ti)
 
 
+def bool_can(to, from_type, method):
+	if method == 'implicit':
+		return False
+
+	if type.type_is_integer(from_type):
+		return True
+	elif type.type_is_byte(from_type):
+		return True
+
+	return False
+
 
 def value_bool_cons(t, v, method, ti):
 	from_type = v['type']
 
-	# explicit casts
-	if method == 'implicit':
-		info("cannot implicitly cons Bool value", ti)
-		return None
-
-	# Integer -> Bool
-	if type.type_is_integer(from_type):
-		return _do_cons_bool(t, v, 'explicit', ti)
-
-	# Byte -> Bool
-	elif type.type_is_byte(from_type):
+	if bool_can(t, from_type, method):
 		return _do_cons_bool(t, v, 'explicit', ti)
 
 	# VA_List -> Bool

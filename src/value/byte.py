@@ -20,22 +20,25 @@ def _do_cons_byte(t, v, method, ti):
 	return value_cons_node(t, v, method, ti=ti)
 
 
+def byte_can(to, from_type, method):
+	if type.type_is_generic_integer(from_type):
+		return True
+
+	if method == 'implicit':
+		return False
+
+	if type.type_is_integer(from_type):
+		return True
+
+	return False
+
+
 
 def value_byte_cons(t, v, method, ti):
 	from_type = v['type']
 
-	# implicit casts
-	if type.type_is_generic_integer(from_type):
-		return _value_byte_cons_immediate(t, v, method, ti)
-
-	# explicit casts
-	if method == 'implicit':
-		info("cannot implicitly cons Byte value", ti)
-		return None
-
-	# Integer -> Byte
-	if type.type_is_integer(from_type):
-		return _do_cons_byte(t, v, 'explicit', ti)
+	if byte_can(t, from_type, method):
+		return _do_cons_byte(t, v, method, ti)
 
 	# VA_List -> Byte
 	elif type.type_is_va_list(from_type):

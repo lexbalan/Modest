@@ -298,7 +298,7 @@ def hlir_type_opaque(ti=None):
 	}
 
 
-def hlir_type_string(char_width,  ti=None):
+def hlir_type_string(char_width, length, ti=None):
 	width = char_width
 	size = nbytes_for_bits(width)
 	return {
@@ -309,6 +309,7 @@ def hlir_type_string(char_width,  ti=None):
 		'size': size,
 		'align': size,
 		'char_width': char_width,
+		'length': length,
 		'declaration': None,
 		'definition': None,
 		'ops': STR_OPS,

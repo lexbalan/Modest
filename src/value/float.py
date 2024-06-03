@@ -3,7 +3,7 @@ import settings
 from error import info, warning, error
 import hlir.type as type
 from hlir.type import hlir_type_float, type_print
-from .value import value_terminal, value_cons_immediate
+from .value import value_terminal, value_cons_immediate, value_is_immediate
 
 
 
@@ -14,7 +14,6 @@ def value_float_create(num, ti=None):
 	v = value_terminal(typ, num, ti)
 	v['immediate'] = True
 	return v
-
 
 
 def _value_float_cons_immediate(t, v, method, ti):
@@ -30,29 +29,32 @@ def _do_cons_float(t, v, method, ti):
 	return value_cons_node(t, v, method, ti=ti)
 
 
-def value_float_cons(t, v, method, ti):
-	vt = v['type']
 
-	if type.type_is_generic(vt):
-		# (GenericInt or GenericFloat) -> Float
-		if type.type_is_integer(vt) or type.type_is_float(vt):
-			return _value_float_cons_immediate(t, v, method, ti)
 
+def float_can(to, from_type, method):
+	if type.type_is_generic(from_type):
+		return type.type_is_integer(from_type) or type.type_is_float(from_type)
 
 	if method == 'implicit':
-		info("cannot implicitly cons Float value", ti)
-		return None
+		return False
 
-	# Int -> Float
-	if type.type_is_integer(vt):
-		return _do_cons_float(t, v, 'explicit', ti=ti)
+	if type.type_is_integer(from_type):
+		return True
+	elif type.type_is_float(from_type):
+		return True
 
-	# Float -> Float
-	elif type.type_is_float(vt):
-		return _do_cons_float(t, v, 'explicit', ti=ti)
+	return False
+
+
+
+def value_float_cons(t, v, method, ti):
+	from_type = v['type']
+
+	if float_can(t, from_type, method):
+		return _do_cons_float(t, v, method, ti=ti)
 
 	# VA_List -> Float
-	elif type.type_is_va_list(vt):
+	elif type.type_is_va_list(from_type):
 		return value_cons_node(t, v, 'explicit', ti)
 
 	return None

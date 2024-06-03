@@ -655,7 +655,7 @@ def bin_imm(op, type_result, l, r, ti):
 		if op == 'add':
 			asset = l['asset'] + r['asset']
 			max_char_width = max(l['type']['width'], r['type']['width'])
-			type_result = hlir_type.hlir_type_string(max_char_width, ti)
+			type_result = hlir_type.hlir_type_string(max_char_width, len(asset), ti)
 		elif op in ['eq', 'ne']:
 			asset = l['asset'] == r['asset']
 			if op == 'ne':

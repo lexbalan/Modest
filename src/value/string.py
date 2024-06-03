@@ -13,7 +13,7 @@ def value_string_create(string, ti=None):
 		n = nbits_for_num(cc)
 		max_char_width = max(max_char_width, n)
 
-	string_type = hlir_type_string(max_char_width, ti)
+	string_type = hlir_type_string(max_char_width, len(string), ti)
 	nv = value_terminal(string_type, string, ti)
 	nv['immediate'] = True
 	return nv
