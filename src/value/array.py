@@ -91,6 +91,11 @@ def value_array_create_from_string(t, v, method, ti=None):
 
 
 
+def array_can(to, from_type, method):
+
+	return False
+
+
 def value_array_cons(t, v, method, ti):
 	#info("value_array_cons", ti)
 
@@ -99,7 +104,7 @@ def value_array_cons(t, v, method, ti):
 	#
 
 	if hlir_type.type_is_string(v['type']):
-		return value_array_create_from_string(t, v, method, ti)
+		return _do_cons_array(t, v, method, ti)
 
 	if not hlir_type.type_is_array(v['type']):
 		return None  # cannot cons array value from non-array value
@@ -150,6 +155,8 @@ def value_array_cons(t, v, method, ti):
 
 
 
+
+
 def _cast_values(values, to_type):
 	casted_items = []
 	for item in values:
@@ -170,6 +177,9 @@ def _cast_values(values, to_type):
 
 def _do_cons_array(t, v, method, ti):
 	#info("_do_cons_array", ti)
+
+	if hlir_type.type_is_string(v['type']):
+		return value_array_create_from_string(t, v, method, ti)
 
 	nv = value_cons_node(t, v, method, ti)
 
