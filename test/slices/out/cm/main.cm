@@ -45,6 +45,19 @@ func main() -> Int {
 		i = i + 1
 	}
 
+
+	printf("--------------------------------------------\n")
+
+	var s: [9]None = [10, 20, 30, 40, 50, 60, 70, 80, 90]
+
+	s[2 .. 5] = []
+
+	i = 0
+	while i < lengthof(s) {
+		printf("s[%d] = %d\n", i, Nat32 s[i])
+		i = i + 1
+	}
+
 	return 0
 }
 

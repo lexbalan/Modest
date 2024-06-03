@@ -645,7 +645,7 @@ class Parser:
 			elif self.match("["):
 				#self.skip()  # "[":
 				i = self.expr_value()
-				if self.match(".."):
+				if self.match(":"):
 					j = self.expr_value()
 					self.need("]")
 					ti['start'] = v['ti']

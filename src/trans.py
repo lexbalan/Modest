@@ -1176,6 +1176,9 @@ def do_value_slice(x):
 
 	slice_len = j - i + 1
 
+	if slice_len > array_type['volume']['asset']:
+		error("slice is too big", x['ti'])
+
 	array_of = array_type['of']
 	volume = value_integer_create(slice_len)
 	type = hlir_type.hlir_type_array(array_of, volume, x['ti'])

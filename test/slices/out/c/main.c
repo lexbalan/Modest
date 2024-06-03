@@ -57,6 +57,20 @@ int main()
 		i = i + 1;
 	}
 
+
+	printf("--------------------------------------------\n");
+
+	int8_t s[9];
+	memcpy(&s, &(int8_t[9]){10, 20, 30, 40, 50, 60, 70, 80, 90}, sizeof(int8_t[9]));
+
+	memset(&s[2], 0, sizeof(int8_t[4]));
+
+	i = 0;
+	while (i < (sizeof(s) / sizeof(s[0]))) {
+		printf("s[%d] = %d\n", i, ((uint32_t)(uint8_t)s[i]));
+		i = i + 1;
+	}
+
 	return 0;
 
 	// undef local macro
