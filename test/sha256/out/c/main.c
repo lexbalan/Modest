@@ -70,7 +70,7 @@ bool sha256_doTest(SHA256_TestCase *test)
 
 	int32_t i;
 	i = 0;
-	while (i < sha256HashSize) {
+	while (i < (int32_t)sha256HashSize) {
 		printf("%02X", test_hash[i]);
 		i = i + 1;
 	}

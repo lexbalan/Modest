@@ -9,7 +9,7 @@ import "./linked_list"
 // wrap around linked list for List Nat32
 func nat32_list_insert(list: *List, x: Nat32) -> Unit {
 	// alloc memory for Nat32 value
-	let p_nat32 = malloc(sizeof(Nat32))
+	let p_nat32 = malloc(SizeT sizeof(Nat32))
 	*p_nat32 = x
 	linked_list_append(list, p_nat32)
 }
@@ -46,21 +46,21 @@ func main() -> Int {
 
 	if list == nil {
 		printf("error: cannot create list")
-		return 1
+		return Int 1
 	}
 
 	// add some Nat32 values to list
-	nat32_list_insert(list, 0)
-	nat32_list_insert(list, 10)
-	nat32_list_insert(list, 20)
-	nat32_list_insert(list, 30)
-	nat32_list_insert(list, 40)
-	nat32_list_insert(list, 50)
-	nat32_list_insert(list, 60)
-	nat32_list_insert(list, 70)
-	nat32_list_insert(list, 80)
-	nat32_list_insert(list, 90)
-	nat32_list_insert(list, 100)
+	nat32_list_insert(list, Nat32 0)
+	nat32_list_insert(list, Nat32 10)
+	nat32_list_insert(list, Nat32 20)
+	nat32_list_insert(list, Nat32 30)
+	nat32_list_insert(list, Nat32 40)
+	nat32_list_insert(list, Nat32 50)
+	nat32_list_insert(list, Nat32 60)
+	nat32_list_insert(list, Nat32 70)
+	nat32_list_insert(list, Nat32 80)
+	nat32_list_insert(list, Nat32 90)
+	nat32_list_insert(list, Nat32 100)
 
 	// print list size
 	let list_size = linked_list_size_get(list)
@@ -76,8 +76,8 @@ func main() -> Int {
 	printf("\nlinked_list_node_get(list, n) test\n")
 
 	// test linked_list_node_get
-	var i: Int32 = 0
-	while i >= -12 {
+	var i: Int32 = Int32 0
+	while i >= Int32 -12 {
 		let node = linked_list_node_get(list, i)
 
 		if node == nil {
@@ -93,8 +93,8 @@ func main() -> Int {
 
 	printf("-----------------------------------------\n")
 
-	i = 0
-	while i <= 12 {
+	i = Int32 0
+	while i <= Int32 12 {
 		let node = linked_list_node_get(list, i)
 
 		if node == nil {
@@ -111,12 +111,12 @@ func main() -> Int {
 	printf("-----------------------------------------\n")
 
 
-	let p_nat32 = malloc(sizeof(Nat32))
-	*p_nat32 = 1234
-	linked_list_insert(list, pos = 4, data = p_nat32)
+	let p_nat32 = malloc(SizeT sizeof(Nat32))
+	*p_nat32 = Nat32 1234
+	linked_list_insert(list, pos = Int32 4, data = p_nat32)
 
 	list_print_forward(list)
 
-	return 0
+	return Int 0
 }
 

@@ -32,7 +32,7 @@ def value_bool_cons(t, v, method, ti):
 	from_type = v['type']
 
 	# explicit casts
-	if method != 'explicit':
+	if method == 'implicit':
 		info("cannot implicitly cons Bool value", ti)
 		return None
 

@@ -76,7 +76,7 @@ def value_pointer_cons(t, v, method, ti):
 
 	### EXPLICIT REGION ###
 
-	if method != 'explicit':
+	if method == 'implicit':
 		info("cannot implicitly cons Pointer value", ti)
 		return v
 

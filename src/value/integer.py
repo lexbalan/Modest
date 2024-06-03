@@ -34,7 +34,7 @@ def _check_width(from_type, t, method, ti):
 	rv = True
 
 	if from_type['width'] > t['width']:
-		if method == 'explicit':
+		if method != 'implicit':
 			if warning_cast_data_loss:
 				from main import features
 				if not (features.get('unsafe') or features.get('unsafe-downcast')):
@@ -71,7 +71,7 @@ def _value_integer_cons_immediate(t, v, method, ti):
 def _do_cons_integer(t, v, method, ti):
 	_check_width(v['type'], t, method, ti)
 	if value_is_immediate(v):
-		if method == 'explicit':
+		if method != 'implicit':
 			nv = value_cons_node(t, v, method, ti=ti)
 			nv['asset'] = int(v['asset'])  # here can be float
 			nv['immediate'] = True
@@ -81,11 +81,46 @@ def _do_cons_integer(t, v, method, ti):
 
 
 
+def integer_can(to, from_type, method):
+	if hlir_type.type_is_generic_integer(from_type):
+		return True
+
+	if method == 'implicit':
+		return False
+
+	# explicit or unsafe cons method
+	if hlir_type.type_is_integer(from_type):
+		return True
+	elif hlir_type.type_is_float(from_type):
+		return True
+	elif hlir_type.type_is_char(from_type):
+		return True
+	elif hlir_type.type_is_byte(from_type):
+		return True
+	elif hlir_type.type_is_bool(from_type):
+		return True
+
+	if method != 'unsafe':
+		return False
+
+	if hlir_type.type_is_pointer(from_type):
+		return True
+
+	return False
+
+
+
 def value_integer_cons(t, v, method, ti):
 	from_type = v['type']
 
-	if value_is_immediate(v):
-		if hlir_type.type_is_generic_integer(from_type):
+	from main import features
+	if features.get('unsafe'):
+		method = 'unsafe'
+
+
+	if integer_can(t, from_type, method):
+
+		if value_is_immediate(v):
 			# GenericInt -> Int
 			_check_width(from_type, t, method, ti)
 
@@ -93,15 +128,29 @@ def value_integer_cons(t, v, method, ti):
 				if v['asset'] < 0:
 					return None
 
-			return _do_cons_integer(t, v, method, ti)
+		return _do_cons_integer(t, v, method, ti)
+
+	elif hlir_type.type_is_va_list(from_type):
+		return value_cons_node(t, v, 'explicit', ti)
+
+	return None
 
 
-	# runtime cast generic-integer to integer
+"""
+
 	if hlir_type.type_is_generic_integer(from_type):
+		if value_is_immediate(v):
+			# GenericInt -> Int
+			_check_width(from_type, t, method, ti)
+
+			if not t['signed']:
+				if v['asset'] < 0:
+					return None
+
 		return _do_cons_integer(t, v, method, ti)
 
 
-	if method != 'explicit':
+	if method == 'implicit':
 		info("cannot implicitly cons Int value", ti)
 		return None
 
@@ -139,4 +188,4 @@ def value_integer_cons(t, v, method, ti):
 
 	return None
 
-
+"""

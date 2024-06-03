@@ -10,10 +10,10 @@ func xor_encrypter(buf: *[]Byte, buflen: Nat32, key: *[]Byte, keylen: Nat32) -> 
 	while i < buflen {
 		buf[i] = buf[i] xor key[j]
 
-		if j < keylen - 1 {
+		if j < keylen - Nat32 1 {
 			j = j + 1
 		} else {
-			j = 0
+			j = Nat32 0
 		}
 
 		i = i + 1
@@ -26,8 +26,8 @@ func xor_encrypter(buf: *[]Byte, buflen: Nat32, key: *[]Byte, keylen: Nat32) -> 
 let msg_length = 12
 let key_length = 3
 
-var test_msg: [msg_length + 1]Char8 = "Hello World!"
-var test_key: [key_length + 1]Char8 = "abc"
+var test_msg: [msg_length + None 1]Char8 = "Hello World!"
+var test_key: [key_length + None 1]Char8 = "abc"
 
 
 func print_bytes(buf: *[]Byte, len: Nat32) -> Unit {
@@ -47,20 +47,20 @@ func main() -> Int {
 	let tkey = *[]Byte &test_key
 
 	printf("before encrypt test_msg: \n")
-	print_bytes(tmsg, msg_length)
+	print_bytes(tmsg, Nat32 msg_length)
 
 	// encrypt test data
-	xor_encrypter(tmsg, msg_length, tkey, key_length)
+	xor_encrypter(tmsg, Nat32 msg_length, tkey, Nat32 key_length)
 
 	printf("after encrypt test_msg: \n")
-	print_bytes(tmsg, msg_length)
+	print_bytes(tmsg, Nat32 msg_length)
 
 	// decrypt test data
-	xor_encrypter(tmsg, msg_length, tkey, key_length)
+	xor_encrypter(tmsg, Nat32 msg_length, tkey, Nat32 key_length)
 
 	printf("after decrypt test_msg: \n")
-	print_bytes(tmsg, msg_length)
+	print_bytes(tmsg, Nat32 msg_length)
 
-	return 0
+	return Int 0
 }
 

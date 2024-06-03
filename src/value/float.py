@@ -39,7 +39,7 @@ def value_float_cons(t, v, method, ti):
 			return _value_float_cons_immediate(t, v, method, ti)
 
 
-	if method != 'explicit':
+	if method == 'implicit':
 		info("cannot implicitly cons Float value", ti)
 		return None
 

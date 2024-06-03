@@ -4,7 +4,7 @@ from .value import value_cons_node
 
 
 def value_unit_cons(t, v, method, ti):
-	if method != 'explicit':
+	if method == 'implicit':
 		error("cannot implicitly cons Unit value", ti)
 		return None
 

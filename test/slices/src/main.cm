@@ -2,6 +2,16 @@
 
 import "libc/stdio"
 
+@feature("unsafe")
+
+func array_print(pa: *[]Int32, len: Int32) {
+	var i = 0
+	while i < len {
+		printf("a[%d] = %d\n", i, Int32 pa[i])
+		++i
+	}
+}
+
 
 func main() -> Int {
 	printf("test slices\n")
@@ -57,6 +67,18 @@ func main() -> Int {
 		printf("s[%d] = %d\n", i, Nat32 s[i])
 		++i
 	}
+
+	printf("--------------------------------------------\n")
+	printf("test pointer to slice\n")
+
+//	let p = &s[2:5]
+
+	// не может неявно привести указатель!
+	// *[]Int32 & *[4]Generic(Int7)
+	// А должен уметь!
+//	array_print(p, 4)
+
+
 
 	return 0
 }

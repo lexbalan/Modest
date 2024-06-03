@@ -55,6 +55,15 @@ def _try_to_implicit_cons(t, v, ti):
 	return nv if (nv != None) else v
 
 
+# can be implicitly constructed value with type a from type b?
+def can(_to, _from):
+	if type.type_eq(_to, _from):
+		return True
+
+	if type.type_is_generic(_from):
+		pass
+	return
+
 
 def value_cons_implicit(t, v):
 	assert(t['isa'] == 'type')

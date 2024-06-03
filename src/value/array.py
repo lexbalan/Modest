@@ -137,7 +137,7 @@ def value_array_cons(t, v, method, ti):
 		return _do_cons_array(t, v, method, ti)
 
 
-	if method != 'explicit':
+	if method == 'implicit':
 		info("cannot implicitly cons Array value", ti)
 		return None
 
@@ -157,7 +157,7 @@ def _cast_values(values, to_type):
 		casted_item = value_cons_implicit(to_type, item)
 
 		if not hlir_type.type_eq(to_type, casted_item['type']):
-			if method == 'explicit':
+			if method != 'implicit':
 				error("cannot construct value", item['ti'])
 				continue
 

@@ -22,6 +22,6 @@ func main() -> Int {
 	print("n = {n}\n", n)
 	print("x = 0x{x}\n", x)
 
-	return 0
+	return Int 0
 }
 

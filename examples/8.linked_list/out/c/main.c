@@ -21,7 +21,7 @@
 void nat32_list_insert(List *list, uint32_t x)
 {
 	// alloc memory for Nat32 value
-	uint32_t *const p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
+	uint32_t *const p_nat32 = (uint32_t *)malloc((size_t)sizeof(uint32_t));
 	*p_nat32 = x;
 	linked_list_append(list, p_nat32);
 }
@@ -95,7 +95,7 @@ int main()
 	// test linked_list_node_get
 	int32_t i;
 	i = 0;
-	while (i >= -12) {
+	while (i >= (int32_t)-12) {
 		Node *const node = linked_list_node_get(list, i);
 
 		if (node == NULL) {
@@ -129,7 +129,7 @@ int main()
 	printf("-----------------------------------------\n");
 
 
-	uint32_t *const p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
+	uint32_t *const p_nat32 = (uint32_t *)malloc((size_t)sizeof(uint32_t));
 	*p_nat32 = 1234;
 	linked_list_insert(list, 4, p_nat32);
 

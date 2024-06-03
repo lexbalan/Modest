@@ -35,21 +35,21 @@ void write_file(int sockfd)
 	}
 
 	while (true) {
-		const ssize_t n = recv(sockfd, (char *)&buffer, bufSize, 0);
+		const ssize_t n = recv(sockfd, (char *)&buffer, ((size_t)(uint16_t)bufSize), 0);
 
 		if (n <= 0) {
 			break;
 		}
 
 		fprintf(fp, "%s", (char *)&buffer);
-		bzero((char *)&buffer, bufSize);
+		bzero((char *)&buffer, ((size_t)(uint16_t)bufSize));
 	}
 }
 
 
 int main()
 {
-	const int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+	const int sockfd = socket((int)AF_INET, (int)SOCK_STREAM, 0);
 	if (sockfd < 0) {
 		perror("[-] Error in socket");
 		exit(1);

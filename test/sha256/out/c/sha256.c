@@ -127,7 +127,7 @@ void sha256_transform(Context *ctx, uint8_t *data)
 
 	i = 0;
 	while (i < 64) {
-		const uint32_t t1 = x[7] + ep1(x[4]) + ch(x[4], x[5], x[6]) + k[i] + m[i];
+		const uint32_t t1 = x[7] + ep1(x[4]) + ch(x[4], x[5], x[6]) + (uint32_t)k[i] + m[i];
 		const uint32_t t2 = ep0(x[0]) + maj(x[0], x[1], x[2]);
 
 		x[7] = x[6];

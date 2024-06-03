@@ -148,7 +148,7 @@ def value_record_cons(t, v, method, ti):
 		return _value_record_cons_record_from_generic(t, v, method, ti)
 
 
-	if method != 'explicit':
+	if method == 'implicit':
 		info("cannot implicitly cons Record value", ti)
 		return None
 

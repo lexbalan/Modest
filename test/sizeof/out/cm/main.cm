@@ -171,6 +171,6 @@ func main() -> Int {
 	printf("offsetof(Mixed4.p) = %llu\n", Nat64 offsetof(Mixed4.p))
 	printf("offsetof(Mixed4.s2) = %llu\n", Nat64 offsetof(Mixed4.s2))
 
-	return 0
+	return Int 0
 }
 
