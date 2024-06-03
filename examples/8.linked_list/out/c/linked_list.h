@@ -18,13 +18,18 @@ uint32_t linked_list_size_get(List *list);
 Node *linked_list_first_node_get(List *list);
 Node *linked_list_last_node_get(List *list);
 
+
 Node *linked_list_node_create();
 Node *linked_list_node_prev_get(Node *node);
 Node *linked_list_node_next_get(Node *node);
 void *linked_list_node_data_get(Node *node);
 Node *linked_list_node_get(List *list, int32_t pos);
 
+Node *linked_list_node_insert(List *list, int32_t pos, Node *new_node);
 Node *linked_list_node_append(List *list, Node *new_node);
+
+
+Node *linked_list_insert(List *list, int32_t pos, void *data);
 
 Node *linked_list_append(List *list, void *data);
 

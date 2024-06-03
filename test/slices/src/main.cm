@@ -35,7 +35,9 @@ func main() -> Int {
 	var vs1 = s1
 	var vs2 = s2
 
-	a[2 .. 5] = [10, 20, 30, 40]
+	let ax = 2
+	let bx = 5
+	a[ax .. bx] = [10, 20, 30, 40]
 
 	i = 0
 	while i < lengthof(a) {

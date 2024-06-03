@@ -74,6 +74,22 @@ Node *linked_list_last_node_get(List *list)
 }
 
 
+Node *linked_list_node_first(List *list, Node *new_node)
+{
+	if ((list == NULL) || (new_node == NULL)) {
+		return NULL;
+	}
+
+	list->head = new_node;
+	list->tail = new_node;
+
+	list->size = list->size + 1;
+
+	return new_node;
+}
+
+
+
 Node *linked_list_node_create()
 {
 	Node *const node = (Node *)malloc(sizeof(Node));
@@ -143,6 +159,7 @@ Node *linked_list_node_get(List *list, int32_t pos)
 		return NULL;
 	}
 
+	printf("linked_list_node_get(%d)\n", pos);
 	Node *node;
 
 	if (pos >= 0) {
@@ -181,6 +198,35 @@ Node *linked_list_node_get(List *list, int32_t pos)
 }
 
 
+Node *linked_list_node_insert(List *list, int32_t pos, Node *new_node)
+{
+	if ((list == NULL) || (new_node == NULL)) {
+		return NULL;
+	}
+
+	printf("linked_list_node_insert(%d)\n", pos);
+
+
+	Node *const n = linked_list_node_get(list, pos);
+
+	if (n == NULL) {
+		return NULL;
+	}
+
+	Node *const nod = linked_list_node_prev_get(n);
+
+	if (nod == NULL) {
+		return NULL;
+	}
+
+	node_insert_right(nod, new_node);
+	list->size = list->size + 1;
+
+	return new_node;
+}
+
+
+
 Node *linked_list_node_append(List *list, Node *new_node)
 {
 	if ((list == NULL) || (new_node == NULL)) {
@@ -198,6 +244,20 @@ Node *linked_list_node_append(List *list, Node *new_node)
 	list->size = list->size + 1;
 
 	return new_node;
+}
+
+
+Node *linked_list_insert(List *list, int32_t pos, void *data)
+{
+	Node *const new_node = linked_list_node_create();
+
+	if (new_node == NULL) {
+		return NULL;
+	}
+
+	new_node->data = data;
+
+	return linked_list_node_insert(list, pos, new_node);
 }
 
 

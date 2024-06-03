@@ -59,6 +59,21 @@ func linked_list_last_node_get(list: *List) -> *Node {
 }
 
 
+func linked_list_node_first(list: *List, new_node: *Node) -> *Node {
+	if list == nil or new_node == nil {
+		return nil
+	}
+
+	list.head = new_node
+	list.tail = new_node
+
+	list.size = list.size + 1
+
+	return new_node
+}
+
+
+
 func linked_list_node_create() -> *Node {
 	let node = malloc(sizeof(Node))
 
@@ -122,6 +137,7 @@ func linked_list_node_get(list: *List, pos: Int32) -> *Node {
 		return nil
 	}
 
+	printf("linked_list_node_get(%d)\n", pos)
 	var node: *Node
 
 	if pos >= 0 {
@@ -158,6 +174,34 @@ func linked_list_node_get(list: *List, pos: Int32) -> *Node {
 }
 
 
+func linked_list_node_insert(list: *List, pos: Int32, new_node: *Node) -> *Node {
+	if list == nil or new_node == nil {
+		return nil
+	}
+
+	printf("linked_list_node_insert(%d)\n", pos)
+
+
+	let n = linked_list_node_get(list, pos)
+
+	if n == nil {
+		return nil
+	}
+
+	let nod = linked_list_node_prev_get(n)
+
+	if nod == nil {
+		return nil
+	}
+
+	node_insert_right(nod, new_node)
+	list.size = list.size + 1
+
+	return new_node
+}
+
+
+
 func linked_list_node_append(list: *List, new_node: *Node) -> *Node {
 	if list == nil or new_node == nil {
 		return nil
@@ -174,6 +218,19 @@ func linked_list_node_append(list: *List, new_node: *Node) -> *Node {
 	list.size = list.size + 1
 
 	return new_node
+}
+
+
+func linked_list_insert(list: *List, pos: Int32, data: Pointer) -> *Node {
+	let new_node = linked_list_node_create()
+
+	if new_node == nil {
+		return nil
+	}
+
+	new_node.data = data
+
+	return linked_list_node_insert(list, pos, new_node)
 }
 
 

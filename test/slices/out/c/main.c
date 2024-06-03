@@ -47,6 +47,8 @@ int main()
 		i = i + 1;
 	}
 
+	#define ax  2
+	#define bx  5
 	memcpy(&a[2], &(int32_t[4]){10, 20, 30, 40}, sizeof(int32_t[4]));
 
 	i = 0;
@@ -56,5 +58,9 @@ int main()
 	}
 
 	return 0;
+
+	// undef local macro
+	#undef ax
+	#undef bx
 }
 

@@ -126,6 +126,15 @@ int main()
 		i = i + 1;
 	}
 
+	printf("-----------------------------------------\n");
+
+
+	uint32_t *const p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
+	*p_nat32 = 1234;
+	linked_list_insert(list, 4, p_nat32);
+
+	list_print_forward(list);
+
 	return 0;
 }
 
