@@ -16,28 +16,23 @@ def value_char_create(char_code, _type=None, ti=None):
 	return value_terminal(_type, char_code, ti)
 
 
-
-def _value_char_cons_immediate(t, v, method, ti):
-	if v['type']['width'] > t['width']:
-		info("char overflow", ti)
-
-	return value_cons_immediate(t, v, method, ti)
+def width_ok(to, from_type, method):
+	if method == 'unsafe':
+		return True
+	return from_type['width'] <= to['width']
 
 
 def char_can(to, from_type, method):
 	if type.type_is_string(from_type):
-		return from_type['length'] == 1
-
-	if type.type_is_generic_char(from_type):
-		return value_char_cons(t, v, method, ti)
+		return from_type['length'] == 1 and width_ok(to, from_type, method)
 
 	if method == 'implicit':
 		return False
 
 	if type.type_is_char(from_type):
-		return True
+		return width_ok(to, from_type, method)
 	elif type.type_is_integer(from_type):
-		return True
+		return width_ok(to, from_type, method)
 
 	return False
 
@@ -51,13 +46,13 @@ def value_char_cons(t, v, method, ti):
 	if type.type_is_string(v['type']):
 		if v['type']['length'] == 1:
 			cc = ord(v['asset'][0])
-			nv = _value_char_cons_immediate(t, v, method, ti)
+			nv = value_cons_immediate(t, v, method, ti)
 			nv['immediate'] = True
 			nv['asset'] = cc
 			return nv
 
 	if value_is_immediate(v):
-		return _value_char_cons_immediate(t, v, method, ti)
+		return value_cons_immediate(t, v, method, ti)
 
 	return value_cons_node(t, v, method, ti=ti)
 
