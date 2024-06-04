@@ -71,12 +71,19 @@ def _value_integer_cons_immediate(t, v, method, ti):
 def _do_cons_integer(t, v, method, ti):
 	_check_width(v['type'], t, method, ti)
 	if value_is_immediate(v):
+		_check_width(v['type'], t, method, ti)
+
+		if not t['signed']:
+			if v['asset'] < 0:
+				return None
+
 		if method != 'implicit':
 			nv = value_cons_node(t, v, method, ti=ti)
 			nv['asset'] = int(v['asset'])  # here can be float
 			nv['immediate'] = True
 			return nv
 		return _value_integer_cons_immediate(t, v, method, ti)
+
 	return value_cons_node(t, v, method, ti=ti)
 
 
@@ -113,78 +120,7 @@ def integer_can(to, from_type, method):
 def value_integer_cons(t, v, method, ti):
 	from_type = v['type']
 
-	#from main import features
-	#if method == 'explicit' and features.get('unsafe'):
-	#	method = 'unsafe'
-
-
 	if integer_can(t, from_type, method):
-		if value_is_immediate(v):
-			# GenericInt -> Int
-			_check_width(from_type, t, method, ti)
-
-			if not t['signed']:
-				if v['asset'] < 0:
-					return None
-
 		return _do_cons_integer(t, v, method, ti)
 
-	elif hlir_type.type_is_va_list(from_type):
-		return value_cons_node(t, v, 'explicit', ti)
-
 	return None
-
-
-"""
-
-	if hlir_type.type_is_generic_integer(from_type):
-		if value_is_immediate(v):
-			# GenericInt -> Int
-			_check_width(from_type, t, method, ti)
-
-			if not t['signed']:
-				if v['asset'] < 0:
-					return None
-
-		return _do_cons_integer(t, v, method, ti)
-
-
-	if method == 'implicit':
-		info("cannot implicitly cons Int value", ti)
-		return None
-
-	# Int -> Int
-	if hlir_type.type_is_integer(from_type):
-		return _do_cons_integer(t, v, 'explicit', ti)
-
-	# Float -> Int
-	elif hlir_type.type_is_float(from_type):
-		return _do_cons_integer(t, v, 'explicit', ti=ti)
-
-	# Char -> Int
-	elif hlir_type.type_is_char(from_type):
-		return _do_cons_integer(t, v, 'explicit', ti)
-
-	# Bool -> Int
-	elif hlir_type.type_is_bool(from_type):
-		return _do_cons_integer(t, v, 'explicit', ti)
-
-	# Byte -> Int
-	elif hlir_type.type_is_byte(from_type):
-		return _do_cons_integer(t, v, 'explicit', ti)
-
-	# Pointer -> Int
-	elif hlir_type.type_is_pointer(from_type):
-		from main import features
-		if not (features.get('unsafe') or features.get("unsafe-ptr-to-int")):
-			info("explicit typecast to pointer is forbidden in safe mode", ti)
-			pass
-		return _do_cons_integer(t, v, 'explicit', ti)
-
-	# VA_List -> Int
-	elif hlir_type.type_is_va_list(from_type):
-		return value_cons_node(t, v, 'explicit', ti)
-
-	return None
-
-"""

@@ -27,8 +27,20 @@ def _value_char_cons_immediate(t, v, method, ti):
 
 def _do_cons_char(t, v, method, ti):
 	from value.value import value_is_immediate
+
+	# String -> Char
+	# ex: var c: Char8 = "A"
+	if type.type_is_string(v['type']):
+		if len(v['asset']) == 1:
+			cc = ord(v['asset'][0])
+			nv = value_cons_immediate(t, v, method, ti)
+			nv['immediate'] = True
+			nv['asset'] = cc
+			return nv
+
 	if value_is_immediate(v):
 		return _value_char_cons_immediate(t, v, method, ti)
+
 	return value_cons_node(t, v, method, ti=ti)
 
 
@@ -57,22 +69,7 @@ def value_char_cons(t, v, method, ti):
 
 	# Char -> Char
 	if char_can(t, from_type, method):
-
-		# String -> Char
-		# ex: var c: Char8 = "A"
-		if type.type_is_string(from_type):
-			if len(v['asset']) == 1:
-				cc = ord(v['asset'][0])
-				nv = value_cons_immediate(t, v, method, ti)
-				nv['immediate'] = True
-				nv['asset'] = cc
-				return nv
-
 		return _do_cons_char(t, v, method, ti)
-
-	# VA_List -> Char
-	elif type.type_is_va_list(from_type):
-		return value_cons_node(t, v, 'explicit', ti)
 
 	return None
 

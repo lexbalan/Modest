@@ -45,10 +45,6 @@ def value_bool_cons(t, v, method, ti):
 	if bool_can(t, from_type, method):
 		return _do_cons_bool(t, v, 'explicit', ti)
 
-	# VA_List -> Bool
-	elif type.type_is_va_list(from_type):
-		return value_cons_node(t, v, 'explicit', ti)
-
 	return None
 
 

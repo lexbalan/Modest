@@ -40,10 +40,6 @@ def value_byte_cons(t, v, method, ti):
 	if byte_can(t, from_type, method):
 		return _do_cons_byte(t, v, method, ti)
 
-	# VA_List -> Byte
-	elif type.type_is_va_list(from_type):
-		return value_cons_node(t, v, 'explicit', ti)
-
 	return None
 
 

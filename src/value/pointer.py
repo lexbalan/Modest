@@ -87,15 +87,7 @@ def pointer_can(to, from_type, method):
 def value_pointer_cons(t, v, method, ti):
 	from_type = v['type']
 
-	#from main import features
-	#if method == 'explicit' and features.get('unsafe'):
-	#	method = 'unsafe'
-
 	if pointer_can(t, from_type, method):
 		return _do_cons_pointer(t, v, method, ti)
 
-	elif type.type_is_va_list(from_type):
-		return value_cons_node(t, v, 'explicit', ti)  # VA_List -> Ptr
-
-	info("????", ti)
 	return None
