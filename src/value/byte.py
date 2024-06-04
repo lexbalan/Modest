@@ -13,15 +13,22 @@ def _value_byte_cons_immediate(t, v, method, ti):
 	return value_cons_immediate(t, v, method, ti)
 
 
+
+def width_ok(to, from_type, method):
+	if method == 'unsafe':
+		return True
+	return from_type['width'] <= to['width']
+
+
 def byte_can(to, from_type, method):
 	if type.type_is_generic_integer(from_type):
-		return True
+		return width_ok(to, from_type, method)
 
 	if method == 'implicit':
 		return False
 
 	if type.type_is_integer(from_type):
-		return True
+		return width_ok(to, from_type, method)
 
 	return False
 

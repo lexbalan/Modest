@@ -36,6 +36,13 @@ def _value_pointer_cons_immediate(t, v, method, ti):
 
 
 
+def width_ok(to, from_type, method):
+	if method == 'unsafe':
+		return True
+	return from_type['width'] != to['width']
+
+
+
 def pointer_can(to, from_type, method):
 	if type.type_is_free_pointer(from_type):
 		return True  # cons *X from Nil
@@ -70,7 +77,7 @@ def pointer_can(to, from_type, method):
 	if type.type_is_pointer(from_type):
 		return True  # Ptr -> Ptr
 	elif type.type_is_integer(from_type):
-		return True  # Int -> Ptr
+		return width_ok(to, from_type, method)  # Int -> Ptr
 
 	return False
 

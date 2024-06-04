@@ -68,30 +68,36 @@ def _value_integer_cons_immediate(t, v, method, ti):
 
 
 
+def width_ok(to, from_type, method):
+	if method == 'unsafe':
+		return True
+	return from_type['width'] <= to['width']
+
+
 def integer_can(to, from_type, method):
 	if hlir_type.type_is_generic_integer(from_type):
-		return True
+		return width_ok(to, from_type, method)
 
 	if method == 'implicit':
 		return False
 
 	# explicit or unsafe cons method
 	if hlir_type.type_is_integer(from_type):
-		return True
+		return width_ok(to, from_type, method)
 	elif hlir_type.type_is_float(from_type):
 		return True
 	elif hlir_type.type_is_char(from_type):
-		return True
+		return width_ok(to, from_type, method)
 	elif hlir_type.type_is_byte(from_type):
-		return True
+		return width_ok(to, from_type, method)
 	elif hlir_type.type_is_bool(from_type):
-		return True
+		return width_ok(to, from_type, method)
 
 	if method != 'unsafe':
 		return False
 
 	if hlir_type.type_is_pointer(from_type):
-		return True
+		return width_ok(to, from_type, method)
 
 	return False
 
