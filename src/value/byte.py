@@ -13,13 +13,6 @@ def _value_byte_cons_immediate(t, v, method, ti):
 	return value_cons_immediate(t, v, method, ti)
 
 
-
-def value_byte_cons(t, v, method, ti):
-	if value_is_immediate(v):
-		return _value_byte_cons_immediate(t, v, method, ti)
-	return value_cons_node(t, v, method, ti=ti)
-
-
 def byte_can(to, from_type, method):
 	if type.type_is_generic_integer(from_type):
 		return True
@@ -33,4 +26,8 @@ def byte_can(to, from_type, method):
 	return False
 
 
+def value_byte_cons(t, v, method, ti):
+	if value_is_immediate(v):
+		return _value_byte_cons_immediate(t, v, method, ti)
+	return value_cons_node(t, v, method, ti=ti)
 

@@ -5,15 +5,6 @@ from .value import value_cons_node, value_is_immediate, value_cons_immediate
 from .char import utf32_chars_to_utfx_chars
 
 
-def _value_pointer_cons_immediate(t, v, method, ti):
-	#info("_value_pointer_cons_immediate", ti)
-	if type.type_is_string(v['type']):
-		return cons_ptr_to_str_from_string(t, v, method, ti)
-
-	return value_cons_immediate(t, v, method, ti)
-
-
-
 def cons_ptr_to_str_from_string(t, v, method, ti):
 	#info("cons_ptr_to_str_from_string", ti)
 	from trans import module_strings_add
@@ -36,11 +27,12 @@ def cons_ptr_to_str_from_string(t, v, method, ti):
 
 
 
-def value_pointer_cons(t, v, method, ti):
-	if value_is_immediate(v):
-		return _value_pointer_cons_immediate(t, v, method, ti)
-	return value_cons_node(t, v, method, ti=ti)
+def _value_pointer_cons_immediate(t, v, method, ti):
+	#info("_value_pointer_cons_immediate", ti)
+	if type.type_is_string(v['type']):
+		return cons_ptr_to_str_from_string(t, v, method, ti)
 
+	return value_cons_immediate(t, v, method, ti)
 
 
 
@@ -81,5 +73,12 @@ def pointer_can(to, from_type, method):
 		return True  # Int -> Ptr
 
 	return False
+
+
+
+def value_pointer_cons(t, v, method, ti):
+	if value_is_immediate(v):
+		return _value_pointer_cons_immediate(t, v, method, ti)
+	return value_cons_node(t, v, method, ti=ti)
 
 
