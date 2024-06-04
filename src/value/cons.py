@@ -109,13 +109,13 @@ def value_cons_implicit(t, v):
 
 
 	if cons_can(t, from_type, 'implicit'):
-
 		# (!) потому что в C номинальные типы, а у нас - структурные
 
 		# for structural type system support
 		if type.type_is_record(t) and type.type_is_record(from_type):
 			if type.type_is_generic(from_type):
 				return _do_value_cons(t, v, 'implicit', ti)
+				return value_record_cons(t, v, 'implicit', ti)
 
 			if not type.type_eq_record(t, from_type, opt=[], nominative=True):
 				return value_cons_node(t, v, 'implicit', ti=ti)  # value_cons_node!
@@ -151,7 +151,6 @@ def value_cons_explicit(t, v, ti):
 		warning("explicit cast to the same type", ti)
 		return v
 
-
 	if not cons_can(t, from_type, 'explicit'):
 		error("cannot do construct value", ti)
 		"""type.type_print(t)
@@ -169,6 +168,7 @@ def value_cons_explicit(t, v, ti):
 def _try_to_implicit_cons(t, v, ti):
 	nv = _do_value_cons(t, v, 'implicit', ti)
 	return nv if (nv != None) else v
+
 
 # избавляемся от generic
 def value_cons_default(x):
@@ -219,7 +219,6 @@ def value_cons_implicit_check(t, v):
 	nv = value_cons_implicit(t, v)
 	type.check(t, nv['type'], v['expr_ti'])
 	return nv
-
 
 
 def value_bad_cons(t, v, method, ti):

@@ -116,26 +116,6 @@ def _doitems(t, v, method, ti):
 
 
 
-def _value_record_cons_record_from_generic(t, v, method, ti):
-	items = _doitems(t, v, method, ti)
-	nv = value_cons_node(t, v, method, ti)
-	nv['asset'] = items
-	nv['immediate'] = True
-	if 'nl' in v:
-		nv['nl'] = v['nl']
-	return nv
-
-
-def _do_cons_record(t, v, method, ti):
-	from_type = v['type']
-	if type.type_is_generic(from_type):
-		return _value_record_cons_record_from_generic(t, v, method, ti)
-
-	nv = value_cons_node(t, v, method, ti=ti)
-	return nv
-
-
-
 def record_can(to, from_type, method):
 	if not type.type_is_record(from_type):
 		return False
@@ -159,14 +139,16 @@ def record_can(to, from_type, method):
 
 
 
-
 def value_record_cons(t, v, method, ti):
-	from_type = v['type']
+	nv = value_cons_node(t, v, method, ti=ti)
 
-	if record_can(t, from_type, method):
-		return _do_cons_record(t, v, method, ti)
+	if value_is_immediate(v):
+		items = _doitems(t, v, method, ti)
+		nv['asset'] = items
+		nv['immediate'] = True
+		if 'nl' in v:
+			nv['nl'] = v['nl']
 
-	return False
-
+	return nv
 
 

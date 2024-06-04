@@ -112,7 +112,6 @@ def array_can(to, from_type, method):
 		info("unsuitable item type", ti)
 		return None
 
-
 	if hlir_type.type_is_generic(from_type):
 		# GenericArray -> Array
 
@@ -123,11 +122,9 @@ def array_can(to, from_type, method):
 		# (нельзя неявно построить меньший массив из большего)
 		return n_from <= n_to
 
-
 	if method == 'implicit':
 		return False
 
-	# Array From Array
 	return True
 
 
