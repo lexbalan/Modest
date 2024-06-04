@@ -3,7 +3,6 @@ from error import error
 from .value import value_cons_node
 
 
-
 def unit_can(to, from_type, method):
 	return method != 'implicit'
 
