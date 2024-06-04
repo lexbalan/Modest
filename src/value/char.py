@@ -51,7 +51,7 @@ def value_char_cons(t, v, method, ti):
 	if type.type_is_string(v['type']):
 		if v['type']['length'] == 1:
 			cc = ord(v['asset'][0])
-			nv = value_cons_immediate(t, v, method, ti)
+			nv = _value_char_cons_immediate(t, v, method, ti)
 			nv['immediate'] = True
 			nv['asset'] = cc
 			return nv
