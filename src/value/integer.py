@@ -68,26 +68,6 @@ def _value_integer_cons_immediate(t, v, method, ti):
 
 
 
-def value_integer_cons(t, v, method, ti):
-	_check_width(v['type'], t, method, ti)
-	if value_is_immediate(v):
-		_check_width(v['type'], t, method, ti)
-
-		if not t['signed']:
-			if v['asset'] < 0:
-				return None
-
-		if method != 'implicit':
-			nv = value_cons_node(t, v, method, ti=ti)
-			nv['asset'] = int(v['asset'])  # here can be float
-			nv['immediate'] = True
-			return nv
-		return _value_integer_cons_immediate(t, v, method, ti)
-
-	return value_cons_node(t, v, method, ti=ti)
-
-
-
 def integer_can(to, from_type, method):
 	if hlir_type.type_is_generic_integer(from_type):
 		return True
@@ -114,5 +94,26 @@ def integer_can(to, from_type, method):
 		return True
 
 	return False
+
+
+
+
+def value_integer_cons(t, v, method, ti):
+	_check_width(v['type'], t, method, ti)
+	if value_is_immediate(v):
+		_check_width(v['type'], t, method, ti)
+
+		if not t['signed']:
+			if v['asset'] < 0:
+				return None
+
+		if method != 'implicit':
+			nv = value_cons_node(t, v, method, ti=ti)
+			nv['asset'] = int(v['asset'])  # here can be float
+			nv['immediate'] = True
+			return nv
+		return _value_integer_cons_immediate(t, v, method, ti)
+
+	return value_cons_node(t, v, method, ti=ti)
 
 
