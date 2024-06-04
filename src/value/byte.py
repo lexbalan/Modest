@@ -14,7 +14,7 @@ def _value_byte_cons_immediate(t, v, method, ti):
 
 
 
-def _do_cons_byte(t, v, method, ti):
+def value_byte_cons(t, v, method, ti):
 	if value_is_immediate(v):
 		return _value_byte_cons_immediate(t, v, method, ti)
 	return value_cons_node(t, v, method, ti=ti)
@@ -32,14 +32,5 @@ def byte_can(to, from_type, method):
 
 	return False
 
-
-
-def value_byte_cons(t, v, method, ti):
-	from_type = v['type']
-
-	if byte_can(t, from_type, method):
-		return _do_cons_byte(t, v, method, ti)
-
-	return None
 
 

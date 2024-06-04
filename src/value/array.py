@@ -132,17 +132,6 @@ def array_can(to, from_type, method):
 
 
 
-def value_array_cons(t, v, method, ti):
-	#info("value_array_cons", ti)
-	from_type = v['type']
-
-	if array_can(t, from_type, method):
-		return _do_cons_array(t, v, method, ti)
-
-	return None
-
-
-
 def _cast_values(values, to_type):
 	casted_items = []
 	for item in values:
@@ -161,8 +150,8 @@ def _cast_values(values, to_type):
 
 
 
-def _do_cons_array(t, v, method, ti):
-	#info("_do_cons_array", ti)
+def value_array_cons(t, v, method, ti):
+	#info("value_array_cons", ti)
 
 	if hlir_type.type_is_string(v['type']):
 		return value_array_create_from_string(t, v, method, ti)
@@ -170,7 +159,7 @@ def _do_cons_array(t, v, method, ti):
 	nv = value_cons_node(t, v, method, ti)
 
 	if value_is_immediate(v):
-		#warning("_do_cons_array immediate?", ti)
+		#warning("value_array_cons immediate?", ti)
 		casted_items = _cast_values(v['asset'], t['of'])
 
 		# add Zero Pad (if need)

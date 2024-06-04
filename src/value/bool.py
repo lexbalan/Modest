@@ -21,7 +21,7 @@ def _value_bool_cons_immediate(t, v, method, ti):
 
 
 
-def _do_cons_bool(t, v, method, ti):
+def value_bool_cons(t, v, method, ti):
 	if value_is_immediate(v):
 		return _value_bool_cons_immediate(t, v, method, ti)
 	return value_cons_node(t, v, method, ti=ti)
@@ -37,14 +37,5 @@ def bool_can(to, from_type, method):
 		return True
 
 	return False
-
-
-def value_bool_cons(t, v, method, ti):
-	from_type = v['type']
-
-	if bool_can(t, from_type, method):
-		return _do_cons_bool(t, v, 'explicit', ti)
-
-	return None
 
 

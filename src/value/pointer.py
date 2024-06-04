@@ -36,7 +36,7 @@ def cons_ptr_to_str_from_string(t, v, method, ti):
 
 
 
-def _do_cons_pointer(t, v, method, ti):
+def value_pointer_cons(t, v, method, ti):
 	if value_is_immediate(v):
 		return _value_pointer_cons_immediate(t, v, method, ti)
 	return value_cons_node(t, v, method, ti=ti)
@@ -83,11 +83,3 @@ def pointer_can(to, from_type, method):
 	return False
 
 
-
-def value_pointer_cons(t, v, method, ti):
-	from_type = v['type']
-
-	if pointer_can(t, from_type, method):
-		return _do_cons_pointer(t, v, method, ti)
-
-	return None

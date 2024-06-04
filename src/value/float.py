@@ -23,7 +23,7 @@ def _value_float_cons_immediate(t, v, method, ti):
 	return nv
 
 
-def _do_cons_float(t, v, method, ti):
+def value_float_cons(t, v, method, ti):
 	if value_is_immediate(v):
 		return _value_float_cons_immediate(t, v, method, ti)
 	return value_cons_node(t, v, method, ti=ti)
@@ -44,16 +44,6 @@ def float_can(to, from_type, method):
 		return True
 
 	return False
-
-
-
-def value_float_cons(t, v, method, ti):
-	from_type = v['type']
-
-	if float_can(t, from_type, method):
-		return _do_cons_float(t, v, method, ti=ti)
-
-	return None
 
 
 

@@ -68,7 +68,7 @@ def _value_integer_cons_immediate(t, v, method, ti):
 
 
 
-def _do_cons_integer(t, v, method, ti):
+def value_integer_cons(t, v, method, ti):
 	_check_width(v['type'], t, method, ti)
 	if value_is_immediate(v):
 		_check_width(v['type'], t, method, ti)
@@ -116,11 +116,3 @@ def integer_can(to, from_type, method):
 	return False
 
 
-
-def value_integer_cons(t, v, method, ti):
-	from_type = v['type']
-
-	if integer_can(t, from_type, method):
-		return _do_cons_integer(t, v, method, ti)
-
-	return None

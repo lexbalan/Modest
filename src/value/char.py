@@ -25,7 +25,7 @@ def _value_char_cons_immediate(t, v, method, ti):
 
 
 
-def _do_cons_char(t, v, method, ti):
+def value_char_cons(t, v, method, ti):
 	from value.value import value_is_immediate
 
 	# String -> Char
@@ -50,7 +50,7 @@ def char_can(to, from_type, method):
 		return from_type['length'] == 1
 
 	if type.type_is_generic_char(from_type):
-		return _do_cons_char(t, v, method, ti)
+		return value_char_cons(t, v, method, ti)
 
 	if method == 'implicit':
 		return False
@@ -64,14 +64,6 @@ def char_can(to, from_type, method):
 
 
 
-def value_char_cons(t, v, method, ti):
-	from_type = v['type']
-
-	# Char -> Char
-	if char_can(t, from_type, method):
-		return _do_cons_char(t, v, method, ti)
-
-	return None
 
 
 
