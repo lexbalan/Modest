@@ -285,7 +285,7 @@ def print_value_slice(x, ctx):
 	print_value(left, need_wrap=need_wrap)
 	out("[")
 	print_value(x['index_from'])
-	out(" .. ")
+	out(":")
 	print_value(x['index_to'])
 	out("]")
 
