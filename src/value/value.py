@@ -1,9 +1,9 @@
+import copy
 from error import info, warning, error
 from hlir.id import hlir_id
 from hlir.hlir import *
 from util import get_item_with_id
 import hlir.type as hlir_type
-
 
 
 def value_is_bad(x):
@@ -26,7 +26,6 @@ def value_is_lvalue(x):
 
 def value_is_generic_immediate(x):
 	return value_is_immediate(x) and hlir_type.type_is_generic(x['type'])
-
 
 
 def _value_is_zero_array(x):
@@ -379,13 +378,13 @@ def value_offsetof(of, field_id, ti):
 	}
 
 
-def value_lengthof(of_value, ti):
-	length = of_value['type']['volume']['asset']
+def value_lengthof(value, ti):
+	length = value['type']['volume']['asset']
 	type = hlir_type.hlir_type_generic_int_for(length, signed=False, ti=ti)
 	return {
 		'isa': 'value',
 		'kind': 'lengthof',
-		'of_value': of_value,
+		'value': value,
 		'type': type,
 		'asset': length,
 		'immediate': True,

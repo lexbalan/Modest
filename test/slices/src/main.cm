@@ -7,7 +7,7 @@ import "libc/stdio"
 func array_print(pa: *[]Int32, len: Int32) {
 	var i = 0
 	while i < len {
-		printf("a[%d] = %d\n", i, Int32 pa[i])
+		printf("a[%d] = %d\n", i, pa[i])
 		++i
 	}
 }
@@ -58,7 +58,7 @@ func main() -> Int {
 
 	printf("--------------------------------------------\n")
 
-	var s = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+	var s = []Int32 [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 
 	s[2:5] = []
 
@@ -71,13 +71,8 @@ func main() -> Int {
 	printf("--------------------------------------------\n")
 	printf("test pointer to slice\n")
 
-//	let p = &s[2:5]
-
-	// не может неявно привести указатель!
-	// *[]Int32 & *[4]Generic(Int7)
-	// А должен уметь!
-//	array_print(p, 4)
-
+	let p = &s[2:8]
+	//array_print(p, lengthof(*p))
 
 
 	return 0

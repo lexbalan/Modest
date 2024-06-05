@@ -57,11 +57,13 @@ def pointer_can(to, from_type, method):
 		if type.type_is_pointer_to_defined_array(from_type) and type.type_is_pointer_to_undefined_array(to):
 			if method == 'unsafe':
 				return True  #! *[]X from *[n]Y !
-			return type.type_eq(from_type['to']['of'], to['to']['of'])
+			from .cons import cons_can
+			return cons_can(to['to']['of'], from_type['to']['of'], method)
+			#return type.type_eq(from_type['to']['of'], to['to']['of'])
 
 	else:
 		# implicit cons pointer from non-pointer
-		# "string" -> *[]CharX
+		# String -> *[]CharX
 		if type.type_is_string(from_type):
 			return type.type_is_pointer_to_array_of_char(to)
 

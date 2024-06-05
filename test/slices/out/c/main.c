@@ -36,7 +36,7 @@ int main()
 	/*end let slice*/
 	int32_t i;
 	i = 0;
-	while (i < (sizeof(s1) / sizeof(s1[0]))) {
+	while (i < 2) {
 		printf("s1[%d] = %d\n", i, s1[i]);
 		i = i + 1;
 	}
@@ -52,7 +52,7 @@ int main()
 	memcpy(&s2, &pa[5], sizeof(int32_t[4]));
 	/*end let slice*/
 	i = 0;
-	while (i < (sizeof(s2) / sizeof(s2[0]))) {
+	while (i < 4) {
 		printf("s2[%d] = %d\n", i, s2[i]);
 		i = i + 1;
 	}
@@ -70,27 +70,20 @@ int main()
 
 	printf("--------------------------------------------\n");
 
-	int8_t s[10];
-	memcpy(&s, &(int8_t[10]){10, 20, 30, 40, 50, 60, 70, 80, 90, 100}, sizeof(int8_t[10]));
+	int32_t s[10];
+	memcpy(&s, &(int32_t[10]){10, 20, 30, 40, 50, 60, 70, 80, 90, 100}, sizeof(int32_t[10]));
 
-	memset(&s[2], 0, sizeof(int8_t[4]));
+	memset(&s[2], 0, sizeof(int32_t[4]));
 
 	i = 0;
 	while (i < (sizeof(s) / sizeof(s[0]))) {
-		printf("s[%d] = %d\n", i, ((uint32_t)(uint8_t)s[i]));
+		printf("s[%d] = %d\n", i, (uint32_t)s[i]);
 		i = i + 1;
 	}
 
 	printf("--------------------------------------------\n");
 	printf("test pointer to slice\n");
-
-	//	let p = &s[2:5]
-
-	// не может неявно привести указатель!
-	// *[]Int32 & *[4]Generic(Int7)
-	// А должен уметь!
-	//	array_print(p, 4)
-
+	//array_print(p, lengthof(*p))
 
 
 	return 0;

@@ -1170,14 +1170,23 @@ def print_value_offsetof(x, ctx):
 
 
 def print_value_lengthof(x, ctx):
+	v = x['value']
+
+	if not v['kind'] in ['var', 'let']:
+		out("%d" % x['asset'])
+		return
+
 	# sizeof(array) / sizeof(array[0])
-	v = x['of_value']
 	out("(sizeof(")
 	print_value(v)
 	out(") / sizeof(")
 	print_value(v)
 	out("[0]))")
 	return
+
+
+
+
 
 
 

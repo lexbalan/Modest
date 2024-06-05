@@ -796,7 +796,7 @@ def type_print(t, print_aka=True):
 			_root_id = type_root_id(t)
 			if _root_id != None:
 				if _root_id != _id:
-					print(" (alias of %s)" % _root_id, end='')
+					print(" (%s is alias of %s)" % (_id, _root_id), end='')
 			return
 
 
@@ -869,6 +869,9 @@ def type_print(t, print_aka=True):
 
 	elif type_is_float(t):
 		print('Float%d' % t['width'], end='')
+
+	elif type_is_string(t):
+		print("String", end='')
 
 	elif type_is_opaque(t):
 		print('opaque', end='')

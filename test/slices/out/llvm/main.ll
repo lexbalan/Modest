@@ -334,25 +334,25 @@ body_3:
 	br label %again_3
 break_3:
 	%59 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @str6 to [0 x i8]*))
-	%60 = alloca [10 x i8], align 1
-	%61 = insertvalue [10 x i8] zeroinitializer, i8 10, 0
-	%62 = insertvalue [10 x i8] %61, i8 20, 1
-	%63 = insertvalue [10 x i8] %62, i8 30, 2
-	%64 = insertvalue [10 x i8] %63, i8 40, 3
-	%65 = insertvalue [10 x i8] %64, i8 50, 4
-	%66 = insertvalue [10 x i8] %65, i8 60, 5
-	%67 = insertvalue [10 x i8] %66, i8 70, 6
-	%68 = insertvalue [10 x i8] %67, i8 80, 7
-	%69 = insertvalue [10 x i8] %68, i8 90, 8
-	%70 = insertvalue [10 x i8] %69, i8 100, 9
-	store [10 x i8] %70, [10 x i8]* %60
-	%71 = getelementptr inbounds [10 x i8], [10 x i8]* %60, i32 0, i8 2
-	%72 = bitcast i8* %71 to [4 x i8]*
-	%73 = insertvalue [4 x i8] zeroinitializer, i8 0, 0
-	%74 = insertvalue [4 x i8] %73, i8 0, 1
-	%75 = insertvalue [4 x i8] %74, i8 0, 2
-	%76 = insertvalue [4 x i8] %75, i8 0, 3
-	store [4 x i8] %76, [4 x i8]* %72
+	%60 = alloca [10 x i32], align 4
+	%61 = insertvalue [10 x i32] zeroinitializer, i32 10, 0
+	%62 = insertvalue [10 x i32] %61, i32 20, 1
+	%63 = insertvalue [10 x i32] %62, i32 30, 2
+	%64 = insertvalue [10 x i32] %63, i32 40, 3
+	%65 = insertvalue [10 x i32] %64, i32 50, 4
+	%66 = insertvalue [10 x i32] %65, i32 60, 5
+	%67 = insertvalue [10 x i32] %66, i32 70, 6
+	%68 = insertvalue [10 x i32] %67, i32 80, 7
+	%69 = insertvalue [10 x i32] %68, i32 90, 8
+	%70 = insertvalue [10 x i32] %69, i32 100, 9
+	store [10 x i32] %70, [10 x i32]* %60
+	%71 = getelementptr inbounds [10 x i32], [10 x i32]* %60, i32 0, i8 2
+	%72 = bitcast i32* %71 to [4 x i32]*
+	%73 = insertvalue [4 x i32] zeroinitializer, i32 0, 0
+	%74 = insertvalue [4 x i32] %73, i32 0, 1
+	%75 = insertvalue [4 x i32] %74, i32 0, 2
+	%76 = insertvalue [4 x i32] %75, i32 0, 3
+	store [4 x i32] %76, [4 x i32]* %72
 	store i32 0, i32* %17
 	br label %again_4
 again_4:
@@ -362,9 +362,9 @@ again_4:
 body_4:
 	%79 = load i32, i32* %17
 	%80 = load i32, i32* %17
-	%81 = getelementptr inbounds [10 x i8], [10 x i8]* %60, i32 0, i32 %80
-	%82 = load i8, i8* %81
-	%83 = zext i8 %82 to i32
+	%81 = getelementptr inbounds [10 x i32], [10 x i32]* %60, i32 0, i32 %80
+	%82 = load i32, i32* %81
+	%83 = bitcast i32 %82 to i32
 	%84 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str7 to [0 x i8]*), i32 %79, i32 %83)
 	%85 = load i32, i32* %17
 	%86 = add i32 %85, 1
@@ -373,11 +373,9 @@ body_4:
 break_4:
 	%87 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @str8 to [0 x i8]*))
 	%88 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str9 to [0 x i8]*))
-	;	let p = &s[2:5]
-	; не может неявно привести указатель!
-	; *[]Int32 & *[4]Generic(Int7)
-	; А должен уметь!
-	;	array_print(p, 4)
+	%89 = getelementptr inbounds [10 x i32], [10 x i32]* %60, i32 0, i8 2
+	%90 = bitcast i32* %89 to [7 x i32]*
+	;array_print(p, lengthof(*p))
 	ret %Int 0
 }
 

@@ -64,6 +64,11 @@ def _do_value_cons(t, v, method, ti):
 
 # can be implicitly constructed value with type a from type b?
 def cons_can(to, from_type, method):
+	"""print("cons_can? ", end='')
+	type.type_print(from_type)
+	print(" -> ", end='')
+	type.type_print(to)"""
+
 	if type.type_eq(to, from_type):
 		return True
 
@@ -75,17 +80,22 @@ def cons_can(to, from_type, method):
 		if features.get('unsafe'):
 			method = 'unsafe'
 
-	if type.type_is_integer(to): return integer_can(to, from_type, method)
-	elif type.type_is_unit(to): return unit_can(to, from_type, method)
-	elif type.type_is_bool(to): return bool_can(to, from_type, method)
-	elif type.type_is_byte(to): return byte_can(to, from_type, method)
-	elif type.type_is_record(to): return record_can(to, from_type, method)
-	elif type.type_is_pointer(to): return pointer_can(to, from_type, method)
-	elif type.type_is_array(to): return array_can(to, from_type, method)
-	elif type.type_is_float(to): return float_can(to, from_type, method)
-	elif type.type_is_char(to): return char_can(to, from_type, method)
+	checker = None
+	if type.type_is_integer(to): checker = integer_can
+	elif type.type_is_unit(to): checker = unit_can
+	elif type.type_is_bool(to): checker = bool_can
+	elif type.type_is_byte(to): checker = byte_can
+	elif type.type_is_record(to): checker = record_can
+	elif type.type_is_pointer(to): checker = pointer_can
+	elif type.type_is_array(to): checker = array_can
+	elif type.type_is_float(to): checker = float_can
+	elif type.type_is_char(to): checker = char_can
 
-	return False
+	res = False
+	if checker != None:
+		res = checker(to, from_type, method)
+	#print(" = %d" % res)
+	return res
 
 
 
@@ -147,8 +157,16 @@ def value_cons_explicit(t, v, ti):
 
 	from_type = v['type']
 
+
+	# for situation like:
+	# var s = []Int32 [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+	if type.type_is_generic_array(from_type):
+		if t['volume'] == None:
+			t['volume'] = from_type['volume']
+
+
 	if type.type_eq(t, from_type):
-		warning("explicit cast to the same type", ti)
+		info("explicit cast to the same type", ti)
 		return v
 
 	if not cons_can(t, from_type, 'explicit'):

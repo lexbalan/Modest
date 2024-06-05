@@ -607,7 +607,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 	elif k == 'sizeof': out("sizeof("); print_type(x['of']); out(")")
 	elif k == 'alignof': out("alignof("); print_type(x['of']); out(")")
 	elif k == 'offsetof': out("offsetof("); print_type(x['of']); out('.%s' % x['field']['str']); out(")")
-	elif k == 'lengthof': out("lengthof("); print_value(x['of_value']); out(")")
+	elif k == 'lengthof': out("lengthof("); print_value(x['value']); out(")")
 	else: out("<%s>" % k)
 
 	if need_wrap:

@@ -978,6 +978,7 @@ def do_value_call(x):
 				return value_lengthof(arg, x['ti'])
 			else:
 				error("expected array value", x['args'][0]['value']['ti'])
+				#hlir_type.type_print(arg['type'])
 				return value_bad(x)
 
 
