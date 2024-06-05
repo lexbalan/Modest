@@ -11,26 +11,21 @@ def value_is_bad(x):
 
 
 def value_is_immediate(x):
-	assert('immediate' in x)
 	return x['immediate']
-
-
-def value_is_generic_immediate(x):
-	return value_is_immediate(x) and hlir_type.type_is_generic(x['type'])
 
 
 # Any immediate value are immutable,
 # but not any immutable value are immediate
 def value_is_immutable(x):
-	if value_is_immediate(x):
-		#if not x['immutable']:
-		#	error("imm not imm", x['ti'])
-		#	1 / 0
-		return True
-
 	return x['immutable']
 
 
+def value_is_lvalue(x):
+	return x['kind'] in ['var', 'access', 'index', 'slice', 'deref']
+
+
+def value_is_generic_immediate(x):
+	return value_is_immediate(x) and hlir_type.type_is_generic(x['type'])
 
 
 

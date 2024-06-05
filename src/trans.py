@@ -1640,6 +1640,10 @@ def do_stmt_assign(x):
 	if value_is_bad(l) or value_is_bad(r):
 		return hlir_stmt_bad(x)
 
+	if not value_is_lvalue(l):
+		error("expected lvalue", l['expr_ti'])
+		return hlir_stmt_bad(x)
+
 	if value_is_immutable(l):
 		error("expected mutable value", l['expr_ti'])
 		return hlir_stmt_bad(x)
