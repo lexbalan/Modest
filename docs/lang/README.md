@@ -27,8 +27,9 @@
   * [Binary](./value/binary.md)
   * [Unary](./value/unary.md)
   * [Call](./value/call.md)
-  * [Index](./value/_index.md)
   * [Access](./value/access.md)
+  * [Index](./value/_index.md)
+  * [Slice](./value/slice.md)
   * [Sizeof](./value/sizeof.md)
 
 - [Statements](./stmt/README.md)

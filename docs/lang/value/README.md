@@ -55,6 +55,7 @@ It is impossible to get pointer (ref operation) to immutable values.
 ### Special operations
 * [Call value expression](./call.md)
 * [Index value expression](./_index.md)
+* [Slice value expression](./slice.md)
 * [Access value expression](./access.md)
 * [Cast value expression](./cast.md)
 * [Sizeof value expression](./sizeof.md)
