@@ -1144,6 +1144,7 @@ def do_value_slice(x):
 	left = do_value(x['left'])
 	index_from = do_rvalue(x['index_from'])
 	index_to = do_rvalue(x['index_to'])
+	ti = x['ti']
 
 	if value_is_bad(left) or value_is_bad(index_from) or value_is_bad(index_to):
 		return value_bad(x)
@@ -1160,27 +1161,50 @@ def do_value_slice(x):
 
 	if not value_is_immediate(index_from):
 		error("expected immediate value", index_from['expr_ti'])
+
 	if not value_is_immediate(index_to):
 		error("expected immediate value", index_to['expr_ti'])
 
-	i = index_from['asset']
-	j = index_to['asset']
 
-	if i > j:
+	# строим выражения для C бекенда в частности
+	# тк volume of array должен быть выражением
+	# а для слайса [a:b] это (b - a + 1)
+
+	de = {
+		'isa': 'ast_value',
+		'kind': 'sub',
+		'left': x['index_to'],
+		'right': x['index_from'],
+		'ti': ti
+	}
+	un = {
+		'isa': 'ast_value',
+		'kind': 'number',
+		'numstr': '1',
+		'att': [],
+		'ti': ti
+	}
+	le = {
+		'isa': 'ast_value',
+		'kind': 'add',
+		'left': de,
+		'right': un,
+		'ti': ti
+	}
+
+	volume = do_value(le)
+	slice_len = volume['asset']
+
+	if slice_len < 0:
 		error("wrong slice direction", x['ti'])
 		return value_bad(x)
 
-	slice_len = j - i + 1
-
+	# TODO: конкретно тут есть что исправить!
 	if slice_len > array_type['volume']['asset']:
 		error("slice is too big", x['ti'])
 
-	array_of = array_type['of']
-	volume = value_integer_create(slice_len)
-	type = hlir_type.hlir_type_array(array_of, volume, x['ti'])
 
-	#hlir_type.type_print(type)
-	#print()
+	type = hlir_type.hlir_type_array(array_type['of'], volume, x['ti'])
 
 	nv = value_slice_array(left, type, index_from, index_to, x['ti'])
 

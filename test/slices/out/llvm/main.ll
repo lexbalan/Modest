@@ -375,7 +375,8 @@ break_4:
 	%88 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str9 to [0 x i8]*))
 	%89 = getelementptr inbounds [10 x i32], [10 x i32]* %60, i32 0, i8 2
 	%90 = bitcast i32* %89 to [7 x i32]*
-	;array_print(p, lengthof(*p))
+	%91 = bitcast [7 x i32]* %90 to [0 x i32]*
+	call void ([0 x i32]*, i32) @array_print([0 x i32]* %91, i32 7)
 	ret %Int 0
 }
 

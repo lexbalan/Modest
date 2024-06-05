@@ -29,8 +29,7 @@ int main()
 	printf("multiply table for %d\n", (int32_t)n);
 	mtab(n);
 	return 0;
-
-	// undef local macro
-	#undef n
 }
+
+#undef n
 

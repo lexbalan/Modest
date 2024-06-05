@@ -23,8 +23,7 @@ int main()
 	}
 
 	return 0;
-
-	// undef local macro
-	#undef b
 }
+
+#undef b
 

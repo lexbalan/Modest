@@ -26,8 +26,7 @@ int main()
 	printf("__target.floatWidth = %u\n", 64);
 
 	return 0;
-
-	// undef local macro
-	#undef ver
 }
+
+#undef ver
 

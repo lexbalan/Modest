@@ -558,9 +558,9 @@ def print_value_slice(x, ctx):
 	varray = x['left']
 	#if hlir_type.type_is_pointer(varray['type']):
 
-	out("&")
-	index = value_integer_create(x['index_from']['asset'])
-	y = value_index_array(varray, x['type'], index, ti=None)
+	#out("&")
+	#index = value_integer_create(x['index_from']['asset'])
+	y = value_index_array(varray, x['type'], x['index_from'], ti=None)
 	print_value_index(y, ctx)
 
 
@@ -1173,7 +1173,8 @@ def print_value_lengthof(x, ctx):
 	v = x['value']
 
 	if not v['kind'] in ['var', 'let']:
-		out("%d" % x['asset'])
+		print_value(v['type']['volume'], need_wrap=True)
+		#out("%d" % x['asset'])
 		return
 
 	# sizeof(array) / sizeof(array[0])
@@ -1611,16 +1612,16 @@ def print_def_func(x):
 
 	indent_down()
 
-	global func_undef_list
-	if len(func_undef_list) > 0:
-		out("\n\n\t// undef local macro")
-		for id_str in func_undef_list:
-			out("\n\t#undef %s" % id_str)
-
-	func_undef_list = []
-
 	newline()
 	out("}")
+
+	global func_undef_list
+	if len(func_undef_list) > 0:
+		newline()
+		for id_str in func_undef_list:
+			out("\n#undef %s" % id_str)
+
+	func_undef_list = []
 
 	va_id = None
 	cfunc = None
@@ -1950,8 +1951,6 @@ def print_value_as_ptr(x):
 	if x['kind'] == 'deref':
 		x = x['value']
 		print_value(x)
-	elif x['kind'] == 'slice':
-		print_value(x)
 	else:
 		out("&")
 		# КОСТЫЛЬ!
@@ -1998,11 +1997,13 @@ def memcopy_assign(left, right):
 
 
 
+"""
 def memzero_off(left, offset, sz):
-	out("memset((((void *)&")
-	print_value(left)
+	out("memset((((void *)")
+	print_value_as_ptr(left)
 	out(") + %i)" % offset)
 	out(", 0, %d);" % sz)
+"""
 
 
 def memzero_sizeof(left):

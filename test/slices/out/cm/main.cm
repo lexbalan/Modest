@@ -40,8 +40,8 @@ func main() -> Int {
 		i = i + 1
 	}
 
-	var vs1: [2]Int32 = s1
-	var vs2: [4]Int32 = s2
+	var vs1: [2 - 1 + 1]Int32 = s1
+	var vs2: [8 - 5 + 1]Int32 = s2
 
 	let ax = 2
 	let bx = 5
@@ -69,8 +69,11 @@ func main() -> Int {
 	printf("--------------------------------------------\n")
 	printf("test pointer to slice\n")
 
-	let p = &s[2:8]
-	//array_print(p, lengthof(*p))
+	let aa = 2
+	let bb = 8
+
+	let p = &s[aa:bb]
+	array_print(p, lengthof(*p))
 
 
 	return 0
