@@ -1350,6 +1350,7 @@ def print_stmt_let(x):
 		return
 
 	# print constant as 'variable'
+	# литерал массива включающий в себя переменные печатаем отдельно
 	if hlir_type.type_is_array(iv['type']):
 		ee = iv['kind'] == 'literal' and not value_is_immediate(iv)
 		if not ee:
@@ -1783,7 +1784,7 @@ def print_def_const(x):
 	if hlir_type.type_is_array(const_value['type']):
 		print_macro_definition(id, init_value, val_ctx=[], prefix='_')
 		newline()
-		print_variable(id, const_value['type'], as_const=True) # False!
+		print_variable(id, const_value['type'], as_const=True)
 		out(" = _%s;" % id['str'])
 		const_value['att'].append('kostil')
 		return
