@@ -142,12 +142,11 @@ def record_can(to, from_type, method):
 def value_record_cons(t, v, method, ti):
 	nv = value_cons_node(t, v, method, ti=ti)
 
-	if value_is_immediate(v):
-		if type.type_is_generic(v['type']):
-			items = _doitems(t, v, method, ti)
+	if type.type_is_generic(v['type']):
+		if value_is_immediate(v):
+			nv['asset'] = _doitems(t, v, method, ti)
 		else:
-			items = v['asset']
-		nv['asset'] = items
+			nv['asset'] = v['asset']
 		nv['immediate'] = True
 
 	return nv
