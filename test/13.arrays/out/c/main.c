@@ -20,7 +20,7 @@
 
 
 #define _constantArray  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-int8_t constantArray[10] = _constantArray;
+const int8_t constantArray[10] = _constantArray;
 
 static int32_t globalArray[10] = _constantArray;
 
@@ -61,9 +61,9 @@ struct f0_retval f0(struct f0_x x)
 
 
 #define _startSequence  {0xAA, 0x55, 0x02}
-int8_t startSequence[3] = _startSequence;
+const int8_t startSequence[3] = _startSequence;
 #define _stopSequence  {0x16}
-int8_t stopSequence[1] = _stopSequence;
+const int8_t stopSequence[1] = _stopSequence;
 
 void test()
 {

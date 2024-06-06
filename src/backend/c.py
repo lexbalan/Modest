@@ -1771,20 +1771,24 @@ def print_def_const(x):
 	global nl_str
 	const_value = x['value']
 	init_value = x['init_value']
+	id = x['id']
 
 	newline(n=x['nl'])
 
-	_id = x['id']
-
+	# глобальные константы-массивы печатаем особенно
+	# сперва печатаем его литерал как одноименный макрос с префиксом '_'
+	# затем создаем одноименную переменную (инициализируем ее макроопределением).
+	# обычно будем использовать сам макрос,
+	# но в случае индексирования переменной - будем обращаться к переменной
 	if hlir_type.type_is_array(const_value['type']):
-		print_macro_definition(_id, init_value, val_ctx=[], prefix='_')
+		print_macro_definition(id, init_value, val_ctx=[], prefix='_')
 		newline()
-		print_variable(_id, const_value['type'], as_const=False) # False!
-		out(" = _%s;" % _id['str'])
+		print_variable(id, const_value['type'], as_const=True) # False!
+		out(" = _%s;" % id['str'])
 		const_value['att'].append('kostil')
-	else:
-		print_macro_definition(_id, init_value, val_ctx=[])
+		return
 
+	print_macro_definition(id, init_value, val_ctx=[])
 	return
 
 
