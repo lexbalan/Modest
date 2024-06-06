@@ -1165,7 +1165,6 @@ def do_value_slice(x):
 	if not value_is_immediate(index_to):
 		error("expected immediate value", index_to['expr_ti'])
 
-
 	# строим выражения для C бекенда в частности
 	# тк volume of array должен быть выражением
 	# а для слайса [a:b] это (b - a + 1)
@@ -1203,16 +1202,13 @@ def do_value_slice(x):
 	if slice_len > array_type['volume']['asset']:
 		error("slice is too big", x['ti'])
 
-
 	type = hlir_type.hlir_type_array(array_type['of'], volume, x['ti'])
-
 	nv = value_slice_array(left, type, index_from, index_to, x['ti'])
 
 	if not via_pointer:
 		nv['immutable'] = left['immutable']
 
 	return nv
-
 
 
 
@@ -1295,7 +1291,6 @@ def do_value_id(x):
 
 
 def do_value_string(x):
-	#length=x['len']
 	return value_string_create(x['str'], ti=x['ti'])
 
 

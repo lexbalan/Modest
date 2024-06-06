@@ -30,10 +30,8 @@ int main()
 	int32_t a[10];
 	memcpy(&a, &(int32_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, sizeof(int32_t[10]));
 
-	/*let slice*/
 	int32_t s1[2 - 1 + 1];
 	memcpy(&s1, &a[1], sizeof(int32_t[2 - 1 + 1]));
-	/*end let slice*/
 	int32_t i;
 	i = 0;
 	while (i < (2 - 1 + 1)) {
@@ -46,11 +44,8 @@ int main()
 	//
 
 	int32_t *const pa = (int32_t *)&a;
-
-	/*let slice*/
 	int32_t s2[8 - 5 + 1];
 	memcpy(&s2, &pa[5], sizeof(int32_t[8 - 5 + 1]));
-	/*end let slice*/
 	i = 0;
 	while (i < (8 - 5 + 1)) {
 		printf("s2[%d] = %d\n", i, s2[i]);
@@ -66,7 +61,6 @@ int main()
 		printf("a[%d] = %d\n", i, a[i]);
 		i = i + 1;
 	}
-
 
 	printf("--------------------------------------------\n");
 

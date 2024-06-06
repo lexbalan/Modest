@@ -34,7 +34,6 @@ func main() -> Int {
 	//
 
 	let pa = &a
-
 	let s2 = pa[5:8]
 	i = 0
 	while i < lengthof(s2) {
@@ -54,7 +53,6 @@ func main() -> Int {
 		printf("a[%d] = %d\n", i, a[i])
 		++i
 	}
-
 
 	printf("--------------------------------------------\n")
 

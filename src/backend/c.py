@@ -470,7 +470,6 @@ def print_value_un(v, ctx):
 			print_type(v['type'])
 			out(")")
 
-
 	out(un_ops[op])
 	print_value(value, need_wrap=pv<p0)
 
@@ -556,13 +555,8 @@ def print_value_call(v, ctx):
 def print_value_slice(x, ctx):
 	#out("/* slice */")
 	varray = x['left']
-	#if hlir_type.type_is_pointer(varray['type']):
-
-	#out("&")
-	#index = value_integer_create(x['index_from']['asset'])
 	y = value_index_array(varray, x['type'], x['index_from'], ti=None)
 	print_value_index(y, ctx)
-
 
 
 
@@ -1348,30 +1342,29 @@ def print_stmt_let(x):
 
 	nl_indent(x['nl'])
 
-	if iv['kind'] == 'slice':
-		out("/*let slice*/")
-		nl_indent()
-		print_variable(id, v['type'], as_const=False)
-		out(";")
-		nl_indent()
-		memcopy_assign(v, iv)
-		nl_indent()
-		out("/*end let slice*/")
-		return
-
+	# print constant as macro
 	if value_is_generic_immediate(v):
 		print_macro_definition(id, iv)
 		global func_undef_list
 		func_undef_list.append(id['str'])
+		return
 
-	else:
-		# Локальные константы (втч. композитные) печатаем как переменные
-		# ПОТОМУ ЧТО: они должны "заморозить" свои значения по месту
-		print_variable(id, v['type'], as_const=True)
-		out(" = ")
-		print_value(iv)
-		out(";")
+	# print constant as 'variable'
+	if hlir_type.type_is_array(iv['type']):
+		ee = iv['kind'] == 'literal' and not value_is_immediate(iv)
+		if not ee:
+			print_variable(id, v['type'])
+			out(";")
+			nl_indent()
+			do_assign(v, iv)
+			return
 
+	# Локальные константы (втч. композитные) печатаем как переменные
+	# ПОТОМУ ЧТО: они должны "заморозить" свои значения по месту
+	print_variable(id, v['type'], as_const=True)
+	out(" = ")
+	print_value(iv)
+	out(";")
 	return
 
 
@@ -1427,7 +1420,8 @@ def assign_array(left, right):
 	# если справа 'обернутое' значение
 	# (для того чтобы в C вернуть массив из функции
 	# его нужно 'обернуть' в структуру)
-	if 'wrapped_array' in right['att']:
+	is_wrapped = 'wrapped_array' in right['att']
+	if is_wrapped:
 		to_type = right['type']
 		if right['kind'] == 'call':
 			to_type = right['func']['type']['to']
@@ -1444,6 +1438,7 @@ def assign_array(left, right):
 
 def do_assign(left, right):
 	#out("/*%s*/" % right['kind'])
+
 	if hlir_type.type_is_array(right['type']):
 		return assign_array(left, right)
 

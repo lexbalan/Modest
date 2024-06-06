@@ -57,7 +57,8 @@ int main()
 	printf("a[0] = %i\n", a[0]);
 	printf("a[1] = %i\n", a[1]);
 
-	struct swap_retval b = swap(*(struct swap_in *)&a);
+	struct swap_retval b;
+	*(struct swap_retval *)&b = swap(*(struct swap_in *)&a);
 
 	printf("after swap:\n");
 	printf("b[0] = %i\n", b.a[0]);
