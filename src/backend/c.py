@@ -714,7 +714,7 @@ def print_value_cons(x, ctx):
 		if hlir_type.type_is_generic_array(from_type):
 			# если это литеральная (и не глобальная) константа-массив
 			# то мы должны ее привести к требуемому типу
-			is_const = value['kind'] in ['const', 'literal']
+			is_const = value['kind'] in ['const', 'literal', 'add']
 			if is_const and not 'kostil' in value['att']:
 				print_cast(to_type, value, ctx=['array_as_array'])
 			else:
