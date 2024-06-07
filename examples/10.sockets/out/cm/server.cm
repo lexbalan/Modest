@@ -46,7 +46,7 @@ func main() -> Int {
 	var server_addr: Struct_sockaddr_in = Struct_sockaddr_in {
 		sin_family = c_AF_INET
 		sin_port = port
-		sin_addr = {
+		sin_addr = Struct_in_addr {
 			s_addr = inet_addr(ipAddress)
 		}
 	}

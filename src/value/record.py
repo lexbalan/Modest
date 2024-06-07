@@ -143,10 +143,7 @@ def value_record_cons(t, v, method, ti):
 	nv = value_cons_node(t, v, method, ti=ti)
 
 	if type.type_is_generic(v['type']):
-		if value_is_immediate(v):
-			nv['asset'] = _doitems(t, v, method, ti)
-		else:
-			nv['asset'] = v['asset']
+		nv['asset'] = _doitems(t, v, method, ti)
 		nv['immediate'] = True
 
 	return nv

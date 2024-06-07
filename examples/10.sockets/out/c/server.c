@@ -61,7 +61,7 @@ int main()
 	server_addr = (struct sockaddr_in){
 		.sin_family = AF_INET,
 		.sin_port = port,
-		.sin_addr = {
+		.sin_addr = (struct in_addr){
 			.s_addr = inet_addr(ipAddress)
 		}
 	};
