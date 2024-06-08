@@ -217,7 +217,6 @@ declare void @perror(%ConstCharStr* %str)
 
 
 
-
 @array = global [21 x i32] [
 	i32 -3,
 	i32 -5,
@@ -293,7 +292,7 @@ break_1:
 }
 
 define i32 @main() {
-	;fill_array(&array, numberOfItems)
+	;fill_array(&array, lengthof(array))
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
 	%2 = bitcast [21 x i32]* @array to [0 x i32]*
 	call void ([0 x i32]*, i32) @print_array([0 x i32]* %2, i32 21)

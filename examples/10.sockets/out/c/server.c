@@ -77,12 +77,12 @@ int main()
 	printf("[+] Binding Successfull\n");
 
 	e = listen(sockfd, 10);
-	if (e == 0) {
-		printf("[+] Listening...\n");
-	} else {
+	if (e != 0) {
 		perror("[-] Error in Binding");
 		exit(1);
 	}
+
+	printf("[+] Listening...\n");
 
 	socklen_t addr_size;
 	addr_size = (socklen_t)sizeof(struct sockaddr_in);

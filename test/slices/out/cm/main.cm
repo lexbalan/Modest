@@ -73,6 +73,11 @@ func main() -> Int {
 	let p = &s[aa:bb]
 	array_print(p, lengthof(*p))
 
+	printf("--------------------------------------------\n")
+
+	p[0] = 123
+
+	array_print(p, lengthof(*p))
 
 	return 0
 }

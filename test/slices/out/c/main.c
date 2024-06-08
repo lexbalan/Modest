@@ -84,6 +84,11 @@ int main()
 	int32_t *const p = (int32_t *)&s[aa];
 	array_print(p, (bb - aa + 1));
 
+	printf("--------------------------------------------\n");
+
+	p[0] = 123;
+
+	array_print(p, (bb - aa + 1));
 
 	return 0;
 }

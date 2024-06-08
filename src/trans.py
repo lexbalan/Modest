@@ -1191,8 +1191,8 @@ def do_value_slice(x):
 		'ti': ti
 	}
 
-	volume = do_value(le)
-	slice_len = volume['asset']
+	slice_volume = do_value(le)
+	slice_len = slice_volume['asset']
 
 	if slice_len < 0:
 		error("wrong slice direction", x['ti'])
@@ -1202,7 +1202,7 @@ def do_value_slice(x):
 	if slice_len > array_type['volume']['asset']:
 		error("slice is too big", x['ti'])
 
-	type = hlir_type.hlir_type_array(array_type['of'], volume, x['ti'])
+	type = hlir_type.hlir_type_array(array_type['of'], slice_volume, x['ti'])
 	nv = value_slice_array(left, type, index_from, index_to, x['ti'])
 
 	if not via_pointer:

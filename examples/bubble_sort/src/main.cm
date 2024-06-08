@@ -2,10 +2,7 @@
 
 import "libc/stdio"
 
-
-let numberOfItems = 21
-
-var array: [numberOfItems]Int32 = [
+var array: []Int32 = [
 	-3, -5, 2, 1, -1, 0, -2, 3, -4, 4
 	11, 9, 6, -7, -8, 5, 7, 10, 8, -6, -9
 ]
@@ -39,16 +36,16 @@ func print_array(array: *[]Int32, len: Int32)
 
 
 func main() -> Int32 {
-	//fill_array(&array, numberOfItems)
+	//fill_array(&array, lengthof(array))
 
 	printf("array before:\n")
-	print_array(&array, numberOfItems)
+	print_array(&array, lengthof(array))
 	printf("\n")
 
-	bubble_sort32(&array, numberOfItems)
+	bubble_sort32(&array, lengthof(array))
 
 	printf("array after:\n")
-	print_array(&array, numberOfItems)
+	print_array(&array, lengthof(array))
 	printf("\n")
 
 	return 0

@@ -1344,6 +1344,7 @@ def print_stmt_let(x):
 
 	# print constant as macro
 	if value_is_generic_immediate(v):
+		# если точный тип константы неизвестен - печатаем ее как макро
 		print_macro_definition(id, iv)
 		global func_undef_list
 		func_undef_list.append(id['str'])
