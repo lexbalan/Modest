@@ -605,6 +605,12 @@ def type_is_array_of_char(t):
 	return False
 
 
+def type_is_generic_pointer(t):
+	if type_is_generic(t):
+		return type_is_pointer(t)
+	return False
+
+
 def type_is_free_pointer(t):
 	if type_is_pointer(t):
 		return type_is_unit(t['to'])
@@ -623,17 +629,6 @@ def type_is_pointer_to_array(t):
 	return False
 
 
-def type_is_pointer_to_defined_array(t):
-	if type_is_pointer(t):
-		return type_is_closed_array(t['to'])
-	return False
-
-
-def type_is_pointer_to_undefined_array(t):
-	if type_is_pointer(t):
-		return type_is_open_array(t['to'])
-	return False
-
 
 def type_is_pointer_to_array_of_char(t):
 	if type_is_pointer(t):
@@ -644,7 +639,6 @@ def type_is_pointer_to_array_of_char(t):
 
 def type_is_generic(t):
 	return t['generic']
-
 
 
 def type_is_signed(t):

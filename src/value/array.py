@@ -93,6 +93,8 @@ def value_array_create_from_string(t, v, method, ti=None):
 
 # TODO: see select_common_type!
 def array_can(to, from_type, method):
+
+	# String -> []CharX
 	if hlir_type.type_is_string(from_type):
 		return hlir_type.type_is_char(to['of'])
 

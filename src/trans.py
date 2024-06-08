@@ -212,7 +212,7 @@ def init():
 
 	foundation_module = foundation.init()
 
-	valueNil = value_integer_create(0, typ=foundation.typeFreePointer)
+	valueNil = value_integer_create(0, typ=foundation.typeNil)
 	valueTrue = value_bool_create(1)
 	valueFalse = value_bool_create(0)
 
@@ -560,9 +560,9 @@ def do_bin_op_with_pointers(op, l, r , ti):
 		if hlir_type.type_is_pointer(l['type']) and hlir_type.type_is_pointer(r['type']):
 
 			# what about typeFreePointer?
-			if hlir_type.type_is_free_pointer(l['type']):
+			if hlir_type.type_is_generic_pointer(l['type']):
 				l = value_cons_implicit(r['type'], l)
-			elif hlir_type.type_is_free_pointer(r['type']):
+			elif hlir_type.type_is_generic_pointer(r['type']):
 				r = value_cons_implicit(l['type'], r)
 
 			return value_bin(op, l, r, foundation.typeBool, ti)

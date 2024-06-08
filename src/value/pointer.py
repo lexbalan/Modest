@@ -44,32 +44,35 @@ def width_ok(to, from_type, method):
 
 
 def pointer_can(to, from_type, method):
-	if type.type_is_free_pointer(from_type):
-		return True  # cons *X from Nil
+	# implicit region
+
+	# String -> *[]CharX
+	if type.type_is_string(from_type):
+		return type.type_is_pointer_to_array_of_char(to)
 
 	if type.type_is_pointer(from_type):
 		# implicit cons pointer from another pointer
+
+		if type.type_is_generic(from_type):
+			return True  # cons *X from Nil
 
 		if type.type_is_free_pointer(to):
 			return True  # cons FreePointer from *X
 
 		# cons *[]X from *[n]X +
-		if type.type_is_pointer_to_defined_array(from_type) and type.type_is_pointer_to_undefined_array(to):
+		if type.type_is_closed_array(from_type['to']) and type.type_is_open_array(to['to']):
 			if method == 'unsafe':
 				return True  #! *[]X from *[n]Y !
 			from .cons import cons_can
 			return cons_can(to['to']['of'], from_type['to']['of'], method)
 			#return type.type_eq(from_type['to']['of'], to['to']['of'])
 
-	else:
-		# implicit cons pointer from non-pointer
-		# String -> *[]CharX
-		if type.type_is_string(from_type):
-			return type.type_is_pointer_to_array_of_char(to)
-
 
 	if method == 'implicit':
 		return False
+
+	if type.type_is_free_pointer(from_type):
+		return True  # cons *X from FreePointer
 
 	if method == 'explicit':
 		return False
@@ -78,6 +81,7 @@ def pointer_can(to, from_type, method):
 
 	if type.type_is_pointer(from_type):
 		return True  # Ptr -> Ptr
+
 	elif type.type_is_integer(from_type):
 		return width_ok(to, from_type, method)  # Int -> Ptr
 

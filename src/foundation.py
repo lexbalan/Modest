@@ -30,6 +30,7 @@ typeStr8 = None
 typeStr16 = None
 typeStr32 = None
 typeFreePointer = None
+typeNil = None
 typeVA_List = None
 #typeSizeof = None
 
@@ -67,6 +68,7 @@ def init():
 	global typeDecimal32, typeDecimal64, typeDecimal128
 	global typeStr8, typeStr16, typeStr32
 	global typeFreePointer
+	global typeNil
 	global typeVA_List
 	global typeSizeof
 
@@ -237,10 +239,13 @@ def init():
 	decimal128_decl['llvm_alias'] = 'double'
 	foundation['text'].append(decimal128_decl)
 
+	# type Nil = Generic(*Unit)
+	typeNil = hlir_type_pointer(to=typeUnit)
+	typeNil['generic'] = True
 
+	# type FreePointer = *Unit
 	typeFreePointer = hlir_type_pointer(to=typeUnit)
 	# не нужно делать decl тк нет собственного имени у этого типа
-
 
 	typeStr8 = hlir_type_array(of=typeChar8)
 	typeStr8_decl = hlir_def_type(hlir_id('Str8'), typeStr8, ti=None)
