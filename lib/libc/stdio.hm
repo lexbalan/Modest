@@ -40,9 +40,9 @@ func fflush(f: *File) -> Int
 func fgetpos(f: *File, pos: *FposT) -> Int
 func fopen(fname: *ConstCharStr, mode: *ConstCharStr) -> *File
 @attribute("value.type.to:dispensable")
-func fread(buf: Pointer, size: SizeT, count: SizeT, f: *File) -> SizeT
+func fread(buf: Ptr, size: SizeT, count: SizeT, f: *File) -> SizeT
 @attribute("value.type.to:dispensable")
-func fwrite(buf: Pointer, size: SizeT, count: SizeT, f: *File) -> SizeT
+func fwrite(buf: Ptr, size: SizeT, count: SizeT, f: *File) -> SizeT
 func freopen(filename: *ConstCharStr, mode: *ConstCharStr, f: *File) -> *File
 
 @attribute("value.type.to:dispensable")

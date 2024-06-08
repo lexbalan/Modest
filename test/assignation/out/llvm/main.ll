@@ -143,7 +143,7 @@ break_2:
 
 
 %OffT = type i64
-%PointerToConst = type i8*
+%PtrToConst = type i8*
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm

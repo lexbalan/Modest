@@ -12,7 +12,7 @@ func linked_list_last_node_get (list: *List) -> *Node
 func linked_list_node_create () -> *Node
 func linked_list_node_prev_get (node: *Node) -> *Node
 func linked_list_node_next_get (node: *Node) -> *Node
-func linked_list_node_data_get (node: *Node) -> Pointer
+func linked_list_node_data_get (node: *Node) -> Ptr
 func linked_list_node_get (list: *List, pos: Int32) -> *Node
 
 func linked_list_node_insert (list: *List, pos: Int32, new_node: *Node) -> *Node
@@ -20,9 +20,9 @@ func linked_list_node_append (list: *List, new_node: *Node) -> *Node
 
 
 @attribute("value:dispensable")
-func linked_list_insert (list: *List, pos: Int32, data: Pointer) -> *Node
+func linked_list_insert (list: *List, pos: Int32, data: Ptr) -> *Node
 
 @attribute("value.type.to:dispensable")
-func linked_list_append (list: *List, data: Pointer) -> *Node
+func linked_list_append (list: *List, data: Ptr) -> *Node
 
 

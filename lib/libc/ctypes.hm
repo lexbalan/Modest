@@ -43,6 +43,6 @@ type IntptrT Nat64  // ?
 type OffT Int64
 
 @property("c_alias", "const void")
-type PointerToConst Pointer
+type PtrToConst Ptr
 
 

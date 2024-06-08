@@ -1,6 +1,6 @@
 // lib/lightfood/memory.hm
 
-func memzero(mem: Pointer, len: Nat64) -> Unit
-func memcopy(dst: Pointer, src: Pointer, len: Nat64) -> Unit
-func memeq(dst: Pointer, src: Pointer, len: Nat64) -> Bool
+func memzero(mem: Ptr, len: Nat64) -> Unit
+func memcopy(dst: Ptr, src: Ptr, len: Nat64) -> Unit
+func memeq(dst: Ptr, src: Ptr, len: Nat64) -> Bool
 

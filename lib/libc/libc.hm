@@ -64,16 +64,16 @@ type DIR
 // from time.h
 func clock () -> Nat64
 
-func malloc(size: SizeT) -> Pointer
-func calloc(num: SizeT, size: SizeT) -> Pointer
+func malloc(size: SizeT) -> Ptr
+func calloc(num: SizeT, size: SizeT) -> Ptr
 @attribute("value.type.to:dispensable")
-func memset (mem: Pointer, c: Int, n: SizeT) -> Pointer
+func memset (mem: Ptr, c: Int, n: SizeT) -> Ptr
 @attribute("value.type.to:dispensable")
-func memcpy(dst: Pointer, src: PointerToConst, len: SizeT) -> Pointer
+func memcpy(dst: Ptr, src: PtrToConst, len: SizeT) -> Ptr
 @attribute("value.type.to:dispensable")
-func memmove (dst: Pointer, source: PointerToConst, n: SizeT) -> Pointer
-func memcmp(ptr1: Pointer, ptr2: Pointer, num: SizeT) -> Int
-func free(ptr: Pointer) -> Unit
+func memmove (dst: Ptr, source: PtrToConst, n: SizeT) -> Ptr
+func memcmp(ptr1: Ptr, ptr2: Ptr, num: SizeT) -> Int
+func free(ptr: Ptr) -> Unit
 
 func strncmp(s1: *[]ConstChar, s2: *[]ConstChar, n: SizeT) -> Int
 func strcmp(s1: *[]ConstChar, s2: *[]ConstChar) -> Int
@@ -109,9 +109,9 @@ let s_IXUSR = 0x0000040   // X for owner
 func creat(path: *Str, mode: ModeT) -> Int
 func open(path: *Str, oflags: Int) -> Int
 @attribute("value.type.to:dispensable")
-func read(fd: Int, buf: Pointer, len: Nat32) -> Int
+func read(fd: Int, buf: Ptr, len: Nat32) -> Int
 @attribute("value.type.to:dispensable")
-func write(fd: Int, buf: Pointer, len: Nat32) -> Int
+func write(fd: Int, buf: Ptr, len: Nat32) -> Int
 @attribute("value.type.to:dispensable")
 func lseek(fd: Int, offset: OffT, whence: Int) -> OffT
 @attribute("value.type.to:dispensable")
@@ -132,9 +132,9 @@ func getenv(name: *Str) -> *Str
 
 // нестандартная (BSD) функция
 // как правило - макрос над memset
-func bzero(s: Pointer, n: SizeT) -> Unit
+func bzero(s: Ptr, n: SizeT) -> Unit
 
 // нестандартная (BSD) функция
 // как правило - макрос над memmove (strings.h)
-func bcopy(src: Pointer, dst: Pointer, n: SizeT) -> Unit
+func bcopy(src: Ptr, dst: Ptr, n: SizeT) -> Unit
 

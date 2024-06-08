@@ -105,7 +105,7 @@ def print_type_array(t):
 
 def print_type_pointer(t):
 	if hlir_type.type_is_free_pointer(t):
-		out("Pointer")
+		out("Ptr")
 	else:
 		out("*"); print_type(t['to'])
 

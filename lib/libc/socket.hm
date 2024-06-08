@@ -123,8 +123,8 @@ func bind(sockfd: Int, addr: *Struct_sockaddr, addrlen: Socklen_t) -> Int
 func listen(sockfd: Int, backlog: Int) -> Int
 func connect(sockfd: Int, addr: *Struct_sockaddr, addrlen: Socklen_t) -> Int
 
-func send(socket: Int, buffer: Pointer, length: SizeT, flags: Int) -> SSizeT
-func recv(sockfd: Int, buf: Pointer, len: SizeT, flags: Int) -> SSizeT
+func send(socket: Int, buffer: Ptr, length: SizeT, flags: Int) -> SSizeT
+func recv(sockfd: Int, buf: Ptr, len: SizeT, flags: Int) -> SSizeT
 
 // вообще syscall, разберись
 func accept(s: Int, addr: *Struct_sockaddr, addrlen: *Socklen_t) -> Int

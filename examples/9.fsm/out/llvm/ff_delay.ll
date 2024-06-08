@@ -143,7 +143,7 @@ break_2:
 
 
 %OffT = type i64
-%PointerToConst = type i8*
+%PtrToConst = type i8*
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/libc.hm
@@ -185,8 +185,8 @@ declare i64 @clock()
 declare i8* @malloc(%SizeT %size)
 declare i8* @calloc(%SizeT %num, %SizeT %size)
 declare i8* @memset(i8* %mem, %Int %c, %SizeT %n)
-declare i8* @memcpy(i8* %dst, %PointerToConst %src, %SizeT %len)
-declare i8* @memmove(i8* %dst, %PointerToConst %source, %SizeT %n)
+declare i8* @memcpy(i8* %dst, %PtrToConst %src, %SizeT %len)
+declare i8* @memmove(i8* %dst, %PtrToConst %source, %SizeT %n)
 declare %Int @memcmp(i8* %ptr1, i8* %ptr2, %SizeT %num)
 declare void @free(i8* %ptr)
 declare %Int @strncmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)

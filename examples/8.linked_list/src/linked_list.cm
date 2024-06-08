@@ -9,7 +9,7 @@ import "./linked_list"
 type Node record {
 	next: *Node
 	prev: *Node
-	data: Pointer
+	data: Ptr
 }
 
 type List record {
@@ -105,7 +105,7 @@ func linked_list_node_prev_get (node: *Node) -> *Node {
 }
 
 
-func linked_list_node_data_get (node: *Node) -> Pointer {
+func linked_list_node_data_get (node: *Node) -> Ptr {
 	if node == nil {
 		return nil
 	}
@@ -222,7 +222,7 @@ func linked_list_node_append (list: *List, new_node: *Node) -> *Node {
 
 
 @attribute("value:dispensable")
-func linked_list_insert (list: *List, pos: Int32, data: Pointer) -> *Node {
+func linked_list_insert (list: *List, pos: Int32, data: Ptr) -> *Node {
 	let new_node = linked_list_node_create()
 
 	if new_node == nil {
@@ -236,7 +236,7 @@ func linked_list_insert (list: *List, pos: Int32, data: Pointer) -> *Node {
 
 
 @attribute("value:dispensable")
-func linked_list_append (list: *List, data: Pointer) -> *Node {
+func linked_list_append (list: *List, data: Ptr) -> *Node {
 	if list == nil {
 		return nil
 	}

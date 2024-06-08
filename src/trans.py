@@ -253,7 +253,7 @@ def init():
 	root_context.type_add('Str16', foundation.typeStr16)
 	root_context.type_add('Str32', foundation.typeStr32)
 
-	root_context.type_add('Pointer', foundation.typeFreePointer)
+	root_context.type_add('Ptr', foundation.typeFreePointer)
 
 	root_context.type_add('VA_List', foundation.typeVA_List)
 

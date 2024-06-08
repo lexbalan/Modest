@@ -9,7 +9,7 @@ func main() -> Int32 {
 	var c: Int64
 
 	//
-	var freePointer: Pointer
+	var freePointer: Ptr
 
 	// free pointer can points to value of any type
 	freePointer = &a

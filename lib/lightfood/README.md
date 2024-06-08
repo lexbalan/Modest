@@ -3,9 +3,9 @@
 
 ## Memory
 ```zig
-func memzero(mem: Pointer, len: Nat64) -> Unit
-func memcopy(dst: Pointer, src: Pointer, len: Nat64) -> Unit
-func memeq(dst: Pointer, src: Pointer, len: Nat64) -> Bool
+func memzero(memPtr, len: Nat64) -> Unit
+func memcopy(dstPtr, srcPtr, len: Nat64) -> Unit
+func memeq(dstPtr, srcPtr, len: Nat64) -> Bool
 ```
 
 ## Delay

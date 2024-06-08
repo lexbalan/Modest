@@ -307,7 +307,7 @@ func access (path: *[]ConstChar, amode: Int) -> Int
 func alarm (seconds: UnsignedInt) -> UnsignedInt
 
 // brk, sbrk - change data segment size
-func brk (end_data_segment: Pointer) -> Int
+func brk (end_data_segment: Ptr) -> Int
 
 // chdir - change working directory
 func chdir (path: *[]ConstChar) -> Int
@@ -459,16 +459,16 @@ func pause () -> Int
 func pipe (fildes: *[2]Int) -> Int
 
 // pread - read from a file
-func pread (fildes: Int, buf: Pointer, nbyte: SizeT, offset: OffT) -> SSizeT
+func pread (fildes: Int, buf: Ptr, nbyte: SizeT, offset: OffT) -> SSizeT
 
 // pthread_atfork - register fork handlers
 func pthread_atfork (prepare: *()->Unit, parent: *()->Unit, child: *()->Unit) -> Int
 
 // pwrite - write on a file
-func pwrite (fildes: Int, buf: Pointer, nbyte: SizeT, offset: OffT) -> SSizeT
+func pwrite (fildes: Int, buf: Ptr, nbyte: SizeT, offset: OffT) -> SSizeT
 
 // read, readv, pread - read from a file
-func read (fildes: Int, buf: Pointer, nbyte: SizeT) -> SSizeT
+func read (fildes: Int, buf: Ptr, nbyte: SizeT) -> SSizeT
 
 // readlink - read the contents of a symbolic link
 func readlink (path: *[]ConstChar, buf: *[]Char, bufsize: SizeT) -> Int
@@ -504,7 +504,7 @@ func setuid (uid: UidT) -> Int
 func sleep (seconds: UnsignedInt) -> UnsignedInt
 
 // swab - swap bytes
-func swab (src: Pointer, dst: Pointer, nbytes: SSizeT) -> Unit
+func swab (src: Ptr, dst: Ptr, nbytes: SSizeT) -> Unit
 
 // symlink - make symbolic link to a file
 func symlink (path1: *[]ConstChar, path2: *[]ConstChar) -> Int
@@ -543,6 +543,6 @@ func usleep (useconds: USecondsT) -> Int
 func vfork () -> PidT
 
 // write, writev, pwrite - write on a file
-func write (fildes: Int, buf: Pointer, nbyte: SizeT) -> SSizeT
+func write (fildes: Int, buf: Ptr, nbyte: SizeT) -> SSizeT
 
 

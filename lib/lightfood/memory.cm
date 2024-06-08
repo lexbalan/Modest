@@ -14,7 +14,7 @@ type CPU_Word Nat32
 let memoryAlignment = systemWidth / 8
 
 
-func memzero(mem: Pointer, len: Nat64) {
+func memzero(mem: Ptr, len: Nat64) {
 	let z = CPU_Word mem % memoryAlignment
 
 	// align the pointer
@@ -48,7 +48,7 @@ func memzero(mem: Pointer, len: Nat64) {
 }
 
 
-func memcopy(dst: Pointer, src: Pointer, len: Nat64) {
+func memcopy(dst: Ptr, src: Ptr, len: Nat64) {
 	let len_words = len / sizeof(CPU_Word)
 	let src_w = *[]CPU_Word src
 	let dst_w = *[]CPU_Word dst
@@ -72,7 +72,7 @@ func memcopy(dst: Pointer, src: Pointer, len: Nat64) {
 }
 
 
-func memeq(mem0: Pointer, mem1: Pointer, len: Nat64) -> Bool {
+func memeq(mem0: Ptr, mem1: Ptr, len: Nat64) -> Bool {
 	let len_words = len / sizeof(CPU_Word)
 	let mem0_w = *[]CPU_Word mem0
 	let mem1_w = *[]CPU_Word mem1
