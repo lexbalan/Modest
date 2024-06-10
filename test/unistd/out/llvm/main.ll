@@ -535,9 +535,14 @@ declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 @str4 = private constant [14 x i8] [i8 99, i8 116, i8 101, i8 114, i8 109, i8 105, i8 100, i8 32, i8 61, i8 32, i8 37, i8 115, i8 10, i8 0]
 @str5 = private constant [10 x i8] [i8 99, i8 119, i8 100, i8 32, i8 61, i8 32, i8 37, i8 115, i8 10, i8 0]
 @str6 = private constant [14 x i8] [i8 116, i8 116, i8 121, i8 110, i8 97, i8 109, i8 101, i8 32, i8 61, i8 32, i8 37, i8 115, i8 10, i8 0]
-@str7 = private constant [6 x i8] [i8 45, i8 32, i8 104, i8 105, i8 10, i8 0]
+@str7 = private constant [5 x i8] [i8 80, i8 65, i8 84, i8 72, i8 0]
+@str8 = private constant [8 x i8] [i8 115, i8 32, i8 61, i8 32, i8 37, i8 115, i8 10, i8 0]
+@str9 = private constant [6 x i8] [i8 45, i8 32, i8 104, i8 105, i8 10, i8 0]
 
 
+
+
+declare %Str* @getenv(%Str* %name)
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str1 to [0 x i8]*))
@@ -557,12 +562,14 @@ define %Int @main() {
 	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str5 to [0 x i8]*), [128 x i8]* %10)
 	%14 = call [0 x %Char]* (%Int) @ttyname(%Int 0)
 	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str6 to [0 x i8]*), [0 x %Char]* %14)
+	%16 = call %Str* (%Str*) @getenv(%Str* bitcast ([5 x i8]* @str7 to [0 x i8]*))
+	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str8 to [0 x i8]*), %Str* %16)
 	br label %again_1
 again_1:
 	br i1 1 , label %body_1, label %break_1
 body_1:
-	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str7 to [0 x i8]*))
-	%17 = call %UnsignedInt (%UnsignedInt) @sleep(%UnsignedInt 1)
+	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str9 to [0 x i8]*))
+	%19 = call %UnsignedInt (%UnsignedInt) @sleep(%UnsignedInt 1)
 	br label %again_1
 break_1:
 	ret %Int 0

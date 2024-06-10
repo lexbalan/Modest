@@ -13,12 +13,12 @@ import "libc/stdio"
   MaxLen: 268 435 455 байт (2 147 483 647 бит) - обнаружение
    одинарных, двойных, пакетных и всех нечетных ошибок
 */
-func do_CRC32(buf: *[]Nat8, len: Nat32) -> Nat32 {
+func do_crc32(buf: *[]Nat8, len: Nat32) -> Nat32 {
 	var crc_table: [256]Nat32
 	var crc: Nat32
 
 	var i = Nat32 0
-	while i < 256 {
+	while i < lengthof(crc_table) {
 		crc = i
 		var j = Nat32 0
 		while j < 8 {
@@ -57,7 +57,7 @@ var data = []Nat8 datastring
 func main() -> Int {
 	printf("CRC32 test\n")
 
-	let crc = do_CRC32(&data, lengthof(data))
+	let crc = do_crc32(&data, lengthof(data))
 
 	printf("CRC32(%s) = %08X\n", *Str8 datastring, crc)
 
