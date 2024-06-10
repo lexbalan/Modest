@@ -142,7 +142,10 @@ def value_cons_implicit(t, v):
 
 		# END - (!) потому что в C номинальные типы, а у нас - структурные
 
-		return _do_value_cons(t, v, 'implicit', ti)
+		nv = _do_value_cons(t, v, 'implicit', ti)
+		if nv == None:
+			return v
+		return nv
 
 	return v
 
