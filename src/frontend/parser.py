@@ -646,8 +646,10 @@ class Parser:
 				#self.skip()  # "[":
 				i = self.expr_value()
 				if self.match(":"):
-					j = self.expr_value()
-					self.need("]")
+					j = None
+					if not self.match("]"):
+						j = self.expr_value()
+						self.need("]")
 					ti['start'] = v['ti']
 					v = {
 						'isa': 'ast_value',

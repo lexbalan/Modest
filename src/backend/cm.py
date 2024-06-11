@@ -286,7 +286,8 @@ def print_value_slice(x, ctx):
 	out("[")
 	print_value(x['index_from'])
 	out(":")
-	print_value(x['index_to'])
+	if x['index_to'] != None:
+		print_value(x['index_to'])
 	out("]")
 
 

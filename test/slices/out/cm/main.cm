@@ -79,6 +79,24 @@ func main() -> Int {
 
 	array_print(p, lengthof(*p))
 
+
+
+	printf("--------------------------------------------\n")
+	printf("slice of pointer to open array\n")
+
+	// за каким то хером это работает, то что мне сейчас нужно
+	// но тут еще куча работы впереди
+
+	var pw: *[]Int32 = *[]Int32 &s
+
+	printf("before\n")
+	array_print(pw, 10)
+
+	pw = &pw[1:]
+
+	printf("after\n")
+	array_print(pw, 10)
+
 	return 0
 }
 

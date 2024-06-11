@@ -90,6 +90,25 @@ int main()
 
 	array_print(p, (bb - aa + 1));
 
+
+
+	printf("--------------------------------------------\n");
+	printf("slice of pointer to open array\n");
+
+	// за каким то хером это работает, то что мне сейчас нужно
+	// но тут еще куча работы впереди
+
+	int32_t *pw;
+	pw = (int32_t *)(int32_t *)&s;
+
+	printf("before\n");
+	array_print(pw, 10);
+
+	pw = (int32_t *)&pw[1];
+
+	printf("after\n");
+	array_print(pw, 10);
+
 	return 0;
 }
 

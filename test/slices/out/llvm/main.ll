@@ -213,6 +213,10 @@ declare void @perror(%ConstCharStr* %str)
 @str8 = private constant [46 x i8] [i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 10, i8 0]
 @str9 = private constant [23 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 111, i8 105, i8 110, i8 116, i8 101, i8 114, i8 32, i8 116, i8 111, i8 32, i8 115, i8 108, i8 105, i8 99, i8 101, i8 10, i8 0]
 @str10 = private constant [46 x i8] [i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 10, i8 0]
+@str11 = private constant [46 x i8] [i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 10, i8 0]
+@str12 = private constant [32 x i8] [i8 115, i8 108, i8 105, i8 99, i8 101, i8 32, i8 111, i8 102, i8 32, i8 112, i8 111, i8 105, i8 110, i8 116, i8 101, i8 114, i8 32, i8 116, i8 111, i8 32, i8 111, i8 112, i8 101, i8 110, i8 32, i8 97, i8 114, i8 114, i8 97, i8 121, i8 10, i8 0]
+@str13 = private constant [8 x i8] [i8 98, i8 101, i8 102, i8 111, i8 114, i8 101, i8 10, i8 0]
+@str14 = private constant [7 x i8] [i8 97, i8 102, i8 116, i8 101, i8 114, i8 10, i8 0]
 
 
 
@@ -383,6 +387,24 @@ break_4:
 	store i32 123, i32* %93
 	%94 = bitcast [7 x i32]* %90 to [0 x i32]*
 	call void ([0 x i32]*, i32) @array_print([0 x i32]* %94, i32 7)
+	%95 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @str11 to [0 x i8]*))
+	%96 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([32 x i8]* @str12 to [0 x i8]*))
+	; за каким то хером это работает, то что мне сейчас нужно
+	; но тут еще куча работы впереди
+	%97 = alloca [0 x i32]*, align 8
+	%98 = bitcast [10 x i32]* %60 to [0 x i32]*
+	store [0 x i32]* %98, [0 x i32]** %97
+	%99 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str13 to [0 x i8]*))
+	%100 = load [0 x i32]*, [0 x i32]** %97
+	call void ([0 x i32]*, i32) @array_print([0 x i32]* %100, i32 10)
+	%101 = load [0 x i32]*, [0 x i32]** %97
+	%102 = getelementptr inbounds [0 x i32], [0 x i32]* %101, i32 0, i8 1
+;
+	%103 = bitcast i32* %102 to [0 x i32]*
+	store [0 x i32]* %103, [0 x i32]** %97
+	%104 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str14 to [0 x i8]*))
+	%105 = load [0 x i32]*, [0 x i32]** %97
+	call void ([0 x i32]*, i32) @array_print([0 x i32]* %105, i32 10)
 	ret %Int 0
 }
 

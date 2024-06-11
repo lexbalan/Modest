@@ -11,7 +11,9 @@
 
 
 
+//import "libc/libc" // getenv
 
+char *getenv(char *name);
 
 int main()
 {
@@ -35,6 +37,10 @@ int main()
 
 	char *const tty = ttyname(0);
 	printf("ttyname = %s\n", tty);
+
+
+	char *const s = getenv("PATH");
+	printf("s = %s\n", s);
 
 	while (true) {
 		printf("- hi\n");

@@ -3,7 +3,9 @@
 import "libc/stdio"
 import "libc/time"
 import "libc/unistd"
+//import "libc/libc" // getenv
 
+func getenv(name: *Str) -> *Str
 
 func main() -> Int {
 	printf("unistd test\n")
@@ -26,6 +28,10 @@ func main() -> Int {
 
 	let tty = ttyname(0)
 	printf("ttyname = %s\n", tty)
+
+
+	let s = getenv("PATH")
+	printf("s = %s\n", s)
 
 	while true {
 		printf("- hi\n")
