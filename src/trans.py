@@ -1165,59 +1165,55 @@ def do_value_slice(x):
 		error("expected array or pointer to array", left['expr_ti'])
 		return value_bad(x)
 
-	is_open_array = hlir_type.type_is_open_array(array_type)
 
+	slice_volume = None
 
-	if is_open_array:
-		slice_volume = None
-		type = hlir_type.hlir_type_array(array_type['of'], slice_volume, x['ti'])
-		nv = value_slice_array(left, type, index_from, index_to, x['ti'])
-		return nv
+	if hlir_type.type_is_closed_array(array_type):
 
+		if not value_is_immediate(index_from):
+			error("expected immediate value", index_from['expr_ti'])
 
-	if not value_is_immediate(index_from):
-		error("expected immediate value", index_from['expr_ti'])
+		if index_to != None:
+			if not value_is_immediate(index_to):
+				error("expected immediate value", index_to['expr_ti'])
 
-	if index_to != None:
-		if not value_is_immediate(index_to):
-			error("expected immediate value", index_to['expr_ti'])
+		# строим выражения для C бекенда в частности
+		# тк volume of array должен быть выражением
+		# а для слайса [a:b] это (b - a + 1)
 
-	# строим выражения для C бекенда в частности
-	# тк volume of array должен быть выражением
-	# а для слайса [a:b] это (b - a + 1)
+		de = {
+			'isa': 'ast_value',
+			'kind': 'sub',
+			'left': x['index_to'],
+			'right': x['index_from'],
+			'ti': ti
+		}
+		un = {
+			'isa': 'ast_value',
+			'kind': 'number',
+			'numstr': '1',
+			'att': [],
+			'ti': ti
+		}
+		le = {
+			'isa': 'ast_value',
+			'kind': 'add',
+			'left': de,
+			'right': un,
+			'ti': ti
+		}
 
-	de = {
-		'isa': 'ast_value',
-		'kind': 'sub',
-		'left': x['index_to'],
-		'right': x['index_from'],
-		'ti': ti
-	}
-	un = {
-		'isa': 'ast_value',
-		'kind': 'number',
-		'numstr': '1',
-		'att': [],
-		'ti': ti
-	}
-	le = {
-		'isa': 'ast_value',
-		'kind': 'add',
-		'left': de,
-		'right': un,
-		'ti': ti
-	}
+		slice_volume = do_value(le)
+		slice_len = slice_volume['asset']
 
-	slice_volume = do_value(le)
-	slice_len = slice_volume['asset']
+		if slice_len < 0:
+			error("wrong slice direction", x['ti'])
+			return value_bad(x)
 
-	if slice_len < 0:
-		error("wrong slice direction", x['ti'])
-		return value_bad(x)
+		# TODO: конкретно тут есть что исправить!
+		if slice_len > array_type['volume']['asset']:
+			error("slice is too big", x['ti'])
 
-	# TODO: конкретно тут есть что исправить!
-	if slice_len > array_type['volume']['asset']:
-		error("slice is too big", x['ti'])
 
 	type = hlir_type.hlir_type_array(array_type['of'], slice_volume, x['ti'])
 	nv = value_slice_array(left, type, index_from, index_to, x['ti'])
