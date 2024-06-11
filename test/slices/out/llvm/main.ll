@@ -397,14 +397,17 @@ break_4:
 	%99 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str13 to [0 x i8]*))
 	%100 = load [0 x i32]*, [0 x i32]** %97
 	call void ([0 x i32]*, i32) @array_print([0 x i32]* %100, i32 10)
-	%101 = load [0 x i32]*, [0 x i32]** %97
-	%102 = getelementptr inbounds [0 x i32], [0 x i32]* %101, i32 0, i8 1
+	%101 = alloca i32, align 4
+	store i32 1, i32* %101
+	%102 = load [0 x i32]*, [0 x i32]** %97
+	%103 = load i32, i32* %101
+	%104 = getelementptr inbounds [0 x i32], [0 x i32]* %102, i32 0, i32 %103
 ;
-	%103 = bitcast i32* %102 to [0 x i32]*
-	store [0 x i32]* %103, [0 x i32]** %97
-	%104 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str14 to [0 x i8]*))
-	%105 = load [0 x i32]*, [0 x i32]** %97
-	call void ([0 x i32]*, i32) @array_print([0 x i32]* %105, i32 10)
+	%105 = bitcast i32* %104 to [0 x i32]*
+	store [0 x i32]* %105, [0 x i32]** %97
+	%106 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str14 to [0 x i8]*))
+	%107 = load [0 x i32]*, [0 x i32]** %97
+	call void ([0 x i32]*, i32) @array_print([0 x i32]* %107, i32 10)
 	ret %Int 0
 }
 

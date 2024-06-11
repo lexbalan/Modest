@@ -107,7 +107,7 @@ def _doitems(t, v, method, ti):
 			from .cons import value_cons_implicit
 			nv = value_cons_implicit(field_type, item_value)
 
-			type.check(field_type, nv['type'], nv['ti'])
+			type.check(field_type, nv['type'], nv['expr_ti'])
 
 			p = hlir_initializer(field['id'], nv, ti=ti, nl=nl)
 			items.append(p)

@@ -104,7 +104,10 @@ int main()
 	printf("before\n");
 	array_print(pw, 10);
 
-	pw = (int32_t *)&pw[1];
+	int32_t ind;
+	ind = 1;
+
+	pw = (int32_t *)&pw[ind];
 
 	printf("after\n");
 	array_print(pw, 10);

@@ -94,7 +94,9 @@ func main() -> Int {
 	printf("before\n")
 	array_print(pw, 10)
 
-	pw = &pw[1:]
+	var ind = 1
+
+	pw = &pw[ind:]
 
 	printf("after\n")
 	array_print(pw, 10)

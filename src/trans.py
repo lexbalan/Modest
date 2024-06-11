@@ -1165,7 +1165,14 @@ def do_value_slice(x):
 		error("expected array or pointer to array", left['expr_ti'])
 		return value_bad(x)
 
-	is_closed_array = hlir_type.type_is_closed_array(array_type)
+	is_open_array = hlir_type.type_is_open_array(array_type)
+
+
+	if is_open_array:
+		slice_volume = None
+		type = hlir_type.hlir_type_array(array_type['of'], slice_volume, x['ti'])
+		nv = value_slice_array(left, type, index_from, index_to, x['ti'])
+		return nv
 
 
 	if not value_is_immediate(index_from):
@@ -1178,16 +1185,6 @@ def do_value_slice(x):
 	# строим выражения для C бекенда в частности
 	# тк volume of array должен быть выражением
 	# а для слайса [a:b] это (b - a + 1)
-
-	if not is_closed_array:
-		slice_volume = None
-		type = hlir_type.hlir_type_array(array_type['of'], slice_volume, x['ti'])
-		nv = value_slice_array(left, type, index_from, index_to, x['ti'])
-
-		#if not via_pointer:
-		#	nv['immutable'] = left['immutable']
-
-		return nv
 
 	de = {
 		'isa': 'ast_value',
