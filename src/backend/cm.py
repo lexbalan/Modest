@@ -265,18 +265,10 @@ def print_value_call(v, ctx):
 
 
 def print_value_index(v, ctx):
-	if hlir_type.type_is_pointer(v['array']['type']):
-		array = v['array']
-		index = v['index']
-		need_wrap = precedence(array) < precedence({'kind': 'index'})
-		print_value(array, need_wrap=need_wrap)
-		out("["); print_value(index); out("]")
-		return
 	array = v['array']
-	index = v['index']
 	need_wrap = precedence(array) < precedence({'kind': 'index'})
 	print_value(array, need_wrap=need_wrap)
-	out("["); print_value(index); out("]")
+	out("["); print_value(v['index']); out("]")
 
 
 def print_value_slice(x, ctx):
@@ -293,13 +285,6 @@ def print_value_slice(x, ctx):
 
 def print_value_access(v, ctx):
 	left = v['record']
-	if hlir_type.type_is_pointer(left['type']):
-		need_wrap = precedence(left) < precedence({'kind': 'access'})
-		print_value(left, need_wrap=need_wrap)
-		out(".")
-		print_id(v['field'])
-		return
-
 	need_wrap = precedence(left) < precedence({'kind': 'access'})
 	print_value(left, need_wrap=need_wrap)
 	out(".")

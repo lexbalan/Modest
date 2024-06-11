@@ -735,12 +735,7 @@ def print_value_cons(x, ctx):
 	if hlir_type.type_is_record(to_type):
 		if hlir_type.type_is_record(from_type):
 			# C cannot cast struct to struct (!)
-
-			try:
-				print_cast_hard(to_type, value)
-			except:
-				value_print(value, msg='cannot cast hard')
-
+			print_cast_hard(to_type, value)
 			return
 
 
