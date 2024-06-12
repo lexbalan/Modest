@@ -823,7 +823,7 @@ def print_array_values(values, ctx):
 				out(" ")
 
 		if hlir_type.type_is_closed_array(a['type']):
-			print_array_values(a['asset'], ctx)
+			print_array_values(a['items'], ctx)
 		else:
 			print_value(a, ctx)
 
@@ -879,8 +879,7 @@ def print_value_array(v, ctx):
 
 	out("{")
 	indent_up()
-	values = v['asset']
-	print_array_values(values, ctx)
+	print_array_values(v['items'], ctx)
 	indent_down()
 
 	if 'nl_end' in v:

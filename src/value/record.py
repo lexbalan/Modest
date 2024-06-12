@@ -90,7 +90,7 @@ def _doitems(t, v, method, ti):
 
 			if ini == None:
 				# no field, create zero value stub
-				item_value = value_zero(field_type, ti=None)
+				item_value = value_zero(field_type, ti=ti)
 				if method == 'implicit':
 					# implicit cast требует наличия всех полей
 					error("required field '%s'" % field_name, v['ti'])

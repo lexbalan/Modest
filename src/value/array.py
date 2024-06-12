@@ -86,7 +86,7 @@ def value_array_create_from_string(t, v, method, ti=None):
 
 	nv = value_cons_node(t, v, method, ti)
 	nv['immediate'] = True
-	nv['asset'] = chars
+	nv['items'] = chars
 	return nv
 
 
@@ -159,7 +159,10 @@ def value_array_cons(t, v, method, ti):
 
 	if value_is_immediate(v):
 		#warning("value_array_cons immediate?", ti)
-		casted_items = _cast_values(v['asset'], t['of'])
+		if not 'items' in v:
+			info("NO ITEMS IN", v['expr_ti'])
+			print(v['kind'])
+		casted_items = _cast_values(v['items'], t['of'])
 
 		# add Zero Pad (if need)
 		zero_pad = 0
@@ -170,7 +173,7 @@ def value_array_cons(t, v, method, ti):
 			zero_pad = [value_zero(t['of'], None)] * zero_pad_len
 			casted_items = casted_items + zero_pad
 
-		nv['asset'] = casted_items
+		nv['items'] = casted_items
 		nv['immediate'] = True
 		#if len(casted_items) == 0:
 
@@ -182,6 +185,8 @@ def _value_array_create(items, item_type, length, is_generic, ti):
 	array_volume = value_integer_create(length)
 	array_type = hlir_type.hlir_type_array(item_type, volume=array_volume, ti=ti)
 	array_type['generic'] = is_generic
-	return value_terminal(array_type, items, ti)
+	nv = value_terminal(array_type, items, ti)
+	nv['items'] = items
+	return nv
 
 

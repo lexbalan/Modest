@@ -74,13 +74,9 @@ int main()
 	}
 
 	send_file(fp, sockfd);
-
 	printf("[+] File data send successfully\n");
-
 	close(sockfd);
-
 	printf("[+] Disconnected from the server\n");
-
 	return 0;
 }
 

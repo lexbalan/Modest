@@ -31,7 +31,7 @@ def value_is_generic_immediate(x):
 def _value_is_zero_array(x):
 	if not value_is_immediate(x):
 		return False
-	for item in x['asset']:
+	for item in x['items']:
 		if not value_is_zero(item):
 			return False
 	return True
@@ -112,6 +112,7 @@ def value_terminal(t, imm, ti):
 		'kind': 'literal',
 		'type': t,
 		'asset': imm,
+		'items': [],
 		# Literal - не всегда immediate!
 		# Литерал композитного типа может быть не immediate
 		# (см: do_value_record, do_value_array)

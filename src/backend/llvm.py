@@ -665,11 +665,8 @@ def print_type_array(t):
 	if array_size != None:
 		sz = array_size['asset']
 	out("%d x " % sz)
-	if t['of'] == None:
-		info("wtf?", t['ti'])
 	print_type(t['of'])
 	out("]")
-
 
 
 
@@ -1216,7 +1213,9 @@ def do_eval_array(v):
 	# сперва вычисляем все элементы массива в регистры
 	# (кроме констант, они едут до последнего)
 	items = []
-	for item in v['asset']:
+	if not 'items' in v:
+		info("???", v['ti'])
+	for item in v['items']:
 		iv = do_reval(item)
 		items.append(iv)
 
@@ -1226,7 +1225,7 @@ def do_eval_array(v):
 		# теперь добавим паддинг нулевыми значениями
 		fulllen = v['type']['volume']['asset']
 	else:
-		fulllen = len(v['asset'])
+		fulllen = len(v['items'])
 
 	n_pad = fulllen - len(items)
 	if n_pad > 0:

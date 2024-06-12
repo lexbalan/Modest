@@ -634,11 +634,11 @@ def bin_imm(op, type_result, l, r, ti):
 	}
 
 	asset = 0
-
+	items = []
 	if hlir_type.type_is_array(l['type']):
 		if op == 'add':
-			asset = l['asset'] + r['asset']
-			length = len(asset)
+			items = l['items'] + r['items']
+			length = len(items)
 			str_array_volume = value_integer_create(length)
 			item_type = select_common_type(l['type']['of'], r['type']['of'])
 			assert(item_type != None)
@@ -686,6 +686,9 @@ def bin_imm(op, type_result, l, r, ti):
 
 	nv = value_bin(op, l, r, type_result, ti=ti)
 	nv['asset'] = asset
+	if items != []:
+		nv['items'] = items
+
 	nv['immediate'] = True
 	return nv
 
@@ -716,7 +719,7 @@ def value_eq_arrays(a, b, ti):
 	else:
 		fatal("dynamic immediate array volume not implemented", ti)
 
-	for ax, bx in zip(a['asset'], b['asset']):
+	for ax, bx in zip(a['items'], b['items']):
 		if not value_eq_immediate(ax, bx, ti):
 			return False
 
@@ -819,6 +822,7 @@ def do_value_ref(x):
 	if not is_local_context():
 		nv['immediate'] = True
 		nv['asset'] = None
+		nv['items'] = []
 
 	return nv
 
@@ -1133,7 +1137,7 @@ def do_value_index(x):
 				item = left['asset'][index_imm]
 
 				nv['immval'] = item
-				nv['asset'] = item['asset']
+				#nv['items'] = item['items']
 				nv['immediate'] = item['immediate']
 
 	return nv
@@ -1266,6 +1270,9 @@ def do_value_access(x):
 
 			nv['immval'] = initializer['value']
 			nv['asset'] = initializer['value']['asset']
+			if 'items' in initializer['value']:
+				nv['items'] = initializer['value']['items']
+
 			# (!) #asset of immediate index & access contains VALUE (!)
 			nv['immediate'] = initializer['value']['immediate']
 
@@ -1324,6 +1331,7 @@ def do_value_array(x):
 		items.append(item_value)
 
 	v = value_array_create(items, ti=x['ti'])
+	assert('items' in v)
 	v['nl_end'] = x['nl_end']
 	return v
 
@@ -1659,7 +1667,10 @@ def do_stmt_let(x):
 	# Now let can be immediate!
 	if value_is_immediate(v):
 		const_value['immediate'] = True
-		const_value['asset'] = v['asset']
+		if 'asset' in v:
+			const_value['asset'] = v['asset']
+		if 'items' in v:
+			const_value['items'] = v['items']
 
 	module['context'].value_add(id['str'], const_value)
 	return hlir_stmt_let(id, const_value, v, ti=x['ti'])
@@ -1910,7 +1921,10 @@ def def_const(x):
 	# Now let can be immediate!
 	if value_is_immediate(v):
 		const_value['immediate'] = True
-		const_value['asset'] = v['asset']
+		if 'asset' in v:
+			const_value['asset'] = v['asset']
+		if 'items' in v:
+			const_value['items'] = v['items']
 
 	module['context'].value_add(id['str'], const_value)
 	return hlir_def_const(id, const_value, v, x['ti'])
