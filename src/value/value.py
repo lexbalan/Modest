@@ -106,12 +106,12 @@ def value_bad(x):
 	}
 
 
-def value_terminal(t, imm, ti):
+def value_terminal(t, asset, ti):
 	return {
 		'isa': 'value',
 		'kind': 'literal',
 		'type': t,
-		'asset': imm,
+		'asset': asset,
 		'items': [],
 		# Literal - не всегда immediate!
 		# Литерал композитного типа может быть не immediate

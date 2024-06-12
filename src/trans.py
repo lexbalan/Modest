@@ -1268,16 +1268,12 @@ def do_value_access(x):
 			initializers = left['asset']
 			initializer = get_item_with_id(initializers, field_id['str'])
 
-			nv['immval'] = initializer['value']
-			nv['asset'] = initializer['value']['asset']
-			if 'items' in initializer['value']:
-				nv['items'] = initializer['value']['items']
-
 			# (!) #asset of immediate index & access contains VALUE (!)
-			nv['immediate'] = initializer['value']['immediate']
+			nv['immediate'] = True
+			nv['immval'] = initializer['value']
+			cp_immediate(nv, initializer['value'])
 
 	return nv
-
 
 
 def do_value_cons(x):
@@ -1667,10 +1663,7 @@ def do_stmt_let(x):
 	# Now let can be immediate!
 	if value_is_immediate(v):
 		const_value['immediate'] = True
-		if 'asset' in v:
-			const_value['asset'] = v['asset']
-		if 'items' in v:
-			const_value['items'] = v['items']
+		cp_immediate(const_value, v)
 
 	module['context'].value_add(id['str'], const_value)
 	return hlir_stmt_let(id, const_value, v, ti=x['ti'])
@@ -1921,10 +1914,7 @@ def def_const(x):
 	# Now let can be immediate!
 	if value_is_immediate(v):
 		const_value['immediate'] = True
-		if 'asset' in v:
-			const_value['asset'] = v['asset']
-		if 'items' in v:
-			const_value['items'] = v['items']
+		cp_immediate(const_value, v)
 
 	module['context'].value_add(id['str'], const_value)
 	return hlir_def_const(id, const_value, v, x['ti'])
@@ -2701,3 +2691,10 @@ def extra_args_check(specs, extra_args, expected_pointers):
 		i = i + 1
 	return
 
+
+
+def cp_immediate(to, _from):
+	if 'asset' in _from:
+		to['asset'] = _from['asset']
+	if 'items' in _from:
+		to['items'] = _from['items']
