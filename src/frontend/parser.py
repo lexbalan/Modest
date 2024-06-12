@@ -832,11 +832,19 @@ class Parser:
 
 						code = int(asciicode, base)
 
-					elif sym == 't':
+					elif sym == 'a':  #BELL
+						code = 7
+					elif sym == 'b':  #BACKSPACE
+						code = 8
+					elif sym == 't':  #TAB
 						code = 9
-					elif sym == 'n':
+					elif sym == 'n':  #LF
 						code = 10
-					elif sym == 'r':
+					elif sym == 'v':  #VT
+						code = 11
+					elif sym == 'f':  #FF
+						code = 12
+					elif sym == 'r':  #CR
 						code = 13
 					elif sym == '"':
 						code = '34'
