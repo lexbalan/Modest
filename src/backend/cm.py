@@ -219,12 +219,8 @@ def print_value_bin(x, ctx):
 	left = x['left']
 	right = x['right']
 
-	# получаем приоритеты операции и операндов
-	p0 = precedence(x)
-	pl = precedence(left)
-	pr = precedence(right)
-	need_wrap_left = pl < p0
-	need_wrap_right = pr < p0
+	need_wrap_left = precedence(left) < precedence(x)
+	need_wrap_right = precedence(right) < precedence(x)
 
 	print_value(left, need_wrap=need_wrap_left)
 	out(' %s ' % bin_ops[op])
@@ -242,9 +238,8 @@ un_ops = {
 def print_value_un(v, ctx):
 	op = v['kind']
 	value = v['value']
-	p0 = precedence({'kind': op})
-	pv = precedence(value)
-	out(un_ops[op]); print_value(value, need_wrap=pv<p0)
+	need_wrap = precedence(value) < precedence({'kind': op})
+	out(un_ops[op]); print_value(value, need_wrap=need_wrap)
 
 
 
