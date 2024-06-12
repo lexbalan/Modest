@@ -1327,7 +1327,6 @@ def do_value_array(x):
 		items.append(item_value)
 
 	v = value_array_create(items, ti=x['ti'])
-	assert('items' in v)
 	v['nl_end'] = x['nl_end']
 	return v
 
