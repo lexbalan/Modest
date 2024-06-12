@@ -432,7 +432,7 @@ def print_value_record(v, ctx):
 
 	indent_up()
 
-	initializers = v['asset']
+	initializers = v['fields']
 	nitems = len(initializers)
 	i = 0
 	while i < nitems:

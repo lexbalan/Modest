@@ -40,7 +40,7 @@ def _value_is_zero_array(x):
 def _value_is_zero_record(x):
 	if not value_is_immediate(x):
 		return False
-	for item in x['asset']:
+	for item in x['fields']:
 		if not value_is_zero(item['value']):
 			return False
 	return True
@@ -127,12 +127,16 @@ def value_terminal(t, asset, ti):
 
 
 def value_zero(t, ti):
-	imm_val = 0
+	nv = value_terminal(t, 0, ti)
 
-	if hlir_type.type_is_composite(t):
-		imm_val = []
+	if hlir_type.type_is_array(t):
+		nv['items'] = []
+	elif hlir_type.type_is_record(t):
+		nv['fields'] = []
+	else:
+		nv['asset'] = 0
 
-	return value_terminal(t, imm_val, ti)
+	return nv
 
 
 

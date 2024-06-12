@@ -1264,7 +1264,8 @@ def do_eval_record(v):
 	# сперва вычисляем все иницифлизаторы поелей структуры в регистры
 	# (кроме констант, ведь они едут до последнего)
 	rec_type = v['type']
-	initializers = v['asset']
+
+	initializers = v['fields']
 
 	if is_global_context():
 		items = []

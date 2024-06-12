@@ -893,7 +893,7 @@ def print_value_array(v, ctx):
 
 
 def print_value_record(v, ctx):
-	initializers = v['asset']
+	initializers = v['fields']
 
 	out("{")
 	indent_up()

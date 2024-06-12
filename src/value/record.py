@@ -36,7 +36,8 @@ def value_record_create(initializers=[], ti=None):
 	record_type = type.hlir_type_record(fields, ti)
 	record_type['generic'] = True
 
-	v = value_terminal(record_type, initializers, ti)
+	v = value_terminal(record_type, None, ti)
+	v['fields'] = initializers
 	v['immediate'] = is_immediate
 	return v
 
@@ -85,7 +86,7 @@ def _doitems(t, v, method, ti):
 			item_value = None
 			nl = 0
 
-			initializers = v['asset']
+			initializers = v['fields']
 			ini = get_item_with_id(initializers, field_name)
 
 			if ini == None:
@@ -143,7 +144,7 @@ def value_record_cons(t, v, method, ti):
 	nv = value_cons_node(t, v, method, ti=ti)
 
 	if type.type_is_generic(v['type']):
-		nv['asset'] = _doitems(t, v, method, ti)
+		nv['fields'] = _doitems(t, v, method, ti)
 		nv['immediate'] = True
 
 	return nv

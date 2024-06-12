@@ -1265,7 +1265,7 @@ def do_value_access(x):
 
 		# access to immediate object
 		if value_is_immediate(left):
-			initializers = left['asset']
+			initializers = left['fields']
 			initializer = get_item_with_id(initializers, field_id['str'])
 
 			# (!) #asset of immediate index & access contains VALUE (!)
@@ -2697,3 +2697,5 @@ def cp_immediate(to, _from):
 		to['asset'] = _from['asset']
 	if 'items' in _from:
 		to['items'] = _from['items']
+	if 'fields' in _from:
+		to['fields'] = _from['fields']
