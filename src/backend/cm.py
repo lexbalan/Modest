@@ -67,8 +67,10 @@ def print_id(x):
 
 def print_comment(x):
 	k = x['kind']
-	if k == 'line': print_comment_line(x)
-	elif k == 'block': print_comment_block(x)
+	if k == 'line':
+		print_comment_line(x)
+	elif k == 'block':
+		print_comment_block(x)
 
 
 def print_comment_block(x):
@@ -110,12 +112,10 @@ def print_type_pointer(t):
 		out("*"); print_type(t['to'])
 
 
-
 def print_field(x):
 	print_id(x)
 	out(": ")
 	print_type(x['type'])
-
 
 
 def print_type_record(t):
@@ -142,7 +142,6 @@ def print_type_record(t):
 	out("}")
 
 
-
 def print_type_enum(t):
 	out("enum {")
 	items = t['items']
@@ -153,7 +152,6 @@ def print_type_enum(t):
 		print_id(item)
 		i = i + 1
 	out("\n}")
-
 
 
 def print_type_func(t, extra_args=False):
@@ -173,7 +171,6 @@ def print_type_func(t, extra_args=False):
 	print_type(t['to'])
 
 
-
 def get_type_id(t):
 	if t['definition'] != None:
 		return t['definition']['id']['str']
@@ -182,7 +179,6 @@ def get_type_id(t):
 		return t['declaration']['id']['str']
 
 	return None
-
 
 
 def print_type(t):
@@ -242,7 +238,6 @@ def print_value_un(v, ctx):
 	out(un_ops[op]); print_value(value, need_wrap=need_wrap)
 
 
-
 def print_value_call(v, ctx):
 	print_value(v['func'])
 	out("(")
@@ -284,7 +279,6 @@ def print_value_access(v, ctx):
 	print_value(left, need_wrap=need_wrap)
 	out(".")
 	print_id(v['field'])
-
 
 
 def print_cast(t, v, ctx=[]):

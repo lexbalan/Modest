@@ -16,7 +16,7 @@ type FposT
 @property("c_alias", "char *")
 type CharStr Str
 
-@property("c_alias", "let char *")
+@property("c_alias", "const char *")
 type ConstCharStr CharStr
 
 

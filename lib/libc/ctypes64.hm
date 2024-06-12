@@ -8,7 +8,7 @@ type Str Str8
 @property("c_alias", "char")
 type Char Char8
 
-@property("c_alias", "let char")
+@property("c_alias", "const char")
 type ConstChar Char
 
 @property("c_alias", "signed char")
