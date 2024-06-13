@@ -435,8 +435,9 @@ declare double @max_float64(double %a, double %b)
 @str33 = private constant [25 x i8] [i8 121, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 32, i8 40, i8 109, i8 117, i8 115, i8 116, i8 32, i8 98, i8 101, i8 32, i8 49, i8 48, i8 41, i8 10, i8 0]
 @str34 = private constant [25 x i8] [i8 121, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 32, i8 40, i8 109, i8 117, i8 115, i8 116, i8 32, i8 98, i8 101, i8 32, i8 50, i8 48, i8 41, i8 10, i8 0]
 @str35 = private constant [25 x i8] [i8 121, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 32, i8 40, i8 109, i8 117, i8 115, i8 116, i8 32, i8 98, i8 101, i8 32, i8 51, i8 48, i8 41, i8 10, i8 0]
-@str36 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
-@str37 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
+@str36 = private constant [25 x i8] [i8 121, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 32, i8 40, i8 109, i8 117, i8 115, i8 116, i8 32, i8 98, i8 101, i8 32, i8 52, i8 48, i8 41, i8 10, i8 0]
+@str37 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
+@str38 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 
 
 
@@ -841,39 +842,44 @@ endif_1:
 	%182 = load i32, i32* %179
 	%183 = load i32, i32* %180
 	%184 = load i32, i32* %181
-	%185 = insertvalue [3 x i32] zeroinitializer, i32 %182, 0
-	%186 = insertvalue [3 x i32] %185, i32 %183, 1
-	%187 = insertvalue [3 x i32] %186, i32 %184, 2
-	%188 = alloca [3 x i32]
-	store [3 x i32] %187, [3 x i32]* %188
+	%185 = insertvalue [4 x i32] zeroinitializer, i32 %182, 0
+	%186 = insertvalue [4 x i32] %185, i32 %183, 1
+	%187 = insertvalue [4 x i32] %186, i32 %184, 2
+	%188 = insertvalue [4 x i32] %187, i32 40, 3
+	%189 = alloca [4 x i32]
+	store [4 x i32] %188, [4 x i32]* %189
 	store i32 111, i32* %179
 	store i32 222, i32* %180
 	store i32 333, i32* %181
-	%189 = getelementptr inbounds [3 x i32], [3 x i32]* %188, i32 0, i32 0
-	%190 = load i32, i32* %189
-	%191 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str33 to [0 x i8]*), i32 0, i32 %190)
-	%192 = getelementptr inbounds [3 x i32], [3 x i32]* %188, i32 0, i32 1
-	%193 = load i32, i32* %192
-	%194 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str34 to [0 x i8]*), i32 1, i32 %193)
-	%195 = getelementptr inbounds [3 x i32], [3 x i32]* %188, i32 0, i32 2
-	%196 = load i32, i32* %195
-	%197 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str35 to [0 x i8]*), i32 2, i32 %196)
-	%198 = insertvalue [3 x i32] zeroinitializer, i32 10, 0
-	%199 = insertvalue [3 x i32] %198, i32 20, 1
-	%200 = insertvalue [3 x i32] %199, i32 30, 2
-	%201 = alloca [3 x i32]
-	store [3 x i32] %200, [3 x i32]* %201
-	%202 = bitcast [3 x i32]* %188 to i8*
-	%203 = bitcast [3 x i32]* %201 to i8*
+	%190 = getelementptr inbounds [4 x i32], [4 x i32]* %189, i32 0, i32 0
+	%191 = load i32, i32* %190
+	%192 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str33 to [0 x i8]*), i32 0, i32 %191)
+	%193 = getelementptr inbounds [4 x i32], [4 x i32]* %189, i32 0, i32 1
+	%194 = load i32, i32* %193
+	%195 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str34 to [0 x i8]*), i32 1, i32 %194)
+	%196 = getelementptr inbounds [4 x i32], [4 x i32]* %189, i32 0, i32 2
+	%197 = load i32, i32* %196
+	%198 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str35 to [0 x i8]*), i32 2, i32 %197)
+	%199 = getelementptr inbounds [4 x i32], [4 x i32]* %189, i32 0, i32 3
+	%200 = load i32, i32* %199
+	%201 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str36 to [0 x i8]*), i32 3, i32 %200)
+	%202 = insertvalue [4 x i32] zeroinitializer, i32 10, 0
+	%203 = insertvalue [4 x i32] %202, i32 20, 1
+	%204 = insertvalue [4 x i32] %203, i32 30, 2
+	%205 = insertvalue [4 x i32] %204, i32 40, 3
+	%206 = alloca [4 x i32]
+	store [4 x i32] %205, [4 x i32]* %206
+	%207 = bitcast [4 x i32]* %189 to i8*
+	%208 = bitcast [4 x i32]* %206 to i8*
 	
-	%204 = call i1 (i8*, i8*, i64) @memeq( i8* %202, i8* %203, i64 12)
-	%205 = icmp ne i1 %204, 0
-	br i1 %205 , label %then_2, label %else_2
+	%209 = call i1 (i8*, i8*, i64) @memeq( i8* %207, i8* %208, i64 16)
+	%210 = icmp ne i1 %209, 0
+	br i1 %210 , label %then_2, label %else_2
 then_2:
-	%206 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str36 to [0 x i8]*))
+	%211 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str37 to [0 x i8]*))
 	br label %endif_2
 else_2:
-	%207 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str37 to [0 x i8]*))
+	%212 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str38 to [0 x i8]*))
 	br label %endif_2
 endif_2:
 	ret %Int 0

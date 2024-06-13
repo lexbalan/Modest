@@ -184,8 +184,9 @@ func main() -> Int {
 	var ax: Int32 = Int32 10
 	var bx: Int32 = Int32 20
 	var cx: Int32 = Int32 30
+	let dx = Int32 40
 
-	let y = [ax, bx, cx]
+	let y = [ax, bx, cx, dx]
 
 	ax = 111
 	bx = 222
@@ -194,8 +195,9 @@ func main() -> Int {
 	printf("y[%i] = %i (must be 10)\n", Int32 0, y[0])
 	printf("y[%i] = %i (must be 20)\n", Int32 1, y[1])
 	printf("y[%i] = %i (must be 30)\n", Int32 2, y[2])
+	printf("y[%i] = %i (must be 40)\n", Int32 3, y[3])
 
-	if y == [10, 20, 30] {
+	if y == [10, 20, 30, 40] {
 		printf("test passed\n")
 	} else {
 		printf("test failed\n")

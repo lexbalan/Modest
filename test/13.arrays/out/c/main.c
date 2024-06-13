@@ -220,8 +220,9 @@ int main()
 	bx = 20;
 	int32_t cx;
 	cx = 30;
+	const int32_t dx = 40;
 
-	const int32_t y[3] = {ax, bx, cx};
+	const int32_t y[4] = {ax, bx, cx, dx};
 
 	ax = 111;
 	bx = 222;
@@ -230,8 +231,9 @@ int main()
 	printf("y[%i] = %i (must be 10)\n", 0, y[0]);
 	printf("y[%i] = %i (must be 20)\n", 1, y[1]);
 	printf("y[%i] = %i (must be 30)\n", 2, y[2]);
+	printf("y[%i] = %i (must be 40)\n", 3, y[3]);
 
-	if (memcmp(&y, &(int32_t[3]){10, 20, 30}, sizeof(int32_t[3])) == 0) {
+	if (memcmp(&y, &(int32_t[4]){10, 20, 30, 40}, sizeof(int32_t[4])) == 0) {
 		printf("test passed\n");
 	} else {
 		printf("test failed\n");
