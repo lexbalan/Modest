@@ -438,6 +438,8 @@ declare double @max_float64(double %a, double %b)
 @str36 = private constant [25 x i8] [i8 121, i8 91, i8 37, i8 105, i8 93, i8 32, i8 61, i8 32, i8 37, i8 105, i8 32, i8 40, i8 109, i8 117, i8 115, i8 116, i8 32, i8 98, i8 101, i8 32, i8 52, i8 48, i8 41, i8 10, i8 0]
 @str37 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 @str38 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
+@str39 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
+@str40 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 
 
 
@@ -882,6 +884,32 @@ else_2:
 	%212 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str38 to [0 x i8]*))
 	br label %endif_2
 endif_2:
+	%213 = insertvalue [5 x i8] zeroinitializer, i8 76, 0
+	%214 = insertvalue [5 x i8] %213, i8 111, 1
+	%215 = insertvalue [5 x i8] %214, i8 72, 2
+	%216 = insertvalue [5 x i8] %215, i8 105, 3
+	%217 = insertvalue [5 x i8] %216, i8 33, 4
+	%218 = alloca [5 x i8]
+	store [5 x i8] %217, [5 x i8]* %218
+	%219 = getelementptr inbounds [5 x i8], [5 x i8]* %218, i32 0, i8 2
+	%220 = bitcast i8* %219 to [2 x i8]*
+	%221 = insertvalue [2 x i8] zeroinitializer, i8 72, 0
+	%222 = insertvalue [2 x i8] %221, i8 105, 1
+	%223 = alloca [2 x i8]
+	store [2 x i8] %222, [2 x i8]* %223
+	%224 = bitcast [2 x i8]* %220 to i8*
+	%225 = bitcast [2 x i8]* %223 to i8*
+	
+	%226 = call i1 (i8*, i8*, i64) @memeq( i8* %224, i8* %225, i64 2)
+	%227 = icmp ne i1 %226, 0
+	br i1 %227 , label %then_3, label %else_3
+then_3:
+	%228 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str39 to [0 x i8]*))
+	br label %endif_3
+else_3:
+	%229 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str40 to [0 x i8]*))
+	br label %endif_3
+endif_3:
 	ret %Int 0
 }
 

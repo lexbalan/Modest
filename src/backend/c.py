@@ -673,6 +673,7 @@ def print_value_cons(x, ctx):
 	value = x['value']
 	from_type = value['type']
 
+
 	if hlir_type.type_is_string(from_type):
 		# cast <string literal> to <array of chars>:
 		if hlir_type.type_is_array_of_char(to_type):
@@ -702,7 +703,6 @@ def print_value_cons(x, ctx):
 			print_cast(to_type, value, ctx)
 			return
 
-
 	# Local:
 	# В C мы не можем просто напечатать {0, 1, 2, 3} и получить массив
 	# Но мы можем сделать так: (<item_type>[4]){0, 1, 2, 3}
@@ -716,7 +716,18 @@ def print_value_cons(x, ctx):
 			# то мы должны ее привести к требуемому типу
 			is_const = value['kind'] in ['const', 'literal', 'add']
 			if is_const and not 'kostil' in value['att']:
-				print_cast(to_type, value, ctx=['array_as_array'])
+
+				ctx=['array_as_array']
+				# []Char8 ['L', 'o', 'H', 'i', '!']
+				# печатается как:
+				# (char[5]){"L", "o", "H", "i", "!"}
+				# но это неверно, поэтому добавляем атрибут string_as_charX
+				# (char[5]){'L', 'o', 'H', 'i', '!'}
+				if hlir_type.type_is_string(from_type['of']):
+					char_width = to_type['of']['width']
+					ctx = ctx + ['string_as_char%d' % char_width]
+
+				print_cast(to_type, value, ctx=ctx)
 			else:
 				print_value(value, ctx=ctx)
 			return
@@ -850,6 +861,10 @@ def print_lit_string(asset, width):
 
 
 def print_value_string(x, ctx):
+	if 'string_as_char8' in ctx:
+		print_char_lit(ord(x['asset'][0]), 8)
+		return
+
 	print_lit_string(x['asset'], x['type']['width'])
 
 
@@ -873,7 +888,6 @@ def print_value_array(v, ctx):
 						break
 
 				i = i + 1
-
 			_print_string_literal(utf32_codes, width=char_width)
 			return
 

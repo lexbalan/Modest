@@ -934,6 +934,16 @@ def select_common_type(a, b):
 			if a['kind'] == 'int':
 				return b
 
+		# array && string | string && array
+		if a['kind'] == 'array':
+			if b['kind'] == 'string':
+				return a
+
+		if b['kind'] == 'array':
+			if a['kind'] == 'string':
+				return b
+
+
 		if a['kind'] == 'unit':
 			return b
 

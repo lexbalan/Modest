@@ -1148,13 +1148,12 @@ def do_value_slice(x):
 	left = do_value(x['left'])
 	index_from = do_rvalue(x['index_from'])
 	index_to = None
+	ti = x['ti']
+
 	if x['index_to'] != None:
 		index_to = do_rvalue(x['index_to'])
 		if value_is_bad(index_to):
 			return value_bad(x)
-
-
-	ti = x['ti']
 
 	if value_is_bad(left) or value_is_bad(index_from):
 		return value_bad(x)
@@ -1170,17 +1169,15 @@ def do_value_slice(x):
 		return value_bad(x)
 
 
-	slice_volume = None
+	# получаем размер слайса
+	slice_volume = None  # asg_value
+	slice_len = 0  # len as integer
 
-	if hlir_type.type_is_closed_array(array_type):
+	known_volume = False
+	if index_from != None and index_to != None:
+		known_volume = value_is_immediate(index_from) and value_is_immediate(index_to)
 
-		if not value_is_immediate(index_from):
-			error("expected immediate value", index_from['expr_ti'])
-
-		if index_to != None:
-			if not value_is_immediate(index_to):
-				error("expected immediate value", index_to['expr_ti'])
-
+	if known_volume:
 		# строим выражения для C бекенда в частности
 		# тк volume of array должен быть выражением
 		# а для слайса [a:b] это (b - a + 1)
@@ -1214,6 +1211,11 @@ def do_value_slice(x):
 			error("wrong slice direction", x['ti'])
 			return value_bad(x)
 
+
+	if hlir_type.type_is_closed_array(array_type):
+		if slice_volume == None:
+			error("expected immediate value", index_from['expr_ti'])
+
 		# TODO: конкретно тут есть что исправить!
 		if slice_len > array_type['volume']['asset']:
 			error("slice is too big", x['ti'])
@@ -1226,7 +1228,6 @@ def do_value_slice(x):
 		nv['immutable'] = left['immutable']
 
 	return nv
-
 
 
 def do_value_access(x):

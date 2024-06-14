@@ -8,7 +8,6 @@ from .integer import value_integer_create
 from .value import value_terminal, value_is_immediate, value_cons_node, value_cons_immediate, value_zero, value_bin, value_print
 
 
-
 # TODO: переделай здесь все - тут все плохо...
 # получает на вход список элементов
 # конструирует и возвращает GenericArray value
@@ -63,7 +62,6 @@ def value_array_create(items, ti=None):
 	return v
 
 
-
 def value_array_create_from_string(t, v, method, ti=None):
 	#info("value_array_create_from_string", ti)
 	char_type = t['of']
@@ -77,18 +75,10 @@ def value_array_create_from_string(t, v, method, ti=None):
 		t = hlir_type.hlir_type_array(char_type, volume, ti)
 
 	chars = utf32_chars_to_utfx_chars(v['asset'], char_type, ti)
-
-	"""
-	v = value_terminal(t, chars, ti)
-	v['immediate'] = True
-	return v
-	"""
-
 	nv = value_cons_node(t, v, method, ti)
 	nv['immediate'] = True
 	nv['items'] = chars
 	return nv
-
 
 
 # TODO: see select_common_type!
@@ -130,7 +120,6 @@ def array_can(to, from_type, method):
 	return True
 
 
-
 def _cast_values(values, to_type):
 	casted_items = []
 	for item in values:
@@ -148,7 +137,6 @@ def _cast_values(values, to_type):
 	return casted_items
 
 
-
 def value_array_cons(t, v, method, ti):
 	#info("value_array_cons", ti)
 
@@ -158,10 +146,6 @@ def value_array_cons(t, v, method, ti):
 	nv = value_cons_node(t, v, method, ti)
 
 	if value_is_immediate(v):
-		#warning("value_array_cons immediate?", ti)
-		if not 'items' in v:
-			info("NO ITEMS IN", v['expr_ti'])
-			print(v['kind'])
 		casted_items = _cast_values(v['items'], t['of'])
 
 		# add Zero Pad (if need)
@@ -175,10 +159,8 @@ def value_array_cons(t, v, method, ti):
 
 		nv['items'] = casted_items
 		nv['immediate'] = True
-		#if len(casted_items) == 0:
 
 	return nv
-
 
 
 def _value_array_create(items, item_type, length, is_generic, ti):

@@ -205,6 +205,14 @@ func main() -> Int {
 	}
 
 
+	let sa = []Char8 ['L', 'o', 'H', 'i', '!']
+
+	if sa[2:3] == "Hi" {
+		printf("test passed\n")
+	} else {
+		printf("test failed\n")
+	}
+
 	return 0
 }
 
