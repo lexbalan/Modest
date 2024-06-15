@@ -154,9 +154,12 @@ func sha256_final(ctx: *Context, outHash: *[sha256HashSize]Byte) {
 
 	memset(&ctx.data[i], 0, SizeT (n - i))
 
+	//ctx.data[i:n-i] = []
+
 	if ctx.datalen >= 56 {
 		sha256_transform(ctx, &ctx.data)
-		memset(&ctx.data, 0, 56)
+		//memset(&ctx.data, 0, 56)
+		ctx.data[0:55] = []
 	}
 
 	// Append to the padding the total message's length in bits and transform.
