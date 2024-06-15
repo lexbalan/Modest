@@ -1,7 +1,6 @@
 // lib/lightfood/delay.cm
 
-
-import "libc/libc"
+import "libc/time"
 
 
 func delay_us(us: Nat64) -> Unit {

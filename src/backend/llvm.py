@@ -214,7 +214,7 @@ return llvm_value_num(x['type'], x['asset'])"""
 
 
 
-def llvm_print_type_value(x):
+def llvm_print_type_value(x, noundef=False):
 	assert(x['isa'] == 'll_value')
 
 	print_type(x['type'])
@@ -222,6 +222,9 @@ def llvm_print_type_value(x):
 		out("* ")
 	else:
 		out(" ")
+
+	if noundef:
+		out(" noundef")
 	llvm_print_value(x)
 
 
@@ -709,6 +712,12 @@ def print_int_type_for(width):
 	out("i%d" % w)
 
 
+
+"""def print_type(t):
+	print_type2(t)
+	if 'noundef' in t['att']:
+		out(' noundef')"""
+
 # функция может получать только указатель на массив
 # если же в CM она получает массив то тут и в СИ она получает
 # указатель на него, и потом копирует его во внутренний массив
@@ -904,13 +913,22 @@ def do_eval_call(v):
 	else:
 		reg = llvm_operation("call")
 
-	print_type_func(ftype)
+	if ftype['extra_args']:
+		print_type_func(ftype)
+	else:
+		if hlir_type.type_is_unit(ftype['to']):
+			out("void")
+		elif hlir_type.type_is_array(ftype['to']):
+			out("void")
+		else:
+			print_type(ftype['to'])
+
 	out(" ")
 	llvm_print_value(f)
 
 	out("(")
 	if sret:
-		llvm_print_type_value(sret_retval)
+		llvm_print_type_value(sret_retval)#, noundef=True)
 		if len(args) > 0:
 			out(", ")
 
@@ -1716,9 +1734,12 @@ def print_func_paramlist(func, only_types=False, with_attributes=True):
 
 	def print_param_type(param):
 		print_type(param['type'])
+		#out(' noundef')
 
 	def print_param_w_id(param):
-		print_type(param['type']); out(" %%%s" % param['id']['str'])
+		print_type(param['type'])
+		#out(' noundef')
+		out(" %%%s" % param['id']['str'])
 
 	method = print_param_w_id
 	if only_types:
@@ -1830,6 +1851,7 @@ def print_def_func(x):
 	if ftype['extra_args']:
 		global va_list
 		id_str = ftype['va_list_id']['str'] # 'va_list'
+		lo("; va list")
 		va_list = llvm_alloca(foundation.typeFreePointer)
 		locals_add(id_str, va_list)
 		llvm_va_start(va_list)

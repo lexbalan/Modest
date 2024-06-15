@@ -130,9 +130,7 @@ break_2:
 
 
 
-%Clock_T = type %UnsignedLong
 %Socklen_T = type i32
-%Time_T = type %LongInt
 %SizeT = type %UnsignedLongInt
 %SSizeT = type %LongInt
 %PidT = type i32
@@ -140,8 +138,6 @@ break_2:
 %GidT = type i32
 %USecondsT = type i32
 %IntptrT = type i64
-
-
 %OffT = type i64
 %PtrToConst = type i8*
 
@@ -187,6 +183,11 @@ declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
 
 
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, ...)
+
+
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, ...)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, ...)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -273,29 +274,29 @@ declare void @utf32_puts(%Str32* %s)
 @ptr_to_string32 = global [0 x i32]* bitcast ([13 x i32]* @str3 to [0 x i32]*)
 
 define %Int @main() {
-	call void (i8) @utf8_putchar(i8 65)
+	call void @utf8_putchar(i8 65)
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))
-	call void (i16) @utf16_putchar(i16 937)
+	call void @utf16_putchar(i16 937)
 	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str5 to [0 x i8]*))
-	call void (i32) @utf32_putchar(i32 129412)
+	call void @utf32_putchar(i32 129412)
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str6 to [0 x i8]*))
 	%4 = bitcast [6 x i8]* @string8 to %Str8*
-	call void (%Str8*) @utf8_puts(%Str8* %4)
+	call void @utf8_puts(%Str8* %4)
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str7 to [0 x i8]*))
 	%6 = bitcast [8 x i16]* @string16 to %Str16*
-	call void (%Str16*) @utf16_puts(%Str16* %6)
+	call void @utf16_puts(%Str16* %6)
 	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str8 to [0 x i8]*))
 	%8 = bitcast [12 x i32]* @string32 to %Str32*
-	call void (%Str32*) @utf32_puts(%Str32* %8)
+	call void @utf32_puts(%Str32* %8)
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str9 to [0 x i8]*))
 	%10 = load [0 x i8]*, [0 x i8]** @ptr_to_string8
-	call void (%Str8*) @utf8_puts([0 x i8]* %10)
+	call void @utf8_puts([0 x i8]* %10)
 	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str10 to [0 x i8]*))
 	%12 = load [0 x i16]*, [0 x i16]** @ptr_to_string16
-	call void (%Str16*) @utf16_puts([0 x i16]* %12)
+	call void @utf16_puts([0 x i16]* %12)
 	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str11 to [0 x i8]*))
 	%14 = load [0 x i32]*, [0 x i32]** @ptr_to_string32
-	call void (%Str32*) @utf32_puts([0 x i32]* %14)
+	call void @utf32_puts([0 x i32]* %14)
 	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str12 to [0 x i8]*))
 	ret %Int 0
 }

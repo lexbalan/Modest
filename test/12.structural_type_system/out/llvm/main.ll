@@ -130,9 +130,7 @@ break_2:
 
 
 
-%Clock_T = type %UnsignedLong
 %Socklen_T = type i32
-%Time_T = type %LongInt
 %SizeT = type %UnsignedLongInt
 %SSizeT = type %LongInt
 %PidT = type i32
@@ -140,8 +138,6 @@ break_2:
 %GidT = type i32
 %USecondsT = type i32
 %IntptrT = type i64
-
-
 %OffT = type i64
 %PtrToConst = type i8*
 
@@ -187,6 +183,11 @@ declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
 
 
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, ...)
+
+
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, ...)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, ...)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -288,86 +289,86 @@ define void @f3_ptr({i32}* %x) {
 
 define void @test_by_value() {
 	%1 = load %Type1, %Type1* @a
-	call void (%Type1) @f0_val(%Type1 %1)
+	call void @f0_val(%Type1 %1)
 	; cast_composite_to_composite
 	; JUST
 	; as ptr
 	%2 = bitcast %Type1* @a to %Type2*
 	%3 = load %Type2, %Type2* %2
-	call void (%Type2) @f1_val(%Type2 %3)
+	call void @f1_val(%Type2 %3)
 	%4 = load %Type1, %Type1* @a
-	call void (%Type1) @f2_val(%Type1 %4)
+	call void @f2_val(%Type1 %4)
 	; cast_composite_to_composite
 	; JUST
 	; as ptr
 	%5 = bitcast %Type1* @a to {i32}*
 	%6 = load {i32}, {i32}* %5
-	call void ({i32}) @f3_val({i32} %6)
+	call void @f3_val({i32} %6)
 	; cast_composite_to_composite
 	; JUST
 	; as ptr
 	%7 = bitcast %Type2* @b to %Type1*
 	%8 = load %Type1, %Type1* %7
-	call void (%Type1) @f0_val(%Type1 %8)
+	call void @f0_val(%Type1 %8)
 	%9 = load %Type2, %Type2* @b
-	call void (%Type2) @f1_val(%Type2 %9)
+	call void @f1_val(%Type2 %9)
 	; cast_composite_to_composite
 	; JUST
 	; as ptr
 	%10 = bitcast %Type2* @b to %Type1*
 	%11 = load %Type1, %Type1* %10
-	call void (%Type1) @f2_val(%Type1 %11)
+	call void @f2_val(%Type1 %11)
 	; cast_composite_to_composite
 	; JUST
 	; as ptr
 	%12 = bitcast %Type2* @b to {i32}*
 	%13 = load {i32}, {i32}* %12
-	call void ({i32}) @f3_val({i32} %13)
+	call void @f3_val({i32} %13)
 	%14 = load %Type1, %Type1* @c
-	call void (%Type1) @f0_val(%Type1 %14)
+	call void @f0_val(%Type1 %14)
 	; cast_composite_to_composite
 	; JUST
 	; as ptr
 	%15 = bitcast %Type1* @c to %Type2*
 	%16 = load %Type2, %Type2* %15
-	call void (%Type2) @f1_val(%Type2 %16)
+	call void @f1_val(%Type2 %16)
 	%17 = load %Type1, %Type1* @c
-	call void (%Type1) @f2_val(%Type1 %17)
+	call void @f2_val(%Type1 %17)
 	; cast_composite_to_composite
 	; JUST
 	; as ptr
 	%18 = bitcast %Type1* @c to {i32}*
 	%19 = load {i32}, {i32}* %18
-	call void ({i32}) @f3_val({i32} %19)
+	call void @f3_val({i32} %19)
 	ret void
 }
 
 define void @test_by_pointer() {
-	call void (%Type1*) @f0_ptr(%Type1* @a)
+	call void @f0_ptr(%Type1* @a)
 	%1 = bitcast %Type1* @a to %Type2*
-	call void (%Type2*) @f1_ptr(%Type2* %1)
-	call void (%Type1*) @f2_ptr(%Type1* @a)
+	call void @f1_ptr(%Type2* %1)
+	call void @f2_ptr(%Type1* @a)
 	%2 = bitcast %Type1* @a to {i32}*
-	call void ({i32}*) @f3_ptr({i32}* %2)
+	call void @f3_ptr({i32}* %2)
 	%3 = bitcast %Type2* @b to %Type1*
-	call void (%Type1*) @f0_ptr(%Type1* %3)
-	call void (%Type2*) @f1_ptr(%Type2* @b)
+	call void @f0_ptr(%Type1* %3)
+	call void @f1_ptr(%Type2* @b)
 	%4 = bitcast %Type2* @b to %Type1*
-	call void (%Type1*) @f2_ptr(%Type1* %4)
+	call void @f2_ptr(%Type1* %4)
 	%5 = bitcast %Type2* @b to {i32}*
-	call void ({i32}*) @f3_ptr({i32}* %5)
-	call void (%Type1*) @f0_ptr(%Type1* @c)
+	call void @f3_ptr({i32}* %5)
+	call void @f0_ptr(%Type1* @c)
 	%6 = bitcast %Type1* @c to %Type2*
-	call void (%Type2*) @f1_ptr(%Type2* %6)
-	call void (%Type1*) @f2_ptr(%Type1* @c)
+	call void @f1_ptr(%Type2* %6)
+	call void @f2_ptr(%Type1* @c)
 	%7 = bitcast %Type1* @c to {i32}*
-	call void ({i32}*) @f3_ptr({i32}* %7)
+	call void @f3_ptr({i32}* %7)
 	ret void
 }
 
 define %Int @main() {
-	call void () @test_by_value()
-	call void () @test_by_pointer()
+	call void @test_by_value()
+	call void @test_by_pointer()
 	ret %Int 0
 }
 

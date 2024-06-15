@@ -130,9 +130,7 @@ break_2:
 
 
 
-%Clock_T = type %UnsignedLong
 %Socklen_T = type i32
-%Time_T = type %LongInt
 %SizeT = type %UnsignedLongInt
 %SSizeT = type %LongInt
 %PidT = type i32
@@ -140,8 +138,6 @@ break_2:
 %GidT = type i32
 %USecondsT = type i32
 %IntptrT = type i64
-
-
 %OffT = type i64
 %PtrToConst = type i8*
 
@@ -187,6 +183,11 @@ declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
 
 
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, ...)
+
+
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, ...)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, ...)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -199,95 +200,6 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
-
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/libc.hm
-
-
-
-
-%DevT = type i16
-
-
-%InoT = type i32
-
-
-%BlkCntT = type i32
-
-
-%NlinkT = type i16
-
-
-%ModeT = type i32
-
-
-%UIDT = type i16
-
-
-%GIDT = type i8
-
-
-%BlkSizeT = type i16
-
-
-%TimeT = type i32
-
-
-%DIR = type opaque
-
-
-declare i64 @clock()
-declare i8* @malloc(%SizeT %size)
-declare i8* @calloc(%SizeT %num, %SizeT %size)
-declare i8* @memset(i8* %mem, %Int %c, %SizeT %n)
-declare i8* @memcpy(i8* %dst, %PtrToConst %src, %SizeT %len)
-declare i8* @memmove(i8* %dst, %PtrToConst %source, %SizeT %n)
-declare %Int @memcmp(i8* %ptr1, i8* %ptr2, %SizeT %num)
-declare void @free(i8* %ptr)
-declare %Int @strncmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
-declare %Int @strcmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2)
-declare [0 x %Char]* @strcpy([0 x %Char]* %dst, [0 x %ConstChar]* %src)
-declare %SizeT @strlen([0 x %ConstChar]* %s)
-
-
-declare %Int @ftruncate(%Int %fd, %OffT %size)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-declare %Int @creat(%Str* %path, %ModeT %mode)
-declare %Int @open(%Str* %path, %Int %oflags)
-declare %Int @read(%Int %fd, i8* %buf, i32 %len)
-declare %Int @write(%Int %fd, i8* %buf, i32 %len)
-declare %OffT @lseek(%Int %fd, %OffT %offset, %Int %whence)
-declare %Int @close(%Int %fd)
-declare void @exit(%Int %rc)
-
-
-declare %DIR* @opendir(%Str* %name)
-declare %Int @closedir(%DIR* %dir)
-
-
-declare %Str* @getcwd(%Str* %buf, %SizeT %size)
-declare %Str* @getenv(%Str* %name)
-
-
-declare void @bzero(i8* %s, %SizeT %n)
-
-
-declare void @bcopy(i8* %src, i8* %dst, %SizeT %n)
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/misc/sha256.hm
@@ -473,7 +385,7 @@ define i1 @sha256_doTest(%SHA256_TestCase* %test) {
 	%3 = bitcast [32 x i8]* %2 to [0 x i8]*
 	%4 = getelementptr inbounds %SHA256_TestCase, %SHA256_TestCase* %test, i32 0, i32 1
 	%5 = load i32, i32* %4
-	call void ([0 x i8]*, i32, [32 x i8]*) @sha256_doHash([0 x i8]* %3, i32 %5, [32 x i8]* %1)
+	call void @sha256_doHash([0 x i8]* %3, i32 %5, [32 x i8]* %1)
 	%6 = getelementptr inbounds %SHA256_TestCase, %SHA256_TestCase* %test, i32 0, i32 0
 	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str1 to [0 x i8]*), [32 x i8]* %6)
 	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str2 to [0 x i8]*))
@@ -517,7 +429,7 @@ body_1:
 	%5 = load i32, i32* %2
 	%6 = getelementptr inbounds [2 x %SHA256_TestCase*], [2 x %SHA256_TestCase*]* @sha256_tests, i32 0, i32 %5
 	%7 = load %SHA256_TestCase*, %SHA256_TestCase** %6
-	%8 = call i1 (%SHA256_TestCase*) @sha256_doTest(%SHA256_TestCase* %7)
+	%8 = call i1 @sha256_doTest(%SHA256_TestCase* %7)
 	%9 = alloca %Str8*, align 8
 	store %Str8* bitcast ([7 x i8]* @str6 to [0 x i8]*), %Str8** %9
 	br i1 %8 , label %then_0, label %endif_0

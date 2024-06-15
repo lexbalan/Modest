@@ -130,9 +130,7 @@ break_2:
 
 
 
-%Clock_T = type %UnsignedLong
 %Socklen_T = type i32
-%Time_T = type %LongInt
 %SizeT = type %UnsignedLongInt
 %SSizeT = type %LongInt
 %PidT = type i32
@@ -140,8 +138,6 @@ break_2:
 %GidT = type i32
 %USecondsT = type i32
 %IntptrT = type i64
-
-
 %OffT = type i64
 %PtrToConst = type i8*
 
@@ -187,6 +183,11 @@ declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
 
 
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, ...)
+
+
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, ...)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, ...)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -205,6 +206,9 @@ declare void @perror(%ConstCharStr* %str)
 
 
 
+
+%TimeT = type i32
+%ClockT = type %UnsignedLong
 %Struct_tm = type {
 	%Int, 
 	%Int, 
@@ -221,28 +225,28 @@ declare void @perror(%ConstCharStr* %str)
 
 
 
-declare %Clock_T @clock()
+declare %ClockT @clock()
 
 
-declare %Double @difftime(%Time_T %end, %Time_T %beginning)
+declare %Double @difftime(%TimeT %end, %TimeT %beginning)
 
 
-declare %Time_T @mktime(%Struct_tm* %timeptr)
+declare %TimeT @mktime(%Struct_tm* %timeptr)
 
 
-declare %Time_T @time(%Time_T* %timer)
+declare %TimeT @time(%TimeT* %timer)
 
 
 declare %Char* @asctime(%Struct_tm* %timeptr)
 
 
-declare %Char* @ctime(%Time_T* %timer)
+declare %Char* @ctime(%TimeT* %timer)
 
 
-declare %Struct_tm* @gmtime(%Time_T* %timer)
+declare %Struct_tm* @gmtime(%TimeT* %timer)
 
 
-declare %Struct_tm* @localtime(%Time_T* %timer)
+declare %Struct_tm* @localtime(%TimeT* %timer)
 
 
 declare %SizeT @strftime(%Char* %ptr, %SizeT %maxsize, %ConstChar* %format, %Struct_tm* %timeptr)
@@ -546,30 +550,30 @@ declare %Str* @getenv(%Str* %name)
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str1 to [0 x i8]*))
-	%2 = call %PidT () @getpid()
+	%2 = call %PidT @getpid()
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str2 to [0 x i8]*), %PidT %2)
-	%4 = call %Long () @gethostid()
+	%4 = call %Long @gethostid()
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str3 to [0 x i8]*), %Long %4)
 	; current control terminal
 	%6 = alloca [128 x i8], align 1
 	%7 = bitcast [128 x i8]* %6 to [0 x %Char]*
-	%8 = call [0 x %Char]* ([0 x %Char]*) @ctermid([0 x %Char]* %7)
+	%8 = call [0 x %Char]* @ctermid([0 x %Char]* %7)
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str4 to [0 x i8]*), [128 x i8]* %6)
 	; current working directory
 	%10 = alloca [128 x i8], align 1
 	%11 = bitcast [128 x i8]* %10 to [0 x %Char]*
-	%12 = call [0 x %Char]* ([0 x %Char]*, %SizeT) @getcwd([0 x %Char]* %11, %SizeT 128)
+	%12 = call [0 x %Char]* @getcwd([0 x %Char]* %11, %SizeT 128)
 	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str5 to [0 x i8]*), [128 x i8]* %10)
-	%14 = call [0 x %Char]* (%Int) @ttyname(%Int 0)
+	%14 = call [0 x %Char]* @ttyname(%Int 0)
 	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str6 to [0 x i8]*), [0 x %Char]* %14)
-	%16 = call %Str* (%Str*) @getenv(%Str* bitcast ([5 x i8]* @str7 to [0 x i8]*))
+	%16 = call %Str* @getenv(%Str* bitcast ([5 x i8]* @str7 to [0 x i8]*))
 	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str8 to [0 x i8]*), %Str* %16)
 	br label %again_1
 again_1:
 	br i1 1 , label %body_1, label %break_1
 body_1:
 	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str9 to [0 x i8]*))
-	%19 = call %UnsignedInt (%UnsignedInt) @sleep(%UnsignedInt 1)
+	%19 = call %UnsignedInt @sleep(%UnsignedInt 1)
 	br label %again_1
 break_1:
 	ret %Int 0

@@ -5,18 +5,8 @@
 #include <string.h>
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <time.h>
 struct __anonymous_struct_3 {uint32_t x; uint32_t y;};
 struct __anonymous_struct_4 {uint32_t x; uint32_t y;};
-
-
-
-//TODO: now runtime requires memcmp declaration
-// for records & arrays eq
 
 
 

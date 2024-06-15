@@ -1,7 +1,6 @@
 // test/sha256/src/main.cm
 
 import "libc/stdio"
-import "libc/libc"
 
 @attribute("c-no-print")
 import "misc/sha256"

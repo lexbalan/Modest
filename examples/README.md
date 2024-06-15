@@ -53,7 +53,6 @@ func main() -> Int32 {
 
 import "libc/math"
 import "libc/stdio"
-import "libc/libc"
 
 
 type Point record {

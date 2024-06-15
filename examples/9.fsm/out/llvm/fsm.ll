@@ -130,9 +130,7 @@ break_2:
 
 
 
-%Clock_T = type %UnsignedLong
 %Socklen_T = type i32
-%Time_T = type %LongInt
 %SizeT = type %UnsignedLongInt
 %SSizeT = type %LongInt
 %PidT = type i32
@@ -140,8 +138,6 @@ break_2:
 %GidT = type i32
 %USecondsT = type i32
 %IntptrT = type i64
-
-
 %OffT = type i64
 %PtrToConst = type i8*
 
@@ -187,6 +183,11 @@ declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
 
 
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, ...)
+
+
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, ...)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, ...)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -276,7 +277,7 @@ endif_1:
 then_2:
 	%14 = getelementptr inbounds %FSM_StateDesc, %FSM_StateDesc* %8, i32 0, i32 1
 	%15 = load %FSM_Proc, %FSM_Proc* %14
-	call void (%FSM*) %15(%FSM* %fsm)
+	call void %15(%FSM* %fsm)
 	br label %endif_2
 endif_2:
 	%16 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 1
@@ -301,7 +302,7 @@ then_3:
 then_4:
 	%28 = getelementptr inbounds %FSM_StateDesc, %FSM_StateDesc* %24, i32 0, i32 2
 	%29 = load %FSM_Proc, %FSM_Proc* %28
-	call void (%FSM*) %29(%FSM* %fsm)
+	call void %29(%FSM* %fsm)
 	br label %endif_4
 endif_4:
 	br label %endif_3
@@ -328,7 +329,7 @@ endif_6:
 then_7:
 	%42 = getelementptr inbounds %FSM_StateDesc, %FSM_StateDesc* %36, i32 0, i32 3
 	%43 = load %FSM_Proc, %FSM_Proc* %42
-	call void (%FSM*) %43(%FSM* %fsm)
+	call void %43(%FSM* %fsm)
 	br label %endif_7
 endif_7:
 	%44 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 3

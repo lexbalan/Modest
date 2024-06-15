@@ -130,9 +130,7 @@ break_2:
 
 
 
-%Clock_T = type %UnsignedLong
 %Socklen_T = type i32
-%Time_T = type %LongInt
 %SizeT = type %UnsignedLongInt
 %SSizeT = type %LongInt
 %PidT = type i32
@@ -140,99 +138,27 @@ break_2:
 %GidT = type i32
 %USecondsT = type i32
 %IntptrT = type i64
-
-
 %OffT = type i64
 %PtrToConst = type i8*
 
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/libc.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/string.hm
 
 
 
-
-%DevT = type i16
-
-
-%InoT = type i32
-
-
-%BlkCntT = type i32
-
-
-%NlinkT = type i16
-
-
-%ModeT = type i32
-
-
-%UIDT = type i16
-
-
-%GIDT = type i8
-
-
-%BlkSizeT = type i16
-
-
-%TimeT = type i32
-
-
-%DIR = type opaque
-
-
-declare i64 @clock()
-declare i8* @malloc(%SizeT %size)
-declare i8* @calloc(%SizeT %num, %SizeT %size)
 declare i8* @memset(i8* %mem, %Int %c, %SizeT %n)
 declare i8* @memcpy(i8* %dst, %PtrToConst %src, %SizeT %len)
 declare i8* @memmove(i8* %dst, %PtrToConst %source, %SizeT %n)
 declare %Int @memcmp(i8* %ptr1, i8* %ptr2, %SizeT %num)
-declare void @free(i8* %ptr)
 declare %Int @strncmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
 declare %Int @strcmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2)
 declare [0 x %Char]* @strcpy([0 x %Char]* %dst, [0 x %ConstChar]* %src)
 declare %SizeT @strlen([0 x %ConstChar]* %s)
 
 
-declare %Int @ftruncate(%Int %fd, %OffT %size)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-declare %Int @creat(%Str* %path, %ModeT %mode)
-declare %Int @open(%Str* %path, %Int %oflags)
-declare %Int @read(%Int %fd, i8* %buf, i32 %len)
-declare %Int @write(%Int %fd, i8* %buf, i32 %len)
-declare %OffT @lseek(%Int %fd, %OffT %offset, %Int %whence)
-declare %Int @close(%Int %fd)
-declare void @exit(%Int %rc)
-
-
-declare %DIR* @opendir(%Str* %name)
-declare %Int @closedir(%DIR* %dir)
-
-
-declare %Str* @getcwd(%Str* %buf, %SizeT %size)
-declare %Str* @getenv(%Str* %name)
-
-
-declare void @bzero(i8* %s, %SizeT %n)
-
-
-declare void @bcopy(i8* %src, i8* %dst, %SizeT %n)
+declare [0 x %Char]* @strcat([0 x %Char]* %s1, [0 x %ConstChar]* %s2)
+declare [0 x %Char]* @strncat([0 x %Char]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
+declare [0 x %Char]* @strerror(%Int %error)
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
@@ -276,6 +202,11 @@ declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
 
 
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, ...)
+
+
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, ...)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, ...)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -319,7 +250,7 @@ declare void @perror(%ConstCharStr* %str)
 
 define void @write_example() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str2 to [0 x i8]*))
-	%2 = call %File* (%ConstCharStr*, %ConstCharStr*) @fopen(%Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([3 x i8]* @str3 to [0 x i8]*))
+	%2 = call %File* @fopen(%Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([3 x i8]* @str3 to [0 x i8]*))
 	%3 = icmp eq %File* %2, null
 	br i1 %3 , label %then_0, label %endif_0
 then_0:
@@ -332,20 +263,20 @@ endif_0:
 	; (see Makefile)
 	%7 = getelementptr inbounds %Chunk, %Chunk* %6, i32 0, i32 0
 	%8 = bitcast [100 x %Char]* %7 to [0 x %Char]*
-	%9 = call [0 x %Char]* ([0 x %Char]*, [0 x %ConstChar]*) @strcpy([0 x %Char]* %8, [0 x %Char]* bitcast ([3 x i8]* @str5 to [0 x i8]*))
+	%9 = call [0 x %Char]* @strcpy([0 x %Char]* %8, [0 x %Char]* bitcast ([3 x i8]* @str5 to [0 x i8]*))
 	%10 = getelementptr inbounds %Chunk, %Chunk* %6, i32 0, i32 1
 	%11 = bitcast [1024 x %Char]* %10 to [0 x %Char]*
-	%12 = call [0 x %Char]* ([0 x %Char]*, [0 x %ConstChar]*) @strcpy([0 x %Char]* %11, [0 x %Char]* bitcast ([5 x i8]* @str6 to [0 x i8]*))
+	%12 = call [0 x %Char]* @strcpy([0 x %Char]* %11, [0 x %Char]* bitcast ([5 x i8]* @str6 to [0 x i8]*))
 	; write chunk to file
 	%13 = bitcast %Chunk* %6 to i8*
-	%14 = call %SizeT (i8*, %SizeT, %SizeT, %File*) @fwrite(i8* %13, %SizeT 1124, %SizeT 1, %File* %2)
-	%15 = call %Int (%File*) @fclose(%File* %2)
+	%14 = call %SizeT @fwrite(i8* %13, %SizeT 1124, %SizeT 1, %File* %2)
+	%15 = call %Int @fclose(%File* %2)
 	ret void
 }
 
 define void @read_example() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str7 to [0 x i8]*))
-	%2 = call %File* (%ConstCharStr*, %ConstCharStr*) @fopen(%Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([3 x i8]* @str8 to [0 x i8]*))
+	%2 = call %File* @fopen(%Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([3 x i8]* @str8 to [0 x i8]*))
 	%3 = icmp eq %File* %2, null
 	br i1 %3 , label %then_0, label %endif_0
 then_0:
@@ -355,20 +286,20 @@ then_0:
 endif_0:
 	%6 = alloca %Chunk, align 1
 	%7 = bitcast %Chunk* %6 to i8*
-	%8 = call %SizeT (i8*, %SizeT, %SizeT, %File*) @fread(i8* %7, %SizeT 1124, %SizeT 1, %File* %2)
+	%8 = call %SizeT @fread(i8* %7, %SizeT 1124, %SizeT 1, %File* %2)
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str10 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))
 	%10 = getelementptr inbounds %Chunk, %Chunk* %6, i32 0, i32 0
 	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str11 to [0 x i8]*), [100 x %Char]* %10)
 	%12 = getelementptr inbounds %Chunk, %Chunk* %6, i32 0, i32 1
 	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str12 to [0 x i8]*), [1024 x %Char]* %12)
-	%14 = call %Int (%File*) @fclose(%File* %2)
+	%14 = call %Int @fclose(%File* %2)
 	ret void
 }
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str13 to [0 x i8]*))
-	call void () @write_example()
-	call void () @read_example()
+	call void @write_example()
+	call void @read_example()
 	ret %Int 0
 }
 

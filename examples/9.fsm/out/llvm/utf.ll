@@ -130,9 +130,7 @@ break_2:
 
 
 
-%Clock_T = type %UnsignedLong
 %Socklen_T = type i32
-%Time_T = type %LongInt
 %SizeT = type %UnsignedLongInt
 %SSizeT = type %LongInt
 %PidT = type i32
@@ -140,8 +138,6 @@ break_2:
 %GidT = type i32
 %USecondsT = type i32
 %IntptrT = type i64
-
-
 %OffT = type i64
 %PtrToConst = type i8*
 
@@ -187,6 +183,11 @@ declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
 
 
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, ...)
+
+
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, ...)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, ...)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -362,7 +363,7 @@ endif_0:
 
 define void @utf8_putchar(i8 %c) {
 	%1 = sext i8 %c to i32
-	%2 = call %Int (%Int) @putchar(i32 %1)
+	%2 = call %Int @putchar(i32 %1)
 	ret void
 }
 
@@ -374,15 +375,15 @@ define void @utf16_putchar(i16 %c) {
 	store i16 0, i16* %3
 	%4 = alloca i32, align 4
 	%5 = bitcast [2 x i16]* %1 to [0 x i16]*
-	%6 = call i8 ([0 x i16]*, i32*) @utf16_to_utf32([0 x i16]* %5, i32* %4)
+	%6 = call i8 @utf16_to_utf32([0 x i16]* %5, i32* %4)
 	%7 = load i32, i32* %4
-	call void (i32) @utf32_putchar(i32 %7)
+	call void @utf32_putchar(i32 %7)
 	ret void
 }
 
 define void @utf32_putchar(i32 %c) {
 	%1 = alloca [4 x i8], align 1
-	%2 = call i8 (i32, [4 x i8]*) @utf32_to_utf8(i32 %c, [4 x i8]* %1)
+	%2 = call i8 @utf32_to_utf8(i32 %c, [4 x i8]* %1)
 	%3 = sext i8 %2 to %Int
 	%4 = alloca i32, align 4
 	store i32 0, i32* %4
@@ -395,7 +396,7 @@ body_1:
 	%7 = load i32, i32* %4
 	%8 = getelementptr inbounds [4 x i8], [4 x i8]* %1, i32 0, i32 %7
 	%9 = load i8, i8* %8
-	call void (i8) @utf8_putchar(i8 %9)
+	call void @utf8_putchar(i8 %9)
 	%10 = load i32, i32* %4
 	%11 = add i32 %10, 1
 	store i32 %11, i32* %4
@@ -422,7 +423,7 @@ then_0:
 	br label %break_1
 	br label %endif_0
 endif_0:
-	call void (i8) @utf8_putchar(i8 %4)
+	call void @utf8_putchar(i8 %4)
 	%7 = load i32, i32* %1
 	%8 = add i32 %7, 1
 	store i32 %8, i32* %1
@@ -453,7 +454,7 @@ endif_0:
 	%8 = load i32, i32* %1
 	%9 = getelementptr inbounds %Str16, %Str16* %s, i32 0, i32 %8
 	%10 = bitcast i16* %9 to [0 x i16]*
-	%11 = call i8 ([0 x i16]*, i32*) @utf16_to_utf32([0 x i16]* %10, i32* %7)
+	%11 = call i8 @utf16_to_utf32([0 x i16]* %10, i32* %7)
 	%12 = icmp eq i8 %11, 0
 	br i1 %12 , label %then_1, label %endif_1
 then_1:
@@ -461,7 +462,7 @@ then_1:
 	br label %endif_1
 endif_1:
 	%14 = load i32, i32* %7
-	call void (i32) @utf32_putchar(i32 %14)
+	call void @utf32_putchar(i32 %14)
 	%15 = load i32, i32* %1
 	%16 = sext i8 %11 to i32
 	%17 = add i32 %15, %16
@@ -487,7 +488,7 @@ then_0:
 	br label %break_1
 	br label %endif_0
 endif_0:
-	call void (i32) @utf32_putchar(i32 %4)
+	call void @utf32_putchar(i32 %4)
 	%7 = load i32, i32* %1
 	%8 = add i32 %7, 1
 	store i32 %8, i32* %1

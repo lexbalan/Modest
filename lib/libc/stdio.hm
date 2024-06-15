@@ -80,9 +80,18 @@ func sprintf(buf: *CharStr, format: *ConstCharStr, va_list: VA_List) -> Int
 
 
 
-//func vfprintf(f: *File, format: *ConstCharStr, arg: VaList) -> Int
-//func vprintf(format: *ConstCharStr, arg: VaList) -> Int
-//func vsprintf(str: *CharStr, format: *ConstCharStr, arg: VaList) -> Int
+//func vfprintf(f: *File, format: *ConstCharStr, arg: VA_List) -> Int
+//func vprintf(format: *ConstCharStr, arg: VA_List) -> Int
+func vsprintf(str: *CharStr, format: *ConstCharStr, arg: VA_List) -> Int
+
+//int vsnprintf (char * s, size_t n, const char * format, va_list arg );
+
+// __vsprintf_chk -- convert formatted output, with stack checking
+func vsnprintf(str: *CharStr, n: SizeT, format: *ConstCharStr, arg: VA_List) -> Int
+
+
+func __vsnprintf_chk (dest:*CharStr, len:SizeT, flags:Int, dstlen:SizeT, format:*ConstCharStr, arg: VA_List) -> Int
+
 
 func fgetc(f: *File) -> Int
 func fputc(char: Int, f: *File) -> Int

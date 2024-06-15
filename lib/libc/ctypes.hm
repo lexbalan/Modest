@@ -13,14 +13,8 @@ import "./ctypes64"
 @endif
 
 
-@property("c_alias", "clock_t")
-type Clock_T UnsignedLong
-
 @property("c_alias", "socklen_t")
 type Socklen_T Nat32
-
-@property("c_alias", "time_t")
-type Time_T LongInt
 
 @property("c_alias", "size_t")
 type SizeT UnsignedLongInt
@@ -38,7 +32,7 @@ type GidT Nat32
 @property("c_alias", "useconds_t")
 type USecondsT Nat32
 @property("c_alias", "intptr_t")
-type IntptrT Nat64  // ?
+type IntptrT Nat64
 @property("c_alias", "off_t")
 type OffT Int64
 

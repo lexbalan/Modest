@@ -1,7 +1,6 @@
 // test/arrays/src/main.cm
 
 import "libc/stdio"
-import "libc/libc"
 import "libc/math"
 
 @attribute("c-no-print")

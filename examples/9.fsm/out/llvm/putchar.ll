@@ -112,17 +112,17 @@ declare void @utf32_puts(%Str32* %s)
 
 
 define void @putchar8(i8 %c) {
-	call void (i8) @utf8_putchar(i8 %c)
+	call void @utf8_putchar(i8 %c)
 	ret void
 }
 
 define void @putchar16(i16 %c) {
-	call void (i16) @utf16_putchar(i16 %c)
+	call void @utf16_putchar(i16 %c)
 	ret void
 }
 
 define void @putchar32(i32 %c) {
-	call void (i32) @utf32_putchar(i32 %c)
+	call void @utf32_putchar(i32 %c)
 	ret void
 }
 

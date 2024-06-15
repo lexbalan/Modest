@@ -130,9 +130,7 @@ break_2:
 
 
 
-%Clock_T = type %UnsignedLong
 %Socklen_T = type i32
-%Time_T = type %LongInt
 %SizeT = type %UnsignedLongInt
 %SSizeT = type %LongInt
 %PidT = type i32
@@ -140,99 +138,58 @@ break_2:
 %GidT = type i32
 %USecondsT = type i32
 %IntptrT = type i64
-
-
 %OffT = type i64
 %PtrToConst = type i8*
 
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/libc.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/time.hm
 
 
-
-
-%DevT = type i16
-
-
-%InoT = type i32
-
-
-%BlkCntT = type i32
-
-
-%NlinkT = type i16
-
-
-%ModeT = type i32
-
-
-%UIDT = type i16
-
-
-%GIDT = type i8
-
-
-%BlkSizeT = type i16
 
 
 %TimeT = type i32
-
-
-%DIR = type opaque
-
-
-declare i64 @clock()
-declare i8* @malloc(%SizeT %size)
-declare i8* @calloc(%SizeT %num, %SizeT %size)
-declare i8* @memset(i8* %mem, %Int %c, %SizeT %n)
-declare i8* @memcpy(i8* %dst, %PtrToConst %src, %SizeT %len)
-declare i8* @memmove(i8* %dst, %PtrToConst %source, %SizeT %n)
-declare %Int @memcmp(i8* %ptr1, i8* %ptr2, %SizeT %num)
-declare void @free(i8* %ptr)
-declare %Int @strncmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
-declare %Int @strcmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2)
-declare [0 x %Char]* @strcpy([0 x %Char]* %dst, [0 x %ConstChar]* %src)
-declare %SizeT @strlen([0 x %ConstChar]* %s)
-
-
-declare %Int @ftruncate(%Int %fd, %OffT %size)
+%ClockT = type %UnsignedLong
+%Struct_tm = type {
+	%Int, 
+	%Int, 
+	%Int, 
+	%Int, 
+	%Int, 
+	%Int, 
+	%Int, 
+	%Int, 
+	%Int, 
+	%LongInt, 
+	%ConstChar*
+}
 
 
 
+declare %ClockT @clock()
 
 
+declare %Double @difftime(%TimeT %end, %TimeT %beginning)
 
 
+declare %TimeT @mktime(%Struct_tm* %timeptr)
 
 
+declare %TimeT @time(%TimeT* %timer)
 
 
+declare %Char* @asctime(%Struct_tm* %timeptr)
 
 
+declare %Char* @ctime(%TimeT* %timer)
 
 
-
-declare %Int @creat(%Str* %path, %ModeT %mode)
-declare %Int @open(%Str* %path, %Int %oflags)
-declare %Int @read(%Int %fd, i8* %buf, i32 %len)
-declare %Int @write(%Int %fd, i8* %buf, i32 %len)
-declare %OffT @lseek(%Int %fd, %OffT %offset, %Int %whence)
-declare %Int @close(%Int %fd)
-declare void @exit(%Int %rc)
+declare %Struct_tm* @gmtime(%TimeT* %timer)
 
 
-declare %DIR* @opendir(%Str* %name)
-declare %Int @closedir(%DIR* %dir)
+declare %Struct_tm* @localtime(%TimeT* %timer)
 
 
-declare %Str* @getcwd(%Str* %buf, %SizeT %size)
-declare %Str* @getenv(%Str* %name)
-
-
-declare void @bzero(i8* %s, %SizeT %n)
-
-
-declare void @bcopy(i8* %src, i8* %dst, %SizeT %n)
+declare %SizeT @strftime(%Char* %ptr, %SizeT %maxsize, %ConstChar* %format, %Struct_tm* %timeptr)
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/lightfood/delay.cm
@@ -241,12 +198,12 @@ declare void @bcopy(i8* %src, i8* %dst, %SizeT %n)
 
 
 define void @delay_us(i64 %us) {
-	%1 = call i64 () @clock()
+	%1 = call %ClockT @clock()
 	br label %again_1
 again_1:
-	%2 = call i64 () @clock()
-	%3 = add i64 %1, %us
-	%4 = icmp ult i64 %2, %3
+	%2 = call %ClockT @clock()
+	%3 = add %ClockT %1, %us
+	%4 = icmp ult %ClockT %2, %3
 	br i1 %4 , label %body_1, label %break_1
 body_1:
 	; just waiting
@@ -256,19 +213,19 @@ break_1:
 }
 
 define void @delay(i64 %us) {
-	call void (i64) @delay_us(i64 %us)
+	call void @delay_us(i64 %us)
 	ret void
 }
 
 define void @delay_ms(i64 %ms) {
 	%1 = mul i64 %ms, 1000
-	call void (i64) @delay_us(i64 %1)
+	call void @delay_us(i64 %1)
 	ret void
 }
 
 define void @delay_s(i64 %s) {
 	%1 = mul i64 %s, 1000
-	call void (i64) @delay_ms(i64 %1)
+	call void @delay_ms(i64 %1)
 	ret void
 }
 

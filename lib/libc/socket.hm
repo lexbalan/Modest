@@ -1,7 +1,7 @@
 
 @pragma("not_included")
 
-import "./libc"
+import "ctypes"
 
 @c_include("arpa/inet.h")
 //@c_include("sys/socket.h")

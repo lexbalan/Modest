@@ -130,9 +130,7 @@ break_2:
 
 
 
-%Clock_T = type %UnsignedLong
 %Socklen_T = type i32
-%Time_T = type %LongInt
 %SizeT = type %UnsignedLongInt
 %SSizeT = type %LongInt
 %PidT = type i32
@@ -140,8 +138,6 @@ break_2:
 %GidT = type i32
 %USecondsT = type i32
 %IntptrT = type i64
-
-
 %OffT = type i64
 %PtrToConst = type i8*
 
@@ -187,6 +183,11 @@ declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
 
 
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, ...)
+
+
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, ...)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, ...)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -381,12 +382,12 @@ break_4:
 	%89 = getelementptr inbounds [10 x i32], [10 x i32]* %60, i32 0, i8 2
 	%90 = bitcast i32* %89 to [7 x i32]*
 	%91 = bitcast [7 x i32]* %90 to [0 x i32]*
-	call void ([0 x i32]*, i32) @array_print([0 x i32]* %91, i32 7)
+	call void @array_print([0 x i32]* %91, i32 7)
 	%92 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @str10 to [0 x i8]*))
 	%93 = getelementptr inbounds [7 x i32], [7 x i32]* %90, i32 0, i32 0
 	store i32 123, i32* %93
 	%94 = bitcast [7 x i32]* %90 to [0 x i32]*
-	call void ([0 x i32]*, i32) @array_print([0 x i32]* %94, i32 7)
+	call void @array_print([0 x i32]* %94, i32 7)
 	%95 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @str11 to [0 x i8]*))
 	%96 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([32 x i8]* @str12 to [0 x i8]*))
 	; за каким то хером это работает, то что мне сейчас нужно
@@ -396,7 +397,7 @@ break_4:
 	store [0 x i32]* %98, [0 x i32]** %97
 	%99 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str13 to [0 x i8]*))
 	%100 = load [0 x i32]*, [0 x i32]** %97
-	call void ([0 x i32]*, i32) @array_print([0 x i32]* %100, i32 10)
+	call void @array_print([0 x i32]* %100, i32 10)
 	%101 = alloca i32, align 4
 	store i32 1, i32* %101
 	%102 = load [0 x i32]*, [0 x i32]** %97
@@ -407,7 +408,7 @@ break_4:
 	store [0 x i32]* %105, [0 x i32]** %97
 	%106 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str14 to [0 x i8]*))
 	%107 = load [0 x i32]*, [0 x i32]** %97
-	call void ([0 x i32]*, i32) @array_print([0 x i32]* %107, i32 10)
+	call void @array_print([0 x i32]* %107, i32 10)
 	ret %Int 0
 }
 

@@ -1,6 +1,6 @@
 // examples/8.linked_list/src/main.cm
 
-import "libc/libc"
+import "libc/stdlib"
 import "libc/stdio"
 
 import "./linked_list"

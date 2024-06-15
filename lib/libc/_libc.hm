@@ -37,9 +37,6 @@ type GIDT Int8	   /* group id */
 @property("c_alias", "blksize_t")
 type BlkSizeT Int16  /* used for block sizes */
 
-@property("c_alias", "time_t")
-type TimeT Int32	 /* time in seconds since 1970 */
-
 
 
 //type Stat record {
@@ -58,83 +55,22 @@ type TimeT Int32	 /* time in seconds since 1970 */
 //  ctime: TimeT	   /* время последнего изменения */
 //}
 
-@property("c_alias", "DIR")
-type DIR
 
-// from time.h
-func clock () -> Nat64
-
-func malloc(size: SizeT) -> Ptr
-func calloc(num: SizeT, size: SizeT) -> Ptr
-@attribute("value.type.to:dispensable")
-func memset (mem: Ptr, c: Int, n: SizeT) -> Ptr
-@attribute("value.type.to:dispensable")
-func memcpy(dst: Ptr, src: PtrToConst, len: SizeT) -> Ptr
-@attribute("value.type.to:dispensable")
-func memmove (dst: Ptr, source: PtrToConst, n: SizeT) -> Ptr
-func memcmp(ptr1: Ptr, ptr2: Ptr, num: SizeT) -> Int
-func free(ptr: Ptr) -> Unit
-
-func strncmp(s1: *[]ConstChar, s2: *[]ConstChar, n: SizeT) -> Int
-func strcmp(s1: *[]ConstChar, s2: *[]ConstChar) -> Int
-@attribute("value.type.to:dispensable")
-func strcpy(dst: *[]Char, src: *[]ConstChar) -> *[]Char
-func strlen(s: *[]ConstChar) -> SizeT
 
 //func mkdir (path: *Str, mode: Mode_T) -> Int
 
-func ftruncate (fd: Int, size: OffT) -> Int
 
-// from unistd.h
-//func pause () -> Int
-
-
-let c_O_RDONLY = 0x0000   // open for reading only
-let c_O_WRONLY = 0x0001   // open for writing only
-let c_O_RDWR = 0x0002	 // open for reading and writing
-
-let o_CREAT = 0x0200
-let o_TRUNC = 0x0400	  // trunc to zero len
-let o_WRONLY = 0x0001
-
-let o_RDONLY = 00
-let o_RDWR = 02
-
+/* from stat.h */
 let s_IRUSR = 0x0000100   // R for owner
 let s_IWUSR = 0x0000080   // W for owner
 let s_IXUSR = 0x0000040   // X for owner
 
 
-@attribute("value.type.to:dispensable")
-func creat(path: *Str, mode: ModeT) -> Int
-func open(path: *Str, oflags: Int) -> Int
-@attribute("value.type.to:dispensable")
-func read(fd: Int, buf: Ptr, len: Nat32) -> Int
-@attribute("value.type.to:dispensable")
-func write(fd: Int, buf: Ptr, len: Nat32) -> Int
-@attribute("value.type.to:dispensable")
-func lseek(fd: Int, offset: OffT, whence: Int) -> OffT
-@attribute("value.type.to:dispensable")
-func close(fd: Int) -> Int
-func exit(rc: Int) -> Unit
-//func fstat(fd: Int, buf: *Stat) -> Int
-
-
-func opendir(name: *Str) -> *DIR
-func closedir(dir: *DIR) -> Int
-
-// current working directory
-func getcwd(buf: *Str, size: SizeT) -> *Str
-
-func getenv(name: *Str) -> *Str
-
-
-
 // нестандартная (BSD) функция
 // как правило - макрос над memset
-func bzero(s: Ptr, n: SizeT) -> Unit
+//func bzero(s: Ptr, n: SizeT) -> Unit
 
 // нестандартная (BSD) функция
 // как правило - макрос над memmove (strings.h)
-func bcopy(src: Ptr, dst: Ptr, n: SizeT) -> Unit
+//func bcopy(src: Ptr, dst: Ptr, n: SizeT) -> Unit
 

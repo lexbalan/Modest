@@ -191,6 +191,11 @@ declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
 
 
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, ...)
+
+
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, ...)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, ...)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -235,7 +240,7 @@ then_0:
 	br label %break_1
 	br label %endif_0
 endif_0:
-	call void (i8) @putchar8(i8 %4)
+	call void @putchar8(i8 %4)
 	%7 = load i32, i32* %1
 	%8 = add i32 %7, 1
 	store i32 %8, i32* %1
@@ -245,6 +250,7 @@ break_1:
 }
 
 define void @print(%Str8* %form, ...) {
+	; va list
 	%1 = alloca i8*
 	%2 = bitcast i8** %1 to i8*
 	call void @llvm.va_start(i8* %2)
@@ -281,7 +287,7 @@ then_1:
 then_2:
 	; "\{" -> "{"
 	%19 = load i8, i8* %4
-	call void (i8) @putchar8(i8 %19)
+	call void @putchar8(i8 %19)
 	%20 = load i32, i32* %3
 	%21 = add i32 %20, 2
 	store i32 %21, i32* %3
@@ -294,7 +300,7 @@ else_2:
 then_3:
 	; "\}" -> "{"
 	%25 = load i8, i8* %4
-	call void (i8) @putchar8(i8 %25)
+	call void @putchar8(i8 %25)
 	%26 = load i32, i32* %3
 	%27 = add i32 %26, 2
 	store i32 %27, i32* %3
@@ -337,7 +343,7 @@ then_5:
 	; %i & %d for signed integer (Int)
 	%48 = va_arg %VA_List* %1, i32
 	%49 = load [0 x i8]*, [0 x i8]** %39
-	call void ([0 x i8]*, i32) @sprintf_dec_int32([0 x i8]* %49, i32 %48)
+	call void @sprintf_dec_int32([0 x i8]* %49, i32 %48)
 	br label %endif_5
 else_5:
 	%50 = load i8, i8* %4
@@ -347,7 +353,7 @@ then_6:
 	; %n for unsigned integer (Nat)
 	%52 = va_arg %VA_List* %1, i32
 	%53 = load [0 x i8]*, [0 x i8]** %39
-	call void ([0 x i8]*, i32) @sprintf_dec_nat32([0 x i8]* %53, i32 %52)
+	call void @sprintf_dec_nat32([0 x i8]* %53, i32 %52)
 	br label %endif_6
 else_6:
 	%54 = load i8, i8* %4
@@ -361,7 +367,7 @@ then_7:
 	; %p for pointers
 	%59 = va_arg %VA_List* %1, i32
 	%60 = load [0 x i8]*, [0 x i8]** %39
-	call void ([0 x i8]*, i32) @sprintf_hex_nat32([0 x i8]* %60, i32 %59)
+	call void @sprintf_hex_nat32([0 x i8]* %60, i32 %59)
 	br label %endif_7
 else_7:
 	%61 = load i8, i8* %4
@@ -396,11 +402,11 @@ endif_6:
 	br label %endif_5
 endif_5:
 	%71 = load [0 x i8]*, [0 x i8]** %39
-	call void (%Str8*) @put_str8([0 x i8]* %71)
+	call void @put_str8([0 x i8]* %71)
 	br label %endif_4
 else_4:
 	%72 = load i8, i8* %4
-	call void (i8) @putchar8(i8 %72)
+	call void @putchar8(i8 %72)
 	br label %endif_4
 endif_4:
 	%73 = load i32, i32* %3
@@ -451,7 +457,7 @@ body_1:
 	%8 = load i32, i32* %3
 	%9 = getelementptr inbounds [8 x i8], [8 x i8]* %1, i32 0, i32 %8
 	%10 = trunc i32 %5 to i8
-	%11 = call i8 (i8) @n_to_sym(i8 %10)
+	%11 = call i8 @n_to_sym(i8 %10)
 	store i8 %11, i8* %9
 	%12 = load i32, i32* %3
 	%13 = add i32 %12, 1
@@ -522,7 +528,7 @@ body_1:
 	%12 = load i32, i32* %7
 	%13 = getelementptr inbounds [11 x i8], [11 x i8]* %1, i32 0, i32 %12
 	%14 = trunc i32 %9 to i8
-	%15 = call i8 (i8) @n_to_sym(i8 %14)
+	%15 = call i8 @n_to_sym(i8 %14)
 	store i8 %15, i8* %13
 	%16 = load i32, i32* %7
 	%17 = add i32 %16, 1
@@ -592,7 +598,7 @@ body_1:
 	%8 = load i32, i32* %3
 	%9 = getelementptr inbounds [11 x i8], [11 x i8]* %1, i32 0, i32 %8
 	%10 = trunc i32 %5 to i8
-	%11 = call i8 (i8) @n_to_sym(i8 %10)
+	%11 = call i8 @n_to_sym(i8 %10)
 	store i8 %11, i8* %9
 	%12 = load i32, i32* %3
 	%13 = add i32 %12, 1

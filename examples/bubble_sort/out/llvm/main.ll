@@ -130,9 +130,7 @@ break_2:
 
 
 
-%Clock_T = type %UnsignedLong
 %Socklen_T = type i32
-%Time_T = type %LongInt
 %SizeT = type %UnsignedLongInt
 %SSizeT = type %LongInt
 %PidT = type i32
@@ -140,8 +138,6 @@ break_2:
 %GidT = type i32
 %USecondsT = type i32
 %IntptrT = type i64
-
-
 %OffT = type i64
 %PtrToConst = type i8*
 
@@ -187,6 +183,11 @@ declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
 
 
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, ...)
+
+
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, ...)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, ...)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -295,13 +296,13 @@ define i32 @main() {
 	;fill_array(&array, lengthof(array))
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
 	%2 = bitcast [21 x i32]* @array to [0 x i32]*
-	call void ([0 x i32]*, i32) @print_array([0 x i32]* %2, i32 21)
+	call void @print_array([0 x i32]* %2, i32 21)
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
 	%4 = bitcast [21 x i32]* @array to [0 x i32]*
-	call void ([0 x i32]*, i32) @bubble_sort32([0 x i32]* %4, i32 21)
+	call void @bubble_sort32([0 x i32]* %4, i32 21)
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str3 to [0 x i8]*))
 	%6 = bitcast [21 x i32]* @array to [0 x i32]*
-	call void ([0 x i32]*, i32) @print_array([0 x i32]* %6, i32 21)
+	call void @print_array([0 x i32]* %6, i32 21)
 	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))
 	ret i32 0
 }
@@ -341,7 +342,7 @@ again_1:
 body_1:
 	%5 = load i32, i32* %2
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str7 to [0 x i8]*), i32 %5)
-	%7 = call i32 (i32, i32) @get_number(i32 -1000, i32 1000)
+	%7 = call i32 @get_number(i32 -1000, i32 1000)
 	%8 = load i32, i32* %2
 	%9 = getelementptr inbounds [0 x i32], [0 x i32]* %array, i32 0, i32 %8
 	store i32 %7, i32* %9

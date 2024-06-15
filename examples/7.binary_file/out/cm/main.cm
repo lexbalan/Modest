@@ -1,6 +1,6 @@
 // examples/7.binary_file/main.cm
 
-import "libc/libc"
+import "libc/string"
 import "libc/stdio"
 
 

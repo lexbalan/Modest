@@ -6,11 +6,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <fcntl.h>
 #include <unistd.h>
-#include <time.h>
 #include <arpa/inet.h>
+
 
 
 
@@ -33,7 +31,7 @@ void send_file(FILE *fp, int sockfd)
 			perror("[-] Error in sendung data");
 			exit(1);
 		}
-		bzero((char *)&data, bufSize);
+		memset(&data, 0, sizeof(char[bufSize]));
 	}
 }
 

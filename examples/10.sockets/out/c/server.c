@@ -6,10 +6,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <time.h>
 #include <arpa/inet.h>
 
 
@@ -42,7 +38,7 @@ void write_file(int sockfd)
 		}
 
 		fprintf(fp, "%s", (char *)&buffer);
-		bzero((char *)&buffer, bufSize);
+		memset(&buffer, 0, sizeof(char[bufSize]));
 	}
 }
 

@@ -130,9 +130,7 @@ break_2:
 
 
 
-%Clock_T = type %UnsignedLong
 %Socklen_T = type i32
-%Time_T = type %LongInt
 %SizeT = type %UnsignedLongInt
 %SSizeT = type %LongInt
 %PidT = type i32
@@ -140,8 +138,6 @@ break_2:
 %GidT = type i32
 %USecondsT = type i32
 %IntptrT = type i64
-
-
 %OffT = type i64
 %PtrToConst = type i8*
 
@@ -187,6 +183,11 @@ declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
 
 
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, ...)
+
+
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, ...)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, ...)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -275,7 +276,7 @@ then_0:
 	br label %endif_0
 else_0:
 	store i8 0, i8* @cnt
-	call void (%FSM*, i32) @fsm_switch(%FSM* %fsm, i32 1)
+	call void @fsm_switch(%FSM* %fsm, i32 1)
 	br label %endif_0
 endif_0:
 	ret void
@@ -305,7 +306,7 @@ then_0:
 	br label %endif_0
 else_0:
 	store i8 0, i8* @cnt
-	call void (%FSM*, i32) @fsm_switch(%FSM* %fsm, i32 2)
+	call void @fsm_switch(%FSM* %fsm, i32 2)
 	br label %endif_0
 endif_0:
 	ret void
@@ -321,7 +322,7 @@ define void @on_exit(%FSM* %fsm) {
 define void @beacon_entry(%FSM* %fsm) {
 	%1 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 1
 	%2 = load %UInt32, %UInt32* %1
-	%3 = call %Str8* (%FSM*, i32) @fsm_state_no_name(%FSM* %fsm, %UInt32 %2)
+	%3 = call %Str8* @fsm_state_no_name(%FSM* %fsm, %UInt32 %2)
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str3 to [0 x i8]*), %Str8* %3)
 	ret void
 }
@@ -338,7 +339,7 @@ then_0:
 	br label %endif_0
 else_0:
 	store i8 0, i8* @cnt
-	call void (%FSM*, i32) @fsm_switch(%FSM* %fsm, i32 0)
+	call void @fsm_switch(%FSM* %fsm, i32 0)
 	br label %endif_0
 endif_0:
 	ret void
@@ -347,7 +348,7 @@ endif_0:
 define void @beacon_exit(%FSM* %fsm) {
 	%1 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 2
 	%2 = load %UInt32, %UInt32* %1
-	%3 = call %Str8* (%FSM*, i32) @fsm_state_no_name(%FSM* %fsm, %UInt32 %2)
+	%3 = call %Str8* @fsm_state_no_name(%FSM* %fsm, %UInt32 %2)
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str5 to [0 x i8]*), %Str8* %3)
 	ret void
 }
@@ -434,8 +435,8 @@ define %Int @main() {
 again_1:
 	br i1 1 , label %body_1, label %break_1
 body_1:
-	call void (%FSM*) @fsm_run(%FSM* @fsm)
-	call void (i64) @delay_ms(i64 500)
+	call void @fsm_run(%FSM* @fsm)
+	call void @delay_ms(i64 500)
 	br label %again_1
 break_1:
 	ret %Int 0

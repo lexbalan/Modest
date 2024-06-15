@@ -1,26 +1,39 @@
 // test/va_list/src/main.cm
 
 import "libc/stdio"
-@attribute("c-no-print")
+import "libc/libc"
+import "libc/unistd"
+
+/*@attribute("c-no-print")
 import "lightfood/print"
-@c_include "./print.h"
+@c_include("./print.h")*/
+func my_printf(format: *Str8, va_list: VA_List) -> SSizeT {
+	let maxstr = 128 + 1
+	var buf: [maxstr]Char8
+	//let n = vsnprintf(&buf, maxstr, format, va_list)
+	let n = __vsnprintf_chk(&buf, maxstr, 0, maxstr, format, va_list)
+	return write(c_STDOUT_FILENO, &buf, SizeT n)
+}
 
 
 func main() -> Int {
-	print("Hello World!\n")
+	//print("Hello World!\n")
 
-	let c = Char8 "$"
+	var k: Int32 = 10
+	my_printf("My Printf Test %d\n", k)
+
+	/*let c = Char8 "$"
 	let s = *Str8 "Hi!"
 	let i = Int32 -1
 	let n = Nat32 123
 	let x = Nat32 0x1234567F
 
-	print("\\{{\\}}\n")
+	print("\{\}\n")
 	print("c = '{c}'\n", c)
 	print("s = \"{s}\"\n", s)
 	print("i = {i}\n", i)
 	print("n = {n}\n", n)
-	print("x = 0x{x}\n", x)
+	print("x = 0x{x}\n", x)*/
 
 	return 0
 }

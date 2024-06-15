@@ -130,9 +130,7 @@ break_2:
 
 
 
-%Clock_T = type %UnsignedLong
 %Socklen_T = type i32
-%Time_T = type %LongInt
 %SizeT = type %UnsignedLongInt
 %SSizeT = type %LongInt
 %PidT = type i32
@@ -140,8 +138,6 @@ break_2:
 %GidT = type i32
 %USecondsT = type i32
 %IntptrT = type i64
-
-
 %OffT = type i64
 %PtrToConst = type i8*
 
@@ -187,6 +183,11 @@ declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
 
 
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, ...)
+
+
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, ...)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, ...)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -250,10 +251,10 @@ define %Int @main() {
 	store i64 20, i64* %3
 	%4 = load i64, i64* %2
 	%5 = load i64, i64* %3
-	%6 = call i64 (i64, i64) @sum64(i64 %4, i64 %5)
+	%6 = call i64 @sum64(i64 %4, i64 %5)
 	%7 = load i64, i64* %2
 	%8 = load i64, i64* %3
-	%9 = call i64 (i64, i64) @sub64(i64 %7, i64 %8)
+	%9 = call i64 @sub64(i64 %7, i64 %8)
 	%10 = load i64, i64* %2
 	%11 = load i64, i64* %3
 	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str4 to [0 x i8]*), i64 %10, i64 %11, i64 %6)
@@ -262,7 +263,7 @@ define %Int @main() {
 	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str5 to [0 x i8]*), i64 %13, i64 %14, i64 %9)
 	%16 = load i64, i64* %2
 	%17 = load i64, i64* %3
-	call void (i64, i64) @sumsub64(i64 %16, i64 %17)
+	call void @sumsub64(i64 %16, i64 %17)
 	ret %Int 0
 }
 

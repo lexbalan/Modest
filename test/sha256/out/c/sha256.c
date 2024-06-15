@@ -4,12 +4,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdlib.h>
 #include <string.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <time.h>
-
 
 
 #include "sha256.h"

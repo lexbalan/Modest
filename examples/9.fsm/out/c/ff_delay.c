@@ -4,19 +4,14 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdlib.h>
-#include <string.h>
-#include <fcntl.h>
-#include <unistd.h>
 #include <time.h>
-
 
 
 
 
 void delay_us(uint64_t us)
 {
-	const uint64_t start_time = clock();
+	const clock_t start_time = clock();
 	while (clock() < start_time + us) {
 		// just waiting
 	}

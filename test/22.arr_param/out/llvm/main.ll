@@ -130,9 +130,7 @@ break_2:
 
 
 
-%Clock_T = type %UnsignedLong
 %Socklen_T = type i32
-%Time_T = type %LongInt
 %SizeT = type %UnsignedLongInt
 %SSizeT = type %LongInt
 %PidT = type i32
@@ -140,8 +138,6 @@ break_2:
 %GidT = type i32
 %USecondsT = type i32
 %IntptrT = type i64
-
-
 %OffT = type i64
 %PtrToConst = type i8*
 
@@ -187,6 +183,11 @@ declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
 
 
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, ...)
+
+
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, ...)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, ...)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -259,7 +260,7 @@ define %Int @main() {
 	; function returns array
 	%1 = alloca [8 x i8], align 1; alloca memory for return value
 	%2 = alloca [8 x i8]
-	call void ([8 x i8]*) @ret_str([8 x i8]* %2)
+	call void @ret_str([8 x i8]* %2)
 	%3 = load [8 x i8], [8 x i8]* %2
 	store [8 x i8] %3, [8 x i8]* %1
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str1 to [0 x i8]*), [8 x i8]* %1)
@@ -278,7 +279,7 @@ define %Int @main() {
 	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str4 to [0 x i8]*), i32 %13)
 	%15 = load [2 x i32], [2 x i32]* %5; alloca memory for return value
 	%16 = alloca [2 x i32]
-	call void ([2 x i32]*, [2 x i32]) @swap([2 x i32]* %16, [2 x i32] %15)
+	call void @swap([2 x i32]* %16, [2 x i32] %15)
 	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str5 to [0 x i8]*))
 	%18 = getelementptr inbounds [2 x i32], [2 x i32]* %16, i32 0, i32 0
 	%19 = load i32, i32* %18

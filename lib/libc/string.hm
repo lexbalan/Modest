@@ -1,0 +1,26 @@
+@pragma("not_included")
+
+import "ctypes"
+
+@c_include("string.h")
+
+
+@attribute("value.type.to:dispensable")
+func memset (mem: Ptr, c: Int, n: SizeT) -> Ptr
+@attribute("value.type.to:dispensable")
+func memcpy(dst: Ptr, src: PtrToConst, len: SizeT) -> Ptr
+@attribute("value.type.to:dispensable")
+func memmove (dst: Ptr, source: PtrToConst, n: SizeT) -> Ptr
+func memcmp(ptr1: Ptr, ptr2: Ptr, num: SizeT) -> Int
+func strncmp(s1: *[]ConstChar, s2: *[]ConstChar, n: SizeT) -> Int
+func strcmp(s1: *[]ConstChar, s2: *[]ConstChar) -> Int
+@attribute("value.type.to:dispensable")
+func strcpy(dst: *[]Char, src: *[]ConstChar) -> *[]Char
+func strlen(s: *[]ConstChar) -> SizeT
+
+//char *strcat(char *s1, const char *s2);
+func strcat(s1: *[]Char, s2: *[]ConstChar) -> *[]Char
+func strncat(s1: *[]Char, s2: *[]ConstChar, n: SizeT) -> *[]Char
+func strerror(error: Int) -> *[]Char
+
+

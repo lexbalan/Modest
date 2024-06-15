@@ -8,7 +8,7 @@ import "libc/unistd"
 func main() -> Int {
 	printf("ctime test\n")
 
-	var timer: Time_T
+	var timer: TimeT
 	var y2k: Struct_tm
 	var tm: *Struct_tm
 	var sec: Double

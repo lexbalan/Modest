@@ -5,11 +5,6 @@
 #include <string.h>
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <time.h>
 #include <math.h>
 
 // how to find library
@@ -20,7 +15,6 @@
 //import library + "/math"
 
 // alternative syntax?
-
 
 
 

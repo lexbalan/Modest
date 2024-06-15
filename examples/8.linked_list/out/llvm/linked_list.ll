@@ -130,9 +130,7 @@ break_2:
 
 
 
-%Clock_T = type %UnsignedLong
 %Socklen_T = type i32
-%Time_T = type %LongInt
 %SizeT = type %UnsignedLongInt
 %SSizeT = type %LongInt
 %PidT = type i32
@@ -140,99 +138,28 @@ break_2:
 %GidT = type i32
 %USecondsT = type i32
 %IntptrT = type i64
-
-
 %OffT = type i64
 %PtrToConst = type i8*
 
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/libc.hm
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdlib.hm
 
 
 
-
-%DevT = type i16
-
-
-%InoT = type i32
-
-
-%BlkCntT = type i32
-
-
-%NlinkT = type i16
-
-
-%ModeT = type i32
-
-
-%UIDT = type i16
-
-
-%GIDT = type i8
-
-
-%BlkSizeT = type i16
-
-
-%TimeT = type i32
-
-
-%DIR = type opaque
-
-
-declare i64 @clock()
-declare i8* @malloc(%SizeT %size)
+declare void @abort()
+declare %Int @abs(%Int %x)
+declare %Int @atexit(void ()* %x)
+declare %Double @atof([0 x %ConstChar]* %nptr)
+declare %Int @atoi([0 x %ConstChar]* %nptr)
+declare %LongInt @atol([0 x %ConstChar]* %nptr)
 declare i8* @calloc(%SizeT %num, %SizeT %size)
-declare i8* @memset(i8* %mem, %Int %c, %SizeT %n)
-declare i8* @memcpy(i8* %dst, %PtrToConst %src, %SizeT %len)
-declare i8* @memmove(i8* %dst, %PtrToConst %source, %SizeT %n)
-declare %Int @memcmp(i8* %ptr1, i8* %ptr2, %SizeT %num)
+declare void @exit(%Int %x)
 declare void @free(i8* %ptr)
-declare %Int @strncmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
-declare %Int @strcmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2)
-declare [0 x %Char]* @strcpy([0 x %Char]* %dst, [0 x %ConstChar]* %src)
-declare %SizeT @strlen([0 x %ConstChar]* %s)
-
-
-declare %Int @ftruncate(%Int %fd, %OffT %size)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-declare %Int @creat(%Str* %path, %ModeT %mode)
-declare %Int @open(%Str* %path, %Int %oflags)
-declare %Int @read(%Int %fd, i8* %buf, i32 %len)
-declare %Int @write(%Int %fd, i8* %buf, i32 %len)
-declare %OffT @lseek(%Int %fd, %OffT %offset, %Int %whence)
-declare %Int @close(%Int %fd)
-declare void @exit(%Int %rc)
-
-
-declare %DIR* @opendir(%Str* %name)
-declare %Int @closedir(%DIR* %dir)
-
-
-declare %Str* @getcwd(%Str* %buf, %SizeT %size)
 declare %Str* @getenv(%Str* %name)
-
-
-declare void @bzero(i8* %s, %SizeT %n)
-
-
-declare void @bcopy(i8* %src, i8* %dst, %SizeT %n)
+declare %LongInt @labs(%LongInt %x)
+declare %Str* @secure_getenv(%Str* %name)
+declare i8* @malloc(%SizeT %size)
+declare %Int @system([0 x %ConstChar]* %string)
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
@@ -276,6 +203,11 @@ declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
 
 
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, ...)
+
+
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, ...)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, ...)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -317,7 +249,7 @@ declare void @perror(%ConstCharStr* %str)
 
 
 define %List* @linked_list_create() {
-	%1 = call i8* (%SizeT) @malloc(%SizeT 24)
+	%1 = call i8* @malloc(%SizeT 24)
 	%2 = bitcast i8* %1 to %List*
 	%3 = icmp eq %List* %2, null
 	br i1 %3 , label %then_0, label %endif_0
@@ -387,7 +319,7 @@ endif_0:
 }
 
 define %Node* @linked_list_node_create() {
-	%1 = call i8* (%SizeT) @malloc(%SizeT 24)
+	%1 = call i8* @malloc(%SizeT 24)
 	%2 = bitcast i8* %1 to %Node*
 	%3 = icmp eq %Node* %2, null
 	br i1 %3 , label %then_0, label %endif_0
@@ -553,21 +485,21 @@ then_0:
 	br label %endif_0
 endif_0:
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([29 x i8]* @str3 to [0 x i8]*), i32 %pos)
-	%6 = call %Node* (%List*, i32) @linked_list_node_get(%List* %list, i32 %pos)
+	%6 = call %Node* @linked_list_node_get(%List* %list, i32 %pos)
 	%7 = icmp eq %Node* %6, null
 	br i1 %7 , label %then_1, label %endif_1
 then_1:
 	ret %Node* null
 	br label %endif_1
 endif_1:
-	%9 = call %Node* (%Node*) @linked_list_node_prev_get(%Node* %6)
+	%9 = call %Node* @linked_list_node_prev_get(%Node* %6)
 	%10 = icmp eq %Node* %9, null
 	br i1 %10 , label %then_2, label %endif_2
 then_2:
 	ret %Node* null
 	br label %endif_2
 endif_2:
-	call void (%Node*, %Node*) @node_insert_right(%Node* %9, %Node* %new_node)
+	call void @node_insert_right(%Node* %9, %Node* %new_node)
 	%12 = getelementptr inbounds %List, %List* %list, i32 0, i32 2
 	%13 = getelementptr inbounds %List, %List* %list, i32 0, i32 2
 	%14 = load i32, i32* %13
@@ -596,7 +528,7 @@ then_1:
 else_1:
 	%9 = getelementptr inbounds %List, %List* %list, i32 0, i32 1
 	%10 = load %Node*, %Node** %9
-	call void (%Node*, %Node*) @node_insert_right(%Node* %10, %Node* %new_node)
+	call void @node_insert_right(%Node* %10, %Node* %new_node)
 	br label %endif_1
 endif_1:
 	%11 = getelementptr inbounds %List, %List* %list, i32 0, i32 1
@@ -610,7 +542,7 @@ endif_1:
 }
 
 define %Node* @linked_list_insert(%List* %list, i32 %pos, i8* %data) {
-	%1 = call %Node* () @linked_list_node_create()
+	%1 = call %Node* @linked_list_node_create()
 	%2 = icmp eq %Node* %1, null
 	br i1 %2 , label %then_0, label %endif_0
 then_0:
@@ -619,7 +551,7 @@ then_0:
 endif_0:
 	%4 = getelementptr inbounds %Node, %Node* %1, i32 0, i32 2
 	store i8* %data, i8** %4
-	%5 = call %Node* (%List*, i32, %Node*) @linked_list_node_insert(%List* %list, i32 %pos, %Node* %1)
+	%5 = call %Node* @linked_list_node_insert(%List* %list, i32 %pos, %Node* %1)
 	ret %Node* %5
 }
 
@@ -630,7 +562,7 @@ then_0:
 	ret %Node* null
 	br label %endif_0
 endif_0:
-	%3 = call %Node* () @linked_list_node_create()
+	%3 = call %Node* @linked_list_node_create()
 	%4 = icmp eq %Node* %3, null
 	br i1 %4 , label %then_1, label %endif_1
 then_1:
@@ -639,12 +571,12 @@ then_1:
 endif_1:
 	%6 = getelementptr inbounds %Node, %Node* %3, i32 0, i32 2
 	store i8* %data, i8** %6
-	%7 = call %Node* (%List*, %Node*) @linked_list_node_append(%List* %list, %Node* %3)
+	%7 = call %Node* @linked_list_node_append(%List* %list, %Node* %3)
 	%8 = icmp eq %Node* %7, null
 	br i1 %8 , label %then_2, label %endif_2
 then_2:
 	%9 = bitcast %Node* %3 to i8*
-	call void (i8*) @free(i8* %9)
+	call void @free(i8* %9)
 	br label %endif_2
 endif_2:
 	ret %Node* %7

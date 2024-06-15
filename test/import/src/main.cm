@@ -10,7 +10,6 @@ let library = "libc"
 // alternative syntax?
 import {
 	library + "/stdio"
-	library + "/libc"
 	library + "/math"
 }
 

@@ -1,7 +1,6 @@
 // SHA256
 
-import "libc/libc"
-
+import "libc/string"
 import "sha256"
 
 

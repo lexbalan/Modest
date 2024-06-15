@@ -130,9 +130,7 @@ break_2:
 
 
 
-%Clock_T = type %UnsignedLong
 %Socklen_T = type i32
-%Time_T = type %LongInt
 %SizeT = type %UnsignedLongInt
 %SSizeT = type %LongInt
 %PidT = type i32
@@ -140,8 +138,6 @@ break_2:
 %GidT = type i32
 %USecondsT = type i32
 %IntptrT = type i64
-
-
 %OffT = type i64
 %PtrToConst = type i8*
 
@@ -187,6 +183,11 @@ declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
 
 
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, ...)
+
+
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, ...)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, ...)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -310,14 +311,14 @@ break_1:
 	%14 = alloca %Str32*, align 8
 	store %Str32* bitcast ([18 x i32]* @str3 to [0 x i32]*), %Str32** %14
 	%15 = load %Str8*, %Str8** %12
-	call void (%Str8*) @utf8_puts(%Str8* %15)
-	call void (%Str8*) @utf8_puts(%Str8* bitcast ([2 x i8]* @str5 to [0 x i8]*))
+	call void @utf8_puts(%Str8* %15)
+	call void @utf8_puts(%Str8* bitcast ([2 x i8]* @str5 to [0 x i8]*))
 	%16 = load %Str16*, %Str16** %13
-	call void (%Str16*) @utf16_puts(%Str16* %16)
-	call void (%Str8*) @utf8_puts(%Str8* bitcast ([2 x i8]* @str6 to [0 x i8]*))
+	call void @utf16_puts(%Str16* %16)
+	call void @utf8_puts(%Str8* bitcast ([2 x i8]* @str6 to [0 x i8]*))
 	%17 = load %Str32*, %Str32** %14
-	call void (%Str32*) @utf32_puts(%Str32* %17)
-	call void (%Str8*) @utf8_puts(%Str8* bitcast ([2 x i8]* @str7 to [0 x i8]*))
+	call void @utf32_puts(%Str32* %17)
+	call void @utf8_puts(%Str8* bitcast ([2 x i8]* @str7 to [0 x i8]*))
 	ret %Int 0
 }
 
