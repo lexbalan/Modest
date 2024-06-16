@@ -1189,7 +1189,7 @@ def do_value_slice(x):
 			'right': x['index_from'],
 			'ti': ti
 		}
-		un = {
+		"""un = {
 			'isa': 'ast_value',
 			'kind': 'number',
 			'numstr': '1',
@@ -1202,9 +1202,9 @@ def do_value_slice(x):
 			'left': de,
 			'right': un,
 			'ti': ti
-		}
+		}"""
 
-		slice_volume = do_value(le)
+		slice_volume = do_value(de)
 		slice_len = slice_volume['asset']
 
 		if slice_len < 0:
@@ -1212,13 +1212,13 @@ def do_value_slice(x):
 			return value_bad(x)
 
 
-	if hlir_type.type_is_closed_array(array_type):
-		if slice_volume == None:
-			error("expected immediate value", index_from['expr_ti'])
-
-		# TODO: конкретно тут есть что исправить!
-		if slice_len > array_type['volume']['asset']:
-			error("slice is too big", x['ti'])
+#	if hlir_type.type_is_closed_array(array_type):
+#		if slice_volume == None:
+#			error("expected immediate value", index_from['expr_ti'])
+#
+#		# TODO: конкретно тут есть что исправить!
+#		if slice_len > array_type['volume']['asset']:
+#			error("slice is too big", x['ti'])
 
 
 	type = hlir_type.hlir_type_array(array_type['of'], slice_volume, x['ti'])
