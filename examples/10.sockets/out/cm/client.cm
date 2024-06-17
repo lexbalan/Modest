@@ -21,7 +21,7 @@ func send_file(fp: *File, sockfd: Int) -> Unit {
 			perror("[-] Error in sendung data")
 			exit(1)
 		}
-		data = []
+		data = []  // right size = 1024
 	}
 }
 

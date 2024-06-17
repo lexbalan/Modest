@@ -438,9 +438,9 @@ break_4:
 	%122 = insertvalue [10 x i32] %121, i32 9, 9
 	store [10 x i32] %122, [10 x i32]* %112
 	%123 = alloca i32, align 4
-	store i32 0, i32* %123
+	store i32 4, i32* %123
 	%124 = alloca i32, align 4
-	store i32 2, i32* %124
+	store i32 7, i32* %124
 	; -- STMT ASSIGN ARRAY --
 	%125 = load i32, i32* %123
 	%126 = getelementptr inbounds [10 x i32], [10 x i32]* %112, i32 0, i32 %125

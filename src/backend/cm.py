@@ -641,6 +641,10 @@ def print_stmt_assign(x):
 	out(" = ")
 	print_value(x['right'])
 
+	if hlir_type.type_is_array(x['right']['type']):
+		if value_is_zero(x['right']):
+			out("  // right size = %d" % x['right']['type']['size'])
+
 
 def print_stmt_value(x):
 	print_value(x['value'])

@@ -109,8 +109,8 @@ func main() -> Int {
 
 	var ss = []Int32 [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-	var k = 0
-	var j = 2
+	var k = 4
+	var j = 7
 	ss[k:j] = []
 	array_print(&ss, 10)
 

@@ -1478,11 +1478,8 @@ def do_assign_arrays(l, r):
 	out("\n\t; -- STMT ASSIGN ARRAY --")
 	dst = do_eval(l)
 
-	rv = r['type']['volume']
-	vol = None
-	#if not value_is_immediate(rv):
 	out("\n\t; -- start vol eval --")
-	volume = do_eval(rv)
+	volume = do_eval(r['type']['volume'])
 	volume = trim(volume, 32)
 	out("\n\t; -- end vol eval --")
 
@@ -1495,7 +1492,6 @@ def do_assign_arrays(l, r):
 		llvm_memzero(dst, size, volatile=False)
 		return
 
-	# else!
 	src = do_reval(r)
 	do_assign(dst, src)
 

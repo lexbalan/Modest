@@ -174,7 +174,7 @@ func main() -> Int {
 	printf("globalArray[%i] = %i\n", Int32 2, globalArray[2])
 
 
-	globalArray = []
+	globalArray = []  // right size = 40
 
 
 	// проверка того как локальная константа-массив

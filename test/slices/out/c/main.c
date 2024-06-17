@@ -122,9 +122,9 @@ int main()
 	memcpy(&ss, &(int32_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, sizeof(int32_t[10]));
 
 	int32_t k;
-	k = 0;
+	k = 4;
 	int32_t j;
-	j = 2;
+	j = 7;
 	memset(&ss[k], 0, sizeof(int32_t[j - k]));
 	array_print((int32_t *)&ss, 10);
 
