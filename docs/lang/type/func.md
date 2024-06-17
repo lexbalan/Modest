@@ -4,7 +4,7 @@
 
 #### Common form
 ```
-	( <#field_list#>] ) -> <#type_expression#>
+( <#field_list#>] ) -> <#type_expression#>
 ```
 
 
