@@ -106,13 +106,22 @@ def array_can(to, from_type, method):
 
 	if hlir_type.type_is_generic(from_type):
 		# GenericArray -> Array
+		if to['volume'] == None:
+			return True
+
+		if not value_is_immediate(to['volume']):
+			return True
 
 		# Check array length
+		#try:
 		n_from = from_type['volume']['asset']
 		n_to = to['volume']['asset']
 
 		# (нельзя неявно построить меньший массив из большего)
 		return n_from <= n_to
+		"""except:
+			info("???", from_type['ti'])
+			print(to['volume'])"""
 
 	if method == 'implicit':
 		return False
@@ -147,6 +156,14 @@ def value_array_cons(t, v, method, ti):
 
 	if value_is_immediate(v):
 		casted_items = _cast_values(v['items'], t['of'])
+
+		if t['volume'] == None:
+			return nv
+
+		if not value_is_immediate(t['volume']):
+			nv['items'] = []
+			nv['immediate'] = True
+			return nv
 
 		# add Zero Pad (if need)
 		zero_pad = 0
