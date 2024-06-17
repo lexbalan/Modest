@@ -39,11 +39,11 @@ func main() -> Int {
 		i = i + 1
 	}
 
-	var vs1: [2 - 1 + 1]Int32 = s1
-	var vs2: [8 - 5 + 1]Int32 = s2
+	var vs1: [2 - 1]Int32 = s1
+	var vs2: [8 - 5]Int32 = s2
 
 	let ax = 2
-	let bx = 5
+	let bx = 6
 	a[ax:bx] = [10, 20, 30, 40]
 
 	i = 0

@@ -237,7 +237,7 @@ int main()
 	char sa[5];
 	memcpy(&sa, &(char[5]){'L', 'o', 'H', 'i', '!'}, sizeof(char[5]));
 
-	if (memcmp(&sa[2], &"Hi", sizeof(char[3 - 2 + 1])) == 0) {
+	if (memcmp(&sa[2], &"Hi", sizeof(char[4 - 2])) == 0) {
 		printf("test passed\n");
 	} else {
 		printf("test failed\n");

@@ -659,6 +659,7 @@ then_0:
 	call void @exit(%Int 1)
 	br label %endif_0
 endif_0:
+	; -- STMT ASSIGN ARRAY --
 	%8 = insertvalue [1024 x i8] zeroinitializer, i8 0, 0
 	%9 = insertvalue [1024 x i8] %8, i8 0, 1
 	%10 = insertvalue [1024 x i8] %9, i8 0, 2

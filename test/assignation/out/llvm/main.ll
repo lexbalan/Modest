@@ -269,6 +269,7 @@ define %Int @main() {
 	%3 = load i32, i32* @glb_i0
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*), i32 %3)
 	; copy arrays by value
+	; -- STMT ASSIGN ARRAY --
 	%5 = load [10 x i32], [10 x i32]* @glb_a1
 	store [10 x i32] %5, [10 x i32]* @glb_a0
 	%6 = getelementptr inbounds [10 x i32], [10 x i32]* @glb_a0, i32 0, i32 0
@@ -326,6 +327,7 @@ define %Int @main() {
 	%47 = insertvalue [10 x i32] %46, i32 0, 8
 	%48 = insertvalue [10 x i32] %47, i32 0, 9
 	store [10 x i32] %48, [10 x i32]* %38
+	; -- STMT ASSIGN ARRAY --
 	%49 = load [10 x i32], [10 x i32]* %38
 	store [10 x i32] %49, [10 x i32]* %27
 	%50 = getelementptr inbounds [10 x i32], [10 x i32]* %27, i32 0, i32 0

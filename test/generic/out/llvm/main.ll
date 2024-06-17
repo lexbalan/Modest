@@ -351,6 +351,7 @@ endif_0:
 	; can be implicit casted to Array with compatible type and same size
 	; implicit cast Generic([4]GenericInteger) value to [4]Int32
 	%8 = alloca [4 x i32], align 4
+	; -- STMT ASSIGN ARRAY --
 	%9 = insertvalue [4 x i32] zeroinitializer, i32 0, 0
 	%10 = insertvalue [4 x i32] %9, i32 1, 1
 	%11 = insertvalue [4 x i32] %10, i32 2, 2
@@ -375,6 +376,7 @@ then_1:
 endif_1:
 	; implicit cast Generic([4]GenericInteger) value to [4]Nat64
 	%24 = alloca [4 x i64], align 8
+	; -- STMT ASSIGN ARRAY --
 	%25 = insertvalue [4 x i64] zeroinitializer, i64 0, 0
 	%26 = insertvalue [4 x i64] %25, i64 1, 1
 	%27 = insertvalue [4 x i64] %26, i64 2, 2

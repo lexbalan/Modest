@@ -701,6 +701,7 @@ endif_1:
 	store [3 x %Int] %144, [3 x %Int]* %145
 	; check local literal array assignation to local array
 	%146 = alloca [4 x i32], align 4
+	; -- STMT ASSIGN ARRAY --
 	; cast_array_to_array
 	; cast_composite_to_composite
 	; JUST
@@ -718,6 +719,7 @@ endif_1:
 	%156 = load i32, i32* %155
 	%157 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str29 to [0 x i8]*), i32 %156)
 	; check local literal array assignation to global array
+	; -- STMT ASSIGN ARRAY --
 	; cast_array_to_array
 	; cast_composite_to_composite
 	; JUST
@@ -734,6 +736,7 @@ endif_1:
 	%166 = getelementptr inbounds [10 x i32], [10 x i32]* @globalArray, i32 0, i32 2
 	%167 = load i32, i32* %166
 	%168 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str32 to [0 x i8]*), i32 2, i32 %167)
+	; -- STMT ASSIGN ARRAY --
 	%169 = insertvalue [10 x i32] zeroinitializer, i32 0, 0
 	%170 = insertvalue [10 x i32] %169, i32 0, 1
 	%171 = insertvalue [10 x i32] %170, i32 0, 2

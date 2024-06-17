@@ -386,6 +386,7 @@ then_1:
 	br label %endif_1
 endif_1:
 	%8 = call %Int (%File*, %Str*, ...) @fprintf(%File* %2, %Str* bitcast ([3 x i8]* @str4 to [0 x i8]*), [1024 x i8]* %1)
+	; -- STMT ASSIGN ARRAY --
 	%9 = insertvalue [1024 x i8] zeroinitializer, i8 0, 0
 	%10 = insertvalue [1024 x i8] %9, i8 0, 1
 	%11 = insertvalue [1024 x i8] %10, i8 0, 2

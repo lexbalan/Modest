@@ -241,6 +241,7 @@ declare void @perror(%ConstCharStr* %str)
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str1 to [0 x i8]*))
+	; -- STMT ASSIGN ARRAY --
 	%2 = load [10 x i32], [10 x i32]* @globalArray0
 	store [10 x i32] %2, [10 x i32]* @globalArray1
 	%3 = alloca i32, align 4
@@ -299,6 +300,7 @@ endif_0:
 	%39 = insertvalue [10 x i32] %38, i32 0, 8
 	%40 = insertvalue [10 x i32] %39, i32 0, 9
 	store [10 x i32] %40, [10 x i32]* %30
+	; -- STMT ASSIGN ARRAY --
 	%41 = load [10 x i32], [10 x i32]* %19
 	store [10 x i32] %41, [10 x i32]* %30
 	store i32 0, i32* %3
