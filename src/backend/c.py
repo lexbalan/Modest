@@ -192,7 +192,7 @@ def print_type_array(t, as_pointer, space_after):
 		_print_type_pointer_to(t['of'], as_const='const' in t['att'], space_after=space_after)
 		return
 
-	assert(t['volume'] != None)
+	#assert(t['volume'] != None)
 	print_type(t['of'], space_after=space_after)
 	print_array_volume(t)
 
@@ -1441,6 +1441,9 @@ def assign_array(left, right):
 		print_value(right)
 		out(";")
 		return
+
+	#if value_is_zero(right):
+	#out("/*%s*/" % right['immediate'])
 
 	memcopy_assign(left, right)
 	return

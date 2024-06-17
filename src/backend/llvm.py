@@ -666,7 +666,8 @@ def print_type_array(t):
 	array_size = t['volume']
 	sz = 0
 	if array_size != None:
-		sz = array_size['asset']
+		if value_is_immediate(array_size):
+			sz = array_size['asset']
 	out("%d x " % sz)
 	print_type(t['of'])
 	out("]")
@@ -1241,7 +1242,8 @@ def do_eval_array(v):
 	fulllen = 0
 	if v['type']['volume'] != None:
 		# теперь добавим паддинг нулевыми значениями
-		fulllen = v['type']['volume']['asset']
+		if value_is_immediate(v['type']['volume']):
+			fulllen = v['type']['volume']['asset']
 	else:
 		fulllen = len(v['items'])
 
@@ -1432,9 +1434,15 @@ def do_assign(l, r):
 	llvm_store(l, r)
 
 
+
 def print_stmt_assign(x):
+	if hlir_type.type_is_array(x['right']['type']):
+		#return assign_array(left, right)
+		out("\n\t; -- STMT ASSIGN ARRAY --")
+
 	l = do_eval(x['left'])
 	r = do_reval(x['right'])
+
 	do_assign(l, r)
 
 
