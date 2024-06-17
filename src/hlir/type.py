@@ -172,7 +172,9 @@ def hlir_type_array(of, volume=None, ti=None):
 
 	array_size = 0
 	if volume != None:
-		array_size = item_size * volume['asset']
+		from value.value import value_is_immediate
+		if value_is_immediate(volume):
+			array_size = item_size * volume['asset']
 
 	return {
 		'isa': 'type',
