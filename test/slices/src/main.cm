@@ -45,7 +45,7 @@ func main() -> Int {
 	var vs2 = s2
 
 	let ax = 2
-	let bx = 5
+	let bx = 6
 	a[ax:bx] = [10, 20, 30, 40]
 
 	i = 0
