@@ -148,7 +148,7 @@ def print_type_enum(t):
 	i = 0
 	while i < len(items):
 		item = items[i]
-		out("\n\t")
+		out(NL_INDENT)
 		print_id(item)
 		i = i + 1
 	out("\n}")

@@ -261,16 +261,20 @@ define i32 @sig1(i32 %x) {
 ]
 
 define void @sha256_contextInit(%Context* %ctx) {
+	; -- STMT ASSIGN ARRAY --
 	%1 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
-	%2 = insertvalue [8 x i32] zeroinitializer, i32 1779033703, 0
-	%3 = insertvalue [8 x i32] %2, i32 3144134277, 1
-	%4 = insertvalue [8 x i32] %3, i32 1013904242, 2
-	%5 = insertvalue [8 x i32] %4, i32 2773480762, 3
-	%6 = insertvalue [8 x i32] %5, i32 1359893119, 4
-	%7 = insertvalue [8 x i32] %6, i32 2600822924, 5
-	%8 = insertvalue [8 x i32] %7, i32 528734635, 6
-	%9 = insertvalue [8 x i32] %8, i32 1541459225, 7
-	store [8 x i32] %9, [8 x i32]* %1
+	; -- start vol eval --
+	%2 = zext i8 8 to i32
+	; -- end vol eval --
+	%3 = insertvalue [8 x i32] zeroinitializer, i32 1779033703, 0
+	%4 = insertvalue [8 x i32] %3, i32 3144134277, 1
+	%5 = insertvalue [8 x i32] %4, i32 1013904242, 2
+	%6 = insertvalue [8 x i32] %5, i32 2773480762, 3
+	%7 = insertvalue [8 x i32] %6, i32 1359893119, 4
+	%8 = insertvalue [8 x i32] %7, i32 2600822924, 5
+	%9 = insertvalue [8 x i32] %8, i32 528734635, 6
+	%10 = insertvalue [8 x i32] %9, i32 1541459225, 7
+	store [8 x i32] %10, [8 x i32]* %1
 	ret void
 }
 
@@ -680,6 +684,7 @@ endif_0:
 	%19 = sub i32 %17, %18
 	%20 = zext i32 %19 to %SizeT
 	%21 = call i8* @memset(i8* %16, %Int 0, %SizeT %20)
+	;ctx.data[i:n-i] = []
 	%22 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
 	%23 = load i32, i32* %22
 	%24 = icmp uge i32 %23, 56
@@ -691,6 +696,7 @@ then_1:
 	%27 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
 	%28 = bitcast [64 x i8]* %27 to i8*
 	%29 = call i8* @memset(i8* %28, %Int 0, %SizeT 56)
+	;ctx.data[0:56] = []
 	br label %endif_1
 endif_1:
 	; Append to the padding the total message's length in bits and transform.

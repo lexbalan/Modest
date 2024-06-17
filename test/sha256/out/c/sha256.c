@@ -180,10 +180,12 @@ void sha256_final(Context *ctx, uint8_t *outHash)
 	i = i + 1;
 
 	memset(&ctx->data[i], 0, (size_t)(n - i));
+	//ctx.data[i:n-i] = []
 
 	if (ctx->datalen >= 56) {
 		sha256_transform(ctx, (uint8_t *)&ctx->data);
 		memset((uint8_t *)&ctx->data, 0, 56);
+		//ctx.data[0:56] = []
 	}
 
 	// Append to the padding the total message's length in bits and transform.

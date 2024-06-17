@@ -4,7 +4,7 @@ from .common import *
 from error import info, warning, error
 import hlir.type as hlir_type
 from hlir.type import type_print
-from value.value import value_attribute_check, value_print, value_is_immediate, value_terminal
+from value.value import value_attribute_check, value_print, value_is_immediate, value_terminal, value_is_zero
 from hlir.type import hlir_type_pointer
 from util import align_bits_up
 from unicode import utf32_chars_to_string
@@ -377,12 +377,17 @@ def llvm_print_value(x):
 
 
 
-def llvm_eval_binary(op, l, r, x):
+def llvm_eval_binary(op, l, r, x=None):
 	assert(l['isa'] == 'll_value')
 	assert(r['isa'] == 'll_value')
 	reg = llvm_operation_with_type(op, l['type'])
 	out(" "); llvm_print_value(l); out(", "); llvm_print_value(r)
-	return llvm_value_reg(reg, x['type'], x)
+
+	result_type = l['type']
+	if x != None:
+		result_type = x['type']
+
+	return llvm_value_reg(reg, result_type, x)
 
 
 
@@ -493,7 +498,7 @@ def llvm_memcpy(dst, src, size, volatile=False):
 
 
 #declare void @llvm.memset.p0.i32(ptr <dest>, i8 <val>, i32 <len>, i1 <isvolatile>)
-def llvm_memzero(dst, size, volatile=False):
+def llvm_memzeron(dst, size, volatile=False):
 	#"@llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)"
 	dst2 = llvm_cast('bitcast', dst['type'], foundation.typeFreePointer, dst)
 	out(NL_INDENT)
@@ -504,19 +509,43 @@ def llvm_memzero(dst, size, volatile=False):
 
 
 
+# грубо привести тип integer value к ширине width
+def trim(int_value, width):
+	assert(int_value['isa'] == 'll_value')
+
+	if int_value['type']['width'] < width:
+		return llvm_cast('zext', int_value['type'], foundation.typeNat32, int_value)
+	elif int_value['type']['width'] > width:
+		return llvm_cast('trunc', int_value['type'], foundation.typeNat32, int_value)
+	return int_value
+
+
+def llvm_memzero(dst, size, volatile=False):
+	#"@llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)"
+	dst2 = llvm_cast('bitcast', dst['type'], foundation.typeFreePointer, dst)
+	out(NL_INDENT)
+
+	out("call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(")
+	llvm_print_type_value(dst2)
+	out(", i8 0, ")
+	llvm_print_type_value(size)
+	out(", i1 %d)" % volatile)
+
+
+
 # memset with offset from start of dst
-def llvm_memzero_off(dst, offset, size, volatile=False):
+def llvm_memzeron_off(dst, offset, size, volatile=False):
 	ll_off = llvm_value_num(foundation.typeInt32, offset)
 
 	# offset pointer
 	dst2 = llvm_cast("ptrtoint", hlir_type_pointer(dst['type']), foundation.typeInt64, dst)
 
-	ll_dst_plus_off = llvm_eval_binary('add', dst2, ll_off, {'type':foundation.typeInt64})
+	ll_dst_plus_off = llvm_eval_binary('add', dst2, ll_off)
 
 	dst3 = llvm_cast("inttoptr", foundation.typeInt64, foundation.typeFreePointer, ll_dst_plus_off)
 
 	# do memzero
-	llvm_memzero(dst3, size, volatile=volatile)
+	llvm_memzeron(dst3, size, volatile=volatile)
 
 
 # получает два указателя, и размер
@@ -649,7 +678,7 @@ def print_type_record(t):
 
 		if i > 0: out(', ')
 		if is_global_context():
-			out("\n\t")
+			out(NL_INDENT)
 
 		print_type(field['type'])
 
@@ -1437,13 +1466,39 @@ def do_assign(l, r):
 
 def print_stmt_assign(x):
 	if hlir_type.type_is_array(x['right']['type']):
-		#return assign_array(left, right)
-		out("\n\t; -- STMT ASSIGN ARRAY --")
+		return do_assign_arrays(x['left'], x['right'])
 
 	l = do_eval(x['left'])
 	r = do_reval(x['right'])
-
 	do_assign(l, r)
+
+
+def do_assign_arrays(l, r):
+	#return assign_array(left, right)
+	out("\n\t; -- STMT ASSIGN ARRAY --")
+	dst = do_eval(l)
+
+	rv = r['type']['volume']
+	vol = None
+	#if not value_is_immediate(rv):
+	out("\n\t; -- start vol eval --")
+	volume = do_eval(rv)
+	volume = trim(volume, 32)
+	out("\n\t; -- end vol eval --")
+
+	if value_is_zero(r):
+		out("\n\t; -- ZERO")
+		# size = volume * item_size
+		item_sz = l['type']['of']['size']
+		item_size = llvm_value_num(foundation.typeNat32, item_sz)
+		size = llvm_eval_binary('mul', volume, item_size)
+		llvm_memzero(dst, size, volatile=False)
+		return
+
+	# else!
+	src = do_reval(r)
+	do_assign(dst, src)
+
 
 
 def print_stmt_if(x):
@@ -1582,7 +1637,7 @@ def print_stmt_block(s):
 
 
 def print_comment_block(x):
-	#out("\n\t");
+	#out(NL_INDENT)
 	#out("/*%s*/" % x['text'])
 	pass
 

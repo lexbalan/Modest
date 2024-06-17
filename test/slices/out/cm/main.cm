@@ -27,6 +27,8 @@ func main() -> Int {
 		i = i + 1
 	}
 
+	printf("--------------------------------------------\n")
+
 	//
 	// by ptr
 	//
@@ -39,11 +41,13 @@ func main() -> Int {
 		i = i + 1
 	}
 
-	var vs1: [2 - 1 + 1]Int32 = s1
-	var vs2: [8 - 5 + 1]Int32 = s2
+	printf("--------------------------------------------\n")
+
+	var vs1: [2 - 1]Int32 = s1
+	var vs2: [8 - 5]Int32 = s2
 
 	let ax = 2
-	let bx = 5
+	let bx = 6
 	a[ax:bx] = [10, 20, 30, 40]
 
 	i = 0
@@ -79,8 +83,6 @@ func main() -> Int {
 
 	array_print(p, lengthof(*p))
 
-
-
 	printf("--------------------------------------------\n")
 	printf("slice of pointer to open array\n")
 
@@ -98,6 +100,18 @@ func main() -> Int {
 
 	printf("after\n")
 	array_print(pw, 10)
+
+	printf("--------------------------------------------\n")
+	printf("slice by var\n")
+	// NOT WORKED NOW
+
+	var ss: [10]Int32 = [10]Int32 [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+	var k: Int32 = 0
+	var j: Int32 = 2
+	ss[k:j] = []
+	array_print(&ss, 10)
+
 
 	return 0
 }

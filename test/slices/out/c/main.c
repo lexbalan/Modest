@@ -30,31 +30,35 @@ int main()
 	int32_t a[10];
 	memcpy(&a, &(int32_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, sizeof(int32_t[10]));
 
-	int32_t s1[2 - 1 + 1];
-	memcpy(&s1, &a[1], sizeof(int32_t[2 - 1 + 1]));
+	int32_t s1[2 - 1];
+	memcpy(&s1, &a[1], sizeof(int32_t[2 - 1]));
 	int32_t i;
 	i = 0;
-	while (i < (2 - 1 + 1)) {
+	while (i < (2 - 1)) {
 		printf("s1[%d] = %d\n", i, s1[i]);
 		i = i + 1;
 	}
+
+	printf("--------------------------------------------\n");
 
 	//
 	// by ptr
 	//
 
 	int32_t *const pa = (int32_t *)&a;
-	int32_t s2[8 - 5 + 1];
-	memcpy(&s2, &pa[5], sizeof(int32_t[8 - 5 + 1]));
+	int32_t s2[8 - 5];
+	memcpy(&s2, &pa[5], sizeof(int32_t[8 - 5]));
 	i = 0;
-	while (i < (8 - 5 + 1)) {
+	while (i < (8 - 5)) {
 		printf("s2[%d] = %d\n", i, s2[i]);
 		i = i + 1;
 	}
 
+	printf("--------------------------------------------\n");
+
 	#define ax  2
-	#define bx  5
-	memcpy(&a[ax], &(int32_t[bx - ax + 1]){10, 20, 30, 40}, sizeof(int32_t[bx - ax + 1]));
+	#define bx  6
+	memcpy(&a[ax], &(int32_t[bx - ax]){10, 20, 30, 40}, sizeof(int32_t[bx - ax]));
 
 	i = 0;
 	while (i < (sizeof(a) / sizeof(a[0]))) {
@@ -67,7 +71,7 @@ int main()
 	int32_t s[10];
 	memcpy(&s, &(int32_t[10]){10, 20, 30, 40, 50, 60, 70, 80, 90, 100}, sizeof(int32_t[10]));
 
-	memset(&s[2], 0, sizeof(int32_t[5 - 2 + 1]));
+	memset(&s[2], 0, sizeof(int32_t[5 - 2]));
 
 	i = 0;
 	while (i < (sizeof(s) / sizeof(s[0]))) {
@@ -82,15 +86,13 @@ int main()
 	#define bb  8
 
 	int32_t *const p = (int32_t *)&s[aa];
-	array_print(p, (bb - aa + 1));
+	array_print(p, (bb - aa));
 
 	printf("--------------------------------------------\n");
 
 	p[0] = 123;
 
-	array_print(p, (bb - aa + 1));
-
-
+	array_print(p, (bb - aa));
 
 	printf("--------------------------------------------\n");
 	printf("slice of pointer to open array\n");
@@ -111,6 +113,21 @@ int main()
 
 	printf("after\n");
 	array_print(pw, 10);
+
+	printf("--------------------------------------------\n");
+	printf("slice by var\n");
+	// NOT WORKED NOW
+
+	int32_t ss[10];
+	memcpy(&ss, &(int32_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, sizeof(int32_t[10]));
+
+	int32_t k;
+	k = 0;
+	int32_t j;
+	j = 2;
+	memset(&ss[k], 0, sizeof(int32_t[j - k]));
+	array_print((int32_t *)&ss, 10);
+
 
 	return 0;
 }
