@@ -5,13 +5,13 @@
 
 | Literal Value Kind | Examples | Type |
 | :----------: | :------: | :--: |
+| Boolean Literal | `false, true` | Bool |
 | Integer Literal | `0, 1, 0xF` | GenericInteger |
 | Rational Literal | `0.5, 3.14, .125` | GenericFloat |
-| Boolean Literal | `false, true` | Bool |
-| String Literal | `"Hello!"` | GenericArray |
+| String Literal | `"Hello!"` | GenericString |
 | Array Literal | `[1, 2, 3]` | GenericArray |
 | Record Literal | `{x=10, y=20}` | GenericRecord |
-| Nil Literal | `nil` | *Unit |
+| Nil Literal | `nil` | Nil |
 
 > Generic type can be implicit casted to value with [corresponded](./cast.md#Implicit-type-casting) non-generic type. 
 
@@ -95,21 +95,11 @@ true, false
 
 
 ### String literals
-String literal is a subkind of array literal and have type `Generic([]GenericChar)` (GenericOpenArray of GenericChar)
-
 
 ```zig
 "Hello World!"
 ```
 
-There is no special type for string, but you can construct an *array* or *pointer to array* from literal string value.
-Also there is three built-in named type aliases for convenient usage of strings:
-```zig
-// built-in type aliases:
-// type Str8 []Char8
-// type Str16 []Char16
-// type Str32 []Char32
-```
 
 #### Exmples
 
@@ -121,6 +111,10 @@ let literalString = "I am a string literal"
 var str_array8: []Char8 = literalString
 var str_array16: []Char16 = literalString
 var str_array32: []Char32 = literalString
+
+var char8: Char8 = "A"
+var char16: Char16 = "A"
+var char32: Char32 = "A"
 ```
 
 Creating three variables with type *Pointer to Array of Char* from string literal
@@ -162,9 +156,6 @@ func main () -> Int32 {
 
 ```
 > Result: `s = "Hello World!"`
-
-
-
 
 
 
