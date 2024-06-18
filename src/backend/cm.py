@@ -148,7 +148,7 @@ def print_type_enum(t):
 	i = 0
 	while i < len(items):
 		item = items[i]
-		out("\n\t")
+		out(NL_INDENT)
 		print_id(item)
 		i = i + 1
 	out("\n}")
@@ -640,6 +640,10 @@ def print_stmt_assign(x):
 	print_value(x['left'])
 	out(" = ")
 	print_value(x['right'])
+
+	if hlir_type.type_is_array(x['right']['type']):
+		if value_is_zero(x['right']):
+			out("  // right size = %d" % x['right']['type']['size'])
 
 
 def print_stmt_value(x):

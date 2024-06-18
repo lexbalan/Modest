@@ -29,7 +29,7 @@ func write_file(sockfd: Int) -> Unit {
 		}
 
 		fprintf(fp, "%s", &buffer)
-		buffer = []
+		buffer = []  // right size = 1024
 	}
 }
 

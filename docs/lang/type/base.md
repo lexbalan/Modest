@@ -22,7 +22,7 @@
 | `Float64` | `8` | `equ, ord, math` | `floating point 64-bit` |
 
 
-> Alignment of any base type is equal to his size, **exclude the *Unit* type**.
+> Alignment of any base type is equal to his size, **exclude the *Unit* type (alignof(Unit) = 1)**.
 
 
 #### Operation classes

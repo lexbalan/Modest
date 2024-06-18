@@ -161,6 +161,7 @@ def value_array_cons(t, v, method, ti):
 			return nv
 
 		if not value_is_immediate(t['volume']):
+			#info("TSize = %d" % t['size'], ti)
 			nv['items'] = []
 			nv['immediate'] = True
 			return nv

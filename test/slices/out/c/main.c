@@ -39,6 +39,8 @@ int main()
 		i = i + 1;
 	}
 
+	printf("--------------------------------------------\n");
+
 	//
 	// by ptr
 	//
@@ -51,6 +53,8 @@ int main()
 		printf("s2[%d] = %d\n", i, s2[i]);
 		i = i + 1;
 	}
+
+	printf("--------------------------------------------\n");
 
 	#define ax  2
 	#define bx  6
@@ -90,8 +94,6 @@ int main()
 
 	array_print(p, (bb - aa));
 
-
-
 	printf("--------------------------------------------\n");
 	printf("slice of pointer to open array\n");
 
@@ -111,6 +113,21 @@ int main()
 
 	printf("after\n");
 	array_print(pw, 10);
+
+	printf("--------------------------------------------\n");
+	printf("slice by var\n");
+	// NOT WORKED NOW
+
+	int32_t ss[10];
+	memcpy(&ss, &(int32_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, sizeof(int32_t[10]));
+
+	int32_t k;
+	k = 4;
+	int32_t j;
+	j = 7;
+	memset(&ss[k], 0, sizeof(int32_t[j - k]));
+	array_print((int32_t *)&ss, 10);
+
 
 	return 0;
 }
