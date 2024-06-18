@@ -115,7 +115,7 @@ int main()
 	array_print(pw, 10);
 
 	printf("--------------------------------------------\n");
-	printf("slice by var\n");
+	printf("zero slice by var\n");
 	// NOT WORKED NOW
 
 	int32_t ss[10];
@@ -128,6 +128,16 @@ int main()
 	memset(&ss[k], 0, sizeof(int32_t[j - k]));
 	array_print((int32_t *)&ss, 10);
 
+	printf("--------------------------------------------\n");
+	printf("copy slice by var\n");
+	int32_t dst[10];
+	memcpy(&dst, &(int32_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, sizeof(int32_t[10]));
+
+	#define i1  3
+	#define j1  8
+	memcpy(&dst[i1], &(int32_t[j1 - i1]){11, 22, 33, 44, 55}, sizeof(int32_t[j1 - i1]));
+
+	array_print((int32_t *)&dst, 10);
 
 	return 0;
 }
@@ -136,4 +146,6 @@ int main()
 #undef bx
 #undef aa
 #undef bb
+#undef i1
+#undef j1
 

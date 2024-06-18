@@ -103,8 +103,9 @@ func main() -> Int {
 	printf("after\n")
 	array_print(pw, 10)
 
+
 	printf("--------------------------------------------\n")
-	printf("slice by var\n")
+	printf("zero slice by var\n")
 	// NOT WORKED NOW
 
 	var ss = []Int32 [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -113,6 +114,20 @@ func main() -> Int {
 	var j = 7
 	ss[k:j] = []
 	array_print(&ss, 10)
+
+
+	printf("--------------------------------------------\n")
+	printf("copy slice by var\n")
+
+	var src = []Int32 [10, 20, 30, 40, 50]
+	var dst = []Int32 [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+	// not worked with var!
+	let i1 = 3
+	let j1 = 8
+	dst[i1:j1] = [11, 22, 33, 44, 55]
+
+	array_print(&dst, 10)
 
 
 	return 0

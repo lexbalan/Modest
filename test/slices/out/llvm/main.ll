@@ -221,7 +221,9 @@ declare void @perror(%ConstCharStr* %str)
 @str15 = private constant [8 x i8] [i8 98, i8 101, i8 102, i8 111, i8 114, i8 101, i8 10, i8 0]
 @str16 = private constant [7 x i8] [i8 97, i8 102, i8 116, i8 101, i8 114, i8 10, i8 0]
 @str17 = private constant [46 x i8] [i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 10, i8 0]
-@str18 = private constant [14 x i8] [i8 115, i8 108, i8 105, i8 99, i8 101, i8 32, i8 98, i8 121, i8 32, i8 118, i8 97, i8 114, i8 10, i8 0]
+@str18 = private constant [19 x i8] [i8 122, i8 101, i8 114, i8 111, i8 32, i8 115, i8 108, i8 105, i8 99, i8 101, i8 32, i8 98, i8 121, i8 32, i8 118, i8 97, i8 114, i8 10, i8 0]
+@str19 = private constant [46 x i8] [i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 10, i8 0]
+@str20 = private constant [19 x i8] [i8 99, i8 111, i8 112, i8 121, i8 32, i8 115, i8 108, i8 105, i8 99, i8 101, i8 32, i8 98, i8 121, i8 32, i8 118, i8 97, i8 114, i8 10, i8 0]
 
 
 
@@ -423,7 +425,7 @@ break_4:
 	%109 = load [0 x i32]*, [0 x i32]** %99
 	call void @array_print([0 x i32]* %109, i32 10)
 	%110 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @str17 to [0 x i8]*))
-	%111 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str18 to [0 x i8]*))
+	%111 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str18 to [0 x i8]*))
 	; NOT WORKED NOW
 	%112 = alloca [10 x i32], align 4
 	%113 = insertvalue [10 x i32] zeroinitializer, i32 0, 0
@@ -456,6 +458,41 @@ break_4:
 	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %132, i8 0, i32 %131, i1 0)
 	%133 = bitcast [10 x i32]* %112 to [0 x i32]*
 	call void @array_print([0 x i32]* %133, i32 10)
+	%134 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @str19 to [0 x i8]*))
+	%135 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str20 to [0 x i8]*))
+	%136 = alloca [5 x i32], align 4
+	%137 = insertvalue [5 x i32] zeroinitializer, i32 10, 0
+	%138 = insertvalue [5 x i32] %137, i32 20, 1
+	%139 = insertvalue [5 x i32] %138, i32 30, 2
+	%140 = insertvalue [5 x i32] %139, i32 40, 3
+	%141 = insertvalue [5 x i32] %140, i32 50, 4
+	store [5 x i32] %141, [5 x i32]* %136
+	%142 = alloca [10 x i32], align 4
+	%143 = insertvalue [10 x i32] zeroinitializer, i32 0, 0
+	%144 = insertvalue [10 x i32] %143, i32 1, 1
+	%145 = insertvalue [10 x i32] %144, i32 2, 2
+	%146 = insertvalue [10 x i32] %145, i32 3, 3
+	%147 = insertvalue [10 x i32] %146, i32 4, 4
+	%148 = insertvalue [10 x i32] %147, i32 5, 5
+	%149 = insertvalue [10 x i32] %148, i32 6, 6
+	%150 = insertvalue [10 x i32] %149, i32 7, 7
+	%151 = insertvalue [10 x i32] %150, i32 8, 8
+	%152 = insertvalue [10 x i32] %151, i32 9, 9
+	store [10 x i32] %152, [10 x i32]* %142
+	; -- STMT ASSIGN ARRAY --
+	%153 = getelementptr inbounds [10 x i32], [10 x i32]* %142, i32 0, i8 3
+	%154 = bitcast i32* %153 to [5 x i32]*
+	; -- start vol eval --
+	%155 = zext i8 5 to i32
+	; -- end vol eval --
+	%156 = insertvalue [5 x i32] zeroinitializer, i32 11, 0
+	%157 = insertvalue [5 x i32] %156, i32 22, 1
+	%158 = insertvalue [5 x i32] %157, i32 33, 2
+	%159 = insertvalue [5 x i32] %158, i32 44, 3
+	%160 = insertvalue [5 x i32] %159, i32 55, 4
+	store [5 x i32] %160, [5 x i32]* %154
+	%161 = bitcast [10 x i32]* %142 to [0 x i32]*
+	call void @array_print([0 x i32]* %161, i32 10)
 	ret %Int 0
 }
 
