@@ -479,6 +479,7 @@ break_4:
 	%151 = insertvalue [10 x i32] %150, i32 8, 8
 	%152 = insertvalue [10 x i32] %151, i32 9, 9
 	store [10 x i32] %152, [10 x i32]* %142
+	; not worked with var!
 	; -- STMT ASSIGN ARRAY --
 	%153 = getelementptr inbounds [10 x i32], [10 x i32]* %142, i32 0, i8 3
 	%154 = bitcast i32* %153 to [5 x i32]*

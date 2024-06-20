@@ -8,7 +8,7 @@ from error import error, warning, info
 from hlir.id import hlir_id
 
 
-top_level_stoppers = ['type', 'const', 'var', 'func']
+top_level_stoppers = ['type', 'let', 'var', 'func']
 func_stoppers = ['let', 'var', 'if', 'while', 'return', 'type']
 
 class Parser:
@@ -1066,8 +1066,6 @@ class Parser:
 			s = self.stmt_again()
 		elif self.match('break'):
 			s = self.stmt_break()
-		elif self.match('const'):
-			s = self.stmt_let()
 		elif self.match('type'):
 			s = self.parse_def_type()
 		elif self.match('++'):
@@ -1408,10 +1406,14 @@ class Parser:
 
 		return dir
 
+	def skipnl(self):
+		n = 0
+		if self.match('\n'):
+			n = n + 1
+		return n
 
 
 	def parse(self, source_info):
-
 		self.tokens = self.lex.run(source_info['path'])
 		self.ctoken = 0
 
@@ -1432,7 +1434,7 @@ class Parser:
 				x = self.parse_directive()
 
 			# we can do const definition before import?
-			elif self.match('const') or self.match('let'):
+			elif self.match('let'):
 				x = self.parse_def_const()
 
 			elif self.match('import'):
@@ -1469,7 +1471,6 @@ class Parser:
 				spaceline_cnt = spaceline_cnt + 1
 				continue
 			elif self.match('func'): x = self.parse_def_func()
-			elif self.match('const'): x = self.parse_def_const()
 			elif self.match('let'): x = self.parse_def_const()
 			elif self.match('var'): x = self.parse_def_var()
 			elif self.match('type'): x = self.parse_def_type()
