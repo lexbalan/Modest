@@ -111,13 +111,13 @@ def value_terminal(t, asset, ti):
 		'isa': 'value',
 		'kind': 'literal',
 		'type': t,
-		'asset': asset,
 		'items': [],
 		# Literal - не всегда immediate!
 		# Литерал композитного типа может быть не immediate
 		# (см: do_value_record, do_value_array)
-		'immediate': True,
 		'immutable': False,
+		'immediate': True,
+		'asset': asset,
 		'att': [],
 		'nl_end': 0,
 		'nl': 0,
@@ -334,9 +334,9 @@ def value_sizeof(of, ti):
 		'kind': 'sizeof',
 		'of': of,
 		'type': type,
-		'asset': size,
-		'immediate': True,
 		'immutable': True,
+		'immediate': True,
+		'asset': size,
 		'att': [],
 		'expr_ti': ti,
 		'ti': ti
@@ -351,9 +351,9 @@ def value_alignof(of, ti):
 		'kind': 'alignof',
 		'of': of,
 		'type': type,
-		'asset': align,
-		'immediate': True,
 		'immutable': True,
+		'immediate': True,
+		'asset': align,
 		'att': [],
 		'expr_ti': ti,
 		'ti': ti
@@ -374,9 +374,9 @@ def value_offsetof(of, field_id, ti):
 		'of': of,
 		'field': field_id,
 		'type': type,
-		'asset': offset,
-		'immediate': True,
 		'immutable': True,
+		'immediate': True,
+		'asset': offset,
 		'att': [],
 		'expr_ti': ti,
 		'ti': ti
@@ -391,14 +391,59 @@ def value_lengthof(value, ti):
 		'kind': 'lengthof',
 		'value': value,
 		'type': type,
-		'asset': length,
-		'immediate': True,
 		'immutable': True,
+		'immediate': True,
+		'asset': length,
 		'att': [],
 		'expr_ti': ti,
 		'ti': ti
 	}
 
+
+def value_va_start(va_list, last_param, ti):
+	from foundation import typeUnit
+	return {
+		'isa': 'value',
+		'kind': 'va_start',
+		'va_list': va_list,
+		'last_param': last_param,
+		'type': typeUnit,
+		'immutable': True,
+		'immediate': True,
+		'asset': 0,
+		'att': [],
+		'expr_ti': ti,
+		'ti': ti
+	}
+
+def value_va_arg(va_list, type, ti):
+	return {
+		'isa': 'value',
+		'kind': 'va_arg',
+		'va_list': va_list,
+		'type': type,
+		'immutable': True,
+		'immediate': True,
+		'asset': 0,
+		'att': [],
+		'expr_ti': ti,
+		'ti': ti
+	}
+
+def value_va_end(va_list, ti):
+	from foundation import typeUnit
+	return {
+		'isa': 'value',
+		'kind': 'va_end',
+		'va_list': va_list,
+		'type': typeUnit,
+		'immutable': True,
+		'immediate': True,
+		'asset': 0,
+		'att': [],
+		'expr_ti': ti,
+		'ti': ti
+	}
 
 
 

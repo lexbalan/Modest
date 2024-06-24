@@ -61,33 +61,33 @@ func tmpnam(str: *CharStr) -> *CharStr
 
 
 @attribute("value.type.to:dispensable")
-func printf(s: *ConstCharStr, va_list: VA_List) -> Int
+func printf(s: *ConstCharStr, ...) -> Int
 
 @attribute("value.type.to:dispensable")
-func scanf(s: *ConstCharStr, va_list: VA_List) -> Int
+func scanf(s: *ConstCharStr, ...) -> Int
 
 @attribute("value.type.to:dispensable")
-func fprintf(stream: *File, format: *Str, va_list: VA_List) -> Int
+func fprintf(stream: *File, format: *Str, ...) -> Int
 
 @attribute("value.type.to:dispensable")
-func fscanf(f: *File, format: *ConstCharStr, va_list: VA_List) -> Int
+func fscanf(f: *File, format: *ConstCharStr, ...) -> Int
 
 @attribute("value.type.to:dispensable")
-func sscanf(buf: *ConstCharStr, format: *ConstCharStr, va_list: VA_List) -> Int
+func sscanf(buf: *ConstCharStr, format: *ConstCharStr, ...) -> Int
 
 @attribute("value.type.to:dispensable")
-func sprintf(buf: *CharStr, format: *ConstCharStr, va_list: VA_List) -> Int
+func sprintf(buf: *CharStr, format: *ConstCharStr, ...) -> Int
 
 
 
-//func vfprintf(f: *File, format: *ConstCharStr, arg: VA_List) -> Int
-//func vprintf(format: *ConstCharStr, arg: VA_List) -> Int
-func vsprintf(str: *CharStr, format: *ConstCharStr, arg: VA_List) -> Int
+//func vfprintf(f: *File, format: *ConstCharStr, args: VA_List) -> Int
+//func vprintf(format: *ConstCharStr, args: VA_List) -> Int
+func vsprintf(str: *CharStr, format: *ConstCharStr, args: VA_List) -> Int
 
 //int vsnprintf (char * s, size_t n, const char * format, va_list arg );
 
 // __vsprintf_chk -- convert formatted output, with stack checking
-func vsnprintf(str: *CharStr, n: SizeT, format: *ConstCharStr, arg: VA_List) -> Int
+func vsnprintf(str: *CharStr, n: SizeT, format: *ConstCharStr, args: VA_List) -> Int
 
 
 func __vsnprintf_chk (dest:*CharStr, len:SizeT, flags:Int, dstlen:SizeT, format:*ConstCharStr, arg: VA_List) -> Int

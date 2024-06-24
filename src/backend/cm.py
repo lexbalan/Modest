@@ -165,7 +165,8 @@ def print_type_func(t, extra_args=False):
 		i = i + 1
 
 	if extra_args:
-		out(", va_list: VA_List")
+		#out(", va_list: VA_List")
+		out(", ...")
 
 	out(') -> ')
 	print_type(t['to'])
@@ -583,6 +584,22 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 	elif k == 'alignof': out("alignof("); print_type(x['of']); out(")")
 	elif k == 'offsetof': out("offsetof("); print_type(x['of']); out('.%s' % x['field']['str']); out(")")
 	elif k == 'lengthof': out("lengthof("); print_value(x['value']); out(")")
+	elif k == 'va_start':
+		out("__va_start(")
+		print_value(x['va_list'])
+		out(", ")
+		print_value(x['last_param'])
+		out(")")
+	elif k == 'va_arg':
+		out("__va_arg(")
+		print_value(x['va_list'])
+		out(", ")
+		print_type(x['type'])
+		out(")")
+	elif k == 'va_end':
+		out("__va_end(")
+		print_value(x['va_list'])
+		out(")")
 	else: out("<%s>" % k)
 
 	if need_wrap:

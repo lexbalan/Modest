@@ -4,7 +4,7 @@
 VA_List is a special pseudo-type used for creating variable-arguments functions. It can be only type of last parameter in function param list. For getting next argument value, you just need to cast VA_List parameter to desirable type.
 
 ```swift
-func my_printf(fmt: *Str8, va_list: VA_List) {
+func my_printf(fmt: *Str8, ...) {
 	var i = 0
 	while true {
 		var c = str[i]

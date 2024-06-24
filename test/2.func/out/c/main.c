@@ -50,6 +50,15 @@ int main()
 	const int32_t sum_result = sum(arg_a, arg_b);
 	printf("sum(%i, %i) == %i\n", arg_a, arg_b, sum_result);
 
+
+	void *fptr;
+	fptr = &sum;
+	// call function with two arguments and return value
+	const int32_t arg_a2 = 1;
+	const int32_t arg_b2 = 2;
+	const int32_t fptr_result = ((int32_t (*) (int32_t a, int32_t b))fptr)(arg_a2, arg_b2);
+	printf("fptr(%i, %i) == %i\n", arg_a2, arg_b2, fptr_result);
+
 	return 0;
 }
 

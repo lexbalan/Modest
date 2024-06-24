@@ -1,4 +1,4 @@
 // lib/lightfood/print.hm
 
-func print(form: *Str8, va_list: VA_List)
+func print(form: *Str8, ...)
 

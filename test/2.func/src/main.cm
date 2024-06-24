@@ -40,6 +40,14 @@ func main() -> Int {
 	let sum_result = sum(arg_a, arg_b)
 	printf("sum(%i, %i) == %i\n", arg_a, arg_b, sum_result)
 
+
+	var fptr = &sum
+	// call function with two arguments and return value
+	let arg_a2 = Int32 1
+	let arg_b2 = Int32 2
+	let fptr_result = fptr(arg_a2, arg_b2)
+	printf("fptr(%i, %i) == %i\n", arg_a2, arg_b2, fptr_result)
+
 	return 0
 }
 

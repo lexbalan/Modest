@@ -15,11 +15,14 @@ operators1 = [
 ]
 
 operators2 = [
-	'==', '!=', '<=', '>=', '=', '::',
+	'==', '!=', '<=', '>=', '::',
 	'<-', '->', '=>', '<<', '>>',
-	'++', '--', '<<=', '>>=', '..'
+	'++', '--'
 ]
 
+operators3 = [
+	'<<=', '>>=', '...'
+]
 
 # Rule returns Product/None in case if it was triggered
 # And False in case if it wasnt triggered
@@ -138,9 +141,16 @@ def doOperation2(src):
 	if s in operators2:
 		ti['len'] = 2
 		return ('op', s, ti)
-
 	return False
 
+
+def doOperation3(src):
+	ti = src.get_ti()
+	s = src.getn(3)
+	if s in operators3:
+		ti['len'] = 3
+		return ('op', s, ti)
+	return False
 
 
 def doOperation1(src):
@@ -330,6 +340,7 @@ class Lexer:
 			doNumber,
 			doLineComment,
 			doBlockComment,
+			doOperation3,
 			doOperation2,
 			doOperation1,
 			doString,

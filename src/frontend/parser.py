@@ -293,10 +293,14 @@ class Parser:
 			error("expected type expr", ti)
 			return None
 
+		arghack = False
 		if self.match("("):
 			fields = []
 			while not self.match(")"):
 				f = self.parse_field()
+				if f == None:
+					if self.match("..."):
+						arghack = True
 				self.match(",")
 				if f != None:
 					fields.extend(f)
@@ -307,6 +311,7 @@ class Parser:
 					'isa': 'type',
 					'kind': 'func',
 					'params': fields,
+					'arghack': arghack,
 					'to': t,
 					'ti': ti
 				}
@@ -316,6 +321,7 @@ class Parser:
 					'kind': 'func',
 					'params': fields,
 					'to': None,
+					'arghack': arghack,
 					'size': 0,
 					'align': 0,
 					'ti': ti
@@ -886,6 +892,22 @@ class Parser:
 				id2 = self.identifier()
 				return {'isa': 'ast_value', 'kind': 'ns', 'ids': [id, id2], 'ti': ti}
 
+
+			if id['str'] == '__va_arg':
+				self.match("(")
+				v = self.expr_value()
+				self.match(",")
+				t = self.expr_type()
+				self.match(")")
+				return {
+					'isa': 'ast_value',
+					'kind': 'va_arg',
+					'va_list': v,
+					'type': t,
+					'ti': ti
+				}
+
+
 			#if id['str'][0].islower():
 			return {'isa': 'ast_value', 'kind': 'id', 'id': id, 'ti': ti}
 			#else:
@@ -1074,6 +1096,8 @@ class Parser:
 			s = self.stmt_dec()
 		elif self.look('__asm'):
 			s = self.stmt_asm()
+		elif self.look('__va_arg'):
+			s = self.stmt_va_arg()
 		else:
 
 			# comment?
@@ -1169,25 +1193,33 @@ class Parser:
 			while True:
 				nl_cnt = self.skip_blanks()
 
-				if self.is_identifier():
-					break
+				#if self.is_identifier():
+				#	break
 
 				x = None
 				if self.token_class_is('comment-block'):
 					x = self.parse_comment_block()
+					x['nl'] = nl_cnt
 					comments_and_directives.append(x)
 				elif self.token_class_is('comment-line'):
 					x = self.parse_comment_line()
+					x['nl'] = nl_cnt
 					comments_and_directives.append(x)
 				elif self.token_class_is('directive'):
 					x = self.parse_directive()
-					comments_and_directives.append(x)
-
-				if x != None:
 					x['nl'] = nl_cnt
+					comments_and_directives.append(x)
+				else:
+					break
+				#if x != None:
+				#	x['nl'] = nl_cnt
 
+
+			if not self.is_identifier():
+				return None
 
 			id = self.identifier()
+
 			if id == None:
 				break
 

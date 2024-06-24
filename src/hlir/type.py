@@ -261,7 +261,7 @@ def hlir_type_record(fields, ti=None):
 	}
 
 
-def hlir_type_func(params, to, var_args, va_list_id, ti=None):
+def hlir_type_func(params, to, va_args, va_list_id, ti=None):
 	return {
 		'isa': 'type',
 		'kind': 'func',
@@ -273,8 +273,8 @@ def hlir_type_func(params, to, var_args, va_list_id, ti=None):
 		'params': params,
 		'to': to,
 
-		'extra_args': var_args,
-		'va_list_id': va_list_id,
+		'extra_args': va_args,
+		#'va_list_id': va_list_id,
 
 		'declaration': None,
 		'definition': None,

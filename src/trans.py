@@ -511,7 +511,7 @@ def do_type_func(t, func_id="_"):
 			to['att'].append('wrapped_array_type')
 			to['wrapped_id'] = 'struct ' + func_id + '_' + 'retval'
 
-	return hlir_type.hlir_type_func(params, to, var_args, va_list_id, ti=t['ti'])
+	return hlir_type.hlir_type_func(params, to, t['arghack'], va_list_id, ti=t['ti'])
 
 
 
@@ -973,17 +973,48 @@ def sort_args(params, args):
 
 
 
+
+def do_value_lengthof(args, ti):
+	arg = do_rvalue(args[0]['value'])
+
+	if not hlir_type.type_is_array(arg['type']):
+		error("expected array value", args[0]['ti'])
+		return value_bad(x)
+
+	return value_lengthof(arg, ti)
+
+
+def do_value_va_start(args, ti):
+	va_list = do_rvalue(args[0]['value'])
+	last_param = do_rvalue(args[1]['value'])
+	return value_va_start(va_list, last_param, ti)
+
+
+def do_value_va_arg(x):
+	va_list = do_rvalue(x['va_list'])
+	type = do_type(x['type'])
+	return value_va_arg(va_list, type, x['ti'])
+
+
+def do_value_va_end(args, ti):
+	va_list = do_rvalue(args[0]['value'])
+	return value_va_end(va_list, ti)
+
+
+
 def do_value_call(x):
-	# for lengthof()
+
 	if x['left']['kind'] == 'id':
-		if x['left']['id']['str'] == 'lengthof':
-			arg = do_rvalue(x['args'][0]['value'])
-			if hlir_type.type_is_array(arg['type']):
-				return value_lengthof(arg, x['ti'])
-			else:
-				error("expected array value", x['args'][0]['value']['ti'])
-				#hlir_type.type_print(arg['type'])
-				return value_bad(x)
+		id_str = x['left']['id']['str']
+
+		if id_str == 'lengthof':
+			return do_value_lengthof(x['args'], x['ti'])
+		elif id_str == '__va_start':
+			return do_value_va_start(x['args'], x['ti'])
+		elif id_str == '__va_arg':
+			return do_value_va_arg(x['args'], x['ti'])
+		elif id_str == '__va_end':
+			return do_value_va_end(x['args'], x['ti'])
 
 
 	f = do_rvalue(x['left'])
@@ -1475,6 +1506,7 @@ def do_value(x):
 	elif k == 'offsetof': v = do_value_offsetof(x)
 	elif k == 'shl': v = do_value_shift(x)
 	elif k == 'shr': v = do_value_shift(x)
+	elif k == 'va_arg': v = do_value_va_arg(x)
 
 	#if v == None:
 	#	v = value_bad(x)
@@ -2184,10 +2216,10 @@ def def_func(x):
 		i = i + 1
 
 
-	if func_type['extra_args']:
-		va_id = func_type['va_list_id']
-		add_local_var(va_id, foundation.typeVA_List, va_id['ti'])
-		module_option('use_extra_args')
+	#if func_type['extra_args']:
+		#va_id = func_type['va_list_id']
+		#add_local_var(va_id, foundation.typeVA_List, va_id['ti'])
+		#module_option('use_extra_args')
 
 
 	fn['stmt'] = do_stmt_block(x['stmt'])

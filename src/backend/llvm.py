@@ -1564,9 +1564,9 @@ def print_stmt_break(x):
 
 
 def print_stmt_return(x):
-	global cfunc
-	if va_list != None:
-		llvm_va_end(va_list)
+	#global cfunc
+	#if va_list != None:
+	#	llvm_va_end(va_list)
 
 	if x['value'] != None:
 		v = do_reval(x['value'])
@@ -1907,19 +1907,19 @@ def print_def_func(x):
 
 	out(" {")
 
-	if ftype['extra_args']:
-		global va_list
-		id_str = ftype['va_list_id']['str'] # 'va_list'
-		lo("; va list")
-		va_list = llvm_alloca(foundation.typeFreePointer)
-		locals_add(id_str, va_list)
-		llvm_va_start(va_list)
+#	if ftype['extra_args']:
+#		global va_list
+#		id_str = ftype['va_list_id']['str'] # 'va_list'
+#		lo("; va list")
+#		va_list = llvm_alloca(foundation.typeFreePointer)
+#		locals_add(id_str, va_list)
+#		llvm_va_start(va_list)
 
 	print_stmt_block(func['stmt'])
 
 	if hlir_type.type_eq(ftype['to'], foundation.typeUnit):
-		if va_list != None:
-			llvm_va_end(va_list)
+		#if va_list != None:
+		#	llvm_va_end(va_list)
 		lo("ret void")
 
 	indent_down()

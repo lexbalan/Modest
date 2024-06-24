@@ -344,9 +344,9 @@ func dup2 (fildes: Int, fildes2: Int) -> Int
 func encrypt (block: *[64]Char, edflag: Int) -> Unit
 
 //
-func execl (path: *[]ConstChar, arg0: *[]ConstChar, va: VA_List) -> Int
-func execle (path: *[]ConstChar, arg0: *[]ConstChar, va: VA_List) -> Int
-func execlp (file: *[]ConstChar, arg0: *[]ConstChar, va: VA_List) -> Int
+func execl (path: *[]ConstChar, arg0: *[]ConstChar, ...) -> Int
+func execle (path: *[]ConstChar, arg0: *[]ConstChar, ...) -> Int
+func execlp (file: *[]ConstChar, arg0: *[]ConstChar, ...) -> Int
 func execv (path: *[]ConstChar, argv: *[]ConstChar) -> Int
 func execve (path: *[]ConstChar, argv: *[]ConstChar, envp: *[]ConstChar) -> Int
 func execvp (file: *[]ConstChar, argv: *[]ConstChar) -> Int

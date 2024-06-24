@@ -34,7 +34,7 @@ func sprintf_dec_nat32(buf: *[]Char8, x: Nat32)
 func sprintf_hex_nat32(buf: *[]Char8, x: Nat32)
 
 
-func print(form: *Str8, va_list: VA_List) {
+func print(form: *Str8, ...) {
 	var i = 0
 	while true {
 		var c = form[i]

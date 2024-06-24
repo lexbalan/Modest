@@ -9,7 +9,16 @@ import "lightfood/print"
 
 
 @attribute("value.type.to:dispensable")
-func my_printf(format: *Str8, va_list: VA_List) -> SSizeT {
+func my_printf(format: *Str8, ...) -> SSizeT {
+	var va_list: VA_List
+
+	__va_start(va_list, format)
+
+	let a = __va_arg(va_list, Int32)
+
+	__va_end(va_list)
+
+	/*
 	var va_list_ptr: VA_List
 	va_list_ptr = list_ptr
 
@@ -17,7 +26,7 @@ func my_printf(format: *Str8, va_list: VA_List) -> SSizeT {
 	var buf: [maxstr]Char8
 	//let n = vsnprintf(&buf, maxstr, format, va_list)
 	let n = __vsnprintf_chk(&buf, maxstr, 0, maxstr, format, va_list)
-	return write(c_STDOUT_FILENO, &buf, SizeT n)
+	return write(c_STDOUT_FILENO, &buf, SizeT n)*/
 }
 
 
