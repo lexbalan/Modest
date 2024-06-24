@@ -161,7 +161,7 @@ void sprintf_hex_nat32(char *buf, uint32_t x)
 		j = j + 1;
 	}
 
-	buf[j] = 0;
+	buf[j] = '\x0';
 
 	//return buf
 }

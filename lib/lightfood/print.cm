@@ -122,10 +122,9 @@ func n_to_sym(n: Nat8) -> Char8 {
 
 func sprintf_hex_nat32(buf: *[]Char8, x: Nat32) {
 	var cc: [8]Char8
-
 	var d = x
-
 	var i = 0
+
 	while true {
 		let n = d % 16
 		d = d / 16
@@ -146,7 +145,7 @@ func sprintf_hex_nat32(buf: *[]Char8, x: Nat32) {
 		++j
 	}
 
-	buf[j] = Char8 0
+	buf[j] = "\0"
 
 	//return buf
 }
@@ -154,9 +153,7 @@ func sprintf_hex_nat32(buf: *[]Char8, x: Nat32) {
 
 func sprintf_dec_int32(buf: *[]Char8, x: Int32) {
 	var cc: [11]Char8
-
 	var d = x
-
 	let neg = d < 0
 
 	if neg {
@@ -196,10 +193,9 @@ func sprintf_dec_int32(buf: *[]Char8, x: Int32) {
 
 func sprintf_dec_nat32(buf: *[]Char8, x: Nat32) {
 	var cc: [11]Char8
-
 	var d = x
-
 	var i = 0
+
 	while true {
 		let n = d % 10
 		d = d / 10
