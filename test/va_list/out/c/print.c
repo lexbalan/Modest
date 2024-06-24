@@ -76,7 +76,6 @@ void print(char *form, ...)
 			c = form[i];
 			i = i + 1;
 
-
 			// буффер для печати всего, кроме строк
 			char buf[10 + 1];
 			char *sptr;
@@ -104,7 +103,7 @@ void print(char *form, ...)
 				// %c for char
 				const char c = (char)va_arg(va, int32_t);
 				sptr[0] = c;
-				sptr[1] = 0;
+				sptr[1] = '\x0';
 			}
 
 			put_str8(sptr);

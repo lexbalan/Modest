@@ -62,10 +62,9 @@ func print(form: *Str8, ...) {
 		}
 
 		if c == "{" {
-			i = i + 1
+			++i
 			c = form[i]
-			i = i + 1
-
+			++i
 
 			// буффер для печати всего, кроме строк
 			var buf: [10+1]Char8
@@ -94,7 +93,7 @@ func print(form: *Str8, ...) {
 				// %c for char
 				let c = Char8 __va_arg(va, Int32)
 				sptr[0] = c
-				sptr[1] = Char8 0
+				sptr[1] = "\0"
 			}
 
 			put_str8(sptr)
@@ -103,7 +102,7 @@ func print(form: *Str8, ...) {
 			putchar8(c)
 		}
 
-		i = i + 1
+		++i
 	}
 
 	__va_end(va)
@@ -132,7 +131,7 @@ func sprintf_hex_nat32(buf: *[]Char8, x: Nat32) {
 		d = d / 16
 
 		cc[i] = n_to_sym(Nat8 n)
-		i = i + 1
+		++i
 
 		if d == 0 {
 			break
@@ -142,9 +141,9 @@ func sprintf_hex_nat32(buf: *[]Char8, x: Nat32) {
 	// mirroring into buffer
 	var j = 0
 	while i > 0 {
-		i = i - 1
+		--i
 		buf[j] = cc[i]
-		j = j + 1
+		++j
 	}
 
 	buf[j] = Char8 0
@@ -169,7 +168,7 @@ func sprintf_dec_int32(buf: *[]Char8, x: Int32) {
 		let n = d % 10
 		d = d / 10
 		cc[i] = n_to_sym(Nat8 n)
-		i = i + 1
+		++i
 
 		if d == 0 {
 			break
@@ -180,13 +179,13 @@ func sprintf_dec_int32(buf: *[]Char8, x: Int32) {
 
 	if neg {
 		buf[0] = "-"
-		j = j + 1
+		++j
 	}
 
 	while i > 0 {
-		i = i - 1
+		--i
 		buf[j] = cc[i]
-		j = j + 1
+		++j
 	}
 
 	buf[j] = "\0"
@@ -214,9 +213,9 @@ func sprintf_dec_nat32(buf: *[]Char8, x: Nat32) {
 
 	var j = 0
 	while i > 0 {
-		i = i - 1
+		--i
 		buf[j] = cc[i]
-		j = j + 1
+		++j
 	}
 
 	buf[j] = "\0"
