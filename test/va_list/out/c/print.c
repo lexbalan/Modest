@@ -134,12 +134,11 @@ char n_to_sym(uint8_t n)
 void sprintf_hex_nat32(char *buf, uint32_t x)
 {
 	char cc[8];
-
 	uint32_t d;
 	d = x;
-
 	int32_t i;
 	i = 0;
+
 	while (true) {
 		const uint32_t n = d % 16;
 		d = d / 16;
@@ -170,10 +169,8 @@ void sprintf_hex_nat32(char *buf, uint32_t x)
 void sprintf_dec_int32(char *buf, int32_t x)
 {
 	char cc[11];
-
 	int32_t d;
 	d = x;
-
 	const bool neg = d < 0;
 
 	if (neg) {
@@ -216,12 +213,11 @@ void sprintf_dec_int32(char *buf, int32_t x)
 void sprintf_dec_nat32(char *buf, uint32_t x)
 {
 	char cc[11];
-
 	uint32_t d;
 	d = x;
-
 	int32_t i;
 	i = 0;
+
 	while (true) {
 		const uint32_t n = d % 10;
 		d = d / 10;

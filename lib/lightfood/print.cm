@@ -24,7 +24,7 @@ func put_str8(s: *Str8) {
 			break
 		}
 		putchar8(c)
-		i = i + 1
+		++i
 	}
 }
 
@@ -200,7 +200,7 @@ func sprintf_dec_nat32(buf: *[]Char8, x: Nat32) {
 		let n = d % 10
 		d = d / 10
 		cc[i] = n_to_sym(Nat8 n)
-		i = i + 1
+		++i
 
 		if d == 0 {
 			break
