@@ -279,6 +279,7 @@ def init():
 
 	type_va_list_decl = hlir_def_type(hlir_id('VA_List'), typeVA_List, ti=None)
 	type_va_list_decl['att'].append('c-no-print')
+	type_va_list_decl['c_alias'] = 'va_list'
 	foundation['text'].append(type_va_list_decl)
 
 

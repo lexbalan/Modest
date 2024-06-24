@@ -26,6 +26,10 @@ target triple = "arm64-apple-macosx12.0.0"
 %Str16 = type [0 x %Char16]
 %Str32 = type [0 x %Char32]
 %VA_List = type i8*
+declare void @llvm.va_start(i8*)
+declare void @llvm.va_copy(i8*, i8*)
+declare void @llvm.va_end(i8*)
+
 declare void @llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)
 declare void @llvm.memset.p0.i32(i8*, i8, i32, i1)
 
@@ -175,12 +179,12 @@ declare void @setbuf(%File* %f, %CharStr* %buffer)
 declare %Int @setvbuf(%File* %f, %CharStr* %buffer, %Int %mode, %SizeT %size)
 declare %File* @tmpfile()
 declare %CharStr* @tmpnam(%CharStr* %str)
-declare %Int @printf(%ConstCharStr* %s)
-declare %Int @scanf(%ConstCharStr* %s)
-declare %Int @fprintf(%File* %stream, %Str* %format)
-declare %Int @fscanf(%File* %f, %ConstCharStr* %format)
-declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format)
-declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format)
+declare %Int @printf(%ConstCharStr* %s, ...)
+declare %Int @scanf(%ConstCharStr* %s, ...)
+declare %Int @fprintf(%File* %stream, %Str* %format, ...)
+declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
+declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
 
 
 declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format)
@@ -278,9 +282,9 @@ declare %Int @dup2(%Int %fildes, %Int %fildes2)
 declare void @encrypt([64 x %Char]* %block, %Int %edflag)
 
 
-declare %Int @execl([0 x %ConstChar]* %path, [0 x %ConstChar]* %arg0)
-declare %Int @execle([0 x %ConstChar]* %path, [0 x %ConstChar]* %arg0)
-declare %Int @execlp([0 x %ConstChar]* %file, [0 x %ConstChar]* %arg0)
+declare %Int @execl([0 x %ConstChar]* %path, [0 x %ConstChar]* %arg0, ...)
+declare %Int @execle([0 x %ConstChar]* %path, [0 x %ConstChar]* %arg0, ...)
+declare %Int @execlp([0 x %ConstChar]* %file, [0 x %ConstChar]* %arg0, ...)
 declare %Int @execv([0 x %ConstChar]* %path, [0 x %ConstChar]* %argv)
 declare %Int @execve([0 x %ConstChar]* %path, [0 x %ConstChar]* %argv, [0 x %ConstChar]* %envp)
 declare %Int @execvp([0 x %ConstChar]* %file, [0 x %ConstChar]* %argv)
@@ -489,6 +493,7 @@ declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 
 
 define %SSizeT @my_printf(%Str8* %format, ...) {
+	%1 = alloca %VA_List, align 1<va_start><va_arg><va_end>
 }
 
 define %Int @main() {

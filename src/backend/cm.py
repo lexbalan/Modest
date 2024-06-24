@@ -562,7 +562,50 @@ def print_value_terminal(x, ctx):
 	elif hlir_type.type_is_char(t): print_value_char_create(x, ctx)
 	elif hlir_type.type_is_enum(t): print_value_integer(x, ctx)
 	elif hlir_type.type_is_byte(t): print_value_integer(x, ctx)
+	return
 
+
+def print_value_sizeof(x, ctx):
+	out("sizeof(")
+	print_type(x['of'])
+	out(")")
+
+def print_value_alignof(x, ctx):
+	out("alignof(")
+	print_type(x['of'])
+	out(")")
+
+def print_value_lengthof(x, ctx):
+	out("lengthof(")
+	print_value(x['value'])
+	out(")")
+
+def print_value_offsetof(x, ctx):
+	out("offsetof(")
+	print_type(x['of'])
+	out('.%s' % x['field']['str'])
+	out(")")
+
+def print_value_va_start(x, ctx):
+	out("__va_start(")
+	print_value(x['va_list'])
+	out(", ")
+	print_value(x['last_param'])
+	out(")")
+
+
+def print_value_va_arg(x, ctx):
+	out("__va_arg(")
+	print_value(x['va_list'])
+	out(", ")
+	print_type(x['type'])
+	out(")")
+
+
+def print_value_va_end(x, ctx):
+	out("__va_end(")
+	print_value(x['va_list'])
+	out(")")
 
 
 def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
@@ -580,26 +623,13 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 	elif k == 'index': print_value_index(x, ctx)
 	elif k == 'access': print_value_access(x, ctx)
 	elif k == 'slice': print_value_slice(x, ctx)
-	elif k == 'sizeof': out("sizeof("); print_type(x['of']); out(")")
-	elif k == 'alignof': out("alignof("); print_type(x['of']); out(")")
-	elif k == 'offsetof': out("offsetof("); print_type(x['of']); out('.%s' % x['field']['str']); out(")")
-	elif k == 'lengthof': out("lengthof("); print_value(x['value']); out(")")
-	elif k == 'va_start':
-		out("__va_start(")
-		print_value(x['va_list'])
-		out(", ")
-		print_value(x['last_param'])
-		out(")")
-	elif k == 'va_arg':
-		out("__va_arg(")
-		print_value(x['va_list'])
-		out(", ")
-		print_type(x['type'])
-		out(")")
-	elif k == 'va_end':
-		out("__va_end(")
-		print_value(x['va_list'])
-		out(")")
+	elif k == 'sizeof': print_value_sizeof(x, ctx)
+	elif k == 'alignof': print_value_alignof(x, ctx)
+	elif k == 'offsetof': print_value_offsetof(x, ctx)
+	elif k == 'lengthof': print_value_lengthof(x, ctx)
+	elif k == 'va_arg': print_value_va_arg(x, ctx)
+	elif k == 'va_start': print_value_va_start(x, ctx)
+	elif k == 'va_end': print_value_va_end(x, ctx)
 	else: out("<%s>" % k)
 
 	if need_wrap:

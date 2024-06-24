@@ -64,7 +64,7 @@ styleguide = styles['legacy']
 nl_str = "\n"
 
 
-va_id = None
+#va_id = None
 
 cfunc = None
 
@@ -751,8 +751,8 @@ def print_value_cons(x, ctx):
 
 
 	# VA_List -> AnyType
-	if hlir_type.type_is_va_list(from_type):
-		global va_id
+	"""if hlir_type.type_is_va_list(from_type):
+		#global va_id
 		out("va_arg(%s, " % va_id)
 
 		if VA_ARG_CHAR_AS_INT:
@@ -764,7 +764,7 @@ def print_value_cons(x, ctx):
 			print_type(to_type)
 
 		out(")")
-		return
+		return"""
 
 
 	if x['method'] == 'implicit':
@@ -1189,8 +1189,26 @@ def print_value_lengthof(x, ctx):
 
 
 
+def print_value_va_start(x, ctx):
+	out("va_start(")
+	print_value(x['va_list'])
+	out(", ")
+	print_value(x['last_param'])
+	out(")")
 
 
+def print_value_va_arg(x, ctx):
+	out("va_arg(")
+	print_value(x['va_list'])
+	out(", ")
+	print_type(x['type'])
+	out(")")
+
+
+def print_value_va_end(x, ctx):
+	out("va_end(")
+	print_value(x['va_list'])
+	out(")")
 
 
 def print_value(x, ctx=[], need_wrap=False):
@@ -1214,6 +1232,9 @@ def print_value(x, ctx=[], need_wrap=False):
 	elif k == 'alignof': print_value_alignof(x, ctx)
 	elif k == 'offsetof': y = print_value_offsetof(x, ctx)
 	elif k == 'lengthof': y = print_value_lengthof(x, ctx)
+	elif k == 'va_start': y = print_value_va_start(x, ctx)
+	elif k == 'va_arg': y = print_value_va_arg(x, ctx)
+	elif k == 'va_end': y = print_value_va_end(x, ctx)
 	else:
 		out("<%s>" % k)
 		fatal("unknown opcode '%s'" % k)
@@ -1271,9 +1292,9 @@ def print_stmt_while(x):
 def print_stmt_return(x):
 	nl_indent(x['nl'])
 	global va_id
-	if va_id != None:
-		out("va_end(%s);" % va_id)
-		newline(); indent();
+	#if va_id != None:
+	#	out("va_end(%s);" % va_id)
+	#	newline(); indent();
 
 	out("return")
 
@@ -1615,9 +1636,9 @@ def print_def_func(x):
 	stmts = func['stmt']['stmts']
 	print_statements(stmts)
 
-	if extra_args:
-		if stmts[-1]['kind'] != 'return':
-			newline(); indent(); out("va_end(%s);" % va_id)
+	#if extra_args:
+	#	if stmts[-1]['kind'] != 'return':
+	#		newline(); indent(); out("va_end(%s);" % va_id)
 
 	indent_down()
 
@@ -1632,7 +1653,7 @@ def print_def_func(x):
 
 	func_undef_list = []
 
-	va_id = None
+	#va_id = None
 	cfunc = None
 
 

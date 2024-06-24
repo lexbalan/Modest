@@ -35,6 +35,9 @@ func sprintf_hex_nat32(buf: *[]Char8, x: Nat32)
 
 
 func print(form: *Str8, ...) {
+	var va: VA_List
+	__va_start(va, form)
+
 	var i = 0
 	while true {
 		var c = form[i]
@@ -72,24 +75,24 @@ func print(form: *Str8, ...) {
 
 			if (c == "i") or (c == "d") {
 				// %i & %d for signed integer (Int)
-				let i = Int32 va_list
+				let i = __va_arg(va, Int32)
 				sprintf_dec_int32(sptr, i)
 			} else if c == "n" {
 				// %n for unsigned integer (Nat)
-				let n = Nat32 va_list
+				let n = __va_arg(va, Nat32)
 				sprintf_dec_nat32(sptr, n)
 			} else if (c == "x") or (c == "p") {
 				// %x for unsigned integer (Nat)
 				// %p for pointers
-				let x = Nat32 va_list
+				let x = __va_arg(va, Nat32)
 				sprintf_hex_nat32(sptr, x)
 			} else if c == "s" {
 				// %s pointer to string
-				let s = *Str8 va_list
+				let s = __va_arg(va, *Str8)
 				sptr = s
 			} else if c == "c" {
 				// %c for char
-				let c = Char8 va_list
+				let c = Char8 __va_arg(va, Int32)
 				sptr[0] = c
 				sptr[1] = Char8 0
 			}
@@ -102,6 +105,8 @@ func print(form: *Str8, ...) {
 
 		i = i + 1
 	}
+
+	__va_end(va)
 }
 
 
