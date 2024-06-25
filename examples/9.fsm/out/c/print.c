@@ -43,8 +43,9 @@ void sprintf_hex_nat32(char *buf, uint32_t x);
 
 void print(char *form, ...)
 {
-	va_list va_list;
-	va_start(va_list, form);
+	va_list va;
+	va_start(va, form);
+
 	int32_t i;
 	i = 0;
 	while (true) {
@@ -75,7 +76,6 @@ void print(char *form, ...)
 			c = form[i];
 			i = i + 1;
 
-
 			// буффер для печати всего, кроме строк
 			char buf[10 + 1];
 			char *sptr;
@@ -84,26 +84,26 @@ void print(char *form, ...)
 
 			if ((c == 'i') || (c == 'd')) {
 				// %i & %d for signed integer (Int)
-				const int32_t i = va_arg(va_list, int32_t);
+				const int32_t i = va_arg(va, int32_t);
 				sprintf_dec_int32(sptr, i);
 			} else if (c == 'n') {
 				// %n for unsigned integer (Nat)
-				const uint32_t n = va_arg(va_list, uint32_t);
+				const uint32_t n = va_arg(va, uint32_t);
 				sprintf_dec_nat32(sptr, n);
 			} else if ((c == 'x') || (c == 'p')) {
 				// %x for unsigned integer (Nat)
 				// %p for pointers
-				const uint32_t x = va_arg(va_list, uint32_t);
+				const uint32_t x = va_arg(va, uint32_t);
 				sprintf_hex_nat32(sptr, x);
 			} else if (c == 's') {
 				// %s pointer to string
-				char *const s = va_arg(va_list, char *);
+				char *const s = va_arg(va, char *);
 				sptr = s;
 			} else if (c == 'c') {
 				// %c for char
-				const char c = va_arg(va_list, int);
+				const char c = (char)va_arg(va, int32_t);
 				sptr[0] = c;
-				sptr[1] = 0;
+				sptr[1] = '\x0';
 			}
 
 			put_str8(sptr);
@@ -114,7 +114,8 @@ void print(char *form, ...)
 
 		i = i + 1;
 	}
-	va_end(va_list);
+
+	va_end(va);
 }
 
 
@@ -133,12 +134,11 @@ char n_to_sym(uint8_t n)
 void sprintf_hex_nat32(char *buf, uint32_t x)
 {
 	char cc[8];
-
 	uint32_t d;
 	d = x;
-
 	int32_t i;
 	i = 0;
+
 	while (true) {
 		const uint32_t n = d % 16;
 		d = d / 16;
@@ -160,7 +160,7 @@ void sprintf_hex_nat32(char *buf, uint32_t x)
 		j = j + 1;
 	}
 
-	buf[j] = 0;
+	buf[j] = '\x0';
 
 	//return buf
 }
@@ -169,10 +169,8 @@ void sprintf_hex_nat32(char *buf, uint32_t x)
 void sprintf_dec_int32(char *buf, int32_t x)
 {
 	char cc[11];
-
 	int32_t d;
 	d = x;
-
 	const bool neg = d < 0;
 
 	if (neg) {
@@ -215,12 +213,11 @@ void sprintf_dec_int32(char *buf, int32_t x)
 void sprintf_dec_nat32(char *buf, uint32_t x)
 {
 	char cc[11];
-
 	uint32_t d;
 	d = x;
-
 	int32_t i;
 	i = 0;
+
 	while (true) {
 		const uint32_t n = d % 10;
 		d = d / 10;
