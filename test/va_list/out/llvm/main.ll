@@ -187,11 +187,11 @@ declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
 
 
-declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, %VA_List %args)
 
 
-declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format)
-declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, %VA_List %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, %VA_List %arg)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -485,15 +485,40 @@ declare %PidT @vfork()
 declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 
 
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/lightfood/print.hm
+
+
+
+declare void @print(%Str8* %form, ...)
+
+
 ; -- SOURCE: src/main.cm
 
 @str1 = private constant [19 x i8] [i8 77, i8 121, i8 32, i8 80, i8 114, i8 105, i8 110, i8 116, i8 102, i8 32, i8 84, i8 101, i8 115, i8 116, i8 32, i8 37, i8 100, i8 10, i8 0]
-
+@str2 = private constant [4 x i8] [i8 72, i8 105, i8 33, i8 0]
+@str3 = private constant [8 x i8] [i8 92, i8 123, i8 123, i8 92, i8 125, i8 125, i8 10, i8 0]
+@str4 = private constant [11 x i8] [i8 99, i8 32, i8 61, i8 32, i8 39, i8 123, i8 99, i8 125, i8 39, i8 10, i8 0]
+@str5 = private constant [11 x i8] [i8 115, i8 32, i8 61, i8 32, i8 34, i8 123, i8 115, i8 125, i8 34, i8 10, i8 0]
+@str6 = private constant [9 x i8] [i8 105, i8 32, i8 61, i8 32, i8 123, i8 105, i8 125, i8 10, i8 0]
+@str7 = private constant [9 x i8] [i8 110, i8 32, i8 61, i8 32, i8 123, i8 110, i8 125, i8 10, i8 0]
+@str8 = private constant [11 x i8] [i8 120, i8 32, i8 61, i8 32, i8 48, i8 120, i8 123, i8 120, i8 125, i8 10, i8 0]
 
 
 
 define %SSizeT @my_printf(%Str8* %format, ...) {
-	%1 = alloca %VA_List, align 1<va_start><va_arg><va_end>
+	%1 = alloca %VA_List, align 1
+	%2 = bitcast %VA_List* %1 to i8*
+	call void @llvm.va_start(i8* %2)
+	%3 = alloca [128 x i8], align 1
+	%4 = bitcast [128 x i8]* %3 to %CharStr*
+	%5 = load %VA_List, %VA_List* %1
+	%6 = call %Int @__vsnprintf_chk(%CharStr* %4, %SizeT 128, %Int 0, %SizeT 128, %Str8* %format, %VA_List %5)
+	%7 = bitcast %VA_List* %1 to i8*
+	call void @llvm.va_end(i8* %7)
+	%8 = bitcast [128 x i8]* %3 to i8*
+	%9 = zext %Int %6 to %SizeT
+	%10 = call %SSizeT @write(%Int 1, i8* %8, %SizeT %9)
+	ret %SSizeT %10
 }
 
 define %Int @main() {
@@ -502,6 +527,12 @@ define %Int @main() {
 	store i32 10, i32* %1
 	%2 = load i32, i32* %1
 	%3 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([19 x i8]* @str1 to [0 x i8]*), i32 %2)
+	call void (%Str8*, ...) @print(%Str8* bitcast ([8 x i8]* @str3 to [0 x i8]*))
+	call void (%Str8*, ...) @print(%Str8* bitcast ([11 x i8]* @str4 to [0 x i8]*), i8 36)
+	call void (%Str8*, ...) @print(%Str8* bitcast ([11 x i8]* @str5 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @str2 to [0 x i8]*))
+	call void (%Str8*, ...) @print(%Str8* bitcast ([9 x i8]* @str6 to [0 x i8]*), i32 -1)
+	call void (%Str8*, ...) @print(%Str8* bitcast ([9 x i8]* @str7 to [0 x i8]*), i32 123)
+	call void (%Str8*, ...) @print(%Str8* bitcast ([11 x i8]* @str8 to [0 x i8]*), i32 305419903)
 	ret %Int 0
 }
 

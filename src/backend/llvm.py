@@ -242,6 +242,15 @@ def insertvalue(x, v, pos):
 
 
 
+
+#"%16 = bitcast i8** %3 to i8*"
+#"call void @llvm.va_start(i8* %16)"
+def llvm_va_start(x):
+	y = llvm_cast('bitcast', hlir_type_pointer(x['type']), foundation.typeFreePointer, x)
+	lo("call void @llvm.va_start(i8* %%%s)" % y['reg'])
+	return llvm_value_zero(foundation.typeUnit)
+
+
 #%44 = va_arg i8** %3, i32
 def llvm_va_arg(va_list, typ):
 	reg = llvm_operation('va_arg')
@@ -251,18 +260,12 @@ def llvm_va_arg(va_list, typ):
 	return llvm_value_reg(reg, typ)
 
 
-#"%16 = bitcast i8** %3 to i8*"
-#"call void @llvm.va_start(i8* %16)"
-def llvm_va_start(x):
-	y = llvm_cast('bitcast', hlir_type_pointer(x['type']), foundation.typeFreePointer, x)
-	lo("call void @llvm.va_start(i8* %%%s)" % y['reg'])
-
-
 #"%96 = bitcast i8** %3 to i8*"
 #"call void @llvm.va_end(i8* %96)"
 def llvm_va_end(x):
 	y = llvm_cast('bitcast', hlir_type_pointer(x['type']), foundation.typeFreePointer, x)
 	lo("call void @llvm.va_end(i8* %%%s)" % y['reg'])
+	return llvm_value_zero(foundation.typeUnit)
 
 
 
@@ -1412,6 +1415,21 @@ def do_eval_literal(x):
 	return
 
 
+def do_eval_va_start(x):
+	va_list = do_eval(x['va_list'])
+	return llvm_va_start(va_list)
+
+
+def do_eval_va_arg(x):
+	va_list = do_eval(x['va_list'])
+	typ = x['type']
+	return llvm_va_arg(va_list, typ)
+
+
+def do_eval_va_end(x):
+	va_list = do_eval(x['va_list'])
+	return llvm_va_end(va_list)
+
 
 
 def do_eval(x):
@@ -1435,10 +1453,11 @@ def do_eval(x):
 	elif k == 'index': y = do_eval_index(x)
 	elif k == 'access': y = do_eval_access(x)
 	elif k == 'slice': y = do_eval_slice(x)
-	#elif k == 'concat_array': y = do_eval_literal(x)
-	#elif k == 'concat_string': y = do_eval_literal(x)
 	elif k in ['sizeof', 'lengthof', 'alignof', 'offsetof']:
 		y = do_eval_literal(x)
+	elif k == 'va_start': y = do_eval_va_start(x)
+	elif k == 'va_arg': y = do_eval_va_arg(x)
+	elif k == 'va_end': y = do_eval_va_end(x)
 	else:
 		out("<%s>" % k)
 
