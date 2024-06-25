@@ -11,7 +11,7 @@
 #### Examples
 
 ```swift
-	*Int32	// pointer to Int32
+	*Int32	  // pointer to Int32
 	**Int32   // pointer to pointer to Int32
 	***Int32  // pointer to pointer to pointer to Int32
 	...
