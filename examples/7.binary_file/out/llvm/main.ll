@@ -200,13 +200,11 @@ declare %Int @fprintf(%File* %stream, %Str* %format, ...)
 declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
 declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-
-
-declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format)
-
-
-declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format)
-declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, %VA_List %args)
+declare %Int @vprintf(%ConstCharStr* %format, %VA_List %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, %VA_List %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, %VA_List %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, %VA_List %arg)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)

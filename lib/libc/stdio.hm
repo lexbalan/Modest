@@ -79,17 +79,10 @@ func sscanf(buf: *ConstCharStr, format: *ConstCharStr, ...) -> Int
 func sprintf(buf: *CharStr, format: *ConstCharStr, ...) -> Int
 
 
-
-//func vfprintf(f: *File, format: *ConstCharStr, args: VA_List) -> Int
-//func vprintf(format: *ConstCharStr, args: VA_List) -> Int
+func vfprintf(f: *File, format: *ConstCharStr, args: VA_List) -> Int
+func vprintf(format: *ConstCharStr, args: VA_List) -> Int
 func vsprintf(str: *CharStr, format: *ConstCharStr, args: VA_List) -> Int
-
-//int vsnprintf (char * s, size_t n, const char * format, va_list arg );
-
-// __vsprintf_chk -- convert formatted output, with stack checking
 func vsnprintf(str: *CharStr, n: SizeT, format: *ConstCharStr, args: VA_List) -> Int
-
-
 func __vsnprintf_chk (dest:*CharStr, len:SizeT, flags:Int, dstlen:SizeT, format:*ConstCharStr, arg: VA_List) -> Int
 
 
