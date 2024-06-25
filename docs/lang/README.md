@@ -45,6 +45,7 @@
   * [Directives](./directive.md)
   * [Attributes](./attribute.md)
   * [Builtin constants](./builtin_constants.md)
+  * [Variadic functions](./va_arg.md)
 
 
 ### Keywords
