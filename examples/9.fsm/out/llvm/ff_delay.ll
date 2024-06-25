@@ -130,16 +130,16 @@ break_2:
 
 
 
-%Socklen_T = type i32
+%SocklenT = type i32
 %SizeT = type %UnsignedLongInt
 %SSizeT = type %LongInt
+%IntptrT = type i64
+%PtrdiffT = type i8*
+%OffT = type i64
+%USecondsT = type i32
 %PidT = type i32
 %UidT = type i32
 %GidT = type i32
-%USecondsT = type i32
-%IntptrT = type i64
-%OffT = type i64
-%PtrToConst = type i8*
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/time.hm

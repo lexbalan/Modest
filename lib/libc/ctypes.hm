@@ -14,7 +14,7 @@ import "./ctypes64"
 
 
 @property("c_alias", "socklen_t")
-type Socklen_T Nat32
+type SocklenT Nat32
 
 @property("c_alias", "size_t")
 type SizeT UnsignedLongInt
@@ -22,6 +22,18 @@ type SizeT UnsignedLongInt
 @property("c_alias", "ssize_t")
 type SSizeT LongInt
 
+@property("c_alias", "intptr_t")
+type IntptrT Nat64
+
+@property("c_alias", "ptrdiff_t")
+type PtrdiffT Ptr
+
+@property("c_alias", "off_t")
+type OffT Int64
+
+
+@property("c_alias", "useconds_t")
+type USecondsT Nat32
 
 @property("c_alias", "pid_t")
 type PidT Int32
@@ -29,14 +41,5 @@ type PidT Int32
 type UidT Nat32
 @property("c_alias", "gid_t")
 type GidT Nat32
-@property("c_alias", "useconds_t")
-type USecondsT Nat32
-@property("c_alias", "intptr_t")
-type IntptrT Nat64
-@property("c_alias", "off_t")
-type OffT Int64
-
-@property("c_alias", "const void")
-type PtrToConst Ptr
 
 
