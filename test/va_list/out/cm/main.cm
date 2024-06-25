@@ -5,20 +5,19 @@ import "libc/unistd"
 @attribute("c-no-print")
 import "lightfood/print"
 @c_include "./print.h"
-
 func my_printf(format: *Str8, ...) -> SSizeT {
 	var va: VA_List
 	var va2: VA_List
 
 	__va_copy(va2, va)
 
-	__va_start(va, format)
+	__va_start(va2, format)
 
 	let maxstr = 127 + 1
 	var buf: [maxstr]Char8
-	let n = __vsnprintf_chk(&buf, maxstr, 0, maxstr, format, va)
+	let n = __vsnprintf_chk(&buf, maxstr, 0, maxstr, format, va2)
 
-	__va_end(va)
+	__va_end(va2)
 
 	return write(c_STDOUT_FILENO, &buf, SizeT n)
 }

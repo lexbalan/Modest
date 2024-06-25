@@ -509,13 +509,13 @@ define %SSizeT @my_printf(%Str8* %format, ...) {
 	%3 = bitcast %VA_List* %2 to i8*
 	%4 = bitcast %VA_List* %1 to i8*
 	call void @llvm.va_copy(i8* %3, i8* %4)
-	%5 = bitcast %VA_List* %1 to i8*
+	%5 = bitcast %VA_List* %2 to i8*
 	call void @llvm.va_start(i8* %5)
 	%6 = alloca [128 x i8], align 1
 	%7 = bitcast [128 x i8]* %6 to %CharStr*
-	%8 = load %VA_List, %VA_List* %1
+	%8 = load %VA_List, %VA_List* %2
 	%9 = call %Int @__vsnprintf_chk(%CharStr* %7, %SizeT 128, %Int 0, %SizeT 128, %Str8* %format, %VA_List %8)
-	%10 = bitcast %VA_List* %1 to i8*
+	%10 = bitcast %VA_List* %2 to i8*
 	call void @llvm.va_end(i8* %10)
 	%11 = bitcast [128 x i8]* %6 to i8*
 	%12 = zext %Int %9 to %SizeT
