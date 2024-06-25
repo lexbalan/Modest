@@ -11,6 +11,9 @@ import "lightfood/print"
 @attribute("value.type.to:dispensable")
 func my_printf(format: *Str8, ...) -> SSizeT {
 	var va: VA_List
+	var va2: VA_List
+
+	__va_copy(va2, va)
 
 	__va_start(va, format)
 

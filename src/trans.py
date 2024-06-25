@@ -985,21 +985,26 @@ def do_value_lengthof(args, ti):
 
 
 def do_value_va_start(args, ti):
-	va_list = do_rvalue(args[0]['value'])
+	va_list = do_value(args[0]['value'])
 	last_param = do_rvalue(args[1]['value'])
 	return value_va_start(va_list, last_param, ti)
 
 
 def do_value_va_arg(x):
-	va_list = do_rvalue(x['va_list'])
+	va_list = do_value(x['va_list'])
 	type = do_type(x['type'])
 	return value_va_arg(va_list, type, x['ti'])
 
 
 def do_value_va_end(args, ti):
-	va_list = do_rvalue(args[0]['value'])
+	va_list = do_value(args[0]['value'])
 	return value_va_end(va_list, ti)
 
+
+def do_value_va_copy(args, ti):
+	va_list0 = do_value(args[0]['value'])
+	va_list1 = do_value(args[1]['value'])
+	return value_va_copy(va_list0, va_list1, ti)
 
 
 def do_value_call(x):
@@ -1011,8 +1016,8 @@ def do_value_call(x):
 			return do_value_lengthof(x['args'], x['ti'])
 		elif id_str == '__va_start':
 			return do_value_va_start(x['args'], x['ti'])
-		elif id_str == '__va_arg':
-			return do_value_va_arg(x['args'], x['ti'])
+		elif id_str == '__va_copy':
+			return do_value_va_copy(x['args'], x['ti'])
 		elif id_str == '__va_end':
 			return do_value_va_end(x['args'], x['ti'])
 

@@ -268,6 +268,13 @@ def llvm_va_end(x):
 	return llvm_value_zero(foundation.typeUnit)
 
 
+def llvm_va_copy(dst, src):
+	dst = llvm_cast('bitcast', hlir_type_pointer(dst['type']), foundation.typeFreePointer, dst)
+	src = llvm_cast('bitcast', hlir_type_pointer(src['type']), foundation.typeFreePointer, src)
+	lo("call void @llvm.va_copy(i8* %%%s, i8* %%%s)" % (dst['reg'], src['reg']))
+	return llvm_value_zero(foundation.typeUnit)
+
+
 
 def llvm_inline_cast(op, to_type, val):
 	assert(to_type['isa'] == 'type')
@@ -1431,6 +1438,11 @@ def do_eval_va_end(x):
 	return llvm_va_end(va_list)
 
 
+def do_eval_va_copy(x):
+	dst = do_eval(x['dst'])
+	src = do_eval(x['src'])
+	return llvm_va_copy(dst, src)
+
 
 def do_eval(x):
 	assert(x != None)
@@ -1458,6 +1470,7 @@ def do_eval(x):
 	elif k == 'va_start': y = do_eval_va_start(x)
 	elif k == 'va_arg': y = do_eval_va_arg(x)
 	elif k == 'va_end': y = do_eval_va_end(x)
+	elif k == 'va_copy': y = do_eval_va_copy(x)
 	else:
 		out("<%s>" % k)
 

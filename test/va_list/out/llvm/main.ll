@@ -185,11 +185,9 @@ declare %Int @fprintf(%File* %stream, %Str* %format, ...)
 declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
 declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-
-
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, %VA_List %args)
+declare %Int @vprintf(%ConstCharStr* %format, %VA_List %args)
 declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, %VA_List %args)
-
-
 declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, %VA_List %args)
 declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, %VA_List %arg)
 declare %Int @fgetc(%File* %f)
@@ -507,18 +505,22 @@ declare void @print(%Str8* %form, ...)
 
 define %SSizeT @my_printf(%Str8* %format, ...) {
 	%1 = alloca %VA_List, align 1
-	%2 = bitcast %VA_List* %1 to i8*
-	call void @llvm.va_start(i8* %2)
-	%3 = alloca [128 x i8], align 1
-	%4 = bitcast [128 x i8]* %3 to %CharStr*
-	%5 = load %VA_List, %VA_List* %1
-	%6 = call %Int @__vsnprintf_chk(%CharStr* %4, %SizeT 128, %Int 0, %SizeT 128, %Str8* %format, %VA_List %5)
-	%7 = bitcast %VA_List* %1 to i8*
-	call void @llvm.va_end(i8* %7)
-	%8 = bitcast [128 x i8]* %3 to i8*
-	%9 = zext %Int %6 to %SizeT
-	%10 = call %SSizeT @write(%Int 1, i8* %8, %SizeT %9)
-	ret %SSizeT %10
+	%2 = alloca %VA_List, align 1
+	%3 = bitcast %VA_List* %2 to i8*
+	%4 = bitcast %VA_List* %1 to i8*
+	call void @llvm.va_copy(i8* %3, i8* %4)
+	%5 = bitcast %VA_List* %1 to i8*
+	call void @llvm.va_start(i8* %5)
+	%6 = alloca [128 x i8], align 1
+	%7 = bitcast [128 x i8]* %6 to %CharStr*
+	%8 = load %VA_List, %VA_List* %1
+	%9 = call %Int @__vsnprintf_chk(%CharStr* %7, %SizeT 128, %Int 0, %SizeT 128, %Str8* %format, %VA_List %8)
+	%10 = bitcast %VA_List* %1 to i8*
+	call void @llvm.va_end(i8* %10)
+	%11 = bitcast [128 x i8]* %6 to i8*
+	%12 = zext %Int %9 to %SizeT
+	%13 = call %SSizeT @write(%Int 1, i8* %11, %SizeT %12)
+	ret %SSizeT %13
 }
 
 define %Int @main() {

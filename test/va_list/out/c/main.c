@@ -15,6 +15,9 @@
 ssize_t my_printf(char *format, ...)
 {
 	va_list va;
+	va_list va2;
+
+	va_copy(va2, va);
 
 	va_start(va, format);
 

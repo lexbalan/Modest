@@ -1192,6 +1192,14 @@ def print_value_va_end(x, ctx):
 	out(")")
 
 
+def print_value_va_copy(x, ctx):
+	out("va_copy(")
+	print_value(x['dst'])
+	out(", ")
+	print_value(x['src'])
+	out(")")
+
+
 def print_value(x, ctx=[], need_wrap=False):
 	if need_wrap:
 		out("(")
@@ -1216,6 +1224,7 @@ def print_value(x, ctx=[], need_wrap=False):
 	elif k == 'va_start': y = print_value_va_start(x, ctx)
 	elif k == 'va_arg': y = print_value_va_arg(x, ctx)
 	elif k == 'va_end': y = print_value_va_end(x, ctx)
+	elif k == 'va_copy': y = print_value_va_copy(x, ctx)
 	else:
 		out("<%s>" % k)
 		fatal("unknown opcode '%s'" % k)

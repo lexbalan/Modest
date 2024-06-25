@@ -608,6 +608,14 @@ def print_value_va_end(x, ctx):
 	out(")")
 
 
+def print_value_va_copy(x, ctx):
+	out("__va_copy(")
+	print_value(x['dst'])
+	out(", ")
+	print_value(x['src'])
+	out(")")
+
+
 def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 	if need_wrap:
 		out("(")
@@ -630,6 +638,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 	elif k == 'va_arg': print_value_va_arg(x, ctx)
 	elif k == 'va_start': print_value_va_start(x, ctx)
 	elif k == 'va_end': print_value_va_end(x, ctx)
+	elif k == 'va_copy': print_value_va_copy(x, ctx)
 	else: out("<%s>" % k)
 
 	if need_wrap:

@@ -5,8 +5,12 @@ import "libc/unistd"
 @attribute("c-no-print")
 import "lightfood/print"
 @c_include "./print.h"
+
 func my_printf(format: *Str8, ...) -> SSizeT {
 	var va: VA_List
+	var va2: VA_List
+
+	__va_copy(va2, va)
 
 	__va_start(va, format)
 

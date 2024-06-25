@@ -446,6 +446,23 @@ def value_va_end(va_list, ti):
 	}
 
 
+def value_va_copy(dst, src, ti):
+	from foundation import typeUnit
+	return {
+		'isa': 'value',
+		'kind': 'va_copy',
+		'src': src,
+		'dst': dst,
+		'type': typeUnit,
+		'immutable': True,
+		'immediate': True,
+		'asset': 0,
+		'att': [],
+		'expr_ti': ti,
+		'ti': ti
+	}
+
+
 
 def value_print(x, msg="value_print"):
 	assert(x['isa'] == 'value')
