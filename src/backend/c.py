@@ -64,8 +64,6 @@ styleguide = styles['legacy']
 nl_str = "\n"
 
 
-#va_id = None
-
 cfunc = None
 
 
@@ -750,23 +748,6 @@ def print_value_cons(x, ctx):
 			return
 
 
-	# VA_List -> AnyType
-	"""if hlir_type.type_is_va_list(from_type):
-		#global va_id
-		out("va_arg(%s, " % va_id)
-
-		if VA_ARG_CHAR_AS_INT:
-			if hlir_type.type_is_char(to_type):
-				out("int")
-			else:
-				print_type(to_type)
-		else:
-			print_type(to_type)
-
-		out(")")
-		return"""
-
-
 	if x['method'] == 'implicit':
 		# не печатаем обычный implicit_cast
 		# (это не касается того что выше ^^)
@@ -1291,11 +1272,6 @@ def print_stmt_while(x):
 
 def print_stmt_return(x):
 	nl_indent(x['nl'])
-	global va_id
-	#if va_id != None:
-	#	out("va_end(%s);" % va_id)
-	#	newline(); indent();
-
 	out("return")
 
 	if x['value'] != None:
@@ -1600,7 +1576,6 @@ def print_def_func(x):
 	func = x['value']
 	id = x['id']
 
-	global va_id
 	global cfunc
 	cfunc = func
 
@@ -1625,20 +1600,8 @@ def print_def_func(x):
 	out("{")
 	indent_up()
 
-#	if extra_args:
-#		# add va_list & va_start()
-#		va_id = ftype['va_list_id']['str']
-#		newline(); indent(); out("va_list %s;" % va_id)
-#		last_param = ftype['params'][-1]
-#		newline(); indent(); out("va_start(%s, %s);" % (va_id, last_param['id']['str']))
-
-
 	stmts = func['stmt']['stmts']
 	print_statements(stmts)
-
-	#if extra_args:
-	#	if stmts[-1]['kind'] != 'return':
-	#		newline(); indent(); out("va_end(%s);" % va_id)
 
 	indent_down()
 
@@ -1653,7 +1616,6 @@ def print_def_func(x):
 
 	func_undef_list = []
 
-	#va_id = None
 	cfunc = None
 
 
