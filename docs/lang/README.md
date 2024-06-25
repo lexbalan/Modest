@@ -17,7 +17,6 @@
   * [Record](./type/record.md)
   * [Function](./type/func.md)
   * [Pointer](./type/pointer.md)
-  * [VA_List](./type/va_list.md)
 
 - [Values](./value/README.md)
   <!--* [Numeric](./value/numeric.md)-->
