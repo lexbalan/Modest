@@ -13,9 +13,9 @@ func my_printf(format: *Str8, ...) -> SSizeT {
 
 	__va_start(va2, format)
 
-	let maxstr = 127 + 1
-	var buf: [maxstr]Char8
-	let n = __vsnprintf_chk(&buf, maxstr, 0, maxstr, format, va2)
+	let strMaxLen = 127 + 1
+	var buf: [strMaxLen]Char8
+	let n = vsnprintf(&buf, strMaxLen, format, va2)
 
 	__va_end(va2)
 

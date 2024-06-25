@@ -21,16 +21,16 @@ ssize_t my_printf(char *format, ...)
 
 	va_start(va2, format);
 
-	#define maxstr  (127 + 1)
-	char buf[maxstr];
-	const int n = __vsnprintf_chk((char *)&buf, maxstr, 0, maxstr, format, va2);
+	#define strMaxLen  (127 + 1)
+	char buf[strMaxLen];
+	const int n = vsnprintf((char *)&buf, strMaxLen, format, va2);
 
 	va_end(va2);
 
 	return write(STDOUT_FILENO, (char *)&buf, ((size_t)(uint32_t)n));
 }
 
-#undef maxstr
+#undef strMaxLen
 
 
 int main()
