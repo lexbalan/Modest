@@ -100,6 +100,20 @@ def value_get(id_str):
 	return module_value_get(module, id_str)
 
 
+
+def defined(id_str):
+	v = type_get(id_str)
+	if v != None:
+		return True
+
+	t = type_get(id_str)
+	if t != None:
+		return True
+
+	return False
+
+
+
 # искать только внутри текущего контекста (блока)
 def value_get_here(id_str):
 	return module['context'].value_get(id_str, recursive=False)
@@ -1008,7 +1022,6 @@ def do_value_va_copy(args, ti):
 
 
 def do_value_call(x):
-
 	if x['left']['kind'] == 'id':
 		id_str = x['left']['id']['str']
 
@@ -2346,7 +2359,7 @@ def do_directive(x):
 		production = cond
 		if cond:
 			old_skipp = skipp
-			skipp = True # skip another branches
+			skipp = True  # skip another branches
 
 	elif kind == 'elseif':
 		production = False
@@ -2383,8 +2396,7 @@ def do_directive(x):
 		if value_is_bad(v):
 			fatal("unsuitable value", x['ti'])
 
-		# (because v['asset'] is an array of UTF-32 codes)
-		msg = str_asset_to_str(v['asset'])
+		msg = v['asset']
 		info(msg, x['ti'])
 
 	elif kind == 'warning':
@@ -2393,8 +2405,7 @@ def do_directive(x):
 		if value_is_bad(v):
 			fatal("unsuitable value", x['ti'])
 
-		# (because v['asset'] is an array of UTF-32 codes)
-		msg = str_asset_to_str(v['asset'])
+		msg = v['asset']
 		warning(msg, x['ti'])
 
 	elif kind == 'error':
@@ -2403,17 +2414,11 @@ def do_directive(x):
 		if value_is_bad(v):
 			fatal("unsuitable value", x['ti'])
 
-		# (because v['asset'] is an array of UTF-32 codes)
-		msg = str_asset_to_str(v['asset'])
+		msg = v['asset']
 		error(msg, x['ti'])
 		exit(-1)
 
 	return None
-
-
-
-def str_asset_to_str(a):
-	return a
 
 
 
