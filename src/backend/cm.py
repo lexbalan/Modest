@@ -249,11 +249,13 @@ def print_value_call(v, ctx):
 		arg = args[i]
 		if i > 0: out(", ")
 
-		if arg['isa'] == 'initializer':
+		if arg['isa'] == 'value':
+			# just paramter value
+			print_value(arg)
+		else: #if arg['isa'] == 'initializer':
+			# named parameter
 			out("%s = " % arg['id']['str'])
 			print_value(arg['value'])
-		else:
-			print_value(arg)
 
 		i = i + 1
 	out(")")
