@@ -3,6 +3,11 @@
 import "libc/stdio"
 
 
+func add(a: Int32, b: Int32) -> Int32 {
+	return a + b
+}
+
+let x = add(1, 2)
 
 
 func main() -> Int {

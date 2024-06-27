@@ -17,6 +17,7 @@ from value.array import value_array_create
 from value.string import value_string_create
 from value.record import value_record_create
 
+#from ct_call import ct_call
 
 import decimal
 # max number of signs after .
@@ -1066,6 +1067,7 @@ def do_value_call(x):
 
 	sorted_args = sort_args(params, x['args'])
 
+	imm_args = True  # all arguments are immediate?
 	args = []
 
 	# normal args
@@ -1091,6 +1093,9 @@ def do_value_call(x):
 			arg = hlir_initializer(s, argval)
 			args.append(arg)
 
+		if not value_is_immediate(argval):
+			imm_args = False
+
 		i = i + 1
 
 	#
@@ -1105,11 +1110,17 @@ def do_value_call(x):
 	while i < nargs:
 		a = x['args'][i]['value']
 		argval = do_rvalue(a)
-		if hlir_type.type_is_generic(argval['type']):
-			warning("extra argument with generic type", a['ti'])
-			argval = value_cons_default(argval)
-		arg = hlir_initializer(None, argval)
-		extra_args.append(arg)
+
+		if not value_is_bad(argval):
+			if hlir_type.type_is_generic(argval['type']):
+				warning("extra argument with generic type", a['ti'])
+				argval = value_cons_default(argval)
+
+			if not value_is_immediate(argval):
+				imm_args = False
+
+			arg = hlir_initializer(None, argval)
+			extra_args.append(arg)
 
 		i = i + 1
 
@@ -1128,11 +1139,21 @@ def do_value_call(x):
 
 	rv = value_call(f, ftype['to'], args + extra_args, ti=x['ti'])
 
+	#TODO: Func#pure
+	if f['pure'] and imm_args:
+		rv = ct_call(rv)
+
 	# for C backend only (maybe mv to C?)
 	if hlir_type.type_is_closed_array(f['type']['to']):
 		rv['att'].append('wrapped_array')
 
 	return rv
+
+
+# compile-time call
+def ct_call(x):
+	info("ct_call", x['expr_ti'])
+	return x
 
 
 
