@@ -922,7 +922,13 @@ def do_eval_call(v):
 	# eval all args
 	args = []
 	for a in v['args']:
-		arg = do_reval(a['value'])
+		arg = None
+		if a['isa'] == 'initializer':
+			arg = do_reval(a['value'])
+		else:
+			arg = do_reval(a)
+
+		#arg = do_reval(a['value'])
 		args.append(arg)
 
 	func = v['func']

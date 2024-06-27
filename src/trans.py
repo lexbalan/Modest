@@ -1066,6 +1066,9 @@ def do_value_call(x):
 
 	sorted_args = sort_args(params, x['args'])
 
+
+	imm_args = True  # all arguments are immediate?
+
 	args = []
 
 	# normal args
@@ -1073,23 +1076,27 @@ def do_value_call(x):
 	while i < npars:
 		param = params[i]
 		param_id_str = param['id']['str']
-		aa = sorted_args[i]
+		a = sorted_args[i]
 
 		# check param name (if assigned)
-		if aa['id'] != None:
-			tasrget_param_id_str = aa['id']['str']
+		if a['id'] != None:
+			tasrget_param_id_str = a['id']['str']
 			if tasrget_param_id_str != param_id_str:
-				error("bad parameter id", aa['id']['ti'])
+				error("bad parameter id", a['id']['ti'])
 
-		argval = do_rvalue(aa['value'])
+		arg = do_rvalue(a['value'])
 
-		if not value_is_bad(argval):
-			argval = value_cons_implicit_check(param['type'], argval)
-			s = None
-			if aa['id'] != None:
-				s = aa['id']
-			arg = hlir_initializer(s, argval)
-			args.append(arg)
+
+		if not value_is_bad(arg):
+			arg = value_cons_implicit_check(param['type'], arg)
+
+			if not value_is_immediate(arg):
+				imm_args = False
+
+			if a['id'] != None:
+				args.append(hlir_initializer(a['id'], arg))
+			else:
+				args.append(arg)
 
 		i = i + 1
 
@@ -1105,11 +1112,17 @@ def do_value_call(x):
 	while i < nargs:
 		a = x['args'][i]['value']
 		argval = do_rvalue(a)
-		if hlir_type.type_is_generic(argval['type']):
-			warning("extra argument with generic type", a['ti'])
-			argval = value_cons_default(argval)
-		arg = hlir_initializer(None, argval)
-		extra_args.append(arg)
+
+		if not value_is_bad(argval):
+			if hlir_type.type_is_generic(argval['type']):
+				warning("extra argument with generic type", a['ti'])
+				argval = value_cons_default(argval)
+
+			if not value_is_immediate(argval):
+				imm_args = False
+
+			#arg = hlir_initializer(None, argval)
+			extra_args.append(argval)
 
 		i = i + 1
 
@@ -1127,6 +1140,13 @@ def do_value_call(x):
 
 
 	rv = value_call(f, ftype['to'], args + extra_args, ti=x['ti'])
+
+
+	#TODO: Func#pure
+	"""if f['kind'] == 'func':
+		if f['pure'] and imm_args:
+			rv = ct_call(rv)#"""
+
 
 	# for C backend only (maybe mv to C?)
 	if hlir_type.type_is_closed_array(f['type']['to']):
@@ -1392,8 +1412,9 @@ def do_value_record(x):
 		item_value = do_rvalue(item['value'])
 		p = hlir_initializer(
 			item['id'],
-			item_value, item['ti'],
-			item['nl']
+			item_value,
+			ti=item['ti'],
+			nl=item['nl']
 		)
 		initializers.append(p)
 
@@ -2527,7 +2548,6 @@ def import_abspath(s):
 		if full_name == '':
 			full_name = lib_path + '/' + s
 
-
 	if not os.path.exists(full_name):
 		print("%s not exist" % full_name)
 		return None
@@ -2561,7 +2581,6 @@ def translate(srcname):
 		'name': srcname,
 	}
 
-
 	ast = parser.parse(source_info)
 
 	if ast == None:
@@ -2573,9 +2592,6 @@ def translate(srcname):
 	env_current_file_dir = old_env_current_file_dir
 
 	return m
-
-
-
 
 
 def set_att(obj, path, att):
@@ -2612,7 +2628,6 @@ def set_prop(obj, path, val):
 	if len(path) == 1:
 		f = path[0]
 		obj[f] = val
-		#print("-- SET %s %s" % (f, val))
 
 	elif len(path) > 1:
 		if path[0] in obj:
@@ -2652,8 +2667,6 @@ def add_spices(obj):
 
 
 
-
-
 # for check print/scanf params
 # returns list of specifiers
 # ex: "%s = %d" -> ['c', 'd']
@@ -2679,7 +2692,7 @@ def extra_args_check(specs, extra_args, expected_pointers):
 	nargs = len(extra_args)
 	nspec = len(specs)
 	while i < nargs and i < nspec:
-		arg = extra_args[i]['value']
+		arg = extra_args[i]
 		arg_type = arg['type']
 
 		if value_is_bad(arg):

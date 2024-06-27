@@ -520,7 +520,11 @@ def print_value_call(v, ctx):
 	i = 0
 	n = len(args)
 	while i < n:
-		a = args[i]['value']
+		a = None
+		if args[i]['isa'] == 'initializer':
+			a = args[i]['value']
+		else:
+			a = args[i]
 
 		# не всегда когда есть аргумент есть и соотв ему параметер (!)
 		try:
