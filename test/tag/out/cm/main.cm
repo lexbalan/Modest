@@ -2,17 +2,11 @@
 
 import "libc/stdio"
 
-//@feature("unsafe")
+
 
 
 func main() -> Int {
 	printf("tag test")
-
-	let p = *Int32 0
-	printf("*p = %i\n", *p)
-
-	var a: Int32
-	var b: Int16 = Int16 a
 
 	//var s : Tag = #justSymbol
 
