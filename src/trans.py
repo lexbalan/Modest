@@ -17,7 +17,7 @@ from value.array import value_array_create
 from value.string import value_string_create
 from value.record import value_record_create
 
-#from ct_call import ct_call
+from ct_call import ct_call
 
 import decimal
 # max number of signs after .
@@ -1148,13 +1148,6 @@ def do_value_call(x):
 		rv['att'].append('wrapped_array')
 
 	return rv
-
-
-# compile-time call
-def ct_call(x):
-	info("ct_call", x['expr_ti'])
-	return x
-
 
 
 
