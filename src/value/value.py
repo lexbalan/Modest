@@ -182,6 +182,7 @@ def value_func(id, type, ti):
 		'usecnt': 0,
 		'immediate': False,
 		'immutable': True,
+		'pure': True,
 		'att': [],
 		'expr_ti': ti,
 		'ti': ti

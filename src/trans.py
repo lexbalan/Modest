@@ -1121,7 +1121,6 @@ def do_value_call(x):
 			if not value_is_immediate(argval):
 				imm_args = False
 
-			#arg = hlir_initializer(None, argval)
 			extra_args.append(argval)
 
 		i = i + 1
@@ -1141,19 +1140,16 @@ def do_value_call(x):
 
 	rv = value_call(f, ftype['to'], args + extra_args, ti=x['ti'])
 
-
 	#TODO: Func#pure
-	"""if f['kind'] == 'func':
-		if f['pure'] and imm_args:
-			rv = ct_call(rv)#"""
-
+	#if 'pure' in f:
+	#	if f['pure'] and imm_args:
+	#		rv = ct_call(rv)
 
 	# for C backend only (maybe mv to C?)
 	if hlir_type.type_is_closed_array(f['type']['to']):
 		rv['att'].append('wrapped_array')
 
 	return rv
-
 
 
 
