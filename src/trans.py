@@ -17,7 +17,7 @@ from value.array import value_array_create
 from value.string import value_string_create
 from value.record import value_record_create
 
-from ct_call import ct_call
+#from ct_call import ct_call
 
 import decimal
 # max number of signs after .
@@ -1140,8 +1140,9 @@ def do_value_call(x):
 	rv = value_call(f, ftype['to'], args + extra_args, ti=x['ti'])
 
 	#TODO: Func#pure
-	if f['pure'] and imm_args:
-		rv = ct_call(rv)
+	#if 'pure' in f:
+	#	if f['pure'] and imm_args:
+	#		rv = ct_call(rv)
 
 	# for C backend only (maybe mv to C?)
 	if hlir_type.type_is_closed_array(f['type']['to']):
