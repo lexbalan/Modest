@@ -509,6 +509,14 @@ def type_is_bad(t):
 	return t['kind'] == 'bad'
 
 
+def type_is_defined(t):
+	return t['kind'] != 'undefined'
+
+
+def type_is_undefined(t):
+	return t['kind'] == 'undefined'
+
+
 def type_is_unit(t):
 	return t['kind'] == 'unit'
 
