@@ -8,8 +8,12 @@ type Node record {
 	next: *Node
 }
 
+type MyInt Int32
+
 func main() -> Int {
 	printf("tag test")
+
+	var i: MyInt
 
 	var n0, n1: Node
 

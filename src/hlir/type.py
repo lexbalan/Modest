@@ -88,6 +88,9 @@ def hlir_type_unit():
 		'align': 0,
 		'declaration': None,
 		'definition': None,
+		'aka': 'Unit',
+		'c_alias': 'void',
+		'llvm_alias': 'void',
 		'ops': CONS_OP,
 		'att': [],
 		'ti': None
@@ -104,6 +107,9 @@ def hlir_type_bool():
 		'align': 1,
 		'declaration': None,
 		'definition': None,
+		'aka': 'Bool',
+		'c_alias': 'bool',
+		'llvm_alias': 'i1',
 		'ops': BOOL_OPS,
 		'att': [],
 		'ti': None
@@ -114,6 +120,9 @@ def hlir_type_bool():
 def hlir_type_char(width, ti=None):
 	size = nbytes_for_bits(width)
 
+	calias = 'char'
+	if width > 8:
+		calias = 'uint%d_t' % width
 	return {
 		'isa': 'type',
 		'kind': 'char',
@@ -123,6 +132,9 @@ def hlir_type_char(width, ti=None):
 		'align': size,
 		'declaration': None,
 		'definition': None,
+		'aka': 'Char%d' % width,
+		'c_alias': calias,
+		'llvm_alias': 'i%d' % width,
 		'ops': CHAR_OPS,
 		'att': [],
 		'ti': ti
@@ -131,6 +143,23 @@ def hlir_type_char(width, ti=None):
 
 def hlir_type_integer(width, signed=True, ti=None):
 	size = nbytes_for_bits(width)
+
+	aka = None
+	calias = None
+	if signed:
+		aka = 'Int%d' % width
+
+		if width == 128:
+			calias = '__int128'
+		else:
+			calias = 'int%d_t' % width
+	else:
+		aka = 'Nat%d' % width
+		if width == 128:
+			calias = 'unsigned __int128'
+		else:
+			calias = 'uint%d_t' % width
+
 	return {
 		'isa': 'type',
 		'kind': 'int',
@@ -141,6 +170,9 @@ def hlir_type_integer(width, signed=True, ti=None):
 		'signed': signed,
 		'declaration': None,
 		'definition': None,
+		'aka': aka,
+		'c_alias': calias,
+		'llvm_alias': 'i%d' % width,
 		'ops': INT_OPS,
 		'att': [],
 		'ti': ti
@@ -149,6 +181,12 @@ def hlir_type_integer(width, signed=True, ti=None):
 
 def hlir_type_float(width, ti=None):
 	size = nbytes_for_bits(width)
+
+	aka = 'Float%d' % width
+	calias = 'float'
+	if width > 32:
+		calias = 'double'
+
 	return {
 		'isa': 'type',
 		'kind': 'float',
@@ -159,6 +197,9 @@ def hlir_type_float(width, ti=None):
 		'signed': True,
 		'declaration': None,
 		'definition': None,
+		'aka': 'Float32',
+		'c_alias': calias,
+		'llvm_alias': calias,
 		'ops': FLOAT_OPS,
 		'att': [],
 		'ti': ti
@@ -457,7 +498,8 @@ def type_eq(a, b, opt=[]):
 
 	if ('aka' in a) or ('aka' in b):
 		if ('aka' in a) and ('aka' in b):
-			return a['aka'] == b['aka']
+			if a['aka'] == b['aka']:
+				return True
 
 	#if a['definition'] != None and b['definition'] != None:
 
@@ -466,6 +508,7 @@ def type_eq(a, b, opt=[]):
 	# напр для явного приведения в беканде C *volatile uint32_t -> uint32_t
 	if 'att_checking' in opt:
 		if a['att'] != b['att']:
+			print("YELLL")
 			return False
 
 	# дженерик и не дженерик типы не равны
@@ -489,7 +532,7 @@ def type_eq(a, b, opt=[]):
 	elif k == 'float': return type_eq_float(a, b, opt)
 	elif k == 'char': return type_eq_char(a, b, opt)
 	elif k == 'undefined': return type_eq_undefined(a, b, opt)
-	elif k == 'va_list': print("UU"); return b['kind'] == 'va_list'
+	elif k == 'va_list': return b['kind'] == 'va_list'
 	return False
 
 

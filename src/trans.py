@@ -255,7 +255,7 @@ def init():
 	root_context.type_add('Nat64', foundation.typeNat64)
 	root_context.type_add('Nat128', foundation.typeNat128)
 
-	root_context.type_add('Float16', foundation.typeFloat16)
+	#root_context.type_add('Float16', foundation.typeFloat16)
 	root_context.type_add('Float32', foundation.typeFloat32)
 	root_context.type_add('Float64', foundation.typeFloat64)
 
@@ -429,7 +429,6 @@ def do_type_array(t):
 
 
 
-
 #exclude_record = []
 
 anon_rec_cnt = 0
@@ -456,9 +455,12 @@ def do_type_record(x):
 	rec = hlir_type.hlir_type_record(fields, ti=x['ti'])
 	rec['end_nl'] = x['end_nl']
 	# add anon record (before)
-	anon_tag = '__anonymous_struct_%d' % anon_rec_cnt
-	rec['aka'] = anon_tag
-	module['anon_recs'].append(rec)
+
+	#anon_tag = '__anonymous_struct_%d' % anon_rec_cnt
+	#rec['c_anon_id'] = 'struct ' + anon_tag
+
+	rec['att'].append('anonymous_record')
+	#module['anon_recs'].append(rec)
 	return rec
 
 
@@ -2033,14 +2035,18 @@ def def_type(x):
 	pre_exist = type_get(id['str'])
 
 	# check if identifier is free
-	if pre_exist != None:
-		if pre_exist['definition'] != None:
-			error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
-
-
 	already_declared = pre_exist != None
 
-	_def = {
+	if already_declared:
+		nt = pre_exist
+		if hlir_type.type_is_defined(pre_exist):
+			error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
+	else:
+		nt = hlir_type.hlir_type_undefined(x)
+		module['context'].type_add(id['str'], nt)
+
+
+	typedef = {
 		'isa': 'def_type',
 		'id': id,
 		'type': None,
@@ -2049,11 +2055,11 @@ def def_type(x):
 		'ti': x['ti']
 	}
 
-	if already_declared:
+	"""if already_declared:
 		# сохр ссылку на объявление в определении (пока просто на всякий)
 		_def['declaration'] = pre_exist['declaration']
 		# сохр в типе ссылку на определение (пока просто на всякий)
-		pre_exist['definition'] = _def
+		pre_exist['definition'] = _def"""
 
 
 	# только теперь обрабатываем поля,
@@ -2061,27 +2067,49 @@ def def_type(x):
 	# а мы к этому заранее подготовлись
 	ty = do_type(x['type'])
 
-	if 'aka' in ty:
-		del ty['aka']
-		if ty in module['anon_recs']:
-			module['anon_recs'].remove(ty)
-
 	if hlir_type.type_is_bad(ty):
 		return None
 
-	_def['original_type'] = ty
 
-	nt = hlir_type.type_copy(ty)
+	"""if 'aka' in ty:
+		del ty['aka']
+		if ty in module['anon_recs']:
+			module['anon_recs'].remove(ty)"""
+
+	# Замещаем внутренности undefined типа на тип справа
+	# НО! имя даем новое
+	nt.clear()
+	nt.update(ty)
+	nt['aka'] = id['str']
+
+
+	if not ('not_included' in module['att']):
+		# В случае когда не печатаем typedef явно (!)
+		# Убираем алиасы которые висели на оригинальном типе
+		if 'c_alias' in nt:
+			nt.pop('c_alias')
+		if 'llvm_alias' in nt:
+			nt.pop('llvm_alias')
+
+
+	if hlir_type.type_is_record(ty):
+		if 'anonymous_record' in ty['att']:
+			#info("NOT AKA", ty['ti'])
+			#ty['aka'] = id['str']
+			#ty['c_alias'] = 'struct ' + id['str']
+			pass
+
 	nt['ti'] = id['ti']
 
-	_def['type'] = nt
-	nt['definition'] = _def
+	#nt['definition'] = typedef
+	typedef['original_type'] = ty
+	typedef['type'] = nt
 
 
 	if already_declared:
-		_def['afterdef'] = True
+		typedef['afterdef'] = True
 		# just overwrite existed 'undefined' type (for records)
-		pre_exist.update(nt)
+#		pre_exist.update(nt)
 		# and find and remove declaration instruction
 		if settings.check('backend', 'llvm'):
 			# LLVM не допускает переопределения типа
@@ -2090,14 +2118,13 @@ def def_type(x):
 			module_remove_node(module, 'decl_type', id['str'])
 
 		# (на всякий)
-		nt['declaration'] = pre_exist['declaration']
+		#nt['declaration'] = pre_exist['declaration']
 
-	else:
-		module['context'].type_add(id['str'], nt)
+	#else:
+	#	module['context'].type_add(id['str'], nt)
 
-	return _def
-	#return hlir_def_type(id, nt, ty, already_declared, ti=x['ti'])
-
+	#print(nt['aka'])
+	return typedef
 
 
 

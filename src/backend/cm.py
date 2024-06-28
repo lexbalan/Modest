@@ -173,11 +173,9 @@ def print_type_func(t, extra_args=False):
 
 
 def get_type_id(t):
-	if t['definition'] != None:
-		return t['definition']['id']['str']
-
-	if t['declaration'] != None:
-		return t['declaration']['id']['str']
+	if 'aka' in t:
+		if 'aka' != None:
+			return t['aka']
 
 	return None
 

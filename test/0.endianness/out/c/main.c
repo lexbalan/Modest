@@ -8,7 +8,7 @@
 
 
 
-int main()
+int32_t main()
 {
 	uint16_t check;
 	check = 0x0001;

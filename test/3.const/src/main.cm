@@ -18,9 +18,9 @@ type Point record {
 
 
 let ps = [
-	{x=0, y=0}
-	{x=1, y=1}
-	{x=2, y=2}
+	{x = 0, y = 0}
+	{x = 1, y = 1}
+	{x = 2, y = 2}
 ]
 
 let points = [3]Point ps
@@ -30,7 +30,7 @@ let points = [3]Point ps
 // не могут быть так инициализированы, поскольку points является приведением
 // непонятно существует ли хорошее решение
 //@property("c_prefix", "const")
-var points2: [3]Point = points
+var points2 = points
 
 
 // define function main

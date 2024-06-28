@@ -33,7 +33,7 @@ int32_t sum(int32_t a, int32_t b)
 
 
 // define function main
-int main()
+int32_t main()
 {
 	printf("test func\n");
 

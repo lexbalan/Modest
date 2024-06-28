@@ -42,7 +42,7 @@ static Point points2[3] = _points;
 
 
 // define function main
-int main()
+int32_t main()
 {
 	printf("test const\n");
 

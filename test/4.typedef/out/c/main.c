@@ -10,7 +10,7 @@
 
 typedef int32_t NewInt32;
 
-int main()
+int32_t main()
 {
 	printf("test typedef\n");
 

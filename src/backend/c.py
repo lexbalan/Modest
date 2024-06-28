@@ -261,6 +261,17 @@ def print_type_enum(t):
 
 
 
+
+def type_get_aka(t):
+	if 'c_alias' in t:
+		return t['c_alias']
+	if 'aka' in t:
+		return t['aka']
+	if 'c_anon_id' in t:
+		return t['c_anon_id']
+	return None
+
+
 def print_type(t, space_after=False, array_as_ptr=True, as_const=False):
 	k = t['kind']
 
@@ -284,36 +295,12 @@ def print_type(t, space_after=False, array_as_ptr=True, as_const=False):
 		t = foundation.type_select_int(t['width'])
 
 
-	if t['definition'] != None:
-		type_definition = t['definition']
-		if 'c_alias' in type_definition:
-			out(type_definition['c_alias'])
-		else:
-			out(type_definition['id']['str'])
-
-	elif t['declaration'] != None:
-		type_declaration = t['declaration']
-		if 'c_alias' in type_declaration:
-			out(type_declaration['c_alias'])
-		else:
-			out(type_declaration['id']['str'])
-
-	elif hlir_type.type_is_integer(t):
-		if not t['signed']:
-			out("u")
-		out("int%d_t", align_to(t['width'], 8))
-
-	elif hlir_type.type_is_float(t):
-		if t['width'] <= 32:
-			out("float")
-		else:
-			out("double")
+	aka = type_get_aka(t)
+	if aka != None:
+		out(aka)
 
 	elif hlir_type.type_is_record(t):
-		if 'aka' in t:
-			out("struct %s" % t['aka'])
-		else:
-			print_type_record(t)
+		print_type_record(t)
 
 	elif hlir_type.type_is_pointer(t):
 		print_type_pointer(t, space_after, as_const)
@@ -1305,9 +1292,10 @@ def print_stmt_var(x):
 	init_value = x['default_value']
 
 	if DONT_PRINT_UNUSED:
-		if x['var']['usecnt'] == 0:
-			if init_value['kind'] != 'call':
-				return
+		if init_value != None:
+			if x['var']['usecnt'] == 0:
+				if init_value['kind'] != 'call':
+					return
 
 	nl_indent(x['nl'])
 
@@ -1665,9 +1653,14 @@ def print_def_type(x):
 
 
 	is_defined_array = hlir_type.type_is_closed_array(orig_type)
-	out("typedef ")
 
-	if 'volatile' in x['original_type']['att']:
+	out("typedef ")
+	print_type(x['original_type'])
+	out(" ")
+	out(id['str'])
+	out(";")
+
+	"""if 'volatile' in x['original_type']['att']:
 		out("volatile ")
 
 	t = orig_type
@@ -1676,12 +1669,14 @@ def print_def_type(x):
 
 	print_type(t, space_after=True)
 
+	out("/**/")
+
 	out(id['str'])
 
 	if is_defined_array:
 		print_array_volume(orig_type)
 
-	out(";")
+	out(";")"""
 
 
 
@@ -1912,7 +1907,8 @@ def run(module, outname):
 
 	for anon_rec in module['anon_recs']:
 		nl_indent()
-		print_type_record(anon_rec, tag=anon_rec['aka'])
+		out("/*anon recs*/ ")
+		print_type_record(anon_rec, tag=anon_rec['c_anon_id'])
 		out(";")
 
 	for x in module['text']:

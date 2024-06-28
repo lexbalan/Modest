@@ -766,6 +766,11 @@ def print_type(t):
 	print_aka=True
 	k = t['kind']
 
+	id_str = type_get_aka(t)
+	if id_str != None:
+		out(id_str)
+		return
+
 	if print_aka:
 		# тупой LLVM не умеет делать алиасы структур
 		# он типа делает, но потом к переменной с таким типом
@@ -1972,21 +1977,33 @@ def print_def_func(x):
 
 
 
+
+def type_get_aka(t):
+	if 'llvm_alias' in t:
+		return t['llvm_alias']
+	if 'aka' in t:
+		return '%' + t['aka']
+	return None
+
+
 def print_decl_type(x):
 	out("\n%%%s = type opaque" % x['id']['str'])
 
 
 def print_def_type(x):
 	xtype = x['original_type']
-	if hlir_type.type_is_record(xtype):
+	"""if hlir_type.type_is_record(xtype):
 		root_id = hlir_type.get_type_root_id(xtype)
 		if root_id != None:
-			return
+			return"""
+
 
 	out("\n%%%s = type " % x['id']['str'])
 	print_type(xtype)
+	out(";;")
 	if hlir_type.type_is_record(xtype):
 		out("\n")
+
 
 
 def print_def_var(x):

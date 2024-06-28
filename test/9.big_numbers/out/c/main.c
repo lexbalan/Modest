@@ -24,7 +24,7 @@ uint64_t low_128(unsigned __int128 x)
 }
 
 
-int main()
+int32_t main()
 {
 
 	#define big1  (((__int128)0xFFFFFFFFFFFFFFFF << 64) | ((__int128)0xFFFFFFFFFFFFFFFF))
