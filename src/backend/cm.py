@@ -199,7 +199,7 @@ def print_type(t):
 	elif hlir_type.type_is_record(t): print_type_record(t)
 	elif hlir_type.type_is_enum(t): print_type_enum(t)
 	elif hlir_type.type_is_pointer(t): print_type_pointer(t)
-	elif k == 'opaque': pass
+	elif k == 'undefined': pass
 	else: out("<type:" + str(t) + ">")
 
 

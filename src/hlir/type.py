@@ -57,6 +57,27 @@ def hlir_type_bad(x):
 	}
 
 
+uid = 0
+def hlir_type_undefined(x):
+	global uid
+	uid = uid + 1
+	return {
+		'isa': 'type',
+		'kind': 'undefined',
+		'generic': False,
+		'width': 0,
+		'size': 0,
+		'align': 1,
+		'declaration': None,
+		'definition': None,
+		'ast_type': x,
+		'uid': uid,
+		'ops': [],
+		'att': [],
+		'ti': x['ti']
+	}
+
+
 def hlir_type_unit():
 	return {
 		'isa': 'type',
@@ -283,25 +304,6 @@ def hlir_type_func(params, to, va_args, va_list_id, ti=None):
 		'ti': ti
 	}
 
-uid = 0
-def hlir_type_opaque(ti=None):
-	global uid
-	uid = uid + 1
-	return {
-		'isa': 'type',
-		'kind': 'opaque',
-		'generic': False,
-		'width': 0,
-		'size': 0,
-		'align': 1,
-		'declaration': None,
-		'definition': None,
-		'uid': uid,
-		'ops': [],
-		'att': [],
-		'ti': ti
-	}
-
 
 def hlir_type_string(char_width, length, ti=None):
 	width = char_width
@@ -437,7 +439,7 @@ def type_eq_float(a, b, opt):
 	return a['width'] == b['width']
 
 
-def type_eq_opaque(a, b, opt):
+def type_eq_undefined(a, b, opt):
 	return a['uid'] == b['uid']  # maybe by UID?
 
 
@@ -486,7 +488,7 @@ def type_eq(a, b, opt=[]):
 	elif k == 'enum': return type_eq_enum(a, b, opt)
 	elif k == 'float': return type_eq_float(a, b, opt)
 	elif k == 'char': return type_eq_char(a, b, opt)
-	elif k == 'opaque': return type_eq_opaque(a, b, opt)
+	elif k == 'undefined': return type_eq_undefined(a, b, opt)
 	elif k == 'va_list': print("UU"); return b['kind'] == 'va_list'
 	return False
 
@@ -573,9 +575,6 @@ def type_is_composite(t):
 def type_is_pointer(t):
 	return t['kind'] == 'pointer'
 
-
-def type_is_opaque(t):
-	return t['kind'] == 'opaque'
 
 
 def type_is_va_list(t):
@@ -677,7 +676,7 @@ def type_is_unsigned(t):
 
 # cannot create variable with type
 def type_is_forbidden_var(t, zero_array_forbidden=True):
-	if type_is_opaque(t) or type_is_unit(t) or type_is_func(t):
+	if type_is_undefined(t) or type_is_unit(t) or type_is_func(t):
 		return True
 
 	if type_is_array(t):
@@ -889,8 +888,8 @@ def type_print(t, print_aka=True):
 	elif type_is_string(t):
 		print("String", end='')
 
-	elif type_is_opaque(t):
-		print('opaque', end='')
+	elif type_is_undefined(t):
+		print('undefined', end='')
 
 	else:
 		print("<type:%s>" % k, end='')

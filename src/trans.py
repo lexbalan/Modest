@@ -2013,7 +2013,7 @@ def decl_type(x):
 	id = x['id']
 	log("decl_type %s" % id['str'])
 
-	nt = hlir_type.hlir_type_opaque(id['ti'])
+	nt = hlir_type.hlir_type_undefined(x)
 	module['context'].type_add(id['str'], nt)
 
 	# С не печатает opaque, но LLVM печатает (!)
@@ -2080,7 +2080,7 @@ def def_type(x):
 
 	if already_declared:
 		_def['afterdef'] = True
-		# just overwrite existed 'opaque' type (for records)
+		# just overwrite existed 'undefined' type (for records)
 		pre_exist.update(nt)
 		# and find and remove declaration instruction
 		if settings.check('backend', 'llvm'):

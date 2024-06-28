@@ -336,7 +336,7 @@ def print_type(t, space_after=False, array_as_ptr=True, as_const=False):
 		elif t['width'] <= 32:
 			out("int32_t")
 
-	elif k == 'opaque':
+	elif k == 'undefined':
 		out("void")
 
 	else: out("<type:" + str(t) + ">")

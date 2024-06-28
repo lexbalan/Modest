@@ -809,7 +809,7 @@ def print_type(t):
 	elif hlir_type.type_is_char(t):
 		print_int_type_for(t['width'])
 
-	elif hlir_type.type_is_opaque(t):
+	elif hlir_type.type_is_undefined(t):
 		out('opaque')
 
 	elif hlir_type.type_is_va_list(t):
