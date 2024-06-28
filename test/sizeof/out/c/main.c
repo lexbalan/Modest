@@ -5,37 +5,43 @@
 #include <string.h>
 
 #include <stdio.h>
+typedef struct Point Point;
+typedef struct Mixed1 Mixed1;
+typedef struct Mixed2 Mixed2;
+typedef struct Mixed3 Mixed3;
+typedef struct Mixed4 Mixed4;
+typedef struct X X;
 
 
 
 
-typedef struct {
+struct Point {
 	uint32_t x;
 	uint32_t y;
-} Point;
+};
 
-typedef struct {
+struct Mixed1 {
 	char c;
 	int32_t i;
 	double f;
-} Mixed1;
+};
 
-typedef struct {
+struct Mixed2 {
 	int32_t i;
 	char c;
 	double f;
 	char c2[3];
 	Mixed1 m;
-} Mixed2;
+};
 
-typedef struct {
+struct Mixed3 {
 	char c;
 	int32_t i;
 	double f;
 	char c2[9];
-} Mixed3;
+};
 
-typedef struct {
+struct Mixed4 {
 	Mixed2 s;
 	char c;
 	int32_t i;
@@ -44,7 +50,7 @@ typedef struct {
 	int16_t i2;
 	Point p[3];
 	Mixed3 s2;
-} Mixed4;
+};
 
 
 //var s: Mixed2
@@ -55,18 +61,18 @@ static int16_t i2;
 static Point p[3];
 static bool g;
 
-typedef struct {
+struct X {
 	char c;
 	int32_t i;
 	double f;
 	int16_t i2;
 	Point p[3];
 	bool g;
-} X;
+};
 
 static X x;
 
-int main()
+int32_t main()
 {
 	printf("test cast operation\n");
 

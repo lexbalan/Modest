@@ -15,7 +15,7 @@ int32_t named_args_test(int32_t a, int32_t b, int32_t c)
 }
 
 
-int main()
+int32_t main()
 {
 	printf("test named_args\n");
 

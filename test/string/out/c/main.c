@@ -27,7 +27,7 @@ static uint16_t *ptr_to_string16 = u"String-Ω";
 static uint32_t *ptr_to_string32 = U"String-Ω 🐀🎉🦄";
 
 
-int main()
+int32_t main()
 {
 	utf8_putchar('A');
 	printf("\n");

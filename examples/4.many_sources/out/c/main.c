@@ -10,7 +10,7 @@
 
 #include "./lib.h"
 
-int main()
+int32_t main()
 {
 	printf("hello from main\n");
 	lib_func();

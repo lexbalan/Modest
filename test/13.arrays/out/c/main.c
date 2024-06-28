@@ -71,7 +71,7 @@ void test()
 	}
 }
 
-int main()
+int32_t main()
 {
 	// generic array [4]Char8 will be implicit casted to [10]Char8
 
@@ -179,14 +179,14 @@ int main()
 
 	//let aa = [111] + [222] + [333]
 	// cons literal array from var items
-	int int100;
+	int32_t int100;
 	int100 = 100;
-	int int200;
+	int32_t int200;
 	int200 = 200;
-	int int300;
+	int32_t int300;
 	int300 = 300;
 	// immutable, non immediate value (array)
-	const int init_array[3] = {int100, int200, int300};
+	const int32_t init_array[3] = {int100, int200, int300};
 
 	// check local literal array assignation to local array
 	int32_t e[4];

@@ -20,7 +20,7 @@ double squareOfCircle(double radius)
 }
 
 
-int main()
+int32_t main()
 {
 	printf("float test\n");
 

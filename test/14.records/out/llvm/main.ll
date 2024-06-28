@@ -103,26 +103,26 @@ break_2:
 
 
 
-%Str = type %Str8
-%Char = type i8
-%ConstChar = type %Char
-%SignedChar = type i8
-%UnsignedChar = type i8
-%Short = type i16
-%UnsignedShort = type i16
-%Int = type i32
-%UnsignedInt = type i32
-%LongInt = type i64
-%UnsignedLongInt = type i64
-%Long = type i64
-%UnsignedLong = type i64
-%LongLong = type i64
-%UnsignedLongLong = type i64
-%LongLongInt = type i64
-%UnsignedLongLongInt = type i64
-%Float = type double
-%Double = type double
-%LongDouble = type double
+%Str = type %Str8;;
+%Char = type i8;;
+%ConstChar = type i8;;
+%SignedChar = type i8;;
+%UnsignedChar = type i8;;
+%Short = type i16;;
+%UnsignedShort = type i16;;
+%Int = type i32;;
+%UnsignedInt = type i32;;
+%LongInt = type i64;;
+%UnsignedLongInt = type i64;;
+%Long = type i64;;
+%UnsignedLong = type i64;;
+%LongLong = type i64;;
+%UnsignedLongLong = type i64;;
+%LongLongInt = type i64;;
+%UnsignedLongLongInt = type i64;;
+%Float = type double;;
+%Double = type double;;
+%LongDouble = type double;;
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
@@ -130,16 +130,16 @@ break_2:
 
 
 
-%SocklenT = type i32
-%SizeT = type %UnsignedLongInt
-%SSizeT = type %LongInt
-%IntptrT = type i64
-%PtrdiffT = type i8*
-%OffT = type i64
-%USecondsT = type i32
-%PidT = type i32
-%UidT = type i32
-%GidT = type i32
+%SocklenT = type i32;;
+%SizeT = type i64;;
+%SSizeT = type i64;;
+%IntptrT = type i64;;
+%PtrdiffT = type i8*;;
+%OffT = type i64;;
+%USecondsT = type i32;;
+%PidT = type i32;;
+%UidT = type i32;;
+%GidT = type i32;;
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
@@ -150,53 +150,53 @@ break_2:
 %File = type opaque
 %FposT = type opaque
 
-%CharStr = type %Str
-%ConstCharStr = type %CharStr
+%CharStr = type %Str;;
+%ConstCharStr = type %CharStr;;
 
 
-declare %Int @fclose(%File* %f)
-declare %Int @feof(%File* %f)
-declare %Int @ferror(%File* %f)
-declare %Int @fflush(%File* %f)
-declare %Int @fgetpos(%File* %f, %FposT* %pos)
+declare i32 @fclose(%File* %f)
+declare i32 @feof(%File* %f)
+declare i32 @ferror(%File* %f)
+declare i32 @fflush(%File* %f)
+declare i32 @fgetpos(%File* %f, %FposT* %pos)
 declare %File* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
-declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
-declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
+declare i64 @fread(i8* %buf, i64 %size, i64 %count, %File* %f)
+declare i64 @fwrite(i8* %buf, i64 %size, i64 %count, %File* %f)
 declare %File* @freopen(%ConstCharStr* %filename, %ConstCharStr* %mode, %File* %f)
-declare %Int @fseek(%File* %stream, %LongInt %offset, %Int %whence)
-declare %Int @fsetpos(%File* %f, %FposT* %pos)
-declare %LongInt @ftell(%File* %f)
-declare %Int @remove(%ConstCharStr* %filename)
-declare %Int @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
+declare i32 @fseek(%File* %stream, i64 %offset, i32 %whence)
+declare i32 @fsetpos(%File* %f, %FposT* %pos)
+declare i64 @ftell(%File* %f)
+declare i32 @remove(%ConstCharStr* %filename)
+declare i32 @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
 declare void @rewind(%File* %f)
 declare void @setbuf(%File* %f, %CharStr* %buffer)
 
 
-declare %Int @setvbuf(%File* %f, %CharStr* %buffer, %Int %mode, %SizeT %size)
+declare i32 @setvbuf(%File* %f, %CharStr* %buffer, i32 %mode, i64 %size)
 declare %File* @tmpfile()
 declare %CharStr* @tmpnam(%CharStr* %str)
-declare %Int @printf(%ConstCharStr* %s, ...)
-declare %Int @scanf(%ConstCharStr* %s, ...)
-declare %Int @fprintf(%File* %stream, %Str* %format, ...)
-declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
-declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, %VA_List %args)
-declare %Int @vprintf(%ConstCharStr* %format, %VA_List %args)
-declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, %VA_List %args)
-declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, %VA_List %args)
-declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, %VA_List %arg)
-declare %Int @fgetc(%File* %f)
-declare %Int @fputc(%Int %char, %File* %f)
-declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
-declare %Int @fputs(%ConstCharStr* %str, %File* %f)
-declare %Int @getc(%File* %f)
-declare %Int @getchar()
+declare i32 @printf(%ConstCharStr* %s, ...)
+declare i32 @scanf(%ConstCharStr* %s, ...)
+declare i32 @fprintf(%File* %stream, %Str* %format, ...)
+declare i32 @fscanf(%File* %f, %ConstCharStr* %format, ...)
+declare i32 @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
+declare i32 @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
+declare i32 @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
+declare i32 @vprintf(%ConstCharStr* %format, i8* %args)
+declare i32 @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
+declare i32 @vsnprintf(%CharStr* %str, i64 %n, %ConstCharStr* %format, i8* %args)
+declare i32 @__vsnprintf_chk(%CharStr* %dest, i64 %len, i32 %flags, i64 %dstlen, %ConstCharStr* %format, i8* %arg)
+declare i32 @fgetc(%File* %f)
+declare i32 @fputc(i32 %char, %File* %f)
+declare %CharStr* @fgets(%CharStr* %str, i32 %n, %File* %f)
+declare i32 @fputs(%ConstCharStr* %str, %File* %f)
+declare i32 @getc(%File* %f)
+declare i32 @getchar()
 declare %CharStr* @gets(%CharStr* %str)
-declare %Int @putc(%Int %char, %File* %f)
-declare %Int @putchar(%Int %char)
-declare %Int @puts(%ConstCharStr* %str)
-declare %Int @ungetc(%Int %char, %File* %f)
+declare i32 @putc(i32 %char, %File* %f)
+declare i32 @putchar(i32 %char)
+declare i32 @puts(%ConstCharStr* %str)
+declare i32 @ungetc(i32 %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
 
 
@@ -221,18 +221,18 @@ declare void @perror(%ConstCharStr* %str)
 %Point2D = type {
 	i32, 
 	i32
-}
+};;
 
 %Point3D = type {
 	i32, 
 	i32, 
 	i32
-}
+};;
 
 
 
-define %Int @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*))
+define i32 @main() {
+	%1 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*))
 	; compare two Point2D records
 	%2 = alloca %Point2D, align 4
 	%3 = insertvalue %Point2D zeroinitializer, i32 1, 0
@@ -249,10 +249,10 @@ define %Int @main() {
 	%11 = icmp ne i1 %10, 0
 	br i1 %11 , label %then_0, label %else_0
 then_0:
-	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str2 to [0 x i8]*))
+	%12 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str2 to [0 x i8]*))
 	br label %endif_0
 else_0:
-	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str3 to [0 x i8]*))
+	%13 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str3 to [0 x i8]*))
 	br label %endif_0
 endif_0:
 	; compare Point2D with anonymous record
@@ -263,116 +263,102 @@ endif_0:
 	%17 = insertvalue {i32, i32} zeroinitializer, i32 1, 0
 	%18 = insertvalue {i32, i32} %17, i32 2, 1
 	store {i32, i32} %18, {i32, i32}* %16
-	; cast_composite_to_composite
-	; JUST
-	; as ptr
-	%19 = bitcast {i32, i32}* %16 to %Point2D*
-	%20 = load %Point2D, %Point2D* %19
-	%21 = alloca %Point2D
-	store %Point2D %20, %Point2D* %21
-	%22 = bitcast %Point2D* %14 to i8*
-	%23 = bitcast %Point2D* %21 to i8*
+	%19 = bitcast %Point2D* %14 to i8*
+	%20 = bitcast {i32, i32}* %16 to i8*
 	
-	%24 = call i1 (i8*, i8*, i64) @memeq( i8* %22, i8* %23, i64 8)
-	%25 = icmp ne i1 %24, 0
-	br i1 %25 , label %then_1, label %else_1
+	%21 = call i1 (i8*, i8*, i64) @memeq( i8* %19, i8* %20, i64 8)
+	%22 = icmp ne i1 %21, 0
+	br i1 %22 , label %then_1, label %else_1
 then_1:
-	%26 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str4 to [0 x i8]*))
+	%23 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str4 to [0 x i8]*))
 	br label %endif_1
 else_1:
-	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str5 to [0 x i8]*))
+	%24 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str5 to [0 x i8]*))
 	br label %endif_1
 endif_1:
 	; comparison between two anonymous record
-	%28 = alloca {i32, i32}, align 4
-	%29 = insertvalue {i32, i32} zeroinitializer, i32 1, 0
-	%30 = insertvalue {i32, i32} %29, i32 2, 1
-	store {i32, i32} %30, {i32, i32}* %28
-	%31 = bitcast {i32, i32}* %16 to i8*
-	%32 = bitcast {i32, i32}* %28 to i8*
+	%25 = alloca {i32, i32}, align 4
+	%26 = insertvalue {i32, i32} zeroinitializer, i32 1, 0
+	%27 = insertvalue {i32, i32} %26, i32 2, 1
+	store {i32, i32} %27, {i32, i32}* %25
+	%28 = bitcast {i32, i32}* %16 to i8*
+	%29 = bitcast {i32, i32}* %25 to i8*
 	
-	%33 = call i1 (i8*, i8*, i64) @memeq( i8* %31, i8* %32, i64 8)
-	%34 = icmp ne i1 %33, 0
-	br i1 %34 , label %then_2, label %else_2
+	%30 = call i1 (i8*, i8*, i64) @memeq( i8* %28, i8* %29, i64 8)
+	%31 = icmp ne i1 %30, 0
+	br i1 %31 , label %then_2, label %else_2
 then_2:
-	%35 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str6 to [0 x i8]*))
+	%32 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str6 to [0 x i8]*))
 	br label %endif_2
 else_2:
-	%36 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str7 to [0 x i8]*))
+	%33 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str7 to [0 x i8]*))
 	br label %endif_2
 endif_2:
 	; comparison between two record (by pointer)
-	; cast_composite_to_composite
-	; JUST
-	; as ptr
-	%37 = bitcast {i32, i32}* %16 to %Point2D*
-	%38 = load %Point2D, %Point2D* %37
-	%39 = alloca %Point2D
-	store %Point2D %38, %Point2D* %39
-	%40 = bitcast %Point2D* %14 to i8*
-	%41 = bitcast %Point2D* %39 to i8*
+	%34 = bitcast %Point2D* %14 to i8*
+	%35 = bitcast {i32, i32}* %16 to i8*
 	
-	%42 = call i1 (i8*, i8*, i64) @memeq( i8* %40, i8* %41, i64 8)
-	%43 = icmp ne i1 %42, 0
-	br i1 %43 , label %then_3, label %else_3
+	%36 = call i1 (i8*, i8*, i64) @memeq( i8* %34, i8* %35, i64 8)
+	%37 = icmp ne i1 %36, 0
+	br i1 %37 , label %then_3, label %else_3
 then_3:
-	%44 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str8 to [0 x i8]*))
+	%38 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str8 to [0 x i8]*))
 	br label %endif_3
 else_3:
-	%45 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str9 to [0 x i8]*))
+	%39 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str9 to [0 x i8]*))
 	br label %endif_3
 endif_3:
 	; assign record by pointer
-	%46 = insertvalue %Point2D zeroinitializer, i32 100, 0
-	%47 = insertvalue %Point2D %46, i32 200, 1
-	store %Point2D %47, %Point2D* %14
+	%40 = insertvalue %Point2D zeroinitializer, i32 100, 0
+	%41 = insertvalue %Point2D %40, i32 200, 1
+	store %Point2D %41, %Point2D* %14
 	store {i32, i32} zeroinitializer, {i32, i32}* %16
 	; cons Point3D from Point2D (record extension)
 	; (it is possible if dst record contained all fields from src record
 	; and their types are equal)
-	%48 = alloca %Point3D, align 4
+	%42 = alloca %Point3D, align 4
 	; cast_composite_to_composite
 	; JUST
 	; as ptr
-	%49 = bitcast %Point2D* %14 to %Point3D*
-	%50 = load %Point3D, %Point3D* %49
-	store %Point3D %50, %Point3D* %48
+	%43 = bitcast %Point2D* %14 to %Point3D*
+	%44 = load %Point3D, %Point3D* %43
+	store %Point3D %44, %Point3D* %42
 	; проверка того как локальная константа-массив
 	; "замораживает" свои элементы
-	%51 = alloca i32, align 4
-	store i32 10, i32* %51
-	%52 = alloca i32, align 4
-	store i32 20, i32* %52
-	%53 = load i32, i32* %51
-	%54 = insertvalue {i32, i32} zeroinitializer, i32 %53, 0
-	%55 = load i32, i32* %52
-	%56 = insertvalue {i32, i32} %54, i32 %55, 1
-	store i32 111, i32* %51
-	store i32 222, i32* %52
-	%57 = extractvalue {i32, i32} %56, 0
-	%58 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str10 to [0 x i8]*), i32 %57)
-	%59 = extractvalue {i32, i32} %56, 1
-	%60 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str11 to [0 x i8]*), i32 %59)
-	%61 = insertvalue {i32, i32} zeroinitializer, i32 10, 0
-	%62 = insertvalue {i32, i32} %61, i32 20, 1
-	%63 = alloca {i32, i32}
-	store {i32, i32} %56, {i32, i32}* %63
-	%64 = alloca {i32, i32}
-	store {i32, i32} %62, {i32, i32}* %64
-	%65 = bitcast {i32, i32}* %63 to i8*
-	%66 = bitcast {i32, i32}* %64 to i8*
+	%45 = alloca i32, align 4
+	store i32 10, i32* %45
+	%46 = alloca i32, align 4
+	store i32 20, i32* %46
+	%47 = load i32, i32* %45
+	%48 = insertvalue {i32, i32} zeroinitializer, i32 %47, 0
+	%49 = load i32, i32* %46
+	%50 = insertvalue {i32, i32} %48, i32 %49, 1
+	store i32 111, i32* %45
+	store i32 222, i32* %46
+	%51 = extractvalue {i32, i32} %50, 0
+	%52 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str10 to [0 x i8]*), i32 %51)
+	%53 = extractvalue {i32, i32} %50, 1
+	%54 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str11 to [0 x i8]*), i32 %53)
+	%55 = insertvalue {i32, i32} zeroinitializer, i32 10, 0
+	%56 = insertvalue {i32, i32} %55, i32 20, 1
+	%57 = alloca {i32, i32}
+	store {i32, i32} %50, {i32, i32}* %57
+	%58 = alloca {i32, i32}
+	store {i32, i32} %56, {i32, i32}* %58
+	%59 = bitcast {i32, i32}* %57 to i8*
+	%60 = bitcast {i32, i32}* %58 to i8*
 	
-	%67 = call i1 (i8*, i8*, i64) @memeq( i8* %65, i8* %66, i64 8)
-	%68 = icmp ne i1 %67, 0
-	br i1 %68 , label %then_4, label %else_4
+	%61 = call i1 (i8*, i8*, i64) @memeq( i8* %59, i8* %60, i64 8)
+	%62 = icmp ne i1 %61, 0
+	br i1 %62 , label %then_4, label %else_4
 then_4:
-	%69 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str12 to [0 x i8]*))
+	%63 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str12 to [0 x i8]*))
 	br label %endif_4
 else_4:
-	%70 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str13 to [0 x i8]*))
+	%64 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str13 to [0 x i8]*))
 	br label %endif_4
 endif_4:
-	ret %Int 0
+	ret i32 0
 }
 
 

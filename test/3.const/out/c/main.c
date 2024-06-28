@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include <stdio.h>
+typedef struct Point Point;
 
 
 
@@ -17,10 +18,10 @@
 #define string32Const  U"Hello!"
 
 
-typedef struct {
+struct Point {
 	uint32_t x;
 	uint32_t y;
-} Point;
+};
 
 
 #define _ps  { \

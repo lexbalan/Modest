@@ -14,7 +14,7 @@
 #define utf32Char  U"🐀"
 
 
-int main()
+int32_t main()
 {
 	printf("test/char\n");
 

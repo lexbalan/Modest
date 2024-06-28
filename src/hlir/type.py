@@ -496,10 +496,10 @@ def type_eq(a, b, opt=[]):
 	if a['kind'] == 'bad' or b['kind'] == 'bad': return True
 	if a['kind'] != b['kind']: return False
 
-	if ('aka' in a) or ('aka' in b):
+	"""if ('aka' in a) or ('aka' in b):
 		if ('aka' in a) and ('aka' in b):
 			if a['aka'] == b['aka']:
-				return True
+				return True"""
 
 	#if a['definition'] != None and b['definition'] != None:
 

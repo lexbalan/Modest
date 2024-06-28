@@ -19,7 +19,7 @@ void array_print(int32_t *pa, int32_t len)
 }
 
 
-int main()
+int32_t main()
 {
 	printf("test slices\n");
 

@@ -15,14 +15,14 @@
 
 char *getenv(char *name);
 
-int main()
+int32_t main()
 {
 	printf("unistd test\n");
 
-	const pid_t pid = getpid();
+	const int32_t pid = getpid();
 	printf("pid = %d\n", pid);
 
-	const long hid = gethostid();
+	const int64_t hid = gethostid();
 	printf("hostid = %ld\n", hid);
 
 	// current control terminal

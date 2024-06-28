@@ -5,6 +5,8 @@
 #include <string.h>
 
 #include <stdio.h>
+typedef struct Point2D Point2D;
+typedef struct Point3D Point3D;
 
 
 
@@ -16,7 +18,7 @@ bool test_generic_array();
 bool test_generic_record();
 
 
-int main()
+int32_t main()
 {
 	printf("generic types test\n");
 
@@ -163,16 +165,16 @@ bool test_generic_array()
 
 
 
-typedef struct {
+struct Point2D {
 	int32_t x;
 	int32_t y;
-} Point2D;
+};
 
-typedef struct {
+struct Point3D {
 	int32_t x;
 	int32_t y;
 	int32_t z;
-} Point3D;
+};
 
 
 bool test_generic_record()

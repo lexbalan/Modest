@@ -305,6 +305,7 @@ def value_cons_node(type, value, method, ti):
 	return nv
 
 
+
 # cons immediate такой же cons
 # но поскольку у него value immediate, мы можем его asset
 # привести и взять себе; Таким образом мы идем как литерал нода

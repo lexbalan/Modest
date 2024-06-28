@@ -8,7 +8,7 @@
 
 
 
-int main()
+int32_t main()
 {
 	printf("Hello World!\n");
 	return 0;

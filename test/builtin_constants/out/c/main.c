@@ -9,7 +9,7 @@
 
 
 
-int main()
+int32_t main()
 {
 
 	// __compiler

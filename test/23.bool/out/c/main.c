@@ -10,7 +10,7 @@
 
 
 
-int main()
+int32_t main()
 {
 	printf("bool check\nm");
 

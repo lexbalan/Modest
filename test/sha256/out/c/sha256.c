@@ -5,17 +5,18 @@
 #include <string.h>
 
 #include <string.h>
+typedef struct Context Context;
 
 
 #include "sha256.h"
 
 
-typedef struct {
+struct Context {
 	uint8_t data[64];
 	uint32_t datalen;
 	uint64_t bitlen;
 	uint32_t state[8];
-} Context;
+};
 
 
 uint32_t rotleft(uint32_t a, uint32_t b)
@@ -179,7 +180,7 @@ void sha256_final(Context *ctx, uint8_t *outHash)
 
 	i = i + 1;
 
-	memset(&ctx->data[i], 0, (size_t)(n - i));
+	memset(&ctx->data[i], 0, (uint64_t)(n - i));
 	//ctx.data[i:n-i] = []
 
 	if (ctx->datalen >= 56) {

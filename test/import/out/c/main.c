@@ -19,7 +19,7 @@
 
 
 
-int main()
+int32_t main()
 {
 	printf("Smart import test\n");
 	return 0;

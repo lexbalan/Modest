@@ -18,7 +18,7 @@
 #define test  "test"
 
 
-int main()
+int32_t main()
 {
 	printf("%s\n", (char *)greeting);
 

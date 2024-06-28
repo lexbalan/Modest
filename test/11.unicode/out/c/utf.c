@@ -86,7 +86,7 @@ uint8_t utf16_to_utf32(uint16_t *c, uint32_t *result)
 
 void utf8_putchar(char c)
 {
-	putchar((int)(int32_t)c);
+	putchar((int32_t)c);
 }
 
 
@@ -104,7 +104,7 @@ void utf16_putchar(uint16_t c)
 void utf32_putchar(uint32_t c)
 {
 	char decoded_buf[4];
-	const int n = (int)utf32_to_utf8(c, (char *)&decoded_buf);
+	const int32_t n = (int32_t)utf32_to_utf8(c, (char *)&decoded_buf);
 
 	int32_t i;
 	i = 0;

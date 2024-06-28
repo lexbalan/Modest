@@ -1654,6 +1654,11 @@ def print_def_type(x):
 
 	is_defined_array = hlir_type.type_is_closed_array(orig_type)
 
+	if hlir_type.type_is_record(x['original_type']):
+		print_type_record(x['original_type'], tag=id['str'])
+		out(";")
+		return
+
 	out("typedef ")
 	print_type(x['original_type'])
 	out(" ")
@@ -1903,6 +1908,10 @@ def run(module, outname):
 
 	# search for @c_include("...")
 	cdirectives(module)
+
+
+	for rec_id in module['records']:
+		out("\ntypedef struct %s %s;" % (rec_id, rec_id))
 
 
 	for anon_rec in module['anon_recs']:

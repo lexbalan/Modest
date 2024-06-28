@@ -8,8 +8,8 @@ import "misc/minmax"
 
 
 type Point record {
-	x: Float64
-	y: Float64
+	x: Float32
+	y: Float32
 }
 
 type Line record {

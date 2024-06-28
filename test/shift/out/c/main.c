@@ -9,7 +9,7 @@
 
 
 
-int main()
+int32_t main()
 {
 	printf("test shift\n");
 

@@ -103,26 +103,26 @@ break_2:
 
 
 
-%Str = type %Str8
-%Char = type i8
-%ConstChar = type %Char
-%SignedChar = type i8
-%UnsignedChar = type i8
-%Short = type i16
-%UnsignedShort = type i16
-%Int = type i32
-%UnsignedInt = type i32
-%LongInt = type i64
-%UnsignedLongInt = type i64
-%Long = type i64
-%UnsignedLong = type i64
-%LongLong = type i64
-%UnsignedLongLong = type i64
-%LongLongInt = type i64
-%UnsignedLongLongInt = type i64
-%Float = type double
-%Double = type double
-%LongDouble = type double
+%Str = type %Str8;;
+%Char = type i8;;
+%ConstChar = type i8;;
+%SignedChar = type i8;;
+%UnsignedChar = type i8;;
+%Short = type i16;;
+%UnsignedShort = type i16;;
+%Int = type i32;;
+%UnsignedInt = type i32;;
+%LongInt = type i64;;
+%UnsignedLongInt = type i64;;
+%Long = type i64;;
+%UnsignedLong = type i64;;
+%LongLong = type i64;;
+%UnsignedLongLong = type i64;;
+%LongLongInt = type i64;;
+%UnsignedLongLongInt = type i64;;
+%Float = type double;;
+%Double = type double;;
+%LongDouble = type double;;
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
@@ -130,33 +130,33 @@ break_2:
 
 
 
-%SocklenT = type i32
-%SizeT = type %UnsignedLongInt
-%SSizeT = type %LongInt
-%IntptrT = type i64
-%PtrdiffT = type i8*
-%OffT = type i64
-%USecondsT = type i32
-%PidT = type i32
-%UidT = type i32
-%GidT = type i32
+%SocklenT = type i32;;
+%SizeT = type i64;;
+%SSizeT = type i64;;
+%IntptrT = type i64;;
+%PtrdiffT = type i8*;;
+%OffT = type i64;;
+%USecondsT = type i32;;
+%PidT = type i32;;
+%UidT = type i32;;
+%GidT = type i32;;
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/string.hm
 
 
 
-declare i8* @memset(i8* %mem, %Int %c, %SizeT %n)
-declare i8* @memcpy(i8* %dst, i8* %src, %SizeT %len)
-declare i8* @memmove(i8* %dst, i8* %src, %SizeT %n)
-declare %Int @memcmp(i8* %p0, i8* %p1, %SizeT %num)
-declare %Int @strncmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
-declare %Int @strcmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2)
-declare [0 x %Char]* @strcpy([0 x %Char]* %dst, [0 x %ConstChar]* %src)
-declare %SizeT @strlen([0 x %ConstChar]* %s)
-declare [0 x %Char]* @strcat([0 x %Char]* %s1, [0 x %ConstChar]* %s2)
-declare [0 x %Char]* @strncat([0 x %Char]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
-declare [0 x %Char]* @strerror(%Int %error)
+declare i8* @memset(i8* %mem, i32 %c, i64 %n)
+declare i8* @memcpy(i8* %dst, i8* %src, i64 %len)
+declare i8* @memmove(i8* %dst, i8* %src, i64 %n)
+declare i32 @memcmp(i8* %p0, i8* %p1, i64 %num)
+declare i32 @strncmp([0 x i8]* %s1, [0 x i8]* %s2, i64 %n)
+declare i32 @strcmp([0 x i8]* %s1, [0 x i8]* %s2)
+declare [0 x i8]* @strcpy([0 x i8]* %dst, [0 x i8]* %src)
+declare i64 @strlen([0 x i8]* %s)
+declare [0 x i8]* @strcat([0 x i8]* %s1, [0 x i8]* %s2)
+declare [0 x i8]* @strncat([0 x i8]* %s1, [0 x i8]* %s2, i64 %n)
+declare [0 x i8]* @strerror(i32 %error)
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/misc/sha256.hm
@@ -174,7 +174,7 @@ declare [0 x %Char]* @strerror(%Int %error)
 	i32, 
 	i64, 
 	[8 x i32]
-}
+};;
 
 
 define i32 @rotleft(i32 %a, i32 %b) {
@@ -262,7 +262,7 @@ define void @sha256_contextInit(%Context* %ctx) {
 	; -- STMT ASSIGN ARRAY --
 	%1 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
 	; -- start vol eval --
-	%2 = zext i8 8 to i32
+	%2 = zext i4 8 to i32
 	; -- end vol eval --
 	%3 = insertvalue [8 x i32] zeroinitializer, i32 1779033703, 0
 	%4 = insertvalue [8 x i32] %3, i32 3144134277, 1
@@ -680,8 +680,8 @@ endif_0:
 	%17 = load i32, i32* %4
 	%18 = load i32, i32* %1
 	%19 = sub i32 %17, %18
-	%20 = zext i32 %19 to %SizeT
-	%21 = call i8* @memset(i8* %16, %Int 0, %SizeT %20)
+	%20 = zext i32 %19 to i64
+	%21 = call i8* @memset(i8* %16, i32 0, i64 %20)
 	;ctx.data[i:n-i] = []
 	%22 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
 	%23 = load i32, i32* %22
@@ -693,7 +693,7 @@ then_1:
 	call void @sha256_transform(%Context* %ctx, [0 x i8]* %26)
 	%27 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
 	%28 = bitcast [64 x i8]* %27 to i8*
-	%29 = call i8* @memset(i8* %28, %Int 0, %SizeT 56)
+	%29 = call i8* @memset(i8* %28, i32 0, i64 56)
 	;ctx.data[0:56] = []
 	br label %endif_1
 endif_1:

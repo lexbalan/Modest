@@ -5,17 +5,18 @@
 #include <string.h>
 
 #include <stdio.h>
+typedef struct Node Node;
+
+
+
+
+
 struct Node {
 	Node *next;
 };
 
-
-
-//type Node
-
-typedef struct Node Node;
-
 typedef int32_t MyInt;
+
 
 int32_t main()
 {

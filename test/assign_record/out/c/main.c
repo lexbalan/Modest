@@ -5,20 +5,21 @@
 #include <string.h>
 
 #include <stdio.h>
+typedef struct Point Point;
 
 
 
 
-typedef struct {
+struct Point {
 	int32_t x;
 	int32_t y;
-} Point;
+};
 
 static Point globalPoint0 = {.x = 10, .y = 20};
 static Point globalPoint1 = {};
 
 
-int main()
+int32_t main()
 {
 	printf("test assign_array\n");
 

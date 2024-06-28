@@ -2,13 +2,14 @@
 
 import "libc/stdio"
 
-//type Node
+
 
 type Node record {
 	next: *Node
 }
 
 type MyInt Int32
+
 
 func main() -> Int {
 	printf("tag test")

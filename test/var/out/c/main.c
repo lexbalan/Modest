@@ -15,7 +15,7 @@ static int32_t arr1[2] = _arr;
 static char *str = "Hello!";// -> *[]Char8
 
 
-int main()
+int32_t main()
 {
 	int32_t x;
 	x = 127;

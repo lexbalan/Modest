@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include "./sha256.h"
+typedef struct SHA256_TestCase SHA256_TestCase;
 
 
 
@@ -15,12 +16,12 @@
 #define outputLength  sha256HashSize
 
 
-typedef struct {
+struct SHA256_TestCase {
 	char input_data[inputLength];
 	uint32_t input_data_len;
 
 	uint8_t expected_result[outputLength];
-} SHA256_TestCase;
+};
 
 
 static SHA256_TestCase test0 = {
@@ -77,13 +78,13 @@ bool sha256_doTest(SHA256_TestCase *test)
 }
 
 
-int main()
+int32_t main()
 {
 	printf("test SHA256\n");
 
 	int32_t i;
 	i = 0;
-	while (i < (int)(sizeof(sha256_tests) / sizeof(sha256_tests[0]))) {
+	while (i < (int32_t)(sizeof(sha256_tests) / sizeof(sha256_tests[0]))) {
 		SHA256_TestCase *const test = sha256_tests[i];
 		const bool test_result = sha256_doTest(test);
 

@@ -341,6 +341,8 @@ def llvm_print_value_num(x):
 	num = x['asset']
 	if not hlir_type.type_is_pointer(x['type']):
 		# integer, float, bool, char
+		if hlir_type.type_is_float(x['type']):
+			return out("%.16f" % num)
 		out(str(num))
 
 	else:
@@ -723,7 +725,13 @@ def print_type_pointer(t):
 
 
 def print_type_id(t):
-	if t['definition'] != None:
+	t_id = type_get_aka(t)
+	if t_id == None:
+		return False
+	out(t_id)
+	return True
+
+	"""if t['definition'] != None:
 		type_definition = t['definition']
 		if 'llvm_alias' in type_definition:
 			out(type_definition['llvm_alias'])
@@ -741,7 +749,7 @@ def print_type_id(t):
 			out(type_declaration['id']['str'])
 		return True
 
-	return False
+	return False"""
 
 
 
@@ -806,10 +814,15 @@ def print_type(t):
 		print_int_type_for(t['width'])
 
 	elif hlir_type.type_is_float(t):
-		if hlir_type.type_is_generic(t):
-			out("double")
+		#if hlir_type.type_is_generic(t):
+		#	out("double")
+		#else:
+		print(t['width'])
+		if t['width'] == 32:
+			out("float")
 		else:
-			print_type_id(t)
+			out("double")
+		#print_type_id(t)
 
 	elif hlir_type.type_is_char(t):
 		print_int_type_for(t['width'])

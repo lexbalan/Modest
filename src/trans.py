@@ -660,6 +660,11 @@ def bin_imm(op, type_result, l, r, ti):
 			length = len(items)
 			str_array_volume = value_integer_create(length)
 			item_type = select_common_type(l['type']['of'], r['type']['of'])
+
+			from value.cons import implicit_cast_list
+			# неявно приводим все элементы к общему типу
+			items = implicit_cast_list(items, item_type)
+
 			assert(item_type != None)
 			type_result = hlir_type.hlir_type_array(item_type, volume=str_array_volume, ti=ti)
 			type_result['generic'] = True  # FIXIT!
@@ -2016,6 +2021,7 @@ def decl_type(x):
 	log("decl_type %s" % id['str'])
 
 	nt = hlir_type.hlir_type_undefined(x)
+	nt['aka'] = id['str']
 	module['context'].type_add(id['str'], nt)
 
 	# С не печатает opaque, но LLVM печатает (!)
@@ -2026,6 +2032,7 @@ def decl_type(x):
 
 
 def def_type(x):
+	global module
 	id = x['id']
 	log("def_type %s" % id['str'])
 
@@ -2046,14 +2053,6 @@ def def_type(x):
 		module['context'].type_add(id['str'], nt)
 
 
-	typedef = {
-		'isa': 'def_type',
-		'id': id,
-		'type': None,
-		'afterdef': False,
-		'att': [],
-		'ti': x['ti']
-	}
 
 	"""if already_declared:
 		# сохр ссылку на объявление в определении (пока просто на всякий)
@@ -2081,6 +2080,7 @@ def def_type(x):
 	nt.clear()
 	nt.update(ty)
 	nt['aka'] = id['str']
+	nt['ti'] = id['ti']
 
 
 	if not ('not_included' in module['att']):
@@ -2093,17 +2093,19 @@ def def_type(x):
 
 
 	if hlir_type.type_is_record(ty):
-		if 'anonymous_record' in ty['att']:
-			#info("NOT AKA", ty['ti'])
-			#ty['aka'] = id['str']
-			#ty['c_alias'] = 'struct ' + id['str']
-			pass
+		module['records'].append(id['str'])
 
-	nt['ti'] = id['ti']
 
-	#nt['definition'] = typedef
-	typedef['original_type'] = ty
-	typedef['type'] = nt
+	typedef = {
+		'isa': 'def_type',
+		'id': id,
+		'type': None,
+		'afterdef': False,
+		'type': nt,
+		'original_type': ty,
+		'att': [],
+		'ti': x['ti']
+	}
 
 
 	if already_declared:
@@ -2493,6 +2495,7 @@ def proc(ast, source_info):
 		'strings': [],  # (used in LLVM backend)
 		'context': new_context,
 		'options': [],
+		'records': [],
 		'anon_recs': [],  # anonymous records for C printer
 		'att': [],
 		'text': []

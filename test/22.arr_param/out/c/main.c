@@ -5,6 +5,8 @@
 #include <string.h>
 
 #include <stdio.h>
+typedef struct Point Point;
+typedef struct Pod Pod;
 
 
 
@@ -30,17 +32,17 @@ struct ret_str_retval ret_str()
 static int32_t global_array[2] = (int32_t[2]){1, 2};
 
 
-typedef struct {
+struct Point {
 	int32_t x;
 	int32_t y;
-} Point;
+};
 
-typedef struct {
+struct Pod {
 	char x[10];
-} Pod;
+};
 
 
-int main()
+int32_t main()
 {
 	// function returns array
 	struct ret_str_retval returned_string;

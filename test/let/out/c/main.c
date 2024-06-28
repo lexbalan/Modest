@@ -9,7 +9,7 @@
 
 
 
-int main()
+int32_t main()
 {
 	#define x  127
 	#define y  (x + 1)

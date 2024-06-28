@@ -20,42 +20,20 @@ def value_array_create(items, ti=None):
 		return v
 
 
-	# Получаем наиболее подходящий общий тип элементов массива
-	array_item_type = items[0]['type']
-
+	# Проверяем - immediate ли этот массив?
+	# если хотя бы один элемент - не immediate
+	# -> весь массив - не immediate
 	is_immediate = True
-
-	i = 0
-	while i < length:
-		item = items[i]
-
-		# если хотя бы один элемент - не immediate
-		# -> весь литерал массива - не immediate
+	for item in items:
 		if not value_is_immediate(item):
 			is_immediate = False
 
-		item_type = item['type']
-		common_type = select_common_type(array_item_type, item_type)
-		if common_type == None:
-			error("value with unsuitable type", item['expr_ti'])
-		else:
-			array_item_type = common_type
-		i = i + 1
+	# Получаем наиболее подходящий общий тип элементов массива
+	array_item_type = select_common_type_for_list(items)
 
+	from .cons import implicit_cast_list
 	# неявно приводим все элементы к этому типу
-	casted_items = []
-
-	from .cons import value_cons_implicit
-	i = 0
-	while i < length:
-		item = items[i]
-		casted_item = value_cons_implicit(array_item_type, item)
-
-		if 'nl_end' in item:
-			casted_item['nl_end'] = item['nl_end']
-
-		casted_items.append(casted_item)
-		i = i + 1
+	casted_items = implicit_cast_list(items, array_item_type)
 
 	v = _value_array_create(casted_items, array_item_type, length, True, ti)
 	v['immediate'] = is_immediate  #TODO: need to implement 'immediate' flag
@@ -189,4 +167,38 @@ def _value_array_create(items, item_type, length, is_generic, ti):
 	nv['items'] = items
 	return nv
 
+
+
+
+
+
+
+
+def select_common_type_for_list(items):
+	array_item_type = items[0]['type']
+	i = 0
+	while i < len(items):
+		item = items[i]
+
+		item_type = item['type']
+		common_type = select_common_type(array_item_type, item_type)
+		if common_type == None:
+			error("value with unsuitable type", item['expr_ti'])
+		else:
+			array_item_type = common_type
+		i = i + 1
+
+	return common_type
+
+
+
+
+"""def rectification(items):
+	# Получаем наиболее подходящий общий тип элементов массива
+	array_item_type = select_common_type_for_list(items)
+
+	# неявно приводим все элементы к этому типу
+	casted_items = implicit_cast_list(items, array_item_type)
+
+	return casted_items"""
 

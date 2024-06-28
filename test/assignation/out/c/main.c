@@ -5,15 +5,16 @@
 #include <string.h>
 
 #include <stdio.h>
+typedef struct Point Point;
 
 
 
 
 // Simply record for records assignation test
-typedef struct {
+struct Point {
 	int32_t x;
 	int32_t y;
-} Point;
+};
 
 
 static int32_t glb_i0 = 0;
@@ -26,7 +27,7 @@ static int32_t glb_a0[10] = (int32_t[10]){};
 static int32_t glb_a1[10] = (int32_t[10]){64, 53, 42};
 
 
-int main()
+int32_t main()
 {
 	printf("test assignation\n");
 

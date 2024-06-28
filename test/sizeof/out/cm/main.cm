@@ -11,13 +11,13 @@ type Point record {
 type Mixed1 record {
 	c: Char8
 	i: Int32
-	f: Float64
+	f: Float32
 }
 
 type Mixed2 record {
 	i: Int32
 	c: Char8
-	f: Float64
+	f: Float32
 	c2: [3]Char8
 	m: Mixed1
 }
@@ -25,7 +25,7 @@ type Mixed2 record {
 type Mixed3 record {
 	c: Char8
 	i: Int32
-	f: Float64
+	f: Float32
 	c2: [9]Char8
 }
 
@@ -33,7 +33,7 @@ type Mixed4 record {
 	s: Mixed2
 	c: Char8
 	i: Int32
-	f: Float64
+	f: Float32
 	c2: [9]Char8
 	i2: Int16
 	p: [3]Point
@@ -44,7 +44,7 @@ type Mixed4 record {
 //var s: Mixed2
 var c: Char8
 var i: Int32
-var f: Float64
+var f: Float32
 var i2: Int16
 var p: [3]Point
 var g: Bool
@@ -52,7 +52,7 @@ var g: Bool
 type X record {
 	c: Char8
 	i: Int32
-	f: Float64
+	f: Float32
 	i2: Int16
 	p: [3]Point
 	g: Bool
