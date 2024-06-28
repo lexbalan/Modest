@@ -429,6 +429,9 @@ def do_type_array(t):
 
 
 
+
+#exclude_record = []
+
 anon_rec_cnt = 0
 def do_type_record(x):
 	global anon_rec_cnt

@@ -2,16 +2,22 @@
 
 import "libc/stdio"
 
+//type Node
 
-func add(a: Int32, b: Int32) -> Int32 {
-	return a + b
+type Node record {
+	next: *Node
 }
-
-let x = add(1, 2)
-
 
 func main() -> Int {
 	printf("tag test")
+
+	var n0, n1: Node
+
+	// здесь происходит проверка типов
+	// и все улетает в бесконечную рекурсию
+	if n0 == n1 {
+
+	}
 
 	//var s : Tag = #justSymbol
 

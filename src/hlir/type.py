@@ -283,8 +283,10 @@ def hlir_type_func(params, to, va_args, va_list_id, ti=None):
 		'ti': ti
 	}
 
-
+uid = 0
 def hlir_type_opaque(ti=None):
+	global uid
+	uid = uid + 1
 	return {
 		'isa': 'type',
 		'kind': 'opaque',
@@ -294,6 +296,7 @@ def hlir_type_opaque(ti=None):
 		'align': 1,
 		'declaration': None,
 		'definition': None,
+		'uid': uid,
 		'ops': [],
 		'att': [],
 		'ti': ti
@@ -358,8 +361,11 @@ def type_eq_array(a, b, opt):
 			return type_eq(a['of'], b['of'], opt)
 		return False
 
-	if a['volume']['asset'] != b['volume']['asset']:
-		return False
+	if a['volume'] != None and b['volume'] != None:
+		from value.value import value_is_immediate
+		if value_is_immediate(a['volume']) and value_is_immediate(b['volume']):
+			if a['volume']['asset'] != b['volume']['asset']:
+				return False
 
 	if a['of'] == None or b['of'] == None:
 		return a['of'] == None and b['of'] == None
@@ -432,7 +438,7 @@ def type_eq_float(a, b, opt):
 
 
 def type_eq_opaque(a, b, opt):
-	return a['id']['str'] == b['id']['str']  # maybe by UID?
+	return a['uid'] == b['uid']  # maybe by UID?
 
 
 def type_eq_alias(a, b, opt):
@@ -442,9 +448,14 @@ def type_eq_alias(a, b, opt):
 
 def type_eq(a, b, opt=[]):
 	# fast checking
-	if a == b: return True
+	#if a == b: return True
+
 	if a['kind'] == 'bad' or b['kind'] == 'bad': return True
 	if a['kind'] != b['kind']: return False
+
+	if ('aka' in a) or ('aka' in b):
+		if ('aka' in a) and ('aka' in b):
+			return a['aka'] == b['aka']
 
 	#if a['definition'] != None and b['definition'] != None:
 
