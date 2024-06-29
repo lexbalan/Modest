@@ -107,39 +107,9 @@ def init():
 	typeNat64 = hlir_type_integer(width=64, signed=False)
 	typeNat128 = hlir_type_integer(width=128, signed=False)
 
-
-	#
-	"""typeFloat16 = hlir_type_float(width=16)
-	typeFloat16['aka'] = 'Half'
-	typeFloat16['c_alias'] = 'half'
-	typeFloat16['llvm_alias'] = 'half'"""
-
-
 	typeFloat32 = hlir_type_float(width=32)
 	typeFloat64 = hlir_type_float(width=64)
 
-
-	#
-	"""typeDecimal32 = hlir_type_float(width=32)
-	decimal32_decl = hlir_def_type(hlir_id('Decimal32'), typeDecimal32, ti=None)
-	decimal32_decl['att'].append('c-no-print')
-	decimal32_decl['c_alias'] = '_Decimal32'
-	decimal32_decl['llvm_alias'] = 'float'
-	foundation['text'].append(decimal32_decl)
-
-	typeDecimal64 = hlir_type_float(width=64)
-	decimal64_decl = hlir_def_type(hlir_id('Decimal64'), typeDecimal64, ti=None)
-	decimal64_decl['att'].append('c-no-print')
-	decimal64_decl['c_alias'] = '_Decimal64'
-	decimal64_decl['llvm_alias'] = 'double'
-	foundation['text'].append(decimal64_decl)
-
-	typeDecimal128 = hlir_type_float(width=128)
-	decimal128_decl = hlir_def_type(hlir_id('Decimal128'), typeDecimal128, ti=None)
-	decimal128_decl['att'].append('c-no-print')
-	decimal128_decl['c_alias'] = '_Decimal128'
-	decimal128_decl['llvm_alias'] = 'double'
-	foundation['text'].append(decimal128_decl)"""
 
 	# type Nil = Generic(*Unit)
 	typeNil = hlir_type_pointer(to=typeUnit)
@@ -175,15 +145,6 @@ def init():
 
 	return foundation
 
-
-
-
-"""def hlir_type_generic_int_for(num, signed=True, ti=None):
-	required_width = nbits_for_num(num)
-	t = hlir_type_integer(width=required_width, ti=ti)
-	t['generic'] = True
-	t['signed'] = unsigned
-	return t"""
 
 
 def type_select_char(sz):

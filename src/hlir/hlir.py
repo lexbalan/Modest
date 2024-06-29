@@ -7,7 +7,6 @@ def hlir_init():
 	hlir_type_init()
 
 
-
 def hlir_decl_type(id, newtype, ti):
 	newtype_declaration = {
 		'isa': 'decl_type',
@@ -16,6 +15,7 @@ def hlir_decl_type(id, newtype, ti):
 		'att': [],
 		'ti': ti
 	}
+
 	return newtype_declaration
 
 
