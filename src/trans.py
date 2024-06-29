@@ -2025,9 +2025,7 @@ def decl_type(x):
 	module['context'].type_add(id['str'], nt)
 
 	# С не печатает opaque, но LLVM печатает (!)
-	obj = hlir_decl_type(id, nt, x['ti'])
-	nt['declaration'] = obj
-	return obj
+	return hlir_decl_type(id, nt, x['ti'])
 
 
 

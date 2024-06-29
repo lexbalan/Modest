@@ -1721,9 +1721,6 @@ def print_variable(_id, typ, as_const=False, init_value=None, prefix=''):
 	assert (id_str != "")
 	id_str = prefix + id_str
 
-	if typ['declaration'] != None or typ['definition'] != None:
-		print_variable_regular(typ, id_str, as_const)
-		return
 
 	if hlir_type.type_is_pointer(typ):
 		print_variable_pointer(typ, id_str, as_const)

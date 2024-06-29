@@ -165,8 +165,6 @@ def init():
 		'size': 0,
 		'align': 1,
 		'width': 0,
-		'declaration': None,
-		'definition': None,
 		'aka': 'VA_List',
 		'c_alias': 'va_list',
 		'llvm_alias': 'i8*',

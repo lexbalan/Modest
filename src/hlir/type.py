@@ -48,8 +48,6 @@ def hlir_type_bad(x):
 		'width': 0,
 		'size': 0,
 		'align': 1,
-		'declaration': None,
-		'definition': None,
 		'ast_type': x,
 		'ops': [],
 		'att': [],
@@ -68,8 +66,6 @@ def hlir_type_undefined(x):
 		'width': 0,
 		'size': 0,
 		'align': 1,
-		'declaration': None,
-		'definition': None,
 		'ast_type': x,
 		'uid': uid,
 		'ops': [],
@@ -86,8 +82,6 @@ def hlir_type_unit():
 		'width': 0,
 		'size': 0,
 		'align': 0,
-		'declaration': None,
-		'definition': None,
 		'aka': 'Unit',
 		'c_alias': 'void',
 		'llvm_alias': 'void',
@@ -105,8 +99,6 @@ def hlir_type_bool():
 		'width': 1,
 		'size': 1,
 		'align': 1,
-		'declaration': None,
-		'definition': None,
 		'aka': 'Bool',
 		'c_alias': 'bool',
 		'llvm_alias': 'i1',
@@ -130,8 +122,6 @@ def hlir_type_char(width, ti=None):
 		'width': width,
 		'size': size,
 		'align': size,
-		'declaration': None,
-		'definition': None,
 		'aka': 'Char%d' % width,
 		'c_alias': calias,
 		'llvm_alias': 'i%d' % width,
@@ -168,8 +158,6 @@ def hlir_type_integer(width, signed=True, ti=None):
 		'size': size,
 		'align': size,
 		'signed': signed,
-		'declaration': None,
-		'definition': None,
 		'aka': aka,
 		'c_alias': calias,
 		'llvm_alias': 'i%d' % width,
@@ -195,8 +183,6 @@ def hlir_type_float(width, ti=None):
 		'size': size,
 		'align': size,
 		'signed': True,
-		'declaration': None,
-		'definition': None,
 		'aka': 'Float32',
 		'c_alias': calias,
 		'llvm_alias': calias,
@@ -216,8 +202,6 @@ def hlir_type_pointer(to, ti=None):
 		'size': size,
 		'align': size,
 		'to': to,
-		'declaration': None,
-		'definition': None,
 		'ops': PTR_OPS,
 		'att': [],
 		'ti': ti
@@ -247,8 +231,6 @@ def hlir_type_array(of, volume=None, ti=None):
 		'align': item_align,
 		'of': of,
 		'volume': volume,
-		'declaration': None,
-		'definition': None,
 		'ops': ARR_OPS,
 		'att': [],
 		'ti': ti
@@ -272,8 +254,6 @@ def hlir_type_enum(ti=None):
 		'align': enum_size,
 		'items': [],
 		'uid': enum_uid,
-		'declaration': None,
-		'definition': None,
 		'ops': ENUM_OPS,
 		'att': [],
 		'ti': ti
@@ -314,8 +294,6 @@ def hlir_type_record(fields, ti=None):
 		'size': record_size,
 		'align': record_align,
 		'fields': fields,
-		'declaration': None,
-		'definition': None,
 		'ops': REC_OPS,
 		'end_nl': 0,
 		'att': [],
@@ -331,15 +309,9 @@ def hlir_type_func(params, to, va_args, va_list_id, ti=None):
 		'width': 0,
 		'size': 0,
 		'align': 1,
-
 		'params': params,
 		'to': to,
-
 		'extra_args': va_args,
-		#'va_list_id': va_list_id,
-
-		'declaration': None,
-		'definition': None,
 		'ops': [],
 		'att': [],
 		'ti': ti
@@ -358,8 +330,6 @@ def hlir_type_string(char_width, length, ti=None):
 		'align': size,
 		'char_width': char_width,
 		'length': length,
-		'declaration': None,
-		'definition': None,
 		'ops': STR_OPS,
 		'att': [],
 		'ti': ti
@@ -418,27 +388,8 @@ def type_eq_array(a, b, opt):
 
 
 def get_type_root_id(t):
-	if t['definition'] != None:
-		_def = t['definition']
-		rd = get_type_root_id(_def['original_type'])
-
-		if rd != None:
-			return rd
-
-		else:
-			return _def['id']
-
-
-	elif t['declaration'] != None:
-		_decl = t['declaration']
-		rd = get_type_root_id(_def['original_type'])
-
-		if rd != None:
-			return rd
-		else:
-			return _decl['id']
-
-
+	if 'aka' in t:
+		return t['aka']
 	return None
 
 
@@ -468,11 +419,11 @@ def type_eq_record(a, b, opt, nominative=False):
 	if nominative:
 		a_root_id = get_type_root_id(a)
 		b_root_id = get_type_root_id(b)
-		#print("A_ROOT: " + str(a_root_id))
-		#print("B_ROOT: " + str(b_root_id))
+
 		if a_root_id != None and b_root_id != None:
-			if a_root_id['str'] != b_root_id['str']:
+			if a_root_id != b_root_id:
 				return False
+
 		elif a_root_id != None or b_root_id != None:
 			return False
 
@@ -508,8 +459,6 @@ def type_eq(a, b, opt=[]):
 		if ('aka' in a) and ('aka' in b):
 			if a['aka'] == b['aka']:
 				return True"""
-
-	#if a['definition'] != None and b['definition'] != None:
 
 	# проверять аттрибуты (volatile, const)
 	# использую для C чтобы можно было более строго проверить типы
@@ -811,32 +760,19 @@ def print_list_by(lst, method):
 
 
 def type_id(t):
-	if t['definition'] != None:
-		return t['definition']['id']['str']
-
-	elif t['declaration'] != None:
-		return t['declaration']['id']['str']
-
+	if 'aka' in t:
+		return t['aka']
 	return None
+
 
 # возвращает корневой тип
 # например Int32 --> Int --> MyInt
 # type#id = MyInt
 # root#id = Int32
 def type_root_id(t):
-	if t['definition'] != None:
-		if t['definition']['original_type'] != None:
-			_id = type_root_id(t['definition']['original_type'])
-			if _id != None:
-				return _id
-		return t['definition']['id']['str']
-
-	elif t['declaration'] != None:
-		if t['declaration']['original_type'] != None:
-			_id = root_id(t['declaration']['original_type'])
-			if _id != None:
-				return _id
-		return t['declaration']['id']['str']
+	if 'aka' in t:
+		return t['aka']
+	return None
 
 
 

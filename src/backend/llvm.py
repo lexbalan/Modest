@@ -731,27 +731,6 @@ def print_type_id(t):
 	out(t_id)
 	return True
 
-	"""if t['definition'] != None:
-		type_definition = t['definition']
-		if 'llvm_alias' in type_definition:
-			out(type_definition['llvm_alias'])
-		else:
-			out("%")
-			out(type_definition['id']['str'])
-		return True
-
-	elif t['declaration'] != None:
-		type_declaration = t['declaration']
-		if 'llvm_alias' in type_declaration:
-			out(type_declaration['llvm_alias'])
-		else:
-			out("%")
-			out(type_declaration['id']['str'])
-		return True
-
-	return False"""
-
-
 
 
 def print_int_type_for(width):

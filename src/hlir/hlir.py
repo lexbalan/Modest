@@ -16,7 +16,6 @@ def hlir_decl_type(id, newtype, ti):
 		'att': [],
 		'ti': ti
 	}
-	newtype['declaration'] = newtype_declaration
 	return newtype_declaration
 
 
@@ -30,7 +29,6 @@ def hlir_def_type(id, newtype, origtype=None, ti=None):
 		'ti': ti
 	}
 
-	newtype['definition'] = newtype_definition
 	return newtype_definition
 
 
