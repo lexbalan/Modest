@@ -118,7 +118,8 @@ def _cast_values(values, to_type):
 				error("cannot construct value", item['ti'])
 				continue
 
-		casted_item['nl'] = item['nl']
+		#if 'nl' in  item:
+		#casted_item['nl'] = item['nl']
 		casted_items.append(casted_item)
 
 	return casted_items

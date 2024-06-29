@@ -103,26 +103,26 @@ break_2:
 
 
 
-%Str = type %Str8;;
-%Char = type i8;;
-%ConstChar = type i8;;
-%SignedChar = type i8;;
-%UnsignedChar = type i8;;
-%Short = type i16;;
-%UnsignedShort = type i16;;
-%Int = type i32;;
-%UnsignedInt = type i32;;
-%LongInt = type i64;;
-%UnsignedLongInt = type i64;;
-%Long = type i64;;
-%UnsignedLong = type i64;;
-%LongLong = type i64;;
-%UnsignedLongLong = type i64;;
-%LongLongInt = type i64;;
-%UnsignedLongLongInt = type i64;;
-%Float = type double;;
-%Double = type double;;
-%LongDouble = type double;;
+%Str = type %Str8;
+%Char = type i8;
+%ConstChar = type i8;
+%SignedChar = type i8;
+%UnsignedChar = type i8;
+%Short = type i16;
+%UnsignedShort = type i16;
+%Int = type i32;
+%UnsignedInt = type i32;
+%LongInt = type i64;
+%UnsignedLongInt = type i64;
+%Long = type i64;
+%UnsignedLong = type i64;
+%LongLong = type i64;
+%UnsignedLongLong = type i64;
+%LongLongInt = type i64;
+%UnsignedLongLongInt = type i64;
+%Float = type double;
+%Double = type double;
+%LongDouble = type double;
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
@@ -130,16 +130,16 @@ break_2:
 
 
 
-%SocklenT = type i32;;
-%SizeT = type i64;;
-%SSizeT = type i64;;
-%IntptrT = type i64;;
-%PtrdiffT = type i8*;;
-%OffT = type i64;;
-%USecondsT = type i32;;
-%PidT = type i32;;
-%UidT = type i32;;
-%GidT = type i32;;
+%SocklenT = type i32;
+%SizeT = type i64;
+%SSizeT = type i64;
+%IntptrT = type i64;
+%PtrdiffT = type i8*;
+%OffT = type i64;
+%USecondsT = type i32;
+%PidT = type i32;
+%UidT = type i32;
+%GidT = type i32;
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/time.hm
@@ -147,8 +147,8 @@ break_2:
 
 
 
-%TimeT = type i32;;
-%ClockT = type i64;;
+%TimeT = type i32;
+%ClockT = type i64;
 %Struct_tm = type {
 	i32, 
 	i32, 
@@ -161,7 +161,7 @@ break_2:
 	i32, 
 	i64, 
 	i8*
-};;
+};
 
 
 

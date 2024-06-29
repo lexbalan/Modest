@@ -2012,8 +2012,14 @@ def print_def_type(x):
 
 
 	out("\n%%%s = type " % x['id']['str'])
-	print_type(xtype)
-	out(";;")
+	if hlir_type.type_is_record(xtype):
+		# не печатаем имя а печатаем саму структуру
+		# тк LLVM дает ошибку на запись вида
+		# %Struct1 = type %Struct2; Error, wtf?
+		print_type_record(xtype)
+	else:
+		print_type(xtype)
+	out(";")
 	if hlir_type.type_is_record(xtype):
 		out("\n")
 

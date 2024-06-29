@@ -156,7 +156,7 @@ void sha256_update(Context *ctx, uint8_t *msg, uint32_t msgLen)
 		ctx->data[ctx->datalen] = msg[i];
 		ctx->datalen = ctx->datalen + 1;
 		if (ctx->datalen == 64) {
-			sha256_transform(ctx, (uint8_t *)&ctx->data);
+			sha256_transform((Context *)ctx, (uint8_t *)&ctx->data);
 			ctx->bitlen = ctx->bitlen + 512;
 			ctx->datalen = 0;
 		}
@@ -186,7 +186,7 @@ void sha256_final(Context *ctx, uint8_t *outHash)
 	//ctx.data[i:n-i] = []
 
 	if (ctx->datalen >= 56) {
-		sha256_transform(ctx, (uint8_t *)&ctx->data);
+		sha256_transform((Context *)ctx, (uint8_t *)&ctx->data);
 		memset((uint8_t *)&ctx->data, 0, 56);
 		//ctx.data[0:56] = []
 	}
@@ -203,7 +203,7 @@ void sha256_final(Context *ctx, uint8_t *outHash)
 	ctx->data[57] = (uint8_t)(ctx->bitlen >> 48);
 	ctx->data[56] = (uint8_t)(ctx->bitlen >> 56);
 
-	sha256_transform(ctx, (uint8_t *)&ctx->data);
+	sha256_transform((Context *)ctx, (uint8_t *)&ctx->data);
 
 	// Since this implementation uses little endian byte ordering
 	// and SHA uses big endian, reverse all the bytes
@@ -229,8 +229,8 @@ void sha256_doHash(uint8_t *msg, uint32_t msgLen, uint8_t *outHash)
 {
 	Context ctx;
 	ctx = (Context){};
-	sha256_contextInit(&ctx);
-	sha256_update(&ctx, msg, msgLen);
-	sha256_final(&ctx, outHash);
+	sha256_contextInit((Context *)&ctx);
+	sha256_update((Context *)&ctx, msg, msgLen);
+	sha256_final((Context *)&ctx, outHash);
 }
 

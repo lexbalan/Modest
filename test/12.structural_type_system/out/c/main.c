@@ -80,38 +80,38 @@ static Type3 c = {.x = 3};
 void test_by_value()
 {
 	f0_val(a);
-	f1_val(a);
-	f2_val(a);
-	f3_val(a);
+	f1_val(*(Type2 *)&a);
+	f2_val(*(Type3 *)&a);
+	f3_val(*(struct __anonymous_struct_3 *)&a);
 
-	f0_val(b);
+	f0_val(*(Type1 *)&b);
 	f1_val(b);
-	f2_val(b);
-	f3_val(b);
+	f2_val(*(Type3 *)&b);
+	f3_val(*(struct __anonymous_struct_3 *)&b);
 
-	f0_val(c);
-	f1_val(c);
+	f0_val(*(Type1 *)&c);
+	f1_val(*(Type2 *)&c);
 	f2_val(c);
-	f3_val(c);
+	f3_val(*(struct __anonymous_struct_3 *)&c);
 }
 
 
 void test_by_pointer()
 {
-	f0_ptr(&a);
-	f1_ptr(&a);
-	f2_ptr(&a);
-	f3_ptr(&a);
+	f0_ptr((Type1 *)&a);
+	f1_ptr((Type2 *)&a);
+	f2_ptr((Type3 *)&a);
+	f3_ptr((struct __anonymous_struct_4 *)&a);
 
-	f0_ptr(&b);
-	f1_ptr(&b);
-	f2_ptr(&b);
-	f3_ptr(&b);
+	f0_ptr((Type1 *)&b);
+	f1_ptr((Type2 *)&b);
+	f2_ptr((Type3 *)&b);
+	f3_ptr((struct __anonymous_struct_4 *)&b);
 
-	f0_ptr(&c);
-	f1_ptr(&c);
-	f2_ptr(&c);
-	f3_ptr(&c);
+	f0_ptr((Type1 *)&c);
+	f1_ptr((Type2 *)&c);
+	f2_ptr((Type3 *)&c);
+	f3_ptr((struct __anonymous_struct_4 *)&c);
 }
 
 

@@ -40,7 +40,7 @@ List *linked_list_create()
 
 	*list = (List){};
 
-	return list;
+	return (List *)list;
 }
 
 
@@ -60,7 +60,7 @@ Node *linked_list_first_node_get(List *list)
 		return NULL;
 	}
 
-	return list->head;
+	return (Node *)list->head;
 }
 
 
@@ -70,7 +70,7 @@ Node *linked_list_last_node_get(List *list)
 		return NULL;
 	}
 
-	return list->tail;
+	return (Node *)list->tail;
 }
 
 
@@ -80,12 +80,12 @@ Node *linked_list_node_first(List *list, Node *new_node)
 		return NULL;
 	}
 
-	list->head = new_node;
-	list->tail = new_node;
+	list->head = (Node *)new_node;
+	list->tail = (Node *)new_node;
 
 	list->size = list->size + 1;
 
-	return new_node;
+	return (Node *)new_node;
 }
 
 
@@ -100,7 +100,7 @@ Node *linked_list_node_create()
 
 	*node = (Node){};
 
-	return node;
+	return (Node *)node;
 }
 
 
@@ -110,7 +110,7 @@ Node *linked_list_node_next_get(Node *node)
 		return NULL;
 	}
 
-	return node->next;
+	return (Node *)node->next;
 }
 
 
@@ -120,7 +120,7 @@ Node *linked_list_node_prev_get(Node *node)
 		return NULL;
 	}
 
-	return node->prev;
+	return (Node *)node->prev;
 }
 
 
@@ -139,14 +139,14 @@ void node_insert_right(Node *left, Node *new_right)
 	printf("node_insert_right\n");
 
 	Node *const old_right = left->next;
-	left->next = new_right;
+	left->next = (Node *)new_right;
 
 	if (old_right != NULL) {
-		old_right->prev = new_right;
+		old_right->prev = (Node *)new_right;
 	}
 
-	new_right->next = old_right;
-	new_right->prev = left;
+	new_right->next = (Node *)old_right;
+	new_right->prev = (Node *)left;
 }
 
 
@@ -164,7 +164,7 @@ Node *linked_list_node_get(List *list, int32_t pos)
 
 	if (pos >= 0) {
 		// go forward
-		node = list->head;
+		node = (Node *)list->head;
 		const uint32_t n = (uint32_t)pos;
 
 		if (n > list->size) {
@@ -174,12 +174,12 @@ Node *linked_list_node_get(List *list, int32_t pos)
 		uint32_t i;
 		i = 0;
 		while (i < n) {
-			node = node->next;
+			node = (Node *)node->next;
 			i = i + 1;
 		}
 	} else {
 		// go backward
-		node = list->tail;
+		node = (Node *)list->tail;
 		const uint32_t n = (uint32_t)-pos - 1;
 
 		if (n > list->size) {
@@ -189,12 +189,12 @@ Node *linked_list_node_get(List *list, int32_t pos)
 		uint32_t i;
 		i = 0;
 		while (i < n) {
-			node = node->prev;
+			node = (Node *)node->prev;
 			i = i + 1;
 		}
 	}
 
-	return node;
+	return (Node *)node;
 }
 
 
@@ -207,22 +207,22 @@ Node *linked_list_node_insert(List *list, int32_t pos, Node *new_node)
 	printf("linked_list_node_insert(%d)\n", pos);
 
 
-	Node *const n = linked_list_node_get(list, pos);
+	Node *const n = linked_list_node_get((List *)list, pos);
 
 	if (n == NULL) {
 		return NULL;
 	}
 
-	Node *const nod = linked_list_node_prev_get(n);
+	Node *const nod = linked_list_node_prev_get((Node *)n);
 
 	if (nod == NULL) {
 		return NULL;
 	}
 
-	node_insert_right(nod, new_node);
+	node_insert_right((Node *)nod, (Node *)new_node);
 	list->size = list->size + 1;
 
-	return new_node;
+	return (Node *)new_node;
 }
 
 
@@ -234,16 +234,16 @@ Node *linked_list_node_append(List *list, Node *new_node)
 	}
 
 	if (list->tail == NULL) {
-		list->head = new_node;
+		list->head = (Node *)new_node;
 	} else {
-		node_insert_right(list->tail, new_node);
+		node_insert_right((Node *)list->tail, (Node *)new_node);
 	}
 
-	list->tail = new_node;
+	list->tail = (Node *)new_node;
 
 	list->size = list->size + 1;
 
-	return new_node;
+	return (Node *)new_node;
 }
 
 
@@ -257,7 +257,7 @@ Node *linked_list_insert(List *list, int32_t pos, void *data)
 
 	new_node->data = data;
 
-	return linked_list_node_insert(list, pos, new_node);
+	return (Node *)linked_list_node_insert((List *)list, pos, (Node *)new_node);
 }
 
 
@@ -275,12 +275,12 @@ Node *linked_list_append(List *list, void *data)
 
 	new_node->data = data;
 
-	Node *const node = linked_list_node_append(list, new_node);
+	Node *const node = linked_list_node_append((List *)list, (Node *)new_node);
 
 	if (node == NULL) {
 		free(new_node);
 	}
 
-	return node;
+	return (Node *)node;
 }
 

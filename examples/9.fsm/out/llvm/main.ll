@@ -103,26 +103,26 @@ break_2:
 
 
 
-%Str = type %Str8;;
-%Char = type i8;;
-%ConstChar = type i8;;
-%SignedChar = type i8;;
-%UnsignedChar = type i8;;
-%Short = type i16;;
-%UnsignedShort = type i16;;
-%Int = type i32;;
-%UnsignedInt = type i32;;
-%LongInt = type i64;;
-%UnsignedLongInt = type i64;;
-%Long = type i64;;
-%UnsignedLong = type i64;;
-%LongLong = type i64;;
-%UnsignedLongLong = type i64;;
-%LongLongInt = type i64;;
-%UnsignedLongLongInt = type i64;;
-%Float = type double;;
-%Double = type double;;
-%LongDouble = type double;;
+%Str = type %Str8;
+%Char = type i8;
+%ConstChar = type i8;
+%SignedChar = type i8;
+%UnsignedChar = type i8;
+%Short = type i16;
+%UnsignedShort = type i16;
+%Int = type i32;
+%UnsignedInt = type i32;
+%LongInt = type i64;
+%UnsignedLongInt = type i64;
+%Long = type i64;
+%UnsignedLong = type i64;
+%LongLong = type i64;
+%UnsignedLongLong = type i64;
+%LongLongInt = type i64;
+%UnsignedLongLongInt = type i64;
+%Float = type double;
+%Double = type double;
+%LongDouble = type double;
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
@@ -130,16 +130,16 @@ break_2:
 
 
 
-%SocklenT = type i32;;
-%SizeT = type i64;;
-%SSizeT = type i64;;
-%IntptrT = type i64;;
-%PtrdiffT = type i8*;;
-%OffT = type i64;;
-%USecondsT = type i32;;
-%PidT = type i32;;
-%UidT = type i32;;
-%GidT = type i32;;
+%SocklenT = type i32;
+%SizeT = type i64;
+%SSizeT = type i64;
+%IntptrT = type i64;
+%PtrdiffT = type i8*;
+%OffT = type i64;
+%USecondsT = type i32;
+%PidT = type i32;
+%UidT = type i32;
+%GidT = type i32;
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
@@ -150,8 +150,8 @@ break_2:
 %File = type opaque
 %FposT = type opaque
 
-%CharStr = type %Str;;
-%ConstCharStr = type %CharStr;;
+%CharStr = type %Str;
+%ConstCharStr = type %CharStr;
 
 
 declare i32 @fclose(%File* %f)
@@ -205,24 +205,24 @@ declare void @perror(%ConstCharStr* %str)
 
 
 
-%FSM_Proc = type void (%FSM*)*;;
+%FSM_Proc = type void (%FSM*)*;
 %FSM_StateDesc = type {
 	[8 x i8], 
 	%FSM_Proc, 
 	%FSM_Proc, 
 	%FSM_Proc
-};;
+};
 
 
 
-%UInt32 = type i32;;
+%UInt32 = type i32;
 %FSM = type {
 	[8 x i8], 
 	%UInt32, 
 	%UInt32, 
 	%UInt32, 
 	[16 x %FSM_StateDesc]
-};;
+};
 
 
 declare %Str8* @fsm_state_no_name(%FSM* %fsm, i32 %state_no)
@@ -274,7 +274,8 @@ then_0:
 	br label %endif_0
 else_0:
 	store i8 0, i8* @cnt
-	call void @fsm_switch(%FSM* %fsm, i32 1)
+	%6 = bitcast %FSM* %fsm to %FSM*
+	call void @fsm_switch(%FSM* %6, i32 1)
 	br label %endif_0
 endif_0:
 	ret void
@@ -304,7 +305,8 @@ then_0:
 	br label %endif_0
 else_0:
 	store i8 0, i8* @cnt
-	call void @fsm_switch(%FSM* %fsm, i32 2)
+	%6 = bitcast %FSM* %fsm to %FSM*
+	call void @fsm_switch(%FSM* %6, i32 2)
 	br label %endif_0
 endif_0:
 	ret void
@@ -318,10 +320,11 @@ define void @on_exit(%FSM* %fsm) {
 
 
 define void @beacon_entry(%FSM* %fsm) {
-	%1 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 1
-	%2 = load %UInt32, %UInt32* %1
-	%3 = call %Str8* @fsm_state_no_name(%FSM* %fsm, %UInt32 %2)
-	%4 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str3 to [0 x i8]*), %Str8* %3)
+	%1 = bitcast %FSM* %fsm to %FSM*
+	%2 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 1
+	%3 = load %UInt32, %UInt32* %2
+	%4 = call %Str8* @fsm_state_no_name(%FSM* %1, %UInt32 %3)
+	%5 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str3 to [0 x i8]*), %Str8* %4)
 	ret void
 }
 
@@ -337,17 +340,19 @@ then_0:
 	br label %endif_0
 else_0:
 	store i8 0, i8* @cnt
-	call void @fsm_switch(%FSM* %fsm, i32 0)
+	%6 = bitcast %FSM* %fsm to %FSM*
+	call void @fsm_switch(%FSM* %6, i32 0)
 	br label %endif_0
 endif_0:
 	ret void
 }
 
 define void @beacon_exit(%FSM* %fsm) {
-	%1 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 2
-	%2 = load %UInt32, %UInt32* %1
-	%3 = call %Str8* @fsm_state_no_name(%FSM* %fsm, %UInt32 %2)
-	%4 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str5 to [0 x i8]*), %Str8* %3)
+	%1 = bitcast %FSM* %fsm to %FSM*
+	%2 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 2
+	%3 = load %UInt32, %UInt32* %2
+	%4 = call %Str8* @fsm_state_no_name(%FSM* %1, %UInt32 %3)
+	%5 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str5 to [0 x i8]*), %Str8* %4)
 	ret void
 }
 
@@ -433,7 +438,8 @@ define i32 @main() {
 again_1:
 	br i1 1 , label %body_1, label %break_1
 body_1:
-	call void @fsm_run(%FSM* @fsm)
+	%1 = bitcast %FSM* @fsm to %FSM*
+	call void @fsm_run(%FSM* %1)
 	call void @delay_ms(i64 500)
 	br label %again_1
 break_1:

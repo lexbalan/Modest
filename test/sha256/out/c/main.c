@@ -52,7 +52,7 @@ static SHA256_TestCase test1 = {
 
 
 //var sha256_tests: []*SHA256_TestCase = [&test0, &test1]
-static SHA256_TestCase *sha256_tests[2] = (SHA256_TestCase *[2]){&test0, &test1};
+static SHA256_TestCase *sha256_tests[2] = (SHA256_TestCase *[2]){(SHA256_TestCase *)&test0, (SHA256_TestCase *)&test1};
 
 
 bool sha256_doTest(SHA256_TestCase *test)
@@ -88,7 +88,7 @@ int main()
 	i = 0;
 	while (i < (int)(sizeof(sha256_tests) / sizeof(sha256_tests[0]))) {
 		SHA256_TestCase *const test = sha256_tests[i];
-		const bool test_result = sha256_doTest(test);
+		const bool test_result = sha256_doTest((SHA256_TestCase *)test);
 
 		char *res;
 		res = "failed";

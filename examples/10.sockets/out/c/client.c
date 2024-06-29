@@ -59,7 +59,7 @@ int main()
 
 	struct sockaddr *const sockaddr = (struct sockaddr *)(void *)&server_addr;
 	int e;
-	e = connect(sockfd, sockaddr, (socklen_t)sizeof(struct sockaddr_in));
+	e = connect(sockfd, (struct sockaddr *)sockaddr, (socklen_t)sizeof(struct sockaddr_in));
 	if (e < 0) {
 		perror("[-] Error in Connecting");
 		exit(1);

@@ -103,26 +103,26 @@ break_2:
 
 
 
-%Str = type %Str8;;
-%Char = type i8;;
-%ConstChar = type i8;;
-%SignedChar = type i8;;
-%UnsignedChar = type i8;;
-%Short = type i16;;
-%UnsignedShort = type i16;;
-%Int = type i32;;
-%UnsignedInt = type i32;;
-%LongInt = type i64;;
-%UnsignedLongInt = type i64;;
-%Long = type i64;;
-%UnsignedLong = type i64;;
-%LongLong = type i64;;
-%UnsignedLongLong = type i64;;
-%LongLongInt = type i64;;
-%UnsignedLongLongInt = type i64;;
-%Float = type double;;
-%Double = type double;;
-%LongDouble = type double;;
+%Str = type %Str8;
+%Char = type i8;
+%ConstChar = type i8;
+%SignedChar = type i8;
+%UnsignedChar = type i8;
+%Short = type i16;
+%UnsignedShort = type i16;
+%Int = type i32;
+%UnsignedInt = type i32;
+%LongInt = type i64;
+%UnsignedLongInt = type i64;
+%Long = type i64;
+%UnsignedLong = type i64;
+%LongLong = type i64;
+%UnsignedLongLong = type i64;
+%LongLongInt = type i64;
+%UnsignedLongLongInt = type i64;
+%Float = type double;
+%Double = type double;
+%LongDouble = type double;
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
@@ -130,16 +130,16 @@ break_2:
 
 
 
-%SocklenT = type i32;;
-%SizeT = type i64;;
-%SSizeT = type i64;;
-%IntptrT = type i64;;
-%PtrdiffT = type i8*;;
-%OffT = type i64;;
-%USecondsT = type i32;;
-%PidT = type i32;;
-%UidT = type i32;;
-%GidT = type i32;;
+%SocklenT = type i32;
+%SizeT = type i64;
+%SSizeT = type i64;
+%IntptrT = type i64;
+%PtrdiffT = type i8*;
+%OffT = type i64;
+%USecondsT = type i32;
+%PidT = type i32;
+%UidT = type i32;
+%GidT = type i32;
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
@@ -150,8 +150,8 @@ break_2:
 %File = type opaque
 %FposT = type opaque
 
-%CharStr = type %Str;;
-%ConstCharStr = type %CharStr;;
+%CharStr = type %Str;
+%ConstCharStr = type %CharStr;
 
 
 declare i32 @fclose(%File* %f)
@@ -225,17 +225,17 @@ declare i32 @system([0 x i8]* %string)
 
 
 
-%In_addr_t = type i32;;
-%In_port_t = type i16;;
-%Socklen_t = type i32;;
+%In_addr_t = type i32;
+%In_port_t = type i16;
+%Socklen_t = type i32;
 %Struct_sockaddr = type {
 	i16, 
 	[14 x i8]
-};;
+};
 
 %Struct_in_addr = type {
 	i32
-};;
+};
 
 %Struct_sockaddr_in = type {
 	i8, 
@@ -243,7 +243,7 @@ declare i32 @system([0 x i8]* %string)
 	i16, 
 	%Struct_in_addr, 
 	[8 x i8]
-};;
+};
 
 
 
@@ -427,36 +427,38 @@ endif_0:
 	%20 = bitcast %Struct_sockaddr_in* %4 to i8*
 	%21 = bitcast i8* %20 to %Struct_sockaddr*
 	%22 = alloca i32, align 4
-	%23 = call i32 @bind(i32 %1, %Struct_sockaddr* %21, i32 16)
-	store i32 %23, i32* %22
-	%24 = load i32, i32* %22
-	%25 = icmp slt i32 %24, 0
-	br i1 %25 , label %then_1, label %endif_1
+	%23 = bitcast %Struct_sockaddr* %21 to %Struct_sockaddr*
+	%24 = call i32 @bind(i32 %1, %Struct_sockaddr* %23, i32 16)
+	store i32 %24, i32* %22
+	%25 = load i32, i32* %22
+	%26 = icmp slt i32 %25, 0
+	br i1 %26 , label %then_1, label %endif_1
 then_1:
 	call void @perror(%ConstCharStr* bitcast ([21 x i8]* @str8 to [0 x i8]*))
 	call void @exit(i32 1)
 	br label %endif_1
 endif_1:
-	%26 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str9 to [0 x i8]*))
-	%27 = call i32 @listen(i32 %1, i32 10)
-	store i32 %27, i32* %22
-	%28 = load i32, i32* %22
-	%29 = icmp ne i32 %28, 0
-	br i1 %29 , label %then_2, label %endif_2
+	%27 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str9 to [0 x i8]*))
+	%28 = call i32 @listen(i32 %1, i32 10)
+	store i32 %28, i32* %22
+	%29 = load i32, i32* %22
+	%30 = icmp ne i32 %29, 0
+	br i1 %30 , label %then_2, label %endif_2
 then_2:
 	call void @perror(%ConstCharStr* bitcast ([21 x i8]* @str10 to [0 x i8]*))
 	call void @exit(i32 1)
 	br label %endif_2
 endif_2:
-	%30 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str11 to [0 x i8]*))
-	%31 = alloca i32, align 4
-	store i32 16, i32* %31
-	%32 = alloca %Struct_sockaddr_in, align 4
-	%33 = bitcast %Struct_sockaddr_in* %32 to i8*
-	%34 = bitcast i8* %33 to %Struct_sockaddr*
-	%35 = call i32 @accept(i32 %1, %Struct_sockaddr* %34, i32* %31)
-	call void @write_file(i32 %35)
-	%36 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @str12 to [0 x i8]*))
+	%31 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str11 to [0 x i8]*))
+	%32 = alloca i32, align 4
+	store i32 16, i32* %32
+	%33 = alloca %Struct_sockaddr_in, align 4
+	%34 = bitcast %Struct_sockaddr_in* %33 to i8*
+	%35 = bitcast i8* %34 to %Struct_sockaddr*
+	%36 = bitcast %Struct_sockaddr* %35 to %Struct_sockaddr*
+	%37 = call i32 @accept(i32 %1, %Struct_sockaddr* %36, i32* %32)
+	call void @write_file(i32 %37)
+	%38 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @str12 to [0 x i8]*))
 	ret i32 0
 }
 

@@ -103,26 +103,26 @@ break_2:
 
 
 
-%Str = type %Str8;;
-%Char = type i8;;
-%ConstChar = type i8;;
-%SignedChar = type i8;;
-%UnsignedChar = type i8;;
-%Short = type i16;;
-%UnsignedShort = type i16;;
-%Int = type i32;;
-%UnsignedInt = type i32;;
-%LongInt = type i64;;
-%UnsignedLongInt = type i64;;
-%Long = type i64;;
-%UnsignedLong = type i64;;
-%LongLong = type i64;;
-%UnsignedLongLong = type i64;;
-%LongLongInt = type i64;;
-%UnsignedLongLongInt = type i64;;
-%Float = type double;;
-%Double = type double;;
-%LongDouble = type double;;
+%Str = type %Str8;
+%Char = type i8;
+%ConstChar = type i8;
+%SignedChar = type i8;
+%UnsignedChar = type i8;
+%Short = type i16;
+%UnsignedShort = type i16;
+%Int = type i32;
+%UnsignedInt = type i32;
+%LongInt = type i64;
+%UnsignedLongInt = type i64;
+%Long = type i64;
+%UnsignedLong = type i64;
+%LongLong = type i64;
+%UnsignedLongLong = type i64;
+%LongLongInt = type i64;
+%UnsignedLongLongInt = type i64;
+%Float = type double;
+%Double = type double;
+%LongDouble = type double;
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
@@ -130,16 +130,16 @@ break_2:
 
 
 
-%SocklenT = type i32;;
-%SizeT = type i64;;
-%SSizeT = type i64;;
-%IntptrT = type i64;;
-%PtrdiffT = type i8*;;
-%OffT = type i64;;
-%USecondsT = type i32;;
-%PidT = type i32;;
-%UidT = type i32;;
-%GidT = type i32;;
+%SocklenT = type i32;
+%SizeT = type i64;
+%SSizeT = type i64;
+%IntptrT = type i64;
+%PtrdiffT = type i8*;
+%OffT = type i64;
+%USecondsT = type i32;
+%PidT = type i32;
+%UidT = type i32;
+%GidT = type i32;
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
@@ -150,8 +150,8 @@ break_2:
 %File = type opaque
 %FposT = type opaque
 
-%CharStr = type %Str;;
-%ConstCharStr = type %CharStr;;
+%CharStr = type %Str;
+%ConstCharStr = type %CharStr;
 
 
 declare i32 @fclose(%File* %f)
@@ -215,13 +215,15 @@ declare void @perror(%ConstCharStr* %str)
 
 %Type1 = type {
 	i32
-};;
+};
 
 %Type2 = type {
 	i32
-};;
+};
 
-%Type3 = type %Type1;;
+%Type3 = type {
+	i32
+};
 
 
 define void @f0_val(%Type1 %x) {
@@ -290,44 +292,92 @@ define void @f3_ptr({i32}* %x) {
 define void @test_by_value() {
 	%1 = load %Type1, %Type1* @a
 	call void @f0_val(%Type1 %1)
-	%2 = load %Type1, %Type1* @a
-	call void @f1_val(%Type1 %2)
-	%3 = load %Type1, %Type1* @a
-	call void @f2_val(%Type1 %3)
-	%4 = load %Type1, %Type1* @a
-	call void @f3_val(%Type1 %4)
-	%5 = load %Type2, %Type2* @b
-	call void @f0_val(%Type2 %5)
-	%6 = load %Type2, %Type2* @b
-	call void @f1_val(%Type2 %6)
-	%7 = load %Type2, %Type2* @b
-	call void @f2_val(%Type2 %7)
-	%8 = load %Type2, %Type2* @b
-	call void @f3_val(%Type2 %8)
-	%9 = load %Type3, %Type3* @c
-	call void @f0_val(%Type3 %9)
-	%10 = load %Type3, %Type3* @c
-	call void @f1_val(%Type3 %10)
-	%11 = load %Type3, %Type3* @c
-	call void @f2_val(%Type3 %11)
-	%12 = load %Type3, %Type3* @c
-	call void @f3_val(%Type3 %12)
+	; cast_composite_to_composite
+	; JUST
+	; as ptr
+	%2 = bitcast %Type1* @a to %Type2*
+	%3 = load %Type2, %Type2* %2
+	call void @f1_val(%Type2 %3)
+	; cast_composite_to_composite
+	; JUST
+	; as ptr
+	%4 = bitcast %Type1* @a to %Type3*
+	%5 = load %Type3, %Type3* %4
+	call void @f2_val(%Type3 %5)
+	; cast_composite_to_composite
+	; JUST
+	; as ptr
+	%6 = bitcast %Type1* @a to {i32}*
+	%7 = load {i32}, {i32}* %6
+	call void @f3_val({i32} %7)
+	; cast_composite_to_composite
+	; JUST
+	; as ptr
+	%8 = bitcast %Type2* @b to %Type1*
+	%9 = load %Type1, %Type1* %8
+	call void @f0_val(%Type1 %9)
+	%10 = load %Type2, %Type2* @b
+	call void @f1_val(%Type2 %10)
+	; cast_composite_to_composite
+	; JUST
+	; as ptr
+	%11 = bitcast %Type2* @b to %Type3*
+	%12 = load %Type3, %Type3* %11
+	call void @f2_val(%Type3 %12)
+	; cast_composite_to_composite
+	; JUST
+	; as ptr
+	%13 = bitcast %Type2* @b to {i32}*
+	%14 = load {i32}, {i32}* %13
+	call void @f3_val({i32} %14)
+	; cast_composite_to_composite
+	; JUST
+	; as ptr
+	%15 = bitcast %Type3* @c to %Type1*
+	%16 = load %Type1, %Type1* %15
+	call void @f0_val(%Type1 %16)
+	; cast_composite_to_composite
+	; JUST
+	; as ptr
+	%17 = bitcast %Type3* @c to %Type2*
+	%18 = load %Type2, %Type2* %17
+	call void @f1_val(%Type2 %18)
+	%19 = load %Type3, %Type3* @c
+	call void @f2_val(%Type3 %19)
+	; cast_composite_to_composite
+	; JUST
+	; as ptr
+	%20 = bitcast %Type3* @c to {i32}*
+	%21 = load {i32}, {i32}* %20
+	call void @f3_val({i32} %21)
 	ret void
 }
 
 define void @test_by_pointer() {
-	call void @f0_ptr(%Type1* @a)
-	call void @f1_ptr(%Type1* @a)
-	call void @f2_ptr(%Type1* @a)
-	call void @f3_ptr(%Type1* @a)
-	call void @f0_ptr(%Type2* @b)
-	call void @f1_ptr(%Type2* @b)
-	call void @f2_ptr(%Type2* @b)
-	call void @f3_ptr(%Type2* @b)
-	call void @f0_ptr(%Type3* @c)
-	call void @f1_ptr(%Type3* @c)
-	call void @f2_ptr(%Type3* @c)
-	call void @f3_ptr(%Type3* @c)
+	%1 = bitcast %Type1* @a to %Type1*
+	call void @f0_ptr(%Type1* %1)
+	%2 = bitcast %Type1* @a to %Type2*
+	call void @f1_ptr(%Type2* %2)
+	%3 = bitcast %Type1* @a to %Type3*
+	call void @f2_ptr(%Type3* %3)
+	%4 = bitcast %Type1* @a to {i32}*
+	call void @f3_ptr({i32}* %4)
+	%5 = bitcast %Type2* @b to %Type1*
+	call void @f0_ptr(%Type1* %5)
+	%6 = bitcast %Type2* @b to %Type2*
+	call void @f1_ptr(%Type2* %6)
+	%7 = bitcast %Type2* @b to %Type3*
+	call void @f2_ptr(%Type3* %7)
+	%8 = bitcast %Type2* @b to {i32}*
+	call void @f3_ptr({i32}* %8)
+	%9 = bitcast %Type3* @c to %Type1*
+	call void @f0_ptr(%Type1* %9)
+	%10 = bitcast %Type3* @c to %Type2*
+	call void @f1_ptr(%Type2* %10)
+	%11 = bitcast %Type3* @c to %Type3*
+	call void @f2_ptr(%Type3* %11)
+	%12 = bitcast %Type3* @c to {i32}*
+	call void @f3_ptr({i32}* %12)
 	ret void
 }
 

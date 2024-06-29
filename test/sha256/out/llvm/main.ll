@@ -103,26 +103,26 @@ break_2:
 
 
 
-%Str = type %Str8;;
-%Char = type i8;;
-%ConstChar = type i8;;
-%SignedChar = type i8;;
-%UnsignedChar = type i8;;
-%Short = type i16;;
-%UnsignedShort = type i16;;
-%Int = type i32;;
-%UnsignedInt = type i32;;
-%LongInt = type i64;;
-%UnsignedLongInt = type i64;;
-%Long = type i64;;
-%UnsignedLong = type i64;;
-%LongLong = type i64;;
-%UnsignedLongLong = type i64;;
-%LongLongInt = type i64;;
-%UnsignedLongLongInt = type i64;;
-%Float = type double;;
-%Double = type double;;
-%LongDouble = type double;;
+%Str = type %Str8;
+%Char = type i8;
+%ConstChar = type i8;
+%SignedChar = type i8;
+%UnsignedChar = type i8;
+%Short = type i16;
+%UnsignedShort = type i16;
+%Int = type i32;
+%UnsignedInt = type i32;
+%LongInt = type i64;
+%UnsignedLongInt = type i64;
+%Long = type i64;
+%UnsignedLong = type i64;
+%LongLong = type i64;
+%UnsignedLongLong = type i64;
+%LongLongInt = type i64;
+%UnsignedLongLongInt = type i64;
+%Float = type double;
+%Double = type double;
+%LongDouble = type double;
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
@@ -130,16 +130,16 @@ break_2:
 
 
 
-%SocklenT = type i32;;
-%SizeT = type i64;;
-%SSizeT = type i64;;
-%IntptrT = type i64;;
-%PtrdiffT = type i8*;;
-%OffT = type i64;;
-%USecondsT = type i32;;
-%PidT = type i32;;
-%UidT = type i32;;
-%GidT = type i32;;
+%SocklenT = type i32;
+%SizeT = type i64;
+%SSizeT = type i64;
+%IntptrT = type i64;
+%PtrdiffT = type i8*;
+%OffT = type i64;
+%USecondsT = type i32;
+%PidT = type i32;
+%UidT = type i32;
+%GidT = type i32;
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
@@ -150,8 +150,8 @@ break_2:
 %File = type opaque
 %FposT = type opaque
 
-%CharStr = type %Str;;
-%ConstCharStr = type %CharStr;;
+%CharStr = type %Str;
+%ConstCharStr = type %CharStr;
 
 
 declare i32 @fclose(%File* %f)
@@ -225,7 +225,7 @@ declare void @sha256_doHash([0 x i8]* %msg, i32 %msgLen, [32 x i8]* %outHash)
 	[32 x i8], 
 	i32, 
 	[32 x i8]
-};;
+};
 
 
 @test0 = global %SHA256_TestCase {
@@ -427,20 +427,21 @@ body_1:
 	%5 = load i32, i32* %2
 	%6 = getelementptr inbounds [2 x %SHA256_TestCase*], [2 x %SHA256_TestCase*]* @sha256_tests, i32 0, i32 %5
 	%7 = load %SHA256_TestCase*, %SHA256_TestCase** %6
-	%8 = call i1 @sha256_doTest(%SHA256_TestCase* %7)
-	%9 = alloca %Str8*, align 8
-	store %Str8* bitcast ([7 x i8]* @str6 to [0 x i8]*), %Str8** %9
-	br i1 %8 , label %then_0, label %endif_0
+	%8 = bitcast %SHA256_TestCase* %7 to %SHA256_TestCase*
+	%9 = call i1 @sha256_doTest(%SHA256_TestCase* %8)
+	%10 = alloca %Str8*, align 8
+	store %Str8* bitcast ([7 x i8]* @str6 to [0 x i8]*), %Str8** %10
+	br i1 %9 , label %then_0, label %endif_0
 then_0:
-	store %Str8* bitcast ([7 x i8]* @str7 to [0 x i8]*), %Str8** %9
+	store %Str8* bitcast ([7 x i8]* @str7 to [0 x i8]*), %Str8** %10
 	br label %endif_0
 endif_0:
-	%10 = load i32, i32* %2
-	%11 = load %Str8*, %Str8** %9
-	%12 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str8 to [0 x i8]*), i32 %10, %Str8* %11)
-	%13 = load i32, i32* %2
-	%14 = add i32 %13, 1
-	store i32 %14, i32* %2
+	%11 = load i32, i32* %2
+	%12 = load %Str8*, %Str8** %10
+	%13 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str8 to [0 x i8]*), i32 %11, %Str8* %12)
+	%14 = load i32, i32* %2
+	%15 = add i32 %14, 1
+	store i32 %15, i32* %2
 	br label %again_1
 break_1:
 	ret i32 0

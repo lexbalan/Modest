@@ -366,7 +366,9 @@ class Parser:
 	#
 
 	def expr_value(self):
-		return self.expr_value_1()
+		x = self.expr_value_1()
+		#x['nl'] = 0
+		return x
 
 
 	def expr_value_1(self):
