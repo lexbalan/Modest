@@ -3,12 +3,11 @@
 import "libc/stdio"
 
 
+type MyInt Int32
 
 type Node record {
 	next: *Node
 }
-
-type MyInt Int32
 
 
 func main() -> Int {

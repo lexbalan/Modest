@@ -141,6 +141,7 @@ def record_can(to, from_type, method):
 
 
 def value_record_cons(t, v, method, ti):
+	#info("value_record_cons", ti)
 	nv = value_cons_node(t, v, method, ti=ti)
 
 	if type.type_is_generic(v['type']):
