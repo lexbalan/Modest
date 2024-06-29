@@ -7,10 +7,8 @@
 #include <stdbool.h>
 #include <string.h>
 
-/* forward type declaration */
 typedef struct FSM_StateDesc FSM_StateDesc;
 typedef struct FSM FSM;
-/* anon recs */
 
 
 #define fsmNameMaxLength  8

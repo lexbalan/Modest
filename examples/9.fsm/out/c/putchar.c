@@ -5,8 +5,6 @@
 #include <string.h>
 
 #include "./utf.h"
-/* forward type declaration */
-/* anon recs */
 
 
 

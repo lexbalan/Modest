@@ -7,8 +7,6 @@
 #include <stdio.h>
 #include <math.h>
 #include "./minmax.h"
-/* forward type declaration */
-/* anon recs */
 
 
 

@@ -7,10 +7,8 @@
 #include <stdio.h>
 #include <math.h>
 #include "./minmax.h"
-/* forward type declaration */
 typedef struct Point Point;
 typedef struct Line Line;
-/* anon recs */
 
 
 

@@ -5,9 +5,7 @@
 #include <string.h>
 
 #include <string.h>
-/* forward type declaration */
 typedef struct Context Context;
-/* anon recs */
 
 
 #include "sha256.h"

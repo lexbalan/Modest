@@ -5,10 +5,8 @@
 #include <string.h>
 
 #include <stdio.h>
-/* forward type declaration */
 typedef struct Point2D Point2D;
 typedef struct Point3D Point3D;
-/* anon recs */
 
 
 

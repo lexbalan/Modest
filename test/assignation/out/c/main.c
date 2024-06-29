@@ -5,9 +5,7 @@
 #include <string.h>
 
 #include <stdio.h>
-/* forward type declaration */
 typedef struct Point Point;
-/* anon recs */
 
 
 

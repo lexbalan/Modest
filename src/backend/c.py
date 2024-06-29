@@ -1899,12 +1899,11 @@ def run(module, outname):
 	cdirectives(module)
 
 
-	out("\n/* forward type declaration */")
+	#out("\n/* forward type declaration */")
 	for rec_id in module['records']:
 		out("\ntypedef struct %s %s;" % (rec_id, rec_id))
 
-
-	out("\n/* anon recs */")
+	#out("\n/* anonymous records */")
 	for anon_rec in module['anon_recs']:
 		nl_indent()
 		print_type_record(anon_rec, tag=anon_rec['c_anon_id'])

@@ -7,8 +7,6 @@
 #include <stdbool.h>
 #include <string.h>
 
-/* forward type declaration */
-/* anon recs */
 
 uint8_t utf32_to_utf8(uint32_t c, char *buf);
 

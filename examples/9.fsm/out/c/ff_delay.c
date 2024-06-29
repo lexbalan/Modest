@@ -5,8 +5,6 @@
 #include <string.h>
 
 #include <time.h>
-/* forward type declaration */
-/* anon recs */
 
 
 

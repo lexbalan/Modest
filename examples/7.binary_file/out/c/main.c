@@ -6,9 +6,7 @@
 
 #include <string.h>
 #include <stdio.h>
-/* forward type declaration */
 typedef struct Chunk Chunk;
-/* anon recs */
 
 
 

@@ -5,11 +5,9 @@
 #include <string.h>
 
 #include <stdio.h>
-/* forward type declaration */
 typedef struct Type1 Type1;
 typedef struct Type2 Type2;
 typedef struct Type3 Type3;
-/* anon recs */
 struct __anonymous_struct_3 {int32_t x;};
 struct __anonymous_struct_4 {int32_t x;};
 

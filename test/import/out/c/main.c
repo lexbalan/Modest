@@ -6,8 +6,6 @@
 
 #include <stdio.h>
 #include <math.h>
-/* forward type declaration */
-/* anon recs */
 
 // how to find library
 #define library  "libc"

@@ -5,14 +5,12 @@
 #include <string.h>
 
 #include <stdio.h>
-/* forward type declaration */
 typedef struct Point Point;
 typedef struct Mixed1 Mixed1;
 typedef struct Mixed2 Mixed2;
 typedef struct Mixed3 Mixed3;
 typedef struct Mixed4 Mixed4;
 typedef struct X X;
-/* anon recs */
 
 
 

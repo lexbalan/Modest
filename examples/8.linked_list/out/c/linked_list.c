@@ -6,10 +6,8 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-/* forward type declaration */
 typedef struct Node Node;
 typedef struct List List;
-/* anon recs */
 
 
 

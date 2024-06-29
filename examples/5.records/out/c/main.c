@@ -7,10 +7,8 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
-/* forward type declaration */
 typedef struct Point Point;
 typedef struct Line Line;
-/* anon recs */
 
 
 

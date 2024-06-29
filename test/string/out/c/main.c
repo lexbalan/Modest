@@ -6,8 +6,6 @@
 
 #include <stdio.h>
 #include "./utf.h"
-/* forward type declaration */
-/* anon recs */
 
 
 

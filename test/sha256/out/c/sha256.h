@@ -7,8 +7,6 @@
 #include <stdbool.h>
 #include <string.h>
 
-/* forward type declaration */
-/* anon recs */
 
 #define sha256HashSize  32
 

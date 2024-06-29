@@ -7,8 +7,6 @@
 
 #include <stdio.h>
 #include "./putchar.h"
-/* forward type declaration */
-/* anon recs */
 
 //@attribute("c-no-print")
 //import "./main"

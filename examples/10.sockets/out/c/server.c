@@ -7,8 +7,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <arpa/inet.h>
-/* forward type declaration */
-/* anon recs */
 
 
 

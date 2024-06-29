@@ -6,9 +6,7 @@
 
 #include <stdio.h>
 #include "./sha256.h"
-/* forward type declaration */
 typedef struct SHA256_TestCase SHA256_TestCase;
-/* anon recs */
 
 
 

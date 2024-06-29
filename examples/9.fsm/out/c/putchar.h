@@ -7,8 +7,6 @@
 #include <stdbool.h>
 #include <string.h>
 
-/* forward type declaration */
-/* anon recs */
 
 void putchar8(char c);
 void putchar16(uint16_t c);

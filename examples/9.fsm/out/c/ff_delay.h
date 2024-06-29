@@ -7,8 +7,6 @@
 #include <stdbool.h>
 #include <string.h>
 
-/* forward type declaration */
-/* anon recs */
 
 void delay_us(uint64_t us);
 void delay_ms(uint64_t ms);

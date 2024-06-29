@@ -7,8 +7,6 @@
 #include <stdio.h>
 #include <time.h>
 #include <unistd.h>
-/* forward type declaration */
-/* anon recs */
 
 
 
