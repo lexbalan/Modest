@@ -99,7 +99,6 @@ def init():
 	typeInt64 = hlir_type_integer(width=64)
 	typeInt128 = hlir_type_integer(width=128)
 
-
 	#
 	typeNat8 = hlir_type_integer(width=8, signed=False)
 	typeNat16 = hlir_type_integer(width=16, signed=False)
@@ -107,9 +106,9 @@ def init():
 	typeNat64 = hlir_type_integer(width=64, signed=False)
 	typeNat128 = hlir_type_integer(width=128, signed=False)
 
+	#
 	typeFloat32 = hlir_type_float(width=32)
 	typeFloat64 = hlir_type_float(width=64)
-
 
 	# type Nil = Generic(*Unit)
 	typeNil = hlir_type_pointer(to=typeUnit)
