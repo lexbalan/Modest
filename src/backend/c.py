@@ -1637,14 +1637,6 @@ def print_def_type(x):
 
 	newline(n=x['nl'])
 
-	# !
-	if x['afterdef']:
-		if hlir_type.type_is_record(orig_type):
-			print_type_record(orig_type, tag=id['str'])
-			out(";")
-			return
-
-
 	if NO_TYPEDEF_STRUCTS:
 		if hlir_type.type_is_record(orig_type):
 			print_type_record(orig_type, tag=id['str'])

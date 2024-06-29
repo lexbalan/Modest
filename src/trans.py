@@ -2052,15 +2052,6 @@ def def_type(x):
 		nt = hlir_type.hlir_type_undefined(x)
 		module['context'].type_add(id['str'], nt)
 
-
-
-	"""if already_declared:
-		# сохр ссылку на объявление в определении (пока просто на всякий)
-		_def['declaration'] = pre_exist['declaration']
-		# сохр в типе ссылку на определение (пока просто на всякий)
-		pre_exist['definition'] = _def"""
-
-
 	# только теперь обрабатываем поля,
 	# тк там могут быть указатели на саму себя
 	# а мы к этому заранее подготовлись
@@ -2099,32 +2090,19 @@ def def_type(x):
 		'isa': 'def_type',
 		'id': id,
 		'type': None,
-		'afterdef': False,
 		'type': nt,
 		'original_type': ty,
 		'att': [],
 		'ti': x['ti']
 	}
 
-
 	if already_declared:
-		typedef['afterdef'] = True
-		# just overwrite existed 'undefined' type (for records)
-#		pre_exist.update(nt)
-		# and find and remove declaration instruction
+		# LLVM не допускает переопределения типа
+		# (после его декларации (как opaque))
+		# поэтому удаляем
 		if settings.check('backend', 'llvm'):
-			# LLVM не допускает переопределения типа
-			# (после его декларации (как opaque))
-			# поэтому удаляем
 			module_remove_node(module, 'decl_type', id['str'])
 
-		# (на всякий)
-		#nt['declaration'] = pre_exist['declaration']
-
-	#else:
-	#	module['context'].type_add(id['str'], nt)
-
-	#print(nt['aka'])
 	return typedef
 
 
