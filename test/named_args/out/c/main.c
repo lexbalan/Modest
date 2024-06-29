@@ -5,6 +5,8 @@
 #include <string.h>
 
 #include <stdio.h>
+/* forward type declaration */
+/* anon recs */
 
 
 
@@ -15,7 +17,7 @@ int32_t named_args_test(int32_t a, int32_t b, int32_t c)
 }
 
 
-int32_t main()
+int main()
 {
 	printf("test named_args\n");
 

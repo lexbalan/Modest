@@ -5,7 +5,9 @@
 #include <string.h>
 
 #include <string.h>
+/* forward type declaration */
 typedef struct Context Context;
+/* anon recs */
 
 
 #include "sha256.h"
@@ -180,7 +182,7 @@ void sha256_final(Context *ctx, uint8_t *outHash)
 
 	i = i + 1;
 
-	memset(&ctx->data[i], 0, (uint64_t)(n - i));
+	memset(&ctx->data[i], 0, (size_t)(n - i));
 	//ctx.data[i:n-i] = []
 
 	if (ctx->datalen >= 56) {

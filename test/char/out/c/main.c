@@ -5,6 +5,8 @@
 #include <string.h>
 
 #include <stdio.h>
+/* forward type declaration */
+/* anon recs */
 
 
 
@@ -14,7 +16,7 @@
 #define utf32Char  U"🐀"
 
 
-int32_t main()
+int main()
 {
 	printf("test/char\n");
 

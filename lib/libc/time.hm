@@ -7,15 +7,15 @@ import "./ctypes"
 
 
 /* time in seconds since 1970 */
-@property("c_alias", "time_t")
+@property("type.c_alias", "time_t")
 type TimeT Int32
 
 
-@property("c_alias", "clock_t")
+@property("type.c_alias", "clock_t")
 type ClockT UnsignedLong
 
 
-@property("c_alias", "struct tm")
+@property("type.c_alias", "struct tm")
 type Struct_tm record {
 	tm_sec: Int	   // Seconds [0-60]
 	tm_min: Int	   // Minutes [0-59]

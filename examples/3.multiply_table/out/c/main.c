@@ -5,6 +5,8 @@
 #include <string.h>
 
 #include <stdio.h>
+/* forward type declaration */
+/* anon recs */
 
 
 
@@ -23,7 +25,7 @@ void mtab(uint32_t n)
 }
 
 
-int32_t main()
+int main()
 {
 	#define n  (2 * 2)
 	printf("multiply table for %d\n", (int32_t)n);

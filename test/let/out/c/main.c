@@ -5,11 +5,13 @@
 #include <string.h>
 
 #include <stdio.h>
+/* forward type declaration */
+/* anon recs */
 
 
 
 
-int32_t main()
+int main()
 {
 	#define x  127
 	#define y  (x + 1)

@@ -206,7 +206,6 @@ declare void @perror(%ConstCharStr* %str)
 
 
 
-
 %Node = type {
 	%Node*
 };;

@@ -456,11 +456,11 @@ def do_type_record(x):
 	rec['end_nl'] = x['end_nl']
 	# add anon record (before)
 
-	#anon_tag = '__anonymous_struct_%d' % anon_rec_cnt
-	#rec['c_anon_id'] = 'struct ' + anon_tag
+	anon_tag = '__anonymous_struct_%d' % anon_rec_cnt
+	rec['c_anon_id'] = anon_tag
 
 	rec['att'].append('anonymous_record')
-	#module['anon_recs'].append(rec)
+	module['anon_recs'].append(rec)
 	return rec
 
 
@@ -2069,11 +2069,10 @@ def def_type(x):
 	if hlir_type.type_is_bad(ty):
 		return None
 
-
-	"""if 'aka' in ty:
-		del ty['aka']
-		if ty in module['anon_recs']:
-			module['anon_recs'].remove(ty)"""
+	# поскольку этот тип здесь связывается с идентификатором
+	# он уже не анонимный
+	if ty in module['anon_recs']:
+		module['anon_recs'].remove(ty)
 
 	# Замещаем внутренности undefined типа на тип справа
 	# НО! имя даем новое

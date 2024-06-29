@@ -268,7 +268,7 @@ def type_get_aka(t):
 	if 'aka' in t:
 		return t['aka']
 	if 'c_anon_id' in t:
-		return t['c_anon_id']
+		return 'struct ' + t['c_anon_id']
 	return None
 
 
@@ -1910,13 +1910,14 @@ def run(module, outname):
 	cdirectives(module)
 
 
+	out("\n/* forward type declaration */")
 	for rec_id in module['records']:
 		out("\ntypedef struct %s %s;" % (rec_id, rec_id))
 
 
+	out("\n/* anon recs */")
 	for anon_rec in module['anon_recs']:
 		nl_indent()
-		out("/*anon recs*/ ")
 		print_type_record(anon_rec, tag=anon_rec['c_anon_id'])
 		out(";")
 

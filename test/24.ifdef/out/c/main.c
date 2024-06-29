@@ -5,6 +5,8 @@
 #include <string.h>
 
 #include <stdio.h>
+/* forward type declaration */
+/* anon recs */
 
 
 
@@ -15,7 +17,7 @@
 #define hello_world  ("Hello " word_name " world!")
 
 
-int32_t main()
+int main()
 {
 	printf("%s", (char *)hello_world);
 	return 0;

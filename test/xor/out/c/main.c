@@ -5,6 +5,8 @@
 #include <string.h>
 
 #include <stdio.h>
+/* forward type declaration */
+/* anon recs */
 
 
 
@@ -50,7 +52,7 @@ void print_bytes(uint8_t *buf, uint32_t len)
 }
 
 
-int32_t main()
+int main()
 {
 	printf("test xor encrypting\n");
 

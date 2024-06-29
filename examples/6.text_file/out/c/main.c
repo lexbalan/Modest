@@ -5,6 +5,8 @@
 #include <string.h>
 
 #include <stdio.h>
+/* forward type declaration */
+/* anon recs */
 
 
 
@@ -16,7 +18,7 @@ void write_example()
 {
 	printf("run write_example\n");
 
-	File *const fp = fopen(filename, "w");
+	FILE *const fp = fopen(filename, "w");
 
 	if (fp == NULL) {
 		printf("error: cannot create file '%s'", filename);
@@ -33,7 +35,7 @@ void read_example()
 {
 	printf("run read_example\n");
 
-	File *const fp = fopen(filename, "r");
+	FILE *const fp = fopen(filename, "r");
 
 	if (fp == NULL) {
 		printf("error: cannot open file '%s'", filename);
@@ -42,7 +44,7 @@ void read_example()
 
 	printf("file '%s' contains: ", filename);
 	while (true) {
-		const int32_t ch = fgetc(fp);
+		const int ch = fgetc(fp);
 		if (ch == EOF) {
 			break;
 		}
@@ -53,7 +55,7 @@ void read_example()
 }
 
 
-int32_t main()
+int main()
 {
 	printf("text_file example\n");
 	write_example();

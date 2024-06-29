@@ -7,16 +7,16 @@
 
 import "./ctypes"
 
-@property("c_alias", "FILE")
+@property("type.c_alias", "FILE")
 type File
 
-@property("c_alias", "fpos_t")
+@property("type.c_alias", "fpos_t")
 type FposT
 
-@property("c_alias", "char *")
+@property("type.c_alias", "char *")
 type CharStr Str
 
-@property("c_alias", "const char *")
+@property("type.c_alias", "const char *")
 type ConstCharStr CharStr
 
 

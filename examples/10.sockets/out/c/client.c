@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+/* forward type declaration */
+/* anon recs */
 
 
 

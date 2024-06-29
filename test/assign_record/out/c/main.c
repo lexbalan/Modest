@@ -5,7 +5,9 @@
 #include <string.h>
 
 #include <stdio.h>
+/* forward type declaration */
 typedef struct Point Point;
+/* anon recs */
 
 
 
@@ -19,7 +21,7 @@ static Point globalPoint0 = {.x = 10, .y = 20};
 static Point globalPoint1 = {};
 
 
-int32_t main()
+int main()
 {
 	printf("test assign_array\n");
 

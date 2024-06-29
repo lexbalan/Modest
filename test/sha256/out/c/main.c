@@ -6,7 +6,9 @@
 
 #include <stdio.h>
 #include "./sha256.h"
+/* forward type declaration */
 typedef struct SHA256_TestCase SHA256_TestCase;
+/* anon recs */
 
 
 
@@ -78,13 +80,13 @@ bool sha256_doTest(SHA256_TestCase *test)
 }
 
 
-int32_t main()
+int main()
 {
 	printf("test SHA256\n");
 
 	int32_t i;
 	i = 0;
-	while (i < (int32_t)(sizeof(sha256_tests) / sizeof(sha256_tests[0]))) {
+	while (i < (int)(sizeof(sha256_tests) / sizeof(sha256_tests[0]))) {
 		SHA256_TestCase *const test = sha256_tests[i];
 		const bool test_result = sha256_doTest(test);
 

@@ -5,21 +5,28 @@
 #include <string.h>
 
 #include <stdio.h>
+/* forward type declaration */
+typedef struct Type1 Type1;
+typedef struct Type2 Type2;
+typedef struct Type3 Type3;
+/* anon recs */
 struct __anonymous_struct_3 {int32_t x;};
 struct __anonymous_struct_4 {int32_t x;};
 
 
 
-typedef struct {
+struct Type1 {
 	int32_t x;
-} Type1;
+};
 
-typedef struct {
+struct Type2 {
 	int32_t x;
-} Type2;
+};
 
 
-typedef Type1 Type3;
+struct Type3 {
+	int32_t x;
+};
 
 
 void f0_val(Type1 x)
@@ -73,38 +80,38 @@ static Type3 c = {.x = 3};
 void test_by_value()
 {
 	f0_val(a);
-	f1_val(*(Type2 *)&a);
+	f1_val(a);
 	f2_val(a);
-	f3_val(*(struct __anonymous_struct_3 *)&a);
+	f3_val(a);
 
-	f0_val(*(Type1 *)&b);
+	f0_val(b);
 	f1_val(b);
-	f2_val(*(Type3 *)&b);
-	f3_val(*(struct __anonymous_struct_3 *)&b);
+	f2_val(b);
+	f3_val(b);
 
 	f0_val(c);
-	f1_val(*(Type2 *)&c);
+	f1_val(c);
 	f2_val(c);
-	f3_val(*(struct __anonymous_struct_3 *)&c);
+	f3_val(c);
 }
 
 
 void test_by_pointer()
 {
 	f0_ptr(&a);
-	f1_ptr((Type2 *)&a);
+	f1_ptr(&a);
 	f2_ptr(&a);
-	f3_ptr((struct __anonymous_struct_4 *)&a);
+	f3_ptr(&a);
 
-	f0_ptr((Type1 *)&b);
+	f0_ptr(&b);
 	f1_ptr(&b);
-	f2_ptr((Type3 *)&b);
-	f3_ptr((struct __anonymous_struct_4 *)&b);
+	f2_ptr(&b);
+	f3_ptr(&b);
 
 	f0_ptr(&c);
-	f1_ptr((Type2 *)&c);
+	f1_ptr(&c);
 	f2_ptr(&c);
-	f3_ptr((struct __anonymous_struct_4 *)&c);
+	f3_ptr(&c);
 }
 
 

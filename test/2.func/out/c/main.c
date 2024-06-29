@@ -5,6 +5,8 @@
 #include <string.h>
 
 #include <stdio.h>
+/* forward type declaration */
+/* anon recs */
 
 
 
@@ -33,7 +35,7 @@ int32_t sum(int32_t a, int32_t b)
 
 
 // define function main
-int32_t main()
+int main()
 {
 	printf("test func\n");
 

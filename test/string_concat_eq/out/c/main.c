@@ -5,6 +5,8 @@
 #include <string.h>
 
 #include <stdio.h>
+/* forward type declaration */
+/* anon recs */
 
 
 
@@ -18,7 +20,7 @@
 #define test  "test"
 
 
-int32_t main()
+int main()
 {
 	printf("%s\n", (char *)greeting);
 

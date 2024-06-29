@@ -5,6 +5,8 @@
 #include <string.h>
 
 #include <stdio.h>
+/* forward type declaration */
+/* anon recs */
 
 
 
@@ -19,7 +21,7 @@ void array_print(int32_t *pa, int32_t len)
 }
 
 
-int32_t main()
+int main()
 {
 	printf("test slices\n");
 

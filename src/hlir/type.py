@@ -416,19 +416,6 @@ def type_eq_array(a, b, opt):
 	return type_eq(a['of'], b['of'], opt)
 
 
-def type_eq_fields(a, b, opt):
-	if len(a) != len(b): return False
-	for ax, bx in zip(a, b):
-		if ax['id']['str'] != bx['id']['str']: return False
-		if not type_eq(ax['type'], bx['type'], opt): return False
-	return True
-
-
-def type_eq_func(a, b, opt):
-	if not type_eq(a['to'], b['to'], opt): return False
-	return type_eq_fields(a['params'], b['params'], opt)
-
-
 
 def get_type_root_id(t):
 	if t['definition'] != None:
@@ -454,6 +441,27 @@ def get_type_root_id(t):
 
 	return None
 
+
+
+def type_eq_func(a, b, opt):
+	if not type_eq(a['to'], b['to'], opt): return False
+	return type_eq_fields(a['params'], b['params'], opt)
+
+
+
+def type_eq_fields(a, b, opt):
+	if len(a) != len(b): return False
+	for ax, bx in zip(a, b):
+		if ax['id']['str'] != bx['id']['str']: return False
+
+		# простейшая защита от бесконечной рекурсии
+		# для случая когда запись содержит указатель на саму себя
+		# (сравниваем типы полей по указателю)
+		if ax['type'] == bx['type']:
+			return True
+
+		if not type_eq(ax['type'], bx['type'], opt): return False
+	return True
 
 
 def type_eq_record(a, b, opt, nominative=False):
@@ -508,7 +516,6 @@ def type_eq(a, b, opt=[]):
 	# напр для явного приведения в беканде C *volatile uint32_t -> uint32_t
 	if 'att_checking' in opt:
 		if a['att'] != b['att']:
-			print("YELLL")
 			return False
 
 	# дженерик и не дженерик типы не равны
@@ -533,6 +540,7 @@ def type_eq(a, b, opt=[]):
 	elif k == 'char': return type_eq_char(a, b, opt)
 	elif k == 'undefined': return type_eq_undefined(a, b, opt)
 	elif k == 'va_list': return b['kind'] == 'va_list'
+	assert(False)
 	return False
 
 

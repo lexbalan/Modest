@@ -5,7 +5,9 @@
 #include <string.h>
 
 #include <stdio.h>
+/* forward type declaration */
 typedef struct Point Point;
+/* anon recs */
 
 
 
@@ -27,7 +29,7 @@ static int32_t glb_a0[10] = (int32_t[10]){};
 static int32_t glb_a1[10] = (int32_t[10]){64, 53, 42};
 
 
-int32_t main()
+int main()
 {
 	printf("test assignation\n");
 

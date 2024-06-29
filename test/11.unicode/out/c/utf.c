@@ -6,6 +6,8 @@
 #include <string.h>
 
 #include <stdio.h>
+/* forward type declaration */
+/* anon recs */
 
 
 #include "./utf.h"
@@ -104,7 +106,7 @@ void utf16_putchar(uint16_t c)
 void utf32_putchar(uint32_t c)
 {
 	char decoded_buf[4];
-	const int32_t n = (int32_t)utf32_to_utf8(c, (char *)&decoded_buf);
+	const int n = (int)utf32_to_utf8(c, (char *)&decoded_buf);
 
 	int32_t i;
 	i = 0;

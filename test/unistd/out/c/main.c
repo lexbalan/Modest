@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <time.h>
 #include <unistd.h>
+/* forward type declaration */
+/* anon recs */
 
 
 
@@ -15,14 +17,14 @@
 
 char *getenv(char *name);
 
-int32_t main()
+int main()
 {
 	printf("unistd test\n");
 
-	const int32_t pid = getpid();
+	const pid_t pid = getpid();
 	printf("pid = %d\n", pid);
 
-	const int64_t hid = gethostid();
+	const long hid = gethostid();
 	printf("hostid = %ld\n", hid);
 
 	// current control terminal

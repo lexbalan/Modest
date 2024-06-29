@@ -6,6 +6,8 @@
 
 #include <stdio.h>
 #include <math.h>
+/* forward type declaration */
+/* anon recs */
 
 
 
@@ -20,7 +22,7 @@ double squareOfCircle(double radius)
 }
 
 
-int32_t main()
+int main()
 {
 	printf("float test\n");
 

@@ -7,8 +7,10 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
+/* forward type declaration */
 typedef struct Point Point;
 typedef struct Line Line;
+/* anon recs */
 
 
 
@@ -16,8 +18,8 @@ typedef struct Line Line;
 
 
 struct Point {
-	double x;
-	double y;
+	float x;
+	float y;
 };
 
 struct Line {
@@ -32,7 +34,7 @@ static Line line = {
 };
 
 
-static inline double max(double a, double b)
+static inline float max(float a, float b)
 {
 	if (a > b) {
 		return a;
@@ -40,7 +42,7 @@ static inline double max(double a, double b)
 	return b;
 }
 
-static inline double min(double a, double b)
+static inline float min(float a, float b)
 {
 	if (a < b) {
 		return a;
@@ -50,17 +52,17 @@ static inline double min(double a, double b)
 
 
 // Pythagorean theorem
-double distance(Point a, Point b)
+float distance(Point a, Point b)
 {
-	const double dx = max(a.x, b.x) - min(a.x, b.x);
-	const double dy = max(a.y, b.y) - min(a.y, b.y);
+	const float dx = max(a.x, b.x) - min(a.x, b.x);
+	const float dy = max(a.y, b.y) - min(a.y, b.y);
 	const double dx2 = pow(dx, 2);
 	const double dy2 = pow(dy, 2);
 	return sqrt(dx2 + dy2);
 }
 
 
-double lineLength(Line line)
+float lineLength(Line line)
 {
 	return distance(line.a, line.b);
 }
@@ -78,10 +80,10 @@ void ptr_example()
 }
 
 
-int32_t main()
+int main()
 {
 	// by value
-	const double len = lineLength(line);
+	const float len = lineLength(line);
 	printf("line length = %f\n", len);
 
 	ptr_example();

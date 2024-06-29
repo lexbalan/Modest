@@ -7,8 +7,10 @@
 #include <stdio.h>
 #include <math.h>
 #include "./minmax.h"
+/* forward type declaration */
 typedef struct Point Point;
 typedef struct Line Line;
+/* anon recs */
 
 
 
@@ -58,7 +60,7 @@ const Line lines[4] = _lines;
 
 
 // Pythagorean theorem
-double distance(Point a, Point b)
+float distance(Point a, Point b)
 {
 	const double dx = max_float64(a.x, b.x) - min_float64(a.x, b.x);
 	const double dy = max_float64(a.y, b.y) - min_float64(a.y, b.y);
@@ -68,18 +70,18 @@ double distance(Point a, Point b)
 }
 
 
-double lineLength(Line line)
+float lineLength(Line line)
 {
 	return distance(line.a, line.b);
 }
 
 
-int32_t main()
+int main()
 {
-	const double lines_0_len = lineLength(lines[0]);
-	const double lines_1_len = lineLength(lines[1]);
-	const double lines_2_len = lineLength(lines[2]);
-	const double lines_3_len = lineLength(lines[3]);
+	const float lines_0_len = lineLength(lines[0]);
+	const float lines_1_len = lineLength(lines[1]);
+	const float lines_2_len = lineLength(lines[2]);
+	const float lines_3_len = lineLength(lines[3]);
 
 	printf("lines_0_len = %f\n", lines_0_len);
 	printf("lines_1_len = %f\n", lines_1_len);

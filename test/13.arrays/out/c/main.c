@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <math.h>
 #include "./minmax.h"
+/* forward type declaration */
+/* anon recs */
 
 
 
@@ -71,7 +73,7 @@ void test()
 	}
 }
 
-int32_t main()
+int main()
 {
 	// generic array [4]Char8 will be implicit casted to [10]Char8
 
@@ -179,14 +181,14 @@ int32_t main()
 
 	//let aa = [111] + [222] + [333]
 	// cons literal array from var items
-	int32_t int100;
+	int int100;
 	int100 = 100;
-	int32_t int200;
+	int int200;
 	int200 = 200;
-	int32_t int300;
+	int int300;
 	int300 = 300;
 	// immutable, non immediate value (array)
-	const int32_t init_array[3] = {int100, int200, int300};
+	const int init_array[3] = {int100, int200, int300};
 
 	// check local literal array assignation to local array
 	int32_t e[4];

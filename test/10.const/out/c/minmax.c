@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include <string.h>
 
+/* forward type declaration */
+/* anon recs */
 
 
 int32_t min_int32(int32_t a, int32_t b)

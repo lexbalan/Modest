@@ -6,6 +6,8 @@
 
 #include <stdio.h>
 #include "./ff_delay.h"
+/* forward type declaration */
+/* anon recs */
 
 // This is flashlight final state machine example
 // (just for compiler test and language demonstration)

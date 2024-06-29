@@ -5,7 +5,9 @@
 #include <string.h>
 
 #include <stdio.h>
+/* forward type declaration */
 typedef struct Point Point;
+/* anon recs */
 
 
 
@@ -43,7 +45,7 @@ static Point points2[3] = _points;
 
 
 // define function main
-int32_t main()
+int main()
 {
 	printf("test const\n");
 

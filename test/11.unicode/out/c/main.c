@@ -6,6 +6,8 @@
 
 #include <stdio.h>
 #include "./utf.h"
+/* forward type declaration */
+/* anon recs */
 
 
 
@@ -29,7 +31,7 @@ static uint32_t arr_utf32[8] = U"Hello!\n";
 #define string32Const  U"S-t-r-i-n-g-Ω 🐀🎉🦄"
 
 
-int32_t main()
+int main()
 {
 	// indexing of GenericString returns #i symbol code
 	// the symbols have GenericInteger type

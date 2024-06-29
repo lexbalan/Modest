@@ -5,6 +5,8 @@
 #include <string.h>
 
 #include <stdio.h>
+/* forward type declaration */
+/* anon recs */
 
 
 
@@ -13,7 +15,7 @@ static int32_t globalArray0[10] = (int32_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 static int32_t globalArray1[10] = (int32_t[10]){};
 
 
-int32_t main()
+int main()
 {
 	printf("test assign_array\n");
 

@@ -5,12 +5,14 @@
 #include <string.h>
 
 #include <stdio.h>
+/* forward type declaration */
+/* anon recs */
 
 
 
 
 
-int32_t main()
+int main()
 {
 	printf("bool check\nm");
 

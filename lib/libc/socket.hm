@@ -7,30 +7,30 @@ import "ctypes"
 //@c_include("sys/socket.h")
 
 
-@property("c_alias", "in_addr_t")
+@property("type.c_alias", "in_addr_t")
 type In_addr_t Nat32
 
-@property("c_alias", "in_port_t")
+@property("type.c_alias", "in_port_t")
 type In_port_t Nat16
 
-@property("c_alias", "socklen_t")
+@property("type.c_alias", "socklen_t")
 type Socklen_t Nat32
 
 
-@property("c_alias", "struct sockaddr")
+@property("type.c_alias", "struct sockaddr")
 type Struct_sockaddr record {
 	sa_family: UnsignedShort  /* address family */
 	sa_data: [14]Char8		/* up to 14 bytes of direct address */
 }
 
 
-@property("c_alias", "struct in_addr")
+@property("type.c_alias", "struct in_addr")
 type Struct_in_addr record {
 	s_addr: In_addr_t
 }
 
 
-@property("c_alias", "struct sockaddr_in")
+@property("type.c_alias", "struct sockaddr_in")
 type Struct_sockaddr_in record {
 	// @if APPLE
 	sin_len: Nat8

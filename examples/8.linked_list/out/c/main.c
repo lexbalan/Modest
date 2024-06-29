@@ -6,6 +6,8 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+/* forward type declaration */
+/* anon recs */
 
 
 

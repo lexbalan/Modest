@@ -5,8 +5,12 @@
 #include <string.h>
 
 #include <stdio.h>
+/* forward type declaration */
 typedef struct Point2D Point2D;
 typedef struct Point3D Point3D;
+/* anon recs */
+struct __anonymous_struct_3 {uint32_t x; uint32_t y;};
+struct __anonymous_struct_4 {uint32_t x; uint32_t y;};
 
 
 
@@ -26,7 +30,7 @@ struct Point3D {
 #define yy  {.x = 1, .y = 2}
 
 
-int32_t main()
+int main()
 {
 	printf("records test\n");
 
@@ -46,8 +50,8 @@ int32_t main()
 	// compare Point2D with anonymous record
 	Point2D p2d2;
 	p2d2 = p2d0;
-	struct {uint32_t x; uint32_t y;} p2d3;
-	p2d3 = (struct {uint32_t x; uint32_t y;})xx;
+	struct __anonymous_struct_3 p2d3;
+	p2d3 = (struct __anonymous_struct_3)xx;
 
 	if (memcmp(&p2d2, &p2d3, sizeof(Point2D)) == 0) {
 		printf("p2d2 == p2d3\n");
@@ -57,10 +61,10 @@ int32_t main()
 
 
 	// comparison between two anonymous record
-	struct {uint32_t x; uint32_t y;} p2d4;
-	p2d4 = (struct {uint32_t x; uint32_t y;}){.x = 1, .y = 2};
+	struct __anonymous_struct_4 p2d4;
+	p2d4 = (struct __anonymous_struct_4){.x = 1, .y = 2};
 
-	if (memcmp(&p2d3, &p2d4, sizeof(struct {uint32_t x; uint32_t y;})) == 0) {
+	if (memcmp(&p2d3, &p2d4, sizeof(struct __anonymous_struct_3)) == 0) {
 		printf("p2d3 == p2d4\n");
 	} else {
 		printf("p2d3 != p2d4\n");
@@ -68,7 +72,7 @@ int32_t main()
 
 	// comparison between two record (by pointer)
 	Point2D *const pr2 = &p2d2;
-	struct {uint32_t x; uint32_t y;} *const pr3 = &p2d3;
+	struct __anonymous_struct_3 *const pr3 = &p2d3;
 
 	if (memcmp(pr2, pr3, sizeof(Point2D)) == 0) {
 		printf("*pr2 == *pr3\n");
@@ -79,7 +83,7 @@ int32_t main()
 
 	// assign record by pointer
 	*pr2 = (Point2D){.x = 100, .y = 200};
-	*pr3 = (struct {uint32_t x; uint32_t y;}){};
+	*pr3 = (struct __anonymous_struct_3){};
 
 	// cons Point3D from Point2D (record extension)
 	// (it is possible if dst record contained all fields from src record

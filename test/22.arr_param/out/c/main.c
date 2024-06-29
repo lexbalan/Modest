@@ -5,8 +5,10 @@
 #include <string.h>
 
 #include <stdio.h>
+/* forward type declaration */
 typedef struct Point Point;
 typedef struct Pod Pod;
+/* anon recs */
 
 
 
@@ -42,7 +44,7 @@ struct Pod {
 };
 
 
-int32_t main()
+int main()
 {
 	// function returns array
 	struct ret_str_retval returned_string;

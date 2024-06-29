@@ -2,68 +2,68 @@
 
 @pragma("not_included")
 
-@property("c_alias", "char *")
+@property("type.c_alias", "char *")
 type Str Str8
 
-@property("c_alias", "char")
+@property("type.c_alias", "char")
 type Char Char8
 
-@property("c_alias", "const char")
+@property("type.c_alias", "const char")
 type ConstChar Char
 
-@property("c_alias", "signed char")
+@property("type.c_alias", "signed char")
 type SignedChar Int8
 
-@property("c_alias", "unsigned char")
+@property("type.c_alias", "unsigned char")
 type UnsignedChar Nat8
 
 
-@property("c_alias", "short")
+@property("type.c_alias", "short")
 type Short Int16
 
-@property("c_alias", "unsigned short")
+@property("type.c_alias", "unsigned short")
 type UnsignedShort Nat16
 
 
-@property("c_alias", "int")
+@property("type.c_alias", "int")
 type Int Int32
 
-@property("c_alias", "unsigned int")
+@property("type.c_alias", "unsigned int")
 type UnsignedInt Nat32
 
-@property("c_alias", "long int")
+@property("type.c_alias", "long int")
 type LongInt Int32
 
-@property("c_alias", "unsigned long int")
+@property("type.c_alias", "unsigned long int")
 type UnsignedLongInt Nat32
 
 
-@property("c_alias", "long")
+@property("type.c_alias", "long")
 type Long Int32
 
-@property("c_alias", "unsigned long")
+@property("type.c_alias", "unsigned long")
 type UnsignedLong Nat32
 
-@property("c_alias", "long long")
+@property("type.c_alias", "long long")
 type LongLong Int64
 
-@property("c_alias", "unsigned long long")
+@property("type.c_alias", "unsigned long long")
 type UnsignedLongLong Nat64
 
-@property("c_alias", "long long int")
+@property("type.c_alias", "long long int")
 type LongLongInt Int64
 
-@property("c_alias", "unsigned long long int")
+@property("type.c_alias", "unsigned long long int")
 type UnsignedLongLongInt Nat64
 
 
-@property("c_alias", "float")
+@property("type.c_alias", "float")
 type Float Float64
 
-@property("c_alias", "double")
+@property("type.c_alias", "double")
 type Double Float64
 
-@property("c_alias", "long double")
+@property("type.c_alias", "long double")
 type LongDouble Float64
 
 

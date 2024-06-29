@@ -5,12 +5,14 @@
 #include <string.h>
 
 #include <stdio.h>
+/* forward type declaration */
+/* anon recs */
 
 
 
 typedef int32_t NewInt32;
 
-int32_t main()
+int main()
 {
 	printf("test typedef\n");
 

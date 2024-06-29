@@ -5,12 +5,14 @@
 #include <string.h>
 
 #include <stdio.h>
+/* forward type declaration */
+/* anon recs */
 
 
 
 #include "./lib.h"
 
-int32_t main()
+int main()
 {
 	printf("hello from main\n");
 	lib_func();

@@ -5,6 +5,8 @@
 #include <string.h>
 
 #include <stdio.h>
+/* forward type declaration */
+/* anon recs */
 
 
 
@@ -52,7 +54,7 @@ void sumsub64(int64_t a, int64_t b)
 }
 
 
-int32_t main()
+int main()
 {
 	printf("inline asm test\n");
 

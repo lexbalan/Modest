@@ -5,6 +5,8 @@
 #include <string.h>
 
 #include <stdio.h>
+/* forward type declaration */
+/* anon recs */
 
 
 
@@ -24,7 +26,7 @@ uint64_t low_128(unsigned __int128 x)
 }
 
 
-int32_t main()
+int main()
 {
 
 	#define big1  (((__int128)0xFFFFFFFFFFFFFFFF << 64) | ((__int128)0xFFFFFFFFFFFFFFFF))

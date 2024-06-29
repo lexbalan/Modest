@@ -5,10 +5,12 @@
 #include <string.h>
 
 #include <stdio.h>
+/* forward type declaration */
+/* anon recs */
 
 
 
-int32_t main()
+int main()
 {
 	uint16_t check;
 	check = 0x0001;

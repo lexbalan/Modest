@@ -6,6 +6,8 @@
 
 #include <stdio.h>
 #include <math.h>
+/* forward type declaration */
+/* anon recs */
 
 // how to find library
 #define library  "libc"
@@ -19,7 +21,7 @@
 
 
 
-int32_t main()
+int main()
 {
 	printf("Smart import test\n");
 	return 0;

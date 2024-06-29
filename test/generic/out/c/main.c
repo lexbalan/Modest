@@ -5,8 +5,10 @@
 #include <string.h>
 
 #include <stdio.h>
+/* forward type declaration */
 typedef struct Point2D Point2D;
 typedef struct Point3D Point3D;
+/* anon recs */
 
 
 
@@ -18,7 +20,7 @@ bool test_generic_array();
 bool test_generic_record();
 
 
-int32_t main()
+int main()
 {
 	printf("generic types test\n");
 

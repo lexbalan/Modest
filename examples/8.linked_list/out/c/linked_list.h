@@ -7,6 +7,8 @@
 #include <stdbool.h>
 #include <string.h>
 
+/* forward type declaration */
+/* anon recs */
 
 struct List;
 typedef struct List List;

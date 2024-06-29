@@ -6,6 +6,9 @@
 
 #include <string.h>
 #include <stdio.h>
+/* forward type declaration */
+typedef struct Chunk Chunk;
+/* anon recs */
 
 
 
@@ -17,10 +20,10 @@
 
 
 // chunk of data for read/write operations in file
-typedef struct {
+struct Chunk {
 	char id[100];
 	char data[1024];
-} Chunk;
+};
 
 
 void write_example()

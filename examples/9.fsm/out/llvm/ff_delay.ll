@@ -103,26 +103,26 @@ break_2:
 
 
 
-%Str = type %Str8
-%Char = type i8
-%ConstChar = type %Char
-%SignedChar = type i8
-%UnsignedChar = type i8
-%Short = type i16
-%UnsignedShort = type i16
-%Int = type i32
-%UnsignedInt = type i32
-%LongInt = type i64
-%UnsignedLongInt = type i64
-%Long = type i64
-%UnsignedLong = type i64
-%LongLong = type i64
-%UnsignedLongLong = type i64
-%LongLongInt = type i64
-%UnsignedLongLongInt = type i64
-%Float = type double
-%Double = type double
-%LongDouble = type double
+%Str = type %Str8;;
+%Char = type i8;;
+%ConstChar = type i8;;
+%SignedChar = type i8;;
+%UnsignedChar = type i8;;
+%Short = type i16;;
+%UnsignedShort = type i16;;
+%Int = type i32;;
+%UnsignedInt = type i32;;
+%LongInt = type i64;;
+%UnsignedLongInt = type i64;;
+%Long = type i64;;
+%UnsignedLong = type i64;;
+%LongLong = type i64;;
+%UnsignedLongLong = type i64;;
+%LongLongInt = type i64;;
+%UnsignedLongLongInt = type i64;;
+%Float = type double;;
+%Double = type double;;
+%LongDouble = type double;;
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
@@ -130,16 +130,16 @@ break_2:
 
 
 
-%SocklenT = type i32
-%SizeT = type %UnsignedLongInt
-%SSizeT = type %LongInt
-%IntptrT = type i64
-%PtrdiffT = type i8*
-%OffT = type i64
-%USecondsT = type i32
-%PidT = type i32
-%UidT = type i32
-%GidT = type i32
+%SocklenT = type i32;;
+%SizeT = type i64;;
+%SSizeT = type i64;;
+%IntptrT = type i64;;
+%PtrdiffT = type i8*;;
+%OffT = type i64;;
+%USecondsT = type i32;;
+%PidT = type i32;;
+%UidT = type i32;;
+%GidT = type i32;;
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/time.hm
@@ -147,49 +147,49 @@ break_2:
 
 
 
-%TimeT = type i32
-%ClockT = type %UnsignedLong
+%TimeT = type i32;;
+%ClockT = type i64;;
 %Struct_tm = type {
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%LongInt, 
-	%ConstChar*
-}
+	i32, 
+	i32, 
+	i32, 
+	i32, 
+	i32, 
+	i32, 
+	i32, 
+	i32, 
+	i32, 
+	i64, 
+	i8*
+};;
 
 
 
-declare %ClockT @clock()
+declare i64 @clock()
 
 
-declare %Double @difftime(%TimeT %end, %TimeT %beginning)
+declare double @difftime(i32 %end, i32 %beginning)
 
 
-declare %TimeT @mktime(%Struct_tm* %timeptr)
+declare i32 @mktime(%Struct_tm* %timeptr)
 
 
-declare %TimeT @time(%TimeT* %timer)
+declare i32 @time(i32* %timer)
 
 
-declare %Char* @asctime(%Struct_tm* %timeptr)
+declare i8* @asctime(%Struct_tm* %timeptr)
 
 
-declare %Char* @ctime(%TimeT* %timer)
+declare i8* @ctime(i32* %timer)
 
 
-declare %Struct_tm* @gmtime(%TimeT* %timer)
+declare %Struct_tm* @gmtime(i32* %timer)
 
 
-declare %Struct_tm* @localtime(%TimeT* %timer)
+declare %Struct_tm* @localtime(i32* %timer)
 
 
-declare %SizeT @strftime(%Char* %ptr, %SizeT %maxsize, %ConstChar* %format, %Struct_tm* %timeptr)
+declare i64 @strftime(i8* %ptr, i64 %maxsize, i8* %format, %Struct_tm* %timeptr)
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/lightfood/delay.cm
@@ -198,12 +198,12 @@ declare %SizeT @strftime(%Char* %ptr, %SizeT %maxsize, %ConstChar* %format, %Str
 
 
 define void @delay_us(i64 %us) {
-	%1 = call %ClockT @clock()
+	%1 = call i64 @clock()
 	br label %again_1
 again_1:
-	%2 = call %ClockT @clock()
-	%3 = add %ClockT %1, %us
-	%4 = icmp ult %ClockT %2, %3
+	%2 = call i64 @clock()
+	%3 = add i64 %1, %us
+	%4 = icmp ult i64 %2, %3
 	br i1 %4 , label %body_1, label %break_1
 body_1:
 	; just waiting

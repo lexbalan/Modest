@@ -103,26 +103,26 @@ break_2:
 
 
 
-%Str = type %Str8
-%Char = type i8
-%ConstChar = type %Char
-%SignedChar = type i8
-%UnsignedChar = type i8
-%Short = type i16
-%UnsignedShort = type i16
-%Int = type i32
-%UnsignedInt = type i32
-%LongInt = type i64
-%UnsignedLongInt = type i64
-%Long = type i64
-%UnsignedLong = type i64
-%LongLong = type i64
-%UnsignedLongLong = type i64
-%LongLongInt = type i64
-%UnsignedLongLongInt = type i64
-%Float = type double
-%Double = type double
-%LongDouble = type double
+%Str = type %Str8;;
+%Char = type i8;;
+%ConstChar = type i8;;
+%SignedChar = type i8;;
+%UnsignedChar = type i8;;
+%Short = type i16;;
+%UnsignedShort = type i16;;
+%Int = type i32;;
+%UnsignedInt = type i32;;
+%LongInt = type i64;;
+%UnsignedLongInt = type i64;;
+%Long = type i64;;
+%UnsignedLong = type i64;;
+%LongLong = type i64;;
+%UnsignedLongLong = type i64;;
+%LongLongInt = type i64;;
+%UnsignedLongLongInt = type i64;;
+%Float = type double;;
+%Double = type double;;
+%LongDouble = type double;;
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
@@ -130,16 +130,16 @@ break_2:
 
 
 
-%SocklenT = type i32
-%SizeT = type %UnsignedLongInt
-%SSizeT = type %LongInt
-%IntptrT = type i64
-%PtrdiffT = type i8*
-%OffT = type i64
-%USecondsT = type i32
-%PidT = type i32
-%UidT = type i32
-%GidT = type i32
+%SocklenT = type i32;;
+%SizeT = type i64;;
+%SSizeT = type i64;;
+%IntptrT = type i64;;
+%PtrdiffT = type i8*;;
+%OffT = type i64;;
+%USecondsT = type i32;;
+%PidT = type i32;;
+%UidT = type i32;;
+%GidT = type i32;;
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
@@ -150,53 +150,53 @@ break_2:
 %File = type opaque
 %FposT = type opaque
 
-%CharStr = type %Str
-%ConstCharStr = type %CharStr
+%CharStr = type %Str;;
+%ConstCharStr = type %CharStr;;
 
 
-declare %Int @fclose(%File* %f)
-declare %Int @feof(%File* %f)
-declare %Int @ferror(%File* %f)
-declare %Int @fflush(%File* %f)
-declare %Int @fgetpos(%File* %f, %FposT* %pos)
+declare i32 @fclose(%File* %f)
+declare i32 @feof(%File* %f)
+declare i32 @ferror(%File* %f)
+declare i32 @fflush(%File* %f)
+declare i32 @fgetpos(%File* %f, %FposT* %pos)
 declare %File* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
-declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
-declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
+declare i64 @fread(i8* %buf, i64 %size, i64 %count, %File* %f)
+declare i64 @fwrite(i8* %buf, i64 %size, i64 %count, %File* %f)
 declare %File* @freopen(%ConstCharStr* %filename, %ConstCharStr* %mode, %File* %f)
-declare %Int @fseek(%File* %stream, %LongInt %offset, %Int %whence)
-declare %Int @fsetpos(%File* %f, %FposT* %pos)
-declare %LongInt @ftell(%File* %f)
-declare %Int @remove(%ConstCharStr* %filename)
-declare %Int @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
+declare i32 @fseek(%File* %stream, i64 %offset, i32 %whence)
+declare i32 @fsetpos(%File* %f, %FposT* %pos)
+declare i64 @ftell(%File* %f)
+declare i32 @remove(%ConstCharStr* %filename)
+declare i32 @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
 declare void @rewind(%File* %f)
 declare void @setbuf(%File* %f, %CharStr* %buffer)
 
 
-declare %Int @setvbuf(%File* %f, %CharStr* %buffer, %Int %mode, %SizeT %size)
+declare i32 @setvbuf(%File* %f, %CharStr* %buffer, i32 %mode, i64 %size)
 declare %File* @tmpfile()
 declare %CharStr* @tmpnam(%CharStr* %str)
-declare %Int @printf(%ConstCharStr* %s, ...)
-declare %Int @scanf(%ConstCharStr* %s, ...)
-declare %Int @fprintf(%File* %stream, %Str* %format, ...)
-declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
-declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, %VA_List %args)
-declare %Int @vprintf(%ConstCharStr* %format, %VA_List %args)
-declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, %VA_List %args)
-declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, %VA_List %args)
-declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, %VA_List %arg)
-declare %Int @fgetc(%File* %f)
-declare %Int @fputc(%Int %char, %File* %f)
-declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
-declare %Int @fputs(%ConstCharStr* %str, %File* %f)
-declare %Int @getc(%File* %f)
-declare %Int @getchar()
+declare i32 @printf(%ConstCharStr* %s, ...)
+declare i32 @scanf(%ConstCharStr* %s, ...)
+declare i32 @fprintf(%File* %stream, %Str* %format, ...)
+declare i32 @fscanf(%File* %f, %ConstCharStr* %format, ...)
+declare i32 @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
+declare i32 @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
+declare i32 @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
+declare i32 @vprintf(%ConstCharStr* %format, i8* %args)
+declare i32 @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
+declare i32 @vsnprintf(%CharStr* %str, i64 %n, %ConstCharStr* %format, i8* %args)
+declare i32 @__vsnprintf_chk(%CharStr* %dest, i64 %len, i32 %flags, i64 %dstlen, %ConstCharStr* %format, i8* %arg)
+declare i32 @fgetc(%File* %f)
+declare i32 @fputc(i32 %char, %File* %f)
+declare %CharStr* @fgets(%CharStr* %str, i32 %n, %File* %f)
+declare i32 @fputs(%ConstCharStr* %str, %File* %f)
+declare i32 @getc(%File* %f)
+declare i32 @getchar()
 declare %CharStr* @gets(%CharStr* %str)
-declare %Int @putc(%Int %char, %File* %f)
-declare %Int @putchar(%Int %char)
-declare %Int @puts(%ConstCharStr* %str)
-declare %Int @ungetc(%Int %char, %File* %f)
+declare i32 @putc(i32 %char, %File* %f)
+declare i32 @putchar(i32 %char)
+declare i32 @puts(%ConstCharStr* %str)
+declare i32 @ungetc(i32 %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
 
 
@@ -205,19 +205,19 @@ declare void @perror(%ConstCharStr* %str)
 
 
 declare void @abort()
-declare %Int @abs(%Int %x)
-declare %Int @atexit(void ()* %x)
-declare %Double @atof([0 x %ConstChar]* %nptr)
-declare %Int @atoi([0 x %ConstChar]* %nptr)
-declare %LongInt @atol([0 x %ConstChar]* %nptr)
-declare i8* @calloc(%SizeT %num, %SizeT %size)
-declare void @exit(%Int %x)
+declare i32 @abs(i32 %x)
+declare i32 @atexit(void ()* %x)
+declare double @atof([0 x i8]* %nptr)
+declare i32 @atoi([0 x i8]* %nptr)
+declare i64 @atol([0 x i8]* %nptr)
+declare i8* @calloc(i64 %num, i64 %size)
+declare void @exit(i32 %x)
 declare void @free(i8* %ptr)
 declare %Str* @getenv(%Str* %name)
-declare %LongInt @labs(%LongInt %x)
+declare i64 @labs(i64 %x)
 declare %Str* @secure_getenv(%Str* %name)
-declare i8* @malloc(%SizeT %size)
-declare %Int @system([0 x %ConstChar]* %string)
+declare i8* @malloc(i64 %size)
+declare i32 @system([0 x i8]* %string)
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/unistd.hm
@@ -254,249 +254,249 @@ declare %Int @system([0 x %ConstChar]* %string)
 
 
 
-declare %Int @access([0 x %ConstChar]* %path, %Int %amode)
+declare i32 @access([0 x i8]* %path, i32 %amode)
 
 
-declare %UnsignedInt @alarm(%UnsignedInt %seconds)
+declare i32 @alarm(i32 %seconds)
 
 
-declare %Int @brk(i8* %end_data_segment)
+declare i32 @brk(i8* %end_data_segment)
 
 
-declare %Int @chdir([0 x %ConstChar]* %path)
+declare i32 @chdir([0 x i8]* %path)
 
 
-declare %Int @chroot([0 x %ConstChar]* %path)
+declare i32 @chroot([0 x i8]* %path)
 
 
-declare %Int @chown([0 x %ConstChar]* %pathname, %UidT %owner, %GidT %group)
+declare i32 @chown([0 x i8]* %pathname, i32 %owner, i32 %group)
 
 
-declare %Int @close(%Int %fildes)
+declare i32 @close(i32 %fildes)
 
 
-declare %SizeT @confstr(%Int %name, [0 x %Char]* %buf, %SizeT %len)
+declare i64 @confstr(i32 %name, [0 x i8]* %buf, i64 %len)
 
 
-declare [0 x %Char]* @crypt([0 x %ConstChar]* %key, [0 x %ConstChar]* %salt)
+declare [0 x i8]* @crypt([0 x i8]* %key, [0 x i8]* %salt)
 
 
-declare [0 x %Char]* @ctermid([0 x %Char]* %s)
+declare [0 x i8]* @ctermid([0 x i8]* %s)
 
 
-declare [0 x %Char]* @cuserid([0 x %Char]* %s)
+declare [0 x i8]* @cuserid([0 x i8]* %s)
 
 
-declare %Int @dup(%Int %fildes)
+declare i32 @dup(i32 %fildes)
 
 
-declare %Int @dup2(%Int %fildes, %Int %fildes2)
+declare i32 @dup2(i32 %fildes, i32 %fildes2)
 
 
-declare void @encrypt([64 x %Char]* %block, %Int %edflag)
+declare void @encrypt([64 x i8]* %block, i32 %edflag)
 
 
-declare %Int @execl([0 x %ConstChar]* %path, [0 x %ConstChar]* %arg0, ...)
-declare %Int @execle([0 x %ConstChar]* %path, [0 x %ConstChar]* %arg0, ...)
-declare %Int @execlp([0 x %ConstChar]* %file, [0 x %ConstChar]* %arg0, ...)
-declare %Int @execv([0 x %ConstChar]* %path, [0 x %ConstChar]* %argv)
-declare %Int @execve([0 x %ConstChar]* %path, [0 x %ConstChar]* %argv, [0 x %ConstChar]* %envp)
-declare %Int @execvp([0 x %ConstChar]* %file, [0 x %ConstChar]* %argv)
+declare i32 @execl([0 x i8]* %path, [0 x i8]* %arg0, ...)
+declare i32 @execle([0 x i8]* %path, [0 x i8]* %arg0, ...)
+declare i32 @execlp([0 x i8]* %file, [0 x i8]* %arg0, ...)
+declare i32 @execv([0 x i8]* %path, [0 x i8]* %argv)
+declare i32 @execve([0 x i8]* %path, [0 x i8]* %argv, [0 x i8]* %envp)
+declare i32 @execvp([0 x i8]* %file, [0 x i8]* %argv)
 
 
-declare void @_exit(%Int %status)
+declare void @_exit(i32 %status)
 
 
-declare %Int @fchown(%Int %fildes, %UidT %owner, %GidT %group)
+declare i32 @fchown(i32 %fildes, i32 %owner, i32 %group)
 
 
-declare %Int @fchdir(%Int %fildes)
+declare i32 @fchdir(i32 %fildes)
 
 
-declare %Int @fdatasync(%Int %fildes)
+declare i32 @fdatasync(i32 %fildes)
 
 
-declare %PidT @fork()
+declare i32 @fork()
 
 
-declare %LongInt @fpathconf(%Int %fildes, %Int %name)
+declare i64 @fpathconf(i32 %fildes, i32 %name)
 
 
-declare %Int @fsync(%Int %fildes)
+declare i32 @fsync(i32 %fildes)
 
 
-declare %Int @ftruncate(%Int %fildes, %OffT %length)
+declare i32 @ftruncate(i32 %fildes, i64 %length)
 
 
-declare [0 x %Char]* @getcwd([0 x %Char]* %buf, %SizeT %size)
+declare [0 x i8]* @getcwd([0 x i8]* %buf, i64 %size)
 
 
-declare %Int @getdtablesize()
+declare i32 @getdtablesize()
 
 
-declare %GidT @getegid()
+declare i32 @getegid()
 
 
-declare %UidT @geteuid()
+declare i32 @geteuid()
 
 
-declare %GidT @getgid()
+declare i32 @getgid()
 
 
-declare %Int @getgroups(%Int %gidsetsize, [0 x %GidT]* %grouplist)
+declare i32 @getgroups(i32 %gidsetsize, [0 x i32]* %grouplist)
 
 
-declare %Long @gethostid()
+declare i64 @gethostid()
 
 
-declare [0 x %Char]* @getlogin()
+declare [0 x i8]* @getlogin()
 
 
-declare %Int @getlogin_r([0 x %Char]* %name, %SizeT %namesize)
+declare i32 @getlogin_r([0 x i8]* %name, i64 %namesize)
 
 
-declare %Int @getopt(%Int %argc, [0 x %ConstChar]* %argv, [0 x %ConstChar]* %optstring)
+declare i32 @getopt(i32 %argc, [0 x i8]* %argv, [0 x i8]* %optstring)
 
 
-declare %Int @getpagesize()
+declare i32 @getpagesize()
 
 
-declare [0 x %Char]* @getpass([0 x %ConstChar]* %prompt)
+declare [0 x i8]* @getpass([0 x i8]* %prompt)
 
 
-declare %PidT @getpgid(%PidT %pid)
+declare i32 @getpgid(i32 %pid)
 
 
-declare %PidT @getpgrp()
+declare i32 @getpgrp()
 
 
-declare %PidT @getpid()
+declare i32 @getpid()
 
 
-declare %PidT @getppid()
+declare i32 @getppid()
 
 
-declare %PidT @getsid(%PidT %pid)
+declare i32 @getsid(i32 %pid)
 
 
-declare %UidT @getuid()
+declare i32 @getuid()
 
 
-declare [0 x %Char]* @getwd([0 x %Char]* %path_name)
+declare [0 x i8]* @getwd([0 x i8]* %path_name)
 
 
-declare %Int @isatty(%Int %fildes)
+declare i32 @isatty(i32 %fildes)
 
 
-declare %Int @lchown([0 x %ConstChar]* %path, %UidT %owner, %GidT %group)
+declare i32 @lchown([0 x i8]* %path, i32 %owner, i32 %group)
 
 
-declare %Int @link([0 x %ConstChar]* %path1, [0 x %ConstChar]* %path2)
+declare i32 @link([0 x i8]* %path1, [0 x i8]* %path2)
 
 
-declare %Int @lockf(%Int %fildes, %Int %function, %OffT %size)
+declare i32 @lockf(i32 %fildes, i32 %function, i64 %size)
 
 
-declare %OffT @lseek(%Int %fildes, %OffT %offset, %Int %whence)
+declare i64 @lseek(i32 %fildes, i64 %offset, i32 %whence)
 
 
-declare %Int @nice(%Int %incr)
+declare i32 @nice(i32 %incr)
 
 
-declare %LongInt @pathconf([0 x %ConstChar]* %path, %Int %name)
+declare i64 @pathconf([0 x i8]* %path, i32 %name)
 
 
-declare %Int @pause()
+declare i32 @pause()
 
 
-declare %Int @pipe([2 x %Int]* %fildes)
+declare i32 @pipe([2 x i32]* %fildes)
 
 
-declare %SSizeT @pread(%Int %fildes, i8* %buf, %SizeT %nbyte, %OffT %offset)
+declare i64 @pread(i32 %fildes, i8* %buf, i64 %nbyte, i64 %offset)
 
 
-declare %Int @pthread_atfork(void ()* %prepare, void ()* %parent, void ()* %child)
+declare i32 @pthread_atfork(void ()* %prepare, void ()* %parent, void ()* %child)
 
 
-declare %SSizeT @pwrite(%Int %fildes, i8* %buf, %SizeT %nbyte, %OffT %offset)
+declare i64 @pwrite(i32 %fildes, i8* %buf, i64 %nbyte, i64 %offset)
 
 
-declare %SSizeT @read(%Int %fildes, i8* %buf, %SizeT %nbyte)
+declare i64 @read(i32 %fildes, i8* %buf, i64 %nbyte)
 
 
-declare %Int @readlink([0 x %ConstChar]* %path, [0 x %Char]* %buf, %SizeT %bufsize)
+declare i32 @readlink([0 x i8]* %path, [0 x i8]* %buf, i64 %bufsize)
 
 
-declare %Int @rmdir([0 x %ConstChar]* %path)
+declare i32 @rmdir([0 x i8]* %path)
 
 
-declare i8* @sbrk(%IntptrT %incr)
+declare i8* @sbrk(i64 %incr)
 
 
-declare %Int @setgid(%GidT %gid)
+declare i32 @setgid(i32 %gid)
 
 
-declare %Int @setpgid(%PidT %pid, %PidT %pgid)
+declare i32 @setpgid(i32 %pid, i32 %pgid)
 
 
-declare %PidT @setpgrp()
+declare i32 @setpgrp()
 
 
-declare %Int @setregid(%GidT %rgid, %GidT %egid)
+declare i32 @setregid(i32 %rgid, i32 %egid)
 
 
-declare %Int @setreuid(%UidT %ruid, %UidT %euid)
+declare i32 @setreuid(i32 %ruid, i32 %euid)
 
 
-declare %PidT @setsid()
+declare i32 @setsid()
 
 
-declare %Int @setuid(%UidT %uid)
+declare i32 @setuid(i32 %uid)
 
 
-declare %UnsignedInt @sleep(%UnsignedInt %seconds)
+declare i32 @sleep(i32 %seconds)
 
 
-declare void @swab(i8* %src, i8* %dst, %SSizeT %nbytes)
+declare void @swab(i8* %src, i8* %dst, i64 %nbytes)
 
 
-declare %Int @symlink([0 x %ConstChar]* %path1, [0 x %ConstChar]* %path2)
+declare i32 @symlink([0 x i8]* %path1, [0 x i8]* %path2)
 
 
 declare void @sync()
 
 
-declare %LongInt @sysconf(%Int %name)
+declare i64 @sysconf(i32 %name)
 
 
-declare %PidT @tcgetpgrp(%Int %fildes)
+declare i32 @tcgetpgrp(i32 %fildes)
 
 
-declare %Int @tcsetpgrp(%Int %fildes, %PidT %pgid_id)
+declare i32 @tcsetpgrp(i32 %fildes, i32 %pgid_id)
 
 
-declare %Int @truncate([0 x %ConstChar]* %path, %OffT %length)
+declare i32 @truncate([0 x i8]* %path, i64 %length)
 
 
-declare [0 x %Char]* @ttyname(%Int %fildes)
+declare [0 x i8]* @ttyname(i32 %fildes)
 
 
-declare %Int @ttyname_r(%Int %fildes, [0 x %Char]* %name, %SizeT %namesize)
+declare i32 @ttyname_r(i32 %fildes, [0 x i8]* %name, i64 %namesize)
 
 
-declare %USecondsT @ualarm(%USecondsT %useconds, %USecondsT %interval)
+declare i32 @ualarm(i32 %useconds, i32 %interval)
 
 
-declare %Int @unlink([0 x %ConstChar]* %path)
+declare i32 @unlink([0 x i8]* %path)
 
 
-declare %Int @usleep(%USecondsT %useconds)
+declare i32 @usleep(i32 %useconds)
 
 
-declare %PidT @vfork()
+declare i32 @vfork()
 
 
-declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
+declare i64 @write(i32 %fildes, i8* %buf, i64 %nbyte)
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/socket.hm
@@ -504,25 +504,25 @@ declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 
 
 
-%In_addr_t = type i32
-%In_port_t = type i16
-%Socklen_t = type i32
+%In_addr_t = type i32;;
+%In_port_t = type i16;;
+%Socklen_t = type i32;;
 %Struct_sockaddr = type {
-	%UnsignedShort, 
+	i16, 
 	[14 x i8]
-}
+};;
 
 %Struct_in_addr = type {
-	%In_addr_t
-}
+	i32
+};;
 
 %Struct_sockaddr_in = type {
 	i8, 
 	i8, 
-	%UnsignedShort, 
+	i16, 
 	%Struct_in_addr, 
 	[8 x i8]
-}
+};;
 
 
 
@@ -608,18 +608,18 @@ declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 
 
 
-declare %In_addr_t @inet_addr([0 x %ConstChar]* %cp)
+declare i32 @inet_addr([0 x i8]* %cp)
 
 
-declare %Int @socket(%Int %domain, %Int %type, %Int %protocol)
-declare %Int @bind(%Int %sockfd, %Struct_sockaddr* %addr, %Socklen_t %addrlen)
-declare %Int @listen(%Int %sockfd, %Int %backlog)
-declare %Int @connect(%Int %sockfd, %Struct_sockaddr* %addr, %Socklen_t %addrlen)
-declare %SSizeT @send(%Int %socket, i8* %buffer, %SizeT %length, %Int %flags)
-declare %SSizeT @recv(%Int %sockfd, i8* %buf, %SizeT %len, %Int %flags)
+declare i32 @socket(i32 %domain, i32 %type, i32 %protocol)
+declare i32 @bind(i32 %sockfd, %Struct_sockaddr* %addr, i32 %addrlen)
+declare i32 @listen(i32 %sockfd, i32 %backlog)
+declare i32 @connect(i32 %sockfd, %Struct_sockaddr* %addr, i32 %addrlen)
+declare i64 @send(i32 %socket, i8* %buffer, i64 %length, i32 %flags)
+declare i64 @recv(i32 %sockfd, i8* %buf, i64 %len, i32 %flags)
 
 
-declare %Int @accept(%Int %s, %Struct_sockaddr* %addr, %Socklen_t* %addrlen)
+declare i32 @accept(i32 %s, %Struct_sockaddr* %addr, i32* %addrlen)
 
 
 ; -- SOURCE: src/client.cm
@@ -639,27 +639,27 @@ declare %Int @accept(%Int %s, %Struct_sockaddr* %addr, %Socklen_t* %addrlen)
 
 
 
-define void @send_file(%File* %fp, %Int %sockfd) {
+define void @send_file(%File* %fp, i32 %sockfd) {
 	%1 = alloca [1024 x i8], align 1
 	br label %again_1
 again_1:
 	%2 = bitcast [1024 x i8]* %1 to %CharStr*
-	%3 = call %CharStr* @fgets(%CharStr* %2, %Int 1024, %File* %fp)
+	%3 = call %CharStr* @fgets(%CharStr* %2, i32 1024, %File* %fp)
 	%4 = icmp ne %CharStr* %3, null
 	br i1 %4 , label %body_1, label %break_1
 body_1:
 	%5 = bitcast [1024 x i8]* %1 to i8*
-	%6 = call %SSizeT @send(%Int %sockfd, i8* %5, %SizeT 1024, %Int 0)
-	%7 = icmp eq %SSizeT %6, -1
+	%6 = call i64 @send(i32 %sockfd, i8* %5, i64 1024, i32 0)
+	%7 = icmp eq i64 %6, -1
 	br i1 %7 , label %then_0, label %endif_0
 then_0:
 	call void @perror(%ConstCharStr* bitcast ([26 x i8]* @str1 to [0 x i8]*))
-	call void @exit(%Int 1)
+	call void @exit(i32 1)
 	br label %endif_0
 endif_0:
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%8 = zext i16 1024 to i32
+	%8 = zext i11 1024 to i32
 	; -- end vol eval --
 	; -- ZERO
 	%9 = mul i32 %8, 1
@@ -670,22 +670,22 @@ break_1:
 	ret void
 }
 
-define %Int @main() {
-	%1 = call %Int @socket(%Int 2, %Int 1, %Int 0)
-	%2 = icmp slt %Int %1, 0
+define i32 @main() {
+	%1 = call i32 @socket(i32 2, i32 1, i32 0)
+	%2 = icmp slt i32 %1, 0
 	br i1 %2 , label %then_0, label %endif_0
 then_0:
 	call void @perror(%ConstCharStr* bitcast ([20 x i8]* @str2 to [0 x i8]*))
-	call void @exit(%Int 1)
+	call void @exit(i32 1)
 	br label %endif_0
 endif_0:
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str3 to [0 x i8]*))
+	%3 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str3 to [0 x i8]*))
 	%4 = alloca %Struct_sockaddr_in, align 4
 	%5 = insertvalue %Struct_sockaddr_in zeroinitializer, i8 0, 0
 	%6 = insertvalue %Struct_sockaddr_in %5, i8 2, 1
-	%7 = insertvalue %Struct_sockaddr_in %6, %UnsignedShort 8080, 2
-	%8 = call %In_addr_t @inet_addr([0 x %ConstChar]* bitcast ([10 x i8]* @str4 to [0 x i8]*))
-	%9 = insertvalue %Struct_in_addr zeroinitializer, %In_addr_t %8, 0
+	%7 = insertvalue %Struct_sockaddr_in %6, i16 8080, 2
+	%8 = call i32 @inet_addr([0 x i8]* bitcast ([10 x i8]* @str4 to [0 x i8]*))
+	%9 = insertvalue %Struct_in_addr zeroinitializer, i32 %8, 0
 	%10 = insertvalue %Struct_sockaddr_in %7, %Struct_in_addr %9, 3
 	%11 = insertvalue [8 x i8] zeroinitializer, i8 0, 0
 	%12 = insertvalue [8 x i8] %11, i8 0, 1
@@ -699,31 +699,31 @@ endif_0:
 	store %Struct_sockaddr_in %19, %Struct_sockaddr_in* %4
 	%20 = bitcast %Struct_sockaddr_in* %4 to i8*
 	%21 = bitcast i8* %20 to %Struct_sockaddr*
-	%22 = alloca %Int, align 4
-	%23 = call %Int @connect(%Int %1, %Struct_sockaddr* %21, %Socklen_t 16)
-	store %Int %23, %Int* %22
-	%24 = load %Int, %Int* %22
-	%25 = icmp slt %Int %24, 0
+	%22 = alloca i32, align 4
+	%23 = call i32 @connect(i32 %1, %Struct_sockaddr* %21, i32 16)
+	store i32 %23, i32* %22
+	%24 = load i32, i32* %22
+	%25 = icmp slt i32 %24, 0
 	br i1 %25 , label %then_1, label %endif_1
 then_1:
 	call void @perror(%ConstCharStr* bitcast ([24 x i8]* @str5 to [0 x i8]*))
-	call void @exit(%Int 1)
+	call void @exit(i32 1)
 	br label %endif_1
 endif_1:
-	%26 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str6 to [0 x i8]*))
+	%26 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str6 to [0 x i8]*))
 	%27 = call %File* @fopen(%ConstCharStr* bitcast ([9 x i8]* @str7 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str8 to [0 x i8]*))
 	%28 = icmp eq %File* %27, null
 	br i1 %28 , label %then_2, label %endif_2
 then_2:
 	call void @perror(%ConstCharStr* bitcast ([26 x i8]* @str9 to [0 x i8]*))
-	call void @exit(%Int 1)
+	call void @exit(i32 1)
 	br label %endif_2
 endif_2:
-	call void @send_file(%File* %27, %Int %1)
-	%29 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([33 x i8]* @str10 to [0 x i8]*))
-	%30 = call %Int @close(%Int %1)
-	%31 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @str11 to [0 x i8]*))
-	ret %Int 0
+	call void @send_file(%File* %27, i32 %1)
+	%29 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([33 x i8]* @str10 to [0 x i8]*))
+	%30 = call i32 @close(i32 %1)
+	%31 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @str11 to [0 x i8]*))
+	ret i32 0
 }
 
 
