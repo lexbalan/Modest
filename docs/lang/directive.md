@@ -56,7 +56,7 @@
 
 ### Examples
 
-```zig
+```swift
 let systemWidth = 64
 
 @if systemWidth == 32:
@@ -79,24 +79,24 @@ let version = "0.1"
 
 ## Compiler messages
 
-```zig
+```swift
 @info("this is info message")
 ```
-```zig
+```swift
 @warning("this is warning message")
 ```
-```zig
+```swift
 @error("this is error message")
 ```
 
 ## Attributes & Properties
 
-```zig
+```swift
 @attribute("value:volatile")
 var byteFromUart: Byte
 ```
 
-```zig
+```swift
 @property("type.c_alias", "int")
 type Int Int32
 ```
@@ -104,7 +104,7 @@ type Int Int32
 
 ## Pragmas
 
-```zig
+```swift
 // this pragma makes compiler to
 // not print include directive (only for C backend) for this file
 @pragma("not_included")
