@@ -13,7 +13,28 @@ type Node record {
 func main() -> Int {
 	printf("tag test")
 
-	var i: MyInt
+	var i = Nat32 0
+	var j = Nat32 0
+	let n = 5
+	while i < 20 {
+
+		if j == 0 {
+			printf("*")
+		} else {
+			printf("-")
+		}
+
+		if j < n {
+			++j
+		} else {
+			j = 0
+		}
+
+		//printf("%d %% 3 = %d\n", i, i % 3)
+		++i
+	}
+
+	var k: MyInt
 
 	var n0, n1: Node
 

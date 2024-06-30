@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <math.h>
 
+
 // how to find library
 #define library  "libc"
 

@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "./minmax.h"
+
 typedef struct Point Point;
 typedef struct Line Line;
 

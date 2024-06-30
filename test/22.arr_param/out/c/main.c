@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include <stdio.h>
+
 typedef struct Point Point;
 typedef struct Pod Pod;
 

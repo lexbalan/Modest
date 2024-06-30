@@ -7,6 +7,7 @@
 #include <stdbool.h>
 #include <string.h>
 
+
 typedef struct FSM_StateDesc FSM_StateDesc;
 typedef struct FSM FSM;
 

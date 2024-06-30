@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include <stdio.h>
+
 typedef struct Point Point;
 typedef struct Mixed1 Mixed1;
 typedef struct Mixed2 Mixed2;

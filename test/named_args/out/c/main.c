@@ -9,6 +9,7 @@
 
 
 
+
 int32_t named_args_test(int32_t a, int32_t b, int32_t c)
 {
 	return (a - b) * c;

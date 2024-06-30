@@ -13,6 +13,7 @@
 
 
 
+
 #define _constantArray  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 const int8_t constantArray[10] = _constantArray;
 
@@ -235,7 +236,7 @@ int main()
 
 
 	char sa[5];
-	memcpy(&sa, &(char[5]){'L', 'o', 'H', 'i', '!'}, sizeof(char[5]));
+	memcpy(&sa, &(char[5]){"L", "o", "H", "i", "!"}, sizeof(char[5]));
 
 	if (memcmp(&sa[2], &"Hi", sizeof(char[4 - 2])) == 0) {
 		printf("test passed\n");

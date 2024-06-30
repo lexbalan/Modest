@@ -8,6 +8,7 @@
 #include <string.h>
 
 
+
 #define sha256HashSize  32
 
 void sha256_doHash(uint8_t *msg, uint32_t msgLen, uint8_t *outHash);

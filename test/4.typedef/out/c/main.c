@@ -8,6 +8,7 @@
 
 
 
+
 typedef int32_t NewInt32;
 
 int main()

@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include "./sha256.h"
+
 typedef struct SHA256_TestCase SHA256_TestCase;
 
 

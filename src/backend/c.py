@@ -85,6 +85,7 @@ def is_local_context():
 	global cfunc
 	return cfunc != None
 
+
 def is_global_context():
 	global cfunc
 	return cfunc == None
@@ -243,7 +244,6 @@ def print_type_record(t, tag=""):
 	out("}")
 
 
-
 def print_type_enum(t):
 	out("enum {")
 	indent_up()
@@ -258,8 +258,6 @@ def print_type_enum(t):
 	indent_down()
 	nl_indent()
 	out("}")
-
-
 
 
 def type_get_aka(t):
@@ -333,7 +331,6 @@ def print_type(t, space_after=False, array_as_ptr=True, as_const=False):
 
 
 
-
 bin_ops = {
 	'or': '|', 'xor': '^', 'and': '&', 'shl': '<<', 'shr': '>>',
 	'eq': '==', 'ne': '!=', 'lt': '<', 'gt': '>', 'le': '<=', 'ge': '>=',
@@ -390,14 +387,13 @@ def print_value_bin(x, ctx):
 				# для случаев вроде "Hello" + U"World!"
 				# (печатаем сам литерал, тк C иначе не умеет)
 				# (U"Hello World!")
-				print_lit_string(x['asset'], x['type']['width'])
+				print_value_string(x, ctx)
 				return
 
 			print_value(left, need_wrap=need_wrap_left)
 			out(' ')
 			print_value(right, need_wrap=need_wrap_right)
 			return
-
 
 	print_value(left, need_wrap=need_wrap_left)
 	out(' %s ' % bin_ops[op])
@@ -406,7 +402,6 @@ def print_value_bin(x, ctx):
 
 
 def print_value_eq_record(x, ctx):
-
 	return print_value_eq_composite(x, ctx)
 
 
@@ -424,7 +419,6 @@ def print_value_eq_composite(x, ctx):
 
 	memcmp_eq(left, right, op=op)
 	return
-
 
 
 
@@ -662,12 +656,11 @@ def print_value_cons(x, ctx):
 	value = x['value']
 	from_type = value['type']
 
-
 	if hlir_type.type_is_string(from_type):
 		# cast <string literal> to <array of chars>:
 		if hlir_type.type_is_array_of_char(to_type):
 			if to_type['of']['width'] != from_type['width']:
-				print_lit_string(value['asset'], to_type['of']['width'])
+				print_string_literal(value['asset'], to_type['of']['width'])
 				return
 
 		# cast <string literal> to <pointer to array of chars>:
@@ -675,7 +668,7 @@ def print_value_cons(x, ctx):
 			# let genericStringConst = "S-t-r-i-n-g-Ω 🐀🎉🦄"
 			# let string8Const = *Str8 genericStringConst  // <-
 			if to_type['to']['of']['width'] != from_type['width']:
-				print_lit_string(value['asset'], to_type['to']['of']['width'])
+				print_string_literal(value['asset'], to_type['to']['of']['width'])
 				return
 
 		if hlir_type.type_is_char(to_type):
@@ -749,7 +742,6 @@ def print_value_cons(x, ctx):
 	if value['kind'] == 'literal':
 		print_value(value)
 		return
-
 
 	# (!) because
 	# - in Cm int32(-1) -> uint64 => 0x00000000ffffffff
@@ -825,19 +817,25 @@ def print_array_values(values, ctx):
 
 
 
-def print_lit_string(asset, width):
+
+def print_value_string(x, ctx):
+	print_string_literal(x['asset'], x['type']['width'])
+
+def print_value_char(x, ctx):
+	print_char_literal(x['asset'], x['type']['width'])
+
+
+
+def print_string_literal(asset, width):
 	utf32_codes = []
 	for c in asset:
 		utf32_codes.append(ord(c))
-	_print_string_literal(utf32_codes, width)
+	print_utf32codes_as_string(utf32_codes, width)
 
 
-def print_value_string(x, ctx):
-	if 'string_as_char8' in ctx:
-		print_char_lit(ord(x['asset'][0]), 8)
-		return
+def print_char_literal(cc, width):
+	print_utf32codes_as_string([cc], width, quote="'")
 
-	print_lit_string(x['asset'], x['type']['width'])
 
 
 def print_value_array(v, ctx):
@@ -860,7 +858,7 @@ def print_value_array(v, ctx):
 						break
 
 				i = i + 1
-			_print_string_literal(utf32_codes, width=char_width)
+			print_utf32codes_as_string(utf32_codes, width=char_width)
 			return
 
 	out("{")
@@ -959,56 +957,16 @@ def code_to_char(cc):
 		return chr(cc)
 
 
-def _print_string_literal(utf32_codes, width=8):
+def print_utf32codes_as_string(utf32_codes, width=8, quote='"'):
 	prefix = ""
 	if width <= 8: prefix = ""
 	elif width <= 16: prefix = "u"
 	elif width <= 32: prefix = "U"
-
-	out("%s\"" % prefix)
-
-	for cc in utf32_codes:
-		if cc == 0:
-			break
-
-		out(code_to_char(cc))
-
-	out("\"")
-
-
-
-def print_value_string_create(x, ctx, char_width=8):
-	# получаем список кодов из списка char-значений
-	# (формат строки может быть разным UTF-8, UTF-16, UTF-32)
-	codes = []
-	for char in x['asset']:
-		codes.append(char['asset'])
-
-	# (для распечатки нужны только UTF-32 коды)
-	utf32_codes = utfx_chars_to_utf32_chars(codes, char_width)
-
-	# распечатываем (для распечатки нужны только UTF-32 коды)
-	assert(utf32_codes != None)
-	_print_string_literal(utf32_codes, char_width)
-
-
-
-def print_value_char(x, ctx):
-	cc = x['asset']
-	width = x['type']['width']
-	print_char_lit(cc, width)
-
-
-
-def print_char_lit(cc, width):
-	prefix = ""
-	if width > 16: prefix = "U"
-	elif width > 8: prefix = "u"
 	out(prefix)
-	out("'")
-	out(code_to_char(cc))
-	out("'")
-	return
+	out(quote)
+	for cc in utf32_codes:
+		out(code_to_char(cc))
+	out(quote)
 
 
 

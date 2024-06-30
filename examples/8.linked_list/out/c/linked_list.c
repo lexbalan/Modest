@@ -6,6 +6,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+
 typedef struct Node Node;
 typedef struct List List;
 

@@ -7,6 +7,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
+
 typedef struct Point Point;
 typedef struct Line Line;
 

@@ -103,26 +103,26 @@ break_2:
 
 
 
-%Str = type %Str8;;
-%Char = type i8;;
-%ConstChar = type i8;;
-%SignedChar = type i8;;
-%UnsignedChar = type i8;;
-%Short = type i16;;
-%UnsignedShort = type i16;;
-%Int = type i32;;
-%UnsignedInt = type i32;;
-%LongInt = type i64;;
-%UnsignedLongInt = type i64;;
-%Long = type i64;;
-%UnsignedLong = type i64;;
-%LongLong = type i64;;
-%UnsignedLongLong = type i64;;
-%LongLongInt = type i64;;
-%UnsignedLongLongInt = type i64;;
-%Float = type double;;
-%Double = type double;;
-%LongDouble = type double;;
+%Str = type %Str8;
+%Char = type i8;
+%ConstChar = type i8;
+%SignedChar = type i8;
+%UnsignedChar = type i8;
+%Short = type i16;
+%UnsignedShort = type i16;
+%Int = type i32;
+%UnsignedInt = type i32;
+%LongInt = type i64;
+%UnsignedLongInt = type i64;
+%Long = type i64;
+%UnsignedLong = type i64;
+%LongLong = type i64;
+%UnsignedLongLong = type i64;
+%LongLongInt = type i64;
+%UnsignedLongLongInt = type i64;
+%Float = type double;
+%Double = type double;
+%LongDouble = type double;
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
@@ -130,16 +130,16 @@ break_2:
 
 
 
-%SocklenT = type i32;;
-%SizeT = type i64;;
-%SSizeT = type i64;;
-%IntptrT = type i64;;
-%PtrdiffT = type i8*;;
-%OffT = type i64;;
-%USecondsT = type i32;;
-%PidT = type i32;;
-%UidT = type i32;;
-%GidT = type i32;;
+%SocklenT = type i32;
+%SizeT = type i64;
+%SSizeT = type i64;
+%IntptrT = type i64;
+%PtrdiffT = type i8*;
+%OffT = type i64;
+%USecondsT = type i32;
+%PidT = type i32;
+%UidT = type i32;
+%GidT = type i32;
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
@@ -150,8 +150,8 @@ break_2:
 %File = type opaque
 %FposT = type opaque
 
-%CharStr = type %Str;;
-%ConstCharStr = type %CharStr;;
+%CharStr = type %Str;
+%ConstCharStr = type %CharStr;
 
 
 declare i32 @fclose(%File* %f)
@@ -203,31 +203,71 @@ declare void @perror(%ConstCharStr* %str)
 ; -- SOURCE: src/main.cm
 
 @str1 = private constant [9 x i8] [i8 116, i8 97, i8 103, i8 32, i8 116, i8 101, i8 115, i8 116, i8 0]
+@str2 = private constant [2 x i8] [i8 42, i8 0]
+@str3 = private constant [2 x i8] [i8 45, i8 0]
 
 
 
+%MyInt = type i32;
 %Node = type {
 	%Node*
-};;
+};
 
-%MyInt = type i32;;
 
 define i32 @main() {
 	%1 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str1 to [0 x i8]*))
-	%2 = alloca %MyInt, align 4
-	%3 = alloca %Node, align 8
-	%4 = alloca %Node, align 8
-	; здесь происходит проверка типов
-	; и все улетает в бесконечную рекурсию
-	%5 = bitcast %Node* %3 to i8*
-	%6 = bitcast %Node* %4 to i8*
-	
-	%7 = call i1 (i8*, i8*, i64) @memeq( i8* %5, i8* %6, i64 8)
-	%8 = icmp ne i1 %7, 0
-	br i1 %8 , label %then_0, label %endif_0
+	%2 = alloca i32, align 4
+	store i32 0, i32* %2
+	%3 = alloca i32, align 4
+	store i32 0, i32* %3
+	br label %again_1
+again_1:
+	%4 = load i32, i32* %2
+	%5 = icmp ult i32 %4, 20
+	br i1 %5 , label %body_1, label %break_1
+body_1:
+	%6 = load i32, i32* %3
+	%7 = icmp eq i32 %6, 0
+	br i1 %7 , label %then_0, label %else_0
 then_0:
+	%8 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
+	br label %endif_0
+else_0:
+	%9 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str3 to [0 x i8]*))
 	br label %endif_0
 endif_0:
+	%10 = load i32, i32* %3
+	%11 = icmp ult i32 %10, 5
+	br i1 %11 , label %then_1, label %else_1
+then_1:
+	%12 = load i32, i32* %3
+	%13 = add i32 %12, 1
+	store i32 %13, i32* %3
+	br label %endif_1
+else_1:
+	store i32 0, i32* %3
+	br label %endif_1
+endif_1:
+	;printf("%d %% 3 = %d\n", i, i % 3)
+	%14 = load i32, i32* %2
+	%15 = add i32 %14, 1
+	store i32 %15, i32* %2
+	br label %again_1
+break_1:
+	%16 = alloca %MyInt, align 4
+	%17 = alloca %Node, align 8
+	%18 = alloca %Node, align 8
+	; здесь происходит проверка типов
+	; и все улетает в бесконечную рекурсию
+	%19 = bitcast %Node* %17 to i8*
+	%20 = bitcast %Node* %18 to i8*
+	
+	%21 = call i1 (i8*, i8*, i64) @memeq( i8* %19, i8* %20, i64 8)
+	%22 = icmp ne i1 %21, 0
+	br i1 %22 , label %then_2, label %endif_2
+then_2:
+	br label %endif_2
+endif_2:
 	;var s : Tag = #justSymbol
 	ret i32 0
 }

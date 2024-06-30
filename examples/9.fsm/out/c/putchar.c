@@ -8,6 +8,7 @@
 
 
 
+
 void putchar8(char c)
 {
 	utf8_putchar(c);
