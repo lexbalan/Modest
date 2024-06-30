@@ -29,7 +29,6 @@ bool send_file(FILE *fp, int sockfd)
 
 	while (fgets((char *)&data, bufSize, fp) != NULL) {
 		if (send(sockfd, (char *)&data, (size_t)sizeof(char[bufSize]), 0) == -1) {
-			perror("[-] Error in sendung data");
 			return false;
 		}
 		memset(&data, 0, sizeof(char[bufSize]));
@@ -77,6 +76,8 @@ int main()
 	const bool suc = send_file(fp, sockfd);
 	if (suc) {
 		printf("[+] File data send successfully\n");
+	} else {
+		perror("[-] Error in sendung data");
 	}
 
 	close(sockfd);

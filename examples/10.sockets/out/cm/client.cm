@@ -18,7 +18,6 @@ func send_file(fp: *File, sockfd: Int) -> Bool {
 
 	while fgets(&data, bufSize, fp) != nil {
 		if send(sockfd, &data, SizeT sizeof([bufSize]Char8), 0) == -1 {
-			perror("[-] Error in sendung data")
 			return false
 		}
 		data = []  // right size = 1024
@@ -63,6 +62,8 @@ func main() -> Int {
 	let suc = send_file(fp, sockfd)
 	if suc {
 		printf("[+] File data send successfully\n")
+	} else {
+		perror("[-] Error in sendung data")
 	}
 
 	close(sockfd)

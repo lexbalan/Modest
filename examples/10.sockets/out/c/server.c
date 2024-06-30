@@ -21,14 +21,14 @@
 #define bufSize  1024
 
 
-void write_file(int sockfd)
+bool write_file(int sockfd)
 {
 	char buffer[bufSize];
 
 	FILE *const fp = fopen(filename, "w");
 	if (fp == NULL) {
 		perror("[-] Error in creating file");
-		exit(1);
+		return false;
 	}
 
 	while (true) {
@@ -41,6 +41,8 @@ void write_file(int sockfd)
 		fprintf(fp, "%s", (char *)&buffer);
 		memset(&buffer, 0, sizeof(char[bufSize]));
 	}
+
+	return true;
 }
 
 
@@ -87,9 +89,12 @@ int main()
 	struct sockaddr *const sa = (struct sockaddr *)(void *)&new_addr;
 	const int new_sock = accept(sockfd, (struct sockaddr *)sa, &addr_size);
 
-	write_file(new_sock);
-
-	printf("[+] Data written in the text file");
+	const bool suc = write_file(new_sock);
+	if (suc) {
+		printf("[+] Data written in the text file");
+	} else {
+		perror("[-] Cannot write file");
+	}
 
 	return 0;
 }
