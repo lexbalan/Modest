@@ -4,9 +4,9 @@
 let systemWidth = 64
 
 
-@if systemWidth == 64
+@if (systemWidth == 64)
 type CPU_Word Nat64
-@elseif systemWidth == 32
+@elseif (systemWidth == 32)
 type CPU_Word Nat32
 @endif
 

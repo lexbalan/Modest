@@ -1417,27 +1417,16 @@ class Parser:
 		ti = self.ti()
 		x = self.gettok()
 
+		args = []
+		if self.look("("):
+			args = self.parse_arglist()
+
 		dir = {
 			'isa': 'ast_directive',
-			'kind': 'directive',
-			'text': x,
+			'kind': x,
+			'args': args,
 			'ti': ti
 		}
-
-		if x in ['if', 'elseif']:
-			c = self.expr_value()
-			dir['kind'] = x
-			dir['cond'] = c
-		elif x in ['else', 'endif']:
-			dir['kind'] = x
-		elif x in ['info', 'warning', 'error', 'undef']:
-			v = self.expr_value()
-			dir['kind'] = x
-			dir['value'] = v
-		elif x in ['attribute', 'property', 'feature', 'module_att', 'c_include']:
-			args = self.parse_arglist()
-			dir['kind'] = x
-			dir['args'] = args
 
 		return dir
 

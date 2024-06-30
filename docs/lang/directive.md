@@ -59,11 +59,11 @@
 ```swift
 let systemWidth = 64
 
-@if systemWidth == 32:
+@if (systemWidth == 32)
 import "./system32"
-@elseif systemWidth == 64:
+@elseif (systemWidth == 64)
 import "./system64"
-@elseif systemWidth == 128:
+@elseif (systemWidth == 128)
 import "./system128"
 @else
 @error("system not supported")

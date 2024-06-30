@@ -2385,15 +2385,15 @@ def do_directive(x):
 	if kind == 'import':
 		return do_import(x)
 
-	elif kind == 'directive':
+	#elif kind == 'directive':
 		#def module_att(cmd, args):
 		#	exec("%s(%s)" % (cmd, str(args)))
 
-		exec(x['text'])
+	#	exec(x['text'])
 
 	elif kind == 'if':
 		old_production = production
-		c = do_value_immediate(x['cond'])
+		c = do_value_immediate(x['args'][0])
 
 		if value_is_bad(c):
 			return None
@@ -2413,7 +2413,7 @@ def do_directive(x):
 
 	elif kind == 'elseif':
 		production = False
-		c = do_value_immediate(x['cond'])
+		c = do_value_immediate(x['args'][0])
 
 		if value_is_bad(c):
 			return None
@@ -2441,7 +2441,7 @@ def do_directive(x):
 		production = old_production
 
 	elif kind == 'info':
-		v = do_value_immediate_string(x['value'])
+		v = do_value_immediate_string(x['args'][0])
 
 		if value_is_bad(v):
 			fatal("unsuitable value", x['ti'])
@@ -2450,7 +2450,7 @@ def do_directive(x):
 		info(msg, x['ti'])
 
 	elif kind == 'warning':
-		v = do_value_immediate_string(x['value'])
+		v = do_value_immediate_string(x['args'][0])
 
 		if value_is_bad(v):
 			fatal("unsuitable value", x['ti'])
@@ -2459,7 +2459,7 @@ def do_directive(x):
 		warning(msg, x['ti'])
 
 	elif kind == 'error':
-		v = do_value_immediate_string(x['value'])
+		v = do_value_immediate_string(x['args'][0])
 
 		if value_is_bad(v):
 			fatal("unsuitable value", x['ti'])
@@ -2469,7 +2469,7 @@ def do_directive(x):
 		exit(-1)
 
 	elif kind == 'undef':
-		v = do_value_immediate_string(x['value'])
+		v = do_value_immediate_string(x['args'][0])
 		if value_is_bad(v):
 			fatal("unsuitable value", x['ti'])
 		id_str = v['asset']

@@ -4,7 +4,7 @@ import "libc/stdio"
 
 var x: Nat32
 
-@if __defined("x")
+@if (__defined("x"))
 @undef("x")
 var x: Int32
 @endif

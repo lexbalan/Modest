@@ -4,9 +4,9 @@
 
 import "./system"
 
-@if systemWidth == 32
+@if (systemWidth == 32)
 import "./ctypes32"
-@elseif systemWidth == 64
+@elseif (systemWidth == 64)
 import "./ctypes64"
 @else
 @error("C types not implemented")

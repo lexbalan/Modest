@@ -6,11 +6,11 @@ import "libc/stdio"
 let __CPU_WORD_WIDTH = 64
 
 
-@if __CPU_WORD_WIDTH == 32
+@if (__CPU_WORD_WIDTH == 32)
 let word_name = "'32-bit'"
-@elseif __CPU_WORD_WIDTH == 64
+@elseif (__CPU_WORD_WIDTH == 64)
 let word_name = "'64-bit'"
-@elseif __CPU_WORD_WIDTH == 128
+@elseif (__CPU_WORD_WIDTH == 128)
 let word_name = "'128-bit'"
 @else
 let word_name = "'unknown-bit'"
