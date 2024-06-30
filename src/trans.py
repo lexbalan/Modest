@@ -2385,12 +2385,6 @@ def do_directive(x):
 	if kind == 'import':
 		return do_import(x)
 
-	#elif kind == 'directive':
-		#def module_att(cmd, args):
-		#	exec("%s(%s)" % (cmd, str(args)))
-
-	#	exec(x['text'])
-
 	elif kind == 'if':
 		old_production = production
 		c = do_value_immediate(x['args'][0])
@@ -2403,8 +2397,6 @@ def do_directive(x):
 			return None
 
 		cond = c['asset'] != 0
-
-		#print("IF: " + str(cond))
 
 		production = cond
 		if cond:
@@ -2424,16 +2416,11 @@ def do_directive(x):
 
 		cond = c['asset'] != 0
 
-		#print("ELSEIF: " + str(cond))
+		if cond and not skipp:
+			production = True
+			skipp = True  # skip another branches
 
-		if not skipp:
-			if cond:
-				production = True
-				skipp = True  # skip another branches
-
-		#print("skipp after elseif = " + str(skipp))
 	elif kind == 'else':
-		#print("ELSE: " + str(skipp))
 		production = not skipp
 
 	elif kind == 'endif':
@@ -2475,7 +2462,7 @@ def do_directive(x):
 		id_str = v['asset']
 		module['context'].value_undef(id_str)
 		module['context'].type_undef(id_str)
-		#print('undef %d' % x)
+
 	elif kind in 'attribute':
 		attribute_add(x['args'][0]['str'])
 	elif kind == 'property':
