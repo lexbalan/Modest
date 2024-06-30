@@ -66,7 +66,7 @@ import "./system64"
 @elseif systemWidth == 128:
 import "./system128"
 @else
-@error("system not implemented")
+@error("system not supported")
 @endif
 
 
