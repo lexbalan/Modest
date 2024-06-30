@@ -80,13 +80,13 @@ let version = "0.1"
 ## Compiler messages
 
 ```swift
-@info("this is info message")
+@info("this is an info message")
 ```
 ```swift
-@warning("this is warning message")
+@warning("this is a warning message")
 ```
 ```swift
-@error("this is error message")
+@error("this is an error message")
 ```
 
 ## Attributes & Properties
