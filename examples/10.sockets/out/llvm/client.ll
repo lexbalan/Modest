@@ -639,7 +639,7 @@ declare i32 @accept(i32 %s, %Struct_sockaddr* %addr, i32* %addrlen)
 
 
 
-define void @send_file(%File* %fp, i32 %sockfd) {
+define i1 @send_file(%File* %fp, i32 %sockfd) {
 	%1 = alloca [1024 x i8], align 1
 	br label %again_1
 again_1:
@@ -654,20 +654,20 @@ body_1:
 	br i1 %7 , label %then_0, label %endif_0
 then_0:
 	call void @perror(%ConstCharStr* bitcast ([26 x i8]* @str1 to [0 x i8]*))
-	call void @exit(i32 1)
+	ret i1 0
 	br label %endif_0
 endif_0:
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%8 = zext i11 1024 to i32
+	%9 = zext i11 1024 to i32
 	; -- end vol eval --
 	; -- ZERO
-	%9 = mul i32 %8, 1
-	%10 = bitcast [1024 x i8]* %1 to i8*
-	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %10, i8 0, i32 %9, i1 0)
+	%10 = mul i32 %9, 1
+	%11 = bitcast [1024 x i8]* %1 to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %11, i8 0, i32 %10, i1 0)
 	br label %again_1
 break_1:
-	ret void
+	ret i1 1
 }
 
 define i32 @main() {
@@ -720,10 +720,14 @@ then_2:
 	call void @exit(i32 1)
 	br label %endif_2
 endif_2:
-	call void @send_file(%File* %28, i32 %1)
-	%30 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([33 x i8]* @str10 to [0 x i8]*))
-	%31 = call i32 @close(i32 %1)
-	%32 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @str11 to [0 x i8]*))
+	%30 = call i1 @send_file(%File* %28, i32 %1)
+	br i1 %30 , label %then_3, label %endif_3
+then_3:
+	%31 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([33 x i8]* @str10 to [0 x i8]*))
+	br label %endif_3
+endif_3:
+	%32 = call i32 @close(i32 %1)
+	%33 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @str11 to [0 x i8]*))
 	ret i32 0
 }
 

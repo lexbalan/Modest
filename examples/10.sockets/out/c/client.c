@@ -23,17 +23,18 @@
 #define bufSize  1024
 
 
-void send_file(FILE *fp, int sockfd)
+bool send_file(FILE *fp, int sockfd)
 {
 	char data[bufSize];
 
 	while (fgets((char *)&data, bufSize, fp) != NULL) {
 		if (send(sockfd, (char *)&data, (size_t)sizeof(char[bufSize]), 0) == -1) {
 			perror("[-] Error in sendung data");
-			exit(1);
+			return false;
 		}
 		memset(&data, 0, sizeof(char[bufSize]));
 	}
+	return true;
 }
 
 
@@ -72,10 +73,14 @@ int main()
 		exit(1);
 	}
 
-	send_file(fp, sockfd);
-	printf("[+] File data send successfully\n");
+	const bool suc = send_file(fp, sockfd);
+	if (suc) {
+		printf("[+] File data send successfully\n");
+	}
+
 	close(sockfd);
 	printf("[+] Disconnected from the server\n");
+
 	return 0;
 }
 
