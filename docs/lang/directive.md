@@ -8,14 +8,14 @@
 ### Common form
 
 ```
-@if <# value_expression #>
+@if (<# value_expression #>)
 	// code activated
 	// when value_expression is true
 @endif
 ```
 
 ```
-@if <# value_expression #>
+@if (<# value_expression #>)
 	// code activated
 	// when value_expression is true
 @else
@@ -25,10 +25,10 @@
 ```
 
 ```
-@if <# value_expression_1 #>
+@if (<# value_expression_1 #>)
 	// code activated
 	// when value_expression_1 is true
-@elseif <# value_expression_2 #>
+@elseif (<# value_expression_2 #>)
 	// code activated 
 	// when value_expression_1 is false
 	// and value_expression_2 is true
@@ -36,15 +36,15 @@
 ```
 
 ```
-@if <# value_expression_1 #>
+@if (<# value_expression_1 #>)
 	// code activated
 	// when value_expression_1 is true
-@elseif <# value_expression_2 #>
+@elseif (<# value_expression_2 #>)
 	// code activated
 	// when value_expression_1 is false
 	// and value_expression_2 is true
 ...
-@elseif <# value_expression_n #>
+@elseif (<# value_expression_n #>)
 	// code activated
 	// when all value_expressions before are false
 	// and value_expression_n is true
@@ -71,7 +71,7 @@ import "./system128"
 
 
 // using built-in 'function' __defined(id: String) -> Bool
-@if not __defined("version")
+@if (not __defined("version"))
 let version = "0.1"
 @endif
 ```
@@ -95,7 +95,7 @@ let version = "0.1"
 ```swift
 var x: Int32
 
-@if __defined("x")
+@if (__defined("x"))
 @undef("x")
 var x: Nat32
 @endif
