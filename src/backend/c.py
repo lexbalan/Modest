@@ -698,16 +698,19 @@ def print_value_cons(x, ctx):
 			# то мы должны ее привести к требуемому типу
 			is_const = value['kind'] in ['const', 'literal', 'add']
 			if is_const and not 'kostil' in value['att']:
-
 				ctx=['array_as_array']
-				# []Char8 ['L', 'o', 'H', 'i', '!']
-				# печатается как:
-				# (char[5]){"L", "o", "H", "i", "!"}
-				# но это неверно, поэтому добавляем атрибут string_as_charX
-				# (char[5]){'L', 'o', 'H', 'i', '!'}
-				if hlir_type.type_is_string(from_type['of']):
-					char_width = to_type['of']['width']
-					ctx = ctx + ['string_as_char%d' % char_width]
+
+				if hlir_type.type_is_char(to_type['of']):
+					if hlir_type.type_is_string(from_type['of']):
+						char_width = to_type['of']['width']
+
+						chars = []
+						for item in value['items']:
+							ch = item['asset']
+							chars.append(ch)
+
+						print_string_literal(chars, char_width)
+						return
 
 				print_cast(to_type, value, ctx=ctx)
 			else:
@@ -764,7 +767,6 @@ def print_value_cons(x, ctx):
 	#print(" -> ", end='')
 	#type_print(x['type'])
 	#print()
-
 	print_cast(to_type, value, ctx)
 
 
@@ -821,15 +823,17 @@ def print_array_values(values, ctx):
 def print_value_string(x, ctx):
 	print_string_literal(x['asset'], x['type']['width'])
 
+
 def print_value_char(x, ctx):
 	print_char_literal(x['asset'], x['type']['width'])
 
 
 
-def print_string_literal(asset, width):
+def print_string_literal(chars, width):
 	utf32_codes = []
-	for c in asset:
-		utf32_codes.append(ord(c))
+	for ch in chars:
+		cc = ord(ch)
+		utf32_codes.append(cc)
 	print_utf32codes_as_string(utf32_codes, width)
 
 

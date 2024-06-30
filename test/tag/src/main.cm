@@ -2,11 +2,11 @@
 
 import "libc/stdio"
 
-var x: Int32
+var x: Nat32
 
 @if __defined("x")
 @undef("x")
-var x: Nat32
+var x: Int32
 @endif
 
 

@@ -207,7 +207,7 @@ declare void @perror(%ConstCharStr* %str)
 
 
 @x = global i32 zeroinitializer
-
+@x = global i32 zeroinitializer
 
 define i32 @main() {
 	%1 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str1 to [0 x i8]*))
