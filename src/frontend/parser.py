@@ -1399,6 +1399,20 @@ class Parser:
 
 
 
+
+	def parse_arglist(self):
+		self.need("(")
+		args = []
+		while not self.match(")"):
+			arg = None
+			self.skip_tokens([' ', '\t', '\n'])
+			arg_ti = self.ti()
+			arg_value = self.expr_value()
+			args.append(arg_value)
+			self.need_sep(separators=[',', '\n'], stoppers=[')'])
+		return args
+
+
 	def parse_directive(self):
 		ti = self.ti()
 		x = self.gettok()
@@ -1410,39 +1424,24 @@ class Parser:
 			'ti': ti
 		}
 
-		if x == 'if':
+		if x in ['if', 'elseif']:
 			c = self.expr_value()
-			dir['kind'] = 'if'
+			dir['kind'] = x
 			dir['cond'] = c
-		elif x == 'elseif':
-			c = self.expr_value()
-			dir['kind'] = 'elseif'
-			dir['cond'] = c
-		elif x == 'else':
-			dir['kind'] = 'else'
-		elif x == 'endif':
-			dir['kind'] = 'endif'
-		elif x == 'info':
+		elif x in ['else', 'endif']:
+			dir['kind'] = x
+		elif x in ['info', 'warning', 'error', 'undef']:
 			v = self.expr_value()
-			dir['kind'] = 'info'
+			dir['kind'] = x
 			dir['value'] = v
-		elif x == 'warning':
-			v = self.expr_value()
-			dir['kind'] = 'warning'
-			dir['value'] = v
-		elif x == 'error':
-			v = self.expr_value()
-			dir['kind'] = 'error'
-			dir['value'] = v
-		elif x == 'undef':
-			v = self.expr_value()
-			dir['kind'] = 'undef'
-			dir['value'] = v
-		#elif x == 'pragma':
-		#	dir['kind'] = 'pragma'
-
+		elif x in ['attribute', 'property', 'feature', 'pragma', 'c_include']:
+			args = self.parse_arglist()
+			dir['kind'] = x
+			dir['args'] = args
 
 		return dir
+
+
 
 	def skipnl(self):
 		n = 0

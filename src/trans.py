@@ -2477,6 +2477,19 @@ def do_directive(x):
 		module['context'].value_undef(id_str)
 		module['context'].type_undef(id_str)
 		#print('undef %d' % x)
+	elif kind in 'attribute':
+		try:
+			attribute(x['args'][0]['str'])
+		except:
+			info("??", x['ti'])
+	elif kind == 'property':
+		property(x['args'][0]['str'], x['args'][1]['str'])
+	elif kind == 'feature':
+		feature(x['args'][0]['str'])
+	elif kind == 'pragma':
+		pragma(x['args'][0]['str'])
+	elif kind == 'c_include':
+		c_include(x['args'][0]['str'])
 
 	return None
 

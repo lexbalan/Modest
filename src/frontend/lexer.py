@@ -74,30 +74,6 @@ def doId(src):
 	return ('id', token, ti)
 
 
-def doTag(src):
-	c = src.lookup(1)
-
-	if c != '#':
-		return False
-
-	src.getc()
-
-	ti = src.get_ti()
-	s = []
-	while True:
-		j = src.getpos()
-		c = src.getc()
-		if not (c.isalpha() or c.isdigit() or c == '_'):
-			src.setpos(j)
-			break
-		s.append(c)
-
-	token = ''.join(s)
-	ti['len'] = len(token)
-	return ('tag', token, ti)
-
-
-
 def doNumber(src):
 	isfloat = False
 	c = src.lookup(2)
@@ -192,6 +168,29 @@ def doString(src):
 
 
 
+def doTag(src):
+	c = src.lookup(1)
+
+	if c != '#':
+		return False
+
+	src.getc()
+
+	ti = src.get_ti()
+	s = []
+	while True:
+		j = src.getpos()
+		c = src.getc()
+		if not (c.isalpha() or c.isdigit() or c == '_'):
+			src.setpos(j)
+			break
+		s.append(c)
+
+	token = ''.join(s)
+	ti['len'] = len(token)
+	return ('tag', token, ti)
+
+
 def doDirective(src):
 	global line, pos
 
@@ -199,7 +198,25 @@ def doDirective(src):
 	if not s == '@':
 		return False
 
+
+	src.getc()
+
 	ti = src.get_ti()
+	s = []
+	while True:
+		j = src.getpos()
+		c = src.getc()
+		if not (c.isalpha() or c.isdigit() or c == '_'):
+			src.setpos(j)
+			break
+		s.append(c)
+
+	token = ''.join(s)
+	ti['len'] = len(token)
+	return ('directive', token, ti)
+
+
+	"""ti = src.get_ti()
 
 	# skip '@'
 	src.getc()
@@ -244,7 +261,7 @@ def doDirective(src):
 				if text == 'warning':
 					break
 
-	return ('directive', text, ti)
+	return ('directive', text, ti)"""
 
 
 
