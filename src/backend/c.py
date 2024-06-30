@@ -1898,6 +1898,7 @@ def run(module, outname):
 	# search for @c_include("...")
 	cdirectives(module)
 
+	out("\n")
 
 	#out("\n/* forward type declaration */")
 	for rec_id in module['records']:
