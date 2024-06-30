@@ -2,50 +2,24 @@
 
 import "libc/stdio"
 
+var x: Int32
 
-type MyInt Int32
-
-type Node record {
-	next: *Node
-}
+@if __defined("x")
+var x: Nat32
+@endif
 
 
 func main() -> Int {
 	printf("tag test")
 
-	var i = Nat32 0
-	var j = Nat32 0
-	let n = 5
-	while i < 20 {
-
-		if j == 0 {
-			printf("*")
-		} else {
-			printf("-")
-		}
-
-		if j < n {
-			++j
-		} else {
-			j = 0
-		}
-
-		//printf("%d %% 3 = %d\n", i, i % 3)
-		++i
-	}
-
-	var k: MyInt
-
-	var n0, n1: Node
-
-	// здесь происходит проверка типов
-	// и все улетает в бесконечную рекурсию
-	if n0 == n1 {
-
-	}
+	let s = sum(10, 20)
 
 	//var s : Tag = #justSymbol
 
 	return 0
 }
 
+
+func sum(a: Int32, b: Int32) -> Int32 {
+	return a + b
+}

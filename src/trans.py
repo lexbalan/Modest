@@ -101,19 +101,6 @@ def value_get(id_str):
 
 
 
-def defined(id_str):
-	v = type_get(id_str)
-	if v != None:
-		return True
-
-	t = type_get(id_str)
-	if t != None:
-		return True
-
-	return False
-
-
-
 # искать только внутри текущего контекста (блока)
 def value_get_here(id_str):
 	return module['context'].value_get(id_str, recursive=False)
@@ -226,6 +213,7 @@ def init():
 
 	foundation_module = foundation.init()
 
+	global valueTrue, valueFalse, valueNil
 	valueNil = value_integer_create(0, typ=foundation.typeNil)
 	valueTrue = value_bool_create(1)
 	valueFalse = value_bool_create(0)
@@ -867,7 +855,12 @@ def do_value_not(x):
 	nv = value_un('not', v, vtype, ti=x['ti'])
 
 	if value_is_immediate(v):
-		nv['asset'] = ~v['asset']
+		# because: ~(1) = -1 (not 0) !
+		if hlir_type.type_is_bool(vtype):
+			nv['asset'] = not v['asset']
+		else:
+			nv['asset'] = ~v['asset']
+
 		nv['immediate'] = True
 
 	return nv
@@ -998,7 +991,7 @@ def sort_args(params, args):
 
 
 
-def do_value_lengthof(args, ti):
+def do_value_call_lengthof(args, ti):
 	arg = do_rvalue(args[0]['value'])
 
 	if not hlir_type.type_is_array(arg['type']):
@@ -1008,7 +1001,7 @@ def do_value_lengthof(args, ti):
 	return value_lengthof(arg, ti)
 
 
-def do_value_va_start(args, ti):
+def do_value_call_va_start(args, ti):
 	va_list = do_value(args[0]['value'])
 	last_param = do_rvalue(args[1]['value'])
 	return value_va_start(va_list, last_param, ti)
@@ -1020,35 +1013,65 @@ def do_value_va_arg(x):
 	return value_va_arg(va_list, type, x['ti'])
 
 
-def do_value_va_end(args, ti):
+def do_value_call_va_end(args, ti):
 	va_list = do_value(args[0]['value'])
 	return value_va_end(va_list, ti)
 
 
-def do_value_va_copy(args, ti):
+def do_value_call_va_copy(args, ti):
 	va_list0 = do_value(args[0]['value'])
 	va_list1 = do_value(args[1]['value'])
 	return value_va_copy(va_list0, va_list1, ti)
 
 
+def do_value_call_defined(args, ti):
+	global valueTrue, valueFalse
+	id = do_value(args[0]['value'])
+
+	if not hlir_type.type_is_string(id['type']):
+		error("expected string", id['expr_ti'])
+
+	s = id['asset']
+	rc = valueTrue
+	v = value_get(s)
+	if v == None:
+		t = type_get(s)
+		if t == None:
+			rc = valueFalse
+
+	return rc
+
+
+
 def do_value_call(x):
-	if x['left']['kind'] == 'id':
-		id_str = x['left']['id']['str']
-
-		if id_str == 'lengthof':
-			return do_value_lengthof(x['args'], x['ti'])
-		elif id_str == '__va_start':
-			return do_value_va_start(x['args'], x['ti'])
-		elif id_str == '__va_copy':
-			return do_value_va_copy(x['args'], x['ti'])
-		elif id_str == '__va_end':
-			return do_value_va_end(x['args'], x['ti'])
-
+	global undeclared_value_error
+	oe = undeclared_value_error
+	undeclared_value_error = False
 
 	f = do_rvalue(x['left'])
 
+	undeclared_value_error = oe
+
+
 	if value_is_bad(f):
+		if 'unknown' in f['att']:
+			if x['left']['kind'] == 'id':
+				id_str = x['left']['id']['str']
+
+				if id_str == 'lengthof':
+					return do_value_call_lengthof(x['args'], x['ti'])
+				elif id_str == '__va_start':
+					return do_value_call_va_start(x['args'], x['ti'])
+				elif id_str == '__va_copy':
+					return do_value_call_va_copy(x['args'], x['ti'])
+				elif id_str == '__va_end':
+					return do_value_call_va_end(x['args'], x['ti'])
+				elif id_str == '__defined':
+					return do_value_call_defined(x['args'], x['ti'])
+
+		error("undeclared value", f['expr_ti'])
 		return value_bad(x)
+
 
 	ftype = f['type']
 
@@ -1361,20 +1384,24 @@ def do_value_cons(x):
 	return value_cons_explicit(t, v, x['ti'])
 
 
+undeclared_value_error = True
 
 def do_value_id(x):
 	id_str = x['id']['str']
 	v = value_get(id_str)
 
 	if v == None:
-		error("undeclared value '%s'" % id_str, x)
+		# see: do_value_call
+		global undeclared_value_error
+		if undeclared_value_error:
+			error("undeclared value '%s'" % id_str, x)
 
 		# чтобы не генерил ошибки дальше
 		# создадим bad value и пропишем его глобально
 		v = value_bad(x)
 		value_attribute_add(v, 'unknown')
 		module['context'].value_add(id_str, v)
-		return value_bad(x)
+		return v
 
 	if 'usecnt' in v:
 		v['usecnt'] = v['usecnt'] + 1

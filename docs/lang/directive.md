@@ -68,6 +68,12 @@ import "./system128"
 @else
 @error("system not implemented")
 @endif
+
+
+// using built-in 'function' __defined(id: String) -> Bool
+@if not __defined("version")
+let version = "0.1"
+@endif
 ```
 
 
