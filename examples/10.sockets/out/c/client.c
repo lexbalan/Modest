@@ -34,6 +34,7 @@ bool send_file(FILE *fp, int sockfd)
 		}
 		memset(&data, 0, sizeof(char[bufSize]));
 	}
+
 	return true;
 }
 
