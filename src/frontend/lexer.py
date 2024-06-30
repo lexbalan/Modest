@@ -233,6 +233,8 @@ def doDirective(src):
 					break
 				if text == 'error':
 					break
+				if text == 'undef':
+					break
 			elif len(text) == 6:
 				if text == 'elseif':
 					break

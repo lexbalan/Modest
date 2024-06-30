@@ -1434,6 +1434,10 @@ class Parser:
 			v = self.expr_value()
 			dir['kind'] = 'error'
 			dir['value'] = v
+		elif x == 'undef':
+			v = self.expr_value()
+			dir['kind'] = 'undef'
+			dir['value'] = v
 		#elif x == 'pragma':
 		#	dir['kind'] = 'pragma'
 

@@ -2469,6 +2469,15 @@ def do_directive(x):
 		error(msg, x['ti'])
 		exit(-1)
 
+	elif kind == 'undef':
+		v = do_value_immediate_string(x['value'])
+		if value_is_bad(v):
+			fatal("unsuitable value", x['ti'])
+		id_str = v['asset']
+		module['context'].value_undef(id_str)
+		module['context'].type_undef(id_str)
+		#print('undef %d' % x)
+
 	return None
 
 

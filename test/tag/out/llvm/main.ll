@@ -203,73 +203,23 @@ declare void @perror(%ConstCharStr* %str)
 ; -- SOURCE: src/main.cm
 
 @str1 = private constant [9 x i8] [i8 116, i8 97, i8 103, i8 32, i8 116, i8 101, i8 115, i8 116, i8 0]
-@str2 = private constant [2 x i8] [i8 42, i8 0]
-@str3 = private constant [2 x i8] [i8 45, i8 0]
 
 
 
-%MyInt = type i32;
-%Node = type {
-	%Node*
-};
+@x = global i32 zeroinitializer
 
 
 define i32 @main() {
 	%1 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str1 to [0 x i8]*))
-	%2 = alloca i32, align 4
-	store i32 0, i32* %2
-	%3 = alloca i32, align 4
-	store i32 0, i32* %3
-	br label %again_1
-again_1:
-	%4 = load i32, i32* %2
-	%5 = icmp ult i32 %4, 20
-	br i1 %5 , label %body_1, label %break_1
-body_1:
-	%6 = load i32, i32* %3
-	%7 = icmp eq i32 %6, 0
-	br i1 %7 , label %then_0, label %else_0
-then_0:
-	%8 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
-	br label %endif_0
-else_0:
-	%9 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str3 to [0 x i8]*))
-	br label %endif_0
-endif_0:
-	%10 = load i32, i32* %3
-	%11 = icmp ult i32 %10, 5
-	br i1 %11 , label %then_1, label %else_1
-then_1:
-	%12 = load i32, i32* %3
-	%13 = add i32 %12, 1
-	store i32 %13, i32* %3
-	br label %endif_1
-else_1:
-	store i32 0, i32* %3
-	br label %endif_1
-endif_1:
-	;printf("%d %% 3 = %d\n", i, i % 3)
-	%14 = load i32, i32* %2
-	%15 = add i32 %14, 1
-	store i32 %15, i32* %2
-	br label %again_1
-break_1:
-	%16 = alloca %MyInt, align 4
-	%17 = alloca %Node, align 8
-	%18 = alloca %Node, align 8
-	; здесь происходит проверка типов
-	; и все улетает в бесконечную рекурсию
-	%19 = bitcast %Node* %17 to i8*
-	%20 = bitcast %Node* %18 to i8*
-	
-	%21 = call i1 (i8*, i8*, i64) @memeq( i8* %19, i8* %20, i64 8)
-	%22 = icmp ne i1 %21, 0
-	br i1 %22 , label %then_2, label %endif_2
-then_2:
-	br label %endif_2
-endif_2:
+	store i32 -1, i32* @x
+	;let s = sum(10, 20)
 	;var s : Tag = #justSymbol
 	ret i32 0
+}
+
+define i32 @sum(i32 %a, i32 %b) {
+	%1 = add i32 %a, %b
+	ret i32 %1
 }
 
 

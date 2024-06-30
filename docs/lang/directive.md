@@ -89,6 +89,18 @@ let version = "0.1"
 @error("this is an error message")
 ```
 
+## Undef
+
+```swift
+var x: Int32
+
+@if __defined("x")
+@undef("x")
+var x: Nat32
+@endif
+```
+
+
 ## Attributes & Properties
 
 ```swift

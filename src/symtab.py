@@ -43,6 +43,33 @@ class Symtab:
 		return None
 
 
+	def value_undef(self, id):
+		if id in self.values:
+			del self.values[id]
+			return True
+
+		if self.parent != None:
+			self.parent.value_undef(id)
+			return True
+
+		return False
+
+
+	def type_undef(self, id):
+		if id in self.types:
+			del self.types[id]
+			return True
+
+		if self.parent != None:
+			self.parent.type_undef(id)
+			return True
+
+		return False
+
+
+
+
+
 	# creates new symtab where #parent links to this symtab
 	def branch(self, domain='global'):
 		return Symtab(self, domain=domain)

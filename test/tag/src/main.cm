@@ -5,6 +5,7 @@ import "libc/stdio"
 var x: Int32
 
 @if __defined("x")
+@undef("x")
 var x: Nat32
 @endif
 
@@ -12,7 +13,9 @@ var x: Nat32
 func main() -> Int {
 	printf("tag test")
 
-	let s = sum(10, 20)
+	x = -1
+
+	//let s = sum(10, 20)
 
 	//var s : Tag = #justSymbol
 
