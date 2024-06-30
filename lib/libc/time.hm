@@ -1,5 +1,5 @@
 
-@pragma("not_included")
+@module_att("not_included")
 
 import "./ctypes"
 

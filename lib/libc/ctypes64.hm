@@ -1,6 +1,6 @@
 // libc/ctypes64.hm
 
-@pragma("not_included")
+@module_att("not_included")
 
 @property("type.c_alias", "char *")
 type Str Str8

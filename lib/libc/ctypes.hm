@@ -1,6 +1,6 @@
 // libc/ctypes.hm
 
-@pragma("not_included")
+@module_att("not_included")
 
 import "./system"
 

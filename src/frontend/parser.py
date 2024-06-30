@@ -1434,7 +1434,7 @@ class Parser:
 			v = self.expr_value()
 			dir['kind'] = x
 			dir['value'] = v
-		elif x in ['attribute', 'property', 'feature', 'pragma', 'c_include']:
+		elif x in ['attribute', 'property', 'feature', 'module_att', 'c_include']:
 			args = self.parse_arglist()
 			dir['kind'] = x
 			dir['args'] = args

@@ -1,7 +1,7 @@
 // libc/unistd.hm
 // thx: https://pubs.opengroup.org/onlinepubs/7908799/xsh/unistd.h.html
 
-@pragma("not_included")
+@module_att("not_included")
 
 @c_include("unistd.h")
 

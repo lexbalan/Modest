@@ -132,22 +132,21 @@ properties = {}
 
 # used in metadirs
 # add 'properties' to entity descriptor
-def property(id, value):
+def property_add(id, value):
 	global properties
 	properties[id] = value
 
 
 def calias(id):
-	property("value.c_alias", id)
-	property("id.str", id)
+	property_add("value.c_alias", id)
+	property_add("id.str", id)
 
 
 def output_id(id):
-	property()
+	property_add()
 
 
-def pragma(pg):
-	#print("@pragma " +  pg)
+def module_att(pg):
 	if pg == 'not_included':
 		module['att'].append('not_included')
 
@@ -155,7 +154,7 @@ def pragma(pg):
 
 attributes = []
 
-def attribute(at):
+def attribute_add(at):
 	global attributes
 	if isinstance(at, list):
 		attributes.extend(at)
@@ -184,7 +183,7 @@ def insert(s):
 	module_append(directive_insert)
 
 
-def feature(s):
+def feature_add(s):
 	from main import features
 	features.set(s)
 
@@ -2387,7 +2386,7 @@ def do_directive(x):
 		return do_import(x)
 
 	elif kind == 'directive':
-		#def pragma(cmd, args):
+		#def module_att(cmd, args):
 		#	exec("%s(%s)" % (cmd, str(args)))
 
 		exec(x['text'])
@@ -2478,16 +2477,13 @@ def do_directive(x):
 		module['context'].type_undef(id_str)
 		#print('undef %d' % x)
 	elif kind in 'attribute':
-		try:
-			attribute(x['args'][0]['str'])
-		except:
-			info("??", x['ti'])
+		attribute_add(x['args'][0]['str'])
 	elif kind == 'property':
-		property(x['args'][0]['str'], x['args'][1]['str'])
+		property_add(x['args'][0]['str'], x['args'][1]['str'])
 	elif kind == 'feature':
-		feature(x['args'][0]['str'])
-	elif kind == 'pragma':
-		pragma(x['args'][0]['str'])
+		feature_add(x['args'][0]['str'])
+	elif kind == 'module_att':
+		module_att(x['args'][0]['str'])
 	elif kind == 'c_include':
 		c_include(x['args'][0]['str'])
 

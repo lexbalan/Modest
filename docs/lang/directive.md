@@ -120,7 +120,7 @@ type Int Int32
 ```swift
 // this pragma makes compiler to
 // not print include directive (only for C backend) for this file
-@pragma("not_included")
+@module_att("not_included")
 ```
 
 ## Compiler Feature
