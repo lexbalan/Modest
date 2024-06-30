@@ -488,8 +488,6 @@ def print_value_char_create(x, ctx):
 	num = x['asset']
 	if num >= 0x20:
 		out("\"%s\"" % chr(num))
-	elif num == 0:
-		out("\"\\x%x\"" % num)
 	else:
 		out("\"\\x%x\"" % num)
 
