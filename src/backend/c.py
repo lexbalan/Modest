@@ -1921,10 +1921,10 @@ def print_value_as_ptr(x):
 		out("&")
 		# КОСТЫЛЬ!
 		if x['kind'] in ['literal', 'add']:
-			if x['type']['generic'] and value_is_immediate(x):
-				out("(")
-				print_type(yy['type'], array_as_ptr=False)
-				out(")")
+			#if x['type']['generic'] and value_is_immediate(x):
+			out("(")
+			print_type(yy['type'], array_as_ptr=False)
+			out(")")
 
 		print_value(x)
 

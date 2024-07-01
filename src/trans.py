@@ -137,11 +137,6 @@ def property_add(id, value):
 	properties[id] = value
 
 
-def calias(id):
-	property_add("value.c_alias", id)
-	property_add("id.str", id)
-
-
 def output_id(id):
 	property_add()
 
