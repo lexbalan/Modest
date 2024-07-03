@@ -992,26 +992,6 @@ def sort_args(params, args):
 
 
 
-def do_value_unsafe(args, ti):
-	#info("do_value_unsafe", ti)
-
-	# for use 'unsafe' operator
-	# required -funsafe option
-	from main import features
-	if not features.get('unsafe'):
-		error("for use 'unsafe' operator required -funsafe option", ti)
-
-	global unsafe_mode
-	old_unsafe_mode = unsafe_mode
-	unsafe_mode = True
-
-	rv = do_rvalue(args[0]['value'])
-
-	unsafe_mode = old_unsafe_mode
-	return rv
-
-
-
 def do_value_call_lengthof(args, ti):
 	arg = do_rvalue(args[0]['value'])
 
@@ -1079,8 +1059,6 @@ def do_value_call(x):
 			if x['left']['kind'] == 'id':
 				id_str = x['left']['id']['str']
 				args = x['args']
-				if id_str == 'unsafe':
-					return do_value_unsafe(args, x['ti'])
 				if id_str == 'lengthof':
 					return do_value_call_lengthof(args, x['ti'])
 				elif id_str == '__va_start':
@@ -1567,6 +1545,25 @@ def do_value_immediate_string(x):
 	return v
 
 
+def do_value_unsafe(x):
+	#info("do_value_unsafe", ti)
+	ti = x['ti']
+	# for use 'unsafe' operator
+	# required -funsafe option
+	from main import features
+	if not features.get('unsafe'):
+		error("for use 'unsafe' operator required -funsafe option", ti)
+
+	global unsafe_mode
+	old_unsafe_mode = unsafe_mode
+	unsafe_mode = True
+
+	rv = do_rvalue(x['value'])
+
+	unsafe_mode = old_unsafe_mode
+	return rv
+
+
 
 def do_rvalue(x):
 	v = do_value(x)
@@ -1596,6 +1593,7 @@ def do_value(x):
 	elif k == 'access': v = do_value_access(x)
 	elif k == 'negative': v = do_value_neg(x)
 	elif k == 'positive': v = do_value_pos(x)
+	elif k == 'unsafe': v = do_value_unsafe(x)
 	elif k == 'sizeof': v = do_value_sizeof(x)
 	elif k == 'alignof': v = do_value_alignof(x)
 	elif k == 'offsetof': v = do_value_offsetof(x)

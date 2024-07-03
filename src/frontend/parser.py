@@ -600,6 +600,10 @@ class Parser:
 			v = self.expr_value_11()
 			ti['end'] = v['ti']
 			return {'isa': 'ast_value', 'kind': 'negative', 'value': v, 'ti': ti}
+		elif self.match("unsafe"):
+			v = self.expr_value_11()
+			ti['end'] = v['ti']
+			return {'isa': 'ast_value', 'kind': 'unsafe', 'value': v, 'ti': ti}
 		elif self.match("sizeof"):
 			self.match("(")
 			t = self.expr_type()
