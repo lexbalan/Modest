@@ -9,6 +9,8 @@
 
 
 
+//@feature("unsafe")
+
 void array_print(int32_t *pa, int32_t len)
 {
 	int32_t i;
@@ -151,7 +153,7 @@ int main()
 	uint8_t axx;
 	axx = 111;
 	uint8_t bxx;
-	bxx = 257;
+	bxx = 222;
 
 	// not worked with var!
 	#define i2  3

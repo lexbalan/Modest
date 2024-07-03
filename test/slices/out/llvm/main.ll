@@ -226,6 +226,7 @@ declare void @perror(%ConstCharStr* %str)
 
 
 
+
 define void @array_print([0 x i32]* %pa, i32 %len) {
 	%1 = alloca i32, align 4
 	store i32 0, i32* %1
@@ -509,7 +510,7 @@ break_4:
 	%174 = alloca i8, align 1
 	store i8 111, i8* %174
 	%175 = alloca i8, align 1
-	store i8 257, i8* %175
+	store i8 222, i8* %175
 	; not worked with var!
 	; -- STMT ASSIGN ARRAY --
 	%176 = getelementptr inbounds [10 x i32], [10 x i32]* %163, i32 0, i2 3
