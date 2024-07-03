@@ -91,7 +91,7 @@ func print(form: *Str8, ...) {
 				sptr = s
 			} else if c == "c" {
 				// %c for char
-				let c = unsafe(Char8 __va_arg(va, Int32))
+				let c = unsafe Char8 __va_arg(va, Int32)
 				sptr[0] = c
 				sptr[1] = "\0"
 			}
@@ -129,7 +129,7 @@ func sprintf_hex_nat32(buf: *[]Char8, x: Nat32) {
 		let n = d % 16
 		d = d / 16
 
-		cc[i] = n_to_sym(unsafe(Nat8 n))
+		cc[i] = n_to_sym(unsafe Nat8 n)
 		++i
 
 		if d == 0 {
@@ -164,7 +164,7 @@ func sprintf_dec_int32(buf: *[]Char8, x: Int32) {
 	while true {
 		let n = d % 10
 		d = d / 10
-		cc[i] = n_to_sym(unsafe(Nat8 n))
+		cc[i] = n_to_sym(unsafe Nat8 n)
 		++i
 
 		if d == 0 {
@@ -199,7 +199,7 @@ func sprintf_dec_nat32(buf: *[]Char8, x: Nat32) {
 	while true {
 		let n = d % 10
 		d = d / 10
-		cc[i] = n_to_sym(unsafe(Nat8 n))
+		cc[i] = n_to_sym(unsafe Nat8 n)
 		++i
 
 		if d == 0 {

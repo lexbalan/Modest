@@ -285,9 +285,16 @@ class Parser:
 		self.setpos(pos)			   # restore position
 		return result
 
+
+	# TODO: now not used
 	def is_value_expr(self):
-		pos = self.getpos()				# save position
+		pos = self.getpos()				   # save position
 		result = not self.check_is_type()  # check
+
+		# TODO!
+		#if result == False:
+		#	return self.is_value_expr()
+
 		self.setpos(pos)				   # restore position
 		return result
 
@@ -601,7 +608,7 @@ class Parser:
 			ti['end'] = v['ti']
 			return {'isa': 'ast_value', 'kind': 'negative', 'value': v, 'ti': ti}
 		elif self.match("unsafe"):
-			v = self.expr_value_11()
+			v = self.expr_value()
 			ti['end'] = v['ti']
 			return {'isa': 'ast_value', 'kind': 'unsafe', 'value': v, 'ti': ti}
 		elif self.match("sizeof"):
