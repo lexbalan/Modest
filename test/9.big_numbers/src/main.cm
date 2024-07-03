@@ -7,12 +7,12 @@ var big0: Nat128 = 0x0123456789ABCDEFFEDCBA9876543210
 
 
 func high_128(x: Nat128) -> Nat64 {
-	return Nat64 (x >> 64)
+	return unsafe(Nat64 (x >> 64))
 }
 
 
 func low_128(x: Nat128) -> Nat64 {
-	return Nat64 (x and 0xFFFFFFFFFFFFFFFF)
+	return unsafe(Nat64 (x and 0xFFFFFFFFFFFFFFFF))
 }
 
 
@@ -43,7 +43,7 @@ func main() -> Int {
 
 	sig1 = sig1 + 1
 
-	printf("sig1 = %lld\n", Nat64 sig1)
+	printf("sig1 = %lld\n", unsafe(Nat64 sig1))
 
 	return 0
 }

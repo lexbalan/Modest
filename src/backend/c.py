@@ -186,13 +186,18 @@ def _print_type_pointer_to(to, as_const, space_after):
 
 
 
-def print_type_array(t, as_pointer, space_after):
+def print_type_array(t, as_pointer, space_after=False, unk_voume=False):
 	if as_pointer:
 		_print_type_pointer_to(t['of'], as_const='const' in t['att'], space_after=space_after)
 		return
 
 	#assert(t['volume'] != None)
 	print_type(t['of'], space_after=space_after)
+
+	if unk_voume:
+		out("[]")
+		return
+
 	print_array_volume(t)
 
 
@@ -1919,11 +1924,20 @@ def print_value_as_ptr(x):
 		print_value(x)
 	else:
 		out("&")
+
+		t = yy['type']
 		# КОСТЫЛЬ!
 		if x['kind'] in ['literal', 'add']:
-			#if x['type']['generic'] and value_is_immediate(x):
 			out("(")
-			print_type(yy['type'], array_as_ptr=False)
+			if hlir_type.type_is_array(t):
+				# only for ARRAYS
+				if value_is_immediate(t['volume']):
+					print_type_array(t, as_pointer=False)
+				else:
+					print_type_array(t, as_pointer=False, unk_voume=True)
+
+			else:
+				print_type(t, array_as_ptr=False)
 			out(")")
 
 		print_value(x)

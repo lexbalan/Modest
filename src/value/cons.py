@@ -29,8 +29,8 @@ def _do_value_cons(t, v, method, ti):
 		if type.type_is_va_list(v['type']):
 			return value_cons_node(t, v, 'explicit', ti)
 
-		from main import features
-		if features.get('unsafe'):
+		from trans import is_unsafe_mode
+		if is_unsafe_mode():
 			method = 'unsafe'
 
 	constructor = None
@@ -76,8 +76,8 @@ def cons_can(to, from_type, method):
 		if type.type_is_va_list(from_type):
 			return True
 
-		from main import features
-		if features.get('unsafe'):
+		from trans import is_unsafe_mode
+		if is_unsafe_mode():
 			method = 'unsafe'
 
 	checker = None

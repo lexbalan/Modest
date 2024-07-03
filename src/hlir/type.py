@@ -689,9 +689,9 @@ def type_is_forbidden_var(t, zero_array_forbidden=True):
 			return True
 
 		# [0]Int
-		from main import features
+		from trans import is_unsafe_mode
 		from value.value import value_is_immediate
-		if zero_array_forbidden or not features.get('unsafe'):
+		if zero_array_forbidden or not is_unsafe_mode():
 			if value_is_immediate(t['volume']):
 				if t['volume']['asset'] == 0:
 					return True

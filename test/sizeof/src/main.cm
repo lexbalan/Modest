@@ -63,13 +63,13 @@ var x: X
 func main() -> Int {
 	printf("test cast operation\n")
 
-	let start_adr = Nat64 &c
-	printf("off(c) = %llu\n", Nat64 &c - start_adr)
-	printf("off(i) = %llu\n", Nat64 &i - start_adr)
-	printf("off(f) = %llu\n", Nat64 &f - start_adr)
-	printf("off(i2) = %llu\n", Nat64 &i2 - start_adr)
-	printf("off(p) = %llu\n", Nat64 &p - start_adr)
-	printf("off(g) = %llu\n", Nat64 &g - start_adr)
+	let start_adr = unsafe(Nat64 &c)
+	printf("off(c) = %llu\n", unsafe(Nat64 &c) - start_adr)
+	printf("off(i) = %llu\n", unsafe(Nat64 &i) - start_adr)
+	printf("off(f) = %llu\n", unsafe(Nat64 &f) - start_adr)
+	printf("off(i2) = %llu\n", unsafe(Nat64 &i2) - start_adr)
+	printf("off(p) = %llu\n", unsafe(Nat64 &p) - start_adr)
+	printf("off(g) = %llu\n", unsafe(Nat64 &g) - start_adr)
 
 	// дженерики в с явно не приводятся, но нектороые нужно!
 	printf("offsetof(x.c) = %llu\n", Nat64 offsetof(X.c))

@@ -207,19 +207,45 @@ declare void @perror(%ConstCharStr* %str)
 
 
 @x = global i32 zeroinitializer
-@x = global i32 zeroinitializer
+
+
+@y = global i32 zeroinitializer
 
 define i32 @main() {
 	%1 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str1 to [0 x i8]*))
-	store i32 -1, i32* @x
-	;let s = sum(10, 20)
-	;var s : Tag = #justSymbol
+	%2 = alloca [5 x i32], align 4
+	%3 = insertvalue [5 x i32] zeroinitializer, i32 10, 0
+	%4 = insertvalue [5 x i32] %3, i32 20, 1
+	%5 = insertvalue [5 x i32] %4, i32 30, 2
+	%6 = insertvalue [5 x i32] %5, i32 40, 3
+	%7 = insertvalue [5 x i32] %6, i32 50, 4
+	store [5 x i32] %7, [5 x i32]* %2
+	%8 = alloca i8, align 1
+	store i8 11, i8* %8
+	%9 = alloca i8, align 1
+	store i8 12, i8* %9
+	; not worked with var!
+	; -- STMT ASSIGN ARRAY --
+	%10 = getelementptr inbounds [5 x i32], [5 x i32]* %2, i32 0, i2 3
+	%11 = bitcast i32* %10 to [2 x i32]*
+	; -- start vol eval --
+	%12 = zext i2 2 to i32
+	; -- end vol eval --
+	; cast_array_to_array
+	%13 = load i8, i8* %8
+	%14 = sext i8 %13 to i32
+	%15 = load i8, i8* %9
+	%16 = sext i8 %15 to i32
+	%17 = insertvalue [2 x i32] zeroinitializer, i32 %14, 0
+	%18 = insertvalue [2 x i32] %17, i32 %16, 1
+	; cast_composite_to_composite
+	; trunk
+	%19 = alloca [2 x i32]
+	store [2 x i32] %18, [2 x i32]* %19
+	%20 = bitcast [2 x i32]* %19 to [2 x i32]*
+	%21 = load [2 x i32], [2 x i32]* %20
+	store [2 x i32] %21, [2 x i32]* %11
 	ret i32 0
-}
-
-define i32 @sum(i32 %a, i32 %b) {
-	%1 = add i32 %a, %b
-	ret i32 %1
 }
 
 

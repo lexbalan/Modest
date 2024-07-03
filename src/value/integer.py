@@ -33,17 +33,19 @@ warning_cast_data_loss = True
 def _check_width(from_type, t, method, ti):
 	rv = True
 
-	if from_type['width'] > t['width']:
-		if method != 'implicit':
-			if warning_cast_data_loss:
-				from main import features
-				if not (features.get('unsafe') or features.get('unsafe-downcast')):
-					warning("value cons with potential data loss", ti)
-				pass
+	if hlir_type.type_is_float(from_type):
+		return True
 
-		else:
+	if from_type['width'] > t['width']:
+		#info("%s" % method, ti)
+		if method != 'unsafe':
 			error("value cons with potential data loss", ti)
 			rv = False
+
+		elif warning_cast_data_loss:
+			from trans import is_unsafe_mode
+			if not (is_unsafe_mode() or features.get('unsafe-downcast')):
+				warning("value cons with potential data loss", ti)
 
 	if not rv:
 		print("attempt to construct ", end='')
@@ -106,6 +108,7 @@ def integer_can(to, from_type, method):
 
 def value_integer_cons(t, v, method, ti):
 	_check_width(v['type'], t, method, ti)
+
 	if value_is_immediate(v):
 		_check_width(v['type'], t, method, ti)
 

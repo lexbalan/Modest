@@ -5,24 +5,27 @@ import "libc/stdio"
 var x: Nat32
 
 @if (__defined("x"))
-@undef("x")
-var x: Int32
+//@undef("x")
+//var x: Int32
 @endif
+
+
+var y: @volatile Nat32
 
 
 func main() -> Int {
 	printf("tag test")
 
-	x = -1
+	var dst2 = @volatile []Int32 [10, 20, 30, 40, 50]
 
-	//let s = sum(10, 20)
+	var axx = Nat8 11
+	var bxx = Nat8 12
 
-	//var s : Tag = #justSymbol
+	// not worked with var!
+	let i2 = 3
+	let j2 = 5
+	dst2[i2:j2] = [Int32 axx, Int32 bxx]
 
 	return 0
 }
 
-
-func sum(a: Int32, b: Int32) -> Int32 {
-	return a + b
-}

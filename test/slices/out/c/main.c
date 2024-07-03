@@ -143,6 +143,22 @@ int main()
 
 	array_print((int32_t *)&dst, 10);
 
+	printf("--------------------------------------------\n");
+
+	int32_t dst2[10];
+	memcpy(&dst2, &(int32_t[10]){0, 10, 20, 30, 40, 50, 60, 70, 80, 90}, sizeof(int32_t[10]));
+
+	uint8_t axx;
+	axx = 111;
+	uint8_t bxx;
+	bxx = 257;
+
+	// not worked with var!
+	#define i2  3
+	#define j2  5
+	memcpy(&dst2[i2], &(int32_t[j2 - i2]){(int32_t)axx, (int32_t)bxx}, sizeof(int32_t[j2 - i2]));
+
+	array_print((int32_t *)&dst2, 10);
 
 	return 0;
 }
@@ -153,4 +169,6 @@ int main()
 #undef bb
 #undef i1
 #undef j1
+#undef i2
+#undef j2
 

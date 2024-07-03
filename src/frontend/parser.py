@@ -228,6 +228,8 @@ class Parser:
 
 			return True
 
+	def is_directive(self):
+		return self.token_class_is('directive')
 
 	def check_is_type(self):
 		if self.is_identifier():
@@ -266,6 +268,10 @@ class Parser:
 
 			return False
 
+		elif self.is_directive():
+			self.parse_directive()
+			return self.check_is_type()
+
 		else:
 			return False
 
@@ -286,6 +292,46 @@ class Parser:
 		return result
 
 
+
+
+	def expr_type_func(self):
+		ti = self.ti()
+		self.skip() #("(")
+		arghack = False
+		fields = []
+		while not self.match(")"):
+			f = self.parse_field()
+			if f == None:
+				if self.match("..."):
+					arghack = True
+			self.match(",")
+			if f != None:
+				fields.extend(f)
+
+		if self.match("->"):
+			t = self.expr_type()
+			return {
+				'isa': 'type',
+				'kind': 'func',
+				'params': fields,
+				'arghack': arghack,
+				'to': t,
+				'ti': ti
+			}
+		else:
+			return {
+				'isa': 'type',
+				'kind': 'func',
+				'params': fields,
+				'to': None,
+				'arghack': arghack,
+				'size': 0,
+				'align': 0,
+				'ti': ti
+			}
+		#	return r
+
+
 	def expr_type(self):
 		ti = self.ti()
 
@@ -293,48 +339,23 @@ class Parser:
 			error("expected type expr", ti)
 			return None
 
-		arghack = False
-		if self.match("("):
-			fields = []
-			while not self.match(")"):
-				f = self.parse_field()
-				if f == None:
-					if self.match("..."):
-						arghack = True
-				self.match(",")
-				if f != None:
-					fields.extend(f)
+		# parse all directives before
+		directives = []
+		while self.token_class_is('directive'):
+			x = self.parse_directive()
+			directives.append(x)
 
-			if self.match("->"):
-				t = self.expr_type()
-				return {
-					'isa': 'type',
-					'kind': 'func',
-					'params': fields,
-					'arghack': arghack,
-					'to': t,
-					'ti': ti
-				}
-			else:
-				return {
-					'isa': 'type',
-					'kind': 'func',
-					'params': fields,
-					'to': None,
-					'arghack': arghack,
-					'size': 0,
-					'align': 0,
-					'ti': ti
-				}
-			#	return r
+		t = {'isa': 'type', 'kind': 'unknown', 'ti': ti}
+
+		if self.look("("):
+			t = self.expr_type_func()
 
 		elif self.match("*"):
 			t = self.expr_type()
-			return {'isa': 'type', 'kind': 'pointer', 'to': t, 'ti': ti}
+			t = {'isa': 'type', 'kind': 'pointer', 'to': t, 'ti': ti}
 
 		elif self.match("record"):
-			return self.expr_type_record(ti)
-
+			t = self.expr_type_record(ti)
 
 		elif self.match("enum"):
 			self.need("{")
@@ -345,7 +366,7 @@ class Parser:
 				id = self.identifier()
 				self.need_sep(separators=['\n', ','])
 				items.append({'id': id, 'ti': ti})
-			return {'isa': 'type', 'kind': 'enum', 'items': items, 'ti': ti}
+			t = {'isa': 'type', 'kind': 'enum', 'items': items, 'ti': ti}
 
 		elif self.match("["):
 			y = {'isa': 'type', 'kind': 'array', 'size': None, 'ti': ti}
@@ -354,11 +375,14 @@ class Parser:
 				y['size'] = self.expr_value()
 				self.need("]")
 			y['of'] = self.expr_type()
-			return y
+			t = y
 
 		elif self.ctok_class() == 'id':
 			id = self.identifier() # type by Name
-			return {'isa': 'type', 'kind': 'id', 'id': id, 'ti': ti}
+			t = {'isa': 'type', 'kind': 'id', 'id': id, 'ti': ti}
+
+		t['directives'] = directives
+		return t
 
 
 	#
@@ -1274,6 +1298,7 @@ class Parser:
 				'isa': 'ast_directive',
 				'kind': 'import',
 				'expr': import_expr,
+				'args': [],
 				'ti': ti
 			}
 		else:
@@ -1291,6 +1316,7 @@ class Parser:
 					'isa': 'ast_directive',
 					'kind': 'import',
 					'expr': import_expr,
+					'args': [],
 					'ti': ti
 				}
 

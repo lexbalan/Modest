@@ -57,6 +57,10 @@ root_context = None
 
 module = None
 
+unsafe_mode = False
+def is_unsafe_mode():
+	return unsafe_mode
+
 
 def module_option(option):
 	global module
@@ -517,6 +521,10 @@ def do_type_func(t, func_id="_"):
 
 
 def do_type(t):
+
+	for d in t['directives']:
+		do_directive(d)
+
 	k = t['kind']
 	if k == 'id': return do_type_id(t)
 	elif k == 'func': return do_type_func(t)
@@ -569,7 +577,7 @@ def do_bin_op_with_pointers(op, l, r , ti):
 			return value_bin(op, l, r, foundation.typeBool, ti)
 
 	from main import features
-	if not features.get('unsafe'):
+	if not is_unsafe_mode():
 		error("unsafe operation", ti)
 		return value_bad({'ti': ti})
 
@@ -984,6 +992,25 @@ def sort_args(params, args):
 
 
 
+def do_value_unsafe(args, ti):
+	#info("do_value_unsafe", ti)
+
+	# for use 'unsafe' operator
+	# required -funsafe option
+	from main import features
+	if not features.get('unsafe'):
+		error("for use 'unsafe' operator required -funsafe option", ti)
+
+	global unsafe_mode
+	old_unsafe_mode = unsafe_mode
+	unsafe_mode = True
+
+	rv = do_rvalue(args[0]['value'])
+
+	unsafe_mode = old_unsafe_mode
+	return rv
+
+
 
 def do_value_call_lengthof(args, ti):
 	arg = do_rvalue(args[0]['value'])
@@ -1051,17 +1078,19 @@ def do_value_call(x):
 		if 'unknown' in f['att']:
 			if x['left']['kind'] == 'id':
 				id_str = x['left']['id']['str']
-
+				args = x['args']
+				if id_str == 'unsafe':
+					return do_value_unsafe(args, x['ti'])
 				if id_str == 'lengthof':
-					return do_value_call_lengthof(x['args'], x['ti'])
+					return do_value_call_lengthof(args, x['ti'])
 				elif id_str == '__va_start':
-					return do_value_call_va_start(x['args'], x['ti'])
+					return do_value_call_va_start(args, x['ti'])
 				elif id_str == '__va_copy':
-					return do_value_call_va_copy(x['args'], x['ti'])
+					return do_value_call_va_copy(args, x['ti'])
 				elif id_str == '__va_end':
-					return do_value_call_va_end(x['args'], x['ti'])
+					return do_value_call_va_end(args, x['ti'])
 				elif id_str == '__defined':
-					return do_value_call_defined(x['args'], x['ti'])
+					return do_value_call_defined(args, x['ti'])
 
 		error("undeclared value", f['expr_ti'])
 		return value_bad(x)
@@ -2376,13 +2405,14 @@ old_skipp = False
 def do_directive(x):
 	global skipp, old_skipp, production, old_production
 	kind = x['kind']
+	args = x['args']
 
 	if kind == 'import':
 		return do_import(x)
 
 	elif kind == 'if':
 		old_production = production
-		c = do_value_immediate(x['args'][0])
+		c = do_value_immediate(args[0])
 
 		if value_is_bad(c):
 			return None
@@ -2400,7 +2430,7 @@ def do_directive(x):
 
 	elif kind == 'elseif':
 		production = False
-		c = do_value_immediate(x['args'][0])
+		c = do_value_immediate(args[0])
 
 		if value_is_bad(c):
 			return None
@@ -2423,7 +2453,7 @@ def do_directive(x):
 		production = old_production
 
 	elif kind == 'info':
-		v = do_value_immediate_string(x['args'][0])
+		v = do_value_immediate_string(args[0])
 
 		if value_is_bad(v):
 			fatal("unsuitable value", x['ti'])
@@ -2432,7 +2462,7 @@ def do_directive(x):
 		info(msg, x['ti'])
 
 	elif kind == 'warning':
-		v = do_value_immediate_string(x['args'][0])
+		v = do_value_immediate_string(args[0])
 
 		if value_is_bad(v):
 			fatal("unsuitable value", x['ti'])
@@ -2441,7 +2471,7 @@ def do_directive(x):
 		warning(msg, x['ti'])
 
 	elif kind == 'error':
-		v = do_value_immediate_string(x['args'][0])
+		v = do_value_immediate_string(args[0])
 
 		if value_is_bad(v):
 			fatal("unsuitable value", x['ti'])
@@ -2451,7 +2481,7 @@ def do_directive(x):
 		exit(-1)
 
 	elif kind == 'undef':
-		v = do_value_immediate_string(x['args'][0])
+		v = do_value_immediate_string(args[0])
 		if value_is_bad(v):
 			fatal("unsuitable value", x['ti'])
 		id_str = v['asset']
@@ -2459,15 +2489,18 @@ def do_directive(x):
 		module['context'].type_undef(id_str)
 
 	elif kind in 'attribute':
-		attribute_add(x['args'][0]['str'])
+		attribute_add(args[0]['str'])
 	elif kind == 'property':
-		property_add(x['args'][0]['str'], x['args'][1]['str'])
+		property_add(args[0]['str'], args[1]['str'])
 	elif kind == 'feature':
-		feature_add(x['args'][0]['str'])
+		feature_add(args[0]['str'])
 	elif kind == 'module_att':
-		module_att(x['args'][0]['str'])
+		module_att(args[0]['str'])
 	elif kind == 'c_include':
-		c_include(x['args'][0]['str'])
+		c_include(args[0]['str'])
+
+	elif kind == 'volatile':
+		print("VOLATILE")
 
 	return None
 

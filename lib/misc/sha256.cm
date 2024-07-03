@@ -164,14 +164,14 @@ func sha256_final(ctx: *Context, outHash: *[sha256HashSize]Byte) {
 	// Append to the padding the total message's length in bits and transform.
 	ctx.bitlen = ctx.bitlen + Nat64 ctx.datalen * 8
 
-	ctx.data[63] = Byte (ctx.bitlen >> 00)
-	ctx.data[62] = Byte (ctx.bitlen >> 08)
-	ctx.data[61] = Byte (ctx.bitlen >> 16)
-	ctx.data[60] = Byte (ctx.bitlen >> 24)
-	ctx.data[59] = Byte (ctx.bitlen >> 32)
-	ctx.data[58] = Byte (ctx.bitlen >> 40)
-	ctx.data[57] = Byte (ctx.bitlen >> 48)
-	ctx.data[56] = Byte (ctx.bitlen >> 56)
+	ctx.data[63] = unsafe(Byte (ctx.bitlen >> 00))
+	ctx.data[62] = unsafe(Byte (ctx.bitlen >> 08))
+	ctx.data[61] = unsafe(Byte (ctx.bitlen >> 16))
+	ctx.data[60] = unsafe(Byte (ctx.bitlen >> 24))
+	ctx.data[59] = unsafe(Byte (ctx.bitlen >> 32))
+	ctx.data[58] = unsafe(Byte (ctx.bitlen >> 40))
+	ctx.data[57] = unsafe(Byte (ctx.bitlen >> 48))
+	ctx.data[56] = unsafe(Byte (ctx.bitlen >> 56))
 
 	sha256_transform(ctx, &ctx.data)
 
@@ -182,14 +182,14 @@ func sha256_final(ctx: *Context, outHash: *[sha256HashSize]Byte) {
 	i = 0
 	while i < 4 {
 		let sh = 24 - i * 8
-		outHash[i + 00] = Byte (ctx.state[0] >> sh)
-		outHash[i + 04] = Byte (ctx.state[1] >> sh)
-		outHash[i + 08] = Byte (ctx.state[2] >> sh)
-		outHash[i + 12] = Byte (ctx.state[3] >> sh)
-		outHash[i + 16] = Byte (ctx.state[4] >> sh)
-		outHash[i + 20] = Byte (ctx.state[5] >> sh)
-		outHash[i + 24] = Byte (ctx.state[6] >> sh)
-		outHash[i + 28] = Byte (ctx.state[7] >> sh)
+		outHash[i + 00] = unsafe(Byte (ctx.state[0] >> sh))
+		outHash[i + 04] = unsafe(Byte (ctx.state[1] >> sh))
+		outHash[i + 08] = unsafe(Byte (ctx.state[2] >> sh))
+		outHash[i + 12] = unsafe(Byte (ctx.state[3] >> sh))
+		outHash[i + 16] = unsafe(Byte (ctx.state[4] >> sh))
+		outHash[i + 20] = unsafe(Byte (ctx.state[5] >> sh))
+		outHash[i + 24] = unsafe(Byte (ctx.state[6] >> sh))
+		outHash[i + 28] = unsafe(Byte (ctx.state[7] >> sh))
 		++i
 	}
 }

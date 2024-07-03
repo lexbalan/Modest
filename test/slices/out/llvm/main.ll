@@ -222,6 +222,7 @@ declare void @perror(%ConstCharStr* %str)
 @str18 = private constant [19 x i8] [i8 122, i8 101, i8 114, i8 111, i8 32, i8 115, i8 108, i8 105, i8 99, i8 101, i8 32, i8 98, i8 121, i8 32, i8 118, i8 97, i8 114, i8 10, i8 0]
 @str19 = private constant [46 x i8] [i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 10, i8 0]
 @str20 = private constant [19 x i8] [i8 99, i8 111, i8 112, i8 121, i8 32, i8 115, i8 108, i8 105, i8 99, i8 101, i8 32, i8 98, i8 121, i8 32, i8 118, i8 97, i8 114, i8 10, i8 0]
+@str21 = private constant [46 x i8] [i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 10, i8 0]
 
 
 
@@ -492,6 +493,46 @@ break_4:
 	store [5 x i32] %160, [5 x i32]* %154
 	%161 = bitcast [10 x i32]* %142 to [0 x i32]*
 	call void @array_print([0 x i32]* %161, i32 10)
+	%162 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @str21 to [0 x i8]*))
+	%163 = alloca [10 x i32], align 4
+	%164 = insertvalue [10 x i32] zeroinitializer, i32 0, 0
+	%165 = insertvalue [10 x i32] %164, i32 10, 1
+	%166 = insertvalue [10 x i32] %165, i32 20, 2
+	%167 = insertvalue [10 x i32] %166, i32 30, 3
+	%168 = insertvalue [10 x i32] %167, i32 40, 4
+	%169 = insertvalue [10 x i32] %168, i32 50, 5
+	%170 = insertvalue [10 x i32] %169, i32 60, 6
+	%171 = insertvalue [10 x i32] %170, i32 70, 7
+	%172 = insertvalue [10 x i32] %171, i32 80, 8
+	%173 = insertvalue [10 x i32] %172, i32 90, 9
+	store [10 x i32] %173, [10 x i32]* %163
+	%174 = alloca i8, align 1
+	store i8 111, i8* %174
+	%175 = alloca i8, align 1
+	store i8 257, i8* %175
+	; not worked with var!
+	; -- STMT ASSIGN ARRAY --
+	%176 = getelementptr inbounds [10 x i32], [10 x i32]* %163, i32 0, i2 3
+	%177 = bitcast i32* %176 to [2 x i32]*
+	; -- start vol eval --
+	%178 = zext i2 2 to i32
+	; -- end vol eval --
+	; cast_array_to_array
+	%179 = load i8, i8* %174
+	%180 = sext i8 %179 to i32
+	%181 = load i8, i8* %175
+	%182 = sext i8 %181 to i32
+	%183 = insertvalue [2 x i32] zeroinitializer, i32 %180, 0
+	%184 = insertvalue [2 x i32] %183, i32 %182, 1
+	; cast_composite_to_composite
+	; trunk
+	%185 = alloca [2 x i32]
+	store [2 x i32] %184, [2 x i32]* %185
+	%186 = bitcast [2 x i32]* %185 to [2 x i32]*
+	%187 = load [2 x i32], [2 x i32]* %186
+	store [2 x i32] %187, [2 x i32]* %177
+	%188 = bitcast [10 x i32]* %163 to [0 x i32]*
+	call void @array_print([0 x i32]* %188, i32 10)
 	ret i32 0
 }
 

@@ -11,25 +11,30 @@
 
 static uint32_t x;
 
-static int32_t x;
+//@undef("x")
+//var x: Int32
 
 
 int main()
 {
 	printf("tag test");
 
-	x = -1;
+	int32_t dst2[5];
+	memcpy(&/*var*/dst2, &/*cons*/(int32_t[5]){10, 20, 30, 40, 50}, sizeof(int32_t[5]));
 
-	//let s = sum(10, 20)
+	uint8_t axx;
+	axx = 11;
+	uint8_t bxx;
+	bxx = 12;
 
-	//var s : Tag = #justSymbol
+	// not worked with var!
+	#define i2  3
+	#define j2  5
+	memcpy(&/*slice*/dst2[i2], &/*literal*/(int32_t[j2 - i2]){(int32_t)axx, (int32_t)bxx}, sizeof(int32_t[j2 - i2]));
 
 	return 0;
 }
 
-
-int32_t sum(int32_t a, int32_t b)
-{
-	return a + b;
-}
+#undef i2
+#undef j2
 
