@@ -29,15 +29,26 @@ INDENT_SYMBOL = "\t"
 
 NL_INDENT = "\n%s" % INDENT_SYMBOL
 
-cfunc = None
 
-func_context = None
+fctx = None  # current function context
+
+def fctx_push(ctx):
+	global fctx
+	prev_fctx = fctx
+	fctx = ctx
+	ctx['prev_fctx'] = prev_fctx
+
+def fctx_pop():
+	global fctx
+	if fctx != None:
+		fctx = fctx['prev_fctx']
+	else:
+		assert(False)
+
 
 def is_global_context():
-	return func_context == None
+	return fctx == None
 
-
-va_list = None
 
 llvm_value_num_zero = None
 
@@ -60,19 +71,19 @@ def lo(s):
 
 
 def locals_push():
-	func_context['locals'].append({})
+	fctx['locals'].append({})
 
 def locals_pop():
-	func_context['locals'].pop()
+	fctx['locals'].pop()
 
 def locals_add(id, llval):
-	func_context['locals'][-1][id] = llval
+	fctx['locals'][-1][id] = llval
 
 def locals_get(id):
 	# идем по стеку контекстов вглубь в поиске id
-	i = len(func_context['locals'])
+	i = len(fctx['locals'])
 	while i > 0:
-		c = func_context['locals'][i - 1]
+		c = fctx['locals'][i - 1]
 		if id in c:
 			return c[id]
 		i = i - 1
@@ -83,10 +94,10 @@ def locals_get(id):
 free_reg = 0
 
 def reg_get():
-	global func_context
+	global fctx
 	assert(not is_global_context())  # we can get reg only locally!
-	reg = func_context['free_reg']
-	func_context['free_reg'] = func_context['free_reg'] + 1
+	reg = fctx['free_reg']
+	fctx['free_reg'] = fctx['free_reg'] + 1
 	return str(reg)
 
 
@@ -101,6 +112,12 @@ def llvm_operation_with_type(op, t):
 	reg = llvm_operation(op)
 	print_type(t)
 	return reg
+
+
+
+def _llvm_operation(op, type, reg=None, x=None):
+	r = llvm_operation(op, reg=reg)
+	return llvm_value_reg(r, type, x)
 
 
 
@@ -1533,9 +1550,9 @@ def do_assign_arrays(l, r):
 
 
 def print_stmt_if(x):
-	global func_context
-	if_id = func_context['if_no']
-	func_context['if_no'] = func_context['if_no'] + 1
+	global fctx
+	if_id = fctx['if_no']
+	fctx['if_no'] = fctx['if_no'] + 1
 	cv = do_reval(x['cond'])
 
 	then_label = 'then_%d' % if_id
@@ -1563,11 +1580,11 @@ def print_stmt_if(x):
 
 
 def print_stmt_while(x):
-	global func_context
-	old_while_id = func_context['cur_while_id']
-	func_context['while_no'] = func_context['while_no'] + 1
-	cur_while_id = func_context['while_no']
-	func_context['cur_while_id'] = cur_while_id
+	global fctx
+	old_while_id = fctx['cur_while_id']
+	fctx['while_no'] = fctx['while_no'] + 1
+	cur_while_id = fctx['while_no']
+	fctx['cur_while_id'] = cur_while_id
 
 	again_label = 'again_%d' % cur_while_id
 	break_label = 'break_%d' % cur_while_id
@@ -1581,38 +1598,44 @@ def print_stmt_while(x):
 	print_stmt(x['stmt'])
 	llvm_jump(again_label)
 	llvm_label(break_label)
-	func_context['cur_while_id'] = old_while_id
+	fctx['cur_while_id'] = old_while_id
 
 
 def print_stmt_again(x):
-	global func_context
-	cur_while_id = func_context['cur_while_id']
+	global fctx
+	cur_while_id = fctx['cur_while_id']
 	llvm_jump('again_%d' % cur_while_id)
 	reg_get()  # for LLVM
 
 
 def print_stmt_break(x):
-	global func_context
-	cur_while_id = func_context['cur_while_id']
+	global fctx
+	cur_while_id = fctx['cur_while_id']
 	llvm_jump('break_%d' % cur_while_id)
 	reg_get()  # for LLVM
 
 
 def print_stmt_return(x):
-	#global cfunc
 	#if va_list != None:
 	#	llvm_va_end(va_list)
 
+	# VLA требует чтобы стек был сохранен в начале работы функции
+	# (see: print_def_func)
+	# и восстановлен перед возвратом из нее
+	if fctx['stackptr'] != None:
+		stackrestore(fctx['stackptr'])
+
+
 	if x['value'] != None:
 		v = do_reval(x['value'])
-		if not need_sret(cfunc['type']):
+		if not need_sret(fctx['func']['type']):
 			lo("ret ")
 			llvm_print_type_value(v)
 			reg_get()  # for LLVM
 			return None
 
 		# return via sret
-		to = cfunc['type']['to']
+		to = fctx['func']['type']['to']
 		p2retval = llvm_value_reg("0", hlir_type_pointer(to))
 		do_assign(p2retval, v)
 
@@ -1898,13 +1921,11 @@ def print_decl_func(x):
 
 
 def print_def_func(x):
-	global func_context
+	func = x['value']
 
-	indent_up()
+	fctx = {
+		'func': func,  # cfunc
 
-	# create new func context
-	old_func_context = func_context
-	func_context = {
 		'if_no': 0,
 		'while_no': 0,
 		'cur_while_id': 0,
@@ -1913,12 +1934,12 @@ def print_def_func(x):
 
 		# map for local lets & vars
 		# <id> => <llvm_value>
-		'locals': [{}]
+		'locals': [{}],
+
+		'stackptr': None,  # for VLA
 	}
 
-	func = x['value']
-	global cfunc
-	cfunc = func
+	fctx_push(fctx)
 
 	out("\ndefine ")
 	print_func_signature(func)
@@ -1941,31 +1962,27 @@ def print_def_func(x):
 	entry_label = reg_get()  # should be here (!)
 
 	out(" {")
+	indent_up()
 
-#	if ftype['extra_args']:
-#		global va_list
-#		id_str = ftype['va_list_id']['str'] # 'va_list'
-#		lo("; va list")
-#		va_list = llvm_alloca(foundation.typeFreePointer)
-#		locals_add(id_str, va_list)
-#		llvm_va_start(va_list)
+	# VLA требует чтобы стек был сохранен в начале работы функции
+	# и восстановлен перед возвратом из нее (see: print_stmt_return)
+	if 'stacksave' in func['att']:
+		#; stack save
+		# %3 = alloca i8*, align 8 ; stack save
+		# %7 = call i8* @llvm.stacksave()
+		stackptr = llvm_alloca(foundation.typeFreePointer)
+		stacksave(stackptr)
+		fctx['stackptr'] = stackptr
 
 	print_stmt_block(func['stmt'])
 
 	if hlir_type.type_eq(ftype['to'], foundation.typeUnit):
-		#if va_list != None:
-		#	llvm_va_end(va_list)
-		lo("ret void")
+		print_stmt_return({'value': None})
 
 	indent_down()
-
 	lo("}\n")
 
-	va_list = None
-
-	func_context = old_func_context
-
-	cfunc = None
+	fctx_pop()
 
 
 
@@ -2257,6 +2274,12 @@ def run(module, outname):
 
 	lo("declare void @llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)")
 	lo("declare void @llvm.memset.p0.i32(i8*, i8, i32, i1)\n")
+
+	lo("declare i8* @llvm.stacksave()\n")
+	lo("declare void @llvm.stackrestore(i8*)\n")
+	lo("\n")
+
+
 	#lo("declare i32 @memcmp(i8* %ptr1, i8* %ptr2, i64 %len)\n")
 	out(memeq_impl)
 
@@ -2374,3 +2397,19 @@ break_2:
 }
 
 """
+
+
+
+def stackrestore(sptr):
+	r = llvm_dold(sptr)
+	lo("call void @llvm.stackrestore(")
+	llvm_print_type_value(r)
+	out(")")
+	return r
+
+
+def stacksave(sptr):
+	r = _llvm_operation("call i8* @llvm.stacksave()", type=sptr['type'])
+	return llvm_store(sptr, r)
+
+

@@ -401,7 +401,16 @@ def do_type_pointer(t):
 def do_type_array(t):
 	volume_expr = None
 	if t['size'] != None:
-		volume_expr = do_value_immediate(t['size'])
+		#volume_expr = do_value_immediate(t['size'])
+		volume_expr = do_value(t['size'])
+		if not value_is_immediate(volume_expr):
+			info("VLA", t['ti'])
+			if is_local_context():
+				global cfunc
+				cfunc['att'].append('stacksave')
+			else:
+				error("non local VLA", t['size'])
+
 
 	of = do_type(t['of'])
 
@@ -2497,8 +2506,12 @@ def do_directive(x):
 	elif kind == 'c_include':
 		c_include(args[0]['str'])
 
+	elif kind == 'const':
+		print("CONST")
 	elif kind == 'volatile':
 		print("VOLATILE")
+	elif kind == 'atomic':
+		print("ATOMIC")
 
 	return None
 

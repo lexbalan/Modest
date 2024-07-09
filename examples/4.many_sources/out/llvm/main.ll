@@ -29,6 +29,12 @@ target triple = "arm64-apple-macosx12.0.0"
 declare void @llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)
 declare void @llvm.memset.p0.i32(i8*, i8, i32, i1)
 
+declare i8* @llvm.stacksave()
+
+declare void @llvm.stackrestore(i8*)
+
+
+
 %CPU.Word = type i64
 define weak i1 @memeq(i8* %mem0, i8* %mem1, i64 %len) {
 	%1 = udiv i64 %len, 8

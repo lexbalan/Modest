@@ -29,6 +29,12 @@ target triple = "arm64-apple-macosx12.0.0"
 declare void @llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)
 declare void @llvm.memset.p0.i32(i8*, i8, i32, i1)
 
+declare i8* @llvm.stacksave()
+
+declare void @llvm.stackrestore(i8*)
+
+
+
 %CPU.Word = type i64
 define weak i1 @memeq(i8* %mem0, i8* %mem1, i64 %len) {
 	%1 = udiv i64 %len, 8
@@ -479,7 +485,7 @@ break_4:
 	%151 = insertvalue [10 x i32] %150, i32 8, 8
 	%152 = insertvalue [10 x i32] %151, i32 9, 9
 	store [10 x i32] %152, [10 x i32]* %142
-	; not worked with var!
+	; test with let
 	; -- STMT ASSIGN ARRAY --
 	%153 = getelementptr inbounds [10 x i32], [10 x i32]* %142, i32 0, i2 3
 	%154 = bitcast i32* %153 to [5 x i32]*
@@ -511,29 +517,36 @@ break_4:
 	store i8 111, i8* %174
 	%175 = alloca i8, align 1
 	store i8 222, i8* %175
-	; not worked with var!
+	; test with var
+	%176 = alloca i32, align 4
+	store i32 3, i32* %176
+	%177 = alloca i32, align 4
+	store i32 5, i32* %177
 	; -- STMT ASSIGN ARRAY --
-	%176 = getelementptr inbounds [10 x i32], [10 x i32]* %163, i32 0, i2 3
-	%177 = bitcast i32* %176 to [2 x i32]*
+	%178 = load i32, i32* %176
+	%179 = getelementptr inbounds [10 x i32], [10 x i32]* %163, i32 0, i32 %178
+	%180 = bitcast i32* %179 to [0 x i32]*
 	; -- start vol eval --
-	%178 = zext i2 2 to i32
+	%181 = load i32, i32* %177
+	%182 = load i32, i32* %176
+	%183 = sub i32 %181, %182
 	; -- end vol eval --
 	; cast_array_to_array
-	%179 = load i8, i8* %174
-	%180 = sext i8 %179 to i32
-	%181 = load i8, i8* %175
-	%182 = sext i8 %181 to i32
-	%183 = insertvalue [2 x i32] zeroinitializer, i32 %180, 0
-	%184 = insertvalue [2 x i32] %183, i32 %182, 1
+	%184 = load i8, i8* %174
+	%185 = sext i8 %184 to i32
+	%186 = load i8, i8* %175
+	%187 = sext i8 %186 to i32
+	%188 = insertvalue [2 x i32] zeroinitializer, i32 %185, 0
+	%189 = insertvalue [2 x i32] %188, i32 %187, 1
 	; cast_composite_to_composite
 	; trunk
-	%185 = alloca [2 x i32]
-	store [2 x i32] %184, [2 x i32]* %185
-	%186 = bitcast [2 x i32]* %185 to [2 x i32]*
-	%187 = load [2 x i32], [2 x i32]* %186
-	store [2 x i32] %187, [2 x i32]* %177
-	%188 = bitcast [10 x i32]* %163 to [0 x i32]*
-	call void @array_print([0 x i32]* %188, i32 10)
+	%190 = alloca [2 x i32]
+	store [2 x i32] %189, [2 x i32]* %190
+	%191 = bitcast [2 x i32]* %190 to [0 x i32]*
+	%192 = load [0 x i32], [0 x i32]* %191
+	store [0 x i32] %192, [0 x i32]* %180
+	%193 = bitcast [10 x i32]* %163 to [0 x i32]*
+	call void @array_print([0 x i32]* %193, i32 10)
 	ret i32 0
 }
 

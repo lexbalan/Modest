@@ -86,11 +86,11 @@ true, false
 
 ## Array literals
 ```swift
-	// Array of five GenericInt values
-	[1, 2, 3, 4, 5]
-	
-	// Array of tree Int32 values
-	[Int32 1, Int32 2, Int32 3]
+// Array of five GenericInt values
+[1, 2, 3, 4, 5]
+
+// Array of tree Int32 values
+[Int32 1, Int32 2, Int32 3]
 ```
 
 
@@ -161,8 +161,8 @@ func main () -> Int32 {
 
 ## Record literals
 ```swift
-	// Record with two fields
-	// 'x' with type GenericInt and value 10
-	// 'y' with type GenericInt and value 20
-	{x = 10, y = 20}
+// Record with two fields
+// 'x' with type GenericInt and value 10
+// 'y' with type GenericInt and value 20
+{x = 10, y = 20}
 ```

@@ -16,15 +16,10 @@ var y: @volatile Nat32
 func main() -> Int {
 	printf("tag test")
 
-	var dst2 = @volatile []Int32 [10, 20, 30, 40, 50]
+	var len = Int 5
+	var a: [len]Nat32
 
-	var axx = Nat8 11
-	var bxx = Nat8 12
-
-	// not worked with var!
-	let i2 = 3
-	let j2 = 5
-	dst2[i2:j2] = [Int32 axx, Int32 bxx]
+	//a = [10, 20, 30, 40, 50]
 
 	return 0
 }

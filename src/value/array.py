@@ -79,7 +79,7 @@ def array_can(to, from_type, method):
 		return None
 
 	if not hlir_type.type_eq(to['of'], ct):
-		info("unsuitable item type", ti)
+		info("unsuitable item type", from_type['ti'])
 		return None
 
 	if hlir_type.type_is_generic(from_type):

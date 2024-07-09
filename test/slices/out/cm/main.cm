@@ -122,7 +122,7 @@ func main() -> Int {
 	var src: [5]Int32 = [5]Int32 [10, 20, 30, 40, 50]
 	var dst: [10]Int32 = [10]Int32 [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-	// not worked with var!
+	// test with let
 	let i1 = 3
 	let j1 = 8
 	dst[i1:j1] = [11, 22, 33, 44, 55]
@@ -136,9 +136,9 @@ func main() -> Int {
 	var axx: Nat8 = Nat8 111
 	var bxx: Nat8 = Nat8 222
 
-	// not worked with var!
-	let i2 = 3
-	let j2 = 5
+	// test with var
+	var i2: Int32 = 3
+	var j2: Int32 = 5
 	dst2[i2:j2] = [Int32 axx, Int32 bxx]
 
 	array_print(&dst2, 10)

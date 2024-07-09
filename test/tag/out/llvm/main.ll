@@ -29,6 +29,12 @@ target triple = "arm64-apple-macosx12.0.0"
 declare void @llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)
 declare void @llvm.memset.p0.i32(i8*, i8, i32, i1)
 
+declare i8* @llvm.stacksave()
+
+declare void @llvm.stackrestore(i8*)
+
+
+
 %CPU.Word = type i64
 define weak i1 @memeq(i8* %mem0, i8* %mem1, i64 %len) {
 	%1 = udiv i64 %len, 8
@@ -212,39 +218,16 @@ declare void @perror(%ConstCharStr* %str)
 @y = global i32 zeroinitializer
 
 define i32 @main() {
-	%1 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str1 to [0 x i8]*))
-	%2 = alloca [5 x i32], align 4
-	%3 = insertvalue [5 x i32] zeroinitializer, i32 10, 0
-	%4 = insertvalue [5 x i32] %3, i32 20, 1
-	%5 = insertvalue [5 x i32] %4, i32 30, 2
-	%6 = insertvalue [5 x i32] %5, i32 40, 3
-	%7 = insertvalue [5 x i32] %6, i32 50, 4
-	store [5 x i32] %7, [5 x i32]* %2
-	%8 = alloca i8, align 1
-	store i8 11, i8* %8
-	%9 = alloca i8, align 1
-	store i8 12, i8* %9
-	; not worked with var!
-	; -- STMT ASSIGN ARRAY --
-	%10 = getelementptr inbounds [5 x i32], [5 x i32]* %2, i32 0, i2 3
-	%11 = bitcast i32* %10 to [2 x i32]*
-	; -- start vol eval --
-	%12 = zext i2 2 to i32
-	; -- end vol eval --
-	; cast_array_to_array
-	%13 = load i8, i8* %8
-	%14 = sext i8 %13 to i32
-	%15 = load i8, i8* %9
-	%16 = sext i8 %15 to i32
-	%17 = insertvalue [2 x i32] zeroinitializer, i32 %14, 0
-	%18 = insertvalue [2 x i32] %17, i32 %16, 1
-	; cast_composite_to_composite
-	; trunk
-	%19 = alloca [2 x i32]
-	store [2 x i32] %18, [2 x i32]* %19
-	%20 = bitcast [2 x i32]* %19 to [2 x i32]*
-	%21 = load [2 x i32], [2 x i32]* %20
-	store [2 x i32] %21, [2 x i32]* %11
+	%1 = alloca i8*
+	%2 = call i8* @llvm.stacksave() 
+	store i8* %2, i8** %1
+	%3 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str1 to [0 x i8]*))
+	%4 = alloca i32, align 4
+	store i32 5, i32* %4
+	%5 = alloca [0 x i32], align 4
+	;a = [10, 20, 30, 40, 50]
+	%6 = load i8*, i8** %1
+	call void @llvm.stackrestore(i8* %6)
 	ret i32 0
 }
 

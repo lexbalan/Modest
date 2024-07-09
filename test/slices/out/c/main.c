@@ -138,7 +138,7 @@ int main()
 	int32_t dst[10];
 	memcpy(&dst, &(int32_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, sizeof(int32_t[10]));
 
-	// not worked with var!
+	// test with let
 	#define i1  3
 	#define j1  8
 	memcpy(&dst[i1], &(int32_t[j1 - i1]){11, 22, 33, 44, 55}, sizeof(int32_t[j1 - i1]));
@@ -155,10 +155,12 @@ int main()
 	uint8_t bxx;
 	bxx = 222;
 
-	// not worked with var!
-	#define i2  3
-	#define j2  5
-	memcpy(&dst2[i2], &(int32_t[j2 - i2]){(int32_t)axx, (int32_t)bxx}, sizeof(int32_t[j2 - i2]));
+	// test with var
+	int32_t i2;
+	i2 = 3;
+	int32_t j2;
+	j2 = 5;
+	memcpy(&dst2[i2], &(int32_t[]){(int32_t)axx, (int32_t)bxx}, sizeof(int32_t[j2 - i2]));
 
 	array_print((int32_t *)&dst2, 10);
 
@@ -171,6 +173,4 @@ int main()
 #undef bb
 #undef i1
 #undef j1
-#undef i2
-#undef j2
 
