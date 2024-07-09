@@ -618,15 +618,24 @@ def llvm_label(label):
 	out("\n%s:" % label)
 
 
-def llvm_alloca(typ, id_str=None, alignment=0):
+def llvm_alloca(typ, id_str=None, size=None, alignment=0):
+	# ;%8 = alloca i32, i64 %6, align 4;
 	assert(typ['isa'] == 'type')
 	reg = llvm_operation("alloca", reg=id_str)
 	print_type(typ)
+
+	if size != None:
+		out(", ")
+		llvm_print_type_value(size)
+
 	if alignment != 0:
 		out(", align %d" % alignment)
+
 	val = llvm_value_stk(reg, typ)
 	val['is_adr'] = True
 	return val
+
+
 
 
 def llvm_alloca_store(typ, id_str=None, init_value=None):
@@ -1646,8 +1655,18 @@ def print_stmt_return(x):
 
 
 def print_stmt_var(x):
-	id_str = x['var']['id']['str']
-	val = llvm_alloca(x['var']['type'], alignment=x['var']['type']['align'])
+	var = x['var']
+	t = var['type']
+	id_str = var['id']['str']
+
+	# only for VLA
+	sz = None
+	if hlir_type.type_is_array(t):
+		if not value_is_immediate(t['volume']):
+			sz = do_reval(t['volume'])
+			t = t['of']
+
+	val = llvm_alloca(t, size=sz, alignment=t['align'])
 	locals_add(id_str, val)
 	if x['default_value'] != None:
 		iv = do_reval(x['default_value'])

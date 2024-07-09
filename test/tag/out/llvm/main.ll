@@ -224,10 +224,11 @@ define i32 @main() {
 	%3 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str1 to [0 x i8]*))
 	%4 = alloca i32, align 4
 	store i32 5, i32* %4
-	%5 = alloca [0 x i32], align 4
+	%5 = load i32, i32* %4
+	%6 = alloca i32, i32 %5, align 4
 	;a = [10, 20, 30, 40, 50]
-	%6 = load i8*, i8** %1
-	call void @llvm.stackrestore(i8* %6)
+	%7 = load i8*, i8** %1
+	call void @llvm.stackrestore(i8* %7)
 	ret i32 0
 }
 
