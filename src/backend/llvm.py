@@ -263,7 +263,7 @@ def insertvalue(x, v, pos):
 #"%16 = bitcast i8** %3 to i8*"
 #"call void @llvm.va_start(i8* %16)"
 def llvm_va_start(x):
-	y = llvm_cast('bitcast', foundation.typeFreePointer, x)
+	y = llvm_cast('bitcast', x, foundation.typeFreePointer)
 	lo("call void @llvm.va_start(i8* %%%s)" % y['reg'])
 	return llvm_value_zero(foundation.typeUnit)
 
@@ -280,14 +280,14 @@ def llvm_va_arg(va_list, typ):
 #"%96 = bitcast i8** %3 to i8*"
 #"call void @llvm.va_end(i8* %96)"
 def llvm_va_end(x):
-	y = llvm_cast('bitcast', foundation.typeFreePointer, x)
+	y = llvm_cast('bitcast', x, foundation.typeFreePointer)
 	lo("call void @llvm.va_end(i8* %%%s)" % y['reg'])
 	return llvm_value_zero(foundation.typeUnit)
 
 
 def llvm_va_copy(dst, src):
-	dst = llvm_cast('bitcast', foundation.typeFreePointer, dst)
-	src = llvm_cast('bitcast', foundation.typeFreePointer, src)
+	dst = llvm_cast('bitcast', dst, foundation.typeFreePointer)
+	src = llvm_cast('bitcast', src, foundation.typeFreePointer)
 	lo("call void @llvm.va_copy(i8* %%%s, i8* %%%s)" % (dst['reg'], src['reg']))
 	return llvm_value_zero(foundation.typeUnit)
 
@@ -453,7 +453,7 @@ def llvm_extract_item(x, ft, field_no):
 	return llvm_value_reg(reg, ft)
 
 
-def llvm_cast(kind, to_type, value):
+def llvm_cast(kind, value, to_type):
 	reg = llvm_operation(kind)
 	llvm_print_type_value(value)
 	out(" to ")
@@ -500,8 +500,8 @@ def llvm_store(l, r):
 # получает два указателя, и размер
 def llvm_memcpy_immsize(dst, src, size, volatile=False):
 	#"@llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)"
-	dst2 = llvm_cast('bitcast', foundation.typeFreePointer, dst)
-	src2 = llvm_cast('bitcast', foundation.typeFreePointer, src)
+	dst2 = llvm_cast('bitcast', dst, foundation.typeFreePointer)
+	src2 = llvm_cast('bitcast', src, foundation.typeFreePointer)
 	out(NL_INDENT)
 	out("call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(")
 	llvm_print_type_value(dst2)
@@ -513,8 +513,8 @@ def llvm_memcpy_immsize(dst, src, size, volatile=False):
 # получает два указателя, и размер
 def llvm_memcpy(dst, src, size, volatile=False):
 	#"@llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)"
-	dst2 = llvm_cast('bitcast', foundation.typeFreePointer, dst)
-	src2 = llvm_cast('bitcast', foundation.typeFreePointer, src)
+	dst2 = llvm_cast('bitcast', dst, foundation.typeFreePointer)
+	src2 = llvm_cast('bitcast', src, foundation.typeFreePointer)
 	out(NL_INDENT)
 	out("call void (i8*, i8*, i32, i1) @llvm.memcpy.p0.p0.i32(")
 	llvm_print_type_value(dst2)
@@ -526,7 +526,7 @@ def llvm_memcpy(dst, src, size, volatile=False):
 #declare void @llvm.memset.p0.i32(ptr <dest>, i8 <val>, i32 <len>, i1 <isvolatile>)
 def llvm_memzeron(dst, size, volatile=False):
 	#"@llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)"
-	dst2 = llvm_cast('bitcast', foundation.typeFreePointer, dst)
+	dst2 = llvm_cast('bitcast', dst, foundation.typeFreePointer)
 	out(NL_INDENT)
 	out("call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(")
 	llvm_print_type_value(dst2)
@@ -540,15 +540,15 @@ def trim(int_value, width):
 	assert(int_value['isa'] == 'll_value')
 
 	if int_value['type']['width'] < width:
-		return llvm_cast('zext', foundation.typeNat32, int_value)
+		return llvm_cast('zext', int_value, foundation.typeNat32)
 	elif int_value['type']['width'] > width:
-		return llvm_cast('trunc', foundation.typeNat32, int_value)
+		return llvm_cast('trunc', int_value, foundation.typeNat32)
 	return int_value
 
 
 def llvm_memzero(dst, size, volatile=False):
 	#"@llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)"
-	dst2 = llvm_cast('bitcast', foundation.typeFreePointer, dst)
+	dst2 = llvm_cast('bitcast', dst, foundation.typeFreePointer)
 	out(NL_INDENT)
 
 	out("call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(")
@@ -564,11 +564,11 @@ def llvm_memzeron_off(dst, offset, size, volatile=False):
 	ll_off = llvm_value_num(foundation.typeInt32, offset)
 
 	# offset pointer
-	dst2 = llvm_cast("ptrtoint", foundation.typeInt64, dst)
+	dst2 = llvm_cast("ptrtoint", dst, foundation.typeInt64)
 
 	ll_dst_plus_off = llvm_eval_binary('add', dst2, ll_off)
 
-	dst3 = llvm_cast("inttoptr", foundation.typeFreePointer, ll_dst_plus_off)
+	dst3 = llvm_cast("inttoptr", ll_dst_plus_off, foundation.typeFreePointer)
 
 	# do memzero
 	llvm_memzeron(dst3, size, volatile=volatile)
@@ -578,8 +578,8 @@ def llvm_memzeron_off(dst, offset, size, volatile=False):
 # LLVM не имеет интиринсика memcmp поэтому используем стандартный...
 # @param op = ['eq', 'ne']
 def llvm_memcmp(op, p0, p1, size):
-	_p0 = llvm_cast('bitcast', foundation.typeFreePointer, p0)
-	_p1 = llvm_cast('bitcast', foundation.typeFreePointer, p1)
+	_p0 = llvm_cast('bitcast', p0, foundation.typeFreePointer)
+	_p1 = llvm_cast('bitcast', p1, foundation.typeFreePointer)
 
 	out(NL_INDENT)
 	#reg = llvm_operation("call i32 (i8*, i8*, i64) @memcmp(")
@@ -1063,7 +1063,7 @@ def do_eval_slice(v):
 		ptr_to_item = llvm_getelementptr(pointer, array_type, (llvm_value_num_zero, index), array_type['of'])
 		out("\n;")
 
-		pnv = llvm_cast("bitcast", hlir_type_pointer(v['type']), ptr_to_item)
+		pnv = llvm_cast("bitcast", ptr_to_item, hlir_type_pointer(v['type']))
 		pnv['is_adr'] = True
 		return pnv
 
@@ -1082,7 +1082,7 @@ def do_eval_slice(v):
 		return llvm_extract_item(array, result_type, index['asset'])
 
 	ptr_to_item = llvm_getelementptr(array, array_type, (llvm_value_num_zero, index), array_type['of'])
-	pnv = llvm_cast("bitcast", hlir_type_pointer(v['type']), ptr_to_item)
+	pnv = llvm_cast("bitcast", ptr_to_item, hlir_type_pointer(v['type']))
 	pnv['is_adr'] = True
 	return pnv
 
@@ -1190,7 +1190,7 @@ def cast_composite_to_composite(to_type, value, ti):
 			pnv = llvm_alloca(to_type)
 			# from, to, val
 			# приводим указатель на слот к указателю на (меньшее) значение
-			xnv = llvm_cast("bitcast", hlir_type_pointer(v['type']), pnv)
+			xnv = llvm_cast("bitcast", pnv, hlir_type_pointer(v['type']))
 			# сохраняем туда это самое меньшее значение
 			llvm_store(xnv, v)
 			#nv = llvm_load(pnv)
@@ -1200,7 +1200,7 @@ def cast_composite_to_composite(to_type, value, ti):
 			out("\n\t; trunk")
 			nv = llvm_alloca_store(v['type'], init_value=v)
 			# from, to, val
-			pnv = llvm_cast("bitcast", hlir_type_pointer(to_type), nv)
+			pnv = llvm_cast("bitcast", nv, hlir_type_pointer(to_type))
 			#nv = llvm_deref(pnv)
 			nv = pnv
 			nv['is_adr'] = True
@@ -1210,7 +1210,7 @@ def cast_composite_to_composite(to_type, value, ti):
 	out("\n\t; JUST")
 	#if v['is_adr'] or hlir_type.type_is_pointer(v['type']):
 	out("\n\t; as ptr")
-	casted_ptr = llvm_cast("bitcast", hlir_type_pointer(to_type), v)
+	casted_ptr = llvm_cast("bitcast", v, hlir_type_pointer(to_type))
 	casted_ptr['type'] = to_type
 	casted_ptr['is_adr'] = True
 	return llvm_load(casted_ptr)
@@ -1289,7 +1289,7 @@ def do_eval_cons(x):
 		return v
 
 	opcode = select_cast_operator(from_type, to_type)
-	return llvm_cast(opcode, to_type, v)
+	return llvm_cast(opcode, v, to_type)
 
 
 
