@@ -692,14 +692,14 @@ endif_0:
 	%8 = call i32 @inet_addr([0 x i8]* bitcast ([10 x i8]* @str3 to [0 x i8]*))
 	%9 = insertvalue %Struct_in_addr zeroinitializer, i32 %8, 0
 	%10 = insertvalue %Struct_sockaddr_in %7, %Struct_in_addr %9, 3
-	%11 = insertvalue [8 x i8] zeroinitializer, i8 0, 0
-	%12 = insertvalue [8 x i8] %11, i8 0, 1
-	%13 = insertvalue [8 x i8] %12, i8 0, 2
-	%14 = insertvalue [8 x i8] %13, i8 0, 3
-	%15 = insertvalue [8 x i8] %14, i8 0, 4
-	%16 = insertvalue [8 x i8] %15, i8 0, 5
-	%17 = insertvalue [8 x i8] %16, i8 0, 6
-	%18 = insertvalue [8 x i8] %17, i8 0, 7
+	%11 = insertvalue [8 x i8] zeroinitializer, i8 0, 0; --
+	%12 = insertvalue [8 x i8] %11, i8 0, 1; --
+	%13 = insertvalue [8 x i8] %12, i8 0, 2; --
+	%14 = insertvalue [8 x i8] %13, i8 0, 3; --
+	%15 = insertvalue [8 x i8] %14, i8 0, 4; --
+	%16 = insertvalue [8 x i8] %15, i8 0, 5; --
+	%17 = insertvalue [8 x i8] %16, i8 0, 6; --
+	%18 = insertvalue [8 x i8] %17, i8 0, 7; --
 	%19 = insertvalue %Struct_sockaddr_in %10, [8 x i8] %18, 4
 	store %Struct_sockaddr_in %19, %Struct_sockaddr_in* %4
 	%20 = bitcast %Struct_sockaddr_in* %4 to i8*

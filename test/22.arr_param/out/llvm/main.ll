@@ -232,14 +232,14 @@ define void @swap([2 x i32]* noalias sret([2 x i32]) %0, [2 x i32] %in) {
 }
 
 define void @ret_str([8 x i8]* noalias sret([8 x i8]) %0) {
-	%2 = insertvalue [8 x i8] zeroinitializer, i8 104, 0
-	%3 = insertvalue [8 x i8] %2, i8 101, 1
-	%4 = insertvalue [8 x i8] %3, i8 108, 2
-	%5 = insertvalue [8 x i8] %4, i8 108, 3
-	%6 = insertvalue [8 x i8] %5, i8 111, 4
-	%7 = insertvalue [8 x i8] %6, i8 33, 5
-	%8 = insertvalue [8 x i8] %7, i8 10, 6
-	%9 = insertvalue [8 x i8] %8, i8 0, 7
+	%2 = insertvalue [8 x i8] zeroinitializer, i8 104, 0; --
+	%3 = insertvalue [8 x i8] %2, i8 101, 1; --
+	%4 = insertvalue [8 x i8] %3, i8 108, 2; --
+	%5 = insertvalue [8 x i8] %4, i8 108, 3; --
+	%6 = insertvalue [8 x i8] %5, i8 111, 4; --
+	%7 = insertvalue [8 x i8] %6, i8 33, 5; --
+	%8 = insertvalue [8 x i8] %7, i8 10, 6; --
+	%9 = insertvalue [8 x i8] %8, i8 0, 7; --
 	store [8 x i8] %9, [8 x i8]* %0
 	ret void
 }

@@ -461,6 +461,16 @@ def llvm_cast(kind, from_type, to_type, value):
 	return llvm_value_reg(reg, to_type, value)
 
 
+def llvm_cast_2(kind, from_type, to_type, value):
+	reg = llvm_operation(kind)
+	print_type(from_type)
+	out(" ")
+	llvm_print_value(value)
+	out(" to ")
+	print_type(to_type)
+	return llvm_value_reg(reg, to_type, value)
+
+
 def llvm_load(x):
 	assert(x['isa'] == 'll_value')
 	if x['is_adr']:
@@ -729,16 +739,16 @@ def print_type_record(t):
 
 
 def print_type_array(t):
-	out("[")
-	array_size = t['volume']
 	sz = 0
-	if array_size != None:
-		if value_is_immediate(array_size):
+	if not hlir_type.type_is_vla(t):
+		array_size = t['volume']
+		if array_size != None:
 			sz = array_size['asset']
+
+	out("[")
 	out("%d x " % sz)
 	print_type(t['of'])
 	out("]")
-
 
 
 
@@ -1014,6 +1024,20 @@ def do_eval_call(v):
 def do_eval_index(v):
 	if value_is_immediate(v):
 		return do_eval(v['immval'])
+
+	if hlir_type.type_is_vla(v['array']['type']):
+		pa = do_eval(v['array'])
+		array_type = pa['type']['of']
+
+		pv = hlir_type_pointer(array_type)
+		pat = hlir_type_pointer(pa['type'])
+		pa = llvm_cast_2("bitcast", pv, pat, pa)
+		#mass
+		index = do_reval(v['index'])
+		result_type = v['type']
+
+		return llvm_getelementptr(pa, v['array']['type'], (llvm_value_num_zero, index), result_type)
+
 
 	if hlir_type.type_is_pointer(v['array']['type']):
 		pointer = do_reval(v['array'])
@@ -1300,8 +1324,6 @@ def do_eval_array(v):
 	# сперва вычисляем все элементы массива в регистры
 	# (кроме констант, они едут до последнего)
 	items = []
-	if not 'items' in v:
-		info("???", v['ti'])
 	for item in v['items']:
 		iv = do_reval(item)
 		items.append(iv)
@@ -1340,6 +1362,7 @@ def do_eval_array(v):
 		i = 0
 		while i < len(items):
 			xv = insertvalue(xv, items[i], i)
+			out("; --")
 			i = i + 1
 
 	return xv

@@ -311,28 +311,28 @@ define i32 @main() {
 	; copy arrays by value
 	; C backend will be use memcpy()
 	%28 = alloca [10 x i32], align 4
-	%29 = insertvalue [10 x i32] zeroinitializer, i32 0, 0
-	%30 = insertvalue [10 x i32] %29, i32 0, 1
-	%31 = insertvalue [10 x i32] %30, i32 0, 2
-	%32 = insertvalue [10 x i32] %31, i32 0, 3
-	%33 = insertvalue [10 x i32] %32, i32 0, 4
-	%34 = insertvalue [10 x i32] %33, i32 0, 5
-	%35 = insertvalue [10 x i32] %34, i32 0, 6
-	%36 = insertvalue [10 x i32] %35, i32 0, 7
-	%37 = insertvalue [10 x i32] %36, i32 0, 8
-	%38 = insertvalue [10 x i32] %37, i32 0, 9
+	%29 = insertvalue [10 x i32] zeroinitializer, i32 0, 0; --
+	%30 = insertvalue [10 x i32] %29, i32 0, 1; --
+	%31 = insertvalue [10 x i32] %30, i32 0, 2; --
+	%32 = insertvalue [10 x i32] %31, i32 0, 3; --
+	%33 = insertvalue [10 x i32] %32, i32 0, 4; --
+	%34 = insertvalue [10 x i32] %33, i32 0, 5; --
+	%35 = insertvalue [10 x i32] %34, i32 0, 6; --
+	%36 = insertvalue [10 x i32] %35, i32 0, 7; --
+	%37 = insertvalue [10 x i32] %36, i32 0, 8; --
+	%38 = insertvalue [10 x i32] %37, i32 0, 9; --
 	store [10 x i32] %38, [10 x i32]* %28
 	%39 = alloca [10 x i32], align 4
-	%40 = insertvalue [10 x i32] zeroinitializer, i32 42, 0
-	%41 = insertvalue [10 x i32] %40, i32 53, 1
-	%42 = insertvalue [10 x i32] %41, i32 64, 2
-	%43 = insertvalue [10 x i32] %42, i32 0, 3
-	%44 = insertvalue [10 x i32] %43, i32 0, 4
-	%45 = insertvalue [10 x i32] %44, i32 0, 5
-	%46 = insertvalue [10 x i32] %45, i32 0, 6
-	%47 = insertvalue [10 x i32] %46, i32 0, 7
-	%48 = insertvalue [10 x i32] %47, i32 0, 8
-	%49 = insertvalue [10 x i32] %48, i32 0, 9
+	%40 = insertvalue [10 x i32] zeroinitializer, i32 42, 0; --
+	%41 = insertvalue [10 x i32] %40, i32 53, 1; --
+	%42 = insertvalue [10 x i32] %41, i32 64, 2; --
+	%43 = insertvalue [10 x i32] %42, i32 0, 3; --
+	%44 = insertvalue [10 x i32] %43, i32 0, 4; --
+	%45 = insertvalue [10 x i32] %44, i32 0, 5; --
+	%46 = insertvalue [10 x i32] %45, i32 0, 6; --
+	%47 = insertvalue [10 x i32] %46, i32 0, 7; --
+	%48 = insertvalue [10 x i32] %47, i32 0, 8; --
+	%49 = insertvalue [10 x i32] %48, i32 0, 9; --
 	store [10 x i32] %49, [10 x i32]* %39
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --

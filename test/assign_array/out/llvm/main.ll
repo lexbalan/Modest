@@ -284,28 +284,28 @@ else_0:
 endif_0:
 	; local
 	%20 = alloca [10 x i32], align 4
-	%21 = insertvalue [10 x i32] zeroinitializer, i32 0, 0
-	%22 = insertvalue [10 x i32] %21, i32 1, 1
-	%23 = insertvalue [10 x i32] %22, i32 2, 2
-	%24 = insertvalue [10 x i32] %23, i32 3, 3
-	%25 = insertvalue [10 x i32] %24, i32 4, 4
-	%26 = insertvalue [10 x i32] %25, i32 5, 5
-	%27 = insertvalue [10 x i32] %26, i32 6, 6
-	%28 = insertvalue [10 x i32] %27, i32 7, 7
-	%29 = insertvalue [10 x i32] %28, i32 8, 8
-	%30 = insertvalue [10 x i32] %29, i32 9, 9
+	%21 = insertvalue [10 x i32] zeroinitializer, i32 0, 0; --
+	%22 = insertvalue [10 x i32] %21, i32 1, 1; --
+	%23 = insertvalue [10 x i32] %22, i32 2, 2; --
+	%24 = insertvalue [10 x i32] %23, i32 3, 3; --
+	%25 = insertvalue [10 x i32] %24, i32 4, 4; --
+	%26 = insertvalue [10 x i32] %25, i32 5, 5; --
+	%27 = insertvalue [10 x i32] %26, i32 6, 6; --
+	%28 = insertvalue [10 x i32] %27, i32 7, 7; --
+	%29 = insertvalue [10 x i32] %28, i32 8, 8; --
+	%30 = insertvalue [10 x i32] %29, i32 9, 9; --
 	store [10 x i32] %30, [10 x i32]* %20
 	%31 = alloca [10 x i32], align 4
-	%32 = insertvalue [10 x i32] zeroinitializer, i32 0, 0
-	%33 = insertvalue [10 x i32] %32, i32 0, 1
-	%34 = insertvalue [10 x i32] %33, i32 0, 2
-	%35 = insertvalue [10 x i32] %34, i32 0, 3
-	%36 = insertvalue [10 x i32] %35, i32 0, 4
-	%37 = insertvalue [10 x i32] %36, i32 0, 5
-	%38 = insertvalue [10 x i32] %37, i32 0, 6
-	%39 = insertvalue [10 x i32] %38, i32 0, 7
-	%40 = insertvalue [10 x i32] %39, i32 0, 8
-	%41 = insertvalue [10 x i32] %40, i32 0, 9
+	%32 = insertvalue [10 x i32] zeroinitializer, i32 0, 0; --
+	%33 = insertvalue [10 x i32] %32, i32 0, 1; --
+	%34 = insertvalue [10 x i32] %33, i32 0, 2; --
+	%35 = insertvalue [10 x i32] %34, i32 0, 3; --
+	%36 = insertvalue [10 x i32] %35, i32 0, 4; --
+	%37 = insertvalue [10 x i32] %36, i32 0, 5; --
+	%38 = insertvalue [10 x i32] %37, i32 0, 6; --
+	%39 = insertvalue [10 x i32] %38, i32 0, 7; --
+	%40 = insertvalue [10 x i32] %39, i32 0, 8; --
+	%41 = insertvalue [10 x i32] %40, i32 0, 9; --
 	store [10 x i32] %41, [10 x i32]* %31
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --

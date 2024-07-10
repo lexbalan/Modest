@@ -568,6 +568,15 @@ def type_is_array(t):
 	return t['kind'] == 'array'
 
 
+# VLA - variable langth array
+def type_is_vla(t):
+	if t['kind'] == 'array':
+		if t['volume'] != None:
+			from value.value import value_is_immediate
+			return not value_is_immediate(t['volume'])
+	return False
+
+
 def type_is_composite(t):
 	return t['kind'] in ['array', 'record']
 
@@ -850,8 +859,11 @@ def type_print(t, print_aka=True):
 		array_size = t['volume']
 
 		if array_size != None:
-			sz = array_size['asset']
-			print("%d" % sz, end='')
+			if type_is_vla(t):
+				print("<VAR>", end='')
+			else:
+				sz = array_size['asset']
+				print("%d" % sz, end='')
 
 		print("]", end='')
 		type_print(t['of'])

@@ -12,10 +12,18 @@ var y: Nat32
 
 
 func main() -> Int {
-	printf("tag test")
+	printf("tag test\n")
 
 	var len: Int = Int 5
 	var a: [len]Nat32
+
+	a[0] = 100
+	a[1] = 200
+	a[2] = 300
+
+	printf("a[0] = %d\n", a[0])
+	printf("a[1] = %d\n", a[1])
+	printf("a[2] = %d\n", a[2])
 
 	//a = [10, 20, 30, 40, 50]
 
