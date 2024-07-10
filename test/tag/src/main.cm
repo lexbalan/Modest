@@ -33,6 +33,8 @@ func main() -> Int {
 	printf("a[1] = %d\n", a[1])
 	printf("a[2] = %d\n", a[2])
 
+	//a = [1, 2, 3, 4, 5]
+
 	//a = [10, 20, 30, 40, 50]
 
 	return 0

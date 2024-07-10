@@ -235,27 +235,23 @@ define i32 @main() {
 	%9 = bitcast i32* %8 to [0 x i32]*
 	%10 = getelementptr inbounds [0 x i32], [0 x i32]* %9, i32 0, i32 0
 	store i32 100, i32* %10
-	%11 = bitcast i32* %8 to [0 x i32]*
-	%12 = getelementptr inbounds [0 x i32], [0 x i32]* %11, i32 0, i32 1
-	store i32 200, i32* %12
-	%13 = bitcast i32* %8 to [0 x i32]*
-	%14 = getelementptr inbounds [0 x i32], [0 x i32]* %13, i32 0, i32 2
-	store i32 300, i32* %14
-	%15 = bitcast i32* %8 to [0 x i32]*
-	%16 = getelementptr inbounds [0 x i32], [0 x i32]* %15, i32 0, i32 0
+	%11 = getelementptr inbounds [0 x i32], [0 x i32]* %9, i32 0, i32 1
+	store i32 200, i32* %11
+	%12 = getelementptr inbounds [0 x i32], [0 x i32]* %9, i32 0, i32 2
+	store i32 300, i32* %12
+	%13 = getelementptr inbounds [0 x i32], [0 x i32]* %9, i32 0, i32 0
+	%14 = load i32, i32* %13
+	%15 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str2 to [0 x i8]*), i32 %14)
+	%16 = getelementptr inbounds [0 x i32], [0 x i32]* %9, i32 0, i32 1
 	%17 = load i32, i32* %16
-	%18 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str2 to [0 x i8]*), i32 %17)
-	%19 = bitcast i32* %8 to [0 x i32]*
-	%20 = getelementptr inbounds [0 x i32], [0 x i32]* %19, i32 0, i32 1
-	%21 = load i32, i32* %20
-	%22 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str3 to [0 x i8]*), i32 %21)
-	%23 = bitcast i32* %8 to [0 x i32]*
-	%24 = getelementptr inbounds [0 x i32], [0 x i32]* %23, i32 0, i32 2
-	%25 = load i32, i32* %24
-	%26 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str4 to [0 x i8]*), i32 %25)
+	%18 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str3 to [0 x i8]*), i32 %17)
+	%19 = getelementptr inbounds [0 x i32], [0 x i32]* %9, i32 0, i32 2
+	%20 = load i32, i32* %19
+	%21 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str4 to [0 x i8]*), i32 %20)
+	;a = [1, 2, 3, 4, 5]
 	;a = [10, 20, 30, 40, 50]
-	%27 = load i8*, i8** %1
-	call void @llvm.stackrestore(i8* %27)
+	%22 = load i8*, i8** %1
+	call void @llvm.stackrestore(i8* %22)
 	ret i32 0
 }
 

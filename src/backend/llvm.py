@@ -1013,20 +1013,9 @@ def do_eval_index(v):
 		return do_eval(v['immval'])
 
 	left = do_eval(v['array'])
-
-	if hlir_type.type_is_vla(left['type']):
-		# поскольку VLA реализован через alloca
-		# и имеет тип <vla_item_type>*,
-		# нам просто нужно пределать его в указатель на массив
-		# и передать дальше (ниже) - там умеют с ними работать
-		# ex:  cast i32* to *[0 x i32]
-		from_type = hlir_type_pointer(left['type']['of'])
-		to_type = hlir_type_pointer(left['type'])
-		left = llvm_2cast('bitcast', from_type, to_type, left)
-
-
 	index = do_reval(v['index'])
 	result_type = v['type']
+
 
 	if hlir_type.type_is_pointer(left['type']):
 		# Left is a pointer in 'reg' to pointer to array
@@ -1037,6 +1026,7 @@ def do_eval_index(v):
 
 
 	# Left is an array
+
 	if not left['is_adr']:
 		# Left is an array placed in 'reg' as value
 		if not value_is_immediate(v['index']):
@@ -1670,6 +1660,7 @@ def print_stmt_var(x):
 	id_str = var['id']['str']
 
 	# only for VLA
+	is_vla = False
 	sz = None
 	if hlir_type.type_is_array(t):
 		if not value_is_immediate(t['volume']):
@@ -1677,6 +1668,22 @@ def print_stmt_var(x):
 			t = t['of']
 
 	val = llvm_alloca(t, size=sz, alignment=t['align'])
+
+
+	# VLA fix
+	left = val
+	if hlir_type.type_is_vla(var['type']):
+		# поскольку VLA реализуется через alloca
+		# и поэтому имеет тип <vla_item_type>*,
+		# нам просто нужно пределать его в указатель на массив
+		# и передать дальше (ниже) - там умеют с ними работать
+		# ex:  cast i32* to *[0 x i32]
+		from_type = hlir_type_pointer(var['type']['of'])
+		to_type = hlir_type_pointer(var['type'])
+		left = llvm_2cast('bitcast', from_type, to_type, left)
+		val = left
+
+
 	locals_add(id_str, val)
 	if x['default_value'] != None:
 		iv = do_reval(x['default_value'])
