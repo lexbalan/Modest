@@ -1676,8 +1676,9 @@ def print_stmt_var(x):
 		# поскольку VLA реализуется через alloca
 		# и поэтому имеет тип <vla_item_type>*,
 		# нам просто нужно пределать его в указатель на массив
-		# и передать дальше (ниже) - там умеют с ними работать
-		# ex:  cast i32* to *[0 x i32]
+		# ex:  %8 = alloca i32, i32 %7, align 4
+		#      %9 = bitcast i32* %8 to [0 x i32]*
+		# и дальше уже будем работать с ним как с *[0 x i32] (%9)
 		from_type = hlir_type_pointer(var['type']['of'])
 		to_type = hlir_type_pointer(var['type'])
 		left = llvm_2cast('bitcast', from_type, to_type, left)
@@ -1685,9 +1686,11 @@ def print_stmt_var(x):
 
 
 	locals_add(id_str, val)
+
 	if x['default_value'] != None:
 		iv = do_reval(x['default_value'])
 		do_assign(val, iv)
+
 	return None
 
 
