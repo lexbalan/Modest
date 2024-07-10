@@ -225,34 +225,37 @@ define i32 @main() {
 	%2 = call i8* @llvm.stacksave() 
 	store i8* %2, i8** %1
 	%3 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*))
-	%4 = alloca i32, align 4
-	store i32 5, i32* %4
-	%5 = load i32, i32* %4
-	%6 = alloca i32, i32 %5, align 4
-	%7 = bitcast i32* %6 to [0 x i32]*
-	%8 = getelementptr inbounds [0 x i32], [0 x i32]* %7, i32 0, i32 0
-	store i32 100, i32* %8
-	%9 = bitcast i32* %6 to [0 x i32]*
-	%10 = getelementptr inbounds [0 x i32], [0 x i32]* %9, i32 0, i32 1
-	store i32 200, i32* %10
-	%11 = bitcast i32* %6 to [0 x i32]*
-	%12 = getelementptr inbounds [0 x i32], [0 x i32]* %11, i32 0, i32 2
-	store i32 300, i32* %12
-	%13 = bitcast i32* %6 to [0 x i32]*
-	%14 = getelementptr inbounds [0 x i32], [0 x i32]* %13, i32 0, i32 0
-	%15 = load i32, i32* %14
-	%16 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str2 to [0 x i8]*), i32 %15)
-	%17 = bitcast i32* %6 to [0 x i32]*
-	%18 = getelementptr inbounds [0 x i32], [0 x i32]* %17, i32 0, i32 1
-	%19 = load i32, i32* %18
-	%20 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str3 to [0 x i8]*), i32 %19)
-	%21 = bitcast i32* %6 to [0 x i32]*
-	%22 = getelementptr inbounds [0 x i32], [0 x i32]* %21, i32 0, i32 2
-	%23 = load i32, i32* %22
-	%24 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str4 to [0 x i8]*), i32 %23)
+	%4 = alloca [5 x i32], align 4
+	%5 = getelementptr inbounds [5 x i32], [5 x i32]* %4, i32 0, i32 0
+	store i32 50, i32* %5
+	%6 = alloca i32, align 4
+	store i32 5, i32* %6
+	%7 = load i32, i32* %6
+	%8 = alloca i32, i32 %7, align 4
+	%9 = bitcast i32* %8 to [0 x i32]*
+	%10 = getelementptr inbounds [0 x i32], [0 x i32]* %9, i32 0, i32 0
+	store i32 100, i32* %10
+	%11 = bitcast i32* %8 to [0 x i32]*
+	%12 = getelementptr inbounds [0 x i32], [0 x i32]* %11, i32 0, i32 1
+	store i32 200, i32* %12
+	%13 = bitcast i32* %8 to [0 x i32]*
+	%14 = getelementptr inbounds [0 x i32], [0 x i32]* %13, i32 0, i32 2
+	store i32 300, i32* %14
+	%15 = bitcast i32* %8 to [0 x i32]*
+	%16 = getelementptr inbounds [0 x i32], [0 x i32]* %15, i32 0, i32 0
+	%17 = load i32, i32* %16
+	%18 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str2 to [0 x i8]*), i32 %17)
+	%19 = bitcast i32* %8 to [0 x i32]*
+	%20 = getelementptr inbounds [0 x i32], [0 x i32]* %19, i32 0, i32 1
+	%21 = load i32, i32* %20
+	%22 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str3 to [0 x i8]*), i32 %21)
+	%23 = bitcast i32* %8 to [0 x i32]*
+	%24 = getelementptr inbounds [0 x i32], [0 x i32]* %23, i32 0, i32 2
+	%25 = load i32, i32* %24
+	%26 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str4 to [0 x i8]*), i32 %25)
 	;a = [10, 20, 30, 40, 50]
-	%25 = load i8*, i8** %1
-	call void @llvm.stackrestore(i8* %25)
+	%27 = load i8*, i8** %1
+	call void @llvm.stackrestore(i8* %27)
 	ret i32 0
 }
 

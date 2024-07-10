@@ -473,6 +473,7 @@ def llvm_cast_2(kind, from_type, to_type, value):
 
 def llvm_load(x):
 	assert(x['isa'] == 'll_value')
+
 	if x['is_adr']:
 		reg = llvm_operation('load')
 		print_type(x['type'])
@@ -481,21 +482,7 @@ def llvm_load(x):
 		result_type = x['type']
 		return llvm_value_reg(reg, result_type, x)
 
-	"""	#result_type = x['type'] # if it just 'is_adr' ll_value
-		llvm_print_type_value(x)
-		pass
-	elif hlir_type.type_is_pointer(x['type']):
-		result_type = x['type']['to'] # if it's real pointer
-		#llvm_print_type_value(x)
-		print_type(x['type'])
-		out(" ")
-		llvm_print_value(x)
-
-	else:
-		assert(False, "expected address or pointer")"""
-	assert(result_type != None)
-
-	return llvm_value_reg(reg, result_type, x)
+	return x
 
 
 # сохр простых значений
@@ -1025,41 +1012,41 @@ def do_eval_index(v):
 	if value_is_immediate(v):
 		return do_eval(v['immval'])
 
-	if hlir_type.type_is_vla(v['array']['type']):
-		pa = do_eval(v['array'])
-		array_type = pa['type']['of']
+	left = do_eval(v['array'])
 
-		pv = hlir_type_pointer(array_type)
-		pat = hlir_type_pointer(pa['type'])
-		pa = llvm_cast_2("bitcast", pv, pat, pa)
-		#mass
-		index = do_reval(v['index'])
-		result_type = v['type']
+	if hlir_type.type_is_vla(left['type']):
+		# поскольку VLA реализован через alloca
+		# и имеет тип <vla_item_type>*,
+		# нам просто нужно пределать его в указатель на массив
+		# и передать дальше (ниже) - там умеют с ними работать
+		# ex:  cast i32* to *[0 x i32]
+		from_type = hlir_type_pointer(left['type']['of'])
+		to_type = hlir_type_pointer(left['type'])
+		left = llvm_cast_2('bitcast', from_type, to_type, left)
 
-		return llvm_getelementptr(pa, v['array']['type'], (llvm_value_num_zero, index), result_type)
 
-
-	if hlir_type.type_is_pointer(v['array']['type']):
-		pointer = do_reval(v['array'])
-		array_type = pointer['type']['to']
-		index = do_reval(v['index'])
-		result_type = v['type']
-		return llvm_getelementptr(pointer, array_type, (llvm_value_num_zero, index), result_type)
-
-	array = do_eval(v['array'])
-	array_type = array['type']
-	result_type = v['type']
 	index = do_reval(v['index'])
+	result_type = v['type']
 
-	# если сам массив находится в регистре: (let rec = get_rec())
-	if not array['is_adr']:
+	if hlir_type.type_is_pointer(left['type']):
+		# Left is a pointer in 'reg' to pointer to array
+		# (access to array via pointer)
+		ptr2arr = llvm_load(left)
+		array_type = ptr2arr['type']['to']
+		return llvm_getelementptr(ptr2arr, array_type, (llvm_value_num_zero, index), result_type)
+
+
+	# Left is an array
+	if not left['is_adr']:
+		# Left is an array placed in 'reg' as value
 		if not value_is_immediate(v['index']):
 			error("expected immediate index value", v['ti'])
 			return llvm_value_zero(v['ti'])
 
-		return llvm_extract_item(array, result_type, index['asset'])
+		return llvm_extract_item(left, result_type, index['asset'])
 
-	return llvm_getelementptr(array, array_type, (llvm_value_num_zero, index), result_type)
+	# Left is a pointer to array in 'reg'
+	return llvm_getelementptr(left, left['type'], (llvm_value_num_zero, index), result_type)
 
 
 

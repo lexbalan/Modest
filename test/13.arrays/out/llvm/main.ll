@@ -558,9 +558,9 @@ again_3:
 	%53 = icmp slt i32 %52, 3
 	br i1 %53 , label %body_3, label %break_3
 body_3:
-	%54 = load [0 x i32]*, [0 x i32]** %50
-	%55 = load i32, i32* %25
-	%56 = getelementptr inbounds [0 x i32], [0 x i32]* %54, i32 0, i32 %55
+	%54 = load i32, i32* %25
+	%55 = load [0 x i32]*, [0 x i32]** %50
+	%56 = getelementptr inbounds [0 x i32], [0 x i32]* %55, i32 0, i32 %54
 	%57 = load i32, i32* %56
 	%58 = load i32, i32* %25
 	%59 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str8 to [0 x i8]*), i32 %58, i32 %57)
@@ -580,9 +580,9 @@ again_4:
 	%66 = icmp slt i32 %65, 3
 	br i1 %66 , label %body_4, label %break_4
 body_4:
-	%67 = load [0 x i32]*, [0 x i32]** %63
-	%68 = load i32, i32* %25
-	%69 = getelementptr inbounds [0 x i32], [0 x i32]* %67, i32 0, i32 %68
+	%67 = load i32, i32* %25
+	%68 = load [0 x i32]*, [0 x i32]** %63
+	%69 = getelementptr inbounds [0 x i32], [0 x i32]* %68, i32 0, i32 %67
 	%70 = load i32, i32* %69
 	%71 = load i32, i32* %25
 	%72 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str10 to [0 x i8]*), i32 %71, i32 %70)

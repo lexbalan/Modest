@@ -16,6 +16,12 @@ var y: @volatile Nat32
 func main() -> Int {
 	printf("tag test\n")
 
+
+	var y: [5]Nat32
+
+	y[0] = 50
+
+
 	var len = Int 5
 	var a: [len]Nat32
 
