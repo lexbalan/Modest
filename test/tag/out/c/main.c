@@ -22,6 +22,12 @@ int main()
 {
 	printf("tag test\n");
 
+
+	uint32_t y[5];
+
+	y[0] = 50;
+
+
 	int len;
 	len = 5;
 	uint32_t a[len];
@@ -34,8 +40,15 @@ int main()
 	printf("a[1] = %d\n", a[1]);
 	printf("a[2] = %d\n", a[2]);
 
+	#define size  (sizeof(uint32_t[len]))
+	printf("sizeof(a) == %lu", size);
+
+	//a = [1, 2, 3, 4, 5]
+
 	//a = [10, 20, 30, 40, 50]
 
 	return 0;
 }
+
+#undef size
 

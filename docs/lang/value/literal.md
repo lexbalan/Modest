@@ -18,7 +18,7 @@
 
 
 ## Integer literals
-Integer literals have type [**GenericNumeric**](./types.md#)
+Integer literals have type [**GenericInteger**](./types.md#)
 ```swift
 0, 1, 2, ...
 ```

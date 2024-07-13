@@ -19,8 +19,6 @@
   * [Pointer](./type/pointer.md)
 
 - [Values](./value/README.md)
-  <!--* [Numeric](./value/numeric.md)-->
-  <!--* [String](./value/string.md)-->
   * [Literal](./value/literal.md)
   * [Cons](./value/cons.md)
   * [Binary](./value/binary.md)

@@ -1,7 +1,7 @@
 # Values
 
 ### Zero value
-Zero value means 0 for any Numeric types, empty array value and empty record value.
+Zero value means 0 for any Integer type, empty array value and empty record value.
 
 ```
 	0, [], {}

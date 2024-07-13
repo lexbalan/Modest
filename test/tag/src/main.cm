@@ -33,6 +33,9 @@ func main() -> Int {
 	printf("a[1] = %d\n", a[1])
 	printf("a[2] = %d\n", a[2])
 
+	//let size = sizeof([len]Nat32)
+	//printf("sizeof(a) == %lu", size)
+
 	//a = [1, 2, 3, 4, 5]
 
 	//a = [10, 20, 30, 40, 50]
