@@ -738,6 +738,7 @@ def type_copy(t):
 
 
 def type_get_size(t):
+	assert(not type_is_vla(t))  #TODO: временная защита
 	return t['size']
 
 

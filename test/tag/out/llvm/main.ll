@@ -212,6 +212,9 @@ declare void @perror(%ConstCharStr* %str)
 @str2 = private constant [11 x i8] [i8 97, i8 91, i8 48, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 @str3 = private constant [11 x i8] [i8 97, i8 91, i8 49, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 @str4 = private constant [11 x i8] [i8 97, i8 91, i8 50, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str5 = private constant [11 x i8] [i8 97, i8 91, i8 48, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str6 = private constant [11 x i8] [i8 97, i8 91, i8 49, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str7 = private constant [11 x i8] [i8 97, i8 91, i8 50, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 
 
 
@@ -248,10 +251,26 @@ define i32 @main() {
 	%19 = getelementptr inbounds [0 x i32], [0 x i32]* %9, i32 0, i32 2
 	%20 = load i32, i32* %19
 	%21 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str4 to [0 x i8]*), i32 %20)
-	;a = [1, 2, 3, 4, 5]
-	;a = [10, 20, 30, 40, 50]
-	%22 = load i8*, i8** %1
-	call void @llvm.stackrestore(i8* %22)
+	; -- STMT ASSIGN ARRAY --
+	; -- start vol eval --
+	; -- end vol eval --
+	%22 = insertvalue [5 x i3] zeroinitializer, i3 1, 0; --
+	%23 = insertvalue [5 x i3] %22, i3 2, 1; --
+	%24 = insertvalue [5 x i3] %23, i3 3, 2; --
+	%25 = insertvalue [5 x i3] %24, i3 4, 3; --
+	%26 = insertvalue [5 x i3] %25, i3 5, 4; --
+	store [0 x i32] %26, [0 x i32]* %9
+	%27 = getelementptr inbounds [0 x i32], [0 x i32]* %9, i32 0, i32 0
+	%28 = load i32, i32* %27
+	%29 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str5 to [0 x i8]*), i32 %28)
+	%30 = getelementptr inbounds [0 x i32], [0 x i32]* %9, i32 0, i32 1
+	%31 = load i32, i32* %30
+	%32 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str6 to [0 x i8]*), i32 %31)
+	%33 = getelementptr inbounds [0 x i32], [0 x i32]* %9, i32 0, i32 2
+	%34 = load i32, i32* %33
+	%35 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str7 to [0 x i8]*), i32 %34)
+	%36 = load i8*, i8** %1
+	call void @llvm.stackrestore(i8* %36)
 	ret i32 0
 }
 

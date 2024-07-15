@@ -64,7 +64,7 @@ void test()
 {
 	// тестируем работу с локальным generic массивом
 	int8_t yy[6];
-	memcpy(&yy, &(int8_t[6]){0xAA, 0x55, 0x02, 0x00, 0x00, 0x16}, sizeof(int8_t[6]));
+	memcpy(&yy, &(int8_t[]){0xAA, 0x55, 0x02, 0x00, 0x00, 0x16}, sizeof(int8_t[6]));
 	int32_t i;
 	i = 0;
 	while (i < (sizeof(yy) / sizeof(yy[0]))) {

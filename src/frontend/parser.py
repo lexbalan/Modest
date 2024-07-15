@@ -613,9 +613,15 @@ class Parser:
 			return {'isa': 'ast_value', 'kind': 'unsafe', 'value': v, 'ti': ti}
 		elif self.match("sizeof"):
 			self.match("(")
-			t = self.expr_type()
+			rv = None
+			if self.is_type_expr():
+				t = self.expr_type()
+				rv = {'isa': 'ast_value', 'kind': 'sizeof_type', 'type': t, 'ti': ti}
+			else:
+				v = self.expr_value()
+				rv = {'isa': 'ast_value', 'kind': 'sizeof_value', 'value': v, 'ti': ti}
 			self.need(")")
-			return {'isa': 'ast_value', 'kind': 'sizeof', 'type': t, 'ti': ti}
+			return rv
 		elif self.match("alignof"):
 			self.match("(")
 			t = self.expr_type()

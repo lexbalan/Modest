@@ -656,18 +656,68 @@ def print_cast(t, v, ctx=[]):
 
 
 
+
+
+def print_value_cons_array(x, ctx):
+	to_type = x['type']
+	value = x['value']
+	from_type = value['type']
+
+	# Local:
+	# В C мы не можем просто напечатать {0, 1, 2, 3} и получить массив
+	# Но мы можем сделать так: (<item_type>[4]){0, 1, 2, 3}
+	# But in Global:
+	# печатаем как есть, иначе ошибка (о Боже C это нечто!):
+	# {0, 1, 2, 3}
+	#if is_global_context():
+	if hlir_type.type_is_generic_array(from_type):
+		# если это литеральная (и не глобальная) константа-массив
+		# то мы должны ее привести к требуемому типу
+		is_const = value['kind'] in ['const', 'literal', 'add']
+		if is_const and not 'kostil' in value['att']:
+			ctx=['array_as_array']
+
+			if hlir_type.type_is_char(to_type['of']):
+				if hlir_type.type_is_string(from_type['of']):
+					char_width = to_type['of']['width']
+
+					chars = []
+					for item in value['items']:
+						ch = item['asset']
+						chars.append(ch)
+
+					print_string_literal(chars, char_width)
+					return
+
+			print_cast(to_type, value, ctx=ctx)
+		else:
+			print_value(value, ctx=ctx)
+		return
+
+
+	if hlir_type.type_is_string(from_type):
+		if hlir_type.type_is_char(to_type['of']):
+			# cast <string literal> to <array of chars>:
+			if to_type['of']['width'] == from_type['width']:
+				print_value(value, ctx=ctx)
+			else:
+				print_string_literal(value['asset'], to_type['of']['width'])
+			return
+
+	return print_cast(to_type, value, ctx)
+
+
 def print_value_cons(x, ctx):
 	to_type = x['type']
 	value = x['value']
 	from_type = value['type']
 
-	if hlir_type.type_is_string(from_type):
-		# cast <string literal> to <array of chars>:
-		if hlir_type.type_is_array_of_char(to_type):
-			if to_type['of']['width'] != from_type['width']:
-				print_string_literal(value['asset'], to_type['of']['width'])
-				return
+	if hlir_type.type_is_array(to_type):
+		return print_value_cons_array(x, ctx)
 
+
+
+	if hlir_type.type_is_string(from_type):
 		# cast <string literal> to <pointer to array of chars>:
 		if hlir_type.type_is_pointer(to_type):
 			# let genericStringConst = "S-t-r-i-n-g-Ω 🐀🎉🦄"
@@ -690,38 +740,6 @@ def print_value_cons(x, ctx):
 			print_cast(to_type, value, ctx)
 			return
 
-	# Local:
-	# В C мы не можем просто напечатать {0, 1, 2, 3} и получить массив
-	# Но мы можем сделать так: (<item_type>[4]){0, 1, 2, 3}
-	# But in Global:
-	# печатаем как есть, иначе ошибка (о Боже C это нечто!):
-	# {0, 1, 2, 3}
-	#if is_global_context():
-	if hlir_type.type_is_array(to_type):
-		if hlir_type.type_is_generic_array(from_type):
-			# если это литеральная (и не глобальная) константа-массив
-			# то мы должны ее привести к требуемому типу
-			is_const = value['kind'] in ['const', 'literal', 'add']
-			if is_const and not 'kostil' in value['att']:
-				ctx=['array_as_array']
-
-				if hlir_type.type_is_char(to_type['of']):
-					if hlir_type.type_is_string(from_type['of']):
-						char_width = to_type['of']['width']
-
-						chars = []
-						for item in value['items']:
-							ch = item['asset']
-							chars.append(ch)
-
-						print_string_literal(chars, char_width)
-						return
-
-				print_cast(to_type, value, ctx=ctx)
-			else:
-				print_value(value, ctx=ctx)
-			return
-
 
 	if hlir_type.type_is_record(to_type):
 		if hlir_type.type_is_generic_record(from_type):
@@ -732,8 +750,8 @@ def print_value_cons(x, ctx):
 			return
 
 
-	# RecordA -> RecordB
-	if hlir_type.type_is_record(to_type):
+		# RecordA -> RecordB
+		#if hlir_type.type_is_record(to_type):
 		if hlir_type.type_is_record(from_type):
 			# C cannot cast struct to struct (!)
 			print_cast_hard(to_type, value)
@@ -1090,7 +1108,12 @@ def print_value_var(x, ctx):
 	return print_value_by_id(x, ctx, prefix='')
 
 
-def print_value_sizeof(x, ctx):
+def print_value_sizeof_value(x, ctx):
+	out("sizeof ")
+	print_value(x['of'])
+
+
+def print_value_sizeof_type(x, ctx):
 	out("sizeof(")
 	print_type(x['of'], array_as_ptr=False)
 	out(")")
@@ -1175,7 +1198,8 @@ def print_value(x, ctx=[], need_wrap=False):
 	elif k == 'index': print_value_index(x, ctx)
 	elif k == 'slice': print_value_slice(x, ctx)
 	elif k == 'access': print_value_access(x, ctx)
-	elif k == 'sizeof': print_value_sizeof(x, ctx)
+	elif k == 'sizeof_value': print_value_sizeof_value(x, ctx)
+	elif k == 'sizeof_type': print_value_sizeof_type(x, ctx)
 	elif k == 'alignof': print_value_alignof(x, ctx)
 	elif k == 'offsetof': y = print_value_offsetof(x, ctx)
 	elif k == 'lengthof': y = print_value_lengthof(x, ctx)
@@ -1899,7 +1923,6 @@ def run(module, outname):
 
 
 
-
 # возвращает само значение из цепочки cons
 # (если только это не cons который приводит generic_composite,
 # тк такой cons нужно печатать)
@@ -1912,6 +1935,14 @@ def get_root_value(x):
 			return x
 		return get_root_value(x['value'])
 	return x
+
+
+
+def cons_vla_from_literal_array(x):
+	if x['kind'] == 'cons':
+		if hlir_type.type_is_vla(x['type']):
+			return x['value']['kind'] in ['literal', 'add']
+	return False
 
 
 # получает значение, печатает указатель на его корень (корневое значение)
@@ -1930,15 +1961,27 @@ def print_value_as_ptr(x):
 		if x['kind'] in ['literal', 'add']:
 			out("(")
 			if hlir_type.type_is_array(t):
-				# only for ARRAYS
-				if value_is_immediate(t['volume']):
+				"""if not hlir_type.type_is_vla(t):
+					hlir_type.type_print(t)
+
 					print_type_array(t, as_pointer=False)
-				else:
-					print_type_array(t, as_pointer=False, unk_voume=True)
+				else:"""
+				print_type_array(t, as_pointer=False, unk_voume=True)
 
 			else:
 				print_type(t, array_as_ptr=False)
 			out(")")
+
+		elif cons_vla_from_literal_array(x):
+			# we need to print:
+			#  &(uint32_t[]){1, 2, 3, 4, 5}
+			# instead of:
+			#  &(uint32_t[len]){1, 2, 3, 4, 5}
+			out("(")
+			print_type_array(t, as_pointer=False, unk_voume=True)
+			out(")")
+			print_value(x['value'])
+			return
 
 		print_value(x)
 

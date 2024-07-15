@@ -567,10 +567,15 @@ def print_value_terminal(x, ctx):
 	return
 
 
-def print_value_sizeof(x, ctx):
+def print_value_sizeof_value(x, ctx):
+	out("sizeof ")
+	print_value(x['of'])
+
+def print_value_sizeof_type(x, ctx):
 	out("sizeof(")
 	print_type(x['of'])
 	out(")")
+
 
 def print_value_alignof(x, ctx):
 	out("alignof(")
@@ -633,7 +638,8 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 	elif k == 'index': print_value_index(x, ctx)
 	elif k == 'access': print_value_access(x, ctx)
 	elif k == 'slice': print_value_slice(x, ctx)
-	elif k == 'sizeof': print_value_sizeof(x, ctx)
+	elif k == 'sizeof_value': print_value_sizeof_value(x, ctx)
+	elif k == 'sizeof_type': print_value_sizeof_type(x, ctx)
 	elif k == 'alignof': print_value_alignof(x, ctx)
 	elif k == 'offsetof': print_value_offsetof(x, ctx)
 	elif k == 'lengthof': print_value_lengthof(x, ctx)

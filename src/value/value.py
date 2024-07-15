@@ -328,12 +328,28 @@ def value_cons_immediate(t, v, method, ti):
 
 
 
-def value_sizeof(of, ti):
+def value_sizeof_type(of, ti):
 	size = hlir_type.type_get_size(of)
 	type = hlir_type.hlir_type_generic_int_for(size, signed=False, ti=ti)
 	return {
 		'isa': 'value',
-		'kind': 'sizeof',
+		'kind': 'sizeof_type',
+		'of': of,
+		'type': type,
+		'immutable': True,
+		'immediate': True,
+		'asset': size,
+		'att': [],
+		'expr_ti': ti,
+		'ti': ti
+	}
+
+def value_sizeof_value(of, ti):
+	size = hlir_type.type_get_size(of['type'])
+	type = hlir_type.hlir_type_generic_int_for(size, signed=False, ti=ti)
+	return {
+		'isa': 'value',
+		'kind': 'sizeof_value',
 		'of': of,
 		'type': type,
 		'immutable': True,

@@ -1502,9 +1502,15 @@ def do_value_float(x):
 	return fv
 
 
-def do_value_sizeof(x):
-	of = do_type(x['type'])
-	return value_sizeof(of, ti=x['ti'])
+def do_value_sizeof_type(x):
+	t = do_type(x['type'])
+	return value_sizeof_type(t, ti=x['ti'])
+
+
+def do_value_sizeof_value(x):
+	v = do_value(x['value'])
+	return value_sizeof_value(v, ti=x['ti'])
+
 
 
 def do_value_alignof(x):
@@ -1603,7 +1609,8 @@ def do_value(x):
 	elif k == 'negative': v = do_value_neg(x)
 	elif k == 'positive': v = do_value_pos(x)
 	elif k == 'unsafe': v = do_value_unsafe(x)
-	elif k == 'sizeof': v = do_value_sizeof(x)
+	elif k == 'sizeof_value': v = do_value_sizeof_value(x)
+	elif k == 'sizeof_type': v = do_value_sizeof_type(x)
 	elif k == 'alignof': v = do_value_alignof(x)
 	elif k == 'offsetof': v = do_value_offsetof(x)
 	elif k == 'shl': v = do_value_shift(x)

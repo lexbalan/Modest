@@ -1220,9 +1220,24 @@ def cast_array_to_array(to_type, value, ti):
 
 
 
+def eval_cons_array(x):
+	if value_is_immediate(x):
+		if hlir_type.type_is_vla(x['type']):
+			return do_eval_literal(x['value'])
+		return do_eval_literal(x)
+
+	#if hlir_type.type_is_array(from_type):
+	#	if hlir_type.type_is_array(to_type):
+	return cast_array_to_array(x['type'], x['value'], x['ti'])
+
+
+
 def do_eval_cons(x):
 	value = x['value']
 	to_type = x['type']
+
+	if hlir_type.type_is_array(to_type):
+		return eval_cons_array(x)
 
 	if value_is_immediate(x):
 		return do_eval_literal(x)
@@ -1252,10 +1267,6 @@ def do_eval_cons(x):
 			return cast_record_to_record(to_type, value, x['ti'])
 
 
-	if hlir_type.type_is_array(from_type):
-		if hlir_type.type_is_array(to_type):
-			nv = cast_array_to_array(to_type, value, x['ti'])
-			return nv
 
 	if hlir_type.type_is_va_list(from_type):
 		# приведение объекта типа va_list особенное
@@ -1494,7 +1505,7 @@ def do_eval(x):
 	elif k == 'index': y = do_eval_index(x)
 	elif k == 'access': y = do_eval_access(x)
 	elif k == 'slice': y = do_eval_slice(x)
-	elif k in ['sizeof', 'lengthof', 'alignof', 'offsetof']:
+	elif k in ['sizeof_value', 'sizeof_type', 'lengthof', 'alignof', 'offsetof']:
 		y = do_eval_literal(x)
 	elif k == 'va_start': y = do_eval_va_start(x)
 	elif k == 'va_arg': y = do_eval_va_arg(x)

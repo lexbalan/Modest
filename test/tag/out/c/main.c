@@ -40,15 +40,17 @@ int main()
 	printf("a[1] = %d\n", a[1]);
 	printf("a[2] = %d\n", a[2]);
 
-	#define size  (sizeof(uint32_t[len]))
-	printf("sizeof(a) == %lu", size);
+	/*
+	let size = sizeof(a)
+	printf("sizeof(a) == %lu", size)
+	*/
 
-	//a = [1, 2, 3, 4, 5]
+	memcpy(&a, &(uint32_t[]){1, 2, 3, 4, 5}, sizeof(uint32_t[len]));
 
-	//a = [10, 20, 30, 40, 50]
+	printf("a[0] = %d\n", a[0]);
+	printf("a[1] = %d\n", a[1]);
+	printf("a[2] = %d\n", a[2]);
 
 	return 0;
 }
-
-#undef size
 
