@@ -1207,19 +1207,6 @@ def cast_composite_to_composite(to_type, value, ti):
 
 
 
-def cast_record_to_record(to_type, value, ti):
-	#info("cast_record_to_record", ti)
-	#out("\n\t; cast_record_to_record")
-	return cast_composite_to_composite(to_type, value, ti)
-
-
-def cast_array_to_array(to_type, value, ti):
-	#info("cast_array_to_array", ti)
-	out("\n\t; cast_array_to_array")
-	return cast_composite_to_composite(to_type, value, ti)
-
-
-
 def eval_cons_record(x):
 	value = x['value']
 	from_type = value['type']
@@ -1229,7 +1216,7 @@ def eval_cons_record(x):
 		# Cm имеет структурную систему типов, тогда как llvm - номинативную
 		# приведение структуры к структуре по значению не поддерживается LLVM
 		# поэтому делаем его отдельно
-		return cast_record_to_record(to_type, value, x['ti'])
+		return cast_composite_to_composite(to_type, value, x['ti'])
 
 
 def eval_cons_array(x):
@@ -1240,7 +1227,7 @@ def eval_cons_array(x):
 
 	#if hlir_type.type_is_array(from_type):
 	#	if hlir_type.type_is_array(to_type):
-	return cast_array_to_array(x['type'], x['value'], x['ti'])
+	return cast_composite_to_composite(x['type'], x['value'], x['ti'])
 
 
 

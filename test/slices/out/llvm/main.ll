@@ -531,7 +531,6 @@ break_4:
 	%182 = load i32, i32* %176
 	%183 = sub i32 %181, %182
 	; -- end vol eval --
-	; cast_array_to_array
 	%184 = load i8, i8* %174
 	%185 = sext i8 %184 to i32
 	%186 = load i8, i8* %175

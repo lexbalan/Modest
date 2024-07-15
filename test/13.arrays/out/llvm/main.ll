@@ -397,7 +397,6 @@ define void @f0([30 x i8]* noalias sret([30 x i8]) %0, [20 x i8] %x) {
 	%3 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*), [20 x i8]* %2)
 	; truncate array
 	%4 = alloca [6 x i8], align 1
-	; cast_array_to_array
 	; cast_composite_to_composite
 	; trunk
 	%5 = alloca [20 x i8]
@@ -410,7 +409,6 @@ define void @f0([30 x i8]* noalias sret([30 x i8]) %0, [20 x i8] %x) {
 	%9 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str2 to [0 x i8]*), [6 x i8]* %4)
 	; extend array
 	%10 = alloca [30 x i8], align 1
-	; cast_array_to_array
 	; cast_composite_to_composite
 	; extend
 	%11 = alloca [30 x i8]
@@ -644,7 +642,6 @@ endif_0:
 	%108 = insertvalue [3 x i32] %107, i32 30, 2; --
 	store [3 x i32] %108, [3 x i32]* %105
 	%109 = alloca [6 x i32], align 4
-	; cast_array_to_array
 	; cast_composite_to_composite
 	; JUST
 	; as ptr
@@ -709,7 +706,6 @@ endif_1:
 	; -- start vol eval --
 	%147 = zext i3 4 to i32
 	; -- end vol eval --
-	; cast_array_to_array
 	; cast_composite_to_composite
 	; JUST
 	; as ptr
@@ -730,7 +726,6 @@ endif_1:
 	; -- start vol eval --
 	%159 = zext i4 10 to i32
 	; -- end vol eval --
-	; cast_array_to_array
 	; cast_composite_to_composite
 	; JUST
 	; as ptr
