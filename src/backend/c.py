@@ -658,6 +658,28 @@ def print_cast(t, v, ctx=[]):
 
 
 
+def print_value_cons_record(x, ctx):
+	to_type = x['type']
+	value = x['value']
+	from_type = value['type']
+
+	if hlir_type.type_is_generic_record(from_type):
+		if is_local_context():
+			print_cast(to_type, value)
+		else:
+			print_value(value, ctx=ctx)
+		return
+
+
+	# RecordA -> RecordB
+	#if hlir_type.type_is_record(to_type):
+	if hlir_type.type_is_record(from_type):
+		# C cannot cast struct to struct (!)
+		print_cast_hard(to_type, value)
+		return
+
+
+
 def print_value_cons_array(x, ctx):
 	to_type = x['type']
 	value = x['value']
@@ -707,6 +729,7 @@ def print_value_cons_array(x, ctx):
 	return print_cast(to_type, value, ctx)
 
 
+
 def print_value_cons(x, ctx):
 	to_type = x['type']
 	value = x['value']
@@ -715,7 +738,8 @@ def print_value_cons(x, ctx):
 	if hlir_type.type_is_array(to_type):
 		return print_value_cons_array(x, ctx)
 
-
+	if hlir_type.type_is_record(to_type):
+		return print_value_cons_record(x, ctx)
 
 	if hlir_type.type_is_string(from_type):
 		# cast <string literal> to <pointer to array of chars>:
@@ -741,23 +765,6 @@ def print_value_cons(x, ctx):
 			return
 
 
-	if hlir_type.type_is_record(to_type):
-		if hlir_type.type_is_generic_record(from_type):
-			if is_local_context():
-				print_cast(to_type, value)
-			else:
-				print_value(value, ctx=ctx)
-			return
-
-
-		# RecordA -> RecordB
-		#if hlir_type.type_is_record(to_type):
-		if hlir_type.type_is_record(from_type):
-			# C cannot cast struct to struct (!)
-			print_cast_hard(to_type, value)
-			return
-
-
 	if x['method'] == 'implicit':
 		# не печатаем обычный implicit_cast
 		# (это не касается того что выше ^^)
@@ -769,28 +776,25 @@ def print_value_cons(x, ctx):
 		print_value(value)
 		return
 
-	# (!) because
-	# - in Cm int32(-1) -> uint64 => 0x00000000ffffffff
+
+	# (!) WARNING (!)
 	# - in C  int32(-1) -> uint64 => 0xffffffffffffffff
+	# - in Cm int32(-1) -> uint64 => 0x00000000ffffffff
 	# required: (uint64_t)((uint32)int32_value)
-	if hlir_type.type_is_integer(from_type) and hlir_type.type_is_integer(to_type):
-		if hlir_type.type_is_signed(from_type) and hlir_type.type_is_unsigned(to_type):
-			if from_type['size'] < to_type['size']:
-				out("((")
-				print_type(to_type)
-				out(")")
-				nat_same_sz = foundation.type_select_nat(from_type['width'])
-				print_cast(nat_same_sz, value, ctx)
-				out(")")
-				return
+	if hlir_type.type_is_integer(to_type):
+		if hlir_type.type_is_integer(from_type):
+			if hlir_type.type_is_signed(from_type) and hlir_type.type_is_unsigned(to_type):
+				if from_type['size'] < to_type['size']:
+					out("((")
+					print_type(to_type)
+					out(")")
+					nat_same_sz = foundation.type_select_nat(from_type['width'])
+					print_cast(nat_same_sz, value, ctx)
+					out(")")
+					return
 
-	#out("/*?%s?*/" % value['type']['kind'])
-
-	#type_print(value['type'])
-	#print(" -> ", end='')
-	#type_print(x['type'])
-	#print()
 	print_cast(to_type, value, ctx)
+
 
 
 def is_zero_tail(values, i, n):
