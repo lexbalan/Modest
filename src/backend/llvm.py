@@ -1245,6 +1245,8 @@ def eval_cons_array(x):
 
 
 def do_eval_cons(x):
+	to_type = x['type']
+
 	if value_is_immediate(x):
 		return do_eval_literal(x)
 
@@ -1256,7 +1258,6 @@ def do_eval_cons(x):
 
 
 	value = x['value']
-	to_type = x['type']
 	from_type = value['type']
 
 
