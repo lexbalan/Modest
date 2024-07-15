@@ -1261,8 +1261,8 @@ def do_eval_cons(x):
 	from_type = value['type']
 
 
-	if hlir_type.type_is_string(from_type):
-		if hlir_type.type_is_pointer_to_array_of_char(to_type):
+	if hlir_type.type_is_pointer_to_array_of_char(to_type):
+		if hlir_type.type_is_string(from_type):
 			string_of = to_type['to']['of']
 			char_pow = string_of['width']
 			return llvm_value_str(x['strid'], x['asset'], x['type'], value, isz='zstring' in x['att'])
