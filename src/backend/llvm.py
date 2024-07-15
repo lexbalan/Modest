@@ -1248,11 +1248,11 @@ def do_eval_cons(x):
 	value = x['value']
 	to_type = x['type']
 
-	if hlir_type.type_is_array(to_type):
-		return eval_cons_array(x)
-
 	if value_is_immediate(x):
 		return do_eval_literal(x)
+
+	if hlir_type.type_is_array(to_type):
+		return eval_cons_array(x)
 
 	if hlir_type.type_is_record(to_type):
 		return eval_cons_record(x)
