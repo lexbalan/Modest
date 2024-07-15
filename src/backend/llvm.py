@@ -1245,9 +1245,6 @@ def eval_cons_array(x):
 
 
 def do_eval_cons(x):
-	value = x['value']
-	to_type = x['type']
-
 	if value_is_immediate(x):
 		return do_eval_literal(x)
 
@@ -1258,8 +1255,10 @@ def do_eval_cons(x):
 		return eval_cons_record(x)
 
 
-
+	value = x['value']
+	to_type = x['type']
 	from_type = value['type']
+
 
 	if hlir_type.type_is_string(from_type):
 		if hlir_type.type_is_pointer_to_array_of_char(to_type):
@@ -1277,9 +1276,6 @@ def do_eval_cons(x):
 			return llvm_value_num(to_type, value['asset'])
 
 
-
-
-
 	if hlir_type.type_is_va_list(from_type):
 		# приведение объекта типа va_list особенное
 		# оно дает доступ к следующему элементу списка
@@ -1288,7 +1284,6 @@ def do_eval_cons(x):
 
 
 	v = do_reval(value)
-
 
 
 	# AnyNonZeroValue to Bool  ==  true  (!)
