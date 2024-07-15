@@ -1220,6 +1220,18 @@ def cast_array_to_array(to_type, value, ti):
 
 
 
+def eval_cons_record(x):
+	value = x['value']
+	from_type = value['type']
+	to_type = x['type']
+
+	if hlir_type.type_is_record(from_type):
+		# Cm имеет структурную систему типов, тогда как llvm - номинативную
+		# приведение структуры к структуре по значению не поддерживается LLVM
+		# поэтому делаем его отдельно
+		return cast_record_to_record(to_type, value, x['ti'])
+
+
 def eval_cons_array(x):
 	if value_is_immediate(x):
 		if hlir_type.type_is_vla(x['type']):
@@ -1242,6 +1254,11 @@ def do_eval_cons(x):
 	if value_is_immediate(x):
 		return do_eval_literal(x)
 
+	if hlir_type.type_is_record(to_type):
+		return eval_cons_record(x)
+
+
+
 	from_type = value['type']
 
 	if hlir_type.type_is_string(from_type):
@@ -1259,12 +1276,7 @@ def do_eval_cons(x):
 		if value_is_immediate(value):
 			return llvm_value_num(to_type, value['asset'])
 
-	# Cm имеет структурную систему типов, тогда как llvm - номинативную
-	# приведение структуры к структуре по значению не поддерживается LLVM
-	# поэтому делаем его отдельно
-	if hlir_type.type_is_record(from_type):
-		if hlir_type.type_is_record(to_type):
-			return cast_record_to_record(to_type, value, x['ti'])
+
 
 
 
