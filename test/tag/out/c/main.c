@@ -24,13 +24,13 @@ int main()
 
 
 	uint32_t y[5];
-
 	y[0] = 50;
 
 
 	int len;
 	len = 5;
 	uint32_t a[len];
+
 
 	a[0] = 100;
 	a[1] = 200;
@@ -41,6 +41,7 @@ int main()
 	printf("a[2] = %d\n", a[2]);
 
 	/*
+	len = 22
 	let size = sizeof(a)
 	printf("sizeof(a) == %lu", size)
 	*/

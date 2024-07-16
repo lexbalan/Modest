@@ -76,11 +76,11 @@ def array_can(to, from_type, method):
 	ct = select_common_type(to['of'], from_type['of'])
 
 	if ct == None:
-		return None
+		return False
 
 	if not hlir_type.type_eq(to['of'], ct):
 		info("unsuitable item type", from_type['ti'])
-		return None
+		return False
 
 	if hlir_type.type_is_generic(from_type):
 		# GenericArray -> Array
