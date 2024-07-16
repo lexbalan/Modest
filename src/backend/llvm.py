@@ -1334,20 +1334,21 @@ def do_eval_array(v):
 	if is_global_context():
 		return llvm_value_array(items, v['type'], v)
 
-	# local.
+	#
+	# local context
+	#
 
-	if True:
-		# если мы локальны то создадим иммутабельную структуру
-		# с массивом (insertvalue)
-		#%5 = insertvalue %Type24 zeroinitializer, %Int32 1, 0
-		xv = llvm_value_array([], v['type'])
+	# если мы локальны то создадим иммутабельную структуру
+	# с массивом (insertvalue)
+	#%5 = insertvalue %Type24 zeroinitializer, %Int32 1, 0
+	xv = llvm_value_array([], v['type'])
 
-		# набиваем массив
-		i = 0
-		while i < len(items):
-			xv = insertvalue(xv, items[i], i)
-			out("; --")
-			i = i + 1
+	# набиваем массив
+	i = 0
+	while i < len(items):
+		xv = insertvalue(xv, items[i], i)
+		out("; --")
+		i = i + 1
 
 	return xv
 
