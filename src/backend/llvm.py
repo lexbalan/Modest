@@ -1347,7 +1347,6 @@ def do_eval_array(v):
 	i = 0
 	while i < len(items):
 		xv = insertvalue(xv, items[i], i)
-		out("; --")
 		i = i + 1
 
 	return xv
