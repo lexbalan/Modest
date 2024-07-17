@@ -261,16 +261,16 @@ define i32 @main() {
 	; by value
 	;
 	%2 = alloca [10 x i32], align 4
-	%3 = insertvalue [10 x i32] zeroinitializer, i32 0, 0; --
-	%4 = insertvalue [10 x i32] %3, i32 1, 1; --
-	%5 = insertvalue [10 x i32] %4, i32 2, 2; --
-	%6 = insertvalue [10 x i32] %5, i32 3, 3; --
-	%7 = insertvalue [10 x i32] %6, i32 4, 4; --
-	%8 = insertvalue [10 x i32] %7, i32 5, 5; --
-	%9 = insertvalue [10 x i32] %8, i32 6, 6; --
-	%10 = insertvalue [10 x i32] %9, i32 7, 7; --
-	%11 = insertvalue [10 x i32] %10, i32 8, 8; --
-	%12 = insertvalue [10 x i32] %11, i32 9, 9; --
+	%3 = insertvalue [10 x i32] zeroinitializer, i32 0, 0
+	%4 = insertvalue [10 x i32] %3, i32 1, 1
+	%5 = insertvalue [10 x i32] %4, i32 2, 2
+	%6 = insertvalue [10 x i32] %5, i32 3, 3
+	%7 = insertvalue [10 x i32] %6, i32 4, 4
+	%8 = insertvalue [10 x i32] %7, i32 5, 5
+	%9 = insertvalue [10 x i32] %8, i32 6, 6
+	%10 = insertvalue [10 x i32] %9, i32 7, 7
+	%11 = insertvalue [10 x i32] %10, i32 8, 8
+	%12 = insertvalue [10 x i32] %11, i32 9, 9
 	store [10 x i32] %12, [10 x i32]* %2
 	%13 = getelementptr inbounds [10 x i32], [10 x i32]* %2, i32 0, i1 1
 	%14 = bitcast i32* %13 to [1 x i32]*
@@ -335,10 +335,10 @@ break_2:
 	; -- start vol eval --
 	%48 = zext i3 4 to i32
 	; -- end vol eval --
-	%49 = insertvalue [4 x i32] zeroinitializer, i32 10, 0; --
-	%50 = insertvalue [4 x i32] %49, i32 20, 1; --
-	%51 = insertvalue [4 x i32] %50, i32 30, 2; --
-	%52 = insertvalue [4 x i32] %51, i32 40, 3; --
+	%49 = insertvalue [4 x i32] zeroinitializer, i32 10, 0
+	%50 = insertvalue [4 x i32] %49, i32 20, 1
+	%51 = insertvalue [4 x i32] %50, i32 30, 2
+	%52 = insertvalue [4 x i32] %51, i32 40, 3
 	store [4 x i32] %52, [4 x i32]* %47
 	store i32 0, i32* %17
 	br label %again_3
@@ -359,16 +359,16 @@ body_3:
 break_3:
 	%62 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @str8 to [0 x i8]*))
 	%63 = alloca [10 x i32], align 4
-	%64 = insertvalue [10 x i32] zeroinitializer, i32 10, 0; --
-	%65 = insertvalue [10 x i32] %64, i32 20, 1; --
-	%66 = insertvalue [10 x i32] %65, i32 30, 2; --
-	%67 = insertvalue [10 x i32] %66, i32 40, 3; --
-	%68 = insertvalue [10 x i32] %67, i32 50, 4; --
-	%69 = insertvalue [10 x i32] %68, i32 60, 5; --
-	%70 = insertvalue [10 x i32] %69, i32 70, 6; --
-	%71 = insertvalue [10 x i32] %70, i32 80, 7; --
-	%72 = insertvalue [10 x i32] %71, i32 90, 8; --
-	%73 = insertvalue [10 x i32] %72, i32 100, 9; --
+	%64 = insertvalue [10 x i32] zeroinitializer, i32 10, 0
+	%65 = insertvalue [10 x i32] %64, i32 20, 1
+	%66 = insertvalue [10 x i32] %65, i32 30, 2
+	%67 = insertvalue [10 x i32] %66, i32 40, 3
+	%68 = insertvalue [10 x i32] %67, i32 50, 4
+	%69 = insertvalue [10 x i32] %68, i32 60, 5
+	%70 = insertvalue [10 x i32] %69, i32 70, 6
+	%71 = insertvalue [10 x i32] %70, i32 80, 7
+	%72 = insertvalue [10 x i32] %71, i32 90, 8
+	%73 = insertvalue [10 x i32] %72, i32 100, 9
 	store [10 x i32] %73, [10 x i32]* %63
 	; -- STMT ASSIGN ARRAY --
 	%74 = getelementptr inbounds [10 x i32], [10 x i32]* %63, i32 0, i2 2
@@ -434,16 +434,16 @@ break_4:
 	%111 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str18 to [0 x i8]*))
 	; NOT WORKED NOW
 	%112 = alloca [10 x i32], align 4
-	%113 = insertvalue [10 x i32] zeroinitializer, i32 0, 0; --
-	%114 = insertvalue [10 x i32] %113, i32 1, 1; --
-	%115 = insertvalue [10 x i32] %114, i32 2, 2; --
-	%116 = insertvalue [10 x i32] %115, i32 3, 3; --
-	%117 = insertvalue [10 x i32] %116, i32 4, 4; --
-	%118 = insertvalue [10 x i32] %117, i32 5, 5; --
-	%119 = insertvalue [10 x i32] %118, i32 6, 6; --
-	%120 = insertvalue [10 x i32] %119, i32 7, 7; --
-	%121 = insertvalue [10 x i32] %120, i32 8, 8; --
-	%122 = insertvalue [10 x i32] %121, i32 9, 9; --
+	%113 = insertvalue [10 x i32] zeroinitializer, i32 0, 0
+	%114 = insertvalue [10 x i32] %113, i32 1, 1
+	%115 = insertvalue [10 x i32] %114, i32 2, 2
+	%116 = insertvalue [10 x i32] %115, i32 3, 3
+	%117 = insertvalue [10 x i32] %116, i32 4, 4
+	%118 = insertvalue [10 x i32] %117, i32 5, 5
+	%119 = insertvalue [10 x i32] %118, i32 6, 6
+	%120 = insertvalue [10 x i32] %119, i32 7, 7
+	%121 = insertvalue [10 x i32] %120, i32 8, 8
+	%122 = insertvalue [10 x i32] %121, i32 9, 9
 	store [10 x i32] %122, [10 x i32]* %112
 	%123 = alloca i32, align 4
 	store i32 4, i32* %123
@@ -467,23 +467,23 @@ break_4:
 	%134 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @str19 to [0 x i8]*))
 	%135 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str20 to [0 x i8]*))
 	%136 = alloca [5 x i32], align 4
-	%137 = insertvalue [5 x i32] zeroinitializer, i32 10, 0; --
-	%138 = insertvalue [5 x i32] %137, i32 20, 1; --
-	%139 = insertvalue [5 x i32] %138, i32 30, 2; --
-	%140 = insertvalue [5 x i32] %139, i32 40, 3; --
-	%141 = insertvalue [5 x i32] %140, i32 50, 4; --
+	%137 = insertvalue [5 x i32] zeroinitializer, i32 10, 0
+	%138 = insertvalue [5 x i32] %137, i32 20, 1
+	%139 = insertvalue [5 x i32] %138, i32 30, 2
+	%140 = insertvalue [5 x i32] %139, i32 40, 3
+	%141 = insertvalue [5 x i32] %140, i32 50, 4
 	store [5 x i32] %141, [5 x i32]* %136
 	%142 = alloca [10 x i32], align 4
-	%143 = insertvalue [10 x i32] zeroinitializer, i32 0, 0; --
-	%144 = insertvalue [10 x i32] %143, i32 1, 1; --
-	%145 = insertvalue [10 x i32] %144, i32 2, 2; --
-	%146 = insertvalue [10 x i32] %145, i32 3, 3; --
-	%147 = insertvalue [10 x i32] %146, i32 4, 4; --
-	%148 = insertvalue [10 x i32] %147, i32 5, 5; --
-	%149 = insertvalue [10 x i32] %148, i32 6, 6; --
-	%150 = insertvalue [10 x i32] %149, i32 7, 7; --
-	%151 = insertvalue [10 x i32] %150, i32 8, 8; --
-	%152 = insertvalue [10 x i32] %151, i32 9, 9; --
+	%143 = insertvalue [10 x i32] zeroinitializer, i32 0, 0
+	%144 = insertvalue [10 x i32] %143, i32 1, 1
+	%145 = insertvalue [10 x i32] %144, i32 2, 2
+	%146 = insertvalue [10 x i32] %145, i32 3, 3
+	%147 = insertvalue [10 x i32] %146, i32 4, 4
+	%148 = insertvalue [10 x i32] %147, i32 5, 5
+	%149 = insertvalue [10 x i32] %148, i32 6, 6
+	%150 = insertvalue [10 x i32] %149, i32 7, 7
+	%151 = insertvalue [10 x i32] %150, i32 8, 8
+	%152 = insertvalue [10 x i32] %151, i32 9, 9
 	store [10 x i32] %152, [10 x i32]* %142
 	; test with let
 	; -- STMT ASSIGN ARRAY --
@@ -492,26 +492,26 @@ break_4:
 	; -- start vol eval --
 	%155 = zext i3 5 to i32
 	; -- end vol eval --
-	%156 = insertvalue [5 x i32] zeroinitializer, i32 11, 0; --
-	%157 = insertvalue [5 x i32] %156, i32 22, 1; --
-	%158 = insertvalue [5 x i32] %157, i32 33, 2; --
-	%159 = insertvalue [5 x i32] %158, i32 44, 3; --
-	%160 = insertvalue [5 x i32] %159, i32 55, 4; --
+	%156 = insertvalue [5 x i32] zeroinitializer, i32 11, 0
+	%157 = insertvalue [5 x i32] %156, i32 22, 1
+	%158 = insertvalue [5 x i32] %157, i32 33, 2
+	%159 = insertvalue [5 x i32] %158, i32 44, 3
+	%160 = insertvalue [5 x i32] %159, i32 55, 4
 	store [5 x i32] %160, [5 x i32]* %154
 	%161 = bitcast [10 x i32]* %142 to [0 x i32]*
 	call void @array_print([0 x i32]* %161, i32 10)
 	%162 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @str21 to [0 x i8]*))
 	%163 = alloca [10 x i32], align 4
-	%164 = insertvalue [10 x i32] zeroinitializer, i32 0, 0; --
-	%165 = insertvalue [10 x i32] %164, i32 10, 1; --
-	%166 = insertvalue [10 x i32] %165, i32 20, 2; --
-	%167 = insertvalue [10 x i32] %166, i32 30, 3; --
-	%168 = insertvalue [10 x i32] %167, i32 40, 4; --
-	%169 = insertvalue [10 x i32] %168, i32 50, 5; --
-	%170 = insertvalue [10 x i32] %169, i32 60, 6; --
-	%171 = insertvalue [10 x i32] %170, i32 70, 7; --
-	%172 = insertvalue [10 x i32] %171, i32 80, 8; --
-	%173 = insertvalue [10 x i32] %172, i32 90, 9; --
+	%164 = insertvalue [10 x i32] zeroinitializer, i32 0, 0
+	%165 = insertvalue [10 x i32] %164, i32 10, 1
+	%166 = insertvalue [10 x i32] %165, i32 20, 2
+	%167 = insertvalue [10 x i32] %166, i32 30, 3
+	%168 = insertvalue [10 x i32] %167, i32 40, 4
+	%169 = insertvalue [10 x i32] %168, i32 50, 5
+	%170 = insertvalue [10 x i32] %169, i32 60, 6
+	%171 = insertvalue [10 x i32] %170, i32 70, 7
+	%172 = insertvalue [10 x i32] %171, i32 80, 8
+	%173 = insertvalue [10 x i32] %172, i32 90, 9
 	store [10 x i32] %173, [10 x i32]* %163
 	%174 = alloca i8, align 1
 	store i8 111, i8* %174
@@ -535,8 +535,8 @@ break_4:
 	%185 = sext i8 %184 to i32
 	%186 = load i8, i8* %175
 	%187 = sext i8 %186 to i32
-	%188 = insertvalue [2 x i32] zeroinitializer, i32 %185, 0; --
-	%189 = insertvalue [2 x i32] %188, i32 %187, 1; --
+	%188 = insertvalue [2 x i32] zeroinitializer, i32 %185, 0
+	%189 = insertvalue [2 x i32] %188, i32 %187, 1
 	; cast_composite_to_composite
 	; trunk
 	%190 = alloca [2 x i32]

@@ -1212,6 +1212,9 @@ def eval_cons_record(x):
 	from_type = value['type']
 	to_type = x['type']
 
+	if value_is_immediate(x):
+		return do_eval_literal(x)
+
 	if hlir_type.type_is_record(from_type):
 		# Cm имеет структурную систему типов, тогда как llvm - номинативную
 		# приведение структуры к структуре по значению не поддерживается LLVM
@@ -1225,8 +1228,6 @@ def eval_cons_array(x):
 			return do_eval_literal(x['value'])
 		return do_eval_literal(x)
 
-	#if hlir_type.type_is_array(from_type):
-	#	if hlir_type.type_is_array(to_type):
 	return cast_composite_to_composite(x['type'], x['value'], x['ti'])
 
 
@@ -1234,14 +1235,18 @@ def eval_cons_array(x):
 def do_eval_cons(x):
 	to_type = x['type']
 
-	if value_is_immediate(x):
-		return do_eval_literal(x)
 
 	if hlir_type.type_is_array(to_type):
 		return eval_cons_array(x)
 
 	if hlir_type.type_is_record(to_type):
 		return eval_cons_record(x)
+
+
+	if value_is_immediate(x):
+		return do_eval_literal(x)
+
+
 
 
 	value = x['value']

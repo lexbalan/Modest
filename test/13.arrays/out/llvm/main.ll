@@ -450,12 +450,12 @@ define void @f0([30 x i8]* noalias sret([30 x i8]) %0, [20 x i8] %x) {
 define void @test() {
 	; тестируем работу с локальным generic массивом
 	%1 = alloca [6 x i8], align 1
-	%2 = insertvalue [6 x i8] zeroinitializer, i8 170, 0; --
-	%3 = insertvalue [6 x i8] %2, i8 85, 1; --
-	%4 = insertvalue [6 x i8] %3, i8 2, 2; --
-	%5 = insertvalue [6 x i8] %4, i8 0, 3; --
-	%6 = insertvalue [6 x i8] %5, i8 0, 4; --
-	%7 = insertvalue [6 x i8] %6, i8 22, 5; --
+	%2 = insertvalue [6 x i8] zeroinitializer, i8 170, 0
+	%3 = insertvalue [6 x i8] %2, i8 85, 1
+	%4 = insertvalue [6 x i8] %3, i8 2, 2
+	%5 = insertvalue [6 x i8] %4, i8 0, 3
+	%6 = insertvalue [6 x i8] %5, i8 0, 4
+	%7 = insertvalue [6 x i8] %6, i8 22, 5
 	store [6 x i8] %7, [6 x i8]* %1
 	%8 = alloca i32, align 4
 	store i32 0, i32* %8
@@ -479,26 +479,26 @@ break_1:
 define i32 @main() {
 	; generic array [4]Char8 will be implicit casted to [10]Char8
 	%1 = alloca [30 x i8], align 1
-	%2 = insertvalue [20 x i8] zeroinitializer, i8 72, 0; --
-	%3 = insertvalue [20 x i8] %2, i8 101, 1; --
-	%4 = insertvalue [20 x i8] %3, i8 108, 2; --
-	%5 = insertvalue [20 x i8] %4, i8 108, 3; --
-	%6 = insertvalue [20 x i8] %5, i8 111, 4; --
-	%7 = insertvalue [20 x i8] %6, i8 32, 5; --
-	%8 = insertvalue [20 x i8] %7, i8 87, 6; --
-	%9 = insertvalue [20 x i8] %8, i8 111, 7; --
-	%10 = insertvalue [20 x i8] %9, i8 114, 8; --
-	%11 = insertvalue [20 x i8] %10, i8 108, 9; --
-	%12 = insertvalue [20 x i8] %11, i8 100, 10; --
-	%13 = insertvalue [20 x i8] %12, i8 33, 11; --
-	%14 = insertvalue [20 x i8] %13, i8 0, 12; --
-	%15 = insertvalue [20 x i8] %14, i8 0, 13; --
-	%16 = insertvalue [20 x i8] %15, i8 0, 14; --
-	%17 = insertvalue [20 x i8] %16, i8 0, 15; --
-	%18 = insertvalue [20 x i8] %17, i8 0, 16; --
-	%19 = insertvalue [20 x i8] %18, i8 0, 17; --
-	%20 = insertvalue [20 x i8] %19, i8 0, 18; --
-	%21 = insertvalue [20 x i8] %20, i8 0, 19; --; alloca memory for return value
+	%2 = insertvalue [20 x i8] zeroinitializer, i8 72, 0
+	%3 = insertvalue [20 x i8] %2, i8 101, 1
+	%4 = insertvalue [20 x i8] %3, i8 108, 2
+	%5 = insertvalue [20 x i8] %4, i8 108, 3
+	%6 = insertvalue [20 x i8] %5, i8 111, 4
+	%7 = insertvalue [20 x i8] %6, i8 32, 5
+	%8 = insertvalue [20 x i8] %7, i8 87, 6
+	%9 = insertvalue [20 x i8] %8, i8 111, 7
+	%10 = insertvalue [20 x i8] %9, i8 114, 8
+	%11 = insertvalue [20 x i8] %10, i8 108, 9
+	%12 = insertvalue [20 x i8] %11, i8 100, 10
+	%13 = insertvalue [20 x i8] %12, i8 33, 11
+	%14 = insertvalue [20 x i8] %13, i8 0, 12
+	%15 = insertvalue [20 x i8] %14, i8 0, 13
+	%16 = insertvalue [20 x i8] %15, i8 0, 14
+	%17 = insertvalue [20 x i8] %16, i8 0, 15
+	%18 = insertvalue [20 x i8] %17, i8 0, 16
+	%19 = insertvalue [20 x i8] %18, i8 0, 17
+	%20 = insertvalue [20 x i8] %19, i8 0, 18
+	%21 = insertvalue [20 x i8] %20, i8 0, 19; alloca memory for return value
 	%22 = alloca [30 x i8]
 	call void @f0([30 x i8]* %22, [20 x i8] %21)
 	%23 = load [30 x i8], [30 x i8]* %22
@@ -524,9 +524,9 @@ body_1:
 break_1:
 	%35 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str5 to [0 x i8]*))
 	%36 = alloca [3 x i32], align 4
-	%37 = insertvalue [3 x i32] zeroinitializer, i32 4, 0; --
-	%38 = insertvalue [3 x i32] %37, i32 5, 1; --
-	%39 = insertvalue [3 x i32] %38, i32 6, 2; --
+	%37 = insertvalue [3 x i32] zeroinitializer, i32 4, 0
+	%38 = insertvalue [3 x i32] %37, i32 5, 1
+	%39 = insertvalue [3 x i32] %38, i32 6, 2
 	store [3 x i32] %39, [3 x i32]* %36
 	store i32 0, i32* %25
 	br label %again_2
@@ -592,9 +592,9 @@ break_4:
 	; assign array to array 1
 	; (with equal types)
 	%75 = alloca [3 x i32], align 4
-	%76 = insertvalue [3 x i32] zeroinitializer, i32 1, 0; --
-	%77 = insertvalue [3 x i32] %76, i32 2, 1; --
-	%78 = insertvalue [3 x i32] %77, i32 3, 2; --
+	%76 = insertvalue [3 x i32] zeroinitializer, i32 1, 0
+	%77 = insertvalue [3 x i32] %76, i32 2, 1
+	%78 = insertvalue [3 x i32] %77, i32 3, 2
 	store [3 x i32] %78, [3 x i32]* %75
 	%79 = getelementptr inbounds [3 x i32], [3 x i32]* %75, i32 0, i32 0
 	%80 = load i32, i32* %79
@@ -637,9 +637,9 @@ endif_0:
 	; assign array to array 2
 	; (with array extending)
 	%105 = alloca [3 x i32], align 4
-	%106 = insertvalue [3 x i32] zeroinitializer, i32 10, 0; --
-	%107 = insertvalue [3 x i32] %106, i32 20, 1; --
-	%108 = insertvalue [3 x i32] %107, i32 30, 2; --
+	%106 = insertvalue [3 x i32] zeroinitializer, i32 10, 0
+	%107 = insertvalue [3 x i32] %106, i32 20, 1
+	%108 = insertvalue [3 x i32] %107, i32 30, 2
 	store [3 x i32] %108, [3 x i32]* %105
 	%109 = alloca [6 x i32], align 4
 	; cast_composite_to_composite
@@ -695,9 +695,9 @@ endif_1:
 	%139 = load i32, i32* %136
 	%140 = load i32, i32* %137
 	%141 = load i32, i32* %138
-	%142 = insertvalue [3 x i32] zeroinitializer, i32 %139, 0; --
-	%143 = insertvalue [3 x i32] %142, i32 %140, 1; --
-	%144 = insertvalue [3 x i32] %143, i32 %141, 2; --
+	%142 = insertvalue [3 x i32] zeroinitializer, i32 %139, 0
+	%143 = insertvalue [3 x i32] %142, i32 %140, 1
+	%144 = insertvalue [3 x i32] %143, i32 %141, 2
 	%145 = alloca [3 x i32]
 	store [3 x i32] %144, [3 x i32]* %145
 	; check local literal array assignation to local array
@@ -760,10 +760,10 @@ endif_1:
 	%177 = load i32, i32* %174
 	%178 = load i32, i32* %175
 	%179 = load i32, i32* %176
-	%180 = insertvalue [4 x i32] zeroinitializer, i32 %177, 0; --
-	%181 = insertvalue [4 x i32] %180, i32 %178, 1; --
-	%182 = insertvalue [4 x i32] %181, i32 %179, 2; --
-	%183 = insertvalue [4 x i32] %182, i32 40, 3; --
+	%180 = insertvalue [4 x i32] zeroinitializer, i32 %177, 0
+	%181 = insertvalue [4 x i32] %180, i32 %178, 1
+	%182 = insertvalue [4 x i32] %181, i32 %179, 2
+	%183 = insertvalue [4 x i32] %182, i32 40, 3
 	%184 = alloca [4 x i32]
 	store [4 x i32] %183, [4 x i32]* %184
 	store i32 111, i32* %174
@@ -781,10 +781,10 @@ endif_1:
 	%194 = getelementptr inbounds [4 x i32], [4 x i32]* %184, i32 0, i32 3
 	%195 = load i32, i32* %194
 	%196 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str36 to [0 x i8]*), i32 3, i32 %195)
-	%197 = insertvalue [4 x i32] zeroinitializer, i32 10, 0; --
-	%198 = insertvalue [4 x i32] %197, i32 20, 1; --
-	%199 = insertvalue [4 x i32] %198, i32 30, 2; --
-	%200 = insertvalue [4 x i32] %199, i32 40, 3; --
+	%197 = insertvalue [4 x i32] zeroinitializer, i32 10, 0
+	%198 = insertvalue [4 x i32] %197, i32 20, 1
+	%199 = insertvalue [4 x i32] %198, i32 30, 2
+	%200 = insertvalue [4 x i32] %199, i32 40, 3
 	%201 = alloca [4 x i32]
 	store [4 x i32] %200, [4 x i32]* %201
 	%202 = bitcast [4 x i32]* %184 to i8*
@@ -800,17 +800,17 @@ else_2:
 	%207 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str38 to [0 x i8]*))
 	br label %endif_2
 endif_2:
-	%208 = insertvalue [5 x i8] zeroinitializer, i8 76, 0; --
-	%209 = insertvalue [5 x i8] %208, i8 111, 1; --
-	%210 = insertvalue [5 x i8] %209, i8 72, 2; --
-	%211 = insertvalue [5 x i8] %210, i8 105, 3; --
-	%212 = insertvalue [5 x i8] %211, i8 33, 4; --
+	%208 = insertvalue [5 x i8] zeroinitializer, i8 76, 0
+	%209 = insertvalue [5 x i8] %208, i8 111, 1
+	%210 = insertvalue [5 x i8] %209, i8 72, 2
+	%211 = insertvalue [5 x i8] %210, i8 105, 3
+	%212 = insertvalue [5 x i8] %211, i8 33, 4
 	%213 = alloca [5 x i8]
 	store [5 x i8] %212, [5 x i8]* %213
 	%214 = getelementptr inbounds [5 x i8], [5 x i8]* %213, i32 0, i2 2
 	%215 = bitcast i8* %214 to [2 x i8]*
-	%216 = insertvalue [2 x i8] zeroinitializer, i8 72, 0; --
-	%217 = insertvalue [2 x i8] %216, i8 105, 1; --
+	%216 = insertvalue [2 x i8] zeroinitializer, i8 72, 0
+	%217 = insertvalue [2 x i8] %216, i8 105, 1
 	%218 = alloca [2 x i8]
 	store [2 x i8] %217, [2 x i8]* %218
 	%219 = bitcast [2 x i8]* %215 to i8*
