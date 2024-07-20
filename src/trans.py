@@ -705,6 +705,8 @@ def do_value_bin(x):
 	if value_is_bad(l) or value_is_bad(r):
 		return value_bad(x)
 
+	# Check is valid type for this operation
+
 	if not op in l['type']['ops']:
 		error("unsuitable value type for '%s' operation" % op, l['expr_ti'])
 		return value_bad(x)
@@ -719,15 +721,17 @@ def do_value_bin(x):
 
 
 	if op in ['eq', 'ne']:
-	# сравнивать можно только указатель с указателем
-		if hlir_type.type_is_pointer(l['type']) and hlir_type.type_is_pointer(r['type']):
-			# what about typeFreePointer?
+		# можно сравнивать указатели
+		if hlir_type.type_is_pointer(l['type']):
 			if hlir_type.type_is_generic_pointer(l['type']):
 				l = value_cons_implicit(r['type'], l)
 			elif hlir_type.type_is_generic_pointer(r['type']):
 				r = value_cons_implicit(l['type'], r)
 			return value_bin(op, l, r, foundation.typeBool, ti)
 
+
+	# Implicit cast left & right operands to common type
+	# and typecheck after
 
 	type_result = select_common_type(l['type'], r['type'])
 
@@ -742,6 +746,7 @@ def do_value_bin(x):
 	if not hlir_type.check(l['type'], r['type'], x['ti']):
 		return value_bad(x)
 
+	#
 
 	if op in (hlir_type.EQ_OPS + hlir_type.RELATIONAL_OPS):
 		type_result = foundation.typeBool

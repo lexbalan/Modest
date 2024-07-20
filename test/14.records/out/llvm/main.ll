@@ -272,12 +272,12 @@ endif_0:
 	; cast_composite_to_composite
 	; JUST
 	; as ptr
-	%19 = bitcast {i32, i32}* %16 to %Point2D*
-	%20 = load %Point2D, %Point2D* %19
-	%21 = alloca %Point2D
-	store %Point2D %20, %Point2D* %21
-	%22 = bitcast %Point2D* %14 to i8*
-	%23 = bitcast %Point2D* %21 to i8*
+	%19 = bitcast %Point2D* %14 to {i32, i32}*
+	%20 = load {i32, i32}, {i32, i32}* %19
+	%21 = alloca {i32, i32}
+	store {i32, i32} %20, {i32, i32}* %21
+	%22 = bitcast {i32, i32}* %21 to i8*
+	%23 = bitcast {i32, i32}* %16 to i8*
 	
 	%24 = call i1 (i8*, i8*, i64) @memeq( i8* %22, i8* %23, i64 8)
 	%25 = icmp ne i1 %24, 0
@@ -297,12 +297,12 @@ endif_1:
 	; cast_composite_to_composite
 	; JUST
 	; as ptr
-	%31 = bitcast {i32, i32}* %28 to {i32, i32}*
+	%31 = bitcast {i32, i32}* %16 to {i32, i32}*
 	%32 = load {i32, i32}, {i32, i32}* %31
 	%33 = alloca {i32, i32}
 	store {i32, i32} %32, {i32, i32}* %33
-	%34 = bitcast {i32, i32}* %16 to i8*
-	%35 = bitcast {i32, i32}* %33 to i8*
+	%34 = bitcast {i32, i32}* %33 to i8*
+	%35 = bitcast {i32, i32}* %28 to i8*
 	
 	%36 = call i1 (i8*, i8*, i64) @memeq( i8* %34, i8* %35, i64 8)
 	%37 = icmp ne i1 %36, 0
@@ -318,12 +318,12 @@ endif_2:
 	; cast_composite_to_composite
 	; JUST
 	; as ptr
-	%40 = bitcast {i32, i32}* %16 to %Point2D*
-	%41 = load %Point2D, %Point2D* %40
-	%42 = alloca %Point2D
-	store %Point2D %41, %Point2D* %42
-	%43 = bitcast %Point2D* %14 to i8*
-	%44 = bitcast %Point2D* %42 to i8*
+	%40 = bitcast %Point2D* %14 to {i32, i32}*
+	%41 = load {i32, i32}, {i32, i32}* %40
+	%42 = alloca {i32, i32}
+	store {i32, i32} %41, {i32, i32}* %42
+	%43 = bitcast {i32, i32}* %42 to i8*
+	%44 = bitcast {i32, i32}* %16 to i8*
 	
 	%45 = call i1 (i8*, i8*, i64) @memeq( i8* %43, i8* %44, i64 8)
 	%46 = icmp ne i1 %45, 0

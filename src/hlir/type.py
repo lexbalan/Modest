@@ -980,38 +980,23 @@ def select_common_type(a, b):
 		return None
 
 
-	if type_is_record(a) and type_is_record(b):
-		#print("RECORD!")
+	if type_is_generic(a) != type_is_generic(b):
+		if type_is_string(a):
+			if type_is_string(b):
+				if a['char_width'] > b['char_width']:
+					return a
+				else:
+					return b
 
-		if type_is_generic(a) != type_is_generic(b):
-			if type_is_generic(a):
-				return b
 
-			if type_is_generic(b):
-				return a
+		if type_is_generic(a):
+			return b
 
-		if not type_is_generic(a):
-			# если мы здесь значит оба - не generic
-			if type_eq_record(a, b, []):
-				# оба не дженерик и равны
-				return a
-
-			# оба не дженерик и не равны
-			return None
-
-		# оба дженерик
-		return select_common_record_type(a, b)
-
+		if type_is_generic(b):
+			return a
 
 
 	if type_is_array(a) and type_is_array(b):
-		if type_is_generic(a) != type_is_generic(b):
-			if type_is_generic(a):
-				return b
-
-			if type_is_generic(b):
-				return a
-
 		if type_is_generic(a) and type_is_generic(b):
 			# TODO: тут все плохо (тк должна быть рекурсия но пока без нее)
 			if type_is_generic(a['of']):
@@ -1023,20 +1008,6 @@ def select_common_type(a, b):
 			return a
 
 
-
-
-	if type_is_generic(a) != type_is_generic(b):
-		if type_is_generic(a):
-			return b
-
-		if type_is_generic(b):
-			return a
-
-	if type_is_string(a) and type_is_string(b):
-		if a['char_width'] > b['char_width']:
-			return a
-		else:
-			return b
 
 	if a['width'] > b['width']:
 		return a

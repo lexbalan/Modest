@@ -52,7 +52,7 @@ int main()
 	struct __anonymous_struct_3 p2d3;
 	p2d3 = (struct __anonymous_struct_3)xx;
 
-	if (memcmp(&p2d2, &p2d3, sizeof(Point2D)) == 0) {
+	if (memcmp(&p2d2, &p2d3, sizeof(struct __anonymous_struct_3)) == 0) {
 		printf("p2d2 == p2d3\n");
 	} else {
 		printf("p2d2 != p2d3\n");
@@ -63,7 +63,7 @@ int main()
 	struct __anonymous_struct_4 p2d4;
 	p2d4 = (struct __anonymous_struct_4){.x = 1, .y = 2};
 
-	if (memcmp(&p2d3, &p2d4, sizeof(struct __anonymous_struct_3)) == 0) {
+	if (memcmp(&p2d3, &p2d4, sizeof(struct __anonymous_struct_4)) == 0) {
 		printf("p2d3 == p2d4\n");
 	} else {
 		printf("p2d3 != p2d4\n");
@@ -73,7 +73,7 @@ int main()
 	Point2D *const pr2 = &p2d2;
 	struct __anonymous_struct_3 *const pr3 = &p2d3;
 
-	if (memcmp(pr2, pr3, sizeof(Point2D)) == 0) {
+	if (memcmp(pr2, pr3, sizeof(struct __anonymous_struct_3)) == 0) {
 		printf("*pr2 == *pr3\n");
 	} else {
 		printf("*pr2 != *pr3\n");
