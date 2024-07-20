@@ -251,11 +251,13 @@ define i32 @main() {
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
 	; -- end vol eval --
-	%20 = insertvalue [0 x i32] zeroinitializer, i32 1, 0
-	%21 = insertvalue [0 x i32] %20, i32 2, 1
-	%22 = insertvalue [0 x i32] %21, i32 3, 2
-	%23 = insertvalue [0 x i32] %22, i32 4, 3
-	%24 = insertvalue [0 x i32] %23, i32 5, 4
+ -- ??? --
+
+	%20 = insertvalue [5 x i3] zeroinitializer, i3 1, 0
+	%21 = insertvalue [5 x i3] %20, i3 2, 1
+	%22 = insertvalue [5 x i3] %21, i3 3, 2
+	%23 = insertvalue [5 x i3] %22, i3 4, 3
+	%24 = insertvalue [5 x i3] %23, i3 5, 4
 	store [0 x i32] %24, [0 x i32]* %7
 	%25 = getelementptr inbounds [0 x i32], [0 x i32]* %7, i32 0, i32 0
 	%26 = load i32, i32* %25

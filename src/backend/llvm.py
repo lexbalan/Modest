@@ -1225,6 +1225,7 @@ def eval_cons_record(x):
 def eval_cons_array(x):
 	if value_is_immediate(x):
 		if hlir_type.type_is_vla(x['type']):
+			out("\n -- ??? --\n")
 			return do_eval_literal(x['value'])
 		return do_eval_literal(x)
 

@@ -570,65 +570,6 @@ def do_value_shift(x):
 
 
 
-# бинарные операции с указателями имеют особые правила
-def do_bin_op_with_pointers(op, l, r , ti):
-	# единственная безопасная операция для указателей - это сравнение
-	if op in ['eq', 'ne']:
-		# сравнивать можно только указатель с указателем
-		if hlir_type.type_is_pointer(l['type']) and hlir_type.type_is_pointer(r['type']):
-
-			# what about typeFreePointer?
-			if hlir_type.type_is_generic_pointer(l['type']):
-				l = value_cons_implicit(r['type'], l)
-			elif hlir_type.type_is_generic_pointer(r['type']):
-				r = value_cons_implicit(l['type'], r)
-
-			return value_bin(op, l, r, foundation.typeBool, ti)
-
-	from main import features
-	if not is_unsafe_mode():
-		error("unsafe operation", ti)
-		return value_bad({'ti': ti})
-
-
-	# если включен unsafe режим
-	if op in ['add', 'sub']:
-		ptr_n_int = hlir_type.type_is_free_pointer(l['type']) and hlir_type.type_is_integer(r['type'])
-		int_n_ptr = hlir_type.type_is_integer(l['type']) and hlir_type.type_is_free_pointer(r['type'])
-
-		# если и указатель и число непосредственные
-		if value_is_immediate(l) and value_is_immediate(r):
-			typ = None
-			if ptr_n_int:
-				typ = l['type']
-			else:
-				typ = r['type']
-
-			num = 0
-			if op == 'add': num = l['asset'] + r['asset']
-			elif op == 'sub': num = l['asset'] - r['asset']
-			return value_integer_create(num, typ=typ, ti=ti)
-
-		# указатель или число в рантайме
-		else:
-
-			if ptr_n_int:
-				lnat = do_cons_runtime(l, typeSysNat, ti)
-				xr = value_cons_implicit(lnat['type'], r)
-				result = value_bin(x['kind'], lnat, xr, xr['type'], ti)
-				return do_cons_runtime(result, l['type'], ti)
-
-			if int_n_ptr:
-				rnat = do_cons_runtime(r, typeSysNat, ti)
-				xl = value_cons_implicit(rnat['type'], l)
-				result = value_bin(x['kind'], rnat, xl, xl['type'], ti)
-				return do_cons_runtime(result, r['type'], ti)
-
-		error("invalid operation", ti)
-		return value_bad({'ti': ti})
-
-
-
 def bin_imm(op, type_result, l, r, ti):
 	ops = {
 		'logic_or': lambda a, b: a or b,
@@ -772,30 +713,34 @@ def do_value_bin(x):
 		error("unsuitable value type for '%s' operation" % op, r['expr_ti'])
 		return value_bad(x)
 
-	if hlir_type.type_is_pointer(l['type']) or hlir_type.type_is_pointer(r['type']):
-		return do_bin_op_with_pointers(op, l, r, ti)
-
-	# FIXME
-	# HOTFIX (не могу выбрать common_type для двух generic массивов)
-	# поэтому сделал этот хотфикс! Но это - кривой костыль!
 	if op == 'add':
 		if hlir_type.type_is_array(l['type']) and 	hlir_type.type_is_array(r['type']):
 			return _bin(op, None, l, r, ti)
 
-	common_type = select_common_type(l['type'], r['type'])
 
-	if common_type == None:
+	if op in ['eq', 'ne']:
+	# сравнивать можно только указатель с указателем
+		if hlir_type.type_is_pointer(l['type']) and hlir_type.type_is_pointer(r['type']):
+			# what about typeFreePointer?
+			if hlir_type.type_is_generic_pointer(l['type']):
+				l = value_cons_implicit(r['type'], l)
+			elif hlir_type.type_is_generic_pointer(r['type']):
+				r = value_cons_implicit(l['type'], r)
+			return value_bin(op, l, r, foundation.typeBool, ti)
+
+
+	type_result = select_common_type(l['type'], r['type'])
+
+	if type_result == None:
 		error("unsuitable value type for '%s' operation" % op, r['expr_ti'])
 		return value_bad(x)
 
-	l = value_cons_implicit(common_type, l)
-	r = value_cons_implicit(common_type, r)
+	l = value_cons_implicit(type_result, l)
+	r = value_cons_implicit(type_result, r)
 
 	# After implicit cons types must be equal
 	if not hlir_type.check(l['type'], r['type'], x['ti']):
 		return value_bad(x)
-
-	type_result = common_type
 
 
 	if op in (hlir_type.EQ_OPS + hlir_type.RELATIONAL_OPS):
@@ -1006,7 +951,7 @@ def do_value_call_lengthof(args, ti):
 
 	if not hlir_type.type_is_array(arg['type']):
 		error("expected array value", args[0]['ti'])
-		return value_bad(x)
+		return value_bad({'ti': ti})
 
 	return value_lengthof(arg, ti)
 
