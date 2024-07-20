@@ -765,6 +765,12 @@ def print_value_cons(x, ctx):
 			return
 
 
+	if hlir_type.type_is_float(to_type):
+		if hlir_type.type_is_integer(from_type):
+			print_cast(to_type, value, ctx)
+			return
+
+
 	if x['method'] == 'implicit':
 		# не печатаем обычный implicit_cast
 		# (это не касается того что выше ^^)

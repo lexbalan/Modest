@@ -31,9 +31,10 @@ def _utf16_cc_arr_to_utf32_cc_arr(arr):
 # получаем список кодов UTF-32 из кодов utf8/16/32
 def utfx_chars_to_utf32_chars(utf32_codes, char_width):
 	utf32_codes = []
-	if char_width == 8: utf32_codes = _utf8_cc_arr_to_utf32_cc_arr(utf32_codes)
-	elif char_width == 16: utf32_codes = _utf16_cc_arr_to_utf32_cc_arr(utf32_codes)
-	elif char_width == 32: utf32_codes = utf32_codes
+	if char_width == 8:
+		utf32_codes = _utf8_cc_arr_to_utf32_cc_arr(utf32_codes)
+	elif char_width == 16:
+		utf32_codes = _utf16_cc_arr_to_utf32_cc_arr(utf32_codes)
 	return utf32_codes
 
 

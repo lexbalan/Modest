@@ -17,8 +17,12 @@ func main() -> Int {
 
 	let r = 10
 	let s = squareOfCircle(r)
-
 	printf("s = %f\n", s)
+
+
+	let k = Float64 1 / Float64 8
+	printf("k = %f\n", k)
+
 
 	return 0
 }

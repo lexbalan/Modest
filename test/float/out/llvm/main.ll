@@ -300,6 +300,7 @@ declare double @fmal(double %a, double %b, double %c)
 
 @str1 = private constant [12 x i8] [i8 102, i8 108, i8 111, i8 97, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
 @str2 = private constant [8 x i8] [i8 115, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
+@str3 = private constant [8 x i8] [i8 107, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
 
 
 
@@ -314,6 +315,7 @@ define i32 @main() {
 	%1 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*))
 	%2 = call double @squareOfCircle(double 10.0000000000000000)
 	%3 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), double %2)
+	%4 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str3 to [0 x i8]*), double 0.1250000000000000)
 	ret i32 0
 }
 
