@@ -2,7 +2,6 @@
 from .value import value_terminal
 from util import nbits_for_num
 from hlir.type import hlir_type_string
-from .value import value_bin
 
 
 def value_string_create(string, ti=None):

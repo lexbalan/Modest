@@ -474,7 +474,8 @@ def do_type_enum(t):
 		})
 
 		# add enum item to global context
-		item_val = value_integer_create(i, typ=enum_type, ti=item['ti'])
+		item_val = value_terminal(enum_type, i, item['ti'])
+
 		item_val['id'] = id
 		module['context'].value_add(id['str'], item_val)
 

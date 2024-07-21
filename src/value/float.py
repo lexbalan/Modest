@@ -3,7 +3,7 @@ import settings
 import decimal
 from error import info, warning, error
 import hlir.type as type
-from hlir.type import hlir_type_float, type_print
+from hlir.type import hlir_type_float
 from .value import value_terminal, value_cons_immediate, value_is_immediate
 
 

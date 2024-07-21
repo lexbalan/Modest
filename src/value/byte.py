@@ -2,7 +2,6 @@
 from error import info, warning, error
 import hlir.type as type
 from value.value import value_is_immediate
-from util import nbits_for_num
 from .value import value_cons_node, value_cons_immediate
 
 

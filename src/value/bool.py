@@ -2,15 +2,13 @@
 from error import info, warning, error
 import hlir.type as type
 from value.value import value_is_immediate
-from util import nbits_for_num
-from .value import value_cons_node, value_cons_immediate
-from .integer import value_integer_create
+from .value import value_terminal, value_cons_node, value_cons_immediate
 
 import foundation
 
 
-def value_bool_create(num):
-	return value_integer_create(num, typ=foundation.typeBool)
+def value_bool_create(val, ti=None):
+	return value_terminal(foundation.typeBool, val, ti)
 
 
 def _value_bool_cons_immediate(t, v, method, ti):
