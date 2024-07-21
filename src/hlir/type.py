@@ -976,8 +976,17 @@ def select_common_type(a, b):
 		if b['kind'] == 'bad':
 			return a
 
-		print("%s %s" % (a['kind'], b['kind']))
+		if type_is_float(a):
+			if type_is_integer(b):
+				return a
+
+		if type_is_float(b):
+			if type_is_integer(a):
+				return b
+
+		print("select_common_type(%s %s) not impl." % (a['kind'], b['kind']))
 		return None
+
 
 
 	if type_is_generic(a) != type_is_generic(b):
@@ -996,16 +1005,17 @@ def select_common_type(a, b):
 			return a
 
 
-	if type_is_array(a) and type_is_array(b):
-		if type_is_generic(a) and type_is_generic(b):
-			# TODO: тут все плохо (тк должна быть рекурсия но пока без нее)
-			if type_is_generic(a['of']):
-				return b
-			if type_is_generic(b['of']):
+	elif type_is_generic(a) and type_is_generic(b):
+		if type_is_array(a) and type_is_array(b):
+				# TODO: тут все плохо (тк должна быть рекурсия но пока без нее)
+				if type_is_generic(a['of']):
+					return b
+				if type_is_generic(b['of']):
+					return a
+
+				# not implemented!
 				return a
 
-			# not implemented!
-			return a
 
 
 

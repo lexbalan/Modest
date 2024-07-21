@@ -359,7 +359,12 @@ def llvm_print_value_num(x):
 	if not hlir_type.type_is_pointer(x['type']):
 		# integer, float, bool, char
 		if hlir_type.type_is_float(x['type']):
-			return out("%.16f" % num)
+			# короче суть такая - число сперва нужно причесать
+			# так, чтобы оно могло быть четко представлено в LLVM float/double
+			# наче LLVM не примет его и сгенерирует ошибку
+			packed_float = _float_value_pack(num, x['type']['width'])
+			return out("%.16f" % packed_float)
+
 		out(str(num))
 
 	else:
@@ -2464,4 +2469,18 @@ def stacksave(sptr):
 	r = _llvm_operation("call i8* @llvm.stacksave()", type=sptr['type'])
 	return llvm_store(sptr, r)
 
+
+
+# получаем 32 или 64 битное представление float числа
+def _float_value_pack(f_num, width):
+	import struct
+	z = 0
+	if width == 32:
+		z = struct.unpack('<f', struct.pack('<f', f_num))[0]
+	elif width == 64:
+		z = struct.unpack('<d', struct.pack('<d', f_num))[0]
+	else:
+		fatal("too big float, _float_value_pack not implemented")
+
+	return z
 

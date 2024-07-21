@@ -640,7 +640,7 @@ def bin_imm(op, type_result, l, r, ti):
 		asset = ops[op](l['asset'], r['asset'])
 
 
-	if hlir_type.type_is_generic(type_result) and not hlir_type.type_is_string(type_result) and not hlir_type.type_is_array(type_result):
+	if hlir_type.type_is_generic(type_result) and not hlir_type.type_is_float(type_result) and not hlir_type.type_is_string(type_result) and not hlir_type.type_is_array(type_result):
 		# (для операций типа 1 + 2)
 		# Пересматриваем generic тип для нового значения
 		type_result = hlir_type.hlir_type_generic_int_for(asset, signed=False, ti=ti)

@@ -1,5 +1,6 @@
 
 import settings
+import decimal
 from error import info, warning, error
 import hlir.type as type
 from hlir.type import hlir_type_float, type_print
@@ -8,6 +9,7 @@ from .value import value_terminal, value_cons_immediate, value_is_immediate
 
 
 def value_float_create(num, ti=None):
+	#info("value_float_create", ti)
 	flt_width = int(settings.get('float_width'))
 	typ = hlir_type_float(width=flt_width, ti=ti)
 	typ['generic'] = True
@@ -17,8 +19,9 @@ def value_float_create(num, ti=None):
 
 
 def _value_float_cons_immediate(t, v, method, ti):
+	#info("_value_float_cons_immediate", ti)
 	nv = value_cons_immediate(t, v, method, ti)
-	nv['asset'] = _float_value_pack(float(nv['asset']), t['width'])
+	nv['asset'] = decimal.Decimal(nv['asset'])
 	nv['immediate'] = True
 	return nv
 
@@ -44,20 +47,5 @@ def value_float_cons(t, v, method, ti):
 	if value_is_immediate(v):
 		return _value_float_cons_immediate(t, v, method, ti)
 	return value_cons_node(t, v, method, ti=ti)
-
-
-
-# получаем 32 или 64 битное представление числа
-def _float_value_pack(f_num, width):
-	import struct
-	z = 0
-	if width == 32:
-		z = struct.unpack('<f', struct.pack('<f', f_num))[0]
-	elif width == 64:
-		z = struct.unpack('<d', struct.pack('<d', f_num))[0]
-	else:
-		fatal("too big float, _float_value_pack not implemented")
-
-	return z
 
 

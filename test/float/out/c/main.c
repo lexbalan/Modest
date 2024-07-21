@@ -30,7 +30,7 @@ int main()
 	printf("s = %f\n", s);
 
 
-	const double k = (double)(1) / (double)(8);
+	#define k  (1.0 / (double)(8))
 	printf("k = %f\n", k);
 
 
@@ -38,4 +38,5 @@ int main()
 }
 
 #undef r
+#undef k
 
