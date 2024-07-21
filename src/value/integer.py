@@ -14,14 +14,12 @@ def value_integer_create(num, typ=None, ti=None):
 		nbits = nbits_for_num(num)
 
 		if nbits > typ['width']:
-			print(nbits)
-			print(typ)
 			from error import error
 			error("value size not corresponded type size", ti)
 			return value_bad(ti)
 
 	v = value_terminal(typ, num, ti)
-	v['nsigns'] = 0  # add field nsigns
+	v['nsigns'] = 0
 	v['immediate'] = True
 	return v
 
