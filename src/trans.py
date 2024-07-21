@@ -2,7 +2,7 @@
 import os
 
 from error import *
-from util import get_item_with_id, get_index_of_item_with_id
+from util import get_item_with_id
 from main import settings
 from frontend.parser import Parser
 from hlir.type import select_common_type
@@ -1674,6 +1674,9 @@ def do_stmt_var(x):
 
 	t = None
 	v = None
+
+	if x['type'] == None and x['value'] == None:
+		pass # error
 
 	if x['type'] != None:
 		t = do_type(x['type'])

@@ -9,7 +9,6 @@ from hlir.type import type_print
 from value.value import value_is_immediate, value_is_generic_immediate, value_is_zero, value_attribute_check, value_print, value_index_array
 from value.integer import value_integer_create
 from util import align_bits_up, nbits_for_num, get_item_with_id, align_to
-from unicode import utfx_chars_to_utf32_chars, utf32_chars_to_string
 from main import settings
 import foundation
 

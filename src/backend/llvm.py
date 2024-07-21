@@ -7,7 +7,6 @@ from hlir.type import type_print
 from value.value import value_attribute_check, value_print, value_is_immediate, value_terminal, value_is_zero
 from hlir.type import hlir_type_pointer
 from util import align_bits_up
-from unicode import utf32_chars_to_string
 import settings
 
 import foundation
