@@ -28,6 +28,13 @@ def nl_indent(nl=1):
 		indent()
 
 
+def get_id_str(x):
+	id_str = x['id']['str']
+	#if 'cm_alias' in x:
+	#	id_str = '"%s"' % x['llvm_alias']
+	return id_str
+
+
 aprecedence = [
 	['logic_or'], #0
 	['logic_and'], #1
@@ -61,7 +68,7 @@ def precedence(x):
 
 
 def print_id(x):
-	out(x['id']['str'])
+	out(get_id_str(x))
 
 
 def print_comment(x):
@@ -251,7 +258,7 @@ def print_value_call(v, ctx):
 			print_value(arg)
 		else: #if arg['isa'] == 'initializer':
 			# named parameter
-			out("%s = " % arg['id']['str'])
+			out("%s = " % get_id_str(arg))
 			print_value(arg['value'])
 
 		i = i + 1
@@ -441,7 +448,7 @@ def print_value_record(v, ctx):
 	i = 0
 	while i < nitems:
 		item = v['type']['fields'][i]
-		field_str = item['id']['str']
+		field_str = get_id_str(item)
 
 		ini = get_item_with_id(initializers, field_str)
 
