@@ -120,6 +120,14 @@ def _llvm_operation(op, type, reg=None, x=None):
 
 
 
+def get_id_str(x):
+	id_str = x['id']['str']
+	if 'llvm_alias' in x:
+		id_str = '"%s"' % x['llvm_alias']
+	return id_str
+
+
+
 def llvm_value_zero(type):
 	return {
 		'isa': 'll_value',
@@ -806,7 +814,7 @@ def print_type(t):
 			return
 
 		#if t['id'] != None:
-		#	out('%%%s' % t['id']['str'])
+		#	out('%%%s' % get_id_str(t))
 		#	return
 
 
@@ -917,7 +925,7 @@ def do_eval_ref(v):
 	if is_global_context():
 		if v['value']['kind'] == 'var':
 			if 'global' in v['value']['att']:
-				id = v['value']['id']['str']
+				id = get_id_str(v['value'])
 				return llvm_value_mem(id, v['type'], v)
 
 	nv = copy.copy(ve)
@@ -1387,7 +1395,7 @@ def do_eval_record(v):
 	# набиваем структуру
 	for initializer in initializers:
 		iv = do_reval(initializer['value'])
-		field = hlir_type.record_field_get(rec_type, initializer['id']['str'])
+		field = hlir_type.record_field_get(rec_type, get_id_str(initializer))
 		xv = insertvalue(xv, iv, field['field_no'])
 
 	return xv
@@ -1398,9 +1406,9 @@ def do_eval_pointer(x):
 	return llvm_value_num(x['type'], x['asset'])
 
 
+
 def do_eval_func(x):
-	k = x['kind']
-	return llvm_value_mem(x['id']['str'], x['type'], x)
+	return llvm_value_mem(get_id_str(x), x['type'], x)
 
 
 
@@ -1408,12 +1416,12 @@ def do_eval_var(x):
 	k = x['kind']
 
 	if value_attribute_check(x, 'local'):
-		localname = x['id']['str']
+		localname = get_id_str(x)
 		y = locals_get(localname)
 		y['is_adr'] = True
 		return y
 
-	rv = llvm_value_mem(x['id']['str'], x['type'], x)
+	rv = llvm_value_mem(get_id_str(x), x['type'], x)
 	rv['is_adr'] = True
 	return rv
 
@@ -1421,7 +1429,7 @@ def do_eval_var(x):
 
 def do_eval_const(x):
 	if value_attribute_check(x, 'local'):
-		localname = x['id']['str']
+		localname = get_id_str(x)
 		y = locals_get(localname)
 		return y
 
@@ -1432,7 +1440,7 @@ def do_eval_const(x):
 			# константные массивы (даже дженерик)
 			# печатаются и их можео индексировать
 			if hlir_type.type_is_array(x['value']['type']):
-				rv = llvm_value_mem(x['id']['str'], x['type'], x)
+				rv = llvm_value_mem(get_id_str(x), x['type'], x)
 				rv['is_adr'] = True
 				return rv
 
@@ -1674,7 +1682,7 @@ def print_stmt_return(x):
 def print_stmt_var(x):
 	var = x['var']
 	t = var['type']
-	id_str = var['id']['str']
+	id_str = get_id_str(var)
 
 	# only for VLA
 	is_vla = False
@@ -1713,7 +1721,7 @@ def print_stmt_var(x):
 
 
 def print_stmt_let(x):
-	id_str = x['id']['str']
+	id_str = get_id_str(x)
 	val = x['init_value']
 
 	if hlir_type.type_is_string(val['type']):
@@ -1912,7 +1920,7 @@ def print_func_paramlist(func, only_types=False, with_attributes=True):
 	def print_param_w_id(param):
 		print_type(param['type'])
 		#out(' noundef')
-		out(" %%%s" % param['id']['str'])
+		out(" %%%s" % get_id_str(param))
 
 	method = print_param_w_id
 	if only_types:
@@ -1959,7 +1967,7 @@ def print_func_signature(func):
 	else:
 		print_type(to)
 
-	out(" @%s(" % func['id']['str'])
+	out(" @%s(" % get_id_str(func))
 	"""if sret:
 		print_type(to)
 		out("*")
@@ -2009,7 +2017,7 @@ def print_def_func(x):
 
 	params = ftype['params']
 	for param in params:
-		param_id = param['id']['str']
+		param_id = get_id_str(param)
 		vv = llvm_value_stk(param_id, param['type'], param)
 		locals_add(param_id, vv)
 
@@ -2052,7 +2060,7 @@ def type_get_aka(t):
 
 
 def print_decl_type(x):
-	out("\n%%%s = type opaque" % x['id']['str'])
+	out("\n%%%s = type opaque" % get_id_str(x))
 
 
 def print_def_type(x):
@@ -2063,7 +2071,7 @@ def print_def_type(x):
 			return"""
 
 
-	out("\n%%%s = type " % x['id']['str'])
+	out("\n%%%s = type " % get_id_str(x))
 	if hlir_type.type_is_record(xtype):
 		# не печатаем имя а печатаем саму структуру
 		# тк LLVM дает ошибку на запись вида
@@ -2092,7 +2100,7 @@ def print_def_var(x):
 	mod = 'global'
 
 	var = x['value']
-	out("\n@%s = " % var['id']['str'])
+	out("\n@%s = " % get_id_str(var))
 	out(linkage + mod + ' ')
 	print_type(var['type'])
 
@@ -2114,7 +2122,7 @@ def print_def_const(x):
 	# тк доступ к ним может идти в рантайме по индкусу;
 	# НО! В константной записи может быть массив! (хз как быть пока)
 	if hlir_type.type_is_array(init_value['type']):
-		out("\n@%s = constant " % x['id']['str'])
+		out("\n@%s = constant " % get_id_str(x))
 		llvm_print_type_value(do_eval(init_value))
 
 	return
@@ -2226,7 +2234,7 @@ def print_strings(strings):
 		strid = None
 		if 'id' in string:
 			# it is named constant
-			strid = string['id']['str']
+			strid = get_id_str(string)
 		else:
 			# it is anonymous string
 			strno = strno + 1

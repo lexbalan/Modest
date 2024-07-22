@@ -206,6 +206,26 @@ declare i32 @ungetc(i32 %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
 
 
+; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdlib.hm
+
+
+
+declare void @abort()
+declare i32 @abs(i32 %x)
+declare i32 @atexit(void ()* %x)
+declare double @atof([0 x i8]* %nptr)
+declare i32 @atoi([0 x i8]* %nptr)
+declare i64 @atol([0 x i8]* %nptr)
+declare i8* @calloc(i64 %num, i64 %size)
+declare void @exit(i32 %x)
+declare void @free(i8* %ptr)
+declare %Str* @getenv(%Str* %name)
+declare i64 @labs(i64 %x)
+declare %Str* @secure_getenv(%Str* %name)
+declare i8* @malloc(i64 %size)
+declare i32 @system([0 x i8]* %string)
+
+
 ; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/math.hm
 
 
@@ -298,9 +318,14 @@ declare double @fmal(double %a, double %b, double %c)
 
 ; -- SOURCE: src/main.cm
 
-@str1 = private constant [12 x i8] [i8 102, i8 108, i8 111, i8 97, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
-@str2 = private constant [8 x i8] [i8 115, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
-@str3 = private constant [8 x i8] [i8 107, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
+@str1 = private constant [9 x i8] [i8 100, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str2 = private constant [9 x i8] [i8 100, i8 121, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str3 = private constant [12 x i8] [i8 102, i8 108, i8 111, i8 97, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
+@str4 = private constant [8 x i8] [i8 115, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
+@str5 = private constant [8 x i8] [i8 107, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
+@str6 = private constant [23 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 70, i8 108, i8 111, i8 97, i8 116, i8 51, i8 50, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 117, i8 10, i8 0]
+@str7 = private constant [23 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 70, i8 108, i8 111, i8 97, i8 116, i8 54, i8 52, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 117, i8 10, i8 0]
+@str8 = private constant [12 x i8] [i8 115, i8 108, i8 111, i8 112, i8 101, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
 
 
 
@@ -311,11 +336,45 @@ define double @squareOfCircle(double %radius) {
 	ret double %2
 }
 
+
+%Point2D = type {
+	i32, 
+	i32
+};
+
+
+define float @slope(%Point2D %a, %Point2D %b) {
+	%1 = extractvalue %Point2D %a, 0
+	%2 = extractvalue %Point2D %b, 0
+	%3 = sub i32 %1, %2
+	%4 = call i32 @abs(i32 %3)
+	%5 = extractvalue %Point2D %a, 1
+	%6 = extractvalue %Point2D %b, 1
+	%7 = sub i32 %5, %6
+	%8 = call i32 @abs(i32 %7)
+	%9 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str1 to [0 x i8]*), i32 %4)
+	%10 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str2 to [0 x i8]*), i32 %8)
+	%11 = sitofp i32 %8 to float
+	%12 = sitofp i32 %4 to float
+	%13 = fdiv float %11, %12
+	ret float %13
+}
+
 define i32 @main() {
-	%1 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*))
+	%1 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str3 to [0 x i8]*))
 	%2 = call double @squareOfCircle(double 10.0000000000000000)
-	%3 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), double %2)
-	%4 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str3 to [0 x i8]*), double 0.1250000000000000)
+	%3 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str4 to [0 x i8]*), double %2)
+	%4 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str5 to [0 x i8]*), double 0.1250000000000000)
+	%5 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str6 to [0 x i8]*), i32 4)
+	%6 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str7 to [0 x i8]*), i32 8)
+	; printf %f ожидает получить double а не float!
+	%7 = insertvalue %Point2D zeroinitializer, i32 10, 0
+	%8 = insertvalue %Point2D %7, i32 20, 1
+	%9 = insertvalue %Point2D zeroinitializer, i32 30, 0
+	%10 = insertvalue %Point2D %9, i32 50, 1
+	%11 = call float @slope(%Point2D %8, %Point2D %10)
+	%12 = fpext float %11 to double
+	%13 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str8 to [0 x i8]*), double %12)
 	ret i32 0
 }
 

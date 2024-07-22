@@ -5,7 +5,10 @@
 #include <string.h>
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
+
+typedef struct Point2D Point2D;
 
 
 
@@ -21,6 +24,20 @@ double squareOfCircle(double radius)
 }
 
 
+struct Point2D {
+	int x;
+	int y;
+};
+
+float slope(Point2D a, Point2D b)
+{
+	const int dx = abs(a.x - b.x);
+	const int dy = abs(a.y - b.y);
+	printf("dx = %d\n", dx);
+	printf("dy = %d\n", dy);
+	return (float)dy / (float)dx;
+}
+
 int main()
 {
 	printf("float test\n");
@@ -33,6 +50,12 @@ int main()
 	#define k  (1.0 / (double)(8))
 	printf("k = %f\n", k);
 
+	printf("sizeof(Float32) = %lu\n", sizeof(float));
+	printf("sizeof(Float64) = %lu\n", sizeof(double));
+
+	// printf %f ожидает получить double а не float!
+	const float sl = slope((Point2D){.x = 10, .y = 20}, (Point2D){.x = 30, .y = 50});
+	printf("slope = %f\n", (double)sl);
 
 	return 0;
 }

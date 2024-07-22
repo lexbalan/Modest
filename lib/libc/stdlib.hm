@@ -1,9 +1,8 @@
 
 @module_att("not_included")
+@c_include("stdlib.h")
 
 import "ctypes"
-
-@c_include("stdlib.h")
 
 func abort() -> Unit
 func abs(x: Int) -> Int

@@ -137,12 +137,15 @@ def precedence(x):
 
 
 
-def print_id(x, prefix=''):
+def get_id_str(x):
+	id_str = x['id']['str']
 	if 'c_alias' in x:
-		out(x['c_alias'])
-		return
+		id_str = '"%s"' % x['llvm_alias']
+	return id_str
 
-	out(prefix + x['id']['str'])
+
+def print_id(x, prefix=''):
+	out(prefix + get_id_str(x))
 
 
 
@@ -927,7 +930,7 @@ def print_value_record(v, ctx):
 
 	while i < nitems:
 		item = v['type']['fields'][i]
-		field_id_str = item['id']['str']
+		field_id_str = get_id_str(item)
 		ini = get_item_with_id(initializers, field_id_str)
 
 		nl = 0
@@ -1569,7 +1572,7 @@ def print_decl_func(x):
 	newline(n=x['nl'])
 	if 'gnu_att' in x:
 		out('__attribute__((%s))\n' % x['gnu_att'])
-	print_func_signature(x['id']['str'], x['value']['type'], x['value']['att'])
+	print_func_signature(get_id_str(x), x['value']['type'], x['value']['att'])
 	out(";")
 
 
@@ -1591,7 +1594,7 @@ def print_def_func(x):
 	# если функция уже была определена, то обертки над ее типами
 	# уже были напечатаны (если они были), и их нельзя печатать еще раз
 	print_wrappers = not 'declared' in func['att']
-	print_func_signature(func['id']['str'], ftype, func['att'], print_wrappers)
+	print_func_signature(get_id_str(func), ftype, func['att'], print_wrappers)
 
 	if styleguide['LINE_BREAK_BEFORE_FUNC_BRACE']:
 		newline()
