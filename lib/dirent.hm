@@ -1,34 +1,41 @@
 // dirent.hm
 
+@property("type.c_alias", "DIR")
+type Dir
 
+@property("type.c_alias", "int")
+type Int Int32
+@property("type.c_alias", "ino_t")
 type InoT Nat32
+@property("type.c_alias", "off_t")
 type OffT Nat32
 
+
 type Dirent record {
- d_ino: InoT       /* inode number */
- d_off: OffT       /* offset to the next dirent */
- d_reclen: Nat16   /* length of this record */
- d_type: Nat8      /* type of file; not supported
-       by all file system types */
- d_name: [256]Char8  /* filename */
+	d_ino: InoT		/* inode number */
+	d_off: OffT		/* offset to the next dirent */
+	d_reclen: Nat16	/* length of this record */
+	d_type: Nat8		/* type of file; not supported
+						by all file system types */
+	d_name: [256]Char8	/* filename */
 }
 
 
-/* File types for Dirent#d_type */
-let DT_UNKNOWN = 0
-let DT_FIFO = 1
-let DT_CHR = 2
-let DT_DIR = 4
-let DT_BLK = 6
-let DT_REG = 8
-let DT_LNK = 10
-let DT_SOCK = 12
-let DT_WHT = 14
+/* File types for `d_type'.  */
+let dt_UNKNOWN = 0
+let dt_FIFO = 1
+let dt_CHR = 2
+let dt_DIR = 4
+let dt_BLK = 6
+let dt_REG = 8
+let dt_LNK = 10
+let dt_SOCK = 12
+let dt_WHT = 14
 
 
-func opendir(dirname: *[]Char) -> *Dir
+func opendir(dirname: *[]Char8) -> *Dir
 func closedir(dirp: *Dir) -> Int
 
 func readdir(dirp: *Dir) -> *Dirent
-func readdir_r(dirp: *Dir, struct dirent *entry, struct dirent **result) -> Int
+func readdir_r(dirp: *Dir, entry: *Dirent, result: **Dirent) -> Int
 

@@ -4,7 +4,7 @@ import decimal
 from error import info, warning, error
 import hlir.type as type
 from hlir.type import hlir_type_float
-from .value import value_terminal, value_cons_immediate, value_is_immediate
+from .value import value_is_immediate, value_terminal, value_cons_node, value_cons_immediate
 
 
 
