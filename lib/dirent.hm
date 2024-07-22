@@ -1,6 +1,9 @@
 // dirent.hm
 
 
+type InoT Nat32
+type OffT Nat32
+
 type Dirent record {
  d_ino: InoT       /* inode number */
  d_off: OffT       /* offset to the next dirent */
