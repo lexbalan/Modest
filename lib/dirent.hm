@@ -11,25 +11,35 @@ type InoT Nat32
 type OffT Nat32
 
 
+@property("type.c_alias", "struct dirent")
 type Dirent record {
-	d_ino: InoT		/* inode number */
-	d_off: OffT		/* offset to the next dirent */
-	d_reclen: Nat16	/* length of this record */
+	d_ino: InoT			/* inode number */
+	d_off: OffT			/* offset to the next dirent */
+	d_reclen: Nat16		/* length of this record */
 	d_type: Nat8		/* type of file; not supported
-						by all file system types */
+							by all file system types */
 	d_name: [256]Char8	/* filename */
 }
 
 
 /* File types for `d_type'.  */
+@property("value.c_alias", "DT_UNKNOWN")
 let dt_UNKNOWN = 0
+@property("value.c_alias", "DT_FIFO")
 let dt_FIFO = 1
+@property("value.c_alias", "DT_CHR")
 let dt_CHR = 2
+@property("value.c_alias", "DT_DIR")
 let dt_DIR = 4
+@property("value.c_alias", "DT_BLK")
 let dt_BLK = 6
+@property("value.c_alias", "DT_REG")
 let dt_REG = 8
+@property("value.c_alias", "DT_LNK")
 let dt_LNK = 10
+@property("value.c_alias", "DT_SOCK")
 let dt_SOCK = 12
+@property("value.c_alias", "DT_WHT")
 let dt_WHT = 14
 
 

@@ -1,5 +1,10 @@
 // ctype.hm
 
+import "ctypes"
+
+@module_att("not_included")
+@c_include("ctype.h")
+
 func isascii(x: Int) -> Bool
 func iscntrl(x: Int) -> Bool
 func isblank(x: Int) -> Bool
@@ -14,10 +19,7 @@ func isspace(x: Int) -> Bool
 func isupper(x: Int) -> Bool
 func islower(x: Int) -> Bool
 
-
 func toascii(x: Int) -> Int
 func toupper(x: Int) -> Int
 func tolower(x: Int) -> Int
-func _tolower(x: Int) -> Int
-func _toupper(x: Int) -> Int
 
