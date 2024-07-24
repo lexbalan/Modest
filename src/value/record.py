@@ -106,9 +106,18 @@ def _doitems(t, v, method, ti):
 			prev_nl = nl
 
 			from .cons import value_cons_implicit
+
+
+			# Если это GenericRecord и тип поля тоже Generic
+			# То здесь можем поменять тип на более подходящий!
+			# Это тонкий лед, нужно быть осторожным!
+			if type.type_is_generic(field_type):
+				field_type = type.select_common_type(field_type, item_value['type'])
+				field['type'] = field_type
+
 			nv = value_cons_implicit(field_type, item_value)
 
-			type.check(field_type, nv['type'], nv['expr_ti'])
+			e = type.check(field_type, nv['type'], nv['expr_ti'])
 
 			p = hlir_initializer(field['id'], nv, ti=ti, nl=nl)
 			items.append(p)

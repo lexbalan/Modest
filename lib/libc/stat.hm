@@ -50,13 +50,13 @@ type Timespec record {
 
 @property("type.c_alias", "struct stat")
 type Stat record {
-	st_dev: DevT                 // [XSI] ID of device containing file
-	st_mode: ModeT               // [XSI] Mode of file (see below)
-	st_nlink: NLinkT             // [XSI] Number of hard links
-	st_ino: DarwinIno64T         // [XSI] File serial number
-	st_uid: UIDT                 // [XSI] User ID of the file
-	st_gid: GIDT                 // [XSI] Group ID of the file
-	st_rdev: DevT                // [XSI] Device ID
+	st_dev: DevT             // [XSI] ID of device containing file
+	st_mode: ModeT           // [XSI] Mode of file (see below)
+	st_nlink: NLinkT         // [XSI] Number of hard links
+	st_ino: DarwinIno64T     // [XSI] File serial number
+	st_uid: UIDT             // [XSI] User ID of the file
+	st_gid: GIDT             // [XSI] Group ID of the file
+	st_rdev: DevT            // [XSI] Device ID
 
 	//__DARWIN_STRUCT_STAT64_TIMES:
 	//+spec -> st_mtimespec
@@ -65,13 +65,13 @@ type Stat record {
 	st_ctime: Timespec       // time of last status change
 	st_birthtime: Timespec   // time of file creation(birth)
 
-	st_size: OffT                // [XSI] file size, in bytes
-	st_blocks: BlkCntT           // [XSI] blocks allocated for file
-	st_blksize: BlkSizeT         // [XSI] optimal blocksize for I/O
-	st_flags: Nat32              // user defined flags for file
-	st_gen: Nat32                // file generation number
-	st_lspare: Int32             // RESERVED: DO NOT USE!
-	st_qspare: [2]Int64          // RESERVED: DO NOT USE!
+	st_size: OffT            // [XSI] file size, in bytes
+	st_blocks: BlkCntT       // [XSI] blocks allocated for file
+	st_blksize: BlkSizeT     // [XSI] optimal blocksize for I/O
+	st_flags: Nat32          // user defined flags for file
+	st_gen: Nat32            // file generation number
+	st_lspare: Int32         // RESERVED: DO NOT USE!
+	st_qspare: [2]Int64      // RESERVED: DO NOT USE!
 }
 
 
