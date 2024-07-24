@@ -181,7 +181,7 @@ func c_S_ISSOCK(m: ModeT) -> Bool {
 /* is whiteout */
 @property("value.c_alias", "S_ISWHT")
 func c_S_ISWHT(m: ModeT) -> Bool {
-	return (m and c_S_IFMT) == c_S_IFWHT)
+	return (m and c_S_IFMT) == c_S_IFWHT
 }
 
 
