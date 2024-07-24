@@ -2,16 +2,6 @@
 
 import "libc/stdio"
 
-var x: Nat32
-
-@if (__defined("x"))
-//@undef("x")
-//var x: Int32
-@endif
-
-
-var y: @volatile Nat32
-
 
 func main() -> Int {
 	printf("tag test\n")
@@ -27,11 +17,11 @@ func main() -> Int {
 	printf("a[1] = %d\n", a[1])
 	printf("a[2] = %d\n", a[2])
 
-	/*
+
 	len = 22
 	let size = sizeof(a)
 	printf("sizeof(a) == %lu", size)
-	*/
+
 
 	a = [1, 2, 3, 4, 5]
 
@@ -41,4 +31,8 @@ func main() -> Int {
 
 	return 0
 }
+
+/*func f(a: Int32, b: Int32) -> Int32 {
+	return a + b
+}*/
 

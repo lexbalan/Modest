@@ -209,67 +209,179 @@ declare void @perror(%ConstCharStr* %str)
 ; -- SOURCE: src/main.cm
 
 @str1 = private constant [10 x i8] [i8 116, i8 97, i8 103, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
-@str2 = private constant [11 x i8] [i8 97, i8 91, i8 48, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str3 = private constant [11 x i8] [i8 97, i8 91, i8 49, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str4 = private constant [11 x i8] [i8 97, i8 91, i8 50, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str5 = private constant [11 x i8] [i8 97, i8 91, i8 48, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str6 = private constant [11 x i8] [i8 97, i8 91, i8 49, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str7 = private constant [11 x i8] [i8 97, i8 91, i8 50, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 
 
 
-@x = global i32 zeroinitializer
+%Point2D = type {
+	i32, 
+	i32
+};
 
 
-@y = global i32 zeroinitializer
+@points = global [3 x %Point2D] [
+	%Point2D {
+		i32 1,
+		i32 2
+	},
+	%Point2D {
+		i32 3,
+		i32 4
+	},
+	%Point2D {
+		i32 7,
+		i32 8
+	}
+]
+
+
+%BatteryLevel = type {
+	i8, 
+	i16, 
+	i16, 
+	i8
+};
+
+
+
+@lookup_discharge = global [11 x %BatteryLevel] [
+	%BatteryLevel {
+		i8 0,
+		i16 0,
+		i16 3300,
+		i8 33
+	},
+	%BatteryLevel {
+		i8 10,
+		i16 3300,
+		i16 3444,
+		i8 0
+	},
+	%BatteryLevel {
+		i8 20,
+		i16 3444,
+		i16 3544,
+		i8 0
+	},
+	%BatteryLevel {
+		i8 30,
+		i16 3544,
+		i16 3628,
+		i8 0
+	},
+	%BatteryLevel {
+		i8 40,
+		i16 3628,
+		i16 3684,
+		i8 0
+	},
+	%BatteryLevel {
+		i8 50,
+		i16 3684,
+		i16 3700,
+		i8 0
+	},
+	%BatteryLevel {
+		i8 60,
+		i16 3700,
+		i16 3744,
+		i8 0
+	},
+	%BatteryLevel {
+		i8 70,
+		i16 3744,
+		i16 3824,
+		i8 0
+	},
+	%BatteryLevel {
+		i8 80,
+		i16 3824,
+		i16 3904,
+		i8 0
+	},
+	%BatteryLevel {
+		i8 90,
+		i16 3904,
+		i16 3996,
+		i8 0
+	},
+	%BatteryLevel {
+		i8 100,
+		i16 3996,
+		i16 5000,
+		i8 0
+	}
+]
+@lookup_charge = global [11 x %BatteryLevel] [
+	%BatteryLevel {
+		i8 0,
+		i16 0,
+		i16 3628,
+		i8 12
+	},
+	%BatteryLevel {
+		i8 10,
+		i16 3628,
+		i16 3764,
+		i8 12
+	},
+	%BatteryLevel {
+		i8 20,
+		i16 3764,
+		i16 3856,
+		i8 12
+	},
+	%BatteryLevel {
+		i8 30,
+		i16 3856,
+		i16 3880,
+		i8 12
+	},
+	%BatteryLevel {
+		i8 40,
+		i16 3880,
+		i16 3912,
+		i8 12
+	},
+	%BatteryLevel {
+		i8 50,
+		i16 3912,
+		i16 3960,
+		i8 12
+	},
+	%BatteryLevel {
+		i8 60,
+		i16 3960,
+		i16 4020,
+		i8 12
+	},
+	%BatteryLevel {
+		i8 70,
+		i16 4020,
+		i16 4088,
+		i8 12
+	},
+	%BatteryLevel {
+		i8 80,
+		i16 4088,
+		i16 4136,
+		i8 12
+	},
+	%BatteryLevel {
+		i8 90,
+		i16 4136,
+		i16 4152,
+		i8 12
+	},
+	%BatteryLevel {
+		i8 100,
+		i16 4152,
+		i16 5000,
+		i8 0
+	}
+]
 
 define i32 @main() {
-	%1 = alloca i8*
-	%2 = call i8* @llvm.stacksave() 
-	store i8* %2, i8** %1
-	%3 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*))
-	%4 = alloca i32, align 4
-	store i32 5, i32* %4
-	%5 = load i32, i32* %4
-	%6 = alloca i32, i32 %5, align 4
-	%7 = bitcast i32* %6 to [0 x i32]*
-	%8 = getelementptr inbounds [0 x i32], [0 x i32]* %7, i32 0, i32 0
-	store i32 100, i32* %8
-	%9 = getelementptr inbounds [0 x i32], [0 x i32]* %7, i32 0, i32 1
-	store i32 200, i32* %9
-	%10 = getelementptr inbounds [0 x i32], [0 x i32]* %7, i32 0, i32 2
-	store i32 300, i32* %10
-	%11 = getelementptr inbounds [0 x i32], [0 x i32]* %7, i32 0, i32 0
-	%12 = load i32, i32* %11
-	%13 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str2 to [0 x i8]*), i32 %12)
-	%14 = getelementptr inbounds [0 x i32], [0 x i32]* %7, i32 0, i32 1
-	%15 = load i32, i32* %14
-	%16 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str3 to [0 x i8]*), i32 %15)
-	%17 = getelementptr inbounds [0 x i32], [0 x i32]* %7, i32 0, i32 2
-	%18 = load i32, i32* %17
-	%19 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str4 to [0 x i8]*), i32 %18)
-	; -- STMT ASSIGN ARRAY --
-	; -- start vol eval --
-	; -- end vol eval --
- -- ??? --
-
-	%20 = insertvalue [5 x i3] zeroinitializer, i3 1, 0
-	%21 = insertvalue [5 x i3] %20, i3 2, 1
-	%22 = insertvalue [5 x i3] %21, i3 3, 2
-	%23 = insertvalue [5 x i3] %22, i3 4, 3
-	%24 = insertvalue [5 x i3] %23, i3 5, 4
-	store [0 x i32] %24, [0 x i32]* %7
-	%25 = getelementptr inbounds [0 x i32], [0 x i32]* %7, i32 0, i32 0
-	%26 = load i32, i32* %25
-	%27 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str5 to [0 x i8]*), i32 %26)
-	%28 = getelementptr inbounds [0 x i32], [0 x i32]* %7, i32 0, i32 1
-	%29 = load i32, i32* %28
-	%30 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str6 to [0 x i8]*), i32 %29)
-	%31 = getelementptr inbounds [0 x i32], [0 x i32]* %7, i32 0, i32 2
-	%32 = load i32, i32* %31
-	%33 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str7 to [0 x i8]*), i32 %32)
-	%34 = load i8*, i8** %1
-	call void @llvm.stackrestore(i8* %34)
+	%1 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*))
 	ret i32 0
 }
 

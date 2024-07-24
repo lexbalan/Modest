@@ -1013,7 +1013,6 @@ def do_value_call(x):
 
 	undeclared_value_error = oe
 
-
 	if value_is_bad(f):
 		if 'unknown' in f['att']:
 			if x['left']['kind'] == 'id':
@@ -1030,7 +1029,7 @@ def do_value_call(x):
 				elif id_str == '__defined':
 					return do_value_call_defined(args, x['ti'])
 
-		error("undeclared value?", f['expr_ti'])
+		error("undeclared value", f['expr_ti'])
 		return value_bad(x)
 
 
