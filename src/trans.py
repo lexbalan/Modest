@@ -72,6 +72,7 @@ def module_option(option):
 
 # тепреь вызывается только из конструктора строки (value)
 def module_strings_add(v):
+	global module
 	module['strings'].append(v)
 
 
@@ -114,14 +115,17 @@ def deep_value_get(m, id_str):
 
 
 def type_get(id_str):
+	global module
 	return deep_type_get(module, id_str)
 
 
 def value_get(id_str):
+	global module
 	return deep_value_get(module, id_str)
 
 
 def ctx_type_add(id_str, type):
+	global module
 	module['context'].type_add(id_str, type)
 
 
@@ -133,11 +137,13 @@ def ctx_value_add(id_str, value):
 
 
 def ctx_value_get(id_str):
+	global module
 	return module['context'].value_get(id_str, recursive=True)
 
 
 # искать ТОЛЬКО внутри текущего контекста (блока)
 def ctx_value_get_shallow(id_str):
+	global module
 	return module['context'].value_get(id_str, recursive=False)
 
 
