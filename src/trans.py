@@ -1674,7 +1674,6 @@ def do_stmt_return(x):
 			error("expected return value", x['ti'])
 		return hlir_stmt_bad(x)
 
-
 	# (!) in return statement retval can be None (!)
 	retval = None
 	if ret_val_present:
@@ -1906,19 +1905,20 @@ def do_stmt(x):
 	k = x['kind']
 
 	s = None
-	if k == 'let': s = do_stmt_let(x)
+
+	if k == 'value': s = do_stmt_value(x)
+	elif k == 'assign': s = do_stmt_assign(x)
+	elif k == 'let': s = do_stmt_let(x)
 	elif k == 'var': s = do_stmt_var(x)
 	elif k == 'block': s = do_stmt_block(x)
-	elif k == 'assign': s = do_stmt_assign(x)
-	elif k == 'value': s = do_stmt_value(x)
 	elif k == 'if': s = do_stmt_if(x)
 	elif k == 'while': s = do_stmt_while(x)
 	elif k == 'return': s = do_stmt_return(x)
-	elif k == 'type': s = do_stmt_type(x)
 	elif k == 'again': s = do_stmt_again(x)
 	elif k == 'break': s = do_stmt_break(x)
 	elif k == 'inc': s = do_stmt_incdec(x, 'add')
 	elif k == 'dec': s = do_stmt_incdec(x, 'sub')
+	elif k == 'type': s = do_stmt_type(x)
 	elif k == 'comment-line': s = do_stmt_comment_line(x)
 	elif k == 'comment-block': s = do_stmt_comment_block(x)
 	elif k == 'asm': s = do_stmt_asm(x)
