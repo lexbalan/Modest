@@ -56,7 +56,7 @@ def value_record_create(initializers=[], ti=None):
 
 		# приводим инициализатор к типу поля
 		#iv = value_cons_implicit(f['type'], init_value)
-		iv = _value_cons(init_value, f['type'], init_value['expr_ti'], method)
+		iv = _value_cons(init_value, f['type'], init_value['ti'], method)
 
 		ni = copy.copy(initializer)
 		ni['value'] = iv
@@ -117,7 +117,7 @@ def _doitems(t, v, method, ti):
 
 			nv = value_cons_implicit(field_type, item_value)
 
-			e = type.check(field_type, nv['type'], nv['expr_ti'])
+			e = type.check(field_type, nv['type'], nv['ti'])
 
 			p = hlir_initializer(field['id'], nv, ti=ti, nl=nl)
 			items.append(p)

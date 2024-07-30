@@ -111,9 +111,9 @@ def value_cons_implicit(t, v):
 	# 5. FreePointer -> AnyPointer
 
 	if value_is_bad(v) or type.type_is_bad(t):
-		return value_bad(v['expr_ti'])
+		return value_bad(v['ti'])
 
-	ti = v['expr_ti']
+	ti = v['ti']
 
 	from_type = v['type']
 
@@ -150,13 +150,13 @@ def value_cons_implicit(t, v):
 					return v
 				el"""
 				if type.type_eq_record(from_type['to'], t['to'], opt=[]):
-					#info("***", v['expr_ti'])
+					#info("***", v['ti'])
 					# если равны но не номенативно - для C & LLVM нужно привдение
 					# тк implicit то CM принтер не станет печатать приведение
 					# а напечатает просто значение
 					return value_record_cons(t, v, 'implicit', ti=ti)  # value_cons_node!
 				"""elif t['to'] != from_type['to']:
-					info("@@@", v['expr_ti'])
+					info("@@@", v['ti'])
 					# суть в том что если типы все же разные
 					# (пусть и структурно идентичные)
 					# нам нужно сгенерировать implicit_cons
@@ -181,17 +181,15 @@ def value_cons_explicit(t, v, ti):
 	assert(v['isa'] == 'value')
 
 	if value_is_bad(v) or type.type_is_bad(t):
-		return value_bad(v['expr_ti'])
+		return value_bad(v['ti'])
 
 	from_type = v['type']
-
 
 	# for situation like:
 	# var s = []Int32 [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 	if type.type_is_generic_array(from_type):
 		if t['volume'] == None:
 			t['volume'] = from_type['volume']
-
 
 	if type.type_eq(t, from_type):
 		info("explicit cast to the same type", ti)
@@ -203,7 +201,7 @@ def value_cons_explicit(t, v, ti):
 		print(" from ")
 		type.type_print(from_type)
 		print()"""
-		return value_bad(v['expr_ti'])
+		return value_bad(v['ti'])
 
 	nv = _do_value_cons(t, v, 'explicit', ti)
 	assert(nv != None)
@@ -219,7 +217,7 @@ def _try_to_implicit_cons(t, v, ti):
 # избавляемся от generic
 def value_cons_default(x):
 	from_type = x['type']
-	ti = x['expr_ti']
+	ti = x['ti']
 
 	# THIS FUNCTION WORKS ONLY FOR GENERIC VALUES
 	if not type.type_is_generic(from_type):
@@ -263,7 +261,7 @@ def value_cons_default(x):
 
 def value_cons_implicit_check(t, v):
 	nv = value_cons_implicit(t, v)
-	type.check(t, nv['type'], v['expr_ti'])
+	type.check(t, nv['type'], v['ti'])
 	return nv
 
 

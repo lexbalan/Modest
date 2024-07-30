@@ -184,7 +184,7 @@ def select_common_type_for_list(items):
 		item_type = item['type']
 		common_type = select_common_type(array_item_type, item_type)
 		if common_type == None:
-			error("value with unsuitable type", item['expr_ti'])
+			error("value with unsuitable type", item['ti'])
 		else:
 			array_item_type = common_type
 		i = i + 1

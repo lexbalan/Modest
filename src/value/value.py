@@ -101,7 +101,6 @@ def value_bad(x):
 		'immediate': False,
 		'att': [],
 		'ast_value': x,
-		'expr_ti': ti,
 		'ti': ti
 	}
 
@@ -121,8 +120,7 @@ def value_terminal(t, asset, ti):
 		'att': [],
 		'nl_end': 0,
 		'nl': 0,
-		'expr_ti': ti,
-		'ti': ti
+		'ti': None
 	}
 
 
@@ -150,8 +148,7 @@ def value_var(id, type, ti):
 		'immediate': False,
 		'immutable': False,
 		'att': [],
-		'expr_ti': ti,
-		'ti': ti
+		'ti_def': ti,
 	}
 
 
@@ -168,8 +165,7 @@ def value_const(id, type, value, ti):
 		'immediate': False,
 		'immutable': True,
 		'att': [],
-		'expr_ti': ti,
-		'ti': ti
+		'ti_def': ti,
 	}
 
 
@@ -184,8 +180,7 @@ def value_func(id, type, ti):
 		'immutable': True,
 		'pure': True,
 		'att': [],
-		'expr_ti': ti,
-		'ti': ti
+		'ti_def': ti,
 	}
 
 
@@ -198,7 +193,6 @@ def value_un(k, value, type, ti):
 		'immediate': False,
 		'immutable': True,
 		'att': [],
-		'expr_ti': ti,
 		'ti': ti
 	}
 
@@ -213,8 +207,7 @@ def value_bin(op, l, r, t, ti):
 		'immediate': False,
 		'immutable': True,
 		'att': [],
-		'expr_ti': ti,
-		'ti': ti
+		#'ti': ti
 	}
 
 
@@ -228,7 +221,6 @@ def value_call(func, rettype, args, ti):
 		'immediate': False,
 		'immutable': True,
 		'att': [],
-		'expr_ti': ti,
 		'ti': ti
 	}
 
@@ -243,7 +235,6 @@ def value_index_array(array, type, index, ti):
 		'immediate': False,
 		'immutable': False,
 		'att': [],
-		'expr_ti': ti,
 		'ti': ti
 	}
 
@@ -261,7 +252,6 @@ def value_slice_array(left, type, index_from, index_to, ti):
 		'immediate': False,
 		'immutable': False,
 		'att': [],
-		'expr_ti': ti,
 		'ti': ti
 	}
 
@@ -277,7 +267,6 @@ def value_access_record(record, type, field, ti):
 		'immediate': False,
 		'immutable': False,
 		'att': [],
-		'expr_ti': ti,
 		'ti': ti
 	}
 
@@ -295,7 +284,6 @@ def value_cons_node(type, value, method, ti):
 		'immutable': True,
 		'att': [],
 		'method': method,
-		'expr_ti': ti,
 		'ti': ti
 	}
 
@@ -340,7 +328,6 @@ def value_sizeof_type(of, ti):
 		'immediate': True,
 		'asset': size,
 		'att': [],
-		'expr_ti': ti,
 		'ti': ti
 	}
 
@@ -356,7 +343,6 @@ def value_sizeof_value(of, ti):
 		'immediate': True,
 		'asset': size,
 		'att': [],
-		'expr_ti': ti,
 		'ti': ti
 	}
 
@@ -373,7 +359,6 @@ def value_alignof(of, ti):
 		'immediate': True,
 		'asset': align,
 		'att': [],
-		'expr_ti': ti,
 		'ti': ti
 	}
 
@@ -396,7 +381,6 @@ def value_offsetof(of, field_id, ti):
 		'immediate': True,
 		'asset': offset,
 		'att': [],
-		'expr_ti': ti,
 		'ti': ti
 	}
 
@@ -413,7 +397,6 @@ def value_lengthof(value, ti):
 		'immediate': True,
 		'asset': length,
 		'att': [],
-		'expr_ti': ti,
 		'ti': ti
 	}
 
@@ -430,7 +413,6 @@ def value_va_start(va_list, last_param, ti):
 		'immediate': True,
 		'asset': 0,
 		'att': [],
-		'expr_ti': ti,
 		'ti': ti
 	}
 
@@ -444,7 +426,6 @@ def value_va_arg(va_list, type, ti):
 		'immediate': True,
 		'asset': 0,
 		'att': [],
-		'expr_ti': ti,
 		'ti': ti
 	}
 
@@ -459,7 +440,6 @@ def value_va_end(va_list, ti):
 		'immediate': True,
 		'asset': 0,
 		'att': [],
-		'expr_ti': ti,
 		'ti': ti
 	}
 
@@ -476,7 +456,6 @@ def value_va_copy(dst, src, ti):
 		'immediate': True,
 		'asset': 0,
 		'att': [],
-		'expr_ti': ti,
 		'ti': ti
 	}
 
@@ -486,10 +465,7 @@ def value_print(x, msg="value_print"):
 	assert(x['isa'] == 'value')
 	print("\n\nvalue_print:")
 
-	if 'expr_ti' in x:
-		info(msg, x['expr_ti'])
-	else:
-		info(msg, x['ti'])
+	info(msg, x['ti'])
 
 	print("isa: " + str(x['isa']))
 	print("kind: " + str(x['kind']))
@@ -506,7 +482,7 @@ def value_print(x, msg="value_print"):
 	print("additional fields:")
 
 	for prop in x:
-		if not prop in ['isa', 'kind', 'type', 'att', 'ti', 'immediate', 'immutable', 'expr_ti']:
+		if not prop in ['isa', 'kind', 'type', 'att', 'ti', 'immediate', 'immutable']:
 			print(" - %s" % prop)
 
 	print()
