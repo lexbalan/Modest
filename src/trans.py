@@ -74,39 +74,69 @@ def module_strings_add(v):
 	module['strings'].append(v)
 
 
+# search type in module
 def module_type_get(m, id_str):
-	t = m['context'].type_get(id_str)
+	return m['context'].type_get(id_str)
+
+# search value in module
+def module_value_get(m, id_str):
+	return m['context'].value_get(id_str)
+
+
+# search type in module and submodules
+def deep_type_get(m, id_str):
+	t = module_type_get(m, id_str)
 	if t != None:
 		return t
 
 	for imported_module in m['imports']:
-		t = module_type_get(imported_module, id_str)
+		t = deep_type_get(imported_module, id_str)
 		if t != None:
 			return t
 
+	return None
 
-def module_value_get(m, id_str):
-	v = m['context'].value_get(id_str)
+
+# search value in module and submodules
+def deep_value_get(m, id_str):
+	v = module_value_get(m, id_str)
 	if v != None:
 		return v
 
 	for imported_module in m['imports']:
-		v = module_value_get(imported_module, id_str)
+		v = deep_value_get(imported_module, id_str)
 		if v != None:
 			return v
 
+	return None
+
+
 
 def type_get(id_str):
-	return module_type_get(module, id_str)
+	return deep_type_get(module, id_str)
 
 
 def value_get(id_str):
-	return module_value_get(module, id_str)
+	return deep_value_get(module, id_str)
+
+
+def ctx_type_add(id_str, type):
+	module['context'].type_add(id_str, type)
 
 
 
-# искать только внутри текущего контекста (блока)
-def value_get_here(id_str):
+# add value (to current context)
+def ctx_value_add(id_str, value):
+	global module
+	module['context'].value_add(id_str, value)
+
+
+def ctx_value_get(id_str):
+	return module['context'].value_get(id_str, recursive=True)
+
+
+# искать ТОЛЬКО внутри текущего контекста (блока)
+def ctx_value_get_shallow(id_str):
 	return module['context'].value_get(id_str, recursive=False)
 
 
@@ -459,7 +489,6 @@ def do_type_record(x):
 	return rec
 
 
-
 def do_type_enum(t):
 	enum_type = hlir_type.hlir_type_enum(t['ti'])
 
@@ -477,7 +506,7 @@ def do_type_enum(t):
 		item_val = value_terminal(enum_type, i, item['ti'])
 
 		item_val['id'] = id
-		module['context'].value_add(id['str'], item_val)
+		ctx_value_add(id['str'], item_val)
 
 		i = i + 1
 
@@ -1360,7 +1389,7 @@ def do_value_id(x):
 		# создадим bad value и пропишем его глобально
 		v = value_bad(x)
 		value_attribute_add(v, 'unknown')
-		module['context'].value_add(id_str, v)
+		ctx_value_add(id_str, v)
 		return v
 
 	if 'usecnt' in v:
@@ -1689,12 +1718,12 @@ def do_stmt_var(x):
 
 	# error: no type, no init value
 	if t == None and v == None:
-		module['context'].value_add(var_id['str'], value_bad(x))
+		ctx_value_add(var_id['str'], value_bad(x))
 		return hlir_stmt_bad(x)
 
 	if t != None:
 		if hlir_type.type_is_bad(t):
-			module['context'].value_add(var_id['str'], value_bad(x))
+			ctx_value_add(var_id['str'], value_bad(x))
 			return hlir_stmt_bad(x)
 
 		if hlir_type.type_is_forbidden_var(t):
@@ -1712,7 +1741,7 @@ def do_stmt_var(x):
 
 
 	# check if identifier is free (in current block)
-	already = value_get_here(var_id['str'])
+	already = ctx_value_get_shallow(var_id['str'])
 	if already != None:
 		error("local id redefinition", x['id']['ti'])
 		return hlir_stmt_bad(x)
@@ -1725,7 +1754,7 @@ def do_stmt_var(x):
 def add_local_var(id, typ, ti):
 	var_value = value_var(id, typ, ti)
 	var_value['att'].extend(['local'])
-	module['context'].value_add(id['str'], var_value)
+	ctx_value_add(id['str'], var_value)
 	return var_value
 
 
@@ -1734,7 +1763,7 @@ def do_stmt_let(x):
 	id = x['id']
 
 	# check if identifier is free (in current block)
-	already = value_get_here(id['str'])
+	already = ctx_value_get_shallow(id['str'])
 	if already != None:
 		error("redefinition of '%s'" % id['str'], id['ti'])
 		return hlir_stmt_bad(x)
@@ -1746,7 +1775,7 @@ def do_stmt_let(x):
 	v = do_rvalue(x['value'])
 
 	if value_is_bad(v):
-		module['context'].value_add(id['str'], value_bad(x))
+		ctx_value_add(id['str'], value_bad(x))
 		return hlir_stmt_bad(x)
 
 	const_value = value_const(id, v['type'], value=v, ti=x['id']['ti'])
@@ -1760,7 +1789,7 @@ def do_stmt_let(x):
 		const_value['immediate'] = True
 		cp_immediate(const_value, v)
 
-	module['context'].value_add(id['str'], const_value)
+	ctx_value_add(id['str'], const_value)
 	return hlir_stmt_let(id, const_value, v, ti=x['ti'])
 
 
@@ -1988,7 +2017,7 @@ def def_const(x):
 	log("def_const %s" % id['str'])
 
 	# check if identifier is free
-	pre_exist = value_get_here(id['str'])
+	pre_exist = ctx_value_get_shallow(id['str'])
 	if pre_exist != None:
 		error("redefinition of '%s'" % id['str'], id['ti'])
 
@@ -1999,7 +2028,7 @@ def def_const(x):
 	v = do_value_immediate(x['value'], allow_ptr_to_str=True)
 
 	if value_is_bad(v):
-		module['context'].value_add(id['str'], v)
+		ctx_value_add(id['str'], v)
 		return hlir_def_const(id, v, v, x['ti'])
 
 	const_value = value_const(id, v['type'], v, id['ti'])
@@ -2011,7 +2040,7 @@ def def_const(x):
 		const_value['immediate'] = True
 		cp_immediate(const_value, v)
 
-	module['context'].value_add(id['str'], const_value)
+	ctx_value_add(id['str'], const_value)
 	return hlir_def_const(id, const_value, v, x['ti'])
 
 
@@ -2039,7 +2068,7 @@ def decl_type(x):
 
 	nt = hlir_type.hlir_type_undefined(x)
 	nt['aka'] = id['str']
-	module['context'].type_add(id['str'], nt)
+	ctx_type_add(id['str'], nt)
 
 	# С не печатает opaque, но LLVM печатает (!)
 	return hlir_decl_type(id, nt, x['ti'])
@@ -2065,7 +2094,7 @@ def def_type(x):
 			error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
 	else:
 		nt = hlir_type.hlir_type_undefined(x)
-		module['context'].type_add(id['str'], nt)
+		ctx_type_add(id['str'], nt)
 
 	# только теперь обрабатываем поля,
 	# тк там могут быть указатели на саму себя
@@ -2164,7 +2193,7 @@ def def_var(x):
 
 	var_value = value_var(id, t, id['ti'])
 	#var_value['att'].append('top_level_value')
-	module['context'].value_add(id['str'], var_value)
+	ctx_value_add(id['str'], var_value)
 	return hlir_def_var(id, var_value, v, x['ti'])
 
 
@@ -2271,7 +2300,7 @@ def def_func(x):
 		if hlir_type.type_is_closed_array(param_type):
 			param_value['att'].append('wrapped_array')
 
-		module['context'].value_add(param_id['str'], param_value)
+		ctx_value_add(param_id['str'], param_value)
 		i = i + 1
 
 
@@ -2302,7 +2331,7 @@ def def_func(x):
 	module['context'] = module['context'].parent_get()
 
 	# add function to parent (global) context
-	module['context'].value_add(func_id['str'], fn)
+	ctx_value_add(func_id['str'], fn)
 
 	cfunc = old_cfunc
 
@@ -2340,7 +2369,7 @@ def decl_func(x):
 		return
 
 	func = value_func(id, func_type, ti=id['ti'])
-	module['context'].value_add(id['str'], func)
+	ctx_value_add(id['str'], func)
 	return hlir_decl_func(id, func, x['ti'])
 
 
