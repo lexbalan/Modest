@@ -2061,6 +2061,8 @@ def module_remove_node(m, isa, id_str):
 					#print("REMOVE: " + id_str)
 					m['text'].remove(x)
 					break
+	return
+
 
 
 def decl_type(x):
@@ -2069,6 +2071,7 @@ def decl_type(x):
 
 	nt = hlir_type.hlir_type_undefined(x)
 	nt['aka'] = id['str']
+	nt['ti_decl'] = x['ti']
 	ctx_type_add(id['str'], nt)
 
 	# С не печатает opaque, но LLVM печатает (!)
