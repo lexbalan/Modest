@@ -120,7 +120,7 @@ def value_terminal(t, asset, ti):
 		'att': [],
 		'nl_end': 0,
 		'nl': 0,
-		'ti': None
+		'ti': ti
 	}
 
 
@@ -207,7 +207,7 @@ def value_bin(op, l, r, t, ti):
 		'immediate': False,
 		'immutable': True,
 		'att': [],
-		#'ti': ti
+		'ti': ti
 	}
 
 
