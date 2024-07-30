@@ -560,19 +560,22 @@ def do_type_func(t, func_id="_"):
 
 
 
-def do_type(t):
-
-	for d in t['directives']:
+def do_type(x):
+	for d in x['directives']:
 		do_directive(d)
 
-	k = t['kind']
-	if k == 'id': return do_type_id(t)
-	elif k == 'func': return do_type_func(t)
-	elif k == 'pointer': return do_type_pointer(t)
-	elif k == 'array': return do_type_array(t)
-	elif k == 'record': return do_type_record(t)
-	elif k == 'enum': return do_type_enum(t)
-	return bad_type(t['ti'])
+	k = x['kind']
+	if k == 'id': t = do_type_id(x)
+	elif k == 'func': t = do_type_func(x)
+	elif k == 'pointer': t = do_type_pointer(x)
+	elif k == 'array': t = do_type_array(x)
+	elif k == 'record': t = do_type_record(x)
+	elif k == 'enum': t = do_type_enum(x)
+	else: t = bad_type(x['ti'])
+
+	t['ti'] = x['ti']
+
+	return t
 
 
 #
@@ -1902,10 +1905,9 @@ def do_stmt_asm(x):
 
 
 def do_stmt(x):
-	k = x['kind']
-
 	s = None
 
+	k = x['kind']
 	if k == 'value': s = do_stmt_value(x)
 	elif k == 'assign': s = do_stmt_assign(x)
 	elif k == 'let': s = do_stmt_let(x)
@@ -1935,6 +1937,7 @@ def do_stmt(x):
 
 
 def do_stmt_block(x):
+	global module
 	module['context'] = module['context'].branch(domain='local')
 
 	stmts = []
@@ -2058,7 +2061,6 @@ def module_remove_node(m, isa, id_str):
 					#print("REMOVE: " + id_str)
 					m['text'].remove(x)
 					break
-
 
 
 def decl_type(x):
