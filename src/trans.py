@@ -2123,6 +2123,7 @@ def def_type(x):
 	# НО! имя даем новое
 	nt.clear()
 	nt.update(ty)
+	nt['att'] = copy.copy(ty['att'])
 	nt['aka'] = id['str']
 	nt['ti_def'] = id['ti']
 
@@ -2143,7 +2144,6 @@ def def_type(x):
 	typedef = {
 		'isa': 'def_type',
 		'id': id,
-		'type': None,
 		'type': nt,
 		'original_type': ty,
 		'att': [],
