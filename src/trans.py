@@ -770,28 +770,27 @@ def do_value_bin(x):
 			return value_bin(op, l, r, foundation.typeBool, ti)
 
 
+	ct = select_common_type(l['type'], r['type'])
 
-	type_result = select_common_type(l['type'], r['type'])
-
-	if type_result != None:
-		l = value_cons_implicit_check(type_result, l)
-		r = value_cons_implicit_check(type_result, r)
+	if ct != None:
+		l = value_cons_implicit_check(ct, l)
+		r = value_cons_implicit_check(ct, r)
 
 	# types must be equal
 	if not hlir_type.type_eq(l['type'], r['type'], x['ti']):
 		error("different types in '%s' operation" % x['kind'], x['ti'])
 		return value_bad(x)
 
-
-	if op in (hlir_type.EQ_OPS + hlir_type.RELATIONAL_OPS):
-		type_result = foundation.typeBool
-
-
-	if hlir_type.type_eq(type_result, foundation.typeBool):
+	if hlir_type.type_eq(ct, foundation.typeBool):
 		if op == 'or': op = 'logic_or'
 		elif op == 'and': op = 'logic_and'
 
-	return _bin(op, type_result, l, r, ti)
+	result_type = ct
+	if op in (hlir_type.EQ_OPS + hlir_type.RELATIONAL_OPS):
+		result_type = foundation.typeBool
+
+	return _bin(op, result_type, l, r, ti)
+
 
 
 
