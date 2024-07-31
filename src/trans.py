@@ -770,23 +770,18 @@ def do_value_bin(x):
 			return value_bin(op, l, r, foundation.typeBool, ti)
 
 
-	# Implicit cast left & right operands to common type
-	# and typecheck after
 
 	type_result = select_common_type(l['type'], r['type'])
 
-	if type_result == None:
-		error("unsuitable value type for '%s' operation" % op, r)
+	if type_result != None:
+		l = value_cons_implicit_check(type_result, l)
+		r = value_cons_implicit_check(type_result, r)
+
+	# types must be equal
+	if not hlir_type.type_eq(l['type'], r['type'], x['ti']):
+		error("different types in '%s' operation" % x['kind'], x['ti'])
 		return value_bad(x)
 
-	l = value_cons_implicit(type_result, l)
-	r = value_cons_implicit(type_result, r)
-
-	# After implicit cons types must be equal
-	if not hlir_type.check(l['type'], r['type'], x['ti']):
-		return value_bad(x)
-
-	#
 
 	if op in (hlir_type.EQ_OPS + hlir_type.RELATIONAL_OPS):
 		type_result = foundation.typeBool
@@ -1608,9 +1603,9 @@ def do_value(x):
 
 	assert(v != None)
 
-	if not 'ti' in v:
+	#if not 'ti' in v:
 		#print("add TI to %s" % v['kind'])
-		v['ti'] = x['ti']
+	v['ti'] = x['ti']
 
 	return v
 

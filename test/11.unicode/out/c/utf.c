@@ -87,7 +87,7 @@ uint8_t utf16_to_utf32(uint16_t *c, uint32_t *result)
 
 void utf8_putchar(char c)
 {
-	putchar((int32_t)c);
+	putchar((int)(int32_t)c);
 }
 
 
