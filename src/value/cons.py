@@ -218,7 +218,6 @@ def _try_to_implicit_cons(t, v, ti):
 # for value
 def select_default_type_for(x):
 	xt = x['type']
-
 	from trans import typeSysNat, typeSysInt, typeSysFloat, typeSysChar, typeSysStr
 
 	if not type.type_is_generic(xt):

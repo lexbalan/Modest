@@ -148,7 +148,7 @@ def value_var(id, type, ti):
 		'immediate': False,
 		'immutable': False,
 		'att': [],
-		'ti_def': ti,
+		'ti_decl': ti,
 	}
 
 

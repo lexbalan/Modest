@@ -772,6 +772,32 @@ def type_root_id(t):
 
 
 
+
+def type_print_record(t, print_aka=True):
+	if type_is_generic_record(t):
+		print("Record{...}", end='')
+		return
+
+#			for f in t['fields']:
+#				print("\t%s: " % f['id']['str'], end='')
+#				type_print(f['type'])
+#				print()
+#			print("}")
+#			return
+
+	print("record {")
+	fields = t['fields']
+	i = 0
+	while i < len(fields):
+		field = fields[i]
+		if i > 0:
+			print(',')
+		print("\n\t"); type_print(field['type'])
+
+		i = i + 1
+	print("\n}")
+
+
 def type_print(t, print_aka=True):
 	assert(t['isa'] == 'type')
 
@@ -799,27 +825,7 @@ def type_print(t, print_aka=True):
 
 
 	if type_is_record(t):
-#		if type_is_generic_record(t):
-#			print("GenericRecord {")
-#			for f in t['fields']:
-#				print("\t%s: " % f['id']['str'], end='')
-#				type_print(f['type'])
-#				print()
-#			print("}")
-#			return
-
-		print("record {")
-		fields = t['fields']
-		i = 0
-		while i < len(fields):
-			field = fields[i]
-			if i > 0:
-				print(',')
-			print("\n\t"); type_print(field['type'])
-
-			i = i + 1
-		print("\n}")
-
+		type_print_record(t, print_aka)
 	elif type_is_bool(t):
 		print("Bool", end='')
 	elif type_is_byte(t):
