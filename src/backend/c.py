@@ -1292,7 +1292,7 @@ def print_stmt_return(x):
 
 
 def print_stmt_var(x):
-	init_value = x['default_value']
+	init_value = x['init_value']
 
 	if DONT_PRINT_UNUSED:
 		if init_value != None:
@@ -1760,7 +1760,7 @@ def print_def_var(x):
 
 	print_variable(id, var['type'])
 
-	init_value = x['default_value']
+	init_value = x['init_value']
 	if init_value != None:
 		out(" = ")
 		print_value(init_value, ctx=['no-literal-array-cast'])

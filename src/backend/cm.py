@@ -689,7 +689,7 @@ def print_stmt_return(x):
 
 
 def print_stmt_var(x):
-	init_value = x['default_value']
+	init_value = x['init_value']
 	out('var ')
 
 	print_field(x['var'])
@@ -843,7 +843,7 @@ def print_def_var(x):
 	out("var ")
 	var = x['value']
 	print_field(var)
-	iv = x['default_value']
+	iv = x['init_value']
 	if iv != None:
 		out(" = ")
 		print_value(iv)

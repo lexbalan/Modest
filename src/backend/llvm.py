@@ -1712,8 +1712,8 @@ def print_stmt_var(x):
 
 	locals_add(id_str, val)
 
-	if x['default_value'] != None:
-		iv = do_reval(x['default_value'])
+	if x['init_value'] != None:
+		iv = do_reval(x['init_value'])
 		do_assign(val, iv)
 
 	return None
@@ -2105,9 +2105,9 @@ def print_def_var(x):
 	print_type(var['type'])
 
 	if not is_extern:
-		if x['default_value'] != None:
+		if x['init_value'] != None:
 			out(" ")
-			llvm_print_value(do_eval(x['default_value']))
+			llvm_print_value(do_eval(x['init_value']))
 		else:
 			out(" zeroinitializer")
 	return
