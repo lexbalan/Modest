@@ -256,7 +256,7 @@ def select_default_type_for(x):
 # избавляемся от generic
 def value_cons_default(x):
 	#from_type = x['type']
-	ti = x['expr_ti']
+	ti = x['ti']
 
 	t = select_default_type_for(x)
 	if t != None:
