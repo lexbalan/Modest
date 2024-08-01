@@ -214,49 +214,55 @@ def _try_to_implicit_cons(t, v, ti):
 	return nv if (nv != None) else v
 
 
-# избавляемся от generic
-def value_cons_default(x):
-	from_type = x['type']
-	ti = x['ti']
+# for value
+def select_default_type_for(x):
 
-	# THIS FUNCTION WORKS ONLY FOR GENERIC VALUES
-	if not type.type_is_generic(from_type):
-		return x
-
+	xt = x['type']
 	from trans import typeSysNat, typeSysInt, typeSysFloat, typeSysChar, typeSysStr
 
-	if type.type_is_integer(from_type):
+	if not type.type_is_generic(xt):
+		return None
+
+	if type.type_is_integer(xt):
 		t = typeSysInt
-		if not type.type_is_signed(from_type):
+		if not type.type_is_signed(xt):
 			t = typeSysNat
-		return _try_to_implicit_cons(t, x, ti)
+		return t
 
-	elif type.type_is_string(from_type):
-		return cons_ptr_to_str_from_string(typeSysStr, x, 'implicit', ti)
+	elif type.type_is_string(xt):
+		return typeSysStr
 
-	elif type.type_is_float(from_type):
-		return _try_to_implicit_cons(typeSysFloat, x, ti)
+	elif type.type_is_float(xt):
+		return typeSysFloat
 
-	elif type.type_is_char(from_type):
-		return _try_to_implicit_cons(typeSysChar, x, ti)
-
+	elif type.type_is_char(xt):
+		return typeSysChar
 
 	# Generic array with non-generic items -> Array
 	# example:
 	#   var a = [Int32 1, Int32 2]  // -> [2]Int32
-	elif type.type_is_array(from_type):
-		if type.type_is_generic(from_type):
-			if not type.type_is_generic(from_type['of']):
-				# GenericArray -> Array
-				#print("- DEFAULT CONS ARRAY")
-				item_type = from_type['of']
-				length = len(x['asset'])
-				volume = value_integer_create(length)
-				t = type.hlir_type_array(item_type, volume, x['ti'])
-				return _try_to_implicit_cons(t, x, ti)
+	elif type.type_is_array(xt):
+		if not type.type_is_generic(xt['of']):
+			# GenericArray -> Array
+			#print("- DEFAULT CONS ARRAY")
+			item_type = xt['of']
+			length = len(x['asset'])
+			volume = value_integer_create(length)
+			return type.hlir_type_array(item_type, volume, x['ti'])
+
+	return None # corresponded type not found!
+
+
+# избавляемся от generic
+def value_cons_default(x):
+	#from_type = x['type']
+	ti = x['expr_ti']
+
+	t = select_default_type_for(x)
+	if t != None:
+		return _try_to_implicit_cons(t, x, ti)
 
 	return x
-
 
 
 def value_cons_implicit_check(t, v):
