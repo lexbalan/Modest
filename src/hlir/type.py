@@ -798,6 +798,36 @@ def type_print_record(t, print_aka=True):
 	print("\n}")
 
 
+
+def type_print_array(t, print_aka=True):
+	if t['of'] == None:
+		print("EmptyArray", end='')
+		if t['generic']:
+			print(")", end='')
+		return
+
+	print("[", end='')
+	array_size = t['volume']
+
+	if array_size != None:
+		if type_is_vla(t):
+			print("<VAR>", end='')
+		else:
+			sz = array_size['asset']
+			print("%d" % sz, end='')
+
+	print("]", end='')
+	type_print(t['of'])
+
+
+def type_print_func(t, print_aka=True):
+	print("(", end='')
+	print_list_by(t['params'], lambda f: type_print(f['type']))
+	print(")", end='')
+	print(" -> ", end='')
+	type_print(t['to'])
+
+
 def type_print(t, print_aka=True):
 	assert(t['isa'] == 'type')
 
@@ -821,8 +851,10 @@ def type_print(t, print_aka=True):
 			if _root_id != None:
 				if _root_id != _id:
 					print(" (%s is alias of %s)" % (_id, _root_id), end='')
-			return
 
+			if t['generic']:
+				print(")", end='')
+			return
 
 	if type_is_record(t):
 		type_print_record(t, print_aka)
@@ -842,31 +874,10 @@ def type_print(t, print_aka=True):
 		print("*", end=''); type_print(t['to'])
 
 	elif type_is_array(t):
-		if t['of'] == None:
-			print("EmptyArray", end='')
-			if t['generic']:
-				print(")", end='')
-			return
-
-		print("[", end='')
-		array_size = t['volume']
-
-		if array_size != None:
-			if type_is_vla(t):
-				print("<VAR>", end='')
-			else:
-				sz = array_size['asset']
-				print("%d" % sz, end='')
-
-		print("]", end='')
-		type_print(t['of'])
+		type_print_array(t, print_aka)
 
 	elif type_is_func(t):
-		print("(", end='')
-		print_list_by(t['params'], lambda f: type_print(f['type']))
-		print(")", end='')
-		print(" -> ", end='')
-		type_print(t['to'])
+		type_print_func(t, print_aka)
 
 	elif type_is_integer(t):
 		if type_is_signed(t):
