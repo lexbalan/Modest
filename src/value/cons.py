@@ -273,9 +273,9 @@ def value_cons_implicit_check(t, v):
 	if not res:
 		error("type error", v['ti'])
 		print("expected: ", end='')
-		type_print(a)
+		type.type_print(t)
 		print("\nreceived: ", end='')
-		type_print(b)
+		type.type_print(v['type'])
 		print("\n")
 
 	return nv
