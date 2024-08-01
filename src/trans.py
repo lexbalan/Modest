@@ -773,12 +773,23 @@ def do_value_bin(x):
 	ct = select_common_type(l['type'], r['type'])
 
 	if ct != None:
-		l = value_cons_implicit_check(ct, l)
-		r = value_cons_implicit_check(ct, r)
+		l = value_cons_implicit(ct, l)
+		r = value_cons_implicit(ct, r)
 
 	# types must be equal
 	if not hlir_type.type_eq(l['type'], r['type'], x['ti']):
 		error("different types in '%s' operation" % x['kind'], x['ti'])
+
+		# print: @@ <left_type> & <right_type> @@
+		print(color_code(CYAN), end='')
+		print('@@ ', end='')
+		hlir_type.type_print(l['type'])
+		print(" & ", end='')
+		hlir_type.type_print(r['type'])
+		print(' @@', end='')
+		print(color_code(ENDC), end='')
+		print("\n")
+
 		return value_bad(x)
 
 	if hlir_type.type_eq(ct, foundation.typeBool):

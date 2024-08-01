@@ -47,9 +47,13 @@ def right_end_pos(ti):
 	return ti['pos'] - ti['len']# - 1
 
 
+def color_code(color):
+	return '\033[%dm' % color
 
 
 def colorize(text, color):
+	#return '\033[%dm%s\033[0m' % (color, text)
+	return color_code(color) + text + color_code(ENDC)
 	return '\033[%dm%s\033[0m' % (color, text)
 
 

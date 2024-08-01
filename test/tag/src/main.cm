@@ -6,11 +6,12 @@ import "libc/stdio"
 func main() -> Int {
 	printf("tag test\n")
 
-	var len = Int 5
+	var a = Int32 5
+	var b = Int64 5
+
+	var c = a + b
+/*
 	var a: [len]Nat32
-
-	var k = a + Nat64 4
-
 	a[0] = 100
 	a[1] = 200
 	a[2] = 300
@@ -30,7 +31,7 @@ func main() -> Int {
 	printf("a[0] = %d\n", a[0])
 	printf("a[1] = %d\n", a[1])
 	printf("a[2] = %d\n", a[2])
-
+*/
 	return 0
 }
 
