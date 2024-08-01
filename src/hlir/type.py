@@ -493,20 +493,6 @@ def type_eq(a, b, opt=[]):
 	return False
 
 
-
-def check(a, b, ti):
-	res = type_eq(a, b)
-	if not res:
-		error("type error", ti)
-		print("expected: ", end='')
-		type_print(a)
-		print("\nreceived: ", end='')
-		type_print(b)
-		print("\n")
-	return res
-
-
-
 def type_is_bad(t):
 	return t['kind'] == 'bad'
 

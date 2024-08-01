@@ -261,7 +261,17 @@ def value_cons_default(x):
 
 def value_cons_implicit_check(t, v):
 	nv = value_cons_implicit(t, v)
-	type.check(t, nv['type'], v['ti'])
+	#type.check(t, nv['type'], v['ti'])
+
+	res = type.type_eq(t, nv['type'])
+	if not res:
+		error("type error", v['ti'])
+		print("expected: ", end='')
+		type_print(a)
+		print("\nreceived: ", end='')
+		type_print(b)
+		print("\n")
+
 	return nv
 
 
