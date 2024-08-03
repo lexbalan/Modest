@@ -67,7 +67,7 @@ def value_record_create(initializers=[], ti=None):
 """
 
 
-def _doitems(t, v, method, ti):
+def cast_items(t, v, method, ti):
 	items = []
 	if len(v['type']['fields']) > 0:
 		# 1. проходим по порядку определения по всем полям типа t (целевого)
@@ -150,7 +150,7 @@ def value_record_cons(t, v, method, ti):
 	nv = value_cons_node(t, v, method, ti=ti)
 
 	if type.type_is_generic(v['type']):
-		nv['fields'] = _doitems(t, v, method, ti)
+		nv['fields'] = cast_items(t, v, method, ti)
 		nv['immediate'] = True
 
 	return nv

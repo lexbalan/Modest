@@ -107,9 +107,9 @@ def array_can(to, from_type, method):
 	return True
 
 
-def _cast_values(values, to_type):
+def cast_items(items, to_type):
 	casted_items = []
-	for item in values:
+	for item in items:
 		from .cons import value_cons_implicit
 		casted_item = value_cons_implicit(to_type, item)
 
@@ -134,7 +134,7 @@ def value_array_cons(t, v, method, ti):
 	nv = value_cons_node(t, v, method, ti)
 
 	if value_is_immediate(v):
-		casted_items = _cast_values(v['items'], t['of'])
+		casted_items = cast_items(v['items'], t['of'])
 
 		if t['volume'] == None:
 			return nv
