@@ -13,6 +13,7 @@ def hlir_decl_type(id, newtype, ti):
 		'id': id,
 		'type': newtype,
 		'att': [],
+		'nl': 1,
 		'ti': ti
 	}
 
@@ -26,6 +27,7 @@ def hlir_def_type(id, newtype, origtype=None, ti=None):
 		'type': newtype,
 		'original_type': origtype,
 		'att': [],
+		'nl': 1,
 		'ti': ti
 	}
 
@@ -39,6 +41,7 @@ def hlir_def_const(_id, value_const, init_value, ti):
 		'init_value': init_value,  # value of initializer
 		'value': value_const,  # value wrapped into 'const'
 		'att': [],
+		'nl': 1,
 		'ti': ti
 	}
 
@@ -50,6 +53,7 @@ def hlir_def_var(_id, var_value, init_value, ti):
 		'init_value': init_value,
 		'value': var_value,
 		'att': [],
+		'nl': 1,
 		'ti': ti
 	}
 
@@ -71,6 +75,7 @@ def hlir_def_func(_id, value_func, ti):
 		'id': _id,
 		'value': value_func,
 		'att': [],
+		'nl': 1,
 		'ti': ti
 	}
 
