@@ -2152,6 +2152,7 @@ def def_type(x):
 		'type': nt,
 		'original_type': ty,
 		'att': [],
+		'nl': 1,
 		'ti': x['ti']
 	}
 
