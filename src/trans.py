@@ -2546,7 +2546,7 @@ def pre_def_type(id_str):
 		elif isa == 'ast_declaration':
 			if kind == 'type':
 				y = decl_type(x)
-				x['defined'] = True
+				x['declared'] = True
 
 		if y != None:
 			module_append(y)
@@ -2650,7 +2650,7 @@ def proc(ast, source_info):
 		elif isa == 'ast_declaration':
 			if kind == 'func': y = decl_func(x)
 			elif kind == 'type':
-				if not 'defined' in x:
+				if not 'declared' in x:
 					y = decl_type(x)
 			add_spices(y)
 

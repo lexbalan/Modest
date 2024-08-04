@@ -15,7 +15,6 @@ Int div(Int a, Int b);// test/pre/src/main.cm
 
 Int main()
 {
-
 	#define a  10
 	#define b  20
 	const Int s = mid(a, b);

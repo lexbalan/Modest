@@ -1,15 +1,28 @@
-// test/1.hello_world/src/main.cm
 
-import "libc/stdio"
+type Int Int32
+func main() -> Int
+func mid(a: Int, b: Int) -> Int
+func div(a: Int, b: Int) -> Int// test/pre/src/main.cm
 
-let hello = "Hello"
-let world = "World!"
-
-let hello_world = hello + " " + world
+//import "libc/stdio"
 
 
 func main() -> Int {
-	printf("%s\n", *Str8 hello_world)
+	let a = 10
+	let b = 20
+	let s = mid(a, b)
+
 	return 0
+}
+
+// аттрибуты не работают!
+//@property("type.c_alias", "int")
+
+func mid(a: Int, b: Int) -> Int {
+	return div(a + b, 2)
+}
+
+func div(a: Int, b: Int) -> Int {
+	return a / b
 }
 
