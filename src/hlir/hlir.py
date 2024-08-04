@@ -60,6 +60,7 @@ def hlir_decl_func(_id, value_func, ti):
 		'id': _id,
 		'value': value_func,
 		'att': [],
+		'nl': 1,
 		'ti': ti
 	}
 

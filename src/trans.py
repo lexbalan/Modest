@@ -50,6 +50,8 @@ env_current_file_abspath = ""
 env_current_file_dir = ""
 
 
+pre_mode = False
+
 cfunc = None	# current function
 
 root_context = None
@@ -2418,10 +2420,10 @@ def do_directive(x):
 	kind = x['kind']
 	args = x['args']
 
-	if kind == 'import':
-		return do_import(x)
+	#if kind == 'import':
+	#	return do_import(x)
 
-	elif kind == 'if':
+	if kind == 'if':
 		old_production = production
 		c = do_value_immediate(args[0])
 
@@ -2522,6 +2524,33 @@ def do_directive(x):
 
 
 
+def pre(ast):
+	global pre_mode
+	old_pre_mode = pre_mode
+	pre_mode = True
+
+	#mass
+
+	# do imports before
+	for x in ast:
+		isa = x['isa']
+		kind = x['kind']
+
+		y = None
+		if isa == 'ast_definition':
+			if kind == 'func': y = decl_func(x)
+		elif isa == 'ast_declaration':
+			if kind == 'func': y = decl_func(x)
+
+		if y != None:
+			module_append(y)
+
+
+	pre_mode = old_pre_mode
+	return
+
+
+
 def proc(ast, source_info):
 	global skipp, production, old_production
 
@@ -2550,6 +2579,22 @@ def proc(ast, source_info):
 		'att': [],
 		'text': []
 	}
+
+
+
+	# do imports before
+	for x in ast:
+		isa = x['isa']
+		kind = x['kind']
+		if isa == 'ast_directive':
+			kind = x['kind']
+			if kind == 'import':
+				y = do_import(x)
+				module_append(y)
+
+	# do pre!
+	pre(ast) ##
+
 
 	for x in ast:
 		isa = x['isa']
