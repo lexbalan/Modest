@@ -5,17 +5,20 @@
 #include <string.h>
 
 
-int32_t main();
-int32_t sum(int32_t a, int32_t b);// test/pre/src/main.cm
+typedef int32_t Int;
+Int main();
+Int mid(Int a, Int b);
+Int div(Int a, Int b);// test/pre/src/main.cm
 
 //import "libc/stdio"
 
-int32_t main()
+
+Int main()
 {
 
 	#define a  10
 	#define b  20
-	const int32_t s = sum(a, b);
+	const Int s = mid(a, b);
 
 	return 0;
 }
@@ -23,9 +26,16 @@ int32_t main()
 #undef a
 #undef b
 
+// аттрибуты не работают!
+//@property("type.c_alias", "int")
 
-int32_t sum(int32_t a, int32_t b)
+Int mid(Int a, Int b)
 {
-	return a + b;
+	return div(a + b, 2);
+}
+
+Int div(Int a, Int b)
+{
+	return a / b;
 }
 

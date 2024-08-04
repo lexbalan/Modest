@@ -424,6 +424,14 @@ def do_type_id(t):
 	id_str = t['id']['str']
 	tx = type_get(id_str)
 	if tx == None:
+
+		global pre_mode
+		if pre_mode:
+			pre_def_type(id_str)
+			tx = type_get(id_str)
+			if tx != None:
+				return tx
+
 		error("undeclared type '%s'" % id_str, t['ti'])
 		# create fake alias for unknown type
 		tx = hlir_type.hlir_type_bad(t)
@@ -2154,6 +2162,7 @@ def def_type(x):
 		'type': nt,
 		'original_type': ty,
 		'att': [],
+		'nl': 1,
 		'ti': x['ti']
 	}
 
@@ -2523,15 +2532,36 @@ def do_directive(x):
 
 
 
+gast = None
+def pre_def_type(id_str):
+	global gast
+	for x in gast:
+		isa = x['isa']
+		kind = x['kind']
+		y = None
+		if isa == 'ast_definition':
+			if kind == 'type':
+				y = def_type(x)
+				x['defined'] = True
+		elif isa == 'ast_declaration':
+			if kind == 'type':
+				y = decl_type(x)
+				x['defined'] = True
+
+		if y != None:
+			module_append(y)
+
 
 def pre(ast):
 	global pre_mode
 	old_pre_mode = pre_mode
 	pre_mode = True
 
+	global gast
+	gast = ast
+
 	#mass
 
-	# do imports before
 	for x in ast:
 		isa = x['isa']
 		kind = x['kind']
@@ -2610,14 +2640,18 @@ def proc(ast, source_info):
 
 		if isa == 'ast_definition':
 			if kind == 'func': y = def_func(x)
-			elif kind == 'type': y = def_type(x)
+			elif kind == 'type':
+				if not 'defined' in x:
+					y = def_type(x)
 			elif kind == 'const': y = def_const(x)
 			elif kind == 'var': y = def_var(x)
 			add_spices(y)
 
 		elif isa == 'ast_declaration':
 			if kind == 'func': y = decl_func(x)
-			elif kind == 'type': y = decl_type(x)
+			elif kind == 'type':
+				if not 'defined' in x:
+					y = decl_type(x)
 			add_spices(y)
 
 		elif isa == 'ast_comment':

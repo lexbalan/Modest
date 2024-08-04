@@ -3,17 +3,23 @@
 //import "libc/stdio"
 
 
-func main() -> Int32 {
+func main() -> Int {
 
 	let a = 10
 	let b = 20
-	let s = sum(a, b)
+	let s = mid(a, b)
 
 	return 0
 }
 
+// аттрибуты не работают!
+//@property("type.c_alias", "int")
 type Int Int32
 
-func sum(a: Int, b: Int) -> Int {
-	return a + b
+func mid(a: Int, b: Int) -> Int {
+	return div(a + b, 2)
+}
+
+func div(a: Int, b: Int) -> Int {
+	return a / b
 }

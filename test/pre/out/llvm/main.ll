@@ -103,15 +103,17 @@ break_2:
 ; -- SOURCE: src/main.cm
 
 
+%Int = type i32;
+
 
 define i32 @main() {
-	%1 = call i32 @sum(i32 10, i32 20)
+	%1 = call %Int @sum(%Int 10, %Int 20)
 	ret i32 0
 }
 
-define i32 @sum(i32 %a, i32 %b) {
-	%1 = add i32 %a, %b
-	ret i32 %1
+define %Int @sum(%Int %a, %Int %b) {
+	%1 = add %Int %a, %b
+	ret %Int %1
 }
 
 
