@@ -106,13 +106,21 @@ break_2:
 %Int = type i32;
 
 
-define i32 @main() {
-	%1 = call %Int @sum(%Int 10, %Int 20)
-	ret i32 0
+define %Int @main() {
+	%1 = call %Int @mid(%Int 10, %Int 20)
+	ret %Int 0
 }
 
-define %Int @sum(%Int %a, %Int %b) {
+
+
+define %Int @mid(%Int %a, %Int %b) {
 	%1 = add %Int %a, %b
+	%2 = call %Int @div(%Int %1, %Int 2)
+	ret %Int %2
+}
+
+define %Int @div(%Int %a, %Int %b) {
+	%1 = sdiv %Int %a, %b
 	ret %Int %1
 }
 

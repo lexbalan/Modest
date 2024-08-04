@@ -30,7 +30,8 @@ Int main()
 
 Int mid(Int a, Int b)
 {
-	return div(a + b, 2);
+	const Int sum = a + b;
+	return div(sum, 2);
 }
 
 Int div(Int a, Int b)

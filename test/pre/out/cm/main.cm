@@ -19,7 +19,8 @@ func main() -> Int {
 //@property("type.c_alias", "int")
 
 func mid(a: Int, b: Int) -> Int {
-	return div(a + b, 2)
+	let sum = a + b
+	return div(sum, 2)
 }
 
 func div(a: Int, b: Int) -> Int {
