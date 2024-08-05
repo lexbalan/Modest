@@ -104,17 +104,17 @@ break_2:
 
 
 %Int = type i32;
+
+
 %Arr = type [10 x %Int];
 
 
-define %Int @main() {
-	%1 = call %Int @mid(%Int 10, %Int 20); alloca memory for return value
-	%2 = alloca %Arr
-	call void @getArr(%Arr* %2)
+define %Int @main() {; alloca memory for return value
+	%1 = alloca %Arr
+	call void @getArr(%Arr* %1)
+	%2 = call %Int @mid(%Int 10, %Int 20)
 	ret %Int 0
 }
-
-
 
 define void @getArr(%Arr* noalias sret(%Arr) %0) {
 	%2 = insertvalue %Arr zeroinitializer, %Int 0, 0

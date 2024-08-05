@@ -1,23 +1,29 @@
 
 type Int Int32
-type Arr [10]Int
 func main() -> Int
+let arrSize = 10
+type Arr [arrSize]Int
+func getArr() -> Arr
 func mid(a: Int, b: Int) -> Int
 func div(a: Int, b: Int) -> Int
-func getArr() -> Arr
 
 //import "libc/stdio"
 
 
 func main() -> Int {
+	let arr = getArr()
+
 	let a = 10
 	let b = 20
 	let s = mid(a, b)
 
-	let arr = getArr()
-
 	return 0
 }
+
+func getArr() -> Arr {
+	return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+}
+
 
 // аттрибуты не работают!
 //@property("type.c_alias", "int")
@@ -29,9 +35,5 @@ func mid(a: Int, b: Int) -> Int {
 
 func div(a: Int, b: Int) -> Int {
 	return a / b
-}
-
-func getArr() -> Arr {
-	return []
 }
 

@@ -427,7 +427,7 @@ def do_type_id(t):
 
 		global pre_mode
 		if pre_mode:
-			pre_def_type(id_str)
+			pre_def(id_str)
 			tx = type_get(id_str)
 			if tx != None:
 				return tx
@@ -446,10 +446,15 @@ def do_type_pointer(t):
 
 
 def do_type_array(t):
+	of = do_type(t['of'])
+
 	volume_expr = None
 	if t['size'] != None:
 		#volume_expr = do_value_immediate(t['size'])
 		volume_expr = do_value(t['size'])
+		if value_is_bad(volume_expr):
+			return hlir_type.hlir_type_array(of, volume=None, ti=t['ti'])
+
 		if not value_is_immediate(volume_expr):
 			info("VLA", t['ti'])
 			if is_local_context():
@@ -457,9 +462,6 @@ def do_type_array(t):
 				cfunc['att'].append('stacksave')
 			else:
 				error("non local VLA", t['size'])
-
-
-	of = do_type(t['of'])
 
 	# closed arrays of closed arrays are denied NOW
 	if volume_expr != None:
@@ -1405,6 +1407,13 @@ def do_value_id(x):
 	v = value_get(id_str)
 
 	if v == None:
+		global pre_mode
+		if pre_mode:
+			pre_def(id_str)
+			vx = value_get(id_str)
+			if vx != None:
+				return vx
+
 		# see: do_value_call
 		global undeclared_value_error
 		if undeclared_value_error:
@@ -2533,26 +2542,25 @@ def do_directive(x):
 
 
 gast = None
-def pre_def_type(id_str):
-	#print("pre_def_type(%s)" % id_str)
+def pre_def(id_str):
+	#print("pre_def(%s)" % id_str)
 	global gast
 	for x in gast:
-		isa = x['isa']
-		kind = x['kind']
-		y = None
-		if isa == 'ast_definition':
-			if kind == 'type':
-				if x['id']['str'] == id_str:
-					y = def_type(x)
-					x['defined'] = True  # mark as DEFINED
-		elif isa == 'ast_declaration':
-			if kind == 'type':
-				if x['id']['str'] == id_str:
-					y = decl_type(x)
-					x['declared'] = True  # mark as DECLARED
+		if not 'id' in x:
+			continue
 
-		if y != None:
-			module_append(y)
+		if x['id']['str'] == id_str:
+			kind = x['kind']
+			y = None
+			if kind == 'type':
+				y = def_type(x)
+			elif kind == 'const':
+				y = def_const(x)
+			x['defined'] = True  # mark as DEFINED
+
+			if y != None:
+				module_append(y)
+
 
 
 def pre(ast):
@@ -2613,8 +2621,6 @@ def proc(ast, source_info):
 		'text': []
 	}
 
-
-
 	# do imports before
 	for x in ast:
 		isa = x['isa']
@@ -2646,14 +2652,16 @@ def proc(ast, source_info):
 			elif kind == 'type':
 				if not 'defined' in x:
 					y = def_type(x)
-			elif kind == 'const': y = def_const(x)
+			elif kind == 'const':
+				if not 'defined' in x:
+					y = def_const(x)
 			elif kind == 'var': y = def_var(x)
 			add_spices(y)
 
 		elif isa == 'ast_declaration':
 			if kind == 'func': y = decl_func(x)
 			elif kind == 'type':
-				if not 'declared' in x:
+				if not 'defined' in x:
 					y = decl_type(x)
 			add_spices(y)
 

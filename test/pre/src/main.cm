@@ -4,20 +4,18 @@
 
 
 func main() -> Int {
+	let arr = getArr()
+
 	let a = 10
 	let b = 20
 	let s = mid(a, b)
-
-	let arr = getArr()
 
 	return 0
 }
 
 
-
-
-//let arrSize = 10
-type Arr [10]Int
+let arrSize = 10
+type Arr [arrSize]Int
 
 func getArr() -> Arr {
 	return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
