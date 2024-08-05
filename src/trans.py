@@ -2046,7 +2046,6 @@ def def_const(x):
 
 	const_value = value_const(id, v['type'], v, id['ti'])
 	const_value['att'].extend(v['att'])
-	const_value['att'].append('top_level_value')
 
 	# Now let can be immediate!
 	if value_is_immediate(v):
@@ -2198,7 +2197,6 @@ def def_var(x):
 			error("cannot cons variable", x['ti'])
 
 	var_value = value_var(id, t, id['ti'])
-	#var_value['att'].append('top_level_value')
 	ctx_value_add(id['str'], var_value)
 	return hlir_def_var(id, var_value, v, x['ti'])
 
