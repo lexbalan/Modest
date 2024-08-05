@@ -2165,8 +2165,6 @@ def def_type(x):
 		module['records'].append(id['str'])
 
 
-	typedef = hlir_def_type(id, nt, ty, x['ti'])
-
 	if already_declared:
 		# LLVM не допускает переопределения типа
 		# (после его декларации (как opaque))
@@ -2174,7 +2172,7 @@ def def_type(x):
 		if settings.check('backend', 'llvm'):
 			module_remove_node(module, 'decl_type', id['str'])
 
-	return typedef
+	return hlir_def_type(id, nt, ty, x['ti'])
 
 
 
