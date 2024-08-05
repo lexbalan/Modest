@@ -2544,12 +2544,12 @@ def pre_def_type(id_str):
 			if kind == 'type':
 				if x['id']['str'] == id_str:
 					y = def_type(x)
-					x['defined'] = True
+					x['defined'] = True  # mark as DEFINED
 		elif isa == 'ast_declaration':
 			if kind == 'type':
 				if x['id']['str'] == id_str:
 					y = decl_type(x)
-					x['declared'] = True
+					x['declared'] = True  # mark as DECLARED
 
 		if y != None:
 			module_append(y)
