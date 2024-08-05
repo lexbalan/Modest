@@ -2165,15 +2165,7 @@ def def_type(x):
 		module['records'].append(id['str'])
 
 
-	typedef = {
-		'isa': 'def_type',
-		'id': id,
-		'type': nt,
-		'original_type': ty,
-		'att': [],
-		'nl': 1,
-		'ti': x['ti']
-	}
+	typedef = hlir_def_type(id, nt, ty, x['ti'])
 
 	if already_declared:
 		# LLVM не допускает переопределения типа

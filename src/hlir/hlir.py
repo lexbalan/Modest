@@ -20,12 +20,12 @@ def hlir_decl_type(id, newtype, ti):
 	return newtype_declaration
 
 
-def hlir_def_type(id, newtype, origtype=None, ti=None):
+def hlir_def_type(id, type, original_type=None, ti=None):
 	newtype_definition = {
 		'isa': 'def_type',
 		'id': id,
-		'type': newtype,
-		'original_type': origtype,
+		'type': type,
+		'original_type': original_type,
 		'att': [],
 		'nl': 1,
 		'ti': ti
