@@ -1488,6 +1488,14 @@ class Parser:
 
 		output = []
 
+		# Head
+		if not self.is_end():
+			if self.token_class_is('comment-block'):
+				x = self.parse_comment_block()
+			elif self.token_class_is('comment-line'):
+				x = self.parse_comment_line()
+
+
 		spaceline_cnt = 0
 		while not self.is_end():
 			x = None
@@ -1564,7 +1572,6 @@ class Parser:
 				continue
 
 			if isinstance(x, list):
-
 				for subx in x:
 					subx['nl'] = 1
 					subx['ti'] = ti
@@ -1573,6 +1580,7 @@ class Parser:
 
 				output.extend(x)
 				spaceline_cnt = 0
+
 			else:
 				x['nl'] = spaceline_cnt
 				x['ti'] = ti

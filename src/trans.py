@@ -2534,6 +2534,7 @@ def do_directive(x):
 
 gast = None
 def pre_def_type(id_str):
+	#print("pre_def_type(%s)" % id_str)
 	global gast
 	for x in gast:
 		isa = x['isa']
@@ -2541,12 +2542,14 @@ def pre_def_type(id_str):
 		y = None
 		if isa == 'ast_definition':
 			if kind == 'type':
-				y = def_type(x)
-				x['defined'] = True
+				if x['id']['str'] == id_str:
+					y = def_type(x)
+					x['defined'] = True
 		elif isa == 'ast_declaration':
 			if kind == 'type':
-				y = decl_type(x)
-				x['declared'] = True
+				if x['id']['str'] == id_str:
+					y = decl_type(x)
+					x['declared'] = True
 
 		if y != None:
 			module_append(y)
