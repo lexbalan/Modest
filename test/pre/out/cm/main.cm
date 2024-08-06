@@ -1,14 +1,22 @@
 
+
+
+type Data Nat32
+type Node record {
+	next: *Node
+	data: *Data
+}
 type Int Int32
-func main() -> Int
 let arrSize = 10
 type Arr [arrSize]Int
-func getArr() -> Arr
-func mid(a: Int, b: Int) -> Int
-func div(a: Int, b: Int) -> Int
+
+
+
+
 
 //import "libc/stdio"
 
+var x: Int
 
 func main() -> Int {
 	let arr = getArr()
@@ -16,6 +24,8 @@ func main() -> Int {
 	let a = 10
 	let b = 20
 	let s = mid(a, b)
+
+	x = 12
 
 	return 0
 }

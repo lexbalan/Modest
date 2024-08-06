@@ -2,6 +2,7 @@
 
 //import "libc/stdio"
 
+var x: Int
 
 func main() -> Int {
 	let arr = getArr()
@@ -10,12 +11,20 @@ func main() -> Int {
 	let b = 20
 	let s = mid(a, b)
 
+	x = 12
+
 	return 0
 }
 
 
-type Arr [arrSize]Int
+type Data Nat32
+type Node record {
+	next: *Node
+	data: *Data
+}
+
 let arrSize = 10
+type Arr [arrSize]Int
 
 func getArr() -> Arr {
 	return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]

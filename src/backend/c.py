@@ -1604,7 +1604,7 @@ def print_def_func(x):
 	out("{")
 	indent_up()
 
-	stmts = func['stmt']['stmts']
+	stmts = x['stmt']['stmts']
 	print_statements(stmts)
 
 	indent_down()
@@ -1856,11 +1856,33 @@ def cdirectives(module):
 
 
 
+def print_cdecl_type(x):
+	newline(n=x['nl'])
+
+	id = x['id']
+	out("struct %s;" % id['str'])
+	if not NO_TYPEDEF_STRUCTS:
+		out("\ntypedef struct %s %s;" % (id['str'], id['str']))
+
+
+def print_cdecl_func(x):
+	newline(n=x['nl'])
+
+	#if 'gnu_att' in x:
+	#	out('__attribute__((%s))\n' % x['gnu_att'])
+
+	sym = x['symbol']
+	print_func_signature(get_id_str(sym), sym['type'], sym['att'])
+	out(";")
+
+
 def print_directive(x):
 	k = x['kind']
 	newline(n=x['nl'])
 	if k == 'import': print_include(x)
 	elif k == 'insert': print_insert(x)
+	elif k == 'cdecl_func': print_cdecl_func(x)
+	elif k == 'cdecl_type': print_cdecl_type(x)
 
 
 

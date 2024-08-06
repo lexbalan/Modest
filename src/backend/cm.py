@@ -823,7 +823,7 @@ def print_def_func(x):
 	out('func ')
 	print_id(func)
 	print_type_func(ft, extra_args=ft['extra_args'])
-	print_stmt_block(func['stmt'])
+	print_stmt_block(x['stmt'])
 
 
 def print_decl_type(x):

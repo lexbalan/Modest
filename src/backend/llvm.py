@@ -2038,7 +2038,7 @@ def print_def_func(x):
 		stacksave(stackptr)
 		fctx['stackptr'] = stackptr
 
-	print_stmt_block(func['stmt'])
+	print_stmt_block(x['stmt'])
 
 	if hlir_type.type_eq(ftype['to'], foundation.typeUnit):
 		print_stmt_return({'value': None})

@@ -56,7 +56,7 @@ def hlir_type_bad(x):
 
 
 uid = 0
-def hlir_type_undefined(x):
+def hlir_type_undefined(ti):
 	global uid
 	uid = uid + 1
 	return {
@@ -66,11 +66,11 @@ def hlir_type_undefined(x):
 		'width': 0,
 		'size': 0,
 		'align': 1,
-		'ast_type': x,
+		#'ast_type': x,
 		'uid': uid,
 		'ops': [],
 		'att': [],
-		'ti': x['ti']
+		'ti': ti
 	}
 
 

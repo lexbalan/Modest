@@ -1351,24 +1351,16 @@ class Parser:
 		if self.is_comment():
 			self.skip()
 
-		# func declaration?
-		if self.look("\n"):
-			return {
-				'isa': 'ast_declaration',
-				'kind': 'func',
-				'id': id,
-				'type': ftyp,
-				'ti': ti
-			}
+		stmt = None
+		if not self.look("\n"):
+			stmt = self.stmt_block()
 
-		# func definition
-		s = self.stmt_block()
 		return {
 			'isa': 'ast_definition',
 			'kind': 'func',
 			'id': id,
 			'type': ftyp,
-			'stmt': s,
+			'stmt': stmt,
 			'ti': ti
 		}
 
@@ -1401,17 +1393,10 @@ class Parser:
 		if self.is_comment():
 			self.skip()
 
-		# type declaration
-		if self.look("\n"):
-			return {
-				'isa': 'ast_declaration',
-				'kind': 'type',
-				'id': id,
-				'ti': ti
-			}
+		t = None
+		if not self.look("\n"):
+			t = self.expr_type()
 
-		# type definition
-		t = self.expr_type()
 		return {
 			'isa': 'ast_definition',
 			'kind': 'type',

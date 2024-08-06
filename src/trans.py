@@ -1821,6 +1821,7 @@ def do_stmt_let(x):
 		cp_immediate(const_value, v)
 
 	ctx_value_add(id['str'], const_value)
+
 	return hlir_stmt_let(id, const_value, v, ti=x['ti'])
 
 
@@ -2043,6 +2044,20 @@ def do_import(x):
 
 
 
+
+def symbol_const(id, init_value):
+	const_value = value_const(id, init_value['type'], init_value, id['ti'])
+	const_value['att'].extend(init_value['att'])
+
+	# Now let can be immediate!
+	if value_is_immediate(init_value):
+		const_value['immediate'] = True
+		cp_immediate(const_value, init_value)
+
+	ctx_value_add(id['str'], const_value)
+	return const_value
+
+
 def def_const(x):
 	id = x['id']
 
@@ -2063,16 +2078,8 @@ def def_const(x):
 		ctx_value_add(id['str'], v)
 		return hlir_def_const(id, v, v, x['ti'])
 
-	const_value = value_const(id, v['type'], v, id['ti'])
-	const_value['att'].extend(v['att'])
-	const_value['att'].append('top_level_value')
+	const_value = symbol_const(id, v)
 
-	# Now let can be immediate!
-	if value_is_immediate(v):
-		const_value['immediate'] = True
-		cp_immediate(const_value, v)
-
-	ctx_value_add(id['str'], const_value)
 	return hlir_def_const(id, const_value, v, x['ti'])
 
 
@@ -2099,7 +2106,7 @@ def decl_type(x):
 	id = x['id']
 	log("decl_type %s" % id['str'])
 
-	nt = hlir_type.hlir_type_undefined(x)
+	nt = hlir_type.hlir_type_undefined(x['ti'])
 	nt['aka'] = id['str']
 	nt['ti_decl'] = x['ti']
 	ctx_type_add(id['str'], nt)
@@ -2107,6 +2114,14 @@ def decl_type(x):
 	# С не печатает opaque, но LLVM печатает (!)
 	return hlir_decl_type(id, nt, x['ti'])
 
+
+
+def symbol_type(id, ti):
+	nt = hlir_type.hlir_type_undefined(ti)
+	nt['aka'] = id['str']
+	nt['ti_decl'] = ti
+	ctx_type_add(id['str'], nt)
+	return nt
 
 
 def def_type(x):
@@ -2122,12 +2137,14 @@ def def_type(x):
 	# check if identifier is free
 	already_declared = pre_exist != None
 
+	#nt = x['symbol']
+
 	if already_declared:
 		nt = pre_exist
 		if hlir_type.type_is_defined(pre_exist):
 			error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
 	else:
-		nt = hlir_type.hlir_type_undefined(x)
+		nt = hlir_type.hlir_type_undefined(x['ti'])
 		ctx_type_add(id['str'], nt)
 
 	# только теперь обрабатываем поля,
@@ -2176,6 +2193,12 @@ def def_type(x):
 
 
 
+def symbol_var(id, type, ti):
+	var_value = value_var(id, type, id['ti'])
+	ctx_value_add(id['str'], var_value)
+	return var_value
+
+
 def def_var(x):
 	id = x['id']
 	log("def_var %s" % id['str'])
@@ -2216,9 +2239,9 @@ def def_var(x):
 		if hlir_type.type_is_generic(v['type']):
 			error("cannot cons variable", x['ti'])
 
-	var_value = value_var(id, t, id['ti'])
-	#var_value['att'].append('top_level_value')
-	ctx_value_add(id['str'], var_value)
+	#var_value = value_var(id, t, id['ti'])
+	#ctx_value_add(id['str'], var_value)
+	var_value = symbol_var(id, t, id['ti'])
 	return hlir_def_var(id, var_value, v, x['ti'])
 
 
@@ -2261,7 +2284,6 @@ def check_stmt(stmt):
 		check_block(stmt['stmt'])
 
 
-
 def def_func(x):
 	global cfunc
 
@@ -2275,41 +2297,13 @@ def def_func(x):
 	func_type = do_type_func(x['type'], func_id=func_id['str'])
 	old_cfunc = cfunc
 
-	fn = None
-
-	# if function already declared/defined, check it
-	already = value_get(func_id['str'])
-	if already != None:
-		# function already declared & defined (incomplete definition)
-		fn = already
-
-		fn['ti_decl'] = func_ti
-
-		if 'stmt' in already:
-			# already defined function
-			error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
-		else:
-			# already declared function
-			if not hlir_type.type_eq(already['type'], func_type):
-				error("definition not correspond to declatartion", x['ti'])
-				info("firstly declared here", already['type']['ti'])
-
-	else:
-		# function already not declared & defined
-		# create new function definition
-		fn = value_func(func_id, func_type, ti=func_ti)
-
-
-	cfunc = fn
-
+	fn = x['symbol']
+	fn['ti_decl'] = func_ti
 	fn['ti_def'] = func_ti
+	cfunc = fn
 
 	# create params context
 	module['context'] = module['context'].branch(domain='local')
-
-
-	if already:
-		fn['att'].append('declared')
 
 	params = func_type['params']
 	i = 0
@@ -2330,72 +2324,39 @@ def def_func(x):
 
 
 	if func_type['extra_args']:
-		#va_id = func_type['va_list_id']
-		#add_local_var(va_id, foundation.typeVA_List, va_id['ti'])
 		module_option('use_extra_args')
 
-
-	fn['stmt'] = do_stmt_block(x['stmt'])
 
 	# check unuse
 	for param in params:
 		check_unuse(param)
 
-	check_block(fn['stmt'])
 
-	# check if return present
-	if not hlir_type.type_is_unit(fn['type']['to']):
-		stmts = fn['stmt']['stmts']
-		if len(stmts) == 0:
-			warning("expected return operator at end", fn['stmt']['ti'])
-		elif stmts[-1]['kind'] != 'return':
-			warning("expected return operator at end", fn['stmt']['ti'])
+	if x['stmt'] != None:
+		stmt = do_stmt_block(x['stmt'])
+		check_block(stmt)
 
+		# check if return present
+		if not hlir_type.type_is_unit(fn['type']['to']):
+			stmts = stmt['stmts']
+			if len(stmts) == 0:
+				warning("expected return operator at end", stmt['ti'])
+			elif stmts[-1]['kind'] != 'return':
+				warning("expected return operator at end", stmt['ti'])
 
 	# remove params context
 	module['context'] = module['context'].parent_get()
 
-	# add function to parent (global) context
-	ctx_value_add(func_id['str'], fn)
-
 	cfunc = old_cfunc
 
-	# в LLVM если делаем func definition нельзя писать func declaration
-	# поэтому удалим все сделаные ранее декларации (если они есть)
-	if settings.check('backend', 'llvm'):
-		module_remove_node(module, 'decl_func', func_id['str'])
-
-	return hlir_def_func(func_id, fn, x['ti'])
+	return hlir_def_func(func_id, fn, stmt, x['ti'])
 
 
 
-def decl_func(x):
-	id = x['id']
-	func_type = do_type_func(x['type'], func_id=id['str'])
-
-	#
-	# Check if function already declared/defined
-	#
-	already = value_get(id['str'])
-	if already != None:
-		if 'stmt' in already:
-			# already defined function
-			info("function declaration after definition", x['ti'])
-
-		else:
-			# already declared function
-			info("repeated function declaration", x['ti'])
-
-		# check type of already created function
-		if not hlir_type.type_eq(already['type'], func_type):
-			error("definition not correspond to function type", x['type']['ti'])
-			info("firstly declared here", already['type']['ti'])
-
-		return
-
-	func = value_func(id, func_type, ti=id['ti'])
+def symbol_func(id, type, ti):
+	func = value_func(id, type, ti=id['ti'])
 	ctx_value_add(id['str'], func)
-	return hlir_decl_func(id, func, x['ti'])
+	return func
 
 
 
@@ -2519,7 +2480,6 @@ def do_directive(x):
 		module_att(args[0]['str'])
 	elif kind == 'c_include':
 		c_include(args[0]['str'])
-
 	elif kind == 'const':
 		print("CONST")
 	elif kind == 'volatile':
@@ -2530,7 +2490,7 @@ def do_directive(x):
 	return None
 
 
-
+# находит сущность по имени и декларирует ее
 gast = None
 def pre_def(id_str):
 	#print("pre_def(%s)" % id_str)
@@ -2552,7 +2512,9 @@ def pre_def(id_str):
 				module_append(y)
 
 
-
+# создает символы для всех функций в модуле
+# если они имеют неизвестную зависимость -
+# удовлетворяет ее посредством pre_def(id_str)
 def pre(ast):
 	global pre_mode
 	old_pre_mode = pre_mode
@@ -2561,21 +2523,43 @@ def pre(ast):
 	global gast
 	gast = ast
 
-	#mass
 
+	# 1. def types before
+	# (and const if need for type!)
 	for x in ast:
 		isa = x['isa']
 		kind = x['kind']
 
-		y = None
 		if isa == 'ast_definition':
-			if kind == 'func': y = decl_func(x)
-		elif isa == 'ast_declaration':
-			if kind == 'func': y = decl_func(x)
+			if kind == 'type':
+				if not 'defined' in x:
+					#info("def type %s" % x['id']['str'], x['ti'])
+					y = def_type(x)
+					if y == None:
+						continue
+					y['nl'] = x['nl']
+					module_append(y)
 
-		if y != None:
-			module_append(y)
 
+	# 2. scan funcs after
+	for x in ast:
+		isa = x['isa']
+		kind = x['kind']
+
+		if kind == 'func':
+			#info("scan func %s" % x['id']['str'], x['ti'])
+			ftype = do_type(x['type'])
+			sym = symbol_func(x['id'], ftype, x['ti'])
+			x['symbol'] = sym
+
+			module_append({
+				'isa': 'directive',
+				'kind': 'cdecl_func',
+				'symbol': sym,
+				'att': [],
+				'nl': 1,
+				'ti': x['ti']
+			})
 
 	pre_mode = old_pre_mode
 	return
@@ -2640,19 +2624,13 @@ def proc(ast, source_info):
 		if isa == 'ast_definition':
 			if kind == 'func': y = def_func(x)
 			elif kind == 'type':
-				if not 'defined' in x:
-					y = def_type(x)
+				#if not 'defined' in x:
+				#	y = def_type(x)
+				continue
 			elif kind == 'const':
 				if not 'defined' in x:
 					y = def_const(x)
 			elif kind == 'var': y = def_var(x)
-			add_spices(y)
-
-		elif isa == 'ast_declaration':
-			if kind == 'func': y = decl_func(x)
-			elif kind == 'type':
-				if not 'defined' in x:
-					y = decl_type(x)
 			add_spices(y)
 
 		elif isa == 'ast_comment':

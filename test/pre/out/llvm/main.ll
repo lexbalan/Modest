@@ -103,16 +103,26 @@ break_2:
 ; -- SOURCE: src/main.cm
 
 
+%Data = type i32;
+%Node = type {
+	%Node*, 
+	%Data*
+};
+
 %Int = type i32;
 
 
 %Arr = type [10 x %Int];
 
 
+
+@x = global %Int zeroinitializer
+
 define %Int @main() {; alloca memory for return value
 	%1 = alloca %Arr
 	call void @getArr(%Arr* %1)
 	%2 = call %Int @mid(%Int 10, %Int 20)
+	store %Int 12, %Int* @x
 	ret %Int 0
 }
 

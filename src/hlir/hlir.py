@@ -69,11 +69,12 @@ def hlir_decl_func(_id, value_func, ti):
 	}
 
 
-def hlir_def_func(_id, value_func, ti):
+def hlir_def_func(_id, value_func, stmt, ti):
 	return {
 		'isa': 'def_func',
 		'id': _id,
 		'value': value_func,
+		'stmt': stmt,
 		'att': [],
 		'nl': 1,
 		'ti': ti
