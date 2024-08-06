@@ -107,8 +107,9 @@ break_2:
 ; -- SOURCE: src/main.cm
 
 @str1 = private constant [6 x i8] [i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
-@str2 = private constant [14 x i8] [i8 97, i8 114, i8 114, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str3 = private constant [8 x i8] [i8 115, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str2 = private constant [8 x i8] [i8 115, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str3 = private constant [12 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 83, i8 104, i8 111, i8 119, i8 58, i8 10, i8 0]
+@str4 = private constant [16 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 
 %Data = type i32;
 %Node = type {
@@ -127,31 +128,40 @@ break_2:
 declare void @printf(%Str8* %s, ...)
 
 define %Int @main() {
-	call void (%Str8*, ...) @printf(%Str8* bitcast ([6 x i8]* @str1 to [0 x i8]*)); alloca memory for return value
-	%1 = alloca %Arr
-	call void @getArr(%Arr* %1)
-	%2 = alloca i32, align 4
-	store i32 0, i32* %2
-	br label %again_1
-again_1:
-	%3 = load i32, i32* %2
-	%4 = icmp slt i32 %3, 10
-	br i1 %4 , label %body_1, label %break_1
-body_1:
-	%5 = load i32, i32* %2
-	%6 = load i32, i32* %2
-	%7 = getelementptr inbounds %Arr, %Arr* %1, i32 0, i32 %6
-	%8 = load %Int, %Int* %7
-	call void (%Str8*, ...) @printf(%Str8* bitcast ([14 x i8]* @str2 to [0 x i8]*), i32 %5, %Int %8)
-	%9 = load i32, i32* %2
-	%10 = add i32 %9, 1
-	store i32 %10, i32* %2
-	br label %again_1
-break_1:
-	%11 = call %Int @mid(%Int 10, %Int 20)
-	call void (%Str8*, ...) @printf(%Str8* bitcast ([8 x i8]* @str3 to [0 x i8]*), %Int %11)
+	call void (%Str8*, ...) @printf(%Str8* bitcast ([6 x i8]* @str1 to [0 x i8]*))
+	%1 = alloca %Arr, align 4; alloca memory for return value
+	%2 = alloca %Arr
+	call void @getArr(%Arr* %2)
+	%3 = load %Arr, %Arr* %2
+	store %Arr %3, %Arr* %1
+	call void @arrayShow(%Arr* %1, %Int 10)
+	%4 = call %Int @mid(%Int 10, %Int 20)
+	call void (%Str8*, ...) @printf(%Str8* bitcast ([8 x i8]* @str2 to [0 x i8]*), %Int %4)
 	store %Int 12, %Int* @x
 	ret %Int 0
+}
+
+define void @arrayShow(%Arr* %array, %Int %size) {
+	call void (%Str8*, ...) @printf(%Str8* bitcast ([12 x i8]* @str3 to [0 x i8]*))
+	%1 = alloca i32, align 4
+	store i32 0, i32* %1
+	br label %again_1
+again_1:
+	%2 = load i32, i32* %1
+	%3 = icmp slt i32 %2, 10
+	br i1 %3 , label %body_1, label %break_1
+body_1:
+	%4 = load i32, i32* %1
+	%5 = load i32, i32* %1
+	%6 = getelementptr inbounds %Arr, %Arr* %array, i32 0, i32 %5
+	%7 = load %Int, %Int* %6
+	call void (%Str8*, ...) @printf(%Str8* bitcast ([16 x i8]* @str4 to [0 x i8]*), i32 %4, %Int %7)
+	%8 = load i32, i32* %1
+	%9 = add i32 %8, 1
+	store i32 %9, i32* %1
+	br label %again_1
+break_1:
+	ret void
 }
 
 define void @getArr(%Arr* noalias sret(%Arr) %0) {

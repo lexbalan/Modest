@@ -1,6 +1,5 @@
 
 
-
 type Data Nat32
 type Node record {
 	next: *Node
@@ -15,21 +14,30 @@ var x: Int
 
 
 
+
 func printf(s: *Str8) -> Unit
 func main() -> Int {
 	printf("test\n")
 
-	let arr = getArr()
-
 	let a = 10
 	let b = 20
 	let s = mid(a, b)
-
 	printf("s = %d\n", s)
+
+	var arr: Arr = getArr()
+	arrayShow(&arr, 10)
 
 	x = 12
 
 	return 0
+}
+func arrayShow(array: *Arr, size: Int) -> Unit {
+	printf("arrayShow:\n")
+	var i: Int32 = 0
+	while i < 10 {
+		printf("array[%d] = %d\n", i, array[i])
+		i = i + 1
+	}
 }
 func getArr() -> Arr {
 	return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
