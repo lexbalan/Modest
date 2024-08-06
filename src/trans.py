@@ -2541,7 +2541,22 @@ def pre(ast):
 					module_append(y)
 
 
-	# 2. scan funcs after
+	# 2. def vars & consts
+	for x in ast:
+		isa = x['isa']
+		kind = x['kind']
+
+		if isa == 'ast_definition':
+			if kind == 'const':
+				if not 'defined' in x:
+					y = def_const(x)
+					module_append(y)
+			elif kind == 'var':
+				y = def_var(x)
+				module_append(y)
+
+
+	# 3. scan funcs after
 	for x in ast:
 		isa = x['isa']
 		kind = x['kind']
@@ -2560,6 +2575,17 @@ def pre(ast):
 				'nl': 1,
 				'ti': x['ti']
 			})
+
+
+	# 4. def funcs after
+	for x in ast:
+		isa = x['isa']
+		kind = x['kind']
+		if isa == 'ast_definition':
+			if kind == 'func':
+				y = def_func(x)
+				module_append(y)
+
 
 	pre_mode = old_pre_mode
 	return
@@ -2621,19 +2647,7 @@ def proc(ast, source_info):
 			elif not kind in ['elseif', 'else', 'endif']:
 				continue
 
-		if isa == 'ast_definition':
-			if kind == 'func': y = def_func(x)
-			elif kind == 'type':
-				#if not 'defined' in x:
-				#	y = def_type(x)
-				continue
-			elif kind == 'const':
-				if not 'defined' in x:
-					y = def_const(x)
-			elif kind == 'var': y = def_var(x)
-			add_spices(y)
-
-		elif isa == 'ast_comment':
+		if isa == 'ast_comment':
 			if kind == 'line': y = comm_line(x)
 			elif kind == 'block': y = comm_block(x)
 

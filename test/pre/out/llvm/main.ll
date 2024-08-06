@@ -114,9 +114,8 @@ break_2:
 
 %Arr = type [10 x %Int];
 
-
-
 @x = global %Int zeroinitializer
+
 
 define %Int @main() {; alloca memory for return value
 	%1 = alloca %Arr
@@ -141,8 +140,6 @@ define void @getArr(%Arr* noalias sret(%Arr) %0) {
 	ret void
 }
 
-
-
 define %Int @mid(%Int %a, %Int %b) {
 	%1 = add %Int %a, %b
 	%2 = call %Int @div(%Int %1, %Int 2)
@@ -153,5 +150,6 @@ define %Int @div(%Int %a, %Int %b) {
 	%1 = sdiv %Int %a, %b
 	ret %Int %1
 }
+
 
 
