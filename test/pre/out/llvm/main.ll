@@ -26,6 +26,10 @@ target triple = "arm64-apple-macosx12.0.0"
 %Str16 = type [0 x %Char16]
 %Str32 = type [0 x %Char32]
 %VA_List = type i8*
+declare void @llvm.va_start(i8*)
+declare void @llvm.va_copy(i8*, i8*)
+declare void @llvm.va_end(i8*)
+
 declare void @llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)
 declare void @llvm.memset.p0.i32(i8*, i8, i32, i1)
 
@@ -102,6 +106,9 @@ break_2:
 
 ; -- SOURCE: src/main.cm
 
+@str1 = private constant [6 x i8] [i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
+@str2 = private constant [14 x i8] [i8 97, i8 114, i8 114, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str3 = private constant [8 x i8] [i8 115, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 
 %Data = type i32;
 %Node = type {
@@ -117,10 +124,32 @@ break_2:
 @x = global %Int zeroinitializer
 
 
-define %Int @main() {; alloca memory for return value
+declare void @printf(%Str8* %s, ...)
+
+define %Int @main() {
+	call void (%Str8*, ...) @printf(%Str8* bitcast ([6 x i8]* @str1 to [0 x i8]*)); alloca memory for return value
 	%1 = alloca %Arr
 	call void @getArr(%Arr* %1)
-	%2 = call %Int @mid(%Int 10, %Int 20)
+	%2 = alloca i32, align 4
+	store i32 0, i32* %2
+	br label %again_1
+again_1:
+	%3 = load i32, i32* %2
+	%4 = icmp slt i32 %3, 10
+	br i1 %4 , label %body_1, label %break_1
+body_1:
+	%5 = load i32, i32* %2
+	%6 = load i32, i32* %2
+	%7 = getelementptr inbounds %Arr, %Arr* %1, i32 0, i32 %6
+	%8 = load %Int, %Int* %7
+	call void (%Str8*, ...) @printf(%Str8* bitcast ([14 x i8]* @str2 to [0 x i8]*), i32 %5, %Int %8)
+	%9 = load i32, i32* %2
+	%10 = add i32 %9, 1
+	store i32 %10, i32* %2
+	br label %again_1
+break_1:
+	%11 = call %Int @mid(%Int 10, %Int 20)
+	call void (%Str8*, ...) @printf(%Str8* bitcast ([8 x i8]* @str3 to [0 x i8]*), %Int %11)
 	store %Int 12, %Int* @x
 	ret %Int 0
 }

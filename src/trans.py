@@ -2331,7 +2331,7 @@ def def_func(x):
 	for param in params:
 		check_unuse(param)
 
-
+	stmt = None
 	if x['stmt'] != None:
 		stmt = do_stmt_block(x['stmt'])
 		check_block(stmt)
@@ -2348,6 +2348,9 @@ def def_func(x):
 	module['context'] = module['context'].parent_get()
 
 	cfunc = old_cfunc
+
+	if stmt == None:
+		return hlir_decl_func(func_id, fn, x['ti'])
 
 	return hlir_def_func(func_id, fn, stmt, x['ti'])
 

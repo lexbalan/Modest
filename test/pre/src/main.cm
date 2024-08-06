@@ -2,14 +2,26 @@
 
 //import "libc/stdio"
 
+func printf(s: *Str8, ...)
+
+
 var x: Int
 
 func main() -> Int {
+	printf("test\n")
+
 	let arr = getArr()
+	var i = 0
+	while i < 10 {
+		printf("arr[%d] = %d\n", i, arr[i])
+		++i
+	}
 
 	let a = 10
 	let b = 20
 	let s = mid(a, b)
+
+	printf("s = %d\n", s)
 
 	x = 12
 

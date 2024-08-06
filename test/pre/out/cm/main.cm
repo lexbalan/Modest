@@ -14,12 +14,18 @@ var x: Int
 
 
 
+
+func printf(s: *Str8) -> Unit
 func main() -> Int {
+	printf("test\n")
+
 	let arr = getArr()
 
 	let a = 10
 	let b = 20
 	let s = mid(a, b)
+
+	printf("s = %d\n", s)
 
 	x = 12
 
