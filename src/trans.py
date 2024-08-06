@@ -2523,7 +2523,6 @@ def pre(ast):
 	global gast
 	gast = ast
 
-
 	# 1. def types before
 	# (and const if need for type!)
 	for x in ast:
@@ -2591,6 +2590,7 @@ def pre(ast):
 
 
 	pre_mode = old_pre_mode
+
 	return
 
 
