@@ -161,7 +161,7 @@ class Parser:
 			#self.skip_tokens([' ', '\t', '\n'])
 
 			comments = []
-			directives = []
+			attributes = []
 
 			spaceline_cnt = 0
 
@@ -180,11 +180,11 @@ class Parser:
 					x['nl'] = spaceline_cnt
 					spaceline_cnt = 0
 					comments.append(x)
-				elif self.token_class_is('directive'):
-					x = self.parse_directive()
+				elif self.token_class_is('attribute'):
+					x = self.parse_attribute()
 					x['nl'] = spaceline_cnt
 					spaceline_cnt = 0
-					directives.append(x)
+					attributes.append(x)
 
 
 				elif self.match(","):
@@ -203,7 +203,7 @@ class Parser:
 
 			if f != None:
 				f[0].update({'comments': comments})
-				f[0].update({'directives': directives})
+				f[0].update({'attributes': attributes})
 				f[0]['nl'] = spaceline_cnt
 				spaceline_cnt = 0
 				fields.extend(f)
@@ -228,8 +228,8 @@ class Parser:
 
 			return True
 
-	def is_directive(self):
-		return self.token_class_is('directive')
+	def is_attribute(self):
+		return self.token_class_is('attribute')
 
 	def check_is_type(self):
 		if self.is_identifier():
@@ -268,8 +268,8 @@ class Parser:
 
 			return False
 
-		elif self.is_directive():
-			self.parse_directive()
+		elif self.is_attribute():
+			self.parse_attribute()
 			return self.check_is_type()
 
 		else:
@@ -346,11 +346,11 @@ class Parser:
 			error("expected type expr", ti)
 			return None
 
-		# parse all directives before
-		directives = []
-		while self.token_class_is('directive'):
-			x = self.parse_directive()
-			directives.append(x)
+		# parse all attributes before
+		attributes = []
+		while self.token_class_is('attribute'):
+			x = self.parse_attribute()
+			attributes.append(x)
 
 		t = {'isa': 'type', 'kind': 'unknown', 'ti': ti}
 
@@ -388,7 +388,7 @@ class Parser:
 			id = self.identifier() # type by Name
 			t = {'isa': 'type', 'kind': 'id', 'id': id, 'ti': ti}
 
-		t['directives'] = directives
+		t['attributes'] = attributes
 		return t
 
 
@@ -1232,7 +1232,7 @@ class Parser:
 		while True:
 			nl_cnt = 0
 
-			comments_and_directives = []
+			comments_and_attributes = []
 			while True:
 				nl_cnt = self.skip_blanks()
 
@@ -1243,15 +1243,15 @@ class Parser:
 				if self.token_class_is('comment-block'):
 					x = self.parse_comment_block()
 					x['nl'] = nl_cnt
-					comments_and_directives.append(x)
+					comments_and_attributes.append(x)
 				elif self.token_class_is('comment-line'):
 					x = self.parse_comment_line()
 					x['nl'] = nl_cnt
-					comments_and_directives.append(x)
-				elif self.token_class_is('directive'):
-					x = self.parse_directive()
+					comments_and_attributes.append(x)
+				elif self.token_class_is('attribute'):
+					x = self.parse_attribute()
 					x['nl'] = nl_cnt
-					comments_and_directives.append(x)
+					comments_and_attributes.append(x)
 				else:
 					break
 				#if x != None:
@@ -1268,7 +1268,7 @@ class Parser:
 
 			objs.append({
 				'id': id,
-				'comments_and_directives': comments_and_directives
+				'comments_and_attributes': comments_and_attributes
 			})
 
 			if self.match(','):
@@ -1294,7 +1294,7 @@ class Parser:
 				'isa': 'field',
 				'id': id,
 				'type': t,
-				'comments_and_directives': obj['comments_and_directives'],
+				'comments_and_attributes': obj['comments_and_attributes'],
 				'ti': id['ti']
 			}
 			fields.append(field)
@@ -1312,7 +1312,7 @@ class Parser:
 		if not self.look("{"):
 			import_expr = self.expr_value()
 			return {
-				'isa': 'ast_directive',
+				'isa': 'ast_attribute',
 				'kind': 'import',
 				'expr': import_expr,
 				'args': [],
@@ -1330,7 +1330,7 @@ class Parser:
 
 				import_expr = self.expr_value()
 				import_dir = {
-					'isa': 'ast_directive',
+					'isa': 'ast_attribute',
 					'kind': 'import',
 					'expr': import_expr,
 					'args': [],
@@ -1441,7 +1441,7 @@ class Parser:
 		return args
 
 
-	def parse_directive(self):
+	def parse_attribute(self):
 		ti = self.ti()
 		x = self.gettok()
 
@@ -1450,7 +1450,7 @@ class Parser:
 			args = self.parse_arglist()
 
 		dir = {
-			'isa': 'ast_directive',
+			'isa': 'ast_attribute',
 			'kind': x,
 			'args': args,
 			'ti': ti
@@ -1481,6 +1481,8 @@ class Parser:
 				x = self.parse_comment_line()
 
 
+		attributes = []
+
 		spaceline_cnt = 0
 		while not self.is_end():
 			x = None
@@ -1492,9 +1494,10 @@ class Parser:
 				x = self.parse_comment_block()
 			elif self.token_class_is('comment-line'):
 				x = self.parse_comment_line()
-			elif self.token_class_is('directive'):
-				x = self.parse_directive()
-
+			elif self.token_class_is('attribute'):
+				d = self.parse_attribute()
+				attributes.append(d)
+				continue
 			# we can do const definition before import?
 			elif self.match('let'):
 				x = self.parse_def_const()
@@ -1513,14 +1516,18 @@ class Parser:
 
 				spaceline_cnt = 0
 				output.extend(x)
-			else:
 
+			else:
 				x['nl'] = spaceline_cnt
 				spaceline_cnt = 0
+
+				x['attributes'] = attributes
+				attributes = []
 
 				output.append(x)
 
 
+		attributes = []
 		while not self.is_end():
 			#export = self.match('export')
 			#extern = self.match('extern')
@@ -1541,15 +1548,17 @@ class Parser:
 				x = self.parse_comment_block()
 			elif self.token_class_is('comment-line'):
 				x = self.parse_comment_line()
-			elif self.token_class_is('directive'):
-				x = self.parse_directive()
+			elif self.token_class_is('attribute'):
+				d = self.parse_attribute()
+				attributes.append(d)
+				continue
 
 			elif self.match('import'):
-				warning("import directive must be placed before definitions", ti)
+				warning("import attribute must be placed before definitions", ti)
 				x = self.parse_import()
 
 			else:
-				error("unexpected token %s" % self.ctok(), self.ti())
+				error("unexpected token '%s'" % self.ctok(), self.ti())
 				self.restore_top_level()
 				continue
 
@@ -1571,10 +1580,13 @@ class Parser:
 				x['ti'] = ti
 
 				# тк CM директива не печатается в C
-				if x['isa'] == 'ast_directive':
+				if x['isa'] == 'ast_attribute':
 					spaceline_cnt = spaceline_cnt - 1
 				else:
 					spaceline_cnt = 0
+
+				x['attributes'] = attributes
+				attributes = []
 
 				output.append(x)
 

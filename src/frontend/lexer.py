@@ -191,7 +191,7 @@ def doTag(src):
 	return ('tag', token, ti)
 
 
-def doDirective(src):
+def doAttribute(src):
 	global line, pos
 
 	s = src.lookup(1)
@@ -213,7 +213,7 @@ def doDirective(src):
 
 	token = ''.join(s)
 	ti['len'] = len(token)
-	return ('directive', token, ti)
+	return ('attribute', token, ti)
 
 
 	"""ti = src.get_ti()
@@ -363,7 +363,7 @@ class Lexer:
 			doOperation2,
 			doOperation1,
 			doString,
-			doDirective,
+			doAttribute,
 			doTag,
 			doBadSymbol,
 		)

@@ -8,7 +8,6 @@
 
 typedef struct Node Node;
 
-
 typedef uint32_t Data;
 struct Node {
 	Node *next;
@@ -23,6 +22,8 @@ void printf(char *s, ...);
 
 Int main();
 
+void arrayShow(Int *array, Int size);
+
 struct __retval {Int a[arrSize];};
 struct __retval getArr();
 
@@ -34,14 +35,14 @@ Int main()
 {
 	printf("test\n");
 
-	struct __retval arr;
-	*(struct __retval *)&arr = getArr();
-
 	#define a  10
 	#define b  20
 	const Int s = mid(a, b);
-
 	printf("s = %d\n", s);
+
+	struct __retval arr;
+	*(struct __retval *)&arr = getArr();
+	arrayShow((Int *)(Int *)&arr, 10);
 
 	x = 12;
 
@@ -50,6 +51,16 @@ Int main()
 
 #undef a
 #undef b
+void arrayShow(Int *array, Int size)
+{
+	printf("arrayShow:\n");
+	int32_t i;
+	i = 0;
+	while (i < 10) {
+		printf("array[%d] = %d\n", i, array[i]);
+		i = i + 1;
+	}
+}
 struct __retval {Int a[arrSize];};
 struct __retval getArr()
 {

@@ -579,8 +579,8 @@ def do_type_func(t, func_id="_"):
 
 
 def do_type(x):
-	for d in x['directives']:
-		do_directive(d)
+	for a in x['attributes']:
+		do_attribute(a)
 
 	k = x['kind']
 	if k == 'id': t = do_type_id(x)
@@ -2387,11 +2387,12 @@ def comm_block(x):
 skipp = False
 old_skipp = False
 
-def do_directive(x):
+def do_attribute(x):
 	global skipp, old_skipp, production, old_production
 	kind = x['kind']
 	args = x['args']
 
+	print("do_attribute('%s')" % kind)
 	#if kind == 'import':
 	#	return do_import(x)
 
@@ -2583,6 +2584,10 @@ def pre(ast):
 
 	# 4. def funcs after
 	for x in ast:
+		if 'attributes' in x:
+			for a in x['attributes']:
+				do_attribute(a)
+
 		isa = x['isa']
 		kind = x['kind']
 		if isa == 'ast_definition':
@@ -2631,7 +2636,7 @@ def proc(ast, source_info):
 	for x in ast:
 		isa = x['isa']
 		kind = x['kind']
-		if isa == 'ast_directive':
+		if isa == 'ast_attribute':
 			kind = x['kind']
 			if kind == 'import':
 				y = do_import(x)
@@ -2648,7 +2653,7 @@ def proc(ast, source_info):
 		y = None
 
 		if not production:
-			if isa != 'ast_directive':
+			if isa != 'ast_attribute':
 				continue
 			elif not kind in ['elseif', 'else', 'endif']:
 				continue
@@ -2657,8 +2662,8 @@ def proc(ast, source_info):
 			if kind == 'line': y = comm_line(x)
 			elif kind == 'block': y = comm_block(x)
 
-		elif isa == 'ast_directive':
-			y = do_directive(x)
+		elif isa == 'ast_attribute':
+			y = do_attribute(x)
 
 
 		if y == None:

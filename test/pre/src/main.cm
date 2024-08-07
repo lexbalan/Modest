@@ -5,7 +5,9 @@
 func printf(s: *Str8, ...)
 
 
+/*@volatile @atomic*/
 var x: Int
+
 
 func main() -> Int {
 	printf("test\n")
@@ -23,6 +25,9 @@ func main() -> Int {
 	return 0
 }
 
+
+@property("value.c_alias", "arrshow")
+@property("value.cm_alias", "arrshow")
 func arrayShow(array: *Arr, size: Int) -> Unit {
 	printf("arrayShow:\n")
 	var i = 0

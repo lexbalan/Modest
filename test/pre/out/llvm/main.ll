@@ -129,14 +129,14 @@ declare void @printf(%Str8* %s, ...)
 
 define %Int @main() {
 	call void (%Str8*, ...) @printf(%Str8* bitcast ([6 x i8]* @str1 to [0 x i8]*))
-	%1 = alloca %Arr, align 4; alloca memory for return value
-	%2 = alloca %Arr
-	call void @getArr(%Arr* %2)
-	%3 = load %Arr, %Arr* %2
-	store %Arr %3, %Arr* %1
-	call void @arrayShow(%Arr* %1, %Int 10)
-	%4 = call %Int @mid(%Int 10, %Int 20)
-	call void (%Str8*, ...) @printf(%Str8* bitcast ([8 x i8]* @str2 to [0 x i8]*), %Int %4)
+	%1 = call %Int @mid(%Int 10, %Int 20)
+	call void (%Str8*, ...) @printf(%Str8* bitcast ([8 x i8]* @str2 to [0 x i8]*), %Int %1)
+	%2 = alloca %Arr, align 4; alloca memory for return value
+	%3 = alloca %Arr
+	call void @getArr(%Arr* %3)
+	%4 = load %Arr, %Arr* %3
+	store %Arr %4, %Arr* %2
+	call void @arrayShow(%Arr* %2, %Int 10)
 	store %Int 12, %Int* @x
 	ret %Int 0
 }

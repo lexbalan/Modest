@@ -53,6 +53,9 @@ func div(a: Int, b: Int) -> Int {
 //import "libc/stdio"
 
 
+/*@volatile @atomic*/
+
+
 // аттрибуты не работают!
 //@property("type.c_alias", "int")
 
