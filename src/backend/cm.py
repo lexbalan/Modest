@@ -30,8 +30,8 @@ def nl_indent(nl=1):
 
 def get_id_str(x):
 	id_str = x['id']['str']
-	#if 'cm_alias' in x:
-	#	id_str = '"%s"' % x['llvm_alias']
+	if 'cm_alias' in x:
+		id_str = x['cm_alias']
 	return id_str
 
 

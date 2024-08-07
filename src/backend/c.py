@@ -140,7 +140,7 @@ def precedence(x):
 def get_id_str(x):
 	id_str = x['id']['str']
 	if 'c_alias' in x:
-		id_str = '"%s"' % x['llvm_alias']
+		id_str = x['c_alias']
 	return id_str
 
 

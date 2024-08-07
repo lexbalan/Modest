@@ -22,7 +22,7 @@ void printf(char *s, ...);
 
 Int main();
 
-void arrayShow(Int *array, Int size);
+void arrshow(Int *array, Int size);
 
 struct __retval {Int a[arrSize];};
 struct __retval getArr();
@@ -42,7 +42,7 @@ Int main()
 
 	struct __retval arr;
 	*(struct __retval *)&arr = getArr();
-	arrayShow((Int *)(Int *)&arr, 10);
+	arrshow((Int *)(Int *)&arr, 10);
 
 	x = 12;
 
@@ -51,7 +51,7 @@ Int main()
 
 #undef a
 #undef b
-void arrayShow(Int *array, Int size)
+void arrshow(Int *array, Int size)
 {
 	printf("arrayShow:\n");
 	int32_t i;
@@ -77,6 +77,9 @@ Int div(Int a, Int b)
 }
 
 //import "libc/stdio"
+
+
+/*@volatile @atomic*/
 
 
 // аттрибуты не работают!

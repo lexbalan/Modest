@@ -25,13 +25,13 @@ func main() -> Int {
 	printf("s = %d\n", s)
 
 	var arr: Arr = getArr()
-	arrayShow(&arr, 10)
+	arrshow(&arr, 10)
 
 	x = 12
 
 	return 0
 }
-func arrayShow(array: *Arr, size: Int) -> Unit {
+func arrshow(array: *Arr, size: Int) -> Unit {
 	printf("arrayShow:\n")
 	var i: Int32 = 0
 	while i < 10 {

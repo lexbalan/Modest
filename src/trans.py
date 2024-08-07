@@ -2550,15 +2550,16 @@ def pre(ast):
 		kind = x['kind']
 
 		if isa == 'ast_definition':
+			y = None
 			if kind == 'const':
 				if not 'defined' in x:
 					y = def_const(x)
-					if y != None:
-						module_append(y)
 			elif kind == 'var':
 				y = def_var(x)
-				if y != None:
-					module_append(y)
+
+			if y != None:
+				add_spices(y)
+				module_append(y)
 
 
 	# 3. scan funcs after
@@ -2594,6 +2595,7 @@ def pre(ast):
 			if kind == 'func':
 				y = def_func(x)
 				if y != None:
+					add_spices(y)
 					module_append(y)
 
 
