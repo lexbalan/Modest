@@ -1,8 +1,8 @@
 // libc/stdio.hm
 
-@module_att("not_included")
+$pragma not_included
 
-@c_include("stdio.h")
+$pragma c_include "stdio.h"
 
 
 import "./ctypes"

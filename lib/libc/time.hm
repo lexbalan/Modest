@@ -1,9 +1,9 @@
 
-@module_att("not_included")
+$pragma not_included
 
 import "./ctypes"
 
-@c_include("time.h")
+$pragma c_include "time.h"
 
 
 /* time in seconds since 1970 */
@@ -27,13 +27,13 @@ type Struct_tm record {
 	tm_yday: Int   // Day in year [0-365]
 	tm_isdst: Int  // DST  [-1/0/1]
 
-//@if __USE_MISC == 1
+//$if __USE_MISC == 1
 	tm_gmtoff: LongInt	 // Seconds east of UTC
 	tm_zone: *ConstChar	// Timezone abbreviation
-//@else
+//$else
 //	__tm_gmtoff: LongInt   // Seconds east of UTC
 //	__tm_zone: *ConstChar  // Timezone abbreviation
-//@endif
+//$endif
 }
 
 

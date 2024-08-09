@@ -4,7 +4,7 @@ import "libc/stdio"
 
 @attribute("c-no-print")
 import "misc/sha256"
-@c_include("./sha256.h")
+$pragma c_include"./sha256.h")
 
 
 let inputLength = 32

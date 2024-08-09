@@ -775,10 +775,6 @@ def print_int_type_for(width):
 
 
 
-"""def print_type(t):
-	print_type2(t)
-	if 'noundef' in t['att']:
-		out(' noundef')"""
 
 # функция может получать только указатель на массив
 # если же в CM она получает массив то тут и в СИ она получает

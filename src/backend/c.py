@@ -1920,7 +1920,7 @@ def run(module, outname):
 	if 'use_extra_args' in module['options']:
 		out("#include <stdarg.h>\n")
 
-	# search for @c_include("...")
+	# search for $pragma c_include "..."
 	cdirectives(module)
 
 	out("\n")

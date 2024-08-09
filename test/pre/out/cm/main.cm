@@ -1,6 +1,8 @@
 
+@c_include "stdint.h"
 
 type Data Nat32
+
 type Node record {
 	next: *Node
 	data: *Data
@@ -51,9 +53,6 @@ func div(a: Int, b: Int) -> Int {
 }
 
 //import "libc/stdio"
-
-
-/*@volatile @atomic*/
 
 
 // аттрибуты не работают!

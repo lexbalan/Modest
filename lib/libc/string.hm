@@ -1,8 +1,8 @@
-@module_att("not_included")
+$pragma not_included
 
 import "ctypes"
 
-@c_include("string.h")
+$pragma c_include "string.h"
 
 
 @attribute("value.type.to:dispensable")

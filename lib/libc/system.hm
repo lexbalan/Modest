@@ -1,5 +1,5 @@
 
-@module_att("not_included")
+$pragma not_included
 
 let systemWidth = 64
 

@@ -1449,15 +1449,33 @@ class Parser:
 		if self.look("("):
 			args = self.parse_arglist()
 
-		dir = {
+		att = {
 			'isa': 'ast_attribute',
 			'kind': x,
 			'args': args,
 			'ti': ti
 		}
 
-		return dir
+		return att
 
+
+	def parse_directive(self):
+		ti = self.ti()
+		x = self.gettok()
+
+		args = []
+		while not self.match("\n"):
+			a = self.gettok()
+			args.append(a)
+
+		dir = {
+			'isa': 'ast_directive',
+			'kind': x,
+			'args': args,
+			'ti': ti
+		}
+
+		return dir
 
 
 	def skipnl(self):
@@ -1495,9 +1513,11 @@ class Parser:
 			elif self.token_class_is('comment-line'):
 				x = self.parse_comment_line()
 			elif self.token_class_is('attribute'):
-				d = self.parse_attribute()
-				attributes.append(d)
+				a = self.parse_attribute()
+				attributes.append(a)
 				continue
+			elif self.token_class_is('directive'):
+				x = self.parse_directive()
 			# we can do const definition before import?
 			elif self.match('let'):
 				x = self.parse_def_const()
@@ -1549,9 +1569,11 @@ class Parser:
 			elif self.token_class_is('comment-line'):
 				x = self.parse_comment_line()
 			elif self.token_class_is('attribute'):
-				d = self.parse_attribute()
-				attributes.append(d)
+				a = self.parse_attribute()
+				attributes.append(a)
 				continue
+			elif self.token_class_is('directive'):
+				x = self.parse_directive()
 
 			elif self.match('import'):
 				warning("import attribute must be placed before definitions", ti)

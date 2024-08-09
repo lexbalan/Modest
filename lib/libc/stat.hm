@@ -1,6 +1,6 @@
 
-@module_att("not_included")
-@c_include("sys/stat.h")
+$pragma not_included
+$pragma c_include "sys/stat.h"
 
 import "libc/ctypes"
 import "libc/time"

@@ -17,7 +17,7 @@
 
 //@attribute("c-no-print")
 //import "lightfood/main"
-//@c_include("./ff_main.h")
+//$pragma c_include"./ff_main.h")
 
 
 

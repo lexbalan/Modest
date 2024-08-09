@@ -1,7 +1,7 @@
 // libc/math.hm
 
-@module_att("not_included")
-@c_include("math.h")
+$pragma not_included
+$pragma c_include "math.h"
 
 import "./ctypes"
 

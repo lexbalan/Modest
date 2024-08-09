@@ -1,10 +1,10 @@
 
-@module_att("not_included")
+$pragma not_included
 
 import "ctypes"
 
-@c_include("arpa/inet.h")
-//@c_include("sys/socket.h")
+$pragma c_include "arpa/inet.h"
+//$pragma c_include "sys/socket.h"
 
 
 @property("type.c_alias", "in_addr_t")
@@ -32,12 +32,12 @@ type Struct_in_addr record {
 
 @property("type.c_alias", "struct sockaddr_in")
 type Struct_sockaddr_in record {
-	// @if APPLE
+	// $if APPLE
 	sin_len: Nat8
 	sin_family: Nat8
-	// @else
+	// $else
 	//sin_family: Short
-	// @endif APPLE
+	// $endif APPLE
 	sin_port: UnsignedShort
 	sin_addr: Struct_in_addr
 	sin_zero: [8]Nat8

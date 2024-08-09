@@ -8,50 +8,50 @@
 ### Common form
 
 ```
-@if (<# value_expression #>)
+$if (<# value_expression #>)
 	// code activated
 	// when value_expression is true
-@endif
+$endif
 ```
 
 ```
-@if (<# value_expression #>)
+$if (<# value_expression #>)
 	// code activated
 	// when value_expression is true
-@else
+$else
 	// code activated
 	// when value_expression is false
-@endif
+$endif
 ```
 
 ```
-@if (<# value_expression_1 #>)
+$if (<# value_expression_1 #>)
 	// code activated
 	// when value_expression_1 is true
-@elseif (<# value_expression_2 #>)
+$elseif (<# value_expression_2 #>)
 	// code activated 
 	// when value_expression_1 is false
 	// and value_expression_2 is true
-@endif
+$endif
 ```
 
 ```
-@if (<# value_expression_1 #>)
+$if (<# value_expression_1 #>)
 	// code activated
 	// when value_expression_1 is true
-@elseif (<# value_expression_2 #>)
+$elseif (<# value_expression_2 #>)
 	// code activated
 	// when value_expression_1 is false
 	// and value_expression_2 is true
 ...
-@elseif (<# value_expression_n #>)
+$elseif (<# value_expression_n #>)
 	// code activated
 	// when all value_expressions before are false
 	// and value_expression_n is true
-@else
+$else
 	// code activated
 	// when all value_expressions are false
-@endif
+$endif
 ```
 
 ### Examples
@@ -59,21 +59,21 @@
 ```swift
 let systemWidth = 64
 
-@if (systemWidth == 32)
+$if (systemWidth == 32)
 import "./system32"
-@elseif (systemWidth == 64)
+$elseif (systemWidth == 64)
 import "./system64"
-@elseif (systemWidth == 128)
+$elseif (systemWidth == 128)
 import "./system128"
-@else
+$else
 @error("system not supported")
-@endif
+$endif
 
 
 // using built-in 'function' __defined(id: String) -> Bool
-@if (not __defined("version"))
+$if (not __defined("version"))
 let version = "0.1"
-@endif
+$endif
 ```
 
 
@@ -95,10 +95,10 @@ let version = "0.1"
 ```swift
 var x: Int32
 
-@if (__defined("x"))
+$if (__defined("x"))
 @undef("x")
 var x: Nat32
-@endif
+$endif
 ```
 
 
@@ -120,7 +120,7 @@ type Int Int32
 ```swift
 // this pragma makes compiler to
 // not print include directive (only for C backend) for this file
-@module_att("not_included")
+$pragma not_included
 ```
 
 ## Compiler Feature

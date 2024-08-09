@@ -5,8 +5,11 @@
 func printf(s: *Str8, ...)
 
 
-/*@volatile @atomic*/
-var x: Int
+$pragma not_included
+$pragma c_include "stdint.h"
+
+
+@volatile @atomic var x: Int
 
 
 func main() -> Int {
@@ -38,6 +41,7 @@ func arrayShow(array: *Arr, size: Int) -> Unit {
 }
 
 type Data Nat32
+
 type Node record {
 	next: *Node
 	data: *Data
@@ -60,6 +64,7 @@ func mid(a: Int, b: Int) -> Int {
 	return div(sum, 2)
 }
 
+@inline
 func div(a: Int, b: Int) -> Int {
 	return a / b
 }

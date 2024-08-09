@@ -11,7 +11,7 @@
 
 //@attribute("c-no-print")
 //import "./main"
-//@c_include("./ff.h")
+//$pragma c_include"./ff.h")
 
 
 

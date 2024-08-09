@@ -1,7 +1,7 @@
 
 @attribute("c-no-print")
 import "misc/utf"
-@c_include("./utf.h")
+$pragma c_include"./utf.h")
 
 
 func putchar8(c: Char8) -> Unit {

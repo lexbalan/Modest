@@ -1,16 +1,16 @@
 // libc/ctypes.hm
 
-@module_att("not_included")
+$pragma not_included
 
 import "./system"
 
-@if (systemWidth == 32)
+$if (systemWidth == 32)
 import "./ctypes32"
-@elseif (systemWidth == 64)
+$elseif (systemWidth == 64)
 import "./ctypes64"
-@else
+$else
 @error("C types not implemented")
-@endif
+$endif
 
 
 @property("type.c_alias", "socklen_t")

@@ -1,9 +1,9 @@
 // libc/unistd.hm
 // thx: https://pubs.opengroup.org/onlinepubs/7908799/xsh/unistd.h.html
 
-@module_att("not_included")
+$pragma not_included
 
-@c_include("unistd.h")
+$pragma c_include "unistd.h"
 
 import "./ctypes"
 
@@ -231,19 +231,19 @@ let _unistd_PC_REC_MIN_XFER_SIZE = 18
 let _unistd_PC_REC_XFER_ALIGN = 19
 let _unistd_PC_TIMESTAMP_RESOLUTION = 20
 
-//@if defined("__CYGWIN__")
+//$if defined("__CYGWIN__")
 ///* Ask for POSIX permission bits support. */
 //let _unistd_PC_POSIX_PERMISSIONS = 90
 ///* Ask for full POSIX permission support including uid/gid settings. */
 //let _unistd_PC_POSIX_SECURITY = 91
 //let _unistd_PC_CASE_INSENSITIVE = 92
-//@endif
+//$endif
 
 /*
  *  confstr values per IEEE Std 1003.1, 2004 Edition
  */
 /* Only defined on Cygwin for now. */
-//@if defined("__CYGWIN__")
+//$if defined("__CYGWIN__")
 let _unistd_CS_PATH = 0
 let _unistd_CS_POSIX_V7_ILP32_OFF32_CFLAGS = 1
 let _unistd_CS_POSIX_V6_ILP32_OFF32_CFLAGS = _unistd_CS_POSIX_V7_ILP32_OFF32_CFLAGS
@@ -296,7 +296,7 @@ let _unistd_CS_LFS_CFLAGS = 21
 let _unistd_CS_LFS_LDFLAGS = 22
 let _unistd_CS_LFS_LIBS = 23
 let _unistd_CS_LFS_LINTFLAGS = 24
-//@endif
+//$endif
 
 
 

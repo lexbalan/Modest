@@ -184,10 +184,6 @@ def output_id(id):
 	property_add()
 
 
-def module_att(pg):
-	if pg == 'not_included':
-		module['att'].append('not_included')
-
 
 
 attributes = []
@@ -2480,10 +2476,8 @@ def do_attribute(x):
 		property_add(args[0]['str'], args[1]['str'])
 	elif kind == 'feature':
 		feature_add(args[0]['str'])
-	elif kind == 'module_att':
-		module_att(args[0]['str'])
-	elif kind == 'c_include':
-		c_include(args[0]['str'])
+	#elif kind == 'c_include':
+	#	c_include(args[0]['str'])
 	elif kind == 'const':
 		print("CONST")
 	elif kind == 'volatile':
@@ -2605,6 +2599,25 @@ def pre(ast):
 
 
 
+def do_directive(x):
+	info("directive %s" % x['kind'], x['ti'])
+	if x['kind'] == 'pragma':
+		args = x['args']
+		#for arg in args:
+		#	print(arg['kind'])
+		s0 = args[0]
+		if s0 == 'ass':
+			print("BADASS")
+		elif s0 == 'not_included':
+			print("NOT_INCLUDED")
+			module['att'].append('not_included')
+		elif s0 == 'c_include':
+			s1 = args[1]
+			print("C_INCLUDE " + s1)
+			c_include(s1)
+		pass
+
+
 def proc(ast, source_info):
 	global skipp, production, old_production
 
@@ -2643,6 +2656,10 @@ def proc(ast, source_info):
 			if kind == 'import':
 				y = do_import(x)
 				module_append(y)
+
+		elif isa == 'ast_directive':
+			do_directive(x)
+			pass
 
 	# do pre!
 	pre(ast) ##
