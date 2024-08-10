@@ -26,10 +26,6 @@ target triple = "arm64-apple-macosx12.0.0"
 %Str16 = type [0 x %Char16]
 %Str32 = type [0 x %Char32]
 %VA_List = type i8*
-declare void @llvm.va_start(i8*)
-declare void @llvm.va_copy(i8*, i8*)
-declare void @llvm.va_end(i8*)
-
 declare void @llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)
 declare void @llvm.memset.p0.i32(i8*, i8, i32, i1)
 
@@ -104,12 +100,31 @@ break_2:
 }
 
 
+; -- SOURCE: /Users/alexbalan/p/Modest/test/pre/src/sub2.cm
+
+
+
+; -- SOURCE: /Users/alexbalan/p/Modest/test/pre/src/sub.cm
+
+
+
+%Int = type i32;
+
+declare void @printf(%Str8* %s, ...)
+declare i32 @div(i32 %a, i32 %b)
+
+
 ; -- SOURCE: src/main.cm
 
 @str1 = private constant [6 x i8] [i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
-@str2 = private constant [8 x i8] [i8 115, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str3 = private constant [12 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 83, i8 104, i8 111, i8 119, i8 58, i8 10, i8 0]
-@str4 = private constant [16 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str2 = private constant [3 x i8] [i8 37, i8 115, i8 0]
+@str3 = private constant [8 x i8] [i8 83, i8 117, i8 98, i8 78, i8 97, i8 109, i8 101, i8 0]
+@str4 = private constant [3 x i8] [i8 37, i8 115, i8 0]
+@str5 = private constant [8 x i8] [i8 83, i8 117, i8 98, i8 78, i8 97, i8 109, i8 101, i8 0]
+@str6 = private constant [8 x i8] [i8 115, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str7 = private constant [12 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 83, i8 104, i8 111, i8 119, i8 58, i8 10, i8 0]
+@str8 = private constant [16 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+
 
 %Data = type i32;
 %Node = type {
@@ -117,32 +132,33 @@ break_2:
 	%Data*
 };
 
-%Int = type i32;
 
 
-%Arr = type [10 x %Int];
+%Arr = type [10 x i32];
 
-@x = global %Int zeroinitializer
+@x = global i32 zeroinitializer
 
 
-declare void @printf(%Str8* %s, ...)
-
-define %Int @main() {
+define i32 @main() {
 	call void (%Str8*, ...) @printf(%Str8* bitcast ([6 x i8]* @str1 to [0 x i8]*))
-	%1 = call %Int @mid(%Int 10, %Int 20)
-	call void (%Str8*, ...) @printf(%Str8* bitcast ([8 x i8]* @str2 to [0 x i8]*), %Int %1)
-	%2 = alloca %Arr, align 4; alloca memory for return value
-	%3 = alloca %Arr
-	call void @getArr(%Arr* %3)
-	%4 = load %Arr, %Arr* %3
-	store %Arr %4, %Arr* %2
-	call void @arrayShow(%Arr* %2, %Int 10)
-	store %Int 12, %Int* @x
-	ret %Int 0
+	call void (%Str8*, ...) @printf(%Str8* bitcast ([3 x i8]* @str2 to [0 x i8]*), %Str8* bitcast ([8 x i8]* @str3 to [0 x i8]*))
+	call void (%Str8*, ...) @printf(%Str8* bitcast ([3 x i8]* @str4 to [0 x i8]*), %Str8* bitcast ([8 x i8]* @str5 to [0 x i8]*))
+	%1 = alloca i32, align 4
+	store i32 5, i32* %1
+	%2 = call i32 @mid(i32 10, i32 20)
+	call void (%Str8*, ...) @printf(%Str8* bitcast ([8 x i8]* @str6 to [0 x i8]*), i32 %2)
+	%3 = alloca %Arr, align 4; alloca memory for return value
+	%4 = alloca %Arr
+	call void @getArr(%Arr* %4)
+	%5 = load %Arr, %Arr* %4
+	store %Arr %5, %Arr* %3
+	call void @arrayShow(%Arr* %3, i32 10)
+	store i32 12, i32* @x
+	ret i32 0
 }
 
-define void @arrayShow(%Arr* %array, %Int %size) {
-	call void (%Str8*, ...) @printf(%Str8* bitcast ([12 x i8]* @str3 to [0 x i8]*))
+define void @arrayShow(%Arr* %array, i32 %size) {
+	call void (%Str8*, ...) @printf(%Str8* bitcast ([12 x i8]* @str7 to [0 x i8]*))
 	%1 = alloca i32, align 4
 	store i32 0, i32* %1
 	br label %again_1
@@ -154,8 +170,8 @@ body_1:
 	%4 = load i32, i32* %1
 	%5 = load i32, i32* %1
 	%6 = getelementptr inbounds %Arr, %Arr* %array, i32 0, i32 %5
-	%7 = load %Int, %Int* %6
-	call void (%Str8*, ...) @printf(%Str8* bitcast ([16 x i8]* @str4 to [0 x i8]*), i32 %4, %Int %7)
+	%7 = load i32, i32* %6
+	call void (%Str8*, ...) @printf(%Str8* bitcast ([16 x i8]* @str8 to [0 x i8]*), i32 %4, i32 %7)
 	%8 = load i32, i32* %1
 	%9 = add i32 %8, 1
 	store i32 %9, i32* %1
@@ -165,30 +181,24 @@ break_1:
 }
 
 define void @getArr(%Arr* noalias sret(%Arr) %0) {
-	%2 = insertvalue %Arr zeroinitializer, %Int 0, 0
-	%3 = insertvalue %Arr %2, %Int 1, 1
-	%4 = insertvalue %Arr %3, %Int 2, 2
-	%5 = insertvalue %Arr %4, %Int 3, 3
-	%6 = insertvalue %Arr %5, %Int 4, 4
-	%7 = insertvalue %Arr %6, %Int 5, 5
-	%8 = insertvalue %Arr %7, %Int 6, 6
-	%9 = insertvalue %Arr %8, %Int 7, 7
-	%10 = insertvalue %Arr %9, %Int 8, 8
-	%11 = insertvalue %Arr %10, %Int 9, 9
+	%2 = insertvalue %Arr zeroinitializer, i32 0, 0
+	%3 = insertvalue %Arr %2, i32 1, 1
+	%4 = insertvalue %Arr %3, i32 2, 2
+	%5 = insertvalue %Arr %4, i32 3, 3
+	%6 = insertvalue %Arr %5, i32 4, 4
+	%7 = insertvalue %Arr %6, i32 5, 5
+	%8 = insertvalue %Arr %7, i32 6, 6
+	%9 = insertvalue %Arr %8, i32 7, 7
+	%10 = insertvalue %Arr %9, i32 8, 8
+	%11 = insertvalue %Arr %10, i32 9, 9
 	store %Arr %11, %Arr* %0
 	ret void
 }
 
-define %Int @mid(%Int %a, %Int %b) {
-	%1 = add %Int %a, %b
-	%2 = call %Int @div(%Int %1, %Int 2)
-	ret %Int %2
+define i32 @mid(i32 %a, i32 %b) {
+	%1 = add i32 %a, %b
+	%2 = call i32 @div(i32 %1, i32 2)
+	ret i32 %2
 }
-
-define %Int @div(%Int %a, %Int %b) {
-	%1 = sdiv %Int %a, %b
-	ret %Int %1
-}
-
 
 

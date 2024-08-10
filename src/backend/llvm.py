@@ -1975,9 +1975,12 @@ def print_func_signature(func):
 
 
 
-def print_decl_func(x):
+def print_fdecl(x):
 	out("\ndeclare ")
-	print_func_signature(x['value'])
+	print_func_signature(x)
+
+def print_decl_func(x):
+	print_fdecl(x['value'])
 
 
 def print_def_func(x):
@@ -2279,8 +2282,12 @@ def print_module(m):
 		elif isa == 'def_const': print_def_const(x)
 		elif isa == 'def_func': print_def_func(x)
 		elif isa == 'def_type': print_def_type(x)
-		elif isa == 'directive': pass
-		elif isa == 'comment': pass
+		elif isa == 'directive':
+			# импортированные CM функции
+			# в LLVM обязательно нужно задекларировать
+			if x['kind'] == 'll_decl_func':
+				print_fdecl(x['symbol'])
+		#elif isa == 'comment': pass
 
 	out("\n\n")
 

@@ -1312,14 +1312,14 @@ class Parser:
 		if not self.look("{"):
 			import_expr = self.expr_value()
 			return {
-				'isa': 'ast_attribute',
-				'kind': 'import',
+				'isa': 'ast_import',
+				'kind': 'ast_import',
 				'expr': import_expr,
 				'args': [],
 				'ti': ti
 			}
-		else:
 
+		else:
 			imports = []
 			self.skip()  # {
 			while True:

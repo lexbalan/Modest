@@ -2,26 +2,25 @@
 
 //import "libc/stdio"
 
-func printf(s: *Str8, ...)
-
-
-$pragma not_included
-$pragma c_include "stdint.h"
-
+import "sub"
 
 @volatile @atomic var x: Int
 
-
 func main() -> Int {
 	printf("test\n")
+
+	printf("%s", *Str8 subName)
+	printf("%s", *Str8 sub2Name)
+
+	var y = default
 
 	let a = 10
 	let b = 20
 	let s = mid(a, b)
 	printf("s = %d\n", s)
 
-	var arr = getArr()
-	arrayShow(&arr, 10)
+	//var arr = getArr()
+	//arrayShow(&arr, 10)
 
 	x = 12
 
@@ -50,23 +49,18 @@ type Node record {
 let arrSize = 10
 type Arr [arrSize]Int
 
-func getArr() -> Arr {
+/*func getArr() -> Arr {
 	return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-}
+}*/
 
 
 // аттрибуты не работают!
 //@property("type.c_alias", "int")
-type Int Int32
+//type Int Int32
 
 func mid(a: Int, b: Int) -> Int {
 	let sum = a + b
 	return div(sum, 2)
-}
-
-@inline
-func div(a: Int, b: Int) -> Int {
-	return a / b
 }
 
 

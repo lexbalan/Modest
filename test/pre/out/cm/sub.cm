@@ -1,0 +1,14 @@
+
+@c_include "stdint.h"
+import "sub2"
+
+type Int Int32
+let subName = "SubName"
+let default = Int 5
+
+
+func printf(s: *Str8) -> Unit
+func div(a: Int, b: Int) -> Int {
+	return a / b
+}
+

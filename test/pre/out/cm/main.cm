@@ -1,5 +1,5 @@
 
-@c_include "stdint.h"
+import "sub"
 
 type Data Nat32
 
@@ -7,7 +7,6 @@ type Node record {
 	next: *Node
 	data: *Data
 }
-type Int Int32
 let arrSize = 10
 type Arr [arrSize]Int
 var x: Int
@@ -15,11 +14,13 @@ var x: Int
 
 
 
-
-
-func printf(s: *Str8) -> Unit
 func main() -> Int {
 	printf("test\n")
+
+	printf("%s", *Str8 subName)
+	printf("%s", *Str8 sub2Name)
+
+	var y: Int = default
 
 	let a = 10
 	let b = 20
@@ -48,13 +49,4 @@ func mid(a: Int, b: Int) -> Int {
 	let sum = a + b
 	return div(sum, 2)
 }
-func div(a: Int, b: Int) -> Int {
-	return a / b
-}
-
-//import "libc/stdio"
-
-
-// аттрибуты не работают!
-//@property("type.c_alias", "int")
 

@@ -2510,10 +2510,45 @@ def pre_def(id_str):
 				module_append(y)
 
 
+def inc(ast):
+	for x in ast:
+		isa = x['isa']
+		kind = x['kind']
+		if kind == 'const':
+			id = x['id']
+			#print('INC CONST ' + id['str'])
+			v = do_value_immediate(x['value'], allow_ptr_to_str=True)
+			if value_is_bad(v):
+				ctx_value_add(id['str'], v)
+				return hlir_def_const(id, v, v, x['ti'])
+			const_value = symbol_const(id, v)
+		elif kind == 'type':
+			id = x['id']
+			#nt = hlir_type.hlir_type_undefined(x['ti'])
+			nt = do_type(x['type'])
+			ctx_type_add(id['str'], nt)
+		elif kind == 'func':
+			id = x['id']
+			ftype = do_type(x['type'])
+			sym = symbol_func(x['id'], ftype, x['ti'])
+			#x['symbol'] = sym
+			module_append({
+				'isa': 'directive',
+				'kind': 'cdecl_func',
+				'symbol': sym,
+				'att': [],
+				'nl': 1,
+				'ti': x['ti']
+			})
+
+
+	return
+
+
 # создает символы для всех функций в модуле
 # если они имеют неизвестную зависимость -
 # удовлетворяет ее посредством pre_def(id_str)
-def pre(ast):
+def pre(ast, nodef):
 	global pre_mode
 	old_pre_mode = pre_mode
 	pre_mode = True
@@ -2546,8 +2581,19 @@ def pre(ast):
 		if isa == 'ast_definition':
 			y = None
 			if kind == 'const':
-				if not 'defined' in x:
-					y = def_const(x)
+
+				if nodef:
+					id = x['id']
+					v = do_value_immediate(x['value'], allow_ptr_to_str=True)
+					if value_is_bad(v):
+						ctx_value_add(id['str'], v)
+						return hlir_def_const(id, v, v, x['ti'])
+					const_value = symbol_const(id, v)
+				else:
+					if not 'defined' in x:
+						y = def_const(x)
+
+
 			elif kind == 'var':
 				y = def_var(x)
 
@@ -2567,6 +2613,17 @@ def pre(ast):
 			sym = symbol_func(x['id'], ftype, x['ti'])
 			x['symbol'] = sym
 
+			if nodef:
+				# импортированные функции в LLVM должны быть прописаны прототипы
+				module_append({
+					'isa': 'directive',
+					'kind': 'll_decl_func',
+					'symbol': sym,
+					'att': [],
+					'nl': 1,
+					'ti': x['ti']
+				})
+
 			module_append({
 				'isa': 'directive',
 				'kind': 'cdecl_func',
@@ -2577,20 +2634,22 @@ def pre(ast):
 			})
 
 
-	# 4. def funcs after
-	for x in ast:
-		if 'attributes' in x:
-			for a in x['attributes']:
-				do_attribute(a)
+	if not nodef:
 
-		isa = x['isa']
-		kind = x['kind']
-		if isa == 'ast_definition':
-			if kind == 'func':
-				y = def_func(x)
-				if y != None:
-					add_spices(y)
-					module_append(y)
+		# 4. def funcs after
+		for x in ast:
+			if 'attributes' in x:
+				for a in x['attributes']:
+					do_attribute(a)
+
+			isa = x['isa']
+			kind = x['kind']
+			if isa == 'ast_definition':
+				if kind == 'func':
+					y = def_func(x)
+					if y != None:
+						add_spices(y)
+						module_append(y)
 
 
 	pre_mode = old_pre_mode
@@ -2600,7 +2659,7 @@ def pre(ast):
 
 
 def do_directive(x):
-	info("directive %s" % x['kind'], x['ti'])
+	#info("directive %s" % x['kind'], x['ti'])
 	if x['kind'] == 'pragma':
 		args = x['args']
 		#for arg in args:
@@ -2609,16 +2668,78 @@ def do_directive(x):
 		if s0 == 'ass':
 			print("BADASS")
 		elif s0 == 'not_included':
-			print("NOT_INCLUDED")
+			#print("NOT_INCLUDED")
 			module['att'].append('not_included')
 		elif s0 == 'c_include':
 			s1 = args[1]
-			print("C_INCLUDE " + s1)
+			#print("C_INCLUDE " + s1)
 			c_include(s1)
 		pass
 
 
-def proc(ast, source_info):
+def do_importing(x):
+	import_expr = do_value_immediate_string(x['expr'])
+
+	if value_is_bad(import_expr):
+		return None
+
+	# Literal string to python string
+	impline = import_expr['asset']
+	log('import "%s"' % impline)
+	print('import "%s"' % impline)
+
+	# (!) right here, before calling "do_import" (!)
+	att = attributes_get()
+	# (!) ^^
+
+	abspath = import_abspath(impline, ext='.cm')
+	if abspath == None:
+		error("module %s not found" % impline, import_expr)
+		fatal("cannot import module")
+		return None
+
+
+	global included_modules
+	if abspath in included_modules:
+		# already imported
+		m = included_modules[abspath]
+	else:
+		m = translate(abspath, nodef=True)
+		included_modules[abspath] = m
+
+
+	# 1. НЕ добавляем символы из модуля в текущий
+	# тк поиск символа идет рекурсивно по всем импортам
+	#module['context'].merge(m['context'])	#!
+
+	# 1. добавляем проимпортированный модуль в список нашего импорта
+
+	# но сперва проверим нет ли его уже среди импортированных модулей
+	for imported_module in module['imports']:
+		if imported_module['source_info']['path'] == m['source_info']['path']:
+			error("attempt to include module twice", import_expr)
+
+	if m != None:
+		module['imports'].append(m)
+
+	# 2. А в нашем модуле добавляем директиву инклуда
+	directive = {
+		'isa': 'directive',
+		'kind': 'import',
+		'str': impline,			# ex: "libc/stdio"
+		'c_name': impline + '.h',  # ex: "libc/stdio.h"
+		'att': att,
+		'module': m, # ссылка на сам модуль (для not_included)
+		'local': True
+	}
+
+	#do_attributes(directive) @^^
+	return directive
+
+
+
+
+def proc(ast, source_info, nodef=False):
 	global skipp, production, old_production
 
 	global properties
@@ -2650,47 +2771,38 @@ def proc(ast, source_info):
 	# do imports before
 	for x in ast:
 		isa = x['isa']
-		kind = x['kind']
-		if isa == 'ast_attribute':
-			kind = x['kind']
-			if kind == 'import':
-				y = do_import(x)
-				module_append(y)
+		if isa == 'ast_import':
+			y = do_importing(x)
+			#y = do_import(x)
+			#module_append(y)
+
+			# Для того чтобы CM backend печатал import директиву
+			impline = x['expr']['str']
+			import_directive = {
+				'isa': 'directive',
+				'kind': 'import',
+				'str': impline,
+				'c_name': impline + '.h',
+				'att': [],
+				'module': module, # ссылка на сам модуль (для not_included)
+				'local': True,
+				'nl': 1,
+				'ti': x['expr']['ti']
+			}
+			module_append(import_directive)
 
 		elif isa == 'ast_directive':
 			do_directive(x)
 			pass
 
+	""""if nodef:
+		print("----NODEF")
+		inc(ast)
+		pass
+	else:"""
 	# do pre!
-	pre(ast) ##
+	pre(ast, nodef=nodef) ##
 
-
-	for x in ast:
-		isa = x['isa']
-		kind = x['kind']
-
-		y = None
-
-		if not production:
-			if isa != 'ast_attribute':
-				continue
-			elif not kind in ['elseif', 'else', 'endif']:
-				continue
-
-		if isa == 'ast_comment':
-			if kind == 'line': y = comm_line(x)
-			elif kind == 'block': y = comm_block(x)
-
-		elif isa == 'ast_attribute':
-			y = do_attribute(x)
-
-
-		if y == None:
-			continue
-
-		y['nl'] = x['nl']
-
-		module_append(y)
 
 	m = module
 	module = old_module
@@ -2702,8 +2814,8 @@ imp_paths = []
 
 # получает строку импорта (и неявно глобальный контекст)
 # и возвращает полный путь к модулю
-def import_abspath(s):
-	s = s + ".hm"
+def import_abspath(s, ext='.hm'):
+	s = s + ext
 
 	is_local = s[0:2] == './' or s[0:3] == '../'
 
@@ -2737,7 +2849,7 @@ def import_abspath(s):
 
 
 
-def translate(srcname):
+def translate(srcname, nodef=False):
 	assert(srcname != None)
 	assert(srcname != "")
 
@@ -2768,7 +2880,7 @@ def translate(srcname):
 	if ast == None:
 		return None
 
-	m = proc(ast, source_info)
+	m = proc(ast, source_info, nodef=nodef)
 
 	env_current_file_abspath = old_env_current_file_abspath
 	env_current_file_dir = old_env_current_file_dir

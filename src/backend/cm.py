@@ -857,10 +857,10 @@ def print_def_const(x):
 
 
 def print_import(x):
-	s = x['str']
-	if 'c-no-print' in x['att']:
-		out("@attribute(\"c-no-print\")\n")
-	out("import \"%s\"" % s)
+	#s = x['str']
+	#if 'c-no-print' in x['att']:
+	#	out("@attribute(\"c-no-print\")\n")
+	out("import \"%s\"" % x['str'])
 
 
 def print_directive(x):
