@@ -233,6 +233,9 @@ class Parser:
 
 	def check_is_type(self):
 		if self.is_identifier():
+			if self.nextok() == '::':
+				self.skip()
+				self.skip()
 			token = self.gettok()
 			if token[0].isupper():
 				return True
@@ -386,7 +389,10 @@ class Parser:
 
 		elif self.ctok_class() == 'id':
 			id = self.identifier() # type by Name
-			t = {'isa': 'type', 'kind': 'id', 'id': id, 'ti': ti}
+			t = {'isa': 'type', 'kind': 'name', 'id': id, 'ti': ti}
+			if self.match('::'):
+				id2 = self.identifier()
+				t['id2'] = id2
 
 		t['attributes'] = attributes
 		return t
@@ -931,11 +937,6 @@ class Parser:
 		elif self.ctok_class() == 'id':
 			id = self.identifier()
 
-			if self.match("::"):
-				id2 = self.identifier()
-				return {'isa': 'ast_value', 'kind': 'ns', 'ids': [id, id2], 'ti': ti}
-
-
 			if id['str'] == '__va_arg':
 				self.match("(")
 				v = self.expr_value()
@@ -950,9 +951,16 @@ class Parser:
 					'ti': ti
 				}
 
+			xx = {'isa': 'ast_value', 'kind': 'name', 'id': id, 'ti': ti}
+
+			ti2 = self.ti()
+			if self.match("::"):
+				id2 = self.identifier()
+				xx['id2'] = id2
+
 
 			#if id['str'][0].islower():
-			return {'isa': 'ast_value', 'kind': 'id', 'id': id, 'ti': ti}
+			return xx
 			#else:
 			#	return {'isa': 'ast_value', 'kind': 'id', 'id': id, 'ti': ti}
 

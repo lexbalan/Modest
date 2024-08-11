@@ -20,6 +20,8 @@ func main() -> Int {
 	let s = mid(a, b)
 	printf("s = %d\n", s)
 
+	var xx: sub::Int
+
 	//var arr = getArr()
 	//arrayShow(&arr, 10)
 

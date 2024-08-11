@@ -38,6 +38,8 @@ Int main()
 	const Int s = mid(a, b);
 	printf("s = %d\n", s);
 
+	Int xx;
+
 	//var arr = getArr()
 	//arrayShow(&arr, 10)
 

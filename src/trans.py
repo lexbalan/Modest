@@ -416,11 +416,12 @@ def do_field(x):
 # Do Type
 #
 
-def do_type_id(t):
+def do_type_name(t):
 	id_str = t['id']['str']
+	if 'id2' in t:
+		id_str = t['id2']['str']
 	tx = type_get(id_str)
 	if tx == None:
-
 		global pre_mode
 		if pre_mode:
 			pre_def(id_str)
@@ -578,8 +579,9 @@ def do_type(x):
 	for a in x['attributes']:
 		do_attribute(a)
 
+	t = None
 	k = x['kind']
-	if k == 'id': t = do_type_id(x)
+	if k == 'name': t = do_type_name(x)
 	elif k == 'func': t = do_type_func(x)
 	elif k == 'pointer': t = do_type_pointer(x)
 	elif k == 'array': t = do_type_array(x)
@@ -1398,8 +1400,12 @@ def do_value_cons(x):
 
 undeclared_value_error = True
 
-def do_value_id(x):
+def do_value_name(x):
 	id_str = x['id']['str']
+
+	if 'id2' in x:
+		id_str = x['id2']['str']
+
 	v = value_get(id_str)
 
 	if v == None:
@@ -1589,6 +1595,7 @@ def do_value_unsafe(x):
 
 
 
+
 def do_rvalue(x):
 	v = do_value(x)
 	return value_load(v)
@@ -1601,7 +1608,7 @@ def do_value(x):
 
 	v = None
 
-	if k == 'id': v = do_value_id(x)
+	if k == 'name': v = do_value_name(x)
 	elif k == 'number': v = do_value_number(x)
 	elif k == 'string': v = do_value_string(x)
 	elif k == 'record': v = do_value_record(x)

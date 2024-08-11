@@ -152,6 +152,7 @@ define %Int @main() {
 	store %Int 5, %Int* %1
 	%2 = call %Int @mid(%Int 10, %Int 20)
 	call void (%Str8*, ...) @printf(%Str8* bitcast ([8 x i8]* @str6 to [0 x i8]*), %Int %2)
+	%3 = alloca %Int, align 4
 	;var arr = getArr()
 	;arrayShow(&arr, 10)
 	store %Int 12, %Int* @x
