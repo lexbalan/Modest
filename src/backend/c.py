@@ -1841,7 +1841,8 @@ def print_comment_line(x):
 
 
 def cdirectives(module):
-	for imported_module in module['imports']:
+	for im in module['imports']:
+		imported_module = module['imports'][im]
 		for obj in imported_module['text']:
 			if obj['isa'] == 'directive':
 				if obj['kind'] == 'c_include':

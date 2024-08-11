@@ -94,7 +94,8 @@ def deep_type_get(m, id_str):
 		return t
 
 	for imported_module in m['imports']:
-		t = deep_type_get(imported_module, id_str)
+		imp = m['imports'][imported_module]
+		t = deep_type_get(imp, id_str)
 		if t != None:
 			return t
 
@@ -108,7 +109,8 @@ def deep_value_get(m, id_str):
 		return v
 
 	for imported_module in m['imports']:
-		v = deep_value_get(imported_module, id_str)
+		imp = m['imports'][imported_module]
+		v = deep_value_get(imp, id_str)
 		if v != None:
 			return v
 
@@ -1986,10 +1988,9 @@ def do_stmt_block(x):
 
 
 
-included_modules = {}
+import_cache = {}
 def do_import(x):
 	import_expr = do_value_immediate_string(x['expr'])
-
 	if value_is_bad(import_expr):
 		return None
 
@@ -2007,26 +2008,7 @@ def do_import(x):
 		fatal("cannot import module")
 		return None
 
-
-	global included_modules
-	if abspath in included_modules:
-		# already imported
-		m = included_modules[abspath]
-	else:
-		m = translate(abspath)
-		included_modules[abspath] = m
-
-
-	# 1. НЕ добавляем символы из модуля в текущий
-	# тк поиск символа идет рекурсивно по всем импортам
-	#module['context'].merge(m['context'])	#!
-
-	# 1. добавляем проимпортированный модуль в список нашего импорта
-
-	# но сперва проверим нет ли его уже среди импортированных модулей
-	for imported_module in module['imports']:
-		if imported_module['source_info']['path'] == m['source_info']['path']:
-			error("attempt to include module twice", import_expr)
+	m = translate(abspath)
 
 	if m != None:
 		module['imports'].append(m)
@@ -2714,29 +2696,18 @@ def do_importing(x):
 		fatal("cannot import module")
 		return None
 
-
-	global included_modules
-	if abspath in included_modules:
+	"""global import_cache
+	if abspath in import_cache:
 		# already imported
-		m = included_modules[abspath]
+		m = import_cache[abspath]
 	else:
 		m = translate(abspath, nodef=True)
-		included_modules[abspath] = m
+		import_cache[abspath] = m"""
 
 
-	# 1. НЕ добавляем символы из модуля в текущий
-	# тк поиск символа идет рекурсивно по всем импортам
-	#module['context'].merge(m['context'])	#!
-
-	# 1. добавляем проимпортированный модуль в список нашего импорта
-
-	# но сперва проверим нет ли его уже среди импортированных модулей
-	for imported_module in module['imports']:
-		if imported_module['source_info']['path'] == m['source_info']['path']:
-			error("attempt to include module twice", import_expr)
-
+	m = translate(abspath, nodef=True)
 	if m != None:
-		module['imports'].append(m)
+		module['imports'][impline] = m
 
 	# 2. А в нашем модуле добавляем директиву инклуда
 	directive = {
@@ -2774,7 +2745,7 @@ def proc(ast, source_info, nodef=False):
 		'id': "id",
 		'source_info': source_info,
 		#'imports': [foundation_module],  #
-		'imports': [],  #
+		'imports': {},  #
 		'strings': [],  # (used in LLVM backend)
 		'context': new_context,
 		'options': [],

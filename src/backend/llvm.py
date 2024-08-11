@@ -2260,7 +2260,8 @@ def print_module(m):
 
 
 	for imported_module in m['imports']:
-		print_module(imported_module)
+		imp = m['imports'][imported_module]
+		print_module(imp)
 
 
 	out("\n; -- SOURCE: %s\n" % m['source_info']['name'])
