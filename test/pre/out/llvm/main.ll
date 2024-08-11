@@ -100,7 +100,7 @@ break_2:
 }
 
 
-; -- SOURCE: /Users/alexbalan/p/Modest/test/pre/src/stdio.cm
+; -- SOURCE: /Users/alexbalan/p/Modest/test/pre/src/console.cm
 
 
 declare void @printf(%Str8* %s, ...)

@@ -28,6 +28,7 @@ C:
 	mcc -o $(CPREFIX)/main -mbackend=c $(INDIR)/main.cm
 	mcc -o $(CPREFIX)/sub -fheader -mbackend=c $(INDIR)/sub.cm
 	mcc -o $(CPREFIX)/sub2 -fheader -mbackend=c $(INDIR)/sub2.cm
+	mcc -o $(CPREFIX)/console -fheader -mbackend=c $(INDIR)/console.cm
 	CC $(CPREFIX)/main.c 
 
 

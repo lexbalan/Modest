@@ -87,45 +87,15 @@ def module_value_get(m, id_str):
 	return m['context'].value_get(id_str)
 
 
-# search type in module and submodules
-def deep_type_get(m, id_str):
-	t = module_type_get(m, id_str)
-	if t != None:
-		return t
-
-	for imported_module in m['imports']:
-		imp = m['imports'][imported_module]
-		t = deep_type_get(imp, id_str)
-		if t != None:
-			return t
-
-	return None
-
-
-# search value in module and submodules
-def deep_value_get(m, id_str):
-	v = module_value_get(m, id_str)
-	if v != None:
-		return v
-
-	for imported_module in m['imports']:
-		imp = m['imports'][imported_module]
-		v = deep_value_get(imp, id_str)
-		if v != None:
-			return v
-
-	return None
-
-
 
 def type_get(id_str):
 	global module
-	return deep_type_get(module, id_str)
+	return module_type_get(module, id_str)
 
 
 def value_get(id_str):
 	global module
-	return deep_value_get(module, id_str)
+	return module_value_get(module, id_str)
 
 
 def ctx_type_add(id_str, type):
@@ -420,9 +390,20 @@ def do_field(x):
 
 def do_type_name(t):
 	id_str = t['id']['str']
+	#if 'id2' in t:
+	#	id_str = t['id2']['str']
+
+	tx = None
 	if 'id2' in t:
-		id_str = t['id2']['str']
-	tx = type_get(id_str)
+		id2_str = t['id2']['str']
+		#print("GET TYPE FROM: %s" % id_str)
+		global module
+		m = module['imports'][id_str]
+		tx = module_type_get(m, id2_str)
+	else:
+		tx = type_get(id_str)
+
+	#tx = type_get(id_str)
 	if tx == None:
 		global pre_mode
 		if pre_mode:
@@ -1405,10 +1386,16 @@ undeclared_value_error = True
 def do_value_name(x):
 	id_str = x['id']['str']
 
+	v = None
 	if 'id2' in x:
-		id_str = x['id2']['str']
+		id2_str = x['id2']['str']
+		#print("GET VALUE FROM: %s" % id_str)
+		global module
+		m = module['imports'][id_str]
+		v = module_value_get(m, id2_str)
+	else:
+		v = value_get(id_str)
 
-	v = value_get(id_str)
 
 	if v == None:
 		global pre_mode
@@ -1988,48 +1975,6 @@ def do_stmt_block(x):
 
 
 
-import_cache = {}
-def do_import(x):
-	import_expr = do_value_immediate_string(x['expr'])
-	if value_is_bad(import_expr):
-		return None
-
-	# Literal string to python string
-	impline = import_expr['asset']
-	log('import "%s"' % impline)
-
-	# (!) right here, before calling "do_import" (!)
-	att = attributes_get()
-	# (!) ^^
-
-	abspath = import_abspath(impline)
-	if abspath == None:
-		error("module %s not found" % impline, import_expr)
-		fatal("cannot import module")
-		return None
-
-	m = translate(abspath)
-
-	if m != None:
-		module['imports'].append(m)
-
-	# 2. А в нашем модуле добавляем директиву инклуда
-	directive = {
-		'isa': 'directive',
-		'kind': 'import',
-		'str': impline,			# ex: "libc/stdio"
-		'c_name': impline + '.h',  # ex: "libc/stdio.h"
-		'att': att,
-		'module': m, # ссылка на сам модуль (для not_included)
-		'local': True
-	}
-
-	#do_attributes(directive) @^^
-	return directive
-
-
-
-
 def symbol_const(id, init_value):
 	const_value = value_const(id, init_value['type'], init_value, id['ti'])
 	const_value['att'].extend(init_value['att'])
@@ -2378,8 +2323,6 @@ def do_attribute(x):
 	args = x['args']
 
 	print("do_attribute('%s')" % kind)
-	#if kind == 'import':
-	#	return do_import(x)
 
 	"""if kind == 'if':
 		old_production = production
@@ -2684,7 +2627,7 @@ def do_importing(x):
 	# Literal string to python string
 	impline = import_expr['asset']
 	log('import "%s"' % impline)
-	print('import "%s"' % impline)
+	print('importing "%s"' % impline)
 
 	# (!) right here, before calling "do_import" (!)
 	att = attributes_get()
@@ -2707,6 +2650,7 @@ def do_importing(x):
 
 	m = translate(abspath, nodef=True)
 	if m != None:
+		print("ADDD " + impline)
 		module['imports'][impline] = m
 
 	# 2. А в нашем модуле добавляем директиву инклуда
@@ -2760,7 +2704,6 @@ def proc(ast, source_info, nodef=False):
 		isa = x['isa']
 		if isa == 'ast_import':
 			y = do_importing(x)
-			#y = do_import(x)
 			#module_append(y)
 
 			# Для того чтобы CM backend печатал import директиву

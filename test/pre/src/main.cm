@@ -2,23 +2,24 @@
 
 //import "libc/stdio"
 
-import "stdio"
+import "console"
 import "sub"
+import "sub2"
 
-@volatile @atomic var x: Int
+@volatile @atomic var x: sub::Int
 
-func main() -> Int {
-	printf("test\n")
+func main() -> sub::Int {
+	console::printf("test\n")
 
-	printf("%s", *Str8 subName)
-	printf("%s", *Str8 sub2Name)
+	console::printf("%s", *Str8 sub::subName)
+	console::printf("%s", *Str8 sub2::sub2Name)
 
-	var y = default
+	var y = sub::default
 
 	let a = 10
 	let b = 20
 	let s = mid(a, b)
-	printf("s = %d\n", s)
+	console::printf("s = %d\n", s)
 
 	var xx: sub::Int
 
@@ -33,11 +34,11 @@ func main() -> Int {
 
 @property("c_alias", "arrshow")
 @property("cm_alias", "arrshow")
-func arrayShow(array: *Arr, size: Int) -> Unit {
-	printf("arrayShow:\n")
+func arrayShow(array: *Arr, size: sub::Int) -> Unit {
+	console::printf("arrayShow:\n")
 	var i = 0
 	while i < 10 {
-		printf("array[%d] = %d\n", i, array[i])
+		console::printf("array[%d] = %d\n", i, array[i])
 		++i
 	}
 }
@@ -50,7 +51,7 @@ type Node record {
 }
 
 let arrSize = 10
-type Arr [arrSize]Int
+type Arr [arrSize]sub::Int
 
 /*func getArr() -> Arr {
 	return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -61,9 +62,9 @@ type Arr [arrSize]Int
 //@property("type.c_alias", "int")
 //type Int Int32
 
-func mid(a: Int, b: Int) -> Int {
+func mid(a: sub::Int, b: sub::Int) -> sub::Int {
 	let sum = a + b
-	return div(sum, 2)
+	return sub::div(sum, 2)
 }
 
 

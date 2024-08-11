@@ -1,6 +1,7 @@
 
-import "stdio"
+import "console"
 import "sub"
+import "sub2"
 
 type Data Nat32
 

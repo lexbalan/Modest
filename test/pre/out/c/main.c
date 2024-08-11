@@ -8,8 +8,9 @@
 #include "./sub2.h"
 
 typedef struct Node Node;
-#include "stdio.h"
+#include "console.h"
 #include "sub.h"
+#include "sub2.h"
 
 typedef uint32_t Data;
 
