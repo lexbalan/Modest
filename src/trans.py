@@ -2392,7 +2392,7 @@ def do_attribute(x):
 	#if kind == 'import':
 	#	return do_import(x)
 
-	if kind == 'if':
+	"""if kind == 'if':
 		old_production = production
 		c = do_value_immediate(args[0])
 
@@ -2470,7 +2470,10 @@ def do_attribute(x):
 		module['context'].value_undef(id_str)
 		module['context'].type_undef(id_str)
 
-	elif kind in 'attribute':
+	el"""
+
+	if kind in 'attribute':
+		print("ATT: " + args[0]['str'])
 		attribute_add(args[0]['str'])
 	elif kind == 'property':
 		property_add(args[0]['str'], args[1]['str'])
@@ -2608,6 +2611,10 @@ def pre(ast, nodef):
 		kind = x['kind']
 
 		if kind == 'func':
+			if 'attributes' in x:
+				for a in x['attributes']:
+					do_attribute(a)
+
 			#info("scan func %s" % x['id']['str'], x['ti'])
 			ftype = do_type(x['type'])
 			sym = symbol_func(x['id'], ftype, x['ti'])
@@ -2624,14 +2631,16 @@ def pre(ast, nodef):
 					'ti': x['ti']
 				})
 
-			module_append({
+			y = {
 				'isa': 'directive',
 				'kind': 'cdecl_func',
 				'symbol': sym,
 				'att': [],
 				'nl': 1,
 				'ti': x['ti']
-			})
+			}
+			add_spices(y)
+			module_append(y)
 
 
 	if not nodef:

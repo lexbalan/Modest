@@ -4,13 +4,10 @@ import "sub2"
 $pragma c_include "./sub2.h"
 //$pragma not_included
 
-
 type Int Int32
 
 let subName = "SubName"
 let default = Int 5
-
-func printf(s: *Str8, ...)
 
 
 @inline

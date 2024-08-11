@@ -6,22 +6,18 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include <stdarg.h>
 
 #include "./sub2.h"
 
-
+#include "sub2.h"
 
 
 typedef int32_t Int;
 #define subName  "SubName"
 #define default  (5)
 
-void printf(char *s, ...);
-
-int32_t div(int32_t a, int32_t b);
-void printf(char *s, ...);
-int32_t div(int32_t a, int32_t b)
+Int div(Int a, Int b);
+Int div(Int a, Int b)
 {
 	return a / b;
 }

@@ -4,9 +4,11 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include <stdio.h>
 #include "./sub2.h"
 
 typedef struct Node Node;
+#include "stdio.h"
 #include "sub.h"
 
 typedef uint32_t Data;
@@ -16,15 +18,15 @@ struct Node {
 	Data *data;
 };
 #define arrSize  10
-typedef int32_t * Arr;
-static int32_t x;
+typedef Int * Arr;
+static Int x;
 
-int32_t main();
+Int main();
 
-void arrshow(int32_t *array, int32_t size);
+void arrayShow(Int *array, Int size);
 
-int32_t mid(int32_t a, int32_t b);
-int32_t main()
+Int mid(Int a, Int b);
+Int main()
 {
 	printf("test\n");
 
@@ -33,7 +35,7 @@ int32_t main()
 
 	#define a  10
 	#define b  20
-	const int32_t s = mid(a, b);
+	const Int s = mid(a, b);
 	printf("s = %d\n", s);
 
 	//var arr = getArr()
@@ -46,7 +48,7 @@ int32_t main()
 
 #undef a
 #undef b
-void arrshow(int32_t *array, int32_t size)
+void arrayShow(Int *array, Int size)
 {
 	printf("arrayShow:\n");
 	int32_t i;
@@ -56,9 +58,9 @@ void arrshow(int32_t *array, int32_t size)
 		i = i + 1;
 	}
 }
-int32_t mid(int32_t a, int32_t b)
+Int mid(Int a, Int b)
 {
-	const int32_t sum = a + b;
+	const Int sum = a + b;
 	return div(sum, 2);
 }
 

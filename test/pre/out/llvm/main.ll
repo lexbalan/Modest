@@ -100,6 +100,12 @@ break_2:
 }
 
 
+; -- SOURCE: /Users/alexbalan/p/Modest/test/pre/src/stdio.cm
+
+
+declare void @printf(%Str8* %s, ...)
+
+
 ; -- SOURCE: /Users/alexbalan/p/Modest/test/pre/src/sub2.cm
 
 
@@ -110,8 +116,7 @@ break_2:
 
 %Int = type i32;
 
-declare void @printf(%Str8* %s, ...)
-declare i32 @div(i32 %a, i32 %b)
+declare %Int @div(%Int %a, %Int %b)
 
 
 ; -- SOURCE: src/main.cm
@@ -134,30 +139,26 @@ declare i32 @div(i32 %a, i32 %b)
 
 
 
-%Arr = type [10 x i32];
+%Arr = type [10 x %Int];
 
-@x = global i32 zeroinitializer
+@x = global %Int zeroinitializer
 
 
-define i32 @main() {
+define %Int @main() {
 	call void (%Str8*, ...) @printf(%Str8* bitcast ([6 x i8]* @str1 to [0 x i8]*))
 	call void (%Str8*, ...) @printf(%Str8* bitcast ([3 x i8]* @str2 to [0 x i8]*), %Str8* bitcast ([8 x i8]* @str3 to [0 x i8]*))
 	call void (%Str8*, ...) @printf(%Str8* bitcast ([3 x i8]* @str4 to [0 x i8]*), %Str8* bitcast ([8 x i8]* @str5 to [0 x i8]*))
-	%1 = alloca i32, align 4
-	store i32 5, i32* %1
-	%2 = call i32 @mid(i32 10, i32 20)
-	call void (%Str8*, ...) @printf(%Str8* bitcast ([8 x i8]* @str6 to [0 x i8]*), i32 %2)
-	%3 = alloca %Arr, align 4; alloca memory for return value
-	%4 = alloca %Arr
-	call void @getArr(%Arr* %4)
-	%5 = load %Arr, %Arr* %4
-	store %Arr %5, %Arr* %3
-	call void @arrayShow(%Arr* %3, i32 10)
-	store i32 12, i32* @x
-	ret i32 0
+	%1 = alloca %Int, align 4
+	store %Int 5, %Int* %1
+	%2 = call %Int @mid(%Int 10, %Int 20)
+	call void (%Str8*, ...) @printf(%Str8* bitcast ([8 x i8]* @str6 to [0 x i8]*), %Int %2)
+	;var arr = getArr()
+	;arrayShow(&arr, 10)
+	store %Int 12, %Int* @x
+	ret %Int 0
 }
 
-define void @arrayShow(%Arr* %array, i32 %size) {
+define void @arrayShow(%Arr* %array, %Int %size) {
 	call void (%Str8*, ...) @printf(%Str8* bitcast ([12 x i8]* @str7 to [0 x i8]*))
 	%1 = alloca i32, align 4
 	store i32 0, i32* %1
@@ -170,8 +171,8 @@ body_1:
 	%4 = load i32, i32* %1
 	%5 = load i32, i32* %1
 	%6 = getelementptr inbounds %Arr, %Arr* %array, i32 0, i32 %5
-	%7 = load i32, i32* %6
-	call void (%Str8*, ...) @printf(%Str8* bitcast ([16 x i8]* @str8 to [0 x i8]*), i32 %4, i32 %7)
+	%7 = load %Int, %Int* %6
+	call void (%Str8*, ...) @printf(%Str8* bitcast ([16 x i8]* @str8 to [0 x i8]*), i32 %4, %Int %7)
 	%8 = load i32, i32* %1
 	%9 = add i32 %8, 1
 	store i32 %9, i32* %1
@@ -180,25 +181,10 @@ break_1:
 	ret void
 }
 
-define void @getArr(%Arr* noalias sret(%Arr) %0) {
-	%2 = insertvalue %Arr zeroinitializer, i32 0, 0
-	%3 = insertvalue %Arr %2, i32 1, 1
-	%4 = insertvalue %Arr %3, i32 2, 2
-	%5 = insertvalue %Arr %4, i32 3, 3
-	%6 = insertvalue %Arr %5, i32 4, 4
-	%7 = insertvalue %Arr %6, i32 5, 5
-	%8 = insertvalue %Arr %7, i32 6, 6
-	%9 = insertvalue %Arr %8, i32 7, 7
-	%10 = insertvalue %Arr %9, i32 8, 8
-	%11 = insertvalue %Arr %10, i32 9, 9
-	store %Arr %11, %Arr* %0
-	ret void
-}
-
-define i32 @mid(i32 %a, i32 %b) {
-	%1 = add i32 %a, %b
-	%2 = call i32 @div(i32 %1, i32 2)
-	ret i32 %2
+define %Int @mid(%Int %a, %Int %b) {
+	%1 = add %Int %a, %b
+	%2 = call %Int @div(%Int %1, %Int 2)
+	ret %Int %2
 }
 
 

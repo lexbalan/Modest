@@ -2,6 +2,7 @@
 
 //import "libc/stdio"
 
+import "stdio"
 import "sub"
 
 @volatile @atomic var x: Int
@@ -28,8 +29,8 @@ func main() -> Int {
 }
 
 
-@property("value.c_alias", "arrshow")
-@property("value.cm_alias", "arrshow")
+@property("c_alias", "arrshow")
+@property("cm_alias", "arrshow")
 func arrayShow(array: *Arr, size: Int) -> Unit {
 	printf("arrayShow:\n")
 	var i = 0

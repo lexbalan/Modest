@@ -1,4 +1,5 @@
 
+import "stdio"
 import "sub"
 
 type Data Nat32
@@ -10,7 +11,6 @@ type Node record {
 let arrSize = 10
 type Arr [arrSize]Int
 var x: Int
-
 
 
 
@@ -27,23 +27,20 @@ func main() -> Int {
 	let s = mid(a, b)
 	printf("s = %d\n", s)
 
-	var arr: Arr = getArr()
-	arrshow(&arr, 10)
+	//var arr = getArr()
+	//arrayShow(&arr, 10)
 
 	x = 12
 
 	return 0
 }
-func arrshow(array: *Arr, size: Int) -> Unit {
+func arrayShow(array: *Arr, size: Int) -> Unit {
 	printf("arrayShow:\n")
 	var i: Int32 = 0
 	while i < 10 {
 		printf("array[%d] = %d\n", i, array[i])
 		i = i + 1
 	}
-}
-func getArr() -> Arr {
-	return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 }
 func mid(a: Int, b: Int) -> Int {
 	let sum = a + b

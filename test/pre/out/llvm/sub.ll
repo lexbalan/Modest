@@ -26,10 +26,6 @@ target triple = "arm64-apple-macosx12.0.0"
 %Str16 = type [0 x %Char16]
 %Str32 = type [0 x %Char32]
 %VA_List = type i8*
-declare void @llvm.va_start(i8*)
-declare void @llvm.va_copy(i8*, i8*)
-declare void @llvm.va_end(i8*)
-
 declare void @llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)
 declare void @llvm.memset.p0.i32(i8*, i8, i32, i1)
 
@@ -116,11 +112,9 @@ break_2:
 
 
 
-declare void @printf(%Str8* %s, ...)
-
-define i32 @div(i32 %a, i32 %b) {
-	%1 = sdiv i32 %a, %b
-	ret i32 %1
+define %Int @div(%Int %a, %Int %b) {
+	%1 = sdiv %Int %a, %b
+	ret %Int %1
 }
 
 
