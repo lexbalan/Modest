@@ -2322,103 +2322,23 @@ def do_attribute(x):
 	kind = x['kind']
 	args = x['args']
 
-	print("do_attribute('%s')" % kind)
+	#print("do_attribute('%s')" % kind)
 
-	"""if kind == 'if':
-		old_production = production
-		c = do_value_immediate(args[0])
-
-		if value_is_bad(c):
-			return None
-
-		if not hlir_type.type_is_bool(c['type']):
-			error("expected bool value", c)
-			return None
-
-		cond = c['asset'] != 0
-
-		production = cond
-		if cond:
-			old_skipp = skipp
-			skipp = True  # skip another branches
-
-	elif kind == 'elseif':
-		production = False
-		c = do_value_immediate(args[0])
-
-		if value_is_bad(c):
-			return None
-
-		if not hlir_type.type_is_bool(c['type']):
-			error("expected bool value", c)
-			return None
-
-		cond = c['asset'] != 0
-
-		if cond and not skipp:
-			production = True
-			skipp = True  # skip another branches
-
-	elif kind == 'else':
-		production = not skipp
-
-	elif kind == 'endif':
-		skipp = old_skipp  # do not skip branches (for new if)
-		production = old_production
-
-	elif kind == 'info':
-		v = do_value_immediate_string(args[0])
-
-		if value_is_bad(v):
-			fatal("unsuitable value", x['ti'])
-
-		msg = v['asset']
-		info(msg, x['ti'])
-
-	elif kind == 'warning':
-		v = do_value_immediate_string(args[0])
-
-		if value_is_bad(v):
-			fatal("unsuitable value", x['ti'])
-
-		msg = v['asset']
-		warning(msg, x['ti'])
-
-	elif kind == 'error':
-		v = do_value_immediate_string(args[0])
-
-		if value_is_bad(v):
-			fatal("unsuitable value", x['ti'])
-
-		msg = v['asset']
-		error(msg, x['ti'])
-		exit(-1)
-
-	elif kind == 'undef':
-		v = do_value_immediate_string(args[0])
-		if value_is_bad(v):
-			fatal("unsuitable value", x['ti'])
-		id_str = v['asset']
-		module['context'].value_undef(id_str)
-		module['context'].type_undef(id_str)
-
-	el"""
-
-	if kind in 'attribute':
-		print("ATT: " + args[0]['str'])
+	if kind == 'attribute':
 		attribute_add(args[0]['str'])
 	elif kind == 'property':
 		property_add(args[0]['str'], args[1]['str'])
 	elif kind == 'feature':
 		feature_add(args[0]['str'])
-	#elif kind == 'c_include':
-	#	c_include(args[0]['str'])
 	elif kind == 'const':
-		print("CONST")
+		#print("CONST")
+		pass
 	elif kind == 'volatile':
-		print("VOLATILE")
+		#print("VOLATILE")
+		pass
 	elif kind == 'atomic':
-		print("ATOMIC")
+		#print("ATOMIC")
+		pass
 
 	return None
 
@@ -2617,6 +2537,87 @@ def do_directive(x):
 			c_include(s1)
 		pass
 
+	"""if kind == 'if':
+		old_production = production
+		c = do_value_immediate(args[0])
+
+		if value_is_bad(c):
+			return None
+
+		if not hlir_type.type_is_bool(c['type']):
+			error("expected bool value", c)
+			return None
+
+		cond = c['asset'] != 0
+
+		production = cond
+		if cond:
+			old_skipp = skipp
+			skipp = True  # skip another branches
+
+	elif kind == 'elseif':
+		production = False
+		c = do_value_immediate(args[0])
+
+		if value_is_bad(c):
+			return None
+
+		if not hlir_type.type_is_bool(c['type']):
+			error("expected bool value", c)
+			return None
+
+		cond = c['asset'] != 0
+
+		if cond and not skipp:
+			production = True
+			skipp = True  # skip another branches
+
+	elif kind == 'else':
+		production = not skipp
+
+	elif kind == 'endif':
+		skipp = old_skipp  # do not skip branches (for new if)
+		production = old_production
+
+	elif kind == 'info':
+		v = do_value_immediate_string(args[0])
+
+		if value_is_bad(v):
+			fatal("unsuitable value", x['ti'])
+
+		msg = v['asset']
+		info(msg, x['ti'])
+
+	elif kind == 'warning':
+		v = do_value_immediate_string(args[0])
+
+		if value_is_bad(v):
+			fatal("unsuitable value", x['ti'])
+
+		msg = v['asset']
+		warning(msg, x['ti'])
+
+	elif kind == 'error':
+		v = do_value_immediate_string(args[0])
+
+		if value_is_bad(v):
+			fatal("unsuitable value", x['ti'])
+
+		msg = v['asset']
+		error(msg, x['ti'])
+		exit(-1)
+
+	elif kind == 'undef':
+		v = do_value_immediate_string(args[0])
+		if value_is_bad(v):
+			fatal("unsuitable value", x['ti'])
+		id_str = v['asset']
+		module['context'].value_undef(id_str)
+		module['context'].type_undef(id_str)
+
+	el"""
+
+
 
 def do_importing(x):
 	import_expr = do_value_immediate_string(x['expr'])
@@ -2650,14 +2651,13 @@ def do_importing(x):
 
 	m = translate(abspath, nodef=True)
 	if m != None:
-		print("ADDD " + impline)
 		module['imports'][impline] = m
 
 	# 2. А в нашем модуле добавляем директиву инклуда
 	directive = {
 		'isa': 'directive',
 		'kind': 'import',
-		'str': impline,			# ex: "libc/stdio"
+		'str': impline,			   # ex: "libc/stdio"
 		'c_name': impline + '.h',  # ex: "libc/stdio.h"
 		'att': att,
 		'module': m, # ссылка на сам модуль (для not_included)

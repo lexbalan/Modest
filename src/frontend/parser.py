@@ -1508,54 +1508,8 @@ class Parser:
 
 
 		attributes = []
-
 		spaceline_cnt = 0
-		while not self.is_end():
-			x = None
-			ti = self.ti()
-			if self.match('\n'):
-				spaceline_cnt = spaceline_cnt + 1
-				continue
-			elif self.token_class_is('comment-block'):
-				x = self.parse_comment_block()
-			elif self.token_class_is('comment-line'):
-				x = self.parse_comment_line()
-			elif self.token_class_is('attribute'):
-				a = self.parse_attribute()
-				attributes.append(a)
-				continue
-			elif self.token_class_is('directive'):
-				x = self.parse_directive()
-			# we can do const definition before import?
-			elif self.match('let'):
-				x = self.parse_def_const()
 
-			elif self.match('import'):
-				x = self.parse_import()
-
-			if x == None:
-				break
-
-			if isinstance(x, list):
-				x[0]['nl'] = spaceline_cnt
-				# у остальных #nl = 1 (!)
-				for xx in x[1:]:
-					xx['nl'] = 1
-
-				spaceline_cnt = 0
-				output.extend(x)
-
-			else:
-				x['nl'] = spaceline_cnt
-				spaceline_cnt = 0
-
-				x['attributes'] = attributes
-				attributes = []
-
-				output.append(x)
-
-
-		attributes = []
 		while not self.is_end():
 			#export = self.match('export')
 			#extern = self.match('extern')
@@ -1584,7 +1538,6 @@ class Parser:
 				x = self.parse_directive()
 
 			elif self.match('import'):
-				warning("import attribute must be placed before definitions", ti)
 				x = self.parse_import()
 
 			else:

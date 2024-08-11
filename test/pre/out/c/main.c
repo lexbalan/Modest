@@ -20,6 +20,7 @@ struct Node {
 };
 #define arrSize  10
 typedef Int * Arr;
+#define print  (&printf)
 static Int x;
 
 Int main();
@@ -29,7 +30,7 @@ void arrayShow(Int *array, Int size);
 Int mid(Int a, Int b);
 Int main()
 {
-	printf("test\n");
+	((void (*) (char *s, ...))print)("test\n");
 
 	printf("%s", (char *)subName);
 	printf("%s", (char *)sub2Name);

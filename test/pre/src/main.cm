@@ -6,10 +6,12 @@ import "console"
 import "sub"
 import "sub2"
 
+let print = &console::printf
+
 @volatile @atomic var x: sub::Int
 
 func main() -> sub::Int {
-	console::printf("test\n")
+	print("test\n")
 
 	console::printf("%s", *Str8 sub::subName)
 	console::printf("%s", *Str8 sub2::sub2Name)

@@ -12,7 +12,4 @@
 
 
 
-void printf(char *s, ...);
-void printf(char *s, ...);
-
 #endif /* CONSOLE_H */

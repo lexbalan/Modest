@@ -11,12 +11,13 @@ type Node record {
 }
 let arrSize = 10
 type Arr [arrSize]Int
+let print = &printf
 var x: Int
 
 
 
 func main() -> Int {
-	printf("test\n")
+	print("test\n")
 
 	printf("%s", *Str8 subName)
 	printf("%s", *Str8 sub2Name)
