@@ -54,7 +54,7 @@ pre_mode = False
 
 cfunc = None	# current function
 
-root_context = None
+root_symtab = None
 
 module = None
 
@@ -80,11 +80,11 @@ def module_strings_add(v):
 
 # search type in module
 def module_type_get(m, id_str):
-	return m['context'].type_get(id_str)
+	return m['symtab'].type_get(id_str)
 
 # search value in module
 def module_value_get(m, id_str):
-	return m['context'].value_get(id_str)
+	return m['symtab'].value_get(id_str)
 
 
 def type_get(id_str):
@@ -99,25 +99,25 @@ def value_get(id_str):
 
 def ctx_type_add(id_str, type):
 	global module
-	module['context'].type_add(id_str, type)
+	module['symtab'].type_add(id_str, type)
 
 
 
 # add value (to current context)
 def ctx_value_add(id_str, value):
 	global module
-	module['context'].value_add(id_str, value)
+	module['symtab'].value_add(id_str, value)
 
 
 def ctx_value_get(id_str):
 	global module
-	return module['context'].value_get(id_str, recursive=True)
+	return module['symtab'].value_get(id_str, recursive=True)
 
 
 # искать ТОЛЬКО внутри текущего контекста (блока)
 def ctx_value_get_shallow(id_str):
 	global module
-	return module['context'].value_get(id_str, recursive=False)
+	return module['symtab'].value_get(id_str, recursive=False)
 
 
 def module_append(definition):
@@ -222,51 +222,51 @@ def init():
 	valueTrue = value_bool_create(1)
 	valueFalse = value_bool_create(0)
 
-	global root_context
+	global root_symtab
 	# init main context
-	root_context = Symtab()
+	root_symtab = Symtab()
 
-	root_context.type_add('Unit', foundation.typeUnit)
-	root_context.type_add('Bool', foundation.typeBool)
+	root_symtab.type_add('Unit', foundation.typeUnit)
+	root_symtab.type_add('Bool', foundation.typeBool)
 
-	root_context.type_add('Byte', foundation.typeByte)
+	root_symtab.type_add('Byte', foundation.typeByte)
 
-	root_context.type_add('Char8', foundation.typeChar8)
-	root_context.type_add('Char16', foundation.typeChar16)
-	root_context.type_add('Char32', foundation.typeChar32)
+	root_symtab.type_add('Char8', foundation.typeChar8)
+	root_symtab.type_add('Char16', foundation.typeChar16)
+	root_symtab.type_add('Char32', foundation.typeChar32)
 
-	root_context.type_add('Int8', foundation.typeInt8)
-	root_context.type_add('Int16', foundation.typeInt16)
-	root_context.type_add('Int32', foundation.typeInt32)
-	root_context.type_add('Int64', foundation.typeInt64)
-	root_context.type_add('Int128', foundation.typeInt128)
+	root_symtab.type_add('Int8', foundation.typeInt8)
+	root_symtab.type_add('Int16', foundation.typeInt16)
+	root_symtab.type_add('Int32', foundation.typeInt32)
+	root_symtab.type_add('Int64', foundation.typeInt64)
+	root_symtab.type_add('Int128', foundation.typeInt128)
 
-	root_context.type_add('Nat8', foundation.typeNat8)
-	root_context.type_add('Nat16', foundation.typeNat16)
-	root_context.type_add('Nat32', foundation.typeNat32)
-	root_context.type_add('Nat64', foundation.typeNat64)
-	root_context.type_add('Nat128', foundation.typeNat128)
+	root_symtab.type_add('Nat8', foundation.typeNat8)
+	root_symtab.type_add('Nat16', foundation.typeNat16)
+	root_symtab.type_add('Nat32', foundation.typeNat32)
+	root_symtab.type_add('Nat64', foundation.typeNat64)
+	root_symtab.type_add('Nat128', foundation.typeNat128)
 
-	#root_context.type_add('Float16', foundation.typeFloat16)
-	root_context.type_add('Float32', foundation.typeFloat32)
-	root_context.type_add('Float64', foundation.typeFloat64)
+	#root_symtab.type_add('Float16', foundation.typeFloat16)
+	root_symtab.type_add('Float32', foundation.typeFloat32)
+	root_symtab.type_add('Float64', foundation.typeFloat64)
 
-	#root_context.type_add('Decimal32', foundation.typeDecimal32)
-	#root_context.type_add('Decimal64', foundation.typeDecimal64)
-	#root_context.type_add('Decimal128', foundation.typeDecimal128)
+	#root_symtab.type_add('Decimal32', foundation.typeDecimal32)
+	#root_symtab.type_add('Decimal64', foundation.typeDecimal64)
+	#root_symtab.type_add('Decimal128', foundation.typeDecimal128)
 
-	root_context.type_add('Str8', foundation.typeStr8)
-	root_context.type_add('Str16', foundation.typeStr16)
-	root_context.type_add('Str32', foundation.typeStr32)
+	root_symtab.type_add('Str8', foundation.typeStr8)
+	root_symtab.type_add('Str16', foundation.typeStr16)
+	root_symtab.type_add('Str32', foundation.typeStr32)
 
-	root_context.type_add('Ptr', foundation.typeFreePointer)
+	root_symtab.type_add('Ptr', foundation.typeFreePointer)
 
-	root_context.type_add('VA_List', foundation.typeVA_List)
+	root_symtab.type_add('VA_List', foundation.typeVA_List)
 
 
-	root_context.value_add('nil', valueNil)
-	root_context.value_add('true', valueTrue)
-	root_context.value_add('false', valueFalse)
+	root_symtab.value_add('nil', valueNil)
+	root_symtab.value_add('true', valueTrue)
+	root_symtab.value_add('false', valueFalse)
 
 
 	target_name = str(settings.get('target_name'))
@@ -316,14 +316,14 @@ def init_builtin_values():
 		hlir_initializer({'str': 'version'}, compilerVersion),
 	]
 	compiler = value_record_create(compiler_initializers)
-	root_context.value_add('__compiler', compiler)
+	root_symtab.value_add('__compiler', compiler)
 
 
 	"""import platform
 	__platformSystem = value_string_create(platform.system())
-	root_context.value_add('__platformSystem', __platformSystem)
+	root_symtab.value_add('__platformSystem', __platformSystem)
 	__platformRelease = value_string_create(platform.release())
-	root_context.value_add('__platformRelease', __platformRelease)
+	root_symtab.value_add('__platformRelease', __platformRelease)
 
 	target_system_initializers = [
 		hlir_initializer({'str': 'name'}, compilerName),
@@ -358,7 +358,7 @@ def init_builtin_values():
 		hlir_initializer({'str': 'pointerWidth'}, __targetPointerWidth),
 	]
 	target = value_record_create(target_initializers)
-	root_context.value_add('__target', target)
+	root_symtab.value_add('__target', target)
 
 
 
@@ -414,7 +414,7 @@ def do_type_name(t):
 		error("undeclared type '%s'" % id_str, t['ti'])
 		# create fake alias for unknown type
 		tx = hlir_type.hlir_type_bad(t)
-		root_context.type_add(id_str, tx)
+		root_symtab.type_add(id_str, tx)
 	return tx
 
 
@@ -1960,7 +1960,7 @@ def do_stmt(x):
 
 def do_stmt_block(x):
 	global module
-	module['context'] = module['context'].branch(domain='local')
+	module['symtab'] = module['symtab'].branch(domain='local')
 
 	stmts = []
 	for stmt in x['stmts']:
@@ -1968,7 +1968,7 @@ def do_stmt_block(x):
 		if not hlir_stmt_is_bad(s):
 			stmts.append(s)
 
-	module['context'] = module['context'].parent_get()
+	module['symtab'] = module['symtab'].parent_get()
 
 	return hlir_stmt_block(stmts, ti=x['ti'], end_nl=x['end_nl'])
 
@@ -2232,7 +2232,7 @@ def def_func(x):
 	cfunc = fn
 
 	# create params context
-	module['context'] = module['context'].branch(domain='local')
+	module['symtab'] = module['symtab'].branch(domain='local')
 
 	params = func_type['params']
 	i = 0
@@ -2274,7 +2274,7 @@ def def_func(x):
 				warning("expected return operator at end", stmt['ti'])
 
 	# remove params context
-	module['context'] = module['context'].parent_get()
+	module['symtab'] = module['symtab'].parent_get()
 
 	cfunc = old_cfunc
 
@@ -2613,8 +2613,8 @@ def do_directive(x):
 		if value_is_bad(v):
 			fatal("unsuitable value", x['ti'])
 		id_str = v['asset']
-		module['context'].value_undef(id_str)
-		module['context'].type_undef(id_str)
+		module['symtab'].value_undef(id_str)
+		module['symtab'].type_undef(id_str)
 
 	el"""
 
@@ -2683,7 +2683,8 @@ def proc(ast, source_info, nodef=False):
 	old_module = module
 
 
-	new_context = root_context.branch()
+	symtab = root_symtab.branch()
+	#root_symtab = Symtab()
 
 	module = {
 		'isa': 'module',
@@ -2692,7 +2693,7 @@ def proc(ast, source_info, nodef=False):
 		#'imports': [foundation_module],  #
 		'imports': {},  #
 		'strings': [],  # (used in LLVM backend)
-		'context': new_context,
+		'symtab': symtab,
 		'options': [],
 		'records': [],
 		'anon_recs': [],  # anonymous records for C printer
