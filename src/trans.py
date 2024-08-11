@@ -2690,7 +2690,6 @@ def proc(ast, source_info, nodef=False):
 		'isa': 'module',
 		'id': "id",
 		'source_info': source_info,
-		#'imports': [foundation_module],  #
 		'imports': {},  #
 		'strings': [],  # (used in LLVM backend)
 		'symtab': symtab,
