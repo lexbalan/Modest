@@ -122,10 +122,10 @@ declare %Int @div(%Int %a, %Int %b)
 ; -- SOURCE: src/main.cm
 
 @str1 = private constant [6 x i8] [i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
-@str2 = private constant [3 x i8] [i8 37, i8 115, i8 0]
+@str2 = private constant [21 x i8] [i8 115, i8 117, i8 98, i8 58, i8 58, i8 115, i8 117, i8 98, i8 78, i8 97, i8 109, i8 101, i8 32, i8 61, i8 32, i8 39, i8 37, i8 115, i8 39, i8 10, i8 0]
 @str3 = private constant [8 x i8] [i8 83, i8 117, i8 98, i8 78, i8 97, i8 109, i8 101, i8 0]
-@str4 = private constant [3 x i8] [i8 37, i8 115, i8 0]
-@str5 = private constant [8 x i8] [i8 83, i8 117, i8 98, i8 78, i8 97, i8 109, i8 101, i8 0]
+@str4 = private constant [23 x i8] [i8 115, i8 117, i8 98, i8 50, i8 58, i8 58, i8 115, i8 117, i8 98, i8 50, i8 78, i8 97, i8 109, i8 101, i8 32, i8 61, i8 32, i8 39, i8 37, i8 115, i8 39, i8 10, i8 0]
+@str5 = private constant [9 x i8] [i8 83, i8 117, i8 98, i8 50, i8 78, i8 97, i8 109, i8 101, i8 0]
 @str6 = private constant [8 x i8] [i8 115, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 @str7 = private constant [12 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 83, i8 104, i8 111, i8 119, i8 58, i8 10, i8 0]
 @str8 = private constant [16 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
@@ -147,8 +147,8 @@ declare %Int @div(%Int %a, %Int %b)
 
 define %Int @main() {
 	call void (%Str8*, ...) @printf(%Str8* bitcast ([6 x i8]* @str1 to [0 x i8]*))
-	call void (%Str8*, ...) @printf(%Str8* bitcast ([3 x i8]* @str2 to [0 x i8]*), %Str8* bitcast ([8 x i8]* @str3 to [0 x i8]*))
-	call void (%Str8*, ...) @printf(%Str8* bitcast ([3 x i8]* @str4 to [0 x i8]*), %Str8* bitcast ([8 x i8]* @str5 to [0 x i8]*))
+	call void (%Str8*, ...) @printf(%Str8* bitcast ([21 x i8]* @str2 to [0 x i8]*), %Str8* bitcast ([8 x i8]* @str3 to [0 x i8]*))
+	call void (%Str8*, ...) @printf(%Str8* bitcast ([23 x i8]* @str4 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str5 to [0 x i8]*))
 	%1 = alloca %Int, align 4
 	store %Int 5, %Int* %1
 	%2 = call %Int @mid(%Int 10, %Int 20)

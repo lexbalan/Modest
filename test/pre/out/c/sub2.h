@@ -8,6 +8,6 @@
 #include <string.h>
 
 
-#define sub2Name  "SubName"
+#define sub2Name  "Sub2Name"
 
 #endif /* SUB2_H */

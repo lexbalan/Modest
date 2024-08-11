@@ -32,13 +32,13 @@ Int main()
 {
 	((void (*) (char *s, ...))print)("test\n");
 
-	printf("%s", (char *)subName);
-	printf("%s", (char *)sub2Name);
+	((void (*) (char *s, ...))print)("sub::subName = '%s'\n", (char *)subName);
+	((void (*) (char *s, ...))print)("sub2::sub2Name = '%s'\n", (char *)sub2Name);
 
 	#define a  10
 	#define b  20
 	const Int s = mid(a, b);
-	printf("s = %d\n", s);
+	((void (*) (char *s, ...))print)("s = %d\n", s);
 
 	Int xx;
 
@@ -54,11 +54,11 @@ Int main()
 #undef b
 void arrayShow(Int *array, Int size)
 {
-	printf("arrayShow:\n");
+	((void (*) (char *s, ...))print)("arrayShow:\n");
 	int32_t i;
 	i = 0;
 	while (i < 10) {
-		printf("array[%d] = %d\n", i, array[i]);
+		((void (*) (char *s, ...))print)("array[%d] = %d\n", i, array[i]);
 		i = i + 1;
 	}
 }

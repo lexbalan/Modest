@@ -19,15 +19,15 @@ var x: Int
 func main() -> Int {
 	print("test\n")
 
-	printf("%s", *Str8 subName)
-	printf("%s", *Str8 sub2Name)
+	print("sub::subName = '%s'\n", *Str8 subName)
+	print("sub2::sub2Name = '%s'\n", *Str8 sub2Name)
 
 	var y: Int = default
 
 	let a = 10
 	let b = 20
 	let s = mid(a, b)
-	printf("s = %d\n", s)
+	print("s = %d\n", s)
 
 	var xx: Int
 
@@ -39,10 +39,10 @@ func main() -> Int {
 	return 0
 }
 func arrayShow(array: *Arr, size: Int) -> Unit {
-	printf("arrayShow:\n")
+	print("arrayShow:\n")
 	var i: Int32 = 0
 	while i < 10 {
-		printf("array[%d] = %d\n", i, array[i])
+		print("array[%d] = %d\n", i, array[i])
 		i = i + 1
 	}
 }

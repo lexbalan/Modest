@@ -8,20 +8,21 @@ import "sub2"
 
 let print = &console::printf
 
+
 @volatile @atomic var x: sub::Int
 
 func main() -> sub::Int {
 	print("test\n")
 
-	console::printf("%s", *Str8 sub::subName)
-	console::printf("%s", *Str8 sub2::sub2Name)
+	print("sub::subName = '%s'\n", *Str8 sub::subName)
+	print("sub2::sub2Name = '%s'\n", *Str8 sub2::sub2Name)
 
 	var y = sub::default
 
 	let a = 10
 	let b = 20
 	let s = mid(a, b)
-	console::printf("s = %d\n", s)
+	print("s = %d\n", s)
 
 	var xx: sub::Int
 
@@ -37,10 +38,10 @@ func main() -> sub::Int {
 @property("c_alias", "arrshow")
 @property("cm_alias", "arrshow")
 func arrayShow(array: *Arr, size: sub::Int) -> Unit {
-	console::printf("arrayShow:\n")
+	print("arrayShow:\n")
 	var i = 0
 	while i < 10 {
-		console::printf("array[%d] = %d\n", i, array[i])
+		print("array[%d] = %d\n", i, array[i])
 		++i
 	}
 }
