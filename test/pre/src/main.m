@@ -9,7 +9,8 @@ import "sub2"
 let print = &console::printf
 
 
-@volatile @atomic var x: sub::Int
+var x: @volatile @atomic sub::Int
+
 
 func main() -> sub::Int {
 	print("test\n")
@@ -60,10 +61,6 @@ type Arr [arrSize]sub::Int
 	return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 }*/
 
-
-// аттрибуты не работают!
-//@property("type.c_alias", "int")
-//type Int Int32
 
 func mid(a: sub::Int, b: sub::Int) -> sub::Int {
 	let sum = a + b

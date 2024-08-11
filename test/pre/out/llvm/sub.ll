@@ -100,11 +100,11 @@ break_2:
 }
 
 
-; -- SOURCE: /Users/alexbalan/p/Modest/test/pre/src/sub2.cm
+; -- SOURCE: /Users/alexbalan/p/Modest/test/pre/src/sub2.m
 
 
 
-; -- SOURCE: src/sub.cm
+; -- SOURCE: src/sub.m
 
 
 

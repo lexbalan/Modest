@@ -100,17 +100,17 @@ break_2:
 }
 
 
-; -- SOURCE: /Users/alexbalan/p/Modest/test/pre/src/console.cm
+; -- SOURCE: /Users/alexbalan/p/Modest/test/pre/src/console.m
 
 
 declare void @printf(%Str8* %s, ...)
 
 
-; -- SOURCE: /Users/alexbalan/p/Modest/test/pre/src/sub2.cm
+; -- SOURCE: /Users/alexbalan/p/Modest/test/pre/src/sub2.m
 
 
 
-; -- SOURCE: /Users/alexbalan/p/Modest/test/pre/src/sub.cm
+; -- SOURCE: /Users/alexbalan/p/Modest/test/pre/src/sub.m
 
 
 
@@ -119,7 +119,7 @@ declare void @printf(%Str8* %s, ...)
 declare %Int @div(%Int %a, %Int %b)
 
 
-; -- SOURCE: src/main.cm
+; -- SOURCE: src/main.m
 
 @str1 = private constant [6 x i8] [i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
 @str2 = private constant [21 x i8] [i8 115, i8 117, i8 98, i8 58, i8 58, i8 115, i8 117, i8 98, i8 78, i8 97, i8 109, i8 101, i8 32, i8 61, i8 32, i8 39, i8 37, i8 115, i8 39, i8 10, i8 0]

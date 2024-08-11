@@ -1511,7 +1511,7 @@ class Parser:
 		spaceline_cnt = 0
 
 		while not self.is_end():
-			#export = self.match('export')
+			export = self.match('export')
 			#extern = self.match('extern')
 
 			ti = self.ti()
@@ -1569,6 +1569,15 @@ class Parser:
 					spaceline_cnt = 0
 
 				x['attributes'] = attributes
+				if export:
+					exp = {
+						'isa': 'ast_attribute',
+						'kind': 'export',
+						#'expr': import_expr,
+						'args': [],
+						'ti': ti
+					}
+					x['attributes'].append(exp)
 				attributes = []
 
 				output.append(x)

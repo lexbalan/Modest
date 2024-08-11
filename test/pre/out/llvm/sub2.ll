@@ -100,7 +100,7 @@ break_2:
 }
 
 
-; -- SOURCE: src/sub2.cm
+; -- SOURCE: src/sub2.m
 
 
 

@@ -87,7 +87,6 @@ def module_value_get(m, id_str):
 	return m['context'].value_get(id_str)
 
 
-
 def type_get(id_str):
 	global module
 	return module_type_get(module, id_str)
@@ -2324,6 +2323,8 @@ def do_attribute(x):
 
 	#print("do_attribute('%s')" % kind)
 
+	if kind == 'export':
+		attribute_add('export')
 	if kind == 'attribute':
 		attribute_add(args[0]['str'])
 	elif kind == 'property':
@@ -2634,7 +2635,7 @@ def do_importing(x):
 	att = attributes_get()
 	# (!) ^^
 
-	abspath = import_abspath(impline, ext='.cm')
+	abspath = import_abspath(impline, ext='.m')
 	if abspath == None:
 		error("module %s not found" % impline, import_expr)
 		fatal("cannot import module")
