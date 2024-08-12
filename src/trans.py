@@ -2111,7 +2111,7 @@ def module_remove_node(m, isa, id_str):
 	return
 
 
-
+"""
 def decl_type(x):
 	id = x['id']
 	log("decl_type %s" % id['str'])
@@ -2124,7 +2124,7 @@ def decl_type(x):
 
 	# С не печатает opaque, но LLVM печатает (!)
 	return hlir_decl_type(id, nt, x['ti'])
-
+"""
 
 
 """
@@ -2137,7 +2137,6 @@ def symbol_type(id, ti):
 	#module_type_add_private(module, id['str'], nt)
 	return nt
 """
-
 
 
 
@@ -2764,6 +2763,7 @@ def proc(ast, source_info, nodef=False):
 		'records': [],    # for C backend
 		'anon_recs': [],  # anonymous records for C printer
 		'att': [],
+
 		'text': []
 	}
 
