@@ -2743,12 +2743,12 @@ def proc(ast, source_info, nodef=False):
 	old_module = module
 
 
-	symtab = root_symtab.branch()
-	private = Symtab()
+	symtab_public = root_symtab.branch()
+	symtab_private = Symtab()
 
 	global context
 	prev_context = context
-	context = symtab
+	context = symtab_public
 
 	module = {
 		'isa': 'module',
@@ -2757,8 +2757,8 @@ def proc(ast, source_info, nodef=False):
 		'imports': {},  #
 		'strings': [],  # (used in LLVM backend)
 
-		'symtab_public': symtab,
-		'symtab_private': private,
+		'symtab_public': symtab_public,
+		'symtab_private': symtab_private,
 
 		'options': [],
 		'records': [],    # for C backend
