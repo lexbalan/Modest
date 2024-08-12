@@ -53,6 +53,8 @@ env_current_file_dir = ""
 pre_mode = False
 
 cfunc = None	# current function
+context = None
+private = None
 
 root_symtab = None
 
@@ -78,6 +80,28 @@ def module_strings_add(v):
 	module['strings'].append(v)
 
 
+
+
+
+
+def module_type_add_public(m, id_str, t):
+	return m['symtab'].type_add(id_str, t)
+
+def module_value_add_public(m, id_str, v):
+	return m['symtab'].value_add(id_str, v)
+
+
+def module_type_add_private(m, id_str, t):
+	return m['private'].type_add(id_str, t)
+
+def module_value_add_private(m, id_str, v):
+	return m['private'].value_add(id_str, v)
+
+
+
+
+"""
+# not used
 # search type in module
 def module_type_get(m, id_str):
 	return m['symtab'].type_get(id_str)
@@ -85,33 +109,70 @@ def module_type_get(m, id_str):
 # search value in module
 def module_value_get(m, id_str):
 	return m['symtab'].value_get(id_str)
+"""
+
+# public
+
+# search type in module
+def module_type_get_public(m, id_str):
+	return m['symtab'].type_get(id_str)
+
+# search value in module
+def module_value_get_public(m, id_str):
+	return m['symtab'].value_get(id_str)
+
+# private
+
+# search type in module
+def module_type_get_private(m, id_str):
+	return m['private'].type_get(id_str)
+
+# search value in module
+def module_value_get_private(m, id_str):
+	return m['private'].value_get(id_str)
 
 
-def type_get(id_str):
+
+def module_type_add(module, id_str, t, is_public=False):
+	if is_public:
+		module_type_add_public(module, id_str, t)
+	else:
+		module_type_add_private(module, id_str, t)
+
+
+def module_value_add(module, id_str, v, is_public=False):
+	if is_public:
+		module_value_add_public(module, id_str, v)
+	else:
+		module_value_add_private(module, id_str, v)
+
+
+
+def ctx_type_add(id_str, t):
+	global context
+	context.type_add(id_str, t)
+
+def ctx_value_add(id_str, v):
+	global context
+	context.value_add(id_str, v)
+
+
+def ctx_type_get(id_str):
+	global context
+	x = context.type_get(id_str)
+	if x != None:
+		return x
 	global module
-	return module_type_get(module, id_str)
-
-
-def value_get(id_str):
-	global module
-	return module_value_get(module, id_str)
-
-
-def ctx_type_add(id_str, type):
-	global module
-	module['symtab'].type_add(id_str, type)
-
-
-
-# add value (to current context)
-def ctx_value_add(id_str, value):
-	global module
-	module['symtab'].value_add(id_str, value)
-
+	return module_type_get_private(module, id_str)
 
 def ctx_value_get(id_str):
+	global context
+	x = context.value_get(id_str)
+	if x != None:
+		return x
 	global module
-	return module['symtab'].value_get(id_str, recursive=True)
+	return module_value_get_private(module, id_str)
+
 
 
 # искать ТОЛЬКО внутри текущего контекста (блока)
@@ -120,9 +181,24 @@ def ctx_value_get_shallow(id_str):
 	return module['symtab'].value_get(id_str, recursive=False)
 
 
+
+
 def module_append(definition):
 	global module
 	module['text'].append(definition)
+
+
+
+
+def context_push():
+	global context
+	context = context.branch(domain='local')
+
+def context_pop():
+	global context
+	context = context.parent_get()
+
+
 
 
 # used in metadirs
@@ -398,16 +474,16 @@ def do_type_name(t):
 		#print("GET TYPE FROM: %s" % id_str)
 		global module
 		m = module['imports'][id_str]
-		tx = module_type_get(m, id2_str)
+		tx = module_type_get_public(m, id2_str)
 	else:
-		tx = type_get(id_str)
+		tx = ctx_type_get(id_str)
 
-	#tx = type_get(id_str)
+	#tx = ctx_type_get(id_str)
 	if tx == None:
 		global pre_mode
 		if pre_mode:
 			pre_def(id_str)
-			tx = type_get(id_str)
+			tx = ctx_type_get(id_str)
 			if tx != None:
 				return tx
 
@@ -504,7 +580,8 @@ def do_type_enum(t):
 		item_val = value_terminal(enum_type, i, item['ti'])
 
 		item_val['id'] = id
-		ctx_value_add(id['str'], item_val)
+		global module
+		module_value_add_public(module, id['str'], item_val)
 
 		i = i + 1
 
@@ -1030,9 +1107,9 @@ def do_value_call_defined(args, ti):
 
 	s = id['asset']
 	rc = valueTrue
-	v = value_get(s)
+	v = ctx_value_get(s)
 	if v == None:
-		t = type_get(s)
+		t = ctx_type_get(s)
 		if t == None:
 			rc = valueFalse
 
@@ -1391,16 +1468,16 @@ def do_value_name(x):
 		#print("GET VALUE FROM: %s" % id_str)
 		global module
 		m = module['imports'][id_str]
-		v = module_value_get(m, id2_str)
+		v = module_value_get_public(m, id2_str)
 	else:
-		v = value_get(id_str)
+		v = ctx_value_get(id_str)
 
 
 	if v == None:
 		global pre_mode
 		if pre_mode:
 			pre_def(id_str)
-			vx = value_get(id_str)
+			vx = ctx_value_get(id_str)
 			if vx != None:
 				return vx
 
@@ -1960,7 +2037,7 @@ def do_stmt(x):
 
 def do_stmt_block(x):
 	global module
-	module['symtab'] = module['symtab'].branch(domain='local')
+	context_push()
 
 	stmts = []
 	for stmt in x['stmts']:
@@ -1968,13 +2045,13 @@ def do_stmt_block(x):
 		if not hlir_stmt_is_bad(s):
 			stmts.append(s)
 
-	module['symtab'] = module['symtab'].parent_get()
+	context_pop()
 
 	return hlir_stmt_block(stmts, ti=x['ti'], end_nl=x['end_nl'])
 
 
 
-def symbol_const(id, init_value):
+def symbol_const(id, init_value, is_public=False):
 	const_value = value_const(id, init_value['type'], init_value, id['ti'])
 	const_value['att'].extend(init_value['att'])
 
@@ -1983,7 +2060,9 @@ def symbol_const(id, init_value):
 		const_value['immediate'] = True
 		cp_immediate(const_value, init_value)
 
-	ctx_value_add(id['str'], const_value)
+	global module
+	module_value_add(module, id['str'], const_value, is_public=is_public)
+	#module_value_add_public(module, id['str'], const_value)
 	return const_value
 
 
@@ -2004,10 +2083,12 @@ def def_const(x):
 	v = do_value_immediate(x['value'], allow_ptr_to_str=True)
 
 	if value_is_bad(v):
-		ctx_value_add(id['str'], v)
+		global module
+		module_value_add_public(module, id['str'], v)
 		return hlir_def_const(id, v, v, x['ti'])
 
-	const_value = symbol_const(id, v)
+
+	const_value = symbol_const(id, v, is_public=x['export'])
 
 	return hlir_def_const(id, const_value, v, x['ti'])
 
@@ -2038,19 +2119,26 @@ def decl_type(x):
 	nt = hlir_type.hlir_type_undefined(x['ti'])
 	nt['aka'] = id['str']
 	nt['ti_decl'] = x['ti']
-	ctx_type_add(id['str'], nt)
+	global module
+	module_type_add_public(module, id['str'], nt)
 
 	# С не печатает opaque, но LLVM печатает (!)
 	return hlir_decl_type(id, nt, x['ti'])
 
 
 
+"""
 def symbol_type(id, ti):
 	nt = hlir_type.hlir_type_undefined(ti)
 	nt['aka'] = id['str']
 	nt['ti_decl'] = ti
-	ctx_type_add(id['str'], nt)
+	global module
+	module_type_add_public(module, id['str'], nt)
+	#module_type_add_private(module, id['str'], nt)
 	return nt
+"""
+
+
 
 
 def def_type(x):
@@ -2061,7 +2149,7 @@ def def_type(x):
 	if id['str'][0].islower():
 		error("type id must starts with big letter", id['ti'])
 
-	pre_exist = type_get(id['str'])
+	pre_exist = ctx_type_get(id['str'])
 
 	# check if identifier is free
 	already_declared = pre_exist != None
@@ -2074,7 +2162,8 @@ def def_type(x):
 			error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
 	else:
 		nt = hlir_type.hlir_type_undefined(x['ti'])
-		ctx_type_add(id['str'], nt)
+		global module
+		module_type_add(module, id['str'], nt, is_public=x['export'])
 
 	# только теперь обрабатываем поля,
 	# тк там могут быть указатели на саму себя
@@ -2122,10 +2211,11 @@ def def_type(x):
 
 
 
-def symbol_var(id, type, ti):
+"""def symbol_var(id, type, ti):
 	var_value = value_var(id, type, id['ti'])
-	ctx_value_add(id['str'], var_value)
-	return var_value
+	#global module
+	#module_value_add_public(module, id['str'], var_value)
+	return var_value"""
 
 
 def def_var(x):
@@ -2133,7 +2223,7 @@ def def_var(x):
 	log("def_var %s" % id['str'])
 
 	# already defined? (check identifier)
-	already = value_get(id['str'])
+	already = ctx_value_get(id['str'])
 	if already != None:
 		error("redefinition of '%s'" % id['str'], id['ti'])
 
@@ -2168,9 +2258,10 @@ def def_var(x):
 		if hlir_type.type_is_generic(v['type']):
 			error("cannot cons variable", x['ti'])
 
-	#var_value = value_var(id, t, id['ti'])
-	#ctx_value_add(id['str'], var_value)
-	var_value = symbol_var(id, t, id['ti'])
+
+	var_value = value_var(id, t, id['ti'])
+	module_value_add(module, id['str'], var_value, is_public=x['export'])
+
 	return hlir_def_var(id, var_value, v, x['ti'])
 
 
@@ -2232,7 +2323,7 @@ def def_func(x):
 	cfunc = fn
 
 	# create params context
-	module['symtab'] = module['symtab'].branch(domain='local')
+	context_push()
 
 	params = func_type['params']
 	i = 0
@@ -2274,7 +2365,7 @@ def def_func(x):
 				warning("expected return operator at end", stmt['ti'])
 
 	# remove params context
-	module['symtab'] = module['symtab'].parent_get()
+	context_pop()
 
 	cfunc = old_cfunc
 
@@ -2285,10 +2376,11 @@ def def_func(x):
 
 
 
-def symbol_func(id, type, ti):
-	func = value_func(id, type, ti=id['ti'])
-	ctx_value_add(id['str'], func)
-	return func
+def symbol_func(id, type, ti, is_public=False):
+	func_value = value_func(id, type, ti=id['ti'])
+	global module
+	module_value_add(module, id['str'], func_value, is_public=is_public)
+	return func_value
 
 
 
@@ -2366,39 +2458,6 @@ def pre_def(id_str):
 				module_append(y)
 
 
-def inc(ast):
-	for x in ast:
-		isa = x['isa']
-		kind = x['kind']
-		if kind == 'const':
-			id = x['id']
-			#print('INC CONST ' + id['str'])
-			v = do_value_immediate(x['value'], allow_ptr_to_str=True)
-			if value_is_bad(v):
-				ctx_value_add(id['str'], v)
-				return hlir_def_const(id, v, v, x['ti'])
-			const_value = symbol_const(id, v)
-		elif kind == 'type':
-			id = x['id']
-			#nt = hlir_type.hlir_type_undefined(x['ti'])
-			nt = do_type(x['type'])
-			ctx_type_add(id['str'], nt)
-		elif kind == 'func':
-			id = x['id']
-			ftype = do_type(x['type'])
-			sym = symbol_func(x['id'], ftype, x['ti'])
-			#x['symbol'] = sym
-			module_append({
-				'isa': 'directive',
-				'kind': 'cdecl_func',
-				'symbol': sym,
-				'att': [],
-				'nl': 1,
-				'ti': x['ti']
-			})
-
-
-	return
 
 
 # создает символы для всех функций в модуле
@@ -2442,9 +2501,10 @@ def pre(ast, nodef):
 					id = x['id']
 					v = do_value_immediate(x['value'], allow_ptr_to_str=True)
 					if value_is_bad(v):
-						ctx_value_add(id['str'], v)
+						global module
+						module_value_add_public(module, id['str'], v)
 						return hlir_def_const(id, v, v, x['ti'])
-					const_value = symbol_const(id, v)
+					const_value = symbol_const(id, v, is_public=x['export'])
 				else:
 					if not 'defined' in x:
 						y = def_const(x)
@@ -2470,7 +2530,7 @@ def pre(ast, nodef):
 
 			#info("scan func %s" % x['id']['str'], x['ti'])
 			ftype = do_type(x['type'])
-			sym = symbol_func(x['id'], ftype, x['ti'])
+			sym = symbol_func(x['id'], ftype, x['ti'], is_public=x['export'])
 			x['symbol'] = sym
 
 			if nodef:
@@ -2684,7 +2744,11 @@ def proc(ast, source_info, nodef=False):
 
 
 	symtab = root_symtab.branch()
-	#root_symtab = Symtab()
+	private = Symtab()
+
+	global context
+	prev_context = context
+	context = symtab
 
 	module = {
 		'isa': 'module',
@@ -2692,9 +2756,12 @@ def proc(ast, source_info, nodef=False):
 		'source_info': source_info,
 		'imports': {},  #
 		'strings': [],  # (used in LLVM backend)
+
 		'symtab': symtab,
+		'private': private,
+
 		'options': [],
-		'records': [],
+		'records': [],    # for C backend
 		'anon_recs': [],  # anonymous records for C printer
 		'att': [],
 		'text': []
@@ -2726,17 +2793,15 @@ def proc(ast, source_info, nodef=False):
 			do_directive(x)
 			pass
 
-	""""if nodef:
-		print("----NODEF")
-		inc(ast)
-		pass
-	else:"""
+
 	# do pre!
 	pre(ast, nodef=nodef) ##
 
 
 	m = module
 	module = old_module
+
+	context = prev_context
 
 	return m
 

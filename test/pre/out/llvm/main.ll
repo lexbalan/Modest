@@ -116,6 +116,8 @@ declare void @printf(%Str8* %s, ...)
 
 %Int = type i32;
 
+@subCnt = global %Int zeroinitializer
+
 declare %Int @div(%Int %a, %Int %b)
 
 
@@ -144,6 +146,13 @@ declare %Int @div(%Int %a, %Int %b)
 
 @x = global %Int zeroinitializer
 
+
+define void @increment() {
+	%1 = load %Int, %Int* @subCnt
+	%2 = add %Int %1, 1
+	store %Int %2, %Int* @subCnt
+	ret void
+}
 
 define %Int @main() {
 	call void (%Str8*, ...) @printf(%Str8* bitcast ([6 x i8]* @str1 to [0 x i8]*))

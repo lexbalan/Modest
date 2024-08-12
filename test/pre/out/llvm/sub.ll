@@ -111,6 +111,8 @@ break_2:
 %Int = type i32;
 
 
+@subCnt = global %Int zeroinitializer
+
 
 define %Int @div(%Int %a, %Int %b) {
 	%1 = sdiv %Int %a, %b

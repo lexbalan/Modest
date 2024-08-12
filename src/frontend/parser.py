@@ -1552,6 +1552,7 @@ class Parser:
 				for subx in x:
 					subx['nl'] = 1
 					subx['ti'] = ti
+					subx['export'] = export
 
 				x[0]['nl'] = spaceline_cnt
 
@@ -1569,16 +1570,9 @@ class Parser:
 					spaceline_cnt = 0
 
 				x['attributes'] = attributes
-				if export:
-					exp = {
-						'isa': 'ast_attribute',
-						'kind': 'export',
-						#'expr': import_expr,
-						'args': [],
-						'ti': ti
-					}
-					x['attributes'].append(exp)
 				attributes = []
+
+				x['export'] = export
 
 				output.append(x)
 

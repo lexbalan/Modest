@@ -16,6 +16,10 @@ var x: Int
 
 
 
+
+func increment() -> Unit {
+	subCnt = subCnt + 1
+}
 func main() -> Int {
 	print("test\n")
 

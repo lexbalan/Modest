@@ -23,11 +23,17 @@ typedef Int * Arr;
 #define print  (&printf)
 static Int x;
 
+void increment();
+
 Int main();
 
 void arrayShow(Int *array, Int size);
 
 Int mid(Int a, Int b);
+void increment()
+{
+	subCnt = subCnt + 1;
+}
 Int main()
 {
 	((void (*) (char *s, ...))print)("test\n");

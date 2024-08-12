@@ -12,6 +12,10 @@ let print = &console::printf
 var x: @volatile @atomic sub::Int
 
 
+func increment() {
+	++sub::subCnt
+}
+
 func main() -> sub::Int {
 	print("test\n")
 
