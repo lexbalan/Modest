@@ -2511,6 +2511,11 @@ def pre(ast, nodef):
 
 			elif kind == 'var':
 				y = def_var(x)
+				if nodef:
+					# обрабатываем перемкнную из импорта
+					# нельзя печатать ее определение (тк она из другого модуля)
+					# но в LLVM backend нужно указать как extern
+					y['att'].append('extern')
 
 			if y != None:
 				add_spices(y)

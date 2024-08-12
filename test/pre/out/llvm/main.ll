@@ -116,7 +116,7 @@ declare void @printf(%Str8* %s, ...)
 
 %Int = type i32;
 
-@subCnt = global %Int zeroinitializer
+@subCnt = external global %Int
 
 declare %Int @div(%Int %a, %Int %b)
 
