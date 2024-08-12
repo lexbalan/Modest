@@ -85,17 +85,17 @@ def module_strings_add(v):
 
 
 def module_type_add_public(m, id_str, t):
-	return m['symtab'].type_add(id_str, t)
+	return m['symtab_public'].type_add(id_str, t)
 
 def module_value_add_public(m, id_str, v):
-	return m['symtab'].value_add(id_str, v)
+	return m['symtab_public'].value_add(id_str, v)
 
 
 def module_type_add_private(m, id_str, t):
-	return m['private'].type_add(id_str, t)
+	return m['symtab_private'].type_add(id_str, t)
 
 def module_value_add_private(m, id_str, v):
-	return m['private'].value_add(id_str, v)
+	return m['symtab_private'].value_add(id_str, v)
 
 
 
@@ -104,32 +104,32 @@ def module_value_add_private(m, id_str, v):
 # not used
 # search type in module
 def module_type_get(m, id_str):
-	return m['symtab'].type_get(id_str)
+	return m['symtab_public'].type_get(id_str)
 
 # search value in module
 def module_value_get(m, id_str):
-	return m['symtab'].value_get(id_str)
+	return m['symtab_public'].value_get(id_str)
 """
 
 # public
 
 # search type in module
 def module_type_get_public(m, id_str):
-	return m['symtab'].type_get(id_str)
+	return m['symtab_public'].type_get(id_str)
 
 # search value in module
 def module_value_get_public(m, id_str):
-	return m['symtab'].value_get(id_str)
+	return m['symtab_public'].value_get(id_str)
 
 # private
 
 # search type in module
 def module_type_get_private(m, id_str):
-	return m['private'].type_get(id_str)
+	return m['symtab_private'].type_get(id_str)
 
 # search value in module
 def module_value_get_private(m, id_str):
-	return m['private'].value_get(id_str)
+	return m['symtab_private'].value_get(id_str)
 
 
 
@@ -178,7 +178,7 @@ def ctx_value_get(id_str):
 # искать ТОЛЬКО внутри текущего контекста (блока)
 def ctx_value_get_shallow(id_str):
 	global module
-	return module['symtab'].value_get(id_str, recursive=False)
+	return module['symtab_public'].value_get(id_str, recursive=False)
 
 
 
@@ -2673,8 +2673,8 @@ def do_directive(x):
 		if value_is_bad(v):
 			fatal("unsuitable value", x['ti'])
 		id_str = v['asset']
-		module['symtab'].value_undef(id_str)
-		module['symtab'].type_undef(id_str)
+		module['symtab_public'].value_undef(id_str)
+		module['symtab_public'].type_undef(id_str)
 
 	el"""
 
@@ -2757,8 +2757,8 @@ def proc(ast, source_info, nodef=False):
 		'imports': {},  #
 		'strings': [],  # (used in LLVM backend)
 
-		'symtab': symtab,
-		'private': private,
+		'symtab_public': symtab,
+		'symtab_private': private,
 
 		'options': [],
 		'records': [],    # for C backend
