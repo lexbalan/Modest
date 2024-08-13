@@ -185,7 +185,7 @@ def ctx_value_get_shallow(id_str):
 
 def module_append(definition):
 	global module
-	module['text'].append(definition)
+	module['defs'].append(definition)
 
 
 
@@ -1963,7 +1963,7 @@ def do_stmt_comment_block(x):
 	return {
 		'isa': 'stmt',
 		'kind': 'comment-block',
-		'text': x['text'],
+		'defs': x['defs'],
 		'nl': x['nl'],
 		'ti': x['ti']
 	}
@@ -2101,12 +2101,12 @@ def module_remove_node(m, isa, id_str):
 	for submodule in m['imports']:
 		module_remove_node(submodule, isa, id_str)
 
-	for x in m['text']:
+	for x in m['defs']:
 		if x['isa'] == isa:
 			if 'id' in x:
 				if x['id']['str'] == id_str:
 					#print("REMOVE: " + id_str)
-					m['text'].remove(x)
+					m['defs'].remove(x)
 					break
 	return
 
@@ -2769,7 +2769,7 @@ def proc(ast, source_info, nodef=False):
 		'anon_recs': [],  # anonymous records for C printer
 		'att': [],
 
-		'text': []
+		'defs': []
 	}
 
 	# do imports before

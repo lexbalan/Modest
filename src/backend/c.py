@@ -1843,13 +1843,13 @@ def print_comment_line(x):
 def cdirectives(module):
 	for im in module['imports']:
 		imported_module = module['imports'][im]
-		for obj in imported_module['text']:
+		for obj in imported_module['defs']:
 			if obj['isa'] == 'directive':
 				if obj['kind'] == 'c_include':
 					newline()
 					print_include(obj)
 
-	for obj in module['text']:
+	for obj in module['defs']:
 		if obj['isa'] == 'directive':
 			if obj['kind'] == 'c_include':
 				newline()
@@ -1897,11 +1897,11 @@ def run(module, outname):
 	output_open(outname)
 
 	# before all print first comment (header) if present
-	if len(module['text']) > 0:
-		first = module['text'][0]
+	if len(module['defs']) > 0:
+		first = module['defs'][0]
 		if first['isa'] == 'comment':
 			print_comment(first)
-			module['text'] = module['text'][1:]
+			module['defs'] = module['defs'][1:]
 		else:
 			out("// %s" % outname)
 		newline()
@@ -1936,7 +1936,7 @@ def run(module, outname):
 		print_type_record(anon_rec, tag=anon_rec['c_anon_id'])
 		out(";")
 
-	for x in module['text']:
+	for x in module['defs']:
 		if 'c-no-print' in x['att']:
 			continue
 

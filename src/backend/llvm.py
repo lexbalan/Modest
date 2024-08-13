@@ -2270,7 +2270,7 @@ def print_module(m):
 
 	isa_prev = None
 
-	for x in m['text']:
+	for x in m['defs']:
 		isa = x['isa']
 
 		if isa_prev != isa:

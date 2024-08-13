@@ -878,7 +878,7 @@ def run(module, outname):
 	output_open(outname)
 
 
-	for x in module['text']:
+	for x in module['defs']:
 		isa = x['isa']
 
 		if isa != 'comment':
