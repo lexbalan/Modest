@@ -2472,7 +2472,7 @@ def pre_nodef(ast):
 	global gast
 	gast = ast
 
-	# 1. def types before
+	# 1. do types before
 	# (and const if need for type!)
 	for x in ast:
 		isa = x['isa']
@@ -2481,14 +2481,12 @@ def pre_nodef(ast):
 		if isa == 'ast_definition':
 			if kind == 'type':
 				if not 'defined' in x:
-					#info("def type %s" % x['id']['str'], x['ti'])
 					y = def_type(x)
 					if y == None:
 						continue
 					y['nl'] = x['nl']
 
 					module_append_export(y)
-					module_append(y)
 
 
 	# 2. def vars & consts
@@ -2571,8 +2569,6 @@ def pre_def(ast):
 					if y == None:
 						continue
 					y['nl'] = x['nl']
-
-					module_append_export(y)
 					module_append(y)
 
 
