@@ -16,8 +16,6 @@ typedef int32_t Int;
 #define subName  "SubName"
 #define default  (5)
 static Int subCnt;
-
-Int div(Int a, Int b);
 Int div(Int a, Int b)
 {
 	return a / b;

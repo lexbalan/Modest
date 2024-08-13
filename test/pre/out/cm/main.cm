@@ -13,10 +13,6 @@ let arrSize = 10
 type Arr [arrSize]Int
 let print = &printf
 var x: Int
-
-
-
-
 func increment() -> Unit {
 	subCnt = subCnt + 1
 }
