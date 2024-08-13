@@ -100,10 +100,9 @@ break_2:
 }
 
 
-; -- SOURCE: /Users/alexbalan/p/Modest/test/pre/src/sub2.m
-
-
-
+; ------------------------
+; from: sub2
+; ------------------------
 ; -- SOURCE: src/sub.m
 
 
@@ -112,7 +111,6 @@ break_2:
 
 
 @subCnt = global %Int zeroinitializer
-
 
 define %Int @div(%Int %a, %Int %b) {
 	%1 = sdiv %Int %a, %b

@@ -100,27 +100,23 @@ break_2:
 }
 
 
-; -- SOURCE: /Users/alexbalan/p/Modest/test/pre/src/console.m
-
+; ------------------------
+; from: console
+; ------------------------
 
 declare void @printf(%Str8* %s, ...)
-
-
-; -- SOURCE: /Users/alexbalan/p/Modest/test/pre/src/sub2.m
-
-
-
-; -- SOURCE: /Users/alexbalan/p/Modest/test/pre/src/sub.m
-
-
+; ------------------------
+; from: sub
+; ------------------------
 
 %Int = type i32;
 
 @subCnt = external global %Int
 
 declare %Int @div(%Int %a, %Int %b)
-
-
+; ------------------------
+; from: sub2
+; ------------------------
 ; -- SOURCE: src/main.m
 
 @str1 = private constant [6 x i8] [i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
@@ -145,7 +141,6 @@ declare %Int @div(%Int %a, %Int %b)
 
 
 @x = global %Int zeroinitializer
-
 
 define void @increment() {
 	%1 = load %Int, %Int* @subCnt

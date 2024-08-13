@@ -183,11 +183,17 @@ def ctx_value_get_shallow(id_str):
 
 
 
+def module_append_export(definition):
+	if definition == None:
+		return
+	global module
+	module['export_defs'].append(definition)
+
 def module_append(definition):
+	if definition == None:
+		return
 	global module
 	module['defs'].append(definition)
-
-
 
 
 def context_push():
@@ -482,7 +488,7 @@ def do_type_name(t):
 	if tx == None:
 		global pre_mode
 		if pre_mode:
-			pre_def(id_str)
+			predefinition(id_str)
 			tx = ctx_type_get(id_str)
 			if tx != None:
 				return tx
@@ -1476,7 +1482,7 @@ def do_value_name(x):
 	if v == None:
 		global pre_mode
 		if pre_mode:
-			pre_def(id_str)
+			predefinition(id_str)
 			vx = ctx_value_get(id_str)
 			if vx != None:
 				return vx
@@ -2437,8 +2443,8 @@ def do_attribute(x):
 
 # находит сущность по имени и декларирует ее
 gast = None
-def pre_def(id_str):
-	#print("pre_def(%s)" % id_str)
+def predefinition(id_str):
+	#print("predefinition(%s)" % id_str)
 	global gast
 	for x in gast:
 		if not 'id' in x:
@@ -2454,15 +2460,11 @@ def pre_def(id_str):
 			x['defined'] = True  # mark as DEFINED
 
 			if y != None:
-				module_append(y)
+				module_append(y)#, x['export'])
 
 
 
-
-# создает символы для всех функций в модуле
-# если они имеют неизвестную зависимость -
-# удовлетворяет ее посредством pre_def(id_str)
-def pre(ast, nodef):
+def pre_nodef(ast):
 	global pre_mode
 	old_pre_mode = pre_mode
 	pre_mode = True
@@ -2484,6 +2486,8 @@ def pre(ast, nodef):
 					if y == None:
 						continue
 					y['nl'] = x['nl']
+
+					module_append_export(y)
 					module_append(y)
 
 
@@ -2495,31 +2499,26 @@ def pre(ast, nodef):
 		if isa == 'ast_definition':
 			y = None
 			if kind == 'const':
-
-				if nodef:
-					id = x['id']
-					v = do_value_immediate(x['value'], allow_ptr_to_str=True)
-					if value_is_bad(v):
-						global module
-						module_value_add_public(module, id['str'], v)
-						return hlir_def_const(id, v, v, x['ti'])
-					const_value = symbol_const(id, v, is_public=x['export'])
-				else:
-					if not 'defined' in x:
-						y = def_const(x)
+				id = x['id']
+				v = do_value_immediate(x['value'], allow_ptr_to_str=True)
+				if value_is_bad(v):
+					global module
+					module_value_add_public(module, id['str'], v)
+					return hlir_def_const(id, v, v, x['ti'])
+				const_value = symbol_const(id, v, is_public=x['export'])
+				module_append_export(y)
+				continue
 
 
 			elif kind == 'var':
 				y = def_var(x)
-				if nodef:
-					# обрабатываем перемкнную из импорта
-					# нельзя печатать ее определение (тк она из другого модуля)
-					# но в LLVM backend нужно указать как extern
-					y['att'].append('extern')
 
-			if y != None:
-				add_spices(y)
-				module_append(y)
+				# обрабатываем перемкнную из импорта
+				# нельзя печатать ее определение (тк она из другого модуля)
+				# но в LLVM backend нужно указать как extern
+				y['att'].append('extern')
+				module_append_export(y)
+				continue
 
 
 	# 3. scan funcs after
@@ -2537,46 +2536,95 @@ def pre(ast, nodef):
 			sym = symbol_func(x['id'], ftype, x['ti'], is_public=x['export'])
 			x['symbol'] = sym
 
-			if nodef:
-				# импортированные функции в LLVM должны быть прописаны прототипы
-				module_append({
-					'isa': 'directive',
-					'kind': 'll_decl_func',
-					'symbol': sym,
-					'att': [],
-					'nl': 1,
-					'ti': x['ti']
-				})
-
-			y = {
-				'isa': 'directive',
-				'kind': 'cdecl_func',
-				'symbol': sym,
-				'att': [],
-				'nl': 1,
-				'ti': x['ti']
-			}
+			y = hlir_decl_func(x['id'], sym, x['ti'])
 			add_spices(y)
-			module_append(y)
+			module_append_export(y)
 
 
-	if not nodef:
+	pre_mode = old_pre_mode
 
-		# 4. def funcs after
-		for x in ast:
+	return
+
+
+# создает символы для всех функций в модуле
+# если они имеют неизвестную зависимость -
+# удовлетворяет ее посредством predefinition(id_str)
+def pre_def(ast):
+	global pre_mode
+	old_pre_mode = pre_mode
+	pre_mode = True
+
+	global gast
+	gast = ast
+
+	# 1. def types before
+	# (and const if need for type!)
+	for x in ast:
+		isa = x['isa']
+		kind = x['kind']
+
+		if isa == 'ast_definition':
+			if kind == 'type':
+				if not 'defined' in x:
+					#info("def type %s" % x['id']['str'], x['ti'])
+					y = def_type(x)
+					if y == None:
+						continue
+					y['nl'] = x['nl']
+
+					module_append_export(y)
+					module_append(y)
+
+
+	# 2. def vars & consts
+	for x in ast:
+		isa = x['isa']
+		kind = x['kind']
+
+		if isa == 'ast_definition':
+			y = None
+			if kind == 'const':
+				if not 'defined' in x:
+					y = def_const(x)
+					module_append(y)
+					continue
+
+			elif kind == 'var':
+				y = def_var(x)
+				module_append(y)
+				continue
+
+
+	# 3. scan funcs after
+	for x in ast:
+		isa = x['isa']
+		kind = x['kind']
+
+		if kind == 'func':
 			if 'attributes' in x:
 				for a in x['attributes']:
 					do_attribute(a)
 
-			isa = x['isa']
-			kind = x['kind']
-			if isa == 'ast_definition':
-				if kind == 'func':
-					y = def_func(x)
-					if y != None:
-						add_spices(y)
-						module_append(y)
+			#info("scan func %s" % x['id']['str'], x['ti'])
+			ftype = do_type(x['type'])
+			sym = symbol_func(x['id'], ftype, x['ti'], is_public=x['export'])
+			x['symbol'] = sym
 
+
+	# 4. def funcs after
+	for x in ast:
+		if 'attributes' in x:
+			for a in x['attributes']:
+				do_attribute(a)
+
+		isa = x['isa']
+		kind = x['kind']
+		if isa == 'ast_definition':
+			if kind == 'func':
+				y = def_func(x)
+				if y != None:
+					add_spices(y)
+					module_append(y)
 
 	pre_mode = old_pre_mode
 
@@ -2729,6 +2777,7 @@ def do_importing(x):
 		'local': True
 	}
 
+	print('end importing "%s"' % impline)
 	#do_attributes(directive) @^^
 	return directive
 
@@ -2769,7 +2818,8 @@ def proc(ast, source_info, nodef=False):
 		'anon_recs': [],  # anonymous records for C printer
 		'att': [],
 
-		'defs': []
+		'defs': [],  # определения модуля
+		'export_defs': [] # определения которые идут на экспорт
 	}
 
 	# do imports before
@@ -2800,7 +2850,12 @@ def proc(ast, source_info, nodef=False):
 
 
 	# do pre!
-	pre(ast, nodef=nodef) ##
+	if nodef:
+		# process in import mode
+		pre_nodef(ast)
+	else:
+		# process in normal mode
+		pre_def(ast)
 
 
 	m = module
