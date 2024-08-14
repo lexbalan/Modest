@@ -2117,7 +2117,7 @@ def module_remove_node(m, isa, id_str):
 	return
 
 
-"""
+
 def decl_type(x):
 	id = x['id']
 	log("decl_type %s" % id['str'])
@@ -2130,7 +2130,7 @@ def decl_type(x):
 
 	# С не печатает opaque, но LLVM печатает (!)
 	return hlir_decl_type(id, nt, x['ti'])
-"""
+
 
 
 """
