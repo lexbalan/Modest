@@ -26,6 +26,10 @@ target triple = "arm64-apple-macosx12.0.0"
 %Str16 = type [0 x %Char16]
 %Str32 = type [0 x %Char32]
 %VA_List = type i8*
+declare void @llvm.va_start(i8*)
+declare void @llvm.va_copy(i8*, i8*)
+declare void @llvm.va_end(i8*)
+
 declare void @llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)
 declare void @llvm.memset.p0.i32(i8*, i8, i32, i1)
 
@@ -100,36 +104,18 @@ break_2:
 }
 
 
-; ------------------------
-; from: console
-; ------------------------
-
-declare void @printf(%Str8* %s, ...)
-; ------------------------
-; from: sub
-; ------------------------
-
-%Int = type opaque
-
-@subCnt = external global i32
-
-declare i32 @div(i32 %a, i32 %b)
-; ------------------------
-; from: sub2
-; ------------------------
 ; -- SOURCE: src/main.m
 
 @str1 = private constant [6 x i8] [i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
-@str2 = private constant [21 x i8] [i8 115, i8 117, i8 98, i8 58, i8 58, i8 115, i8 117, i8 98, i8 78, i8 97, i8 109, i8 101, i8 32, i8 61, i8 32, i8 39, i8 37, i8 115, i8 39, i8 10, i8 0]
-@str3 = private constant [8 x i8] [i8 83, i8 117, i8 98, i8 78, i8 97, i8 109, i8 101, i8 0]
-@str4 = private constant [23 x i8] [i8 115, i8 117, i8 98, i8 50, i8 58, i8 58, i8 115, i8 117, i8 98, i8 50, i8 78, i8 97, i8 109, i8 101, i8 32, i8 61, i8 32, i8 39, i8 37, i8 115, i8 39, i8 10, i8 0]
-@str5 = private constant [9 x i8] [i8 83, i8 117, i8 98, i8 50, i8 78, i8 97, i8 109, i8 101, i8 0]
-@str6 = private constant [8 x i8] [i8 115, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str7 = private constant [12 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 83, i8 104, i8 111, i8 119, i8 58, i8 10, i8 0]
-@str8 = private constant [16 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str2 = private constant [16 x i8] [i8 115, i8 117, i8 98, i8 78, i8 97, i8 109, i8 101, i8 32, i8 61, i8 32, i8 39, i8 37, i8 115, i8 39, i8 10, i8 0]
+@str3 = private constant [5 x i8] [i8 78, i8 97, i8 109, i8 101, i8 0]
+@str4 = private constant [8 x i8] [i8 115, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str5 = private constant [12 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 83, i8 104, i8 111, i8 119, i8 58, i8 10, i8 0]
+@str6 = private constant [16 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 
 
-%Data = type i32;
+%Int = type i32;
+%Data = type %Int;
 %Node = type {
 	%Node*, 
 	%Data*
@@ -137,35 +123,35 @@ declare i32 @div(i32 %a, i32 %b)
 
 
 
-%Arr = type [10 x i32];
+%Arr = type [10 x %Int];
+
+@x = global %Int zeroinitializer
 
 
-@x = global i32 zeroinitializer
+declare void @printf(%Str8* %s, ...)
+declare void @printf(%Str8* %s, ...)
+declare %Int @main()
 
-define void @increment() {
-	%1 = load i32, i32* @subCnt
-	%2 = add i32 %1, 1
-	store i32 %2, i32* @subCnt
-	ret void
-}
-
-define i32 @main() {
+define %Int @main() {
 	call void (%Str8*, ...) @printf(%Str8* bitcast ([6 x i8]* @str1 to [0 x i8]*))
-	call void (%Str8*, ...) @printf(%Str8* bitcast ([21 x i8]* @str2 to [0 x i8]*), %Str8* bitcast ([8 x i8]* @str3 to [0 x i8]*))
-	call void (%Str8*, ...) @printf(%Str8* bitcast ([23 x i8]* @str4 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str5 to [0 x i8]*))
+	call void (%Str8*, ...) @printf(%Str8* bitcast ([16 x i8]* @str2 to [0 x i8]*), %Str8* bitcast ([5 x i8]* @str3 to [0 x i8]*))
+	;printf("sub2Name = '%s'\n", *Str8 sub2Name)
 	%1 = alloca i32, align 4
 	store i32 5, i32* %1
-	%2 = call i32 @mid(i32 10, i32 20)
-	call void (%Str8*, ...) @printf(%Str8* bitcast ([8 x i8]* @str6 to [0 x i8]*), i32 %2)
-	%3 = alloca i32, align 4
+	%2 = call %Int @mid(%Int 10, %Int 20)
+	call void (%Str8*, ...) @printf(%Str8* bitcast ([8 x i8]* @str4 to [0 x i8]*), %Int %2)
+	%3 = alloca %Int, align 4
 	;var arr = getArr()
 	;arrayShow(&arr, 10)
-	store i32 12, i32* @x
-	ret i32 0
+	store %Int 12, %Int* @x
+	ret %Int 0
 }
 
-define void @arrayShow(%Arr* %array, i32 %size) {
-	call void (%Str8*, ...) @printf(%Str8* bitcast ([12 x i8]* @str7 to [0 x i8]*))
+
+declare void @arrayShow(%Arr* %array, %Int %size)
+
+define void @arrayShow(%Arr* %array, %Int %size) {
+	call void (%Str8*, ...) @printf(%Str8* bitcast ([12 x i8]* @str5 to [0 x i8]*))
 	%1 = alloca i32, align 4
 	store i32 0, i32* %1
 	br label %again_1
@@ -177,8 +163,8 @@ body_1:
 	%4 = load i32, i32* %1
 	%5 = load i32, i32* %1
 	%6 = getelementptr inbounds %Arr, %Arr* %array, i32 0, i32 %5
-	%7 = load i32, i32* %6
-	call void (%Str8*, ...) @printf(%Str8* bitcast ([16 x i8]* @str8 to [0 x i8]*), i32 %4, i32 %7)
+	%7 = load %Int, %Int* %6
+	call void (%Str8*, ...) @printf(%Str8* bitcast ([16 x i8]* @str6 to [0 x i8]*), i32 %4, %Int %7)
 	%8 = load i32, i32* %1
 	%9 = add i32 %8, 1
 	store i32 %9, i32* %1
@@ -187,10 +173,21 @@ break_1:
 	ret void
 }
 
-define i32 @mid(i32 %a, i32 %b) {
-	%1 = add i32 %a, %b
-	%2 = call i32 @div(i32 %1, i32 2)
-	ret i32 %2
+
+declare %Int @mid(%Int %a, %Int %b)
+
+define %Int @mid(%Int %a, %Int %b) {
+	%1 = add %Int %a, %b
+	%2 = call %Int @div(%Int %1, %Int 2)
+	ret %Int %2
+}
+
+
+declare %Int @div(%Int %a, %Int %b)
+
+define %Int @div(%Int %a, %Int %b) {
+	%1 = udiv %Int %a, %b
+	ret %Int %1
 }
 
 

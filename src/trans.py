@@ -183,17 +183,22 @@ def ctx_value_get_shallow(id_str):
 
 
 
+"""
 def module_append_export(definition):
 	if definition == None:
 		return
 	global module
 	module['export_defs'].append(definition)
+	#module['defs'].append(definition)
+"""
 
-def module_append(definition):
+def module_append(definition, to_export=False):
 	if definition == None:
 		return
 	global module
 	module['defs'].append(definition)
+	if to_export:
+		module['export_defs'].append(definition)
 
 
 def context_push():
@@ -220,7 +225,8 @@ def c_include(s):
 		'nl': 1,
 		'ti': None
 	}
-	module_append(inc)
+	#module_append(inc)
+	return inc
 
 
 properties = {}
@@ -2118,18 +2124,36 @@ def module_remove_node(m, isa, id_str):
 
 
 
-def decl_type(x):
+
+def decl_func(x):
 	id = x['id']
-	log("decl_type %s" % id['str'])
+	func_type = do_type_func(x['type'], func_id=id['str'])
 
-	nt = hlir_type.hlir_type_undefined(x['ti'])
-	nt['aka'] = id['str']
-	nt['ti_decl'] = x['ti']
-	global module
-	module_type_add_public(module, id['str'], nt)
+	#
+	# Check if function already declared/defined
+	#
+#	already = value_get(id['str'])
+#	if already != None:
+#		if 'stmt' in already:
+#			# already defined function
+#			info("function declaration after definition", x['ti'])
+#
+#		else:
+#			# already declared function
+#			info("repeated function declaration", x['ti'])
+#
+#		# check type of already created function
+#		if not hlir_type.type_eq(already['type'], func_type):
+#			error("definition not correspond to function type", x['type']['ti'])
+#			info("firstly declared here", already['type']['ti'])
+#
+#		return
 
-	# С не печатает opaque, но LLVM печатает (!)
-	return hlir_decl_type(id, nt, x['ti'])
+	func = value_func(id, func_type, ti=id['ti'])
+	ctx_value_add(id['str'], func)
+	return hlir_decl_func(id, func, x['ti'])
+
+
 
 
 
@@ -2143,6 +2167,24 @@ def symbol_type(id, ti):
 	#module_type_add_private(module, id['str'], nt)
 	return nt
 """
+
+
+
+
+def decl_type(x):
+	id = x['id']
+	log("decl_type %s" % id['str'])
+
+	nt = do_type(x['type'])
+	#nt = hlir_type.hlir_type_undefined(x['ti'])
+	nt['aka'] = id['str']
+	nt['ti_decl'] = x['ti']
+	global module
+	module_type_add_public(module, id['str'], nt)
+
+	# С не печатает opaque, но LLVM печатает (!)
+	return hlir_decl_type(id, nt, x['ti'])
+
 
 
 
@@ -2212,7 +2254,9 @@ def def_type(x):
 		if settings.check('backend', 'llvm'):
 			module_remove_node(module, 'decl_type', id['str'])
 
-	return hlir_def_type(id, nt, ty, x['ti'])
+	y = hlir_def_type(id, nt, ty, x['ti'])
+	y['nl'] = x['nl']
+	return y
 
 
 
@@ -2221,6 +2265,41 @@ def def_type(x):
 	#global module
 	#module_value_add_public(module, id['str'], var_value)
 	return var_value"""
+
+
+def decl_var(x):
+	id = x['id']
+	#log("decl_var %s" % id['str'])
+	v = None
+	if x['value'] != None:
+		v = do_rvalue(x['value'])
+
+		if t != None:
+			# for case like:
+			# var a: Int[] = [1, 2, 3] // -> Int[3]
+			if hlir_type.type_is_open_array(t):
+				length = 0
+				if hlir_type.type_is_string(v['type']):
+					length = len(v['asset'])
+				elif hlir_type.type_is_array(v['type']):
+					length = v['type']['volume']['asset']
+
+				volume = value_integer_create(length)
+				t = hlir_type.hlir_type_array(t['of'], volume, x['ti'])
+
+			v = value_cons_implicit_check(t, v)
+		else:
+			v = value_cons_default(v)
+			t = v['type']
+
+		if hlir_type.type_is_generic(v['type']):
+			error("cannot cons variable", x['ti'])
+
+
+	var_value = value_var(id, t, id['ti'])
+	module_value_add(module, id['str'], var_value, is_public=x['export'])
+
+	return hlir_decl_var(id, var_value, v, x['ti'])
 
 
 def def_var(x):
@@ -2418,7 +2497,7 @@ def do_attribute(x):
 	kind = x['kind']
 	args = x['args']
 
-	#print("do_attribute('%s')" % kind)
+	#info("do_attribute('%s')" % kind, x['ti'])
 
 	if kind == 'export':
 		attribute_add('export')
@@ -2441,10 +2520,10 @@ def do_attribute(x):
 	return None
 
 
-# находит сущность по имени и декларирует ее
+# находит сущность по имени и определяет ее
 gast = None
 def predefinition(id_str):
-	#print("predefinition(%s)" % id_str)
+	print("predefinition(\"%s\")" % id_str)
 	global gast
 	for x in gast:
 		if not 'id' in x:
@@ -2460,7 +2539,7 @@ def predefinition(id_str):
 			x['defined'] = True  # mark as DEFINED
 
 			if y != None:
-				module_append(y)#, x['export'])
+				module_append(y, to_export=x['export'])
 
 
 
@@ -2481,12 +2560,12 @@ def pre_nodef(ast):
 		if isa == 'ast_definition':
 			if kind == 'type':
 				if not 'defined' in x:
-					y = def_type(x)
+					y = decl_type(x)
 					if y == None:
 						continue
 					y['nl'] = x['nl']
 
-					module_append_export(y)
+					module_append(y, to_export=x['export'])
 
 
 	# 2. def vars & consts
@@ -2504,7 +2583,7 @@ def pre_nodef(ast):
 					module_value_add_public(module, id['str'], v)
 					return hlir_def_const(id, v, v, x['ti'])
 				const_value = symbol_const(id, v, is_public=x['export'])
-				module_append_export(y)
+				module_append(y, to_export=x['export'])
 				continue
 
 
@@ -2515,7 +2594,7 @@ def pre_nodef(ast):
 				# нельзя печатать ее определение (тк она из другого модуля)
 				# но в LLVM backend нужно указать как extern
 				y['att'].append('extern')
-				module_append_export(y)
+				module_append(y, to_export=x['export'])
 				continue
 
 
@@ -2529,14 +2608,14 @@ def pre_nodef(ast):
 				for a in x['attributes']:
 					do_attribute(a)
 
-			#info("scan func %s" % x['id']['str'], x['ti'])
-			ftype = do_type(x['type'])
-			sym = symbol_func(x['id'], ftype, x['ti'], is_public=x['export'])
-			x['symbol'] = sym
+			#sym = symbol_func(x['id'], ftype, x['ti'], is_public=x['export'])
+			#x['symbol'] = sym
 
-			y = hlir_decl_func(x['id'], sym, x['ti'])
+			print("DECL: " + x['id']['str'])
+
+			y = decl_func(x)
 			add_spices(y)
-			module_append_export(y)
+			module_append(y, to_export=x['export'])
 
 
 	pre_mode = old_pre_mode
@@ -2563,13 +2642,16 @@ def pre_def(ast):
 
 		if isa == 'ast_definition':
 			if kind == 'type':
-				if not 'defined' in x:
-					#info("def type %s" % x['id']['str'], x['ti'])
-					y = def_type(x)
-					if y == None:
-						continue
-					y['nl'] = x['nl']
-					module_append(y)
+				for a in x['attributes']:
+					do_attribute(a)
+
+				y = def_type(x)
+				add_spices(y)
+				module_append(y, to_export=x['export'])
+
+		elif isa == 'ast_directive':
+			y = do_directive(x)
+			module_append(y)
 
 
 	# 2. def vars & consts
@@ -2582,13 +2664,11 @@ def pre_def(ast):
 			if kind == 'const':
 				if not 'defined' in x:
 					y = def_const(x)
-					module_append(y)
-					continue
 
 			elif kind == 'var':
 				y = def_var(x)
-				module_append(y)
-				continue
+
+			module_append(y, to_export=x['export'])
 
 
 	# 3. scan funcs after
@@ -2597,30 +2677,33 @@ def pre_def(ast):
 		kind = x['kind']
 
 		if kind == 'func':
-			if 'attributes' in x:
-				for a in x['attributes']:
-					do_attribute(a)
+			for a in x['attributes']:
+				do_attribute(a)
 
-			#info("scan func %s" % x['id']['str'], x['ti'])
+			y0 = decl_func(x)
+			add_spices(y0)
+			module_append(y0, to_export=x['export'])
+
+			#info("scan func: %s" % x['id']['str'], x['ti'])
 			ftype = do_type(x['type'])
-			sym = symbol_func(x['id'], ftype, x['ti'], is_public=x['export'])
-			x['symbol'] = sym
+			fvalue = value_func(x['id'], ftype, ti=x['ti'])
+			global module
+			module_value_add(module, x['id']['str'], fvalue, is_public=x['export'])
+			x['symbol'] = fvalue
 
 
 	# 4. def funcs after
 	for x in ast:
-		if 'attributes' in x:
-			for a in x['attributes']:
-				do_attribute(a)
-
 		isa = x['isa']
 		kind = x['kind']
 		if isa == 'ast_definition':
 			if kind == 'func':
+				for a in x['attributes']:
+					do_attribute(a)
 				y = def_func(x)
 				if y != None:
 					add_spices(y)
-					module_append(y)
+					module_append(y)#, to_export=x['export'])
 
 	pre_mode = old_pre_mode
 
@@ -2635,16 +2718,16 @@ def do_directive(x):
 		#for arg in args:
 		#	print(arg['kind'])
 		s0 = args[0]
-		if s0 == 'ass':
-			print("BADASS")
-		elif s0 == 'not_included':
+		if s0 == 'not_included':
 			#print("NOT_INCLUDED")
 			module['att'].append('not_included')
 		elif s0 == 'c_include':
 			s1 = args[1]
 			#print("C_INCLUDE " + s1)
-			c_include(s1)
+			return c_include(s1)
 		pass
+	return None
+
 
 	"""if kind == 'if':
 		old_production = production
@@ -2819,7 +2902,7 @@ def proc(ast, source_info, nodef=False):
 	}
 
 	# do imports before
-	for x in ast:
+	"""for x in ast:
 		isa = x['isa']
 		if isa == 'ast_import':
 			y = do_importing(x)
@@ -2842,7 +2925,7 @@ def proc(ast, source_info, nodef=False):
 
 		elif isa == 'ast_directive':
 			do_directive(x)
-			pass
+			pass"""
 
 
 	# do pre!
@@ -2994,7 +3077,6 @@ def add_properties(obj):
 	for prop in props:
 		k = prop
 		v = props[prop]
-
 		path_array = prop.split(".")
 		set_prop(obj, path_array, v)
 

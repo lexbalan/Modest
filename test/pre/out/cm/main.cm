@@ -40,7 +40,7 @@ func main() -> Int {
 }
 func arrayShow(array: *Arr, size: Int) -> Unit {
 	print("arrayShow:\n")
-	var i: Int32 = 0
+	var i: Int = 0
 	while i < 10 {
 		print("array[%d] = %d\n", i, array[i])
 		i = i + 1

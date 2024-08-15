@@ -8,6 +8,10 @@
 #include "./sub2.h"
 
 typedef struct Node Node;
+void arrshow();
+int32_t main();
+void arrshow(int32_t *array, int32_t size);
+int32_t mid(int32_t a, int32_t b);
 #include "console.h"
 #include "sub.h"
 #include "sub2.h"
@@ -19,14 +23,14 @@ struct Node {
 	Data *data;
 };
 #define arrSize  10
-typedef Int * Arr;
+typedef int32_t * Arr;
 #define print  (&printf)
-static Int x;
+static int32_t x;
 void increment()
 {
 	subCnt = subCnt + 1;
 }
-Int main()
+int32_t main()
 {
 	((void (*) (char *s, ...))print)("test\n");
 
@@ -35,10 +39,10 @@ Int main()
 
 	#define a  10
 	#define b  20
-	const Int s = mid(a, b);
+	const int32_t s = mid(a, b);
 	((void (*) (char *s, ...))print)("s = %d\n", s);
 
-	Int xx;
+	int32_t xx;
 
 	//var arr = getArr()
 	//arrayShow(&arr, 10)
@@ -50,7 +54,7 @@ Int main()
 
 #undef a
 #undef b
-void arrayShow(Int *array, Int size)
+void arrayShow(int32_t *array, int32_t size)
 {
 	((void (*) (char *s, ...))print)("arrayShow:\n");
 	int32_t i;
@@ -60,9 +64,9 @@ void arrayShow(Int *array, Int size)
 		i = i + 1;
 	}
 }
-Int mid(Int a, Int b)
+int32_t mid(int32_t a, int32_t b)
 {
-	const Int sum = a + b;
+	const int32_t sum = a + b;
 	return div(sum, 2);
 }
 

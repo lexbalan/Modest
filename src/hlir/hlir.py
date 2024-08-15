@@ -45,6 +45,16 @@ def hlir_def_const(_id, value_const, init_value, ti):
 		'ti': ti
 	}
 
+def hlir_decl_var(_id, var_value, init_value, ti):
+	return {
+		'isa': 'decl_var',
+		'id': _id,
+		'init_value': init_value,
+		'value': var_value,
+		'att': [],
+		'nl': 1,
+		'ti': ti
+	}
 
 def hlir_def_var(_id, var_value, init_value, ti):
 	return {

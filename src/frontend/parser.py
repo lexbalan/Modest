@@ -1476,6 +1476,8 @@ class Parser:
 			a = self.gettok()
 			args.append(a)
 
+		print("PARSE_DIRECTIVE: " + x)
+
 		dir = {
 			'isa': 'ast_directive',
 			'kind': x,
@@ -1507,10 +1509,22 @@ class Parser:
 				x = self.parse_comment_line()
 
 
-		attributes = []
+
 		spaceline_cnt = 0
 
+		attributes = []
 		while not self.is_end():
+
+			if self.token_class_is('attribute'):
+				#info("ATT", self.ti())
+				a = self.parse_attribute()
+				attributes.append(a)
+				continue
+
+			#print("AFTER=%d" % len(attributes))
+
+			#attributes = []
+
 			export = self.match('export')
 			#extern = self.match('extern')
 
@@ -1530,10 +1544,6 @@ class Parser:
 				x = self.parse_comment_block()
 			elif self.token_class_is('comment-line'):
 				x = self.parse_comment_line()
-			elif self.token_class_is('attribute'):
-				a = self.parse_attribute()
-				attributes.append(a)
-				continue
 			elif self.token_class_is('directive'):
 				x = self.parse_directive()
 
@@ -1553,6 +1563,7 @@ class Parser:
 					subx['nl'] = 1
 					subx['ti'] = ti
 					subx['export'] = export
+					subx['attributes'] = attributes
 
 				x[0]['nl'] = spaceline_cnt
 
@@ -1570,11 +1581,12 @@ class Parser:
 					spaceline_cnt = 0
 
 				x['attributes'] = attributes
-				attributes = []
 
 				x['export'] = export
 
 				output.append(x)
+
+			attributes = []
 
 			#spaceline_cnt = 0
 

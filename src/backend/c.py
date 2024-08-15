@@ -1741,7 +1741,10 @@ def print_variable(_id, typ, as_const=False, init_value=None, prefix=''):
 
 
 
-def print_def_var(x):
+def print_decl_var(x):
+	print_def_var(x, isdecl=True)
+
+def print_def_var(x, isdecl=False):
 	newline(n=x['nl'])
 
 	if 'gnu_att' in x:
@@ -1755,8 +1758,10 @@ def print_def_var(x):
 				out("static ")
 
 	#if 'static' in var['att']: out("static ")
-	if 'extern' in var['att']: out("extern ")
-	if 'volatile' in var['att']: out("volatile ")
+	if 'extern' in var['att']:
+		out("extern ")
+	if 'volatile' in var['att']:
+		out("volatile ")
 
 	print_variable(id, var['type'])
 
@@ -1936,17 +1941,50 @@ def run(module, outname):
 		print_type_record(anon_rec, tag=anon_rec['c_anon_id'])
 		out(";")
 
+
+	"""for x in module['export_defs']:
+		if 'c-no-print' in x['att']:
+			continue
+
+		isa = x['isa']
+		if isa == 'decl_var': print_decl_var(x)
+		elif isa == 'decl_func': print_decl_func(x)
+		elif isa == 'decl_type': print_decl_type(x)"""
+
+	# types & constants
 	for x in module['defs']:
 		if 'c-no-print' in x['att']:
 			continue
 
 		isa = x['isa']
+		#if isa == 'decl_func': print_decl_func(x)
+		#elif isa == 'decl_var': print_decl_var(x)
+		if isa == 'def_const': print_def_const(x)
+		elif isa == 'def_type': print_def_type(x)
+
+
+	for x in module['defs']:
+		if 'c-no-print' in x['att']:
+			continue
+
+		isa = x['isa']
+		if isa == 'decl_func': print_decl_func(x)
+		elif isa == 'decl_var': print_decl_var(x)
+		#elif isa == 'decl_type': print_decl_type(x)
+
+
+	for x in module['defs']:
+		if 'c-no-print' in x['att']:
+			continue
+
+		isa = x['isa']
+		#elif isa == 'decl_var': print_decl_var(x)
+		#elif isa == 'decl_func': print_decl_func(x)
+		#elif isa == 'decl_type': print_decl_type(x)
 		if isa == 'def_var': print_def_var(x)
 		elif isa == 'def_const': print_def_const(x)
 		elif isa == 'def_func': print_def_func(x)
-		elif isa == 'def_type': print_def_type(x)
-		elif isa == 'decl_func': print_decl_func(x)
-		elif isa == 'decl_type': print_decl_type(x)
+		#elif isa == 'def_type': print_def_type(x)
 		elif isa == 'comment': print_comment(x)
 		elif isa == 'directive': print_directive(x)
 
