@@ -2604,17 +2604,9 @@ def pre_nodef(ast):
 		kind = x['kind']
 
 		if kind == 'func':
-			if 'attributes' in x:
-				for a in x['attributes']:
-					do_attribute(a)
-
-			#sym = symbol_func(x['id'], ftype, x['ti'], is_public=x['export'])
-			#x['symbol'] = sym
-
 			print("DECL: " + x['id']['str'])
-
 			y = decl_func(x)
-			add_spices(y)
+			add_spices(y, ast_atts=x['attributes'])
 			module_append(y, to_export=x['export'])
 
 
@@ -2642,11 +2634,8 @@ def pre_def(ast):
 
 		if isa == 'ast_definition':
 			if kind == 'type':
-				for a in x['attributes']:
-					do_attribute(a)
-
 				y = def_type(x)
-				add_spices(y)
+				add_spices(y, ast_atts=x['attributes'])
 				module_append(y, to_export=x['export'])
 
 		elif isa == 'ast_directive':
@@ -2677,11 +2666,8 @@ def pre_def(ast):
 		kind = x['kind']
 
 		if kind == 'func':
-			for a in x['attributes']:
-				do_attribute(a)
-
 			y0 = decl_func(x)
-			add_spices(y0)
+			add_spices(y0, ast_atts=x['attributes'])
 			module_append(y0, to_export=x['export'])
 
 			#info("scan func: %s" % x['id']['str'], x['ti'])
@@ -2698,11 +2684,9 @@ def pre_def(ast):
 		kind = x['kind']
 		if isa == 'ast_definition':
 			if kind == 'func':
-				for a in x['attributes']:
-					do_attribute(a)
 				y = def_func(x)
 				if y != None:
-					add_spices(y)
+					add_spices(y, ast_atts=x['attributes'])
 					module_append(y)#, to_export=x['export'])
 
 	pre_mode = old_pre_mode
@@ -3082,13 +3066,19 @@ def add_properties(obj):
 
 
 
-def add_spices(obj):
+def add_spices(obj, ast_atts=None):
+	global attributes
+	global properties
+
+	attributes = []
+	properties = {}
+
 	if obj == None:
-		global attributes
-		attributes = []
-		global properties
-		properties = {}
 		return
+
+	if ast_atts!=None:
+		for a in ast_atts:
+			do_attribute(a)
 
 	add_properties(obj)
 	add_attributes(obj)
