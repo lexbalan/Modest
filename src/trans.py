@@ -2609,7 +2609,6 @@ def pre_nodef(ast):
 			add_spices(y, ast_atts=x['attributes'])
 			module_append(y, to_export=x['export'])
 
-
 	pre_mode = old_pre_mode
 
 	return
@@ -2687,7 +2686,7 @@ def pre_def(ast):
 				y = def_func(x)
 				if y != None:
 					add_spices(y, ast_atts=x['attributes'])
-					module_append(y)#, to_export=x['export'])
+					module_append(y)
 
 	pre_mode = old_pre_mode
 
@@ -2699,16 +2698,12 @@ def do_directive(x):
 	#info("directive %s" % x['kind'], x['ti'])
 	if x['kind'] == 'pragma':
 		args = x['args']
-		#for arg in args:
-		#	print(arg['kind'])
 		s0 = args[0]
 		if s0 == 'not_included':
 			#print("NOT_INCLUDED")
 			module['att'].append('not_included')
 		elif s0 == 'c_include':
-			s1 = args[1]
-			#print("C_INCLUDE " + s1)
-			return c_include(s1)
+			return c_include(args[1])
 		pass
 	return None
 
