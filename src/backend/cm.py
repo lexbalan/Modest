@@ -882,8 +882,6 @@ def run(module, outname):
 		isa = x['isa']
 
 		if isa != 'comment':
-			if not 'nl' in x:
-				print(x)
 			newline(n=x['nl'])
 
 		if isa == 'def_var': print_def_var(x)
