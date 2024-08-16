@@ -20,7 +20,6 @@ struct Node {
 typedef int * Arr;
 #define printf  (&printf)
 #define default  5
-#define subName  "Name"
 int main();
 void arrshow(int *array, int size);
 int mid(int a, int b);
@@ -30,7 +29,7 @@ int main()
 {
 	((void (*) (char *s, ...))printf)("test\n");
 
-	((void (*) (char *s, ...))printf)("subName = '%s'\n", (char *)subName);
+	((void (*) (char *s, ...))printf)("sub::name = '%s'\n", (char *)name);
 	//printf("sub2Name = '%s'\n", *Str8 sub2Name)
 
 	#define a  10

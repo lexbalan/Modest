@@ -2791,7 +2791,6 @@ def do_directive(x):
 
 
 
-
 def do_import(x):
 	import_expr = do_value_immediate_string(x['expr'])
 
@@ -2816,6 +2815,47 @@ def do_import(x):
 
 
 
+def translate(srcname, nodef=False):
+	assert(srcname != None)
+	assert(srcname != "")
+
+	#print("translate(\"%s\")" % srcname)
+
+	if not os.path.exists(srcname):
+		return None
+
+	global env_current_file_abspath
+	global env_current_file_dir
+	prev_env_current_file_dir = env_current_file_dir
+	prev_env_current_file_abspath = env_current_file_abspath
+
+	absp = os.path.abspath(srcname)
+	fdir = os.path.dirname(absp)
+
+	env_current_file_abspath = absp
+	env_current_file_dir = fdir
+
+	source_info = {
+		'id': srcname,
+		'path': absp,
+		'dir': fdir,
+		'name': srcname,
+	}
+
+	parser = Parser()
+	ast = parser.parse(source_info)
+
+	if ast == None:
+		return None
+
+	m = process_module(ast, source_info, nodef=nodef)
+
+	env_current_file_abspath = prev_env_current_file_abspath
+	env_current_file_dir = prev_env_current_file_dir
+
+	return m
+
+
 
 def process_module(ast, source_info, nodef=False):
 	global skipp, production, prev_production
@@ -2827,7 +2867,6 @@ def process_module(ast, source_info, nodef=False):
 
 	global module
 	prev_module = module
-
 
 	symtab_public = root_symtab.branch()
 	symtab_private = Symtab()
@@ -2902,7 +2941,9 @@ def process_module(ast, source_info, nodef=False):
 	return m
 
 
+
 imp_paths = []
+
 
 # получает строку импорта (и неявно глобальный контекст)
 # и возвращает полный путь к модулю
@@ -2939,48 +2980,6 @@ def import_abspath(s, ext='.hm'):
 
 	return os.path.abspath(full_name)
 
-
-
-def translate(srcname, nodef=False):
-	assert(srcname != None)
-	assert(srcname != "")
-
-	#print("translate(\"%s\")" % srcname)
-
-	if not os.path.exists(srcname):
-		return None
-
-	global env_current_file_abspath
-	global env_current_file_dir
-	prev_env_current_file_dir = env_current_file_dir
-	prev_env_current_file_abspath = env_current_file_abspath
-
-
-	absp = os.path.abspath(srcname)
-	fdir = os.path.dirname(absp)
-
-	env_current_file_abspath = absp
-	env_current_file_dir = fdir
-
-	source_info = {
-		'id': srcname,
-		'path': absp,
-		'dir': fdir,
-		'name': srcname,
-	}
-
-	parser = Parser()
-	ast = parser.parse(source_info)
-
-	if ast == None:
-		return None
-
-	m = process_module(ast, source_info, nodef=nodef)
-
-	env_current_file_abspath = prev_env_current_file_abspath
-	env_current_file_dir = prev_env_current_file_dir
-
-	return m
 
 
 def set_att(obj, path, att):

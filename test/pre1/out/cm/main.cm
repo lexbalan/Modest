@@ -14,11 +14,10 @@ type Arr [arrSize]Int
 let printf = &printf
 var x: Int
 let default = 5
-let subName = "Name"
 func main() -> Int {
 	printf("test\n")
 
-	printf("subName = '%s'\n", *Str8 subName)
+	printf("sub::name = '%s'\n", *Str8 name)
 	//printf("sub2Name = '%s'\n", *Str8 sub2Name)
 
 	var y: Int32 = default
