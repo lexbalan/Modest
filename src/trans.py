@@ -2811,6 +2811,7 @@ def do_import(x):
 
 	m = translate(abspath, nodef=True)
 	m['id'] = impline
+	m['prefix'] = impline + '_'
 	return m
 
 
@@ -2879,6 +2880,7 @@ def process_module(ast, source_info, nodef=False):
 	module = {
 		'isa': 'module',
 		'id': "id",
+		'prefix': "",
 		'source_info': source_info,
 		'imports': {},  #
 		'strings': [],  # (used in LLVM backend)
