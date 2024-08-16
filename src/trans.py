@@ -42,7 +42,7 @@ from hlir.hlir import *
 
 
 production = True
-old_production = True  # TODO: это бред, сделай стек!
+prev_production = True  # TODO: это бред, сделай стек!
 
 
 # current file directory
@@ -1658,12 +1658,12 @@ def do_value_unsafe(x):
 		error("for use 'unsafe' operator required -funsafe option", ti)
 
 	global unsafe_mode
-	old_unsafe_mode = unsafe_mode
+	prev_unsafe_mode = unsafe_mode
 	unsafe_mode = True
 
 	rv = do_rvalue(x['value'])
 
-	unsafe_mode = old_unsafe_mode
+	unsafe_mode = prev_unsafe_mode
 	return rv
 
 
@@ -2395,7 +2395,7 @@ def def_func(x):
 	func_ti = func_id['ti']
 
 	func_type = do_type_func(x['type'], func_id=func_id['str'])
-	old_cfunc = cfunc
+	prev_cfunc = cfunc
 
 	fn = x['symbol']
 	fn['ti_decl'] = func_ti
@@ -2447,7 +2447,7 @@ def def_func(x):
 	# remove params context
 	context_pop()
 
-	cfunc = old_cfunc
+	cfunc = prev_cfunc
 
 	if stmt == None:
 		return hlir_decl_func(func_id, fn, x['ti'])
@@ -2486,10 +2486,10 @@ def comm_block(x):
 # пропускать остальные ветви (elseif & else) условной директивы
 # тк основная ветвь была выполнена
 skipp = False
-old_skipp = False
+prev_skipp = False
 
 def do_attribute(x):
-	global skipp, old_skipp, production, old_production
+	global skipp, prev_skipp, production, prev_production
 	kind = x['kind']
 	args = x['args']
 
@@ -2620,6 +2620,9 @@ def pre_def(ast):
 		isa = x['isa']
 		if isa == 'ast_import':
 			y = do_import(x)
+			if y == None:
+				fatal("cannot import module")
+
 			idd = y['id']
 			module['imports'][idd] = y
 			#module_append(y)
@@ -2707,7 +2710,7 @@ def do_directive(x):
 
 
 	"""if kind == 'if':
-		old_production = production
+		prev_production = production
 		c = do_value_immediate(args[0])
 
 		if value_is_bad(c):
@@ -2721,7 +2724,7 @@ def do_directive(x):
 
 		production = cond
 		if cond:
-			old_skipp = skipp
+			prev_skipp = skipp
 			skipp = True  # skip another branches
 
 	elif kind == 'elseif':
@@ -2745,8 +2748,8 @@ def do_directive(x):
 		production = not skipp
 
 	elif kind == 'endif':
-		skipp = old_skipp  # do not skip branches (for new if)
-		production = old_production
+		skipp = prev_skipp  # do not skip branches (for new if)
+		production = prev_production
 
 	elif kind == 'info':
 		v = do_value_immediate_string(args[0])
@@ -2788,6 +2791,7 @@ def do_directive(x):
 
 
 
+
 def do_import(x):
 	import_expr = do_value_immediate_string(x['expr'])
 
@@ -2796,61 +2800,25 @@ def do_import(x):
 
 	# Literal string to python string
 	impline = import_expr['asset']
+
 	log('import "%s"' % impline)
 	print('do_import("%s")' % impline)
 
-	global module
-	global context
-	old_module = module
-	old_context = context
-
-	# (!) right here, before calling "do_import" (!)
-	att = attributes_get()
-	# (!) ^^
-
 	abspath = import_abspath(impline, ext='.m')
+
 	if abspath == None:
 		error("module %s not found" % impline, import_expr)
-		fatal("cannot import module")
 		return None
 
-	"""global import_cache
-	if abspath in import_cache:
-		# already imported
-		m = import_cache[abspath]
-	else:
-		m = translate(abspath, nodef=True)
-		import_cache[abspath] = m"""
-
 	m = translate(abspath, nodef=True)
-	#if m != None:
-	#	module['imports'][impline] = m
 	m['id'] = impline
-
-	# 2. А в нашем модуле добавляем директиву инклуда
-	"""directive = {
-		'isa': 'directive',
-		'kind': 'import',
-		'str': impline,			   # ex: "libc/stdio"
-		'c_name': impline + '.h',  # ex: "libc/stdio.h"
-		'att': att,
-		'module': m, # ссылка на сам модуль (для not_included)
-		'local': True
-	}"""
-
-	print('end importing "%s"' % impline)
-	#do_attributes(directive) @^^
-
-	module = old_module
-	context = old_context
-
 	return m
 
 
 
 
-def proc(ast, source_info, nodef=False):
-	global skipp, production, old_production
+def process_module(ast, source_info, nodef=False):
+	global skipp, production, prev_production
 
 	global properties
 	properties = {}
@@ -2858,7 +2826,7 @@ def proc(ast, source_info, nodef=False):
 	attributes = []
 
 	global module
-	old_module = module
+	prev_module = module
 
 
 	symtab_public = root_symtab.branch()
@@ -2867,6 +2835,7 @@ def proc(ast, source_info, nodef=False):
 	global context
 	prev_context = context
 	context = symtab_public
+
 
 	module = {
 		'isa': 'module',
@@ -2926,7 +2895,7 @@ def proc(ast, source_info, nodef=False):
 
 
 	m = module
-	module = old_module
+	module = prev_module
 
 	context = prev_context
 
@@ -2983,8 +2952,9 @@ def translate(srcname, nodef=False):
 
 	global env_current_file_abspath
 	global env_current_file_dir
-	old_env_current_file_dir = env_current_file_dir
-	old_env_current_file_abspath = env_current_file_abspath
+	prev_env_current_file_dir = env_current_file_dir
+	prev_env_current_file_abspath = env_current_file_abspath
+
 
 	absp = os.path.abspath(srcname)
 	fdir = os.path.dirname(absp)
@@ -3005,10 +2975,10 @@ def translate(srcname, nodef=False):
 	if ast == None:
 		return None
 
-	m = proc(ast, source_info, nodef=nodef)
+	m = process_module(ast, source_info, nodef=nodef)
 
-	env_current_file_abspath = old_env_current_file_abspath
-	env_current_file_dir = old_env_current_file_dir
+	env_current_file_abspath = prev_env_current_file_abspath
+	env_current_file_dir = prev_env_current_file_dir
 
 	return m
 

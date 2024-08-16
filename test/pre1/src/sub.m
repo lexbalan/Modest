@@ -1,2 +1,2 @@
 
-let name = "Name"
+export let name = "Name"
