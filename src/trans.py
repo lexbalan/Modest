@@ -50,11 +50,9 @@ env_current_file_abspath = ""
 env_current_file_dir = ""
 
 
-pre_mode = False
 
 cfunc = None	# current function
 context = None
-private = None
 
 root_symtab = None
 
@@ -477,27 +475,24 @@ def do_field(x):
 
 def do_type_name(t):
 	id_str = t['id']['str']
-	#if 'id2' in t:
-	#	id_str = t['id2']['str']
 
 	tx = None
 	if 'id2' in t:
-		id2_str = t['id2']['str']
-		#print("GET TYPE FROM: %s" % id_str)
+		ns_id = id_str
+		id_str = x['id2']['str']
+		#print("GET TYPE %s FROM: %s" % (id_str, ns_id))
 		global module
-		m = module['imports'][id_str]
-		tx = module_type_get_public(m, id2_str)
+		submodule = module['imports'][ns_id]
+		tx = module_type_get_public(submodule, id_str)
+
 	else:
 		tx = ctx_type_get(id_str)
 
-	#tx = ctx_type_get(id_str)
 	if tx == None:
-		global pre_mode
-		if pre_mode:
-			predefinition(id_str)
-			tx = ctx_type_get(id_str)
-			if tx != None:
-				return tx
+		predefinition(id_str)
+		tx = ctx_type_get(id_str)
+		if tx != None:
+			return tx
 
 		error("undeclared type '%s'" % id_str, t['ti'])
 		# create fake alias for unknown type
@@ -1476,22 +1471,23 @@ def do_value_name(x):
 
 	v = None
 	if 'id2' in x:
-		id2_str = x['id2']['str']
-		#print("GET VALUE FROM: %s" % id_str)
+		ns_id = id_str
+		id_str = x['id2']['str']
+		print("GET VALUE %s FROM: %s" % (id_str, ns_id))
 		global module
-		m = module['imports'][id_str]
-		v = module_value_get_public(m, id2_str)
+		submodule = module['imports'][ns_id]
+		if submodule == None:
+			print("MODULE %s NOT FOUND" % ns_id)
+		v = module_value_get_public(submodule, id_str)
+
 	else:
 		v = ctx_value_get(id_str)
 
-
 	if v == None:
-		global pre_mode
-		if pre_mode:
-			predefinition(id_str)
-			vx = ctx_value_get(id_str)
-			if vx != None:
-				return vx
+		predefinition(id_str)
+		vx = ctx_value_get(id_str)
+		if vx != None:
+			return vx
 
 		# see: do_value_call
 		global undeclared_value_error
@@ -2544,11 +2540,8 @@ def predefinition(id_str):
 
 
 def pre_nodef(ast):
-	global pre_mode
-	old_pre_mode = pre_mode
-	pre_mode = True
-
 	global gast
+	prev_gast = gast
 	gast = ast
 
 	# 1. do types before
@@ -2590,7 +2583,7 @@ def pre_nodef(ast):
 			elif kind == 'var':
 				y = def_var(x)
 
-				# обрабатываем перемкнную из импорта
+				# обрабатываем переменную из импорта
 				# нельзя печатать ее определение (тк она из другого модуля)
 				# но в LLVM backend нужно указать как extern
 				y['att'].append('extern')
@@ -2609,8 +2602,7 @@ def pre_nodef(ast):
 			add_spices(y, ast_atts=x['attributes'])
 			module_append(y, to_export=x['export'])
 
-	pre_mode = old_pre_mode
-
+	gast = prev_gast
 	return
 
 
@@ -2618,12 +2610,19 @@ def pre_nodef(ast):
 # если они имеют неизвестную зависимость -
 # удовлетворяет ее посредством predefinition(id_str)
 def pre_def(ast):
-	global pre_mode
-	old_pre_mode = pre_mode
-	pre_mode = True
-
+	global module
 	global gast
+	prev_gast = gast
 	gast = ast
+
+	# 0. do imports
+	for x in ast:
+		isa = x['isa']
+		if isa == 'ast_import':
+			y = do_import(x)
+			idd = y['id']
+			module['imports'][idd] = y
+			#module_append(y)
 
 	# 1. def types before
 	# (and const if need for type!)
@@ -2673,7 +2672,6 @@ def pre_def(ast):
 			#info("scan func: %s" % x['id']['str'], x['ti'])
 			ftype = do_type(x['type'])
 			fvalue = value_func(x['id'], ftype, ti=x['ti'])
-			global module
 			module_value_add(module, x['id']['str'], fvalue, is_public=x['export'])
 			x['symbol'] = fvalue
 
@@ -2689,8 +2687,7 @@ def pre_def(ast):
 					add_spices(y, ast_atts=x['attributes'])
 					module_append(y)
 
-	pre_mode = old_pre_mode
-
+	gast = prev_gast
 	return
 
 
@@ -2791,7 +2788,7 @@ def do_directive(x):
 
 
 
-def do_importing(x):
+def do_import(x):
 	import_expr = do_value_immediate_string(x['expr'])
 
 	if value_is_bad(import_expr):
@@ -2800,7 +2797,12 @@ def do_importing(x):
 	# Literal string to python string
 	impline = import_expr['asset']
 	log('import "%s"' % impline)
-	print('importing "%s"' % impline)
+	print('do_import("%s")' % impline)
+
+	global module
+	global context
+	old_module = module
+	old_context = context
 
 	# (!) right here, before calling "do_import" (!)
 	att = attributes_get()
@@ -2820,13 +2822,13 @@ def do_importing(x):
 		m = translate(abspath, nodef=True)
 		import_cache[abspath] = m"""
 
-
 	m = translate(abspath, nodef=True)
-	if m != None:
-		module['imports'][impline] = m
+	#if m != None:
+	#	module['imports'][impline] = m
+	m['id'] = impline
 
 	# 2. А в нашем модуле добавляем директиву инклуда
-	directive = {
+	"""directive = {
 		'isa': 'directive',
 		'kind': 'import',
 		'str': impline,			   # ex: "libc/stdio"
@@ -2834,11 +2836,15 @@ def do_importing(x):
 		'att': att,
 		'module': m, # ссылка на сам модуль (для not_included)
 		'local': True
-	}
+	}"""
 
 	print('end importing "%s"' % impline)
 	#do_attributes(directive) @^^
-	return directive
+
+	module = old_module
+	context = old_context
+
+	return m
 
 
 
@@ -2886,7 +2892,7 @@ def proc(ast, source_info, nodef=False):
 	"""for x in ast:
 		isa = x['isa']
 		if isa == 'ast_import':
-			y = do_importing(x)
+			y = do_import(x)
 			#module_append(y)
 
 			# Для того чтобы CM backend печатал import директиву
@@ -2913,6 +2919,7 @@ def proc(ast, source_info, nodef=False):
 	if nodef:
 		# process in import mode
 		pre_nodef(ast)
+		pass
 	else:
 		# process in normal mode
 		pre_def(ast)
@@ -2968,6 +2975,8 @@ def import_abspath(s, ext='.hm'):
 def translate(srcname, nodef=False):
 	assert(srcname != None)
 	assert(srcname != "")
+
+	#print("translate(\"%s\")" % srcname)
 
 	if not os.path.exists(srcname):
 		return None

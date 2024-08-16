@@ -1,12 +1,10 @@
-// test/pre/src/main.cm
+// test/pre1/src/main.cm
 
-//import "libc/stdio"
+import "console"
+import "sub"
 
 
-$pragma c_include "stdio.h"
-
-@attribute("c-no-print")
-export func printf(s: *Str8, ...)
+let printf = &console::printf
 
 
 var x: Int
@@ -15,7 +13,7 @@ var x: Int
 func main() -> Int {
 	printf("test\n")
 
-	printf("subName = '%s'\n", *Str8 subName)
+	printf("sub::name = '%s'\n", *Str8 sub::name)
 	//printf("sub2Name = '%s'\n", *Str8 sub2Name)
 
 	var y = default
@@ -35,10 +33,8 @@ func main() -> Int {
 	return 0
 }
 
+
 let default = 5
-
-
-let subName = "Name"
 
 
 @property("c_alias", "arrshow")

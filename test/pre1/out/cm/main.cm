@@ -1,5 +1,4 @@
 
-@c_include "stdio.h"
 
 
 type Int Nat32
@@ -12,10 +11,10 @@ type Node record {
 }
 let arrSize = 10
 type Arr [arrSize]Int
+let printf = &printf
 var x: Int
 let default = 5
 let subName = "Name"
-func printf(s: *Str8) -> Unit
 func main() -> Int {
 	printf("test\n")
 
