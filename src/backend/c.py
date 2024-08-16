@@ -1951,16 +1951,26 @@ def run(module, outname):
 		elif isa == 'decl_func': print_decl_func(x)
 		elif isa == 'decl_type': print_decl_type(x)"""
 
+
+
 	# types & constants
 	for x in module['defs']:
 		if 'c-no-print' in x['att']:
 			continue
 
 		isa = x['isa']
-		#if isa == 'decl_func': print_decl_func(x)
-		#elif isa == 'decl_var': print_decl_var(x)
 		if isa == 'def_const': print_def_const(x)
 		elif isa == 'def_type': print_def_type(x)
+
+
+	# печатаем прототипы функций текущего модуля
+	# (тк C не позволяет использовать функции перед их определением)
+	for x in module['local_decls']:
+		if 'c-no-print' in x['att']:
+			continue
+
+		isa = x['isa']
+		if isa == 'decl_func': print_decl_func(x)
 
 
 	for x in module['defs']:
@@ -1978,13 +1988,9 @@ def run(module, outname):
 			continue
 
 		isa = x['isa']
-		#elif isa == 'decl_var': print_decl_var(x)
-		#elif isa == 'decl_func': print_decl_func(x)
-		#elif isa == 'decl_type': print_decl_type(x)
 		if isa == 'def_var': print_def_var(x)
-		elif isa == 'def_const': print_def_const(x)
+		#elif isa == 'def_const': print_def_const(x)
 		elif isa == 'def_func': print_def_func(x)
-		#elif isa == 'def_type': print_def_type(x)
 		elif isa == 'comment': print_comment(x)
 		elif isa == 'directive': print_directive(x)
 

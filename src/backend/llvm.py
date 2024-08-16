@@ -1979,7 +1979,9 @@ def print_fdecl(x):
 	out("\ndeclare ")
 	print_func_signature(x)
 
+
 def print_decl_func(x):
+	print("print_decl_func " + x['value']['id']['str'])
 	print_fdecl(x['value'])
 
 
@@ -2265,8 +2267,9 @@ def een(defs):
 		elif isa == 'directive':
 			# импортированные CM функции
 			# в LLVM обязательно нужно задекларировать
-			if x['kind'] == 'll_decl_func':
-				print_fdecl(x['symbol'])
+			#if x['kind'] == 'll_decl_func':
+			#	print_fdecl(x['symbol'])
+			pass
 		#elif isa == 'comment': pass
 
 # список имен модулей распечатанных в текущей сброке
@@ -2278,7 +2281,7 @@ def print_module(m):
 
 	printed_modules.append(m['source_info']['path'])
 
-	for imported_module_id in m['imports']:
+	"""for imported_module_id in m['imports']:
 		imp = m['imports'][imported_module_id]
 		#print_module(imp)
 		out("\n; ------------------------")
@@ -2286,7 +2289,7 @@ def print_module(m):
 		#for definition in imp['export_defs']:
 		#	print("; ADD: %s" % definition['id']['str'])
 		out("\n; ------------------------")
-		een(imp['export_defs'])
+		een(imp['export_defs'])"""
 
 
 	out("\n; -- SOURCE: %s\n" % m['source_info']['name'])

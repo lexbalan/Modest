@@ -183,14 +183,15 @@ def ctx_value_get_shallow(id_str):
 
 
 
-"""
-def module_append_export(definition):
+# добавляем декларацию местной функции в отдельное поле модуля local_decls
+# нужно это для C принтера ктороый требует декларацию местных функций перед исп.
+def module_append_localfunc(definition):
 	if definition == None:
 		return
 	global module
-	module['export_defs'].append(definition)
+	module['local_decls'].append(definition)
 	#module['defs'].append(definition)
-"""
+
 
 def module_append(definition, to_export=False):
 	if definition == None:
@@ -2665,9 +2666,10 @@ def pre_def(ast):
 		kind = x['kind']
 
 		if kind == 'func':
+
 			y0 = decl_func(x)
 			add_spices(y0, ast_atts=x['attributes'])
-			module_append(y0, to_export=x['export'])
+			module_append_localfunc(y0)
 
 			#info("scan func: %s" % x['id']['str'], x['ti'])
 			ftype = do_type(x['type'])
@@ -2877,6 +2879,7 @@ def proc(ast, source_info, nodef=False):
 		'att': [],
 
 		'defs': [],  # определения модуля
+		'local_decls': [],  # определения
 		'export_defs': [] # определения которые идут на экспорт
 	}
 
