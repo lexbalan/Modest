@@ -190,7 +190,6 @@ def module_append_localfunc(definition):
 		return
 	global module
 	module['local_decls'].append(definition)
-	#module['defs'].append(definition)
 
 
 def module_append(definition, to_export=False):
