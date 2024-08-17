@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "./sub.h"
+#include "./console.h"
 
 typedef struct Node Node;
 
@@ -24,6 +26,8 @@ int main();
 void arrshow(int *array, int size);
 int mid(int a, int b);
 int div(int a, int b);
+
+
 static int x;
 int main()
 {

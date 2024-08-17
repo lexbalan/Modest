@@ -2281,28 +2281,26 @@ def print_module(m):
 
 	printed_modules.append(m['source_info']['path'])
 
-	"""for imported_module_id in m['imports']:
+	for imported_module_id in m['imports']:
 		imp = m['imports'][imported_module_id]
-		#print_module(imp)
-		out("\n; ------------------------")
+		out("\n; ------------------------------------------------")
 		out("\n; from: %s" % imported_module_id)
-		#for definition in imp['export_defs']:
-		#	print("; ADD: %s" % definition['id']['str'])
-		out("\n; ------------------------")
-		een(imp['export_defs'])"""
+		out("\n; ------------------------------------------------")
+		for definition in imp['export_defs']:
+			print("; ADD: %s" % definition['id']['str'])
+			een(imp['export_defs'])
+		out("\n\n")
 
 
 	out("\n; -- SOURCE: %s\n" % m['source_info']['name'])
 
 	print_strings(m['strings'])
 
-
-
-
 	een(m['defs'])
 
-
 	out("\n\n")
+	return
+
 
 
 def run(module, outname):

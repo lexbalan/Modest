@@ -13,22 +13,22 @@ all: LLVM
 
 CM:
 	mcc -o $(CMPREFIX)/main -mbackend=cm $(INDIR)/main.m
-	#mcc -o $(CMPREFIX)/sub -mbackend=cm $(INDIR)/sub.m
+	mcc -o $(CMPREFIX)/sub -mbackend=cm $(INDIR)/sub.m
 	#mcc -o $(CMPREFIX)/sub2 -mbackend=cm $(INDIR)/sub2.m
 
 
 LLVM:
 	mcc -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.m
-	#mcc -o $(LLVMPREFIX)/sub -mbackend=llvm $(INDIR)/sub.m
+	mcc -o $(LLVMPREFIX)/sub -mbackend=llvm $(INDIR)/sub.m
 	#mcc -o $(LLVMPREFIX)/sub2 -mbackend=llvm $(INDIR)/sub2.m
-	clang $(LLVMPREFIX)/main.ll #$(LLVMPREFIX)/sub.ll $(LLVMPREFIX)/sub2.ll
+	clang $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/sub.ll #$(LLVMPREFIX)/sub2.ll
 
 
 C:
 	mcc -o $(CPREFIX)/main -mbackend=c $(INDIR)/main.m
-	#mcc -o $(CPREFIX)/sub -fheader -mbackend=c $(INDIR)/sub.m
+	mcc -o $(CPREFIX)/sub -fheader -mbackend=c $(INDIR)/sub.m
 	#mcc -o $(CPREFIX)/sub2 -fheader -mbackend=c $(INDIR)/sub2.m
-	#mcc -o $(CPREFIX)/console -fheader -mbackend=c $(INDIR)/console.m
+	mcc -o $(CPREFIX)/console -fheader -mbackend=c $(INDIR)/console.m
 	CC $(CPREFIX)/main.c 
 
 

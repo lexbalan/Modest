@@ -3,6 +3,8 @@
 import "console"
 import "sub"
 
+$pragma c_include "./sub.h"
+$pragma c_include "./console.h"
 
 let printf = &console::printf
 
