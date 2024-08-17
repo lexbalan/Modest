@@ -2286,10 +2286,9 @@ def print_module(m):
 	for imported_module_id in m['imports']:
 		imp = m['imports'][imported_module_id]
 		out("\n; ------------------------------------------------")
-		out("\n; from: %s" % imported_module_id)
+		out("\n; declarations from: %s" % imported_module_id)
 		out("\n; ------------------------------------------------")
 		for definition in imp['export_defs']:
-			print("; ADD: %s" % definition['id']['str'])
 			een(imp['export_defs'])
 		out("\n\n")
 
