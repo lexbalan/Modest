@@ -2281,6 +2281,8 @@ def print_module(m):
 
 	printed_modules.append(m['source_info']['path'])
 
+	# печатаем декларации
+	# из экспортируемой части импортированных модулей
 	for imported_module_id in m['imports']:
 		imp = m['imports'][imported_module_id]
 		out("\n; ------------------------------------------------")
