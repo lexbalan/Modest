@@ -104,3 +104,14 @@ break_2:
 
 
 
+define i32 @add(i32 %a, i32 %b) {
+	%1 = add i32 %a, %b
+	ret i32 %1
+}
+
+define i32 @sub(i32 %a, i32 %b) {
+	%1 = sub i32 %a, %b
+	ret i32 %1
+}
+
+

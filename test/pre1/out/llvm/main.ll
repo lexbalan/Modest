@@ -111,6 +111,9 @@ declare void @printf(%Str8* %s, ...)
 ; declarations from: sub
 ; ------------------------------------------------
 
+declare i32 @add(i32 %a, i32 %b)
+declare i32 @sub(i32 %a, i32 %b)
+
 
 ; -- SOURCE: src/main.m
 
