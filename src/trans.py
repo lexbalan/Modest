@@ -2502,23 +2502,12 @@ def do_attribute(x):
 
 	#info("do_attribute('%s')" % kind, x['ti'])
 
-	if kind == 'export':
-		attribute_add('export')
 	if kind == 'attribute':
 		attribute_add(args[0]['str'])
 	elif kind == 'property':
 		property_add(args[0]['str'], args[1]['str'])
-	elif kind == 'feature':
-		feature_add(args[0]['str'])
-	elif kind == 'const':
-		#print("CONST")
-		pass
-	elif kind == 'volatile':
-		#print("VOLATILE")
-		pass
-	elif kind == 'atomic':
-		#print("ATOMIC")
-		pass
+	else:
+		attribute_add(kind)
 
 	return None
 
@@ -2716,7 +2705,9 @@ def do_directive(x):
 			module['att'].append('not_included')
 		elif s0 == 'c_include':
 			return c_include(args[1])
-		pass
+		elif s0 == 'feature':
+			feature_add(args[0])#['str'])
+			pass
 	return None
 
 

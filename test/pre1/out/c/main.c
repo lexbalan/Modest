@@ -27,7 +27,7 @@ typedef int * Arr;
 #define default  5
 int main();
 void arrshow(int *array, int size);
-int mid(int a, int b);
+int div(int a, int b);
 
 
 static int x;
@@ -41,7 +41,7 @@ int main()
 
 	#define a  10
 	#define b  20
-	const int s = mid(a, b);
+	const int32_t s = mid(a, b);
 	((void (*) (char *s, ...))printf)("s = %d\n", s);
 
 	int xx;
@@ -66,12 +66,6 @@ void arrayShow(int *array, int size)
 		((void (*) (char *s, ...))printf)("array[%d] = %d\n", i, array[i]);
 		i = i + 1;
 	}
-}
-
-int mid(int a, int b)
-{
-	const int sum = a + b;
-	return div(sum, 2);
 }
 
 int div(int a, int b)

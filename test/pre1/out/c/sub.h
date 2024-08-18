@@ -11,4 +11,10 @@
 int32_t add(int32_t a, int32_t b);
 int32_t sub(int32_t a, int32_t b);
 
+static inline
+int32_t mid(int32_t a, int32_t b)
+{
+	return (a + b) / 2;
+}
+
 #endif /* SUB_H */

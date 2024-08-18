@@ -1915,18 +1915,30 @@ def print_header(module, outname):
 
 	out("\n")
 
-	print(len(module['export_defs']))
 	for x in module['export_defs']:
 		if 'c-no-print' in x['att']:
 			continue
 
 		isa = x['isa']
-		if isa == 'decl_func': print_decl_func(x)
+
+		if isa == 'decl_func':
+			if 'inline' in x['att']:
+				# do not print prototype for inline functions
+				continue
+			print_decl_func(x)
 		elif isa == 'decl_var': print_decl_var(x)
 		elif isa == 'decl_type': print_decl_type(x)
 		elif isa == 'def_const':
 			if 'export' in x['att']:
 				print_def_const(x)
+
+
+	for x in module['defs']:
+		isa = x['isa']
+		if isa == 'def_func':
+			if 'inline' in x['att']:
+				out("\n\nstatic inline")
+				print_def_func(x)
 
 	newline()
 	out("\n#endif /* %s */" % guardsymbol)
@@ -2024,7 +2036,11 @@ def print_cfile(module, _outname):
 
 		isa = x['isa']
 		if isa == 'def_var': print_def_var(x)
-		elif isa == 'def_func': out("\n"); print_def_func(x)
+		elif isa == 'def_func':
+			if 'inline' in x['att']:
+				# inline function must be printed in header file
+				continue
+			out("\n"); print_def_func(x)
 		elif isa == 'comment': print_comment(x)
 		elif isa == 'directive': print_directive(x)
 		#elif isa == 'def_const': print_def_const(x)

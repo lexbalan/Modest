@@ -46,10 +46,6 @@ func arrayShow(array: *Arr, size: Int) -> Unit {
 		i = i + 1
 	}
 }
-func mid(a: Int, b: Int) -> Int {
-	let sum = a + b
-	return div(sum, 2)
-}
 func div(a: Int, b: Int) -> Int {
 	return a / b
 }

@@ -6,4 +6,7 @@ func add(a: Int32, b: Int32) -> Int32 {
 func sub(a: Int32, b: Int32) -> Int32 {
 	return a - b
 }
+func mid(a: Int32, b: Int32) -> Int32 {
+	return (a + b) / 2
+}
 

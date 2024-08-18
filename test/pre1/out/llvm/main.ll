@@ -113,6 +113,7 @@ declare void @printf(%Str8* %s, ...)
 
 declare i32 @add(i32 %a, i32 %b)
 declare i32 @sub(i32 %a, i32 %b)
+declare i32 @mid(i32 %a, i32 %b)
 
 
 ; -- SOURCE: /Users/alexbalan/p/Modest/test/pre1/src/main.m
@@ -146,8 +147,8 @@ define %Int @main() {
 	;printf("sub2Name = '%s'\n", *Str8 sub2Name)
 	%1 = alloca i32, align 4
 	store i32 5, i32* %1
-	%2 = call %Int @mid(%Int 10, %Int 20)
-	call void (%Str8*, ...) @printf(%Str8* bitcast ([8 x i8]* @str4 to [0 x i8]*), %Int %2)
+	%2 = call i32 @mid(i32 10, i32 20)
+	call void (%Str8*, ...) @printf(%Str8* bitcast ([8 x i8]* @str4 to [0 x i8]*), i32 %2)
 	%3 = alloca %Int, align 4
 	;var arr = getArr()
 	;arrayShow(&arr, 10)
@@ -176,12 +177,6 @@ body_1:
 	br label %again_1
 break_1:
 	ret void
-}
-
-define %Int @mid(%Int %a, %Int %b) {
-	%1 = add %Int %a, %b
-	%2 = call %Int @div(%Int %1, %Int 2)
-	ret %Int %2
 }
 
 define %Int @div(%Int %a, %Int %b) {

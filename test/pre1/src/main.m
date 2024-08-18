@@ -22,7 +22,7 @@ func main() -> Int {
 
 	let a = 10
 	let b = 20
-	let s = mid(a, b)
+	let s = sub::mid(a, b)
 	printf("s = %d\n", s)
 
 	var xx: Int
@@ -68,14 +68,13 @@ type Arr [arrSize]Int
 }*/
 
 
-func mid(a: Int, b: Int) -> Int {
+/*func mid(a: Int, b: Int) -> Int {
 	let sum = a + b
 	return div(sum, 2)
-}
+}*/
 
 
-@inline
-export func div(a: Int, b: Int) -> Int {
+func div(a: Int, b: Int) -> Int {
 	return a / b
 }
 
