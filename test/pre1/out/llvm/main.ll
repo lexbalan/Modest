@@ -120,7 +120,7 @@ declare i32 @mid(i32 %a, i32 %b)
 
 @str1 = private constant [6 x i8] [i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
 @str2 = private constant [18 x i8] [i8 115, i8 117, i8 98, i8 58, i8 58, i8 110, i8 97, i8 109, i8 101, i8 32, i8 61, i8 32, i8 39, i8 37, i8 115, i8 39, i8 10, i8 0]
-@str3 = private constant [5 x i8] [i8 78, i8 97, i8 109, i8 101, i8 0]
+@str3 = private constant [4 x i8] [i8 115, i8 117, i8 98, i8 0]
 @str4 = private constant [8 x i8] [i8 115, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 @str5 = private constant [12 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 83, i8 104, i8 111, i8 119, i8 58, i8 10, i8 0]
 @str6 = private constant [16 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
@@ -143,7 +143,7 @@ declare i32 @mid(i32 %a, i32 %b)
 
 define %Int @main() {
 	call void (%Str8*, ...) @printf(%Str8* bitcast ([6 x i8]* @str1 to [0 x i8]*))
-	call void (%Str8*, ...) @printf(%Str8* bitcast ([18 x i8]* @str2 to [0 x i8]*), %Str8* bitcast ([5 x i8]* @str3 to [0 x i8]*))
+	call void (%Str8*, ...) @printf(%Str8* bitcast ([18 x i8]* @str2 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @str3 to [0 x i8]*))
 	;printf("sub2Name = '%s'\n", *Str8 sub2Name)
 	%1 = alloca i32, align 4
 	store i32 5, i32* %1

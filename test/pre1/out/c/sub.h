@@ -7,7 +7,7 @@
 #include <string.h>
 
 
-#define name  "Name"
+#define name  "sub"
 int32_t add(int32_t a, int32_t b);
 int32_t sub(int32_t a, int32_t b);
 

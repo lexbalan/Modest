@@ -2666,8 +2666,10 @@ def pre_def(ast):
 
 		if kind == 'func':
 			y0 = decl_func(x)
+
 			add_spices(y0, ast_atts=x['attributes'])
 			if x['export']:
+				y0['att'].append('export')
 				module_append_export(y0)
 			else:
 				module_append_localfunc(y0)
@@ -2687,6 +2689,8 @@ def pre_def(ast):
 			if kind == 'func':
 				y = def_func(x)
 				if y != None:
+					if x['export']:
+						y['att'].append('export')
 					add_spices(y, ast_atts=x['attributes'])
 					module_append(y)
 

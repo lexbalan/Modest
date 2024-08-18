@@ -25,8 +25,9 @@ struct Node {
 typedef int * Arr;
 #define printf  (&printf)
 #define default  5
-int main();
+static
 void arrshow(int *array, int size);
+static
 int div(int a, int b);
 
 
@@ -57,6 +58,7 @@ int main()
 #undef a
 #undef b
 
+static
 void arrayShow(int *array, int size)
 {
 	((void (*) (char *s, ...))printf)("arrayShow:\n");
@@ -68,6 +70,7 @@ void arrayShow(int *array, int size)
 	}
 }
 
+static
 int div(int a, int b)
 {
 	return a / b;

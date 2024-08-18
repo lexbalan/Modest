@@ -1,5 +1,5 @@
 
-let name = "Name"
+let name = "sub"
 func add(a: Int32, b: Int32) -> Int32 {
 	return a + b
 }

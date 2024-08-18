@@ -12,7 +12,7 @@ let printf = &console::printf
 var x: Int
 
 
-func main() -> Int {
+export func main() -> Int {
 	printf("test\n")
 
 	printf("sub::name = '%s'\n", *Str8 sub::name)

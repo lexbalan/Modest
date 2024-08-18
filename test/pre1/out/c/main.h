@@ -9,5 +9,6 @@
 #include "./console.h"
 #include "./sub.h"
 
+int main();
 
 #endif /* MAIN_H */

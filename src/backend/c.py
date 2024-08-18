@@ -2017,7 +2017,10 @@ def print_cfile(module, _outname):
 			continue
 
 		isa = x['isa']
-		if isa == 'decl_func': print_decl_func(x)
+		if isa == 'decl_func':
+			if not 'export' in x['att']:
+				out("\nstatic")
+			print_decl_func(x)
 
 
 	for x in module['defs']:
@@ -2025,7 +2028,8 @@ def print_cfile(module, _outname):
 			continue
 
 		isa = x['isa']
-		if isa == 'decl_func': print_decl_func(x)
+		if isa == 'decl_func':
+			print_decl_func(x)
 		elif isa == 'decl_var': print_decl_var(x)
 		#elif isa == 'decl_type': print_decl_type(x)
 
@@ -2037,10 +2041,16 @@ def print_cfile(module, _outname):
 		isa = x['isa']
 		if isa == 'def_var': print_def_var(x)
 		elif isa == 'def_func':
+			out("\n");
+
 			if 'inline' in x['att']:
 				# inline function must be printed in header file
 				continue
-			out("\n"); print_def_func(x)
+
+			if not 'export' in x['att']:
+				out("\nstatic")
+			print_def_func(x)
+
 		elif isa == 'comment': print_comment(x)
 		elif isa == 'directive': print_directive(x)
 		#elif isa == 'def_const': print_def_const(x)

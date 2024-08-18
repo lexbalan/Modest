@@ -1,6 +1,7 @@
+// module: sub.m
+//
 
-
-export let name = "Name"
+export let name = "sub"
 
 
 export func add(a: Int32, b: Int32) -> Int32 {
