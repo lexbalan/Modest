@@ -2895,7 +2895,7 @@ def process_module(ast, source_info, nodef=False):
 		'id': source_info['id'],
 		'prefix': "",
 		'source_info': source_info,
-		'imports': {},  #
+		'imports': {},  # 'local_module_id' => {'isa': 'module'}
 		'strings': [],  # (used in LLVM backend)
 
 		'symtab_public': symtab_public,
@@ -2908,7 +2908,7 @@ def process_module(ast, source_info, nodef=False):
 
 		'defs': [],  # определения модуля
 		'local_decls': [],  # определения
-		'export_defs': [] # определения которые идут на экспорт
+		'export_defs': []   # определения которые идут на экспорт
 	}
 
 	# do imports before

@@ -31,6 +31,7 @@ int mid(int a, int b);
 
 
 static int x;
+
 int main()
 {
 	((void (*) (char *s, ...))printf)("test\n");
@@ -55,6 +56,7 @@ int main()
 
 #undef a
 #undef b
+
 void arrayShow(int *array, int size)
 {
 	((void (*) (char *s, ...))printf)("arrayShow:\n");
@@ -65,11 +67,13 @@ void arrayShow(int *array, int size)
 		i = i + 1;
 	}
 }
+
 int mid(int a, int b)
 {
 	const int sum = a + b;
 	return div(sum, 2);
 }
+
 int div(int a, int b)
 {
 	return a / b;

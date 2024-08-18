@@ -10,5 +10,6 @@
 
 
 
+#define cobsoleLocalConst  true
 
 

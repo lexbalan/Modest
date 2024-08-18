@@ -6,6 +6,8 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include <stdio.h>
 
+#define cobsoleGlobalConst  true
 
 #endif /* CONSOLE_H */

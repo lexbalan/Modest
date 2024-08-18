@@ -1905,6 +1905,14 @@ def print_header(module, outname):
 	out("#include <stdbool.h>\n")
 	out("#include <string.h>\n")
 	#cdirectives(module)
+
+	# print directives (only for header)
+	for obj in module['defs']:
+		if obj['isa'] == 'directive':
+			if obj['kind'] == 'c_include':
+				newline()
+				print_include(obj)
+
 	out("\n")
 
 	print(len(module['export_defs']))
@@ -2016,10 +2024,10 @@ def print_cfile(module, _outname):
 
 		isa = x['isa']
 		if isa == 'def_var': print_def_var(x)
-		#elif isa == 'def_const': print_def_const(x)
-		elif isa == 'def_func': print_def_func(x)
+		elif isa == 'def_func': out("\n"); print_def_func(x)
 		elif isa == 'comment': print_comment(x)
 		elif isa == 'directive': print_directive(x)
+		#elif isa == 'def_const': print_def_const(x)
 
 	newline()
 	newline()

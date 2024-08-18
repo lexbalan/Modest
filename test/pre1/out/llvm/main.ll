@@ -115,7 +115,7 @@ declare i32 @add(i32 %a, i32 %b)
 declare i32 @sub(i32 %a, i32 %b)
 
 
-; -- SOURCE: src/main.m
+; -- SOURCE: /Users/alexbalan/p/Modest/test/pre1/src/main.m
 
 @str1 = private constant [6 x i8] [i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
 @str2 = private constant [18 x i8] [i8 115, i8 117, i8 98, i8 58, i8 58, i8 110, i8 97, i8 109, i8 101, i8 32, i8 61, i8 32, i8 39, i8 37, i8 115, i8 39, i8 10, i8 0]

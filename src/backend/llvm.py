@@ -2293,7 +2293,7 @@ def print_module(m):
 		out("\n\n")
 
 
-	out("\n; -- SOURCE: %s\n" % m['source_info']['name'])
+	out("\n; -- SOURCE: %s\n" % m['source_info']['path'])
 
 	print_strings(m['strings'])
 
