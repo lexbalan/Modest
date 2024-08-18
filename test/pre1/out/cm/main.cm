@@ -16,6 +16,7 @@ type Arr [arrSize]Int
 let printf = &printf
 var x: Int
 let default = 5
+
 func main() -> Int {
 	printf("test\n")
 
@@ -38,7 +39,8 @@ func main() -> Int {
 
 	return 0
 }
-func arrayShow(array: *Arr, size: Int) -> Unit {
+
+func arrshow(array: *Arr, size: Int) -> Unit {
 	printf("arrayShow:\n")
 	var i: Int32 = 0
 	while i < 10 {
@@ -46,6 +48,7 @@ func arrayShow(array: *Arr, size: Int) -> Unit {
 		i = i + 1
 	}
 }
+
 func div(a: Int, b: Int) -> Int {
 	return a / b
 }

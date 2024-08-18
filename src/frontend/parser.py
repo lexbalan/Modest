@@ -1526,6 +1526,9 @@ class Parser:
 			#attributes = []
 
 			export = self.match('export')
+			"""export = False
+			if self.match('export'):
+				export = True"""
 			#extern = self.match('extern')
 
 			ti = self.ti()

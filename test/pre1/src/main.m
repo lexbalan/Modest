@@ -39,8 +39,8 @@ export func main() -> Int {
 let default = 5
 
 
-@property("c_alias", "arrshow")
-@property("cm_alias", "arrshow")
+@property("value.c_alias", "arrshow")
+@property("value.cm_alias", "arrshow")
 func arrayShow(array: *Arr, size: Int) -> Unit {
 	printf("arrayShow:\n")
 	var i = 0
@@ -67,11 +67,6 @@ type Arr [arrSize]Int
 	return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 }*/
 
-
-/*func mid(a: Int, b: Int) -> Int {
-	let sum = a + b
-	return div(sum, 2)
-}*/
 
 
 func div(a: Int, b: Int) -> Int {

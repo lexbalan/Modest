@@ -26,7 +26,7 @@ typedef int * Arr;
 #define printf  (&printf)
 #define default  5
 static
-void arrshow(int *array, int size);
+void arrayShow(int *array, int size);
 static
 int div(int a, int b);
 
@@ -59,7 +59,7 @@ int main()
 #undef b
 
 static
-void arrayShow(int *array, int size)
+void arrshow(int *array, int size)
 {
 	((void (*) (char *s, ...))printf)("arrayShow:\n");
 	int32_t i;
