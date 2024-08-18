@@ -190,13 +190,18 @@ def module_append_localfunc(definition):
 	module['local_decls'].append(definition)
 
 
+
+def module_append_export(definition):
+	global module
+	module['export_defs'].append(definition)
+
 def module_append(definition, to_export=False):
 	if definition == None:
 		return
 	global module
 	module['defs'].append(definition)
 	if to_export:
-		module['export_defs'].append(definition)
+		module_append_export(definition)
 
 
 def context_push():
@@ -2667,10 +2672,12 @@ def pre_def(ast):
 		kind = x['kind']
 
 		if kind == 'func':
-
 			y0 = decl_func(x)
 			add_spices(y0, ast_atts=x['attributes'])
-			module_append_localfunc(y0)
+			if x['export']:
+				module_append_export(y0)
+			else:
+				module_append_localfunc(y0)
 
 			#info("scan func: %s" % x['id']['str'], x['ti'])
 			ftype = do_type(x['type'])

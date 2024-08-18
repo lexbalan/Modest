@@ -1892,12 +1892,50 @@ def print_directive(x):
 
 
 
-def run(module, outname):
-	from main import features
-	is_header = features.get('header')
+def print_header(module, outname):
+	outname = outname + '.h'
+	output_open(outname)
 
-	if is_header: outname = outname + '.h'
-	else: outname = outname + '.c'
+	guardname = outname.split("/")[-1]
+	guardname = guardname[:-2].upper() + '_H'
+	out("\n#ifndef %s\n" % guardname)
+	out("#define %s\n" % guardname)
+
+	out("\n#include <stdint.h>\n")
+	if USE_STDBOOL:
+		out("#include <stdbool.h>\n")
+	out("#include <string.h>\n")
+	cdirectives(module)
+	out("\n")
+
+	out("// %d" % len(module['export_defs']))
+	print(len(module['export_defs']))
+	for x in module['export_defs']:
+		if 'c-no-print' in x['att']:
+			continue
+
+		isa = x['isa']
+		if isa == 'decl_func': print_decl_func(x)
+		elif isa == 'decl_var': print_decl_var(x)
+		elif isa == 'decl_type': print_decl_type(x)
+		elif isa == 'def_const':
+			if x['export']:
+				print_def_const(x)
+
+	newline()
+	out("\n#endif /* %s */" % guardname)
+	newline()
+	output_close()
+	return
+
+
+def run(module, _outname):
+	from main import features
+	#is_header = features.get('header')
+
+	print_header(module, _outname)
+
+	outname = _outname + '.c'
 
 	output_open(outname)
 
@@ -1912,11 +1950,6 @@ def run(module, outname):
 		newline()
 
 	guardname = ''
-	if is_header:
-		guardname = outname.split("/")[-1]
-		guardname = guardname[:-2].upper() + '_H'
-		out("\n#ifndef %s\n" % guardname)
-		out("#define %s\n" % guardname)
 
 	out("\n#include <stdint.h>\n")
 	if USE_STDBOOL:
@@ -1928,6 +1961,9 @@ def run(module, outname):
 
 	# search for $pragma c_include "..."
 	cdirectives(module)
+
+
+	#out("\n#include \"%s.h\"\n" % _outname)
 
 	out("\n")
 
@@ -1959,7 +1995,9 @@ def run(module, outname):
 			continue
 
 		isa = x['isa']
-		if isa == 'def_const': print_def_const(x)
+		if isa == 'def_const':
+			if not x['export']:
+				print_def_const(x)
 		elif isa == 'def_type': print_def_type(x)
 
 
@@ -1995,7 +2033,6 @@ def run(module, outname):
 		elif isa == 'directive': print_directive(x)
 
 	newline()
-	if is_header: out("\n#endif /* %s */" % guardname)
 	newline()
 	output_close()
 	return
