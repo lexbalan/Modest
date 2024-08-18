@@ -1,6 +1,6 @@
 
-@c_include "./sub.h"
 @c_include "./console.h"
+@c_include "./sub.h"
 
 
 type Int Nat32

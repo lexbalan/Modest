@@ -19,7 +19,6 @@ INDENT_SYMBOL = "\t"
 
 NO_TYPEDEF_STRUCTS = False
 
-USE_STDBOOL = True
 BOOL_TRUE_LITERAL = 'true'
 BOOL_FALSE_LITERAL = 'false'
 DONT_PRINT_UNUSED = True
@@ -1896,19 +1895,18 @@ def print_header(module, outname):
 	outname = outname + '.h'
 	output_open(outname)
 
-	guardname = outname.split("/")[-1]
-	guardname = guardname[:-2].upper() + '_H'
-	out("\n#ifndef %s\n" % guardname)
-	out("#define %s\n" % guardname)
-
-	out("\n#include <stdint.h>\n")
-	if USE_STDBOOL:
-		out("#include <stdbool.h>\n")
+	guardsymbol = outname.split("/")[-1]
+	guardsymbol = guardsymbol[:-2].upper() + '_H'
+	out("\n")
+	out("#ifndef %s\n" % guardsymbol)
+	out("#define %s\n" % guardsymbol)
+	out("\n")
+	out("#include <stdint.h>\n")
+	out("#include <stdbool.h>\n")
 	out("#include <string.h>\n")
-	cdirectives(module)
+	#cdirectives(module)
 	out("\n")
 
-	out("// %d" % len(module['export_defs']))
 	print(len(module['export_defs']))
 	for x in module['export_defs']:
 		if 'c-no-print' in x['att']:
@@ -1919,22 +1917,17 @@ def print_header(module, outname):
 		elif isa == 'decl_var': print_decl_var(x)
 		elif isa == 'decl_type': print_decl_type(x)
 		elif isa == 'def_const':
-			if x['export']:
+			if 'export' in x['att']:
 				print_def_const(x)
 
 	newline()
-	out("\n#endif /* %s */" % guardname)
+	out("\n#endif /* %s */" % guardsymbol)
 	newline()
 	output_close()
 	return
 
 
-def run(module, _outname):
-	from main import features
-	#is_header = features.get('header')
-
-	print_header(module, _outname)
-
+def print_cfile(module, _outname):
 	outname = _outname + '.c'
 
 	output_open(outname)
@@ -1949,11 +1942,10 @@ def run(module, _outname):
 			out("// %s" % outname)
 		newline()
 
-	guardname = ''
+	guardsymbol = ''
 
 	out("\n#include <stdint.h>\n")
-	if USE_STDBOOL:
-		out("#include <stdbool.h>\n")
+	out("#include <stdbool.h>\n")
 	out("#include <string.h>\n")
 
 	if 'use_extra_args' in module['options']:
@@ -1962,10 +1954,9 @@ def run(module, _outname):
 	# search for $pragma c_include "..."
 	cdirectives(module)
 
+	out("\n#include \"%s.h\"\n" % module['id'])
 
-	#out("\n#include \"%s.h\"\n" % _outname)
-
-	out("\n")
+	out("\n\n")
 
 	#out("\n/* forward type declaration */")
 	for rec_id in module['records']:
@@ -1987,8 +1978,6 @@ def run(module, _outname):
 		elif isa == 'decl_func': print_decl_func(x)
 		elif isa == 'decl_type': print_decl_type(x)"""
 
-
-
 	# types & constants
 	for x in module['defs']:
 		if 'c-no-print' in x['att']:
@@ -1996,7 +1985,7 @@ def run(module, _outname):
 
 		isa = x['isa']
 		if isa == 'def_const':
-			if not x['export']:
+			if not 'export' in x['att']:
 				print_def_const(x)
 		elif isa == 'def_type': print_def_type(x)
 
@@ -2035,6 +2024,12 @@ def run(module, _outname):
 	newline()
 	newline()
 	output_close()
+
+
+
+def run(module, _outname):
+	print_header(module, _outname)
+	print_cfile(module, _outname)
 	return
 
 

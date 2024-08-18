@@ -193,6 +193,7 @@ def module_append_localfunc(definition):
 
 def module_append_export(definition):
 	global module
+	definition['att'].append('export')
 	module['export_defs'].append(definition)
 
 def module_append(definition, to_export=False):
@@ -201,6 +202,7 @@ def module_append(definition, to_export=False):
 	global module
 	module['defs'].append(definition)
 	if to_export:
+		definition['att'].append('export')
 		module_append_export(definition)
 
 
@@ -2630,7 +2632,9 @@ def pre_def(ast):
 
 			idd = y['id']
 			module['imports'][idd] = y
-			#module_append(y)
+
+			cinc = c_include('./%s.h' % idd)
+			module_append(cinc)
 
 	# 1. def types before
 	# (and const if need for type!)
@@ -2843,11 +2847,14 @@ def translate(srcname, nodef=False):
 	env_current_file_abspath = absp
 	env_current_file_dir = fdir
 
+
+	src_id = srcname.split('/')[-1]
+	src_id = src_id[:-2]
+
 	source_info = {
-		'id': srcname,
-		'path': absp,
-		'dir': fdir,
-		'name': srcname,
+		'id': src_id,   # 'console'
+		'path': absp,	# '/Users/.../console.m'
+		'dir': fdir,	# '/Users/.../'
 	}
 
 	parser = Parser()
@@ -2883,10 +2890,9 @@ def process_module(ast, source_info, nodef=False):
 	prev_context = context
 	context = symtab_public
 
-
 	module = {
 		'isa': 'module',
-		'id': "id",
+		'id': source_info['id'],
 		'prefix': "",
 		'source_info': source_info,
 		'imports': {},  #

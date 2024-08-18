@@ -6,7 +6,6 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
-// 1
+
 
 #endif /* CONSOLE_H */
