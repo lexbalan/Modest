@@ -1981,7 +1981,6 @@ def print_fdecl(x):
 
 
 def print_decl_func(x):
-	print("print_decl_func " + x['value']['id']['str'])
 	print_fdecl(x['value'])
 
 

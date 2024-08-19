@@ -1480,7 +1480,7 @@ def do_value_name(x):
 	if 'id2' in x:
 		ns_id = id_str
 		id_str = x['id2']['str']
-		print("GET VALUE %s FROM: %s" % (id_str, ns_id))
+		#print("GET VALUE %s FROM: %s" % (id_str, ns_id))
 		global module
 		submodule = module['imports'][ns_id]
 		if submodule == None:
@@ -2593,7 +2593,7 @@ def pre_nodef(ast):
 		kind = x['kind']
 
 		if kind == 'func':
-			print("DECL: " + x['id']['str'])
+			#print("DECL: " + x['id']['str'])
 			y = decl_func(x)
 			add_spices(y, ast_atts=x['attributes'])
 			module_append(y, to_export=x['export'])
