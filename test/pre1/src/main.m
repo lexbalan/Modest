@@ -1,5 +1,7 @@
 // test/pre1/src/main.cm
 
+include "ctypes"
+
 import "console"
 import "sub"
 
@@ -17,6 +19,8 @@ export func main() -> Int {
 
 	printf("sub::name = '%s'\n", *Str8 sub::name)
 	//printf("sub2Name = '%s'\n", *Str8 sub2Name)
+
+	var f: Float
 
 	var y = default
 
@@ -50,8 +54,6 @@ func arrayShow(array: *Arr, size: Int) -> Unit {
 	}
 }
 
-@property("type.c_alias", "int")
-type Int Nat32
 
 type Data Int
 

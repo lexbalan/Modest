@@ -1314,7 +1314,7 @@ class Parser:
 	# Top Level Directives
 	#
 
-	def parse_import(self):
+	def parse_import(self, include=False):
 		ti = self.ti()
 
 		if not self.look("{"):
@@ -1322,6 +1322,7 @@ class Parser:
 			return {
 				'isa': 'ast_import',
 				'kind': 'ast_import',
+				'include': include,
 				'expr': import_expr,
 				'args': [],
 				'ti': ti
@@ -1340,6 +1341,7 @@ class Parser:
 				import_dir = {
 					'isa': 'ast_attribute',
 					'kind': 'import',
+					'include': include,
 					'expr': import_expr,
 					'args': [],
 					'ti': ti
@@ -1476,8 +1478,6 @@ class Parser:
 			a = self.gettok()
 			args.append(a)
 
-		print("PARSE_DIRECTIVE: " + x)
-
 		dir = {
 			'isa': 'ast_directive',
 			'kind': x,
@@ -1552,6 +1552,8 @@ class Parser:
 
 			elif self.match('import'):
 				x = self.parse_import()
+			elif self.match('include'):
+				x = self.parse_import(include=True)
 
 			else:
 				error("unexpected token '%s'" % self.ctok(), self.ti())

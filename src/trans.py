@@ -2537,8 +2537,35 @@ def predefinition(id_str):
 
 def pre_nodef(ast):
 	global gast
+	global module
 	prev_gast = gast
 	gast = ast
+
+
+	# 0. do imports
+	for x in ast:
+		isa = x['isa']
+		if isa == 'ast_import':
+			y = do_import(x)
+			if y == None:
+				fatal("cannot import module")
+
+			if x['include']:
+				# include mode
+				cmodule_extend(y)
+			else:
+				# import mode
+				idd = y['id']
+				module['imports'][idd] = y
+				#module['att'].append('not_included')
+				if not 'not_included' in y['att']:
+					cinc = c_include('./%s.h' % idd)
+					module_append(cinc)
+
+		elif isa == 'ast_directive':
+			y = do_directive(x)
+			module_append(y)
+
 
 	# 1. do types before
 	# (and const if need for type!)
@@ -2557,6 +2584,7 @@ def pre_nodef(ast):
 					module_append(y, to_export=x['export'])
 
 
+
 	# 2. def vars & consts
 	for x in ast:
 		isa = x['isa']
@@ -2568,7 +2596,6 @@ def pre_nodef(ast):
 				id = x['id']
 				v = do_value_immediate(x['value'], allow_ptr_to_str=True)
 				if value_is_bad(v):
-					global module
 					module_value_add_public(module, id['str'], v)
 					return hlir_def_const(id, v, v, x['ti'])
 				const_value = symbol_const(id, v, is_public=x['export'])
@@ -2602,6 +2629,15 @@ def pre_nodef(ast):
 	return
 
 
+def cmodule_extend(y):
+	global module
+	module['defs'].extend(y['defs'])
+	module['local_decls'].extend(y['local_decls'])
+	module['export_defs'].extend(y['export_defs'])
+	module['symtab_public'].extend(y['symtab_public'])
+	module['symtab_private'].extend(y['symtab_private'])
+
+
 # создает символы для всех функций в модуле
 # если они имеют неизвестную зависимость -
 # удовлетворяет ее посредством predefinition(id_str)
@@ -2619,11 +2655,22 @@ def pre_def(ast):
 			if y == None:
 				fatal("cannot import module")
 
-			idd = y['id']
-			module['imports'][idd] = y
+			if x['include']:
+				# include mode
+				cmodule_extend(y)
+			else:
+				# import mode
+				idd = y['id']
+				module['imports'][idd] = y
+				#module['att'].append('not_included')
+				if not 'not_included' in y['att']:
+					cinc = c_include('./%s.h' % idd)
+					module_append(cinc)
 
-			cinc = c_include('./%s.h' % idd)
-			module_append(cinc)
+		elif isa == 'ast_directive':
+			y = do_directive(x)
+			module_append(y)
+
 
 	# 1. def types before
 	# (and const if need for type!)
@@ -2637,9 +2684,7 @@ def pre_def(ast):
 				add_spices(y, ast_atts=x['attributes'])
 				module_append(y, to_export=x['export'])
 
-		elif isa == 'ast_directive':
-			y = do_directive(x)
-			module_append(y)
+
 
 
 	# 2. def vars & consts
@@ -2705,7 +2750,6 @@ def do_directive(x):
 		args = x['args']
 		s0 = args[0]
 		if s0 == 'not_included':
-			#print("NOT_INCLUDED")
 			module['att'].append('not_included')
 		elif s0 == 'c_include':
 			return c_include(args[1])

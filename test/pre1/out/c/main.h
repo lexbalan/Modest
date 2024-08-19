@@ -9,6 +9,6 @@
 #include "./console.h"
 #include "./sub.h"
 
-int main();
+int32_t main();
 
 #endif /* MAIN_H */
