@@ -2288,7 +2288,6 @@ def print_module(m):
 		out("\n; ------------------------------------------------")
 		out("\n; declarations from: %s" % (imported_module_id))
 		out("\n; ------------------------------------------------")
-		print(len(imp['export_defs']))
 		een(imp['export_defs'])
 		out("\n\n")
 
