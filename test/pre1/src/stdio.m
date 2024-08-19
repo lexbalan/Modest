@@ -1,22 +1,22 @@
 // libc/stdio.hm
 
-//$pragma not_included
+$pragma not_included
 
-//$pragma c_include "stdio.h"
+$pragma c_include "stdio.h"
 
-//import "./ctypes"
+include "./ctypes"
 
 
-//@property("type.c_alias", "FILE")
-export type File
+@property("type.c_alias", "FILE")
+export type File Unit
 
-//@property("type.c_alias", "fpos_t")
-export type FposT
+@property("type.c_alias", "fpos_t")
+export type FposT Unit
 
-//@property("type.c_alias", "char *")
+@property("type.c_alias", "char *")
 export type CharStr Str
 
-//@property("type.c_alias", "const char *")
+@property("type.c_alias", "const char *")
 export type ConstCharStr CharStr
 
 
@@ -30,22 +30,22 @@ export let c_SEEK_CUR = 1
 @property("value.c_alias", "SEEK_END")
 export let c_SEEK_END = 2
 
-//@attribute("value.type.to:dispensable")
+@attribute("value.type.to:dispensable")
 export func fclose(f: *File) -> Int
 export func feof(f: *File) -> Int
 export func ferror(f: *File) -> Int
-//@attribute("value.type.to:dispensable")
+@attribute("value.type.to:dispensable")
 export func fflush(f: *File) -> Int
-//@attribute("value.type.to:dispensable")
+@attribute("value.type.to:dispensable")
 export func fgetpos(f: *File, pos: *FposT) -> Int
 export func fopen(fname: *ConstCharStr, mode: *ConstCharStr) -> *File
-//@attribute("value.type.to:dispensable")
+@attribute("value.type.to:dispensable")
 export func fread(buf: Ptr, size: SizeT, count: SizeT, f: *File) -> SizeT
-//@attribute("value.type.to:dispensable")
+@attribute("value.type.to:dispensable")
 export func fwrite(buf: Ptr, size: SizeT, count: SizeT, f: *File) -> SizeT
 export func freopen(filename: *ConstCharStr, mode: *ConstCharStr, f: *File) -> *File
 
-//@attribute("value.type.to:dispensable")
+@attribute("value.type.to:dispensable")
 export func fseek(stream: *File, offset: LongInt, whence: Int) -> Int
 
 export func fsetpos(f: *File, pos: *FposT) -> Int
@@ -60,22 +60,22 @@ export func tmpfile() -> *File
 export func tmpnam(str: *CharStr) -> *CharStr
 
 
-//@attribute("value.type.to:dispensable")
+@attribute("value.type.to:dispensable")
 export func printf(s: *ConstCharStr, ...) -> Int
 
-//@attribute("value.type.to:dispensable")
+@attribute("value.type.to:dispensable")
 export func scanf(s: *ConstCharStr, ...) -> Int
 
-//@attribute("value.type.to:dispensable")
+@attribute("value.type.to:dispensable")
 export func fprintf(stream: *File, format: *Str, ...) -> Int
 
-//@attribute("value.type.to:dispensable")
+@attribute("value.type.to:dispensable")
 export func fscanf(f: *File, format: *ConstCharStr, ...) -> Int
 
-//@attribute("value.type.to:dispensable")
+@attribute("value.type.to:dispensable")
 export func sscanf(buf: *ConstCharStr, format: *ConstCharStr, ...) -> Int
 
-//@attribute("value.type.to:dispensable")
+@attribute("value.type.to:dispensable")
 export func sprintf(buf: *CharStr, format: *ConstCharStr, ...) -> Int
 
 
@@ -95,11 +95,11 @@ export func fputs(str: *ConstCharStr, f: *File) -> Int
 export func getc(f: *File) -> Int
 export func getchar() -> Int
 export func gets(str: *CharStr) -> *CharStr
-//@attribute("value.type.to:dispensable")
+@attribute("value.type.to:dispensable")
 export func putc(char: Int, f: *File) -> Int
-//@attribute("value.type.to:dispensable")
+@attribute("value.type.to:dispensable")
 export func putchar(char: Int) -> Int
-//@attribute("value.type.to:dispensable")
+@attribute("value.type.to:dispensable")
 export func puts(str: *ConstCharStr) -> Int
 export func ungetc(char: Int, f: *File) -> Int
 export func perror(str: *ConstCharStr) -> Unit

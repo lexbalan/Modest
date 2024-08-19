@@ -5,7 +5,6 @@
 #include <string.h>
 
 #include <stdio.h>
-#include "./console.h"
 #include "./sub.h"
 #include "main.h"
 
@@ -22,7 +21,6 @@ struct Node {
 };
 #define arrSize  10
 typedef int32_t * Arr;
-#define printf  (&printf)
 #define default  5
 static
 void arrayShow(int32_t *array, int32_t size);
@@ -34,9 +32,9 @@ static int32_t x;
 
 int32_t main()
 {
-	((void (*) (char *s, ...))printf)("test\n");
+	printf("test\n");
 
-	((void (*) (char *s, ...))printf)("sub::name = '%s'\n", (char *)name);
+	printf("sub::name = '%s'\n", (char *)name);
 	//printf("sub2Name = '%s'\n", *Str8 sub2Name)
 
 	double f;
@@ -44,7 +42,7 @@ int32_t main()
 	#define a  10
 	#define b  20
 	const int32_t s = mid(a, b);
-	((void (*) (char *s, ...))printf)("s = %d\n", s);
+	printf("s = %d\n", s);
 
 	int32_t xx;
 
@@ -62,11 +60,11 @@ int32_t main()
 static
 void arrshow(int32_t *array, int32_t size)
 {
-	((void (*) (char *s, ...))printf)("arrayShow:\n");
+	printf("arrayShow:\n");
 	int32_t i;
 	i = 0;
 	while (i < 10) {
-		((void (*) (char *s, ...))printf)("array[%d] = %d\n", i, array[i]);
+		printf("array[%d] = %d\n", i, array[i]);
 		i = i + 1;
 	}
 }

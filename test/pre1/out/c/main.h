@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include "./console.h"
+#include <stdio.h>
 #include "./sub.h"
 
 int32_t main();

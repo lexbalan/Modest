@@ -489,8 +489,13 @@ def do_type_name(t):
 		id_str = x['id2']['str']
 		#print("GET TYPE %s FROM: %s" % (id_str, ns_id))
 		global module
-		submodule = module['imports'][ns_id]
-		tx = module_type_get_public(submodule, id_str)
+		if ns_id in module['imports']:
+			submodule = module['imports'][ns_id]
+			tx = module_type_get_public(submodule, id_str)
+		else:
+			error('unknown namespace', t['ti'])
+			tx = hlir_type.hlir_type_bad(t)
+			return tx
 
 	else:
 		tx = ctx_type_get(id_str)
@@ -1482,10 +1487,13 @@ def do_value_name(x):
 		id_str = x['id2']['str']
 		#print("GET VALUE %s FROM: %s" % (id_str, ns_id))
 		global module
-		submodule = module['imports'][ns_id]
-		if submodule == None:
-			print("MODULE %s NOT FOUND" % ns_id)
-		v = module_value_get_public(submodule, id_str)
+		if ns_id in module['imports']:
+			submodule = module['imports'][ns_id]
+			v = module_value_get_public(submodule, id_str)
+		else:
+			error('unknown namespace', x['ti'])
+			v = value_bad(x)
+			return v
 
 	else:
 		v = ctx_value_get(id_str)
@@ -2629,13 +2637,15 @@ def pre_nodef(ast):
 	return
 
 
+
 def cmodule_extend(y):
 	global module
-	module['defs'].extend(y['defs'])
-	module['local_decls'].extend(y['local_decls'])
-	module['export_defs'].extend(y['export_defs'])
 	module['symtab_public'].extend(y['symtab_public'])
 	module['symtab_private'].extend(y['symtab_private'])
+	#module['local_decls'].extend(y['local_decls'])
+	#module['defs'].extend(y['defs'])
+	#module['export_defs'].extend(y['export_defs'])
+
 
 
 # создает символы для всех функций в модуле

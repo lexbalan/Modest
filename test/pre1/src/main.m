@@ -1,14 +1,17 @@
 // test/pre1/src/main.cm
 
 include "ctypes"
+$pragma c_include "stdio.h"
+include "stdio"
 
-import "console"
+//import "console"
 import "sub"
 
 //$pragma c_include "./sub.h"
 //$pragma c_include "./console.h"
 
-let printf = &console::printf
+//let printf = &console::printf
+
 
 
 var x: Int
