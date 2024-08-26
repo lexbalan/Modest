@@ -1916,7 +1916,7 @@ def print_header(module, outname):
 	out("\n")
 
 	for x in module['export_defs']:
-		if 'c-no-print' in x['att']:
+		if 'c_no_print' in x['att']:
 			continue
 
 		isa = x['isa']
@@ -1951,6 +1951,11 @@ def print_cfile(module, _outname):
 	outname = _outname + '.c'
 
 	output_open(outname)
+
+	if 'c_no_print' in module['att']:
+		print("--------MODULE CNOPRINT")
+		output_close()
+		return
 
 	# before all print first comment (header) if present
 	if len(module['defs']) > 0:
@@ -1990,7 +1995,7 @@ def print_cfile(module, _outname):
 
 
 	"""for x in module['export_defs']:
-		if 'c-no-print' in x['att']:
+		if 'c_no_print' in x['att']:
 			continue
 
 		isa = x['isa']
@@ -1998,22 +2003,25 @@ def print_cfile(module, _outname):
 		elif isa == 'decl_func': print_decl_func(x)
 		elif isa == 'decl_type': print_decl_type(x)"""
 
+
 	# types & constants
 	for x in module['defs']:
-		if 'c-no-print' in x['att']:
+		if 'c_no_print' in x['att']:
 			continue
 
 		isa = x['isa']
 		if isa == 'def_const':
 			if not 'export' in x['att']:
 				print_def_const(x)
-		elif isa == 'def_type': print_def_type(x)
+		elif isa == 'def_type':
+			print_def_type(x)
 
 
 	# печатаем прототипы функций текущего модуля
 	# (тк C не позволяет использовать функции перед их определением)
+	out("// local decls\n")
 	for x in module['local_decls']:
-		if 'c-no-print' in x['att']:
+		if 'c_no_print' in x['att']:
 			continue
 
 		isa = x['isa']
@@ -2023,23 +2031,26 @@ def print_cfile(module, _outname):
 			print_decl_func(x)
 
 
+	out("// defs\n")
 	for x in module['defs']:
-		if 'c-no-print' in x['att']:
+		if 'c_no_print' in x['att']:
 			continue
 
 		isa = x['isa']
 		if isa == 'decl_func':
 			print_decl_func(x)
-		elif isa == 'decl_var': print_decl_var(x)
+		elif isa == 'decl_var':
+			print_decl_var(x)
 		#elif isa == 'decl_type': print_decl_type(x)
 
 
 	for x in module['defs']:
-		if 'c-no-print' in x['att']:
+		if 'c_no_print' in x['att']:
 			continue
 
 		isa = x['isa']
-		if isa == 'def_var': print_def_var(x)
+		if isa == 'def_var':
+			print_def_var(x)
 		elif isa == 'def_func':
 			out("\n");
 

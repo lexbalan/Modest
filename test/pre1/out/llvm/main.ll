@@ -100,24 +100,18 @@ break_2:
 }
 
 
-; ------------------------------------------------
-; declarations from: console
-; ------------------------------------------------
-
-declare void @printf(%Str8* %s, ...)
-
-
-; ------------------------------------------------
+; -----------------------------------------------------------------------------
 ; declarations from: sub
-; ------------------------------------------------
+; -----------------------------------------------------------------------------
 
 declare i32 @add(i32 %a, i32 %b)
 declare i32 @sub(i32 %a, i32 %b)
 declare i32 @mid(i32 %a, i32 %b)
 
 
+; -----------------------------------------------------------------------------
 ; -- SOURCE: /Users/alexbalan/p/Modest/test/pre1/src/main.m
-
+; -----------------------------------------------------------------------------
 @str1 = private constant [6 x i8] [i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
 @str2 = private constant [18 x i8] [i8 115, i8 117, i8 98, i8 58, i8 58, i8 110, i8 97, i8 109, i8 101, i8 32, i8 61, i8 32, i8 39, i8 37, i8 115, i8 39, i8 10, i8 0]
 @str3 = private constant [4 x i8] [i8 115, i8 117, i8 98, i8 0]
@@ -125,9 +119,90 @@ declare i32 @mid(i32 %a, i32 %b)
 @str5 = private constant [12 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 83, i8 104, i8 111, i8 119, i8 58, i8 10, i8 0]
 @str6 = private constant [16 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 
-
+%Str = type %Str8;
+%Char = type i8;
+%ConstChar = type i8;
+%SignedChar = type i8;
+%UnsignedChar = type i8;
+%Short = type i16;
+%UnsignedShort = type i16;
 %Int = type i32;
-%Data = type %Int;
+%UnsignedInt = type i32;
+%LongInt = type i64;
+%UnsignedLongInt = type i64;
+%Long = type i64;
+%UnsignedLong = type i64;
+%LongLong = type i64;
+%UnsignedLongLong = type i64;
+%LongLongInt = type i64;
+%UnsignedLongLongInt = type i64;
+%Float = type double;
+%Double = type double;
+%LongDouble = type double;
+%SocklenT = type i32;
+%SizeT = type i64;
+%SSizeT = type i64;
+%IntptrT = type i64;
+%PtrdiffT = type i8*;
+%OffT = type i64;
+%USecondsT = type i32;
+%PidT = type i32;
+%UidT = type i32;
+%GidT = type i32;
+
+
+%Opaque = type i8*;
+%File = type %Opaque;
+%FposT = type %Opaque;
+%CharStr = type %Str;
+%ConstCharStr = type %CharStr;
+
+
+declare i32 @fclose(%File* %f)
+declare i32 @feof(%File* %f)
+declare i32 @ferror(%File* %f)
+declare i32 @fflush(%File* %f)
+declare i32 @fgetpos(%File* %f, %FposT* %pos)
+declare %File* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
+declare i64 @fread(i8* %buf, i64 %size, i64 %count, %File* %f)
+declare i64 @fwrite(i8* %buf, i64 %size, i64 %count, %File* %f)
+declare %File* @freopen(%ConstCharStr* %filename, %ConstCharStr* %mode, %File* %f)
+declare i32 @fseek(%File* %stream, i64 %offset, i32 %whence)
+declare i32 @fsetpos(%File* %f, %FposT* %pos)
+declare i64 @ftell(%File* %f)
+declare i32 @remove(%ConstCharStr* %filename)
+declare i32 @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
+declare void @rewind(%File* %f)
+declare void @setbuf(%File* %f, %CharStr* %buffer)
+declare i32 @setvbuf(%File* %f, %CharStr* %buffer, i32 %mode, i64 %size)
+declare %File* @tmpfile()
+declare %CharStr* @tmpnam(%CharStr* %str)
+declare i32 @printf(%ConstCharStr* %s, ...)
+declare i32 @scanf(%ConstCharStr* %s, ...)
+declare i32 @fprintf(%File* %stream, %Str* %format, ...)
+declare i32 @fscanf(%File* %f, %ConstCharStr* %format, ...)
+declare i32 @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
+declare i32 @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
+declare i32 @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
+declare i32 @vprintf(%ConstCharStr* %format, i8* %args)
+declare i32 @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
+declare i32 @vsnprintf(%CharStr* %str, i64 %n, %ConstCharStr* %format, i8* %args)
+declare i32 @__vsnprintf_chk(%CharStr* %dest, i64 %len, i32 %flags, i64 %dstlen, %ConstCharStr* %format, i8* %arg)
+declare i32 @fgetc(%File* %f)
+declare i32 @fputc(i32 %char, %File* %f)
+declare %CharStr* @fgets(%CharStr* %str, i32 %n, %File* %f)
+declare i32 @fputs(%ConstCharStr* %str, %File* %f)
+declare i32 @getc(%File* %f)
+declare i32 @getchar()
+declare %CharStr* @gets(%CharStr* %str)
+declare i32 @putc(i32 %char, %File* %f)
+declare i32 @putchar(i32 %char)
+declare i32 @puts(%ConstCharStr* %str)
+declare i32 @ungetc(i32 %char, %File* %f)
+declare void @perror(%ConstCharStr* %str)
+
+
+%Data = type i32;
 %Node = type {
 	%Node*, 
 	%Data*
@@ -135,53 +210,54 @@ declare i32 @mid(i32 %a, i32 %b)
 
 
 
-%Arr = type [10 x %Int];
+%Arr = type [10 x i32];
+
+@x = global i32 zeroinitializer
 
 
-@x = global %Int zeroinitializer
-
-
-define %Int @main() {
-	call void (%Str8*, ...) @printf(%Str8* bitcast ([6 x i8]* @str1 to [0 x i8]*))
-	call void (%Str8*, ...) @printf(%Str8* bitcast ([18 x i8]* @str2 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @str3 to [0 x i8]*))
+define i32 @main() {
+	%1 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str1 to [0 x i8]*))
+	%2 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str2 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @str3 to [0 x i8]*))
 	;printf("sub2Name = '%s'\n", *Str8 sub2Name)
-	%1 = alloca i32, align 4
-	store i32 5, i32* %1
-	%2 = call i32 @mid(i32 10, i32 20)
-	call void (%Str8*, ...) @printf(%Str8* bitcast ([8 x i8]* @str4 to [0 x i8]*), i32 %2)
-	%3 = alloca %Int, align 4
+	%3 = alloca double, align 8
+	%4 = alloca i32, align 4
+	store i32 5, i32* %4
+	%5 = call i32 @mid(i32 10, i32 20)
+	%6 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str4 to [0 x i8]*), i32 %5)
+	%7 = call i32 @div(i32 10, i32 2)
+	%8 = alloca i32, align 4
 	;var arr = getArr()
 	;arrayShow(&arr, 10)
-	store %Int 12, %Int* @x
-	ret %Int 0
+	store i32 12, i32* @x
+	ret i32 0
 }
 
-define void @arrayShow(%Arr* %array, %Int %size) {
-	call void (%Str8*, ...) @printf(%Str8* bitcast ([12 x i8]* @str5 to [0 x i8]*))
-	%1 = alloca i32, align 4
-	store i32 0, i32* %1
+define void @arrayShow(%Arr* %array, i32 %size) {
+	%1 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str5 to [0 x i8]*))
+	%2 = alloca i32, align 4
+	store i32 0, i32* %2
 	br label %again_1
 again_1:
-	%2 = load i32, i32* %1
-	%3 = icmp slt i32 %2, 10
-	br i1 %3 , label %body_1, label %break_1
+	%3 = load i32, i32* %2
+	%4 = icmp slt i32 %3, 10
+	br i1 %4 , label %body_1, label %break_1
 body_1:
-	%4 = load i32, i32* %1
-	%5 = load i32, i32* %1
-	%6 = getelementptr inbounds %Arr, %Arr* %array, i32 0, i32 %5
-	%7 = load %Int, %Int* %6
-	call void (%Str8*, ...) @printf(%Str8* bitcast ([16 x i8]* @str6 to [0 x i8]*), i32 %4, %Int %7)
-	%8 = load i32, i32* %1
-	%9 = add i32 %8, 1
-	store i32 %9, i32* %1
+	%5 = load i32, i32* %2
+	%6 = load i32, i32* %2
+	%7 = getelementptr inbounds %Arr, %Arr* %array, i32 0, i32 %6
+	%8 = load i32, i32* %7
+	%9 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str6 to [0 x i8]*), i32 %5, i32 %8)
+	%10 = load i32, i32* %2
+	%11 = add i32 %10, 1
+	store i32 %11, i32* %2
 	br label %again_1
 break_1:
 	ret void
 }
 
-define %Int @div(%Int %a, %Int %b) {
-	%1 = udiv %Int %a, %b
-	ret %Int %1
+define i32 @div(i32 %a, i32 %b) {
+	%1 = sdiv i32 %a, %b
+	ret i32 %1
 }
 
 

@@ -7,8 +7,9 @@
 #include <string.h>
 
 #include <stdio.h>
+#include <stdio.h>
 #include "./sub.h"
 
-int32_t main();
+int main();
 
 #endif /* MAIN_H */

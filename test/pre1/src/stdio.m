@@ -1,17 +1,20 @@
 // libc/stdio.hm
 
 $pragma not_included
+$pragma c_no_print
 
 $pragma c_include "stdio.h"
 
 include "./ctypes"
 
 
+export type Opaque *Nat8
+
 @property("type.c_alias", "FILE")
-export type File Unit
+export type File Opaque
 
 @property("type.c_alias", "fpos_t")
-export type FposT Unit
+export type FposT Opaque
 
 @property("type.c_alias", "char *")
 export type CharStr Str

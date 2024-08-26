@@ -5,7 +5,7 @@ errcnt = 0
 
 MAX_ERRORS = 10
 
-verbose_mode = False
+verbose_mode = True
 
 
 ENDC = 0
@@ -108,9 +108,20 @@ def note(s, ti=None):
 	common_message('note: ', COLOR_NOTE, s, ti)
 
 
+
+log_ind = 0
+def log_ind_plus():
+	global log_ind
+	log_ind = log_ind + 1
+
+def log_ind_minus():
+	global log_ind
+	log_ind = log_ind - 1
+
 def log(s):
 	if verbose_mode:
-		print(s)
+		global log_ind
+		print('  ' * log_ind + s)
 
 
 def info(s, ti=None):

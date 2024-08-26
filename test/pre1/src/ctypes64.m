@@ -1,6 +1,7 @@
 // libc/ctypes64.hm
 
 $pragma not_included
+$pragma c_no_print
 
 @property("type.c_alias", "char *")
 type Str Str8

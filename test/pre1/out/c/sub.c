@@ -7,6 +7,8 @@
 #include "sub.h"
 
 
+// local decls
+// defs
 
 
 int32_t add(int32_t a, int32_t b)

@@ -1,6 +1,7 @@
 // libc/ctypes.hm
 
 $pragma not_included
+$pragma c_no_print
 
 //import "./system"
 

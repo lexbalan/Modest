@@ -12,8 +12,6 @@ import "sub"
 
 //let printf = &console::printf
 
-
-
 var x: Int
 
 
@@ -31,6 +29,8 @@ export func main() -> Int {
 	let b = 20
 	let s = sub::mid(a, b)
 	printf("s = %d\n", s)
+
+	let d = div(10, 2)
 
 	var xx: Int
 

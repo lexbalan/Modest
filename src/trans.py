@@ -18,6 +18,8 @@ from value.string import value_string_create
 from value.record import value_record_create
 
 
+included_modules = {}
+
 import decimal
 # max number of signs after .
 # decimal operation precision
@@ -2554,21 +2556,7 @@ def pre_nodef(ast):
 	for x in ast:
 		isa = x['isa']
 		if isa == 'ast_import':
-			y = do_import(x)
-			if y == None:
-				fatal("cannot import module")
-
-			if x['include']:
-				# include mode
-				cmodule_extend(y)
-			else:
-				# import mode
-				idd = y['id']
-				module['imports'][idd] = y
-				#module['att'].append('not_included')
-				if not 'not_included' in y['att']:
-					cinc = c_include('./%s.h' % idd)
-					module_append(cinc)
+			do_import2(x)
 
 		elif isa == 'ast_directive':
 			y = do_directive(x)
@@ -2638,14 +2626,50 @@ def pre_nodef(ast):
 
 
 
-def cmodule_extend(y):
+def cmodule_extend(y, do_not_def):
 	global module
 	module['symtab_public'].extend(y['symtab_public'])
 	module['symtab_private'].extend(y['symtab_private'])
-	#module['local_decls'].extend(y['local_decls'])
-	#module['defs'].extend(y['defs'])
-	#module['export_defs'].extend(y['export_defs'])
 
+	if not do_not_def:
+		module['local_decls'].extend(y['local_decls'])
+		module['defs'].extend(y['defs'])
+		module['export_defs'].extend(y['export_defs'])
+
+
+def do_import2(x):
+	y = do_import(x, nodef=not x['include'])
+	if y == None:
+		fatal("cannot import module")
+
+	if 'c_no_print' in y['att']:
+		for xx in y['defs']:
+			xx['att'].append('c_no_print')
+		for xx in y['local_decls']:
+			xx['att'].append('c_no_print')
+		for xx in y['export_defs']:
+			xx['att'].append('c_no_print')
+
+	path = y['source_info']['path']
+	do_not_def = False
+	if path in included_modules:
+		#print("---------------INN "  + path)
+		do_not_def = True
+	else:
+		#print("---------------NN " + path)
+		included_modules[path] = y
+
+	if x['include']:
+		# include mode
+		cmodule_extend(y, do_not_def)
+	else:
+		# import mode
+		idd = y['id']
+		module['imports'][idd] = y
+		#module['att'].append('not_included')
+		if not 'not_included' in y['att']:
+			cinc = c_include('./%s.h' % idd)
+			module_append(cinc)
 
 
 # создает символы для всех функций в модуле
@@ -2661,21 +2685,7 @@ def pre_def(ast):
 	for x in ast:
 		isa = x['isa']
 		if isa == 'ast_import':
-			y = do_import(x)
-			if y == None:
-				fatal("cannot import module")
-
-			if x['include']:
-				# include mode
-				cmodule_extend(y)
-			else:
-				# import mode
-				idd = y['id']
-				module['imports'][idd] = y
-				#module['att'].append('not_included')
-				if not 'not_included' in y['att']:
-					cinc = c_include('./%s.h' % idd)
-					module_append(cinc)
+			do_import2(x)
 
 		elif isa == 'ast_directive':
 			y = do_directive(x)
@@ -2763,6 +2773,8 @@ def do_directive(x):
 			module['att'].append('not_included')
 		elif s0 == 'c_include':
 			return c_include(args[1])
+		elif s0 == 'c_no_print':
+			module['att'].append('c_no_print')
 		elif s0 == 'feature':
 			feature_add(args[0])#['str'])
 			pass
@@ -2851,7 +2863,7 @@ def do_directive(x):
 
 
 
-def do_import(x):
+def do_import(x, nodef=True):
 	import_expr = do_value_immediate_string(x['expr'])
 
 	if value_is_bad(import_expr):
@@ -2860,8 +2872,7 @@ def do_import(x):
 	# Literal string to python string
 	impline = import_expr['asset']
 
-	log('import "%s"' % impline)
-	print('do_import("%s")' % impline)
+	log('do_import("%s")' % impline)
 
 	abspath = import_abspath(impline, ext='.m')
 
@@ -2869,18 +2880,20 @@ def do_import(x):
 		error("module %s not found" % impline, import_expr)
 		return None
 
-	m = translate(abspath, nodef=True)
+	m = translate(abspath, nodef=nodef)
 	m['id'] = impline
 	m['prefix'] = impline + '_'
 	return m
 
 
-
+tabb = 0
 def translate(srcname, nodef=False):
 	assert(srcname != None)
 	assert(srcname != "")
 
-	#print("translate(\"%s\")" % srcname)
+
+	log("TRANSLATE(\"%s\")" % srcname)
+	log_ind_plus()
 
 	if not os.path.exists(srcname):
 		return None
@@ -2917,6 +2930,8 @@ def translate(srcname, nodef=False):
 	env_current_file_abspath = prev_env_current_file_abspath
 	env_current_file_dir = prev_env_current_file_dir
 
+	log_ind_minus()
+	log("END-TRANSLATE(\"%s\")" % srcname)
 	return m
 
 

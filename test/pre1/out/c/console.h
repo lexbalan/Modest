@@ -9,5 +9,6 @@
 #include <stdio.h>
 
 #define cobsoleGlobalConst  true
+void printf(char *s, ...);
 
 #endif /* CONSOLE_H */

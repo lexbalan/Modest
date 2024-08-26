@@ -10,6 +10,9 @@
 
 
 
-#define cobsoleLocalConst  true
+#define cobsoleLocalConst  true// local decls
+// defs
+
+void printf(char *s, ...);
 
 

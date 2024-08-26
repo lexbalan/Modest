@@ -2280,18 +2280,22 @@ def print_module(m):
 
 	printed_modules.append(m['source_info']['path'])
 
+	DD = 77
+
 	# печатаем декларации
 	# из экспортируемой части импортированных модулей
 	for imported_module_id in m['imports']:
 		imp = m['imports'][imported_module_id]
-		out("\n; ------------------------------------------------")
+		out("\n; " + '-' * DD)
 		out("\n; declarations from: %s" % (imported_module_id))
-		out("\n; ------------------------------------------------")
+		out("\n; " + '-' * DD)
 		een(imp['export_defs'])
 		out("\n\n")
 
 
-	out("\n; -- SOURCE: %s\n" % m['source_info']['path'])
+	out("\n; " + '-' * DD)
+	out("\n; -- SOURCE: %s" % m['source_info']['path'])
+	out("\n; " + '-' * DD)
 
 	print_strings(m['strings'])
 
