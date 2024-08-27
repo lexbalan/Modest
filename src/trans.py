@@ -2522,6 +2522,7 @@ def do_attribute(x):
 	return None
 
 
+
 # находит сущность по имени и определяет ее
 gast = None
 def predefinition(id_str):
@@ -2542,7 +2543,6 @@ def predefinition(id_str):
 
 			if y != None:
 				module_append(y, to_export=x['export'])
-
 
 
 def pre_nodef(ast):
@@ -2625,7 +2625,7 @@ def pre_nodef(ast):
 	return
 
 
-
+# расширить текущий модуль определениями
 def cmodule_extend(y, do_not_def):
 	global module
 	module['symtab_public'].extend(y['symtab_public'])
@@ -2733,6 +2733,7 @@ def pre_def(ast):
 			y0 = decl_func(x)
 
 			add_spices(y0, ast_atts=x['attributes'])
+
 			if x['export']:
 				y0['att'].append('export')
 				module_append_export(y0)
@@ -2971,9 +2972,10 @@ def process_module(ast, source_info, nodef=False):
 		'att': [],
 
 		'defs': [],  # определения модуля
-		'local_decls': [],  # определения
-		'export_defs': []   # определения которые идут на экспорт
-	}
+		'local_decls': [],   # определения локальных сущностей (static)
+		'export_defs': [],   # определения которые идут на экспорт (export)
+		'included_defs': [], # определения из включенных модулей
+ 	}
 
 	# do imports before
 	"""for x in ast:

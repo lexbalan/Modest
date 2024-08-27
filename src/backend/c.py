@@ -1571,7 +1571,7 @@ def print_decl_func(x):
 	newline(n=x['nl'])
 	if 'gnu_att' in x:
 		out('__attribute__((%s))\n' % x['gnu_att'])
-	print_func_signature(get_id_str(x), x['value']['type'], x['value']['att'])
+	print_func_signature(get_id_str(x['value']), x['value']['type'], x['value']['att'])
 	out(";")
 
 

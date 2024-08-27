@@ -25,7 +25,7 @@ typedef int * Arr;
 #define default  5// local decls
 
 static
-void arrayShow(int *array, int size);
+void arrshow(int *array, int size);
 static
 int div(int a, int b);// defs
 

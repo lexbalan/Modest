@@ -73,7 +73,6 @@ type Arr [arrSize]Int
 }*/
 
 
-
 func div(a: Int, b: Int) -> Int {
 	return a / b
 }
