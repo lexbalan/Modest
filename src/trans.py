@@ -2545,84 +2545,7 @@ def predefinition(id_str):
 				module_append(y, to_export=x['export'])
 
 
-def pre_nodef(ast):
-	global gast
-	global module
-	prev_gast = gast
-	gast = ast
 
-
-	# 0. do imports
-	for x in ast:
-		isa = x['isa']
-		if isa == 'ast_import':
-			do_import2(x)
-
-		elif isa == 'ast_directive':
-			y = do_directive(x)
-			module_append(y)
-
-
-	# 1. do types before
-	# (and const if need for type!)
-	for x in ast:
-		isa = x['isa']
-		kind = x['kind']
-
-		if isa == 'ast_definition':
-			if kind == 'type':
-				if not 'defined' in x:
-					y = decl_type(x)
-					if y == None:
-						continue
-					y['nl'] = x['nl']
-
-					module_append(y, to_export=x['export'])
-
-
-
-	# 2. def vars & consts
-	for x in ast:
-		isa = x['isa']
-		kind = x['kind']
-
-		if isa == 'ast_definition':
-			y = None
-			if kind == 'const':
-				id = x['id']
-				v = do_value_immediate(x['value'], allow_ptr_to_str=True)
-				if value_is_bad(v):
-					module_value_add_public(module, id['str'], v)
-					return hlir_def_const(id, v, v, x['ti'])
-				const_value = symbol_const(id, v, is_public=x['export'])
-				module_append(y, to_export=x['export'])
-				continue
-
-
-			elif kind == 'var':
-				y = def_var(x)
-
-				# обрабатываем переменную из импорта
-				# нельзя печатать ее определение (тк она из другого модуля)
-				# но в LLVM backend нужно указать как extern
-				y['att'].append('extern')
-				module_append(y, to_export=x['export'])
-				continue
-
-
-	# 3. scan funcs after
-	for x in ast:
-		isa = x['isa']
-		kind = x['kind']
-
-		if kind == 'func':
-			#print("DECL: " + x['id']['str'])
-			y = decl_func(x)
-			add_spices(y, ast_atts=x['attributes'])
-			module_append(y, to_export=x['export'])
-
-	gast = prev_gast
-	return
 
 
 # расширить текущий модуль определениями
@@ -2759,6 +2682,87 @@ def pre_def(ast):
 						y['att'].append('export')
 					add_spices(y, ast_atts=x['attributes'])
 					module_append(y)
+
+	gast = prev_gast
+	return
+
+
+
+def pre_nodef(ast):
+	global gast
+	global module
+	prev_gast = gast
+	gast = ast
+
+
+	# 0. do imports
+	for x in ast:
+		isa = x['isa']
+		if isa == 'ast_import':
+			do_import2(x)
+
+		elif isa == 'ast_directive':
+			y = do_directive(x)
+			module_append(y)
+
+
+	# 1. do types before
+	# (and const if need for type!)
+	for x in ast:
+		isa = x['isa']
+		kind = x['kind']
+
+		if isa == 'ast_definition':
+			if kind == 'type':
+				if not 'defined' in x:
+					y = decl_type(x)
+					if y == None:
+						continue
+					y['nl'] = x['nl']
+
+					module_append(y, to_export=x['export'])
+
+
+
+	# 2. def vars & consts
+	for x in ast:
+		isa = x['isa']
+		kind = x['kind']
+
+		if isa == 'ast_definition':
+			y = None
+			if kind == 'const':
+				id = x['id']
+				v = do_value_immediate(x['value'], allow_ptr_to_str=True)
+				if value_is_bad(v):
+					module_value_add_public(module, id['str'], v)
+					return hlir_def_const(id, v, v, x['ti'])
+				const_value = symbol_const(id, v, is_public=x['export'])
+				module_append(y, to_export=x['export'])
+				continue
+
+
+			elif kind == 'var':
+				y = def_var(x)
+
+				# обрабатываем переменную из импорта
+				# нельзя печатать ее определение (тк она из другого модуля)
+				# но в LLVM backend нужно указать как extern
+				y['att'].append('extern')
+				module_append(y, to_export=x['export'])
+				continue
+
+
+	# 3. scan funcs after
+	for x in ast:
+		isa = x['isa']
+		kind = x['kind']
+
+		if kind == 'func':
+			#print("DECL: " + x['id']['str'])
+			y = decl_func(x)
+			add_spices(y, ast_atts=x['attributes'])
+			module_append(y, to_export=x['export'])
 
 	gast = prev_gast
 	return
@@ -2977,46 +2981,18 @@ def process_module(ast, source_info, nodef=False):
 		'included_defs': [], # определения из включенных модулей
  	}
 
-	# do imports before
-	"""for x in ast:
-		isa = x['isa']
-		if isa == 'ast_import':
-			y = do_import(x)
-			#module_append(y)
-
-			# Для того чтобы CM backend печатал import директиву
-			impline = x['expr']['str']
-			import_directive = {
-				'isa': 'directive',
-				'kind': 'import',
-				'str': impline,
-				'c_name': impline + '.h',
-				'att': [],
-				'module': module, # ссылка на сам модуль (для not_included)
-				'local': True,
-				'nl': 1,
-				'ti': x['expr']['ti']
-			}
-			module_append(import_directive)
-
-		elif isa == 'ast_directive':
-			do_directive(x)
-			pass"""
-
-
 	# do pre!
 	if nodef:
 		# process in import mode
 		pre_nodef(ast)
-		pass
 	else:
 		# process in normal mode
 		pre_def(ast)
 
 
 	m = module
-	module = prev_module
 
+	module = prev_module
 	context = prev_context
 
 	return m
