@@ -2806,7 +2806,7 @@ def process_module(ast, source_info, nodef=False):
 		'defs': [],  # определения модуля
 		'local_decls': [],   # определения локальных сущностей (static)
 		'export_defs': [],   # определения которые идут на экспорт (export)
-		'included_defs': [], # определения из включенных модулей
+#		'included_defs': [], # определения из включенных модулей
  	}
 
 
@@ -2820,13 +2820,11 @@ def process_module(ast, source_info, nodef=False):
 			y = do_directive(x)
 			module_append(y)
 
-	# do pre!
+
 	if nodef:
-		# process in import mode
-		pre_nodef(ast)
+		pre_nodef(ast)  # process in import mode
 	else:
-		# process in normal mode
-		pre_def(ast)
+		pre_def(ast)    # process in normal mode
 
 
 	m = module
@@ -2835,7 +2833,6 @@ def process_module(ast, source_info, nodef=False):
 	context = prev_context
 
 	return m
-
 
 
 
@@ -2916,6 +2913,7 @@ def pre_def(ast):
 
 	gast = prev_gast
 	return
+
 
 
 
