@@ -2595,178 +2595,6 @@ def do_import2(x):
 			module_append(cinc)
 
 
-# создает символы для всех функций в модуле
-# если они имеют неизвестную зависимость -
-# удовлетворяет ее посредством predefinition(id_str)
-def pre_def(ast):
-	global module
-	global gast
-	prev_gast = gast
-	gast = ast
-
-	# 0. do imports
-	for x in ast:
-		isa = x['isa']
-		if isa == 'ast_import':
-			do_import2(x)
-
-		elif isa == 'ast_directive':
-			y = do_directive(x)
-			module_append(y)
-
-
-	# 1. def types before
-	# (and const if need for type!)
-	for x in ast:
-		isa = x['isa']
-		kind = x['kind']
-
-		if isa == 'ast_definition':
-			if kind == 'type':
-				y = def_type(x)
-				add_spices(y, ast_atts=x['attributes'])
-				module_append(y, to_export=x['export'])
-
-
-
-
-	# 2. def vars & consts
-	for x in ast:
-		isa = x['isa']
-		kind = x['kind']
-
-		if isa == 'ast_definition':
-			y = None
-			if kind == 'const':
-				if not 'defined' in x:
-					y = def_const(x)
-
-			elif kind == 'var':
-				y = def_var(x)
-
-			module_append(y, to_export=x['export'])
-
-
-	# 3. scan funcs after
-	for x in ast:
-		isa = x['isa']
-		kind = x['kind']
-
-		if kind == 'func':
-			y0 = decl_func(x)
-
-			add_spices(y0, ast_atts=x['attributes'])
-
-			if x['export']:
-				y0['att'].append('export')
-				module_append_export(y0)
-			else:
-				module_append_localfunc(y0)
-
-			#info("scan func: %s" % x['id']['str'], x['ti'])
-			ftype = do_type(x['type'])
-			fvalue = value_func(x['id'], ftype, ti=x['ti'])
-			module_value_add(module, x['id']['str'], fvalue, is_public=x['export'])
-			x['symbol'] = fvalue
-
-
-	# 4. def funcs after
-	for x in ast:
-		isa = x['isa']
-		kind = x['kind']
-		if isa == 'ast_definition':
-			if kind == 'func':
-				y = def_func(x)
-				if y != None:
-					if x['export']:
-						y['att'].append('export')
-					add_spices(y, ast_atts=x['attributes'])
-					module_append(y)
-
-	gast = prev_gast
-	return
-
-
-
-def pre_nodef(ast):
-	global gast
-	global module
-	prev_gast = gast
-	gast = ast
-
-
-	# 0. do imports
-	for x in ast:
-		isa = x['isa']
-		if isa == 'ast_import':
-			do_import2(x)
-
-		elif isa == 'ast_directive':
-			y = do_directive(x)
-			module_append(y)
-
-
-	# 1. do types before
-	# (and const if need for type!)
-	for x in ast:
-		isa = x['isa']
-		kind = x['kind']
-
-		if isa == 'ast_definition':
-			if kind == 'type':
-				if not 'defined' in x:
-					y = decl_type(x)
-					if y == None:
-						continue
-					y['nl'] = x['nl']
-
-					module_append(y, to_export=x['export'])
-
-
-
-	# 2. def vars & consts
-	for x in ast:
-		isa = x['isa']
-		kind = x['kind']
-
-		if isa == 'ast_definition':
-			y = None
-			if kind == 'const':
-				id = x['id']
-				v = do_value_immediate(x['value'], allow_ptr_to_str=True)
-				if value_is_bad(v):
-					module_value_add_public(module, id['str'], v)
-					return hlir_def_const(id, v, v, x['ti'])
-				const_value = symbol_const(id, v, is_public=x['export'])
-				module_append(y, to_export=x['export'])
-				continue
-
-
-			elif kind == 'var':
-				y = def_var(x)
-
-				# обрабатываем переменную из импорта
-				# нельзя печатать ее определение (тк она из другого модуля)
-				# но в LLVM backend нужно указать как extern
-				y['att'].append('extern')
-				module_append(y, to_export=x['export'])
-				continue
-
-
-	# 3. scan funcs after
-	for x in ast:
-		isa = x['isa']
-		kind = x['kind']
-
-		if kind == 'func':
-			#print("DECL: " + x['id']['str'])
-			y = decl_func(x)
-			add_spices(y, ast_atts=x['attributes'])
-			module_append(y, to_export=x['export'])
-
-	gast = prev_gast
-	return
-
 
 
 def do_directive(x):
@@ -2981,6 +2809,17 @@ def process_module(ast, source_info, nodef=False):
 		'included_defs': [], # определения из включенных модулей
  	}
 
+
+	# 0. do imports
+	for x in ast:
+		isa = x['isa']
+		if isa == 'ast_import':
+			do_import2(x)
+
+		elif isa == 'ast_directive':
+			y = do_directive(x)
+			module_append(y)
+
 	# do pre!
 	if nodef:
 		# process in import mode
@@ -2996,6 +2835,160 @@ def process_module(ast, source_info, nodef=False):
 	context = prev_context
 
 	return m
+
+
+
+
+# создает символы для всех функций в модуле
+# если они имеют неизвестную зависимость -
+# удовлетворяет ее посредством predefinition(id_str)
+def pre_def(ast):
+	global module
+	global gast
+	prev_gast = gast
+	gast = ast
+
+	# 1. def types
+	# (and const if need for type!)
+	for x in ast:
+		isa = x['isa']
+		kind = x['kind']
+
+		if isa == 'ast_definition':
+			if kind == 'type':
+				y = def_type(x)
+				add_spices(y, ast_atts=x['attributes'])
+				module_append(y, to_export=x['export'])
+
+
+	# 2. def vars & consts
+	for x in ast:
+		isa = x['isa']
+		kind = x['kind']
+
+		if isa == 'ast_definition':
+			y = None
+			if kind == 'const':
+				if not 'defined' in x:
+					y = def_const(x)
+
+			elif kind == 'var':
+				y = def_var(x)
+
+			module_append(y, to_export=x['export'])
+
+
+	# 3. scan funcs
+	for x in ast:
+		isa = x['isa']
+		kind = x['kind']
+
+		if kind == 'func':
+			y0 = decl_func(x)
+
+			add_spices(y0, ast_atts=x['attributes'])
+
+			if x['export']:
+				y0['att'].append('export')
+				module_append_export(y0)
+			else:
+				module_append_localfunc(y0)
+
+			#info("scan func: %s" % x['id']['str'], x['ti'])
+			ftype = do_type(x['type'])
+			fvalue = value_func(x['id'], ftype, ti=x['ti'])
+			module_value_add(module, x['id']['str'], fvalue, is_public=x['export'])
+			x['symbol'] = fvalue
+
+
+	# 4. def funcs
+	for x in ast:
+		isa = x['isa']
+		kind = x['kind']
+		if isa == 'ast_definition':
+			if kind == 'func':
+				y = def_func(x)
+				if y != None:
+					if x['export']:
+						y['att'].append('export')
+					add_spices(y, ast_atts=x['attributes'])
+					module_append(y)
+
+	gast = prev_gast
+	return
+
+
+
+def pre_nodef(ast):
+	global gast
+	global module
+	prev_gast = gast
+	gast = ast
+
+
+	# 1. decl types
+	# (and const if need for type!)
+	for x in ast:
+		isa = x['isa']
+		kind = x['kind']
+
+		if isa == 'ast_definition':
+			if kind == 'type':
+				if not 'defined' in x:
+					y = decl_type(x)
+					if y == None:
+						continue
+					y['nl'] = x['nl']
+
+					module_append(y, to_export=x['export'])
+
+	# 2. def vars & consts
+	for x in ast:
+		isa = x['isa']
+		kind = x['kind']
+
+		if isa == 'ast_definition':
+			y = None
+			if kind == 'const':
+				id = x['id']
+				v = do_value_immediate(x['value'], allow_ptr_to_str=True)
+				if value_is_bad(v):
+					module_value_add_public(module, id['str'], v)
+					return hlir_def_const(id, v, v, x['ti'])
+				const_value = symbol_const(id, v, is_public=x['export'])
+				module_append(y, to_export=x['export'])
+				continue
+
+
+			elif kind == 'var':
+				y = def_var(x)
+
+				# обрабатываем переменную из импорта
+				# нельзя печатать ее определение (тк она из другого модуля)
+				# но в LLVM backend нужно указать как extern
+				y['att'].append('extern')
+				module_append(y, to_export=x['export'])
+				continue
+
+
+	# 3. scan funcs
+	for x in ast:
+		isa = x['isa']
+		kind = x['kind']
+
+		if kind == 'func':
+			y = decl_func(x)
+			add_spices(y, ast_atts=x['attributes'])
+			module_append(y, to_export=x['export'])
+
+	gast = prev_gast
+	return
+
+
+
+
+
+
 
 
 
