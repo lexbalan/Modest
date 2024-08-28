@@ -2141,27 +2141,6 @@ def module_remove_node(m, isa, id_str):
 def decl_func(x):
 	id = x['id']
 	func_type = do_type_func(x['type'], func_id=id['str'])
-
-	#
-	# Check if function already declared/defined
-	#
-#	already = value_get(id['str'])
-#	if already != None:
-#		if 'stmt' in already:
-#			# already defined function
-#			info("function declaration after definition", x['ti'])
-#
-#		else:
-#			# already declared function
-#			info("repeated function declaration", x['ti'])
-#
-#		# check type of already created function
-#		if not hlir_type.type_eq(already['type'], func_type):
-#			error("definition not correspond to function type", x['type']['ti'])
-#			info("firstly declared here", already['type']['ti'])
-#
-#		return
-
 	func = value_func(id, func_type, ti=id['ti'])
 	ctx_value_add(id['str'], func)
 	return hlir_decl_func(id, func, x['ti'])
@@ -2892,8 +2871,8 @@ def pre_def(ast):
 				module_append_localfunc(y0)
 
 			#info("scan func: %s" % x['id']['str'], x['ti'])
-			ftype = do_type(x['type'])
-			fvalue = value_func(x['id'], ftype, ti=x['ti'])
+
+			fvalue = y0['value']
 			module_value_add(module, x['id']['str'], fvalue, is_public=x['export'])
 			x['symbol'] = fvalue
 
@@ -2969,7 +2948,7 @@ def pre_nodef(ast):
 				continue
 
 
-	# 3. scan funcs
+	# 3. decl funcs
 	for x in ast:
 		isa = x['isa']
 		kind = x['kind']
