@@ -2138,14 +2138,6 @@ def module_remove_node(m, isa, id_str):
 
 
 
-def decl_func(x):
-	id = x['id']
-	func_type = do_type_func(x['type'], func_id=id['str'])
-	func = value_func(id, func_type, ti=id['ti'])
-	ctx_value_add(id['str'], func)
-	return hlir_decl_func(id, func, x['ti'])
-
-
 
 
 
@@ -2192,8 +2184,6 @@ def def_type(x):
 
 	# check if identifier is free
 	already_declared = pre_exist != None
-
-	#nt = x['symbol']
 
 	if already_declared:
 		nt = pre_exist
@@ -2380,20 +2370,31 @@ def check_stmt(stmt):
 		check_block(stmt['stmt'])
 
 
-def def_func(x):
-	global cfunc
 
+
+def decl_func(x):
 	func_id = x['id']
-
-	if func_id['str'][0].isupper():
-		error("function id must starts with small letter", func_id['ti'])
-
 	func_ti = func_id['ti']
 
 	func_type = do_type_func(x['type'], func_id=func_id['str'])
+	fn = value_func(func_id, func_type, ti=func_ti)
+	ctx_value_add(func_id['str'], fn)
+	return hlir_decl_func(func_id, fn, func_ti)
+
+
+def def_func(x):
+	global cfunc
 	prev_cfunc = cfunc
 
-	fn = x['symbol']
+	func_id = x['id']
+	func_ti = func_id['ti']
+
+	#if func_id['str'][0].isupper():
+	#	error("function id must starts with small letter", func_ti)
+
+	#func_type = do_type_func(x['type'], func_id=func_id['str'])
+	fn = ctx_value_get(func_id['str'])
+	func_type = fn['type']
 	fn['ti_decl'] = func_ti
 	fn['ti_def'] = func_ti
 	cfunc = fn
@@ -2874,7 +2875,6 @@ def pre_def(ast):
 
 			fvalue = y0['value']
 			module_value_add(module, x['id']['str'], fvalue, is_public=x['export'])
-			x['symbol'] = fvalue
 
 
 	# 4. def funcs
