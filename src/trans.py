@@ -2382,25 +2382,18 @@ def decl_func(x):
 	return hlir_decl_func(func_id, fn, func_ti)
 
 
+
 def def_func(x):
 	global cfunc
 	prev_cfunc = cfunc
 
 	func_id = x['id']
-	func_ti = func_id['ti']
-
-	#if func_id['str'][0].isupper():
-	#	error("function id must starts with small letter", func_ti)
-
-	#func_type = do_type_func(x['type'], func_id=func_id['str'])
 	fn = ctx_value_get(func_id['str'])
 	func_type = fn['type']
-	fn['ti_decl'] = func_ti
-	fn['ti_def'] = func_ti
+
 	cfunc = fn
 
-	# create params context
-	context_push()
+	context_push()  # create params context
 
 	params = func_type['params']
 	i = 0
@@ -2441,8 +2434,7 @@ def def_func(x):
 			elif stmts[-1]['kind'] != 'return':
 				warning("expected return operator at end", stmt['ti'])
 
-	# remove params context
-	context_pop()
+	context_pop()  # remove params context
 
 	cfunc = prev_cfunc
 
