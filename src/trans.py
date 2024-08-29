@@ -2138,38 +2138,16 @@ def module_remove_node(m, isa, id_str):
 
 
 
-
-
-
-"""
-def symbol_type(id, ti):
-	nt = hlir_type.hlir_type_undefined(ti)
-	nt['aka'] = id['str']
-	nt['ti_decl'] = ti
-	global module
-	module_type_add_public(module, id['str'], nt)
-	#module_type_add_private(module, id['str'], nt)
-	return nt
-"""
-
-
-
-
 def decl_type(x):
 	id = x['id']
 	log("decl_type %s" % id['str'])
 
 	nt = do_type(x['type'])
-	#nt = hlir_type.hlir_type_undefined(x['ti'])
 	nt['aka'] = id['str']
-	nt['ti_decl'] = x['ti']
+	nt['ti_def'] = x['ti']
 	global module
 	module_type_add_public(module, id['str'], nt)
-
-	# С не печатает opaque, но LLVM печатает (!)
 	return hlir_decl_type(id, nt, x['ti'])
-
-
 
 
 def def_type(x):
@@ -2908,7 +2886,7 @@ def pre_nodef(ast):
 					if y == None:
 						continue
 					y['nl'] = x['nl']
-
+					# С не печатает opaque, но LLVM печатает (!)
 					module_append(y, to_export=x['export'])
 
 	# 2. def vars & consts
