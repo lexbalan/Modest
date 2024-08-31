@@ -29,9 +29,11 @@ def nl_indent(nl=1):
 
 
 def get_id_str(x):
-	id_str = x['id']['str']
-	if 'cm_alias' in x:
-		id_str = x['cm_alias']
+	id_str = ""
+	if not 'cm' in x:
+		id_str = x['id']['str']
+	else:
+		id_str = x['id']['cm']
 	return id_str
 
 
@@ -179,9 +181,10 @@ def print_type_func(t, extra_args=False):
 
 
 def get_type_id(t):
-	if 'aka' in t:
-		if 'aka' != None:
-			return t['aka']
+	if 'id' in t:
+		if 'cm' in t['id']:
+			return t['cm']
+		return t['id']['str']
 
 	return None
 

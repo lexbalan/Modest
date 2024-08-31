@@ -10,27 +10,27 @@ include "./ctypes"
 
 export type Opaque *Nat8
 
-@property("type.c_alias", "FILE")
+@property("type.id.c", "FILE")
 export type File Opaque
 
-@property("type.c_alias", "fpos_t")
+@property("type.id.c", "fpos_t")
 export type FposT Opaque
 
-@property("type.c_alias", "char *")
+@property("type.id.c", "char *")
 export type CharStr Str
 
-@property("type.c_alias", "const char *")
+@property("type.id.c", "const char *")
 export type ConstCharStr CharStr
 
 
-@property("value.c_alias", "EOF")
+@property("value.id.c", "EOF")
 export let c_EOF = -1
 
-@property("value.c_alias", "SEEK_SET")
+@property("value.id.c", "SEEK_SET")
 export let c_SEEK_SET = 0
-@property("value.c_alias", "SEEK_CUR")
+@property("value.id.c", "SEEK_CUR")
 export let c_SEEK_CUR = 1
-@property("value.c_alias", "SEEK_END")
+@property("value.id.c", "SEEK_END")
 export let c_SEEK_END = 2
 
 @attribute("value.type.to:dispensable")

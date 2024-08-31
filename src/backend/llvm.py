@@ -122,8 +122,10 @@ def _llvm_operation(op, type, reg=None, x=None):
 
 def get_id_str(x):
 	id_str = x['id']['str']
-	if 'llvm_alias' in x:
-		id_str = '"%s"' % x['llvm_alias']
+	if not 'llvm_alias' in x:
+		id_str = x['id']['str']
+	else:
+		id_str = '"%s"' % x['id']['llvm']
 	return id_str
 
 
@@ -2052,10 +2054,10 @@ def print_def_func(x):
 
 
 def type_get_aka(t):
-	if 'llvm_alias' in t:
-		return t['llvm_alias']
-	if 'aka' in t:
-		return '%' + t['aka']
+	if 'id' in t:
+		if 'llvm' in t['id']:
+			return t['id']['llvm']
+		return '%' + t['id']['str']
 	return None
 
 

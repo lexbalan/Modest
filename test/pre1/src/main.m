@@ -46,8 +46,8 @@ export func main() -> Int {
 let default = 5
 
 
-@property("value.c_alias", "arrshow")
-@property("value.cm_alias", "arrshow")
+@property("value.id.c", "arrshow")
+@property("value.id.cm", "arrshow")
 func arrayShow(array: *Arr, size: Int) -> Unit {
 	printf("arrayShow:\n")
 	var i = 0

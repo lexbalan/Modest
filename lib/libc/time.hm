@@ -7,15 +7,15 @@ $pragma c_include "time.h"
 
 
 /* time in seconds since 1970 */
-@property("type.c_alias", "time_t")
+@property("type.id.c", "time_t")
 type TimeT Int32
 
 
-@property("type.c_alias", "clock_t")
+@property("type.id.c", "clock_t")
 type ClockT UnsignedLong
 
 
-@property("type.c_alias", "struct tm")
+@property("type.id.c", "struct tm")
 type Struct_tm record {
 	tm_sec: Int	   // Seconds [0-60]
 	tm_min: Int	   // Minutes [0-59]

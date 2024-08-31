@@ -1,6 +1,6 @@
 
 
-type Str Str8
+type Str []Char8
 
 
 type Char Char8
@@ -29,26 +29,26 @@ type Int Int32
 type UnsignedInt Nat32
 
 
-type LongInt MyInt
+type LongInt Int64
 
 
 type UnsignedLongInt Nat64
 
 
 
-type Long MyInt
+type Long Int64
 
 
 type UnsignedLong Nat64
 
 
-type LongLong MyInt
+type LongLong Int64
 
 
 type UnsignedLongLong Nat64
 
 
-type LongLongInt MyInt
+type LongLongInt Int64
 
 
 type UnsignedLongLongInt Nat64
@@ -80,7 +80,7 @@ type IntptrT Nat64
 type PtrdiffT Ptr
 
 
-type OffT MyInt
+type OffT Int64
 
 
 
@@ -140,11 +140,11 @@ func fprintf(stream: *File, format: *Str) -> Int
 func fscanf(f: *File, format: *ConstCharStr) -> Int
 func sscanf(buf: *ConstCharStr, format: *ConstCharStr) -> Int
 func sprintf(buf: *CharStr, format: *ConstCharStr) -> Int
-func vfprintf(f: *File, format: *ConstCharStr, args: VA_List) -> Int
-func vprintf(format: *ConstCharStr, args: VA_List) -> Int
-func vsprintf(str: *CharStr, format: *ConstCharStr, args: VA_List) -> Int
-func vsnprintf(str: *CharStr, n: SizeT, format: *ConstCharStr, args: VA_List) -> Int
-func __vsnprintf_chk(dest: *CharStr, len: SizeT, flags: Int, dstlen: SizeT, format: *ConstCharStr, arg: VA_List) -> Int
+func vfprintf(f: *File, format: *ConstCharStr, args: <type:{'isa': 'type', 'kind': 'va_list', 'generic': False, 'width': 0, 'size': 0, 'align': 1, 'aka': 'VA_List', 'c_alias': 'va_list', 'llvm_alias': 'i8*', 'att': [], 'ops': [], 'ti': {'isa': 'ti', 'file': '/Users/alexbalan/p/Modest/test/pre1/src/stdio.m', 'line': 89, 'len': 7, 'pos': 107}}>) -> Int
+func vprintf(format: *ConstCharStr, args: <type:{'isa': 'type', 'kind': 'va_list', 'generic': False, 'width': 0, 'size': 0, 'align': 1, 'aka': 'VA_List', 'c_alias': 'va_list', 'llvm_alias': 'i8*', 'att': [], 'ops': [], 'ti': {'isa': 'ti', 'file': '/Users/alexbalan/p/Modest/test/pre1/src/stdio.m', 'line': 89, 'len': 7, 'pos': 107}}>) -> Int
+func vsprintf(str: *CharStr, format: *ConstCharStr, args: <type:{'isa': 'type', 'kind': 'va_list', 'generic': False, 'width': 0, 'size': 0, 'align': 1, 'aka': 'VA_List', 'c_alias': 'va_list', 'llvm_alias': 'i8*', 'att': [], 'ops': [], 'ti': {'isa': 'ti', 'file': '/Users/alexbalan/p/Modest/test/pre1/src/stdio.m', 'line': 89, 'len': 7, 'pos': 107}}>) -> Int
+func vsnprintf(str: *CharStr, n: SizeT, format: *ConstCharStr, args: <type:{'isa': 'type', 'kind': 'va_list', 'generic': False, 'width': 0, 'size': 0, 'align': 1, 'aka': 'VA_List', 'c_alias': 'va_list', 'llvm_alias': 'i8*', 'att': [], 'ops': [], 'ti': {'isa': 'ti', 'file': '/Users/alexbalan/p/Modest/test/pre1/src/stdio.m', 'line': 89, 'len': 7, 'pos': 107}}>) -> Int
+func __vsnprintf_chk(dest: *CharStr, len: SizeT, flags: Int, dstlen: SizeT, format: *ConstCharStr, arg: <type:{'isa': 'type', 'kind': 'va_list', 'generic': False, 'width': 0, 'size': 0, 'align': 1, 'aka': 'VA_List', 'c_alias': 'va_list', 'llvm_alias': 'i8*', 'att': [], 'ops': [], 'ti': {'isa': 'ti', 'file': '/Users/alexbalan/p/Modest/test/pre1/src/stdio.m', 'line': 89, 'len': 7, 'pos': 107}}>) -> Int
 func fgetc(f: *File) -> Int
 func fputc(char: Int, f: *File) -> Int
 func fgets(str: *CharStr, n: Int, f: *File) -> *CharStr
@@ -169,13 +169,13 @@ type Node record {
 let arrSize = 10
 type Arr [arrSize]Int
 let add = &add
-var x: MyInt
+var x: Int64
 let default = 5
 
 func main() -> Int {
 	printf("test\n")
 
-	printf("sub.name = '%s'\n", *Str8 name)
+	printf("sub.name = '%s'\n", *[]Char8 name)
 	//printf("sub2Name = '%s'\n", *Str8 sub2Name)
 
 	var f: Float
@@ -201,7 +201,7 @@ func main() -> Int {
 	return 0
 }
 
-func arrshow(array: *Arr, size: Int) -> Unit {
+func arrayShow(array: *Arr, size: Int) -> Unit {
 	printf("arrayShow:\n")
 	var i: Int32 = 0
 	while i < 10 {

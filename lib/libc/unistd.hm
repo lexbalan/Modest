@@ -11,38 +11,38 @@ import "./ctypes"
 //@attribute("extern")
 //var environ: *[]*Char
 
-@property("value.c_alias", "SEEK_SET")
+@property("value.id.c", "SEEK_SET")
 let c_SEEK_SET = 0
-@property("value.c_alias", "SEEK_CUR")
+@property("value.id.c", "SEEK_CUR")
 let c_SEEK_CUR = 1
-@property("value.c_alias", "SEEK_END")
+@property("value.id.c", "SEEK_END")
 let c_SEEK_END = 2
 
-@property("value.c_alias", "STDIN_FILENO")
+@property("value.id.c", "STDIN_FILENO")
 let c_STDIN_FILENO = 0
-@property("value.c_alias", "STDOUT_FILENO")
+@property("value.id.c", "STDOUT_FILENO")
 let c_STDOUT_FILENO = 1
-@property("value.c_alias", "STDERR_FILENO")
+@property("value.id.c", "STDERR_FILENO")
 let c_STDERR_FILENO = 2
 
 
 // lockf function - record locking on files
-@property("value.c_alias", "F_ULOCK")
+@property("value.id.c", "F_ULOCK")
 let c_F_ULOCK = 0  // unlock locked sections
-@property("value.c_alias", "F_LOCK")
+@property("value.id.c", "F_LOCK")
 let c_F_LOCK = 1   // lock a section for exclusive use
-@property("value.c_alias", "F_TLOCK")
+@property("value.id.c", "F_TLOCK")
 let c_F_TLOCK = 2  // test and lock a section for exclusive use
-@property("value.c_alias", "F_TEST")
+@property("value.id.c", "F_TEST")
 let c_F_TEST = 3
 
-@property("value.c_alias", "F_OK")
+@property("value.id.c", "F_OK")
 let c_F_OK = 0  // Test for existence of file
-@property("value.c_alias", "R_OK")
+@property("value.id.c", "R_OK")
 let c_R_OK = 4  // Test for read permission
-@property("value.c_alias", "W_OK")
+@property("value.id.c", "W_OK")
 let c_W_OK = 2  // Test for write permission
-@property("value.c_alias", "X_OK")
+@property("value.id.c", "X_OK")
 let c_X_OK = 1  // Test for execute (search) permission
 
 

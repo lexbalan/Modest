@@ -1931,7 +1931,7 @@ def do_stmt_let(x):
 		if hlir_type.type_is_generic(v['type']):
 			# generic immediate в C печатается как #define
 			# и его надо манглить иначе возникает куча проблем
-			const_value['c_alias'] = '__' + const_value['id']['str']
+			const_value['id']['c_alias'] = '__' + const_value['id']['str']
 
 	ctx_value_add(id['str'], const_value)
 
@@ -2209,17 +2209,18 @@ def def_type(x):
 	# НО! имя даем новое
 	nt.clear()
 	nt.update(ty)
+	nt['id'] = id # need for  @property("type.id.c", "int")
 	nt['att'] = copy.copy(ty['att'])
-	nt['aka'] = id['str']
+	#nt['aka'] = id['str']
 	nt['ti_def'] = id['ti']
 
 
 	if not ('not_included' in module['att']):
 		# В случае когда не печатаем typedef явно (!)
 		# Убираем алиасы которые висели на оригинальном типе
-		if 'c_alias' in nt:
+		if 'c_alias' in nt['id']:
 			nt.pop('c_alias')
-		if 'llvm_alias' in nt:
+		if 'llvm_alias' in nt['id']:
 			nt.pop('llvm_alias')
 
 

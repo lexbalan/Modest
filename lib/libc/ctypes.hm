@@ -13,33 +13,33 @@ $else
 $endif
 
 
-@property("type.c_alias", "socklen_t")
+@property("type.id.c", "socklen_t")
 type SocklenT Nat32
 
-@property("type.c_alias", "size_t")
+@property("type.id.c", "size_t")
 type SizeT UnsignedLongInt
 
-@property("type.c_alias", "ssize_t")
+@property("type.id.c", "ssize_t")
 type SSizeT LongInt
 
-@property("type.c_alias", "intptr_t")
+@property("type.id.c", "intptr_t")
 type IntptrT Nat64
 
-@property("type.c_alias", "ptrdiff_t")
+@property("type.id.c", "ptrdiff_t")
 type PtrdiffT Ptr
 
-@property("type.c_alias", "off_t")
+@property("type.id.c", "off_t")
 type OffT Int64
 
 
-@property("type.c_alias", "useconds_t")
+@property("type.id.c", "useconds_t")
 type USecondsT Nat32
 
-@property("type.c_alias", "pid_t")
+@property("type.id.c", "pid_t")
 type PidT Int32
-@property("type.c_alias", "uid_t")
+@property("type.id.c", "uid_t")
 type UidT Nat32
-@property("type.c_alias", "gid_t")
+@property("type.id.c", "gid_t")
 type GidT Nat32
 
 

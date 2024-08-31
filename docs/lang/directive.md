@@ -110,7 +110,7 @@ var byteFromUart: Byte
 ```
 
 ```swift
-@property("type.c_alias", "int")
+@property("type.id.c", "int")
 type Int Int32
 ```
 

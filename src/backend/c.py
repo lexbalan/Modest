@@ -137,9 +137,11 @@ def precedence(x):
 
 
 def get_id_str(x):
-	id_str = x['id']['str']
-	if 'c_alias' in x:
-		id_str = x['c_alias']
+	id_str = ""
+	if not 'c_alias' in x['id']:
+		id_str = x['id']['str']
+	else:
+		id_str = x['id']['c_alias']
 	return id_str
 
 
@@ -267,10 +269,11 @@ def print_type_enum(t):
 
 
 def type_get_aka(t):
-	if 'c_alias' in t:
-		return t['c_alias']
-	if 'aka' in t:
-		return t['aka']
+	if 'id' in t:
+		if 'c' in t['id']:
+			return t['id']['c']
+		return t['id']['str']
+
 	if 'c_anon_id' in t:
 		return 'struct ' + t['c_anon_id']
 	return None

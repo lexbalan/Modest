@@ -26,7 +26,7 @@ typedef int * Arr;
 #define default  5// local decls
 
 static
-void arrshow(int *array, int size);
+void arrayShow(int *array, int size);
 static
 int div(int a, int b);// defs
 
@@ -66,7 +66,7 @@ int main()
 #undef __b
 
 static
-void arrshow(int *array, int size)
+void arrayShow(int *array, int size)
 {
 	printf("arrayShow:\n");
 	int32_t i;

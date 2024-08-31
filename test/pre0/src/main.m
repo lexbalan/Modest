@@ -41,8 +41,8 @@ let default = 5
 let subName = "Name"
 
 
-@property("c_alias", "arrshow")
-@property("cm_alias", "arrshow")
+@property("value.id.c", "arrshow")
+@property("value.id.cm", "arrshow")
 func arrayShow(array: *Arr, size: Int) -> Unit {
 	printf("arrayShow:\n")
 	var i = 0
@@ -52,7 +52,7 @@ func arrayShow(array: *Arr, size: Int) -> Unit {
 	}
 }
 
-@property("type.c_alias", "int")
+@property("type.id.c", "int")
 type Int Nat32
 
 type Data Int

@@ -82,9 +82,7 @@ def hlir_type_unit():
 		'width': 0,
 		'size': 0,
 		'align': 0,
-		'aka': 'Unit',
-		'c_alias': 'void',
-		'llvm_alias': 'void',
+		'id': {'isa': 'id', 'str': 'Unit', 'c': 'void', 'llvm': 'void', 'ti': None},
 		'ops': CONS_OP,
 		'att': [],
 		'ti': None
@@ -99,9 +97,7 @@ def hlir_type_bool():
 		'width': 1,
 		'size': 1,
 		'align': 1,
-		'aka': 'Bool',
-		'c_alias': 'bool',
-		'llvm_alias': 'i1',
+		'id': {'isa': 'id', 'str': 'Bool', 'c': 'bool', 'llvm': 'i1', 'ti': None},
 		'ops': BOOL_OPS,
 		'att': [],
 		'ti': None
@@ -122,9 +118,14 @@ def hlir_type_char(width, ti=None):
 		'width': width,
 		'size': size,
 		'align': size,
-		'aka': 'Char%d' % width,
-		'c_alias': calias,
-		'llvm_alias': 'i%d' % width,
+		'id': {
+			'isa': 'id',
+			'str': 'Char%d' % width,
+			'c': calias,
+			'llvm': 'i%d' % width,
+			'ti': None
+		},
+
 		'ops': CHAR_OPS,
 		'att': [],
 		'ti': ti
@@ -158,9 +159,15 @@ def hlir_type_integer(width, signed=True, ti=None):
 		'size': size,
 		'align': size,
 		'signed': signed,
-		'aka': aka,
-		'c_alias': calias,
-		'llvm_alias': 'i%d' % width,
+
+		'id': {
+			'isa': 'id',
+			'str': aka,
+			'c': calias,
+			'llvm': 'i%d' % width,
+			'ti': None
+		},
+
 		'ops': INT_OPS,
 		'att': [],
 		'ti': ti
@@ -183,9 +190,15 @@ def hlir_type_float(width, ti=None):
 		'size': size,
 		'align': size,
 		'signed': True,
-		'aka': 'Float32',
-		'c_alias': calias,
-		'llvm_alias': calias,
+
+		'id': {
+			'isa': 'id',
+			'str': 'Float32',
+			'c': calias,
+			'llvm': calias,
+			'ti': None
+		},
+
 		'ops': FLOAT_OPS,
 		'att': [],
 		'ti': ti
