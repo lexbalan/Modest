@@ -104,6 +104,8 @@ break_2:
 ; declarations from: sub
 ; -----------------------------------------------------------------------------
 
+%MyInt = type opaque
+
 declare i32 @add(i32 %a, i32 %b)
 declare i32 @sub(i32 %a, i32 %b)
 declare i32 @mid(i32 %a, i32 %b)
@@ -113,7 +115,7 @@ declare i32 @mid(i32 %a, i32 %b)
 ; -- SOURCE: /Users/alexbalan/p/Modest/test/pre1/src/main.m
 ; -----------------------------------------------------------------------------
 @str1 = private constant [6 x i8] [i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
-@str2 = private constant [18 x i8] [i8 115, i8 117, i8 98, i8 58, i8 58, i8 110, i8 97, i8 109, i8 101, i8 32, i8 61, i8 32, i8 39, i8 37, i8 115, i8 39, i8 10, i8 0]
+@str2 = private constant [17 x i8] [i8 115, i8 117, i8 98, i8 46, i8 110, i8 97, i8 109, i8 101, i8 32, i8 61, i8 32, i8 39, i8 37, i8 115, i8 39, i8 10, i8 0]
 @str3 = private constant [4 x i8] [i8 115, i8 117, i8 98, i8 0]
 @str4 = private constant [8 x i8] [i8 115, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 @str5 = private constant [12 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 83, i8 104, i8 111, i8 119, i8 58, i8 10, i8 0]
@@ -212,12 +214,12 @@ declare void @perror(%ConstCharStr* %str)
 
 %Arr = type [10 x i32];
 
-@x = global i32 zeroinitializer
+@x = global i64 zeroinitializer
 
 
 define i32 @main() {
 	%1 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str1 to [0 x i8]*))
-	%2 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str2 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @str3 to [0 x i8]*))
+	%2 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str2 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @str3 to [0 x i8]*))
 	;printf("sub2Name = '%s'\n", *Str8 sub2Name)
 	%3 = alloca double, align 8
 	%4 = alloca i32, align 4
@@ -228,7 +230,7 @@ define i32 @main() {
 	%8 = alloca i32, align 4
 	;var arr = getArr()
 	;arrayShow(&arr, 10)
-	store i32 12, i32* @x
+	store i64 12, i64* @x
 	ret i32 0
 }
 

@@ -174,7 +174,7 @@ let default = 5
 func main() -> Int {
 	printf("test\n")
 
-	printf("sub::name = '%s'\n", *Str8 name)
+	printf("sub.name = '%s'\n", *Str8 name)
 	//printf("sub2Name = '%s'\n", *Str8 sub2Name)
 
 	var f: Float

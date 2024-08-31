@@ -104,6 +104,8 @@ break_2:
 ; -- SOURCE: /Users/alexbalan/p/Modest/test/pre1/src/sub.m
 ; -----------------------------------------------------------------------------
 
+%MyInt = type i64;
+
 
 define i32 @add(i32 %a, i32 %b) {
 	%1 = add i32 %a, %b

@@ -482,13 +482,13 @@ def do_field(x):
 # Do Type
 #
 
-def do_type_name(t):
-	id_str = t['name']['ids'][0]['str']
+def do_type_id(t):
+	id_str = t['ids'][0]['str']
 
 	tx = None
-	if len(t['name']['ids']) > 1:
+	if len(t['ids']) > 1:
 		ns_id = id_str
-		id_str = t['name']['ids'][1]['str']
+		id_str = t['ids'][1]['str']
 		#print("GET TYPE %s FROM: %s" % (id_str, ns_id))
 		global module
 		if ns_id in module['imports']:
@@ -661,7 +661,7 @@ def do_type(x):
 
 	t = None
 	k = x['kind']
-	if k == 'name': t = do_type_name(x)
+	if k == 'id': t = do_type_id(x)
 	elif k == 'func': t = do_type_func(x)
 	elif k == 'pointer': t = do_type_pointer(x)
 	elif k == 'array': t = do_type_array(x)
@@ -1424,12 +1424,24 @@ def do_value_slice(x):
 
 
 def do_value_access(x):
+
+	# access to submodule?
+	if x['left']['kind'] == 'id':
+		ss = x['left']['str']
+		if is_submodule_name(ss):
+			v = submodule_access(ss, x['right']['str'])
+			return v
+
+	#
+	# access to object
+	#
+
 	left = do_rvalue(x['left'])
 
 	if value_is_bad(left):
 		return value_bad(x)
 
-	field_id = x['field']
+	field_id = x['right']
 
 	# доступ через переменную-указатель
 	via_pointer = hlir_type.type_is_pointer(left['type'])
@@ -1479,6 +1491,50 @@ def do_value_cons(x):
 
 
 undeclared_value_error = True
+
+
+
+def do_value_id(x):
+	id_str = x['str']
+	v = ctx_value_get(id_str)
+
+	if v == None:
+		predefinition(id_str)
+		vx = ctx_value_get(id_str)
+		if vx != None:
+			return vx
+
+		# see: do_value_call
+		global undeclared_value_error
+		if undeclared_value_error:
+			error("undeclared value '%s'" % id_str, x)
+
+		# чтобы не генерил ошибки дальше
+		# создадим bad value и пропишем его глобально
+		v = value_bad(x)
+		value_attribute_add(v, 'unknown')
+		ctx_value_add(id_str, v)
+		return v
+
+	if 'usecnt' in v:
+		v['usecnt'] = v['usecnt'] + 1
+
+	return v
+
+
+def is_submodule_name(name):
+	return name in module['imports']
+
+def submodule_access(mname, iname):
+	global module
+	if is_submodule_name(mname):
+		submodule = module['imports'][mname]
+		v = module_value_get_public(submodule, iname)
+		return v
+	else:
+		#error('unknown module', x['ti'])
+		return value_bad(x)
+
 
 def do_value_name(x):
 	id_str = x['name']['ids'][0]['str']
@@ -1699,6 +1755,7 @@ def do_value(x):
 	v = None
 
 	if k == 'name': v = do_value_name(x)
+	elif k == 'id': v = do_value_id(x)
 	elif k == 'number': v = do_value_number(x)
 	elif k == 'string': v = do_value_string(x)
 	elif k == 'record': v = do_value_record(x)

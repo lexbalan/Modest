@@ -10,15 +10,15 @@ import "sub"
 //$pragma c_include "./sub.h"
 //$pragma c_include "./console.h"
 
-//let printf = &console::printf
+//let printf = &console.printf
 
-var x: Int
+var x: sub.MyInt
 
 
 export func main() -> Int {
 	printf("test\n")
 
-	printf("sub::name = '%s'\n", *Str8 sub::name)
+	printf("sub.name = '%s'\n", *Str8 sub.name)
 	//printf("sub2Name = '%s'\n", *Str8 sub2Name)
 
 	var f: Float
@@ -27,7 +27,7 @@ export func main() -> Int {
 
 	let a = 10
 	let b = 20
-	let s = sub::mid(a, b)
+	let s = sub.mid(a, b)
 	printf("s = %d\n", s)
 
 	let d = div(10, 2)

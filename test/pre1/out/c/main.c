@@ -37,7 +37,7 @@ int main()
 {
 	printf("test\n");
 
-	printf("sub::name = '%s'\n", (char *)name);
+	printf("sub.name = '%s'\n", (char *)name);
 	//printf("sub2Name = '%s'\n", *Str8 sub2Name)
 
 	float f;

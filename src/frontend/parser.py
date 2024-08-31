@@ -126,17 +126,6 @@ class Parser:
 		return hlir_id(s, ti=ti)
 
 
-	# Name: foo
-	# Name: bar::foo
-	def name(self):
-		ti = self.ti()
-		id = self.identifier()
-		_name = {'isa': 'name', 'ids': [id], 'ti': ti}
-		while self.match('::'):
-			id = self.identifier()
-			_name['ids'].append(id)
-		return _name
-
 
 	def need_sep(self, separators=['\n', ';'], stoppers=['}'], eat=True):
 		# random space after
@@ -246,7 +235,7 @@ class Parser:
 
 	def check_is_type(self):
 		if self.is_identifier():
-			if self.nextok() == '::':
+			if self.nextok() == '.':
 				self.skip()
 				self.skip()
 			token = self.gettok()
@@ -401,8 +390,19 @@ class Parser:
 			t = y
 
 		elif self.ctok_class() == 'id':
-			n = self.name() # type by Name
-			t = {'isa': 'type', 'kind': 'name', 'name': n, 'ti': ti}
+			id = self.identifier()
+			ids = [id]
+
+			while self.match('.'):
+				id = self.identifier()
+				ids.append(id)
+
+			t = {
+				'isa': 'type',
+				'kind': 'id',
+				'ids': ids,
+				'ti': ti
+			}
 
 		t['attributes'] = attributes
 		return t
@@ -703,7 +703,7 @@ class Parser:
 					'isa': 'ast_value',
 					'kind': 'access',
 					'left': v,
-					'field': field_id,
+					'right': field_id,
 					'ti': ti
 				}
 			#elif self.look("[") and self.is_value_expr():
@@ -945,10 +945,10 @@ class Parser:
 			return v
 
 		elif self.ctok_class() == 'id':
-			n = self.name()
+			id = self.identifier()
 
 			# __va_arg hack
-			if n['ids'][0]['str'] == '__va_arg':
+			if id['str'] == '__va_arg':
 				self.match("(")
 				v = self.expr_value()
 				self.match(",")
@@ -962,7 +962,9 @@ class Parser:
 					'ti': ti
 				}
 
-			return {'isa': 'ast_value', 'kind': 'name', 'name': n, 'ti': ti}
+			#return id
+
+			return {'isa': 'ast_value', 'kind': 'id', 'str': id['str'], 'ti': ti}
 
 
 		elif self.ctok_class() == 'num':
