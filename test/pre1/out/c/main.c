@@ -31,7 +31,7 @@ int div(int a, int b);// defs
 
 
 
-static int x;
+static int64_t x;
 
 int main()
 {

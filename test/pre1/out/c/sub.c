@@ -7,7 +7,9 @@
 #include "sub.h"
 
 
-// local decls
+
+
+typedef int64_t MyInt;// local decls
 // defs
 
 

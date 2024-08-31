@@ -1536,50 +1536,6 @@ def submodule_access(mname, iname):
 		return value_bad(x)
 
 
-def do_value_name(x):
-	id_str = x['name']['ids'][0]['str']
-
-	v = None
-	if len(x['name']['ids']) > 1:
-		ns_id = id_str
-		id_str = x['name']['ids'][1]['str']
-		#print("GET VALUE %s FROM: %s" % (id_str, ns_id))
-		global module
-		if ns_id in module['imports']:
-			submodule = module['imports'][ns_id]
-			v = module_value_get_public(submodule, id_str)
-		else:
-			error('unknown namespace', x['ti'])
-			v = value_bad(x)
-			return v
-
-	else:
-		v = ctx_value_get(id_str)
-
-	if v == None:
-		predefinition(id_str)
-		vx = ctx_value_get(id_str)
-		if vx != None:
-			return vx
-
-		# see: do_value_call
-		global undeclared_value_error
-		if undeclared_value_error:
-			error("undeclared value '%s'" % id_str, x)
-
-		# чтобы не генерил ошибки дальше
-		# создадим bad value и пропишем его глобально
-		v = value_bad(x)
-		value_attribute_add(v, 'unknown')
-		ctx_value_add(id_str, v)
-		return v
-
-	if 'usecnt' in v:
-		v['usecnt'] = v['usecnt'] + 1
-
-	return v
-
-
 
 def do_value_string(x):
 	return value_string_create(x['str'], ti=x['ti'])
@@ -1754,8 +1710,7 @@ def do_value(x):
 
 	v = None
 
-	if k == 'name': v = do_value_name(x)
-	elif k == 'id': v = do_value_id(x)
+	if k == 'id': v = do_value_id(x)
 	elif k == 'number': v = do_value_number(x)
 	elif k == 'string': v = do_value_string(x)
 	elif k == 'record': v = do_value_record(x)
