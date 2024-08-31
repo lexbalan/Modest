@@ -121,7 +121,7 @@ declare i32 @mid(i32 %a, i32 %b)
 @str5 = private constant [12 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 83, i8 104, i8 111, i8 119, i8 58, i8 10, i8 0]
 @str6 = private constant [16 x i8] [i8 97, i8 114, i8 114, i8 97, i8 121, i8 91, i8 37, i8 100, i8 93, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 
-%Str = type [0 x i8];
+%Str = type %Str8;
 %Char = type i8;
 %ConstChar = type %Char;
 %SignedChar = type i8;
@@ -220,7 +220,7 @@ declare void @perror(%ConstCharStr* %str)
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str1 to [0 x i8]*))
-	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str2 to [0 x i8]*), [0 x i8]* bitcast ([4 x i8]* @str3 to [0 x i8]*))
+	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str2 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @str3 to [0 x i8]*))
 	;printf("sub2Name = '%s'\n", *Str8 sub2Name)
 	%3 = alloca %Float, align 8
 	%4 = alloca i32, align 4

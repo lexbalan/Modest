@@ -2163,7 +2163,7 @@ def decl_type(x):
 	log("decl_type %s" % id['str'])
 
 	nt = do_type(x['type'])
-	nt['aka'] = id['str']
+	#nt['id'] = id['str']
 	nt['ti_def'] = x['ti']
 	global module
 	module_type_add_public(module, id['str'], nt)

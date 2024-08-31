@@ -401,8 +401,8 @@ def type_eq_array(a, b, opt):
 
 
 def get_type_root_id(t):
-	if 'aka' in t:
-		return t['aka']
+	if 'id' in t:
+		return get_id_str(t['id'])
 	return None
 
 
@@ -467,11 +467,6 @@ def type_eq(a, b, opt=[]):
 
 	if a['kind'] == 'bad' or b['kind'] == 'bad': return True
 	if a['kind'] != b['kind']: return False
-
-	"""if ('aka' in a) or ('aka' in b):
-		if ('aka' in a) and ('aka' in b):
-			if a['aka'] == b['aka']:
-				return True"""
 
 	# проверять аттрибуты (volatile, const)
 	# использую для C чтобы можно было более строго проверить типы
@@ -769,8 +764,8 @@ def print_list_by(lst, method):
 
 
 def type_id(t):
-	if 'aka' in t:
-		return t['aka']
+	if 'id' in t:
+		return t['id']['str']
 	return None
 
 
@@ -779,8 +774,8 @@ def type_id(t):
 # type#id = MyInt
 # root#id = Int32
 def type_root_id(t):
-	if 'aka' in t:
-		return t['aka']
+	if 'id' in t:
+		return t['id']['str']
 	return None
 
 

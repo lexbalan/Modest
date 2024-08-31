@@ -82,7 +82,7 @@ def init():
 
 	typeByte = hlir_type_integer(width=8, signed=False)
 	typeByte['kind'] = 'byte'
-	typeByte['aka'] = 'Byte'
+	typeByte['id'] = {'str': 'Byte'}
 	typeByte['ops'] = BYTE_OPS
 	typeByte['c_alias'] = 'uint8_t'
 	typeByte['llvm_alias'] = 'i8'
@@ -119,11 +119,11 @@ def init():
 	# не нужно делать decl тк нет собственного имени у этого типа
 
 	typeStr8 = hlir_type_array(of=typeChar8)
-	typeStr8['aka'] = 'Str8'
+	typeStr8['id'] = {'str': 'Str8'}
 	typeStr16 = hlir_type_array(of=typeChar16)
-	typeStr16['aka'] = 'Str16'
+	typeStr16['id'] = {'str': 'Str16'}
 	typeStr32 = hlir_type_array(of=typeChar32)
-	typeStr32['aka'] = 'Str32'
+	typeStr32['id'] = {'str': 'Str32'}
 
 
 	typeVA_List = {
@@ -134,9 +134,13 @@ def init():
 		'size': 0,
 		'align': 1,
 		'width': 0,
-		'aka': 'VA_List',
-		'c_alias': 'va_list',
-		'llvm_alias': 'i8*',
+		'id': {
+			'isa': 'id',
+			'str': 'Byte',
+			'c':'va_list',
+			'llvm':'i8*',
+			'ti': None
+		},
 		'att': [],
 		'ops': [],
 		'ti': None
