@@ -1423,13 +1423,30 @@ def do_value_slice(x):
 	return nv
 
 
+
+
+
+def is_submodule_name(name):
+	return name in module['imports']
+
+def submodule_access(mname, iname):
+	global module
+	if not is_submodule_name(mname):
+		return None
+
+	submodule = module['imports'][mname]
+	v = module_value_get_public(submodule, iname)
+	return v
+
+
+
+
 def do_value_access(x):
 
 	# access to submodule?
 	if x['left']['kind'] == 'id':
-		ss = x['left']['str']
-		if is_submodule_name(ss):
-			v = submodule_access(ss, x['right']['str'])
+		v = submodule_access(x['left']['str'], x['right']['str'])
+		if v != None:
 			return v
 
 	#
@@ -1520,20 +1537,6 @@ def do_value_id(x):
 		v['usecnt'] = v['usecnt'] + 1
 
 	return v
-
-
-def is_submodule_name(name):
-	return name in module['imports']
-
-def submodule_access(mname, iname):
-	global module
-	if is_submodule_name(mname):
-		submodule = module['imports'][mname]
-		v = module_value_get_public(submodule, iname)
-		return v
-	else:
-		#error('unknown module', x['ti'])
-		return value_bad(x)
 
 
 
