@@ -29,26 +29,26 @@ type Int Int32
 type UnsignedInt Nat32
 
 
-type LongInt Int64
+type LongInt MyInt
 
 
 type UnsignedLongInt Nat64
 
 
 
-type Long Int64
+type Long MyInt
 
 
 type UnsignedLong Nat64
 
 
-type LongLong Int64
+type LongLong MyInt
 
 
 type UnsignedLongLong Nat64
 
 
-type LongLongInt Int64
+type LongLongInt MyInt
 
 
 type UnsignedLongLongInt Nat64
@@ -80,7 +80,7 @@ type IntptrT Nat64
 type PtrdiffT Ptr
 
 
-type OffT Int64
+type OffT MyInt
 
 
 
@@ -168,7 +168,8 @@ type Node record {
 }
 let arrSize = 10
 type Arr [arrSize]Int
-var x: Int
+let add = &add
+var x: MyInt
 let default = 5
 
 func main() -> Int {
@@ -187,6 +188,8 @@ func main() -> Int {
 	printf("s = %d\n", s)
 
 	let d = div(10, 2)
+
+	let e = add(d, 1)
 
 	var xx: Int
 

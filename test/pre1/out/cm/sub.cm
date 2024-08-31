@@ -1,4 +1,6 @@
 
+
+type MyInt Int64
 let name = "sub"
 
 func add(a: Int32, b: Int32) -> Int32 {

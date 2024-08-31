@@ -1314,9 +1314,9 @@ def print_stmt_var(x):
 
 
 
-def print_macro_definition(id, value, val_ctx=[], prefix=''):
+def print_macro_definition(id_str, value, val_ctx=[], prefix=''):
 	global nl_str
-	out("#define %s%s  " % (prefix, id['str']))
+	out("#define %s%s  " % (prefix, id_str))
 
 	# нельзя оборачивать круглыми скобками литерал массива или структуры
 	# иначе при его прведении по месту к конкретному типу си сойдет с ума
@@ -1352,10 +1352,11 @@ def print_stmt_let(x):
 
 	# print constant as macro
 	if value_is_generic_immediate(v):
+		id_str = get_id_str(v)
 		# если точный тип константы неизвестен - печатаем ее как макро
-		print_macro_definition(id, iv)
+		print_macro_definition(id_str, iv)
 		global func_undef_list
-		func_undef_list.append(id['str'])
+		func_undef_list.append(id_str)
 		return
 
 	# print constant as 'variable'
@@ -1778,6 +1779,7 @@ def print_def_const(x):
 	const_value = x['value']
 	init_value = x['init_value']
 	id = x['id']
+	id_str = get_id_str(const_value)
 
 	newline(n=x['nl'])
 
@@ -1787,14 +1789,14 @@ def print_def_const(x):
 	# обычно будем использовать сам макрос,
 	# но в случае индексирования переменной - будем обращаться к переменной
 	if hlir_type.type_is_array(const_value['type']):
-		print_macro_definition(id, init_value, val_ctx=[], prefix='_')
+		print_macro_definition(id_str, init_value, val_ctx=[], prefix='_')
 		newline()
 		print_variable(id, const_value['type'], as_const=True)
-		out(" = _%s;" % id['str'])
+		out(" = _%s;" % id_str)
 		const_value['att'].append('kostil')
 		return
 
-	print_macro_definition(id, init_value, val_ctx=[])
+	print_macro_definition(id_str, init_value, val_ctx=[])
 	return
 
 

@@ -214,6 +214,7 @@ declare void @perror(%ConstCharStr* %str)
 
 %Arr = type [10 x i32];
 
+
 @x = global i64 zeroinitializer
 
 
@@ -227,7 +228,8 @@ define i32 @main() {
 	%5 = call i32 @mid(i32 10, i32 20)
 	%6 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str4 to [0 x i8]*), i32 %5)
 	%7 = call i32 @div(i32 10, i32 2)
-	%8 = alloca i32, align 4
+	%8 = call i32 @add(i32 %7, i32 1)
+	%9 = alloca i32, align 4
 	;var arr = getArr()
 	;arrayShow(&arr, 10)
 	store i64 12, i64* @x

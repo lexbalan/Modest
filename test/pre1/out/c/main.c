@@ -22,6 +22,7 @@ struct Node {
 };
 #define arrSize  10
 typedef int * Arr;
+#define add  (&add)
 #define default  5// local decls
 
 static
@@ -42,12 +43,14 @@ int main()
 
 	float f;
 
-	#define a  10
-	#define b  20
-	const int32_t s = mid(a, b);
+	#define __a  10
+	#define __b  20
+	const int32_t s = mid(__a, __b);
 	printf("s = %d\n", s);
 
 	const int d = div(10, 2);
+
+	const int32_t e = ((int32_t (*) (int32_t a, int32_t b))add)((int32_t)d, 1);
 
 	int xx;
 
@@ -59,8 +62,8 @@ int main()
 	return 0;
 }
 
-#undef a
-#undef b
+#undef __a
+#undef __b
 
 static
 void arrshow(int *array, int size)

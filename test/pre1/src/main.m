@@ -4,15 +4,13 @@ include "ctypes"
 $pragma c_include "stdio.h"
 include "stdio"
 
-//import "console"
 import "sub"
 
-//$pragma c_include "./sub.h"
-//$pragma c_include "./console.h"
+let add = &sub.add
 
-//let printf = &console.printf
 
 var x: sub.MyInt
+
 
 
 export func main() -> Int {
@@ -31,6 +29,8 @@ export func main() -> Int {
 	printf("s = %d\n", s)
 
 	let d = div(10, 2)
+
+	let e = add(d, 1)
 
 	var xx: Int
 

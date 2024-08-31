@@ -1928,6 +1928,11 @@ def do_stmt_let(x):
 		const_value['immediate'] = True
 		cp_immediate(const_value, v)
 
+		if hlir_type.type_is_generic(v['type']):
+			# generic immediate в C печатается как #define
+			# и его надо манглить иначе возникает куча проблем
+			const_value['c_alias'] = '__' + const_value['id']['str']
+
 	ctx_value_add(id['str'], const_value)
 
 	return hlir_stmt_let(id, const_value, v, ti=x['ti'])
