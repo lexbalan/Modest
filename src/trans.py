@@ -483,12 +483,12 @@ def do_field(x):
 #
 
 def do_type_name(t):
-	id_str = t['id']['str']
+	id_str = t['name']['ids'][0]['str']
 
 	tx = None
-	if 'id2' in t:
+	if len(t['name']['ids']) > 1:
 		ns_id = id_str
-		id_str = x['id2']['str']
+		id_str = t['name']['ids'][1]['str']
 		#print("GET TYPE %s FROM: %s" % (id_str, ns_id))
 		global module
 		if ns_id in module['imports']:
@@ -1481,12 +1481,12 @@ def do_value_cons(x):
 undeclared_value_error = True
 
 def do_value_name(x):
-	id_str = x['id']['str']
+	id_str = x['name']['ids'][0]['str']
 
 	v = None
-	if 'id2' in x:
+	if len(x['name']['ids']) > 1:
 		ns_id = id_str
-		id_str = x['id2']['str']
+		id_str = x['name']['ids'][1]['str']
 		#print("GET VALUE %s FROM: %s" % (id_str, ns_id))
 		global module
 		if ns_id in module['imports']:
@@ -2493,8 +2493,6 @@ def predefinition(id_str):
 
 			if y != None:
 				module_append(y, to_export=x['export'])
-
-
 
 
 

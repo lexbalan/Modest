@@ -115,6 +115,7 @@ class Parser:
 	def is_tag(self):
 		return self.ctok_class() == 'tag'
 
+
 	def identifier(self):
 		ti = self.ti()
 		if not self.is_identifier():
@@ -123,6 +124,18 @@ class Parser:
 			return None
 		s = self.gettok()
 		return hlir_id(s, ti=ti)
+
+
+	# Name: foo
+	# Name: bar::foo
+	def name(self):
+		ti = self.ti()
+		id = self.identifier()
+		_name = {'isa': 'name', 'ids': [id], 'ti': ti}
+		while self.match('::'):
+			id = self.identifier()
+			_name['ids'].append(id)
+		return _name
 
 
 	def need_sep(self, separators=['\n', ';'], stoppers=['}'], eat=True):
@@ -388,11 +401,8 @@ class Parser:
 			t = y
 
 		elif self.ctok_class() == 'id':
-			id = self.identifier() # type by Name
-			t = {'isa': 'type', 'kind': 'name', 'id': id, 'ti': ti}
-			if self.match('::'):
-				id2 = self.identifier()
-				t['id2'] = id2
+			n = self.name() # type by Name
+			t = {'isa': 'type', 'kind': 'name', 'name': n, 'ti': ti}
 
 		t['attributes'] = attributes
 		return t
@@ -935,9 +945,10 @@ class Parser:
 			return v
 
 		elif self.ctok_class() == 'id':
-			id = self.identifier()
+			n = self.name()
 
-			if id['str'] == '__va_arg':
+			# __va_arg hack
+			if n['ids'][0]['str'] == '__va_arg':
 				self.match("(")
 				v = self.expr_value()
 				self.match(",")
@@ -951,18 +962,8 @@ class Parser:
 					'ti': ti
 				}
 
-			xx = {'isa': 'ast_value', 'kind': 'name', 'id': id, 'ti': ti}
+			return {'isa': 'ast_value', 'kind': 'name', 'name': n, 'ti': ti}
 
-			ti2 = self.ti()
-			if self.match("::"):
-				id2 = self.identifier()
-				xx['id2'] = id2
-
-
-			#if id['str'][0].islower():
-			return xx
-			#else:
-			#	return {'isa': 'ast_value', 'kind': 'id', 'id': id, 'ti': ti}
 
 		elif self.ctok_class() == 'num':
 			numstr = self.gettok()
