@@ -2157,13 +2157,11 @@ def module_remove_node(m, isa, id_str):
 
 
 
-
 def decl_type(x):
 	id = x['id']
 	log("decl_type %s" % id['str'])
 
 	nt = do_type(x['type'])
-	#nt['id'] = id['str']
 	nt['ti_def'] = x['ti']
 	global module
 	module_type_add_public(module, id['str'], nt)
