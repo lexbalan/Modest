@@ -181,18 +181,6 @@ def ctx_value_get_shallow(id_str):
 	return module['symtab_public'].value_get(id_str, recursive=False)
 
 
-
-
-# добавляем декларацию местной функции в отдельное поле модуля local_decls
-# нужно это для C принтера ктороый требует декларацию местных функций перед исп.
-def module_append_localfunc(definition):
-	if definition == None:
-		return
-	global module
-	module['local_decls'].append(definition)
-
-
-
 def module_append_export(definition):
 	global module
 	definition['att'].append('export')
@@ -2528,7 +2516,6 @@ def cmodule_extend(y, do_not_def):
 	module['symtab_private'].extend(y['symtab_private'])
 
 	if not do_not_def:
-		module['local_decls'].extend(y['local_decls'])
 		module['defs'].extend(y['defs'])
 		module['export_defs'].extend(y['export_defs'])
 
@@ -2541,8 +2528,8 @@ def do_import2(x):
 	if 'c_no_print' in y['att']:
 		for xx in y['defs']:
 			xx['att'].append('c_no_print')
-		for xx in y['local_decls']:
-			xx['att'].append('c_no_print')
+		#for xx in y['local_decls']:
+		#	xx['att'].append('c_no_print')
 		for xx in y['export_defs']:
 			xx['att'].append('c_no_print')
 
@@ -2777,9 +2764,7 @@ def process_module(ast, source_info, nodef=False):
 		'att': [],
 
 		'defs': [],  # определения модуля
-		'local_decls': [],   # определения локальных сущностей (static)
 		'export_defs': [],   # определения которые идут на экспорт (export)
-#		'included_defs': [], # определения из включенных модулей
  	}
 
 
@@ -2861,13 +2846,6 @@ def pre_def(ast):
 			if x['export']:
 				y0['att'].append('export')
 				module_append_export(y0)
-			#	module_append(y0)
-			#	module_append(y0, to_export)
-			#else:
-			#	print("APP: " + x['id']['str'])
-			#	module_append(y0)
-
-			#info("scan func: %s" % x['id']['str'], x['ti'])
 
 			fvalue = y0['value']
 			module_value_add(module, x['id']['str'], fvalue, is_public=x['export'])
