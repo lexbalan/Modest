@@ -2750,19 +2750,19 @@ def process_module(ast, source_info, nodef=False):
 		'id': source_info['id'],
 		'prefix': "",
 		'source_info': source_info,
+		'options': [],
 		'imports': {},  # 'local_module_id' => {'isa': 'module'}
-		'strings': [],  # (used in LLVM backend)
+		'strings': [],  # for in LLVM backend)
+		'records': [],  # for C backend
+		'anon_recs': [],  # anonymous records for C backend
 
 		'symtab_public': symtab_public,
 		'symtab_private': symtab_private,
 
-		'options': [],
-		'records': [],    # for C backend
-		'anon_recs': [],  # anonymous records for C printer
-		'att': [],
-
 		'defs': [],  # определения модуля
 		'export_defs': [],   # определения которые идут на экспорт (export)
+
+		'att': [],
  	}
 
 
