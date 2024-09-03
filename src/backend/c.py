@@ -2025,12 +2025,12 @@ def print_cfile(module, _outname):
 	# печатаем прототипы функций текущего модуля
 	# (тк C не позволяет использовать функции перед их определением)
 	out("// local decls\n")
-	for x in module['local_decls']:
+	for x in module['defs']:
 		if 'c_no_print' in x['att']:
 			continue
 
 		isa = x['isa']
-		if isa == 'decl_func':
+		if isa == 'def_func':
 			if not 'export' in x['att']:
 				out("\nstatic")
 			print_decl_func(x)
@@ -2042,9 +2042,7 @@ def print_cfile(module, _outname):
 			continue
 
 		isa = x['isa']
-		if isa == 'decl_func':
-			print_decl_func(x)
-		elif isa == 'decl_var':
+		if isa == 'decl_var':
 			print_decl_var(x)
 		#elif isa == 'decl_type': print_decl_type(x)
 

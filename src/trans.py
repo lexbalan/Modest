@@ -2855,8 +2855,9 @@ def pre_def(ast):
 			if x['export']:
 				y0['att'].append('export')
 				module_append_export(y0)
-			else:
-				module_append_localfunc(y0)
+			#else:
+			#	print("APP: " + x['id']['str'])
+			#	module_append(y0)
 
 			#info("scan func: %s" % x['id']['str'], x['ti'])
 

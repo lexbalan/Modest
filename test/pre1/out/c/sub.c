@@ -10,7 +10,10 @@
 
 
 typedef int64_t MyInt;// local decls
-// defs
+
+int32_t add(int32_t a, int32_t b);
+int32_t sub(int32_t a, int32_t b);
+int32_t mid(int32_t a, int32_t b);// defs
 
 
 int32_t add(int32_t a, int32_t b)

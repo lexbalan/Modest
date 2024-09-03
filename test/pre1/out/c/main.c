@@ -25,6 +25,7 @@ typedef int * Arr;
 #define add  (&add)
 #define default  5// local decls
 
+int main();
 static
 void arrayShow(int *array, int size);
 static
