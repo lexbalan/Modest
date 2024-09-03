@@ -2288,12 +2288,12 @@ def print_module(m):
 		out("\n; " + '-' * DD)
 		een(imp['export_defs'])
 
-		for d in imp['defs']:
+		"""for d in imp['defs']:
 			print("+" + d['id']['str'])
-			if d['isa'] == 'def_func':
+			if d['isa'] == 'decl_func':
 				#if d['export']:
 				print(":: " + d['id']['str'])
-				print_decl_func(d)
+				print_decl_func(d)"""
 
 		out("\n\n")
 

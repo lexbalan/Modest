@@ -2123,7 +2123,9 @@ def def_const(x):
 
 	const_value = symbol_const(id, v, is_public=x['export'])
 
-	return hlir_def_const(id, const_value, v, x['ti'])
+	y = hlir_def_const(id, const_value, v, x['ti'])
+	y['export'] = x['export']
+	return y
 
 
 
@@ -2153,7 +2155,9 @@ def decl_type(x):
 	nt['ti_def'] = x['ti']
 	global module
 	module_type_add_public(module, id['str'], nt)
-	return hlir_decl_type(id, nt, x['ti'])
+	y = hlir_decl_type(id, nt, x['ti'])
+	y['export'] = x['export']
+	return y
 
 
 def def_type(x):
@@ -2223,6 +2227,7 @@ def def_type(x):
 
 	y = hlir_def_type(id, nt, ty, x['ti'])
 	y['nl'] = x['nl']
+	y['export'] = x['export']
 	return y
 
 
@@ -2266,7 +2271,9 @@ def decl_var(x):
 	var_value = value_var(id, t, id['ti'])
 	module_value_add(module, id['str'], var_value, is_public=x['export'])
 
-	return hlir_decl_var(id, var_value, v, x['ti'])
+	y = hlir_decl_var(id, var_value, v, x['ti'])
+	y['export'] = x['export']
+	return y
 
 
 def def_var(x):
@@ -2313,7 +2320,9 @@ def def_var(x):
 	var_value = value_var(id, t, id['ti'])
 	module_value_add(module, id['str'], var_value, is_public=x['export'])
 
-	return hlir_def_var(id, var_value, v, x['ti'])
+	y = hlir_def_var(id, var_value, v, x['ti'])
+	y['export'] = x['export']
+	return y
 
 
 
@@ -2364,7 +2373,9 @@ def decl_func(x):
 	func_type = do_type_func(x['type'], func_id=func_id['str'])
 	fn = value_func(func_id, func_type, ti=func_ti)
 	ctx_value_add(func_id['str'], fn)
-	return hlir_decl_func(func_id, fn, func_ti)
+	y = hlir_decl_func(func_id, fn, func_ti)
+	y['export'] = x['export']
+	return y
 
 
 

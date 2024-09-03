@@ -1999,16 +1999,6 @@ def print_cfile(module, _outname):
 		out(";")
 
 
-	"""for x in module['export_defs']:
-		if 'c_no_print' in x['att']:
-			continue
-
-		isa = x['isa']
-		if isa == 'decl_var': print_decl_var(x)
-		elif isa == 'decl_func': print_decl_func(x)
-		elif isa == 'decl_type': print_decl_type(x)"""
-
-
 	# types & constants
 	for x in module['defs']:
 		if 'c_no_print' in x['att']:
