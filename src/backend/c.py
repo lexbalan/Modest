@@ -2044,7 +2044,6 @@ def print_cfile(module, _outname):
 		isa = x['isa']
 		if isa == 'decl_var':
 			print_decl_var(x)
-		#elif isa == 'decl_type': print_decl_type(x)
 
 
 	for x in module['defs']:

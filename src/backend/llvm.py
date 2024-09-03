@@ -2265,13 +2265,8 @@ def een(defs):
 		elif isa == 'def_const': print_def_const(x)
 		elif isa == 'def_func': print_def_func(x)
 		elif isa == 'def_type': print_def_type(x)
-		elif isa == 'directive':
-			# импортированные CM функции
-			# в LLVM обязательно нужно задекларировать
-			#if x['kind'] == 'll_decl_func':
-			#	print_fdecl(x['symbol'])
-			pass
-		#elif isa == 'comment': pass
+		elif isa == 'directive': pass
+
 
 # список имен модулей распечатанных в текущей сброке
 printed_modules = []
@@ -2292,6 +2287,14 @@ def print_module(m):
 		out("\n; declarations from: %s" % (imported_module_id))
 		out("\n; " + '-' * DD)
 		een(imp['export_defs'])
+
+		for d in imp['defs']:
+			print("+" + d['id']['str'])
+			if d['isa'] == 'def_func':
+				#if d['export']:
+				print(":: " + d['id']['str'])
+				print_decl_func(d)
+
 		out("\n\n")
 
 
@@ -2302,6 +2305,8 @@ def print_module(m):
 	print_strings(m['strings'])
 
 	een(m['defs'])
+
+
 
 	out("\n\n")
 	return

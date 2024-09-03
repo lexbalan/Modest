@@ -2435,10 +2435,16 @@ def def_func(x):
 
 	cfunc = prev_cfunc
 
-	if stmt == None:
-		return hlir_decl_func(func_id, fn, x['ti'])
+	yy = None
 
-	return hlir_def_func(func_id, fn, stmt, x['ti'])
+	if stmt == None:
+		yy = hlir_decl_func(func_id, fn, x['ti'])
+	else:
+		yy = hlir_def_func(func_id, fn, stmt, x['ti'])
+
+	yy['export'] = x['export']
+
+	return yy
 
 
 
@@ -2855,6 +2861,8 @@ def pre_def(ast):
 			if x['export']:
 				y0['att'].append('export')
 				module_append_export(y0)
+			#	module_append(y0)
+			#	module_append(y0, to_export)
 			#else:
 			#	print("APP: " + x['id']['str'])
 			#	module_append(y0)
@@ -2944,6 +2952,8 @@ def pre_nodef(ast):
 		if kind == 'func':
 			y = decl_func(x)
 			add_spices(y, ast_atts=x['attributes'])
+			# добавляем декларации функций из импортируемого модуля
+			# тк они нужны LLVM
 			module_append(y, to_export=x['export'])
 
 	gast = prev_gast
