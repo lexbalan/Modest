@@ -2528,8 +2528,6 @@ def do_import2(x):
 	if 'c_no_print' in y['att']:
 		for xx in y['defs']:
 			xx['att'].append('c_no_print')
-		#for xx in y['local_decls']:
-		#	xx['att'].append('c_no_print')
 		for xx in y['export_defs']:
 			xx['att'].append('c_no_print')
 
