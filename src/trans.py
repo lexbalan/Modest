@@ -2763,10 +2763,10 @@ def process_module(ast, source_info, nodef=False):
 		'source_info': source_info,
 		'options': [],
 
-		'imports': {},  # 'local_module_id' => {'isa': 'module'}
+		'imports': {},    # '<local_module_id>' => {'isa': 'module'}
 
-		'strings': [],  # for in LLVM backend)
-		'records': [],  # for C backend
+		'strings': [],    # for in LLVM backend)
+		'records': [],    # for C backend
 		'anon_recs': [],  # anonymous records for C backend
 
 		'symtab_public': symtab_public,
