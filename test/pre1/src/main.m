@@ -5,12 +5,12 @@ $pragma c_include "stdio.h"
 include "stdio"
 
 import "sub"
+//import "list"
 
 let add = &sub.add
 
 
 var x: sub.MyInt
-
 
 
 export func main() -> Int {
@@ -38,6 +38,9 @@ export func main() -> Int {
 	//arrayShow(&arr, 10)
 
 	x = 12
+
+
+//	let list = list.create()
 
 	return 0
 }

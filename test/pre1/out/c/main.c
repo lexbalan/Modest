@@ -33,7 +33,7 @@ int div(int a, int b);// defs
 
 
 
-static int64_t x;
+static MyInt x;
 
 int main()
 {
@@ -59,6 +59,9 @@ int main()
 	//arrayShow(&arr, 10)
 
 	x = 12;
+
+
+	//	let list = list.create()
 
 	return 0;
 }

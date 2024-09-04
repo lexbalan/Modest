@@ -2897,7 +2897,7 @@ def pre_nodef(ast):
 		if isa == 'ast_definition':
 			if kind == 'type':
 				if not 'defined' in x:
-					y = decl_type(x)
+					y = def_type(x)
 					if y == None:
 						continue
 					y['nl'] = x['nl']

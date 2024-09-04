@@ -104,7 +104,7 @@ break_2:
 ; declarations from: sub
 ; -----------------------------------------------------------------------------
 
-%MyInt = type opaque
+%MyInt = type i64;
 
 declare i32 @add(i32 %a, i32 %b)
 declare i32 @sub(i32 %a, i32 %b)
@@ -215,7 +215,7 @@ declare void @perror(%ConstCharStr* %str)
 %Arr = type [10 x %Int];
 
 
-@x = global i64 zeroinitializer
+@x = global %MyInt zeroinitializer
 
 
 define %Int @main() {
@@ -232,7 +232,8 @@ define %Int @main() {
 	%9 = alloca %Int, align 4
 	;var arr = getArr()
 	;arrayShow(&arr, 10)
-	store i64 12, i64* @x
+	store %MyInt 12, %MyInt* @x
+	;	let list = list.create()
 	ret %Int 0
 }
 

@@ -1944,6 +1944,9 @@ def print_header(module, outname):
 			if 'inline' in x['att']:
 				out("\n\nstatic inline")
 				print_def_func(x)
+		#elif isa == 'def_type':
+		#	if x['export']:
+		#		print_def_type(x)
 
 	newline()
 	out("\n#endif /* %s */" % guardsymbol)
