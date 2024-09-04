@@ -2779,7 +2779,7 @@ def process_module(ast, source_info, nodef=False):
  	}
 
 
-	# 0. do imports
+	# 0. do imports & directives
 	for x in ast:
 		isa = x['isa']
 		if isa == 'ast_import':
