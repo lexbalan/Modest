@@ -7,4 +7,6 @@ export func mid(a: Int, b: Int) -> Int {
 	return div(sum, 2)
 }
 
-
+func internal_func() {
+	//
+}

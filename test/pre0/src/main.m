@@ -9,11 +9,13 @@ $pragma c_include "stdio.h"
 export func printf(s: *Str8, ...)
 
 
-func main() -> Int {
+func main() -> lib.Int {
 	let a = 10
 	let b = 20
-	let s = mid(a, b)
+	let s = lib.mid(a, b)
 	printf("s = %d\n", s)
+
+	lib.internal_func()
 
 	return 0
 }

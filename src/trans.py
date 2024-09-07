@@ -2382,21 +2382,21 @@ def decl_func(x):
 	return y
 
 
-
 def def_func(x, dostmt=True):
 	global cfunc
-	prev_cfunc = cfunc
 
 	func_id = x['id']
 	log('def_func: %s' % func_id['str'])
-	fn = ctx_value_get(func_id['str'])
-	func_type = fn['type']
 
+	# значение функции уже существует, тк мы ранее сделали проход
+	fn = ctx_value_get(func_id['str'])
+
+	prev_cfunc = cfunc
 	cfunc = fn
 
 	context_push()  # create params context
 
-	params = func_type['params']
+	params = fn['type']['params']
 	i = 0
 	while i < len(params):
 		param = params[i]
@@ -2414,7 +2414,7 @@ def def_func(x, dostmt=True):
 		i = i + 1
 
 
-	if func_type['extra_args']:
+	if fn['type']['extra_args']:
 		module_option('use_extra_args')
 
 
@@ -2852,12 +2852,6 @@ def pre_def(ast, fdecl=False):
 
 		if kind == 'func':
 			fn = do_func_value(x)
-
-			#add_spices(y0, ast_atts=x['attributes'])
-
-			if x['export']:
-				module_append(fn, to_export=True)
-
 			module_value_add(module, fn['id']['str'], fn, is_public=x['export'])
 
 
@@ -2876,7 +2870,7 @@ def pre_def(ast, fdecl=False):
 
 				if y != None:
 					add_spices(y, ast_atts=x['attributes'])
-					module_append(y)
+					module_append(y, to_export=x['export'])
 
 	gast = prev_gast
 	return
