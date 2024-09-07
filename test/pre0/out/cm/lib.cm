@@ -4,6 +4,7 @@ func div(a: Int, b: Int) -> Int {
 	return a / b
 }
 
+
 export type Int Int32
 
 export type Point record {

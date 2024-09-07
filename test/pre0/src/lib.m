@@ -1,6 +1,7 @@
 
 import "console"
 
+
 export type Int Int32
 
 export type Point record {
