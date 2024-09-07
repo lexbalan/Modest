@@ -2812,6 +2812,7 @@ def process_module(ast, source_info, nodef=False):
 		'isa': 'module',
 		'id': source_info['id'],
 		'prefix': "",
+
 		'source_info': source_info,
 		'options': [],
 
@@ -2822,7 +2823,7 @@ def process_module(ast, source_info, nodef=False):
 		'symtab_public': symtab_public,
 		'symtab_private': symtab_private,
 
-		'imports': {},    # '<local_module_id>' => {'isa': 'module'}
+		'imports': {},      # '<local_module_id>' => {'isa': 'module'}
 
 		'defs': [],         # приватные определения модуля
 		'export_defs': [],  # открытые определения модуля
