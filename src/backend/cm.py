@@ -871,6 +871,25 @@ def print_directive(x):
 	elif x['kind'] == 'c_include': out("@c_include \"%s\"" % x['c_name'])
 
 
+def print_def(x):
+	isa = x['isa']
+
+	if isa != 'comment':
+		newline(n=x['nl'])
+
+	if 'export' in x:
+		if x['export']:
+			out("export ")
+
+	if isa == 'def_var': print_def_var(x)
+	elif isa == 'def_const': print_def_const(x)
+	elif isa == 'def_func': print_def_func(x)
+	elif isa == 'def_type': print_def_type(x)
+	elif isa == 'decl_func': print_decl_func(x)
+	elif isa == 'decl_type': print_decl_type(x)
+	elif isa == 'directive': print_directive(x)
+	elif isa == 'comment': print_comment(x)
+
 def run(module, outname):
 	from main import features
 	is_header = features.get('header')
@@ -882,23 +901,9 @@ def run(module, outname):
 
 
 	for x in module['defs']:
-		isa = x['isa']
-
-		if isa != 'comment':
-			newline(n=x['nl'])
-
-		if 'export' in x:
-			if x['export']:
-				out("export ")
-
-		if isa == 'def_var': print_def_var(x)
-		elif isa == 'def_const': print_def_const(x)
-		elif isa == 'def_func': print_def_func(x)
-		elif isa == 'def_type': print_def_type(x)
-		elif isa == 'decl_func': print_decl_func(x)
-		elif isa == 'decl_type': print_decl_type(x)
-		elif isa == 'directive': print_directive(x)
-		elif isa == 'comment': print_comment(x)
+		print_def(x)
+	for x in module['export_defs']:
+		print_def(x)
 
 	out("\n\n")
 

@@ -13,6 +13,7 @@ class Symtab:
 
 
 	def value_add(self, id, v):
+		#print("LL_VALUE_ADD " + id)
 		self.values[id] = v
 		return v
 

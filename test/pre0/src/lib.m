@@ -1,5 +1,6 @@
 
 
+type XXX Int32
 export type Int Int32
 
 func div(a: Int, b: Int) -> Int {

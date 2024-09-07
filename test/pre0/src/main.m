@@ -1,12 +1,8 @@
-// test/pre/src/main.cm
-
+// test/pre0/src/main.cm
 
 import "lib"
 
 $pragma c_include "stdio.h"
-
-@attribute("c-no-print")
-export func printf(s: *Str8, ...)
 
 
 func main() -> lib.Int {
@@ -15,8 +11,13 @@ func main() -> lib.Int {
 	let s = lib.mid(a, b)
 	printf("s = %d\n", s)
 
-	let x = lib.div(a, b)
+	// access to private value
+	//let x = lib.div(a, b)
 
 	return 0
 }
+
+
+@attribute("c-no-print")
+func printf(s: *Str8, ...)
 

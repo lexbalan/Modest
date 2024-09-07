@@ -83,18 +83,21 @@ def module_strings_add(v):
 
 
 
-
 def module_type_add_public(m, id_str, t):
+	print("module %s type_add_public %s" % (m['id'], id_str))
 	return m['symtab_public'].type_add(id_str, t)
 
 def module_value_add_public(m, id_str, v):
+	print("module %s value_add_public %s" % (m['id'], id_str))
 	return m['symtab_public'].value_add(id_str, v)
 
 
 def module_type_add_private(m, id_str, t):
+	print("module %s type_add_private %s" % (m['id'], id_str))
 	return m['symtab_private'].type_add(id_str, t)
 
 def module_value_add_private(m, id_str, v):
+	print("module %s value_add_private %s" % (m['id'], id_str))
 	return m['symtab_private'].value_add(id_str, v)
 
 
@@ -105,10 +108,6 @@ def module_value_add_private(m, id_str, v):
 # search type in module
 def module_type_get(m, id_str):
 	return m['symtab_public'].type_get(id_str)
-
-# search value in module
-def module_value_get(m, id_str):
-	return m['symtab_public'].value_get(id_str)
 """
 
 # public
@@ -133,20 +132,46 @@ def module_value_get_private(m, id_str):
 
 
 
-def module_type_add(module, id_str, t, is_public=False):
+def module_type_add(m, id_str, t, is_public=False):
 	if is_public:
-		module_type_add_public(module, id_str, t)
+		module_type_add_public(m, id_str, t)
 	else:
-		module_type_add_private(module, id_str, t)
+		module_type_add_private(m, id_str, t)
 
 
-def module_value_add(module, id_str, v, is_public=False):
+def module_value_add(m, id_str, v, is_public=False):
+	print('module_value_add (%s, isPublic=%d)' % (id_str, is_public))
 	if is_public:
-		module_value_add_public(module, id_str, v)
+		module_value_add_public(m, id_str, v)
 	else:
-		module_value_add_private(module, id_str, v)
+		module_value_add_private(m, id_str, v)
 
 
+
+# search value in module
+def module_value_get(m, id_str):
+	"""
+	print("------------------------")
+	print("get from: %s" % m['id'])
+	print("pub:")
+	m['symtab_public'].show_table()
+	print("priv:")
+	m['symtab_private'].show_table()
+	print("------------------------")
+	"""
+	#print("module_value_get: " + id_str)
+
+	v = m['symtab_public'].value_get(id_str)
+	if v != None:
+		return v
+	v = m['symtab_private'].value_get(id_str)
+	if v != None:
+		return v
+
+	return None
+
+
+# ONLY FOR LOCALS:
 
 def ctx_type_add(id_str, t):
 	global context
@@ -155,6 +180,7 @@ def ctx_type_add(id_str, t):
 def ctx_value_add(id_str, v):
 	global context
 	context.value_add(id_str, v)
+
 
 
 def ctx_type_get(id_str):
@@ -1126,13 +1152,13 @@ def do_value_call_defined(args, ti):
 
 
 def do_value_call(x):
-	global undeclared_value_error
-	oe = undeclared_value_error
-	undeclared_value_error = False
+	#global undeclared_value_error
+	#oe = undeclared_value_error
+	#undeclared_value_error = False
 
 	f = do_rvalue(x['left'])
 
-	undeclared_value_error = oe
+	#undeclared_value_error = oe
 
 	if value_is_bad(f):
 		if 'unknown' in f['att']:
@@ -1150,7 +1176,7 @@ def do_value_call(x):
 				elif id_str == '__defined':
 					return do_value_call_defined(args, x['ti'])
 
-		error("undeclared value", f)
+		#error("undefined value", f)
 		return value_bad(x)
 
 
@@ -1416,14 +1442,23 @@ def do_value_slice(x):
 def is_submodule_name(name):
 	return name in module['imports']
 
-def submodule_access(mname, iname):
+def submodule_access(mname, iname, ti):
 	global module
+
 	if not is_submodule_name(mname):
 		return None
 
 	submodule = module['imports'][mname]
+
 	v = module_value_get_public(submodule, iname)
-	return v
+	if v != None:
+		return v
+
+	v = module_value_get_private(submodule, iname)
+	if v != None:
+		error("access to module private item", ti)
+
+	return None
 
 
 
@@ -1432,9 +1467,10 @@ def do_value_access(x):
 
 	# access to submodule?
 	if x['left']['kind'] == 'id':
-		v = submodule_access(x['left']['str'], x['right']['str'])
-		if v != None:
-			return v
+		v = submodule_access(x['left']['str'], x['right']['str'], x['ti'])
+		if v == None:
+			return value_bad(x)
+		return v
 
 	#
 	# access to object
@@ -1494,7 +1530,7 @@ def do_value_cons(x):
 	return value_cons_explicit(t, v, x['ti'])
 
 
-undeclared_value_error = True
+#undeclared_value_error = True
 
 
 
@@ -1509,9 +1545,9 @@ def do_value_id(x):
 			return vx
 
 		# see: do_value_call
-		global undeclared_value_error
-		if undeclared_value_error:
-			error("undeclared value '%s'" % id_str, x)
+		#global undeclared_value_error
+		#if undeclared_value_error:
+		#	error("undefined value '%s'" % id_str, x)
 
 		# чтобы не генерил ошибки дальше
 		# создадим bad value и пропишем его глобально
@@ -2370,11 +2406,11 @@ def do_func_value(x):
 	func_ti = func_id['ti']
 	func_type = do_type_func(x['type'], func_id=func_id['str'])
 	fn = value_func(func_id, func_type, ti=func_ti)
-	ctx_value_add(func_id['str'], fn)
 	return fn
 
 
 def decl_func(x):
+	global module
 	fn = do_func_value(x)
 	log('decl_func: %s' % fn['id']['str'])
 	y = hlir_decl_func(fn['id'], fn, fn['ti_def'])
@@ -2384,12 +2420,13 @@ def decl_func(x):
 
 def def_func(x, dostmt=True):
 	global cfunc
+	global module
 
 	func_id = x['id']
 	log('def_func: %s' % func_id['str'])
 
 	# значение функции уже существует, тк мы ранее сделали проход
-	fn = ctx_value_get(func_id['str'])
+	fn = module_value_get(module, func_id['str'])
 
 	prev_cfunc = cfunc
 	cfunc = fn
@@ -2445,13 +2482,6 @@ def def_func(x, dostmt=True):
 	yy['export'] = x['export']
 	return yy
 
-
-
-def symbol_func(id, type, ti, is_public=False):
-	func_value = value_func(id, type, ti=id['ti'])
-	global module
-	module_value_add(module, id['str'], func_value, is_public=is_public)
-	return func_value
 
 
 
@@ -2687,6 +2717,10 @@ def do_import(x, nodef=True):
 	m['id'] = impline
 	m['prefix'] = impline + '_'
 
+	"""print("symtab_public:")
+	m['symtab_public'].show_table()
+	print("symtab_private:")
+	m['symtab_private'].show_table()"""
 
 	directive_import = {
 		'isa': 'directive',
