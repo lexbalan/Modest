@@ -183,7 +183,6 @@ def ctx_value_get_shallow(id_str):
 
 def module_append_export(definition):
 	global module
-	definition['att'].append('export')
 	module['export_defs'].append(definition)
 
 def module_append(definition, to_export=False):
@@ -192,7 +191,6 @@ def module_append(definition, to_export=False):
 	global module
 	module['defs'].append(definition)
 	if to_export:
-		definition['att'].append('export')
 		module_append_export(definition)
 
 
@@ -2379,7 +2377,7 @@ def decl_func(x):
 
 
 
-def def_func(x):
+def def_func(x, dostmt=True):
 	global cfunc
 	prev_cfunc = cfunc
 
@@ -2418,31 +2416,26 @@ def def_func(x):
 		check_unuse(param)
 
 	stmt = None
-	if x['stmt'] != None:
-		stmt = do_stmt_block(x['stmt'])
-		check_block(stmt)
 
-		# check if return present
-		if not hlir_type.type_is_unit(fn['type']['to']):
-			stmts = stmt['stmts']
-			if len(stmts) == 0:
-				warning("expected return operator at end", stmt['ti'])
-			elif stmts[-1]['kind'] != 'return':
-				warning("expected return operator at end", stmt['ti'])
+	if dostmt:
+		if x['stmt'] != None:
+			stmt = do_stmt_block(x['stmt'])
+			check_block(stmt)
+
+			# check if return present
+			if not hlir_type.type_is_unit(fn['type']['to']):
+				stmts = stmt['stmts']
+				if len(stmts) == 0:
+					warning("expected return operator at end", stmt['ti'])
+				elif stmts[-1]['kind'] != 'return':
+					warning("expected return operator at end", stmt['ti'])
 
 	context_pop()  # remove params context
 
 	cfunc = prev_cfunc
 
-	yy = None
-
-	if stmt == None:
-		yy = hlir_decl_func(func_id, fn, x['ti'])
-	else:
-		yy = hlir_def_func(func_id, fn, stmt, x['ti'])
-
+	yy = hlir_def_func(func_id, fn, stmt, x['ti'])
 	yy['export'] = x['export']
-
 	return yy
 
 
@@ -2790,10 +2783,7 @@ def process_module(ast, source_info, nodef=False):
 			module_append(y)
 
 
-	if nodef:
-		pre_nodef(ast)  # process in import mode
-	else:
-		pre_def(ast)    # process in normal mode
+	pre_def(ast, fdecl=nodef)    # process in normal mode
 
 
 	m = module
@@ -2808,7 +2798,7 @@ def process_module(ast, source_info, nodef=False):
 # создает символы для всех функций в модуле
 # если они имеют неизвестную зависимость -
 # удовлетворяет ее посредством predefinition(id_str)
-def pre_def(ast):
+def pre_def(ast, fdecl=False):
 	global module
 	global gast
 	prev_gast = gast
@@ -2822,7 +2812,12 @@ def pre_def(ast):
 
 		if isa == 'ast_definition':
 			if kind == 'type':
-				y = def_type(x)
+				y =  None
+				if x['type'] != None:
+					y = def_type(x)
+				else:
+					y = decl_type(x)
+
 				add_spices(y, ast_atts=x['attributes'])
 				module_append(y, to_export=x['export'])
 
@@ -2855,7 +2850,6 @@ def pre_def(ast):
 			add_spices(y0, ast_atts=x['attributes'])
 
 			if x['export']:
-				y0['att'].append('export')
 				module_append_export(y0)
 
 			fvalue = y0['value']
@@ -2868,86 +2862,19 @@ def pre_def(ast):
 		kind = x['kind']
 		if isa == 'ast_definition':
 			if kind == 'func':
-				y = def_func(x)
+				y = None
+				if x['stmt'] != None:
+					# (трансляция импорта не требует обработки тела функции)
+					y = def_func(x, dostmt=not fdecl)
+				else:
+					y = decl_func(x)
+
 				if y != None:
-					if x['export']:
-						y['att'].append('export')
 					add_spices(y, ast_atts=x['attributes'])
 					module_append(y)
 
 	gast = prev_gast
 	return
-
-
-
-
-def pre_nodef(ast):
-	global gast
-	global module
-	prev_gast = gast
-	gast = ast
-
-
-	# 1. decl types
-	# (and const if need for type!)
-	for x in ast:
-		isa = x['isa']
-		kind = x['kind']
-
-		if isa == 'ast_definition':
-			if kind == 'type':
-				if not 'defined' in x:
-					y = def_type(x)
-					if y == None:
-						continue
-					y['nl'] = x['nl']
-					# С не печатает opaque, но LLVM печатает (!)
-					module_append(y, to_export=x['export'])
-
-	# 2. def vars & consts
-	for x in ast:
-		isa = x['isa']
-		kind = x['kind']
-
-		if isa == 'ast_definition':
-			y = None
-			if kind == 'const':
-				id = x['id']
-				v = do_value_immediate(x['value'], allow_ptr_to_str=True)
-				if value_is_bad(v):
-					module_value_add_public(module, id['str'], v)
-					return hlir_def_const(id, v, v, x['ti'])
-				const_value = symbol_const(id, v, is_public=x['export'])
-				module_append(y, to_export=x['export'])
-				continue
-
-
-			elif kind == 'var':
-				y = def_var(x)
-
-				# обрабатываем переменную из импорта
-				# нельзя печатать ее определение (тк она из другого модуля)
-				# но в LLVM backend нужно указать как extern
-				y['att'].append('extern')
-				module_append(y, to_export=x['export'])
-				continue
-
-
-	# 3. decl funcs
-	for x in ast:
-		isa = x['isa']
-		kind = x['kind']
-
-		if kind == 'func':
-			y = decl_func(x)
-			add_spices(y, ast_atts=x['attributes'])
-			# добавляем декларации функций из импортируемого модуля
-			# тк они нужны LLVM
-			module_append(y, to_export=x['export'])
-
-	gast = prev_gast
-	return
-
 
 
 

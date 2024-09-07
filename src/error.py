@@ -5,7 +5,7 @@ errcnt = 0
 
 MAX_ERRORS = 10
 
-verbose_mode = False
+verbose_mode = True
 
 
 ENDC = 0

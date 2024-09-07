@@ -1,7 +1,7 @@
 // test/pre/src/main.cm
 
-//import "libc/stdio"
 
+import "lib"
 
 $pragma c_include "stdio.h"
 
