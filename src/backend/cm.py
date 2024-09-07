@@ -890,6 +890,7 @@ def print_def(x):
 	elif isa == 'directive': print_directive(x)
 	elif isa == 'comment': print_comment(x)
 
+
 def run(module, outname):
 	from main import features
 	is_header = features.get('header')
@@ -899,14 +900,13 @@ def run(module, outname):
 
 	output_open(outname)
 
-
 	for x in module['defs']:
 		print_def(x)
+
 	for x in module['export_defs']:
 		print_def(x)
 
 	out("\n\n")
-
 	output_close()
 
 
