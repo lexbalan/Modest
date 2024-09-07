@@ -6,6 +6,9 @@
 #include <stdarg.h>
 
 #include <stdio.h>
+#include "main.h"
+
+
 
 typedef struct Node Node;
 
@@ -21,16 +24,20 @@ struct Node {
 #define arrSize  10
 typedef int * Arr;
 #define default  5
-#define subName  "Name"
-int main();
-void arrshow(int *array, int size);
-int mid(int a, int b);
-int div(int a, int b);
+#define subName  "Name"// local decls
 
-#define arrSize  10
+static
+int main();
+static
+void arrayShow(int *array, int size);
+static
+int mid(int a, int b);
+int div(int a, int b);// defs
+
+
 static int x;
-#define default  5
-#define subName  "Name"
+
+static
 int main()
 {
 	printf("test\n");
@@ -38,9 +45,9 @@ int main()
 	printf("subName = '%s'\n", (char *)subName);
 	//printf("sub2Name = '%s'\n", *Str8 sub2Name)
 
-	#define a  10
-	#define b  20
-	const int s = mid(a, b);
+	#define __a  10
+	#define __b  20
+	const int s = mid(__a, __b);
 	printf("s = %d\n", s);
 
 	int xx;
@@ -53,8 +60,10 @@ int main()
 	return 0;
 }
 
-#undef a
-#undef b
+#undef __a
+#undef __b
+
+static
 void arrayShow(int *array, int size)
 {
 	printf("arrayShow:\n");
@@ -65,13 +74,12 @@ void arrayShow(int *array, int size)
 		i = i + 1;
 	}
 }
+
+static
 int mid(int a, int b)
 {
 	const int sum = a + b;
 	return div(sum, 2);
 }
-int div(int a, int b)
-{
-	return a / b;
-}
+
 

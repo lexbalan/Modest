@@ -1138,7 +1138,7 @@ def do_value_call(x):
 	if value_is_bad(f):
 		if 'unknown' in f['att']:
 			if x['left']['kind'] == 'id':
-				id_str = x['left']['id']['str']
+				id_str = x['left']['str']
 				args = x['args']
 				if id_str == 'lengthof':
 					return do_value_call_lengthof(args, x['ti'])

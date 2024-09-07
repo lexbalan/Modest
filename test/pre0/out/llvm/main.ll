@@ -104,8 +104,9 @@ break_2:
 }
 
 
-; -- SOURCE: src/main.m
-
+; -----------------------------------------------------------------------------
+; -- SOURCE: /Users/alexbalan/p/Modest/test/pre0/src/main.m
+; -----------------------------------------------------------------------------
 @str1 = private constant [6 x i8] [i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
 @str2 = private constant [16 x i8] [i8 115, i8 117, i8 98, i8 78, i8 97, i8 109, i8 101, i8 32, i8 61, i8 32, i8 39, i8 37, i8 115, i8 39, i8 10, i8 0]
 @str3 = private constant [5 x i8] [i8 78, i8 97, i8 109, i8 101, i8 0]
@@ -129,8 +130,6 @@ break_2:
 
 
 declare void @printf(%Str8* %s, ...)
-declare void @printf(%Str8* %s, ...)
-declare %Int @main()
 
 define %Int @main() {
 	call void (%Str8*, ...) @printf(%Str8* bitcast ([6 x i8]* @str1 to [0 x i8]*))
@@ -146,9 +145,6 @@ define %Int @main() {
 	store %Int 12, %Int* @x
 	ret %Int 0
 }
-
-
-declare void @arrayShow(%Arr* %array, %Int %size)
 
 define void @arrayShow(%Arr* %array, %Int %size) {
 	call void (%Str8*, ...) @printf(%Str8* bitcast ([12 x i8]* @str5 to [0 x i8]*))
@@ -173,17 +169,11 @@ break_1:
 	ret void
 }
 
-
-declare %Int @mid(%Int %a, %Int %b)
-
 define %Int @mid(%Int %a, %Int %b) {
 	%1 = add %Int %a, %b
 	%2 = call %Int @div(%Int %1, %Int 2)
 	ret %Int %2
 }
-
-
-declare %Int @div(%Int %a, %Int %b)
 
 define %Int @div(%Int %a, %Int %b) {
 	%1 = udiv %Int %a, %b
