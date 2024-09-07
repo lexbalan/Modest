@@ -1,6 +1,5 @@
 
-@attribute("c-no-print")
-func printf(s: *Str8, ...)
+import "console"
 
 export type Point record {
 	x: Int32
@@ -20,7 +19,7 @@ export func mid(a: Int, b: Int) -> Int {
 
 
 export func printPoint(p: Point) -> Unit {
-	printf("p.x = %d\n", p.x)
-	printf("p.y = %d\n", p.y)
+	console.printf("p.x = %d\n", p.x)
+	console.printf("p.y = %d\n", p.y)
 }
 

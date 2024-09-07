@@ -1,5 +1,5 @@
 
-func printf(s: *Str8) -> Unit
+import "console"
 func div(a: Int, b: Int) -> Int {
 	return a / b
 }
@@ -15,7 +15,7 @@ export func mid(a: Int, b: Int) -> Int {
 	return div(sum, 2)
 }
 export func printPoint(p: Point) -> Unit {
-	printf("p.x = %d\n", p.x)
-	printf("p.y = %d\n", p.y)
+	console.printf("p.x = %d\n", p.x)
+	console.printf("p.y = %d\n", p.y)
 }
 
