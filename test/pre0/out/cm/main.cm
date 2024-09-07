@@ -1,6 +1,10 @@
 
 import "lib"
 @c_include "stdio.h"
+type Point record {
+	x: Int32
+	y: Int32
+}
 func main() -> Int {
 	let a = 10
 	let b = 20
@@ -9,6 +13,9 @@ func main() -> Int {
 
 	// access to private value
 	//let x = lib.div(a, b)
+
+	var p: Point = Point {x = 10, y = 20}
+	printPoint(p)
 
 	return 0
 }

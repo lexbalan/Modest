@@ -402,7 +402,7 @@ def type_eq_array(a, b, opt):
 
 def get_type_root_id(t):
 	if 'id' in t:
-		return get_id_str(t['id'])
+		return t['id']['str']
 	return None
 
 

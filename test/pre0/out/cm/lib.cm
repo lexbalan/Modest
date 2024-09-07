@@ -1,12 +1,21 @@
 
-
-type XXX Int32
+func printf(s: *Str8) -> Unit
 func div(a: Int, b: Int) -> Int {
 	return a / b
-}export
-type Int Int32export
-func mid(a: Int, b: Int) -> Int {
+}
+
+export type Point record {
+	x: Int32
+	y: Int32
+}
+
+export type Int Int32
+export func mid(a: Int, b: Int) -> Int {
 	let sum = a + b
 	return div(sum, 2)
+}
+export func printPoint(p: Point) -> Unit {
+	printf("p.x = %d\n")
+	printf("p.y = %d\n")
 }
 
