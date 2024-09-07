@@ -84,20 +84,20 @@ def module_strings_add(v):
 
 
 def module_type_add_public(m, id_str, t):
-	print("module %s type_add_public %s" % (m['id'], id_str))
+	#print("module %s type_add_public %s" % (m['id'], id_str))
 	return m['symtab_public'].type_add(id_str, t)
 
 def module_value_add_public(m, id_str, v):
-	print("module %s value_add_public %s" % (m['id'], id_str))
+	#print("module %s value_add_public %s" % (m['id'], id_str))
 	return m['symtab_public'].value_add(id_str, v)
 
 
 def module_type_add_private(m, id_str, t):
-	print("module %s type_add_private %s" % (m['id'], id_str))
+	#print("module %s type_add_private %s" % (m['id'], id_str))
 	return m['symtab_private'].type_add(id_str, t)
 
 def module_value_add_private(m, id_str, v):
-	print("module %s value_add_private %s" % (m['id'], id_str))
+	#print("module %s value_add_private %s" % (m['id'], id_str))
 	return m['symtab_private'].value_add(id_str, v)
 
 
@@ -140,7 +140,7 @@ def module_type_add(m, id_str, t, is_public=False):
 
 
 def module_value_add(m, id_str, v, is_public=False):
-	print('module_value_add (%s, isPublic=%d)' % (id_str, is_public))
+	#print('module_value_add (%s, isPublic=%d)' % (id_str, is_public))
 	if is_public:
 		module_value_add_public(m, id_str, v)
 	else:
@@ -2785,7 +2785,7 @@ def translate(srcname, nodef=False):
 	env_current_file_dir = prev_env_current_file_dir
 
 	log_ind_minus()
-	log("<< END-TRANSLATE(\"%s\")" % srcname)
+	log("<< END-TRANSLATE(\"%s\")\n" % srcname)
 	return m
 
 
