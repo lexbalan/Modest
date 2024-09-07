@@ -15,7 +15,7 @@ func main() -> lib.Int {
 	let s = lib.mid(a, b)
 	printf("s = %d\n", s)
 
-	lib.internal_func()
+	let x = lib.div(a, b)
 
 	return 0
 }

@@ -13,8 +13,7 @@ all: LLVM
 
 CM:
 	mcc -o $(CMPREFIX)/main -mbackend=cm $(INDIR)/main.m
-	#mcc -o $(CMPREFIX)/sub -mbackend=cm $(INDIR)/sub.m
-	#mcc -o $(CMPREFIX)/sub2 -mbackend=cm $(INDIR)/sub2.m
+	mcc -o $(CMPREFIX)/lib -mbackend=cm $(INDIR)/lib.m
 
 
 LLVM:

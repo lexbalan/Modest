@@ -2558,10 +2558,11 @@ def do_import2(x):
 		# import mode
 		idd = y['id']
 		module['imports'][idd] = y
+
 		#module['att'].append('not_included')
-		if not 'not_included' in y['att']:
-			cinc = c_include('./%s.h' % idd)
-			module_append(cinc)
+		#if not 'not_included' in y['att']:
+		#	cinc = c_include('./%s.h' % idd)
+		#	module_append(cinc)
 
 
 
@@ -2685,6 +2686,20 @@ def do_import(x, nodef=True):
 	m = translate(abspath, nodef=nodef)
 	m['id'] = impline
 	m['prefix'] = impline + '_'
+
+
+	directive_import = {
+		'isa': 'directive',
+		'kind': 'import',
+		'str': impline,
+		'att': [],
+		'nl': 1,
+		'ti': None
+	}
+
+	module_append(directive_import)
+
+
 	return m
 
 

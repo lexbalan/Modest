@@ -1,14 +1,13 @@
 
-@c_include "./lib.h"
+import "lib"
 @c_include "stdio.h"
-
 func main() -> Int {
 	let a = 10
 	let b = 20
 	let s = mid(a, b)
 	printf("s = %d\n", s)
 
-	internal_func()
+	let x = div(a, b)
 
 	return 0
 }
