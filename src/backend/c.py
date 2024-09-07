@@ -115,7 +115,7 @@ aprecedence = [
 	['add', 'sub'], #8
 	['mul', 'div', 'rem'], #9
 	['positive', 'negative', 'not', 'cons', 'ref', 'deref', 'sizeof', 'alignof', 'offsetof', 'lengthof'], #10
-	['call', 'index', 'access'], #11
+	['call', 'index', 'access', 'access_module'], #11
 	['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #12
 ]
 
@@ -635,6 +635,11 @@ def print_value_access(x, ctx):
 	out('.')
 	print_id(x['field'])
 
+
+
+def print_value_access_module(v, ctx):
+	left = v['left']
+	out("%s.%s" % (left['id'], v['right']['str']))
 
 
 def print_cast_hard(t, v, ctx=[]):
@@ -1212,6 +1217,7 @@ def print_value(x, ctx=[], need_wrap=False):
 	elif k == 'index': print_value_index(x, ctx)
 	elif k == 'slice': print_value_slice(x, ctx)
 	elif k == 'access': print_value_access(x, ctx)
+	elif k == 'access_module': print_value_access_module(x, ctx)
 	elif k == 'sizeof_value': print_value_sizeof_value(x, ctx)
 	elif k == 'sizeof_type': print_value_sizeof_type(x, ctx)
 	elif k == 'alignof': print_value_alignof(x, ctx)
