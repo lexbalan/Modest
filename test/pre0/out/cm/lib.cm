@@ -4,12 +4,12 @@ func div(a: Int, b: Int) -> Int {
 	return a / b
 }
 
-export type Point record {
-	x: Int32
-	y: Int32
-}
-
 export type Int Int32
+
+export type Point record {
+	x: Int
+	y: Int
+}
 export func mid(a: Int, b: Int) -> Int {
 	let sum = a + b
 	return div(sum, 2)
