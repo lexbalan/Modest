@@ -49,7 +49,7 @@ aprecedence = [
 	['add', 'sub'], #8
 	['mul', 'div', 'rem'], #9
 	['positive', 'negative', 'not', 'cons', 'ref', 'deref', 'sizeof', 'alignof', 'offsetof', 'lengthof'], #10
-	['call', 'index', 'access', 'slice'], #11
+	['call', 'index', 'access', 'access_module', 'slice'], #11
 	['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #12
 ]
 
@@ -293,6 +293,11 @@ def print_value_access(v, ctx):
 	print_value(left, need_wrap=need_wrap)
 	out(".")
 	print_id(v['field'])
+
+
+def print_value_access_module(v, ctx):
+	left = v['left']
+	out("%s.%s" % (left['id'], v['right']['str']))
 
 
 def print_cast(t, v, ctx=[]):
@@ -646,6 +651,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 	elif k == 'call': print_value_call(x, ctx)
 	elif k == 'index': print_value_index(x, ctx)
 	elif k == 'access': print_value_access(x, ctx)
+	elif k == 'access_module': print_value_access_module(x, ctx)
 	elif k == 'slice': print_value_slice(x, ctx)
 	elif k == 'sizeof_value': print_value_sizeof_value(x, ctx)
 	elif k == 'sizeof_type': print_value_sizeof_type(x, ctx)

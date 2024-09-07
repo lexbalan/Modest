@@ -260,7 +260,7 @@ def value_access_module(type, left, right, ti):
 	return {
 		'isa': 'value',
 		'kind': 'access_module',
-		'left': record,
+		'left': left,
 		'right': right,
 		'type': type,
 		'immediate': False,

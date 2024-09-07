@@ -8,14 +8,14 @@ type Point record {
 func main() -> Int {
 	let a = 10
 	let b = 20
-	let s = mid(a, b)
+	let s = lib.mid(a, b)
 	printf("s = %d\n", s)
 
 	// access to private value
 	//let x = lib.div(a, b)
 
 	var p: Point = Point {x = 10, y = 20}
-	printPoint(p)
+	lib.printPoint(p)
 
 	return 0
 }

@@ -1439,26 +1439,32 @@ def do_value_slice(x):
 
 
 
-def is_submodule_name(name):
-	return name in module['imports']
+def is_submodule_name(id_str):
+	return id_str in module['imports']
 
-def submodule_access(mname, iname, ti):
+
+def submodule_access(x):
 	global module
 
-	if not is_submodule_name(mname):
-		return None
+	mname = x['left']['str']
+	iname = x['right']['str']
+	ti = x['ti']
 
 	submodule = module['imports'][mname]
 
 	v = module_value_get_public(submodule, iname)
-	if v != None:
-		return v
+	if v == None:
+		v = module_value_get_private(submodule, iname)
+		if v != None:
+			error("access to module private item", ti)
 
-	v = module_value_get_private(submodule, iname)
-	if v != None:
-		error("access to module private item", ti)
+	if v == None:
+		return value_bad(x)
 
-	return None
+	y = value_access_module(v['type'], submodule, x['right'], x['ti'])
+	cp_immediate(y, v)
+	return y
+
 
 
 
@@ -1467,10 +1473,8 @@ def do_value_access(x):
 
 	# access to submodule?
 	if x['left']['kind'] == 'id':
-		v = submodule_access(x['left']['str'], x['right']['str'], x['ti'])
-		if v == None:
-			return value_bad(x)
-		return v
+		if is_submodule_name(x['left']['str']):
+			return submodule_access(x)
 
 	#
 	# access to object

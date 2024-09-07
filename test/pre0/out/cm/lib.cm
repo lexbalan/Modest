@@ -15,7 +15,7 @@ export func mid(a: Int, b: Int) -> Int {
 	return div(sum, 2)
 }
 export func printPoint(p: Point) -> Unit {
-	printf("p.x = %d\n")
-	printf("p.y = %d\n")
+	printf("p.x = %d\n", p.x)
+	printf("p.y = %d\n", p.y)
 }
 
