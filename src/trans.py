@@ -2771,7 +2771,7 @@ def process_module(ast, source_info, nodef=False):
 		'symtab_public': symtab_public,
 		'symtab_private': symtab_private,
 
-		'defs': [],         # определения модуля
+		'defs': [],         # внутренние определения модуля
 		'export_defs': [],  # определения которые идут на экспорт (export)
 
 		'att': []
