@@ -256,14 +256,27 @@ def value_slice_array(left, type, index_from, index_to, ti):
 	}
 
 
-def value_access_record(record, type, field, ti):
+def value_access_module(type, left, right, ti):
+	return {
+		'isa': 'value',
+		'kind': 'access_module',
+		'left': record,
+		'right': right,
+		'type': type,
+		'immediate': False,
+		'immutable': False,
+		'att': [],
+		'ti': ti
+	}
+
+
+def value_access_record(type, record, field, ti):
 	return {
 		'isa': 'value',
 		'kind': 'access',
 		'record': record,
 		'field': field,
-		'record_type': type,
-		'type': field['type'],
+		'type': type,
 		'immediate': False,
 		'immutable': False,
 		'att': [],

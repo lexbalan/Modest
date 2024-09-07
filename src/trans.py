@@ -1505,7 +1505,7 @@ def do_value_access(x):
 	if hlir_type.type_is_bad(field['type']):
 		return value_bad(x)
 
-	nv = value_access_record(left, field['type'], field, ti=x['ti'])
+	nv = value_access_record(field['type'], left, field, ti=x['ti'])
 	if not via_pointer:
 		nv['immutable'] = left['immutable']
 
@@ -2811,8 +2811,6 @@ def process_module(ast, source_info, nodef=False):
 		'source_info': source_info,
 		'options': [],
 
-		'imports': {},    # '<local_module_id>' => {'isa': 'module'}
-
 		'strings': [],    # for in LLVM backend)
 		'records': [],    # for C backend
 		'anon_recs': [],  # anonymous records for C backend
@@ -2820,8 +2818,13 @@ def process_module(ast, source_info, nodef=False):
 		'symtab_public': symtab_public,
 		'symtab_private': symtab_private,
 
-		'defs': [],         # внутренние определения модуля
-		'export_defs': [],  # определения которые идут на экспорт (export)
+		'imports': {},    # '<local_module_id>' => {'isa': 'module'}
+
+		'defs': [],         # приватные определения модуля
+		'export_defs': [],  # открытые определения модуля
+		# определения полученные из заинклуженного модуля
+		# LLVM например их печатает, а C и CM - нет
+		'included_defs': [],
 
 		'att': []
  	}
