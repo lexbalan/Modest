@@ -189,9 +189,10 @@ def module_append(definition, to_export=False):
 	if definition == None:
 		return
 	global module
-	module['defs'].append(definition)
 	if to_export:
-		module_append_export(definition)
+		module['export_defs'].append(definition)
+	else:
+		module['defs'].append(definition)
 
 
 def context_push():
@@ -2100,7 +2101,7 @@ def symbol_const(id, init_value, is_public=False):
 def def_const(x):
 	id = x['id']
 
-	log("def_const %s" % id['str'])
+	log("def_const: %s" % id['str'])
 
 	# check if identifier is free
 	pre_exist = ctx_value_get_shallow(id['str'])
@@ -2147,7 +2148,7 @@ def module_remove_node(m, isa, id_str):
 
 def decl_type(x):
 	id = x['id']
-	log("decl_type %s" % id['str'])
+	log("decl_type: %s" % id['str'])
 
 	nt = do_type(x['type'])
 	nt['ti_def'] = x['ti']
@@ -2161,7 +2162,7 @@ def decl_type(x):
 def def_type(x):
 	global module
 	id = x['id']
-	log("def_type %s" % id['str'])
+	log("def_type: %s" % id['str'])
 
 	if id['str'][0].islower():
 		error("type id must starts with big letter", id['ti'])
@@ -2364,14 +2365,19 @@ def check_stmt(stmt):
 
 
 
-def decl_func(x):
+def do_func_value(x):
 	func_id = x['id']
 	func_ti = func_id['ti']
-
 	func_type = do_type_func(x['type'], func_id=func_id['str'])
 	fn = value_func(func_id, func_type, ti=func_ti)
 	ctx_value_add(func_id['str'], fn)
-	y = hlir_decl_func(func_id, fn, func_ti)
+	return fn
+
+
+def decl_func(x):
+	fn = do_func_value(x)
+	log('decl_func: %s' % fn['id']['str'])
+	y = hlir_decl_func(fn['id'], fn, fn['ti_def'])
 	y['export'] = x['export']
 	return y
 
@@ -2382,6 +2388,7 @@ def def_func(x, dostmt=True):
 	prev_cfunc = cfunc
 
 	func_id = x['id']
+	log('def_func: %s' % func_id['str'])
 	fn = ctx_value_get(func_id['str'])
 	func_type = fn['type']
 
@@ -2686,8 +2693,7 @@ def translate(srcname, nodef=False):
 	assert(srcname != None)
 	assert(srcname != "")
 
-
-	log("TRANSLATE(\"%s\")" % srcname)
+	log(">> TRANSLATE(\"%s\")" % srcname)
 	log_ind_plus()
 
 	if not os.path.exists(srcname):
@@ -2726,7 +2732,7 @@ def translate(srcname, nodef=False):
 	env_current_file_dir = prev_env_current_file_dir
 
 	log_ind_minus()
-	log("END-TRANSLATE(\"%s\")" % srcname)
+	log("<< END-TRANSLATE(\"%s\")" % srcname)
 	return m
 
 
@@ -2845,15 +2851,14 @@ def pre_def(ast, fdecl=False):
 		kind = x['kind']
 
 		if kind == 'func':
-			y0 = decl_func(x)
+			fn = do_func_value(x)
 
-			add_spices(y0, ast_atts=x['attributes'])
+			#add_spices(y0, ast_atts=x['attributes'])
 
 			if x['export']:
-				module_append_export(y0)
+				module_append(fn, to_export=True)
 
-			fvalue = y0['value']
-			module_value_add(module, x['id']['str'], fvalue, is_public=x['export'])
+			module_value_add(module, fn['id']['str'], fn, is_public=x['export'])
 
 
 	# 4. def funcs
