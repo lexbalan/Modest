@@ -1,12 +1,12 @@
 // lib/lightfood/print.cm
 
-//@attribute("c-no-print")
+//@attribute("c_no_print")
 //import "./main"
 //$pragma c_include"./ff.h")
 
 import "libc/stdio"
 
-@attribute("c-no-print")
+@attribute("c_no_print")
 import "lightfood/putchar"
 $pragma c_include"./putchar.h")
 

@@ -1817,12 +1817,16 @@ def print_include(x):
 				return
 
 	ss = x['c_name']
+	inc(ss, local=x['local'])
 
-	if x['local']:
-		include_text = "#include \"%s\"" % ss
+
+def inc(string, local=True):
+	if local:
+		include_text = "#include \"%s\"" % string
 	else:
-		include_text = "#include <%s>" % ss
+		include_text = "#include <%s>" % string
 	out(include_text)
+
 
 
 def print_insert(x):
@@ -1895,8 +1899,8 @@ def print_cdecl_func(x):
 def print_directive(x):
 	k = x['kind']
 	newline(n=x['nl'])
-	if k == 'import': print_include(x)
-	elif k == 'insert': print_insert(x)
+	#if k == 'import': print_include(x)
+	if k == 'insert': print_insert(x)
 	elif k == 'cdecl_func': print_cdecl_func(x)
 	elif k == 'cdecl_type': print_cdecl_type(x)
 
@@ -1923,8 +1927,18 @@ def print_header(module, outname):
 			if obj['kind'] == 'c_include':
 				newline()
 				print_include(obj)
+			elif obj['kind'] == 'import':
+				#print_include(obj)
+				newline()
+				inc(obj['str'] + '.h', local=True)
+
 
 	out("\n")
+
+	#out("\n/* forward type declaration */")
+	for rec_id in module['records']:
+		out("\ntypedef struct %s %s;" % (rec_id, rec_id))
+
 
 	for x in module['export_defs']:
 		if 'c_no_print' in x['att']:
@@ -1932,16 +1946,16 @@ def print_header(module, outname):
 
 		isa = x['isa']
 
-		if isa == 'decl_func':
-			if 'inline' in x['att']:
-				# do not print prototype for inline functions
-				continue
+		if isa in ['def_func', 'decl_func']:
+			#if 'inline' in x['att']:
+			#	continue
 			print_decl_func(x)
-		elif isa == 'decl_var': print_decl_var(x)
-		elif isa == 'decl_type': print_decl_type(x)
+		elif isa == 'def_var':
+			print_decl_var(x)
+		elif isa in ['def_type', 'decl_type']:
+			print_def_type(x)
 		elif isa == 'def_const':
-			if x['export']:
-				print_def_const(x)
+			print_def_const(x)
 
 
 	for x in module['defs']:
@@ -1998,8 +2012,9 @@ def print_cfile(module, _outname):
 	out("\n\n")
 
 	#out("\n/* forward type declaration */")
-	for rec_id in module['records']:
-		out("\ntypedef struct %s %s;" % (rec_id, rec_id))
+# now see header!
+#	for rec_id in module['records']:
+#		out("\ntypedef struct %s %s;" % (rec_id, rec_id))
 
 	#out("\n/* anonymous records */")
 	for anon_rec in module['anon_recs']:

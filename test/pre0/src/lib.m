@@ -9,6 +9,8 @@ export type Point record {
 	y: Int
 }
 
+type XXX Int
+
 
 func div(a: Int, b: Int) -> Int {
 	return a / b

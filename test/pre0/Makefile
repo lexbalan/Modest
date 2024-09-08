@@ -25,10 +25,9 @@ LLVM:
 
 C:
 	mcc -o $(CPREFIX)/main -mbackend=c $(INDIR)/main.m
-	#mcc -o $(CPREFIX)/sub -fheader -mbackend=c $(INDIR)/sub.m
-	#mcc -o $(CPREFIX)/sub2 -fheader -mbackend=c $(INDIR)/sub2.m
-	#mcc -o $(CPREFIX)/console -fheader -mbackend=c $(INDIR)/console.m
-	CC $(CPREFIX)/main.c 
+	mcc -o $(CPREFIX)/lib -mbackend=c $(INDIR)/lib.m
+	mcc -o $(CPREFIX)/console -mbackend=c $(INDIR)/console.m
+	CC $(CPREFIX)/main.c $(CPREFIX)/lib.c 
 
 
 clean:

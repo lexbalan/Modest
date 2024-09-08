@@ -2,7 +2,7 @@
 
 import "libc/stdio"
 import "libc/unistd"
-@attribute("c-no-print")
+@attribute("c_no_print")
 import "lightfood/print"
 @c_include "./print.h"
 func my_printf(format: *Str8, ...) -> SSizeT {

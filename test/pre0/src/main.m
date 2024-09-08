@@ -4,11 +4,13 @@ include "console"
 import "lib"
 
 
-type Point record {
+type Point2 record {
 	x: Int32
 	y: Int32
 }
 
+
+//var p: lib.XXX
 
 func main() -> lib.Int {
 	let a = 10
@@ -20,7 +22,7 @@ func main() -> lib.Int {
 	// access to private value
 	//let x = lib.div(a, b)
 
-	var p = Point {x=10, y=20}
+	var p = Point2 {x=10, y=20}
 	lib.printPoint(p)
 
 	return 0

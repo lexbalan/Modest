@@ -6,14 +6,9 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
+#include "console.h"
+#include "lib.h"
 
-void printf(char *s, ...);
-
-static inline
-int div(int a, int b)
-{
-	return a / b;
-}
+typedef struct Point2 Point2;
 
 #endif /* MAIN_H */

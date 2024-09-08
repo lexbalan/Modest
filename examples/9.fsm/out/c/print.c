@@ -9,7 +9,7 @@
 #include "./putchar.h"
 
 
-//@attribute("c-no-print")
+//@attribute("c_no_print")
 //import "./main"
 //$pragma c_include"./ff.h")
 

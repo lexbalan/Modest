@@ -15,7 +15,7 @@
 
 #include "./fsm.h"
 
-//@attribute("c-no-print")
+//@attribute("c_no_print")
 //import "lightfood/main"
 //$pragma c_include"./ff_main.h")
 

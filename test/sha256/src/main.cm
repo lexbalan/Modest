@@ -2,7 +2,7 @@
 
 import "libc/stdio"
 
-@attribute("c-no-print")
+@attribute("c_no_print")
 import "misc/sha256"
 $pragma c_include"./sha256.h")
 

@@ -866,9 +866,6 @@ def print_def_const(x):
 
 
 def print_import(x):
-	#s = x['str']
-	#if 'c-no-print' in x['att']:
-	#	out("@attribute(\"c-no-print\")\n")
 	if not x['include']:
 		out("import \"%s\"" % x['str'])
 	else:

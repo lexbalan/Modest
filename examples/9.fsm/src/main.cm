@@ -7,9 +7,9 @@ import "libc/stdio"
 
 import "./fsm"
 
-//@attribute("c-no-print")
+//@attribute("c_no_print")
 //import "lightfood/main"
-@attribute("c-no-print")
+@attribute("c_no_print")
 import "lightfood/delay"
 //$pragma c_include"./ff_main.h")
 $pragma c_include"./ff_delay.h")

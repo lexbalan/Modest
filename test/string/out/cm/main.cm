@@ -1,7 +1,7 @@
 // test/string/src/main.cm
 
 import "libc/stdio"
-@attribute("c-no-print")
+@attribute("c_no_print")
 import "misc/utf"
 @c_include "./utf.h"
 

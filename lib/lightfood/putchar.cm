@@ -1,5 +1,5 @@
 
-@attribute("c-no-print")
+@attribute("c_no_print")
 import "misc/utf"
 $pragma c_include"./utf.h")
 

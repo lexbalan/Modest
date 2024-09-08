@@ -3,7 +3,7 @@
 import "libc/stdio"
 import "libc/unistd"
 
-@attribute("c-no-print")
+@attribute("c_no_print")
 import "lightfood/print"
 $pragma c_include"./print.h")
 
