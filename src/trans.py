@@ -2770,7 +2770,6 @@ def do_directive(x):
 
 
 def import_directive(impline, ti, include=False):
-	print("import_directive " + impline)
 	imp = {
 		'isa': 'directive',
 		'kind': 'import',
