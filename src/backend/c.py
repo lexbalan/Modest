@@ -639,7 +639,8 @@ def print_value_access(x, ctx):
 
 def print_value_access_module(v, ctx):
 	left = v['left']
-	out("%s.%s" % (left['id'], v['right']['str']))
+	#out("%s.%s" % (left['id'], v['right']['str']))
+	out("%s" % (v['right']['str']))
 
 
 def print_cast_hard(t, v, ctx=[]):
@@ -1928,7 +1929,6 @@ def print_header(module, outname):
 				newline()
 				print_include(obj)
 			elif obj['kind'] == 'import':
-				#print_include(obj)
 				newline()
 				inc(obj['str'] + '.h', local=True)
 
@@ -2030,27 +2030,26 @@ def print_cfile(module, _outname):
 
 		isa = x['isa']
 		if isa == 'def_const':
-			if not x['export']:
-				print_def_const(x)
+			print_def_const(x)
 		elif isa == 'def_type':
 			print_def_type(x)
 
 
 	# печатаем прототипы функций текущего модуля
 	# (тк C не позволяет использовать функции перед их определением)
-	out("// local decls\n")
+	#out("// local decls\n")
 	for x in module['defs']:
 		if 'c_no_print' in x['att']:
 			continue
 
 		isa = x['isa']
 		if isa == 'def_func':
-			if not x['export']:
-				out("\nstatic")
+#			if not x['export']:
+#				out("\nstatic")
 			print_decl_func(x)
 
 
-	out("// defs\n")
+	#out("// defs\n")
 	for x in module['defs']:
 		if 'c_no_print' in x['att']:
 			continue
@@ -2074,8 +2073,30 @@ def print_cfile(module, _outname):
 				# inline function must be printed in header file
 				continue
 
-			if not x['export']:
-				out("\nstatic")
+#			if not x['export']:
+#				out("\nstatic")
+			print_def_func(x)
+
+		elif isa == 'comment': print_comment(x)
+		elif isa == 'directive': print_directive(x)
+		#elif isa == 'def_const': print_def_const(x)
+
+	for x in module['export_defs']:
+		if 'c_no_print' in x['att']:
+			continue
+
+		isa = x['isa']
+		if isa == 'def_var':
+			print_def_var(x)
+		elif isa == 'def_func':
+			out("\n");
+
+			if 'inline' in x['att']:
+				# inline function must be printed in header file
+				continue
+
+#			if not x['export']:
+#				out("\nstatic")
 			print_def_func(x)
 
 		elif isa == 'comment': print_comment(x)

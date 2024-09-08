@@ -12,7 +12,7 @@ type Point2 record {
 
 //var p: lib.XXX
 
-func main() -> lib.Int {
+export func main() -> lib.Int {
 	let a = 10
 	let b = 20
 	let s = lib.mid(a, b)

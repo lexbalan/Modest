@@ -9,16 +9,24 @@
 
 
 
-typedef Int XXX;// local decls
-
-static
-Int div(Int a, Int b);// defs
+typedef Int XXX;
+Int div(Int a, Int b);
 
 
-
-static
 Int div(Int a, Int b)
 {
 	return a / b;
+}
+
+Int mid(Int a, Int b)
+{
+	const Int sum = a + b;
+	return div(sum, 2);
+}
+
+void printPoint(Point p)
+{
+	printf("p.x = %d\n", p.x);
+	printf("p.y = %d\n", p.y);
 }
 

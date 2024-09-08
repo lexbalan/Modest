@@ -8,8 +8,6 @@
 #include "console.h"
 
 
-// local decls
-// defs
 
 
 

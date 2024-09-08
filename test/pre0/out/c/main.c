@@ -13,20 +13,15 @@
 struct Point2 {
 	int32_t x;
 	int32_t y;
-};// local decls
-
-static
-Int main();// defs
+};
 
 
 
-
-static
 Int main()
 {
 	#define __a  10
 	#define __b  20
-	const Int s = lib.mid(__a, __b);
+	const Int s = mid(__a, __b);
 
 	printf("s = %d\n", s);
 
@@ -35,7 +30,7 @@ Int main()
 
 	Point2 p;
 	p = (Point2){.x = 10, .y = 20};
-	lib.printPoint(*(Point *)&p);
+	printPoint(*(Point *)&p);
 
 	return 0;
 }
