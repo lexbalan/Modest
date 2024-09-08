@@ -2584,7 +2584,7 @@ def cmodule_extend(y, do_not_def):
 		module['export_defs'].extend(y['export_defs'])
 
 
-def do_import2(x):
+def do_import(x):
 
 	# SAVE
 	old_edefs = None
@@ -2599,7 +2599,6 @@ def do_import2(x):
 		old_symtab_public = module['symtab_public']
 		old_symtab_private = module['symtab_private']
 
-	#y = do_import(x, nodef=not x['include'])
 
 	import_expr = do_value_immediate_string(x['expr'])
 
@@ -2636,10 +2635,6 @@ def do_import2(x):
 		module['symtab_include'].extend(m['symtab_public'])
 
 
-
-
-	module_append(import_directive(impline, x['ti'], include=x['include']))
-
 	if y == None:
 		fatal("cannot import module")
 
@@ -2667,6 +2662,10 @@ def do_import2(x):
 		#if not 'not_included' in y['att']:
 		#	cinc = c_include('./%s.h' % idd)
 		#	module_append(cinc)
+
+	return import_directive(impline, x['ti'], include=x['include'])
+
+
 
 
 
@@ -2882,11 +2881,14 @@ def process_module(ast, source_info, nodef=False):
 	# 0. do imports & directives
 	for x in ast:
 		isa = x['isa']
+		y = None
 		if isa == 'ast_import':
-			do_import2(x)
+			y = do_import(x)
 
 		elif isa == 'ast_directive':
 			y = do_directive(x)
+
+		if y != None:
 			module_append(y)
 
 
