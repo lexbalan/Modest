@@ -1,5 +1,4 @@
 
-import "console"
 import "lib"
 
 
@@ -11,7 +10,6 @@ func main() -> Int {
 	let a = 10
 	let b = 20
 	let s = lib.mid(a, b)
-	console.printf("s = %d\n", s)
 
 	// access to private value
 	//let x = lib.div(a, b)

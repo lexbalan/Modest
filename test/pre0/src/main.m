@@ -1,6 +1,6 @@
 // test/pre0/src/main.cm
 
-import "console"
+include "console"
 import "lib"
 
 
@@ -14,7 +14,8 @@ func main() -> lib.Int {
 	let a = 10
 	let b = 20
 	let s = lib.mid(a, b)
-	console.printf("s = %d\n", s)
+
+	printf("s = %d\n", s)
 
 	// access to private value
 	//let x = lib.div(a, b)

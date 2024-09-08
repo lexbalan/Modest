@@ -1176,7 +1176,7 @@ def do_value_call(x):
 				elif id_str == '__defined':
 					return do_value_call_defined(args, x['ti'])
 
-		#error("undefined value", f)
+		error("undefined value", f)
 		return value_bad(x)
 
 
@@ -2035,7 +2035,7 @@ def do_stmt_comment_block(x):
 	return {
 		'isa': 'stmt',
 		'kind': 'comment-block',
-		'defs': x['defs'],
+		'text': x['text'],
 		'nl': x['nl'],
 		'ti': x['ti']
 	}
@@ -2566,7 +2566,24 @@ def cmodule_extend(y, do_not_def):
 
 
 def do_import2(x):
+
+	# SAVE
+	old_edefs = None
+	old_defs = None
+	if x['include']:
+		old_defs = module['defs']
+		old_edefs = module['export_defs']
+		module['defs'] = module['included_defs']
+		module['export_defs'] = module['included_defs']
+
 	y = do_import(x, nodef=not x['include'])
+
+	# RESTORE
+	if x['include']:
+		module['defs'] = old_defs
+		module['export_defs'] = old_edefs
+
+
 	if y == None:
 		fatal("cannot import module")
 
@@ -2585,10 +2602,7 @@ def do_import2(x):
 		#print("---------------NN " + path)
 		included_modules[path] = y
 
-	if x['include']:
-		# include mode
-		cmodule_extend(y, do_not_def)
-	else:
+	if not x['include']:
 		# import mode
 		idd = y['id']
 		module['imports'][idd] = y
@@ -2699,6 +2713,19 @@ def do_directive(x):
 	el"""
 
 
+def import_directive(impline, ti, include=False):
+	print("import_directive " + impline)
+	imp = {
+		'isa': 'directive',
+		'kind': 'import',
+		'include': include,
+		'str': impline,
+		'att': [],
+		'nl': 1,
+		'ti': ti,
+	}
+	return imp
+
 
 def do_import(x, nodef=True):
 	import_expr = do_value_immediate_string(x['expr'])
@@ -2726,17 +2753,7 @@ def do_import(x, nodef=True):
 	print("symtab_private:")
 	m['symtab_private'].show_table()"""
 
-	directive_import = {
-		'isa': 'directive',
-		'kind': 'import',
-		'str': impline,
-		'att': [],
-		'nl': 1,
-		'ti': None
-	}
-
-	module_append(directive_import)
-
+	module_append(import_directive(impline, x['ti']))
 
 	return m
 
