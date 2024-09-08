@@ -2576,13 +2576,37 @@ def do_import2(x):
 		module['defs'] = module['included_defs']
 		module['export_defs'] = module['included_defs']
 
-	y = do_import(x, nodef=not x['include'])
+	#y = do_import(x, nodef=not x['include'])
+
+
+	import_expr = do_value_immediate_string(x['expr'])
+
+	if value_is_bad(import_expr):
+		return None
+
+	# Literal string to python string
+	impline = import_expr['asset']
+
+	log('do_import("%s")' % impline)
+
+	abspath = import_abspath(impline, ext='.m')
+
+	if abspath == None:
+		error("module %s not found" % impline, import_expr)
+		return None
+
+	m = translate(abspath, nodef=not x['include'])
+	m['id'] = impline
+	m['prefix'] = impline + '_'
+	y = m
+
 
 	# RESTORE
 	if x['include']:
 		module['defs'] = old_defs
 		module['export_defs'] = old_edefs
 
+	module_append(import_directive(impline, x['ti'], include=x['include']))
 
 	if y == None:
 		fatal("cannot import module")
@@ -2726,36 +2750,6 @@ def import_directive(impline, ti, include=False):
 	}
 	return imp
 
-
-def do_import(x, nodef=True):
-	import_expr = do_value_immediate_string(x['expr'])
-
-	if value_is_bad(import_expr):
-		return None
-
-	# Literal string to python string
-	impline = import_expr['asset']
-
-	log('do_import("%s")' % impline)
-
-	abspath = import_abspath(impline, ext='.m')
-
-	if abspath == None:
-		error("module %s not found" % impline, import_expr)
-		return None
-
-	m = translate(abspath, nodef=nodef)
-	m['id'] = impline
-	m['prefix'] = impline + '_'
-
-	"""print("symtab_public:")
-	m['symtab_public'].show_table()
-	print("symtab_private:")
-	m['symtab_private'].show_table()"""
-
-	module_append(import_directive(impline, x['ti']))
-
-	return m
 
 
 tabb = 0

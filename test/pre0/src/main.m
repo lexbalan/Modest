@@ -15,7 +15,7 @@ func main() -> lib.Int {
 	let b = 20
 	let s = lib.mid(a, b)
 
-	printf("s = %d\n", s)
+	//printf("s = %d\n", s)
 
 	// access to private value
 	//let x = lib.div(a, b)
