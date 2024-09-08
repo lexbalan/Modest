@@ -26,7 +26,7 @@ Int lib_mid(Int a, Int b)
 
 void lib_printPoint(Point p)
 {
-	console_printf("p.x = %d\n", p.x);
-	console_printf("p.y = %d\n", p.y);
+	printf("p.x = %d\n", p.x);
+	printf("p.y = %d\n", p.y);
 }
 

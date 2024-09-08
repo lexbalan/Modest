@@ -12,6 +12,7 @@ type Point2 record {
 
 //var p: lib.XXX
 
+@nodecorate
 export func main() -> lib.Int {
 	let a = 10
 	let b = 20

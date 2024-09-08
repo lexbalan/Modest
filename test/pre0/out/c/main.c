@@ -17,13 +17,13 @@ struct Point2 {
 
 
 
-Int main_main()
+Int main()
 {
 	#define __a  10
 	#define __b  20
 	const Int s = lib_mid(__a, __b);
 
-	console_printf("s = %d\n", s);
+	printf("s = %d\n", s);
 
 	// access to private value
 	//let x = lib.div(a, b)
