@@ -2585,21 +2585,6 @@ def cmodule_extend(y, do_not_def):
 
 
 def do_import(x):
-
-	# SAVE
-	old_edefs = None
-	old_defs = None
-	if x['include']:
-		old_defs = module['defs']
-		old_edefs = module['export_defs']
-		module['defs'] = module['included_defs']
-		module['export_defs'] = module['included_defs']
-
-		# подменяем символьные таблицы
-		old_symtab_public = module['symtab_public']
-		old_symtab_private = module['symtab_private']
-
-
 	import_expr = do_value_immediate_string(x['expr'])
 
 	if value_is_bad(import_expr):
@@ -2619,49 +2604,27 @@ def do_import(x):
 	m = translate(abspath, nodef=not x['include'])
 	m['id'] = impline
 	m['prefix'] = impline + '_'
-	y = m
 
 
-	# RESTORE
-	if x['include']:
-		module['defs'] = old_defs
-		module['export_defs'] = old_edefs
-
-		module['symtab_public'] = old_symtab_public
-		module['symtab_private'] = old_symtab_private
-
-
-	if x['include']:
-		module['symtab_include'].extend(m['symtab_public'])
-
-
-	if y == None:
+	if m == None:
 		fatal("cannot import module")
 
-	if 'c_no_print' in y['att']:
-		for xx in y['defs']:
+	if 'c_no_print' in m['att']:
+		for xx in m['defs']:
 			xx['att'].append('c_no_print')
-		for xx in y['export_defs']:
+		for xx in m['export_defs']:
 			xx['att'].append('c_no_print')
 
-	path = y['source_info']['path']
-	do_not_def = False
-	if path in included_modules:
-		#print("---------------INN "  + path)
-		do_not_def = True
-	else:
-		#print("---------------NN " + path)
-		included_modules[path] = y
+
+	# add to cash
+	if not abspath in included_modules:
+		included_modules[abspath] = m
 
 	if not x['include']:
-		# import mode
-		idd = y['id']
-		module['imports'][idd] = y
-
-		#module['att'].append('not_included')
-		#if not 'not_included' in y['att']:
-		#	cinc = c_include('./%s.h' % idd)
-		#	module_append(cinc)
+		module_id = m['id']
+		module['imports'][module_id] = m
+	else:
+		module['symtab_include'].extend(m['symtab_public'])
 
 	return import_directive(impline, x['ti'], include=x['include'])
 
