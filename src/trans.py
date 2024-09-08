@@ -228,12 +228,15 @@ def ctx_value_get_shallow(id_str):
 
 def module_append_export(definition):
 	global module
+	definition['module'] = module
 	module['export_defs'].append(definition)
 
 def module_append(definition, to_export=False):
 	if definition == None:
 		return
 	global module
+
+	definition['module'] = module
 	if to_export:
 		module['export_defs'].append(definition)
 	else:
@@ -2603,7 +2606,6 @@ def do_import(x):
 
 	m = translate(abspath, nodef=not x['include'])
 	m['id'] = impline
-	m['prefix'] = impline + '_'
 
 
 	if m == None:
@@ -2816,7 +2818,7 @@ def process_module(ast, source_info, nodef=False):
 	module = {
 		'isa': 'module',
 		'id': source_info['id'],
-		'prefix': "",
+		'prefix': source_info['id'],
 
 		'source_info': source_info,
 		'options': [],
