@@ -2788,7 +2788,7 @@ def translate(srcname, nodef=False):
 	assert(srcname != None)
 	assert(srcname != "")
 
-	log(">> TRANSLATE(\"%s\")" % srcname)
+	log(">>>> TRANSLATE(\"%s\")" % srcname)
 	log_ind_plus()
 
 	if not os.path.exists(srcname):
@@ -2827,7 +2827,7 @@ def translate(srcname, nodef=False):
 	env_current_file_dir = prev_env_current_file_dir
 
 	log_ind_minus()
-	log("<< END-TRANSLATE(\"%s\")\n" % srcname)
+	log("<<<< END-TRANSLATE(\"%s\")\n" % srcname)
 	return m
 
 
