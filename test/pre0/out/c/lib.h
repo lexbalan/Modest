@@ -17,7 +17,7 @@ struct Point {
 	Int x;
 	Int y;
 };
-Int mid(Int a, Int b);
-void printPoint(Point p);
+Int lib_mid(Int a, Int b);
+void lib_printPoint(Point p);
 
 #endif /* LIB_H */

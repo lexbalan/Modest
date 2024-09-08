@@ -10,6 +10,6 @@
 #include "lib.h"
 
 typedef struct Point2 Point2;
-Int main();
+Int main_main();
 
 #endif /* MAIN_H */

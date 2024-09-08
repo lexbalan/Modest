@@ -17,20 +17,20 @@ struct Point2 {
 
 
 
-Int main()
+Int main_main()
 {
 	#define __a  10
 	#define __b  20
-	const Int s = mid(__a, __b);
+	const Int s = lib_mid(__a, __b);
 
-	printf("s = %d\n", s);
+	console_printf("s = %d\n", s);
 
 	// access to private value
 	//let x = lib.div(a, b)
 
 	Point2 p;
 	p = (Point2){.x = 10, .y = 20};
-	printPoint(*(Point *)&p);
+	lib_printPoint(*(Point *)&p);
 
 	return 0;
 }

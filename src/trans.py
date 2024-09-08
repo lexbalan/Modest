@@ -1483,7 +1483,7 @@ def submodule_access(x):
 	if v == None:
 		return value_bad(x)
 
-	y = value_access_module(v['type'], submodule, x['right'], x['ti'])
+	y = value_access_module(v['type'], submodule, v, x['ti'])
 	cp_immediate(y, v)
 	return y
 
@@ -2428,10 +2428,12 @@ def check_stmt(stmt):
 
 
 def do_func_value(x):
+	global module
 	func_id = x['id']
 	func_ti = func_id['ti']
 	func_type = do_type_func(x['type'], func_id=func_id['str'])
 	fn = value_func(func_id, func_type, ti=func_ti)
+	fn['prefix'] = module['prefix']
 	return fn
 
 
@@ -2505,6 +2507,7 @@ def def_func(x, dostmt=True):
 	cfunc = prev_cfunc
 
 	yy = hlir_def_func(func_id, fn, stmt, x['ti'])
+	yy['prefix'] = module['prefix']
 	yy['export'] = x['export']
 	return yy
 

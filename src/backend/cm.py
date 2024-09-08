@@ -297,7 +297,8 @@ def print_value_access(v, ctx):
 
 def print_value_access_module(v, ctx):
 	left = v['left']
-	out("%s.%s" % (left['id'], v['right']['str']))
+	id_str = get_id_str(v['right'])
+	out("%s.%s" % (left['id'], id_str))
 
 
 def print_cast(t, v, ctx=[]):

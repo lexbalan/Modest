@@ -137,9 +137,14 @@ def precedence(x):
 
 
 def get_id_str(x):
+	if not 'id' in x:
+		print(x)
+
 	id_str = ""
 	if not 'c_alias' in x['id']:
 		id_str = x['id']['str']
+		if 'prefix' in x:
+			id_str = x['prefix'] + '_' + id_str
 	else:
 		id_str = x['id']['c_alias']
 	return id_str
@@ -640,7 +645,9 @@ def print_value_access(x, ctx):
 def print_value_access_module(v, ctx):
 	left = v['left']
 	#out("%s.%s" % (left['id'], v['right']['str']))
-	out("%s" % (v['right']['str']))
+
+	id_str = get_id_str(v['right'])
+	out("%s" % (id_str))
 
 
 def print_cast_hard(t, v, ctx=[]):

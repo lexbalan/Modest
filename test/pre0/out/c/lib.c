@@ -10,23 +10,23 @@
 
 
 typedef Int XXX;
-Int div(Int a, Int b);
+Int lib_div(Int a, Int b);
 
 
-Int div(Int a, Int b)
+Int lib_div(Int a, Int b)
 {
 	return a / b;
 }
 
-Int mid(Int a, Int b)
+Int lib_mid(Int a, Int b)
 {
 	const Int sum = a + b;
-	return div(sum, 2);
+	return lib_div(sum, 2);
 }
 
-void printPoint(Point p)
+void lib_printPoint(Point p)
 {
-	printf("p.x = %d\n", p.x);
-	printf("p.y = %d\n", p.y);
+	console_printf("p.x = %d\n", p.x);
+	console_printf("p.y = %d\n", p.y);
 }
 

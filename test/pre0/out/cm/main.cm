@@ -7,7 +7,7 @@ type Point2 record {
 	x: Int32
 	y: Int32
 }
-func main() -> Int {
+export func main() -> Int {
 	let a = 10
 	let b = 20
 	let s = lib.mid(a, b)
