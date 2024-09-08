@@ -22,9 +22,7 @@ export func mid(a: Int, b: Int) -> Int {
 
 
 export func printPoint(p: Point) -> Unit {
-	/*console.printf("p.x = %d\n", p.x)
-	console.printf("p.y = %d\n", p.y)*/
-//	printf("p.x = %d\n", p.x)
-//	printf("p.y = %d\n", p.y)
+	printf("p.x = %d\n", p.x)
+	printf("p.y = %d\n", p.y)
 }
 

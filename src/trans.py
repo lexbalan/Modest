@@ -103,12 +103,6 @@ def module_value_add_private(m, id_str, v):
 
 
 
-"""
-# not used
-# search type in module
-def module_type_get(m, id_str):
-	return m['symtab_public'].type_get(id_str)
-"""
 
 # public
 
@@ -148,27 +142,50 @@ def module_value_add(m, id_str, v, is_public=False):
 
 
 
+def module_type_get(m, id_str, only_public=False):
+	#print("module_type_get: " + id_str)
+
+	t = m['symtab_public'].type_get(id_str)
+	if t != None:
+		return t
+
+	if only_public:
+		return None
+
+	t = m['symtab_private'].type_get(id_str)
+	if t != None:
+		return t
+
+	t = m['symtab_include'].type_get(id_str)
+	if t != None:
+		return t
+
+	return None
+
+
 # search value in module
-def module_value_get(m, id_str):
-	"""
-	print("------------------------")
-	print("get from: %s" % m['id'])
-	print("pub:")
-	m['symtab_public'].show_table()
-	print("priv:")
-	m['symtab_private'].show_table()
-	print("------------------------")
-	"""
+def module_value_get(m, id_str, only_public=False):
 	#print("module_value_get: " + id_str)
 
 	v = m['symtab_public'].value_get(id_str)
 	if v != None:
 		return v
+
+	if only_public:
+		return None
+
 	v = m['symtab_private'].value_get(id_str)
 	if v != None:
 		return v
 
+	v = m['symtab_include'].value_get(id_str)
+	if v != None:
+		return v
+
 	return None
+
+
+
 
 
 # ONLY FOR LOCALS:
@@ -184,20 +201,22 @@ def ctx_value_add(id_str, v):
 
 
 def ctx_type_get(id_str):
+	#print("ctx_type_get %s" % id_str)
 	global context
 	x = context.type_get(id_str)
 	if x != None:
 		return x
 	global module
-	return module_type_get_private(module, id_str)
+	return module_type_get(module, id_str)
 
 def ctx_value_get(id_str):
+	#print("ctx_value_get %s" % id_str)
 	global context
 	x = context.value_get(id_str)
 	if x != None:
 		return x
 	global module
-	return module_value_get_private(module, id_str)
+	return module_value_get(module, id_str)
 
 
 
@@ -2576,8 +2595,11 @@ def do_import2(x):
 		module['defs'] = module['included_defs']
 		module['export_defs'] = module['included_defs']
 
-	#y = do_import(x, nodef=not x['include'])
+		# подменяем символьные таблицы
+		old_symtab_public = module['symtab_public']
+		old_symtab_private = module['symtab_private']
 
+	#y = do_import(x, nodef=not x['include'])
 
 	import_expr = do_value_immediate_string(x['expr'])
 
@@ -2605,6 +2627,16 @@ def do_import2(x):
 	if x['include']:
 		module['defs'] = old_defs
 		module['export_defs'] = old_edefs
+
+		module['symtab_public'] = old_symtab_public
+		module['symtab_private'] = old_symtab_private
+
+
+	if x['include']:
+		module['symtab_include'].extend(m['symtab_public'])
+
+
+
 
 	module_append(import_directive(impline, x['ti'], include=x['include']))
 
@@ -2814,6 +2846,7 @@ def process_module(ast, source_info, nodef=False):
 
 	symtab_public = root_symtab.branch()
 	symtab_private = Symtab()
+	symtab_include = Symtab()
 
 	global context
 	prev_context = context
@@ -2833,6 +2866,7 @@ def process_module(ast, source_info, nodef=False):
 
 		'symtab_public': symtab_public,
 		'symtab_private': symtab_private,
+		'symtab_include': symtab_include,
 
 		'imports': {},      # '<local_module_id>' => {'isa': 'module'}
 
