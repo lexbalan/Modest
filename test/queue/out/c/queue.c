@@ -55,7 +55,7 @@ bool queue_put(queue_Queue *q, uint8_t b)
 		return false;
 	}
 
-	printf("put %d to %d\n", (int32_t)b, q->p);
+	//printf("put %d to %d\n", Int32 b, q.p)
 	q->data[q->p] = b;
 	q->p = np;
 	return true;

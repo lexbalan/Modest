@@ -35,7 +35,7 @@ export func put(q: *Queue, b: Byte) -> Bool {
 		return false
 	}
 
-	printf("put %d to %d\n", Int32 b, q.p)
+	//printf("put %d to %d\n", Int32 b, q.p)
 	q.data[q.p] = b
 	q.p = np
 	return true
