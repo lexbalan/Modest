@@ -87,22 +87,26 @@ def module_type_add_public(m, id_str, t):
 	#print("module %s type_add_public %s" % (m['id'], id_str))
 	m['symtab_public'].type_add(id_str, t)
 	t['module'] = m
+	t['att'].append('global_entity')
 
 def module_value_add_public(m, id_str, v):
 	#print("module %s value_add_public %s" % (m['id'], id_str))
 	m['symtab_public'].value_add(id_str, v)
 	v['module'] = m
+	v['att'].append('global_entity')
 
 
 def module_type_add_private(m, id_str, t):
 	#print("module %s type_add_private %s" % (m['id'], id_str))
 	m['symtab_private'].type_add(id_str, t)
 	t['module'] = m
+	t['att'].append('global_entity')
 
 def module_value_add_private(m, id_str, v):
 	#print("module %s value_add_private %s" % (m['id'], id_str))
 	m['symtab_private'].value_add(id_str, v)
 	v['module'] = m
+	v['att'].append('global_entity')
 
 
 
@@ -233,21 +237,20 @@ def ctx_value_get_shallow(id_str):
 	return module['symtab_public'].value_get(id_str, recursive=False)
 
 
-def module_append_export(definition):
-	global module
-	definition['module'] = module
-	module['export_defs'].append(definition)
 
 def module_append(definition, to_export=False):
 	if definition == None:
 		return
+
 	global module
 
-	definition['module'] = module
 	if to_export:
 		module['export_defs'].append(definition)
 	else:
 		module['defs'].append(definition)
+
+	definition['module'] = module
+
 
 
 def context_push():

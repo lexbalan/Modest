@@ -143,6 +143,7 @@ def get_id_str(x):
 	id_str = ""
 	if not 'c' in x['id']:
 		id_str = x['id']['str']
+		#if 'global_entity' in x['att']:
 		if 'prefix' in x:
 			id_str = x['module']['prefix'] + '_' + id_str
 	else:
@@ -249,7 +250,7 @@ def print_type_record(t, tag=""):
 		nl_indent(field['nl'])
 		prev_nl = field['nl']
 
-		print_variable(field['id'], field['type'])
+		print_variable(get_id_str(field), field['type'])
 		out(";")
 
 	indent_down()
@@ -475,7 +476,7 @@ def print_paramlist(params, extra_args=False):
 	i = 0
 	for param in params:
 		if i > 0: out(", ")
-		print_variable(param['id'], param['type'])
+		print_variable(get_id_str(param), param['type'])
 		i = i + 1
 
 	if extra_args:
@@ -1319,7 +1320,7 @@ def print_stmt_var(x):
 
 	nl_indent(x['nl'])
 
-	print_variable(x['var']['id'], x['var']['type'])
+	print_variable(get_id_str(x['var']), x['var']['type'])
 
 	if init_value != None:
 		out(";")
@@ -1382,7 +1383,7 @@ def print_stmt_let(x):
 	if hlir_type.type_is_array(iv['type']):
 		ee = iv['kind'] == 'literal' and not value_is_immediate(iv)
 		if not ee:
-			print_variable(id, v['type'])
+			print_variable(get_id_str(x), v['type'])
 			out(";")
 			nl_indent()
 			do_assign(v, iv)
@@ -1390,7 +1391,7 @@ def print_stmt_let(x):
 
 	# Локальные константы (втч. композитные) печатаем как переменные
 	# ПОТОМУ ЧТО: они должны "заморозить" свои значения по месту
-	print_variable(id, v['type'], as_const=True)
+	print_variable(get_id_str(x), v['type'], as_const=True)
 	out(" = ")
 	print_value(iv)
 	out(";")
@@ -1734,11 +1735,9 @@ def print_variable_array(t, id_str, do_wrapped=True, as_const=False):
 
 # из за того что с C типы записваются через жопу
 # приходится печатать типы ptr, arr & func вместе с именем поля
-def print_variable(_id, typ, as_const=False, init_value=None, prefix=''):
+def print_variable(id_str, typ, as_const=False, init_value=None, prefix=''):
 	assert (typ != None)
 
-	id_str = _id['str']
-	assert (id_str != "")
 	id_str = prefix + id_str
 
 
@@ -1767,7 +1766,7 @@ def print_def_var(x, isdecl=False):
 	if 'gnu_att' in x:
 		out('__attribute__((%s))\n' % x['gnu_att'])
 
-	id = x['id']
+	#id = x['id']
 	var = x['value']
 	if USE_STATIC_VARIABLES:
 		if not 'global' in var['att']:
@@ -1780,7 +1779,7 @@ def print_def_var(x, isdecl=False):
 	if 'volatile' in var['att']:
 		out("volatile ")
 
-	print_variable(id, var['type'])
+	print_variable(get_id_str(x), var['type'])
 
 	init_value = x['init_value']
 	if init_value != None:
@@ -1808,7 +1807,7 @@ def print_def_const(x):
 	if hlir_type.type_is_array(const_value['type']):
 		print_macro_definition(id_str, init_value, val_ctx=[], prefix='_')
 		newline()
-		print_variable(id, const_value['type'], as_const=True)
+		print_variable(id_str, const_value['type'], as_const=True)
 		out(" = _%s;" % id_str)
 		const_value['att'].append('kostil')
 		return
