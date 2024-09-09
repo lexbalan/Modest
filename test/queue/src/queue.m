@@ -16,6 +16,11 @@ export type Queue record {
 }
 
 
+export func init(q: *Queue) {
+	data = []
+	q.p = 0
+	q.g = 0
+}
 
 export func isEmpty(q: *Queue) -> Bool {
 	return q.g == q.p

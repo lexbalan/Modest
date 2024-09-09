@@ -17,6 +17,7 @@ struct queue_Queue {
 	int32_t p;
 	int32_t g;
 };
+void queue_init(queue_Queue *q);
 bool queue_isEmpty(queue_Queue *q);
 bool queue_put(queue_Queue *q, uint8_t b);
 uint8_t queue_get(queue_Queue *q);

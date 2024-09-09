@@ -40,6 +40,9 @@ Int main()
 {
 	main_init();
 
+
+	queue_init((queue_Queue *)&q0);
+
 	queue_put((queue_Queue *)&q0, 10);
 	queue_put((queue_Queue *)&q0, 20);
 	queue_put((queue_Queue *)&q0, 30);

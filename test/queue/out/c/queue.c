@@ -29,6 +29,12 @@ static inline int32_t queue_prev(int32_t x)
 	return bufSize;
 }
 
+void queue_init(queue_Queue *q)
+{
+	q->p = 0;
+	q->g = 0;
+}
+
 bool queue_isEmpty(queue_Queue *q)
 {
 	return q->g == q->p;

@@ -20,6 +20,10 @@ export type Queue record {
 	p: Int32
 	g: Int32
 }
+export func init(q: *Queue) -> Unit {
+	q.p = 0
+	q.g = 0
+}
 export func isEmpty(q: *Queue) -> Bool {
 	return q.g == q.p
 }
