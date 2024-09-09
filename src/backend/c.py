@@ -1565,7 +1565,7 @@ def print_func_signature(id_str, ftype, atts, print_wrappers=True):
 	if print_wrappers:
 		print_func_wrappers(ftype)
 
-	if 'static' in atts: out("static ")
+	if 'c_static' in atts: out("static ")
 	if 'inline' in atts: out("inline ")
 
 	to = ftype['to']
@@ -1591,6 +1591,10 @@ def print_decl_func(x):
 	newline(n=x['nl'])
 	if 'gnu_att' in x:
 		out('__attribute__((%s))\n' % x['gnu_att'])
+	if 'c_static' in x['att']:
+		out("static ")
+	if 'inline' in x['att']:
+		out("inline ")
 	print_func_signature(get_id_str(x['value']), x['value']['type'], x['value']['att'])
 	out(";")
 
@@ -1605,6 +1609,11 @@ def print_def_func(x):
 
 	if 'gnu_att' in x:
 		out('__attribute__((%s))\n' % x['gnu_att'])
+
+	if 'c_static' in x['att']:
+		out("static ")
+	if 'inline' in x['att']:
+		out("inline ")
 
 	ftype = func['type']
 	extra_args = ftype['extra_args']
@@ -1773,7 +1782,7 @@ def print_def_var(x, isdecl=False):
 			if not 'extern' in var['att']:
 				out("static ")
 
-	#if 'static' in var['att']: out("static ")
+	#if 'c_static' in var['att']: out("static ")
 	if 'extern' in var['att']:
 		out("extern ")
 	if 'volatile' in var['att']:
@@ -2048,8 +2057,6 @@ def print_cfile(module, _outname):
 		if isa == 'def_func':
 #			if not x['export']:
 #				out("\nstatic")
-			if 'inline' in x['att']:
-				out("\n\nstatic inline")
 			print_decl_func(x)
 
 
@@ -2072,8 +2079,6 @@ def print_cfile(module, _outname):
 			print_def_var(x)
 		elif isa == 'def_func':
 			out("\n")
-			if 'inline' in x['att']:
-				out("\n\nstatic inline")
 			print_def_func(x)
 
 		elif isa == 'comment': print_comment(x)

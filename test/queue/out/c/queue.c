@@ -8,18 +8,12 @@
 
 
 
-
-static inline
-int32_t queue_next(int32_t x);
-
-static inline
-int32_t queue_prev(int32_t x);
+static inline int32_t queue_next(int32_t x);
+static inline int32_t queue_prev(int32_t x);
 
 
 
-
-static inline
-int32_t queue_next(int32_t x)
+static inline int32_t queue_next(int32_t x)
 {
 	if (x < bufSize - 1) {
 		return x + 1;
@@ -27,9 +21,7 @@ int32_t queue_next(int32_t x)
 	return 0;
 }
 
-
-static inline
-int32_t queue_prev(int32_t x)
+static inline int32_t queue_prev(int32_t x)
 {
 	if (x > 1) {
 		return x - 1;

@@ -2572,6 +2572,9 @@ def do_attribute(x):
 		attribute_add(args[0]['str'])
 	elif kind == 'property':
 		property_add(args[0]['str'], args[1]['str'])
+	elif kind == 'inline':
+		attribute_add('c_static')
+		attribute_add('inline')
 	else:
 		attribute_add(kind)
 
