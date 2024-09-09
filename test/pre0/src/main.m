@@ -14,6 +14,8 @@ type Point2 record {
 
 @nodecorate
 export func main() -> lib.Int {
+	init()
+
 	let a = 10
 	let b = 20
 	let s = lib.mid(a, b)
@@ -27,6 +29,11 @@ export func main() -> lib.Int {
 	lib.printPoint(p)
 
 	return 0
+}
+
+
+func init() {
+	printf("init!\n")
 }
 
 

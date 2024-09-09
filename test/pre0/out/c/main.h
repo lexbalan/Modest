@@ -9,7 +9,7 @@
 #include "console.h"
 #include "lib.h"
 
-typedef struct Point2 Point2;
-Int main();
+typedef struct main_Point2 main_Point2; //
+lib_Int main();
 
 #endif /* MAIN_H */

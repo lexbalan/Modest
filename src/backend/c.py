@@ -277,7 +277,7 @@ def type_get_aka(t):
 	if 'id' in t:
 		if 'c' in t['id']:
 			return t['id']['c']
-		return t['id']['str']
+		return get_id_str(t)
 
 	if 'c_anon_id' in t:
 		return 'struct ' + t['c_anon_id']
@@ -1595,7 +1595,6 @@ def print_decl_func(x):
 
 def print_def_func(x):
 	func = x['value']
-	id = x['id']
 
 	global cfunc
 	cfunc = func
@@ -1645,21 +1644,21 @@ def print_def_func(x):
 
 def print_decl_type(x):
 	newline(n=x['nl'])
-	id = x['id']
-	out("struct %s;" % id['str'])
+	id_str = get_id_str(x['type'])
+	out("struct %s;" % id_str)
 	if not NO_TYPEDEF_STRUCTS:
-		out("\ntypedef struct %s %s;" % (id['str'], id['str']))
+		out("\ntypedef struct %s %s;" % (id_str, id_str))
 
 
 def print_def_type(x):
-	id = x['id']
+	id_str = get_id_str(x['type'])
 	orig_type = x['original_type']
 
 	newline(n=x['nl'])
 
 	if NO_TYPEDEF_STRUCTS:
 		if hlir_type.type_is_record(orig_type):
-			print_type_record(orig_type, tag=id['str'])
+			print_type_record(orig_type, tag=id_str)
 			out(";")
 			return
 
@@ -1667,14 +1666,14 @@ def print_def_type(x):
 	is_defined_array = hlir_type.type_is_closed_array(orig_type)
 
 	if hlir_type.type_is_record(x['original_type']):
-		print_type_record(x['original_type'], tag=id['str'])
+		print_type_record(x['original_type'], tag=id_str)
 		out(";")
 		return
 
 	out("typedef ")
 	print_type(x['original_type'])
 	out(" ")
-	out(id['str'])
+	out(id_str)
 	out(";")
 
 	"""if 'volatile' in x['original_type']['att']:
@@ -1887,10 +1886,10 @@ def cdirectives(module):
 def print_cdecl_type(x):
 	newline(n=x['nl'])
 
-	id = x['id']
-	out("struct %s;" % id['str'])
+	id_str = get_id_str(x['type'])
+	out("struct %s;" % id_str)
 	if not NO_TYPEDEF_STRUCTS:
-		out("\ntypedef struct %s %s;" % (id['str'], id['str']))
+		out("\ntypedef struct %s %s;" % (id_str, id_str))
 
 
 def print_cdecl_func(x):
@@ -1943,8 +1942,9 @@ def print_header(module, outname):
 	out("\n")
 
 	#out("\n/* forward type declaration */")
-	for rec_id in module['records']:
-		out("\ntypedef struct %s %s;" % (rec_id, rec_id))
+	for rec in module['records']:
+		rec_id = get_id_str(rec)
+		out("\ntypedef struct %s %s; //" % (rec_id, rec_id))
 
 
 	for x in module['export_defs']:

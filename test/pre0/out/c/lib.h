@@ -8,16 +8,16 @@
 
 #include "console.h"
 
-typedef struct Point Point;
+typedef struct lib_Point lib_Point; //
 
 
-typedef int32_t Int;
+typedef int32_t lib_Int;
 
-struct Point {
-	Int x;
-	Int y;
+struct lib_Point {
+	lib_Int x;
+	lib_Int y;
 };
-Int lib_mid(Int a, Int b);
-void lib_printPoint(Point p);
+lib_Int lib_mid(lib_Int a, lib_Int b);
+void lib_printPoint(lib_Point p);
 
 #endif /* LIB_H */

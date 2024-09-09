@@ -7,7 +7,12 @@ type Point2 record {
 	x: Int32
 	y: Int32
 }
+func init() -> Unit {
+	printf("init!\n")
+}
 export func main() -> Int {
+	init()
+
 	let a = 10
 	let b = 20
 	let s = lib.mid(a, b)

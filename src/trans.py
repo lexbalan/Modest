@@ -2266,6 +2266,9 @@ def def_type(x):
 	#nt['aka'] = id['str']
 	nt['ti_def'] = id['ti']
 
+	if not is_nodecorate(x):
+		nt['prefix'] = module['prefix']
+
 
 	if not ('not_included' in module['att']):
 		# В случае когда не печатаем typedef явно (!)
@@ -2277,7 +2280,7 @@ def def_type(x):
 
 
 	if hlir_type.type_is_record(ty):
-		module['records'].append(id['str'])
+		module['records'].append(nt)
 
 
 	if already_declared:
@@ -2427,6 +2430,12 @@ def check_stmt(stmt):
 
 
 
+def is_nodecorate(x):
+	for a in x['attributes']:
+		if a['kind'] == 'nodecorate':
+			return True
+	return False
+
 
 def do_func_value(x):
 	global module
@@ -2435,12 +2444,7 @@ def do_func_value(x):
 	func_type = do_type_func(x['type'], func_id=func_id['str'])
 	fn = value_func(func_id, func_type, ti=func_ti)
 
-	nodecorate = False
-	for a in x['attributes']:
-		if a['kind'] == 'nodecorate':
-			nodecorate = True
-
-	if not nodecorate:
+	if not is_nodecorate(x):
 		fn['prefix'] = module['prefix']
 
 	return fn

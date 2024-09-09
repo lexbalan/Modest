@@ -9,22 +9,22 @@
 
 
 
-typedef Int XXX;
-Int lib_div(Int a, Int b);
+typedef lib_Int lib_XXX;
+lib_Int lib_div(lib_Int a, lib_Int b);
 
 
-Int lib_div(Int a, Int b)
+lib_Int lib_div(lib_Int a, lib_Int b)
 {
 	return a / b;
 }
 
-Int lib_mid(Int a, Int b)
+lib_Int lib_mid(lib_Int a, lib_Int b)
 {
-	const Int sum = a + b;
+	const lib_Int sum = a + b;
 	return lib_div(sum, 2);
 }
 
-void lib_printPoint(Point p)
+void lib_printPoint(lib_Point p)
 {
 	printf("p.x = %d\n", p.x);
 	printf("p.y = %d\n", p.y);
