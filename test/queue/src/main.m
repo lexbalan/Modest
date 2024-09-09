@@ -30,7 +30,6 @@ func fetch(n: Int) -> Unit {
 export func main() -> Int {
 	init()
 
-
 	queue.init(&q0)
 
 	queue.put(&q0, 10)
