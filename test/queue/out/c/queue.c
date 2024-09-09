@@ -10,22 +10,10 @@
 
 int32_t queue_next(int32_t x);
 int32_t queue_prev(int32_t x);
-int32_t queue_getFreeIndex(queue_Queue *q);
-int32_t queue_getFirstIndex(queue_Queue *q);
 
 
 
 
-
-int32_t queue_getFreeIndex(queue_Queue *q)
-{
-	return -1;
-}
-
-int32_t queue_getFirstIndex(queue_Queue *q)
-{
-	return 0;
-}
 
 bool queue_isEmpty(queue_Queue *q)
 {

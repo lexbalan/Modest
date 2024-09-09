@@ -13,12 +13,6 @@ func prev(x: Int32) -> Int32 {
 	}
 	return bufSize
 }
-func getFreeIndex(q: *Queue) -> Int32 {
-	return -1
-}
-func getFirstIndex(q: *Queue) -> Int32 {
-	return 0
-}
 export let bufSize = 4
 
 export type Queue record {
