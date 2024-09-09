@@ -2575,6 +2575,8 @@ def do_attribute(x):
 	elif kind == 'inline':
 		attribute_add('c_static')
 		attribute_add('inline')
+	elif kind == 'extern':
+		attribute_add('c_extern')
 	else:
 		attribute_add(kind)
 
