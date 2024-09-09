@@ -10,7 +10,7 @@ $pragma c_include "./sub2.h"
 }*/
 
 // this c_alias - not worked!
-//@property("c_alias", "int")
+//@property("id.c", "int")
 export type Int Int32
 
 export let subName = "SubName"

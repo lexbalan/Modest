@@ -40,7 +40,7 @@ func main() -> sub::Int {
 }
 
 
-@property("c_alias", "arrshow")
+@property("c", "arrshow")
 @property("cm_alias", "arrshow")
 func arrayShow(array: *Arr, size: sub::Int) -> Unit {
 	print("arrayShow:\n")

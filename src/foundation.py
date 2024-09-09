@@ -84,7 +84,6 @@ def init():
 	typeByte['kind'] = 'byte'
 	typeByte['id'] = {'str': 'Byte', 'c': 'uint8_t'}
 	typeByte['ops'] = BYTE_OPS
-	typeByte['c_alias'] = 'uint8_t'
 	typeByte['llvm_alias'] = 'i8'
 
 	#

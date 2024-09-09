@@ -130,13 +130,13 @@ def module_value_get_private(m, id_str):
 
 
 def module_type_add(m, id_str, t, is_public=False):
-	#print('module_type_add (%s, isPublic=%d)' % (id_str, is_public))
+	print('module_type_add (%s, isPublic=%d)' % (id_str, is_public))
 	if is_public:
 		module_type_add_public(m, id_str, t)
 	else:
 		module_type_add_private(m, id_str, t)
 
-	t['module'] = m
+	#t['module'] = m
 
 
 def module_value_add(m, id_str, v, is_public=False):
@@ -146,7 +146,7 @@ def module_value_add(m, id_str, v, is_public=False):
 	else:
 		module_value_add_private(m, id_str, v)
 
-	v['module'] = m
+	#v['module'] = m
 
 
 def module_type_get(m, id_str, only_public=False):
@@ -532,7 +532,7 @@ def do_type_id(t):
 	if len(t['ids']) > 1:
 		ns_id = id_str
 		id_str = t['ids'][1]['str']
-		#print("GET TYPE %s FROM: %s" % (id_str, ns_id))
+		print(">>>>>>>>>>>>>>>>>>>>>> GET TYPE %s FROM: %s" % (id_str, ns_id))
 		global module
 		if ns_id in module['imports']:
 			submodule = module['imports'][ns_id]
@@ -1988,7 +1988,7 @@ def do_stmt_let(x):
 		if hlir_type.type_is_generic(v['type']):
 			# generic immediate в C печатается как #define
 			# и его надо манглить иначе возникает куча проблем
-			const_value['id']['c_alias'] = '__' + const_value['id']['str']
+			const_value['id']['c'] = '__' + const_value['id']['str']
 
 	ctx_value_add(id['str'], const_value)
 
@@ -2270,8 +2270,8 @@ def def_type(x):
 	nt.update(ty)
 	nt['id'] = id # need for  @property("type.id.c", "int")
 	nt['att'] = copy.copy(ty['att'])
-	#nt['aka'] = id['str']
 	nt['ti_def'] = id['ti']
+	nt['module'] = module  ## добавляем заново тк очистили его выше!
 
 	if not is_nodecorate(x):
 		nt['prefix'] = module['prefix']
@@ -2280,8 +2280,8 @@ def def_type(x):
 	if not ('not_included' in module['att']):
 		# В случае когда не печатаем typedef явно (!)
 		# Убираем алиасы которые висели на оригинальном типе
-		if 'c_alias' in nt['id']:
-			nt.pop('c_alias')
+		if 'c' in nt['id']:
+			nt.pop('c')
 		if 'llvm_alias' in nt['id']:
 			nt.pop('llvm_alias')
 

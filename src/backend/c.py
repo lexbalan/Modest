@@ -141,12 +141,12 @@ def get_id_str(x):
 		print(x)
 
 	id_str = ""
-	if not 'c_alias' in x['id']:
+	if not 'c' in x['id']:
 		id_str = x['id']['str']
 		if 'prefix' in x:
-			id_str = x['prefix'] + '_' + id_str
+			id_str = x['module']['prefix'] + '_' + id_str
 	else:
-		id_str = x['id']['c_alias']
+		id_str = x['id']['c']
 	return id_str
 
 
@@ -281,6 +281,7 @@ def type_get_aka(t):
 
 	if 'c_anon_id' in t:
 		return 'struct ' + t['c_anon_id']
+
 	return None
 
 
@@ -1105,8 +1106,8 @@ def print_value_terminal(x, ctx):
 
 
 def print_value_by_id(x, ctx=[], prefix=''):
-	if 'c_alias' in x:
-		out(x['c_alias'])
+	if 'c' in x:
+		out(x['c'])
 	else:
 		print_id(x, prefix)
 
