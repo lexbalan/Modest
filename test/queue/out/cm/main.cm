@@ -1,0 +1,15 @@
+
+include "console"
+include "inttypes"
+import "queue"
+var queue: Queue
+func init() -> Unit {
+	printf("init!\n")
+}
+export func main() -> Int {
+	init()
+
+
+	return 0
+}
+

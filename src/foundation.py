@@ -82,7 +82,7 @@ def init():
 
 	typeByte = hlir_type_integer(width=8, signed=False)
 	typeByte['kind'] = 'byte'
-	typeByte['id'] = {'str': 'Byte'}
+	typeByte['id'] = {'str': 'Byte', 'c': 'uint8_t'}
 	typeByte['ops'] = BYTE_OPS
 	typeByte['c_alias'] = 'uint8_t'
 	typeByte['llvm_alias'] = 'i8'
@@ -136,7 +136,7 @@ def init():
 		'width': 0,
 		'id': {
 			'isa': 'id',
-			'str': 'Byte',
+			'str': 'va_list',
 			'c':'va_list',
 			'llvm':'i8*',
 			'ti': None
