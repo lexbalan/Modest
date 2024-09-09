@@ -1565,9 +1565,6 @@ def print_func_signature(id_str, ftype, atts, print_wrappers=True):
 	if print_wrappers:
 		print_func_wrappers(ftype)
 
-	if 'c_static' in atts: out("static ")
-	if 'inline' in atts: out("inline ")
-
 	to = ftype['to']
 	t = to
 
@@ -1589,23 +1586,27 @@ def print_func_signature(id_str, ftype, atts, print_wrappers=True):
 
 def print_decl_func(x):
 	newline(n=x['nl'])
+
 	if 'gnu_att' in x:
 		out('__attribute__((%s))\n' % x['gnu_att'])
+
 	if 'c_static' in x['att']:
 		out("static ")
 	if 'inline' in x['att']:
 		out("inline ")
+
 	print_func_signature(get_id_str(x['value']), x['value']['type'], x['value']['att'])
 	out(";")
 
 
 def print_def_func(x):
+	newline(n=x['nl'])
+
 	func = x['value']
 
 	global cfunc
 	cfunc = func
 
-	newline(n=x['nl'])
 
 	if 'gnu_att' in x:
 		out('__attribute__((%s))\n' % x['gnu_att'])
@@ -1655,6 +1656,7 @@ def print_def_func(x):
 
 def print_decl_type(x):
 	newline(n=x['nl'])
+
 	id_str = get_id_str(x['type'])
 	out("struct %s;" % id_str)
 	if not NO_TYPEDEF_STRUCTS:
@@ -1662,10 +1664,11 @@ def print_decl_type(x):
 
 
 def print_def_type(x):
+	newline(n=x['nl'])
+
 	id_str = get_id_str(x['type'])
 	orig_type = x['original_type']
 
-	newline(n=x['nl'])
 
 	if NO_TYPEDEF_STRUCTS:
 		if hlir_type.type_is_record(orig_type):
@@ -1782,7 +1785,6 @@ def print_def_var(x, isdecl=False):
 			if not 'c_extern' in var['att']:
 				out("static ")
 
-	#if 'c_static' in var['att']: out("static ")
 	if 'c_extern' in var['att']:
 		out("extern ")
 	if 'volatile' in var['att']:
@@ -1800,13 +1802,14 @@ def print_def_var(x, isdecl=False):
 
 
 def print_def_const(x):
+	newline(n=x['nl'])
+
 	global nl_str
 	const_value = x['value']
 	init_value = x['init_value']
 	id = x['id']
 	id_str = get_id_str(const_value)
 
-	newline(n=x['nl'])
 
 	# глобальные константы-массивы печатаем особенно
 	# сперва печатаем его литерал как одноименный макрос с префиксом '_'
@@ -1913,8 +1916,9 @@ def print_cdecl_func(x):
 
 
 def print_directive(x):
-	k = x['kind']
 	newline(n=x['nl'])
+
+	k = x['kind']
 	#if k == 'import': print_include(x)
 	if k == 'insert': print_insert(x)
 	elif k == 'cdecl_func': print_cdecl_func(x)
@@ -2055,8 +2059,6 @@ def print_cfile(module, _outname):
 
 		isa = x['isa']
 		if isa == 'def_func':
-#			if not x['export']:
-#				out("\nstatic")
 			print_decl_func(x)
 
 
@@ -2094,13 +2096,6 @@ def print_cfile(module, _outname):
 			print_def_var(x)
 		elif isa == 'def_func':
 			out("\n");
-
-			if 'inline' in x['att']:
-				# inline function must be printed in header file
-				continue
-
-#			if not x['export']:
-#				out("\nstatic")
 			print_def_func(x)
 
 		elif isa == 'comment': print_comment(x)
