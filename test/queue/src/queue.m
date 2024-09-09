@@ -15,20 +15,21 @@ export type Queue record {
 }
 
 
+
 export func isEmpty(q: *Queue) -> Bool {
 	return q.g == q.p
 }
 
-export func put(q: *Queue, b: Byte) -> Bool {
-	// пишем в p
-	// !если он не налезет на g в результате
 
-	// получим индекс куда хвост должен прийти
+export func put(q: *Queue, b: Byte) -> Bool {
+	// пишем в p только если он не налезет на g
+	// (в результате сдвига после записи)
+
+	// получим индекс куда p должен прийти
 	let np = next(q.p)
 
-	// И если он будет налазить на голову - выходим
+	// И если он будет налазить на t - выходим
 	if np == q.g {
-		// Если добавить то хвост наедет на голову, так нельзя
 		return false
 	}
 
@@ -55,6 +56,7 @@ func next(x: Int32) -> Int32 {
 	}
 	return 0
 }
+
 
 @inline
 func prev(x: Int32) -> Int32 {

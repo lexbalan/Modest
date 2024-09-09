@@ -8,12 +8,34 @@
 
 
 
+
+static inline
 int32_t queue_next(int32_t x);
+
+static inline
 int32_t queue_prev(int32_t x);
 
 
 
 
+static inline
+int32_t queue_next(int32_t x)
+{
+	if (x < bufSize - 1) {
+		return x + 1;
+	}
+	return 0;
+}
+
+
+static inline
+int32_t queue_prev(int32_t x)
+{
+	if (x > 1) {
+		return x - 1;
+	}
+	return bufSize;
+}
 
 bool queue_isEmpty(queue_Queue *q)
 {
@@ -22,15 +44,14 @@ bool queue_isEmpty(queue_Queue *q)
 
 bool queue_put(queue_Queue *q, uint8_t b)
 {
-	// пишем в p
-	// !если он не налезет на g в результате
+	// пишем в p только если он не налезет на g
+	// (в результате сдвига после записи)
 
-	// получим индекс куда хвост должен прийти
+	// получим индекс куда p должен прийти
 	const int32_t np = queue_next(q->p);
 
-	// И если он будет налазить на голову - выходим
+	// И если он будет налазить на t - выходим
 	if (np == q->g) {
-		// Если добавить то хвост наедет на голову, так нельзя
 		return false;
 	}
 

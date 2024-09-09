@@ -1965,12 +1965,7 @@ def print_header(module, outname):
 			print_def_const(x)
 
 
-	for x in module['defs']:
-		isa = x['isa']
-		if isa == 'def_func':
-			if 'inline' in x['att']:
-				out("\n\nstatic inline")
-				print_def_func(x)
+
 		#elif isa == 'def_type':
 		#	if x['export']:
 		#		print_def_type(x)
@@ -2053,6 +2048,8 @@ def print_cfile(module, _outname):
 		if isa == 'def_func':
 #			if not x['export']:
 #				out("\nstatic")
+			if 'inline' in x['att']:
+				out("\n\nstatic inline")
 			print_decl_func(x)
 
 
@@ -2074,14 +2071,9 @@ def print_cfile(module, _outname):
 		if isa == 'def_var':
 			print_def_var(x)
 		elif isa == 'def_func':
-			out("\n");
-
+			out("\n")
 			if 'inline' in x['att']:
-				# inline function must be printed in header file
-				continue
-
-#			if not x['export']:
-#				out("\nstatic")
+				out("\n\nstatic inline")
 			print_def_func(x)
 
 		elif isa == 'comment': print_comment(x)
