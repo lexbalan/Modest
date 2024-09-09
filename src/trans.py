@@ -85,21 +85,24 @@ def module_strings_add(v):
 
 def module_type_add_public(m, id_str, t):
 	#print("module %s type_add_public %s" % (m['id'], id_str))
-	return m['symtab_public'].type_add(id_str, t)
+	m['symtab_public'].type_add(id_str, t)
+	t['module'] = m
 
 def module_value_add_public(m, id_str, v):
 	#print("module %s value_add_public %s" % (m['id'], id_str))
-	return m['symtab_public'].value_add(id_str, v)
+	m['symtab_public'].value_add(id_str, v)
+	v['module'] = m
 
 
 def module_type_add_private(m, id_str, t):
 	#print("module %s type_add_private %s" % (m['id'], id_str))
-	return m['symtab_private'].type_add(id_str, t)
+	m['symtab_private'].type_add(id_str, t)
+	t['module'] = m
 
 def module_value_add_private(m, id_str, v):
 	#print("module %s value_add_private %s" % (m['id'], id_str))
-	return m['symtab_private'].value_add(id_str, v)
-
+	m['symtab_private'].value_add(id_str, v)
+	v['module'] = m
 
 
 
@@ -127,10 +130,13 @@ def module_value_get_private(m, id_str):
 
 
 def module_type_add(m, id_str, t, is_public=False):
+	#print('module_type_add (%s, isPublic=%d)' % (id_str, is_public))
 	if is_public:
 		module_type_add_public(m, id_str, t)
 	else:
 		module_type_add_private(m, id_str, t)
+
+	t['module'] = m
 
 
 def module_value_add(m, id_str, v, is_public=False):
@@ -140,6 +146,7 @@ def module_value_add(m, id_str, v, is_public=False):
 	else:
 		module_value_add_private(m, id_str, v)
 
+	v['module'] = m
 
 
 def module_type_get(m, id_str, only_public=False):

@@ -2,6 +2,7 @@
 include "console"
 include "inttypes"
 
+
 // (!) реально полезный размер такой очереди bufSize - 1
 // это следствие того что q.g != q.p (!)
 
