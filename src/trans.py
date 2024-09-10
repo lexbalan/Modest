@@ -2447,14 +2447,14 @@ def is_nodecorate(x):
 	return False
 
 
-def do_func_value(x):
+def do_func_value(x, export):
 	global module
 	func_id = x['id']
 	func_ti = func_id['ti']
 	func_type = do_type_func(x['type'], func_id=func_id['str'])
 	fn = value_func(func_id, func_type, ti=func_ti)
 
-	if not is_nodecorate(x):
+	if export and not is_nodecorate(x):
 		fn['prefix'] = module['prefix']
 
 	return fn
@@ -2462,7 +2462,7 @@ def do_func_value(x):
 
 def decl_func(x):
 	global module
-	fn = do_func_value(x)
+	fn = do_func_value(x, x['export'])
 	log('decl_func: %s' % fn['id']['str'])
 	y = hlir_decl_func(fn['id'], fn, fn['ti_def'])
 	y['export'] = x['export']
@@ -2950,7 +2950,7 @@ def pre_def(ast, fdecl=False):
 		kind = x['kind']
 
 		if kind == 'func':
-			fn = do_func_value(x)
+			fn = do_func_value(x, x['export'])
 			module_value_add(module, fn['id']['str'], fn, is_public=x['export'])
 
 

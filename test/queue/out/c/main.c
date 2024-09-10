@@ -8,14 +8,14 @@
 
 
 
-void main_fetch(Int n);
-void main_init();
+void fetch(Int n);
+void init();
 
 
 
 static queue_Queue q0;
 
-void main_fetch(Int n)
+void fetch(Int n)
 {
 	int32_t i;
 	i = 0;
@@ -31,14 +31,14 @@ void main_fetch(Int n)
 	}
 }
 
-void main_init()
+void init()
 {
 	printf("init!\n");
 }
 
 Int main()
 {
-	main_init();
+	init();
 
 	queue_init((queue_Queue *)&q0);
 
@@ -48,7 +48,7 @@ Int main()
 	queue_put((queue_Queue *)&q0, 40);
 	queue_put((queue_Queue *)&q0, 50);
 
-	main_fetch(7);
+	fetch(7);
 
 	queue_put((queue_Queue *)&q0, 40);
 	queue_put((queue_Queue *)&q0, 50);
@@ -56,7 +56,7 @@ Int main()
 	queue_put((queue_Queue *)&q0, 70);
 	queue_put((queue_Queue *)&q0, 80);
 
-	main_fetch(7);
+	fetch(7);
 
 	queue_put((queue_Queue *)&q0, 11);
 	queue_put((queue_Queue *)&q0, 12);
@@ -64,7 +64,7 @@ Int main()
 	queue_put((queue_Queue *)&q0, 14);
 	queue_put((queue_Queue *)&q0, 15);
 
-	main_fetch(7);
+	fetch(7);
 
 	return 0;
 }
