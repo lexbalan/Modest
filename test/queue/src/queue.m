@@ -2,7 +2,6 @@
 include "console"
 include "inttypes"
 
-
 // (!) реально полезный размер такой очереди bufSize - 1
 // это следствие того что q.g != q.p (!)
 
@@ -13,17 +12,19 @@ export type Queue record {
 	data: [bufSize]Byte
 	p: Int32  // put index
 	g: Int32  // get index
+
 }
 
 
 export func init(q: *Queue) {
-	data = []
+	q.data = []
 	q.p = 0
 	q.g = 0
 }
 
 export func isEmpty(q: *Queue) -> Bool {
-	return q.g == q.p
+	let x = q.g == q.p
+	return x
 }
 
 
@@ -42,11 +43,12 @@ export func put(q: *Queue, b: Byte) -> Bool {
 	//printf("put %d to %d\n", Int32 b, q.p)
 	q.data[q.p] = b
 	q.p = np
+
 	return true
 }
 
 
-// you need check isEmpty(&queue) before get call
+// you need check isEmpty(&queue) before call 'get'
 export func get(q: *Queue) -> Byte {
 	let ng = next(q.g)
 	let x = q.data[q.g]

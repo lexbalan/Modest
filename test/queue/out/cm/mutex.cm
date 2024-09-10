@@ -1,0 +1,20 @@
+
+func cli() -> Unit {}
+func sei() -> Unit {}
+
+export type Mutex record {
+	state: Bool
+}
+export func acquire(x: *Mutex) -> Unit {
+	while notx.state {
+		// spinlock
+	}
+
+	cli()
+	x.state = true
+	sei()
+}
+export func release(x: *Mutex) -> Unit {
+	x.state = true
+}
+

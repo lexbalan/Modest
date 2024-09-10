@@ -1,6 +1,7 @@
 
 include "console"
 include "inttypes"
+import "mutex"
 func next(x: Int32) -> Int32 {
 	if x < bufSize - 1 {
 		return x + 1
@@ -19,8 +20,10 @@ export type Queue record {
 	data: [bufSize]Byte
 	p: Int32
 	g: Int32
+	mutex: Mutex
 }
 export func init(q: *Queue) -> Unit {
+	q.data = []  // right size = 4
 	q.p = 0
 	q.g = 0
 }
@@ -31,23 +34,34 @@ export func put(q: *Queue, b: Byte) -> Bool {
 	// пишем в p только если он не налезет на g
 	// (в результате сдвига после записи)
 
+	mutex.acquire(&q.mutex)
+
 	// получим индекс куда p должен прийти
 	let np = next(q.p)
 
 	// И если он будет налазить на t - выходим
 	if np == q.g {
+		mutex.release(&q.mutex)
 		return false
 	}
 
 	//printf("put %d to %d\n", Int32 b, q.p)
 	q.data[q.p] = b
 	q.p = np
+
+	mutex.release(&q.mutex)
+
 	return true
 }
 export func get(q: *Queue) -> Byte {
+	mutex.acquire(&q.mutex)
+
 	let ng = next(q.g)
 	let x = q.data[q.g]
 	q.g = ng
+
+	mutex.release(&q.mutex)
+
 	return x
 }
 

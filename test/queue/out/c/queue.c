@@ -31,13 +31,15 @@ static inline int32_t prev(int32_t x)
 
 void queue_init(queue_Queue *q)
 {
+	memset(&q->data, 0, sizeof(uint8_t[bufSize]));
 	q->p = 0;
 	q->g = 0;
 }
 
 bool queue_isEmpty(queue_Queue *q)
 {
-	return q->g == q->p;
+	const bool x = q->g == q->p;
+	return x;
 }
 
 bool queue_put(queue_Queue *q, uint8_t b)
@@ -56,6 +58,7 @@ bool queue_put(queue_Queue *q, uint8_t b)
 	//printf("put %d to %d\n", Int32 b, q.p)
 	q->data[q->p] = b;
 	q->p = np;
+
 	return true;
 }
 

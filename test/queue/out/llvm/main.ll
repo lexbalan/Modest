@@ -101,9 +101,15 @@ break_2:
 
 
 ; -----------------------------------------------------------------------------
-; declarations from: lib
+; declarations from: queue
 ; -----------------------------------------------------------------------------
 
-%Int = type i32;
 
-define %Int @mid(%Int %a, %Int %b) {
+%Queue = type {
+	[4 x %Byte], 
+	i32, 
+	i32
+};
+
+
+define void @init(%Queue* %q) {

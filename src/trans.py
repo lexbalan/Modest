@@ -535,7 +535,7 @@ def do_type_id(t):
 	if len(t['ids']) > 1:
 		ns_id = id_str
 		id_str = t['ids'][1]['str']
-		print(">>>>>>>>>>>>>>>>>>>>>> GET TYPE %s FROM: %s" % (id_str, ns_id))
+		#print(">>>>>>>>>>>>>>>>>>>>>> GET TYPE %s FROM: %s" % (id_str, ns_id))
 		global module
 		if ns_id in module['imports']:
 			submodule = module['imports'][ns_id]
