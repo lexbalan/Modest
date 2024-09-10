@@ -4,7 +4,7 @@ include "console"
 //include "inttypes"
 include "libc/ctypes64"
 include "libc/ctypes"
-include "libc/ctype"
+include "libc/math"
 
 import "queue"
 
