@@ -2,47 +2,47 @@
 include "console"
 include "inttypes"
 
-// (!) реально полезный размер такой очереди bufSize - 1
+// (!) реально полезный размер такой очереди bufVolume - 1
 // это следствие того что q.g != q.p (!)
 
-// BUG: Queue зависит от bufSize но он
-export let bufSize = 4
+// BUG: Queue зависит от bufVolume но он
+export let bufVolume = 4
 
 export type Queue record {
-	data: [bufSize]Byte
+	data: [bufVolume]Byte
 	p: Int32  // put index
 	g: Int32  // get index
-
+	size: Nat32
 }
 
 
 export func init(q: *Queue) {
 	q.data = []
+	q.size = 0
 	q.p = 0
 	q.g = 0
 }
 
+
 export func isEmpty(q: *Queue) -> Bool {
-	let x = q.g == q.p
-	return x
+	return q.size == 0
+}
+
+
+export func isFull(q: *Queue) -> Bool {
+	return q.size == bufVolume
 }
 
 
 export func put(q: *Queue, b: Byte) -> Bool {
-	// пишем в p только если он не налезет на g
-	// (в результате сдвига после записи)
-
-	// получим индекс куда p должен прийти
-	let np = next(q.p)
-
-	// И если он будет налазить на t - выходим
-	if np == q.g {
+	if isFull(q) {
 		return false
 	}
 
-	//printf("put %d to %d\n", Int32 b, q.p)
+	printf("put %d to %d\n", Int32 b, q.p)
 	q.data[q.p] = b
-	q.p = np
+	q.p = next(q.p)
+	++q.size
 
 	return true
 }
@@ -50,29 +50,23 @@ export func put(q: *Queue, b: Byte) -> Bool {
 
 // you need check isEmpty(&queue) before call 'get'
 export func get(q: *Queue) -> Byte {
-	let ng = next(q.g)
+	if isEmpty(q) {
+		return 0
+	}
+
 	let x = q.data[q.g]
-	q.g = ng
+	q.g = next(q.g)
+	--q.size
 	return x
 }
 
 
 @inline
 func next(x: Int32) -> Int32 {
-	if x < bufSize - 1 {
+	if x < bufVolume - 1 {
 		return x + 1
 	}
 	return 0
 }
-
-
-@inline
-func prev(x: Int32) -> Int32 {
-	if x > 1 {
-		return x - 1
-	}
-	return bufSize
-}
-
 
 

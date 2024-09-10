@@ -9,64 +9,58 @@
 
 
 static inline int32_t next(int32_t x);
-static inline int32_t prev(int32_t x);
 
 
 
 static inline int32_t next(int32_t x)
 {
-	if (x < bufSize - 1) {
+	if (x < bufVolume - 1) {
 		return x + 1;
 	}
 	return 0;
 }
 
-static inline int32_t prev(int32_t x)
-{
-	if (x > 1) {
-		return x - 1;
-	}
-	return bufSize;
-}
-
 void queue_init(queue_Queue *q)
 {
-	memset(&q->data, 0, sizeof(uint8_t[bufSize]));
+	memset(&q->data, 0, sizeof(uint8_t[bufVolume]));
+	q->size = 0;
 	q->p = 0;
 	q->g = 0;
 }
 
 bool queue_isEmpty(queue_Queue *q)
 {
-	const bool x = q->g == q->p;
-	return x;
+	return q->size == 0;
+}
+
+bool queue_isFull(queue_Queue *q)
+{
+	return q->size == bufVolume;
 }
 
 bool queue_put(queue_Queue *q, uint8_t b)
 {
-	// пишем в p только если он не налезет на g
-	// (в результате сдвига после записи)
-
-	// получим индекс куда p должен прийти
-	const int32_t np = next(q->p);
-
-	// И если он будет налазить на t - выходим
-	if (np == q->g) {
+	if (queue_isFull((queue_Queue *)q)) {
 		return false;
 	}
 
-	//printf("put %d to %d\n", Int32 b, q.p)
+	printf("put %d to %d\n", (int32_t)b, q->p);
 	q->data[q->p] = b;
-	q->p = np;
+	q->p = next(q->p);
+	q->size = q->size + 1;
 
 	return true;
 }
 
 uint8_t queue_get(queue_Queue *q)
 {
-	const int32_t ng = next(q->g);
+	if (queue_isEmpty((queue_Queue *)q)) {
+		return 0;
+	}
+
 	const uint8_t x = q->data[q->g];
-	q->g = ng;
+	q->g = next(q->g);
+	q->size = q->size - 1;
 	return x;
 }
 

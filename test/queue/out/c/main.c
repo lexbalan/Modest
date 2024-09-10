@@ -8,6 +8,7 @@
 
 
 
+void padd(Int n);
 void fetch(Int n);
 void init();
 
@@ -15,18 +16,34 @@ void init();
 
 static queue_Queue q0;
 
+void padd(Int n)
+{
+	int32_t i;
+	i = 0;
+	while (i < n) {
+		if (queue_isFull((queue_Queue *)&q0)) {
+			printf("queue is full\n");
+			break;
+		}
+
+		printf("queue.put(%d)\n", i);
+		queue_put((queue_Queue *)&q0, (uint8_t)i);
+		i = i + 1;
+	}
+}
+
 void fetch(Int n)
 {
 	int32_t i;
 	i = 0;
-	while (i < 7) {
+	while (i < n) {
 		if (queue_isEmpty((queue_Queue *)&q0)) {
 			printf("queue is empty\n");
 			break;
 		}
 
 		const uint8_t x = queue_get((queue_Queue *)&q0);
-		printf("x = %d\n", (Int)x);
+		printf("queue.get = %d\n", (Int)x);
 		i = i + 1;
 	}
 }
@@ -42,27 +59,15 @@ Int main()
 
 	queue_init((queue_Queue *)&q0);
 
-	queue_put((queue_Queue *)&q0, 10);
-	queue_put((queue_Queue *)&q0, 20);
-	queue_put((queue_Queue *)&q0, 30);
-	queue_put((queue_Queue *)&q0, 40);
-	queue_put((queue_Queue *)&q0, 50);
+	padd(3);
 
 	fetch(7);
 
-	queue_put((queue_Queue *)&q0, 40);
-	queue_put((queue_Queue *)&q0, 50);
-	queue_put((queue_Queue *)&q0, 60);
-	queue_put((queue_Queue *)&q0, 70);
-	queue_put((queue_Queue *)&q0, 80);
+	padd(12);
 
 	fetch(7);
 
-	queue_put((queue_Queue *)&q0, 11);
-	queue_put((queue_Queue *)&q0, 12);
-	queue_put((queue_Queue *)&q0, 13);
-	queue_put((queue_Queue *)&q0, 14);
-	queue_put((queue_Queue *)&q0, 15);
+	padd(22);
 
 	fetch(7);
 

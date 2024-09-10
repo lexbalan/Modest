@@ -9,17 +9,32 @@ import "queue"
 var q0: queue.Queue
 
 
+func padd(n: Int) {
+	var i = 0
+	while i < n {
+		if queue.isFull(&q0) {
+			printf("queue is full\n")
+			break
+		}
+
+		printf("queue.put(%d)\n", Int i)
+		queue.put(&q0, unsafe Byte i)
+		++i
+	}
+}
+
+
 // выгребаем все и печатаем в консоль
 func fetch(n: Int) -> Unit {
 	var i = 0
-	while i < 7 {
+	while i < n {
 		if queue.isEmpty(&q0) {
 			printf("queue is empty\n")
 			break
 		}
 
 		let x = queue.get(&q0)
-		printf("x = %d\n", Int x)
+		printf("queue.get = %d\n", Int x)
 		++i
 	}
 }
@@ -32,27 +47,15 @@ export func main() -> Int {
 
 	queue.init(&q0)
 
-	queue.put(&q0, 10)
-	queue.put(&q0, 20)
-	queue.put(&q0, 30)
-	queue.put(&q0, 40)
-	queue.put(&q0, 50)
+	padd(3)
 
 	fetch(7)
 
-	queue.put(&q0, 40)
-	queue.put(&q0, 50)
-	queue.put(&q0, 60)
-	queue.put(&q0, 70)
-	queue.put(&q0, 80)
+	padd(12)
 
 	fetch(7)
 
-	queue.put(&q0, 11)
-	queue.put(&q0, 12)
-	queue.put(&q0, 13)
-	queue.put(&q0, 14)
-	queue.put(&q0, 15)
+	padd(22)
 
 	fetch(7)
 

@@ -1,20 +1,31 @@
 
-func cli() -> Unit {}
-func sei() -> Unit {}
+let stateOpen = false
+let stateClose = true
+func __enable_irq() -> Unit {}
+func __disable_irq() -> Unit {}
 
 export type Mutex record {
 	state: Bool
 }
-export func acquire(x: *Mutex) -> Unit {
-	while notx.state {
-		// spinlock
+export func init(x: *Mutex) -> Unit {
+	release(x)
+}
+export func acquire(x: *Mutex) -> Bool {
+	// отпустили, вырубаем прерывания
+	__disable_irq()
+
+	if x.state == stateClose {
+		__enable_irq()
+		return false
 	}
 
-	cli()
-	x.state = true
-	sei()
+	x.state = stateClose
+
+	__enable_irq()
+
+	return true
 }
 export func release(x: *Mutex) -> Unit {
-	x.state = true
+	x.state = stateOpen
 }
 
