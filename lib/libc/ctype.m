@@ -1,9 +1,10 @@
 // ctype.hm
 
-import "ctypes"
-
 $pragma do_not_include
 $pragma c_include "ctype.h"
+
+include "ctypes64"
+
 
 func isascii(x: Int) -> Bool
 func iscntrl(x: Int) -> Bool

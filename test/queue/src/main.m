@@ -4,11 +4,13 @@ include "console"
 //include "inttypes"
 include "libc/ctypes64"
 include "libc/ctypes"
+include "libc/ctype"
 
 import "queue"
 
 
 var q0: queue.Queue
+
 
 var ii: Int32
 func padd(n: Int) {
@@ -19,7 +21,7 @@ func padd(n: Int) {
 			break
 		}
 
-		printf("queue.put(%d)\n", Int ii)
+		printf("queue.put(%d)\n", ii)
 		queue.put(&q0, unsafe Byte ii)
 		++i
 		++ii
