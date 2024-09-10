@@ -7,7 +7,8 @@
 #include <string.h>
 
 #include "console.h"
-#include "inttypes.h"
+
+
 
 typedef struct queue_Queue queue_Queue; //
 #define bufVolume  4

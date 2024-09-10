@@ -1,5 +1,5 @@
 
-$pragma not_included
+$pragma do_not_include
 
 $if (__systemIntWidth == 32)
 type Int Int32

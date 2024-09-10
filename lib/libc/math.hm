@@ -1,6 +1,6 @@
 // libc/math.hm
 
-$pragma not_included
+$pragma do_not_include
 $pragma c_include "math.h"
 
 import "./ctypes"

@@ -7,9 +7,10 @@
 #include <string.h>
 
 #include "console.h"
-#include "inttypes.h"
+
+
 #include "queue.h"
 
-Int main();
+int main();
 
 #endif /* MAIN_H */

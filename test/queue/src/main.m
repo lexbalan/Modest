@@ -1,7 +1,9 @@
 // test/pre0/src/main.cm
 
 include "console"
-include "inttypes"
+//include "inttypes"
+include "libc/ctypes64"
+include "libc/ctypes"
 
 import "queue"
 

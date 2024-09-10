@@ -12,6 +12,7 @@ static inline int32_t next(int32_t x);
 
 
 
+
 static inline int32_t next(int32_t x)
 {
 	if (x < bufVolume - 1) {

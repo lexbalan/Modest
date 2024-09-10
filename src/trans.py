@@ -134,7 +134,7 @@ def module_value_get_private(m, id_str):
 
 
 def module_type_add(m, id_str, t, is_public=False):
-	print('module_type_add (%s, isPublic=%d)' % (id_str, is_public))
+	#print('module_type_add (%s, isPublic=%d)' % (id_str, is_public))
 	if is_public:
 		module_type_add_public(m, id_str, t)
 	else:
@@ -2280,7 +2280,7 @@ def def_type(x):
 		nt['prefix'] = module['prefix']
 
 
-	if not ('not_included' in module['att']):
+	if not ('do_not_include' in module['att']):
 		# В случае когда не печатаем typedef явно (!)
 		# Убираем алиасы которые висели на оригинальном типе
 		if 'c' in nt['id']:
@@ -2659,7 +2659,9 @@ def do_import(x):
 	else:
 		module['symtab_include'].extend(m['symtab_public'])
 
-	return import_directive(impline, x['ti'], include=x['include'])
+	y = import_directive(impline, x['ti'], include=x['include'])
+	y['import_module'] = m
+	return y
 
 
 
@@ -2671,8 +2673,8 @@ def do_directive(x):
 	if x['kind'] == 'pragma':
 		args = x['args']
 		s0 = args[0]
-		if s0 == 'not_included':
-			module['att'].append('not_included')
+		if s0 == 'do_not_include':
+			module['att'].append('do_not_include')
 		elif s0 == 'c_include':
 			return c_include(args[1])
 		elif s0 == 'c_no_print':
@@ -2770,6 +2772,7 @@ def import_directive(impline, ti, include=False):
 		'kind': 'import',
 		'include': include,
 		'str': impline,
+		'import_module': None,
 		'att': [],
 		'nl': 1,
 		'ti': ti,

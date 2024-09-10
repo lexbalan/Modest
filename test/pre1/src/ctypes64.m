@@ -1,6 +1,6 @@
 // libc/ctypes64.hm
 
-$pragma not_included
+$pragma do_not_include
 $pragma c_no_print
 
 @property("type.id.c", "char *")

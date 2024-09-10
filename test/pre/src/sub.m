@@ -2,7 +2,7 @@
 
 import "sub2"
 $pragma c_include "./sub2.h"
-//$pragma not_included
+//$pragma do_not_include
 
 /*export {
 	subName

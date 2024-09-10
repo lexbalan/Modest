@@ -1,4 +1,4 @@
-$pragma not_included
+$pragma do_not_include
 
 import "ctypes"
 

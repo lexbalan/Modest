@@ -1,69 +1,69 @@
-// libc/ctypes64.hm
+// libc/ctypes32.hm
 
-$pragma not_included
+$pragma do_not_include
 
 @property("type.id.c", "char *")
-type Str Str8
+export type Str Str8
 
 @property("type.id.c", "char")
-type Char Char8
+export type Char Char8
 
 @property("type.id.c", "const char")
-type ConstChar Char
+export type ConstChar Char
 
 @property("type.id.c", "signed char")
-type SignedChar Int8
+export type SignedChar Int8
 
 @property("type.id.c", "unsigned char")
-type UnsignedChar Nat8
+export type UnsignedChar Nat8
 
 
 @property("type.id.c", "short")
-type Short Int16
+export type Short Int16
 
 @property("type.id.c", "unsigned short")
-type UnsignedShort Nat16
+export type UnsignedShort Nat16
 
 
 @property("type.id.c", "int")
-type Int Int32
+export type Int Int32
 
 @property("type.id.c", "unsigned int")
-type UnsignedInt Nat32
+export type UnsignedInt Nat32
 
 @property("type.id.c", "long int")
-type LongInt Int64
+export type LongInt Int32
 
 @property("type.id.c", "unsigned long int")
-type UnsignedLongInt Nat64
+export type UnsignedLongInt Nat32
 
 
 @property("type.id.c", "long")
-type Long Int64
+export type Long Int32
 
 @property("type.id.c", "unsigned long")
-type UnsignedLong Nat64
+export type UnsignedLong Nat32
 
 @property("type.id.c", "long long")
-type LongLong Int64
+export type LongLong Int64
 
 @property("type.id.c", "unsigned long long")
-type UnsignedLongLong Nat64
+export type UnsignedLongLong Nat64
 
 @property("type.id.c", "long long int")
-type LongLongInt Int64
+export type LongLongInt Int64
 
 @property("type.id.c", "unsigned long long int")
-type UnsignedLongLongInt Nat64
+export type UnsignedLongLongInt Nat64
 
 
 @property("type.id.c", "float")
-type Float Float64
+export type Float Float64
 
 @property("type.id.c", "double")
-type Double Float64
+export type Double Float64
 
 @property("type.id.c", "long double")
-type LongDouble Float64
+export type LongDouble Float64
 
 

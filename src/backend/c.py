@@ -1829,14 +1829,7 @@ def print_def_const(x):
 
 
 def print_include(x):
-	# если в модуле включена опция not_included
-	if 'module' in x:
-		if x['module'] != None:
-			if 'not_included' in x['module']['att']:
-				return
-
-	ss = x['c_name']
-	inc(ss, local=x['local'])
+	inc(x['c_name'], local=x['local'])
 
 
 def inc(string, local=True):
@@ -1949,7 +1942,8 @@ def print_header(module, outname):
 				print_include(obj)
 			elif obj['kind'] == 'import':
 				newline()
-				inc(obj['str'] + '.h', local=True)
+				if not 'do_not_include' in obj['import_module']['att']:
+					inc(obj['str'] + '.h', local=True)
 
 
 	out("\n")

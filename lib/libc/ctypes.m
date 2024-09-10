@@ -1,45 +1,48 @@
 // libc/ctypes.hm
 
-$pragma not_included
+$pragma do_not_include
 
-import "./system"
+//import "./system"
 
-$if (systemWidth == 32)
+/*$if (systemWidth == 32)
 import "./ctypes32"
 $elseif (systemWidth == 64)
 import "./ctypes64"
 $else
 @error("C types not implemented")
-$endif
+$endif*/
 
+include "./ctypes64"
 
 @property("type.id.c", "socklen_t")
-type SocklenT Nat32
+export type SocklenT Nat32
 
 @property("type.id.c", "size_t")
-type SizeT UnsignedLongInt
+export type SizeT UnsignedLongInt
 
 @property("type.id.c", "ssize_t")
-type SSizeT LongInt
+export type SSizeT LongInt
 
 @property("type.id.c", "intptr_t")
-type IntptrT Nat64
+export type IntptrT Nat64
 
 @property("type.id.c", "ptrdiff_t")
-type PtrdiffT Ptr
+export type PtrdiffT Ptr
 
 @property("type.id.c", "off_t")
-type OffT Int64
+export type OffT Int64
 
 
 @property("type.id.c", "useconds_t")
-type USecondsT Nat32
+export type USecondsT Nat32
 
 @property("type.id.c", "pid_t")
-type PidT Int32
+export type PidT Int32
+
 @property("type.id.c", "uid_t")
-type UidT Nat32
+export type UidT Nat32
+
 @property("type.id.c", "gid_t")
-type GidT Nat32
+export type GidT Nat32
 
 

@@ -8,16 +8,17 @@
 
 
 
-void padd(Int n);
-void fetch(Int n);
+void padd(int n);
+void fetch(int n);
 void init();
+
 
 
 
 static queue_Queue q0;
 static int32_t ii;
 
-void padd(Int n)
+void padd(int n)
 {
 	int32_t i;
 	i = 0;
@@ -34,7 +35,7 @@ void padd(Int n)
 	}
 }
 
-void fetch(Int n)
+void fetch(int n)
 {
 	int32_t i;
 	i = 0;
@@ -45,7 +46,7 @@ void fetch(Int n)
 		}
 
 		const uint8_t x = queue_get((queue_Queue *)&q0);
-		printf("queue.get = %d\n", (Int)x);
+		printf("queue.get = %d\n", (int)x);
 		i = i + 1;
 	}
 }
@@ -55,7 +56,7 @@ void init()
 	printf("init!\n");
 }
 
-Int main()
+int main()
 {
 	init();
 

@@ -2,7 +2,7 @@
 
 import "ctypes"
 
-$pragma not_included
+$pragma do_not_include
 $pragma c_include "ctype.h"
 
 func isascii(x: Int) -> Bool
