@@ -1,10 +1,9 @@
 // test/pre0/src/main.cm
 
-include "console"
-//include "inttypes"
 include "libc/ctypes64"
 include "libc/ctypes"
 include "libc/math"
+include "libc/stdio"
 
 import "queue"
 
@@ -44,27 +43,21 @@ func fetch(n: Int) -> Unit {
 	}
 }
 
-// test
 
 @nodecorate
 export func main() -> Int {
 
-	printf("f = %f\n", m_PI)
+	printf("f = %lf\n", Double m_PI)
 
 	init()
 
 	queue.init(&q0)
 
 	padd(3)
-
 	fetch(7)
-
 	padd(12)
-
 	fetch(7)
-
 	padd(22)
-
 	fetch(7)
 
 	return 0

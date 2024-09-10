@@ -1,8 +1,8 @@
 
-include "console"
-//include "inttypes"
 include "libc/ctypes64"
 include "libc/ctypes"
+include "libc/stdio"
+
 
 // (!) реально полезный размер такой очереди bufVolume - 1
 // это следствие того что q.g != q.p (!)

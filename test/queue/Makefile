@@ -15,7 +15,6 @@ CM:
 	mcc -o $(CMPREFIX)/main -mbackend=cm -funsafe $(INDIR)/main.m
 	mcc -o $(CMPREFIX)/mutex -mbackend=cm $(INDIR)/mutex.m
 	mcc -o $(CMPREFIX)/queue -mbackend=cm $(INDIR)/queue.m
-	mcc -o $(CMPREFIX)/inttypes -mbackend=cm $(INDIR)/inttypes.m
 
 
 LLVM:
@@ -30,7 +29,6 @@ C:
 	mcc -o $(CPREFIX)/mutex -mbackend=c $(INDIR)/mutex.m
 	mcc -o $(CPREFIX)/queue -mbackend=c $(INDIR)/queue.m
 	mcc -o $(CPREFIX)/console -mbackend=c $(INDIR)/console.m
-	mcc -o $(CPREFIX)/inttypes -mbackend=c $(INDIR)/inttypes.m
 	CC $(CPREFIX)/main.c $(CPREFIX)/mutex.c $(CPREFIX)/queue.c 
 
 

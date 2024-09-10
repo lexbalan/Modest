@@ -2224,9 +2224,11 @@ def decl_type(x):
 	id = x['id']
 	log("decl_type: %s" % id['str'])
 
-	nt = do_type(x['type'])
+	#nt = do_type(x['type'])
+	nt = hlir_type.hlir_type_undefined(x['ti'])
 	nt['ti_def'] = x['ti']
 	global module
+
 	module_type_add_public(module, id['str'], nt)
 	y = hlir_decl_type(id, nt, x['ti'])
 	y['export'] = x['export']

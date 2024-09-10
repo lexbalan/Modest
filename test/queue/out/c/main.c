@@ -60,22 +60,17 @@ void init()
 int main()
 {
 
-	printf("f = %f\n", M_PI);
+	printf("f = %lf\n", (double)M_PI);
 
 	init();
 
 	queue_init((queue_Queue *)&q0);
 
 	padd(3);
-
 	fetch(7);
-
 	padd(12);
-
 	fetch(7);
-
 	padd(22);
-
 	fetch(7);
 
 	return 0;

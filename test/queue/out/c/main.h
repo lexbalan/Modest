@@ -6,9 +6,9 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
 #include <math.h>
-#include "console.h"
+#include <stdio.h>
+
 
 
 
