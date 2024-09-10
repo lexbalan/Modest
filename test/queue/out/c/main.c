@@ -15,6 +15,7 @@ void init();
 
 
 static queue_Queue q0;
+static int32_t ii;
 
 void padd(Int n)
 {
@@ -26,9 +27,10 @@ void padd(Int n)
 			break;
 		}
 
-		printf("queue.put(%d)\n", i);
-		queue_put((queue_Queue *)&q0, (uint8_t)i);
+		printf("queue.put(%d)\n", ii);
+		queue_put((queue_Queue *)&q0, (uint8_t)ii);
 		i = i + 1;
+		ii = ii + 1;
 	}
 }
 

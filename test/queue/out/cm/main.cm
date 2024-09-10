@@ -3,6 +3,7 @@ include "console"
 include "inttypes"
 import "queue"
 var q0: Queue
+var ii: Int32
 func padd(n: Int) -> Unit {
 	var i: Int32 = 0
 	while i < n {
@@ -11,9 +12,10 @@ func padd(n: Int) -> Unit {
 			break
 		}
 
-		printf("queue.put(%d)\n", i)
-		queue.put(&q0, Byte i)
+		printf("queue.put(%d)\n", ii)
+		queue.put(&q0, Byte ii)
 		i = i + 1
+		ii = ii + 1
 	}
 }
 func fetch(n: Int) -> Unit {

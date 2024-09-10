@@ -8,7 +8,7 @@ import "queue"
 
 var q0: queue.Queue
 
-
+var ii: Int32
 func padd(n: Int) {
 	var i = 0
 	while i < n {
@@ -17,9 +17,10 @@ func padd(n: Int) {
 			break
 		}
 
-		printf("queue.put(%d)\n", Int i)
-		queue.put(&q0, unsafe Byte i)
+		printf("queue.put(%d)\n", Int ii)
+		queue.put(&q0, unsafe Byte ii)
 		++i
+		++ii
 	}
 }
 
