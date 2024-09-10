@@ -6,8 +6,11 @@ $pragma c_include "math.h"
 include "./ctypes64"
 
 
-let m_PI = 3.141592653589793238462643383279502884
-let m_E =  2.718281828459045235360287471352662498
+@property("value.id.c", "M_PI")
+export let m_PI = 3.141592653589793238462643383279502884
+
+@property("value.id.c", "M_E")
+export let m_E =  2.718281828459045235360287471352662498
 
 
 /*

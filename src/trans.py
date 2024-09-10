@@ -247,6 +247,7 @@ def module_append(definition, to_export=False):
 	if to_export:
 		module['export_defs'].append(definition)
 	else:
+		#print("module %s append %s" % (module['id'], definition['isa']))
 		module['defs'].append(definition)
 
 	definition['module'] = module
@@ -2658,6 +2659,8 @@ def do_import(x):
 		module['imports'][module_id] = m
 	else:
 		module['symtab_include'].extend(m['symtab_public'])
+		module['included_defs'].extend(m['defs'])
+		module['included_defs'].extend(m['export_defs'])
 
 	y = import_directive(impline, x['ti'], include=x['include'])
 	y['import_module'] = m
@@ -2944,6 +2947,8 @@ def pre_def(ast, fdecl=False):
 			elif kind == 'var':
 				y = def_var(x)
 
+			if y != None:
+				add_spices(y, ast_atts=x['attributes'])
 			module_append(y, to_export=x['export'])
 
 

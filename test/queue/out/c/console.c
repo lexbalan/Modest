@@ -4,7 +4,6 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
 #include "console.h"
 
 

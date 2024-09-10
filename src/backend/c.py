@@ -1872,15 +1872,33 @@ def print_comment_line(x):
 
 
 def cdirectives(module):
+
+	print("CDIRS FOR %s" % module['id'])
+
 	for im in module['imports']:
 		imported_module = module['imports'][im]
+
 		for obj in imported_module['defs']:
 			if obj['isa'] == 'directive':
 				if obj['kind'] == 'c_include':
 					newline()
 					print_include(obj)
 
+		"""for obj in imported_module['included_defs']:
+			print("????" + str(obj['isa']))
+			if obj['isa'] == 'directive':
+				if obj['kind'] == 'c_include':
+					newline()
+					print_include(obj)
+		"""
+
 	for obj in module['defs']:
+		if obj['isa'] == 'directive':
+			if obj['kind'] == 'c_include':
+				newline()
+				print_include(obj)
+
+	for obj in module['included_defs']:
 		if obj['isa'] == 'directive':
 			if obj['kind'] == 'c_include':
 				newline()
@@ -1932,7 +1950,7 @@ def print_header(module, outname):
 	out("#include <stdint.h>\n")
 	out("#include <stdbool.h>\n")
 	out("#include <string.h>\n")
-	#cdirectives(module)
+	cdirectives(module)
 
 	# print directives (only for header)
 	for obj in module['defs']:
@@ -2014,7 +2032,7 @@ def print_cfile(module, _outname):
 		out("#include <stdarg.h>\n")
 
 	# search for $pragma c_include "..."
-	cdirectives(module)
+	#cdirectives(module)
 
 	out("\n#include \"%s.h\"\n" % module['id'])
 

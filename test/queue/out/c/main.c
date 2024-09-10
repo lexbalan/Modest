@@ -59,6 +59,9 @@ void init()
 
 int main()
 {
+
+	printf("f = %f\n", M_PI);
+
 	init();
 
 	queue_init((queue_Queue *)&q0);
