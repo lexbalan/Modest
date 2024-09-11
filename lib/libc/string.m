@@ -16,6 +16,7 @@ export func memmove(dst: Ptr, src: Ptr, n: SizeT) -> Ptr
 export func memcmp(p0: Ptr, p1: Ptr, num: SizeT) -> Int
 export func strncmp(s1: *[]ConstChar, s2: *[]ConstChar, n: SizeT) -> Int
 export func strcmp(s1: *[]ConstChar, s2: *[]ConstChar) -> Int
+@nodecorate
 @attribute("value.type.to:dispensable")
 export func strcpy(dst: *[]Char, src: *[]ConstChar) -> *[]Char
 export func strlen(s: *[]ConstChar) -> SizeT

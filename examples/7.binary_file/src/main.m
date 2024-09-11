@@ -1,7 +1,8 @@
 // examples/7.binary_file/main.cm
 
-import "libc/string"
-import "libc/stdio"
+include "libc/ctypes64"
+include "libc/string"
+include "libc/stdio"
 
 
 // FIXIT: not worked LLVM result (!)

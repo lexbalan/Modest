@@ -1,11 +1,14 @@
-// examples/0.endianness/src/main.cm
+// ./out/c/main.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
+#include "main.h"
 
+
+
+int main();
 
 
 

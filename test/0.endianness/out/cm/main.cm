@@ -1,7 +1,6 @@
-// examples/0.endianness/src/main.cm
 
-import "libc/stdio"
-
+include "libc/ctypes64"
+include "libc/stdio"
 func main() -> Int {
 	var check: Nat16 = 0x0001
 	let is_le = **Nat8 &check == 1

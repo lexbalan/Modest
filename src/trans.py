@@ -2235,6 +2235,13 @@ def decl_type(x):
 	return y
 
 
+# нужно добавлять префикс к сущности
+# наличие поля prefix дает принтеру знать что нужно декорировать имя
+def need_decoration(x):
+	return not is_nodecorate(x) and not ('module_nodecorate' in module['att'])
+
+
+
 def def_type(x):
 	global module
 	id = x['id']
@@ -2279,9 +2286,8 @@ def def_type(x):
 	nt['ti_def'] = id['ti']
 	nt['module'] = module  ## добавляем заново тк очистили его выше!
 
-	if not is_nodecorate(x):
+	if need_decoration(x):
 		nt['prefix'] = module['prefix']
-
 
 	if not ('do_not_include' in module['att']):
 		# В случае когда не печатаем typedef явно (!)
@@ -2457,8 +2463,9 @@ def do_func_value(x, export):
 	func_type = do_type_func(x['type'], func_id=func_id['str'])
 	fn = value_func(func_id, func_type, ti=func_ti)
 
-	if export and not is_nodecorate(x):
-		fn['prefix'] = module['prefix']
+	if export:
+		if need_decoration(x):
+			fn['prefix'] = module['prefix']
 
 	return fn
 
@@ -2533,7 +2540,8 @@ def def_func(x, dostmt=True):
 	cfunc = prev_cfunc
 
 	yy = hlir_def_func(func_id, fn, stmt, x['ti'])
-	yy['prefix'] = module['prefix']
+	if need_decoration(x):
+		yy['prefix'] = module['prefix']
 	yy['export'] = x['export']
 	return yy
 
@@ -2694,12 +2702,14 @@ def do_directive(x):
 		s0 = args[0]
 		if s0 == 'do_not_include':
 			module['att'].append('do_not_include')
+		elif s0 == 'module_nodecorate':
+			module['att'].append('module_nodecorate')
 		elif s0 == 'c_include':
 			return c_include(args[1])
 		elif s0 == 'c_no_print':
 			module['att'].append('c_no_print')
 		elif s0 == 'feature':
-			feature_add(args[0])#['str'])
+			feature_add(args[0])
 			pass
 	return None
 

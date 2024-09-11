@@ -1,6 +1,7 @@
 // examples/0.endianness/src/main.cm
 
-import "libc/stdio"
+include "libc/ctypes64"
+include "libc/stdio"
 
 @feature("unsafe")
 

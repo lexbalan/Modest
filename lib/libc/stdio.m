@@ -2,6 +2,7 @@
 
 $pragma do_not_include
 $pragma c_include "stdio.h"
+$pragma module_nodecorate
 
 include "libc/ctypes64"
 include "libc/ctypes"
@@ -30,7 +31,6 @@ export let c_SEEK_CUR = 1
 @property("value.id.c", "SEEK_END")
 export let c_SEEK_END = 2
 
-
 @attribute("value.type.to:dispensable")
 export func fclose(f: *File) -> Int
 export func feof(f: *File) -> Int
@@ -39,6 +39,7 @@ export func ferror(f: *File) -> Int
 export func fflush(f: *File) -> Int
 @attribute("value.type.to:dispensable")
 export func fgetpos(f: *File, pos: *FposT) -> Int
+
 export func fopen(fname: *ConstCharStr, mode: *ConstCharStr) -> *File
 @attribute("value.type.to:dispensable")
 export func fread(buf: Ptr, size: SizeT, count: SizeT, f: *File) -> SizeT
@@ -60,8 +61,6 @@ export func setvbuf(f: *File, buffer: *CharStr, mode: Int, size: SizeT) -> Int
 export func tmpfile() -> *File
 export func tmpnam(str: *CharStr) -> *CharStr
 
-
-@nodecorate
 @attribute("value.type.to:dispensable")
 export func printf(s: *ConstCharStr, ...) -> Int
 

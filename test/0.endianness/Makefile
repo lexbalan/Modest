@@ -12,17 +12,17 @@ all: LLVM
 
 
 CM:
-	mcc -funsafe -o $(CMPREFIX)/main -mbackend=cm $(INDIR)/main.cm
+	mcc -funsafe -o $(CMPREFIX)/main -mbackend=cm $(INDIR)/main.m
 
 
 LLVM:
-	mcc -funsafe -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.cm
-	#mcc -o $(LLVMPREFIX)/memory -funsafe -mbackend=llvm ${MODEST_LIB}/lightfood/memory.cm
+	mcc -funsafe -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.m
+	#mcc -o $(LLVMPREFIX)/memory -funsafe -mbackend=llvm ${MODEST_LIB}/lightfood/memory.m
 	clang $(LLVMPREFIX)/main.ll
 
 
 C:
-	mcc -funsafe -o $(CPREFIX)/main -mbackend=c $(INDIR)/main.cm
+	mcc -funsafe -o $(CPREFIX)/main -mbackend=c $(INDIR)/main.m
 	CC $(CPREFIX)/main.c
 
 
