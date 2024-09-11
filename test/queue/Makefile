@@ -28,7 +28,6 @@ C:
 	mcc -o $(CPREFIX)/main -mbackend=c -funsafe $(INDIR)/main.m
 	mcc -o $(CPREFIX)/mutex -mbackend=c $(INDIR)/mutex.m
 	mcc -o $(CPREFIX)/queue -mbackend=c $(INDIR)/queue.m
-	mcc -o $(CPREFIX)/console -mbackend=c $(INDIR)/console.m
 	CC $(CPREFIX)/main.c $(CPREFIX)/mutex.c $(CPREFIX)/queue.c 
 
 
