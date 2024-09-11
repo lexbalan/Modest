@@ -1,12 +1,15 @@
-// examples/3.multiply_table/src/main.cm
+// ./out/c/main.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
+#include "main.h"
 
 
+
+void mtab(uint32_t n);
+int main();
 
 
 
@@ -23,14 +26,13 @@ void mtab(uint32_t n)
 	}
 }
 
-
 int main()
 {
-	#define n  (2 * 2)
-	printf("multiply table for %d\n", (int32_t)n);
-	mtab(n);
+	#define __n  (2 * 2)
+	printf("multiply table for %d\n", (int32_t)__n);
+	mtab(__n);
 	return 0;
 }
 
-#undef n
+#undef __n
 

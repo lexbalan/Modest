@@ -1,8 +1,6 @@
-// examples/3.multiply_table/src/main.cm
 
-import "libc/stdio"
-
-
+include "libc/ctypes64"
+include "libc/stdio"
 func mtab(n: Nat32) -> Unit {
 	var m: Nat32 = 1
 	// or
@@ -13,8 +11,6 @@ func mtab(n: Nat32) -> Unit {
 		m = m + 1
 	}
 }
-
-
 func main() -> Int {
 	let n = 2 * 2
 	printf("multiply table for %d\n", Int32 n)

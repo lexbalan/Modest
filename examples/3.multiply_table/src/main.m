@@ -1,6 +1,7 @@
 // examples/3.multiply_table/src/main.cm
 
-import "libc/stdio"
+include "libc/ctypes64"
+include "libc/stdio"
 
 
 func mtab(n: Nat32) -> Unit {
