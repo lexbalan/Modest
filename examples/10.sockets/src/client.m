@@ -1,9 +1,11 @@
 /* thx: https://github.com/pshashipreetham/File-Transfer-Using-TCP-Socket-in-C-Socket-Programming */
 
-import "libc/stdio"
-import "libc/stdlib"
-import "libc/unistd"
-import "libc/socket"
+include "libc/ctypes64"
+include "libc/ctypes"
+include "libc/stdio"
+include "libc/stdlib"
+include "libc/unistd"
+include "libc/socket"
 
 
 let filename = "file.txt"

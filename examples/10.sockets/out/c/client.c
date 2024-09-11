@@ -1,26 +1,24 @@
-/* thx: https://github.com/pshashipreetham/File-Transfer-Using-TCP-Socket-in-C-Socket-Programming */
+// ./out/c/client.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <arpa/inet.h>
-
-
-
-
-
+#include "client.h"
 
 
 
 #define filename  "file.txt"
-
 #define ipAddress  "127.0.0.1"
 #define port  8080
 #define bufSize  1024
+bool send_file(FILE *fp, int sockfd);
+int main();
+
+
+
+
+
 
 
 bool send_file(FILE *fp, int sockfd)
@@ -36,7 +34,6 @@ bool send_file(FILE *fp, int sockfd)
 
 	return true;
 }
-
 
 int main()
 {
