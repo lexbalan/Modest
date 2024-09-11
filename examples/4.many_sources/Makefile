@@ -16,7 +16,6 @@ CM:
 	mcc -o $(CMPREFIX)/lib -mbackend=cm $(INDIR)/lib.m
   
 
-
 LLVM:
 	mcc -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.m
 	mcc -o $(LLVMPREFIX)/lib -mbackend=llvm $(INDIR)/lib.m
