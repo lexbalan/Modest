@@ -1,6 +1,7 @@
 // examples/demo1/src/main.cm
 
-import "libc/stdio"
+include "libc/ctypes64"
+include "libc/stdio"
 
 var array: []Int32 = [
 	-3, -5, 2, 1, -1, 0, -2, 3, -4, 4

@@ -1,19 +1,24 @@
-// examples/demo1/src/main.cm
+// ./out/c/main.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
+#include "main.h"
 
 
+
+void bubble_sort32(int32_t *array, int32_t len);
+int32_t main();
+void print_array(int32_t *array, int32_t len);
+void fill_array(int32_t *array, int32_t len);
+int32_t get_number(int32_t min, int32_t max);
 
 
 static int32_t array[21] = (int32_t[21]){
 	-3, -5, 2, 1, -1, 0, -2, 3, -4, 4,
 	11, 9, 6, -7, -8, 5, 7, 10, 8, -6, -9
 };
-
 
 void bubble_sort32(int32_t *array, int32_t len)
 {
@@ -40,11 +45,6 @@ void bubble_sort32(int32_t *array, int32_t len)
 	}
 }
 
-
-void fill_array(int32_t *array, int32_t len);
-void print_array(int32_t *array, int32_t len);
-
-
 int32_t main()
 {
 	//fill_array(&array, lengthof(array))
@@ -62,7 +62,6 @@ int32_t main()
 	return 0;
 }
 
-
 void print_array(int32_t *array, int32_t len)
 {
 	printf("\n");
@@ -74,26 +73,22 @@ void print_array(int32_t *array, int32_t len)
 	}
 }
 
-
-int32_t get_number(int32_t min, int32_t max);
-
 void fill_array(int32_t *array, int32_t len)
 {
-	#define min  (-1000)
-	#define max  1000
+	#define __min  (-1000)
+	#define __max  1000
 	int32_t i;
 	i = 0;
 	while (i < len) {
 		printf("[%i] ", i);
-		const int32_t x = get_number(min, max);
+		const int32_t x = get_number(__min, __max);
 		array[i] = x;
 		i = i + 1;
 	}
 }
 
-#undef min
-#undef max
-
+#undef __min
+#undef __max
 
 int32_t get_number(int32_t min, int32_t max)
 {
