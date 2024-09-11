@@ -1,6 +1,8 @@
 // test/crc32/src/main.cm
 
-import "libc/stdio"
+include "libc/ctypes64"
+include "libc/ctypes"
+include "libc/stdio"
 
 /*
   Name  : CRC-32
@@ -13,7 +15,7 @@ import "libc/stdio"
   MaxLen: 268 435 455 байт (2 147 483 647 бит) - обнаружение
    одинарных, двойных, пакетных и всех нечетных ошибок
 */
-func do_crc32(buf: *[]Nat8, len: Nat32) -> Nat32 {
+func do_crc32(buf: *[]Byte, len: Nat32) -> Nat32 {
 	var crc_table: [256]Nat32
 	var crc: Nat32
 
@@ -51,7 +53,7 @@ func do_crc32(buf: *[]Nat8, len: Nat32) -> Nat32 {
 let datastring = "123456789"
 let expected_hash = 0xCBF43926
 
-var data = []Nat8 datastring
+var data = []Byte datastring
 
 
 func main() -> Int {

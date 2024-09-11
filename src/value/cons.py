@@ -196,11 +196,11 @@ def value_cons_explicit(t, v, ti):
 		return v
 
 	if not cons_can(t, from_type, 'explicit'):
-		error("cannot do construct value", ti)
-		"""type.type_print(t)
+		error("cannot construct value", ti)
+		type.type_print(t)
 		print(" from ")
 		type.type_print(from_type)
-		print()"""
+		print()
 		return value_bad(v['ti'])
 
 	nv = _do_value_cons(t, v, 'explicit', ti)

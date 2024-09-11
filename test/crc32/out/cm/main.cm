@@ -1,25 +1,16 @@
-// test/1.hello_world/src/main.cm
 
-import "libc/stdio"
-
-
-/*
-  Name  : CRC-32
-  Poly  : 0x04C11DB7    xxor32 + xxor26 + xxor23 + xxor22 + xxor16 + xxor12 + xxor11
-                       + xxor10 + xxor8 + xxor7 + xxor5 + xxor4 + xxor2 + x + 1
-  Init  : 0xFFFFFFFF
-  Revert: true
-  XorOut: 0xFFFFFFFF
-  Check : 0xCBF43926 ("123456789")
-  MaxLen: 268 435 455 байт (2 147 483 647 бит) - обнаружение
-   одинарных, двойных, пакетных и всех нечетных ошибок
-*/
-func do_CRC32(buf: *[]Nat8, len: Nat32) -> Nat32 {
+include "libc/ctypes64"
+include "libc/ctypes"
+include "libc/stdio"
+let datastring = "123456789"
+let expected_hash = 0xCBF43926
+var data: [9]Byte = [9]Byte datastring
+func do_crc32(buf: *[]Byte, len: Nat32) -> Nat32 {
 	var crc_table: [256]Nat32
 	var crc: Nat32
 
 	var i: Nat32 = Nat32 0
-	while i < 256 {
+	while i < lengthof(crc_table) {
 		crc = i
 		var j: Nat32 = Nat32 0
 		while j < 8 {
@@ -46,18 +37,11 @@ func do_CRC32(buf: *[]Nat8, len: Nat32) -> Nat32 {
 
 	return crc xor 0xFFFFFFFF
 }
-
-
-
-let datastring = "123456789"
-let expected_hash = 0xCBF43926
-
-var data: [9]Nat8 = [9]Nat8 datastring
-
-
 func main() -> Int {
 	printf("CRC32 test\n")
-	let crc = do_CRC32(&data, 9)
+
+	let crc = do_crc32(&data, lengthof(data))
+
 	printf("CRC32(%s) = %08X\n", *Str8 datastring, crc)
 
 	if crc == expected_hash {
