@@ -12,15 +12,14 @@ all: LLVM
 
 
 CM:
-	mcc -o $(CMPREFIX)/main -mbackend=cm $(INDIR)/main.cm
-	mcc -o $(CMPREFIX)/lib -mbackend=cm $(INDIR)/lib.hm
-	mcc -o $(CMPREFIX)/lib -mbackend=cm $(INDIR)/lib.cm
+	mcc -o $(CMPREFIX)/main -mbackend=cm $(INDIR)/main.m
+	mcc -o $(CMPREFIX)/lib -mbackend=cm $(INDIR)/lib.m
   
 
 
 LLVM:
-	mcc -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.cm
-	mcc -o $(LLVMPREFIX)/lib -mbackend=llvm $(INDIR)/lib.cm
+	mcc -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.m
+	mcc -o $(LLVMPREFIX)/lib -mbackend=llvm $(INDIR)/lib.m
 	
 	# translate IR to .o
 	clang -c $(LLVMPREFIX)/main.ll
@@ -31,9 +30,8 @@ LLVM:
 
 
 C:
-	mcc -o $(CPREFIX)/main -mbackend=c $(INDIR)/main.cm
-	mcc -o $(CPREFIX)/lib -mbackend=c $(INDIR)/lib.hm
-	mcc -o $(CPREFIX)/lib -mbackend=c $(INDIR)/lib.cm
+	mcc -o $(CPREFIX)/main -mbackend=c $(INDIR)/main.m
+	mcc -o $(CPREFIX)/lib -mbackend=c $(INDIR)/lib.m
 	CC $(CPREFIX)/main.c $(CPREFIX)/lib.c
 
 

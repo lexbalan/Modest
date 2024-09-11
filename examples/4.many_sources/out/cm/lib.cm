@@ -1,11 +1,6 @@
-// examples/4.many_sources/lib.cm
 
-import "libc/stdio"
-
-import "lib"
-
-
-func lib_func() -> Unit {
-	printf("hello from lib_func\n")
+include "libc/stdio"
+export func foo() -> Unit {
+	printf("hello from lib.foo\n")
 }
 

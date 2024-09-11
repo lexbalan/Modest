@@ -1,6 +1,6 @@
 
-#ifndef LIB_H
-#define LIB_H
+#ifndef MAIN_H
+#define MAIN_H
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -9,6 +9,7 @@
 #include <stdio.h>
 
 
-void lib_foo();
+#include "lib.h"
 
-#endif /* LIB_H */
+
+#endif /* MAIN_H */

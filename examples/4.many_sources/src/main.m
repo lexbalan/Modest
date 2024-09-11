@@ -1,12 +1,14 @@
 // examples/4.many_sources/main.cm
 
-import "libc/stdio"
+include "libc/ctypes64"
+include "libc/stdio"
 
-import "./lib"
+import "lib"
+
 
 func main() -> Int {
 	printf("hello from main\n")
-	lib_func()
+	lib.foo()
 	return 0
 }
 
