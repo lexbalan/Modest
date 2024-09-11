@@ -5,28 +5,58 @@ import "libc/stdio"
 import "./fsm"
 
 
-let fsmVerbose = true
+let verbose = true
 
 
-func fsm_state_no_name(fsm: *FSM, state_no: Nat32) -> *Str8 {
+let nameMaxLength = 8
+let maxStates = 16
+
+
+export type FSM_Proc *(fsm: *FSM) -> Unit
+
+export type FSM_StateDesc record {
+	name: [nameMaxLength]Char8
+	entry: FSM_Proc
+	loop: FSM_Proc
+	exit: FSM_Proc
+}
+
+
+let fsmSubstateEntering = 0
+let fsmSubstateLoop = 1
+let fsmSubstateLeaving = 2
+
+export type UInt32 Nat32
+
+export type FSM record {
+	name: [nameMaxLength]Char8
+	state: UInt32
+	nexstate: UInt32
+	substate: UInt32
+	states: [maxStates]FSM_StateDesc
+}
+
+
+
+export func state_no_name(fsm: *FSM, state_no: Nat32) -> *Str8 {
 	return &fsm.states[state_no].name
 }
 
 
-func fsm_switch(fsm: *FSM, state: Nat32) {
+export func switch(fsm: *FSM, state: Nat32) {
 	fsm.nexstate = state
 	fsm.substate = fsmSubstateLeaving
 }
 
 
-func fsm_run(fsm: *FSM) {
-	printf("fsm_run()\n")
+export func run(fsm: *FSM) {
+	printf("fsm::run()\n")
 
 	if fsm.substate == fsmSubstateEntering {
 		let nexstate = fsm.nexstate
 		let state = &fsm.states[nexstate]
 
-		if fsmVerbose {
+		if verbose {
 			printf("enter %s\n", &state.name)
 		}
 
@@ -47,7 +77,7 @@ func fsm_run(fsm: *FSM) {
 	} else if fsm.substate == fsmSubstateLeaving {
 		let state = &fsm.states[fsm.state]
 
-		if fsmVerbose {
+		if verbose {
 			printf("exit %s\n", &state.name)
 		}
 

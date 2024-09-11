@@ -5,7 +5,7 @@ import "libc/math"
 
 @attribute("c_no_print")
 import "misc/minmax"
-$pragma c_include"./minmax.h")
+$pragma c_include "./minmax.h"
 
 
 type Point record {

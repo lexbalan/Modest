@@ -542,7 +542,7 @@ def do_type_id(t):
 			submodule = module['imports'][ns_id]
 			tx = module_type_get_public(submodule, id_str)
 		else:
-			error('unknown namespace', t['ti'])
+			error("unknown namespace '%s'" % ns_id, t['ti'])
 			tx = hlir_type.hlir_type_bad(t)
 			return tx
 
@@ -1927,7 +1927,7 @@ def do_stmt_var(x):
 			return hlir_stmt_bad(x)
 
 		if hlir_type.type_is_forbidden_var(t):
-			error("unsuitable type", x['type'])
+			error("unsuitable type1", x['type']['ti'])
 
 	# type & init value present
 	if t != None and v != None:
@@ -2590,7 +2590,7 @@ def do_attribute(x):
 # находит сущность по имени и определяет ее
 gast = None
 def predefinition(id_str):
-	print("predefinition(\"%s\")" % id_str)
+	#print("predefinition(\"%s\")" % id_str)
 	global gast
 	for x in gast:
 		if not 'id' in x:
@@ -2630,6 +2630,7 @@ def do_import(x):
 	# Literal string to python string
 	impline = import_expr['asset']
 
+	#print('do_import("%s")' % impline)
 	log('do_import("%s")' % impline)
 
 	abspath = import_abspath(impline, ext='.m')
@@ -2638,27 +2639,40 @@ def do_import(x):
 		error("module %s not found" % impline, import_expr)
 		return None
 
-	m = translate(abspath, nodef=not x['include'])
-	m['id'] = impline
 
+	#if abspath in included_modules:
 
-	if m == None:
-		fatal("cannot import module")
-
-	if 'c_no_print' in m['att']:
-		for xx in m['defs']:
-			xx['att'].append('c_no_print')
-		for xx in m['export_defs']:
-			xx['att'].append('c_no_print')
-
-
-	# add to cash
 	if not abspath in included_modules:
+		#print(">>> " + abspath)
+		#for im in included_modules:
+		#	print("-" + im)
+
+		m = translate(abspath, nodef=not x['include'])
+
+		#if 'as' in x:
+		#	m['id'] = x['as']['str'] # todo
+		m['id'] = impline.split("/")[-1]
+
+		#print("IMP_ID = " + impline)
+
+		if m == None:
+			fatal("cannot import module")
+
+		if 'c_no_print' in m['att']:
+			for xx in m['defs']:
+				xx['att'].append('c_no_print')
+			for xx in m['export_defs']:
+				xx['att'].append('c_no_print')
+
 		included_modules[abspath] = m
 
+	else:
+		# cash hit
+		m = included_modules[abspath]
+
 	if not x['include']:
-		module_id = m['id']
-		module['imports'][module_id] = m
+		m_id = m['id']
+		module['imports'][m_id] = m
 	else:
 		module['symtab_include'].extend(m['symtab_public'])
 		module['included_defs'].extend(m['defs'])

@@ -1,31 +1,30 @@
-// test/sha256/src/main.cm
+// ./out/c/main.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
-#include "./sha256.h"
-
-typedef struct SHA256_TestCase SHA256_TestCase;
-
-
+#include "main.h"
 
 
 
 #define inputLength  32
-#define outputLength  sha256HashSize
 
 
-struct SHA256_TestCase {
+struct main_SHA256_TestCase {
 	char input_data[inputLength];
 	uint32_t input_data_len;
 
-	uint8_t expected_result[outputLength];
+	uint8_t expected_result[hashSize];
 };
+bool sha256_doTest(main_SHA256_TestCase *test);
+int main();
 
 
-static SHA256_TestCase test0 = {
+
+
+
+static main_SHA256_TestCase test0 = {
 	.input_data = "abc",
 	.input_data_len = 3,
 
@@ -36,8 +35,7 @@ static SHA256_TestCase test0 = {
 		0xB4, 0x10, 0xFF, 0x61, 0xF2, 0x00, 0x15, 0xAD
 	}
 };
-
-static SHA256_TestCase test1 = {
+static main_SHA256_TestCase test1 = {
 	.input_data = "Hello World!",
 	.input_data_len = 12,
 
@@ -48,36 +46,31 @@ static SHA256_TestCase test1 = {
 		0x4A, 0xDD, 0xD2, 0x00, 0x12, 0x6D, 0x90, 0x69
 	}
 };
+static main_SHA256_TestCase *sha256_tests[2] = (main_SHA256_TestCase *[2]){(main_SHA256_TestCase *)&test0, (main_SHA256_TestCase *)&test1};
 
-
-//var sha256_tests: []*SHA256_TestCase = [&test0, &test1]
-static SHA256_TestCase *sha256_tests[2] = (SHA256_TestCase *[2]){(SHA256_TestCase *)&test0, (SHA256_TestCase *)&test1};
-
-
-bool sha256_doTest(SHA256_TestCase *test)
+bool sha256_doTest(main_SHA256_TestCase *test)
 {
-	uint8_t test_hash[sha256HashSize];
+	uint8_t test_hash[hashSize];
 	uint8_t *const msg = (uint8_t *)(char *)&test->input_data;
 	const uint32_t msg_len = test->input_data_len;
-	sha256_doHash(msg, msg_len, (uint8_t *)&test_hash);
+	sha256_hash(msg, msg_len, (uint8_t *)&test_hash);
 
 	printf("'%s'", (char *)&test->input_data);
 	printf(" -> ");
 
 	int32_t i;
 	i = 0;
-	while (i < sha256HashSize) {
+	while (i < hashSize) {
 		printf("%02X", test_hash[i]);
 		i = i + 1;
 	}
 
 	printf("\n");
 
-	const bool test_passed = memcmp(&test_hash, &test->expected_result, sizeof(uint8_t[outputLength])) == 0;
+	const bool test_passed = memcmp(&test_hash, &test->expected_result, sizeof(sha256_Hash)) == 0;
 
 	return test_passed;
 }
-
 
 int main()
 {
@@ -86,8 +79,8 @@ int main()
 	int32_t i;
 	i = 0;
 	while (i < (int)(sizeof(sha256_tests) / sizeof(sha256_tests[0]))) {
-		SHA256_TestCase *const test = sha256_tests[i];
-		const bool test_result = sha256_doTest((SHA256_TestCase *)test);
+		main_SHA256_TestCase *const test = sha256_tests[i];
+		const bool test_result = sha256_doTest((main_SHA256_TestCase *)test);
 
 		char *res;
 		res = "failed";

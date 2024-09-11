@@ -2,13 +2,13 @@
 
 //@attribute("c_no_print")
 //import "./main"
-//$pragma c_include"./ff.h")
+//$pragma c_include "./ff.h"
 
 import "libc/stdio"
 
 @attribute("c_no_print")
 import "lightfood/putchar"
-$pragma c_include"./putchar.h")
+$pragma c_include "./putchar.h"
 
 
 /*func _put_char8(c: Char8) {

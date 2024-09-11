@@ -11,7 +11,7 @@ import "./fsm"
 //import "lightfood/main"
 @attribute("c_no_print")
 import "lightfood/delay"
-//$pragma c_include"./ff_main.h")
+//$pragma c_include "./ff_main.h"
 @c_include "./ff_delay.h"
 
 

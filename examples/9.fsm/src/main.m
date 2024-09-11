@@ -3,16 +3,20 @@
 // This is flashlight final state machine example
 // (just for compiler test and language demonstration)
 
-import "libc/stdio"
+include "libc/ctypes64"
+include "libc/ctypes"
+include "libc/stdio"
 
-import "./fsm"
+include "lightfood/delay"
+
+import "fsm"
 
 //@attribute("c_no_print")
 //import "lightfood/main"
-@attribute("c_no_print")
-import "lightfood/delay"
-//$pragma c_include"./ff_main.h")
-$pragma c_include"./ff_delay.h")
+//@attribute("c_no_print")
+
+//$pragma c_include "./ff_main.h"
+//$pragma c_include "./ff_delay.h"
 
 
 
@@ -28,13 +32,13 @@ var cnt: Nat8
 // State Off
 //
 
-func off_entry(fsm: *FSM) {
+func off_entry(fsm: *fsm.FSM) {
 	Unit fsm  // ignore argument
 	//printf("off_entry\n")
 }
 
 
-func off_loop(fsm: *FSM) {
+func off_loop(fsm: *fsm.FSM) {
 	Unit fsm
 
 	printf("off_loop\n")
@@ -42,12 +46,12 @@ func off_loop(fsm: *FSM) {
 		cnt = cnt + 1
 	} else {
 		cnt = 0
-		fsm_switch(fsm, flashlightStateOn)
+		fsm.switch(fsm, flashlightStateOn)
 	}
 }
 
 
-func off_exit(fsm: *FSM) {
+func off_exit(fsm: *fsm.FSM) {
 	Unit fsm  // ignore argument
 	//printf("off_exit\n")
 }
@@ -57,25 +61,25 @@ func off_exit(fsm: *FSM) {
 // State On
 //
 
-func on_entry(fsm: *FSM) {
+func on_entry(fsm: *fsm.FSM) {
 	Unit fsm  // ignore argument
 	//printf("on_entry\n")
 }
 
 
-func on_loop(fsm: *FSM) {
+func on_loop(fsm: *fsm.FSM) {
 	Unit fsm  // ignore argument
 	printf("on_loop\n")
 	if cnt < 10 {
 		cnt = cnt + 1
 	} else {
 		cnt = 0
-		fsm_switch(fsm, flashlightStateBeacon)
+		fsm.switch(fsm, flashlightStateBeacon)
 	}
 }
 
 
-func on_exit(fsm: *FSM) {
+func on_exit(fsm: *fsm.FSM) {
 	Unit fsm  // ignore argument
 	//printf("on_exit\n")
 }
@@ -85,31 +89,31 @@ func on_exit(fsm: *FSM) {
 // State Beacon
 //
 
-func beacon_entry(fsm: *FSM) {
-	let from_name = fsm_state_no_name(fsm, fsm.state)
+func beacon_entry(fsm: *fsm.FSM) {
+	let from_name = fsm.state_no_name(fsm, fsm.state)
 	printf("beacon_entry from %s\n", from_name)
 }
 
 
-func beacon_loop(fsm: *FSM) {
+func beacon_loop(fsm: *fsm.FSM) {
 	printf("beacon_loop\n")
 	if cnt < 10 {
 		cnt = cnt + 1
 	} else {
 		cnt = 0
-		fsm_switch(fsm, flashlightStateOff)
+		fsm.switch(fsm, flashlightStateOff)
 	}
 }
 
 
-func beacon_exit(fsm: *FSM) {
-	let to_name = fsm_state_no_name(fsm, fsm.nexstate)
+func beacon_exit(fsm: *fsm.FSM) {
+	let to_name = fsm.state_no_name(fsm, fsm.nexstate)
 	printf("beacon_exit to %s\n", to_name)
 }
 
 
 
-var fsm: FSM = {
+var fsm: fsm.FSM = {
 	name = "Flash"
 	state = 0
 	nexstate = 0
@@ -143,7 +147,7 @@ var fsm: FSM = {
 func main() -> Int {
 
 	while true {
-		fsm_run(&fsm)
+		fsm.run(&fsm)
 		delay_ms(500)
 	}
 

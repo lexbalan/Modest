@@ -1873,7 +1873,7 @@ def print_comment_line(x):
 
 def cdirectives(module):
 
-	print("CDIRS FOR %s" % module['id'])
+	#print("CDIRS FOR %s" % module['id'])
 
 	for im in module['imports']:
 		imported_module = module['imports'][im]

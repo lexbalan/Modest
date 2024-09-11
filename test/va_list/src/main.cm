@@ -5,7 +5,7 @@ import "libc/unistd"
 
 @attribute("c_no_print")
 import "lightfood/print"
-$pragma c_include"./print.h")
+$pragma c_include "./print.h"
 
 
 @attribute("value.type.to:dispensable")

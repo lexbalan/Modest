@@ -10,7 +10,7 @@
 
 //@attribute("c_no_print")
 //import "./main"
-//$pragma c_include"./ff.h")
+//$pragma c_include "./ff.h"
 
 
 

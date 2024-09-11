@@ -4,7 +4,7 @@ import "libc/stdio"
 
 @attribute("c_no_print")
 import "misc/utf"
-$pragma c_include"./utf.h")
+$pragma c_include "./utf.h"
 
 
 // constants with type String(Generic)

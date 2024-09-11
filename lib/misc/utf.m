@@ -1,12 +1,11 @@
 // algorithms from wikipedia
 // (https://ru.wikipedia.org/wiki/UTF-16)
 
-import "libc/stdio"
-import "./utf"
+//import "libc/stdio"
 
 
 // декодирует символ UTF-32 в последовательность UTF-8
-func utf32_to_utf8(c: Char32, buf: *[4]Char8) -> Nat8 {
+export func utf32_to_utf8(c: Char32, buf: *[4]Char8) -> Nat8 {
 	let x = Nat32 c
 
 	if x <= 0x0000007F {
@@ -46,7 +45,7 @@ func utf32_to_utf8(c: Char32, buf: *[4]Char8) -> Nat8 {
 
 
 // returns n-symbols from input stream
-func utf16_to_utf32(c: *[]Char16, result: *Char32) -> Nat8 {
+export func utf16_to_utf32(c: *[]Char16, result: *Char32) -> Nat8 {
 	let leading = Nat32 c[0]
 
 	if (leading < 0xD800) or (leading > 0xDFFF) {
@@ -76,12 +75,12 @@ func utf16_to_utf32(c: *[]Char16, result: *Char32) -> Nat8 {
 //
 
 
-func utf8_putchar(c: Char8) -> Unit {
+export func utf8_putchar(c: Char8) -> Unit {
 	putchar(Int32 c)
 }
 
 
-func utf16_putchar(c: Char16) -> Unit {
+export func utf16_putchar(c: Char16) -> Unit {
 	var cc: [2]Char16
 	cc[0] = c
 	cc[1] = Char16 0
@@ -91,7 +90,7 @@ func utf16_putchar(c: Char16) -> Unit {
 }
 
 
-func utf32_putchar(c: Char32) -> Unit {
+export func utf32_putchar(c: Char32) -> Unit {
 	var decoded_buf: [4]Char8
 	let n = Int utf32_to_utf8(c, &decoded_buf)
 
@@ -108,7 +107,7 @@ func utf32_putchar(c: Char32) -> Unit {
 // puts
 //
 
-func utf8_puts(s: *Str8) -> Unit {
+export func utf8_puts(s: *Str8) -> Unit {
 	var i = 0
 	while true {
 		let c = s[i]
@@ -119,7 +118,7 @@ func utf8_puts(s: *Str8) -> Unit {
 }
 
 
-func utf16_puts(s: *Str16) -> Unit {
+export func utf16_puts(s: *Str16) -> Unit {
 	var i = 0
 	while true {
 		// нельзя просто так взять и вызвать utf16_putchar
@@ -139,7 +138,7 @@ func utf16_puts(s: *Str16) -> Unit {
 }
 
 
-func utf32_puts(s: *Str32) -> Unit {
+export func utf32_puts(s: *Str32) -> Unit {
 	var i = 0
 	while true {
 		let c = s[i]

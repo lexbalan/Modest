@@ -1,10 +1,12 @@
 $pragma do_not_include
 
-import "ctypes"
+include "ctypes64"
+include "ctypes"
 
 $pragma c_include "string.h"
 
 
+@nodecorate
 @attribute("value.type.to:dispensable")
 export func memset(mem: Ptr, c: Int, n: SizeT) -> Ptr
 @attribute("value.type.to:dispensable")

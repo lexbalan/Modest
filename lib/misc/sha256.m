@@ -1,7 +1,14 @@
 // SHA256
 
-import "libc/string"
-import "sha256"
+$pragma do_not_include
+
+include "libc/ctypes"
+include "libc/string"
+
+
+export let hashSize = 32
+
+export type Hash [hashSize]Byte
 
 
 type Context record {
@@ -12,34 +19,42 @@ type Context record {
 }
 
 
+@inline
 func rotleft(a: Nat32, b: Nat32) -> Nat32 {
 	return (a << b) or (a >> (32 - b))
 }
 
+@inline
 func rotright(a: Nat32, b: Nat32) -> Nat32 {
 	return (a >> b) or (a << (32 - b))
 }
 
+@inline
 func ch(x: Nat32, y: Nat32, z: Nat32) -> Nat32 {
 	return (x and y) xor (not x and z)
 }
 
+@inline
 func maj(x: Nat32, y: Nat32, z: Nat32) -> Nat32 {
 	return (x and y) xor (x and z) xor (y and z)
 }
 
+@inline
 func ep0(x: Nat32) -> Nat32 {
 	return rotright(x, 2) xor rotright(x, 13) xor rotright(x, 22)
 }
 
+@inline
 func ep1(x: Nat32) -> Nat32 {
 	return rotright(x, 6) xor rotright(x, 11) xor rotright(x, 25)
 }
 
+@inline
 func sig0(x: Nat32) -> Nat32 {
 	return rotright(x, 7) xor rotright(x, 18) xor (x >> 3)
 }
 
+@inline
 func sig1(x: Nat32) -> Nat32 {
 	return rotright(x, 17) xor rotright(x, 19) xor (x >> 10)
 }
@@ -52,7 +67,7 @@ let initalState = [
 ]
 
 
-func sha256_contextInit(ctx: *Context) {
+func contextInit(ctx: *Context) {
 	ctx.state = initalState
 }
 
@@ -77,7 +92,7 @@ let k = [
 ]
 
 
-func sha256_transform(ctx: *Context, data: *[]Byte) {
+func transform(ctx: *Context, data: *[]Byte) {
 	var m = [64]Nat32 []
 
 	var i = Nat32 0
@@ -123,13 +138,13 @@ func sha256_transform(ctx: *Context, data: *[]Byte) {
 }
 
 
-func sha256_update(ctx: *Context, msg: *[]Byte, msgLen: Nat32) {
+func update(ctx: *Context, msg: *[]Byte, msgLen: Nat32) {
 	var i = Nat32 0
 	while i < msgLen {
 		ctx.data[ctx.datalen] = msg[i]
 		ctx.datalen = ctx.datalen + 1
 		if ctx.datalen == 64 {
-			sha256_transform(ctx, &ctx.data)
+			transform(ctx, &ctx.data)
 			ctx.bitlen = ctx.bitlen + 512
 			ctx.datalen = 0
 		}
@@ -138,7 +153,7 @@ func sha256_update(ctx: *Context, msg: *[]Byte, msgLen: Nat32) {
 }
 
 
-func sha256_final(ctx: *Context, outHash: *[sha256HashSize]Byte) {
+func final(ctx: *Context, outHash: *Hash) {
 	var i: Nat32 = ctx.datalen
 
 	// Pad whatever data is left in the buffer.
@@ -156,7 +171,7 @@ func sha256_final(ctx: *Context, outHash: *[sha256HashSize]Byte) {
 	//ctx.data[i:n-i] = []
 
 	if ctx.datalen >= 56 {
-		sha256_transform(ctx, &ctx.data)
+		transform(ctx, &ctx.data)
 		memset(&ctx.data, 0, 56)
 		//ctx.data[0:56] = []
 	}
@@ -173,7 +188,7 @@ func sha256_final(ctx: *Context, outHash: *[sha256HashSize]Byte) {
 	ctx.data[57] = unsafe Byte (ctx.bitlen >> 48)
 	ctx.data[56] = unsafe Byte (ctx.bitlen >> 56)
 
-	sha256_transform(ctx, &ctx.data)
+	transform(ctx, &ctx.data)
 
 	// Since this implementation uses little endian byte ordering
 	// and SHA uses big endian, reverse all the bytes
@@ -195,11 +210,11 @@ func sha256_final(ctx: *Context, outHash: *[sha256HashSize]Byte) {
 }
 
 
-func sha256_doHash(msg: *[]Byte, msgLen: Nat32, outHash: *[sha256HashSize]Byte) {
+export func hash(msg: *[]Byte, msgLen: Nat32, outHash: *Hash) {
 	var ctx = Context {}
-	sha256_contextInit(&ctx)
-	sha256_update(&ctx, msg, msgLen)
-	sha256_final(&ctx, outHash)
+	contextInit(&ctx)
+	update(&ctx, msg, msgLen)
+	final(&ctx, outHash)
 }
 
 
