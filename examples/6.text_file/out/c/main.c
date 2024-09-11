@@ -1,16 +1,18 @@
-// examples/6.text_file/main.cm
+// ./out/c/main.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
-
-
+#include "main.h"
 
 
 
 #define filename  "file.txt"
+void write_example();
+void read_example();
+int main();
+
 
 
 void write_example()
@@ -28,7 +30,6 @@ void write_example()
 
 	fclose(fp);
 }
-
 
 void read_example()
 {
@@ -52,7 +53,6 @@ void read_example()
 
 	fclose(fp);
 }
-
 
 int main()
 {

@@ -1,5 +1,8 @@
 // fcntl.hm
 
+$pragma module_nodecorate
+
+
 /* open-only flags */
 let	c_O_RDONLY = 0x00000000		/* open for reading only */
 let	c_O_WRONLY = 0x00000001		/* open for writing only */

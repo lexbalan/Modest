@@ -1,6 +1,7 @@
 // libc/ctypes.hm
 
 $pragma do_not_include
+$pragma module_nodecorate
 
 //import "./system"
 
@@ -13,6 +14,7 @@ $else
 $endif*/
 
 include "./ctypes64"
+
 
 @property("type.id.c", "socklen_t")
 export type SocklenT Nat32

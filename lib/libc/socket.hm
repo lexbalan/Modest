@@ -1,10 +1,12 @@
 
 $pragma do_not_include
+$pragma module_nodecorate
+$pragma c_include "arpa/inet.h"
+//$pragma c_include "sys/socket.h"
+
 
 import "ctypes"
 
-$pragma c_include "arpa/inet.h"
-//$pragma c_include "sys/socket.h"
 
 
 @property("type.id.c", "in_addr_t")

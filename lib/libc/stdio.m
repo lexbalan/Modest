@@ -1,8 +1,8 @@
 // libc/stdio.hm
 
 $pragma do_not_include
-$pragma c_include "stdio.h"
 $pragma module_nodecorate
+$pragma c_include "stdio.h"
 
 include "libc/ctypes64"
 include "libc/ctypes"

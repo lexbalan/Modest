@@ -1,6 +1,7 @@
 // libc/ctypes64.hm
 
 $pragma do_not_include
+$pragma module_nodecorate
 
 
 @property("type.id.c", "char *")

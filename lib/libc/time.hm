@@ -1,9 +1,11 @@
 
 $pragma do_not_include
+$pragma module_nodecorate
+$pragma c_include "time.h"
+
 
 import "./ctypes"
 
-$pragma c_include "time.h"
 
 
 /* time in seconds since 1970 */

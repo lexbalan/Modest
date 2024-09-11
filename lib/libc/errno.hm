@@ -1,4 +1,7 @@
 
+$pragma module_nodecorate
+
+
 /*
  * Error codes
  */
