@@ -32,12 +32,10 @@ LLVM:
 	clang $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/linked_list.ll
 
 
-
 C:
-	mcc -o $(CPREFIX)/main -mbackend=c -funsafe -mint=64 $(INDIR)/main.cm
-	mcc -o $(CPREFIX)/linked_list -mstyle=modern -mbackend=c -mint=64 $(INDIR)/linked_list.hm
-	mcc -o $(CPREFIX)/linked_list -mbackend=c -mint=64 $(INDIR)/linked_list.cm
-	CC $(CPREFIX)/main.c $(CPREFIX)/linked_list.c
+	mcc -o $(CPREFIX)/main -mbackend=c -funsafe -mint=64 $(INDIR)/main.m
+	mcc -o $(CPREFIX)/list -mbackend=c -mint=64 $(INDIR)/list.m
+	CC $(CPREFIX)/main.c $(CPREFIX)/list.c
 
 
 clean:

@@ -1,25 +1,24 @@
 // examples/8.linked_list/linked_list.cm
 
-import "libc/stdlib"
-import "libc/stdio"
+include "libc/ctypes64"
+include "libc/stdlib"
+include "libc/stdio"
 
-import "./linked_list"
 
-
-type Node record {
+export type Node record {
 	next: *Node
 	prev: *Node
 	data: Ptr
 }
 
-type List record {
+export type List record {
 	head: *Node
 	tail: *Node
 	size: Nat32
 }
 
 
-func linked_list_create () -> *List {
+export func create () -> *List {
 	let list = *List malloc(sizeof(List))
 
 	if list == nil {
@@ -32,7 +31,7 @@ func linked_list_create () -> *List {
 }
 
 
-func linked_list_size_get (list: *List) -> Nat32 {
+export func size_get (list: *List) -> Nat32 {
 	if list == nil {
 		return 0
 	}
@@ -41,7 +40,7 @@ func linked_list_size_get (list: *List) -> Nat32 {
 }
 
 
-func linked_list_first_node_get (list: *List) -> *Node {
+export func first_node_get (list: *List) -> *Node {
 	if list == nil {
 		return nil
 	}
@@ -50,7 +49,7 @@ func linked_list_first_node_get (list: *List) -> *Node {
 }
 
 
-func linked_list_last_node_get (list: *List) -> *Node {
+export func last_node_get (list: *List) -> *Node {
 	if list == nil {
 		return nil
 	}
@@ -59,7 +58,7 @@ func linked_list_last_node_get (list: *List) -> *Node {
 }
 
 
-func linked_list_node_first (list: *List, new_node: *Node) -> *Node {
+export func node_first (list: *List, new_node: *Node) -> *Node {
 	if list == nil or new_node == nil {
 		return nil
 	}
@@ -74,7 +73,7 @@ func linked_list_node_first (list: *List, new_node: *Node) -> *Node {
 
 
 
-func linked_list_node_create () -> *Node {
+export func node_create () -> *Node {
 	let node = *Node malloc(sizeof(Node))
 
 	if node == nil {
@@ -87,7 +86,7 @@ func linked_list_node_create () -> *Node {
 }
 
 
-func linked_list_node_next_get (node: *Node) -> *Node {
+export func node_next_get (node: *Node) -> *Node {
 	if node == nil {
 		return nil
 	}
@@ -96,7 +95,7 @@ func linked_list_node_next_get (node: *Node) -> *Node {
 }
 
 
-func linked_list_node_prev_get (node: *Node) -> *Node {
+export func node_prev_get (node: *Node) -> *Node {
 	if node == nil {
 		return nil
 	}
@@ -105,7 +104,7 @@ func linked_list_node_prev_get (node: *Node) -> *Node {
 }
 
 
-func linked_list_node_data_get (node: *Node) -> Ptr {
+export func node_data_get (node: *Node) -> Ptr {
 	if node == nil {
 		return nil
 	}
@@ -114,7 +113,7 @@ func linked_list_node_data_get (node: *Node) -> Ptr {
 }
 
 
-func node_insert_right (left: *Node, new_right: *Node) {
+export func node_insert_right (left: *Node, new_right: *Node) {
 	printf("node_insert_right\n")
 
 	let old_right = left.next
@@ -132,12 +131,12 @@ func node_insert_right (left: *Node, new_right: *Node) {
 // get list node by number
 // if number is out of range returns nil
 // if number < 0 - go backward
-func linked_list_node_get (list: *List, pos: Int32) -> *Node {
+export func node_get (list: *List, pos: Int32) -> *Node {
 	if list == nil or list.size == 0 {
 		return nil
 	}
 
-	printf("linked_list_node_get(%d)\n", pos)
+	printf("node_get(%d)\n", pos)
 	var node: *Node
 
 	if pos >= 0 {
@@ -174,21 +173,21 @@ func linked_list_node_get (list: *List, pos: Int32) -> *Node {
 }
 
 
-func linked_list_node_insert (list: *List, pos: Int32, new_node: *Node) -> *Node {
+export func node_insert (list: *List, pos: Int32, new_node: *Node) -> *Node {
 	if list == nil or new_node == nil {
 		return nil
 	}
 
-	printf("linked_list_node_insert(%d)\n", pos)
+	printf("node_insert(%d)\n", pos)
 
 
-	let n = linked_list_node_get(list, pos)
+	let n = node_get(list, pos)
 
 	if n == nil {
 		return nil
 	}
 
-	let nod = linked_list_node_prev_get(n)
+	let nod = node_prev_get(n)
 
 	if nod == nil {
 		return nil
@@ -202,7 +201,7 @@ func linked_list_node_insert (list: *List, pos: Int32, new_node: *Node) -> *Node
 
 
 
-func linked_list_node_append (list: *List, new_node: *Node) -> *Node {
+export func node_append (list: *List, new_node: *Node) -> *Node {
 	if list == nil or new_node == nil {
 		return nil
 	}
@@ -222,8 +221,8 @@ func linked_list_node_append (list: *List, new_node: *Node) -> *Node {
 
 
 @attribute("value:dispensable")
-func linked_list_insert (list: *List, pos: Int32, data: Ptr) -> *Node {
-	let new_node = linked_list_node_create()
+export func insert (list: *List, pos: Int32, data: Ptr) -> *Node {
+	let new_node = node_create()
 
 	if new_node == nil {
 		return nil
@@ -231,17 +230,17 @@ func linked_list_insert (list: *List, pos: Int32, data: Ptr) -> *Node {
 
 	new_node.data = data
 
-	return linked_list_node_insert(list, pos, new_node)
+	return node_insert(list, pos, new_node)
 }
 
 
 @attribute("value:dispensable")
-func linked_list_append (list: *List, data: Ptr) -> *Node {
+export func append (list: *List, data: Ptr) -> *Node {
 	if list == nil {
 		return nil
 	}
 
-	let new_node = linked_list_node_create()
+	let new_node = node_create()
 
 	if new_node == nil {
 		return nil
@@ -249,7 +248,7 @@ func linked_list_append (list: *List, data: Ptr) -> *Node {
 
 	new_node.data = data
 
-	let node = linked_list_node_append(list, new_node)
+	let node = node_append(list, new_node)
 
 	if node == nil {
 		free(new_node)

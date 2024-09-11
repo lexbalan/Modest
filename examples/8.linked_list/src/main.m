@@ -1,40 +1,42 @@
 // examples/8.linked_list/src/main.cm
 
-import "libc/stdlib"
-import "libc/stdio"
 
-import "./linked_list"
+include "libc/ctypes64"
+include "libc/stdlib"
+include "libc/stdio"
+
+import "list"
 
 
-// wrap around linked list for List Nat32
-func nat32_list_insert(list: *List, x: Nat32) -> Unit {
+// wrap around linked list for list.List Nat32
+func nat32_list_insert(list: *list.List, x: Nat32) -> Unit {
 	// alloc memory for Nat32 value
 	let p_nat32 = *Nat32 malloc(sizeof(Nat32))
 	*p_nat32 = x
-	linked_list_append(list, p_nat32)
+	list.append(list, p_nat32)
 }
 
 
 // show list conent from first item to last
-func list_print_forward(list: *List) -> Unit {
+func list_print_forward(list: *list.List) -> Unit {
 	printf("list_print_forward:\n")
-	var pn = linked_list_first_node_get(list)
+	var pn = list.first_node_get(list)
 	while pn != nil {
-		let x = *Nat32 linked_list_node_data_get(pn)
+		let x = *Nat32 list.node_data_get(pn)
 		printf("v = %u\n", *x)
-		pn = linked_list_node_next_get(pn)
+		pn = list.node_next_get(pn)
 	}
 }
 
 
 // show list conent from last item to first
-func list_print_backward(list: *List) -> Unit {
+func list_print_backward(list: *list.List) -> Unit {
 	printf("list_print_backward:\n")
-	var pn = linked_list_last_node_get(list)
+	var pn = list.last_node_get(list)
 	while pn != nil {
-		let x = *Nat32 linked_list_node_data_get(pn)
+		let x = *Nat32 list.node_data_get(pn)
 		printf("v = %u\n", *x)
-		pn = linked_list_node_prev_get(pn)
+		pn = list.node_prev_get(pn)
 	}
 }
 
@@ -42,7 +44,7 @@ func list_print_backward(list: *List) -> Unit {
 func main() -> Int {
 	printf("linked list example\n")
 
-	let list = linked_list_create()
+	let list = list.create()
 
 	if list == nil {
 		printf("error: cannot create list")
@@ -63,7 +65,7 @@ func main() -> Int {
 	nat32_list_insert(list, 100)
 
 	// print list size
-	let list_size = linked_list_size_get(list)
+	let list_size = list.size_get(list)
 	printf("linked list size: %u\n", list_size)
 
 	// print list forward
@@ -73,12 +75,12 @@ func main() -> Int {
 	list_print_backward(list)
 
 
-	printf("\nlinked_list_node_get(list, n) test\n")
+	printf("\nlist.node_get(list, n) test\n")
 
-	// test linked_list_node_get
+	// test list.node_get
 	var i = 0
 	while i >= -12 {
-		let node = linked_list_node_get(list, i)
+		let node = list.node_get(list, i)
 
 		if node == nil {
 			printf("node %i not exist\n", i)
@@ -86,7 +88,7 @@ func main() -> Int {
 			again
 		}
 
-		let px = *Nat32 linked_list_node_data_get(node)
+		let px = *Nat32 list.node_data_get(node)
 		printf("list(%i) = %i\n", i, *px)
 		--i
 	}
@@ -95,7 +97,7 @@ func main() -> Int {
 
 	i = 0
 	while i <= 12 {
-		let node = linked_list_node_get(list, i)
+		let node = list.node_get(list, i)
 
 		if node == nil {
 			printf("node %i not exist\n", i)
@@ -103,7 +105,7 @@ func main() -> Int {
 			again
 		}
 
-		let px = *Nat32 linked_list_node_data_get(node)
+		let px = *Nat32 list.node_data_get(node)
 		printf("list(%i) = %i\n", i, *px)
 		++i
 	}
@@ -113,7 +115,7 @@ func main() -> Int {
 
 	let p_nat32 = *Nat32 malloc(sizeof(Nat32))
 	*p_nat32 = 1234
-	linked_list_insert(list, pos=4, data=p_nat32)
+	list.insert(list, pos=4, data=p_nat32)
 
 	list_print_forward(list)
 

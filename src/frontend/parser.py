@@ -673,7 +673,12 @@ class Parser:
 						if arg_value['kind'] != 'id':
 							error("expected identifier", a['ti'])
 
-						arg_id = arg_value['id']
+						#if not 'id' in arg_value:
+							#print("isa = " + arg_value['isa'])
+							#print("kind = " + arg_value['kind'])
+							#print(arg_value)
+							#info("HERE", arg_value['ti'])
+						arg_id = arg_value#['id']
 						arg_value = self.expr_value()
 
 					arg = {
