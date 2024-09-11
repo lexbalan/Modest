@@ -6,20 +6,20 @@ $pragma c_include "sys/stat.h"
 import "libc/ctypes"
 import "libc/time"
 
-type DevT Nat32
-type InoT Nat64
-type ModeT Nat16
-type NLinkT Nat16
-type UIDT Nat32
-type GIDT Nat32
-type BlkSizeT Nat32
-type BlkCntT Nat64
+export type DevT Nat32
+export type InoT Nat64
+export type ModeT Nat16
+export type NLinkT Nat16
+export type UIDT Nat32
+export type GIDT Nat32
+export type BlkSizeT Nat32
+export type BlkCntT Nat64
 
-type DarwinIno64T Nat64
+export type DarwinIno64T Nat64
 
 //
 //@property("type.id.c", "struct stat")
-//type Stat record {
+//export type Stat record {
 //	st_dev: DevT			/* номер устройства */
 //	st_ino: InoT			/* inode */
 //	st_mode: ModeT			/* режим доступа */
@@ -36,10 +36,10 @@ type DarwinIno64T Nat64
 //}
 
 
-type DarwinTimeT Nat64
+export type DarwinTimeT Nat64
 
 @property("type.id.c", "struct timespec")
-type Timespec record {
+export type Timespec record {
 	tv_sec: DarwinTimeT
 	tv_nsec: Long
 }
@@ -50,7 +50,7 @@ type Timespec record {
 
 
 @property("type.id.c", "struct stat")
-type Stat record {
+export type Stat record {
 	st_dev: DevT             // [XSI] ID of device containing file
 	st_mode: ModeT           // [XSI] Mode of file (see below)
 	st_nlink: NLinkT         // [XSI] Number of hard links
@@ -78,7 +78,7 @@ type Stat record {
 
 // 01_stat for MACOS
 @property("value.id.llvm", "\\01_stat")
-func stat(path: *[]ConstChar, stat: *Stat) -> Int
+export func stat(path: *[]ConstChar, stat: *Stat) -> Int
 
 
 /*struct stat {
@@ -98,90 +98,90 @@ func stat(path: *[]ConstChar, stat: *Stat) -> Int
 };*/
 
 
-let	c_S_ISUID = 0x0800	// (0004000) set user id on execution
-let	c_S_ISGID = 0x0400	// (0002000) set group id on execution
-let	c_S_ISTXT = 0x0200	// (0001000) sticky bit
+export let	c_S_ISUID = 0x0800	// (0004000) set user id on execution
+export let	c_S_ISGID = 0x0400	// (0002000) set group id on execution
+export let	c_S_ISTXT = 0x0200	// (0001000) sticky bit
 
-let	c_S_IRWXU = 0x01C0	// (0000700) RWX mask for owner
-let	c_S_IRUSR = 0x0100	// (0000400) R for owner
-let	c_S_IWUSR = 0x0080	// (0000200) W for owner
-let	c_S_IXUSR = 0x0040	// (0000100) X for owner
-
-
-let	c_S_IREAD = c_S_IRUSR
-let	c_S_IWRITE = c_S_IWUSR
-let	c_S_IEXEC = c_S_IXUSR
+export let	c_S_IRWXU = 0x01C0	// (0000700) RWX mask for owner
+export let	c_S_IRUSR = 0x0100	// (0000400) R for owner
+export let	c_S_IWUSR = 0x0080	// (0000200) W for owner
+export let	c_S_IXUSR = 0x0040	// (0000100) X for owner
 
 
-let	c_S_IRWXG = 0x0038  // (0000070) RWX mask for group
-let	c_S_IRGRP = 0x0020  // (0000040) R for group
-let	c_S_IWGRP = 0x0010  // (0000020) W for group
-let	c_S_IXGRP = 0x0008  // (0000010) X for group
-
-let	c_S_IRWXO = 0x0007  // (0000007) RWX mask for other
-let	c_S_IROTH = 0x0004  // (0000004) R for other
-let	c_S_IWOTH = 0x0002  // (0000002) W for other
-let	c_S_IXOTH = 0x0001  // (0000001) X for other
+export let	c_S_IREAD = c_S_IRUSR
+export let	c_S_IWRITE = c_S_IWUSR
+export let	c_S_IEXEC = c_S_IXUSR
 
 
-let	c_S_IFMT =   0xF000  // (0170000) type of file mask
-let	c_S_IFIFO =  0x1000  // (0010000) named pipe (fifo)
-let	c_S_IFCHR =  0x2000  // (0020000) character special
-let	c_S_IFDIR =  0x4000  // (0040000) directory
-let	c_S_IFBLK =  0x6000  // (0060000) block special
-let	c_S_IFREG =  0x8000  // (0100000) regular
-let	c_S_IFLNK =  0xA000  // (0120000) symbolic link
-let	c_S_IFSOCK = 0xC000  // (0140000) socket
-let	c_S_IFWHT =  0xE000  // (0160000) whiteout
-let	c_S_ISVTX =  0x0200  // (0001000) save swapped text even after use
+export let	c_S_IRWXG = 0x0038  // (0000070) RWX mask for group
+export let	c_S_IRGRP = 0x0020  // (0000040) R for group
+export let	c_S_IWGRP = 0x0010  // (0000020) W for group
+export let	c_S_IXGRP = 0x0008  // (0000010) X for group
+
+export let	c_S_IRWXO = 0x0007  // (0000007) RWX mask for other
+export let	c_S_IROTH = 0x0004  // (0000004) R for other
+export let	c_S_IWOTH = 0x0002  // (0000002) W for other
+export let	c_S_IXOTH = 0x0001  // (0000001) X for other
+
+
+export let	c_S_IFMT =   0xF000  // (0170000) export type of file mask
+export let	c_S_IFIFO =  0x1000  // (0010000) named pipe (fifo)
+export let	c_S_IFCHR =  0x2000  // (0020000) character special
+export let	c_S_IFDIR =  0x4000  // (0040000) directory
+export let	c_S_IFBLK =  0x6000  // (0060000) block special
+export let	c_S_IFREG =  0x8000  // (0100000) regular
+export let	c_S_IFLNK =  0xA000  // (0120000) symbolic link
+export let	c_S_IFSOCK = 0xC000  // (0140000) socket
+export let	c_S_IFWHT =  0xE000  // (0160000) whiteout
+export let	c_S_ISVTX =  0x0200  // (0001000) save swapped text even after use
 
 
 
 /* is directory */
 @property("value.id.c", "S_ISDIR")
-func c_S_ISDIR(m: ModeT) -> Bool {
+export func c_S_ISDIR(m: ModeT) -> Bool {
 	return (m and c_S_IFMT) == c_S_IFDIR
 }
 
 /* is char special */
 @property("value.id.c", "S_ISCHR")
-func c_S_ISCHR(m: ModeT) -> Bool {
+export func c_S_ISCHR(m: ModeT) -> Bool {
 	return (m and c_S_IFMT) == c_S_IFCHR
 }
 
 /* is block special */
 @property("value.id.c", "S_ISBLK")
-func c_S_ISBLK(m: ModeT) -> Bool {
+export func c_S_ISBLK(m: ModeT) -> Bool {
 	return (m and c_S_IFMT) == c_S_IFBLK
 }
 
 /* is regular file */
 @property("value.id.c", "S_ISREG")
-func c_S_ISREG(m: ModeT) -> Bool {
+export func c_S_ISREG(m: ModeT) -> Bool {
 	return (m and c_S_IFMT) == c_S_IFREG
 }
 
 /* is fifo or socket */
 @property("value.id.c", "S_ISFIFO")
-func c_S_ISFIFO(m: ModeT) -> Bool {
+export func c_S_ISFIFO(m: ModeT) -> Bool {
 	return (m and c_S_IFMT) == c_S_IFIFO
 }
 
 /* is symbolic link */
 @property("value.id.c", "S_ISLNK")
-func c_S_ISLNK(m: ModeT) -> Bool {
+export func c_S_ISLNK(m: ModeT) -> Bool {
 	return (m and c_S_IFMT) == c_S_IFLNK
 }
 
 /* is socket */
 @property("value.id.c", "S_ISSOCK")
-func c_S_ISSOCK(m: ModeT) -> Bool {
+export func c_S_ISSOCK(m: ModeT) -> Bool {
 	return (m and c_S_IFMT) == c_S_IFSOCK
 }
 
 /* is whiteout */
 @property("value.id.c", "S_ISWHT")
-func c_S_ISWHT(m: ModeT) -> Bool {
+export func c_S_ISWHT(m: ModeT) -> Bool {
 	return (m and c_S_IFMT) == c_S_IFWHT
 }
 
