@@ -9,8 +9,6 @@ include "libc/ctypes64"
 include "libc/ctypes"
 
 
-
-
 @property("type.id.c", "in_addr_t")
 export type In_addr_t Nat32
 
