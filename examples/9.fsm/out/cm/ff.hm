@@ -1,6 +1,0 @@
-// lib/lightfood/delay.hm
-
-func delay_us(us: Nat64) -> Unit
-func delay_ms(ms: Nat64) -> Unit
-func delay_s(s: Nat64) -> Unit
-

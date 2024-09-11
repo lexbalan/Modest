@@ -4,21 +4,21 @@ $pragma module_nodecorate
 $pragma c_include "time.h"
 
 
-import "./ctypes"
-
+include "libc/ctypes64"
+include "libc/ctypes"
 
 
 /* time in seconds since 1970 */
 @property("type.id.c", "time_t")
-type TimeT Int32
+export type TimeT Int32
 
 
 @property("type.id.c", "clock_t")
-type ClockT UnsignedLong
+export type ClockT UnsignedLong
 
 
 @property("type.id.c", "struct tm")
-type Struct_tm record {
+export type Struct_tm record {
 	tm_sec: Int	   // Seconds [0-60]
 	tm_min: Int	   // Minutes [0-59]
 	tm_hour: Int   // Hours	[0-23]
@@ -40,31 +40,31 @@ type Struct_tm record {
 
 
 // Clock program
-func clock() -> ClockT
+export func clock() -> ClockT
 
 // Return difference between two times
-func difftime(end: TimeT, beginning: TimeT) -> Double
+export func difftime(end: TimeT, beginning: TimeT) -> Double
 
 // Convert tm structure to time_t
-func mktime(timeptr: *Struct_tm) -> TimeT
+export func mktime(timeptr: *Struct_tm) -> TimeT
 
 // Get current time
 @attribute("value.type.to:dispensable")
-func time(timer: *TimeT) -> TimeT
+export func time(timer: *TimeT) -> TimeT
 
 // Convert tm structure to string
-func asctime(timeptr: *Struct_tm) -> *Char
+export func asctime(timeptr: *Struct_tm) -> *Char
 
 // Convert time_t value to string
-func ctime(timer: *TimeT) -> *Char
+export func ctime(timer: *TimeT) -> *Char
 
 // Convert time_t to tm as UTC time
-func gmtime(timer: *TimeT) -> *Struct_tm
+export func gmtime(timer: *TimeT) -> *Struct_tm
 
 // Convert time_t to tm as local time
-func localtime(timer: *TimeT) -> *Struct_tm
+export func localtime(timer: *TimeT) -> *Struct_tm
 
 // Format time as string
-func strftime(ptr: *Char, maxsize: SizeT, format: *ConstChar, timeptr: *Struct_tm) -> SizeT
+export func strftime(ptr: *Char, maxsize: SizeT, format: *ConstChar, timeptr: *Struct_tm) -> SizeT
 
 

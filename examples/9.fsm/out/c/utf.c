@@ -1,19 +1,14 @@
-// algorithms from wikipedia
-// (https://ru.wikipedia.org/wiki/UTF-16)
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
+#include "utf.h"
 
 
 
-#include "./utf.h"
 
-
-// декодирует символ UTF-32 в последовательность UTF-8
-uint8_t utf32_to_utf8(uint32_t c, char *buf)
+uint8_t utf_utf32_to_utf8(uint32_t c, char *buf)
 {
 	const uint32_t x = (uint32_t)c;
 
@@ -52,9 +47,7 @@ uint8_t utf32_to_utf8(uint32_t c, char *buf)
 	return 0;
 }
 
-
-// returns n-symbols from input stream
-uint8_t utf16_to_utf32(uint16_t *c, uint32_t *result)
+uint8_t utf_utf16_to_utf32(uint16_t *c, uint32_t *result)
 {
 	const uint32_t leading = (uint32_t)c[0];
 
@@ -77,94 +70,5 @@ uint8_t utf16_to_utf32(uint16_t *c, uint32_t *result)
 	}
 
 	return 0;
-}
-
-
-//
-// putchar
-//
-
-
-void utf8_putchar(char c)
-{
-	putchar((int)(int32_t)c);
-}
-
-
-void utf16_putchar(uint16_t c)
-{
-	uint16_t cc[2];
-	cc[0] = c;
-	cc[1] = 0;
-	uint32_t char32;
-	const uint8_t n = utf16_to_utf32((uint16_t *)&cc, &char32);
-	utf32_putchar(char32);
-}
-
-
-void utf32_putchar(uint32_t c)
-{
-	char decoded_buf[4];
-	const int n = (int)utf32_to_utf8(c, (char *)&decoded_buf);
-
-	int32_t i;
-	i = 0;
-	while (i < n) {
-		const char c = decoded_buf[i];
-		utf8_putchar(c);
-		i = i + 1;
-	}
-}
-
-
-//
-// puts
-//
-
-void utf8_puts(char *s)
-{
-	int32_t i;
-	i = 0;
-	while (true) {
-		const char c = s[i];
-		if (c == 0) {break;}
-		utf8_putchar(c);
-		i = i + 1;
-	}
-}
-
-
-void utf16_puts(uint16_t *s)
-{
-	int32_t i;
-	i = 0;
-	while (true) {
-		// нельзя просто так взять и вызвать utf16_putchar
-		// тк в строке может быть суррогатная пара UTF_16 символов
-
-		const uint16_t cc16 = s[i];
-		if (cc16 == 0) {break;}
-
-		uint32_t char32;
-		const uint8_t n = utf16_to_utf32((uint16_t *)&s[i], &char32);
-		if (n == 0) {break;}
-
-		utf32_putchar(char32);
-
-		i = i + (int32_t)n;
-	}
-}
-
-
-void utf32_puts(uint32_t *s)
-{
-	int32_t i;
-	i = 0;
-	while (true) {
-		const uint32_t c = s[i];
-		if (c == 0) {break;}
-		utf32_putchar(c);
-		i = i + 1;
-	}
 }
 

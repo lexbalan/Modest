@@ -2257,8 +2257,8 @@ def def_type(x):
 
 	if already_declared:
 		nt = pre_exist
-		if hlir_type.type_is_defined(pre_exist):
-			error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
+		#if hlir_type.type_is_defined(pre_exist):
+		#	error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
 	else:
 		nt = hlir_type.hlir_type_undefined(x['ti'])
 		global module
@@ -2494,6 +2494,9 @@ def def_func(x, dostmt=True):
 
 	context_push()  # create params context
 
+	if hlir_type.type_is_bad(fn['type']):
+		return None
+
 	params = fn['type']['params']
 	i = 0
 	while i < len(params):
@@ -2598,7 +2601,7 @@ def do_attribute(x):
 # находит сущность по имени и определяет ее
 gast = None
 def predefinition(id_str):
-	#print("predefinition(\"%s\")" % id_str)
+	print("predefinition(\"%s\")" % id_str)
 	global gast
 	for x in gast:
 		if not 'id' in x:

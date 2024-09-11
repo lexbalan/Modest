@@ -36,11 +36,13 @@ C:
 	mcc -o $(CPREFIX)/putchar $(C_OPTIONS) -mbackend=c -funsafe ${MODEST_LIB}/lightfood/putchar.m
 	
 	mcc -o $(CPREFIX)/ff_delay -mbackend=c $(C_OPTIONS) ${MODEST_LIB}/lightfood/delay.m
-	mcc -o $(CPREFIX)/print -mbackend=c $(C_OPTIONS) -funsafe ${MODEST_LIB}/lightfood/print.m
 	mcc -o $(CPREFIX)/fsm -mbackend=c $(C_OPTIONS) $(INDIR)/fsm.m
 	mcc -o $(CPREFIX)/main -mbackend=c $(C_OPTIONS) $(INDIR)/main.m
     
-	CC $(CPREFIX)/main.c $(CPREFIX)/fsm.c $(CPREFIX)/ff_delay.c $(CPREFIX)/print.c $(CPREFIX)/utf.c $(CPREFIX)/putchar.c
+	CC $(CPREFIX)/main.c $(CPREFIX)/fsm.c $(CPREFIX)/ff_delay.c$(CPREFIX)/utf.c $(CPREFIX)/putchar.c
+	
+	#mcc -o $(CPREFIX)/print -mbackend=c $(C_OPTIONS) -funsafe ${MODEST_LIB}/lightfood/print.m
+	#$(CPREFIX)/print.c 
 
 
 clean:

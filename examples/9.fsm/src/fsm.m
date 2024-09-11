@@ -1,8 +1,6 @@
 // examples/fsm/fsm.cm
 
-import "libc/stdio"
-
-import "./fsm"
+include "libc/stdio"
 
 
 let verbose = true
