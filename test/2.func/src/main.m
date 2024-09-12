@@ -1,6 +1,7 @@
 // test/2.func/src/main.cm
 
-import "libc/stdio"
+include "libc/ctypes64"
+include "libc/stdio"
 
 
 // declare function f0

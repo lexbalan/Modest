@@ -1,6 +1,7 @@
 // test/9.big_numbers/src/main.cm
 
-import "libc/stdio"
+include "libc/ctypes64"
+include "libc/stdio"
 
 
 var big0: Nat128 = 0x0123456789ABCDEFFEDCBA9876543210

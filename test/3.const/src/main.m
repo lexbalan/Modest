@@ -1,6 +1,7 @@
 // test/3.const/src/main.cm
 
-import "libc/stdio"
+include "libc/ctypes64"
+include "libc/stdio"
 
 let genericIntConst = 42
 let int32Const = Int32 genericIntConst

@@ -1,18 +1,18 @@
-// test/1.hello_world/src/main.cm
+// ./out/c/main.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
-
+#include "main.h"
 
 
 
 #define hello  "Hello"
 #define world  "World!"
-
 #define hello_world  (hello " " world)
+int main();
+
 
 
 int main()

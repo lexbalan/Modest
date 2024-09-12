@@ -1,6 +1,7 @@
 // test/4.typedef/src/main.cm
 
-import "libc/stdio"
+include "libc/ctypes64"
+include "libc/stdio"
 
 type NewInt32 Int32
 

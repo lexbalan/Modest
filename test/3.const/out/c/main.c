@@ -1,49 +1,38 @@
-// test/3.const/src/main.cm
+// ./out/c/main.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
-
-typedef struct Point Point;
+#include "main.h"
 
 
 
+
+
+struct main_Point {
+	uint32_t x;
+	uint32_t y;
+};
 #define genericIntConst  42
 #define int32Const  ((int32_t)genericIntConst)
-
 #define genericStringConst  "Hello!"
 #define string8Const  (char *)genericStringConst
 #define string16Const  u"Hello!"
 #define string32Const  U"Hello!"
-
-
-struct Point {
-	uint32_t x;
-	uint32_t y;
-};
-
-
 #define _ps  { \
 	{.x = 0, .y = 0}, \
 	{.x = 1, .y = 1}, \
 	{.x = 2, .y = 2} \
 }
 const struct {int8_t x; int8_t y;} ps[3] = _ps;
-
 #define _points  _ps
-const Point points[3] = _points;
+const main_Point points[3] = _points;
+int main();
 
 
-// есть проблема - в C глобальные переменные с модификатором const
-// не могут быть так инициализированы, поскольку points является приведением
-// непонятно существует ли хорошее решение
-//@property("c_prefix", "const")
-static Point points2[3] = _points;
+static main_Point points2[3] = _points;
 
-
-// define function main
 int main()
 {
 	printf("test const\n");

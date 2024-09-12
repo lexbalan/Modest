@@ -1,39 +1,36 @@
-// test/2.func/src/main.cm
+// ./out/c/main.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
+#include "main.h"
 
 
 
-
-
-// declare function f0
+void func1();
+void print_ab(int32_t a, int32_t b);
+int32_t sum(int32_t a, int32_t b);
+int main();
 void func0();
 
 
-// define function f1
+
 void func1()
 {
 	printf("func1 was called\n");
 }
-
 
 void print_ab(int32_t a, int32_t b)
 {
 	printf("print_ab(a=%i, b=%i)\n", a, b);
 }
 
-
 int32_t sum(int32_t a, int32_t b)
 {
 	return a + b;
 }
 
-
-// define function main
 int main()
 {
 	printf("test func\n");
@@ -63,8 +60,6 @@ int main()
 	return 0;
 }
 
-
-// define function f0
 void func0()
 {
 	printf("func0 was called\n");
