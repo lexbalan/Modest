@@ -15,36 +15,36 @@ $endif*/
 
 include "./ctypes64"
 
+export {
+	@property("type.id.c", "socklen_t")
+	type SocklenT Nat32
 
-@property("type.id.c", "socklen_t")
-export type SocklenT Nat32
+	@property("type.id.c", "size_t")
+	type SizeT UnsignedLongInt
 
-@property("type.id.c", "size_t")
-export type SizeT UnsignedLongInt
+	@property("type.id.c", "ssize_t")
+	type SSizeT LongInt
 
-@property("type.id.c", "ssize_t")
-export type SSizeT LongInt
+	@property("type.id.c", "intptr_t")
+	type IntptrT Nat64
 
-@property("type.id.c", "intptr_t")
-export type IntptrT Nat64
+	@property("type.id.c", "ptrdiff_t")
+	type PtrdiffT Ptr
 
-@property("type.id.c", "ptrdiff_t")
-export type PtrdiffT Ptr
-
-@property("type.id.c", "off_t")
-export type OffT Int64
+	@property("type.id.c", "off_t")
+	type OffT Int64
 
 
-@property("type.id.c", "useconds_t")
-export type USecondsT Nat32
+	@property("type.id.c", "useconds_t")
+	type USecondsT Nat32
 
-@property("type.id.c", "pid_t")
-export type PidT Int32
+	@property("type.id.c", "pid_t")
+	type PidT Int32
 
-@property("type.id.c", "uid_t")
-export type UidT Nat32
+	@property("type.id.c", "uid_t")
+	type UidT Nat32
 
-@property("type.id.c", "gid_t")
-export type GidT Nat32
-
+	@property("type.id.c", "gid_t")
+	type GidT Nat32
+}
 

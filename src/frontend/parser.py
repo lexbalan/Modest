@@ -1520,6 +1520,8 @@ class Parser:
 
 		spaceline_cnt = 0
 
+		export_region = False
+
 		attributes = []
 		while not self.is_end():
 
@@ -1533,11 +1535,14 @@ class Parser:
 
 			#attributes = []
 
+
 			export = self.match('export')
-			"""export = False
-			if self.match('export'):
-				export = True"""
-			#extern = self.match('extern')
+			if export:
+				if self.match('{'):
+					export_region = True
+
+			if export_region:
+				export = True
 
 			ti = self.ti()
 
@@ -1562,6 +1567,10 @@ class Parser:
 				x = self.parse_import()
 			elif self.match('include'):
 				x = self.parse_import(include=True)
+
+			elif export_region:
+				if self.match('}'):
+					export_region = False
 
 			else:
 				error("unexpected token '%s'" % self.ctok(), self.ti())
