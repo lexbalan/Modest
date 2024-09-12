@@ -1,9 +1,10 @@
 // test/unistd/src/main.cm
 
-import "libc/stdio"
-import "libc/time"
-import "libc/unistd"
-//import "libc/libc" // getenv
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/time"
+include "libc/unistd"
+//include "libc/libc" // getenv
 
 func getenv(name: *Str) -> *Str
 

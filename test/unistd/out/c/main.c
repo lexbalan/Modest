@@ -1,20 +1,18 @@
-// test/unistd/src/main.cm
+// ./out/c/main.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
-#include <time.h>
-#include <unistd.h>
+#include "main.h"
+
+
+
+int main();
 
 
 
 
-
-//import "libc/libc" // getenv
-
-char *getenv(char *name);
 
 int main()
 {

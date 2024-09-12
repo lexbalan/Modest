@@ -1,6 +1,7 @@
 // test/string_concat_eq/src/main.cm
 
-import "libc/stdio"
+include "libc/ctypes64"
+include "libc/stdio"
 
 let hello = "Hello"
 let world = "World"

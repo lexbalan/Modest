@@ -1,22 +1,20 @@
-// test/string_concat_eq/src/main.cm
+// ./out/c/main.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
-
+#include "main.h"
 
 
 
 #define hello  "Hello"
 #define world  "World"
 #define party_corn  U"🎉"
-
-#define greeting  (hello " " world)//+ " " + party_corn
-
-
+#define greeting  (hello " " world)
 #define test  "test"
+int main();
+
 
 
 int main()
