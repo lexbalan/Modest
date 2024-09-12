@@ -1,6 +1,6 @@
 
 
-func str8_len(str: *Str8) -> Nat64 {
+func len8(str: *Str8) -> Nat64 {
 	var i = Nat64 0
 	while str[i] != "\0" {
 		++i
@@ -9,7 +9,7 @@ func str8_len(str: *Str8) -> Nat64 {
 }
 
 
-func str16_len(str: *Str16) -> Nat64 {
+func len16(str: *Str16) -> Nat64 {
 	var i = Nat64 0
 	while str[i] != "\0" {
 		++i
@@ -18,7 +18,7 @@ func str16_len(str: *Str16) -> Nat64 {
 }
 
 
-func str32_len(str: *Str32) -> Nat64 {
+func len32(str: *Str32) -> Nat64 {
 	var i = Nat64 0
 	while str[i] != "\0" {
 		++i

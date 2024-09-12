@@ -1,5 +1,7 @@
 // lib/lightfood/memory.cm
 
+$pragma do_not_include
+
 
 let systemWidth = 64
 
