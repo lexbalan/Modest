@@ -1,12 +1,17 @@
-// test/asm/src/main.cm
+// ./out/c/main.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
+#include "main.h"
 
 
+
+int64_t sum64(int64_t a, int64_t b);
+int64_t sub64(int64_t a, int64_t b);
+void sumsub64(int64_t a, int64_t b);
+int main();
 
 
 
@@ -22,7 +27,6 @@ int64_t sum64(int64_t a, int64_t b)
 	return sum;
 }
 
-
 int64_t sub64(int64_t a, int64_t b)
 {
 	int64_t sub;
@@ -34,7 +38,6 @@ int64_t sub64(int64_t a, int64_t b)
 	);
 	return sub;
 }
-
 
 void sumsub64(int64_t a, int64_t b)
 {
@@ -51,7 +54,6 @@ void sumsub64(int64_t a, int64_t b)
 	printf("sumsub64 sum = %lld\n", sum);
 	printf("sumsub64 sub = %lld\n", sub);
 }
-
 
 int main()
 {

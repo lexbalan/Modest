@@ -1,6 +1,7 @@
 // test/asm/src/main.cm
 
-import "libc/stdio"
+include "libc/ctypes64"
+include "libc/stdio"
 
 
 func sum64(a: Int64, b: Int64) -> Int64 {

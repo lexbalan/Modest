@@ -1,12 +1,14 @@
-// test/builtin_constants/src/main.cm
+// ./out/c/main.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
+#include "main.h"
 
 
+
+int main();
 
 
 
@@ -15,7 +17,7 @@ int main()
 
 	// __compiler
 	printf("__compiler.name = %s\n", (char *)"m2");
-	#define ver  {.major = 0, .minor = 7}
+	#define __ver  {.major = 0, .minor = 7}
 	printf("__compiler.version.major = %u\n", 0);
 	printf("__compiler.version.minor = %u\n", 7);
 
@@ -29,5 +31,5 @@ int main()
 	return 0;
 }
 
-#undef ver
+#undef __ver
 

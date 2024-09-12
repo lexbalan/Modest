@@ -1,6 +1,7 @@
 // test/char/src/main.cm
 
-import "libc/stdio"
+include "libc/ctypes64"
+include "libc/stdio"
 
 
 let utf8Char = "s"

@@ -1,6 +1,7 @@
 // test/assignation/src/main.cm
 
-import "libc/stdio"
+include "libc/ctypes64"
+include "libc/stdio"
 
 
 // Simply record for records assignation test

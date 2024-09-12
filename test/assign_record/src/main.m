@@ -1,6 +1,7 @@
 // test/assign_record/src/main.cm
 
-import "libc/stdio"
+include "libc/ctypes64"
+include "libc/stdio"
 
 
 type Point record {

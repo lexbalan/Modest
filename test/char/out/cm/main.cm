@@ -1,13 +1,9 @@
-// test/char/src/main.cm
 
-import "libc/stdio"
-
-
+include "libc/ctypes64"
+include "libc/stdio"
 let utf8Char = "s"
 let utf16Char = "Я"
 let utf32Char = "🐀"
-
-
 func main() -> Int {
 	printf("test/char\n")
 

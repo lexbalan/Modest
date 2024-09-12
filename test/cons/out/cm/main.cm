@@ -1,8 +1,6 @@
-// test/cons/src/main.cm
 
-import "libc/stdio"
-
-
+include "libc/ctypes64"
+include "libc/stdio"
 func main() -> Int {
 	printf("test cons operation\n")
 

@@ -1,13 +1,7 @@
 // test/1.hello_world/src/main.cm
 
-import "libc/stdio"
-
-
-func test_generic_integer() -> Bool
-func test_generic_float() -> Bool
-func test_generic_char() -> Bool
-func test_generic_array() -> Bool
-func test_generic_record() -> Bool
+include "libc/ctypes64"
+include "libc/stdio"
 
 
 func main() -> Int {

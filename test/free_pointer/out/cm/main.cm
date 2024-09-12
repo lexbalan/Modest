@@ -1,8 +1,6 @@
-// test/free_pointer/src/main.cm
 
-import "libc/stdio"
-
-
+include "libc/ctypes64"
+include "libc/stdio"
 func main() -> Int32 {
 	var a: Bool
 	var b: Int32

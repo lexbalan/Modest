@@ -1,6 +1,7 @@
 // test/named_args/src/main.cm
 
-import "libc/stdio"
+include "libc/ctypes64"
+include "libc/stdio"
 
 
 func named_args_test(a: Int32, b: Int32, c: Int32) -> Int32 {

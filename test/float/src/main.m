@@ -1,8 +1,9 @@
 // test/float/src/main.cm
 
-import "libc/stdio"
-import "libc/stdlib"
-import "libc/math"
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/stdlib"
+include "libc/math"
 
 
 let mathPi = 3.141592653589793238462643383279502884

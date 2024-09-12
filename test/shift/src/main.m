@@ -1,6 +1,7 @@
 // test/shift/src/main.cm
 
-import "libc/stdio"
+include "libc/ctypes64"
+include "libc/stdio"
 
 
 func main() -> Int {

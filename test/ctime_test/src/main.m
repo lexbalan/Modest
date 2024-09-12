@@ -1,8 +1,9 @@
 // test/ctime_test/src/main.cm
 
-import "libc/stdio"
-import "libc/time"
-import "libc/unistd"
+include "libc/ctypes64"
+include "libc/stdio"
+include "libc/time"
+include "libc/unistd"
 
 
 func main() -> Int {
