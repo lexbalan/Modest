@@ -1,6 +1,7 @@
 // test/14.records/src/main.cm
 
-import "libc/stdio"
+include "libc/ctypes64"
+include "libc/stdio"
 
 type Point2D record {
 	x: Nat32
