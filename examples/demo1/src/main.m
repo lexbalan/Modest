@@ -1,6 +1,6 @@
 // examples/demo1/src/main.cm
 
-import "libc/stdio"
+include "libc/stdio"
 
 
 let minNumber = 0

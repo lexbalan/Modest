@@ -1,19 +1,16 @@
-// examples/demo1/src/main.cm
+// ./out/c/main.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
-
-
+#include "main.h"
 
 
 
 #define minNumber  0
 #define maxNumber  10
-
-
+int32_t main();
 int32_t get_number(int32_t min, int32_t max);
 
 
@@ -33,7 +30,6 @@ int32_t main()
 
 	return 0;
 }
-
 
 int32_t get_number(int32_t min, int32_t max)
 {

@@ -1,8 +1,6 @@
-// examples/stmt_while/src/main.cm
 
-import "libc/stdio"
-
-
+include "libc/ctypes64"
+include "libc/stdio"
 func main() -> Int {
 	printf("while statement test\n")
 
