@@ -46,7 +46,7 @@ export func fmod(a: Double, b: Double) -> Double
 
 
 /*
- * Long double versions of C99 export functions
+ * Long double versions of C99 functions
  */
 export func acosl(x: LongDouble) -> LongDouble
 export func asinl(x: LongDouble) -> LongDouble
