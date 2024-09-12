@@ -1,15 +1,17 @@
-// test/slices/src/main.cm
+// ./out/c/main.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
+#include "main.h"
 
 
 
+void array_print(int32_t *pa, int32_t len);
+int main();
 
-//@feature("unsafe")
+
 
 void array_print(int32_t *pa, int32_t len)
 {
@@ -20,7 +22,6 @@ void array_print(int32_t *pa, int32_t len)
 		i = i + 1;
 	}
 }
-
 
 int main()
 {
@@ -59,9 +60,9 @@ int main()
 
 	printf("--------------------------------------------\n");
 
-	#define ax  2
-	#define bx  6
-	memcpy(&a[ax], &(int32_t[bx - ax]){10, 20, 30, 40}, sizeof(int32_t[bx - ax]));
+	#define __ax  2
+	#define __bx  6
+	memcpy(&a[__ax], &(int32_t[__bx - __ax]){10, 20, 30, 40}, sizeof(int32_t[__bx - __ax]));
 
 	i = 0;
 	while (i < (sizeof(a) / sizeof(a[0]))) {
@@ -85,17 +86,17 @@ int main()
 	printf("--------------------------------------------\n");
 	printf("test pointer to slice\n");
 
-	#define aa  2
-	#define bb  8
+	#define __aa  2
+	#define __bb  8
 
-	int32_t *const p = (int32_t *)&s[aa];
-	array_print(p, (bb - aa));
+	int32_t *const p = (int32_t *)&s[__aa];
+	array_print(p, (__bb - __aa));
 
 	printf("--------------------------------------------\n");
 
 	p[0] = 123;
 
-	array_print(p, (bb - aa));
+	array_print(p, (__bb - __aa));
 
 	printf("--------------------------------------------\n");
 	printf("slice of pointer to open array\n");
@@ -139,9 +140,9 @@ int main()
 	memcpy(&dst, &(int32_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, sizeof(int32_t[10]));
 
 	// test with let
-	#define i1  3
-	#define j1  8
-	memcpy(&dst[i1], &(int32_t[j1 - i1]){11, 22, 33, 44, 55}, sizeof(int32_t[j1 - i1]));
+	#define __i1  3
+	#define __j1  8
+	memcpy(&dst[__i1], &(int32_t[__j1 - __i1]){11, 22, 33, 44, 55}, sizeof(int32_t[__j1 - __i1]));
 
 	array_print((int32_t *)&dst, 10);
 
@@ -167,10 +168,10 @@ int main()
 	return 0;
 }
 
-#undef ax
-#undef bx
-#undef aa
-#undef bb
-#undef i1
-#undef j1
+#undef __ax
+#undef __bx
+#undef __aa
+#undef __bb
+#undef __i1
+#undef __j1
 

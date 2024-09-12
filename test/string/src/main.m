@@ -1,10 +1,13 @@
 // test/string/src/main.cm
 
-import "libc/stdio"
+include "libc/ctypes64"
+include "libc/stdio"
 
 @attribute("c_no_print")
-import "misc/utf"
+include "misc/utf"
+include "lightfood/putchar"
 $pragma c_include "./utf.h"
+$pragma c_include "./putchar.h"
 
 
 // constants with type String(Generic)

@@ -1,7 +1,9 @@
 // test/stat/src/main.cm
 
-import "libc/stdio"
-import "libc/stat"
+include "libc/ctypes64"
+include "libc/ctypes"
+include "libc/stdio"
+include "libc/stat"
 
 
 let filename = "Makefile"

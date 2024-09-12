@@ -1,9 +1,6 @@
-// test/slices/src/main.cm
 
-import "libc/stdio"
-
-//@feature("unsafe")
-
+include "libc/ctypes64"
+include "libc/stdio"
 func array_print(pa: *[]Int32, len: Int32) -> Unit {
 	var i: Int32 = 0
 	while i < len {
@@ -11,8 +8,6 @@ func array_print(pa: *[]Int32, len: Int32) -> Unit {
 		i = i + 1
 	}
 }
-
-
 func main() -> Int {
 	printf("test slices\n")
 
