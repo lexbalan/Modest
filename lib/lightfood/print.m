@@ -1,13 +1,15 @@
 // lib/lightfood/print.cm
 
 //@attribute("c_no_print")
-//import "./main"
+//include "./main"
 //$pragma c_include "./ff.h"
 
-import "libc/stdio"
+include "libc/ctypes64"
+include "libc/ctypes"
+include "libc/stdio"
 
 @attribute("c_no_print")
-import "lightfood/putchar"
+include "lightfood/putchar"
 $pragma c_include "./putchar.h"
 
 

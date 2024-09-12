@@ -1,6 +1,7 @@
 // test/1.hello_world/src/main.cm
 
-import "libc/stdio"
+include "libc/ctypes64"
+include "libc/stdio"
 
 let arr = [Int32 1, Int32 2]
 var arr0 = arr

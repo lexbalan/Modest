@@ -1,10 +1,12 @@
 // test/va/src/main.cm
 
-import "libc/stdio"
-import "libc/unistd"
+include "libc/ctypes64"
+include "libc/ctypes"
+include "libc/stdio"
+include "libc/unistd"
 
 @attribute("c_no_print")
-import "lightfood/print"
+include "lightfood/print"
 $pragma c_include "./print.h"
 
 

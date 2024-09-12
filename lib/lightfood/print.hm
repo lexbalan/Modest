@@ -1,4 +1,0 @@
-// lib/lightfood/print.hm
-
-func print(form: *Str8, ...)
-

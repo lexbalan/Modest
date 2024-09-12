@@ -1,6 +1,7 @@
 // test/xor/src/main.cm
 
-import "libc/stdio"
+include "libc/ctypes64"
+include "libc/stdio"
 
 
 func xor_encrypter(buf: *[]Byte, buflen: Nat32, key: *[]Byte, keylen: Nat32) -> Unit {
