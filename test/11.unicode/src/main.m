@@ -1,10 +1,13 @@
 // test/11.unicode/src/main.cm
 
-import "libc/stdio"
+include "libc/ctypes64"
+include "libc/stdio"
 
+include "lightfood/putchar"
 @attribute("c_no_print")
-import "misc/utf"
+include "misc/utf"
 $pragma c_include "./utf.h"
+$pragma c_include "./putchar.h"
 
 
 let ratSymbolUTF8 = [0xf0, 0x9f, 0x90, 0x80]
@@ -37,7 +40,7 @@ func main() -> Int {
 //	printf("omegaCode = %d\n", omegaCode)
 //	printf("ratCode = %d\n", ratCode)
 
-	var i = 0
+	/*var i = 0
 	while true {
 		let c = string16Const[i]
 
@@ -48,7 +51,7 @@ func main() -> Int {
 		printf("[%d]U16: 0x%x\n", i, Nat32 c)
 
 		i = i + 1
-	}
+	}*/
 
 	var str8: *Str8 = string8Const
 	var str16: *Str16 = string16Const

@@ -1,6 +1,8 @@
 // algorithms from wikipedia
 // (https://ru.wikipedia.org/wiki/UTF-16)
 
+$pragma do_not_include
+
 
 // декодирует символ UTF-32 в последовательность UTF-8
 export func utf32_to_utf8(c: Char32, buf: *[4]Char8) -> Nat8 {

@@ -1,10 +1,13 @@
+//
+
+$pragma do_not_include
 
 //@attribute("c_no_print")
 include "misc/utf"
 $pragma c_include "./utf.h"
 
 include "libc/ctypes64"
-// for putchar
+// for putchar()
 include "libc/stdio"
 
 
