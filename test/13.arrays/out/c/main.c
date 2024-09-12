@@ -1,29 +1,31 @@
-// test/arrays/src/main.cm
+// ./out/c/main.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
-#include <math.h>
-#include "./minmax.h"
-
-
-
-
+#include "main.h"
 
 
 
 #define _constantArray  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 const int8_t constantArray[10] = _constantArray;
+#define _startSequence  {0xAA, 0x55, 0x02}
+const int8_t startSequence[3] = _startSequence;
+#define _stopSequence  {0x16}
+const int8_t stopSequence[1] = _stopSequence;
+struct f0_x {char a[20];};
+struct f0_retval {char a[30];};
+struct f0_retval f0(struct f0_x x);
+void test();
+int main();
+
+
+
+
 
 static int32_t globalArray[10] = _constantArray;
-
 static char arrayFromString[3] = "abc";
-
-
-//var arrayOfChars = [Char8 "a", 'b', 'c']
-
 
 struct f0_x {char a[20];};
 struct f0_retval {char a[30];};
@@ -53,12 +55,6 @@ struct f0_retval f0(struct f0_x x)
 	res[13] = '\x0';
 	return *(struct f0_retval *)&res;
 }
-
-
-#define _startSequence  {0xAA, 0x55, 0x02}
-const int8_t startSequence[3] = _startSequence;
-#define _stopSequence  {0x16}
-const int8_t stopSequence[1] = _stopSequence;
 
 void test()
 {

@@ -1,6 +1,7 @@
 // test/12.structural_type_system/src/main.cm
 
-import "libc/stdio"
+include "libc/ctypes64"
+include "libc/stdio"
 
 
 type Type1 record {
