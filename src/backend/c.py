@@ -745,6 +745,12 @@ def print_value_cons_array(x, ctx):
 				print_string_literal(value['asset'], to_type['of']['width'])
 			return
 
+	# for:
+	#    var x: [10]Byte = "0123456789"
+	if hlir_type.type_is_string(value['type']):
+		print_value(value, ctx=ctx)
+		return
+
 	return print_cast(to_type, value, ctx)
 
 
