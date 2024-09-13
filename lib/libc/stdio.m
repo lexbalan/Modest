@@ -9,10 +9,10 @@ include "libc/ctypes"
 
 export {
 	@property("type.id.c", "FILE")
-	type File Unit
+	type File Nat8
 
 	@property("type.id.c", "fpos_t")
-	type FposT Unit
+	type FposT Nat8
 
 	@property("type.id.c", "char *")
 	type CharStr Str
