@@ -15,7 +15,7 @@ int main();
 
 
 
-static uint8_t data[9] = (uint8_t *)datastring;
+static uint8_t data[9] = datastring;
 
 uint32_t do_crc32(uint8_t *buf, uint32_t len)
 {
