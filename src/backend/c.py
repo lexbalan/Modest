@@ -1173,15 +1173,12 @@ def print_value_lengthof(x, ctx):
 
 	if not v['kind'] in ['var', 'let']:
 		print_value(v['type']['volume'], need_wrap=True)
-		#out("%d" % x['asset'])
 		return
 
 	# sizeof(array) / sizeof(array[0])
-	out("(sizeof(")
+	out("LENGTHOF(")
 	print_value(v)
-	out(") / sizeof(")
-	print_value(v)
-	out("[0]))")
+	out(")")
 	return
 
 
@@ -2037,12 +2034,17 @@ def print_cfile(module, _outname):
 	if 'use_extra_args' in module['options']:
 		out("#include <stdarg.h>\n")
 
-	# search for $pragma c_include "..."
-	#cdirectives(module)
+	if 'use_va_arg' in module['att']:
+		out("#include <stdarg.h>")
 
 	out("\n#include \"%s.h\"\n" % module['id'])
 
-	out("\n\n")
+	out("\n")
+
+	if 'use_lengthof' in module['att']:
+		out("#define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))")
+
+	out("\n")
 
 	#out("\n/* forward type declaration */")
 # now see header!

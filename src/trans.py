@@ -1140,6 +1140,10 @@ def do_value_call_lengthof(args, ti):
 		error("expected array value", args[0]['ti'])
 		return value_bad({'ti': ti})
 
+	# for C backend, because C cannot do lengthof(x)
+	if not 'use_lengthof' in module['att']:
+		module['att'].append('use_lengthof')
+
 	return value_lengthof(arg, ti)
 
 
@@ -2515,8 +2519,10 @@ def def_func(x, dostmt=True):
 		i = i + 1
 
 
+	# for C backend, for #include <stdarg.h>
 	if fn['type']['extra_args']:
-		module_option('use_extra_args')
+		if not 'use_va_arg' in module['att']:
+			module['att'].append('use_va_arg')
 
 
 	# check unuse
@@ -2621,7 +2627,7 @@ def predefinition(id_str):
 
 
 
-# расширить текущий модуль определениями
+"""# расширить текущий модуль определениями
 def cmodule_extend(y, do_not_def):
 	global module
 	module['symtab_public'].extend(y['symtab_public'])
@@ -2630,7 +2636,7 @@ def cmodule_extend(y, do_not_def):
 	if not do_not_def:
 		module['defs'].extend(y['defs'])
 		module['export_defs'].extend(y['export_defs'])
-
+"""
 
 def do_import(x):
 	import_expr = do_value_immediate_string(x['expr'])
@@ -2685,9 +2691,34 @@ def do_import(x):
 		m_id = m['id']
 		module['imports'][m_id] = m
 	else:
+		# забираем публичные символы
+		# и забираем все определения (исключая дубликаты!)
 		module['symtab_include'].extend(m['symtab_public'])
-		module['included_defs'].extend(m['defs'])
-		module['included_defs'].extend(m['export_defs'])
+
+
+		def isntin(x, y):
+			for xx in x:
+				if ('id' in xx) and ('id' in y):
+					if xx['id']['str'] == y['id']['str']:
+						return False
+			#print("ISIN " + y['id']['str'])
+			return True
+
+		for d in m['defs']:
+			if isntin(module['included_defs'], d):
+				module['included_defs'].append(d)
+
+		for d in m['export_defs']:
+			if isntin(module['included_defs'], d):
+				module['included_defs'].append(d)
+
+		for d in m['included_defs']:
+			if isntin(module['included_defs'], d):
+				module['included_defs'].append(d)
+
+#		module['included_defs'].extend(m['defs'])
+#		module['included_defs'].extend(m['export_defs'])
+#		module['included_defs'].extend(m['included_defs'])
 
 	y = import_directive(impline, x['ti'], include=x['include'])
 	y['import_module'] = m
@@ -2904,7 +2935,6 @@ def process_module(ast, source_info, nodef=False):
 		# определения полученные из заинклуженного модуля
 		# LLVM например их печатает, а C и CM - нет
 		'included_defs': [],
-
 		'att': []
  	}
 
