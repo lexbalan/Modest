@@ -21,7 +21,10 @@ export func doHash(buf: *[]Byte, len: Nat32) -> Nat32 {
 	var crc_table: [tableSize]Nat32
 	var crc: Nat32
 
+	//
 	// create table before
+	//
+
 	var i = Nat32 0
 	while i < tableSize {
 		crc = i
@@ -39,7 +42,10 @@ export func doHash(buf: *[]Byte, len: Nat32) -> Nat32 {
 		++i
     }
 
+	//
 	// calculate CRC32
+	//
+
     crc = 0xFFFFFFFF
 
 	i = 0
