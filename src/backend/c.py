@@ -1640,9 +1640,6 @@ def print_def_func(x):
 
 	indent_down()
 
-	newline()
-	out("}")
-
 	global func_undef_list
 	if len(func_undef_list) > 0:
 		newline()
@@ -1650,6 +1647,7 @@ def print_def_func(x):
 			out("\n#undef %s" % id_str)
 
 	func_undef_list = []
+	out("\n}")
 
 	cfunc = None
 
