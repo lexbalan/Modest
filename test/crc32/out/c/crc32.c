@@ -5,18 +5,19 @@
 
 #include "crc32.h"
 
-#define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
+
 
 
 uint32_t crc32_doHash(uint8_t *buf, uint32_t len)
 {
-	uint32_t crc_table[256];
+	#define __tableSize  256
+	uint32_t crc_table[__tableSize];
 	uint32_t crc;
 
 	// create table before
 	uint32_t i;
 	i = 0;
-	while (i < LENGTHOF(crc_table)) {
+	while (i < __tableSize) {
 		crc = i;
 		uint32_t j;
 		j = 0;
@@ -44,5 +45,7 @@ uint32_t crc32_doHash(uint8_t *buf, uint32_t len)
 	}
 
 	return crc ^ 0xFFFFFFFF;
+
+#undef __tableSize
 }
 

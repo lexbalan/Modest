@@ -17,12 +17,13 @@ $pragma do_not_include
    одинарных, двойных, пакетных и всех нечетных ошибок
 */
 export func doHash(buf: *[]Byte, len: Nat32) -> Nat32 {
-	var crc_table: [256]Nat32
+	let tableSize = 256
+	var crc_table: [tableSize]Nat32
 	var crc: Nat32
 
 	// create table before
 	var i = Nat32 0
-	while i < lengthof(crc_table) {
+	while i < tableSize {
 		crc = i
 		var j = Nat32 0
 		while j < 8 {
@@ -50,3 +51,4 @@ export func doHash(buf: *[]Byte, len: Nat32) -> Nat32 {
 
 	return crc xor 0xFFFFFFFF
 }
+
