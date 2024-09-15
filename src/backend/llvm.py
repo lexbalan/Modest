@@ -2062,8 +2062,8 @@ def type_get_aka(t):
 	return None
 
 
-def print_decl_type(x):
-	out("\n%%%s = type opaque" % get_id_str(x))
+#def print_decl_type(x):
+#	out("\n%%%s = type opaque" % get_id_str(x))
 
 
 def print_def_type(x):
@@ -2260,9 +2260,9 @@ def een(defs):
 			out("\n")
 			isa_prev = isa
 
-		if isa == 'decl_func': print_decl_func(x)
-		elif isa == 'decl_type': print_decl_type(x)
-		elif isa == 'def_var': print_def_var(x)
+		#if isa == 'decl_func': print_decl_func(x)
+		#elif isa == 'decl_type': print_decl_type(x)
+		if isa == 'def_var': print_def_var(x)
 		elif isa == 'def_const': print_def_const(x)
 		elif isa == 'def_func': print_def_func(x)
 		elif isa == 'def_type': print_def_type(x)

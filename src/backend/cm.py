@@ -894,8 +894,6 @@ def print_def(x):
 	elif isa == 'def_const': print_def_const(x)
 	elif isa == 'def_func': print_def_func(x)
 	elif isa == 'def_type': print_def_type(x)
-	#elif isa == 'decl_func': print_decl_func(x)
-	elif isa == 'decl_type': print_decl_type(x)
 	elif isa == 'directive': print_directive(x)
 	elif isa == 'comment': print_comment(x)
 
