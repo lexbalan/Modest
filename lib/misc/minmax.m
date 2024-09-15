@@ -1,4 +1,4 @@
-// minmax.cm
+// minmax.m
 
 $pragma do_not_include
 

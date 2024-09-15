@@ -1,4 +1,4 @@
-// SHA256
+// sha256.m
 
 $pragma do_not_include
 
