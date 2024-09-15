@@ -14,7 +14,10 @@ uint32_t crc32_doHash(uint8_t *buf, uint32_t len)
 	uint32_t crc_table[__tableSize];
 	uint32_t crc;
 
+	//
 	// create table before
+	//
+
 	uint32_t i;
 	i = 0;
 	while (i < __tableSize) {
@@ -34,7 +37,10 @@ uint32_t crc32_doHash(uint8_t *buf, uint32_t len)
 		i = i + 1;
 	}
 
+	//
 	// calculate CRC32
+	//
+
 	crc = 0xFFFFFFFF;
 
 	i = 0;

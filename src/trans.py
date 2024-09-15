@@ -2708,30 +2708,6 @@ def do_import(x):
 		module['symtab_include'].extend(m['symtab_public'])
 		module['included'].append(m)
 
-		def isntin(x, y):
-			for xx in x:
-				if ('id' in xx) and ('id' in y):
-					if xx['id']['str'] == y['id']['str']:
-						return False
-			#print("ISIN " + y['id']['str'])
-			return True
-
-		for d in m['defs']:
-			if isntin(module['included_defs'], d):
-				module['included_defs'].append(d)
-
-		for d in m['export_defs']:
-			if isntin(module['included_defs'], d):
-				module['included_defs'].append(d)
-
-		for d in m['included_defs']:
-			if isntin(module['included_defs'], d):
-				module['included_defs'].append(d)
-
-#		module['included_defs'].extend(m['defs'])
-#		module['included_defs'].extend(m['export_defs'])
-#		module['included_defs'].extend(m['included_defs'])
-
 	y = import_directive(impline, x['ti'], include=x['include'])
 	y['import_module'] = m
 	return y

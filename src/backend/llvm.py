@@ -2268,24 +2268,48 @@ def een(defs):
 		elif isa == 'directive': pass
 
 
+# защита от повторного включения
+already_in = []
+def print_included(m):
+	for inc in m['included']:
+		# защита от повторного включения
+		if inc['id'] not in already_in:
+			already_in.append(inc['id'])
+			print_included(inc)
+
+	een(m['export_defs'])
+
+
+
+separatorLine = "\n; " + '-' * 77
 # список имен модулей распечатанных в текущей сброке
-printed_modules = []
+#printed_modules = []
 
 def print_module(m):
-	if m['source_info']['path'] in printed_modules:
-		return
+	#if m['source_info']['path'] in printed_modules:
+	#	return
 
-	printed_modules.append(m['source_info']['path'])
+	out(separatorLine)
+	out("\n; MODULE: %s (%s)" % (m['id'], m['source_info']['path']))
+	out(separatorLine)
 
-	DD = 77
+	#printed_modules.append(m['source_info']['path'])
+
+	print_included(m)
+
+	out(separatorLine)
+	out("\n; ENDMODULE: %s (%s)" % (m['id'], m['source_info']['path']))
+	out(separatorLine)
+
+
 
 	# печатаем декларации
 	# из экспортируемой части импортированных модулей
 	for imported_module_id in m['imports']:
 		imp = m['imports'][imported_module_id]
-		out("\n; " + '-' * DD)
+		out(separatorLine)
 		out("\n; declarations from: %s" % (imported_module_id))
-		out("\n; " + '-' * DD)
+		out(separatorLine)
 		een(imp['export_defs'])
 
 		"""for d in imp['defs']:
@@ -2298,15 +2322,14 @@ def print_module(m):
 		out("\n\n")
 
 
-	out("\n; " + '-' * DD)
+
+	out(separatorLine)
 	out("\n; -- SOURCE: %s" % m['source_info']['path'])
-	out("\n; " + '-' * DD)
+	out(separatorLine)
 
 	print_strings(m['strings'])
 
 	een(m['defs'])
-
-
 
 	out("\n\n")
 	return

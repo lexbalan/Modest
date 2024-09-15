@@ -14,18 +14,18 @@ struct main_Point2 {
 	int32_t x;
 	int32_t y;
 };
-void main_init();
+void init();
 
 
 
-void main_init()
+void init()
 {
 	printf("init!\n");
 }
 
 lib_Int main()
 {
-	main_init();
+	init();
 
 	#define __a  10
 	#define __b  20
@@ -41,8 +41,8 @@ lib_Int main()
 	lib_printPoint(*(lib_Point *)&p);
 
 	return 0;
-}
 
 #undef __a
 #undef __b
+}
 

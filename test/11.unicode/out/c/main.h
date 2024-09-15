@@ -10,6 +10,7 @@
 #include "./putchar.h"
 #include <stdio.h>
 #include "./utf.h"
+#include <stdio.h>
 
 
 

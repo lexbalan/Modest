@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include <stdio.h>
+#include <stdio.h>
 
 
 #endif /* CONSOLE_H */

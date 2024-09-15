@@ -1885,13 +1885,6 @@ def cdirectives(module):
 					newline()
 					print_include(obj)
 
-		"""for obj in imported_module['included_defs']:
-			print("????" + str(obj['isa']))
-			if obj['isa'] == 'directive':
-				if obj['kind'] == 'c_include':
-					newline()
-					print_include(obj)
-		"""
 
 	for obj in module['defs']:
 		if obj['isa'] == 'directive':
@@ -1899,11 +1892,12 @@ def cdirectives(module):
 				newline()
 				print_include(obj)
 
-	for obj in module['included_defs']:
-		if obj['isa'] == 'directive':
-			if obj['kind'] == 'c_include':
-				newline()
-				print_include(obj)
+	for inc in module['included']:
+		for obj in inc['defs']:
+			if obj['isa'] == 'directive':
+				if obj['kind'] == 'c_include':
+					newline()
+					print_include(obj)
 
 
 

@@ -101,9 +101,11 @@ break_2:
 
 
 ; -----------------------------------------------------------------------------
-; declarations from: lib
+; MODULE: main (/Users/alexbalan/p/Modest/test/pre0/src/main.m)
 ; -----------------------------------------------------------------------------
 
-%Int = type i32;
+declare void @printf(%Str8* %s, ...)
 
-define %Int @mid(%Int %a, %Int %b) {
+define %Int @main() {
+	call void @init()<access_module>
+	%1 = call %Int 0(%Int 10, %Int 20)
