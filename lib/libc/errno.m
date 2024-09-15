@@ -1,5 +1,7 @@
+// libc/errno.m
 
 $pragma module_nodecorate
+
 
 export {
 	/*

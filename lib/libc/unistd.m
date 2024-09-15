@@ -1,4 +1,4 @@
-// libc/unistd.hm
+// libc/unistd.m
 // thx: https://pubs.opengroup.org/onlinepubs/7908799/xsh/unistd.h.html
 
 $pragma do_not_include

@@ -1,4 +1,4 @@
-// libc/math.hm
+// libc/math.m
 
 $pragma do_not_include
 $pragma module_nodecorate

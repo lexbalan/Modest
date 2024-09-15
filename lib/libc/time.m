@@ -1,3 +1,4 @@
+// libc/time.m
 
 $pragma do_not_include
 $pragma module_nodecorate
@@ -11,7 +12,6 @@ export {
 	/* time in seconds since 1970 */
 	@property("type.id.c", "time_t")
 	type TimeT Int32
-
 
 	@property("type.id.c", "clock_t")
 	type ClockT UnsignedLong

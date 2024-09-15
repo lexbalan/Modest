@@ -1,4 +1,4 @@
-// libc/ctypes.hm
+// libc/ctypes.m
 
 $pragma do_not_include
 $pragma module_nodecorate

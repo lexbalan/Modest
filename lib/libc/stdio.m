@@ -1,4 +1,4 @@
-// libc/stdio.hm
+// libc/stdio.m
 
 $pragma do_not_include
 $pragma module_nodecorate
