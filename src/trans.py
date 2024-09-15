@@ -86,26 +86,26 @@ def module_strings_add(v):
 def module_type_add_public(m, id_str, t):
 	#print("module %s type_add_public %s" % (m['id'], id_str))
 	m['symtab_public'].type_add(id_str, t)
-	t['module'] = m
+	#t['module'] = m
 	t['att'].append('global_entity')
 
 def module_value_add_public(m, id_str, v):
 	#print("module %s value_add_public %s" % (m['id'], id_str))
 	m['symtab_public'].value_add(id_str, v)
-	v['module'] = m
+	#v['module'] = m
 	v['att'].append('global_entity')
 
 
 def module_type_add_private(m, id_str, t):
 	#print("module %s type_add_private %s" % (m['id'], id_str))
 	m['symtab_private'].type_add(id_str, t)
-	t['module'] = m
+	#t['module'] = m
 	t['att'].append('global_entity')
 
 def module_value_add_private(m, id_str, v):
 	#print("module %s value_add_private %s" % (m['id'], id_str))
 	m['symtab_private'].value_add(id_str, v)
-	v['module'] = m
+	#v['module'] = m
 	v['att'].append('global_entity')
 
 
@@ -2202,6 +2202,8 @@ def def_const(x):
 
 	y = hlir_def_const(id, const_value, v, x['ti'])
 	y['export'] = x['export']
+	v['definition'] = y
+	y['module'] = module
 	return y
 
 
@@ -2236,6 +2238,8 @@ def decl_type(x):
 	module_type_add_public(module, id['str'], nt)
 	y = hlir_decl_type(id, nt, x['ti'])
 	y['export'] = x['export']
+	nt['definition'] = y
+	y['module'] = module
 	return y
 
 
@@ -2265,7 +2269,6 @@ def def_type(x):
 		#	error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
 	else:
 		nt = hlir_type.hlir_type_undefined(x['ti'])
-		global module
 		module_type_add(module, id['str'], nt, is_public=x['export'])
 
 	# только теперь обрабатываем поля,
@@ -2289,6 +2292,7 @@ def def_type(x):
 	nt['att'] = copy.copy(ty['att'])
 	nt['ti_def'] = id['ti']
 	nt['module'] = module  ## добавляем заново тк очистили его выше!
+
 
 	if need_decoration(x):
 		nt['prefix'] = module['prefix']
@@ -2314,6 +2318,8 @@ def def_type(x):
 			module_remove_node(module, 'decl_type', id['str'])
 
 	y = hlir_def_type(id, nt, ty, x['ti'])
+	nt['definition'] = y
+	y['module'] = module
 	y['nl'] = x['nl']
 	y['export'] = x['export']
 	return y
@@ -2361,6 +2367,8 @@ def decl_var(x):
 
 	y = hlir_decl_var(id, var_value, v, x['ti'])
 	y['export'] = x['export']
+	nt['definition'] = y
+	y['module'] = module
 	return y
 
 
@@ -2409,6 +2417,8 @@ def def_var(x):
 	module_value_add(module, id['str'], var_value, is_public=x['export'])
 
 	y = hlir_def_var(id, var_value, v, x['ti'])
+	y['module'] = module
+	v['definition'] = y
 	y['export'] = x['export']
 	return y
 
@@ -2548,11 +2558,13 @@ def def_func(x, dostmt=True):
 
 	cfunc = prev_cfunc
 
-	yy = hlir_def_func(func_id, fn, stmt, x['ti'])
+	y = hlir_def_func(func_id, fn, stmt, x['ti'])
 	if need_decoration(x):
-		yy['prefix'] = module['prefix']
-	yy['export'] = x['export']
-	return yy
+		y['prefix'] = module['prefix']
+	y['export'] = x['export']
+	fn['definition'] = y
+	y['module'] = module
+	return y
 
 
 
@@ -2694,7 +2706,7 @@ def do_import(x):
 		# забираем публичные символы
 		# и забираем все определения (исключая дубликаты!)
 		module['symtab_include'].extend(m['symtab_public'])
-
+		module['included'].append(m)
 
 		def isntin(x, y):
 			for xx in x:
@@ -2928,6 +2940,7 @@ def process_module(ast, source_info, nodef=False):
 		'symtab_private': symtab_private,
 		'symtab_include': symtab_include,
 
+		'included': [],
 		'imports': {},      # '<local_module_id>' => {'isa': 'module'}
 
 		'defs': [],         # приватные определения модуля
