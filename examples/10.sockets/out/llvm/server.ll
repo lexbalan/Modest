@@ -100,18 +100,13 @@ break_2:
 }
 
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/system.hm
-
-
-
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
-
-
+; -----------------------------------------------------------------------------
+; MODULE: server (/Users/alexbalan/p/Modest/examples/10.sockets/src/server.m)
+; -----------------------------------------------------------------------------
 
 %Str = type %Str8;
 %Char = type i8;
-%ConstChar = type i8;
+%ConstChar = type %Char;
 %SignedChar = type i8;
 %UnsignedChar = type i8;
 %Short = type i16;
@@ -130,15 +125,9 @@ break_2:
 %Double = type double;
 %LongDouble = type double;
 
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
-
-
-
-
 %SocklenT = type i32;
-%SizeT = type i64;
-%SSizeT = type i64;
+%SizeT = type %UnsignedLongInt;
+%SSizeT = type %LongInt;
 %IntptrT = type i64;
 %PtrdiffT = type i8*;
 %OffT = type i64;
@@ -147,210 +136,106 @@ break_2:
 %UidT = type i32;
 %GidT = type i32;
 
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
-
-
-
-
-%File = type opaque
-%FposT = type opaque
-
+%File = type i8;
+%FposT = type i8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 
 
-declare i32 @fclose(%File* %f)
-declare i32 @feof(%File* %f)
-declare i32 @ferror(%File* %f)
-declare i32 @fflush(%File* %f)
-declare i32 @fgetpos(%File* %f, %FposT* %pos)
+declare %Int @fclose(%File* %f)
+declare %Int @feof(%File* %f)
+declare %Int @ferror(%File* %f)
+declare %Int @fflush(%File* %f)
+declare %Int @fgetpos(%File* %f, %FposT* %pos)
 declare %File* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
-declare i64 @fread(i8* %buf, i64 %size, i64 %count, %File* %f)
-declare i64 @fwrite(i8* %buf, i64 %size, i64 %count, %File* %f)
+declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
+declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
 declare %File* @freopen(%ConstCharStr* %filename, %ConstCharStr* %mode, %File* %f)
-declare i32 @fseek(%File* %stream, i64 %offset, i32 %whence)
-declare i32 @fsetpos(%File* %f, %FposT* %pos)
-declare i64 @ftell(%File* %f)
-declare i32 @remove(%ConstCharStr* %filename)
-declare i32 @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
+declare %Int @fseek(%File* %stream, %LongInt %offset, %Int %whence)
+declare %Int @fsetpos(%File* %f, %FposT* %pos)
+declare %LongInt @ftell(%File* %f)
+declare %Int @remove(%ConstCharStr* %filename)
+declare %Int @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
 declare void @rewind(%File* %f)
 declare void @setbuf(%File* %f, %CharStr* %buffer)
-
-
-declare i32 @setvbuf(%File* %f, %CharStr* %buffer, i32 %mode, i64 %size)
+declare %Int @setvbuf(%File* %f, %CharStr* %buffer, %Int %mode, %SizeT %size)
 declare %File* @tmpfile()
 declare %CharStr* @tmpnam(%CharStr* %str)
-declare i32 @printf(%ConstCharStr* %s, ...)
-declare i32 @scanf(%ConstCharStr* %s, ...)
-declare i32 @fprintf(%File* %stream, %Str* %format, ...)
-declare i32 @fscanf(%File* %f, %ConstCharStr* %format, ...)
-declare i32 @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
-declare i32 @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare i32 @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
-declare i32 @vprintf(%ConstCharStr* %format, i8* %args)
-declare i32 @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
-declare i32 @vsnprintf(%CharStr* %str, i64 %n, %ConstCharStr* %format, i8* %args)
-declare i32 @__vsnprintf_chk(%CharStr* %dest, i64 %len, i32 %flags, i64 %dstlen, %ConstCharStr* %format, i8* %arg)
-declare i32 @fgetc(%File* %f)
-declare i32 @fputc(i32 %char, %File* %f)
-declare %CharStr* @fgets(%CharStr* %str, i32 %n, %File* %f)
-declare i32 @fputs(%ConstCharStr* %str, %File* %f)
-declare i32 @getc(%File* %f)
-declare i32 @getchar()
+declare %Int @printf(%ConstCharStr* %s, ...)
+declare %Int @scanf(%ConstCharStr* %s, ...)
+declare %Int @fprintf(%File* %stream, %Str* %format, ...)
+declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
+declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
+declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
+declare %Int @fgetc(%File* %f)
+declare %Int @fputc(%Int %char, %File* %f)
+declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
+declare %Int @fputs(%ConstCharStr* %str, %File* %f)
+declare %Int @getc(%File* %f)
+declare %Int @getchar()
 declare %CharStr* @gets(%CharStr* %str)
-declare i32 @putc(i32 %char, %File* %f)
-declare i32 @putchar(i32 %char)
-declare i32 @puts(%ConstCharStr* %str)
-declare i32 @ungetc(i32 %char, %File* %f)
+declare %Int @putc(%Int %char, %File* %f)
+declare %Int @putchar(%Int %char)
+declare %Int @puts(%ConstCharStr* %str)
+declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
 
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdlib.hm
-
-
-
 declare void @abort()
-declare i32 @abs(i32 %x)
-declare i32 @atexit(void ()* %x)
-declare double @atof([0 x i8]* %nptr)
-declare i32 @atoi([0 x i8]* %nptr)
-declare i64 @atol([0 x i8]* %nptr)
-declare i8* @calloc(i64 %num, i64 %size)
-declare void @exit(i32 %x)
+declare %Int @abs(%Int %x)
+declare %Int @atexit(void ()* %x)
+declare %Double @atof([0 x %ConstChar]* %nptr)
+declare %Int @atoi([0 x %ConstChar]* %nptr)
+declare %LongInt @atol([0 x %ConstChar]* %nptr)
+declare i8* @calloc(%SizeT %num, %SizeT %size)
+declare void @exit(%Int %x)
 declare void @free(i8* %ptr)
 declare %Str* @getenv(%Str* %name)
-declare i64 @labs(i64 %x)
+declare %LongInt @labs(%LongInt %x)
 declare %Str* @secure_getenv(%Str* %name)
-declare i8* @malloc(i64 %size)
-declare i32 @system([0 x i8]* %string)
-
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/socket.hm
-
-
-
+declare i8* @malloc(%SizeT %size)
+declare %Int @system([0 x %ConstChar]* %string)
 
 %In_addr_t = type i32;
 %In_port_t = type i16;
 %Socklen_t = type i32;
 %Struct_sockaddr = type {
-	i16, 
+	%UnsignedShort, 
 	[14 x i8]
 };
 
 %Struct_in_addr = type {
-	i32
+	%In_addr_t
 };
 
 %Struct_sockaddr_in = type {
 	i8, 
 	i8, 
-	i16, 
+	%UnsignedShort, 
 	%Struct_in_addr, 
 	[8 x i8]
 };
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-declare i32 @inet_addr([0 x i8]* %cp)
-
-
-declare i32 @socket(i32 %domain, i32 %type, i32 %protocol)
-declare i32 @bind(i32 %sockfd, %Struct_sockaddr* %addr, i32 %addrlen)
-declare i32 @listen(i32 %sockfd, i32 %backlog)
-declare i32 @connect(i32 %sockfd, %Struct_sockaddr* %addr, i32 %addrlen)
-declare i64 @send(i32 %socket, i8* %buffer, i64 %length, i32 %flags)
-declare i64 @recv(i32 %sockfd, i8* %buf, i64 %len, i32 %flags)
-
-
-declare i32 @accept(i32 %s, %Struct_sockaddr* %addr, i32* %addrlen)
-
-
-; -- SOURCE: src/server.cm
-
+declare %In_addr_t @inet_addr([0 x %ConstChar]* %cp)
+declare %Int @socket(%Int %domain, %Int %type, %Int %protocol)
+declare %Int @bind(%Int %sockfd, %Struct_sockaddr* %addr, %Socklen_t %addrlen)
+declare %Int @listen(%Int %sockfd, %Int %backlog)
+declare %Int @connect(%Int %sockfd, %Struct_sockaddr* %addr, %Socklen_t %addrlen)
+declare %SSizeT @send(%Int %socket, i8* %buffer, %SizeT %length, %Int %flags)
+declare %SSizeT @recv(%Int %sockfd, i8* %buf, %SizeT %len, %Int %flags)
+declare %Int @accept(%Int %s, %Struct_sockaddr* %addr, %Socklen_t* %addrlen)
+; -----------------------------------------------------------------------------
+; ENDMODULE: server (/Users/alexbalan/p/Modest/examples/10.sockets/src/server.m)
+; -----------------------------------------------------------------------------
+; -----------------------------------------------------------------------------
+; -- SOURCE: /Users/alexbalan/p/Modest/examples/10.sockets/src/server.m
+; -----------------------------------------------------------------------------
 @str1 = private constant [10 x i8] [i8 102, i8 105, i8 108, i8 101, i8 50, i8 46, i8 116, i8 120, i8 116, i8 0]
 @str2 = private constant [2 x i8] [i8 119, i8 0]
 @str3 = private constant [27 x i8] [i8 91, i8 45, i8 93, i8 32, i8 69, i8 114, i8 114, i8 111, i8 114, i8 32, i8 105, i8 110, i8 32, i8 99, i8 114, i8 101, i8 97, i8 116, i8 105, i8 110, i8 103, i8 32, i8 102, i8 105, i8 108, i8 101, i8 0]
@@ -367,8 +252,7 @@ declare i32 @accept(i32 %s, %Struct_sockaddr* %addr, i32* %addrlen)
 
 
 
-
-define i1 @write_file(i32 %sockfd) {
+define i1 @write_file(%Int %sockfd) {
 	%1 = alloca [1024 x i8], align 1
 	%2 = call %File* @fopen(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
 	%3 = icmp eq %File* %2, null
@@ -383,14 +267,14 @@ again_1:
 	br i1 1 , label %body_1, label %break_1
 body_1:
 	%5 = bitcast [1024 x i8]* %1 to i8*
-	%6 = call i64 @recv(i32 %sockfd, i8* %5, i64 1024, i32 0)
-	%7 = icmp sle i64 %6, 0
+	%6 = call %SSizeT @recv(%Int %sockfd, i8* %5, %SizeT 1024, %Int 0)
+	%7 = icmp sle %SSizeT %6, 0
 	br i1 %7 , label %then_1, label %endif_1
 then_1:
 	br label %break_1
 	br label %endif_1
 endif_1:
-	%9 = call i32 (%File*, %Str*, ...) @fprintf(%File* %2, %Str* bitcast ([3 x i8]* @str4 to [0 x i8]*), [1024 x i8]* %1)
+	%9 = call %Int (%File*, %Str*, ...) @fprintf(%File* %2, %Str* bitcast ([3 x i8]* @str4 to [0 x i8]*), [1024 x i8]* %1)
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
 	%10 = zext i11 1024 to i32
@@ -404,22 +288,22 @@ break_1:
 	ret i1 1
 }
 
-define i32 @main() {
-	%1 = call i32 @socket(i32 2, i32 1, i32 0)
-	%2 = icmp slt i32 %1, 0
+define %Int @main() {
+	%1 = call %Int @socket(%Int 2, %Int 1, %Int 0)
+	%2 = icmp slt %Int %1, 0
 	br i1 %2 , label %then_0, label %endif_0
 then_0:
 	call void @perror(%ConstCharStr* bitcast ([20 x i8]* @str5 to [0 x i8]*))
-	call void @exit(i32 1)
+	call void @exit(%Int 1)
 	br label %endif_0
 endif_0:
-	%3 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str6 to [0 x i8]*))
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str6 to [0 x i8]*))
 	%4 = alloca %Struct_sockaddr_in, align 4
 	%5 = insertvalue %Struct_sockaddr_in zeroinitializer, i8 0, 0
 	%6 = insertvalue %Struct_sockaddr_in %5, i8 2, 1
-	%7 = insertvalue %Struct_sockaddr_in %6, i16 8080, 2
-	%8 = call i32 @inet_addr([0 x i8]* bitcast ([10 x i8]* @str7 to [0 x i8]*))
-	%9 = insertvalue %Struct_in_addr zeroinitializer, i32 %8, 0
+	%7 = insertvalue %Struct_sockaddr_in %6, %UnsignedShort 8080, 2
+	%8 = call %In_addr_t @inet_addr([0 x %ConstChar]* bitcast ([10 x i8]* @str7 to [0 x i8]*))
+	%9 = insertvalue %Struct_in_addr zeroinitializer, %In_addr_t %8, 0
 	%10 = insertvalue %Struct_sockaddr_in %7, %Struct_in_addr %9, 3
 	%11 = insertvalue [8 x i8] zeroinitializer, i8 0, 0
 	%12 = insertvalue [8 x i8] %11, i8 0, 1
@@ -433,47 +317,47 @@ endif_0:
 	store %Struct_sockaddr_in %19, %Struct_sockaddr_in* %4
 	%20 = bitcast %Struct_sockaddr_in* %4 to i8*
 	%21 = bitcast i8* %20 to %Struct_sockaddr*
-	%22 = alloca i32, align 4
+	%22 = alloca %Int, align 4
 	%23 = bitcast %Struct_sockaddr* %21 to %Struct_sockaddr*
-	%24 = call i32 @bind(i32 %1, %Struct_sockaddr* %23, i32 16)
-	store i32 %24, i32* %22
-	%25 = load i32, i32* %22
-	%26 = icmp slt i32 %25, 0
+	%24 = call %Int @bind(%Int %1, %Struct_sockaddr* %23, %Socklen_t 16)
+	store %Int %24, %Int* %22
+	%25 = load %Int, %Int* %22
+	%26 = icmp slt %Int %25, 0
 	br i1 %26 , label %then_1, label %endif_1
 then_1:
 	call void @perror(%ConstCharStr* bitcast ([21 x i8]* @str8 to [0 x i8]*))
-	call void @exit(i32 1)
+	call void @exit(%Int 1)
 	br label %endif_1
 endif_1:
-	%27 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str9 to [0 x i8]*))
-	%28 = call i32 @listen(i32 %1, i32 10)
-	store i32 %28, i32* %22
-	%29 = load i32, i32* %22
-	%30 = icmp ne i32 %29, 0
+	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str9 to [0 x i8]*))
+	%28 = call %Int @listen(%Int %1, %Int 10)
+	store %Int %28, %Int* %22
+	%29 = load %Int, %Int* %22
+	%30 = icmp ne %Int %29, 0
 	br i1 %30 , label %then_2, label %endif_2
 then_2:
 	call void @perror(%ConstCharStr* bitcast ([21 x i8]* @str10 to [0 x i8]*))
-	call void @exit(i32 1)
+	call void @exit(%Int 1)
 	br label %endif_2
 endif_2:
-	%31 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str11 to [0 x i8]*))
-	%32 = alloca i32, align 4
-	store i32 16, i32* %32
+	%31 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str11 to [0 x i8]*))
+	%32 = alloca %Socklen_t, align 4
+	store %Socklen_t 16, %Socklen_t* %32
 	%33 = alloca %Struct_sockaddr_in, align 4
 	%34 = bitcast %Struct_sockaddr_in* %33 to i8*
 	%35 = bitcast i8* %34 to %Struct_sockaddr*
 	%36 = bitcast %Struct_sockaddr* %35 to %Struct_sockaddr*
-	%37 = call i32 @accept(i32 %1, %Struct_sockaddr* %36, i32* %32)
-	%38 = call i1 @write_file(i32 %37)
+	%37 = call %Int @accept(%Int %1, %Struct_sockaddr* %36, %Socklen_t* %32)
+	%38 = call i1 @write_file(%Int %37)
 	br i1 %38 , label %then_3, label %else_3
 then_3:
-	%39 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @str12 to [0 x i8]*))
+	%39 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @str12 to [0 x i8]*))
 	br label %endif_3
 else_3:
 	call void @perror(%ConstCharStr* bitcast ([22 x i8]* @str13 to [0 x i8]*))
 	br label %endif_3
 endif_3:
-	ret i32 0
+	ret %Int 0
 }
 
 

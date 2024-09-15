@@ -1,17 +1,13 @@
-/* thx: https://github.com/pshashipreetham/File-Transfer-Using-TCP-Socket-in-C-Socket-Programming */
 
-import "libc/stdio"
-import "libc/stdlib"
-import "libc/socket"
-
-
+include "libc/ctypes64"
+include "libc/ctypes"
+include "libc/stdio"
+include "libc/stdlib"
+include "libc/socket"
 let filename = "file2.txt"
-
 let ipAddress = "127.0.0.1"
 let port = 8080
 let bufSize = 1024
-
-
 func write_file(sockfd: Int) -> Bool {
 	var buffer: [bufSize]Char8
 
@@ -34,8 +30,6 @@ func write_file(sockfd: Int) -> Bool {
 
 	return true
 }
-
-
 func main() -> Int {
 	let sockfd = socket(c_AF_INET, c_SOCK_STREAM, 0)
 	if sockfd < 0 {

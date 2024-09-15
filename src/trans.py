@@ -2226,9 +2226,19 @@ def module_remove_node(m, isa, id_str):
 
 
 
+
+# нужно добавлять префикс к сущности
+# наличие поля prefix дает принтеру знать что нужно декорировать имя
+def need_decoration(x):
+	return not is_nodecorate(x) and not ('module_nodecorate' in module['att'])
+
+
+
+
+# Похоже что decl_type вообще нет тк теперь он нафиг не нужен
 def decl_type(x):
 	id = x['id']
-	log("decl_type: %s" % id['str'])
+	print("decl_type: %s" % id['str'])
 
 	#nt = do_type(x['type'])
 	nt = hlir_type.hlir_type_undefined(x['ti'])
@@ -2243,17 +2253,13 @@ def decl_type(x):
 	return y
 
 
-# нужно добавлять префикс к сущности
-# наличие поля prefix дает принтеру знать что нужно декорировать имя
-def need_decoration(x):
-	return not is_nodecorate(x) and not ('module_nodecorate' in module['att'])
-
-
-
 def def_type(x):
 	global module
 	id = x['id']
 	log("def_type: %s" % id['str'])
+
+	if x['type'] == None:
+		return decl_type(x)
 
 	if id['str'][0].islower():
 		error("type id must starts with big letter", id['ti'])
@@ -2484,14 +2490,6 @@ def do_func_value(x, export):
 	return fn
 
 
-def decl_func(x):
-	global module
-	fn = do_func_value(x, x['export'])
-	log('decl_func: %s' % fn['id']['str'])
-	y = hlir_decl_func(fn['id'], fn, fn['ti_def'])
-	y['export'] = x['export']
-	return y
-
 
 def def_func(x, dostmt=True):
 	global cfunc
@@ -2505,6 +2503,14 @@ def def_func(x, dostmt=True):
 
 	prev_cfunc = cfunc
 	cfunc = fn
+
+	if x['stmt'] == None:
+		#print("DECL: "+fn['id']['str'])
+		y = hlir_decl_func(fn['id'], fn, fn['ti_def'])
+		y['export'] = x['export']
+		fn['definition'] = y
+		return y
+
 
 	context_push()  # create params context
 
@@ -2971,11 +2977,7 @@ def pre_def(ast, fdecl=False):
 
 		if isa == 'ast_definition':
 			if kind == 'type':
-				y =  None
-				if x['type'] != None:
-					y = def_type(x)
-				else:
-					y = decl_type(x)
+				y = def_type(x)
 
 				add_spices(y, ast_atts=x['attributes'])
 				module_append(y, to_export=x['export'])
@@ -3016,12 +3018,8 @@ def pre_def(ast, fdecl=False):
 		kind = x['kind']
 		if isa == 'ast_definition':
 			if kind == 'func':
-				y = None
-				if x['stmt'] != None:
-					# (трансляция импорта не требует обработки тела функции)
-					y = def_func(x, dostmt=not fdecl)
-				else:
-					y = decl_func(x)
+				y = def_func(x, dostmt=not fdecl)
+
 
 				if y != None:
 					add_spices(y, ast_atts=x['attributes'])

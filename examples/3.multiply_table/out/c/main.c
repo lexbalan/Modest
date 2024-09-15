@@ -32,7 +32,7 @@ int main()
 	printf("multiply table for %d\n", (int32_t)__n);
 	mtab(__n);
 	return 0;
-}
 
 #undef __n
+}
 

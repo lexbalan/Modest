@@ -1989,6 +1989,12 @@ def print_decl_func(x):
 def print_def_func(x):
 	func = x['value']
 
+	if x['stmt'] == None:
+		print("STMT == NULL in")
+		print(x['id']['str'])
+		#print_fdecl(x)
+		return
+
 	fctx = {
 		'func': func,  # cfunc
 
