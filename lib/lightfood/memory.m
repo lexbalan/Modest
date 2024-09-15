@@ -1,4 +1,4 @@
-// lib/lightfood/memory.cm
+// lightfood/memory.m
 
 $pragma do_not_include
 

@@ -1,4 +1,4 @@
-// lib/lightfood/delay.m
+// lightfood/delay.m
 
 include "libc/time"
 

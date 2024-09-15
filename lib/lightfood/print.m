@@ -1,4 +1,4 @@
-// lib/lightfood/print.cm
+// lightfood/print.m
 
 //@attribute("c_no_print")
 //include "./main"
