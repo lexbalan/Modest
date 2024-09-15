@@ -2235,31 +2235,11 @@ def need_decoration(x):
 
 
 
-# Похоже что decl_type вообще нет тк теперь он нафиг не нужен
-def decl_type(x):
-	id = x['id']
-	print("decl_type: %s" % id['str'])
-
-	#nt = do_type(x['type'])
-	nt = hlir_type.hlir_type_undefined(x['ti'])
-	nt['ti_def'] = x['ti']
-	global module
-
-	module_type_add_public(module, id['str'], nt)
-	y = hlir_decl_type(id, nt, x['ti'])
-	y['export'] = x['export']
-	nt['definition'] = y
-	y['module'] = module
-	return y
-
 
 def def_type(x):
 	global module
 	id = x['id']
 	log("def_type: %s" % id['str'])
-
-	if x['type'] == None:
-		return decl_type(x)
 
 	if id['str'][0].islower():
 		error("type id must starts with big letter", id['ti'])
@@ -2315,66 +2295,11 @@ def def_type(x):
 	if hlir_type.type_is_record(ty):
 		module['records'].append(nt)
 
-
-	if already_declared:
-		# LLVM не допускает переопределения типа
-		# (после его декларации (как opaque))
-		# поэтому удаляем
-		if settings.check('backend', 'llvm'):
-			module_remove_node(module, 'decl_type', id['str'])
-
 	y = hlir_def_type(id, nt, ty, x['ti'])
 	nt['definition'] = y
 	y['module'] = module
 	y['nl'] = x['nl']
 	y['export'] = x['export']
-	return y
-
-
-
-"""def symbol_var(id, type, ti):
-	var_value = value_var(id, type, id['ti'])
-	#global module
-	#module_value_add_public(module, id['str'], var_value)
-	return var_value"""
-
-
-def decl_var(x):
-	id = x['id']
-	#log("decl_var %s" % id['str'])
-	v = None
-	if x['value'] != None:
-		v = do_rvalue(x['value'])
-
-		if t != None:
-			# for case like:
-			# var a: Int[] = [1, 2, 3] // -> Int[3]
-			if hlir_type.type_is_open_array(t):
-				length = 0
-				if hlir_type.type_is_string(v['type']):
-					length = len(v['asset'])
-				elif hlir_type.type_is_array(v['type']):
-					length = v['type']['volume']['asset']
-
-				volume = value_integer_create(length)
-				t = hlir_type.hlir_type_array(t['of'], volume, x['ti'])
-
-			v = value_cons_implicit_check(t, v)
-		else:
-			v = value_cons_default(v)
-			t = v['type']
-
-		if hlir_type.type_is_generic(v['type']):
-			error("cannot cons variable", x['ti'])
-
-
-	var_value = value_var(id, t, id['ti'])
-	module_value_add(module, id['str'], var_value, is_public=x['export'])
-
-	y = hlir_decl_var(id, var_value, v, x['ti'])
-	y['export'] = x['export']
-	nt['definition'] = y
-	y['module'] = module
 	return y
 
 
@@ -2506,7 +2431,7 @@ def def_func(x, dostmt=True):
 
 	if x['stmt'] == None:
 		#print("DECL: "+fn['id']['str'])
-		y = hlir_decl_func(fn['id'], fn, fn['ti_def'])
+		y = hlir_def_func(func_id, fn, None, x['ti'])
 		y['export'] = x['export']
 		fn['definition'] = y
 		return y

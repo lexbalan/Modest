@@ -7,7 +7,7 @@ def hlir_init():
 	hlir_type_init()
 
 
-def hlir_decl_type(id, newtype, ti):
+"""def hlir_decl_type(id, newtype, ti):
 	newtype_declaration = {
 		'isa': 'decl_type',
 		'id': id,
@@ -17,7 +17,7 @@ def hlir_decl_type(id, newtype, ti):
 		'ti': ti
 	}
 
-	return newtype_declaration
+	return newtype_declaration"""
 
 
 def hlir_def_type(id, type, original_type=None, ti=None):
@@ -68,7 +68,7 @@ def hlir_def_var(_id, var_value, init_value, ti):
 	}
 
 
-def hlir_decl_func(_id, value_func, ti):
+"""def hlir_decl_func(_id, value_func, ti):
 	return {
 		'isa': 'decl_func',
 		'id': _id,
@@ -76,7 +76,7 @@ def hlir_decl_func(_id, value_func, ti):
 		'att': [],
 		'nl': 1,
 		'ti': ti
-	}
+	}"""
 
 
 def hlir_def_func(_id, value_func, stmt, ti):

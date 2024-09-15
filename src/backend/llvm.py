@@ -1977,23 +1977,18 @@ def print_func_signature(func):
 
 
 
-def print_fdecl(x):
-	out("\ndeclare ")
-	print_func_signature(x)
-
 
 def print_decl_func(x):
-	print_fdecl(x['value'])
+	out("\ndeclare ")
+	print_func_signature(x['value'])
 
 
 def print_def_func(x):
 	func = x['value']
 
 	if x['stmt'] == None:
-		print("STMT == NULL in")
-		print(x['id']['str'])
-		#print_fdecl(x)
-		return
+		return print_decl_func(x)
+
 
 	fctx = {
 		'func': func,  # cfunc

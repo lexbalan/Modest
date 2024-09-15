@@ -1973,7 +1973,7 @@ def print_header(module, outname):
 
 		isa = x['isa']
 
-		if isa in ['def_func', 'decl_func']:
+		if isa in ['def_func']:
 			#if 'inline' in x['att']:
 			#	continue
 			print_decl_func(x)
