@@ -145,7 +145,7 @@ def get_id_str(x):
 		id_str = x['id']['str']
 		#if 'global_entity' in x['att']:
 		if 'prefix' in x:
-			id_str = x['module']['prefix'] + '_' + id_str
+			id_str = x['definition']['module']['prefix'] + '_' + id_str
 	else:
 		id_str = x['id']['c']
 	return id_str
