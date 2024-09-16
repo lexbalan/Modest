@@ -21,6 +21,7 @@ struct queue_Queue {
 	uint32_t size;
 };
 void queue_init(queue_Queue *q);
+uint32_t queue_getSize(queue_Queue *q);
 bool queue_isEmpty(queue_Queue *q);
 bool queue_isFull(queue_Queue *q);
 bool queue_put(queue_Queue *q, uint8_t b);

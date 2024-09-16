@@ -1,7 +1,8 @@
 
-include "console"
 include "libc/ctypes64"
 include "libc/ctypes"
+include "libc/math"
+include "libc/stdio"
 import "queue"
 var q0: Queue
 var ii: Int32
@@ -41,15 +42,10 @@ export func main() -> Int {
 	queue.init(&q0)
 
 	padd(3)
-
 	fetch(7)
-
 	padd(12)
-
 	fetch(7)
-
 	padd(22)
-
 	fetch(7)
 
 	return 0

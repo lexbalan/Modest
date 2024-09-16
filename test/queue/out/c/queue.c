@@ -29,6 +29,11 @@ void queue_init(queue_Queue *q)
 	q->g = 0;
 }
 
+uint32_t queue_getSize(queue_Queue *q)
+{
+	return q->size;
+}
+
 bool queue_isEmpty(queue_Queue *q)
 {
 	return q->size == 0;
@@ -45,7 +50,6 @@ bool queue_put(queue_Queue *q, uint8_t b)
 		return false;
 	}
 
-	//printf("put %d to %d\n", Int32 b, q.p)
 	q->data[q->p] = b;
 	q->p = next(q->p);
 	q->size = q->size + 1;

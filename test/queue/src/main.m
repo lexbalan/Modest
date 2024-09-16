@@ -46,9 +46,6 @@ func fetch(n: Int) -> Unit {
 
 @nodecorate
 export func main() -> Int {
-
-	printf("f = %lf\n", Double m_PI)
-
 	init()
 
 	queue.init(&q0)

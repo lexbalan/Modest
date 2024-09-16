@@ -1,7 +1,7 @@
 
-include "console"
 include "libc/ctypes64"
 include "libc/ctypes"
+include "libc/stdio"
 func next(x: Int32) -> Int32 {
 	if x < bufVolume - 1 {
 		return x + 1
@@ -22,6 +22,9 @@ export func init(q: *Queue) -> Unit {
 	q.p = 0
 	q.g = 0
 }
+export func getSize(q: *Queue) -> Nat32 {
+	return q.size
+}
 export func isEmpty(q: *Queue) -> Bool {
 	return q.size == 0
 }
@@ -33,7 +36,6 @@ export func put(q: *Queue, b: Byte) -> Bool {
 		return false
 	}
 
-	//printf("put %d to %d\n", Int32 b, q.p)
 	q.data[q.p] = b
 	q.p = next(q.p)
 	q.size = q.size + 1
