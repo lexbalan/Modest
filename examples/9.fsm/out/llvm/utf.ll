@@ -99,10 +99,10 @@ break_2:
 	ret i1 1
 }
 
-; print includes; end print includes
-; -----------------------------------------------------------------------------
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/misc/utf.m
-; -----------------------------------------------------------------------------
+; MODULE: utf
+
+; print includes
+; end print includes
 ; -- strings --
 
 define i8 @utf32_to_utf8(i32 %c, [4 x i8]* %buf) {

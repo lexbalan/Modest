@@ -99,6 +99,8 @@ break_2:
 	ret i1 1
 }
 
+; MODULE: fsm
+
 ; print includes
 
 %Str = type %Str8;
@@ -182,10 +184,8 @@ declare %Int @putc(%Int %char, %File* %f)
 declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
-declare void @perror(%ConstCharStr* %str); end print includes
-; -----------------------------------------------------------------------------
-; -- SOURCE: /Users/alexbalan/p/Modest/examples/9.fsm/src/fsm.m
-; -----------------------------------------------------------------------------
+declare void @perror(%ConstCharStr* %str)
+; end print includes
 ; -- strings --
 @str1 = private constant [12 x i8] [i8 102, i8 115, i8 109, i8 58, i8 58, i8 114, i8 117, i8 110, i8 40, i8 41, i8 10, i8 0]
 @str2 = private constant [10 x i8] [i8 101, i8 110, i8 116, i8 101, i8 114, i8 32, i8 37, i8 115, i8 10, i8 0]

@@ -99,6 +99,8 @@ break_2:
 	ret i1 1
 }
 
+; MODULE: putchar
+
 ; print includes
 
 define i8 @utf32_to_utf8(i32 %c, [4 x i8]* %buf) {
@@ -328,10 +330,8 @@ declare %Int @putc(%Int %char, %File* %f)
 declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
-declare void @perror(%ConstCharStr* %str); end print includes
-; -----------------------------------------------------------------------------
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/lightfood/putchar.m
-; -----------------------------------------------------------------------------
+declare void @perror(%ConstCharStr* %str)
+; end print includes
 ; -- strings --
 
 

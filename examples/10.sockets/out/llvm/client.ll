@@ -99,10 +99,9 @@ break_2:
 	ret i1 1
 }
 
+; MODULE: client
 
-; -----------------------------------------------------------------------------
-; MODULE: client (/Users/alexbalan/p/Modest/examples/10.sockets/src/client.m)
-; -----------------------------------------------------------------------------
+; print includes
 
 %Str = type %Str8;
 %Char = type i8;
@@ -125,6 +124,7 @@ break_2:
 %Double = type double;
 %LongDouble = type double;
 
+
 %SocklenT = type i32;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
@@ -135,6 +135,7 @@ break_2:
 %PidT = type i32;
 %UidT = type i32;
 %GidT = type i32;
+
 
 %File = type i8;
 %FposT = type i8;
@@ -185,6 +186,7 @@ declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
 
+
 declare void @abort()
 declare %Int @abs(%Int %x)
 declare %Int @atexit(void ()* %x)
@@ -199,6 +201,7 @@ declare %LongInt @labs(%LongInt %x)
 declare %Str* @secure_getenv(%Str* %name)
 declare i8* @malloc(%SizeT %size)
 declare %Int @system([0 x %ConstChar]* %string)
+
 
 
 declare %Int @access([0 x %ConstChar]* %path, %Int %amode)
@@ -287,6 +290,7 @@ declare %Int @usleep(%USecondsT %useconds)
 declare %PidT @vfork()
 declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 
+
 %In_addr_t = type i32;
 %In_port_t = type i16;
 %Socklen_t = type i32;
@@ -317,12 +321,8 @@ declare %Int @connect(%Int %sockfd, %Struct_sockaddr* %addr, %Socklen_t %addrlen
 declare %SSizeT @send(%Int %socket, i8* %buffer, %SizeT %length, %Int %flags)
 declare %SSizeT @recv(%Int %sockfd, i8* %buf, %SizeT %len, %Int %flags)
 declare %Int @accept(%Int %s, %Struct_sockaddr* %addr, %Socklen_t* %addrlen)
-; -----------------------------------------------------------------------------
-; ENDMODULE: client (/Users/alexbalan/p/Modest/examples/10.sockets/src/client.m)
-; -----------------------------------------------------------------------------
-; -----------------------------------------------------------------------------
-; -- SOURCE: /Users/alexbalan/p/Modest/examples/10.sockets/src/client.m
-; -----------------------------------------------------------------------------
+; end print includes
+; -- strings --
 @str1 = private constant [20 x i8] [i8 91, i8 45, i8 93, i8 32, i8 69, i8 114, i8 114, i8 111, i8 114, i8 32, i8 105, i8 110, i8 32, i8 115, i8 111, i8 99, i8 107, i8 101, i8 116, i8 0]
 @str2 = private constant [27 x i8] [i8 91, i8 43, i8 93, i8 32, i8 83, i8 101, i8 114, i8 118, i8 101, i8 114, i8 32, i8 115, i8 111, i8 99, i8 107, i8 101, i8 116, i8 32, i8 99, i8 114, i8 101, i8 97, i8 116, i8 101, i8 100, i8 10, i8 0]
 @str3 = private constant [10 x i8] [i8 49, i8 50, i8 55, i8 46, i8 48, i8 46, i8 48, i8 46, i8 49, i8 0]

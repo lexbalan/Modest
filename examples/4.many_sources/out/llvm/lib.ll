@@ -99,6 +99,8 @@ break_2:
 	ret i1 1
 }
 
+; MODULE: lib
+
 ; print includes
 
 %Str = type %Str8;
@@ -182,10 +184,8 @@ declare %Int @putc(%Int %char, %File* %f)
 declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
-declare void @perror(%ConstCharStr* %str); end print includes
-; -----------------------------------------------------------------------------
-; -- SOURCE: /Users/alexbalan/p/Modest/examples/4.many_sources/src/lib.m
-; -----------------------------------------------------------------------------
+declare void @perror(%ConstCharStr* %str)
+; end print includes
 ; -- strings --
 @str1 = private constant [20 x i8] [i8 104, i8 101, i8 108, i8 108, i8 111, i8 32, i8 102, i8 114, i8 111, i8 109, i8 32, i8 108, i8 105, i8 98, i8 46, i8 102, i8 111, i8 111, i8 10, i8 0]
 

@@ -99,6 +99,8 @@ break_2:
 	ret i1 1
 }
 
+; MODULE: main
+
 ; print includes
 
 %Str = type %Str8;
@@ -244,6 +246,7 @@ define void @delay_s(i64 %s) {
 	call void @delay_ms(i64 %1)
 	ret void
 }
+
 ; end print includes
 ; -----------------------------------------------------------------------------
 ; declarations from: fsm
@@ -288,9 +291,6 @@ declare void @switch(%FSM* %fsm, i32 %state)
 declare void @run(%FSM* %fsm)
 
 
-; -----------------------------------------------------------------------------
-; -- SOURCE: /Users/alexbalan/p/Modest/examples/9.fsm/src/main.m
-; -----------------------------------------------------------------------------
 ; -- strings --
 
 

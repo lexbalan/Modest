@@ -2343,7 +2343,7 @@ def def_var(x):
 
 
 	v = value_var(id, t, id['ti'])
-	module_value_add(module, id['str'], var_value, is_public=x['export'])
+	module_value_add(module, id['str'], v, is_public=x['export'])
 
 
 	y = hlir_def_var(id, v, init_value, x['ti'])

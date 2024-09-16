@@ -99,10 +99,9 @@ break_2:
 	ret i1 1
 }
 
+; MODULE: server
 
-; -----------------------------------------------------------------------------
-; MODULE: server (/Users/alexbalan/p/Modest/examples/10.sockets/src/server.m)
-; -----------------------------------------------------------------------------
+; print includes
 
 %Str = type %Str8;
 %Char = type i8;
@@ -125,6 +124,7 @@ break_2:
 %Double = type double;
 %LongDouble = type double;
 
+
 %SocklenT = type i32;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
@@ -135,6 +135,7 @@ break_2:
 %PidT = type i32;
 %UidT = type i32;
 %GidT = type i32;
+
 
 %File = type i8;
 %FposT = type i8;
@@ -185,6 +186,7 @@ declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
 
+
 declare void @abort()
 declare %Int @abs(%Int %x)
 declare %Int @atexit(void ()* %x)
@@ -199,6 +201,7 @@ declare %LongInt @labs(%LongInt %x)
 declare %Str* @secure_getenv(%Str* %name)
 declare i8* @malloc(%SizeT %size)
 declare %Int @system([0 x %ConstChar]* %string)
+
 
 %In_addr_t = type i32;
 %In_port_t = type i16;
@@ -230,12 +233,8 @@ declare %Int @connect(%Int %sockfd, %Struct_sockaddr* %addr, %Socklen_t %addrlen
 declare %SSizeT @send(%Int %socket, i8* %buffer, %SizeT %length, %Int %flags)
 declare %SSizeT @recv(%Int %sockfd, i8* %buf, %SizeT %len, %Int %flags)
 declare %Int @accept(%Int %s, %Struct_sockaddr* %addr, %Socklen_t* %addrlen)
-; -----------------------------------------------------------------------------
-; ENDMODULE: server (/Users/alexbalan/p/Modest/examples/10.sockets/src/server.m)
-; -----------------------------------------------------------------------------
-; -----------------------------------------------------------------------------
-; -- SOURCE: /Users/alexbalan/p/Modest/examples/10.sockets/src/server.m
-; -----------------------------------------------------------------------------
+; end print includes
+; -- strings --
 @str1 = private constant [10 x i8] [i8 102, i8 105, i8 108, i8 101, i8 50, i8 46, i8 116, i8 120, i8 116, i8 0]
 @str2 = private constant [2 x i8] [i8 119, i8 0]
 @str3 = private constant [27 x i8] [i8 91, i8 45, i8 93, i8 32, i8 69, i8 114, i8 114, i8 111, i8 114, i8 32, i8 105, i8 110, i8 32, i8 99, i8 114, i8 101, i8 97, i8 116, i8 105, i8 110, i8 103, i8 32, i8 102, i8 105, i8 108, i8 101, i8 0]

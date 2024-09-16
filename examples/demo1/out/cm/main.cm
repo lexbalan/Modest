@@ -1,15 +1,7 @@
-// examples/demo1/src/main.cm
 
-import "libc/stdio"
-
-
+include "libc/stdio"
 let minNumber = 0
 let maxNumber = 10
-
-
-func get_number(min: Int32, max: Int32) -> Int32
-
-
 func main() -> Int32 {
 	let number = get_number(minNumber, maxNumber)
 
@@ -25,8 +17,6 @@ func main() -> Int32 {
 
 	return 0
 }
-
-
 func get_number(min: Int32, max: Int32) -> Int32 {
 	var number: Int32
 	number = 0

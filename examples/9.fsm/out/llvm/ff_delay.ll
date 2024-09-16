@@ -99,6 +99,8 @@ break_2:
 	ret i1 1
 }
 
+; MODULE: delay
+
 ; print includes
 
 %Str = type %Str8;
@@ -160,10 +162,8 @@ declare %Char* @asctime(%Struct_tm* %timeptr)
 declare %Char* @ctime(%TimeT* %timer)
 declare %Struct_tm* @gmtime(%TimeT* %timer)
 declare %Struct_tm* @localtime(%TimeT* %timer)
-declare %SizeT @strftime(%Char* %ptr, %SizeT %maxsize, %ConstChar* %format, %Struct_tm* %timeptr); end print includes
-; -----------------------------------------------------------------------------
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/lightfood/delay.m
-; -----------------------------------------------------------------------------
+declare %SizeT @strftime(%Char* %ptr, %SizeT %maxsize, %ConstChar* %format, %Struct_tm* %timeptr)
+; end print includes
 ; -- strings --
 
 
