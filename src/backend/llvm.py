@@ -2303,12 +2303,11 @@ def print_module(m):
 	#if m['source_info']['path'] in printed_modules:
 	#	return
 
-	print("PRINT_MODULE: " + m['id'])
-	print(len(m['strings']))
+	out("; MODULE: %s\n" % m['id'])
 
-	out("; print includes")
+	out("\n; print includes")
 	print_included(m)
-	out("; end print includes")
+	out("\n; end print includes")
 
 	# печатаем декларации
 	# из экспортируемой части импортированных модулей
@@ -2319,12 +2318,6 @@ def print_module(m):
 		out(separatorLine)
 		een(imp['export_defs'])
 		out("\n\n")
-
-
-
-	out(separatorLine)
-	out("\n; -- SOURCE: %s" % m['source_info']['path'])
-	out(separatorLine)
 
 	print_strings(m['strings'])
 

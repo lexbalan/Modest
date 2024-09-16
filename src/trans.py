@@ -2316,36 +2316,37 @@ def def_var(x):
 		#if hlir_type.type_is_bad(t):
 		#	return None
 
-	v = None
+	init_value = None
 	if x['value'] != None:
-		v = do_rvalue(x['value'])
+		init_value = do_rvalue(x['value'])
 
 		if t != None:
 			# for case like:
 			# var a: Int[] = [1, 2, 3] // -> Int[3]
 			if hlir_type.type_is_open_array(t):
 				length = 0
-				if hlir_type.type_is_string(v['type']):
-					length = len(v['asset'])
-				elif hlir_type.type_is_array(v['type']):
-					length = v['type']['volume']['asset']
+				if hlir_type.type_is_string(init_value['type']):
+					length = len(init_value['asset'])
+				elif hlir_type.type_is_array(init_value['type']):
+					length = init_value['type']['volume']['asset']
 
 				volume = value_integer_create(length)
 				t = hlir_type.hlir_type_array(t['of'], volume, x['ti'])
 
-			v = value_cons_implicit_check(t, v)
+			init_value = value_cons_implicit_check(t, init_value)
 		else:
-			v = value_cons_default(v)
-			t = v['type']
+			init_value = value_cons_default(init_value)
+			t = init_value['type']
 
-		if hlir_type.type_is_generic(v['type']):
+		if hlir_type.type_is_generic(init_value['type']):
 			error("cannot cons variable", x['ti'])
 
 
-	var_value = value_var(id, t, id['ti'])
+	v = value_var(id, t, id['ti'])
 	module_value_add(module, id['str'], var_value, is_public=x['export'])
 
-	y = hlir_def_var(id, var_value, v, x['ti'])
+
+	y = hlir_def_var(id, v, init_value, x['ti'])
 	y['module'] = module
 	v['definition'] = y
 	y['export'] = x['export']

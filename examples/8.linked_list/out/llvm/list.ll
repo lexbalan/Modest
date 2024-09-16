@@ -99,6 +99,8 @@ break_2:
 	ret i1 1
 }
 
+; MODULE: list
+
 ; print includes
 
 %Str = type %Str8;
@@ -198,10 +200,8 @@ declare %Int @putc(%Int %char, %File* %f)
 declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
-declare void @perror(%ConstCharStr* %str); end print includes
-; -----------------------------------------------------------------------------
-; -- SOURCE: /Users/alexbalan/p/Modest/examples/8.linked_list/src/list.m
-; -----------------------------------------------------------------------------
+declare void @perror(%ConstCharStr* %str)
+; end print includes
 ; -- strings --
 @str1 = private constant [19 x i8] [i8 110, i8 111, i8 100, i8 101, i8 95, i8 105, i8 110, i8 115, i8 101, i8 114, i8 116, i8 95, i8 114, i8 105, i8 103, i8 104, i8 116, i8 10, i8 0]
 @str2 = private constant [14 x i8] [i8 110, i8 111, i8 100, i8 101, i8 95, i8 103, i8 101, i8 116, i8 40, i8 37, i8 100, i8 41, i8 10, i8 0]
