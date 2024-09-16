@@ -6,7 +6,7 @@
 
 #include "main.h"
 
-
+#define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
 
 void bubble_sort32(int32_t *array, int32_t len);
 int32_t main();
@@ -50,13 +50,13 @@ int32_t main()
 	//fill_array(&array, lengthof(array))
 
 	printf("array before:\n");
-	print_array((int32_t *)&array, (sizeof(array) / sizeof(array[0])));
+	print_array((int32_t *)&array, LENGTHOF(array));
 	printf("\n");
 
-	bubble_sort32((int32_t *)&array, (sizeof(array) / sizeof(array[0])));
+	bubble_sort32((int32_t *)&array, LENGTHOF(array));
 
 	printf("array after:\n");
-	print_array((int32_t *)&array, (sizeof(array) / sizeof(array[0])));
+	print_array((int32_t *)&array, LENGTHOF(array));
 	printf("\n");
 
 	return 0;
@@ -85,10 +85,10 @@ void fill_array(int32_t *array, int32_t len)
 		array[i] = x;
 		i = i + 1;
 	}
-}
 
 #undef __min
 #undef __max
+}
 
 int32_t get_number(int32_t min, int32_t max)
 {

@@ -1,4 +1,4 @@
-// examples/demo1/src/main.cm
+// examples/demo1/src/main.m
 
 include "libc/ctypes64"
 include "libc/stdio"
@@ -32,10 +32,6 @@ func bubble_sort32(array: *[]Int32, len: Int32) {
 }
 
 
-func fill_array(array: *[]Int32, len: Int32)
-func print_array(array: *[]Int32, len: Int32)
-
-
 func main() -> Int32 {
 	//fill_array(&array, lengthof(array))
 
@@ -63,8 +59,6 @@ func print_array(array: *[]Int32, len: Int32) {
 }
 
 
-func get_number(min: Int32, max: Int32) -> Int32
-
 func fill_array(array: *[]Int32, len: Int32) {
 	let min = -1000
 	let max = 1000
@@ -79,8 +73,7 @@ func fill_array(array: *[]Int32, len: Int32) {
 
 
 func get_number(min: Int32, max: Int32) -> Int32 {
-	var number: Int32
-	number = 0
+	var number = Int32 0
 
 	while true {
 		printf("enter a number (%i .. %i): ", min, max)
