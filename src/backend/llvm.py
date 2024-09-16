@@ -1115,6 +1115,10 @@ def do_eval_access_ptr(v):
 
 
 
+def do_eval_access_module(x):
+	return do_eval(x['value'])
+
+
 'trunc .. to'
 'zext .. to'
 'sext .. to'
@@ -1258,8 +1262,6 @@ def do_eval_cons(x):
 		return do_eval_literal(x)
 
 
-
-
 	value = x['value']
 	from_type = value['type']
 
@@ -1269,6 +1271,14 @@ def do_eval_cons(x):
 			if hlir_type.type_is_string(from_type):
 				string_of = to_type['to']['of']
 				char_pow = string_of['width']
+
+				xx = x['value']
+				#mass
+				if not 'strid' in x:
+					info("???", x['ti'])
+					#print(xx['isa'])
+					#print(xx['kind'])
+
 				return llvm_value_str(x['strid'], x['asset'], x['type'], value, isz='zstring' in x['att'])
 
 		# (STUB?) nil -> zeroinitializer
@@ -1516,6 +1526,7 @@ def do_eval(x):
 	elif k == 'call': y = do_eval_call(x)
 	elif k == 'index': y = do_eval_index(x)
 	elif k == 'access': y = do_eval_access(x)
+	elif k == 'access_module': y = do_eval_access_module(x)
 	elif k == 'slice': y = do_eval_slice(x)
 	elif k in ['sizeof_value', 'sizeof_type', 'lengthof', 'alignof', 'offsetof']:
 		y = do_eval_literal(x)
@@ -2232,6 +2243,7 @@ def print_string_as_array(strid, string, char_width):
 
 
 def print_strings(strings):
+	out("\n; -- strings --")
 	strno = 0
 	for string in strings:
 		strid = None
@@ -2278,7 +2290,8 @@ def print_included(m):
 			already_in.append(inc['id'])
 			print_included(inc)
 
-	een(m['export_defs'])
+			een(inc['defs'])
+			een(inc['export_defs'])
 
 
 
@@ -2290,19 +2303,12 @@ def print_module(m):
 	#if m['source_info']['path'] in printed_modules:
 	#	return
 
-	out(separatorLine)
-	out("\n; MODULE: %s (%s)" % (m['id'], m['source_info']['path']))
-	out(separatorLine)
+	print("PRINT_MODULE: " + m['id'])
+	print(len(m['strings']))
 
-	#printed_modules.append(m['source_info']['path'])
-
+	out("; print includes")
 	print_included(m)
-
-	out(separatorLine)
-	out("\n; ENDMODULE: %s (%s)" % (m['id'], m['source_info']['path']))
-	out(separatorLine)
-
-
+	out("; end print includes")
 
 	# печатаем декларации
 	# из экспортируемой части импортированных модулей
@@ -2312,14 +2318,6 @@ def print_module(m):
 		out("\n; declarations from: %s" % (imported_module_id))
 		out(separatorLine)
 		een(imp['export_defs'])
-
-		"""for d in imp['defs']:
-			print("+" + d['id']['str'])
-			if d['isa'] == 'decl_func':
-				#if d['export']:
-				print(":: " + d['id']['str'])
-				print_decl_func(d)"""
-
 		out("\n\n")
 
 
@@ -2331,6 +2329,7 @@ def print_module(m):
 	print_strings(m['strings'])
 
 	een(m['defs'])
+	een(m['export_defs'])
 
 	out("\n\n")
 	return

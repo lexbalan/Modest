@@ -99,10 +99,7 @@ break_2:
 	ret i1 1
 }
 
-
-; -----------------------------------------------------------------------------
-; MODULE: lib (/Users/alexbalan/p/Modest/examples/4.many_sources/src/lib.m)
-; -----------------------------------------------------------------------------
+; print includes
 
 %Str = type %Str8;
 %Char = type i8;
@@ -125,6 +122,7 @@ break_2:
 %Double = type double;
 %LongDouble = type double;
 
+
 %SocklenT = type i32;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
@@ -135,6 +133,7 @@ break_2:
 %PidT = type i32;
 %UidT = type i32;
 %GidT = type i32;
+
 
 %File = type i8;
 %FposT = type i8;
@@ -183,6 +182,17 @@ declare %Int @putc(%Int %char, %File* %f)
 declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
-declare void @perror(%ConstCharStr* %str)
+declare void @perror(%ConstCharStr* %str); end print includes
+; -----------------------------------------------------------------------------
+; -- SOURCE: /Users/alexbalan/p/Modest/examples/4.many_sources/src/lib.m
+; -----------------------------------------------------------------------------
+; -- strings --
+@str1 = private constant [20 x i8] [i8 104, i8 101, i8 108, i8 108, i8 111, i8 32, i8 102, i8 114, i8 111, i8 109, i8 32, i8 108, i8 105, i8 98, i8 46, i8 102, i8 111, i8 111, i8 10, i8 0]
+
 
 define void @foo() {
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str1 to [0 x i8]*))
+	ret void
+}
+
+

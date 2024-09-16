@@ -256,12 +256,13 @@ def value_slice_array(left, type, index_from, index_to, ti):
 	}
 
 
-def value_access_module(type, left, right, ti):
+def value_access_module(type, left, right, value, ti):
 	return {
 		'isa': 'value',
 		'kind': 'access_module',
 		'left': left,
 		'right': right,
+		'value': value,
 		'type': type,
 		'immediate': False,
 		'immutable': False,

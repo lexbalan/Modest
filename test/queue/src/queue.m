@@ -26,6 +26,11 @@ export func init(q: *Queue) {
 }
 
 
+export func getSize(q: *Queue) -> Nat32 {
+	return q.size
+}
+
+
 export func isEmpty(q: *Queue) -> Bool {
 	return q.size == 0
 }
@@ -41,7 +46,6 @@ export func put(q: *Queue, b: Byte) -> Bool {
 		return false
 	}
 
-	//printf("put %d to %d\n", Int32 b, q.p)
 	q.data[q.p] = b
 	q.p = next(q.p)
 	++q.size

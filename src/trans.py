@@ -1499,11 +1499,9 @@ def submodule_access(x):
 	if v == None:
 		return value_bad(x)
 
-	y = value_access_module(v['type'], submodule, v, x['ti'])
+	y = value_access_module(v['type'], submodule, v, v, x['ti'])
 	cp_immediate(y, v)
 	return y
-
-
 
 
 
