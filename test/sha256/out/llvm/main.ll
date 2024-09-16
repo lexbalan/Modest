@@ -186,41 +186,177 @@ declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
 ; end print includes
+; -----------------------------------------------------------------------------
+; declarations from: sha256
+; -----------------------------------------------------------------------------
+
+
+%Hash = type [32 x %Byte];
+
+declare void @hash([0 x %Byte]* %msg, i32 %msgLen, %Hash* %outHash)
+
+
 ; -- strings --
-@str1 = private constant [12 x i8] [i8 99, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 108, i8 108, i8 88, i8 10, i8 0]
-@str2 = private constant [12 x i8] [i8 120, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 108, i8 108, i8 88, i8 10, i8 0]
+@str1 = private constant [5 x i8] [i8 39, i8 37, i8 115, i8 39, i8 0]
+@str2 = private constant [5 x i8] [i8 32, i8 45, i8 62, i8 32, i8 0]
+@str3 = private constant [5 x i8] [i8 37, i8 48, i8 50, i8 88, i8 0]
+@str4 = private constant [2 x i8] [i8 10, i8 0]
+@str5 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 83, i8 72, i8 65, i8 50, i8 53, i8 54, i8 10, i8 0]
+@str6 = private constant [7 x i8] [i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 0]
+@str7 = private constant [7 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 0]
+@str8 = private constant [14 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 35, i8 37, i8 105, i8 58, i8 32, i8 37, i8 115, i8 10, i8 0]
 
 
-define i32 @main() {
-	%1 = alloca i1, align 1
-	%2 = alloca i32, align 4
-	%3 = alloca i64, align 8
-	;
-	%4 = alloca i8*, align 8
-	; free pointer can points to value of any type
-	%5 = bitcast i1* %1 to i8*
-	store i8* %5, i8** %4
-	%6 = bitcast i32* %2 to i8*
-	store i8* %6, i8** %4
-	%7 = bitcast i64* %3 to i8*
-	store i8* %7, i8** %4
-	; you can't do dereference operation with Free pointer
-	; (because runtime doesn't have any idea about value type it pointee),
-	; but you can construct another (non Free) pointer from it
-	; and use it as usualy
-	%8 = load i8*, i8** %4
-	%9 = bitcast i8* %8 to i64*
-	store i64 81985529216486895, i64* %9
-	%10 = load i64, i64* %3
-	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*), i64 %10)
-	; Let's create new pointer to *Int64 from freePointer
-	%12 = load i8*, i8** %4
-	%13 = bitcast i8* %12 to i64*
-	; And will use it...
-	%14 = load i64, i64* %13
-	; for pointer mechanics checking
-	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str2 to [0 x i8]*), i64 %14)
-	ret i32 0
+
+%SHA256_TestCase = type {
+	[32 x i8], 
+	i32, 
+	%Hash
+};
+
+
+@test0 = global %SHA256_TestCase {
+	[32 x i8] [
+		i8 97,
+		i8 98,
+		i8 99,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0
+	],
+	i32 3,
+	%Hash [
+		%Byte 186,
+		%Byte 120,
+		%Byte 22,
+		%Byte 191,
+		%Byte 143,
+		%Byte 1,
+		%Byte 207,
+		%Byte 234,
+		%Byte 65,
+		%Byte 65,
+		%Byte 64,
+		%Byte 222,
+		%Byte 93,
+		%Byte 174,
+		%Byte 34,
+		%Byte 35,
+		%Byte 176,
+		%Byte 3,
+		%Byte 97,
+		%Byte 163,
+		%Byte 150,
+		%Byte 23,
+		%Byte 122,
+		%Byte 156,
+		%Byte 180,
+		%Byte 16,
+		%Byte 255,
+		%Byte 97,
+		%Byte 242,
+		%Byte 0,
+		%Byte 21,
+		%Byte 173
+	]
 }
-
-
+@test1 = global %SHA256_TestCase {
+	[32 x i8] [
+		i8 72,
+		i8 101,
+		i8 108,
+		i8 108,
+		i8 111,
+		i8 32,
+		i8 87,
+		i8 111,
+		i8 114,
+		i8 108,
+		i8 100,
+		i8 33,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0,
+		i8 0
+	],
+	i32 12,
+	%Hash [
+		%Byte 127,
+		%Byte 131,
+		%Byte 177,
+		%Byte 101,
+		%Byte 127,
+		%Byte 241,
+		%Byte 252,
+		%Byte 83,
+		%Byte 185,
+		%Byte 45,
+		%Byte 193,
+		%Byte 129,
+		%Byte 72,
+		%Byte 161,
+		%Byte 214,
+		%Byte 93,
+		%Byte 252,
+		%Byte 45,
+		%Byte 75,
+		%Byte 31,
+		%Byte 163,
+		%Byte 214,
+		%Byte 119,
+		%Byte 40,
+		%Byte 74,
+		%Byte 221,
+		%Byte 210,
+		%Byte 0,
+		%Byte 18,
+		%Byte 109,
+		%Byte 144,
+		%Byte 105
+	]
+}
+@tests = global [2 x %SHA256_TestCase*] 
+	; cast_composite_to_composite
+	; trunk

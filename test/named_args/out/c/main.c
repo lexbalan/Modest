@@ -37,10 +37,10 @@ int main()
 	}
 
 	return 0;
-}
 
 #undef __a
 #undef __b
 #undef __c
 #undef __x0
+}
 

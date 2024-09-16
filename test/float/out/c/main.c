@@ -57,8 +57,8 @@ int main()
 	printf("slope = %f\n", (double)sl);
 
 	return 0;
-}
 
 #undef __r
 #undef __k
+}
 

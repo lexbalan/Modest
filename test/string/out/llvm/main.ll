@@ -99,19 +99,13 @@ break_2:
 	ret i1 1
 }
 
+; MODULE: main
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/system.hm
-
-
-
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
-
-
+; print includes
 
 %Str = type %Str8;
 %Char = type i8;
-%ConstChar = type i8;
+%ConstChar = type %Char;
 %SignedChar = type i8;
 %UnsignedChar = type i8;
 %Short = type i16;
@@ -131,14 +125,9 @@ break_2:
 %LongDouble = type double;
 
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
-
-
-
-
 %SocklenT = type i32;
-%SizeT = type i64;
-%SSizeT = type i64;
+%SizeT = type %UnsignedLongInt;
+%SSizeT = type %LongInt;
 %IntptrT = type i64;
 %PtrdiffT = type i8*;
 %OffT = type i64;
@@ -148,79 +137,353 @@ break_2:
 %GidT = type i32;
 
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
-
-
-
-
-%File = type opaque
-%FposT = type opaque
-
+%File = type i8;
+%FposT = type i8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 
 
-declare i32 @fclose(%File* %f)
-declare i32 @feof(%File* %f)
-declare i32 @ferror(%File* %f)
-declare i32 @fflush(%File* %f)
-declare i32 @fgetpos(%File* %f, %FposT* %pos)
+declare %Int @fclose(%File* %f)
+declare %Int @feof(%File* %f)
+declare %Int @ferror(%File* %f)
+declare %Int @fflush(%File* %f)
+declare %Int @fgetpos(%File* %f, %FposT* %pos)
 declare %File* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
-declare i64 @fread(i8* %buf, i64 %size, i64 %count, %File* %f)
-declare i64 @fwrite(i8* %buf, i64 %size, i64 %count, %File* %f)
+declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
+declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
 declare %File* @freopen(%ConstCharStr* %filename, %ConstCharStr* %mode, %File* %f)
-declare i32 @fseek(%File* %stream, i64 %offset, i32 %whence)
-declare i32 @fsetpos(%File* %f, %FposT* %pos)
-declare i64 @ftell(%File* %f)
-declare i32 @remove(%ConstCharStr* %filename)
-declare i32 @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
+declare %Int @fseek(%File* %stream, %LongInt %offset, %Int %whence)
+declare %Int @fsetpos(%File* %f, %FposT* %pos)
+declare %LongInt @ftell(%File* %f)
+declare %Int @remove(%ConstCharStr* %filename)
+declare %Int @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
 declare void @rewind(%File* %f)
 declare void @setbuf(%File* %f, %CharStr* %buffer)
-
-
-declare i32 @setvbuf(%File* %f, %CharStr* %buffer, i32 %mode, i64 %size)
+declare %Int @setvbuf(%File* %f, %CharStr* %buffer, %Int %mode, %SizeT %size)
 declare %File* @tmpfile()
 declare %CharStr* @tmpnam(%CharStr* %str)
-declare i32 @printf(%ConstCharStr* %s, ...)
-declare i32 @scanf(%ConstCharStr* %s, ...)
-declare i32 @fprintf(%File* %stream, %Str* %format, ...)
-declare i32 @fscanf(%File* %f, %ConstCharStr* %format, ...)
-declare i32 @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
-declare i32 @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare i32 @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
-declare i32 @vprintf(%ConstCharStr* %format, i8* %args)
-declare i32 @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
-declare i32 @vsnprintf(%CharStr* %str, i64 %n, %ConstCharStr* %format, i8* %args)
-declare i32 @__vsnprintf_chk(%CharStr* %dest, i64 %len, i32 %flags, i64 %dstlen, %ConstCharStr* %format, i8* %arg)
-declare i32 @fgetc(%File* %f)
-declare i32 @fputc(i32 %char, %File* %f)
-declare %CharStr* @fgets(%CharStr* %str, i32 %n, %File* %f)
-declare i32 @fputs(%ConstCharStr* %str, %File* %f)
-declare i32 @getc(%File* %f)
-declare i32 @getchar()
+declare %Int @printf(%ConstCharStr* %s, ...)
+declare %Int @scanf(%ConstCharStr* %s, ...)
+declare %Int @fprintf(%File* %stream, %Str* %format, ...)
+declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
+declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
+declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
+declare %Int @fgetc(%File* %f)
+declare %Int @fputc(%Int %char, %File* %f)
+declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
+declare %Int @fputs(%ConstCharStr* %str, %File* %f)
+declare %Int @getc(%File* %f)
+declare %Int @getchar()
 declare %CharStr* @gets(%CharStr* %str)
-declare i32 @putc(i32 %char, %File* %f)
-declare i32 @putchar(i32 %char)
-declare i32 @puts(%ConstCharStr* %str)
-declare i32 @ungetc(i32 %char, %File* %f)
+declare %Int @putc(%Int %char, %File* %f)
+declare %Int @putchar(%Int %char)
+declare %Int @puts(%ConstCharStr* %str)
+declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
 
+define i8 @utf32_to_utf8(i32 %c, [4 x i8]* %buf) {
+	%1 = bitcast i32 %c to i32
+	%2 = icmp ule i32 %1, 127
+	br i1 %2 , label %then_0, label %else_0
+then_0:
+	%3 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
+	%4 = trunc i32 %1 to i8
+	store i8 %4, i8* %3
+	ret i8 1
+	br label %endif_0
+else_0:
+	%6 = icmp ule i32 %1, 2047
+	br i1 %6 , label %then_1, label %else_1
+then_1:
+	%7 = lshr i32 %1, 6
+	%8 = and i32 %7, 31
+	%9 = lshr i32 %1, 0
+	%10 = and i32 %9, 63
+	%11 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
+	%12 = or i32 192, %8
+	%13 = trunc i32 %12 to i8
+	store i8 %13, i8* %11
+	%14 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 1
+	%15 = or i32 128, %10
+	%16 = trunc i32 %15 to i8
+	store i8 %16, i8* %14
+	ret i8 2
+	br label %endif_1
+else_1:
+	%18 = icmp ule i32 %1, 65535
+	br i1 %18 , label %then_2, label %else_2
+then_2:
+	%19 = lshr i32 %1, 12
+	%20 = and i32 %19, 15
+	%21 = lshr i32 %1, 6
+	%22 = and i32 %21, 63
+	%23 = lshr i32 %1, 0
+	%24 = and i32 %23, 63
+	%25 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
+	%26 = or i32 224, %20
+	%27 = trunc i32 %26 to i8
+	store i8 %27, i8* %25
+	%28 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 1
+	%29 = or i32 128, %22
+	%30 = trunc i32 %29 to i8
+	store i8 %30, i8* %28
+	%31 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 2
+	%32 = or i32 128, %24
+	%33 = trunc i32 %32 to i8
+	store i8 %33, i8* %31
+	ret i8 3
+	br label %endif_2
+else_2:
+	%35 = icmp ule i32 %1, 1114111
+	br i1 %35 , label %then_3, label %endif_3
+then_3:
+	%36 = lshr i32 %1, 18
+	%37 = and i32 %36, 7
+	%38 = lshr i32 %1, 12
+	%39 = and i32 %38, 63
+	%40 = lshr i32 %1, 6
+	%41 = and i32 %40, 63
+	%42 = lshr i32 %1, 0
+	%43 = and i32 %42, 63
+	%44 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
+	%45 = or i32 240, %37
+	%46 = trunc i32 %45 to i8
+	store i8 %46, i8* %44
+	%47 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 1
+	%48 = or i32 128, %39
+	%49 = trunc i32 %48 to i8
+	store i8 %49, i8* %47
+	%50 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 2
+	%51 = or i32 128, %41
+	%52 = trunc i32 %51 to i8
+	store i8 %52, i8* %50
+	%53 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 3
+	%54 = or i32 128, %43
+	%55 = trunc i32 %54 to i8
+	store i8 %55, i8* %53
+	ret i8 4
+	br label %endif_3
+endif_3:
+	br label %endif_2
+endif_2:
+	br label %endif_1
+endif_1:
+	br label %endif_0
+endif_0:
+	ret i8 0
+}
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/misc/utf.hm
+define i8 @utf16_to_utf32([0 x i16]* %c, i32* %result) {
+	%1 = getelementptr inbounds [0 x i16], [0 x i16]* %c, i32 0, i32 0
+	%2 = load i16, i16* %1
+	%3 = zext i16 %2 to i32
+	%4 = icmp ult i32 %3, 55296
+	%5 = icmp ugt i32 %3, 57343
+	%6 = or i1 %4, %5
+	br i1 %6 , label %then_0, label %else_0
+then_0:
+	%7 = bitcast i32 %3 to i32
+	store i32 %7, i32* %result
+	ret i8 1
+	br label %endif_0
+else_0:
+	%9 = icmp uge i32 %3, 56320
+	br i1 %9 , label %then_1, label %else_1
+then_1:
+	;error("Недопустимая кодовая последовательность.")
+	br label %endif_1
+else_1:
+	%10 = alloca i32, align 4
+	%11 = and i32 %3, 1023
+	%12 = shl i32 %11, 10
+	store i32 %12, i32* %10
+	%13 = getelementptr inbounds [0 x i16], [0 x i16]* %c, i32 0, i32 1
+	%14 = load i16, i16* %13
+	%15 = zext i16 %14 to i32
+	%16 = icmp ult i32 %15, 56320
+	%17 = icmp ugt i32 %15, 57343
+	%18 = or i1 %16, %17
+	br i1 %18 , label %then_2, label %else_2
+then_2:
+	;error("Недопустимая кодовая последовательность.")
+	br label %endif_2
+else_2:
+	%19 = load i32, i32* %10
+	%20 = and i32 %15, 1023
+	%21 = or i32 %19, %20
+	store i32 %21, i32* %10
+	%22 = load i32, i32* %10
+	%23 = add i32 %22, 65536
+	%24 = bitcast i32 %23 to i32
+	store i32 %24, i32* %result
+	ret i8 2
+	br label %endif_2
+endif_2:
+	br label %endif_1
+endif_1:
+	br label %endif_0
+endif_0:
+	ret i8 0
+}
 
 
-declare i8 @utf32_to_utf8(i32 %c, [4 x i8]* %buf)
-declare i8 @utf16_to_utf32([0 x i16]* %c, i32* %result)
-declare void @utf8_putchar(i8 %c)
-declare void @utf16_putchar(i16 %c)
-declare void @utf32_putchar(i32 %c)
-declare void @utf8_puts(%Str8* %s)
-declare void @utf16_puts(%Str16* %s)
-declare void @utf32_puts(%Str32* %s)
 
+define void @putchar8(i8 %c) {
+	call void @utf8_putchar(i8 %c)
+	ret void
+}
 
-; -- SOURCE: src/main.cm
+define void @putchar16(i16 %c) {
+	call void @utf16_putchar(i16 %c)
+	ret void
+}
 
+define void @putchar32(i32 %c) {
+	call void @utf32_putchar(i32 %c)
+	ret void
+}
+
+define void @utf8_putchar(i8 %c) {
+	%1 = sext i8 %c to i32
+	%2 = call %Int @putchar(i32 %1)
+	ret void
+}
+
+define void @utf16_putchar(i16 %c) {
+	%1 = alloca [2 x i16], align 2
+	%2 = getelementptr inbounds [2 x i16], [2 x i16]* %1, i32 0, i32 0
+	store i16 %c, i16* %2
+	%3 = getelementptr inbounds [2 x i16], [2 x i16]* %1, i32 0, i32 1
+	store i16 0, i16* %3
+	%4 = alloca i32, align 4
+	%5 = bitcast [2 x i16]* %1 to [0 x i16]*
+	%6 = call i8 @utf16_to_utf32([0 x i16]* %5, i32* %4)
+	%7 = load i32, i32* %4
+	call void @utf32_putchar(i32 %7)
+	ret void
+}
+
+define void @utf32_putchar(i32 %c) {
+	%1 = alloca [4 x i8], align 1
+	%2 = call i8 @utf32_to_utf8(i32 %c, [4 x i8]* %1)
+	%3 = sext i8 %2 to %Int
+	%4 = alloca i32, align 4
+	store i32 0, i32* %4
+	br label %again_1
+again_1:
+	%5 = load i32, i32* %4
+	%6 = icmp slt i32 %5, %3
+	br i1 %6 , label %body_1, label %break_1
+body_1:
+	%7 = load i32, i32* %4
+	%8 = getelementptr inbounds [4 x i8], [4 x i8]* %1, i32 0, i32 %7
+	%9 = load i8, i8* %8
+	call void @utf8_putchar(i8 %9)
+	%10 = load i32, i32* %4
+	%11 = add i32 %10, 1
+	store i32 %11, i32* %4
+	br label %again_1
+break_1:
+	ret void
+}
+
+define void @utf8_puts(%Str8* %s) {
+	%1 = alloca i32, align 4
+	store i32 0, i32* %1
+	br label %again_1
+again_1:
+	br i1 1 , label %body_1, label %break_1
+body_1:
+	%2 = load i32, i32* %1
+	%3 = getelementptr inbounds %Str8, %Str8* %s, i32 0, i32 %2
+	%4 = load i8, i8* %3
+	%5 = icmp eq i8 %4, 0
+	br i1 %5 , label %then_0, label %endif_0
+then_0:
+	br label %break_1
+	br label %endif_0
+endif_0:
+	call void @utf8_putchar(i8 %4)
+	%7 = load i32, i32* %1
+	%8 = add i32 %7, 1
+	store i32 %8, i32* %1
+	br label %again_1
+break_1:
+	ret void
+}
+
+define void @utf16_puts(%Str16* %s) {
+	%1 = alloca i32, align 4
+	store i32 0, i32* %1
+	br label %again_1
+again_1:
+	br i1 1 , label %body_1, label %break_1
+body_1:
+	; нельзя просто так взять и вызвать utf16_putchar
+	; тк в строке может быть суррогатная пара UTF_16 символов
+	%2 = load i32, i32* %1
+	%3 = getelementptr inbounds %Str16, %Str16* %s, i32 0, i32 %2
+	%4 = load i16, i16* %3
+	%5 = icmp eq i16 %4, 0
+	br i1 %5 , label %then_0, label %endif_0
+then_0:
+	br label %break_1
+	br label %endif_0
+endif_0:
+	%7 = alloca i32, align 4
+	%8 = load i32, i32* %1
+	%9 = getelementptr inbounds %Str16, %Str16* %s, i32 0, i32 %8
+	%10 = bitcast i16* %9 to [0 x i16]*
+	%11 = call i8 @utf16_to_utf32([0 x i16]* %10, i32* %7)
+	%12 = icmp eq i8 %11, 0
+	br i1 %12 , label %then_1, label %endif_1
+then_1:
+	br label %break_1
+	br label %endif_1
+endif_1:
+	%14 = load i32, i32* %7
+	call void @utf32_putchar(i32 %14)
+	%15 = load i32, i32* %1
+	%16 = sext i8 %11 to i32
+	%17 = add i32 %15, %16
+	store i32 %17, i32* %1
+	br label %again_1
+break_1:
+	ret void
+}
+
+define void @utf32_puts(%Str32* %s) {
+	%1 = alloca i32, align 4
+	store i32 0, i32* %1
+	br label %again_1
+again_1:
+	br i1 1 , label %body_1, label %break_1
+body_1:
+	%2 = load i32, i32* %1
+	%3 = getelementptr inbounds %Str32, %Str32* %s, i32 0, i32 %2
+	%4 = load i32, i32* %3
+	%5 = icmp eq i32 %4, 0
+	br i1 %5 , label %then_0, label %endif_0
+then_0:
+	br label %break_1
+	br label %endif_0
+endif_0:
+	call void @utf32_putchar(i32 %4)
+	%7 = load i32, i32* %1
+	%8 = add i32 %7, 1
+	store i32 %8, i32* %1
+	br label %again_1
+break_1:
+	ret void
+}
+
+; end print includes
+; -- strings --
 @str1 = private constant [7 x i8] [i8 83, i8 116, i8 114, i8 105, i8 110, i8 103, i8 0]
 @str2 = private constant [9 x i16] [i16 83, i16 116, i16 114, i16 105, i16 110, i16 103, i16 45, i16 937, i16 0]
 @str3 = private constant [13 x i32] [i32 83, i32 116, i32 114, i32 105, i32 110, i32 103, i32 45, i32 937, i32 32, i32 128000, i32 127881, i32 129412, i32 0]
@@ -233,9 +496,6 @@ declare void @utf32_puts(%Str32* %s)
 @str10 = private constant [2 x i8] [i8 10, i8 0]
 @str11 = private constant [2 x i8] [i8 10, i8 0]
 @str12 = private constant [2 x i8] [i8 10, i8 0]
-
-
-
 
 
 
@@ -271,38 +531,36 @@ declare void @utf32_puts(%Str32* %s)
 	i32 127881,
 	i32 129412
 ]
-
-
 @ptr_to_string8 = global [0 x i8]* bitcast ([7 x i8]* @str1 to [0 x i8]*)
 @ptr_to_string16 = global [0 x i16]* bitcast ([9 x i16]* @str2 to [0 x i16]*)
 @ptr_to_string32 = global [0 x i32]* bitcast ([13 x i32]* @str3 to [0 x i32]*)
 
-define i32 @main() {
+define %Int @main() {
 	call void @utf8_putchar(i8 65)
-	%1 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))
 	call void @utf16_putchar(i16 937)
-	%2 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str5 to [0 x i8]*))
+	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str5 to [0 x i8]*))
 	call void @utf32_putchar(i32 129412)
-	%3 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str6 to [0 x i8]*))
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str6 to [0 x i8]*))
 	%4 = bitcast [6 x i8]* @string8 to %Str8*
 	call void @utf8_puts(%Str8* %4)
-	%5 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str7 to [0 x i8]*))
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str7 to [0 x i8]*))
 	%6 = bitcast [8 x i16]* @string16 to %Str16*
 	call void @utf16_puts(%Str16* %6)
-	%7 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str8 to [0 x i8]*))
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str8 to [0 x i8]*))
 	%8 = bitcast [12 x i32]* @string32 to %Str32*
 	call void @utf32_puts(%Str32* %8)
-	%9 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str9 to [0 x i8]*))
+	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str9 to [0 x i8]*))
 	%10 = load [0 x i8]*, [0 x i8]** @ptr_to_string8
 	call void @utf8_puts([0 x i8]* %10)
-	%11 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str10 to [0 x i8]*))
+	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str10 to [0 x i8]*))
 	%12 = load [0 x i16]*, [0 x i16]** @ptr_to_string16
 	call void @utf16_puts([0 x i16]* %12)
-	%13 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str11 to [0 x i8]*))
+	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str11 to [0 x i8]*))
 	%14 = load [0 x i32]*, [0 x i32]** @ptr_to_string32
 	call void @utf32_puts([0 x i32]* %14)
-	%15 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str12 to [0 x i8]*))
-	ret i32 0
+	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str12 to [0 x i8]*))
+	ret %Int 0
 }
 
 

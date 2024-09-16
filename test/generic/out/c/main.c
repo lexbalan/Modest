@@ -89,9 +89,9 @@ bool test_generic_integer()
 	// explicit cast GenericInteger value
 
 	return true;
-}
 
 #undef __one
+}
 
 bool test_generic_float()
 {
@@ -105,9 +105,9 @@ bool test_generic_float()
 	// explicit cast GenericFloat value to Int32
 
 	return true;
-}
 
 #undef __pi
+}
 
 bool test_generic_char()
 {
@@ -121,9 +121,9 @@ bool test_generic_char()
 	// explicit cast GenericChar value to Int32
 
 	return true;
-}
 
 #undef __a
+}
 
 bool test_generic_array()
 {
@@ -167,9 +167,9 @@ bool test_generic_array()
 	}
 
 	return true;
-}
 
 #undef __a
+}
 
 bool test_generic_record()
 {
@@ -193,7 +193,7 @@ bool test_generic_record()
 	point_3d = (main_Point3D)__p;
 
 	return true;
-}
 
 #undef __p
+}
 

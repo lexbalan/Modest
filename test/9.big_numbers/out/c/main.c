@@ -60,8 +60,8 @@ int main()
 	printf("sig1 = %lld\n", (uint64_t)sig1);
 
 	return 0;
-}
 
 #undef __big1
 #undef __sig0
+}
 

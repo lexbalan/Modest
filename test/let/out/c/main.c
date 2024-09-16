@@ -26,8 +26,8 @@ int main()
 	}
 
 	return 0;
-}
 
 #undef __x
 #undef __y
+}
 

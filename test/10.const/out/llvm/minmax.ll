@@ -99,10 +99,11 @@ break_2:
 	ret i1 1
 }
 
+; MODULE: minmax
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/misc/minmax.cm
-
-
+; print includes
+; end print includes
+; -- strings --
 
 define i32 @min_int32(i32 %a, i32 %b) {
 	%1 = icmp slt i32 %a, %b

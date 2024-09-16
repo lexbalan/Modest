@@ -99,10 +99,9 @@ break_2:
 	ret i1 1
 }
 
+; MODULE: main
 
-; -----------------------------------------------------------------------------
-; MODULE: main (/Users/alexbalan/p/Modest/test/11.unicode/src/main.m)
-; -----------------------------------------------------------------------------
+; print includes
 
 %Str = type %Str8;
 %Char = type i8;
@@ -125,6 +124,7 @@ break_2:
 %Double = type double;
 %LongDouble = type double;
 
+
 %SocklenT = type i32;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
@@ -135,6 +135,7 @@ break_2:
 %PidT = type i32;
 %UidT = type i32;
 %GidT = type i32;
+
 
 %File = type i8;
 %FposT = type i8;
@@ -331,6 +332,7 @@ endif_0:
 }
 
 
+
 define void @putchar8(i8 %c) {
 	call void @utf8_putchar(i8 %c)
 	ret void
@@ -480,12 +482,8 @@ break_1:
 	ret void
 }
 
-; -----------------------------------------------------------------------------
-; ENDMODULE: main (/Users/alexbalan/p/Modest/test/11.unicode/src/main.m)
-; -----------------------------------------------------------------------------
-; -----------------------------------------------------------------------------
-; -- SOURCE: /Users/alexbalan/p/Modest/test/11.unicode/src/main.m
-; -----------------------------------------------------------------------------
+; end print includes
+; -- strings --
 @str1 = private constant [28 x i8] [i8 83, i8 45, i8 116, i8 45, i8 114, i8 45, i8 105, i8 45, i8 110, i8 45, i8 103, i8 45, i8 206, i8 169, i8 32, i8 240, i8 159, i8 144, i8 128, i8 240, i8 159, i8 142, i8 137, i8 240, i8 159, i8 166, i8 132, i8 0]
 @str2 = private constant [21 x i16] [i16 83, i16 45, i16 116, i16 45, i16 114, i16 45, i16 105, i16 45, i16 110, i16 45, i16 103, i16 45, i16 937, i16 32, i16 55357, i16 56320, i16 55356, i16 57225, i16 55358, i16 56708, i16 0]
 @str3 = private constant [18 x i32] [i32 83, i32 45, i32 116, i32 45, i32 114, i32 45, i32 105, i32 45, i32 110, i32 45, i32 103, i32 45, i32 937, i32 32, i32 128000, i32 127881, i32 129412, i32 0]

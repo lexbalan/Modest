@@ -6,7 +6,7 @@
 
 #include "main.h"
 
-
+#define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
 
 void array_print(int32_t *pa, int32_t len);
 int main();
@@ -65,7 +65,7 @@ int main()
 	memcpy(&a[__ax], &(int32_t[__bx - __ax]){10, 20, 30, 40}, sizeof(int32_t[__bx - __ax]));
 
 	i = 0;
-	while (i < (sizeof(a) / sizeof(a[0]))) {
+	while (i < LENGTHOF(a)) {
 		printf("a[%d] = %d\n", i, a[i]);
 		i = i + 1;
 	}
@@ -78,7 +78,7 @@ int main()
 	memset(&s[2], 0, sizeof(int32_t[5 - 2]));
 
 	i = 0;
-	while (i < (sizeof(s) / sizeof(s[0]))) {
+	while (i < LENGTHOF(s)) {
 		printf("s[%d] = %d\n", i, (uint32_t)s[i]);
 		i = i + 1;
 	}
@@ -166,7 +166,6 @@ int main()
 	array_print((int32_t *)&dst2, 10);
 
 	return 0;
-}
 
 #undef __ax
 #undef __bx
@@ -174,4 +173,5 @@ int main()
 #undef __bb
 #undef __i1
 #undef __j1
+}
 

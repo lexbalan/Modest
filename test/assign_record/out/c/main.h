@@ -6,16 +6,10 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include "./utf.h"
-#include "./putchar.h"
 #include <stdio.h>
-#include "./utf.h"
 
 
 
-
-#include "./utf.h"
-#include "./putchar.h"
-
+typedef struct main_Point main_Point; //
 
 #endif /* MAIN_H */

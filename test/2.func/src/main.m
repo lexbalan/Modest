@@ -4,11 +4,6 @@ include "libc/ctypes64"
 include "libc/stdio"
 
 
-// declare function f0
-func func0() -> Unit
-
-
-// define function f1
 func func1() -> Unit {
 	printf("func1 was called\n")
 }
@@ -53,7 +48,6 @@ func main() -> Int {
 }
 
 
-// define function f0
 func func0() -> Unit {
 	printf("func0 was called\n")
 }

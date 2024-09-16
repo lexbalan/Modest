@@ -99,10 +99,9 @@ break_2:
 	ret i1 1
 }
 
+; MODULE: main
 
-; -----------------------------------------------------------------------------
-; MODULE: main (/Users/alexbalan/p/Modest/test/3.const/src/main.m)
-; -----------------------------------------------------------------------------
+; print includes
 
 %Str = type %Str8;
 %Char = type i8;
@@ -125,6 +124,7 @@ break_2:
 %Double = type double;
 %LongDouble = type double;
 
+
 %SocklenT = type i32;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
@@ -135,6 +135,7 @@ break_2:
 %PidT = type i32;
 %UidT = type i32;
 %GidT = type i32;
+
 
 %File = type i8;
 %FposT = type i8;
@@ -184,12 +185,8 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
-; -----------------------------------------------------------------------------
-; ENDMODULE: main (/Users/alexbalan/p/Modest/test/3.const/src/main.m)
-; -----------------------------------------------------------------------------
-; -----------------------------------------------------------------------------
-; -- SOURCE: /Users/alexbalan/p/Modest/test/3.const/src/main.m
-; -----------------------------------------------------------------------------
+; end print includes
+; -- strings --
 @str1 = private constant [7 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 33, i8 0]
 @str2 = private constant [7 x i16] [i16 72, i16 101, i16 108, i16 108, i16 111, i16 33, i16 0]
 @str3 = private constant [7 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 33, i32 0]

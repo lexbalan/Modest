@@ -99,19 +99,13 @@ break_2:
 	ret i1 1
 }
 
+; MODULE: main
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/system.hm
-
-
-
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
-
-
+; print includes
 
 %Str = type %Str8;
 %Char = type i8;
-%ConstChar = type i8;
+%ConstChar = type %Char;
 %SignedChar = type i8;
 %UnsignedChar = type i8;
 %Short = type i16;
@@ -131,14 +125,9 @@ break_2:
 %LongDouble = type double;
 
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
-
-
-
-
 %SocklenT = type i32;
-%SizeT = type i64;
-%SSizeT = type i64;
+%SizeT = type %UnsignedLongInt;
+%SSizeT = type %LongInt;
 %IntptrT = type i64;
 %PtrdiffT = type i8*;
 %OffT = type i64;
@@ -148,176 +137,154 @@ break_2:
 %GidT = type i32;
 
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
-
-
-
-
-%File = type opaque
-%FposT = type opaque
-
+%File = type i8;
+%FposT = type i8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 
 
-declare i32 @fclose(%File* %f)
-declare i32 @feof(%File* %f)
-declare i32 @ferror(%File* %f)
-declare i32 @fflush(%File* %f)
-declare i32 @fgetpos(%File* %f, %FposT* %pos)
+declare %Int @fclose(%File* %f)
+declare %Int @feof(%File* %f)
+declare %Int @ferror(%File* %f)
+declare %Int @fflush(%File* %f)
+declare %Int @fgetpos(%File* %f, %FposT* %pos)
 declare %File* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
-declare i64 @fread(i8* %buf, i64 %size, i64 %count, %File* %f)
-declare i64 @fwrite(i8* %buf, i64 %size, i64 %count, %File* %f)
+declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
+declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
 declare %File* @freopen(%ConstCharStr* %filename, %ConstCharStr* %mode, %File* %f)
-declare i32 @fseek(%File* %stream, i64 %offset, i32 %whence)
-declare i32 @fsetpos(%File* %f, %FposT* %pos)
-declare i64 @ftell(%File* %f)
-declare i32 @remove(%ConstCharStr* %filename)
-declare i32 @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
+declare %Int @fseek(%File* %stream, %LongInt %offset, %Int %whence)
+declare %Int @fsetpos(%File* %f, %FposT* %pos)
+declare %LongInt @ftell(%File* %f)
+declare %Int @remove(%ConstCharStr* %filename)
+declare %Int @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
 declare void @rewind(%File* %f)
 declare void @setbuf(%File* %f, %CharStr* %buffer)
-
-
-declare i32 @setvbuf(%File* %f, %CharStr* %buffer, i32 %mode, i64 %size)
+declare %Int @setvbuf(%File* %f, %CharStr* %buffer, %Int %mode, %SizeT %size)
 declare %File* @tmpfile()
 declare %CharStr* @tmpnam(%CharStr* %str)
-declare i32 @printf(%ConstCharStr* %s, ...)
-declare i32 @scanf(%ConstCharStr* %s, ...)
-declare i32 @fprintf(%File* %stream, %Str* %format, ...)
-declare i32 @fscanf(%File* %f, %ConstCharStr* %format, ...)
-declare i32 @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
-declare i32 @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare i32 @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
-declare i32 @vprintf(%ConstCharStr* %format, i8* %args)
-declare i32 @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
-declare i32 @vsnprintf(%CharStr* %str, i64 %n, %ConstCharStr* %format, i8* %args)
-declare i32 @__vsnprintf_chk(%CharStr* %dest, i64 %len, i32 %flags, i64 %dstlen, %ConstCharStr* %format, i8* %arg)
-declare i32 @fgetc(%File* %f)
-declare i32 @fputc(i32 %char, %File* %f)
-declare %CharStr* @fgets(%CharStr* %str, i32 %n, %File* %f)
-declare i32 @fputs(%ConstCharStr* %str, %File* %f)
-declare i32 @getc(%File* %f)
-declare i32 @getchar()
+declare %Int @printf(%ConstCharStr* %s, ...)
+declare %Int @scanf(%ConstCharStr* %s, ...)
+declare %Int @fprintf(%File* %stream, %Str* %format, ...)
+declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
+declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
+declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
+declare %Int @fgetc(%File* %f)
+declare %Int @fputc(%Int %char, %File* %f)
+declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
+declare %Int @fputs(%ConstCharStr* %str, %File* %f)
+declare %Int @getc(%File* %f)
+declare %Int @getchar()
 declare %CharStr* @gets(%CharStr* %str)
-declare i32 @putc(i32 %char, %File* %f)
-declare i32 @putchar(i32 %char)
-declare i32 @puts(%ConstCharStr* %str)
-declare i32 @ungetc(i32 %char, %File* %f)
+declare %Int @putc(%Int %char, %File* %f)
+declare %Int @putchar(%Int %char)
+declare %Int @puts(%ConstCharStr* %str)
+declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
 
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdlib.hm
-
-
-
 declare void @abort()
-declare i32 @abs(i32 %x)
-declare i32 @atexit(void ()* %x)
-declare double @atof([0 x i8]* %nptr)
-declare i32 @atoi([0 x i8]* %nptr)
-declare i64 @atol([0 x i8]* %nptr)
-declare i8* @calloc(i64 %num, i64 %size)
-declare void @exit(i32 %x)
+declare %Int @abs(%Int %x)
+declare %Int @atexit(void ()* %x)
+declare %Double @atof([0 x %ConstChar]* %nptr)
+declare %Int @atoi([0 x %ConstChar]* %nptr)
+declare %LongInt @atol([0 x %ConstChar]* %nptr)
+declare i8* @calloc(%SizeT %num, %SizeT %size)
+declare void @exit(%Int %x)
 declare void @free(i8* %ptr)
 declare %Str* @getenv(%Str* %name)
-declare i64 @labs(i64 %x)
+declare %LongInt @labs(%LongInt %x)
 declare %Str* @secure_getenv(%Str* %name)
-declare i8* @malloc(i64 %size)
-declare i32 @system([0 x i8]* %string)
-
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/math.hm
+declare i8* @malloc(%SizeT %size)
+declare %Int @system([0 x %ConstChar]* %string)
 
 
 
-
-
-
-declare double @acos(double %x)
-declare double @asin(double %x)
-declare double @atan(double %x)
-declare double @atan2(double %a, double %b)
-declare double @cos(double %x)
-declare double @sin(double %x)
-declare double @tan(double %x)
-declare double @cosh(double %x)
-declare double @sinh(double %x)
-declare double @tanh(double %x)
-declare double @exp(double %x)
-declare double @frexp(double %a, i32* %i)
-declare double @ldexp(double %a, i32 %i)
-declare double @log(double %x)
-declare double @log10(double %x)
-declare double @modf(double %a, double* %b)
-declare double @pow(double %a, double %b)
-declare double @sqrt(double %x)
-declare double @ceil(double %x)
-declare double @fabs(double %x)
-declare double @floor(double %x)
-declare double @fmod(double %a, double %b)
-
-
-declare double @acosl(double %x)
-declare double @asinl(double %x)
-declare double @atanl(double %x)
-declare double @atan2l(double %a, double %b)
-declare double @cosl(double %x)
-declare double @sinl(double %x)
-declare double @tanl(double %x)
-declare double @acoshl(double %x)
-declare double @asinhl(double %x)
-declare double @atanhl(double %x)
-declare double @coshl(double %x)
-declare double @sinhl(double %x)
-declare double @tanhl(double %x)
-declare double @expl(double %x)
-declare double @exp2l(double %x)
-declare double @expm1l(double %x)
-declare double @frexpl(double %a, i32* %i)
-declare i32 @ilogbl(double %x)
-declare double @ldexpl(double %a, i32 %i)
-declare double @logl(double %x)
-declare double @log10l(double %x)
-declare double @log1pl(double %x)
-declare double @log2l(double %x)
-declare double @logbl(double %x)
-declare double @modfl(double %a, double* %b)
-declare double @scalbnl(double %a, i32 %i)
-declare double @scalblnl(double %a, i64 %i)
-declare double @cbrtl(double %x)
-declare double @fabsl(double %x)
-declare double @hypotl(double %a, double %b)
-declare double @powl(double %a, double %b)
-declare double @sqrtl(double %x)
-declare double @erfl(double %x)
-declare double @erfcl(double %x)
-declare double @lgammal(double %x)
-declare double @tgammal(double %x)
-declare double @ceill(double %x)
-declare double @floorl(double %x)
-declare double @nearbyintl(double %x)
-declare double @rintl(double %x)
-declare i64 @lrintl(double %x)
-declare i64 @llrintl(double %x)
-declare double @roundl(double %x)
-declare i64 @lroundl(double %x)
-declare i64 @llroundl(double %x)
-declare double @truncl(double %x)
-declare double @fmodl(double %a, double %b)
-declare double @remainderl(double %a, double %b)
-declare double @remquol(double %a, double %b, i32* %i)
-declare double @copysignl(double %a, double %b)
-declare double @nanl(i8* %x)
-declare double @nextafterl(double %a, double %b)
-declare double @nexttowardl(double %a, double %b)
-declare double @fdiml(double %a, double %b)
-declare double @fmaxl(double %a, double %b)
-declare double @fminl(double %a, double %b)
-declare double @fmal(double %a, double %b, double %c)
-
-
-; -- SOURCE: src/main.cm
-
+declare %Double @acos(%Double %x)
+declare %Double @asin(%Double %x)
+declare %Double @atan(%Double %x)
+declare %Double @atan2(%Double %a, %Double %b)
+declare %Double @cos(%Double %x)
+declare %Double @sin(%Double %x)
+declare %Double @tan(%Double %x)
+declare %Double @cosh(%Double %x)
+declare %Double @sinh(%Double %x)
+declare %Double @tanh(%Double %x)
+declare %Double @exp(%Double %x)
+declare %Double @frexp(%Double %a, %Int* %i)
+declare %Double @ldexp(%Double %a, %Int %i)
+declare %Double @log(%Double %x)
+declare %Double @log10(%Double %x)
+declare %Double @modf(%Double %a, %Double* %b)
+declare %Double @pow(%Double %a, %Double %b)
+declare %Double @sqrt(%Double %x)
+declare %Double @ceil(%Double %x)
+declare %Double @fabs(%Double %x)
+declare %Double @floor(%Double %x)
+declare %Double @fmod(%Double %a, %Double %b)
+declare %LongDouble @acosl(%LongDouble %x)
+declare %LongDouble @asinl(%LongDouble %x)
+declare %LongDouble @atanl(%LongDouble %x)
+declare %LongDouble @atan2l(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @cosl(%LongDouble %x)
+declare %LongDouble @sinl(%LongDouble %x)
+declare %LongDouble @tanl(%LongDouble %x)
+declare %LongDouble @acoshl(%LongDouble %x)
+declare %LongDouble @asinhl(%LongDouble %x)
+declare %LongDouble @atanhl(%LongDouble %x)
+declare %LongDouble @coshl(%LongDouble %x)
+declare %LongDouble @sinhl(%LongDouble %x)
+declare %LongDouble @tanhl(%LongDouble %x)
+declare %LongDouble @expl(%LongDouble %x)
+declare %LongDouble @exp2l(%LongDouble %x)
+declare %LongDouble @expm1l(%LongDouble %x)
+declare %LongDouble @frexpl(%LongDouble %a, %Int* %i)
+declare %Int @ilogbl(%LongDouble %x)
+declare %LongDouble @ldexpl(%LongDouble %a, %Int %i)
+declare %LongDouble @logl(%LongDouble %x)
+declare %LongDouble @log10l(%LongDouble %x)
+declare %LongDouble @log1pl(%LongDouble %x)
+declare %LongDouble @log2l(%LongDouble %x)
+declare %LongDouble @logbl(%LongDouble %x)
+declare %LongDouble @modfl(%LongDouble %a, %LongDouble* %b)
+declare %LongDouble @scalbnl(%LongDouble %a, %Int %i)
+declare %LongDouble @scalblnl(%LongDouble %a, %LongInt %i)
+declare %LongDouble @cbrtl(%LongDouble %x)
+declare %LongDouble @fabsl(%LongDouble %x)
+declare %LongDouble @hypotl(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @powl(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @sqrtl(%LongDouble %x)
+declare %LongDouble @erfl(%LongDouble %x)
+declare %LongDouble @erfcl(%LongDouble %x)
+declare %LongDouble @lgammal(%LongDouble %x)
+declare %LongDouble @tgammal(%LongDouble %x)
+declare %LongDouble @ceill(%LongDouble %x)
+declare %LongDouble @floorl(%LongDouble %x)
+declare %LongDouble @nearbyintl(%LongDouble %x)
+declare %LongDouble @rintl(%LongDouble %x)
+declare %LongInt @lrintl(%LongDouble %x)
+declare %LongLongInt @llrintl(%LongDouble %x)
+declare %LongDouble @roundl(%LongDouble %x)
+declare %LongInt @lroundl(%LongDouble %x)
+declare %LongLongInt @llroundl(%LongDouble %x)
+declare %LongDouble @truncl(%LongDouble %x)
+declare %LongDouble @fmodl(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @remainderl(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @remquol(%LongDouble %a, %LongDouble %b, %Int* %i)
+declare %LongDouble @copysignl(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @nanl(%ConstChar* %x)
+declare %LongDouble @nextafterl(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @nexttowardl(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @fdiml(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @fmaxl(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @fminl(%LongDouble %a, %LongDouble %b)
+declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
+; end print includes
+; -- strings --
 @str1 = private constant [9 x i8] [i8 100, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 @str2 = private constant [9 x i8] [i8 100, i8 121, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 @str3 = private constant [12 x i8] [i8 102, i8 108, i8 111, i8 97, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
@@ -328,54 +295,52 @@ declare double @fmal(double %a, double %b, double %c)
 @str8 = private constant [12 x i8] [i8 115, i8 108, i8 111, i8 112, i8 101, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
 
 
+%Point2D = type {
+	%Int, 
+	%Int
+};
+
 
 
 define double @squareOfCircle(double %radius) {
-	%1 = call double @pow(double %radius, double 2.0000000000000000)
-	%2 = fmul double %1, 3.1415926535897931
-	ret double %2
+	%1 = call %Double @pow(double %radius, %Double 2.0000000000000000)
+	%2 = fmul %Double %1, 3.1415926535897931
+	ret %Double %2
 }
-
-
-%Point2D = type {
-	i32, 
-	i32
-};
-
 
 define float @slope(%Point2D %a, %Point2D %b) {
 	%1 = extractvalue %Point2D %a, 0
 	%2 = extractvalue %Point2D %b, 0
-	%3 = sub i32 %1, %2
-	%4 = call i32 @abs(i32 %3)
+	%3 = sub %Int %1, %2
+	%4 = call %Int @abs(%Int %3)
 	%5 = extractvalue %Point2D %a, 1
 	%6 = extractvalue %Point2D %b, 1
-	%7 = sub i32 %5, %6
-	%8 = call i32 @abs(i32 %7)
-	%9 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str1 to [0 x i8]*), i32 %4)
-	%10 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str2 to [0 x i8]*), i32 %8)
-	%11 = sitofp i32 %8 to float
-	%12 = sitofp i32 %4 to float
+	%7 = sub %Int %5, %6
+	%8 = call %Int @abs(%Int %7)
+	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str1 to [0 x i8]*), %Int %4)
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str2 to [0 x i8]*), %Int %8)
+	%11 = sitofp %Int %8 to float
+	%12 = sitofp %Int %4 to float
 	%13 = fdiv float %11, %12
 	ret float %13
 }
 
-define i32 @main() {
-	%1 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str3 to [0 x i8]*))
+define %Int @main() {
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str3 to [0 x i8]*))
 	%2 = call double @squareOfCircle(double 10.0000000000000000)
-	%3 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str4 to [0 x i8]*), double %2)
-	%4 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str5 to [0 x i8]*), double 0.1250000000000000)
-	%5 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str6 to [0 x i8]*), i32 4)
-	%6 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str7 to [0 x i8]*), i32 8)
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str4 to [0 x i8]*), double %2)
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str5 to [0 x i8]*), double 0.1250000000000000)
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str6 to [0 x i8]*), i32 4)
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str7 to [0 x i8]*), i32 8)
 	; printf %f ожидает получить double а не float!
-	%7 = insertvalue %Point2D zeroinitializer, i32 10, 0
-	%8 = insertvalue %Point2D %7, i32 20, 1
-	%9 = insertvalue %Point2D zeroinitializer, i32 30, 0
-	%10 = insertvalue %Point2D %9, i32 50, 1
+	%7 = insertvalue %Point2D zeroinitializer, %Int 10, 0
+	%8 = insertvalue %Point2D %7, %Int 20, 1
+	%9 = insertvalue %Point2D zeroinitializer, %Int 30, 0
+	%10 = insertvalue %Point2D %9, %Int 50, 1
 	%11 = call float @slope(%Point2D %8, %Point2D %10)
 	%12 = fpext float %11 to double
-	%13 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str8 to [0 x i8]*), double %12)
-	ret i32 0
+	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str8 to [0 x i8]*), double %12)
+	ret %Int 0
 }
 
 

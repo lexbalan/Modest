@@ -99,10 +99,94 @@ break_2:
 	ret i1 1
 }
 
+; MODULE: main
 
-; -----------------------------------------------------------------------------
-; -- SOURCE: /Users/alexbalan/p/Modest/test/var/src/main.m
-; -----------------------------------------------------------------------------
+; print includes
+
+%Str = type %Str8;
+%Char = type i8;
+%ConstChar = type %Char;
+%SignedChar = type i8;
+%UnsignedChar = type i8;
+%Short = type i16;
+%UnsignedShort = type i16;
+%Int = type i32;
+%UnsignedInt = type i32;
+%LongInt = type i64;
+%UnsignedLongInt = type i64;
+%Long = type i64;
+%UnsignedLong = type i64;
+%LongLong = type i64;
+%UnsignedLongLong = type i64;
+%LongLongInt = type i64;
+%UnsignedLongLongInt = type i64;
+%Float = type double;
+%Double = type double;
+%LongDouble = type double;
+
+
+%SocklenT = type i32;
+%SizeT = type %UnsignedLongInt;
+%SSizeT = type %LongInt;
+%IntptrT = type i64;
+%PtrdiffT = type i8*;
+%OffT = type i64;
+%USecondsT = type i32;
+%PidT = type i32;
+%UidT = type i32;
+%GidT = type i32;
+
+
+%File = type i8;
+%FposT = type i8;
+%CharStr = type %Str;
+%ConstCharStr = type %CharStr;
+
+
+declare %Int @fclose(%File* %f)
+declare %Int @feof(%File* %f)
+declare %Int @ferror(%File* %f)
+declare %Int @fflush(%File* %f)
+declare %Int @fgetpos(%File* %f, %FposT* %pos)
+declare %File* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
+declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
+declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
+declare %File* @freopen(%ConstCharStr* %filename, %ConstCharStr* %mode, %File* %f)
+declare %Int @fseek(%File* %stream, %LongInt %offset, %Int %whence)
+declare %Int @fsetpos(%File* %f, %FposT* %pos)
+declare %LongInt @ftell(%File* %f)
+declare %Int @remove(%ConstCharStr* %filename)
+declare %Int @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
+declare void @rewind(%File* %f)
+declare void @setbuf(%File* %f, %CharStr* %buffer)
+declare %Int @setvbuf(%File* %f, %CharStr* %buffer, %Int %mode, %SizeT %size)
+declare %File* @tmpfile()
+declare %CharStr* @tmpnam(%CharStr* %str)
+declare %Int @printf(%ConstCharStr* %s, ...)
+declare %Int @scanf(%ConstCharStr* %s, ...)
+declare %Int @fprintf(%File* %stream, %Str* %format, ...)
+declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
+declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
+declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
+declare %Int @fgetc(%File* %f)
+declare %Int @fputc(%Int %char, %File* %f)
+declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
+declare %Int @fputs(%ConstCharStr* %str, %File* %f)
+declare %Int @getc(%File* %f)
+declare %Int @getchar()
+declare %CharStr* @gets(%CharStr* %str)
+declare %Int @putc(%Int %char, %File* %f)
+declare %Int @putchar(%Int %char)
+declare %Int @puts(%ConstCharStr* %str)
+declare %Int @ungetc(%Int %char, %File* %f)
+declare void @perror(%ConstCharStr* %str)
+; end print includes
+; -- strings --
 @str1 = private constant [7 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 33, i8 0]
 @str2 = private constant [8 x i8] [i8 121, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 @str3 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
