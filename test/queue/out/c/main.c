@@ -10,7 +10,6 @@
 
 void padd(int n);
 void fetch(int n);
-void init();
 
 
 
@@ -52,15 +51,8 @@ void fetch(int n)
 	}
 }
 
-void init()
-{
-	printf("init!\n");
-}
-
 int main()
 {
-	init();
-
 	queue_init((queue_Queue *)&q0);
 
 	padd(3);

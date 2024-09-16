@@ -294,7 +294,6 @@ declare %Byte @get(%Queue* %q)
 @str2 = private constant [15 x i8] [i8 113, i8 117, i8 101, i8 117, i8 101, i8 46, i8 112, i8 117, i8 116, i8 40, i8 37, i8 100, i8 41, i8 10, i8 0]
 @str3 = private constant [16 x i8] [i8 113, i8 117, i8 101, i8 117, i8 101, i8 32, i8 105, i8 115, i8 32, i8 101, i8 109, i8 112, i8 116, i8 121, i8 10, i8 0]
 @str4 = private constant [16 x i8] [i8 113, i8 117, i8 101, i8 117, i8 101, i8 46, i8 103, i8 101, i8 116, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str5 = private constant [7 x i8] [i8 105, i8 110, i8 105, i8 116, i8 33, i8 10, i8 0]
 
 
 @q0 = global %Queue zeroinitializer
@@ -363,14 +362,8 @@ break_1:
 	ret void
 }
 
-define void @init() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str5 to [0 x i8]*))
-	ret void
-}
-
 
 define %Int @main() {
-	call void @init()
 	%1 = bitcast %Queue* @q0 to %Queue*
 	call void @init(%Queue* %1)
 	call void @padd(%Int 3)

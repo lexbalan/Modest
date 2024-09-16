@@ -46,8 +46,6 @@ func fetch(n: Int) -> Unit {
 
 @nodecorate
 export func main() -> Int {
-	init()
-
 	queue.init(&q0)
 
 	padd(3)
@@ -58,11 +56,6 @@ export func main() -> Int {
 	fetch(7)
 
 	return 0
-}
-
-
-func init() {
-	printf("init!\n")
 }
 
 

@@ -33,12 +33,7 @@ func fetch(n: Int) -> Unit {
 		i = i + 1
 	}
 }
-func init() -> Unit {
-	printf("init!\n")
-}
 export func main() -> Int {
-	init()
-
 	queue.init(&q0)
 
 	padd(3)
