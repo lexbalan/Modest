@@ -1,13 +1,12 @@
 // test/11.unicode/src/main.cm
 
+$pragma c_include "./utf.h"
+$pragma c_include "./putchar.h"
+
 include "libc/ctypes64"
 include "libc/stdio"
 
-include "lightfood/putchar"
-@attribute("c_no_print")
-include "misc/utf"
-$pragma c_include "./utf.h"
-$pragma c_include "./putchar.h"
+import "lightfood/putchar"
 
 
 let ratSymbolUTF8 = [0xf0, 0x9f, 0x90, 0x80]
@@ -57,14 +56,14 @@ func main() -> Int {
 	var str16: *Str16 = string16Const
 	var str32: *Str32 = string32Const
 
-	utf8_puts(str8)
-	utf8_puts("\n")
+	putchar.utf8_puts(str8)
+	putchar.utf8_puts("\n")
 
-	utf16_puts(str16)
-	utf8_puts("\n")
+	putchar.utf16_puts(str16)
+	putchar.utf8_puts("\n")
 
-	utf32_puts(str32)
-	utf8_puts("\n")
+	putchar.utf32_puts(str32)
+	putchar.utf8_puts("\n")
 
 	return 0
 }

@@ -78,11 +78,15 @@ void putchar_utf16_puts(uint16_t *s)
 		// тк в строке может быть суррогатная пара UTF_16 символов
 
 		const uint16_t cc16 = s[i];
-		if (cc16 == 0) {break;}
+		if (cc16 == 0) {
+			break;
+		}
 
 		uint32_t char32;
 		const uint8_t n = utf_utf16_to_utf32((uint16_t *)&s[i], &char32);
-		if (n == 0) {break;}
+		if (n == 0) {
+			break;
+		}
 
 		putchar_utf32_putchar(char32);
 

@@ -23,7 +23,6 @@ int main();
 
 
 
-
 static char arr_utf8[8] = "Hi!\n";
 static uint16_t arr_utf16[8] = u"Hello!\n";
 static uint32_t arr_utf32[8] = U"Hello!\n";

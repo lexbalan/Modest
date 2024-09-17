@@ -2651,9 +2651,6 @@ def do_import(x):
 
 
 
-
-
-
 def do_directive(x):
 	#info("directive %s" % x['kind'], x['ti'])
 	if x['kind'] == 'pragma':

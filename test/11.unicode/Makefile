@@ -16,11 +16,11 @@ CM:
 
 
 LLVM:
-	#mcc -o $(LLVMPREFIX)/utf -mbackend=llvm -funsafe ${MODEST_LIB}/misc/utf.m
-	#mcc -o $(LLVMPREFIX)/putchar -mbackend=llvm -funsafe ${MODEST_LIB}/lightfood/putchar.m
+	mcc -o $(LLVMPREFIX)/utf -mbackend=llvm -funsafe ${MODEST_LIB}/misc/utf.m
+	mcc -o $(LLVMPREFIX)/putchar -mbackend=llvm -funsafe ${MODEST_LIB}/lightfood/putchar.m
 	mcc -o $(LLVMPREFIX)/main -mbackend=llvm -funsafe $(INDIR)/main.m
 	
-	clang $(LLVMPREFIX)/main.ll #$(LLVMPREFIX)/utf.ll #$(LLVMPREFIX)/putchar.ll
+	clang $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/putchar.ll $(LLVMPREFIX)/utf.ll
 
 
 C:
