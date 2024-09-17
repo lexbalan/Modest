@@ -29,9 +29,14 @@ target triple = "arm64-apple-macosx12.0.0"
 declare void @llvm.va_start(i8*)
 declare void @llvm.va_copy(i8*, i8*)
 declare void @llvm.va_end(i8*)
-
 declare void @llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)
 declare void @llvm.memset.p0.i32(i8*, i8, i32, i1)
+
+declare i8* @llvm.stacksave()
+
+declare void @llvm.stackrestore(i8*)
+
+
 
 %CPU.Word = type i64
 define weak i1 @memeq(i8* %mem0, i8* %mem1, i64 %len) {
@@ -97,65 +102,48 @@ break_2:
 	ret i1 1
 }
 
+; MODULE: main
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/system.hm
+; print includes
 
-
-
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
-
-
-
-%Str = type %Str8
-%Char = type i8
-%ConstChar = type %Char
-%SignedChar = type i8
-%UnsignedChar = type i8
-%Short = type i16
-%UnsignedShort = type i16
-%Int = type i32
-%UnsignedInt = type i32
-%LongInt = type i64
-%UnsignedLongInt = type i64
-%Long = type i64
-%UnsignedLong = type i64
-%LongLong = type i64
-%UnsignedLongLong = type i64
-%LongLongInt = type i64
-%UnsignedLongLongInt = type i64
-%Float = type double
-%Double = type double
-%LongDouble = type double
+%Str = type %Str8;
+%Char = type i8;
+%ConstChar = type %Char;
+%SignedChar = type i8;
+%UnsignedChar = type i8;
+%Short = type i16;
+%UnsignedShort = type i16;
+%Int = type i32;
+%UnsignedInt = type i32;
+%LongInt = type i64;
+%UnsignedLongInt = type i64;
+%Long = type i64;
+%UnsignedLong = type i64;
+%LongLong = type i64;
+%UnsignedLongLong = type i64;
+%LongLongInt = type i64;
+%UnsignedLongLongInt = type i64;
+%Float = type double;
+%Double = type double;
+%LongDouble = type double;
 
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
+%SocklenT = type i32;
+%SizeT = type %UnsignedLongInt;
+%SSizeT = type %LongInt;
+%IntptrT = type i64;
+%PtrdiffT = type i8*;
+%OffT = type i64;
+%USecondsT = type i32;
+%PidT = type i32;
+%UidT = type i32;
+%GidT = type i32;
 
 
-
-
-%Socklen_T = type i32
-%SizeT = type %UnsignedLongInt
-%SSizeT = type %LongInt
-%PidT = type i32
-%UidT = type i32
-%GidT = type i32
-%USecondsT = type i32
-%IntptrT = type i64
-%OffT = type i64
-%PtrToConst = type i8*
-
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
-
-
-
-
-%File = type opaque
-%FposT = type opaque
-
-%CharStr = type %Str
-%ConstCharStr = type %CharStr
+%File = type i8;
+%FposT = type i8;
+%CharStr = type %Str;
+%ConstCharStr = type %CharStr;
 
 
 declare %Int @fclose(%File* %f)
@@ -174,8 +162,6 @@ declare %Int @remove(%ConstCharStr* %filename)
 declare %Int @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
 declare void @rewind(%File* %f)
 declare void @setbuf(%File* %f, %CharStr* %buffer)
-
-
 declare %Int @setvbuf(%File* %f, %CharStr* %buffer, %Int %mode, %SizeT %size)
 declare %File* @tmpfile()
 declare %CharStr* @tmpnam(%CharStr* %str)
@@ -185,11 +171,11 @@ declare %Int @fprintf(%File* %stream, %Str* %format, ...)
 declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
 declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, %VA_List %args)
-declare %Int @vprintf(%ConstCharStr* %format, %VA_List %args)
-declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, %VA_List %args)
-declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, %VA_List %args)
-declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, %VA_List %arg)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
+declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -204,294 +190,94 @@ declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
 
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/unistd.hm
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 declare %Int @access([0 x %ConstChar]* %path, %Int %amode)
-
-
 declare %UnsignedInt @alarm(%UnsignedInt %seconds)
-
-
 declare %Int @brk(i8* %end_data_segment)
-
-
 declare %Int @chdir([0 x %ConstChar]* %path)
-
-
 declare %Int @chroot([0 x %ConstChar]* %path)
-
-
 declare %Int @chown([0 x %ConstChar]* %pathname, %UidT %owner, %GidT %group)
-
-
 declare %Int @close(%Int %fildes)
-
-
 declare %SizeT @confstr(%Int %name, [0 x %Char]* %buf, %SizeT %len)
-
-
 declare [0 x %Char]* @crypt([0 x %ConstChar]* %key, [0 x %ConstChar]* %salt)
-
-
 declare [0 x %Char]* @ctermid([0 x %Char]* %s)
-
-
 declare [0 x %Char]* @cuserid([0 x %Char]* %s)
-
-
 declare %Int @dup(%Int %fildes)
-
-
 declare %Int @dup2(%Int %fildes, %Int %fildes2)
-
-
 declare void @encrypt([64 x %Char]* %block, %Int %edflag)
-
-
 declare %Int @execl([0 x %ConstChar]* %path, [0 x %ConstChar]* %arg0, ...)
 declare %Int @execle([0 x %ConstChar]* %path, [0 x %ConstChar]* %arg0, ...)
 declare %Int @execlp([0 x %ConstChar]* %file, [0 x %ConstChar]* %arg0, ...)
 declare %Int @execv([0 x %ConstChar]* %path, [0 x %ConstChar]* %argv)
 declare %Int @execve([0 x %ConstChar]* %path, [0 x %ConstChar]* %argv, [0 x %ConstChar]* %envp)
 declare %Int @execvp([0 x %ConstChar]* %file, [0 x %ConstChar]* %argv)
-
-
 declare void @_exit(%Int %status)
-
-
 declare %Int @fchown(%Int %fildes, %UidT %owner, %GidT %group)
-
-
 declare %Int @fchdir(%Int %fildes)
-
-
 declare %Int @fdatasync(%Int %fildes)
-
-
 declare %PidT @fork()
-
-
 declare %LongInt @fpathconf(%Int %fildes, %Int %name)
-
-
 declare %Int @fsync(%Int %fildes)
-
-
 declare %Int @ftruncate(%Int %fildes, %OffT %length)
-
-
 declare [0 x %Char]* @getcwd([0 x %Char]* %buf, %SizeT %size)
-
-
 declare %Int @getdtablesize()
-
-
 declare %GidT @getegid()
-
-
 declare %UidT @geteuid()
-
-
 declare %GidT @getgid()
-
-
 declare %Int @getgroups(%Int %gidsetsize, [0 x %GidT]* %grouplist)
-
-
 declare %Long @gethostid()
-
-
 declare [0 x %Char]* @getlogin()
-
-
 declare %Int @getlogin_r([0 x %Char]* %name, %SizeT %namesize)
-
-
 declare %Int @getopt(%Int %argc, [0 x %ConstChar]* %argv, [0 x %ConstChar]* %optstring)
-
-
 declare %Int @getpagesize()
-
-
 declare [0 x %Char]* @getpass([0 x %ConstChar]* %prompt)
-
-
 declare %PidT @getpgid(%PidT %pid)
-
-
 declare %PidT @getpgrp()
-
-
 declare %PidT @getpid()
-
-
 declare %PidT @getppid()
-
-
 declare %PidT @getsid(%PidT %pid)
-
-
 declare %UidT @getuid()
-
-
 declare [0 x %Char]* @getwd([0 x %Char]* %path_name)
-
-
 declare %Int @isatty(%Int %fildes)
-
-
 declare %Int @lchown([0 x %ConstChar]* %path, %UidT %owner, %GidT %group)
-
-
 declare %Int @link([0 x %ConstChar]* %path1, [0 x %ConstChar]* %path2)
-
-
 declare %Int @lockf(%Int %fildes, %Int %function, %OffT %size)
-
-
 declare %OffT @lseek(%Int %fildes, %OffT %offset, %Int %whence)
-
-
 declare %Int @nice(%Int %incr)
-
-
 declare %LongInt @pathconf([0 x %ConstChar]* %path, %Int %name)
-
-
 declare %Int @pause()
-
-
 declare %Int @pipe([2 x %Int]* %fildes)
-
-
 declare %SSizeT @pread(%Int %fildes, i8* %buf, %SizeT %nbyte, %OffT %offset)
-
-
 declare %Int @pthread_atfork(void ()* %prepare, void ()* %parent, void ()* %child)
-
-
 declare %SSizeT @pwrite(%Int %fildes, i8* %buf, %SizeT %nbyte, %OffT %offset)
-
-
 declare %SSizeT @read(%Int %fildes, i8* %buf, %SizeT %nbyte)
-
-
 declare %Int @readlink([0 x %ConstChar]* %path, [0 x %Char]* %buf, %SizeT %bufsize)
-
-
 declare %Int @rmdir([0 x %ConstChar]* %path)
-
-
 declare i8* @sbrk(%IntptrT %incr)
-
-
 declare %Int @setgid(%GidT %gid)
-
-
 declare %Int @setpgid(%PidT %pid, %PidT %pgid)
-
-
 declare %PidT @setpgrp()
-
-
 declare %Int @setregid(%GidT %rgid, %GidT %egid)
-
-
 declare %Int @setreuid(%UidT %ruid, %UidT %euid)
-
-
 declare %PidT @setsid()
-
-
 declare %Int @setuid(%UidT %uid)
-
-
 declare %UnsignedInt @sleep(%UnsignedInt %seconds)
-
-
 declare void @swab(i8* %src, i8* %dst, %SSizeT %nbytes)
-
-
 declare %Int @symlink([0 x %ConstChar]* %path1, [0 x %ConstChar]* %path2)
-
-
 declare void @sync()
-
-
 declare %LongInt @sysconf(%Int %name)
-
-
 declare %PidT @tcgetpgrp(%Int %fildes)
-
-
 declare %Int @tcsetpgrp(%Int %fildes, %PidT %pgid_id)
-
-
 declare %Int @truncate([0 x %ConstChar]* %path, %OffT %length)
-
-
 declare [0 x %Char]* @ttyname(%Int %fildes)
-
-
 declare %Int @ttyname_r(%Int %fildes, [0 x %Char]* %name, %SizeT %namesize)
-
-
 declare %USecondsT @ualarm(%USecondsT %useconds, %USecondsT %interval)
-
-
 declare %Int @unlink([0 x %ConstChar]* %path)
-
-
 declare %Int @usleep(%USecondsT %useconds)
-
-
 declare %PidT @vfork()
-
-
 declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
-
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/lightfood/print.hm
-
-
-
-declare void @print(%Str8* %form, ...)
-
-
-; -- SOURCE: src/main.cm
-
+; end print includes
+; -- strings --
 @str1 = private constant [19 x i8] [i8 77, i8 121, i8 32, i8 80, i8 114, i8 105, i8 110, i8 116, i8 102, i8 32, i8 84, i8 101, i8 115, i8 116, i8 32, i8 37, i8 100, i8 10, i8 0]
 @str2 = private constant [4 x i8] [i8 72, i8 105, i8 33, i8 0]
 @str3 = private constant [8 x i8] [i8 92, i8 123, i8 123, i8 92, i8 125, i8 125, i8 10, i8 0]
@@ -502,20 +288,19 @@ declare void @print(%Str8* %form, ...)
 @str8 = private constant [11 x i8] [i8 120, i8 32, i8 61, i8 32, i8 48, i8 120, i8 123, i8 120, i8 125, i8 10, i8 0]
 
 
-
 define %SSizeT @my_printf(%Str8* %format, ...) {
-	%1 = alloca %VA_List, align 1
-	%2 = alloca %VA_List, align 1
-	%3 = bitcast %VA_List* %2 to i8*
-	%4 = bitcast %VA_List* %1 to i8*
+	%1 = alloca i8*, align 1
+	%2 = alloca i8*, align 1
+	%3 = bitcast i8** %2 to i8*
+	%4 = bitcast i8** %1 to i8*
 	call void @llvm.va_copy(i8* %3, i8* %4)
-	%5 = bitcast %VA_List* %2 to i8*
+	%5 = bitcast i8** %2 to i8*
 	call void @llvm.va_start(i8* %5)
 	%6 = alloca [128 x i8], align 1
 	%7 = bitcast [128 x i8]* %6 to %CharStr*
-	%8 = load %VA_List, %VA_List* %2
-	%9 = call %Int @vsnprintf(%CharStr* %7, %SizeT 128, %Str8* %format, %VA_List %8)
-	%10 = bitcast %VA_List* %2 to i8*
+	%8 = load i8*, i8** %2
+	%9 = call %Int @vsnprintf(%CharStr* %7, %SizeT 128, %Str8* %format, i8* %8)
+	%10 = bitcast i8** %2 to i8*
 	call void @llvm.va_end(i8* %10)
 	%11 = bitcast [128 x i8]* %6 to i8*
 	%12 = zext %Int %9 to %SizeT
@@ -524,17 +309,16 @@ define %SSizeT @my_printf(%Str8* %format, ...) {
 }
 
 define %Int @main() {
-	;print("Hello World!\n")
 	%1 = alloca i32, align 4
 	store i32 10, i32* %1
 	%2 = load i32, i32* %1
 	%3 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([19 x i8]* @str1 to [0 x i8]*), i32 %2)
-	call void (%Str8*, ...) @print(%Str8* bitcast ([8 x i8]* @str3 to [0 x i8]*))
-	call void (%Str8*, ...) @print(%Str8* bitcast ([11 x i8]* @str4 to [0 x i8]*), i8 36)
-	call void (%Str8*, ...) @print(%Str8* bitcast ([11 x i8]* @str5 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @str2 to [0 x i8]*))
-	call void (%Str8*, ...) @print(%Str8* bitcast ([9 x i8]* @str6 to [0 x i8]*), i32 -1)
-	call void (%Str8*, ...) @print(%Str8* bitcast ([9 x i8]* @str7 to [0 x i8]*), i32 123)
-	call void (%Str8*, ...) @print(%Str8* bitcast ([11 x i8]* @str8 to [0 x i8]*), i32 305419903)
+	%4 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([8 x i8]* @str3 to [0 x i8]*))
+	%5 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([11 x i8]* @str4 to [0 x i8]*), i8 36)
+	%6 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([11 x i8]* @str5 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @str2 to [0 x i8]*))
+	%7 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([9 x i8]* @str6 to [0 x i8]*), i32 -1)
+	%8 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([9 x i8]* @str7 to [0 x i8]*), i32 123)
+	%9 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([11 x i8]* @str8 to [0 x i8]*), i32 305419903)
 	ret %Int 0
 }
 

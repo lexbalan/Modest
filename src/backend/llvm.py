@@ -2360,13 +2360,12 @@ def run(module, outname):
 	lo("%Str32 = type [0 x %Char32]")
 	lo("%VA_List = type i8*")
 
+	if 'use_va_arg' in module['att']:
+		lo("declare void @llvm.va_start(i8*)")
+		lo("declare void @llvm.va_copy(i8*, i8*)")
+		lo("declare void @llvm.va_end(i8*)")
 
 	if module['options'] != []:
-		if 'use_extra_args' in module['options']:
-			lo("declare void @llvm.va_start(i8*)")
-			lo("declare void @llvm.va_copy(i8*, i8*)")
-			lo("declare void @llvm.va_end(i8*)")
-
 		# llvm.memcpy intrinsic
 		# <dest> <src> <len> <isvolatile>
 #		if 'use_memcpy' in module['options']:

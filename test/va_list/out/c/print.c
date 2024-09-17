@@ -1,24 +1,26 @@
-// lib/lightfood/print.cm
+// ./out/c/print.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 #include <stdarg.h>
-
-#include <stdio.h>
-#include "./putchar.h"
-
-//@attribute("c_no_print")
-//import "./main"
-//$pragma c_include "./ff.h"
+#include "print.h"
 
 
 
+void put_str8(char *s);
+void sprintf_dec_int32(char *buf, int32_t x);
+void sprintf_dec_nat32(char *buf, uint32_t x);
+void sprintf_hex_nat32(char *buf, uint32_t x);
+void print(char *form, ...);
+char n_to_sym(uint8_t n);
+void sprintf_hex_nat32(char *buf, uint32_t x);
+void sprintf_dec_int32(char *buf, int32_t x);
+void sprintf_dec_nat32(char *buf, uint32_t x);
 
 
-/*func _put_char8(c: Char8) {
-	putchar(Int c)
-}*/
+
+
 
 
 void put_str8(char *s)
@@ -30,16 +32,19 @@ void put_str8(char *s)
 		if (c == '\x0') {
 			break;
 		}
-		putchar8(c);
+		putchar_putchar8(c);
 		i = i + 1;
 	}
 }
 
+void sprintf_dec_int32(char *buf, int32_t x)
+;
 
-void sprintf_dec_int32(char *buf, int32_t x);
-void sprintf_dec_nat32(char *buf, uint32_t x);
-void sprintf_hex_nat32(char *buf, uint32_t x);
+void sprintf_dec_nat32(char *buf, uint32_t x)
+;
 
+void sprintf_hex_nat32(char *buf, uint32_t x)
+;
 
 void print(char *form, ...)
 {
@@ -60,12 +65,12 @@ void print(char *form, ...)
 			c = form[i + 1];
 			if (c == '{') {
 				// "\{" -> "{"
-				putchar8(c);
+				putchar_putchar8(c);
 				i = i + 2;
 				continue;
 			} else if (c == '}') {
 				// "\}" -> "{"
-				putchar8(c);
+				putchar_putchar8(c);
 				i = i + 2;
 				continue;
 			}
@@ -109,7 +114,7 @@ void print(char *form, ...)
 			put_str8(sptr);
 
 		} else {
-			putchar8(c);
+			putchar_putchar8(c);
 		}
 
 		i = i + 1;
@@ -117,7 +122,6 @@ void print(char *form, ...)
 
 	va_end(va);
 }
-
 
 char n_to_sym(uint8_t n)
 {
@@ -129,7 +133,6 @@ char n_to_sym(uint8_t n)
 	}
 	return c;
 }
-
 
 void sprintf_hex_nat32(char *buf, uint32_t x)
 {
@@ -164,7 +167,6 @@ void sprintf_hex_nat32(char *buf, uint32_t x)
 
 	//return buf
 }
-
 
 void sprintf_dec_int32(char *buf, int32_t x)
 {
@@ -208,7 +210,6 @@ void sprintf_dec_int32(char *buf, int32_t x)
 
 	//return buf
 }
-
 
 void sprintf_dec_nat32(char *buf, uint32_t x)
 {

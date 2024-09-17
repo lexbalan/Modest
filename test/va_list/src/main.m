@@ -5,10 +5,8 @@ include "libc/ctypes"
 include "libc/stdio"
 include "libc/unistd"
 
-@attribute("c_no_print")
-include "lightfood/print"
-$pragma c_include "./print.h"
-
+//include "lightfood/print"
+//$pragma c_include "./print.h"
 
 @attribute("value.type.to:dispensable")
 func my_printf(format: *Str8, ...) -> SSizeT {
@@ -30,8 +28,6 @@ func my_printf(format: *Str8, ...) -> SSizeT {
 
 
 func main() -> Int {
-	//print("Hello World!\n")
-
 	var k = 10
 	my_printf("My Printf Test %d\n", k)
 
@@ -41,12 +37,12 @@ func main() -> Int {
 	let n = Nat32 123
 	let x = Nat32 0x1234567F
 
-	print("\{\}\n")
-	print("c = '{c}'\n", c)
-	print("s = \"{s}\"\n", s)
-	print("i = {i}\n", i)
-	print("n = {n}\n", n)
-	print("x = 0x{x}\n", x)
+	my_printf("\{\}\n")
+	my_printf("c = '{c}'\n", c)
+	my_printf("s = \"{s}\"\n", s)
+	my_printf("i = {i}\n", i)
+	my_printf("n = {n}\n", n)
+	my_printf("x = 0x{x}\n", x)
 
 	return 0
 }

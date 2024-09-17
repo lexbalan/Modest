@@ -1632,6 +1632,10 @@ def print_def_func(x):
 	else:
 		out(" ")
 
+	if x['stmt'] == None:
+		out(";")
+		return
+
 	out("{")
 	indent_up()
 
@@ -2023,9 +2027,6 @@ def print_cfile(module, _outname):
 	out("\n#include <stdint.h>\n")
 	out("#include <stdbool.h>\n")
 	out("#include <string.h>\n")
-
-	if 'use_extra_args' in module['options']:
-		out("#include <stdarg.h>\n")
 
 	if 'use_va_arg' in module['att']:
 		out("#include <stdarg.h>")

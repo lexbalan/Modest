@@ -1,13 +1,16 @@
-// test/va/src/main.cm
+// ./out/c/main.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 #include <stdarg.h>
+#include "main.h"
 
-#include <stdio.h>
-#include <unistd.h>
-#include "./print.h"
+
+
+ssize_t my_printf(char *format, ...);
+int main();
+
 
 
 
@@ -21,22 +24,19 @@ ssize_t my_printf(char *format, ...)
 
 	va_start(va2, format);
 
-	#define strMaxLen  (127 + 1)
-	char buf[strMaxLen];
-	const int n = vsnprintf((char *)&buf, strMaxLen, format, va2);
+	#define __strMaxLen  (127 + 1)
+	char buf[__strMaxLen];
+	const int n = vsnprintf((char *)&buf, __strMaxLen, format, va2);
 
 	va_end(va2);
 
 	return write(STDOUT_FILENO, (char *)&buf, ((size_t)(uint32_t)n));
+
+#undef __strMaxLen
 }
-
-#undef strMaxLen
-
 
 int main()
 {
-	//print("Hello World!\n")
-
 	int32_t k;
 	k = 10;
 	my_printf("My Printf Test %d\n", k);
@@ -47,12 +47,12 @@ int main()
 	const uint32_t n = 123;
 	const uint32_t x = 0x1234567F;
 
-	print("\\{{\\}}\n");
-	print("c = '{c}'\n", c);
-	print("s = \"{s}\"\n", s);
-	print("i = {i}\n", i);
-	print("n = {n}\n", n);
-	print("x = 0x{x}\n", x);
+	my_printf("\\{{\\}}\n");
+	my_printf("c = '{c}'\n", c);
+	my_printf("s = \"{s}\"\n", s);
+	my_printf("i = {i}\n", i);
+	my_printf("n = {n}\n", n);
+	my_printf("x = 0x{x}\n", x);
 
 	return 0;
 }

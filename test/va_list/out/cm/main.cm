@@ -1,13 +1,11 @@
-// test/va/src/main.cm
 
-import "libc/stdio"
-import "libc/unistd"
-@attribute("c_no_print")
-import "lightfood/print"
-@c_include "./print.h"
+include "libc/ctypes64"
+include "libc/ctypes"
+include "libc/stdio"
+include "libc/unistd"
 func my_printf(format: *Str8, ...) -> SSizeT {
-	var va: VA_List
-	var va2: VA_List
+	var va: va_list
+	var va2: va_list
 
 	__va_copy(va2, va)
 
@@ -21,8 +19,6 @@ func my_printf(format: *Str8, ...) -> SSizeT {
 
 	return write(c_STDOUT_FILENO, &buf, SizeT n)
 }
-
-
 func main() -> Int {
 	//print("Hello World!\n")
 
@@ -35,12 +31,12 @@ func main() -> Int {
 	let n = Nat32 123
 	let x = Nat32 0x1234567F
 
-	print("\\{{\\}}\n")
-	print("c = '{c}'\n", c)
-	print("s = \"{s}\"\n", s)
-	print("i = {i}\n", i)
-	print("n = {n}\n", n)
-	print("x = 0x{x}\n", x)
+	my_printf("\\{{\\}}\n")
+	my_printf("c = '{c}'\n", c)
+	my_printf("s = \"{s}\"\n", s)
+	my_printf("i = {i}\n", i)
+	my_printf("n = {n}\n", n)
+	my_printf("x = 0x{x}\n", x)
 
 	return 0
 }
