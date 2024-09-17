@@ -1974,8 +1974,9 @@ def print_header(module, outname):
 		isa = x['isa']
 
 		if isa in ['def_func']:
-			#if 'inline' in x['att']:
-			#	continue
+			if 'inline' in x['att']:
+				print_def_func(x)
+				continue
 			print_decl_func(x)
 		elif isa == 'def_var':
 			print_decl_var(x)
@@ -2107,7 +2108,9 @@ def print_cfile(module, _outname):
 		if isa == 'def_var':
 			print_def_var(x)
 		elif isa == 'def_func':
-			out("\n");
+			if 'inline' in x['att']:
+				continue
+			out("\n")
 			print_def_func(x)
 
 		elif isa == 'comment': print_comment(x)

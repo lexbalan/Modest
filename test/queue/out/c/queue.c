@@ -29,21 +29,6 @@ void queue_init(queue_Queue *q)
 	q->g = 0;
 }
 
-uint32_t queue_getSize(queue_Queue *q)
-{
-	return q->size;
-}
-
-bool queue_isEmpty(queue_Queue *q)
-{
-	return q->size == 0;
-}
-
-bool queue_isFull(queue_Queue *q)
-{
-	return q->size == bufVolume;
-}
-
 bool queue_put(queue_Queue *q, uint8_t b)
 {
 	if (queue_isFull((queue_Queue *)q)) {

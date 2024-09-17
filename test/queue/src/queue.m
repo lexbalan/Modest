@@ -25,17 +25,17 @@ export func init(q: *Queue) {
 	q.g = 0
 }
 
-
+@inline
 export func getSize(q: *Queue) -> Nat32 {
 	return q.size
 }
 
-
+@inline
 export func isEmpty(q: *Queue) -> Bool {
 	return q.size == 0
 }
 
-
+@inline
 export func isFull(q: *Queue) -> Bool {
 	return q.size == bufVolume
 }

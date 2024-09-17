@@ -20,9 +20,18 @@ struct queue_Queue {
 	int32_t g;uint32_t size;
 };
 void queue_init(queue_Queue *q);
-uint32_t queue_getSize(queue_Queue *q);
-bool queue_isEmpty(queue_Queue *q);
-bool queue_isFull(queue_Queue *q);
+static inline uint32_t queue_getSize(queue_Queue *q)
+{
+	return q->size;
+}
+static inline bool queue_isEmpty(queue_Queue *q)
+{
+	return q->size == 0;
+}
+static inline bool queue_isFull(queue_Queue *q)
+{
+	return q->size == bufVolume;
+}
 bool queue_put(queue_Queue *q, uint8_t b);
 uint8_t queue_get(queue_Queue *q);
 
