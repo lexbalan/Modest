@@ -3,9 +3,9 @@
 include "libc/ctypes64"
 include "libc/stdio"
 
-@attribute("c_no_print")
 include "misc/utf"
 include "lightfood/putchar"
+
 $pragma c_include "./utf.h"
 $pragma c_include "./putchar.h"
 
