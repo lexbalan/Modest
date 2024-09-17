@@ -17,7 +17,8 @@ typedef struct queue_Queue queue_Queue; //
 struct queue_Queue {
 	uint8_t data[bufVolume];
 	int32_t p;
-	int32_t g;uint32_t size;
+	int32_t g;
+	uint32_t size;
 };
 void queue_init(queue_Queue *q);
 static inline uint32_t queue_getSize(queue_Queue *q)
