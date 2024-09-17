@@ -1545,7 +1545,7 @@ def do_value_access(x):
 
 
 	if record_type['definition']['module'] != module:
-		if 'private' in field['att']:
+		if not 'public' in field['att']:
 			error("access to private field", x['ti'])
 
 

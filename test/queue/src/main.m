@@ -48,9 +48,6 @@ func fetch(n: Int) -> Unit {
 export func main() -> Int {
 	queue.init(&q0)
 
-	let y = q0.p
-	//let yy = q0.size
-
 	padd(3)
 	fetch(7)
 	padd(12)

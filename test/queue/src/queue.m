@@ -14,7 +14,7 @@ export type Queue record {
 	data: [bufVolume]Byte
 	p: Int32  // put index
 	g: Int32  // get index
-	@private size: Nat32
+	size: Nat32
 }
 
 
