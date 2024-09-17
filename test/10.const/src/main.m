@@ -4,9 +4,9 @@ include "libc/ctypes64"
 include "libc/stdio"
 include "libc/math"
 
-@attribute("c_no_print")
-include "misc/minmax"
 $pragma c_include "./minmax.h"
+
+include "misc/minmax"
 
 
 type Point record {

@@ -9,6 +9,7 @@
 
 
 
+
 struct main_Point {
 	double x;
 	double y;

@@ -1543,10 +1543,12 @@ def do_value_access(x):
 		error("undefined field '%s'" % field_id['str'], x)
 		return value_bad(x)
 
-
-	if record_type['definition']['module'] != module:
-		if not 'public' in field['att']:
-			error("access to private field", x['ti'])
+	# PROBLEM: у анонимных структур нет поля 'definition'
+	# и непонятно как с этимм быть. Можно добавить module
+	# в каждую сущность, но...
+#	if record_type['definition']['module'] != module:
+#		if not 'public' in field['att']:
+#			error("access to private field", x['ti'])
 
 
 	if hlir_type.type_is_bad(field['type']):

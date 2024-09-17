@@ -12,8 +12,8 @@
 
 
 
-
 #include "./minmax.h"
+
 
 typedef struct main_Point main_Point; //
 typedef struct main_Line main_Line; //

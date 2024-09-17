@@ -13,7 +13,8 @@ export let bufVolume = 4
 export type Queue record {
 	data: [bufVolume]Byte
 	p: Int32
-	g: Int32size: Nat32
+	g: Int32
+	size: Nat32
 }
 export func init(q: *Queue) -> Unit {
 	q.data = []  // right size = 4
