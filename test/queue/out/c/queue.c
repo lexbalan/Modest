@@ -53,7 +53,6 @@ bool queue_put(queue_Queue *q, uint8_t b)
 	q->data[q->p] = b;
 	q->p = next(q->p);
 	q->size = q->size + 1;
-
 	return true;
 }
 

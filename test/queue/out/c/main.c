@@ -54,8 +54,7 @@ void fetch(int n)
 int main()
 {
 	queue_init((queue_Queue *)&q0);
-
-	q0.size;
+	//let yy = q0.size
 
 	padd(3);
 	fetch(7);

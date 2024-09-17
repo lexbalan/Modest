@@ -366,6 +366,9 @@ break_1:
 define %Int @main() {
 	%1 = bitcast %Queue* @q0 to %Queue*
 	call void @init(%Queue* %1)
+	%2 = getelementptr inbounds %Queue, %Queue* @q0, i32 0, i32 1
+	%3 = load i32, i32* %2
+	;let yy = q0.size
 	call void @padd(%Int 3)
 	call void @fetch(%Int 7)
 	call void @padd(%Int 12)

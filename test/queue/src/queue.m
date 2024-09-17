@@ -49,7 +49,6 @@ export func put(q: *Queue, b: Byte) -> Bool {
 	q.data[q.p] = b
 	q.p = next(q.p)
 	++q.size
-
 	return true
 }
 
