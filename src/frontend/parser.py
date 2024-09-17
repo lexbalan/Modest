@@ -1310,6 +1310,7 @@ class Parser:
 				'isa': 'field',
 				'id': id,
 				'type': t,
+				'attributes': [],
 				'comments_and_attributes': obj['comments_and_attributes'],
 				'ti': id['ti']
 			}

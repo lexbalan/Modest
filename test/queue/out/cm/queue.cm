@@ -16,29 +16,29 @@ export type Queue record {
 	g: Int32
 	size: Nat32
 }
-export func init(q: *Queue) -> Unit {
-	q.data = []  // right size = 4
-	q.size = 0
-	q.p = 0
-	q.g = 0
+export func init(self: *Queue) -> Unit {
+	self.data = []  // right size = 4
+	self.size = 0
+	self.p = 0
+	self.g = 0
 }
-export func getSize(q: *Queue) -> Nat32 {
-	return q.size
+export func getSize(self: *Queue) -> Nat32 {
+	return self.size
 }
-export func isEmpty(q: *Queue) -> Bool {
-	return q.size == 0
+export func isEmpty(self: *Queue) -> Bool {
+	return self.size == 0
 }
-export func isFull(q: *Queue) -> Bool {
-	return q.size == bufVolume
+export func isFull(self: *Queue) -> Bool {
+	return self.size == bufVolume
 }
-export func put(q: *Queue, b: Byte) -> Bool {
-	if isFull(q) {
+export func put(self: *Queue, b: Byte) -> Bool {
+	if isFull(self) {
 		return false
 	}
 
-	q.data[q.p] = b
-	q.p = next(q.p)
-	q.size = q.size + 1
+	self.data[self.p] = b
+	self.p = next(self.p)
+	self.size = self.size + 1
 
 	return true
 }

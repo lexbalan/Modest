@@ -55,6 +55,8 @@ int main()
 {
 	queue_init((queue_Queue *)&q0);
 
+	q0.size;
+
 	padd(3);
 	fetch(7);
 	padd(12);

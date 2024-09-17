@@ -522,6 +522,7 @@ def do_field(x):
 		nl = x['nl']
 	f['nl'] = nl
 
+	add_spices(f, ast_atts=x['attributes'])
 	return f
 
 
@@ -1541,6 +1542,12 @@ def do_value_access(x):
 	if field == None:
 		error("undefined field '%s'" % field_id['str'], x)
 		return value_bad(x)
+
+
+	if record_type['definition']['module'] != module:
+		if 'private' in field['att']:
+			error("access to private field", x['ti'])
+
 
 	if hlir_type.type_is_bad(field['type']):
 		return value_bad(x)
