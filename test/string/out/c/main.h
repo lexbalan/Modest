@@ -10,11 +10,11 @@
 #include "./utf.h"
 #include "./putchar.h"
 #include <stdio.h>
-
-
-
 #include "./utf.h"
 #include "./putchar.h"
+
+
+
 
 
 #endif /* MAIN_H */

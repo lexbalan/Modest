@@ -1,9 +1,9 @@
 
+@c_include "./utf.h"
+@c_include "./putchar.h"
 include "libc/ctypes64"
 include "libc/stdio"
 import "lightfood/putchar"
-@c_include "./utf.h"
-@c_include "./putchar.h"
 let str8_example = "String"
 let str16_example = str8_example + "-Ω"
 let str32_example = str16_example + " 🐀🎉🦄"

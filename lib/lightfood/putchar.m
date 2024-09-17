@@ -1,10 +1,9 @@
 // lightfood/putchar.m
 
 $pragma do_not_include
-
-//@attribute("c_no_print")
-include "misc/utf"
 $pragma c_include "./utf.h"
+
+import "misc/utf"
 
 include "libc/ctypes64"
 // for putchar()
@@ -37,14 +36,14 @@ export func utf16_putchar(c: Char16) -> Unit {
 	cc[0] = c
 	cc[1] = Char16 0
 	var char32: Char32
-	let n = utf16_to_utf32(&cc, &char32)
+	let n = utf.utf16_to_utf32(&cc, &char32)
 	utf32_putchar(char32)
 }
 
 
 export func utf32_putchar(c: Char32) -> Unit {
 	var decoded_buf: [4]Char8
-	let n = Int utf32_to_utf8(c, &decoded_buf)
+	let n = Int utf.utf32_to_utf8(c, &decoded_buf)
 
 	var i = 0
 	while i < n {
@@ -77,11 +76,15 @@ export func utf16_puts(s: *Str16) -> Unit {
 		// тк в строке может быть суррогатная пара UTF_16 символов
 
 		let cc16 = s[i]
-		if cc16 == Char16 0 {break}
+		if cc16 == Char16 0 {
+			break
+		}
 
 		var char32: Char32
-		let n = utf16_to_utf32(unsafe *[]Char16 &s[i], &char32)
-		if n == 0 {break}
+		let n = utf.utf16_to_utf32(unsafe *[]Char16 &s[i], &char32)
+		if n == 0 {
+			break
+		}
 
 		utf32_putchar(char32)
 

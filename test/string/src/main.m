@@ -1,14 +1,12 @@
 // test/string/src/main.cm
 
-include "libc/ctypes64"
-include "libc/stdio"
-
-//import "misc/utf"
-import "lightfood/putchar"
-
 $pragma c_include "./utf.h"
 $pragma c_include "./putchar.h"
 
+
+include "libc/ctypes64"
+include "libc/stdio"
+import "lightfood/putchar"
 
 // constants with type String(Generic)
 let str8_example = "String"
