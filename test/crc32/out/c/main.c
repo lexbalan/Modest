@@ -6,7 +6,7 @@
 
 #include "main.h"
 
-#define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
+
 
 #define datastring  "123456789"
 #define expected_hash  0xCBF43926
@@ -22,7 +22,7 @@ int main()
 {
 	printf("CRC32 test\n");
 
-	const uint32_t crc = crc32_doHash((uint8_t *)&data, LENGTHOF(data));
+	const uint32_t crc = crc32_doHash((uint8_t *)&data, sizeof data);
 
 	printf("crc32.doHash(\"%s\") = %08X\n", (char *)datastring, crc);
 

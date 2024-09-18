@@ -278,13 +278,13 @@ define i32 @main() {
 	;fill_array(&array, lengthof(array))
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
 	%2 = bitcast [21 x i32]* @array to [0 x i32]*
-	call void @print_array([0 x i32]* %2, i32 21)
+	call void @print_array([0 x i32]* %2, i32 84)
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
 	%4 = bitcast [21 x i32]* @array to [0 x i32]*
-	call void @bubble_sort32([0 x i32]* %4, i32 21)
+	call void @bubble_sort32([0 x i32]* %4, i32 84)
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str3 to [0 x i8]*))
 	%6 = bitcast [21 x i32]* @array to [0 x i32]*
-	call void @print_array([0 x i32]* %6, i32 21)
+	call void @print_array([0 x i32]* %6, i32 84)
 	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))
 	ret i32 0
 }

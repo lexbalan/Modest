@@ -259,7 +259,7 @@ define %Int @main() {
 	br label %again_1
 again_1:
 	%18 = load i32, i32* %17
-	%19 = icmp slt i32 %18, 1
+	%19 = icmp slt i32 %18, 4
 	br i1 %19 , label %body_1, label %break_1
 body_1:
 	%20 = load i32, i32* %17
@@ -286,7 +286,7 @@ break_1:
 	br label %again_2
 again_2:
 	%32 = load i32, i32* %17
-	%33 = icmp slt i32 %32, 3
+	%33 = icmp slt i32 %32, 12
 	br i1 %33 , label %body_2, label %break_2
 body_2:
 	%34 = load i32, i32* %17
@@ -321,7 +321,7 @@ break_2:
 	br label %again_3
 again_3:
 	%53 = load i32, i32* %17
-	%54 = icmp slt i32 %53, 10
+	%54 = icmp slt i32 %53, 40
 	br i1 %54 , label %body_3, label %break_3
 body_3:
 	%55 = load i32, i32* %17
@@ -361,7 +361,7 @@ break_3:
 	br label %again_4
 again_4:
 	%79 = load i32, i32* %17
-	%80 = icmp slt i32 %79, 10
+	%80 = icmp slt i32 %79, 0
 	br i1 %80 , label %body_4, label %break_4
 body_4:
 	%81 = load i32, i32* %17
@@ -380,12 +380,12 @@ break_4:
 	%91 = getelementptr inbounds [10 x i32], [10 x i32]* %63, i32 0, i2 2
 	%92 = bitcast i32* %91 to [6 x i32]*
 	%93 = bitcast [6 x i32]* %92 to [0 x i32]*
-	call void @array_print([0 x i32]* %93, i32 6)
+	call void @array_print([0 x i32]* %93, i32 24)
 	%94 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @str12 to [0 x i8]*))
 	%95 = getelementptr inbounds [6 x i32], [6 x i32]* %92, i32 0, i32 0
 	store i32 123, i32* %95
 	%96 = bitcast [6 x i32]* %92 to [0 x i32]*
-	call void @array_print([0 x i32]* %96, i32 6)
+	call void @array_print([0 x i32]* %96, i32 24)
 	%97 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @str13 to [0 x i8]*))
 	%98 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([32 x i8]* @str14 to [0 x i8]*))
 	; за каким то хером это работает, то что мне сейчас нужно

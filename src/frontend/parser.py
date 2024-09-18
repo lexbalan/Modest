@@ -650,6 +650,34 @@ class Parser:
 			f = self.identifier()
 			self.need(")")
 			return {'isa': 'ast_value', 'kind': 'offsetof', 'type': t, 'field': f, 'ti': ti}
+		elif self.match("lengthof"):
+			self.match("(")
+			v = self.expr_value()
+			rv = {'isa': 'ast_value', 'kind': 'sizeof_value', 'value': v, 'ti': ti}
+			self.need(")")
+			return rv
+		elif self.match("__va_start"):
+			self.match("(")
+			v0 = self.expr_value()
+			self.need(",")
+			v1 = self.expr_value()
+			rv = {'isa': 'ast_value', 'kind': '__va_start', 'values': [v0, v1], 'ti': ti}
+			self.need(")")
+			return rv
+		elif self.match("__va_copy"):
+			self.match("(")
+			v0 = self.expr_value()
+			self.need(",")
+			v1 = self.expr_value()
+			rv = {'isa': 'ast_value', 'kind': '__va_copy', 'values': [v0, v1], 'ti': ti}
+			self.need(")")
+			return rv
+		elif self.match("__va_end"):
+			self.match("(")
+			v = self.expr_value()
+			rv = {'isa': 'ast_value', 'kind': '__va_end', 'value': v, 'ti': ti}
+			self.need(")")
+			return rv
 		else:
 			y = self.expr_value_11()
 			return y

@@ -1135,8 +1135,9 @@ def sort_args(params, args):
 
 
 
-def do_value_call_lengthof(args, ti):
-	arg = do_rvalue(args[0]['value'])
+def do_value_call_lengthof(x):
+	ti = x['ti']
+	arg = do_rvalue(x['value'])
 
 	if not hlir_type.type_is_array(arg['type']):
 		error("expected array value", args[0]['ti'])
@@ -1149,9 +1150,11 @@ def do_value_call_lengthof(args, ti):
 	return value_lengthof(arg, ti)
 
 
-def do_value_call_va_start(args, ti):
-	va_list = do_value(args[0]['value'])
-	last_param = do_rvalue(args[1]['value'])
+def do_value_va_start(x):#args, ti):
+	args = x['values']
+	ti = x['ti']
+	va_list = do_value(args[0])
+	last_param = do_rvalue(args[1])
 	return value_va_start(va_list, last_param, ti)
 
 
@@ -1161,14 +1164,17 @@ def do_value_va_arg(x):
 	return value_va_arg(va_list, type, x['ti'])
 
 
-def do_value_call_va_end(args, ti):
-	va_list = do_value(args[0]['value'])
+def do_value_va_end(x):
+	ti = x['ti']
+	va_list = do_value(x['value'])
 	return value_va_end(va_list, ti)
 
 
-def do_value_call_va_copy(args, ti):
-	va_list0 = do_value(args[0]['value'])
-	va_list1 = do_value(args[1]['value'])
+def do_value_va_copy(x):
+	args = x['values']
+	ti = x['ti']
+	va_list0 = do_value(args[0])
+	va_list1 = do_value(args[1])
 	return value_va_copy(va_list0, va_list1, ti)
 
 
@@ -1205,15 +1211,8 @@ def do_value_call(x):
 			if x['left']['kind'] == 'id':
 				id_str = x['left']['str']
 				args = x['args']
-				if id_str == 'lengthof':
-					return do_value_call_lengthof(args, x['ti'])
-				elif id_str == '__va_start':
-					return do_value_call_va_start(args, x['ti'])
-				elif id_str == '__va_copy':
-					return do_value_call_va_copy(args, x['ti'])
-				elif id_str == '__va_end':
-					return do_value_call_va_end(args, x['ti'])
-				elif id_str == '__defined':
+				if id_str == '__defined':
+					fatal("DEFINED NOT IMPLEMENTED")
 					return do_value_call_defined(args, x['ti'])
 
 		error("undefined value", f)
@@ -1807,6 +1806,10 @@ def do_value(x):
 	elif k == 'sizeof_type': v = do_value_sizeof_type(x)
 	elif k == 'alignof': v = do_value_alignof(x)
 	elif k == 'offsetof': v = do_value_offsetof(x)
+	elif k == 'lengthof': v = do_value_call_lengthof(x)
+	elif k == '__va_start': v = do_value_va_start(x)
+	elif k == '__va_copy': v = do_value_va_copy(x)
+	elif k == '__va_end': v = do_value_va_end(x)
 	elif k == 'shl': v = do_value_shift(x)
 	elif k == 'shr': v = do_value_shift(x)
 	elif k == 'va_arg': v = do_value_va_arg(x)
@@ -2433,7 +2436,7 @@ def def_func(x, dostmt=True):
 	log('def_func: %s' % func_id['str'])
 
 	# значение функции уже существует, тк мы ранее сделали проход
-	fn = module_value_get(module, func_id['str'])
+	fn = ctx_value_get(func_id['str'])
 
 	prev_cfunc = cfunc
 	cfunc = fn
@@ -2952,7 +2955,7 @@ def pre_def(ast, fdecl=False):
 		kind = x['kind']
 
 		if kind == 'func':
-			fn = module_value_get(module, x['id']['str'])
+			fn = ctx_value_get(x['id']['str'])
 			if fn == None:
 				fn = do_func_value(x, x['export'])
 				module_value_add(module, fn['id']['str'], fn, is_public=x['export'])
