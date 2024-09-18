@@ -1178,22 +1178,14 @@ def do_value_va_copy(x):
 	return value_va_copy(va_list0, va_list1, ti)
 
 
-def do_value_call_defined(args, ti):
-	global valueTrue, valueFalse
-	id = do_value(args[0]['value'])
+def do_value___defined_type(x):
+	t = ctx_type_get(x['type']['id']['str'])
+	return t != None
 
-	if not hlir_type.type_is_string(id['type']):
-		error("expected string", id)
 
-	s = id['asset']
-	rc = valueTrue
-	v = ctx_value_get(s)
-	if v == None:
-		t = ctx_type_get(s)
-		if t == None:
-			rc = valueFalse
-
-	return rc
+def do_value___defined_value(x):
+	v = ctx_value_get(x['value']['id']['str'])
+	return v != None
 
 
 
@@ -1207,14 +1199,6 @@ def do_value_call(x):
 	#undeclared_value_error = oe
 
 	if value_is_bad(f):
-		if 'unknown' in f['att']:
-			if x['left']['kind'] == 'id':
-				id_str = x['left']['str']
-				args = x['args']
-				if id_str == '__defined':
-					fatal("DEFINED NOT IMPLEMENTED")
-					return do_value_call_defined(args, x['ti'])
-
 		error("undefined value", f)
 		return value_bad(x)
 
@@ -1801,18 +1785,22 @@ def do_value(x):
 	elif k == 'access': v = do_value_access(x)
 	elif k == 'negative': v = do_value_neg(x)
 	elif k == 'positive': v = do_value_pos(x)
+	elif k == 'shl': v = do_value_shift(x)
+	elif k == 'shr': v = do_value_shift(x)
 	elif k == 'unsafe': v = do_value_unsafe(x)
+
 	elif k == 'sizeof_value': v = do_value_sizeof_value(x)
 	elif k == 'sizeof_type': v = do_value_sizeof_type(x)
 	elif k == 'alignof': v = do_value_alignof(x)
 	elif k == 'offsetof': v = do_value_offsetof(x)
 	elif k == 'lengthof': v = do_value_call_lengthof(x)
+	elif k == '__va_arg': v = do_value_va_arg(x)
 	elif k == '__va_start': v = do_value_va_start(x)
 	elif k == '__va_copy': v = do_value_va_copy(x)
 	elif k == '__va_end': v = do_value_va_end(x)
-	elif k == 'shl': v = do_value_shift(x)
-	elif k == 'shr': v = do_value_shift(x)
-	elif k == 'va_arg': v = do_value_va_arg(x)
+	elif k == '__defined_type': v = do_value___defined_type(x)
+	elif k == '__defined_value': v = do_value___defined_value(x)
+
 
 	assert(v != None)
 

@@ -678,6 +678,18 @@ class Parser:
 			rv = {'isa': 'ast_value', 'kind': '__va_end', 'value': v, 'ti': ti}
 			self.need(")")
 			return rv
+
+		elif self.match("__defined"):
+			self.match("(")
+			rv = None
+			if self.is_type_expr():
+				t = self.expr_type()
+				rv = {'isa': 'ast_value', 'kind': '__defined_type', 'type': t, 'ti': ti}
+			else:
+				v = self.expr_value()
+				rv = {'isa': 'ast_value', 'kind': '__defined_value', 'value': v, 'ti': ti}
+			self.need(")")
+			return rv
 		else:
 			y = self.expr_value_11()
 			return y
@@ -989,7 +1001,7 @@ class Parser:
 				self.match(")")
 				return {
 					'isa': 'ast_value',
-					'kind': 'va_arg',
+					'kind': '__va_arg',
 					'va_list': v,
 					'type': t,
 					'ti': ti
