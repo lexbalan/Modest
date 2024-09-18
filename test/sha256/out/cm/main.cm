@@ -4,11 +4,11 @@ include "libc/ctypes"
 include "libc/stdio"
 import "misc/sha256"
 @c_include "./sha256.h"
-let inputLength = 32
+let inputDataLength = 32
 
 
 type SHA256_TestCase record {
-	input_data: [inputLength]Char8
+	input_data: [inputDataLength]Char8
 	input_data_len: Nat32
 
 	expected_result: Hash

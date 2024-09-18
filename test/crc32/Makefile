@@ -17,7 +17,8 @@ CM:
 
 LLVM:
 	mcc -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.m
-	clang $(LLVMPREFIX)/main.ll
+	mcc -o $(LLVMPREFIX)/crc32 -mbackend=llvm -funsafe ${MODEST_LIB}/misc/crc32.m
+	clang $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/crc32.ll
 
 
 C:

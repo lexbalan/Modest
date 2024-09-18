@@ -23,7 +23,7 @@ cd string_concat_eq && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd
 cd assign_array && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd assign_record && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd assignation && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
-#cd va_list && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+cd va_list && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd char && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. &&\
 #cd import && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. &&\
 cd float && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. &&\
@@ -32,7 +32,7 @@ cd builtin_constants && echo "\nBUILD:" "$PWD" && make && make C && make CM && c
 cd string && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd asm && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd slices && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
-#cd crc32 && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+cd crc32 && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd float && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd free_pointer && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 #cd unistd && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \

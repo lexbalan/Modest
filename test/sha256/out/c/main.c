@@ -6,13 +6,13 @@
 
 #include "main.h"
 
+#define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
 
-
-#define inputLength  32
+#define inputDataLength  32
 
 
 struct main_SHA256_TestCase {
-	char input_data[inputLength];
+	char input_data[inputDataLength];
 	uint32_t input_data_len;
 
 	uint8_t expected_result[hashSize];
@@ -78,7 +78,7 @@ int main()
 
 	int32_t i;
 	i = 0;
-	while (i < (int)(sizeof(tests) / sizeof(tests[0]))) {
+	while (i < (int)LENGTHOF(tests)) {
 		main_SHA256_TestCase *const test = tests[i];
 		const bool test_result = doTest((main_SHA256_TestCase *)test);
 
