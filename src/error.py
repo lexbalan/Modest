@@ -86,12 +86,18 @@ def highlight(ti, color, offset):
 def common_message(mg, color, s, ti=None):
 	pre = ''
 
-	if ti != None:
-		if ti['isa'] != 'ti':
-			if 'ti' in ti:
-				ti = ti['ti']
+	if ti == None:
+		return
 
-		pre = '\n%s:%d:%d:\n' % (ti['file'], ti['line'], ti['pos'])
+	if ti['isa'] != 'ti':
+		if 'ti' in ti:
+			ti = ti['ti']
+
+	if ti == None:
+		return
+
+
+	pre = '\n%s:%d:%d:\n' % (ti['file'], ti['line'], ti['pos'])
 
 	print(pre + colorize(mg, color) + s)
 

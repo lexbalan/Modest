@@ -1242,6 +1242,7 @@ def print_value(x, ctx=[], need_wrap=False):
 	elif k == 'va_copy': y = print_value_va_copy(x, ctx)
 	else:
 		out("<%s>" % k)
+		info("HERE", x)
 		fatal("unknown opcode '%s'" % k)
 		exit(-1)
 

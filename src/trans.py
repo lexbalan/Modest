@@ -531,7 +531,8 @@ def do_field(x):
 #
 
 def do_type_id(t):
-	id_str = t['ids'][0]['str']
+	id = t['ids'][0]
+	id_str = id['str']
 
 	tx = None
 	if len(t['ids']) > 1:
@@ -551,7 +552,7 @@ def do_type_id(t):
 		tx = ctx_type_get(id_str)
 
 	if tx == None:
-		predefinition(id_str)
+		predefinition(id)
 		tx = ctx_type_get(id_str)
 		if tx != None:
 			return tx
@@ -1588,7 +1589,7 @@ def do_value_id(x):
 	v = ctx_value_get(id_str)
 
 	if v == None:
-		predefinition(id_str)
+		predefinition(x)
 		vx = ctx_value_get(id_str)
 		if vx != None:
 			return vx
@@ -2557,25 +2558,38 @@ def do_attribute(x):
 
 # находит сущность по имени и определяет ее
 gast = None
-def predefinition(id_str):
+def predefinition(id):
+	id_str = id['str']
 	print("predefinition(\"%s\")" % id_str)
 	global gast
+	y = None
+
+	found = False
 	for x in gast:
 		if not 'id' in x:
 			continue
 
 		if x['id']['str'] == id_str:
 			kind = x['kind']
-			y = None
 			if kind == 'type':
+				found = True
 				y = def_type(x)
 			elif kind == 'const':
+				found = True
 				y = def_const(x)
+			elif kind == 'func':
+				found = True
+				global module
+				fn = do_func_value(x, x['export'])
+				module_value_add(module, fn['id']['str'], fn, is_public=x['export'])
+
 			x['defined'] = True  # mark as DEFINED
 
 			if y != None:
 				module_append(y, to_export=x['export'])
-
+	if not found:
+		error("unknown identifier", id['ti'])
+	#return y
 
 
 """# расширить текущий модуль определениями
@@ -2938,8 +2952,10 @@ def pre_def(ast, fdecl=False):
 		kind = x['kind']
 
 		if kind == 'func':
-			fn = do_func_value(x, x['export'])
-			module_value_add(module, fn['id']['str'], fn, is_public=x['export'])
+			fn = module_value_get(module, x['id']['str'])
+			if fn == None:
+				fn = do_func_value(x, x['export'])
+				module_value_add(module, fn['id']['str'], fn, is_public=x['export'])
 
 
 	# 4. def funcs

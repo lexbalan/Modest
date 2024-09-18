@@ -185,72 +185,20 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
-
-
-%TimeT = type i32;
-%ClockT = type %UnsignedLong;
-%Struct_tm = type {
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%LongInt, 
-	%ConstChar*
-};
-
-
-declare %ClockT @clock()
-declare %Double @difftime(%TimeT %end, %TimeT %beginning)
-declare %TimeT @mktime(%Struct_tm* %timeptr)
-declare %TimeT @time(%TimeT* %timer)
-declare %Char* @asctime(%Struct_tm* %timeptr)
-declare %Char* @ctime(%TimeT* %timer)
-declare %Struct_tm* @gmtime(%TimeT* %timer)
-declare %Struct_tm* @localtime(%TimeT* %timer)
-declare %SizeT @strftime(%Char* %ptr, %SizeT %maxsize, %ConstChar* %format, %Struct_tm* %timeptr)
-
-
-define void @delay_us(i64 %us) {
-	%1 = call %ClockT @clock()
-	br label %again_1
-again_1:
-	%2 = call %ClockT @clock()
-	%3 = add %ClockT %1, %us
-	%4 = icmp ult %ClockT %2, %3
-	br i1 %4 , label %body_1, label %break_1
-body_1:
-	; just waiting
-	br label %again_1
-break_1:
-	ret void
-}
-
-define void @delay(i64 %us) {
-	call void @delay_us(i64 %us)
-	ret void
-}
-
-define void @delay_ms(i64 %ms) {
-	%1 = mul i64 %ms, 1000
-	call void @delay_us(i64 %1)
-	ret void
-}
-
-define void @delay_s(i64 %s) {
-	%1 = mul i64 %s, 1000
-	call void @delay_ms(i64 %1)
-	ret void
-}
-
 ; end print includes
+; -----------------------------------------------------------------------------
+; declarations from: delay
+; -----------------------------------------------------------------------------
+
+declare void @us(i64 %us)
+declare void @ms(i64 %ms)
+declare void @sec(i64 %s)
+
+
 ; -----------------------------------------------------------------------------
 ; declarations from: fsm
 ; -----------------------------------------------------------------------------
+
 
 %UInt32 = type i32;
 %FSM_StateDesc = type {
@@ -259,6 +207,8 @@ define void @delay_s(i64 %s) {
 	%FSM_Proc, 
 	%FSM_Proc
 };
+
+
 
 %FSM = type {
 	[8 x i8], 
@@ -286,14 +236,22 @@ define void @delay_s(i64 %s) {
 };
 
 
+
 declare %Str8* @state_no_name(%FSM* %fsm, i32 %state_no)
 declare void @switch(%FSM* %fsm, i32 %state)
 declare void @run(%FSM* %fsm)
 
 
 ; -- strings --
+@str1 = private constant [10 x i8] [i8 111, i8 102, i8 102, i8 95, i8 108, i8 111, i8 111, i8 112, i8 10, i8 0]
+@str2 = private constant [9 x i8] [i8 111, i8 110, i8 95, i8 108, i8 111, i8 111, i8 112, i8 10, i8 0]
+@str3 = private constant [22 x i8] [i8 98, i8 101, i8 97, i8 99, i8 111, i8 110, i8 95, i8 101, i8 110, i8 116, i8 114, i8 121, i8 32, i8 102, i8 114, i8 111, i8 109, i8 32, i8 37, i8 115, i8 10, i8 0]
+@str4 = private constant [13 x i8] [i8 98, i8 101, i8 97, i8 99, i8 111, i8 110, i8 95, i8 108, i8 111, i8 111, i8 112, i8 10, i8 0]
+@str5 = private constant [19 x i8] [i8 98, i8 101, i8 97, i8 99, i8 111, i8 110, i8 95, i8 101, i8 120, i8 105, i8 116, i8 32, i8 116, i8 111, i8 32, i8 37, i8 115, i8 10, i8 0]
 
 
 
 @cnt = global i8 zeroinitializer
-@fsm = global %FSM <bad><bad><bad><bad><bad><bad><bad>
+@fsm = global %FSM 
+	; cast_composite_to_composite
+	; extend

@@ -10,7 +10,7 @@
 
 
 
-void delay_delay_us(uint64_t us)
+void delay_us(uint64_t us)
 {
 	const clock_t start_time = clock();
 	while (clock() < start_time + us) {
@@ -18,18 +18,13 @@ void delay_delay_us(uint64_t us)
 	}
 }
 
-void delay_delay(uint64_t us)
+void delay_ms(uint64_t ms)
 {
-	delay_delay_us(us);
+	delay_us(ms * 1000);
 }
 
-void delay_delay_ms(uint64_t ms)
+void delay_sec(uint64_t s)
 {
-	delay_delay_us(ms * 1000);
-}
-
-void delay_delay_s(uint64_t s)
-{
-	delay_delay_ms(s * 1000);
+	delay_us(s * 1000000);
 }
 

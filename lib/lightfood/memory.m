@@ -61,7 +61,6 @@ func memcopy(dst: Ptr, src: Ptr, len: Nat64) {
 		++i
 	}
 
-
 	let len_bytes = len % sizeof(CPU_Word)
 	let src_b = *[]Byte &src_w[i]
 	let dst_b = *[]Byte &dst_w[i]
@@ -86,7 +85,6 @@ func memeq(mem0: Ptr, mem1: Ptr, len: Nat64) -> Bool {
 		}
 		++i
 	}
-
 
 	let len_bytes = len % sizeof(CPU_Word)
 	let mem0_b = *[]Byte &mem0_w[i]

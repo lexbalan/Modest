@@ -1,9 +1,11 @@
 // lightfood/delay.m
 
+$pragma do_not_include
+
 include "libc/time"
 
 
-export func delay_us(us: Nat64) {
+export func us(us: Nat64) {
 	let start_time = clock()
 	while (clock() < start_time + us) {
 		// just waiting
@@ -11,18 +13,13 @@ export func delay_us(us: Nat64) {
 }
 
 
-export func delay(us: Nat64) {
-	delay_us(us)
+export func ms(ms: Nat64) {
+	us(ms * 1000)
 }
 
 
-export func delay_ms(ms: Nat64) {
-	delay_us(ms * 1000)
-}
-
-
-export func delay_s(s: Nat64) {
-	delay_ms(s * 1000)
+export func sec(s: Nat64) {
+	us(s * 1000000)
 }
 
 

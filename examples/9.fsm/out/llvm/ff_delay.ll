@@ -167,7 +167,7 @@ declare %SizeT @strftime(%Char* %ptr, %SizeT %maxsize, %ConstChar* %format, %Str
 ; -- strings --
 
 
-define void @delay_us(i64 %us) {
+define void @us(i64 %us) {
 	%1 = call %ClockT @clock()
 	br label %again_1
 again_1:
@@ -182,20 +182,15 @@ break_1:
 	ret void
 }
 
-define void @delay(i64 %us) {
-	call void @delay_us(i64 %us)
-	ret void
-}
-
-define void @delay_ms(i64 %ms) {
+define void @ms(i64 %ms) {
 	%1 = mul i64 %ms, 1000
-	call void @delay_us(i64 %1)
+	call void @us(i64 %1)
 	ret void
 }
 
-define void @delay_s(i64 %s) {
-	%1 = mul i64 %s, 1000
-	call void @delay_ms(i64 %1)
+define void @sec(i64 %s) {
+	%1 = mul i64 %s, 1000000
+	call void @us(i64 %1)
 	ret void
 }
 

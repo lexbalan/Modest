@@ -193,6 +193,7 @@ declare void @perror(%ConstCharStr* %str)
 
 
 
+
 %UInt32 = type i32;
 %FSM_StateDesc = type {
 	[8 x i8], 
@@ -200,6 +201,8 @@ declare void @perror(%ConstCharStr* %str)
 	%FSM_Proc, 
 	%FSM_Proc
 };
+
+
 
 %FSM = type {
 	[8 x i8], 
@@ -225,6 +228,7 @@ declare void @perror(%ConstCharStr* %str)
 	%UInt32, 
 	[16 x %FSM_StateDesc]
 };
+
 
 
 define %Str8* @state_no_name(%FSM* %fsm, i32 %state_no) {
