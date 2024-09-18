@@ -1190,20 +1190,14 @@ def do_value___defined_value(x):
 
 
 def do_value_call(x):
-	#global undeclared_value_error
-	#oe = undeclared_value_error
-	#undeclared_value_error = False
+	fn = do_rvalue(x['left'])
 
-	f = do_rvalue(x['left'])
-
-	#undeclared_value_error = oe
-
-	if value_is_bad(f):
-		error("undefined value", f)
+	if value_is_bad(fn):
+		error("undefined value", fn)
 		return value_bad(x)
 
 
-	ftype = f['type']
+	ftype = fn['type']
 
 	# pointer to function?
 	if hlir_type.type_is_pointer(ftype):
@@ -1289,8 +1283,8 @@ def do_value_call(x):
 		i = i + 1
 
 
-	if 'id' in f:
-		func_id_str = f['id']['str']
+	if 'id' in fn:
+		func_id_str = fn['id']['str']
 		if func_id_str in ['print', 'scanf', 'print']:
 			expected_pointers = func_id_str == 'scanf'
 			first_arg = x['args'][0]['value']
@@ -1301,15 +1295,15 @@ def do_value_call(x):
 				error("expected literal string argument", first_arg['ti'])
 
 
-	rv = value_call(f, ftype['to'], args + extra_args, ti=x['ti'])
+	rv = value_call(fn, ftype['to'], args + extra_args, ti=x['ti'])
 
 	#TODO: Func#pure
-	#if 'pure' in f:
+	#if 'pure' in fn:
 	#	if f['pure'] and imm_args:
 	#		rv = ct_call(rv)
 
 	# for C backend only (maybe mv to C?)
-	if hlir_type.type_is_closed_array(f['type']['to']):
+	if hlir_type.type_is_closed_array(fn['type']['to']):
 		rv['att'].append('wrapped_array')
 
 	return rv
@@ -1577,10 +1571,7 @@ def do_value_id(x):
 		if vx != None:
 			return vx
 
-		# see: do_value_call
-		#global undeclared_value_error
-		#if undeclared_value_error:
-		#	error("undefined value '%s'" % id_str, x)
+		error("undefined value '%s'" % id_str, x)
 
 		# чтобы не генерил ошибки дальше
 		# создадим bad value и пропишем его глобально
