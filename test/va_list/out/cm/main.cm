@@ -20,8 +20,6 @@ func my_printf(format: *Str8, ...) -> SSizeT {
 	return write(c_STDOUT_FILENO, &buf, SizeT n)
 }
 func main() -> Int {
-	//print("Hello World!\n")
-
 	var k: Int32 = 10
 	my_printf("My Printf Test %d\n", k)
 

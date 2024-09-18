@@ -53,13 +53,12 @@ export func utf16_to_utf32(c: *[]Char16, result: *Char32) -> Nat8 {
 		*result = Char32 leading
 		return 1
 	} else if leading >= 0xDC00 {
-		//error("Недопустимая кодовая последовательность.")
+		//error("Illegal code sequence")
 	} else {
-		var code: Nat32
-		code = (leading and 0x3FF) << 10
+		var code = (leading and 0x3FF) << 10
 		let trailing = Nat32 c[1]
 		if (trailing < 0xDC00) or (trailing > 0xDFFF) {
-			//error("Недопустимая кодовая последовательность.")
+			//error("Illegal code sequence")
 		} else {
 			code = code or (trailing and 0x3FF)
 			*result = Char32 (code + 0x10000)

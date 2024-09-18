@@ -9,8 +9,9 @@ include "libc/ctypes"
 include "libc/stdio"
 
 @attribute("c_no_print")
-include "lightfood/putchar"
+import "lightfood/putchar"
 $pragma c_include "./putchar.h"
+import "misc/utf"
 
 
 /*func _put_char8(c: Char8) {
@@ -25,15 +26,10 @@ func put_str8(s: *Str8) {
 		if c == "\0" {
 			break
 		}
-		putchar8(c)
+		putchar.putchar8(c)
 		++i
 	}
 }
-
-
-func sprintf_dec_int32(buf: *[]Char8, x: Int32)
-func sprintf_dec_nat32(buf: *[]Char8, x: Nat32)
-func sprintf_hex_nat32(buf: *[]Char8, x: Nat32)
 
 
 func print(form: *Str8, ...) {
@@ -52,12 +48,12 @@ func print(form: *Str8, ...) {
 			c = form[i + 1]
 			if c == "{" {
 				// "\{" -> "{"
-				putchar8(c)
+				putchar.putchar8(c)
 				i = i + 2
 				again
 			} else if c == "}" {
 				// "\}" -> "{"
-				putchar8(c)
+				putchar.putchar8(c)
 				i = i + 2
 				again
 			}
@@ -101,7 +97,7 @@ func print(form: *Str8, ...) {
 			put_str8(sptr)
 
 		} else {
-			putchar8(c)
+			putchar.putchar8(c)
 		}
 
 		++i

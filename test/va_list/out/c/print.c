@@ -9,14 +9,12 @@
 
 
 void put_str8(char *s);
-void sprintf_dec_int32(char *buf, int32_t x);
-void sprintf_dec_nat32(char *buf, uint32_t x);
-void sprintf_hex_nat32(char *buf, uint32_t x);
 void print(char *form, ...);
 char n_to_sym(uint8_t n);
 void sprintf_hex_nat32(char *buf, uint32_t x);
 void sprintf_dec_int32(char *buf, int32_t x);
 void sprintf_dec_nat32(char *buf, uint32_t x);
+
 
 
 
@@ -36,15 +34,6 @@ void put_str8(char *s)
 		i = i + 1;
 	}
 }
-
-void sprintf_dec_int32(char *buf, int32_t x)
-;
-
-void sprintf_dec_nat32(char *buf, uint32_t x)
-;
-
-void sprintf_hex_nat32(char *buf, uint32_t x)
-;
 
 void print(char *form, ...)
 {
