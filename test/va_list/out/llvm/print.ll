@@ -193,23 +193,23 @@ declare void @perror(%ConstCharStr* %str)
 ; declarations from: putchar
 ; -----------------------------------------------------------------------------
 
-declare void @putchar8(i8 %c)
-declare void @putchar16(i16 %c)
-declare void @putchar32(i32 %c)
-declare void @utf8_putchar(i8 %c)
-declare void @utf16_putchar(i16 %c)
-declare void @utf32_putchar(i32 %c)
-declare void @utf8_puts(%Str8* %s)
-declare void @utf16_puts(%Str16* %s)
-declare void @utf32_puts(%Str32* %s)
+declare void @putchar_putchar8(i8 %c)
+declare void @putchar_putchar16(i16 %c)
+declare void @putchar_putchar32(i32 %c)
+declare void @putchar_utf8_putchar(i8 %c)
+declare void @putchar_utf16_putchar(i16 %c)
+declare void @putchar_utf32_putchar(i32 %c)
+declare void @putchar_utf8_puts(%Str8* %s)
+declare void @putchar_utf16_puts(%Str16* %s)
+declare void @putchar_utf32_puts(%Str32* %s)
 
 
 ; -----------------------------------------------------------------------------
 ; declarations from: utf
 ; -----------------------------------------------------------------------------
 
-declare i8 @utf32_to_utf8(i32 %c, [4 x i8]* %buf)
-declare i8 @utf16_to_utf32([0 x i16]* %c, i32* %result)
+declare i8 @utf_utf32_to_utf8(i32 %c, [4 x i8]* %buf)
+declare i8 @utf_utf16_to_utf32([0 x i16]* %c, i32* %result)
 
 
 ; -- strings --
@@ -231,7 +231,7 @@ then_0:
 	br label %break_1
 	br label %endif_0
 endif_0:
-	call void @putchar8(i8 %4)
+	call void @putchar_putchar8(i8 %4)
 	%7 = load i32, i32* %1
 	%8 = add i32 %7, 1
 	store i32 %8, i32* %1
@@ -277,7 +277,7 @@ then_1:
 then_2:
 	; "\{" -> "{"
 	%19 = load i8, i8* %4
-	call void @putchar8(i8 %19)
+	call void @putchar_putchar8(i8 %19)
 	%20 = load i32, i32* %3
 	%21 = add i32 %20, 2
 	store i32 %21, i32* %3
@@ -290,7 +290,7 @@ else_2:
 then_3:
 	; "\}" -> "{"
 	%25 = load i8, i8* %4
-	call void @putchar8(i8 %25)
+	call void @putchar_putchar8(i8 %25)
 	%26 = load i32, i32* %3
 	%27 = add i32 %26, 2
 	store i32 %27, i32* %3
@@ -395,7 +395,7 @@ endif_5:
 	br label %endif_4
 else_4:
 	%71 = load i8, i8* %4
-	call void @putchar8(i8 %71)
+	call void @putchar_putchar8(i8 %71)
 	br label %endif_4
 endif_4:
 	%72 = load i32, i32* %3

@@ -221,7 +221,7 @@ declare void @perror(%ConstCharStr* %str)
 };
 
 
-define %List* @create() {
+define %List* @list_create() {
 	%1 = call i8* @malloc(%SizeT 24)
 	%2 = bitcast i8* %1 to %List*
 	%3 = icmp eq %List* %2, null
@@ -235,7 +235,7 @@ endif_0:
 	ret %List* %5
 }
 
-define i32 @size_get(%List* %list) {
+define i32 @list_size_get(%List* %list) {
 	%1 = icmp eq %List* %list, null
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
@@ -247,7 +247,7 @@ endif_0:
 	ret i32 %4
 }
 
-define %Node* @first_node_get(%List* %list) {
+define %Node* @list_first_node_get(%List* %list) {
 	%1 = icmp eq %List* %list, null
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
@@ -260,7 +260,7 @@ endif_0:
 	ret %Node* %5
 }
 
-define %Node* @last_node_get(%List* %list) {
+define %Node* @list_last_node_get(%List* %list) {
 	%1 = icmp eq %List* %list, null
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
@@ -273,7 +273,7 @@ endif_0:
 	ret %Node* %5
 }
 
-define %Node* @node_first(%List* %list, %Node* %new_node) {
+define %Node* @list_node_first(%List* %list, %Node* %new_node) {
 	%1 = icmp eq %List* %list, null
 	%2 = icmp eq %Node* %new_node, null
 	%3 = or i1 %1, %2
@@ -297,7 +297,7 @@ endif_0:
 	ret %Node* %13
 }
 
-define %Node* @node_create() {
+define %Node* @list_node_create() {
 	%1 = call i8* @malloc(%SizeT 24)
 	%2 = bitcast i8* %1 to %Node*
 	%3 = icmp eq %Node* %2, null
@@ -311,7 +311,7 @@ endif_0:
 	ret %Node* %5
 }
 
-define %Node* @node_next_get(%Node* %node) {
+define %Node* @list_node_next_get(%Node* %node) {
 	%1 = icmp eq %Node* %node, null
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
@@ -324,7 +324,7 @@ endif_0:
 	ret %Node* %5
 }
 
-define %Node* @node_prev_get(%Node* %node) {
+define %Node* @list_node_prev_get(%Node* %node) {
 	%1 = icmp eq %Node* %node, null
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
@@ -337,7 +337,7 @@ endif_0:
 	ret %Node* %5
 }
 
-define i8* @node_data_get(%Node* %node) {
+define i8* @list_node_data_get(%Node* %node) {
 	%1 = icmp eq %Node* %node, null
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
@@ -349,7 +349,7 @@ endif_0:
 	ret i8* %4
 }
 
-define void @node_insert_right(%Node* %left, %Node* %new_right) {
+define void @list_node_insert_right(%Node* %left, %Node* %new_right) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str1 to [0 x i8]*))
 	%2 = getelementptr inbounds %Node, %Node* %left, i32 0, i32 0
 	%3 = load %Node*, %Node** %2
@@ -373,7 +373,7 @@ endif_0:
 	ret void
 }
 
-define %Node* @node_get(%List* %list, i32 %pos) {
+define %Node* @list_node_get(%List* %list, i32 %pos) {
 	%1 = icmp eq %List* %list, null
 	%2 = getelementptr inbounds %List, %List* %list, i32 0, i32 2
 	%3 = load i32, i32* %2
@@ -464,7 +464,7 @@ endif_1:
 	ret %Node* %47
 }
 
-define %Node* @node_insert(%List* %list, i32 %pos, %Node* %new_node) {
+define %Node* @list_node_insert(%List* %list, i32 %pos, %Node* %new_node) {
 	%1 = icmp eq %List* %list, null
 	%2 = icmp eq %Node* %new_node, null
 	%3 = or i1 %1, %2
@@ -475,7 +475,7 @@ then_0:
 endif_0:
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str3 to [0 x i8]*), i32 %pos)
 	%6 = bitcast %List* %list to %List*
-	%7 = call %Node* @node_get(%List* %6, i32 %pos)
+	%7 = call %Node* @list_node_get(%List* %6, i32 %pos)
 	%8 = icmp eq %Node* %7, null
 	br i1 %8 , label %then_1, label %endif_1
 then_1:
@@ -483,7 +483,7 @@ then_1:
 	br label %endif_1
 endif_1:
 	%10 = bitcast %Node* %7 to %Node*
-	%11 = call %Node* @node_prev_get(%Node* %10)
+	%11 = call %Node* @list_node_prev_get(%Node* %10)
 	%12 = icmp eq %Node* %11, null
 	br i1 %12 , label %then_2, label %endif_2
 then_2:
@@ -492,7 +492,7 @@ then_2:
 endif_2:
 	%14 = bitcast %Node* %11 to %Node*
 	%15 = bitcast %Node* %new_node to %Node*
-	call void @node_insert_right(%Node* %14, %Node* %15)
+	call void @list_node_insert_right(%Node* %14, %Node* %15)
 	%16 = getelementptr inbounds %List, %List* %list, i32 0, i32 2
 	%17 = getelementptr inbounds %List, %List* %list, i32 0, i32 2
 	%18 = load i32, i32* %17
@@ -502,7 +502,7 @@ endif_2:
 	ret %Node* %20
 }
 
-define %Node* @node_append(%List* %list, %Node* %new_node) {
+define %Node* @list_node_append(%List* %list, %Node* %new_node) {
 	%1 = icmp eq %List* %list, null
 	%2 = icmp eq %Node* %new_node, null
 	%3 = or i1 %1, %2
@@ -525,7 +525,7 @@ else_1:
 	%11 = load %Node*, %Node** %10
 	%12 = bitcast %Node* %11 to %Node*
 	%13 = bitcast %Node* %new_node to %Node*
-	call void @node_insert_right(%Node* %12, %Node* %13)
+	call void @list_node_insert_right(%Node* %12, %Node* %13)
 	br label %endif_1
 endif_1:
 	%14 = getelementptr inbounds %List, %List* %list, i32 0, i32 1
@@ -540,8 +540,8 @@ endif_1:
 	ret %Node* %20
 }
 
-define %Node* @insert(%List* %list, i32 %pos, i8* %data) {
-	%1 = call %Node* @node_create()
+define %Node* @list_insert(%List* %list, i32 %pos, i8* %data) {
+	%1 = call %Node* @list_node_create()
 	%2 = icmp eq %Node* %1, null
 	br i1 %2 , label %then_0, label %endif_0
 then_0:
@@ -552,19 +552,19 @@ endif_0:
 	store i8* %data, i8** %4
 	%5 = bitcast %List* %list to %List*
 	%6 = bitcast %Node* %1 to %Node*
-	%7 = call %Node* @node_insert(%List* %5, i32 %pos, %Node* %6)
+	%7 = call %Node* @list_node_insert(%List* %5, i32 %pos, %Node* %6)
 	%8 = bitcast %Node* %7 to %Node*
 	ret %Node* %8
 }
 
-define %Node* @append(%List* %list, i8* %data) {
+define %Node* @list_append(%List* %list, i8* %data) {
 	%1 = icmp eq %List* %list, null
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
 	ret %Node* null
 	br label %endif_0
 endif_0:
-	%3 = call %Node* @node_create()
+	%3 = call %Node* @list_node_create()
 	%4 = icmp eq %Node* %3, null
 	br i1 %4 , label %then_1, label %endif_1
 then_1:
@@ -575,7 +575,7 @@ endif_1:
 	store i8* %data, i8** %6
 	%7 = bitcast %List* %list to %List*
 	%8 = bitcast %Node* %3 to %Node*
-	%9 = call %Node* @node_append(%List* %7, %Node* %8)
+	%9 = call %Node* @list_node_append(%List* %7, %Node* %8)
 	%10 = icmp eq %Node* %9, null
 	br i1 %10 , label %then_2, label %endif_2
 then_2:

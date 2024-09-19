@@ -105,7 +105,7 @@ break_2:
 ; end print includes
 ; -- strings --
 
-define i8 @utf32_to_utf8(i32 %c, [4 x i8]* %buf) {
+define i8 @utf_utf32_to_utf8(i32 %c, [4 x i8]* %buf) {
 	%1 = bitcast i32 %c to i32
 	%2 = icmp ule i32 %1, 127
 	br i1 %2 , label %then_0, label %else_0
@@ -197,7 +197,7 @@ endif_0:
 	ret i8 0
 }
 
-define i8 @utf16_to_utf32([0 x i16]* %c, i32* %result) {
+define i8 @utf_utf16_to_utf32([0 x i16]* %c, i32* %result) {
 	%1 = getelementptr inbounds [0 x i16], [0 x i16]* %c, i32 0, i32 0
 	%2 = load i16, i16* %1
 	%3 = zext i16 %2 to i32

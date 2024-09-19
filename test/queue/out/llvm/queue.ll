@@ -210,7 +210,7 @@ endif_0:
 };
 
 
-define void @init(%Queue* %q) {
+define void @queue_init(%Queue* %q) {
 	; -- STMT ASSIGN ARRAY --
 	%1 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 0
 	; -- start vol eval --
@@ -229,29 +229,29 @@ define void @init(%Queue* %q) {
 	ret void
 }
 
-define i32 @getSize(%Queue* %q) {
+define i32 @queue_getSize(%Queue* %q) {
 	%1 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 3
 	%2 = load i32, i32* %1
 	ret i32 %2
 }
 
-define i1 @isEmpty(%Queue* %q) {
+define i1 @queue_isEmpty(%Queue* %q) {
 	%1 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 3
 	%2 = load i32, i32* %1
 	%3 = icmp eq i32 %2, 0
 	ret i1 %3
 }
 
-define i1 @isFull(%Queue* %q) {
+define i1 @queue_isFull(%Queue* %q) {
 	%1 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 3
 	%2 = load i32, i32* %1
 	%3 = icmp eq i32 %2, 4
 	ret i1 %3
 }
 
-define i1 @put(%Queue* %q, %Byte %b) {
+define i1 @queue_put(%Queue* %q, %Byte %b) {
 	%1 = bitcast %Queue* %q to %Queue*
-	%2 = call i1 @isFull(%Queue* %1)
+	%2 = call i1 @queue_isFull(%Queue* %1)
 	br i1 %2 , label %then_0, label %endif_0
 then_0:
 	ret i1 0
@@ -275,9 +275,9 @@ endif_0:
 	ret i1 1
 }
 
-define %Byte @get(%Queue* %q) {
+define %Byte @queue_get(%Queue* %q) {
 	%1 = bitcast %Queue* %q to %Queue*
-	%2 = call i1 @isEmpty(%Queue* %1)
+	%2 = call i1 @queue_isEmpty(%Queue* %1)
 	br i1 %2 , label %then_0, label %endif_0
 then_0:
 	ret %Byte 0

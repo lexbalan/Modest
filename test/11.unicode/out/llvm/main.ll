@@ -190,15 +190,15 @@ declare void @perror(%ConstCharStr* %str)
 ; declarations from: putchar
 ; -----------------------------------------------------------------------------
 
-declare void @putchar8(i8 %c)
-declare void @putchar16(i16 %c)
-declare void @putchar32(i32 %c)
-declare void @utf8_putchar(i8 %c)
-declare void @utf16_putchar(i16 %c)
-declare void @utf32_putchar(i32 %c)
-declare void @utf8_puts(%Str8* %s)
-declare void @utf16_puts(%Str16* %s)
-declare void @utf32_puts(%Str32* %s)
+declare void @putchar_putchar8(i8 %c)
+declare void @putchar_putchar16(i16 %c)
+declare void @putchar_putchar32(i32 %c)
+declare void @putchar_utf8_putchar(i8 %c)
+declare void @putchar_utf16_putchar(i16 %c)
+declare void @putchar_utf32_putchar(i32 %c)
+declare void @putchar_utf8_puts(%Str8* %s)
+declare void @putchar_utf16_puts(%Str16* %s)
+declare void @putchar_utf32_puts(%Str32* %s)
 
 
 ; -- strings --
@@ -271,14 +271,14 @@ define %Int @main() {
 	%3 = alloca %Str32*, align 8
 	store %Str32* bitcast ([18 x i32]* @str3 to [0 x i32]*), %Str32** %3
 	%4 = load %Str8*, %Str8** %1
-	call void @utf8_puts(%Str8* %4)
-	call void @utf8_puts(%Str8* bitcast ([2 x i8]* @str4 to [0 x i8]*))
+	call void @putchar_utf8_puts(%Str8* %4)
+	call void @putchar_utf8_puts(%Str8* bitcast ([2 x i8]* @str4 to [0 x i8]*))
 	%5 = load %Str16*, %Str16** %2
-	call void @utf16_puts(%Str16* %5)
-	call void @utf8_puts(%Str8* bitcast ([2 x i8]* @str5 to [0 x i8]*))
+	call void @putchar_utf16_puts(%Str16* %5)
+	call void @putchar_utf8_puts(%Str8* bitcast ([2 x i8]* @str5 to [0 x i8]*))
 	%6 = load %Str32*, %Str32** %3
-	call void @utf32_puts(%Str32* %6)
-	call void @utf8_puts(%Str8* bitcast ([2 x i8]* @str6 to [0 x i8]*))
+	call void @putchar_utf32_puts(%Str32* %6)
+	call void @putchar_utf8_puts(%Str8* bitcast ([2 x i8]* @str6 to [0 x i8]*))
 	ret %Int 0
 }
 

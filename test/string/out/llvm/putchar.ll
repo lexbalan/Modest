@@ -190,35 +190,35 @@ declare void @perror(%ConstCharStr* %str)
 ; declarations from: utf
 ; -----------------------------------------------------------------------------
 
-declare i8 @utf32_to_utf8(i32 %c, [4 x i8]* %buf)
-declare i8 @utf16_to_utf32([0 x i16]* %c, i32* %result)
+declare i8 @utf_utf32_to_utf8(i32 %c, [4 x i8]* %buf)
+declare i8 @utf_utf16_to_utf32([0 x i16]* %c, i32* %result)
 
 
 ; -- strings --
 
 
-define void @putchar8(i8 %c) {
-	call void @utf8_putchar(i8 %c)
+define void @putchar_putchar8(i8 %c) {
+	call void @putchar_utf8_putchar(i8 %c)
 	ret void
 }
 
-define void @putchar16(i16 %c) {
-	call void @utf16_putchar(i16 %c)
+define void @putchar_putchar16(i16 %c) {
+	call void @putchar_utf16_putchar(i16 %c)
 	ret void
 }
 
-define void @putchar32(i32 %c) {
-	call void @utf32_putchar(i32 %c)
+define void @putchar_putchar32(i32 %c) {
+	call void @putchar_utf32_putchar(i32 %c)
 	ret void
 }
 
-define void @utf8_putchar(i8 %c) {
+define void @putchar_utf8_putchar(i8 %c) {
 	%1 = sext i8 %c to i32
 	%2 = call %Int @putchar(i32 %1)
 	ret void
 }
 
-define void @utf16_putchar(i16 %c) {
+define void @putchar_utf16_putchar(i16 %c) {
 	%1 = alloca [2 x i16], align 2
 	%2 = getelementptr inbounds [2 x i16], [2 x i16]* %1, i32 0, i32 0
 	store i16 %c, i16* %2
@@ -226,15 +226,15 @@ define void @utf16_putchar(i16 %c) {
 	store i16 0, i16* %3
 	%4 = alloca i32, align 4
 	%5 = bitcast [2 x i16]* %1 to [0 x i16]*
-	%6 = call i8 @utf16_to_utf32([0 x i16]* %5, i32* %4)
+	%6 = call i8 @utf_utf16_to_utf32([0 x i16]* %5, i32* %4)
 	%7 = load i32, i32* %4
-	call void @utf32_putchar(i32 %7)
+	call void @putchar_utf32_putchar(i32 %7)
 	ret void
 }
 
-define void @utf32_putchar(i32 %c) {
+define void @putchar_utf32_putchar(i32 %c) {
 	%1 = alloca [4 x i8], align 1
-	%2 = call i8 @utf32_to_utf8(i32 %c, [4 x i8]* %1)
+	%2 = call i8 @utf_utf32_to_utf8(i32 %c, [4 x i8]* %1)
 	%3 = sext i8 %2 to %Int
 	%4 = alloca i32, align 4
 	store i32 0, i32* %4
@@ -247,7 +247,7 @@ body_1:
 	%7 = load i32, i32* %4
 	%8 = getelementptr inbounds [4 x i8], [4 x i8]* %1, i32 0, i32 %7
 	%9 = load i8, i8* %8
-	call void @utf8_putchar(i8 %9)
+	call void @putchar_utf8_putchar(i8 %9)
 	%10 = load i32, i32* %4
 	%11 = add i32 %10, 1
 	store i32 %11, i32* %4
@@ -256,7 +256,7 @@ break_1:
 	ret void
 }
 
-define void @utf8_puts(%Str8* %s) {
+define void @putchar_utf8_puts(%Str8* %s) {
 	%1 = alloca i32, align 4
 	store i32 0, i32* %1
 	br label %again_1
@@ -272,7 +272,7 @@ then_0:
 	br label %break_1
 	br label %endif_0
 endif_0:
-	call void @utf8_putchar(i8 %4)
+	call void @putchar_utf8_putchar(i8 %4)
 	%7 = load i32, i32* %1
 	%8 = add i32 %7, 1
 	store i32 %8, i32* %1
@@ -281,7 +281,7 @@ break_1:
 	ret void
 }
 
-define void @utf16_puts(%Str16* %s) {
+define void @putchar_utf16_puts(%Str16* %s) {
 	%1 = alloca i32, align 4
 	store i32 0, i32* %1
 	br label %again_1
@@ -303,7 +303,7 @@ endif_0:
 	%8 = load i32, i32* %1
 	%9 = getelementptr inbounds %Str16, %Str16* %s, i32 0, i32 %8
 	%10 = bitcast i16* %9 to [0 x i16]*
-	%11 = call i8 @utf16_to_utf32([0 x i16]* %10, i32* %7)
+	%11 = call i8 @utf_utf16_to_utf32([0 x i16]* %10, i32* %7)
 	%12 = icmp eq i8 %11, 0
 	br i1 %12 , label %then_1, label %endif_1
 then_1:
@@ -311,7 +311,7 @@ then_1:
 	br label %endif_1
 endif_1:
 	%14 = load i32, i32* %7
-	call void @utf32_putchar(i32 %14)
+	call void @putchar_utf32_putchar(i32 %14)
 	%15 = load i32, i32* %1
 	%16 = sext i8 %11 to i32
 	%17 = add i32 %15, %16
@@ -321,7 +321,7 @@ break_1:
 	ret void
 }
 
-define void @utf32_puts(%Str32* %s) {
+define void @putchar_utf32_puts(%Str32* %s) {
 	%1 = alloca i32, align 4
 	store i32 0, i32* %1
 	br label %again_1
@@ -337,7 +337,7 @@ then_0:
 	br label %break_1
 	br label %endif_0
 endif_0:
-	call void @utf32_putchar(i32 %4)
+	call void @putchar_utf32_putchar(i32 %4)
 	%7 = load i32, i32* %1
 	%8 = add i32 %7, 1
 	store i32 %8, i32* %1

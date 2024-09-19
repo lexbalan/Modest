@@ -219,21 +219,21 @@ declare void @perror(%ConstCharStr* %str)
 };
 
 
-declare %List* @create()
-declare i32 @size_get(%List* %list)
-declare %Node* @first_node_get(%List* %list)
-declare %Node* @last_node_get(%List* %list)
-declare %Node* @node_first(%List* %list, %Node* %new_node)
-declare %Node* @node_create()
-declare %Node* @node_next_get(%Node* %node)
-declare %Node* @node_prev_get(%Node* %node)
-declare i8* @node_data_get(%Node* %node)
-declare void @node_insert_right(%Node* %left, %Node* %new_right)
-declare %Node* @node_get(%List* %list, i32 %pos)
-declare %Node* @node_insert(%List* %list, i32 %pos, %Node* %new_node)
-declare %Node* @node_append(%List* %list, %Node* %new_node)
-declare %Node* @insert(%List* %list, i32 %pos, i8* %data)
-declare %Node* @append(%List* %list, i8* %data)
+declare %List* @list_create()
+declare i32 @list_size_get(%List* %list)
+declare %Node* @list_first_node_get(%List* %list)
+declare %Node* @list_last_node_get(%List* %list)
+declare %Node* @list_node_first(%List* %list, %Node* %new_node)
+declare %Node* @list_node_create()
+declare %Node* @list_node_next_get(%Node* %node)
+declare %Node* @list_node_prev_get(%Node* %node)
+declare i8* @list_node_data_get(%Node* %node)
+declare void @list_node_insert_right(%Node* %left, %Node* %new_right)
+declare %Node* @list_node_get(%List* %list, i32 %pos)
+declare %Node* @list_node_insert(%List* %list, i32 %pos, %Node* %new_node)
+declare %Node* @list_node_append(%List* %list, %Node* %new_node)
+declare %Node* @list_insert(%List* %list, i32 %pos, i8* %data)
+declare %Node* @list_append(%List* %list, i8* %data)
 
 
 ; -- strings --
@@ -260,7 +260,7 @@ define void @nat32_list_insert(%List* %list, i32 %x) {
 	store i32 %x, i32* %2
 	%3 = bitcast %List* %list to %List*
 	%4 = bitcast i32* %2 to i8*
-	%5 = call %Node* @append(%List* %3, i8* %4)
+	%5 = call %Node* @list_append(%List* %3, i8* %4)
 	ret void
 }
 
@@ -268,7 +268,7 @@ define void @list_print_forward(%List* %list) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str1 to [0 x i8]*))
 	%2 = alloca %Node*, align 8
 	%3 = bitcast %List* %list to %List*
-	%4 = call %Node* @first_node_get(%List* %3)
+	%4 = call %Node* @list_first_node_get(%List* %3)
 	store %Node* %4, %Node** %2
 	br label %again_1
 again_1:
@@ -278,13 +278,13 @@ again_1:
 body_1:
 	%7 = load %Node*, %Node** %2
 	%8 = bitcast %Node* %7 to %Node*
-	%9 = call i8* @node_data_get(%Node* %8)
+	%9 = call i8* @list_node_data_get(%Node* %8)
 	%10 = bitcast i8* %9 to i32*
 	%11 = load i32, i32* %10
 	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), i32 %11)
 	%13 = load %Node*, %Node** %2
 	%14 = bitcast %Node* %13 to %Node*
-	%15 = call %Node* @node_next_get(%Node* %14)
+	%15 = call %Node* @list_node_next_get(%Node* %14)
 	%16 = bitcast %Node* %15 to %Node*
 	store %Node* %16, %Node** %2
 	br label %again_1
@@ -296,7 +296,7 @@ define void @list_print_backward(%List* %list) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str3 to [0 x i8]*))
 	%2 = alloca %Node*, align 8
 	%3 = bitcast %List* %list to %List*
-	%4 = call %Node* @last_node_get(%List* %3)
+	%4 = call %Node* @list_last_node_get(%List* %3)
 	store %Node* %4, %Node** %2
 	br label %again_1
 again_1:
@@ -306,13 +306,13 @@ again_1:
 body_1:
 	%7 = load %Node*, %Node** %2
 	%8 = bitcast %Node* %7 to %Node*
-	%9 = call i8* @node_data_get(%Node* %8)
+	%9 = call i8* @list_node_data_get(%Node* %8)
 	%10 = bitcast i8* %9 to i32*
 	%11 = load i32, i32* %10
 	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str4 to [0 x i8]*), i32 %11)
 	%13 = load %Node*, %Node** %2
 	%14 = bitcast %Node* %13 to %Node*
-	%15 = call %Node* @node_prev_get(%Node* %14)
+	%15 = call %Node* @list_node_prev_get(%Node* %14)
 	%16 = bitcast %Node* %15 to %Node*
 	store %Node* %16, %Node** %2
 	br label %again_1
@@ -322,7 +322,7 @@ break_1:
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str5 to [0 x i8]*))
-	%2 = call %List* @create()
+	%2 = call %List* @list_create()
 	%3 = icmp eq %List* %2, null
 	br i1 %3 , label %then_0, label %endif_0
 then_0:
@@ -355,7 +355,7 @@ endif_0:
 	call void @nat32_list_insert(%List* %16, i32 100)
 	; print list size
 	%17 = bitcast %List* %2 to %List*
-	%18 = call i32 @size_get(%List* %17)
+	%18 = call i32 @list_size_get(%List* %17)
 	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str7 to [0 x i8]*), i32 %18)
 	; print list forward
 	%20 = bitcast %List* %2 to %List*
@@ -375,7 +375,7 @@ again_1:
 body_1:
 	%26 = bitcast %List* %2 to %List*
 	%27 = load i32, i32* %23
-	%28 = call %Node* @node_get(%List* %26, i32 %27)
+	%28 = call %Node* @list_node_get(%List* %26, i32 %27)
 	%29 = icmp eq %Node* %28, null
 	br i1 %29 , label %then_1, label %endif_1
 then_1:
@@ -388,7 +388,7 @@ then_1:
 	br label %endif_1
 endif_1:
 	%35 = bitcast %Node* %28 to %Node*
-	%36 = call i8* @node_data_get(%Node* %35)
+	%36 = call i8* @list_node_data_get(%Node* %35)
 	%37 = bitcast i8* %36 to i32*
 	%38 = load i32, i32* %23
 	%39 = load i32, i32* %37
@@ -408,7 +408,7 @@ again_2:
 body_2:
 	%46 = bitcast %List* %2 to %List*
 	%47 = load i32, i32* %23
-	%48 = call %Node* @node_get(%List* %46, i32 %47)
+	%48 = call %Node* @list_node_get(%List* %46, i32 %47)
 	%49 = icmp eq %Node* %48, null
 	br i1 %49 , label %then_2, label %endif_2
 then_2:
@@ -421,7 +421,7 @@ then_2:
 	br label %endif_2
 endif_2:
 	%55 = bitcast %Node* %48 to %Node*
-	%56 = call i8* @node_data_get(%Node* %55)
+	%56 = call i8* @list_node_data_get(%Node* %55)
 	%57 = bitcast i8* %56 to i32*
 	%58 = load i32, i32* %23
 	%59 = load i32, i32* %57
@@ -437,7 +437,7 @@ break_2:
 	store i32 1234, i32* %65
 	%66 = bitcast %List* %2 to %List*
 	%67 = bitcast i32* %65 to i8*
-	%68 = call %Node* @insert(%List* %66, i32 4, i8* %67)
+	%68 = call %Node* @list_insert(%List* %66, i32 4, i8* %67)
 	%69 = bitcast %List* %2 to %List*
 	call void @list_print_forward(%List* %69)
 	ret %Int 0

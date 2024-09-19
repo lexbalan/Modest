@@ -281,12 +281,12 @@ declare void @perror(%ConstCharStr* %str)
 };
 
 
-declare void @init(%Queue* %q)
-declare i32 @getSize(%Queue* %q)
-declare i1 @isEmpty(%Queue* %q)
-declare i1 @isFull(%Queue* %q)
-declare i1 @put(%Queue* %q, %Byte %b)
-declare %Byte @get(%Queue* %q)
+declare void @queue_init(%Queue* %q)
+declare i32 @queue_getSize(%Queue* %q)
+declare i1 @queue_isEmpty(%Queue* %q)
+declare i1 @queue_isFull(%Queue* %q)
+declare i1 @queue_put(%Queue* %q, %Byte %b)
+declare %Byte @queue_get(%Queue* %q)
 
 
 ; -- strings --
@@ -309,7 +309,7 @@ again_1:
 	br i1 %3 , label %body_1, label %break_1
 body_1:
 	%4 = bitcast %Queue* @q0 to %Queue*
-	%5 = call i1 @isFull(%Queue* %4)
+	%5 = call i1 @queue_isFull(%Queue* %4)
 	br i1 %5 , label %then_0, label %endif_0
 then_0:
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
@@ -321,7 +321,7 @@ endif_0:
 	%10 = bitcast %Queue* @q0 to %Queue*
 	%11 = load i32, i32* @ii
 	%12 = trunc i32 %11 to %Byte
-	%13 = call i1 @put(%Queue* %10, %Byte %12)
+	%13 = call i1 @queue_put(%Queue* %10, %Byte %12)
 	%14 = load i32, i32* %1
 	%15 = add i32 %14, 1
 	store i32 %15, i32* %1
@@ -343,7 +343,7 @@ again_1:
 	br i1 %3 , label %body_1, label %break_1
 body_1:
 	%4 = bitcast %Queue* @q0 to %Queue*
-	%5 = call i1 @isEmpty(%Queue* %4)
+	%5 = call i1 @queue_isEmpty(%Queue* %4)
 	br i1 %5 , label %then_0, label %endif_0
 then_0:
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str3 to [0 x i8]*))
@@ -351,7 +351,7 @@ then_0:
 	br label %endif_0
 endif_0:
 	%8 = bitcast %Queue* @q0 to %Queue*
-	%9 = call %Byte @get(%Queue* %8)
+	%9 = call %Byte @queue_get(%Queue* %8)
 	%10 = sext %Byte %9 to %Int
 	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str4 to [0 x i8]*), %Int %10)
 	%12 = load i32, i32* %1
@@ -365,7 +365,7 @@ break_1:
 
 define %Int @main() {
 	%1 = bitcast %Queue* @q0 to %Queue*
-	call void @init(%Queue* %1)
+	call void @queue_init(%Queue* %1)
 	call void @padd(%Int 3)
 	call void @fetch(%Int 7)
 	call void @padd(%Int 12)

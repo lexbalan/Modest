@@ -121,11 +121,12 @@ def _llvm_operation(op, type, reg=None, x=None):
 
 
 def get_id_str(x):
+	if 'llvm' in x['id']:
+		return '"%s"' % x['id']['llvm']
+
 	id_str = x['id']['str']
-	if not 'llvm_alias' in x:
-		id_str = x['id']['str']
-	else:
-		id_str = '"%s"' % x['id']['llvm']
+	if 'prefix' in x:
+		id_str = x['definition']['module']['prefix'] + '_' + id_str
 	return id_str
 
 

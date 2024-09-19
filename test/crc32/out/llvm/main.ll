@@ -190,7 +190,7 @@ declare void @perror(%ConstCharStr* %str)
 ; declarations from: crc32
 ; -----------------------------------------------------------------------------
 
-declare i32 @doHash([0 x %Byte]* %buf, i32 %len)
+declare i32 @crc32_doHash([0 x %Byte]* %buf, i32 %len)
 
 
 ; -- strings --
@@ -217,7 +217,7 @@ declare i32 @doHash([0 x %Byte]* %buf, i32 %len)
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*))
 	%2 = bitcast [9 x %Byte]* @data to [0 x %Byte]*
-	%3 = call i32 @doHash([0 x %Byte]* %2, i32 9)
+	%3 = call i32 @crc32_doHash([0 x %Byte]* %2, i32 9)
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str2 to [0 x i8]*), %Str8* bitcast ([10 x i8]* @str3 to [0 x i8]*), i32 %3)
 	%5 = icmp eq i32 %3, 3421780262
 	br i1 %5 , label %then_0, label %else_0

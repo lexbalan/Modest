@@ -190,7 +190,7 @@ declare void @perror(%ConstCharStr* %str)
 ; declarations from: lib
 ; -----------------------------------------------------------------------------
 
-declare void @foo()
+declare void @lib_foo()
 
 
 ; -- strings --
@@ -199,7 +199,7 @@ declare void @foo()
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str1 to [0 x i8]*))
-	call void @foo()
+	call void @lib_foo()
 	ret %Int 0
 }
 

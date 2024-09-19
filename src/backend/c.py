@@ -137,17 +137,12 @@ def precedence(x):
 
 
 def get_id_str(x):
-	if not 'id' in x:
-		print(x)
+	if 'c' in x['id']:
+		return x['id']['c']
 
-	id_str = ""
-	if not 'c' in x['id']:
-		id_str = x['id']['str']
-		#if 'global_entity' in x['att']:
-		if 'prefix' in x:
-			id_str = x['definition']['module']['prefix'] + '_' + id_str
-	else:
-		id_str = x['id']['c']
+	id_str = x['id']['str']
+	if 'prefix' in x:
+		id_str = x['definition']['module']['prefix'] + '_' + id_str
 	return id_str
 
 

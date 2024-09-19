@@ -105,7 +105,7 @@ break_2:
 ; end print includes
 ; -- strings --
 
-define i32 @doHash([0 x %Byte]* %buf, i32 %len) {
+define i32 @crc32_doHash([0 x %Byte]* %buf, i32 %len) {
 	%1 = alloca [256 x i32], align 4
 	%2 = alloca i32, align 4
 	;
