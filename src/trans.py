@@ -1294,7 +1294,6 @@ def do_value_call(x):
 			else:
 				error("expected literal string argument", first_arg['ti'])
 
-
 	rv = value_call(fn, ftype['to'], args + extra_args, ti=x['ti'])
 
 	#TODO: Func#pure
