@@ -105,7 +105,7 @@ break_2:
 ; end print includes
 ; -- strings --
 
-define i32 @min_int32(i32 %a, i32 %b) {
+define i32 @minmax_min_int32(i32 %a, i32 %b) {
 	%1 = icmp slt i32 %a, %b
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
@@ -115,7 +115,7 @@ endif_0:
 	ret i32 %b
 }
 
-define i32 @max_int32(i32 %a, i32 %b) {
+define i32 @minmax_max_int32(i32 %a, i32 %b) {
 	%1 = icmp sgt i32 %a, %b
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
@@ -125,7 +125,7 @@ endif_0:
 	ret i32 %b
 }
 
-define i64 @min_int64(i64 %a, i64 %b) {
+define i64 @minmax_min_int64(i64 %a, i64 %b) {
 	%1 = icmp slt i64 %a, %b
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
@@ -135,7 +135,7 @@ endif_0:
 	ret i64 %b
 }
 
-define i64 @max_int64(i64 %a, i64 %b) {
+define i64 @minmax_max_int64(i64 %a, i64 %b) {
 	%1 = icmp sgt i64 %a, %b
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
@@ -145,7 +145,7 @@ endif_0:
 	ret i64 %b
 }
 
-define i32 @min_nat32(i32 %a, i32 %b) {
+define i32 @minmax_min_nat32(i32 %a, i32 %b) {
 	%1 = icmp ult i32 %a, %b
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
@@ -155,7 +155,7 @@ endif_0:
 	ret i32 %b
 }
 
-define i32 @max_nat32(i32 %a, i32 %b) {
+define i32 @minmax_max_nat32(i32 %a, i32 %b) {
 	%1 = icmp ugt i32 %a, %b
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
@@ -165,7 +165,7 @@ endif_0:
 	ret i32 %b
 }
 
-define i64 @min_nat64(i64 %a, i64 %b) {
+define i64 @minmax_min_nat64(i64 %a, i64 %b) {
 	%1 = icmp ult i64 %a, %b
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
@@ -175,7 +175,7 @@ endif_0:
 	ret i64 %b
 }
 
-define i64 @max_nat64(i64 %a, i64 %b) {
+define i64 @minmax_max_nat64(i64 %a, i64 %b) {
 	%1 = icmp ugt i64 %a, %b
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
@@ -185,7 +185,7 @@ endif_0:
 	ret i64 %b
 }
 
-define float @min_float32(float %a, float %b) {
+define float @minmax_min_float32(float %a, float %b) {
 	%1 = fcmp olt float %a, %b
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
@@ -195,7 +195,7 @@ endif_0:
 	ret float %b
 }
 
-define float @max_float32(float %a, float %b) {
+define float @minmax_max_float32(float %a, float %b) {
 	%1 = fcmp ogt float %a, %b
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
@@ -205,7 +205,7 @@ endif_0:
 	ret float %b
 }
 
-define double @min_float64(double %a, double %b) {
+define double @minmax_min_float64(double %a, double %b) {
 	%1 = fcmp olt double %a, %b
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
@@ -215,7 +215,7 @@ endif_0:
 	ret double %b
 }
 
-define double @max_float64(double %a, double %b) {
+define double @minmax_max_float64(double %a, double %b) {
 	%1 = fcmp ogt double %a, %b
 	br i1 %1 , label %then_0, label %endif_0
 then_0:

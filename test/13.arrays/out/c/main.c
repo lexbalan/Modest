@@ -6,7 +6,7 @@
 
 #include "main.h"
 
-#define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
+
 
 #define _constantArray  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 const int8_t constantArray[10] = _constantArray;
@@ -22,13 +22,9 @@ int main();
 
 
 
-
-
 static int32_t globalArray[10] = _constantArray;
 static char arrayFromString[3] = "abc";
 
-struct f0_x {char a[20];};
-struct f0_retval {char a[30];};
 struct f0_retval f0(struct f0_x x)
 {
 	struct f0_x local_copy_of_x;
@@ -63,7 +59,7 @@ void test()
 	memcpy(&yy, &(int8_t[]){0xAA, 0x55, 0x02, 0x00, 0x00, 0x16}, sizeof(int8_t[6]));
 	int32_t i;
 	i = 0;
-	while (i < LENGTHOF(yy)) {
+	while (i < sizeof yy) {
 		i = i + 1;
 	}
 }

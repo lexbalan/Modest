@@ -2,8 +2,6 @@
 include "libc/ctypes64"
 include "libc/stdio"
 include "libc/math"
-include "misc/minmax"
-@c_include "./minmax.h"
 let constantArray = [1, 2, 3, 4, 5] + [6, 7, 8, 9, 10]
 var globalArray: [10]Int32 = constantArray
 var arrayFromString: [3]Char8 = "abc"
@@ -35,7 +33,7 @@ func test() -> Unit {
 	// тестируем работу с локальным generic массивом
 	var yy: [6]Int8 = startSequence + [] + stopSequence
 	var i: Int32 = 0
-	while i < lengthof(yy) {
+	while i < sizeof yy {
 		let y = yy[i]
 		i = i + 1
 	}

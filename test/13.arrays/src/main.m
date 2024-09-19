@@ -5,8 +5,8 @@ include "libc/stdio"
 include "libc/math"
 
 //@attribute("c_no_print")
-include "misc/minmax"
-$pragma c_include "./minmax.h"
+//import "misc/minmax"
+//$pragma c_include "./minmax.h"
 
 
 let constantArray = [1, 2, 3, 4, 5] + [6, 7, 8, 9, 10]

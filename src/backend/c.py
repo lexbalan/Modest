@@ -1550,20 +1550,8 @@ def print_wrapped_array(_type):
 	newline()
 
 
-def print_func_wrappers(ftype):
-	# печатаем обернутые параметры-массивы и возврашаемые массивы
-	# (обернуты тк C не позволяет принимать возвращать массив по значению)
-	for param in ftype['params']:
-		if hlir_type.type_is_closed_array(param['type']):
-			print_wrapped_array(param['type'])
-	if hlir_type.type_is_closed_array(ftype['to']):
-		print_wrapped_array(ftype['to'])
 
-
-def print_func_signature(id_str, ftype, atts, print_wrappers=True):
-	if print_wrappers:
-		print_func_wrappers(ftype)
-
+def print_func_signature(id_str, ftype, atts):
 	to = ftype['to']
 	t = to
 
@@ -1583,6 +1571,16 @@ def print_func_signature(id_str, ftype, atts, print_wrappers=True):
 
 
 
+def print_func_wrappers(ftype):
+	# печатаем обернутые параметры-массивы и возврашаемые массивы
+	# (обернуты тк C не позволяет принимать возвращать массив по значению)
+	for param in ftype['params']:
+		if hlir_type.type_is_closed_array(param['type']):
+			print_wrapped_array(param['type'])
+	if hlir_type.type_is_closed_array(ftype['to']):
+		print_wrapped_array(ftype['to'])
+
+
 def print_decl_func(x):
 	newline(n=x['nl'])
 
@@ -1594,7 +1592,9 @@ def print_decl_func(x):
 	if 'inline' in x['att']:
 		out("inline ")
 
-	print_func_signature(get_id_str(x['value']), x['value']['type'], x['value']['att'])
+	ftype = x['value']['type']
+	print_func_wrappers(ftype)
+	print_func_signature(get_id_str(x['value']), ftype, x['value']['att'])
 	out(";")
 
 
@@ -1620,8 +1620,8 @@ def print_def_func(x):
 
 	# если функция уже была определена, то обертки над ее типами
 	# уже были напечатаны (если они были), и их нельзя печатать еще раз
-	print_wrappers = not 'declared' in func['att']
-	print_func_signature(get_id_str(func), ftype, func['att'], print_wrappers)
+	#print_wrappers = not 'declared' in func['att']
+	print_func_signature(get_id_str(func), ftype, func['att'])
 
 	if styleguide['LINE_BREAK_BEFORE_FUNC_BRACE']:
 		newline()
