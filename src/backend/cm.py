@@ -820,16 +820,17 @@ def print_stmt_block(s):
 
 
 
+"""
 def print_decl_func(x):
 	func = x['value']
 	out('func ')
 	print_id(func)
 	print_type(func['type'])
-
+"""
 
 def print_def_func(x):
 	if x['stmt'] == None:
-		print_decl_func(x)
+		return
 	func = x['value']
 	ft = func['type']
 	out('func ')
