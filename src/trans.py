@@ -2165,64 +2165,11 @@ def symbol_const(id, init_value, is_public=False):
 	return const_value
 
 
-def def_const(x):
-	id = x['id']
-
-	log("def_const: %s" % id['str'])
-
-	# check if identifier is free
-	pre_exist = ctx_value_get_shallow(id['str'])
-	if pre_exist != None:
-		error("redefinition of '%s'" % id['str'], id['ti'])
-
-	if id['str'][0].isupper():
-		error("value id must starts with small letter", id['ti'])
-		pass
-
-	v = do_value_immediate(x['value'], allow_ptr_to_str=True)
-
-	if value_is_bad(v):
-		global module
-		module_value_add_public(module, id['str'], v)
-		return hlir_def_const(id, v, v, x['ti'])
-
-
-	const_value = symbol_const(id, v, is_public=x['export'])
-
-	y = hlir_def_const(id, const_value, v, x['ti'])
-	y['export'] = x['export']
-	v['definition'] = y
-	y['module'] = module
-	return y
-
-
-
-# удаляет hlir_node по isa & id_str
-def module_remove_node(m, isa, id_str):
-	#print(f"module_remove_node: {id_str}")
-
-	for submodule in m['imports']:
-		module_remove_node(submodule, isa, id_str)
-
-	for x in m['defs']:
-		if x['isa'] == isa:
-			if 'id' in x:
-				if x['id']['str'] == id_str:
-					#print("REMOVE: " + id_str)
-					m['defs'].remove(x)
-					break
-	return
-
-
-
 
 # нужно добавлять префикс к сущности
 # наличие поля prefix дает принтеру знать что нужно декорировать имя
 def need_decoration(x):
 	return not is_nodecorate(x) and not ('module_nodecorate' in module['att'])
-
-
-
 
 
 def def_type(x):
@@ -2292,6 +2239,39 @@ def def_type(x):
 	return y
 
 
+
+def def_const(x):
+	id = x['id']
+
+	log("def_const: %s" % id['str'])
+
+	# check if identifier is free
+	pre_exist = ctx_value_get_shallow(id['str'])
+	if pre_exist != None:
+		error("redefinition of '%s'" % id['str'], id['ti'])
+
+	if id['str'][0].isupper():
+		error("value id must starts with small letter", id['ti'])
+		pass
+
+	v = do_value_immediate(x['value'], allow_ptr_to_str=True)
+
+	if value_is_bad(v):
+		global module
+		module_value_add_public(module, id['str'], v)
+		return hlir_def_const(id, v, v, x['ti'])
+
+
+	const_value = symbol_const(id, v, is_public=x['export'])
+
+	y = hlir_def_const(id, const_value, v, x['ti'])
+	y['export'] = x['export']
+	v['definition'] = y
+	y['module'] = module
+	return y
+
+
+
 def def_var(x):
 	id = x['id']
 	log("def_var %s" % id['str'])
@@ -2341,6 +2321,86 @@ def def_var(x):
 	y['module'] = module
 	v['definition'] = y
 	y['export'] = x['export']
+	return y
+
+
+def def_func(x, dostmt=True):
+	global cfunc
+	global module
+
+	func_id = x['id']
+	log('def_func: %s' % func_id['str'])
+
+	# значение функции уже существует, тк мы ранее сделали проход
+	fn = ctx_value_get(func_id['str'])
+
+	prev_cfunc = cfunc
+	cfunc = fn
+
+	if x['stmt'] == None:
+		#print("DECL: "+fn['id']['str'])
+		y = hlir_def_func(func_id, fn, None, x['ti'])
+		y['export'] = x['export']
+		fn['definition'] = y
+		return y
+
+
+	context_push()  # create params context
+
+	if hlir_type.type_is_bad(fn['type']):
+		return None
+
+	params = fn['type']['params']
+	i = 0
+	while i < len(params):
+		param = params[i]
+		param_type = param['type']
+		param_id = param['id']
+
+		param_value = value_const(param_id, param_type, None, param['ti'])
+		param_value['att'].append('local')
+
+		# for C backend only (maybe mv to C?)
+		if hlir_type.type_is_closed_array(param_type):
+			param_value['att'].append('wrapped_array')
+
+		ctx_value_add(param_id['str'], param_value)
+		i = i + 1
+
+	# for C backend, for #include <stdarg.h>
+	if fn['type']['extra_args']:
+		if not 'use_va_arg' in module['att']:
+			module['att'].append('use_va_arg')
+
+	# check unuse
+	for param in params:
+		check_unuse(param)
+
+	stmt = None
+
+	if dostmt:
+		if x['stmt'] != None:
+			stmt = do_stmt_block(x['stmt'])
+			check_block(stmt)
+
+			# check if return present
+			if not hlir_type.type_is_unit(fn['type']['to']):
+				stmts = stmt['stmts']
+				if len(stmts) == 0:
+					warning("expected return operator at end", stmt['ti'])
+				elif stmts[-1]['kind'] != 'return':
+					warning("expected return operator at end", stmt['ti'])
+
+	context_pop()  # remove params context
+
+	cfunc = prev_cfunc
+
+	y = hlir_def_func(func_id, fn, stmt, x['ti'])
+	if need_decoration(x):
+		y['prefix'] = module['prefix']
+	y['export'] = x['export']
+	fn['definition'] = y
+	y['module'] = module
 	return y
 
 
@@ -2404,88 +2464,6 @@ def do_func_value(x, export):
 
 	return fn
 
-
-
-def def_func(x, dostmt=True):
-	global cfunc
-	global module
-
-	func_id = x['id']
-	log('def_func: %s' % func_id['str'])
-
-	# значение функции уже существует, тк мы ранее сделали проход
-	fn = ctx_value_get(func_id['str'])
-
-	prev_cfunc = cfunc
-	cfunc = fn
-
-	if x['stmt'] == None:
-		#print("DECL: "+fn['id']['str'])
-		y = hlir_def_func(func_id, fn, None, x['ti'])
-		y['export'] = x['export']
-		fn['definition'] = y
-		return y
-
-
-	context_push()  # create params context
-
-	if hlir_type.type_is_bad(fn['type']):
-		return None
-
-	params = fn['type']['params']
-	i = 0
-	while i < len(params):
-		param = params[i]
-		param_type = param['type']
-		param_id = param['id']
-
-		param_value = value_const(param_id, param_type, None, param['ti'])
-		param_value['att'].append('local')
-
-		# for C backend only (maybe mv to C?)
-		if hlir_type.type_is_closed_array(param_type):
-			param_value['att'].append('wrapped_array')
-
-		ctx_value_add(param_id['str'], param_value)
-		i = i + 1
-
-
-	# for C backend, for #include <stdarg.h>
-	if fn['type']['extra_args']:
-		if not 'use_va_arg' in module['att']:
-			module['att'].append('use_va_arg')
-
-
-	# check unuse
-	for param in params:
-		check_unuse(param)
-
-	stmt = None
-
-	if dostmt:
-		if x['stmt'] != None:
-			stmt = do_stmt_block(x['stmt'])
-			check_block(stmt)
-
-			# check if return present
-			if not hlir_type.type_is_unit(fn['type']['to']):
-				stmts = stmt['stmts']
-				if len(stmts) == 0:
-					warning("expected return operator at end", stmt['ti'])
-				elif stmts[-1]['kind'] != 'return':
-					warning("expected return operator at end", stmt['ti'])
-
-	context_pop()  # remove params context
-
-	cfunc = prev_cfunc
-
-	y = hlir_def_func(func_id, fn, stmt, x['ti'])
-	if need_decoration(x):
-		y['prefix'] = module['prefix']
-	y['export'] = x['export']
-	fn['definition'] = y
-	y['module'] = module
-	return y
 
 
 
@@ -3169,3 +3147,25 @@ def cp_immediate(to, _from):
 		to['items'] = _from['items']
 	if 'fields' in _from:
 		to['fields'] = _from['fields']
+	return
+
+
+
+"""
+# удаляет hlir_node по isa & id_str
+def module_remove_node(m, isa, id_str):
+	#print(f"module_remove_node: {id_str}")
+
+	for submodule in m['imports']:
+		module_remove_node(submodule, isa, id_str)
+
+	for x in m['defs']:
+		if x['isa'] == isa:
+			if 'id' in x:
+				if x['id']['str'] == id_str:
+					#print("REMOVE: " + id_str)
+					m['defs'].remove(x)
+					break
+	return
+
+"""
