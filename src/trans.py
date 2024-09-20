@@ -2741,7 +2741,6 @@ def import_directive(impline, ti, include=False):
 
 
 
-tabb = 0
 def translate(srcname, nodef=False):
 	assert(srcname != None)
 	assert(srcname != "")
@@ -2836,7 +2835,6 @@ def process_module(ast, source_info, nodef=False):
 		'att': []
  	}
 
-
 	# 0. do imports & directives
 	for x in ast:
 		isa = x['isa']
@@ -2852,7 +2850,6 @@ def process_module(ast, source_info, nodef=False):
 
 
 	pre_def(ast, fdecl=nodef)    # process in normal mode
-
 
 	m = module
 
@@ -2884,7 +2881,6 @@ def pre_def(ast, fdecl=False):
 
 				add_spices(y, ast_atts=x['attributes'])
 				module_append(y, to_export=x['export'])
-
 
 	# 2. def vars & consts
 	for x in ast:
@@ -2932,11 +2928,6 @@ def pre_def(ast, fdecl=False):
 
 	gast = prev_gast
 	return
-
-
-
-
-
 
 
 

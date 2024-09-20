@@ -45,19 +45,19 @@ export {
 	func fread(buf: Ptr, size: SizeT, count: SizeT, f: *File) -> SizeT
 	@attribute("value.type.to:dispensable")
 	func fwrite(buf: Ptr, size: SizeT, count: SizeT, f: *File) -> SizeT
-	func freopen(filename: *ConstCharStr, mode: *ConstCharStr, f: *File) -> *File
+	func freopen(fname: *ConstCharStr, mode: *ConstCharStr, f: *File) -> *File
 
 	@attribute("value.type.to:dispensable")
-	func fseek(stream: *File, offset: LongInt, whence: Int) -> Int
+	func fseek(f: *File, offset: LongInt, whence: Int) -> Int
 
 	func fsetpos(f: *File, pos: *FposT) -> Int
 	func ftell(f: *File) -> LongInt
-	func remove(filename: *ConstCharStr) -> Int
+	func remove(fname: *ConstCharStr) -> Int
 	func rename(old_filename: *ConstCharStr, new_filename: *ConstCharStr) -> Int
 	func rewind(f: *File) -> Unit
-	func setbuf(f: *File, buffer: *CharStr) -> Unit
-	//int setvbuf(FILE *stream, char *buffer, int mode, size_t size)
-	func setvbuf(f: *File, buffer: *CharStr, mode: Int, size: SizeT) -> Int
+	func setbuf(f: *File, buf: *CharStr) -> Unit
+	//func setvbuf(f: *File, buf: *[]Char, mode: Int, size: SizeT) -> Int
+	func setvbuf(f: *File, buf: *CharStr, mode: Int, size: SizeT) -> Int
 	func tmpfile() -> *File
 	func tmpnam(str: *CharStr) -> *CharStr
 
@@ -68,7 +68,7 @@ export {
 	func scanf(s: *ConstCharStr, ...) -> Int
 
 	@attribute("value.type.to:dispensable")
-	func fprintf(stream: *File, format: *Str, ...) -> Int
+	func fprintf(f: *File, format: *Str, ...) -> Int
 
 	@attribute("value.type.to:dispensable")
 	func fscanf(f: *File, format: *ConstCharStr, ...) -> Int
