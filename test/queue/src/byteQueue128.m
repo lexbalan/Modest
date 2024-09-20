@@ -18,6 +18,10 @@ export {
 		q.data = []
 	}
 
+	func getCapacity(q: *ByteQueue128) -> Nat32 {
+		return queue.getCapacity(&q.queue)
+	}
+
 	func getSize(q: *ByteQueue128) -> Nat32 {
 		return queue.getSize(&q.queue)
 	}

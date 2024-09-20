@@ -16,6 +16,7 @@ struct byteQueue128_ByteQueue128 {
 	uint8_t data[capacity];
 };
 void byteQueue128_init(byteQueue128_ByteQueue128 *q);
+uint32_t byteQueue128_getCapacity(byteQueue128_ByteQueue128 *q);
 uint32_t byteQueue128_getSize(byteQueue128_ByteQueue128 *q);
 bool byteQueue128_isFull(byteQueue128_ByteQueue128 *q);
 bool byteQueue128_isEmpty(byteQueue128_ByteQueue128 *q);

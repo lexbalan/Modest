@@ -21,6 +21,10 @@ struct queue_Queue {
 };
 #define bufVolume  4
 void queue_init(queue_Queue *q, uint32_t capacity);
+static inline uint32_t queue_getCapacity(queue_Queue *q)
+{
+	return q->capacity;
+}
 static inline uint32_t queue_getSize(queue_Queue *q)
 {
 	return q->size;

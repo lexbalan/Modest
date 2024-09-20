@@ -22,6 +22,11 @@ export {
 	}
 
 	@inline
+	func getCapacity(q: *Queue) -> Nat32 {
+		return q.capacity
+	}
+
+	@inline
 	func getSize(q: *Queue) -> Nat32 {
 		return q.size
 	}

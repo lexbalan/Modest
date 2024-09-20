@@ -3,19 +3,19 @@ include "libc/ctypes64"
 include "libc/ctypes"
 include "libc/math"
 include "libc/stdio"
-import "queue"
-var q0: Queue
+import "./byteQueue128"
+var bq0: ByteQueue128
 var ii: Int32
 func padd(n: Int) -> Unit {
 	var i: Int32 = 0
 	while i < n {
-		if queue.isFull(&q0) {
+		if byteQueue128.isFull(&bq0) {
 			printf("queue is full\n")
 			break
 		}
 
-		printf("queue.put(%d)\n", ii)
-		queue.put(&q0, Byte ii)
+		printf("bq.put(%d)\n", ii)
+		byteQueue128.put(&bq0, Byte ii)
 		i = i + 1
 		ii = ii + 1
 	}
@@ -23,18 +23,19 @@ func padd(n: Int) -> Unit {
 func fetch(n: Int) -> Unit {
 	var i: Int32 = 0
 	while i < n {
-		if queue.isEmpty(&q0) {
+		if byteQueue128.isEmpty(&bq0) {
 			printf("queue is empty\n")
 			break
 		}
 
-		let x = queue.get(&q0)
-		printf("queue.get = %d\n", Int x)
+		var x: Byte
+		let res = byteQueue128.get(&bq0, &x)
+		printf("bq.get = %d\n", Int x)
 		i = i + 1
 	}
 }
 export func main() -> Int {
-	queue.init(&q0)
+	byteQueue128.init(&bq0)
 
 	padd(3)
 	fetch(7)

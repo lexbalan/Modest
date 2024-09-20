@@ -2,25 +2,26 @@
 include "libc/ctypes64"
 include "libc/ctypes"
 include "libc/stdio"
-func next(x: Int32) -> Int32 {
+func next(capacity: Nat32, x: Nat32) -> Nat32 {
 	if x < bufVolume - 1 {
 		return x + 1
 	}
 	return 0
 }
-export let bufVolume = 4
 
 export type Queue record {
-	data: [bufVolume]Byte
-	p: Int32
-	g: Int32
+	capacity: Nat32
 	size: Nat32
+	p: Nat32
+	g: Nat32
 }
-export func init(q: *Queue) -> Unit {
-	q.data = []  // right size = 4
-	q.size = 0
-	q.p = 0
-	q.g = 0
+export let bufVolume = 4
+export func init(q: *Queue, capacity: Nat32) -> Unit {
+	*q = {}
+	q.capacity = capacity
+}
+export func getCapacity(q: *Queue) -> Nat32 {
+	return q.capacity
 }
 export func getSize(q: *Queue) -> Nat32 {
 	return q.size
@@ -31,24 +32,16 @@ export func isEmpty(q: *Queue) -> Bool {
 export func isFull(q: *Queue) -> Bool {
 	return q.size == bufVolume
 }
-export func put(q: *Queue, b: Byte) -> Bool {
-	if isFull(q) {
-		return false
-	}
-
-	q.data[q.p] = b
-	q.p = next(q.p)
+export func putPosition(q: *Queue) -> Nat32 {
+	let pos = q.p
+	q.p = next(q.capacity, q.p)
 	q.size = q.size + 1
-	return true
+	return pos
 }
-export func get(q: *Queue) -> Byte {
-	if isEmpty(q) {
-		return 0
-	}
-
-	let x = q.data[q.g]
-	q.g = next(q.g)
+export func getPosition(q: *Queue) -> Nat32 {
+	let pos = q.g
+	q.g = next(q.capacity, q.g)
 	q.size = q.size - 1
-	return x
+	return pos
 }
 
