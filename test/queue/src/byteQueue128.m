@@ -1,4 +1,8 @@
+// byteQueue128
+// queue implementation example
+
 import "queue"
+
 
 export {
 	let capacity = 128
