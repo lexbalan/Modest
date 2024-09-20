@@ -2612,7 +2612,11 @@ def do_import(x):
 		m = included_modules[abspath]
 
 	if not x['include']:
-		m_id = m['id']
+		m_id = '<$>'
+		if x['as'] != None:
+			m_id = x['as']['str']
+		else:
+			m_id = m['id']
 		module['imports'][m_id] = m
 	else:
 		# забираем публичные символы

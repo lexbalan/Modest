@@ -12,22 +12,25 @@ all: LLVM
 
 
 CM:
-	mcc -o $(CMPREFIX)/main -mbackend=cm -funsafe $(INDIR)/main.m
-	mcc -o $(CMPREFIX)/mutex -mbackend=cm $(INDIR)/mutex.m
+	#mcc -o $(CMPREFIX)/mutex -mbackend=cm $(INDIR)/mutex.m
 	mcc -o $(CMPREFIX)/queue -mbackend=cm $(INDIR)/queue.m
+	mcc -o $(CMPREFIX)/byteQueue128 -mbackend=cm $(INDIR)/byteQueue128.m
+	mcc -o $(CMPREFIX)/main -mbackend=cm -funsafe $(INDIR)/main.m
 
 
 LLVM:
-	mcc -o $(LLVMPREFIX)/main -mbackend=llvm -funsafe $(INDIR)/main.m
 	mcc -o $(LLVMPREFIX)/queue -mbackend=llvm $(INDIR)/queue.m
-	clang $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/queue.ll
+	mcc -o $(LLVMPREFIX)/byteQueue128 -mbackend=llvm $(INDIR)/byteQueue128.m
+	mcc -o $(LLVMPREFIX)/main -mbackend=llvm -funsafe $(INDIR)/main.m
+	clang $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/queue.ll $(LLVMPREFIX)/byteQueue128.ll
 
 
 C:
-	mcc -o $(CPREFIX)/main -mbackend=c -funsafe $(INDIR)/main.m
-	mcc -o $(CPREFIX)/mutex -mbackend=c $(INDIR)/mutex.m
 	mcc -o $(CPREFIX)/queue -mbackend=c $(INDIR)/queue.m
-	CC $(CPREFIX)/main.c $(CPREFIX)/mutex.c $(CPREFIX)/queue.c 
+	mcc -o $(CPREFIX)/byteQueue128 -mbackend=c $(INDIR)/byteQueue128.m
+	mcc -o $(CPREFIX)/main -mbackend=c -funsafe $(INDIR)/main.m
+	#mcc -o $(CPREFIX)/mutex -mbackend=c $(INDIR)/mutex.m
+	CC $(CPREFIX)/main.c $(CPREFIX)/queue.c $(CPREFIX)/byteQueue128.c 
 
 
 clean:

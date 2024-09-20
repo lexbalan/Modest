@@ -151,20 +151,20 @@ declare %Int @fgetpos(%File* %f, %FposT* %pos)
 declare %File* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
 declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
 declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
-declare %File* @freopen(%ConstCharStr* %filename, %ConstCharStr* %mode, %File* %f)
-declare %Int @fseek(%File* %stream, %LongInt %offset, %Int %whence)
+declare %File* @freopen(%ConstCharStr* %fname, %ConstCharStr* %mode, %File* %f)
+declare %Int @fseek(%File* %f, %LongInt %offset, %Int %whence)
 declare %Int @fsetpos(%File* %f, %FposT* %pos)
 declare %LongInt @ftell(%File* %f)
-declare %Int @remove(%ConstCharStr* %filename)
+declare %Int @remove(%ConstCharStr* %fname)
 declare %Int @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
 declare void @rewind(%File* %f)
-declare void @setbuf(%File* %f, %CharStr* %buffer)
-declare %Int @setvbuf(%File* %f, %CharStr* %buffer, %Int %mode, %SizeT %size)
+declare void @setbuf(%File* %f, %CharStr* %buf)
+declare %Int @setvbuf(%File* %f, %CharStr* %buf, %Int %mode, %SizeT %size)
 declare %File* @tmpfile()
 declare %CharStr* @tmpnam(%CharStr* %str)
 declare %Int @printf(%ConstCharStr* %s, ...)
 declare %Int @scanf(%ConstCharStr* %s, ...)
-declare %Int @fprintf(%File* %stream, %Str* %format, ...)
+declare %Int @fprintf(%File* %f, %Str* %format, ...)
 declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
 declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
@@ -189,8 +189,8 @@ declare void @perror(%ConstCharStr* %str)
 ; -- strings --
 
 
-define i32 @next(i32 %x) {
-	%1 = icmp slt i32 %x, 3
+define i32 @next(i32 %capacity, i32 %x) {
+	%1 = icmp ult i32 %x, 3
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
 	%2 = add i32 %x, 1
@@ -201,104 +201,76 @@ endif_0:
 }
 
 
-
 %Queue = type {
-	[4 x %Byte], 
+	i32, 
 	i32, 
 	i32, 
 	i32
 };
 
 
-define void @queue_init(%Queue* %q) {
-	; -- STMT ASSIGN ARRAY --
+
+define void @queue_init(%Queue* %q, i32 %capacity) {
+	store %Queue zeroinitializer, %Queue* %q
 	%1 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 0
-	; -- start vol eval --
-	%2 = zext i3 4 to i32
-	; -- end vol eval --
-	; -- ZERO
-	%3 = mul i32 %2, 1
-	%4 = bitcast [4 x %Byte]* %1 to i8*
-	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %4, i8 0, i32 %3, i1 0)
-	%5 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 3
-	store i32 0, i32* %5
-	%6 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
-	store i32 0, i32* %6
-	%7 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 2
-	store i32 0, i32* %7
+	store i32 %capacity, i32* %1
 	ret void
 }
 
 define i32 @queue_getSize(%Queue* %q) {
-	%1 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 3
+	%1 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
 	%2 = load i32, i32* %1
 	ret i32 %2
 }
 
 define i1 @queue_isEmpty(%Queue* %q) {
-	%1 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 3
+	%1 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
 	%2 = load i32, i32* %1
 	%3 = icmp eq i32 %2, 0
 	ret i1 %3
 }
 
 define i1 @queue_isFull(%Queue* %q) {
-	%1 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 3
+	%1 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
 	%2 = load i32, i32* %1
 	%3 = icmp eq i32 %2, 4
 	ret i1 %3
 }
 
-define i1 @queue_put(%Queue* %q, %Byte %b) {
-	%1 = bitcast %Queue* %q to %Queue*
-	%2 = call i1 @queue_isFull(%Queue* %1)
-	br i1 %2 , label %then_0, label %endif_0
-then_0:
-	ret i1 0
-	br label %endif_0
-endif_0:
+define i32 @queue_putPosition(%Queue* %q) {
+	%1 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 2
+	%2 = load i32, i32* %1
+	%3 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 2
 	%4 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 0
-	%5 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
-	%6 = load i32, i32* %5
-	%7 = getelementptr inbounds [4 x %Byte], [4 x %Byte]* %4, i32 0, i32 %6
-	store %Byte %b, %Byte* %7
-	%8 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
+	%5 = load i32, i32* %4
+	%6 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 2
+	%7 = load i32, i32* %6
+	%8 = call i32 @next(i32 %5, i32 %7)
+	store i32 %8, i32* %3
 	%9 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
-	%10 = load i32, i32* %9
-	%11 = call i32 @next(i32 %10)
-	store i32 %11, i32* %8
-	%12 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 3
-	%13 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 3
-	%14 = load i32, i32* %13
-	%15 = add i32 %14, 1
-	store i32 %15, i32* %12
-	ret i1 1
+	%10 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
+	%11 = load i32, i32* %10
+	%12 = add i32 %11, 1
+	store i32 %12, i32* %9
+	ret i32 %2
 }
 
-define %Byte @queue_get(%Queue* %q) {
-	%1 = bitcast %Queue* %q to %Queue*
-	%2 = call i1 @queue_isEmpty(%Queue* %1)
-	br i1 %2 , label %then_0, label %endif_0
-then_0:
-	ret %Byte 0
-	br label %endif_0
-endif_0:
+define i32 @queue_getPosition(%Queue* %q) {
+	%1 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 3
+	%2 = load i32, i32* %1
+	%3 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 3
 	%4 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 0
-	%5 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 2
-	%6 = load i32, i32* %5
-	%7 = getelementptr inbounds [4 x %Byte], [4 x %Byte]* %4, i32 0, i32 %6
-	%8 = load %Byte, %Byte* %7
-	%9 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 2
-	%10 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 2
+	%5 = load i32, i32* %4
+	%6 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 3
+	%7 = load i32, i32* %6
+	%8 = call i32 @next(i32 %5, i32 %7)
+	store i32 %8, i32* %3
+	%9 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
+	%10 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
 	%11 = load i32, i32* %10
-	%12 = call i32 @next(i32 %11)
+	%12 = sub i32 %11, 1
 	store i32 %12, i32* %9
-	%13 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 3
-	%14 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 3
-	%15 = load i32, i32* %14
-	%16 = sub i32 %15, 1
-	store i32 %16, i32* %13
-	ret %Byte %8
+	ret i32 %2
 }
 
 

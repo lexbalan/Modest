@@ -8,12 +8,12 @@
 
 
 
-static inline int32_t next(int32_t x);
+static inline uint32_t next(uint32_t capacity, uint32_t x);
 
 
 
 
-static inline int32_t next(int32_t x)
+static inline uint32_t next(uint32_t capacity, uint32_t x)
 {
 	if (x < bufVolume - 1) {
 		return x + 1;
@@ -21,35 +21,25 @@ static inline int32_t next(int32_t x)
 	return 0;
 }
 
-void queue_init(queue_Queue *q)
+void queue_init(queue_Queue *q, uint32_t capacity)
 {
-	memset(&q->data, 0, sizeof(uint8_t[bufVolume]));
-	q->size = 0;
-	q->p = 0;
-	q->g = 0;
+	*q = (queue_Queue){};
+	q->capacity = capacity;
 }
 
-bool queue_put(queue_Queue *q, uint8_t b)
+uint32_t queue_putPosition(queue_Queue *q)
 {
-	if (queue_isFull((queue_Queue *)q)) {
-		return false;
-	}
-
-	q->data[q->p] = b;
-	q->p = next(q->p);
+	const uint32_t pos = q->p;
+	q->p = next(q->capacity, q->p);
 	q->size = q->size + 1;
-	return true;
+	return pos;
 }
 
-uint8_t queue_get(queue_Queue *q)
+uint32_t queue_getPosition(queue_Queue *q)
 {
-	if (queue_isEmpty((queue_Queue *)q)) {
-		return 0;
-	}
-
-	const uint8_t x = q->data[q->g];
-	q->g = next(q->g);
+	const uint32_t pos = q->g;
+	q->g = next(q->capacity, q->g);
 	q->size = q->size - 1;
-	return x;
+	return pos;
 }
 

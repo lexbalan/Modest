@@ -15,7 +15,7 @@ void fetch(int n);
 
 
 
-static queue_Queue q0;
+static byteQueue128_ByteQueue128 bq0;
 static int32_t ii;
 
 void padd(int n)
@@ -23,13 +23,13 @@ void padd(int n)
 	int32_t i;
 	i = 0;
 	while (i < n) {
-		if (queue_isFull((queue_Queue *)&q0)) {
+		if (byteQueue128_isFull((byteQueue128_ByteQueue128 *)&bq0)) {
 			printf("queue is full\n");
 			break;
 		}
 
 		printf("queue.put(%d)\n", ii);
-		queue_put((queue_Queue *)&q0, (uint8_t)ii);
+		byteQueue128_put((byteQueue128_ByteQueue128 *)&bq0, (uint8_t)ii);
 		i = i + 1;
 		ii = ii + 1;
 	}
@@ -40,12 +40,13 @@ void fetch(int n)
 	int32_t i;
 	i = 0;
 	while (i < n) {
-		if (queue_isEmpty((queue_Queue *)&q0)) {
+		if (byteQueue128_isEmpty((byteQueue128_ByteQueue128 *)&bq0)) {
 			printf("queue is empty\n");
 			break;
 		}
 
-		const uint8_t x = queue_get((queue_Queue *)&q0);
+		uint8_t x;
+		const bool res = byteQueue128_get((byteQueue128_ByteQueue128 *)&bq0, &x);
 		printf("queue.get = %d\n", (int)x);
 		i = i + 1;
 	}
@@ -53,7 +54,7 @@ void fetch(int n)
 
 int main()
 {
-	queue_init((queue_Queue *)&q0);
+	byteQueue128_init((byteQueue128_ByteQueue128 *)&bq0);
 
 	padd(3);
 	fetch(7);

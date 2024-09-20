@@ -1368,11 +1368,17 @@ class Parser:
 
 		if not self.look("{"):
 			import_expr = self.expr_value()
+
+			_as = None
+			if self.match("as"):
+				_as = self.identifier()
+
 			return {
 				'isa': 'ast_import',
 				'kind': 'ast_import',
-				'include': include,
 				'expr': import_expr,
+				'include': include,
+				'as': _as,
 				'args': [],
 				'ti': ti
 			}
@@ -1387,11 +1393,17 @@ class Parser:
 					break
 
 				import_expr = self.expr_value()
+
+				_as = None
+				if self.match("as"):
+					_as = self.identifier()
+
 				import_dir = {
 					'isa': 'ast_attribute',
 					'kind': 'import',
-					'include': include,
 					'expr': import_expr,
+					'include': include,
+					'as': _as,
 					'args': [],
 					'ti': ti
 				}
