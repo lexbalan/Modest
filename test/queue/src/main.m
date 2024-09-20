@@ -5,7 +5,8 @@ include "libc/ctypes"
 include "libc/math"
 include "libc/stdio"
 
-import "byteQueue128" as bq
+import "./byteQueue128" as bq
+
 
 var bq0: bq.ByteQueue128
 
@@ -19,7 +20,7 @@ func padd(n: Int) {
 			break
 		}
 
-		printf("queue.put(%d)\n", ii)
+		printf("bq.put(%d)\n", ii)
 		bq.put(&bq0, unsafe Byte ii)
 		++i
 		++ii
@@ -38,7 +39,7 @@ func fetch(n: Int) -> Unit {
 
 		var x: Byte
 		let res = bq.get(&bq0, &x)
-		printf("queue.get = %d\n", Int x)
+		printf("bq.get = %d\n", Int x)
 		++i
 	}
 }
