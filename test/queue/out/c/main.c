@@ -28,7 +28,7 @@ void padd(int n)
 			break;
 		}
 
-		printf("queue.put(%d)\n", ii);
+		printf("bq.put(%d)\n", ii);
 		byteQueue128_put((byteQueue128_ByteQueue128 *)&bq0, (uint8_t)ii);
 		i = i + 1;
 		ii = ii + 1;
@@ -47,7 +47,7 @@ void fetch(int n)
 
 		uint8_t x;
 		const bool res = byteQueue128_get((byteQueue128_ByteQueue128 *)&bq0, &x);
-		printf("queue.get = %d\n", (int)x);
+		printf("bq.get = %d\n", (int)x);
 		i = i + 1;
 	}
 }

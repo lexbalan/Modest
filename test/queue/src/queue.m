@@ -1,9 +1,9 @@
-
 //module queue
 
 include "libc/ctypes64"
 include "libc/ctypes"
 include "libc/stdio"
+
 
 export {
 	let bufVolume = 4
@@ -15,7 +15,7 @@ export {
 		g: Nat32  // get index
 	}
 
-
+	@inlinehint
 	func init(q: *Queue, capacity: Nat32) {
 		*q = {}
 		q.capacity = capacity
@@ -38,6 +38,7 @@ export {
 
 
 	// you must check isFull(queue) before call 'putPosition'
+	@inlinehint
 	func putPosition(q: *Queue) -> Nat32 {
 		let pos = q.p
 		q.p = next(q.capacity, q.p)
@@ -47,6 +48,7 @@ export {
 
 
 	// you must check isEmpty(queue) before call 'getPosition'
+	@inlinehint
 	func getPosition(q: *Queue) -> Nat32 {
 		let pos = q.g
 		q.g = next(q.capacity, q.g)
