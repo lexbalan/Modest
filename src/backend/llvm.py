@@ -1990,17 +1990,14 @@ def print_func_signature(func):
 
 
 
-def print_decl_func(x):
-	out("\ndeclare ")
-	print_func_signature(x['value'])
-
-
-def print_def_func(x):
+def print_def_func(x, declare_only=False):
 	func = x['value']
 
-	if x['stmt'] == None:
-		return print_decl_func(x)
-
+	if (x['stmt'] == None) or declare_only:
+		#return print_decl_func(x)
+		out("\ndeclare ")
+		print_func_signature(x['value'])
+		return
 
 	fctx = {
 		'func': func,  # cfunc
@@ -2100,8 +2097,8 @@ def print_def_type(x):
 
 
 
-def print_def_var(x):
-	is_extern = 'extern' in x['att']
+def print_def_var(x, as_extern=False):
+	is_extern = 'extern' in x['att'] or as_extern
 	is_static = 'static' in x['att']
 
 	#['private', 'internal', 'weak', 'external'] # etc..
@@ -2129,7 +2126,7 @@ def print_def_var(x):
 
 
 
-def print_def_const(x):
+def print_def_const(x, as_extern=False):
 	init_value = x['init_value']
 
 	#if hlir_type.type_is_composite(const_value['type']):
@@ -2266,7 +2263,7 @@ def print_strings(strings):
 
 printed = []
 
-def een(defs):
+def een(defs, decl_only=False):
 	isa_prev = None
 	for x in defs:
 		isa = x['isa']
@@ -2287,10 +2284,17 @@ def een(defs):
 			out("\n")
 			isa_prev = isa
 
-		if isa == 'def_var': print_def_var(x)
-		elif isa == 'def_const': print_def_const(x)
-		elif isa == 'def_func': print_def_func(x)
-		elif isa == 'def_type': print_def_type(x)
+		if isa == 'def_var':
+			print_def_var(x, as_extern=decl_only)
+
+		elif isa == 'def_const':
+			print_def_const(x, as_extern=decl_only)
+
+		elif isa == 'def_func':
+			print_def_func(x, declare_only=decl_only)
+
+		elif isa == 'def_type':
+			print_def_type(x)
 
 
 # защита от повторного включения
@@ -2318,7 +2322,9 @@ def print_imports(m):
 		#for x in imp['export_defs']:
 		#	print("- %s" % x['id']['str'])
 
-		een(imp['export_defs'])
+		# только декларируем функции переменные и константы
+		een(imp['defs'], decl_only=True)
+		een(imp['export_defs'], decl_only=True)
 
 
 separatorLine = "\n; " + '-' * 77
