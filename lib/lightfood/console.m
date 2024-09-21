@@ -49,7 +49,7 @@ export func putchar_utf32(c: Char32) -> Unit {
 	while i < n {
 		let c = decoded_buf[i]
 		putchar_utf8(c)
-		i = i + 1
+		++i
 	}
 }
 
@@ -73,7 +73,7 @@ export func puts8(s: *Str8) -> Unit {
 		let c = s[i]
 		if c == Char8 0 {break}
 		putchar_utf8(c)
-		i = i + 1
+		++i
 	}
 }
 
@@ -108,7 +108,7 @@ export func puts32(s: *Str32) -> Unit {
 		let c = s[i]
 		if c == Char32 0 {break}
 		putchar_utf32(c)
-		i = i + 1
+		++i
 	}
 }
 
