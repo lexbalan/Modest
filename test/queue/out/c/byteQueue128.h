@@ -9,11 +9,11 @@
 #include "queue.h"
 
 typedef struct byteQueue128_ByteQueue128 byteQueue128_ByteQueue128; //
-#define capacity  128
+#define byteQueue128_capacity  128
 
 struct byteQueue128_ByteQueue128 {
 	queue_Queue queue;
-	uint8_t data[capacity];
+	uint8_t data[byteQueue128_capacity];
 };
 void byteQueue128_init(byteQueue128_ByteQueue128 *q);
 uint32_t byteQueue128_getCapacity(byteQueue128_ByteQueue128 *q);

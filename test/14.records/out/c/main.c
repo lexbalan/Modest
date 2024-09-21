@@ -21,8 +21,8 @@ struct main_Point3D {
 	uint32_t y;
 	uint32_t z;
 };
-#define xx  {.x = 1, .y = 2}
-#define yy  {.x = 1, .y = 2}
+#define main_xx  {.x = 1, .y = 2}
+#define main_yy  {.x = 1, .y = 2}
 int main();
 
 
@@ -48,7 +48,7 @@ int main()
 	main_Point2D p2d2;
 	p2d2 = p2d0;
 	struct __anonymous_struct_3 p2d3;
-	p2d3 = (struct __anonymous_struct_3)xx;
+	p2d3 = (struct __anonymous_struct_3)main_xx;
 
 	if (memcmp(&p2d2, &p2d3, sizeof(struct __anonymous_struct_3)) == 0) {
 		printf("p2d2 == p2d3\n");

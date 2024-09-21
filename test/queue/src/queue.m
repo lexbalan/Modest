@@ -47,7 +47,9 @@ export {
 	func putPosition(q: *Queue) -> Nat32 {
 		let pos = q.p
 		q.p = next(q.capacity, q.p)
-		++q.size
+		if q.size < (bufVolume - 1) {
+			++q.size
+		}
 		return pos
 	}
 
@@ -57,7 +59,9 @@ export {
 	func getPosition(q: *Queue) -> Nat32 {
 		let pos = q.g
 		q.g = next(q.capacity, q.g)
-		--q.size
+		if q.size > 0 {
+			--q.size
+		}
 		return pos
 	}
 }

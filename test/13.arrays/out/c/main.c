@@ -8,12 +8,12 @@
 
 
 
-#define _constantArray  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-const int8_t constantArray[10] = _constantArray;
-#define _startSequence  {0xAA, 0x55, 0x02}
-const int8_t startSequence[3] = _startSequence;
-#define _stopSequence  {0x16}
-const int8_t stopSequence[1] = _stopSequence;
+#define _main_constantArray  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+const int8_t main_constantArray[10] = _main_constantArray;
+#define _main_startSequence  {0xAA, 0x55, 0x02}
+const int8_t main_startSequence[3] = _main_startSequence;
+#define _main_stopSequence  {0x16}
+const int8_t main_stopSequence[1] = _main_stopSequence;
 struct f0_x {char a[20];};
 struct f0_retval {char a[30];};
 struct f0_retval f0(struct f0_x x);
@@ -22,7 +22,7 @@ int main();
 
 
 
-static int32_t globalArray[10] = _constantArray;
+static int32_t globalArray[10] = _main_constantArray;
 static char arrayFromString[3] = "abc";
 
 struct f0_retval f0(struct f0_x x)

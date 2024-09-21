@@ -8,15 +8,15 @@
 
 
 
-#define _ratSymbolUTF8  {0xF0, 0x9F, 0x90, 0x80}
-const int8_t ratSymbolUTF8[4] = _ratSymbolUTF8;
-#define _ratSymbolUTF16  {0xD83D, 0xDC00}
-const int16_t ratSymbolUTF16[2] = _ratSymbolUTF16;
-#define ratSymbolUTF32  0x0001F400
-#define genericStringConst  U"S-t-r-i-n-g-Ω 🐀🎉🦄"
-#define string8Const  "S-t-r-i-n-g-Ω 🐀🎉🦄"
-#define string16Const  u"S-t-r-i-n-g-Ω 🐀🎉🦄"
-#define string32Const  U"S-t-r-i-n-g-Ω 🐀🎉🦄"
+#define _main_ratSymbolUTF8  {0xF0, 0x9F, 0x90, 0x80}
+const int8_t main_ratSymbolUTF8[4] = _main_ratSymbolUTF8;
+#define _main_ratSymbolUTF16  {0xD83D, 0xDC00}
+const int16_t main_ratSymbolUTF16[2] = _main_ratSymbolUTF16;
+#define main_ratSymbolUTF32  0x0001F400
+#define main_genericStringConst  U"S-t-r-i-n-g-Ω 🐀🎉🦄"
+#define main_string8Const  "S-t-r-i-n-g-Ω 🐀🎉🦄"
+#define main_string16Const  u"S-t-r-i-n-g-Ω 🐀🎉🦄"
+#define main_string32Const  U"S-t-r-i-n-g-Ω 🐀🎉🦄"
 int main();
 
 
@@ -56,11 +56,11 @@ int main()
 	}*/
 
 	char *str8;
-	str8 = string8Const;
+	str8 = main_string8Const;
 	uint16_t *str16;
-	str16 = string16Const;
+	str16 = main_string16Const;
 	uint32_t *str32;
-	str32 = string32Const;
+	str32 = main_string32Const;
 
 	putchar_utf8_puts(str8);
 	putchar_utf8_puts("\n");

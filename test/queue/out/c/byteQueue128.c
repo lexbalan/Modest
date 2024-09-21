@@ -12,8 +12,8 @@
 
 void byteQueue128_init(byteQueue128_ByteQueue128 *q)
 {
-	queue_init((queue_Queue *)&q->queue, capacity);
-	memset(&q->data, 0, sizeof(uint8_t[capacity]));
+	queue_init((queue_Queue *)&q->queue, byteQueue128_capacity);
+	memset(&q->data, 0, sizeof(uint8_t[byteQueue128_capacity]));
 }
 
 uint32_t byteQueue128_getCapacity(byteQueue128_ByteQueue128 *q)

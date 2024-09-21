@@ -19,29 +19,29 @@ struct main_Line {
 	main_Point a;
 	main_Point b;
 };
-#define zero  0
-#define pointZero  {.x = zero, .y = zero}
-#define pointOne  {.x = 1.0, .y = 1.0}
-#define line0  { \
-	.a = pointZero, \
-	.b = pointOne \
+#define main_zero  0
+#define main_pointZero  {.x = main_zero, .y = main_zero}
+#define main_pointOne  {.x = 1.0, .y = 1.0}
+#define main_line0  { \
+	.a = main_pointZero, \
+	.b = main_pointOne \
 }
-#define _carr  {0, 10, 15, 20, 25, 30}
-const int8_t carr[6] = _carr;
-#define line1  { \
+#define _main_carr  {0, 10, 15, 20, 25, 30}
+const int8_t main_carr[6] = _main_carr;
+#define main_line1  { \
 	.a = {.x = 10, .y = 20}, \
 	.b = {.x = 30, .y = 40} \
 }
-#define line2  { \
-	.a = pointZero, \
-	.b = pointOne \
+#define main_line2  { \
+	.a = main_pointZero, \
+	.b = main_pointOne \
 }
-#define line3  { \
+#define main_line3  { \
 	.a = {.x = 10, .y = 20}, \
 	.b = {.x = 30, .y = 40} \
 }
-#define _lines  {line0, line1, line2, line3}
-const main_Line lines[4] = _lines;
+#define _main_lines  {main_line0, main_line1, main_line2, main_line3}
+const main_Line main_lines[4] = _main_lines;
 float distance(main_Point a, main_Point b);
 float lineLength(main_Line line);
 int main();
@@ -67,10 +67,10 @@ float lineLength(main_Line line)
 
 int main()
 {
-	const float lines_0_len = lineLength(lines[0]);
-	const float lines_1_len = lineLength(lines[1]);
-	const float lines_2_len = lineLength(lines[2]);
-	const float lines_3_len = lineLength(lines[3]);
+	const float lines_0_len = lineLength(main_lines[0]);
+	const float lines_1_len = lineLength(main_lines[1]);
+	const float lines_2_len = lineLength(main_lines[2]);
+	const float lines_3_len = lineLength(main_lines[3]);
 
 	printf("lines_0_len = %f\n", lines_0_len);
 	printf("lines_1_len = %f\n", lines_1_len);

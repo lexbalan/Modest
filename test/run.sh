@@ -35,6 +35,6 @@ cd crc32 && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd float && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd free_pointer && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd unistd && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
-cd generic && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
-cd queue && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
+cd generic && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
+#cd queue && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
 

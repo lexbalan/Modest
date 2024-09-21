@@ -117,6 +117,7 @@ break_2:
 
 
 declare void @queue_init(%Queue* %q, i32 %capacity)
+declare i32 @queue_getCapacity(%Queue* %q)
 declare i32 @queue_getSize(%Queue* %q)
 declare i1 @queue_isEmpty(%Queue* %q)
 declare i1 @queue_isFull(%Queue* %q)
@@ -148,6 +149,13 @@ define void @byteQueue128_init(%ByteQueue128* %q) {
 	%6 = bitcast [128 x %Byte]* %3 to i8*
 	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %6, i8 0, i32 %5, i1 0)
 	ret void
+}
+
+define i32 @byteQueue128_getCapacity(%ByteQueue128* %q) {
+	%1 = getelementptr inbounds %ByteQueue128, %ByteQueue128* %q, i32 0, i32 0
+	%2 = bitcast %Queue* %1 to %Queue*
+	%3 = call i32 @queue_getCapacity(%Queue* %2)
+	ret i32 %3
 }
 
 define i32 @byteQueue128_getSize(%ByteQueue128* %q) {

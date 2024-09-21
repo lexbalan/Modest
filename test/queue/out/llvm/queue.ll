@@ -217,6 +217,12 @@ define void @queue_init(%Queue* %q, i32 %capacity) {
 	ret void
 }
 
+define i32 @queue_getCapacity(%Queue* %q) {
+	%1 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 0
+	%2 = load i32, i32* %1
+	ret i32 %2
+}
+
 define i32 @queue_getSize(%Queue* %q) {
 	%1 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
 	%2 = load i32, i32* %1
@@ -248,10 +254,17 @@ define i32 @queue_putPosition(%Queue* %q) {
 	%8 = call i32 @next(i32 %5, i32 %7)
 	store i32 %8, i32* %3
 	%9 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
-	%10 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
-	%11 = load i32, i32* %10
-	%12 = add i32 %11, 1
-	store i32 %12, i32* %9
+	%10 = load i32, i32* %9
+	%11 = icmp ult i32 %10, 3
+	br i1 %11 , label %then_0, label %endif_0
+then_0:
+	%12 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
+	%13 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
+	%14 = load i32, i32* %13
+	%15 = add i32 %14, 1
+	store i32 %15, i32* %12
+	br label %endif_0
+endif_0:
 	ret i32 %2
 }
 
@@ -266,10 +279,17 @@ define i32 @queue_getPosition(%Queue* %q) {
 	%8 = call i32 @next(i32 %5, i32 %7)
 	store i32 %8, i32* %3
 	%9 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
-	%10 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
-	%11 = load i32, i32* %10
-	%12 = sub i32 %11, 1
-	store i32 %12, i32* %9
+	%10 = load i32, i32* %9
+	%11 = icmp ugt i32 %10, 0
+	br i1 %11 , label %then_0, label %endif_0
+then_0:
+	%12 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
+	%13 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
+	%14 = load i32, i32* %13
+	%15 = sub i32 %14, 1
+	store i32 %15, i32* %12
+	br label %endif_0
+endif_0:
 	ret i32 %2
 }
 

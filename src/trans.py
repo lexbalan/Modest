@@ -2254,19 +2254,22 @@ def def_const(x):
 		error("value id must starts with small letter", id['ti'])
 		pass
 
-	v = do_value_immediate(x['value'], allow_ptr_to_str=True)
+	init_value = do_value_immediate(x['value'], allow_ptr_to_str=True)
 
-	if value_is_bad(v):
+	if value_is_bad(init_value):
 		global module
-		module_value_add_public(module, id['str'], v)
-		return hlir_def_const(id, v, v, x['ti'])
+		module_value_add_public(module, id['str'], init_value)
+		return hlir_def_const(id, init_value, init_value, x['ti'])
 
 
-	const_value = symbol_const(id, v, is_public=x['export'])
+	const_value = symbol_const(id, init_value, is_public=x['export'])
 
-	y = hlir_def_const(id, const_value, v, x['ti'])
+	y = hlir_def_const(id, const_value, init_value, x['ti'])
+	if need_decoration(x):
+		const_value['prefix'] = module['prefix']
 	y['export'] = x['export']
-	v['definition'] = y
+	const_value['definition'] = y
+	const_value['module'] = module
 	y['module'] = module
 	return y
 

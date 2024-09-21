@@ -269,7 +269,7 @@ declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
 ; end print includes
 ; -----------------------------------------------------------------------------
-; declarations from: byteQueue128
+; declarations from: bq
 ; -----------------------------------------------------------------------------
 
 
@@ -280,6 +280,7 @@ declare void @perror(%ConstCharStr* %str)
 
 
 declare void @byteQueue128_init(%ByteQueue128* %q)
+declare i32 @byteQueue128_getCapacity(%ByteQueue128* %q)
 declare i32 @byteQueue128_getSize(%ByteQueue128* %q)
 declare i1 @byteQueue128_isFull(%ByteQueue128* %q)
 declare i1 @byteQueue128_isEmpty(%ByteQueue128* %q)
@@ -289,9 +290,9 @@ declare i1 @byteQueue128_get(%ByteQueue128* %q, %Byte* %b)
 
 ; -- strings --
 @str1 = private constant [15 x i8] [i8 113, i8 117, i8 101, i8 117, i8 101, i8 32, i8 105, i8 115, i8 32, i8 102, i8 117, i8 108, i8 108, i8 10, i8 0]
-@str2 = private constant [15 x i8] [i8 113, i8 117, i8 101, i8 117, i8 101, i8 46, i8 112, i8 117, i8 116, i8 40, i8 37, i8 100, i8 41, i8 10, i8 0]
+@str2 = private constant [12 x i8] [i8 98, i8 113, i8 46, i8 112, i8 117, i8 116, i8 40, i8 37, i8 100, i8 41, i8 10, i8 0]
 @str3 = private constant [16 x i8] [i8 113, i8 117, i8 101, i8 117, i8 101, i8 32, i8 105, i8 115, i8 32, i8 101, i8 109, i8 112, i8 116, i8 121, i8 10, i8 0]
-@str4 = private constant [16 x i8] [i8 113, i8 117, i8 101, i8 117, i8 101, i8 46, i8 103, i8 101, i8 116, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str4 = private constant [13 x i8] [i8 98, i8 113, i8 46, i8 103, i8 101, i8 116, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 
 
 @bq0 = global %ByteQueue128 zeroinitializer
@@ -315,7 +316,7 @@ then_0:
 	br label %endif_0
 endif_0:
 	%8 = load i32, i32* @ii
-	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str2 to [0 x i8]*), i32 %8)
+	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str2 to [0 x i8]*), i32 %8)
 	%10 = bitcast %ByteQueue128* @bq0 to %ByteQueue128*
 	%11 = load i32, i32* @ii
 	%12 = trunc i32 %11 to %Byte
@@ -353,7 +354,7 @@ endif_0:
 	%10 = call i1 @byteQueue128_get(%ByteQueue128* %9, %Byte* %8)
 	%11 = load %Byte, %Byte* %8
 	%12 = sext %Byte %11 to %Int
-	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str4 to [0 x i8]*), %Int %12)
+	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str4 to [0 x i8]*), %Int %12)
 	%14 = load i32, i32* %1
 	%15 = add i32 %14, 1
 	store i32 %15, i32* %1

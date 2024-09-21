@@ -19,7 +19,7 @@ struct queue_Queue {
 	uint32_t p;
 	uint32_t g;
 };
-#define bufVolume  4
+#define queue_bufVolume  4
 void queue_init(queue_Queue *q, uint32_t capacity);
 static inline uint32_t queue_getCapacity(queue_Queue *q)
 {
@@ -35,7 +35,7 @@ static inline bool queue_isEmpty(queue_Queue *q)
 }
 static inline bool queue_isFull(queue_Queue *q)
 {
-	return q->size == bufVolume;
+	return q->size == queue_bufVolume;
 }
 uint32_t queue_putPosition(queue_Queue *q);
 uint32_t queue_getPosition(queue_Queue *q);

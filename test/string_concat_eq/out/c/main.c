@@ -8,18 +8,18 @@
 
 
 
-#define hello  "Hello"
-#define world  "World"
-#define party_corn  U"🎉"
-#define greeting  (hello " " world)
-#define test  "test"
+#define main_hello  "Hello"
+#define main_world  "World"
+#define main_party_corn  U"🎉"
+#define main_greeting  (main_hello " " main_world)
+#define main_test  "test"
 int main();
 
 
 
 int main()
 {
-	printf("%s\n", (char *)greeting);
+	printf("%s\n", (char *)main_greeting);
 
 	if (true) {
 		printf("test ok.\n");
