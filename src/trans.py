@@ -382,12 +382,14 @@ def init():
 	root_symtab.type_add('Int32', foundation.typeInt32)
 	root_symtab.type_add('Int64', foundation.typeInt64)
 	root_symtab.type_add('Int128', foundation.typeInt128)
+	root_symtab.type_add('Int256', foundation.typeInt256)
 
 	root_symtab.type_add('Nat8', foundation.typeNat8)
 	root_symtab.type_add('Nat16', foundation.typeNat16)
 	root_symtab.type_add('Nat32', foundation.typeNat32)
 	root_symtab.type_add('Nat64', foundation.typeNat64)
 	root_symtab.type_add('Nat128', foundation.typeNat128)
+	root_symtab.type_add('Nat256', foundation.typeNat256)
 
 	#root_symtab.type_add('Float16', foundation.typeFloat16)
 	root_symtab.type_add('Float32', foundation.typeFloat32)
