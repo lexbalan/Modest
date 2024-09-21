@@ -6,16 +6,16 @@
 
 #include "main.h"
 
-#define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
 
-#define inputDataLength  32
+
+#define main_inputDataLength  32
 
 
 struct main_SHA256_TestCase {
-	char input_data[inputDataLength];
+	char input_data[main_inputDataLength];
 	uint32_t input_data_len;
 
-	uint8_t expected_result[hashSize];
+	uint8_t expected_result[sha256_hashSize];
 };
 bool doTest(main_SHA256_TestCase *test);
 int main();
@@ -50,7 +50,7 @@ static main_SHA256_TestCase *tests[2] = (main_SHA256_TestCase *[2]){(main_SHA256
 
 bool doTest(main_SHA256_TestCase *test)
 {
-	uint8_t test_hash[hashSize];
+	uint8_t test_hash[sha256_hashSize];
 	uint8_t *const msg = (uint8_t *)(char *)&test->input_data;
 	const uint32_t msg_len = test->input_data_len;
 	sha256_hash(msg, msg_len, (uint8_t *)&test_hash);
@@ -60,7 +60,7 @@ bool doTest(main_SHA256_TestCase *test)
 
 	int32_t i;
 	i = 0;
-	while (i < hashSize) {
+	while (i < sha256_hashSize) {
 		printf("%02X", test_hash[i]);
 		i = i + 1;
 	}
@@ -78,7 +78,7 @@ int main()
 
 	int32_t i;
 	i = 0;
-	while (i < (int)LENGTHOF(tests)) {
+	while (i < (int)sizeof tests) {
 		main_SHA256_TestCase *const test = tests[i];
 		const bool test_result = doTest((main_SHA256_TestCase *)test);
 

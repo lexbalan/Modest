@@ -1,14 +1,9 @@
-// test/sha256/src/main.cm
 
 include "libc/ctypes64"
 include "libc/ctypes"
 include "libc/stdio"
-
-
 import "misc/sha256"
-$pragma c_include "./sha256.h"
-
-
+@c_include "./sha256.h"
 let inputDataLength = 32
 
 
@@ -16,11 +11,9 @@ type SHA256_TestCase record {
 	input_data: [inputDataLength]Char8
 	input_data_len: Nat32
 
-	expected_result: sha256.Hash
+	expected_result: Hash
 }
-
-
-var test0 = SHA256_TestCase {
+var test0: SHA256_TestCase = SHA256_TestCase {
 	input_data = "abc"
 	input_data_len = 3
 
@@ -31,8 +24,7 @@ var test0 = SHA256_TestCase {
 		0xB4, 0x10, 0xFF, 0x61, 0xF2, 0x00, 0x15, 0xAD
 	]
 }
-
-var test1 = SHA256_TestCase {
+var test1: SHA256_TestCase = SHA256_TestCase {
 	input_data = "Hello World!"
 	input_data_len = 12
 
@@ -43,24 +35,20 @@ var test1 = SHA256_TestCase {
 		0x4A, 0xDD, 0xD2, 0x00, 0x12, 0x6D, 0x90, 0x69
 	]
 }
-
-
-var tests = [&test0, &test1]
-
-
+var tests: [2]*SHA256_TestCase = [&test0, &test1]
 func doTest(test: *SHA256_TestCase) -> Bool {
-	var test_hash: sha256.Hash
-	let msg = unsafe *[]Byte &test.input_data
+	var test_hash: Hash
+	let msg = *[]Byte &test.input_data
 	let msg_len = test.input_data_len
 	sha256.hash(msg, msg_len, &test_hash)
 
 	printf("'%s'", &test.input_data)
 	printf(" -> ")
 
-	var i = 0
+	var i: Int32 = 0
 	while i < sha256.hashSize {
 		printf("%02X", test_hash[i])
-		++i
+		i = i + 1
 	}
 
 	printf("\n")
@@ -69,24 +57,22 @@ func doTest(test: *SHA256_TestCase) -> Bool {
 
 	return test_passed
 }
-
-
 func main() -> Int {
 	printf("test SHA256\n")
 
-	var i = 0
-	while i < Int lengthof(tests) {
+	var i: Int32 = 0
+	while i < Int sizeof tests {
 		let test = tests[i]
 		let test_result = doTest(test)
 
-		var res = *Str8 "failed"
+		var res: *Str8 = *Str8 "failed"
 		if test_result {
 			res = "passed"
 		}
 
 		printf("test #%i: %s\n", i, res)
 
-		++i
+		i = i + 1
 	}
 
 	return 0

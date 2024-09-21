@@ -101,7 +101,7 @@ break_2:
 
 ; MODULE: main
 
-; print includes
+; -- print includes --
 
 %Str = type %Str8;
 %Char = type i8;
@@ -124,7 +124,6 @@ break_2:
 %Double = type double;
 %LongDouble = type double;
 
-
 %SocklenT = type i32;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
@@ -135,7 +134,6 @@ break_2:
 %PidT = type i32;
 %UidT = type i32;
 %GidT = type i32;
-
 
 %File = type i8;
 %FposT = type i8;
@@ -151,20 +149,20 @@ declare %Int @fgetpos(%File* %f, %FposT* %pos)
 declare %File* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
 declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
 declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
-declare %File* @freopen(%ConstCharStr* %filename, %ConstCharStr* %mode, %File* %f)
-declare %Int @fseek(%File* %stream, %LongInt %offset, %Int %whence)
+declare %File* @freopen(%ConstCharStr* %fname, %ConstCharStr* %mode, %File* %f)
+declare %Int @fseek(%File* %f, %LongInt %offset, %Int %whence)
 declare %Int @fsetpos(%File* %f, %FposT* %pos)
 declare %LongInt @ftell(%File* %f)
-declare %Int @remove(%ConstCharStr* %filename)
+declare %Int @remove(%ConstCharStr* %fname)
 declare %Int @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
 declare void @rewind(%File* %f)
-declare void @setbuf(%File* %f, %CharStr* %buffer)
-declare %Int @setvbuf(%File* %f, %CharStr* %buffer, %Int %mode, %SizeT %size)
+declare void @setbuf(%File* %f, %CharStr* %buf)
+declare %Int @setvbuf(%File* %f, %CharStr* %buf, %Int %mode, %SizeT %size)
 declare %File* @tmpfile()
 declare %CharStr* @tmpnam(%CharStr* %str)
 declare %Int @printf(%ConstCharStr* %s, ...)
 declare %Int @scanf(%ConstCharStr* %s, ...)
-declare %Int @fprintf(%File* %stream, %Str* %format, ...)
+declare %Int @fprintf(%File* %f, %Str* %format, ...)
 declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
 declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
@@ -185,17 +183,26 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
-; end print includes
-; -----------------------------------------------------------------------------
-; declarations from: sha256
-; -----------------------------------------------------------------------------
+; -- end print includes --
+; -- print imports --
+
+declare i8* @memset(i8* %mem, %Int %c, %SizeT %n)
+declare i8* @memcpy(i8* %dst, i8* %src, %SizeT %len)
+declare i8* @memmove(i8* %dst, i8* %src, %SizeT %n)
+declare %Int @memcmp(i8* %p0, i8* %p1, %SizeT %num)
+declare %Int @strncmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
+declare %Int @strcmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2)
+declare [0 x %Char]* @strcpy([0 x %Char]* %dst, [0 x %ConstChar]* %src)
+declare %SizeT @strlen([0 x %ConstChar]* %s)
+declare [0 x %Char]* @strcat([0 x %Char]* %s1, [0 x %ConstChar]* %s2)
+declare [0 x %Char]* @strncat([0 x %Char]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
+declare [0 x %Char]* @strerror(%Int %error)
 
 
 %Hash = type [32 x %Byte];
 
-declare void @hash([0 x %Byte]* %msg, i32 %msgLen, %Hash* %outHash)
-
-
+declare void @sha256_hash([0 x %Byte]* %msg, i32 %msgLen, %Hash* %outHash)
+; -- end print imports --
 ; -- strings --
 @str1 = private constant [5 x i8] [i8 39, i8 37, i8 115, i8 39, i8 0]
 @str2 = private constant [5 x i8] [i8 32, i8 45, i8 62, i8 32, i8 0]
@@ -205,7 +212,6 @@ declare void @hash([0 x %Byte]* %msg, i32 %msgLen, %Hash* %outHash)
 @str6 = private constant [7 x i8] [i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 0]
 @str7 = private constant [7 x i8] [i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 0]
 @str8 = private constant [14 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 35, i8 37, i8 105, i8 58, i8 32, i8 37, i8 115, i8 10, i8 0]
-
 
 
 %SHA256_TestCase = type {

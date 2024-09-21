@@ -11,7 +11,7 @@
 
 
 typedef struct sha256_Context sha256_Context; //
-#define hashSize  32
+#define sha256_hashSize  32
 
 typedef uint8_t * sha256_Hash;
 void sha256_hash(uint8_t *msg, uint32_t msgLen, uint8_t *outHash);

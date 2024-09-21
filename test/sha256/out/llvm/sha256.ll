@@ -101,7 +101,7 @@ break_2:
 
 ; MODULE: sha256
 
-; print includes
+; -- print includes --
 
 %Str = type %Str8;
 %Char = type i8;
@@ -124,7 +124,6 @@ break_2:
 %Double = type double;
 %LongDouble = type double;
 
-
 %SocklenT = type i32;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
@@ -135,7 +134,6 @@ break_2:
 %PidT = type i32;
 %UidT = type i32;
 %GidT = type i32;
-
 
 declare i8* @memset(i8* %mem, %Int %c, %SizeT %n)
 declare i8* @memcpy(i8* %dst, i8* %src, %SizeT %len)
@@ -148,9 +146,10 @@ declare %SizeT @strlen([0 x %ConstChar]* %s)
 declare [0 x %Char]* @strcat([0 x %Char]* %s1, [0 x %ConstChar]* %s2)
 declare [0 x %Char]* @strncat([0 x %Char]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
 declare [0 x %Char]* @strerror(%Int %error)
-; end print includes
+; -- end print includes --
+; -- print imports --
+; -- end print imports --
 ; -- strings --
-
 
 %Context = type {
 	[64 x %Byte], 
@@ -500,7 +499,7 @@ body_3:
 	%147 = call i32 @ch(i32 %142, i32 %144, i32 %146)
 	%148 = add i32 %140, %147
 	%149 = load i32, i32* %66
-	%150 = getelementptr inbounds [64 x i32], [64 x i32]* @k, i32 0, i32 %149
+	%150 = getelementptr inbounds [64 x i32], [64 x i32]* @sha256_k, i32 0, i32 %149
 	%151 = load i32, i32* %150
 	%152 = bitcast i32 %151 to i32
 	%153 = add i32 %148, %152
@@ -846,7 +845,7 @@ break_1:
 
 %Hash = type [32 x %Byte];
 
-define void @hash([0 x %Byte]* %msg, i32 %msgLen, %Hash* %outHash) {
+define void @sha256_hash([0 x %Byte]* %msg, i32 %msgLen, %Hash* %outHash) {
 	%1 = alloca %Context, align 8
 	store %Context zeroinitializer, %Context* %1
 	%2 = bitcast %Context* %1 to %Context*
