@@ -582,6 +582,8 @@ def do_type_array(t):
 
 		if not value_is_immediate(volume_expr):
 			info("VLA", t['ti'])
+			print(volume_expr['isa'])
+			print(volume_expr['kind'])
 			if is_local_context():
 				global cfunc
 				cfunc['att'].append('stacksave')

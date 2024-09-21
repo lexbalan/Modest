@@ -272,7 +272,6 @@ declare void @perror(%ConstCharStr* %str)
 ; declarations from: bq
 ; -----------------------------------------------------------------------------
 
-
 %ByteQueue128 = type {
 	%Queue, 
 	[128 x %Byte]
@@ -280,8 +279,8 @@ declare void @perror(%ConstCharStr* %str)
 
 
 declare void @byteQueue128_init(%ByteQueue128* %q)
-declare i32 @byteQueue128_getCapacity(%ByteQueue128* %q)
-declare i32 @byteQueue128_getSize(%ByteQueue128* %q)
+declare i32 @byteQueue128_capacity(%ByteQueue128* %q)
+declare i32 @byteQueue128_size(%ByteQueue128* %q)
 declare i1 @byteQueue128_isFull(%ByteQueue128* %q)
 declare i1 @byteQueue128_isEmpty(%ByteQueue128* %q)
 declare i1 @byteQueue128_put(%ByteQueue128* %q, %Byte %b)

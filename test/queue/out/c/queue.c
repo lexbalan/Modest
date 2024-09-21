@@ -15,7 +15,7 @@ static inline uint32_t next(uint32_t capacity, uint32_t x);
 
 static inline uint32_t next(uint32_t capacity, uint32_t x)
 {
-	if (x < queue_bufVolume - 1) {
+	if (x < capacity - 1) {
 		return x + 1;
 	}
 	return 0;
@@ -31,7 +31,7 @@ uint32_t queue_putPosition(queue_Queue *q)
 {
 	const uint32_t pos = q->p;
 	q->p = next(q->capacity, q->p);
-	if (q->size < queue_bufVolume - 1) {
+	if (q->size < q->capacity - 1) {
 		q->size = q->size + 1;
 	}
 	return pos;

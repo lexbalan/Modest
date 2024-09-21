@@ -190,11 +190,12 @@ declare void @perror(%ConstCharStr* %str)
 
 
 define i32 @next(i32 %capacity, i32 %x) {
-	%1 = icmp ult i32 %x, 3
-	br i1 %1 , label %then_0, label %endif_0
+	%1 = sub i32 %capacity, 1
+	%2 = icmp ult i32 %x, %1
+	br i1 %2 , label %then_0, label %endif_0
 then_0:
-	%2 = add i32 %x, 1
-	ret i32 %2
+	%3 = add i32 %x, 1
+	ret i32 %3
 	br label %endif_0
 endif_0:
 	ret i32 0
@@ -209,7 +210,6 @@ endif_0:
 };
 
 
-
 define void @queue_init(%Queue* %q, i32 %capacity) {
 	store %Queue zeroinitializer, %Queue* %q
 	%1 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 0
@@ -217,13 +217,13 @@ define void @queue_init(%Queue* %q, i32 %capacity) {
 	ret void
 }
 
-define i32 @queue_getCapacity(%Queue* %q) {
+define i32 @queue_capacity(%Queue* %q) {
 	%1 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 0
 	%2 = load i32, i32* %1
 	ret i32 %2
 }
 
-define i32 @queue_getSize(%Queue* %q) {
+define i32 @queue_size(%Queue* %q) {
 	%1 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
 	%2 = load i32, i32* %1
 	ret i32 %2
@@ -239,8 +239,10 @@ define i1 @queue_isEmpty(%Queue* %q) {
 define i1 @queue_isFull(%Queue* %q) {
 	%1 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
 	%2 = load i32, i32* %1
-	%3 = icmp eq i32 %2, 4
-	ret i1 %3
+	%3 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 0
+	%4 = load i32, i32* %3
+	%5 = icmp eq i32 %2, %4
+	ret i1 %5
 }
 
 define i32 @queue_putPosition(%Queue* %q) {
@@ -255,14 +257,17 @@ define i32 @queue_putPosition(%Queue* %q) {
 	store i32 %8, i32* %3
 	%9 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
 	%10 = load i32, i32* %9
-	%11 = icmp ult i32 %10, 3
-	br i1 %11 , label %then_0, label %endif_0
+	%11 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 0
+	%12 = load i32, i32* %11
+	%13 = sub i32 %12, 1
+	%14 = icmp ult i32 %10, %13
+	br i1 %14 , label %then_0, label %endif_0
 then_0:
-	%12 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
-	%13 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
-	%14 = load i32, i32* %13
-	%15 = add i32 %14, 1
-	store i32 %15, i32* %12
+	%15 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
+	%16 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
+	%17 = load i32, i32* %16
+	%18 = add i32 %17, 1
+	store i32 %18, i32* %15
 	br label %endif_0
 endif_0:
 	ret i32 %2

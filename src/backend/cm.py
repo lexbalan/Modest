@@ -901,12 +901,9 @@ def print_def(x):
 
 def run(module, outname):
 	from main import features
-	is_header = features.get('header')
+	#is_header = features.get('header')
 
-	if is_header: outname = outname + '.hm'
-	else: outname = outname + '.cm'
-
-	output_open(outname)
+	output_open(outname + '.m')
 
 	for x in module['defs']:
 		print_def(x)

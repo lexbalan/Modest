@@ -12,18 +12,18 @@
 
 void byteQueue128_init(byteQueue128_ByteQueue128 *q)
 {
-	queue_init((queue_Queue *)&q->queue, byteQueue128_capacity);
-	memset(&q->data, 0, sizeof(uint8_t[byteQueue128_capacity]));
+	queue_init((queue_Queue *)&q->queue, 128);
+	memset(&q->data, 0, sizeof(uint8_t[128]));
 }
 
-uint32_t byteQueue128_getCapacity(byteQueue128_ByteQueue128 *q)
+uint32_t byteQueue128_capacity(byteQueue128_ByteQueue128 *q)
 {
-	return queue_getCapacity((queue_Queue *)&q->queue);
+	return queue_capacity((queue_Queue *)&q->queue);
 }
 
-uint32_t byteQueue128_getSize(byteQueue128_ByteQueue128 *q)
+uint32_t byteQueue128_size(byteQueue128_ByteQueue128 *q)
 {
-	return queue_getSize((queue_Queue *)&q->queue);
+	return queue_size((queue_Queue *)&q->queue);
 }
 
 bool byteQueue128_isFull(byteQueue128_ByteQueue128 *q)

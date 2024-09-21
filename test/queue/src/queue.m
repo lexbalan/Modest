@@ -6,8 +6,6 @@ include "libc/stdio"
 
 
 export {
-	let bufVolume = 4
-
 	type Queue record {
 		capacity: Nat32
 		size: Nat32
@@ -22,12 +20,12 @@ export {
 	}
 
 	@inline
-	func getCapacity(q: *Queue) -> Nat32 {
+	func capacity(q: *Queue) -> Nat32 {
 		return q.capacity
 	}
 
 	@inline
-	func getSize(q: *Queue) -> Nat32 {
+	func size(q: *Queue) -> Nat32 {
 		return q.size
 	}
 
@@ -38,7 +36,7 @@ export {
 
 	@inline
 	func isFull(q: *Queue) -> Bool {
-		return q.size == bufVolume
+		return q.size == q.capacity
 	}
 
 
@@ -47,7 +45,7 @@ export {
 	func putPosition(q: *Queue) -> Nat32 {
 		let pos = q.p
 		q.p = next(q.capacity, q.p)
-		if q.size < (bufVolume - 1) {
+		if q.size < (q.capacity - 1) {
 			++q.size
 		}
 		return pos
@@ -69,7 +67,7 @@ export {
 
 @inline
 func next(capacity: Nat32, x: Nat32) -> Nat32 {
-	if x < bufVolume - 1 {
+	if x < capacity - 1 {
 		return x + 1
 	}
 	return 0

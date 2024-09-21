@@ -5,25 +5,26 @@ import "queue"
 
 
 export {
-	let capacity = 128
+	// nmae conflict!
+	//let capacity = 128
 
 	type ByteQueue128 record {
 		queue: queue.Queue
-		data: [capacity]Byte
+		data: [128]Byte
 	}
 
 
 	func init(q: *ByteQueue128) -> Unit {
-		queue.init(&q.queue, capacity=capacity)
+		queue.init(&q.queue, capacity=128)
 		q.data = []
 	}
 
-	func getCapacity(q: *ByteQueue128) -> Nat32 {
-		return queue.getCapacity(&q.queue)
+	func capacity(q: *ByteQueue128) -> Nat32 {
+		return queue.capacity(&q.queue)
 	}
 
-	func getSize(q: *ByteQueue128) -> Nat32 {
-		return queue.getSize(&q.queue)
+	func size(q: *ByteQueue128) -> Nat32 {
+		return queue.size(&q.queue)
 	}
 
 	func isFull(q: *ByteQueue128) -> Bool {
