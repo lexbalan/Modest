@@ -101,7 +101,7 @@ break_2:
 
 ; MODULE: main
 
-; print includes
+; -- print includes --
 
 %Str = type %Str8;
 %Char = type i8;
@@ -124,7 +124,6 @@ break_2:
 %Double = type double;
 %LongDouble = type double;
 
-
 %SocklenT = type i32;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
@@ -135,7 +134,6 @@ break_2:
 %PidT = type i32;
 %UidT = type i32;
 %GidT = type i32;
-
 
 %File = type i8;
 %FposT = type i8;
@@ -185,12 +183,13 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
-; end print includes
+; -- end print includes --
+; -- print imports --
+; -- end print imports --
 ; -- strings --
 @str1 = private constant [7 x i8] [i8 108, i8 105, i8 116, i8 116, i8 108, i8 101, i8 0]
 @str2 = private constant [4 x i8] [i8 98, i8 105, i8 103, i8 0]
 @str3 = private constant [11 x i8] [i8 37, i8 115, i8 45, i8 101, i8 110, i8 100, i8 105, i8 97, i8 110, i8 10, i8 0]
-
 
 define %Int @main() {
 	%1 = alloca i16, align 2

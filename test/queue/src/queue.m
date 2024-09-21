@@ -39,7 +39,6 @@ export {
 		return q.size == q.capacity
 	}
 
-
 	// you must check isFull(queue) before call 'putPosition'
 	@inlinehint
 	func putPosition(q: *Queue) -> Nat32 {
@@ -50,7 +49,6 @@ export {
 		}
 		return pos
 	}
-
 
 	// you must check isEmpty(queue) before call 'getPosition'
 	@inlinehint

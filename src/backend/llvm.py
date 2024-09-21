@@ -2264,22 +2264,33 @@ def print_strings(strings):
 	return
 
 
+printed = []
+
 def een(defs):
 	isa_prev = None
 	for x in defs:
 		isa = x['isa']
+		if not 'id' in x:
+			continue
+
+		# Тупейшая Защита от повторного определения
+		# (А они происходят тк импорты и инклуюды сложно сплетены и повтор.)
+		uid = x['module']['id'] + '/' + x['id']['str']
+
+		if uid in printed:
+			continue
+
+		printed.append(uid)
+		#print(uid)
 
 		if isa_prev != isa:
 			out("\n")
 			isa_prev = isa
 
-		#if isa == 'decl_func': print_decl_func(x)
-		#elif isa == 'decl_type': print_decl_type(x)
 		if isa == 'def_var': print_def_var(x)
 		elif isa == 'def_const': print_def_const(x)
 		elif isa == 'def_func': print_def_func(x)
 		elif isa == 'def_type': print_def_type(x)
-		elif isa == 'directive': pass
 
 
 # защита от повторного включения
@@ -2290,10 +2301,24 @@ def print_included(m):
 		if inc['id'] not in already_in:
 			already_in.append(inc['id'])
 			print_included(inc)
-
 			een(inc['defs'])
 			een(inc['export_defs'])
+#			out("\n; -- INCLUDED_DEFS --")
+#			een(inc['included_defs'])
+#			out("\n; -- END_INCLUDED_DEFS --")
 
+
+def print_imports(m):
+	for imp_id in m['imports']:
+		imp = m['imports'][imp_id]
+		#print(">>>> %s" % imp['id'])
+		print_included(imp)
+		print_imports(imp)
+
+		#for x in imp['export_defs']:
+		#	print("- %s" % x['id']['str'])
+
+		een(imp['export_defs'])
 
 
 separatorLine = "\n; " + '-' * 77
@@ -2306,19 +2331,23 @@ def print_module(m):
 
 	out("; MODULE: %s\n" % m['id'])
 
-	out("\n; print includes")
+	out("\n; -- print includes --")
 	print_included(m)
-	out("\n; end print includes")
+	out("\n; -- end print includes --")
+
+	out("\n; -- print imports --")
+	print_imports(m)
+	out("\n; -- end print imports --")
 
 	# печатаем декларации
 	# из экспортируемой части импортированных модулей
-	for imported_module_id in m['imports']:
+	"""for imported_module_id in m['imports']:
 		imp = m['imports'][imported_module_id]
 		out(separatorLine)
 		out("\n; declarations from: %s" % (imported_module_id))
 		out(separatorLine)
 		een(imp['export_defs'])
-		out("\n\n")
+		out("\n\n")"""
 
 	print_strings(m['strings'])
 

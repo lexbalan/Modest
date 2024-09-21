@@ -101,11 +101,9 @@ break_2:
 
 ; MODULE: byteQueue128
 
-; print includes
-; end print includes
-; -----------------------------------------------------------------------------
-; declarations from: queue
-; -----------------------------------------------------------------------------
+; -- print includes --
+; -- end print includes --
+; -- print imports --
 
 %Queue = type {
 	i32, 
@@ -122,8 +120,7 @@ declare i1 @queue_isEmpty(%Queue* %q)
 declare i1 @queue_isFull(%Queue* %q)
 declare i32 @queue_putPosition(%Queue* %q)
 declare i32 @queue_getPosition(%Queue* %q)
-
-
+; -- end print imports --
 ; -- strings --
 
 

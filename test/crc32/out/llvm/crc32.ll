@@ -101,8 +101,10 @@ break_2:
 
 ; MODULE: crc32
 
-; print includes
-; end print includes
+; -- print includes --
+; -- end print includes --
+; -- print imports --
+; -- end print imports --
 ; -- strings --
 
 define i32 @crc32_doHash([0 x %Byte]* %buf, i32 %len) {

@@ -101,8 +101,10 @@ break_2:
 
 ; MODULE: minmax
 
-; print includes
-; end print includes
+; -- print includes --
+; -- end print includes --
+; -- print imports --
+; -- end print imports --
 ; -- strings --
 
 define i32 @minmax_min_int32(i32 %a, i32 %b) {

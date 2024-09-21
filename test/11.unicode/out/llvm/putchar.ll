@@ -101,7 +101,7 @@ break_2:
 
 ; MODULE: putchar
 
-; print includes
+; -- print includes --
 
 %Str = type %Str8;
 %Char = type i8;
@@ -124,7 +124,6 @@ break_2:
 %Double = type double;
 %LongDouble = type double;
 
-
 %SocklenT = type i32;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
@@ -135,7 +134,6 @@ break_2:
 %PidT = type i32;
 %UidT = type i32;
 %GidT = type i32;
-
 
 %File = type i8;
 %FposT = type i8;
@@ -185,17 +183,13 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
-; end print includes
-; -----------------------------------------------------------------------------
-; declarations from: utf
-; -----------------------------------------------------------------------------
+; -- end print includes --
+; -- print imports --
 
 declare i8 @utf_utf32_to_utf8(i32 %c, [4 x i8]* %buf)
 declare i8 @utf_utf16_to_utf32([0 x i16]* %c, i32* %result)
-
-
+; -- end print imports --
 ; -- strings --
-
 
 define void @putchar_putchar8(i8 %c) {
 	call void @putchar_utf8_putchar(i8 %c)

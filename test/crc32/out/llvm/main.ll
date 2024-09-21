@@ -101,7 +101,7 @@ break_2:
 
 ; MODULE: main
 
-; print includes
+; -- print includes --
 
 %Str = type %Str8;
 %Char = type i8;
@@ -124,7 +124,6 @@ break_2:
 %Double = type double;
 %LongDouble = type double;
 
-
 %SocklenT = type i32;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
@@ -135,7 +134,6 @@ break_2:
 %PidT = type i32;
 %UidT = type i32;
 %GidT = type i32;
-
 
 %File = type i8;
 %FposT = type i8;
@@ -185,21 +183,17 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
-; end print includes
-; -----------------------------------------------------------------------------
-; declarations from: crc32
-; -----------------------------------------------------------------------------
+; -- end print includes --
+; -- print imports --
 
 declare i32 @crc32_doHash([0 x %Byte]* %buf, i32 %len)
-
-
+; -- end print imports --
 ; -- strings --
 @str1 = private constant [12 x i8] [i8 67, i8 82, i8 67, i8 51, i8 50, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
 @str2 = private constant [27 x i8] [i8 99, i8 114, i8 99, i8 51, i8 50, i8 46, i8 100, i8 111, i8 72, i8 97, i8 115, i8 104, i8 40, i8 34, i8 37, i8 115, i8 34, i8 41, i8 32, i8 61, i8 32, i8 37, i8 48, i8 56, i8 88, i8 10, i8 0]
 @str3 = private constant [10 x i8] [i8 49, i8 50, i8 51, i8 52, i8 53, i8 54, i8 55, i8 56, i8 57, i8 0]
 @str4 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 @str5 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
-
 
 
 @data = global [9 x %Byte] [

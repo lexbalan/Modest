@@ -101,7 +101,7 @@ break_2:
 
 ; MODULE: main
 
-; print includes
+; -- print includes --
 
 %Str = type %Str8;
 %Char = type i8;
@@ -124,7 +124,6 @@ break_2:
 %Double = type double;
 %LongDouble = type double;
 
-
 %SocklenT = type i32;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
@@ -135,7 +134,6 @@ break_2:
 %PidT = type i32;
 %UidT = type i32;
 %GidT = type i32;
-
 
 %File = type i8;
 %FposT = type i8;
@@ -185,10 +183,11 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
-; end print includes
-; -----------------------------------------------------------------------------
-; declarations from: putchar
-; -----------------------------------------------------------------------------
+; -- end print includes --
+; -- print imports --
+
+declare i8 @utf_utf32_to_utf8(i32 %c, [4 x i8]* %buf)
+declare i8 @utf_utf16_to_utf32([0 x i16]* %c, i32* %result)
 
 declare void @putchar_putchar8(i8 %c)
 declare void @putchar_putchar16(i16 %c)
@@ -199,8 +198,7 @@ declare void @putchar_utf32_putchar(i32 %c)
 declare void @putchar_utf8_puts(%Str8* %s)
 declare void @putchar_utf16_puts(%Str16* %s)
 declare void @putchar_utf32_puts(%Str32* %s)
-
-
+; -- end print imports --
 ; -- strings --
 @str1 = private constant [28 x i8] [i8 83, i8 45, i8 116, i8 45, i8 114, i8 45, i8 105, i8 45, i8 110, i8 45, i8 103, i8 45, i8 206, i8 169, i8 32, i8 240, i8 159, i8 144, i8 128, i8 240, i8 159, i8 142, i8 137, i8 240, i8 159, i8 166, i8 132, i8 0]
 @str2 = private constant [21 x i16] [i16 83, i16 45, i16 116, i16 45, i16 114, i16 45, i16 105, i16 45, i16 110, i16 45, i16 103, i16 45, i16 937, i16 32, i16 55357, i16 56320, i16 55356, i16 57225, i16 55358, i16 56708, i16 0]
@@ -208,7 +206,6 @@ declare void @putchar_utf32_puts(%Str32* %s)
 @str4 = private constant [2 x i8] [i8 10, i8 0]
 @str5 = private constant [2 x i8] [i8 10, i8 0]
 @str6 = private constant [2 x i8] [i8 10, i8 0]
-
 
 @ratSymbolUTF8 = constant [4 x i8] [
 	i8 240,

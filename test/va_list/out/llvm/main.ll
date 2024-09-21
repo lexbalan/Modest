@@ -104,7 +104,7 @@ break_2:
 
 ; MODULE: main
 
-; print includes
+; -- print includes --
 
 %Str = type %Str8;
 %Char = type i8;
@@ -127,7 +127,6 @@ break_2:
 %Double = type double;
 %LongDouble = type double;
 
-
 %SocklenT = type i32;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
@@ -138,7 +137,6 @@ break_2:
 %PidT = type i32;
 %UidT = type i32;
 %GidT = type i32;
-
 
 %File = type i8;
 %FposT = type i8;
@@ -188,7 +186,6 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
-
 
 
 declare %Int @access([0 x %ConstChar]* %path, %Int %amode)
@@ -276,7 +273,9 @@ declare %Int @unlink([0 x %ConstChar]* %path)
 declare %Int @usleep(%USecondsT %useconds)
 declare %PidT @vfork()
 declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
-; end print includes
+; -- end print includes --
+; -- print imports --
+; -- end print imports --
 ; -- strings --
 @str1 = private constant [19 x i8] [i8 77, i8 121, i8 32, i8 80, i8 114, i8 105, i8 110, i8 116, i8 102, i8 32, i8 84, i8 101, i8 115, i8 116, i8 32, i8 37, i8 100, i8 10, i8 0]
 @str2 = private constant [4 x i8] [i8 72, i8 105, i8 33, i8 0]
@@ -286,7 +285,6 @@ declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 @str6 = private constant [9 x i8] [i8 105, i8 32, i8 61, i8 32, i8 123, i8 105, i8 125, i8 10, i8 0]
 @str7 = private constant [9 x i8] [i8 110, i8 32, i8 61, i8 32, i8 123, i8 110, i8 125, i8 10, i8 0]
 @str8 = private constant [11 x i8] [i8 120, i8 32, i8 61, i8 32, i8 48, i8 120, i8 123, i8 120, i8 125, i8 10, i8 0]
-
 
 define %SSizeT @my_printf(%Str8* %format, ...) {
 	%1 = alloca i8*, align 1

@@ -101,8 +101,10 @@ break_2:
 
 ; MODULE: utf
 
-; print includes
-; end print includes
+; -- print includes --
+; -- end print includes --
+; -- print imports --
+; -- end print imports --
 ; -- strings --
 
 define i8 @utf_utf32_to_utf8(i32 %c, [4 x i8]* %buf) {
