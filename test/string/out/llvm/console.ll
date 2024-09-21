@@ -99,7 +99,7 @@ break_2:
 	ret i1 1
 }
 
-; MODULE: main
+; MODULE: console
 
 ; -- print includes --
 
@@ -188,94 +188,156 @@ declare void @perror(%ConstCharStr* %str)
 
 declare i8 @utf_utf32_to_utf8(i32 %c, [4 x i8]* %buf)
 declare i8 @utf_utf16_to_utf32([0 x i16]* %c, i32* %result)
-
-declare void @console_putchar8(i8 %c)
-declare void @console_putchar16(i16 %c)
-declare void @console_putchar32(i32 %c)
-declare void @console_putchar_utf8(i8 %c)
-declare void @console_putchar_utf16(i16 %c)
-declare void @console_putchar_utf32(i32 %c)
-declare void @console_puts8(%Str8* %s)
-declare void @console_puts16(%Str16* %s)
-declare void @console_puts32(%Str32* %s)
 ; -- end print imports --
 ; -- strings --
-@str1 = private constant [7 x i8] [i8 83, i8 116, i8 114, i8 105, i8 110, i8 103, i8 0]
-@str2 = private constant [9 x i16] [i16 83, i16 116, i16 114, i16 105, i16 110, i16 103, i16 45, i16 937, i16 0]
-@str3 = private constant [13 x i32] [i32 83, i32 116, i32 114, i32 105, i32 110, i32 103, i32 45, i32 937, i32 32, i32 128000, i32 127881, i32 129412, i32 0]
-@str4 = private constant [2 x i8] [i8 10, i8 0]
-@str5 = private constant [2 x i8] [i8 10, i8 0]
-@str6 = private constant [3 x i8] [i8 10, i8 10, i8 0]
-@str7 = private constant [2 x i8] [i8 10, i8 0]
-@str8 = private constant [2 x i8] [i8 10, i8 0]
-@str9 = private constant [3 x i8] [i8 10, i8 10, i8 0]
-@str10 = private constant [2 x i8] [i8 10, i8 0]
-@str11 = private constant [2 x i8] [i8 10, i8 0]
-@str12 = private constant [2 x i8] [i8 10, i8 0]
 
+define void @console_putchar8(i8 %c) {
+	call void @console_putchar_utf8(i8 %c)
+	ret void
+}
 
-@string8 = global [6 x i8] [
-	i8 83,
-	i8 116,
-	i8 114,
-	i8 105,
-	i8 110,
-	i8 103
-]
-@string16 = global [8 x i16] [
-	i16 83,
-	i16 116,
-	i16 114,
-	i16 105,
-	i16 110,
-	i16 103,
-	i16 45,
-	i16 937
-]
-@string32 = global [12 x i32] [
-	i32 83,
-	i32 116,
-	i32 114,
-	i32 105,
-	i32 110,
-	i32 103,
-	i32 45,
-	i32 937,
-	i32 32,
-	i32 128000,
-	i32 127881,
-	i32 129412
-]
-@ptr_to_string8 = global [0 x i8]* bitcast ([7 x i8]* @str1 to [0 x i8]*)
-@ptr_to_string16 = global [0 x i16]* bitcast ([9 x i16]* @str2 to [0 x i16]*)
-@ptr_to_string32 = global [0 x i32]* bitcast ([13 x i32]* @str3 to [0 x i32]*)
+define void @console_putchar16(i16 %c) {
+	call void @console_putchar_utf16(i16 %c)
+	ret void
+}
 
-define %Int @main() {
-	call void @console_putchar_utf8(i8 65)
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))
-	call void @console_putchar_utf16(i16 937)
-	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str5 to [0 x i8]*))
-	call void @console_putchar_utf32(i32 129412)
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str6 to [0 x i8]*))
-	%4 = bitcast [6 x i8]* @string8 to %Str8*
-	call void @console_puts8(%Str8* %4)
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str7 to [0 x i8]*))
-	%6 = bitcast [8 x i16]* @string16 to %Str16*
-	call void @console_puts16(%Str16* %6)
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str8 to [0 x i8]*))
-	%8 = bitcast [12 x i32]* @string32 to %Str32*
-	call void @console_puts32(%Str32* %8)
-	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([3 x i8]* @str9 to [0 x i8]*))
-	%10 = load [0 x i8]*, [0 x i8]** @ptr_to_string8
-	call void @console_puts8([0 x i8]* %10)
-	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str10 to [0 x i8]*))
-	%12 = load [0 x i16]*, [0 x i16]** @ptr_to_string16
-	call void @console_puts16([0 x i16]* %12)
-	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str11 to [0 x i8]*))
-	%14 = load [0 x i32]*, [0 x i32]** @ptr_to_string32
-	call void @console_puts32([0 x i32]* %14)
-	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str12 to [0 x i8]*))
-	ret %Int 0
+define void @console_putchar32(i32 %c) {
+	call void @console_putchar_utf32(i32 %c)
+	ret void
+}
+
+define void @console_putchar_utf8(i8 %c) {
+	%1 = sext i8 %c to i32
+	%2 = call %Int @putchar(i32 %1)
+	ret void
+}
+
+define void @console_putchar_utf16(i16 %c) {
+	%1 = alloca [2 x i16], align 2
+	%2 = getelementptr inbounds [2 x i16], [2 x i16]* %1, i32 0, i32 0
+	store i16 %c, i16* %2
+	%3 = getelementptr inbounds [2 x i16], [2 x i16]* %1, i32 0, i32 1
+	store i16 0, i16* %3
+	%4 = alloca i32, align 4
+	%5 = bitcast [2 x i16]* %1 to [0 x i16]*
+	%6 = call i8 @utf_utf16_to_utf32([0 x i16]* %5, i32* %4)
+	%7 = load i32, i32* %4
+	call void @console_putchar_utf32(i32 %7)
+	ret void
+}
+
+define void @console_putchar_utf32(i32 %c) {
+	%1 = alloca [4 x i8], align 1
+	%2 = call i8 @utf_utf32_to_utf8(i32 %c, [4 x i8]* %1)
+	%3 = sext i8 %2 to %Int
+	%4 = alloca i32, align 4
+	store i32 0, i32* %4
+	br label %again_1
+again_1:
+	%5 = load i32, i32* %4
+	%6 = icmp slt i32 %5, %3
+	br i1 %6 , label %body_1, label %break_1
+body_1:
+	%7 = load i32, i32* %4
+	%8 = getelementptr inbounds [4 x i8], [4 x i8]* %1, i32 0, i32 %7
+	%9 = load i8, i8* %8
+	call void @console_putchar_utf8(i8 %9)
+	%10 = load i32, i32* %4
+	%11 = add i32 %10, 1
+	store i32 %11, i32* %4
+	br label %again_1
+break_1:
+	ret void
+}
+
+define void @console_puts8(%Str8* %s) {
+	%1 = alloca i32, align 4
+	store i32 0, i32* %1
+	br label %again_1
+again_1:
+	br i1 1 , label %body_1, label %break_1
+body_1:
+	%2 = load i32, i32* %1
+	%3 = getelementptr inbounds %Str8, %Str8* %s, i32 0, i32 %2
+	%4 = load i8, i8* %3
+	%5 = icmp eq i8 %4, 0
+	br i1 %5 , label %then_0, label %endif_0
+then_0:
+	br label %break_1
+	br label %endif_0
+endif_0:
+	call void @console_putchar_utf8(i8 %4)
+	%7 = load i32, i32* %1
+	%8 = add i32 %7, 1
+	store i32 %8, i32* %1
+	br label %again_1
+break_1:
+	ret void
+}
+
+define void @console_puts16(%Str16* %s) {
+	%1 = alloca i32, align 4
+	store i32 0, i32* %1
+	br label %again_1
+again_1:
+	br i1 1 , label %body_1, label %break_1
+body_1:
+	; нельзя просто так взять и вызвать putchar_utf16
+	; тк в строке может быть суррогатная пара UTF_16 символов
+	%2 = load i32, i32* %1
+	%3 = getelementptr inbounds %Str16, %Str16* %s, i32 0, i32 %2
+	%4 = load i16, i16* %3
+	%5 = icmp eq i16 %4, 0
+	br i1 %5 , label %then_0, label %endif_0
+then_0:
+	br label %break_1
+	br label %endif_0
+endif_0:
+	%7 = alloca i32, align 4
+	%8 = load i32, i32* %1
+	%9 = getelementptr inbounds %Str16, %Str16* %s, i32 0, i32 %8
+	%10 = bitcast i16* %9 to [0 x i16]*
+	%11 = call i8 @utf_utf16_to_utf32([0 x i16]* %10, i32* %7)
+	%12 = icmp eq i8 %11, 0
+	br i1 %12 , label %then_1, label %endif_1
+then_1:
+	br label %break_1
+	br label %endif_1
+endif_1:
+	%14 = load i32, i32* %7
+	call void @console_putchar_utf32(i32 %14)
+	%15 = load i32, i32* %1
+	%16 = sext i8 %11 to i32
+	%17 = add i32 %15, %16
+	store i32 %17, i32* %1
+	br label %again_1
+break_1:
+	ret void
+}
+
+define void @console_puts32(%Str32* %s) {
+	%1 = alloca i32, align 4
+	store i32 0, i32* %1
+	br label %again_1
+again_1:
+	br i1 1 , label %body_1, label %break_1
+body_1:
+	%2 = load i32, i32* %1
+	%3 = getelementptr inbounds %Str32, %Str32* %s, i32 0, i32 %2
+	%4 = load i32, i32* %3
+	%5 = icmp eq i32 %4, 0
+	br i1 %5 , label %then_0, label %endif_0
+then_0:
+	br label %break_1
+	br label %endif_0
+endif_0:
+	call void @console_putchar_utf32(i32 %4)
+	%7 = load i32, i32* %1
+	%8 = add i32 %7, 1
+	store i32 %8, i32* %1
+	br label %again_1
+break_1:
+	ret void
 }
 
 

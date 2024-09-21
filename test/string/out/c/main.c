@@ -26,27 +26,27 @@ static uint32_t *ptr_to_string32 = U"String-Ω 🐀🎉🦄";
 
 int main()
 {
-	putchar_utf8_putchar('A');
+	console_putchar_utf8('A');
 	printf("\n");
-	putchar_utf16_putchar(u'Ω');
+	console_putchar_utf16(u'Ω');
 	printf("\n");
-	putchar_utf32_putchar(U'🦄');
+	console_putchar_utf32(U'🦄');
 
 	printf("\n\n");
 
-	putchar_utf8_puts((char *)&string8);
+	console_puts8((char *)&string8);
 	printf("\n");
-	putchar_utf16_puts((uint16_t *)&string16);
+	console_puts16((uint16_t *)&string16);
 	printf("\n");
-	putchar_utf32_puts((uint32_t *)&string32);
+	console_puts32((uint32_t *)&string32);
 
 	printf("\n\n");
 
-	putchar_utf8_puts(ptr_to_string8);
+	console_puts8(ptr_to_string8);
 	printf("\n");
-	putchar_utf16_puts(ptr_to_string16);
+	console_puts16(ptr_to_string16);
 	printf("\n");
-	putchar_utf32_puts(ptr_to_string32);
+	console_puts32(ptr_to_string32);
 	printf("\n");
 
 	return 0;

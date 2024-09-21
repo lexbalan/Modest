@@ -18,16 +18,16 @@ CM:
 
 LLVM:
 	mcc -o $(LLVMPREFIX)/main -mbackend=llvm -funsafe $(INDIR)/main.m
-	mcc -o $(LLVMPREFIX)/putchar -mbackend=llvm -funsafe ${MODEST_LIB}/lightfood/putchar.m
+	mcc -o $(LLVMPREFIX)/console -mbackend=llvm -funsafe ${MODEST_LIB}/lightfood/console.m
 	mcc -o $(LLVMPREFIX)/utf -mbackend=llvm -funsafe ${MODEST_LIB}/misc/utf.m
-	clang $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/putchar.ll $(LLVMPREFIX)/utf.ll
+	clang $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/console.ll $(LLVMPREFIX)/utf.ll
 
 
 C:
-	mcc -o $(CPREFIX)/putchar $(C_OPTIONS) -mbackend=c -funsafe ${MODEST_LIB}/lightfood/putchar.m
+	mcc -o $(CPREFIX)/console $(C_OPTIONS) -mbackend=c -funsafe ${MODEST_LIB}/lightfood/console.m
 	mcc -o $(CPREFIX)/utf $(C_OPTIONS) -mbackend=c -funsafe ${MODEST_LIB}/misc/utf.m
 	mcc -o $(CPREFIX)/main -mbackend=c -funsafe $(INDIR)/main.m
-	CC $(CPREFIX)/main.c $(CPREFIX)/putchar.c $(CPREFIX)/utf.c
+	CC $(CPREFIX)/main.c $(CPREFIX)/console.c $(CPREFIX)/utf.c
 
 
 clean:

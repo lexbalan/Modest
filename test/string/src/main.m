@@ -1,12 +1,12 @@
 // test/string/src/main.cm
 
 $pragma c_include "./utf.h"
-$pragma c_include "./putchar.h"
-
+$pragma c_include "./console.h"
 
 include "libc/ctypes64"
 include "libc/stdio"
-import "lightfood/putchar"
+
+import "lightfood/console"
 
 // constants with type String(Generic)
 let str8_example = "String"
@@ -25,27 +25,27 @@ var ptr_to_string32: *[]Char32 = str32_example
 
 
 func main() -> Int {
-	putchar.utf8_putchar("A")
+	console.putchar_utf8("A")
 	printf("\n")
-	putchar.utf16_putchar("Ω")
+	console.putchar_utf16("Ω")
 	printf("\n")
-	putchar.utf32_putchar("🦄")
+	console.putchar_utf32("🦄")
 
 	printf("\n\n")
 
-	putchar.utf8_puts(&string8)
+	console.puts8(&string8)
 	printf("\n")
-	putchar.utf16_puts(&string16)
+	console.puts16(&string16)
 	printf("\n")
-	putchar.utf32_puts(&string32)
+	console.puts32(&string32)
 
 	printf("\n\n")
 
-	putchar.utf8_puts(ptr_to_string8)
+	console.puts8(ptr_to_string8)
 	printf("\n")
-	putchar.utf16_puts(ptr_to_string16)
+	console.puts16(ptr_to_string16)
 	printf("\n")
-	putchar.utf32_puts(ptr_to_string32)
+	console.puts32(ptr_to_string32)
 	printf("\n")
 
 	return 0
