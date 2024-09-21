@@ -8,6 +8,7 @@ include "libc/stdio"
 
 import "lightfood/console"
 
+
 // constants with type String(Generic)
 let str8_example = "String"
 let str16_example = str8_example + "-Ω"
