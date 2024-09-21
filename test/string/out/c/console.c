@@ -12,7 +12,6 @@
 
 
 
-
 void console_putchar8(char c)
 {
 	console_putchar_utf8(c);
@@ -46,7 +45,7 @@ void console_putchar_utf16(uint16_t c)
 void console_putchar_utf32(uint32_t c)
 {
 	char decoded_buf[4];
-	const int n = (int)utf_utf32_to_utf8(c, (char *)&decoded_buf);
+	const int32_t n = (int32_t)utf_utf32_to_utf8(c, (char *)&decoded_buf);
 
 	int32_t i;
 	i = 0;

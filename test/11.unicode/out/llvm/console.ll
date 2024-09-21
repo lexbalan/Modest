@@ -229,7 +229,7 @@ define void @console_putchar_utf16(i16 %c) {
 define void @console_putchar_utf32(i32 %c) {
 	%1 = alloca [4 x i8], align 1
 	%2 = call i8 @utf_utf32_to_utf8(i32 %c, [4 x i8]* %1)
-	%3 = sext i8 %2 to %Int
+	%3 = sext i8 %2 to i32
 	%4 = alloca i32, align 4
 	store i32 0, i32* %4
 	br label %again_1

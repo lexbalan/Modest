@@ -12,7 +12,6 @@
 
 
 
-
 void console_putchar8(char c);
 void console_putchar16(uint16_t c);
 void console_putchar32(uint32_t c);

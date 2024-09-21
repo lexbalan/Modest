@@ -3,11 +3,9 @@
 $pragma do_not_include
 $pragma c_include "./utf.h"
 
-import "misc/utf"
+include "libc/stdio"  // for putchar()
 
-include "libc/ctypes64"
-// for putchar()
-include "libc/stdio"
+import "misc/utf"
 
 
 export func putchar8(c: Char8) -> Unit {
@@ -43,9 +41,9 @@ export func putchar_utf16(c: Char16) -> Unit {
 
 export func putchar_utf32(c: Char32) -> Unit {
 	var decoded_buf: [4]Char8
-	let n = Int utf.utf32_to_utf8(c, &decoded_buf)
+	let n = Int32 utf.utf32_to_utf8(c, &decoded_buf)
 
-	var i = 0
+	var i = Int32 0
 	while i < n {
 		let c = decoded_buf[i]
 		putchar_utf8(c)
