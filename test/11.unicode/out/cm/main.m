@@ -1,9 +1,9 @@
 
 @c_include "./utf.h"
-@c_include "./putchar.h"
+@c_include "./console.h"
 include "libc/ctypes64"
 include "libc/stdio"
-import "lightfood/putchar"
+import "lightfood/console"
 let ratSymbolUTF8 = [0xF0, 0x9F, 0x90, 0x80]
 let ratSymbolUTF16 = [0xD83D, 0xDC00]
 let ratSymbolUTF32 = 0x0001F400
@@ -45,14 +45,14 @@ func main() -> Int {
 	var str16: *Str16 = string16Const
 	var str32: *Str32 = string32Const
 
-	putchar.utf8_puts(str8)
-	putchar.utf8_puts("\n")
+	console.puts8(str8)
+	console.puts8("\n")
 
-	putchar.utf16_puts(str16)
-	putchar.utf8_puts("\n")
+	console.puts16(str16)
+	console.puts8("\n")
 
-	putchar.utf32_puts(str32)
-	putchar.utf8_puts("\n")
+	console.puts32(str32)
+	console.puts8("\n")
 
 	return 0
 }

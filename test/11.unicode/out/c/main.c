@@ -62,14 +62,14 @@ int main()
 	uint32_t *str32;
 	str32 = main_string32Const;
 
-	putchar_utf8_puts(str8);
-	putchar_utf8_puts("\n");
+	console_puts8(str8);
+	console_puts8("\n");
 
-	putchar_utf16_puts(str16);
-	putchar_utf8_puts("\n");
+	console_puts16(str16);
+	console_puts8("\n");
 
-	putchar_utf32_puts(str32);
-	putchar_utf8_puts("\n");
+	console_puts32(str32);
+	console_puts8("\n");
 
 	return 0;
 }

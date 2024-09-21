@@ -8,10 +8,10 @@
 
 #include "./utf.h"
 #include "./utf.h"
-#include "./putchar.h"
+#include "./console.h"
 #include <stdio.h>
 #include "./utf.h"
-#include "./putchar.h"
+#include "./console.h"
 
 
 
