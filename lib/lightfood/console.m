@@ -1,4 +1,4 @@
-// lightfood/putchar.m
+// lightfood/console.m
 
 $pragma do_not_include
 $pragma c_include "./utf.h"

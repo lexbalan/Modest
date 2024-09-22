@@ -101,7 +101,7 @@ break_2:
 
 ; MODULE: delay
 
-; print includes
+; -- print includes --
 
 %Str = type %Str8;
 %Char = type i8;
@@ -124,7 +124,6 @@ break_2:
 %Double = type double;
 %LongDouble = type double;
 
-
 %SocklenT = type i32;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
@@ -135,7 +134,6 @@ break_2:
 %PidT = type i32;
 %UidT = type i32;
 %GidT = type i32;
-
 
 %TimeT = type i32;
 %ClockT = type %UnsignedLong;
@@ -163,11 +161,12 @@ declare %Char* @ctime(%TimeT* %timer)
 declare %Struct_tm* @gmtime(%TimeT* %timer)
 declare %Struct_tm* @localtime(%TimeT* %timer)
 declare %SizeT @strftime(%Char* %ptr, %SizeT %maxsize, %ConstChar* %format, %Struct_tm* %timeptr)
-; end print includes
+; -- end print includes --
+; -- print imports --
+; -- end print imports --
 ; -- strings --
 
-
-define void @us(i64 %us) {
+define void @delay_us(i64 %us) {
 	%1 = call %ClockT @clock()
 	br label %again_1
 again_1:
@@ -182,15 +181,15 @@ break_1:
 	ret void
 }
 
-define void @ms(i64 %ms) {
+define void @delay_ms(i64 %ms) {
 	%1 = mul i64 %ms, 1000
-	call void @us(i64 %1)
+	call void @delay_us(i64 %1)
 	ret void
 }
 
-define void @sec(i64 %s) {
+define void @delay_sec(i64 %s) {
 	%1 = mul i64 %s, 1000000
-	call void @us(i64 %1)
+	call void @delay_us(i64 %1)
 	ret void
 }
 

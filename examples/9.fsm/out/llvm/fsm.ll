@@ -101,7 +101,7 @@ break_2:
 
 ; MODULE: fsm
 
-; print includes
+; -- print includes --
 
 %Str = type %Str8;
 %Char = type i8;
@@ -124,7 +124,6 @@ break_2:
 %Double = type double;
 %LongDouble = type double;
 
-
 %SocklenT = type i32;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
@@ -135,7 +134,6 @@ break_2:
 %PidT = type i32;
 %UidT = type i32;
 %GidT = type i32;
-
 
 %File = type i8;
 %FposT = type i8;
@@ -151,20 +149,20 @@ declare %Int @fgetpos(%File* %f, %FposT* %pos)
 declare %File* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
 declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
 declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
-declare %File* @freopen(%ConstCharStr* %filename, %ConstCharStr* %mode, %File* %f)
-declare %Int @fseek(%File* %stream, %LongInt %offset, %Int %whence)
+declare %File* @freopen(%ConstCharStr* %fname, %ConstCharStr* %mode, %File* %f)
+declare %Int @fseek(%File* %f, %LongInt %offset, %Int %whence)
 declare %Int @fsetpos(%File* %f, %FposT* %pos)
 declare %LongInt @ftell(%File* %f)
-declare %Int @remove(%ConstCharStr* %filename)
+declare %Int @remove(%ConstCharStr* %fname)
 declare %Int @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
 declare void @rewind(%File* %f)
-declare void @setbuf(%File* %f, %CharStr* %buffer)
-declare %Int @setvbuf(%File* %f, %CharStr* %buffer, %Int %mode, %SizeT %size)
+declare void @setbuf(%File* %f, %CharStr* %buf)
+declare %Int @setvbuf(%File* %f, %CharStr* %buf, %Int %mode, %SizeT %size)
 declare %File* @tmpfile()
 declare %CharStr* @tmpnam(%CharStr* %str)
 declare %Int @printf(%ConstCharStr* %s, ...)
 declare %Int @scanf(%ConstCharStr* %s, ...)
-declare %Int @fprintf(%File* %stream, %Str* %format, ...)
+declare %Int @fprintf(%File* %f, %Str* %format, ...)
 declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
 declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
@@ -185,12 +183,13 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
-; end print includes
+; -- end print includes --
+; -- print imports --
+; -- end print imports --
 ; -- strings --
 @str1 = private constant [12 x i8] [i8 102, i8 115, i8 109, i8 58, i8 58, i8 114, i8 117, i8 110, i8 40, i8 41, i8 10, i8 0]
 @str2 = private constant [10 x i8] [i8 101, i8 110, i8 116, i8 101, i8 114, i8 32, i8 37, i8 115, i8 10, i8 0]
 @str3 = private constant [9 x i8] [i8 101, i8 120, i8 105, i8 116, i8 32, i8 37, i8 115, i8 10, i8 0]
-
 
 
 
@@ -213,25 +212,9 @@ declare void @perror(%ConstCharStr* %str)
 };
 
 %FSM_Proc = type void (%FSM*)*;
-%FSM_StateDesc = type {
-	[8 x i8], 
-	%FSM_Proc, 
-	%FSM_Proc, 
-	%FSM_Proc
-};
-
-%UInt32 = type i32;
-%FSM = type {
-	[8 x i8], 
-	%UInt32, 
-	%UInt32, 
-	%UInt32, 
-	[16 x %FSM_StateDesc]
-};
 
 
-
-define %Str8* @state_no_name(%FSM* %fsm, i32 %state_no) {
+define %Str8* @fsm_state_no_name(%FSM* %fsm, i32 %state_no) {
 	%1 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 4
 	%2 = getelementptr inbounds [16 x %FSM_StateDesc], [16 x %FSM_StateDesc]* %1, i32 0, i32 %state_no
 	%3 = getelementptr inbounds %FSM_StateDesc, %FSM_StateDesc* %2, i32 0, i32 0
@@ -239,7 +222,7 @@ define %Str8* @state_no_name(%FSM* %fsm, i32 %state_no) {
 	ret %Str8* %4
 }
 
-define void @switch(%FSM* %fsm, i32 %state) {
+define void @fsm_switch(%FSM* %fsm, i32 %state) {
 	%1 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 2
 	store i32 %state, %UInt32* %1
 	%2 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 3
@@ -247,7 +230,7 @@ define void @switch(%FSM* %fsm, i32 %state) {
 	ret void
 }
 
-define void @run(%FSM* %fsm) {
+define void @fsm_run(%FSM* %fsm) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*))
 	%2 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 3
 	%3 = load %UInt32, %UInt32* %2

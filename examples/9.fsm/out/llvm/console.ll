@@ -99,7 +99,7 @@ break_2:
 	ret i1 1
 }
 
-; MODULE: main
+; MODULE: console
 
 ; -- print includes --
 
@@ -186,73 +186,158 @@ declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
 ; -- print imports --
 
-%TimeT = type i32;
-%ClockT = type %UnsignedLong;
-%Struct_tm = type {
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%LongInt, 
-	%ConstChar*
-};
-
-
-declare %ClockT @clock()
-declare %Double @difftime(%TimeT %end, %TimeT %beginning)
-declare %TimeT @mktime(%Struct_tm* %timeptr)
-declare %TimeT @time(%TimeT* %timer)
-declare %Char* @asctime(%Struct_tm* %timeptr)
-declare %Char* @ctime(%TimeT* %timer)
-declare %Struct_tm* @gmtime(%TimeT* %timer)
-declare %Struct_tm* @localtime(%TimeT* %timer)
-declare %SizeT @strftime(%Char* %ptr, %SizeT %maxsize, %ConstChar* %format, %Struct_tm* %timeptr)
-
-declare void @delay_us(i64 %us)
-declare void @delay_ms(i64 %ms)
-declare void @delay_sec(i64 %s)
-
-
-
-%UInt32 = type i32;
-%FSM_StateDesc = type {
-	[8 x i8], 
-	%FSM_Proc, 
-	%FSM_Proc, 
-	%FSM_Proc
-};
-
-
-
-%FSM = type {
-	[8 x i8], 
-	%UInt32, 
-	%UInt32, 
-	%UInt32, 
-	[16 x %FSM_StateDesc]
-};
-
-%FSM_Proc = type void (%FSM*)*;
-
-
-declare %Str8* @fsm_state_no_name(%FSM* %fsm, i32 %state_no)
-declare void @fsm_switch(%FSM* %fsm, i32 %state)
-declare void @fsm_run(%FSM* %fsm)
+declare i8 @utf_utf32_to_utf8(i32 %c, [4 x i8]* %buf)
+declare i8 @utf_utf16_to_utf32([0 x i16]* %c, i32* %result)
 ; -- end print imports --
 ; -- strings --
-@str1 = private constant [10 x i8] [i8 111, i8 102, i8 102, i8 95, i8 108, i8 111, i8 111, i8 112, i8 10, i8 0]
-@str2 = private constant [9 x i8] [i8 111, i8 110, i8 95, i8 108, i8 111, i8 111, i8 112, i8 10, i8 0]
-@str3 = private constant [22 x i8] [i8 98, i8 101, i8 97, i8 99, i8 111, i8 110, i8 95, i8 101, i8 110, i8 116, i8 114, i8 121, i8 32, i8 102, i8 114, i8 111, i8 109, i8 32, i8 37, i8 115, i8 10, i8 0]
-@str4 = private constant [13 x i8] [i8 98, i8 101, i8 97, i8 99, i8 111, i8 110, i8 95, i8 108, i8 111, i8 111, i8 112, i8 10, i8 0]
-@str5 = private constant [19 x i8] [i8 98, i8 101, i8 97, i8 99, i8 111, i8 110, i8 95, i8 101, i8 120, i8 105, i8 116, i8 32, i8 116, i8 111, i8 32, i8 37, i8 115, i8 10, i8 0]
+
+define void @console_putchar8(i8 %c) {
+	call void @console_putchar_utf8(i8 %c)
+	ret void
+}
+
+define void @console_putchar16(i16 %c) {
+	call void @console_putchar_utf16(i16 %c)
+	ret void
+}
+
+define void @console_putchar32(i32 %c) {
+	call void @console_putchar_utf32(i32 %c)
+	ret void
+}
+
+define void @console_putchar_utf8(i8 %c) {
+	%1 = sext i8 %c to i32
+	%2 = call %Int @putchar(i32 %1)
+	ret void
+}
+
+define void @console_putchar_utf16(i16 %c) {
+	%1 = alloca [2 x i16], align 2
+	%2 = getelementptr inbounds [2 x i16], [2 x i16]* %1, i32 0, i32 0
+	store i16 %c, i16* %2
+	%3 = getelementptr inbounds [2 x i16], [2 x i16]* %1, i32 0, i32 1
+	store i16 0, i16* %3
+	%4 = alloca i32, align 4
+	%5 = bitcast [2 x i16]* %1 to [0 x i16]*
+	%6 = call i8 @utf_utf16_to_utf32([0 x i16]* %5, i32* %4)
+	%7 = load i32, i32* %4
+	call void @console_putchar_utf32(i32 %7)
+	ret void
+}
+
+define void @console_putchar_utf32(i32 %c) {
+	%1 = alloca [4 x i8], align 1
+	%2 = call i8 @utf_utf32_to_utf8(i32 %c, [4 x i8]* %1)
+	%3 = sext i8 %2 to i32
+	%4 = alloca i32, align 4
+	store i32 0, i32* %4
+	br label %again_1
+again_1:
+	%5 = load i32, i32* %4
+	%6 = icmp slt i32 %5, %3
+	br i1 %6 , label %body_1, label %break_1
+body_1:
+	%7 = load i32, i32* %4
+	%8 = getelementptr inbounds [4 x i8], [4 x i8]* %1, i32 0, i32 %7
+	%9 = load i8, i8* %8
+	call void @console_putchar_utf8(i8 %9)
+	%10 = load i32, i32* %4
+	%11 = add i32 %10, 1
+	store i32 %11, i32* %4
+	br label %again_1
+break_1:
+	ret void
+}
+
+define void @console_puts8(%Str8* %s) {
+	%1 = alloca i32, align 4
+	store i32 0, i32* %1
+	br label %again_1
+again_1:
+	br i1 1 , label %body_1, label %break_1
+body_1:
+	%2 = load i32, i32* %1
+	%3 = getelementptr inbounds %Str8, %Str8* %s, i32 0, i32 %2
+	%4 = load i8, i8* %3
+	%5 = icmp eq i8 %4, 0
+	br i1 %5 , label %then_0, label %endif_0
+then_0:
+	br label %break_1
+	br label %endif_0
+endif_0:
+	call void @console_putchar_utf8(i8 %4)
+	%7 = load i32, i32* %1
+	%8 = add i32 %7, 1
+	store i32 %8, i32* %1
+	br label %again_1
+break_1:
+	ret void
+}
+
+define void @console_puts16(%Str16* %s) {
+	%1 = alloca i32, align 4
+	store i32 0, i32* %1
+	br label %again_1
+again_1:
+	br i1 1 , label %body_1, label %break_1
+body_1:
+	; нельзя просто так взять и вызвать putchar_utf16
+	; тк в строке может быть суррогатная пара UTF_16 символов
+	%2 = load i32, i32* %1
+	%3 = getelementptr inbounds %Str16, %Str16* %s, i32 0, i32 %2
+	%4 = load i16, i16* %3
+	%5 = icmp eq i16 %4, 0
+	br i1 %5 , label %then_0, label %endif_0
+then_0:
+	br label %break_1
+	br label %endif_0
+endif_0:
+	%7 = alloca i32, align 4
+	%8 = load i32, i32* %1
+	%9 = getelementptr inbounds %Str16, %Str16* %s, i32 0, i32 %8
+	%10 = bitcast i16* %9 to [0 x i16]*
+	%11 = call i8 @utf_utf16_to_utf32([0 x i16]* %10, i32* %7)
+	%12 = icmp eq i8 %11, 0
+	br i1 %12 , label %then_1, label %endif_1
+then_1:
+	br label %break_1
+	br label %endif_1
+endif_1:
+	%14 = load i32, i32* %7
+	call void @console_putchar_utf32(i32 %14)
+	%15 = load i32, i32* %1
+	%16 = sext i8 %11 to i32
+	%17 = add i32 %15, %16
+	store i32 %17, i32* %1
+	br label %again_1
+break_1:
+	ret void
+}
+
+define void @console_puts32(%Str32* %s) {
+	%1 = alloca i32, align 4
+	store i32 0, i32* %1
+	br label %again_1
+again_1:
+	br i1 1 , label %body_1, label %break_1
+body_1:
+	%2 = load i32, i32* %1
+	%3 = getelementptr inbounds %Str32, %Str32* %s, i32 0, i32 %2
+	%4 = load i32, i32* %3
+	%5 = icmp eq i32 %4, 0
+	br i1 %5 , label %then_0, label %endif_0
+then_0:
+	br label %break_1
+	br label %endif_0
+endif_0:
+	call void @console_putchar_utf32(i32 %4)
+	%7 = load i32, i32* %1
+	%8 = add i32 %7, 1
+	store i32 %8, i32* %1
+	br label %again_1
+break_1:
+	ret void
+}
 
 
-@cnt = global i8 zeroinitializer
-@fsm = global %FSM 
-	; cast_composite_to_composite
-	; extend
