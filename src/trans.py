@@ -2554,7 +2554,7 @@ def predefinition(id):
 			if y != None:
 				module_append(y, to_export=x['export'])
 	if not found:
-		error("unknown identifier", id['ti'])
+		error("unknown identifier '%s'" % id['str'], id['ti'])
 	#return y
 
 
@@ -2888,10 +2888,11 @@ def pre_def(ast, fdecl=False):
 
 		if isa == 'ast_definition':
 			if kind == 'type':
-				y = def_type(x)
+				if not 'defined' in x:
+					y = def_type(x)
 
-				add_spices(y, ast_atts=x['attributes'])
-				module_append(y, to_export=x['export'])
+					add_spices(y, ast_atts=x['attributes'])
+					module_append(y, to_export=x['export'])
 
 	# 2. def vars & consts
 	for x in ast:
