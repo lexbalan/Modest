@@ -16,6 +16,7 @@ struct main_SHA256_TestCase {
 	uint32_t input_data_len;
 
 	uint8_t expected_result[sha256_hashSize];
+	uint256_t expected_result256;
 };
 bool doTest(main_SHA256_TestCase *test);
 int main();
@@ -34,6 +35,8 @@ static main_SHA256_TestCase test0 = {
 		0xB0, 0x03, 0x61, 0xA3, 0x96, 0x17, 0x7A, 0x9C,
 		0xB4, 0x10, 0xFF, 0x61, 0xF2, 0x00, 0x15, 0xAD
 	}
+
+
 };
 static main_SHA256_TestCase test1 = {
 	.input_data = "Hello World!",
@@ -45,6 +48,8 @@ static main_SHA256_TestCase test1 = {
 		0xFC, 0x2D, 0x4B, 0x1F, 0xA3, 0xD6, 0x77, 0x28,
 		0x4A, 0xDD, 0xD2, 0x00, 0x12, 0x6D, 0x90, 0x69
 	}
+
+
 };
 static main_SHA256_TestCase *tests[2] = (main_SHA256_TestCase *[2]){(main_SHA256_TestCase *)&test0, (main_SHA256_TestCase *)&test1};
 

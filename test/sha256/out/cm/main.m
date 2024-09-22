@@ -12,6 +12,7 @@ type SHA256_TestCase record {
 	input_data_len: Nat32
 
 	expected_result: Hash
+	expected_result256: Nat256
 }
 var test0: SHA256_TestCase = SHA256_TestCase {
 	input_data = "abc"
@@ -23,6 +24,8 @@ var test0: SHA256_TestCase = SHA256_TestCase {
 		0xB0, 0x03, 0x61, 0xA3, 0x96, 0x17, 0x7A, 0x9C
 		0xB4, 0x10, 0xFF, 0x61, 0xF2, 0x00, 0x15, 0xAD
 	]
+
+
 }
 var test1: SHA256_TestCase = SHA256_TestCase {
 	input_data = "Hello World!"
@@ -34,6 +37,8 @@ var test1: SHA256_TestCase = SHA256_TestCase {
 		0xFC, 0x2D, 0x4B, 0x1F, 0xA3, 0xD6, 0x77, 0x28
 		0x4A, 0xDD, 0xD2, 0x00, 0x12, 0x6D, 0x90, 0x69
 	]
+
+
 }
 var tests: [2]*SHA256_TestCase = [&test0, &test1]
 func doTest(test: *SHA256_TestCase) -> Bool {

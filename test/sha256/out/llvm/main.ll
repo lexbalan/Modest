@@ -217,7 +217,8 @@ declare void @sha256_hash([0 x %Byte]* %msg, i32 %msgLen, %Hash* %outHash)
 %SHA256_TestCase = type {
 	[32 x i8], 
 	i32, 
-	%Hash
+	%Hash, 
+	i256
 };
 
 
@@ -290,7 +291,8 @@ declare void @sha256_hash([0 x %Byte]* %msg, i32 %msgLen, %Hash* %outHash)
 		%Byte 0,
 		%Byte 21,
 		%Byte 173
-	]
+	],
+	i256 0
 }
 @test1 = global %SHA256_TestCase {
 	[32 x i8] [
@@ -361,7 +363,8 @@ declare void @sha256_hash([0 x %Byte]* %msg, i32 %msgLen, %Hash* %outHash)
 		%Byte 109,
 		%Byte 144,
 		%Byte 105
-	]
+	],
+	i256 0
 }
 @tests = global [2 x %SHA256_TestCase*] 
 	; cast_composite_to_composite
