@@ -461,5 +461,80 @@ declare void @sha256_hash([0 x %Byte]* %msg, i32 %msgLen, %Hash* %outHash)
 	]
 }
 @tests = global [2 x %SHA256_TestCase*] 
-	; cast_composite_to_composite
-	; trunk
+	; cast_composite_to_composite[
+	%SHA256_TestCase* @test0,
+	%SHA256_TestCase* @test1
+]
+
+define i1 @doTest(%SHA256_TestCase* %test) {
+	%1 = alloca %Hash, align 1
+	%2 = getelementptr inbounds %SHA256_TestCase, %SHA256_TestCase* %test, i32 0, i32 0
+	%3 = bitcast [32 x i8]* %2 to [0 x %Byte]*
+	%4 = getelementptr inbounds %SHA256_TestCase, %SHA256_TestCase* %test, i32 0, i32 1
+	%5 = load i32, i32* %4
+	call void @sha256_hash([0 x %Byte]* %3, i32 %5, %Hash* %1)
+	%6 = getelementptr inbounds %SHA256_TestCase, %SHA256_TestCase* %test, i32 0, i32 0
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str1 to [0 x i8]*), [32 x i8]* %6)
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str2 to [0 x i8]*))
+	%9 = alloca i32, align 4
+	store i32 0, i32* %9
+	br label %again_1
+again_1:
+	%10 = load i32, i32* %9
+	%11 = sext i6 32 to i32
+	%12 = icmp slt i32 %10, %11
+	br i1 %12 , label %body_1, label %break_1
+body_1:
+	%13 = load i32, i32* %9
+	%14 = getelementptr inbounds %Hash, %Hash* %1, i32 0, i32 %13
+	%15 = load %Byte, %Byte* %14
+	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str3 to [0 x i8]*), %Byte %15)
+	%17 = load i32, i32* %9
+	%18 = add i32 %17, 1
+	store i32 %18, i32* %9
+	br label %again_1
+break_1:
+	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))
+	%20 = getelementptr inbounds %SHA256_TestCase, %SHA256_TestCase* %test, i32 0, i32 2
+	%21 = bitcast %Hash* %1 to i8*
+	%22 = bitcast %Hash* %20 to i8*
+	
+	%23 = call i1 (i8*, i8*, i64) @memeq( i8* %21, i8* %22, i64 32)
+	%24 = icmp ne i1 %23, 0
+	ret i1 %24
+}
+
+define %Int @main() {
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str5 to [0 x i8]*))
+	%2 = alloca i32, align 4
+	store i32 0, i32* %2
+	br label %again_1
+again_1:
+	%3 = load i32, i32* %2
+	%4 = icmp slt i32 %3, 16
+	br i1 %4 , label %body_1, label %break_1
+body_1:
+	%5 = load i32, i32* %2
+	%6 = getelementptr inbounds [2 x %SHA256_TestCase*], [2 x %SHA256_TestCase*]* @tests, i32 0, i32 %5
+	%7 = load %SHA256_TestCase*, %SHA256_TestCase** %6
+	%8 = bitcast %SHA256_TestCase* %7 to %SHA256_TestCase*
+	%9 = call i1 @doTest(%SHA256_TestCase* %8)
+	%10 = alloca %Str8*, align 8
+	store %Str8* bitcast ([7 x i8]* @str6 to [0 x i8]*), %Str8** %10
+	br i1 %9 , label %then_0, label %endif_0
+then_0:
+	store %Str8* bitcast ([7 x i8]* @str7 to [0 x i8]*), %Str8** %10
+	br label %endif_0
+endif_0:
+	%11 = load i32, i32* %2
+	%12 = load %Str8*, %Str8** %10
+	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str8 to [0 x i8]*), i32 %11, %Str8* %12)
+	%14 = load i32, i32* %2
+	%15 = add i32 %14, 1
+	store i32 %15, i32* %2
+	br label %again_1
+break_1:
+	ret %Int 0
+}
+
+
