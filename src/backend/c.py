@@ -174,7 +174,10 @@ def print_array_volume(t):
 			out(" * ")
 
 	else:
-		print_value(t['volume'])
+		if t['volume'] != None:
+			print_value(t['volume'])
+		else:
+			out("0")
 
 	out("]")
 
