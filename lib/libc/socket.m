@@ -7,7 +7,7 @@ $pragma c_include "arpa/inet.h"
 
 
 include "libc/ctypes64"
-include "libc/ctypes"
+
 
 export {
 	@property("type.id.c", "in_addr_t")

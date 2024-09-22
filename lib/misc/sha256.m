@@ -2,7 +2,6 @@
 
 $pragma do_not_include
 
-include "libc/ctypes"
 include "libc/string"
 
 

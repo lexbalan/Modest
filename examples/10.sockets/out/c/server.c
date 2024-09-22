@@ -19,7 +19,6 @@ int main();
 
 
 
-
 bool write_file(int sockfd)
 {
 	char buffer[server_bufSize];

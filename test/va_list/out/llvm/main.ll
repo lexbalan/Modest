@@ -126,7 +126,6 @@ break_2:
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
-
 %SocklenT = type i32;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;

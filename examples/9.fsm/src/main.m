@@ -4,7 +4,6 @@
 // (just for compiler test and language demonstration)
 
 include "libc/ctypes64"
-include "libc/ctypes"
 include "libc/stdio"
 
 import "lightfood/delay"

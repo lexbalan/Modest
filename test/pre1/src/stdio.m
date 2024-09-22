@@ -5,7 +5,7 @@ $pragma c_no_print
 
 $pragma c_include "stdio.h"
 
-include "./ctypes"
+include "./ctypes64"
 
 
 export type Opaque *Nat8

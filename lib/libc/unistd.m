@@ -7,7 +7,6 @@ $pragma c_include "unistd.h"
 
 
 include "libc/ctypes64"
-include "libc/ctypes"
 
 
 //@attribute("extern")

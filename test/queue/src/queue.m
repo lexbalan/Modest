@@ -1,7 +1,6 @@
 //module queue
 
 include "libc/ctypes64"
-include "libc/ctypes"
 include "libc/stdio"
 
 

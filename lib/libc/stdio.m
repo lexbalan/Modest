@@ -5,7 +5,6 @@ $pragma module_nodecorate
 $pragma c_include "stdio.h"
 
 include "libc/ctypes64"
-include "libc/ctypes"
 
 export {
 	@property("type.id.c", "FILE")

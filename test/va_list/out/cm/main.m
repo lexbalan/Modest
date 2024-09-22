@@ -1,6 +1,5 @@
 
 include "libc/ctypes64"
-include "libc/ctypes"
 include "libc/stdio"
 include "libc/unistd"
 func my_printf(format: *Str8, ...) -> SSizeT {

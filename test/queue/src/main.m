@@ -1,7 +1,6 @@
 // test/pre0/src/main.cm
 
 include "libc/ctypes64"
-include "libc/ctypes"
 include "libc/math"
 include "libc/stdio"
 

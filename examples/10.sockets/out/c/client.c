@@ -20,7 +20,6 @@ int main();
 
 
 
-
 bool send_file(FILE *fp, int sockfd)
 {
 	char data[client_bufSize];

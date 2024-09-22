@@ -4,7 +4,7 @@ $pragma do_not_include
 $pragma module_nodecorate
 $pragma c_include "sys/stat.h"
 
-import "libc/ctypes"
+import "libc/ctypes64"
 import "libc/time"
 
 

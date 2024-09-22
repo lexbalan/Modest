@@ -1,6 +1,5 @@
 
 include "libc/ctypes64"
-include "libc/ctypes"
 include "libc/stdio"
 @c_include "./crc32.h"
 import "misc/crc32"

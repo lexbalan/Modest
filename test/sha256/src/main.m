@@ -1,7 +1,6 @@
 // test/sha256/src/main.cm
 
 include "libc/ctypes64"
-include "libc/ctypes"
 include "libc/stdio"
 
 

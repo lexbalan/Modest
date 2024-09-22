@@ -5,7 +5,6 @@
 //$pragma c_include "./ff.h"
 
 include "libc/ctypes64"
-include "libc/ctypes"
 include "libc/stdio"
 
 @attribute("c_no_print")

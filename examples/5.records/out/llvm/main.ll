@@ -123,6 +123,16 @@ break_2:
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
+%SocklenT = type i32;
+%SizeT = type %UnsignedLongInt;
+%SSizeT = type %LongInt;
+%IntptrT = type i64;
+%PtrdiffT = type i8*;
+%OffT = type i64;
+%USecondsT = type i32;
+%PidT = type i32;
+%UidT = type i32;
+%GidT = type i32;
 
 
 declare %Double @acos(%Double %x)
@@ -204,17 +214,6 @@ declare %LongDouble @fdiml(%LongDouble %a, %LongDouble %b)
 declare %LongDouble @fmaxl(%LongDouble %a, %LongDouble %b)
 declare %LongDouble @fminl(%LongDouble %a, %LongDouble %b)
 declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
-
-%SocklenT = type i32;
-%SizeT = type %UnsignedLongInt;
-%SSizeT = type %LongInt;
-%IntptrT = type i64;
-%PtrdiffT = type i8*;
-%OffT = type i64;
-%USecondsT = type i32;
-%PidT = type i32;
-%UidT = type i32;
-%GidT = type i32;
 
 declare void @abort()
 declare %Int @abs(%Int %x)

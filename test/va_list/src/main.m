@@ -1,7 +1,6 @@
 // test/va/src/main.cm
 
 include "libc/ctypes64"
-include "libc/ctypes"
 include "libc/stdio"
 include "libc/unistd"
 

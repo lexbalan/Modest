@@ -1,6 +1,5 @@
 
 include "libc/ctypes64"
-include "libc/ctypes"
 include "libc/stdio"
 import "misc/sha256"
 @c_include "./sha256.h"

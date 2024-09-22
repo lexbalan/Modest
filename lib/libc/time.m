@@ -6,7 +6,6 @@ $pragma c_include "time.h"
 
 
 include "libc/ctypes64"
-include "libc/ctypes"
 
 export {
 	/* time in seconds since 1970 */

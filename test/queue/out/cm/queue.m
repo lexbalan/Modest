@@ -1,6 +1,5 @@
 
 include "libc/ctypes64"
-include "libc/ctypes"
 include "libc/stdio"
 func next(capacity: Nat32, x: Nat32) -> Nat32 {
 	if x < capacity - 1 {
