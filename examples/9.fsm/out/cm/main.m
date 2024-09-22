@@ -1,6 +1,5 @@
 
 include "libc/ctypes64"
-include "libc/ctypes"
 include "libc/stdio"
 import "lightfood/delay"
 import "fsm"
