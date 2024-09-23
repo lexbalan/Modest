@@ -16,10 +16,10 @@ $pragma do_not_include
   MaxLen: 268 435 455 байт (2 147 483 647 бит) - обнаружение
    одинарных, двойных, пакетных и всех нечетных ошибок
 */
-export func doHash(buf: *[]Byte, len: Nat32) -> Nat32 {
+export func doHash(buf: *[]Byte, len: Nat32) -> Word32 {
 	let tableSize = 256
-	var crc_table: [tableSize]Nat32
-	var crc: Nat32
+	var crc_table: [tableSize]Word32
+	var crc: Word32
 
 	//
 	// create table before
@@ -27,7 +27,7 @@ export func doHash(buf: *[]Byte, len: Nat32) -> Nat32 {
 
 	var i = Nat32 0
 	while i < tableSize {
-		crc = i
+		crc = Word32 i
 		var j = Nat32 0
 		while j < 8 {
 			if (crc and 1) != 0 {
@@ -50,7 +50,8 @@ export func doHash(buf: *[]Byte, len: Nat32) -> Nat32 {
 
 	i = 0
 	while i < len {
-		let yy = (crc xor Nat32 buf[i]) and 0xFF
+		let y = (crc xor Word32 buf[i]) and 0xFF
+		let yy = unsafe Nat8 y
 		crc = crc_table[yy] xor (crc >> 8)
 		++i
 	}

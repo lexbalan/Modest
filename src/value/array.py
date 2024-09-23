@@ -64,7 +64,7 @@ def array_can(to, from_type, method):
 
 	# String -> []CharX
 	if hlir_type.type_is_string(from_type):
-		return hlir_type.type_is_char(to['of']) or hlir_type.type_is_byte(to['of'])
+		return hlir_type.type_is_char(to['of']) or hlir_type.type_is_word(to['of'])
 
 	if not hlir_type.type_is_array(from_type):
 		return False

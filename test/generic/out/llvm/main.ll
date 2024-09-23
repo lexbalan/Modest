@@ -278,8 +278,8 @@ define i1 @test_generic_integer() {
 	%4 = alloca double, align 8
 	store double 1.0000000000000000, double* %4
 	; and to Byte
-	%5 = alloca %Byte, align 1
-	store %Byte 1, %Byte* %5
+	%5 = alloca i8, align 1
+	store i8 1, i8* %5
 	; explicit cast GenericInteger value
 	%6 = alloca i8, align 1
 	store i8 1, i8* %6

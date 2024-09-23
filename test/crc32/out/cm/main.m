@@ -5,7 +5,7 @@ include "libc/stdio"
 import "misc/crc32"
 let datastring = "123456789"
 let expected_hash = 0xCBF43926
-var data: [9]Byte = [9]Byte datastring
+var data: [9]Word8 = [9]Word8 datastring
 func main() -> Int {
 	printf("CRC32 test\n")
 

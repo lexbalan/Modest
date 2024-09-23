@@ -6,7 +6,7 @@ from symtab import Symtab
 
 typeUnit = None
 typeBool = None
-typeByte = None
+#typeByte = None
 typeChar8 = None
 typeChar16 = None
 typeChar32 = None
@@ -68,7 +68,6 @@ foundation = {
 def init():
 	global typeUnit
 	global typeBool
-	global typeByte
 	global typeChar8, typeChar16, typeChar32
 	global typeWord8, typeWord16, typeWord32, typeWord64, typeWord128, typeWord256
 	global typeInt8, typeInt16, typeInt32, typeInt64, typeInt128, typeInt256
@@ -89,11 +88,11 @@ def init():
 	typeUnit = hlir_type_unit()
 	typeBool = hlir_type_bool()
 
-	typeByte = hlir_type_integer(width=8, signed=False)
+	"""typeByte = hlir_type_integer(width=8, signed=False)
 	typeByte['kind'] = 'byte'
 	typeByte['id'] = {'str': 'Byte', 'c': 'uint8_t'}
 	typeByte['ops'] = BYTE_OPS
-	typeByte['llvm_alias'] = 'i8'
+	typeByte['llvm_alias'] = 'i8'"""
 
 	#
 	typeChar8 = hlir_type_char(width=8)

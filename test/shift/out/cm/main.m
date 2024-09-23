@@ -4,12 +4,12 @@ include "libc/stdio"
 func main() -> Int {
 	printf("test shift\n")
 
-	var c: Int32
+	var c: Word32
 
-	c = 1 << 31
+	c = Word32 1 << 31
 	printf("1 << 31 = 0x%x\n", c)
 
-	c = 0x80000000 >> 31
+	c = Word32 0x80000000 >> 31
 	printf("0x80000000 >> 31 = 0x%x\n", c)
 
 	return 0

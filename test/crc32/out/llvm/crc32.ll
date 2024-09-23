@@ -107,7 +107,7 @@ break_2:
 ; -- end print imports --
 ; -- strings --
 
-define i32 @crc32_doHash([0 x %Byte]* %buf, i32 %len) {
+define i32 @crc32_doHash([0 x i8]* %buf, i32 %len) {
 	%1 = alloca [256 x i32], align 4
 	%2 = alloca i32, align 4
 	;
@@ -122,43 +122,44 @@ again_1:
 	br i1 %5 , label %body_1, label %break_1
 body_1:
 	%6 = load i32, i32* %3
-	store i32 %6, i32* %2
-	%7 = alloca i32, align 4
-	store i32 0, i32* %7
+	%7 = bitcast i32 %6 to i32
+	store i32 %7, i32* %2
+	%8 = alloca i32, align 4
+	store i32 0, i32* %8
 	br label %again_2
 again_2:
-	%8 = load i32, i32* %7
-	%9 = icmp ult i32 %8, 8
-	br i1 %9 , label %body_2, label %break_2
+	%9 = load i32, i32* %8
+	%10 = icmp ult i32 %9, 8
+	br i1 %10 , label %body_2, label %break_2
 body_2:
-	%10 = load i32, i32* %2
-	%11 = and i32 %10, 1
-	%12 = icmp ne i32 %11, 0
-	br i1 %12 , label %then_0, label %else_0
+	%11 = load i32, i32* %2
+	%12 = and i32 %11, 1
+	%13 = icmp ne i32 %12, 0
+	br i1 %13 , label %then_0, label %else_0
 then_0:
-	%13 = load i32, i32* %2
-	%14 = lshr i32 %13, 1
-	%15 = xor i32 %14, 3988292384
-	store i32 %15, i32* %2
+	%14 = load i32, i32* %2
+	%15 = lshr i32 %14, 1
+	%16 = xor i32 %15, 3988292384
+	store i32 %16, i32* %2
 	br label %endif_0
 else_0:
-	%16 = load i32, i32* %2
-	%17 = lshr i32 %16, 1
-	store i32 %17, i32* %2
+	%17 = load i32, i32* %2
+	%18 = lshr i32 %17, 1
+	store i32 %18, i32* %2
 	br label %endif_0
 endif_0:
-	%18 = load i32, i32* %7
-	%19 = add i32 %18, 1
-	store i32 %19, i32* %7
+	%19 = load i32, i32* %8
+	%20 = add i32 %19, 1
+	store i32 %20, i32* %8
 	br label %again_2
 break_2:
-	%20 = load i32, i32* %3
-	%21 = getelementptr inbounds [256 x i32], [256 x i32]* %1, i32 0, i32 %20
-	%22 = load i32, i32* %2
-	store i32 %22, i32* %21
-	%23 = load i32, i32* %3
-	%24 = add i32 %23, 1
-	store i32 %24, i32* %3
+	%21 = load i32, i32* %3
+	%22 = getelementptr inbounds [256 x i32], [256 x i32]* %1, i32 0, i32 %21
+	%23 = load i32, i32* %2
+	store i32 %23, i32* %22
+	%24 = load i32, i32* %3
+	%25 = add i32 %24, 1
+	store i32 %25, i32* %3
 	br label %again_1
 break_1:
 	;
@@ -168,31 +169,32 @@ break_1:
 	store i32 0, i32* %3
 	br label %again_3
 again_3:
-	%25 = load i32, i32* %3
-	%26 = icmp ult i32 %25, %len
-	br i1 %26 , label %body_3, label %break_3
+	%26 = load i32, i32* %3
+	%27 = icmp ult i32 %26, %len
+	br i1 %27 , label %body_3, label %break_3
 body_3:
-	%27 = load i32, i32* %2
-	%28 = load i32, i32* %3
-	%29 = getelementptr inbounds [0 x %Byte], [0 x %Byte]* %buf, i32 0, i32 %28
-	%30 = load %Byte, %Byte* %29
-	%31 = zext %Byte %30 to i32
-	%32 = xor i32 %27, %31
-	%33 = and i32 %32, 255
-	%34 = getelementptr inbounds [256 x i32], [256 x i32]* %1, i32 0, i32 %33
-	%35 = load i32, i32* %34
-	%36 = load i32, i32* %2
-	%37 = lshr i32 %36, 8
-	%38 = xor i32 %35, %37
-	store i32 %38, i32* %2
-	%39 = load i32, i32* %3
-	%40 = add i32 %39, 1
-	store i32 %40, i32* %3
+	%28 = load i32, i32* %2
+	%29 = load i32, i32* %3
+	%30 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %29
+	%31 = load i8, i8* %30
+	%32 = zext i8 %31 to i32
+	%33 = xor i32 %28, %32
+	%34 = and i32 %33, 255
+	%35 = trunc i32 %34 to i8
+	%36 = getelementptr inbounds [256 x i32], [256 x i32]* %1, i32 0, i8 %35
+	%37 = load i32, i32* %36
+	%38 = load i32, i32* %2
+	%39 = lshr i32 %38, 8
+	%40 = xor i32 %37, %39
+	store i32 %40, i32* %2
+	%41 = load i32, i32* %3
+	%42 = add i32 %41, 1
+	store i32 %42, i32* %3
 	br label %again_3
 break_3:
-	%41 = load i32, i32* %2
-	%42 = xor i32 %41, 4294967295
-	ret i32 %42
+	%43 = load i32, i32* %2
+	%44 = xor i32 %43, 4294967295
+	ret i32 %44
 }
 
 

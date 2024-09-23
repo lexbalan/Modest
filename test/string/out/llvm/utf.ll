@@ -121,72 +121,75 @@ else_0:
 	%6 = icmp ule i32 %1, 2047
 	br i1 %6 , label %then_1, label %else_1
 then_1:
-	%7 = lshr i32 %1, 6
-	%8 = and i32 %7, 31
-	%9 = lshr i32 %1, 0
-	%10 = and i32 %9, 63
-	%11 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
-	%12 = or i32 192, %8
-	%13 = trunc i32 %12 to i8
-	store i8 %13, i8* %11
-	%14 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 1
-	%15 = or i32 128, %10
-	%16 = trunc i32 %15 to i8
-	store i8 %16, i8* %14
+	%7 = bitcast i32 %1 to i32
+	%8 = lshr i32 %7, 6
+	%9 = and i32 %8, 31
+	%10 = lshr i32 %7, 0
+	%11 = and i32 %10, 63
+	%12 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
+	%13 = or i32 192, %9
+	%14 = trunc i32 %13 to i8
+	store i8 %14, i8* %12
+	%15 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 1
+	%16 = or i32 128, %11
+	%17 = trunc i32 %16 to i8
+	store i8 %17, i8* %15
 	ret i8 2
 	br label %endif_1
 else_1:
-	%18 = icmp ule i32 %1, 65535
-	br i1 %18 , label %then_2, label %else_2
+	%19 = icmp ule i32 %1, 65535
+	br i1 %19 , label %then_2, label %else_2
 then_2:
-	%19 = lshr i32 %1, 12
-	%20 = and i32 %19, 15
-	%21 = lshr i32 %1, 6
-	%22 = and i32 %21, 63
-	%23 = lshr i32 %1, 0
+	%20 = bitcast i32 %1 to i32
+	%21 = lshr i32 %20, 12
+	%22 = and i32 %21, 15
+	%23 = lshr i32 %20, 6
 	%24 = and i32 %23, 63
-	%25 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
-	%26 = or i32 224, %20
-	%27 = trunc i32 %26 to i8
-	store i8 %27, i8* %25
-	%28 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 1
-	%29 = or i32 128, %22
-	%30 = trunc i32 %29 to i8
-	store i8 %30, i8* %28
-	%31 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 2
-	%32 = or i32 128, %24
-	%33 = trunc i32 %32 to i8
-	store i8 %33, i8* %31
+	%25 = lshr i32 %20, 0
+	%26 = and i32 %25, 63
+	%27 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
+	%28 = or i32 224, %22
+	%29 = trunc i32 %28 to i8
+	store i8 %29, i8* %27
+	%30 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 1
+	%31 = or i32 128, %24
+	%32 = trunc i32 %31 to i8
+	store i8 %32, i8* %30
+	%33 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 2
+	%34 = or i32 128, %26
+	%35 = trunc i32 %34 to i8
+	store i8 %35, i8* %33
 	ret i8 3
 	br label %endif_2
 else_2:
-	%35 = icmp ule i32 %1, 1114111
-	br i1 %35 , label %then_3, label %endif_3
+	%37 = icmp ule i32 %1, 1114111
+	br i1 %37 , label %then_3, label %endif_3
 then_3:
-	%36 = lshr i32 %1, 18
-	%37 = and i32 %36, 7
-	%38 = lshr i32 %1, 12
-	%39 = and i32 %38, 63
-	%40 = lshr i32 %1, 6
-	%41 = and i32 %40, 63
-	%42 = lshr i32 %1, 0
-	%43 = and i32 %42, 63
-	%44 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
-	%45 = or i32 240, %37
-	%46 = trunc i32 %45 to i8
-	store i8 %46, i8* %44
-	%47 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 1
-	%48 = or i32 128, %39
+	%38 = bitcast i32 %1 to i32
+	%39 = lshr i32 %38, 18
+	%40 = and i32 %39, 7
+	%41 = lshr i32 %38, 12
+	%42 = and i32 %41, 63
+	%43 = lshr i32 %38, 6
+	%44 = and i32 %43, 63
+	%45 = lshr i32 %38, 0
+	%46 = and i32 %45, 63
+	%47 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
+	%48 = or i32 240, %40
 	%49 = trunc i32 %48 to i8
 	store i8 %49, i8* %47
-	%50 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 2
-	%51 = or i32 128, %41
+	%50 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 1
+	%51 = or i32 128, %42
 	%52 = trunc i32 %51 to i8
 	store i8 %52, i8* %50
-	%53 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 3
-	%54 = or i32 128, %43
+	%53 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 2
+	%54 = or i32 128, %44
 	%55 = trunc i32 %54 to i8
 	store i8 %55, i8* %53
+	%56 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 3
+	%57 = or i32 128, %46
+	%58 = trunc i32 %57 to i8
+	store i8 %58, i8* %56
 	ret i8 4
 	br label %endif_3
 endif_3:
@@ -220,28 +223,31 @@ then_1:
 	br label %endif_1
 else_1:
 	%10 = alloca i32, align 4
-	%11 = and i32 %3, 1023
-	%12 = shl i32 %11, 10
-	store i32 %12, i32* %10
-	%13 = getelementptr inbounds [0 x i16], [0 x i16]* %c, i32 0, i32 1
-	%14 = load i16, i16* %13
-	%15 = zext i16 %14 to i32
-	%16 = icmp ult i32 %15, 56320
-	%17 = icmp ugt i32 %15, 57343
-	%18 = or i1 %16, %17
-	br i1 %18 , label %then_2, label %else_2
+	%11 = bitcast i32 %3 to i32
+	%12 = and i32 %11, 1023
+	%13 = shl i32 %12, 10
+	store i32 %13, i32* %10
+	%14 = getelementptr inbounds [0 x i16], [0 x i16]* %c, i32 0, i32 1
+	%15 = load i16, i16* %14
+	%16 = zext i16 %15 to i32
+	%17 = icmp ult i32 %16, 56320
+	%18 = icmp ugt i32 %16, 57343
+	%19 = or i1 %17, %18
+	br i1 %19 , label %then_2, label %else_2
 then_2:
 	;error("Illegal code sequence")
 	br label %endif_2
 else_2:
-	%19 = load i32, i32* %10
-	%20 = and i32 %15, 1023
-	%21 = or i32 %19, %20
-	store i32 %21, i32* %10
-	%22 = load i32, i32* %10
-	%23 = add i32 %22, 65536
-	%24 = bitcast i32 %23 to i32
-	store i32 %24, i32* %result
+	%20 = load i32, i32* %10
+	%21 = bitcast i32 %16 to i32
+	%22 = and i32 %21, 1023
+	%23 = or i32 %20, %22
+	store i32 %23, i32* %10
+	%24 = load i32, i32* %10
+	%25 = bitcast i32 %24 to i32
+	%26 = add i32 %25, 65536
+	%27 = bitcast i32 %26 to i32
+	store i32 %27, i32* %result
 	ret i8 2
 	br label %endif_2
 endif_2:

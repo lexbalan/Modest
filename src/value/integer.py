@@ -88,7 +88,7 @@ def integer_can(to, from_type, method):
 		return True
 	elif hlir_type.type_is_char(from_type):
 		return width_ok(to, from_type, method)
-	elif hlir_type.type_is_byte(from_type):
+	elif hlir_type.type_is_word(from_type):
 		return width_ok(to, from_type, method)
 	elif hlir_type.type_is_bool(from_type):
 		return width_ok(to, from_type, method)

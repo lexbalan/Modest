@@ -11,7 +11,6 @@ type SHA256_TestCase record {
 	input_data_len: Nat32
 
 	expected_result: Hash
-	expected_result256: Nat256
 }
 var test0: SHA256_TestCase = SHA256_TestCase {
 	input_data = "abc"
@@ -42,7 +41,7 @@ var test1: SHA256_TestCase = SHA256_TestCase {
 var tests: [2]*SHA256_TestCase = [&test0, &test1]
 func doTest(test: *SHA256_TestCase) -> Bool {
 	var test_hash: Hash
-	let msg = *[]Byte &test.input_data
+	let msg = *[]Word8 &test.input_data
 	let msg_len = test.input_data_len
 	sha256.hash(msg, msg_len, &test_hash)
 

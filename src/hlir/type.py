@@ -30,10 +30,10 @@ ARITHMETICAL_OPS = ['add', 'sub', 'mul', 'div', 'rem', 'negative']
 LOGICAL_OPS = ['or', 'xor', 'and', 'not']
 
 WORD_OPS = CONS_OP + EQ_OPS + LOGICAL_OPS
-INT_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS + LOGICAL_OPS
+INT_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS #+ LOGICAL_OPS
 FLOAT_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS
 BOOL_OPS = CONS_OP + EQ_OPS + LOGICAL_OPS
-BYTE_OPS = CONS_OP + EQ_OPS + LOGICAL_OPS
+#BYTE_OPS = CONS_OP + EQ_OPS + LOGICAL_OPS
 CHAR_OPS = CONS_OP + EQ_OPS
 ENUM_OPS = CONS_OP + EQ_OPS
 PTR_OPS = CONS_OP + EQ_OPS + ['deref']
@@ -135,9 +135,11 @@ def hlir_type_char(width, ti=None):
 
 def hlir_type_word(width, ti=None):
 	t = hlir_type_integer(width, signed=False, ti=ti)
-	t['ops'] = WORD_OPS,
+	t['kind'] = 'word'
+	t['ops'] = WORD_OPS
 	t['id']['str'] = 'Word%d' % width
 	return t
+
 
 def hlir_type_integer(width, signed=True, ti=None):
 	size = nbytes_for_bits(width)
@@ -376,8 +378,14 @@ def type_eq_integer(a, b, opt):
 	return True
 
 
-
 def type_eq_char(a, b, opt):
+	if a['width'] != b['width']:
+		return False
+
+	return True
+
+
+def type_eq_word(a, b, opt):
 	if a['width'] != b['width']:
 		return False
 
@@ -502,6 +510,7 @@ def type_eq(a, b, opt=[]):
 	elif k == 'enum': return type_eq_enum(a, b, opt)
 	elif k == 'float': return type_eq_float(a, b, opt)
 	elif k == 'char': return type_eq_char(a, b, opt)
+	elif k == 'word': return type_eq_word(a, b, opt)
 	elif k == 'undefined': return type_eq_undefined(a, b, opt)
 	elif k == 'va_list': return b['kind'] == 'va_list'
 	assert(False)
@@ -528,12 +537,16 @@ def type_is_bool(t):
 	return t['kind'] == 'bool'
 
 
-def type_is_byte(t):
-	return t['kind'] == 'byte'
+#def type_is_byte(t):
+#	return t['kind'] == 'byte'
 
 
 def type_is_char(t):
 	return t['kind'] == 'char'
+
+
+def type_is_word(t):
+	return t['kind'] == 'word'
 
 
 def type_is_string(t):
@@ -875,8 +888,8 @@ def type_print(t, print_aka=True):
 		type_print_record(t, print_aka)
 	elif type_is_bool(t):
 		print("Bool", end='')
-	elif type_is_byte(t):
-		print("Byte", end='')
+	elif type_is_word(t):
+		print("Word%d" % t['width'], end='')
 	elif type_is_char(t):
 		print("Char%d" % t['width'], end='')
 
@@ -963,13 +976,13 @@ def select_common_type(a, b):
 				return b
 
 
-		if a['kind'] == 'byte':
-			if b['kind'] == 'int':
+		if a['kind'] == 'word':
+			if b['kind'] == 'int' and b['generic']:
 				return a
 
 
-		if b['kind'] == 'byte':
-			if a['kind'] == 'int':
+		if b['kind'] == 'word':
+			if a['kind'] == 'int' and a['generic']:
 				return b
 
 		# array && string | string && array

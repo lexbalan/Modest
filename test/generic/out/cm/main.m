@@ -70,7 +70,7 @@ func test_generic_integer() -> Bool {
 	var g: Float32 = one
 
 	// and to Byte
-	var x: Byte = one
+	var x: Word8 = one
 
 
 	// explicit cast GenericInteger value

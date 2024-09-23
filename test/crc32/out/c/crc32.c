@@ -21,7 +21,7 @@ uint32_t crc32_doHash(uint8_t *buf, uint32_t len)
 	uint32_t i;
 	i = 0;
 	while (i < __tableSize) {
-		crc = i;
+		crc = (uint32_t)i;
 		uint32_t j;
 		j = 0;
 		while (j < 8) {
@@ -45,7 +45,8 @@ uint32_t crc32_doHash(uint8_t *buf, uint32_t len)
 
 	i = 0;
 	while (i < len) {
-		const uint32_t yy = (crc ^ (uint32_t)buf[i]) & 0xFF;
+		const uint32_t y = (crc ^ (uint32_t)buf[i]) & 0xFF;
+		const uint8_t yy = (uint8_t)y;
 		crc = crc_table[yy] ^ crc >> 8;
 		i = i + 1;
 	}

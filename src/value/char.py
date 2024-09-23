@@ -33,8 +33,8 @@ def char_can(to, from_type, method):
 		return width_ok(to, from_type, method)
 	elif type.type_is_integer(from_type):
 		return width_ok(to, from_type, method)
-	elif type.type_is_byte(from_type):
-		return True
+	elif type.type_is_word(from_type):
+		return width_ok(to, from_type, method)
 
 	return False
 

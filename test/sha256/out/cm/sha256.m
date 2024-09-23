@@ -1,12 +1,13 @@
 
+include "libc/ctypes64"
 include "libc/string"
 
 
 type Context record {
-	data: [64]Byte
+	data: [64]Word8
 	datalen: Nat32
 	bitlen: Nat64
-	state: [8]Nat32
+	state: [8]Word32
 }
 let initalState = [
 	0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A
@@ -30,41 +31,41 @@ let k = [
 	0x748F82EE, 0x78A5636F, 0x84C87814, 0x8CC70208
 	0x90BEFFFA, 0xA4506CEB, 0xBEF9A3F7, 0xC67178F2
 ]
-func rotleft(a: Nat32, b: Nat32) -> Nat32 {
+func rotleft(a: Word32, b: Nat32) -> Word32 {
 	return a << b or a >> 32 - b
 }
-func rotright(a: Nat32, b: Nat32) -> Nat32 {
+func rotright(a: Word32, b: Nat32) -> Word32 {
 	return a >> b or a << 32 - b
 }
-func ch(x: Nat32, y: Nat32, z: Nat32) -> Nat32 {
+func ch(x: Word32, y: Word32, z: Word32) -> Word32 {
 	return x and y xor notx and z
 }
-func maj(x: Nat32, y: Nat32, z: Nat32) -> Nat32 {
+func maj(x: Word32, y: Word32, z: Word32) -> Word32 {
 	return x and y xor x and z xor y and z
 }
-func ep0(x: Nat32) -> Nat32 {
+func ep0(x: Word32) -> Word32 {
 	return rotright(x, 2) xor rotright(x, 13) xor rotright(x, 22)
 }
-func ep1(x: Nat32) -> Nat32 {
+func ep1(x: Word32) -> Word32 {
 	return rotright(x, 6) xor rotright(x, 11) xor rotright(x, 25)
 }
-func sig0(x: Nat32) -> Nat32 {
+func sig0(x: Word32) -> Word32 {
 	return rotright(x, 7) xor rotright(x, 18) xor x >> 3
 }
-func sig1(x: Nat32) -> Nat32 {
+func sig1(x: Word32) -> Word32 {
 	return rotright(x, 17) xor rotright(x, 19) xor x >> 10
 }
 func contextInit(ctx: *Context) -> Unit {
 	ctx.state = initalState
 }
-func transform(ctx: *Context, data: *[]Byte) -> Unit {
-	var m: [64]Nat32 = [64]Nat32 []
+func transform(ctx: *Context, data: *[]Word8) -> Unit {
+	var m: [64]Word32 = [64]Word32 []
 
 	var i: Nat32 = Nat32 0
 	var j: Nat32 = Nat32 0
 
 	while i < 16 {
-		let x = Nat32 data[j + 0] << 24 or Nat32 data[j + 1] << 16 or Nat32 data[j + 2] << 08 or Nat32 data[j + 3] << 00
+		let x = Word32 data[j + 0] << 24 or Word32 data[j + 1] << 16 or Word32 data[j + 2] << 08 or Word32 data[j + 3] << 00
 
 		m[i] = x
 		j = j + 4
@@ -72,36 +73,36 @@ func transform(ctx: *Context, data: *[]Byte) -> Unit {
 	}
 
 	while i < 64 {
-		m[i] = sig1(m[i - 2]) + m[i - 7] + sig0(m[i - 15]) + m[i - 16]
+		m[i] = Word32 (Nat32 sig1(m[i - 2]) + Nat32 m[i - 7] + Nat32 sig0(m[i - 15]) + Nat32 m[i - 16])
 		i = i + 1
 	}
 
-	var x: [8]Nat32 = ctx.state
+	var x: [8]Word32 = ctx.state
 
 	i = 0
 	while i < 64 {
-		let t1 = x[7] + ep1(x[4]) + ch(x[4], x[5], x[6]) + k[i] + m[i]
-		let t2 = ep0(x[0]) + maj(x[0], x[1], x[2])
+		let t1 = Nat32 x[7] + Nat32 ep1(x[4]) + Nat32 ch(x[4], x[5], x[6]) + k[i] + Nat32 m[i]
+		let t2 = Nat32 ep0(x[0]) + Nat32 maj(x[0], x[1], x[2])
 
 		x[7] = x[6]
 		x[6] = x[5]
 		x[5] = x[4]
-		x[4] = x[3] + t1
+		x[4] = Word32 (Nat32 x[3] + t1)
 		x[3] = x[2]
 		x[2] = x[1]
 		x[1] = x[0]
-		x[0] = t1 + t2
+		x[0] = Word32 (t1 + t2)
 
 		i = i + 1
 	}
 
 	i = 0
 	while i < 8 {
-		ctx.state[i] = ctx.state[i] + x[i]
+		ctx.state[i] = Word32 (Nat32 ctx.state[i] + Nat32 x[i])
 		i = i + 1
 	}
 }
-func update(ctx: *Context, msg: *[]Byte, msgLen: Nat32) -> Unit {
+func update(ctx: *Context, msg: *[]Word8, msgLen: Nat32) -> Unit {
 	var i: Nat32 = Nat32 0
 	while i < msgLen {
 		ctx.data[ctx.datalen] = msg[i]
@@ -140,14 +141,14 @@ func final(ctx: *Context, outHash: *Hash) -> Unit {
 	// Append to the padding the total message's length in bits and transform.
 	ctx.bitlen = ctx.bitlen + Nat64 ctx.datalen * 8
 
-	ctx.data[63] = Byte (ctx.bitlen >> 00)
-	ctx.data[62] = Byte (ctx.bitlen >> 08)
-	ctx.data[61] = Byte (ctx.bitlen >> 16)
-	ctx.data[60] = Byte (ctx.bitlen >> 24)
-	ctx.data[59] = Byte (ctx.bitlen >> 32)
-	ctx.data[58] = Byte (ctx.bitlen >> 40)
-	ctx.data[57] = Byte (ctx.bitlen >> 48)
-	ctx.data[56] = Byte (ctx.bitlen >> 56)
+	ctx.data[63] = Word8 (Word32 ctx.bitlen >> 00)
+	ctx.data[62] = Word8 (Word32 ctx.bitlen >> 08)
+	ctx.data[61] = Word8 (Word32 ctx.bitlen >> 16)
+	ctx.data[60] = Word8 (Word32 ctx.bitlen >> 24)
+	ctx.data[59] = Word8 (Word32 ctx.bitlen >> 32)
+	ctx.data[58] = Word8 (Word32 ctx.bitlen >> 40)
+	ctx.data[57] = Word8 (Word32 ctx.bitlen >> 48)
+	ctx.data[56] = Word8 (Word32 ctx.bitlen >> 56)
 
 	transform(ctx, &ctx.data)
 
@@ -158,21 +159,21 @@ func final(ctx: *Context, outHash: *Hash) -> Unit {
 	i = 0
 	while i < 4 {
 		let sh = 24 - i * 8
-		outHash[i + 00] = Byte (ctx.state[0] >> sh)
-		outHash[i + 04] = Byte (ctx.state[1] >> sh)
-		outHash[i + 08] = Byte (ctx.state[2] >> sh)
-		outHash[i + 12] = Byte (ctx.state[3] >> sh)
-		outHash[i + 16] = Byte (ctx.state[4] >> sh)
-		outHash[i + 20] = Byte (ctx.state[5] >> sh)
-		outHash[i + 24] = Byte (ctx.state[6] >> sh)
-		outHash[i + 28] = Byte (ctx.state[7] >> sh)
+		outHash[i + 00] = Word8 (ctx.state[0] >> sh)
+		outHash[i + 04] = Word8 (ctx.state[1] >> sh)
+		outHash[i + 08] = Word8 (ctx.state[2] >> sh)
+		outHash[i + 12] = Word8 (ctx.state[3] >> sh)
+		outHash[i + 16] = Word8 (ctx.state[4] >> sh)
+		outHash[i + 20] = Word8 (ctx.state[5] >> sh)
+		outHash[i + 24] = Word8 (ctx.state[6] >> sh)
+		outHash[i + 28] = Word8 (ctx.state[7] >> sh)
 		i = i + 1
 	}
 }
 export let hashSize = 32
 
-export type Hash [hashSize]Byte
-export func hash(msg: *[]Byte, msgLen: Nat32, outHash: *Hash) -> Unit {
+export type Hash [hashSize]Word8
+export func hash(msg: *[]Word8, msgLen: Nat32, outHash: *Hash) -> Unit {
 	var ctx: Context = Context {}
 	contextInit(&ctx)
 	update(&ctx, msg, msgLen)

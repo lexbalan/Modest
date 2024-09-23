@@ -15,47 +15,47 @@ type Context record {
 	data: [64]Byte
 	datalen: Nat32
 	bitlen: Nat64
-	state: [8]Nat32
+	state: [8]Word32
 }
 
 
 @inline
-func rotleft(a: Nat32, b: Nat32) -> Nat32 {
+func rotleft(a: Word32, b: Nat32) -> Word32 {
 	return (a << b) or (a >> (32 - b))
 }
 
 @inline
-func rotright(a: Nat32, b: Nat32) -> Nat32 {
+func rotright(a: Word32, b: Nat32) -> Word32 {
 	return (a >> b) or (a << (32 - b))
 }
 
 @inline
-func ch(x: Nat32, y: Nat32, z: Nat32) -> Nat32 {
+func ch(x: Word32, y: Word32, z: Word32) -> Word32 {
 	return (x and y) xor (not x and z)
 }
 
 @inline
-func maj(x: Nat32, y: Nat32, z: Nat32) -> Nat32 {
+func maj(x: Word32, y: Word32, z: Word32) -> Word32 {
 	return (x and y) xor (x and z) xor (y and z)
 }
 
 @inline
-func ep0(x: Nat32) -> Nat32 {
+func ep0(x: Word32) -> Word32 {
 	return rotright(x, 2) xor rotright(x, 13) xor rotright(x, 22)
 }
 
 @inline
-func ep1(x: Nat32) -> Nat32 {
+func ep1(x: Word32) -> Word32 {
 	return rotright(x, 6) xor rotright(x, 11) xor rotright(x, 25)
 }
 
 @inline
-func sig0(x: Nat32) -> Nat32 {
+func sig0(x: Word32) -> Word32 {
 	return rotright(x, 7) xor rotright(x, 18) xor (x >> 3)
 }
 
 @inline
-func sig1(x: Nat32) -> Nat32 {
+func sig1(x: Word32) -> Word32 {
 	return rotright(x, 17) xor rotright(x, 19) xor (x >> 10)
 }
 
@@ -93,13 +93,13 @@ let k = [
 
 
 func transform(ctx: *Context, data: *[]Byte) {
-	var m = [64]Nat32 []
+	var m = [64]Word32 []
 
 	var i = Nat32 0
 	var j = Nat32 0
 
 	while i < 16 {
-		let x = (Nat32 data[j + 0] << 24) or (Nat32 data[j + 1] << 16) or (Nat32 data[j + 2] << 08) or (Nat32 data[j + 3] << 00)
+		let x = (Word32 data[j + 0] << 24) or (Word32 data[j + 1] << 16) or (Word32 data[j + 2] << 08) or (Word32 data[j + 3] << 00)
 
 		m[i] = x
 		j = j + 4
@@ -107,32 +107,32 @@ func transform(ctx: *Context, data: *[]Byte) {
 	}
 
 	while i < 64 {
-		m[i] = sig1(m[i - 2]) + m[i - 7] + sig0(m[i - 15]) + m[i - 16]
+		m[i] = Word32 (Nat32 sig1(m[i - 2]) + Nat32 m[i - 7] + Nat32 sig0(m[i - 15]) + Nat32 m[i - 16])
 		++i
 	}
 
-	var x: [8]Nat32 = ctx.state
+	var x: [8]Word32 = ctx.state
 
 	i = 0
 	while i < 64 {
-		let t1 = x[7] + ep1(x[4]) + ch(x[4], x[5], x[6]) + k[i] + m[i]
-		let t2 = ep0(x[0]) + maj(x[0], x[1], x[2])
+		let t1 = Nat32 x[7] + Nat32 ep1(x[4]) + Nat32 ch(x[4], x[5], x[6]) + k[i] + Nat32 m[i]
+		let t2 = Nat32 ep0(x[0]) + Nat32 maj(x[0], x[1], x[2])
 
 		x[7] = x[6]
 		x[6] = x[5]
 		x[5] = x[4]
-		x[4] = x[3] + t1
+		x[4] = Word32 (Nat32 x[3] + t1)
 		x[3] = x[2]
 		x[2] = x[1]
 		x[1] = x[0]
-		x[0] = t1 + t2
+		x[0] = Word32 (t1 + t2)
 
 		++i
 	}
 
 	i = 0
 	while i < 8 {
-		ctx.state[i] = ctx.state[i] + x[i]
+		ctx.state[i] = Word32 (Nat32 ctx.state[i] + Nat32 x[i])
 		++i
 	}
 }
@@ -179,14 +179,14 @@ func final(ctx: *Context, outHash: *Hash) {
 	// Append to the padding the total message's length in bits and transform.
 	ctx.bitlen = ctx.bitlen + Nat64 ctx.datalen * 8
 
-	ctx.data[63] = unsafe Byte (ctx.bitlen >> 00)
-	ctx.data[62] = unsafe Byte (ctx.bitlen >> 08)
-	ctx.data[61] = unsafe Byte (ctx.bitlen >> 16)
-	ctx.data[60] = unsafe Byte (ctx.bitlen >> 24)
-	ctx.data[59] = unsafe Byte (ctx.bitlen >> 32)
-	ctx.data[58] = unsafe Byte (ctx.bitlen >> 40)
-	ctx.data[57] = unsafe Byte (ctx.bitlen >> 48)
-	ctx.data[56] = unsafe Byte (ctx.bitlen >> 56)
+	ctx.data[63] = unsafe Byte (Word32 ctx.bitlen >> 00)
+	ctx.data[62] = unsafe Byte (Word32 ctx.bitlen >> 08)
+	ctx.data[61] = unsafe Byte (Word32 ctx.bitlen >> 16)
+	ctx.data[60] = unsafe Byte (Word32 ctx.bitlen >> 24)
+	ctx.data[59] = unsafe Byte (Word32 ctx.bitlen >> 32)
+	ctx.data[58] = unsafe Byte (Word32 ctx.bitlen >> 40)
+	ctx.data[57] = unsafe Byte (Word32 ctx.bitlen >> 48)
+	ctx.data[56] = unsafe Byte (Word32 ctx.bitlen >> 56)
 
 	transform(ctx, &ctx.data)
 

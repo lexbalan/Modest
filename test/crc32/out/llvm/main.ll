@@ -185,7 +185,7 @@ declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
 ; -- print imports --
 
-declare i32 @crc32_doHash([0 x %Byte]* %buf, i32 %len)
+declare i32 @crc32_doHash([0 x i8]* %buf, i32 %len)
 ; -- end print imports --
 ; -- strings --
 @str1 = private constant [12 x i8] [i8 67, i8 82, i8 67, i8 51, i8 50, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
@@ -195,22 +195,22 @@ declare i32 @crc32_doHash([0 x %Byte]* %buf, i32 %len)
 @str5 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 
 
-@data = global [9 x %Byte] [
-	%Byte 49,
-	%Byte 50,
-	%Byte 51,
-	%Byte 52,
-	%Byte 53,
-	%Byte 54,
-	%Byte 55,
-	%Byte 56,
-	%Byte 57
+@data = global [9 x i8] [
+	i8 49,
+	i8 50,
+	i8 51,
+	i8 52,
+	i8 53,
+	i8 54,
+	i8 55,
+	i8 56,
+	i8 57
 ]
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*))
-	%2 = bitcast [9 x %Byte]* @data to [0 x %Byte]*
-	%3 = call i32 @crc32_doHash([0 x %Byte]* %2, i32 9)
+	%2 = bitcast [9 x i8]* @data to [0 x i8]*
+	%3 = call i32 @crc32_doHash([0 x i8]* %2, i32 9)
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str2 to [0 x i8]*), %Str8* bitcast ([10 x i8]* @str3 to [0 x i8]*), i32 %3)
 	%5 = icmp eq i32 %3, 3421780262
 	br i1 %5 , label %then_0, label %else_0

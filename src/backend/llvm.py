@@ -1136,8 +1136,8 @@ def do_eval_access_module(x):
 
 # cast type a to type b
 def select_cast_operator(a, b):
-	if hlir_type.type_is_integer(a) or hlir_type.type_is_char(a) or hlir_type.type_is_bool(a) or hlir_type.type_is_byte(a):
-		if hlir_type.type_is_integer(b) or hlir_type.type_is_char(b) or hlir_type.type_is_bool(b) or hlir_type.type_is_byte(b):
+	if hlir_type.type_is_integer(a) or hlir_type.type_is_char(a) or hlir_type.type_is_bool(a) or hlir_type.type_is_word(a):
+		if hlir_type.type_is_integer(b) or hlir_type.type_is_char(b) or hlir_type.type_is_bool(b) or hlir_type.type_is_word(b):
 			signed = hlir_type.type_is_signed(b)
 
 			aw = align_bits_up(a['width'])
@@ -1482,7 +1482,7 @@ def do_eval_literal(x):
 	elif hlir_type.type_is_pointer(xt): return do_eval_pointer(x)
 	elif hlir_type.type_is_char(xt): return llvm_value_num(xt, x['asset'])
 	elif hlir_type.type_is_enum(xt): return llvm_value_num(xt, x['asset'])
-	elif hlir_type.type_is_byte(xt): return llvm_value_num(xt, x['asset'])
+	elif hlir_type.type_is_word(xt): return llvm_value_num(xt, x['asset'])
 	else:
 		error("do_eval_literal: unknown literal", x['ti'])
 		value_print(x)

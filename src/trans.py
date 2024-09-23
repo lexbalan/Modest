@@ -371,11 +371,20 @@ def init():
 	root_symtab.type_add('Unit', foundation.typeUnit)
 	root_symtab.type_add('Bool', foundation.typeBool)
 
-	root_symtab.type_add('Byte', foundation.typeByte)
 
 	root_symtab.type_add('Char8', foundation.typeChar8)
 	root_symtab.type_add('Char16', foundation.typeChar16)
 	root_symtab.type_add('Char32', foundation.typeChar32)
+
+
+	root_symtab.type_add('Byte', foundation.typeWord8)
+
+	root_symtab.type_add('Word8', foundation.typeWord8)
+	root_symtab.type_add('Word16', foundation.typeWord16)
+	root_symtab.type_add('Word32', foundation.typeWord32)
+	root_symtab.type_add('Word64', foundation.typeWord64)
+	root_symtab.type_add('Word128', foundation.typeWord128)
+	root_symtab.type_add('Word256', foundation.typeWord256)
 
 	root_symtab.type_add('Int8', foundation.typeInt8)
 	root_symtab.type_add('Int16', foundation.typeInt16)
@@ -391,12 +400,6 @@ def init():
 	root_symtab.type_add('Nat128', foundation.typeNat128)
 	root_symtab.type_add('Nat256', foundation.typeNat256)
 
-	root_symtab.type_add('Word8', foundation.typeWord8)
-	root_symtab.type_add('Word16', foundation.typeWord16)
-	root_symtab.type_add('Word32', foundation.typeWord32)
-	root_symtab.type_add('Word64', foundation.typeWord64)
-	root_symtab.type_add('Word128', foundation.typeWord128)
-	root_symtab.type_add('Word256', foundation.typeWord256)
 
 	#root_symtab.type_add('Float16', foundation.typeFloat16)
 	root_symtab.type_add('Float32', foundation.typeFloat32)
@@ -743,8 +746,8 @@ def do_value_shift(x):
 	l = do_rvalue(x['left'])
 	r = do_rvalue(x['right'])
 
-	if not hlir_type.type_is_integer(l['type']):
-		error("expected integer value", x['left'])
+	if not hlir_type.type_is_word(l['type']):
+		error("expected word value", x['left'])
 
 	if not hlir_type.type_is_integer(r['type']):
 		error("expected integer value", x['right'])
@@ -895,15 +898,6 @@ def do_value_bin(x):
 	if value_is_bad(l) or value_is_bad(r):
 		return value_bad(x)
 
-	# Check is valid type for this operation
-
-	if not op in l['type']['ops']:
-		error("unsuitable value type for '%s' operation" % op, l)
-		return value_bad(x)
-
-	if not op in r['type']['ops']:
-		error("unsuitable value type for '%s' operation" % op, r)
-		return value_bad(x)
 
 	if op == 'add':
 		if hlir_type.type_is_array(l['type']) and 	hlir_type.type_is_array(r['type']):
@@ -925,6 +919,17 @@ def do_value_bin(x):
 	if ct != None:
 		l = value_cons_implicit(ct, l)
 		r = value_cons_implicit(ct, r)
+
+	# Check type is valid for the operation
+
+	if not op in l['type']['ops']:
+		error("unsuitable value type for '%s' operation" % op, l)
+		return value_bad(x)
+
+	if not op in r['type']['ops']:
+		error("unsuitable value type for '%s' operation" % op, r)
+		return value_bad(x)
+
 
 	# types must be equal
 	if not hlir_type.type_eq(l['type'], r['type'], x['ti']):
