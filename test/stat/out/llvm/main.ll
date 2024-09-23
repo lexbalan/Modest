@@ -99,19 +99,13 @@ break_2:
 	ret i1 1
 }
 
+; MODULE: main
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/system.hm
-
-
-
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
-
-
+; -- print includes --
 
 %Str = type %Str8;
 %Char = type i8;
-%ConstChar = type i8;
+%ConstChar = type %Char;
 %SignedChar = type i8;
 %UnsignedChar = type i8;
 %Short = type i16;
@@ -129,16 +123,9 @@ break_2:
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
-
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
-
-
-
-
 %SocklenT = type i32;
-%SizeT = type i64;
-%SSizeT = type i64;
+%SizeT = type %UnsignedLongInt;
+%SSizeT = type %LongInt;
 %IntptrT = type i64;
 %PtrdiffT = type i8*;
 %OffT = type i64;
@@ -147,118 +134,81 @@ break_2:
 %UidT = type i32;
 %GidT = type i32;
 
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
-
-
-
-
-%File = type opaque
-%FposT = type opaque
-
+%File = type i8;
+%FposT = type i8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 
 
-declare i32 @fclose(%File* %f)
-declare i32 @feof(%File* %f)
-declare i32 @ferror(%File* %f)
-declare i32 @fflush(%File* %f)
-declare i32 @fgetpos(%File* %f, %FposT* %pos)
+declare %Int @fclose(%File* %f)
+declare %Int @feof(%File* %f)
+declare %Int @ferror(%File* %f)
+declare %Int @fflush(%File* %f)
+declare %Int @fgetpos(%File* %f, %FposT* %pos)
 declare %File* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
-declare i64 @fread(i8* %buf, i64 %size, i64 %count, %File* %f)
-declare i64 @fwrite(i8* %buf, i64 %size, i64 %count, %File* %f)
-declare %File* @freopen(%ConstCharStr* %filename, %ConstCharStr* %mode, %File* %f)
-declare i32 @fseek(%File* %stream, i64 %offset, i32 %whence)
-declare i32 @fsetpos(%File* %f, %FposT* %pos)
-declare i64 @ftell(%File* %f)
-declare i32 @remove(%ConstCharStr* %filename)
-declare i32 @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
+declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
+declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
+declare %File* @freopen(%ConstCharStr* %fname, %ConstCharStr* %mode, %File* %f)
+declare %Int @fseek(%File* %f, %LongInt %offset, %Int %whence)
+declare %Int @fsetpos(%File* %f, %FposT* %pos)
+declare %LongInt @ftell(%File* %f)
+declare %Int @remove(%ConstCharStr* %fname)
+declare %Int @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
 declare void @rewind(%File* %f)
-declare void @setbuf(%File* %f, %CharStr* %buffer)
-
-
-declare i32 @setvbuf(%File* %f, %CharStr* %buffer, i32 %mode, i64 %size)
+declare void @setbuf(%File* %f, %CharStr* %buf)
+declare %Int @setvbuf(%File* %f, %CharStr* %buf, %Int %mode, %SizeT %size)
 declare %File* @tmpfile()
 declare %CharStr* @tmpnam(%CharStr* %str)
-declare i32 @printf(%ConstCharStr* %s, ...)
-declare i32 @scanf(%ConstCharStr* %s, ...)
-declare i32 @fprintf(%File* %stream, %Str* %format, ...)
-declare i32 @fscanf(%File* %f, %ConstCharStr* %format, ...)
-declare i32 @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
-declare i32 @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare i32 @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
-declare i32 @vprintf(%ConstCharStr* %format, i8* %args)
-declare i32 @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
-declare i32 @vsnprintf(%CharStr* %str, i64 %n, %ConstCharStr* %format, i8* %args)
-declare i32 @__vsnprintf_chk(%CharStr* %dest, i64 %len, i32 %flags, i64 %dstlen, %ConstCharStr* %format, i8* %arg)
-declare i32 @fgetc(%File* %f)
-declare i32 @fputc(i32 %char, %File* %f)
-declare %CharStr* @fgets(%CharStr* %str, i32 %n, %File* %f)
-declare i32 @fputs(%ConstCharStr* %str, %File* %f)
-declare i32 @getc(%File* %f)
-declare i32 @getchar()
+declare %Int @printf(%ConstCharStr* %s, ...)
+declare %Int @scanf(%ConstCharStr* %s, ...)
+declare %Int @fprintf(%File* %f, %Str* %format, ...)
+declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
+declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
+declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
+declare %Int @fgetc(%File* %f)
+declare %Int @fputc(%Int %char, %File* %f)
+declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
+declare %Int @fputs(%ConstCharStr* %str, %File* %f)
+declare %Int @getc(%File* %f)
+declare %Int @getchar()
 declare %CharStr* @gets(%CharStr* %str)
-declare i32 @putc(i32 %char, %File* %f)
-declare i32 @putchar(i32 %char)
-declare i32 @puts(%ConstCharStr* %str)
-declare i32 @ungetc(i32 %char, %File* %f)
+declare %Int @putc(%Int %char, %File* %f)
+declare %Int @putchar(%Int %char)
+declare %Int @puts(%ConstCharStr* %str)
+declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
 
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/time.hm
-
-
-
-
 %TimeT = type i32;
-%ClockT = type i64;
+%ClockT = type %UnsignedLong;
 %Struct_tm = type {
-	i32, 
-	i32, 
-	i32, 
-	i32, 
-	i32, 
-	i32, 
-	i32, 
-	i32, 
-	i32, 
-	i64, 
-	i8*
+	%Int, 
+	%Int, 
+	%Int, 
+	%Int, 
+	%Int, 
+	%Int, 
+	%Int, 
+	%Int, 
+	%Int, 
+	%LongInt, 
+	%ConstChar*
 };
 
 
-
-declare i64 @clock()
-
-
-declare double @difftime(i32 %end, i32 %beginning)
-
-
-declare i32 @mktime(%Struct_tm* %timeptr)
-
-
-declare i32 @time(i32* %timer)
-
-
-declare i8* @asctime(%Struct_tm* %timeptr)
-
-
-declare i8* @ctime(i32* %timer)
-
-
-declare %Struct_tm* @gmtime(i32* %timer)
-
-
-declare %Struct_tm* @localtime(i32* %timer)
-
-
-declare i64 @strftime(i8* %ptr, i64 %maxsize, i8* %format, %Struct_tm* %timeptr)
-
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stat.hm
-
-
+declare %ClockT @clock()
+declare %Double @difftime(%TimeT %end, %TimeT %beginning)
+declare %TimeT @mktime(%Struct_tm* %timeptr)
+declare %TimeT @time(%TimeT* %timer)
+declare %Char* @asctime(%Struct_tm* %timeptr)
+declare %Char* @ctime(%TimeT* %timer)
+declare %Struct_tm* @gmtime(%TimeT* %timer)
+declare %Struct_tm* @localtime(%TimeT* %timer)
+declare %SizeT @strftime(%Char* %ptr, %SizeT %maxsize, %ConstChar* %format, %Struct_tm* %timeptr)
 
 %DevT = type i32;
 %InoT = type i64;
@@ -269,31 +219,27 @@ declare i64 @strftime(i8* %ptr, i64 %maxsize, i8* %format, %Struct_tm* %timeptr)
 %BlkSizeT = type i32;
 %BlkCntT = type i64;
 %DarwinIno64T = type i64;
-
-
 %DarwinTimeT = type i64;
 %Timespec = type {
-	i64, 
-	i64
+	%DarwinTimeT, 
+	%Long
 };
 
-
-
 %Stat = type {
-	i32, 
-	i16, 
-	i16, 
-	i64, 
-	i32, 
-	i32, 
-	i32, 
+	%DevT, 
+	%ModeT, 
+	%NLinkT, 
+	%DarwinIno64T, 
+	%UIDT, 
+	%GIDT, 
+	%DevT, 
 	%Timespec, 
 	%Timespec, 
 	%Timespec, 
 	%Timespec, 
-	i64, 
-	i64, 
-	i32, 
+	%OffT, 
+	%BlkCntT, 
+	%BlkSizeT, 
 	i32, 
 	i32, 
 	i32, 
@@ -302,12 +248,67 @@ declare i64 @strftime(i8* %ptr, i64 %maxsize, i8* %format, %Struct_tm* %timeptr)
 
 
 
-declare i32 @"\01_stat"([0 x i8]* %path, %Stat* %stat)
+declare %Int @"\01_stat"([0 x %ConstChar]* %path, %Stat* %stat)
+define i1 @s_ISDIR(%ModeT %m) {
+	%1 = bitcast %ModeT %m to i16
+	%2 = and i16 %1, 61440
+	%3 = icmp eq i16 %2, 16384
+	ret i1 %3
+}
 
+define i1 @s_ISCHR(%ModeT %m) {
+	%1 = bitcast %ModeT %m to i16
+	%2 = and i16 %1, 61440
+	%3 = icmp eq i16 %2, 8192
+	ret i1 %3
+}
 
+define i1 @s_ISBLK(%ModeT %m) {
+	%1 = bitcast %ModeT %m to i16
+	%2 = and i16 %1, 61440
+	%3 = icmp eq i16 %2, 24576
+	ret i1 %3
+}
 
-; -- SOURCE: src/main.cm
+define i1 @s_ISREG(%ModeT %m) {
+	%1 = bitcast %ModeT %m to i16
+	%2 = and i16 %1, 61440
+	%3 = icmp eq i16 %2, 32768
+	ret i1 %3
+}
 
+define i1 @s_ISFIFO(%ModeT %m) {
+	%1 = bitcast %ModeT %m to i16
+	%2 = and i16 %1, 61440
+	%3 = icmp eq i16 %2, 4096
+	ret i1 %3
+}
+
+define i1 @s_ISLNK(%ModeT %m) {
+	%1 = bitcast %ModeT %m to i16
+	%2 = and i16 %1, 61440
+	%3 = icmp eq i16 %2, 40960
+	ret i1 %3
+}
+
+define i1 @s_ISSOCK(%ModeT %m) {
+	%1 = bitcast %ModeT %m to i16
+	%2 = and i16 %1, 61440
+	%3 = icmp eq i16 %2, 49152
+	ret i1 %3
+}
+
+define i1 @s_ISWHT(%ModeT %m) {
+	%1 = bitcast %ModeT %m to i16
+	%2 = and i16 %1, 61440
+	%3 = icmp eq i16 %2, 57344
+	ret i1 %3
+}
+
+; -- end print includes --
+; -- print imports --
+; -- end print imports --
+; -- strings --
 @str1 = private constant [13 x i8] [i8 115, i8 116, i8 97, i8 116, i8 40, i8 34, i8 37, i8 115, i8 34, i8 41, i8 58, i8 10, i8 0]
 @str2 = private constant [9 x i8] [i8 77, i8 97, i8 107, i8 101, i8 102, i8 105, i8 108, i8 101, i8 0]
 @str3 = private constant [9 x i8] [i8 77, i8 97, i8 107, i8 101, i8 102, i8 105, i8 108, i8 101, i8 0]
@@ -325,58 +326,58 @@ declare i32 @"\01_stat"([0 x i8]* %path, %Stat* %stat)
 @str15 = private constant [2 x i8] [i8 10, i8 0]
 
 
-
-
-define i32 @main() {
-	%1 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str1 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str2 to [0 x i8]*))
+define %Int @main() {
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str1 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str2 to [0 x i8]*))
 	%2 = alloca %Stat, align 8
 	%3 = bitcast %Stat* %2 to %Stat*
-	%4 = call i32 @"\01_stat"([0 x i8]* bitcast ([9 x i8]* @str3 to [0 x i8]*), %Stat* %3)
-	%5 = icmp slt i32 %4, 0
+	%4 = call %Int @"\01_stat"([0 x %ConstChar]* bitcast ([9 x i8]* @str3 to [0 x i8]*), %Stat* %3)
+	%5 = icmp slt %Int %4, 0
 	br i1 %5 , label %then_0, label %endif_0
 then_0:
-	%6 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str4 to [0 x i8]*))
-	ret i32 1
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str4 to [0 x i8]*))
+	ret %Int 1
 	br label %endif_0
 endif_0:
 	%8 = getelementptr inbounds %Stat, %Stat* %2, i32 0, i32 0
-	%9 = load i32, i32* %8
-	%10 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str5 to [0 x i8]*), i32 %9)
+	%9 = load %DevT, %DevT* %8
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str5 to [0 x i8]*), %DevT %9)
 	%11 = getelementptr inbounds %Stat, %Stat* %2, i32 0, i32 3
-	%12 = load i64, i64* %11
-	%13 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str6 to [0 x i8]*), i64 %12)
+	%12 = load %DarwinIno64T, %DarwinIno64T* %11
+	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str6 to [0 x i8]*), %DarwinIno64T %12)
 	%14 = getelementptr inbounds %Stat, %Stat* %2, i32 0, i32 4
-	%15 = load i32, i32* %14
-	%16 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str7 to [0 x i8]*), i32 %15)
+	%15 = load %UIDT, %UIDT* %14
+	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str7 to [0 x i8]*), %UIDT %15)
 	%17 = getelementptr inbounds %Stat, %Stat* %2, i32 0, i32 5
-	%18 = load i32, i32* %17
-	%19 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str8 to [0 x i8]*), i32 %18)
+	%18 = load %GIDT, %GIDT* %17
+	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str8 to [0 x i8]*), %GIDT %18)
 	%20 = getelementptr inbounds %Stat, %Stat* %2, i32 0, i32 6
-	%21 = load i32, i32* %20
-	%22 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str9 to [0 x i8]*), i32 %21)
+	%21 = load %DevT, %DevT* %20
+	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str9 to [0 x i8]*), %DevT %21)
 	%23 = getelementptr inbounds %Stat, %Stat* %2, i32 0, i32 13
-	%24 = load i32, i32* %23
-	%25 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str10 to [0 x i8]*), i32 %24)
+	%24 = load %BlkSizeT, %BlkSizeT* %23
+	%25 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str10 to [0 x i8]*), %BlkSizeT %24)
 	%26 = getelementptr inbounds %Stat, %Stat* %2, i32 0, i32 12
-	%27 = load i64, i64* %26
-	%28 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str11 to [0 x i8]*), i64 %27)
+	%27 = load %BlkCntT, %BlkCntT* %26
+	%28 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str11 to [0 x i8]*), %BlkCntT %27)
 	%29 = getelementptr inbounds %Stat, %Stat* %2, i32 0, i32 11
-	%30 = load i64, i64* %29
-	%31 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str12 to [0 x i8]*), i64 %30)
+	%30 = load %OffT, %OffT* %29
+	%31 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str12 to [0 x i8]*), %OffT %30)
 	%32 = getelementptr inbounds %Stat, %Stat* %2, i32 0, i32 2
-	%33 = load i16, i16* %32
-	%34 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str13 to [0 x i8]*), i16 %33)
+	%33 = load %NLinkT, %NLinkT* %32
+	%34 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str13 to [0 x i8]*), %NLinkT %33)
 	%35 = getelementptr inbounds %Stat, %Stat* %2, i32 0, i32 1
-	%36 = load i16, i16* %35
-	%37 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str14 to [0 x i8]*), i16 %36)
+	%36 = load %ModeT, %ModeT* %35
+	%37 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str14 to [0 x i8]*), %ModeT %36)
 	%38 = getelementptr inbounds %Stat, %Stat* %2, i32 0, i32 7
 	%39 = load %Timespec, %Timespec* %38
 	%40 = getelementptr inbounds %Stat, %Stat* %2, i32 0, i32 8
 	%41 = load %Timespec, %Timespec* %40
+	; UNIX filesystems have no creation time for files.
+	; The ctime is the last time the file metadata (inode) was changed
 	%42 = getelementptr inbounds %Stat, %Stat* %2, i32 0, i32 9
 	%43 = load %Timespec, %Timespec* %42
-	%44 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str15 to [0 x i8]*))
-	ret i32 0
+	%44 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str15 to [0 x i8]*))
+	ret %Int 0
 }
 
 

@@ -4,8 +4,8 @@ $pragma do_not_include
 $pragma module_nodecorate
 $pragma c_include "sys/stat.h"
 
-import "libc/ctypes64"
-import "libc/time"
+include "libc/ctypes64"
+include "libc/time"
 
 
 export {
@@ -139,49 +139,49 @@ export {
 	/* is directory */
 	@property("value.id.c", "S_ISDIR")
 	func s_ISDIR(m: ModeT) -> Bool {
-		return (m and s_IFMT) == s_IFDIR
+		return (Word16 m and s_IFMT) == s_IFDIR
 	}
 
 	/* is char special */
 	@property("value.id.c", "S_ISCHR")
 	func s_ISCHR(m: ModeT) -> Bool {
-		return (m and s_IFMT) == s_IFCHR
+		return (Word16 m and s_IFMT) == s_IFCHR
 	}
 
 	/* is block special */
 	@property("value.id.c", "S_ISBLK")
 	func s_ISBLK(m: ModeT) -> Bool {
-		return (m and s_IFMT) == s_IFBLK
+		return (Word16 m and s_IFMT) == s_IFBLK
 	}
 
 	/* is regular file */
 	@property("value.id.c", "S_ISREG")
 	func s_ISREG(m: ModeT) -> Bool {
-		return (m and s_IFMT) == s_IFREG
+		return (Word16 m and s_IFMT) == s_IFREG
 	}
 
 	/* is fifo or socket */
 	@property("value.id.c", "S_ISFIFO")
 	func s_ISFIFO(m: ModeT) -> Bool {
-		return (m and s_IFMT) == s_IFIFO
+		return (Word16 m and s_IFMT) == s_IFIFO
 	}
 
 	/* is symbolic link */
 	@property("value.id.c", "S_ISLNK")
 	func s_ISLNK(m: ModeT) -> Bool {
-		return (m and s_IFMT) == s_IFLNK
+		return (Word16 m and s_IFMT) == s_IFLNK
 	}
 
 	/* is socket */
 	@property("value.id.c", "S_ISSOCK")
 	func s_ISSOCK(m: ModeT) -> Bool {
-		return (m and s_IFMT) == s_IFSOCK
+		return (Word16 m and s_IFMT) == s_IFSOCK
 	}
 
 	/* is whiteout */
 	@property("value.id.c", "S_ISWHT")
 	func s_ISWHT(m: ModeT) -> Bool {
-		return (m and s_IFMT) == s_IFWHT
+		return (Word16 m and s_IFMT) == s_IFWHT
 	}
 }
 
