@@ -16,16 +16,16 @@ func main() -> Int {
         return 1
     }
 
-	printf(" device: %x\n", fileStat.st_dev)
-    printf(" inode: %lld\n", fileStat.st_ino)
-    printf(" UID: %u\n", fileStat.st_uid)
-    printf(" GID: %u\n", fileStat.st_gid)
-    printf(" rdev: %u\n", fileStat.st_rdev)
-    printf(" blksize: %u\n", fileStat.st_blksize)
-    printf(" blocks: %lld\n", fileStat.st_blocks)
-    printf(" size: %lld bytes\n", fileStat.st_size)
-    printf(" nlinks: %hu\n", fileStat.st_nlink)
-    printf(" perm: %o\n", fileStat.st_mode)
+	printf("device: %x\n", fileStat.st_dev)
+    printf("inode: %lld\n", fileStat.st_ino)
+    printf("UID: %u\n", fileStat.st_uid)
+    printf("GID: %u\n", fileStat.st_gid)
+    printf("rdev: %u\n", fileStat.st_rdev)
+    printf("blksize: %u\n", fileStat.st_blksize)
+    printf("blocks: %lld\n", fileStat.st_blocks)
+    printf("size: %lld bytes\n", fileStat.st_size)
+    printf("nlinks: %hu\n", fileStat.st_nlink)
+    printf("perm: %o\n", fileStat.st_mode)
 
 
 	let atime = fileStat.st_atime  // last access time
