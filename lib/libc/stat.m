@@ -11,7 +11,7 @@ include "libc/time"
 export {
 	type DevT Nat32
 	type InoT Nat64
-	type ModeT Nat16
+	type ModeT Word16
 	type NLinkT Nat16
 	type UIDT Nat32
 	type GIDT Nat32
@@ -50,7 +50,6 @@ export {
 
 	/* for MACOS see: /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk/System/Library/Frameworks/Kernel.framework/Versions/A/Headers/sys
 	*/
-
 
 	@property("type.id.c", "struct stat")
 	type Stat record {
@@ -114,74 +113,74 @@ export {
 	let s_IWRITE = s_IWUSR
 	let s_IEXEC = s_IXUSR
 
-	let s_IRWXG = 0x0038   // (0000070) RWX mask for group
-	let s_IRGRP = 0x0020   // (0000040) R for group
-	let s_IWGRP = 0x0010   // (0000020) W for group
-	let s_IXGRP = 0x0008   // (0000010) X for group
+	let s_IRWXG = 0x0038    // (0000070) RWX mask for group
+	let s_IRGRP = 0x0020    // (0000040) R for group
+	let s_IWGRP = 0x0010    // (0000020) W for group
+	let s_IXGRP = 0x0008    // (0000010) X for group
 
-	let s_IRWXO = 0x0007   // (0000007) RWX mask for other
-	let s_IROTH = 0x0004   // (0000004) R for other
-	let s_IWOTH = 0x0002   // (0000002) W for other
-	let s_IXOTH = 0x0001   // (0000001) X for other
+	let s_IRWXO = 0x0007    // (0000007) RWX mask for other
+	let s_IROTH = 0x0004    // (0000004) R for other
+	let s_IWOTH = 0x0002    // (0000002) W for other
+	let s_IXOTH = 0x0001    // (0000001) X for other
 
-	let s_IFMT = 0xF000    // (0170000) type of file mask
-	let s_IFIFO = 0x1000   // (0010000) named pipe (fifo)
-	let s_IFCHR = 0x2000   // (0020000) character special
-	let s_IFDIR = 0x4000   // (0040000) directory
-	let s_IFBLK = 0x6000   // (0060000) block special
-	let s_IFREG = 0x8000   // (0100000) regular
-	let s_IFLNK = 0xA000   // (0120000) symbolic link
-	let s_IFSOCK = 0xC000  // (0140000) socket
-	let s_IFWHT = 0xE000   // (0160000) whiteout
-	let s_ISVTX = 0x0200   // (0001000) save swapped text even after use
+	let s_IFMT = 0xF000     // (0170000) type of file mask
+	let s_IFIFO = 0x1000    // (0010000) named pipe (fifo)
+	let s_IFCHR = 0x2000    // (0020000) character special
+	let s_IFDIR = 0x4000    // (0040000) directory
+	let s_IFBLK = 0x6000    // (0060000) block special
+	let s_IFREG = 0x8000    // (0100000) regular
+	let s_IFLNK = 0xA000    // (0120000) symbolic link
+	let s_IFSOCK = 0xC000   // (0140000) socket
+	let s_IFWHT = 0xE000    // (0160000) whiteout
+	let s_ISVTX = 0x0200    // (0001000) save swapped text even after use
 
 
 	/* is directory */
 	@property("value.id.c", "S_ISDIR")
 	func s_ISDIR(m: ModeT) -> Bool {
-		return (Word16 m and s_IFMT) == s_IFDIR
+		return (m and s_IFMT) == s_IFDIR
 	}
 
 	/* is char special */
 	@property("value.id.c", "S_ISCHR")
 	func s_ISCHR(m: ModeT) -> Bool {
-		return (Word16 m and s_IFMT) == s_IFCHR
+		return (m and s_IFMT) == s_IFCHR
 	}
 
 	/* is block special */
 	@property("value.id.c", "S_ISBLK")
 	func s_ISBLK(m: ModeT) -> Bool {
-		return (Word16 m and s_IFMT) == s_IFBLK
+		return (m and s_IFMT) == s_IFBLK
 	}
 
 	/* is regular file */
 	@property("value.id.c", "S_ISREG")
 	func s_ISREG(m: ModeT) -> Bool {
-		return (Word16 m and s_IFMT) == s_IFREG
+		return (m and s_IFMT) == s_IFREG
 	}
 
 	/* is fifo or socket */
 	@property("value.id.c", "S_ISFIFO")
 	func s_ISFIFO(m: ModeT) -> Bool {
-		return (Word16 m and s_IFMT) == s_IFIFO
+		return (m and s_IFMT) == s_IFIFO
 	}
 
 	/* is symbolic link */
 	@property("value.id.c", "S_ISLNK")
 	func s_ISLNK(m: ModeT) -> Bool {
-		return (Word16 m and s_IFMT) == s_IFLNK
+		return (m and s_IFMT) == s_IFLNK
 	}
 
 	/* is socket */
 	@property("value.id.c", "S_ISSOCK")
 	func s_ISSOCK(m: ModeT) -> Bool {
-		return (Word16 m and s_IFMT) == s_IFSOCK
+		return (m and s_IFMT) == s_IFSOCK
 	}
 
 	/* is whiteout */
 	@property("value.id.c", "S_ISWHT")
 	func s_ISWHT(m: ModeT) -> Bool {
-		return (Word16 m and s_IFMT) == s_IFWHT
+		return (m and s_IFMT) == s_IFWHT
 	}
 }
 
