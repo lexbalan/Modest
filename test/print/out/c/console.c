@@ -1,0 +1,321 @@
+// ./out/c/console.c
+
+#include <stdint.h>
+#include <stdbool.h>
+#include <string.h>
+#include <stdarg.h>
+#include "console.h"
+
+
+
+char n_to_sym(uint8_t n);
+void sprintf_hex_nat32(char *buf, uint32_t x);
+void sprintf_dec_int32(char *buf, int32_t x);
+void sprintf_dec_nat32(char *buf, uint32_t x);
+
+
+
+
+
+char n_to_sym(uint8_t n)
+{
+	char c;
+	if (n <= 9) {
+		c = (char)((uint8_t)'0' + n);
+	} else {
+		c = (char)((uint8_t)'A' + n - 10);
+	}
+	return c;
+}
+
+void sprintf_hex_nat32(char *buf, uint32_t x)
+{
+	char cc[8];
+	uint32_t d;
+	d = x;
+	int32_t i;
+	i = 0;
+
+	while (true) {
+		const uint32_t n = d % 16;
+		d = d / 16;
+
+		cc[i] = n_to_sym((uint8_t)n);
+		i = i + 1;
+
+		if (d == 0) {
+			break;
+		}
+	}
+
+	// mirroring into buffer
+	int32_t j;
+	j = 0;
+	while (i > 0) {
+		i = i - 1;
+		buf[j] = cc[i];
+		j = j + 1;
+	}
+
+	buf[j] = '\x0';
+
+	//return buf
+}
+
+void sprintf_dec_int32(char *buf, int32_t x)
+{
+	char cc[11];
+	int32_t d;
+	d = x;
+	const bool neg = d < 0;
+
+	if (neg) {
+		d = -d;
+	}
+
+	int32_t i;
+	i = 0;
+	while (true) {
+		const int32_t n = d % 10;
+		d = d / 10;
+		cc[i] = n_to_sym((uint8_t)n);
+		i = i + 1;
+
+		if (d == 0) {
+			break;
+		}
+	}
+
+	int32_t j;
+	j = 0;
+
+	if (neg) {
+		buf[0] = '-';
+		j = j + 1;
+	}
+
+	while (i > 0) {
+		i = i - 1;
+		buf[j] = cc[i];
+		j = j + 1;
+	}
+
+	buf[j] = '\x0';
+
+	//return buf
+}
+
+void sprintf_dec_nat32(char *buf, uint32_t x)
+{
+	char cc[11];
+	uint32_t d;
+	d = x;
+	int32_t i;
+	i = 0;
+
+	while (true) {
+		const uint32_t n = d % 10;
+		d = d / 10;
+		cc[i] = n_to_sym((uint8_t)n);
+		i = i + 1;
+
+		if (d == 0) {
+			break;
+		}
+	}
+
+	int32_t j;
+	j = 0;
+	while (i > 0) {
+		i = i - 1;
+		buf[j] = cc[i];
+		j = j + 1;
+	}
+
+	buf[j] = '\x0';
+
+	//return buf
+}
+
+void console_putchar8(char c)
+{
+	console_putchar_utf8(c);
+}
+
+void console_putchar16(uint16_t c)
+{
+	console_putchar_utf16(c);
+}
+
+void console_putchar32(uint32_t c)
+{
+	console_putchar_utf32(c);
+}
+
+void console_putchar_utf8(char c)
+{
+	putchar((int)(int32_t)c);
+}
+
+void console_putchar_utf16(uint16_t c)
+{
+	uint16_t cc[2];
+	cc[0] = c;
+	cc[1] = 0;
+	uint32_t char32;
+	const uint8_t n = utf_utf16_to_utf32((uint16_t *)&cc, &char32);
+	console_putchar_utf32(char32);
+}
+
+void console_putchar_utf32(uint32_t c)
+{
+	char decoded_buf[4];
+	const int32_t n = (int32_t)utf_utf32_to_utf8(c, (char *)&decoded_buf);
+
+	int32_t i;
+	i = 0;
+	while (i < n) {
+		const char c = decoded_buf[i];
+		console_putchar_utf8(c);
+		i = i + 1;
+	}
+}
+
+void console_puts8(char *s)
+{
+	int32_t i;
+	i = 0;
+	while (true) {
+		const char c = s[i];
+		if (c == 0) {
+			break;
+		}
+		console_putchar_utf8(c);
+		i = i + 1;
+	}
+}
+
+void console_puts16(uint16_t *s)
+{
+	int32_t i;
+	i = 0;
+	while (true) {
+		// нельзя просто так взять и вызвать putchar_utf16
+		// тк в строке может быть суррогатная пара UTF_16 символов
+
+		const uint16_t cc16 = s[i];
+		if (cc16 == 0) {
+			break;
+		}
+
+		uint32_t char32;
+		const uint8_t n = utf_utf16_to_utf32((uint16_t *)&s[i], &char32);
+		if (n == 0) {
+			break;
+		}
+
+		console_putchar_utf32(char32);
+
+		i = i + (int32_t)n;
+	}
+}
+
+void console_puts32(uint32_t *s)
+{
+	int32_t i;
+	i = 0;
+	while (true) {
+		const uint32_t c = s[i];
+		if (c == 0) {break;}
+		console_putchar_utf32(c);
+		i = i + 1;
+	}
+}
+
+void console_print(char *form, ...)
+{
+	va_list va;
+	va_start(va, form);
+
+	int32_t i;
+	i = 0;
+	while (true) {
+		char c;
+		c = form[i];
+
+		if (c == '\x0') {
+			break;
+		}
+
+		if (c == '\\') {
+			c = form[i + 1];
+			if (c == '{') {
+				// "\{" -> "{"
+				console_putchar8(c);
+				i = i + 2;
+				continue;
+			} else if (c == '}') {
+				// "\}" -> "{"
+				console_putchar8(c);
+				i = i + 2;
+				continue;
+			}
+		}
+
+		if (c == '{') {
+			i = i + 1;
+			c = form[i];
+			i = i + 1;
+
+			// буффер для печати всего, кроме строк
+			char buf[10 + 1];
+			char *sptr;
+			sptr = (char *)&buf;
+			sptr[0] = '\x0';
+
+			if ((c == 'i') || (c == 'd')) {
+				//
+				// %i & %d for signed integer (Int)
+				//
+				const int32_t i = va_arg(va, int32_t);
+				sprintf_dec_int32(sptr, i);
+			} else if (c == 'n') {
+				//
+				// %n for unsigned integer (Nat)
+				//
+				const uint32_t n = va_arg(va, uint32_t);
+				sprintf_dec_nat32(sptr, n);
+			} else if ((c == 'x') || (c == 'p')) {
+				//
+				// %x for unsigned integer (Nat)
+				// %p for pointers
+				//
+				const uint32_t x = va_arg(va, uint32_t);
+				sprintf_hex_nat32(sptr, x);
+			} else if (c == 's') {
+				//
+				// %s pointer to string
+				//
+				char *const s = va_arg(va, char *);
+				sptr = s;
+			} else if (c == 'c') {
+				//
+				// %c for char
+				//
+				const char c = (char)va_arg(va, int32_t);
+				sptr[0] = c;
+				sptr[1] = '\x0';
+			}
+
+			console_puts8(sptr);
+
+		} else {
+			console_putchar8(c);
+		}
+
+		i = i + 1;
+	}
+
+	va_end(va);
+}
+

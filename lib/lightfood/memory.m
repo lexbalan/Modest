@@ -7,9 +7,9 @@ let systemWidth = 64
 
 
 $if (systemWidth == 64)
-type CPU_Word Nat64
+type Word Word64
 $elseif (systemWidth == 32)
-type CPU_Word Nat32
+type Word Word32
 $endif
 
 
@@ -17,7 +17,7 @@ let memoryAlignment = systemWidth / 8
 
 
 func memzero(mem: Ptr, len: Nat64) {
-	let z = CPU_Word mem % memoryAlignment
+	let z = Word mem % memoryAlignment
 
 	// align the pointer
 	var i = Nat64 0
@@ -28,8 +28,8 @@ func memzero(mem: Ptr, len: Nat64) {
 
 	// word operation
 
-	let len_words = (len - z) / sizeof(CPU_Word)
-	let dst_word = *[]CPU_Word &mem[i]
+	let len_words = (len - z) / sizeof(Word)
+	let dst_word = *[]Word &mem[i]
 
 	i = 0
 	while i < len_words {
@@ -39,7 +39,7 @@ func memzero(mem: Ptr, len: Nat64) {
 
 	// byte operation
 
-	let len_bytes = (len - z) % sizeof(CPU_Word)
+	let len_bytes = (len - z) % sizeof(Word)
 	let dst_byte1 = *[]Byte &dst_word[i]
 
 	i = 0
@@ -51,9 +51,9 @@ func memzero(mem: Ptr, len: Nat64) {
 
 
 func memcopy(dst: Ptr, src: Ptr, len: Nat64) {
-	let len_words = len / sizeof(CPU_Word)
-	let src_w = *[]CPU_Word src
-	let dst_w = *[]CPU_Word dst
+	let len_words = len / sizeof(Word)
+	let src_w = *[]Word src
+	let dst_w = *[]Word dst
 
 	var i = Nat64 0
 	while i < len_words {
@@ -61,7 +61,7 @@ func memcopy(dst: Ptr, src: Ptr, len: Nat64) {
 		++i
 	}
 
-	let len_bytes = len % sizeof(CPU_Word)
+	let len_bytes = len % sizeof(Word)
 	let src_b = *[]Byte &src_w[i]
 	let dst_b = *[]Byte &dst_w[i]
 
@@ -74,9 +74,9 @@ func memcopy(dst: Ptr, src: Ptr, len: Nat64) {
 
 
 func memeq(mem0: Ptr, mem1: Ptr, len: Nat64) -> Bool {
-	let len_words = len / sizeof(CPU_Word)
-	let mem0_w = *[]CPU_Word mem0
-	let mem1_w = *[]CPU_Word mem1
+	let len_words = len / sizeof(Word)
+	let mem0_w = *[]Word mem0
+	let mem1_w = *[]Word mem1
 
 	var i = Nat64 0
 	while i < len_words {
@@ -86,7 +86,7 @@ func memeq(mem0: Ptr, mem1: Ptr, len: Nat64) -> Bool {
 		++i
 	}
 
-	let len_bytes = len % sizeof(CPU_Word)
+	let len_bytes = len % sizeof(Word)
 	let mem0_b = *[]Byte &mem0_w[i]
 	let mem1_b = *[]Byte &mem1_w[i]
 
