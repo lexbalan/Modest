@@ -10,6 +10,12 @@ typeByte = None
 typeChar8 = None
 typeChar16 = None
 typeChar32 = None
+typeWord8 = None
+typeWord16 = None
+typeWord32 = None
+typeWord64 = None
+typeWord128 = None
+typeWord256 = None
 typeInt8 = None
 typeInt16 = None
 typeInt32 = None
@@ -64,6 +70,7 @@ def init():
 	global typeBool
 	global typeByte
 	global typeChar8, typeChar16, typeChar32
+	global typeWord8, typeWord16, typeWord32, typeWord64, typeWord128, typeWord256
 	global typeInt8, typeInt16, typeInt32, typeInt64, typeInt128, typeInt256
 	global typeNat8, typeNat16, typeNat32, typeNat64, typeNat128, typeNat256
 	global typeFloat16, typeFloat32, typeFloat64
@@ -92,6 +99,14 @@ def init():
 	typeChar8 = hlir_type_char(width=8)
 	typeChar16 = hlir_type_char(width=16)
 	typeChar32 = hlir_type_char(width=32)
+
+	#
+	typeWord8 = hlir_type_word(width=8)
+	typeWord16 = hlir_type_word(width=16)
+	typeWord32 = hlir_type_word(width=32)
+	typeWord64 = hlir_type_word(width=64)
+	typeWord128 = hlir_type_word(width=128)
+	typeWord256 = hlir_type_word(width=256)
 
 	#
 	typeInt8 = hlir_type_integer(width=8)

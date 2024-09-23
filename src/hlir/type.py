@@ -29,6 +29,7 @@ RELATIONAL_OPS = ['lt', 'gt', 'le', 'ge']
 ARITHMETICAL_OPS = ['add', 'sub', 'mul', 'div', 'rem', 'negative']
 LOGICAL_OPS = ['or', 'xor', 'and', 'not']
 
+WORD_OPS = CONS_OP + EQ_OPS + LOGICAL_OPS
 INT_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS + LOGICAL_OPS
 FLOAT_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS
 BOOL_OPS = CONS_OP + EQ_OPS + LOGICAL_OPS
@@ -131,6 +132,12 @@ def hlir_type_char(width, ti=None):
 		'ti': ti
 	}
 
+
+def hlir_type_word(width, ti=None):
+	t = hlir_type_integer(width, signed=False, ti=ti)
+	t['ops'] = WORD_OPS,
+	t['id']['str'] = 'Word%d' % width
+	return t
 
 def hlir_type_integer(width, signed=True, ti=None):
 	size = nbytes_for_bits(width)
