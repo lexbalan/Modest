@@ -259,6 +259,10 @@ void console_print(char *form, ...)
 				console_putchar8(c);
 				i = i + 2;
 				continue;
+			} else if (c == '\\') {
+				console_putchar8('\\');
+				i = i + 2;
+				continue;
 			}
 		}
 
@@ -305,6 +309,7 @@ void console_print(char *form, ...)
 				const char c = (char)va_arg(va, int32_t);
 				sptr[0] = c;
 				sptr[1] = '\x0';
+
 			}
 
 			console_puts8(sptr);

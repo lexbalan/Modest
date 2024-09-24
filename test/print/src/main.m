@@ -12,7 +12,7 @@ let hello_world = hello + " " + world
 
 
 func main() -> Int {
-	console.print("{s}\n", *Str8 hello_world)
+	//console.print("{s}\n", *Str8 hello_world)
 
 	let c = Char8 "$"
 	let s = *Str8 "Hi!"
@@ -21,8 +21,10 @@ func main() -> Int {
 	let x = Nat32 0x1234567F
 
 	console.print("\\")
+	console.print("\n")
+
 	console.print("\{\}\n")
-	console.print("c = '{c}'\n", c)
+	console.print("c = '{c}'\n", Nat32 c)
 	console.print("s = \"{s}\"\n", s)
 	console.print("i = {i}\n", i)
 	console.print("n = {n}\n", n)

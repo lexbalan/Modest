@@ -17,7 +17,7 @@ int main();
 
 int main()
 {
-	console_print("{s}\n", (char *)main_hello_world);
+	//console.print("{s}\n", *Str8 hello_world)
 
 	const char c = '$';
 	char *const s = "Hi!";
@@ -25,7 +25,9 @@ int main()
 	const uint32_t n = 123;
 	const uint32_t x = 0x1234567F;
 
-	console_print("\\");
+	console_print("\\\\");
+	console_print("\n");
+
 	console_print("\\{{\\}}\n");
 	console_print("c = '{c}'\n", c);
 	console_print("s = \"{s}\"\n", s);

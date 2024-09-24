@@ -899,6 +899,10 @@ class Parser:
 						# eat "\{" as is
 						new_s = new_s + '\\{'
 						continue
+					elif sym == '\\':
+						new_s = new_s + '\\\\'
+						i = i + 1
+						continue
 					elif sym == '}':
 						# eat "\}" as is
 						new_s = new_s + '\\}'

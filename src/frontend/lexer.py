@@ -150,6 +150,8 @@ def doString(src):
 
 	par = c
 
+	# \\ так и идет (как два слеша) в оконечную строку
+
 	s = []
 	while True:
 		c = src.getc()

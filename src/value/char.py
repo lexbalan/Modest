@@ -24,7 +24,7 @@ def width_ok(to, from_type, method):
 
 def char_can(to, from_type, method):
 	if type.type_is_string(from_type):
-		return from_type['length'] == 1 and width_ok(to, from_type, method)
+		return from_type['length'] <= 2 and width_ok(to, from_type, method)
 
 	if method == 'implicit':
 		return False
@@ -46,12 +46,13 @@ def value_char_cons(t, v, method, ti):
 	# String -> Char
 	# ex: var c: Char8 = "A"
 	if type.type_is_string(v['type']):
-		if v['type']['length'] == 1:
-			cc = ord(v['asset'][0])
-			nv = value_cons_immediate(t, v, method, ti)
-			nv['immediate'] = True
-			nv['asset'] = cc
-			return nv
+		#if v['type']['length'] == 1:
+		cc = ord(v['asset'][0])
+		nv = value_cons_immediate(t, v, method, ti)
+		nv['immediate'] = True
+		nv['asset'] = cc
+		return nv
+
 
 	if value_is_immediate(v):
 		return value_cons_immediate(t, v, method, ti)

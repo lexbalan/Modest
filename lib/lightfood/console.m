@@ -136,6 +136,10 @@ export func print(form: *Str8, ...) {
 				putchar8(c)
 				i = i + 2
 				again
+			} else if c == "\\" {
+				putchar8("\\")
+				i = i + 2
+				again
 			}
 		}
 
@@ -182,6 +186,7 @@ export func print(form: *Str8, ...) {
 				let c = unsafe Char8 __va_arg(va, Int32)
 				sptr[0] = c
 				sptr[1] = "\0"
+
 			}
 
 			puts8(sptr)
