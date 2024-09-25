@@ -183,10 +183,11 @@ export func print(form: *Str8, ...) {
 				//
 				// %c for char
 				//
-				let c = unsafe Char8 __va_arg(va, Int32)
-				sptr[0] = c
+				let c = unsafe Char32 __va_arg(va, Char32)
+				printf("CC32 = %d\n", c)
+				printf("CC8 = %d\n", unsafe Char8 c)
+				sptr[0] = unsafe Char8 c
 				sptr[1] = "\0"
-
 			}
 
 			puts8(sptr)

@@ -192,6 +192,8 @@ declare i8 @utf_utf32_to_utf8(i32 %c, [4 x i8]* %buf)
 declare i8 @utf_utf16_to_utf32([0 x i16]* %c, i32* %result)
 ; -- end print imports --
 ; -- strings --
+@str1 = private constant [11 x i8] [i8 67, i8 67, i8 51, i8 50, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str2 = private constant [10 x i8] [i8 67, i8 67, i8 56, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 
 define i8 @n_to_sym(i8 %n) {
 	%1 = alloca i8, align 1
@@ -722,12 +724,18 @@ then_10:
 	;
 	; %c for char
 	;
-	%71 = load [0 x i8]*, [0 x i8]** %44
-	%72 = getelementptr inbounds [0 x i8], [0 x i8]* %71, i32 0, i32 0
-	store i8 0, i8* %72
-	%73 = load [0 x i8]*, [0 x i8]** %44
-	%74 = getelementptr inbounds [0 x i8], [0 x i8]* %73, i32 0, i32 1
-	store i8 0, i8* %74
+	%71 = va_arg i8** %1, i32
+	
+	%72 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str1 to [0 x i8]*), i32 %71)
+	
+	%73 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str2 to [0 x i8]*), i8 0)
+	
+	%74 = load [0 x i8]*, [0 x i8]** %44
+	%75 = getelementptr inbounds [0 x i8], [0 x i8]* %74, i32 0, i32 0
+	store i8 0, i8* %75
+	%76 = load [0 x i8]*, [0 x i8]** %44
+	%77 = getelementptr inbounds [0 x i8], [0 x i8]* %76, i32 0, i32 1
+	store i8 0, i8* %77
 	br label %endif_10
 endif_10:
 	br label %endif_9
@@ -738,21 +746,21 @@ endif_8:
 endif_7:
 	br label %endif_6
 endif_6:
-	%75 = load [0 x i8]*, [0 x i8]** %44
-	call void @console_puts8([0 x i8]* %75)
+	%78 = load [0 x i8]*, [0 x i8]** %44
+	call void @console_puts8([0 x i8]* %78)
 	br label %endif_5
 else_5:
-	%76 = load i8, i8* %4
-	call void @console_putchar8(i8 %76)
+	%79 = load i8, i8* %4
+	call void @console_putchar8(i8 %79)
 	br label %endif_5
 endif_5:
-	%77 = load i32, i32* %3
-	%78 = add i32 %77, 1
-	store i32 %78, i32* %3
+	%80 = load i32, i32* %3
+	%81 = add i32 %80, 1
+	store i32 %81, i32* %3
 	br label %again_1
 break_1:
-	%79 = bitcast i8** %1 to i8*
-	call void @llvm.va_end(i8* %79)
+	%82 = bitcast i8** %1 to i8*
+	call void @llvm.va_end(i8* %82)
 	ret void
 }
 

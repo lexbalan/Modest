@@ -17,7 +17,7 @@ func main() -> Int {
 	console.print("\n")
 
 	console.print("\\{{\\}}\n")
-	console.print("c = '{c}'\n", c)
+	console.print("c = '{c}'\n", Nat32 c)
 	console.print("s = \"{s}\"\n", s)
 	console.print("i = {i}\n", i)
 	console.print("n = {n}\n", n)
