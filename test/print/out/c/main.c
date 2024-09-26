@@ -8,16 +8,13 @@
 
 
 
-#define main_hello  "Hello"
-#define main_world  "World!"
-#define main_hello_world  (main_hello " " main_world)
 int main();
 
 
 
 int main()
 {
-	//console.print("{s}\n", *Str8 hello_world)
+	console_print("console print test\n");
 
 	const uint32_t c = U'🐀';
 	char *const s = "Hi!";

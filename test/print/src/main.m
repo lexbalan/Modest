@@ -5,14 +5,10 @@ include "libc/ctypes64"
 import "lightfood/console"
 
 
-let hello = "Hello"
-let world = "World!"
-
-let hello_world = hello + " " + world
 
 
 func main() -> Int {
-	//console.print("{s}\n", *Str8 hello_world)
+	console.print("console print test\n")
 
 	let c = Char32 "🐀"
 	let s = *Str8 "Hi!"
