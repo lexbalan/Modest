@@ -55,6 +55,7 @@ def value_char_cons(t, v, method, ti):
 
 
 	if value_is_immediate(v):
+		info("???", v)
 		return value_cons_immediate(t, v, method, ti)
 
 	return value_cons_node(t, v, method, ti=ti)

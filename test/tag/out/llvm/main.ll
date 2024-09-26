@@ -26,6 +26,9 @@ target triple = "arm64-apple-macosx12.0.0"
 %Str16 = type [0 x %Char16]
 %Str32 = type [0 x %Char32]
 %VA_List = type i8*
+declare void @llvm.va_start(i8*)
+declare void @llvm.va_copy(i8*, i8*)
+declare void @llvm.va_end(i8*)
 declare void @llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)
 declare void @llvm.memset.p0.i32(i8*, i8, i32, i1)
 
@@ -99,19 +102,15 @@ break_2:
 	ret i1 1
 }
 
+; MODULE: main
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/system.hm
-
-
-
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
-
-
+; -- print includes --
+; -- end print includes --
+; -- print imports --
 
 %Str = type %Str8;
 %Char = type i8;
-%ConstChar = type i8;
+%ConstChar = type %Char;
 %SignedChar = type i8;
 %UnsignedChar = type i8;
 %Short = type i16;
@@ -129,16 +128,9 @@ break_2:
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
-
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
-
-
-
-
 %SocklenT = type i32;
-%SizeT = type i64;
-%SSizeT = type i64;
+%SizeT = type %UnsignedLongInt;
+%SSizeT = type %LongInt;
 %IntptrT = type i64;
 %PtrdiffT = type i8*;
 %OffT = type i64;
@@ -147,242 +139,77 @@ break_2:
 %UidT = type i32;
 %GidT = type i32;
 
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
-
-
-
-
-%File = type opaque
-%FposT = type opaque
-
+%File = type i8;
+%FposT = type i8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 
 
-declare i32 @fclose(%File* %f)
-declare i32 @feof(%File* %f)
-declare i32 @ferror(%File* %f)
-declare i32 @fflush(%File* %f)
-declare i32 @fgetpos(%File* %f, %FposT* %pos)
+declare %Int @fclose(%File* %f)
+declare %Int @feof(%File* %f)
+declare %Int @ferror(%File* %f)
+declare %Int @fflush(%File* %f)
+declare %Int @fgetpos(%File* %f, %FposT* %pos)
 declare %File* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
-declare i64 @fread(i8* %buf, i64 %size, i64 %count, %File* %f)
-declare i64 @fwrite(i8* %buf, i64 %size, i64 %count, %File* %f)
-declare %File* @freopen(%ConstCharStr* %filename, %ConstCharStr* %mode, %File* %f)
-declare i32 @fseek(%File* %stream, i64 %offset, i32 %whence)
-declare i32 @fsetpos(%File* %f, %FposT* %pos)
-declare i64 @ftell(%File* %f)
-declare i32 @remove(%ConstCharStr* %filename)
-declare i32 @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
+declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
+declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
+declare %File* @freopen(%ConstCharStr* %fname, %ConstCharStr* %mode, %File* %f)
+declare %Int @fseek(%File* %f, %LongInt %offset, %Int %whence)
+declare %Int @fsetpos(%File* %f, %FposT* %pos)
+declare %LongInt @ftell(%File* %f)
+declare %Int @remove(%ConstCharStr* %fname)
+declare %Int @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
 declare void @rewind(%File* %f)
-declare void @setbuf(%File* %f, %CharStr* %buffer)
-
-
-declare i32 @setvbuf(%File* %f, %CharStr* %buffer, i32 %mode, i64 %size)
+declare void @setbuf(%File* %f, %CharStr* %buf)
+declare %Int @setvbuf(%File* %f, %CharStr* %buf, %Int %mode, %SizeT %size)
 declare %File* @tmpfile()
 declare %CharStr* @tmpnam(%CharStr* %str)
-declare i32 @printf(%ConstCharStr* %s, ...)
-declare i32 @scanf(%ConstCharStr* %s, ...)
-declare i32 @fprintf(%File* %stream, %Str* %format, ...)
-declare i32 @fscanf(%File* %f, %ConstCharStr* %format, ...)
-declare i32 @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
-declare i32 @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare i32 @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
-declare i32 @vprintf(%ConstCharStr* %format, i8* %args)
-declare i32 @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
-declare i32 @vsnprintf(%CharStr* %str, i64 %n, %ConstCharStr* %format, i8* %args)
-declare i32 @__vsnprintf_chk(%CharStr* %dest, i64 %len, i32 %flags, i64 %dstlen, %ConstCharStr* %format, i8* %arg)
-declare i32 @fgetc(%File* %f)
-declare i32 @fputc(i32 %char, %File* %f)
-declare %CharStr* @fgets(%CharStr* %str, i32 %n, %File* %f)
-declare i32 @fputs(%ConstCharStr* %str, %File* %f)
-declare i32 @getc(%File* %f)
-declare i32 @getchar()
+declare %Int @printf(%ConstCharStr* %s, ...)
+declare %Int @scanf(%ConstCharStr* %s, ...)
+declare %Int @fprintf(%File* %f, %Str* %format, ...)
+declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
+declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
+declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
+declare %Int @fgetc(%File* %f)
+declare %Int @fputc(%Int %char, %File* %f)
+declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
+declare %Int @fputs(%ConstCharStr* %str, %File* %f)
+declare %Int @getc(%File* %f)
+declare %Int @getchar()
 declare %CharStr* @gets(%CharStr* %str)
-declare i32 @putc(i32 %char, %File* %f)
-declare i32 @putchar(i32 %char)
-declare i32 @puts(%ConstCharStr* %str)
-declare i32 @ungetc(i32 %char, %File* %f)
+declare %Int @putc(%Int %char, %File* %f)
+declare %Int @putchar(%Int %char)
+declare %Int @puts(%ConstCharStr* %str)
+declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
-
-
-; -- SOURCE: src/main.cm
-
-@str1 = private constant [10 x i8] [i8 116, i8 97, i8 103, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
-
-
-
-%Point2D = type {
-	i32, 
-	i32
-};
-
-
-@points = global [3 x %Point2D] [
-	%Point2D {
-		i32 1,
-		i32 2
-	},
-	%Point2D {
-		i32 3,
-		i32 4
-	},
-	%Point2D {
-		i32 7,
-		i32 8
-	}
-]
-
-
-%BatteryLevel = type {
-	i8, 
-	i16, 
-	i16, 
-	i8
-};
-
-
-
-@lookup_discharge = global [11 x %BatteryLevel] [
-	%BatteryLevel {
-		i8 0,
-		i16 0,
-		i16 3300,
-		i8 33
-	},
-	%BatteryLevel {
-		i8 10,
-		i16 3300,
-		i16 3444,
-		i8 0
-	},
-	%BatteryLevel {
-		i8 20,
-		i16 3444,
-		i16 3544,
-		i8 0
-	},
-	%BatteryLevel {
-		i8 30,
-		i16 3544,
-		i16 3628,
-		i8 0
-	},
-	%BatteryLevel {
-		i8 40,
-		i16 3628,
-		i16 3684,
-		i8 0
-	},
-	%BatteryLevel {
-		i8 50,
-		i16 3684,
-		i16 3700,
-		i8 0
-	},
-	%BatteryLevel {
-		i8 60,
-		i16 3700,
-		i16 3744,
-		i8 0
-	},
-	%BatteryLevel {
-		i8 70,
-		i16 3744,
-		i16 3824,
-		i8 0
-	},
-	%BatteryLevel {
-		i8 80,
-		i16 3824,
-		i16 3904,
-		i8 0
-	},
-	%BatteryLevel {
-		i8 90,
-		i16 3904,
-		i16 3996,
-		i8 0
-	},
-	%BatteryLevel {
-		i8 100,
-		i16 3996,
-		i16 5000,
-		i8 0
-	}
-]
-@lookup_charge = global [11 x %BatteryLevel] [
-	%BatteryLevel {
-		i8 0,
-		i16 0,
-		i16 3628,
-		i8 12
-	},
-	%BatteryLevel {
-		i8 10,
-		i16 3628,
-		i16 3764,
-		i8 12
-	},
-	%BatteryLevel {
-		i8 20,
-		i16 3764,
-		i16 3856,
-		i8 12
-	},
-	%BatteryLevel {
-		i8 30,
-		i16 3856,
-		i16 3880,
-		i8 12
-	},
-	%BatteryLevel {
-		i8 40,
-		i16 3880,
-		i16 3912,
-		i8 12
-	},
-	%BatteryLevel {
-		i8 50,
-		i16 3912,
-		i16 3960,
-		i8 12
-	},
-	%BatteryLevel {
-		i8 60,
-		i16 3960,
-		i16 4020,
-		i8 12
-	},
-	%BatteryLevel {
-		i8 70,
-		i16 4020,
-		i16 4088,
-		i8 12
-	},
-	%BatteryLevel {
-		i8 80,
-		i16 4088,
-		i16 4136,
-		i8 12
-	},
-	%BatteryLevel {
-		i8 90,
-		i16 4136,
-		i16 4152,
-		i8 12
-	},
-	%BatteryLevel {
-		i8 100,
-		i16 4152,
-		i16 5000,
-		i8 0
-	}
-]
+; -- end print imports --
+; -- strings --
+@str1 = private constant [11 x i8] [i8 67, i8 67, i8 51, i8 50, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str2 = private constant [10 x i8] [i8 67, i8 67, i8 56, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str3 = private constant [3 x i8] [i8 37, i8 99, i8 0]
 
 define i32 @main() {
-	%1 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*))
+	call void (%Str8*, ...) @main_print(%Str8* bitcast ([3 x i8]* @str3 to [0 x i8]*), i32 35)
 	ret i32 0
+}
+
+
+define void @main_print(%Str8* %form, ...) {
+	%1 = alloca i8*, align 1
+	%2 = bitcast i8** %1 to i8*
+	call void @llvm.va_start(i8* %2)
+	%3 = va_arg i8** %1, i32
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str1 to [0 x i8]*), i32 %3)
+	%5 = trunc i32 %3 to i8
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str2 to [0 x i8]*), i8 %5)
+	%7 = bitcast i8** %1 to i8*
+	call void @llvm.va_end(i8* %7)
+	ret void
 }
 
 

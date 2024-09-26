@@ -437,7 +437,7 @@ def value_va_arg(va_list, type, ti):
 		'va_list': va_list,
 		'type': type,
 		'immutable': True,
-		'immediate': True,
+		'immediate': False,
 		'asset': 0,
 		'att': [],
 		'ti': ti
