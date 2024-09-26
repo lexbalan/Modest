@@ -2,7 +2,7 @@
 include "libc/ctypes64"
 import "lightfood/console"
 func main() -> Int {
-	console.print("console print test\n")
+	console.print("test console print\n")
 
 	let c = Char32 "🐀"
 	let s = *Str8 "Hi!"

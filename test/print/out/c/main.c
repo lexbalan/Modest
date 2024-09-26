@@ -14,7 +14,7 @@ int main();
 
 int main()
 {
-	console_print("console print test\n");
+	console_print("test console print\n");
 
 	const uint32_t c = U'🐀';
 	char *const s = "Hi!";
