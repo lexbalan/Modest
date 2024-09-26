@@ -6,7 +6,6 @@ export func print(form: *Str8, ...) {
 	var va: VA_List
 	__va_start(va, form)
 
-	/*unsafe Char8*/
 	let c = __va_arg(va, Char32)
 	stdio.printf("CC32 = %d\n", c)
 	stdio.printf("CC8 = %d\n", unsafe Char8 c)
