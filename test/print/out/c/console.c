@@ -306,9 +306,8 @@ void console_print(char *form, ...)
 				//
 				// %c for char
 				//
-				const char c = va_arg(va, char);
-				printf("CC = %d\n", c);
-				sptr[0] = c;
+				const uint32_t c = va_arg(va, uint32_t);
+				sptr[0] = (char)c;
 				sptr[1] = '\x0';
 			}
 

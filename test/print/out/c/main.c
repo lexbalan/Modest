@@ -29,7 +29,7 @@ int main()
 	console_print("\n");
 
 	console_print("\\{{\\}}\n");
-	console_print("c = '{c}'\n", c);
+	console_print("c = '{c}'\n", (uint32_t)c);
 	console_print("s = \"{s}\"\n", s);
 	console_print("i = {i}\n", i);
 	console_print("n = {n}\n", n);
