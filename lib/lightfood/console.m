@@ -184,8 +184,9 @@ export func print(form: *Str8, ...) {
 				// %c for char
 				//
 				let c = __va_arg(va, Char32)
-				sptr[0] = unsafe Char8 c
-				sptr[1] = "\0"
+				putchar32(c)
+				//sptr[0] = unsafe Char8 c
+				sptr[0] = "\0"
 			}
 
 			puts8(sptr)

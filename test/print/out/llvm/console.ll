@@ -723,13 +723,11 @@ then_10:
 	; %c for char
 	;
 	%71 = va_arg i8** %1, i32
+	call void @console_putchar32(i32 %71)
+	;sptr[0] = unsafe Char8 c
 	%72 = load [0 x i8]*, [0 x i8]** %44
 	%73 = getelementptr inbounds [0 x i8], [0 x i8]* %72, i32 0, i32 0
-	%74 = trunc i32 %71 to i8
-	store i8 %74, i8* %73
-	%75 = load [0 x i8]*, [0 x i8]** %44
-	%76 = getelementptr inbounds [0 x i8], [0 x i8]* %75, i32 0, i32 1
-	store i8 0, i8* %76
+	store i8 0, i8* %73
 	br label %endif_10
 endif_10:
 	br label %endif_9
@@ -740,21 +738,21 @@ endif_8:
 endif_7:
 	br label %endif_6
 endif_6:
-	%77 = load [0 x i8]*, [0 x i8]** %44
-	call void @console_puts8([0 x i8]* %77)
+	%74 = load [0 x i8]*, [0 x i8]** %44
+	call void @console_puts8([0 x i8]* %74)
 	br label %endif_5
 else_5:
-	%78 = load i8, i8* %4
-	call void @console_putchar8(i8 %78)
+	%75 = load i8, i8* %4
+	call void @console_putchar8(i8 %75)
 	br label %endif_5
 endif_5:
-	%79 = load i32, i32* %3
-	%80 = add i32 %79, 1
-	store i32 %80, i32* %3
+	%76 = load i32, i32* %3
+	%77 = add i32 %76, 1
+	store i32 %77, i32* %3
 	br label %again_1
 break_1:
-	%81 = bitcast i8** %1 to i8*
-	call void @llvm.va_end(i8* %81)
+	%78 = bitcast i8** %1 to i8*
+	call void @llvm.va_end(i8* %78)
 	ret void
 }
 

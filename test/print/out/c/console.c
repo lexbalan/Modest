@@ -307,8 +307,9 @@ void console_print(char *form, ...)
 				// %c for char
 				//
 				const uint32_t c = va_arg(va, uint32_t);
-				sptr[0] = (char)c;
-				sptr[1] = '\x0';
+				console_putchar32(c);
+				//sptr[0] = unsafe Char8 c
+				sptr[0] = '\x0';
 			}
 
 			console_puts8(sptr);
