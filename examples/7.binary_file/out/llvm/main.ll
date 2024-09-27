@@ -123,16 +123,15 @@ break_2:
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
-%SocklenT = type i32;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntptrT = type i64;
-%PtrdiffT = type i8*;
+%IntPtrT = type i64;
+%PtrDiffT = type i8*;
 %OffT = type i64;
 %USecondsT = type i32;
-%PidT = type i32;
-%UidT = type i32;
-%GidT = type i32;
+%PIDT = type i32;
+%UIDT = type i32;
+%GIDT = type i32;
 
 declare i8* @memset(i8* %mem, %Int %c, %SizeT %n)
 declare i8* @memcpy(i8* %dst, i8* %src, %SizeT %len)

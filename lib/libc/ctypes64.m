@@ -80,10 +80,10 @@ export {
 	type SSizeT LongInt
 
 	@property("type.id.c", "intptr_t")
-	type IntptrT Nat64
+	type IntPtrT Nat64
 
 	@property("type.id.c", "ptrdiff_t")
-	type PtrdiffT Ptr
+	type PtrDiffT Ptr
 
 	@property("type.id.c", "off_t")
 	type OffT Int64
@@ -93,13 +93,13 @@ export {
 	type USecondsT Nat32
 
 	@property("type.id.c", "pid_t")
-	type PidT Int32
+	type PIDT Int32
 
 	@property("type.id.c", "uid_t")
-	type UidT Nat32
+	type UIDT Nat32
 
 	@property("type.id.c", "gid_t")
-	type GidT Nat32
+	type GIDT Nat32
 }
 
 

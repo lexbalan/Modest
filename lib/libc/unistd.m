@@ -317,7 +317,7 @@ export {
 	func chroot (path: *[]ConstChar) -> Int
 
 	// chown — change the owner or group of a file or directory
-	func chown (pathname: *[]ConstChar, owner: UidT, group: GidT) -> Int
+	func chown (pathname: *[]ConstChar, owner: UIDT, group: GIDT) -> Int
 
 	// close - close a file descriptor
 	func close (fildes: Int) -> Int
@@ -356,7 +356,7 @@ export {
 	func _exit (status: Int) -> Unit
 
 	// fchown - change owner and group of a file
-	func fchown (fildes: Int, owner: UidT, group: GidT) -> Int
+	func fchown (fildes: Int, owner: UIDT, group: GIDT) -> Int
 
 	// fchdir - change working directory
 	func fchdir (fildes: Int) -> Int
@@ -365,7 +365,7 @@ export {
 	func fdatasync (fildes: Int) -> Int
 
 	// fork - create a new process
-	func fork () -> PidT
+	func fork () -> PIDT
 
 	// fpathconf, pathconf - get configurable pathname variables
 	func fpathconf (fildes: Int, name: Int) -> LongInt
@@ -383,16 +383,16 @@ export {
 	func getdtablesize () -> Int
 
 	// getegid - get the effective group ID
-	func getegid () -> GidT
+	func getegid () -> GIDT
 
 	// geteuid - get the effective user ID
-	func geteuid () -> UidT
+	func geteuid () -> UIDT
 
 	// getgid - get the real group ID
-	func getgid () -> GidT
+	func getgid () -> GIDT
 
 	// getgroups - get supplementary group IDs
-	func getgroups (gidsetsize: Int, grouplist: *[]GidT) -> Int
+	func getgroups (gidsetsize: Int, grouplist: *[]GIDT) -> Int
 
 	// gethostid - get an identifier for the current host
 	func gethostid () -> Long
@@ -413,22 +413,22 @@ export {
 	func getpass (prompt: *[]ConstChar) -> *[]Char
 
 	// getpgid - get the process group ID for a process
-	func getpgid (pid: PidT) -> PidT
+	func getpgid (pid: PIDT) -> PIDT
 
 	// getpgrp - get the process group ID of the calling process
-	func getpgrp () -> PidT
+	func getpgrp () -> PIDT
 
 	// getpid - get the process ID
-	func getpid () -> PidT
+	func getpid () -> PIDT
 
 	// getppid - get the parent process ID
-	func getppid () -> PidT
+	func getppid () -> PIDT
 
 	// getsid - get the process group ID of session leader
-	func getsid (pid: PidT) -> PidT
+	func getsid (pid: PIDT) -> PIDT
 
 	// getuid - get a real user ID
-	func getuid () -> UidT
+	func getuid () -> UIDT
 
 	// getwd - get the current working directory pathname
 	func getwd (path_name: *[]Char) -> *[]Char
@@ -437,7 +437,7 @@ export {
 	func isatty (fildes: Int) -> Int
 
 	// lchown - change the owner and group of a symbolic link
-	func lchown (path: *[]ConstChar, owner: UidT, group: GidT) -> Int
+	func lchown (path: *[]ConstChar, owner: UIDT, group: GIDT) -> Int
 
 	// link - link to a file
 	func link (path1: *[]ConstChar, path2: *[]ConstChar) -> Int
@@ -479,28 +479,28 @@ export {
 	func rmdir (path: *[]ConstChar) -> Int
 
 	// sbrk - change space allocation
-	func sbrk (incr: IntptrT) -> Ptr
+	func sbrk (incr: IntPtrT) -> Ptr
 
 	// setgid - set-group-ID
-	func setgid (gid: GidT) -> Int
+	func setgid (gid: GIDT) -> Int
 
 	// setpgid - set process group ID for job control
-	func setpgid (pid: PidT, pgid: PidT) -> Int
+	func setpgid (pid: PIDT, pgid: PIDT) -> Int
 
 	// setpgrp - set process group ID
-	func setpgrp () -> PidT
+	func setpgrp () -> PIDT
 
 	// setregid - set real and effective group IDs
-	func setregid (rgid: GidT, egid: GidT) -> Int
+	func setregid (rgid: GIDT, egid: GIDT) -> Int
 
 	// setreuid - set real and effective user IDs
-	func setreuid (ruid: UidT, euid: UidT) -> Int
+	func setreuid (ruid: UIDT, euid: UIDT) -> Int
 
 	// setsid - create session and set process group ID
-	func setsid () -> PidT
+	func setsid () -> PIDT
 
 	// setuid - set-user-ID
-	func setuid (uid: UidT) -> Int
+	func setuid (uid: UIDT) -> Int
 
 	// sleep - suspend execution for an interval of time
 	func sleep (seconds: UnsignedInt) -> UnsignedInt
@@ -518,10 +518,10 @@ export {
 	func sysconf (name: Int) -> LongInt
 
 	// tcgetpgrp - get the foreground process group ID
-	func tcgetpgrp (fildes: Int) -> PidT
+	func tcgetpgrp (fildes: Int) -> PIDT
 
 	// tcsetpgrp - set the foreground process group ID
-	func tcsetpgrp (fildes: Int, pgid_id: PidT) -> Int
+	func tcsetpgrp (fildes: Int, pgid_id: PIDT) -> Int
 
 	// truncate - truncate a file to a specified length
 	func truncate (path: *[]ConstChar, length: OffT) -> Int
@@ -542,7 +542,7 @@ export {
 	func usleep (useconds: USecondsT) -> Int
 
 	// vfork - create new process; share virtual memory
-	func vfork () -> PidT
+	func vfork () -> PIDT
 
 	// write, writev, pwrite - write on a file
 	func write (fildes: Int, buf: Ptr, nbyte: SizeT) -> SSizeT
