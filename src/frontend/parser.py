@@ -1468,6 +1468,8 @@ class Parser:
 		if self.is_comment():
 			self.skip()
 
+		self.match("=")
+
 		t = None
 		if not self.look("\n"):
 			t = self.expr_type()
