@@ -55,7 +55,7 @@ func main() -> Int {
 	}
 
 	let sockaddr = *Struct_sockaddr Ptr &server_addr
-	var e = bind(sockfd, sockaddr, Socklen_t sizeof(Struct_sockaddr_in))
+	var e = bind(sockfd, sockaddr, SocklenT sizeof(Struct_sockaddr_in))
 	if e < 0 {
 		perror("[-] Error in Binding")
 		exit(1)
@@ -71,7 +71,7 @@ func main() -> Int {
 
 	printf("[+] Listening...\n")
 
-	var addr_size = Socklen_t sizeof(Struct_sockaddr_in)
+	var addr_size = SocklenT sizeof(Struct_sockaddr_in)
 	var new_addr: Struct_sockaddr_in
 	let sa = *Struct_sockaddr Ptr &new_addr
 	let new_sock = accept(sockfd, sa, &addr_size)

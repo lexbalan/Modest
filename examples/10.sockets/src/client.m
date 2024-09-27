@@ -46,7 +46,7 @@ func main() -> Int {
 	}
 
 	let sockaddr = *Struct_sockaddr Ptr &server_addr
-	var e = connect(sockfd, sockaddr, Socklen_t sizeof(Struct_sockaddr_in))
+	var e = connect(sockfd, sockaddr, SocklenT sizeof(Struct_sockaddr_in))
 	if e < 0 {
 		 perror("[-] Error in Connecting")
 		 exit(1)

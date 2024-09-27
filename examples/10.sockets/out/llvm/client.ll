@@ -123,7 +123,6 @@ break_2:
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
-%SocklenT = type i32;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
 %IntptrT = type i64;
@@ -285,16 +284,16 @@ declare %Int @usleep(%USecondsT %useconds)
 declare %PidT @vfork()
 declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 
-%In_addr_t = type i32;
-%In_port_t = type i16;
-%Socklen_t = type i32;
+%InAddrT = type i32;
+%InPortT = type i16;
+%SocklenT = type i32;
 %Struct_sockaddr = type {
 	%UnsignedShort, 
 	[14 x i8]
 };
 
 %Struct_in_addr = type {
-	%In_addr_t
+	%InAddrT
 };
 
 %Struct_sockaddr_in = type {
@@ -307,14 +306,14 @@ declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 
 
 
-declare %In_addr_t @inet_addr([0 x %ConstChar]* %cp)
+declare %InAddrT @inet_addr([0 x %ConstChar]* %cp)
 declare %Int @socket(%Int %domain, %Int %type, %Int %protocol)
-declare %Int @bind(%Int %socket, %Struct_sockaddr* %addr, %Socklen_t %addrlen)
+declare %Int @bind(%Int %socket, %Struct_sockaddr* %addr, %SocklenT %addrlen)
 declare %Int @listen(%Int %socket, %Int %backlog)
-declare %Int @connect(%Int %socket, %Struct_sockaddr* %addr, %Socklen_t %addrlen)
+declare %Int @connect(%Int %socket, %Struct_sockaddr* %addr, %SocklenT %addrlen)
 declare %SSizeT @send(%Int %socket, i8* %buf, %SizeT %len, %Int %flags)
 declare %SSizeT @recv(%Int %socket, i8* %buf, %SizeT %len, %Int %flags)
-declare %Int @accept(%Int %socket, %Struct_sockaddr* %addr, %Socklen_t* %addrlen)
+declare %Int @accept(%Int %socket, %Struct_sockaddr* %addr, %SocklenT* %addrlen)
 ; -- end print includes --
 ; -- print imports --
 ; -- end print imports --
@@ -376,8 +375,8 @@ endif_0:
 	%5 = insertvalue %Struct_sockaddr_in zeroinitializer, i8 0, 0
 	%6 = insertvalue %Struct_sockaddr_in %5, i8 2, 1
 	%7 = insertvalue %Struct_sockaddr_in %6, %UnsignedShort 8080, 2
-	%8 = call %In_addr_t @inet_addr([0 x %ConstChar]* bitcast ([10 x i8]* @str3 to [0 x i8]*))
-	%9 = insertvalue %Struct_in_addr zeroinitializer, %In_addr_t %8, 0
+	%8 = call %InAddrT @inet_addr([0 x %ConstChar]* bitcast ([10 x i8]* @str3 to [0 x i8]*))
+	%9 = insertvalue %Struct_in_addr zeroinitializer, %InAddrT %8, 0
 	%10 = insertvalue %Struct_sockaddr_in %7, %Struct_in_addr %9, 3
 	%11 = insertvalue [8 x i8] zeroinitializer, i8 0, 0
 	%12 = insertvalue [8 x i8] %11, i8 0, 1
@@ -393,7 +392,7 @@ endif_0:
 	%21 = bitcast i8* %20 to %Struct_sockaddr*
 	%22 = alloca %Int, align 4
 	%23 = bitcast %Struct_sockaddr* %21 to %Struct_sockaddr*
-	%24 = call %Int @connect(%Int %1, %Struct_sockaddr* %23, %Socklen_t 16)
+	%24 = call %Int @connect(%Int %1, %Struct_sockaddr* %23, %SocklenT 16)
 	store %Int %24, %Int* %22
 	%25 = load %Int, %Int* %22
 	%26 = icmp slt %Int %25, 0

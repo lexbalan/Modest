@@ -11,13 +11,13 @@ include "libc/ctypes64"
 
 export {
 	@property("type.id.c", "in_addr_t")
-	type In_addr_t Nat32
+	type InAddrT Nat32
 
 	@property("type.id.c", "in_port_t")
-	type In_port_t Nat16
+	type InPortT Nat16
 
 	@property("type.id.c", "socklen_t")
-	type Socklen_t Nat32
+	type SocklenT Nat32
 
 
 	@property("type.id.c", "struct sockaddr")
@@ -29,7 +29,7 @@ export {
 
 	@property("type.id.c", "struct in_addr")
 	type Struct_in_addr record {
-		s_addr: In_addr_t
+		s_addr: InAddrT
 	}
 
 
@@ -111,25 +111,25 @@ export {
 	let af_MAX = 36
 
 
-	func inet_addr(cp: *[]ConstChar) -> In_addr_t
+	func inet_addr(cp: *[]ConstChar) -> InAddrT
 
 	/*
-	func inet_lnaof(in: Struct_in_addr) -> In_addr_t
-	func inet_makeaddr(net: In_addr_t, lna: In_addr_t) -> Struct_in_addr
-	func inet_netof(in: Struct_in_addr) -> In_addr_t
-	func inet_network(cp: *ConstChar) -> In_addr_t
+	func inet_lnaof(in: Struct_in_addr) -> InAddrT
+	func inet_makeaddr(net: InAddrT, lna: InAddrT) -> Struct_in_addr
+	func inet_netof(in: Struct_in_addr) -> InAddrT
+	func inet_network(cp: *ConstChar) -> InAddrT
 	func inet_ntoa(in: Struct_in_addr) -> *Char
 	*/
 
 	func socket(domain: Int, type: Int, protocol: Int) -> Int
-	func bind(socket: Int, addr: *Struct_sockaddr, addrlen: Socklen_t) -> Int
+	func bind(socket: Int, addr: *Struct_sockaddr, addrlen: SocklenT) -> Int
 	func listen(socket: Int, backlog: Int) -> Int
-	func connect(socket: Int, addr: *Struct_sockaddr, addrlen: Socklen_t) -> Int
+	func connect(socket: Int, addr: *Struct_sockaddr, addrlen: SocklenT) -> Int
 
 	func send(socket: Int, buf: Ptr, len: SizeT, flags: Int) -> SSizeT
 	func recv(socket: Int, buf: Ptr, len: SizeT, flags: Int) -> SSizeT
 
 	// вообще syscall, разберись
-	func accept(socket: Int, addr: *Struct_sockaddr, addrlen: *Socklen_t) -> Int
+	func accept(socket: Int, addr: *Struct_sockaddr, addrlen: *SocklenT) -> Int
 }
 

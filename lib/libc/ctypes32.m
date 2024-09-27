@@ -72,9 +72,6 @@ type LongDouble Float64
 
 
 export {
-	@property("type.id.c", "socklen_t")
-	type SocklenT Nat32
-
 	@property("type.id.c", "size_t")
 	type SizeT UnsignedLongInt
 
