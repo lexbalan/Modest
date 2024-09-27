@@ -9,6 +9,9 @@ include "libc/unistd"
 func main() -> Int {
 	printf("ctime test\n")
 
+	let seconds = time(nil)
+	printf("Hours since January 1, 1970 = %ld\n", seconds/3600)
+
 	var timer: TimeT
 	var y2k: Struct_tm
 	var tm: *Struct_tm
@@ -27,7 +30,7 @@ func main() -> Int {
 	tm = gmtime(&timer)
 
 	printf("tm.year = %i\n", tm.tm_year + 1900)
-	printf("tm.month = %i\n", tm.tm_mon)
+	printf("tm.month = %i\n", tm.tm_mon + 1)
 	printf("tm.mday = %i\n", tm.tm_mday)
 	printf("tm.wday = %i\n", tm.tm_wday)
 	printf("tm.hour = %i\n", tm.tm_hour)

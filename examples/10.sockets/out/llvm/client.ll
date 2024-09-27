@@ -309,12 +309,12 @@ declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 
 declare %In_addr_t @inet_addr([0 x %ConstChar]* %cp)
 declare %Int @socket(%Int %domain, %Int %type, %Int %protocol)
-declare %Int @bind(%Int %sockfd, %Struct_sockaddr* %addr, %Socklen_t %addrlen)
-declare %Int @listen(%Int %sockfd, %Int %backlog)
-declare %Int @connect(%Int %sockfd, %Struct_sockaddr* %addr, %Socklen_t %addrlen)
-declare %SSizeT @send(%Int %socket, i8* %buffer, %SizeT %length, %Int %flags)
-declare %SSizeT @recv(%Int %sockfd, i8* %buf, %SizeT %len, %Int %flags)
-declare %Int @accept(%Int %s, %Struct_sockaddr* %addr, %Socklen_t* %addrlen)
+declare %Int @bind(%Int %socket, %Struct_sockaddr* %addr, %Socklen_t %addrlen)
+declare %Int @listen(%Int %socket, %Int %backlog)
+declare %Int @connect(%Int %socket, %Struct_sockaddr* %addr, %Socklen_t %addrlen)
+declare %SSizeT @send(%Int %socket, i8* %buf, %SizeT %len, %Int %flags)
+declare %SSizeT @recv(%Int %socket, i8* %buf, %SizeT %len, %Int %flags)
+declare %Int @accept(%Int %socket, %Struct_sockaddr* %addr, %Socklen_t* %addrlen)
 ; -- end print includes --
 ; -- print imports --
 ; -- end print imports --

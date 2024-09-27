@@ -188,6 +188,11 @@ declare void @perror(%ConstCharStr* %str)
 declare i8 @utf_utf32_to_utf8(i32 %c, [4 x i8]* %buf)
 declare i8 @utf_utf16_to_utf32([0 x i16]* %c, i32* %result)
 
+declare i8 @n_to_sym(i8 %n)
+declare void @sprintf_hex_nat32([0 x i8]* %buf, i32 %x)
+declare void @sprintf_dec_int32([0 x i8]* %buf, i32 %x)
+declare void @sprintf_dec_nat32([0 x i8]* %buf, i32 %x)
+
 declare void @console_putchar8(i8 %c)
 declare void @console_putchar16(i16 %c)
 declare void @console_putchar32(i32 %c)
@@ -197,6 +202,7 @@ declare void @console_putchar_utf32(i32 %c)
 declare void @console_puts8(%Str8* %s)
 declare void @console_puts16(%Str16* %s)
 declare void @console_puts32(%Str32* %s)
+declare void @console_print(%Str8* %form, ...)
 ; -- end print imports --
 ; -- strings --
 @str1 = private constant [28 x i8] [i8 83, i8 45, i8 116, i8 45, i8 114, i8 45, i8 105, i8 45, i8 110, i8 45, i8 103, i8 45, i8 206, i8 169, i8 32, i8 240, i8 159, i8 144, i8 128, i8 240, i8 159, i8 142, i8 137, i8 240, i8 159, i8 166, i8 132, i8 0]

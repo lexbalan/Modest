@@ -49,7 +49,7 @@ export {
 
 	/* non-blocking and interrupt i/o */
 	let eAGAIN = 35           // Resource temporarily unavailable
-	let eWOULDBLOCK = EAGAIN  // Operation would block
+	let eWOULDBLOCK = eAGAIN  // Operation would block
 	let eINPROGRESS = 36      // Operation now in progress
 	let eALREADY = 37         // Operation already in progress
 
