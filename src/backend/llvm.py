@@ -2237,7 +2237,8 @@ def print_string_as_array(strid, string, char_width):
 		i = i + 1
 
 	if 'zstring' in string['att']:
-		out(", ")
+		if slen > 1:
+			out(", ")
 		print_int_type_for(char_width)
 		out(" 0")
 
