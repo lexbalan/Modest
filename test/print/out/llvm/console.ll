@@ -136,6 +136,93 @@ break_2:
 %UIDT = type i32;
 %GIDT = type i32;
 
+
+declare %Int @access([0 x %ConstChar]* %path, %Int %amode)
+declare %UnsignedInt @alarm(%UnsignedInt %seconds)
+declare %Int @brk(i8* %end_data_segment)
+declare %Int @chdir([0 x %ConstChar]* %path)
+declare %Int @chroot([0 x %ConstChar]* %path)
+declare %Int @chown([0 x %ConstChar]* %pathname, %UIDT %owner, %GIDT %group)
+declare %Int @close(%Int %fildes)
+declare %SizeT @confstr(%Int %name, [0 x %Char]* %buf, %SizeT %len)
+declare [0 x %Char]* @crypt([0 x %ConstChar]* %key, [0 x %ConstChar]* %salt)
+declare [0 x %Char]* @ctermid([0 x %Char]* %s)
+declare [0 x %Char]* @cuserid([0 x %Char]* %s)
+declare %Int @dup(%Int %fildes)
+declare %Int @dup2(%Int %fildes, %Int %fildes2)
+declare void @encrypt([64 x %Char]* %block, %Int %edflag)
+declare %Int @execl([0 x %ConstChar]* %path, [0 x %ConstChar]* %arg0, ...)
+declare %Int @execle([0 x %ConstChar]* %path, [0 x %ConstChar]* %arg0, ...)
+declare %Int @execlp([0 x %ConstChar]* %file, [0 x %ConstChar]* %arg0, ...)
+declare %Int @execv([0 x %ConstChar]* %path, [0 x %ConstChar]* %argv)
+declare %Int @execve([0 x %ConstChar]* %path, [0 x %ConstChar]* %argv, [0 x %ConstChar]* %envp)
+declare %Int @execvp([0 x %ConstChar]* %file, [0 x %ConstChar]* %argv)
+declare void @_exit(%Int %status)
+declare %Int @fchown(%Int %fildes, %UIDT %owner, %GIDT %group)
+declare %Int @fchdir(%Int %fildes)
+declare %Int @fdatasync(%Int %fildes)
+declare %PIDT @fork()
+declare %LongInt @fpathconf(%Int %fildes, %Int %name)
+declare %Int @fsync(%Int %fildes)
+declare %Int @ftruncate(%Int %fildes, %OffT %length)
+declare [0 x %Char]* @getcwd([0 x %Char]* %buf, %SizeT %size)
+declare %Int @getdtablesize()
+declare %GIDT @getegid()
+declare %UIDT @geteuid()
+declare %GIDT @getgid()
+declare %Int @getgroups(%Int %gidsetsize, [0 x %GIDT]* %grouplist)
+declare %Long @gethostid()
+declare [0 x %Char]* @getlogin()
+declare %Int @getlogin_r([0 x %Char]* %name, %SizeT %namesize)
+declare %Int @getopt(%Int %argc, [0 x %ConstChar]* %argv, [0 x %ConstChar]* %optstring)
+declare %Int @getpagesize()
+declare [0 x %Char]* @getpass([0 x %ConstChar]* %prompt)
+declare %PIDT @getpgid(%PIDT %pid)
+declare %PIDT @getpgrp()
+declare %PIDT @getpid()
+declare %PIDT @getppid()
+declare %PIDT @getsid(%PIDT %pid)
+declare %UIDT @getuid()
+declare [0 x %Char]* @getwd([0 x %Char]* %path_name)
+declare %Int @isatty(%Int %fildes)
+declare %Int @lchown([0 x %ConstChar]* %path, %UIDT %owner, %GIDT %group)
+declare %Int @link([0 x %ConstChar]* %path1, [0 x %ConstChar]* %path2)
+declare %Int @lockf(%Int %fildes, %Int %function, %OffT %size)
+declare %OffT @lseek(%Int %fildes, %OffT %offset, %Int %whence)
+declare %Int @nice(%Int %incr)
+declare %LongInt @pathconf([0 x %ConstChar]* %path, %Int %name)
+declare %Int @pause()
+declare %Int @pipe([2 x %Int]* %fildes)
+declare %SSizeT @pread(%Int %fildes, i8* %buf, %SizeT %nbyte, %OffT %offset)
+declare %Int @pthread_atfork(void ()* %prepare, void ()* %parent, void ()* %child)
+declare %SSizeT @pwrite(%Int %fildes, i8* %buf, %SizeT %nbyte, %OffT %offset)
+declare %SSizeT @read(%Int %fildes, i8* %buf, %SizeT %nbyte)
+declare %Int @readlink([0 x %ConstChar]* %path, [0 x %Char]* %buf, %SizeT %bufsize)
+declare %Int @rmdir([0 x %ConstChar]* %path)
+declare i8* @sbrk(%IntPtrT %incr)
+declare %Int @setgid(%GIDT %gid)
+declare %Int @setpgid(%PIDT %pid, %PIDT %pgid)
+declare %PIDT @setpgrp()
+declare %Int @setregid(%GIDT %rgid, %GIDT %egid)
+declare %Int @setreuid(%UIDT %ruid, %UIDT %euid)
+declare %PIDT @setsid()
+declare %Int @setuid(%UIDT %uid)
+declare %UnsignedInt @sleep(%UnsignedInt %seconds)
+declare void @swab(i8* %src, i8* %dst, %SSizeT %nbytes)
+declare %Int @symlink([0 x %ConstChar]* %path1, [0 x %ConstChar]* %path2)
+declare void @sync()
+declare %LongInt @sysconf(%Int %name)
+declare %PIDT @tcgetpgrp(%Int %fildes)
+declare %Int @tcsetpgrp(%Int %fildes, %PIDT %pgid_id)
+declare %Int @truncate([0 x %ConstChar]* %path, %OffT %length)
+declare [0 x %Char]* @ttyname(%Int %fildes)
+declare %Int @ttyname_r(%Int %fildes, [0 x %Char]* %name, %SizeT %namesize)
+declare %USecondsT @ualarm(%USecondsT %useconds, %USecondsT %interval)
+declare %Int @unlink([0 x %ConstChar]* %path)
+declare %Int @usleep(%USecondsT %useconds)
+declare %PIDT @vfork()
+declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
+
 %File = type i8;
 %FposT = type i8;
 %CharStr = type %Str;
@@ -580,16 +667,22 @@ define void @console_print(%Str8* %form, ...) {
 	%1 = alloca i8*, align 1
 	%2 = bitcast i8** %1 to i8*
 	call void @llvm.va_start(i8* %2)
-	%3 = alloca [256 x i8], align 1
-	%4 = bitcast [256 x i8]* %3 to [0 x i8]*
-	%5 = load i8*, i8** %1
-	%6 = call i32 @console_vsprint([0 x i8]* %4, %Str8* %form, i8* %5)
-	%7 = getelementptr inbounds [256 x i8], [256 x i8]* %3, i32 0, i32 %6
-	store i8 0, i8* %7
-	%8 = bitcast [256 x i8]* %3 to %Str8*
-	call void @console_puts8(%Str8* %8)
-	%9 = bitcast i8** %1 to i8*
-	call void @llvm.va_end(i8* %9)
+	%3 = load i8*, i8** %1
+	call void @console_vfprint(%Int 1, %Str8* %form, i8* %3)
+	%4 = bitcast i8** %1 to i8*
+	call void @llvm.va_end(i8* %4)
+	ret void
+}
+
+define void @console_vfprint(%Int %fd, %Str8* %form, i8* %va) {
+	%1 = alloca [256 x i8], align 1
+	%2 = bitcast [256 x i8]* %1 to [0 x i8]*
+	%3 = call i32 @console_vsprint([0 x i8]* %2, %Str8* %form, i8* %va)
+	%4 = getelementptr inbounds [256 x i8], [256 x i8]* %1, i32 0, i32 %3
+	store i8 0, i8* %4
+	%5 = bitcast [256 x i8]* %1 to i8*
+	%6 = zext i32 %3 to %SizeT
+	%7 = call %SSizeT @write(%Int %fd, i8* %5, %SizeT %6)
 	ret void
 }
 
@@ -603,7 +696,7 @@ again_1:
 	br i1 1 , label %body_1, label %break_1
 body_1:
 	%3 = alloca i8, align 1
-	%4 = load i32, i32* %2
+	%4 = load i32, i32* %1
 	%5 = getelementptr inbounds %Str8, %Str8* %form, i32 0, i32 %4
 	%6 = load i8, i8* %5
 	store i8 %6, i8* %3
@@ -618,7 +711,7 @@ endif_0:
 	%11 = icmp eq i8 %10, 92
 	br i1 %11 , label %then_1, label %endif_1
 then_1:
-	%12 = load i32, i32* %2
+	%12 = load i32, i32* %1
 	%13 = add i32 %12, 1
 	%14 = getelementptr inbounds %Str8, %Str8* %form, i32 0, i32 %13
 	%15 = load i8, i8* %14
@@ -628,16 +721,16 @@ then_1:
 	br i1 %17 , label %then_2, label %else_2
 then_2:
 	; "\{" -> "{"
-	%18 = load i32, i32* %1
+	%18 = load i32, i32* %2
 	%19 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %18
 	%20 = load i8, i8* %3
 	store i8 %20, i8* %19
-	%21 = load i32, i32* %1
+	%21 = load i32, i32* %2
 	%22 = add i32 %21, 1
-	store i32 %22, i32* %1
-	%23 = load i32, i32* %2
+	store i32 %22, i32* %2
+	%23 = load i32, i32* %1
 	%24 = add i32 %23, 2
-	store i32 %24, i32* %2
+	store i32 %24, i32* %1
 	br label %again_1
 	br label %endif_2
 else_2:
@@ -646,16 +739,16 @@ else_2:
 	br i1 %27 , label %then_3, label %else_3
 then_3:
 	; "\}" -> "{"
-	%28 = load i32, i32* %1
+	%28 = load i32, i32* %2
 	%29 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %28
 	%30 = load i8, i8* %3
 	store i8 %30, i8* %29
-	%31 = load i32, i32* %1
+	%31 = load i32, i32* %2
 	%32 = add i32 %31, 1
-	store i32 %32, i32* %1
-	%33 = load i32, i32* %2
+	store i32 %32, i32* %2
+	%33 = load i32, i32* %1
 	%34 = add i32 %33, 2
-	store i32 %34, i32* %2
+	store i32 %34, i32* %1
 	br label %again_1
 	br label %endif_3
 else_3:
@@ -663,16 +756,16 @@ else_3:
 	%37 = icmp eq i8 %36, 92
 	br i1 %37 , label %then_4, label %endif_4
 then_4:
-	%38 = load i32, i32* %1
+	%38 = load i32, i32* %2
 	%39 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %38
 	%40 = load i8, i8* %3
 	store i8 %40, i8* %39
-	%41 = load i32, i32* %1
+	%41 = load i32, i32* %2
 	%42 = add i32 %41, 1
-	store i32 %42, i32* %1
-	%43 = load i32, i32* %2
+	store i32 %42, i32* %2
+	%43 = load i32, i32* %1
 	%44 = add i32 %43, 2
-	store i32 %44, i32* %2
+	store i32 %44, i32* %1
 	br label %again_1
 	br label %endif_4
 endif_4:
@@ -686,17 +779,17 @@ endif_1:
 	%47 = icmp eq i8 %46, 123
 	br i1 %47 , label %then_5, label %else_5
 then_5:
-	%48 = load i32, i32* %2
+	%48 = load i32, i32* %1
 	%49 = add i32 %48, 1
-	store i32 %49, i32* %2
-	%50 = load i32, i32* %2
+	store i32 %49, i32* %1
+	%50 = load i32, i32* %1
 	%51 = getelementptr inbounds %Str8, %Str8* %form, i32 0, i32 %50
 	%52 = load i8, i8* %51
 	store i8 %52, i8* %3
-	%53 = load i32, i32* %2
+	%53 = load i32, i32* %1
 	%54 = add i32 %53, 1
-	store i32 %54, i32* %2
-	%55 = load i32, i32* %1
+	store i32 %54, i32* %1
+	%55 = load i32, i32* %2
 	%56 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %55
 ;
 	%57 = bitcast i8* %56 to [0 x i8]*
@@ -712,9 +805,9 @@ then_6:
 	;
 	%63 = va_arg i8* %va, i32
 	%64 = call i32 @sprint_dec_int32([0 x i8]* %57, i32 %63)
-	%65 = load i32, i32* %1
+	%65 = load i32, i32* %2
 	%66 = add i32 %65, %64
-	store i32 %66, i32* %1
+	store i32 %66, i32* %2
 	br label %endif_6
 else_6:
 	%67 = load i8, i8* %3
@@ -726,9 +819,9 @@ then_7:
 	;
 	%69 = va_arg i8* %va, i32
 	%70 = call i32 @sprint_n32([0 x i8]* %57, i32 %69)
-	%71 = load i32, i32* %1
+	%71 = load i32, i32* %2
 	%72 = add i32 %71, %70
-	store i32 %72, i32* %1
+	store i32 %72, i32* %2
 	br label %endif_7
 else_7:
 	%73 = load i8, i8* %3
@@ -744,9 +837,9 @@ then_8:
 	;
 	%78 = va_arg i8* %va, i32
 	%79 = call i32 @sprint_hex_nat32([0 x i8]* %57, i32 %78)
-	%80 = load i32, i32* %1
+	%80 = load i32, i32* %2
 	%81 = add i32 %80, %79
-	store i32 %81, i32* %1
+	store i32 %81, i32* %2
 	br label %endif_8
 else_8:
 	%82 = load i8, i8* %3
@@ -758,11 +851,11 @@ then_9:
 	;
 	%84 = va_arg i8* %va, %Str8*
 	%85 = call [0 x %Char]* @strcpy([0 x i8]* %57, %Str8* %84)
-	%86 = load i32, i32* %1
+	%86 = load i32, i32* %2
 	%87 = call %SizeT @strlen(%Str8* %84)
 	%88 = trunc %SizeT %87 to i32
 	%89 = add i32 %86, %88
-	store i32 %89, i32* %1
+	store i32 %89, i32* %2
 	br label %endif_9
 else_9:
 	%90 = load i8, i8* %3
@@ -773,16 +866,16 @@ then_10:
 	; %c for char
 	;
 	%92 = va_arg i8* %va, i32
-	;putchar32(c)
-	%93 = load i32, i32* %1
+	%93 = load i32, i32* %2
 	%94 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %93
-	%95 = trunc i32 %92 to i8
-	store i8 %95, i8* %94
-	%96 = load i32, i32* %1
-	%97 = add i32 %96, 1
-	store i32 %97, i32* %1
-	;sptr[0] = unsafe Char8 c
-	;sptr[0] = "\0"
+;
+	%95 = bitcast i8* %94 to [0 x i8]*
+	%96 = bitcast [0 x i8]* %95 to [4 x i8]*
+	%97 = call i8 @utf_utf32_to_utf8(i32 %92, [4 x i8]* %96)
+	%98 = sext i8 %97 to i32
+	%99 = load i32, i32* %2
+	%100 = add i32 %99, %98
+	store i32 %100, i32* %2
 	br label %endif_10
 endif_10:
 	br label %endif_9
@@ -795,22 +888,22 @@ endif_7:
 endif_6:
 	br label %endif_5
 else_5:
-	%98 = load i32, i32* %1
-	%99 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %98
-	%100 = load i8, i8* %3
-	store i8 %100, i8* %99
-	%101 = load i32, i32* %1
-	%102 = add i32 %101, 1
-	store i32 %102, i32* %1
+	%101 = load i32, i32* %2
+	%102 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %101
+	%103 = load i8, i8* %3
+	store i8 %103, i8* %102
+	%104 = load i32, i32* %2
+	%105 = add i32 %104, 1
+	store i32 %105, i32* %2
 	br label %endif_5
 endif_5:
-	%103 = load i32, i32* %2
-	%104 = add i32 %103, 1
-	store i32 %104, i32* %2
+	%106 = load i32, i32* %1
+	%107 = add i32 %106, 1
+	store i32 %107, i32* %1
 	br label %again_1
 break_1:
-	%105 = load i32, i32* %1
-	ret i32 %105
+	%108 = load i32, i32* %2
+	ret i32 %108
 }
 
 

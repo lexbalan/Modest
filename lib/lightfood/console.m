@@ -4,7 +4,9 @@ $pragma do_not_include
 $pragma c_include "./utf.h"
 $pragma c_include "./console.h"
 
-include "libc/stdio"  // for putchar()
+include "libc/ctypes64"  // for Int
+include "libc/unistd"  // for write()
+include "libc/stdio"   // for putchar()
 include "libc/string"  // for strlen, strcpy
 import "misc/utf"
 
@@ -113,16 +115,20 @@ export func puts32(s: *Str32) -> Unit {
 }
 
 
+
 export func print(form: *Str8, ...) {
 	var va: VA_List
 	__va_start(va, form)
+	vfprint(c_STDOUT_FILENO, form, va)
+	__va_end(va)
+}
 
+
+export func vfprint(fd: Int, form: *Str8, va: VA_List) {
 	var strbuf: [256]Char8
 	let n = vsprint(&strbuf, form, va)
 	strbuf[n] = '\x0'
-	puts8(&strbuf)
-
-	__va_end(va)
+	write(fd, &strbuf, SizeT n)
 }
 
 

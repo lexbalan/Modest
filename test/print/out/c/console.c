@@ -18,6 +18,8 @@ int32_t sprint_n32(char *buf, uint32_t x);
 
 
 
+
+
 char n_to_sym(uint8_t n)
 {
 	char c;
@@ -237,13 +239,16 @@ void console_print(char *form, ...)
 {
 	va_list va;
 	va_start(va, form);
+	console_vfprint(STDOUT_FILENO, form, va);
+	va_end(va);
+}
 
+void console_vfprint(int fd, char *form, va_list va)
+{
 	char strbuf[256];
 	const int32_t n = console_vsprint((char *)&strbuf, form, va);
 	strbuf[n] = '\x0';
-	console_puts8((char *)&strbuf);
-
-	va_end(va);
+	write(fd, (char *)&strbuf, ((size_t)(uint32_t)n));
 }
 
 int32_t console_vsprint(char *buf, char *form, va_list va)
