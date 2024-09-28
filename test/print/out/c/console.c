@@ -288,61 +288,62 @@ int32_t console_vsprint(char *buf, char *form, va_list va)
 			}
 		}
 
-		if (c == '{') {
-			i = i + 1;
-			c = form[i];
-			i = i + 1;
-
-			char *const sptr = (char *)&buf[j];
-
-			if ((c == 'i') || (c == 'd')) {
-				//
-				// %i & %d for signed integer (Int)
-				//
-				const int32_t x = va_arg(va, int32_t);
-				const int32_t n = sprint_dec_int32(sptr, x);
-				j = j + n;
-
-			} else if (c == 'n') {
-				//
-				// %n for unsigned integer (Nat)
-				//
-				const uint32_t x = va_arg(va, uint32_t);
-				const int32_t n = sprint_n32(sptr, x);
-				j = j + n;
-
-			} else if ((c == 'x') || (c == 'p')) {
-				//
-				// %x for unsigned integer (Nat)
-				// %p for pointers
-				//
-				const uint32_t x = va_arg(va, uint32_t);
-				const int32_t n = sprint_hex_nat32(sptr, x);
-				j = j + n;
-
-			} else if (c == 's') {
-				//
-				// %s pointer to string
-				//
-				char *const s = va_arg(va, char *);
-				strcpy(sptr, s);
-				j = j + (int32_t)strlen(s);
-
-			} else if (c == 'c') {
-				//
-				// %c for char
-				//
-				const uint32_t c = va_arg(va, uint32_t);
-				const int32_t n = (int32_t)utf_utf32_to_utf8(c, (char *)(char *)&buf[j]);
-				j = j + n;
-			}
-
-		} else {
+		if (c != '{') {
 			buf[j] = c;
 			j = j + 1;
+			i = i + 1;
+			continue;
 		}
 
+		// c == '{'
+
 		i = i + 1;
+		c = form[i];
+		i = i + 2;
+
+		char *const sptr = (char *)&buf[j];
+
+		if ((c == 'i') || (c == 'd')) {
+			//
+			// %i & %d for signed integer (Int)
+			//
+			const int32_t x = va_arg(va, int32_t);
+			const int32_t n = sprint_dec_int32(sptr, x);
+			j = j + n;
+
+		} else if (c == 'n') {
+			//
+			// %n for unsigned integer (Nat)
+			//
+			const uint32_t x = va_arg(va, uint32_t);
+			const int32_t n = sprint_n32(sptr, x);
+			j = j + n;
+
+		} else if ((c == 'x') || (c == 'p')) {
+			//
+			// %x for unsigned integer (Nat)
+			// %p for pointers
+			//
+			const uint32_t x = va_arg(va, uint32_t);
+			const int32_t n = sprint_hex_nat32(sptr, x);
+			j = j + n;
+
+		} else if (c == 's') {
+			//
+			// %s pointer to string
+			//
+			char *const s = va_arg(va, char *);
+			strcpy(sptr, s);
+			j = j + (int32_t)strlen(s);
+
+		} else if (c == 'c') {
+			//
+			// %c for char
+			//
+			const uint32_t c = va_arg(va, uint32_t);
+			const int32_t n = (int32_t)utf_utf32_to_utf8(c, (char *)sptr);
+			j = j + n;
+		}
 	}
 
 	return j;

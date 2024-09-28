@@ -116,6 +116,7 @@ export func puts32(s: *Str32) -> Unit {
 
 
 
+
 export func print(form: *Str8, ...) {
 	var va: VA_List
 	__va_start(va, form)
@@ -165,61 +166,62 @@ export func vsprint(buf: *[]Char8, form: *Str8, va: VA_List) -> Int32 {
 			}
 		}
 
-		if c == "{" {
-			++i
-			c = form[i]
-			++i
-
-			let sptr = &buf[j:]
-
-			if c == "i" or c == "d" {
-				//
-				// %i & %d for signed integer (Int)
-				//
-				let x = __va_arg(va, Int32)
-				let n = sprint_dec_int32(sptr, x)
-				j = j + n
-
-			} else if c == "n" {
-				//
-				// %n for unsigned integer (Nat)
-				//
-				let x = __va_arg(va, Nat32)
-				let n = sprint_n32(sptr, x)
-				j = j + n
-
-			} else if c == "x" or c == "p" {
-				//
-				// %x for unsigned integer (Nat)
-				// %p for pointers
-				//
-				let x = __va_arg(va, Nat32)
-				let n = sprint_hex_nat32(sptr, x)
-				j = j + n
-
-			} else if c == "s" {
-				//
-				// %s pointer to string
-				//
-				let s = __va_arg(va, *Str8)
-				strcpy(sptr, s)
-				j = j + unsafe Int32 strlen(s)
-
-			} else if c == "c" {
-				//
-				// %c for char
-				//
-				let c = __va_arg(va, Char32)
-				let n = Int32 utf.utf32_to_utf8(c, unsafe *[4]Char8 &buf[j:])
-				j = j + n
-			}
-
-		} else {
+		if c != "{" {
 			buf[j] = c
 			++j
+			++i
+			again
 		}
 
+		// c == '{'
+
 		++i
+		c = form[i]
+		i = i + 2
+
+		let sptr = &buf[j:]
+
+		if c == "i" or c == "d" {
+			//
+			// %i & %d for signed integer (Int)
+			//
+			let x = __va_arg(va, Int32)
+			let n = sprint_dec_int32(sptr, x)
+			j = j + n
+
+		} else if c == "n" {
+			//
+			// %n for unsigned integer (Nat)
+			//
+			let x = __va_arg(va, Nat32)
+			let n = sprint_n32(sptr, x)
+			j = j + n
+
+		} else if c == "x" or c == "p" {
+			//
+			// %x for unsigned integer (Nat)
+			// %p for pointers
+			//
+			let x = __va_arg(va, Nat32)
+			let n = sprint_hex_nat32(sptr, x)
+			j = j + n
+
+		} else if c == "s" {
+			//
+			// %s pointer to string
+			//
+			let s = __va_arg(va, *Str8)
+			strcpy(sptr, s)
+			j = j + unsafe Int32 strlen(s)
+
+		} else if c == "c" {
+			//
+			// %c for char
+			//
+			let c = __va_arg(va, Char32)
+			let n = Int32 utf.utf32_to_utf8(c, unsafe *[4]Char8 sptr)
+			j = j + n
+		}
 	}
 
 	return j
