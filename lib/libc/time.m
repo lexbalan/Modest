@@ -17,7 +17,7 @@ export {
 
 
 	@property("type.id.c", "struct tm")
-	type Struct_tm record {
+	type StructTM record {
 		tm_sec: Int	   // Seconds [0-60]
 		tm_min: Int	   // Minutes [0-59]
 		tm_hour: Int   // Hours	[0-23]
@@ -45,25 +45,29 @@ export {
 	func difftime(end: TimeT, beginning: TimeT) -> Double
 
 	// Convert tm structure to time_t
-	func mktime(timeptr: *Struct_tm) -> TimeT
+	func mktime(timeptr: *StructTM) -> TimeT
 
 	// Get current time
 	@attribute("value.type.to:dispensable")
 	func time(timer: *TimeT) -> TimeT
 
 	// Convert tm structure to string
-	func asctime(timeptr: *Struct_tm) -> *Char
+	func asctime(timeptr: *StructTM) -> *Char
 
 	// Convert time_t value to string
 	func ctime(timer: *TimeT) -> *Char
 
 	// Convert time_t to tm as UTC time
-	func gmtime(timer: *TimeT) -> *Struct_tm
+	func gmtime(timer: *TimeT) -> *StructTM
 
 	// Convert time_t to tm as local time
-	func localtime(timer: *TimeT) -> *Struct_tm
+	func localtime(timer: *TimeT) -> *StructTM
 
 	// Format time as string
-	func strftime(ptr: *Char, maxsize: SizeT, format: *ConstChar, timeptr: *Struct_tm) -> SizeT
+	func strftime(ptr: *Char, maxsize: SizeT, format: *ConstChar, timeptr: *StructTM) -> SizeT
+
+
+	func localtime_s(timer: *TimeT, tmptr: *StructTM) -> *StructTM // (since C11)
+	func localtime_r(timer: *TimeT, tmptr: *StructTM) -> *StructTM // (since C23)
 }
 

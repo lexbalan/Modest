@@ -17,7 +17,8 @@ CM:
 
 LLVM:
 	mcc -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.m
-	clang $(LLVMPREFIX)/main.ll
+	mcc -o $(LLVMPREFIX)/datetime -mbackend=llvm -funsafe ${MODEST_LIB}/lightfood/datetime.m
+	clang $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/datetime.ll
 
 
 C:
