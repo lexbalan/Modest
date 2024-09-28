@@ -165,7 +165,7 @@ export func print(form: *Str8, ...) {
 				// %n for unsigned integer (Nat)
 				//
 				let n = __va_arg(va, Nat32)
-				sprintf_dec_nat32(sptr, n)
+				sprint_n32(sptr, n)
 			} else if c == "x" or c == "p" {
 				//
 				// %x for unsigned integer (Nat)
@@ -284,7 +284,7 @@ func sprintf_dec_int32(buf: *[]Char8, x: Int32) {
 }
 
 
-func sprintf_dec_nat32(buf: *[]Char8, x: Nat32) {
+func sprint_n32(buf: *[]Char8, x: Nat32) {
 	var cc: [11]Char8
 	var d = x
 	var i = 0
