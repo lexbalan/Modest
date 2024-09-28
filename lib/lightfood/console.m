@@ -154,7 +154,7 @@ export func print(form: *Str8, ...) {
 			sptr = &buf
 			sptr[0] = "\0"
 
-			if (c == "i") or (c == "d") {
+			if c == "i" or c == "d" {
 				//
 				// %i & %d for signed integer (Int)
 				//
@@ -166,7 +166,7 @@ export func print(form: *Str8, ...) {
 				//
 				let n = __va_arg(va, Nat32)
 				sprintf_dec_nat32(sptr, n)
-			} else if (c == "x") or (c == "p") {
+			} else if c == "x" or c == "p" {
 				//
 				// %x for unsigned integer (Nat)
 				// %p for pointers
