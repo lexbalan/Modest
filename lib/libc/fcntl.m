@@ -43,7 +43,7 @@ export {
 	let f_GET_SEALS = 17      // get seals
 
 	// file descriptor flags (f_GETFD, f_SETFD)
-	let c_FD_CLOEXEC = 1      // close-on-exec flag
+	let fd_CLOEXEC = 1        // close-on-exec flag
 
 	// record locking flags (F_GETLK, F_SETLK, F_SETLKW)
 	let f_RDLCK = 1  // shared or read lock
