@@ -184,13 +184,25 @@ declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
 
+declare i8* @memset(i8* %mem, %Int %c, %SizeT %n)
+declare i8* @memcpy(i8* %dst, i8* %src, %SizeT %len)
+declare i8* @memmove(i8* %dst, i8* %src, %SizeT %n)
+declare %Int @memcmp(i8* %p0, i8* %p1, %SizeT %num)
+declare %Int @strncmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
+declare %Int @strcmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2)
+declare [0 x %Char]* @strcpy([0 x %Char]* %dst, [0 x %ConstChar]* %src)
+declare %SizeT @strlen([0 x %ConstChar]* %s)
+declare [0 x %Char]* @strcat([0 x %Char]* %s1, [0 x %ConstChar]* %s2)
+declare [0 x %Char]* @strncat([0 x %Char]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
+declare [0 x %Char]* @strerror(%Int %error)
+
 declare i8 @utf_utf32_to_utf8(i32 %c, [4 x i8]* %buf)
 declare i8 @utf_utf16_to_utf32([0 x i16]* %c, i32* %result)
 
 declare i8 @n_to_sym(i8 %n)
-declare void @sprintf_hex_nat32([0 x i8]* %buf, i32 %x)
-declare void @sprintf_dec_int32([0 x i8]* %buf, i32 %x)
-declare void @sprintf_dec_nat32([0 x i8]* %buf, i32 %x)
+declare i32 @sprint_hex_nat32([0 x i8]* %buf, i32 %x)
+declare i32 @sprint_dec_int32([0 x i8]* %buf, i32 %x)
+declare i32 @sprint_n32([0 x i8]* %buf, i32 %x)
 
 declare void @console_putchar8(i8 %c)
 declare void @console_putchar16(i16 %c)
@@ -202,6 +214,7 @@ declare void @console_puts8(%Str8* %s)
 declare void @console_puts16(%Str16* %s)
 declare void @console_puts32(%Str32* %s)
 declare void @console_print(%Str8* %form, ...)
+declare i32 @console_vsprint([0 x i8]* %buf, %Str8* %form, i8* %va)
 ; -- end print imports --
 ; -- strings --
 @str1 = private constant [20 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 99, i8 111, i8 110, i8 115, i8 111, i8 108, i8 101, i8 32, i8 112, i8 114, i8 105, i8 110, i8 116, i8 10, i8 0]
@@ -210,8 +223,8 @@ declare void @console_print(%Str8* %form, ...)
 @str4 = private constant [2 x i8] [i8 10, i8 0]
 @str5 = private constant [8 x i8] [i8 92, i8 123, i8 123, i8 92, i8 125, i8 125, i8 10, i8 0]
 @str6 = private constant [11 x i8] [i8 99, i8 32, i8 61, i8 32, i8 39, i8 123, i8 99, i8 125, i8 39, i8 10, i8 0]
-@str7 = private constant [11 x i8] [i8 115, i8 32, i8 61, i8 32, i8 34, i8 123, i8 115, i8 125, i8 34, i8 10, i8 0]
-@str8 = private constant [9 x i8] [i8 105, i8 32, i8 61, i8 32, i8 123, i8 105, i8 125, i8 10, i8 0]
+@str7 = private constant [9 x i8] [i8 105, i8 32, i8 61, i8 32, i8 123, i8 105, i8 125, i8 10, i8 0]
+@str8 = private constant [11 x i8] [i8 115, i8 32, i8 61, i8 32, i8 34, i8 123, i8 115, i8 125, i8 34, i8 10, i8 0]
 @str9 = private constant [9 x i8] [i8 110, i8 32, i8 61, i8 32, i8 123, i8 110, i8 125, i8 10, i8 0]
 @str10 = private constant [11 x i8] [i8 120, i8 32, i8 61, i8 32, i8 48, i8 120, i8 123, i8 120, i8 125, i8 10, i8 0]
 
@@ -220,9 +233,9 @@ define %Int @main() {
 	call void (%Str8*, ...) @console_print(%Str8* bitcast ([3 x i8]* @str3 to [0 x i8]*))
 	call void (%Str8*, ...) @console_print(%Str8* bitcast ([2 x i8]* @str4 to [0 x i8]*))
 	call void (%Str8*, ...) @console_print(%Str8* bitcast ([8 x i8]* @str5 to [0 x i8]*))
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([11 x i8]* @str6 to [0 x i8]*), i32 128000)
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([11 x i8]* @str7 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @str2 to [0 x i8]*))
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([9 x i8]* @str8 to [0 x i8]*), i32 -1)
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([11 x i8]* @str6 to [0 x i8]*), i32 35)
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([9 x i8]* @str7 to [0 x i8]*), i32 -1)
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([11 x i8]* @str8 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @str2 to [0 x i8]*))
 	call void (%Str8*, ...) @console_print(%Str8* bitcast ([9 x i8]* @str9 to [0 x i8]*), i32 123)
 	call void (%Str8*, ...) @console_print(%Str8* bitcast ([11 x i8]* @str10 to [0 x i8]*), i32 305419903)
 	ret %Int 0

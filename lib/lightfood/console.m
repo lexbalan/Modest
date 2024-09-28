@@ -5,6 +5,7 @@ $pragma c_include "./utf.h"
 $pragma c_include "./console.h"
 
 include "libc/stdio"  // for putchar()
+include "libc/string"  // for strlen, strcpy
 import "misc/utf"
 
 
@@ -116,7 +117,19 @@ export func print(form: *Str8, ...) {
 	var va: VA_List
 	__va_start(va, form)
 
-	var i = 0
+	var strbuf: [256]Char8
+	let n = vsprint(&strbuf, form, va)
+	strbuf[n] = '\x0'
+	puts8(&strbuf)
+
+	__va_end(va)
+}
+
+
+export func vsprint(buf: *[]Char8, form: *Str8, va: VA_List) -> Int32 {
+	var i = 0  // form index
+	var j = 0  // out buf index
+
 	while true {
 		var c = form[i]
 
@@ -128,16 +141,19 @@ export func print(form: *Str8, ...) {
 			c = form[i + 1]
 			if c == "{" {
 				// "\{" -> "{"
-				putchar8(c)
+				buf[j] = c
+				++j
 				i = i + 2
 				again
 			} else if c == "}" {
 				// "\}" -> "{"
-				putchar8(c)
+				buf[j] = c
+				++j
 				i = i + 2
 				again
 			} else if c == "\\" {
-				putchar8("\\")
+				buf[j] = c
+				++j
 				i = i + 2
 				again
 			}
@@ -148,57 +164,59 @@ export func print(form: *Str8, ...) {
 			c = form[i]
 			++i
 
-			// буффер для печати всего, кроме строк
-			var buf: [10+1]Char8
-			var sptr: *[]Char8
-			sptr = &buf
-			sptr[0] = "\0"
+			let sptr = &buf[j:]
 
 			if c == "i" or c == "d" {
 				//
 				// %i & %d for signed integer (Int)
 				//
-				let i = __va_arg(va, Int32)
-				sprintf_dec_int32(sptr, i)
+				let x = __va_arg(va, Int32)
+				let n = sprint_dec_int32(sptr, x)
+				j = j + n
+
 			} else if c == "n" {
 				//
 				// %n for unsigned integer (Nat)
 				//
-				let n = __va_arg(va, Nat32)
-				sprint_n32(sptr, n)
+				let x = __va_arg(va, Nat32)
+				let n = sprint_n32(sptr, x)
+				j = j + n
+
 			} else if c == "x" or c == "p" {
 				//
 				// %x for unsigned integer (Nat)
 				// %p for pointers
 				//
 				let x = __va_arg(va, Nat32)
-				sprintf_hex_nat32(sptr, x)
+				let n = sprint_hex_nat32(sptr, x)
+				j = j + n
+
 			} else if c == "s" {
 				//
 				// %s pointer to string
 				//
 				let s = __va_arg(va, *Str8)
-				sptr = s
+				strcpy(sptr, s)
+				j = j + unsafe Int32 strlen(s)
+
 			} else if c == "c" {
 				//
 				// %c for char
 				//
 				let c = __va_arg(va, Char32)
-				putchar32(c)
-				//sptr[0] = unsafe Char8 c
-				sptr[0] = "\0"
+				let n = Int32 utf.utf32_to_utf8(c, unsafe *[4]Char8 &buf[j:])
+				j = j + n
 			}
 
-			puts8(sptr)
-
 		} else {
-			putchar8(c)
+			buf[j] = c
+			++j
 		}
 
 		++i
 	}
 
-	__va_end(va)
+	return j
 }
 
 
@@ -213,7 +231,7 @@ func n_to_sym(n: Nat8) -> Char8 {
 }
 
 
-func sprintf_hex_nat32(buf: *[]Char8, x: Nat32) {
+func sprint_hex_nat32(buf: *[]Char8, x: Nat32) -> Int32 {
 	var cc: [8]Char8
 	var d = x
 	var i = 0
@@ -240,11 +258,11 @@ func sprintf_hex_nat32(buf: *[]Char8, x: Nat32) {
 
 	buf[j] = "\0"
 
-	//return buf
+	return j
 }
 
 
-func sprintf_dec_int32(buf: *[]Char8, x: Int32) {
+func sprint_dec_int32(buf: *[]Char8, x: Int32) -> Int32 {
 	var cc: [11]Char8
 	var d = x
 	let neg = d < 0
@@ -280,11 +298,11 @@ func sprintf_dec_int32(buf: *[]Char8, x: Int32) {
 
 	buf[j] = "\0"
 
-	//return buf
+	return j
 }
 
 
-func sprint_n32(buf: *[]Char8, x: Nat32) {
+func sprint_n32(buf: *[]Char8, x: Nat32) -> Int32 {
 	var cc: [11]Char8
 	var d = x
 	var i = 0
@@ -309,6 +327,6 @@ func sprint_n32(buf: *[]Char8, x: Nat32) {
 
 	buf[j] = "\0"
 
-	//return buf
+	return j
 }
 

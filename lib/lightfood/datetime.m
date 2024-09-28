@@ -33,6 +33,7 @@ func localTimeNow() -> *StructTM {
 	return tm
 }
 
+
 export func timeNow() -> Time {
 	let tm = localTimeNow()
 	return Time {

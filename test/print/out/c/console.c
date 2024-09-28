@@ -9,9 +9,10 @@
 
 
 char n_to_sym(uint8_t n);
-void sprintf_hex_nat32(char *buf, uint32_t x);
-void sprintf_dec_int32(char *buf, int32_t x);
-void sprintf_dec_nat32(char *buf, uint32_t x);
+int32_t sprint_hex_nat32(char *buf, uint32_t x);
+int32_t sprint_dec_int32(char *buf, int32_t x);
+int32_t sprint_n32(char *buf, uint32_t x);
+
 
 
 
@@ -28,7 +29,7 @@ char n_to_sym(uint8_t n)
 	return c;
 }
 
-void sprintf_hex_nat32(char *buf, uint32_t x)
+int32_t sprint_hex_nat32(char *buf, uint32_t x)
 {
 	char cc[8];
 	uint32_t d;
@@ -59,10 +60,10 @@ void sprintf_hex_nat32(char *buf, uint32_t x)
 
 	buf[j] = '\x0';
 
-	//return buf
+	return j;
 }
 
-void sprintf_dec_int32(char *buf, int32_t x)
+int32_t sprint_dec_int32(char *buf, int32_t x)
 {
 	char cc[11];
 	int32_t d;
@@ -102,10 +103,10 @@ void sprintf_dec_int32(char *buf, int32_t x)
 
 	buf[j] = '\x0';
 
-	//return buf
+	return j;
 }
 
-void sprintf_dec_nat32(char *buf, uint32_t x)
+int32_t sprint_n32(char *buf, uint32_t x)
 {
 	char cc[11];
 	uint32_t d;
@@ -134,7 +135,7 @@ void sprintf_dec_nat32(char *buf, uint32_t x)
 
 	buf[j] = '\x0';
 
-	//return buf
+	return j;
 }
 
 void console_putchar8(char c)
@@ -237,8 +238,21 @@ void console_print(char *form, ...)
 	va_list va;
 	va_start(va, form);
 
+	char strbuf[256];
+	const int32_t n = console_vsprint((char *)&strbuf, form, va);
+	strbuf[n] = '\x0';
+	console_puts8((char *)&strbuf);
+
+	va_end(va);
+}
+
+int32_t console_vsprint(char *buf, char *form, va_list va)
+{
 	int32_t i;
 	i = 0;
+	int32_t j;
+	j = 0;
+
 	while (true) {
 		char c;
 		c = form[i];
@@ -251,16 +265,19 @@ void console_print(char *form, ...)
 			c = form[i + 1];
 			if (c == '{') {
 				// "\{" -> "{"
-				console_putchar8(c);
+				buf[j] = c;
+				j = j + 1;
 				i = i + 2;
 				continue;
 			} else if (c == '}') {
 				// "\}" -> "{"
-				console_putchar8(c);
+				buf[j] = c;
+				j = j + 1;
 				i = i + 2;
 				continue;
 			} else if (c == '\\') {
-				console_putchar8('\\');
+				buf[j] = c;
+				j = j + 1;
 				i = i + 2;
 				continue;
 			}
@@ -271,56 +288,58 @@ void console_print(char *form, ...)
 			c = form[i];
 			i = i + 1;
 
-			// буффер для печати всего, кроме строк
-			char buf[10 + 1];
-			char *sptr;
-			sptr = (char *)&buf;
-			sptr[0] = '\x0';
+			char *const sptr = (char *)&buf[j];
 
 			if ((c == 'i') || (c == 'd')) {
 				//
 				// %i & %d for signed integer (Int)
 				//
-				const int32_t i = va_arg(va, int32_t);
-				sprintf_dec_int32(sptr, i);
+				const int32_t x = va_arg(va, int32_t);
+				const int32_t n = sprint_dec_int32(sptr, x);
+				j = j + n;
+
 			} else if (c == 'n') {
 				//
 				// %n for unsigned integer (Nat)
 				//
-				const uint32_t n = va_arg(va, uint32_t);
-				sprintf_dec_nat32(sptr, n);
+				const uint32_t x = va_arg(va, uint32_t);
+				const int32_t n = sprint_n32(sptr, x);
+				j = j + n;
+
 			} else if ((c == 'x') || (c == 'p')) {
 				//
 				// %x for unsigned integer (Nat)
 				// %p for pointers
 				//
 				const uint32_t x = va_arg(va, uint32_t);
-				sprintf_hex_nat32(sptr, x);
+				const int32_t n = sprint_hex_nat32(sptr, x);
+				j = j + n;
+
 			} else if (c == 's') {
 				//
 				// %s pointer to string
 				//
 				char *const s = va_arg(va, char *);
-				sptr = s;
+				strcpy(sptr, s);
+				j = j + (int32_t)strlen(s);
+
 			} else if (c == 'c') {
 				//
 				// %c for char
 				//
 				const uint32_t c = va_arg(va, uint32_t);
-				console_putchar32(c);
-				//sptr[0] = unsafe Char8 c
-				sptr[0] = '\x0';
+				const int32_t n = (int32_t)utf_utf32_to_utf8(c, (char *)(char *)&buf[j]);
+				j = j + n;
 			}
 
-			console_puts8(sptr);
-
 		} else {
-			console_putchar8(c);
+			buf[j] = c;
+			j = j + 1;
 		}
 
 		i = i + 1;
 	}
 
-	va_end(va);
+	return j;
 }
 
