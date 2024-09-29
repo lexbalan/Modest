@@ -501,14 +501,14 @@ def llvm_load(x):
 
 
 # сохр простых значений
-def llvm_store(l, r):
-	assert(l['isa'] == 'll_value')
-	assert(r['isa'] == 'll_value')
+def llvm_store(dst, src):
+	assert(dst['isa'] == 'll_value')
+	assert(src['isa'] == 'll_value')
 	lo("store ")
-	llvm_print_type_value(r)
+	llvm_print_type_value(src)
 	out(", ")
-	llvm_print_type_value(l)
-	return l
+	llvm_print_type_value(dst)
+	return dst
 
 
 
@@ -1277,14 +1277,6 @@ def do_eval_cons(x):
 			if hlir_type.type_is_string(from_type):
 				string_of = to_type['to']['of']
 				char_pow = string_of['width']
-
-				xx = x['value']
-				#mass
-				if not 'strid' in x:
-					info("???", x['ti'])
-					#print(xx['isa'])
-					#print(xx['kind'])
-
 				return llvm_value_str(x['strid'], x['asset'], x['type'], value, isz='zstring' in x['att'])
 
 		# (STUB?) nil -> zeroinitializer
@@ -2035,8 +2027,11 @@ def print_def_func(x, declare_only=False):
 	params = ftype['params']
 	for param in params:
 		param_id = get_id_str(param)
-		vv = llvm_value_stk(param_id, param['type'], param)
-		locals_add(param_id, vv)
+
+		if not hlir_type.type_is_va_list(param['type']):
+			# see: p216
+			vv = llvm_value_stk(param_id, param['type'], param)
+			locals_add(param_id, vv)
 
 
 	# 0, 1, 2 - params; 3 - entry label, 4 - first free register
@@ -2044,6 +2039,34 @@ def print_def_func(x, declare_only=False):
 
 	out(" {")
 	indent_up()
+
+	if len(params) > 0:
+		last_param = params[-1]
+		if hlir_type.type_is_va_list(last_param['type']):
+			# :p216
+			# В LLVM va_arg принимает параметром указатель на укзаатель на VA_List!
+			# Но тк мы получаем просто указатель на va_list,
+			# создадим локальную переменную сохраним в нее его,
+			# и будем передавать va_arg указатель на эту локальную переменную
+
+			# 1. создаем лок переменную для *va_arg
+			va_list_srorage = llvm_alloca(foundation.typeFreePointer)
+
+			# 2. сохраняем в нее полученный (параметр) *va_arg
+			va_list_param_id = get_id_str(param)
+
+			lo("store ")
+			print_type(last_param['type'])
+			out(" %%%s" % va_list_param_id)
+			out(", ")
+			llvm_print_type_value(va_list_srorage)
+
+			# 3. добваляем в локалы именно указатель на эту переменную
+			# но называем ее именем самого параметра
+			# чтобы при обращении __va_arg va (будто к параметру va)
+			# генерировался %2 = va_arg i8** %1, i32 (обращ. к указ. на лок. перем.)
+			locals_add(va_list_param_id, va_list_srorage)
+
 
 	# VLA требует чтобы стек был сохранен в начале работы функции
 	# и восстановлен перед возвратом из нее (see: print_stmt_return)
