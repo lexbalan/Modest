@@ -220,7 +220,7 @@ export func node_append (list: *List, new_node: *Node) -> *Node {
 }
 
 
-@attribute("value:dispensable")
+@unused_result
 export func insert (list: *List, pos: Int32, data: Ptr) -> *Node {
 	let new_node = node_create()
 
@@ -234,7 +234,7 @@ export func insert (list: *List, pos: Int32, data: Ptr) -> *Node {
 }
 
 
-@attribute("value:dispensable")
+@unused_result
 export func append (list: *List, data: Ptr) -> *Node {
 	if list == nil {
 		return nil
