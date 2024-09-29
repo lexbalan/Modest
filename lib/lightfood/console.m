@@ -229,13 +229,13 @@ export func vsprint(buf: *[]Char8, form: *Str8, va: VA_List) -> Int32 {
 
 
 func n_to_sym(n: Nat8) -> Char8 {
-	var c: Char8
+	var cc: Nat8
 	if n <= 9 {
-		c = Char8 (Nat8 Char8 "0" + n)
+		cc = Nat8 Char8 "0" + n
 	} else {
-		c = Char8 (Nat8 Char8 "A" + (n - 10))
+		cc = Nat8 Char8 "A" + (n - 10)
 	}
-	return c
+	return Char8 cc
 }
 
 
