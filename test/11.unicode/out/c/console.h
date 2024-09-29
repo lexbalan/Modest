@@ -29,7 +29,7 @@ void console_puts8(char *s);
 void console_puts16(uint16_t *s);
 void console_puts32(uint32_t *s);
 void console_print(char *form, ...);
-void console_vfprint(int fd, char *form, va_list va);
+int32_t console_vfprint(int fd, char *form, va_list va);
 int32_t console_vsprint(char *buf, char *form, va_list va);
 
 #endif /* CONSOLE_H */

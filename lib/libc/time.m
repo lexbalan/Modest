@@ -48,7 +48,7 @@ export {
 	func mktime(timeptr: *StructTM) -> TimeT
 
 	// Get current time
-	@attribute("value.type.to:dispensable")
+	@unused_result
 	func time(timer: *TimeT) -> TimeT
 
 	// Convert tm structure to string

@@ -30,23 +30,23 @@ export {
 	@property("value.id.c", "SEEK_END")
 	let c_SEEK_END = 2
 
-	@attribute("value.type.to:dispensable")
+	@unused_result
 	func fclose(f: *File) -> Int
 	func feof(f: *File) -> Int
 	func ferror(f: *File) -> Int
-	@attribute("value.type.to:dispensable")
+	@unused_result
 	func fflush(f: *File) -> Int
-	@attribute("value.type.to:dispensable")
+	@unused_result
 	func fgetpos(f: *File, pos: *FposT) -> Int
 
 	func fopen(fname: *ConstCharStr, mode: *ConstCharStr) -> *File
-	@attribute("value.type.to:dispensable")
+	@unused_result
 	func fread(buf: Ptr, size: SizeT, count: SizeT, f: *File) -> SizeT
-	@attribute("value.type.to:dispensable")
+	@unused_result
 	func fwrite(buf: Ptr, size: SizeT, count: SizeT, f: *File) -> SizeT
 	func freopen(fname: *ConstCharStr, mode: *ConstCharStr, f: *File) -> *File
 
-	@attribute("value.type.to:dispensable")
+	@unused_result
 	func fseek(f: *File, offset: LongInt, whence: Int) -> Int
 
 	func fsetpos(f: *File, pos: *FposT) -> Int
@@ -60,22 +60,23 @@ export {
 	func tmpfile() -> *File
 	func tmpnam(str: *CharStr) -> *CharStr
 
-	@attribute("value.type.to:dispensable")
+	//@unused_result
+	@unused_result
 	func printf(s: *ConstCharStr, ...) -> Int
 
-	@attribute("value.type.to:dispensable")
+	@unused_result
 	func scanf(s: *ConstCharStr, ...) -> Int
 
-	@attribute("value.type.to:dispensable")
+	@unused_result
 	func fprintf(f: *File, format: *Str, ...) -> Int
 
-	@attribute("value.type.to:dispensable")
+	@unused_result
 	func fscanf(f: *File, format: *ConstCharStr, ...) -> Int
 
-	@attribute("value.type.to:dispensable")
+	@unused_result
 	func sscanf(buf: *ConstCharStr, format: *ConstCharStr, ...) -> Int
 
-	@attribute("value.type.to:dispensable")
+	@unused_result
 	func sprintf(buf: *CharStr, format: *ConstCharStr, ...) -> Int
 
 
@@ -95,11 +96,11 @@ export {
 	func getc(f: *File) -> Int
 	func getchar() -> Int
 	func gets(str: *CharStr) -> *CharStr
-	@attribute("value.type.to:dispensable")
+	@unused_result
 	func putc(char: Int, f: *File) -> Int
-	@attribute("value.type.to:dispensable")
+	@unused_result
 	func putchar(char: Int) -> Int
-	@attribute("value.type.to:dispensable")
+	@unused_result
 	func puts(str: *ConstCharStr) -> Int
 	func ungetc(char: Int, f: *File) -> Int
 	func perror(str: *ConstCharStr) -> Unit

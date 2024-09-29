@@ -8,10 +8,11 @@
 
 
 
-char n_to_sym(uint8_t n);
+static inline char n_to_dec_sym(uint8_t n);
+char n_to_hex_sym(uint8_t n);
 int32_t sprint_hex_nat32(char *buf, uint32_t x);
 int32_t sprint_dec_int32(char *buf, int32_t x);
-int32_t sprint_n32(char *buf, uint32_t x);
+int32_t sprint_dec_n32(char *buf, uint32_t x);
 
 
 
@@ -20,20 +21,22 @@ int32_t sprint_n32(char *buf, uint32_t x);
 
 
 
-char n_to_sym(uint8_t n)
+static inline char n_to_dec_sym(uint8_t n)
 {
-	uint8_t cc;
-	if (n <= 9) {
-		cc = (uint8_t)'0' + n;
-	} else {
-		cc = (uint8_t)'A' + n - 10;
+	return (char)((uint8_t)'0' + n);
+}
+
+char n_to_hex_sym(uint8_t n)
+{
+	if (n < 10) {
+		return n_to_dec_sym(n);
 	}
-	return (char)cc;
+	return (char)((uint8_t)'A' + n - 10);
 }
 
 int32_t sprint_hex_nat32(char *buf, uint32_t x)
 {
-	char cc[8];
+	char tmpbuf[8];
 	uint32_t d;
 	d = x;
 	int32_t i;
@@ -43,7 +46,7 @@ int32_t sprint_hex_nat32(char *buf, uint32_t x)
 		const uint32_t n = d % 16;
 		d = d / 16;
 
-		cc[i] = n_to_sym((uint8_t)n);
+		tmpbuf[i] = n_to_hex_sym((uint8_t)n);
 		i = i + 1;
 
 		if (d == 0) {
@@ -56,7 +59,7 @@ int32_t sprint_hex_nat32(char *buf, uint32_t x)
 	j = 0;
 	while (i > 0) {
 		i = i - 1;
-		buf[j] = cc[i];
+		buf[j] = tmpbuf[i];
 		j = j + 1;
 	}
 
@@ -67,7 +70,7 @@ int32_t sprint_hex_nat32(char *buf, uint32_t x)
 
 int32_t sprint_dec_int32(char *buf, int32_t x)
 {
-	char cc[11];
+	char tmpbuf[11];
 	int32_t d;
 	d = x;
 	const bool neg = d < 0;
@@ -81,7 +84,7 @@ int32_t sprint_dec_int32(char *buf, int32_t x)
 	while (true) {
 		const int32_t n = d % 10;
 		d = d / 10;
-		cc[i] = n_to_sym((uint8_t)n);
+		tmpbuf[i] = n_to_dec_sym((uint8_t)n);
 		i = i + 1;
 
 		if (d == 0) {
@@ -99,7 +102,7 @@ int32_t sprint_dec_int32(char *buf, int32_t x)
 
 	while (i > 0) {
 		i = i - 1;
-		buf[j] = cc[i];
+		buf[j] = tmpbuf[i];
 		j = j + 1;
 	}
 
@@ -108,9 +111,9 @@ int32_t sprint_dec_int32(char *buf, int32_t x)
 	return j;
 }
 
-int32_t sprint_n32(char *buf, uint32_t x)
+int32_t sprint_dec_n32(char *buf, uint32_t x)
 {
-	char cc[11];
+	char tmpbuf[11];
 	uint32_t d;
 	d = x;
 	int32_t i;
@@ -119,7 +122,7 @@ int32_t sprint_n32(char *buf, uint32_t x)
 	while (true) {
 		const uint32_t n = d % 10;
 		d = d / 10;
-		cc[i] = n_to_sym((uint8_t)n);
+		tmpbuf[i] = n_to_dec_sym((uint8_t)n);
 		i = i + 1;
 
 		if (d == 0) {
@@ -131,7 +134,7 @@ int32_t sprint_n32(char *buf, uint32_t x)
 	j = 0;
 	while (i > 0) {
 		i = i - 1;
-		buf[j] = cc[i];
+		buf[j] = tmpbuf[i];
 		j = j + 1;
 	}
 
@@ -243,12 +246,13 @@ void console_print(char *form, ...)
 	va_end(va);
 }
 
-void console_vfprint(int fd, char *form, va_list va)
+int32_t console_vfprint(int fd, char *form, va_list va)
 {
 	char strbuf[256];
 	const int32_t n = console_vsprint((char *)&strbuf, form, va);
 	strbuf[n] = '\x0';
 	write(fd, (char *)&strbuf, ((size_t)(uint32_t)n));
+	return n;
 }
 
 int32_t console_vsprint(char *buf, char *form, va_list va)
@@ -316,7 +320,7 @@ int32_t console_vsprint(char *buf, char *form, va_list va)
 			// %n for unsigned integer (Nat)
 			//
 			const uint32_t x = va_arg(va, uint32_t);
-			const int32_t n = sprint_n32(sptr, x);
+			const int32_t n = sprint_dec_n32(sptr, x);
 			j = j + n;
 
 		} else if ((c == 'x') || (c == 'p')) {

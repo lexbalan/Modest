@@ -2527,6 +2527,8 @@ def do_attribute(x):
 		attribute_add('inline')
 	elif kind == 'extern':
 		attribute_add('c_extern')
+	elif kind == 'unused_result':
+		attribute_add("value.type.to:dispensable")
 	else:
 		attribute_add(kind)
 

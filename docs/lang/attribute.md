@@ -4,7 +4,7 @@
 Attributes are a way to change (or add) meta information of defined entities. Using the attribute mechanism allows you to influence the compilation process
 
 ```swift
-@attribute("dispensable")
+@unused_result
 func my_func () -> Int {
   return 0
 }

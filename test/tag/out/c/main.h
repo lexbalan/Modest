@@ -9,6 +9,7 @@
 #include <stdio.h>
 
 
-void main_print(char *form, ...);
+void main_xxx(char *form, ...);
+void main_yyy(int32_t fd, char *form, va_list va);
 
 #endif /* MAIN_H */

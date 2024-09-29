@@ -503,6 +503,7 @@ export {
 	func setuid (uid: UIDT) -> Int
 
 	// sleep - suspend execution for an interval of time
+	@unused_result
 	func sleep (seconds: UnsignedInt) -> UnsignedInt
 
 	// swab - swap bytes
@@ -545,6 +546,7 @@ export {
 	func vfork () -> PIDT
 
 	// write, writev, pwrite - write on a file
+	@unused_result
 	func write (fildes: Int, buf: Ptr, nbyte: SizeT) -> SSizeT
 }
 

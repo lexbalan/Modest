@@ -286,10 +286,11 @@ declare [0 x %Char]* @strerror(%Int %error)
 declare i8 @utf_utf32_to_utf8(i32 %c, [4 x i8]* %buf)
 declare i8 @utf_utf16_to_utf32([0 x i16]* %c, i32* %result)
 
-declare i8 @n_to_sym(i8 %n)
+declare i8 @n_to_dec_sym(i8 %n)
+declare i8 @n_to_hex_sym(i8 %n)
 declare i32 @sprint_hex_nat32([0 x i8]* %buf, i32 %x)
 declare i32 @sprint_dec_int32([0 x i8]* %buf, i32 %x)
-declare i32 @sprint_n32([0 x i8]* %buf, i32 %x)
+declare i32 @sprint_dec_n32([0 x i8]* %buf, i32 %x)
 
 declare void @console_putchar8(i8 %c)
 declare void @console_putchar16(i16 %c)
@@ -301,7 +302,7 @@ declare void @console_puts8(%Str8* %s)
 declare void @console_puts16(%Str16* %s)
 declare void @console_puts32(%Str32* %s)
 declare void @console_print(%Str8* %form, ...)
-declare void @console_vfprint(%Int %fd, %Str8* %form, i8* %va)
+declare i32 @console_vfprint(%Int %fd, %Str8* %form, i8* %va)
 declare i32 @console_vsprint([0 x i8]* %buf, %Str8* %form, i8* %va)
 ; -- end print imports --
 ; -- strings --

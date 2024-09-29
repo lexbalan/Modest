@@ -7,7 +7,7 @@ include "libc/unistd"
 //include "lightfood/print"
 //$pragma c_include "./print.h"
 
-@attribute("value.type.to:dispensable")
+@unused_result
 func my_printf(format: *Str8, ...) -> SSizeT {
 	var va: VA_List
 	var va2: VA_List

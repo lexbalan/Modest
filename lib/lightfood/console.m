@@ -125,14 +125,18 @@ export func print(form: *Str8, ...) {
 }
 
 
-export func vfprint(fd: Int, form: *Str8, va: VA_List) {
+
+@unused_result
+export func vfprint(fd: Int, form: *Str8, va: VA_List) -> Int32 {
 	var strbuf: [256]Char8
 	let n = vsprint(&strbuf, form, va)
 	strbuf[n] = '\x0'
 	write(fd, &strbuf, SizeT n)
+	return n
 }
 
 
+@unused_result
 export func vsprint(buf: *[]Char8, form: *Str8, va: VA_List) -> Int32 {
 	var i = 0  // form index
 	var j = 0  // out buf index
@@ -243,7 +247,7 @@ func n_to_hex_sym(n: Nat8) -> Char8 {
 
 
 func sprint_hex_nat32(buf: *[]Char8, x: Nat32) -> Int32 {
-	var cc: [8]Char8
+	var tmpbuf: [8]Char8
 	var d = x
 	var i = 0
 
@@ -251,7 +255,7 @@ func sprint_hex_nat32(buf: *[]Char8, x: Nat32) -> Int32 {
 		let n = d % 16
 		d = d / 16
 
-		cc[i] = n_to_hex_sym(unsafe Nat8 n)
+		tmpbuf[i] = n_to_hex_sym(unsafe Nat8 n)
 		++i
 
 		if d == 0 {
@@ -263,7 +267,7 @@ func sprint_hex_nat32(buf: *[]Char8, x: Nat32) -> Int32 {
 	var j = 0
 	while i > 0 {
 		--i
-		buf[j] = cc[i]
+		buf[j] = tmpbuf[i]
 		++j
 	}
 
@@ -274,7 +278,7 @@ func sprint_hex_nat32(buf: *[]Char8, x: Nat32) -> Int32 {
 
 
 func sprint_dec_int32(buf: *[]Char8, x: Int32) -> Int32 {
-	var cc: [11]Char8
+	var tmpbuf: [11]Char8
 	var d = x
 	let neg = d < 0
 
@@ -286,7 +290,7 @@ func sprint_dec_int32(buf: *[]Char8, x: Int32) -> Int32 {
 	while true {
 		let n = d % 10
 		d = d / 10
-		cc[i] = n_to_dec_sym(unsafe Nat8 n)
+		tmpbuf[i] = n_to_dec_sym(unsafe Nat8 n)
 		++i
 
 		if d == 0 {
@@ -303,7 +307,7 @@ func sprint_dec_int32(buf: *[]Char8, x: Int32) -> Int32 {
 
 	while i > 0 {
 		--i
-		buf[j] = cc[i]
+		buf[j] = tmpbuf[i]
 		++j
 	}
 
@@ -314,14 +318,14 @@ func sprint_dec_int32(buf: *[]Char8, x: Int32) -> Int32 {
 
 
 func sprint_dec_n32(buf: *[]Char8, x: Nat32) -> Int32 {
-	var cc: [11]Char8
+	var tmpbuf: [11]Char8
 	var d = x
 	var i = 0
 
 	while true {
 		let n = d % 10
 		d = d / 10
-		cc[i] = n_to_dec_sym(unsafe Nat8 n)
+		tmpbuf[i] = n_to_dec_sym(unsafe Nat8 n)
 		++i
 
 		if d == 0 {
@@ -332,7 +336,7 @@ func sprint_dec_n32(buf: *[]Char8, x: Nat32) -> Int32 {
 	var j = 0
 	while i > 0 {
 		--i
-		buf[j] = cc[i]
+		buf[j] = tmpbuf[i]
 		++j
 	}
 
