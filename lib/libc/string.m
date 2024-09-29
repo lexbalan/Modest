@@ -5,7 +5,6 @@ $pragma module_nodecorate
 $pragma c_include "string.h"
 
 include "ctypes64"
-include "ctypes"
 
 export {
 	@attribute("value.type.to:dispensable")

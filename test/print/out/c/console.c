@@ -22,13 +22,13 @@ int32_t sprint_n32(char *buf, uint32_t x);
 
 char n_to_sym(uint8_t n)
 {
-	char c;
+	uint8_t cc;
 	if (n <= 9) {
-		c = (char)((uint8_t)'0' + n);
+		cc = (uint8_t)'0' + n;
 	} else {
-		c = (char)((uint8_t)'A' + n - 10);
+		cc = (uint8_t)'A' + n - 10;
 	}
-	return c;
+	return (char)cc;
 }
 
 int32_t sprint_hex_nat32(char *buf, uint32_t x)

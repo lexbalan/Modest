@@ -25,6 +25,7 @@ int main()
 	console_print("\\\\");
 	console_print("\n");
 
+	//console.print("{{}}")
 	console_print("\\{{\\}}\n");
 	console_print("c = '{c}'\n", c);
 	console_print("s = \"{s}\"\n", s);

@@ -5,7 +5,6 @@ $pragma module_nodecorate
 $pragma c_include "stdlib.h"
 
 include "ctypes64"
-include "ctypes"
 
 export {
 	func abort() -> Unit

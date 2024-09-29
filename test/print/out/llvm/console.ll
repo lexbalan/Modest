@@ -297,18 +297,17 @@ define i8 @n_to_sym(i8 %n) {
 	br i1 %2 , label %then_0, label %else_0
 then_0:
 	%3 = add i8 48, %n
-	%4 = bitcast i8 %3 to i8
-	store i8 %4, i8* %1
+	store i8 %3, i8* %1
 	br label %endif_0
 else_0:
-	%5 = sub i8 %n, 10
-	%6 = add i8 65, %5
-	%7 = bitcast i8 %6 to i8
-	store i8 %7, i8* %1
+	%4 = sub i8 %n, 10
+	%5 = add i8 65, %4
+	store i8 %5, i8* %1
 	br label %endif_0
 endif_0:
-	%8 = load i8, i8* %1
-	ret i8 %8
+	%6 = load i8, i8* %1
+	%7 = bitcast i8 %6 to i8
+	ret i8 %7
 }
 
 define i32 @sprint_hex_nat32([0 x i8]* %buf, i32 %x) {
@@ -776,106 +775,116 @@ endif_2:
 	br label %endif_1
 endif_1:
 	%46 = load i8, i8* %3
-	%47 = icmp eq i8 %46, 123
-	br i1 %47 , label %then_5, label %else_5
+	%47 = icmp ne i8 %46, 123
+	br i1 %47 , label %then_5, label %endif_5
 then_5:
-	%48 = load i32, i32* %1
-	%49 = add i32 %48, 1
-	store i32 %49, i32* %1
-	%50 = load i32, i32* %1
-	%51 = getelementptr inbounds %Str8, %Str8* %form, i32 0, i32 %50
-	%52 = load i8, i8* %51
-	store i8 %52, i8* %3
+	%48 = load i32, i32* %2
+	%49 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %48
+	%50 = load i8, i8* %3
+	store i8 %50, i8* %49
+	%51 = load i32, i32* %2
+	%52 = add i32 %51, 1
+	store i32 %52, i32* %2
 	%53 = load i32, i32* %1
 	%54 = add i32 %53, 1
 	store i32 %54, i32* %1
-	%55 = load i32, i32* %2
-	%56 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %55
+	br label %again_1
+	br label %endif_5
+endif_5:
+	; c == '{'
+	%56 = load i32, i32* %1
+	%57 = add i32 %56, 1
+	store i32 %57, i32* %1
+	%58 = load i32, i32* %1
+	%59 = getelementptr inbounds %Str8, %Str8* %form, i32 0, i32 %58
+	%60 = load i8, i8* %59
+	store i8 %60, i8* %3
+	%61 = load i32, i32* %1
+	%62 = add i32 %61, 2
+	store i32 %62, i32* %1
+	%63 = load i32, i32* %2
+	%64 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %63
 ;
-	%57 = bitcast i8* %56 to [0 x i8]*
-	%58 = load i8, i8* %3
-	%59 = icmp eq i8 %58, 105
-	%60 = load i8, i8* %3
-	%61 = icmp eq i8 %60, 100
-	%62 = or i1 %59, %61
-	br i1 %62 , label %then_6, label %else_6
+	%65 = bitcast i8* %64 to [0 x i8]*
+	%66 = load i8, i8* %3
+	%67 = icmp eq i8 %66, 105
+	%68 = load i8, i8* %3
+	%69 = icmp eq i8 %68, 100
+	%70 = or i1 %67, %69
+	br i1 %70 , label %then_6, label %else_6
 then_6:
 	;
 	; %i & %d for signed integer (Int)
 	;
-	%63 = va_arg i8* %va, i32
-	%64 = call i32 @sprint_dec_int32([0 x i8]* %57, i32 %63)
-	%65 = load i32, i32* %2
-	%66 = add i32 %65, %64
-	store i32 %66, i32* %2
+	%71 = va_arg i8* %va, i32
+	%72 = call i32 @sprint_dec_int32([0 x i8]* %65, i32 %71)
+	%73 = load i32, i32* %2
+	%74 = add i32 %73, %72
+	store i32 %74, i32* %2
 	br label %endif_6
 else_6:
-	%67 = load i8, i8* %3
-	%68 = icmp eq i8 %67, 110
-	br i1 %68 , label %then_7, label %else_7
+	%75 = load i8, i8* %3
+	%76 = icmp eq i8 %75, 110
+	br i1 %76 , label %then_7, label %else_7
 then_7:
 	;
 	; %n for unsigned integer (Nat)
 	;
-	%69 = va_arg i8* %va, i32
-	%70 = call i32 @sprint_n32([0 x i8]* %57, i32 %69)
-	%71 = load i32, i32* %2
-	%72 = add i32 %71, %70
-	store i32 %72, i32* %2
+	%77 = va_arg i8* %va, i32
+	%78 = call i32 @sprint_n32([0 x i8]* %65, i32 %77)
+	%79 = load i32, i32* %2
+	%80 = add i32 %79, %78
+	store i32 %80, i32* %2
 	br label %endif_7
 else_7:
-	%73 = load i8, i8* %3
-	%74 = icmp eq i8 %73, 120
-	%75 = load i8, i8* %3
-	%76 = icmp eq i8 %75, 112
-	%77 = or i1 %74, %76
-	br i1 %77 , label %then_8, label %else_8
+	%81 = load i8, i8* %3
+	%82 = icmp eq i8 %81, 120
+	%83 = load i8, i8* %3
+	%84 = icmp eq i8 %83, 112
+	%85 = or i1 %82, %84
+	br i1 %85 , label %then_8, label %else_8
 then_8:
 	;
 	; %x for unsigned integer (Nat)
 	; %p for pointers
 	;
-	%78 = va_arg i8* %va, i32
-	%79 = call i32 @sprint_hex_nat32([0 x i8]* %57, i32 %78)
-	%80 = load i32, i32* %2
-	%81 = add i32 %80, %79
-	store i32 %81, i32* %2
+	%86 = va_arg i8* %va, i32
+	%87 = call i32 @sprint_hex_nat32([0 x i8]* %65, i32 %86)
+	%88 = load i32, i32* %2
+	%89 = add i32 %88, %87
+	store i32 %89, i32* %2
 	br label %endif_8
 else_8:
-	%82 = load i8, i8* %3
-	%83 = icmp eq i8 %82, 115
-	br i1 %83 , label %then_9, label %else_9
+	%90 = load i8, i8* %3
+	%91 = icmp eq i8 %90, 115
+	br i1 %91 , label %then_9, label %else_9
 then_9:
 	;
 	; %s pointer to string
 	;
-	%84 = va_arg i8* %va, %Str8*
-	%85 = call [0 x %Char]* @strcpy([0 x i8]* %57, %Str8* %84)
-	%86 = load i32, i32* %2
-	%87 = call %SizeT @strlen(%Str8* %84)
-	%88 = trunc %SizeT %87 to i32
-	%89 = add i32 %86, %88
-	store i32 %89, i32* %2
+	%92 = va_arg i8* %va, %Str8*
+	%93 = call [0 x %Char]* @strcpy([0 x i8]* %65, %Str8* %92)
+	%94 = load i32, i32* %2
+	%95 = call %SizeT @strlen(%Str8* %92)
+	%96 = trunc %SizeT %95 to i32
+	%97 = add i32 %94, %96
+	store i32 %97, i32* %2
 	br label %endif_9
 else_9:
-	%90 = load i8, i8* %3
-	%91 = icmp eq i8 %90, 99
-	br i1 %91 , label %then_10, label %endif_10
+	%98 = load i8, i8* %3
+	%99 = icmp eq i8 %98, 99
+	br i1 %99 , label %then_10, label %endif_10
 then_10:
 	;
 	; %c for char
 	;
-	%92 = va_arg i8* %va, i32
-	%93 = load i32, i32* %2
-	%94 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %93
-;
-	%95 = bitcast i8* %94 to [0 x i8]*
-	%96 = bitcast [0 x i8]* %95 to [4 x i8]*
-	%97 = call i8 @utf_utf32_to_utf8(i32 %92, [4 x i8]* %96)
-	%98 = sext i8 %97 to i32
-	%99 = load i32, i32* %2
-	%100 = add i32 %99, %98
-	store i32 %100, i32* %2
+	%100 = va_arg i8* %va, i32
+	%101 = bitcast [0 x i8]* %65 to [4 x i8]*
+	%102 = call i8 @utf_utf32_to_utf8(i32 %100, [4 x i8]* %101)
+	%103 = sext i8 %102 to i32
+	%104 = load i32, i32* %2
+	%105 = add i32 %104, %103
+	store i32 %105, i32* %2
 	br label %endif_10
 endif_10:
 	br label %endif_9
@@ -886,24 +895,10 @@ endif_8:
 endif_7:
 	br label %endif_6
 endif_6:
-	br label %endif_5
-else_5:
-	%101 = load i32, i32* %2
-	%102 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %101
-	%103 = load i8, i8* %3
-	store i8 %103, i8* %102
-	%104 = load i32, i32* %2
-	%105 = add i32 %104, 1
-	store i32 %105, i32* %2
-	br label %endif_5
-endif_5:
-	%106 = load i32, i32* %1
-	%107 = add i32 %106, 1
-	store i32 %107, i32* %1
 	br label %again_1
 break_1:
-	%108 = load i32, i32* %2
-	ret i32 %108
+	%106 = load i32, i32* %2
+	ret i32 %106
 }
 
 

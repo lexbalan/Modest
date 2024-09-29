@@ -194,7 +194,7 @@ export func vsprint(buf: *[]Char8, form: *Str8, va: VA_List) -> Int32 {
 			// %n for unsigned integer (Nat)
 			//
 			let x = __va_arg(va, Nat32)
-			let n = sprint_n32(sptr, x)
+			let n = sprint_dec_n32(sptr, x)
 			j = j + n
 
 		} else if c == "x" or c == "p" {
@@ -310,7 +310,7 @@ func sprint_dec_int32(buf: *[]Char8, x: Int32) -> Int32 {
 }
 
 
-func sprint_n32(buf: *[]Char8, x: Nat32) -> Int32 {
+func sprint_dec_n32(buf: *[]Char8, x: Nat32) -> Int32 {
 	var cc: [11]Char8
 	var d = x
 	var i = 0

@@ -320,6 +320,7 @@ define %Int @main() {
 	call void (%Str8*, ...) @console_print(%Str8* bitcast ([20 x i8]* @str1 to [0 x i8]*))
 	call void (%Str8*, ...) @console_print(%Str8* bitcast ([3 x i8]* @str3 to [0 x i8]*))
 	call void (%Str8*, ...) @console_print(%Str8* bitcast ([2 x i8]* @str4 to [0 x i8]*))
+	;console.print("{{}}")
 	call void (%Str8*, ...) @console_print(%Str8* bitcast ([8 x i8]* @str5 to [0 x i8]*))
 	call void (%Str8*, ...) @console_print(%Str8* bitcast ([11 x i8]* @str6 to [0 x i8]*), i32 128000)
 	call void (%Str8*, ...) @console_print(%Str8* bitcast ([11 x i8]* @str7 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @str2 to [0 x i8]*))

@@ -184,7 +184,7 @@ declare void @perror(%ConstCharStr* %str)
 
 %TimeT = type i32;
 %ClockT = type %UnsignedLong;
-%Struct_tm = type {
+%StructTM = type {
 	%Int, 
 	%Int, 
 	%Int, 
@@ -201,13 +201,15 @@ declare void @perror(%ConstCharStr* %str)
 
 declare %ClockT @clock()
 declare %Double @difftime(%TimeT %end, %TimeT %beginning)
-declare %TimeT @mktime(%Struct_tm* %timeptr)
+declare %TimeT @mktime(%StructTM* %timeptr)
 declare %TimeT @time(%TimeT* %timer)
-declare %Char* @asctime(%Struct_tm* %timeptr)
+declare %Char* @asctime(%StructTM* %timeptr)
 declare %Char* @ctime(%TimeT* %timer)
-declare %Struct_tm* @gmtime(%TimeT* %timer)
-declare %Struct_tm* @localtime(%TimeT* %timer)
-declare %SizeT @strftime(%Char* %ptr, %SizeT %maxsize, %ConstChar* %format, %Struct_tm* %timeptr)
+declare %StructTM* @gmtime(%TimeT* %timer)
+declare %StructTM* @localtime(%TimeT* %timer)
+declare %SizeT @strftime(%Char* %ptr, %SizeT %maxsize, %ConstChar* %format, %StructTM* %timeptr)
+declare %StructTM* @localtime_s(%TimeT* %timer, %StructTM* %tmptr)
+declare %StructTM* @localtime_r(%TimeT* %timer, %StructTM* %tmptr)
 
 
 declare %Int @access([0 x %ConstChar]* %path, %Int %amode)

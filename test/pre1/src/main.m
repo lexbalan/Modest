@@ -1,6 +1,5 @@
 // test/pre1/src/main.cm
 
-include "ctypes"
 $pragma c_include "stdio.h"
 include "stdio"
 

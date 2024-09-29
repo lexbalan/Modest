@@ -13,6 +13,7 @@ func main() -> Int {
 	console.print("\\\\")
 	console.print("\n")
 
+	//console.print("{{}}")
 	console.print("\\{{\\}}\n")
 	console.print("c = '{c}'\n", c)
 	console.print("s = \"{s}\"\n", s)
