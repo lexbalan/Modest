@@ -228,14 +228,17 @@ export func vsprint(buf: *[]Char8, form: *Str8, va: VA_List) -> Int32 {
 }
 
 
-func n_to_sym(n: Nat8) -> Char8 {
-	var cc: Nat8
-	if n <= 9 {
-		cc = Nat8 Char8 "0" + n
-	} else {
-		cc = Nat8 Char8 "A" + (n - 10)
+@inline
+func n_to_dec_sym(n: Nat8) -> Char8 {
+	return Char8 (Nat8 Char8 "0" + n)
+}
+
+
+func n_to_hex_sym(n: Nat8) -> Char8 {
+	if n < 10 {
+		return n_to_dec_sym(n)
 	}
-	return Char8 cc
+	return Char8 (Nat8 Char8 "A" + (n - 10))
 }
 
 
@@ -248,7 +251,7 @@ func sprint_hex_nat32(buf: *[]Char8, x: Nat32) -> Int32 {
 		let n = d % 16
 		d = d / 16
 
-		cc[i] = n_to_sym(unsafe Nat8 n)
+		cc[i] = n_to_hex_sym(unsafe Nat8 n)
 		++i
 
 		if d == 0 {
@@ -283,7 +286,7 @@ func sprint_dec_int32(buf: *[]Char8, x: Int32) -> Int32 {
 	while true {
 		let n = d % 10
 		d = d / 10
-		cc[i] = n_to_sym(unsafe Nat8 n)
+		cc[i] = n_to_dec_sym(unsafe Nat8 n)
 		++i
 
 		if d == 0 {
@@ -318,7 +321,7 @@ func sprint_dec_n32(buf: *[]Char8, x: Nat32) -> Int32 {
 	while true {
 		let n = d % 10
 		d = d / 10
-		cc[i] = n_to_sym(unsafe Nat8 n)
+		cc[i] = n_to_dec_sym(unsafe Nat8 n)
 		++i
 
 		if d == 0 {
