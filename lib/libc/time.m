@@ -4,8 +4,8 @@ $pragma do_not_include
 $pragma module_nodecorate
 $pragma c_include "time.h"
 
-
 include "libc/ctypes64"
+
 
 export {
 	/* time in seconds since 1970 */
@@ -67,7 +67,7 @@ export {
 	func strftime(ptr: *Char, maxsize: SizeT, format: *ConstChar, timeptr: *StructTM) -> SizeT
 
 
-	func localtime_s(timer: *TimeT, tmptr: *StructTM) -> *StructTM // (since C11)
-	func localtime_r(timer: *TimeT, tmptr: *StructTM) -> *StructTM // (since C23)
+	func localtime_s(timer: *TimeT, tmptr: *StructTM) -> *StructTM  // (since C11)
+	func localtime_r(timer: *TimeT, tmptr: *StructTM) -> *StructTM  // (since C23)
 }
 

@@ -22,11 +22,10 @@ int main()
 	const uint32_t n = 123;
 	const uint32_t x = 0x1234567F;
 
-	console_print("\\\\");
+	console_print("\\");
 	console_print("\n");
 
-	//console.print("{{}}")
-	console_print("\\{{\\}}\n");
+	console_print("{{ text }}\n");
 	console_print("c = '{c}'\n", c);
 	console_print("s = \"{s}\"\n", s);
 	console_print("i = {i}\n", i);

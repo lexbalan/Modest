@@ -895,18 +895,11 @@ class Parser:
 					i = i + 1
 					sym = s[i]
 
-					if sym == '{':
-						# eat "\{" as is
-						new_s = new_s + '\\{'
-						continue
-					elif sym == '\\':
-						new_s = new_s + '\\\\'
+					if sym == '\\':
+						new_s = new_s + '\\'
 						i = i + 1
 						continue
-					elif sym == '}':
-						# eat "\}" as is
-						new_s = new_s + '\\}'
-						continue
+
 					elif sym == '"':
 						# eat "\""
 						new_s = new_s + sym

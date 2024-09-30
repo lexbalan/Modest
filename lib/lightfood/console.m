@@ -148,29 +148,19 @@ export func vsprint(buf: *[]Char8, form: *Str8, va: VA_List) -> Int32 {
 			break
 		}
 
-		if c == "\\" {
-			c = form[i + 1]
-			if c == "{" {
-				// "\{" -> "{"
-				buf[j] = c
-				++j
-				i = i + 2
-				again
-			} else if c == "}" {
-				// "\}" -> "{"
-				buf[j] = c
-				++j
-				i = i + 2
-				again
-			} else if c == "\\" {
-				buf[j] = c
-				++j
-				i = i + 2
+		if c != "{" {
+
+			if c == '}' {
+				++i
+				c = form[i]
+				if c == '}'	{
+					buf[j] = c
+					++j
+					++i
+				}
 				again
 			}
-		}
 
-		if c != "{" {
 			buf[j] = c
 			++j
 			++i
@@ -181,6 +171,14 @@ export func vsprint(buf: *[]Char8, form: *Str8, va: VA_List) -> Int32 {
 
 		++i
 		c = form[i]
+
+		if c == '{' {
+			buf[j] = '{'
+			++j
+			++i
+			again
+		}
+
 		i = i + 2
 
 		let sptr = &buf[j:]

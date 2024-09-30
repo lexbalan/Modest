@@ -308,9 +308,9 @@ declare i32 @console_vsprint([0 x i8]* %buf, %Str8* %form, i8* %va)
 ; -- strings --
 @str1 = private constant [20 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 99, i8 111, i8 110, i8 115, i8 111, i8 108, i8 101, i8 32, i8 112, i8 114, i8 105, i8 110, i8 116, i8 10, i8 0]
 @str2 = private constant [4 x i8] [i8 72, i8 105, i8 33, i8 0]
-@str3 = private constant [3 x i8] [i8 92, i8 92, i8 0]
+@str3 = private constant [2 x i8] [i8 92, i8 0]
 @str4 = private constant [2 x i8] [i8 10, i8 0]
-@str5 = private constant [8 x i8] [i8 92, i8 123, i8 123, i8 92, i8 125, i8 125, i8 10, i8 0]
+@str5 = private constant [12 x i8] [i8 123, i8 123, i8 32, i8 116, i8 101, i8 120, i8 116, i8 32, i8 125, i8 125, i8 10, i8 0]
 @str6 = private constant [11 x i8] [i8 99, i8 32, i8 61, i8 32, i8 39, i8 123, i8 99, i8 125, i8 39, i8 10, i8 0]
 @str7 = private constant [11 x i8] [i8 115, i8 32, i8 61, i8 32, i8 34, i8 123, i8 115, i8 125, i8 34, i8 10, i8 0]
 @str8 = private constant [9 x i8] [i8 105, i8 32, i8 61, i8 32, i8 123, i8 105, i8 125, i8 10, i8 0]
@@ -319,10 +319,9 @@ declare i32 @console_vsprint([0 x i8]* %buf, %Str8* %form, i8* %va)
 
 define %Int @main() {
 	call void (%Str8*, ...) @console_print(%Str8* bitcast ([20 x i8]* @str1 to [0 x i8]*))
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([3 x i8]* @str3 to [0 x i8]*))
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([2 x i8]* @str3 to [0 x i8]*))
 	call void (%Str8*, ...) @console_print(%Str8* bitcast ([2 x i8]* @str4 to [0 x i8]*))
-	;console.print("{{}}")
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([8 x i8]* @str5 to [0 x i8]*))
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([12 x i8]* @str5 to [0 x i8]*))
 	call void (%Str8*, ...) @console_print(%Str8* bitcast ([11 x i8]* @str6 to [0 x i8]*), i32 128000)
 	call void (%Str8*, ...) @console_print(%Str8* bitcast ([11 x i8]* @str7 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @str2 to [0 x i8]*))
 	call void (%Str8*, ...) @console_print(%Str8* bitcast ([9 x i8]* @str8 to [0 x i8]*), i32 -1)
