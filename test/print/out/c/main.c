@@ -24,6 +24,11 @@ int main()
 
 	console_print("\\");
 	console_print("\n");
+	console_print("#");
+	console_print("\n");
+
+	//console.print(*Str8 "\x1F389")
+	//console.print("\U+1F389")
 
 	console_print("{{ text }}\n");
 	console_print("c = '{c}'\n", c);

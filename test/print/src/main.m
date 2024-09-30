@@ -16,6 +16,11 @@ func main() -> Int {
 
 	console.print("\\")
 	console.print("\n")
+	console.print("\x23")
+	console.print("\n")
+
+	//console.print(*Str8 "\x1F389")
+	//console.print("\U+1F389")
 
 	console.print("{{ text }}\n")
 	console.print("c = '{c}'\n", c)

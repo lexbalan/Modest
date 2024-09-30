@@ -10,11 +10,15 @@ func main() -> Int {
 	let n = Nat32 123
 	let x = Nat32 0x1234567F
 
-	console.print("\\\\")
+	console.print("\\")
+	console.print("\n")
+	console.print("#")
 	console.print("\n")
 
-	//console.print("{{}}")
-	console.print("\\{{\\}}\n")
+	//console.print(*Str8 "\x1F389")
+	//console.print("\U+1F389")
+
+	console.print("{{ text }}\n")
 	console.print("c = '{c}'\n", c)
 	console.print("s = \"{s}\"\n", s)
 	console.print("i = {i}\n", i)
