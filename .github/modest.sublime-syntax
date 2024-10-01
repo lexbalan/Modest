@@ -6,7 +6,7 @@ scope: source.modest
 
 contexts:
   main:
-    - match: '\b(class|struct|enum|protocol|extension|func|if|else|while|for|switch|case|break|return|let|var|guard|defer|import|public|private|internal|open|static|final|let|in|as|is|self|super|typealias|throws|rethrows|try|catch|throw)\b'
+    - match: '\b(record|enum|func|if|else|while|for|switch|case|break|return|let|var|import|let|is|self|type)\b'
       scope: keyword.control.modest
 
     - match: '"([^"\\]*(\\.[^"\\]*)*)"'  # Double-quoted strings
