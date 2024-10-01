@@ -308,39 +308,31 @@ declare i32 @console_vsprint([0 x i8]* %buf, %Str8* %form, i8* %va)
 ; -- strings --
 @str1 = private constant [20 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 99, i8 111, i8 110, i8 115, i8 111, i8 108, i8 101, i8 32, i8 112, i8 114, i8 105, i8 110, i8 116, i8 10, i8 0]
 @str2 = private constant [4 x i8] [i8 72, i8 105, i8 33, i8 0]
-@str3 = private constant [2 x i8] [i8 92, i8 0]
-@str4 = private constant [2 x i8] [i8 10, i8 0]
-@str5 = private constant [2 x i8] [i8 64, i8 0]
-@str6 = private constant [2 x i8] [i8 10, i8 0]
-@str7 = private constant [5 x i8] [i8 35, i8 65, i8 65, i8 35, i8 0]
-@str8 = private constant [2 x i8] [i8 10, i8 0]
-@str9 = private constant [6 x i8] [i8 240, i8 159, i8 142, i8 137, i8 65, i8 0]
-@str10 = private constant [2 x i8] [i8 10, i8 0]
-@str11 = private constant [64 x i8] [i8 208, i8 173, i8 209, i8 130, i8 208, i8 190, i8 32, i8 209, i8 129, i8 209, i8 130, i8 209, i8 128, i8 208, i8 190, i8 208, i8 186, i8 208, i8 176, i8 32, i8 208, i8 183, i8 208, i8 176, i8 208, i8 191, i8 208, i8 184, i8 209, i8 129, i8 208, i8 176, i8 208, i8 189, i8 208, i8 189, i8 208, i8 176, i8 209, i8 143, i8 32, i8 208, i8 186, i8 208, i8 184, i8 209, i8 128, i8 208, i8 184, i8 208, i8 187, i8 208, i8 187, i8 208, i8 184, i8 209, i8 134, i8 208, i8 181, i8 208, i8 185, i8 46, i8 10, i8 0]
-@str12 = private constant [7 x i8] [i8 123, i8 123, i8 99, i8 125, i8 125, i8 10, i8 0]
-@str13 = private constant [11 x i8] [i8 99, i8 32, i8 61, i8 32, i8 34, i8 123, i8 99, i8 125, i8 34, i8 10, i8 0]
-@str14 = private constant [11 x i8] [i8 115, i8 32, i8 61, i8 32, i8 34, i8 123, i8 115, i8 125, i8 34, i8 10, i8 0]
-@str15 = private constant [9 x i8] [i8 105, i8 32, i8 61, i8 32, i8 123, i8 105, i8 125, i8 10, i8 0]
-@str16 = private constant [9 x i8] [i8 110, i8 32, i8 61, i8 32, i8 123, i8 110, i8 125, i8 10, i8 0]
-@str17 = private constant [11 x i8] [i8 120, i8 32, i8 61, i8 32, i8 48, i8 120, i8 123, i8 120, i8 125, i8 10, i8 0]
+@str3 = private constant [3 x i8] [i8 92, i8 10, i8 0]
+@str4 = private constant [3 x i8] [i8 64, i8 10, i8 0]
+@str5 = private constant [6 x i8] [i8 35, i8 65, i8 65, i8 35, i8 10, i8 0]
+@str6 = private constant [7 x i8] [i8 240, i8 159, i8 142, i8 137, i8 65, i8 10, i8 0]
+@str7 = private constant [64 x i8] [i8 208, i8 173, i8 209, i8 130, i8 208, i8 190, i8 32, i8 209, i8 129, i8 209, i8 130, i8 209, i8 128, i8 208, i8 190, i8 208, i8 186, i8 208, i8 176, i8 32, i8 208, i8 183, i8 208, i8 176, i8 208, i8 191, i8 208, i8 184, i8 209, i8 129, i8 208, i8 176, i8 208, i8 189, i8 208, i8 189, i8 208, i8 176, i8 209, i8 143, i8 32, i8 208, i8 186, i8 208, i8 184, i8 209, i8 128, i8 208, i8 184, i8 208, i8 187, i8 208, i8 187, i8 208, i8 184, i8 209, i8 134, i8 208, i8 181, i8 208, i8 185, i8 46, i8 10, i8 0]
+@str8 = private constant [7 x i8] [i8 123, i8 123, i8 99, i8 125, i8 125, i8 10, i8 0]
+@str9 = private constant [11 x i8] [i8 99, i8 32, i8 61, i8 32, i8 34, i8 123, i8 99, i8 125, i8 34, i8 10, i8 0]
+@str10 = private constant [11 x i8] [i8 115, i8 32, i8 61, i8 32, i8 34, i8 123, i8 115, i8 125, i8 34, i8 10, i8 0]
+@str11 = private constant [9 x i8] [i8 105, i8 32, i8 61, i8 32, i8 123, i8 105, i8 125, i8 10, i8 0]
+@str12 = private constant [9 x i8] [i8 110, i8 32, i8 61, i8 32, i8 123, i8 110, i8 125, i8 10, i8 0]
+@str13 = private constant [11 x i8] [i8 120, i8 32, i8 61, i8 32, i8 48, i8 120, i8 123, i8 120, i8 125, i8 10, i8 0]
 
 define %Int @main() {
 	call void (%Str8*, ...) @console_print(%Str8* bitcast ([20 x i8]* @str1 to [0 x i8]*))
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([2 x i8]* @str3 to [0 x i8]*))
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([2 x i8]* @str4 to [0 x i8]*))
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([2 x i8]* @str5 to [0 x i8]*))
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([2 x i8]* @str6 to [0 x i8]*))
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([5 x i8]* @str7 to [0 x i8]*))
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([2 x i8]* @str8 to [0 x i8]*))
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([6 x i8]* @str9 to [0 x i8]*))
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([2 x i8]* @str10 to [0 x i8]*))
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([64 x i8]* @str11 to [0 x i8]*))
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([7 x i8]* @str12 to [0 x i8]*))
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([11 x i8]* @str13 to [0 x i8]*), i32 128000)
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([11 x i8]* @str14 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @str2 to [0 x i8]*))
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([9 x i8]* @str15 to [0 x i8]*), i32 -1)
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([9 x i8]* @str16 to [0 x i8]*), i32 123)
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([11 x i8]* @str17 to [0 x i8]*), i32 305419903)
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([3 x i8]* @str3 to [0 x i8]*))
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([3 x i8]* @str4 to [0 x i8]*))
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([6 x i8]* @str5 to [0 x i8]*))
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([7 x i8]* @str6 to [0 x i8]*))
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([64 x i8]* @str7 to [0 x i8]*))
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([7 x i8]* @str8 to [0 x i8]*))
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([11 x i8]* @str9 to [0 x i8]*), i32 128000)
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([11 x i8]* @str10 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @str2 to [0 x i8]*))
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([9 x i8]* @str11 to [0 x i8]*), i32 -1)
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([9 x i8]* @str12 to [0 x i8]*), i32 123)
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([11 x i8]* @str13 to [0 x i8]*), i32 305419903)
 	ret %Int 0
 }
 

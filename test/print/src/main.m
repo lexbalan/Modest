@@ -14,14 +14,10 @@ func main() -> Int {
 	let n = Nat32 123
 	let x = Nat32 0x1234567F
 
-	console.print("\\")           // "\\" = "\"
-	console.print("\n")
-	console.print("\64")          // "\64" = "@"
-	console.print("\n")
-	console.print("\x23AA\x23")   // "\x23AA\x23" = "#AA#"
-	console.print("\n")
-	console.print("\u0001F389A")  // "\u0001F389A" = "🎉A"
-	console.print("\n")
+	console.print("\\\n")           // "\\" = "\"
+	console.print("\64\n")          // "\64" = "@"
+	console.print("\x23AA\x23\n")   // "\x23AA\x23" = "#AA#"
+	console.print("\u0001F389A\n")  // "\u0001F389A" = "🎉A"
 
 	console.print("Это строка записанная кириллицей.\n")
 

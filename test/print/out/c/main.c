@@ -22,14 +22,10 @@ int main()
 	const uint32_t n = 123;
 	const uint32_t x = 0x1234567F;
 
-	console_print("\\");
-	console_print("\n");
-	console_print("@");
-	console_print("\n");
-	console_print("#AA#");
-	console_print("\n");
-	console_print("🎉A");
-	console_print("\n");
+	console_print("\\\n");
+	console_print("@\n");
+	console_print("#AA#\n");
+	console_print("🎉A\n");
 
 	console_print("Это строка записанная кириллицей.\n");
 
