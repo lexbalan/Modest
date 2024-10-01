@@ -1,0 +1,28 @@
+%YAML 1.2
+---
+name: Modest
+file_extensions: [m]
+scope: source.modest
+
+contexts:
+  main:
+    - match: '\b(class|struct|enum|protocol|extension|func|if|else|while|for|switch|case|break|return|let|var|guard|defer|import|public|private|internal|open|static|final|let|in|as|is|self|super|typealias|throws|rethrows|try|catch|throw)\b'
+      scope: keyword.control.modest
+
+    - match: '"([^"\\]*(\\.[^"\\]*)*)"'  # Double-quoted strings
+      scope: string.quoted.double.modest
+
+    - match: '//.*$'  # Single-line comments
+      scope: comment.line.double-slash.modest
+
+    - match: '/\*'
+      scope: comment.block.modest
+      push: comment_block
+
+  comment_block:
+    - meta_start: true
+    - match: '\*/'
+      scope: comment.block.modest
+      pop: true
+    - match: '.'
+      scope: comment.block.modest
