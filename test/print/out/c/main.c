@@ -31,6 +31,8 @@ int main()
 	console_print("🎉A");
 	console_print("\n");
 
+	console_print("Это строка записанная кириллицей.\n");
+
 	console_print("{{c}}\n");
 	console_print("c = '{c}'\n", c);
 	console_print("s = \"{s}\"\n", s);

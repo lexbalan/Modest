@@ -19,6 +19,8 @@ func main() -> Int {
 	console.print("🎉A")
 	console.print("\n")
 
+	console.print("Это строка записанная кириллицей.\n")
+
 	console.print("{{c}}\n")
 	console.print("c = '{c}'\n", c)
 	console.print("s = \"{s}\"\n", s)

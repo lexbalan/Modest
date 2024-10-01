@@ -23,6 +23,8 @@ func main() -> Int {
 	console.print("\u0001F389A")  // "\u0001F389A" = "🎉A"
 	console.print("\n")
 
+	console.print("Это строка записанная кириллицей.\n")
+
 	console.print("{{c}}\n")            // {{c}}
 	console.print("c = '{c}'\n", c)     // c = \
 	console.print("s = \"{s}\"\n", s)   // s = "Hi!"
