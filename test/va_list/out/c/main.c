@@ -46,7 +46,7 @@ int main()
 	const uint32_t n = 123;
 	const uint32_t x = 0x1234567F;
 
-	my_printf("\\{{\\}}\n");
+	my_printf("\x0\x0\n");
 	my_printf("c = '{c}'\n", c);
 	my_printf("s = \"{s}\"\n", s);
 	my_printf("i = {i}\n", i);

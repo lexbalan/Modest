@@ -270,29 +270,19 @@ int32_t console_vsprint(char *buf, char *form, va_list va)
 			break;
 		}
 
-		if (c == '\\') {
-			c = form[i + 1];
-			if (c == '{') {
-				// "\{" -> "{"
-				buf[j] = c;
-				j = j + 1;
-				i = i + 2;
-				continue;
-			} else if (c == '}') {
-				// "\}" -> "{"
-				buf[j] = c;
-				j = j + 1;
-				i = i + 2;
-				continue;
-			} else if (c == '\\') {
-				buf[j] = c;
-				j = j + 1;
-				i = i + 2;
+		if (c != '{') {
+
+			if (c == '}') {
+				i = i + 1;
+				c = form[i];
+				if (c == '}') {
+					buf[j] = c;
+					j = j + 1;
+					i = i + 1;
+				}
 				continue;
 			}
-		}
 
-		if (c != '{') {
 			buf[j] = c;
 			j = j + 1;
 			i = i + 1;
@@ -303,6 +293,14 @@ int32_t console_vsprint(char *buf, char *form, va_list va)
 
 		i = i + 1;
 		c = form[i];
+
+		if (c == '{') {
+			buf[j] = '{';
+			j = j + 1;
+			i = i + 1;
+			continue;
+		}
+
 		i = i + 2;
 
 		char *const sptr = (char *)&buf[j];

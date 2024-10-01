@@ -277,7 +277,7 @@ declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 ; -- strings --
 @str1 = private constant [19 x i8] [i8 77, i8 121, i8 32, i8 80, i8 114, i8 105, i8 110, i8 116, i8 102, i8 32, i8 84, i8 101, i8 115, i8 116, i8 32, i8 37, i8 100, i8 10, i8 0]
 @str2 = private constant [4 x i8] [i8 72, i8 105, i8 33, i8 0]
-@str3 = private constant [8 x i8] [i8 92, i8 123, i8 123, i8 92, i8 125, i8 125, i8 10, i8 0]
+@str3 = private constant [4 x i8] [i8 0, i8 0, i8 10, i8 0]
 @str4 = private constant [11 x i8] [i8 99, i8 32, i8 61, i8 32, i8 39, i8 123, i8 99, i8 125, i8 39, i8 10, i8 0]
 @str5 = private constant [11 x i8] [i8 115, i8 32, i8 61, i8 32, i8 34, i8 123, i8 115, i8 125, i8 34, i8 10, i8 0]
 @str6 = private constant [9 x i8] [i8 105, i8 32, i8 61, i8 32, i8 123, i8 105, i8 125, i8 10, i8 0]
@@ -309,7 +309,7 @@ define %Int @main() {
 	store i32 10, i32* %1
 	%2 = load i32, i32* %1
 	%3 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([19 x i8]* @str1 to [0 x i8]*), i32 %2)
-	%4 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([8 x i8]* @str3 to [0 x i8]*))
+	%4 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([4 x i8]* @str3 to [0 x i8]*))
 	%5 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([11 x i8]* @str4 to [0 x i8]*), i8 36)
 	%6 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([11 x i8]* @str5 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @str2 to [0 x i8]*))
 	%7 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([9 x i8]* @str6 to [0 x i8]*), i32 -1)
