@@ -6,11 +6,17 @@ scope: source.modest
 
 contexts:
   main:
-    - match: '\b(record|enum|func|if|else|while|for|switch|case|break|return|let|var|import|let|is|self|type)\b'
+    - match: '\b(record|enum|func|if|else|while|for|switch|case|break|return|let|var|import|include|let|is|self|type)\b'
       scope: keyword.control.modest
 
     - match: '\b[A-Z][a-zA-Z0-9_]*\b'  # Подсветка типов с заглавной буквы
       scope: entity.name.type.modest
+
+    - match: '\B@[\w_]+\b'  # Подсветка директив, начинающихся с '@'
+      scope: meta.attribute.modest
+
+    - match: '\B@[\w_]+\b'  # Подсветка директив, начинающихся с '@'
+      scope: meta.attribute.modest
 
     - match: '"([^"\\]*(\\.[^"\\]*)*)"'  # Double-quoted strings
       scope: string.quoted.double.modest
