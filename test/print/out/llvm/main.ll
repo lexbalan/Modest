@@ -318,7 +318,7 @@ declare i32 @console_vsprint([0 x i8]* %buf, %Str8* %form, i8* %va)
 @str10 = private constant [2 x i8] [i8 10, i8 0]
 @str11 = private constant [64 x i8] [i8 208, i8 173, i8 209, i8 130, i8 208, i8 190, i8 32, i8 209, i8 129, i8 209, i8 130, i8 209, i8 128, i8 208, i8 190, i8 208, i8 186, i8 208, i8 176, i8 32, i8 208, i8 183, i8 208, i8 176, i8 208, i8 191, i8 208, i8 184, i8 209, i8 129, i8 208, i8 176, i8 208, i8 189, i8 208, i8 189, i8 208, i8 176, i8 209, i8 143, i8 32, i8 208, i8 186, i8 208, i8 184, i8 209, i8 128, i8 208, i8 184, i8 208, i8 187, i8 208, i8 187, i8 208, i8 184, i8 209, i8 134, i8 208, i8 181, i8 208, i8 185, i8 46, i8 10, i8 0]
 @str12 = private constant [7 x i8] [i8 123, i8 123, i8 99, i8 125, i8 125, i8 10, i8 0]
-@str13 = private constant [11 x i8] [i8 99, i8 32, i8 61, i8 32, i8 39, i8 123, i8 99, i8 125, i8 39, i8 10, i8 0]
+@str13 = private constant [11 x i8] [i8 99, i8 32, i8 61, i8 32, i8 34, i8 123, i8 99, i8 125, i8 34, i8 10, i8 0]
 @str14 = private constant [11 x i8] [i8 115, i8 32, i8 61, i8 32, i8 34, i8 123, i8 115, i8 125, i8 34, i8 10, i8 0]
 @str15 = private constant [9 x i8] [i8 105, i8 32, i8 61, i8 32, i8 123, i8 105, i8 125, i8 10, i8 0]
 @str16 = private constant [9 x i8] [i8 110, i8 32, i8 61, i8 32, i8 123, i8 110, i8 125, i8 10, i8 0]

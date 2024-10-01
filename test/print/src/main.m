@@ -26,7 +26,7 @@ func main() -> Int {
 	console.print("Это строка записанная кириллицей.\n")
 
 	console.print("{{c}}\n")            // {{c}}
-	console.print("c = '{c}'\n", c)     // c = \
+	console.print("c = \"{c}\"\n", c)   // c = "🐀"
 	console.print("s = \"{s}\"\n", s)   // s = "Hi!"
 	console.print("i = {i}\n", i)       // i = -1
 	console.print("n = {n}\n", n)       // n = 123
