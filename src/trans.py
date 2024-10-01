@@ -18,6 +18,8 @@ from value.string import value_string_create
 from value.record import value_record_create
 
 
+included_modules = {}
+
 import decimal
 # max number of signs after .
 # decimal operation precision
@@ -42,7 +44,7 @@ from hlir.hlir import *
 
 
 production = True
-old_production = True  # TODO: это бред, сделай стек!
+prev_production = True  # TODO: это бред, сделай стек!
 
 
 # current file directory
@@ -50,9 +52,11 @@ env_current_file_abspath = ""
 env_current_file_dir = ""
 
 
-cfunc = None	# current function
 
-root_context = None
+cfunc = None	# current function
+context = None
+
+root_symtab = None
 
 module = None
 
@@ -76,80 +80,189 @@ def module_strings_add(v):
 	module['strings'].append(v)
 
 
+
+
+
+def module_type_add_public(m, id_str, t):
+	#print("module %s type_add_public %s" % (m['id'], id_str))
+	m['symtab_public'].type_add(id_str, t)
+	#t['module'] = m
+	t['att'].append('global_entity')
+
+def module_value_add_public(m, id_str, v):
+	#print("module %s value_add_public %s" % (m['id'], id_str))
+	m['symtab_public'].value_add(id_str, v)
+	#v['module'] = m
+	v['att'].append('global_entity')
+
+
+def module_type_add_private(m, id_str, t):
+	#print("module %s type_add_private %s" % (m['id'], id_str))
+	m['symtab_private'].type_add(id_str, t)
+	#t['module'] = m
+	t['att'].append('global_entity')
+
+def module_value_add_private(m, id_str, v):
+	#print("module %s value_add_private %s" % (m['id'], id_str))
+	m['symtab_private'].value_add(id_str, v)
+	#v['module'] = m
+	v['att'].append('global_entity')
+
+
+
+
+# public
+
 # search type in module
-def module_type_get(m, id_str):
-	return m['context'].type_get(id_str)
+def module_type_get_public(m, id_str):
+	return m['symtab_public'].type_get(id_str)
 
 # search value in module
-def module_value_get(m, id_str):
-	return m['context'].value_get(id_str)
+def module_value_get_public(m, id_str):
+	return m['symtab_public'].value_get(id_str)
+
+# private
+
+# search type in module
+def module_type_get_private(m, id_str):
+	return m['symtab_private'].type_get(id_str)
+
+# search value in module
+def module_value_get_private(m, id_str):
+	return m['symtab_private'].value_get(id_str)
 
 
-# search type in module and submodules
-def deep_type_get(m, id_str):
-	t = module_type_get(m, id_str)
+
+def module_type_add(m, id_str, t, is_public=False):
+	#print('module_type_add (%s, isPublic=%d)' % (id_str, is_public))
+	if is_public:
+		module_type_add_public(m, id_str, t)
+	else:
+		module_type_add_private(m, id_str, t)
+
+	#t['module'] = m
+
+
+def module_value_add(m, id_str, v, is_public=False):
+	#print('module_value_add (%s, isPublic=%d)' % (id_str, is_public))
+	if is_public:
+		module_value_add_public(m, id_str, v)
+	else:
+		module_value_add_private(m, id_str, v)
+
+	#v['module'] = m
+
+
+def module_type_get(m, id_str, only_public=False):
+	#print("module_type_get: " + id_str)
+
+	t = m['symtab_public'].type_get(id_str)
 	if t != None:
 		return t
 
-	for imported_module in m['imports']:
-		t = deep_type_get(imported_module, id_str)
-		if t != None:
-			return t
+	if only_public:
+		return None
+
+	t = m['symtab_private'].type_get(id_str)
+	if t != None:
+		return t
+
+	t = m['symtab_include'].type_get(id_str)
+	if t != None:
+		return t
 
 	return None
 
 
-# search value in module and submodules
-def deep_value_get(m, id_str):
-	v = module_value_get(m, id_str)
+# search value in module
+def module_value_get(m, id_str, only_public=False):
+	#print("module_value_get: " + id_str)
+
+	v = m['symtab_public'].value_get(id_str)
 	if v != None:
 		return v
 
-	for imported_module in m['imports']:
-		v = deep_value_get(imported_module, id_str)
-		if v != None:
-			return v
+	if only_public:
+		return None
+
+	v = m['symtab_private'].value_get(id_str)
+	if v != None:
+		return v
+
+	v = m['symtab_include'].value_get(id_str)
+	if v != None:
+		return v
 
 	return None
 
 
 
-def type_get(id_str):
+
+
+# ONLY FOR LOCALS:
+
+def ctx_type_add(id_str, t):
+	global context
+	context.type_add(id_str, t)
+
+def ctx_value_add(id_str, v):
+	global context
+	context.value_add(id_str, v)
+
+
+
+def ctx_type_get(id_str):
+	#print("ctx_type_get %s" % id_str)
+	global context
+	x = context.type_get(id_str)
+	if x != None:
+		return x
 	global module
-	return deep_type_get(module, id_str)
-
-
-def value_get(id_str):
-	global module
-	return deep_value_get(module, id_str)
-
-
-def ctx_type_add(id_str, type):
-	global module
-	module['context'].type_add(id_str, type)
-
-
-
-# add value (to current context)
-def ctx_value_add(id_str, value):
-	global module
-	module['context'].value_add(id_str, value)
-
+	return module_type_get(module, id_str)
 
 def ctx_value_get(id_str):
+	#print("ctx_value_get %s" % id_str)
+	global context
+	x = context.value_get(id_str)
+	if x != None:
+		return x
 	global module
-	return module['context'].value_get(id_str, recursive=True)
+	return module_value_get(module, id_str)
+
 
 
 # искать ТОЛЬКО внутри текущего контекста (блока)
 def ctx_value_get_shallow(id_str):
 	global module
-	return module['context'].value_get(id_str, recursive=False)
+	return module['symtab_public'].value_get(id_str, recursive=False)
 
 
-def module_append(definition):
+
+def module_append(definition, to_export=False):
+	if definition == None:
+		return
+
 	global module
-	module['text'].append(definition)
+
+	if to_export:
+		module['export_defs'].append(definition)
+	else:
+		#print("module %s append %s" % (module['id'], definition['isa']))
+		module['defs'].append(definition)
+
+	definition['module'] = module
+
+
+
+def context_push():
+	global context
+	context = context.branch(domain='local')
+
+def context_pop():
+	global context
+	context = context.parent_get()
+
+
 
 
 # used in metadirs
@@ -165,7 +278,8 @@ def c_include(s):
 		'nl': 1,
 		'ti': None
 	}
-	module_append(inc)
+	#module_append(inc)
+	return inc
 
 
 properties = {}
@@ -182,16 +296,13 @@ def output_id(id):
 	property_add()
 
 
-def module_att(pg):
-	if pg == 'not_included':
-		module['att'].append('not_included')
-
 
 
 attributes = []
 
 def attribute_add(at):
 	global attributes
+	#print("attribute_add " + at)
 	if isinstance(at, list):
 		attributes.extend(at)
 	else:
@@ -253,51 +364,63 @@ def init():
 	valueTrue = value_bool_create(1)
 	valueFalse = value_bool_create(0)
 
-	global root_context
+	global root_symtab
 	# init main context
-	root_context = Symtab()
+	root_symtab = Symtab()
 
-	root_context.type_add('Unit', foundation.typeUnit)
-	root_context.type_add('Bool', foundation.typeBool)
-
-	root_context.type_add('Byte', foundation.typeByte)
-
-	root_context.type_add('Char8', foundation.typeChar8)
-	root_context.type_add('Char16', foundation.typeChar16)
-	root_context.type_add('Char32', foundation.typeChar32)
-
-	root_context.type_add('Int8', foundation.typeInt8)
-	root_context.type_add('Int16', foundation.typeInt16)
-	root_context.type_add('Int32', foundation.typeInt32)
-	root_context.type_add('Int64', foundation.typeInt64)
-	root_context.type_add('Int128', foundation.typeInt128)
-
-	root_context.type_add('Nat8', foundation.typeNat8)
-	root_context.type_add('Nat16', foundation.typeNat16)
-	root_context.type_add('Nat32', foundation.typeNat32)
-	root_context.type_add('Nat64', foundation.typeNat64)
-	root_context.type_add('Nat128', foundation.typeNat128)
-
-	#root_context.type_add('Float16', foundation.typeFloat16)
-	root_context.type_add('Float32', foundation.typeFloat32)
-	root_context.type_add('Float64', foundation.typeFloat64)
-
-	#root_context.type_add('Decimal32', foundation.typeDecimal32)
-	#root_context.type_add('Decimal64', foundation.typeDecimal64)
-	#root_context.type_add('Decimal128', foundation.typeDecimal128)
-
-	root_context.type_add('Str8', foundation.typeStr8)
-	root_context.type_add('Str16', foundation.typeStr16)
-	root_context.type_add('Str32', foundation.typeStr32)
-
-	root_context.type_add('Ptr', foundation.typeFreePointer)
-
-	root_context.type_add('VA_List', foundation.typeVA_List)
+	root_symtab.type_add('Unit', foundation.typeUnit)
+	root_symtab.type_add('Bool', foundation.typeBool)
 
 
-	root_context.value_add('nil', valueNil)
-	root_context.value_add('true', valueTrue)
-	root_context.value_add('false', valueFalse)
+	root_symtab.type_add('Char8', foundation.typeChar8)
+	root_symtab.type_add('Char16', foundation.typeChar16)
+	root_symtab.type_add('Char32', foundation.typeChar32)
+
+
+	root_symtab.type_add('Byte', foundation.typeWord8)
+
+	root_symtab.type_add('Word8', foundation.typeWord8)
+	root_symtab.type_add('Word16', foundation.typeWord16)
+	root_symtab.type_add('Word32', foundation.typeWord32)
+	root_symtab.type_add('Word64', foundation.typeWord64)
+	root_symtab.type_add('Word128', foundation.typeWord128)
+	root_symtab.type_add('Word256', foundation.typeWord256)
+
+	root_symtab.type_add('Int8', foundation.typeInt8)
+	root_symtab.type_add('Int16', foundation.typeInt16)
+	root_symtab.type_add('Int32', foundation.typeInt32)
+	root_symtab.type_add('Int64', foundation.typeInt64)
+	root_symtab.type_add('Int128', foundation.typeInt128)
+	root_symtab.type_add('Int256', foundation.typeInt256)
+
+	root_symtab.type_add('Nat8', foundation.typeNat8)
+	root_symtab.type_add('Nat16', foundation.typeNat16)
+	root_symtab.type_add('Nat32', foundation.typeNat32)
+	root_symtab.type_add('Nat64', foundation.typeNat64)
+	root_symtab.type_add('Nat128', foundation.typeNat128)
+	root_symtab.type_add('Nat256', foundation.typeNat256)
+
+
+	#root_symtab.type_add('Float16', foundation.typeFloat16)
+	root_symtab.type_add('Float32', foundation.typeFloat32)
+	root_symtab.type_add('Float64', foundation.typeFloat64)
+
+	#root_symtab.type_add('Decimal32', foundation.typeDecimal32)
+	#root_symtab.type_add('Decimal64', foundation.typeDecimal64)
+	#root_symtab.type_add('Decimal128', foundation.typeDecimal128)
+
+	root_symtab.type_add('Str8', foundation.typeStr8)
+	root_symtab.type_add('Str16', foundation.typeStr16)
+	root_symtab.type_add('Str32', foundation.typeStr32)
+
+	root_symtab.type_add('Ptr', foundation.typeFreePointer)
+
+	root_symtab.type_add('VA_List', foundation.typeVA_List)
+
+
+	root_symtab.value_add('nil', valueNil)
+	root_symtab.value_add('true', valueTrue)
+	root_symtab.value_add('false', valueFalse)
 
 
 	target_name = str(settings.get('target_name'))
@@ -347,14 +470,14 @@ def init_builtin_values():
 		hlir_initializer({'str': 'version'}, compilerVersion),
 	]
 	compiler = value_record_create(compiler_initializers)
-	root_context.value_add('__compiler', compiler)
+	root_symtab.value_add('__compiler', compiler)
 
 
 	"""import platform
 	__platformSystem = value_string_create(platform.system())
-	root_context.value_add('__platformSystem', __platformSystem)
+	root_symtab.value_add('__platformSystem', __platformSystem)
 	__platformRelease = value_string_create(platform.release())
-	root_context.value_add('__platformRelease', __platformRelease)
+	root_symtab.value_add('__platformRelease', __platformRelease)
 
 	target_system_initializers = [
 		hlir_initializer({'str': 'name'}, compilerName),
@@ -389,7 +512,7 @@ def init_builtin_values():
 		hlir_initializer({'str': 'pointerWidth'}, __targetPointerWidth),
 	]
 	target = value_record_create(target_initializers)
-	root_context.value_add('__target', target)
+	root_symtab.value_add('__target', target)
 
 
 
@@ -411,6 +534,7 @@ def do_field(x):
 		nl = x['nl']
 	f['nl'] = nl
 
+	add_spices(f, ast_atts=x['attributes'])
 	return f
 
 
@@ -419,13 +543,36 @@ def do_field(x):
 #
 
 def do_type_id(t):
-	id_str = t['id']['str']
-	tx = type_get(id_str)
+	id = t['ids'][0]
+	id_str = id['str']
+
+	tx = None
+	if len(t['ids']) > 1:
+		ns_id = id_str
+		id_str = t['ids'][1]['str']
+		#print(">>>>>>>>>>>>>>>>>>>>>> GET TYPE %s FROM: %s" % (id_str, ns_id))
+		global module
+		if ns_id in module['imports']:
+			submodule = module['imports'][ns_id]
+			tx = module_type_get_public(submodule, id_str)
+		else:
+			error("unknown namespace '%s'" % ns_id, t['ti'])
+			tx = hlir_type.hlir_type_bad(t)
+			return tx
+
+	else:
+		tx = ctx_type_get(id_str)
+
 	if tx == None:
+		predefinition(id)
+		tx = ctx_type_get(id_str)
+		if tx != None:
+			return tx
+
 		error("undeclared type '%s'" % id_str, t['ti'])
 		# create fake alias for unknown type
 		tx = hlir_type.hlir_type_bad(t)
-		root_context.type_add(id_str, tx)
+		root_symtab.type_add(id_str, tx)
 	return tx
 
 
@@ -436,20 +583,24 @@ def do_type_pointer(t):
 
 
 def do_type_array(t):
+	of = do_type(t['of'])
+
 	volume_expr = None
 	if t['size'] != None:
 		#volume_expr = do_value_immediate(t['size'])
 		volume_expr = do_value(t['size'])
+		if value_is_bad(volume_expr):
+			return hlir_type.hlir_type_array(of, volume=None, ti=t['ti'])
+
 		if not value_is_immediate(volume_expr):
 			info("VLA", t['ti'])
+			#print(volume_expr['isa'])
+			#print(volume_expr['kind'])
 			if is_local_context():
 				global cfunc
 				cfunc['att'].append('stacksave')
 			else:
 				error("non local VLA", t['size'])
-
-
-	of = do_type(t['of'])
 
 	# closed arrays of closed arrays are denied NOW
 	if volume_expr != None:
@@ -513,7 +664,8 @@ def do_type_enum(t):
 		item_val = value_terminal(enum_type, i, item['ti'])
 
 		item_val['id'] = id
-		ctx_value_add(id['str'], item_val)
+		global module
+		module_value_add_public(module, id['str'], item_val)
 
 		i = i + 1
 
@@ -567,9 +719,10 @@ def do_type_func(t, func_id="_"):
 
 
 def do_type(x):
-	for d in x['directives']:
-		do_directive(d)
+	for a in x['attributes']:
+		do_attribute(a)
 
+	t = None
 	k = x['kind']
 	if k == 'id': t = do_type_id(x)
 	elif k == 'func': t = do_type_func(x)
@@ -593,8 +746,8 @@ def do_value_shift(x):
 	l = do_rvalue(x['left'])
 	r = do_rvalue(x['right'])
 
-	if not hlir_type.type_is_integer(l['type']):
-		error("expected integer value", x['left'])
+	if not hlir_type.type_is_word(l['type']):
+		error("expected word value", x['left'])
 
 	if not hlir_type.type_is_integer(r['type']):
 		error("expected integer value", x['right'])
@@ -745,15 +898,6 @@ def do_value_bin(x):
 	if value_is_bad(l) or value_is_bad(r):
 		return value_bad(x)
 
-	# Check is valid type for this operation
-
-	if not op in l['type']['ops']:
-		error("unsuitable value type for '%s' operation" % op, l)
-		return value_bad(x)
-
-	if not op in r['type']['ops']:
-		error("unsuitable value type for '%s' operation" % op, r)
-		return value_bad(x)
 
 	if op == 'add':
 		if hlir_type.type_is_array(l['type']) and 	hlir_type.type_is_array(r['type']):
@@ -775,6 +919,17 @@ def do_value_bin(x):
 	if ct != None:
 		l = value_cons_implicit(ct, l)
 		r = value_cons_implicit(ct, r)
+
+	# Check type is valid for the operation
+
+	if not op in l['type']['ops']:
+		error("unsuitable value type for '%s' operation" % op, l)
+		return value_bad(x)
+
+	if not op in r['type']['ops']:
+		error("unsuitable value type for '%s' operation" % op, r)
+		return value_bad(x)
+
 
 	# types must be equal
 	if not hlir_type.type_eq(l['type'], r['type'], x['ti']):
@@ -996,19 +1151,26 @@ def sort_args(params, args):
 
 
 
-def do_value_call_lengthof(args, ti):
-	arg = do_rvalue(args[0]['value'])
+def do_value_call_lengthof(x):
+	ti = x['ti']
+	arg = do_rvalue(x['value'])
 
 	if not hlir_type.type_is_array(arg['type']):
 		error("expected array value", args[0]['ti'])
 		return value_bad({'ti': ti})
 
+	# for C backend, because C cannot do lengthof(x)
+	if not 'use_lengthof' in module['att']:
+		module['att'].append('use_lengthof')
+
 	return value_lengthof(arg, ti)
 
 
-def do_value_call_va_start(args, ti):
-	va_list = do_value(args[0]['value'])
-	last_param = do_rvalue(args[1]['value'])
+def do_value_va_start(x):#args, ti):
+	args = x['values']
+	ti = x['ti']
+	va_list = do_value(args[0])
+	last_param = do_rvalue(args[1])
 	return value_va_start(va_list, last_param, ti)
 
 
@@ -1018,66 +1180,40 @@ def do_value_va_arg(x):
 	return value_va_arg(va_list, type, x['ti'])
 
 
-def do_value_call_va_end(args, ti):
-	va_list = do_value(args[0]['value'])
+def do_value_va_end(x):
+	ti = x['ti']
+	va_list = do_value(x['value'])
 	return value_va_end(va_list, ti)
 
 
-def do_value_call_va_copy(args, ti):
-	va_list0 = do_value(args[0]['value'])
-	va_list1 = do_value(args[1]['value'])
+def do_value_va_copy(x):
+	args = x['values']
+	ti = x['ti']
+	va_list0 = do_value(args[0])
+	va_list1 = do_value(args[1])
 	return value_va_copy(va_list0, va_list1, ti)
 
 
-def do_value_call_defined(args, ti):
-	global valueTrue, valueFalse
-	id = do_value(args[0]['value'])
+def do_value___defined_type(x):
+	t = ctx_type_get(x['type']['id']['str'])
+	return t != None
 
-	if not hlir_type.type_is_string(id['type']):
-		error("expected string", id)
 
-	s = id['asset']
-	rc = valueTrue
-	v = value_get(s)
-	if v == None:
-		t = type_get(s)
-		if t == None:
-			rc = valueFalse
-
-	return rc
+def do_value___defined_value(x):
+	v = ctx_value_get(x['value']['id']['str'])
+	return v != None
 
 
 
 def do_value_call(x):
-	global undeclared_value_error
-	oe = undeclared_value_error
-	undeclared_value_error = False
+	fn = do_rvalue(x['left'])
 
-	f = do_rvalue(x['left'])
-
-	undeclared_value_error = oe
-
-	if value_is_bad(f):
-		if 'unknown' in f['att']:
-			if x['left']['kind'] == 'id':
-				id_str = x['left']['id']['str']
-				args = x['args']
-				if id_str == 'lengthof':
-					return do_value_call_lengthof(args, x['ti'])
-				elif id_str == '__va_start':
-					return do_value_call_va_start(args, x['ti'])
-				elif id_str == '__va_copy':
-					return do_value_call_va_copy(args, x['ti'])
-				elif id_str == '__va_end':
-					return do_value_call_va_end(args, x['ti'])
-				elif id_str == '__defined':
-					return do_value_call_defined(args, x['ti'])
-
-		error("undeclared value", f)
+	if value_is_bad(fn):
+		error("undefined value", fn)
 		return value_bad(x)
 
 
-	ftype = f['type']
+	ftype = fn['type']
 
 	# pointer to function?
 	if hlir_type.type_is_pointer(ftype):
@@ -1163,8 +1299,8 @@ def do_value_call(x):
 		i = i + 1
 
 
-	if 'id' in f:
-		func_id_str = f['id']['str']
+	if 'id' in fn:
+		func_id_str = fn['id']['str']
 		if func_id_str in ['print', 'scanf', 'print']:
 			expected_pointers = func_id_str == 'scanf'
 			first_arg = x['args'][0]['value']
@@ -1174,16 +1310,15 @@ def do_value_call(x):
 			else:
 				error("expected literal string argument", first_arg['ti'])
 
-
-	rv = value_call(f, ftype['to'], args + extra_args, ti=x['ti'])
+	rv = value_call(fn, ftype['to'], args + extra_args, ti=x['ti'])
 
 	#TODO: Func#pure
-	#if 'pure' in f:
+	#if 'pure' in fn:
 	#	if f['pure'] and imm_args:
 	#		rv = ct_call(rv)
 
 	# for C backend only (maybe mv to C?)
-	if hlir_type.type_is_closed_array(f['type']['to']):
+	if hlir_type.type_is_closed_array(fn['type']['to']):
 		rv['att'].append('wrapped_array')
 
 	return rv
@@ -1333,13 +1468,54 @@ def do_value_slice(x):
 	return nv
 
 
+
+
+
+def is_submodule_name(id_str):
+	return id_str in module['imports']
+
+
+def submodule_access(x):
+	global module
+
+	mname = x['left']['str']
+	iname = x['right']['str']
+	ti = x['ti']
+
+	submodule = module['imports'][mname]
+
+	v = module_value_get_public(submodule, iname)
+	if v == None:
+		v = module_value_get_private(submodule, iname)
+		if v != None:
+			error("access to module private item", ti)
+
+	if v == None:
+		return value_bad(x)
+
+	y = value_access_module(v['type'], submodule, v, v, x['ti'])
+	cp_immediate(y, v)
+	return y
+
+
+
 def do_value_access(x):
+
+	# access to submodule?
+	if x['left']['kind'] == 'id':
+		if is_submodule_name(x['left']['str']):
+			return submodule_access(x)
+
+	#
+	# access to object
+	#
+
 	left = do_rvalue(x['left'])
 
 	if value_is_bad(left):
 		return value_bad(x)
 
-	field_id = x['field']
+	field_id = x['right']
 
 	# доступ через переменную-указатель
 	via_pointer = hlir_type.type_is_pointer(left['type'])
@@ -1360,10 +1536,18 @@ def do_value_access(x):
 		error("undefined field '%s'" % field_id['str'], x)
 		return value_bad(x)
 
+	# PROBLEM: у анонимных структур нет поля 'definition'
+	# и непонятно как с этимм быть. Можно добавить module
+	# в каждую сущность, но...
+#	if record_type['definition']['module'] != module:
+#		if not 'public' in field['att']:
+#			error("access to private field", x['ti'])
+
+
 	if hlir_type.type_is_bad(field['type']):
 		return value_bad(x)
 
-	nv = value_access_record(left, field['type'], field, ti=x['ti'])
+	nv = value_access_record(field['type'], left, field, ti=x['ti'])
 	if not via_pointer:
 		nv['immutable'] = left['immutable']
 
@@ -1388,17 +1572,21 @@ def do_value_cons(x):
 	return value_cons_explicit(t, v, x['ti'])
 
 
-undeclared_value_error = True
+#undeclared_value_error = True
+
+
 
 def do_value_id(x):
-	id_str = x['id']['str']
-	v = value_get(id_str)
+	id_str = x['str']
+	v = ctx_value_get(id_str)
 
 	if v == None:
-		# see: do_value_call
-		global undeclared_value_error
-		if undeclared_value_error:
-			error("undeclared value '%s'" % id_str, x)
+		predefinition(x)
+		vx = ctx_value_get(id_str)
+		if vx != None:
+			return vx
+
+		error("undefined value '%s'" % id_str, x)
 
 		# чтобы не генерил ошибки дальше
 		# создадим bad value и пропишем его глобально
@@ -1564,13 +1752,14 @@ def do_value_unsafe(x):
 		error("for use 'unsafe' operator required -funsafe option", ti)
 
 	global unsafe_mode
-	old_unsafe_mode = unsafe_mode
+	prev_unsafe_mode = unsafe_mode
 	unsafe_mode = True
 
 	rv = do_rvalue(x['value'])
 
-	unsafe_mode = old_unsafe_mode
+	unsafe_mode = prev_unsafe_mode
 	return rv
+
 
 
 
@@ -1602,14 +1791,22 @@ def do_value(x):
 	elif k == 'access': v = do_value_access(x)
 	elif k == 'negative': v = do_value_neg(x)
 	elif k == 'positive': v = do_value_pos(x)
+	elif k == 'shl': v = do_value_shift(x)
+	elif k == 'shr': v = do_value_shift(x)
 	elif k == 'unsafe': v = do_value_unsafe(x)
+
 	elif k == 'sizeof_value': v = do_value_sizeof_value(x)
 	elif k == 'sizeof_type': v = do_value_sizeof_type(x)
 	elif k == 'alignof': v = do_value_alignof(x)
 	elif k == 'offsetof': v = do_value_offsetof(x)
-	elif k == 'shl': v = do_value_shift(x)
-	elif k == 'shr': v = do_value_shift(x)
-	elif k == 'va_arg': v = do_value_va_arg(x)
+	elif k == 'lengthof': v = do_value_call_lengthof(x)
+	elif k == '__va_arg': v = do_value_va_arg(x)
+	elif k == '__va_start': v = do_value_va_start(x)
+	elif k == '__va_copy': v = do_value_va_copy(x)
+	elif k == '__va_end': v = do_value_va_end(x)
+	elif k == '__defined_type': v = do_value___defined_type(x)
+	elif k == '__defined_value': v = do_value___defined_value(x)
+
 
 	assert(v != None)
 
@@ -1739,7 +1936,7 @@ def do_stmt_var(x):
 			return hlir_stmt_bad(x)
 
 		if hlir_type.type_is_forbidden_var(t):
-			error("unsuitable type", x['type'])
+			error("unsuitable type1", x['type']['ti'])
 
 	# type & init value present
 	if t != None and v != None:
@@ -1801,7 +1998,13 @@ def do_stmt_let(x):
 		const_value['immediate'] = True
 		cp_immediate(const_value, v)
 
+		if hlir_type.type_is_generic(v['type']):
+			# generic immediate в C печатается как #define
+			# и его надо манглить иначе возникает куча проблем
+			const_value['id']['c'] = '__' + const_value['id']['str']
+
 	ctx_value_add(id['str'], const_value)
+
 	return hlir_stmt_let(id, const_value, v, ti=x['ti'])
 
 
@@ -1949,7 +2152,7 @@ def do_stmt(x):
 
 def do_stmt_block(x):
 	global module
-	module['context'] = module['context'].branch(domain='local')
+	context_push()
 
 	stmts = []
 	for stmt in x['stmts']:
@@ -1957,158 +2160,55 @@ def do_stmt_block(x):
 		if not hlir_stmt_is_bad(s):
 			stmts.append(s)
 
-	module['context'] = module['context'].parent_get()
+	context_pop()
 
 	return hlir_stmt_block(stmts, ti=x['ti'], end_nl=x['end_nl'])
 
 
 
-included_modules = {}
-def do_import(x):
-	import_expr = do_value_immediate_string(x['expr'])
 
-	if value_is_bad(import_expr):
-		return None
-
-	# Literal string to python string
-	impline = import_expr['asset']
-	log('import "%s"' % impline)
-
-	# (!) right here, before calling "do_import" (!)
-	att = attributes_get()
-	# (!) ^^
-
-	abspath = import_abspath(impline)
-	if abspath == None:
-		error("module %s not found" % impline, import_expr)
-		fatal("cannot import module")
-		return None
-
-
-	global included_modules
-	if abspath in included_modules:
-		# already imported
-		m = included_modules[abspath]
-	else:
-		m = translate(abspath)
-		included_modules[abspath] = m
-
-
-	# 1. НЕ добавляем символы из модуля в текущий
-	# тк поиск символа идет рекурсивно по всем импортам
-	#module['context'].merge(m['context'])	#!
-
-	# 1. добавляем проимпортированный модуль в список нашего импорта
-
-	# но сперва проверим нет ли его уже среди импортированных модулей
-	for imported_module in module['imports']:
-		if imported_module['source_info']['path'] == m['source_info']['path']:
-			error("attempt to include module twice", import_expr)
-
-	if m != None:
-		module['imports'].append(m)
-
-	# 2. А в нашем модуле добавляем директиву инклуда
-	directive = {
-		'isa': 'directive',
-		'kind': 'import',
-		'str': impline,			# ex: "libc/stdio"
-		'c_name': impline + '.h',  # ex: "libc/stdio.h"
-		'att': att,
-		'module': m, # ссылка на сам модуль (для not_included)
-		'local': True
-	}
-
-	#do_attributes(directive) @^^
-	return directive
-
-
-
-def def_const(x):
-	id = x['id']
-
-	log("def_const %s" % id['str'])
-
-	# check if identifier is free
-	pre_exist = ctx_value_get_shallow(id['str'])
-	if pre_exist != None:
-		error("redefinition of '%s'" % id['str'], id['ti'])
-
-	if id['str'][0].isupper():
-		error("value id must starts with small letter", id['ti'])
-		pass
-
-	v = do_value_immediate(x['value'], allow_ptr_to_str=True)
-
-	if value_is_bad(v):
-		ctx_value_add(id['str'], v)
-		return hlir_def_const(id, v, v, x['ti'])
-
-	const_value = value_const(id, v['type'], v, id['ti'])
-	const_value['att'].extend(v['att'])
+def symbol_const(id, init_value, is_public=False):
+	const_value = value_const(id, init_value['type'], init_value, id['ti'])
+	const_value['att'].extend(init_value['att'])
 
 	# Now let can be immediate!
-	if value_is_immediate(v):
+	if value_is_immediate(init_value):
 		const_value['immediate'] = True
-		cp_immediate(const_value, v)
+		cp_immediate(const_value, init_value)
 
-	ctx_value_add(id['str'], const_value)
-	return hlir_def_const(id, const_value, v, x['ti'])
-
-
-
-# удаляет hlir_node по isa & id_str
-def module_remove_node(m, isa, id_str):
-	#print(f"module_remove_node: {id_str}")
-
-	for submodule in m['imports']:
-		module_remove_node(submodule, isa, id_str)
-
-	for x in m['text']:
-		if x['isa'] == isa:
-			if 'id' in x:
-				if x['id']['str'] == id_str:
-					#print("REMOVE: " + id_str)
-					m['text'].remove(x)
-					break
-	return
+	global module
+	module_value_add(module, id['str'], const_value, is_public=is_public)
+	#module_value_add_public(module, id['str'], const_value)
+	return const_value
 
 
 
-def decl_type(x):
-	id = x['id']
-	log("decl_type %s" % id['str'])
-
-	nt = hlir_type.hlir_type_undefined(x)
-	nt['aka'] = id['str']
-	nt['ti_decl'] = x['ti']
-	ctx_type_add(id['str'], nt)
-
-	# С не печатает opaque, но LLVM печатает (!)
-	return hlir_decl_type(id, nt, x['ti'])
-
+# нужно добавлять префикс к сущности
+# наличие поля prefix дает принтеру знать что нужно декорировать имя
+def need_decoration(x):
+	return not is_nodecorate(x) and not ('module_nodecorate' in module['att'])
 
 
 def def_type(x):
 	global module
 	id = x['id']
-	log("def_type %s" % id['str'])
+	log("def_type: %s" % id['str'])
 
 	if id['str'][0].islower():
 		error("type id must starts with big letter", id['ti'])
 
-	pre_exist = type_get(id['str'])
+	pre_exist = ctx_type_get(id['str'])
 
 	# check if identifier is free
 	already_declared = pre_exist != None
 
 	if already_declared:
 		nt = pre_exist
-		if hlir_type.type_is_defined(pre_exist):
-			error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
+		#if hlir_type.type_is_defined(pre_exist):
+		#	error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
 	else:
-		nt = hlir_type.hlir_type_undefined(x)
-		ctx_type_add(id['str'], nt)
+		nt = hlir_type.hlir_type_undefined(x['ti'])
+		module_type_add(module, id['str'], nt, is_public=x['export'])
 
 	# только теперь обрабатываем поля,
 	# тк там могут быть указатели на саму себя
@@ -2127,32 +2227,68 @@ def def_type(x):
 	# НО! имя даем новое
 	nt.clear()
 	nt.update(ty)
+	nt['id'] = id # need for  @property("type.id.c", "int")
 	nt['att'] = copy.copy(ty['att'])
-	nt['aka'] = id['str']
 	nt['ti_def'] = id['ti']
+	nt['module'] = module  ## добавляем заново тк очистили его выше!
 
 
-	if not ('not_included' in module['att']):
+	if need_decoration(x):
+		nt['prefix'] = module['prefix']
+
+	if not ('do_not_include' in module['att']):
 		# В случае когда не печатаем typedef явно (!)
 		# Убираем алиасы которые висели на оригинальном типе
-		if 'c_alias' in nt:
-			nt.pop('c_alias')
-		if 'llvm_alias' in nt:
+		if 'c' in nt['id']:
+			nt.pop('c')
+		if 'llvm_alias' in nt['id']:
 			nt.pop('llvm_alias')
 
 
 	if hlir_type.type_is_record(ty):
-		module['records'].append(id['str'])
+		module['records'].append(nt)
+
+	y = hlir_def_type(id, nt, ty, x['ti'])
+	nt['definition'] = y
+	y['module'] = module
+	y['nl'] = x['nl']
+	y['export'] = x['export']
+	return y
 
 
-	if already_declared:
-		# LLVM не допускает переопределения типа
-		# (после его декларации (как opaque))
-		# поэтому удаляем
-		if settings.check('backend', 'llvm'):
-			module_remove_node(module, 'decl_type', id['str'])
 
-	return hlir_def_type(id, nt, ty, x['ti'])
+def def_const(x):
+	id = x['id']
+
+	log("def_const: %s" % id['str'])
+
+	# check if identifier is free
+	pre_exist = ctx_value_get_shallow(id['str'])
+	if pre_exist != None:
+		error("redefinition of '%s'" % id['str'], id['ti'])
+
+	if id['str'][0].isupper():
+		error("value id must starts with small letter", id['ti'])
+		pass
+
+	init_value = do_value_immediate(x['value'], allow_ptr_to_str=True)
+
+	if value_is_bad(init_value):
+		global module
+		module_value_add_public(module, id['str'], init_value)
+		return hlir_def_const(id, init_value, init_value, x['ti'])
+
+
+	const_value = symbol_const(id, init_value, is_public=x['export'])
+
+	y = hlir_def_const(id, const_value, init_value, x['ti'])
+	if need_decoration(x):
+		const_value['prefix'] = module['prefix']
+	y['export'] = x['export']
+	const_value['definition'] = y
+	const_value['module'] = module
+	y['module'] = module
+	return y
 
 
 
@@ -2161,7 +2297,7 @@ def def_var(x):
 	log("def_var %s" % id['str'])
 
 	# already defined? (check identifier)
-	already = value_get(id['str'])
+	already = ctx_value_get(id['str'])
 	if already != None:
 		error("redefinition of '%s'" % id['str'], id['ti'])
 
@@ -2171,34 +2307,120 @@ def def_var(x):
 		#if hlir_type.type_is_bad(t):
 		#	return None
 
-	v = None
+	init_value = None
 	if x['value'] != None:
-		v = do_rvalue(x['value'])
+		init_value = do_rvalue(x['value'])
 
 		if t != None:
 			# for case like:
 			# var a: Int[] = [1, 2, 3] // -> Int[3]
 			if hlir_type.type_is_open_array(t):
 				length = 0
-				if hlir_type.type_is_string(v['type']):
-					length = len(v['asset'])
-				elif hlir_type.type_is_array(v['type']):
-					length = v['type']['volume']['asset']
+				if hlir_type.type_is_string(init_value['type']):
+					length = len(init_value['asset'])
+				elif hlir_type.type_is_array(init_value['type']):
+					length = init_value['type']['volume']['asset']
 
 				volume = value_integer_create(length)
 				t = hlir_type.hlir_type_array(t['of'], volume, x['ti'])
 
-			v = value_cons_implicit_check(t, v)
+			init_value = value_cons_implicit_check(t, init_value)
 		else:
-			v = value_cons_default(v)
-			t = v['type']
+			init_value = value_cons_default(init_value)
+			t = init_value['type']
 
-		if hlir_type.type_is_generic(v['type']):
+		if hlir_type.type_is_generic(init_value['type']):
 			error("cannot cons variable", x['ti'])
 
-	var_value = value_var(id, t, id['ti'])
-	ctx_value_add(id['str'], var_value)
-	return hlir_def_var(id, var_value, v, x['ti'])
+	v = value_var(id, t, id['ti'])
+	module_value_add(module, id['str'], v, is_public=x['export'])
+
+
+	y = hlir_def_var(id, v, init_value, x['ti'])
+	y['module'] = module
+	v['definition'] = y
+	y['export'] = x['export']
+	return y
+
+
+def def_func(x, dostmt=True):
+	global cfunc
+	global module
+
+	func_id = x['id']
+	log('def_func: %s' % func_id['str'])
+
+	# значение функции уже существует, тк мы ранее сделали проход
+	fn = ctx_value_get(func_id['str'])
+
+	prev_cfunc = cfunc
+	cfunc = fn
+
+	if x['stmt'] == None:
+		#print("DECL: "+fn['id']['str'])
+		y = hlir_def_func(func_id, fn, None, x['ti'])
+		y['export'] = x['export']
+		fn['definition'] = y
+		return y
+
+
+	context_push()  # create params context
+
+	if hlir_type.type_is_bad(fn['type']):
+		return None
+
+	params = fn['type']['params']
+	i = 0
+	while i < len(params):
+		param = params[i]
+		param_type = param['type']
+		param_id = param['id']
+
+		param_value = value_const(param_id, param_type, None, param['ti'])
+		param_value['att'].append('local')
+
+		# for C backend only (maybe mv to C?)
+		if hlir_type.type_is_closed_array(param_type):
+			param_value['att'].append('wrapped_array')
+
+		ctx_value_add(param_id['str'], param_value)
+		i = i + 1
+
+	# for C backend, for #include <stdarg.h>
+	if fn['type']['extra_args']:
+		if not 'use_va_arg' in module['att']:
+			module['att'].append('use_va_arg')
+
+	# check unuse
+	for param in params:
+		check_unuse(param)
+
+	stmt = None
+
+	if dostmt:
+		if x['stmt'] != None:
+			stmt = do_stmt_block(x['stmt'])
+			check_block(stmt)
+
+			# check if return present
+			if not hlir_type.type_is_unit(fn['type']['to']):
+				stmts = stmt['stmts']
+				if len(stmts) == 0:
+					warning("expected return operator at end", stmt['ti'])
+				elif stmts[-1]['kind'] != 'return':
+					warning("expected return operator at end", stmt['ti'])
+
+	context_pop()  # remove params context
+
+	cfunc = prev_cfunc
+
+	y = hlir_def_func(func_id, fn, stmt, x['ti'])
+	if need_decoration(x):
+		y['prefix'] = module['prefix']
+	y['export'] = x['export']
+	fn['definition'] = y
+	y['module'] = module
+	return y
 
 
 
@@ -2241,140 +2463,27 @@ def check_stmt(stmt):
 
 
 
-def def_func(x):
-	global cfunc
+def is_nodecorate(x):
+	for a in x['attributes']:
+		if a['kind'] == 'nodecorate':
+			return True
+	return False
 
+
+def do_func_value(x, export):
+	global module
 	func_id = x['id']
-
-	if func_id['str'][0].isupper():
-		error("function id must starts with small letter", func_id['ti'])
-
 	func_ti = func_id['ti']
-
 	func_type = do_type_func(x['type'], func_id=func_id['str'])
-	old_cfunc = cfunc
+	fn = value_func(func_id, func_type, ti=func_ti)
 
-	fn = None
+	if export:
+		if need_decoration(x):
+			fn['prefix'] = module['prefix']
 
-	# if function already declared/defined, check it
-	already = value_get(func_id['str'])
-	if already != None:
-		# function already declared & defined (incomplete definition)
-		fn = already
-
-		fn['ti_decl'] = func_ti
-
-		if 'stmt' in already:
-			# already defined function
-			error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
-		else:
-			# already declared function
-			if not hlir_type.type_eq(already['type'], func_type):
-				error("definition not correspond to declatartion", x['ti'])
-				info("firstly declared here", already['type']['ti'])
-
-	else:
-		# function already not declared & defined
-		# create new function definition
-		fn = value_func(func_id, func_type, ti=func_ti)
+	return fn
 
 
-	cfunc = fn
-
-	fn['ti_def'] = func_ti
-
-	# create params context
-	module['context'] = module['context'].branch(domain='local')
-
-
-	if already:
-		fn['att'].append('declared')
-
-	params = func_type['params']
-	i = 0
-	while i < len(params):
-		param = params[i]
-		param_type = param['type']
-		param_id = param['id']
-
-		param_value = value_const(param_id, param_type, None, param['ti'])
-		param_value['att'].append('local')
-
-		# for C backend only (maybe mv to C?)
-		if hlir_type.type_is_closed_array(param_type):
-			param_value['att'].append('wrapped_array')
-
-		ctx_value_add(param_id['str'], param_value)
-		i = i + 1
-
-
-	if func_type['extra_args']:
-		#va_id = func_type['va_list_id']
-		#add_local_var(va_id, foundation.typeVA_List, va_id['ti'])
-		module_option('use_extra_args')
-
-
-	fn['stmt'] = do_stmt_block(x['stmt'])
-
-	# check unuse
-	for param in params:
-		check_unuse(param)
-
-	check_block(fn['stmt'])
-
-	# check if return present
-	if not hlir_type.type_is_unit(fn['type']['to']):
-		stmts = fn['stmt']['stmts']
-		if len(stmts) == 0:
-			warning("expected return operator at end", fn['stmt']['ti'])
-		elif stmts[-1]['kind'] != 'return':
-			warning("expected return operator at end", fn['stmt']['ti'])
-
-
-	# remove params context
-	module['context'] = module['context'].parent_get()
-
-	# add function to parent (global) context
-	ctx_value_add(func_id['str'], fn)
-
-	cfunc = old_cfunc
-
-	# в LLVM если делаем func definition нельзя писать func declaration
-	# поэтому удалим все сделаные ранее декларации (если они есть)
-	if settings.check('backend', 'llvm'):
-		module_remove_node(module, 'decl_func', func_id['str'])
-
-	return hlir_def_func(func_id, fn, x['ti'])
-
-
-
-def decl_func(x):
-	id = x['id']
-	func_type = do_type_func(x['type'], func_id=id['str'])
-
-	#
-	# Check if function already declared/defined
-	#
-	already = value_get(id['str'])
-	if already != None:
-		if 'stmt' in already:
-			# already defined function
-			info("function declaration after definition", x['ti'])
-
-		else:
-			# already declared function
-			info("repeated function declaration", x['ti'])
-
-		# check type of already created function
-		if not hlir_type.type_eq(already['type'], func_type):
-			error("definition not correspond to function type", x['type']['ti'])
-			info("firstly declared here", already['type']['ti'])
-
-		return
-
-	func = value_func(id, func_type, ti=id['ti'])
-	ctx_value_add(id['str'], func)
-	return hlir_decl_func(id, func, x['ti'])
 
 
 
@@ -2400,18 +2509,169 @@ def comm_block(x):
 # пропускать остальные ветви (elseif & else) условной директивы
 # тк основная ветвь была выполнена
 skipp = False
-old_skipp = False
+prev_skipp = False
 
-def do_directive(x):
-	global skipp, old_skipp, production, old_production
+def do_attribute(x):
+	global skipp, prev_skipp, production, prev_production
 	kind = x['kind']
 	args = x['args']
 
-	if kind == 'import':
-		return do_import(x)
+	#info("do_attribute('%s')" % kind, x['ti'])
 
-	elif kind == 'if':
-		old_production = production
+	if kind == 'attribute':
+		attribute_add(args[0]['str'])
+	elif kind == 'property':
+		property_add(args[0]['str'], args[1]['str'])
+	elif kind == 'inline':
+		attribute_add('c_static')
+		attribute_add('inline')
+	elif kind == 'extern':
+		attribute_add('c_extern')
+	elif kind == 'unused_result':
+		attribute_add("value.type.to:dispensable")
+	else:
+		attribute_add(kind)
+
+	return None
+
+
+
+# находит сущность по имени и определяет ее
+gast = None
+def predefinition(id):
+	id_str = id['str']
+	print("predefinition(\"%s\")" % id_str)
+	global gast
+	y = None
+
+	found = False
+	for x in gast:
+		if not 'id' in x:
+			continue
+
+		if x['id']['str'] == id_str:
+			kind = x['kind']
+			if kind == 'type':
+				found = True
+				y = def_type(x)
+			elif kind == 'const':
+				found = True
+				y = def_const(x)
+			elif kind == 'func':
+				found = True
+				global module
+				fn = do_func_value(x, x['export'])
+				module_value_add(module, fn['id']['str'], fn, is_public=x['export'])
+
+			x['defined'] = True  # mark as DEFINED
+
+			if y != None:
+				module_append(y, to_export=x['export'])
+	if not found:
+		error("unknown identifier '%s'" % id['str'], id['ti'])
+	#return y
+
+
+"""# расширить текущий модуль определениями
+def cmodule_extend(y, do_not_def):
+	global module
+	module['symtab_public'].extend(y['symtab_public'])
+	module['symtab_private'].extend(y['symtab_private'])
+
+	if not do_not_def:
+		module['defs'].extend(y['defs'])
+		module['export_defs'].extend(y['export_defs'])
+"""
+
+def do_import(x):
+	import_expr = do_value_immediate_string(x['expr'])
+
+	if value_is_bad(import_expr):
+		return None
+
+	# Literal string to python string
+	impline = import_expr['asset']
+
+	#print('do_import("%s")' % impline)
+	log('do_import("%s")' % impline)
+
+	abspath = import_abspath(impline, ext='.m')
+
+	if abspath == None:
+		error("module %s not found" % impline, import_expr)
+		return None
+
+
+	#if abspath in included_modules:
+
+	if not abspath in included_modules:
+		#print(">>> " + abspath)
+		#for im in included_modules:
+		#	print("-" + im)
+
+		m = translate(abspath, nodef=not x['include'])
+
+		#if 'as' in x:
+		#	m['id'] = x['as']['str'] # todo
+		m['id'] = impline.split("/")[-1]
+
+		#print("IMP_ID = " + impline)
+
+		if m == None:
+			fatal("cannot import module")
+
+		if 'c_no_print' in m['att']:
+			for xx in m['defs']:
+				xx['att'].append('c_no_print')
+			for xx in m['export_defs']:
+				xx['att'].append('c_no_print')
+
+		included_modules[abspath] = m
+
+	else:
+		# cash hit
+		m = included_modules[abspath]
+
+	if not x['include']:
+		m_id = '<$>'
+		if x['as'] != None:
+			m_id = x['as']['str']
+		else:
+			m_id = m['id']
+		module['imports'][m_id] = m
+	else:
+		# забираем публичные символы
+		# и забираем все определения (исключая дубликаты!)
+		module['symtab_include'].extend(m['symtab_public'])
+		module['included'].append(m)
+
+	y = import_directive(impline, x['ti'], include=x['include'])
+	y['import_module'] = m
+	return y
+
+
+
+def do_directive(x):
+	#info("directive %s" % x['kind'], x['ti'])
+	if x['kind'] == 'pragma':
+		args = x['args']
+		s0 = args[0]
+		if s0 == 'do_not_include':
+			module['att'].append('do_not_include')
+		elif s0 == 'module_nodecorate':
+			module['att'].append('module_nodecorate')
+		elif s0 == 'c_include':
+			return c_include(args[1])
+		elif s0 == 'c_no_print':
+			module['att'].append('c_no_print')
+		elif s0 == 'feature':
+			feature_add(args[0])
+			pass
+	return None
+
+
+	"""if kind == 'if':
+		prev_production = production
 		c = do_value_immediate(args[0])
 
 		if value_is_bad(c):
@@ -2425,7 +2685,7 @@ def do_directive(x):
 
 		production = cond
 		if cond:
-			old_skipp = skipp
+			prev_skipp = skipp
 			skipp = True  # skip another branches
 
 	elif kind == 'elseif':
@@ -2449,8 +2709,8 @@ def do_directive(x):
 		production = not skipp
 
 	elif kind == 'endif':
-		skipp = old_skipp  # do not skip branches (for new if)
-		production = old_production
+		skipp = prev_skipp  # do not skip branches (for new if)
+		production = prev_production
 
 	elif kind == 'info':
 		v = do_value_immediate_string(args[0])
@@ -2485,34 +2745,77 @@ def do_directive(x):
 		if value_is_bad(v):
 			fatal("unsuitable value", x['ti'])
 		id_str = v['asset']
-		module['context'].value_undef(id_str)
-		module['context'].type_undef(id_str)
+		module['symtab_public'].value_undef(id_str)
+		module['symtab_public'].type_undef(id_str)
 
-	elif kind in 'attribute':
-		attribute_add(args[0]['str'])
-	elif kind == 'property':
-		property_add(args[0]['str'], args[1]['str'])
-	elif kind == 'feature':
-		feature_add(args[0]['str'])
-	elif kind == 'module_att':
-		module_att(args[0]['str'])
-	elif kind == 'c_include':
-		c_include(args[0]['str'])
+	el"""
 
-	elif kind == 'const':
-		print("CONST")
-	elif kind == 'volatile':
-		print("VOLATILE")
-	elif kind == 'atomic':
-		print("ATOMIC")
 
-	return None
+def import_directive(impline, ti, include=False):
+	imp = {
+		'isa': 'directive',
+		'kind': 'import',
+		'include': include,
+		'str': impline,
+		'import_module': None,
+		'att': [],
+		'nl': 1,
+		'ti': ti,
+	}
+	return imp
 
 
 
+def translate(srcname, nodef=False):
+	assert(srcname != None)
+	assert(srcname != "")
 
-def proc(ast, source_info):
-	global skipp, production, old_production
+	log(">>>> TRANSLATE(\"%s\")" % srcname)
+	log_ind_plus()
+
+	if not os.path.exists(srcname):
+		return None
+
+	global env_current_file_abspath
+	global env_current_file_dir
+	prev_env_current_file_dir = env_current_file_dir
+	prev_env_current_file_abspath = env_current_file_abspath
+
+	absp = os.path.abspath(srcname)
+	fdir = os.path.dirname(absp)
+
+	env_current_file_abspath = absp
+	env_current_file_dir = fdir
+
+
+	src_id = srcname.split('/')[-1]
+	src_id = src_id[:-2]
+
+	source_info = {
+		'id': src_id,   # 'console'
+		'path': absp,	# '/Users/.../console.m'
+		'dir': fdir,	# '/Users/.../'
+	}
+
+	parser = Parser()
+	ast = parser.parse(source_info)
+
+	if ast == None:
+		return None
+
+	m = process_module(ast, source_info, nodef=nodef)
+
+	env_current_file_abspath = prev_env_current_file_abspath
+	env_current_file_dir = prev_env_current_file_dir
+
+	log_ind_minus()
+	log("<<<< END-TRANSLATE(\"%s\")\n" % srcname)
+	return m
+
+
+
+def process_module(ast, source_info, nodef=False):
+	global skipp, production, prev_production
 
 	global properties
 	properties = {}
@@ -2520,77 +2823,147 @@ def proc(ast, source_info):
 	attributes = []
 
 	global module
-	old_module = module
+	prev_module = module
 
+	symtab_public = root_symtab.branch()
+	symtab_private = Symtab()
+	symtab_include = Symtab()
 
-	new_context = root_context.branch()
+	global context
+	prev_context = context
+	context = symtab_public
 
 	module = {
 		'isa': 'module',
-		'id': "id",
-		'source_info': source_info,
-		#'imports': [foundation_module],  #
-		'imports': [],  #
-		'strings': [],  # (used in LLVM backend)
-		'context': new_context,
-		'options': [],
-		'records': [],
-		'anon_recs': [],  # anonymous records for C printer
-		'att': [],
-		'text': []
-	}
+		'id': source_info['id'],
+		'prefix': source_info['id'],
 
+		'source_info': source_info,
+		'options': [],
+
+		'strings': [],    # for in LLVM backend)
+		'records': [],    # for C backend
+		'anon_recs': [],  # anonymous records for C backend
+
+		'symtab_public': symtab_public,
+		'symtab_private': symtab_private,
+		'symtab_include': symtab_include,
+
+		'included': [],
+		'imports': {},      # '<local_module_id>' => {'isa': 'module'}
+
+		'defs': [],         # приватные определения модуля
+		'export_defs': [],  # открытые определения модуля
+		# определения полученные из заинклуженного модуля
+		# LLVM например их печатает, а C и CM - нет
+		'included_defs': [],
+		'att': []
+ 	}
+
+	# 0. do imports & directives
 	for x in ast:
 		isa = x['isa']
-		kind = x['kind']
-
 		y = None
-
-		if not production:
-			if isa != 'ast_directive':
-				continue
-			elif not kind in ['elseif', 'else', 'endif']:
-				continue
-
-		if isa == 'ast_definition':
-			if kind == 'func': y = def_func(x)
-			elif kind == 'type': y = def_type(x)
-			elif kind == 'const': y = def_const(x)
-			elif kind == 'var': y = def_var(x)
-			add_spices(y)
-
-		elif isa == 'ast_declaration':
-			if kind == 'func': y = decl_func(x)
-			elif kind == 'type': y = decl_type(x)
-			add_spices(y)
-
-		elif isa == 'ast_comment':
-			if kind == 'line': y = comm_line(x)
-			elif kind == 'block': y = comm_block(x)
+		if isa == 'ast_import':
+			y = do_import(x)
 
 		elif isa == 'ast_directive':
 			y = do_directive(x)
 
+		if y != None:
+			module_append(y)
 
-		if y == None:
-			continue
 
-		y['nl'] = x['nl']
-
-		module_append(y)
+	pre_def(ast, fdecl=nodef)    # process in normal mode
 
 	m = module
-	module = old_module
+
+	module = prev_module
+	context = prev_context
 
 	return m
 
 
+
+# создает символы для всех функций в модуле
+# если они имеют неизвестную зависимость -
+# удовлетворяет ее посредством predefinition(id_str)
+def pre_def(ast, fdecl=False):
+	global module
+	global gast
+	prev_gast = gast
+	gast = ast
+
+	# 1. def types
+	# (and const if need for type!)
+	for x in ast:
+		isa = x['isa']
+		kind = x['kind']
+
+		if isa == 'ast_definition':
+			if kind == 'type':
+				if not 'defined' in x:
+					y = def_type(x)
+
+					add_spices(y, ast_atts=x['attributes'])
+					module_append(y, to_export=x['export'])
+
+	# 2. def vars & consts
+	for x in ast:
+		isa = x['isa']
+		kind = x['kind']
+
+		if isa == 'ast_definition':
+			y = None
+			if kind == 'const':
+				if not 'defined' in x:
+					y = def_const(x)
+
+			elif kind == 'var':
+				y = def_var(x)
+
+			if y != None:
+				add_spices(y, ast_atts=x['attributes'])
+			module_append(y, to_export=x['export'])
+
+
+	# 3. scan funcs
+	for x in ast:
+		isa = x['isa']
+		kind = x['kind']
+
+		if kind == 'func':
+			fn = ctx_value_get(x['id']['str'])
+			if fn == None:
+				fn = do_func_value(x, x['export'])
+				module_value_add(module, fn['id']['str'], fn, is_public=x['export'])
+
+
+	# 4. def funcs
+	for x in ast:
+		isa = x['isa']
+		kind = x['kind']
+		if isa == 'ast_definition':
+			if kind == 'func':
+				y = def_func(x, dostmt=not fdecl)
+
+
+				if y != None:
+					add_spices(y, ast_atts=x['attributes'])
+					module_append(y, to_export=x['export'])
+
+	gast = prev_gast
+	return
+
+
+
 imp_paths = []
+
 
 # получает строку импорта (и неявно глобальный контекст)
 # и возвращает полный путь к модулю
-def import_abspath(s):
-	s = s + ".hm"
+def import_abspath(s, ext='.hm'):
+	s = s + ext
 
 	is_local = s[0:2] == './' or s[0:3] == '../'
 
@@ -2622,45 +2995,6 @@ def import_abspath(s):
 
 	return os.path.abspath(full_name)
 
-
-
-def translate(srcname):
-	assert(srcname != None)
-	assert(srcname != "")
-
-	if not os.path.exists(srcname):
-		return None
-
-	global env_current_file_abspath
-	global env_current_file_dir
-	old_env_current_file_dir = env_current_file_dir
-	old_env_current_file_abspath = env_current_file_abspath
-
-	absp = os.path.abspath(srcname)
-	fdir = os.path.dirname(absp)
-
-	env_current_file_abspath = absp
-	env_current_file_dir = fdir
-
-	source_info = {
-		'id': srcname,
-		'path': absp,
-		'dir': fdir,
-		'name': srcname,
-	}
-
-	parser = Parser()
-	ast = parser.parse(source_info)
-
-	if ast == None:
-		return None
-
-	m = proc(ast, source_info)
-
-	env_current_file_abspath = old_env_current_file_abspath
-	env_current_file_dir = old_env_current_file_dir
-
-	return m
 
 
 def set_att(obj, path, att):
@@ -2717,19 +3051,24 @@ def add_properties(obj):
 	for prop in props:
 		k = prop
 		v = props[prop]
-
 		path_array = prop.split(".")
 		set_prop(obj, path_array, v)
 
 
 
-def add_spices(obj):
+def add_spices(obj, ast_atts=None):
+	global attributes
+	global properties
+
+	attributes = []
+	properties = {}
+
 	if obj == None:
-		global attributes
-		attributes = []
-		global properties
-		properties = {}
 		return
+
+	if ast_atts!=None:
+		for a in ast_atts:
+			do_attribute(a)
 
 	add_properties(obj)
 	add_attributes(obj)
@@ -2825,3 +3164,25 @@ def cp_immediate(to, _from):
 		to['items'] = _from['items']
 	if 'fields' in _from:
 		to['fields'] = _from['fields']
+	return
+
+
+
+"""
+# удаляет hlir_node по isa & id_str
+def module_remove_node(m, isa, id_str):
+	#print(f"module_remove_node: {id_str}")
+
+	for submodule in m['imports']:
+		module_remove_node(submodule, isa, id_str)
+
+	for x in m['defs']:
+		if x['isa'] == isa:
+			if 'id' in x:
+				if x['id']['str'] == id_str:
+					#print("REMOVE: " + id_str)
+					m['defs'].remove(x)
+					break
+	return
+
+"""
