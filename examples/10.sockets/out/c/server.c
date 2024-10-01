@@ -1,50 +1,47 @@
-/* thx: https://github.com/pshashipreetham/File-Transfer-Using-TCP-Socket-in-C-Socket-Programming */
+// ./out/c/server.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <arpa/inet.h>
+#include "server.h"
 
 
 
+#define server_filename  "file2.txt"
+#define server_ipAddress  "127.0.0.1"
+#define server_port  8080
+#define server_bufSize  1024
+bool write_file(int sockfd);
+int main();
 
 
 
-
-#define filename  "file2.txt"
-
-#define ipAddress  "127.0.0.1"
-#define port  8080
-#define bufSize  1024
 
 
 bool write_file(int sockfd)
 {
-	char buffer[bufSize];
+	char buffer[server_bufSize];
 
-	FILE *const fp = fopen(filename, "w");
+	FILE *const fp = fopen(server_filename, "w");
 	if (fp == NULL) {
 		perror("[-] Error in creating file");
 		return false;
 	}
 
 	while (true) {
-		const ssize_t n = recv(sockfd, (char *)&buffer, bufSize, 0);
+		const ssize_t n = recv(sockfd, (char *)&buffer, server_bufSize, 0);
 
 		if (n <= 0) {
 			break;
 		}
 
 		fprintf(fp, "%s", (char *)&buffer);
-		memset(&buffer, 0, sizeof(char[bufSize]));
+		memset(&buffer, 0, sizeof(char[server_bufSize]));
 	}
 
 	return true;
 }
-
 
 int main()
 {
@@ -59,9 +56,9 @@ int main()
 	struct sockaddr_in server_addr;
 	server_addr = (struct sockaddr_in){
 		.sin_family = AF_INET,
-		.sin_port = port,
+		.sin_port = server_port,
 		.sin_addr = (struct in_addr){
-			.s_addr = inet_addr(ipAddress)
+			.s_addr = inet_addr(server_ipAddress)
 		}
 	};
 

@@ -1,31 +1,33 @@
-// test/let/src/main.cm
+// ./out/c/main.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
+#include "main.h"
 
 
+
+int main();
 
 
 
 int main()
 {
-	#define x  127
-	#define y  (x + 1)
+	#define __x  127
+	#define __y  (__x + 1)
 
-	printf("y = %i\n", (int32_t)y);
+	printf("y = %i\n", (int32_t)__y);
 
-	if (y == 128) {
+	if (__y == 128) {
 		printf("test passed\n");
 	} else {
 		printf("test failed\n");
 	}
 
 	return 0;
-}
 
-#undef x
-#undef y
+#undef __x
+#undef __y
+}
 

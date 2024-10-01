@@ -19,7 +19,6 @@ INDENT_SYMBOL = "\t"
 
 NO_TYPEDEF_STRUCTS = False
 
-USE_STDBOOL = True
 BOOL_TRUE_LITERAL = 'true'
 BOOL_FALSE_LITERAL = 'false'
 DONT_PRINT_UNUSED = True
@@ -116,7 +115,7 @@ aprecedence = [
 	['add', 'sub'], #8
 	['mul', 'div', 'rem'], #9
 	['positive', 'negative', 'not', 'cons', 'ref', 'deref', 'sizeof', 'alignof', 'offsetof', 'lengthof'], #10
-	['call', 'index', 'access'], #11
+	['call', 'index', 'access', 'access_module'], #11
 	['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #12
 ]
 
@@ -138,9 +137,12 @@ def precedence(x):
 
 
 def get_id_str(x):
+	if 'c' in x['id']:
+		return x['id']['c']
+
 	id_str = x['id']['str']
-	if 'c_alias' in x:
-		id_str = '"%s"' % x['llvm_alias']
+	if 'prefix' in x:
+		id_str = x['definition']['module']['prefix'] + '_' + id_str
 	return id_str
 
 
@@ -172,7 +174,10 @@ def print_array_volume(t):
 			out(" * ")
 
 	else:
-		print_value(t['volume'])
+		if t['volume'] != None:
+			print_value(t['volume'])
+		else:
+			out("0")
 
 	out("]")
 
@@ -243,7 +248,7 @@ def print_type_record(t, tag=""):
 		nl_indent(field['nl'])
 		prev_nl = field['nl']
 
-		print_variable(field['id'], field['type'])
+		print_variable(get_id_str(field), field['type'])
 		out(";")
 
 	indent_down()
@@ -268,12 +273,14 @@ def print_type_enum(t):
 
 
 def type_get_aka(t):
-	if 'c_alias' in t:
-		return t['c_alias']
-	if 'aka' in t:
-		return t['aka']
+	if 'id' in t:
+		if 'c' in t['id']:
+			return t['id']['c']
+		return get_id_str(t)
+
 	if 'c_anon_id' in t:
 		return 'struct ' + t['c_anon_id']
+
 	return None
 
 
@@ -467,7 +474,7 @@ def print_paramlist(params, extra_args=False):
 	i = 0
 	for param in params:
 		if i > 0: out(", ")
-		print_variable(param['id'], param['type'])
+		print_variable(get_id_str(param), param['type'])
 		i = i + 1
 
 	if extra_args:
@@ -635,6 +642,14 @@ def print_value_access(x, ctx):
 
 
 
+def print_value_access_module(v, ctx):
+	left = v['left']
+	#out("%s.%s" % (left['id'], v['right']['str']))
+
+	id_str = get_id_str(v['right'])
+	out("%s" % (id_str))
+
+
 def print_cast_hard(t, v, ctx=[]):
 	# hard cast is possible only in function body
 	assert(is_local_context())
@@ -727,6 +742,12 @@ def print_value_cons_array(x, ctx):
 			else:
 				print_string_literal(value['asset'], to_type['of']['width'])
 			return
+
+	# for:
+	#    var x: [10]Byte = "0123456789"
+	if hlir_type.type_is_string(value['type']):
+		print_value(value, ctx=ctx)
+		return
 
 	return print_cast(to_type, value, ctx)
 
@@ -976,14 +997,14 @@ def print_value_record(v, ctx):
 
 def code_to_char(cc):
 	if cc < 0x20:
-		if cc == 0x07: return "\\a" # bell
-		elif cc == 0x08: return "\\b" # backspace
-		elif cc == 0x09: return "\\t" # horizontal tab
-		elif cc == 0x0A: return "\\n" # line feed
-		elif cc == 0x0B: return "\\v" # vertical tab
-		elif cc == 0x0C: return "\\f" # form feed
-		elif cc == 0x0D: return "\\r" # carriage return
-		elif cc == 0x1B: return "\\e" # escape
+		if cc == 0x07: return "\\a"    # bell
+		elif cc == 0x08: return "\\b"  # backspace
+		elif cc == 0x09: return "\\t"  # horizontal tab
+		elif cc == 0x0A: return "\\n"  # line feed
+		elif cc == 0x0B: return "\\v"  # vertical tab
+		elif cc == 0x0C: return "\\f"  # form feed
+		elif cc == 0x0D: return "\\r"  # carriage return
+		elif cc == 0x1B: return "\\e"  # escape
 		else: return "\\x%X" % cc
 
 	elif cc <= 0x7E :
@@ -1090,8 +1111,8 @@ def print_value_terminal(x, ctx):
 
 
 def print_value_by_id(x, ctx=[], prefix=''):
-	if 'c_alias' in x:
-		out(x['c_alias'])
+	if 'c' in x:
+		out(x['c'])
 	else:
 		print_id(x, prefix)
 
@@ -1150,15 +1171,12 @@ def print_value_lengthof(x, ctx):
 
 	if not v['kind'] in ['var', 'let']:
 		print_value(v['type']['volume'], need_wrap=True)
-		#out("%d" % x['asset'])
 		return
 
 	# sizeof(array) / sizeof(array[0])
-	out("(sizeof(")
+	out("LENGTHOF(")
 	print_value(v)
-	out(") / sizeof(")
-	print_value(v)
-	out("[0]))")
+	out(")")
 	return
 
 
@@ -1210,6 +1228,7 @@ def print_value(x, ctx=[], need_wrap=False):
 	elif k == 'index': print_value_index(x, ctx)
 	elif k == 'slice': print_value_slice(x, ctx)
 	elif k == 'access': print_value_access(x, ctx)
+	elif k == 'access_module': print_value_access_module(x, ctx)
 	elif k == 'sizeof_value': print_value_sizeof_value(x, ctx)
 	elif k == 'sizeof_type': print_value_sizeof_type(x, ctx)
 	elif k == 'alignof': print_value_alignof(x, ctx)
@@ -1221,6 +1240,7 @@ def print_value(x, ctx=[], need_wrap=False):
 	elif k == 'va_copy': y = print_value_va_copy(x, ctx)
 	else:
 		out("<%s>" % k)
+		info("HERE", x)
 		fatal("unknown opcode '%s'" % k)
 		exit(-1)
 
@@ -1302,7 +1322,7 @@ def print_stmt_var(x):
 
 	nl_indent(x['nl'])
 
-	print_variable(x['var']['id'], x['var']['type'])
+	print_variable(get_id_str(x['var']), x['var']['type'])
 
 	if init_value != None:
 		out(";")
@@ -1315,9 +1335,9 @@ def print_stmt_var(x):
 
 
 
-def print_macro_definition(id, value, val_ctx=[], prefix=''):
+def print_macro_definition(id_str, value, val_ctx=[], prefix=''):
 	global nl_str
-	out("#define %s%s  " % (prefix, id['str']))
+	out("#define %s%s  " % (prefix, id_str))
 
 	# нельзя оборачивать круглыми скобками литерал массива или структуры
 	# иначе при его прведении по месту к конкретному типу си сойдет с ума
@@ -1353,10 +1373,11 @@ def print_stmt_let(x):
 
 	# print constant as macro
 	if value_is_generic_immediate(v):
+		id_str = get_id_str(v)
 		# если точный тип константы неизвестен - печатаем ее как макро
-		print_macro_definition(id, iv)
+		print_macro_definition(id_str, iv)
 		global func_undef_list
-		func_undef_list.append(id['str'])
+		func_undef_list.append(id_str)
 		return
 
 	# print constant as 'variable'
@@ -1364,7 +1385,7 @@ def print_stmt_let(x):
 	if hlir_type.type_is_array(iv['type']):
 		ee = iv['kind'] == 'literal' and not value_is_immediate(iv)
 		if not ee:
-			print_variable(id, v['type'])
+			print_variable(get_id_str(x), v['type'])
 			out(";")
 			nl_indent()
 			do_assign(v, iv)
@@ -1372,7 +1393,7 @@ def print_stmt_let(x):
 
 	# Локальные константы (втч. композитные) печатаем как переменные
 	# ПОТОМУ ЧТО: они должны "заморозить" свои значения по месту
-	print_variable(id, v['type'], as_const=True)
+	print_variable(get_id_str(x), v['type'], as_const=True)
 	out(" = ")
 	print_value(iv)
 	out(";")
@@ -1532,23 +1553,8 @@ def print_wrapped_array(_type):
 	newline()
 
 
-def print_func_wrappers(ftype):
-	# печатаем обернутые параметры-массивы и возврашаемые массивы
-	# (обернуты тк C не позволяет принимать возвращать массив по значению)
-	for param in ftype['params']:
-		if hlir_type.type_is_closed_array(param['type']):
-			print_wrapped_array(param['type'])
-	if hlir_type.type_is_closed_array(ftype['to']):
-		print_wrapped_array(ftype['to'])
 
-
-def print_func_signature(id_str, ftype, atts, print_wrappers=True):
-	if print_wrappers:
-		print_func_wrappers(ftype)
-
-	if 'static' in atts: out("static ")
-	if 'inline' in atts: out("inline ")
-
+def print_func_signature(id_str, ftype, atts):
 	to = ftype['to']
 	t = to
 
@@ -1568,49 +1574,74 @@ def print_func_signature(id_str, ftype, atts, print_wrappers=True):
 
 
 
+def print_func_wrappers(ftype):
+	# печатаем обернутые параметры-массивы и возврашаемые массивы
+	# (обернуты тк C не позволяет принимать возвращать массив по значению)
+	for param in ftype['params']:
+		if hlir_type.type_is_closed_array(param['type']):
+			print_wrapped_array(param['type'])
+	if hlir_type.type_is_closed_array(ftype['to']):
+		print_wrapped_array(ftype['to'])
+
+
 def print_decl_func(x):
 	newline(n=x['nl'])
+
 	if 'gnu_att' in x:
 		out('__attribute__((%s))\n' % x['gnu_att'])
-	print_func_signature(get_id_str(x), x['value']['type'], x['value']['att'])
+
+	if 'c_static' in x['att']:
+		out("static ")
+	if 'inline' in x['att']:
+		out("inline ")
+
+	ftype = x['value']['type']
+	print_func_wrappers(ftype)
+	print_func_signature(get_id_str(x['value']), ftype, x['value']['att'])
 	out(";")
 
 
 def print_def_func(x):
+	newline(n=x['nl'])
+
 	func = x['value']
-	id = x['id']
 
 	global cfunc
 	cfunc = func
 
-	newline(n=x['nl'])
 
 	if 'gnu_att' in x:
 		out('__attribute__((%s))\n' % x['gnu_att'])
+
+	if 'c_static' in x['att']:
+		out("static ")
+	if 'inline' in x['att']:
+		out("inline ")
 
 	ftype = func['type']
 	extra_args = ftype['extra_args']
 
 	# если функция уже была определена, то обертки над ее типами
 	# уже были напечатаны (если они были), и их нельзя печатать еще раз
-	print_wrappers = not 'declared' in func['att']
-	print_func_signature(get_id_str(func), ftype, func['att'], print_wrappers)
+	#print_wrappers = not 'declared' in func['att']
+	print_func_signature(get_id_str(func), ftype, func['att'])
 
 	if styleguide['LINE_BREAK_BEFORE_FUNC_BRACE']:
 		newline()
 	else:
 		out(" ")
 
+	if x['stmt'] == None:
+		out(";")
+		return
+
 	out("{")
 	indent_up()
 
-	stmts = func['stmt']['stmts']
+	stmts = x['stmt']['stmts']
 	print_statements(stmts)
 
 	indent_down()
-
-	newline()
-	out("}")
 
 	global func_undef_list
 	if len(func_undef_list) > 0:
@@ -1619,6 +1650,7 @@ def print_def_func(x):
 			out("\n#undef %s" % id_str)
 
 	func_undef_list = []
+	out("\n}")
 
 	cfunc = None
 
@@ -1628,21 +1660,23 @@ def print_def_func(x):
 
 def print_decl_type(x):
 	newline(n=x['nl'])
-	id = x['id']
-	out("struct %s;" % id['str'])
+
+	id_str = get_id_str(x['type'])
+	out("struct %s;" % id_str)
 	if not NO_TYPEDEF_STRUCTS:
-		out("\ntypedef struct %s %s;" % (id['str'], id['str']))
+		out("\ntypedef struct %s %s;" % (id_str, id_str))
 
 
 def print_def_type(x):
-	id = x['id']
+	newline(n=x['nl'])
+
+	id_str = get_id_str(x['type'])
 	orig_type = x['original_type']
 
-	newline(n=x['nl'])
 
 	if NO_TYPEDEF_STRUCTS:
 		if hlir_type.type_is_record(orig_type):
-			print_type_record(orig_type, tag=id['str'])
+			print_type_record(orig_type, tag=id_str)
 			out(";")
 			return
 
@@ -1650,14 +1684,14 @@ def print_def_type(x):
 	is_defined_array = hlir_type.type_is_closed_array(orig_type)
 
 	if hlir_type.type_is_record(x['original_type']):
-		print_type_record(x['original_type'], tag=id['str'])
+		print_type_record(x['original_type'], tag=id_str)
 		out(";")
 		return
 
 	out("typedef ")
 	print_type(x['original_type'])
 	out(" ")
-	out(id['str'])
+	out(id_str)
 	out(";")
 
 	"""if 'volatile' in x['original_type']['att']:
@@ -1717,11 +1751,9 @@ def print_variable_array(t, id_str, do_wrapped=True, as_const=False):
 
 # из за того что с C типы записваются через жопу
 # приходится печатать типы ptr, arr & func вместе с именем поля
-def print_variable(_id, typ, as_const=False, init_value=None, prefix=''):
+def print_variable(id_str, typ, as_const=False, init_value=None, prefix=''):
 	assert (typ != None)
 
-	id_str = _id['str']
-	assert (id_str != "")
 	id_str = prefix + id_str
 
 
@@ -1741,24 +1773,28 @@ def print_variable(_id, typ, as_const=False, init_value=None, prefix=''):
 
 
 
-def print_def_var(x):
+def print_decl_var(x):
+	print_def_var(x, isdecl=True)
+
+def print_def_var(x, isdecl=False):
 	newline(n=x['nl'])
 
 	if 'gnu_att' in x:
 		out('__attribute__((%s))\n' % x['gnu_att'])
 
-	id = x['id']
+	#id = x['id']
 	var = x['value']
 	if USE_STATIC_VARIABLES:
 		if not 'global' in var['att']:
-			if not 'extern' in var['att']:
+			if not 'c_extern' in var['att']:
 				out("static ")
 
-	#if 'static' in var['att']: out("static ")
-	if 'extern' in var['att']: out("extern ")
-	if 'volatile' in var['att']: out("volatile ")
+	if 'c_extern' in var['att']:
+		out("extern ")
+	if 'volatile' in var['att']:
+		out("volatile ")
 
-	print_variable(id, var['type'])
+	print_variable(get_id_str(x), var['type'])
 
 	init_value = x['init_value']
 	if init_value != None:
@@ -1770,12 +1806,13 @@ def print_def_var(x):
 
 
 def print_def_const(x):
+	newline(n=x['nl'])
+
 	global nl_str
 	const_value = x['value']
 	init_value = x['init_value']
 	id = x['id']
-
-	newline(n=x['nl'])
+	id_str = get_id_str(const_value)
 
 	# глобальные константы-массивы печатаем особенно
 	# сперва печатаем его литерал как одноименный макрос с префиксом '_'
@@ -1783,31 +1820,28 @@ def print_def_const(x):
 	# обычно будем использовать сам макрос,
 	# но в случае индексирования переменной - будем обращаться к переменной
 	if hlir_type.type_is_array(const_value['type']):
-		print_macro_definition(id, init_value, val_ctx=[], prefix='_')
+		print_macro_definition(id_str, init_value, val_ctx=[], prefix='_')
 		newline()
-		print_variable(id, const_value['type'], as_const=True)
-		out(" = _%s;" % id['str'])
+		print_variable(id_str, const_value['type'], as_const=True)
+		out(" = _%s;" % id_str)
 		const_value['att'].append('kostil')
 		return
 
-	print_macro_definition(id, init_value, val_ctx=[])
+	print_macro_definition(id_str, init_value, val_ctx=[])
 	return
 
 
 def print_include(x):
-	# если в модуле включена опция not_included
-	if 'module' in x:
-		if x['module'] != None:
-			if 'not_included' in x['module']['att']:
-				return
+	inc(x['c_name'], local=x['local'])
 
-	ss = x['c_name']
 
-	if x['local']:
-		include_text = "#include \"%s\"" % ss
+def inc(string, local=True):
+	if local:
+		include_text = "#include \"%s\"" % string
 	else:
-		include_text = "#include <%s>" % ss
+		include_text = "#include <%s>" % string
 	out(include_text)
+
 
 
 def print_insert(x):
@@ -1841,71 +1875,173 @@ def print_comment_line(x):
 
 
 def cdirectives(module):
-	for imported_module in module['imports']:
-		for obj in imported_module['text']:
+
+	#print("CDIRS FOR %s" % module['id'])
+
+	for im in module['imports']:
+		imported_module = module['imports'][im]
+
+		for obj in imported_module['defs']:
 			if obj['isa'] == 'directive':
 				if obj['kind'] == 'c_include':
 					newline()
 					print_include(obj)
 
-	for obj in module['text']:
+
+	for obj in module['defs']:
 		if obj['isa'] == 'directive':
 			if obj['kind'] == 'c_include':
 				newline()
 				print_include(obj)
 
+	for inc in module['included']:
+		for obj in inc['defs']:
+			if obj['isa'] == 'directive':
+				if obj['kind'] == 'c_include':
+					newline()
+					print_include(obj)
+
+
+
+def print_cdecl_type(x):
+	newline(n=x['nl'])
+
+	id_str = get_id_str(x['type'])
+	out("struct %s;" % id_str)
+	if not NO_TYPEDEF_STRUCTS:
+		out("\ntypedef struct %s %s;" % (id_str, id_str))
+
+
+def print_cdecl_func(x):
+	newline(n=x['nl'])
+
+	#if 'gnu_att' in x:
+	#	out('__attribute__((%s))\n' % x['gnu_att'])
+
+	sym = x['symbol']
+	print_func_signature(get_id_str(sym), sym['type'], sym['att'])
+	out(";")
 
 
 def print_directive(x):
-	k = x['kind']
 	newline(n=x['nl'])
-	if k == 'import': print_include(x)
-	elif k == 'insert': print_insert(x)
+
+	k = x['kind']
+	#if k == 'import': print_include(x)
+	if k == 'insert': print_insert(x)
+	elif k == 'cdecl_func': print_cdecl_func(x)
+	elif k == 'cdecl_type': print_cdecl_type(x)
 
 
 
-def run(module, outname):
-	from main import features
-	is_header = features.get('header')
-
-	if is_header: outname = outname + '.h'
-	else: outname = outname + '.c'
-
+def print_header(module, outname):
+	outname = outname + '.h'
 	output_open(outname)
 
-	# before all print first comment (header) if present
-	if len(module['text']) > 0:
-		first = module['text'][0]
-		if first['isa'] == 'comment':
-			print_comment(first)
-			module['text'] = module['text'][1:]
-		else:
-			out("// %s" % outname)
-		newline()
-
-	guardname = ''
-	if is_header:
-		guardname = outname.split("/")[-1]
-		guardname = guardname[:-2].upper() + '_H'
-		out("\n#ifndef %s\n" % guardname)
-		out("#define %s\n" % guardname)
-
-	out("\n#include <stdint.h>\n")
-	if USE_STDBOOL:
-		out("#include <stdbool.h>\n")
+	guardsymbol = outname.split("/")[-1]
+	guardsymbol = guardsymbol[:-2].upper() + '_H'
+	out("\n")
+	out("#ifndef %s\n" % guardsymbol)
+	out("#define %s\n" % guardsymbol)
+	out("\n")
+	out("#include <stdint.h>\n")
+	out("#include <stdbool.h>\n")
 	out("#include <string.h>\n")
-
-	if 'use_extra_args' in module['options']:
-		out("#include <stdarg.h>\n")
-
-	# search for @c_include("...")
 	cdirectives(module)
+
+	# print directives (only for header)
+	for obj in module['defs']:
+		if obj['isa'] == 'directive':
+			if obj['kind'] == 'c_include':
+				newline()
+				print_include(obj)
+			elif obj['kind'] == 'import':
+				newline()
+				if not 'do_not_include' in obj['import_module']['att']:
+					inc(obj['str'] + '.h', local=True)
+
 
 	out("\n")
 
 	#out("\n/* forward type declaration */")
-	for rec_id in module['records']:
-		out("\ntypedef struct %s %s;" % (rec_id, rec_id))
+	for rec in module['records']:
+		rec_id = get_id_str(rec)
+		out("\ntypedef struct %s %s; //" % (rec_id, rec_id))
+
+
+	for x in module['export_defs']:
+		if 'c_no_print' in x['att']:
+			continue
+
+		isa = x['isa']
+
+		if isa in ['def_func']:
+			if 'inline' in x['att']:
+				print_def_func(x)
+				continue
+			print_decl_func(x)
+		elif isa == 'def_var':
+			print_decl_var(x)
+		elif isa in ['def_type', 'decl_type']:
+			print_def_type(x)
+		elif isa == 'def_const':
+			print_def_const(x)
+
+
+
+		#elif isa == 'def_type':
+		#	if x['export']:
+		#		print_def_type(x)
+
+	newline()
+	out("\n#endif /* %s */" % guardsymbol)
+	newline()
+	output_close()
+	return
+
+
+def print_cfile(module, _outname):
+	outname = _outname + '.c'
+
+	output_open(outname)
+
+	if 'c_no_print' in module['att']:
+		print("--------MODULE CNOPRINT")
+		output_close()
+		return
+
+	# before all print first comment (header) if present
+	if len(module['defs']) > 0:
+		first = module['defs'][0]
+		if first['isa'] == 'comment':
+			print_comment(first)
+			module['defs'] = module['defs'][1:]
+		else:
+			out("// %s" % outname)
+		newline()
+
+	guardsymbol = ''
+
+	out("\n#include <stdint.h>\n")
+	out("#include <stdbool.h>\n")
+	out("#include <string.h>\n")
+
+	if 'use_va_arg' in module['att']:
+		out("#include <stdarg.h>")
+
+	out("\n#include \"%s.h\"\n" % module['id'])
+
+	out("\n")
+
+	if 'use_lengthof' in module['att']:
+		out("#define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))")
+
+	out("\n")
+
+	#out("\n/* forward type declaration */")
+# now see header!
+#	for rec_id in module['records']:
+#		out("\ntypedef struct %s %s;" % (rec_id, rec_id))
 
 	#out("\n/* anonymous records */")
 	for anon_rec in module['anon_recs']:
@@ -1913,24 +2049,82 @@ def run(module, outname):
 		print_type_record(anon_rec, tag=anon_rec['c_anon_id'])
 		out(";")
 
-	for x in module['text']:
-		if 'c-no-print' in x['att']:
+
+	# types & constants
+	for x in module['defs']:
+		if 'c_no_print' in x['att']:
 			continue
 
 		isa = x['isa']
-		if isa == 'def_var': print_def_var(x)
-		elif isa == 'def_const': print_def_const(x)
-		elif isa == 'def_func': print_def_func(x)
-		elif isa == 'def_type': print_def_type(x)
-		elif isa == 'decl_func': print_decl_func(x)
-		elif isa == 'decl_type': print_decl_type(x)
+		if isa == 'def_const':
+			print_def_const(x)
+		elif isa == 'def_type':
+			print_def_type(x)
+
+
+	# печатаем прототипы функций текущего модуля
+	# (тк C не позволяет использовать функции перед их определением)
+	#out("// local decls\n")
+	for x in module['defs']:
+		if 'c_no_print' in x['att']:
+			continue
+
+		isa = x['isa']
+		if isa == 'def_func':
+			print_decl_func(x)
+
+
+	#out("// defs\n")
+	for x in module['defs']:
+		if 'c_no_print' in x['att']:
+			continue
+
+		isa = x['isa']
+		if isa == 'decl_var':
+			print_decl_var(x)
+
+
+	for x in module['defs']:
+		if 'c_no_print' in x['att']:
+			continue
+
+		isa = x['isa']
+		if isa == 'def_var':
+			print_def_var(x)
+		elif isa == 'def_func':
+			out("\n")
+			print_def_func(x)
+
 		elif isa == 'comment': print_comment(x)
 		elif isa == 'directive': print_directive(x)
+		#elif isa == 'def_const': print_def_const(x)
+
+	for x in module['export_defs']:
+		if 'c_no_print' in x['att']:
+			continue
+
+		isa = x['isa']
+		if isa == 'def_var':
+			print_def_var(x)
+		elif isa == 'def_func':
+			if 'inline' in x['att']:
+				continue
+			out("\n")
+			print_def_func(x)
+
+		elif isa == 'comment': print_comment(x)
+		elif isa == 'directive': print_directive(x)
+		#elif isa == 'def_const': print_def_const(x)
 
 	newline()
-	if is_header: out("\n#endif /* %s */" % guardname)
 	newline()
 	output_close()
+
+
+
+def run(module, _outname):
+	print_header(module, _outname)
+	print_cfile(module, _outname)
 	return
 
 

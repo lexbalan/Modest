@@ -99,19 +99,13 @@ break_2:
 	ret i1 1
 }
 
+; MODULE: main
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/system.hm
-
-
-
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
-
-
+; -- print includes --
 
 %Str = type %Str8;
 %Char = type i8;
-%ConstChar = type i8;
+%ConstChar = type %Char;
 %SignedChar = type i8;
 %UnsignedChar = type i8;
 %Short = type i16;
@@ -129,107 +123,195 @@ break_2:
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
-
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
-
-
-
-
-%SocklenT = type i32;
-%SizeT = type i64;
-%SSizeT = type i64;
-%IntptrT = type i64;
-%PtrdiffT = type i8*;
+%SizeT = type %UnsignedLongInt;
+%SSizeT = type %LongInt;
+%IntPtrT = type i64;
+%PtrDiffT = type i8*;
 %OffT = type i64;
 %USecondsT = type i32;
-%PidT = type i32;
-%UidT = type i32;
-%GidT = type i32;
+%PIDT = type i32;
+%UIDT = type i32;
+%GIDT = type i32;
 
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
-
-
-
-
-%File = type opaque
-%FposT = type opaque
-
+%File = type i8;
+%FposT = type i8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 
 
-declare i32 @fclose(%File* %f)
-declare i32 @feof(%File* %f)
-declare i32 @ferror(%File* %f)
-declare i32 @fflush(%File* %f)
-declare i32 @fgetpos(%File* %f, %FposT* %pos)
+declare %Int @fclose(%File* %f)
+declare %Int @feof(%File* %f)
+declare %Int @ferror(%File* %f)
+declare %Int @fflush(%File* %f)
+declare %Int @fgetpos(%File* %f, %FposT* %pos)
 declare %File* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
-declare i64 @fread(i8* %buf, i64 %size, i64 %count, %File* %f)
-declare i64 @fwrite(i8* %buf, i64 %size, i64 %count, %File* %f)
-declare %File* @freopen(%ConstCharStr* %filename, %ConstCharStr* %mode, %File* %f)
-declare i32 @fseek(%File* %stream, i64 %offset, i32 %whence)
-declare i32 @fsetpos(%File* %f, %FposT* %pos)
-declare i64 @ftell(%File* %f)
-declare i32 @remove(%ConstCharStr* %filename)
-declare i32 @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
+declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
+declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
+declare %File* @freopen(%ConstCharStr* %fname, %ConstCharStr* %mode, %File* %f)
+declare %Int @fseek(%File* %f, %LongInt %offset, %Int %whence)
+declare %Int @fsetpos(%File* %f, %FposT* %pos)
+declare %LongInt @ftell(%File* %f)
+declare %Int @remove(%ConstCharStr* %fname)
+declare %Int @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
 declare void @rewind(%File* %f)
-declare void @setbuf(%File* %f, %CharStr* %buffer)
-
-
-declare i32 @setvbuf(%File* %f, %CharStr* %buffer, i32 %mode, i64 %size)
+declare void @setbuf(%File* %f, %CharStr* %buf)
+declare %Int @setvbuf(%File* %f, %CharStr* %buf, %Int %mode, %SizeT %size)
 declare %File* @tmpfile()
 declare %CharStr* @tmpnam(%CharStr* %str)
-declare i32 @printf(%ConstCharStr* %s, ...)
-declare i32 @scanf(%ConstCharStr* %s, ...)
-declare i32 @fprintf(%File* %stream, %Str* %format, ...)
-declare i32 @fscanf(%File* %f, %ConstCharStr* %format, ...)
-declare i32 @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
-declare i32 @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare i32 @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
-declare i32 @vprintf(%ConstCharStr* %format, i8* %args)
-declare i32 @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
-declare i32 @vsnprintf(%CharStr* %str, i64 %n, %ConstCharStr* %format, i8* %args)
-declare i32 @__vsnprintf_chk(%CharStr* %dest, i64 %len, i32 %flags, i64 %dstlen, %ConstCharStr* %format, i8* %arg)
-declare i32 @fgetc(%File* %f)
-declare i32 @fputc(i32 %char, %File* %f)
-declare %CharStr* @fgets(%CharStr* %str, i32 %n, %File* %f)
-declare i32 @fputs(%ConstCharStr* %str, %File* %f)
-declare i32 @getc(%File* %f)
-declare i32 @getchar()
+declare %Int @printf(%ConstCharStr* %s, ...)
+declare %Int @scanf(%ConstCharStr* %s, ...)
+declare %Int @fprintf(%File* %f, %Str* %format, ...)
+declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
+declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
+declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
+declare %Int @fgetc(%File* %f)
+declare %Int @fputc(%Int %char, %File* %f)
+declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
+declare %Int @fputs(%ConstCharStr* %str, %File* %f)
+declare %Int @getc(%File* %f)
+declare %Int @getchar()
 declare %CharStr* @gets(%CharStr* %str)
-declare i32 @putc(i32 %char, %File* %f)
-declare i32 @putchar(i32 %char)
-declare i32 @puts(%ConstCharStr* %str)
-declare i32 @ungetc(i32 %char, %File* %f)
+declare %Int @putc(%Int %char, %File* %f)
+declare %Int @putchar(%Int %char)
+declare %Int @puts(%ConstCharStr* %str)
+declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
+; -- end print includes --
+; -- print imports --
 
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/misc/utf.hm
+declare %Int @access([0 x %ConstChar]* %path, %Int %amode)
+declare %UnsignedInt @alarm(%UnsignedInt %seconds)
+declare %Int @brk(i8* %end_data_segment)
+declare %Int @chdir([0 x %ConstChar]* %path)
+declare %Int @chroot([0 x %ConstChar]* %path)
+declare %Int @chown([0 x %ConstChar]* %pathname, %UIDT %owner, %GIDT %group)
+declare %Int @close(%Int %fildes)
+declare %SizeT @confstr(%Int %name, [0 x %Char]* %buf, %SizeT %len)
+declare [0 x %Char]* @crypt([0 x %ConstChar]* %key, [0 x %ConstChar]* %salt)
+declare [0 x %Char]* @ctermid([0 x %Char]* %s)
+declare [0 x %Char]* @cuserid([0 x %Char]* %s)
+declare %Int @dup(%Int %fildes)
+declare %Int @dup2(%Int %fildes, %Int %fildes2)
+declare void @encrypt([64 x %Char]* %block, %Int %edflag)
+declare %Int @execl([0 x %ConstChar]* %path, [0 x %ConstChar]* %arg0, ...)
+declare %Int @execle([0 x %ConstChar]* %path, [0 x %ConstChar]* %arg0, ...)
+declare %Int @execlp([0 x %ConstChar]* %file, [0 x %ConstChar]* %arg0, ...)
+declare %Int @execv([0 x %ConstChar]* %path, [0 x %ConstChar]* %argv)
+declare %Int @execve([0 x %ConstChar]* %path, [0 x %ConstChar]* %argv, [0 x %ConstChar]* %envp)
+declare %Int @execvp([0 x %ConstChar]* %file, [0 x %ConstChar]* %argv)
+declare void @_exit(%Int %status)
+declare %Int @fchown(%Int %fildes, %UIDT %owner, %GIDT %group)
+declare %Int @fchdir(%Int %fildes)
+declare %Int @fdatasync(%Int %fildes)
+declare %PIDT @fork()
+declare %LongInt @fpathconf(%Int %fildes, %Int %name)
+declare %Int @fsync(%Int %fildes)
+declare %Int @ftruncate(%Int %fildes, %OffT %length)
+declare [0 x %Char]* @getcwd([0 x %Char]* %buf, %SizeT %size)
+declare %Int @getdtablesize()
+declare %GIDT @getegid()
+declare %UIDT @geteuid()
+declare %GIDT @getgid()
+declare %Int @getgroups(%Int %gidsetsize, [0 x %GIDT]* %grouplist)
+declare %Long @gethostid()
+declare [0 x %Char]* @getlogin()
+declare %Int @getlogin_r([0 x %Char]* %name, %SizeT %namesize)
+declare %Int @getopt(%Int %argc, [0 x %ConstChar]* %argv, [0 x %ConstChar]* %optstring)
+declare %Int @getpagesize()
+declare [0 x %Char]* @getpass([0 x %ConstChar]* %prompt)
+declare %PIDT @getpgid(%PIDT %pid)
+declare %PIDT @getpgrp()
+declare %PIDT @getpid()
+declare %PIDT @getppid()
+declare %PIDT @getsid(%PIDT %pid)
+declare %UIDT @getuid()
+declare [0 x %Char]* @getwd([0 x %Char]* %path_name)
+declare %Int @isatty(%Int %fildes)
+declare %Int @lchown([0 x %ConstChar]* %path, %UIDT %owner, %GIDT %group)
+declare %Int @link([0 x %ConstChar]* %path1, [0 x %ConstChar]* %path2)
+declare %Int @lockf(%Int %fildes, %Int %function, %OffT %size)
+declare %OffT @lseek(%Int %fildes, %OffT %offset, %Int %whence)
+declare %Int @nice(%Int %incr)
+declare %LongInt @pathconf([0 x %ConstChar]* %path, %Int %name)
+declare %Int @pause()
+declare %Int @pipe([2 x %Int]* %fildes)
+declare %SSizeT @pread(%Int %fildes, i8* %buf, %SizeT %nbyte, %OffT %offset)
+declare %Int @pthread_atfork(void ()* %prepare, void ()* %parent, void ()* %child)
+declare %SSizeT @pwrite(%Int %fildes, i8* %buf, %SizeT %nbyte, %OffT %offset)
+declare %SSizeT @read(%Int %fildes, i8* %buf, %SizeT %nbyte)
+declare %Int @readlink([0 x %ConstChar]* %path, [0 x %Char]* %buf, %SizeT %bufsize)
+declare %Int @rmdir([0 x %ConstChar]* %path)
+declare i8* @sbrk(%IntPtrT %incr)
+declare %Int @setgid(%GIDT %gid)
+declare %Int @setpgid(%PIDT %pid, %PIDT %pgid)
+declare %PIDT @setpgrp()
+declare %Int @setregid(%GIDT %rgid, %GIDT %egid)
+declare %Int @setreuid(%UIDT %ruid, %UIDT %euid)
+declare %PIDT @setsid()
+declare %Int @setuid(%UIDT %uid)
+declare %UnsignedInt @sleep(%UnsignedInt %seconds)
+declare void @swab(i8* %src, i8* %dst, %SSizeT %nbytes)
+declare %Int @symlink([0 x %ConstChar]* %path1, [0 x %ConstChar]* %path2)
+declare void @sync()
+declare %LongInt @sysconf(%Int %name)
+declare %PIDT @tcgetpgrp(%Int %fildes)
+declare %Int @tcsetpgrp(%Int %fildes, %PIDT %pgid_id)
+declare %Int @truncate([0 x %ConstChar]* %path, %OffT %length)
+declare [0 x %Char]* @ttyname(%Int %fildes)
+declare %Int @ttyname_r(%Int %fildes, [0 x %Char]* %name, %SizeT %namesize)
+declare %USecondsT @ualarm(%USecondsT %useconds, %USecondsT %interval)
+declare %Int @unlink([0 x %ConstChar]* %path)
+declare %Int @usleep(%USecondsT %useconds)
+declare %PIDT @vfork()
+declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 
+declare i8* @memset(i8* %mem, %Int %c, %SizeT %n)
+declare i8* @memcpy(i8* %dst, i8* %src, %SizeT %len)
+declare i8* @memmove(i8* %dst, i8* %src, %SizeT %n)
+declare %Int @memcmp(i8* %p0, i8* %p1, %SizeT %num)
+declare %Int @strncmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
+declare %Int @strcmp([0 x %ConstChar]* %s1, [0 x %ConstChar]* %s2)
+declare [0 x %Char]* @strcpy([0 x %Char]* %dst, [0 x %ConstChar]* %src)
+declare %SizeT @strlen([0 x %ConstChar]* %s)
+declare [0 x %Char]* @strcat([0 x %Char]* %s1, [0 x %ConstChar]* %s2)
+declare [0 x %Char]* @strncat([0 x %Char]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
+declare [0 x %Char]* @strerror(%Int %error)
 
-declare i8 @utf32_to_utf8(i32 %c, [4 x i8]* %buf)
-declare i8 @utf16_to_utf32([0 x i16]* %c, i32* %result)
-declare void @utf8_putchar(i8 %c)
-declare void @utf16_putchar(i16 %c)
-declare void @utf32_putchar(i32 %c)
-declare void @utf8_puts(%Str8* %s)
-declare void @utf16_puts(%Str16* %s)
-declare void @utf32_puts(%Str32* %s)
+declare i8 @utf_utf32_to_utf8(i32 %c, [4 x i8]* %buf)
+declare i8 @utf_utf16_to_utf32([0 x i16]* %c, i32* %result)
 
+declare i8 @n_to_dec_sym(i8 %n)
+declare i8 @n_to_hex_sym(i8 %n)
+declare i32 @sprint_hex_nat32([0 x i8]* %buf, i32 %x)
+declare i32 @sprint_dec_int32([0 x i8]* %buf, i32 %x)
+declare i32 @sprint_dec_n32([0 x i8]* %buf, i32 %x)
 
-; -- SOURCE: src/main.cm
-
+declare void @console_putchar8(i8 %c)
+declare void @console_putchar16(i16 %c)
+declare void @console_putchar32(i32 %c)
+declare void @console_putchar_utf8(i8 %c)
+declare void @console_putchar_utf16(i16 %c)
+declare void @console_putchar_utf32(i32 %c)
+declare void @console_puts8(%Str8* %s)
+declare void @console_puts16(%Str16* %s)
+declare void @console_puts32(%Str32* %s)
+declare void @console_print(%Str8* %form, ...)
+declare i32 @console_vfprint(%Int %fd, %Str8* %form, i8* %va)
+declare i32 @console_vsprint([0 x i8]* %buf, %Str8* %form, i8* %va)
+; -- end print imports --
+; -- strings --
 @str1 = private constant [28 x i8] [i8 83, i8 45, i8 116, i8 45, i8 114, i8 45, i8 105, i8 45, i8 110, i8 45, i8 103, i8 45, i8 206, i8 169, i8 32, i8 240, i8 159, i8 144, i8 128, i8 240, i8 159, i8 142, i8 137, i8 240, i8 159, i8 166, i8 132, i8 0]
 @str2 = private constant [21 x i16] [i16 83, i16 45, i16 116, i16 45, i16 114, i16 45, i16 105, i16 45, i16 110, i16 45, i16 103, i16 45, i16 937, i16 32, i16 55357, i16 56320, i16 55356, i16 57225, i16 55358, i16 56708, i16 0]
 @str3 = private constant [18 x i32] [i32 83, i32 45, i32 116, i32 45, i32 114, i32 45, i32 105, i32 45, i32 110, i32 45, i32 103, i32 45, i32 937, i32 32, i32 128000, i32 127881, i32 129412, i32 0]
-@str4 = private constant [15 x i8] [i8 91, i8 37, i8 100, i8 93, i8 85, i8 49, i8 54, i8 58, i8 32, i8 48, i8 120, i8 37, i8 120, i8 10, i8 0]
+@str4 = private constant [2 x i8] [i8 10, i8 0]
 @str5 = private constant [2 x i8] [i8 10, i8 0]
 @str6 = private constant [2 x i8] [i8 10, i8 0]
-@str7 = private constant [2 x i8] [i8 10, i8 0]
-
-
 
 @ratSymbolUTF8 = constant [4 x i8] [
 	i8 240,
@@ -274,7 +356,7 @@ declare void @utf32_puts(%Str32* %s)
 ]
 
 
-define i32 @main() {
+define %Int @main() {
 	; indexing of GenericString returns #i symbol code
 	; the symbols have GenericInteger type
 	;	let omegaCharCode = "Hello Ω!\n"[6]
@@ -285,45 +367,22 @@ define i32 @main() {
 	;	var ratCode: Nat32 = Nat32 ratCharCode
 	;	printf("omegaCode = %d\n", omegaCode)
 	;	printf("ratCode = %d\n", ratCode)
-	%1 = alloca i32, align 4
-	store i32 0, i32* %1
-	br label %again_1
-again_1:
-	br i1 1 , label %body_1, label %break_1
-body_1:
-	%2 = load i32, i32* %1
-	%3 = getelementptr inbounds %Str16, %Str16* bitcast ([21 x i16]* @str2 to [0 x i16]*), i32 0, i32 %2
-	%4 = load i16, i16* %3
-	%5 = icmp eq i16 %4, 0
-	br i1 %5 , label %then_0, label %endif_0
-then_0:
-	br label %break_1
-	br label %endif_0
-endif_0:
-	%7 = load i32, i32* %1
-	%8 = zext i16 %4 to i32
-	%9 = call i32 (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str4 to [0 x i8]*), i32 %7, i32 %8)
-	%10 = load i32, i32* %1
-	%11 = add i32 %10, 1
-	store i32 %11, i32* %1
-	br label %again_1
-break_1:
-	%12 = alloca %Str8*, align 8
-	store %Str8* bitcast ([28 x i8]* @str1 to [0 x i8]*), %Str8** %12
-	%13 = alloca %Str16*, align 8
-	store %Str16* bitcast ([21 x i16]* @str2 to [0 x i16]*), %Str16** %13
-	%14 = alloca %Str32*, align 8
-	store %Str32* bitcast ([18 x i32]* @str3 to [0 x i32]*), %Str32** %14
-	%15 = load %Str8*, %Str8** %12
-	call void @utf8_puts(%Str8* %15)
-	call void @utf8_puts(%Str8* bitcast ([2 x i8]* @str5 to [0 x i8]*))
-	%16 = load %Str16*, %Str16** %13
-	call void @utf16_puts(%Str16* %16)
-	call void @utf8_puts(%Str8* bitcast ([2 x i8]* @str6 to [0 x i8]*))
-	%17 = load %Str32*, %Str32** %14
-	call void @utf32_puts(%Str32* %17)
-	call void @utf8_puts(%Str8* bitcast ([2 x i8]* @str7 to [0 x i8]*))
-	ret i32 0
+	%1 = alloca %Str8*, align 8
+	store %Str8* bitcast ([28 x i8]* @str1 to [0 x i8]*), %Str8** %1
+	%2 = alloca %Str16*, align 8
+	store %Str16* bitcast ([21 x i16]* @str2 to [0 x i16]*), %Str16** %2
+	%3 = alloca %Str32*, align 8
+	store %Str32* bitcast ([18 x i32]* @str3 to [0 x i32]*), %Str32** %3
+	%4 = load %Str8*, %Str8** %1
+	call void @console_puts8(%Str8* %4)
+	call void @console_puts8(%Str8* bitcast ([2 x i8]* @str4 to [0 x i8]*))
+	%5 = load %Str16*, %Str16** %2
+	call void @console_puts16(%Str16* %5)
+	call void @console_puts8(%Str8* bitcast ([2 x i8]* @str5 to [0 x i8]*))
+	%6 = load %Str32*, %Str32** %3
+	call void @console_puts32(%Str32* %6)
+	call void @console_puts8(%Str8* bitcast ([2 x i8]* @str6 to [0 x i8]*))
+	ret %Int 0
 }
 
 

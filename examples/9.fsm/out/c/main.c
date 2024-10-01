@@ -1,134 +1,37 @@
-// examples/fsm/src/main.cm
+// ./out/c/main.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
-#include "./ff_delay.h"
-
-
-// This is flashlight final state machine example
-// (just for compiler test and language demonstration)
+#include "main.h"
 
 
 
-#include "./fsm.h"
+#define main_flashlightStateOff  0
+#define main_flashlightStateOn  1
+#define main_flashlightStateBeacon  2
+void off_entry(fsm_FSM *x);
+void off_loop(fsm_FSM *x);
+void off_exit(fsm_FSM *x);
+void on_entry(fsm_FSM *x);
+void on_loop(fsm_FSM *x);
+void on_exit(fsm_FSM *x);
+void beacon_entry(fsm_FSM *x);
+void beacon_loop(fsm_FSM *x);
+void beacon_exit(fsm_FSM *x);
+int main();
 
-//@attribute("c-no-print")
-//import "lightfood/main"
-//@c_include("./ff_main.h")
 
 
-
-
-#define flashlightStateOff  0
-#define flashlightStateOn  1
-#define flashlightStateBeacon  2
 
 
 static uint8_t cnt;
-
-
-//
-// State Off
-//
-
-void off_entry(FSM *fsm)
-{
-	(void)fsm;
-	//printf("off_entry\n")
-}
-
-
-void off_loop(FSM *fsm)
-{
-	(void)fsm;
-
-	printf("off_loop\n");
-	if (cnt < 10) {
-		cnt = cnt + 1;
-	} else {
-		cnt = 0;
-		fsm_switch((FSM *)fsm, flashlightStateOn);
-	}
-}
-
-
-void off_exit(FSM *fsm)
-{
-	(void)fsm;
-	//printf("off_exit\n")
-}
-
-
-//
-// State On
-//
-
-void on_entry(FSM *fsm)
-{
-	(void)fsm;
-	//printf("on_entry\n")
-}
-
-
-void on_loop(FSM *fsm)
-{
-	(void)fsm;
-	printf("on_loop\n");
-	if (cnt < 10) {
-		cnt = cnt + 1;
-	} else {
-		cnt = 0;
-		fsm_switch((FSM *)fsm, flashlightStateBeacon);
-	}
-}
-
-
-void on_exit(FSM *fsm)
-{
-	(void)fsm;
-	//printf("on_exit\n")
-}
-
-
-//
-// State Beacon
-//
-
-void beacon_entry(FSM *fsm)
-{
-	char *const from_name = fsm_state_no_name((FSM *)fsm, fsm->state);
-	printf("beacon_entry from %s\n", from_name);
-}
-
-
-void beacon_loop(FSM *fsm)
-{
-	printf("beacon_loop\n");
-	if (cnt < 10) {
-		cnt = cnt + 1;
-	} else {
-		cnt = 0;
-		fsm_switch((FSM *)fsm, flashlightStateOff);
-	}
-}
-
-
-void beacon_exit(FSM *fsm)
-{
-	char *const to_name = fsm_state_no_name((FSM *)fsm, fsm->nexstate);
-	printf("beacon_exit to %s\n", to_name);
-}
-
-
-
-static FSM fsm = {
+static fsm_FSM fsm = {
 	.name = "Flash",
 	.state = 0,
 	.nexstate = 0,
-	.substate = fsmSubstateEntering,
+	.substate = fsm_substateEntering,
 	.states = {
 		{
 			.name = "Off",
@@ -153,13 +56,80 @@ static FSM fsm = {
 	}
 };
 
+void off_entry(fsm_FSM *x)
+{
+	(void)x;
+	//printf("off_entry\n")
+}
 
+void off_loop(fsm_FSM *x)
+{
+	printf("off_loop\n");
+	if (cnt < 10) {
+		cnt = cnt + 1;
+	} else {
+		cnt = 0;
+		fsm_switch((fsm_FSM *)x, main_flashlightStateOn);
+	}
+}
+
+void off_exit(fsm_FSM *x)
+{
+	(void)x;
+	//printf("off_exit\n")
+}
+
+void on_entry(fsm_FSM *x)
+{
+	(void)x;
+	//printf("on_entry\n")
+}
+
+void on_loop(fsm_FSM *x)
+{
+	printf("on_loop\n");
+	if (cnt < 10) {
+		cnt = cnt + 1;
+	} else {
+		cnt = 0;
+		fsm_switch((fsm_FSM *)x, main_flashlightStateBeacon);
+	}
+}
+
+void on_exit(fsm_FSM *x)
+{
+	(void)x;
+	//printf("on_exit\n")
+}
+
+void beacon_entry(fsm_FSM *x)
+{
+	char *const from_name = fsm_state_no_name((fsm_FSM *)x, x->state);
+	printf("beacon_entry from %s\n", from_name);
+}
+
+void beacon_loop(fsm_FSM *x)
+{
+	printf("beacon_loop\n");
+	if (cnt < 10) {
+		cnt = cnt + 1;
+	} else {
+		cnt = 0;
+		fsm_switch((fsm_FSM *)x, main_flashlightStateOff);
+	}
+}
+
+void beacon_exit(fsm_FSM *x)
+{
+	char *const to_name = fsm_state_no_name((fsm_FSM *)x, x->nexstate);
+	printf("beacon_exit to %s\n", to_name);
+}
 
 int main()
 {
 
 	while (true) {
-		fsm_run((FSM *)&fsm);
+		fsm_run((fsm_FSM *)&fsm);
 		delay_ms(500);
 	}
 

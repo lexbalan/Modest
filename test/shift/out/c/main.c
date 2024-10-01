@@ -1,12 +1,14 @@
-// test/shift/src/main.cm
+// ./out/c/main.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
+#include "main.h"
 
 
+
+int main();
 
 
 
@@ -14,7 +16,7 @@ int main()
 {
 	printf("test shift\n");
 
-	int32_t c;
+	uint32_t c;
 
 	c = 1 << 31;
 	printf("1 << 31 = 0x%x\n", c);

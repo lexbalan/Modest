@@ -29,9 +29,14 @@ target triple = "arm64-apple-macosx12.0.0"
 declare void @llvm.va_start(i8*)
 declare void @llvm.va_copy(i8*, i8*)
 declare void @llvm.va_end(i8*)
-
 declare void @llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)
 declare void @llvm.memset.p0.i32(i8*, i8, i32, i1)
+
+declare i8* @llvm.stacksave()
+
+declare void @llvm.stackrestore(i8*)
+
+
 
 %CPU.Word = type i64
 define weak i1 @memeq(i8* %mem0, i8* %mem1, i64 %len) {
@@ -97,65 +102,46 @@ break_2:
 	ret i1 1
 }
 
+; MODULE: print
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/system.hm
+; -- print includes --
 
+%Str = type %Str8;
+%Char = type i8;
+%ConstChar = type %Char;
+%SignedChar = type i8;
+%UnsignedChar = type i8;
+%Short = type i16;
+%UnsignedShort = type i16;
+%Int = type i32;
+%UnsignedInt = type i32;
+%LongInt = type i64;
+%UnsignedLongInt = type i64;
+%Long = type i64;
+%UnsignedLong = type i64;
+%LongLong = type i64;
+%UnsignedLongLong = type i64;
+%LongLongInt = type i64;
+%UnsignedLongLongInt = type i64;
+%Float = type double;
+%Double = type double;
+%LongDouble = type double;
 
+%SocklenT = type i32;
+%SizeT = type %UnsignedLongInt;
+%SSizeT = type %LongInt;
+%IntptrT = type i64;
+%PtrdiffT = type i8*;
+%OffT = type i64;
+%USecondsT = type i32;
+%PidT = type i32;
+%UidT = type i32;
+%GidT = type i32;
 
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
-
-
-
-%Str = type %Str8
-%Char = type i8
-%ConstChar = type %Char
-%SignedChar = type i8
-%UnsignedChar = type i8
-%Short = type i16
-%UnsignedShort = type i16
-%Int = type i32
-%UnsignedInt = type i32
-%LongInt = type i64
-%UnsignedLongInt = type i64
-%Long = type i64
-%UnsignedLong = type i64
-%LongLong = type i64
-%UnsignedLongLong = type i64
-%LongLongInt = type i64
-%UnsignedLongLongInt = type i64
-%Float = type double
-%Double = type double
-%LongDouble = type double
-
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
-
-
-
-
-%Socklen_T = type i32
-%SizeT = type %UnsignedLongInt
-%SSizeT = type %LongInt
-%PidT = type i32
-%UidT = type i32
-%GidT = type i32
-%USecondsT = type i32
-%IntptrT = type i64
-%OffT = type i64
-%PtrToConst = type i8*
-
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
-
-
-
-
-%File = type opaque
-%FposT = type opaque
-
-%CharStr = type %Str
-%ConstCharStr = type %CharStr
+%File = type i8;
+%FposT = type i8;
+%CharStr = type %Str;
+%ConstCharStr = type %CharStr;
 
 
 declare %Int @fclose(%File* %f)
@@ -166,30 +152,28 @@ declare %Int @fgetpos(%File* %f, %FposT* %pos)
 declare %File* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
 declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
 declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
-declare %File* @freopen(%ConstCharStr* %filename, %ConstCharStr* %mode, %File* %f)
-declare %Int @fseek(%File* %stream, %LongInt %offset, %Int %whence)
+declare %File* @freopen(%ConstCharStr* %fname, %ConstCharStr* %mode, %File* %f)
+declare %Int @fseek(%File* %f, %LongInt %offset, %Int %whence)
 declare %Int @fsetpos(%File* %f, %FposT* %pos)
 declare %LongInt @ftell(%File* %f)
-declare %Int @remove(%ConstCharStr* %filename)
+declare %Int @remove(%ConstCharStr* %fname)
 declare %Int @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
 declare void @rewind(%File* %f)
-declare void @setbuf(%File* %f, %CharStr* %buffer)
-
-
-declare %Int @setvbuf(%File* %f, %CharStr* %buffer, %Int %mode, %SizeT %size)
+declare void @setbuf(%File* %f, %CharStr* %buf)
+declare %Int @setvbuf(%File* %f, %CharStr* %buf, %Int %mode, %SizeT %size)
 declare %File* @tmpfile()
 declare %CharStr* @tmpnam(%CharStr* %str)
 declare %Int @printf(%ConstCharStr* %s, ...)
 declare %Int @scanf(%ConstCharStr* %s, ...)
-declare %Int @fprintf(%File* %stream, %Str* %format, ...)
+declare %Int @fprintf(%File* %f, %Str* %format, ...)
 declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
 declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
 declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, %VA_List %args)
-declare %Int @vprintf(%ConstCharStr* %format, %VA_List %args)
-declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, %VA_List %args)
-declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, %VA_List %args)
-declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, %VA_List %arg)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
+declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
 declare %Int @fgetc(%File* %f)
 declare %Int @fputc(%Int %char, %File* %f)
 declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
@@ -202,21 +186,23 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
+; -- end print includes --
+; -- print imports --
 
+declare i8 @utf_utf32_to_utf8(i32 %c, [4 x i8]* %buf)
+declare i8 @utf_utf16_to_utf32([0 x i16]* %c, i32* %result)
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/lightfood/putchar.hm
-
-
-declare void @putchar8(i8 %c)
-declare void @putchar16(i16 %c)
-declare void @putchar32(i32 %c)
-
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/lightfood/print.cm
-
-
-
-
+declare void @putchar_putchar8(i8 %c)
+declare void @putchar_putchar16(i16 %c)
+declare void @putchar_putchar32(i32 %c)
+declare void @putchar_utf8_putchar(i8 %c)
+declare void @putchar_utf16_putchar(i16 %c)
+declare void @putchar_utf32_putchar(i32 %c)
+declare void @putchar_utf8_puts(%Str8* %s)
+declare void @putchar_utf16_puts(%Str16* %s)
+declare void @putchar_utf32_puts(%Str32* %s)
+; -- end print imports --
+; -- strings --
 
 define void @put_str8(%Str8* %s) {
 	%1 = alloca i32, align 4
@@ -234,7 +220,7 @@ then_0:
 	br label %break_1
 	br label %endif_0
 endif_0:
-	call void @putchar8(i8 %4)
+	call void @putchar_putchar8(i8 %4)
 	%7 = load i32, i32* %1
 	%8 = add i32 %7, 1
 	store i32 %8, i32* %1
@@ -244,8 +230,8 @@ break_1:
 }
 
 define void @print(%Str8* %form, ...) {
-	%1 = alloca %VA_List, align 1
-	%2 = bitcast %VA_List* %1 to i8*
+	%1 = alloca i8*, align 1
+	%2 = bitcast i8** %1 to i8*
 	call void @llvm.va_start(i8* %2)
 	%3 = alloca i32, align 4
 	store i32 0, i32* %3
@@ -280,7 +266,7 @@ then_1:
 then_2:
 	; "\{" -> "{"
 	%19 = load i8, i8* %4
-	call void @putchar8(i8 %19)
+	call void @putchar_putchar8(i8 %19)
 	%20 = load i32, i32* %3
 	%21 = add i32 %20, 2
 	store i32 %21, i32* %3
@@ -293,7 +279,7 @@ else_2:
 then_3:
 	; "\}" -> "{"
 	%25 = load i8, i8* %4
-	call void @putchar8(i8 %25)
+	call void @putchar_putchar8(i8 %25)
 	%26 = load i32, i32* %3
 	%27 = add i32 %26, 2
 	store i32 %27, i32* %3
@@ -334,7 +320,7 @@ then_4:
 	br i1 %47 , label %then_5, label %else_5
 then_5:
 	; %i & %d for signed integer (Int)
-	%48 = va_arg %VA_List* %1, i32
+	%48 = va_arg i8** %1, i32
 	%49 = load [0 x i8]*, [0 x i8]** %39
 	call void @sprintf_dec_int32([0 x i8]* %49, i32 %48)
 	br label %endif_5
@@ -344,7 +330,7 @@ else_5:
 	br i1 %51 , label %then_6, label %else_6
 then_6:
 	; %n for unsigned integer (Nat)
-	%52 = va_arg %VA_List* %1, i32
+	%52 = va_arg i8** %1, i32
 	%53 = load [0 x i8]*, [0 x i8]** %39
 	call void @sprintf_dec_nat32([0 x i8]* %53, i32 %52)
 	br label %endif_6
@@ -358,7 +344,7 @@ else_6:
 then_7:
 	; %x for unsigned integer (Nat)
 	; %p for pointers
-	%59 = va_arg %VA_List* %1, i32
+	%59 = va_arg i8** %1, i32
 	%60 = load [0 x i8]*, [0 x i8]** %39
 	call void @sprintf_hex_nat32([0 x i8]* %60, i32 %59)
 	br label %endif_7
@@ -368,7 +354,7 @@ else_7:
 	br i1 %62 , label %then_8, label %else_8
 then_8:
 	; %s pointer to string
-	%63 = va_arg %VA_List* %1, %Str8*
+	%63 = va_arg i8** %1, %Str8*
 	store %Str8* %63, [0 x i8]** %39
 	br label %endif_8
 else_8:
@@ -398,7 +384,7 @@ endif_5:
 	br label %endif_4
 else_4:
 	%71 = load i8, i8* %4
-	call void @putchar8(i8 %71)
+	call void @putchar_putchar8(i8 %71)
 	br label %endif_4
 endif_4:
 	%72 = load i32, i32* %3
@@ -406,7 +392,7 @@ endif_4:
 	store i32 %73, i32* %3
 	br label %again_1
 break_1:
-	%74 = bitcast %VA_List* %1 to i8*
+	%74 = bitcast i8** %1 to i8*
 	call void @llvm.va_end(i8* %74)
 	ret void
 }

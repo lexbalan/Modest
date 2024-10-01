@@ -1,12 +1,14 @@
-// examples/stmt_while/src/main.cm
+// ./out/c/main.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
+#include "main.h"
 
 
+
+int main();
 
 
 
@@ -16,15 +18,15 @@ int main()
 
 	int32_t a;
 	a = 0;
-	#define b  10
+	#define __b  10
 
-	while (a < b) {
+	while (a < __b) {
 		printf("a = %d\n", a);
 		a = a + 1;
 	}
 
 	return 0;
-}
 
-#undef b
+#undef __b
+}
 

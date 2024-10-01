@@ -4,16 +4,19 @@
 import "libc/stdio"
 
 func main() -> Int {
-	printf("__compilerVersionMajor = %u\n", __compilerVersionMajor)
-	printf("__compilerVersionMinor = %u\n", __compilerVersionMinor)
 
-	printf("__systemPointerWidth = %i\n", __systemPointerWidth)
-	printf("__systemCharWidth = %i\n", __systemCharWidth)
-	printf("__systemIntWidth = %i\n", __systemIntWidth)
-	printf("__systemFloatWidth = %i\n", __systemFloatWidth)
+	// __compiler
+	printf("__compiler.name = %s\n", *Str8 __compiler.name)
+	let ver = __compiler.version
+	printf("__compiler.version.major = %u\n", ver.major)
+	printf("__compiler.version.minor = %u\n", ver.minor)
 
-	printf("__platformSystem = %s\n", *Str8 __platformSystem)
-	printf("__platformRelease = %s\n", *Str8 __platformRelease)
+	// __target
+	printf("__target.name = %s\n", *Str __target.name)
+	printf("__target.pointerWidth = %u\n", __target.pointerWidth)
+	printf("__target.charWidth = %u\n", __target.charWidth)
+	printf("__target.intWidth = %u\n", __target.intWidth)
+	printf("__target.floatWidth = %u\n", __target.floatWidth)
 
 	return 0
 }

@@ -7,7 +7,7 @@
 import "libc/stdio"
 import "libc/unistd"
 
-@attribute("value.type.to:dispensable")
+@unused_result
 func print(format: *Str8, ...) -> SSizeT {
 	var va: VA_List
 

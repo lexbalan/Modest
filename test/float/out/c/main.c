@@ -1,35 +1,34 @@
-// test/float/src/main.cm
+// ./out/c/main.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-
-typedef struct Point2D Point2D;
+#include "main.h"
 
 
 
 
 
+struct main_Point2D {
+	int x;
+	int y;
+};
+#define main_mathPi  3.141592653589793238462643383279502884
+double squareOfCircle(double radius);
+float slope(main_Point2D a, main_Point2D b);
+int main();
 
-#define mathPi  3.141592653589793238462643383279502884
+
+
 
 
 double squareOfCircle(double radius)
 {
-	return pow(radius, (double)(2)) * mathPi;
+	return pow(radius, (double)(2)) * main_mathPi;
 }
 
-
-struct Point2D {
-	int x;
-	int y;
-};
-
-float slope(Point2D a, Point2D b)
+float slope(main_Point2D a, main_Point2D b)
 {
 	const int dx = abs(a.x - b.x);
 	const int dy = abs(a.y - b.y);
@@ -42,24 +41,24 @@ int main()
 {
 	printf("float test\n");
 
-	#define r  10
-	const double s = squareOfCircle((double)r);
+	#define __r  10
+	const double s = squareOfCircle((double)__r);
 	printf("s = %f\n", s);
 
 
-	#define k  (1.0 / (double)(8))
-	printf("k = %f\n", k);
+	#define __k  (1.0 / (double)(8))
+	printf("k = %f\n", __k);
 
 	printf("sizeof(Float32) = %lu\n", sizeof(float));
 	printf("sizeof(Float64) = %lu\n", sizeof(double));
 
 	// printf %f ожидает получить double а не float!
-	const float sl = slope((Point2D){.x = 10, .y = 20}, (Point2D){.x = 30, .y = 50});
+	const float sl = slope((main_Point2D){.x = 10, .y = 20}, (main_Point2D){.x = 30, .y = 50});
 	printf("slope = %f\n", (double)sl);
 
 	return 0;
-}
 
-#undef r
-#undef k
+#undef __r
+#undef __k
+}
 

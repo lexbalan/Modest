@@ -1,20 +1,21 @@
-// test/1.hello_world/src/main.cm
+// ./out/c/main.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
+#include "main.h"
 
 
 
+#define _main_arr  {1, 2}
+const int32_t main_arr[2] = _main_arr;
+int main();
 
-#define _arr  {1, 2}
-const int32_t arr[2] = _arr;
-static int32_t arr0[2] = _arr;
-static int32_t arr1[2] = _arr;
-static char *str = "Hello!";// -> *[]Char8
 
+static int32_t arr0[2] = _main_arr;
+static int32_t arr1[2] = _main_arr;
+static char *str = "Hello!";
 
 int main()
 {

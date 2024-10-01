@@ -86,12 +86,18 @@ def highlight(ti, color, offset):
 def common_message(mg, color, s, ti=None):
 	pre = ''
 
-	if ti != None:
-		if ti['isa'] != 'ti':
-			if 'ti' in ti:
-				ti = ti['ti']
+	if ti == None:
+		return
 
-		pre = '\n%s:%d:%d:\n' % (ti['file'], ti['line'], ti['pos'])
+	if ti['isa'] != 'ti':
+		if 'ti' in ti:
+			ti = ti['ti']
+
+	if ti == None:
+		return
+
+
+	pre = '\n%s:%d:%d:\n' % (ti['file'], ti['line'], ti['pos'])
 
 	print(pre + colorize(mg, color) + s)
 
@@ -108,9 +114,20 @@ def note(s, ti=None):
 	common_message('note: ', COLOR_NOTE, s, ti)
 
 
+
+log_ind = 0
+def log_ind_plus():
+	global log_ind
+	log_ind = log_ind + 1
+
+def log_ind_minus():
+	global log_ind
+	log_ind = log_ind - 1
+
 def log(s):
 	if verbose_mode:
-		print(s)
+		global log_ind
+		print('  ' * log_ind + s)
 
 
 def info(s, ti=None):

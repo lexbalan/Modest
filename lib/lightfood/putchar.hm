@@ -1,6 +1,0 @@
-
-
-func putchar8 (c: Char8) -> Unit
-func putchar16 (c: Char16) -> Unit
-func putchar32 (c: Char32) -> Unit
-

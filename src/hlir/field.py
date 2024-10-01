@@ -7,6 +7,7 @@ def hlir_field(id, type, ti=None):
 		'type': type,
 		'field_no': 0,
 		'offset': 0,
+		'att': [],
 		'nl': 0,
 		'ti': ti
 	}

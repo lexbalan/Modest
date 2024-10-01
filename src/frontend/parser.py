@@ -6,7 +6,7 @@ import os
 from .lexer import Lexer
 from error import error, warning, info
 from hlir.id import hlir_id
-
+from util import utf32cc_to_utf8_str
 
 top_level_stoppers = ['type', 'let', 'var', 'func']
 func_stoppers = ['let', 'var', 'if', 'while', 'return', 'type']
@@ -115,6 +115,7 @@ class Parser:
 	def is_tag(self):
 		return self.ctok_class() == 'tag'
 
+
 	def identifier(self):
 		ti = self.ti()
 		if not self.is_identifier():
@@ -123,6 +124,7 @@ class Parser:
 			return None
 		s = self.gettok()
 		return hlir_id(s, ti=ti)
+
 
 
 	def need_sep(self, separators=['\n', ';'], stoppers=['}'], eat=True):
@@ -161,7 +163,7 @@ class Parser:
 			#self.skip_tokens([' ', '\t', '\n'])
 
 			comments = []
-			directives = []
+			attributes = []
 
 			spaceline_cnt = 0
 
@@ -180,11 +182,11 @@ class Parser:
 					x['nl'] = spaceline_cnt
 					spaceline_cnt = 0
 					comments.append(x)
-				elif self.token_class_is('directive'):
-					x = self.parse_directive()
+				elif self.token_class_is('attribute'):
+					x = self.parse_attribute()
 					x['nl'] = spaceline_cnt
 					spaceline_cnt = 0
-					directives.append(x)
+					attributes.append(x)
 
 
 				elif self.match(","):
@@ -203,7 +205,7 @@ class Parser:
 
 			if f != None:
 				f[0].update({'comments': comments})
-				f[0].update({'directives': directives})
+				f[0].update({'attributes': attributes})
 				f[0]['nl'] = spaceline_cnt
 				spaceline_cnt = 0
 				fields.extend(f)
@@ -228,11 +230,14 @@ class Parser:
 
 			return True
 
-	def is_directive(self):
-		return self.token_class_is('directive')
+	def is_attribute(self):
+		return self.token_class_is('attribute')
 
 	def check_is_type(self):
 		if self.is_identifier():
+			if self.nextok() == '.':
+				self.skip()
+				self.skip()
 			token = self.gettok()
 			if token[0].isupper():
 				return True
@@ -268,8 +273,8 @@ class Parser:
 
 			return False
 
-		elif self.is_directive():
-			self.parse_directive()
+		elif self.is_attribute():
+			self.parse_attribute()
 			return self.check_is_type()
 
 		else:
@@ -346,11 +351,11 @@ class Parser:
 			error("expected type expr", ti)
 			return None
 
-		# parse all directives before
-		directives = []
-		while self.token_class_is('directive'):
-			x = self.parse_directive()
-			directives.append(x)
+		# parse all attributes before
+		attributes = []
+		while self.token_class_is('attribute'):
+			x = self.parse_attribute()
+			attributes.append(x)
 
 		t = {'isa': 'type', 'kind': 'unknown', 'ti': ti}
 
@@ -385,10 +390,21 @@ class Parser:
 			t = y
 
 		elif self.ctok_class() == 'id':
-			id = self.identifier() # type by Name
-			t = {'isa': 'type', 'kind': 'id', 'id': id, 'ti': ti}
+			id = self.identifier()
+			ids = [id]
 
-		t['directives'] = directives
+			while self.match('.'):
+				id = self.identifier()
+				ids.append(id)
+
+			t = {
+				'isa': 'type',
+				'kind': 'id',
+				'ids': ids,
+				'ti': ti
+			}
+
+		t['attributes'] = attributes
 		return t
 
 
@@ -634,6 +650,46 @@ class Parser:
 			f = self.identifier()
 			self.need(")")
 			return {'isa': 'ast_value', 'kind': 'offsetof', 'type': t, 'field': f, 'ti': ti}
+		elif self.match("lengthof"):
+			self.match("(")
+			v = self.expr_value()
+			rv = {'isa': 'ast_value', 'kind': 'sizeof_value', 'value': v, 'ti': ti}
+			self.need(")")
+			return rv
+		elif self.match("__va_start"):
+			self.match("(")
+			v0 = self.expr_value()
+			self.need(",")
+			v1 = self.expr_value()
+			rv = {'isa': 'ast_value', 'kind': '__va_start', 'values': [v0, v1], 'ti': ti}
+			self.need(")")
+			return rv
+		elif self.match("__va_copy"):
+			self.match("(")
+			v0 = self.expr_value()
+			self.need(",")
+			v1 = self.expr_value()
+			rv = {'isa': 'ast_value', 'kind': '__va_copy', 'values': [v0, v1], 'ti': ti}
+			self.need(")")
+			return rv
+		elif self.match("__va_end"):
+			self.match("(")
+			v = self.expr_value()
+			rv = {'isa': 'ast_value', 'kind': '__va_end', 'value': v, 'ti': ti}
+			self.need(")")
+			return rv
+
+		elif self.match("__defined"):
+			self.match("(")
+			rv = None
+			if self.is_type_expr():
+				t = self.expr_type()
+				rv = {'isa': 'ast_value', 'kind': '__defined_type', 'type': t, 'ti': ti}
+			else:
+				v = self.expr_value()
+				rv = {'isa': 'ast_value', 'kind': '__defined_value', 'value': v, 'ti': ti}
+			self.need(")")
+			return rv
 		else:
 			y = self.expr_value_11()
 			return y
@@ -657,7 +713,12 @@ class Parser:
 						if arg_value['kind'] != 'id':
 							error("expected identifier", a['ti'])
 
-						arg_id = arg_value['id']
+						#if not 'id' in arg_value:
+							#print("isa = " + arg_value['isa'])
+							#print("kind = " + arg_value['kind'])
+							#print(arg_value)
+							#info("HERE", arg_value['ti'])
+						arg_id = arg_value#['id']
 						arg_value = self.expr_value()
 
 					arg = {
@@ -687,7 +748,7 @@ class Parser:
 					'isa': 'ast_value',
 					'kind': 'access',
 					'left': v,
-					'field': field_id,
+					'right': field_id,
 					'ti': ti
 				}
 			#elif self.look("[") and self.is_value_expr():
@@ -828,20 +889,16 @@ class Parser:
 				sym = s[i]
 
 				if sym == '\\':
-					code = 0
 
 					# nexsym
 					i = i + 1
 					sym = s[i]
 
-					if sym == '{':
-						# eat "\{" as is
-						new_s = new_s + '\\{'
+					if sym == '\\':
+						new_s = new_s + '\\'
+						i = i + 1
 						continue
-					elif sym == '}':
-						# eat "\}" as is
-						new_s = new_s + '\\}'
-						continue
+
 					elif sym == '"':
 						# eat "\""
 						new_s = new_s + sym
@@ -850,60 +907,67 @@ class Parser:
 						continue
 
 					# '\xCODE' ?
-					is_num = sym.isdigit()
 					is_hex = sym == 'x'
+					is_unicode = sym == 'u'
 
-					if is_num or is_hex:
-						asciicode = ''
 
-						if is_hex:
-							i = i + 1
+					def isxdigit(char):
+						return char in '0123456789abcdefABCDEF'
+
+
+					code = 0
+
+					# case \012345678
+					if sym.isdigit():
+						cod = ""
+						while i < len(s):
 							sym = s[i]
-							asciicode = '0x'
-
-						hexsyms = [
-							'a', 'b', 'c', 'd', 'e', 'f',
-							'A', 'B', 'C', 'D', 'E', 'F',
-						]
-						while True:
-							asciicode = asciicode + sym
-							if i == len(s) - 1:
+							if not sym.isdigit():
 								break
+							cod = cod + sym
 							i = i + 1
+
+						i = i - 1
+						code = int(cod, 10) & 0xFF
+
+					# case \xXX | \uXXXXXXXX
+					elif is_hex or is_unicode:
+						cod = ""
+						i = i + 1 # skip 'x' | 'u' prefix
+						while i < len(s):
 							sym = s[i]
-							if not sym.isdigit() or (is_hex and sym in hexsyms):
-								i = i - 1
+							if not isxdigit(sym):
 								break
+							cod = cod + sym
+							i = i + 1
+							if is_hex:
+								if len(cod) == 2:
+									break
+							else:
+								if len(cod) == 8:
+									break
+						i = i - 1
+						code = int(cod, 16)
 
-						base = 10
-						if is_hex:
-							base = 16
+					elif sym == 'n': code = ord("\n")  # LF
+					elif sym == '"': code = ord("\"")  # QUOTE2
+					elif sym == "'": code = ord("'")   # QUOTE1
+					elif sym == '\\': code = ord("\\") # BACKSLASH
+					elif sym == 'r': code = ord("\r")  # CR
+					elif sym == 't': code = ord("\t")  # TAB
+					elif sym == 'a': code = ord("\a")  # BELL
+					elif sym == 'b': code = ord("\b")  # BACKSPACE
+					elif sym == 'v': code = ord("\v")  # VT
+					elif sym == 'f': code = ord("\f")  # FF
 
-						code = int(asciicode, base)
 
-					elif sym == 'a':  #BELL
-						code = 7
-					elif sym == 'b':  #BACKSPACE
-						code = 8
-					elif sym == 't':  #TAB
-						code = 9
-					elif sym == 'n':  #LF
-						code = 10
-					elif sym == 'v':  #VT
-						code = 11
-					elif sym == 'f':  #FF
-						code = 12
-					elif sym == 'r':  #CR
-						code = 13
-					elif sym == '"':
-						code = '34'
-					elif sym == '\\':
-						code = 92
+					if is_unicode:
+						sym = utf32cc_to_utf8_str(code)
+					else:
+						sym = chr(code)
 
-					sym = chr(code)
-
-				new_s = new_s + sym
 				str_len = str_len + 1
+				new_s = new_s + sym
 				i = i + 1
 
 			string = ''.join(new_s)
@@ -911,7 +975,7 @@ class Parser:
 			return {
 				'isa': 'ast_value',
 				'kind': 'string',
-				'len': str_len,
+				'len': str_len,  # длина строки в символах (не в байтах!)
 				'str': string,
 				'ti': ti
 			}
@@ -931,11 +995,7 @@ class Parser:
 		elif self.ctok_class() == 'id':
 			id = self.identifier()
 
-			if self.match("::"):
-				id2 = self.identifier()
-				return {'isa': 'ast_value', 'kind': 'ns', 'ids': [id, id2], 'ti': ti}
-
-
+			# __va_arg hack
 			if id['str'] == '__va_arg':
 				self.match("(")
 				v = self.expr_value()
@@ -944,17 +1004,16 @@ class Parser:
 				self.match(")")
 				return {
 					'isa': 'ast_value',
-					'kind': 'va_arg',
+					'kind': '__va_arg',
 					'va_list': v,
 					'type': t,
 					'ti': ti
 				}
 
+			#return id
 
-			#if id['str'][0].islower():
-			return {'isa': 'ast_value', 'kind': 'id', 'id': id, 'ti': ti}
-			#else:
-			#	return {'isa': 'ast_value', 'kind': 'id', 'id': id, 'ti': ti}
+			return {'isa': 'ast_value', 'kind': 'id', 'str': id['str'], 'ti': ti}
+
 
 		elif self.ctok_class() == 'num':
 			numstr = self.gettok()
@@ -1232,7 +1291,7 @@ class Parser:
 		while True:
 			nl_cnt = 0
 
-			comments_and_directives = []
+			comments_and_attributes = []
 			while True:
 				nl_cnt = self.skip_blanks()
 
@@ -1243,15 +1302,15 @@ class Parser:
 				if self.token_class_is('comment-block'):
 					x = self.parse_comment_block()
 					x['nl'] = nl_cnt
-					comments_and_directives.append(x)
+					comments_and_attributes.append(x)
 				elif self.token_class_is('comment-line'):
 					x = self.parse_comment_line()
 					x['nl'] = nl_cnt
-					comments_and_directives.append(x)
-				elif self.token_class_is('directive'):
-					x = self.parse_directive()
+					comments_and_attributes.append(x)
+				elif self.token_class_is('attribute'):
+					x = self.parse_attribute()
 					x['nl'] = nl_cnt
-					comments_and_directives.append(x)
+					comments_and_attributes.append(x)
 				else:
 					break
 				#if x != None:
@@ -1268,7 +1327,7 @@ class Parser:
 
 			objs.append({
 				'id': id,
-				'comments_and_directives': comments_and_directives
+				'comments_and_attributes': comments_and_attributes
 			})
 
 			if self.match(','):
@@ -1294,7 +1353,8 @@ class Parser:
 				'isa': 'field',
 				'id': id,
 				'type': t,
-				'comments_and_directives': obj['comments_and_directives'],
+				'attributes': [],
+				'comments_and_attributes': obj['comments_and_attributes'],
 				'ti': id['ti']
 			}
 			fields.append(field)
@@ -1306,20 +1366,27 @@ class Parser:
 	# Top Level Directives
 	#
 
-	def parse_import(self):
+	def parse_import(self, include=False):
 		ti = self.ti()
 
 		if not self.look("{"):
 			import_expr = self.expr_value()
+
+			_as = None
+			if self.match("as"):
+				_as = self.identifier()
+
 			return {
-				'isa': 'ast_directive',
-				'kind': 'import',
+				'isa': 'ast_import',
+				'kind': 'ast_import',
 				'expr': import_expr,
+				'include': include,
+				'as': _as,
 				'args': [],
 				'ti': ti
 			}
-		else:
 
+		else:
 			imports = []
 			self.skip()  # {
 			while True:
@@ -1329,10 +1396,17 @@ class Parser:
 					break
 
 				import_expr = self.expr_value()
+
+				_as = None
+				if self.match("as"):
+					_as = self.identifier()
+
 				import_dir = {
-					'isa': 'ast_directive',
+					'isa': 'ast_attribute',
 					'kind': 'import',
 					'expr': import_expr,
+					'include': include,
+					'as': _as,
 					'args': [],
 					'ti': ti
 				}
@@ -1351,24 +1425,16 @@ class Parser:
 		if self.is_comment():
 			self.skip()
 
-		# func declaration?
-		if self.look("\n"):
-			return {
-				'isa': 'ast_declaration',
-				'kind': 'func',
-				'id': id,
-				'type': ftyp,
-				'ti': ti
-			}
+		stmt = None
+		if not self.look("\n"):
+			stmt = self.stmt_block()
 
-		# func definition
-		s = self.stmt_block()
 		return {
 			'isa': 'ast_definition',
 			'kind': 'func',
 			'id': id,
 			'type': ftyp,
-			'stmt': s,
+			'stmt': stmt,
 			'ti': ti
 		}
 
@@ -1401,17 +1467,12 @@ class Parser:
 		if self.is_comment():
 			self.skip()
 
-		# type declaration
-		if self.look("\n"):
-			return {
-				'isa': 'ast_declaration',
-				'kind': 'type',
-				'id': id,
-				'ti': ti
-			}
+		self.match("=")
 
-		# type definition
-		t = self.expr_type()
+		t = None
+		if not self.look("\n"):
+			t = self.expr_type()
+
 		return {
 			'isa': 'ast_definition',
 			'kind': 'type',
@@ -1456,13 +1517,32 @@ class Parser:
 		return args
 
 
-	def parse_directive(self):
+	def parse_attribute(self):
 		ti = self.ti()
 		x = self.gettok()
 
 		args = []
 		if self.look("("):
 			args = self.parse_arglist()
+
+		att = {
+			'isa': 'ast_attribute',
+			'kind': x,
+			'args': args,
+			'ti': ti
+		}
+
+		return att
+
+
+	def parse_directive(self):
+		ti = self.ti()
+		x = self.gettok()
+
+		args = []
+		while not self.match("\n"):
+			a = self.gettok()
+			args.append(a)
 
 		dir = {
 			'isa': 'ast_directive',
@@ -1472,7 +1552,6 @@ class Parser:
 		}
 
 		return dir
-
 
 
 	def skipnl(self):
@@ -1488,49 +1567,40 @@ class Parser:
 
 		output = []
 
-		spaceline_cnt = 0
-		while not self.is_end():
-			x = None
-			ti = self.ti()
-			if self.match('\n'):
-				spaceline_cnt = spaceline_cnt + 1
-				continue
-			elif self.token_class_is('comment-block'):
+		# Head
+		if not self.is_end():
+			if self.token_class_is('comment-block'):
 				x = self.parse_comment_block()
 			elif self.token_class_is('comment-line'):
 				x = self.parse_comment_line()
-			elif self.token_class_is('directive'):
-				x = self.parse_directive()
-
-			# we can do const definition before import?
-			elif self.match('let'):
-				x = self.parse_def_const()
-
-			elif self.match('import'):
-				x = self.parse_import()
-
-			if x == None:
-				break
-
-			if isinstance(x, list):
-				x[0]['nl'] = spaceline_cnt
-				# у остальных #nl = 1 (!)
-				for xx in x[1:]:
-					xx['nl'] = 1
-
-				spaceline_cnt = 0
-				output.extend(x)
-			else:
-
-				x['nl'] = spaceline_cnt
-				spaceline_cnt = 0
-
-				output.append(x)
 
 
+
+		spaceline_cnt = 0
+
+		export_region = False
+
+		attributes = []
 		while not self.is_end():
-			#export = self.match('export')
-			#extern = self.match('extern')
+
+			if self.token_class_is('attribute'):
+				#info("ATT", self.ti())
+				a = self.parse_attribute()
+				attributes.append(a)
+				continue
+
+			#print("AFTER=%d" % len(attributes))
+
+			#attributes = []
+
+
+			export = self.match('export')
+			if export:
+				if self.match('{'):
+					export_region = True
+
+			if export_region:
+				export = True
 
 			ti = self.ti()
 
@@ -1552,11 +1622,16 @@ class Parser:
 				x = self.parse_directive()
 
 			elif self.match('import'):
-				warning("import directive must be placed before definitions", ti)
 				x = self.parse_import()
+			elif self.match('include'):
+				x = self.parse_import(include=True)
+
+			elif export_region:
+				if self.match('}'):
+					export_region = False
 
 			else:
-				error("unexpected token %s" % self.ctok(), self.ti())
+				error("unexpected token '%s'" % self.ctok(), self.ti())
 				self.restore_top_level()
 				continue
 
@@ -1564,26 +1639,34 @@ class Parser:
 				continue
 
 			if isinstance(x, list):
-
 				for subx in x:
 					subx['nl'] = 1
 					subx['ti'] = ti
+					subx['export'] = export
+					subx['attributes'] = attributes
 
 				x[0]['nl'] = spaceline_cnt
 
 				output.extend(x)
 				spaceline_cnt = 0
+
 			else:
 				x['nl'] = spaceline_cnt
 				x['ti'] = ti
 
 				# тк CM директива не печатается в C
-				if x['isa'] == 'ast_directive':
+				if x['isa'] == 'ast_attribute':
 					spaceline_cnt = spaceline_cnt - 1
 				else:
 					spaceline_cnt = 0
 
+				x['attributes'] = attributes
+
+				x['export'] = export
+
 				output.append(x)
+
+			attributes = []
 
 			#spaceline_cnt = 0
 

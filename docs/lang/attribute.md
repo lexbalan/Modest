@@ -4,7 +4,7 @@
 Attributes are a way to change (or add) meta information of defined entities. Using the attribute mechanism allows you to influence the compilation process
 
 ```swift
-@attribute("dispensable")
+@unused_result
 func my_func () -> Int {
   return 0
 }
@@ -17,7 +17,7 @@ func main () {
 }
 ```
 
-**c-no-print** - entity definition must not be printed by C printer
+**c_no_print** - entity definition must not be printed by C printer
 
 **dispensable** - means that result of function call can be ignored
 

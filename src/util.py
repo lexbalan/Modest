@@ -55,6 +55,12 @@ def get_item_with_id(_list, id):
 	return _list[i]
 
 
+def utf32cc_to_utf8_str(cc):
+	# Преобразуем целое число в байты (UTF-32 требует 4 байта)
+	utf32_bytes = cc.to_bytes(4, byteorder='little')
+	utf8_string = utf32_bytes.decode('utf-32')
+	return utf8_string
+
 
 """def utf16_to_utf32(c):
 	leading = c[0]
@@ -77,11 +83,7 @@ def get_item_with_id(_list, id):
 
 
 	return ['', 0]
-"""
 
-
-
-"""
 def _utf8_cc_arr_to_utf32_cc_arr(arr):
 	arr = list(bytes(arr).decode('utf-8').encode('utf-32').decode('utf32'))
 

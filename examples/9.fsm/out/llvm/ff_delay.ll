@@ -99,19 +99,13 @@ break_2:
 	ret i1 1
 }
 
+; MODULE: delay
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/system.hm
-
-
-
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
-
-
+; -- print includes --
 
 %Str = type %Str8;
 %Char = type i8;
-%ConstChar = type i8;
+%ConstChar = type %Char;
 %SignedChar = type i8;
 %UnsignedChar = type i8;
 %Short = type i16;
@@ -130,15 +124,9 @@ break_2:
 %Double = type double;
 %LongDouble = type double;
 
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
-
-
-
-
 %SocklenT = type i32;
-%SizeT = type i64;
-%SSizeT = type i64;
+%SizeT = type %UnsignedLongInt;
+%SSizeT = type %LongInt;
 %IntptrT = type i64;
 %PtrdiffT = type i8*;
 %OffT = type i64;
@@ -147,79 +135,49 @@ break_2:
 %UidT = type i32;
 %GidT = type i32;
 
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/time.hm
-
-
-
-
 %TimeT = type i32;
-%ClockT = type i64;
+%ClockT = type %UnsignedLong;
 %Struct_tm = type {
-	i32, 
-	i32, 
-	i32, 
-	i32, 
-	i32, 
-	i32, 
-	i32, 
-	i32, 
-	i32, 
-	i64, 
-	i8*
+	%Int, 
+	%Int, 
+	%Int, 
+	%Int, 
+	%Int, 
+	%Int, 
+	%Int, 
+	%Int, 
+	%Int, 
+	%LongInt, 
+	%ConstChar*
 };
 
 
-
-declare i64 @clock()
-
-
-declare double @difftime(i32 %end, i32 %beginning)
-
-
-declare i32 @mktime(%Struct_tm* %timeptr)
-
-
-declare i32 @time(i32* %timer)
-
-
-declare i8* @asctime(%Struct_tm* %timeptr)
-
-
-declare i8* @ctime(i32* %timer)
-
-
-declare %Struct_tm* @gmtime(i32* %timer)
-
-
-declare %Struct_tm* @localtime(i32* %timer)
-
-
-declare i64 @strftime(i8* %ptr, i64 %maxsize, i8* %format, %Struct_tm* %timeptr)
-
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/lightfood/delay.cm
-
-
-
+declare %ClockT @clock()
+declare %Double @difftime(%TimeT %end, %TimeT %beginning)
+declare %TimeT @mktime(%Struct_tm* %timeptr)
+declare %TimeT @time(%TimeT* %timer)
+declare %Char* @asctime(%Struct_tm* %timeptr)
+declare %Char* @ctime(%TimeT* %timer)
+declare %Struct_tm* @gmtime(%TimeT* %timer)
+declare %Struct_tm* @localtime(%TimeT* %timer)
+declare %SizeT @strftime(%Char* %ptr, %SizeT %maxsize, %ConstChar* %format, %Struct_tm* %timeptr)
+; -- end print includes --
+; -- print imports --
+; -- end print imports --
+; -- strings --
 
 define void @delay_us(i64 %us) {
-	%1 = call i64 @clock()
+	%1 = call %ClockT @clock()
 	br label %again_1
 again_1:
-	%2 = call i64 @clock()
-	%3 = add i64 %1, %us
-	%4 = icmp ult i64 %2, %3
+	%2 = call %ClockT @clock()
+	%3 = add %ClockT %1, %us
+	%4 = icmp ult %ClockT %2, %3
 	br i1 %4 , label %body_1, label %break_1
 body_1:
 	; just waiting
 	br label %again_1
 break_1:
-	ret void
-}
-
-define void @delay(i64 %us) {
-	call void @delay_us(i64 %us)
 	ret void
 }
 
@@ -229,9 +187,9 @@ define void @delay_ms(i64 %ms) {
 	ret void
 }
 
-define void @delay_s(i64 %s) {
-	%1 = mul i64 %s, 1000
-	call void @delay_ms(i64 %1)
+define void @delay_sec(i64 %s) {
+	%1 = mul i64 %s, 1000000
+	call void @delay_us(i64 %1)
 	ret void
 }
 

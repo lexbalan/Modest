@@ -121,9 +121,12 @@ def _llvm_operation(op, type, reg=None, x=None):
 
 
 def get_id_str(x):
+	if 'llvm' in x['id']:
+		return '"%s"' % x['id']['llvm']
+
 	id_str = x['id']['str']
-	if 'llvm_alias' in x:
-		id_str = '"%s"' % x['llvm_alias']
+	if 'prefix' in x:
+		id_str = x['definition']['module']['prefix'] + '_' + id_str
 	return id_str
 
 
@@ -498,14 +501,14 @@ def llvm_load(x):
 
 
 # сохр простых значений
-def llvm_store(l, r):
-	assert(l['isa'] == 'll_value')
-	assert(r['isa'] == 'll_value')
+def llvm_store(dst, src):
+	assert(dst['isa'] == 'll_value')
+	assert(src['isa'] == 'll_value')
 	lo("store ")
-	llvm_print_type_value(r)
+	llvm_print_type_value(src)
 	out(", ")
-	llvm_print_type_value(l)
-	return l
+	llvm_print_type_value(dst)
+	return dst
 
 
 
@@ -775,10 +778,6 @@ def print_int_type_for(width):
 
 
 
-"""def print_type(t):
-	print_type2(t)
-	if 'noundef' in t['att']:
-		out(' noundef')"""
 
 # функция может получать только указатель на массив
 # если же в CM она получает массив то тут и в СИ она получает
@@ -1117,6 +1116,10 @@ def do_eval_access_ptr(v):
 
 
 
+def do_eval_access_module(x):
+	return do_eval(x['value'])
+
+
 'trunc .. to'
 'zext .. to'
 'sext .. to'
@@ -1133,8 +1136,8 @@ def do_eval_access_ptr(v):
 
 # cast type a to type b
 def select_cast_operator(a, b):
-	if hlir_type.type_is_integer(a) or hlir_type.type_is_char(a) or hlir_type.type_is_bool(a) or hlir_type.type_is_byte(a):
-		if hlir_type.type_is_integer(b) or hlir_type.type_is_char(b) or hlir_type.type_is_bool(b) or hlir_type.type_is_byte(b):
+	if hlir_type.type_is_integer(a) or hlir_type.type_is_char(a) or hlir_type.type_is_bool(a) or hlir_type.type_is_word(a):
+		if hlir_type.type_is_integer(b) or hlir_type.type_is_char(b) or hlir_type.type_is_bool(b) or hlir_type.type_is_word(b):
 			signed = hlir_type.type_is_signed(b)
 
 			aw = align_bits_up(a['width'])
@@ -1182,6 +1185,11 @@ def is_adrptr(x):
 def cast_composite_to_composite(to_type, value, ti):
 	v = do_eval(value)
 	out("\n\t; cast_composite_to_composite")
+
+	if is_global_context():
+		#info("GLOBAL", ti)
+		# не можем приводить глобально
+		return v
 
 	if not is_adrptr(v):
 		# если значение из которого конструируем идет 'по значению'
@@ -1258,8 +1266,6 @@ def do_eval_cons(x):
 
 	if value_is_immediate(x):
 		return do_eval_literal(x)
-
-
 
 
 	value = x['value']
@@ -1468,7 +1474,7 @@ def do_eval_literal(x):
 	elif hlir_type.type_is_pointer(xt): return do_eval_pointer(x)
 	elif hlir_type.type_is_char(xt): return llvm_value_num(xt, x['asset'])
 	elif hlir_type.type_is_enum(xt): return llvm_value_num(xt, x['asset'])
-	elif hlir_type.type_is_byte(xt): return llvm_value_num(xt, x['asset'])
+	elif hlir_type.type_is_word(xt): return llvm_value_num(xt, x['asset'])
 	else:
 		error("do_eval_literal: unknown literal", x['ti'])
 		value_print(x)
@@ -1518,6 +1524,7 @@ def do_eval(x):
 	elif k == 'call': y = do_eval_call(x)
 	elif k == 'index': y = do_eval_index(x)
 	elif k == 'access': y = do_eval_access(x)
+	elif k == 'access_module': y = do_eval_access_module(x)
 	elif k == 'slice': y = do_eval_slice(x)
 	elif k in ['sizeof_value', 'sizeof_type', 'lengthof', 'alignof', 'offsetof']:
 		y = do_eval_literal(x)
@@ -1979,13 +1986,15 @@ def print_func_signature(func):
 
 
 
-def print_decl_func(x):
-	out("\ndeclare ")
-	print_func_signature(x['value'])
 
-
-def print_def_func(x):
+def print_def_func(x, declare_only=False):
 	func = x['value']
+
+	if (x['stmt'] == None) or declare_only:
+		#return print_decl_func(x)
+		out("\ndeclare ")
+		print_func_signature(x['value'])
+		return
 
 	fctx = {
 		'func': func,  # cfunc
@@ -2018,8 +2027,11 @@ def print_def_func(x):
 	params = ftype['params']
 	for param in params:
 		param_id = get_id_str(param)
-		vv = llvm_value_stk(param_id, param['type'], param)
-		locals_add(param_id, vv)
+
+		if not hlir_type.type_is_va_list(param['type']):
+			# see: p216
+			vv = llvm_value_stk(param_id, param['type'], param)
+			locals_add(param_id, vv)
 
 
 	# 0, 1, 2 - params; 3 - entry label, 4 - first free register
@@ -2027,6 +2039,34 @@ def print_def_func(x):
 
 	out(" {")
 	indent_up()
+
+	if len(params) > 0:
+		last_param = params[-1]
+		if hlir_type.type_is_va_list(last_param['type']):
+			# :p216
+			# В LLVM va_arg принимает параметром указатель на укзаатель на VA_List!
+			# Но тк мы получаем просто указатель на va_list,
+			# создадим локальную переменную сохраним в нее его,
+			# и будем передавать va_arg указатель на эту локальную переменную
+
+			# 1. создаем лок переменную для *va_arg
+			va_list_srorage = llvm_alloca(foundation.typeFreePointer)
+
+			# 2. сохраняем в нее полученный (параметр) *va_arg
+			va_list_param_id = get_id_str(param)
+
+			lo("store ")
+			print_type(last_param['type'])
+			out(" %%%s" % va_list_param_id)
+			out(", ")
+			llvm_print_type_value(va_list_srorage)
+
+			# 3. добваляем в локалы именно указатель на эту переменную
+			# но называем ее именем самого параметра
+			# чтобы при обращении __va_arg va (будто к параметру va)
+			# генерировался %2 = va_arg i8** %1, i32 (обращ. к указ. на лок. перем.)
+			locals_add(va_list_param_id, va_list_srorage)
+
 
 	# VLA требует чтобы стек был сохранен в начале работы функции
 	# и восстановлен перед возвратом из нее (see: print_stmt_return)
@@ -2038,7 +2078,7 @@ def print_def_func(x):
 		stacksave(stackptr)
 		fctx['stackptr'] = stackptr
 
-	print_stmt_block(func['stmt'])
+	print_stmt_block(x['stmt'])
 
 	if hlir_type.type_eq(ftype['to'], foundation.typeUnit):
 		print_stmt_return({'value': None})
@@ -2052,15 +2092,15 @@ def print_def_func(x):
 
 
 def type_get_aka(t):
-	if 'llvm_alias' in t:
-		return t['llvm_alias']
-	if 'aka' in t:
-		return '%' + t['aka']
+	if 'id' in t:
+		if 'llvm' in t['id']:
+			return t['id']['llvm']
+		return '%' + t['id']['str']
 	return None
 
 
-def print_decl_type(x):
-	out("\n%%%s = type opaque" % get_id_str(x))
+#def print_decl_type(x):
+#	out("\n%%%s = type opaque" % get_id_str(x))
 
 
 def print_def_type(x):
@@ -2085,8 +2125,8 @@ def print_def_type(x):
 
 
 
-def print_def_var(x):
-	is_extern = 'extern' in x['att']
+def print_def_var(x, as_extern=False):
+	is_extern = 'extern' in x['att'] or as_extern
 	is_static = 'static' in x['att']
 
 	#['private', 'internal', 'weak', 'external'] # etc..
@@ -2114,7 +2154,7 @@ def print_def_var(x):
 
 
 
-def print_def_const(x):
+def print_def_const(x, as_extern=False):
 	init_value = x['init_value']
 
 	#if hlir_type.type_is_composite(const_value['type']):
@@ -2220,7 +2260,8 @@ def print_string_as_array(strid, string, char_width):
 		i = i + 1
 
 	if 'zstring' in string['att']:
-		out(", ")
+		if slen > 1:
+			out(", ")
 		print_int_type_for(char_width)
 		out(" 0")
 
@@ -2229,6 +2270,7 @@ def print_string_as_array(strid, string, char_width):
 
 
 def print_strings(strings):
+	out("\n; -- strings --")
 	strno = 0
 	for string in strings:
 		strid = None
@@ -2245,48 +2287,111 @@ def print_strings(strings):
 		string['strid'] = strid
 
 		print_string_as_array(strid, string, char_width)
+	return
 
 
+printed = []
 
-
-# список имен модулей распечатанных в текущей сброке
-printed_modules = []
-
-def print_module(m):
-
-	if m['source_info']['path'] in printed_modules:
-		return
-
-	printed_modules.append(m['source_info']['path'])
-
-
-	for imported_module in m['imports']:
-		print_module(imported_module)
-
-
-	out("\n; -- SOURCE: %s\n" % m['source_info']['name'])
-
-	print_strings(m['strings'])
-
+def een(defs, decl_only=False):
 	isa_prev = None
-
-	for x in m['text']:
+	for x in defs:
 		isa = x['isa']
+		if not 'id' in x:
+			continue
+
+		# Тупейшая Защита от повторного определения
+		# (А они происходят тк импорты и инклуюды сложно сплетены и повтор.)
+		uid = x['module']['id'] + '.' + x['id']['str']
+
+		if uid in printed:
+			continue
+
+		printed.append(uid)
+		#print(uid)
 
 		if isa_prev != isa:
 			out("\n")
 			isa_prev = isa
 
-		if isa == 'decl_func': print_decl_func(x)
-		elif isa == 'decl_type': print_decl_type(x)
-		elif isa == 'def_var': print_def_var(x)
-		elif isa == 'def_const': print_def_const(x)
-		elif isa == 'def_func': print_def_func(x)
-		elif isa == 'def_type': print_def_type(x)
-		elif isa == 'directive': pass
-		elif isa == 'comment': pass
+		if isa == 'def_var':
+			print_def_var(x, as_extern=decl_only)
+
+		elif isa == 'def_const':
+			print_def_const(x, as_extern=decl_only)
+
+		elif isa == 'def_func':
+			print_def_func(x, declare_only=decl_only)
+
+		elif isa == 'def_type':
+			print_def_type(x)
+
+
+# защита от повторного включения
+already_in = []
+def print_included(m):
+	for inc in m['included']:
+		# защита от повторного включения
+		if inc['id'] not in already_in:
+			already_in.append(inc['id'])
+			print_included(inc)
+			een(inc['defs'])
+			een(inc['export_defs'])
+#			out("\n; -- INCLUDED_DEFS --")
+#			een(inc['included_defs'])
+#			out("\n; -- END_INCLUDED_DEFS --")
+
+
+def print_imports(m):
+	for imp_id in m['imports']:
+		imp = m['imports'][imp_id]
+		#print(">>>> %s" % imp['id'])
+		print_included(imp)
+		print_imports(imp)
+
+		#for x in imp['export_defs']:
+		#	print("- %s" % x['id']['str'])
+
+		# только декларируем функции переменные и константы
+		een(imp['defs'], decl_only=True)
+		een(imp['export_defs'], decl_only=True)
+
+
+separatorLine = "\n; " + '-' * 77
+# список имен модулей распечатанных в текущей сброке
+#printed_modules = []
+
+def print_module(m):
+	#if m['source_info']['path'] in printed_modules:
+	#	return
+
+	out("; MODULE: %s\n" % m['id'])
+
+	out("\n; -- print includes --")
+	print_included(m)
+	out("\n; -- end print includes --")
+
+	out("\n; -- print imports --")
+	print_imports(m)
+	out("\n; -- end print imports --")
+
+	# печатаем декларации
+	# из экспортируемой части импортированных модулей
+	"""for imported_module_id in m['imports']:
+		imp = m['imports'][imported_module_id]
+		out(separatorLine)
+		out("\n; declarations from: %s" % (imported_module_id))
+		out(separatorLine)
+		een(imp['export_defs'])
+		out("\n\n")"""
+
+	print_strings(m['strings'])
+
+	een(m['defs'])
+	een(m['export_defs'])
 
 	out("\n\n")
+	return
+
 
 
 def run(module, outname):
@@ -2320,13 +2425,12 @@ def run(module, outname):
 	lo("%Str32 = type [0 x %Char32]")
 	lo("%VA_List = type i8*")
 
+	if 'use_va_arg' in module['att']:
+		lo("declare void @llvm.va_start(i8*)")
+		lo("declare void @llvm.va_copy(i8*, i8*)")
+		lo("declare void @llvm.va_end(i8*)")
 
 	if module['options'] != []:
-		if 'use_extra_args' in module['options']:
-			lo("declare void @llvm.va_start(i8*)")
-			lo("declare void @llvm.va_copy(i8*, i8*)")
-			lo("declare void @llvm.va_end(i8*)")
-
 		# llvm.memcpy intrinsic
 		# <dest> <src> <len> <isvolatile>
 #		if 'use_memcpy' in module['options']:

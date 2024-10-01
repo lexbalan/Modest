@@ -6,20 +6,28 @@ from symtab import Symtab
 
 typeUnit = None
 typeBool = None
-typeByte = None
+#typeByte = None
 typeChar8 = None
 typeChar16 = None
 typeChar32 = None
+typeWord8 = None
+typeWord16 = None
+typeWord32 = None
+typeWord64 = None
+typeWord128 = None
+typeWord256 = None
 typeInt8 = None
 typeInt16 = None
 typeInt32 = None
 typeInt64 = None
 typeInt128 = None
+typeInt256 = None
 typeNat8 = None
 typeNat16 = None
 typeNat32 = None
 typeNat64 = None
 typeNat128 = None
+typeNat256 = None
 typeFloat16 = None
 typeFloat32 = None
 typeFloat64 = None
@@ -60,10 +68,10 @@ foundation = {
 def init():
 	global typeUnit
 	global typeBool
-	global typeByte
 	global typeChar8, typeChar16, typeChar32
-	global typeInt8, typeInt16, typeInt32, typeInt64, typeInt128
-	global typeNat8, typeNat16, typeNat32, typeNat64, typeNat128
+	global typeWord8, typeWord16, typeWord32, typeWord64, typeWord128, typeWord256
+	global typeInt8, typeInt16, typeInt32, typeInt64, typeInt128, typeInt256
+	global typeNat8, typeNat16, typeNat32, typeNat64, typeNat128, typeNat256
 	global typeFloat16, typeFloat32, typeFloat64
 	global typeDecimal32, typeDecimal64, typeDecimal128
 	global typeStr8, typeStr16, typeStr32
@@ -80,12 +88,11 @@ def init():
 	typeUnit = hlir_type_unit()
 	typeBool = hlir_type_bool()
 
-	typeByte = hlir_type_integer(width=8, signed=False)
+	"""typeByte = hlir_type_integer(width=8, signed=False)
 	typeByte['kind'] = 'byte'
-	typeByte['aka'] = 'Byte'
+	typeByte['id'] = {'str': 'Byte', 'c': 'uint8_t'}
 	typeByte['ops'] = BYTE_OPS
-	typeByte['c_alias'] = 'uint8_t'
-	typeByte['llvm_alias'] = 'i8'
+	typeByte['llvm_alias'] = 'i8'"""
 
 	#
 	typeChar8 = hlir_type_char(width=8)
@@ -93,11 +100,20 @@ def init():
 	typeChar32 = hlir_type_char(width=32)
 
 	#
+	typeWord8 = hlir_type_word(width=8)
+	typeWord16 = hlir_type_word(width=16)
+	typeWord32 = hlir_type_word(width=32)
+	typeWord64 = hlir_type_word(width=64)
+	typeWord128 = hlir_type_word(width=128)
+	typeWord256 = hlir_type_word(width=256)
+
+	#
 	typeInt8 = hlir_type_integer(width=8)
 	typeInt16 = hlir_type_integer(width=16)
 	typeInt32 = hlir_type_integer(width=32)
 	typeInt64 = hlir_type_integer(width=64)
 	typeInt128 = hlir_type_integer(width=128)
+	typeInt256 = hlir_type_integer(width=256)
 
 	#
 	typeNat8 = hlir_type_integer(width=8, signed=False)
@@ -105,6 +121,7 @@ def init():
 	typeNat32 = hlir_type_integer(width=32, signed=False)
 	typeNat64 = hlir_type_integer(width=64, signed=False)
 	typeNat128 = hlir_type_integer(width=128, signed=False)
+	typeNat256 = hlir_type_integer(width=256, signed=False)
 
 	#
 	typeFloat32 = hlir_type_float(width=32)
@@ -119,11 +136,11 @@ def init():
 	# не нужно делать decl тк нет собственного имени у этого типа
 
 	typeStr8 = hlir_type_array(of=typeChar8)
-	typeStr8['aka'] = 'Str8'
+	typeStr8['id'] = {'str': 'Str8'}
 	typeStr16 = hlir_type_array(of=typeChar16)
-	typeStr16['aka'] = 'Str16'
+	typeStr16['id'] = {'str': 'Str16'}
 	typeStr32 = hlir_type_array(of=typeChar32)
-	typeStr32['aka'] = 'Str32'
+	typeStr32['id'] = {'str': 'Str32'}
 
 
 	typeVA_List = {
@@ -134,9 +151,13 @@ def init():
 		'size': 0,
 		'align': 1,
 		'width': 0,
-		'aka': 'VA_List',
-		'c_alias': 'va_list',
-		'llvm_alias': 'i8*',
+		'id': {
+			'isa': 'id',
+			'str': 'va_list',
+			'c':'va_list',
+			'llvm':'i8*',
+			'ti': None
+		},
 		'att': [],
 		'ops': [],
 		'ti': None
@@ -162,6 +183,7 @@ def type_select_int(sz):
 	elif sz <= 32: t = typeInt32
 	elif sz <= 64: t = typeInt64
 	elif sz <= 128: t = typeInt128
+	elif sz <= 256: t = typeInt256
 	assert(t != None)
 	return t
 
@@ -173,6 +195,7 @@ def type_select_nat(sz):
 	elif sz <= 32: t = typeNat32
 	elif sz <= 64: t = typeNat64
 	elif sz <= 128: t = typeNat128
+	elif sz <= 256: t = typeNat256
 	assert(t != None)
 	return t
 

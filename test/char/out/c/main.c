@@ -1,18 +1,18 @@
-// test/char/src/main.cm
+// ./out/c/main.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
+#include "main.h"
 
 
 
+#define main_utf8Char  "s"
+#define main_utf16Char  u"Я"
+#define main_utf32Char  U"🐀"
+int main();
 
-
-#define utf8Char  "s"
-#define utf16Char  u"Я"
-#define utf32Char  U"🐀"
 
 
 int main()

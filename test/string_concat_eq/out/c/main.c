@@ -1,27 +1,25 @@
-// test/string_concat_eq/src/main.cm
+// ./out/c/main.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
+#include "main.h"
 
 
 
+#define main_hello  "Hello"
+#define main_world  "World"
+#define main_party_corn  U"🎉"
+#define main_greeting  (main_hello " " main_world)
+#define main_test  "test"
+int main();
 
-#define hello  "Hello"
-#define world  "World"
-#define party_corn  U"🎉"
-
-#define greeting  (hello " " world)//+ " " + party_corn
-
-
-#define test  "test"
 
 
 int main()
 {
-	printf("%s\n", (char *)greeting);
+	printf("%s\n", (char *)main_greeting);
 
 	if (true) {
 		printf("test ok.\n");

@@ -29,10 +29,11 @@ RELATIONAL_OPS = ['lt', 'gt', 'le', 'ge']
 ARITHMETICAL_OPS = ['add', 'sub', 'mul', 'div', 'rem', 'negative']
 LOGICAL_OPS = ['or', 'xor', 'and', 'not']
 
-INT_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS + LOGICAL_OPS
+WORD_OPS = CONS_OP + EQ_OPS + LOGICAL_OPS
+INT_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS #+ LOGICAL_OPS
 FLOAT_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS
 BOOL_OPS = CONS_OP + EQ_OPS + LOGICAL_OPS
-BYTE_OPS = CONS_OP + EQ_OPS + LOGICAL_OPS
+#BYTE_OPS = CONS_OP + EQ_OPS + LOGICAL_OPS
 CHAR_OPS = CONS_OP + EQ_OPS
 ENUM_OPS = CONS_OP + EQ_OPS
 PTR_OPS = CONS_OP + EQ_OPS + ['deref']
@@ -56,7 +57,7 @@ def hlir_type_bad(x):
 
 
 uid = 0
-def hlir_type_undefined(x):
+def hlir_type_undefined(ti):
 	global uid
 	uid = uid + 1
 	return {
@@ -66,11 +67,11 @@ def hlir_type_undefined(x):
 		'width': 0,
 		'size': 0,
 		'align': 1,
-		'ast_type': x,
+		#'ast_type': x,
 		'uid': uid,
 		'ops': [],
 		'att': [],
-		'ti': x['ti']
+		'ti': ti
 	}
 
 
@@ -82,9 +83,7 @@ def hlir_type_unit():
 		'width': 0,
 		'size': 0,
 		'align': 0,
-		'aka': 'Unit',
-		'c_alias': 'void',
-		'llvm_alias': 'void',
+		'id': {'isa': 'id', 'str': 'Unit', 'c': 'void', 'llvm': 'void', 'ti': None},
 		'ops': CONS_OP,
 		'att': [],
 		'ti': None
@@ -99,9 +98,7 @@ def hlir_type_bool():
 		'width': 1,
 		'size': 1,
 		'align': 1,
-		'aka': 'Bool',
-		'c_alias': 'bool',
-		'llvm_alias': 'i1',
+		'id': {'isa': 'id', 'str': 'Bool', 'c': 'bool', 'llvm': 'i1', 'ti': None},
 		'ops': BOOL_OPS,
 		'att': [],
 		'ti': None
@@ -122,13 +119,26 @@ def hlir_type_char(width, ti=None):
 		'width': width,
 		'size': size,
 		'align': size,
-		'aka': 'Char%d' % width,
-		'c_alias': calias,
-		'llvm_alias': 'i%d' % width,
+		'id': {
+			'isa': 'id',
+			'str': 'Char%d' % width,
+			'c': calias,
+			'llvm': 'i%d' % width,
+			'ti': None
+		},
+
 		'ops': CHAR_OPS,
 		'att': [],
 		'ti': ti
 	}
+
+
+def hlir_type_word(width, ti=None):
+	t = hlir_type_integer(width, signed=False, ti=ti)
+	t['kind'] = 'word'
+	t['ops'] = WORD_OPS
+	t['id']['str'] = 'Word%d' % width
+	return t
 
 
 def hlir_type_integer(width, signed=True, ti=None):
@@ -158,9 +168,15 @@ def hlir_type_integer(width, signed=True, ti=None):
 		'size': size,
 		'align': size,
 		'signed': signed,
-		'aka': aka,
-		'c_alias': calias,
-		'llvm_alias': 'i%d' % width,
+
+		'id': {
+			'isa': 'id',
+			'str': aka,
+			'c': calias,
+			'llvm': 'i%d' % width,
+			'ti': None
+		},
+
 		'ops': INT_OPS,
 		'att': [],
 		'ti': ti
@@ -183,9 +199,15 @@ def hlir_type_float(width, ti=None):
 		'size': size,
 		'align': size,
 		'signed': True,
-		'aka': 'Float32',
-		'c_alias': calias,
-		'llvm_alias': calias,
+
+		'id': {
+			'isa': 'id',
+			'str': 'Float32',
+			'c': calias,
+			'llvm': calias,
+			'ti': None
+		},
+
 		'ops': FLOAT_OPS,
 		'att': [],
 		'ti': ti
@@ -356,8 +378,14 @@ def type_eq_integer(a, b, opt):
 	return True
 
 
-
 def type_eq_char(a, b, opt):
+	if a['width'] != b['width']:
+		return False
+
+	return True
+
+
+def type_eq_word(a, b, opt):
 	if a['width'] != b['width']:
 		return False
 
@@ -388,8 +416,8 @@ def type_eq_array(a, b, opt):
 
 
 def get_type_root_id(t):
-	if 'aka' in t:
-		return t['aka']
+	if 'id' in t:
+		return t['id']['str']
 	return None
 
 
@@ -455,11 +483,6 @@ def type_eq(a, b, opt=[]):
 	if a['kind'] == 'bad' or b['kind'] == 'bad': return True
 	if a['kind'] != b['kind']: return False
 
-	"""if ('aka' in a) or ('aka' in b):
-		if ('aka' in a) and ('aka' in b):
-			if a['aka'] == b['aka']:
-				return True"""
-
 	# проверять аттрибуты (volatile, const)
 	# использую для C чтобы можно было более строго проверить типы
 	# напр для явного приведения в беканде C *volatile uint32_t -> uint32_t
@@ -487,6 +510,7 @@ def type_eq(a, b, opt=[]):
 	elif k == 'enum': return type_eq_enum(a, b, opt)
 	elif k == 'float': return type_eq_float(a, b, opt)
 	elif k == 'char': return type_eq_char(a, b, opt)
+	elif k == 'word': return type_eq_word(a, b, opt)
 	elif k == 'undefined': return type_eq_undefined(a, b, opt)
 	elif k == 'va_list': return b['kind'] == 'va_list'
 	assert(False)
@@ -513,12 +537,16 @@ def type_is_bool(t):
 	return t['kind'] == 'bool'
 
 
-def type_is_byte(t):
-	return t['kind'] == 'byte'
+#def type_is_byte(t):
+#	return t['kind'] == 'byte'
 
 
 def type_is_char(t):
 	return t['kind'] == 'char'
+
+
+def type_is_word(t):
+	return t['kind'] == 'word'
 
 
 def type_is_string(t):
@@ -724,7 +752,7 @@ def type_copy(t):
 
 
 def type_get_size(t):
-	assert(not type_is_vla(t))  #TODO: временная защита
+	assert(not type_is_vla(t))  #TODO: временная защита от VLA
 	return t['size']
 
 
@@ -756,8 +784,8 @@ def print_list_by(lst, method):
 
 
 def type_id(t):
-	if 'aka' in t:
-		return t['aka']
+	if 'id' in t:
+		return t['id']['str']
 	return None
 
 
@@ -766,8 +794,8 @@ def type_id(t):
 # type#id = MyInt
 # root#id = Int32
 def type_root_id(t):
-	if 'aka' in t:
-		return t['aka']
+	if 'id' in t:
+		return t['id']['str']
 	return None
 
 
@@ -860,8 +888,8 @@ def type_print(t, print_aka=True):
 		type_print_record(t, print_aka)
 	elif type_is_bool(t):
 		print("Bool", end='')
-	elif type_is_byte(t):
-		print("Byte", end='')
+	elif type_is_word(t):
+		print("Word%d" % t['width'], end='')
 	elif type_is_char(t):
 		print("Char%d" % t['width'], end='')
 
@@ -948,13 +976,13 @@ def select_common_type(a, b):
 				return b
 
 
-		if a['kind'] == 'byte':
-			if b['kind'] == 'int':
+		if a['kind'] == 'word':
+			if b['kind'] == 'int' and b['generic']:
 				return a
 
 
-		if b['kind'] == 'byte':
-			if a['kind'] == 'int':
+		if b['kind'] == 'word':
+			if a['kind'] == 'int' and a['generic']:
 				return b
 
 		# array && string | string && array

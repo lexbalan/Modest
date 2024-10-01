@@ -29,9 +29,11 @@ def nl_indent(nl=1):
 
 
 def get_id_str(x):
-	id_str = x['id']['str']
-	#if 'cm_alias' in x:
-	#	id_str = '"%s"' % x['llvm_alias']
+	id_str = ""
+	if not 'cm' in x:
+		id_str = x['id']['str']
+	else:
+		id_str = x['id']['cm']
 	return id_str
 
 
@@ -47,7 +49,7 @@ aprecedence = [
 	['add', 'sub'], #8
 	['mul', 'div', 'rem'], #9
 	['positive', 'negative', 'not', 'cons', 'ref', 'deref', 'sizeof', 'alignof', 'offsetof', 'lengthof'], #10
-	['call', 'index', 'access', 'slice'], #11
+	['call', 'index', 'access', 'access_module', 'slice'], #11
 	['num', 'var', 'func', 'str', 'enum', 'record', 'array'] #12
 ]
 
@@ -179,9 +181,10 @@ def print_type_func(t, extra_args=False):
 
 
 def get_type_id(t):
-	if 'aka' in t:
-		if 'aka' != None:
-			return t['aka']
+	if 'id' in t:
+		if 'cm' in t['id']:
+			return t['cm']
+		return t['id']['str']
 
 	return None
 
@@ -290,6 +293,12 @@ def print_value_access(v, ctx):
 	print_value(left, need_wrap=need_wrap)
 	out(".")
 	print_id(v['field'])
+
+
+def print_value_access_module(v, ctx):
+	left = v['left']
+	id_str = get_id_str(v['right'])
+	out("%s.%s" % (left['id'], id_str))
 
 
 def print_cast(t, v, ctx=[]):
@@ -643,6 +652,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 	elif k == 'call': print_value_call(x, ctx)
 	elif k == 'index': print_value_index(x, ctx)
 	elif k == 'access': print_value_access(x, ctx)
+	elif k == 'access_module': print_value_access_module(x, ctx)
 	elif k == 'slice': print_value_slice(x, ctx)
 	elif k == 'sizeof_value': print_value_sizeof_value(x, ctx)
 	elif k == 'sizeof_type': print_value_sizeof_type(x, ctx)
@@ -810,20 +820,23 @@ def print_stmt_block(s):
 
 
 
+"""
 def print_decl_func(x):
 	func = x['value']
 	out('func ')
 	print_id(func)
 	print_type(func['type'])
-
+"""
 
 def print_def_func(x):
+	if x['stmt'] == None:
+		return
 	func = x['value']
 	ft = func['type']
 	out('func ')
 	print_id(func)
 	print_type_func(ft, extra_args=ft['extra_args'])
-	print_stmt_block(func['stmt'])
+	print_stmt_block(x['stmt'])
 
 
 def print_decl_type(x):
@@ -857,10 +870,10 @@ def print_def_const(x):
 
 
 def print_import(x):
-	s = x['str']
-	if 'c-no-print' in x['att']:
-		out("@attribute(\"c-no-print\")\n")
-	out("import \"%s\"" % s)
+	if not x['include']:
+		out("import \"%s\"" % x['str'])
+	else:
+		out("include \"%s\"" % x['str'])
 
 
 def print_directive(x):
@@ -868,33 +881,37 @@ def print_directive(x):
 	elif x['kind'] == 'c_include': out("@c_include \"%s\"" % x['c_name'])
 
 
+def print_def(x):
+	isa = x['isa']
+
+	if isa != 'comment':
+		newline(n=x['nl'])
+
+	if 'export' in x:
+		if x['export']:
+			out("export ")
+
+	if isa == 'def_var': print_def_var(x)
+	elif isa == 'def_const': print_def_const(x)
+	elif isa == 'def_func': print_def_func(x)
+	elif isa == 'def_type': print_def_type(x)
+	elif isa == 'directive': print_directive(x)
+	elif isa == 'comment': print_comment(x)
+
+
 def run(module, outname):
 	from main import features
-	is_header = features.get('header')
+	#is_header = features.get('header')
 
-	if is_header: outname = outname + '.hm'
-	else: outname = outname + '.cm'
+	output_open(outname + '.m')
 
-	output_open(outname)
+	for x in module['defs']:
+		print_def(x)
 
-
-	for x in module['text']:
-		isa = x['isa']
-
-		if isa != 'comment':
-			newline(n=x['nl'])
-
-		if isa == 'def_var': print_def_var(x)
-		elif isa == 'def_const': print_def_const(x)
-		elif isa == 'def_func': print_def_func(x)
-		elif isa == 'def_type': print_def_type(x)
-		elif isa == 'decl_func': print_decl_func(x)
-		elif isa == 'decl_type': print_decl_type(x)
-		elif isa == 'directive': print_directive(x)
-		elif isa == 'comment': print_comment(x)
+	for x in module['export_defs']:
+		print_def(x)
 
 	out("\n\n")
-
 	output_close()
 
 

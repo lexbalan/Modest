@@ -29,6 +29,12 @@ target triple = "arm64-apple-macosx12.0.0"
 declare void @llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)
 declare void @llvm.memset.p0.i32(i8*, i8, i32, i1)
 
+declare i8* @llvm.stacksave()
+
+declare void @llvm.stackrestore(i8*)
+
+
+
 %CPU.Word = type i64
 define weak i1 @memeq(i8* %mem0, i8* %mem1, i64 %len) {
 	%1 = udiv i64 %len, 8
@@ -93,124 +99,15 @@ break_2:
 	ret i1 1
 }
 
+; MODULE: utf
 
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/system.hm
+; -- print includes --
+; -- end print includes --
+; -- print imports --
+; -- end print imports --
+; -- strings --
 
-
-
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes64.hm
-
-
-
-%Str = type %Str8
-%Char = type i8
-%ConstChar = type %Char
-%SignedChar = type i8
-%UnsignedChar = type i8
-%Short = type i16
-%UnsignedShort = type i16
-%Int = type i32
-%UnsignedInt = type i32
-%LongInt = type i64
-%UnsignedLongInt = type i64
-%Long = type i64
-%UnsignedLong = type i64
-%LongLong = type i64
-%UnsignedLongLong = type i64
-%LongLongInt = type i64
-%UnsignedLongLongInt = type i64
-%Float = type double
-%Double = type double
-%LongDouble = type double
-
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/ctypes.hm
-
-
-
-
-%Socklen_T = type i32
-%SizeT = type %UnsignedLongInt
-%SSizeT = type %LongInt
-%PidT = type i32
-%UidT = type i32
-%GidT = type i32
-%USecondsT = type i32
-%IntptrT = type i64
-%OffT = type i64
-%PtrToConst = type i8*
-
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/libc/stdio.hm
-
-
-
-
-%File = type opaque
-%FposT = type opaque
-
-%CharStr = type %Str
-%ConstCharStr = type %CharStr
-
-
-declare %Int @fclose(%File* %f)
-declare %Int @feof(%File* %f)
-declare %Int @ferror(%File* %f)
-declare %Int @fflush(%File* %f)
-declare %Int @fgetpos(%File* %f, %FposT* %pos)
-declare %File* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
-declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
-declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
-declare %File* @freopen(%ConstCharStr* %filename, %ConstCharStr* %mode, %File* %f)
-declare %Int @fseek(%File* %stream, %LongInt %offset, %Int %whence)
-declare %Int @fsetpos(%File* %f, %FposT* %pos)
-declare %LongInt @ftell(%File* %f)
-declare %Int @remove(%ConstCharStr* %filename)
-declare %Int @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
-declare void @rewind(%File* %f)
-declare void @setbuf(%File* %f, %CharStr* %buffer)
-
-
-declare %Int @setvbuf(%File* %f, %CharStr* %buffer, %Int %mode, %SizeT %size)
-declare %File* @tmpfile()
-declare %CharStr* @tmpnam(%CharStr* %str)
-declare %Int @printf(%ConstCharStr* %s, ...)
-declare %Int @scanf(%ConstCharStr* %s, ...)
-declare %Int @fprintf(%File* %stream, %Str* %format, ...)
-declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
-declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
-declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, %VA_List %args)
-declare %Int @vprintf(%ConstCharStr* %format, %VA_List %args)
-declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, %VA_List %args)
-declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, %VA_List %args)
-declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, %VA_List %arg)
-declare %Int @fgetc(%File* %f)
-declare %Int @fputc(%Int %char, %File* %f)
-declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
-declare %Int @fputs(%ConstCharStr* %str, %File* %f)
-declare %Int @getc(%File* %f)
-declare %Int @getchar()
-declare %CharStr* @gets(%CharStr* %str)
-declare %Int @putc(%Int %char, %File* %f)
-declare %Int @putchar(%Int %char)
-declare %Int @puts(%ConstCharStr* %str)
-declare %Int @ungetc(%Int %char, %File* %f)
-declare void @perror(%ConstCharStr* %str)
-
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/misc/utf.hm
-
-
-
-; -- SOURCE: /Users/alexbalan/p/Modest/lib/misc/utf.cm
-
-
-
-
-
-define i8 @utf32_to_utf8(i32 %c, [4 x i8]* %buf) {
+define i8 @utf_utf32_to_utf8(i32 %c, [4 x i8]* %buf) {
 	%1 = bitcast i32 %c to i32
 	%2 = icmp ule i32 %1, 127
 	br i1 %2 , label %then_0, label %else_0
@@ -224,72 +121,75 @@ else_0:
 	%6 = icmp ule i32 %1, 2047
 	br i1 %6 , label %then_1, label %else_1
 then_1:
-	%7 = lshr i32 %1, 6
-	%8 = and i32 %7, 31
-	%9 = lshr i32 %1, 0
-	%10 = and i32 %9, 63
-	%11 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
-	%12 = or i32 192, %8
-	%13 = trunc i32 %12 to i8
-	store i8 %13, i8* %11
-	%14 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 1
-	%15 = or i32 128, %10
-	%16 = trunc i32 %15 to i8
-	store i8 %16, i8* %14
+	%7 = bitcast i32 %1 to i32
+	%8 = lshr i32 %7, 6
+	%9 = and i32 %8, 31
+	%10 = lshr i32 %7, 0
+	%11 = and i32 %10, 63
+	%12 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
+	%13 = or i32 192, %9
+	%14 = trunc i32 %13 to i8
+	store i8 %14, i8* %12
+	%15 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 1
+	%16 = or i32 128, %11
+	%17 = trunc i32 %16 to i8
+	store i8 %17, i8* %15
 	ret i8 2
 	br label %endif_1
 else_1:
-	%18 = icmp ule i32 %1, 65535
-	br i1 %18 , label %then_2, label %else_2
+	%19 = icmp ule i32 %1, 65535
+	br i1 %19 , label %then_2, label %else_2
 then_2:
-	%19 = lshr i32 %1, 12
-	%20 = and i32 %19, 15
-	%21 = lshr i32 %1, 6
-	%22 = and i32 %21, 63
-	%23 = lshr i32 %1, 0
+	%20 = bitcast i32 %1 to i32
+	%21 = lshr i32 %20, 12
+	%22 = and i32 %21, 15
+	%23 = lshr i32 %20, 6
 	%24 = and i32 %23, 63
-	%25 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
-	%26 = or i32 224, %20
-	%27 = trunc i32 %26 to i8
-	store i8 %27, i8* %25
-	%28 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 1
-	%29 = or i32 128, %22
-	%30 = trunc i32 %29 to i8
-	store i8 %30, i8* %28
-	%31 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 2
-	%32 = or i32 128, %24
-	%33 = trunc i32 %32 to i8
-	store i8 %33, i8* %31
+	%25 = lshr i32 %20, 0
+	%26 = and i32 %25, 63
+	%27 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
+	%28 = or i32 224, %22
+	%29 = trunc i32 %28 to i8
+	store i8 %29, i8* %27
+	%30 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 1
+	%31 = or i32 128, %24
+	%32 = trunc i32 %31 to i8
+	store i8 %32, i8* %30
+	%33 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 2
+	%34 = or i32 128, %26
+	%35 = trunc i32 %34 to i8
+	store i8 %35, i8* %33
 	ret i8 3
 	br label %endif_2
 else_2:
-	%35 = icmp ule i32 %1, 1114111
-	br i1 %35 , label %then_3, label %endif_3
+	%37 = icmp ule i32 %1, 1114111
+	br i1 %37 , label %then_3, label %endif_3
 then_3:
-	%36 = lshr i32 %1, 18
-	%37 = and i32 %36, 7
-	%38 = lshr i32 %1, 12
-	%39 = and i32 %38, 63
-	%40 = lshr i32 %1, 6
-	%41 = and i32 %40, 63
-	%42 = lshr i32 %1, 0
-	%43 = and i32 %42, 63
-	%44 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
-	%45 = or i32 240, %37
-	%46 = trunc i32 %45 to i8
-	store i8 %46, i8* %44
-	%47 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 1
-	%48 = or i32 128, %39
+	%38 = bitcast i32 %1 to i32
+	%39 = lshr i32 %38, 18
+	%40 = and i32 %39, 7
+	%41 = lshr i32 %38, 12
+	%42 = and i32 %41, 63
+	%43 = lshr i32 %38, 6
+	%44 = and i32 %43, 63
+	%45 = lshr i32 %38, 0
+	%46 = and i32 %45, 63
+	%47 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
+	%48 = or i32 240, %40
 	%49 = trunc i32 %48 to i8
 	store i8 %49, i8* %47
-	%50 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 2
-	%51 = or i32 128, %41
+	%50 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 1
+	%51 = or i32 128, %42
 	%52 = trunc i32 %51 to i8
 	store i8 %52, i8* %50
-	%53 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 3
-	%54 = or i32 128, %43
+	%53 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 2
+	%54 = or i32 128, %44
 	%55 = trunc i32 %54 to i8
 	store i8 %55, i8* %53
+	%56 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 3
+	%57 = or i32 128, %46
+	%58 = trunc i32 %57 to i8
+	store i8 %58, i8* %56
 	ret i8 4
 	br label %endif_3
 endif_3:
@@ -302,9 +202,7 @@ endif_0:
 	ret i8 0
 }
 
-
-
-define i8 @utf16_to_utf32([0 x i16]* %c, i32* %result) {
+define i8 @utf_utf16_to_utf32([0 x i16]* %c, i32* %result) {
 	%1 = getelementptr inbounds [0 x i16], [0 x i16]* %c, i32 0, i32 0
 	%2 = load i16, i16* %1
 	%3 = zext i16 %2 to i32
@@ -321,32 +219,35 @@ else_0:
 	%9 = icmp uge i32 %3, 56320
 	br i1 %9 , label %then_1, label %else_1
 then_1:
-	;error("Недопустимая кодовая последовательность.")
+	;error("Illegal code sequence")
 	br label %endif_1
 else_1:
 	%10 = alloca i32, align 4
-	%11 = and i32 %3, 1023
-	%12 = shl i32 %11, 10
-	store i32 %12, i32* %10
-	%13 = getelementptr inbounds [0 x i16], [0 x i16]* %c, i32 0, i32 1
-	%14 = load i16, i16* %13
-	%15 = zext i16 %14 to i32
-	%16 = icmp ult i32 %15, 56320
-	%17 = icmp ugt i32 %15, 57343
-	%18 = or i1 %16, %17
-	br i1 %18 , label %then_2, label %else_2
+	%11 = bitcast i32 %3 to i32
+	%12 = and i32 %11, 1023
+	%13 = shl i32 %12, 10
+	store i32 %13, i32* %10
+	%14 = getelementptr inbounds [0 x i16], [0 x i16]* %c, i32 0, i32 1
+	%15 = load i16, i16* %14
+	%16 = zext i16 %15 to i32
+	%17 = icmp ult i32 %16, 56320
+	%18 = icmp ugt i32 %16, 57343
+	%19 = or i1 %17, %18
+	br i1 %19 , label %then_2, label %else_2
 then_2:
-	;error("Недопустимая кодовая последовательность.")
+	;error("Illegal code sequence")
 	br label %endif_2
 else_2:
-	%19 = load i32, i32* %10
-	%20 = and i32 %15, 1023
-	%21 = or i32 %19, %20
-	store i32 %21, i32* %10
-	%22 = load i32, i32* %10
-	%23 = add i32 %22, 65536
-	%24 = bitcast i32 %23 to i32
-	store i32 %24, i32* %result
+	%20 = load i32, i32* %10
+	%21 = bitcast i32 %16 to i32
+	%22 = and i32 %21, 1023
+	%23 = or i32 %20, %22
+	store i32 %23, i32* %10
+	%24 = load i32, i32* %10
+	%25 = bitcast i32 %24 to i32
+	%26 = add i32 %25, 65536
+	%27 = bitcast i32 %26 to i32
+	store i32 %27, i32* %result
 	ret i8 2
 	br label %endif_2
 endif_2:
@@ -355,144 +256,6 @@ endif_1:
 	br label %endif_0
 endif_0:
 	ret i8 0
-}
-
-
-
-define void @utf8_putchar(i8 %c) {
-	%1 = sext i8 %c to i32
-	%2 = call %Int @putchar(i32 %1)
-	ret void
-}
-
-define void @utf16_putchar(i16 %c) {
-	%1 = alloca [2 x i16], align 2
-	%2 = getelementptr inbounds [2 x i16], [2 x i16]* %1, i32 0, i32 0
-	store i16 %c, i16* %2
-	%3 = getelementptr inbounds [2 x i16], [2 x i16]* %1, i32 0, i32 1
-	store i16 0, i16* %3
-	%4 = alloca i32, align 4
-	%5 = bitcast [2 x i16]* %1 to [0 x i16]*
-	%6 = call i8 @utf16_to_utf32([0 x i16]* %5, i32* %4)
-	%7 = load i32, i32* %4
-	call void @utf32_putchar(i32 %7)
-	ret void
-}
-
-define void @utf32_putchar(i32 %c) {
-	%1 = alloca [4 x i8], align 1
-	%2 = call i8 @utf32_to_utf8(i32 %c, [4 x i8]* %1)
-	%3 = sext i8 %2 to %Int
-	%4 = alloca i32, align 4
-	store i32 0, i32* %4
-	br label %again_1
-again_1:
-	%5 = load i32, i32* %4
-	%6 = icmp slt i32 %5, %3
-	br i1 %6 , label %body_1, label %break_1
-body_1:
-	%7 = load i32, i32* %4
-	%8 = getelementptr inbounds [4 x i8], [4 x i8]* %1, i32 0, i32 %7
-	%9 = load i8, i8* %8
-	call void @utf8_putchar(i8 %9)
-	%10 = load i32, i32* %4
-	%11 = add i32 %10, 1
-	store i32 %11, i32* %4
-	br label %again_1
-break_1:
-	ret void
-}
-
-
-
-define void @utf8_puts(%Str8* %s) {
-	%1 = alloca i32, align 4
-	store i32 0, i32* %1
-	br label %again_1
-again_1:
-	br i1 1 , label %body_1, label %break_1
-body_1:
-	%2 = load i32, i32* %1
-	%3 = getelementptr inbounds %Str8, %Str8* %s, i32 0, i32 %2
-	%4 = load i8, i8* %3
-	%5 = icmp eq i8 %4, 0
-	br i1 %5 , label %then_0, label %endif_0
-then_0:
-	br label %break_1
-	br label %endif_0
-endif_0:
-	call void @utf8_putchar(i8 %4)
-	%7 = load i32, i32* %1
-	%8 = add i32 %7, 1
-	store i32 %8, i32* %1
-	br label %again_1
-break_1:
-	ret void
-}
-
-define void @utf16_puts(%Str16* %s) {
-	%1 = alloca i32, align 4
-	store i32 0, i32* %1
-	br label %again_1
-again_1:
-	br i1 1 , label %body_1, label %break_1
-body_1:
-	; нельзя просто так взять и вызвать utf16_putchar
-	; тк в строке может быть суррогатная пара UTF_16 символов
-	%2 = load i32, i32* %1
-	%3 = getelementptr inbounds %Str16, %Str16* %s, i32 0, i32 %2
-	%4 = load i16, i16* %3
-	%5 = icmp eq i16 %4, 0
-	br i1 %5 , label %then_0, label %endif_0
-then_0:
-	br label %break_1
-	br label %endif_0
-endif_0:
-	%7 = alloca i32, align 4
-	%8 = load i32, i32* %1
-	%9 = getelementptr inbounds %Str16, %Str16* %s, i32 0, i32 %8
-	%10 = bitcast i16* %9 to [0 x i16]*
-	%11 = call i8 @utf16_to_utf32([0 x i16]* %10, i32* %7)
-	%12 = icmp eq i8 %11, 0
-	br i1 %12 , label %then_1, label %endif_1
-then_1:
-	br label %break_1
-	br label %endif_1
-endif_1:
-	%14 = load i32, i32* %7
-	call void @utf32_putchar(i32 %14)
-	%15 = load i32, i32* %1
-	%16 = sext i8 %11 to i32
-	%17 = add i32 %15, %16
-	store i32 %17, i32* %1
-	br label %again_1
-break_1:
-	ret void
-}
-
-define void @utf32_puts(%Str32* %s) {
-	%1 = alloca i32, align 4
-	store i32 0, i32* %1
-	br label %again_1
-again_1:
-	br i1 1 , label %body_1, label %break_1
-body_1:
-	%2 = load i32, i32* %1
-	%3 = getelementptr inbounds %Str32, %Str32* %s, i32 0, i32 %2
-	%4 = load i32, i32* %3
-	%5 = icmp eq i32 %4, 0
-	br i1 %5 , label %then_0, label %endif_0
-then_0:
-	br label %break_1
-	br label %endif_0
-endif_0:
-	call void @utf32_putchar(i32 %4)
-	%7 = load i32, i32* %1
-	%8 = add i32 %7, 1
-	store i32 %8, i32* %1
-	br label %again_1
-break_1:
-	ret void
 }
 
 

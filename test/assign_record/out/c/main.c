@@ -1,24 +1,24 @@
-// test/assign_record/src/main.cm
+// ./out/c/main.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
-
-typedef struct Point Point;
+#include "main.h"
 
 
 
 
-struct Point {
+
+struct main_Point {
 	int32_t x;
 	int32_t y;
 };
+int main();
 
-static Point globalPoint0 = {.x = 10, .y = 20};
-static Point globalPoint1 = {};
 
+static main_Point globalPoint0 = {.x = 10, .y = 20};
+static main_Point globalPoint1 = {};
 
 int main()
 {
@@ -29,7 +29,7 @@ int main()
 	printf("globalPoint1.x = %d\n", globalPoint1.x);
 	printf("globalPoint1.x = %d\n", globalPoint1.y);
 
-	if (memcmp(&globalPoint0, &globalPoint1, sizeof(Point)) == 0) {
+	if (memcmp(&globalPoint0, &globalPoint1, sizeof(main_Point)) == 0) {
 		printf("globalPoint test passed\n");
 	} else {
 		printf("globalPoint test failed\n");
@@ -37,17 +37,17 @@ int main()
 
 	// local
 
-	Point localPoint0;
-	localPoint0 = (Point){.x = 10, .y = 20};
-	Point localPoint1;
-	localPoint1 = (Point){};
+	main_Point localPoint0;
+	localPoint0 = (main_Point){.x = 10, .y = 20};
+	main_Point localPoint1;
+	localPoint1 = (main_Point){};
 
 	localPoint1 = localPoint0;
 
 	printf("localPoint1.x = %d\n", localPoint1.x);
 	printf("localPoint1.x = %d\n", localPoint1.y);
 
-	if (memcmp(&localPoint0, &localPoint1, sizeof(Point)) == 0) {
+	if (memcmp(&localPoint0, &localPoint1, sizeof(main_Point)) == 0) {
 		printf("localPoint test passed\n");
 	} else {
 		printf("localPoint test failed\n");

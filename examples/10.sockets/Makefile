@@ -14,20 +14,20 @@ all: LLVM
 
 
 CM:
-	mcc -o $(CMPREFIX)/client -mbackend=cm $(INDIR)/client.cm
-	mcc -o $(CMPREFIX)/server -mbackend=cm $(INDIR)/server.cm
+	mcc -o $(CMPREFIX)/client -mbackend=cm $(INDIR)/client.m
+	mcc -o $(CMPREFIX)/server -mbackend=cm $(INDIR)/server.m
 
 
 LLVM:
-	mcc -o $(LLVMPREFIX)/client -funsafe -mbackend=llvm $(INDIR)/client.cm
-	mcc -o $(LLVMPREFIX)/server -funsafe -mbackend=llvm $(INDIR)/server.cm
+	mcc -o $(LLVMPREFIX)/client -funsafe -mbackend=llvm $(INDIR)/client.m
+	mcc -o $(LLVMPREFIX)/server -funsafe -mbackend=llvm $(INDIR)/server.m
 	clang -oclient $(LLVMPREFIX)/client.ll
 	clang -oserver $(LLVMPREFIX)/server.ll
 
 
 C:
-	mcc -o $(CPREFIX)/client -funsafe -mbackend=c $(INDIR)/client.cm
-	mcc -o $(CPREFIX)/server -funsafe -mbackend=c $(INDIR)/server.cm
+	mcc -o $(CPREFIX)/client -funsafe -mbackend=c $(INDIR)/client.m
+	mcc -o $(CPREFIX)/server -funsafe -mbackend=c $(INDIR)/server.m
 	CC -oclient $(CPREFIX)/client.c
 	CC -oserver $(CPREFIX)/server.c
 

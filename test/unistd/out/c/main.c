@@ -1,20 +1,22 @@
-// test/unistd/src/main.cm
+// ./out/c/main.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
-#include <time.h>
-#include <unistd.h>
+#include "main.h"
 
 
-
-
-
-//import "libc/libc" // getenv
 
 char *getenv(char *name);
+int main();
+
+
+
+
+
+char *getenv(char *name)
+;
 
 int main()
 {
@@ -33,7 +35,7 @@ int main()
 
 	// current working directory
 	char cwd[128];
-	getcwd((char *)&cwd, (sizeof(cwd) / sizeof(cwd[0])));
+	getcwd((char *)&cwd, sizeof cwd);
 	printf("cwd = %s\n", (char *)&cwd);
 
 	char *const tty = ttyname(0);

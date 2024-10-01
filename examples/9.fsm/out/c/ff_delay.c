@@ -1,10 +1,10 @@
-// lib/lightfood/delay.cm
+// ./out/c/ff_delay.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <time.h>
+#include "delay.h"
 
 
 
@@ -18,21 +18,13 @@ void delay_us(uint64_t us)
 	}
 }
 
-
-void delay(uint64_t us)
-{
-	delay_us(us);
-}
-
-
 void delay_ms(uint64_t ms)
 {
 	delay_us(ms * 1000);
 }
 
-
-void delay_s(uint64_t s)
+void delay_sec(uint64_t s)
 {
-	delay_ms(s * 1000);
+	delay_us(s * 1000000);
 }
 

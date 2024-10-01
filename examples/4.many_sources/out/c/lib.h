@@ -1,4 +1,3 @@
-// examples/4.many_sources/lib.hm
 
 #ifndef LIB_H
 #define LIB_H
@@ -7,8 +6,9 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include <stdio.h>
 
 
-void lib_func();
+void lib_foo();
 
 #endif /* LIB_H */

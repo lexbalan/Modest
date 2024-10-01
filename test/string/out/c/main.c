@@ -1,56 +1,52 @@
-// test/string/src/main.cm
+// ./out/c/main.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
-#include "./utf.h"
+#include "main.h"
+
+
+
+#define main_str8_example  "String"
+#define main_str16_example  (u"String-Ω")
+#define main_str32_example  (U"String-Ω 🐀🎉🦄")
+int main();
 
 
 
 
 
-
-// constants with type String(Generic)
-#define str8_example  "String"
-#define str16_example  (u"String-Ω")
-#define str32_example  (U"String-Ω 🐀🎉🦄")
-
-// variables with type Array of Chars
-static char string8[6] = str8_example;
+static char string8[6] = main_str8_example;
 static uint16_t string16[8] = u"String-Ω";
 static uint32_t string32[12] = U"String-Ω 🐀🎉🦄";
-
-// variables with type Pointer to Array of Chars
-static char *ptr_to_string8 = str8_example;
+static char *ptr_to_string8 = main_str8_example;
 static uint16_t *ptr_to_string16 = u"String-Ω";
 static uint32_t *ptr_to_string32 = U"String-Ω 🐀🎉🦄";
 
-
 int main()
 {
-	utf8_putchar('A');
+	console_putchar_utf8('A');
 	printf("\n");
-	utf16_putchar(u'Ω');
+	console_putchar_utf16(u'Ω');
 	printf("\n");
-	utf32_putchar(U'🦄');
+	console_putchar_utf32(U'🦄');
 
 	printf("\n\n");
 
-	utf8_puts((char *)&string8);
+	console_puts8((char *)&string8);
 	printf("\n");
-	utf16_puts((uint16_t *)&string16);
+	console_puts16((uint16_t *)&string16);
 	printf("\n");
-	utf32_puts((uint32_t *)&string32);
+	console_puts32((uint32_t *)&string32);
 
 	printf("\n\n");
 
-	utf8_puts(ptr_to_string8);
+	console_puts8(ptr_to_string8);
 	printf("\n");
-	utf16_puts(ptr_to_string16);
+	console_puts16(ptr_to_string16);
 	printf("\n");
-	utf32_puts(ptr_to_string32);
+	console_puts32(ptr_to_string32);
 	printf("\n");
 
 	return 0;

@@ -143,21 +143,27 @@ def doOperation1(src):
 def doString(src):
 	ti = src.get_ti()
 	c = src.lookup(1)
-	if not (c == '"' or c == "'"):
+	if c != '"' and c != "'":
 		return False
 
-	src.getc()
+	quote = src.getc()  # get first quote
 
-	par = c
-
+	# Если в строке встречается экранирующий слэш
+	# Он и то что он экранирует (следующий символ) попадут в рез. строку
+	# (ост. работу сделает уже парсер)
 	s = []
 	while True:
 		c = src.getc()
+
 		if c == '\\':
 			s.append(c)
+			# следующий символ заэкранирован и как есть попадет в строку
+			# (даже если это закр кавычка)
 			c = src.getc()
-		elif c == par:
-			break
+
+		elif c == quote:
+			break  # endstring
+
 		s.append(c)
 
 	# добавляем " чтобы match в парсере не путал "+" с оператором + (!)
@@ -191,13 +197,37 @@ def doTag(src):
 	return ('tag', token, ti)
 
 
+def doAttribute(src):
+	global line, pos
+
+	s = src.lookup(1)
+	if s != '@':
+		return False
+
+
+	src.getc()
+
+	ti = src.get_ti()
+	s = []
+	while True:
+		j = src.getpos()
+		c = src.getc()
+		if not (c.isalpha() or c.isdigit() or c == '_'):
+			src.setpos(j)
+			break
+		s.append(c)
+
+	token = ''.join(s)
+	ti['len'] = len(token)
+	return ('attribute', token, ti)
+
+
 def doDirective(src):
 	global line, pos
 
 	s = src.lookup(1)
-	if not s == '@':
+	if s != '$':
 		return False
-
 
 	src.getc()
 
@@ -216,60 +246,12 @@ def doDirective(src):
 	return ('directive', token, ti)
 
 
-	"""ti = src.get_ti()
-
-	# skip '@'
-	src.getc()
-
-	text = ""
-	while True:
-		# we dont need to eat NL because it will be used by lexer (!)
-		c = src.lookup(1)
-		if c == '\n':
-			line = line + 1
-			pos = 1
-			break
-		else:
-			text += c
-			src.getc()
-
-			if len(text) == 2:
-				if text == 'if':
-					break
-			elif len(text) == 4:
-				if text == 'else':
-					c = src.lookup(2)
-					if c != 'if':
-						break
-				elif text == 'info':
-					break
-			elif len(text) == 5:
-				if text == 'ifdef':
-					break
-				if text == 'endif':
-					break
-				if text == 'error':
-					break
-				if text == 'undef':
-					break
-			elif len(text) == 6:
-				if text == 'elseif':
-					break
-				#if text == 'pragma':
-				#	break
-			elif len(text) == 7:
-				if text == 'warning':
-					break
-
-	return ('directive', text, ti)"""
-
-
 
 def doLineComment(src):
 	global line, pos
 
 	s = src.lookup(2)
-	if not s == '//':
+	if s != '//':
 		return False
 
 	ti = src.get_ti()
@@ -315,7 +297,7 @@ def doBlockComment(src):
 	global f
 
 	s = src.lookup(2)
-	if not s == '/*':
+	if s != '/*':
 		return False
 
 	ti = src.get_ti()
@@ -363,6 +345,7 @@ class Lexer:
 			doOperation2,
 			doOperation1,
 			doString,
+			doAttribute,
 			doDirective,
 			doTag,
 			doBadSymbol,

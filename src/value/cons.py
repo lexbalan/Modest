@@ -5,7 +5,7 @@ from error import info, warning, error
 from .value import value_is_bad, value_bad, value_is_immediate, value_cons_node
 from .unit import value_unit_cons, unit_can
 from .bool import value_bool_cons, bool_can
-from .byte import value_byte_cons, byte_can
+from .word import value_word_cons, word_can
 from .char import value_char_cons, char_can
 from .integer import value_integer_cons, value_integer_create, integer_can
 from .float import value_float_cons, float_can
@@ -39,7 +39,7 @@ def _do_value_cons(t, v, method, ti):
 	elif type.type_is_array(t): constructor = value_array_cons
 	elif type.type_is_record(t): constructor = value_record_cons
 	elif type.type_is_char(t): constructor = value_char_cons
-	elif type.type_is_byte(t): constructor = value_byte_cons
+	elif type.type_is_word(t): constructor = value_word_cons
 	elif type.type_is_bool(t): constructor = value_bool_cons
 	elif type.type_is_pointer(t): constructor = value_pointer_cons
 	elif type.type_is_unit(t): constructor = value_unit_cons
@@ -64,10 +64,11 @@ def _do_value_cons(t, v, method, ti):
 
 # can be implicitly constructed value with type a from type b?
 def cons_can(to, from_type, method):
-	"""print("cons_can? ", end='')
-	type.type_print(from_type)
-	print(" -> ", end='')
-	type.type_print(to)"""
+#	print("cons_can? ", end='')
+#	type.type_print(from_type)
+#	print(" -> ", end='')
+#	type.type_print(to)
+#	print()
 
 	if type.type_eq(to, from_type):
 		return True
@@ -84,7 +85,7 @@ def cons_can(to, from_type, method):
 	if type.type_is_integer(to): checker = integer_can
 	elif type.type_is_unit(to): checker = unit_can
 	elif type.type_is_bool(to): checker = bool_can
-	elif type.type_is_byte(to): checker = byte_can
+	elif type.type_is_word(to): checker = word_can
 	elif type.type_is_record(to): checker = record_can
 	elif type.type_is_pointer(to): checker = pointer_can
 	elif type.type_is_array(to): checker = array_can
@@ -196,11 +197,11 @@ def value_cons_explicit(t, v, ti):
 		return v
 
 	if not cons_can(t, from_type, 'explicit'):
-		error("cannot do construct value", ti)
-		"""type.type_print(t)
+		error("cannot construct value", ti)
+		type.type_print(t)
 		print(" from ")
 		type.type_print(from_type)
-		print()"""
+		print()
 		return value_bad(v['ti'])
 
 	nv = _do_value_cons(t, v, 'explicit', ti)

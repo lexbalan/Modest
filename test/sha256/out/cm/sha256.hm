@@ -1,6 +1,0 @@
-
-
-let sha256HashSize = 32
-
-func sha256_doHash(msg: *[]Byte, msgLen: Nat32, outHash: *[sha256HashSize]Byte) -> Unit
-

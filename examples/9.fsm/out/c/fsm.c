@@ -1,71 +1,65 @@
-// examples/fsm/fsm.cm
+// ./out/c/fsm.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
+#include "fsm.h"
 
 
 
-
-#include "./fsm.h"
-
-
-#define fsmVerbose  true
+#define fsm_verbose  true
 
 
-char *fsm_state_no_name(FSM *fsm, uint32_t state_no)
+char *fsm_state_no_name(fsm_FSM *fsm, uint32_t state_no)
 {
 	return (char *)&fsm->states[state_no].name;
 }
 
-
-void fsm_switch(FSM *fsm, uint32_t state)
+void fsm_switch(fsm_FSM *fsm, uint32_t state)
 {
 	fsm->nexstate = state;
-	fsm->substate = fsmSubstateLeaving;
+	fsm->substate = fsm_substateLeaving;
 }
 
-
-void fsm_run(FSM *fsm)
+void fsm_run(fsm_FSM *fsm)
 {
-	printf("fsm_run()\n");
+	printf("fsm::run()\n");
 
-	if (fsm->substate == fsmSubstateEntering) {
-		const UInt32 nexstate = fsm->nexstate;
-		FSM_StateDesc *const state = &fsm->states[nexstate];
+	if (fsm->substate == fsm_substateEntering) {
+		const fsm_UInt32 nexstate = fsm->nexstate;
+		fsm_FSM_StateDesc *const state = &fsm->states[nexstate];
 
-		if (fsmVerbose) {
+		if (fsm_verbose) {
 			printf("enter %s\n", (char *)&state->name);
 		}
 
 		if (state->entry != NULL) {
-			((void (*) (FSM *fsm))state->entry)((FSM *)fsm);
+			((void (*) (fsm_FSM *fsm))state->entry)((fsm_FSM *)fsm);
 		}
 
 		fsm->state = nexstate;
-		fsm->substate = fsmSubstateLoop;
+		fsm->substate = fsm_substateLoop;
 
-	} else if (fsm->substate == fsmSubstateLoop) {
-		FSM_StateDesc *const state = &fsm->states[fsm->state];
+	} else if (fsm->substate == fsm_substateLoop) {
+		fsm_FSM_StateDesc *const state = &fsm->states[fsm->state];
 
 		if (state->loop != NULL) {
-			((void (*) (FSM *fsm))state->loop)((FSM *)fsm);
+			((void (*) (fsm_FSM *fsm))state->loop)((fsm_FSM *)fsm);
 		}
 
-	} else if (fsm->substate == fsmSubstateLeaving) {
-		FSM_StateDesc *const state = &fsm->states[fsm->state];
+	} else if (fsm->substate == fsm_substateLeaving) {
+		fsm_FSM_StateDesc *const state = &fsm->states[fsm->state];
 
-		if (fsmVerbose) {
+		if (fsm_verbose) {
 			printf("exit %s\n", (char *)&state->name);
 		}
 
 		if (state->exit != NULL) {
-			((void (*) (FSM *fsm))state->exit)((FSM *)fsm);
+			((void (*) (fsm_FSM *fsm))state->exit)((fsm_FSM *)fsm);
 		}
 
-		fsm->substate = fsmSubstateEntering;
+		fsm->substate = fsm_substateEntering;
 	}
 }
 

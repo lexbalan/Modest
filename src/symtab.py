@@ -7,13 +7,13 @@ class Symtab:
 		self.values = {}
 		self.domain = domain
 
-
 	def type_add(self, id, t):
 		self.types[id] = t
 		return t
 
 
 	def value_add(self, id, v):
+		#print("LL_VALUE_ADD " + id)
 		self.values[id] = v
 		return v
 
@@ -83,6 +83,11 @@ class Symtab:
 
 	def parent_get(self):
 		return self.parent
+
+
+	def extend(self, symtab):
+		self.types.update(symtab.types)
+		self.values.update(symtab.values)
 
 
 	# печатает только указанную таблицу символов
