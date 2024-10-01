@@ -12,13 +12,14 @@ func main() -> Int {
 
 	console.print("\\")
 	console.print("\n")
-	console.print("#")
+	console.print("@")
+	console.print("\n")
+	console.print("#AA#")
+	console.print("\n")
+	console.print("🎉A")
 	console.print("\n")
 
-	//console.print(*Str8 "\x1F389")
-	//console.print("\U+1F389")
-
-	console.print("{{ text }}\n")
+	console.print("{{c}}\n")
 	console.print("c = '{c}'\n", c)
 	console.print("s = \"{s}\"\n", s)
 	console.print("i = {i}\n", i)

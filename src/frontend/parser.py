@@ -6,7 +6,7 @@ import os
 from .lexer import Lexer
 from error import error, warning, info
 from hlir.id import hlir_id
-
+from util import utf32cc_to_utf8_str
 
 top_level_stoppers = ['type', 'let', 'var', 'func']
 func_stoppers = ['let', 'var', 'if', 'while', 'return', 'type']
@@ -889,7 +889,6 @@ class Parser:
 				sym = s[i]
 
 				if sym == '\\':
-					code = 0
 
 					# nexsym
 					i = i + 1
@@ -908,60 +907,67 @@ class Parser:
 						continue
 
 					# '\xCODE' ?
-					is_num = sym.isdigit()
 					is_hex = sym == 'x'
+					is_unicode = sym == 'u'
 
-					if is_num or is_hex:
-						asciicode = ''
 
-						if is_hex:
-							i = i + 1
+					def isxdigit(char):
+						return char in '0123456789abcdefABCDEF'
+
+
+					code = 0
+
+					# case \012345678
+					if sym.isdigit():
+						cod = ""
+						while i < len(s):
 							sym = s[i]
-							asciicode = '0x'
-
-						hexsyms = [
-							'a', 'b', 'c', 'd', 'e', 'f',
-							'A', 'B', 'C', 'D', 'E', 'F',
-						]
-						while True:
-							asciicode = asciicode + sym
-							if i == len(s) - 1:
+							if not sym.isdigit():
 								break
+							cod = cod + sym
 							i = i + 1
+
+						i = i - 1
+						code = int(cod, 10) & 0xFF
+
+					# case \xXX | \uXXXXXXXX
+					elif is_hex or is_unicode:
+						cod = ""
+						i = i + 1 # skip 'x' | 'u' prefix
+						while i < len(s):
 							sym = s[i]
-							if not sym.isdigit() or (is_hex and sym in hexsyms):
-								i = i - 1
+							if not isxdigit(sym):
 								break
+							cod = cod + sym
+							i = i + 1
+							if is_hex:
+								if len(cod) == 2:
+									break
+							else:
+								if len(cod) == 8:
+									break
+						i = i - 1
+						code = int(cod, 16)
 
-						base = 10
-						if is_hex:
-							base = 16
+					elif sym == 'n': code = ord("\n")  # LF
+					elif sym == '"': code = ord("\"")  # QUOTE2
+					elif sym == "'": code = ord("'")   # QUOTE1
+					elif sym == '\\': code = ord("\\") # BACKSLASH
+					elif sym == 'r': code = ord("\r")  # CR
+					elif sym == 't': code = ord("\t")  # TAB
+					elif sym == 'a': code = ord("\a")  # BELL
+					elif sym == 'b': code = ord("\b")  # BACKSPACE
+					elif sym == 'v': code = ord("\v")  # VT
+					elif sym == 'f': code = ord("\f")  # FF
 
-						code = int(asciicode, base)
 
-					elif sym == 'a':  #BELL
-						code = 7
-					elif sym == 'b':  #BACKSPACE
-						code = 8
-					elif sym == 't':  #TAB
-						code = 9
-					elif sym == 'n':  #LF
-						code = 10
-					elif sym == 'v':  #VT
-						code = 11
-					elif sym == 'f':  #FF
-						code = 12
-					elif sym == 'r':  #CR
-						code = 13
-					elif sym == '"':
-						code = '34'
-					elif sym == '\\':
-						code = 92
+					if is_unicode:
+						sym = utf32cc_to_utf8_str(code)
+					else:
+						sym = chr(code)
 
-					sym = chr(code)
-
-				new_s = new_s + sym
 				str_len = str_len + 1
+				new_s = new_s + sym
 				i = i + 1
 
 			string = ''.join(new_s)
@@ -969,7 +975,7 @@ class Parser:
 			return {
 				'isa': 'ast_value',
 				'kind': 'string',
-				'len': str_len,
+				'len': str_len,  # длина строки в символах (не в байтах!)
 				'str': string,
 				'ti': ti
 			}

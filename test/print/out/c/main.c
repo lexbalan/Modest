@@ -24,13 +24,14 @@ int main()
 
 	console_print("\\");
 	console_print("\n");
-	console_print("#");
+	console_print("@");
+	console_print("\n");
+	console_print("#AA#");
+	console_print("\n");
+	console_print("🎉A");
 	console_print("\n");
 
-	//console.print(*Str8 "\x1F389")
-	//console.print("\U+1F389")
-
-	console_print("{{ text }}\n");
+	console_print("{{c}}\n");
 	console_print("c = '{c}'\n", c);
 	console_print("s = \"{s}\"\n", s);
 	console_print("i = {i}\n", i);
