@@ -9,6 +9,9 @@ contexts:
     - match: '\b(record|enum|func|if|else|while|for|switch|case|break|return|let|var|import|let|is|self|type)\b'
       scope: keyword.control.modest
 
+    - match: '\b[A-Z][a-zA-Z0-9_]*\b'  # Подсветка типов с заглавной буквы
+      scope: entity.name.type.modest
+
     - match: '"([^"\\]*(\\.[^"\\]*)*)"'  # Double-quoted strings
       scope: string.quoted.double.modest
 
