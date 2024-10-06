@@ -19,7 +19,7 @@ var arr_utf16: [8]Char16 = "Hello!\n"
 var arr_utf32: [8]Char32 = "Hello!\n"
 
 
-var arr_partycorn: [4]Char8 = "🎉"
+let arr_partycorn: [4]Char8 = "🎉"
 let arr_unicorn: [4]Char8 = "🦄"
 let arr_rat: [4]Char8 = "🐀"
 
@@ -44,7 +44,6 @@ func main() -> Int {
 	console.puts32(str32)
 	console.puts8("\n")
 
-	console.puts8(&arr_partycorn)
 	return 0
 }
 
