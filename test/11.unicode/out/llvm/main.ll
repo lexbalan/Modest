@@ -354,6 +354,12 @@ declare i32 @console_vsprint([0 x i8]* %buf, %Str8* %form, i8* %va)
 	i32 10,
 	i32 0
 ]
+@arr_partycorn = global [1 x i8] [
+	i8 240,
+	i8 159,
+	i8 142,
+	i8 137
+]
 
 @arr_unicorn = constant [4 x i8] [
 	i8 240,
@@ -361,18 +367,14 @@ declare i32 @console_vsprint([0 x i8]* %buf, %Str8* %form, i8* %va)
 	i8 166,
 	i8 132
 ]
+@arr_rat = constant [4 x i8] [
+	i8 240,
+	i8 159,
+	i8 144,
+	i8 128
+]
 
 define %Int @main() {
-	; indexing of GenericString returns #i symbol code
-	; the symbols have GenericInteger type
-	;	let omegaCharCode = "Hello Ω!\n"[6]
-	;	let ratCharCode = "Hello 🐀!\n"[6]
-	; you can assign omegaCharCode (937) to Nat32,
-	; but you can't assign ratCharCode (128000) to Nat16 (!)
-	;	var omegaCode: Nat16 = Nat16 omegaCharCode
-	;	var ratCode: Nat32 = Nat32 ratCharCode
-	;	printf("omegaCode = %d\n", omegaCode)
-	;	printf("ratCode = %d\n", ratCode)
 	%1 = alloca %Str8*, align 8
 	store %Str8* bitcast ([28 x i8]* @str1 to [0 x i8]*), %Str8** %1
 	%2 = alloca %Str16*, align 8
@@ -388,6 +390,8 @@ define %Int @main() {
 	%6 = load %Str32*, %Str32** %3
 	call void @console_puts32(%Str32* %6)
 	call void @console_puts8(%Str8* bitcast ([2 x i8]* @str6 to [0 x i8]*))
+	%7 = bitcast [1 x i8]* @arr_partycorn to %Str8*
+	call void @console_puts8(%Str8* %7)
 	ret %Int 0
 }
 
