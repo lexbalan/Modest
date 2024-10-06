@@ -354,7 +354,7 @@ declare i32 @console_vsprint([0 x i8]* %buf, %Str8* %form, i8* %va)
 	i32 10,
 	i32 0
 ]
-@arr_partycorn = global [1 x i8] [
+@arr_partycorn = global [4 x i8] [
 	i8 240,
 	i8 159,
 	i8 142,
@@ -390,7 +390,7 @@ define %Int @main() {
 	%6 = load %Str32*, %Str32** %3
 	call void @console_puts32(%Str32* %6)
 	call void @console_puts8(%Str8* bitcast ([2 x i8]* @str6 to [0 x i8]*))
-	%7 = bitcast [1 x i8]* @arr_partycorn to %Str8*
+	%7 = bitcast [4 x i8]* @arr_partycorn to %Str8*
 	call void @console_puts8(%Str8* %7)
 	ret %Int 0
 }

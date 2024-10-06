@@ -14,7 +14,7 @@ let ratSymbolUTF16 = [0xD83D, 0xDC00]
 let ratSymbolUTF32 = 0x0001F400
 
 
-var arr_utf8: [8]Char8 = [8]Char8 "Hi!\n"
+var arr_utf8: [8]Char8 = "Hi!\n"
 var arr_utf16: [8]Char16 = "Hello!\n"
 var arr_utf32: [8]Char32 = "Hello!\n"
 
