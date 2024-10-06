@@ -19,6 +19,9 @@ var arr_utf16: [8]Char16 = "Hello!\n"
 var arr_utf32: [8]Char32 = "Hello!\n"
 
 
+let arr_unicorn: [4]Char8 = "🦄"
+
+
 let genericStringConst = "S-t-r-i-n-g-Ω 🐀🎉🦄"
 let string8Const = *Str8 genericStringConst
 let string16Const = *Str16 genericStringConst

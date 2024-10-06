@@ -355,6 +355,12 @@ declare i32 @console_vsprint([0 x i8]* %buf, %Str8* %form, i8* %va)
 	i32 0
 ]
 
+@arr_unicorn = constant [4 x i8] [
+	i8 240,
+	i8 159,
+	i8 166,
+	i8 132
+]
 
 define %Int @main() {
 	; indexing of GenericString returns #i symbol code

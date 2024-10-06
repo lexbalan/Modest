@@ -1059,10 +1059,25 @@ class Parser:
 	#
 
 	def stmt_let(self):
+		ti = self.ti()
 		id = self.identifier()
-		self.need("=")
-		r = self.expr_value()
-		return {'isa': 'stmt', 'kind': 'let', 'id': id, 'value': r}
+
+		t = None
+		v = None
+		if self.match(":"):
+			t = self.expr_type()
+		if self.is_assign_operator():
+			v = self.expr_value()
+
+		return {
+			'isa': 'stmt',
+			'kind': 'let',
+			'id': id,
+			'type': t,
+			'value': v,
+			'ti': ti
+		}
+
 
 	def stmt_if(self):
 		c = self.expr_value()
@@ -1075,13 +1090,24 @@ class Parser:
 			else:
 				e = self.stmt_block()
 			e['ti'] = ti
-		return {'isa': 'stmt', 'kind': 'if', 'cond': c, 'then': t, 'else': e}
+		return {
+			'isa': 'stmt',
+			'kind': 'if',
+			'cond': c,
+			'then': t,
+			'else': e
+		}
 
 
 	def stmt_while(self):
 		v = self.expr_value()
 		b = self.stmt_block()
-		return {'isa': 'stmt', 'kind': 'while', 'cond': v, 'stmt': b}
+		return {
+			'isa': 'stmt',
+			'kind': 'while',
+			'cond': v,
+			'stmt': b
+		}
 
 
 	def stmt_return(self):
@@ -1091,7 +1117,11 @@ class Parser:
 		if not (self.look("\n") or self.look(";") or self.look("}")):
 			v = self.expr_value()
 
-		return {'isa': 'stmt', 'kind': 'return', 'value': v}
+		return {
+			'isa': 'stmt',
+			'kind': 'return',
+			'value': v
+		}
 
 
 	def stmt_var(self):
@@ -1126,11 +1156,17 @@ class Parser:
 
 
 	def stmt_again(self):
-		return {'isa': 'stmt', 'kind': 'again'}
+		return {
+			'isa': 'stmt',
+			'kind': 'again'
+		}
 
 
 	def stmt_break(self):
-		return {'isa': 'stmt', 'kind': 'break'}
+		return {
+			'isa': 'stmt',
+			'kind': 'break'
+		}
 
 
 	def stmt_inc(self):
@@ -1442,12 +1478,19 @@ class Parser:
 	def parse_def_const(self):
 		ti = self.ti()
 		id = self.identifier()
-		self.need('=')
-		v = self.expr_value()
+
+		t = None
+		v = None
+		if self.match(":"):
+			t = self.expr_type()
+		if self.is_assign_operator():
+			v = self.expr_value()
+
 		return {
 			'isa': 'ast_definition',
 			'kind': 'const',
 			'id': id,
+			'type': t,
 			'value': v,
 			'ti': ti
 		}

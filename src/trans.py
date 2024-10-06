@@ -2278,6 +2278,10 @@ def def_const(x):
 		module_value_add_public(module, id['str'], init_value)
 		return hlir_def_const(id, init_value, init_value, x['ti'])
 
+	if x['type'] != None:
+		t = do_type(x['type'])
+		if not hlir_type.type_is_bad(t):
+			init_value = value_cons_implicit_check(t, init_value)
 
 	const_value = symbol_const(id, init_value, is_public=x['export'])
 
