@@ -323,44 +323,12 @@ declare i32 @console_vsprint([0 x i8]* %buf, %Str8* %form, i8* %va)
 	i16 55357,
 	i16 56320
 ]
-
-@arr_utf8 = global [8 x i8] [
-	i8 72,
-	i8 105,
-	i8 33,
-	i8 10,
-	i8 0,
-	i8 0,
-	i8 0,
-	i8 0
-]
-@arr_utf16 = global [8 x i16] [
-	i16 72,
-	i16 101,
-	i16 108,
-	i16 108,
-	i16 111,
-	i16 33,
-	i16 10,
-	i16 0
-]
-@arr_utf32 = global [8 x i32] [
-	i32 72,
-	i32 101,
-	i32 108,
-	i32 108,
-	i32 111,
-	i32 33,
-	i32 10,
-	i32 0
-]
-@arr_partycorn = global [4 x i8] [
+@arr_partycorn = constant [4 x i8] [
 	i8 240,
 	i8 159,
 	i8 142,
 	i8 137
 ]
-
 @arr_unicorn = constant [4 x i8] [
 	i8 240,
 	i8 159,
@@ -372,6 +340,38 @@ declare i32 @console_vsprint([0 x i8]* %buf, %Str8* %form, i8* %va)
 	i8 159,
 	i8 144,
 	i8 128
+]
+
+@arr_utf8 = global [8 x i8] [
+	i8 72,
+	i8 105,
+	i8 33,
+	i8 10,
+	i8 0,
+	i8 0,
+	i8 0,
+	i8 0
+]
+@arr_utf16 = global [9 x i16] [
+	i16 72,
+	i16 101,
+	i16 108,
+	i16 108,
+	i16 111,
+	i16 32,
+	i16 937,
+	i16 33,
+	i16 10
+]
+@arr_utf32 = global [8 x i32] [
+	i32 72,
+	i32 101,
+	i32 108,
+	i32 108,
+	i32 111,
+	i32 33,
+	i32 10,
+	i32 0
 ]
 
 define %Int @main() {
@@ -390,8 +390,6 @@ define %Int @main() {
 	%6 = load %Str32*, %Str32** %3
 	call void @console_puts32(%Str32* %6)
 	call void @console_puts8(%Str8* bitcast ([2 x i8]* @str6 to [0 x i8]*))
-	%7 = bitcast [4 x i8]* @arr_partycorn to %Str8*
-	call void @console_puts8(%Str8* %7)
 	ret %Int 0
 }
 
