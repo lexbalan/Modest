@@ -6,9 +6,9 @@ include "libc/ctypes64"
 include "libc/string"
 
 
-export let hashSize = 32
+public const hashSize = 32
 
-export type Hash [hashSize]Byte
+public type Hash [hashSize]Byte
 
 
 type Context record {
@@ -210,7 +210,7 @@ func final(ctx: *Context, outHash: *Hash) {
 }
 
 
-export func hash(msg: *[]Byte, msgLen: Nat32, outHash: *Hash) {
+public func hash(msg: *[]Byte, msgLen: Nat32, outHash: *Hash) {
 	var ctx = Context {}
 	contextInit(&ctx)
 	update(&ctx, msg, msgLen)

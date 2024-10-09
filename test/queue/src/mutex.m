@@ -2,7 +2,7 @@
 let stateOpen = false
 let stateClose = true
 
-export type Mutex record {
+public type Mutex record {
 	state: @volatile @atomic Bool
 }
 
@@ -11,13 +11,13 @@ func __enable_irq() {}
 func __disable_irq() {}
 
 
-export func init(x: *Mutex) {
+public func init(x: *Mutex) {
 	release(x)
 }
 
 
 // попытка захвата мьютекса
-export func acquire(x: *Mutex) -> Bool {
+public func acquire(x: *Mutex) -> Bool {
 	// отпустили, вырубаем прерывания
 	__disable_irq()
 
@@ -35,7 +35,7 @@ export func acquire(x: *Mutex) -> Bool {
 
 
 // отпускаем мьютекс
-export func release(x: *Mutex) {
+public func release(x: *Mutex) {
 	x.state = stateOpen
 }
 

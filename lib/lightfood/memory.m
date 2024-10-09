@@ -3,7 +3,7 @@
 $pragma do_not_include
 
 
-let systemWidth = 64
+const systemWidth = 64
 
 
 $if (systemWidth == 64)
@@ -13,10 +13,10 @@ type Word Word32
 $endif
 
 
-let memoryAlignment = systemWidth / 8
+const memoryAlignment = systemWidth / 8
 
 
-func memzero(mem: Ptr, len: Nat64) {
+public func memzero(mem: Ptr, len: Nat64) {
 	let z = Word mem % memoryAlignment
 
 	// align the pointer
@@ -50,7 +50,7 @@ func memzero(mem: Ptr, len: Nat64) {
 }
 
 
-func memcopy(dst: Ptr, src: Ptr, len: Nat64) {
+public func memcopy(dst: Ptr, src: Ptr, len: Nat64) {
 	let len_words = len / sizeof(Word)
 	let src_w = *[]Word src
 	let dst_w = *[]Word dst
@@ -73,7 +73,7 @@ func memcopy(dst: Ptr, src: Ptr, len: Nat64) {
 }
 
 
-func memeq(mem0: Ptr, mem1: Ptr, len: Nat64) -> Bool {
+public func memeq(mem0: Ptr, mem1: Ptr, len: Nat64) -> Bool {
 	let len_words = len / sizeof(Word)
 	let mem0_w = *[]Word mem0
 	let mem1_w = *[]Word mem1

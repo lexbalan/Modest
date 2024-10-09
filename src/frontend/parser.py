@@ -8,7 +8,7 @@ from error import error, warning, info
 from hlir.id import hlir_id
 from util import utf32cc_to_utf8_str
 
-top_level_stoppers = ['type', 'let', 'var', 'func']
+top_level_stoppers = ['type', 'let', 'const', 'var', 'func']
 func_stoppers = ['let', 'var', 'if', 'while', 'return', 'type']
 
 class Parser:
@@ -1621,7 +1621,7 @@ class Parser:
 
 		spaceline_cnt = 0
 
-		export_region = False
+		public_region = False
 
 		attributes = []
 		while not self.is_end():
@@ -1637,13 +1637,13 @@ class Parser:
 			#attributes = []
 
 
-			export = self.match('export')
-			if export:
+			public = self.match('public') or self.match('public')
+			if public:
 				if self.match('{'):
-					export_region = True
+					public_region = True
 
-			if export_region:
-				export = True
+			if public_region:
+				public = True
 
 			ti = self.ti()
 
@@ -1654,6 +1654,7 @@ class Parser:
 				continue
 			elif self.match('func'): x = self.parse_def_func()
 			elif self.match('let'): x = self.parse_def_const()
+			elif self.match('const'): x = self.parse_def_const()
 			elif self.match('var'): x = self.parse_def_var()
 			elif self.match('type'): x = self.parse_def_type()
 
@@ -1669,9 +1670,9 @@ class Parser:
 			elif self.match('include'):
 				x = self.parse_import(include=True)
 
-			elif export_region:
+			elif public_region:
 				if self.match('}'):
-					export_region = False
+					public_region = False
 
 			else:
 				error("unexpected token '%s'" % self.ctok(), self.ti())
@@ -1685,7 +1686,7 @@ class Parser:
 				for subx in x:
 					subx['nl'] = 1
 					subx['ti'] = ti
-					subx['export'] = export
+					subx['public'] = public
 					subx['attributes'] = attributes
 
 				x[0]['nl'] = spaceline_cnt
@@ -1705,7 +1706,7 @@ class Parser:
 
 				x['attributes'] = attributes
 
-				x['export'] = export
+				x['public'] = public
 
 				output.append(x)
 

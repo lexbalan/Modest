@@ -1,19 +1,19 @@
 
 include "libc/stdio"
 let verbose = true
-export let nameMaxLength = 8
+public const nameMaxLength = 8
 
-export type UInt32 Nat32
+public type UInt32 Nat32
 
-export type FSM_StateDesc record {
+public type FSM_StateDesc record {
 	name: [nameMaxLength]Char8
 	entry: FSM_Proc
 	loop: FSM_Proc
 	exit: FSM_Proc
 }
-export let maxStates = 16
+public const maxStates = 16
 
-export type FSM record {
+public type FSM record {
 	name: [nameMaxLength]Char8
 	state: UInt32
 	nexstate: UInt32
@@ -22,18 +22,18 @@ export type FSM record {
 }
 
 
-export type FSM_Proc *(fsm: *FSM) -> Unit
-export let substateEntering = 0
-export let substateLoop = 1
-export let substateLeaving = 2
-export func state_no_name(fsm: *FSM, state_no: Nat32) -> *Str8 {
+public type FSM_Proc *(fsm: *FSM) -> Unit
+public const substateEntering = 0
+public const substateLoop = 1
+public const substateLeaving = 2
+public func state_no_name(fsm: *FSM, state_no: Nat32) -> *Str8 {
 	return &fsm.states[state_no].name
 }
-export func switch(fsm: *FSM, state: Nat32) -> Unit {
+public func switch(fsm: *FSM, state: Nat32) -> Unit {
 	fsm.nexstate = state
 	fsm.substate = substateLeaving
 }
-export func run(fsm: *FSM) -> Unit {
+public func run(fsm: *FSM) -> Unit {
 	printf("fsm::run()\n")
 
 	if fsm.substate == substateEntering {

@@ -4,9 +4,8 @@ include "libc/ctypes64"
 include "libc/stdio"
 include "libc/time"
 include "libc/unistd"
-//include "libc/libc" // getenv
+include "libc/stdlib" // getenv
 
-func getenv(name: *Str) -> *Str
 
 func main() -> Int {
 	printf("unistd test\n")
@@ -32,7 +31,7 @@ func main() -> Int {
 
 
 	let s = getenv("PATH")
-	printf("s = %s\n", s)
+	printf("PATH = %s\n", s)
 
 	while true {
 		printf("- hi\n")

@@ -170,10 +170,10 @@ func final(ctx: *Context, outHash: *Hash) -> Unit {
 		i = i + 1
 	}
 }
-export let hashSize = 32
+public const hashSize = 32
 
-export type Hash [hashSize]Word8
-export func hash(msg: *[]Word8, msgLen: Nat32, outHash: *Hash) -> Unit {
+public type Hash [hashSize]Word8
+public func hash(msg: *[]Word8, msgLen: Nat32, outHash: *Hash) -> Unit {
 	var ctx: Context = Context {}
 	contextInit(&ctx)
 	update(&ctx, msg, msgLen)

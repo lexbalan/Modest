@@ -1,22 +1,22 @@
 // module: sub.m
 //
 
-export let name = "sub"
+public const name = "sub"
 
-export type MyInt Int64
+public type MyInt Int64
 
 
-export func add(a: Int32, b: Int32) -> Int32 {
+public func add(a: Int32, b: Int32) -> Int32 {
 	return a + b
 }
 
 
-export func sub(a: Int32, b: Int32) -> Int32 {
+public func sub(a: Int32, b: Int32) -> Int32 {
 	return a - b
 }
 
 @inline
-export func mid(a: Int32, b: Int32) -> Int32 {
+public func mid(a: Int32, b: Int32) -> Int32 {
 	return (a + b) / 2
 }
 

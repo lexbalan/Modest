@@ -2208,7 +2208,7 @@ def def_type(x):
 		#	error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
 	else:
 		nt = hlir_type.hlir_type_undefined(x['ti'])
-		module_type_add(module, id['str'], nt, is_public=x['export'])
+		module_type_add(module, id['str'], nt, is_public=x['public'])
 
 	# только теперь обрабатываем поля,
 	# тк там могут быть указатели на саму себя
@@ -2252,7 +2252,7 @@ def def_type(x):
 	nt['definition'] = y
 	y['module'] = module
 	y['nl'] = x['nl']
-	y['export'] = x['export']
+	y['public'] = x['public']
 	return y
 
 
@@ -2283,12 +2283,12 @@ def def_const(x):
 		if not hlir_type.type_is_bad(t):
 			init_value = value_cons_implicit_check(t, init_value)
 
-	const_value = symbol_const(id, init_value, is_public=x['export'])
+	const_value = symbol_const(id, init_value, is_public=x['public'])
 
 	y = hlir_def_const(id, const_value, init_value, x['ti'])
 	if need_decoration(x):
 		const_value['prefix'] = module['prefix']
-	y['export'] = x['export']
+	y['public'] = x['public']
 	const_value['definition'] = y
 	const_value['module'] = module
 	y['module'] = module
@@ -2337,13 +2337,13 @@ def def_var(x):
 			error("cannot cons variable", x['ti'])
 
 	v = value_var(id, t, id['ti'])
-	module_value_add(module, id['str'], v, is_public=x['export'])
+	module_value_add(module, id['str'], v, is_public=x['public'])
 
 
 	y = hlir_def_var(id, v, init_value, x['ti'])
 	y['module'] = module
 	v['definition'] = y
-	y['export'] = x['export']
+	y['public'] = x['public']
 	return y
 
 
@@ -2363,7 +2363,7 @@ def def_func(x, dostmt=True):
 	if x['stmt'] == None:
 		#print("DECL: "+fn['id']['str'])
 		y = hlir_def_func(func_id, fn, None, x['ti'])
-		y['export'] = x['export']
+		y['public'] = x['public']
 		fn['definition'] = y
 		return y
 
@@ -2421,7 +2421,7 @@ def def_func(x, dostmt=True):
 	y = hlir_def_func(func_id, fn, stmt, x['ti'])
 	if need_decoration(x):
 		y['prefix'] = module['prefix']
-	y['export'] = x['export']
+	y['public'] = x['public']
 	fn['definition'] = y
 	y['module'] = module
 	return y
@@ -2564,13 +2564,13 @@ def predefinition(id):
 			elif kind == 'func':
 				found = True
 				global module
-				fn = do_func_value(x, x['export'])
-				module_value_add(module, fn['id']['str'], fn, is_public=x['export'])
+				fn = do_func_value(x, x['public'])
+				module_value_add(module, fn['id']['str'], fn, is_public=x['public'])
 
 			x['defined'] = True  # mark as DEFINED
 
 			if y != None:
-				module_append(y, to_export=x['export'])
+				module_append(y, to_export=x['public'])
 	if not found:
 		error("unknown identifier '%s'" % id['str'], id['ti'])
 	#return y
@@ -2910,7 +2910,7 @@ def pre_def(ast, fdecl=False):
 					y = def_type(x)
 
 					add_spices(y, ast_atts=x['attributes'])
-					module_append(y, to_export=x['export'])
+					module_append(y, to_export=x['public'])
 
 	# 2. def vars & consts
 	for x in ast:
@@ -2928,7 +2928,7 @@ def pre_def(ast, fdecl=False):
 
 			if y != None:
 				add_spices(y, ast_atts=x['attributes'])
-			module_append(y, to_export=x['export'])
+			module_append(y, to_export=x['public'])
 
 
 	# 3. scan funcs
@@ -2939,8 +2939,8 @@ def pre_def(ast, fdecl=False):
 		if kind == 'func':
 			fn = ctx_value_get(x['id']['str'])
 			if fn == None:
-				fn = do_func_value(x, x['export'])
-				module_value_add(module, fn['id']['str'], fn, is_public=x['export'])
+				fn = do_func_value(x, x['public'])
+				module_value_add(module, fn['id']['str'], fn, is_public=x['public'])
 
 
 	# 4. def funcs
@@ -2954,7 +2954,7 @@ def pre_def(ast, fdecl=False):
 
 				if y != None:
 					add_spices(y, ast_atts=x['attributes'])
-					module_append(y, to_export=x['export'])
+					module_append(y, to_export=x['public'])
 
 	gast = prev_gast
 	return

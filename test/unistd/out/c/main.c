@@ -8,15 +8,12 @@
 
 
 
-char *getenv(char *name);
 int main();
 
 
 
 
 
-char *getenv(char *name)
-;
 
 int main()
 {
@@ -43,7 +40,7 @@ int main()
 
 
 	char *const s = getenv("PATH");
-	printf("s = %s\n", s);
+	printf("PATH = %s\n", s);
 
 	while (true) {
 		printf("- hi\n");

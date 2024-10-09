@@ -12,7 +12,7 @@ let add = &sub.add
 var x: sub.MyInt
 
 
-export func main() -> Int {
+public func main() -> Int {
 	printf("test\n")
 
 	printf("sub.name = '%s'\n", *Str8 sub.name)

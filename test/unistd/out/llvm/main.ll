@@ -297,6 +297,21 @@ declare %Int @unlink([0 x %ConstChar]* %path)
 declare %Int @usleep(%USecondsT %useconds)
 declare %PIDT @vfork()
 declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
+
+declare void @abort()
+declare %Int @abs(%Int %x)
+declare %Int @atexit(void ()* %x)
+declare %Double @atof([0 x %ConstChar]* %nptr)
+declare %Int @atoi([0 x %ConstChar]* %nptr)
+declare %LongInt @atol([0 x %ConstChar]* %nptr)
+declare i8* @calloc(%SizeT %num, %SizeT %size)
+declare void @exit(%Int %x)
+declare void @free(i8* %ptr)
+declare %Str* @getenv(%Str* %name)
+declare %LongInt @labs(%LongInt %x)
+declare %Str* @secure_getenv(%Str* %name)
+declare i8* @malloc(%SizeT %size)
+declare %Int @system([0 x %ConstChar]* %string)
 ; -- end print includes --
 ; -- print imports --
 ; -- end print imports --
@@ -308,10 +323,9 @@ declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 @str5 = private constant [10 x i8] [i8 99, i8 119, i8 100, i8 32, i8 61, i8 32, i8 37, i8 115, i8 10, i8 0]
 @str6 = private constant [14 x i8] [i8 116, i8 116, i8 121, i8 110, i8 97, i8 109, i8 101, i8 32, i8 61, i8 32, i8 37, i8 115, i8 10, i8 0]
 @str7 = private constant [5 x i8] [i8 80, i8 65, i8 84, i8 72, i8 0]
-@str8 = private constant [8 x i8] [i8 115, i8 32, i8 61, i8 32, i8 37, i8 115, i8 10, i8 0]
+@str8 = private constant [11 x i8] [i8 80, i8 65, i8 84, i8 72, i8 32, i8 61, i8 32, i8 37, i8 115, i8 10, i8 0]
 @str9 = private constant [6 x i8] [i8 45, i8 32, i8 104, i8 105, i8 10, i8 0]
 
-declare %Str* @getenv(%Str* %name)
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str1 to [0 x i8]*))
 	%2 = call %PIDT @getpid()
@@ -331,7 +345,7 @@ define %Int @main() {
 	%14 = call [0 x %Char]* @ttyname(%Int 0)
 	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str6 to [0 x i8]*), [0 x %Char]* %14)
 	%16 = call %Str* @getenv(%Str* bitcast ([5 x i8]* @str7 to [0 x i8]*))
-	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str8 to [0 x i8]*), %Str* %16)
+	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str8 to [0 x i8]*), %Str* %16)
 	br label %again_1
 again_1:
 	br i1 1 , label %body_1, label %break_1

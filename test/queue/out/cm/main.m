@@ -33,7 +33,7 @@ func fetch(n: Int) -> Unit {
 		i = i + 1
 	}
 }
-export func main() -> Int {
+public func main() -> Int {
 	byteQueue128.init(&bq0)
 
 	padd(3)

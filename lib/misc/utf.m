@@ -6,7 +6,7 @@ $pragma do_not_include
 
 
 // декодирует символ UTF-32 в последовательность UTF-8
-export func utf32_to_utf8(c: Char32, buf: *[4]Char8) -> Nat8 {
+public func utf32_to_utf8(c: Char32, buf: *[4]Char8) -> Nat8 {
 	let x = Nat32 c
 
 	if x <= 0x0000007F {
@@ -49,7 +49,7 @@ export func utf32_to_utf8(c: Char32, buf: *[4]Char8) -> Nat8 {
 
 
 // returns n-symbols from input stream
-export func utf16_to_utf32(c: *[]Char16, result: *Char32) -> Nat8 {
+public func utf16_to_utf32(c: *[]Char16, result: *Char32) -> Nat8 {
 	let leading = Nat32 c[0]
 
 	if (leading < 0xD800) or (leading > 0xDFFF) {

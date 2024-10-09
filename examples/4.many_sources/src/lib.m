@@ -3,7 +3,7 @@
 include "libc/stdio"
 
 
-export func foo () -> Unit {
+public func foo () -> Unit {
 	printf("hello from lib.foo\n")
 }
 

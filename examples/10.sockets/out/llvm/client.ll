@@ -307,7 +307,7 @@ declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 
 
 declare %InAddrT @inet_addr([0 x %ConstChar]* %cp)
-declare %Int @socket(%Int %domain, %Int %type, %Int %protocol)
+declare %Int @socket(%Int %domain, %Int %_type, %Int %protocol)
 declare %Int @bind(%Int %socket, %Struct_sockaddr* %addr, %SocklenT %addrlen)
 declare %Int @listen(%Int %socket, %Int %backlog)
 declare %Int @connect(%Int %socket, %Struct_sockaddr* %addr, %SocklenT %addrlen)

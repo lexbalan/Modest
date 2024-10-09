@@ -887,9 +887,9 @@ def print_def(x):
 	if isa != 'comment':
 		newline(n=x['nl'])
 
-	if 'export' in x:
-		if x['export']:
-			out("export ")
+	if 'public' in x:
+		if x['public']:
+			out("public ")
 
 	if isa == 'def_var': print_def_var(x)
 	elif isa == 'def_const': print_def_const(x)

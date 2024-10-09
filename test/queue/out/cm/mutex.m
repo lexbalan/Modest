@@ -4,13 +4,13 @@ let stateClose = true
 func __enable_irq() -> Unit {}
 func __disable_irq() -> Unit {}
 
-export type Mutex record {
+public type Mutex record {
 	state: Bool
 }
-export func init(x: *Mutex) -> Unit {
+public func init(x: *Mutex) -> Unit {
 	release(x)
 }
-export func acquire(x: *Mutex) -> Bool {
+public func acquire(x: *Mutex) -> Bool {
 	// отпустили, вырубаем прерывания
 	__disable_irq()
 
@@ -25,7 +25,7 @@ export func acquire(x: *Mutex) -> Bool {
 
 	return true
 }
-export func release(x: *Mutex) -> Unit {
+public func release(x: *Mutex) -> Unit {
 	x.state = stateOpen
 }
 

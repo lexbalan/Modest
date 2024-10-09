@@ -12,20 +12,20 @@ type Word128 Nat128
 //
 
 @inline
-func set8(x: Word8, no: Nat8) -> Word8 {
+public func set8(x: Word8, no: Nat8) -> Word8 {
 	let mask = Word8 1 << no
 	return x or mask
 }
 
 
 @inline
-func reset8(x: Word8, no: Nat8) -> Word8 {
+public func reset8(x: Word8, no: Nat8) -> Word8 {
 	let mask = Word8 1 << no
 	return x and not mask
 }
 
 
-func switch8(x: Word8, no: Nat8, val: Bool) -> Word8 {
+public func switch8(x: Word8, no: Nat8, val: Bool) -> Word8 {
 	if val {
 		return set16(x, no)
 	} else {
@@ -35,7 +35,7 @@ func switch8(x: Word8, no: Nat8, val: Bool) -> Word8 {
 }
 
 @inline
-func check8(x: Word8, no: Nat8) -> Bool {
+public func check8(x: Word8, no: Nat8) -> Bool {
 	let mask = Word8 1 << no
 	return Bool (x and mask)
 }
@@ -46,20 +46,20 @@ func check8(x: Word8, no: Nat8) -> Bool {
 //
 
 @inline
-func set16(x: Word16, no: Nat8) -> Word16 {
+public func set16(x: Word16, no: Nat8) -> Word16 {
 	let mask = Word16 1 << no
 	return x or mask
 }
 
 
 @inline
-func reset16(x: Word16, no: Nat8) -> Word16 {
+public func reset16(x: Word16, no: Nat8) -> Word16 {
 	let mask = Word16 1 << no
 	return x and not mask
 }
 
 
-func switch16(x: Word16, no: Nat8, val: Bool) -> Word16 {
+public func switch16(x: Word16, no: Nat8, val: Bool) -> Word16 {
 	if val {
 		return set16(x, no)
 	} else {
@@ -69,7 +69,7 @@ func switch16(x: Word16, no: Nat8, val: Bool) -> Word16 {
 }
 
 @inline
-func check16(x: Word16, no: Nat8) -> Bool {
+public func check16(x: Word16, no: Nat8) -> Bool {
 	let mask = Word16 1 << no
 	return Bool (x and mask)
 }
@@ -80,20 +80,20 @@ func check16(x: Word16, no: Nat8) -> Bool {
 //
 
 @inline
-func set32(x: Word32, no: Nat8) -> Word32 {
+public func set32(x: Word32, no: Nat8) -> Word32 {
 	let mask = Word32 1 << no
 	return x or mask
 }
 
 
 @inline
-func reset32(x: Word32, no: Nat8) -> Word32 {
+public func reset32(x: Word32, no: Nat8) -> Word32 {
 	let mask = Word32 1 << no
 	return x and not mask
 }
 
 
-func switch32(x: Word32, no: Nat8, val: Bool) -> Word32 {
+public func switch32(x: Word32, no: Nat8, val: Bool) -> Word32 {
 	if val {
 		return set32(x, no)
 	} else {
@@ -103,7 +103,7 @@ func switch32(x: Word32, no: Nat8, val: Bool) -> Word32 {
 }
 
 @inline
-func check32(x: Word32, no: Nat8) -> Bool {
+public func check32(x: Word32, no: Nat8) -> Bool {
 	let mask = Word32 1 << no
 	return Bool (x and mask)
 }
@@ -114,19 +114,19 @@ func check32(x: Word32, no: Nat8) -> Bool {
 //
 
 @inline
-func set64(x: Word64, no: Nat8) -> Word64 {
+public func set64(x: Word64, no: Nat8) -> Word64 {
 	let mask = Word64 1 << no
 	return x or mask
 }
 
 @inline
-func reset64(x: Word64, no: Nat8) -> Word64 {
+public func reset64(x: Word64, no: Nat8) -> Word64 {
 	let mask = Word64 1 << no
 	return x and not mask
 }
 
 
-func switch64(x: Word64, no: Nat8, val: Bool) -> Word64 {
+public func switch64(x: Word64, no: Nat8, val: Bool) -> Word64 {
 	if val {
 		return set64(x, no)
 	} else {
@@ -136,7 +136,7 @@ func switch64(x: Word64, no: Nat8, val: Bool) -> Word64 {
 }
 
 @inline
-func check64(x: Word64, no: Nat8) -> Bool {
+public func check64(x: Word64, no: Nat8) -> Bool {
 	let mask = Word64 1 << no
 	return Bool (x and mask)
 }
@@ -147,19 +147,19 @@ func check64(x: Word64, no: Nat8) -> Bool {
 //
 
 @inline
-func set128(x: Word128, no: Nat8) -> Word128 {
+public func set128(x: Word128, no: Nat8) -> Word128 {
 	let mask = Word128 1 << no
 	return x or mask
 }
 
 @inline
-func reset128(x: Word128, no: Nat8) -> Word128 {
+public func reset128(x: Word128, no: Nat8) -> Word128 {
 	let mask = Word128 1 << no
 	return x and not mask
 }
 
 
-func switch128(x: Word128, no: Nat8, val: Bool) -> Word128 {
+public func switch128(x: Word128, no: Nat8, val: Bool) -> Word128 {
 	if val {
 		return set64(x, no)
 	} else {
@@ -169,7 +169,7 @@ func switch128(x: Word128, no: Nat8, val: Bool) -> Word128 {
 }
 
 @inline
-func check128(x: Word128, no: Nat8) -> Bool {
+public func check128(x: Word128, no: Nat8) -> Bool {
 	let mask = Word128 1 << no
 	return Bool (x and mask)
 }

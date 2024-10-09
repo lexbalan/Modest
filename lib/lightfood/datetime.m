@@ -2,20 +2,20 @@
 include "libc/time"
 
 
-export type Date record {
+public type Date record {
 	year: Nat32
 	month: Nat8
 	day: Nat8
 }
 
-export type Time record {
+public type Time record {
 	hour: Nat8
 	minute: Nat8
 	second: Nat8
 }
 
 
-export type DateTime record {
+public type DateTime record {
 	year: Nat32
 	month: Nat8
 	day: Nat8
@@ -34,7 +34,7 @@ func localTimeNow() -> *StructTM {
 }
 
 
-export func timeNow() -> Time {
+public func timeNow() -> Time {
 	let tm = localTimeNow()
 	return Time {
 		hour = unsafe Nat8 tm.tm_hour
@@ -44,7 +44,7 @@ export func timeNow() -> Time {
 }
 
 
-export func dateNow() -> Date {
+public func dateNow() -> Date {
 	let tm = localTimeNow()
 	return Date {
 		year = unsafe Nat32 tm.tm_year + 1900
@@ -54,7 +54,7 @@ export func dateNow() -> Date {
 }
 
 
-export func dateTimeNow() -> DateTime {
+public func dateTimeNow() -> DateTime {
 	let tm = localTimeNow()
 	return DateTime {
 		year = unsafe Nat32 tm.tm_year + 1900

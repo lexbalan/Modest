@@ -16,7 +16,7 @@ $pragma do_not_include
   MaxLen: 268 435 455 байт (2 147 483 647 бит) - обнаружение
    одинарных, двойных, пакетных и всех нечетных ошибок
 */
-export func doHash(buf: *[]Byte, len: Nat32) -> Word32 {
+public func doHash(buf: *[]Byte, len: Nat32) -> Word32 {
 	let tableSize = 256
 	var crc_table: [tableSize]Word32
 	var crc: Word32

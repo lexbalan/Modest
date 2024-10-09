@@ -24,23 +24,23 @@ type Dirent record {
 
 /* File types for `d_type'.  */
 @property("value.id.c", "DT_UNKNOWN")
-let dt_UNKNOWN = 0
+const dt_UNKNOWN = 0
 @property("value.id.c", "DT_FIFO")
-let dt_FIFO = 1
+const dt_FIFO = 1
 @property("value.id.c", "DT_CHR")
-let dt_CHR = 2
+const dt_CHR = 2
 @property("value.id.c", "DT_DIR")
-let dt_DIR = 4
+const dt_DIR = 4
 @property("value.id.c", "DT_BLK")
-let dt_BLK = 6
+const dt_BLK = 6
 @property("value.id.c", "DT_REG")
-let dt_REG = 8
+const dt_REG = 8
 @property("value.id.c", "DT_LNK")
-let dt_LNK = 10
+const dt_LNK = 10
 @property("value.id.c", "DT_SOCK")
-let dt_SOCK = 12
+const dt_SOCK = 12
 @property("value.id.c", "DT_WHT")
-let dt_WHT = 14
+const dt_WHT = 14
 
 
 func opendir(dirname: *[]Char8) -> *Dir

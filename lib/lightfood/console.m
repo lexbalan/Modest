@@ -11,28 +11,28 @@ include "libc/string"  // for strlen, strcpy
 import "misc/utf"
 
 
-export func putchar8(c: Char8) -> Unit {
+public func putchar8(c: Char8) -> Unit {
 	putchar_utf8(c)
 }
 
 
-export func putchar16(c: Char16) -> Unit {
+public func putchar16(c: Char16) -> Unit {
 	putchar_utf16(c)
 }
 
 
-export func putchar32(c: Char32) -> Unit {
+public func putchar32(c: Char32) -> Unit {
 	putchar_utf32(c)
 }
 
 
 
-export func putchar_utf8(c: Char8) -> Unit {
+public func putchar_utf8(c: Char8) -> Unit {
 	putchar(Int32 c)
 }
 
 
-export func putchar_utf16(c: Char16) -> Unit {
+public func putchar_utf16(c: Char16) -> Unit {
 	var cc: [2]Char16
 	cc[0] = c
 	cc[1] = Char16 0
@@ -42,7 +42,7 @@ export func putchar_utf16(c: Char16) -> Unit {
 }
 
 
-export func putchar_utf32(c: Char32) -> Unit {
+public func putchar_utf32(c: Char32) -> Unit {
 	var decoded_buf: [4]Char8
 	let n = Int32 utf.utf32_to_utf8(c, &decoded_buf)
 
@@ -62,12 +62,12 @@ export func putchar_utf32(c: Char32) -> Unit {
 
 /*
 // проблема тк puts уже определен в include ^^
-export func puts(s: *Str8) -> Unit {
+public func puts(s: *Str8) -> Unit {
 	puts8(s)
 }
 */
 
-export func puts8(s: *Str8) -> Unit {
+public func puts8(s: *Str8) -> Unit {
 	var i = 0
 	while true {
 		let c = s[i]
@@ -80,7 +80,7 @@ export func puts8(s: *Str8) -> Unit {
 }
 
 
-export func puts16(s: *Str16) -> Unit {
+public func puts16(s: *Str16) -> Unit {
 	var i = 0
 	while true {
 		// нельзя просто так взять и вызвать putchar_utf16
@@ -104,7 +104,7 @@ export func puts16(s: *Str16) -> Unit {
 }
 
 
-export func puts32(s: *Str32) -> Unit {
+public func puts32(s: *Str32) -> Unit {
 	var i = 0
 	while true {
 		let c = s[i]
@@ -117,7 +117,7 @@ export func puts32(s: *Str32) -> Unit {
 
 
 
-export func print(form: *Str8, ...) {
+public func print(form: *Str8, ...) {
 	var va: VA_List
 	__va_start(va, form)
 	vfprint(c_STDOUT_FILENO, form, va)
@@ -127,7 +127,7 @@ export func print(form: *Str8, ...) {
 
 
 @unused_result
-export func vfprint(fd: Int, form: *Str8, va: VA_List) -> Int32 {
+public func vfprint(fd: Int, form: *Str8, va: VA_List) -> Int32 {
 	var strbuf: [256]Char8
 	let n = vsprint(&strbuf, form, va)
 	strbuf[n] = '\x0'
@@ -137,7 +137,7 @@ export func vfprint(fd: Int, form: *Str8, va: VA_List) -> Int32 {
 
 
 @unused_result
-export func vsprint(buf: *[]Char8, form: *Str8, va: VA_List) -> Int32 {
+public func vsprint(buf: *[]Char8, form: *Str8, va: VA_List) -> Int32 {
 	var i = 0  // form index
 	var j = 0  // out buf index
 

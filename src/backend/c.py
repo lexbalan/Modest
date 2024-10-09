@@ -1990,7 +1990,7 @@ def print_header(module, outname):
 
 
 		#elif isa == 'def_type':
-		#	if x['export']:
+		#	if x['public']:
 		#		print_def_type(x)
 
 	newline()
