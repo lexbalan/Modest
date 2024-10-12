@@ -833,6 +833,8 @@ def print_def_func(x):
 		return
 	func = x['value']
 	ft = func['type']
+	if x['public']:
+		out("public ")
 	out('func ')
 	print_id(func)
 	print_type_func(ft, extra_args=ft['extra_args'])
@@ -840,12 +842,16 @@ def print_def_func(x):
 
 
 def print_decl_type(x):
+	if x['public']:
+		out("public ")
 	out("type ")
 	out(get_type_id(x['type']))
 
 
 
 def print_def_type(x):
+	if x['public']:
+		out("public ")
 	out("type ")
 	print_id(x)
 	out(" ")
@@ -853,6 +859,8 @@ def print_def_type(x):
 
 
 def print_def_var(x):
+	if x['public']:
+		out("public ")
 	out("var ")
 	var = x['value']
 	print_field(var)
@@ -863,6 +871,8 @@ def print_def_var(x):
 
 
 def print_def_const(x):
+	if x['public']:
+		out("public ")
 	out("const ")
 	print_id(x)
 	out(" = ")
@@ -886,10 +896,6 @@ def print_def(x):
 
 	if isa != 'comment':
 		newline(n=x['nl'])
-
-	if 'public' in x:
-		if x['public']:
-			out("public ")
 
 	if isa == 'def_var': print_def_var(x)
 	elif isa == 'def_const': print_def_const(x)
