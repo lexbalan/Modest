@@ -1,3 +1,6 @@
+// Blink example for Arduino Nano (ATMega328p)
+// FCPU=16MHz
+// LED connected to PORTB
 
 type IO8 Nat8
 type IO16 Nat16
@@ -10,12 +13,15 @@ type GPIO record {
 }
 
 const sfrOffset = 0x20
+
 public const portB = unsafe *GPIO (sfrOffset + 0x03)
 public const portC = unsafe *GPIO (sfrOffset + 0x06)
 public const portD = unsafe *GPIO (sfrOffset + 0x09)
 
 
 
+// delay not calibrated
+// just for example
 var delay_counter: Nat32
 func delay_ms(ms: Nat32) -> Unit {
 	var t: Nat32 = ms
