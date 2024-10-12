@@ -642,7 +642,7 @@ def do_type_record(x):
 	anon_tag = '__anonymous_struct_%d' % anon_rec_cnt
 	rec['c_anon_id'] = anon_tag
 
-	rec['att'].append('anonymous_record')
+	#rec['att'].append('anonymous_record') # remove this!
 	module['anon_recs'].append(rec)
 	return rec
 
@@ -1209,7 +1209,7 @@ def do_value_call(x):
 	fn = do_rvalue(x['left'])
 
 	if value_is_bad(fn):
-		error("undefined value", fn)
+		error("undefined value 2", fn)
 		return value_bad(x)
 
 
@@ -2531,6 +2531,10 @@ def do_attribute(x):
 		attribute_add('inline')
 	elif kind == 'extern':
 		attribute_add('c_extern')
+	elif kind == 'packed':
+		attribute_add('type:packed')
+		# так делать вообще-то нельзя, но пока делаю так
+		attribute_add('original_type:packed')
 	elif kind == 'unused_result':
 		attribute_add("value.type.to:dispensable")
 	else:
@@ -2911,6 +2915,8 @@ def pre_def(ast, fdecl=False):
 
 					add_spices(y, ast_atts=x['attributes'])
 					module_append(y, to_export=x['public'])
+					#mass
+					#print(y['type']['att'])
 
 	# 2. def vars & consts
 	for x in ast:

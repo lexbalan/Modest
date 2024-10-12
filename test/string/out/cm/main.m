@@ -4,9 +4,9 @@
 include "libc/ctypes64"
 include "libc/stdio"
 import "lightfood/console"
-let str8_example = "String"
-let str16_example = str8_example + "-Ω"
-let str32_example = str16_example + " 🐀🎉🦄"
+const str8_example = "String"
+const str16_example = str8_example + "-Ω"
+const str32_example = str16_example + " 🐀🎉🦄"
 var string8: [6]Char8 = str8_example
 var string16: [8]Char16 = str16_example
 var string32: [12]Char32 = str32_example

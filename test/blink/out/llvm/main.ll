@@ -26,6 +26,9 @@ target triple = "arm64-apple-macosx12.0.0"
 %Str16 = type [0 x %Char16]
 %Str32 = type [0 x %Char32]
 %VA_List = type i8*
+declare void @llvm.va_start(i8*)
+declare void @llvm.va_copy(i8*, i8*)
+declare void @llvm.va_end(i8*)
 declare void @llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)
 declare void @llvm.memset.p0.i32(i8*, i8, i32, i1)
 
@@ -102,6 +105,8 @@ break_2:
 ; MODULE: main
 
 ; -- print includes --
+; -- end print includes --
+; -- print imports --
 
 %Str = type %Str8;
 %Char = type i8;
@@ -181,73 +186,29 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
-; -- end print includes --
-; -- print imports --
 ; -- end print imports --
 ; -- strings --
-@str1 = private constant [9 x i8] [i8 102, i8 105, i8 108, i8 101, i8 46, i8 116, i8 120, i8 116, i8 0]
-@str2 = private constant [19 x i8] [i8 114, i8 117, i8 110, i8 32, i8 119, i8 114, i8 105, i8 116, i8 101, i8 95, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
-@str3 = private constant [2 x i8] [i8 119, i8 0]
-@str4 = private constant [31 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 99, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 99, i8 114, i8 101, i8 97, i8 116, i8 101, i8 32, i8 102, i8 105, i8 108, i8 101, i8 32, i8 39, i8 37, i8 115, i8 39, i8 0]
-@str5 = private constant [12 x i8] [i8 115, i8 111, i8 109, i8 101, i8 32, i8 116, i8 101, i8 120, i8 116, i8 46, i8 10, i8 0]
-@str6 = private constant [18 x i8] [i8 114, i8 117, i8 110, i8 32, i8 114, i8 101, i8 97, i8 100, i8 95, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
-@str7 = private constant [2 x i8] [i8 114, i8 0]
-@str8 = private constant [29 x i8] [i8 101, i8 114, i8 114, i8 111, i8 114, i8 58, i8 32, i8 99, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 111, i8 112, i8 101, i8 110, i8 32, i8 102, i8 105, i8 108, i8 101, i8 32, i8 39, i8 37, i8 115, i8 39, i8 0]
-@str9 = private constant [21 x i8] [i8 102, i8 105, i8 108, i8 101, i8 32, i8 39, i8 37, i8 115, i8 39, i8 32, i8 99, i8 111, i8 110, i8 116, i8 97, i8 105, i8 110, i8 115, i8 58, i8 32, i8 0]
-@str10 = private constant [19 x i8] [i8 116, i8 101, i8 120, i8 116, i8 95, i8 102, i8 105, i8 108, i8 101, i8 32, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
+@str1 = private constant [11 x i8] [i8 67, i8 67, i8 51, i8 50, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str2 = private constant [10 x i8] [i8 67, i8 67, i8 56, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str3 = private constant [3 x i8] [i8 37, i8 99, i8 0]
 
-
-define void @write_example() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str2 to [0 x i8]*))
-	%2 = call %File* @fopen(%Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str3 to [0 x i8]*))
-	%3 = bitcast i8* null to %File*
-	%4 = icmp eq %File* %2, %3
-	br i1 %4 , label %then_0, label %endif_0
-then_0:
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @str4 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))
-	ret void
-	br label %endif_0
-endif_0:
-	%7 = call %Int (%File*, %Str*, ...) @fprintf(%File* %2, %Str* bitcast ([12 x i8]* @str5 to [0 x i8]*))
-	%8 = call %Int @fclose(%File* %2)
-	ret void
+define i32 @main() {
+	call void (%Str8*, ...) @main_print(%Str8* bitcast ([3 x i8]* @str3 to [0 x i8]*), i32 35)
+	ret i32 0
 }
 
-define void @read_example() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str6 to [0 x i8]*))
-	%2 = call %File* @fopen(%Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str7 to [0 x i8]*))
-	%3 = bitcast i8* null to %File*
-	%4 = icmp eq %File* %2, %3
-	br i1 %4 , label %then_0, label %endif_0
-then_0:
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([29 x i8]* @str8 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))
-	ret void
-	br label %endif_0
-endif_0:
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str9 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))
-	br label %again_1
-again_1:
-	br i1 1 , label %body_1, label %break_1
-body_1:
-	%8 = call %Int @fgetc(%File* %2)
-	%9 = icmp eq %Int %8, -1
-	br i1 %9 , label %then_1, label %endif_1
-then_1:
-	br label %break_1
-	br label %endif_1
-endif_1:
-	%11 = call %Int @putchar(%Int %8)
-	br label %again_1
-break_1:
-	%12 = call %Int @fclose(%File* %2)
-	ret void
-}
 
-define %Int @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str10 to [0 x i8]*))
-	call void @write_example()
-	call void @read_example()
-	ret %Int 0
+define void @main_print(%Str8* %form, ...) {
+	%1 = alloca i8*, align 1
+	%2 = bitcast i8** %1 to i8*
+	call void @llvm.va_start(i8* %2)
+	%3 = va_arg i8** %1, i32
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str1 to [0 x i8]*), i32 %3)
+	%5 = trunc i32 %3 to i8
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str2 to [0 x i8]*), i8 %5)
+	%7 = bitcast i8** %1 to i8*
+	call void @llvm.va_end(i8* %7)
+	ret void
 }
 
 

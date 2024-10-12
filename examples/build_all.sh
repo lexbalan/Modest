@@ -5,6 +5,7 @@ cd 5.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd 6.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd 7.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd 8.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+cd m328p_blink && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 #cd 9.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd 10.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd stmt_if && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \

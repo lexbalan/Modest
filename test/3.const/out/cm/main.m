@@ -7,18 +7,18 @@ type Point record {
 	x: Nat32
 	y: Nat32
 }
-let genericIntConst = 42
-let int32Const = Int32 genericIntConst
-let genericStringConst = "Hello!"
-let string8Const = *Str8 genericStringConst
-let string16Const = *Str16 genericStringConst
-let string32Const = *Str32 genericStringConst
-let ps = [
+const genericIntConst = 42
+const int32Const = Int32 genericIntConst
+const genericStringConst = "Hello!"
+const string8Const = *Str8 genericStringConst
+const string16Const = *Str16 genericStringConst
+const string32Const = *Str32 genericStringConst
+const ps = [
 	{x = 0, y = 0}
 	{x = 1, y = 1}
 	{x = 2, y = 2}
 ]
-let points = [3]Point ps
+const points = [3]Point ps
 var points2: [3]Point = points
 func main() -> Int {
 	printf("test const\n")

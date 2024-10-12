@@ -3,10 +3,10 @@ include "libc/ctypes64"
 include "libc/stdio"
 include "libc/stdlib"
 include "libc/socket"
-let filename = "file2.txt"
-let ipAddress = "127.0.0.1"
-let port = 8080
-let bufSize = 1024
+const filename = "file2.txt"
+const ipAddress = "127.0.0.1"
+const port = 8080
+const bufSize = 1024
 func write_file(sockfd: Int) -> Bool {
 	var buffer: [bufSize]Char8
 

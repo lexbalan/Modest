@@ -9,7 +9,7 @@ type Point2D record {
 	x: Int
 	y: Int
 }
-let mathPi = 3.141592653589793238462643383279502884
+const mathPi = 3.141592653589793238462643383279502884
 func squareOfCircle(radius: Float32) -> Float32 {
 	return pow(radius, 2) * mathPi
 }

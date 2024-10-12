@@ -221,48 +221,50 @@ declare void @perror(%ConstCharStr* %str)
 define void @write_example() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str2 to [0 x i8]*))
 	%2 = call %File* @fopen(%Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([3 x i8]* @str3 to [0 x i8]*))
-	%3 = icmp eq %File* %2, null
-	br i1 %3 , label %then_0, label %endif_0
+	%3 = bitcast i8* null to %File*
+	%4 = icmp eq %File* %2, %3
+	br i1 %4 , label %then_0, label %endif_0
 then_0:
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @str4 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @str4 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))
 	ret void
 	br label %endif_0
 endif_0:
-	%6 = alloca %Chunk, align 1
+	%7 = alloca %Chunk, align 1
 	; pointers casting requires -funsafe translator option
 	; (see Makefile)
-	%7 = getelementptr inbounds %Chunk, %Chunk* %6, i32 0, i32 0
-	%8 = bitcast [100 x %Char]* %7 to [0 x %Char]*
-	%9 = call [0 x %Char]* @strcpy([0 x %Char]* %8, [0 x %Char]* bitcast ([3 x i8]* @str5 to [0 x i8]*))
-	%10 = getelementptr inbounds %Chunk, %Chunk* %6, i32 0, i32 1
-	%11 = bitcast [1024 x %Char]* %10 to [0 x %Char]*
-	%12 = call [0 x %Char]* @strcpy([0 x %Char]* %11, [0 x %Char]* bitcast ([5 x i8]* @str6 to [0 x i8]*))
+	%8 = getelementptr inbounds %Chunk, %Chunk* %7, i32 0, i32 0
+	%9 = bitcast [100 x %Char]* %8 to [0 x %Char]*
+	%10 = call [0 x %Char]* @strcpy([0 x %Char]* %9, [0 x %Char]* bitcast ([3 x i8]* @str5 to [0 x i8]*))
+	%11 = getelementptr inbounds %Chunk, %Chunk* %7, i32 0, i32 1
+	%12 = bitcast [1024 x %Char]* %11 to [0 x %Char]*
+	%13 = call [0 x %Char]* @strcpy([0 x %Char]* %12, [0 x %Char]* bitcast ([5 x i8]* @str6 to [0 x i8]*))
 	; write chunk to file
-	%13 = bitcast %Chunk* %6 to i8*
-	%14 = call %SizeT @fwrite(i8* %13, %SizeT 1124, %SizeT 1, %File* %2)
-	%15 = call %Int @fclose(%File* %2)
+	%14 = bitcast %Chunk* %7 to i8*
+	%15 = call %SizeT @fwrite(i8* %14, %SizeT 1124, %SizeT 1, %File* %2)
+	%16 = call %Int @fclose(%File* %2)
 	ret void
 }
 
 define void @read_example() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str7 to [0 x i8]*))
 	%2 = call %File* @fopen(%Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([3 x i8]* @str8 to [0 x i8]*))
-	%3 = icmp eq %File* %2, null
-	br i1 %3 , label %then_0, label %endif_0
+	%3 = bitcast i8* null to %File*
+	%4 = icmp eq %File* %2, %3
+	br i1 %4 , label %then_0, label %endif_0
 then_0:
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([29 x i8]* @str9 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([29 x i8]* @str9 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))
 	ret void
 	br label %endif_0
 endif_0:
-	%6 = alloca %Chunk, align 1
-	%7 = bitcast %Chunk* %6 to i8*
-	%8 = call %SizeT @fread(i8* %7, %SizeT 1124, %SizeT 1, %File* %2)
-	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str10 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))
-	%10 = getelementptr inbounds %Chunk, %Chunk* %6, i32 0, i32 0
-	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str11 to [0 x i8]*), [100 x %Char]* %10)
-	%12 = getelementptr inbounds %Chunk, %Chunk* %6, i32 0, i32 1
-	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str12 to [0 x i8]*), [1024 x %Char]* %12)
-	%14 = call %Int @fclose(%File* %2)
+	%7 = alloca %Chunk, align 1
+	%8 = bitcast %Chunk* %7 to i8*
+	%9 = call %SizeT @fread(i8* %8, %SizeT 1124, %SizeT 1, %File* %2)
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str10 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))
+	%11 = getelementptr inbounds %Chunk, %Chunk* %7, i32 0, i32 0
+	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str11 to [0 x i8]*), [100 x %Char]* %11)
+	%13 = getelementptr inbounds %Chunk, %Chunk* %7, i32 0, i32 1
+	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str12 to [0 x i8]*), [1024 x %Char]* %13)
+	%15 = call %Int @fclose(%File* %2)
 	ret void
 }
 

@@ -1,7 +1,7 @@
 
 include "libc/ctypes64"
 include "libc/stdio"
-let arr = [Int32 1, Int32 2]
+const arr = [Int32 1, Int32 2]
 var arr0: [2]Int32 = arr
 var arr1: [2]Int32 = arr
 var str: *[]Char8 = "Hello!"

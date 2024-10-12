@@ -2,11 +2,11 @@
 include "libc/ctypes64"
 include "libc/stdio"
 include "libc/math"
-let constantArray = [1, 2, 3, 4, 5] + [6, 7, 8, 9, 10]
+const constantArray = [1, 2, 3, 4, 5] + [6, 7, 8, 9, 10]
 var globalArray: [10]Int32 = constantArray
 var arrayFromString: [3]Char8 = "abc"
-let startSequence = [0xAA, 0x55, 0x02]
-let stopSequence = [0x16]
+const startSequence = [0xAA, 0x55, 0x02]
+const stopSequence = [0x16]
 func f0(x: [20]Char8) -> [30]Char8 {
 	var local_copy_of_x: [20]Char8 = x
 	printf("f0(\"%s\")\n", &local_copy_of_x)

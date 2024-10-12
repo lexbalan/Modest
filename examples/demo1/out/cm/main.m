@@ -1,7 +1,7 @@
 
 include "libc/stdio"
-let minNumber = 0
-let maxNumber = 10
+const minNumber = 0
+const maxNumber = 10
 func main() -> Int32 {
 	let number = get_number(minNumber, maxNumber)
 

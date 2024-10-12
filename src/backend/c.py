@@ -222,6 +222,9 @@ def print_type_pointer(t, space_after, as_const=False):
 def print_type_record(t, tag=""):
 	out("struct")
 
+	if 'packed' in t['att']:
+		out(" __attribute__((packed))")
+
 	if tag != "":
 		out(" %s" % tag)
 

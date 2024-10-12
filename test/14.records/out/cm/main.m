@@ -12,8 +12,8 @@ type Point3D record {
 	y: Nat32
 	z: Nat32
 }
-let xx = {x = 1, y = 2}
-let yy = Point2D {x = 1, y = 2}
+const xx = {x = 1, y = 2}
+const yy = Point2D {x = 1, y = 2}
 func main() -> Int {
 	printf("records test\n")
 

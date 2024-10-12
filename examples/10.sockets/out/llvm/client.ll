@@ -337,25 +337,26 @@ define i1 @send_file(%File* %fp, %Int %sockfd) {
 again_1:
 	%2 = bitcast [1024 x i8]* %1 to %CharStr*
 	%3 = call %CharStr* @fgets(%CharStr* %2, %Int 1024, %File* %fp)
-	%4 = icmp ne %CharStr* %3, null
-	br i1 %4 , label %body_1, label %break_1
+	%4 = bitcast i8* null to %CharStr*
+	%5 = icmp ne %CharStr* %3, %4
+	br i1 %5 , label %body_1, label %break_1
 body_1:
-	%5 = bitcast [1024 x i8]* %1 to i8*
-	%6 = call %SSizeT @send(%Int %sockfd, i8* %5, %SizeT 1024, %Int 0)
-	%7 = icmp eq %SSizeT %6, -1
-	br i1 %7 , label %then_0, label %endif_0
+	%6 = bitcast [1024 x i8]* %1 to i8*
+	%7 = call %SSizeT @send(%Int %sockfd, i8* %6, %SizeT 1024, %Int 0)
+	%8 = icmp eq %SSizeT %7, -1
+	br i1 %8 , label %then_0, label %endif_0
 then_0:
 	ret i1 0
 	br label %endif_0
 endif_0:
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%9 = zext i11 1024 to i32
+	%10 = zext i11 1024 to i32
 	; -- end vol eval --
 	; -- ZERO
-	%10 = mul i32 %9, 1
-	%11 = bitcast [1024 x i8]* %1 to i8*
-	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %11, i8 0, i32 %10, i1 0)
+	%11 = mul i32 %10, 1
+	%12 = bitcast [1024 x i8]* %1 to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %12, i8 0, i32 %11, i1 0)
 	br label %again_1
 break_1:
 	ret i1 1
@@ -404,24 +405,25 @@ then_1:
 endif_1:
 	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str5 to [0 x i8]*))
 	%28 = call %File* @fopen(%ConstCharStr* bitcast ([9 x i8]* @str6 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str7 to [0 x i8]*))
-	%29 = icmp eq %File* %28, null
-	br i1 %29 , label %then_2, label %endif_2
+	%29 = bitcast i8* null to %File*
+	%30 = icmp eq %File* %28, %29
+	br i1 %30 , label %then_2, label %endif_2
 then_2:
 	call void @perror(%ConstCharStr* bitcast ([26 x i8]* @str8 to [0 x i8]*))
 	call void @exit(%Int 1)
 	br label %endif_2
 endif_2:
-	%30 = call i1 @send_file(%File* %28, %Int %1)
-	br i1 %30 , label %then_3, label %else_3
+	%31 = call i1 @send_file(%File* %28, %Int %1)
+	br i1 %31 , label %then_3, label %else_3
 then_3:
-	%31 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([33 x i8]* @str9 to [0 x i8]*))
+	%32 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([33 x i8]* @str9 to [0 x i8]*))
 	br label %endif_3
 else_3:
 	call void @perror(%ConstCharStr* bitcast ([26 x i8]* @str10 to [0 x i8]*))
 	br label %endif_3
 endif_3:
-	%32 = call %Int @close(%Int %1)
-	%33 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @str11 to [0 x i8]*))
+	%33 = call %Int @close(%Int %1)
+	%34 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @str11 to [0 x i8]*))
 	ret %Int 0
 }
 

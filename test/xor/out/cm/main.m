@@ -1,8 +1,8 @@
 
 include "libc/ctypes64"
 include "libc/stdio"
-let msg_length = 12
-let key_length = 3
+const msg_length = 12
+const key_length = 3
 var test_msg: [msg_length + 1]Char8 = "Hello World!"
 var test_key: [key_length + 1]Char8 = "abc"
 func xor_encrypter(buf: *[]Word8, buflen: Nat32, key: *[]Word8, keylen: Nat32) -> Unit {

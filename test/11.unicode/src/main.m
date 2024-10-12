@@ -9,18 +9,18 @@ include "libc/stdio"
 import "lightfood/console"
 
 
-let ratSymbolUTF8 = [0xf0, 0x9f, 0x90, 0x80]
-let ratSymbolUTF16 = [0xD83D, 0xDC00]
-let ratSymbolUTF32 = 0x0001F400
+const ratSymbolUTF8 = [0xf0, 0x9f, 0x90, 0x80]
+const ratSymbolUTF16 = [0xD83D, 0xDC00]
+const ratSymbolUTF32 = 0x0001F400
 
-let arr_partycorn: [4]Char8 = "🎉"
-let arr_unicorn: [4]Char8 = "🦄"
-let arr_rat: [4]Char8 = "🐀"
+const arr_partycorn: [4]Char8 = "🎉"
+const arr_unicorn: [4]Char8 = "🦄"
+const arr_rat: [4]Char8 = "🐀"
 
-let genericStringConst = "S-t-r-i-n-g-Ω 🐀🎉🦄"
-let string8Const = *Str8 genericStringConst
-let string16Const = *Str16 genericStringConst
-let string32Const = *Str32 genericStringConst
+const genericStringConst = "S-t-r-i-n-g-Ω 🐀🎉🦄"
+const string8Const = *Str8 genericStringConst
+const string16Const = *Str16 genericStringConst
+const string32Const = *Str32 genericStringConst
 
 var arr_utf8: [8]Char8 = "Hi!\n"
 var arr_utf16: [9]Char16 = "Hello Ω!\n"

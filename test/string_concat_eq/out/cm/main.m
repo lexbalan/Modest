@@ -1,11 +1,11 @@
 
 include "libc/ctypes64"
 include "libc/stdio"
-let hello = "Hello"
-let world = "World"
-let party_corn = "🎉"
-let greeting = hello + " " + world
-let test = "test"
+const hello = "Hello"
+const world = "World"
+const party_corn = "🎉"
+const greeting = hello + " " + world
+const test = "test"
 func main() -> Int {
 	printf("%s\n", *Str8 greeting)
 

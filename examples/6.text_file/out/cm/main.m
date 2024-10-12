@@ -1,7 +1,7 @@
 
 include "libc/ctypes64"
 include "libc/stdio"
-let filename = *Str8 "file.txt"
+const filename = *Str8 "file.txt"
 func write_example() -> Unit {
 	printf("run write_example\n")
 

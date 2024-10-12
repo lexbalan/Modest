@@ -224,6 +224,18 @@ def llvm_value_str(strid, _str, type, proto=None, isz=True):
 
 
 
+def llvm_value_inline_cast(type, value):
+	return {
+		'isa': 'll_value',
+		'kind': 'inline_cast',
+		'type': type,
+		'value': value,
+		'is_adr': False,
+		'proto': None
+	}
+
+
+
 #def llvm_value_immediate(x):
 #	return do_eval(x)
 """if hlir_type.type_is_array(x['type']):
@@ -243,7 +255,7 @@ return llvm_value_num(x['type'], x['asset'])"""
 
 def llvm_print_type_value(x, noundef=False):
 	assert(x['isa'] == 'll_value')
-
+	#mass
 	print_type(x['type'])
 	if x['is_adr']:
 		out("* ")
@@ -252,6 +264,7 @@ def llvm_print_type_value(x, noundef=False):
 
 	if noundef:
 		out(" noundef")
+
 	llvm_print_value(x)
 
 
@@ -366,23 +379,27 @@ def llvm_print_value_str(x):
 
 def llvm_print_value_num(x):
 	num = x['asset']
-	if not hlir_type.type_is_pointer(x['type']):
-		# integer, float, bool, char
-		if hlir_type.type_is_float(x['type']):
-			# короче суть такая - число сперва нужно причесать
-			# так, чтобы оно могло быть четко представлено в LLVM float/double
-			# наче LLVM не примет его и сгенерирует ошибку
-			packed_float = _float_value_pack(num, x['type']['width'])
-			return out("%.16f" % packed_float)
 
-		out(str(num))
-
-	else:
-		if x['asset'] == 0:
+	if hlir_type.type_is_pointer(x['type']):
+		if num == 0:
 			out("null")
 		else:
-			v = llvm_value_num(foundation.typeNat64, x['asset'])
+			v = llvm_value_num(foundation.typeNat64, num)
 			llvm_inline_cast('inttoptr', x['type'], v)
+		return
+
+	# integer, float, bool, char
+	if hlir_type.type_is_float(x['type']):
+		# короче суть такая - число сперва нужно причесать
+		# так, чтобы оно могло быть четко представлено в LLVM float/double
+		# наче LLVM не примет его и сгенерирует ошибку
+		packed_float = _float_value_pack(num, x['type']['width'])
+		return out("%.16f" % packed_float)
+
+	out(str(num))
+
+
+
 
 
 
@@ -410,7 +427,7 @@ def llvm_print_value(x):
 	elif k == 'str': llvm_print_value_str(x)
 	elif k == 'array': llvm_print_value_array(x)
 	elif k == 'record': llvm_print_value_record(x)
-	elif k == 'cons': llvm_print_value_inlinecast(x)
+	elif k == 'inline_cast': llvm_print_value_inlinecast(x)
 	elif k == 'zero': llvm_print_value_zero(x)
 	else:
 		out("<unknown_value::%s>" % c)
@@ -720,6 +737,11 @@ def print_type_enum(t):
 
 
 def print_type_record(t):
+	packed = 'packed' in t['att']
+
+	if packed:
+		out("<")
+
 	out("{")
 	fields = t['fields']
 	i = 0
@@ -738,6 +760,9 @@ def print_type_record(t):
 		out("\n")
 
 	out("}")
+
+	if packed:
+		out(">")
 
 
 def print_type_array(t):
@@ -1264,8 +1289,9 @@ def do_eval_cons(x):
 		return eval_cons_record(x)
 
 
-	if value_is_immediate(x):
-		return do_eval_literal(x)
+	if value_is_immediate(x['value']):
+		if not hlir_type.type_is_pointer(to_type):
+			return do_eval_literal(x)
 
 
 	value = x['value']
@@ -1280,9 +1306,11 @@ def do_eval_cons(x):
 				return llvm_value_str(x['strid'], x['asset'], x['type'], value, isz='zstring' in x['att'])
 
 		# (STUB?) nil -> zeroinitializer
-		if hlir_type.type_is_free_pointer(from_type):
-			if value_is_immediate(value):
-				return llvm_value_num(to_type, value['asset'])
+		"""if value_is_immediate(value):
+			info("/???", x['ti'])
+			rv = do_eval(value)
+			return llvm_value_inline_cast(to_type, rv)"""
+
 
 	# cast any type to Unit type
 	if hlir_type.type_is_unit(to_type):
@@ -1409,6 +1437,7 @@ def do_eval_record(v):
 
 
 def do_eval_pointer(x):
+	info("???", x['ti'])
 	return llvm_value_num(x['type'], x['asset'])
 
 

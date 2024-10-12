@@ -249,8 +249,9 @@ declare %Int @accept(%Int %socket, %Struct_sockaddr* %addr, %SocklenT* %addrlen)
 define i1 @write_file(%Int %sockfd) {
 	%1 = alloca [1024 x i8], align 1
 	%2 = call %File* @fopen(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
-	%3 = icmp eq %File* %2, null
-	br i1 %3 , label %then_0, label %endif_0
+	%3 = bitcast i8* null to %File*
+	%4 = icmp eq %File* %2, %3
+	br i1 %4 , label %then_0, label %endif_0
 then_0:
 	call void @perror(%ConstCharStr* bitcast ([27 x i8]* @str3 to [0 x i8]*))
 	ret i1 0
@@ -260,23 +261,23 @@ endif_0:
 again_1:
 	br i1 1 , label %body_1, label %break_1
 body_1:
-	%5 = bitcast [1024 x i8]* %1 to i8*
-	%6 = call %SSizeT @recv(%Int %sockfd, i8* %5, %SizeT 1024, %Int 0)
-	%7 = icmp sle %SSizeT %6, 0
-	br i1 %7 , label %then_1, label %endif_1
+	%6 = bitcast [1024 x i8]* %1 to i8*
+	%7 = call %SSizeT @recv(%Int %sockfd, i8* %6, %SizeT 1024, %Int 0)
+	%8 = icmp sle %SSizeT %7, 0
+	br i1 %8 , label %then_1, label %endif_1
 then_1:
 	br label %break_1
 	br label %endif_1
 endif_1:
-	%9 = call %Int (%File*, %Str*, ...) @fprintf(%File* %2, %Str* bitcast ([3 x i8]* @str4 to [0 x i8]*), [1024 x i8]* %1)
+	%10 = call %Int (%File*, %Str*, ...) @fprintf(%File* %2, %Str* bitcast ([3 x i8]* @str4 to [0 x i8]*), [1024 x i8]* %1)
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%10 = zext i11 1024 to i32
+	%11 = zext i11 1024 to i32
 	; -- end vol eval --
 	; -- ZERO
-	%11 = mul i32 %10, 1
-	%12 = bitcast [1024 x i8]* %1 to i8*
-	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %12, i8 0, i32 %11, i1 0)
+	%12 = mul i32 %11, 1
+	%13 = bitcast [1024 x i8]* %1 to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %13, i8 0, i32 %12, i1 0)
 	br label %again_1
 break_1:
 	ret i1 1

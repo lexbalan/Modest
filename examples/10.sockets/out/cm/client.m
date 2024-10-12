@@ -4,10 +4,10 @@ include "libc/stdio"
 include "libc/stdlib"
 include "libc/unistd"
 include "libc/socket"
-let filename = "file.txt"
-let ipAddress = "127.0.0.1"
-let port = 8080
-let bufSize = 1024
+const filename = "file.txt"
+const ipAddress = "127.0.0.1"
+const port = 8080
+const bufSize = 1024
 func send_file(fp: *File, sockfd: Int) -> Bool {
 	var data: [bufSize]Char8
 

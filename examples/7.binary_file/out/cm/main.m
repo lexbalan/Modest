@@ -6,7 +6,7 @@ type Chunk record {
 	id: [100]Char
 	data: [1024]Char
 }
-let filename = *Str8 "file.bin"
+const filename = *Str8 "file.bin"
 func write_example() -> Unit {
 	printf("run write_example\n")
 
