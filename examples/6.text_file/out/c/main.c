@@ -14,7 +14,6 @@ void read_example();
 int main();
 
 
-
 void write_example()
 {
 	printf("run write_example\n");

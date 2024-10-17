@@ -2650,7 +2650,20 @@ def do_import(x):
 	else:
 		# забираем публичные символы
 		# и забираем все определения (исключая дубликаты!)
-		module['symtab_include'].extend(m['symtab_public'])
+		if x['public']:
+			# public include
+			module['symtab_public'].extend(m['symtab_public'])
+
+			# копируем все c_include из импортированного модуля себе
+			# это костыль, но пока так
+			for private_def in m['defs']:
+				if private_def['isa'] == 'directive':
+					if private_def['kind'] == 'c_include':
+						module_append(private_def)
+
+		else:
+			module['symtab_include'].extend(m['symtab_public'])
+
 		module['included'].append(m)
 
 	y = import_directive(impline, x['ti'], include=x['include'])
@@ -2915,7 +2928,6 @@ def pre_def(ast, fdecl=False):
 
 					add_spices(y, ast_atts=x['attributes'])
 					module_append(y, to_export=x['public'])
-					#mass
 					#print(y['type']['att'])
 
 	# 2. def vars & consts

@@ -13,4 +13,5 @@ $else
 @error("C types not implemented")
 $endif*/
 
-include "./ctypes64"
+public include "./ctypes64"
+

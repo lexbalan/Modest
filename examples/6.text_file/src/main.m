@@ -1,7 +1,8 @@
 // examples/6.text_file/main.cm
 
-include "libc/ctypes64"
-include "libc/stdio"
+//include "libc/ctypes64"
+//include "libc/stdio"
+include "libc/libc"
 
 
 let filename = *Str8 "file.txt"
