@@ -2363,10 +2363,10 @@ def print_included(m):
 		if inc['id'] not in already_in:
 			already_in.append(inc['id'])
 			print_included(inc)
-			een(inc['defs'])
-			een(inc['export_defs'])
+			een(inc['defs_private'])
+			een(inc['defs_public'])
 #			out("\n; -- INCLUDED_DEFS --")
-#			een(inc['included_defs'])
+#			een(inc['defs_included'])
 #			out("\n; -- END_INCLUDED_DEFS --")
 
 
@@ -2377,12 +2377,12 @@ def print_imports(m):
 		print_included(imp)
 		print_imports(imp)
 
-		#for x in imp['export_defs']:
+		#for x in imp['defs_public']:
 		#	print("- %s" % x['id']['str'])
 
 		# только декларируем функции переменные и константы
-		een(imp['defs'], decl_only=True)
-		een(imp['export_defs'], decl_only=True)
+		een(imp['defs_private'], decl_only=True)
+		een(imp['defs_public'], decl_only=True)
 
 
 separatorLine = "\n; " + '-' * 77
@@ -2410,13 +2410,13 @@ def print_module(m):
 		out(separatorLine)
 		out("\n; declarations from: %s" % (imported_module_id))
 		out(separatorLine)
-		een(imp['export_defs'])
+		een(imp['defs_public'])
 		out("\n\n")"""
 
 	print_strings(m['strings'])
 
-	een(m['defs'])
-	een(m['export_defs'])
+	een(m['defs_private'])
+	een(m['defs_public'])
 
 	out("\n\n")
 	return

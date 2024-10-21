@@ -245,10 +245,10 @@ def module_append(definition, to_export=False):
 	global module
 
 	if to_export:
-		module['export_defs'].append(definition)
+		module['defs_public'].append(definition)
 	else:
 		#print("module %s append %s" % (module['id'], definition['isa']))
-		module['defs'].append(definition)
+		module['defs_private'].append(definition)
 
 	definition['module'] = module
 
@@ -2587,8 +2587,8 @@ def cmodule_extend(y, do_not_def):
 	module['symtab_private'].extend(y['symtab_private'])
 
 	if not do_not_def:
-		module['defs'].extend(y['defs'])
-		module['export_defs'].extend(y['export_defs'])
+		module['defs_private'].extend(y['defs_private'])
+		module['defs_public'].extend(y['defs_public'])
 """
 
 def do_import(x):
@@ -2629,9 +2629,9 @@ def do_import(x):
 			fatal("cannot import module")
 
 		if 'c_no_print' in m['att']:
-			for xx in m['defs']:
+			for xx in m['defs_private']:
 				xx['att'].append('c_no_print')
-			for xx in m['export_defs']:
+			for xx in m['defs_public']:
 				xx['att'].append('c_no_print')
 
 		included_modules[abspath] = m
@@ -2656,7 +2656,7 @@ def do_import(x):
 
 			# копируем все c_include из импортированного модуля себе
 			# это костыль, но пока так
-			for private_def in m['defs']:
+			for private_def in m['defs_private']:
 				if private_def['isa'] == 'directive':
 					if private_def['kind'] == 'c_include':
 						module_append(private_def)
@@ -2873,11 +2873,11 @@ def process_module(ast, source_info, nodef=False):
 		'included': [],
 		'imports': {},      # '<local_module_id>' => {'isa': 'module'}
 
-		'defs': [],         # приватные определения модуля
-		'export_defs': [],  # открытые определения модуля
-		# определения полученные из заинклуженного модуля
-		# LLVM например их печатает, а C и CM - нет
-		'included_defs': [],
+		'defs_private': [],
+		'defs_public': [],
+
+		'defs_included': [],  # need for LLVM
+
 		'att': []
  	}
 
@@ -3198,12 +3198,12 @@ def module_remove_node(m, isa, id_str):
 	for submodule in m['imports']:
 		module_remove_node(submodule, isa, id_str)
 
-	for x in m['defs']:
+	for x in m['defs_private']:
 		if x['isa'] == isa:
 			if 'id' in x:
 				if x['id']['str'] == id_str:
 					#print("REMOVE: " + id_str)
-					m['defs'].remove(x)
+					m['defs_private'].remove(x)
 					break
 	return
 

@@ -911,10 +911,10 @@ def run(module, outname):
 
 	output_open(outname + '.m')
 
-	for x in module['defs']:
+	for x in module['defs_private']:
 		print_def(x)
 
-	for x in module['export_defs']:
+	for x in module['defs_public']:
 		print_def(x)
 
 	out("\n\n")

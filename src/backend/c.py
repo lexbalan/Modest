@@ -1884,21 +1884,21 @@ def cdirectives(module):
 	for im in module['imports']:
 		imported_module = module['imports'][im]
 
-		for obj in imported_module['defs']:
+		for obj in imported_module['defs_private']:
 			if obj['isa'] == 'directive':
 				if obj['kind'] == 'c_include':
 					newline()
 					print_include(obj)
 
 
-	for obj in module['defs']:
+	for obj in module['defs_private']:
 		if obj['isa'] == 'directive':
 			if obj['kind'] == 'c_include':
 				newline()
 				print_include(obj)
 
 	for inc in module['included']:
-		for obj in inc['defs']:
+		for obj in inc['defs_private']:
 			if obj['isa'] == 'directive':
 				if obj['kind'] == 'c_include':
 					newline()
@@ -1953,7 +1953,7 @@ def print_header(module, outname):
 	cdirectives(module)
 
 	# print directives (only for header)
-	for obj in module['defs']:
+	for obj in module['defs_private']:
 		if obj['isa'] == 'directive':
 			if obj['kind'] == 'c_include':
 				newline()
@@ -1972,7 +1972,7 @@ def print_header(module, outname):
 		out("\ntypedef struct %s %s; //" % (rec_id, rec_id))
 
 
-	for x in module['export_defs']:
+	for x in module['defs_public']:
 		if 'c_no_print' in x['att']:
 			continue
 
@@ -2014,11 +2014,11 @@ def print_cfile(module, _outname):
 		return
 
 	# before all print first comment (header) if present
-	if len(module['defs']) > 0:
-		first = module['defs'][0]
+	if len(module['defs_private']) > 0:
+		first = module['defs_private'][0]
 		if first['isa'] == 'comment':
 			print_comment(first)
-			module['defs'] = module['defs'][1:]
+			module['defs_private'] = module['defs_private'][1:]
 		else:
 			out("// %s" % outname)
 		newline()
@@ -2054,7 +2054,7 @@ def print_cfile(module, _outname):
 
 
 	# types & constants
-	for x in module['defs']:
+	for x in module['defs_private']:
 		if 'c_no_print' in x['att']:
 			continue
 
@@ -2068,7 +2068,7 @@ def print_cfile(module, _outname):
 	# печатаем прототипы функций текущего модуля
 	# (тк C не позволяет использовать функции перед их определением)
 	#out("// local decls\n")
-	for x in module['defs']:
+	for x in module['defs_private']:
 		if 'c_no_print' in x['att']:
 			continue
 
@@ -2078,7 +2078,7 @@ def print_cfile(module, _outname):
 
 
 	#out("// defs\n")
-	for x in module['defs']:
+	for x in module['defs_private']:
 		if 'c_no_print' in x['att']:
 			continue
 
@@ -2087,7 +2087,7 @@ def print_cfile(module, _outname):
 			print_decl_var(x)
 
 
-	for x in module['defs']:
+	for x in module['defs_private']:
 		if 'c_no_print' in x['att']:
 			continue
 
@@ -2102,7 +2102,7 @@ def print_cfile(module, _outname):
 		elif isa == 'directive': print_directive(x)
 		#elif isa == 'def_const': print_def_const(x)
 
-	for x in module['export_defs']:
+	for x in module['defs_public']:
 		if 'c_no_print' in x['att']:
 			continue
 
