@@ -1897,7 +1897,7 @@ def cdirectives(module):
 				newline()
 				print_include(obj)
 
-	for inc in module['included']:
+	for inc in module['included_modules']:
 		for obj in inc['defs_private']:
 			if obj['isa'] == 'directive':
 				if obj['kind'] == 'c_include':

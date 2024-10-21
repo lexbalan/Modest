@@ -67,19 +67,10 @@ def is_unsafe_mode():
 	return unsafe_mode
 
 
-def module_option(option):
-	global module
-	if not option in module['options']:
-		#print("module_option('%s')" % option)
-		module['options'].append(option)
-
-
 # тепреь вызывается только из конструктора строки (value)
 def module_strings_add(v):
 	global module
 	module['strings'].append(v)
-
-
 
 
 
@@ -2664,7 +2655,7 @@ def do_import(x):
 		else:
 			module['symtab_include'].extend(m['symtab_public'])
 
-		module['included'].append(m)
+		module['included_modules'].append(m)
 
 	y = import_directive(impline, x['ti'], include=x['include'])
 	y['import_module'] = m
@@ -2856,13 +2847,12 @@ def process_module(ast, source_info, nodef=False):
 
 	module = {
 		'isa': 'module',
+
 		'id': source_info['id'],
 		'prefix': source_info['id'],
-
 		'source_info': source_info,
-		'options': [],
 
-		'strings': [],    # for in LLVM backend)
+		'strings': [],    # for LLVM backend
 		'records': [],    # for C backend
 		'anon_recs': [],  # anonymous records for C backend
 
@@ -2870,15 +2860,16 @@ def process_module(ast, source_info, nodef=False):
 		'symtab_private': symtab_private,
 		'symtab_include': symtab_include,
 
-		'imports': {},      # '<local_module_id>' => {'isa': 'module'}
+		'imports': {},   # '<import_id>' => {'isa': 'module'}
 
-		'included': [],
+		'included_modules': [],
 
 		'defs_private': [],
 		'defs_public': [],
 
 		'att': []
  	}
+
 
 	# 0. do imports & directives
 	for x in ast:
