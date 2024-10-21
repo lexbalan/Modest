@@ -2870,13 +2870,12 @@ def process_module(ast, source_info, nodef=False):
 		'symtab_private': symtab_private,
 		'symtab_include': symtab_include,
 
-		'included': [],
 		'imports': {},      # '<local_module_id>' => {'isa': 'module'}
+
+		'included': [],
 
 		'defs_private': [],
 		'defs_public': [],
-
-		'defs_included': [],  # need for LLVM
 
 		'att': []
  	}

@@ -2365,9 +2365,6 @@ def print_included(m):
 			print_included(inc)
 			een(inc['defs_private'])
 			een(inc['defs_public'])
-#			out("\n; -- INCLUDED_DEFS --")
-#			een(inc['defs_included'])
-#			out("\n; -- END_INCLUDED_DEFS --")
 
 
 def print_imports(m):
