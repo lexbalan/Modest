@@ -158,9 +158,11 @@ def module_type_get(m, id_str, only_public=False):
 	if t != None:
 		return t
 
-	t = m['symtab_include'].type_get(id_str)
-	if t != None:
-		return t
+	#
+	for included_module in m['included_modules']:
+		t = included_module['symtab_public'].type_get(id_str)
+		if t != None:
+			return t
 
 	return None
 
@@ -180,9 +182,11 @@ def module_value_get(m, id_str, only_public=False):
 	if v != None:
 		return v
 
-	v = m['symtab_include'].value_get(id_str)
-	if v != None:
-		return v
+	#
+	for included_module in m['included_modules']:
+		v = included_module['symtab_public'].value_get(id_str)
+		if v != None:
+			return v
 
 	return None
 
@@ -2652,9 +2656,6 @@ def do_import(x):
 					if private_def['kind'] == 'c_include':
 						module_append(private_def)
 
-		else:
-			module['symtab_include'].extend(m['symtab_public'])
-
 		module['included_modules'].append(m)
 
 	y = import_directive(impline, x['ti'], include=x['include'])
@@ -2839,7 +2840,6 @@ def process_module(ast, source_info, nodef=False):
 
 	symtab_public = root_symtab.branch()
 	symtab_private = Symtab()
-	symtab_include = Symtab()
 
 	global context
 	prev_context = context
@@ -2858,9 +2858,8 @@ def process_module(ast, source_info, nodef=False):
 
 		'symtab_public': symtab_public,
 		'symtab_private': symtab_private,
-		'symtab_include': symtab_include,
 
-		'imports': {},   # '<import_id>' => {'isa': 'module'}
+		'imports': {},    # '<import_id>' => {'isa': 'module'}
 
 		'included_modules': [],
 
