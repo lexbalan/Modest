@@ -18,7 +18,6 @@ from value.string import value_string_create
 from value.record import value_record_create
 
 
-included_modules = {}
 
 import decimal
 # max number of signs after .
@@ -58,6 +57,11 @@ context = None
 
 root_symtab = None
 
+# All already translated modules
+# path => module
+modules = {}
+
+# Current module
 module = None
 
 
@@ -2587,6 +2591,9 @@ def cmodule_extend(y, do_not_def):
 """
 
 def do_import(x):
+	global modules
+	global module
+
 	import_expr = do_value_immediate_string(x['expr'])
 
 	if value_is_bad(import_expr):
@@ -2605,14 +2612,16 @@ def do_import(x):
 		return None
 
 
-	#if abspath in included_modules:
+	m = None
 
-	if not abspath in included_modules:
-		#print(">>> " + abspath)
-		#for im in included_modules:
-		#	print("-" + im)
+	# Seek in global modules pool
+	if abspath in modules:
+		m = modules[abspath]
 
+	if m == None:
 		m = translate(abspath, nodef=not x['include'])
+
+		modules[abspath] = m
 
 		#if 'as' in x:
 		#	m['id'] = x['as']['str'] # todo
@@ -2629,11 +2638,6 @@ def do_import(x):
 			for xx in m['defs_public']:
 				xx['att'].append('c_no_print')
 
-		included_modules[abspath] = m
-
-	else:
-		# cash hit
-		m = included_modules[abspath]
 
 	if not x['include']:
 		m_id = '<$>'
@@ -2856,12 +2860,11 @@ def process_module(ast, source_info, nodef=False):
 		'records': [],    # for C backend
 		'anon_recs': [],  # anonymous records for C backend
 
+		'imports': {},    # '<import_id>' => {'isa': 'module'}
+		'included_modules': [],
+
 		'symtab_public': symtab_public,
 		'symtab_private': symtab_private,
-
-		'imports': {},    # '<import_id>' => {'isa': 'module'}
-
-		'included_modules': [],
 
 		'defs_private': [],
 		'defs_public': [],
@@ -2917,7 +2920,6 @@ def pre_def(ast, fdecl=False):
 
 					add_spices(y, ast_atts=x['attributes'])
 					module_append(y, to_export=x['public'])
-					#print(y['type']['att'])
 
 	# 2. def vars & consts
 	for x in ast:

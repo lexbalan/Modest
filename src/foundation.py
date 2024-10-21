@@ -46,6 +46,7 @@ typeVA_List = None
 
 
 foundation_source_info = {
+	'isa': 'source_info',
 	'id': 'foundation',
 	'path': '_',
 	'dir': '_',
