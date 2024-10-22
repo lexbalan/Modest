@@ -199,12 +199,12 @@ declare void @perror(%ConstCharStr* %str)
 @str14 = private constant [19 x i8] [i8 99, i8 32, i8 33, i8 61, i8 32, i8 91, i8 48, i8 44, i8 32, i8 49, i8 44, i8 32, i8 50, i8 44, i8 32, i8 51, i8 93, i8 10, i8 0]
 @str15 = private constant [37 x i8] [i8 100, i8 32, i8 33, i8 61, i8 32, i8 91, i8 48, i8 44, i8 32, i8 49, i8 44, i8 32, i8 50, i8 44, i8 32, i8 51, i8 44, i8 32, i8 48, i8 44, i8 32, i8 48, i8 44, i8 32, i8 48, i8 44, i8 32, i8 48, i8 44, i8 32, i8 48, i8 44, i8 32, i8 48, i8 93, i8 10, i8 0]
 
-%Point2D = type {
+%main_Point2D = type {
 	i32, 
 	i32
 };
 
-%Point3D = type {
+%main_Point3D = type {
 	i32, 
 	i32, 
 	i32
@@ -393,17 +393,17 @@ define internal i1 @test_generic_record() {
 	; can be implicit casted to Record with same fields.
 	; implicit cast Generic(record {x: GenericInteger, y: GenericInteger})
 	; to record {x: Int32, y: Int32}
-	%3 = alloca %Point2D, align 4
-	%4 = insertvalue %Point2D zeroinitializer, i32 10, 0
-	%5 = insertvalue %Point2D %4, i32 20, 1
-	store %Point2D %5, %Point2D* %3
+	%3 = alloca %main_Point2D, align 4
+	%4 = insertvalue %main_Point2D zeroinitializer, i32 10, 0
+	%5 = insertvalue %main_Point2D %4, i32 20, 1
+	store %main_Point2D %5, %main_Point2D* %3
 	; explicit cast Generic(record {x: GenericInteger, y: GenericInteger})
 	; to record {x: Int32, y: Int32, z: Int32}
-	%6 = alloca %Point3D, align 4
-	%7 = insertvalue %Point3D zeroinitializer, i32 10, 0
-	%8 = insertvalue %Point3D %7, i32 20, 1
-	%9 = insertvalue %Point3D %8, i32 0, 2
-	store %Point3D %9, %Point3D* %6
+	%6 = alloca %main_Point3D, align 4
+	%7 = insertvalue %main_Point3D zeroinitializer, i32 10, 0
+	%8 = insertvalue %main_Point3D %7, i32 20, 1
+	%9 = insertvalue %main_Point3D %8, i32 0, 2
+	store %main_Point3D %9, %main_Point3D* %6
 	ret i1 1
 }
 

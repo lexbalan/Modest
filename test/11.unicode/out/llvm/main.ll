@@ -301,29 +301,29 @@ declare i32 @console_vsprint([0 x i8]* %buf, %Str8* %form, i8* %va)
 @str5 = private constant [2 x i8] [i8 10, i8 0]
 @str6 = private constant [2 x i8] [i8 10, i8 0]
 
-@ratSymbolUTF8 = constant [4 x i8] [
+@main_ratSymbolUTF8 = constant [4 x i8] [
 	i8 240,
 	i8 159,
 	i8 144,
 	i8 128
 ]
-@ratSymbolUTF16 = constant [2 x i16] [
+@main_ratSymbolUTF16 = constant [2 x i16] [
 	i16 55357,
 	i16 56320
 ]
-@arr_partycorn = constant [4 x i8] [
+@main_arr_partycorn = constant [4 x i8] [
 	i8 240,
 	i8 159,
 	i8 142,
 	i8 137
 ]
-@arr_unicorn = constant [4 x i8] [
+@main_arr_unicorn = constant [4 x i8] [
 	i8 240,
 	i8 159,
 	i8 166,
 	i8 132
 ]
-@arr_rat = constant [4 x i8] [
+@main_arr_rat = constant [4 x i8] [
 	i8 240,
 	i8 159,
 	i8 144,

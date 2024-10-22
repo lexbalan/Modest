@@ -19,27 +19,26 @@ from util import get_item_with_id, nbits_for_num, nbytes_for_bits
 
 
 ######################################################################
-#							HLIR TYPE							   #
+#                            HLIR TYPE                               #
 ######################################################################
 
 
-CONS_OP = ['cons']
-EQ_OPS = ['eq', 'ne']
-RELATIONAL_OPS = ['lt', 'gt', 'le', 'ge']
-ARITHMETICAL_OPS = ['add', 'sub', 'mul', 'div', 'rem', 'negative']
-LOGICAL_OPS = ['or', 'xor', 'and', 'not']
+CONS_OP = ('cons',)
+EQ_OPS = ('eq', 'ne')
+RELATIONAL_OPS = ('lt', 'gt', 'le', 'ge')
+ARITHMETICAL_OPS = ('add', 'sub', 'mul', 'div', 'rem', 'negative')
+LOGICAL_OPS = ('or', 'xor', 'and', 'not')
 
 WORD_OPS = CONS_OP + EQ_OPS + LOGICAL_OPS
 INT_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS #+ LOGICAL_OPS
 FLOAT_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS
 BOOL_OPS = CONS_OP + EQ_OPS + LOGICAL_OPS
-#BYTE_OPS = CONS_OP + EQ_OPS + LOGICAL_OPS
 CHAR_OPS = CONS_OP + EQ_OPS
 ENUM_OPS = CONS_OP + EQ_OPS
-PTR_OPS = CONS_OP + EQ_OPS + ['deref']
-ARR_OPS = CONS_OP + EQ_OPS + ['add', 'index']
-REC_OPS = CONS_OP + EQ_OPS + ['access']
-STR_OPS = CONS_OP + EQ_OPS + ['add']
+PTR_OPS = CONS_OP + EQ_OPS + ('deref',)
+ARR_OPS = CONS_OP + EQ_OPS + ('add', 'index')
+REC_OPS = CONS_OP + EQ_OPS + ('access',)
+STR_OPS = CONS_OP + EQ_OPS + ('add',)
 
 def hlir_type_bad(x):
 	return {
@@ -67,7 +66,6 @@ def hlir_type_undefined(ti):
 		'width': 0,
 		'size': 0,
 		'align': 1,
-		#'ast_type': x,
 		'uid': uid,
 		'ops': [],
 		'att': [],
@@ -83,7 +81,13 @@ def hlir_type_unit():
 		'width': 0,
 		'size': 0,
 		'align': 0,
-		'id': {'isa': 'id', 'str': 'Unit', 'c': 'void', 'llvm': 'void', 'ti': None},
+		'id': {
+			'isa': 'id',
+			'str': 'Unit',
+			'c': 'void',
+			'llvm': 'void',
+			'ti': None
+		},
 		'ops': CONS_OP,
 		'att': [],
 		'ti': None
@@ -98,7 +102,13 @@ def hlir_type_bool():
 		'width': 1,
 		'size': 1,
 		'align': 1,
-		'id': {'isa': 'id', 'str': 'Bool', 'c': 'bool', 'llvm': 'i1', 'ti': None},
+		'id': {
+			'isa': 'id',
+			'str': 'Bool',
+			'c': 'bool',
+			'llvm': 'i1',
+			'ti': None
+		},
 		'ops': BOOL_OPS,
 		'att': [],
 		'ti': None

@@ -193,30 +193,30 @@ declare void @perror(%ConstCharStr* %str)
 @str8 = private constant [24 x i8] [i8 108, i8 111, i8 99, i8 97, i8 108, i8 80, i8 111, i8 105, i8 110, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 @str9 = private constant [24 x i8] [i8 108, i8 111, i8 99, i8 97, i8 108, i8 80, i8 111, i8 105, i8 110, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 
-%Point = type {
+%main_Point = type {
 	i32, 
 	i32
 };
 
 
-@globalPoint0 = global %Point {
+@globalPoint0 = global %main_Point {
 	i32 10,
 	i32 20
 }
-@globalPoint1 = global %Point zeroinitializer
+@globalPoint1 = global %main_Point zeroinitializer
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str1 to [0 x i8]*))
-	%2 = load %Point, %Point* @globalPoint0
-	store %Point %2, %Point* @globalPoint1
-	%3 = getelementptr inbounds %Point, %Point* @globalPoint1, i32 0, i32 0
+	%2 = load %main_Point, %main_Point* @globalPoint0
+	store %main_Point %2, %main_Point* @globalPoint1
+	%3 = getelementptr inbounds %main_Point, %main_Point* @globalPoint1, i32 0, i32 0
 	%4 = load i32, i32* %3
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str2 to [0 x i8]*), i32 %4)
-	%6 = getelementptr inbounds %Point, %Point* @globalPoint1, i32 0, i32 1
+	%6 = getelementptr inbounds %main_Point, %main_Point* @globalPoint1, i32 0, i32 1
 	%7 = load i32, i32* %6
 	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str3 to [0 x i8]*), i32 %7)
-	%9 = bitcast %Point* @globalPoint0 to i8*
-	%10 = bitcast %Point* @globalPoint1 to i8*
+	%9 = bitcast %main_Point* @globalPoint0 to i8*
+	%10 = bitcast %main_Point* @globalPoint1 to i8*
 	
 	%11 = call i1 (i8*, i8*, i64) @memeq( i8* %9, i8* %10, i64 8)
 	%12 = icmp ne i1 %11, 0
@@ -229,22 +229,22 @@ else_0:
 	br label %endif_0
 endif_0:
 	; local
-	%15 = alloca %Point, align 4
-	%16 = insertvalue %Point zeroinitializer, i32 10, 0
-	%17 = insertvalue %Point %16, i32 20, 1
-	store %Point %17, %Point* %15
-	%18 = alloca %Point, align 4
-	store %Point zeroinitializer, %Point* %18
-	%19 = load %Point, %Point* %15
-	store %Point %19, %Point* %18
-	%20 = getelementptr inbounds %Point, %Point* %18, i32 0, i32 0
+	%15 = alloca %main_Point, align 4
+	%16 = insertvalue %main_Point zeroinitializer, i32 10, 0
+	%17 = insertvalue %main_Point %16, i32 20, 1
+	store %main_Point %17, %main_Point* %15
+	%18 = alloca %main_Point, align 4
+	store %main_Point zeroinitializer, %main_Point* %18
+	%19 = load %main_Point, %main_Point* %15
+	store %main_Point %19, %main_Point* %18
+	%20 = getelementptr inbounds %main_Point, %main_Point* %18, i32 0, i32 0
 	%21 = load i32, i32* %20
 	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str6 to [0 x i8]*), i32 %21)
-	%23 = getelementptr inbounds %Point, %Point* %18, i32 0, i32 1
+	%23 = getelementptr inbounds %main_Point, %main_Point* %18, i32 0, i32 1
 	%24 = load i32, i32* %23
 	%25 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str7 to [0 x i8]*), i32 %24)
-	%26 = bitcast %Point* %15 to i8*
-	%27 = bitcast %Point* %18 to i8*
+	%26 = bitcast %main_Point* %15 to i8*
+	%27 = bitcast %main_Point* %18 to i8*
 	
 	%28 = call i1 (i8*, i8*, i64) @memeq( i8* %26, i8* %27, i64 8)
 	%29 = icmp ne i1 %28, 0

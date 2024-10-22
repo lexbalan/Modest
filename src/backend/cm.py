@@ -874,7 +874,7 @@ def print_def_const(x):
 	if x['access_level'] == 'public':
 		out("public ")
 	out("const ")
-	print_id(x)
+	print_id(x['value'])
 	out(" = ")
 	print_value(x['init_value'], ctx=['oneline'], print_just_id=False)
 

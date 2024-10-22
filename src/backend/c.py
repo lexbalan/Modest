@@ -141,7 +141,7 @@ def get_id_str(x):
 		return x['id']['c']
 
 	id_str = x['id']['str']
-	if 'prefix' in x:
+	if 'prefix' in x['id']:
 		id_str = x['definition']['module']['prefix'] + '_' + id_str
 	return id_str
 
@@ -1797,7 +1797,7 @@ def print_def_var(x, isdecl=False):
 	if 'volatile' in var['att']:
 		out("volatile ")
 
-	print_variable(get_id_str(x), var['type'])
+	print_variable(get_id_str(x['value']), var['type'])
 
 	init_value = x['init_value']
 	if init_value != None:

@@ -2233,7 +2233,7 @@ def def_type(x):
 
 
 	if need_decoration(x):
-		nt['prefix'] = module['prefix']
+		nt['id']['prefix'] = module['prefix']
 
 	if not ('do_not_include' in module['att']):
 		# В случае когда не печатаем typedef явно (!)
@@ -2286,7 +2286,7 @@ def def_const(x):
 
 	definition = hlir_def_const(id, const_value, init_value, x['ti'])
 	if need_decoration(x):
-		const_value['prefix'] = module['prefix']
+		const_value['id']['prefix'] = module['prefix']
 	definition['access_level'] = x['access_modifier']
 	const_value['definition'] = definition
 	const_value['module'] = module
@@ -2490,7 +2490,7 @@ def do_func_value(x, export):
 	if func_id['str'] != 'main':
 		if export:
 			if need_decoration(x):
-				fn['prefix'] = module['prefix']
+				fn['id']['prefix'] = module['prefix']
 
 	return fn
 

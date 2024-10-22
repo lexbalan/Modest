@@ -108,32 +108,32 @@ declare void @delay_ms(i32 %x)
 ; -- end print imports --
 ; -- strings --
 
-%IO8 = type i8;
-%IO16 = type i16;
-%GPIO = type <{
-	%IO8, 
-	%IO8, 
-	%IO8
+%main_IO8 = type i8;
+%main_IO16 = type i16;
+%main_GPIO = type <{
+	%main_IO8, 
+	%main_IO8, 
+	%main_IO8
 }>;
 
 
 
 
 define i16 @main() {
-	%1 = inttoptr i6 35 to %GPIO*
-	%2 = getelementptr inbounds %GPIO, %GPIO* %1, i32 0, i32 1
-	store %IO8 255, %IO8* %2
+	%1 = inttoptr i6 35 to %main_GPIO*
+	%2 = getelementptr inbounds %main_GPIO, %main_GPIO* %1, i32 0, i32 1
+	store %main_IO8 255, %main_IO8* %2
 	br label %again_1
 again_1:
 	br i1 1 , label %body_1, label %break_1
 body_1:
-	%3 = inttoptr i6 35 to %GPIO*
-	%4 = getelementptr inbounds %GPIO, %GPIO* %3, i32 0, i32 2
-	store %IO8 255, %IO8* %4
+	%3 = inttoptr i6 35 to %main_GPIO*
+	%4 = getelementptr inbounds %main_GPIO, %main_GPIO* %3, i32 0, i32 2
+	store %main_IO8 255, %main_IO8* %4
 	call void @delay_ms(i32 1000)
-	%5 = inttoptr i6 35 to %GPIO*
-	%6 = getelementptr inbounds %GPIO, %GPIO* %5, i32 0, i32 2
-	store %IO8 0, %IO8* %6
+	%5 = inttoptr i6 35 to %main_GPIO*
+	%6 = getelementptr inbounds %main_GPIO, %main_GPIO* %5, i32 0, i32 2
+	store %main_IO8 0, %main_IO8* %6
 	call void @delay_ms(i32 1000)
 	br label %again_1
 break_1:

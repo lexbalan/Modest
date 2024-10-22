@@ -1012,7 +1012,12 @@ class Parser:
 
 			#return id
 
-			return {'isa': 'ast_value', 'kind': 'id', 'str': id['str'], 'ti': ti}
+			return {
+				'isa': 'ast_value',
+				'kind': 'id',
+				'str': id['str'],
+				'ti': ti
+			}
 
 
 		elif self.ctok_class() == 'num':

@@ -197,12 +197,12 @@ declare void @perror(%ConstCharStr* %str)
 @str12 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 @str13 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 
-%Point2D = type {
+%main_Point2D = type {
 	i32, 
 	i32
 };
 
-%Point3D = type {
+%main_Point3D = type {
 	i32, 
 	i32, 
 	i32
@@ -213,16 +213,16 @@ declare void @perror(%ConstCharStr* %str)
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*))
 	; compare two Point2D records
-	%2 = alloca %Point2D, align 4
-	%3 = insertvalue %Point2D zeroinitializer, i32 1, 0
-	%4 = insertvalue %Point2D %3, i32 2, 1
-	store %Point2D %4, %Point2D* %2
-	%5 = alloca %Point2D, align 4
-	%6 = insertvalue %Point2D zeroinitializer, i32 10, 0
-	%7 = insertvalue %Point2D %6, i32 20, 1
-	store %Point2D %7, %Point2D* %5
-	%8 = bitcast %Point2D* %2 to i8*
-	%9 = bitcast %Point2D* %5 to i8*
+	%2 = alloca %main_Point2D, align 4
+	%3 = insertvalue %main_Point2D zeroinitializer, i32 1, 0
+	%4 = insertvalue %main_Point2D %3, i32 2, 1
+	store %main_Point2D %4, %main_Point2D* %2
+	%5 = alloca %main_Point2D, align 4
+	%6 = insertvalue %main_Point2D zeroinitializer, i32 10, 0
+	%7 = insertvalue %main_Point2D %6, i32 20, 1
+	store %main_Point2D %7, %main_Point2D* %5
+	%8 = bitcast %main_Point2D* %2 to i8*
+	%9 = bitcast %main_Point2D* %5 to i8*
 	
 	%10 = call i1 (i8*, i8*, i64) @memeq( i8* %8, i8* %9, i64 8)
 	%11 = icmp ne i1 %10, 0
@@ -235,9 +235,9 @@ else_0:
 	br label %endif_0
 endif_0:
 	; compare Point2D with anonymous record
-	%14 = alloca %Point2D, align 4
-	%15 = load %Point2D, %Point2D* %2
-	store %Point2D %15, %Point2D* %14
+	%14 = alloca %main_Point2D, align 4
+	%15 = load %main_Point2D, %main_Point2D* %2
+	store %main_Point2D %15, %main_Point2D* %14
 	%16 = alloca {i32, i32}, align 4
 	%17 = insertvalue {i32, i32} zeroinitializer, i32 1, 0
 	%18 = insertvalue {i32, i32} %17, i32 2, 1
@@ -245,7 +245,7 @@ endif_0:
 	; cast_composite_to_composite
 	; JUST
 	; as ptr
-	%19 = bitcast %Point2D* %14 to {i32, i32}*
+	%19 = bitcast %main_Point2D* %14 to {i32, i32}*
 	%20 = load {i32, i32}, {i32, i32}* %19
 	%21 = alloca {i32, i32}
 	store {i32, i32} %20, {i32, i32}* %21
@@ -291,7 +291,7 @@ endif_2:
 	; cast_composite_to_composite
 	; JUST
 	; as ptr
-	%40 = bitcast %Point2D* %14 to {i32, i32}*
+	%40 = bitcast %main_Point2D* %14 to {i32, i32}*
 	%41 = load {i32, i32}, {i32, i32}* %40
 	%42 = alloca {i32, i32}
 	store {i32, i32} %41, {i32, i32}* %42
@@ -309,20 +309,20 @@ else_3:
 	br label %endif_3
 endif_3:
 	; assign record by pointer
-	%49 = insertvalue %Point2D zeroinitializer, i32 100, 0
-	%50 = insertvalue %Point2D %49, i32 200, 1
-	store %Point2D %50, %Point2D* %14
+	%49 = insertvalue %main_Point2D zeroinitializer, i32 100, 0
+	%50 = insertvalue %main_Point2D %49, i32 200, 1
+	store %main_Point2D %50, %main_Point2D* %14
 	store {i32, i32} zeroinitializer, {i32, i32}* %16
 	; cons Point3D from Point2D (record extension)
 	; (it is possible if dst record contained all fields from src record
 	; and their types are equal)
-	%51 = alloca %Point3D, align 4
+	%51 = alloca %main_Point3D, align 4
 	; cast_composite_to_composite
 	; JUST
 	; as ptr
-	%52 = bitcast %Point2D* %14 to %Point3D*
-	%53 = load %Point3D, %Point3D* %52
-	store %Point3D %53, %Point3D* %51
+	%52 = bitcast %main_Point2D* %14 to %main_Point3D*
+	%53 = load %main_Point3D, %main_Point3D* %52
+	store %main_Point3D %53, %main_Point3D* %51
 	; проверка того как локальная константа-массив
 	; "замораживает" свои элементы
 	%54 = alloca i32, align 4

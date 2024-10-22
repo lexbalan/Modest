@@ -279,18 +279,18 @@ declare double @minmax_max_float64(double %a, double %b)
 @str1 = private constant [18 x i8] [i8 108, i8 105, i8 110, i8 101, i8 115, i8 95, i8 48, i8 95, i8 108, i8 101, i8 110, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
 @str2 = private constant [18 x i8] [i8 108, i8 105, i8 110, i8 101, i8 115, i8 95, i8 49, i8 95, i8 108, i8 101, i8 110, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
 
-%Point = type {
+%main_Point = type {
 	double, 
 	double
 };
 
-%Line = type {
-	%Point, 
-	%Point
+%main_Line = type {
+	%main_Point, 
+	%main_Point
 };
 
 
-@carr = constant [6 x i5] [
+@main_carr = constant [6 x i5] [
 	i5 0,
 	i5 10,
 	i5 15,
@@ -298,62 +298,62 @@ declare double @minmax_max_float64(double %a, double %b)
 	i5 25,
 	i5 30
 ]
-@lines = constant [4 x %Line] [
-	%Line {
-		%Point {
+@main_lines = constant [4 x %main_Line] [
+	%main_Line {
+		%main_Point {
 			double 0.0000000000000000,
 			double 0.0000000000000000
 		},
-		%Point {
+		%main_Point {
 			double 1.0000000000000000,
 			double 1.0000000000000000
 		}
 	},
-	%Line {
-		%Point {
+	%main_Line {
+		%main_Point {
 			double 10.0000000000000000,
 			double 20.0000000000000000
 		},
-		%Point {
+		%main_Point {
 			double 30.0000000000000000,
 			double 40.0000000000000000
 		}
 	},
-	%Line {
-		%Point {
+	%main_Line {
+		%main_Point {
 			double 0.0000000000000000,
 			double 0.0000000000000000
 		},
-		%Point {
+		%main_Point {
 			double 1.0000000000000000,
 			double 1.0000000000000000
 		}
 	},
-	%Line {
-		%Point {
+	%main_Line {
+		%main_Point {
 			double 10.0000000000000000,
 			double 20.0000000000000000
 		},
-		%Point {
+		%main_Point {
 			double 30.0000000000000000,
 			double 40.0000000000000000
 		}
 	}
 ]
 
-define internal %Float @distance(%Point %a, %Point %b) {
-	%1 = extractvalue %Point %a, 0
-	%2 = extractvalue %Point %b, 0
+define internal %Float @distance(%main_Point %a, %main_Point %b) {
+	%1 = extractvalue %main_Point %a, 0
+	%2 = extractvalue %main_Point %b, 0
 	%3 = call double @minmax_max_float64(double %1, double %2)
-	%4 = extractvalue %Point %a, 0
-	%5 = extractvalue %Point %b, 0
+	%4 = extractvalue %main_Point %a, 0
+	%5 = extractvalue %main_Point %b, 0
 	%6 = call double @minmax_min_float64(double %4, double %5)
 	%7 = fsub double %3, %6
-	%8 = extractvalue %Point %a, 1
-	%9 = extractvalue %Point %b, 1
+	%8 = extractvalue %main_Point %a, 1
+	%9 = extractvalue %main_Point %b, 1
 	%10 = call double @minmax_max_float64(double %8, double %9)
-	%11 = extractvalue %Point %a, 1
-	%12 = extractvalue %Point %b, 1
+	%11 = extractvalue %main_Point %a, 1
+	%12 = extractvalue %main_Point %b, 1
 	%13 = call double @minmax_min_float64(double %11, double %12)
 	%14 = fsub double %10, %13
 	%15 = call %Double @pow(double %7, %Double 2.0000000000000000)
@@ -363,43 +363,43 @@ define internal %Float @distance(%Point %a, %Point %b) {
 	ret %Double %18
 }
 
-define internal %Float @lineLength(%Line %line) {
-	%1 = extractvalue %Line %line, 0
-	%2 = extractvalue %Line %line, 1
-	%3 = call %Float @distance(%Point %1, %Point %2)
+define internal %Float @lineLength(%main_Line %line) {
+	%1 = extractvalue %main_Line %line, 0
+	%2 = extractvalue %main_Line %line, 1
+	%3 = call %Float @distance(%main_Point %1, %main_Point %2)
 	ret %Float %3
 }
 
 
 define %Int @main() {
-	%1 = insertvalue %Point zeroinitializer, double 0.0000000000000000, 0
-	%2 = insertvalue %Point %1, double 0.0000000000000000, 1
-	%3 = insertvalue %Line zeroinitializer, %Point %2, 0
-	%4 = insertvalue %Point zeroinitializer, double 1.0000000000000000, 0
-	%5 = insertvalue %Point %4, double 1.0000000000000000, 1
-	%6 = insertvalue %Line %3, %Point %5, 1
-	%7 = call %Float @lineLength(%Line %6)
-	%8 = insertvalue %Point zeroinitializer, double 10.0000000000000000, 0
-	%9 = insertvalue %Point %8, double 20.0000000000000000, 1
-	%10 = insertvalue %Line zeroinitializer, %Point %9, 0
-	%11 = insertvalue %Point zeroinitializer, double 30.0000000000000000, 0
-	%12 = insertvalue %Point %11, double 40.0000000000000000, 1
-	%13 = insertvalue %Line %10, %Point %12, 1
-	%14 = call %Float @lineLength(%Line %13)
-	%15 = insertvalue %Point zeroinitializer, double 0.0000000000000000, 0
-	%16 = insertvalue %Point %15, double 0.0000000000000000, 1
-	%17 = insertvalue %Line zeroinitializer, %Point %16, 0
-	%18 = insertvalue %Point zeroinitializer, double 1.0000000000000000, 0
-	%19 = insertvalue %Point %18, double 1.0000000000000000, 1
-	%20 = insertvalue %Line %17, %Point %19, 1
-	%21 = call %Float @lineLength(%Line %20)
-	%22 = insertvalue %Point zeroinitializer, double 10.0000000000000000, 0
-	%23 = insertvalue %Point %22, double 20.0000000000000000, 1
-	%24 = insertvalue %Line zeroinitializer, %Point %23, 0
-	%25 = insertvalue %Point zeroinitializer, double 30.0000000000000000, 0
-	%26 = insertvalue %Point %25, double 40.0000000000000000, 1
-	%27 = insertvalue %Line %24, %Point %26, 1
-	%28 = call %Float @lineLength(%Line %27)
+	%1 = insertvalue %main_Point zeroinitializer, double 0.0000000000000000, 0
+	%2 = insertvalue %main_Point %1, double 0.0000000000000000, 1
+	%3 = insertvalue %main_Line zeroinitializer, %main_Point %2, 0
+	%4 = insertvalue %main_Point zeroinitializer, double 1.0000000000000000, 0
+	%5 = insertvalue %main_Point %4, double 1.0000000000000000, 1
+	%6 = insertvalue %main_Line %3, %main_Point %5, 1
+	%7 = call %Float @lineLength(%main_Line %6)
+	%8 = insertvalue %main_Point zeroinitializer, double 10.0000000000000000, 0
+	%9 = insertvalue %main_Point %8, double 20.0000000000000000, 1
+	%10 = insertvalue %main_Line zeroinitializer, %main_Point %9, 0
+	%11 = insertvalue %main_Point zeroinitializer, double 30.0000000000000000, 0
+	%12 = insertvalue %main_Point %11, double 40.0000000000000000, 1
+	%13 = insertvalue %main_Line %10, %main_Point %12, 1
+	%14 = call %Float @lineLength(%main_Line %13)
+	%15 = insertvalue %main_Point zeroinitializer, double 0.0000000000000000, 0
+	%16 = insertvalue %main_Point %15, double 0.0000000000000000, 1
+	%17 = insertvalue %main_Line zeroinitializer, %main_Point %16, 0
+	%18 = insertvalue %main_Point zeroinitializer, double 1.0000000000000000, 0
+	%19 = insertvalue %main_Point %18, double 1.0000000000000000, 1
+	%20 = insertvalue %main_Line %17, %main_Point %19, 1
+	%21 = call %Float @lineLength(%main_Line %20)
+	%22 = insertvalue %main_Point zeroinitializer, double 10.0000000000000000, 0
+	%23 = insertvalue %main_Point %22, double 20.0000000000000000, 1
+	%24 = insertvalue %main_Line zeroinitializer, %main_Point %23, 0
+	%25 = insertvalue %main_Point zeroinitializer, double 30.0000000000000000, 0
+	%26 = insertvalue %main_Point %25, double 40.0000000000000000, 1
+	%27 = insertvalue %main_Line %24, %main_Point %26, 1
+	%28 = call %Float @lineLength(%main_Line %27)
 	%29 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str1 to [0 x i8]*), %Float %7)
 	%30 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str2 to [0 x i8]*), %Float %14)
 	ret %Int 0

@@ -197,7 +197,7 @@ declare void @perror(%ConstCharStr* %str)
 @str12 = private constant [15 x i8] [i8 108, i8 111, i8 99, i8 95, i8 114, i8 48, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 @str13 = private constant [15 x i8] [i8 108, i8 111, i8 99, i8 95, i8 114, i8 48, i8 46, i8 121, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 
-%Point = type {
+%main_Point = type {
 	i32, 
 	i32
 };
@@ -205,8 +205,8 @@ declare void @perror(%ConstCharStr* %str)
 
 @glb_i0 = global i32 0
 @glb_i1 = global i32 321
-@glb_r0 = global %Point zeroinitializer
-@glb_r1 = global %Point {
+@glb_r0 = global %main_Point zeroinitializer
+@glb_r1 = global %main_Point {
 	i32 20,
 	i32 10
 }
@@ -261,12 +261,12 @@ define %Int @main() {
 	%14 = load i32, i32* %13
 	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str5 to [0 x i8]*), i32 %14)
 	; copy records by value
-	%16 = load %Point, %Point* @glb_r1
-	store %Point %16, %Point* @glb_r0
-	%17 = getelementptr inbounds %Point, %Point* @glb_r0, i32 0, i32 0
+	%16 = load %main_Point, %main_Point* @glb_r1
+	store %main_Point %16, %main_Point* @glb_r0
+	%17 = getelementptr inbounds %main_Point, %main_Point* @glb_r0, i32 0, i32 0
 	%18 = load i32, i32* %17
 	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str6 to [0 x i8]*), i32 %18)
-	%20 = getelementptr inbounds %Point, %Point* @glb_r0, i32 0, i32 1
+	%20 = getelementptr inbounds %main_Point, %main_Point* @glb_r0, i32 0, i32 1
 	%21 = load i32, i32* %20
 	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str7 to [0 x i8]*), i32 %21)
 	; -----------------------------------
@@ -323,18 +323,18 @@ define %Int @main() {
 	%60 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str11 to [0 x i8]*), i32 %59)
 	; copy records by value
 	; C backend will be use memcpy()
-	%61 = alloca %Point, align 4
-	store %Point zeroinitializer, %Point* %61
-	%62 = alloca %Point, align 4
-	%63 = insertvalue %Point zeroinitializer, i32 10, 0
-	%64 = insertvalue %Point %63, i32 20, 1
-	store %Point %64, %Point* %62
-	%65 = load %Point, %Point* %62
-	store %Point %65, %Point* %61
-	%66 = getelementptr inbounds %Point, %Point* %61, i32 0, i32 0
+	%61 = alloca %main_Point, align 4
+	store %main_Point zeroinitializer, %main_Point* %61
+	%62 = alloca %main_Point, align 4
+	%63 = insertvalue %main_Point zeroinitializer, i32 10, 0
+	%64 = insertvalue %main_Point %63, i32 20, 1
+	store %main_Point %64, %main_Point* %62
+	%65 = load %main_Point, %main_Point* %62
+	store %main_Point %65, %main_Point* %61
+	%66 = getelementptr inbounds %main_Point, %main_Point* %61, i32 0, i32 0
 	%67 = load i32, i32* %66
 	%68 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str12 to [0 x i8]*), i32 %67)
-	%69 = getelementptr inbounds %Point, %Point* %61, i32 0, i32 1
+	%69 = getelementptr inbounds %main_Point, %main_Point* %61, i32 0, i32 1
 	%70 = load i32, i32* %69
 	%71 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str13 to [0 x i8]*), i32 %70)
 	; error: closed arrays of closed arrays are denied

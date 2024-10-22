@@ -120,12 +120,26 @@ def _llvm_operation(op, type, reg=None, x=None):
 
 
 
+
+def type_get_aka(t):
+	if 'id' in t:
+		if 'llvm' in t['id']:
+			return t['id']['llvm']
+
+		id_str = t['id']['str']
+		if 'prefix' in t['id']:
+			id_str = t['definition']['module']['prefix'] + '_' + id_str
+
+		return '%' + id_str
+	return None
+
+
 def get_id_str(x):
 	if 'llvm' in x['id']:
 		return '"%s"' % x['id']['llvm']
 
 	id_str = x['id']['str']
-	if 'prefix' in x:
+	if 'prefix' in x['id']:
 		id_str = x['definition']['module']['prefix'] + '_' + id_str
 
 	return id_str
@@ -2059,12 +2073,6 @@ def print_def_func(x):
 
 	out("\ndefine ")
 	print_linkage(x)
-	"""print("<<<")
-	if not 'prefix' in func:
-		print("not prefix in %s" % func['id']['str'])
-	else:
-		print("prefix %s in %s" % (func['prefix'], func['id']['str']))
-	"""
 	print_func_signature(func)
 
 	sret = need_sret(func['type'])
@@ -2141,14 +2149,6 @@ def print_def_func(x):
 
 
 
-def type_get_aka(t):
-	if 'id' in t:
-		if 'llvm' in t['id']:
-			return t['id']['llvm']
-		return '%' + t['id']['str']
-	return None
-
-
 #def print_decl_type(x):
 #	out("\n%%%s = type opaque" % get_id_str(x))
 
@@ -2161,7 +2161,7 @@ def print_def_type(x):
 			return"""
 
 
-	out("\n%%%s = type " % get_id_str(x))
+	out("\n%%%s = type " % get_id_str(x['type']))
 	if hlir_type.type_is_record(xtype):
 		# не печатаем имя а печатаем саму структуру
 		# тк LLVM дает ошибку на запись вида
@@ -2212,7 +2212,7 @@ def print_def_const(x, as_extern=False):
 	# тк доступ к ним может идти в рантайме по индкусу;
 	# НО! В константной записи может быть массив! (хз как быть пока)
 	if hlir_type.type_is_array(init_value['type']):
-		out("\n@%s = constant " % get_id_str(x))
+		out("\n@%s = constant " % get_id_str(x['value']))
 		llvm_print_type_value(do_eval(init_value))
 
 	return

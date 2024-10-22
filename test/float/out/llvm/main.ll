@@ -287,7 +287,7 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 @str7 = private constant [23 x i8] [i8 115, i8 105, i8 122, i8 101, i8 111, i8 102, i8 40, i8 70, i8 108, i8 111, i8 97, i8 116, i8 54, i8 52, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 117, i8 10, i8 0]
 @str8 = private constant [12 x i8] [i8 115, i8 108, i8 111, i8 112, i8 101, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
 
-%Point2D = type {
+%main_Point2D = type {
 	%Int, 
 	%Int
 };
@@ -300,13 +300,13 @@ define internal double @squareOfCircle(double %radius) {
 	ret %Double %2
 }
 
-define internal float @slope(%Point2D %a, %Point2D %b) {
-	%1 = extractvalue %Point2D %a, 0
-	%2 = extractvalue %Point2D %b, 0
+define internal float @slope(%main_Point2D %a, %main_Point2D %b) {
+	%1 = extractvalue %main_Point2D %a, 0
+	%2 = extractvalue %main_Point2D %b, 0
 	%3 = sub %Int %1, %2
 	%4 = call %Int @abs(%Int %3)
-	%5 = extractvalue %Point2D %a, 1
-	%6 = extractvalue %Point2D %b, 1
+	%5 = extractvalue %main_Point2D %a, 1
+	%6 = extractvalue %main_Point2D %b, 1
 	%7 = sub %Int %5, %6
 	%8 = call %Int @abs(%Int %7)
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str1 to [0 x i8]*), %Int %4)
@@ -326,11 +326,11 @@ define %Int @main() {
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str6 to [0 x i8]*), i32 4)
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str7 to [0 x i8]*), i32 8)
 	; printf %f ожидает получить double а не float!
-	%7 = insertvalue %Point2D zeroinitializer, %Int 10, 0
-	%8 = insertvalue %Point2D %7, %Int 20, 1
-	%9 = insertvalue %Point2D zeroinitializer, %Int 30, 0
-	%10 = insertvalue %Point2D %9, %Int 50, 1
-	%11 = call float @slope(%Point2D %8, %Point2D %10)
+	%7 = insertvalue %main_Point2D zeroinitializer, %Int 10, 0
+	%8 = insertvalue %main_Point2D %7, %Int 20, 1
+	%9 = insertvalue %main_Point2D zeroinitializer, %Int 30, 0
+	%10 = insertvalue %main_Point2D %9, %Int 50, 1
+	%11 = call float @slope(%main_Point2D %8, %main_Point2D %10)
 	%12 = fpext float %11 to double
 	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str8 to [0 x i8]*), double %12)
 	ret %Int 0

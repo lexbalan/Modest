@@ -191,13 +191,13 @@ declare void @perror(%ConstCharStr* %str)
 @str6 = private constant [17 x i8] [i8 105, i8 110, i8 116, i8 51, i8 50, i8 67, i8 111, i8 110, i8 115, i8 116, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 @str7 = private constant [19 x i8] [i8 115, i8 116, i8 114, i8 105, i8 110, i8 103, i8 56, i8 67, i8 111, i8 110, i8 115, i8 116, i8 32, i8 61, i8 32, i8 37, i8 115, i8 10, i8 0]
 
-%Point = type {
+%main_Point = type {
 	i32, 
 	i32
 };
 
 
-@ps = constant [3 x {
+@main_ps = constant [3 x {
 	i2, 
 	i2
 }] [
@@ -223,31 +223,31 @@ declare void @perror(%ConstCharStr* %str)
 		i2 2
 	}
 ]
-@points = constant [3 x %Point] [
-	%Point {
+@main_points = constant [3 x %main_Point] [
+	%main_Point {
 		i32 0,
 		i32 0
 	},
-	%Point {
+	%main_Point {
 		i32 1,
 		i32 1
 	},
-	%Point {
+	%main_Point {
 		i32 2,
 		i32 2
 	}
 ]
 
-@points2 = global [3 x %Point] [
-	%Point {
+@points2 = global [3 x %main_Point] [
+	%main_Point {
 		i32 0,
 		i32 0
 	},
-	%Point {
+	%main_Point {
 		i32 1,
 		i32 1
 	},
-	%Point {
+	%main_Point {
 		i32 2,
 		i32 2
 	}

@@ -281,23 +281,23 @@ declare void @perror(%ConstCharStr* %str)
 @str1 = private constant [15 x i8] [i8 112, i8 111, i8 105, i8 110, i8 116, i8 40, i8 37, i8 102, i8 44, i8 32, i8 37, i8 102, i8 41, i8 10, i8 0]
 @str2 = private constant [18 x i8] [i8 108, i8 105, i8 110, i8 101, i8 32, i8 108, i8 101, i8 110, i8 103, i8 116, i8 104, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
 
-%Point = type {
+%main_Point = type {
 	%Float, 
 	%Float
 };
 
-%Line = type {
-	%Point, 
-	%Point
+%main_Line = type {
+	%main_Point, 
+	%main_Point
 };
 
 
-@line = global %Line {
-	%Point {
+@line = global %main_Line {
+	%main_Point {
 		%Float 0.0000000000000000,
 		%Float 0.0000000000000000
 	},
-	%Point {
+	%main_Point {
 		%Float 1.0000000000000000,
 		%Float 1.0000000000000000
 	}
@@ -323,19 +323,19 @@ endif_0:
 	ret %Float %b
 }
 
-define internal %Float @distance(%Point %a, %Point %b) {
-	%1 = extractvalue %Point %a, 0
-	%2 = extractvalue %Point %b, 0
+define internal %Float @distance(%main_Point %a, %main_Point %b) {
+	%1 = extractvalue %main_Point %a, 0
+	%2 = extractvalue %main_Point %b, 0
 	%3 = call %Float @max(%Float %1, %Float %2)
-	%4 = extractvalue %Point %a, 0
-	%5 = extractvalue %Point %b, 0
+	%4 = extractvalue %main_Point %a, 0
+	%5 = extractvalue %main_Point %b, 0
 	%6 = call %Float @min(%Float %4, %Float %5)
 	%7 = fsub %Float %3, %6
-	%8 = extractvalue %Point %a, 1
-	%9 = extractvalue %Point %b, 1
+	%8 = extractvalue %main_Point %a, 1
+	%9 = extractvalue %main_Point %b, 1
 	%10 = call %Float @max(%Float %8, %Float %9)
-	%11 = extractvalue %Point %a, 1
-	%12 = extractvalue %Point %b, 1
+	%11 = extractvalue %main_Point %a, 1
+	%12 = extractvalue %main_Point %b, 1
 	%13 = call %Float @min(%Float %11, %Float %12)
 	%14 = fsub %Float %10, %13
 	%15 = call %Double @pow(%Float %7, %Double 2.0000000000000000)
@@ -345,24 +345,24 @@ define internal %Float @distance(%Point %a, %Point %b) {
 	ret %Double %18
 }
 
-define internal %Float @lineLength(%Line %line) {
-	%1 = extractvalue %Line %line, 0
-	%2 = extractvalue %Line %line, 1
-	%3 = call %Float @distance(%Point %1, %Point %2)
+define internal %Float @lineLength(%main_Line %line) {
+	%1 = extractvalue %main_Line %line, 0
+	%2 = extractvalue %main_Line %line, 1
+	%3 = call %Float @distance(%main_Point %1, %main_Point %2)
 	ret %Float %3
 }
 
 define internal void @ptr_example() {
 	%1 = call i8* @malloc(%SizeT 16)
-	%2 = bitcast i8* %1 to %Point*
+	%2 = bitcast i8* %1 to %main_Point*
 	; access by pointer
-	%3 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 0
+	%3 = getelementptr inbounds %main_Point, %main_Point* %2, i32 0, i32 0
 	store %Float 10.0000000000000000, %Float* %3
-	%4 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 1
+	%4 = getelementptr inbounds %main_Point, %main_Point* %2, i32 0, i32 1
 	store %Float 20.0000000000000000, %Float* %4
-	%5 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 0
+	%5 = getelementptr inbounds %main_Point, %main_Point* %2, i32 0, i32 0
 	%6 = load %Float, %Float* %5
-	%7 = getelementptr inbounds %Point, %Point* %2, i32 0, i32 1
+	%7 = getelementptr inbounds %main_Point, %main_Point* %2, i32 0, i32 1
 	%8 = load %Float, %Float* %7
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*), %Float %6, %Float %8)
 	ret void
@@ -371,8 +371,8 @@ define internal void @ptr_example() {
 
 define %Int @main() {
 	; by value
-	%1 = load %Line, %Line* @line
-	%2 = call %Float @lineLength(%Line %1)
+	%1 = load %main_Line, %main_Line* @line
+	%2 = call %Float @lineLength(%main_Line %1)
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str2 to [0 x i8]*), %Float %2)
 	call void @ptr_example()
 	ret %Int 0
