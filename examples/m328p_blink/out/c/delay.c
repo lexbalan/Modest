@@ -15,7 +15,8 @@ void delay_ms(uint32_t x)
 	uint32_t t;
 	t = x;
 	while (t > 0) {
-		while (delayCounter < 400) {
+		delayCounter = 0;
+		while (delayCounter < 380) {
 			delayCounter = delayCounter + 1;
 		}
 		t = t - 1;
