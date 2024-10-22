@@ -1,5 +1,5 @@
 	.text
-	.file	"main.ll"
+	.file	"delay.ll"
 	.weak	memeq                           ; -- Begin function memeq
 	.p2align	1
 	.type	memeq,@function
@@ -372,45 +372,119 @@ memeq:                                  ; @memeq
 .Lfunc_end0:
 	.size	memeq, .Lfunc_end0-memeq
                                         ; -- End function
-	.globl	main                            ; -- Begin function main
+	.globl	delay_ms                        ; -- Begin function delay_ms
 	.p2align	1
-	.type	main,@function
-main:                                   ; @main
+	.type	delay_ms,@function
+delay_ms:                               ; @delay_ms
 ; %bb.0:
-	push	r12
-	push	r13
-	push	r14
-	push	r15
-	push	r16
-	push	r17
-	ldi	r24, -1
-	out	4, r24
-	ldi	r24, 232
-	ldi	r25, 3
-	mov	r12, r24
-	mov	r13, r25
-	ldi	r16, 0
-	ldi	r17, 0
-.LBB1_1:                                ; %again_1
-                                        ; =>This Inner Loop Header: Depth=1
-	ldi	r24, -1
-	out	5, r24
-	mov	r14, r12
-	mov	r15, r13
-	mov	r22, r14
-	mov	r23, r15
-	mov	r24, r16
-	mov	r25, r17
-	rcall	delay_ms
-	out	5, r1
-	mov	r22, r14
-	mov	r23, r15
-	mov	r24, r16
-	mov	r25, r17
-	rcall	delay_ms
+	push	r28
+	push	r29
+	in	r28, 61
+	in	r29, 62
+	sbiw	r28, 4
+	in	r0, 63
+	cli
+	out	62, r29
+	out	63, r0
+	out	61, r28
+	std	Y+3, r24
+	std	Y+4, r25
+	std	Y+1, r22
+	std	Y+2, r23
+	ldi	r24, 0
+	ldi	r25, 0
+	rjmp	.LBB1_2
+.LBB1_1:                                ; %break_2
+                                        ;   in Loop: Header=BB1_2 Depth=1
+	ldd	r18, Y+1
+	ldd	r19, Y+2
+	ldd	r20, Y+3
+	ldd	r21, Y+4
+	subi	r18, 1
+	sbci	r19, 0
+	sbci	r20, 0
+	sbci	r21, 0
+	std	Y+1, r18
+	std	Y+2, r19
+	std	Y+3, r20
+	std	Y+4, r21
+.LBB1_2:                                ; %again_1
+                                        ; =>This Loop Header: Depth=1
+                                        ;     Child Loop BB1_6 Depth 2
+	ldd	r20, Y+1
+	ldd	r21, Y+2
+	ldd	r22, Y+3
+	ldd	r23, Y+4
+	ldi	r18, 1
+	cpi	r20, 0
+	cpc	r21, r1
+	cpc	r22, r24
+	cpc	r23, r25
+	breq	.LBB1_4
+; %bb.3:                                ; %again_1
+                                        ;   in Loop: Header=BB1_2 Depth=1
+	mov	r18, r1
+.LBB1_4:                                ; %again_1
+                                        ;   in Loop: Header=BB1_2 Depth=1
+	andi	r18, 1
+	cpi	r18, 0
+	breq	.LBB1_5
+	rjmp	.LBB1_10
+.LBB1_5:                                ; %body_1
+                                        ;   in Loop: Header=BB1_2 Depth=1
+	sts	delayCounter+3, r25
+	sts	delayCounter+2, r24
+	sts	delayCounter+1, r25
+	sts	delayCounter, r24
+.LBB1_6:                                ; %again_2
+                                        ;   Parent Loop BB1_2 Depth=1
+                                        ; =>  This Inner Loop Header: Depth=2
+	lds	r20, delayCounter
+	lds	r21, delayCounter+1
+	lds	r22, delayCounter+2
+	lds	r23, delayCounter+3
+	ldi	r18, 1
+	cpi	r20, -112
+	cpc	r21, r18
+	cpc	r22, r24
+	cpc	r23, r25
+	brsh	.LBB1_8
+; %bb.7:                                ; %again_2
+                                        ;   in Loop: Header=BB1_6 Depth=2
+	mov	r18, r1
+.LBB1_8:                                ; %again_2
+                                        ;   in Loop: Header=BB1_6 Depth=2
+	andi	r18, 1
+	cpi	r18, 0
+	breq	.LBB1_9
 	rjmp	.LBB1_1
+.LBB1_9:                                ; %body_2
+                                        ;   in Loop: Header=BB1_6 Depth=2
+	lds	r18, delayCounter
+	lds	r19, delayCounter+1
+	lds	r20, delayCounter+2
+	lds	r21, delayCounter+3
+	subi	r18, 255
+	sbci	r19, 255
+	sbci	r20, 255
+	sbci	r21, 255
+	sts	delayCounter+1, r19
+	sts	delayCounter, r18
+	sts	delayCounter+3, r21
+	sts	delayCounter+2, r20
+	rjmp	.LBB1_6
+.LBB1_10:                               ; %break_1
+	adiw	r28, 4
+	in	r0, 63
+	cli
+	out	62, r29
+	out	63, r0
+	out	61, r28
+	pop	r29
+	pop	r28
+	ret
 .Lfunc_end1:
-	.size	main, .Lfunc_end1-main
+	.size	delay_ms, .Lfunc_end1-delay_ms
                                         ; -- End function
 	; Declaring this symbol tells the CRT that it should
 	;copy all variables from program memory to RAM on startup
@@ -418,3 +492,10 @@ main:                                   ; @main
 	; Declaring this symbol tells the CRT that it should
 	;clear the zeroed data section on startup
 	.globl	__do_clear_bss
+	.type	delayCounter,@object            ; @delayCounter
+	.section	.bss,"aw",@nobits
+	.globl	delayCounter
+delayCounter:
+	.long	0                               ; 0x0
+	.size	delayCounter, 4
+

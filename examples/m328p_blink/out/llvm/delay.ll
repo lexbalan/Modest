@@ -99,45 +99,43 @@ break_2:
 	ret i1 1
 }
 
-; MODULE: main
+; MODULE: delay
 
 ; -- print includes --
 ; -- end print includes --
 ; -- print imports --
-declare void @delay_ms(i32 %x)
 ; -- end print imports --
 ; -- strings --
 
-%IO8 = type i8;
-%IO16 = type i16;
-%GPIO = type <{
-	%IO8, 
-	%IO8, 
-	%IO8
-}>;
+@delayCounter = global i32 zeroinitializer
 
-
-
-
-define i16 @main() {
-	%1 = inttoptr i6 35 to %GPIO*
-	%2 = getelementptr inbounds %GPIO, %GPIO* %1, i32 0, i32 1
-	store %IO8 255, %IO8* %2
+define void @delay_ms(i32 %x) {
+	%1 = alloca i32, align 4
+	store i32 %x, i32* %1
 	br label %again_1
 again_1:
-	br i1 1 , label %body_1, label %break_1
+	%2 = load i32, i32* %1
+	%3 = icmp ugt i32 %2, 0
+	br i1 %3 , label %body_1, label %break_1
 body_1:
-	%3 = inttoptr i6 35 to %GPIO*
-	%4 = getelementptr inbounds %GPIO, %GPIO* %3, i32 0, i32 2
-	store %IO8 255, %IO8* %4
-	call void @delay_ms(i32 1000)
-	%5 = inttoptr i6 35 to %GPIO*
-	%6 = getelementptr inbounds %GPIO, %GPIO* %5, i32 0, i32 2
-	store %IO8 0, %IO8* %6
-	call void @delay_ms(i32 1000)
+	store i32 0, i32* @delayCounter
+	br label %again_2
+again_2:
+	%4 = load i32, i32* @delayCounter
+	%5 = icmp ult i32 %4, 400
+	br i1 %5 , label %body_2, label %break_2
+body_2:
+	%6 = load i32, i32* @delayCounter
+	%7 = add i32 %6, 1
+	store i32 %7, i32* @delayCounter
+	br label %again_2
+break_2:
+	%8 = load i32, i32* %1
+	%9 = sub i32 %8, 1
+	store i32 %9, i32* %1
 	br label %again_1
 break_1:
-	ret i16 0
+	ret void
 }
 
 

@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "delay.h"
 
 typedef struct main_GPIO main_GPIO; //
 #define main_portB  ((main_GPIO *)(main_sfrOffset + 0x03))
