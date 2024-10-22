@@ -1949,7 +1949,7 @@ def print_header(module, outname):
 	out("\n")
 	out("#include <stdint.h>\n")
 	out("#include <stdbool.h>\n")
-	out("#include <string.h>\n")
+	#out("#include <string.h>\n")
 	cdirectives(module)
 
 	# print directives (only for header)

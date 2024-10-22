@@ -4,7 +4,6 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
 
 
 void delay_ms(uint32_t x);
