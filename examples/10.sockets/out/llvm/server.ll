@@ -102,7 +102,7 @@ break_2:
 ; MODULE: server
 
 ; -- print includes --
-
+; from included ctypes64
 %Str = type %Str8;
 %Char = type i8;
 %ConstChar = type %Char;
@@ -132,13 +132,11 @@ break_2:
 %PIDT = type i32;
 %UIDT = type i32;
 %GIDT = type i32;
-
+; from included stdio
 %File = type i8;
 %FposT = type i8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
-
-
 declare %Int @fclose(%File* %f)
 declare %Int @feof(%File* %f)
 declare %Int @ferror(%File* %f)
@@ -181,7 +179,7 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
-
+; from included stdlib
 declare void @abort()
 declare %Int @abs(%Int %x)
 declare %Int @atexit(void ()* %x)
@@ -196,7 +194,7 @@ declare %LongInt @labs(%LongInt %x)
 declare %Str* @secure_getenv(%Str* %name)
 declare i8* @malloc(%SizeT %size)
 declare %Int @system([0 x %ConstChar]* %string)
-
+; from included socket
 %InAddrT = type i32;
 %InPortT = type i16;
 %SocklenT = type i32;
@@ -216,8 +214,6 @@ declare %Int @system([0 x %ConstChar]* %string)
 	%Struct_in_addr, 
 	[8 x i8]
 };
-
-
 
 declare %InAddrT @inet_addr([0 x %ConstChar]* %cp)
 declare %Int @socket(%Int %domain, %Int %_type, %Int %protocol)
@@ -246,7 +242,7 @@ declare %Int @accept(%Int %socket, %Struct_sockaddr* %addr, %SocklenT* %addrlen)
 @str13 = private constant [22 x i8] [i8 91, i8 45, i8 93, i8 32, i8 67, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 119, i8 114, i8 105, i8 116, i8 101, i8 32, i8 102, i8 105, i8 108, i8 101, i8 0]
 
 
-define i1 @write_file(%Int %sockfd) {
+define internal i1 @write_file(%Int %sockfd) {
 	%1 = alloca [1024 x i8], align 1
 	%2 = call %File* @fopen(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
 	%3 = bitcast i8* null to %File*
@@ -282,6 +278,7 @@ endif_1:
 break_1:
 	ret i1 1
 }
+
 
 define %Int @main() {
 	%1 = call %Int @socket(%Int 2, %Int 1, %Int 0)

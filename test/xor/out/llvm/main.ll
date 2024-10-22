@@ -102,7 +102,7 @@ break_2:
 ; MODULE: main
 
 ; -- print includes --
-
+; from included ctypes64
 %Str = type %Str8;
 %Char = type i8;
 %ConstChar = type %Char;
@@ -132,13 +132,11 @@ break_2:
 %PIDT = type i32;
 %UIDT = type i32;
 %GIDT = type i32;
-
+; from included stdio
 %File = type i8;
 %FposT = type i8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
-
-
 declare %Int @fclose(%File* %f)
 declare %Int @feof(%File* %f)
 declare %Int @ferror(%File* %f)
@@ -215,7 +213,7 @@ declare void @perror(%ConstCharStr* %str)
 	i8 0
 ]
 
-define void @xor_encrypter([0 x i8]* %buf, i32 %buflen, [0 x i8]* %key, i32 %keylen) {
+define internal void @xor_encrypter([0 x i8]* %buf, i32 %buflen, [0 x i8]* %key, i32 %keylen) {
 	%1 = alloca i32, align 4
 	store i32 0, i32* %1
 	%2 = alloca i32, align 4
@@ -257,7 +255,7 @@ break_1:
 	ret void
 }
 
-define void @print_bytes([0 x i8]* %buf, i32 %len) {
+define internal void @print_bytes([0 x i8]* %buf, i32 %len) {
 	%1 = alloca i32, align 4
 	store i32 0, i32* %1
 	br label %again_1
@@ -278,6 +276,7 @@ break_1:
 	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
 	ret void
 }
+
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str3 to [0 x i8]*))

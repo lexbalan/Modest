@@ -11,7 +11,12 @@
 #define main_filename  "file.txt"
 void write_example();
 void read_example();
-int main();
+
+
+
+
+
+
 
 
 void write_example()

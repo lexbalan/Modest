@@ -1,5 +1,6 @@
 
 include "libc/ctypes64"
+@c_include "stdio.h"
 include "libc/stdio"
 func array_print(pa: *[]Int32, len: Int32) -> Unit {
 	var i: Int32 = 0
@@ -8,7 +9,7 @@ func array_print(pa: *[]Int32, len: Int32) -> Unit {
 		i = i + 1
 	}
 }
-func main() -> Int {
+public func main() -> Int {
 	printf("test slices\n")
 
 	//

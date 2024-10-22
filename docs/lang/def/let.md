@@ -25,7 +25,7 @@ let four = two * 2
 ```swift
 let message = "Hello World!\n"
 
-func main () -> Int32 {
+public func main () -> Int32 {
 	printf("%s\n", message)
 	return 0
 }

@@ -105,7 +105,7 @@ break_2:
 ; MODULE: main
 
 ; -- print includes --
-
+; from included ctypes64
 %Str = type %Str8;
 %Char = type i8;
 %ConstChar = type %Char;
@@ -135,13 +135,11 @@ break_2:
 %PIDT = type i32;
 %UIDT = type i32;
 %GIDT = type i32;
-
+; from included stdio
 %File = type i8;
 %FposT = type i8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
-
-
 declare %Int @fclose(%File* %f)
 declare %Int @feof(%File* %f)
 declare %Int @ferror(%File* %f)
@@ -184,8 +182,7 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
-
-
+; from included unistd
 declare %Int @access([0 x %ConstChar]* %path, %Int %amode)
 declare %UnsignedInt @alarm(%UnsignedInt %seconds)
 declare %Int @brk(i8* %end_data_segment)
@@ -284,7 +281,7 @@ declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 @str7 = private constant [9 x i8] [i8 110, i8 32, i8 61, i8 32, i8 123, i8 110, i8 125, i8 10, i8 0]
 @str8 = private constant [11 x i8] [i8 120, i8 32, i8 61, i8 32, i8 48, i8 120, i8 123, i8 120, i8 125, i8 10, i8 0]
 
-define %SSizeT @my_printf(%Str8* %format, ...) {
+define internal %SSizeT @my_printf(%Str8* %format, ...) {
 	%1 = alloca i8*, align 1
 	%2 = alloca i8*, align 1
 	%3 = bitcast i8** %2 to i8*
@@ -303,6 +300,7 @@ define %SSizeT @my_printf(%Str8* %format, ...) {
 	%13 = call %SSizeT @write(%Int 1, i8* %11, %SizeT %12)
 	ret %SSizeT %13
 }
+
 
 define %Int @main() {
 	%1 = alloca i32, align 4

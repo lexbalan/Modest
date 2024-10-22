@@ -102,7 +102,7 @@ break_2:
 ; MODULE: list
 
 ; -- print includes --
-
+; from included ctypes64
 %Str = type %Str8;
 %Char = type i8;
 %ConstChar = type %Char;
@@ -132,7 +132,7 @@ break_2:
 %PIDT = type i32;
 %UIDT = type i32;
 %GIDT = type i32;
-
+; from included stdlib
 declare void @abort()
 declare %Int @abs(%Int %x)
 declare %Int @atexit(void ()* %x)
@@ -147,13 +147,11 @@ declare %LongInt @labs(%LongInt %x)
 declare %Str* @secure_getenv(%Str* %name)
 declare i8* @malloc(%SizeT %size)
 declare %Int @system([0 x %ConstChar]* %string)
-
+; from included stdio
 %File = type i8;
 %FposT = type i8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
-
-
 declare %Int @fclose(%File* %f)
 declare %Int @feof(%File* %f)
 declare %Int @ferror(%File* %f)

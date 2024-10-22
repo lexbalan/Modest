@@ -60,7 +60,7 @@ func doTest(test: *SHA256_TestCase) -> Bool {
 
 	return test_passed
 }
-func main() -> Int {
+public func main() -> Int {
 	printf("test SHA256\n")
 
 	var i: Int32 = 0

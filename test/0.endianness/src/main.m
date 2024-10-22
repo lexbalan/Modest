@@ -5,7 +5,7 @@ include "libc/stdio"
 
 @feature("unsafe")
 
-func main() -> Int {
+public func main() -> Int {
 	var check: Nat16 = 0x0001
 	let is_le = *(unsafe *Nat8 &check) == 1
 

@@ -10,7 +10,7 @@
 
 
 typedef int32_t main_NewInt32;
-int main();
+
 
 
 

@@ -37,7 +37,7 @@ func write_file(sockfd: Int) -> Bool {
 }
 
 
-func main() -> Int {
+public func main() -> Int {
 	let sockfd = socket(af_INET, c_SOCK_STREAM, 0)
 	if sockfd < 0 {
 		perror("[-] Error in socket")

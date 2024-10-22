@@ -16,7 +16,7 @@ func mtab(n: Nat32) -> Unit {
 }
 
 
-func main() -> Int {
+public func main() -> Int {
 	let n = 2 * 2
 	printf("multiply table for %d\n", Int32 n)
 	mtab(n)

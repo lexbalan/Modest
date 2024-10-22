@@ -102,7 +102,7 @@ break_2:
 ; MODULE: main
 
 ; -- print includes --
-
+; from included ctypes64
 %Str = type %Str8;
 %Char = type i8;
 %ConstChar = type %Char;
@@ -132,13 +132,11 @@ break_2:
 %PIDT = type i32;
 %UIDT = type i32;
 %GIDT = type i32;
-
+; from included stdio
 %File = type i8;
 %FposT = type i8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
-
-
 declare %Int @fclose(%File* %f)
 declare %Int @feof(%File* %f)
 declare %Int @ferror(%File* %f)
@@ -194,29 +192,7 @@ declare void @perror(%ConstCharStr* %str)
 @str7 = private constant [40 x i8] [i8 110, i8 117, i8 109, i8 98, i8 101, i8 114, i8 32, i8 109, i8 117, i8 115, i8 116, i8 32, i8 98, i8 101, i8 32, i8 108, i8 101, i8 115, i8 115, i8 32, i8 116, i8 104, i8 97, i8 110, i8 32, i8 37, i8 105, i8 44, i8 32, i8 116, i8 114, i8 121, i8 32, i8 97, i8 103, i8 97, i8 105, i8 110, i8 10, i8 0]
 
 
-define i32 @main() {
-	%1 = call i32 @get_number(i32 0, i32 10)
-	%2 = icmp slt i32 %1, 5
-	br i1 %2 , label %then_0, label %else_0
-then_0:
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([37 x i8]* @str1 to [0 x i8]*), i32 %1, i32 5)
-	br label %endif_0
-else_0:
-	%4 = icmp sgt i32 %1, 5
-	br i1 %4 , label %then_1, label %else_1
-then_1:
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([40 x i8]* @str2 to [0 x i8]*), i32 %1, i32 5)
-	br label %endif_1
-else_1:
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str3 to [0 x i8]*), i32 %1, i32 5)
-	br label %endif_1
-endif_1:
-	br label %endif_0
-endif_0:
-	ret i32 0
-}
-
-define i32 @get_number(i32 %min, i32 %max) {
+define internal i32 @get_number(i32 %min, i32 %max) {
 	%1 = alloca i32, align 4
 	store i32 0, i32* %1
 	br label %again_1
@@ -250,6 +226,29 @@ endif_0:
 break_1:
 	%13 = load i32, i32* %1
 	ret i32 %13
+}
+
+
+define i32 @main() {
+	%1 = call i32 @get_number(i32 0, i32 10)
+	%2 = icmp slt i32 %1, 5
+	br i1 %2 , label %then_0, label %else_0
+then_0:
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([37 x i8]* @str1 to [0 x i8]*), i32 %1, i32 5)
+	br label %endif_0
+else_0:
+	%4 = icmp sgt i32 %1, 5
+	br i1 %4 , label %then_1, label %else_1
+then_1:
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([40 x i8]* @str2 to [0 x i8]*), i32 %1, i32 5)
+	br label %endif_1
+else_1:
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str3 to [0 x i8]*), i32 %1, i32 5)
+	br label %endif_1
+endif_1:
+	br label %endif_0
+endif_0:
+	ret i32 0
 }
 
 

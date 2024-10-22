@@ -28,7 +28,7 @@ struct main_Point {
 const struct {int8_t x; int8_t y;} main_ps[3] = _main_ps;
 #define _main_points  _main_ps
 const main_Point main_points[3] = _main_points;
-int main();
+
 
 
 static main_Point points2[3] = _main_points;

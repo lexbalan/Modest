@@ -29,7 +29,7 @@ var x: Int16
 var y = Int32 10
 var z: Int32 = 20
 
-func main () -> Int32 {
+public func main () -> Int32 {
 	printf("x = %hd\n", x)
 	printf("y = %d\n", y)
 	printf("z = %d\n", z)
@@ -51,7 +51,7 @@ func count() {
 	++counter
 }
 
-func main() -> Int {
+public func main() -> Int {
 	printf("before counter = %i\n", counter)
 
 	// call function count for ten times
@@ -88,7 +88,7 @@ func mid (a: Int32, b: Int32) -> Int32 {
 
 ```swift
 
-func main () -> Int32 {
+public func main () -> Int32 {
 	var x: Int16
 	var y = Int32 10
 	var z: Int32 = 10

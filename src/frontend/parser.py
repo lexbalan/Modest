@@ -1636,14 +1636,18 @@ class Parser:
 
 			#attributes = []
 
+			access_modifier = 'private'
 
-			public = self.match('public') or self.match('public')
-			if public:
+			if self.match('public'):
+				access_modifier = 'public'
 				if self.match('{'):
 					public_region = True
+			elif self.match('private'):
+				pass
+
 
 			if public_region:
-				public = True
+				access_modifier = 'public'
 
 			ti = self.ti()
 
@@ -1686,7 +1690,7 @@ class Parser:
 				for subx in x:
 					subx['nl'] = 1
 					subx['ti'] = ti
-					subx['public'] = public
+					subx['access_modifier'] = access_modifier
 					subx['attributes'] = attributes
 
 				x[0]['nl'] = spaceline_cnt
@@ -1706,7 +1710,7 @@ class Parser:
 
 				x['attributes'] = attributes
 
-				x['public'] = public
+				x['access_modifier'] = access_modifier
 
 				output.append(x)
 

@@ -1,9 +1,10 @@
 
 include "libc/ctypes64"
+@c_include "stdio.h"
 include "libc/stdio"
 var globalArray0: [10]Int32 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 var globalArray1: [10]Int32 = []
-func main() -> Int {
+public func main() -> Int {
 	printf("test assign_array\n")
 
 	globalArray1 = globalArray0

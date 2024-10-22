@@ -119,7 +119,7 @@ break_2:
 
 @delay_counter = global i32 zeroinitializer
 
-define void @delay_ms(i32 %ms) {
+define internal void @delay_ms(i32 %ms) {
 	%1 = alloca i32, align 4
 	store i32 %ms, i32* %1
 	br label %again_1
@@ -148,6 +148,8 @@ break_1:
 	ret void
 }
 
+
+
 define i16 @main() {
 	%1 = inttoptr i6 35 to %GPIO*
 	%2 = getelementptr inbounds %GPIO, %GPIO* %1, i32 0, i32 1
@@ -168,6 +170,5 @@ body_1:
 break_1:
 	ret i16 0
 }
-
 
 

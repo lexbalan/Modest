@@ -102,7 +102,7 @@ break_2:
 ; MODULE: main
 
 ; -- print includes --
-
+; from included ctypes64
 %Str = type %Str8;
 %Char = type i8;
 %ConstChar = type %Char;
@@ -132,13 +132,11 @@ break_2:
 %PIDT = type i32;
 %UIDT = type i32;
 %GIDT = type i32;
-
+; from included stdio
 %File = type i8;
 %FposT = type i8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
-
-
 declare %Int @fclose(%File* %f)
 declare %Int @feof(%File* %f)
 declare %Int @ferror(%File* %f)
@@ -194,17 +192,18 @@ declare void @perror(%ConstCharStr* %str)
 
 @big0 = global i128 1512366075204170947332355369683137040
 
-define i64 @high_128(i128 %x) {
+define internal i64 @high_128(i128 %x) {
 	%1 = lshr i128 %x, 64
 	%2 = trunc i128 %1 to i64
 	ret i64 %2
 }
 
-define i64 @low_128(i128 %x) {
+define internal i64 @low_128(i128 %x) {
 	%1 = and i128 %x, 18446744073709551615
 	%2 = trunc i128 %1 to i64
 	ret i64 %2
 }
+
 
 define %Int @main() {
 	%1 = alloca i128, align 16

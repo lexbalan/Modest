@@ -102,7 +102,7 @@ break_2:
 ; MODULE: main
 
 ; -- print includes --
-
+; from included ctypes64
 %Str = type %Str8;
 %Char = type i8;
 %ConstChar = type %Char;
@@ -132,13 +132,11 @@ break_2:
 %PIDT = type i32;
 %UIDT = type i32;
 %GIDT = type i32;
-
+; from included stdio
 %File = type i8;
 %FposT = type i8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
-
-
 declare %Int @fclose(%File* %f)
 declare %Int @feof(%File* %f)
 declare %Int @ferror(%File* %f)
@@ -213,57 +211,7 @@ declare void @perror(%ConstCharStr* %str)
 };
 
 
-define %Int @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str1 to [0 x i8]*))
-	%2 = call i1 @test_generic_integer()
-	br i1 %2 , label %then_0, label %else_0
-then_0:
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([29 x i8]* @str2 to [0 x i8]*))
-	br label %endif_0
-else_0:
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([29 x i8]* @str3 to [0 x i8]*))
-	br label %endif_0
-endif_0:
-	%5 = call i1 @test_generic_float()
-	br i1 %5 , label %then_1, label %else_1
-then_1:
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str4 to [0 x i8]*))
-	br label %endif_1
-else_1:
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str5 to [0 x i8]*))
-	br label %endif_1
-endif_1:
-	%8 = call i1 @test_generic_char()
-	br i1 %8 , label %then_2, label %else_2
-then_2:
-	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str6 to [0 x i8]*))
-	br label %endif_2
-else_2:
-	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str7 to [0 x i8]*))
-	br label %endif_2
-endif_2:
-	%11 = call i1 @test_generic_array()
-	br i1 %11 , label %then_3, label %else_3
-then_3:
-	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str8 to [0 x i8]*))
-	br label %endif_3
-else_3:
-	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str9 to [0 x i8]*))
-	br label %endif_3
-endif_3:
-	%14 = call i1 @test_generic_record()
-	br i1 %14 , label %then_4, label %else_4
-then_4:
-	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([28 x i8]* @str10 to [0 x i8]*))
-	br label %endif_4
-else_4:
-	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([29 x i8]* @str11 to [0 x i8]*))
-	br label %endif_4
-endif_4:
-	ret %Int 0
-}
-
-define i1 @test_generic_integer() {
+define internal i1 @test_generic_integer() {
 	; Any integer literal have GenericInteger type
 	; result of such expressions also have generic type
 	; GenericInteger value can be implicitly casted to any Integer type
@@ -291,7 +239,7 @@ define i1 @test_generic_integer() {
 	ret i1 1
 }
 
-define i1 @test_generic_float() {
+define internal i1 @test_generic_float() {
 	; Any float literal have GenericFloat type
 	; value with GenericFloat type
 	; can be implicit casted to any Float type
@@ -306,7 +254,7 @@ define i1 @test_generic_float() {
 	ret i1 1
 }
 
-define i1 @test_generic_char() {
+define internal i1 @test_generic_char() {
 	; Any char value expression have GenericChar type
 	; (you can pick GenericChar value by index of GenericString value)
 	; value with GenericChar type
@@ -323,7 +271,7 @@ define i1 @test_generic_char() {
 	ret i1 1
 }
 
-define i1 @test_generic_array() {
+define internal i1 @test_generic_array() {
 	; Any array expression have GenericArray type
 	; this array expression (GenericArray of four GenericInteger items)
 	%1 = insertvalue [4 x i2] zeroinitializer, i2 0, 0
@@ -435,7 +383,7 @@ endif_3:
 	ret i1 1
 }
 
-define i1 @test_generic_record() {
+define internal i1 @test_generic_record() {
 	; Any record expression have GenericRecord type
 	; this record expression have type:
 	; Generic(record {x: GenericInteger, y: GenericInteger})
@@ -457,6 +405,57 @@ define i1 @test_generic_record() {
 	%9 = insertvalue %Point3D %8, i32 0, 2
 	store %Point3D %9, %Point3D* %6
 	ret i1 1
+}
+
+
+define %Int @main() {
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str1 to [0 x i8]*))
+	%2 = call i1 @test_generic_integer()
+	br i1 %2 , label %then_0, label %else_0
+then_0:
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([29 x i8]* @str2 to [0 x i8]*))
+	br label %endif_0
+else_0:
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([29 x i8]* @str3 to [0 x i8]*))
+	br label %endif_0
+endif_0:
+	%5 = call i1 @test_generic_float()
+	br i1 %5 , label %then_1, label %else_1
+then_1:
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str4 to [0 x i8]*))
+	br label %endif_1
+else_1:
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str5 to [0 x i8]*))
+	br label %endif_1
+endif_1:
+	%8 = call i1 @test_generic_char()
+	br i1 %8 , label %then_2, label %else_2
+then_2:
+	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str6 to [0 x i8]*))
+	br label %endif_2
+else_2:
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str7 to [0 x i8]*))
+	br label %endif_2
+endif_2:
+	%11 = call i1 @test_generic_array()
+	br i1 %11 , label %then_3, label %else_3
+then_3:
+	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str8 to [0 x i8]*))
+	br label %endif_3
+else_3:
+	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str9 to [0 x i8]*))
+	br label %endif_3
+endif_3:
+	%14 = call i1 @test_generic_record()
+	br i1 %14 , label %then_4, label %else_4
+then_4:
+	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([28 x i8]* @str10 to [0 x i8]*))
+	br label %endif_4
+else_4:
+	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([29 x i8]* @str11 to [0 x i8]*))
+	br label %endif_4
+endif_4:
+	ret %Int 0
 }
 
 

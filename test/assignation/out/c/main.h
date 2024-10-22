@@ -7,9 +7,12 @@
 #include <string.h>
 
 #include <stdio.h>
+#include <stdio.h>
 
+#include <stdio.h>
 
 
 typedef struct main_Point main_Point; //
+int main();
 
 #endif /* MAIN_H */

@@ -102,7 +102,7 @@ break_2:
 ; MODULE: main
 
 ; -- print includes --
-
+; from included ctypes64
 %Str = type %Str8;
 %Char = type i8;
 %ConstChar = type %Char;
@@ -132,8 +132,7 @@ break_2:
 %PIDT = type i32;
 %UIDT = type i32;
 %GIDT = type i32;
-
-
+; from included math
 declare %Double @acos(%Double %x)
 declare %Double @asin(%Double %x)
 declare %Double @atan(%Double %x)
@@ -213,7 +212,7 @@ declare %LongDouble @fdiml(%LongDouble %a, %LongDouble %b)
 declare %LongDouble @fmaxl(%LongDouble %a, %LongDouble %b)
 declare %LongDouble @fminl(%LongDouble %a, %LongDouble %b)
 declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
-
+; from included stdlib
 declare void @abort()
 declare %Int @abs(%Int %x)
 declare %Int @atexit(void ()* %x)
@@ -228,13 +227,11 @@ declare %LongInt @labs(%LongInt %x)
 declare %Str* @secure_getenv(%Str* %name)
 declare i8* @malloc(%SizeT %size)
 declare %Int @system([0 x %ConstChar]* %string)
-
+; from included stdio
 %File = type i8;
 %FposT = type i8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
-
-
 declare %Int @fclose(%File* %f)
 declare %Int @feof(%File* %f)
 declare %Int @ferror(%File* %f)
@@ -306,7 +303,7 @@ declare void @perror(%ConstCharStr* %str)
 	}
 }
 
-define %Float @max(%Float %a, %Float %b) {
+define internal %Float @max(%Float %a, %Float %b) {
 	%1 = fcmp ogt %Float %a, %b
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
@@ -316,7 +313,7 @@ endif_0:
 	ret %Float %b
 }
 
-define %Float @min(%Float %a, %Float %b) {
+define internal %Float @min(%Float %a, %Float %b) {
 	%1 = fcmp olt %Float %a, %b
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
@@ -326,7 +323,7 @@ endif_0:
 	ret %Float %b
 }
 
-define %Float @distance(%Point %a, %Point %b) {
+define internal %Float @distance(%Point %a, %Point %b) {
 	%1 = extractvalue %Point %a, 0
 	%2 = extractvalue %Point %b, 0
 	%3 = call %Float @max(%Float %1, %Float %2)
@@ -348,14 +345,14 @@ define %Float @distance(%Point %a, %Point %b) {
 	ret %Double %18
 }
 
-define %Float @lineLength(%Line %line) {
+define internal %Float @lineLength(%Line %line) {
 	%1 = extractvalue %Line %line, 0
 	%2 = extractvalue %Line %line, 1
 	%3 = call %Float @distance(%Point %1, %Point %2)
 	ret %Float %3
 }
 
-define void @ptr_example() {
+define internal void @ptr_example() {
 	%1 = call i8* @malloc(%SizeT 16)
 	%2 = bitcast i8* %1 to %Point*
 	; access by pointer
@@ -370,6 +367,7 @@ define void @ptr_example() {
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*), %Float %6, %Float %8)
 	ret void
 }
+
 
 define %Int @main() {
 	; by value

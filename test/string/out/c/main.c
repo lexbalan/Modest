@@ -11,7 +11,7 @@
 #define main_str8_example  "String"
 #define main_str16_example  (u"String-Ω")
 #define main_str32_example  (U"String-Ω 🐀🎉🦄")
-int main();
+
 
 
 

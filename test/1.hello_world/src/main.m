@@ -9,7 +9,7 @@ let world = "World!"
 let hello_world = hello + " " + world
 
 
-func main() -> Int {
+public func main() -> Int {
 	printf("%s\n", *Str8 hello_world)
 	return 0
 }

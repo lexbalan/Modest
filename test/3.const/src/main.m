@@ -35,7 +35,7 @@ var points2 = points
 
 
 // define function main
-func main() -> Int {
+public func main() -> Int {
 	printf("test const\n")
 
 	printf("genericIntConst = %d\n", Int32 genericIntConst)

@@ -1,6 +1,8 @@
 
 include "libc/ctypes64"
+@c_include "stdlib.h"
 include "libc/stdlib"
+@c_include "stdio.h"
 include "libc/stdio"
 import "list"
 func nat32_list_insert(list: *List, x: Nat32) -> Unit {
@@ -27,7 +29,7 @@ func list_print_backward(list: *List) -> Unit {
 		pn = list.node_prev_get(pn)
 	}
 }
-func main() -> Int {
+public func main() -> Int {
 	printf("linked list example\n")
 
 	let list = list.create()

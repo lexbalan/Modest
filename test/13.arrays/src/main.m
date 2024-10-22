@@ -56,7 +56,7 @@ func test() {
 	}
 }
 
-func main() -> Int {
+public func main() -> Int {
 	// generic array [4]Char8 will be implicit casted to [10]Char8
 
 	var em = f0("Hello World!")

@@ -2207,7 +2207,7 @@ def def_type(x):
 		#	error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
 	else:
 		nt = hlir_type.hlir_type_undefined(x['ti'])
-		module_type_add(module, id['str'], nt, is_public=x['public'])
+		module_type_add(module, id['str'], nt, is_public=x['access_modifier'] == 'public')
 
 	# только теперь обрабатываем поля,
 	# тк там могут быть указатели на саму себя
@@ -2247,12 +2247,12 @@ def def_type(x):
 	if hlir_type.type_is_record(ty):
 		module['records'].append(nt)
 
-	y = hlir_def_type(id, nt, ty, x['ti'])
-	nt['definition'] = y
-	y['module'] = module
-	y['nl'] = x['nl']
-	y['public'] = x['public']
-	return y
+	definition = hlir_def_type(id, nt, ty, x['ti'])
+	nt['definition'] = definition
+	definition['module'] = module
+	definition['nl'] = x['nl']
+	definition['access_level'] = x['access_modifier']
+	return definition
 
 
 
@@ -2282,16 +2282,16 @@ def def_const(x):
 		if not hlir_type.type_is_bad(t):
 			init_value = value_cons_implicit_check(t, init_value)
 
-	const_value = symbol_const(id, init_value, is_public=x['public'])
+	const_value = symbol_const(id, init_value, is_public=x['access_modifier'] == 'public')
 
-	y = hlir_def_const(id, const_value, init_value, x['ti'])
+	definition = hlir_def_const(id, const_value, init_value, x['ti'])
 	if need_decoration(x):
 		const_value['prefix'] = module['prefix']
-	y['public'] = x['public']
-	const_value['definition'] = y
+	definition['access_level'] = x['access_modifier']
+	const_value['definition'] = definition
 	const_value['module'] = module
-	y['module'] = module
-	return y
+	definition['module'] = module
+	return definition
 
 
 
@@ -2335,15 +2335,14 @@ def def_var(x):
 		if hlir_type.type_is_generic(init_value['type']):
 			error("cannot cons variable", x['ti'])
 
-	v = value_var(id, t, id['ti'])
-	module_value_add(module, id['str'], v, is_public=x['public'])
+	var_value = value_var(id, t, id['ti'])
+	module_value_add(module, id['str'], var_value, is_public=x['access_modifier'] == 'public')
 
-
-	y = hlir_def_var(id, v, init_value, x['ti'])
-	y['module'] = module
-	v['definition'] = y
-	y['public'] = x['public']
-	return y
+	definition = hlir_def_var(id, var_value, init_value, x['ti'])
+	definition['module'] = module
+	var_value['definition'] = definition
+	definition['access_level'] = x['access_modifier']
+	return definition
 
 
 def def_func(x, dostmt=True):
@@ -2361,10 +2360,10 @@ def def_func(x, dostmt=True):
 
 	if x['stmt'] == None:
 		#print("DECL: "+fn['id']['str'])
-		y = hlir_def_func(func_id, fn, None, x['ti'])
-		y['public'] = x['public']
-		fn['definition'] = y
-		return y
+		definition = hlir_def_func(func_id, fn, None, x['ti'])
+		definition['access_level'] = x['access_modifier']
+		fn['definition'] = definition
+		return definition
 
 
 	context_push()  # create params context
@@ -2417,13 +2416,21 @@ def def_func(x, dostmt=True):
 
 	cfunc = prev_cfunc
 
-	y = hlir_def_func(func_id, fn, stmt, x['ti'])
-	if need_decoration(x):
-		y['prefix'] = module['prefix']
-	y['public'] = x['public']
-	fn['definition'] = y
-	y['module'] = module
-	return y
+	definition = hlir_def_func(func_id, fn, stmt, x['ti'])
+
+	#print(x['id']['str'])
+	# Префика
+	"""
+	y['prefix'] = ''
+	if x['id']['str'] != 'main':
+		if need_decoration(x):
+			y['prefix'] = module['prefix']
+	"""
+
+	definition['access_level'] = x['access_modifier']
+	fn['definition'] = definition
+	definition['module'] = module
+	return definition
 
 
 
@@ -2480,9 +2487,10 @@ def do_func_value(x, export):
 	func_type = do_type_func(x['type'], func_id=func_id['str'])
 	fn = value_func(func_id, func_type, ti=func_ti)
 
-	if export:
-		if need_decoration(x):
-			fn['prefix'] = module['prefix']
+	if func_id['str'] != 'main':
+		if export:
+			if need_decoration(x):
+				fn['prefix'] = module['prefix']
 
 	return fn
 
@@ -2567,13 +2575,13 @@ def predefinition(id):
 			elif kind == 'func':
 				found = True
 				global module
-				fn = do_func_value(x, x['public'])
-				module_value_add(module, fn['id']['str'], fn, is_public=x['public'])
+				fn = do_func_value(x, x['access_modifier'] == 'public')
+				module_value_add(module, fn['id']['str'], fn, is_public=x['access_modifier'] == 'public')
 
 			x['defined'] = True  # mark as DEFINED
 
 			if y != None:
-				module_append(y, to_export=x['public'])
+				module_append(y, to_export=x['access_modifier'] == 'public')
 	if not found:
 		error("unknown identifier '%s'" % id['str'], id['ti'])
 	#return y
@@ -2647,9 +2655,10 @@ def do_import(x):
 			m_id = m['id']
 		module['imports'][m_id] = m
 	else:
+		# INCLUDE
 		# забираем публичные символы
 		# и забираем все определения (исключая дубликаты!)
-		if x['public']:
+		if x['access_modifier']:
 			# public include
 			module['symtab_public'].extend(m['symtab_public'])
 
@@ -2919,7 +2928,7 @@ def pre_def(ast, fdecl=False):
 					y = def_type(x)
 
 					add_spices(y, ast_atts=x['attributes'])
-					module_append(y, to_export=x['public'])
+					module_append(y, to_export=x['access_modifier'] == 'public')
 
 	# 2. def vars & consts
 	for x in ast:
@@ -2937,7 +2946,7 @@ def pre_def(ast, fdecl=False):
 
 			if y != None:
 				add_spices(y, ast_atts=x['attributes'])
-			module_append(y, to_export=x['public'])
+			module_append(y, to_export=x['access_modifier'] == 'public')
 
 
 	# 3. scan funcs
@@ -2948,8 +2957,8 @@ def pre_def(ast, fdecl=False):
 		if kind == 'func':
 			fn = ctx_value_get(x['id']['str'])
 			if fn == None:
-				fn = do_func_value(x, x['public'])
-				module_value_add(module, fn['id']['str'], fn, is_public=x['public'])
+				fn = do_func_value(x, x['access_modifier'] == 'public')
+				module_value_add(module, fn['id']['str'], fn, is_public=x['access_modifier'] == 'public')
 
 
 	# 4. def funcs
@@ -2963,7 +2972,7 @@ def pre_def(ast, fdecl=False):
 
 				if y != None:
 					add_spices(y, ast_atts=x['attributes'])
-					module_append(y, to_export=x['public'])
+					module_append(y, to_export=x['access_modifier'] == 'public')
 
 	gast = prev_gast
 	return

@@ -1,5 +1,6 @@
 
 include "libc/ctypes64"
+@c_include "stdio.h"
 include "libc/stdio"
 
 
@@ -71,7 +72,7 @@ func test_by_pointer() -> Unit {
 	f2_ptr(&c)
 	f3_ptr(&c)
 }
-func main() -> Int {
+public func main() -> Int {
 	test_by_value()
 	test_by_pointer()
 	return 0

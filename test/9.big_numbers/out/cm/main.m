@@ -1,5 +1,6 @@
 
 include "libc/ctypes64"
+@c_include "stdio.h"
 include "libc/stdio"
 var big0: Nat128 = 0x0123456789ABCDEFFEDCBA9876543210
 func high_128(x: Word128) -> Word64 {
@@ -8,7 +9,7 @@ func high_128(x: Word128) -> Word64 {
 func low_128(x: Word128) -> Word64 {
 	return Word64 (x and 0xFFFFFFFFFFFFFFFF)
 }
-func main() -> Int {
+public func main() -> Int {
 
 	let big1 = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
 

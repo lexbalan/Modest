@@ -11,7 +11,7 @@
 ```swift
 var a: Int32
 
-func main () -> Unit {
+public func main () -> Unit {
 	a = 10
 	printf("a = %d\n", a)
 }

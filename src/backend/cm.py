@@ -833,7 +833,7 @@ def print_def_func(x):
 		return
 	func = x['value']
 	ft = func['type']
-	if x['public']:
+	if x['access_level'] == 'public':
 		out("public ")
 	out('func ')
 	print_id(func)
@@ -842,7 +842,7 @@ def print_def_func(x):
 
 
 def print_decl_type(x):
-	if x['public']:
+	if x['access_level'] == 'public':
 		out("public ")
 	out("type ")
 	out(get_type_id(x['type']))
@@ -850,7 +850,7 @@ def print_decl_type(x):
 
 
 def print_def_type(x):
-	if x['public']:
+	if x['access_level'] == 'public':
 		out("public ")
 	out("type ")
 	print_id(x)
@@ -859,7 +859,7 @@ def print_def_type(x):
 
 
 def print_def_var(x):
-	if x['public']:
+	if x['access_level'] == 'public':
 		out("public ")
 	out("var ")
 	var = x['value']
@@ -871,7 +871,7 @@ def print_def_var(x):
 
 
 def print_def_const(x):
-	if x['public']:
+	if x['access_level'] == 'public':
 		out("public ")
 	out("const ")
 	print_id(x)

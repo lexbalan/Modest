@@ -23,7 +23,7 @@ struct main_Point3D {
 };
 #define main_xx  {.x = 1, .y = 2}
 #define main_yy  {.x = 1, .y = 2}
-int main();
+
 
 
 

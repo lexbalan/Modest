@@ -7,7 +7,7 @@
 
 import "libc/stdio"
 
-func main() -> Int {
+public func main() -> Int {
     printf("Hello World!\n")
     return 0
 }
@@ -33,7 +33,7 @@ func mtab(n: Nat32) {
 }
 
 
-func main() -> Int32 {
+public func main() -> Int32 {
     let n = 2 * 2
     printf("multiply table for %d\n", n)
     mtab(n)
@@ -117,7 +117,7 @@ func ptr_example() -> Unit {
 }
 
 
-func main() -> Int {
+public func main() -> Int {
     // by value
     let len = lineLength(line)
     printf("line length = %f\n", len)
@@ -182,7 +182,7 @@ func read_example() -> Unit {
 }
 
 
-func main() -> Int {
+public func main() -> Int {
     printf("text_file example\n")
     write_example()
     read_example()

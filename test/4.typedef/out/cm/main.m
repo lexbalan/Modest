@@ -1,9 +1,10 @@
 
 include "libc/ctypes64"
+@c_include "stdio.h"
 include "libc/stdio"
 
 type NewInt32 Int32
-func main() -> Int {
+public func main() -> Int {
 	printf("test typedef\n")
 
 	var newInt32: NewInt32

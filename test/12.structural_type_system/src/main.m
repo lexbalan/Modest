@@ -91,7 +91,7 @@ func test_by_pointer() -> Unit {
 }
 
 
-func main() -> Int {
+public func main() -> Int {
 	test_by_value()
 	test_by_pointer()
 	return 0

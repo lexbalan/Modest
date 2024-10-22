@@ -1,12 +1,13 @@
 
 include "libc/ctypes64"
+@c_include "stdio.h"
 include "libc/stdio"
 @c_include "./crc32.h"
 import "misc/crc32"
 const datastring = "123456789"
 const expected_hash = 0xCBF43926
 var data: [9]Word8 = [9]Word8 datastring
-func main() -> Int {
+public func main() -> Int {
 	printf("CRC32 test\n")
 
 	let crc = crc32.doHash(&data, sizeof data)

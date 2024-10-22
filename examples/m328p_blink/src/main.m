@@ -35,7 +35,7 @@ func delay_ms(ms: Nat32) -> Unit {
 }
 
 
-func main() -> Int16 {
+public func main() -> Int16 {
 	portB.dir = 0xFF
 
 	while true {

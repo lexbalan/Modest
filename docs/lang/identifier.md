@@ -22,7 +22,7 @@ let myConst = 10
 
 var myVar: MyInt
 
-func main () -> Int32 {
+public func main () -> Int32 {
 	return 0
 }
 

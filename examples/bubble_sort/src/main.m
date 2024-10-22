@@ -32,7 +32,7 @@ func bubble_sort32(array: *[]Int32, len: Int32) {
 }
 
 
-func main() -> Int32 {
+public func main() -> Int32 {
 	//fill_array(&array, lengthof(array))
 
 	printf("array before:\n")

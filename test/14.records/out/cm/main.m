@@ -1,5 +1,6 @@
 
 include "libc/ctypes64"
+@c_include "stdio.h"
 include "libc/stdio"
 
 type Point2D record {
@@ -14,7 +15,7 @@ type Point3D record {
 }
 const xx = {x = 1, y = 2}
 const yy = Point2D {x = 1, y = 2}
-func main() -> Int {
+public func main() -> Int {
 	printf("records test\n")
 
 	// compare two Point2D records

@@ -27,7 +27,7 @@ while <# condition #> {
 import "libc/stdio"
 
 
-func main() -> Int {
+public func main() -> Int {
 	printf("while statement test\n")
 
 	var a = 0
@@ -58,7 +58,7 @@ func main() -> Int {
 
 let nMax = 10
 
-func main () -> Unit {
+public func main () -> Unit {
 	printf("count for: ")
 
 	var n: Int32

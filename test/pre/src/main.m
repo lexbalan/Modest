@@ -16,7 +16,7 @@ func increment() {
 	++sub::subCnt
 }
 
-func main() -> sub::Int {
+public func main() -> sub::Int {
 	print("test\n")
 
 	print("sub::subName = '%s'\n", *Str8 sub::subName)

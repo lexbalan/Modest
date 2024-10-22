@@ -1,7 +1,10 @@
 
 include "libc/ctypes64"
+@c_include "math.h"
 include "libc/math"
+@c_include "stdlib.h"
 include "libc/stdlib"
+@c_include "stdio.h"
 include "libc/stdio"
 
 
@@ -49,7 +52,7 @@ func ptr_example() -> Unit {
 
 	printf("point(%f, %f)\n", ptr_p.x, ptr_p.y)
 }
-func main() -> Int {
+public func main() -> Int {
 	// by value
 	let len = lineLength(line)
 	printf("line length = %f\n", len)

@@ -23,7 +23,12 @@ const char main_arr_rat[4] = _main_arr_rat;
 #define main_string8Const  "S-t-r-i-n-g-Ω 🐀🎉🦄"
 #define main_string16Const  u"S-t-r-i-n-g-Ω 🐀🎉🦄"
 #define main_string32Const  U"S-t-r-i-n-g-Ω 🐀🎉🦄"
-int main();
+
+
+
+
+
+
 
 
 

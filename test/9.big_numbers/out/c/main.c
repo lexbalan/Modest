@@ -10,7 +10,7 @@
 
 uint64_t high_128(unsigned __int128 x);
 uint64_t low_128(unsigned __int128 x);
-int main();
+
 
 
 static unsigned __int128 big0 = (((__int128)0x123456789ABCDEF << 64) | ((__int128)0xFEDCBA9876543210));

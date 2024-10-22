@@ -8,9 +8,14 @@
 
 #include <stdio.h>
 #include <unistd.h>
+#include <stdio.h>
+#include <unistd.h>
+
+#include <stdio.h>
+
+#include <unistd.h>
 
 
-
-
+int main();
 
 #endif /* MAIN_H */

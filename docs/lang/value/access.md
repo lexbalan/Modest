@@ -20,7 +20,7 @@ type Point record {
 	y: Int32
 }
 
-func main() -> Int32 {
+public func main() -> Int32 {
 	// create local instance of Point
 	var point: Point
 
@@ -60,7 +60,7 @@ var point: Point
 var ptr_to_point: *Point
 
 
-func main() -> Int32 {
+public func main() -> Int32 {
 	// assign pointer to var point to ptr_to_point
 	ptr_to_point = &point
 

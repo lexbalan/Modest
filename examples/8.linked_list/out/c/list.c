@@ -12,6 +12,8 @@
 
 
 
+
+
 list_List *list_create()
 {
 	list_List *const list = (list_List *)malloc(sizeof(list_List));

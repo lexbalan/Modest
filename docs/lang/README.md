@@ -64,7 +64,7 @@ let maxNumber = 10
 func get_number(min: Int32, max: Int32) -> Int32
 
 
-func main() -> Int32 {
+public func main() -> Int32 {
 	let number = get_number(minNumber, maxNumber)
 
 	let n = Int32 5

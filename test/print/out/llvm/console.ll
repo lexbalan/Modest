@@ -105,7 +105,7 @@ break_2:
 ; MODULE: console
 
 ; -- print includes --
-
+; from included ctypes64
 %Str = type %Str8;
 %Char = type i8;
 %ConstChar = type %Char;
@@ -135,8 +135,7 @@ break_2:
 %PIDT = type i32;
 %UIDT = type i32;
 %GIDT = type i32;
-
-
+; from included unistd
 declare %Int @access([0 x %ConstChar]* %path, %Int %amode)
 declare %UnsignedInt @alarm(%UnsignedInt %seconds)
 declare %Int @brk(i8* %end_data_segment)
@@ -222,13 +221,11 @@ declare %Int @unlink([0 x %ConstChar]* %path)
 declare %Int @usleep(%USecondsT %useconds)
 declare %PIDT @vfork()
 declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
-
+; from included stdio
 %File = type i8;
 %FposT = type i8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
-
-
 declare %Int @fclose(%File* %f)
 declare %Int @feof(%File* %f)
 declare %Int @ferror(%File* %f)
@@ -271,7 +268,7 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
-
+; from included string
 declare i8* @memset(i8* %mem, %Int %c, %SizeT %n)
 declare i8* @memcpy(i8* %dst, i8* %src, %SizeT %len)
 declare i8* @memmove(i8* %dst, i8* %src, %SizeT %n)
@@ -285,19 +282,18 @@ declare [0 x %Char]* @strncat([0 x %Char]* %s1, [0 x %ConstChar]* %s2, %SizeT %n
 declare [0 x %Char]* @strerror(%Int %error)
 ; -- end print includes --
 ; -- print imports --
-
 declare i8 @utf_utf32_to_utf8(i32 %c, [4 x i8]* %buf)
 declare i8 @utf_utf16_to_utf32([0 x i16]* %c, i32* %result)
 ; -- end print imports --
 ; -- strings --
 
-define i8 @n_to_dec_sym(i8 %n) {
+define internal i8 @n_to_dec_sym(i8 %n) {
 	%1 = add i8 48, %n
 	%2 = bitcast i8 %1 to i8
 	ret i8 %2
 }
 
-define i8 @n_to_hex_sym(i8 %n) {
+define internal i8 @n_to_hex_sym(i8 %n) {
 	%1 = icmp ult i8 %n, 10
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
@@ -311,7 +307,7 @@ endif_0:
 	ret i8 %6
 }
 
-define i32 @sprint_hex_nat32([0 x i8]* %buf, i32 %x) {
+define internal i32 @sprint_hex_nat32([0 x i8]* %buf, i32 %x) {
 	%1 = alloca [8 x i8], align 1
 	%2 = alloca i32, align 4
 	store i32 %x, i32* %2
@@ -373,7 +369,7 @@ break_2:
 	ret i32 %31
 }
 
-define i32 @sprint_dec_int32([0 x i8]* %buf, i32 %x) {
+define internal i32 @sprint_dec_int32([0 x i8]* %buf, i32 %x) {
 	%1 = alloca [11 x i8], align 1
 	%2 = alloca i32, align 4
 	store i32 %x, i32* %2
@@ -452,7 +448,7 @@ break_2:
 	ret i32 %38
 }
 
-define i32 @sprint_dec_n32([0 x i8]* %buf, i32 %x) {
+define internal i32 @sprint_dec_n32([0 x i8]* %buf, i32 %x) {
 	%1 = alloca [11 x i8], align 1
 	%2 = alloca i32, align 4
 	store i32 %x, i32* %2

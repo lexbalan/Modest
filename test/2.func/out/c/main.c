@@ -11,8 +11,8 @@
 void func1();
 void print_ab(int32_t a, int32_t b);
 int32_t sum(int32_t a, int32_t b);
-int main();
 void func0();
+
 
 
 
@@ -29,6 +29,11 @@ void print_ab(int32_t a, int32_t b)
 int32_t sum(int32_t a, int32_t b)
 {
 	return a + b;
+}
+
+void func0()
+{
+	printf("func0 was called\n");
 }
 
 int main()
@@ -58,10 +63,5 @@ int main()
 	printf("fptr(%i, %i) == %i\n", arg_a2, arg_b2, fptr_result);
 
 	return 0;
-}
-
-void func0()
-{
-	printf("func0 was called\n");
 }
 

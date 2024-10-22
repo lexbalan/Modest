@@ -41,7 +41,7 @@ func list_print_backward(list: *list.List) -> Unit {
 }
 
 
-func main() -> Int {
+public func main() -> Int {
 	printf("linked list example\n")
 
 	let list = list.create()

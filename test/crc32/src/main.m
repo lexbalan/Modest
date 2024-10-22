@@ -14,7 +14,7 @@ let expected_hash = 0xCBF43926
 var data = []Byte datastring
 
 
-func main() -> Int {
+public func main() -> Int {
 	printf("CRC32 test\n")
 
 	let crc = crc32.doHash(&data, lengthof(data))

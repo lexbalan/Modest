@@ -76,7 +76,7 @@ while not b {
 ### Byte type
 
 ```zig
-func main () -> Int32 {
+public func main () -> Int32 {
 	var byte: Byte
 
 	// GenericInteger will be implicit casted to Byte
@@ -97,7 +97,7 @@ Int8, Int16, Int32, Int64, Int128
 ```
 
 ```zig
-func main () -> Unit {
+public func main () -> Unit {
 	var a, b: Int32
 	
 	a = -1
@@ -122,7 +122,7 @@ Nat8, Nat16, Nat32, Nat64, Nat128
 ```
 
 ```zig
-func main () -> Unit {
+public func main () -> Unit {
 	var a, b: Nat32
 
 	a = Nat32 -1
@@ -152,7 +152,7 @@ Float32, Float64
 import "libc/stdio"
 import "libc/math"
 
-func main () -> Unit {
+public func main () -> Unit {
 	var pi: Float64
 	
 	pi = M_PI
@@ -312,7 +312,7 @@ printf("p.y = %f\n", p.y)
 
 import "libc/stdio"
 
-func main () -> Int32 {
+public func main () -> Int32 {
 	var a: Bool
 	var b: Int32
 	var c: Int64

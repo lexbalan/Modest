@@ -15,7 +15,8 @@ struct main_Chunk {
 #define main_filename  "file.bin"
 void write_example();
 void read_example();
-int main();
+
+
 
 
 

@@ -102,7 +102,7 @@ break_2:
 ; MODULE: main
 
 ; -- print includes --
-
+; from included ctypes64
 %Str = type %Str8;
 %Char = type i8;
 %ConstChar = type %Char;
@@ -132,13 +132,11 @@ break_2:
 %PIDT = type i32;
 %UIDT = type i32;
 %GIDT = type i32;
-
+; from included stdio
 %File = type i8;
 %FposT = type i8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
-
-
 declare %Int @fclose(%File* %f)
 declare %Int @feof(%File* %f)
 declare %Int @ferror(%File* %f)
@@ -181,7 +179,7 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
-
+; from included stdlib
 declare void @abort()
 declare %Int @abs(%Int %x)
 declare %Int @atexit(void ()* %x)
@@ -196,8 +194,7 @@ declare %LongInt @labs(%LongInt %x)
 declare %Str* @secure_getenv(%Str* %name)
 declare i8* @malloc(%SizeT %size)
 declare %Int @system([0 x %ConstChar]* %string)
-
-
+; from included math
 declare %Double @acos(%Double %x)
 declare %Double @asin(%Double %x)
 declare %Double @atan(%Double %x)
@@ -297,13 +294,13 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 
 
 
-define double @squareOfCircle(double %radius) {
+define internal double @squareOfCircle(double %radius) {
 	%1 = call %Double @pow(double %radius, %Double 2.0000000000000000)
 	%2 = fmul %Double %1, 3.1415926535897931
 	ret %Double %2
 }
 
-define float @slope(%Point2D %a, %Point2D %b) {
+define internal float @slope(%Point2D %a, %Point2D %b) {
 	%1 = extractvalue %Point2D %a, 0
 	%2 = extractvalue %Point2D %b, 0
 	%3 = sub %Int %1, %2
@@ -319,6 +316,7 @@ define float @slope(%Point2D %a, %Point2D %b) {
 	%13 = fdiv float %11, %12
 	ret float %13
 }
+
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str3 to [0 x i8]*))

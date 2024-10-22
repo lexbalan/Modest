@@ -102,7 +102,7 @@ break_2:
 ; MODULE: main
 
 ; -- print includes --
-
+; from included ctypes64
 %Str = type %Str8;
 %Char = type i8;
 %ConstChar = type %Char;
@@ -132,13 +132,11 @@ break_2:
 %PIDT = type i32;
 %UIDT = type i32;
 %GIDT = type i32;
-
+; from included stdio
 %File = type i8;
 %FposT = type i8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
-
-
 declare %Int @fclose(%File* %f)
 declare %Int @feof(%File* %f)
 declare %Int @ferror(%File* %f)
@@ -181,8 +179,7 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
-
-
+; from included math
 declare %Double @acos(%Double %x)
 declare %Double @asin(%Double %x)
 declare %Double @atan(%Double %x)
@@ -262,127 +259,19 @@ declare %LongDouble @fdiml(%LongDouble %a, %LongDouble %b)
 declare %LongDouble @fmaxl(%LongDouble %a, %LongDouble %b)
 declare %LongDouble @fminl(%LongDouble %a, %LongDouble %b)
 declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
-
-define i32 @minmax_min_int32(i32 %a, i32 %b) {
-	%1 = icmp slt i32 %a, %b
-	br i1 %1 , label %then_0, label %endif_0
-then_0:
-	ret i32 %a
-	br label %endif_0
-endif_0:
-	ret i32 %b
-}
-
-define i32 @minmax_max_int32(i32 %a, i32 %b) {
-	%1 = icmp sgt i32 %a, %b
-	br i1 %1 , label %then_0, label %endif_0
-then_0:
-	ret i32 %a
-	br label %endif_0
-endif_0:
-	ret i32 %b
-}
-
-define i64 @minmax_min_int64(i64 %a, i64 %b) {
-	%1 = icmp slt i64 %a, %b
-	br i1 %1 , label %then_0, label %endif_0
-then_0:
-	ret i64 %a
-	br label %endif_0
-endif_0:
-	ret i64 %b
-}
-
-define i64 @minmax_max_int64(i64 %a, i64 %b) {
-	%1 = icmp sgt i64 %a, %b
-	br i1 %1 , label %then_0, label %endif_0
-then_0:
-	ret i64 %a
-	br label %endif_0
-endif_0:
-	ret i64 %b
-}
-
-define i32 @minmax_min_nat32(i32 %a, i32 %b) {
-	%1 = icmp ult i32 %a, %b
-	br i1 %1 , label %then_0, label %endif_0
-then_0:
-	ret i32 %a
-	br label %endif_0
-endif_0:
-	ret i32 %b
-}
-
-define i32 @minmax_max_nat32(i32 %a, i32 %b) {
-	%1 = icmp ugt i32 %a, %b
-	br i1 %1 , label %then_0, label %endif_0
-then_0:
-	ret i32 %a
-	br label %endif_0
-endif_0:
-	ret i32 %b
-}
-
-define i64 @minmax_min_nat64(i64 %a, i64 %b) {
-	%1 = icmp ult i64 %a, %b
-	br i1 %1 , label %then_0, label %endif_0
-then_0:
-	ret i64 %a
-	br label %endif_0
-endif_0:
-	ret i64 %b
-}
-
-define i64 @minmax_max_nat64(i64 %a, i64 %b) {
-	%1 = icmp ugt i64 %a, %b
-	br i1 %1 , label %then_0, label %endif_0
-then_0:
-	ret i64 %a
-	br label %endif_0
-endif_0:
-	ret i64 %b
-}
-
-define float @minmax_min_float32(float %a, float %b) {
-	%1 = fcmp olt float %a, %b
-	br i1 %1 , label %then_0, label %endif_0
-then_0:
-	ret float %a
-	br label %endif_0
-endif_0:
-	ret float %b
-}
-
-define float @minmax_max_float32(float %a, float %b) {
-	%1 = fcmp ogt float %a, %b
-	br i1 %1 , label %then_0, label %endif_0
-then_0:
-	ret float %a
-	br label %endif_0
-endif_0:
-	ret float %b
-}
-
-define double @minmax_min_float64(double %a, double %b) {
-	%1 = fcmp olt double %a, %b
-	br i1 %1 , label %then_0, label %endif_0
-then_0:
-	ret double %a
-	br label %endif_0
-endif_0:
-	ret double %b
-}
-
-define double @minmax_max_float64(double %a, double %b) {
-	%1 = fcmp ogt double %a, %b
-	br i1 %1 , label %then_0, label %endif_0
-then_0:
-	ret double %a
-	br label %endif_0
-endif_0:
-	ret double %b
-}
-
+; from included minmax
+declare i32 @minmax_min_int32(i32 %a, i32 %b)
+declare i32 @minmax_max_int32(i32 %a, i32 %b)
+declare i64 @minmax_min_int64(i64 %a, i64 %b)
+declare i64 @minmax_max_int64(i64 %a, i64 %b)
+declare i32 @minmax_min_nat32(i32 %a, i32 %b)
+declare i32 @minmax_max_nat32(i32 %a, i32 %b)
+declare i64 @minmax_min_nat64(i64 %a, i64 %b)
+declare i64 @minmax_max_nat64(i64 %a, i64 %b)
+declare float @minmax_min_float32(float %a, float %b)
+declare float @minmax_max_float32(float %a, float %b)
+declare double @minmax_min_float64(double %a, double %b)
+declare double @minmax_max_float64(double %a, double %b)
 ; -- end print includes --
 ; -- print imports --
 ; -- end print imports --
@@ -452,7 +341,7 @@ endif_0:
 	}
 ]
 
-define %Float @distance(%Point %a, %Point %b) {
+define internal %Float @distance(%Point %a, %Point %b) {
 	%1 = extractvalue %Point %a, 0
 	%2 = extractvalue %Point %b, 0
 	%3 = call double @minmax_max_float64(double %1, double %2)
@@ -474,12 +363,13 @@ define %Float @distance(%Point %a, %Point %b) {
 	ret %Double %18
 }
 
-define %Float @lineLength(%Line %line) {
+define internal %Float @lineLength(%Line %line) {
 	%1 = extractvalue %Line %line, 0
 	%2 = extractvalue %Line %line, 1
 	%3 = call %Float @distance(%Point %1, %Point %2)
 	ret %Float %3
 }
+
 
 define %Int @main() {
 	%1 = insertvalue %Point zeroinitializer, double 0.0000000000000000, 0

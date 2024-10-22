@@ -19,7 +19,7 @@ LLVM:
 	mcc -o $(LLVMPREFIX)/utf -mbackend=llvm -funsafe ${MODEST_LIB}/misc/utf.m
 	mcc -o $(LLVMPREFIX)/console -mbackend=llvm -funsafe ${MODEST_LIB}/lightfood/console.m
 	mcc -o $(LLVMPREFIX)/main -mbackend=llvm -funsafe $(INDIR)/main.m
-	
+
 	clang $(LLVMPREFIX)/main.ll $(LLVMPREFIX)/console.ll $(LLVMPREFIX)/utf.ll
 
 

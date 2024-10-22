@@ -44,7 +44,8 @@ const int8_t main_carr[6] = _main_carr;
 const main_Line main_lines[4] = _main_lines;
 float distance(main_Point a, main_Point b);
 float lineLength(main_Line line);
-int main();
+
+
 
 
 

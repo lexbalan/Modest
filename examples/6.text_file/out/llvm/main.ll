@@ -102,7 +102,7 @@ break_2:
 ; MODULE: main
 
 ; -- print includes --
-
+; from included ctypes64
 %Str = type %Str8;
 %Char = type i8;
 %ConstChar = type %Char;
@@ -132,13 +132,11 @@ break_2:
 %PIDT = type i32;
 %UIDT = type i32;
 %GIDT = type i32;
-
+; from included stdio
 %File = type i8;
 %FposT = type i8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
-
-
 declare %Int @fclose(%File* %f)
 declare %Int @feof(%File* %f)
 declare %Int @ferror(%File* %f)
@@ -181,7 +179,7 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
-
+; from included stdlib
 declare void @abort()
 declare %Int @abs(%Int %x)
 declare %Int @atexit(void ()* %x)
@@ -196,7 +194,7 @@ declare %LongInt @labs(%LongInt %x)
 declare %Str* @secure_getenv(%Str* %name)
 declare i8* @malloc(%SizeT %size)
 declare %Int @system([0 x %ConstChar]* %string)
-
+; from included string
 declare i8* @memset(i8* %mem, %Int %c, %SizeT %n)
 declare i8* @memcpy(i8* %dst, i8* %src, %SizeT %len)
 declare i8* @memmove(i8* %dst, i8* %src, %SizeT %n)
@@ -208,7 +206,7 @@ declare %SizeT @strlen([0 x %ConstChar]* %s)
 declare [0 x %Char]* @strcat([0 x %Char]* %s1, [0 x %ConstChar]* %s2)
 declare [0 x %Char]* @strncat([0 x %Char]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
 declare [0 x %Char]* @strerror(%Int %error)
-
+; from included time
 %TimeT = type i32;
 %ClockT = type %UnsignedLong;
 %StructTM = type {
@@ -225,7 +223,6 @@ declare [0 x %Char]* @strerror(%Int %error)
 	%ConstChar*
 };
 
-
 declare %ClockT @clock()
 declare %Double @difftime(%TimeT %end, %TimeT %beginning)
 declare %TimeT @mktime(%StructTM* %timeptr)
@@ -237,8 +234,7 @@ declare %StructTM* @localtime(%TimeT* %timer)
 declare %SizeT @strftime(%Char* %ptr, %SizeT %maxsize, %ConstChar* %format, %StructTM* %timeptr)
 declare %StructTM* @localtime_s(%TimeT* %timer, %StructTM* %tmptr)
 declare %StructTM* @localtime_r(%TimeT* %timer, %StructTM* %tmptr)
-
-
+; from included unistd
 declare %Int @access([0 x %ConstChar]* %path, %Int %amode)
 declare %UnsignedInt @alarm(%UnsignedInt %seconds)
 declare %Int @brk(i8* %end_data_segment)
@@ -324,8 +320,7 @@ declare %Int @unlink([0 x %ConstChar]* %path)
 declare %Int @usleep(%USecondsT %useconds)
 declare %PIDT @vfork()
 declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
-
-
+; from included math
 declare %Double @acos(%Double %x)
 declare %Double @asin(%Double %x)
 declare %Double @atan(%Double %x)
@@ -405,6 +400,7 @@ declare %LongDouble @fdiml(%LongDouble %a, %LongDouble %b)
 declare %LongDouble @fmaxl(%LongDouble %a, %LongDouble %b)
 declare %LongDouble @fminl(%LongDouble %a, %LongDouble %b)
 declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
+; from included libc
 ; -- end print includes --
 ; -- print imports --
 ; -- end print imports --
@@ -421,7 +417,7 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 @str10 = private constant [19 x i8] [i8 116, i8 101, i8 120, i8 116, i8 95, i8 102, i8 105, i8 108, i8 101, i8 32, i8 101, i8 120, i8 97, i8 109, i8 112, i8 108, i8 101, i8 10, i8 0]
 
 
-define void @write_example() {
+define internal void @write_example() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str2 to [0 x i8]*))
 	%2 = call %File* @fopen(%Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str3 to [0 x i8]*))
 	%3 = bitcast i8* null to %File*
@@ -437,7 +433,7 @@ endif_0:
 	ret void
 }
 
-define void @read_example() {
+define internal void @read_example() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str6 to [0 x i8]*))
 	%2 = call %File* @fopen(%Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str7 to [0 x i8]*))
 	%3 = bitcast i8* null to %File*
@@ -466,6 +462,7 @@ break_1:
 	%12 = call %Int @fclose(%File* %2)
 	ret void
 }
+
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str10 to [0 x i8]*))

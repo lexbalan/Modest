@@ -102,7 +102,7 @@ break_2:
 ; MODULE: main
 
 ; -- print includes --
-
+; from included ctypes64
 %Str = type %Str8;
 %Char = type i8;
 %ConstChar = type %Char;
@@ -132,13 +132,11 @@ break_2:
 %PIDT = type i32;
 %UIDT = type i32;
 %GIDT = type i32;
-
+; from included stdio
 %File = type i8;
 %FposT = type i8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
-
-
 declare %Int @fclose(%File* %f)
 declare %Int @feof(%File* %f)
 declare %Int @ferror(%File* %f)
@@ -181,7 +179,7 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
-
+; from included time
 %TimeT = type i32;
 %ClockT = type %UnsignedLong;
 %StructTM = type {
@@ -198,7 +196,6 @@ declare void @perror(%ConstCharStr* %str)
 	%ConstChar*
 };
 
-
 declare %ClockT @clock()
 declare %Double @difftime(%TimeT %end, %TimeT %beginning)
 declare %TimeT @mktime(%StructTM* %timeptr)
@@ -210,8 +207,7 @@ declare %StructTM* @localtime(%TimeT* %timer)
 declare %SizeT @strftime(%Char* %ptr, %SizeT %maxsize, %ConstChar* %format, %StructTM* %timeptr)
 declare %StructTM* @localtime_s(%TimeT* %timer, %StructTM* %tmptr)
 declare %StructTM* @localtime_r(%TimeT* %timer, %StructTM* %tmptr)
-
-
+; from included unistd
 declare %Int @access([0 x %ConstChar]* %path, %Int %amode)
 declare %UnsignedInt @alarm(%UnsignedInt %seconds)
 declare %Int @brk(i8* %end_data_segment)
@@ -297,7 +293,7 @@ declare %Int @unlink([0 x %ConstChar]* %path)
 declare %Int @usleep(%USecondsT %useconds)
 declare %PIDT @vfork()
 declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
-
+; from included stdlib
 declare void @abort()
 declare %Int @abs(%Int %x)
 declare %Int @atexit(void ()* %x)

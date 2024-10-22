@@ -45,7 +45,7 @@ func fetch(n: Int) -> Unit {
 
 
 @nodecorate
-public func main() -> Int {
+public public func main() -> Int {
 	bq.init(&bq0)
 
 	padd(3)

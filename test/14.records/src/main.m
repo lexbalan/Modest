@@ -19,7 +19,7 @@ let xx = {x=1, y=2}
 let yy = Point2D {x=1, y=2}
 
 
-func main() -> Int {
+public func main() -> Int {
 	printf("records test\n")
 
 	// compare two Point2D records

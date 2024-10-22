@@ -1990,8 +1990,6 @@ def print_header(module, outname):
 		elif isa == 'def_const':
 			print_def_const(x)
 
-
-
 		#elif isa == 'def_type':
 		#	if x['public']:
 		#		print_def_type(x)

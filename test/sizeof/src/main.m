@@ -61,7 +61,7 @@ type X record {
 
 var x: X
 
-func main() -> Int {
+public func main() -> Int {
 	printf("test cast operation\n")
 
 	let start_adr = unsafe Nat64 &c

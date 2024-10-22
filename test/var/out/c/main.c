@@ -10,7 +10,7 @@
 
 #define _main_arr  {1, 2}
 const int32_t main_arr[2] = _main_arr;
-int main();
+
 
 
 static int32_t arr0[2] = _main_arr;

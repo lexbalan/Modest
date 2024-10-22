@@ -372,8 +372,7 @@ memeq:                                  ; @memeq
 .Lfunc_end0:
 	.size	memeq, .Lfunc_end0-memeq
                                         ; -- End function
-	.globl	delay_ms                        ; -- Begin function delay_ms
-	.p2align	1
+	.p2align	1                               ; -- Begin function delay_ms
 	.type	delay_ms,@function
 delay_ms:                               ; @delay_ms
 ; %bb.0:

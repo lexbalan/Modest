@@ -4,7 +4,7 @@ include "libc/ctypes64"
 include "libc/stdio"
 
 
-func main() -> Int {
+public func main() -> Int {
 	printf("generic types test\n")
 
 	let t1 = test_generic_integer()

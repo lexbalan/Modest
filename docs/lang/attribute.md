@@ -9,7 +9,7 @@ func my_func () -> Int {
   return 0
 }
 
-func main () {
+public func main () {
   // Here we ignore my_func return value,
   // but there is no warning,
   // because my_func defined with attribute "dispensable"

@@ -102,7 +102,7 @@ break_2:
 ; MODULE: main
 
 ; -- print includes --
-
+; from included ctypes64
 %Str = type %Str8;
 %Char = type i8;
 %ConstChar = type %Char;
@@ -132,13 +132,11 @@ break_2:
 %PIDT = type i32;
 %UIDT = type i32;
 %GIDT = type i32;
-
+; from included stdio
 %File = type i8;
 %FposT = type i8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
-
-
 declare %Int @fclose(%File* %f)
 declare %Int @feof(%File* %f)
 declare %Int @ferror(%File* %f)
@@ -221,7 +219,7 @@ declare void @perror(%ConstCharStr* %str)
 	i32 -9
 ]
 
-define void @bubble_sort32([0 x i32]* %array, i32 %len) {
+define internal void @bubble_sort32([0 x i32]* %array, i32 %len) {
 	%1 = alloca i1, align 1
 	store i1 1, i1* %1
 	br label %again_1
@@ -271,22 +269,7 @@ break_1:
 	ret void
 }
 
-define i32 @main() {
-	;fill_array(&array, lengthof(array))
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
-	%2 = bitcast [21 x i32]* @array to [0 x i32]*
-	call void @print_array([0 x i32]* %2, i32 84)
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
-	%4 = bitcast [21 x i32]* @array to [0 x i32]*
-	call void @bubble_sort32([0 x i32]* %4, i32 84)
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str3 to [0 x i8]*))
-	%6 = bitcast [21 x i32]* @array to [0 x i32]*
-	call void @print_array([0 x i32]* %6, i32 84)
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))
-	ret i32 0
-}
-
-define void @print_array([0 x i32]* %array, i32 %len) {
+define internal void @print_array([0 x i32]* %array, i32 %len) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str5 to [0 x i8]*))
 	%2 = alloca i32, align 4
 	store i32 0, i32* %2
@@ -309,7 +292,7 @@ break_1:
 	ret void
 }
 
-define void @fill_array([0 x i32]* %array, i32 %len) {
+define internal void @fill_array([0 x i32]* %array, i32 %len) {
 	%1 = sub i10 0, 1000
 	%2 = alloca i32, align 4
 	store i32 0, i32* %2
@@ -333,7 +316,7 @@ break_1:
 	ret void
 }
 
-define i32 @get_number(i32 %min, i32 %max) {
+define internal i32 @get_number(i32 %min, i32 %max) {
 	%1 = alloca i32, align 4
 	store i32 0, i32* %1
 	br label %again_1
@@ -367,6 +350,22 @@ endif_0:
 break_1:
 	%13 = load i32, i32* %1
 	ret i32 %13
+}
+
+
+define i32 @main() {
+	;fill_array(&array, lengthof(array))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
+	%2 = bitcast [21 x i32]* @array to [0 x i32]*
+	call void @print_array([0 x i32]* %2, i32 84)
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
+	%4 = bitcast [21 x i32]* @array to [0 x i32]*
+	call void @bubble_sort32([0 x i32]* %4, i32 84)
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str3 to [0 x i8]*))
+	%6 = bitcast [21 x i32]* @array to [0 x i32]*
+	call void @print_array([0 x i32]* %6, i32 84)
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))
+	ret i32 0
 }
 
 

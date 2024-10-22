@@ -19,7 +19,7 @@
 
 #### Example
 ```swift
-func main() -> Int {
+public func main() -> Int {
 	// Any integer literal have GenericInteger type
 	let one = 1
 
@@ -58,7 +58,7 @@ func main() -> Int {
 
 #### Example
 ```swift
-func main() -> Int {
+public func main() -> Int {
 	// Any float literal have GenericFloat type
 	let pi = 3.141592653589793238462643383279502884
 
@@ -83,7 +83,7 @@ func main() -> Int {
 
 #### Example
 ```swift
-func main() -> Int {
+public func main() -> Int {
 	// Any char value expression have GenericChar type
 	// (you can pick GenericChar value by index of GenericString value)
 	let a = "A"[0]
@@ -109,7 +109,7 @@ func main() -> Int {
 
 #### Example
 ```swift
-func main() -> Int {
+public func main() -> Int {
 	// Any array expression have GenericArray type
 	// this array expression (GenericArray of four GenericInteger items)
 	let a = [0, 1, 2, 3]
@@ -155,7 +155,7 @@ type Point3D record {
 	z: Int32
 }
 
-func main() -> Int {
+public func main() -> Int {
 	// Any record expression have GenericRecord type
 	// this record expression have type:
 	// Generic(record {x: GenericInteger, y: GenericInteger})

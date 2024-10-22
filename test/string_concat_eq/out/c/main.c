@@ -13,7 +13,7 @@
 #define main_party_corn  U"🎉"
 #define main_greeting  (main_hello " " main_world)
 #define main_test  "test"
-int main();
+
 
 
 

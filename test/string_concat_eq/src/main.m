@@ -13,7 +13,7 @@ let greeting = hello + " " + world //+ " " + party_corn
 let test = "test"
 
 
-func main() -> Int {
+public func main() -> Int {
 	printf("%s\n", *Str8 greeting)
 
 	if test == "test" {

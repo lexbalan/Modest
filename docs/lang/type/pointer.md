@@ -18,7 +18,7 @@
 ```
 
 ```swift
-func main () -> Int32 {
+public func main () -> Int32 {
 	var a: Int32
 	var p: *Int32
 	a = 0
@@ -39,7 +39,7 @@ func main () -> Int32 {
 
 import "libc/stdio"
 
-func main () -> Int32 {
+public func main () -> Int32 {
 	var a: Bool
 	var b: Int32
 	var c: Int64

@@ -34,7 +34,7 @@ func sumsub64(a: Int64, b: Int64) -> Unit {
 }
 
 
-func main() -> Int {
+public func main() -> Int {
 	printf("inline asm test\n")
 
 	var a: Int64 = 10

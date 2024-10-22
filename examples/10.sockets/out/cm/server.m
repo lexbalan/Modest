@@ -1,7 +1,10 @@
 
 include "libc/ctypes64"
+@c_include "stdio.h"
 include "libc/stdio"
+@c_include "stdlib.h"
 include "libc/stdlib"
+@c_include "arpa/inet.h"
 include "libc/socket"
 const filename = "file2.txt"
 const ipAddress = "127.0.0.1"
@@ -29,7 +32,7 @@ func write_file(sockfd: Int) -> Bool {
 
 	return true
 }
-func main() -> Int {
+public func main() -> Int {
 	let sockfd = socket(af_INET, c_SOCK_STREAM, 0)
 	if sockfd < 0 {
 		perror("[-] Error in socket")

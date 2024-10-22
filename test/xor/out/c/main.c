@@ -12,7 +12,7 @@
 #define main_key_length  3
 void xor_encrypter(uint8_t *buf, uint32_t buflen, uint8_t *key, uint32_t keylen);
 void print_bytes(uint8_t *buf, uint32_t len);
-int main();
+
 
 
 static char test_msg[main_msg_length + 1] = "Hello World!";

@@ -8,7 +8,7 @@ include "libc/unistd"
 import "lightfood/datetime"
 
 
-func main() -> Int {
+public func main() -> Int {
 	printf("ctime test\n")
 
 	let seconds = time(nil)

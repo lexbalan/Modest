@@ -102,7 +102,7 @@ break_2:
 ; MODULE: main
 
 ; -- print includes --
-
+; from included ctypes64
 %Str = type %Str8;
 %Char = type i8;
 %ConstChar = type %Char;
@@ -132,13 +132,11 @@ break_2:
 %PIDT = type i32;
 %UIDT = type i32;
 %GIDT = type i32;
-
+; from included stdio
 %File = type i8;
 %FposT = type i8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
-
-
 declare %Int @fclose(%File* %f)
 declare %Int @feof(%File* %f)
 declare %Int @ferror(%File* %f)
@@ -191,7 +189,7 @@ declare void @perror(%ConstCharStr* %str)
 @str4 = private constant [24 x i8] [i8 115, i8 117, i8 109, i8 40, i8 37, i8 108, i8 108, i8 100, i8 44, i8 32, i8 37, i8 108, i8 108, i8 100, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
 @str5 = private constant [24 x i8] [i8 115, i8 117, i8 98, i8 40, i8 37, i8 108, i8 108, i8 100, i8 44, i8 32, i8 37, i8 108, i8 108, i8 100, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
 
-define i64 @sum64(i64 %a, i64 %b) {
+define internal i64 @sum64(i64 %a, i64 %b) {
 	%1 = alloca i64, align 8
 	%2 = call i64 asm sideeffect "add $0, $1, $2", "=r,r,r,~{cc}" (i64 %a, i64 %b)
 	store i64 %2, i64* %1
@@ -199,7 +197,7 @@ define i64 @sum64(i64 %a, i64 %b) {
 	ret i64 %3
 }
 
-define i64 @sub64(i64 %a, i64 %b) {
+define internal i64 @sub64(i64 %a, i64 %b) {
 	%1 = alloca i64, align 8
 	%2 = call i64 asm sideeffect "sub $0, $1, $2", "=r,r,r,~{cc}" (i64 %a, i64 %b)
 	store i64 %2, i64* %1
@@ -207,7 +205,7 @@ define i64 @sub64(i64 %a, i64 %b) {
 	ret i64 %3
 }
 
-define void @sumsub64(i64 %a, i64 %b) {
+define internal void @sumsub64(i64 %a, i64 %b) {
 	%1 = alloca i64, align 8
 	%2 = alloca i64, align 8
 	%3 = call {i64, i64} asm sideeffect "add $0, $2, $3\0Asub $1, $2, $3\0A", "=&r,=&r,r,r,~{cc}" (i64 %a, i64 %b)
@@ -221,6 +219,7 @@ define void @sumsub64(i64 %a, i64 %b) {
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str2 to [0 x i8]*), i64 %8)
 	ret void
 }
+
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str3 to [0 x i8]*))

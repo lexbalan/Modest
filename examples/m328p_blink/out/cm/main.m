@@ -21,7 +21,10 @@ func delay_ms(ms: Nat32) -> Unit {
 		t = t - 1
 	}
 }
-func main() -> Int16 {
+public const portB = *GPIO (sfrOffset + 0x03)
+public const portC = *GPIO (sfrOffset + 0x06)
+public const portD = *GPIO (sfrOffset + 0x09)
+public func main() -> Int16 {
 	portB.dir = 0xFF
 
 	while true {
@@ -34,7 +37,4 @@ func main() -> Int16 {
 
 	return 0
 }
-public const portB = *GPIO (sfrOffset + 0x03)
-public const portC = *GPIO (sfrOffset + 0x06)
-public const portD = *GPIO (sfrOffset + 0x09)
 

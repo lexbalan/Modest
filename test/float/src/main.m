@@ -27,7 +27,7 @@ func slope(a: Point2D, b: Point2D) -> Float32 {
 	return Float32 dy / Float32 dx
 }
 
-func main() -> Int {
+public func main() -> Int {
 	printf("float test\n")
 
 	let r = 10

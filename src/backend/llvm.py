@@ -127,6 +127,7 @@ def get_id_str(x):
 	id_str = x['id']['str']
 	if 'prefix' in x:
 		id_str = x['definition']['module']['prefix'] + '_' + id_str
+
 	return id_str
 
 
@@ -2015,15 +2016,28 @@ def print_func_signature(func):
 
 
 
+def get_linkage(x):
+	if x['access_level'] == 'private':
+		return "internal"
+	return ""
 
-def print_def_func(x, declare_only=False):
+def print_linkage(x):
+	linkage = get_linkage(x)
+	if linkage != "":
+		out("%s " % linkage)
+
+
+def print_decl_func(x):
+	out("\ndeclare ")
+	print_linkage(x)
+	print_func_signature(x['value'])
+
+
+def print_def_func(x):
 	func = x['value']
 
-	if (x['stmt'] == None) or declare_only:
-		#return print_decl_func(x)
-		out("\ndeclare ")
-		print_func_signature(x['value'])
-		return
+	if x['stmt'] == None:
+		return print_decl_func(x)
 
 	fctx = {
 		'func': func,  # cfunc
@@ -2044,6 +2058,13 @@ def print_def_func(x, declare_only=False):
 	fctx_push(fctx)
 
 	out("\ndefine ")
+	print_linkage(x)
+	"""print("<<<")
+	if not 'prefix' in func:
+		print("not prefix in %s" % func['id']['str'])
+	else:
+		print("prefix %s in %s" % (func['prefix'], func['id']['str']))
+	"""
 	print_func_signature(func)
 
 	sret = need_sret(func['type'])
@@ -2349,7 +2370,10 @@ def een(defs, decl_only=False):
 			print_def_const(x, as_extern=decl_only)
 
 		elif isa == 'def_func':
-			print_def_func(x, declare_only=decl_only)
+			if not decl_only:
+				print_def_func(x)
+			else:
+				print_decl_func(x)
 
 		elif isa == 'def_type':
 			print_def_type(x)
@@ -2363,8 +2387,20 @@ def print_included(m):
 		if inc['id'] not in already_in:
 			already_in.append(inc['id'])
 			print_included(inc)
-			een(inc['defs_private'])
-			een(inc['defs_public'])
+
+			out("\n; from included %s" % inc['id'])
+
+			for d in inc['defs_private']:
+				if d['isa'] == 'def_type':
+					print_def_type(d)
+
+			for d in inc['defs_public']:
+				if d['isa'] == 'def_type':
+					print_def_type(d)
+				elif d['isa'] == 'def_func':
+					print_decl_func(d)
+				#elif d['isa'] == 'def_const':
+				#	print_decl_const(x)
 
 
 def print_imports(m):
@@ -2377,9 +2413,22 @@ def print_imports(m):
 		#for x in imp['defs_public']:
 		#	print("- %s" % x['id']['str'])
 
-		# только декларируем функции переменные и константы
-		een(imp['defs_private'], decl_only=True)
-		een(imp['defs_public'], decl_only=True)
+		#
+
+		for d in imp['defs_private']:
+			if d['isa'] == 'def_type':
+				print_def_type(d)
+
+		for d in imp['defs_public']:
+			if d['isa'] == 'def_type':
+				print_def_type(d)
+			elif d['isa'] == 'def_func':
+				print_decl_func(d)
+			#elif isa == 'def_const':
+			#	print_decl_const(x)
+
+		#een(imp['defs_private'], decl_only=True)
+		#een(imp['defs_public'], decl_only=True)
 
 
 separatorLine = "\n; " + '-' * 77

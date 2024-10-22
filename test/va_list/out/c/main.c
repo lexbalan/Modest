@@ -9,7 +9,8 @@
 
 
 ssize_t my_printf(char *format, ...);
-int main();
+
+
 
 
 

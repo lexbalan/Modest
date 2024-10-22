@@ -10,7 +10,7 @@
 
 #define main_datastring  "123456789"
 #define main_expected_hash  0xCBF43926
-int main();
+
 
 
 

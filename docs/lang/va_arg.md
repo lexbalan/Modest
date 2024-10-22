@@ -23,7 +23,7 @@ func print(format: *Str8, ...) -> SSizeT {
 }
 
 
-func main() -> Int {
+public func main() -> Int {
 	var k = 10
 	print("print test; k = %d\n", k)
 	return 0

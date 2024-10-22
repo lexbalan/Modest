@@ -1,6 +1,8 @@
 
 include "libc/ctypes64"
+@c_include "stdio.h"
 include "libc/stdio"
+@c_include "math.h"
 include "libc/math"
 const constantArray = [1, 2, 3, 4, 5] + [6, 7, 8, 9, 10]
 var globalArray: [10]Int32 = constantArray
@@ -38,7 +40,7 @@ func test() -> Unit {
 		i = i + 1
 	}
 }
-func main() -> Int {
+public func main() -> Int {
 	// generic array [4]Char8 will be implicit casted to [10]Char8
 
 	var em: [30]Char8 = f0("Hello World!")

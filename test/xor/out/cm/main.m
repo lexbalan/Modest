@@ -1,5 +1,6 @@
 
 include "libc/ctypes64"
+@c_include "stdio.h"
 include "libc/stdio"
 const msg_length = 12
 const key_length = 3
@@ -28,7 +29,7 @@ func print_bytes(buf: *[]Word8, len: Nat32) -> Unit {
 	}
 	printf("\n")
 }
-func main() -> Int {
+public func main() -> Int {
 	printf("test xor encrypting\n")
 
 	let tmsg = *[]Word8 &test_msg

@@ -1,6 +1,8 @@
 
 include "libc/ctypes64"
+@c_include "stdio.h"
 include "libc/stdio"
+@c_include "math.h"
 include "libc/math"
 @c_include "./minmax.h"
 include "misc/minmax"
@@ -46,7 +48,7 @@ func distance(a: Point, b: Point) -> Float {
 func lineLength(line: Line) -> Float {
 	return distance(line.a, line.b)
 }
-func main() -> Int {
+public func main() -> Int {
 	let lines_0_len = lineLength(lines[0])
 	let lines_1_len = lineLength(lines[1])
 	let lines_2_len = lineLength(lines[2])

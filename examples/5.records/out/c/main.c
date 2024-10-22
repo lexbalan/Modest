@@ -24,7 +24,9 @@ float min(float a, float b);
 float distance(main_Point a, main_Point b);
 float lineLength(main_Line line);
 void ptr_example();
-int main();
+
+
+
 
 
 

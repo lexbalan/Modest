@@ -33,7 +33,7 @@ void f2_ptr(main_Type3 *x);
 void f3_ptr(struct __anonymous_struct_4 *x);
 void test_by_value();
 void test_by_pointer();
-int main();
+
 
 
 static main_Type1 a = {.x = 1};

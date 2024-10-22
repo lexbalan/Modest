@@ -102,7 +102,7 @@ break_2:
 ; MODULE: main
 
 ; -- print includes --
-
+; from included ctypes64
 %Str = type %Str8;
 %Char = type i8;
 %ConstChar = type %Char;
@@ -132,13 +132,11 @@ break_2:
 %PIDT = type i32;
 %UIDT = type i32;
 %GIDT = type i32;
-
+; from included stdio
 %File = type i8;
 %FposT = type i8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
-
-
 declare %Int @fclose(%File* %f)
 declare %Int @feof(%File* %f)
 declare %Int @ferror(%File* %f)
@@ -192,20 +190,26 @@ declare void @perror(%ConstCharStr* %str)
 @str5 = private constant [20 x i8] [i8 102, i8 112, i8 116, i8 114, i8 40, i8 37, i8 105, i8 44, i8 32, i8 37, i8 105, i8 41, i8 32, i8 61, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 @str6 = private constant [18 x i8] [i8 102, i8 117, i8 110, i8 99, i8 48, i8 32, i8 119, i8 97, i8 115, i8 32, i8 99, i8 97, i8 108, i8 108, i8 101, i8 100, i8 10, i8 0]
 
-define void @func1() {
+define internal void @func1() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str1 to [0 x i8]*))
 	ret void
 }
 
-define void @print_ab(i32 %a, i32 %b) {
+define internal void @print_ab(i32 %a, i32 %b) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str2 to [0 x i8]*), i32 %a, i32 %b)
 	ret void
 }
 
-define i32 @sum(i32 %a, i32 %b) {
+define internal i32 @sum(i32 %a, i32 %b) {
 	%1 = add i32 %a, %b
 	ret i32 %1
 }
+
+define internal void @func0() {
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str6 to [0 x i8]*))
+	ret void
+}
+
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str3 to [0 x i8]*))
@@ -224,11 +228,6 @@ define %Int @main() {
 	%6 = call i32 %5(i32 1, i32 2)
 	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str5 to [0 x i8]*), i32 1, i32 2, i32 %6)
 	ret %Int 0
-}
-
-define void @func0() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str6 to [0 x i8]*))
-	ret void
 }
 
 

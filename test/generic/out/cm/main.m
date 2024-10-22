@@ -1,5 +1,6 @@
 
 include "libc/ctypes64"
+@c_include "stdio.h"
 include "libc/stdio"
 
 
@@ -13,46 +14,6 @@ type Point3D record {
 	x: Int32
 	y: Int32
 	z: Int32
-}
-func main() -> Int {
-	printf("generic types test\n")
-
-	let t1 = test_generic_integer()
-	if t1 {
-		printf("test_generic_integer passed\n")
-	} else {
-		printf("test_generic_integer failed\n")
-	}
-
-	let t2 = test_generic_float()
-	if t2 {
-		printf("test_generic_float passed\n")
-	} else {
-		printf("test_generic_float failed\n")
-	}
-
-	let t3 = test_generic_char()
-	if t3 {
-		printf("test_generic_char passed\n")
-	} else {
-		printf("test_generic_char failed\n")
-	}
-
-	let t4 = test_generic_array()
-	if t4 {
-		printf("test_generic_array passed\n")
-	} else {
-		printf("test_generic_array failed\n")
-	}
-
-	let t5 = test_generic_record()
-	if t5 {
-		printf("test_generic_record passed\n")
-	} else {
-		printf("test_generic_integer failed\n")
-	}
-
-	return 0
 }
 func test_generic_integer() -> Bool {
 	// Any integer literal have GenericInteger type
@@ -176,5 +137,45 @@ func test_generic_record() -> Bool {
 	point_3d = Point3D p
 
 	return true
+}
+public func main() -> Int {
+	printf("generic types test\n")
+
+	let t1 = test_generic_integer()
+	if t1 {
+		printf("test_generic_integer passed\n")
+	} else {
+		printf("test_generic_integer failed\n")
+	}
+
+	let t2 = test_generic_float()
+	if t2 {
+		printf("test_generic_float passed\n")
+	} else {
+		printf("test_generic_float failed\n")
+	}
+
+	let t3 = test_generic_char()
+	if t3 {
+		printf("test_generic_char passed\n")
+	} else {
+		printf("test_generic_char failed\n")
+	}
+
+	let t4 = test_generic_array()
+	if t4 {
+		printf("test_generic_array passed\n")
+	} else {
+		printf("test_generic_array failed\n")
+	}
+
+	let t5 = test_generic_record()
+	if t5 {
+		printf("test_generic_record passed\n")
+	} else {
+		printf("test_generic_integer failed\n")
+	}
+
+	return 0
 }
 

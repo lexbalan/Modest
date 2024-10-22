@@ -11,7 +11,7 @@
 #define main_utf8Char  "s"
 #define main_utf16Char  u"Я"
 #define main_utf32Char  U"🐀"
-int main();
+
 
 
 

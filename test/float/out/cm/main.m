@@ -1,7 +1,10 @@
 
 include "libc/ctypes64"
+@c_include "stdio.h"
 include "libc/stdio"
+@c_include "stdlib.h"
 include "libc/stdlib"
+@c_include "math.h"
 include "libc/math"
 
 
@@ -20,7 +23,7 @@ func slope(a: Point2D, b: Point2D) -> Float32 {
 	printf("dy = %d\n", dy)
 	return Float32 dy / Float32 dx
 }
-func main() -> Int {
+public func main() -> Int {
 	printf("float test\n")
 
 	let r = 10

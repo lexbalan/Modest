@@ -64,7 +64,7 @@ func lineLength (line: Line) -> Float {
 }
 
 
-func main() -> Int {
+public func main() -> Int {
 	let lines_0_len = lineLength(lines[0])
 	let lines_1_len = lineLength(lines[1])
 	let lines_2_len = lineLength(lines[2])

@@ -17,7 +17,9 @@ struct main_Point2D {
 #define main_mathPi  3.141592653589793238462643383279502884
 double squareOfCircle(double radius);
 float slope(main_Point2D a, main_Point2D b);
-int main();
+
+
+
 
 
 

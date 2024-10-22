@@ -139,7 +139,7 @@ var fsm: fsm.FSM = {
 
 
 
-func main() -> Int {
+public func main() -> Int {
 
 	while true {
 		fsm.run(&fsm)

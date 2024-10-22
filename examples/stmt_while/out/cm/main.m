@@ -1,7 +1,8 @@
 
 include "libc/ctypes64"
+@c_include "stdio.h"
 include "libc/stdio"
-func main() -> Int {
+public func main() -> Int {
 	printf("while statement test\n")
 
 	var a: Int32 = 0

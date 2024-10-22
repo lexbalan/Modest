@@ -6,7 +6,8 @@ $pragma c_include "./console.h"
 include "libc/ctypes64"
 include "libc/stdio"
 
-import "lightfood/console"
+// include test (!)
+include "lightfood/console"
 
 
 const ratSymbolUTF8 = [0xf0, 0x9f, 0x90, 0x80]
@@ -27,21 +28,20 @@ var arr_utf16: [9]Char16 = "Hello Ω!\n"
 var arr_utf32: [8]Char32 = "Hello!\n"
 
 
-func main() -> Int {
+public func main() -> Int {
 	var str8: *Str8 = string8Const
 	var str16: *Str16 = string16Const
 	var str32: *Str32 = string32Const
 
-	console.puts8(str8)
-	console.puts8("\n")
+	puts8(str8)
+	puts8("\n")
 
-	console.puts16(str16)
-	console.puts8("\n")
+	puts16(str16)
+	puts8("\n")
 
-	console.puts32(str32)
-	console.puts8("\n")
+	puts32(str32)
+	puts8("\n")
 
 	return 0
 }
-
 

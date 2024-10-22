@@ -4,7 +4,7 @@ include "libc/ctypes64"
 include "libc/stdio"
 
 
-func main() -> Int {
+public func main() -> Int {
 	printf("if statement example\n")
 
 	var a: Int32

@@ -11,7 +11,8 @@
 void nat32_list_insert(list_List *list, uint32_t x);
 void list_print_forward(list_List *list);
 void list_print_backward(list_List *list);
-int main();
+
+
 
 
 

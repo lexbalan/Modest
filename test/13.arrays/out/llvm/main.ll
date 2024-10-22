@@ -102,7 +102,7 @@ break_2:
 ; MODULE: main
 
 ; -- print includes --
-
+; from included ctypes64
 %Str = type %Str8;
 %Char = type i8;
 %ConstChar = type %Char;
@@ -132,13 +132,11 @@ break_2:
 %PIDT = type i32;
 %UIDT = type i32;
 %GIDT = type i32;
-
+; from included stdio
 %File = type i8;
 %FposT = type i8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
-
-
 declare %Int @fclose(%File* %f)
 declare %Int @feof(%File* %f)
 declare %Int @ferror(%File* %f)
@@ -181,8 +179,7 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
-
-
+; from included math
 declare %Double @acos(%Double %x)
 declare %Double @asin(%Double %x)
 declare %Double @atan(%Double %x)
@@ -347,7 +344,7 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 	i5 22
 ]
 
-define void @f0([30 x i8]* noalias sret([30 x i8]) %0, [20 x i8] %x) {
+define internal void @f0([30 x i8]* noalias sret([30 x i8]) %0, [20 x i8] %x) {
 	%2 = alloca [20 x i8], align 1
 	store [20 x i8] %x, [20 x i8]* %2
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*), [20 x i8]* %2)
@@ -393,7 +390,7 @@ define void @f0([30 x i8]* noalias sret([30 x i8]) %0, [20 x i8] %x) {
 	ret void
 }
 
-define void @test() {
+define internal void @test() {
 	; тестируем работу с локальным generic массивом
 	%1 = alloca [6 x i8], align 1
 	%2 = insertvalue [6 x i8] zeroinitializer, i8 170, 0
@@ -421,6 +418,7 @@ body_1:
 break_1:
 	ret void
 }
+
 
 define %Int @main() {
 	; generic array [4]Char8 will be implicit casted to [10]Char8

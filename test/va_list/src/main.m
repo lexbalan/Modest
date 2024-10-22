@@ -26,7 +26,7 @@ func my_printf(format: *Str8, ...) -> SSizeT {
 }
 
 
-func main() -> Int {
+public func main() -> Int {
 	var k = 10
 	my_printf("My Printf Test %d\n", k)
 

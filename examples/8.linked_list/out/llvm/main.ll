@@ -102,7 +102,7 @@ break_2:
 ; MODULE: main
 
 ; -- print includes --
-
+; from included ctypes64
 %Str = type %Str8;
 %Char = type i8;
 %ConstChar = type %Char;
@@ -132,7 +132,7 @@ break_2:
 %PIDT = type i32;
 %UIDT = type i32;
 %GIDT = type i32;
-
+; from included stdlib
 declare void @abort()
 declare %Int @abs(%Int %x)
 declare %Int @atexit(void ()* %x)
@@ -147,13 +147,11 @@ declare %LongInt @labs(%LongInt %x)
 declare %Str* @secure_getenv(%Str* %name)
 declare i8* @malloc(%SizeT %size)
 declare %Int @system([0 x %ConstChar]* %string)
-
+; from included stdio
 %File = type i8;
 %FposT = type i8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
-
-
 declare %Int @fclose(%File* %f)
 declare %Int @feof(%File* %f)
 declare %Int @ferror(%File* %f)
@@ -198,7 +196,6 @@ declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
 ; -- print imports --
-
 %Node = type {
 	%Node*, 
 	%Node*, 
@@ -210,7 +207,6 @@ declare void @perror(%ConstCharStr* %str)
 	%Node*, 
 	i32
 };
-
 
 declare %List* @list_create()
 declare i32 @list_size_get(%List* %list)
@@ -244,7 +240,7 @@ declare %Node* @list_append(%List* %list, i8* %data)
 @str13 = private constant [15 x i8] [i8 108, i8 105, i8 115, i8 116, i8 40, i8 37, i8 105, i8 41, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 @str14 = private constant [43 x i8] [i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 45, i8 10, i8 0]
 
-define void @nat32_list_insert(%List* %list, i32 %x) {
+define internal void @nat32_list_insert(%List* %list, i32 %x) {
 	; alloc memory for Nat32 value
 	%1 = call i8* @malloc(%SizeT 4)
 	%2 = bitcast i8* %1 to i32*
@@ -255,7 +251,7 @@ define void @nat32_list_insert(%List* %list, i32 %x) {
 	ret void
 }
 
-define void @list_print_forward(%List* %list) {
+define internal void @list_print_forward(%List* %list) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str1 to [0 x i8]*))
 	%2 = alloca %Node*, align 8
 	%3 = bitcast %List* %list to %List*
@@ -284,7 +280,7 @@ break_1:
 	ret void
 }
 
-define void @list_print_backward(%List* %list) {
+define internal void @list_print_backward(%List* %list) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str3 to [0 x i8]*))
 	%2 = alloca %Node*, align 8
 	%3 = bitcast %List* %list to %List*
@@ -312,6 +308,7 @@ body_1:
 break_1:
 	ret void
 }
+
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str5 to [0 x i8]*))

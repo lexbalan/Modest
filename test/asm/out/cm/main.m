@@ -1,5 +1,6 @@
 
 include "libc/ctypes64"
+@c_include "stdio.h"
 include "libc/stdio"
 func sum64(a: Int64, b: Int64) -> Int64 {
 	var sum: Int64
@@ -20,7 +21,7 @@ func sumsub64(a: Int64, b: Int64) -> Unit {
 	printf("sumsub64 sum = %lld\n", sum)
 	printf("sumsub64 sub = %lld\n", sub)
 }
-func main() -> Int {
+public func main() -> Int {
 	printf("inline asm test\n")
 
 	var a: Int64 = 10

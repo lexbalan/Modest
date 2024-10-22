@@ -12,7 +12,7 @@ struct main_Point {
 	int32_t x;
 	int32_t y;
 };
-int main();
+
 
 
 static int32_t glb_i0 = 0;

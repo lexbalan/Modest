@@ -26,7 +26,7 @@ func function_3(x: Int32) -> Int32 {
 	return x + 1
 }
 
-func main() -> Int {
+public func main() -> Int {
 	// just call
 	function_1()
 
@@ -70,7 +70,7 @@ var ptr_to_function_3: (x: Int32) -> Int32
 // var ptr_to_function_3 = &function_3
 
 
-func main() -> Int {
+public func main() -> Int {
 	ptr_to_function_1 = &function_1
 	ptr_to_function_2 = &function_2
 	ptr_to_function_3 = &function_3
@@ -104,7 +104,7 @@ func named_args_test(a: Int32, b: Int32, c: Int32) -> Int32 {
 }
 
 
-func main() -> Int {
+public func main() -> Int {
 	printf("test named_args\n")
 
 	let a = 25

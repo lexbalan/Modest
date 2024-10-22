@@ -23,7 +23,7 @@ type Point record {
 }
 
 
-func main () -> Unit {
+public func main () -> Unit {
 	var p: Point
   
 	// we can initialize record with 'literal record value'

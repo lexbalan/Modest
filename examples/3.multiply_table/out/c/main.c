@@ -9,7 +9,7 @@
 
 
 void mtab(uint32_t n);
-int main();
+
 
 
 

@@ -11,7 +11,7 @@
 int64_t sum64(int64_t a, int64_t b);
 int64_t sub64(int64_t a, int64_t b);
 void sumsub64(int64_t a, int64_t b);
-int main();
+
 
 
 

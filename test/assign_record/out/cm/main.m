@@ -1,5 +1,6 @@
 
 include "libc/ctypes64"
+@c_include "stdio.h"
 include "libc/stdio"
 
 
@@ -9,7 +10,7 @@ type Point record {
 }
 var globalPoint0: Point = {x = 10, y = 20}
 var globalPoint1: Point = {}
-func main() -> Int {
+public func main() -> Int {
 	printf("test assign_array\n")
 
 	globalPoint1 = globalPoint0

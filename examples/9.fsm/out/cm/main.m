@@ -86,7 +86,7 @@ func beacon_exit(x: *FSM) -> Unit {
 	let to_name = fsm.state_no_name(x, x.nexstate)
 	printf("beacon_exit to %s\n", to_name)
 }
-func main() -> Int {
+public func main() -> Int {
 
 	while true {
 		fsm.run(&fsm)

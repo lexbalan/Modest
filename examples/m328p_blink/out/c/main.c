@@ -20,7 +20,6 @@ struct __attribute__((packed)) main_GPIO {
 };
 #define main_sfrOffset  0x20
 void delay_ms(uint32_t ms);
-int16_t main();
 static uint32_t delay_counter;
 
 void delay_ms(uint32_t ms)

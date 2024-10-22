@@ -40,7 +40,7 @@ func print_bytes(buf: *[]Byte, len: Nat32) -> Unit {
 }
 
 
-func main() -> Int {
+public func main() -> Int {
 	printf("test xor encrypting\n")
 
 	let tmsg = unsafe *[]Byte &test_msg

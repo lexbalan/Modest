@@ -1,4 +1,10 @@
 
+@c_include "stdio.h"
+@c_include "stdlib.h"
+@c_include "string.h"
+@c_include "time.h"
+@c_include "unistd.h"
+@c_include "math.h"
 include "libc/libc"
 const filename = *Str8 "file.txt"
 func write_example() -> Unit {
@@ -36,7 +42,7 @@ func read_example() -> Unit {
 
 	fclose(fp)
 }
-func main() -> Int {
+public func main() -> Int {
 	printf("text_file example\n")
 	write_example()
 	read_example()

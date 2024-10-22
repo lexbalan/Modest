@@ -14,7 +14,7 @@ struct main_Point {
 	int32_t x;
 	int32_t y;
 };
-int main();
+
 
 
 static main_Point globalPoint0 = {.x = 10, .y = 20};

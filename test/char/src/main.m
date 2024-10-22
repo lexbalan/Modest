@@ -9,7 +9,7 @@ let utf16Char = "Я"
 let utf32Char = "🐀"
 
 
-func main() -> Int {
+public func main() -> Int {
 	printf("test/char\n")
 
 	var ch08: Char8

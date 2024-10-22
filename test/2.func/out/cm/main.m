@@ -1,5 +1,6 @@
 
 include "libc/ctypes64"
+@c_include "stdio.h"
 include "libc/stdio"
 func func1() -> Unit {
 	printf("func1 was called\n")
@@ -10,7 +11,10 @@ func print_ab(a: Int32, b: Int32) -> Unit {
 func sum(a: Int32, b: Int32) -> Int32 {
 	return a + b
 }
-func main() -> Int {
+func func0() -> Unit {
+	printf("func0 was called\n")
+}
+public func main() -> Int {
 	printf("test func\n")
 
 	// call declared & defined functions
@@ -35,8 +39,5 @@ func main() -> Int {
 	printf("fptr(%i, %i) == %i\n", arg_a2, arg_b2, fptr_result)
 
 	return 0
-}
-func func0() -> Unit {
-	printf("func0 was called\n")
 }
 

@@ -1,10 +1,11 @@
 
 include "libc/ctypes64"
+@c_include "stdio.h"
 include "libc/stdio"
 func named_args_test(a: Int32, b: Int32, c: Int32) -> Int32 {
 	return (a - b) * c
 }
-func main() -> Int {
+public func main() -> Int {
 	printf("test named_args\n")
 
 	let a = 25

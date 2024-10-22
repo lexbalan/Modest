@@ -46,7 +46,7 @@ e = 256 // error (Nat8 = {0 .. 255})
 #### Exmples
 
 ```zig
-func main () -> Int32 {
+public func main () -> Int32 {
 	var x: Nat32
 	x = 123
 	printf("x = %i\n", x)
@@ -140,7 +140,7 @@ var ptr_to_str32: *Str32 = literalString
 ```zig
 import "libc/stdio"
 
-func main () -> Int32 {
+public func main () -> Int32 {
 	// creating local variable with type *[]Char8 (aka *Str8)
 	var string: *Str8
 
