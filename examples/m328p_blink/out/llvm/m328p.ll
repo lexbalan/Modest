@@ -99,42 +99,23 @@ break_2:
 	ret i1 1
 }
 
-; MODULE: delay
+; MODULE: m328p
 
 ; -- print includes --
+; from included avr
+%avr_IO8 = type i8;
+%avr_IO16 = type i16;
 ; -- end print includes --
 ; -- print imports --
 ; -- end print imports --
 ; -- strings --
 
-define void @delay_ms(i32 %x) {
-	%1 = alloca i32, align 4
-	store i32 %x, i32* %1
-	br label %again_1
-again_1:
-	%2 = load i32, i32* %1
-	%3 = icmp ugt i32 %2, 0
-	br i1 %3 , label %body_1, label %break_1
-body_1:
-	%4 = alloca i32, align 4
-	store i32 0, i32* %4
-	br label %again_2
-again_2:
-	%5 = load i32, i32* %4
-	%6 = icmp ult i32 %5, 400
-	br i1 %6 , label %body_2, label %break_2
-body_2:
-	%7 = load i32, i32* %4
-	%8 = add i32 %7, 1
-	store i32 %8, i32* %4
-	br label %again_2
-break_2:
-	%9 = load i32, i32* %1
-	%10 = sub i32 %9, 1
-	store i32 %10, i32* %1
-	br label %again_1
-break_1:
-	ret void
-}
+
+%m328p_GPIO = type <{
+	%avr_IO8, 
+	%avr_IO8, 
+	%avr_IO8
+}>;
+
 
 
