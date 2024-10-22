@@ -107,6 +107,8 @@ break_2:
 ; -- end print imports --
 ; -- strings --
 
+@delayCounter = global i32 0
+
 define void @delay_ms(i32 %x) {
 	%1 = alloca i32, align 4
 	store i32 %x, i32* %1
@@ -116,22 +118,21 @@ again_1:
 	%3 = icmp ugt i32 %2, 0
 	br i1 %3 , label %body_1, label %break_1
 body_1:
-	%4 = alloca i32, align 4
-	store i32 0, i32* %4
+	store i32 0, i32* @delayCounter
 	br label %again_2
 again_2:
-	%5 = load i32, i32* %4
-	%6 = icmp ult i32 %5, 400
-	br i1 %6 , label %body_2, label %break_2
+	%4 = load i32, i32* @delayCounter
+	%5 = icmp ult i32 %4, 380
+	br i1 %5 , label %body_2, label %break_2
 body_2:
-	%7 = load i32, i32* %4
-	%8 = add i32 %7, 1
-	store i32 %8, i32* %4
+	%6 = load i32, i32* @delayCounter
+	%7 = add i32 %6, 1
+	store i32 %7, i32* @delayCounter
 	br label %again_2
 break_2:
-	%9 = load i32, i32* %1
-	%10 = sub i32 %9, 1
-	store i32 %10, i32* %1
+	%8 = load i32, i32* %1
+	%9 = sub i32 %8, 1
+	store i32 %9, i32* %1
 	br label %again_1
 break_1:
 	ret void
