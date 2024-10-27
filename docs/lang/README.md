@@ -1,6 +1,7 @@
 # Modest language
 
 - [Comments](./comments.md)
+- [Access Modifiers](./access_modifiers.md)
 - [Identifiers](./identifier.md)
 <!--- [Fields](./fields.md)-->
 - [Import](./import.md)
