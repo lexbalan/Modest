@@ -372,6 +372,7 @@ def hlir_type_string(char_width, length, ti=None):
 def hlir_type_generic_int_for(num, signed=True, ti=None):
 	required_width = nbits_for_num(num)
 	t = hlir_type_integer(width=required_width, ti=ti)
+	t['ops'] = t['ops'] + WORD_OPS
 	t['generic'] = True
 	t['signed'] = signed
 	return t
@@ -594,11 +595,20 @@ def type_is_array(t):
 
 # VLA - variable langth array
 def type_is_vla(t):
-	if t['kind'] == 'array':
-		if t['volume'] != None:
-			from value.value import value_is_immediate
-			return not value_is_immediate(t['volume'])
-	return False
+	if t['kind'] != 'array':
+		return False
+
+	if t['volume'] == None:
+		return False
+
+	from value.value import value_is_immediate
+
+	if not value_is_immediate(t['volume']):
+		info("?????", t)
+		print(t['volume'])
+
+	return not value_is_immediate(t['volume'])
+
 
 
 def type_is_composite(t):

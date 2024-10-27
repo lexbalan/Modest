@@ -14,7 +14,7 @@
 
 ## Generic Integer
 
-*Generic integer* value can be implicitly casted to *Integer*, *Float* and *Byte* types, and explicitly to *Unit*, *Bool* and *Char*.
+*Generic integer* value can be implicitly casted to *Integer*, *Float* and *Word8* types, and explicitly to *Unit*, *Bool* and *Char*.
 
 
 #### Example
@@ -35,8 +35,8 @@ public func main() -> Int {
 	var f: Float32 = one  // implicit cast GenericInteger value to Float32
 	var g: Float64 = one  // implicit cast GenericInteger value to Float64
 
-	// and to Byte
-	var x: Byte = one  // implicit cast GenericInteger value to Byte
+	// and to Word8
+	var x: Word8 = one  // implicit cast GenericInteger value to Word8
 
 
 	// explicit cast GenericInteger value

@@ -3,11 +3,12 @@
 | Type	 | Size (in bytes) | Classes | Description |
 | :------: | :-: | ------- | --- |
 | `Unit`   | `0` | `-` | `Empty type (void in C)` |
-| `Bool`   | `1` | `logical, equ` | `8-bit` |
-| `Byte`   | `1` | `logical, equ` | `unsigned 8-bit` |
-| `Char8`  | `1` | `equ` | `for 8-bit character` |
-| `Char16` | `2` | `equ` | `for 16-bit character` |
-| `Char32` | `4` | `equ` | `for 32-bit character` |
+| `Bool`   | `1` | `equ, logical` | `8-bit` |
+| `Word8`  | `1` | `equ, logical` | `8-bit word` |
+| `Word16` | `2` | `equ, logical` | `16-bit word` |
+| `Word32` | `4` | `equ, logical` | `32-bit word` |
+| `Word64` | `8` | `equ, logical` | `64-bit word` |
+| `Word128` | `16` | `equ, logical` | `128-bit word` |
 | `Int8`   | `1` | `equ, ord, math, rem` | `signed integer 8-bit` |
 | `Int16`  | `2` | `equ, ord, math, rem` | `signed integer 16-bit` |
 | `Int32`  | `4` | `equ, ord, math, rem` | `signed integer 32-bit` |
@@ -18,6 +19,9 @@
 | `Nat32`  | `4` | `equ, ord, math, rem` | `unsigned integer 32-bit` |
 | `Nat64`  | `8` | `equ, ord, math, rem` | `unsigned integer 64-bit` |
 | `Nat128` | `16` | `equ, ord, math, rem` | `unsigned integer 128-bit` |
+| `Char8`  | `1` | `equ` | `for 8-bit character` |
+| `Char16` | `2` | `equ` | `for 16-bit character` |
+| `Char32` | `4` | `equ` | `for 32-bit character` |
 | `Float32` | `4` | `equ, ord, math` | `floating point 32-bit` |
 | `Float64` | `8` | `equ, ord, math` | `floating point 64-bit` |
 
@@ -73,13 +77,13 @@ while not b {
 ```
 
 
-### Byte type
+### Word type
 
 ```zig
 public func main () -> Int32 {
-	var byte: Byte
+	var byte: Word8
 
-	// GenericInteger will be implicit casted to Byte
+	// GenericInteger will be implicit casted to Word8
 	byte = 42
 
 	printf("byte = %i", Nat32 byte)

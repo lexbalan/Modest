@@ -8,11 +8,11 @@ include "libc/string"
 
 public const hashSize = 32
 
-public type Hash [hashSize]Byte
+public type Hash [hashSize]Word8
 
 
 type Context record {
-	data: [64]Byte
+	data: [64]Word8
 	datalen: Nat32
 	bitlen: Nat64
 	state: [8]Word32
@@ -92,7 +92,7 @@ let k = [
 ]
 
 
-func transform(ctx: *Context, data: *[]Byte) {
+func transform(ctx: *Context, data: *[]Word8) {
 	var m = [64]Word32 []
 
 	var i = Nat32 0
@@ -138,7 +138,7 @@ func transform(ctx: *Context, data: *[]Byte) {
 }
 
 
-func update(ctx: *Context, msg: *[]Byte, msgLen: Nat32) {
+func update(ctx: *Context, msg: *[]Word8, msgLen: Nat32) {
 	var i = Nat32 0
 	while i < msgLen {
 		ctx.data[ctx.datalen] = msg[i]
@@ -179,14 +179,14 @@ func final(ctx: *Context, outHash: *Hash) {
 	// Append to the padding the total message's length in bits and transform.
 	ctx.bitlen = ctx.bitlen + Nat64 ctx.datalen * 8
 
-	ctx.data[63] = unsafe Byte (Word32 ctx.bitlen >> 00)
-	ctx.data[62] = unsafe Byte (Word32 ctx.bitlen >> 08)
-	ctx.data[61] = unsafe Byte (Word32 ctx.bitlen >> 16)
-	ctx.data[60] = unsafe Byte (Word32 ctx.bitlen >> 24)
-	ctx.data[59] = unsafe Byte (Word32 ctx.bitlen >> 32)
-	ctx.data[58] = unsafe Byte (Word32 ctx.bitlen >> 40)
-	ctx.data[57] = unsafe Byte (Word32 ctx.bitlen >> 48)
-	ctx.data[56] = unsafe Byte (Word32 ctx.bitlen >> 56)
+	ctx.data[63] = unsafe Word8 (Word32 ctx.bitlen >> 00)
+	ctx.data[62] = unsafe Word8 (Word32 ctx.bitlen >> 08)
+	ctx.data[61] = unsafe Word8 (Word32 ctx.bitlen >> 16)
+	ctx.data[60] = unsafe Word8 (Word32 ctx.bitlen >> 24)
+	ctx.data[59] = unsafe Word8 (Word32 ctx.bitlen >> 32)
+	ctx.data[58] = unsafe Word8 (Word32 ctx.bitlen >> 40)
+	ctx.data[57] = unsafe Word8 (Word32 ctx.bitlen >> 48)
+	ctx.data[56] = unsafe Word8 (Word32 ctx.bitlen >> 56)
 
 	transform(ctx, &ctx.data)
 
@@ -197,20 +197,20 @@ func final(ctx: *Context, outHash: *Hash) {
 	i = 0
 	while i < 4 {
 		let sh = 24 - i * 8
-		outHash[i + 00] = unsafe Byte (ctx.state[0] >> sh)
-		outHash[i + 04] = unsafe Byte (ctx.state[1] >> sh)
-		outHash[i + 08] = unsafe Byte (ctx.state[2] >> sh)
-		outHash[i + 12] = unsafe Byte (ctx.state[3] >> sh)
-		outHash[i + 16] = unsafe Byte (ctx.state[4] >> sh)
-		outHash[i + 20] = unsafe Byte (ctx.state[5] >> sh)
-		outHash[i + 24] = unsafe Byte (ctx.state[6] >> sh)
-		outHash[i + 28] = unsafe Byte (ctx.state[7] >> sh)
+		outHash[i + 00] = unsafe Word8 (ctx.state[0] >> sh)
+		outHash[i + 04] = unsafe Word8 (ctx.state[1] >> sh)
+		outHash[i + 08] = unsafe Word8 (ctx.state[2] >> sh)
+		outHash[i + 12] = unsafe Word8 (ctx.state[3] >> sh)
+		outHash[i + 16] = unsafe Word8 (ctx.state[4] >> sh)
+		outHash[i + 20] = unsafe Word8 (ctx.state[5] >> sh)
+		outHash[i + 24] = unsafe Word8 (ctx.state[6] >> sh)
+		outHash[i + 28] = unsafe Word8 (ctx.state[7] >> sh)
 		++i
 	}
 }
 
 
-public func hash(msg: *[]Byte, msgLen: Nat32, outHash: *Hash) {
+public func hash(msg: *[]Word8, msgLen: Nat32, outHash: *Hash) {
 	var ctx = Context {}
 	contextInit(&ctx)
 	update(&ctx, msg, msgLen)

@@ -30,7 +30,7 @@ func test_generic_integer() -> Bool {
 	var f: Float32 = one
 	var g: Float32 = one
 
-	// and to Byte
+	// and to Word8
 	var x: Word8 = one
 
 

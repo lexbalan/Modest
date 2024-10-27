@@ -5,7 +5,7 @@ target triple = "arm64-apple-macosx12.0.0"
 
 %Unit = type i1
 %Bool = type i1
-%Byte = type i8
+%Word8 = type i8
 %Char8 = type i8
 %Char16 = type i16
 %Char32 = type i32
@@ -198,7 +198,7 @@ declare [0 x %Char]* @strncat([0 x %Char]* %s1, [0 x %ConstChar]* %s2, %SizeT %n
 declare [0 x %Char]* @strerror(%Int %error)
 
 %Context = type {
-	[64 x %Byte], 
+	[64 x %Word8], 
 	i32, 
 	i64, 
 	[8 x i32]
@@ -291,14 +291,14 @@ declare i32 @ep1(i32 %x)
 declare i32 @sig0(i32 %x)
 declare i32 @sig1(i32 %x)
 declare void @contextInit(%Context* %ctx)
-declare void @transform(%Context* %ctx, [0 x %Byte]* %data)
-declare void @update(%Context* %ctx, [0 x %Byte]* %msg, i32 %msgLen)
+declare void @transform(%Context* %ctx, [0 x %Word8]* %data)
+declare void @update(%Context* %ctx, [0 x %Word8]* %msg, i32 %msgLen)
 declare void @final(%Context* %ctx, %Hash* %outHash)
 
 
-%Hash = type [32 x %Byte];
+%Hash = type [32 x %Word8];
 
-declare void @sha256_hash([0 x %Byte]* %msg, i32 %msgLen, %Hash* %outHash)
+declare void @sha256_hash([0 x %Word8]* %msg, i32 %msgLen, %Hash* %outHash)
 ; -- end print imports --
 ; -- strings --
 @str1 = private constant [5 x i8] [i8 39, i8 37, i8 115, i8 39, i8 0]
@@ -355,38 +355,38 @@ declare void @sha256_hash([0 x %Byte]* %msg, i32 %msgLen, %Hash* %outHash)
 	],
 	i32 3,
 	%Hash [
-		%Byte 186,
-		%Byte 120,
-		%Byte 22,
-		%Byte 191,
-		%Byte 143,
-		%Byte 1,
-		%Byte 207,
-		%Byte 234,
-		%Byte 65,
-		%Byte 65,
-		%Byte 64,
-		%Byte 222,
-		%Byte 93,
-		%Byte 174,
-		%Byte 34,
-		%Byte 35,
-		%Byte 176,
-		%Byte 3,
-		%Byte 97,
-		%Byte 163,
-		%Byte 150,
-		%Byte 23,
-		%Byte 122,
-		%Byte 156,
-		%Byte 180,
-		%Byte 16,
-		%Byte 255,
-		%Byte 97,
-		%Byte 242,
-		%Byte 0,
-		%Byte 21,
-		%Byte 173
+		%Word8 186,
+		%Word8 120,
+		%Word8 22,
+		%Word8 191,
+		%Word8 143,
+		%Word8 1,
+		%Word8 207,
+		%Word8 234,
+		%Word8 65,
+		%Word8 65,
+		%Word8 64,
+		%Word8 222,
+		%Word8 93,
+		%Word8 174,
+		%Word8 34,
+		%Word8 35,
+		%Word8 176,
+		%Word8 3,
+		%Word8 97,
+		%Word8 163,
+		%Word8 150,
+		%Word8 23,
+		%Word8 122,
+		%Word8 156,
+		%Word8 180,
+		%Word8 16,
+		%Word8 255,
+		%Word8 97,
+		%Word8 242,
+		%Word8 0,
+		%Word8 21,
+		%Word8 173
 	]
 }
 @test1 = global %SHA256_TestCase {
@@ -426,38 +426,38 @@ declare void @sha256_hash([0 x %Byte]* %msg, i32 %msgLen, %Hash* %outHash)
 	],
 	i32 12,
 	%Hash [
-		%Byte 127,
-		%Byte 131,
-		%Byte 177,
-		%Byte 101,
-		%Byte 127,
-		%Byte 241,
-		%Byte 252,
-		%Byte 83,
-		%Byte 185,
-		%Byte 45,
-		%Byte 193,
-		%Byte 129,
-		%Byte 72,
-		%Byte 161,
-		%Byte 214,
-		%Byte 93,
-		%Byte 252,
-		%Byte 45,
-		%Byte 75,
-		%Byte 31,
-		%Byte 163,
-		%Byte 214,
-		%Byte 119,
-		%Byte 40,
-		%Byte 74,
-		%Byte 221,
-		%Byte 210,
-		%Byte 0,
-		%Byte 18,
-		%Byte 109,
-		%Byte 144,
-		%Byte 105
+		%Word8 127,
+		%Word8 131,
+		%Word8 177,
+		%Word8 101,
+		%Word8 127,
+		%Word8 241,
+		%Word8 252,
+		%Word8 83,
+		%Word8 185,
+		%Word8 45,
+		%Word8 193,
+		%Word8 129,
+		%Word8 72,
+		%Word8 161,
+		%Word8 214,
+		%Word8 93,
+		%Word8 252,
+		%Word8 45,
+		%Word8 75,
+		%Word8 31,
+		%Word8 163,
+		%Word8 214,
+		%Word8 119,
+		%Word8 40,
+		%Word8 74,
+		%Word8 221,
+		%Word8 210,
+		%Word8 0,
+		%Word8 18,
+		%Word8 109,
+		%Word8 144,
+		%Word8 105
 	]
 }
 @tests = global [2 x %SHA256_TestCase*] 
@@ -469,10 +469,10 @@ declare void @sha256_hash([0 x %Byte]* %msg, i32 %msgLen, %Hash* %outHash)
 define i1 @doTest(%SHA256_TestCase* %test) {
 	%1 = alloca %Hash, align 1
 	%2 = getelementptr inbounds %SHA256_TestCase, %SHA256_TestCase* %test, i32 0, i32 0
-	%3 = bitcast [32 x i8]* %2 to [0 x %Byte]*
+	%3 = bitcast [32 x i8]* %2 to [0 x %Word8]*
 	%4 = getelementptr inbounds %SHA256_TestCase, %SHA256_TestCase* %test, i32 0, i32 1
 	%5 = load i32, i32* %4
-	call void @sha256_hash([0 x %Byte]* %3, i32 %5, %Hash* %1)
+	call void @sha256_hash([0 x %Word8]* %3, i32 %5, %Hash* %1)
 	%6 = getelementptr inbounds %SHA256_TestCase, %SHA256_TestCase* %test, i32 0, i32 0
 	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str1 to [0 x i8]*), [32 x i8]* %6)
 	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str2 to [0 x i8]*))
@@ -487,8 +487,8 @@ again_1:
 body_1:
 	%13 = load i32, i32* %9
 	%14 = getelementptr inbounds %Hash, %Hash* %1, i32 0, i32 %13
-	%15 = load %Byte, %Byte* %14
-	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str3 to [0 x i8]*), %Byte %15)
+	%15 = load %Word8, %Word8* %14
+	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([5 x i8]* @str3 to [0 x i8]*), %Word8 %15)
 	%17 = load i32, i32* %9
 	%18 = add i32 %17, 1
 	store i32 %18, i32* %9

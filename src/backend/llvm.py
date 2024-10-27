@@ -2478,7 +2478,7 @@ def run(module, outname):
 
 	lo("%Unit = type i1")
 	lo("%Bool = type i1")
-	lo("%Byte = type i8")
+	lo("%Word8 = type i8")
 	lo("%Char8 = type i8")
 	lo("%Char16 = type i16")
 	lo("%Char32 = type i32")

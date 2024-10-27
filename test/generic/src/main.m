@@ -61,8 +61,8 @@ func test_generic_integer() -> Bool {
 	var f: Float32 = one  // implicit cast GenericInteger value to Float32
 	var g: Float64 = one  // implicit cast GenericInteger value to Float64
 
-	// and to Byte
-	var x: Byte = one  // implicit cast GenericInteger value to Byte
+	// and to Word8
+	var x: Word8 = one  // implicit cast GenericInteger value to Word8
 
 
 	// explicit cast GenericInteger value

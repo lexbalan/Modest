@@ -41,7 +41,7 @@ bool test_generic_integer()
 
 	// to Float
 
-	// and to Byte
+	// and to Word8
 
 
 	// explicit cast GenericInteger value

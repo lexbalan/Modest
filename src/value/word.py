@@ -29,8 +29,9 @@ def word_can(to, from_type, method):
 	c0 = type.type_is_word(from_type)
 	c1 = type.type_is_integer(from_type)
 	c2 = type.type_is_char(from_type)
+	c3 = type.type_is_bool(from_type)
 
-	if c0 or c1 or c2:
+	if c0 or c1 or c2 or c3:
 		return width_ok(to, from_type, method)
 
 	return False

@@ -99,9 +99,11 @@ break_2:
 	ret i1 1
 }
 
-; MODULE: main
+; MODULE: byteRing16
 
 ; -- print includes --
+; -- end print includes --
+; -- print imports --
 ; from included ctypes64
 %Str = type %Str8;
 %Char = type i8;
@@ -179,87 +181,101 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
-; -- end print includes --
-; -- print imports --
-; -- end print imports --
-; -- strings --
-@str1 = private constant [7 x i8] [i8 72, i8 101, i8 108, i8 108, i8 111, i8 33, i8 0]
-@str2 = private constant [7 x i16] [i16 72, i16 101, i16 108, i16 108, i16 111, i16 33, i16 0]
-@str3 = private constant [7 x i32] [i32 72, i32 101, i32 108, i32 108, i32 111, i32 33, i32 0]
-@str4 = private constant [12 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 99, i8 111, i8 110, i8 115, i8 116, i8 10, i8 0]
-@str5 = private constant [22 x i8] [i8 103, i8 101, i8 110, i8 101, i8 114, i8 105, i8 99, i8 73, i8 110, i8 116, i8 67, i8 111, i8 110, i8 115, i8 116, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str6 = private constant [17 x i8] [i8 105, i8 110, i8 116, i8 51, i8 50, i8 67, i8 111, i8 110, i8 115, i8 116, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str7 = private constant [19 x i8] [i8 115, i8 116, i8 114, i8 105, i8 110, i8 103, i8 56, i8 67, i8 111, i8 110, i8 115, i8 116, i8 32, i8 61, i8 32, i8 37, i8 115, i8 10, i8 0]
-
-%main_Point = type {
+%queue_Queue = type {
+	i32, 
+	i32, 
 	i32, 
 	i32
 };
 
+declare void @queue_init(%queue_Queue* %q, i32 %capacity)
+declare i32 @queue_capacity(%queue_Queue* %q)
+declare i32 @queue_size(%queue_Queue* %q)
+declare i1 @queue_isEmpty(%queue_Queue* %q)
+declare i1 @queue_isFull(%queue_Queue* %q)
+declare i32 @queue_getPutPosition(%queue_Queue* %q)
+declare i32 @queue_getGetPosition(%queue_Queue* %q)
+; -- end print imports --
+; -- strings --
 
-@main_ps = constant [3 x {
-	i2, 
-	i2
-}] [
-	{
-	i2, 
-	i2
-} {
-		i2 0,
-		i2 0
-	},
-	{
-	i2, 
-	i2
-} {
-		i2 1,
-		i2 1
-	},
-	{
-	i2, 
-	i2
-} {
-		i2 2,
-		i2 2
-	}
-]
-@main_points = constant [3 x %main_Point] [
-	%main_Point {
-		i32 0,
-		i32 0
-	},
-	%main_Point {
-		i32 1,
-		i32 1
-	},
-	%main_Point {
-		i32 2,
-		i32 2
-	}
-]
 
-@points2 = global [3 x %main_Point] [
-	%main_Point {
-		i32 0,
-		i32 0
-	},
-	%main_Point {
-		i32 1,
-		i32 1
-	},
-	%main_Point {
-		i32 2,
-		i32 2
-	}
-]
+%byteRing16_Word8Ring16 = type {
+	%queue_Queue, 
+	[16 x i8]
+};
 
-define %Int @main() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str4 to [0 x i8]*))
-	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*), i32 42)
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str6 to [0 x i8]*), i32 42)
-	;	printf("genericStringConst = %s\n", genericStringConst)
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str7 to [0 x i8]*), %Str8* bitcast ([7 x i8]* @str1 to [0 x i8]*))
-	ret %Int 0
+
+define void @byteRing16_init(%byteRing16_Word8Ring16* %q) {
+	%1 = getelementptr inbounds %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, i32 0, i32 0
+	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
+	call void @queue_init(%queue_Queue* %2, i32 16)
+	; -- STMT ASSIGN ARRAY --
+	%3 = getelementptr inbounds %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, i32 0, i32 1
+	; -- start vol eval --
+	%4 = zext i5 16 to i32
+	; -- end vol eval --
+	; -- ZERO
+	%5 = mul i32 %4, 1
+	%6 = bitcast [16 x i8]* %3 to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %6, i8 0, i32 %5, i1 0)
+	ret void
+}
+
+define i32 @byteRing16_capacity(%byteRing16_Word8Ring16* %q) {
+	%1 = getelementptr inbounds %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, i32 0, i32 0
+	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
+	%3 = call i32 @queue_capacity(%queue_Queue* %2)
+	ret i32 %3
+}
+
+define i32 @byteRing16_size(%byteRing16_Word8Ring16* %q) {
+	%1 = getelementptr inbounds %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, i32 0, i32 0
+	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
+	%3 = call i32 @queue_size(%queue_Queue* %2)
+	ret i32 %3
+}
+
+define i1 @byteRing16_isFull(%byteRing16_Word8Ring16* %q) {
+	%1 = getelementptr inbounds %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, i32 0, i32 0
+	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
+	%3 = call i1 @queue_isFull(%queue_Queue* %2)
+	ret i1 %3
+}
+
+define i1 @byteRing16_isEmpty(%byteRing16_Word8Ring16* %q) {
+	%1 = getelementptr inbounds %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, i32 0, i32 0
+	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
+	%3 = call i1 @queue_isEmpty(%queue_Queue* %2)
+	ret i1 %3
+}
+
+define i1 @byteRing16_put(%byteRing16_Word8Ring16* %q, i8 %b) {
+	%1 = getelementptr inbounds %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, i32 0, i32 0
+	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
+	%3 = call i32 @queue_getPutPosition(%queue_Queue* %2)
+	%4 = getelementptr inbounds %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, i32 0, i32 1
+	%5 = getelementptr inbounds [16 x i8], [16 x i8]* %4, i32 0, i32 %3
+	store i8 %b, i8* %5
+	ret i1 1
+}
+
+define i1 @byteRing16_get(%byteRing16_Word8Ring16* %q, i8* %b) {
+	%1 = getelementptr inbounds %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, i32 0, i32 0
+	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
+	%3 = call i1 @queue_isEmpty(%queue_Queue* %2)
+	br i1 %3 , label %then_0, label %endif_0
+then_0:
+	ret i1 0
+	br label %endif_0
+endif_0:
+	%5 = getelementptr inbounds %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, i32 0, i32 0
+	%6 = bitcast %queue_Queue* %5 to %queue_Queue*
+	%7 = call i32 @queue_getGetPosition(%queue_Queue* %6)
+	%8 = getelementptr inbounds %byteRing16_Word8Ring16, %byteRing16_Word8Ring16* %q, i32 0, i32 1
+	%9 = getelementptr inbounds [16 x i8], [16 x i8]* %8, i32 0, i32 %7
+	%10 = load i8, i8* %9
+	store i8 %10, i8* %b
+	ret i1 1
 }
 
 

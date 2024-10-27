@@ -5,7 +5,7 @@ target triple = "arm64-apple-macosx12.0.0"
 
 %Unit = type i1
 %Bool = type i1
-%Byte = type i8
+%Word8 = type i8
 %Char8 = type i8
 %Char16 = type i16
 %Char32 = type i32
@@ -102,7 +102,7 @@ break_2:
 ; MODULE: queue
 
 ; -- print includes --
-
+; from included ctypes64
 %Str = type %Str8;
 %Char = type i8;
 %ConstChar = type %Char;
@@ -123,24 +123,20 @@ break_2:
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
-
-%SocklenT = type i32;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntptrT = type i64;
-%PtrdiffT = type i8*;
+%IntPtrT = type i64;
+%PtrDiffT = type i8*;
 %OffT = type i64;
 %USecondsT = type i32;
-%PidT = type i32;
-%UidT = type i32;
-%GidT = type i32;
-
+%PIDT = type i32;
+%UIDT = type i32;
+%GIDT = type i32;
+; from included stdio
 %File = type i8;
 %FposT = type i8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
-
-
 declare %Int @fclose(%File* %f)
 declare %Int @feof(%File* %f)
 declare %Int @ferror(%File* %f)
@@ -188,8 +184,7 @@ declare void @perror(%ConstCharStr* %str)
 ; -- end print imports --
 ; -- strings --
 
-
-define i32 @next(i32 %capacity, i32 %x) {
+define internal i32 @next(i32 %capacity, i32 %x) {
 	%1 = sub i32 %capacity, 1
 	%2 = icmp ult i32 %x, %1
 	br i1 %2 , label %then_0, label %endif_0
@@ -202,7 +197,7 @@ endif_0:
 }
 
 
-%Queue = type {
+%queue_Queue = type {
 	i32, 
 	i32, 
 	i32, 
@@ -210,61 +205,61 @@ endif_0:
 };
 
 
-define void @queue_init(%Queue* %q, i32 %capacity) {
-	store %Queue zeroinitializer, %Queue* %q
-	%1 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 0
+define void @queue_init(%queue_Queue* %q, i32 %capacity) {
+	store %queue_Queue zeroinitializer, %queue_Queue* %q
+	%1 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, i32 0, i32 0
 	store i32 %capacity, i32* %1
 	ret void
 }
 
-define i32 @queue_capacity(%Queue* %q) {
-	%1 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 0
+define i32 @queue_capacity(%queue_Queue* %q) {
+	%1 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, i32 0, i32 0
 	%2 = load i32, i32* %1
 	ret i32 %2
 }
 
-define i32 @queue_size(%Queue* %q) {
-	%1 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
+define i32 @queue_size(%queue_Queue* %q) {
+	%1 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, i32 0, i32 1
 	%2 = load i32, i32* %1
 	ret i32 %2
 }
 
-define i1 @queue_isEmpty(%Queue* %q) {
-	%1 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
+define i1 @queue_isEmpty(%queue_Queue* %q) {
+	%1 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, i32 0, i32 1
 	%2 = load i32, i32* %1
 	%3 = icmp eq i32 %2, 0
 	ret i1 %3
 }
 
-define i1 @queue_isFull(%Queue* %q) {
-	%1 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
+define i1 @queue_isFull(%queue_Queue* %q) {
+	%1 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, i32 0, i32 1
 	%2 = load i32, i32* %1
-	%3 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 0
+	%3 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, i32 0, i32 0
 	%4 = load i32, i32* %3
 	%5 = icmp eq i32 %2, %4
 	ret i1 %5
 }
 
-define i32 @queue_putPosition(%Queue* %q) {
-	%1 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 2
+define i32 @queue_getPutPosition(%queue_Queue* %q) {
+	%1 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, i32 0, i32 2
 	%2 = load i32, i32* %1
-	%3 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 2
-	%4 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 0
+	%3 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, i32 0, i32 2
+	%4 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, i32 0, i32 0
 	%5 = load i32, i32* %4
-	%6 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 2
+	%6 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, i32 0, i32 2
 	%7 = load i32, i32* %6
 	%8 = call i32 @next(i32 %5, i32 %7)
 	store i32 %8, i32* %3
-	%9 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
+	%9 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, i32 0, i32 1
 	%10 = load i32, i32* %9
-	%11 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 0
+	%11 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, i32 0, i32 0
 	%12 = load i32, i32* %11
 	%13 = sub i32 %12, 1
 	%14 = icmp ult i32 %10, %13
 	br i1 %14 , label %then_0, label %endif_0
 then_0:
-	%15 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
-	%16 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
+	%15 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, i32 0, i32 1
+	%16 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, i32 0, i32 1
 	%17 = load i32, i32* %16
 	%18 = add i32 %17, 1
 	store i32 %18, i32* %15
@@ -273,23 +268,23 @@ endif_0:
 	ret i32 %2
 }
 
-define i32 @queue_getPosition(%Queue* %q) {
-	%1 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 3
+define i32 @queue_getGetPosition(%queue_Queue* %q) {
+	%1 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, i32 0, i32 3
 	%2 = load i32, i32* %1
-	%3 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 3
-	%4 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 0
+	%3 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, i32 0, i32 3
+	%4 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, i32 0, i32 0
 	%5 = load i32, i32* %4
-	%6 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 3
+	%6 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, i32 0, i32 3
 	%7 = load i32, i32* %6
 	%8 = call i32 @next(i32 %5, i32 %7)
 	store i32 %8, i32* %3
-	%9 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
+	%9 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, i32 0, i32 1
 	%10 = load i32, i32* %9
 	%11 = icmp ugt i32 %10, 0
 	br i1 %11 , label %then_0, label %endif_0
 then_0:
-	%12 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
-	%13 = getelementptr inbounds %Queue, %Queue* %q, i32 0, i32 1
+	%12 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, i32 0, i32 1
+	%13 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, i32 0, i32 1
 	%14 = load i32, i32* %13
 	%15 = sub i32 %14, 1
 	store i32 %15, i32* %12

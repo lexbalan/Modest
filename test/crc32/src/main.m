@@ -11,7 +11,7 @@ import "misc/crc32"
 let datastring = "123456789"
 let expected_hash = 0xCBF43926
 
-var data = []Byte datastring
+var data = []Word8 datastring
 
 
 public func main() -> Int {

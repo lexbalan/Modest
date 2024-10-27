@@ -5,7 +5,7 @@ target triple = "arm64-apple-macosx12.0.0"
 
 %Unit = type i1
 %Bool = type i1
-%Byte = type i8
+%Word8 = type i8
 %Char8 = type i8
 %Char16 = type i16
 %Char32 = type i32
@@ -224,7 +224,7 @@ define internal i1 @test_generic_integer() {
 	store float 1.0000000000000000, float* %3
 	%4 = alloca double, align 8
 	store double 1.0000000000000000, double* %4
-	; and to Byte
+	; and to Word8
 	%5 = alloca i8, align 1
 	store i8 1, i8* %5
 	; explicit cast GenericInteger value

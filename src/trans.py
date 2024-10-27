@@ -370,13 +370,9 @@ def init():
 	root_symtab.type_add('Unit', foundation.typeUnit)
 	root_symtab.type_add('Bool', foundation.typeBool)
 
-
 	root_symtab.type_add('Char8', foundation.typeChar8)
 	root_symtab.type_add('Char16', foundation.typeChar16)
 	root_symtab.type_add('Char32', foundation.typeChar32)
-
-
-	root_symtab.type_add('Byte', foundation.typeWord8)
 
 	root_symtab.type_add('Word8', foundation.typeWord8)
 	root_symtab.type_add('Word16', foundation.typeWord16)
@@ -591,8 +587,13 @@ def do_type_array(t):
 		if value_is_bad(volume_expr):
 			return hlir_type.hlir_type_array(of, volume=None, ti=t['ti'])
 
-		if not value_is_immediate(volume_expr):
+		if not hlir_type.type_is_integer(volume_expr['type']):
+			volume_expr = None
+			error("required value with integer type", t['size']['ti'])
+
+		elif not value_is_immediate(volume_expr):
 			info("VLA", t['ti'])
+			volume_expr = None
 			#print(volume_expr['isa'])
 			#print(volume_expr['kind'])
 			if is_local_context():
@@ -2371,7 +2372,11 @@ def def_func(x, dostmt=True):
 	if hlir_type.type_is_bad(fn['type']):
 		return None
 
+	if not 'params' in fn['type']:
+		info("??", fn['type'])
 	params = fn['type']['params']
+
+
 	i = 0
 	while i < len(params):
 		param = params[i]

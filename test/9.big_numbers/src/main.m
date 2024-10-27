@@ -4,7 +4,7 @@ include "libc/ctypes64"
 include "libc/stdio"
 
 
-var big0: Nat128 = 0x0123456789ABCDEFFEDCBA9876543210
+var big0: Nat128 = 0x01234567_89ABCDEF_FEDCBA98_76543210
 
 
 func high_128(x: Word128) -> Word64 {

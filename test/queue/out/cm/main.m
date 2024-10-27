@@ -1,9 +1,13 @@
 
 include "libc/ctypes64"
+@c_include "math.h"
 include "libc/math"
+@c_include "stdio.h"
 include "libc/stdio"
 import "./byteQueue128"
-var bq0: ByteQueue128
+import "./byteRing16"
+var bq0: Word8Queue128
+var br0: Word8Ring16
 var ii: Int32
 func padd(n: Int) -> Unit {
 	var i: Int32 = 0
@@ -14,7 +18,7 @@ func padd(n: Int) -> Unit {
 		}
 
 		printf("bq.put(%d)\n", ii)
-		byteQueue128.put(&bq0, Byte ii)
+		byteQueue128.put(&bq0, Word8 ii)
 		i = i + 1
 		ii = ii + 1
 	}
@@ -27,13 +31,13 @@ func fetch(n: Int) -> Unit {
 			break
 		}
 
-		var x: Byte
+		var x: Word8
 		let res = byteQueue128.get(&bq0, &x)
 		printf("bq.get = %d\n", Int x)
 		i = i + 1
 	}
 }
-public public func main() -> Int {
+public func main() -> Int {
 	byteQueue128.init(&bq0)
 
 	padd(3)

@@ -6,7 +6,6 @@ from symtab import Symtab
 
 typeUnit = None
 typeBool = None
-#typeByte = None
 typeChar8 = None
 typeChar16 = None
 typeChar32 = None
@@ -89,11 +88,11 @@ def init():
 	typeUnit = hlir_type_unit()
 	typeBool = hlir_type_bool()
 
-	"""typeByte = hlir_type_integer(width=8, signed=False)
-	typeByte['kind'] = 'byte'
-	typeByte['id'] = {'str': 'Byte', 'c': 'uint8_t'}
-	typeByte['ops'] = BYTE_OPS
-	typeByte['llvm_alias'] = 'i8'"""
+	"""typeWord8 = hlir_type_integer(width=8, signed=False)
+	typeWord8['kind'] = 'byte'
+	typeWord8['id'] = {'str': 'Word8', 'c': 'uint8_t'}
+	typeWord8['ops'] = BYTE_OPS
+	typeWord8['llvm_alias'] = 'i8'"""
 
 	#
 	typeChar8 = hlir_type_char(width=8)

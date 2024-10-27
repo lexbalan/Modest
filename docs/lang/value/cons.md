@@ -64,11 +64,11 @@ r = Point3D {x=10}
 | Cons Value Type | Allowable argument type | Action | Comment |
 | ---- | ---------------------------------- | --- | --- |
 | **Unit** | *Any* | Annihilation of argument value | Can be constructed from any type. Used for warning suppression |
-| **Bool** | **Byte**, **Int**Y, **Nat**Y | returns ***true*** if argument != 0, else - ***false*** | |
-| **Byte** | **Bool**, **Int**Y, **Nat**Y | Byte representation of argument lower byte | Requires *unsafe* feature for warning suppression |
+| **Bool** | **Word8**, **Int**Y, **Nat**Y | returns ***true*** if argument != 0, else - ***false*** | |
+| **Word8** | **Bool**, **Int**Y, **Nat**Y | Word8 representation of argument lower byte | Requires *unsafe* feature for warning suppression |
 | **Char**X | **Int**Y, **Nat**Y | Creating character value with the same code as argument | Compiler error if Y != X |
-| **Int**X | **Bool**, **Byte**, **Nat**Y, **Float**Z | - | Compiler warning if Y > X |
-| **Nat**X | **Bool**, **Byte**, **Int**Y, **Float**Z | - | Compiler warning if Y > X |
+| **Int**X | **Bool**, **Word8**, **Nat**Y, **Float**Z | - | Compiler warning if Y > X |
+| **Nat**X | **Bool**, **Word8**, **Int**Y, **Float**Z | - | Compiler warning if Y > X |
 | **Float**X | **Int**Y, **Nat**Y, **Float**Y | - | - |
 | ***Record*** | | | - |
 | ***Array*** | | | - |
@@ -85,7 +85,7 @@ Value can be implicitly constructed from another value with *generic* type
 
 | **Generic type** | **Can be implicitly cast to** |
 | :--------------: | :---------------------: |
-| Generic Integer  | Byte, Char, Integer, Float |
+| Generic Integer  | Word8, Char, Integer, Float |
 | Generic Float	| Float |
 | Generic Char	 | Char |
 | Generic Array	| Array, Pointer to Array |

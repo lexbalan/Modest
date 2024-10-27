@@ -11,7 +11,7 @@
 
 | Operation | Code Example | Valid types | Result type | Comment |
 | :-------: | :----------: | :---------: | :---------: | :-----: |
-| [*Not*](#Not) | `not arg` | Bool, Byte, Integer | ***type***(*arg*) | |
+| [*Not*](#Not) | `not arg` | Bool, Word8, Integer | ***type***(*arg*) | |
 | [*Neg*](#Neg) | `-arg` | Integer, Float | ***type***(*arg*) | |
 | [*Ref*](#Ref) | `&arg` | *Any* | Pointer to ***type***(*arg*)| |
 | [*Deref*](#Deref) | `*arg` | Pointer | ***type***(*arg*)#to | |
@@ -25,7 +25,7 @@ Returns ***true*** when *argument* is ***false***, otherwise returns ***false***
 
 **Bitwise form** *(Requires Integer or Bool argument)*
 
-> Valid argument type: [*Bool*](../types.md#Bool-type), [*Byte*](../types.md#Byte-type), [*Integer*](../types.md#Integer-type)
+> Valid argument type: [*Bool*](../types.md#Bool-type), [*Word8*](../types.md#Word8-type), [*Integer*](../types.md#Integer-type)
 
 ```zig
 	not x

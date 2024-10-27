@@ -95,12 +95,15 @@ def doNumber(src):
 		j = src.getpos()
 		c = src.getc()
 
+		if c == '_':
+			continue
+
 		if c == '.':
 			isfloat = True
 			s.append(c)
 			continue
 
-		if not (c.isdigit() or (ishex and c in ['a', 'b', 'c', 'd', 'e', 'f', 'A', 'B', 'C', 'D', 'E', 'F'])):
+		if not (c.isdigit() or (ishex and c in ('a', 'b', 'c', 'd', 'e', 'f', 'A', 'B', 'C', 'D', 'E', 'F'))):
 			src.setpos(j)
 			break
 		s.append(c)

@@ -27,7 +27,27 @@ void queue_init(queue_Queue *q, uint32_t capacity)
 	q->capacity = capacity;
 }
 
-uint32_t queue_putPosition(queue_Queue *q)
+uint32_t queue_capacity(queue_Queue *q)
+{
+	return q->capacity;
+}
+
+uint32_t queue_size(queue_Queue *q)
+{
+	return q->size;
+}
+
+bool queue_isEmpty(queue_Queue *q)
+{
+	return q->size == 0;
+}
+
+bool queue_isFull(queue_Queue *q)
+{
+	return q->size == q->capacity;
+}
+
+uint32_t queue_getPutPosition(queue_Queue *q)
 {
 	const uint32_t pos = q->p;
 	q->p = next(q->capacity, q->p);
@@ -37,7 +57,7 @@ uint32_t queue_putPosition(queue_Queue *q)
 	return pos;
 }
 
-uint32_t queue_getPosition(queue_Queue *q)
+uint32_t queue_getGetPosition(queue_Queue *q)
 {
 	const uint32_t pos = q->g;
 	q->g = next(q->capacity, q->g);

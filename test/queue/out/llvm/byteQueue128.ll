@@ -5,7 +5,7 @@ target triple = "arm64-apple-macosx12.0.0"
 
 %Unit = type i1
 %Bool = type i1
-%Byte = type i8
+%Word8 = type i8
 %Char8 = type i8
 %Char16 = type i16
 %Char32 = type i32
@@ -104,110 +104,185 @@ break_2:
 ; -- print includes --
 ; -- end print includes --
 ; -- print imports --
-
-%Queue = type {
+; from included ctypes64
+%Str = type %Str8;
+%Char = type i8;
+%ConstChar = type %Char;
+%SignedChar = type i8;
+%UnsignedChar = type i8;
+%Short = type i16;
+%UnsignedShort = type i16;
+%Int = type i32;
+%UnsignedInt = type i32;
+%LongInt = type i64;
+%UnsignedLongInt = type i64;
+%Long = type i64;
+%UnsignedLong = type i64;
+%LongLong = type i64;
+%UnsignedLongLong = type i64;
+%LongLongInt = type i64;
+%UnsignedLongLongInt = type i64;
+%Float = type double;
+%Double = type double;
+%LongDouble = type double;
+%SizeT = type %UnsignedLongInt;
+%SSizeT = type %LongInt;
+%IntPtrT = type i64;
+%PtrDiffT = type i8*;
+%OffT = type i64;
+%USecondsT = type i32;
+%PIDT = type i32;
+%UIDT = type i32;
+%GIDT = type i32;
+; from included stdio
+%File = type i8;
+%FposT = type i8;
+%CharStr = type %Str;
+%ConstCharStr = type %CharStr;
+declare %Int @fclose(%File* %f)
+declare %Int @feof(%File* %f)
+declare %Int @ferror(%File* %f)
+declare %Int @fflush(%File* %f)
+declare %Int @fgetpos(%File* %f, %FposT* %pos)
+declare %File* @fopen(%ConstCharStr* %fname, %ConstCharStr* %mode)
+declare %SizeT @fread(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
+declare %SizeT @fwrite(i8* %buf, %SizeT %size, %SizeT %count, %File* %f)
+declare %File* @freopen(%ConstCharStr* %fname, %ConstCharStr* %mode, %File* %f)
+declare %Int @fseek(%File* %f, %LongInt %offset, %Int %whence)
+declare %Int @fsetpos(%File* %f, %FposT* %pos)
+declare %LongInt @ftell(%File* %f)
+declare %Int @remove(%ConstCharStr* %fname)
+declare %Int @rename(%ConstCharStr* %old_filename, %ConstCharStr* %new_filename)
+declare void @rewind(%File* %f)
+declare void @setbuf(%File* %f, %CharStr* %buf)
+declare %Int @setvbuf(%File* %f, %CharStr* %buf, %Int %mode, %SizeT %size)
+declare %File* @tmpfile()
+declare %CharStr* @tmpnam(%CharStr* %str)
+declare %Int @printf(%ConstCharStr* %s, ...)
+declare %Int @scanf(%ConstCharStr* %s, ...)
+declare %Int @fprintf(%File* %f, %Str* %format, ...)
+declare %Int @fscanf(%File* %f, %ConstCharStr* %format, ...)
+declare %Int @sscanf(%ConstCharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @sprintf(%CharStr* %buf, %ConstCharStr* %format, ...)
+declare %Int @vfprintf(%File* %f, %ConstCharStr* %format, i8* %args)
+declare %Int @vprintf(%ConstCharStr* %format, i8* %args)
+declare %Int @vsprintf(%CharStr* %str, %ConstCharStr* %format, i8* %args)
+declare %Int @vsnprintf(%CharStr* %str, %SizeT %n, %ConstCharStr* %format, i8* %args)
+declare %Int @__vsnprintf_chk(%CharStr* %dest, %SizeT %len, %Int %flags, %SizeT %dstlen, %ConstCharStr* %format, i8* %arg)
+declare %Int @fgetc(%File* %f)
+declare %Int @fputc(%Int %char, %File* %f)
+declare %CharStr* @fgets(%CharStr* %str, %Int %n, %File* %f)
+declare %Int @fputs(%ConstCharStr* %str, %File* %f)
+declare %Int @getc(%File* %f)
+declare %Int @getchar()
+declare %CharStr* @gets(%CharStr* %str)
+declare %Int @putc(%Int %char, %File* %f)
+declare %Int @putchar(%Int %char)
+declare %Int @puts(%ConstCharStr* %str)
+declare %Int @ungetc(%Int %char, %File* %f)
+declare void @perror(%ConstCharStr* %str)
+%queue_Queue = type {
 	i32, 
 	i32, 
 	i32, 
 	i32
 };
 
-
-declare void @queue_init(%Queue* %q, i32 %capacity)
-declare i32 @queue_capacity(%Queue* %q)
-declare i32 @queue_size(%Queue* %q)
-declare i1 @queue_isEmpty(%Queue* %q)
-declare i1 @queue_isFull(%Queue* %q)
-declare i32 @queue_putPosition(%Queue* %q)
-declare i32 @queue_getPosition(%Queue* %q)
+declare void @queue_init(%queue_Queue* %q, i32 %capacity)
+declare i32 @queue_capacity(%queue_Queue* %q)
+declare i32 @queue_size(%queue_Queue* %q)
+declare i1 @queue_isEmpty(%queue_Queue* %q)
+declare i1 @queue_isFull(%queue_Queue* %q)
+declare i32 @queue_getPutPosition(%queue_Queue* %q)
+declare i32 @queue_getGetPosition(%queue_Queue* %q)
 ; -- end print imports --
 ; -- strings --
 
 
-%ByteQueue128 = type {
-	%Queue, 
-	[128 x %Byte]
+%byteQueue128_Word8Queue128 = type {
+	%queue_Queue, 
+	[16 x i8]
 };
 
 
-define void @byteQueue128_init(%ByteQueue128* %q) {
-	%1 = getelementptr inbounds %ByteQueue128, %ByteQueue128* %q, i32 0, i32 0
-	%2 = bitcast %Queue* %1 to %Queue*
-	call void @queue_init(%Queue* %2, i32 128)
+define void @byteQueue128_init(%byteQueue128_Word8Queue128* %q) {
+	%1 = getelementptr inbounds %byteQueue128_Word8Queue128, %byteQueue128_Word8Queue128* %q, i32 0, i32 0
+	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
+	call void @queue_init(%queue_Queue* %2, i32 16)
 	; -- STMT ASSIGN ARRAY --
-	%3 = getelementptr inbounds %ByteQueue128, %ByteQueue128* %q, i32 0, i32 1
+	%3 = getelementptr inbounds %byteQueue128_Word8Queue128, %byteQueue128_Word8Queue128* %q, i32 0, i32 1
 	; -- start vol eval --
-	%4 = zext i8 128 to i32
+	%4 = zext i5 16 to i32
 	; -- end vol eval --
 	; -- ZERO
 	%5 = mul i32 %4, 1
-	%6 = bitcast [128 x %Byte]* %3 to i8*
+	%6 = bitcast [16 x i8]* %3 to i8*
 	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %6, i8 0, i32 %5, i1 0)
 	ret void
 }
 
-define i32 @byteQueue128_capacity(%ByteQueue128* %q) {
-	%1 = getelementptr inbounds %ByteQueue128, %ByteQueue128* %q, i32 0, i32 0
-	%2 = bitcast %Queue* %1 to %Queue*
-	%3 = call i32 @queue_capacity(%Queue* %2)
+define i32 @byteQueue128_capacity(%byteQueue128_Word8Queue128* %q) {
+	%1 = getelementptr inbounds %byteQueue128_Word8Queue128, %byteQueue128_Word8Queue128* %q, i32 0, i32 0
+	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
+	%3 = call i32 @queue_capacity(%queue_Queue* %2)
 	ret i32 %3
 }
 
-define i32 @byteQueue128_size(%ByteQueue128* %q) {
-	%1 = getelementptr inbounds %ByteQueue128, %ByteQueue128* %q, i32 0, i32 0
-	%2 = bitcast %Queue* %1 to %Queue*
-	%3 = call i32 @queue_size(%Queue* %2)
+define i32 @byteQueue128_size(%byteQueue128_Word8Queue128* %q) {
+	%1 = getelementptr inbounds %byteQueue128_Word8Queue128, %byteQueue128_Word8Queue128* %q, i32 0, i32 0
+	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
+	%3 = call i32 @queue_size(%queue_Queue* %2)
 	ret i32 %3
 }
 
-define i1 @byteQueue128_isFull(%ByteQueue128* %q) {
-	%1 = getelementptr inbounds %ByteQueue128, %ByteQueue128* %q, i32 0, i32 0
-	%2 = bitcast %Queue* %1 to %Queue*
-	%3 = call i1 @queue_isFull(%Queue* %2)
+define i1 @byteQueue128_isFull(%byteQueue128_Word8Queue128* %q) {
+	%1 = getelementptr inbounds %byteQueue128_Word8Queue128, %byteQueue128_Word8Queue128* %q, i32 0, i32 0
+	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
+	%3 = call i1 @queue_isFull(%queue_Queue* %2)
 	ret i1 %3
 }
 
-define i1 @byteQueue128_isEmpty(%ByteQueue128* %q) {
-	%1 = getelementptr inbounds %ByteQueue128, %ByteQueue128* %q, i32 0, i32 0
-	%2 = bitcast %Queue* %1 to %Queue*
-	%3 = call i1 @queue_isEmpty(%Queue* %2)
+define i1 @byteQueue128_isEmpty(%byteQueue128_Word8Queue128* %q) {
+	%1 = getelementptr inbounds %byteQueue128_Word8Queue128, %byteQueue128_Word8Queue128* %q, i32 0, i32 0
+	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
+	%3 = call i1 @queue_isEmpty(%queue_Queue* %2)
 	ret i1 %3
 }
 
-define i1 @byteQueue128_put(%ByteQueue128* %q, %Byte %b) {
-	%1 = getelementptr inbounds %ByteQueue128, %ByteQueue128* %q, i32 0, i32 0
-	%2 = bitcast %Queue* %1 to %Queue*
-	%3 = call i1 @queue_isFull(%Queue* %2)
+define i1 @byteQueue128_put(%byteQueue128_Word8Queue128* %q, i8 %b) {
+	%1 = getelementptr inbounds %byteQueue128_Word8Queue128, %byteQueue128_Word8Queue128* %q, i32 0, i32 0
+	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
+	%3 = call i1 @queue_isFull(%queue_Queue* %2)
 	br i1 %3 , label %then_0, label %endif_0
 then_0:
 	ret i1 0
 	br label %endif_0
 endif_0:
-	%5 = getelementptr inbounds %ByteQueue128, %ByteQueue128* %q, i32 0, i32 0
-	%6 = bitcast %Queue* %5 to %Queue*
-	%7 = call i32 @queue_putPosition(%Queue* %6)
-	%8 = getelementptr inbounds %ByteQueue128, %ByteQueue128* %q, i32 0, i32 1
-	%9 = getelementptr inbounds [128 x %Byte], [128 x %Byte]* %8, i32 0, i32 %7
-	store %Byte %b, %Byte* %9
+	%5 = getelementptr inbounds %byteQueue128_Word8Queue128, %byteQueue128_Word8Queue128* %q, i32 0, i32 0
+	%6 = bitcast %queue_Queue* %5 to %queue_Queue*
+	%7 = call i32 @queue_getPutPosition(%queue_Queue* %6)
+	%8 = getelementptr inbounds %byteQueue128_Word8Queue128, %byteQueue128_Word8Queue128* %q, i32 0, i32 1
+	%9 = getelementptr inbounds [16 x i8], [16 x i8]* %8, i32 0, i32 %7
+	store i8 %b, i8* %9
 	ret i1 1
 }
 
-define i1 @byteQueue128_get(%ByteQueue128* %q, %Byte* %b) {
-	%1 = getelementptr inbounds %ByteQueue128, %ByteQueue128* %q, i32 0, i32 0
-	%2 = bitcast %Queue* %1 to %Queue*
-	%3 = call i1 @queue_isEmpty(%Queue* %2)
+define i1 @byteQueue128_get(%byteQueue128_Word8Queue128* %q, i8* %b) {
+	%1 = getelementptr inbounds %byteQueue128_Word8Queue128, %byteQueue128_Word8Queue128* %q, i32 0, i32 0
+	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
+	%3 = call i1 @queue_isEmpty(%queue_Queue* %2)
 	br i1 %3 , label %then_0, label %endif_0
 then_0:
 	ret i1 0
 	br label %endif_0
 endif_0:
-	%5 = getelementptr inbounds %ByteQueue128, %ByteQueue128* %q, i32 0, i32 0
-	%6 = bitcast %Queue* %5 to %Queue*
-	%7 = call i32 @queue_getPosition(%Queue* %6)
-	%8 = getelementptr inbounds %ByteQueue128, %ByteQueue128* %q, i32 0, i32 1
-	%9 = getelementptr inbounds [128 x %Byte], [128 x %Byte]* %8, i32 0, i32 %7
-	%10 = load %Byte, %Byte* %9
-	store %Byte %10, %Byte* %b
+	%5 = getelementptr inbounds %byteQueue128_Word8Queue128, %byteQueue128_Word8Queue128* %q, i32 0, i32 0
+	%6 = bitcast %queue_Queue* %5 to %queue_Queue*
+	%7 = call i32 @queue_getGetPosition(%queue_Queue* %6)
+	%8 = getelementptr inbounds %byteQueue128_Word8Queue128, %byteQueue128_Word8Queue128* %q, i32 0, i32 1
+	%9 = getelementptr inbounds [16 x i8], [16 x i8]* %8, i32 0, i32 %7
+	%10 = load i8, i8* %9
+	store i8 %10, i8* %b
 	ret i1 1
 }
 

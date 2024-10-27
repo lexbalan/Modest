@@ -106,7 +106,7 @@ $endif
 
 ```swift
 @attribute("value:volatile")
-var byteFromUart: Byte
+var byteFromUart: Word8
 ```
 
 ```swift

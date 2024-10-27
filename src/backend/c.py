@@ -747,7 +747,7 @@ def print_value_cons_array(x, ctx):
 			return
 
 	# for:
-	#    var x: [10]Byte = "0123456789"
+	#    var x: [10]Word8 = "0123456789"
 	if hlir_type.type_is_string(value['type']):
 		print_value(value, ctx=ctx)
 		return
