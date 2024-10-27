@@ -1180,8 +1180,14 @@ def select_cast_operator(a, b):
 		if hlir_type.type_is_integer(b) or hlir_type.type_is_char(b) or hlir_type.type_is_bool(b) or hlir_type.type_is_word(b):
 			signed = hlir_type.type_is_signed(b)
 
-			aw = align_bits_up(a['width'])
-			bw = align_bits_up(b['width'])
+			# Это плохо тк не работает в некоторых особых ситуациях
+			# например для  i17 to i32 вернет bitcast что неверно!
+			# но пока не убираю тк непонятно чем аукнется еще
+			#aw = align_bits_up(a['width'])
+			#bw = align_bits_up(b['width'])
+
+			aw = a['width']
+			bw = b['width']
 
 			if aw < bw:
 				return 'sext' if signed else 'zext'
@@ -1199,8 +1205,10 @@ def select_cast_operator(a, b):
 			return 'sitofp' if hlir_type.type_is_signed(a) else 'uitofp'
 
 	elif hlir_type.type_is_pointer(a):
-		if hlir_type.type_is_pointer(b): return 'bitcast'
-		elif hlir_type.type_is_integer(b): return 'ptrtoint'
+		if hlir_type.type_is_pointer(b):
+			return 'bitcast'
+		elif hlir_type.type_is_integer(b):
+			return 'ptrtoint'
 
 	elif hlir_type.type_is_float(a):
 		# Float -> Integer
@@ -1209,12 +1217,15 @@ def select_cast_operator(a, b):
 
 		# Float -> Float
 		elif hlir_type.type_is_float(b):
-			if a['width'] < b['width']: return 'fpext'
-			elif a['width'] > b['width']: return 'fptrunc'
-			else: return 'bitcast'
-
+			if a['width'] < b['width']:
+				return 'fpext'
+			elif a['width'] > b['width']:
+				return 'fptrunc'
+			else:
+				return 'bitcast'
 
 	return 'cast <%s -> %s>' % (a['kind'], b['kind'])
+
 
 
 def is_adrptr(x):
