@@ -358,11 +358,6 @@ def init():
 
 	foundation_module = foundation.init()
 
-	global valueTrue, valueFalse, valueNil
-	valueNil = value_integer_create(0, typ=foundation.typeNil)
-	valueTrue = value_bool_create(1)
-	valueFalse = value_bool_create(0)
-
 	global root_symtab
 	# init main context
 	root_symtab = Symtab()
@@ -412,9 +407,16 @@ def init():
 	root_symtab.type_add('VA_List', foundation.typeVA_List)
 
 
+
+	global valueTrue, valueFalse, valueNil
+	valueNil = value_integer_create(0, typ=foundation.typeNil)
+	valueTrue = value_bool_create(1)
+	valueFalse = value_bool_create(0)
+
 	root_symtab.value_add('nil', valueNil)
 	root_symtab.value_add('true', valueTrue)
 	root_symtab.value_add('false', valueFalse)
+
 
 
 	target_name = str(settings.get('target_name'))
