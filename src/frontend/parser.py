@@ -1662,7 +1662,7 @@ class Parser:
 				spaceline_cnt = spaceline_cnt + 1
 				continue
 			elif self.match('func'): x = self.parse_def_func()
-			elif self.match('let'): x = self.parse_def_const()
+			#elif self.match('let'): x = self.parse_def_const()
 			elif self.match('const'): x = self.parse_def_const()
 			elif self.match('var'): x = self.parse_def_var()
 			elif self.match('type'): x = self.parse_def_type()

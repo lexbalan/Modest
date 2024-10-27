@@ -10,9 +10,9 @@ import "lightfood/console"
 
 
 // constants with type String(Generic)
-let str8_example = "String"
-let str16_example = str8_example + "-Ω"
-let str32_example = str16_example + " 🐀🎉🦄"
+const str8_example = "String"
+const str16_example = str8_example + "-Ω"
+const str32_example = str16_example + " 🐀🎉🦄"
 
 // variables with type Array of Chars
 var string8: []Char8 = str8_example

@@ -7,9 +7,9 @@ $pragma c_include "./crc32.h"
 import "misc/crc32"
 
 
+const datastring = "123456789"
+const expected_hash = 0xCBF43926
 
-let datastring = "123456789"
-let expected_hash = 0xCBF43926
 
 var data = []Word8 datastring
 

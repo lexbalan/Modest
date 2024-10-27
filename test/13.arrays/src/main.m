@@ -9,7 +9,7 @@ include "libc/math"
 //$pragma c_include "./minmax.h"
 
 
-let constantArray = [1, 2, 3, 4, 5] + [6, 7, 8, 9, 10]
+const constantArray = [1, 2, 3, 4, 5] + [6, 7, 8, 9, 10]
 
 var globalArray: [10]Int32 = constantArray
 
@@ -43,8 +43,9 @@ func f0(x: [20]Char8) -> [30]Char8 {
 }
 
 
-let startSequence = [0xAA, 0x55, 0x02]
-let stopSequence = [0x16]
+const startSequence = [0xAA, 0x55, 0x02]
+const stopSequence = [0x16]
+
 
 func test() {
 	// тестируем работу с локальным generic массивом

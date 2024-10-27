@@ -3,14 +3,14 @@
 include "libc/ctypes64"
 include "libc/stdio"
 
-let hello = "Hello"
-let world = "World"
-let party_corn = "🎉"
+const hello = "Hello"
+const world = "World"
+const party_corn = "🎉"
 
-let greeting = hello + " " + world //+ " " + party_corn
+const greeting = hello + " " + world //+ " " + party_corn
 
 
-let test = "test"
+const test = "test"
 
 
 public func main() -> Int {

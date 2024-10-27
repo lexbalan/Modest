@@ -23,8 +23,8 @@ func xor_encrypter(buf: *[]Word8, buflen: Nat32, key: *[]Word8, keylen: Nat32) -
 //xor_encrypt = xor_encrypter
 //xor_decrypt = xor_encrypter
 
-let msg_length = 12
-let key_length = 3
+const msg_length = 12
+const key_length = 3
 
 var test_msg: [msg_length + 1]Char8 = "Hello World!"
 var test_key: [key_length + 1]Char8 = "abc"

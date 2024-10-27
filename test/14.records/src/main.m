@@ -15,8 +15,8 @@ type Point3D record {
 }
 
 
-let xx = {x=1, y=2}
-let yy = Point2D {x=1, y=2}
+const xx = {x=1, y=2}
+const yy = Point2D {x=1, y=2}
 
 
 public func main() -> Int {

@@ -3,10 +3,10 @@
 include "libc/ctypes64"
 include "libc/stdio"
 
-let hello = "Hello"
-let world = "World!"
+const hello = "Hello"
+const world = "World!"
 
-let hello_world = hello + " " + world
+const hello_world = hello + " " + world
 
 
 public func main() -> Int {

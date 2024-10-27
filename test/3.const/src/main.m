@@ -3,13 +3,13 @@
 include "libc/ctypes64"
 include "libc/stdio"
 
-let genericIntConst = 42
-let int32Const = Int32 genericIntConst
+const genericIntConst = 42
+const int32Const = Int32 genericIntConst
 
-let genericStringConst = "Hello!"
-let string8Const = *Str8 genericStringConst
-let string16Const = *Str16 genericStringConst
-let string32Const = *Str32 genericStringConst
+const genericStringConst = "Hello!"
+const string8Const = *Str8 genericStringConst
+const string16Const = *Str16 genericStringConst
+const string32Const = *Str32 genericStringConst
 
 
 type Point record {
@@ -18,13 +18,13 @@ type Point record {
 }
 
 
-let ps = [
+const ps = [
 	{x = 0, y = 0}
 	{x = 1, y = 1}
 	{x = 2, y = 2}
 ]
 
-let points = [3]Point ps
+const points = [3]Point ps
 
 
 // есть проблема - в C глобальные переменные с модификатором const

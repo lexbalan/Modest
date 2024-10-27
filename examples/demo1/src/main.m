@@ -3,8 +3,8 @@
 include "libc/stdio"
 
 
-let minNumber = 0
-let maxNumber = 10
+const minNumber = 0
+const maxNumber = 10
 
 
 public func main() -> Int32 {

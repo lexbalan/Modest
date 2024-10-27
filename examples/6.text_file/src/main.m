@@ -5,7 +5,7 @@
 include "libc/libc"
 
 
-let filename = *Str8 "file.txt"
+const filename = *Str8 "file.txt"
 
 
 func write_example() -> Unit {

@@ -4,9 +4,9 @@ include "libc/ctypes64"
 include "libc/stdio"
 
 
-let utf8Char = "s"
-let utf16Char = "Я"
-let utf32Char = "🐀"
+const utf8Char = "s"
+const utf16Char = "Я"
+const utf32Char = "🐀"
 
 
 public func main() -> Int {

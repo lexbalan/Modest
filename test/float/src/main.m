@@ -6,7 +6,7 @@ include "libc/stdlib"
 include "libc/math"
 
 
-let mathPi = 3.141592653589793238462643383279502884
+const mathPi = 3.141592653589793238462643383279502884
 
 
 func squareOfCircle(radius: Float64) -> Float64 {

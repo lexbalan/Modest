@@ -7,7 +7,7 @@ include "libc/stdio"
 
 // FIXIT: not worked LLVM result (!)
 
-let filename =  *Str8 "file.bin"
+const filename =  *Str8 "file.bin"
 
 
 // chunk of data for read/write operations in file
