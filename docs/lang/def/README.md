@@ -3,7 +3,7 @@
 *Top level definition* create a global entity (*type alias*, *constant*, *variable* or *function*). You can learn more about top-level definitions by clicking on the link below.
 
   * [Type definition](./type.md)
-  * [Constant definition](./let.md)
+  * [Constant definition](./const.md)
   * [Variable definition](./var.md)
   * [Function definition](./func.md)
 
@@ -22,7 +22,7 @@ type MyPoint3D record {
 }
 ```
 
-#### [Constant Definition](./let.md)
+#### [Constant Definition](./const.md)
 ```golang
 let one = 1
 let two = one + 1

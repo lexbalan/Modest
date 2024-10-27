@@ -31,6 +31,8 @@
   * [Sizeof](./value/sizeof.md)
 
 - [Statements](./stmt/README.md)
+  * [Var](./stmt/var.md)
+  * [Let](./stmt/let.md)
   * [If](./stmt/if.md)
   * [While](./stmt/while.md)
   * [Return](./stmt/return.md)
