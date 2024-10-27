@@ -603,9 +603,9 @@ def type_is_vla(t):
 
 	from value.value import value_is_immediate
 
-	if not value_is_immediate(t['volume']):
-		info("?????", t)
-		print(t['volume'])
+#	if not value_is_immediate(t['volume']):
+#		info("?????", t)
+#		print(t['volume'])
 
 	return not value_is_immediate(t['volume'])
 
