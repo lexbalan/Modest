@@ -108,37 +108,37 @@ break_2:
 ; -- print includes --
 ; from included ctypes64
 %Str = type %Str8;
-%Char = type i8;
+%Char = type %Char8;
 %ConstChar = type %Char;
-%SignedChar = type i8;
-%UnsignedChar = type i8;
-%Short = type i16;
-%UnsignedShort = type i16;
-%Int = type i32;
-%UnsignedInt = type i32;
-%LongInt = type i64;
-%UnsignedLongInt = type i64;
-%Long = type i64;
-%UnsignedLong = type i64;
-%LongLong = type i64;
-%UnsignedLongLong = type i64;
-%LongLongInt = type i64;
-%UnsignedLongLongInt = type i64;
+%SignedChar = type %Int8;
+%UnsignedChar = type %Int8;
+%Short = type %Int16;
+%UnsignedShort = type %Int16;
+%Int = type %Int32;
+%UnsignedInt = type %Int32;
+%LongInt = type %Int64;
+%UnsignedLongInt = type %Int64;
+%Long = type %Int64;
+%UnsignedLong = type %Int64;
+%LongLong = type %Int64;
+%UnsignedLongLong = type %Int64;
+%LongLongInt = type %Int64;
+%UnsignedLongLongInt = type %Int64;
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type i64;
+%IntPtrT = type %Int64;
 %PtrDiffT = type i8*;
-%OffT = type i64;
-%USecondsT = type i32;
-%PIDT = type i32;
-%UIDT = type i32;
-%GIDT = type i32;
+%OffT = type %Int64;
+%USecondsT = type %Int32;
+%PIDT = type %Int32;
+%UIDT = type %Int32;
+%GIDT = type %Int32;
 ; from included stdio
-%File = type i8;
-%FposT = type i8;
+%File = type %Int8;
+%FposT = type %Int8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -193,59 +193,59 @@ declare void @perror(%ConstCharStr* %str)
 @str4 = private constant [24 x i8] [i8 115, i8 117, i8 109, i8 40, i8 37, i8 108, i8 108, i8 100, i8 44, i8 32, i8 37, i8 108, i8 108, i8 100, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
 @str5 = private constant [24 x i8] [i8 115, i8 117, i8 98, i8 40, i8 37, i8 108, i8 108, i8 100, i8 44, i8 32, i8 37, i8 108, i8 108, i8 100, i8 41, i8 32, i8 61, i8 32, i8 37, i8 108, i8 108, i8 100, i8 10, i8 0]
 
-define internal i64 @sum64(i64 %a, i64 %b) {
-	%1 = alloca i64, align 8
-	%2 = call i64 asm sideeffect "add $0, $1, $2", "=r,r,r,~{cc}" (i64 %a, i64 %b)
-	store i64 %2, i64* %1
-	%3 = load i64, i64* %1
-	ret i64 %3
+define internal %Int64 @sum64(%Int64 %a, %Int64 %b) {
+	%1 = alloca %Int64, align 8
+	%2 = call %Int64 asm sideeffect "add $0, $1, $2", "=r,r,r,~{cc}" (%Int64 %a, %Int64 %b)
+	store %Int64 %2, %Int64* %1
+	%3 = load %Int64, %Int64* %1
+	ret %Int64 %3
 }
 
-define internal i64 @sub64(i64 %a, i64 %b) {
-	%1 = alloca i64, align 8
-	%2 = call i64 asm sideeffect "sub $0, $1, $2", "=r,r,r,~{cc}" (i64 %a, i64 %b)
-	store i64 %2, i64* %1
-	%3 = load i64, i64* %1
-	ret i64 %3
+define internal %Int64 @sub64(%Int64 %a, %Int64 %b) {
+	%1 = alloca %Int64, align 8
+	%2 = call %Int64 asm sideeffect "sub $0, $1, $2", "=r,r,r,~{cc}" (%Int64 %a, %Int64 %b)
+	store %Int64 %2, %Int64* %1
+	%3 = load %Int64, %Int64* %1
+	ret %Int64 %3
 }
 
-define internal void @sumsub64(i64 %a, i64 %b) {
-	%1 = alloca i64, align 8
-	%2 = alloca i64, align 8
-	%3 = call {i64, i64} asm sideeffect "add $0, $2, $3\0Asub $1, $2, $3\0A", "=&r,=&r,r,r,~{cc}" (i64 %a, i64 %b)
-	%4 = extractvalue {i64, i64} %3, 0
-	store i64 %4, i64* %1
-	%5 = extractvalue {i64, i64} %3, 1
-	store i64 %5, i64* %2
-	%6 = load i64, i64* %1
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str1 to [0 x i8]*), i64 %6)
-	%8 = load i64, i64* %2
-	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str2 to [0 x i8]*), i64 %8)
+define internal void @sumsub64(%Int64 %a, %Int64 %b) {
+	%1 = alloca %Int64, align 8
+	%2 = alloca %Int64, align 8
+	%3 = call {%Int64,%Int64} asm sideeffect "add $0, $2, $3\0Asub $1, $2, $3\0A", "=&r,=&r,r,r,~{cc}" (%Int64 %a, %Int64 %b)
+	%4 = extractvalue {%Int64,%Int64} %3, 0
+	store %Int64 %4, %Int64* %1
+	%5 = extractvalue {%Int64,%Int64} %3, 1
+	store %Int64 %5, %Int64* %2
+	%6 = load %Int64, %Int64* %1
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str1 to [0 x i8]*), %Int64 %6)
+	%8 = load %Int64, %Int64* %2
+	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str2 to [0 x i8]*), %Int64 %8)
 	ret void
 }
 
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str3 to [0 x i8]*))
-	%2 = alloca i64, align 8
-	store i64 10, i64* %2
-	%3 = alloca i64, align 8
-	store i64 20, i64* %3
-	%4 = load i64, i64* %2
-	%5 = load i64, i64* %3
-	%6 = call i64 @sum64(i64 %4, i64 %5)
-	%7 = load i64, i64* %2
-	%8 = load i64, i64* %3
-	%9 = call i64 @sub64(i64 %7, i64 %8)
-	%10 = load i64, i64* %2
-	%11 = load i64, i64* %3
-	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str4 to [0 x i8]*), i64 %10, i64 %11, i64 %6)
-	%13 = load i64, i64* %2
-	%14 = load i64, i64* %3
-	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str5 to [0 x i8]*), i64 %13, i64 %14, i64 %9)
-	%16 = load i64, i64* %2
-	%17 = load i64, i64* %3
-	call void @sumsub64(i64 %16, i64 %17)
+	%2 = alloca %Int64, align 8
+	store %Int64 10, %Int64* %2
+	%3 = alloca %Int64, align 8
+	store %Int64 20, %Int64* %3
+	%4 = load %Int64, %Int64* %2
+	%5 = load %Int64, %Int64* %3
+	%6 = call %Int64 @sum64(%Int64 %4, %Int64 %5)
+	%7 = load %Int64, %Int64* %2
+	%8 = load %Int64, %Int64* %3
+	%9 = call %Int64 @sub64(%Int64 %7, %Int64 %8)
+	%10 = load %Int64, %Int64* %2
+	%11 = load %Int64, %Int64* %3
+	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str4 to [0 x i8]*), %Int64 %10, %Int64 %11, %Int64 %6)
+	%13 = load %Int64, %Int64* %2
+	%14 = load %Int64, %Int64* %3
+	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str5 to [0 x i8]*), %Int64 %13, %Int64 %14, %Int64 %9)
+	%16 = load %Int64, %Int64* %2
+	%17 = load %Int64, %Int64* %3
+	call void @sumsub64(%Int64 %16, %Int64 %17)
 	ret %Int 0
 }
 

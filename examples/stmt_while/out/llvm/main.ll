@@ -108,37 +108,37 @@ break_2:
 ; -- print includes --
 ; from included ctypes64
 %Str = type %Str8;
-%Char = type i8;
+%Char = type %Char8;
 %ConstChar = type %Char;
-%SignedChar = type i8;
-%UnsignedChar = type i8;
-%Short = type i16;
-%UnsignedShort = type i16;
-%Int = type i32;
-%UnsignedInt = type i32;
-%LongInt = type i64;
-%UnsignedLongInt = type i64;
-%Long = type i64;
-%UnsignedLong = type i64;
-%LongLong = type i64;
-%UnsignedLongLong = type i64;
-%LongLongInt = type i64;
-%UnsignedLongLongInt = type i64;
+%SignedChar = type %Int8;
+%UnsignedChar = type %Int8;
+%Short = type %Int16;
+%UnsignedShort = type %Int16;
+%Int = type %Int32;
+%UnsignedInt = type %Int32;
+%LongInt = type %Int64;
+%UnsignedLongInt = type %Int64;
+%Long = type %Int64;
+%UnsignedLong = type %Int64;
+%LongLong = type %Int64;
+%UnsignedLongLong = type %Int64;
+%LongLongInt = type %Int64;
+%UnsignedLongLongInt = type %Int64;
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type i64;
+%IntPtrT = type %Int64;
 %PtrDiffT = type i8*;
-%OffT = type i64;
-%USecondsT = type i32;
-%PIDT = type i32;
-%UIDT = type i32;
-%GIDT = type i32;
+%OffT = type %Int64;
+%USecondsT = type %Int32;
+%PIDT = type %Int32;
+%UIDT = type %Int32;
+%GIDT = type %Int32;
 ; from included stdio
-%File = type i8;
-%FposT = type i8;
+%File = type %Int8;
+%FposT = type %Int8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -192,19 +192,19 @@ declare void @perror(%ConstCharStr* %str)
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str1 to [0 x i8]*))
-	%2 = alloca i32, align 4
-	store i32 0, i32* %2
+	%2 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %2
 	br label %again_1
 again_1:
-	%3 = load i32, i32* %2
-	%4 = icmp slt i32 %3, 10
+	%3 = load %Int32, %Int32* %2
+	%4 = icmp slt %Int32 %3, 10
 	br i1 %4 , label %body_1, label %break_1
 body_1:
-	%5 = load i32, i32* %2
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), i32 %5)
-	%7 = load i32, i32* %2
-	%8 = add i32 %7, 1
-	store i32 %8, i32* %2
+	%5 = load %Int32, %Int32* %2
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), %Int32 %5)
+	%7 = load %Int32, %Int32* %2
+	%8 = add %Int32 %7, 1
+	store %Int32 %8, %Int32* %2
 	br label %again_1
 break_1:
 	ret %Int 0

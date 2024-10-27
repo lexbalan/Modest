@@ -108,37 +108,37 @@ break_2:
 ; -- print includes --
 ; from included ctypes64
 %Str = type %Str8;
-%Char = type i8;
+%Char = type %Char8;
 %ConstChar = type %Char;
-%SignedChar = type i8;
-%UnsignedChar = type i8;
-%Short = type i16;
-%UnsignedShort = type i16;
-%Int = type i32;
-%UnsignedInt = type i32;
-%LongInt = type i64;
-%UnsignedLongInt = type i64;
-%Long = type i64;
-%UnsignedLong = type i64;
-%LongLong = type i64;
-%UnsignedLongLong = type i64;
-%LongLongInt = type i64;
-%UnsignedLongLongInt = type i64;
+%SignedChar = type %Int8;
+%UnsignedChar = type %Int8;
+%Short = type %Int16;
+%UnsignedShort = type %Int16;
+%Int = type %Int32;
+%UnsignedInt = type %Int32;
+%LongInt = type %Int64;
+%UnsignedLongInt = type %Int64;
+%Long = type %Int64;
+%UnsignedLong = type %Int64;
+%LongLong = type %Int64;
+%UnsignedLongLong = type %Int64;
+%LongLongInt = type %Int64;
+%UnsignedLongLongInt = type %Int64;
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type i64;
+%IntPtrT = type %Int64;
 %PtrDiffT = type i8*;
-%OffT = type i64;
-%USecondsT = type i32;
-%PIDT = type i32;
-%UIDT = type i32;
-%GIDT = type i32;
+%OffT = type %Int64;
+%USecondsT = type %Int32;
+%PIDT = type %Int32;
+%UIDT = type %Int32;
+%GIDT = type %Int32;
 ; from included stdio
-%File = type i8;
-%FposT = type i8;
+%File = type %Int8;
+%FposT = type %Int8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -202,41 +202,41 @@ declare void @perror(%ConstCharStr* %str)
 @str13 = private constant [15 x i8] [i8 108, i8 111, i8 99, i8 95, i8 114, i8 48, i8 46, i8 121, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 
 %main_Point = type {
-	i32, 
-	i32
+	%Int32,
+	%Int32
 };
 
 
-@glb_i0 = global i32 0
-@glb_i1 = global i32 321
+@glb_i0 = global %Int32 0
+@glb_i1 = global %Int32 321
 @glb_r0 = global %main_Point zeroinitializer
 @glb_r1 = global %main_Point {
-	i32 20,
-	i32 10
+	%Int32 20,
+	%Int32 10
 }
-@glb_a0 = global [10 x i32] [
-	i32 0,
-	i32 0,
-	i32 0,
-	i32 0,
-	i32 0,
-	i32 0,
-	i32 0,
-	i32 0,
-	i32 0,
-	i32 0
+@glb_a0 = global [10 x %Int32] [
+	%Int32 0,
+	%Int32 0,
+	%Int32 0,
+	%Int32 0,
+	%Int32 0,
+	%Int32 0,
+	%Int32 0,
+	%Int32 0,
+	%Int32 0,
+	%Int32 0
 ]
-@glb_a1 = global [10 x i32] [
-	i32 64,
-	i32 53,
-	i32 42,
-	i32 0,
-	i32 0,
-	i32 0,
-	i32 0,
-	i32 0,
-	i32 0,
-	i32 0
+@glb_a1 = global [10 x %Int32] [
+	%Int32 64,
+	%Int32 53,
+	%Int32 42,
+	%Int32 0,
+	%Int32 0,
+	%Int32 0,
+	%Int32 0,
+	%Int32 0,
+	%Int32 0,
+	%Int32 0
 ]
 
 define %Int @main() {
@@ -244,103 +244,103 @@ define %Int @main() {
 	; -----------------------------------
 	; Global
 	; copy integers by value
-	%2 = load i32, i32* @glb_i1
-	store i32 %2, i32* @glb_i0
-	%3 = load i32, i32* @glb_i0
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*), i32 %3)
+	%2 = load %Int32, %Int32* @glb_i1
+	store %Int32 %2, %Int32* @glb_i0
+	%3 = load %Int32, %Int32* @glb_i0
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*), %Int32 %3)
 	; copy arrays by value
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%5 = zext i4 10 to i32
+	%5 = zext i4 10 to %Int32
 	; -- end vol eval --
-	%6 = load [10 x i32], [10 x i32]* @glb_a1
-	store [10 x i32] %6, [10 x i32]* @glb_a0
-	%7 = getelementptr inbounds [10 x i32], [10 x i32]* @glb_a0, i32 0, i32 0
-	%8 = load i32, i32* %7
-	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str3 to [0 x i8]*), i32 %8)
-	%10 = getelementptr inbounds [10 x i32], [10 x i32]* @glb_a0, i32 0, i32 1
-	%11 = load i32, i32* %10
-	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str4 to [0 x i8]*), i32 %11)
-	%13 = getelementptr inbounds [10 x i32], [10 x i32]* @glb_a0, i32 0, i32 2
-	%14 = load i32, i32* %13
-	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str5 to [0 x i8]*), i32 %14)
+	%6 = load [10 x %Int32], [10 x %Int32]* @glb_a1
+	store [10 x %Int32] %6, [10 x %Int32]* @glb_a0
+	%7 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* @glb_a0, %Int32 0, %Int32 0
+	%8 = load %Int32, %Int32* %7
+	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str3 to [0 x i8]*), %Int32 %8)
+	%10 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* @glb_a0, %Int32 0, %Int32 1
+	%11 = load %Int32, %Int32* %10
+	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str4 to [0 x i8]*), %Int32 %11)
+	%13 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* @glb_a0, %Int32 0, %Int32 2
+	%14 = load %Int32, %Int32* %13
+	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str5 to [0 x i8]*), %Int32 %14)
 	; copy records by value
 	%16 = load %main_Point, %main_Point* @glb_r1
 	store %main_Point %16, %main_Point* @glb_r0
-	%17 = getelementptr inbounds %main_Point, %main_Point* @glb_r0, i32 0, i32 0
-	%18 = load i32, i32* %17
-	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str6 to [0 x i8]*), i32 %18)
-	%20 = getelementptr inbounds %main_Point, %main_Point* @glb_r0, i32 0, i32 1
-	%21 = load i32, i32* %20
-	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str7 to [0 x i8]*), i32 %21)
+	%17 = getelementptr inbounds %main_Point, %main_Point* @glb_r0, %Int32 0, %Int32 0
+	%18 = load %Int32, %Int32* %17
+	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str6 to [0 x i8]*), %Int32 %18)
+	%20 = getelementptr inbounds %main_Point, %main_Point* @glb_r0, %Int32 0, %Int32 1
+	%21 = load %Int32, %Int32* %20
+	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str7 to [0 x i8]*), %Int32 %21)
 	; -----------------------------------
 	; Local
 	; copy integers by value
-	%23 = alloca i32, align 4
-	store i32 0, i32* %23
-	%24 = alloca i32, align 4
-	store i32 123, i32* %24
-	%25 = load i32, i32* %24
-	store i32 %25, i32* %23
-	%26 = load i32, i32* %23
-	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str8 to [0 x i8]*), i32 %26)
+	%23 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %23
+	%24 = alloca %Int32, align 4
+	store %Int32 123, %Int32* %24
+	%25 = load %Int32, %Int32* %24
+	store %Int32 %25, %Int32* %23
+	%26 = load %Int32, %Int32* %23
+	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str8 to [0 x i8]*), %Int32 %26)
 	; copy arrays by value
 	; C backend will be use memcpy()
-	%28 = alloca [10 x i32], align 4
-	%29 = insertvalue [10 x i32] zeroinitializer, i32 0, 0
-	%30 = insertvalue [10 x i32] %29, i32 0, 1
-	%31 = insertvalue [10 x i32] %30, i32 0, 2
-	%32 = insertvalue [10 x i32] %31, i32 0, 3
-	%33 = insertvalue [10 x i32] %32, i32 0, 4
-	%34 = insertvalue [10 x i32] %33, i32 0, 5
-	%35 = insertvalue [10 x i32] %34, i32 0, 6
-	%36 = insertvalue [10 x i32] %35, i32 0, 7
-	%37 = insertvalue [10 x i32] %36, i32 0, 8
-	%38 = insertvalue [10 x i32] %37, i32 0, 9
-	store [10 x i32] %38, [10 x i32]* %28
-	%39 = alloca [10 x i32], align 4
-	%40 = insertvalue [10 x i32] zeroinitializer, i32 42, 0
-	%41 = insertvalue [10 x i32] %40, i32 53, 1
-	%42 = insertvalue [10 x i32] %41, i32 64, 2
-	%43 = insertvalue [10 x i32] %42, i32 0, 3
-	%44 = insertvalue [10 x i32] %43, i32 0, 4
-	%45 = insertvalue [10 x i32] %44, i32 0, 5
-	%46 = insertvalue [10 x i32] %45, i32 0, 6
-	%47 = insertvalue [10 x i32] %46, i32 0, 7
-	%48 = insertvalue [10 x i32] %47, i32 0, 8
-	%49 = insertvalue [10 x i32] %48, i32 0, 9
-	store [10 x i32] %49, [10 x i32]* %39
+	%28 = alloca [10 x %Int32], align 4
+	%29 = insertvalue [10 x %Int32] zeroinitializer, %Int32 0, 0
+	%30 = insertvalue [10 x %Int32] %29, %Int32 0, 1
+	%31 = insertvalue [10 x %Int32] %30, %Int32 0, 2
+	%32 = insertvalue [10 x %Int32] %31, %Int32 0, 3
+	%33 = insertvalue [10 x %Int32] %32, %Int32 0, 4
+	%34 = insertvalue [10 x %Int32] %33, %Int32 0, 5
+	%35 = insertvalue [10 x %Int32] %34, %Int32 0, 6
+	%36 = insertvalue [10 x %Int32] %35, %Int32 0, 7
+	%37 = insertvalue [10 x %Int32] %36, %Int32 0, 8
+	%38 = insertvalue [10 x %Int32] %37, %Int32 0, 9
+	store [10 x %Int32] %38, [10 x %Int32]* %28
+	%39 = alloca [10 x %Int32], align 4
+	%40 = insertvalue [10 x %Int32] zeroinitializer, %Int32 42, 0
+	%41 = insertvalue [10 x %Int32] %40, %Int32 53, 1
+	%42 = insertvalue [10 x %Int32] %41, %Int32 64, 2
+	%43 = insertvalue [10 x %Int32] %42, %Int32 0, 3
+	%44 = insertvalue [10 x %Int32] %43, %Int32 0, 4
+	%45 = insertvalue [10 x %Int32] %44, %Int32 0, 5
+	%46 = insertvalue [10 x %Int32] %45, %Int32 0, 6
+	%47 = insertvalue [10 x %Int32] %46, %Int32 0, 7
+	%48 = insertvalue [10 x %Int32] %47, %Int32 0, 8
+	%49 = insertvalue [10 x %Int32] %48, %Int32 0, 9
+	store [10 x %Int32] %49, [10 x %Int32]* %39
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%50 = zext i4 10 to i32
+	%50 = zext i4 10 to %Int32
 	; -- end vol eval --
-	%51 = load [10 x i32], [10 x i32]* %39
-	store [10 x i32] %51, [10 x i32]* %28
-	%52 = getelementptr inbounds [10 x i32], [10 x i32]* %28, i32 0, i32 0
-	%53 = load i32, i32* %52
-	%54 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str9 to [0 x i8]*), i32 %53)
-	%55 = getelementptr inbounds [10 x i32], [10 x i32]* %28, i32 0, i32 1
-	%56 = load i32, i32* %55
-	%57 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str10 to [0 x i8]*), i32 %56)
-	%58 = getelementptr inbounds [10 x i32], [10 x i32]* %28, i32 0, i32 2
-	%59 = load i32, i32* %58
-	%60 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str11 to [0 x i8]*), i32 %59)
+	%51 = load [10 x %Int32], [10 x %Int32]* %39
+	store [10 x %Int32] %51, [10 x %Int32]* %28
+	%52 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %28, %Int32 0, %Int32 0
+	%53 = load %Int32, %Int32* %52
+	%54 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str9 to [0 x i8]*), %Int32 %53)
+	%55 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %28, %Int32 0, %Int32 1
+	%56 = load %Int32, %Int32* %55
+	%57 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str10 to [0 x i8]*), %Int32 %56)
+	%58 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %28, %Int32 0, %Int32 2
+	%59 = load %Int32, %Int32* %58
+	%60 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str11 to [0 x i8]*), %Int32 %59)
 	; copy records by value
 	; C backend will be use memcpy()
 	%61 = alloca %main_Point, align 4
 	store %main_Point zeroinitializer, %main_Point* %61
 	%62 = alloca %main_Point, align 4
-	%63 = insertvalue %main_Point zeroinitializer, i32 10, 0
-	%64 = insertvalue %main_Point %63, i32 20, 1
+	%63 = insertvalue %main_Point zeroinitializer, %Int32 10, 0
+	%64 = insertvalue %main_Point %63, %Int32 20, 1
 	store %main_Point %64, %main_Point* %62
 	%65 = load %main_Point, %main_Point* %62
 	store %main_Point %65, %main_Point* %61
-	%66 = getelementptr inbounds %main_Point, %main_Point* %61, i32 0, i32 0
-	%67 = load i32, i32* %66
-	%68 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str12 to [0 x i8]*), i32 %67)
-	%69 = getelementptr inbounds %main_Point, %main_Point* %61, i32 0, i32 1
-	%70 = load i32, i32* %69
-	%71 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str13 to [0 x i8]*), i32 %70)
+	%66 = getelementptr inbounds %main_Point, %main_Point* %61, %Int32 0, %Int32 0
+	%67 = load %Int32, %Int32* %66
+	%68 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str12 to [0 x i8]*), %Int32 %67)
+	%69 = getelementptr inbounds %main_Point, %main_Point* %61, %Int32 0, %Int32 1
+	%70 = load %Int32, %Int32* %69
+	%71 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str13 to [0 x i8]*), %Int32 %70)
 	; error: closed arrays of closed arrays are denied
 	ret %Int 0
 }

@@ -763,7 +763,7 @@ def print_type_record(t):
 	while i < len(fields):
 		field = fields[i]
 
-		if i > 0: out(', ')
+		if i > 0: out(',')
 		if is_global_context():
 			out(NL_INDENT)
 

@@ -111,94 +111,94 @@ break_2:
 ; -- end print imports --
 ; -- strings --
 
-define i32 @crc32_doHash([0 x i8]* %buf, i32 %len) {
-	%1 = alloca [256 x i32], align 4
-	%2 = alloca i32, align 4
+define %Word32 @crc32_doHash([0 x %Word8]* %buf, %Int32 %len) {
+	%1 = alloca [256 x %Word32], align 4
+	%2 = alloca %Word32, align 4
 	;
 	; create table before
 	;
-	%3 = alloca i32, align 4
-	store i32 0, i32* %3
+	%3 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %3
 	br label %again_1
 again_1:
-	%4 = load i32, i32* %3
-	%5 = icmp ult i32 %4, 256
+	%4 = load %Int32, %Int32* %3
+	%5 = icmp ult %Int32 %4, 256
 	br i1 %5 , label %body_1, label %break_1
 body_1:
-	%6 = load i32, i32* %3
-	%7 = bitcast i32 %6 to i32
-	store i32 %7, i32* %2
-	%8 = alloca i32, align 4
-	store i32 0, i32* %8
+	%6 = load %Int32, %Int32* %3
+	%7 = bitcast %Int32 %6 to %Word32
+	store %Word32 %7, %Word32* %2
+	%8 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %8
 	br label %again_2
 again_2:
-	%9 = load i32, i32* %8
-	%10 = icmp ult i32 %9, 8
+	%9 = load %Int32, %Int32* %8
+	%10 = icmp ult %Int32 %9, 8
 	br i1 %10 , label %body_2, label %break_2
 body_2:
-	%11 = load i32, i32* %2
-	%12 = and i32 %11, 1
-	%13 = icmp ne i32 %12, 0
+	%11 = load %Word32, %Word32* %2
+	%12 = and %Word32 %11, 1
+	%13 = icmp ne %Word32 %12, 0
 	br i1 %13 , label %then_0, label %else_0
 then_0:
-	%14 = load i32, i32* %2
-	%15 = lshr i32 %14, 1
-	%16 = xor i32 %15, 3988292384
-	store i32 %16, i32* %2
+	%14 = load %Word32, %Word32* %2
+	%15 = lshr %Word32 %14, 1
+	%16 = xor %Word32 %15, 3988292384
+	store %Word32 %16, %Word32* %2
 	br label %endif_0
 else_0:
-	%17 = load i32, i32* %2
-	%18 = lshr i32 %17, 1
-	store i32 %18, i32* %2
+	%17 = load %Word32, %Word32* %2
+	%18 = lshr %Word32 %17, 1
+	store %Word32 %18, %Word32* %2
 	br label %endif_0
 endif_0:
-	%19 = load i32, i32* %8
-	%20 = add i32 %19, 1
-	store i32 %20, i32* %8
+	%19 = load %Int32, %Int32* %8
+	%20 = add %Int32 %19, 1
+	store %Int32 %20, %Int32* %8
 	br label %again_2
 break_2:
-	%21 = load i32, i32* %3
-	%22 = getelementptr inbounds [256 x i32], [256 x i32]* %1, i32 0, i32 %21
-	%23 = load i32, i32* %2
-	store i32 %23, i32* %22
-	%24 = load i32, i32* %3
-	%25 = add i32 %24, 1
-	store i32 %25, i32* %3
+	%21 = load %Int32, %Int32* %3
+	%22 = getelementptr inbounds [256 x %Word32], [256 x %Word32]* %1, %Int32 0, %Int32 %21
+	%23 = load %Word32, %Word32* %2
+	store %Word32 %23, %Word32* %22
+	%24 = load %Int32, %Int32* %3
+	%25 = add %Int32 %24, 1
+	store %Int32 %25, %Int32* %3
 	br label %again_1
 break_1:
 	;
 	; calculate CRC32
 	;
-	store i32 4294967295, i32* %2
-	store i32 0, i32* %3
+	store %Word32 4294967295, %Word32* %2
+	store %Int32 0, %Int32* %3
 	br label %again_3
 again_3:
-	%26 = load i32, i32* %3
-	%27 = icmp ult i32 %26, %len
+	%26 = load %Int32, %Int32* %3
+	%27 = icmp ult %Int32 %26, %len
 	br i1 %27 , label %body_3, label %break_3
 body_3:
-	%28 = load i32, i32* %2
-	%29 = load i32, i32* %3
-	%30 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %29
-	%31 = load i8, i8* %30
-	%32 = zext i8 %31 to i32
-	%33 = xor i32 %28, %32
-	%34 = and i32 %33, 255
-	%35 = trunc i32 %34 to i8
-	%36 = getelementptr inbounds [256 x i32], [256 x i32]* %1, i32 0, i8 %35
-	%37 = load i32, i32* %36
-	%38 = load i32, i32* %2
-	%39 = lshr i32 %38, 8
-	%40 = xor i32 %37, %39
-	store i32 %40, i32* %2
-	%41 = load i32, i32* %3
-	%42 = add i32 %41, 1
-	store i32 %42, i32* %3
+	%28 = load %Word32, %Word32* %2
+	%29 = load %Int32, %Int32* %3
+	%30 = getelementptr inbounds [0 x %Word8], [0 x %Word8]* %buf, %Int32 0, %Int32 %29
+	%31 = load %Word8, %Word8* %30
+	%32 = zext %Word8 %31 to %Word32
+	%33 = xor %Word32 %28, %32
+	%34 = and %Word32 %33, 255
+	%35 = trunc %Word32 %34 to %Int8
+	%36 = getelementptr inbounds [256 x %Word32], [256 x %Word32]* %1, %Int32 0, %Int8 %35
+	%37 = load %Word32, %Word32* %36
+	%38 = load %Word32, %Word32* %2
+	%39 = lshr %Word32 %38, 8
+	%40 = xor %Word32 %37, %39
+	store %Word32 %40, %Word32* %2
+	%41 = load %Int32, %Int32* %3
+	%42 = add %Int32 %41, 1
+	store %Int32 %42, %Int32* %3
 	br label %again_3
 break_3:
-	%43 = load i32, i32* %2
-	%44 = xor i32 %43, 4294967295
-	ret i32 %44
+	%43 = load %Word32, %Word32* %2
+	%44 = xor %Word32 %43, 4294967295
+	ret %Word32 %44
 }
 
 

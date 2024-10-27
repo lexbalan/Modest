@@ -108,37 +108,37 @@ break_2:
 ; -- print includes --
 ; from included ctypes64
 %Str = type %Str8;
-%Char = type i8;
+%Char = type %Char8;
 %ConstChar = type %Char;
-%SignedChar = type i8;
-%UnsignedChar = type i8;
-%Short = type i16;
-%UnsignedShort = type i16;
-%Int = type i32;
-%UnsignedInt = type i32;
-%LongInt = type i64;
-%UnsignedLongInt = type i64;
-%Long = type i64;
-%UnsignedLong = type i64;
-%LongLong = type i64;
-%UnsignedLongLong = type i64;
-%LongLongInt = type i64;
-%UnsignedLongLongInt = type i64;
+%SignedChar = type %Int8;
+%UnsignedChar = type %Int8;
+%Short = type %Int16;
+%UnsignedShort = type %Int16;
+%Int = type %Int32;
+%UnsignedInt = type %Int32;
+%LongInt = type %Int64;
+%UnsignedLongInt = type %Int64;
+%Long = type %Int64;
+%UnsignedLong = type %Int64;
+%LongLong = type %Int64;
+%UnsignedLongLong = type %Int64;
+%LongLongInt = type %Int64;
+%UnsignedLongLongInt = type %Int64;
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type i64;
+%IntPtrT = type %Int64;
 %PtrDiffT = type i8*;
-%OffT = type i64;
-%USecondsT = type i32;
-%PIDT = type i32;
-%UIDT = type i32;
-%GIDT = type i32;
+%OffT = type %Int64;
+%USecondsT = type %Int32;
+%PIDT = type %Int32;
+%UIDT = type %Int32;
+%GIDT = type %Int32;
 ; from included stdio
-%File = type i8;
-%FposT = type i8;
+%File = type %Int8;
+%FposT = type %Int8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -196,31 +196,31 @@ declare void @perror(%ConstCharStr* %str)
 @str7 = private constant [19 x i8] [i8 115, i8 116, i8 114, i8 105, i8 110, i8 103, i8 56, i8 67, i8 111, i8 110, i8 115, i8 116, i8 32, i8 61, i8 32, i8 37, i8 115, i8 10, i8 0]
 
 %main_Point = type {
-	i32, 
-	i32
+	%Int32,
+	%Int32
 };
 
 
 @main_ps = constant [3 x {
-	i2, 
+	i2,
 	i2
 }] [
 	{
-	i2, 
+	i2,
 	i2
 } {
 		i2 0,
 		i2 0
 	},
 	{
-	i2, 
+	i2,
 	i2
 } {
 		i2 1,
 		i2 1
 	},
 	{
-	i2, 
+	i2,
 	i2
 } {
 		i2 2,
@@ -229,38 +229,38 @@ declare void @perror(%ConstCharStr* %str)
 ]
 @main_points = constant [3 x %main_Point] [
 	%main_Point {
-		i32 0,
-		i32 0
+		%Int32 0,
+		%Int32 0
 	},
 	%main_Point {
-		i32 1,
-		i32 1
+		%Int32 1,
+		%Int32 1
 	},
 	%main_Point {
-		i32 2,
-		i32 2
+		%Int32 2,
+		%Int32 2
 	}
 ]
 
 @points2 = global [3 x %main_Point] [
 	%main_Point {
-		i32 0,
-		i32 0
+		%Int32 0,
+		%Int32 0
 	},
 	%main_Point {
-		i32 1,
-		i32 1
+		%Int32 1,
+		%Int32 1
 	},
 	%main_Point {
-		i32 2,
-		i32 2
+		%Int32 2,
+		%Int32 2
 	}
 ]
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str4 to [0 x i8]*))
-	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*), i32 42)
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str6 to [0 x i8]*), i32 42)
+	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*), %Int32 42)
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str6 to [0 x i8]*), %Int32 42)
 	;	printf("genericStringConst = %s\n", genericStringConst)
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str7 to [0 x i8]*), %Str8* bitcast ([7 x i8]* @str1 to [0 x i8]*))
 	ret %Int 0

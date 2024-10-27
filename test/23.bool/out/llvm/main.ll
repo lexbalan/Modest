@@ -108,37 +108,37 @@ break_2:
 ; -- print includes --
 ; from included ctypes64
 %Str = type %Str8;
-%Char = type i8;
+%Char = type %Char8;
 %ConstChar = type %Char;
-%SignedChar = type i8;
-%UnsignedChar = type i8;
-%Short = type i16;
-%UnsignedShort = type i16;
-%Int = type i32;
-%UnsignedInt = type i32;
-%LongInt = type i64;
-%UnsignedLongInt = type i64;
-%Long = type i64;
-%UnsignedLong = type i64;
-%LongLong = type i64;
-%UnsignedLongLong = type i64;
-%LongLongInt = type i64;
-%UnsignedLongLongInt = type i64;
+%SignedChar = type %Int8;
+%UnsignedChar = type %Int8;
+%Short = type %Int16;
+%UnsignedShort = type %Int16;
+%Int = type %Int32;
+%UnsignedInt = type %Int32;
+%LongInt = type %Int64;
+%UnsignedLongInt = type %Int64;
+%Long = type %Int64;
+%UnsignedLong = type %Int64;
+%LongLong = type %Int64;
+%UnsignedLongLong = type %Int64;
+%LongLongInt = type %Int64;
+%UnsignedLongLongInt = type %Int64;
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type i64;
+%IntPtrT = type %Int64;
 %PtrDiffT = type i8*;
-%OffT = type i64;
-%USecondsT = type i32;
-%PIDT = type i32;
-%UIDT = type i32;
-%GIDT = type i32;
+%OffT = type %Int64;
+%USecondsT = type %Int32;
+%PIDT = type %Int32;
+%UIDT = type %Int32;
+%GIDT = type %Int32;
 ; from included stdio
-%File = type i8;
-%FposT = type i8;
+%File = type %Int8;
+%FposT = type %Int8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -197,38 +197,38 @@ declare void @perror(%ConstCharStr* %str)
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str1 to [0 x i8]*))
-	%2 = alloca i8, align 1
+	%2 = alloca %Int8, align 1
 	%3 = alloca i1, align 1
-	store i8 1, i8* %2
-	%4 = load i8, i8* %2
-	%5 = icmp ne i8 %4, 0
+	store %Int8 1, %Int8* %2
+	%4 = load %Int8, %Int8* %2
+	%5 = icmp ne %Int8 %4, 0
 	store i1 %5, i1* %3
-	%6 = load i8, i8* %2
-	%7 = zext i8 %6 to i32
-	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), i32 %7)
+	%6 = load %Int8, %Int8* %2
+	%7 = zext %Int8 %6 to %Int32
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), %Int32 %7)
 	%9 = load i1, i1* %3
-	%10 = zext i1 %9 to i32
-	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str3 to [0 x i8]*), i32 %10)
-	store i8 2, i8* %2
-	%12 = load i8, i8* %2
-	%13 = icmp ne i8 %12, 0
+	%10 = zext i1 %9 to %Int32
+	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str3 to [0 x i8]*), %Int32 %10)
+	store %Int8 2, %Int8* %2
+	%12 = load %Int8, %Int8* %2
+	%13 = icmp ne %Int8 %12, 0
 	store i1 %13, i1* %3
-	%14 = load i8, i8* %2
-	%15 = zext i8 %14 to i32
-	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str4 to [0 x i8]*), i32 %15)
+	%14 = load %Int8, %Int8* %2
+	%15 = zext %Int8 %14 to %Int32
+	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str4 to [0 x i8]*), %Int32 %15)
 	%17 = load i1, i1* %3
-	%18 = zext i1 %17 to i32
-	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str5 to [0 x i8]*), i32 %18)
-	store i8 3, i8* %2
-	%20 = load i8, i8* %2
-	%21 = icmp ne i8 %20, 0
+	%18 = zext i1 %17 to %Int32
+	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str5 to [0 x i8]*), %Int32 %18)
+	store %Int8 3, %Int8* %2
+	%20 = load %Int8, %Int8* %2
+	%21 = icmp ne %Int8 %20, 0
 	store i1 %21, i1* %3
-	%22 = load i8, i8* %2
-	%23 = zext i8 %22 to i32
-	%24 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str6 to [0 x i8]*), i32 %23)
+	%22 = load %Int8, %Int8* %2
+	%23 = zext %Int8 %22 to %Int32
+	%24 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str6 to [0 x i8]*), %Int32 %23)
 	%25 = load i1, i1* %3
-	%26 = zext i1 %25 to i32
-	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str7 to [0 x i8]*), i32 %26)
+	%26 = zext i1 %25 to %Int32
+	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str7 to [0 x i8]*), %Int32 %26)
 	ret %Int 0
 }
 

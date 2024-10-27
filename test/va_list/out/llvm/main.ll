@@ -111,37 +111,37 @@ break_2:
 ; -- print includes --
 ; from included ctypes64
 %Str = type %Str8;
-%Char = type i8;
+%Char = type %Char8;
 %ConstChar = type %Char;
-%SignedChar = type i8;
-%UnsignedChar = type i8;
-%Short = type i16;
-%UnsignedShort = type i16;
-%Int = type i32;
-%UnsignedInt = type i32;
-%LongInt = type i64;
-%UnsignedLongInt = type i64;
-%Long = type i64;
-%UnsignedLong = type i64;
-%LongLong = type i64;
-%UnsignedLongLong = type i64;
-%LongLongInt = type i64;
-%UnsignedLongLongInt = type i64;
+%SignedChar = type %Int8;
+%UnsignedChar = type %Int8;
+%Short = type %Int16;
+%UnsignedShort = type %Int16;
+%Int = type %Int32;
+%UnsignedInt = type %Int32;
+%LongInt = type %Int64;
+%UnsignedLongInt = type %Int64;
+%Long = type %Int64;
+%UnsignedLong = type %Int64;
+%LongLong = type %Int64;
+%UnsignedLongLong = type %Int64;
+%LongLongInt = type %Int64;
+%UnsignedLongLongInt = type %Int64;
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type i64;
+%IntPtrT = type %Int64;
 %PtrDiffT = type i8*;
-%OffT = type i64;
-%USecondsT = type i32;
-%PIDT = type i32;
-%UIDT = type i32;
-%GIDT = type i32;
+%OffT = type %Int64;
+%USecondsT = type %Int32;
+%PIDT = type %Int32;
+%UIDT = type %Int32;
+%GIDT = type %Int32;
 ; from included stdio
-%File = type i8;
-%FposT = type i8;
+%File = type %Int8;
+%FposT = type %Int8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -293,13 +293,13 @@ define internal %SSizeT @my_printf(%Str8* %format, ...) {
 	call void @llvm.va_copy(i8* %3, i8* %4)
 	%5 = bitcast i8** %2 to i8*
 	call void @llvm.va_start(i8* %5)
-	%6 = alloca [128 x i8], align 1
-	%7 = bitcast [128 x i8]* %6 to %CharStr*
+	%6 = alloca [128 x %Char8], align 1
+	%7 = bitcast [128 x %Char8]* %6 to %CharStr*
 	%8 = load i8*, i8** %2
 	%9 = call %Int @vsnprintf(%CharStr* %7, %SizeT 128, %Str8* %format, i8* %8)
 	%10 = bitcast i8** %2 to i8*
 	call void @llvm.va_end(i8* %10)
-	%11 = bitcast [128 x i8]* %6 to i8*
+	%11 = bitcast [128 x %Char8]* %6 to i8*
 	%12 = zext %Int %9 to %SizeT
 	%13 = call %SSizeT @write(%Int 1, i8* %11, %SizeT %12)
 	ret %SSizeT %13
@@ -307,16 +307,16 @@ define internal %SSizeT @my_printf(%Str8* %format, ...) {
 
 
 define %Int @main() {
-	%1 = alloca i32, align 4
-	store i32 10, i32* %1
-	%2 = load i32, i32* %1
-	%3 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([19 x i8]* @str1 to [0 x i8]*), i32 %2)
+	%1 = alloca %Int32, align 4
+	store %Int32 10, %Int32* %1
+	%2 = load %Int32, %Int32* %1
+	%3 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([19 x i8]* @str1 to [0 x i8]*), %Int32 %2)
 	%4 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([4 x i8]* @str3 to [0 x i8]*))
-	%5 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([11 x i8]* @str4 to [0 x i8]*), i8 36)
+	%5 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([11 x i8]* @str4 to [0 x i8]*), %Char8 36)
 	%6 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([11 x i8]* @str5 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @str2 to [0 x i8]*))
-	%7 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([9 x i8]* @str6 to [0 x i8]*), i32 -1)
-	%8 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([9 x i8]* @str7 to [0 x i8]*), i32 123)
-	%9 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([11 x i8]* @str8 to [0 x i8]*), i32 305419903)
+	%7 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([9 x i8]* @str6 to [0 x i8]*), %Int32 -1)
+	%8 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([9 x i8]* @str7 to [0 x i8]*), %Int32 123)
+	%9 = call %SSizeT (%Str8*, ...) @my_printf(%Str8* bitcast ([11 x i8]* @str8 to [0 x i8]*), %Int32 305419903)
 	ret %Int 0
 }
 

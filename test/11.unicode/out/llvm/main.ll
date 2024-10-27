@@ -108,37 +108,37 @@ break_2:
 ; -- print includes --
 ; from included ctypes64
 %Str = type %Str8;
-%Char = type i8;
+%Char = type %Char8;
 %ConstChar = type %Char;
-%SignedChar = type i8;
-%UnsignedChar = type i8;
-%Short = type i16;
-%UnsignedShort = type i16;
-%Int = type i32;
-%UnsignedInt = type i32;
-%LongInt = type i64;
-%UnsignedLongInt = type i64;
-%Long = type i64;
-%UnsignedLong = type i64;
-%LongLong = type i64;
-%UnsignedLongLong = type i64;
-%LongLongInt = type i64;
-%UnsignedLongLongInt = type i64;
+%SignedChar = type %Int8;
+%UnsignedChar = type %Int8;
+%Short = type %Int16;
+%UnsignedShort = type %Int16;
+%Int = type %Int32;
+%UnsignedInt = type %Int32;
+%LongInt = type %Int64;
+%UnsignedLongInt = type %Int64;
+%Long = type %Int64;
+%UnsignedLong = type %Int64;
+%LongLong = type %Int64;
+%UnsignedLongLong = type %Int64;
+%LongLongInt = type %Int64;
+%UnsignedLongLongInt = type %Int64;
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type i64;
+%IntPtrT = type %Int64;
 %PtrDiffT = type i8*;
-%OffT = type i64;
-%USecondsT = type i32;
-%PIDT = type i32;
-%UIDT = type i32;
-%GIDT = type i32;
+%OffT = type %Int64;
+%USecondsT = type %Int32;
+%PIDT = type %Int32;
+%UIDT = type %Int32;
+%GIDT = type %Int32;
 ; from included stdio
-%File = type i8;
-%FposT = type i8;
+%File = type %Int8;
+%FposT = type %Int8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -282,18 +282,18 @@ declare [0 x %Char]* @strcat([0 x %Char]* %s1, [0 x %ConstChar]* %s2)
 declare [0 x %Char]* @strncat([0 x %Char]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
 declare [0 x %Char]* @strerror(%Int %error)
 ; from included console
-declare void @console_putchar8(i8 %c)
-declare void @console_putchar16(i16 %c)
-declare void @console_putchar32(i32 %c)
-declare void @console_putchar_utf8(i8 %c)
-declare void @console_putchar_utf16(i16 %c)
-declare void @console_putchar_utf32(i32 %c)
+declare void @console_putchar8(%Char8 %c)
+declare void @console_putchar16(%Char16 %c)
+declare void @console_putchar32(%Char32 %c)
+declare void @console_putchar_utf8(%Char8 %c)
+declare void @console_putchar_utf16(%Char16 %c)
+declare void @console_putchar_utf32(%Char32 %c)
 declare void @console_puts8(%Str8* %s)
 declare void @console_puts16(%Str16* %s)
 declare void @console_puts32(%Str32* %s)
 declare void @console_print(%Str8* %form, ...)
-declare i32 @console_vfprint(%Int %fd, %Str8* %form, i8* %va)
-declare i32 @console_vsprint([0 x i8]* %buf, %Str8* %form, i8* %va)
+declare %Int32 @console_vfprint(%Int %fd, %Str8* %form, i8* %va)
+declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
 ; -- end print includes --
 ; -- print imports --
 ; -- end print imports --
@@ -305,65 +305,65 @@ declare i32 @console_vsprint([0 x i8]* %buf, %Str8* %form, i8* %va)
 @str5 = private constant [2 x i8] [i8 10, i8 0]
 @str6 = private constant [2 x i8] [i8 10, i8 0]
 
-@main_ratSymbolUTF8 = constant [4 x i8] [
-	i8 240,
-	i8 159,
-	i8 144,
-	i8 128
+@main_ratSymbolUTF8 = constant [4 x %Int8] [
+	%Int8 240,
+	%Int8 159,
+	%Int8 144,
+	%Int8 128
 ]
-@main_ratSymbolUTF16 = constant [2 x i16] [
-	i16 55357,
-	i16 56320
+@main_ratSymbolUTF16 = constant [2 x %Int16] [
+	%Int16 55357,
+	%Int16 56320
 ]
-@main_arr_partycorn = constant [4 x i8] [
-	i8 240,
-	i8 159,
-	i8 142,
-	i8 137
+@main_arr_partycorn = constant [4 x %Char8] [
+	%Char8 240,
+	%Char8 159,
+	%Char8 142,
+	%Char8 137
 ]
-@main_arr_unicorn = constant [4 x i8] [
-	i8 240,
-	i8 159,
-	i8 166,
-	i8 132
+@main_arr_unicorn = constant [4 x %Char8] [
+	%Char8 240,
+	%Char8 159,
+	%Char8 166,
+	%Char8 132
 ]
-@main_arr_rat = constant [4 x i8] [
-	i8 240,
-	i8 159,
-	i8 144,
-	i8 128
+@main_arr_rat = constant [4 x %Char8] [
+	%Char8 240,
+	%Char8 159,
+	%Char8 144,
+	%Char8 128
 ]
 
-@arr_utf8 = global [8 x i8] [
-	i8 72,
-	i8 105,
-	i8 33,
-	i8 10,
-	i8 0,
-	i8 0,
-	i8 0,
-	i8 0
+@arr_utf8 = global [8 x %Char8] [
+	%Char8 72,
+	%Char8 105,
+	%Char8 33,
+	%Char8 10,
+	%Char8 0,
+	%Char8 0,
+	%Char8 0,
+	%Char8 0
 ]
-@arr_utf16 = global [9 x i16] [
-	i16 72,
-	i16 101,
-	i16 108,
-	i16 108,
-	i16 111,
-	i16 32,
-	i16 937,
-	i16 33,
-	i16 10
+@arr_utf16 = global [9 x %Char16] [
+	%Char16 72,
+	%Char16 101,
+	%Char16 108,
+	%Char16 108,
+	%Char16 111,
+	%Char16 32,
+	%Char16 937,
+	%Char16 33,
+	%Char16 10
 ]
-@arr_utf32 = global [8 x i32] [
-	i32 72,
-	i32 101,
-	i32 108,
-	i32 108,
-	i32 111,
-	i32 33,
-	i32 10,
-	i32 0
+@arr_utf32 = global [8 x %Char32] [
+	%Char32 72,
+	%Char32 101,
+	%Char32 108,
+	%Char32 108,
+	%Char32 111,
+	%Char32 33,
+	%Char32 10,
+	%Char32 0
 ]
 
 define %Int @main() {

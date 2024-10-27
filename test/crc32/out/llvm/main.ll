@@ -108,37 +108,37 @@ break_2:
 ; -- print includes --
 ; from included ctypes64
 %Str = type %Str8;
-%Char = type i8;
+%Char = type %Char8;
 %ConstChar = type %Char;
-%SignedChar = type i8;
-%UnsignedChar = type i8;
-%Short = type i16;
-%UnsignedShort = type i16;
-%Int = type i32;
-%UnsignedInt = type i32;
-%LongInt = type i64;
-%UnsignedLongInt = type i64;
-%Long = type i64;
-%UnsignedLong = type i64;
-%LongLong = type i64;
-%UnsignedLongLong = type i64;
-%LongLongInt = type i64;
-%UnsignedLongLongInt = type i64;
+%SignedChar = type %Int8;
+%UnsignedChar = type %Int8;
+%Short = type %Int16;
+%UnsignedShort = type %Int16;
+%Int = type %Int32;
+%UnsignedInt = type %Int32;
+%LongInt = type %Int64;
+%UnsignedLongInt = type %Int64;
+%Long = type %Int64;
+%UnsignedLong = type %Int64;
+%LongLong = type %Int64;
+%UnsignedLongLong = type %Int64;
+%LongLongInt = type %Int64;
+%UnsignedLongLongInt = type %Int64;
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type i64;
+%IntPtrT = type %Int64;
 %PtrDiffT = type i8*;
-%OffT = type i64;
-%USecondsT = type i32;
-%PIDT = type i32;
-%UIDT = type i32;
-%GIDT = type i32;
+%OffT = type %Int64;
+%USecondsT = type %Int32;
+%PIDT = type %Int32;
+%UIDT = type %Int32;
+%GIDT = type %Int32;
 ; from included stdio
-%File = type i8;
-%FposT = type i8;
+%File = type %Int8;
+%FposT = type %Int8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -185,7 +185,7 @@ declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
 ; -- print imports --
-declare i32 @crc32_doHash([0 x i8]* %buf, i32 %len)
+declare %Word32 @crc32_doHash([0 x %Word8]* %buf, %Int32 %len)
 ; -- end print imports --
 ; -- strings --
 @str1 = private constant [12 x i8] [i8 67, i8 82, i8 67, i8 51, i8 50, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
@@ -195,24 +195,24 @@ declare i32 @crc32_doHash([0 x i8]* %buf, i32 %len)
 @str5 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 
 
-@data = global [9 x i8] [
-	i8 49,
-	i8 50,
-	i8 51,
-	i8 52,
-	i8 53,
-	i8 54,
-	i8 55,
-	i8 56,
-	i8 57
+@data = global [9 x %Word8] [
+	%Word8 49,
+	%Word8 50,
+	%Word8 51,
+	%Word8 52,
+	%Word8 53,
+	%Word8 54,
+	%Word8 55,
+	%Word8 56,
+	%Word8 57
 ]
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*))
-	%2 = bitcast [9 x i8]* @data to [0 x i8]*
-	%3 = call i32 @crc32_doHash([0 x i8]* %2, i32 9)
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str2 to [0 x i8]*), %Str8* bitcast ([10 x i8]* @str3 to [0 x i8]*), i32 %3)
-	%5 = icmp eq i32 %3, 3421780262
+	%2 = bitcast [9 x %Word8]* @data to [0 x %Word8]*
+	%3 = call %Word32 @crc32_doHash([0 x %Word8]* %2, %Int32 9)
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str2 to [0 x i8]*), %Str8* bitcast ([10 x i8]* @str3 to [0 x i8]*), %Word32 %3)
+	%5 = icmp eq %Word32 %3, 3421780262
 	br i1 %5 , label %then_0, label %else_0
 then_0:
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str4 to [0 x i8]*))

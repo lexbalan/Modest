@@ -133,7 +133,7 @@ def hlir_type_char(width, ti=None):
 			'isa': 'id',
 			'str': 'Char%d' % width,
 			'c': calias,
-			'llvm': 'i%d' % width,
+			'llvm': '%%Char%d' % width,
 			'ti': None
 		},
 
@@ -147,7 +147,8 @@ def hlir_type_word(width, ti=None):
 	t = hlir_type_integer(width, signed=False, ti=ti)
 	t['kind'] = 'word'
 	t['ops'] = WORD_OPS
-	t['id']['str'] = 'Word%d' % width
+	t['id']['str'] = '%%Word%d' % width
+	t['id']['llvm'] = '%%Word%d' % width
 	return t
 
 
@@ -156,6 +157,8 @@ def hlir_type_integer(width, signed=True, ti=None):
 
 	aka = None
 	calias = None
+	llvm_alias = None
+
 	if signed:
 		aka = 'Int%d' % width
 
@@ -163,12 +166,23 @@ def hlir_type_integer(width, signed=True, ti=None):
 			calias = '__int128'
 		else:
 			calias = 'int%d_t' % width
+
+		if width in [8, 16, 32, 64, 128]:
+			llvm_alias = '%%Int%d' % width
+		else:
+			llvm_alias = 'i%d' % width
+
 	else:
 		aka = 'Nat%d' % width
 		if width == 128:
 			calias = 'unsigned __int128'
 		else:
 			calias = 'uint%d_t' % width
+
+		if width in [8, 16, 32, 64, 128]:
+			llvm_alias = '%%Int%d' % width
+		else:
+			llvm_alias = 'i%d' % width
 
 	return {
 		'isa': 'type',
@@ -183,7 +197,7 @@ def hlir_type_integer(width, signed=True, ti=None):
 			'isa': 'id',
 			'str': aka,
 			'c': calias,
-			'llvm': 'i%d' % width,
+			'llvm': llvm_alias,
 			'ti': None
 		},
 

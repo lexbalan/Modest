@@ -108,37 +108,37 @@ break_2:
 ; -- print includes --
 ; from included ctypes64
 %Str = type %Str8;
-%Char = type i8;
+%Char = type %Char8;
 %ConstChar = type %Char;
-%SignedChar = type i8;
-%UnsignedChar = type i8;
-%Short = type i16;
-%UnsignedShort = type i16;
-%Int = type i32;
-%UnsignedInt = type i32;
-%LongInt = type i64;
-%UnsignedLongInt = type i64;
-%Long = type i64;
-%UnsignedLong = type i64;
-%LongLong = type i64;
-%UnsignedLongLong = type i64;
-%LongLongInt = type i64;
-%UnsignedLongLongInt = type i64;
+%SignedChar = type %Int8;
+%UnsignedChar = type %Int8;
+%Short = type %Int16;
+%UnsignedShort = type %Int16;
+%Int = type %Int32;
+%UnsignedInt = type %Int32;
+%LongInt = type %Int64;
+%UnsignedLongInt = type %Int64;
+%Long = type %Int64;
+%UnsignedLong = type %Int64;
+%LongLong = type %Int64;
+%UnsignedLongLong = type %Int64;
+%LongLongInt = type %Int64;
+%UnsignedLongLongInt = type %Int64;
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type i64;
+%IntPtrT = type %Int64;
 %PtrDiffT = type i8*;
-%OffT = type i64;
-%USecondsT = type i32;
-%PIDT = type i32;
-%UIDT = type i32;
-%GIDT = type i32;
+%OffT = type %Int64;
+%USecondsT = type %Int32;
+%PIDT = type %Int32;
+%UIDT = type %Int32;
+%GIDT = type %Int32;
 ; from included stdio
-%File = type i8;
-%FposT = type i8;
+%File = type %Int8;
+%FposT = type %Int8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -190,36 +190,36 @@ declare void @perror(%ConstCharStr* %str)
 @str1 = private constant [12 x i8] [i8 99, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 108, i8 108, i8 88, i8 10, i8 0]
 @str2 = private constant [12 x i8] [i8 120, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 108, i8 108, i8 88, i8 10, i8 0]
 
-define i32 @main() {
+define %Int32 @main() {
 	%1 = alloca i1, align 1
-	%2 = alloca i32, align 4
-	%3 = alloca i64, align 8
+	%2 = alloca %Int32, align 4
+	%3 = alloca %Int64, align 8
 	;
 	%4 = alloca i8*, align 8
 	; free pointer can points to value of any type
 	%5 = bitcast i1* %1 to i8*
 	store i8* %5, i8** %4
-	%6 = bitcast i32* %2 to i8*
+	%6 = bitcast %Int32* %2 to i8*
 	store i8* %6, i8** %4
-	%7 = bitcast i64* %3 to i8*
+	%7 = bitcast %Int64* %3 to i8*
 	store i8* %7, i8** %4
 	; you can't do dereference operation with Free pointer
 	; (because runtime doesn't have any idea about value type it pointee),
 	; but you can construct another (non Free) pointer from it
 	; and use it as usualy
 	%8 = load i8*, i8** %4
-	%9 = bitcast i8* %8 to i64*
-	store i64 81985529216486895, i64* %9
-	%10 = load i64, i64* %3
-	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*), i64 %10)
+	%9 = bitcast i8* %8 to %Int64*
+	store %Int64 81985529216486895, %Int64* %9
+	%10 = load %Int64, %Int64* %3
+	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*), %Int64 %10)
 	; Let's create new pointer to *Int64 from freePointer
 	%12 = load i8*, i8** %4
-	%13 = bitcast i8* %12 to i64*
+	%13 = bitcast i8* %12 to %Int64*
 	; And will use it...
-	%14 = load i64, i64* %13
+	%14 = load %Int64, %Int64* %13
 	; for pointer mechanics checking
-	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str2 to [0 x i8]*), i64 %14)
-	ret i32 0
+	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str2 to [0 x i8]*), %Int64 %14)
+	ret %Int32 0
 }
 
 

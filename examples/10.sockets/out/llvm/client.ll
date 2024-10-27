@@ -108,37 +108,37 @@ break_2:
 ; -- print includes --
 ; from included ctypes64
 %Str = type %Str8;
-%Char = type i8;
+%Char = type %Char8;
 %ConstChar = type %Char;
-%SignedChar = type i8;
-%UnsignedChar = type i8;
-%Short = type i16;
-%UnsignedShort = type i16;
-%Int = type i32;
-%UnsignedInt = type i32;
-%LongInt = type i64;
-%UnsignedLongInt = type i64;
-%Long = type i64;
-%UnsignedLong = type i64;
-%LongLong = type i64;
-%UnsignedLongLong = type i64;
-%LongLongInt = type i64;
-%UnsignedLongLongInt = type i64;
+%SignedChar = type %Int8;
+%UnsignedChar = type %Int8;
+%Short = type %Int16;
+%UnsignedShort = type %Int16;
+%Int = type %Int32;
+%UnsignedInt = type %Int32;
+%LongInt = type %Int64;
+%UnsignedLongInt = type %Int64;
+%Long = type %Int64;
+%UnsignedLong = type %Int64;
+%LongLong = type %Int64;
+%UnsignedLongLong = type %Int64;
+%LongLongInt = type %Int64;
+%UnsignedLongLongInt = type %Int64;
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type i64;
+%IntPtrT = type %Int64;
 %PtrDiffT = type i8*;
-%OffT = type i64;
-%USecondsT = type i32;
-%PIDT = type i32;
-%UIDT = type i32;
-%GIDT = type i32;
+%OffT = type %Int64;
+%USecondsT = type %Int32;
+%PIDT = type %Int32;
+%UIDT = type %Int32;
+%GIDT = type %Int32;
 ; from included stdio
-%File = type i8;
-%FposT = type i8;
+%File = type %Int8;
+%FposT = type %Int8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -285,12 +285,12 @@ declare %Int @usleep(%USecondsT %useconds)
 declare %PIDT @vfork()
 declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 ; from included socket
-%InAddrT = type i32;
-%InPortT = type i16;
-%SocklenT = type i32;
+%InAddrT = type %Int32;
+%InPortT = type %Int16;
+%SocklenT = type %Int32;
 %Struct_sockaddr = type {
-	%UnsignedShort, 
-	[14 x i8]
+	%UnsignedShort,
+	[14 x %Char8]
 };
 
 %Struct_in_addr = type {
@@ -298,11 +298,11 @@ declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 };
 
 %Struct_sockaddr_in = type {
-	i8, 
-	i8, 
-	%UnsignedShort, 
-	%Struct_in_addr, 
-	[8 x i8]
+	%Int8,
+	%Int8,
+	%UnsignedShort,
+	%Struct_in_addr,
+	[8 x %Int8]
 };
 
 declare %InAddrT @inet_addr([0 x %ConstChar]* %cp)
@@ -331,16 +331,16 @@ declare %Int @accept(%Int %socket, %Struct_sockaddr* %addr, %SocklenT* %addrlen)
 
 
 define internal i1 @send_file(%File* %fp, %Int %sockfd) {
-	%1 = alloca [1024 x i8], align 1
+	%1 = alloca [1024 x %Char8], align 1
 	br label %again_1
 again_1:
-	%2 = bitcast [1024 x i8]* %1 to %CharStr*
+	%2 = bitcast [1024 x %Char8]* %1 to %CharStr*
 	%3 = call %CharStr* @fgets(%CharStr* %2, %Int 1024, %File* %fp)
 	%4 = bitcast i8* null to %CharStr*
 	%5 = icmp ne %CharStr* %3, %4
 	br i1 %5 , label %body_1, label %break_1
 body_1:
-	%6 = bitcast [1024 x i8]* %1 to i8*
+	%6 = bitcast [1024 x %Char8]* %1 to i8*
 	%7 = call %SSizeT @send(%Int %sockfd, i8* %6, %SizeT 1024, %Int 0)
 	%8 = icmp eq %SSizeT %7, -1
 	br i1 %8 , label %then_0, label %endif_0
@@ -350,12 +350,12 @@ then_0:
 endif_0:
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%10 = zext i11 1024 to i32
+	%10 = zext i11 1024 to %Int32
 	; -- end vol eval --
 	; -- ZERO
-	%11 = mul i32 %10, 1
-	%12 = bitcast [1024 x i8]* %1 to i8*
-	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %12, i8 0, i32 %11, i1 0)
+	%11 = mul %Int32 %10, 1
+	%12 = bitcast [1024 x %Char8]* %1 to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %12, i8 0, %Int32 %11, i1 0)
 	br label %again_1
 break_1:
 	ret i1 1
@@ -373,21 +373,21 @@ then_0:
 endif_0:
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str2 to [0 x i8]*))
 	%4 = alloca %Struct_sockaddr_in, align 4
-	%5 = insertvalue %Struct_sockaddr_in zeroinitializer, i8 0, 0
-	%6 = insertvalue %Struct_sockaddr_in %5, i8 2, 1
+	%5 = insertvalue %Struct_sockaddr_in zeroinitializer, %Int8 0, 0
+	%6 = insertvalue %Struct_sockaddr_in %5, %Int8 2, 1
 	%7 = insertvalue %Struct_sockaddr_in %6, %UnsignedShort 8080, 2
 	%8 = call %InAddrT @inet_addr([0 x %ConstChar]* bitcast ([10 x i8]* @str3 to [0 x i8]*))
 	%9 = insertvalue %Struct_in_addr zeroinitializer, %InAddrT %8, 0
 	%10 = insertvalue %Struct_sockaddr_in %7, %Struct_in_addr %9, 3
-	%11 = insertvalue [8 x i8] zeroinitializer, i8 0, 0
-	%12 = insertvalue [8 x i8] %11, i8 0, 1
-	%13 = insertvalue [8 x i8] %12, i8 0, 2
-	%14 = insertvalue [8 x i8] %13, i8 0, 3
-	%15 = insertvalue [8 x i8] %14, i8 0, 4
-	%16 = insertvalue [8 x i8] %15, i8 0, 5
-	%17 = insertvalue [8 x i8] %16, i8 0, 6
-	%18 = insertvalue [8 x i8] %17, i8 0, 7
-	%19 = insertvalue %Struct_sockaddr_in %10, [8 x i8] %18, 4
+	%11 = insertvalue [8 x %Int8] zeroinitializer, %Int8 0, 0
+	%12 = insertvalue [8 x %Int8] %11, %Int8 0, 1
+	%13 = insertvalue [8 x %Int8] %12, %Int8 0, 2
+	%14 = insertvalue [8 x %Int8] %13, %Int8 0, 3
+	%15 = insertvalue [8 x %Int8] %14, %Int8 0, 4
+	%16 = insertvalue [8 x %Int8] %15, %Int8 0, 5
+	%17 = insertvalue [8 x %Int8] %16, %Int8 0, 6
+	%18 = insertvalue [8 x %Int8] %17, %Int8 0, 7
+	%19 = insertvalue %Struct_sockaddr_in %10, [8 x %Int8] %18, 4
 	store %Struct_sockaddr_in %19, %Struct_sockaddr_in* %4
 	%20 = bitcast %Struct_sockaddr_in* %4 to i8*
 	%21 = bitcast i8* %20 to %Struct_sockaddr*

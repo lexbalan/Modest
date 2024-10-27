@@ -108,37 +108,37 @@ break_2:
 ; -- print includes --
 ; from included ctypes64
 %Str = type %Str8;
-%Char = type i8;
+%Char = type %Char8;
 %ConstChar = type %Char;
-%SignedChar = type i8;
-%UnsignedChar = type i8;
-%Short = type i16;
-%UnsignedShort = type i16;
-%Int = type i32;
-%UnsignedInt = type i32;
-%LongInt = type i64;
-%UnsignedLongInt = type i64;
-%Long = type i64;
-%UnsignedLong = type i64;
-%LongLong = type i64;
-%UnsignedLongLong = type i64;
-%LongLongInt = type i64;
-%UnsignedLongLongInt = type i64;
+%SignedChar = type %Int8;
+%UnsignedChar = type %Int8;
+%Short = type %Int16;
+%UnsignedShort = type %Int16;
+%Int = type %Int32;
+%UnsignedInt = type %Int32;
+%LongInt = type %Int64;
+%UnsignedLongInt = type %Int64;
+%Long = type %Int64;
+%UnsignedLong = type %Int64;
+%LongLong = type %Int64;
+%UnsignedLongLong = type %Int64;
+%LongLongInt = type %Int64;
+%UnsignedLongLongInt = type %Int64;
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type i64;
+%IntPtrT = type %Int64;
 %PtrDiffT = type i8*;
-%OffT = type i64;
-%USecondsT = type i32;
-%PIDT = type i32;
-%UIDT = type i32;
-%GIDT = type i32;
+%OffT = type %Int64;
+%USecondsT = type %Int32;
+%PIDT = type %Int32;
+%UIDT = type %Int32;
+%GIDT = type %Int32;
 ; from included stdio
-%File = type i8;
-%FposT = type i8;
+%File = type %Int8;
+%FposT = type %Int8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -199,14 +199,14 @@ define internal void @func1() {
 	ret void
 }
 
-define internal void @print_ab(i32 %a, i32 %b) {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str2 to [0 x i8]*), i32 %a, i32 %b)
+define internal void @print_ab(%Int32 %a, %Int32 %b) {
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str2 to [0 x i8]*), %Int32 %a, %Int32 %b)
 	ret void
 }
 
-define internal i32 @sum(i32 %a, i32 %b) {
-	%1 = add i32 %a, %b
-	ret i32 %1
+define internal %Int32 @sum(%Int32 %a, %Int32 %b) {
+	%1 = add %Int32 %a, %b
+	ret %Int32 %1
 }
 
 define internal void @func0() {
@@ -221,16 +221,16 @@ define %Int @main() {
 	call void @func0()
 	call void @func1()
 	; call function with two arguments
-	call void @print_ab(i32 10, i32 20)
+	call void @print_ab(%Int32 10, %Int32 20)
 	; call function with two arguments and return value
-	%2 = call i32 @sum(i32 1, i32 2)
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str4 to [0 x i8]*), i32 1, i32 2, i32 %2)
-	%4 = alloca i32 (i32, i32)*, align 8
-	store i32 (i32, i32)* @sum, i32 (i32, i32)** %4
+	%2 = call %Int32 @sum(%Int32 1, %Int32 2)
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str4 to [0 x i8]*), %Int32 1, %Int32 2, %Int32 %2)
+	%4 = alloca %Int32 (%Int32, %Int32)*, align 8
+	store %Int32 (%Int32, %Int32)* @sum, %Int32 (%Int32, %Int32)** %4
 	; call function with two arguments and return value
-	%5 = load i32 (i32, i32)*, i32 (i32, i32)** %4
-	%6 = call i32 %5(i32 1, i32 2)
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str5 to [0 x i8]*), i32 1, i32 2, i32 %6)
+	%5 = load %Int32 (%Int32, %Int32)*, %Int32 (%Int32, %Int32)** %4
+	%6 = call %Int32 %5(%Int32 1, %Int32 2)
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str5 to [0 x i8]*), %Int32 1, %Int32 2, %Int32 %6)
 	ret %Int 0
 }
 

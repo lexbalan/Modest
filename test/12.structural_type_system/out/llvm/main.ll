@@ -108,37 +108,37 @@ break_2:
 ; -- print includes --
 ; from included ctypes64
 %Str = type %Str8;
-%Char = type i8;
+%Char = type %Char8;
 %ConstChar = type %Char;
-%SignedChar = type i8;
-%UnsignedChar = type i8;
-%Short = type i16;
-%UnsignedShort = type i16;
-%Int = type i32;
-%UnsignedInt = type i32;
-%LongInt = type i64;
-%UnsignedLongInt = type i64;
-%Long = type i64;
-%UnsignedLong = type i64;
-%LongLong = type i64;
-%UnsignedLongLong = type i64;
-%LongLongInt = type i64;
-%UnsignedLongLongInt = type i64;
+%SignedChar = type %Int8;
+%UnsignedChar = type %Int8;
+%Short = type %Int16;
+%UnsignedShort = type %Int16;
+%Int = type %Int32;
+%UnsignedInt = type %Int32;
+%LongInt = type %Int64;
+%UnsignedLongInt = type %Int64;
+%Long = type %Int64;
+%UnsignedLong = type %Int64;
+%LongLong = type %Int64;
+%UnsignedLongLong = type %Int64;
+%LongLongInt = type %Int64;
+%UnsignedLongLongInt = type %Int64;
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type i64;
+%IntPtrT = type %Int64;
 %PtrDiffT = type i8*;
-%OffT = type i64;
-%USecondsT = type i32;
-%PIDT = type i32;
-%UIDT = type i32;
-%GIDT = type i32;
+%OffT = type %Int64;
+%USecondsT = type %Int32;
+%PIDT = type %Int32;
+%UIDT = type %Int32;
+%GIDT = type %Int32;
 ; from included stdio
-%File = type i8;
-%FposT = type i8;
+%File = type %Int8;
+%FposT = type %Int8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -197,77 +197,77 @@ declare void @perror(%ConstCharStr* %str)
 @str8 = private constant [14 x i8] [i8 102, i8 51, i8 112, i8 32, i8 120, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 
 %main_Type1 = type {
-	i32
+	%Int32
 };
 
 %main_Type2 = type {
-	i32
+	%Int32
 };
 
 %main_Type3 = type {
-	i32
+	%Int32
 };
 
 
 @a = global %main_Type1 {
-	i32 1
+	%Int32 1
 }
 @b = global %main_Type2 {
-	i32 2
+	%Int32 2
 }
 @c = global %main_Type3 {
-	i32 3
+	%Int32 3
 }
 
 define internal void @f0_val(%main_Type1 %x) {
 	%1 = extractvalue %main_Type1 %x, 0
-	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str1 to [0 x i8]*), i32 %1)
+	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str1 to [0 x i8]*), %Int32 %1)
 	ret void
 }
 
 define internal void @f1_val(%main_Type2 %x) {
 	%1 = extractvalue %main_Type2 %x, 0
-	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*), i32 %1)
+	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*), %Int32 %1)
 	ret void
 }
 
 define internal void @f2_val(%main_Type3 %x) {
 	%1 = extractvalue %main_Type3 %x, 0
-	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str3 to [0 x i8]*), i32 %1)
+	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str3 to [0 x i8]*), %Int32 %1)
 	ret void
 }
 
-define internal void @f3_val({i32} %x) {
-	%1 = extractvalue {i32} %x, 0
-	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str4 to [0 x i8]*), i32 %1)
+define internal void @f3_val({%Int32} %x) {
+	%1 = extractvalue {%Int32} %x, 0
+	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str4 to [0 x i8]*), %Int32 %1)
 	ret void
 }
 
 define internal void @f0_ptr(%main_Type1* %x) {
-	%1 = getelementptr inbounds %main_Type1, %main_Type1* %x, i32 0, i32 0
-	%2 = load i32, i32* %1
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str5 to [0 x i8]*), i32 %2)
+	%1 = getelementptr inbounds %main_Type1, %main_Type1* %x, %Int32 0, %Int32 0
+	%2 = load %Int32, %Int32* %1
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str5 to [0 x i8]*), %Int32 %2)
 	ret void
 }
 
 define internal void @f1_ptr(%main_Type2* %x) {
-	%1 = getelementptr inbounds %main_Type2, %main_Type2* %x, i32 0, i32 0
-	%2 = load i32, i32* %1
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str6 to [0 x i8]*), i32 %2)
+	%1 = getelementptr inbounds %main_Type2, %main_Type2* %x, %Int32 0, %Int32 0
+	%2 = load %Int32, %Int32* %1
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str6 to [0 x i8]*), %Int32 %2)
 	ret void
 }
 
 define internal void @f2_ptr(%main_Type3* %x) {
-	%1 = getelementptr inbounds %main_Type3, %main_Type3* %x, i32 0, i32 0
-	%2 = load i32, i32* %1
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str7 to [0 x i8]*), i32 %2)
+	%1 = getelementptr inbounds %main_Type3, %main_Type3* %x, %Int32 0, %Int32 0
+	%2 = load %Int32, %Int32* %1
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str7 to [0 x i8]*), %Int32 %2)
 	ret void
 }
 
-define internal void @f3_ptr({i32}* %x) {
-	%1 = getelementptr inbounds {i32}, {i32}* %x, i32 0, i32 0
-	%2 = load i32, i32* %1
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str8 to [0 x i8]*), i32 %2)
+define internal void @f3_ptr({%Int32}* %x) {
+	%1 = getelementptr inbounds {%Int32}, {%Int32}* %x, %Int32 0, %Int32 0
+	%2 = load %Int32, %Int32* %1
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str8 to [0 x i8]*), %Int32 %2)
 	ret void
 }
 
@@ -289,9 +289,9 @@ define internal void @test_by_value() {
 	; cast_composite_to_composite
 	; JUST
 	; as ptr
-	%6 = bitcast %main_Type1* @a to {i32}*
-	%7 = load {i32}, {i32}* %6
-	call void @f3_val({i32} %7)
+	%6 = bitcast %main_Type1* @a to {%Int32}*
+	%7 = load {%Int32}, {%Int32}* %6
+	call void @f3_val({%Int32} %7)
 	; cast_composite_to_composite
 	; JUST
 	; as ptr
@@ -309,9 +309,9 @@ define internal void @test_by_value() {
 	; cast_composite_to_composite
 	; JUST
 	; as ptr
-	%13 = bitcast %main_Type2* @b to {i32}*
-	%14 = load {i32}, {i32}* %13
-	call void @f3_val({i32} %14)
+	%13 = bitcast %main_Type2* @b to {%Int32}*
+	%14 = load {%Int32}, {%Int32}* %13
+	call void @f3_val({%Int32} %14)
 	; cast_composite_to_composite
 	; JUST
 	; as ptr
@@ -329,9 +329,9 @@ define internal void @test_by_value() {
 	; cast_composite_to_composite
 	; JUST
 	; as ptr
-	%20 = bitcast %main_Type3* @c to {i32}*
-	%21 = load {i32}, {i32}* %20
-	call void @f3_val({i32} %21)
+	%20 = bitcast %main_Type3* @c to {%Int32}*
+	%21 = load {%Int32}, {%Int32}* %20
+	call void @f3_val({%Int32} %21)
 	ret void
 }
 
@@ -342,24 +342,24 @@ define internal void @test_by_pointer() {
 	call void @f1_ptr(%main_Type2* %2)
 	%3 = bitcast %main_Type1* @a to %main_Type3*
 	call void @f2_ptr(%main_Type3* %3)
-	%4 = bitcast %main_Type1* @a to {i32}*
-	call void @f3_ptr({i32}* %4)
+	%4 = bitcast %main_Type1* @a to {%Int32}*
+	call void @f3_ptr({%Int32}* %4)
 	%5 = bitcast %main_Type2* @b to %main_Type1*
 	call void @f0_ptr(%main_Type1* %5)
 	%6 = bitcast %main_Type2* @b to %main_Type2*
 	call void @f1_ptr(%main_Type2* %6)
 	%7 = bitcast %main_Type2* @b to %main_Type3*
 	call void @f2_ptr(%main_Type3* %7)
-	%8 = bitcast %main_Type2* @b to {i32}*
-	call void @f3_ptr({i32}* %8)
+	%8 = bitcast %main_Type2* @b to {%Int32}*
+	call void @f3_ptr({%Int32}* %8)
 	%9 = bitcast %main_Type3* @c to %main_Type1*
 	call void @f0_ptr(%main_Type1* %9)
 	%10 = bitcast %main_Type3* @c to %main_Type2*
 	call void @f1_ptr(%main_Type2* %10)
 	%11 = bitcast %main_Type3* @c to %main_Type3*
 	call void @f2_ptr(%main_Type3* %11)
-	%12 = bitcast %main_Type3* @c to {i32}*
-	call void @f3_ptr({i32}* %12)
+	%12 = bitcast %main_Type3* @c to {%Int32}*
+	call void @f3_ptr({%Int32}* %12)
 	ret void
 }
 

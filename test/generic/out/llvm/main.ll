@@ -108,37 +108,37 @@ break_2:
 ; -- print includes --
 ; from included ctypes64
 %Str = type %Str8;
-%Char = type i8;
+%Char = type %Char8;
 %ConstChar = type %Char;
-%SignedChar = type i8;
-%UnsignedChar = type i8;
-%Short = type i16;
-%UnsignedShort = type i16;
-%Int = type i32;
-%UnsignedInt = type i32;
-%LongInt = type i64;
-%UnsignedLongInt = type i64;
-%Long = type i64;
-%UnsignedLong = type i64;
-%LongLong = type i64;
-%UnsignedLongLong = type i64;
-%LongLongInt = type i64;
-%UnsignedLongLongInt = type i64;
+%SignedChar = type %Int8;
+%UnsignedChar = type %Int8;
+%Short = type %Int16;
+%UnsignedShort = type %Int16;
+%Int = type %Int32;
+%UnsignedInt = type %Int32;
+%LongInt = type %Int64;
+%UnsignedLongInt = type %Int64;
+%Long = type %Int64;
+%UnsignedLong = type %Int64;
+%LongLong = type %Int64;
+%UnsignedLongLong = type %Int64;
+%LongLongInt = type %Int64;
+%UnsignedLongLongInt = type %Int64;
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type i64;
+%IntPtrT = type %Int64;
 %PtrDiffT = type i8*;
-%OffT = type i64;
-%USecondsT = type i32;
-%PIDT = type i32;
-%UIDT = type i32;
-%GIDT = type i32;
+%OffT = type %Int64;
+%USecondsT = type %Int32;
+%PIDT = type %Int32;
+%UIDT = type %Int32;
+%GIDT = type %Int32;
 ; from included stdio
-%File = type i8;
-%FposT = type i8;
+%File = type %Int8;
+%FposT = type %Int8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -204,14 +204,14 @@ declare void @perror(%ConstCharStr* %str)
 @str15 = private constant [37 x i8] [i8 100, i8 32, i8 33, i8 61, i8 32, i8 91, i8 48, i8 44, i8 32, i8 49, i8 44, i8 32, i8 50, i8 44, i8 32, i8 51, i8 44, i8 32, i8 48, i8 44, i8 32, i8 48, i8 44, i8 32, i8 48, i8 44, i8 32, i8 48, i8 44, i8 32, i8 48, i8 44, i8 32, i8 48, i8 93, i8 10, i8 0]
 
 %main_Point2D = type {
-	i32, 
-	i32
+	%Int32,
+	%Int32
 };
 
 %main_Point3D = type {
-	i32, 
-	i32, 
-	i32
+	%Int32,
+	%Int32,
+	%Int32
 };
 
 
@@ -219,25 +219,25 @@ define internal i1 @test_generic_integer() {
 	; Any integer literal have GenericInteger type
 	; result of such expressions also have generic type
 	; GenericInteger value can be implicitly casted to any Integer type
-	%1 = alloca i32, align 4
-	store i32 1, i32* %1
-	%2 = alloca i64, align 8
-	store i64 1, i64* %2
+	%1 = alloca %Int32, align 4
+	store %Int32 1, %Int32* %1
+	%2 = alloca %Int64, align 8
+	store %Int64 1, %Int64* %2
 	; to Float
 	%3 = alloca float, align 4
 	store float 1.0000000000000000, float* %3
 	%4 = alloca double, align 8
 	store double 1.0000000000000000, double* %4
 	; and to Word8
-	%5 = alloca i8, align 1
-	store i8 1, i8* %5
+	%5 = alloca %Word8, align 1
+	store %Word8 1, %Word8* %5
 	; explicit cast GenericInteger value
-	%6 = alloca i8, align 1
-	store i8 1, i8* %6
-	%7 = alloca i16, align 2
-	store i16 1, i16* %7
-	%8 = alloca i32, align 4
-	store i32 1, i32* %8
+	%6 = alloca %Char8, align 1
+	store %Char8 1, %Char8* %6
+	%7 = alloca %Char16, align 2
+	store %Char16 1, %Char16* %7
+	%8 = alloca %Char32, align 4
+	store %Char32 1, %Char32* %8
 	%9 = alloca i1, align 1
 	store i1 1, i1* %9
 	ret i1 1
@@ -253,8 +253,8 @@ define internal i1 @test_generic_float() {
 	%2 = alloca double, align 8
 	store double 3.1415926535897931, double* %2
 	; explicit cast GenericFloat value to Int32
-	%3 = alloca i32, align 4
-	store i32 3, i32* %3
+	%3 = alloca %Int32, align 4
+	store %Int32 3, %Int32* %3
 	ret i1 1
 }
 
@@ -263,15 +263,15 @@ define internal i1 @test_generic_char() {
 	; (you can pick GenericChar value by index of GenericString value)
 	; value with GenericChar type
 	; can be implicit casted to any Char type
-	%1 = alloca i8, align 1
-	store i8 65, i8* %1
-	%2 = alloca i16, align 2
-	store i16 65, i16* %2
-	%3 = alloca i32, align 4
-	store i32 65, i32* %3
+	%1 = alloca %Char8, align 1
+	store %Char8 65, %Char8* %1
+	%2 = alloca %Char16, align 2
+	store %Char16 65, %Char16* %2
+	%3 = alloca %Char32, align 4
+	store %Char32 65, %Char32* %3
 	; explicit cast GenericChar value to Int32
-	%4 = alloca i32, align 4
-	store i32 65, i32* %4
+	%4 = alloca %Int32, align 4
+	store %Int32 65, %Int32* %4
 	ret i1 1
 }
 
@@ -293,26 +293,26 @@ endif_0:
 	; value with GenericArray type
 	; can be implicit casted to Array with compatible type and same size
 	; implicit cast Generic([4]GenericInteger) value to [4]Int32
-	%8 = alloca [4 x i32], align 4
+	%8 = alloca [4 x %Int32], align 4
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%9 = zext i3 4 to i32
+	%9 = zext i3 4 to %Int32
 	; -- end vol eval --
-	%10 = insertvalue [4 x i32] zeroinitializer, i32 0, 0
-	%11 = insertvalue [4 x i32] %10, i32 1, 1
-	%12 = insertvalue [4 x i32] %11, i32 2, 2
-	%13 = insertvalue [4 x i32] %12, i32 3, 3
-	store [4 x i32] %13, [4 x i32]* %8
-	%14 = insertvalue [4 x i32] zeroinitializer, i32 0, 0
-	%15 = insertvalue [4 x i32] %14, i32 1, 1
-	%16 = insertvalue [4 x i32] %15, i32 2, 2
-	%17 = insertvalue [4 x i32] %16, i32 3, 3
-	%18 = alloca [4 x i32]
-	store [4 x i32] %17, [4 x i32]* %18
-	%19 = bitcast [4 x i32]* %8 to i8*
-	%20 = bitcast [4 x i32]* %18 to i8*
+	%10 = insertvalue [4 x %Int32] zeroinitializer, %Int32 0, 0
+	%11 = insertvalue [4 x %Int32] %10, %Int32 1, 1
+	%12 = insertvalue [4 x %Int32] %11, %Int32 2, 2
+	%13 = insertvalue [4 x %Int32] %12, %Int32 3, 3
+	store [4 x %Int32] %13, [4 x %Int32]* %8
+	%14 = insertvalue [4 x %Int32] zeroinitializer, %Int32 0, 0
+	%15 = insertvalue [4 x %Int32] %14, %Int32 1, 1
+	%16 = insertvalue [4 x %Int32] %15, %Int32 2, 2
+	%17 = insertvalue [4 x %Int32] %16, %Int32 3, 3
+	%18 = alloca [4 x %Int32]
+	store [4 x %Int32] %17, [4 x %Int32]* %18
+	%19 = bitcast [4 x %Int32]* %8 to i8*
+	%20 = bitcast [4 x %Int32]* %18 to i8*
 	
-	%21 = call i1 (i8*, i8*, i64) @memeq( i8* %19, i8* %20, i64 16)
+	%21 = call i1 (i8*, i8*, i64) @memeq( i8* %19, i8* %20, %Int64 16)
 	%22 = icmp eq i1 %21, 0
 	br i1 %22 , label %then_1, label %endif_1
 then_1:
@@ -321,26 +321,26 @@ then_1:
 	br label %endif_1
 endif_1:
 	; implicit cast Generic([4]GenericInteger) value to [4]Nat64
-	%25 = alloca [4 x i64], align 8
+	%25 = alloca [4 x %Int64], align 8
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%26 = zext i3 4 to i32
+	%26 = zext i3 4 to %Int32
 	; -- end vol eval --
-	%27 = insertvalue [4 x i64] zeroinitializer, i64 0, 0
-	%28 = insertvalue [4 x i64] %27, i64 1, 1
-	%29 = insertvalue [4 x i64] %28, i64 2, 2
-	%30 = insertvalue [4 x i64] %29, i64 3, 3
-	store [4 x i64] %30, [4 x i64]* %25
-	%31 = insertvalue [4 x i64] zeroinitializer, i64 0, 0
-	%32 = insertvalue [4 x i64] %31, i64 1, 1
-	%33 = insertvalue [4 x i64] %32, i64 2, 2
-	%34 = insertvalue [4 x i64] %33, i64 3, 3
-	%35 = alloca [4 x i64]
-	store [4 x i64] %34, [4 x i64]* %35
-	%36 = bitcast [4 x i64]* %25 to i8*
-	%37 = bitcast [4 x i64]* %35 to i8*
+	%27 = insertvalue [4 x %Int64] zeroinitializer, %Int64 0, 0
+	%28 = insertvalue [4 x %Int64] %27, %Int64 1, 1
+	%29 = insertvalue [4 x %Int64] %28, %Int64 2, 2
+	%30 = insertvalue [4 x %Int64] %29, %Int64 3, 3
+	store [4 x %Int64] %30, [4 x %Int64]* %25
+	%31 = insertvalue [4 x %Int64] zeroinitializer, %Int64 0, 0
+	%32 = insertvalue [4 x %Int64] %31, %Int64 1, 1
+	%33 = insertvalue [4 x %Int64] %32, %Int64 2, 2
+	%34 = insertvalue [4 x %Int64] %33, %Int64 3, 3
+	%35 = alloca [4 x %Int64]
+	store [4 x %Int64] %34, [4 x %Int64]* %35
+	%36 = bitcast [4 x %Int64]* %25 to i8*
+	%37 = bitcast [4 x %Int64]* %35 to i8*
 	
-	%38 = call i1 (i8*, i8*, i64) @memeq( i8* %36, i8* %37, i64 32)
+	%38 = call i1 (i8*, i8*, i64) @memeq( i8* %36, i8* %37, %Int64 32)
 	%39 = icmp eq i1 %38, 0
 	br i1 %39 , label %then_2, label %endif_2
 then_2:
@@ -349,34 +349,34 @@ then_2:
 	br label %endif_2
 endif_2:
 	; explicit cast Generic([4]GenericInteger) value to [10]Int32
-	%42 = alloca [10 x i32], align 4
-	%43 = insertvalue [10 x i32] zeroinitializer, i32 0, 0
-	%44 = insertvalue [10 x i32] %43, i32 1, 1
-	%45 = insertvalue [10 x i32] %44, i32 2, 2
-	%46 = insertvalue [10 x i32] %45, i32 3, 3
-	%47 = insertvalue [10 x i32] %46, i32 0, 4
-	%48 = insertvalue [10 x i32] %47, i32 0, 5
-	%49 = insertvalue [10 x i32] %48, i32 0, 6
-	%50 = insertvalue [10 x i32] %49, i32 0, 7
-	%51 = insertvalue [10 x i32] %50, i32 0, 8
-	%52 = insertvalue [10 x i32] %51, i32 0, 9
-	store [10 x i32] %52, [10 x i32]* %42
-	%53 = insertvalue [10 x i32] zeroinitializer, i32 0, 0
-	%54 = insertvalue [10 x i32] %53, i32 1, 1
-	%55 = insertvalue [10 x i32] %54, i32 2, 2
-	%56 = insertvalue [10 x i32] %55, i32 3, 3
-	%57 = insertvalue [10 x i32] %56, i32 0, 4
-	%58 = insertvalue [10 x i32] %57, i32 0, 5
-	%59 = insertvalue [10 x i32] %58, i32 0, 6
-	%60 = insertvalue [10 x i32] %59, i32 0, 7
-	%61 = insertvalue [10 x i32] %60, i32 0, 8
-	%62 = insertvalue [10 x i32] %61, i32 0, 9
-	%63 = alloca [10 x i32]
-	store [10 x i32] %62, [10 x i32]* %63
-	%64 = bitcast [10 x i32]* %42 to i8*
-	%65 = bitcast [10 x i32]* %63 to i8*
+	%42 = alloca [10 x %Int32], align 4
+	%43 = insertvalue [10 x %Int32] zeroinitializer, %Int32 0, 0
+	%44 = insertvalue [10 x %Int32] %43, %Int32 1, 1
+	%45 = insertvalue [10 x %Int32] %44, %Int32 2, 2
+	%46 = insertvalue [10 x %Int32] %45, %Int32 3, 3
+	%47 = insertvalue [10 x %Int32] %46, %Int32 0, 4
+	%48 = insertvalue [10 x %Int32] %47, %Int32 0, 5
+	%49 = insertvalue [10 x %Int32] %48, %Int32 0, 6
+	%50 = insertvalue [10 x %Int32] %49, %Int32 0, 7
+	%51 = insertvalue [10 x %Int32] %50, %Int32 0, 8
+	%52 = insertvalue [10 x %Int32] %51, %Int32 0, 9
+	store [10 x %Int32] %52, [10 x %Int32]* %42
+	%53 = insertvalue [10 x %Int32] zeroinitializer, %Int32 0, 0
+	%54 = insertvalue [10 x %Int32] %53, %Int32 1, 1
+	%55 = insertvalue [10 x %Int32] %54, %Int32 2, 2
+	%56 = insertvalue [10 x %Int32] %55, %Int32 3, 3
+	%57 = insertvalue [10 x %Int32] %56, %Int32 0, 4
+	%58 = insertvalue [10 x %Int32] %57, %Int32 0, 5
+	%59 = insertvalue [10 x %Int32] %58, %Int32 0, 6
+	%60 = insertvalue [10 x %Int32] %59, %Int32 0, 7
+	%61 = insertvalue [10 x %Int32] %60, %Int32 0, 8
+	%62 = insertvalue [10 x %Int32] %61, %Int32 0, 9
+	%63 = alloca [10 x %Int32]
+	store [10 x %Int32] %62, [10 x %Int32]* %63
+	%64 = bitcast [10 x %Int32]* %42 to i8*
+	%65 = bitcast [10 x %Int32]* %63 to i8*
 	
-	%66 = call i1 (i8*, i8*, i64) @memeq( i8* %64, i8* %65, i64 40)
+	%66 = call i1 (i8*, i8*, i64) @memeq( i8* %64, i8* %65, %Int64 40)
 	%67 = icmp eq i1 %66, 0
 	br i1 %67 , label %then_3, label %endif_3
 then_3:
@@ -391,22 +391,22 @@ define internal i1 @test_generic_record() {
 	; Any record expression have GenericRecord type
 	; this record expression have type:
 	; Generic(record {x: GenericInteger, y: GenericInteger})
-	%1 = insertvalue {i4, i5} zeroinitializer, i4 10, 0
-	%2 = insertvalue {i4, i5} %1, i5 20, 1
+	%1 = insertvalue {i4,i5} zeroinitializer, i4 10, 0
+	%2 = insertvalue {i4,i5} %1, i5 20, 1
 	; value with GenericRecord type
 	; can be implicit casted to Record with same fields.
 	; implicit cast Generic(record {x: GenericInteger, y: GenericInteger})
 	; to record {x: Int32, y: Int32}
 	%3 = alloca %main_Point2D, align 4
-	%4 = insertvalue %main_Point2D zeroinitializer, i32 10, 0
-	%5 = insertvalue %main_Point2D %4, i32 20, 1
+	%4 = insertvalue %main_Point2D zeroinitializer, %Int32 10, 0
+	%5 = insertvalue %main_Point2D %4, %Int32 20, 1
 	store %main_Point2D %5, %main_Point2D* %3
 	; explicit cast Generic(record {x: GenericInteger, y: GenericInteger})
 	; to record {x: Int32, y: Int32, z: Int32}
 	%6 = alloca %main_Point3D, align 4
-	%7 = insertvalue %main_Point3D zeroinitializer, i32 10, 0
-	%8 = insertvalue %main_Point3D %7, i32 20, 1
-	%9 = insertvalue %main_Point3D %8, i32 0, 2
+	%7 = insertvalue %main_Point3D zeroinitializer, %Int32 10, 0
+	%8 = insertvalue %main_Point3D %7, %Int32 20, 1
+	%9 = insertvalue %main_Point3D %8, %Int32 0, 2
 	store %main_Point3D %9, %main_Point3D* %6
 	ret i1 1
 }

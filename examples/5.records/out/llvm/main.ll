@@ -108,34 +108,34 @@ break_2:
 ; -- print includes --
 ; from included ctypes64
 %Str = type %Str8;
-%Char = type i8;
+%Char = type %Char8;
 %ConstChar = type %Char;
-%SignedChar = type i8;
-%UnsignedChar = type i8;
-%Short = type i16;
-%UnsignedShort = type i16;
-%Int = type i32;
-%UnsignedInt = type i32;
-%LongInt = type i64;
-%UnsignedLongInt = type i64;
-%Long = type i64;
-%UnsignedLong = type i64;
-%LongLong = type i64;
-%UnsignedLongLong = type i64;
-%LongLongInt = type i64;
-%UnsignedLongLongInt = type i64;
+%SignedChar = type %Int8;
+%UnsignedChar = type %Int8;
+%Short = type %Int16;
+%UnsignedShort = type %Int16;
+%Int = type %Int32;
+%UnsignedInt = type %Int32;
+%LongInt = type %Int64;
+%UnsignedLongInt = type %Int64;
+%Long = type %Int64;
+%UnsignedLong = type %Int64;
+%LongLong = type %Int64;
+%UnsignedLongLong = type %Int64;
+%LongLongInt = type %Int64;
+%UnsignedLongLongInt = type %Int64;
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type i64;
+%IntPtrT = type %Int64;
 %PtrDiffT = type i8*;
-%OffT = type i64;
-%USecondsT = type i32;
-%PIDT = type i32;
-%UIDT = type i32;
-%GIDT = type i32;
+%OffT = type %Int64;
+%USecondsT = type %Int32;
+%PIDT = type %Int32;
+%UIDT = type %Int32;
+%GIDT = type %Int32;
 ; from included math
 declare %Double @acos(%Double %x)
 declare %Double @asin(%Double %x)
@@ -232,8 +232,8 @@ declare %Str* @secure_getenv(%Str* %name)
 declare i8* @malloc(%SizeT %size)
 declare %Int @system([0 x %ConstChar]* %string)
 ; from included stdio
-%File = type i8;
-%FposT = type i8;
+%File = type %Int8;
+%FposT = type %Int8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -286,12 +286,12 @@ declare void @perror(%ConstCharStr* %str)
 @str2 = private constant [18 x i8] [i8 108, i8 105, i8 110, i8 101, i8 32, i8 108, i8 101, i8 110, i8 103, i8 116, i8 104, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
 
 %main_Point = type {
-	%Float, 
+	%Float,
 	%Float
 };
 
 %main_Line = type {
-	%main_Point, 
+	%main_Point,
 	%main_Point
 };
 
@@ -360,13 +360,13 @@ define internal void @ptr_example() {
 	%1 = call i8* @malloc(%SizeT 16)
 	%2 = bitcast i8* %1 to %main_Point*
 	; access by pointer
-	%3 = getelementptr inbounds %main_Point, %main_Point* %2, i32 0, i32 0
+	%3 = getelementptr inbounds %main_Point, %main_Point* %2, %Int32 0, %Int32 0
 	store %Float 10.0000000000000000, %Float* %3
-	%4 = getelementptr inbounds %main_Point, %main_Point* %2, i32 0, i32 1
+	%4 = getelementptr inbounds %main_Point, %main_Point* %2, %Int32 0, %Int32 1
 	store %Float 20.0000000000000000, %Float* %4
-	%5 = getelementptr inbounds %main_Point, %main_Point* %2, i32 0, i32 0
+	%5 = getelementptr inbounds %main_Point, %main_Point* %2, %Int32 0, %Int32 0
 	%6 = load %Float, %Float* %5
-	%7 = getelementptr inbounds %main_Point, %main_Point* %2, i32 0, i32 1
+	%7 = getelementptr inbounds %main_Point, %main_Point* %2, %Int32 0, %Int32 1
 	%8 = load %Float, %Float* %7
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*), %Float %6, %Float %8)
 	ret void

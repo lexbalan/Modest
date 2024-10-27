@@ -108,37 +108,37 @@ break_2:
 ; -- print includes --
 ; from included ctypes64
 %Str = type %Str8;
-%Char = type i8;
+%Char = type %Char8;
 %ConstChar = type %Char;
-%SignedChar = type i8;
-%UnsignedChar = type i8;
-%Short = type i16;
-%UnsignedShort = type i16;
-%Int = type i32;
-%UnsignedInt = type i32;
-%LongInt = type i64;
-%UnsignedLongInt = type i64;
-%Long = type i64;
-%UnsignedLong = type i64;
-%LongLong = type i64;
-%UnsignedLongLong = type i64;
-%LongLongInt = type i64;
-%UnsignedLongLongInt = type i64;
+%SignedChar = type %Int8;
+%UnsignedChar = type %Int8;
+%Short = type %Int16;
+%UnsignedShort = type %Int16;
+%Int = type %Int32;
+%UnsignedInt = type %Int32;
+%LongInt = type %Int64;
+%UnsignedLongInt = type %Int64;
+%Long = type %Int64;
+%UnsignedLong = type %Int64;
+%LongLong = type %Int64;
+%UnsignedLongLong = type %Int64;
+%LongLongInt = type %Int64;
+%UnsignedLongLongInt = type %Int64;
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type i64;
+%IntPtrT = type %Int64;
 %PtrDiffT = type i8*;
-%OffT = type i64;
-%USecondsT = type i32;
-%PIDT = type i32;
-%UIDT = type i32;
-%GIDT = type i32;
+%OffT = type %Int64;
+%USecondsT = type %Int32;
+%PIDT = type %Int32;
+%UIDT = type %Int32;
+%GIDT = type %Int32;
 ; from included stdio
-%File = type i8;
-%FposT = type i8;
+%File = type %Int8;
+%FposT = type %Int8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -195,61 +195,61 @@ declare void @perror(%ConstCharStr* %str)
 @str6 = private constant [24 x i8] [i8 108, i8 111, i8 99, i8 97, i8 108, i8 65, i8 114, i8 114, i8 97, i8 121, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
 @str7 = private constant [24 x i8] [i8 108, i8 111, i8 99, i8 97, i8 108, i8 65, i8 114, i8 114, i8 97, i8 121, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 
-@globalArray0 = global [10 x i32] [
-	i32 0,
-	i32 1,
-	i32 2,
-	i32 3,
-	i32 4,
-	i32 5,
-	i32 6,
-	i32 7,
-	i32 8,
-	i32 9
+@globalArray0 = global [10 x %Int32] [
+	%Int32 0,
+	%Int32 1,
+	%Int32 2,
+	%Int32 3,
+	%Int32 4,
+	%Int32 5,
+	%Int32 6,
+	%Int32 7,
+	%Int32 8,
+	%Int32 9
 ]
-@globalArray1 = global [10 x i32] [
-	i32 0,
-	i32 0,
-	i32 0,
-	i32 0,
-	i32 0,
-	i32 0,
-	i32 0,
-	i32 0,
-	i32 0,
-	i32 0
+@globalArray1 = global [10 x %Int32] [
+	%Int32 0,
+	%Int32 0,
+	%Int32 0,
+	%Int32 0,
+	%Int32 0,
+	%Int32 0,
+	%Int32 0,
+	%Int32 0,
+	%Int32 0,
+	%Int32 0
 ]
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str1 to [0 x i8]*))
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%2 = zext i4 10 to i32
+	%2 = zext i4 10 to %Int32
 	; -- end vol eval --
-	%3 = load [10 x i32], [10 x i32]* @globalArray0
-	store [10 x i32] %3, [10 x i32]* @globalArray1
-	%4 = alloca i32, align 4
-	store i32 0, i32* %4
+	%3 = load [10 x %Int32], [10 x %Int32]* @globalArray0
+	store [10 x %Int32] %3, [10 x %Int32]* @globalArray1
+	%4 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %4
 	br label %again_1
 again_1:
-	%5 = load i32, i32* %4
-	%6 = icmp slt i32 %5, 10
+	%5 = load %Int32, %Int32* %4
+	%6 = icmp slt %Int32 %5, 10
 	br i1 %6 , label %body_1, label %break_1
 body_1:
-	%7 = load i32, i32* %4
-	%8 = getelementptr inbounds [10 x i32], [10 x i32]* @globalArray1, i32 0, i32 %7
-	%9 = load i32, i32* %8
-	%10 = load i32, i32* %4
-	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str2 to [0 x i8]*), i32 %10, i32 %9)
-	%12 = load i32, i32* %4
-	%13 = add i32 %12, 1
-	store i32 %13, i32* %4
+	%7 = load %Int32, %Int32* %4
+	%8 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* @globalArray1, %Int32 0, %Int32 %7
+	%9 = load %Int32, %Int32* %8
+	%10 = load %Int32, %Int32* %4
+	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str2 to [0 x i8]*), %Int32 %10, %Int32 %9)
+	%12 = load %Int32, %Int32* %4
+	%13 = add %Int32 %12, 1
+	store %Int32 %13, %Int32* %4
 	br label %again_1
 break_1:
-	%14 = bitcast [10 x i32]* @globalArray0 to i8*
-	%15 = bitcast [10 x i32]* @globalArray1 to i8*
+	%14 = bitcast [10 x %Int32]* @globalArray0 to i8*
+	%15 = bitcast [10 x %Int32]* @globalArray1 to i8*
 	
-	%16 = call i1 (i8*, i8*, i64) @memeq( i8* %14, i8* %15, i64 40)
+	%16 = call i1 (i8*, i8*, i64) @memeq( i8* %14, i8* %15, %Int64 40)
 	%17 = icmp ne i1 %16, 0
 	br i1 %17 , label %then_0, label %else_0
 then_0:
@@ -260,57 +260,57 @@ else_0:
 	br label %endif_0
 endif_0:
 	; local
-	%20 = alloca [10 x i32], align 4
-	%21 = insertvalue [10 x i32] zeroinitializer, i32 0, 0
-	%22 = insertvalue [10 x i32] %21, i32 1, 1
-	%23 = insertvalue [10 x i32] %22, i32 2, 2
-	%24 = insertvalue [10 x i32] %23, i32 3, 3
-	%25 = insertvalue [10 x i32] %24, i32 4, 4
-	%26 = insertvalue [10 x i32] %25, i32 5, 5
-	%27 = insertvalue [10 x i32] %26, i32 6, 6
-	%28 = insertvalue [10 x i32] %27, i32 7, 7
-	%29 = insertvalue [10 x i32] %28, i32 8, 8
-	%30 = insertvalue [10 x i32] %29, i32 9, 9
-	store [10 x i32] %30, [10 x i32]* %20
-	%31 = alloca [10 x i32], align 4
-	%32 = insertvalue [10 x i32] zeroinitializer, i32 0, 0
-	%33 = insertvalue [10 x i32] %32, i32 0, 1
-	%34 = insertvalue [10 x i32] %33, i32 0, 2
-	%35 = insertvalue [10 x i32] %34, i32 0, 3
-	%36 = insertvalue [10 x i32] %35, i32 0, 4
-	%37 = insertvalue [10 x i32] %36, i32 0, 5
-	%38 = insertvalue [10 x i32] %37, i32 0, 6
-	%39 = insertvalue [10 x i32] %38, i32 0, 7
-	%40 = insertvalue [10 x i32] %39, i32 0, 8
-	%41 = insertvalue [10 x i32] %40, i32 0, 9
-	store [10 x i32] %41, [10 x i32]* %31
+	%20 = alloca [10 x %Int32], align 4
+	%21 = insertvalue [10 x %Int32] zeroinitializer, %Int32 0, 0
+	%22 = insertvalue [10 x %Int32] %21, %Int32 1, 1
+	%23 = insertvalue [10 x %Int32] %22, %Int32 2, 2
+	%24 = insertvalue [10 x %Int32] %23, %Int32 3, 3
+	%25 = insertvalue [10 x %Int32] %24, %Int32 4, 4
+	%26 = insertvalue [10 x %Int32] %25, %Int32 5, 5
+	%27 = insertvalue [10 x %Int32] %26, %Int32 6, 6
+	%28 = insertvalue [10 x %Int32] %27, %Int32 7, 7
+	%29 = insertvalue [10 x %Int32] %28, %Int32 8, 8
+	%30 = insertvalue [10 x %Int32] %29, %Int32 9, 9
+	store [10 x %Int32] %30, [10 x %Int32]* %20
+	%31 = alloca [10 x %Int32], align 4
+	%32 = insertvalue [10 x %Int32] zeroinitializer, %Int32 0, 0
+	%33 = insertvalue [10 x %Int32] %32, %Int32 0, 1
+	%34 = insertvalue [10 x %Int32] %33, %Int32 0, 2
+	%35 = insertvalue [10 x %Int32] %34, %Int32 0, 3
+	%36 = insertvalue [10 x %Int32] %35, %Int32 0, 4
+	%37 = insertvalue [10 x %Int32] %36, %Int32 0, 5
+	%38 = insertvalue [10 x %Int32] %37, %Int32 0, 6
+	%39 = insertvalue [10 x %Int32] %38, %Int32 0, 7
+	%40 = insertvalue [10 x %Int32] %39, %Int32 0, 8
+	%41 = insertvalue [10 x %Int32] %40, %Int32 0, 9
+	store [10 x %Int32] %41, [10 x %Int32]* %31
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%42 = zext i4 10 to i32
+	%42 = zext i4 10 to %Int32
 	; -- end vol eval --
-	%43 = load [10 x i32], [10 x i32]* %20
-	store [10 x i32] %43, [10 x i32]* %31
-	store i32 0, i32* %4
+	%43 = load [10 x %Int32], [10 x %Int32]* %20
+	store [10 x %Int32] %43, [10 x %Int32]* %31
+	store %Int32 0, %Int32* %4
 	br label %again_2
 again_2:
-	%44 = load i32, i32* %4
-	%45 = icmp slt i32 %44, 10
+	%44 = load %Int32, %Int32* %4
+	%45 = icmp slt %Int32 %44, 10
 	br i1 %45 , label %body_2, label %break_2
 body_2:
-	%46 = load i32, i32* %4
-	%47 = getelementptr inbounds [10 x i32], [10 x i32]* %31, i32 0, i32 %46
-	%48 = load i32, i32* %47
-	%49 = load i32, i32* %4
-	%50 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*), i32 %49, i32 %48)
-	%51 = load i32, i32* %4
-	%52 = add i32 %51, 1
-	store i32 %52, i32* %4
+	%46 = load %Int32, %Int32* %4
+	%47 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %31, %Int32 0, %Int32 %46
+	%48 = load %Int32, %Int32* %47
+	%49 = load %Int32, %Int32* %4
+	%50 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*), %Int32 %49, %Int32 %48)
+	%51 = load %Int32, %Int32* %4
+	%52 = add %Int32 %51, 1
+	store %Int32 %52, %Int32* %4
 	br label %again_2
 break_2:
-	%53 = bitcast [10 x i32]* %20 to i8*
-	%54 = bitcast [10 x i32]* %31 to i8*
+	%53 = bitcast [10 x %Int32]* %20 to i8*
+	%54 = bitcast [10 x %Int32]* %31 to i8*
 	
-	%55 = call i1 (i8*, i8*, i64) @memeq( i8* %53, i8* %54, i64 40)
+	%55 = call i1 (i8*, i8*, i64) @memeq( i8* %53, i8* %54, %Int64 40)
 	%56 = icmp ne i1 %55, 0
 	br i1 %56 , label %then_1, label %else_1
 then_1:

@@ -108,37 +108,37 @@ break_2:
 ; -- print includes --
 ; from included ctypes64
 %Str = type %Str8;
-%Char = type i8;
+%Char = type %Char8;
 %ConstChar = type %Char;
-%SignedChar = type i8;
-%UnsignedChar = type i8;
-%Short = type i16;
-%UnsignedShort = type i16;
-%Int = type i32;
-%UnsignedInt = type i32;
-%LongInt = type i64;
-%UnsignedLongInt = type i64;
-%Long = type i64;
-%UnsignedLong = type i64;
-%LongLong = type i64;
-%UnsignedLongLong = type i64;
-%LongLongInt = type i64;
-%UnsignedLongLongInt = type i64;
+%SignedChar = type %Int8;
+%UnsignedChar = type %Int8;
+%Short = type %Int16;
+%UnsignedShort = type %Int16;
+%Int = type %Int32;
+%UnsignedInt = type %Int32;
+%LongInt = type %Int64;
+%UnsignedLongInt = type %Int64;
+%Long = type %Int64;
+%UnsignedLong = type %Int64;
+%LongLong = type %Int64;
+%UnsignedLongLong = type %Int64;
+%LongLongInt = type %Int64;
+%UnsignedLongLongInt = type %Int64;
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type i64;
+%IntPtrT = type %Int64;
 %PtrDiffT = type i8*;
-%OffT = type i64;
-%USecondsT = type i32;
-%PIDT = type i32;
-%UIDT = type i32;
-%GIDT = type i32;
+%OffT = type %Int64;
+%USecondsT = type %Int32;
+%PIDT = type %Int32;
+%UIDT = type %Int32;
+%GIDT = type %Int32;
 ; from included stdio
-%File = type i8;
-%FposT = type i8;
+%File = type %Int8;
+%FposT = type %Int8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -195,86 +195,86 @@ declare void @perror(%ConstCharStr* %str)
 @str6 = private constant [26 x i8] [i8 97, i8 102, i8 116, i8 101, i8 114, i8 32, i8 100, i8 101, i8 99, i8 114, i8 121, i8 112, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 95, i8 109, i8 115, i8 103, i8 58, i8 32, i8 10, i8 0]
 
 
-@test_msg = global [13 x i8] [
-	i8 72,
-	i8 101,
-	i8 108,
-	i8 108,
-	i8 111,
-	i8 32,
-	i8 87,
-	i8 111,
-	i8 114,
-	i8 108,
-	i8 100,
-	i8 33,
-	i8 0
+@test_msg = global [13 x %Char8] [
+	%Char8 72,
+	%Char8 101,
+	%Char8 108,
+	%Char8 108,
+	%Char8 111,
+	%Char8 32,
+	%Char8 87,
+	%Char8 111,
+	%Char8 114,
+	%Char8 108,
+	%Char8 100,
+	%Char8 33,
+	%Char8 0
 ]
-@test_key = global [4 x i8] [
-	i8 97,
-	i8 98,
-	i8 99,
-	i8 0
+@test_key = global [4 x %Char8] [
+	%Char8 97,
+	%Char8 98,
+	%Char8 99,
+	%Char8 0
 ]
 
-define internal void @xor_encrypter([0 x i8]* %buf, i32 %buflen, [0 x i8]* %key, i32 %keylen) {
-	%1 = alloca i32, align 4
-	store i32 0, i32* %1
-	%2 = alloca i32, align 4
-	store i32 0, i32* %2
+define internal void @xor_encrypter([0 x %Word8]* %buf, %Int32 %buflen, [0 x %Word8]* %key, %Int32 %keylen) {
+	%1 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %1
+	%2 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %2
 	br label %again_1
 again_1:
-	%3 = load i32, i32* %1
-	%4 = icmp ult i32 %3, %buflen
+	%3 = load %Int32, %Int32* %1
+	%4 = icmp ult %Int32 %3, %buflen
 	br i1 %4 , label %body_1, label %break_1
 body_1:
-	%5 = load i32, i32* %1
-	%6 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %5
-	%7 = load i32, i32* %1
-	%8 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %7
-	%9 = load i8, i8* %8
-	%10 = load i32, i32* %2
-	%11 = getelementptr inbounds [0 x i8], [0 x i8]* %key, i32 0, i32 %10
-	%12 = load i8, i8* %11
-	%13 = xor i8 %9, %12
-	store i8 %13, i8* %6
-	%14 = load i32, i32* %2
-	%15 = sub i32 %keylen, 1
-	%16 = icmp ult i32 %14, %15
+	%5 = load %Int32, %Int32* %1
+	%6 = getelementptr inbounds [0 x %Word8], [0 x %Word8]* %buf, %Int32 0, %Int32 %5
+	%7 = load %Int32, %Int32* %1
+	%8 = getelementptr inbounds [0 x %Word8], [0 x %Word8]* %buf, %Int32 0, %Int32 %7
+	%9 = load %Word8, %Word8* %8
+	%10 = load %Int32, %Int32* %2
+	%11 = getelementptr inbounds [0 x %Word8], [0 x %Word8]* %key, %Int32 0, %Int32 %10
+	%12 = load %Word8, %Word8* %11
+	%13 = xor %Word8 %9, %12
+	store %Word8 %13, %Word8* %6
+	%14 = load %Int32, %Int32* %2
+	%15 = sub %Int32 %keylen, 1
+	%16 = icmp ult %Int32 %14, %15
 	br i1 %16 , label %then_0, label %else_0
 then_0:
-	%17 = load i32, i32* %2
-	%18 = add i32 %17, 1
-	store i32 %18, i32* %2
+	%17 = load %Int32, %Int32* %2
+	%18 = add %Int32 %17, 1
+	store %Int32 %18, %Int32* %2
 	br label %endif_0
 else_0:
-	store i32 0, i32* %2
+	store %Int32 0, %Int32* %2
 	br label %endif_0
 endif_0:
-	%19 = load i32, i32* %1
-	%20 = add i32 %19, 1
-	store i32 %20, i32* %1
+	%19 = load %Int32, %Int32* %1
+	%20 = add %Int32 %19, 1
+	store %Int32 %20, %Int32* %1
 	br label %again_1
 break_1:
 	ret void
 }
 
-define internal void @print_bytes([0 x i8]* %buf, i32 %len) {
-	%1 = alloca i32, align 4
-	store i32 0, i32* %1
+define internal void @print_bytes([0 x %Word8]* %buf, %Int32 %len) {
+	%1 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %1
 	br label %again_1
 again_1:
-	%2 = load i32, i32* %1
-	%3 = icmp ult i32 %2, %len
+	%2 = load %Int32, %Int32* %1
+	%3 = icmp ult %Int32 %2, %len
 	br i1 %3 , label %body_1, label %break_1
 body_1:
-	%4 = load i32, i32* %1
-	%5 = getelementptr inbounds [0 x i8], [0 x i8]* %buf, i32 0, i32 %4
-	%6 = load i8, i8* %5
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str1 to [0 x i8]*), i8 %6)
-	%8 = load i32, i32* %1
-	%9 = add i32 %8, 1
-	store i32 %9, i32* %1
+	%4 = load %Int32, %Int32* %1
+	%5 = getelementptr inbounds [0 x %Word8], [0 x %Word8]* %buf, %Int32 0, %Int32 %4
+	%6 = load %Word8, %Word8* %5
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str1 to [0 x i8]*), %Word8 %6)
+	%8 = load %Int32, %Int32* %1
+	%9 = add %Int32 %8, 1
+	store %Int32 %9, %Int32* %1
 	br label %again_1
 break_1:
 	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
@@ -284,18 +284,18 @@ break_1:
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str3 to [0 x i8]*))
-	%2 = bitcast [13 x i8]* @test_msg to [0 x i8]*
-	%3 = bitcast [4 x i8]* @test_key to [0 x i8]*
+	%2 = bitcast [13 x %Char8]* @test_msg to [0 x %Word8]*
+	%3 = bitcast [4 x %Char8]* @test_key to [0 x %Word8]*
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([27 x i8]* @str4 to [0 x i8]*))
-	call void @print_bytes([0 x i8]* %2, i32 12)
+	call void @print_bytes([0 x %Word8]* %2, %Int32 12)
 	; encrypt test data
-	call void @xor_encrypter([0 x i8]* %2, i32 12, [0 x i8]* %3, i32 3)
+	call void @xor_encrypter([0 x %Word8]* %2, %Int32 12, [0 x %Word8]* %3, %Int32 3)
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str5 to [0 x i8]*))
-	call void @print_bytes([0 x i8]* %2, i32 12)
+	call void @print_bytes([0 x %Word8]* %2, %Int32 12)
 	; decrypt test data
-	call void @xor_encrypter([0 x i8]* %2, i32 12, [0 x i8]* %3, i32 3)
+	call void @xor_encrypter([0 x %Word8]* %2, %Int32 12, [0 x %Word8]* %3, %Int32 3)
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str6 to [0 x i8]*))
-	call void @print_bytes([0 x i8]* %2, i32 12)
+	call void @print_bytes([0 x %Word8]* %2, %Int32 12)
 	ret %Int 0
 }
 

@@ -111,84 +111,84 @@ break_2:
 ; -- end print imports --
 ; -- strings --
 
-define i32 @minmax_min_int32(i32 %a, i32 %b) {
-	%1 = icmp slt i32 %a, %b
+define %Int32 @minmax_min_int32(%Int32 %a, %Int32 %b) {
+	%1 = icmp slt %Int32 %a, %b
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
-	ret i32 %a
+	ret %Int32 %a
 	br label %endif_0
 endif_0:
-	ret i32 %b
+	ret %Int32 %b
 }
 
-define i32 @minmax_max_int32(i32 %a, i32 %b) {
-	%1 = icmp sgt i32 %a, %b
+define %Int32 @minmax_max_int32(%Int32 %a, %Int32 %b) {
+	%1 = icmp sgt %Int32 %a, %b
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
-	ret i32 %a
+	ret %Int32 %a
 	br label %endif_0
 endif_0:
-	ret i32 %b
+	ret %Int32 %b
 }
 
-define i64 @minmax_min_int64(i64 %a, i64 %b) {
-	%1 = icmp slt i64 %a, %b
+define %Int64 @minmax_min_int64(%Int64 %a, %Int64 %b) {
+	%1 = icmp slt %Int64 %a, %b
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
-	ret i64 %a
+	ret %Int64 %a
 	br label %endif_0
 endif_0:
-	ret i64 %b
+	ret %Int64 %b
 }
 
-define i64 @minmax_max_int64(i64 %a, i64 %b) {
-	%1 = icmp sgt i64 %a, %b
+define %Int64 @minmax_max_int64(%Int64 %a, %Int64 %b) {
+	%1 = icmp sgt %Int64 %a, %b
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
-	ret i64 %a
+	ret %Int64 %a
 	br label %endif_0
 endif_0:
-	ret i64 %b
+	ret %Int64 %b
 }
 
-define i32 @minmax_min_nat32(i32 %a, i32 %b) {
-	%1 = icmp ult i32 %a, %b
+define %Int32 @minmax_min_nat32(%Int32 %a, %Int32 %b) {
+	%1 = icmp ult %Int32 %a, %b
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
-	ret i32 %a
+	ret %Int32 %a
 	br label %endif_0
 endif_0:
-	ret i32 %b
+	ret %Int32 %b
 }
 
-define i32 @minmax_max_nat32(i32 %a, i32 %b) {
-	%1 = icmp ugt i32 %a, %b
+define %Int32 @minmax_max_nat32(%Int32 %a, %Int32 %b) {
+	%1 = icmp ugt %Int32 %a, %b
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
-	ret i32 %a
+	ret %Int32 %a
 	br label %endif_0
 endif_0:
-	ret i32 %b
+	ret %Int32 %b
 }
 
-define i64 @minmax_min_nat64(i64 %a, i64 %b) {
-	%1 = icmp ult i64 %a, %b
+define %Int64 @minmax_min_nat64(%Int64 %a, %Int64 %b) {
+	%1 = icmp ult %Int64 %a, %b
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
-	ret i64 %a
+	ret %Int64 %a
 	br label %endif_0
 endif_0:
-	ret i64 %b
+	ret %Int64 %b
 }
 
-define i64 @minmax_max_nat64(i64 %a, i64 %b) {
-	%1 = icmp ugt i64 %a, %b
+define %Int64 @minmax_max_nat64(%Int64 %a, %Int64 %b) {
+	%1 = icmp ugt %Int64 %a, %b
 	br i1 %1 , label %then_0, label %endif_0
 then_0:
-	ret i64 %a
+	ret %Int64 %a
 	br label %endif_0
 endif_0:
-	ret i64 %b
+	ret %Int64 %b
 }
 
 define float @minmax_min_float32(float %a, float %b) {

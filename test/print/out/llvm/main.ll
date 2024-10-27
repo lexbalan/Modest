@@ -108,34 +108,34 @@ break_2:
 ; -- print includes --
 ; from included ctypes64
 %Str = type %Str8;
-%Char = type i8;
+%Char = type %Char8;
 %ConstChar = type %Char;
-%SignedChar = type i8;
-%UnsignedChar = type i8;
-%Short = type i16;
-%UnsignedShort = type i16;
-%Int = type i32;
-%UnsignedInt = type i32;
-%LongInt = type i64;
-%UnsignedLongInt = type i64;
-%Long = type i64;
-%UnsignedLong = type i64;
-%LongLong = type i64;
-%UnsignedLongLong = type i64;
-%LongLongInt = type i64;
-%UnsignedLongLongInt = type i64;
+%SignedChar = type %Int8;
+%UnsignedChar = type %Int8;
+%Short = type %Int16;
+%UnsignedShort = type %Int16;
+%Int = type %Int32;
+%UnsignedInt = type %Int32;
+%LongInt = type %Int64;
+%UnsignedLongInt = type %Int64;
+%Long = type %Int64;
+%UnsignedLong = type %Int64;
+%LongLong = type %Int64;
+%UnsignedLongLong = type %Int64;
+%LongLongInt = type %Int64;
+%UnsignedLongLongInt = type %Int64;
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type i64;
+%IntPtrT = type %Int64;
 %PtrDiffT = type i8*;
-%OffT = type i64;
-%USecondsT = type i32;
-%PIDT = type i32;
-%UIDT = type i32;
-%GIDT = type i32;
+%OffT = type %Int64;
+%USecondsT = type %Int32;
+%PIDT = type %Int32;
+%UIDT = type %Int32;
+%GIDT = type %Int32;
 ; -- end print includes --
 ; -- print imports --
 ; from included unistd
@@ -225,8 +225,8 @@ declare %Int @usleep(%USecondsT %useconds)
 declare %PIDT @vfork()
 declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 ; from included stdio
-%File = type i8;
-%FposT = type i8;
+%File = type %Int8;
+%FposT = type %Int8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -283,20 +283,20 @@ declare %SizeT @strlen([0 x %ConstChar]* %s)
 declare [0 x %Char]* @strcat([0 x %Char]* %s1, [0 x %ConstChar]* %s2)
 declare [0 x %Char]* @strncat([0 x %Char]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
 declare [0 x %Char]* @strerror(%Int %error)
-declare i8 @utf_utf32_to_utf8(i32 %c, [4 x i8]* %buf)
-declare i8 @utf_utf16_to_utf32([0 x i16]* %c, i32* %result)
-declare void @console_putchar8(i8 %c)
-declare void @console_putchar16(i16 %c)
-declare void @console_putchar32(i32 %c)
-declare void @console_putchar_utf8(i8 %c)
-declare void @console_putchar_utf16(i16 %c)
-declare void @console_putchar_utf32(i32 %c)
+declare %Int8 @utf_utf32_to_utf8(%Char32 %c, [4 x %Char8]* %buf)
+declare %Int8 @utf_utf16_to_utf32([0 x %Char16]* %c, %Char32* %result)
+declare void @console_putchar8(%Char8 %c)
+declare void @console_putchar16(%Char16 %c)
+declare void @console_putchar32(%Char32 %c)
+declare void @console_putchar_utf8(%Char8 %c)
+declare void @console_putchar_utf16(%Char16 %c)
+declare void @console_putchar_utf32(%Char32 %c)
 declare void @console_puts8(%Str8* %s)
 declare void @console_puts16(%Str16* %s)
 declare void @console_puts32(%Str32* %s)
 declare void @console_print(%Str8* %form, ...)
-declare i32 @console_vfprint(%Int %fd, %Str8* %form, i8* %va)
-declare i32 @console_vsprint([0 x i8]* %buf, %Str8* %form, i8* %va)
+declare %Int32 @console_vfprint(%Int %fd, %Str8* %form, i8* %va)
+declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
 ; -- end print imports --
 ; -- strings --
 @str1 = private constant [20 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 99, i8 111, i8 110, i8 115, i8 111, i8 108, i8 101, i8 32, i8 112, i8 114, i8 105, i8 110, i8 116, i8 10, i8 0]
@@ -321,11 +321,11 @@ define %Int @main() {
 	call void (%Str8*, ...) @console_print(%Str8* bitcast ([7 x i8]* @str6 to [0 x i8]*))
 	call void (%Str8*, ...) @console_print(%Str8* bitcast ([64 x i8]* @str7 to [0 x i8]*))
 	call void (%Str8*, ...) @console_print(%Str8* bitcast ([7 x i8]* @str8 to [0 x i8]*))
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([11 x i8]* @str9 to [0 x i8]*), i32 128000)
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([11 x i8]* @str9 to [0 x i8]*), %Char32 128000)
 	call void (%Str8*, ...) @console_print(%Str8* bitcast ([11 x i8]* @str10 to [0 x i8]*), %Str8* bitcast ([4 x i8]* @str2 to [0 x i8]*))
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([9 x i8]* @str11 to [0 x i8]*), i32 -1)
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([9 x i8]* @str12 to [0 x i8]*), i32 123)
-	call void (%Str8*, ...) @console_print(%Str8* bitcast ([11 x i8]* @str13 to [0 x i8]*), i32 305419903)
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([9 x i8]* @str11 to [0 x i8]*), %Int32 -1)
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([9 x i8]* @str12 to [0 x i8]*), %Int32 123)
+	call void (%Str8*, ...) @console_print(%Str8* bitcast ([11 x i8]* @str13 to [0 x i8]*), %Int32 305419903)
 	ret %Int 0
 }
 

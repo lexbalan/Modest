@@ -31,7 +31,7 @@ func test_generic_integer() -> Bool {
 	var g: Float32 = one
 
 	// and to Word8
-	var x: Word8 = one
+	var x: %Word8 = one
 
 
 	// explicit cast GenericInteger value

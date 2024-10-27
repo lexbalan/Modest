@@ -111,90 +111,90 @@ break_2:
 ; -- end print imports --
 ; -- strings --
 
-define i8 @utf_utf32_to_utf8(i32 %c, [4 x i8]* %buf) {
-	%1 = bitcast i32 %c to i32
-	%2 = icmp ule i32 %1, 127
+define %Int8 @utf_utf32_to_utf8(%Char32 %c, [4 x %Char8]* %buf) {
+	%1 = bitcast %Char32 %c to %Int32
+	%2 = icmp ule %Int32 %1, 127
 	br i1 %2 , label %then_0, label %else_0
 then_0:
-	%3 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
-	%4 = trunc i32 %1 to i8
-	store i8 %4, i8* %3
-	ret i8 1
+	%3 = getelementptr inbounds [4 x %Char8], [4 x %Char8]* %buf, %Int32 0, %Int32 0
+	%4 = trunc %Int32 %1 to %Char8
+	store %Char8 %4, %Char8* %3
+	ret %Int8 1
 	br label %endif_0
 else_0:
-	%6 = icmp ule i32 %1, 2047
+	%6 = icmp ule %Int32 %1, 2047
 	br i1 %6 , label %then_1, label %else_1
 then_1:
-	%7 = bitcast i32 %1 to i32
-	%8 = lshr i32 %7, 6
-	%9 = and i32 %8, 31
-	%10 = lshr i32 %7, 0
-	%11 = and i32 %10, 63
-	%12 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
-	%13 = or i32 192, %9
-	%14 = trunc i32 %13 to i8
-	store i8 %14, i8* %12
-	%15 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 1
-	%16 = or i32 128, %11
-	%17 = trunc i32 %16 to i8
-	store i8 %17, i8* %15
-	ret i8 2
+	%7 = bitcast %Int32 %1 to %Word32
+	%8 = lshr %Word32 %7, 6
+	%9 = and %Word32 %8, 31
+	%10 = lshr %Word32 %7, 0
+	%11 = and %Word32 %10, 63
+	%12 = getelementptr inbounds [4 x %Char8], [4 x %Char8]* %buf, %Int32 0, %Int32 0
+	%13 = or %Word32 192, %9
+	%14 = trunc %Word32 %13 to %Char8
+	store %Char8 %14, %Char8* %12
+	%15 = getelementptr inbounds [4 x %Char8], [4 x %Char8]* %buf, %Int32 0, %Int32 1
+	%16 = or %Word32 128, %11
+	%17 = trunc %Word32 %16 to %Char8
+	store %Char8 %17, %Char8* %15
+	ret %Int8 2
 	br label %endif_1
 else_1:
-	%19 = icmp ule i32 %1, 65535
+	%19 = icmp ule %Int32 %1, 65535
 	br i1 %19 , label %then_2, label %else_2
 then_2:
-	%20 = bitcast i32 %1 to i32
-	%21 = lshr i32 %20, 12
-	%22 = and i32 %21, 15
-	%23 = lshr i32 %20, 6
-	%24 = and i32 %23, 63
-	%25 = lshr i32 %20, 0
-	%26 = and i32 %25, 63
-	%27 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
-	%28 = or i32 224, %22
-	%29 = trunc i32 %28 to i8
-	store i8 %29, i8* %27
-	%30 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 1
-	%31 = or i32 128, %24
-	%32 = trunc i32 %31 to i8
-	store i8 %32, i8* %30
-	%33 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 2
-	%34 = or i32 128, %26
-	%35 = trunc i32 %34 to i8
-	store i8 %35, i8* %33
-	ret i8 3
+	%20 = bitcast %Int32 %1 to %Word32
+	%21 = lshr %Word32 %20, 12
+	%22 = and %Word32 %21, 15
+	%23 = lshr %Word32 %20, 6
+	%24 = and %Word32 %23, 63
+	%25 = lshr %Word32 %20, 0
+	%26 = and %Word32 %25, 63
+	%27 = getelementptr inbounds [4 x %Char8], [4 x %Char8]* %buf, %Int32 0, %Int32 0
+	%28 = or %Word32 224, %22
+	%29 = trunc %Word32 %28 to %Char8
+	store %Char8 %29, %Char8* %27
+	%30 = getelementptr inbounds [4 x %Char8], [4 x %Char8]* %buf, %Int32 0, %Int32 1
+	%31 = or %Word32 128, %24
+	%32 = trunc %Word32 %31 to %Char8
+	store %Char8 %32, %Char8* %30
+	%33 = getelementptr inbounds [4 x %Char8], [4 x %Char8]* %buf, %Int32 0, %Int32 2
+	%34 = or %Word32 128, %26
+	%35 = trunc %Word32 %34 to %Char8
+	store %Char8 %35, %Char8* %33
+	ret %Int8 3
 	br label %endif_2
 else_2:
-	%37 = icmp ule i32 %1, 1114111
+	%37 = icmp ule %Int32 %1, 1114111
 	br i1 %37 , label %then_3, label %endif_3
 then_3:
-	%38 = bitcast i32 %1 to i32
-	%39 = lshr i32 %38, 18
-	%40 = and i32 %39, 7
-	%41 = lshr i32 %38, 12
-	%42 = and i32 %41, 63
-	%43 = lshr i32 %38, 6
-	%44 = and i32 %43, 63
-	%45 = lshr i32 %38, 0
-	%46 = and i32 %45, 63
-	%47 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 0
-	%48 = or i32 240, %40
-	%49 = trunc i32 %48 to i8
-	store i8 %49, i8* %47
-	%50 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 1
-	%51 = or i32 128, %42
-	%52 = trunc i32 %51 to i8
-	store i8 %52, i8* %50
-	%53 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 2
-	%54 = or i32 128, %44
-	%55 = trunc i32 %54 to i8
-	store i8 %55, i8* %53
-	%56 = getelementptr inbounds [4 x i8], [4 x i8]* %buf, i32 0, i32 3
-	%57 = or i32 128, %46
-	%58 = trunc i32 %57 to i8
-	store i8 %58, i8* %56
-	ret i8 4
+	%38 = bitcast %Int32 %1 to %Word32
+	%39 = lshr %Word32 %38, 18
+	%40 = and %Word32 %39, 7
+	%41 = lshr %Word32 %38, 12
+	%42 = and %Word32 %41, 63
+	%43 = lshr %Word32 %38, 6
+	%44 = and %Word32 %43, 63
+	%45 = lshr %Word32 %38, 0
+	%46 = and %Word32 %45, 63
+	%47 = getelementptr inbounds [4 x %Char8], [4 x %Char8]* %buf, %Int32 0, %Int32 0
+	%48 = or %Word32 240, %40
+	%49 = trunc %Word32 %48 to %Char8
+	store %Char8 %49, %Char8* %47
+	%50 = getelementptr inbounds [4 x %Char8], [4 x %Char8]* %buf, %Int32 0, %Int32 1
+	%51 = or %Word32 128, %42
+	%52 = trunc %Word32 %51 to %Char8
+	store %Char8 %52, %Char8* %50
+	%53 = getelementptr inbounds [4 x %Char8], [4 x %Char8]* %buf, %Int32 0, %Int32 2
+	%54 = or %Word32 128, %44
+	%55 = trunc %Word32 %54 to %Char8
+	store %Char8 %55, %Char8* %53
+	%56 = getelementptr inbounds [4 x %Char8], [4 x %Char8]* %buf, %Int32 0, %Int32 3
+	%57 = or %Word32 128, %46
+	%58 = trunc %Word32 %57 to %Char8
+	store %Char8 %58, %Char8* %56
+	ret %Int8 4
 	br label %endif_3
 endif_3:
 	br label %endif_2
@@ -203,63 +203,63 @@ endif_2:
 endif_1:
 	br label %endif_0
 endif_0:
-	ret i8 0
+	ret %Int8 0
 }
 
-define i8 @utf_utf16_to_utf32([0 x i16]* %c, i32* %result) {
-	%1 = getelementptr inbounds [0 x i16], [0 x i16]* %c, i32 0, i32 0
-	%2 = load i16, i16* %1
-	%3 = zext i16 %2 to i32
-	%4 = icmp ult i32 %3, 55296
-	%5 = icmp ugt i32 %3, 57343
+define %Int8 @utf_utf16_to_utf32([0 x %Char16]* %c, %Char32* %result) {
+	%1 = getelementptr inbounds [0 x %Char16], [0 x %Char16]* %c, %Int32 0, %Int32 0
+	%2 = load %Char16, %Char16* %1
+	%3 = zext %Char16 %2 to %Int32
+	%4 = icmp ult %Int32 %3, 55296
+	%5 = icmp ugt %Int32 %3, 57343
 	%6 = or i1 %4, %5
 	br i1 %6 , label %then_0, label %else_0
 then_0:
-	%7 = bitcast i32 %3 to i32
-	store i32 %7, i32* %result
-	ret i8 1
+	%7 = bitcast %Int32 %3 to %Char32
+	store %Char32 %7, %Char32* %result
+	ret %Int8 1
 	br label %endif_0
 else_0:
-	%9 = icmp uge i32 %3, 56320
+	%9 = icmp uge %Int32 %3, 56320
 	br i1 %9 , label %then_1, label %else_1
 then_1:
 	;error("Illegal code sequence")
 	br label %endif_1
 else_1:
-	%10 = alloca i32, align 4
-	%11 = bitcast i32 %3 to i32
-	%12 = and i32 %11, 1023
-	%13 = shl i32 %12, 10
-	store i32 %13, i32* %10
-	%14 = getelementptr inbounds [0 x i16], [0 x i16]* %c, i32 0, i32 1
-	%15 = load i16, i16* %14
-	%16 = zext i16 %15 to i32
-	%17 = icmp ult i32 %16, 56320
-	%18 = icmp ugt i32 %16, 57343
+	%10 = alloca %Word32, align 4
+	%11 = bitcast %Int32 %3 to %Word32
+	%12 = and %Word32 %11, 1023
+	%13 = shl %Word32 %12, 10
+	store %Word32 %13, %Word32* %10
+	%14 = getelementptr inbounds [0 x %Char16], [0 x %Char16]* %c, %Int32 0, %Int32 1
+	%15 = load %Char16, %Char16* %14
+	%16 = zext %Char16 %15 to %Int32
+	%17 = icmp ult %Int32 %16, 56320
+	%18 = icmp ugt %Int32 %16, 57343
 	%19 = or i1 %17, %18
 	br i1 %19 , label %then_2, label %else_2
 then_2:
 	;error("Illegal code sequence")
 	br label %endif_2
 else_2:
-	%20 = load i32, i32* %10
-	%21 = bitcast i32 %16 to i32
-	%22 = and i32 %21, 1023
-	%23 = or i32 %20, %22
-	store i32 %23, i32* %10
-	%24 = load i32, i32* %10
-	%25 = bitcast i32 %24 to i32
-	%26 = add i32 %25, 65536
-	%27 = bitcast i32 %26 to i32
-	store i32 %27, i32* %result
-	ret i8 2
+	%20 = load %Word32, %Word32* %10
+	%21 = bitcast %Int32 %16 to %Word32
+	%22 = and %Word32 %21, 1023
+	%23 = or %Word32 %20, %22
+	store %Word32 %23, %Word32* %10
+	%24 = load %Word32, %Word32* %10
+	%25 = bitcast %Word32 %24 to %Int32
+	%26 = add %Int32 %25, 65536
+	%27 = bitcast %Int32 %26 to %Char32
+	store %Char32 %27, %Char32* %result
+	ret %Int8 2
 	br label %endif_2
 endif_2:
 	br label %endif_1
 endif_1:
 	br label %endif_0
 endif_0:
-	ret i8 0
+	ret %Int8 0
 }
 
 
