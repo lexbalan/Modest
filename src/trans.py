@@ -370,10 +370,6 @@ def init():
 	root_symtab.type_add('Unit', foundation.typeUnit)
 	root_symtab.type_add('Bool', foundation.typeBool)
 
-	root_symtab.type_add('Char8', foundation.typeChar8)
-	root_symtab.type_add('Char16', foundation.typeChar16)
-	root_symtab.type_add('Char32', foundation.typeChar32)
-
 	root_symtab.type_add('Word8', foundation.typeWord8)
 	root_symtab.type_add('Word16', foundation.typeWord16)
 	root_symtab.type_add('Word32', foundation.typeWord32)
@@ -395,7 +391,6 @@ def init():
 	root_symtab.type_add('Nat128', foundation.typeNat128)
 	root_symtab.type_add('Nat256', foundation.typeNat256)
 
-
 	#root_symtab.type_add('Float16', foundation.typeFloat16)
 	root_symtab.type_add('Float32', foundation.typeFloat32)
 	root_symtab.type_add('Float64', foundation.typeFloat64)
@@ -403,6 +398,10 @@ def init():
 	#root_symtab.type_add('Decimal32', foundation.typeDecimal32)
 	#root_symtab.type_add('Decimal64', foundation.typeDecimal64)
 	#root_symtab.type_add('Decimal128', foundation.typeDecimal128)
+
+	root_symtab.type_add('Char8', foundation.typeChar8)
+	root_symtab.type_add('Char16', foundation.typeChar16)
+	root_symtab.type_add('Char32', foundation.typeChar32)
 
 	root_symtab.type_add('Str8', foundation.typeStr8)
 	root_symtab.type_add('Str16', foundation.typeStr16)
