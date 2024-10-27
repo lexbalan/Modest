@@ -5,6 +5,10 @@ Constant definition bounds an [*identifier*](../identifier.md) with an [*immedia
 #### Common form
 
 ```
+// for global const
+const <#identifier#> = <#value_expression#>
+
+// for local const
 let <#identifier#> = <#value_expression#>
 ```
 
@@ -16,14 +20,14 @@ Global constant definition bounds an [*identifier*](../identifier.md) with an [*
 #### Examples
 
 ```swift
-let one = 1
-let two = one + 1
-let three = one + two
-let four = two * 2
+const one = 1
+const two = one + 1
+const three = one + two
+const four = two * 2
 ```
 
 ```swift
-let message = "Hello World!\n"
+const message = "Hello World!\n"
 
 public func main () -> Int32 {
 	printf("%s\n", message)

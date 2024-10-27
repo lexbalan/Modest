@@ -56,13 +56,8 @@
 
 import "libc/stdio"
 
-
-let minNumber = 0
-let maxNumber = 10
-
-
-func get_number(min: Int32, max: Int32) -> Int32
-
+const minNumber = 0
+const maxNumber = 10
 
 public func main() -> Int32 {
 	let number = get_number(minNumber, maxNumber)
