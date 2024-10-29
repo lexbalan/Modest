@@ -530,20 +530,8 @@ def type_is_bool(t):
 	return t['kind'] == 'bool'
 
 
-#def type_is_byte(t):
-#	return t['kind'] == 'byte'
-
-
-def type_is_char(t):
-	return t['kind'] == 'char'
-
-
 def type_is_word(t):
 	return t['kind'] == 'word'
-
-
-def type_is_string(t):
-	return t['kind'] == 'string'
 
 
 def type_is_integer(t):
@@ -552,6 +540,10 @@ def type_is_integer(t):
 
 def type_is_float(t):
 	return t['kind'] == 'float'
+
+
+def type_is_char(t):
+	return t['kind'] == 'char'
 
 
 # numeric type supports arithmetical operations
@@ -575,6 +567,11 @@ def type_is_array(t):
 	return t['kind'] == 'array'
 
 
+def type_is_string(t):
+	return t['kind'] == 'string'
+
+
+
 # VLA - variable langth array
 def type_is_vla(t):
 	if t['kind'] != 'array':
@@ -584,10 +581,6 @@ def type_is_vla(t):
 		return False
 
 	from value.value import value_is_immediate
-
-#	if not value_is_immediate(t['volume']):
-#		info("?????", t)
-#		print(t['volume'])
 
 	return not value_is_immediate(t['volume'])
 
@@ -771,8 +764,6 @@ def array_root_item_type(t):
 
 
 
-
-
 def print_list_by(lst, method):
 	i = 0
 	while i < len(lst):
@@ -888,12 +879,12 @@ def type_print(t, print_aka=True):
 
 	if type_is_record(t):
 		type_print_record(t, print_aka)
+
 	elif type_is_bool(t):
 		print("Bool", end='')
-	elif type_is_word(t):
-		print("Word%d" % t['width'], end='')
+
 	elif type_is_char(t):
-		print("Char%d" % t['width'], end='')
+		print(t['id']['str'], end='')
 
 	elif type_is_enum(t):
 		if t['id'] != None:
@@ -909,14 +900,14 @@ def type_print(t, print_aka=True):
 	elif type_is_func(t):
 		type_print_func(t, print_aka)
 
+	elif type_is_word(t):
+		print(t['id']['str'], end='')
+
 	elif type_is_integer(t):
-		if type_is_signed(t):
-			print('Int%d' % t['width'], end='')
-		else:
-			print('Nat%d' % t['width'], end='')
+		print(t['id']['str'], end='')
 
 	elif type_is_float(t):
-		print('Float%d' % t['width'], end='')
+		print(t['id']['str'], end='')
 
 	elif type_is_string(t):
 		print("String", end='')
