@@ -418,7 +418,6 @@ def init():
 	root_symtab.value_add('false', valueFalse)
 
 
-
 	target_name = str(settings.get('target_name'))
 	char_width = int(settings.get('char_width'))
 	int_width = int(settings.get('integer_width'))
