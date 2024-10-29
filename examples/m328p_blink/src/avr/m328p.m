@@ -3,9 +3,9 @@ include "avr"
 
 @packed
 public type GPIO record {
-	in: IO8
-	dir: IO8
-	out: IO8
+	public in: IO8
+	public dir: IO8
+	public out: IO8
 }
 
 private const sfrOffset = 0x20

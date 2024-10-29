@@ -6,6 +6,10 @@ target triple = "arm64-apple-macosx12.0.0"
 %Unit = type i1
 %Bool = type i1
 %Word8 = type i8
+%Word16 = type i16
+%Word32 = type i32
+%Word64 = type i64
+%Word128 = type i128
 %Char8 = type i8
 %Char16 = type i16
 %Char32 = type i32
@@ -103,8 +107,8 @@ break_2:
 
 ; -- print includes --
 ; from included avr
-%avr_IO8 = type i8;
-%avr_IO16 = type i16;
+%avr_IO8 = type %Int8;
+%avr_IO16 = type %Int16;
 ; -- end print includes --
 ; -- print imports --
 ; -- end print imports --
@@ -112,8 +116,8 @@ break_2:
 
 
 %m328p_GPIO = type <{
-	%avr_IO8, 
-	%avr_IO8, 
+	%avr_IO8,
+	%avr_IO8,
 	%avr_IO8
 }>;
 

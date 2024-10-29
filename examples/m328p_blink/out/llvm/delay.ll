@@ -6,6 +6,10 @@ target triple = "arm64-apple-macosx12.0.0"
 %Unit = type i1
 %Bool = type i1
 %Word8 = type i8
+%Word16 = type i16
+%Word32 = type i32
+%Word64 = type i64
+%Word128 = type i128
 %Char8 = type i8
 %Char16 = type i16
 %Char32 = type i32
@@ -107,32 +111,32 @@ break_2:
 ; -- end print imports --
 ; -- strings --
 
-@delayCounter = global i32 0
+@delayCounter = global %Int32 0
 
-define void @delay_ms(i32 %x) {
-	%1 = alloca i32, align 4
-	store i32 %x, i32* %1
+define void @delay_ms(%Int32 %x) {
+	%1 = alloca %Int32, align 4
+	store %Int32 %x, %Int32* %1
 	br label %again_1
 again_1:
-	%2 = load i32, i32* %1
-	%3 = icmp ugt i32 %2, 0
+	%2 = load %Int32, %Int32* %1
+	%3 = icmp ugt %Int32 %2, 0
 	br i1 %3 , label %body_1, label %break_1
 body_1:
-	store i32 0, i32* @delayCounter
+	store %Int32 0, %Int32* @delayCounter
 	br label %again_2
 again_2:
-	%4 = load i32, i32* @delayCounter
-	%5 = icmp ult i32 %4, 380
+	%4 = load %Int32, %Int32* @delayCounter
+	%5 = icmp ult %Int32 %4, 380
 	br i1 %5 , label %body_2, label %break_2
 body_2:
-	%6 = load i32, i32* @delayCounter
-	%7 = add i32 %6, 1
-	store i32 %7, i32* @delayCounter
+	%6 = load %Int32, %Int32* @delayCounter
+	%7 = add %Int32 %6, 1
+	store %Int32 %7, %Int32* @delayCounter
 	br label %again_2
 break_2:
-	%8 = load i32, i32* %1
-	%9 = sub i32 %8, 1
-	store i32 %9, i32* %1
+	%8 = load %Int32, %Int32* %1
+	%9 = sub %Int32 %8, 1
+	store %Int32 %9, %Int32* %1
 	br label %again_1
 break_1:
 	ret void

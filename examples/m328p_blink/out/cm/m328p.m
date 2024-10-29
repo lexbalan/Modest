@@ -4,9 +4,9 @@ const sfrOffset = 0x20
 
 
 public type GPIO record {
-	in: IO8
-	dir: IO8
-	out: IO8
+	public in: IO8
+	public dir: IO8
+	public out: IO8
 }
 public const portB = *GPIO (sfrOffset + 0x03)
 public const portC = *GPIO (sfrOffset + 0x06)

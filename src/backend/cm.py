@@ -143,6 +143,9 @@ def print_type_record(t):
 
 		nl_indent(field['nl'])
 		prev_nl = field['nl']
+
+		if field['access_level'] == 'public':
+			out("public ")
 		print_field(field)
 
 	indent_down()
