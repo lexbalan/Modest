@@ -529,6 +529,8 @@ def do_field(x):
 		nl = x['nl']
 	f['nl'] = nl
 
+	f['access_level'] = x['access_modifier']
+
 	add_spices(f, ast_atts=x['attributes'])
 	return f
 
@@ -1547,6 +1549,16 @@ def do_value_access(x):
 	if hlir_type.type_is_bad(field['type']):
 		return value_bad(x)
 
+
+	# Check access permissions
+	global module
+	# не у всех типов есть 'definition' (его нет у анонимных записей например)
+	if 'definition' in record_type:
+		if record_type['definition']['module'] != module:
+			if field['access_level'] == 'private':
+				error("access to private field of record", x['right']['ti'])
+
+
 	nv = value_access_record(field['type'], left, field, ti=x['ti'])
 	if not via_pointer:
 		nv['immutable'] = left['immutable']
@@ -2244,15 +2256,16 @@ def def_type(x):
 		if 'llvm_alias' in nt['id']:
 			nt.pop('llvm_alias')
 
-
 	if hlir_type.type_is_record(ty):
 		module['records'].append(nt)
 
 	definition = hlir_def_type(id, nt, ty, x['ti'])
-	nt['definition'] = definition
 	definition['module'] = module
 	definition['nl'] = x['nl']
 	definition['access_level'] = x['access_modifier']
+
+	nt['definition'] = definition
+
 	return definition
 
 

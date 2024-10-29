@@ -54,35 +54,37 @@ int main()
 {
 	printf("linked list example\n");
 
-	list_List *const list = list_create();
+	list_List *const list0 = list_create();
 
-	if (list == NULL) {
+	//list0.size  // access to private field of record
+
+	if (list0 == NULL) {
 		printf("error: cannot create list");
 		return 1;
 	}
 
 	// add some Nat32 values to list
-	nat32_list_insert((list_List *)list, 0);
-	nat32_list_insert((list_List *)list, 10);
-	nat32_list_insert((list_List *)list, 20);
-	nat32_list_insert((list_List *)list, 30);
-	nat32_list_insert((list_List *)list, 40);
-	nat32_list_insert((list_List *)list, 50);
-	nat32_list_insert((list_List *)list, 60);
-	nat32_list_insert((list_List *)list, 70);
-	nat32_list_insert((list_List *)list, 80);
-	nat32_list_insert((list_List *)list, 90);
-	nat32_list_insert((list_List *)list, 100);
+	nat32_list_insert((list_List *)list0, 0);
+	nat32_list_insert((list_List *)list0, 10);
+	nat32_list_insert((list_List *)list0, 20);
+	nat32_list_insert((list_List *)list0, 30);
+	nat32_list_insert((list_List *)list0, 40);
+	nat32_list_insert((list_List *)list0, 50);
+	nat32_list_insert((list_List *)list0, 60);
+	nat32_list_insert((list_List *)list0, 70);
+	nat32_list_insert((list_List *)list0, 80);
+	nat32_list_insert((list_List *)list0, 90);
+	nat32_list_insert((list_List *)list0, 100);
 
 	// print list size
-	const uint32_t list_size = list_size_get((list_List *)list);
+	const uint32_t list_size = list_size_get((list_List *)list0);
 	printf("linked list size: %u\n", list_size);
 
 	// print list forward
-	list_print_forward((list_List *)list);
+	list_print_forward((list_List *)list0);
 
 	// print list backward
-	list_print_backward((list_List *)list);
+	list_print_backward((list_List *)list0);
 
 
 	printf("\nlist.node_get(list, n) test\n");
@@ -91,7 +93,7 @@ int main()
 	int32_t i;
 	i = 0;
 	while (i >= -12) {
-		list_Node *const node = list_node_get((list_List *)list, i);
+		list_Node *const node = list_node_get((list_List *)list0, i);
 
 		if (node == NULL) {
 			printf("node %i not exist\n", i);
@@ -108,7 +110,7 @@ int main()
 
 	i = 0;
 	while (i <= 12) {
-		list_Node *const node = list_node_get((list_List *)list, i);
+		list_Node *const node = list_node_get((list_List *)list0, i);
 
 		if (node == NULL) {
 			printf("node %i not exist\n", i);
@@ -126,9 +128,9 @@ int main()
 
 	uint32_t *const p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
 	*p_nat32 = 1234;
-	list_insert((list_List *)list, 4, p_nat32);
+	list_insert((list_List *)list0, 4, p_nat32);
 
-	list_print_forward((list_List *)list);
+	list_print_forward((list_List *)list0);
 
 	return 0;
 }

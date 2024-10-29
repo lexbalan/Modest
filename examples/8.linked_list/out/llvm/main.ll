@@ -317,6 +317,7 @@ break_1:
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str5 to [0 x i8]*))
 	%2 = call %list_List* @list_create()
+	;list0.size  // access to private field of record
 	%3 = bitcast i8* null to %list_List*
 	%4 = icmp eq %list_List* %2, %3
 	br i1 %4 , label %then_0, label %endif_0

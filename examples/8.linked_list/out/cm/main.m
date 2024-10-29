@@ -32,35 +32,37 @@ func list_print_backward(list: *List) -> Unit {
 public func main() -> Int {
 	printf("linked list example\n")
 
-	let list = list.create()
+	let list0 = list.create()
 
-	if list == nil {
+	//list0.size  // access to private field of record
+
+	if list0 == nil {
 		printf("error: cannot create list")
 		return 1
 	}
 
 	// add some Nat32 values to list
-	nat32_list_insert(list, 0)
-	nat32_list_insert(list, 10)
-	nat32_list_insert(list, 20)
-	nat32_list_insert(list, 30)
-	nat32_list_insert(list, 40)
-	nat32_list_insert(list, 50)
-	nat32_list_insert(list, 60)
-	nat32_list_insert(list, 70)
-	nat32_list_insert(list, 80)
-	nat32_list_insert(list, 90)
-	nat32_list_insert(list, 100)
+	nat32_list_insert(list0, 0)
+	nat32_list_insert(list0, 10)
+	nat32_list_insert(list0, 20)
+	nat32_list_insert(list0, 30)
+	nat32_list_insert(list0, 40)
+	nat32_list_insert(list0, 50)
+	nat32_list_insert(list0, 60)
+	nat32_list_insert(list0, 70)
+	nat32_list_insert(list0, 80)
+	nat32_list_insert(list0, 90)
+	nat32_list_insert(list0, 100)
 
 	// print list size
-	let list_size = list.size_get(list)
+	let list_size = list.size_get(list0)
 	printf("linked list size: %u\n", list_size)
 
 	// print list forward
-	list_print_forward(list)
+	list_print_forward(list0)
 
 	// print list backward
-	list_print_backward(list)
+	list_print_backward(list0)
 
 
 	printf("\nlist.node_get(list, n) test\n")
@@ -68,7 +70,7 @@ public func main() -> Int {
 	// test list.node_get
 	var i: Int32 = 0
 	while i >= -12 {
-		let node = list.node_get(list, i)
+		let node = list.node_get(list0, i)
 
 		if node == nil {
 			printf("node %i not exist\n", i)
@@ -85,7 +87,7 @@ public func main() -> Int {
 
 	i = 0
 	while i <= 12 {
-		let node = list.node_get(list, i)
+		let node = list.node_get(list0, i)
 
 		if node == nil {
 			printf("node %i not exist\n", i)
@@ -103,9 +105,9 @@ public func main() -> Int {
 
 	let p_nat32 = malloc(sizeof(Nat32))
 	*p_nat32 = 1234
-	list.insert(list, pos = 4, data = p_nat32)
+	list.insert(list0, pos = 4, data = p_nat32)
 
-	list_print_forward(list)
+	list_print_forward(list0)
 
 	return 0
 }

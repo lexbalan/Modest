@@ -1357,6 +1357,11 @@ class Parser:
 				#if x != None:
 				#	x['nl'] = nl_cnt
 
+			access_modifier = 'private'
+			if self.match('public'):
+				access_modifier = 'public'
+			if self.match('private'):
+				pass
 
 			if not self.is_identifier():
 				return None
@@ -1394,6 +1399,7 @@ class Parser:
 				'isa': 'field',
 				'id': id,
 				'type': t,
+				'access_modifier': access_modifier,
 				'attributes': [],
 				'comments_and_attributes': obj['comments_and_attributes'],
 				'ti': id['ti']
