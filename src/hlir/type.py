@@ -29,6 +29,7 @@ RELATIONAL_OPS = ('lt', 'gt', 'le', 'ge')
 ARITHMETICAL_OPS = ('add', 'sub', 'mul', 'div', 'rem', 'negative')
 LOGICAL_OPS = ('or', 'xor', 'and', 'not')
 
+UNIT_OPS = CONS_OP
 WORD_OPS = CONS_OP + EQ_OPS + LOGICAL_OPS
 INT_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS #+ LOGICAL_OPS
 FLOAT_OPS = CONS_OP + EQ_OPS + RELATIONAL_OPS + ARITHMETICAL_OPS
@@ -73,87 +74,78 @@ def hlir_type_undefined(ti):
 	}
 
 
-def hlir_type_unit():
-	return {
-		'isa': 'type',
-		'kind': 'unit',
-		'generic': False,
-		'width': 0,
-		'size': 0,
-		'align': 0,
-		'id': {
-			'isa': 'id',
-			'str': 'Unit',
-			'c': 'void',
-			'llvm': 'void',
-			'ti': None
-		},
-		'ops': CONS_OP,
-		'att': [],
-		'ti': None
-	}
 
-
-def hlir_type_bool():
-	return {
-		'isa': 'type',
-		'kind': 'bool',
-		'generic': False,
-		'width': 1,
-		'size': 1,
-		'align': 1,
-		'id': {
-			'isa': 'id',
-			'str': 'Bool',
-			'c': 'bool',
-			'llvm': 'i1',
-			'ti': None
-		},
-		'ops': BOOL_OPS,
-		'att': [],
-		'ti': None
-	}
-
-
-
-def hlir_type_char(width, ti=None):
+def hlir_type_by_width(width, ti=None):
 	size = nbytes_for_bits(width)
-
-	calias = 'char'
-	if width > 8:
-		calias = 'uint%d_t' % width
 	return {
 		'isa': 'type',
-		'kind': 'char',
+		'kind': 'kind',
 		'generic': False,
 		'width': width,
 		'size': size,
 		'align': size,
+
 		'id': {
 			'isa': 'id',
-			'str': 'Char%d' % width,
-			'c': calias,
-			'llvm': '%%Char%d' % width,
+			'str': None,
+			'c': None,
+			'llvm': None,
 			'ti': None
 		},
 
-		'ops': CHAR_OPS,
+		'ops': [],
 		'att': [],
 		'ti': ti
 	}
 
 
-def hlir_type_word(width, ti=None):
-	t = hlir_type_integer(width, signed=False, ti=ti)
-	t['kind'] = 'word'
-	t['ops'] = WORD_OPS
-	t['id']['str'] = '%%Word%d' % width
-	t['id']['llvm'] = '%%Word%d' % width
+def hlir_type_unit():
+	t = hlir_type_by_width(0, ti=None)
+	t['kind'] = 'unit'
+	t['id']['str'] = 'Unit'
+	t['id']['c'] = 'void'
+	t['id']['llvm'] = 'void'
+	t['ops'] = UNIT_OPS
 	return t
 
 
+def hlir_type_bool():
+	t = hlir_type_by_width(1, ti=None)
+	t['kind'] = 'bool'
+	t['id']['str'] = 'Bool'
+	t['id']['c'] = 'bool'
+	t['id']['llvm'] = 'i1'
+	t['ops'] = BOOL_OPS
+	return t
+
+
+def hlir_type_word(width, ti=None):
+	t = hlir_type_by_width(width, ti=ti)
+
+	calias = None
+	llvm_alias = None
+
+	if width == 128:
+		calias = 'unsigned __int128'
+	else:
+		calias = 'uint%d_t' % width
+
+	if width in [8, 16, 32, 64, 128]:
+		llvm_alias = '%%Word%d' % width
+	else:
+		llvm_alias = 'i%d' % width
+
+	t['kind'] = 'word'
+	t['id']['str'] = 'Word%d' % width
+	t['id']['llvm'] = llvm_alias
+	t['id']['c'] = calias
+	t['ops'] = WORD_OPS
+	return t
+
+
+
 def hlir_type_integer(width, signed=True, ti=None):
-	size = nbytes_for_bits(width)
+	t = hlir_type_by_width(width, ti=ti)
 
 	aka = None
 	calias = None
@@ -184,74 +176,50 @@ def hlir_type_integer(width, signed=True, ti=None):
 		else:
 			llvm_alias = 'i%d' % width
 
-	return {
-		'isa': 'type',
-		'kind': 'int',
-		'generic': False,
-		'width': width,
-		'size': size,
-		'align': size,
-		'signed': signed,
-
-		'id': {
-			'isa': 'id',
-			'str': aka,
-			'c': calias,
-			'llvm': llvm_alias,
-			'ti': None
-		},
-
-		'ops': INT_OPS,
-		'att': [],
-		'ti': ti
-	}
+	t['kind'] = 'int'
+	t['signed'] = signed
+	t['id']['str'] = aka
+	t['id']['llvm'] = llvm_alias
+	t['id']['c'] = calias
+	t['ops'] = INT_OPS
+	return t
 
 
 def hlir_type_float(width, ti=None):
-	size = nbytes_for_bits(width)
+	t = hlir_type_by_width(width, ti=ti)
 
-	aka = 'Float%d' % width
 	calias = 'float'
 	if width > 32:
 		calias = 'double'
 
-	return {
-		'isa': 'type',
-		'kind': 'float',
-		'generic': False,
-		'width': width,
-		'size': size,
-		'align': size,
-		'signed': True,
+	t['kind'] = 'float'
+	t['id']['str'] = 'Float%d' % width
+	t['id']['c'] = calias
+	t['id']['llvm'] = calias
+	t['ops'] = FLOAT_OPS
+	return t
 
-		'id': {
-			'isa': 'id',
-			'str': 'Float32',
-			'c': calias,
-			'llvm': calias,
-			'ti': None
-		},
 
-		'ops': FLOAT_OPS,
-		'att': [],
-		'ti': ti
-	}
+def hlir_type_char(width, ti=None):
+	calias = 'char'
+	if width > 8:
+		calias = 'uint%d_t' % width
+
+	t = hlir_type_by_width(width, ti=ti)
+	t['kind'] = 'char'
+	t['id']['str'] = 'Char%d' % width
+	t['id']['c'] = calias
+	t['id']['llvm'] = '%%Char%d' % width
+	t['ops'] = CHAR_OPS
+	return t
 
 
 def hlir_type_pointer(to, ti=None):
-	size = nbytes_for_bits(ptr_width)
-	return {
-		'isa': 'type',
-		'kind': 'pointer',
-		'generic': False,
-		'width': ptr_width,
-		'size': size,
-		'align': size,
-		'to': to,
-		'ops': PTR_OPS,
-		'att': [],
-		'ti': ti
-	}
+	t = hlir_type_by_width(ptr_width, ti=ti)
+	t['kind'] = 'pointer'
+	t['to'] = to
+	t['ops'] = PTR_OPS
+	return t
 
 
 # size - always hlir_value (!)

@@ -9,8 +9,8 @@ include "misc/minmax"
 
 
 type Point record {
-	x: Float32
-	y: Float32
+	x: Float64
+	y: Float64
 }
 
 type Line record {

@@ -13,7 +13,7 @@ type Point2D record {
 	y: Int
 }
 const mathPi = 3.141592653589793238462643383279502884
-func squareOfCircle(radius: Float32) -> Float32 {
+func squareOfCircle(radius: Float64) -> Float64 {
 	return pow(radius, 2) * mathPi
 }
 func slope(a: Point2D, b: Point2D) -> Float32 {
@@ -35,11 +35,11 @@ public func main() -> Int {
 	printf("k = %f\n", k)
 
 	printf("sizeof(Float32) = %lu\n", sizeof(Float32))
-	printf("sizeof(Float64) = %lu\n", sizeof(Float32))
+	printf("sizeof(Float64) = %lu\n", sizeof(Float64))
 
 	// printf %f ожидает получить double а не float!
 	let sl = slope({x = 10, y = 20}, {x = 30, y = 50})
-	printf("slope = %f\n", Float32 sl)
+	printf("slope = %f\n", Float64 sl)
 
 	return 0
 }

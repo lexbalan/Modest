@@ -28,10 +28,10 @@ func test_generic_integer() -> Bool {
 
 	// to Float
 	var f: Float32 = one
-	var g: Float32 = one
+	var g: Float64 = one
 
 	// and to Word8
-	var x: %Word8 = one
+	var x: Word8 = one
 
 
 	// explicit cast GenericInteger value
@@ -52,7 +52,7 @@ func test_generic_float() -> Bool {
 	// can be implicit casted to any Float type
 	// (in this case value may lose precision)
 	var f: Float32 = pi
-	var g: Float32 = pi
+	var g: Float64 = pi
 
 	// explicit cast GenericFloat value to Int32
 	var x: Int32 = Int32 pi
