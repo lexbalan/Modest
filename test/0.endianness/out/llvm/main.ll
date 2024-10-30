@@ -193,11 +193,11 @@ declare void @perror(%ConstCharStr* %str)
 ; -- endstrings --
 
 define %Int @main() {
-	%1 = alloca %Int16, align 2
-	store %Int16 1, %Int16* %1
-	%2 = bitcast %Int16* %1 to %Int8*
-	%3 = load %Int8, %Int8* %2
-	%4 = icmp eq %Int8 %3, 1
+	%1 = alloca %Word16, align 2
+	store %Word16 1, %Word16* %1
+	%2 = bitcast %Word16* %1 to %Word8*
+	%3 = load %Word8, %Word8* %2
+	%4 = icmp eq %Word8 %3, 1
 	%5 = alloca %Str8*, align 8
 	br %Bool %4 , label %then_0, label %else_0
 then_0:
