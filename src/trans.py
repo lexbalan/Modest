@@ -25,6 +25,13 @@ import decimal
 decimal.getcontext().prec = settings.get('precision')
 
 
+def is_local_entity(x):
+	global cmodule
+	if 'definition' in x:
+		return x['definition']['module'] == cmodule
+	return True
+
+
 def is_local_context():
 	global cfunc
 	return cfunc != None
@@ -62,7 +69,7 @@ root_symtab = None
 modules = {}
 
 # Current module
-module = None
+cmodule = None
 
 
 # TODO: attribute 'unsafe' for cast operation
@@ -73,8 +80,8 @@ def is_unsafe_mode():
 
 # тепреь вызывается только из конструктора строки (value)
 def module_strings_add(v):
-	global module
-	module['strings'].append(v)
+	global cmodule
+	cmodule['strings'].append(v)
 
 
 
@@ -216,8 +223,8 @@ def ctx_type_get(id_str):
 	x = context.type_get(id_str)
 	if x != None:
 		return x
-	global module
-	return module_type_get(module, id_str)
+	global cmodule
+	return module_type_get(cmodule, id_str)
 
 def ctx_value_get(id_str):
 	#print("ctx_value_get %s" % id_str)
@@ -225,15 +232,15 @@ def ctx_value_get(id_str):
 	x = context.value_get(id_str)
 	if x != None:
 		return x
-	global module
-	return module_value_get(module, id_str)
+	global cmodule
+	return module_value_get(cmodule, id_str)
 
 
 
 # искать ТОЛЬКО внутри текущего контекста (блока)
 def ctx_value_get_shallow(id_str):
-	global module
-	return module['symtab_public'].value_get(id_str, recursive=False)
+	global cmodule
+	return cmodule['symtab_public'].value_get(id_str, recursive=False)
 
 
 
@@ -241,15 +248,15 @@ def module_append(definition, to_export=False):
 	if definition == None:
 		return
 
-	global module
+	global cmodule
 
 	if to_export:
-		module['defs_public'].append(definition)
+		cmodule['defs_public'].append(definition)
 	else:
 		#print("module %s append %s" % (module['id'], definition['isa']))
-		module['defs_private'].append(definition)
+		cmodule['defs_private'].append(definition)
 
-	definition['module'] = module
+	definition['module'] = cmodule
 
 
 
@@ -266,7 +273,7 @@ def context_pop():
 
 # used in metadirs
 def c_include(s):
-	global module
+	#global cmodule
 	local = s[0:2] == './'
 	inc = {
 		'isa': 'directive',
@@ -317,7 +324,7 @@ def attributes_get():
 
 
 def insert(s):
-	global module
+	#global cmodule
 	directive_insert = {
 		'isa': 'directive',
 		'kind': 'insert',
@@ -548,9 +555,9 @@ def do_type_id(t):
 		ns_id = id_str
 		id_str = t['ids'][1]['str']
 		#print(">>>>>>>>>>>>>>>>>>>>>> GET TYPE %s FROM: %s" % (id_str, ns_id))
-		global module
-		if ns_id in module['imports']:
-			submodule = module['imports'][ns_id]
+		global cmodule
+		if ns_id in cmodule['imports']:
+			submodule = cmodule['imports'][ns_id]
 			tx = module_type_get_public(submodule, id_str)
 		else:
 			error("unknown namespace '%s'" % ns_id, t['ti'])
@@ -645,7 +652,7 @@ def do_type_record(x):
 	rec['c_anon_id'] = anon_tag
 
 	#rec['att'].append('anonymous_record') # remove this!
-	module['anon_recs'].append(rec)
+	cmodule['anon_recs'].append(rec)
 	return rec
 
 
@@ -666,8 +673,8 @@ def do_type_enum(t):
 		item_val = value_terminal(enum_type, i, item['ti'])
 
 		item_val['id'] = id
-		global module
-		module_value_add_public(module, id['str'], item_val)
+		global cmodule
+		module_value_add_public(cmodule, id['str'], item_val)
 
 		i = i + 1
 
@@ -1162,8 +1169,8 @@ def do_value_call_lengthof(x):
 		return value_bad({'ti': ti})
 
 	# for C backend, because C cannot do lengthof(x)
-	if not 'use_lengthof' in module['att']:
-		module['att'].append('use_lengthof')
+	if not 'use_lengthof' in cmodule['att']:
+		cmodule['att'].append('use_lengthof')
 
 	return value_lengthof(arg, ti)
 
@@ -1474,17 +1481,17 @@ def do_value_slice(x):
 
 
 def is_submodule_name(id_str):
-	return id_str in module['imports']
+	return id_str in cmodule['imports']
 
 
 def submodule_access(x):
-	global module
+	global cmodule
 
 	mname = x['left']['str']
 	iname = x['right']['str']
 	ti = x['ti']
 
-	submodule = module['imports'][mname]
+	submodule = cmodule['imports'][mname]
 
 	v = module_value_get_public(submodule, iname)
 	if v == None:
@@ -1541,7 +1548,7 @@ def do_value_access(x):
 	# PROBLEM: у анонимных структур нет поля 'definition'
 	# и непонятно как с этимм быть. Можно добавить module
 	# в каждую сущность, но...
-#	if record_type['definition']['module'] != module:
+#	if record_type['definition']['module'] != cmodule:
 #		if not 'public' in field['att']:
 #			error("access to private field", x['ti'])
 
@@ -1551,12 +1558,11 @@ def do_value_access(x):
 
 
 	# Check access permissions
-	global module
+
 	# не у всех типов есть 'definition' (его нет у анонимных записей например)
-	if 'definition' in record_type:
-		if record_type['definition']['module'] != module:
-			if field['access_level'] == 'private':
-				error("access to private field of record", x['right']['ti'])
+	if not is_local_entity(record_type):
+		if field['access_level'] == 'private':
+			error("access to private field of record", x['right']['ti'])
 
 
 	nv = value_access_record(field['type'], left, field, ti=x['ti'])
@@ -1582,9 +1588,6 @@ def do_value_cons(x):
 	if value_is_bad(v) or hlir_type.type_is_bad(t):
 		return value_bad(x)
 	return value_cons_explicit(t, v, x['ti'])
-
-
-#undeclared_value_error = True
 
 
 
@@ -2163,7 +2166,7 @@ def do_stmt(x):
 
 
 def do_stmt_block(x):
-	global module
+	#global cmodule
 	context_push()
 
 	stmts = []
@@ -2188,9 +2191,9 @@ def symbol_const(id, init_value, is_public=False):
 		const_value['immediate'] = True
 		cp_immediate(const_value, init_value)
 
-	global module
-	module_value_add(module, id['str'], const_value, is_public=is_public)
-	#module_value_add_public(module, id['str'], const_value)
+	global cmodule
+	module_value_add(cmodule, id['str'], const_value, is_public=is_public)
+	#module_value_add_public(cmodule, id['str'], const_value)
 	return const_value
 
 
@@ -2198,11 +2201,11 @@ def symbol_const(id, init_value, is_public=False):
 # нужно добавлять префикс к сущности
 # наличие поля prefix дает принтеру знать что нужно декорировать имя
 def need_decoration(x):
-	return not is_nodecorate(x) and not ('module_nodecorate' in module['att'])
+	return not is_nodecorate(x) and not ('module_nodecorate' in cmodule['att'])
 
 
 def def_type(x):
-	global module
+	global cmodule
 	id = x['id']
 	log("def_type: %s" % id['str'])
 
@@ -2220,7 +2223,7 @@ def def_type(x):
 		#	error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
 	else:
 		nt = hlir_type.hlir_type_undefined(x['ti'])
-		module_type_add(module, id['str'], nt, is_public=x['access_modifier'] == 'public')
+		module_type_add(cmodule, id['str'], nt, is_public=x['access_modifier'] == 'public')
 
 	# только теперь обрабатываем поля,
 	# тк там могут быть указатели на саму себя
@@ -2232,8 +2235,8 @@ def def_type(x):
 
 	# поскольку этот тип здесь связывается с идентификатором
 	# он уже не анонимный
-	if ty in module['anon_recs']:
-		module['anon_recs'].remove(ty)
+	if ty in cmodule['anon_recs']:
+		cmodule['anon_recs'].remove(ty)
 
 	# Замещаем внутренности undefined типа на тип справа
 	# НО! имя даем новое
@@ -2242,13 +2245,13 @@ def def_type(x):
 	nt['id'] = id # need for  @property("type.id.c", "int")
 	nt['att'] = copy.copy(ty['att'])
 	nt['ti_def'] = id['ti']
-	nt['module'] = module  ## добавляем заново тк очистили его выше!
+	nt['module'] = cmodule  ## добавляем заново тк очистили его выше!
 
 
 	if need_decoration(x):
-		nt['id']['prefix'] = module['prefix']
+		nt['id']['prefix'] = cmodule['prefix']
 
-	if not ('do_not_include' in module['att']):
+	if not ('do_not_include' in cmodule['att']):
 		# В случае когда не печатаем typedef явно (!)
 		# Убираем алиасы которые висели на оригинальном типе
 		if 'c' in nt['id']:
@@ -2257,10 +2260,10 @@ def def_type(x):
 			nt.pop('llvm_alias')
 
 	if hlir_type.type_is_record(ty):
-		module['records'].append(nt)
+		cmodule['records'].append(nt)
 
 	definition = hlir_def_type(id, nt, ty, x['ti'])
-	definition['module'] = module
+	definition['module'] = cmodule
 	definition['nl'] = x['nl']
 	definition['access_level'] = x['access_modifier']
 
@@ -2287,8 +2290,8 @@ def def_const(x):
 	init_value = do_value_immediate(x['value'], allow_ptr_to_str=True)
 
 	if value_is_bad(init_value):
-		global module
-		module_value_add_public(module, id['str'], init_value)
+		global cmodule
+		module_value_add_public(cmodule, id['str'], init_value)
 		return hlir_def_const(id, init_value, init_value, x['ti'])
 
 	if x['type'] != None:
@@ -2300,11 +2303,11 @@ def def_const(x):
 
 	definition = hlir_def_const(id, const_value, init_value, x['ti'])
 	if need_decoration(x):
-		const_value['id']['prefix'] = module['prefix']
+		const_value['id']['prefix'] = cmodule['prefix']
 	definition['access_level'] = x['access_modifier']
 	const_value['definition'] = definition
-	const_value['module'] = module
-	definition['module'] = module
+	const_value['module'] = cmodule
+	definition['module'] = cmodule
 	return definition
 
 
@@ -2350,10 +2353,10 @@ def def_var(x):
 			error("cannot cons variable", x['ti'])
 
 	var_value = value_var(id, t, id['ti'])
-	module_value_add(module, id['str'], var_value, is_public=x['access_modifier'] == 'public')
+	module_value_add(cmodule, id['str'], var_value, is_public=x['access_modifier'] == 'public')
 
 	definition = hlir_def_var(id, var_value, init_value, x['ti'])
-	definition['module'] = module
+	definition['module'] = cmodule
 	var_value['definition'] = definition
 	definition['access_level'] = x['access_modifier']
 	return definition
@@ -2361,7 +2364,7 @@ def def_var(x):
 
 def def_func(x, dostmt=True):
 	global cfunc
-	global module
+	global cmodule
 
 	func_id = x['id']
 	log('def_func: %s' % func_id['str'])
@@ -2408,8 +2411,8 @@ def def_func(x, dostmt=True):
 
 	# for C backend, for #include <stdarg.h>
 	if fn['type']['extra_args']:
-		if not 'use_va_arg' in module['att']:
-			module['att'].append('use_va_arg')
+		if not 'use_va_arg' in cmodule['att']:
+			cmodule['att'].append('use_va_arg')
 
 	# check unuse
 	for param in params:
@@ -2442,12 +2445,12 @@ def def_func(x, dostmt=True):
 	y['prefix'] = ''
 	if x['id']['str'] != 'main':
 		if need_decoration(x):
-			y['prefix'] = module['prefix']
+			y['prefix'] = cmodule['prefix']
 	"""
 
 	definition['access_level'] = x['access_modifier']
 	fn['definition'] = definition
-	definition['module'] = module
+	definition['module'] = cmodule
 	return definition
 
 
@@ -2499,7 +2502,7 @@ def is_nodecorate(x):
 
 
 def do_func_value(x, export):
-	global module
+	global cmodule
 	func_id = x['id']
 	func_ti = func_id['ti']
 	func_type = do_type_func(x['type'], func_id=func_id['str'])
@@ -2508,7 +2511,7 @@ def do_func_value(x, export):
 	if func_id['str'] != 'main':
 		if export:
 			if need_decoration(x):
-				fn['id']['prefix'] = module['prefix']
+				fn['id']['prefix'] = cmodule['prefix']
 
 	return fn
 
@@ -2592,9 +2595,9 @@ def predefinition(id):
 				y = def_const(x)
 			elif kind == 'func':
 				found = True
-				global module
+				global cmodule
 				fn = do_func_value(x, x['access_modifier'] == 'public')
-				module_value_add(module, fn['id']['str'], fn, is_public=x['access_modifier'] == 'public')
+				module_value_add(cmodule, fn['id']['str'], fn, is_public=x['access_modifier'] == 'public')
 
 			x['defined'] = True  # mark as DEFINED
 
@@ -2607,18 +2610,18 @@ def predefinition(id):
 
 """# расширить текущий модуль определениями
 def cmodule_extend(y, do_not_def):
-	global module
-	module['symtab_public'].extend(y['symtab_public'])
-	module['symtab_private'].extend(y['symtab_private'])
+	global cmodule
+	cmodule['symtab_public'].extend(y['symtab_public'])
+	cmodule['symtab_private'].extend(y['symtab_private'])
 
 	if not do_not_def:
-		module['defs_private'].extend(y['defs_private'])
-		module['defs_public'].extend(y['defs_public'])
+		cmodule['defs_private'].extend(y['defs_private'])
+		cmodule['defs_public'].extend(y['defs_public'])
 """
 
 def do_import(x):
 	global modules
-	global module
+	global cmodule
 
 	import_expr = do_value_immediate_string(x['expr'])
 
@@ -2671,14 +2674,14 @@ def do_import(x):
 			m_id = x['as']['str']
 		else:
 			m_id = m['id']
-		module['imports'][m_id] = m
+		cmodule['imports'][m_id] = m
 	else:
 		# INCLUDE
 		# забираем публичные символы
 		# и забираем все определения (исключая дубликаты!)
 		if x['access_modifier']:
 			# public include
-			module['symtab_public'].extend(m['symtab_public'])
+			cmodule['symtab_public'].extend(m['symtab_public'])
 
 			# копируем все c_include из импортированного модуля себе
 			# это костыль, но пока так
@@ -2687,7 +2690,7 @@ def do_import(x):
 					if private_def['kind'] == 'c_include':
 						module_append(private_def)
 
-		module['included_modules'].append(m)
+		cmodule['included_modules'].append(m)
 
 	y = import_directive(impline, x['ti'], include=x['include'])
 	y['import_module'] = m
@@ -2697,17 +2700,18 @@ def do_import(x):
 
 def do_directive(x):
 	#info("directive %s" % x['kind'], x['ti'])
+	global cmodule
 	if x['kind'] == 'pragma':
 		args = x['args']
 		s0 = args[0]
 		if s0 == 'do_not_include':
-			module['att'].append('do_not_include')
+			cmodule['att'].append('do_not_include')
 		elif s0 == 'module_nodecorate':
-			module['att'].append('module_nodecorate')
+			cmodule['att'].append('module_nodecorate')
 		elif s0 == 'c_include':
 			return c_include(args[1])
 		elif s0 == 'c_no_print':
-			module['att'].append('c_no_print')
+			cmodule['att'].append('c_no_print')
 		elif s0 == 'feature':
 			feature_add(args[0])
 			pass
@@ -2789,8 +2793,8 @@ def do_directive(x):
 		if value_is_bad(v):
 			fatal("unsuitable value", x['ti'])
 		id_str = v['asset']
-		module['symtab_public'].value_undef(id_str)
-		module['symtab_public'].type_undef(id_str)
+		cmodule['symtab_public'].value_undef(id_str)
+		cmodule['symtab_public'].type_undef(id_str)
 
 	el"""
 
@@ -2866,8 +2870,8 @@ def process_module(ast, source_info, nodef=False):
 	global attributes
 	attributes = []
 
-	global module
-	prev_module = module
+	global cmodule
+	prev_module = cmodule
 
 	symtab_public = root_symtab.branch()
 	symtab_private = Symtab()
@@ -2876,7 +2880,7 @@ def process_module(ast, source_info, nodef=False):
 	prev_context = context
 	context = symtab_public
 
-	module = {
+	cmodule = {
 		'isa': 'module',
 
 		'id': source_info['id'],
@@ -2916,9 +2920,9 @@ def process_module(ast, source_info, nodef=False):
 
 	pre_def(ast, fdecl=nodef)    # process in normal mode
 
-	m = module
+	m = cmodule
 
-	module = prev_module
+	cmodule = prev_module
 	context = prev_context
 
 	return m
@@ -2929,7 +2933,7 @@ def process_module(ast, source_info, nodef=False):
 # если они имеют неизвестную зависимость -
 # удовлетворяет ее посредством predefinition(id_str)
 def pre_def(ast, fdecl=False):
-	global module
+	global cmodule
 	global gast
 	prev_gast = gast
 	gast = ast
@@ -2976,7 +2980,7 @@ def pre_def(ast, fdecl=False):
 			fn = ctx_value_get(x['id']['str'])
 			if fn == None:
 				fn = do_func_value(x, x['access_modifier'] == 'public')
-				module_value_add(module, fn['id']['str'], fn, is_public=x['access_modifier'] == 'public')
+				module_value_add(cmodule, fn['id']['str'], fn, is_public=x['access_modifier'] == 'public')
 
 
 	# 4. def funcs
