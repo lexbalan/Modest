@@ -311,6 +311,7 @@ declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
 @str10 = private constant [2 x i8] [i8 10, i8 0]
 @str11 = private constant [2 x i8] [i8 10, i8 0]
 @str12 = private constant [2 x i8] [i8 10, i8 0]
+; -- endstrings --
 
 
 @string8 = global [6 x %Char8] [

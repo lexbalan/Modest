@@ -290,6 +290,7 @@ declare %Int8 @utf_utf32_to_utf8(%Char32 %c, [4 x %Char8]* %buf)
 declare %Int8 @utf_utf16_to_utf32([0 x %Char16]* %c, %Char32* %result)
 ; -- end print imports --
 ; -- strings --
+; -- endstrings --
 
 define internal %Char8 @n_to_dec_sym(%Int8 %n) {
 	%1 = add %Int8 48, %n

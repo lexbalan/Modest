@@ -189,6 +189,7 @@ declare void @perror(%ConstCharStr* %str)
 ; -- strings --
 @str1 = private constant [12 x i8] [i8 99, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 108, i8 108, i8 88, i8 10, i8 0]
 @str2 = private constant [12 x i8] [i8 120, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 108, i8 108, i8 88, i8 10, i8 0]
+; -- endstrings --
 
 define %Int32 @main() {
 	%1 = alloca %Bool, align 1

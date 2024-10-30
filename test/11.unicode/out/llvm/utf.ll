@@ -110,6 +110,7 @@ break_2:
 ; -- print imports --
 ; -- end print imports --
 ; -- strings --
+; -- endstrings --
 
 define %Int8 @utf_utf32_to_utf8(%Char32 %c, [4 x %Char8]* %buf) {
 	%1 = bitcast %Char32 %c to %Int32

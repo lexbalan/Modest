@@ -110,6 +110,7 @@ break_2:
 ; -- print imports --
 ; -- end print imports --
 ; -- strings --
+; -- endstrings --
 
 define %Int32 @minmax_min_int32(%Int32 %a, %Int32 %b) {
 	%1 = icmp slt %Int32 %a, %b

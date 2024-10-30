@@ -2348,6 +2348,7 @@ def print_strings(strings):
 		string['strid'] = strid
 
 		print_string_as_array(strid, string, char_width)
+	out("\n; -- endstrings --")
 	return
 
 

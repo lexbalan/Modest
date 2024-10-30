@@ -188,6 +188,7 @@ declare void @perror(%ConstCharStr* %str)
 ; -- end print imports --
 ; -- strings --
 @str1 = private constant [11 x i8] [i8 116, i8 101, i8 115, i8 116, i8 47, i8 99, i8 104, i8 97, i8 114, i8 10, i8 0]
+; -- endstrings --
 
 
 define %Int @main() {

@@ -188,6 +188,7 @@ declare void @perror(%ConstCharStr* %str)
 ; -- end print imports --
 ; -- strings --
 @str1 = private constant [14 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 116, i8 121, i8 112, i8 101, i8 100, i8 101, i8 102, i8 10, i8 0]
+; -- endstrings --
 
 %main_NewInt32 = type %Int32;
 

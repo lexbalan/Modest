@@ -110,6 +110,7 @@ break_2:
 ; -- print imports --
 ; -- end print imports --
 ; -- strings --
+; -- endstrings --
 
 define %Word32 @crc32_doHash([0 x %Word8]* %buf, %Int32 %len) {
 	%1 = alloca [256 x %Word32], align 4
