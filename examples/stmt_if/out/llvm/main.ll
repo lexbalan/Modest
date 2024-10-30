@@ -207,7 +207,7 @@ define %Int @main() {
 	%8 = load %Int32, %Int32* %2
 	%9 = load %Int32, %Int32* %3
 	%10 = icmp sgt %Int32 %8, %9
-	br i1 %10 , label %then_0, label %else_0
+	br %Bool %10 , label %then_0, label %else_0
 then_0:
 	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str6 to [0 x i8]*))
 	br label %endif_0
@@ -215,7 +215,7 @@ else_0:
 	%12 = load %Int32, %Int32* %2
 	%13 = load %Int32, %Int32* %3
 	%14 = icmp slt %Int32 %12, %13
-	br i1 %14 , label %then_1, label %else_1
+	br %Bool %14 , label %then_1, label %else_1
 then_1:
 	%15 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str7 to [0 x i8]*))
 	br label %endif_1

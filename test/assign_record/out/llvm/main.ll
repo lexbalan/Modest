@@ -223,8 +223,8 @@ define %Int @main() {
 	%10 = bitcast %main_Point* @globalPoint1 to i8*
 	
 	%11 = call i1 (i8*, i8*, i64) @memeq( i8* %9, i8* %10, %Int64 8)
-	%12 = icmp ne i1 %11, 0
-	br i1 %12 , label %then_0, label %else_0
+	%12 = icmp ne %Bool %11, 0
+	br %Bool %12 , label %then_0, label %else_0
 then_0:
 	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([25 x i8]* @str4 to [0 x i8]*))
 	br label %endif_0
@@ -251,8 +251,8 @@ endif_0:
 	%27 = bitcast %main_Point* %18 to i8*
 	
 	%28 = call i1 (i8*, i8*, i64) @memeq( i8* %26, i8* %27, %Int64 8)
-	%29 = icmp ne i1 %28, 0
-	br i1 %29 , label %then_1, label %else_1
+	%29 = icmp ne %Bool %28, 0
+	br %Bool %29 , label %then_1, label %else_1
 then_1:
 	%30 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str8 to [0 x i8]*))
 	br label %endif_1

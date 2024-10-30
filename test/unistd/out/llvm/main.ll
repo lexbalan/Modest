@@ -348,7 +348,7 @@ define %Int @main() {
 	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str8 to [0 x i8]*), %Str* %16)
 	br label %again_1
 again_1:
-	br i1 1 , label %body_1, label %break_1
+	br %Bool 1 , label %body_1, label %break_1
 body_1:
 	%18 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str9 to [0 x i8]*))
 	%19 = call %UnsignedInt @sleep(%UnsignedInt 1)

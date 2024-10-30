@@ -426,7 +426,7 @@ define internal void @write_example() {
 	%2 = call %File* @fopen(%Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str3 to [0 x i8]*))
 	%3 = bitcast i8* null to %File*
 	%4 = icmp eq %File* %2, %3
-	br i1 %4 , label %then_0, label %endif_0
+	br %Bool %4 , label %then_0, label %endif_0
 then_0:
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([31 x i8]* @str4 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))
 	ret void
@@ -442,7 +442,7 @@ define internal void @read_example() {
 	%2 = call %File* @fopen(%Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str7 to [0 x i8]*))
 	%3 = bitcast i8* null to %File*
 	%4 = icmp eq %File* %2, %3
-	br i1 %4 , label %then_0, label %endif_0
+	br %Bool %4 , label %then_0, label %endif_0
 then_0:
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([29 x i8]* @str8 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))
 	ret void
@@ -451,11 +451,11 @@ endif_0:
 	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str9 to [0 x i8]*), %Str8* bitcast ([9 x i8]* @str1 to [0 x i8]*))
 	br label %again_1
 again_1:
-	br i1 1 , label %body_1, label %break_1
+	br %Bool 1 , label %body_1, label %break_1
 body_1:
 	%8 = call %Int @fgetc(%File* %2)
 	%9 = icmp eq %Int %8, -1
-	br i1 %9 , label %then_1, label %endif_1
+	br %Bool %9 , label %then_1, label %endif_1
 then_1:
 	br label %break_1
 	br label %endif_1

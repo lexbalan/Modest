@@ -246,25 +246,25 @@ declare %Int @accept(%Int %socket, %Struct_sockaddr* %addr, %SocklenT* %addrlen)
 @str13 = private constant [22 x i8] [i8 91, i8 45, i8 93, i8 32, i8 67, i8 97, i8 110, i8 110, i8 111, i8 116, i8 32, i8 119, i8 114, i8 105, i8 116, i8 101, i8 32, i8 102, i8 105, i8 108, i8 101, i8 0]
 
 
-define internal i1 @write_file(%Int %sockfd) {
+define internal %Bool @write_file(%Int %sockfd) {
 	%1 = alloca [1024 x %Char8], align 1
 	%2 = call %File* @fopen(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
 	%3 = bitcast i8* null to %File*
 	%4 = icmp eq %File* %2, %3
-	br i1 %4 , label %then_0, label %endif_0
+	br %Bool %4 , label %then_0, label %endif_0
 then_0:
 	call void @perror(%ConstCharStr* bitcast ([27 x i8]* @str3 to [0 x i8]*))
-	ret i1 0
+	ret %Bool 0
 	br label %endif_0
 endif_0:
 	br label %again_1
 again_1:
-	br i1 1 , label %body_1, label %break_1
+	br %Bool 1 , label %body_1, label %break_1
 body_1:
 	%6 = bitcast [1024 x %Char8]* %1 to i8*
 	%7 = call %SSizeT @recv(%Int %sockfd, i8* %6, %SizeT 1024, %Int 0)
 	%8 = icmp sle %SSizeT %7, 0
-	br i1 %8 , label %then_1, label %endif_1
+	br %Bool %8 , label %then_1, label %endif_1
 then_1:
 	br label %break_1
 	br label %endif_1
@@ -280,14 +280,14 @@ endif_1:
 	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %13, i8 0, %Int32 %12, i1 0)
 	br label %again_1
 break_1:
-	ret i1 1
+	ret %Bool 1
 }
 
 
 define %Int @main() {
 	%1 = call %Int @socket(%Int 2, %Int 1, %Int 0)
 	%2 = icmp slt %Int %1, 0
-	br i1 %2 , label %then_0, label %endif_0
+	br %Bool %2 , label %then_0, label %endif_0
 then_0:
 	call void @perror(%ConstCharStr* bitcast ([20 x i8]* @str5 to [0 x i8]*))
 	call void @exit(%Int 1)
@@ -319,7 +319,7 @@ endif_0:
 	store %Int %24, %Int* %22
 	%25 = load %Int, %Int* %22
 	%26 = icmp slt %Int %25, 0
-	br i1 %26 , label %then_1, label %endif_1
+	br %Bool %26 , label %then_1, label %endif_1
 then_1:
 	call void @perror(%ConstCharStr* bitcast ([21 x i8]* @str8 to [0 x i8]*))
 	call void @exit(%Int 1)
@@ -330,7 +330,7 @@ endif_1:
 	store %Int %28, %Int* %22
 	%29 = load %Int, %Int* %22
 	%30 = icmp ne %Int %29, 0
-	br i1 %30 , label %then_2, label %endif_2
+	br %Bool %30 , label %then_2, label %endif_2
 then_2:
 	call void @perror(%ConstCharStr* bitcast ([21 x i8]* @str10 to [0 x i8]*))
 	call void @exit(%Int 1)
@@ -344,8 +344,8 @@ endif_2:
 	%35 = bitcast i8* %34 to %Struct_sockaddr*
 	%36 = bitcast %Struct_sockaddr* %35 to %Struct_sockaddr*
 	%37 = call %Int @accept(%Int %1, %Struct_sockaddr* %36, %SocklenT* %32)
-	%38 = call i1 @write_file(%Int %37)
-	br i1 %38 , label %then_3, label %else_3
+	%38 = call %Bool @write_file(%Int %37)
+	br %Bool %38 , label %then_3, label %else_3
 then_3:
 	%39 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([34 x i8]* @str12 to [0 x i8]*))
 	br label %endif_3

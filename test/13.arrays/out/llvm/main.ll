@@ -410,7 +410,7 @@ define internal void @test() {
 again_1:
 	%9 = load %Int32, %Int32* %8
 	%10 = icmp slt %Int32 %9, 6
-	br i1 %10 , label %body_1, label %break_1
+	br %Bool %10 , label %body_1, label %break_1
 body_1:
 	%11 = load %Int32, %Int32* %8
 	%12 = getelementptr inbounds [6 x %Int8], [6 x %Int8]* %1, %Int32 0, %Int32 %11
@@ -458,7 +458,7 @@ define %Int @main() {
 again_1:
 	%26 = load %Int32, %Int32* %25
 	%27 = icmp slt %Int32 %26, 10
-	br i1 %27 , label %body_1, label %break_1
+	br %Bool %27 , label %body_1, label %break_1
 body_1:
 	%28 = load %Int32, %Int32* %25
 	%29 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* @globalArray, %Int32 0, %Int32 %28
@@ -481,7 +481,7 @@ break_1:
 again_2:
 	%40 = load %Int32, %Int32* %25
 	%41 = icmp slt %Int32 %40, 3
-	br i1 %41 , label %body_2, label %break_2
+	br %Bool %41 , label %body_2, label %break_2
 body_2:
 	%42 = load %Int32, %Int32* %25
 	%43 = getelementptr inbounds [3 x %Int32], [3 x %Int32]* %36, %Int32 0, %Int32 %42
@@ -502,7 +502,7 @@ break_2:
 again_3:
 	%52 = load %Int32, %Int32* %25
 	%53 = icmp slt %Int32 %52, 3
-	br i1 %53 , label %body_3, label %break_3
+	br %Bool %53 , label %body_3, label %break_3
 body_3:
 	%54 = load %Int32, %Int32* %25
 	%55 = load [0 x %Int32]*, [0 x %Int32]** %50
@@ -524,7 +524,7 @@ break_3:
 again_4:
 	%65 = load %Int32, %Int32* %25
 	%66 = icmp slt %Int32 %65, 3
-	br i1 %66 , label %body_4, label %break_4
+	br %Bool %66 , label %body_4, label %break_4
 body_4:
 	%67 = load %Int32, %Int32* %25
 	%68 = load [0 x %Int32]*, [0 x %Int32]** %63
@@ -573,8 +573,8 @@ break_4:
 	%100 = bitcast [3 x %Int32]* %88 to i8*
 	
 	%101 = call i1 (i8*, i8*, i64) @memeq( i8* %99, i8* %100, %Int64 12)
-	%102 = icmp ne i1 %101, 0
-	br i1 %102 , label %then_0, label %else_0
+	%102 = icmp ne %Bool %101, 0
+	br %Bool %102 , label %then_0, label %else_0
 then_0:
 	%103 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str17 to [0 x i8]*))
 	br label %endif_0
@@ -619,8 +619,8 @@ endif_0:
 	%131 = bitcast [3 x %Int32]* %88 to i8*
 	
 	%132 = call i1 (i8*, i8*, i64) @memeq( i8* %130, i8* %131, %Int64 12)
-	%133 = icmp ne i1 %132, 0
-	br i1 %133 , label %then_1, label %else_1
+	%133 = icmp ne %Bool %132, 0
+	br %Bool %133 , label %then_1, label %else_1
 then_1:
 	%134 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str25 to [0 x i8]*))
 	br label %endif_1
@@ -739,8 +739,8 @@ endif_1:
 	%203 = bitcast [4 x %Int32]* %201 to i8*
 	
 	%204 = call i1 (i8*, i8*, i64) @memeq( i8* %202, i8* %203, %Int64 16)
-	%205 = icmp ne i1 %204, 0
-	br i1 %205 , label %then_2, label %else_2
+	%205 = icmp ne %Bool %204, 0
+	br %Bool %205 , label %then_2, label %else_2
 then_2:
 	%206 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str37 to [0 x i8]*))
 	br label %endif_2
@@ -765,8 +765,8 @@ endif_2:
 	%220 = bitcast [2 x %Char8]* %218 to i8*
 	
 	%221 = call i1 (i8*, i8*, i64) @memeq( i8* %219, i8* %220, %Int64 2)
-	%222 = icmp ne i1 %221, 0
-	br i1 %222 , label %then_3, label %else_3
+	%222 = icmp ne %Bool %221, 0
+	br %Bool %222 , label %then_3, label %else_3
 then_3:
 	%223 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str39 to [0 x i8]*))
 	br label %endif_3

@@ -218,7 +218,7 @@ define %Int @main() {
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), %Int32 %5)
 	%7 = load %Int32, %Int32* %2
 	%8 = icmp eq %Int32 %7, 128
-	br i1 %8 , label %then_0, label %else_0
+	br %Bool %8 , label %then_0, label %else_0
 then_0:
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str3 to [0 x i8]*))
 	br label %endif_0

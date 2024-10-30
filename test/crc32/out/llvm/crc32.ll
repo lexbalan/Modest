@@ -123,7 +123,7 @@ define %Word32 @crc32_doHash([0 x %Word8]* %buf, %Int32 %len) {
 again_1:
 	%4 = load %Int32, %Int32* %3
 	%5 = icmp ult %Int32 %4, 256
-	br i1 %5 , label %body_1, label %break_1
+	br %Bool %5 , label %body_1, label %break_1
 body_1:
 	%6 = load %Int32, %Int32* %3
 	%7 = bitcast %Int32 %6 to %Word32
@@ -134,12 +134,12 @@ body_1:
 again_2:
 	%9 = load %Int32, %Int32* %8
 	%10 = icmp ult %Int32 %9, 8
-	br i1 %10 , label %body_2, label %break_2
+	br %Bool %10 , label %body_2, label %break_2
 body_2:
 	%11 = load %Word32, %Word32* %2
 	%12 = and %Word32 %11, 1
 	%13 = icmp ne %Word32 %12, 0
-	br i1 %13 , label %then_0, label %else_0
+	br %Bool %13 , label %then_0, label %else_0
 then_0:
 	%14 = load %Word32, %Word32* %2
 	%15 = lshr %Word32 %14, 1
@@ -175,7 +175,7 @@ break_1:
 again_3:
 	%26 = load %Int32, %Int32* %3
 	%27 = icmp ult %Int32 %26, %len
-	br i1 %27 , label %body_3, label %break_3
+	br %Bool %27 , label %body_3, label %break_3
 body_3:
 	%28 = load %Word32, %Word32* %2
 	%29 = load %Int32, %Int32* %3

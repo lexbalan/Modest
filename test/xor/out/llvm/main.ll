@@ -226,7 +226,7 @@ define internal void @xor_encrypter([0 x %Word8]* %buf, %Int32 %buflen, [0 x %Wo
 again_1:
 	%3 = load %Int32, %Int32* %1
 	%4 = icmp ult %Int32 %3, %buflen
-	br i1 %4 , label %body_1, label %break_1
+	br %Bool %4 , label %body_1, label %break_1
 body_1:
 	%5 = load %Int32, %Int32* %1
 	%6 = getelementptr inbounds [0 x %Word8], [0 x %Word8]* %buf, %Int32 0, %Int32 %5
@@ -241,7 +241,7 @@ body_1:
 	%14 = load %Int32, %Int32* %2
 	%15 = sub %Int32 %keylen, 1
 	%16 = icmp ult %Int32 %14, %15
-	br i1 %16 , label %then_0, label %else_0
+	br %Bool %16 , label %then_0, label %else_0
 then_0:
 	%17 = load %Int32, %Int32* %2
 	%18 = add %Int32 %17, 1
@@ -266,7 +266,7 @@ define internal void @print_bytes([0 x %Word8]* %buf, %Int32 %len) {
 again_1:
 	%2 = load %Int32, %Int32* %1
 	%3 = icmp ult %Int32 %2, %len
-	br i1 %3 , label %body_1, label %break_1
+	br %Bool %3 , label %body_1, label %break_1
 body_1:
 	%4 = load %Int32, %Int32* %1
 	%5 = getelementptr inbounds [0 x %Word8], [0 x %Word8]* %buf, %Int32 0, %Int32 %4

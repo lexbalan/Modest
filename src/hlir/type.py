@@ -114,7 +114,7 @@ def hlir_type_bool():
 	t['kind'] = 'bool'
 	t['id']['str'] = 'Bool'
 	t['id']['c'] = 'bool'
-	t['id']['llvm'] = 'i1'
+	t['id']['llvm'] = '%Bool'
 	t['ops'] = BOOL_OPS
 	return t
 

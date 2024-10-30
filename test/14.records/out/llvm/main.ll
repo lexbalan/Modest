@@ -229,8 +229,8 @@ define %Int @main() {
 	%9 = bitcast %main_Point2D* %5 to i8*
 	
 	%10 = call i1 (i8*, i8*, i64) @memeq( i8* %8, i8* %9, %Int64 8)
-	%11 = icmp ne i1 %10, 0
-	br i1 %11 , label %then_0, label %else_0
+	%11 = icmp ne %Bool %10, 0
+	br %Bool %11 , label %then_0, label %else_0
 then_0:
 	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str2 to [0 x i8]*))
 	br label %endif_0
@@ -257,8 +257,8 @@ endif_0:
 	%23 = bitcast {%Int32,%Int32}* %16 to i8*
 	
 	%24 = call i1 (i8*, i8*, i64) @memeq( i8* %22, i8* %23, %Int64 8)
-	%25 = icmp ne i1 %24, 0
-	br i1 %25 , label %then_1, label %else_1
+	%25 = icmp ne %Bool %24, 0
+	br %Bool %25 , label %then_1, label %else_1
 then_1:
 	%26 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str4 to [0 x i8]*))
 	br label %endif_1
@@ -282,8 +282,8 @@ endif_1:
 	%35 = bitcast {%Int32,%Int32}* %28 to i8*
 	
 	%36 = call i1 (i8*, i8*, i64) @memeq( i8* %34, i8* %35, %Int64 8)
-	%37 = icmp ne i1 %36, 0
-	br i1 %37 , label %then_2, label %else_2
+	%37 = icmp ne %Bool %36, 0
+	br %Bool %37 , label %then_2, label %else_2
 then_2:
 	%38 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str6 to [0 x i8]*))
 	br label %endif_2
@@ -303,8 +303,8 @@ endif_2:
 	%44 = bitcast {%Int32,%Int32}* %16 to i8*
 	
 	%45 = call i1 (i8*, i8*, i64) @memeq( i8* %43, i8* %44, %Int64 8)
-	%46 = icmp ne i1 %45, 0
-	br i1 %46 , label %then_3, label %else_3
+	%46 = icmp ne %Bool %45, 0
+	br %Bool %46 , label %then_3, label %else_3
 then_3:
 	%47 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str8 to [0 x i8]*))
 	br label %endif_3
@@ -353,8 +353,8 @@ endif_3:
 	%69 = bitcast {%Int32,%Int32}* %67 to i8*
 	
 	%70 = call i1 (i8*, i8*, i64) @memeq( i8* %68, i8* %69, %Int64 8)
-	%71 = icmp ne i1 %70, 0
-	br i1 %71 , label %then_4, label %else_4
+	%71 = icmp ne %Bool %70, 0
+	br %Bool %71 , label %then_4, label %else_4
 then_4:
 	%72 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str12 to [0 x i8]*))
 	br label %endif_4

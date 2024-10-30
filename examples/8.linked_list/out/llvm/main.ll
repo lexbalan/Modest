@@ -266,7 +266,7 @@ again_1:
 	%5 = load %list_Node*, %list_Node** %2
 	%6 = bitcast i8* null to %list_Node*
 	%7 = icmp ne %list_Node* %5, %6
-	br i1 %7 , label %body_1, label %break_1
+	br %Bool %7 , label %body_1, label %break_1
 body_1:
 	%8 = load %list_Node*, %list_Node** %2
 	%9 = bitcast %list_Node* %8 to %list_Node*
@@ -295,7 +295,7 @@ again_1:
 	%5 = load %list_Node*, %list_Node** %2
 	%6 = bitcast i8* null to %list_Node*
 	%7 = icmp ne %list_Node* %5, %6
-	br i1 %7 , label %body_1, label %break_1
+	br %Bool %7 , label %body_1, label %break_1
 body_1:
 	%8 = load %list_Node*, %list_Node** %2
 	%9 = bitcast %list_Node* %8 to %list_Node*
@@ -320,7 +320,7 @@ define %Int @main() {
 	;list0.size  // access to private field of record
 	%3 = bitcast i8* null to %list_List*
 	%4 = icmp eq %list_List* %2, %3
-	br i1 %4 , label %then_0, label %endif_0
+	br %Bool %4 , label %then_0, label %endif_0
 then_0:
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([26 x i8]* @str6 to [0 x i8]*))
 	ret %Int 1
@@ -367,14 +367,14 @@ endif_0:
 again_1:
 	%25 = load %Int32, %Int32* %24
 	%26 = icmp sge %Int32 %25, -12
-	br i1 %26 , label %body_1, label %break_1
+	br %Bool %26 , label %body_1, label %break_1
 body_1:
 	%27 = bitcast %list_List* %2 to %list_List*
 	%28 = load %Int32, %Int32* %24
 	%29 = call %list_Node* @list_node_get(%list_List* %27, %Int32 %28)
 	%30 = bitcast i8* null to %list_Node*
 	%31 = icmp eq %list_Node* %29, %30
-	br i1 %31 , label %then_1, label %endif_1
+	br %Bool %31 , label %then_1, label %endif_1
 then_1:
 	%32 = load %Int32, %Int32* %24
 	%33 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str9 to [0 x i8]*), %Int32 %32)
@@ -401,14 +401,14 @@ break_1:
 again_2:
 	%46 = load %Int32, %Int32* %24
 	%47 = icmp sle %Int32 %46, 12
-	br i1 %47 , label %body_2, label %break_2
+	br %Bool %47 , label %body_2, label %break_2
 body_2:
 	%48 = bitcast %list_List* %2 to %list_List*
 	%49 = load %Int32, %Int32* %24
 	%50 = call %list_Node* @list_node_get(%list_List* %48, %Int32 %49)
 	%51 = bitcast i8* null to %list_Node*
 	%52 = icmp eq %list_Node* %50, %51
-	br i1 %52 , label %then_2, label %endif_2
+	br %Bool %52 , label %then_2, label %endif_2
 then_2:
 	%53 = load %Int32, %Int32* %24
 	%54 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str12 to [0 x i8]*), %Int32 %53)

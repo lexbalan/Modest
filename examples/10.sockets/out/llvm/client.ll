@@ -330,7 +330,7 @@ declare %Int @accept(%Int %socket, %Struct_sockaddr* %addr, %SocklenT* %addrlen)
 @str11 = private constant [34 x i8] [i8 91, i8 43, i8 93, i8 32, i8 68, i8 105, i8 115, i8 99, i8 111, i8 110, i8 110, i8 101, i8 99, i8 116, i8 101, i8 100, i8 32, i8 102, i8 114, i8 111, i8 109, i8 32, i8 116, i8 104, i8 101, i8 32, i8 115, i8 101, i8 114, i8 118, i8 101, i8 114, i8 10, i8 0]
 
 
-define internal i1 @send_file(%File* %fp, %Int %sockfd) {
+define internal %Bool @send_file(%File* %fp, %Int %sockfd) {
 	%1 = alloca [1024 x %Char8], align 1
 	br label %again_1
 again_1:
@@ -338,14 +338,14 @@ again_1:
 	%3 = call %CharStr* @fgets(%CharStr* %2, %Int 1024, %File* %fp)
 	%4 = bitcast i8* null to %CharStr*
 	%5 = icmp ne %CharStr* %3, %4
-	br i1 %5 , label %body_1, label %break_1
+	br %Bool %5 , label %body_1, label %break_1
 body_1:
 	%6 = bitcast [1024 x %Char8]* %1 to i8*
 	%7 = call %SSizeT @send(%Int %sockfd, i8* %6, %SizeT 1024, %Int 0)
 	%8 = icmp eq %SSizeT %7, -1
-	br i1 %8 , label %then_0, label %endif_0
+	br %Bool %8 , label %then_0, label %endif_0
 then_0:
-	ret i1 0
+	ret %Bool 0
 	br label %endif_0
 endif_0:
 	; -- STMT ASSIGN ARRAY --
@@ -358,14 +358,14 @@ endif_0:
 	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %12, i8 0, %Int32 %11, i1 0)
 	br label %again_1
 break_1:
-	ret i1 1
+	ret %Bool 1
 }
 
 
 define %Int @main() {
 	%1 = call %Int @socket(%Int 2, %Int 1, %Int 0)
 	%2 = icmp slt %Int %1, 0
-	br i1 %2 , label %then_0, label %endif_0
+	br %Bool %2 , label %then_0, label %endif_0
 then_0:
 	call void @perror(%ConstCharStr* bitcast ([20 x i8]* @str1 to [0 x i8]*))
 	call void @exit(%Int 1)
@@ -397,7 +397,7 @@ endif_0:
 	store %Int %24, %Int* %22
 	%25 = load %Int, %Int* %22
 	%26 = icmp slt %Int %25, 0
-	br i1 %26 , label %then_1, label %endif_1
+	br %Bool %26 , label %then_1, label %endif_1
 then_1:
 	call void @perror(%ConstCharStr* bitcast ([24 x i8]* @str4 to [0 x i8]*))
 	call void @exit(%Int 1)
@@ -407,14 +407,14 @@ endif_1:
 	%28 = call %File* @fopen(%ConstCharStr* bitcast ([9 x i8]* @str6 to [0 x i8]*), %ConstCharStr* bitcast ([2 x i8]* @str7 to [0 x i8]*))
 	%29 = bitcast i8* null to %File*
 	%30 = icmp eq %File* %28, %29
-	br i1 %30 , label %then_2, label %endif_2
+	br %Bool %30 , label %then_2, label %endif_2
 then_2:
 	call void @perror(%ConstCharStr* bitcast ([26 x i8]* @str8 to [0 x i8]*))
 	call void @exit(%Int 1)
 	br label %endif_2
 endif_2:
-	%31 = call i1 @send_file(%File* %28, %Int %1)
-	br i1 %31 , label %then_3, label %else_3
+	%31 = call %Bool @send_file(%File* %28, %Int %1)
+	br %Bool %31 , label %then_3, label %else_3
 then_3:
 	%32 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([33 x i8]* @str9 to [0 x i8]*))
 	br label %endif_3

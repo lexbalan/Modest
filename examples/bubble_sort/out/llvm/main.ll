@@ -224,14 +224,14 @@ declare void @perror(%ConstCharStr* %str)
 ]
 
 define internal void @bubble_sort32([0 x %Int32]* %array, %Int32 %len) {
-	%1 = alloca i1, align 1
-	store i1 1, i1* %1
+	%1 = alloca %Bool, align 1
+	store %Bool 1, %Bool* %1
 	br label %again_1
 again_1:
-	%2 = load i1, i1* %1
-	br i1 %2 , label %body_1, label %break_1
+	%2 = load %Bool, %Bool* %1
+	br %Bool %2 , label %body_1, label %break_1
 body_1:
-	store i1 0, i1* %1
+	store %Bool 0, %Bool* %1
 	%3 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %3
 	br label %again_2
@@ -239,7 +239,7 @@ again_2:
 	%4 = load %Int32, %Int32* %3
 	%5 = sub %Int32 %len, 1
 	%6 = icmp slt %Int32 %4, %5
-	br i1 %6 , label %body_2, label %break_2
+	br %Bool %6 , label %body_2, label %break_2
 body_2:
 	%7 = load %Int32, %Int32* %3
 	%8 = getelementptr inbounds [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Int32 %7
@@ -249,7 +249,7 @@ body_2:
 	%12 = getelementptr inbounds [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Int32 %11
 	%13 = load %Int32, %Int32* %12
 	%14 = icmp sgt %Int32 %9, %13
-	br i1 %14 , label %then_0, label %endif_0
+	br %Bool %14 , label %then_0, label %endif_0
 then_0:
 	; swap
 	%15 = load %Int32, %Int32* %3
@@ -259,7 +259,7 @@ then_0:
 	%18 = add %Int32 %17, 1
 	%19 = getelementptr inbounds [0 x %Int32], [0 x %Int32]* %array, %Int32 0, %Int32 %18
 	store %Int32 %9, %Int32* %19
-	store i1 1, i1* %1
+	store %Bool 1, %Bool* %1
 	br label %break_2
 	br label %endif_0
 endif_0:
@@ -281,7 +281,7 @@ define internal void @print_array([0 x %Int32]* %array, %Int32 %len) {
 again_1:
 	%3 = load %Int32, %Int32* %2
 	%4 = icmp slt %Int32 %3, %len
-	br i1 %4 , label %body_1, label %break_1
+	br %Bool %4 , label %body_1, label %break_1
 body_1:
 	%5 = load %Int32, %Int32* %2
 	%6 = load %Int32, %Int32* %2
@@ -304,7 +304,7 @@ define internal void @fill_array([0 x %Int32]* %array, %Int32 %len) {
 again_1:
 	%3 = load %Int32, %Int32* %2
 	%4 = icmp slt %Int32 %3, %len
-	br i1 %4 , label %body_1, label %break_1
+	br %Bool %4 , label %body_1, label %break_1
 body_1:
 	%5 = load %Int32, %Int32* %2
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([6 x i8]* @str7 to [0 x i8]*), %Int32 %5)
@@ -325,13 +325,13 @@ define internal %Int32 @get_number(%Int32 %min, %Int32 %max) {
 	store %Int32 0, %Int32* %1
 	br label %again_1
 again_1:
-	br i1 1 , label %body_1, label %break_1
+	br %Bool 1 , label %body_1, label %break_1
 body_1:
 	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([28 x i8]* @str8 to [0 x i8]*), %Int32 %min, %Int32 %max)
 	%3 = call %Int (%ConstCharStr*, ...) @scanf(%ConstCharStr* bitcast ([3 x i8]* @str9 to [0 x i8]*), %Int32* %1)
 	%4 = load %Int32, %Int32* %1
 	%5 = icmp slt %Int32 %4, %min
-	br i1 %5 , label %then_0, label %else_0
+	br %Bool %5 , label %then_0, label %else_0
 then_0:
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([43 x i8]* @str10 to [0 x i8]*), %Int32 %min)
 	br label %again_1
@@ -339,7 +339,7 @@ then_0:
 else_0:
 	%8 = load %Int32, %Int32* %1
 	%9 = icmp sgt %Int32 %8, %max
-	br i1 %9 , label %then_1, label %else_1
+	br %Bool %9 , label %then_1, label %else_1
 then_1:
 	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([40 x i8]* @str11 to [0 x i8]*), %Int32 %max)
 	br label %again_1

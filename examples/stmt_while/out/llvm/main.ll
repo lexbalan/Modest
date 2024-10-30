@@ -198,7 +198,7 @@ define %Int @main() {
 again_1:
 	%3 = load %Int32, %Int32* %2
 	%4 = icmp slt %Int32 %3, 10
-	br i1 %4 , label %body_1, label %break_1
+	br %Bool %4 , label %body_1, label %break_1
 body_1:
 	%5 = load %Int32, %Int32* %2
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), %Int32 %5)

@@ -18,7 +18,6 @@ from value.string import value_string_create
 from value.record import value_record_create
 
 
-
 import decimal
 # max number of signs after .
 # decimal operation precision
@@ -58,18 +57,18 @@ env_current_file_abspath = ""
 env_current_file_dir = ""
 
 
-
-cfunc = None	# current function
-context = None
-
-root_symtab = None
+root_symtab = None  # symtab with base types & values
 
 # All already translated modules
 # path => module
 modules = {}
 
-# Current module
-cmodule = None
+
+cmodule = None  # Current module
+cfunc = None	# current function
+context = None  # current context (symtab)
+
+
 
 
 # TODO: attribute 'unsafe' for cast operation

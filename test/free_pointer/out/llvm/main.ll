@@ -191,13 +191,13 @@ declare void @perror(%ConstCharStr* %str)
 @str2 = private constant [12 x i8] [i8 120, i8 32, i8 61, i8 32, i8 48, i8 120, i8 37, i8 108, i8 108, i8 88, i8 10, i8 0]
 
 define %Int32 @main() {
-	%1 = alloca i1, align 1
+	%1 = alloca %Bool, align 1
 	%2 = alloca %Int32, align 4
 	%3 = alloca %Int64, align 8
 	;
 	%4 = alloca i8*, align 8
 	; free pointer can points to value of any type
-	%5 = bitcast i1* %1 to i8*
+	%5 = bitcast %Bool* %1 to i8*
 	store i8* %5, i8** %4
 	%6 = bitcast %Int32* %2 to i8*
 	store i8* %6, i8** %4

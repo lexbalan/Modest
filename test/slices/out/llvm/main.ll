@@ -216,7 +216,7 @@ define internal void @array_print([0 x %Int32]* %pa, %Int32 %len) {
 again_1:
 	%2 = load %Int32, %Int32* %1
 	%3 = icmp slt %Int32 %2, %len
-	br i1 %3 , label %body_1, label %break_1
+	br %Bool %3 , label %body_1, label %break_1
 body_1:
 	%4 = load %Int32, %Int32* %1
 	%5 = load %Int32, %Int32* %1
@@ -260,7 +260,7 @@ define %Int @main() {
 again_1:
 	%18 = load %Int32, %Int32* %17
 	%19 = icmp slt %Int32 %18, 4
-	br i1 %19 , label %body_1, label %break_1
+	br %Bool %19 , label %body_1, label %break_1
 body_1:
 	%20 = load %Int32, %Int32* %17
 	%21 = load %Int32, %Int32* %17
@@ -287,7 +287,7 @@ break_1:
 again_2:
 	%32 = load %Int32, %Int32* %17
 	%33 = icmp slt %Int32 %32, 12
-	br i1 %33 , label %body_2, label %break_2
+	br %Bool %33 , label %body_2, label %break_2
 body_2:
 	%34 = load %Int32, %Int32* %17
 	%35 = load %Int32, %Int32* %17
@@ -322,7 +322,7 @@ break_2:
 again_3:
 	%53 = load %Int32, %Int32* %17
 	%54 = icmp slt %Int32 %53, 40
-	br i1 %54 , label %body_3, label %break_3
+	br %Bool %54 , label %body_3, label %break_3
 body_3:
 	%55 = load %Int32, %Int32* %17
 	%56 = load %Int32, %Int32* %17
@@ -362,7 +362,7 @@ break_3:
 again_4:
 	%79 = load %Int32, %Int32* %17
 	%80 = icmp slt %Int32 %79, 0
-	br i1 %80 , label %body_4, label %break_4
+	br %Bool %80 , label %body_4, label %break_4
 body_4:
 	%81 = load %Int32, %Int32* %17
 	%82 = load %Int32, %Int32* %17

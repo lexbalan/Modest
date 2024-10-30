@@ -199,7 +199,7 @@ define internal void @mtab(%Int32 %n) {
 again_1:
 	%2 = load %Int32, %Int32* %1
 	%3 = icmp ult %Int32 %2, 10
-	br i1 %3 , label %body_1, label %break_1
+	br %Bool %3 , label %body_1, label %break_1
 body_1:
 	%4 = load %Int32, %Int32* %1
 	%5 = mul %Int32 %n, %4

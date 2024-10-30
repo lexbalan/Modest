@@ -198,36 +198,36 @@ declare void @perror(%ConstCharStr* %str)
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str1 to [0 x i8]*))
 	%2 = alloca %Int8, align 1
-	%3 = alloca i1, align 1
+	%3 = alloca %Bool, align 1
 	store %Int8 1, %Int8* %2
 	%4 = load %Int8, %Int8* %2
 	%5 = icmp ne %Int8 %4, 0
-	store i1 %5, i1* %3
+	store %Bool %5, %Bool* %3
 	%6 = load %Int8, %Int8* %2
 	%7 = zext %Int8 %6 to %Int32
 	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), %Int32 %7)
-	%9 = load i1, i1* %3
-	%10 = zext i1 %9 to %Int32
+	%9 = load %Bool, %Bool* %3
+	%10 = zext %Bool %9 to %Int32
 	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str3 to [0 x i8]*), %Int32 %10)
 	store %Int8 2, %Int8* %2
 	%12 = load %Int8, %Int8* %2
 	%13 = icmp ne %Int8 %12, 0
-	store i1 %13, i1* %3
+	store %Bool %13, %Bool* %3
 	%14 = load %Int8, %Int8* %2
 	%15 = zext %Int8 %14 to %Int32
 	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str4 to [0 x i8]*), %Int32 %15)
-	%17 = load i1, i1* %3
-	%18 = zext i1 %17 to %Int32
+	%17 = load %Bool, %Bool* %3
+	%18 = zext %Bool %17 to %Int32
 	%19 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str5 to [0 x i8]*), %Int32 %18)
 	store %Int8 3, %Int8* %2
 	%20 = load %Int8, %Int8* %2
 	%21 = icmp ne %Int8 %20, 0
-	store i1 %21, i1* %3
+	store %Bool %21, %Bool* %3
 	%22 = load %Int8, %Int8* %2
 	%23 = zext %Int8 %22 to %Int32
 	%24 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str6 to [0 x i8]*), %Int32 %23)
-	%25 = load i1, i1* %3
-	%26 = zext i1 %25 to %Int32
+	%25 = load %Bool, %Bool* %3
+	%26 = zext %Bool %25 to %Int32
 	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str7 to [0 x i8]*), %Int32 %26)
 	ret %Int 0
 }

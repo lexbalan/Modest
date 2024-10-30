@@ -201,13 +201,13 @@ define internal %Int32 @get_number(%Int32 %min, %Int32 %max) {
 	store %Int32 0, %Int32* %1
 	br label %again_1
 again_1:
-	br i1 1 , label %body_1, label %break_1
+	br %Bool 1 , label %body_1, label %break_1
 body_1:
 	%2 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([28 x i8]* @str4 to [0 x i8]*), %Int32 %min, %Int32 %max)
 	%3 = call %Int (%ConstCharStr*, ...) @scanf(%ConstCharStr* bitcast ([3 x i8]* @str5 to [0 x i8]*), %Int32* %1)
 	%4 = load %Int32, %Int32* %1
 	%5 = icmp slt %Int32 %4, %min
-	br i1 %5 , label %then_0, label %else_0
+	br %Bool %5 , label %then_0, label %else_0
 then_0:
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([43 x i8]* @str6 to [0 x i8]*), %Int32 %min)
 	br label %again_1
@@ -215,7 +215,7 @@ then_0:
 else_0:
 	%8 = load %Int32, %Int32* %1
 	%9 = icmp sgt %Int32 %8, %max
-	br i1 %9 , label %then_1, label %else_1
+	br %Bool %9 , label %then_1, label %else_1
 then_1:
 	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([40 x i8]* @str7 to [0 x i8]*), %Int32 %max)
 	br label %again_1
@@ -236,13 +236,13 @@ break_1:
 define %Int32 @main() {
 	%1 = call %Int32 @get_number(%Int32 0, %Int32 10)
 	%2 = icmp slt %Int32 %1, 5
-	br i1 %2 , label %then_0, label %else_0
+	br %Bool %2 , label %then_0, label %else_0
 then_0:
 	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([37 x i8]* @str1 to [0 x i8]*), %Int32 %1, %Int32 5)
 	br label %endif_0
 else_0:
 	%4 = icmp sgt %Int32 %1, 5
-	br i1 %4 , label %then_1, label %else_1
+	br %Bool %4 , label %then_1, label %else_1
 then_1:
 	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([40 x i8]* @str2 to [0 x i8]*), %Int32 %1, %Int32 5)
 	br label %endif_1

@@ -114,7 +114,7 @@ break_2:
 define %Int8 @utf_utf32_to_utf8(%Char32 %c, [4 x %Char8]* %buf) {
 	%1 = bitcast %Char32 %c to %Int32
 	%2 = icmp ule %Int32 %1, 127
-	br i1 %2 , label %then_0, label %else_0
+	br %Bool %2 , label %then_0, label %else_0
 then_0:
 	%3 = getelementptr inbounds [4 x %Char8], [4 x %Char8]* %buf, %Int32 0, %Int32 0
 	%4 = trunc %Int32 %1 to %Char8
@@ -123,7 +123,7 @@ then_0:
 	br label %endif_0
 else_0:
 	%6 = icmp ule %Int32 %1, 2047
-	br i1 %6 , label %then_1, label %else_1
+	br %Bool %6 , label %then_1, label %else_1
 then_1:
 	%7 = bitcast %Int32 %1 to %Word32
 	%8 = lshr %Word32 %7, 6
@@ -142,7 +142,7 @@ then_1:
 	br label %endif_1
 else_1:
 	%19 = icmp ule %Int32 %1, 65535
-	br i1 %19 , label %then_2, label %else_2
+	br %Bool %19 , label %then_2, label %else_2
 then_2:
 	%20 = bitcast %Int32 %1 to %Word32
 	%21 = lshr %Word32 %20, 12
@@ -167,7 +167,7 @@ then_2:
 	br label %endif_2
 else_2:
 	%37 = icmp ule %Int32 %1, 1114111
-	br i1 %37 , label %then_3, label %endif_3
+	br %Bool %37 , label %then_3, label %endif_3
 then_3:
 	%38 = bitcast %Int32 %1 to %Word32
 	%39 = lshr %Word32 %38, 18
@@ -212,8 +212,8 @@ define %Int8 @utf_utf16_to_utf32([0 x %Char16]* %c, %Char32* %result) {
 	%3 = zext %Char16 %2 to %Int32
 	%4 = icmp ult %Int32 %3, 55296
 	%5 = icmp ugt %Int32 %3, 57343
-	%6 = or i1 %4, %5
-	br i1 %6 , label %then_0, label %else_0
+	%6 = or %Bool %4, %5
+	br %Bool %6 , label %then_0, label %else_0
 then_0:
 	%7 = bitcast %Int32 %3 to %Char32
 	store %Char32 %7, %Char32* %result
@@ -221,7 +221,7 @@ then_0:
 	br label %endif_0
 else_0:
 	%9 = icmp uge %Int32 %3, 56320
-	br i1 %9 , label %then_1, label %else_1
+	br %Bool %9 , label %then_1, label %else_1
 then_1:
 	;error("Illegal code sequence")
 	br label %endif_1
@@ -236,8 +236,8 @@ else_1:
 	%16 = zext %Char16 %15 to %Int32
 	%17 = icmp ult %Int32 %16, 56320
 	%18 = icmp ugt %Int32 %16, 57343
-	%19 = or i1 %17, %18
-	br i1 %19 , label %then_2, label %else_2
+	%19 = or %Bool %17, %18
+	br %Bool %19 , label %then_2, label %else_2
 then_2:
 	;error("Illegal code sequence")
 	br label %endif_2
