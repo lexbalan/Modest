@@ -3,25 +3,25 @@ include "libc/time"
 
 
 public type Date record {
-	year: Nat32
-	month: Nat8
-	day: Nat8
+	public year: Nat32
+	public month: Nat8
+	public day: Nat8
 }
 
 public type Time record {
-	hour: Nat8
-	minute: Nat8
-	second: Nat8
+	public hour: Nat8
+	public minute: Nat8
+	public second: Nat8
 }
 
 
 public type DateTime record {
-	year: Nat32
-	month: Nat8
-	day: Nat8
-	hour: Nat8
-	minute: Nat8
-	second: Nat8
+	public year: Nat32
+	public month: Nat8
+	public day: Nat8
+	public hour: Nat8
+	public minute: Nat8
+	public second: Nat8
 }
 
 

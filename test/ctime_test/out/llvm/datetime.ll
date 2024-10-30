@@ -6,6 +6,10 @@ target triple = "arm64-apple-macosx12.0.0"
 %Unit = type i1
 %Bool = type i1
 %Word8 = type i8
+%Word16 = type i16
+%Word32 = type i32
+%Word64 = type i64
+%Word128 = type i128
 %Char8 = type i8
 %Char16 = type i16
 %Char32 = type i32
@@ -102,53 +106,52 @@ break_2:
 ; MODULE: datetime
 
 ; -- print includes --
-
+; from included ctypes64
 %Str = type %Str8;
-%Char = type i8;
+%Char = type %Char8;
 %ConstChar = type %Char;
-%SignedChar = type i8;
-%UnsignedChar = type i8;
-%Short = type i16;
-%UnsignedShort = type i16;
-%Int = type i32;
-%UnsignedInt = type i32;
-%LongInt = type i64;
-%UnsignedLongInt = type i64;
-%Long = type i64;
-%UnsignedLong = type i64;
-%LongLong = type i64;
-%UnsignedLongLong = type i64;
-%LongLongInt = type i64;
-%UnsignedLongLongInt = type i64;
+%SignedChar = type %Int8;
+%UnsignedChar = type %Int8;
+%Short = type %Int16;
+%UnsignedShort = type %Int16;
+%Int = type %Int32;
+%UnsignedInt = type %Int32;
+%LongInt = type %Int64;
+%UnsignedLongInt = type %Int64;
+%Long = type %Int64;
+%UnsignedLong = type %Int64;
+%LongLong = type %Int64;
+%UnsignedLongLong = type %Int64;
+%LongLongInt = type %Int64;
+%UnsignedLongLongInt = type %Int64;
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type i64;
+%IntPtrT = type %Int64;
 %PtrDiffT = type i8*;
-%OffT = type i64;
-%USecondsT = type i32;
-%PIDT = type i32;
-%UIDT = type i32;
-%GIDT = type i32;
-
-%TimeT = type i32;
+%OffT = type %Int64;
+%USecondsT = type %Int32;
+%PIDT = type %Int32;
+%UIDT = type %Int32;
+%GIDT = type %Int32;
+; from included time
+%TimeT = type %Int32;
 %ClockT = type %UnsignedLong;
 %StructTM = type {
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%LongInt, 
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%LongInt,
 	%ConstChar*
 };
-
 
 declare %ClockT @clock()
 declare %Double @difftime(%TimeT %end, %TimeT %beginning)
@@ -165,8 +168,9 @@ declare %StructTM* @localtime_r(%TimeT* %timer, %StructTM* %tmptr)
 ; -- print imports --
 ; -- end print imports --
 ; -- strings --
+; -- endstrings --
 
-define %StructTM* @localTimeNow() {
+define internal %StructTM* @localTimeNow() {
 	%1 = alloca %TimeT, align 4
 	%2 = call %TimeT @time(%TimeT* %1)
 	%3 = alloca %StructTM, align 8
@@ -177,93 +181,93 @@ define %StructTM* @localTimeNow() {
 }
 
 
-%Date = type {
-	i32, 
-	i8, 
-	i8
+%datetime_Date = type {
+	%Int32,
+	%Int8,
+	%Int8
 };
 
-%Time = type {
-	i8, 
-	i8, 
-	i8
+%datetime_Time = type {
+	%Int8,
+	%Int8,
+	%Int8
 };
 
-%DateTime = type {
-	i32, 
-	i8, 
-	i8, 
-	i8, 
-	i8, 
-	i8
+%datetime_DateTime = type {
+	%Int32,
+	%Int8,
+	%Int8,
+	%Int8,
+	%Int8,
+	%Int8
 };
 
 
-define %Time @datetime_timeNow() {
+define %datetime_Time @datetime_timeNow() {
 	%1 = call %StructTM* @localTimeNow()
-	%2 = getelementptr inbounds %StructTM, %StructTM* %1, i32 0, i32 2
+	%2 = getelementptr inbounds %StructTM, %StructTM* %1, %Int32 0, %Int32 2
 	%3 = load %Int, %Int* %2
-	%4 = trunc %Int %3 to i8
-	%5 = insertvalue %Time zeroinitializer, i8 %4, 0
-	%6 = getelementptr inbounds %StructTM, %StructTM* %1, i32 0, i32 1
+	%4 = trunc %Int %3 to %Int8
+	%5 = insertvalue %datetime_Time zeroinitializer, %Int8 %4, 0
+	%6 = getelementptr inbounds %StructTM, %StructTM* %1, %Int32 0, %Int32 1
 	%7 = load %Int, %Int* %6
-	%8 = trunc %Int %7 to i8
-	%9 = insertvalue %Time %5, i8 %8, 1
-	%10 = getelementptr inbounds %StructTM, %StructTM* %1, i32 0, i32 0
+	%8 = trunc %Int %7 to %Int8
+	%9 = insertvalue %datetime_Time %5, %Int8 %8, 1
+	%10 = getelementptr inbounds %StructTM, %StructTM* %1, %Int32 0, %Int32 0
 	%11 = load %Int, %Int* %10
-	%12 = trunc %Int %11 to i8
-	%13 = insertvalue %Time %9, i8 %12, 2
-	ret %Time %13
+	%12 = trunc %Int %11 to %Int8
+	%13 = insertvalue %datetime_Time %9, %Int8 %12, 2
+	ret %datetime_Time %13
 }
 
-define %Date @datetime_dateNow() {
+define %datetime_Date @datetime_dateNow() {
 	%1 = call %StructTM* @localTimeNow()
-	%2 = getelementptr inbounds %StructTM, %StructTM* %1, i32 0, i32 5
+	%2 = getelementptr inbounds %StructTM, %StructTM* %1, %Int32 0, %Int32 5
 	%3 = load %Int, %Int* %2
-	%4 = bitcast %Int %3 to i32
-	%5 = add i32 %4, 1900
-	%6 = insertvalue %Date zeroinitializer, i32 %5, 0
-	%7 = getelementptr inbounds %StructTM, %StructTM* %1, i32 0, i32 4
+	%4 = bitcast %Int %3 to %Int32
+	%5 = add %Int32 %4, 1900
+	%6 = insertvalue %datetime_Date zeroinitializer, %Int32 %5, 0
+	%7 = getelementptr inbounds %StructTM, %StructTM* %1, %Int32 0, %Int32 4
 	%8 = load %Int, %Int* %7
-	%9 = trunc %Int %8 to i8
-	%10 = add i8 %9, 1
-	%11 = insertvalue %Date %6, i8 %10, 1
-	%12 = getelementptr inbounds %StructTM, %StructTM* %1, i32 0, i32 3
+	%9 = trunc %Int %8 to %Int8
+	%10 = add %Int8 %9, 1
+	%11 = insertvalue %datetime_Date %6, %Int8 %10, 1
+	%12 = getelementptr inbounds %StructTM, %StructTM* %1, %Int32 0, %Int32 3
 	%13 = load %Int, %Int* %12
-	%14 = trunc %Int %13 to i8
-	%15 = insertvalue %Date %11, i8 %14, 2
-	ret %Date %15
+	%14 = trunc %Int %13 to %Int8
+	%15 = insertvalue %datetime_Date %11, %Int8 %14, 2
+	ret %datetime_Date %15
 }
 
-define %DateTime @datetime_dateTimeNow() {
+define %datetime_DateTime @datetime_dateTimeNow() {
 	%1 = call %StructTM* @localTimeNow()
-	%2 = getelementptr inbounds %StructTM, %StructTM* %1, i32 0, i32 5
+	%2 = getelementptr inbounds %StructTM, %StructTM* %1, %Int32 0, %Int32 5
 	%3 = load %Int, %Int* %2
-	%4 = bitcast %Int %3 to i32
-	%5 = add i32 %4, 1900
-	%6 = insertvalue %DateTime zeroinitializer, i32 %5, 0
-	%7 = getelementptr inbounds %StructTM, %StructTM* %1, i32 0, i32 4
+	%4 = bitcast %Int %3 to %Int32
+	%5 = add %Int32 %4, 1900
+	%6 = insertvalue %datetime_DateTime zeroinitializer, %Int32 %5, 0
+	%7 = getelementptr inbounds %StructTM, %StructTM* %1, %Int32 0, %Int32 4
 	%8 = load %Int, %Int* %7
-	%9 = trunc %Int %8 to i8
-	%10 = add i8 %9, 1
-	%11 = insertvalue %DateTime %6, i8 %10, 1
-	%12 = getelementptr inbounds %StructTM, %StructTM* %1, i32 0, i32 3
+	%9 = trunc %Int %8 to %Int8
+	%10 = add %Int8 %9, 1
+	%11 = insertvalue %datetime_DateTime %6, %Int8 %10, 1
+	%12 = getelementptr inbounds %StructTM, %StructTM* %1, %Int32 0, %Int32 3
 	%13 = load %Int, %Int* %12
-	%14 = trunc %Int %13 to i8
-	%15 = insertvalue %DateTime %11, i8 %14, 2
-	%16 = getelementptr inbounds %StructTM, %StructTM* %1, i32 0, i32 2
+	%14 = trunc %Int %13 to %Int8
+	%15 = insertvalue %datetime_DateTime %11, %Int8 %14, 2
+	%16 = getelementptr inbounds %StructTM, %StructTM* %1, %Int32 0, %Int32 2
 	%17 = load %Int, %Int* %16
-	%18 = trunc %Int %17 to i8
-	%19 = insertvalue %DateTime %15, i8 %18, 3
-	%20 = getelementptr inbounds %StructTM, %StructTM* %1, i32 0, i32 1
+	%18 = trunc %Int %17 to %Int8
+	%19 = insertvalue %datetime_DateTime %15, %Int8 %18, 3
+	%20 = getelementptr inbounds %StructTM, %StructTM* %1, %Int32 0, %Int32 1
 	%21 = load %Int, %Int* %20
-	%22 = trunc %Int %21 to i8
-	%23 = insertvalue %DateTime %19, i8 %22, 4
-	%24 = getelementptr inbounds %StructTM, %StructTM* %1, i32 0, i32 0
+	%22 = trunc %Int %21 to %Int8
+	%23 = insertvalue %datetime_DateTime %19, %Int8 %22, 4
+	%24 = getelementptr inbounds %StructTM, %StructTM* %1, %Int32 0, %Int32 0
 	%25 = load %Int, %Int* %24
-	%26 = trunc %Int %25 to i8
-	%27 = insertvalue %DateTime %23, i8 %26, 5
-	ret %DateTime %27
+	%26 = trunc %Int %25 to %Int8
+	%27 = insertvalue %datetime_DateTime %23, %Int8 %26, 5
+	ret %datetime_DateTime %27
 }
 
 

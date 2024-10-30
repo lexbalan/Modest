@@ -118,7 +118,6 @@ int main()
 	printf("after\n");
 	array_print(pw, 10);
 
-
 	printf("--------------------------------------------\n");
 	printf("zero slice by var\n");
 	// NOT WORKED NOW
@@ -132,7 +131,6 @@ int main()
 	j = 7;
 	memset(&ss[k], 0, sizeof(int32_t[j - k]));
 	array_print((int32_t *)&ss, 10);
-
 
 	printf("--------------------------------------------\n");
 	printf("copy slice by var\n");

@@ -21,28 +21,28 @@ public type SocklenT Nat32
 
 @property("type.id.c", "struct sockaddr")
 public type Struct_sockaddr record {
-	sa_family: UnsignedShort  // address family
-	sa_data: [14]Char8        // up to 14 bytes of direct address
+	public sa_family: UnsignedShort  // address family
+	public sa_data: [14]Char8        // up to 14 bytes of direct address
 }
 
 
 @property("type.id.c", "struct in_addr")
 public type Struct_in_addr record {
-	s_addr: InAddrT
+	public s_addr: InAddrT
 }
 
 
 @property("type.id.c", "struct sockaddr_in")
 public type Struct_sockaddr_in record {
 // $if APPLE
-	sin_len: Nat8
-	sin_family: Nat8
+	public sin_len: Nat8
+	public sin_family: Nat8
 // $else
-//sin_family: Short
+//public sin_family: Short
 // $endif APPLE
-	sin_port: UnsignedShort
-	sin_addr: Struct_in_addr
-	sin_zero: [8]Nat8
+	public sin_port: UnsignedShort
+	public sin_addr: Struct_in_addr
+	public sin_zero: [8]Nat8
 }
 
 @property("value.id.c", "SOCK_STREAM")

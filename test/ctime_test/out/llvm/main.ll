@@ -6,6 +6,10 @@ target triple = "arm64-apple-macosx12.0.0"
 %Unit = type i1
 %Bool = type i1
 %Word8 = type i8
+%Word16 = type i16
+%Word32 = type i32
+%Word64 = type i64
+%Word128 = type i128
 %Char8 = type i8
 %Char16 = type i16
 %Char32 = type i32
@@ -102,43 +106,41 @@ break_2:
 ; MODULE: main
 
 ; -- print includes --
-
+; from included ctypes64
 %Str = type %Str8;
-%Char = type i8;
+%Char = type %Char8;
 %ConstChar = type %Char;
-%SignedChar = type i8;
-%UnsignedChar = type i8;
-%Short = type i16;
-%UnsignedShort = type i16;
-%Int = type i32;
-%UnsignedInt = type i32;
-%LongInt = type i64;
-%UnsignedLongInt = type i64;
-%Long = type i64;
-%UnsignedLong = type i64;
-%LongLong = type i64;
-%UnsignedLongLong = type i64;
-%LongLongInt = type i64;
-%UnsignedLongLongInt = type i64;
+%SignedChar = type %Int8;
+%UnsignedChar = type %Int8;
+%Short = type %Int16;
+%UnsignedShort = type %Int16;
+%Int = type %Int32;
+%UnsignedInt = type %Int32;
+%LongInt = type %Int64;
+%UnsignedLongInt = type %Int64;
+%Long = type %Int64;
+%UnsignedLong = type %Int64;
+%LongLong = type %Int64;
+%UnsignedLongLong = type %Int64;
+%LongLongInt = type %Int64;
+%UnsignedLongLongInt = type %Int64;
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type i64;
+%IntPtrT = type %Int64;
 %PtrDiffT = type i8*;
-%OffT = type i64;
-%USecondsT = type i32;
-%PIDT = type i32;
-%UIDT = type i32;
-%GIDT = type i32;
-
-%File = type i8;
-%FposT = type i8;
+%OffT = type %Int64;
+%USecondsT = type %Int32;
+%PIDT = type %Int32;
+%UIDT = type %Int32;
+%GIDT = type %Int32;
+; from included stdio
+%File = type %Int8;
+%FposT = type %Int8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
-
-
 declare %Int @fclose(%File* %f)
 declare %Int @feof(%File* %f)
 declare %Int @ferror(%File* %f)
@@ -181,23 +183,22 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
-
-%TimeT = type i32;
+; from included time
+%TimeT = type %Int32;
 %ClockT = type %UnsignedLong;
 %StructTM = type {
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%LongInt, 
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%LongInt,
 	%ConstChar*
 };
-
 
 declare %ClockT @clock()
 declare %Double @difftime(%TimeT %end, %TimeT %beginning)
@@ -210,8 +211,7 @@ declare %StructTM* @localtime(%TimeT* %timer)
 declare %SizeT @strftime(%Char* %ptr, %SizeT %maxsize, %ConstChar* %format, %StructTM* %timeptr)
 declare %StructTM* @localtime_s(%TimeT* %timer, %StructTM* %tmptr)
 declare %StructTM* @localtime_r(%TimeT* %timer, %StructTM* %tmptr)
-
-
+; from included unistd
 declare %Int @access([0 x %ConstChar]* %path, %Int %amode)
 declare %UnsignedInt @alarm(%UnsignedInt %seconds)
 declare %Int @brk(i8* %end_data_segment)
@@ -299,34 +299,30 @@ declare %PIDT @vfork()
 declare %SSizeT @write(%Int %fildes, i8* %buf, %SizeT %nbyte)
 ; -- end print includes --
 ; -- print imports --
-
-declare %StructTM* @localTimeNow()
-
-%Date = type {
-	i32, 
-	i8, 
-	i8
+%datetime_Date = type {
+	%Int32,
+	%Int8,
+	%Int8
 };
 
-%Time = type {
-	i8, 
-	i8, 
-	i8
+%datetime_Time = type {
+	%Int8,
+	%Int8,
+	%Int8
 };
 
-%DateTime = type {
-	i32, 
-	i8, 
-	i8, 
-	i8, 
-	i8, 
-	i8
+%datetime_DateTime = type {
+	%Int32,
+	%Int8,
+	%Int8,
+	%Int8,
+	%Int8,
+	%Int8
 };
 
-
-declare %Time @datetime_timeNow()
-declare %Date @datetime_dateNow()
-declare %DateTime @datetime_dateTimeNow()
+declare %datetime_Time @datetime_timeNow()
+declare %datetime_Date @datetime_dateNow()
+declare %datetime_DateTime @datetime_dateTimeNow()
 ; -- end print imports --
 ; -- strings --
 @str1 = private constant [12 x i8] [i8 99, i8 116, i8 105, i8 109, i8 101, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
@@ -346,88 +342,90 @@ declare %DateTime @datetime_dateTimeNow()
 @str15 = private constant [15 x i8] [i8 110, i8 111, i8 119, i8 46, i8 104, i8 111, i8 117, i8 114, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 @str16 = private constant [17 x i8] [i8 110, i8 111, i8 119, i8 46, i8 109, i8 105, i8 110, i8 117, i8 116, i8 101, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
 @str17 = private constant [17 x i8] [i8 110, i8 111, i8 119, i8 46, i8 115, i8 101, i8 99, i8 111, i8 110, i8 100, i8 32, i8 61, i8 32, i8 37, i8 105, i8 10, i8 0]
+; -- endstrings --
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*))
-	%2 = call %TimeT @time(%TimeT* null)
-	%3 = sdiv %TimeT %2, 3600
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([35 x i8]* @str2 to [0 x i8]*), %TimeT %3)
-	%5 = alloca %StructTM, align 8
-	%6 = alloca %StructTM*, align 8
-	%7 = alloca %Double, align 8
-	%8 = getelementptr inbounds %StructTM, %StructTM* %5, i32 0, i32 2
-	store %Int 0, %Int* %8
-	%9 = getelementptr inbounds %StructTM, %StructTM* %5, i32 0, i32 1
+	%2 = bitcast i8* null to %TimeT*
+	%3 = call %TimeT @time(%TimeT* %2)
+	%4 = sdiv %TimeT %3, 3600
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([35 x i8]* @str2 to [0 x i8]*), %TimeT %4)
+	%6 = alloca %StructTM, align 8
+	%7 = alloca %StructTM*, align 8
+	%8 = alloca %Double, align 8
+	%9 = getelementptr inbounds %StructTM, %StructTM* %6, %Int32 0, %Int32 2
 	store %Int 0, %Int* %9
-	%10 = getelementptr inbounds %StructTM, %StructTM* %5, i32 0, i32 0
+	%10 = getelementptr inbounds %StructTM, %StructTM* %6, %Int32 0, %Int32 1
 	store %Int 0, %Int* %10
-	%11 = getelementptr inbounds %StructTM, %StructTM* %5, i32 0, i32 5
-	store %Int 100, %Int* %11
-	%12 = getelementptr inbounds %StructTM, %StructTM* %5, i32 0, i32 4
-	store %Int 0, %Int* %12
-	%13 = getelementptr inbounds %StructTM, %StructTM* %5, i32 0, i32 3
-	store %Int 1, %Int* %13
+	%11 = getelementptr inbounds %StructTM, %StructTM* %6, %Int32 0, %Int32 0
+	store %Int 0, %Int* %11
+	%12 = getelementptr inbounds %StructTM, %StructTM* %6, %Int32 0, %Int32 5
+	store %Int 100, %Int* %12
+	%13 = getelementptr inbounds %StructTM, %StructTM* %6, %Int32 0, %Int32 4
+	store %Int 0, %Int* %13
+	%14 = getelementptr inbounds %StructTM, %StructTM* %6, %Int32 0, %Int32 3
+	store %Int 1, %Int* %14
 	;timer = clock()
-	%14 = alloca %TimeT, align 4
-	%15 = call %TimeT @time(%TimeT* %14)
-	%16 = load %TimeT, %TimeT* %14
-	%17 = bitcast %StructTM* %5 to %StructTM*
-	%18 = call %TimeT @mktime(%StructTM* %17)
-	%19 = call %Double @difftime(%TimeT %16, %TimeT %18)
-	store %Double %19, %Double* %7
-	%20 = load %Double, %Double* %7
-	%21 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([59 x i8]* @str3 to [0 x i8]*), %Double %20)
-	%22 = alloca %TimeT, align 4
-	%23 = call %TimeT @time(%TimeT* %22)
+	%15 = alloca %TimeT, align 4
+	%16 = call %TimeT @time(%TimeT* %15)
+	%17 = load %TimeT, %TimeT* %15
+	%18 = bitcast %StructTM* %6 to %StructTM*
+	%19 = call %TimeT @mktime(%StructTM* %18)
+	%20 = call %Double @difftime(%TimeT %17, %TimeT %19)
+	store %Double %20, %Double* %8
+	%21 = load %Double, %Double* %8
+	%22 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([59 x i8]* @str3 to [0 x i8]*), %Double %21)
+	%23 = alloca %TimeT, align 4
+	%24 = call %TimeT @time(%TimeT* %23)
 	;time2 = time(nil)   // segfail
-	%24 = call %StructTM* @localtime(%TimeT* %22)
-	%25 = bitcast %StructTM* %24 to %StructTM*
-	store %StructTM* %25, %StructTM** %6
+	%25 = call %StructTM* @localtime(%TimeT* %23)
+	%26 = bitcast %StructTM* %25 to %StructTM*
+	store %StructTM* %26, %StructTM** %7
 	;tm = gmtime(&time2)
-	%26 = load %StructTM*, %StructTM** %6
-	%27 = getelementptr inbounds %StructTM, %StructTM* %26, i32 0, i32 5
-	%28 = load %Int, %Int* %27
-	%29 = add %Int %28, 1900
-	%30 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str4 to [0 x i8]*), %Int %29)
-	%31 = load %StructTM*, %StructTM** %6
-	%32 = getelementptr inbounds %StructTM, %StructTM* %31, i32 0, i32 4
-	%33 = load %Int, %Int* %32
-	%34 = add %Int %33, 1
-	%35 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str5 to [0 x i8]*), %Int %34)
-	%36 = load %StructTM*, %StructTM** %6
-	%37 = getelementptr inbounds %StructTM, %StructTM* %36, i32 0, i32 3
-	%38 = load %Int, %Int* %37
-	%39 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str6 to [0 x i8]*), %Int %38)
-	%40 = load %StructTM*, %StructTM** %6
-	%41 = getelementptr inbounds %StructTM, %StructTM* %40, i32 0, i32 6
-	%42 = load %Int, %Int* %41
-	%43 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str7 to [0 x i8]*), %Int %42)
-	%44 = load %StructTM*, %StructTM** %6
-	%45 = getelementptr inbounds %StructTM, %StructTM* %44, i32 0, i32 2
-	%46 = load %Int, %Int* %45
-	%47 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str8 to [0 x i8]*), %Int %46)
-	%48 = load %StructTM*, %StructTM** %6
-	%49 = getelementptr inbounds %StructTM, %StructTM* %48, i32 0, i32 1
-	%50 = load %Int, %Int* %49
-	%51 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str9 to [0 x i8]*), %Int %50)
-	%52 = load %StructTM*, %StructTM** %6
-	%53 = getelementptr inbounds %StructTM, %StructTM* %52, i32 0, i32 0
-	%54 = load %Int, %Int* %53
-	%55 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str10 to [0 x i8]*), %Int %54)
-	%56 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([1 x i8]* @str11 to [0 x i8]*))
-	%57 = call %DateTime @datetime_dateTimeNow()
-	%58 = extractvalue %DateTime %57, 0
-	%59 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str12 to [0 x i8]*), i32 %58)
-	%60 = extractvalue %DateTime %57, 1
-	%61 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str13 to [0 x i8]*), i8 %60)
-	%62 = extractvalue %DateTime %57, 2
-	%63 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str14 to [0 x i8]*), i8 %62)
-	%64 = extractvalue %DateTime %57, 3
-	%65 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str15 to [0 x i8]*), i8 %64)
-	%66 = extractvalue %DateTime %57, 4
-	%67 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str16 to [0 x i8]*), i8 %66)
-	%68 = extractvalue %DateTime %57, 5
-	%69 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str17 to [0 x i8]*), i8 %68)
+	%27 = load %StructTM*, %StructTM** %7
+	%28 = getelementptr inbounds %StructTM, %StructTM* %27, %Int32 0, %Int32 5
+	%29 = load %Int, %Int* %28
+	%30 = add %Int %29, 1900
+	%31 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str4 to [0 x i8]*), %Int %30)
+	%32 = load %StructTM*, %StructTM** %7
+	%33 = getelementptr inbounds %StructTM, %StructTM* %32, %Int32 0, %Int32 4
+	%34 = load %Int, %Int* %33
+	%35 = add %Int %34, 1
+	%36 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str5 to [0 x i8]*), %Int %35)
+	%37 = load %StructTM*, %StructTM** %7
+	%38 = getelementptr inbounds %StructTM, %StructTM* %37, %Int32 0, %Int32 3
+	%39 = load %Int, %Int* %38
+	%40 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str6 to [0 x i8]*), %Int %39)
+	%41 = load %StructTM*, %StructTM** %7
+	%42 = getelementptr inbounds %StructTM, %StructTM* %41, %Int32 0, %Int32 6
+	%43 = load %Int, %Int* %42
+	%44 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str7 to [0 x i8]*), %Int %43)
+	%45 = load %StructTM*, %StructTM** %7
+	%46 = getelementptr inbounds %StructTM, %StructTM* %45, %Int32 0, %Int32 2
+	%47 = load %Int, %Int* %46
+	%48 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str8 to [0 x i8]*), %Int %47)
+	%49 = load %StructTM*, %StructTM** %7
+	%50 = getelementptr inbounds %StructTM, %StructTM* %49, %Int32 0, %Int32 1
+	%51 = load %Int, %Int* %50
+	%52 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str9 to [0 x i8]*), %Int %51)
+	%53 = load %StructTM*, %StructTM** %7
+	%54 = getelementptr inbounds %StructTM, %StructTM* %53, %Int32 0, %Int32 0
+	%55 = load %Int, %Int* %54
+	%56 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str10 to [0 x i8]*), %Int %55)
+	%57 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([1 x i8]* @str11 to [0 x i8]*))
+	%58 = call %datetime_DateTime @datetime_dateTimeNow()
+	%59 = extractvalue %datetime_DateTime %58, 0
+	%60 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str12 to [0 x i8]*), %Int32 %59)
+	%61 = extractvalue %datetime_DateTime %58, 1
+	%62 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str13 to [0 x i8]*), %Int8 %61)
+	%63 = extractvalue %datetime_DateTime %58, 2
+	%64 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str14 to [0 x i8]*), %Int8 %63)
+	%65 = extractvalue %datetime_DateTime %58, 3
+	%66 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str15 to [0 x i8]*), %Int8 %65)
+	%67 = extractvalue %datetime_DateTime %58, 4
+	%68 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str16 to [0 x i8]*), %Int8 %67)
+	%69 = extractvalue %datetime_DateTime %58, 5
+	%70 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str17 to [0 x i8]*), %Int8 %69)
 	ret %Int 0
 }
 

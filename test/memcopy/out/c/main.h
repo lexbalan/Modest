@@ -5,22 +5,13 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include <time.h>
 #include <stdio.h>
-#include <time.h>
-#include <unistd.h>
 #include <stdio.h>
-#include <time.h>
-#include <unistd.h>
 
 #include <stdio.h>
 
-#include <time.h>
 
-#include <unistd.h>
-
-#include "lightfood/datetime.h"
-
+typedef struct main_Object main_Object; //
 int main();
 
 #endif /* MAIN_H */

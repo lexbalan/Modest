@@ -99,7 +99,6 @@ public func main() -> Int {
 	printf("after\n")
 	array_print(pw, 10)
 
-
 	printf("--------------------------------------------\n")
 	printf("zero slice by var\n")
 	// NOT WORKED NOW
@@ -110,7 +109,6 @@ public func main() -> Int {
 	var j: Int32 = 7
 	ss[k:j] = []  // right size = 0
 	array_print(&ss, 10)
-
 
 	printf("--------------------------------------------\n")
 	printf("copy slice by var\n")
