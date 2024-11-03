@@ -1159,7 +1159,7 @@ def sort_args(params, args):
 
 
 
-def do_value_call_lengthof(x):
+def do_value_lengthof_value(x):
 	ti = x['ti']
 	arg = do_rvalue(x['value'])
 
@@ -1813,7 +1813,7 @@ def do_value(x):
 	elif k == 'sizeof_type': v = do_value_sizeof_type(x)
 	elif k == 'alignof': v = do_value_alignof(x)
 	elif k == 'offsetof': v = do_value_offsetof(x)
-	elif k == 'lengthof': v = do_value_call_lengthof(x)
+	elif k == 'lengthof_value': v = do_value_lengthof_value(x)
 	elif k == '__va_arg': v = do_value_va_arg(x)
 	elif k == '__va_start': v = do_value_va_start(x)
 	elif k == '__va_copy': v = do_value_va_copy(x)

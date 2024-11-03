@@ -653,7 +653,7 @@ class Parser:
 		elif self.match("lengthof"):
 			self.match("(")
 			v = self.expr_value()
-			rv = {'isa': 'ast_value', 'kind': 'sizeof_value', 'value': v, 'ti': ti}
+			rv = {'isa': 'ast_value', 'kind': 'lengthof_value', 'value': v, 'ti': ti}
 			self.need(")")
 			return rv
 		elif self.match("__va_start"):
