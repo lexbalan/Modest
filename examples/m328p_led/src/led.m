@@ -35,8 +35,10 @@ public func isFree(led: *LedController) -> Bool {
 func ledSet(brightness: Nat32) -> Unit {
 	let b = brightness / divider
 	//ledPwmSet(b)
-	//printf("PWM = %d\n", b)
-	bsp.tc1PWM_PB1(unsafe Nat16 b)
+	////printf("PWM = %d\n", b)
+
+	// PB2 = RED
+	bsp.tc1PWM_PB2(unsafe Nat16 b)
 }
 
 
@@ -47,18 +49,25 @@ public func reset(led: *LedController) {
 }
 
 
-public func start(led: *LedController, brightness: Nat8, time: Nat32) {
-	let diff = (Int32 brightness * divider) - Int32 led.brightness
-	led.step = diff / Int32 time
+// a = current brightness
+// b = target brightness
+func calcStep(a: Nat32, b: Nat32, time: Nat32) -> Int32 {
+	let diff = Int32 b - Int32 a
+	let stepp = diff / Int32 time
+	return stepp  // error step!
+}
 
+
+public func start(led: *LedController, brightness: Nat8, time: Nat32) {
 	led.stepNo = 0
 	led.stepEnd = time
+	led.step = calcStep(led.brightness, (Nat32 brightness * divider), time)
 	led.run = true
 
-	printf("start:\n")
-	printf("brightness = %d\n", brightness)
-	printf("step = %d\n", led.step)
-	printf("stepEnd = %d\n", led.stepEnd)
+	//printf("start:\n")
+	//printf("brightness = %d\n", brightness)
+	//printf("step = %d\n", led.step)
+	//printf("stepEnd = %d\n", led.stepEnd)
 }
 
 
@@ -75,7 +84,7 @@ public func step(led: *LedController) {
 	let brightness = Nat32 (Int32 led.brightness + led.step)
 	led.brightness = brightness
 
-	printf("[%d]", led.stepNo)
+	//printf("[%d]", led.stepNo)
 	ledSet(brightness)
 
 	++led.stepNo

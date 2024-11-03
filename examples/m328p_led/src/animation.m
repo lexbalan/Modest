@@ -1,16 +1,13 @@
 
 include "libc/stdio"
+
+include "rgb24"
 import "led" as led
 
 
-type Color record {
-	red: Nat8
-	green: Nat8
-	blue: Nat8
-}
-
 type AnimationPoint record {
 	brightness: Nat8
+	//color: RGB24
 	time: Nat32  // In ms; 0=instant
 }
 

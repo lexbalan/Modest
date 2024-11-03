@@ -21,7 +21,7 @@ public func main() -> Int16 {
 	bsp.tc1PWM_PB1(0)
 	bsp.tc1PWM_PB2(0)
 
-	//animation.startt(&astate)
+	animation.startt(&astate)
 
 	while true {
 		//avr.portB.out = 0xFF

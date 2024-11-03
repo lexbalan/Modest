@@ -10,6 +10,7 @@
 
 #define led_divider  256
 void ledSet(uint32_t brightness);
+int32_t slope(uint32_t a, uint32_t b, uint32_t time);
 
 
 
@@ -19,7 +20,16 @@ void ledSet(uint32_t brightness)
 	const uint32_t b = brightness / led_divider;
 	//ledPwmSet(b)
 	//printf("PWM = %d\n", b)
-	bsp_tc1PWM_PB1((uint16_t)b);
+
+	// PB2 = RED
+	bsp_tc1PWM_PB2((uint16_t)b);
+}
+
+int32_t slope(uint32_t a, uint32_t b, uint32_t time)
+{
+	const int32_t diff = (int32_t)b - (int32_t)a;
+	const int32_t stepp = diff / (int32_t)time;
+	return stepp;
 }
 
 void led_init()
@@ -43,8 +53,7 @@ void led_reset(led_LedController *led)
 
 void led_start(led_LedController *led, uint8_t brightness, uint32_t time)
 {
-	const int32_t diff = (int32_t)brightness * led_divider - (int32_t)led->brightness;
-	led->step = diff / (int32_t)time;
+	led->step = slope(led->brightness, (uint32_t)brightness * led_divider, time);
 
 	led->stepNo = 0;
 	led->stepEnd = time;

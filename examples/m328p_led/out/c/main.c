@@ -23,7 +23,7 @@ int16_t main()
 	bsp_tc1PWM_PB1(0);
 	bsp_tc1PWM_PB2(0);
 
-	//animation.startt(&astate)
+	animation_startt((animation_AnimationState *)&astate);
 
 	while (true) {
 		//avr.portB.out = 0xFF

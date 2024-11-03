@@ -33,6 +33,7 @@ C:
 	mcc -o out/c/led -funsafe -mbackend=c src/led.m
 	mcc -o out/c/animation -funsafe -mbackend=c src/animation.m
 	mcc -o out/c/bsp -funsafe -mbackend=c src/bsp.m
+	mcc -o out/c/rgb24 -funsafe -mbackend=c src/rgb24.m
 	
 	avr-gcc $(ALL_CFLAGS) -o $(BIN)/main.o out/c/main.c
 	avr-gcc $(ALL_CFLAGS) -o $(BIN)/avr.o out/c/avr/avr.c

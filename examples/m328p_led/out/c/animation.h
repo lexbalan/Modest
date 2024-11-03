@@ -10,9 +10,9 @@
 #include <stdio.h>
 #include <stdio.h>
 
+#include "rgb24.h"
 #include "led.h"
 
-typedef struct animation_Color animation_Color; //
 typedef struct animation_AnimationPoint animation_AnimationPoint; //
 typedef struct animation_Animation animation_Animation; //
 typedef struct animation_AnimationState animation_AnimationState; //

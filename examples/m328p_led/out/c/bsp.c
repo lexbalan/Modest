@@ -24,11 +24,11 @@ void bsp_initTC1_PWM()
 
 void bsp_tc1PWM_PB1(uint16_t x)
 {
-	m328p_tc1->ocr1a = x;
+	m328p_tc1->ocr1a = x / 2;
 }
 
 void bsp_tc1PWM_PB2(uint16_t x)
 {
-	m328p_tc1->ocr1b = x;
+	m328p_tc1->ocr1b = x / 2;
 }
 

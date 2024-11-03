@@ -10,14 +10,9 @@
 
 
 
-struct animation_Color {
-	uint8_t red;
-	uint8_t green;
-	uint8_t blue;
-};
-
 struct animation_AnimationPoint {
 	uint8_t brightness;
+	//color: RGB24
 	uint32_t time;
 };
 
@@ -25,6 +20,7 @@ struct animation_Animation {
 	uint32_t len;
 	animation_AnimationPoint *points;
 };
+
 
 
 
