@@ -24,11 +24,17 @@ import decimal
 decimal.getcontext().prec = settings.get('precision')
 
 
+# сущность из текущего модуля
 def is_local_entity(x):
 	global cmodule
 	if 'definition' in x:
 		return x['definition']['module'] == cmodule
 	return True
+
+
+# значение глобально (неважно из какого модуля)
+def is_global_value(x):
+	return 'global_entity' in x['att']
 
 
 def is_local_context():
@@ -1475,8 +1481,6 @@ def do_value_slice(x):
 
 
 
-def is_global_value(x):
-	return 'global_entity' in x['att']
 
 
 def is_submodule_name(id_str):

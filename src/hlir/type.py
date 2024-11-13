@@ -41,6 +41,7 @@ ARR_OPS = CONS_OP + EQ_OPS + ('add', 'index')
 REC_OPS = CONS_OP + EQ_OPS + ('access',)
 STR_OPS = CONS_OP + EQ_OPS + ('add',)
 
+
 def hlir_type_bad(x):
 	return {
 		'isa': 'type',
@@ -72,7 +73,6 @@ def hlir_type_undefined(ti):
 		'att': [],
 		'ti': ti
 	}
-
 
 
 def hlir_type_by_width(width, ti=None):
