@@ -3,7 +3,7 @@ from error import info, warning, error
 import hlir.type as type
 from hlir.hlir import *
 from hlir.field import hlir_field
-from hlir.type import record_field_get
+from hlir.type import type_print, record_field_get
 from util import get_item_with_id
 from .value import value_terminal, value_cons_node, value_zero, value_is_immediate, value_print, value_cons_immediate
 
@@ -27,9 +27,10 @@ def value_record_create(initializers=[], ti=None):
 		# если хотя бы один элемент - не immediate
 		# -> весь литерал записи - не immediate
 		if not value_is_immediate(init_value):
+			info("NOT IMM", field_ti)
 			is_immediate = False
 
-		# создаем поле для generic record
+		# создаем поле для типа generic record
 		field = hlir_field(field_id, field_type, ti=field_ti)
 		fields.append(field)
 
@@ -67,7 +68,8 @@ def value_record_create(initializers=[], ti=None):
 """
 
 
-def cast_items(t, v, method, ti):
+def cons_items(t, v, method, ti):
+	#warning("cons_items", ti)
 	items = []
 	if len(v['type']['fields']) > 0:
 		# 1. проходим по порядку определения по всем полям типа t (целевого)
@@ -77,7 +79,7 @@ def cast_items(t, v, method, ti):
 		# 3. делаем implicit_cast() для поля из v к соотв полю из t
 		# 4. проверяем тип
 		# 5. пакуем
-		prev_nl = 1 # nl для неявных инициализаторов (zeroinitializers)
+		prev_nl = 1  # nl для неявных инициализаторов (zeroinitializers)
 		for field in t['fields']:
 			field_name = field['id']['str']
 			field_type = field['type']
@@ -87,9 +89,9 @@ def cast_items(t, v, method, ti):
 			nl = 0
 
 			initializers = v['fields']
-			ini = get_item_with_id(initializers, field_name)
+			initializer = get_item_with_id(initializers, field_name)
 
-			if ini == None:
+			if initializer == None:
 				# no field, create zero value stub
 				item_value = value_zero(field_type, ti=ti)
 				if method == 'implicit':
@@ -99,22 +101,34 @@ def cast_items(t, v, method, ti):
 				nl = prev_nl
 				ti = None
 			else:
-				item_value = ini['value']
-				nl = ini['nl']
-				ti = ini['ti']
+				item_value = initializer['value']
+				nl = initializer['nl']
+				ti = initializer['ti']
 
 			prev_nl = nl
 
+			#info("cons record item", item_value['ti'])
 
 			# Если это GenericRecord и тип поля тоже Generic
 			# То здесь можем поменять тип на более подходящий!
 			# Это тонкий лед, нужно быть осторожным!
-			if type.type_is_generic(field_type):
-				field_type = type.select_common_type(field_type, item_value['type'])
-				field['type'] = field_type
+#			if type.type_is_generic(field_type):
+#				field_type = type.select_common_type(field_type, item_value['type'])
+#				field['type'] = field_type
 
 			from .cons import value_cons_implicit_check
 			nv = value_cons_implicit_check(field_type, item_value)
+
+			"""print("%s" % nv['kind'])
+			print(">>>>>>>>>>>>>")
+			type_print(field_type)
+			print()
+			type_print(item_value['type'])
+			print()
+			type_print(nv['type'])
+			print()
+			print("<<<<<<<<<<<<<")"""
+
 			p = hlir_initializer(field['id'], nv, ti=ti, nl=nl)
 			items.append(p)
 
@@ -150,7 +164,7 @@ def value_record_cons(t, v, method, ti):
 	nv = value_cons_node(t, v, method, ti=ti)
 
 	if type.type_is_generic(v['type']):
-		nv['fields'] = cast_items(t, v, method, ti)
+		nv['fields'] = cons_items(t, v, method, ti)
 		nv['immediate'] = True
 
 	return nv

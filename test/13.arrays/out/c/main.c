@@ -6,7 +6,7 @@
 
 #include "main.h"
 
-
+#define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
 
 #define _main_constantArray  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 const int8_t main_constantArray[10] = _main_constantArray;
@@ -60,7 +60,7 @@ void test()
 	memcpy(&yy, &(int8_t[]){0xAA, 0x55, 0x02, 0x00, 0x00, 0x16}, sizeof(int8_t[6]));
 	int32_t i;
 	i = 0;
-	while (i < sizeof yy) {
+	while (i < LENGTHOF(yy)) {
 		i = i + 1;
 	}
 }

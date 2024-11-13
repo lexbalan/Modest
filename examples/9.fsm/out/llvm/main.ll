@@ -6,6 +6,10 @@ target triple = "arm64-apple-macosx12.0.0"
 %Unit = type i1
 %Bool = type i1
 %Word8 = type i8
+%Word16 = type i16
+%Word32 = type i32
+%Word64 = type i64
+%Word128 = type i128
 %Char8 = type i8
 %Char16 = type i16
 %Char32 = type i32
@@ -102,45 +106,41 @@ break_2:
 ; MODULE: main
 
 ; -- print includes --
-
+; from included ctypes64
 %Str = type %Str8;
-%Char = type i8;
+%Char = type %Char8;
 %ConstChar = type %Char;
-%SignedChar = type i8;
-%UnsignedChar = type i8;
-%Short = type i16;
-%UnsignedShort = type i16;
-%Int = type i32;
-%UnsignedInt = type i32;
-%LongInt = type i64;
-%UnsignedLongInt = type i64;
-%Long = type i64;
-%UnsignedLong = type i64;
-%LongLong = type i64;
-%UnsignedLongLong = type i64;
-%LongLongInt = type i64;
-%UnsignedLongLongInt = type i64;
+%SignedChar = type %Int8;
+%UnsignedChar = type %Int8;
+%Short = type %Int16;
+%UnsignedShort = type %Int16;
+%Int = type %Int32;
+%UnsignedInt = type %Int32;
+%LongInt = type %Int64;
+%UnsignedLongInt = type %Int64;
+%Long = type %Int64;
+%UnsignedLong = type %Int64;
+%LongLong = type %Int64;
+%UnsignedLongLong = type %Int64;
+%LongLongInt = type %Int64;
+%UnsignedLongLongInt = type %Int64;
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
-
-%SocklenT = type i32;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntptrT = type i64;
-%PtrdiffT = type i8*;
-%OffT = type i64;
-%USecondsT = type i32;
-%PidT = type i32;
-%UidT = type i32;
-%GidT = type i32;
-
-%File = type i8;
-%FposT = type i8;
+%IntPtrT = type %Int64;
+%PtrDiffT = type i8*;
+%OffT = type %Int64;
+%USecondsT = type %Int32;
+%PIDT = type %Int32;
+%UIDT = type %Int32;
+%GIDT = type %Int32;
+; from included stdio
+%File = type %Int8;
+%FposT = type %Int8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
-
-
 declare %Int @fclose(%File* %f)
 declare %Int @feof(%File* %f)
 declare %Int @ferror(%File* %f)
@@ -185,64 +185,57 @@ declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
 ; -- print imports --
-
-%TimeT = type i32;
+; from included time
+%TimeT = type %Int32;
 %ClockT = type %UnsignedLong;
-%Struct_tm = type {
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%LongInt, 
+%StructTM = type {
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%LongInt,
 	%ConstChar*
 };
 
-
 declare %ClockT @clock()
 declare %Double @difftime(%TimeT %end, %TimeT %beginning)
-declare %TimeT @mktime(%Struct_tm* %timeptr)
+declare %TimeT @mktime(%StructTM* %timeptr)
 declare %TimeT @time(%TimeT* %timer)
-declare %Char* @asctime(%Struct_tm* %timeptr)
+declare %Char* @asctime(%StructTM* %timeptr)
 declare %Char* @ctime(%TimeT* %timer)
-declare %Struct_tm* @gmtime(%TimeT* %timer)
-declare %Struct_tm* @localtime(%TimeT* %timer)
-declare %SizeT @strftime(%Char* %ptr, %SizeT %maxsize, %ConstChar* %format, %Struct_tm* %timeptr)
-
-declare void @delay_us(i64 %us)
-declare void @delay_ms(i64 %ms)
-declare void @delay_sec(i64 %s)
-
-
-
-%UInt32 = type i32;
-%FSM_StateDesc = type {
-	[8 x i8], 
-	%FSM_Proc, 
-	%FSM_Proc, 
-	%FSM_Proc
+declare %StructTM* @gmtime(%TimeT* %timer)
+declare %StructTM* @localtime(%TimeT* %timer)
+declare %SizeT @strftime(%Char* %ptr, %SizeT %maxsize, %ConstChar* %format, %StructTM* %timeptr)
+declare %StructTM* @localtime_s(%TimeT* %timer, %StructTM* %tmptr)
+declare %StructTM* @localtime_r(%TimeT* %timer, %StructTM* %tmptr)
+declare void @delay_us(%Int64 %us)
+declare void @delay_ms(%Int64 %ms)
+declare void @delay_sec(%Int64 %s)
+%fsm_UInt32 = type %Int32;
+%fsm_FSM_StateDesc = type {
+	[8 x %Char8],
+	%fsm_FSM_Proc,
+	%fsm_FSM_Proc,
+	%fsm_FSM_Proc
 };
 
-
-
-%FSM = type {
-	[8 x i8], 
-	%UInt32, 
-	%UInt32, 
-	%UInt32, 
-	[16 x %FSM_StateDesc]
+%fsm_FSM = type {
+	[8 x %Char8],
+	%fsm_UInt32,
+	%fsm_UInt32,
+	%fsm_UInt32,
+	[16 x %fsm_FSM_StateDesc]
 };
 
-%FSM_Proc = type void (%FSM*)*;
-
-
-declare %Str8* @fsm_state_no_name(%FSM* %fsm, i32 %state_no)
-declare void @fsm_switch(%FSM* %fsm, i32 %state)
-declare void @fsm_run(%FSM* %fsm)
+%fsm_FSM_Proc = type void (%fsm_FSM*)*;
+declare %Str8* @fsm_state_no_name(%fsm_FSM* %fsm, %Int32 %state_no)
+declare void @fsm_switch(%fsm_FSM* %fsm, %Int32 %state)
+declare void @fsm_run(%fsm_FSM* %fsm)
 ; -- end print imports --
 ; -- strings --
 @str1 = private constant [10 x i8] [i8 111, i8 102, i8 102, i8 95, i8 108, i8 111, i8 111, i8 112, i8 10, i8 0]
@@ -250,9 +243,193 @@ declare void @fsm_run(%FSM* %fsm)
 @str3 = private constant [22 x i8] [i8 98, i8 101, i8 97, i8 99, i8 111, i8 110, i8 95, i8 101, i8 110, i8 116, i8 114, i8 121, i8 32, i8 102, i8 114, i8 111, i8 109, i8 32, i8 37, i8 115, i8 10, i8 0]
 @str4 = private constant [13 x i8] [i8 98, i8 101, i8 97, i8 99, i8 111, i8 110, i8 95, i8 108, i8 111, i8 111, i8 112, i8 10, i8 0]
 @str5 = private constant [19 x i8] [i8 98, i8 101, i8 97, i8 99, i8 111, i8 110, i8 95, i8 101, i8 120, i8 105, i8 116, i8 32, i8 116, i8 111, i8 32, i8 37, i8 115, i8 10, i8 0]
+; -- endstrings --
 
 
-@cnt = global i8 zeroinitializer
-@fsm = global %FSM 
-	; cast_composite_to_composite
-	; extend
+@cnt = global %Int8 zeroinitializer
+@fsm = global %fsm_FSM {
+	[8 x %Char8] [
+		%Char8 70,
+		%Char8 108,
+		%Char8 97,
+		%Char8 115,
+		%Char8 104,
+		%Char8 0,
+		%Char8 0,
+		%Char8 0
+	],
+	%fsm_UInt32 0,
+	%fsm_UInt32 0,
+	%fsm_UInt32 0,
+	[16 x %fsm_FSM_StateDesc] [
+		%fsm_FSM_StateDesc {
+			[8 x %Char8] [
+				%Char8 79,
+				%Char8 102,
+				%Char8 102,
+				%Char8 0,
+				%Char8 0,
+				%Char8 0,
+				%Char8 0,
+				%Char8 0
+			],
+			void (%fsm_FSM*)* @off_entry,
+			void (%fsm_FSM*)* @off_loop,
+			void (%fsm_FSM*)* @off_exit
+		},
+		%fsm_FSM_StateDesc {
+			[8 x %Char8] [
+				%Char8 79,
+				%Char8 110,
+				%Char8 0,
+				%Char8 0,
+				%Char8 0,
+				%Char8 0,
+				%Char8 0,
+				%Char8 0
+			],
+			void (%fsm_FSM*)* @on_entry,
+			void (%fsm_FSM*)* @on_loop,
+			void (%fsm_FSM*)* @on_exit
+		},
+		%fsm_FSM_StateDesc {
+			[8 x %Char8] [
+				%Char8 66,
+				%Char8 101,
+				%Char8 97,
+				%Char8 99,
+				%Char8 111,
+				%Char8 110,
+				%Char8 0,
+				%Char8 0
+			],
+			void (%fsm_FSM*)* @beacon_entry,
+			void (%fsm_FSM*)* @beacon_loop,
+			void (%fsm_FSM*)* @beacon_exit
+		},
+		%fsm_FSM_StateDesc zeroinitializer,
+		%fsm_FSM_StateDesc zeroinitializer,
+		%fsm_FSM_StateDesc zeroinitializer,
+		%fsm_FSM_StateDesc zeroinitializer,
+		%fsm_FSM_StateDesc zeroinitializer,
+		%fsm_FSM_StateDesc zeroinitializer,
+		%fsm_FSM_StateDesc zeroinitializer,
+		%fsm_FSM_StateDesc zeroinitializer,
+		%fsm_FSM_StateDesc zeroinitializer,
+		%fsm_FSM_StateDesc zeroinitializer,
+		%fsm_FSM_StateDesc zeroinitializer,
+		%fsm_FSM_StateDesc zeroinitializer,
+		%fsm_FSM_StateDesc zeroinitializer
+	]
+}
+
+define internal void @off_entry(%fsm_FSM* %x) {
+	;printf("off_entry\n")
+	ret void
+}
+
+define internal void @off_loop(%fsm_FSM* %x) {
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*))
+	%2 = load %Int8, %Int8* @cnt
+	%3 = icmp ult %Int8 %2, 10
+	br %Bool %3 , label %then_0, label %else_0
+then_0:
+	%4 = load %Int8, %Int8* @cnt
+	%5 = add %Int8 %4, 1
+	store %Int8 %5, %Int8* @cnt
+	br label %endif_0
+else_0:
+	store %Int8 0, %Int8* @cnt
+	%6 = bitcast %fsm_FSM* %x to %fsm_FSM*
+	call void @fsm_switch(%fsm_FSM* %6, %Int32 1)
+	br label %endif_0
+endif_0:
+	ret void
+}
+
+define internal void @off_exit(%fsm_FSM* %x) {
+	;printf("off_exit\n")
+	ret void
+}
+
+define internal void @on_entry(%fsm_FSM* %x) {
+	;printf("on_entry\n")
+	ret void
+}
+
+define internal void @on_loop(%fsm_FSM* %x) {
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str2 to [0 x i8]*))
+	%2 = load %Int8, %Int8* @cnt
+	%3 = icmp ult %Int8 %2, 10
+	br %Bool %3 , label %then_0, label %else_0
+then_0:
+	%4 = load %Int8, %Int8* @cnt
+	%5 = add %Int8 %4, 1
+	store %Int8 %5, %Int8* @cnt
+	br label %endif_0
+else_0:
+	store %Int8 0, %Int8* @cnt
+	%6 = bitcast %fsm_FSM* %x to %fsm_FSM*
+	call void @fsm_switch(%fsm_FSM* %6, %Int32 2)
+	br label %endif_0
+endif_0:
+	ret void
+}
+
+define internal void @on_exit(%fsm_FSM* %x) {
+	;printf("on_exit\n")
+	ret void
+}
+
+define internal void @beacon_entry(%fsm_FSM* %x) {
+	%1 = bitcast %fsm_FSM* %x to %fsm_FSM*
+	%2 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %x, %Int32 0, %Int32 1
+	%3 = load %fsm_UInt32, %fsm_UInt32* %2
+	%4 = call %Str8* @fsm_state_no_name(%fsm_FSM* %1, %fsm_UInt32 %3)
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str3 to [0 x i8]*), %Str8* %4)
+	ret void
+}
+
+define internal void @beacon_loop(%fsm_FSM* %x) {
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str4 to [0 x i8]*))
+	%2 = load %Int8, %Int8* @cnt
+	%3 = icmp ult %Int8 %2, 10
+	br %Bool %3 , label %then_0, label %else_0
+then_0:
+	%4 = load %Int8, %Int8* @cnt
+	%5 = add %Int8 %4, 1
+	store %Int8 %5, %Int8* @cnt
+	br label %endif_0
+else_0:
+	store %Int8 0, %Int8* @cnt
+	%6 = bitcast %fsm_FSM* %x to %fsm_FSM*
+	call void @fsm_switch(%fsm_FSM* %6, %Int32 0)
+	br label %endif_0
+endif_0:
+	ret void
+}
+
+define internal void @beacon_exit(%fsm_FSM* %x) {
+	%1 = bitcast %fsm_FSM* %x to %fsm_FSM*
+	%2 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %x, %Int32 0, %Int32 2
+	%3 = load %fsm_UInt32, %fsm_UInt32* %2
+	%4 = call %Str8* @fsm_state_no_name(%fsm_FSM* %1, %fsm_UInt32 %3)
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str5 to [0 x i8]*), %Str8* %4)
+	ret void
+}
+
+
+define %Int @main() {
+	br label %again_1
+again_1:
+	br %Bool 1 , label %body_1, label %break_1
+body_1:
+	%1 = bitcast %fsm_FSM* @fsm to %fsm_FSM*
+	call void @fsm_run(%fsm_FSM* %1)
+	call void @delay_ms(%Int64 500)
+	br label %again_1
+break_1:
+	ret %Int 0
+}
+
+

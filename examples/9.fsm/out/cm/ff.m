@@ -1,4 +1,5 @@
 
+@c_include "time.h"
 include "libc/time"
 public func us(us: Nat64) -> Unit {
 	let start_time = clock()

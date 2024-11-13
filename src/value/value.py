@@ -475,10 +475,8 @@ def value_va_copy(dst, src, ti):
 
 
 
-def value_print(x, msg="value_print"):
+def value_print(x, msg="value_print:"):
 	assert(x['isa'] == 'value')
-	print("\n\nvalue_print:")
-
 	info(msg, x['ti'])
 
 	print("isa: " + str(x['isa']))

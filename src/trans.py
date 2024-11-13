@@ -997,10 +997,8 @@ def do_value_ref(x):
 	nv = value_un('ref', v, vt, ti=ti)
 
 	# HOTFIX, BADFIX
-	# временно считвем указатель на глоб переменную/функцию immediate значением
-	# это нужно для глобальных immediate структур,
-	# пока не знаю как это лучше сделать, но мне это вообще не нравится!
-	if not is_local_context():
+	# считаем указатель на глоб переменную/функцию immediate значением
+	if is_global_value(v):
 		nv['immediate'] = True
 		nv['asset'] = None
 		nv['items'] = []
@@ -1477,6 +1475,8 @@ def do_value_slice(x):
 
 
 
+def is_global_value(x):
+	return 'global_entity' in x['att']
 
 
 def is_submodule_name(id_str):
@@ -1581,6 +1581,7 @@ def do_value_access(x):
 	return nv
 
 
+
 def do_value_cons(x):
 	v = do_rvalue(x['value'])
 	t = do_type(x['type'])
@@ -1641,8 +1642,10 @@ def do_value_array(x):
 	return v
 
 
-
+# Создает value с типом GenericRecord
+# которое далее уже можно привести к конкретной записи
 def do_value_record(x):
+	#info("do_value_record", x['ti'])
 	initializers = []
 	for item in x['items']:
 		if item['isa'] == 'ast_comment':
@@ -2371,8 +2374,7 @@ def def_func(x, dostmt=True):
 	# значение функции уже существует, тк мы ранее сделали проход
 	fn = ctx_value_get(func_id['str'])
 
-	prev_cfunc = cfunc
-	cfunc = fn
+
 
 	if x['stmt'] == None:
 		#print("DECL: "+fn['id']['str'])
@@ -2387,8 +2389,10 @@ def def_func(x, dostmt=True):
 	if hlir_type.type_is_bad(fn['type']):
 		return None
 
-	if not 'params' in fn['type']:
-		info("??", fn['type'])
+
+	prev_cfunc = cfunc
+	cfunc = fn
+
 	params = fn['type']['params']
 
 

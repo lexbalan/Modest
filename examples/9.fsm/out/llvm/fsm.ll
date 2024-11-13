@@ -6,6 +6,10 @@ target triple = "arm64-apple-macosx12.0.0"
 %Unit = type i1
 %Bool = type i1
 %Word8 = type i8
+%Word16 = type i16
+%Word32 = type i32
+%Word64 = type i64
+%Word128 = type i128
 %Char8 = type i8
 %Char16 = type i16
 %Char32 = type i32
@@ -102,45 +106,41 @@ break_2:
 ; MODULE: fsm
 
 ; -- print includes --
-
+; from included ctypes64
 %Str = type %Str8;
-%Char = type i8;
+%Char = type %Char8;
 %ConstChar = type %Char;
-%SignedChar = type i8;
-%UnsignedChar = type i8;
-%Short = type i16;
-%UnsignedShort = type i16;
-%Int = type i32;
-%UnsignedInt = type i32;
-%LongInt = type i64;
-%UnsignedLongInt = type i64;
-%Long = type i64;
-%UnsignedLong = type i64;
-%LongLong = type i64;
-%UnsignedLongLong = type i64;
-%LongLongInt = type i64;
-%UnsignedLongLongInt = type i64;
+%SignedChar = type %Int8;
+%UnsignedChar = type %Int8;
+%Short = type %Int16;
+%UnsignedShort = type %Int16;
+%Int = type %Int32;
+%UnsignedInt = type %Int32;
+%LongInt = type %Int64;
+%UnsignedLongInt = type %Int64;
+%Long = type %Int64;
+%UnsignedLong = type %Int64;
+%LongLong = type %Int64;
+%UnsignedLongLong = type %Int64;
+%LongLongInt = type %Int64;
+%UnsignedLongLongInt = type %Int64;
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
-
-%SocklenT = type i32;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntptrT = type i64;
-%PtrdiffT = type i8*;
-%OffT = type i64;
-%USecondsT = type i32;
-%PidT = type i32;
-%UidT = type i32;
-%GidT = type i32;
-
-%File = type i8;
-%FposT = type i8;
+%IntPtrT = type %Int64;
+%PtrDiffT = type i8*;
+%OffT = type %Int64;
+%USecondsT = type %Int32;
+%PIDT = type %Int32;
+%UIDT = type %Int32;
+%GIDT = type %Int32;
+; from included stdio
+%File = type %Int8;
+%FposT = type %Int8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
-
-
 declare %Int @fclose(%File* %f)
 declare %Int @feof(%File* %f)
 declare %Int @ferror(%File* %f)
@@ -190,130 +190,134 @@ declare void @perror(%ConstCharStr* %str)
 @str1 = private constant [12 x i8] [i8 102, i8 115, i8 109, i8 58, i8 58, i8 114, i8 117, i8 110, i8 40, i8 41, i8 10, i8 0]
 @str2 = private constant [10 x i8] [i8 101, i8 110, i8 116, i8 101, i8 114, i8 32, i8 37, i8 115, i8 10, i8 0]
 @str3 = private constant [9 x i8] [i8 101, i8 120, i8 105, i8 116, i8 32, i8 37, i8 115, i8 10, i8 0]
+; -- endstrings --
 
 
 
-%UInt32 = type i32;
-%FSM_StateDesc = type {
-	[8 x i8], 
-	%FSM_Proc, 
-	%FSM_Proc, 
-	%FSM_Proc
+%fsm_UInt32 = type %Int32;
+%fsm_FSM_StateDesc = type {
+	[8 x %Char8],
+	%fsm_FSM_Proc,
+	%fsm_FSM_Proc,
+	%fsm_FSM_Proc
 };
 
 
 
-%FSM = type {
-	[8 x i8], 
-	%UInt32, 
-	%UInt32, 
-	%UInt32, 
-	[16 x %FSM_StateDesc]
+%fsm_FSM = type {
+	[8 x %Char8],
+	%fsm_UInt32,
+	%fsm_UInt32,
+	%fsm_UInt32,
+	[16 x %fsm_FSM_StateDesc]
 };
 
-%FSM_Proc = type void (%FSM*)*;
+%fsm_FSM_Proc = type void (%fsm_FSM*)*;
 
 
-define %Str8* @fsm_state_no_name(%FSM* %fsm, i32 %state_no) {
-	%1 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 4
-	%2 = getelementptr inbounds [16 x %FSM_StateDesc], [16 x %FSM_StateDesc]* %1, i32 0, i32 %state_no
-	%3 = getelementptr inbounds %FSM_StateDesc, %FSM_StateDesc* %2, i32 0, i32 0
-	%4 = bitcast [8 x i8]* %3 to %Str8*
+define %Str8* @fsm_state_no_name(%fsm_FSM* %fsm, %Int32 %state_no) {
+	%1 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 4
+	%2 = getelementptr inbounds [16 x %fsm_FSM_StateDesc], [16 x %fsm_FSM_StateDesc]* %1, %Int32 0, %Int32 %state_no
+	%3 = getelementptr inbounds %fsm_FSM_StateDesc, %fsm_FSM_StateDesc* %2, %Int32 0, %Int32 0
+	%4 = bitcast [8 x %Char8]* %3 to %Str8*
 	ret %Str8* %4
 }
 
-define void @fsm_switch(%FSM* %fsm, i32 %state) {
-	%1 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 2
-	store i32 %state, %UInt32* %1
-	%2 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 3
-	store %UInt32 2, %UInt32* %2
+define void @fsm_switch(%fsm_FSM* %fsm, %Int32 %state) {
+	%1 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 2
+	store %Int32 %state, %fsm_UInt32* %1
+	%2 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 3
+	store %fsm_UInt32 2, %fsm_UInt32* %2
 	ret void
 }
 
-define void @fsm_run(%FSM* %fsm) {
+define void @fsm_run(%fsm_FSM* %fsm) {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str1 to [0 x i8]*))
-	%2 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 3
-	%3 = load %UInt32, %UInt32* %2
-	%4 = icmp eq %UInt32 %3, 0
-	br i1 %4 , label %then_0, label %else_0
+	%2 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 3
+	%3 = load %fsm_UInt32, %fsm_UInt32* %2
+	%4 = icmp eq %fsm_UInt32 %3, 0
+	br %Bool %4 , label %then_0, label %else_0
 then_0:
-	%5 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 2
-	%6 = load %UInt32, %UInt32* %5
-	%7 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 4
-	%8 = getelementptr inbounds [16 x %FSM_StateDesc], [16 x %FSM_StateDesc]* %7, i32 0, %UInt32 %6
-	br i1 1 , label %then_1, label %endif_1
+	%5 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 2
+	%6 = load %fsm_UInt32, %fsm_UInt32* %5
+	%7 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 4
+	%8 = getelementptr inbounds [16 x %fsm_FSM_StateDesc], [16 x %fsm_FSM_StateDesc]* %7, %Int32 0, %fsm_UInt32 %6
+	br %Bool 1 , label %then_1, label %endif_1
 then_1:
-	%9 = getelementptr inbounds %FSM_StateDesc, %FSM_StateDesc* %8, i32 0, i32 0
-	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str2 to [0 x i8]*), [8 x i8]* %9)
+	%9 = getelementptr inbounds %fsm_FSM_StateDesc, %fsm_FSM_StateDesc* %8, %Int32 0, %Int32 0
+	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str2 to [0 x i8]*), [8 x %Char8]* %9)
 	br label %endif_1
 endif_1:
-	%11 = getelementptr inbounds %FSM_StateDesc, %FSM_StateDesc* %8, i32 0, i32 1
-	%12 = load %FSM_Proc, %FSM_Proc* %11
-	%13 = icmp ne %FSM_Proc %12, null
-	br i1 %13 , label %then_2, label %endif_2
+	%11 = getelementptr inbounds %fsm_FSM_StateDesc, %fsm_FSM_StateDesc* %8, %Int32 0, %Int32 1
+	%12 = load %fsm_FSM_Proc, %fsm_FSM_Proc* %11
+	%13 = bitcast i8* null to %fsm_FSM_Proc
+	%14 = icmp ne %fsm_FSM_Proc %12, %13
+	br %Bool %14 , label %then_2, label %endif_2
 then_2:
-	%14 = bitcast %FSM* %fsm to %FSM*
-	%15 = getelementptr inbounds %FSM_StateDesc, %FSM_StateDesc* %8, i32 0, i32 1
-	%16 = load %FSM_Proc, %FSM_Proc* %15
-	call void %16(%FSM* %14)
+	%15 = bitcast %fsm_FSM* %fsm to %fsm_FSM*
+	%16 = getelementptr inbounds %fsm_FSM_StateDesc, %fsm_FSM_StateDesc* %8, %Int32 0, %Int32 1
+	%17 = load %fsm_FSM_Proc, %fsm_FSM_Proc* %16
+	call void %17(%fsm_FSM* %15)
 	br label %endif_2
 endif_2:
-	%17 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 1
-	store %UInt32 %6, %UInt32* %17
-	%18 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 3
-	store %UInt32 1, %UInt32* %18
+	%18 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 1
+	store %fsm_UInt32 %6, %fsm_UInt32* %18
+	%19 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 3
+	store %fsm_UInt32 1, %fsm_UInt32* %19
 	br label %endif_0
 else_0:
-	%19 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 3
-	%20 = load %UInt32, %UInt32* %19
-	%21 = icmp eq %UInt32 %20, 1
-	br i1 %21 , label %then_3, label %else_3
+	%20 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 3
+	%21 = load %fsm_UInt32, %fsm_UInt32* %20
+	%22 = icmp eq %fsm_UInt32 %21, 1
+	br %Bool %22 , label %then_3, label %else_3
 then_3:
-	%22 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 4
-	%23 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 1
-	%24 = load %UInt32, %UInt32* %23
-	%25 = getelementptr inbounds [16 x %FSM_StateDesc], [16 x %FSM_StateDesc]* %22, i32 0, %UInt32 %24
-	%26 = getelementptr inbounds %FSM_StateDesc, %FSM_StateDesc* %25, i32 0, i32 2
-	%27 = load %FSM_Proc, %FSM_Proc* %26
-	%28 = icmp ne %FSM_Proc %27, null
-	br i1 %28 , label %then_4, label %endif_4
+	%23 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 4
+	%24 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 1
+	%25 = load %fsm_UInt32, %fsm_UInt32* %24
+	%26 = getelementptr inbounds [16 x %fsm_FSM_StateDesc], [16 x %fsm_FSM_StateDesc]* %23, %Int32 0, %fsm_UInt32 %25
+	%27 = getelementptr inbounds %fsm_FSM_StateDesc, %fsm_FSM_StateDesc* %26, %Int32 0, %Int32 2
+	%28 = load %fsm_FSM_Proc, %fsm_FSM_Proc* %27
+	%29 = bitcast i8* null to %fsm_FSM_Proc
+	%30 = icmp ne %fsm_FSM_Proc %28, %29
+	br %Bool %30 , label %then_4, label %endif_4
 then_4:
-	%29 = bitcast %FSM* %fsm to %FSM*
-	%30 = getelementptr inbounds %FSM_StateDesc, %FSM_StateDesc* %25, i32 0, i32 2
-	%31 = load %FSM_Proc, %FSM_Proc* %30
-	call void %31(%FSM* %29)
+	%31 = bitcast %fsm_FSM* %fsm to %fsm_FSM*
+	%32 = getelementptr inbounds %fsm_FSM_StateDesc, %fsm_FSM_StateDesc* %26, %Int32 0, %Int32 2
+	%33 = load %fsm_FSM_Proc, %fsm_FSM_Proc* %32
+	call void %33(%fsm_FSM* %31)
 	br label %endif_4
 endif_4:
 	br label %endif_3
 else_3:
-	%32 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 3
-	%33 = load %UInt32, %UInt32* %32
-	%34 = icmp eq %UInt32 %33, 2
-	br i1 %34 , label %then_5, label %endif_5
+	%34 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 3
+	%35 = load %fsm_UInt32, %fsm_UInt32* %34
+	%36 = icmp eq %fsm_UInt32 %35, 2
+	br %Bool %36 , label %then_5, label %endif_5
 then_5:
-	%35 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 4
-	%36 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 1
-	%37 = load %UInt32, %UInt32* %36
-	%38 = getelementptr inbounds [16 x %FSM_StateDesc], [16 x %FSM_StateDesc]* %35, i32 0, %UInt32 %37
-	br i1 1 , label %then_6, label %endif_6
+	%37 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 4
+	%38 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 1
+	%39 = load %fsm_UInt32, %fsm_UInt32* %38
+	%40 = getelementptr inbounds [16 x %fsm_FSM_StateDesc], [16 x %fsm_FSM_StateDesc]* %37, %Int32 0, %fsm_UInt32 %39
+	br %Bool 1 , label %then_6, label %endif_6
 then_6:
-	%39 = getelementptr inbounds %FSM_StateDesc, %FSM_StateDesc* %38, i32 0, i32 0
-	%40 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str3 to [0 x i8]*), [8 x i8]* %39)
+	%41 = getelementptr inbounds %fsm_FSM_StateDesc, %fsm_FSM_StateDesc* %40, %Int32 0, %Int32 0
+	%42 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str3 to [0 x i8]*), [8 x %Char8]* %41)
 	br label %endif_6
 endif_6:
-	%41 = getelementptr inbounds %FSM_StateDesc, %FSM_StateDesc* %38, i32 0, i32 3
-	%42 = load %FSM_Proc, %FSM_Proc* %41
-	%43 = icmp ne %FSM_Proc %42, null
-	br i1 %43 , label %then_7, label %endif_7
+	%43 = getelementptr inbounds %fsm_FSM_StateDesc, %fsm_FSM_StateDesc* %40, %Int32 0, %Int32 3
+	%44 = load %fsm_FSM_Proc, %fsm_FSM_Proc* %43
+	%45 = bitcast i8* null to %fsm_FSM_Proc
+	%46 = icmp ne %fsm_FSM_Proc %44, %45
+	br %Bool %46 , label %then_7, label %endif_7
 then_7:
-	%44 = bitcast %FSM* %fsm to %FSM*
-	%45 = getelementptr inbounds %FSM_StateDesc, %FSM_StateDesc* %38, i32 0, i32 3
-	%46 = load %FSM_Proc, %FSM_Proc* %45
-	call void %46(%FSM* %44)
+	%47 = bitcast %fsm_FSM* %fsm to %fsm_FSM*
+	%48 = getelementptr inbounds %fsm_FSM_StateDesc, %fsm_FSM_StateDesc* %40, %Int32 0, %Int32 3
+	%49 = load %fsm_FSM_Proc, %fsm_FSM_Proc* %48
+	call void %49(%fsm_FSM* %47)
 	br label %endif_7
 endif_7:
-	%47 = getelementptr inbounds %FSM, %FSM* %fsm, i32 0, i32 3
-	store %UInt32 0, %UInt32* %47
+	%50 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 3
+	store %fsm_UInt32 0, %fsm_UInt32* %50
 	br label %endif_5
 endif_5:
 	br label %endif_3

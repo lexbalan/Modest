@@ -1,7 +1,7 @@
 
 import hlir.type as hlir_type
 import foundation
-from hlir.type import select_common_type
+from hlir.type import type_print, select_common_type
 from error import info, warning, error
 from .char import utf32_chars_to_utfx_chars
 from .integer import value_integer_create
@@ -112,19 +112,12 @@ def array_can(to, from_type, method):
 	return True
 
 
-def cast_items(items, to_type):
+def cons_items(items, to_type):
 	casted_items = []
 	for item in items:
 		from .cons import value_cons_implicit
-		casted_item = value_cons_implicit(to_type, item)
-
-		if not hlir_type.type_eq(to_type, casted_item['type']):
-			if method != 'implicit':
-				error("cannot construct value", item['ti'])
-				continue
-
-		#if 'nl' in  item:
-		#casted_item['nl'] = item['nl']
+		from .cons import value_cons_implicit_check
+		casted_item = value_cons_implicit_check(to_type, item)
 		casted_items.append(casted_item)
 
 	return casted_items
@@ -138,18 +131,28 @@ def value_array_cons(t, v, method, ti):
 
 	nv = value_cons_node(t, v, method, ti)
 
-	if value_is_immediate(v):
-		casted_items = cast_items(v['items'], t['of'])
+	#for valItem in v['items']:
+	#	info("ITEM", valItem['ti'])
 
-		if t['volume'] == None:
-			return nv
+	#if value_is_immediate(v):
+	nv['items'] = []
+	if 'items' in v:
+		nv['items'] = cons_items(v['items'], t['of'])
+	nv['immediate'] = value_is_immediate(v)
 
-		if not value_is_immediate(t['volume']):
-			#info("TSize = %d" % t['size'], ti)
-			nv['items'] = casted_items
-			nv['immediate'] = True
-			return nv
+	if not value_is_immediate(v):
+		error("NOT IMMEDIATE", v['ti'])
 
+		for item in v['items']:
+			print(" k = %s" % item['kind'])
+			print("-item: %d" % value_is_immediate(item))
+
+
+	#if t['volume'] == None:
+	#	return nv
+	#nv['items'] = casted_items
+
+	if value_is_immediate(t['volume']):
 		# add Zero Pad (if need)
 		zero_pad = 0
 		vlen = v['type']['volume']['asset']
@@ -157,10 +160,7 @@ def value_array_cons(t, v, method, ti):
 		if vlen < tlen:
 			zero_pad_len = tlen - vlen
 			zero_pad = [value_zero(t['of'], None)] * zero_pad_len
-			casted_items = casted_items + zero_pad
-
-		nv['items'] = casted_items
-		nv['immediate'] = True
+			nv['items'] = nv['items'] + zero_pad
 
 	return nv
 

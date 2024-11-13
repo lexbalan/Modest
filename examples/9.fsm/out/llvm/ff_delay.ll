@@ -6,6 +6,10 @@ target triple = "arm64-apple-macosx12.0.0"
 %Unit = type i1
 %Bool = type i1
 %Word8 = type i8
+%Word16 = type i16
+%Word32 = type i32
+%Word64 = type i64
+%Word128 = type i128
 %Char8 = type i8
 %Char16 = type i16
 %Char32 = type i32
@@ -102,78 +106,78 @@ break_2:
 ; MODULE: delay
 
 ; -- print includes --
-
+; from included ctypes64
 %Str = type %Str8;
-%Char = type i8;
+%Char = type %Char8;
 %ConstChar = type %Char;
-%SignedChar = type i8;
-%UnsignedChar = type i8;
-%Short = type i16;
-%UnsignedShort = type i16;
-%Int = type i32;
-%UnsignedInt = type i32;
-%LongInt = type i64;
-%UnsignedLongInt = type i64;
-%Long = type i64;
-%UnsignedLong = type i64;
-%LongLong = type i64;
-%UnsignedLongLong = type i64;
-%LongLongInt = type i64;
-%UnsignedLongLongInt = type i64;
+%SignedChar = type %Int8;
+%UnsignedChar = type %Int8;
+%Short = type %Int16;
+%UnsignedShort = type %Int16;
+%Int = type %Int32;
+%UnsignedInt = type %Int32;
+%LongInt = type %Int64;
+%UnsignedLongInt = type %Int64;
+%Long = type %Int64;
+%UnsignedLong = type %Int64;
+%LongLong = type %Int64;
+%UnsignedLongLong = type %Int64;
+%LongLongInt = type %Int64;
+%UnsignedLongLongInt = type %Int64;
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
-
-%SocklenT = type i32;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntptrT = type i64;
-%PtrdiffT = type i8*;
-%OffT = type i64;
-%USecondsT = type i32;
-%PidT = type i32;
-%UidT = type i32;
-%GidT = type i32;
-
-%TimeT = type i32;
+%IntPtrT = type %Int64;
+%PtrDiffT = type i8*;
+%OffT = type %Int64;
+%USecondsT = type %Int32;
+%PIDT = type %Int32;
+%UIDT = type %Int32;
+%GIDT = type %Int32;
+; from included time
+%TimeT = type %Int32;
 %ClockT = type %UnsignedLong;
-%Struct_tm = type {
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%Int, 
-	%LongInt, 
+%StructTM = type {
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%Int,
+	%LongInt,
 	%ConstChar*
 };
 
-
 declare %ClockT @clock()
 declare %Double @difftime(%TimeT %end, %TimeT %beginning)
-declare %TimeT @mktime(%Struct_tm* %timeptr)
+declare %TimeT @mktime(%StructTM* %timeptr)
 declare %TimeT @time(%TimeT* %timer)
-declare %Char* @asctime(%Struct_tm* %timeptr)
+declare %Char* @asctime(%StructTM* %timeptr)
 declare %Char* @ctime(%TimeT* %timer)
-declare %Struct_tm* @gmtime(%TimeT* %timer)
-declare %Struct_tm* @localtime(%TimeT* %timer)
-declare %SizeT @strftime(%Char* %ptr, %SizeT %maxsize, %ConstChar* %format, %Struct_tm* %timeptr)
+declare %StructTM* @gmtime(%TimeT* %timer)
+declare %StructTM* @localtime(%TimeT* %timer)
+declare %SizeT @strftime(%Char* %ptr, %SizeT %maxsize, %ConstChar* %format, %StructTM* %timeptr)
+declare %StructTM* @localtime_s(%TimeT* %timer, %StructTM* %tmptr)
+declare %StructTM* @localtime_r(%TimeT* %timer, %StructTM* %tmptr)
 ; -- end print includes --
 ; -- print imports --
 ; -- end print imports --
 ; -- strings --
+; -- endstrings --
 
-define void @delay_us(i64 %us) {
+define void @delay_us(%Int64 %us) {
 	%1 = call %ClockT @clock()
 	br label %again_1
 again_1:
 	%2 = call %ClockT @clock()
 	%3 = add %ClockT %1, %us
 	%4 = icmp ult %ClockT %2, %3
-	br i1 %4 , label %body_1, label %break_1
+	br %Bool %4 , label %body_1, label %break_1
 body_1:
 	; just waiting
 	br label %again_1
@@ -181,15 +185,15 @@ break_1:
 	ret void
 }
 
-define void @delay_ms(i64 %ms) {
-	%1 = mul i64 %ms, 1000
-	call void @delay_us(i64 %1)
+define void @delay_ms(%Int64 %ms) {
+	%1 = mul %Int64 %ms, 1000
+	call void @delay_us(%Int64 %1)
 	ret void
 }
 
-define void @delay_sec(i64 %s) {
-	%1 = mul i64 %s, 1000000
-	call void @delay_us(i64 %1)
+define void @delay_sec(%Int64 %s) {
+	%1 = mul %Int64 %s, 1000000
+	call void @delay_us(%Int64 %1)
 	ret void
 }
 

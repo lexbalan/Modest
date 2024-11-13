@@ -21,6 +21,12 @@ def _do_value_cons(t, v, method, ti):
 	if value_is_bad(v) or type.type_is_bad(t):
 		return None
 
+	#if type.type_is_record(t):
+	#	info(" CONS RECORD %s" % t['kind'], ti)
+	#if type.type_is_string(v['type']):
+	#	info("+++++++ CONS %s" % t['kind'], ti)
+	#	pass
+
 	if method == 'implicit':
 		if type.type_eq(v['type'], t):
 			return v
@@ -32,6 +38,7 @@ def _do_value_cons(t, v, method, ti):
 		from trans import is_unsafe_mode
 		if is_unsafe_mode():
 			method = 'unsafe'
+
 
 	constructor = None
 	if type.type_is_integer(t): constructor = value_integer_cons
@@ -278,6 +285,9 @@ def value_cons_implicit_check(t, v):
 		print("\nreceived: ", end='')
 		type.type_print(v['type'])
 		print("\n")
+		type.type_print(t['to'])
+		type.type_print(v['type']['to'])
+		print(type.type_eq(t['to'], v['type']['to']))
 
 	return nv
 

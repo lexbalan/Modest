@@ -260,7 +260,7 @@ define %Int @main() {
 	br label %again_1
 again_1:
 	%18 = load %Int32, %Int32* %17
-	%19 = icmp slt %Int32 %18, 4
+	%19 = icmp slt %Int32 %18, 1
 	br %Bool %19 , label %body_1, label %break_1
 body_1:
 	%20 = load %Int32, %Int32* %17
@@ -287,7 +287,7 @@ break_1:
 	br label %again_2
 again_2:
 	%32 = load %Int32, %Int32* %17
-	%33 = icmp slt %Int32 %32, 12
+	%33 = icmp slt %Int32 %32, 3
 	br %Bool %33 , label %body_2, label %break_2
 body_2:
 	%34 = load %Int32, %Int32* %17
@@ -322,7 +322,7 @@ break_2:
 	br label %again_3
 again_3:
 	%53 = load %Int32, %Int32* %17
-	%54 = icmp slt %Int32 %53, 40
+	%54 = icmp slt %Int32 %53, 10
 	br %Bool %54 , label %body_3, label %break_3
 body_3:
 	%55 = load %Int32, %Int32* %17
@@ -362,7 +362,7 @@ break_3:
 	br label %again_4
 again_4:
 	%79 = load %Int32, %Int32* %17
-	%80 = icmp slt %Int32 %79, 0
+	%80 = icmp slt %Int32 %79, 10
 	br %Bool %80 , label %body_4, label %break_4
 body_4:
 	%81 = load %Int32, %Int32* %17
@@ -381,12 +381,12 @@ break_4:
 	%91 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %63, %Int32 0, i2 2
 	%92 = bitcast %Int32* %91 to [6 x %Int32]*
 	%93 = bitcast [6 x %Int32]* %92 to [0 x %Int32]*
-	call void @array_print([0 x %Int32]* %93, %Int32 24)
+	call void @array_print([0 x %Int32]* %93, %Int32 6)
 	%94 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @str12 to [0 x i8]*))
 	%95 = getelementptr inbounds [6 x %Int32], [6 x %Int32]* %92, %Int32 0, %Int32 0
 	store %Int32 123, %Int32* %95
 	%96 = bitcast [6 x %Int32]* %92 to [0 x %Int32]*
-	call void @array_print([0 x %Int32]* %96, %Int32 24)
+	call void @array_print([0 x %Int32]* %96, %Int32 6)
 	%97 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([46 x i8]* @str13 to [0 x i8]*))
 	%98 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([32 x i8]* @str14 to [0 x i8]*))
 	; за каким то хером это работает, то что мне сейчас нужно

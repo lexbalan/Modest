@@ -270,7 +270,7 @@ return llvm_value_num(x['type'], x['asset'])"""
 
 def llvm_print_type_value(x, noundef=False):
 	assert(x['isa'] == 'll_value')
-	#mass
+
 	print_type(x['type'])
 	if x['is_adr']:
 		out("* ")
@@ -1234,7 +1234,10 @@ def is_adrptr(x):
 
 
 def cast_composite_to_composite(to_type, value, ti):
+	info("cast_composite_to_composite", ti)
+
 	v = do_eval(value)
+
 	out("\n\t; cast_composite_to_composite")
 
 	if is_global_context():
@@ -1296,7 +1299,6 @@ def eval_cons_record(x):
 def eval_cons_array(x):
 	if value_is_immediate(x):
 		if hlir_type.type_is_vla(x['type']):
-			#out("\n -- ??? --\n")
 			return do_eval_literal(x['value'])
 		return do_eval_literal(x)
 
@@ -1306,7 +1308,6 @@ def eval_cons_array(x):
 
 def do_eval_cons(x):
 	to_type = x['type']
-
 
 	if hlir_type.type_is_array(to_type):
 		return eval_cons_array(x)
@@ -1443,6 +1444,7 @@ def do_eval_record(v):
 	if is_global_context():
 		items = []
 		for initializer in initializers:
+			#value_print(initializer['value'])
 			iv = do_reval(initializer['value'])
 			items.append({'id': initializer['id'], 'value': iv})
 		return llvm_value_record(items, rec_type, v)
@@ -1591,9 +1593,13 @@ def do_eval(x):
 		out("<%s>" % k)
 
 	if y == None:
-		error("llvm do_eval cannot eval this (%s) value" % k, x['ti'])
+		error("llvm do_eval cannot eval (%s) value" % k, x['ti'])
+		#print("hlir_type.type_is_string() = %d" % hlir_type.type_is_string(x['type']))
 		value_print(x)
+		type_print(x['type'])
+		1 / 0
 		return llvm_value_zero(x['type'])
+
 
 	y['type'] = x['type']
 

@@ -1,28 +1,29 @@
 
+@c_include "stdio.h"
 include "libc/stdio"
-let verbose = true
+const verbose = true
 public const nameMaxLength = 8
 
 public type UInt32 Nat32
 
 public type FSM_StateDesc record {
-	name: [nameMaxLength]Char8
-	entry: FSM_Proc
-	loop: FSM_Proc
-	exit: FSM_Proc
+	public name: [nameMaxLength]Char8
+	public entry: FSM_Proc
+	public loop: FSM_Proc
+	public exit: FSM_Proc
 }
 public const maxStates = 16
 
 public type FSM record {
-	name: [nameMaxLength]Char8
-	state: UInt32
-	nexstate: UInt32
-	substate: UInt32
-	states: [maxStates]FSM_StateDesc
+	public name: [nameMaxLength]Char8
+	public state: UInt32
+	public nexstate: UInt32
+	public substate: UInt32
+	public states: [maxStates]FSM_StateDesc
 }
 
 
-public type FSM_Proc *(fsm: *FSM) -> Unit
+public type FSM_Proc *(x: *FSM) -> Unit
 public const substateEntering = 0
 public const substateLoop = 1
 public const substateLeaving = 2

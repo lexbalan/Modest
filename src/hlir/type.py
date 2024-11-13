@@ -424,7 +424,10 @@ def type_eq_func(a, b, opt):
 def type_eq_fields(a, b, opt):
 	if len(a) != len(b): return False
 	for ax, bx in zip(a, b):
-		if ax['id']['str'] != bx['id']['str']: return False
+
+		#if ax['id']['str'] != None and bx['id']['str'] != None:
+		if ax['id']['str'] != bx['id']['str']:
+			return False
 
 		# простейшая защита от бесконечной рекурсии
 		# для случая когда запись содержит указатель на саму себя
@@ -813,7 +816,8 @@ def type_print_record(t, print_aka=True):
 		field = fields[i]
 		if i > 0:
 			print(',')
-		print("\n\t"); type_print(field['type'])
+		print("\n\t");
+		field_print(field)
 
 		i = i + 1
 	print("\n}")
@@ -841,9 +845,15 @@ def type_print_array(t, print_aka=True):
 	type_print(t['of'])
 
 
+
+def field_print(f):
+	print("%s: " % f['id']['str'], end='')
+	type_print(f['type'])
+
+
 def type_print_func(t, print_aka=True):
 	print("(", end='')
-	print_list_by(t['params'], lambda f: type_print(f['type']))
+	print_list_by(t['params'], lambda f: field_print(f))
 	print(")", end='')
 	print(" -> ", end='')
 	type_print(t['to'])

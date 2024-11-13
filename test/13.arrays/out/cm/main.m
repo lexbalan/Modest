@@ -35,7 +35,7 @@ func test() -> Unit {
 	// тестируем работу с локальным generic массивом
 	var yy: [6]Int8 = startSequence + [] + stopSequence
 	var i: Int32 = 0
-	while i < sizeof yy {
+	while i < lengthof(yy) {
 		let y = yy[i]
 		i = i + 1
 	}

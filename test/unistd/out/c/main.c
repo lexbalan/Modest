@@ -6,7 +6,7 @@
 
 #include "main.h"
 
-
+#define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
 
 
 
@@ -35,7 +35,7 @@ int main()
 
 	// current working directory
 	char cwd[128];
-	getcwd((char *)&cwd, sizeof cwd);
+	getcwd((char *)&cwd, LENGTHOF(cwd));
 	printf("cwd = %s\n", (char *)&cwd);
 
 	char *const tty = ttyname(0);

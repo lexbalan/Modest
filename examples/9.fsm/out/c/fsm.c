@@ -11,6 +11,7 @@
 #define fsm_verbose  true
 
 
+
 char *fsm_state_no_name(fsm_FSM *fsm, uint32_t state_no)
 {
 	return (char *)&fsm->states[state_no].name;
@@ -35,7 +36,7 @@ void fsm_run(fsm_FSM *fsm)
 		}
 
 		if (state->entry != NULL) {
-			((void (*) (fsm_FSM *fsm))state->entry)((fsm_FSM *)fsm);
+			((void (*) (fsm_FSM *x))state->entry)((fsm_FSM *)fsm);
 		}
 
 		fsm->state = nexstate;
@@ -45,7 +46,7 @@ void fsm_run(fsm_FSM *fsm)
 		fsm_FSM_StateDesc *const state = &fsm->states[fsm->state];
 
 		if (state->loop != NULL) {
-			((void (*) (fsm_FSM *fsm))state->loop)((fsm_FSM *)fsm);
+			((void (*) (fsm_FSM *x))state->loop)((fsm_FSM *)fsm);
 		}
 
 	} else if (fsm->substate == fsm_substateLeaving) {
@@ -56,7 +57,7 @@ void fsm_run(fsm_FSM *fsm)
 		}
 
 		if (state->exit != NULL) {
-			((void (*) (fsm_FSM *fsm))state->exit)((fsm_FSM *)fsm);
+			((void (*) (fsm_FSM *x))state->exit)((fsm_FSM *)fsm);
 		}
 
 		fsm->substate = fsm_substateEntering;

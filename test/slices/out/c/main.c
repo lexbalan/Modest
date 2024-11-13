@@ -6,7 +6,7 @@
 
 #include "main.h"
 
-
+#define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
 
 void array_print(int32_t *pa, int32_t len);
 
@@ -38,7 +38,7 @@ int main()
 	memcpy(&s1, &a[1], sizeof(int32_t[2 - 1]));
 	int32_t i;
 	i = 0;
-	while (i < sizeof s1) {
+	while (i < (2 - 1)) {
 		printf("s1[%d] = %d\n", i, s1[i]);
 		i = i + 1;
 	}
@@ -53,7 +53,7 @@ int main()
 	int32_t s2[8 - 5];
 	memcpy(&s2, &pa[5], sizeof(int32_t[8 - 5]));
 	i = 0;
-	while (i < sizeof s2) {
+	while (i < (8 - 5)) {
 		printf("s2[%d] = %d\n", i, s2[i]);
 		i = i + 1;
 	}
@@ -65,7 +65,7 @@ int main()
 	memcpy(&a[__ax], &(int32_t[__bx - __ax]){10, 20, 30, 40}, sizeof(int32_t[__bx - __ax]));
 
 	i = 0;
-	while (i < sizeof a) {
+	while (i < LENGTHOF(a)) {
 		printf("a[%d] = %d\n", i, a[i]);
 		i = i + 1;
 	}
@@ -78,7 +78,7 @@ int main()
 	memset(&s[2], 0, sizeof(int32_t[5 - 2]));
 
 	i = 0;
-	while (i < sizeof s) {
+	while (i < LENGTHOF(s)) {
 		printf("s[%d] = %d\n", i, (uint32_t)s[i]);
 		i = i + 1;
 	}
@@ -90,13 +90,13 @@ int main()
 	#define __bb  8
 
 	int32_t *const p = (int32_t *)&s[__aa];
-	array_print(p, sizeof *p);
+	array_print(p, (__bb - __aa));
 
 	printf("--------------------------------------------\n");
 
 	p[0] = 123;
 
-	array_print(p, sizeof *p);
+	array_print(p, (__bb - __aa));
 
 	printf("--------------------------------------------\n");
 	printf("slice of pointer to open array\n");

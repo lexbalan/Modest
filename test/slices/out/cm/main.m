@@ -20,7 +20,7 @@ public func main() -> Int {
 
 	let s1 = a[1:2]
 	var i: Int32 = 0
-	while i < sizeof s1 {
+	while i < lengthof(s1) {
 		printf("s1[%d] = %d\n", i, s1[i])
 		i = i + 1
 	}
@@ -34,7 +34,7 @@ public func main() -> Int {
 	let pa = &a
 	let s2 = pa[5:8]
 	i = 0
-	while i < sizeof s2 {
+	while i < lengthof(s2) {
 		printf("s2[%d] = %d\n", i, s2[i])
 		i = i + 1
 	}
@@ -49,7 +49,7 @@ public func main() -> Int {
 	a[ax:bx] = [10, 20, 30, 40]
 
 	i = 0
-	while i < sizeof a {
+	while i < lengthof(a) {
 		printf("a[%d] = %d\n", i, a[i])
 		i = i + 1
 	}
@@ -61,7 +61,7 @@ public func main() -> Int {
 	s[2:5] = []  // right size = 12
 
 	i = 0
-	while i < sizeof s {
+	while i < lengthof(s) {
 		printf("s[%d] = %d\n", i, Nat32 s[i])
 		i = i + 1
 	}
@@ -73,13 +73,13 @@ public func main() -> Int {
 	let bb = 8
 
 	let p = &s[aa:bb]
-	array_print(p, sizeof *p)
+	array_print(p, lengthof(*p))
 
 	printf("--------------------------------------------\n")
 
 	p[0] = 123
 
-	array_print(p, sizeof *p)
+	array_print(p, lengthof(*p))
 
 	printf("--------------------------------------------\n")
 	printf("slice of pointer to open array\n")

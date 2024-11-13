@@ -70,13 +70,13 @@ public func main() -> Int32 {
 	//fill_array(&array, lengthof(array))
 
 	printf("array before:\n")
-	print_array(&array, sizeof array)
+	print_array(&array, lengthof(array))
 	printf("\n")
 
-	bubble_sort32(&array, sizeof array)
+	bubble_sort32(&array, lengthof(array))
 
 	printf("array after:\n")
-	print_array(&array, sizeof array)
+	print_array(&array, lengthof(array))
 	printf("\n")
 
 	return 0

@@ -20,7 +20,6 @@ void on_exit(fsm_FSM *x);
 void beacon_entry(fsm_FSM *x);
 void beacon_loop(fsm_FSM *x);
 void beacon_exit(fsm_FSM *x);
-int main();
 
 
 

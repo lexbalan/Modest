@@ -4,14 +4,17 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include <string.h>
+
+#include <time.h>
+#include <stdio.h>
+#include <stdio.h>
+#include <stdio.h>
 
 #include <stdio.h>
 
 
-
-
 #include "fsm.h"
 
+int main();
 
 #endif /* MAIN_H */

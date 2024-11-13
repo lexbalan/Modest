@@ -10,7 +10,7 @@ var data: [9]Word8 = [9]Word8 datastring
 public func main() -> Int {
 	printf("CRC32 test\n")
 
-	let crc = crc32.doHash(&data, sizeof data)
+	let crc = crc32.doHash(&data, lengthof(data))
 
 	printf("crc32.doHash(\"%s\") = %08X\n", *Str8 datastring, crc)
 

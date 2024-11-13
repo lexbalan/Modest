@@ -1,11 +1,12 @@
 
 include "libc/ctypes64"
+@c_include "stdio.h"
 include "libc/stdio"
 import "lightfood/delay"
 import "fsm"
-let flashlightStateOff = 0
-let flashlightStateOn = 1
-let flashlightStateBeacon = 2
+const flashlightStateOff = 0
+const flashlightStateOn = 1
+const flashlightStateBeacon = 2
 var cnt: Nat8
 var fsm: FSM = {
 	name = "Flash"
