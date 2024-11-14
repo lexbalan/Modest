@@ -19,7 +19,6 @@ def value_array_create(items, ti=None):
 		v['immediate'] = True  #!
 		return v
 
-
 	# Проверяем - immediate ли этот массив?
 	# если хотя бы один элемент - не immediate
 	# -> весь массив - не immediate

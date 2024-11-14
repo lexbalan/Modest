@@ -27,7 +27,6 @@ def value_record_create(initializers=[], ti=None):
 		# если хотя бы один элемент - не immediate
 		# -> весь литерал записи - не immediate
 		if not value_is_immediate(init_value):
-			info("NOT IMM", field_ti)
 			is_immediate = False
 
 		# создаем поле для типа generic record

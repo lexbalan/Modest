@@ -477,7 +477,12 @@ def value_va_copy(dst, src, ti):
 
 def value_print(x, msg="value_print:"):
 	assert(x['isa'] == 'value')
-	info(msg, x['ti'])
+
+	# can be 'ti_def', but no 'ti'!
+	if 'ti' in x:
+		info(msg, x['ti'])
+	if 'def_ti' in x:
+		info(msg, x['def_ti'])
 
 	print("isa: " + str(x['isa']))
 	print("kind: " + str(x['kind']))

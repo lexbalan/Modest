@@ -2295,6 +2295,8 @@ def def_const(x):
 
 	init_value = do_value_immediate(x['value'], allow_ptr_to_str=True)
 
+
+
 	if value_is_bad(init_value):
 		global cmodule
 		module_value_add_public(cmodule, id['str'], init_value)
@@ -2304,6 +2306,7 @@ def def_const(x):
 		t = do_type(x['type'])
 		if not hlir_type.type_is_bad(t):
 			init_value = value_cons_implicit_check(t, init_value)
+
 
 	const_value = symbol_const(id, init_value, is_public=x['access_modifier'] == 'public')
 
@@ -2910,7 +2913,6 @@ def process_module(ast, source_info, nodef=False):
 		'att': []
  	}
 
-
 	# 0. do imports & directives
 	for x in ast:
 		isa = x['isa']
@@ -3215,6 +3217,9 @@ def cp_immediate(to, _from):
 		to['items'] = _from['items']
 	if 'fields' in _from:
 		to['fields'] = _from['fields']
+
+	to['immediate'] = _from['immediate']
+	to['immutable'] = _from['immutable']
 	return
 
 
