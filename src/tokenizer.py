@@ -169,10 +169,10 @@ class CmTokenizer(Tokenizer):
 		ti = self.get_ti()
 		s = []
 		while True:
-			j = self.getpos()
+			sp = self.getpos()
 			c = self.getc()
 			if not (c.isalpha() or c.isdigit() or c == '_'):
-				self.setpos(j)
+				self.setpos(sp)
 				break
 			s.append(c)
 
@@ -199,7 +199,7 @@ class CmTokenizer(Tokenizer):
 
 
 		while True:
-			j = self.getpos()
+			sp = self.getpos()
 			c = self.getc()
 
 			if c == '_':
@@ -211,7 +211,7 @@ class CmTokenizer(Tokenizer):
 				continue
 
 			if not (c.isdigit() or (ishex and c in self.hexDigits)):
-				self.setpos(j)
+				self.setpos(sp)
 				break
 			s.append(c)
 
@@ -291,10 +291,10 @@ class CmTokenizer(Tokenizer):
 		ti = self.get_ti()
 		s = []
 		while True:
-			j = self.getpos()
+			sp = self.getpos()
 			c = self.getc()
 			if not (c.isalpha() or c.isdigit() or c == '_'):
-				self.setpos(j)
+				self.setpos(sp)
 				break
 			s.append(c)
 
@@ -316,10 +316,10 @@ class CmTokenizer(Tokenizer):
 		ti = self.get_ti()
 		s = []
 		while True:
-			j = self.getpos()
+			sp = self.getpos()
 			c = self.getc()
 			if not (c.isalpha() or c.isdigit() or c == '_'):
-				self.setpos(j)
+				self.setpos(sp)
 				break
 			s.append(c)
 
@@ -340,10 +340,10 @@ class CmTokenizer(Tokenizer):
 		ti = self.get_ti()
 		s = []
 		while True:
-			j = self.getpos()
+			sp = self.getpos()
 			c = self.getc()
 			if not (c.isalpha() or c.isdigit() or c == '_'):
-				self.setpos(j)
+				self.setpos(sp)
 				break
 			s.append(c)
 
