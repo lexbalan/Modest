@@ -7,20 +7,20 @@ line = 1
 pos = 1
 
 
-operators1 = [
+operators1 = (
 	'(', ')', '[', ']', '{', '}', ',', '.', ':', ';',
 	'=', '+', '-', '/', '*', '%%', '&', '<', '>'
-]
+)
 
-operators2 = [
+operators2 = (
 	'==', '!=', '<=', '>=', '::',
 	'<-', '->', '=>', '<<', '>>',
 	'++', '--'
-]
+)
 
-operators3 = [
+operators3 = (
 	'<<=', '>>=', '...'
-]
+)
 
 # Rule returns Product/None in case if it was triggered
 # And False in case if it wasnt triggered
@@ -112,7 +112,7 @@ def doNumber(src):
 
 
 
-def doOperation2(src):
+def doOperator2(src):
 	ti = src.get_ti()
 	s = src.getn(2)
 	if s in operators2:
@@ -121,7 +121,7 @@ def doOperation2(src):
 	return False
 
 
-def doOperation3(src):
+def doOperator3(src):
 	ti = src.get_ti()
 	s = src.getn(3)
 	if s in operators3:
@@ -130,15 +130,13 @@ def doOperation3(src):
 	return False
 
 
-def doOperation1(src):
+def doOperator1(src):
 	ti = src.get_ti()
 	s = src.getc()
 	if s in operators1:
 		ti['len'] = 1
 		return ('op', s, ti)
-
 	return False
-
 
 
 def doString(src):
@@ -342,9 +340,9 @@ class Lexer:
 			doNumber,
 			doLineComment,
 			doBlockComment,
-			doOperation3,
-			doOperation2,
-			doOperation1,
+			doOperator3,
+			doOperator2,
+			doOperator1,
 			doString,
 			doAttribute,
 			doDirective,
