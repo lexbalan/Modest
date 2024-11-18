@@ -68,7 +68,7 @@ env_current_file_dir = ""
 
 root_symtab = None  # symtab with base types & values
 
-# All already translate_importd modules
+# All already translate imported modules
 # path => module
 modules = {}
 
@@ -2661,7 +2661,15 @@ def do_import(x):
 		m = modules[abspath]
 
 	if m == None:
-		m = translate_import(abspath, nodef=not x['include'])
+
+		global env_current_file_dir
+		prev_env_current_file_dir = env_current_file_dir
+		env_current_file_dir = os.path.dirname(abspath)
+
+		m = translate(abspath, nodef=not x['include'])
+
+		env_current_file_dir = prev_env_current_file_dir
+
 		modules[abspath] = m
 
 		#if 'as' in x:
@@ -2826,7 +2834,7 @@ def import_directive(impline, ti, include=False):
 
 
 
-def translate_import(abspath, nodef=False):
+def translate(abspath, nodef=False):
 	log(">>>> TRANSLATE(\"%s\")" % abspath)
 	log_push()
 	assert(abspath != None)
@@ -2834,10 +2842,6 @@ def translate_import(abspath, nodef=False):
 
 	if not os.path.exists(abspath):
 		return None
-
-	global env_current_file_dir
-	prev_env_current_file_dir = env_current_file_dir
-	env_current_file_dir = os.path.dirname(abspath)
 
 	source = Source(abspath)
 	lexer = Lexer()
@@ -2852,8 +2856,6 @@ def translate_import(abspath, nodef=False):
 	m['id'] = abspath.split('/')[-1][:-2]
 	m['prefix'] = m['id']
 	m['source_abspath'] = abspath
-
-	env_current_file_dir = prev_env_current_file_dir
 
 	log_pop()
 	log("<<<< END-TRANSLATE(\"%s\")\n" % abspath)

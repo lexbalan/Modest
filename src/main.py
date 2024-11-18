@@ -74,27 +74,10 @@ def do_file(src_name):
 
 
 	trans.init()
-
-	source = Source(src_name)
-	lexer = Lexer()
-	tokens = lexer.tokenize(source)
-	parser = Parser()
-	ast = parser.parse(tokens)
-
-	if ast == None:
-		return None
-
-	module = trans.process_module(ast)
-	module['id'] = src_name.split('/')[-1][:-2]
-	module['prefix'] = module['id']
-	module['source_abspath'] = src_abspath
-
-	print("module['id'] = %s" % module['id'])
-	print("module['prefix'] = %s" % module['prefix'])
+	module = trans.translate(src_name)
 
 	if error.errcnt > 0 or module == None:
 		exit(1)
-
 
 	# select & init backend
 	backend_name = settings.get('backend')
