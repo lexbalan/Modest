@@ -3,8 +3,8 @@ import os
 
 from error import *
 
-from frontend.tokenizer import CmTokenizer
-from frontend.parser import Parser
+from tokenizer import CmTokenizer
+from parser import Parser
 
 from util import get_item_with_id
 from main import settings
