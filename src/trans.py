@@ -3,8 +3,7 @@ import os
 
 from error import *
 
-from frontend.source import Source
-from frontend.tokenizer import Tokenizer
+from frontend.tokenizer import CmTokenizer
 from frontend.parser import Parser
 
 from util import get_item_with_id
@@ -2843,10 +2842,10 @@ def translate(abspath, nodef=False):
 	if not os.path.exists(abspath):
 		return None
 
-	source = Source(abspath)
-	tokenizer = Tokenizer()
-	tokens = tokenizer.tokenize(source)
+	tokenizer = CmTokenizer()
 	parser = Parser()
+
+	tokens = tokenizer.tokenize(abspath)
 	ast = parser.parse(tokens)
 
 	if ast == None:
