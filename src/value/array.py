@@ -139,13 +139,13 @@ def value_array_cons(t, v, method, ti):
 		nv['items'] = cons_items(v['items'], t['of'])
 	nv['immediate'] = value_is_immediate(v)
 
-	if not value_is_immediate(v):
+	"""if not value_is_immediate(v):
 		error("NOT IMMEDIATE", v['ti'])
 
 		for item in v['items']:
 			print(" k = %s" % item['kind'])
 			print("-item: %d" % value_is_immediate(item))
-
+	"""
 
 	#if t['volume'] == None:
 	#	return nv
