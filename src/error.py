@@ -116,11 +116,11 @@ def note(s, ti=None):
 
 
 log_ind = 0
-def log_ind_plus():
+def log_push():
 	global log_ind
 	log_ind = log_ind + 1
 
-def log_ind_minus():
+def log_pop():
 	global log_ind
 	log_ind = log_ind - 1
 

@@ -9,6 +9,10 @@ import tomllib
 import settings
 import error
 
+from frontend.source import Source
+from frontend.lexer import Lexer
+from frontend.parser import Parser
+
 
 def load_config(config_name):
 	config = {}
@@ -69,18 +73,32 @@ def do_file(src_name):
 	settings.set('path', src_dirname)
 
 
-	# loading backend
-	backend_name = settings.get('backend')
-	backend = importlib.import_module("backend.%s" % backend_name)
-
 	trans.init()
 
-	module = trans.translate(src_name)
+	source = Source(src_name)
+	lexer = Lexer()
+	tokens = lexer.tokenize(source)
+	parser = Parser()
+	ast = parser.parse(tokens)
+
+	if ast == None:
+		return None
+
+	module = trans.process_module(ast)
+	module['id'] = src_name.split('/')[-1][:-2]
+	module['prefix'] = module['id']
+	module['source_abspath'] = src_abspath
+
+	print("module['id'] = %s" % module['id'])
+	print("module['prefix'] = %s" % module['prefix'])
 
 	if error.errcnt > 0 or module == None:
 		exit(1)
 
 
+	# select & init backend
+	backend_name = settings.get('backend')
+	backend = importlib.import_module("backend.%s" % backend_name)
 	backend.init()
 
 	# print output
@@ -90,6 +108,7 @@ def do_file(src_name):
 		outname = root_name
 
 	backend.run(module, outname)
+
 
 
 def main():

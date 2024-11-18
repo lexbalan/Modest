@@ -10,7 +10,6 @@ class Source:
 		self.pos = 0
 		self.line = 1
 
-
 	# считать очередной символ
 	def getc(self):
 		x = self.f.read(1)

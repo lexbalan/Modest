@@ -2,9 +2,13 @@
 import os
 
 from error import *
+
+from frontend.source import Source
+from frontend.lexer import Lexer
+from frontend.parser import Parser
+
 from util import get_item_with_id
 from main import settings
-from frontend.parser import Parser
 from hlir.type import select_common_type
 from hlir.hlir import hlir_initializer
 
@@ -59,13 +63,12 @@ prev_production = True  # TODO: это бред, сделай стек!
 
 
 # current file directory
-env_current_file_abspath = ""
 env_current_file_dir = ""
 
 
 root_symtab = None  # symtab with base types & values
 
-# All already translated modules
+# All already translate_importd modules
 # path => module
 modules = {}
 
@@ -2658,8 +2661,7 @@ def do_import(x):
 		m = modules[abspath]
 
 	if m == None:
-		m = translate(abspath, nodef=not x['include'])
-
+		m = translate_import(abspath, nodef=not x['include'])
 		modules[abspath] = m
 
 		#if 'as' in x:
@@ -2824,55 +2826,43 @@ def import_directive(impline, ti, include=False):
 
 
 
-def translate(srcname, nodef=False):
-	assert(srcname != None)
-	assert(srcname != "")
+def translate_import(abspath, nodef=False):
+	log(">>>> TRANSLATE(\"%s\")" % abspath)
+	log_push()
+	assert(abspath != None)
+	assert(abspath != "")
 
-	log(">>>> TRANSLATE(\"%s\")" % srcname)
-	log_ind_plus()
-
-	if not os.path.exists(srcname):
+	if not os.path.exists(abspath):
 		return None
 
-	global env_current_file_abspath
 	global env_current_file_dir
 	prev_env_current_file_dir = env_current_file_dir
-	prev_env_current_file_abspath = env_current_file_abspath
+	env_current_file_dir = os.path.dirname(abspath)
 
-	absp = os.path.abspath(srcname)
-	fdir = os.path.dirname(absp)
-
-	env_current_file_abspath = absp
-	env_current_file_dir = fdir
-
-
-	src_id = srcname.split('/')[-1]
-	src_id = src_id[:-2]
-
-	source_info = {
-		'id': src_id,   # 'console'
-		'path': absp,	# '/Users/.../console.m'
-		'dir': fdir,	# '/Users/.../'
-	}
-
+	source = Source(abspath)
+	lexer = Lexer()
+	tokens = lexer.tokenize(source)
 	parser = Parser()
-	ast = parser.parse(source_info)
+	ast = parser.parse(tokens)
 
 	if ast == None:
 		return None
 
-	m = process_module(ast, source_info, nodef=nodef)
+	m = process_module(ast, nodef=nodef)
+	m['id'] = abspath.split('/')[-1][:-2]
+	m['prefix'] = m['id']
+	m['source_abspath'] = abspath
 
-	env_current_file_abspath = prev_env_current_file_abspath
 	env_current_file_dir = prev_env_current_file_dir
 
-	log_ind_minus()
-	log("<<<< END-TRANSLATE(\"%s\")\n" % srcname)
+	log_pop()
+	log("<<<< END-TRANSLATE(\"%s\")\n" % abspath)
 	return m
 
 
 
-def process_module(ast, source_info, nodef=False):
+
+def process_module(ast, nodef=False):
 	global skipp, production, prev_production
 
 	global properties
@@ -2893,9 +2883,9 @@ def process_module(ast, source_info, nodef=False):
 	cmodule = {
 		'isa': 'module',
 
-		'id': source_info['id'],
-		'prefix': source_info['id'],
-		'source_info': source_info,
+		# defined after
+		'id': '<moduleId>',
+		'prefix': None,
 
 		'strings': [],    # for LLVM backend
 		'records': [],    # for C backend

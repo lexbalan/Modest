@@ -1,10 +1,8 @@
 
 from error import info
-from .source import Source
 from .tokenizer import Tokenizer
 
 
-fname = ""
 line = 1
 pos = 1
 
@@ -357,10 +355,7 @@ class Lexer:
 		self.tokenizer = Tokenizer(rules)
 
 
-	def run(self, filename):
-		global fname
-		fname = filename
-		src = Source(filename)
-		return self.tokenizer.run(src)
+	def tokenize(self, source):
+		return self.tokenizer.run(source)
 
 

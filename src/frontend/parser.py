@@ -3,7 +3,6 @@
 #####################################################################
 
 import os
-from .lexer import Lexer
 from error import error, warning, info
 from hlir.id import hlir_id
 from util import utf32cc_to_utf8_str
@@ -14,7 +13,7 @@ func_stoppers = ['let', 'var', 'if', 'while', 'return', 'type']
 class Parser:
 
 	def __init__(self):
-		self.lex = Lexer()
+		pass
 
 	def is_end(self):
 		if self.tokens[self.ctoken][1] == '':
@@ -1615,8 +1614,8 @@ class Parser:
 		return n
 
 
-	def parse(self, source_info):
-		self.tokens = self.lex.run(source_info['path'])
+	def parse(self, tokens):
+		self.tokens = tokens
 		self.ctoken = 0
 
 		output = []

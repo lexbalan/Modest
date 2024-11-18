@@ -6,6 +6,10 @@ target triple = "arm64-apple-macosx12.0.0"
 %Unit = type i1
 %Bool = type i1
 %Word8 = type i8
+%Word16 = type i16
+%Word32 = type i32
+%Word64 = type i64
+%Word128 = type i128
 %Char8 = type i8
 %Char16 = type i16
 %Char32 = type i32
@@ -107,43 +111,40 @@ break_2:
 ; -- print includes --
 ; -- end print includes --
 ; -- print imports --
-
+; from included ctypes64
 %Str = type %Str8;
-%Char = type i8;
+%Char = type %Char8;
 %ConstChar = type %Char;
-%SignedChar = type i8;
-%UnsignedChar = type i8;
-%Short = type i16;
-%UnsignedShort = type i16;
-%Int = type i32;
-%UnsignedInt = type i32;
-%LongInt = type i64;
-%UnsignedLongInt = type i64;
-%Long = type i64;
-%UnsignedLong = type i64;
-%LongLong = type i64;
-%UnsignedLongLong = type i64;
-%LongLongInt = type i64;
-%UnsignedLongLongInt = type i64;
+%SignedChar = type %Int8;
+%UnsignedChar = type %Int8;
+%Short = type %Int16;
+%UnsignedShort = type %Int16;
+%Int = type %Int32;
+%UnsignedInt = type %Int32;
+%LongInt = type %Int64;
+%UnsignedLongInt = type %Int64;
+%Long = type %Int64;
+%UnsignedLong = type %Int64;
+%LongLong = type %Int64;
+%UnsignedLongLong = type %Int64;
+%LongLongInt = type %Int64;
+%UnsignedLongLongInt = type %Int64;
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type i64;
+%IntPtrT = type %Int64;
 %PtrDiffT = type i8*;
-%OffT = type i64;
-%USecondsT = type i32;
-%PIDT = type i32;
-%UIDT = type i32;
-%GIDT = type i32;
-
-%File = type i8;
-%FposT = type i8;
+%OffT = type %Int64;
+%USecondsT = type %Int32;
+%PIDT = type %Int32;
+%UIDT = type %Int32;
+%GIDT = type %Int32;
+%File = type %Int8;
+%FposT = type %Int8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
-
-
 declare %Int @fclose(%File* %f)
 declare %Int @feof(%File* %f)
 declare %Int @ferror(%File* %f)
@@ -191,24 +192,24 @@ declare void @perror(%ConstCharStr* %str)
 @str1 = private constant [11 x i8] [i8 67, i8 67, i8 51, i8 50, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 @str2 = private constant [10 x i8] [i8 67, i8 67, i8 56, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 @str3 = private constant [3 x i8] [i8 37, i8 99, i8 0]
-
-define i32 @main() {
-	call void (%Str8*, ...) @main_print(%Str8* bitcast ([3 x i8]* @str3 to [0 x i8]*), i32 35)
-	ret i32 0
-}
-
+; -- endstrings --
 
 define void @main_print(%Str8* %form, ...) {
 	%1 = alloca i8*, align 1
 	%2 = bitcast i8** %1 to i8*
 	call void @llvm.va_start(i8* %2)
-	%3 = va_arg i8** %1, i32
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str1 to [0 x i8]*), i32 %3)
-	%5 = trunc i32 %3 to i8
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str2 to [0 x i8]*), i8 %5)
+	%3 = va_arg i8** %1, %Char32
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str1 to [0 x i8]*), %Char32 %3)
+	%5 = trunc %Char32 %3 to %Char8
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str2 to [0 x i8]*), %Char8 %5)
 	%7 = bitcast i8** %1 to i8*
 	call void @llvm.va_end(i8* %7)
 	ret void
+}
+
+define %Int32 @main() {
+	call void (%Str8*, ...) @main_print(%Str8* bitcast ([3 x i8]* @str3 to [0 x i8]*), %Char32 35)
+	ret %Int32 0
 }
 
 
