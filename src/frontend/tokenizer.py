@@ -6,8 +6,6 @@ TAB_STOP = 4
 
 
 
-
-
 class Tokenizer:
 	def __init__(self):
 		pass
@@ -133,6 +131,8 @@ class CmTokenizer(Tokenizer):
 			'<<=', '>>=', '...'
 		)
 
+		self.hexDigits = ('a', 'b', 'c', 'd', 'e', 'f', 'A', 'B', 'C', 'D', 'E', 'F')
+
 
 	#
 	# Lexical Rules
@@ -150,7 +150,6 @@ class CmTokenizer(Tokenizer):
 		return False
 
 
-
 	def doNewline(self):
 		ti = self.get_ti()
 		c = self.lookup(1)
@@ -159,7 +158,6 @@ class CmTokenizer(Tokenizer):
 		self.getc()
 		ti['len'] = 0
 		return ('nl', '\n', ti)
-
 
 
 	def doId(self):
@@ -212,7 +210,7 @@ class CmTokenizer(Tokenizer):
 				s.append(c)
 				continue
 
-			if not (c.isdigit() or (ishex and c in ('a', 'b', 'c', 'd', 'e', 'f', 'A', 'B', 'C', 'D', 'E', 'F'))):
+			if not (c.isdigit() or (ishex and c in self.hexDigits)):
 				self.setpos(j)
 				break
 			s.append(c)
@@ -220,7 +218,6 @@ class CmTokenizer(Tokenizer):
 		token = ''.join(s)
 		ti['len'] = len(token)
 		return ('num', token, ti)
-
 
 
 	def doOperator2(self):
@@ -281,7 +278,6 @@ class CmTokenizer(Tokenizer):
 		token = ''.join(s)
 		ti['len'] = len(token) + 2  # "
 		return ('str', token, ti)
-
 
 
 	def doTag(self):
@@ -356,7 +352,6 @@ class CmTokenizer(Tokenizer):
 		return ('directive', token, ti)
 
 
-
 	def doLineComment(self):
 		global line, pos
 
@@ -401,7 +396,6 @@ class CmTokenizer(Tokenizer):
 		return None
 
 
-
 	def doBlockComment(self):
 		global line, pos
 		global f
@@ -429,7 +423,6 @@ class CmTokenizer(Tokenizer):
 
 		ti['len'] = 0 #!
 		return ('comment-block', text, ti)
-
 
 
 	def doBadSymbol(self):
