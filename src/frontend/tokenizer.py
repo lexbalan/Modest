@@ -40,8 +40,6 @@ class Tokenizer:
 
 	def tokenize(self, source):
 		self.src = source
-		self.line = 1
-		self.pos = 1
 		tokens = []
 		while True:
 
@@ -89,10 +87,6 @@ class Tokenizer:
 		if not c == '\n':
 			return False
 		self.src.getc()
-
-		self.line = self.line + 1
-		self.pos = 1
-
 		ti['len'] = 0
 		return ('nl', '\n', ti)
 
@@ -356,8 +350,7 @@ class Tokenizer:
 		while True:
 			c = self.src.getc()
 			if c == "\n":
-				self.line = self.line + 1
-				self.pos = 1
+				pass
 			elif c == "*":
 				if self.src.lookup(1) == "/":
 					self.src.getc() # skip "/"
