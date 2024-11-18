@@ -9,10 +9,6 @@ import tomllib
 import settings
 import error
 
-from frontend.source import Source
-from frontend.lexer import Lexer
-from frontend.parser import Parser
-
 
 def load_config(config_name):
 	config = {}

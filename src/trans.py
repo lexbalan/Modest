@@ -4,7 +4,7 @@ import os
 from error import *
 
 from frontend.source import Source
-from frontend.lexer import Lexer
+from frontend.tokenizer import Tokenizer
 from frontend.parser import Parser
 
 from util import get_item_with_id
@@ -2844,8 +2844,8 @@ def translate(abspath, nodef=False):
 		return None
 
 	source = Source(abspath)
-	lexer = Lexer()
-	tokens = lexer.tokenize(source)
+	tokenizer = Tokenizer()
+	tokens = tokenizer.tokenize(source)
 	parser = Parser()
 	ast = parser.parse(tokens)
 
