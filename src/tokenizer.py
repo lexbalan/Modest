@@ -98,8 +98,8 @@ class Tokenizer:
 			'isa': 'ti',
 			'file': self.filename,
 			'line': self.line,
-			'len': 0,
 			'pos': self.pos
+			'len': 0,
 		}
 
 
