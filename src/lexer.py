@@ -23,11 +23,11 @@ def isHexDigit(x):
 	return False
 
 
-class Tokenizer:
+class Lexer:
 	def __init__(self):
 		pass
 
-	def tokenize(self, filename):
+	def run(self, filename):
 		self.filename = filename
 		self.pos = 0
 		self.line = 1
@@ -118,7 +118,7 @@ class Tokenizer:
 
 
 
-class CmTokenizer(Tokenizer):
+class CmLexer(Lexer):
 	def __init__(self):
 		self.rules = (
 			self.doBlank,
@@ -196,7 +196,6 @@ class CmTokenizer(Tokenizer):
 
 		if not c[0].isdigit():
 			return False
-
 
 		ishex = False
 		isfloat = False

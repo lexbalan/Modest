@@ -3,7 +3,7 @@ import os
 
 from error import *
 
-from tokenizer import CmTokenizer
+from lexer import CmLexer
 from parser import Parser
 
 from util import get_item_with_id
@@ -27,8 +27,7 @@ import decimal
 decimal.getcontext().prec = settings.get('precision')
 
 
-
-tokenizer = CmTokenizer()
+lexer = CmLexer()
 parser = Parser()
 
 
@@ -2848,7 +2847,7 @@ def translate(abspath, nodef=False):
 	prev_env_current_file_dir = env_current_file_dir
 	env_current_file_dir = os.path.dirname(abspath)
 
-	tokens = tokenizer.tokenize(abspath)
+	tokens = lexer.run(abspath)
 	ast = parser.parse(tokens)
 
 	m = None
