@@ -119,7 +119,6 @@ class Tokenizer:
 
 
 
-
 class CmTokenizer(Tokenizer):
 	def __init__(self):
 		self.rules = (
@@ -232,23 +231,23 @@ class CmTokenizer(Tokenizer):
 		return ('num', token)
 
 
+	def doOperator1(self):
+		if self.lookup() in self.operators1:
+			s = self.getc()
+			return ('op', s)
+		return False
+
+
 	def doOperator2(self):
-		s = self.getn(2)
-		if s in self.operators2:
+		if self.lookup(2) in self.operators2:
+			s = self.getn(2)
 			return ('op', s)
 		return False
 
 
 	def doOperator3(self):
-		s = self.getn(3)
-		if s in self.operators3:
-			return ('op', s)
-		return False
-
-
-	def doOperator1(self):
-		s = self.getc()
-		if s in self.operators1:
+		if self.lookup(3) in self.operators3:
+			s = self.getn(3)
 			return ('op', s)
 		return False
 
@@ -258,7 +257,7 @@ class CmTokenizer(Tokenizer):
 		if c != '"' and c != "'":
 			return False
 
-		quote = self.getc()  # get first quote
+		quote = self.getc()  # get start quote
 
 		# Если в строке встречается экранирующий слэш
 		# Он и то что он экранирует (следующий символ) попадут в рез. строку
@@ -356,7 +355,6 @@ class CmTokenizer(Tokenizer):
 		commtext = ""
 
 		while True:
-
 			# we dont need to eat NL because it will be used by lexer (!)
 			c = self.lookup()
 			if c == '\n':
@@ -393,7 +391,7 @@ class CmTokenizer(Tokenizer):
 				pass
 			elif c == "*":
 				if self.lookup() == "/":
-					self.skip() # '/'
+					self.skip()  # '/'
 					break
 			text = text + c
 
