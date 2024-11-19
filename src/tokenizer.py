@@ -381,7 +381,7 @@ class CmTokenizer(Tokenizer):
 		if self.lookup(2) != '/*':
 			return False
 
-		self.skipn(2) # /*
+		self.skipn(2)  # '/*'
 
 		text = ""
 
