@@ -27,6 +27,11 @@ import decimal
 decimal.getcontext().prec = settings.get('precision')
 
 
+
+tokenizer = CmTokenizer()
+parser = Parser()
+
+
 # сущность из текущего модуля
 def is_local_entity(x):
 	global cmodule
@@ -2842,9 +2847,6 @@ def translate(abspath, nodef=False):
 	global env_current_file_dir
 	prev_env_current_file_dir = env_current_file_dir
 	env_current_file_dir = os.path.dirname(abspath)
-
-	tokenizer = CmTokenizer()
-	parser = Parser()
 
 	tokens = tokenizer.tokenize(abspath)
 	ast = parser.parse(tokens)
