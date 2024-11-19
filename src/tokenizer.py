@@ -1,5 +1,6 @@
 
-from error import info
+from error import error, info
+
 
 # used for ti
 TAB_STOP = 4
@@ -140,7 +141,7 @@ class CmTokenizer(Tokenizer):
 
 		self.operators1 = (
 			'(', ')', '[', ']', '{', '}', ',', '.', ':', ';',
-			'=', '+', '-', '/', '*', '%%', '&', '<', '>'
+			'=', '+', '-', '/', '*', '%', '&', '<', '>'
 		)
 
 		self.operators2 = (
@@ -159,12 +160,12 @@ class CmTokenizer(Tokenizer):
 	#
 
 
-	# Rule returns Product/None in case if it was triggered
-	# And False in case if it wasnt triggered
+	# Rule returns False in case if it wasnt triggered
+	# And Product/None in case if it was triggered
 
 	def doBlank(self):
 		c = self.lookup()
-		if (c == ' ' or c == '\t'):
+		if c == ' ' or c == '\t':
 			self.skip()
 			return None
 		return False
@@ -172,7 +173,7 @@ class CmTokenizer(Tokenizer):
 
 	def doNewline(self):
 		c = self.lookup()
-		if not c == '\n':
+		if c != '\n':
 			return False
 		self.skip()  # '\n'
 		return ('nl', '\n')
@@ -193,13 +194,15 @@ class CmTokenizer(Tokenizer):
 
 
 	def doNumber(self):
-		isfloat = False
 		c = self.lookup(2)
 
 		if not c[0].isdigit():
 			return False
 
+
 		ishex = False
+		isfloat = False
+
 		if len(c) > 1:
 			ishex = c[1] == 'x'
 
@@ -387,9 +390,7 @@ class CmTokenizer(Tokenizer):
 
 		while True:
 			c = self.getc()
-			if c == "\n":
-				pass
-			elif c == "*":
+			if c == "*":
 				if self.lookup() == "/":
 					self.skip()  # '/'
 					break
@@ -399,7 +400,9 @@ class CmTokenizer(Tokenizer):
 
 
 	def doBadSymbol(self):
+		ti = self.get_ti()
 		c = self.getc()
+		error("unexpected symbol '%c'" % c, ti)
 		return ('badsym', c)
 
 
