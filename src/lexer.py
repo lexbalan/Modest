@@ -24,7 +24,8 @@ def isHexDigit(x):
 
 
 class Lexer:
-	def __init__(self):
+	def __init__(self, rules):
+		self.rules = rules
 		pass
 
 	def run(self, filename):
@@ -39,7 +40,8 @@ class Lexer:
 				return tokens
 
 			ti = self.get_ti()
-			pos_before = self.getpos()
+			pos = self.getpos()
+
 			for rule in self.rules:
 				result = rule()
 
@@ -49,7 +51,7 @@ class Lexer:
 						tokens.append(result + (ti,))
 					break
 
-				self.setpos(pos_before)
+				self.setpos(pos)
 
 		return None
 
@@ -120,7 +122,7 @@ class Lexer:
 
 class CmLexer(Lexer):
 	def __init__(self):
-		self.rules = (
+		rules = (
 			self.doBlank,
 			self.doNewline,
 			self.doId,
@@ -136,6 +138,7 @@ class CmLexer(Lexer):
 			self.doTag,
 			self.doBadSymbol,
 		)
+		super().__init__(rules)
 
 		self.operators1 = (
 			'*', ',', '=', '.', ':', '(', ')', '+', '-', '/',
