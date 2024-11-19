@@ -5,6 +5,20 @@ from error import info
 TAB_STOP = 4
 
 
+def isIdChar(x):
+	return x.isalpha() or x.isdigit() or x == '_'
+
+# Ave Python!
+def isHexDigit(x):
+	cc = ord(x)
+	if cc >= ord('0') and cc <= ord('9'):
+		return True
+	if cc >= ord('A') and cc <= ord('F'):
+		return True
+	if cc >= ord('a') and cc <= ord('f'):
+		return True
+	return False
+
 
 class Tokenizer:
 	def __init__(self):
@@ -20,7 +34,7 @@ class Tokenizer:
 		while True:
 
 			# EOF?
-			if self.lookup(1) == '':
+			if self.lookup() == '':
 				return tokens
 
 			pos_before = self.getpos()
@@ -37,7 +51,6 @@ class Tokenizer:
 				break
 
 		return None
-
 
 
 	# считать очередной символ
@@ -71,10 +84,10 @@ class Tokenizer:
 
 
 	# установить позицию в файле
-	def setpos(self, pos):
-		self.line = pos[1]
-		self.pos = pos[2]
-		self.f.seek(pos[0], 0)
+	def setpos(self, position):
+		self.f.seek(position[0], 0)
+		self.line = position[1]
+		self.pos = position[2]
 
 
 	def get_ti(self):
@@ -88,11 +101,19 @@ class Tokenizer:
 
 
 	# посмотреть n символов вперед
-	def lookup(self, n):
-		pos = self.getpos()
+	def lookup(self, n=1):
+		fpos = self.f.tell()
 		c = self.f.read(n)
-		self.setpos(pos)
+		self.f.seek(fpos, 0)
 		return c
+
+
+	def skip(self):
+		self.getc()
+
+
+	def skipn(self, n):
+		self.getn(n=n)
 
 
 
@@ -131,8 +152,6 @@ class CmTokenizer(Tokenizer):
 			'<<=', '>>=', '...'
 		)
 
-		self.hexDigits = ('a', 'b', 'c', 'd', 'e', 'f', 'A', 'B', 'C', 'D', 'E', 'F')
-
 
 	#
 	# Lexical Rules
@@ -143,40 +162,35 @@ class CmTokenizer(Tokenizer):
 	# And False in case if it wasnt triggered
 
 	def doBlank(self):
-		c = self.lookup(1)
+		c = self.lookup()
 		if (c == ' ' or c == '\t'):
-			self.getc()
+			self.skip()
 			return None
 		return False
 
 
 	def doNewline(self):
 		ti = self.get_ti()
-		c = self.lookup(1)
+		c = self.lookup()
 		if not c == '\n':
 			return False
-		self.getc()
+		self.skip()  # '\n'
 		ti['len'] = 0
 		return ('nl', '\n', ti)
 
 
 	def doId(self):
-		c = self.lookup(1)
+		c = self.lookup()
 
 		if not (c.isalpha() or c == '_'):
 			return False
 
 		ti = self.get_ti()
-		s = []
-		while True:
-			sp = self.getpos()
-			c = self.getc()
-			if not (c.isalpha() or c.isdigit() or c == '_'):
-				self.setpos(sp)
-				break
-			s.append(c)
+		token = ""
+		while isIdChar(c):
+			token = token + str(self.getc())
+			c = self.lookup()
 
-		token = ''.join(s)
 		ti['len'] = len(token)
 		return ('id', token, ti)
 
@@ -210,9 +224,10 @@ class CmTokenizer(Tokenizer):
 				s.append(c)
 				continue
 
-			if not (c.isdigit() or (ishex and c in self.hexDigits)):
+			if not (c.isdigit() or (ishex and isHexDigit(c))):
 				self.setpos(sp)
 				break
+
 			s.append(c)
 
 		token = ''.join(s)
@@ -249,7 +264,7 @@ class CmTokenizer(Tokenizer):
 
 	def doString(self):
 		ti = self.get_ti()
-		c = self.lookup(1)
+		c = self.lookup()
 		if c != '"' and c != "'":
 			return False
 
@@ -281,19 +296,19 @@ class CmTokenizer(Tokenizer):
 
 
 	def doTag(self):
-		c = self.lookup(1)
+		c = self.lookup()
 
 		if c != '#':
 			return False
 
-		self.getc()
+		self.skip()  # '#'
 
 		ti = self.get_ti()
 		s = []
 		while True:
 			sp = self.getpos()
 			c = self.getc()
-			if not (c.isalpha() or c.isdigit() or c == '_'):
+			if not isIdChar(c):
 				self.setpos(sp)
 				break
 			s.append(c)
@@ -306,19 +321,18 @@ class CmTokenizer(Tokenizer):
 	def doAttribute(self):
 		global line, pos
 
-		s = self.lookup(1)
+		s = self.lookup()
 		if s != '@':
 			return False
 
-
-		self.getc()
+		self.skip()  # '@'
 
 		ti = self.get_ti()
 		s = []
 		while True:
 			sp = self.getpos()
 			c = self.getc()
-			if not (c.isalpha() or c.isdigit() or c == '_'):
+			if not isIdChar(c):
 				self.setpos(sp)
 				break
 			s.append(c)
@@ -331,18 +345,18 @@ class CmTokenizer(Tokenizer):
 	def doDirective(self):
 		global line, pos
 
-		s = self.lookup(1)
+		s = self.lookup()
 		if s != '$':
 			return False
 
-		self.getc()
+		self.skip()  # '$'
 
 		ti = self.get_ti()
 		s = []
 		while True:
 			sp = self.getpos()
 			c = self.getc()
-			if not (c.isalpha() or c.isdigit() or c == '_'):
+			if not isIdChar(c):
 				self.setpos(sp)
 				break
 			s.append(c)
@@ -361,9 +375,7 @@ class CmTokenizer(Tokenizer):
 
 		ti = self.get_ti()
 
-		# skip '//'
-		self.getc()
-		self.getc()
+		self.skipn(2)  # skip '//'
 
 		lines = []
 
@@ -372,15 +384,13 @@ class CmTokenizer(Tokenizer):
 		while True:
 
 			# we dont need to eat NL because it will be used by lexer (!)
-			c = self.lookup(1)
+			c = self.lookup()
 			if c == '\n':
 				lines.append({'str': commtext})
 
 				s = self.lookup(3)
 				if s == '\n//':
-					self.getc()
-					self.getc()
-					self.getc()
+					self.skipn(3)
 					commtext = ""
 					continue
 
@@ -388,7 +398,7 @@ class CmTokenizer(Tokenizer):
 			else:
 				commtext += c
 
-			self.getc()
+			self.skip()
 
 		ti['len'] = 0
 		return ('comment-line', lines, ti)
@@ -406,8 +416,7 @@ class CmTokenizer(Tokenizer):
 
 		ti = self.get_ti()
 
-		self.getc() # /
-		self.getc() # *
+		self.skipn(2) # /*
 
 		text = ""
 
@@ -416,8 +425,8 @@ class CmTokenizer(Tokenizer):
 			if c == "\n":
 				pass
 			elif c == "*":
-				if self.lookup(1) == "/":
-					self.getc() # skip "/"
+				if self.lookup() == "/":
+					self.skip() # '/'
 					break
 			text = text + c
 
