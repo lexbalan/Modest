@@ -4,6 +4,8 @@ from error import info
 # used for ti
 TAB_STOP = 4
 
+EOF = ''
+
 
 def isIdChar(x):
 	return x.isalpha() or x.isdigit() or x == '_'
@@ -25,16 +27,14 @@ class Tokenizer:
 		pass
 
 	def tokenize(self, filename):
-		self.f = open(filename, "r")
 		self.filename = filename
 		self.pos = 0
 		self.line = 1
+		self.f = open(filename, "r")
 
 		tokens = []
 		while True:
-
-			# EOF?
-			if self.lookup() == '':
+			if self.lookup() == EOF:
 				return tokens
 
 			ti = self.get_ti()
