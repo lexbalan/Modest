@@ -43,15 +43,13 @@ class Tokenizer:
 			for rule in self.rules:
 				result = rule()
 
-				if result == False:
-					self.setpos(pos_before)
-					continue
+				if result != False:
+					if result != None:
+						ti['len'] = len(result[1])
+						tokens.append(result + (ti,))
+					break
 
-				if result != None:
-					ti['len'] = len(result[1])
-					tokens.append(result + (ti,))
-
-				break
+				self.setpos(pos_before)
 
 		return None
 
