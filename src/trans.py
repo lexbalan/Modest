@@ -2661,13 +2661,10 @@ def do_import(x):
 
 	if m == None:
 
-		global env_current_file_dir
-		prev_env_current_file_dir = env_current_file_dir
-		env_current_file_dir = os.path.dirname(abspath)
+
 
 		m = translate(abspath, nodef=not x['include'])
 
-		env_current_file_dir = prev_env_current_file_dir
 
 		modules[abspath] = m
 
@@ -2842,19 +2839,24 @@ def translate(abspath, nodef=False):
 	if not os.path.exists(abspath):
 		return None
 
+	global env_current_file_dir
+	prev_env_current_file_dir = env_current_file_dir
+	env_current_file_dir = os.path.dirname(abspath)
+
 	tokenizer = CmTokenizer()
 	parser = Parser()
 
 	tokens = tokenizer.tokenize(abspath)
 	ast = parser.parse(tokens)
 
-	if ast == None:
-		return None
+	m = None
+	if ast != None:
+		m = process_module(ast, nodef=nodef)
+		m['id'] = abspath.split('/')[-1][:-2]
+		m['prefix'] = m['id']
+		m['source_abspath'] = abspath
 
-	m = process_module(ast, nodef=nodef)
-	m['id'] = abspath.split('/')[-1][:-2]
-	m['prefix'] = m['id']
-	m['source_abspath'] = abspath
+	env_current_file_dir = prev_env_current_file_dir
 
 	log_pop()
 	log("<<<< END-TRANSLATE(\"%s\")\n" % abspath)
