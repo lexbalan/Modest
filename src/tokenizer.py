@@ -319,8 +319,6 @@ class CmTokenizer(Tokenizer):
 
 
 	def doAttribute(self):
-		global line, pos
-
 		s = self.lookup()
 		if s != '@':
 			return False
@@ -343,8 +341,6 @@ class CmTokenizer(Tokenizer):
 
 
 	def doDirective(self):
-		global line, pos
-
 		s = self.lookup()
 		if s != '$':
 			return False
@@ -367,8 +363,6 @@ class CmTokenizer(Tokenizer):
 
 
 	def doLineComment(self):
-		global line, pos
-
 		s = self.lookup(2)
 		if s != '//':
 			return False
@@ -407,9 +401,6 @@ class CmTokenizer(Tokenizer):
 
 
 	def doBlockComment(self):
-		global line, pos
-		global f
-
 		s = self.lookup(2)
 		if s != '/*':
 			return False
