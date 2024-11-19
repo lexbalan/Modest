@@ -37,6 +37,7 @@ class Tokenizer:
 			if self.lookup() == '':
 				return tokens
 
+			ti = self.get_ti()
 			pos_before = self.getpos()
 			for rule in self.rules:
 				result = rule()
@@ -46,7 +47,8 @@ class Tokenizer:
 					continue
 
 				if result != None:
-					tokens.append(result)
+					ti['len'] = len(result[1])
+					tokens.append(result + (ti,))
 
 				break
 
@@ -170,13 +172,11 @@ class CmTokenizer(Tokenizer):
 
 
 	def doNewline(self):
-		ti = self.get_ti()
 		c = self.lookup()
 		if not c == '\n':
 			return False
 		self.skip()  # '\n'
-		ti['len'] = 0
-		return ('nl', '\n', ti)
+		return ('nl', '\n')
 
 
 	def doId(self):
@@ -185,22 +185,21 @@ class CmTokenizer(Tokenizer):
 		if not (c.isalpha() or c == '_'):
 			return False
 
-		ti = self.get_ti()
 		token = ""
 		while isIdChar(c):
 			token = token + str(self.getc())
 			c = self.lookup()
 
-		ti['len'] = len(token)
-		return ('id', token, ti)
+		return ('id', token)
 
 
 	def doNumber(self):
 		isfloat = False
 		c = self.lookup(2)
+
 		if not c[0].isdigit():
 			return False
-		ti = self.get_ti()
+
 		ishex = False
 		if len(c) > 1:
 			ishex = c[1] == 'x'
@@ -210,7 +209,6 @@ class CmTokenizer(Tokenizer):
 		if ishex:
 			s.append(self.getc())
 			s.append(self.getc())
-
 
 		while True:
 			sp = self.getpos()
@@ -231,39 +229,31 @@ class CmTokenizer(Tokenizer):
 			s.append(c)
 
 		token = ''.join(s)
-		ti['len'] = len(token)
-		return ('num', token, ti)
+		return ('num', token)
 
 
 	def doOperator2(self):
-		ti = self.get_ti()
 		s = self.getn(2)
 		if s in self.operators2:
-			ti['len'] = 2
-			return ('op', s, ti)
+			return ('op', s)
 		return False
 
 
 	def doOperator3(self):
-		ti = self.get_ti()
 		s = self.getn(3)
 		if s in self.operators3:
-			ti['len'] = 3
-			return ('op', s, ti)
+			return ('op', s)
 		return False
 
 
 	def doOperator1(self):
-		ti = self.get_ti()
 		s = self.getc()
 		if s in self.operators1:
-			ti['len'] = 1
-			return ('op', s, ti)
+			return ('op', s)
 		return False
 
 
 	def doString(self):
-		ti = self.get_ti()
 		c = self.lookup()
 		if c != '"' and c != "'":
 			return False
@@ -291,8 +281,7 @@ class CmTokenizer(Tokenizer):
 		# добавляем " чтобы match в парсере не путал "+" с оператором + (!)
 		# поскольку match не учитывает класс
 		token = ''.join(s)
-		ti['len'] = len(token) + 2  # "
-		return ('str', token, ti)
+		return ('str', token)
 
 
 	def doTag(self):
@@ -303,7 +292,6 @@ class CmTokenizer(Tokenizer):
 
 		self.skip()  # '#'
 
-		ti = self.get_ti()
 		s = []
 		while True:
 			sp = self.getpos()
@@ -314,8 +302,7 @@ class CmTokenizer(Tokenizer):
 			s.append(c)
 
 		token = ''.join(s)
-		ti['len'] = len(token)
-		return ('tag', token, ti)
+		return ('tag', token)
 
 
 	def doAttribute(self):
@@ -325,7 +312,6 @@ class CmTokenizer(Tokenizer):
 
 		self.skip()  # '@'
 
-		ti = self.get_ti()
 		s = []
 		while True:
 			sp = self.getpos()
@@ -336,8 +322,7 @@ class CmTokenizer(Tokenizer):
 			s.append(c)
 
 		token = ''.join(s)
-		ti['len'] = len(token)
-		return ('attribute', token, ti)
+		return ('attribute', token)
 
 
 	def doDirective(self):
@@ -347,7 +332,6 @@ class CmTokenizer(Tokenizer):
 
 		self.skip()  # '$'
 
-		ti = self.get_ti()
 		s = []
 		while True:
 			sp = self.getpos()
@@ -358,16 +342,12 @@ class CmTokenizer(Tokenizer):
 			s.append(c)
 
 		token = ''.join(s)
-		ti['len'] = len(token)
-		return ('directive', token, ti)
+		return ('directive', token)
 
 
 	def doLineComment(self):
-		s = self.lookup(2)
-		if s != '//':
+		if self.lookup(2) != '//':
 			return False
-
-		ti = self.get_ti()
 
 		self.skipn(2)  # skip '//'
 
@@ -394,18 +374,14 @@ class CmTokenizer(Tokenizer):
 
 			self.skip()
 
-		ti['len'] = 0
-		return ('comment-line', lines, ti)
+		return ('comment-line', lines)
 
 		return None
 
 
 	def doBlockComment(self):
-		s = self.lookup(2)
-		if s != '/*':
+		if self.lookup(2) != '/*':
 			return False
-
-		ti = self.get_ti()
 
 		self.skipn(2) # /*
 
@@ -421,14 +397,11 @@ class CmTokenizer(Tokenizer):
 					break
 			text = text + c
 
-		ti['len'] = 0 #!
-		return ('comment-block', text, ti)
+		return ('comment-block', text)
 
 
 	def doBadSymbol(self):
-		ti = self.get_ti()
 		c = self.getc()
-		ti['len'] = 1
-		return ('badsym', c, ti)
+		return ('badsym', c)
 
 
