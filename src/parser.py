@@ -57,19 +57,9 @@ class Parser:
 
 
 	def ti(self):
-		assert(len(self.tokens[self.ctoken]) == 4)
-		#return self.tokens[self.ctoken][2]
-
-		start = self.tokens[self.ctoken][2]
-		end = self.tokens[self.ctoken][3]
-		return {
-			'isa': 'ti',
-			'file': start['file'],
-			'start_line': start['line'],
-			'start_pos': start['pos'],
-			'end_line': end['line'],
-			'end_pos': end['pos'],
-		}
+		assert(len(self.tokens[self.ctoken]) == 3)
+		ti = self.tokens[self.ctoken][2]
+		return ti
 
 
 	def gettok(self):

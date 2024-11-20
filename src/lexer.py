@@ -39,7 +39,7 @@ class Lexer:
 			if self.lookup() == EOF:
 				return tokens
 
-			ti = self.get_ti()
+			coord_start = self.get_coord()
 			pos = self.getpos()
 
 			for rule in self.rules:
@@ -47,9 +47,21 @@ class Lexer:
 
 				if result != False:
 					if result != None:
-						ti['len'] = len(result[1])
-						ti_end = self.get_ti()
-						tokens.append(result + (ti, ti_end))
+						coord_end = self.get_coord()
+						ti = {
+							'isa': 'ti',
+
+							'file': self.filename,
+
+							'start_line': coord_start['line'],
+							'start_pos': coord_start['pos'],
+							'start_fpos': coord_start['fpos'],
+
+							'end_line': coord_end['line'],
+							'end_pos': coord_end['pos'],
+							'end_fpos': coord_end['fpos'],
+						}
+						tokens.append(result + (ti,))
 					break
 
 				self.setpos(pos)
@@ -94,13 +106,12 @@ class Lexer:
 		self.pos = position[2]
 
 
-	def get_ti(self):
+	def get_coord(self):
 		return {
 			'isa': 'ti',
-			'file': self.filename,
+			'fpos': self.f.tell(),
 			'line': self.line,
-			'pos': self.pos,
-			'len': 0,
+			'pos': self.pos
 		}
 
 
@@ -401,7 +412,7 @@ class CmLexer(Lexer):
 
 
 	def doBadSymbol(self):
-		ti = self.get_ti()
+		ti = self.get_coord()
 		c = self.getc()
 		error("unexpected symbol '%c'" % c, ti)
 		return ('badsym', c)
