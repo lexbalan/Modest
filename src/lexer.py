@@ -93,13 +93,13 @@ class Lexer:
 		return "".join(s)
 
 
-	# получить позицию в файле
+	# получить текущую позицию в файле (точка сохранения)
 	def getpos(self):
-		x = self.f.tell()
-		return (x, self.line, self.pos)
+		fpos = self.f.tell()
+		return (fpos, self.line, self.pos)
 
 
-	# установить позицию в файле
+	# установить позицию в файле (восстановление)
 	def setpos(self, position):
 		self.f.seek(position[0], 0)
 		self.line = position[1]
