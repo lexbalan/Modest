@@ -48,7 +48,8 @@ class Lexer:
 				if result != False:
 					if result != None:
 						ti['len'] = len(result[1])
-						tokens.append(result + (ti,))
+						ti_end = self.get_ti()
+						tokens.append(result + (ti, ti_end))
 					break
 
 				self.setpos(pos)

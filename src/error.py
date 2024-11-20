@@ -28,7 +28,7 @@ SIMPLE_MARK = True
 
 def getline(ti):
 	file = ti['file']
-	lineno = ti['line']
+	lineno = ti['start_line']
 	f = open(file, 'r')
 	lin = f.read().split("\n")[lineno - 1]
 	f.close()
@@ -38,13 +38,18 @@ def getline(ti):
 def left_start_pos(ti):
 	if 'start' in ti:
 		return left_start_pos(ti['start'])
-	return ti['pos']
+	return ti['start_pos']
+
+
+# length of token
+def tilen(ti):
+	return ti['end_pos'] - ti['start_pos']
 
 
 def right_end_pos(ti):
 	if 'end' in ti:
 		return right_end_pos(ti['end'])
-	return ti['pos'] - ti['len']# - 1
+	return ti['start_pos'] - tilen(ti)# - 1
 
 
 def color_code(color):
@@ -77,10 +82,10 @@ def himark(lpos, pos, lenc, rpos, color):
 
 
 def highlight(ti, color, offset):
-	pos = ti['pos'] + offset
+	pos = ti['start_pos'] + offset
 	start = left_start_pos(ti) + offset
 	end = right_end_pos(ti) + offset
-	himark(start, pos, ti['len'], end - 1, color)
+	himark(start, pos, tilen(ti), end - 1, color)
 
 
 def common_message(mg, color, s, ti=None):
@@ -97,12 +102,12 @@ def common_message(mg, color, s, ti=None):
 		return
 
 
-	pre = '\n%s:%d:%d:\n' % (ti['file'], ti['line'], ti['pos'])
+	pre = '\n%s:%d:%d:\n' % (ti['file'], ti['start_line'], ti['start_pos'])
 
 	print(pre + colorize(mg, color) + s)
 
 	if ti != None:
-		prelin = "%d |" % ti['line']
+		prelin = "%d |" % ti['start_line']
 		line = getline(ti)
 		line = line.replace('\t', ' ' * 4)
 		print(prelin + line)
