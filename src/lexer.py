@@ -47,13 +47,16 @@ class Lexer:
 				if result != False:
 					if result != None:
 						tokenEndPosition = self.getTextPosition()
+
+						# token = ('<token_class>', <token_data>, <ti>)
 						ti = {
 							'isa': 'ti',
 							'file': self.filename,
 							'start_position': tokenStartPosition,
 							'end_position': tokenEndPosition,
 						}
-						tokens.append(result + (ti,))
+						token = result + (ti,)
+						tokens.append(token)
 					break
 
 				self.setTextPosition(tokenStartPosition)
@@ -88,7 +91,7 @@ class Lexer:
 	# получить текущую позицию в файле (точка сохранения)
 	def getTextPosition(self):
 		return {
-			'isa': 'ti',
+			'isa': 'text_position',
 			'fpos': self.f.tell(),
 			'line': self.line,
 			'pos': self.pos
@@ -184,12 +187,12 @@ class CmLexer(Lexer):
 		if not (c.isalpha() or c == '_'):
 			return False
 
-		token = ""
+		s = ""
 		while isIdChar(c):
-			token = token + str(self.getc())
+			s = s + str(self.getc())
 			c = self.lookup()
 
-		return ('id', token)
+		return ('id', s)
 
 
 	def doNumber(self):
@@ -228,8 +231,7 @@ class CmLexer(Lexer):
 
 			s.append(c)
 
-		token = ''.join(s)
-		return ('num', token)
+		return ('num', ''.join(s))
 
 
 	def doOperator1(self):
@@ -280,8 +282,7 @@ class CmLexer(Lexer):
 
 		# добавляем " чтобы match в парсере не путал "+" с оператором + (!)
 		# поскольку match не учитывает класс
-		token = ''.join(s)
-		return ('str', token)
+		return ('str', ''.join(s))
 
 
 	def doTag(self):
@@ -301,8 +302,7 @@ class CmLexer(Lexer):
 				break
 			s.append(c)
 
-		token = ''.join(s)
-		return ('tag', token)
+		return ('tag', ''.join(s))
 
 
 	def doAttribute(self):
@@ -321,8 +321,7 @@ class CmLexer(Lexer):
 				break
 			s.append(c)
 
-		token = ''.join(s)
-		return ('attribute', token)
+		return ('attribute', ''.join(s))
 
 
 	def doDirective(self):
@@ -341,8 +340,7 @@ class CmLexer(Lexer):
 				break
 			s.append(c)
 
-		token = ''.join(s)
-		return ('directive', token)
+		return ('directive', ''.join(s))
 
 
 	def doLineComment(self):
