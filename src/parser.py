@@ -1,5 +1,5 @@
 #####################################################################
-#							PARSER								 #
+#                             PARSER                                #
 #####################################################################
 
 import os
@@ -7,8 +7,10 @@ from error import error, warning, info
 from hlir.id import hlir_id
 from util import utf32cc_to_utf8_str
 
+
 top_level_stoppers = ['type', 'let', 'const', 'var', 'func']
 func_stoppers = ['let', 'var', 'if', 'while', 'return', 'type']
+
 
 class Parser:
 
@@ -126,7 +128,6 @@ class Parser:
 		return hlir_id(s, ti=ti)
 
 
-
 	def need_sep(self, separators=['\n', ';'], stoppers=['}'], eat=True):
 		# random space after
 		self.skip_tokens([' ', '\t'])
@@ -219,7 +220,6 @@ class Parser:
 		}
 
 
-
 	def check_is_field(self):
 		if self.is_identifier():
 			token = self.gettok()
@@ -230,8 +230,10 @@ class Parser:
 
 			return True
 
+
 	def is_attribute(self):
 		return self.token_class_is('attribute')
+
 
 	def check_is_type(self):
 		if self.is_identifier():
@@ -283,7 +285,6 @@ class Parser:
 		return False
 
 
-
 	def is_type_expr(self):
 		pos = self.getpos()			# save position
 		result = self.check_is_type()  # check
@@ -304,11 +305,9 @@ class Parser:
 		return result
 
 
-
-
 	def expr_type_func(self):
 		ti = self.ti()
-		self.skip() #("(")
+		self.skip()  # "("
 		arghack = False
 		fields = []
 		while not self.match(")"):
@@ -341,7 +340,7 @@ class Parser:
 				'align': 0,
 				'ti': ti
 			}
-		#	return r
+		#return r
 
 
 	def expr_type(self):
@@ -753,7 +752,7 @@ class Parser:
 				}
 			#elif self.look("[") and self.is_value_expr():
 			elif self.match("["):
-				#self.skip()  # "[":
+				#self.skip()  # "["
 				i = self.expr_value()
 				if self.match(":"):
 					j = None
@@ -949,16 +948,16 @@ class Parser:
 						i = i - 1
 						code = int(cod, 16)
 
-					elif sym == 'n': code = ord("\n")  # LF
-					elif sym == '"': code = ord("\"")  # QUOTE2
-					elif sym == "'": code = ord("'")   # QUOTE1
-					elif sym == '\\': code = ord("\\") # BACKSLASH
-					elif sym == 'r': code = ord("\r")  # CR
-					elif sym == 't': code = ord("\t")  # TAB
-					elif sym == 'a': code = ord("\a")  # BELL
-					elif sym == 'b': code = ord("\b")  # BACKSPACE
-					elif sym == 'v': code = ord("\v")  # VT
-					elif sym == 'f': code = ord("\f")  # FF
+					elif sym == 'n': code = ord("\n")   # LF
+					elif sym == '"': code = ord("\"")   # QUOTE2
+					elif sym == "'": code = ord("'")    # QUOTE1
+					elif sym == '\\': code = ord("\\")  # BACKSLASH
+					elif sym == 'r': code = ord("\r")   # CR
+					elif sym == 't': code = ord("\t")   # TAB
+					elif sym == 'a': code = ord("\a")   # BELL
+					elif sym == 'b': code = ord("\b")   # BACKSPACE
+					elif sym == 'v': code = ord("\v")   # VT
+					elif sym == 'f': code = ord("\f")   # FF
 
 
 					if is_unicode:

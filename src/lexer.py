@@ -8,6 +8,7 @@ EOF = ''
 def isIdChar(x):
 	return x.isalpha() or x.isdigit() or x == '_'
 
+
 # Ave Python!
 def isHexDigit(x):
 	cc = ord(x)
