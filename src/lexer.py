@@ -39,32 +39,24 @@ class Lexer:
 			if self.lookup() == EOF:
 				return tokens
 
-			coord_start = self.get_coord()
-			pos = self.getpos()
+			tokenStartPosition = self.getTextPosition()
 
 			for rule in self.rules:
 				result = rule()
 
 				if result != False:
 					if result != None:
-						coord_end = self.get_coord()
+						tokenEndPosition = self.getTextPosition()
 						ti = {
 							'isa': 'ti',
-
 							'file': self.filename,
-
-							'start_line': coord_start['line'],
-							'start_pos': coord_start['pos'],
-							'start_fpos': coord_start['fpos'],
-
-							'end_line': coord_end['line'],
-							'end_pos': coord_end['pos'],
-							'end_fpos': coord_end['fpos'],
+							'start_position': tokenStartPosition,
+							'end_position': tokenEndPosition,
 						}
 						tokens.append(result + (ti,))
 					break
 
-				self.setpos(pos)
+				self.setTextPosition(tokenStartPosition)
 
 		return None
 
@@ -94,25 +86,19 @@ class Lexer:
 
 
 	# получить текущую позицию в файле (точка сохранения)
-	def getpos(self):
-		fpos = self.f.tell()
-		return (fpos, self.line, self.pos)
-
-
-	# установить позицию в файле (восстановление)
-	def setpos(self, position):
-		self.f.seek(position[0], 0)
-		self.line = position[1]
-		self.pos = position[2]
-
-
-	def get_coord(self):
+	def getTextPosition(self):
 		return {
 			'isa': 'ti',
 			'fpos': self.f.tell(),
 			'line': self.line,
 			'pos': self.pos
 		}
+
+	# установить позицию в файле (возврат на позицию)
+	def setTextPosition(self, pos):
+		self.f.seek(pos['fpos'], 0)
+		self.line = pos['line']
+		self.pos = pos['pos']
 
 
 	# посмотреть n символов вперед
@@ -225,7 +211,7 @@ class CmLexer(Lexer):
 			s.append(self.getc())
 
 		while True:
-			sp = self.getpos()
+			sp = self.getTextPosition()
 			c = self.getc()
 
 			if c == '_':
@@ -237,7 +223,7 @@ class CmLexer(Lexer):
 				continue
 
 			if not (c.isdigit() or (ishex and isHexDigit(c))):
-				self.setpos(sp)
+				self.setTextPosition(sp)
 				break
 
 			s.append(c)
@@ -308,10 +294,10 @@ class CmLexer(Lexer):
 
 		s = []
 		while True:
-			sp = self.getpos()
+			sp = self.getTextPosition()
 			c = self.getc()
 			if not isIdChar(c):
-				self.setpos(sp)
+				self.setTextPosition(sp)
 				break
 			s.append(c)
 
@@ -328,10 +314,10 @@ class CmLexer(Lexer):
 
 		s = []
 		while True:
-			sp = self.getpos()
+			sp = self.getTextPosition()
 			c = self.getc()
 			if not isIdChar(c):
-				self.setpos(sp)
+				self.setTextPosition(sp)
 				break
 			s.append(c)
 
@@ -348,10 +334,10 @@ class CmLexer(Lexer):
 
 		s = []
 		while True:
-			sp = self.getpos()
+			sp = self.getTextPosition()
 			c = self.getc()
 			if not isIdChar(c):
-				self.setpos(sp)
+				self.setTextPosition(sp)
 				break
 			s.append(c)
 
@@ -412,7 +398,7 @@ class CmLexer(Lexer):
 
 
 	def doBadSymbol(self):
-		ti = self.get_coord()
+		ti = self.getTextPosition()
 		c = self.getc()
 		error("unexpected symbol '%c'" % c, ti)
 		return ('badsym', c)
