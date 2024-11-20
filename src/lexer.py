@@ -142,21 +142,6 @@ class CmLexer(Lexer):
 		)
 		super().__init__(rules)
 
-		self.operators1 = (
-			'*', ',', '=', '.', ':', '(', ')', '+', '-', '/',
-			'&', '<', '>', '[', ']', '{', '}', '%', ';'
-		)
-
-		self.operators2 = (
-			'==', '!=', '<=', '>=', '::',
-			'<-', '->', '=>', '<<', '>>',
-			'++', '--'
-		)
-
-		self.operators3 = (
-			'<<=', '>>=', '...'
-		)
-
 
 	#
 	# Lexical Rules
@@ -236,23 +221,41 @@ class CmLexer(Lexer):
 
 
 	def doOperator1(self):
-		if self.peep() in self.operators1:
+		operators1 = (
+			'*', ',', '=', '.', ':', '(', ')', '+', '-', '/',
+			'&', '<', '>', '[', ']', '{', '}', '%', ';'
+		)
+
+		if self.peep() in operators1:
 			s = self.getc()
 			return ('op', s)
+
 		return False
 
 
 	def doOperator2(self):
-		if self.peep(2) in self.operators2:
+		operators2 = (
+			'==', '!=', '<=', '>=', '::',
+			'<-', '->', '=>', '<<', '>>',
+			'++', '--'
+		)
+
+		if self.peep(2) in operators2:
 			s = self.getn(2)
 			return ('op', s)
+
 		return False
 
 
 	def doOperator3(self):
-		if self.peep(3) in self.operators3:
+		operators3 = (
+			'<<=', '>>=', '...'
+		)
+
+		if self.peep(3) in operators3:
 			s = self.getn(3)
 			return ('op', s)
+
 		return False
 
 
