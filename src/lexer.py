@@ -39,13 +39,16 @@ class Lexer:
 			if self.peep() == EOF:
 				return tokens
 
+			# save current lexer position in the source
 			tokenStartPosition = self.getTextPosition()
 
 			for rule in self.lexicalRules:
 				result = rule()
 
-				if result = False:
-					# rule don't recognized input chain
+				if result == False:
+					# restore lexer position in the source
+					# and go to try another lexer rule
+					self.setTextPosition(tokenStartPosition)
 					continue
 
 				if result != None:
@@ -59,9 +62,10 @@ class Lexer:
 					}
 					token = result + (ti,)
 					tokens.append(token)
-					break
 
-				self.setTextPosition(tokenStartPosition)
+				break
+
+
 
 		return None
 
@@ -404,7 +408,15 @@ class CmLexer(Lexer):
 
 
 	def doBadSymbol(self):
-		ti = self.getTextPosition()
+		tp = self.getTextPosition()
+
+		ti = {
+			'isa': 'ti',
+			'file': self.filename,
+			'start_position': tp,
+			'end_position': tp,
+		}
+
 		c = self.getc()
 		error("unexpected symbol '%c'" % c, ti)
 		return ('badsym', c)

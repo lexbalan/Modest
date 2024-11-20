@@ -472,15 +472,15 @@ def init_builtin_values():
 	compilerVersionMinor = value_integer_create(7, typ=foundation.typeNat32)
 
 	compiler_version_initializers = [
-		hlir_initializer({'str': 'major'}, compilerVersionMajor),
-		hlir_initializer({'str': 'minor'}, compilerVersionMinor)
+		hlir_initializer(hlir_id('major'), compilerVersionMajor),
+		hlir_initializer(hlir_id('minor'), compilerVersionMinor)
 	]
 	compilerVersion = value_record_create(compiler_version_initializers)
 
 	# '__compiler' record
 	compiler_initializers = [
-		hlir_initializer({'str': 'name'}, compilerName),
-		hlir_initializer({'str': 'version'}, compilerVersion),
+		hlir_initializer(hlir_id('name'), compilerName),
+		hlir_initializer(hlir_id('version'), compilerVersion),
 	]
 	compiler = value_record_create(compiler_initializers)
 	root_symtab.value_add('__compiler', compiler)
@@ -493,8 +493,8 @@ def init_builtin_values():
 	root_symtab.value_add('__platformRelease', __platformRelease)
 
 	target_system_initializers = [
-		hlir_initializer({'str': 'name'}, compilerName),
-		hlir_initializer({'str': 'version'}, compilerVersion),
+		hlir_initializer(hlir_id('name'), compilerName),
+		hlir_initializer(hlir_id('version'), compilerVersion),
 	]
 	target_system = value_record_create(target_system_initializers)
 	"""
@@ -518,11 +518,11 @@ def init_builtin_values():
 
 	# '__target' record
 	target_initializers = [
-		hlir_initializer({'str': 'name'}, __targetName),
-		hlir_initializer({'str': 'charWidth'}, __targetCharWidth),
-		hlir_initializer({'str': 'intWidth'}, __targetIntWidth),
-		hlir_initializer({'str': 'floatWidth'}, __targetFloatWidth),
-		hlir_initializer({'str': 'pointerWidth'}, __targetPointerWidth),
+		hlir_initializer(hlir_id('name'), __targetName),
+		hlir_initializer(hlir_id('charWidth'), __targetCharWidth),
+		hlir_initializer(hlir_id('intWidth'), __targetIntWidth),
+		hlir_initializer(hlir_id('floatWidth'), __targetFloatWidth),
+		hlir_initializer(hlir_id('pointerWidth'), __targetPointerWidth),
 	]
 	target = value_record_create(target_initializers)
 	root_symtab.value_add('__target', target)
@@ -2257,7 +2257,7 @@ def def_type(x):
 	nt['id'] = id # need for  @property("type.id.c", "int")
 	nt['att'] = copy.copy(ty['att'])
 	nt['ti_def'] = id['ti']
-	nt['module'] = cmodule  ## добавляем заново тк очистили его выше!
+	nt['module'] = cmodule  # добавляем заново тк очистили его выше!
 
 
 	if need_decoration(x):
