@@ -36,7 +36,7 @@ class Lexer:
 
 		tokens = []
 		while True:
-			if self.lookup() == EOF:
+			if self.peep() == EOF:
 				return tokens
 
 			tokenStartPosition = self.getTextPosition()
@@ -105,7 +105,7 @@ class Lexer:
 
 
 	# посмотреть n символов вперед
-	def lookup(self, n=1):
+	def peep(self, n=1):
 		fpos = self.f.tell()
 		c = self.f.read(n)
 		self.f.seek(fpos, 0)
@@ -166,7 +166,7 @@ class CmLexer(Lexer):
 	# And Product/None in case if it was triggered
 
 	def doBlank(self):
-		c = self.lookup()
+		c = self.peep()
 		if c == ' ' or c == '\t':
 			self.skip()
 			return None
@@ -174,7 +174,7 @@ class CmLexer(Lexer):
 
 
 	def doNewline(self):
-		c = self.lookup()
+		c = self.peep()
 		if c != '\n':
 			return False
 		self.skip()  # '\n'
@@ -182,7 +182,7 @@ class CmLexer(Lexer):
 
 
 	def doId(self):
-		c = self.lookup()
+		c = self.peep()
 
 		if not (c.isalpha() or c == '_'):
 			return False
@@ -190,13 +190,13 @@ class CmLexer(Lexer):
 		s = ""
 		while isIdChar(c):
 			s = s + str(self.getc())
-			c = self.lookup()
+			c = self.peep()
 
 		return ('id', s)
 
 
 	def doNumber(self):
-		c = self.lookup(2)
+		c = self.peep(2)
 
 		if not c[0].isdigit():
 			return False
@@ -235,28 +235,28 @@ class CmLexer(Lexer):
 
 
 	def doOperator1(self):
-		if self.lookup() in self.operators1:
+		if self.peep() in self.operators1:
 			s = self.getc()
 			return ('op', s)
 		return False
 
 
 	def doOperator2(self):
-		if self.lookup(2) in self.operators2:
+		if self.peep(2) in self.operators2:
 			s = self.getn(2)
 			return ('op', s)
 		return False
 
 
 	def doOperator3(self):
-		if self.lookup(3) in self.operators3:
+		if self.peep(3) in self.operators3:
 			s = self.getn(3)
 			return ('op', s)
 		return False
 
 
 	def doString(self):
-		c = self.lookup()
+		c = self.peep()
 		if c != '"' and c != "'":
 			return False
 
@@ -286,7 +286,7 @@ class CmLexer(Lexer):
 
 
 	def doTag(self):
-		c = self.lookup()
+		c = self.peep()
 
 		if c != '#':
 			return False
@@ -306,7 +306,7 @@ class CmLexer(Lexer):
 
 
 	def doAttribute(self):
-		s = self.lookup()
+		s = self.peep()
 		if s != '@':
 			return False
 
@@ -325,7 +325,7 @@ class CmLexer(Lexer):
 
 
 	def doDirective(self):
-		s = self.lookup()
+		s = self.peep()
 		if s != '$':
 			return False
 
@@ -344,7 +344,7 @@ class CmLexer(Lexer):
 
 
 	def doLineComment(self):
-		if self.lookup(2) != '//':
+		if self.peep(2) != '//':
 			return False
 
 		self.skipn(2)  # skip '//'
@@ -355,11 +355,11 @@ class CmLexer(Lexer):
 
 		while True:
 			# we dont need to eat NL because it will be used by lexer (!)
-			c = self.lookup()
+			c = self.peep()
 			if c == '\n':
 				lines.append({'str': commtext})
 
-				s = self.lookup(3)
+				s = self.peep(3)
 				if s == '\n//':
 					self.skipn(3)
 					commtext = ""
@@ -377,7 +377,7 @@ class CmLexer(Lexer):
 
 
 	def doBlockComment(self):
-		if self.lookup(2) != '/*':
+		if self.peep(2) != '/*':
 			return False
 
 		self.skipn(2)  # '/*'
@@ -387,7 +387,7 @@ class CmLexer(Lexer):
 		while True:
 			c = self.getc()
 			if c == "*":
-				if self.lookup() == "/":
+				if self.peep() == "/":
 					self.skip()  # '/'
 					break
 			text = text + c
