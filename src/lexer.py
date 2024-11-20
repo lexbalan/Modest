@@ -46,14 +46,17 @@ class Lexer:
 				result = rule()
 
 				if result == False:
-					# restore lexer position in the source
+					# The rule not recognize input chain.
+					# Restore lexer position in the source
 					# and go to try another lexer rule
 					self.setTextPosition(tokenStartPosition)
 					continue
 
+				# The rule recognized input chain
 				if result != None:
+					# There is a token
+					# # token = ('<token_class>', <token_data>, <ti>)
 					tokenEndPosition = self.getTextPosition()
-					# token = ('<token_class>', <token_data>, <ti>)
 					ti = {
 						'isa': 'ti',
 						'file': self.filename,
@@ -64,8 +67,6 @@ class Lexer:
 					tokens.append(token)
 
 				break
-
-
 
 		return None
 
