@@ -25,6 +25,9 @@ COLOR_ERROR = RED
 
 SIMPLE_MARK = True
 
+#
+TABSTOP = 4
+
 
 def getline(ti):
 	file = ti['file']
@@ -67,13 +70,13 @@ def mark(pos, color):
 	print(colorize('^', color))
 
 
-def himark(lpos, pos, lenc, rpos, color):
+def himark(lpos, offset, lenc, rpos, color):
 	if SIMPLE_MARK:
-		mark(pos, color)
+		mark(offset, color)
 		return
 
-	llen = pos - lpos  # длина подчеркивания слева
-	rlen = rpos - pos  # длина подчеркивания справа
+	llen = offset - lpos  # длина подчеркивания слева
+	rlen = rpos - offset  # длина подчеркивания справа
 
 	print(" " * lpos, end='')
 	print(colorize('-' * llen, color), end='')
@@ -83,9 +86,12 @@ def himark(lpos, pos, lenc, rpos, color):
 
 def highlight(ti, color, offset):
 	pos = ti['start_position']['pos'] + offset
+	tabpos = ti['start_position']['tab_pos']
+	offset = pos + tabpos * TABSTOP
+
 	start = left_start_pos(ti) + offset
 	end = right_end_pos(ti) + offset
-	himark(start, pos, tilen(ti), end - 1, color)
+	himark(start, offset, tilen(ti), end - 1, color)
 
 
 def common_message(mg, color, s, ti=None):
@@ -109,7 +115,7 @@ def common_message(mg, color, s, ti=None):
 	if ti != None:
 		prelin = "%d |" % ti['start_position']['line']
 		line = getline(ti)
-		line = line.replace('\t', ' ' * 4)
+		line = line.replace('\t', ' ' * TABSTOP)
 		print(prelin + line)
 		highlight(ti, color, offset=len(prelin))
 

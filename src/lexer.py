@@ -2,9 +2,6 @@
 from error import error, info
 
 
-# used for ti
-TAB_STOP = 4
-
 EOF = ''
 
 
@@ -14,12 +11,12 @@ def isIdChar(x):
 # Ave Python!
 def isHexDigit(x):
 	cc = ord(x)
-	if cc >= ord('0') and cc <= ord('9'):
-		return True
-	if cc >= ord('A') and cc <= ord('F'):
-		return True
-	if cc >= ord('a') and cc <= ord('f'):
-		return True
+	if cc <= ord('9'):
+		return cc >= ord('0')
+	if cc <= ord('F'):
+		return cc >= ord('A')
+	if cc <= ord('f'):
+		return cc >= ord('a')
 	return False
 
 
@@ -31,6 +28,7 @@ class Lexer:
 	def run(self, filename):
 		self.filename = filename
 		self.pos = 0
+		self.tab_pos = 0
 		self.line = 1
 		self.f = open(filename, "r")
 
@@ -69,9 +67,10 @@ class Lexer:
 		x = self.f.read(1)
 		if x == '\n':
 			self.pos = 0
+			self.tab_pos = 0
 			self.line = self.line + 1
 		elif x == '\t':
-			self.pos = self.pos + TAB_STOP
+			self.tab_pos = self.tab_pos + 1
 		else:
 			self.pos = self.pos + 1
 		return x
@@ -94,7 +93,8 @@ class Lexer:
 			'isa': 'text_position',
 			'fpos': self.f.tell(),
 			'line': self.line,
-			'pos': self.pos
+			'pos': self.pos,
+			'tab_pos': self.tab_pos
 		}
 
 	# установить позицию в файле (возврат на позицию)
@@ -102,6 +102,7 @@ class Lexer:
 		self.f.seek(pos['fpos'], 0)
 		self.line = pos['line']
 		self.pos = pos['pos']
+		self.tab_pos = pos['tab_pos']
 
 
 	# посмотреть n символов вперед
