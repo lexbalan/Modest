@@ -2664,12 +2664,7 @@ def do_import(x):
 		m = modules[abspath]
 
 	if m == None:
-
-
-
 		m = translate(abspath, nodef=not x['include'])
-
-
 		modules[abspath] = m
 
 		#if 'as' in x:

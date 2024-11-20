@@ -386,8 +386,6 @@ class CmLexer(Lexer):
 
 		return ('comment-line', lines)
 
-		return None
-
 
 	def doBlockComment(self):
 		if self.peep(2) != '/*':
