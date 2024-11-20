@@ -21,9 +21,10 @@ def isHexDigit(x):
 
 
 class Lexer:
-	def __init__(self, rules):
-		self.rules = rules
+	def __init__(self, lexicalRules):
+		self.lexicalRules = lexicalRules
 		pass
+
 
 	def run(self, filename):
 		self.filename = filename
@@ -39,22 +40,24 @@ class Lexer:
 
 			tokenStartPosition = self.getTextPosition()
 
-			for rule in self.rules:
+			for rule in self.lexicalRules:
 				result = rule()
 
-				if result != False:
-					if result != None:
-						tokenEndPosition = self.getTextPosition()
+				if result = False:
+					# rule don't recognized input chain
+					continue
 
-						# token = ('<token_class>', <token_data>, <ti>)
-						ti = {
-							'isa': 'ti',
-							'file': self.filename,
-							'start_position': tokenStartPosition,
-							'end_position': tokenEndPosition,
-						}
-						token = result + (ti,)
-						tokens.append(token)
+				if result != None:
+					tokenEndPosition = self.getTextPosition()
+					# token = ('<token_class>', <token_data>, <ti>)
+					ti = {
+						'isa': 'ti',
+						'file': self.filename,
+						'start_position': tokenStartPosition,
+						'end_position': tokenEndPosition,
+					}
+					token = result + (ti,)
+					tokens.append(token)
 					break
 
 				self.setTextPosition(tokenStartPosition)
@@ -124,7 +127,7 @@ class Lexer:
 
 class CmLexer(Lexer):
 	def __init__(self):
-		rules = (
+		lexicalRules = (
 			self.doBlank,
 			self.doNewline,
 			self.doId,
@@ -140,7 +143,7 @@ class CmLexer(Lexer):
 			self.doTag,
 			self.doBadSymbol,
 		)
-		super().__init__(rules)
+		super().__init__(lexicalRules)
 
 
 	#
