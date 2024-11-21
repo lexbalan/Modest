@@ -1,4 +1,4 @@
-// examples/8.linked_list/src/main.cm
+// examples/8.linked_list/src/main.m
 
 
 include "libc/ctypes64"

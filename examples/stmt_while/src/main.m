@@ -1,4 +1,4 @@
-// examples/stmt_while/src/main.cm
+// examples/stmt_while/src/main.m
 
 include "libc/ctypes64"
 include "libc/stdio"

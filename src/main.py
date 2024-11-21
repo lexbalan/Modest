@@ -1,5 +1,5 @@
 #
-# ../mcc -o main -mbackend=printer_c -mopt=speed -funsafe main.cm
+# ../mcc -o main -mbackend=printer_c -mopt=speed -funsafe main.m
 #
 
 import os

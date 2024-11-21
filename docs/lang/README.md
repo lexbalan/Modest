@@ -55,7 +55,7 @@
 ### Example
 
 ```swift
-// examples/demo1/src/main.cm
+// examples/demo1/src/main.m
 
 import "libc/stdio"
 

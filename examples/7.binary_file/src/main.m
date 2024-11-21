@@ -1,4 +1,4 @@
-// examples/7.binary_file/main.cm
+// examples/7.binary_file/main.m
 
 include "libc/ctypes64"
 include "libc/string"

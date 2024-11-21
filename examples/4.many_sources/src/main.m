@@ -1,4 +1,4 @@
-// examples/4.many_sources/main.cm
+// examples/4.many_sources/main.m
 
 include "libc/ctypes64"
 include "libc/stdio"

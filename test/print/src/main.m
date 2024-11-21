@@ -1,4 +1,4 @@
-// test/print/src/main.cm
+// test/print/src/main.m
 
 include "libc/ctypes64"
 

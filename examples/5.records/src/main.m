@@ -1,4 +1,4 @@
-// examples/5.records/main.cm
+// examples/5.records/main.m
 
 include "libc/ctypes64"
 include "libc/math"

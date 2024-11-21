@@ -1,4 +1,4 @@
-// test/ctime_test/src/main.cm
+// test/ctime_test/src/main.m
 
 include "libc/ctypes64"
 include "libc/stdio"

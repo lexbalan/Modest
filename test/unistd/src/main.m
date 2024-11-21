@@ -1,4 +1,4 @@
-// test/unistd/src/main.cm
+// test/unistd/src/main.m
 
 include "libc/ctypes64"
 include "libc/stdio"

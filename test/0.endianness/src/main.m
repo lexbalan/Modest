@@ -1,4 +1,4 @@
-// examples/0.endianness/src/main.cm
+// examples/0.endianness/src/main.m
 
 include "libc/ctypes64"
 include "libc/stdio"

@@ -1,4 +1,4 @@
-// examples/1.hello_world/src/main.cm
+// examples/1.hello_world/src/main.m
 
 include "libc/ctypes64"
 include "libc/stdio"

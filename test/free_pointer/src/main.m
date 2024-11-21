@@ -1,4 +1,4 @@
-// test/free_pointer/src/main.cm
+// test/free_pointer/src/main.m
 
 include "libc/ctypes64"
 include "libc/stdio"

@@ -1,4 +1,4 @@
-// examples/3.multiply_table/src/main.cm
+// examples/3.multiply_table/src/main.m
 
 include "libc/ctypes64"
 include "libc/stdio"

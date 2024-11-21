@@ -1,4 +1,4 @@
-// test/12.structural_type_system/src/main.cm
+// test/12.structural_type_system/src/main.m
 
 include "libc/ctypes64"
 include "libc/stdio"

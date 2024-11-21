@@ -1,4 +1,4 @@
-// test/pre/src/main.cm
+// test/pre/src/main.m
 
 //import "libc/stdio"
 

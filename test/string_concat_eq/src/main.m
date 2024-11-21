@@ -1,4 +1,4 @@
-// test/string_concat_eq/src/main.cm
+// test/string_concat_eq/src/main.m
 
 include "libc/ctypes64"
 include "libc/stdio"

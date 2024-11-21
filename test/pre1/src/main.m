@@ -1,4 +1,4 @@
-// test/pre1/src/main.cm
+// test/pre1/src/main.m
 
 $pragma c_include "stdio.h"
 include "stdio"

@@ -1,4 +1,4 @@
-// test/sha256/src/main.cm
+// test/sha256/src/main.m
 
 include "libc/ctypes64"
 include "libc/stdio"

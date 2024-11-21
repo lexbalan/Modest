@@ -312,7 +312,7 @@ printf("p.y = %f\n", p.y)
 #### Free pointer type
 *Pointer to Unit* (aka *Free pointer type*) can points to value of **any type**.
 ```swift
-// see: test/free_pointer/src/main.cm
+// see: test/free_pointer/src/main.m
 
 import "libc/stdio"
 

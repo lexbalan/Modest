@@ -1,4 +1,4 @@
-// examples/stmt_if/src/main.cm
+// examples/stmt_if/src/main.m
 
 include "libc/ctypes64"
 include "libc/stdio"

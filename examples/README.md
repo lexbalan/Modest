@@ -3,7 +3,7 @@
 ### Hello World
 
 ```zig
-// see: examples/1.hello_world/src/main.cm
+// see: examples/1.hello_world/src/main.m
 
 import "libc/stdio"
 
@@ -16,7 +16,7 @@ public func main() -> Int {
 ### Multiply table
 
 ```zig
-// see: examples/3.multiply_table/src/main.cm
+// see: examples/3.multiply_table/src/main.m
 
 import "libc/stdio"
 
@@ -46,7 +46,7 @@ public func main() -> Int32 {
 ### Records
 
 ```zig
-// see: examples/5.records/main.cm
+// see: examples/5.records/main.m
 
 // this example shows how to create records Point & Line
 // and determine length of the line
@@ -133,7 +133,7 @@ public func main() -> Int {
 ### Text file
 
 ```zig
-// see: examples/6.text_file/main.cm
+// see: examples/6.text_file/main.m
 
 // this example shows how to write & read text file
 

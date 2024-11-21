@@ -32,7 +32,7 @@ if <# condition1 #> {
 #### Examples
 
 ```swift
-// see: examples/stmt_if/src/main.cm
+// see: examples/stmt_if/src/main.m
 
 import "libc/stdio"
 

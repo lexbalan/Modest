@@ -1,4 +1,4 @@
-// examples/1.hello_world/main.cm
+// examples/1.hello_world/main.m
 
 #include <string.h>
 #include <stdio.h>

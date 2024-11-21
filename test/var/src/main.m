@@ -1,4 +1,4 @@
-// test/1.hello_world/src/main.cm
+// test/var/src/main.m
 
 include "libc/ctypes64"
 include "libc/stdio"

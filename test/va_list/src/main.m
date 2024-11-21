@@ -1,4 +1,4 @@
-// test/va/src/main.cm
+// test/va/src/main.m
 
 include "libc/ctypes64"
 include "libc/stdio"

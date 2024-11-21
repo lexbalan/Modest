@@ -1,4 +1,4 @@
-// test/xor/src/main.cm
+// test/xor/src/main.m
 
 include "libc/ctypes64"
 include "libc/stdio"

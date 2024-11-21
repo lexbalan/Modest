@@ -22,7 +22,7 @@ while <# condition #> {
 #### Examples
 
 ```swift
-// see: examples/stmt_while/src/main.cm
+// see: examples/stmt_while/src/main.m
 
 import "libc/stdio"
 
