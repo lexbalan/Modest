@@ -16,14 +16,13 @@ type SHA256_TestCase record {
 	input_data_len: Nat32
 
 	expected_result: sha256.Hash
-	//expected_result256: Nat256
+	//expected_result: Word256
 }
 
 
 var test0 = SHA256_TestCase {
 	input_data = "abc"
 	input_data_len = 3
-
 	expected_result = [
 		0xBA, 0x78, 0x16, 0xBF, 0x8F, 0x01, 0xCF, 0xEA
 		0x41, 0x41, 0x40, 0xDE, 0x5D, 0xAE, 0x22, 0x23
@@ -31,13 +30,12 @@ var test0 = SHA256_TestCase {
 		0xB4, 0x10, 0xFF, 0x61, 0xF2, 0x00, 0x15, 0xAD
 	]
 
-	//expected_result256 = 0xBA7816BF8F01CFEA414140DE5DAE2223B00361A396177A9CB410FF61F20015AD
+	//expected_result = 0xBA7816BF8F01CFEA414140DE5DAE2223B00361A396177A9CB410FF61F20015AD
 }
 
 var test1 = SHA256_TestCase {
 	input_data = "Hello World!"
 	input_data_len = 12
-
 	expected_result = [
 		0x7F, 0x83, 0xB1, 0x65, 0x7F, 0xF1, 0xFC, 0x53
 		0xB9, 0x2D, 0xC1, 0x81, 0x48, 0xA1, 0xD6, 0x5D
@@ -45,7 +43,7 @@ var test1 = SHA256_TestCase {
 		0x4A, 0xDD, 0xD2, 0x00, 0x12, 0x6D, 0x90, 0x69
 	]
 
-	//expected_result256 = 0x7F83B1657FF1FC53B92DC18148A1D65DFC2D4B1FA3D677284ADDD200126D9069
+	//expected_result = 0x7F83B1657FF1FC53B92DC18148A1D65DFC2D4B1FA3D677284ADDD200126D9069
 }
 
 
