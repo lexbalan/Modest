@@ -2589,15 +2589,14 @@ def do_attribute(x):
 
 
 # находит сущность по имени и определяет ее
-gast = None
 def predefinition(id):
 	id_str = id['str']
 	print("predefinition(\"%s\")" % id_str)
-	global gast
+	global cmodule
 	y = None
 
 	found = False
-	for x in gast:
+	for x in cmodule['ast']:
 		if not 'id' in x:
 			continue
 
@@ -2611,7 +2610,6 @@ def predefinition(id):
 				y = def_const(x)
 			elif kind == 'func':
 				found = True
-				global cmodule
 				fn = do_func_value(x, x['access_modifier'] == 'public')
 				module_value_add(cmodule, fn['id']['str'], fn, is_public=x['access_modifier'] == 'public')
 
@@ -2881,6 +2879,8 @@ def process_module(ast, nodef=False):
 
 	cmodule = {
 		'isa': 'module',
+		
+		'ast': ast,
 
 		# defined after
 		'id': '<moduleId>',
@@ -2932,9 +2932,6 @@ def process_module(ast, nodef=False):
 # удовлетворяет ее посредством predefinition(id_str)
 def pre_def(ast, fdecl=False):
 	global cmodule
-	global gast
-	prev_gast = gast
-	gast = ast
 
 	# 1. def types
 	# (and const if need for type!)
@@ -2994,7 +2991,6 @@ def pre_def(ast, fdecl=False):
 					add_spices(y, ast_atts=x['attributes'])
 					module_append(y, to_export=x['access_modifier'] == 'public')
 
-	gast = prev_gast
 	return
 
 
