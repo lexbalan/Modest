@@ -166,6 +166,16 @@ def module_value_add(m, id_str, v, is_public=False):
 	#v['module'] = m
 
 
+def cmodule_value_add(id_str, v, is_public=False):
+	global cmodule
+	module_value_add(cmodule, id_str, v, is_public=is_public)
+
+
+def cmodule_type_add(id_str, t, is_public=False):
+	global cmodule
+	module_type_add(cmodule, id_str, t, is_public=is_public)
+
+
 def module_type_get(m, id_str, only_public=False):
 	#print("module_type_get: " + id_str)
 
@@ -2204,7 +2214,7 @@ def symbol_const(id, init_value, is_public=False):
 		cp_immediate(const_value, init_value)
 
 	global cmodule
-	module_value_add(cmodule, id['str'], const_value, is_public=is_public)
+	cmodule_value_add(id['str'], const_value, is_public=is_public)
 	#module_value_add_public(cmodule, id['str'], const_value)
 	return const_value
 
@@ -2235,7 +2245,7 @@ def def_type(x):
 		#	error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
 	else:
 		nt = hlir_type.hlir_type_undefined(x['ti'])
-		module_type_add(cmodule, id['str'], nt, is_public=x['access_modifier'] == 'public')
+		cmodule_type_add(id['str'], nt, is_public=x['access_modifier'] == 'public')
 
 	# только теперь обрабатываем поля,
 	# тк там могут быть указатели на саму себя
@@ -2368,7 +2378,7 @@ def def_var(x):
 			error("cannot cons variable", x['ti'])
 
 	var_value = value_var(id, t, id['ti'])
-	module_value_add(cmodule, id['str'], var_value, is_public=x['access_modifier'] == 'public')
+	cmodule_value_add(id['str'], var_value, is_public=x['access_modifier'] == 'public')
 
 	definition = hlir_def_var(id, var_value, init_value, x['ti'])
 	definition['module'] = cmodule
@@ -2611,7 +2621,7 @@ def predefinition(id):
 			elif kind == 'func':
 				found = True
 				fn = do_func_value(x, x['access_modifier'] == 'public')
-				module_value_add(cmodule, fn['id']['str'], fn, is_public=x['access_modifier'] == 'public')
+				cmodule_value_add(fn['id']['str'], fn, is_public=x['access_modifier'] == 'public')
 
 			x['defined'] = True  # mark as DEFINED
 
@@ -2975,7 +2985,7 @@ def pre_def(ast, fdecl=False):
 			fn = ctx_value_get(x['id']['str'])
 			if fn == None:
 				fn = do_func_value(x, x['access_modifier'] == 'public')
-				module_value_add(cmodule, fn['id']['str'], fn, is_public=x['access_modifier'] == 'public')
+				cmodule_value_add(fn['id']['str'], fn, is_public=x['access_modifier'] == 'public')
 
 
 	# 4. def funcs
