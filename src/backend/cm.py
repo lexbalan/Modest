@@ -705,7 +705,7 @@ def print_stmt_var(x):
 	init_value = x['init_value']
 	out('var ')
 
-	print_field(x['var'])
+	print_field(x['var_value'])
 
 	if init_value != None:
 		out(" = ")
@@ -865,7 +865,7 @@ def print_def_var(x):
 	if x['access_level'] == 'public':
 		out("public ")
 	out("var ")
-	var = x['value']
+	var = x['var_value']
 	print_field(var)
 	iv = x['init_value']
 	if iv != None:

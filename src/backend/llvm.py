@@ -1748,7 +1748,7 @@ def print_stmt_return(x):
 
 
 def print_stmt_var(x):
-	var = x['var']
+	var = x['var_value']
 	t = var['type']
 	id_str = get_id_str(var)
 
@@ -2206,7 +2206,7 @@ def print_def_var(x, as_extern=False):
 	#mods = ['global', 'constant']
 	mod = 'global'
 
-	var = x['value']
+	var = x['var_value']
 	out("\n@%s = " % get_id_str(var))
 	out(linkage + mod + ' ')
 	print_type(var['type'])

@@ -1318,18 +1318,18 @@ def print_stmt_var(x):
 
 	if DONT_PRINT_UNUSED:
 		if init_value != None:
-			if x['var']['usecnt'] == 0:
+			if x['var_value']['usecnt'] == 0:
 				if init_value['kind'] != 'call':
 					return
 
 	nl_indent(x['nl'])
 
-	print_variable(get_id_str(x['var']), x['var']['type'])
+	print_variable(get_id_str(x['var_value']), x['var_value']['type'])
 
 	if init_value != None:
 		out(";")
 		nl_indent()
-		do_assign(x['var'], init_value)
+		do_assign(x['var_value'], init_value)
 		return
 
 	out(";")
@@ -1785,7 +1785,7 @@ def print_def_var(x, isdecl=False):
 		out('__attribute__((%s))\n' % x['gnu_att'])
 
 	#id = x['id']
-	var = x['value']
+	var = x['var_value']
 	if USE_STATIC_VARIABLES:
 		if not 'global' in var['att']:
 			if not 'c_extern' in var['att']:
@@ -1796,7 +1796,7 @@ def print_def_var(x, isdecl=False):
 	if 'volatile' in var['att']:
 		out("volatile ")
 
-	print_variable(get_id_str(x['value']), var['type'])
+	print_variable(get_id_str(x['var_value']), var['type'])
 
 	init_value = x['init_value']
 	if init_value != None:

@@ -50,7 +50,7 @@ def hlir_decl_var(_id, var_value, init_value, ti):
 		'isa': 'decl_var',
 		'id': _id,
 		'init_value': init_value,
-		'value': var_value,
+		'var_value': var_value,
 		'att': [],
 		'nl': 1,
 		'ti': ti
@@ -61,7 +61,7 @@ def hlir_def_var(_id, var_value, init_value, ti):
 		'isa': 'def_var',
 		'id': _id,
 		'init_value': init_value,
-		'value': var_value,
+		'var_value': var_value,
 		'att': [],
 		'nl': 1,
 		'ti': ti
