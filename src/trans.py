@@ -1843,7 +1843,7 @@ def do_value(x):
 	elif k == '__va_end': v = do_value_va_end(x)
 	elif k == '__defined_type': v = do_value___defined_type(x)
 	elif k == '__defined_value': v = do_value___defined_value(x)
-
+	elif k == 'bad': v = value_bad(x)
 
 	assert(v != None)
 
