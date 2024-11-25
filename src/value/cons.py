@@ -254,7 +254,7 @@ def select_default_type_for(x):
 			# GenericArray -> Array
 			#print("- DEFAULT CONS ARRAY")
 			item_type = xt['of']
-			length = len(x['asset'])
+			length = len(x['items'])
 			volume = value_integer_create(length)
 			return type.hlir_type_array(item_type, volume, x['ti'])
 

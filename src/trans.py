@@ -1399,7 +1399,7 @@ def do_value_index(x):
 					error("array index out of bounds", x['index'])
 					return value_bad(x)
 
-				item = left['asset'][index_imm]
+				item = left['items'][index_imm]
 
 				nv['immval'] = item
 				#nv['items'] = item['items']
@@ -1985,6 +1985,8 @@ def do_stmt_var(x):
 
 		t = v['type']
 
+	if v == None:
+		v = value_undefined(t, var_id['ti'])
 
 	# check if identifier is free (in current block)
 	already = ctx_value_get_shallow(var_id['str'])

@@ -36,7 +36,7 @@ def value_record_create(initializers=[], ti=None):
 	record_type = type.hlir_type_record(fields, ti)
 	record_type['generic'] = True
 
-	v = value_terminal(record_type, None, ti)
+	v = value_terminal(record_type, ti)
 	v['fields'] = initializers
 	v['immediate'] = is_immediate
 	return v

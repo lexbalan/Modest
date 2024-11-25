@@ -6,7 +6,7 @@ from error import info, error, fatal
 from .common import *
 import hlir.type as hlir_type
 from hlir.type import type_print
-from value.value import value_is_immediate, value_is_generic_immediate, value_is_zero, value_attribute_check, value_print, value_index_array
+from value.value import value_is_undefined, value_is_immediate, value_is_generic_immediate, value_is_zero, value_attribute_check, value_print, value_index_array
 from value.integer import value_integer_create
 from util import align_bits_up, nbits_for_num, get_item_with_id, align_to
 from main import settings
@@ -908,7 +908,7 @@ def print_value_array(v, ctx):
 
 		# массивы чаров в конце которых только один терминальный ноль
 		# печатаем в виде строковых литералов C
-		values = v['asset']
+		values = v['items']
 		n = len(values)
 		if n > 0:
 			utf32_codes = []
@@ -1326,7 +1326,7 @@ def print_stmt_var(x):
 
 	print_variable(get_id_str(x['var_value']), x['var_value']['type'])
 
-	if init_value != None:
+	if not value_is_undefined(init_value):
 		out(";")
 		nl_indent()
 		do_assign(x['var_value'], init_value)

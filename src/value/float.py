@@ -13,7 +13,8 @@ def value_float_create(num, ti=None):
 	flt_width = int(settings.get('float_width'))
 	typ = hlir_type_float(width=flt_width, ti=ti)
 	typ['generic'] = True
-	v = value_terminal(typ, num, ti)
+	v = value_terminal(typ, ti)
+	v['asset'] = num
 	v['immediate'] = True
 	return v
 

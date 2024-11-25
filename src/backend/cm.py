@@ -2,7 +2,7 @@
 import hlir.type as hlir_type
 from error import info
 from .common import *
-from value.value import value_is_zero, value_is_immediate, value_attribute_check, value_print
+from value.value import value_is_undefined, value_is_zero, value_is_immediate, value_attribute_check, value_print
 from util import get_item_with_id
 
 
@@ -359,7 +359,7 @@ def print_value_array(v, ctx):
 	out("[")
 	indent_up()
 
-	values = v['asset']
+	values = v['items']
 	i = 0
 	n = len(values)
 	while i < n:
@@ -707,7 +707,7 @@ def print_stmt_var(x):
 
 	print_field(x['var_value'])
 
-	if init_value != None:
+	if not value_is_undefined(init_value):
 		out(" = ")
 		print_value(init_value)
 

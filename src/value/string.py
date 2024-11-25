@@ -13,7 +13,8 @@ def value_string_create(string, ti=None):
 		max_char_width = max(max_char_width, n)
 
 	string_type = hlir_type_string(max_char_width, len(string), ti)
-	nv = value_terminal(string_type, string, ti)
+	nv = value_terminal(string_type, ti)
+	nv['asset'] = string
 	nv['immediate'] = True
 	return nv
 

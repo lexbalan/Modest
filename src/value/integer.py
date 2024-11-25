@@ -18,7 +18,8 @@ def value_integer_create(num, typ=None, ti=None):
 			error("value size not corresponded type size", ti)
 			return value_bad(ti)
 
-	v = value_terminal(typ, num, ti)
+	v = value_terminal(typ, ti)
+	v['asset'] = num
 	v['nsigns'] = 0
 	v['immediate'] = True
 	return v

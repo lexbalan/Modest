@@ -168,7 +168,7 @@ def _value_array_create(items, item_type, length, is_generic, ti):
 	array_volume = value_integer_create(length)
 	array_type = hlir_type.hlir_type_array(item_type, volume=array_volume, ti=ti)
 	array_type['generic'] = is_generic
-	nv = value_terminal(array_type, items, ti)
+	nv = value_terminal(array_type, ti)
 	nv['items'] = items
 	return nv
 

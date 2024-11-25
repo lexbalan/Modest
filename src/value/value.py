@@ -9,6 +9,8 @@ import hlir.type as hlir_type
 def value_is_bad(x):
 	return x['kind'] == 'bad'
 
+def value_is_undefined(x):
+	return x['kind'] == 'undefined'
 
 def value_is_immediate(x):
 	return x['immediate']
@@ -105,18 +107,15 @@ def value_bad(x):
 	}
 
 
-def value_terminal(t, asset, ti):
+# его получают по умолчанию локальные переменные
+# в случае если не указан инициализатор
+def value_undefined(t, ti):
 	return {
 		'isa': 'value',
-		'kind': 'literal',
+		'kind': 'undefined',
 		'type': t,
-		'items': [],
-		# Literal - не всегда immediate!
-		# Литерал композитного типа может быть не immediate
-		# (см: do_value_record, do_value_array)
-		'immutable': False,
-		'immediate': True,
-		'asset': asset,
+		'immutable': True,
+		'immediate': False,
 		'att': [],
 		'nl_end': 0,
 		'nl': 0,
@@ -124,8 +123,17 @@ def value_terminal(t, asset, ti):
 	}
 
 
+def value_terminal(t, ti):
+	v = value_undefined(t, ti)
+	v['kind'] = 'literal'
+	v['immutable'] = True
+	v['immediate'] = True
+	return v
+
+
+
 def value_zero(t, ti):
-	nv = value_terminal(t, 0, ti)
+	nv = value_terminal(t, ti)
 
 	if hlir_type.type_is_array(t):
 		nv['items'] = []
@@ -135,6 +143,7 @@ def value_zero(t, ti):
 		nv['asset'] = 0
 
 	return nv
+
 
 
 

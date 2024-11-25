@@ -13,7 +13,9 @@ def value_char_create(char_code, _type=None, ti=None):
 		_type = type.hlir_type_char(char_width, ti=ti)
 		_type['generic'] = True
 
-	return value_terminal(_type, char_code, ti)
+	v = value_terminal(_type, ti)
+	v['asset'] = char_code
+	return v
 
 
 def width_ok(to, from_type, method):

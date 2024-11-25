@@ -8,7 +8,9 @@ import foundation
 
 
 def value_bool_create(val, ti=None):
-	return value_terminal(foundation.typeBool, val, ti)
+	v = value_terminal(foundation.typeBool, ti)
+	v['asset'] = val
+	return v
 
 
 def _value_bool_cons_immediate(t, v, method, ti):

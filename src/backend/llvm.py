@@ -4,7 +4,7 @@ from .common import *
 from error import info, warning, error
 import hlir.type as hlir_type
 from hlir.type import type_print
-from value.value import value_attribute_check, value_print, value_is_immediate, value_terminal, value_is_zero
+from value.value import value_attribute_check, value_print, value_is_undefined, value_is_immediate, value_terminal, value_is_zero
 from hlir.type import hlir_type_pointer
 from util import align_bits_up
 import settings
@@ -1780,8 +1780,9 @@ def print_stmt_var(x):
 
 	locals_add(id_str, val)
 
-	if x['init_value'] != None:
-		iv = do_reval(x['init_value'])
+	init_value = x['init_value']
+	if not value_is_undefined(init_value):
+		iv = do_reval(init_value)
 		do_assign(val, iv)
 
 	return None
