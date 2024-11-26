@@ -13,6 +13,8 @@ from hlir.hlir import hlir_initializer
 
 import foundation
 
+from value.value import value_print
+
 from value.bool import value_bool_create
 from value.integer import value_integer_create
 from value.float import value_float_create
@@ -612,22 +614,20 @@ def do_type_pointer(t):
 def do_type_array(t):
 	of = do_type(t['of'])
 
-	volume_expr = None
-	if t['size'] != None:
-		#volume_expr = do_value_immediate(t['size'])
-		volume_expr = do_value(t['size'])
-		if value_is_bad(volume_expr):
-			return hlir_type.hlir_type_array(of, volume_expr, ti=t['ti'])
+	volume = do_value(t['size'])
 
-		if not hlir_type.type_is_integer(volume_expr['type']):
-			volume_expr = None
+	if value_is_bad(volume):
+		return hlir_type.hlir_type_array(of, volume, ti=t['ti'])
+
+	if not value_is_undefined(volume):
+		if not hlir_type.type_is_integer(volume['type']):
 			error("required value with integer type", t['size']['ti'])
 
-		elif not value_is_immediate(volume_expr):
+		if not value_is_immediate(volume):
 			info("VLA", t['ti'])
-			volume_expr = None
-			#print(volume_expr['isa'])
-			#print(volume_expr['kind'])
+			volume = None
+			#print(volume['isa'])
+			#print(volume['kind'])
 			if is_local_context():
 				global cfunc
 				cfunc['att'].append('stacksave')
@@ -635,14 +635,11 @@ def do_type_array(t):
 				error("non local VLA", t['size'])
 
 	# closed arrays of closed arrays are denied NOW
-	if volume_expr != None:
-		if hlir_type.type_is_closed_array(of):
-			error("closed arrays of closed arrays are denied", t['ti'])
-			return hlir_type.hlir_type_bad(t)
-	else:
-		volume_expr = value_undefined(typeSysNat, t['ti'])
+	if hlir_type.type_is_closed_array(of):
+		error("closed arrays of closed arrays are denied", t['ti'])
+		return hlir_type.hlir_type_bad(t)
 
-	return hlir_type.hlir_type_array(of, volume=volume_expr, ti=t['ti'])
+	return hlir_type.hlir_type_array(of, volume, ti=t['ti'])
 
 
 
@@ -752,6 +749,10 @@ def do_type_func(t, func_id="_"):
 
 
 
+def do_type_undefined(x):
+	return hlir_type.hlir_type_undefined(x['ti'])
+
+
 def do_type(x):
 	for a in x['attributes']:
 		do_attribute(a)
@@ -764,6 +765,7 @@ def do_type(x):
 	elif k == 'array': t = do_type_array(x)
 	elif k == 'record': t = do_type_record(x)
 	elif k == 'enum': t = do_type_enum(x)
+	elif k == 'undefined': t = do_type_undefined(x)
 	else: t = bad_type(x['ti'])
 
 	t['ti'] = x['ti']
@@ -1852,6 +1854,7 @@ def do_value(x):
 	elif k == '__defined_type': v = do_value___defined_type(x)
 	elif k == '__defined_value': v = do_value___defined_value(x)
 	elif k == 'bad': v = value_bad(x)
+	elif k == 'undefined': v = value_undefined(x, x['ti'])
 
 	assert(v != None)
 
@@ -1955,46 +1958,43 @@ def do_stmt_break(x):
 def do_stmt_var(x):
 	var_id = x['id']
 
-	t = None
-	v = None
+	t = do_type(x['type'])
+	v = do_rvalue(x['init_value'])
 
-	if x['type'] == None and x['value'] == None:
-		pass # error
+	tu = hlir_type.type_is_undefined(t)
+	vu = value_is_undefined(v)
 
-	if x['type'] != None:
-		t = do_type(x['type'])
-
-	v = None
-	if x['value'] != None:
-		v = do_rvalue(x['value'])
-		if value_is_bad(v):
-			v = None
-
-	# error: no type, no init value
-	if t == None and v == None:
+	# error: no type, no init valuetu = type_is_undefined(t)
+	if tu == True and vu == True:
+		# type & value undefined
 		ctx_value_add(var_id['str'], value_bad(x))
 		return hlir_stmt_bad(x)
 
-	if t != None:
-		if hlir_type.type_is_bad(t):
-			ctx_value_add(var_id['str'], value_bad(x))
-			return hlir_stmt_bad(x)
+	if tu == True and vu == False:
+		# type undef, value ok
+		#type_update(nt, v['type'])
+		if hlir_type.type_is_generic(v['type']):
+			v = value_cons_default(v)
+		t = v['type']
 
-		if hlir_type.type_is_forbidden_var(t):
-			error("unsuitable type1", x['type']['ti'])
+	#if not hlir_type.type_is_undefined(t):
+	#	if hlir_type.type_is_bad(t):
+	#		ctx_value_add(var_id['str'], value_bad(x))
+	#		return hlir_stmt_bad(x)
+	#
+	#	if hlir_type.type_is_forbidden_var(t):
+	#		error("unsuitable type1", x['type']['ti'])
 
 	# type & init value present
-	if t != None and v != None:
+	if not hlir_type.type_is_undefined(t) and not value_is_undefined(v):
 		v = value_cons_implicit_check(t, v)
 
-	if t == None:
+	if hlir_type.type_is_undefined(t):
 		if hlir_type.type_is_generic(v['type']):
 			v = value_cons_default(v)
 
 		t = v['type']
 
-	if v == None:
-		v = value_undefined(t, var_id['ti'])
 
 	# check if identifier is free (in current block)
 	already = ctx_value_get_shallow(var_id['str'])
@@ -2236,6 +2236,13 @@ def need_decoration(x):
 	return not is_nodecorate(x) and not ('module_nodecorate' in cmodule['att'])
 
 
+
+def type_update(dst, src):
+	dst.clear()
+	dst.update(src)
+	dst['att'] = copy.copy(src['att'])
+
+
 def def_type(x):
 	global cmodule
 	id = x['id']
@@ -2272,12 +2279,19 @@ def def_type(x):
 
 	# Замещаем внутренности undefined типа на тип справа
 	# НО! имя даем новое
+	"""
 	nt.clear()
 	nt.update(ty)
 	nt['id'] = id # need for  @property("type.id.c", "int")
 	nt['att'] = copy.copy(ty['att'])
 	nt['ti_def'] = id['ti']
 	nt['module'] = cmodule  # добавляем заново тк очистили его выше!
+	"""
+
+	type_update(nt, ty)
+	nt['ti_def'] = id['ti']
+	nt['module'] = cmodule  # добавляем заново тк очистили его выше!
+	nt['id'] = id # need for  @property("type.id.c", "int")
 
 
 	if need_decoration(x):
@@ -2328,8 +2342,9 @@ def def_const(x):
 		module_value_add_public(cmodule, id['str'], init_value)
 		return hlir_def_const(id, init_value, init_value, x['ti'])
 
-	if x['type'] != None:
-		t = do_type(x['type'])
+	t = do_type(x['type'])
+	#if x['type'] != None:
+	if not hlir_type.type_is_undefined(t):
 		if not hlir_type.type_is_bad(t):
 			init_value = value_cons_implicit_check(t, init_value)
 
@@ -2356,16 +2371,30 @@ def def_var(x):
 	if already != None:
 		error("redefinition of '%s'" % id['str'], id['ti'])
 
-	t = None
-	if x['type'] != None:
-		t = do_type(x['type'])
-		#if hlir_type.type_is_bad(t):
-		#	return None
 
-	init_value = None
-	if x['value'] != None:
-		init_value = do_rvalue(x['value'])
+	t = do_type(x['type'])
+	v = do_rvalue(x['init_value'])
 
+	tu = hlir_type.type_is_undefined(t)
+	vu = value_is_undefined(v)
+
+	# error: no type, no init valuetu = type_is_undefined(t)
+	if tu == True and vu == True:
+		# type & value undefined
+		ctx_value_add(var_id['str'], value_bad(x))
+		return hlir_stmt_bad(x)
+
+	if tu == True and vu == False:
+		# type undef, value ok
+		#type_update(nt, v['type'])
+		if hlir_type.type_is_generic(v['type']):
+			v = value_cons_default(v)
+		t = v['type']
+
+
+	init_value = v
+	init_value = do_rvalue(x['init_value'])
+	if init_value != None:
 		if t != None:
 			# for case like:
 			# var a: Int[] = [1, 2, 3] // -> Int[3]

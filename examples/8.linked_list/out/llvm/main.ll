@@ -261,25 +261,26 @@ define internal void @list_print_forward(%list_List* %list) {
 	%2 = alloca %list_Node*, align 8
 	%3 = bitcast %list_List* %list to %list_List*
 	%4 = call %list_Node* @list_first_node_get(%list_List* %3)
-	store %list_Node* %4, %list_Node** %2
+	%5 = bitcast %list_Node* %4 to %list_Node*
+	store %list_Node* %5, %list_Node** %2
 	br label %again_1
 again_1:
-	%5 = load %list_Node*, %list_Node** %2
-	%6 = bitcast i8* null to %list_Node*
-	%7 = icmp ne %list_Node* %5, %6
-	br %Bool %7 , label %body_1, label %break_1
+	%6 = load %list_Node*, %list_Node** %2
+	%7 = bitcast i8* null to %list_Node*
+	%8 = icmp ne %list_Node* %6, %7
+	br %Bool %8 , label %body_1, label %break_1
 body_1:
-	%8 = load %list_Node*, %list_Node** %2
-	%9 = bitcast %list_Node* %8 to %list_Node*
-	%10 = call i8* @list_node_data_get(%list_Node* %9)
-	%11 = bitcast i8* %10 to %Int32*
-	%12 = load %Int32, %Int32* %11
-	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), %Int32 %12)
-	%14 = load %list_Node*, %list_Node** %2
-	%15 = bitcast %list_Node* %14 to %list_Node*
-	%16 = call %list_Node* @list_node_next_get(%list_Node* %15)
-	%17 = bitcast %list_Node* %16 to %list_Node*
-	store %list_Node* %17, %list_Node** %2
+	%9 = load %list_Node*, %list_Node** %2
+	%10 = bitcast %list_Node* %9 to %list_Node*
+	%11 = call i8* @list_node_data_get(%list_Node* %10)
+	%12 = bitcast i8* %11 to %Int32*
+	%13 = load %Int32, %Int32* %12
+	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str2 to [0 x i8]*), %Int32 %13)
+	%15 = load %list_Node*, %list_Node** %2
+	%16 = bitcast %list_Node* %15 to %list_Node*
+	%17 = call %list_Node* @list_node_next_get(%list_Node* %16)
+	%18 = bitcast %list_Node* %17 to %list_Node*
+	store %list_Node* %18, %list_Node** %2
 	br label %again_1
 break_1:
 	ret void
@@ -290,25 +291,26 @@ define internal void @list_print_backward(%list_List* %list) {
 	%2 = alloca %list_Node*, align 8
 	%3 = bitcast %list_List* %list to %list_List*
 	%4 = call %list_Node* @list_last_node_get(%list_List* %3)
-	store %list_Node* %4, %list_Node** %2
+	%5 = bitcast %list_Node* %4 to %list_Node*
+	store %list_Node* %5, %list_Node** %2
 	br label %again_1
 again_1:
-	%5 = load %list_Node*, %list_Node** %2
-	%6 = bitcast i8* null to %list_Node*
-	%7 = icmp ne %list_Node* %5, %6
-	br %Bool %7 , label %body_1, label %break_1
+	%6 = load %list_Node*, %list_Node** %2
+	%7 = bitcast i8* null to %list_Node*
+	%8 = icmp ne %list_Node* %6, %7
+	br %Bool %8 , label %body_1, label %break_1
 body_1:
-	%8 = load %list_Node*, %list_Node** %2
-	%9 = bitcast %list_Node* %8 to %list_Node*
-	%10 = call i8* @list_node_data_get(%list_Node* %9)
-	%11 = bitcast i8* %10 to %Int32*
-	%12 = load %Int32, %Int32* %11
-	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str4 to [0 x i8]*), %Int32 %12)
-	%14 = load %list_Node*, %list_Node** %2
-	%15 = bitcast %list_Node* %14 to %list_Node*
-	%16 = call %list_Node* @list_node_prev_get(%list_Node* %15)
-	%17 = bitcast %list_Node* %16 to %list_Node*
-	store %list_Node* %17, %list_Node** %2
+	%9 = load %list_Node*, %list_Node** %2
+	%10 = bitcast %list_Node* %9 to %list_Node*
+	%11 = call i8* @list_node_data_get(%list_Node* %10)
+	%12 = bitcast i8* %11 to %Int32*
+	%13 = load %Int32, %Int32* %12
+	%14 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str4 to [0 x i8]*), %Int32 %13)
+	%15 = load %list_Node*, %list_Node** %2
+	%16 = bitcast %list_Node* %15 to %list_Node*
+	%17 = call %list_Node* @list_node_prev_get(%list_Node* %16)
+	%18 = bitcast %list_Node* %17 to %list_Node*
+	store %list_Node* %18, %list_Node** %2
 	br label %again_1
 break_1:
 	ret void

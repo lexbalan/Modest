@@ -153,6 +153,16 @@ class Parser:
 	# Parse Type
 	#
 
+
+	def expr_type_undefined(self, ti):
+		return {
+			'isa': 'ast_type',
+			'kind': 'undefined',
+			'attributes': [],
+			'ti': ti
+		}
+
+
 	def expr_type_record(self, ti):
 		self.need("{")
 		fields = []
@@ -160,7 +170,6 @@ class Parser:
 		spaceline_cnt = 0
 
 		while True:
-
 			#self.skip_tokens([' ', '\t', '\n'])
 
 			comments = []
@@ -212,7 +221,7 @@ class Parser:
 				fields.extend(f)
 
 		return {
-			'isa': 'type',
+			'isa': 'ast_type',
 			'kind': 'record',
 			'fields': fields,
 			'end_nl': spaceline_cnt,
@@ -322,7 +331,7 @@ class Parser:
 		if self.match("->"):
 			t = self.expr_type()
 			return {
-				'isa': 'type',
+				'isa': 'ast_type',
 				'kind': 'func',
 				'params': fields,
 				'arghack': arghack,
@@ -331,7 +340,7 @@ class Parser:
 			}
 		else:
 			return {
-				'isa': 'type',
+				'isa': 'ast_type',
 				'kind': 'func',
 				'params': fields,
 				'to': None,
@@ -356,14 +365,14 @@ class Parser:
 			x = self.parse_attribute()
 			attributes.append(x)
 
-		t = {'isa': 'type', 'kind': 'unknown', 'ti': ti}
+		t = {'isa': 'ast_type', 'kind': 'unknown', 'ti': ti}
 
 		if self.look("("):
 			t = self.expr_type_func()
 
 		elif self.match("*"):
 			t = self.expr_type()
-			t = {'isa': 'type', 'kind': 'pointer', 'to': t, 'ti': ti}
+			t = {'isa': 'ast_type', 'kind': 'pointer', 'to': t, 'ti': ti}
 
 		elif self.match("record"):
 			t = self.expr_type_record(ti)
@@ -377,12 +386,13 @@ class Parser:
 				id = self.identifier()
 				self.need_sep(separators=['\n', ','])
 				items.append({'id': id, 'ti': ti})
-			t = {'isa': 'type', 'kind': 'enum', 'items': items, 'ti': ti}
+			t = {'isa': 'ast_type', 'kind': 'enum', 'items': items, 'ti': ti}
 
 		elif self.match("["):
-			y = {'isa': 'type', 'kind': 'array', 'size': None, 'ti': ti}
-			s = None
-			if not self.match("]"):
+			y = {'isa': 'ast_type', 'kind': 'array', 'size': None, 'ti': ti}
+			if self.match("]"):
+				y['size'] = self.expr_value_undefined(ti)
+			else:
 				y['size'] = self.expr_value()
 				self.need("]")
 			y['of'] = self.expr_type()
@@ -397,7 +407,7 @@ class Parser:
 				ids.append(id)
 
 			t = {
-				'isa': 'type',
+				'isa': 'ast_type',
 				'kind': 'id',
 				'ids': ids,
 				'ti': ti
@@ -410,6 +420,15 @@ class Parser:
 	#
 	# Parse Value
 	#
+
+	def expr_value_undefined(self, ti):
+		return {
+			'isa': 'ast_value',
+			'kind': 'undefined',
+			'attributes': [],
+			'ti': ti
+		}
+
 
 	def expr_value(self):
 		x = self.expr_value_1()
@@ -1070,11 +1089,14 @@ class Parser:
 		v = None
 		if self.match(":"):
 			t = self.expr_type()
+		#else:
+		#	t = self.expr_type_undefined(ti)
+
 		if self.is_assign_operator():
 			v = self.expr_value()
 
 		return {
-			'isa': 'stmt',
+			'isa': 'ast_stmt',
 			'kind': 'let',
 			'id': id,
 			'type': t,
@@ -1095,7 +1117,7 @@ class Parser:
 				e = self.stmt_block()
 			e['ti'] = ti
 		return {
-			'isa': 'stmt',
+			'isa': 'ast_stmt',
 			'kind': 'if',
 			'cond': c,
 			'then': t,
@@ -1107,7 +1129,7 @@ class Parser:
 		v = self.expr_value()
 		b = self.stmt_block()
 		return {
-			'isa': 'stmt',
+			'isa': 'ast_stmt',
 			'kind': 'while',
 			'cond': v,
 			'stmt': b
@@ -1122,7 +1144,7 @@ class Parser:
 			v = self.expr_value()
 
 		return {
-			'isa': 'stmt',
+			'isa': 'ast_stmt',
 			'kind': 'return',
 			'value': v
 		}
@@ -1139,20 +1161,26 @@ class Parser:
 				break
 
 		t = None
-		v = None
+		init_value = None
 		if self.match(":"):
 			t = self.expr_type()
+		else:
+			t = self.expr_type_undefined(ti)
+
 		if self.is_assign_operator():
-			v = self.expr_value()
+			init_value = self.expr_value()
+
+		if init_value == None:
+			init_value = self.expr_value_undefined(ti)
 
 		stmts = []
 		for id in ids:
 			stmt_var = {
-				'isa': 'stmt',
+				'isa': 'ast_stmt',
 				'kind': 'var',
 				'id': id,
 				'type': t,
-				'value': v,
+				'init_value': init_value,
 				'ti': id['ti']
 			}
 			stmts.append(stmt_var)
@@ -1161,31 +1189,31 @@ class Parser:
 
 	def stmt_again(self):
 		return {
-			'isa': 'stmt',
+			'isa': 'ast_stmt',
 			'kind': 'again'
 		}
 
 
 	def stmt_break(self):
 		return {
-			'isa': 'stmt',
+			'isa': 'ast_stmt',
 			'kind': 'break'
 		}
 
 
 	def stmt_inc(self):
 		v = self.expr_value()
-		return {'isa': 'stmt', 'kind': 'inc', 'value': v}
+		return {'isa': 'ast_stmt', 'kind': 'inc', 'value': v}
 
 
 	def stmt_dec(self):
 		v = self.expr_value()
-		return {'isa': 'stmt', 'kind': 'dec', 'value': v}
+		return {'isa': 'ast_stmt', 'kind': 'dec', 'value': v}
 
 
 	def stmt_asm(self):
 		v = self.expr_value()
-		return {'isa': 'stmt', 'kind': 'asm', 'args': v['args']}
+		return {'isa': 'ast_stmt', 'kind': 'asm', 'args': v['args']}
 
 
 	def stmt_expr_value(self):
@@ -1194,23 +1222,23 @@ class Parser:
 		# stmt expr
 		assign_ti = self.ti()
 		if not (self.is_assign_operator()):
-			return {'isa': 'stmt', 'kind': 'value', 'value': v}
+			return {'isa': 'ast_stmt', 'kind': 'value', 'value': v}
 
 		# stmt assign
 		r = self.expr_value()
-		return {'isa': 'stmt', 'kind': 'assign', 'left': v, 'right': r, 'ti': assign_ti}
+		return {'isa': 'ast_stmt', 'kind': 'assign', 'left': v, 'right': r, 'ti': assign_ti}
 
 
 	def stmt_comment_line(self):
 		ti = self.ti()
 		x = self.gettok()
-		return {'isa': 'stmt', 'kind': 'comment-line', 'lines': x, 'ti': ti}
+		return {'isa': 'ast_stmt', 'kind': 'comment-line', 'lines': x, 'ti': ti}
 
 
 	def stmt_comment_block(self):
 		ti = self.ti()
 		x = self.gettok()
-		return {'isa': 'stmt', 'kind': 'comment-block', 'text': x, 'ti': ti}
+		return {'isa': 'ast_stmt', 'kind': 'comment-block', 'text': x, 'ti': ti}
 
 
 	def stmt(self):
@@ -1316,7 +1344,7 @@ class Parser:
 				nl_cnt = 0
 
 		return {
-			'isa': 'stmt',
+			'isa': 'ast_stmt',
 			'kind': 'block',
 			'stmts': stmts,
 			'end_nl': nl_cnt,
@@ -1493,6 +1521,9 @@ class Parser:
 		v = None
 		if self.match(":"):
 			t = self.expr_type()
+		else:
+			t = self.expr_type_undefined(ti)
+
 		if self.is_assign_operator():
 			v = self.expr_value()
 
