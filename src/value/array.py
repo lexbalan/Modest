@@ -5,7 +5,7 @@ from hlir.type import type_print, select_common_type
 from error import info, warning, error
 from .char import utf32_chars_to_utfx_chars
 from .integer import value_integer_create
-from .value import value_terminal, value_is_immediate, value_cons_node, value_cons_immediate, value_zero, value_bin, value_print
+from .value import value_terminal, value_is_undefined, value_is_immediate, value_cons_node, value_cons_immediate, value_zero, value_bin, value_print
 
 
 # TODO: переделай здесь все - тут все плохо...
@@ -88,7 +88,7 @@ def array_can(to, from_type, method):
 
 	if hlir_type.type_is_generic(from_type):
 		# GenericArray -> Array
-		if to['volume'] == None:
+		if value_is_undefined(to['volume']):
 			return True
 
 		if not value_is_immediate(to['volume']):
@@ -147,7 +147,7 @@ def value_array_cons(t, v, method, ti):
 			print("-item: %d" % value_is_immediate(item))
 	"""
 
-	#if t['volume'] == None:
+	#if value_is_undefined(t['volume']):
 	#	return nv
 	#nv['items'] = casted_items
 

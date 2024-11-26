@@ -129,11 +129,14 @@ def init():
 	typeFreePointer = hlir_type_pointer(to=typeUnit)
 	# не нужно делать decl тк нет собственного имени у этого типа
 
-	typeStr8 = hlir_type_array(of=typeChar8)
+	typeSysNat = typeNat64
+	from value.value import value_undefined
+	undefinedVolume = value_undefined(typeSysNat, ti=None)
+	typeStr8 = hlir_type_array(typeChar8, undefinedVolume, ti=None)
 	typeStr8['id'] = {'str': 'Str8'}
-	typeStr16 = hlir_type_array(of=typeChar16)
+	typeStr16 = hlir_type_array(typeChar16, undefinedVolume, ti=None)
 	typeStr16['id'] = {'str': 'Str16'}
-	typeStr32 = hlir_type_array(of=typeChar32)
+	typeStr32 = hlir_type_array(typeChar32, undefinedVolume, ti=None)
 	typeStr32['id'] = {'str': 'Str32'}
 
 

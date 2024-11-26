@@ -223,7 +223,7 @@ def hlir_type_pointer(to, ti=None):
 
 
 # size - always hlir_value (!)
-def hlir_type_array(of, volume=None, ti=None):
+def hlir_type_array(of, volume, ti=None):
 	item_size = 0
 	item_align = 0
 	if of != None:
@@ -390,13 +390,19 @@ def type_eq_pointer(a, b, opt):
 
 
 def type_eq_array(a, b, opt):
-	if a['volume'] == None or b['volume'] == None:
-		if a['volume'] == None and b['volume'] == None:
+	from value.value import value_is_undefined
+
+	if value_is_undefined(a) or value_is_undefined(b):
+		if value_is_undefined(a) and value_is_undefined(b):
 			return type_eq(a['of'], b['of'], opt)
 		return False
 
-	if a['volume'] != None and b['volume'] != None:
+	if not value_is_undefined(a) and not value_is_undefined(b):
 		from value.value import value_is_immediate
+
+		if b['volume'] == None:
+			info("HERE", b['ti'])
+
 		if value_is_immediate(a['volume']) and value_is_immediate(b['volume']):
 			if a['volume']['asset'] != b['volume']['asset']:
 				return False
@@ -580,7 +586,9 @@ def type_is_vla(t):
 	if t['kind'] != 'array':
 		return False
 
-	if t['volume'] == None:
+	from value.value import value_is_undefined
+
+	if value_is_undefined(t['volume']):
 		return False
 
 	from value.value import value_is_immediate
@@ -635,8 +643,9 @@ def type_is_closed_array(t):
 
 
 def type_is_open_array(t):
+	from value.value import value_is_undefined
 	if type_is_array(t):
-		return t['volume'] == None
+		return value_is_undefined(t['volume'])
 	return False
 
 

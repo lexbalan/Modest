@@ -2,7 +2,7 @@
 import hlir.type as type
 from error import info, warning, error
 
-from .value import value_is_bad, value_bad, value_is_immediate, value_cons_node
+from .value import value_is_bad, value_is_undefined, value_is_immediate, value_cons_node
 from .unit import value_unit_cons, unit_can
 from .bool import value_bool_cons, bool_can
 from .word import value_word_cons, word_can
@@ -196,7 +196,7 @@ def value_cons_explicit(t, v, ti):
 	# for situation like:
 	# var s = []Int32 [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 	if type.type_is_generic_array(from_type):
-		if t['volume'] == None:
+		if value_is_undefined(t['volume']):
 			t['volume'] = from_type['volume']
 
 	if type.type_eq(t, from_type):

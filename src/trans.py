@@ -458,7 +458,9 @@ def init():
 	typeSysInt = foundation.type_select_int(int_width)
 	typeSysNat = foundation.type_select_nat(int_width)
 	typeSysFloat = foundation.typeFloat64
-	typeSysStr = hlir_type.hlir_type_pointer(hlir_type.hlir_type_array(typeSysChar))
+
+	undefinedVolume = value_undefined(typeSysNat, ti=None)
+	typeSysStr = hlir_type.hlir_type_pointer(hlir_type.hlir_type_array(typeSysChar, undefinedVolume))
 
 	init_builtin_values()
 
@@ -615,7 +617,7 @@ def do_type_array(t):
 		#volume_expr = do_value_immediate(t['size'])
 		volume_expr = do_value(t['size'])
 		if value_is_bad(volume_expr):
-			return hlir_type.hlir_type_array(of, volume=None, ti=t['ti'])
+			return hlir_type.hlir_type_array(of, volume_expr, ti=t['ti'])
 
 		if not hlir_type.type_is_integer(volume_expr['type']):
 			volume_expr = None
@@ -637,6 +639,8 @@ def do_type_array(t):
 		if hlir_type.type_is_closed_array(of):
 			error("closed arrays of closed arrays are denied", t['ti'])
 			return hlir_type.hlir_type_bad(t)
+	else:
+		volume_expr = value_undefined(typeSysNat, t['ti'])
 
 	return hlir_type.hlir_type_array(of, volume=volume_expr, ti=t['ti'])
 
@@ -1486,6 +1490,10 @@ def do_value_slice(x):
 #		# TODO: конкретно тут есть что исправить!
 #		if slice_len > array_type['volume']['asset']:
 #			error("slice is too big", x['ti'])
+
+
+	if slice_volume == None:
+		slice_volume = value_undefined(typeSysNat, x['ti'])
 
 	type = hlir_type.hlir_type_array(array_type['of'], slice_volume, x['ti'])
 	nv = value_slice_array(left, type, index_from, index_to, x['ti'])

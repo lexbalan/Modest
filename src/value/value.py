@@ -114,8 +114,14 @@ def value_undefined(t, ti):
 		'isa': 'value',
 		'kind': 'undefined',
 		'type': t,
+
 		'immutable': True,
-		'immediate': False,
+		'immediate': True,
+
+		'items': [],
+		'fields': [],
+		'asset': 0,
+
 		'att': [],
 		'nl_end': 0,
 		'nl': 0,

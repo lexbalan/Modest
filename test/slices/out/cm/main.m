@@ -2,7 +2,7 @@
 include "libc/ctypes64"
 @c_include "stdio.h"
 include "libc/stdio"
-func array_print(pa: *[]Int32, len: Int32) -> Unit {
+func array_print(pa: *[<undefined>]Int32, len: Int32) -> Unit {
 	var i: Int32 = 0
 	while i < len {
 		printf("a[%d] = %d\n", i, pa[i])
@@ -87,7 +87,7 @@ public func main() -> Int {
 	// за каким то хером это работает, то что мне сейчас нужно
 	// но тут еще куча работы впереди
 
-	var pw: *[]Int32 = *[]Int32 &s
+	var pw: *[<undefined>]Int32 = *[<undefined>]Int32 &s
 
 	printf("before\n")
 	array_print(pw, 10)
