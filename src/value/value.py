@@ -120,7 +120,7 @@ def value_undefined(t, ti):
 
 		'items': [],
 		'fields': [],
-		'asset': 0,
+		'asset': 0,  # generic string also goes here  (!)
 
 		'att': [],
 		'nl_end': 0,

@@ -2384,15 +2384,38 @@ def def_var(x):
 		ctx_value_add(var_id['str'], value_bad(x))
 		return hlir_stmt_bad(x)
 
-	if tu == True and vu == False:
+	elif tu == True and vu == False:
 		# type undef, value ok
+
 		#type_update(nt, v['type'])
-		if hlir_type.type_is_generic(v['type']):
-			v = value_cons_default(v)
+		v = value_cons_default(v)
 		t = v['type']
+
+	elif tu == False and vu == False:
+		# type ok, value ok
+
+		# only for case:
+		# var arrayFromString: []Char8 = "abc"
+		if hlir_type.type_is_open_array(t):
+			if hlir_type.type_is_string(v['type']):
+				length = len(v['asset'])
+			elif hlir_type.type_is_array(v['type']):
+				length = v['type']['volume']['asset']
+
+			volume = value_integer_create(length)
+			t = hlir_type.hlir_type_array(t['of'], volume, x['ti'])
+		#
+
+		v = value_cons_implicit_check(t, v)
 
 
 	init_value = v
+
+
+
+
+
+	"""
 	init_value = do_rvalue(x['init_value'])
 	if init_value != None:
 		if t != None:
@@ -2415,6 +2438,7 @@ def def_var(x):
 
 		if hlir_type.type_is_generic(init_value['type']):
 			error("cannot cons variable", x['ti'])
+	"""
 
 	var_value = value_var(id, t, id['ti'])
 	cmodule_value_add(id['str'], var_value, is_public=x['access_modifier'] == 'public')

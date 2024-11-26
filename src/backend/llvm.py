@@ -1379,7 +1379,7 @@ bin_ops = [
 
 
 def do_eval_string(x):
-	info("from here", x['ti'])
+	info("do_eval_string??", x['ti'])
 
 
 
