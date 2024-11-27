@@ -2371,7 +2371,6 @@ def def_var(x):
 	if already != None:
 		error("redefinition of '%s'" % id['str'], id['ti'])
 
-
 	t = do_type(x['type'])
 	v = do_rvalue(x['init_value'])
 
@@ -2395,7 +2394,7 @@ def def_var(x):
 		# type ok, value ok
 
 		# only for case:
-		# var arrayFromString: []Char8 = "abc"
+		# var arrayFromString: var s: []Char8 = "abc"
 		if hlir_type.type_is_open_array(t):
 			if hlir_type.type_is_string(v['type']):
 				length = len(v['asset'])
