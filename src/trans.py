@@ -2379,7 +2379,7 @@ def def_var(x):
 
 	# error: no type, no init valuetu = type_is_undefined(t)
 	if tu == True and vu == True:
-		# type & value undefined
+		# ERROR: type & value undefined
 		ctx_value_add(var_id['str'], value_bad(x))
 		return hlir_stmt_bad(x)
 
@@ -2406,6 +2406,11 @@ def def_var(x):
 		#
 
 		v = value_cons_implicit_check(t, v)
+
+	elif tu == False and vu == True:
+		# type ok, value undef
+		# пропишем тип для v, тк там сейчас type_undefined
+		v['type'] = t
 
 
 	init_value = v
