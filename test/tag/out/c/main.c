@@ -10,38 +10,7 @@
 
 
 
-
-struct Rec1;
-typedef struct Rec1 Rec1;
-
-struct Rec0 {
-	Rec1 *p;
-};
-typedef struct Rec0 Rec0;
-
-struct Rec1 {
-	Rec0 *p;
-};
-
-
-
-void main_print(char *form, ...);
-
-int32_t main()
-{
-	const uint32_t c = U'#';
-	main_print("%c", c);
-
-	Rec0 r0;
-	Rec1 r1;
-
-	r0.p = (Rec1 *)&r1;
-	r1.p = (Rec0 *)&r0;
-
-	return 0;
-}
-
-void main_print(char *form, ...)
+static void print(char *form, ...)
 {
 	va_list va;
 	va_start(va, form);
@@ -51,5 +20,19 @@ void main_print(char *form, ...)
 	printf("CC8 = %d\n", (char)c);
 
 	va_end(va);
+}
+
+int32_t main()
+{
+	const uint32_t c = U'#';
+	print("%c", c);
+
+	main_Rec0 r0;
+	main_Rec1 r1;
+
+	r0.p = (main_Rec1 *)&r1;
+	r1.p = (main_Rec0 *)&r0;
+
+	return 0;
 }
 

@@ -8,7 +8,6 @@
 
 
 
-/* anonymous records */
 #define flashlightStateOff  0
 #define flashlightStateOn  1
 #define flashlightStateBeacon  2

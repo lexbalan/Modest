@@ -7,7 +7,6 @@
 
 
 
-/* anonymous records */
 
 uint8_t utf_utf32_to_utf8(uint32_t c, char *buf)
 {

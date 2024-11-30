@@ -3,11 +3,11 @@ import "libc/stdio"
 
 
 
-type Rec0 record {
+public type Rec0 record {
 	p: *Rec1
 }
 
-type Rec1 record {
+public type Rec1 record {
 	p: *Rec0
 }
 
@@ -26,7 +26,7 @@ public func main() -> Int32 {
 }
 
 
-public func print(form: *Str8, ...) {
+func print(form: *Str8, ...) {
 	var va: VA_List
 	__va_start(va, form)
 

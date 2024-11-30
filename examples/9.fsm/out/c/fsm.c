@@ -8,7 +8,6 @@
 
 
 
-/* anonymous records */
 #define verbose  true
 
 

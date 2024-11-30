@@ -194,29 +194,7 @@ declare void @perror(%ConstCharStr* %str)
 @str3 = private constant [10 x i8] [i8 67, i8 67, i8 56, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 ; -- endstrings --
 
-%Rec0 = type {
-	%Rec1*
-};
-
-%Rec1 = type {
-	%Rec0*
-};
-
-
-define %Int32 @main() {
-	call void (%Str8*, ...) @main_print(%Str8* bitcast ([3 x i8]* @str1 to [0 x i8]*), %Char32 35)
-	%1 = alloca %Rec0, align 8
-	%2 = alloca %Rec1, align 8
-	%3 = getelementptr inbounds %Rec0, %Rec0* %1, %Int32 0, %Int32 0
-	%4 = bitcast %Rec1* %2 to %Rec1*
-	store %Rec1* %4, %Rec1** %3
-	%5 = getelementptr inbounds %Rec1, %Rec1* %2, %Int32 0, %Int32 0
-	%6 = bitcast %Rec0* %1 to %Rec0*
-	store %Rec0* %6, %Rec0** %5
-	ret %Int32 0
-}
-
-define void @main_print(%Str8* %form, ...) {
+define internal void @print(%Str8* %form, ...) {
 	%1 = alloca i8*, align 1
 	%2 = bitcast i8** %1 to i8*
 	call void @llvm.va_start(i8* %2)
@@ -227,6 +205,29 @@ define void @main_print(%Str8* %form, ...) {
 	%7 = bitcast i8** %1 to i8*
 	call void @llvm.va_end(i8* %7)
 	ret void
+}
+
+
+%main_Rec0 = type {
+	%main_Rec1*
+};
+
+%main_Rec1 = type {
+	%main_Rec0*
+};
+
+
+define %Int32 @main() {
+	call void (%Str8*, ...) @print(%Str8* bitcast ([3 x i8]* @str1 to [0 x i8]*), %Char32 35)
+	%1 = alloca %main_Rec0, align 8
+	%2 = alloca %main_Rec1, align 8
+	%3 = getelementptr inbounds %main_Rec0, %main_Rec0* %1, %Int32 0, %Int32 0
+	%4 = bitcast %main_Rec1* %2 to %main_Rec1*
+	store %main_Rec1* %4, %main_Rec1** %3
+	%5 = getelementptr inbounds %main_Rec1, %main_Rec1* %2, %Int32 0, %Int32 0
+	%6 = bitcast %main_Rec0* %1 to %main_Rec0*
+	store %main_Rec0* %6, %main_Rec0** %5
+	ret %Int32 0
 }
 
 
