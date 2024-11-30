@@ -3,7 +3,11 @@
 $pragma do_not_include
 $pragma c_no_print
 
+// TODO: как он их печатает без префикса если нет module_no_decorate?
+// тут какая то лажа
+
 $pragma c_include "stdio.h"
+
 
 include "./ctypes64"
 
