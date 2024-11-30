@@ -3,8 +3,10 @@
 include "libc/stdio"
 const verbose = true
 public const nameMaxLength = 8
+public const maxStates = 16
 
-public type UInt32 Nat32
+
+public type FSM_Proc *(x: *FSM) -> Unit
 
 public type FSM_StateDesc record {
 	public name: [nameMaxLength]Char8
@@ -12,7 +14,11 @@ public type FSM_StateDesc record {
 	public loop: FSM_Proc
 	public exit: FSM_Proc
 }
-public const maxStates = 16
+public const substateEntering = 0
+public const substateLoop = 1
+public const substateLeaving = 2
+
+public type UInt32 Nat32
 
 public type FSM record {
 	public name: [nameMaxLength]Char8
@@ -21,12 +27,6 @@ public type FSM record {
 	public substate: UInt32
 	public states: [maxStates]FSM_StateDesc
 }
-
-
-public type FSM_Proc *(x: *FSM) -> Unit
-public const substateEntering = 0
-public const substateLoop = 1
-public const substateLeaving = 2
 public func state_no_name(fsm: *FSM, state_no: Nat32) -> *Str8 {
 	return &fsm.states[state_no].name
 }

@@ -8,7 +8,8 @@
 
 
 
-#define fsm_verbose  true
+/* anonymous records */
+#define verbose  true
 
 
 
@@ -31,7 +32,7 @@ void fsm_run(fsm_FSM *fsm)
 		const fsm_UInt32 nexstate = fsm->nexstate;
 		fsm_FSM_StateDesc *const state = &fsm->states[nexstate];
 
-		if (fsm_verbose) {
+		if (verbose) {
 			printf("enter %s\n", (char *)&state->name);
 		}
 
@@ -52,7 +53,7 @@ void fsm_run(fsm_FSM *fsm)
 	} else if (fsm->substate == fsm_substateLeaving) {
 		fsm_FSM_StateDesc *const state = &fsm->states[fsm->state];
 
-		if (fsm_verbose) {
+		if (verbose) {
 			printf("exit %s\n", (char *)&state->name);
 		}
 
