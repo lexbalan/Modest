@@ -2484,8 +2484,8 @@ def def_func(x, dostmt=True):
 		fn['ti_def'] = x['ti']
 
 
-	if need_decoration(x):
-		if x['id']['str'] != 'main':
+	if x['id']['str'] != 'main':
+		if need_decoration(x):
 			fn['id']['prefix'] = cmodule['prefix']
 
 
