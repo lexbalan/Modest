@@ -8,12 +8,12 @@
 
 #define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
 
-void array_print(int32_t *pa, int32_t len);
+/* anonymous records */
 
 
 
 
-void array_print(int32_t *pa, int32_t len)
+static void array_print(int32_t *pa, int32_t len)
 {
 	int32_t i;
 	i = 0;

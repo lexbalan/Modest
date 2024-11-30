@@ -8,10 +8,7 @@
 
 #define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
 
-void bubble_sort32(int32_t *array, int32_t len);
-void print_array(int32_t *array, int32_t len);
-void fill_array(int32_t *array, int32_t len);
-int32_t get_number(int32_t min, int32_t max);
+/* anonymous records */
 
 
 
@@ -20,7 +17,7 @@ static int32_t array[21] = (int32_t[21]){
 	11, 9, 6, -7, -8, 5, 7, 10, 8, -6, -9
 };
 
-void bubble_sort32(int32_t *array, int32_t len)
+static void bubble_sort32(int32_t *array, int32_t len)
 {
 	bool need_to_sort;
 	need_to_sort = true;
@@ -45,7 +42,7 @@ void bubble_sort32(int32_t *array, int32_t len)
 	}
 }
 
-void print_array(int32_t *array, int32_t len)
+static void print_array(int32_t *array, int32_t len)
 {
 	printf("\n");
 	int32_t i;
@@ -56,7 +53,11 @@ void print_array(int32_t *array, int32_t len)
 	}
 }
 
-void fill_array(int32_t *array, int32_t len)
+
+//dep get_number
+
+static int32_t get_number(int32_t min, int32_t max);
+static void fill_array(int32_t *array, int32_t len)
 {
 	#define __min  (-1000)
 	#define __max  1000
@@ -73,7 +74,7 @@ void fill_array(int32_t *array, int32_t len)
 #undef __max
 }
 
-int32_t get_number(int32_t min, int32_t max)
+static int32_t get_number(int32_t min, int32_t max)
 {
 	int32_t number;
 	number = 0;

@@ -8,30 +8,27 @@
 
 
 
-void func1();
-void print_ab(int32_t a, int32_t b);
-int32_t sum(int32_t a, int32_t b);
-void func0();
+/* anonymous records */
 
 
 
 
-void func1()
+static void func1()
 {
 	printf("func1 was called\n");
 }
 
-void print_ab(int32_t a, int32_t b)
+static void print_ab(int32_t a, int32_t b)
 {
 	printf("print_ab(a=%i, b=%i)\n", a, b);
 }
 
-int32_t sum(int32_t a, int32_t b)
+static int32_t sum(int32_t a, int32_t b)
 {
 	return a + b;
 }
 
-void func0()
+static void func0()
 {
 	printf("func0 was called\n");
 }

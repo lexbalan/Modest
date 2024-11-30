@@ -8,12 +8,12 @@
 
 
 
-int32_t named_args_test(int32_t a, int32_t b, int32_t c);
+/* anonymous records */
 
 
 
 
-int32_t named_args_test(int32_t a, int32_t b, int32_t c)
+static int32_t named_args_test(int32_t a, int32_t b, int32_t c)
 {
 	return (a - b) * c;
 }

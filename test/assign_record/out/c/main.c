@@ -8,6 +8,7 @@
 
 
 
+/* anonymous records */
 
 
 struct Point {

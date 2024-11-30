@@ -7,6 +7,7 @@
 
 
 
+/* anonymous records */
 
 int32_t minmax_min_int32(int32_t a, int32_t b)
 {

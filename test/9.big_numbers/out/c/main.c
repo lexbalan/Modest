@@ -8,19 +8,18 @@
 
 
 
-uint64_t high_128(unsigned __int128 x);
-uint64_t low_128(unsigned __int128 x);
+/* anonymous records */
 
 
 
 static unsigned __int128 big0 = (((__int128)0x123456789ABCDEF << 64) | ((__int128)0xFEDCBA9876543210));
 
-uint64_t high_128(unsigned __int128 x)
+static uint64_t high_128(unsigned __int128 x)
 {
 	return (uint64_t)(x >> 64);
 }
 
-uint64_t low_128(unsigned __int128 x)
+static uint64_t low_128(unsigned __int128 x)
 {
 	return (uint64_t)(x & 0xFFFFFFFFFFFFFFFF);
 }

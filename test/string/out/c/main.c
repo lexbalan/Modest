@@ -8,6 +8,7 @@
 
 
 
+/* anonymous records */
 #define str8_example  "String"
 #define str16_example  (u"String-Ω")
 #define str32_example  (U"String-Ω 🐀🎉🦄")

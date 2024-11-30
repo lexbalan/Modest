@@ -8,12 +8,12 @@
 
 
 
-void mtab(uint32_t n);
+/* anonymous records */
 
 
 
 
-void mtab(uint32_t n)
+static void mtab(uint32_t n)
 {
 	uint32_t m;
 	m = 1;

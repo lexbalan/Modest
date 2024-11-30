@@ -8,14 +8,14 @@
 
 
 
-ssize_t my_printf(char *format, ...);
+/* anonymous records */
 
 
 
 
 
 
-ssize_t my_printf(char *format, ...)
+static ssize_t my_printf(char *format, ...)
 {
 	va_list va;
 	va_list va2;

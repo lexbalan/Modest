@@ -8,16 +8,13 @@
 
 #define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
 
+/* anonymous records */
 #define _constantArray  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 const int8_t constantArray[10] = _constantArray;
 #define _startSequence  {0xAA, 0x55, 0x02}
 const int8_t startSequence[3] = _startSequence;
 #define _stopSequence  {0x16}
 const int8_t stopSequence[1] = _stopSequence;
-struct __x {char a[20];};
-struct __retval {char a[30];};
-struct __retval f0(struct __x x);
-void test();
 
 
 
@@ -26,7 +23,7 @@ void test();
 static int32_t globalArray[10] = _constantArray;
 static char arrayFromString[3] = "abc";
 
-struct __retval f0(struct __x x)
+static struct __retval f0(struct __x x)
 {
 	struct __x local_copy_of_x;
 	*(struct __x *)&local_copy_of_x = x;
@@ -53,7 +50,7 @@ struct __retval f0(struct __x x)
 	return *(struct __retval *)&res;
 }
 
-void test()
+static void test()
 {
 	// тестируем работу с локальным generic массивом
 	int8_t yy[6];

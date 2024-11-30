@@ -8,13 +8,13 @@
 
 
 
+/* anonymous records */
 #define minNumber  0
 #define maxNumber  10
-int32_t get_number(int32_t min, int32_t max);
 
 
 
-int32_t get_number(int32_t min, int32_t max)
+static int32_t get_number(int32_t min, int32_t max)
 {
 	int32_t number;
 	number = 0;

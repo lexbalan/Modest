@@ -8,6 +8,7 @@
 
 
 
+/* anonymous records */
 
 
 struct Point {
@@ -19,11 +20,6 @@ struct Line {
 	Point a;
 	Point b;
 };
-float max(float a, float b);
-float min(float a, float b);
-float distance(Point a, Point b);
-float lineLength(Line line);
-void ptr_example();
 
 
 
@@ -36,7 +32,7 @@ static Line line = {
 	.b = {.x = 1.0, .y = 1.0}
 };
 
-float max(float a, float b)
+static float max(float a, float b)
 {
 	if (a > b) {
 		return a;
@@ -44,7 +40,7 @@ float max(float a, float b)
 	return b;
 }
 
-float min(float a, float b)
+static float min(float a, float b)
 {
 	if (a < b) {
 		return a;
@@ -52,7 +48,7 @@ float min(float a, float b)
 	return b;
 }
 
-float distance(Point a, Point b)
+static float distance(Point a, Point b)
 {
 	const float dx = max(a.x, b.x) - min(a.x, b.x);
 	const float dy = max(a.y, b.y) - min(a.y, b.y);
@@ -61,12 +57,12 @@ float distance(Point a, Point b)
 	return sqrt(dx2 + dy2);
 }
 
-float lineLength(Line line)
+static float lineLength(Line line)
 {
 	return distance(line.a, line.b);
 }
 
-void ptr_example()
+static void ptr_example()
 {
 	Point *const ptr_p = (Point *)malloc(sizeof(Point));
 

@@ -8,14 +8,12 @@
 
 
 
-int64_t sum64(int64_t a, int64_t b);
-int64_t sub64(int64_t a, int64_t b);
-void sumsub64(int64_t a, int64_t b);
+/* anonymous records */
 
 
 
 
-int64_t sum64(int64_t a, int64_t b)
+static int64_t sum64(int64_t a, int64_t b)
 {
 	int64_t sum;
 	__asm__ volatile (
@@ -27,7 +25,7 @@ int64_t sum64(int64_t a, int64_t b)
 	return sum;
 }
 
-int64_t sub64(int64_t a, int64_t b)
+static int64_t sub64(int64_t a, int64_t b)
 {
 	int64_t sub;
 	__asm__ volatile (
@@ -39,7 +37,7 @@ int64_t sub64(int64_t a, int64_t b)
 	return sub;
 }
 
-void sumsub64(int64_t a, int64_t b)
+static void sumsub64(int64_t a, int64_t b)
 {
 	int64_t sum;
 	int64_t sub;

@@ -8,11 +8,11 @@
 
 
 
+/* anonymous records */
 #define filename  "file2.txt"
 #define ipAddress  "127.0.0.1"
 #define port  8080
 #define bufSize  1024
-bool write_file(int sockfd);
 
 
 
@@ -21,7 +21,7 @@ bool write_file(int sockfd);
 
 
 
-bool write_file(int sockfd)
+static bool write_file(int sockfd)
 {
 	char buffer[bufSize];
 

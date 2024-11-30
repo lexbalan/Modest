@@ -8,6 +8,7 @@
 
 
 
+/* anonymous records */
 #define hello  "Hello"
 #define world  "World"
 #define party_corn  U"🎉"

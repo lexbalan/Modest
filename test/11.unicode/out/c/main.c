@@ -8,6 +8,7 @@
 
 
 
+/* anonymous records */
 #define _ratSymbolUTF8  {0xF0, 0x9F, 0x90, 0x80}
 const int8_t ratSymbolUTF8[4] = _ratSymbolUTF8;
 #define _ratSymbolUTF16  {0xD83D, 0xDC00}

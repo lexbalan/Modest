@@ -8,9 +8,7 @@
 
 
 
-void nat32_list_insert(list_List *list, uint32_t x);
-void list_print_forward(list_List *list);
-void list_print_backward(list_List *list);
+/* anonymous records */
 
 
 
@@ -18,7 +16,7 @@ void list_print_backward(list_List *list);
 
 
 
-void nat32_list_insert(list_List *list, uint32_t x)
+static void nat32_list_insert(list_List *list, uint32_t x)
 {
 	// alloc memory for Nat32 value
 	uint32_t *const p_nat32 = (uint32_t *)malloc(sizeof(uint32_t));
@@ -26,7 +24,7 @@ void nat32_list_insert(list_List *list, uint32_t x)
 	list_append((list_List *)list, p_nat32);
 }
 
-void list_print_forward(list_List *list)
+static void list_print_forward(list_List *list)
 {
 	printf("list_print_forward:\n");
 	list_Node *pn;
@@ -38,7 +36,7 @@ void list_print_forward(list_List *list)
 	}
 }
 
-void list_print_backward(list_List *list)
+static void list_print_backward(list_List *list)
 {
 	printf("list_print_backward:\n");
 	list_Node *pn;

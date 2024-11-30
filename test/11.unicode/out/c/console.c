@@ -8,11 +8,7 @@
 
 
 
-static inline char n_to_dec_sym(uint8_t n);
-char n_to_hex_sym(uint8_t n);
-int32_t sprint_hex_nat32(char *buf, uint32_t x);
-int32_t sprint_dec_int32(char *buf, int32_t x);
-int32_t sprint_dec_n32(char *buf, uint32_t x);
+/* anonymous records */
 
 
 
@@ -29,7 +25,7 @@ static inline char n_to_dec_sym(uint8_t n)
 	return (char)((uint8_t)'0' + n);
 }
 
-char n_to_hex_sym(uint8_t n)
+static char n_to_hex_sym(uint8_t n)
 {
 	if (n < 10) {
 		return n_to_dec_sym(n);
@@ -37,7 +33,7 @@ char n_to_hex_sym(uint8_t n)
 	return (char)((uint8_t)'A' + n - 10);
 }
 
-int32_t sprint_hex_nat32(char *buf, uint32_t x)
+static int32_t sprint_hex_nat32(char *buf, uint32_t x)
 {
 	char tmpbuf[8];
 	uint32_t d;
@@ -71,7 +67,7 @@ int32_t sprint_hex_nat32(char *buf, uint32_t x)
 	return j;
 }
 
-int32_t sprint_dec_int32(char *buf, int32_t x)
+static int32_t sprint_dec_int32(char *buf, int32_t x)
 {
 	char tmpbuf[11];
 	int32_t d;
@@ -114,7 +110,7 @@ int32_t sprint_dec_int32(char *buf, int32_t x)
 	return j;
 }
 
-int32_t sprint_dec_n32(char *buf, uint32_t x)
+static int32_t sprint_dec_n32(char *buf, uint32_t x)
 {
 	char tmpbuf[11];
 	uint32_t d;
@@ -146,16 +142,28 @@ int32_t sprint_dec_n32(char *buf, uint32_t x)
 	return j;
 }
 
+
+//dep putchar_utf8
+
+void console_putchar_utf8(char c);
 void console_putchar8(char c)
 {
 	console_putchar_utf8(c);
 }
 
+
+//dep putchar_utf16
+
+void console_putchar_utf16(uint16_t c);
 void console_putchar16(uint16_t c)
 {
 	console_putchar_utf16(c);
 }
 
+
+//dep putchar_utf32
+
+void console_putchar_utf32(uint32_t c);
 void console_putchar32(uint32_t c)
 {
 	console_putchar_utf32(c);
@@ -241,6 +249,10 @@ void console_puts32(uint32_t *s)
 	}
 }
 
+
+//dep vfprint
+
+int32_t console_vfprint(int fd, char *form, va_list va);
 void console_print(char *form, ...)
 {
 	va_list va;
@@ -249,6 +261,10 @@ void console_print(char *form, ...)
 	va_end(va);
 }
 
+
+//dep vsprint
+
+int32_t console_vsprint(char *buf, char *form, va_list va);
 int32_t console_vfprint(int fd, char *form, va_list va)
 {
 	char strbuf[256];

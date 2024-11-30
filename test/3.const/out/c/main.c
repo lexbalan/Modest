@@ -8,6 +8,7 @@
 
 
 
+/* anonymous records */
 #define genericIntConst  42
 #define int32Const  ((int32_t)genericIntConst)
 #define genericStringConst  "Hello!"

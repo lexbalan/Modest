@@ -8,6 +8,7 @@
 
 #define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
 
+/* anonymous records */
 #define datastring  "123456789"
 #define expected_hash  0xCBF43926
 

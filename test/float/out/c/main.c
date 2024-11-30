@@ -8,6 +8,7 @@
 
 
 
+/* anonymous records */
 #define mathPi  3.141592653589793238462643383279502884
 
 
@@ -15,8 +16,6 @@ struct Point2D {
 	int x;
 	int y;
 };
-double squareOfCircle(double radius);
-float slope(Point2D a, Point2D b);
 
 
 
@@ -25,12 +24,12 @@ float slope(Point2D a, Point2D b);
 
 
 
-double squareOfCircle(double radius)
+static double squareOfCircle(double radius)
 {
 	return pow(radius, (double)(2)) * mathPi;
 }
 
-float slope(Point2D a, Point2D b)
+static float slope(Point2D a, Point2D b)
 {
 	const int dx = abs(a.x - b.x);
 	const int dy = abs(a.y - b.y);

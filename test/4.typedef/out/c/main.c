@@ -8,6 +8,7 @@
 
 
 
+/* anonymous records */
 
 typedef int32_t NewInt32;
 

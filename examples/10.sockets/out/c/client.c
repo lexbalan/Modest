@@ -8,11 +8,11 @@
 
 
 
+/* anonymous records */
 #define filename  "file.txt"
 #define ipAddress  "127.0.0.1"
 #define port  8080
 #define bufSize  1024
-bool send_file(FILE *fp, int sockfd);
 
 
 
@@ -23,7 +23,7 @@ bool send_file(FILE *fp, int sockfd);
 
 
 
-bool send_file(FILE *fp, int sockfd)
+static bool send_file(FILE *fp, int sockfd)
 {
 	char data[bufSize];
 

@@ -8,6 +8,7 @@
 
 
 
+/* anonymous records */
 
 
 
@@ -21,16 +22,11 @@ struct Point3D {
 	int32_t y;
 	int32_t z;
 };
-bool test_generic_integer();
-bool test_generic_float();
-bool test_generic_char();
-bool test_generic_array();
-bool test_generic_record();
 
 
 
 
-bool test_generic_integer()
+static bool test_generic_integer()
 {
 	// Any integer literal have GenericInteger type
 	#define __one  1
@@ -51,7 +47,7 @@ bool test_generic_integer()
 #undef __one
 }
 
-bool test_generic_float()
+static bool test_generic_float()
 {
 	// Any float literal have GenericFloat type
 	#define __pi  3.141592653589793238462643383279502884
@@ -67,7 +63,7 @@ bool test_generic_float()
 #undef __pi
 }
 
-bool test_generic_char()
+static bool test_generic_char()
 {
 	// Any char value expression have GenericChar type
 	// (you can pick GenericChar value by index of GenericString value)
@@ -83,7 +79,7 @@ bool test_generic_char()
 #undef __a
 }
 
-bool test_generic_array()
+static bool test_generic_array()
 {
 	// Any array expression have GenericArray type
 	// this array expression (GenericArray of four GenericInteger items)
@@ -129,7 +125,7 @@ bool test_generic_array()
 #undef __a
 }
 
-bool test_generic_record()
+static bool test_generic_record()
 {
 	// Any record expression have GenericRecord type
 	// this record expression have type:

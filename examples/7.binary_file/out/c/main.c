@@ -8,20 +8,19 @@
 
 
 
+/* anonymous records */
 #define filename  "file.bin"
 struct Chunk {
 	char id[100];
 	char data[1024];
 };
-void write_example();
-void read_example();
 
 
 
 
 
 
-void write_example()
+static void write_example()
 {
 	printf("run write_example\n");
 
@@ -45,7 +44,7 @@ void write_example()
 	fclose(fp);
 }
 
-void read_example()
+static void read_example()
 {
 	printf("run read_example\n");
 

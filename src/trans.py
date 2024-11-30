@@ -2258,22 +2258,8 @@ def def_type(x):
 	if id['str'][0].islower():
 		error("type id must starts with big letter", id['ti'])
 
-	pre_exist = ctx_type_get(id['str'])
+	nt = ctx_type_get(id['str'])
 
-	# check if identifier is free
-	already_declared = pre_exist != None
-
-	if already_declared:
-		nt = pre_exist
-		#if hlir_type.type_is_defined(pre_exist):
-		#	error("redefinition of '%s'" % x['id']['str'], x['id']['ti'])
-	else:
-		nt = hlir_type.hlir_type_undefined(x['ti'])
-		cmodule_type_add(id['str'], nt, is_public=x['access_modifier'] == 'public')
-
-	# только теперь обрабатываем поля,
-	# тк там могут быть указатели на саму себя
-	# а мы к этому заранее подготовлись
 	ty = do_type(x['type'])
 
 	if hlir_type.type_is_bad(ty):
@@ -2286,15 +2272,6 @@ def def_type(x):
 
 	# Замещаем внутренности undefined типа на тип справа
 	# НО! имя даем новое
-	"""
-	nt.clear()
-	nt.update(ty)
-	nt['id'] = id # need for  @property("type.id.c", "int")
-	nt['att'] = copy.copy(ty['att'])
-	nt['ti_def'] = id['ti']
-	nt['module'] = cmodule  # добавляем заново тк очистили его выше!
-	"""
-
 	type_update(nt, ty)
 	nt['ti_def'] = id['ti']
 	nt['module'] = cmodule  # добавляем заново тк очистили его выше!
@@ -3092,7 +3069,6 @@ def pre_def(ast, fdecl=False):
 				y = def_const(x)
 			elif kind == 'func':
 				y = def_func(x)
-
 			elif kind == 'var':
 				y = def_var(x)
 

@@ -32,6 +32,9 @@ CC_INT_SIZE_BITS = 32
 CC_LONG_SIZE_BITS = 32
 CC_LONG_LONG_SIZE_BITS = 64
 
+# идетнифиаторы декларированных (или определенных) сущностей
+declared = []
+
 
 func_undef_list = []
 
@@ -1592,8 +1595,10 @@ def print_decl_func(x):
 	if 'gnu_att' in x:
 		out('__attribute__((%s))\n' % x['gnu_att'])
 
-	if 'c_static' in x['att']:
+	if x['access_level'] == 'private':
 		out("static ")
+	#if 'c_static' in x['att']:
+	#	out("static ")
 	if 'inline' in x['att']:
 		out("inline ")
 
@@ -1603,20 +1608,37 @@ def print_decl_func(x):
 	out(";")
 
 
+
+
+
+
+
 def print_def_func(x):
+	global declared
 	newline(n=x['nl'])
+
+	for dep in x['value']['deps']:
+		#mass
+		if not dep['id']['str'] in declared:
+			idStr = dep['id']['str']
+			out("\n//dep %s\n" % idStr)
+			print_decl_func(dep['definition'])
+			out("\n")
+			declared.append(idStr)
+
 
 	func = x['value']
 
 	global cfunc
 	cfunc = func
 
-
 	if 'gnu_att' in x:
 		out('__attribute__((%s))\n' % x['gnu_att'])
 
-	if 'c_static' in x['att']:
+	if x['access_level'] == 'private':
 		out("static ")
+	#if 'c_static' in x['att']:
+	#	out("static ")
 	if 'inline' in x['att']:
 		out("inline ")
 
@@ -1653,6 +1675,9 @@ def print_def_func(x):
 
 	func_undef_list = []
 	out("\n}")
+
+	if not func['id']['str'] in declared:
+		declared.append(func['id']['str'])
 
 	cfunc = None
 
@@ -1920,6 +1945,9 @@ def print_cdecl_func(x):
 	#if 'gnu_att' in x:
 	#	out('__attribute__((%s))\n' % x['gnu_att'])
 
+	if x['access_level'] == 'private':
+		out("static ")
+
 	sym = x['symbol']
 	print_func_signature(get_id_str(sym), sym['type'], sym['att'])
 	out(";")
@@ -2043,7 +2071,7 @@ def print_cfile(module, _outname):
 #	for rec_id in module['records']:
 #		out("\ntypedef struct %s %s;" % (rec_id, rec_id))
 
-	#out("\n/* anonymous records */")
+	out("\n/* anonymous records */")
 	for anon_rec in module['anon_recs']:
 		nl_indent()
 		print_type_record(anon_rec, tag=anon_rec['c_anon_id'])
@@ -2064,7 +2092,7 @@ def print_cfile(module, _outname):
 
 	# печатаем прототипы функций текущего модуля
 	# (тк C не позволяет использовать функции перед их определением)
-	#out("// local decls\n")
+	"""out("\n// protos\n")
 	for x in module['defs_private']:
 		if 'c_no_print' in x['att']:
 			continue
@@ -2072,6 +2100,7 @@ def print_cfile(module, _outname):
 		isa = x['isa']
 		if isa == 'def_func':
 			print_decl_func(x)
+	out("\n// end protos\n")"""
 
 
 	#out("// defs\n")
