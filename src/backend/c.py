@@ -1618,13 +1618,10 @@ def print_def_func(x):
 	newline(n=x['nl'])
 
 	for dep in x['value']['deps']:
-		#mass
 		if not dep['id']['str'] in declared:
-			idStr = dep['id']['str']
-			out("\n//dep %s\n" % idStr)
+			declared.append(dep['id']['str'])
 			print_decl_func(dep['definition'])
-			out("\n")
-			declared.append(idStr)
+			out("\n\n")
 
 
 	func = x['value']
