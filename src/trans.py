@@ -2484,6 +2484,10 @@ def def_func(x, dostmt=True):
 		fn['ti_def'] = x['ti']
 
 
+	if need_decoration(x):
+		if x['id']['str'] != 'main':
+			fn['id']['prefix'] = cmodule['prefix']
+
 
 	if x['stmt'] == None:
 		#print("DECL: "+fn['id']['str'])
@@ -2550,15 +2554,6 @@ def def_func(x, dostmt=True):
 	cfunc = prev_cfunc
 
 	definition = hlir_def_func(func_id, fn, stmt, x['ti'])
-
-	#print(x['id']['str'])
-	# Префика
-	"""
-	y['prefix'] = ''
-	if x['id']['str'] != 'main':
-		if need_decoration(x):
-			y['prefix'] = cmodule['prefix']
-	"""
 
 	definition['access_level'] = x['access_modifier']
 	fn['definition'] = definition
@@ -2825,8 +2820,8 @@ def do_directive(x):
 			feature_add(args[0])
 		elif s0 == 'unsafe':
 			feature_add('unsafe')
-		elif s0 == 'noprefix':
-			feature_add('noprefix')
+		#elif s0 == 'noprefix':
+		#	feature_add('noprefix')
 			pass
 	return None
 
@@ -3097,10 +3092,6 @@ def pre_def(ast, fdecl=False):
 				y = def_const(x)
 			elif kind == 'func':
 				y = def_func(x)
-
-				if need_decoration(x):
-					if x['id']['str'] != 'main':
-						y['id']['prefix'] = cmodule['prefix']
 
 			elif kind == 'var':
 				y = def_var(x)
