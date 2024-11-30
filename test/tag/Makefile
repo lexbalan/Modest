@@ -12,7 +12,7 @@ all: LLVM
 
 
 CM:
-	mcc -o $(CMPREFIX)/main -mbackend=cm $(INDIR)/main.m
+	mcc -o $(CMPREFIX)/main -funsafe -mbackend=cm $(INDIR)/main.m
 
 
 LLVM:

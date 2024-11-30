@@ -192,25 +192,8 @@ declare void @perror(%ConstCharStr* %str)
 ; -- endstrings --
 
 
-%Rec0 = type {
-	%Rec1*
-};
-
-%Rec1 = type {
-	%Rec0*
-};
-
-
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([4 x i8]* @str1 to [0 x i8]*), %Str8* bitcast ([13 x i8]* @str2 to [0 x i8]*))
-	%2 = alloca %Rec0, align 8
-	%3 = alloca %Rec1, align 8
-	%4 = getelementptr inbounds %Rec0, %Rec0* %2, %Int32 0, %Int32 0
-	%5 = bitcast %Rec1* %3 to %Rec1*
-	store %Rec1* %5, %Rec1** %4
-	%6 = getelementptr inbounds %Rec1, %Rec1* %3, %Int32 0, %Int32 0
-	%7 = bitcast %Rec0* %2 to %Rec0*
-	store %Rec0* %7, %Rec0** %6
 	ret %Int 0
 }
 

@@ -8,32 +8,47 @@
 
 
 
-int32_t main();
 
 
-int32_t main()
-{
-	main_xxx("", 10);
-	//let c = Char32 "#"
-	//print("%c", c)
-	return 0;
-}
 
-void main_xxx(char *form, ...)
+struct Rec1;
+typedef struct Rec1 Rec1;
+
+struct Rec0 {
+	Rec1 *p;
+};
+typedef struct Rec0 Rec0;
+
+struct Rec1 {
+	Rec0 *p;
+};
+
+
+void main_print(char *form, ...)
 {
 	va_list va;
 	va_start(va, form);
-	main_yyy(1, "", va);
+
+	const uint32_t c = va_arg(va, uint32_t);
+	printf("CC32 = %d\n", c);
+	printf("CC8 = %d\n", (char)c);
+
 	va_end(va);
 }
 
-void main_yyy(int32_t fd, char *form, va_list va)
+int32_t main()
 {
-	const uint32_t x = va_arg(va, uint32_t);
-	printf("x = %d\n", x);
-	//var strbuf: [256]Char8
-	//let n = vsprint(&strbuf, form, va)
-	//strbuf[n] = '\x0'
-	//write(fd, &strbuf, SizeT n)
+	const uint32_t c = U'#';
+	main_print("%c", c);
+
+	Rec0 r0;
+	Rec1 r1;
+
+	r0.p = (Rec1 *)&r1;
+	r1.p = (Rec0 *)&r0;
+
+
+
+	return 0;
 }
 
