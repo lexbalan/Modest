@@ -8,7 +8,6 @@
 
 
 
-/* anonymous records */
 #define _arr  {1, 2}
 const int32_t arr[2] = _arr;
 

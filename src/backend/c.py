@@ -2062,17 +2062,12 @@ def print_cfile(module, _outname):
 
 	out("\n")
 
-	#out("\n/* forward type declaration */")
-# now see header!
-#	for rec_id in module['records']:
-#		out("\ntypedef struct %s %s;" % (rec_id, rec_id))
-
-	out("\n/* anonymous records */")
-	for anon_rec in module['anon_recs']:
-		nl_indent()
-		print_type_record(anon_rec, tag=anon_rec['c_anon_id'])
-		out(";")
-
+	if len(module['anon_recs']) > 0:
+		out("\n/* anonymous records */")
+		for anon_rec in module['anon_recs']:
+			nl_indent()
+			print_type_record(anon_rec, tag=anon_rec['c_anon_id'])
+			out(";")
 
 	# types & constants
 	for x in module['defs_private']:
@@ -2084,19 +2079,6 @@ def print_cfile(module, _outname):
 			print_def_const(x)
 		elif isa == 'def_type':
 			print_def_type(x)
-
-
-	# печатаем прототипы функций текущего модуля
-	# (тк C не позволяет использовать функции перед их определением)
-	"""out("\n// protos\n")
-	for x in module['defs_private']:
-		if 'c_no_print' in x['att']:
-			continue
-
-		isa = x['isa']
-		if isa == 'def_func':
-			print_decl_func(x)
-	out("\n// end protos\n")"""
 
 
 	#out("// defs\n")

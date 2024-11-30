@@ -8,7 +8,6 @@
 
 
 
-/* anonymous records */
 #define filename  "file.txt"
 
 

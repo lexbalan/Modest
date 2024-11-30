@@ -8,7 +8,6 @@
 
 
 
-/* anonymous records */
 #define msg_length  12
 #define key_length  3
 

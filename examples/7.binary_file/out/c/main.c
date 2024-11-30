@@ -8,7 +8,6 @@
 
 
 
-/* anonymous records */
 #define filename  "file.bin"
 struct Chunk {
 	char id[100];
