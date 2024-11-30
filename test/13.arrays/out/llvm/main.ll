@@ -309,7 +309,7 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 @str40 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
 
-@main_constantArray = constant [10 x i4] [
+@constantArray = constant [10 x i4] [
 	i4 1,
 	i4 2,
 	i4 3,
@@ -338,15 +338,6 @@ declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 	%Char8 97,
 	%Char8 98,
 	%Char8 99
-]
-
-@main_startSequence = constant [3 x %Int8] [
-	%Int8 170,
-	%Int8 85,
-	%Int8 2
-]
-@main_stopSequence = constant [1 x i5] [
-	i5 22
 ]
 
 define internal void @f0([30 x %Char8]* noalias sret([30 x %Char8]) %0, [20 x %Char8] %x) {
@@ -394,6 +385,16 @@ define internal void @f0([30 x %Char8]* noalias sret([30 x %Char8]) %0, [20 x %C
 	store [30 x %Char8] %22, [30 x %Char8]* %0
 	ret void
 }
+
+
+@startSequence = constant [3 x %Int8] [
+	%Int8 170,
+	%Int8 85,
+	%Int8 2
+]
+@stopSequence = constant [1 x i5] [
+	i5 22
+]
 
 define internal void @test() {
 	; тестируем работу с локальным generic массивом

@@ -2,18 +2,18 @@
 include "libc/ctypes64"
 @c_include "stdio.h"
 include "libc/stdio"
-
-
-type Point record {
-	x: Nat32
-	y: Nat32
-}
 const genericIntConst = 42
 const int32Const = Int32 genericIntConst
 const genericStringConst = "Hello!"
 const string8Const = *Str8 genericStringConst
 const string16Const = *Str16 genericStringConst
 const string32Const = *Str32 genericStringConst
+
+
+type Point record {
+	x: Nat32
+	y: Nat32
+}
 const ps = [
 	{x = 0, y = 0}
 	{x = 1, y = 1}

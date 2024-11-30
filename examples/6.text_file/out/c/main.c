@@ -8,7 +8,7 @@
 
 
 
-#define main_filename  "file.txt"
+#define filename  "file.txt"
 void write_example();
 void read_example();
 
@@ -23,10 +23,10 @@ void write_example()
 {
 	printf("run write_example\n");
 
-	FILE *const fp = fopen(main_filename, "w");
+	FILE *const fp = fopen(filename, "w");
 
 	if (fp == NULL) {
-		printf("error: cannot create file '%s'", main_filename);
+		printf("error: cannot create file '%s'", filename);
 		return;
 	}
 
@@ -39,14 +39,14 @@ void read_example()
 {
 	printf("run read_example\n");
 
-	FILE *const fp = fopen(main_filename, "r");
+	FILE *const fp = fopen(filename, "r");
 
 	if (fp == NULL) {
-		printf("error: cannot open file '%s'", main_filename);
+		printf("error: cannot open file '%s'", filename);
 		return;
 	}
 
-	printf("file '%s' contains: ", main_filename);
+	printf("file '%s' contains: ", filename);
 	while (true) {
 		const int ch = fgetc(fp);
 		if (ch == EOF) {

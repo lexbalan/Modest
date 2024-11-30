@@ -11,7 +11,7 @@
 #include <stdio.h>
 
 
-typedef struct main_Point main_Point; //
+typedef struct Point Point; //
 int main();
 
 #endif /* MAIN_H */

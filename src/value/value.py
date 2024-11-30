@@ -195,6 +195,7 @@ def value_func(id, type, ti):
 		'immutable': True,
 		'pure': True,
 		'att': [],
+		'deps': [],
 		'ti_def': ti,
 	}
 

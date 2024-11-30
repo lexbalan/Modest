@@ -8,7 +8,7 @@
 
 
 
-struct main_Point {
+struct Point {
 	int32_t x;
 	int32_t y;
 };
@@ -17,8 +17,8 @@ struct main_Point {
 
 static int32_t glb_i0 = 0;
 static int32_t glb_i1 = 321;
-static main_Point glb_r0 = {};
-static main_Point glb_r1 = {.x = 20, .y = 10};
+static Point glb_r0 = {};
+static Point glb_r1 = {.x = 20, .y = 10};
 static int32_t glb_a0[10] = (int32_t[10]){};
 static int32_t glb_a1[10] = (int32_t[10]){64, 53, 42};
 
@@ -78,10 +78,10 @@ int main()
 
 	// copy records by value
 	// C backend will be use memcpy()
-	main_Point loc_r0;
-	loc_r0 = (main_Point){};
-	main_Point loc_r1;
-	loc_r1 = (main_Point){.x = 10, .y = 20};
+	Point loc_r0;
+	loc_r0 = (Point){};
+	Point loc_r1;
+	loc_r1 = (Point){.x = 10, .y = 20};
 
 	loc_r0 = loc_r1;
 

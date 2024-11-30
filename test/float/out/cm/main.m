@@ -6,15 +6,15 @@ include "libc/stdio"
 include "libc/stdlib"
 @c_include "math.h"
 include "libc/math"
+const mathPi = 3.141592653589793238462643383279502884
+func squareOfCircle(radius: Float64) -> Float64 {
+	return pow(radius, 2) * mathPi
+}
 
 
 type Point2D record {
 	x: Int
 	y: Int
-}
-const mathPi = 3.141592653589793238462643383279502884
-func squareOfCircle(radius: Float64) -> Float64 {
-	return pow(radius, 2) * mathPi
 }
 func slope(a: Point2D, b: Point2D) -> Float32 {
 	let dx = abs(a.x - b.x)

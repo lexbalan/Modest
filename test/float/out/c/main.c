@@ -8,15 +8,15 @@
 
 
 
+#define mathPi  3.141592653589793238462643383279502884
 
 
-struct main_Point2D {
+struct Point2D {
 	int x;
 	int y;
 };
-#define main_mathPi  3.141592653589793238462643383279502884
 double squareOfCircle(double radius);
-float slope(main_Point2D a, main_Point2D b);
+float slope(Point2D a, Point2D b);
 
 
 
@@ -27,10 +27,10 @@ float slope(main_Point2D a, main_Point2D b);
 
 double squareOfCircle(double radius)
 {
-	return pow(radius, (double)(2)) * main_mathPi;
+	return pow(radius, (double)(2)) * mathPi;
 }
 
-float slope(main_Point2D a, main_Point2D b)
+float slope(Point2D a, Point2D b)
 {
 	const int dx = abs(a.x - b.x);
 	const int dy = abs(a.y - b.y);
@@ -55,7 +55,7 @@ int main()
 	printf("sizeof(Float64) = %lu\n", sizeof(double));
 
 	// printf %f ожидает получить double а не float!
-	const float sl = slope((main_Point2D){.x = 10, .y = 20}, (main_Point2D){.x = 30, .y = 50});
+	const float sl = slope((Point2D){.x = 10, .y = 20}, (Point2D){.x = 30, .y = 50});
 	printf("slope = %f\n", (double)sl);
 
 	return 0;

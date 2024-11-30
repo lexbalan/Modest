@@ -15,7 +15,7 @@
 #include <stdio.h>
 
 
-typedef struct main_Chunk main_Chunk; //
+typedef struct Chunk Chunk; //
 int main();
 
 #endif /* MAIN_H */

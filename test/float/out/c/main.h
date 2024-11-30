@@ -19,7 +19,7 @@
 #include <math.h>
 
 
-typedef struct main_Point2D main_Point2D; //
+typedef struct Point2D Point2D; //
 int main();
 
 #endif /* MAIN_H */

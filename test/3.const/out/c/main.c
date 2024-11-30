@@ -8,40 +8,40 @@
 
 
 
+#define genericIntConst  42
+#define int32Const  ((int32_t)genericIntConst)
+#define genericStringConst  "Hello!"
+#define string8Const  (char *)genericStringConst
+#define string16Const  u"Hello!"
+#define string32Const  U"Hello!"
 
 
-struct main_Point {
+struct Point {
 	uint32_t x;
 	uint32_t y;
 };
-#define main_genericIntConst  42
-#define main_int32Const  ((int32_t)main_genericIntConst)
-#define main_genericStringConst  "Hello!"
-#define main_string8Const  (char *)main_genericStringConst
-#define main_string16Const  u"Hello!"
-#define main_string32Const  U"Hello!"
-#define _main_ps  { \
+#define _ps  { \
 	{.x = 0, .y = 0}, \
 	{.x = 1, .y = 1}, \
 	{.x = 2, .y = 2} \
 }
-const struct {int8_t x; int8_t y;} main_ps[3] = _main_ps;
-#define _main_points  _main_ps
-const main_Point main_points[3] = _main_points;
+const struct {int8_t x; int8_t y;} ps[3] = _ps;
+#define _points  _ps
+const Point points[3] = _points;
 
 
 
-static main_Point points2[3] = _main_points;
+static Point points2[3] = _points;
 
 int main()
 {
 	printf("test const\n");
 
-	printf("genericIntConst = %d\n", (int32_t)main_genericIntConst);
-	printf("int32Const = %d\n", main_int32Const);
+	printf("genericIntConst = %d\n", (int32_t)genericIntConst);
+	printf("int32Const = %d\n", int32Const);
 
 	//	printf("genericStringConst = %s\n", genericStringConst)
-	printf("string8Const = %s\n", main_string8Const);
+	printf("string8Const = %s\n", string8Const);
 
 	return 0;
 }

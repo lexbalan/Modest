@@ -4,11 +4,11 @@ include "libc/ctypes64"
 include "libc/string"
 @c_include "stdio.h"
 include "libc/stdio"
+const filename = *Str8 "file.bin"
 type Chunk record {
 	id: [100]Char
 	data: [1024]Char
 }
-const filename = *Str8 "file.bin"
 func write_example() -> Unit {
 	printf("run write_example\n")
 

@@ -11,9 +11,9 @@
 #include <stdio.h>
 
 
-typedef struct main_Type1 main_Type1; //
-typedef struct main_Type2 main_Type2; //
-typedef struct main_Type3 main_Type3; //
+typedef struct Type1 Type1; //
+typedef struct Type2 Type2; //
+typedef struct Type3 Type3; //
 int main();
 
 #endif /* MAIN_H */

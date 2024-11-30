@@ -193,7 +193,7 @@ declare void @perror(%ConstCharStr* %str)
 @str4 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
 
-@main_arr = constant [2 x %Int32] [
+@arr = constant [2 x %Int32] [
 	%Int32 1,
 	%Int32 2
 ]

@@ -306,29 +306,29 @@ declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
 @str6 = private constant [2 x i8] [i8 10, i8 0]
 ; -- endstrings --
 
-@main_ratSymbolUTF8 = constant [4 x %Int8] [
+@ratSymbolUTF8 = constant [4 x %Int8] [
 	%Int8 240,
 	%Int8 159,
 	%Int8 144,
 	%Int8 128
 ]
-@main_ratSymbolUTF16 = constant [2 x %Int16] [
+@ratSymbolUTF16 = constant [2 x %Int16] [
 	%Int16 55357,
 	%Int16 56320
 ]
-@main_arr_partycorn = constant [4 x %Char8] [
+@arr_partycorn = constant [4 x %Char8] [
 	%Char8 240,
 	%Char8 159,
 	%Char8 142,
 	%Char8 137
 ]
-@main_arr_unicorn = constant [4 x %Char8] [
+@arr_unicorn = constant [4 x %Char8] [
 	%Char8 240,
 	%Char8 159,
 	%Char8 166,
 	%Char8 132
 ]
-@main_arr_rat = constant [4 x %Char8] [
+@arr_rat = constant [4 x %Char8] [
 	%Char8 240,
 	%Char8 159,
 	%Char8 144,

@@ -10,19 +10,19 @@
 
 
 
-struct main_Point {
+struct Point {
 	float x;
 	float y;
 };
 
-struct main_Line {
-	main_Point a;
-	main_Point b;
+struct Line {
+	Point a;
+	Point b;
 };
 float max(float a, float b);
 float min(float a, float b);
-float distance(main_Point a, main_Point b);
-float lineLength(main_Line line);
+float distance(Point a, Point b);
+float lineLength(Line line);
 void ptr_example();
 
 
@@ -31,7 +31,7 @@ void ptr_example();
 
 
 
-static main_Line line = {
+static Line line = {
 	.a = {.x = 0, .y = 0},
 	.b = {.x = 1.0, .y = 1.0}
 };
@@ -52,7 +52,7 @@ float min(float a, float b)
 	return b;
 }
 
-float distance(main_Point a, main_Point b)
+float distance(Point a, Point b)
 {
 	const float dx = max(a.x, b.x) - min(a.x, b.x);
 	const float dy = max(a.y, b.y) - min(a.y, b.y);
@@ -61,14 +61,14 @@ float distance(main_Point a, main_Point b)
 	return sqrt(dx2 + dy2);
 }
 
-float lineLength(main_Line line)
+float lineLength(Line line)
 {
 	return distance(line.a, line.b);
 }
 
 void ptr_example()
 {
-	main_Point *const ptr_p = (main_Point *)malloc(sizeof(main_Point));
+	Point *const ptr_p = (Point *)malloc(sizeof(Point));
 
 	// access by pointer
 	ptr_p->x = (float)(10);

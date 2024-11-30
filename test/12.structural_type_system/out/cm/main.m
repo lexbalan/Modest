@@ -13,9 +13,6 @@ type Type2 record {
 }
 
 type Type3 Type1
-var a: Type1 = {x = 1}
-var b: Type2 = {x = 2}
-var c: Type3 = {x = 3}
 func f0_val(x: Type1) -> Unit {
 	printf("f0 x.x = %d\n", x.x)
 }
@@ -40,6 +37,9 @@ func f2_ptr(x: *Type3) -> Unit {
 func f3_ptr(x: *record {x: Int32}) -> Unit {
 	printf("f3p x.x = %d\n", x.x)
 }
+var a: Type1 = {x = 1}
+var b: Type2 = {x = 2}
+var c: Type3 = {x = 3}
 func test_by_value() -> Unit {
 	f0_val(a)
 	f1_val(a)

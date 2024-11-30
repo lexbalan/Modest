@@ -9,7 +9,7 @@
 
 
 
-typedef int32_t main_NewInt32;
+typedef int32_t NewInt32;
 
 
 
@@ -18,7 +18,7 @@ int main()
 {
 	printf("test typedef\n");
 
-	main_NewInt32 newInt32;
+	NewInt32 newInt32;
 	newInt32 = 0;
 
 	//type NewInt16 Int16

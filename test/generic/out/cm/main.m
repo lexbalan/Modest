@@ -2,19 +2,6 @@
 include "libc/ctypes64"
 @c_include "stdio.h"
 include "libc/stdio"
-
-
-
-type Point2D record {
-	x: Int32
-	y: Int32
-}
-
-type Point3D record {
-	x: Int32
-	y: Int32
-	z: Int32
-}
 func test_generic_integer() -> Bool {
 	// Any integer literal have GenericInteger type
 	let one = 1
@@ -115,6 +102,19 @@ func test_generic_array() -> Bool {
 	}
 
 	return true
+}
+
+
+
+type Point2D record {
+	x: Int32
+	y: Int32
+}
+
+type Point3D record {
+	x: Int32
+	y: Int32
+	z: Int32
 }
 func test_generic_record() -> Bool {
 	// Any record expression have GenericRecord type

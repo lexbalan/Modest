@@ -2240,7 +2240,7 @@ def symbol_const(id, init_value, is_public=False):
 # нужно добавлять префикс к сущности
 # наличие поля prefix дает принтеру знать что нужно декорировать имя
 def need_decoration(x):
-	return not is_nodecorate(x) and not ('module_nodecorate' in cmodule['att'])
+	return not is_nodecorate(x) and not ('module_nodecorate' in cmodule['att']) and not x['access_modifier'] == 'private'
 
 
 
@@ -2825,6 +2825,8 @@ def do_directive(x):
 			feature_add(args[0])
 		elif s0 == 'unsafe':
 			feature_add('unsafe')
+		elif s0 == 'noprefix':
+			feature_add('noprefix')
 			pass
 	return None
 
@@ -3095,6 +3097,11 @@ def pre_def(ast, fdecl=False):
 				y = def_const(x)
 			elif kind == 'func':
 				y = def_func(x)
+
+				if need_decoration(x):
+					if x['id']['str'] != 'main':
+						y['id']['prefix'] = cmodule['prefix']
+
 			elif kind == 'var':
 				y = def_var(x)
 

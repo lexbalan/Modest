@@ -8,10 +8,10 @@
 
 
 
-#define server_filename  "file2.txt"
-#define server_ipAddress  "127.0.0.1"
-#define server_port  8080
-#define server_bufSize  1024
+#define filename  "file2.txt"
+#define ipAddress  "127.0.0.1"
+#define port  8080
+#define bufSize  1024
 bool write_file(int sockfd);
 
 
@@ -23,23 +23,23 @@ bool write_file(int sockfd);
 
 bool write_file(int sockfd)
 {
-	char buffer[server_bufSize];
+	char buffer[bufSize];
 
-	FILE *const fp = fopen(server_filename, "w");
+	FILE *const fp = fopen(filename, "w");
 	if (fp == NULL) {
 		perror("[-] Error in creating file");
 		return false;
 	}
 
 	while (true) {
-		const ssize_t n = recv(sockfd, (char *)&buffer, server_bufSize, 0);
+		const ssize_t n = recv(sockfd, (char *)&buffer, bufSize, 0);
 
 		if (n <= 0) {
 			break;
 		}
 
 		fprintf(fp, "%s", (char *)&buffer);
-		memset(&buffer, 0, sizeof(char[server_bufSize]));
+		memset(&buffer, 0, sizeof(char[bufSize]));
 	}
 
 	return true;
@@ -58,9 +58,9 @@ int main()
 	struct sockaddr_in server_addr;
 	server_addr = (struct sockaddr_in){
 		.sin_family = AF_INET,
-		.sin_port = server_port,
+		.sin_port = port,
 		.sin_addr = (struct in_addr){
-			.s_addr = inet_addr(server_ipAddress)
+			.s_addr = inet_addr(ipAddress)
 		}
 	};
 

@@ -2,6 +2,7 @@
 
 $pragma do_not_include
 $pragma c_no_print
+$pragma noprefix
 
 $pragma c_include "stdio.h"
 

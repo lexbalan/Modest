@@ -195,29 +195,6 @@ declare void @perror(%ConstCharStr* %str)
 @str6 = private constant [26 x i8] [i8 97, i8 102, i8 116, i8 101, i8 114, i8 32, i8 100, i8 101, i8 99, i8 114, i8 121, i8 112, i8 116, i8 32, i8 116, i8 101, i8 115, i8 116, i8 95, i8 109, i8 115, i8 103, i8 58, i8 32, i8 10, i8 0]
 ; -- endstrings --
 
-
-@test_msg = global [13 x %Char8] [
-	%Char8 72,
-	%Char8 101,
-	%Char8 108,
-	%Char8 108,
-	%Char8 111,
-	%Char8 32,
-	%Char8 87,
-	%Char8 111,
-	%Char8 114,
-	%Char8 108,
-	%Char8 100,
-	%Char8 33,
-	%Char8 0
-]
-@test_key = global [4 x %Char8] [
-	%Char8 97,
-	%Char8 98,
-	%Char8 99,
-	%Char8 0
-]
-
 define internal void @xor_encrypter([0 x %Word8]* %buf, %Int32 %buflen, [0 x %Word8]* %key, %Int32 %keylen) {
 	%1 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %1
@@ -259,6 +236,30 @@ endif_0:
 break_1:
 	ret void
 }
+
+
+
+@test_msg = global [13 x %Char8] [
+	%Char8 72,
+	%Char8 101,
+	%Char8 108,
+	%Char8 108,
+	%Char8 111,
+	%Char8 32,
+	%Char8 87,
+	%Char8 111,
+	%Char8 114,
+	%Char8 108,
+	%Char8 100,
+	%Char8 33,
+	%Char8 0
+]
+@test_key = global [4 x %Char8] [
+	%Char8 97,
+	%Char8 98,
+	%Char8 99,
+	%Char8 0
+]
 
 define internal void @print_bytes([0 x %Word8]* %buf, %Int32 %len) {
 	%1 = alloca %Int32, align 4

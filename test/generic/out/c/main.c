@@ -11,12 +11,12 @@
 
 
 
-struct main_Point2D {
+struct Point2D {
 	int32_t x;
 	int32_t y;
 };
 
-struct main_Point3D {
+struct Point3D {
 	int32_t x;
 	int32_t y;
 	int32_t z;
@@ -141,14 +141,14 @@ bool test_generic_record()
 
 	// implicit cast Generic(record {x: GenericInteger, y: GenericInteger})
 	// to record {x: Int32, y: Int32}
-	main_Point2D point_2d;
-	point_2d = (main_Point2D)__p;
+	Point2D point_2d;
+	point_2d = (Point2D)__p;
 
 
 	// explicit cast Generic(record {x: GenericInteger, y: GenericInteger})
 	// to record {x: Int32, y: Int32, z: Int32}
-	main_Point3D point_3d;
-	point_3d = (main_Point3D)__p;
+	Point3D point_3d;
+	point_3d = (Point3D)__p;
 
 	return true;
 
