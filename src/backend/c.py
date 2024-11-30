@@ -2046,15 +2046,16 @@ def print_cfile(module, _outname):
 
 	guardsymbol = ''
 
-	out("\n#include <stdint.h>\n")
+	out("\n")
+	out("#include <stdint.h>\n")
 	out("#include <stdbool.h>\n")
 	out("#include <string.h>\n")
 
 	if 'use_va_arg' in module['att']:
 		out("#include <stdarg.h>")
 
-	out("\n#include \"%s.h\"\n" % module['id'])
-
+	out("\n")
+	out("#include \"%s.h\"\n" % module['id'])
 	out("\n")
 
 	if 'use_lengthof' in module['att']:
@@ -2081,7 +2082,6 @@ def print_cfile(module, _outname):
 			print_def_type(x)
 
 
-	#out("// defs\n")
 	for x in module['defs_private']:
 		if 'c_no_print' in x['att']:
 			continue
