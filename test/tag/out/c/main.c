@@ -24,17 +24,8 @@ struct Rec1 {
 };
 
 
-void main_print(char *form, ...)
-{
-	va_list va;
-	va_start(va, form);
 
-	const uint32_t c = va_arg(va, uint32_t);
-	printf("CC32 = %d\n", c);
-	printf("CC8 = %d\n", (char)c);
-
-	va_end(va);
-}
+void main_print(char *form, ...);
 
 int32_t main()
 {
@@ -47,8 +38,18 @@ int32_t main()
 	r0.p = (Rec1 *)&r1;
 	r1.p = (Rec0 *)&r0;
 
-
-
 	return 0;
+}
+
+void main_print(char *form, ...)
+{
+	va_list va;
+	va_start(va, form);
+
+	const uint32_t c = va_arg(va, uint32_t);
+	printf("CC32 = %d\n", c);
+	printf("CC8 = %d\n", (char)c);
+
+	va_end(va);
 }
 

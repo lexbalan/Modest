@@ -8,7 +8,7 @@
 #include <stdio.h>
 
 
-void main_print(char *form, ...);
 int32_t main();
+void main_print(char *form, ...);
 
 #endif /* MAIN_H */

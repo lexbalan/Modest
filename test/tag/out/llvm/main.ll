@@ -189,9 +189,9 @@ declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
 ; -- end print imports --
 ; -- strings --
-@str1 = private constant [11 x i8] [i8 67, i8 67, i8 51, i8 50, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str2 = private constant [10 x i8] [i8 67, i8 67, i8 56, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
-@str3 = private constant [3 x i8] [i8 37, i8 99, i8 0]
+@str1 = private constant [3 x i8] [i8 37, i8 99, i8 0]
+@str2 = private constant [11 x i8] [i8 67, i8 67, i8 51, i8 50, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+@str3 = private constant [10 x i8] [i8 67, i8 67, i8 56, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 ; -- endstrings --
 
 %Rec0 = type {
@@ -203,21 +203,8 @@ declare void @perror(%ConstCharStr* %str)
 };
 
 
-define void @main_print(%Str8* %form, ...) {
-	%1 = alloca i8*, align 1
-	%2 = bitcast i8** %1 to i8*
-	call void @llvm.va_start(i8* %2)
-	%3 = va_arg i8** %1, %Char32
-	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str1 to [0 x i8]*), %Char32 %3)
-	%5 = trunc %Char32 %3 to %Char8
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str2 to [0 x i8]*), %Char8 %5)
-	%7 = bitcast i8** %1 to i8*
-	call void @llvm.va_end(i8* %7)
-	ret void
-}
-
 define %Int32 @main() {
-	call void (%Str8*, ...) @main_print(%Str8* bitcast ([3 x i8]* @str3 to [0 x i8]*), %Char32 35)
+	call void (%Str8*, ...) @main_print(%Str8* bitcast ([3 x i8]* @str1 to [0 x i8]*), %Char32 35)
 	%1 = alloca %Rec0, align 8
 	%2 = alloca %Rec1, align 8
 	%3 = getelementptr inbounds %Rec0, %Rec0* %1, %Int32 0, %Int32 0
@@ -227,6 +214,19 @@ define %Int32 @main() {
 	%6 = bitcast %Rec0* %1 to %Rec0*
 	store %Rec0* %6, %Rec0** %5
 	ret %Int32 0
+}
+
+define void @main_print(%Str8* %form, ...) {
+	%1 = alloca i8*, align 1
+	%2 = bitcast i8** %1 to i8*
+	call void @llvm.va_start(i8* %2)
+	%3 = va_arg i8** %1, %Char32
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str2 to [0 x i8]*), %Char32 %3)
+	%5 = trunc %Char32 %3 to %Char8
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str3 to [0 x i8]*), %Char8 %5)
+	%7 = bitcast i8** %1 to i8*
+	call void @llvm.va_end(i8* %7)
+	ret void
 }
 
 
