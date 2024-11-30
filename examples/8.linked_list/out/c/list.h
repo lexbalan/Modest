@@ -15,21 +15,24 @@
 #include <stdio.h>
 
 
-typedef struct list_Node list_Node; //
-typedef struct list_List list_List; //
 
+
+struct list_Node;
+typedef struct list_Node list_Node;
 
 struct list_Node {
 	list_Node *next;
 	list_Node *prev;
 	void *data;
 };
+typedef struct list_Node list_Node;
 
 struct list_List {
 	list_Node *head;
 	list_Node *tail;
 	uint32_t size;
 };
+typedef struct list_List list_List;
 list_List *list_create();
 uint32_t list_size_get(list_List *list);
 list_Node *list_first_node_get(list_List *list);

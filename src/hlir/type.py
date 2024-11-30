@@ -53,6 +53,7 @@ def hlir_type_bad(x):
 		'ast_type': x,
 		'ops': [],
 		'att': [],
+		'deps': [],
 		'ti': x['ti']
 	}
 
@@ -71,6 +72,7 @@ def hlir_type_undefined(ti):
 		'uid': uid,
 		'ops': [],
 		'att': [],
+		'deps': [],
 		'ti': ti
 	}
 
@@ -95,6 +97,7 @@ def hlir_type_by_width(width, ti=None):
 
 		'ops': [],
 		'att': [],
+		'deps': [],
 		'ti': ti
 	}
 
@@ -247,6 +250,7 @@ def hlir_type_array(of, volume, ti=None):
 		'volume': volume,
 		'ops': ARR_OPS,
 		'att': [],
+		'deps': [],
 		'ti': ti
 	}
 
@@ -270,6 +274,7 @@ def hlir_type_enum(ti=None):
 		'uid': enum_uid,
 		'ops': ENUM_OPS,
 		'att': [],
+		'deps': [],
 		'ti': ti
 	}
 
@@ -311,6 +316,7 @@ def hlir_type_record(fields, ti=None):
 		'ops': REC_OPS,
 		'end_nl': 0,
 		'att': [],
+		'deps': [],
 		'ti': ti
 	}
 
@@ -328,6 +334,7 @@ def hlir_type_func(params, to, va_args, va_list_id, ti=None):
 		'extra_args': va_args,
 		'ops': [],
 		'att': [],
+		'deps': [],
 		'ti': ti
 	}
 
@@ -346,6 +353,7 @@ def hlir_type_string(char_width, length, ti=None):
 		'length': length,
 		'ops': STR_OPS,
 		'att': [],
+		'deps': [],
 		'ti': ti
 	}
 

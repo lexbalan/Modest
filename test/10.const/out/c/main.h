@@ -18,8 +18,6 @@
 #include "./minmax.h"
 
 
-typedef struct Point Point; //
-typedef struct Line Line; //
 int main();
 
 #endif /* MAIN_H */

@@ -1681,8 +1681,7 @@ def print_def_func(x):
 
 
 def print_decl_type(x):
-	newline(n=x['nl'])
-
+	#newline(n=x['nl'])
 	id_str = get_id_str(x['type'])
 	out("struct %s;" % id_str)
 	if not NO_TYPEDEF_STRUCTS:
@@ -1690,17 +1689,25 @@ def print_decl_type(x):
 
 
 def print_def_type(x):
+	global declared
 	newline(n=x['nl'])
 
 	id_str = get_id_str(x['type'])
 	orig_type = x['original_type']
 
+	# печатаем декларации для типов от которых зависит этот тип
+	for dep in x['type']['deps']:
+		if not dep['id']['str'] in declared:
+			declared.append(dep['id']['str'])
+			print_decl_type(dep['definition'])
+			out("\n\n")
 
-	if NO_TYPEDEF_STRUCTS:
-		if hlir_type.type_is_record(orig_type):
-			print_type_record(orig_type, tag=id_str)
-			out(";")
-			return
+
+#	if NO_TYPEDEF_STRUCTS:
+#		if hlir_type.type_is_record(orig_type):
+#			print_type_record(orig_type, tag=id_str)
+#			out(";")
+#			return
 
 
 	is_defined_array = hlir_type.type_is_closed_array(orig_type)
@@ -1708,6 +1715,8 @@ def print_def_type(x):
 	if hlir_type.type_is_record(x['original_type']):
 		print_type_record(x['original_type'], tag=id_str)
 		out(";")
+		if not id_str in declared:
+			out("\ntypedef struct %s %s;" % (id_str, id_str))
 		return
 
 	out("typedef ")
@@ -1716,23 +1725,11 @@ def print_def_type(x):
 	out(id_str)
 	out(";")
 
-	"""if 'volatile' in x['original_type']['att']:
-		out("volatile ")
 
-	t = orig_type
-	if is_defined_array:
-		t = orig_type['of']
 
-	print_type(t, space_after=True)
 
-	out("/**/")
 
-	out(id['str'])
 
-	if is_defined_array:
-		print_array_volume(orig_type)
-
-	out(";")"""
 
 
 
@@ -1989,10 +1986,10 @@ def print_header(module, outname):
 
 	out("\n")
 
-	#out("\n/* forward type declaration */")
-	for rec in module['records']:
-		rec_id = get_id_str(rec)
-		out("\ntypedef struct %s %s; //" % (rec_id, rec_id))
+#	out("\n/* forward type declaration */")
+#	for rec in module['records']:
+#		rec_id = get_id_str(rec)
+#		out("\ntypedef struct %s %s; //" % (rec_id, rec_id))
 
 
 	for x in module['defs_public']:
@@ -2101,6 +2098,8 @@ def print_cfile(module, _outname):
 		elif isa == 'def_func':
 			out("\n")
 			print_def_func(x)
+		#elif isa == 'def_type':
+		#	print_def_type(x)
 
 		elif isa == 'comment': print_comment(x)
 		elif isa == 'directive': print_directive(x)
@@ -2118,6 +2117,9 @@ def print_cfile(module, _outname):
 				continue
 			out("\n")
 			print_def_func(x)
+
+		#elif isa == 'def_type':
+		#	print_def_type(x)
 
 		elif isa == 'comment': print_comment(x)
 		elif isa == 'directive': print_directive(x)

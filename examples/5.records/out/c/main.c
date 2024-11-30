@@ -14,11 +14,13 @@ struct Point {
 	float x;
 	float y;
 };
+typedef struct Point Point;
 
 struct Line {
 	Point a;
 	Point b;
 };
+typedef struct Line Line;
 
 
 

@@ -15,6 +15,7 @@ struct Point2D {
 	int x;
 	int y;
 };
+typedef struct Point2D Point2D;
 
 
 

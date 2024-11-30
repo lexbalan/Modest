@@ -80,6 +80,7 @@ modules = {}
 
 cmodule = None  # Current module
 cfunc = None	# current function
+ctype = None	# current type
 context = None  # current context (symtab)
 
 
@@ -572,6 +573,8 @@ def do_field(x):
 #
 
 def do_type_id(t):
+	global ctype
+
 	id = t['ids'][0]
 	id_str = id['str']
 
@@ -592,16 +595,25 @@ def do_type_id(t):
 	else:
 		tx = ctx_type_get(id_str)
 
-	if tx == None:
-		predefinition(id)
-		tx = ctx_type_get(id_str)
-		if tx != None:
-			return tx
+	# если дело происходит в определении типа и пришел undefined тип
+	# пропишем его в ctype['deps']
 
-		error("undeclared type '%s'" % id_str, t['ti'])
-		# create fake alias for unknown type
-		tx = hlir_type.hlir_type_bad(t)
-		root_symtab.type_add(id_str, tx)
+	if ctype != None:
+		if hlir_type.type_is_undefined(tx):
+			#print("TYPE_DEPS_APPEND(%s)" % str(tx))
+			ctype['deps'].append(tx)
+
+
+#	if tx == None:
+#		predefinition(id)
+#		tx = ctx_type_get(id_str)
+#		if tx != None:
+#			return tx
+#
+#		error("undeclared type '%s'" % id_str, t['ti'])
+#		# create fake alias for unknown type
+#		tx = hlir_type.hlir_type_bad(t)
+#		root_symtab.type_add(id_str, tx)
 	return tx
 
 
@@ -2252,17 +2264,26 @@ def type_update(dst, src):
 
 def def_type(x):
 	global cmodule
-	id = x['id']
-	log("def_type: %s" % id['str'])
+	global ctype
 
-	if id['str'][0].islower():
-		error("type id must starts with big letter", id['ti'])
+	id = x['id']
+	#print("def_type: %s" % id['str'])
+
+	# TODO: move this checking to parser!
+	#if id['str'][0].islower():
+	#	error("type id must starts with big letter", id['ti'])
+
+	old_ctype = ctype
 
 	nt = ctx_type_get(id['str'])
+	ctype = nt
 
 	ty = do_type(x['type'])
 
+
+
 	if hlir_type.type_is_bad(ty):
+		ctype = old_ctype
 		return None
 
 	# поскольку этот тип здесь связывается с идентификатором
@@ -2270,13 +2291,15 @@ def def_type(x):
 	if ty in cmodule['anon_recs']:
 		cmodule['anon_recs'].remove(ty)
 
+
 	# Замещаем внутренности undefined типа на тип справа
 	# НО! имя даем новое
+	deps = nt['deps']
 	type_update(nt, ty)
+	nt['deps'] = deps
 	nt['ti_def'] = id['ti']
 	nt['module'] = cmodule  # добавляем заново тк очистили его выше!
 	nt['id'] = id # need for  @property("type.id.c", "int")
-
 
 	if need_decoration(x):
 		nt['id']['prefix'] = cmodule['prefix']
@@ -2298,6 +2321,8 @@ def def_type(x):
 	definition['access_level'] = x['access_modifier']
 
 	nt['definition'] = definition
+
+	ctype = old_ctype
 
 	return definition
 

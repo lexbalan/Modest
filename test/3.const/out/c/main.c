@@ -20,6 +20,7 @@ struct Point {
 	uint32_t x;
 	uint32_t y;
 };
+typedef struct Point Point;
 #define _ps  { \
 	{.x = 0, .y = 0}, \
 	{.x = 1, .y = 1}, \

@@ -16,14 +16,17 @@ struct __anonymous_struct_4 {int32_t x;};
 struct Type1 {
 	int32_t x;
 };
+typedef struct Type1 Type1;
 
 struct Type2 {
 	int32_t x;
 };
+typedef struct Type2 Type2;
 
 struct Type3 {
 	int32_t x;
 };
+typedef struct Type3 Type3;
 
 
 

@@ -14,11 +14,13 @@ struct Point {
 	double x;
 	double y;
 };
+typedef struct Point Point;
 
 struct Line {
 	Point a;
 	Point b;
 };
+typedef struct Line Line;
 #define zero  0
 #define pointZero  {.x = zero, .y = zero}
 #define pointOne  {.x = 1.0, .y = 1.0}

@@ -16,12 +16,14 @@ struct Point2D {
 	uint32_t x;
 	uint32_t y;
 };
+typedef struct Point2D Point2D;
 
 struct Point3D {
 	uint32_t x;
 	uint32_t y;
 	uint32_t z;
 };
+typedef struct Point3D Point3D;
 #define xx  {.x = 1, .y = 2}
 #define yy  {.x = 1, .y = 2}
 
