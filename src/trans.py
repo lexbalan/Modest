@@ -1246,6 +1246,13 @@ def do_value_call(x):
 		error("undefined value 2", fn)
 		return value_bad(x)
 
+	if value_is_undefined(fn):
+		#info("call undefined func", x['ti'])
+		cfunc['deps'].append(fn)
+		fn = lookup_func(x['left']['str'])
+		if fn == None:
+			error("call undefined func", x['ti'])
+			return value_bad(x)
 
 	ftype = fn['type']
 
@@ -2461,8 +2468,20 @@ def def_func(x, dostmt=True):
 	func_id = x['id']
 	log('def_func: %s' % func_id['str'])
 
-	# значение функции уже существует, тк мы ранее сделали проход
+	# значение функции уже существует, (возможно - undefined)
+	# тк мы ранее сделали проход
 	fn = ctx_value_get(func_id['str'])
+
+	if value_is_undefined(fn):
+		ftype = do_type_func(x['type'])
+		fn['kind'] = 'func'
+		fn['id'] = x['id']
+		fn['type'] = ftype
+		fn['immediate'] = False
+		fn['immutable'] = True
+		fn['deps'] = []
+		fn['att'] = []
+		fn['ti_def'] = x['ti']
 
 
 
@@ -2804,6 +2823,8 @@ def do_directive(x):
 			cmodule['att'].append('c_no_print')
 		elif s0 == 'feature':
 			feature_add(args[0])
+		elif s0 == 'unsafe':
+			feature_add('unsafe')
 			pass
 	return None
 
@@ -2922,8 +2943,8 @@ def translate(abspath, nodef=False):
 
 	m = None
 	if ast != None:
-		m = process_module(ast, nodef=nodef)
-		m['id'] = abspath.split('/')[-1][:-2]
+		idStr = abspath.split('/')[-1][:-2]
+		m = process_module(idStr, ast, nodef=nodef)
 		m['prefix'] = m['id']
 		m['source_abspath'] = abspath
 
@@ -2936,7 +2957,7 @@ def translate(abspath, nodef=False):
 
 
 
-def process_module(ast, nodef=False):
+def process_module(idStr, ast, nodef=False):
 	global skipp, production, prev_production
 
 	global properties
@@ -2960,7 +2981,7 @@ def process_module(ast, nodef=False):
 		'ast': ast,
 
 		# defined after
-		'id': '<moduleId>',
+		'id': idStr,
 		'prefix': None,
 
 		'strings': [],    # for LLVM backend
@@ -2993,7 +3014,8 @@ def process_module(ast, nodef=False):
 			module_append(y)
 
 
-	pre_def(ast, fdecl=nodef)    # process in normal mode
+	pre_def(ast, fdecl=nodef)  # process in normal mode
+
 
 	m = cmodule
 
@@ -3004,71 +3026,85 @@ def process_module(ast, nodef=False):
 
 
 
-# создает символы для всех функций в модуле
-# если они имеют неизвестную зависимость -
-# удовлетворяет ее посредством predefinition(id_str)
+def lookup_func(idStr):
+	#print("lookup_func(%s)" % idStr)
+	for x in cmodule['ast']:
+		y = None
+		if x['isa'] != 'ast_definition':
+			continue
+		if x['kind'] != 'func':
+			continue
+		if x['id']['str'] != idStr:
+			continue
+
+		fn = ctx_value_get(idStr)
+		fn['kind'] = 'func'
+		fn['id'] = x['id']
+		#fn['type'] = ftype
+		fn['immediate'] = False
+		fn['immutable'] = True
+		fn['deps'] = []
+		fn['att'] = []
+		fn['ti_def'] = x['ti']
+
+		ftype = do_type_func(x['type'])
+		type_update(fn['type'], ftype)
+		return fn
+
+
 def pre_def(ast, fdecl=False):
 	global cmodule
 
-	# 1. def types
-	# (and const if need for type!)
+	# 1. Проходим по всем типам, создаем их undefined "прототипы".
+	# 2. Проходим по всем функциям, создаем их undefined "прототипы".
 	for x in ast:
 		isa = x['isa']
 		kind = x['kind']
 
 		if isa == 'ast_definition':
+			is_public = x['access_modifier'] == 'public'
+			id = x['id']
+			ti = id['ti']
+
 			if kind == 'type':
-				if not 'defined' in x:
-					y = def_type(x)
+				#print("PREDEF_TYPE(%s)" % id['str'])
+				t = hlir_type.hlir_type_undefined(x['ti'])
+				cmodule_type_add(id['str'], t, is_public=is_public)
 
-					add_spices(y, ast_atts=x['attributes'])
-					module_append(y, to_export=x['access_modifier'] == 'public')
+			elif kind == 'func':
+				#print("PREDEF_FUNC(%s)" % id['str'])
+				t = hlir_type.hlir_type_undefined(x['ti'])
+				v = value_undefined(t, x['ti'])
+				cmodule_value_add(id['str'], v, is_public=is_public)
 
-	# 2. def vars & consts
+		elif isa == 'ast_attribute':
+			print("ATT(%s)" % x['kind'])
+
+
+	# 3. Далее идем по всем элементам с самого начала и определяем их.
+	#   - Если элемент использует undefined - заносим его в список зависимостей эл-та
 	for x in ast:
 		isa = x['isa']
 		kind = x['kind']
 
 		if isa == 'ast_definition':
 			y = None
-			if kind == 'const':
-				if not 'defined' in x:
-					y = def_const(x)
-
+			if kind == 'type':
+				y = def_type(x)
+			elif kind == 'const':
+				y = def_const(x)
+			elif kind == 'func':
+				y = def_func(x)
 			elif kind == 'var':
 				y = def_var(x)
 
+			add_spices(y, ast_atts=x['attributes'])
+
 			if y != None:
-				add_spices(y, ast_atts=x['attributes'])
-			module_append(y, to_export=x['access_modifier'] == 'public')
-
-
-	# 3. scan funcs
-	for x in ast:
-		isa = x['isa']
-		kind = x['kind']
-
-		if kind == 'func':
-			fn = ctx_value_get(x['id']['str'])
-			if fn == None:
-				fn = do_func_value(x, x['access_modifier'] == 'public')
-				cmodule_value_add(fn['id']['str'], fn, is_public=x['access_modifier'] == 'public')
-
-
-	# 4. def funcs
-	for x in ast:
-		isa = x['isa']
-		kind = x['kind']
-		if isa == 'ast_definition':
-			if kind == 'func':
-				y = def_func(x, dostmt=not fdecl)
-
-
-				if y != None:
-					add_spices(y, ast_atts=x['attributes'])
-					module_append(y, to_export=x['access_modifier'] == 'public')
-
+				module_append(y, to_export=x['access_modifier'] == 'public')
 	return
+
+
 
 
 
