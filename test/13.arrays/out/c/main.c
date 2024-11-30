@@ -8,7 +8,6 @@
 
 #define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
 
-/* anonymous records */
 #define _constantArray  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 const int8_t constantArray[10] = _constantArray;
 #define _startSequence  {0xAA, 0x55, 0x02}
@@ -25,20 +24,17 @@ static char arrayFromString[3] = "abc";
 
 static struct __retval f0(struct __x x)
 {
-	struct __x local_copy_of_x;
-	*(struct __x *)&local_copy_of_x = x;
+	struct __x local_copy_of_x = x;
 	printf("f0(\"%s\")\n", (char *)&local_copy_of_x);
 
 	// truncate array
-	char mic[6];
-	memcpy(&mic, &x, sizeof(char[6]));
+	char mic[6] = (char *)x;
 	mic[5] = '\x0';
 
 	printf("f0 mic = \"%s\"\n", (char *)&mic);
 
 	// extend array
-	char res[30];
-	memcpy(&res, &x, sizeof(char[30]));
+	char res[30] = (char *)x;
 	res[6] = 'M';
 	res[7] = 'o';
 	res[8] = 'd';
@@ -53,10 +49,8 @@ static struct __retval f0(struct __x x)
 static void test()
 {
 	// тестируем работу с локальным generic массивом
-	int8_t yy[6];
-	memcpy(&yy, &(int8_t[]){0xAA, 0x55, 0x02, 0x00, 0x00, 0x16}, sizeof(int8_t[6]));
-	int32_t i;
-	i = 0;
+	int8_t yy[6] = {0xAA, 0x55, 0x02, 0x00, 0x00, 0x16};
+	int32_t i = 0;
 	while (i < LENGTHOF(yy)) {
 		i = i + 1;
 	}
@@ -66,12 +60,10 @@ int main()
 {
 	// generic array [4]Char8 will be implicit casted to [10]Char8
 
-	struct __retval em;
-	*(struct __retval *)&em = f0(*(struct __x *)&"Hello World!");
+	struct __retval em = f0(*(struct __x *)&"Hello World!");
 	printf("em = %s\n", (char *)&em);
 
-	int32_t i;
-	i = 0;
+	int32_t i = 0;
 	while (i < 10) {
 		const int32_t a = globalArray[i];
 		printf("globalArray[%i] = %i\n", i, a);
@@ -80,8 +72,7 @@ int main()
 
 	printf("------------------------------------\n");
 
-	int32_t localArray[3];
-	memcpy(&localArray, &(int32_t[3]){4, 5, 6}, sizeof(int32_t[3]));
+	int32_t localArray[3] = (int32_t[3]){4, 5, 6};
 
 	i = 0;
 	while (i < 3) {
@@ -116,8 +107,7 @@ int main()
 
 	// assign array to array 1
 	// (with equal types)
-	int32_t a[3];
-	memcpy(&a, &(int32_t[3]){1, 2, 3}, sizeof(int32_t[3]));
+	int32_t a[3] = (int32_t[3]){1, 2, 3};
 	printf("a[0] = %i\n", a[0]);
 	printf("a[1] = %i\n", a[1]);
 	printf("a[2] = %i\n", a[2]);
@@ -125,8 +115,7 @@ int main()
 	// create (and initialize) new variable b
 	// (with type [3]Int32)
 	// this variable are copy of array a
-	int32_t b[3];
-	memcpy(&b, &a, sizeof(int32_t[3]));
+	int32_t b[3] = a;
 	printf("b[0] = %i\n", b[0]);
 	printf("b[1] = %i\n", b[1]);
 	printf("b[2] = %i\n", b[2]);
@@ -140,10 +129,8 @@ int main()
 
 	// assign array to array 2
 	// (with array extending)
-	int32_t c[3];
-	memcpy(&c, &(int32_t[3]){10, 20, 30}, sizeof(int32_t[3]));
-	int32_t d[6];
-	memcpy(&d, &c, sizeof(int32_t[6]));
+	int32_t c[3] = (int32_t[3]){10, 20, 30};
+	int32_t d[6] = (int32_t *)c;
 	printf("d[0] = %i\n", d[0]);
 	printf("d[1] = %i\n", d[1]);
 	printf("d[2] = %i\n", d[2]);
@@ -170,12 +157,9 @@ int main()
 
 	//let aa = [111] + [222] + [333]
 	// cons literal array from var items
-	int int100;
-	int100 = 100;
-	int int200;
-	int200 = 200;
-	int int300;
-	int300 = 300;
+	int int100 = 100;
+	int int200 = 200;
+	int int300 = 300;
 	// immutable, non immediate value (array)
 	const int init_array[3] = {int100, int200, int300};
 
@@ -199,12 +183,9 @@ int main()
 	// проверка того как локальная константа-массив
 	// "замораживает" свои элементы
 
-	int32_t ax;
-	ax = 10;
-	int32_t bx;
-	bx = 20;
-	int32_t cx;
-	cx = 30;
+	int32_t ax = 10;
+	int32_t bx = 20;
+	int32_t cx = 30;
 	const int32_t dx = 40;
 
 	const int32_t y[4] = {ax, bx, cx, dx};

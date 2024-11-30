@@ -6,29 +6,25 @@
 
 #include "main.h"
 
+#define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
+
+#define inputDataLength  32
 
 
-#define main_inputDataLength  32
-
-
-struct main_SHA256_TestCase {
-	char input_data[main_inputDataLength];
+struct SHA256_TestCase {
+	char input_data[inputDataLength];
 	uint32_t input_data_len;
 
 	uint8_t expected_result[sha256_hashSize];
-	uint256_t expected_result256;
 };
-bool doTest(main_SHA256_TestCase *test);
-int main();
 
 
 
 
 
-static main_SHA256_TestCase test0 = {
+static SHA256_TestCase test0 = {
 	.input_data = "abc",
 	.input_data_len = 3,
-
 	.expected_result = {
 		0xBA, 0x78, 0x16, 0xBF, 0x8F, 0x01, 0xCF, 0xEA,
 		0x41, 0x41, 0x40, 0xDE, 0x5D, 0xAE, 0x22, 0x23,
@@ -38,10 +34,9 @@ static main_SHA256_TestCase test0 = {
 
 
 };
-static main_SHA256_TestCase test1 = {
+static SHA256_TestCase test1 = {
 	.input_data = "Hello World!",
 	.input_data_len = 12,
-
 	.expected_result = {
 		0x7F, 0x83, 0xB1, 0x65, 0x7F, 0xF1, 0xFC, 0x53,
 		0xB9, 0x2D, 0xC1, 0x81, 0x48, 0xA1, 0xD6, 0x5D,
@@ -51,9 +46,9 @@ static main_SHA256_TestCase test1 = {
 
 
 };
-static main_SHA256_TestCase *tests[2] = (main_SHA256_TestCase *[2]){(main_SHA256_TestCase *)&test0, (main_SHA256_TestCase *)&test1};
+static SHA256_TestCase *tests[2] = (SHA256_TestCase *[2]){(SHA256_TestCase *)&test0, (SHA256_TestCase *)&test1};
 
-bool doTest(main_SHA256_TestCase *test)
+static bool doTest(SHA256_TestCase *test)
 {
 	uint8_t test_hash[sha256_hashSize];
 	uint8_t *const msg = (uint8_t *)(char *)&test->input_data;
@@ -63,8 +58,7 @@ bool doTest(main_SHA256_TestCase *test)
 	printf("'%s'", (char *)&test->input_data);
 	printf(" -> ");
 
-	int32_t i;
-	i = 0;
+	int32_t i = 0;
 	while (i < sha256_hashSize) {
 		printf("%02X", test_hash[i]);
 		i = i + 1;
@@ -81,14 +75,12 @@ int main()
 {
 	printf("test SHA256\n");
 
-	int32_t i;
-	i = 0;
-	while (i < (int)sizeof tests) {
-		main_SHA256_TestCase *const test = tests[i];
-		const bool test_result = doTest((main_SHA256_TestCase *)test);
+	int32_t i = 0;
+	while (i < (int)LENGTHOF(tests)) {
+		SHA256_TestCase *const test = tests[i];
+		const bool test_result = doTest((SHA256_TestCase *)test);
 
-		char *res;
-		res = "failed";
+		char *res = "failed";
 		if (test_result) {
 			res = "passed";
 		}

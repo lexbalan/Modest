@@ -6,6 +6,10 @@ target triple = "arm64-apple-macosx12.0.0"
 %Unit = type i1
 %Bool = type i1
 %Word8 = type i8
+%Word16 = type i16
+%Word32 = type i32
+%Word64 = type i64
+%Word128 = type i128
 %Char8 = type i8
 %Char16 = type i16
 %Char32 = type i32
@@ -102,38 +106,37 @@ break_2:
 ; MODULE: sha256
 
 ; -- print includes --
-
+; from included ctypes64
 %Str = type %Str8;
-%Char = type i8;
+%Char = type %Char8;
 %ConstChar = type %Char;
-%SignedChar = type i8;
-%UnsignedChar = type i8;
-%Short = type i16;
-%UnsignedShort = type i16;
-%Int = type i32;
-%UnsignedInt = type i32;
-%LongInt = type i64;
-%UnsignedLongInt = type i64;
-%Long = type i64;
-%UnsignedLong = type i64;
-%LongLong = type i64;
-%UnsignedLongLong = type i64;
-%LongLongInt = type i64;
-%UnsignedLongLongInt = type i64;
+%SignedChar = type %Int8;
+%UnsignedChar = type %Int8;
+%Short = type %Int16;
+%UnsignedShort = type %Int16;
+%Int = type %Int32;
+%UnsignedInt = type %Int32;
+%LongInt = type %Int64;
+%UnsignedLongInt = type %Int64;
+%Long = type %Int64;
+%UnsignedLong = type %Int64;
+%LongLong = type %Int64;
+%UnsignedLongLong = type %Int64;
+%LongLongInt = type %Int64;
+%UnsignedLongLongInt = type %Int64;
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
-%SocklenT = type i32;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntptrT = type i64;
-%PtrdiffT = type i8*;
-%OffT = type i64;
-%USecondsT = type i32;
-%PidT = type i32;
-%UidT = type i32;
-%GidT = type i32;
-
+%IntPtrT = type %Int64;
+%PtrDiffT = type i8*;
+%OffT = type %Int64;
+%USecondsT = type %Int32;
+%PIDT = type %Int32;
+%UIDT = type %Int32;
+%GIDT = type %Int32;
+; from included string
 declare i8* @memset(i8* %mem, %Int %c, %SizeT %n)
 declare i8* @memcpy(i8* %dst, i8* %src, %SizeT %len)
 declare i8* @memmove(i8* %dst, i8* %src, %SizeT %n)
@@ -149,692 +152,721 @@ declare [0 x %Char]* @strerror(%Int %error)
 ; -- print imports --
 ; -- end print imports --
 ; -- strings --
+; -- endstrings --
 
 %Context = type {
-	[64 x %Word8], 
-	i32, 
-	i64, 
-	[8 x i32]
+	[64 x %Word8],
+	%Int32,
+	%Int64,
+	[8 x %Word32]
 };
 
 
-@initalState = constant [8 x i32] [
-	i32 1779033703,
-	i32 3144134277,
-	i32 1013904242,
-	i32 2773480762,
-	i32 1359893119,
-	i32 2600822924,
-	i32 528734635,
-	i32 1541459225
+define internal %Word32 @rotleft(%Word32 %a, %Int32 %b) {
+	%1 = shl %Word32 %a, %b
+	%2 = sub %Int32 32, %b
+	%3 = lshr %Word32 %a, %2
+	%4 = or %Word32 %1, %3
+	ret %Word32 %4
+}
+
+define internal %Word32 @rotright(%Word32 %a, %Int32 %b) {
+	%1 = lshr %Word32 %a, %b
+	%2 = sub %Int32 32, %b
+	%3 = shl %Word32 %a, %2
+	%4 = or %Word32 %1, %3
+	ret %Word32 %4
+}
+
+define internal %Word32 @ch(%Word32 %x, %Word32 %y, %Word32 %z) {
+	%1 = and %Word32 %x, %y
+	%2 = xor %Word32 %x, -1
+	%3 = and %Word32 %2, %z
+	%4 = xor %Word32 %1, %3
+	ret %Word32 %4
+}
+
+define internal %Word32 @maj(%Word32 %x, %Word32 %y, %Word32 %z) {
+	%1 = and %Word32 %x, %y
+	%2 = and %Word32 %x, %z
+	%3 = and %Word32 %y, %z
+	%4 = xor %Word32 %2, %3
+	%5 = xor %Word32 %1, %4
+	ret %Word32 %5
+}
+
+define internal %Word32 @ep0(%Word32 %x) {
+	%1 = call %Word32 @rotright(%Word32 %x, %Int32 2)
+	%2 = call %Word32 @rotright(%Word32 %x, %Int32 13)
+	%3 = call %Word32 @rotright(%Word32 %x, %Int32 22)
+	%4 = xor %Word32 %2, %3
+	%5 = xor %Word32 %1, %4
+	ret %Word32 %5
+}
+
+define internal %Word32 @ep1(%Word32 %x) {
+	%1 = call %Word32 @rotright(%Word32 %x, %Int32 6)
+	%2 = call %Word32 @rotright(%Word32 %x, %Int32 11)
+	%3 = call %Word32 @rotright(%Word32 %x, %Int32 25)
+	%4 = xor %Word32 %2, %3
+	%5 = xor %Word32 %1, %4
+	ret %Word32 %5
+}
+
+define internal %Word32 @sig0(%Word32 %x) {
+	%1 = call %Word32 @rotright(%Word32 %x, %Int32 7)
+	%2 = call %Word32 @rotright(%Word32 %x, %Int32 18)
+	%3 = lshr %Word32 %x, 3
+	%4 = xor %Word32 %2, %3
+	%5 = xor %Word32 %1, %4
+	ret %Word32 %5
+}
+
+define internal %Word32 @sig1(%Word32 %x) {
+	%1 = call %Word32 @rotright(%Word32 %x, %Int32 17)
+	%2 = call %Word32 @rotright(%Word32 %x, %Int32 19)
+	%3 = lshr %Word32 %x, 10
+	%4 = xor %Word32 %2, %3
+	%5 = xor %Word32 %1, %4
+	ret %Word32 %5
+}
+
+
+@initalState = constant [8 x %Int32] [
+	%Int32 1779033703,
+	%Int32 3144134277,
+	%Int32 1013904242,
+	%Int32 2773480762,
+	%Int32 1359893119,
+	%Int32 2600822924,
+	%Int32 528734635,
+	%Int32 1541459225
 ]
-@k = constant [64 x i32] [
-	i32 1116352408,
-	i32 1899447441,
-	i32 3049323471,
-	i32 3921009573,
-	i32 961987163,
-	i32 1508970993,
-	i32 2453635748,
-	i32 2870763221,
-	i32 3624381080,
-	i32 310598401,
-	i32 607225278,
-	i32 1426881987,
-	i32 1925078388,
-	i32 2162078206,
-	i32 2614888103,
-	i32 3248222580,
-	i32 3835390401,
-	i32 4022224774,
-	i32 264347078,
-	i32 604807628,
-	i32 770255983,
-	i32 1249150122,
-	i32 1555081692,
-	i32 1996064986,
-	i32 2554220882,
-	i32 2821834349,
-	i32 2952996808,
-	i32 3210313671,
-	i32 3336571891,
-	i32 3584528711,
-	i32 113926993,
-	i32 338241895,
-	i32 666307205,
-	i32 773529912,
-	i32 1294757372,
-	i32 1396182291,
-	i32 1695183700,
-	i32 1986661051,
-	i32 2177026350,
-	i32 2456956037,
-	i32 2730485921,
-	i32 2820302411,
-	i32 3259730800,
-	i32 3345764771,
-	i32 3516065817,
-	i32 3600352804,
-	i32 4094571909,
-	i32 275423344,
-	i32 430227734,
-	i32 506948616,
-	i32 659060556,
-	i32 883997877,
-	i32 958139571,
-	i32 1322822218,
-	i32 1537002063,
-	i32 1747873779,
-	i32 1955562222,
-	i32 2024104815,
-	i32 2227730452,
-	i32 2361852424,
-	i32 2428436474,
-	i32 2756734187,
-	i32 3204031479,
-	i32 3329325298
-]
 
-define i32 @rotleft(i32 %a, i32 %b) {
-	%1 = shl i32 %a, %b
-	%2 = sub i32 32, %b
-	%3 = lshr i32 %a, %2
-	%4 = or i32 %1, %3
-	ret i32 %4
-}
-
-define i32 @rotright(i32 %a, i32 %b) {
-	%1 = lshr i32 %a, %b
-	%2 = sub i32 32, %b
-	%3 = shl i32 %a, %2
-	%4 = or i32 %1, %3
-	ret i32 %4
-}
-
-define i32 @ch(i32 %x, i32 %y, i32 %z) {
-	%1 = and i32 %x, %y
-	%2 = xor i32 %x, -1
-	%3 = and i32 %2, %z
-	%4 = xor i32 %1, %3
-	ret i32 %4
-}
-
-define i32 @maj(i32 %x, i32 %y, i32 %z) {
-	%1 = and i32 %x, %y
-	%2 = and i32 %x, %z
-	%3 = and i32 %y, %z
-	%4 = xor i32 %2, %3
-	%5 = xor i32 %1, %4
-	ret i32 %5
-}
-
-define i32 @ep0(i32 %x) {
-	%1 = call i32 @rotright(i32 %x, i32 2)
-	%2 = call i32 @rotright(i32 %x, i32 13)
-	%3 = call i32 @rotright(i32 %x, i32 22)
-	%4 = xor i32 %2, %3
-	%5 = xor i32 %1, %4
-	ret i32 %5
-}
-
-define i32 @ep1(i32 %x) {
-	%1 = call i32 @rotright(i32 %x, i32 6)
-	%2 = call i32 @rotright(i32 %x, i32 11)
-	%3 = call i32 @rotright(i32 %x, i32 25)
-	%4 = xor i32 %2, %3
-	%5 = xor i32 %1, %4
-	ret i32 %5
-}
-
-define i32 @sig0(i32 %x) {
-	%1 = call i32 @rotright(i32 %x, i32 7)
-	%2 = call i32 @rotright(i32 %x, i32 18)
-	%3 = lshr i32 %x, 3
-	%4 = xor i32 %2, %3
-	%5 = xor i32 %1, %4
-	ret i32 %5
-}
-
-define i32 @sig1(i32 %x) {
-	%1 = call i32 @rotright(i32 %x, i32 17)
-	%2 = call i32 @rotright(i32 %x, i32 19)
-	%3 = lshr i32 %x, 10
-	%4 = xor i32 %2, %3
-	%5 = xor i32 %1, %4
-	ret i32 %5
-}
-
-define void @contextInit(%Context* %ctx) {
+define internal void @contextInit(%Context* %ctx) {
 	; -- STMT ASSIGN ARRAY --
-	%1 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
+	%1 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 3
 	; -- start vol eval --
-	%2 = zext i4 8 to i32
+	%2 = zext i4 8 to %Int32
 	; -- end vol eval --
-	%3 = insertvalue [8 x i32] zeroinitializer, i32 1779033703, 0
-	%4 = insertvalue [8 x i32] %3, i32 3144134277, 1
-	%5 = insertvalue [8 x i32] %4, i32 1013904242, 2
-	%6 = insertvalue [8 x i32] %5, i32 2773480762, 3
-	%7 = insertvalue [8 x i32] %6, i32 1359893119, 4
-	%8 = insertvalue [8 x i32] %7, i32 2600822924, 5
-	%9 = insertvalue [8 x i32] %8, i32 528734635, 6
-	%10 = insertvalue [8 x i32] %9, i32 1541459225, 7
-	store [8 x i32] %10, [8 x i32]* %1
+	%3 = insertvalue [8 x %Word32] zeroinitializer, %Word32 1779033703, 0
+	%4 = insertvalue [8 x %Word32] %3, %Word32 3144134277, 1
+	%5 = insertvalue [8 x %Word32] %4, %Word32 1013904242, 2
+	%6 = insertvalue [8 x %Word32] %5, %Word32 2773480762, 3
+	%7 = insertvalue [8 x %Word32] %6, %Word32 1359893119, 4
+	%8 = insertvalue [8 x %Word32] %7, %Word32 2600822924, 5
+	%9 = insertvalue [8 x %Word32] %8, %Word32 528734635, 6
+	%10 = insertvalue [8 x %Word32] %9, %Word32 1541459225, 7
+	store [8 x %Word32] %10, [8 x %Word32]* %1
 	ret void
 }
 
-define void @transform(%Context* %ctx, [0 x %Word8]* %data) {
-	%1 = alloca [64 x i32], align 4
-	%2 = insertvalue [64 x i32] zeroinitializer, i32 0, 0
-	%3 = insertvalue [64 x i32] %2, i32 0, 1
-	%4 = insertvalue [64 x i32] %3, i32 0, 2
-	%5 = insertvalue [64 x i32] %4, i32 0, 3
-	%6 = insertvalue [64 x i32] %5, i32 0, 4
-	%7 = insertvalue [64 x i32] %6, i32 0, 5
-	%8 = insertvalue [64 x i32] %7, i32 0, 6
-	%9 = insertvalue [64 x i32] %8, i32 0, 7
-	%10 = insertvalue [64 x i32] %9, i32 0, 8
-	%11 = insertvalue [64 x i32] %10, i32 0, 9
-	%12 = insertvalue [64 x i32] %11, i32 0, 10
-	%13 = insertvalue [64 x i32] %12, i32 0, 11
-	%14 = insertvalue [64 x i32] %13, i32 0, 12
-	%15 = insertvalue [64 x i32] %14, i32 0, 13
-	%16 = insertvalue [64 x i32] %15, i32 0, 14
-	%17 = insertvalue [64 x i32] %16, i32 0, 15
-	%18 = insertvalue [64 x i32] %17, i32 0, 16
-	%19 = insertvalue [64 x i32] %18, i32 0, 17
-	%20 = insertvalue [64 x i32] %19, i32 0, 18
-	%21 = insertvalue [64 x i32] %20, i32 0, 19
-	%22 = insertvalue [64 x i32] %21, i32 0, 20
-	%23 = insertvalue [64 x i32] %22, i32 0, 21
-	%24 = insertvalue [64 x i32] %23, i32 0, 22
-	%25 = insertvalue [64 x i32] %24, i32 0, 23
-	%26 = insertvalue [64 x i32] %25, i32 0, 24
-	%27 = insertvalue [64 x i32] %26, i32 0, 25
-	%28 = insertvalue [64 x i32] %27, i32 0, 26
-	%29 = insertvalue [64 x i32] %28, i32 0, 27
-	%30 = insertvalue [64 x i32] %29, i32 0, 28
-	%31 = insertvalue [64 x i32] %30, i32 0, 29
-	%32 = insertvalue [64 x i32] %31, i32 0, 30
-	%33 = insertvalue [64 x i32] %32, i32 0, 31
-	%34 = insertvalue [64 x i32] %33, i32 0, 32
-	%35 = insertvalue [64 x i32] %34, i32 0, 33
-	%36 = insertvalue [64 x i32] %35, i32 0, 34
-	%37 = insertvalue [64 x i32] %36, i32 0, 35
-	%38 = insertvalue [64 x i32] %37, i32 0, 36
-	%39 = insertvalue [64 x i32] %38, i32 0, 37
-	%40 = insertvalue [64 x i32] %39, i32 0, 38
-	%41 = insertvalue [64 x i32] %40, i32 0, 39
-	%42 = insertvalue [64 x i32] %41, i32 0, 40
-	%43 = insertvalue [64 x i32] %42, i32 0, 41
-	%44 = insertvalue [64 x i32] %43, i32 0, 42
-	%45 = insertvalue [64 x i32] %44, i32 0, 43
-	%46 = insertvalue [64 x i32] %45, i32 0, 44
-	%47 = insertvalue [64 x i32] %46, i32 0, 45
-	%48 = insertvalue [64 x i32] %47, i32 0, 46
-	%49 = insertvalue [64 x i32] %48, i32 0, 47
-	%50 = insertvalue [64 x i32] %49, i32 0, 48
-	%51 = insertvalue [64 x i32] %50, i32 0, 49
-	%52 = insertvalue [64 x i32] %51, i32 0, 50
-	%53 = insertvalue [64 x i32] %52, i32 0, 51
-	%54 = insertvalue [64 x i32] %53, i32 0, 52
-	%55 = insertvalue [64 x i32] %54, i32 0, 53
-	%56 = insertvalue [64 x i32] %55, i32 0, 54
-	%57 = insertvalue [64 x i32] %56, i32 0, 55
-	%58 = insertvalue [64 x i32] %57, i32 0, 56
-	%59 = insertvalue [64 x i32] %58, i32 0, 57
-	%60 = insertvalue [64 x i32] %59, i32 0, 58
-	%61 = insertvalue [64 x i32] %60, i32 0, 59
-	%62 = insertvalue [64 x i32] %61, i32 0, 60
-	%63 = insertvalue [64 x i32] %62, i32 0, 61
-	%64 = insertvalue [64 x i32] %63, i32 0, 62
-	%65 = insertvalue [64 x i32] %64, i32 0, 63
-	store [64 x i32] %65, [64 x i32]* %1
-	%66 = alloca i32, align 4
-	store i32 0, i32* %66
-	%67 = alloca i32, align 4
-	store i32 0, i32* %67
+
+@k = constant [64 x %Int32] [
+	%Int32 1116352408,
+	%Int32 1899447441,
+	%Int32 3049323471,
+	%Int32 3921009573,
+	%Int32 961987163,
+	%Int32 1508970993,
+	%Int32 2453635748,
+	%Int32 2870763221,
+	%Int32 3624381080,
+	%Int32 310598401,
+	%Int32 607225278,
+	%Int32 1426881987,
+	%Int32 1925078388,
+	%Int32 2162078206,
+	%Int32 2614888103,
+	%Int32 3248222580,
+	%Int32 3835390401,
+	%Int32 4022224774,
+	%Int32 264347078,
+	%Int32 604807628,
+	%Int32 770255983,
+	%Int32 1249150122,
+	%Int32 1555081692,
+	%Int32 1996064986,
+	%Int32 2554220882,
+	%Int32 2821834349,
+	%Int32 2952996808,
+	%Int32 3210313671,
+	%Int32 3336571891,
+	%Int32 3584528711,
+	%Int32 113926993,
+	%Int32 338241895,
+	%Int32 666307205,
+	%Int32 773529912,
+	%Int32 1294757372,
+	%Int32 1396182291,
+	%Int32 1695183700,
+	%Int32 1986661051,
+	%Int32 2177026350,
+	%Int32 2456956037,
+	%Int32 2730485921,
+	%Int32 2820302411,
+	%Int32 3259730800,
+	%Int32 3345764771,
+	%Int32 3516065817,
+	%Int32 3600352804,
+	%Int32 4094571909,
+	%Int32 275423344,
+	%Int32 430227734,
+	%Int32 506948616,
+	%Int32 659060556,
+	%Int32 883997877,
+	%Int32 958139571,
+	%Int32 1322822218,
+	%Int32 1537002063,
+	%Int32 1747873779,
+	%Int32 1955562222,
+	%Int32 2024104815,
+	%Int32 2227730452,
+	%Int32 2361852424,
+	%Int32 2428436474,
+	%Int32 2756734187,
+	%Int32 3204031479,
+	%Int32 3329325298
+]
+
+define internal void @transform(%Context* %ctx, [0 x %Word8]* %data) {
+	%1 = alloca [64 x %Word32], align 4
+	%2 = insertvalue [64 x %Word32] zeroinitializer, %Word32 0, 0
+	%3 = insertvalue [64 x %Word32] %2, %Word32 0, 1
+	%4 = insertvalue [64 x %Word32] %3, %Word32 0, 2
+	%5 = insertvalue [64 x %Word32] %4, %Word32 0, 3
+	%6 = insertvalue [64 x %Word32] %5, %Word32 0, 4
+	%7 = insertvalue [64 x %Word32] %6, %Word32 0, 5
+	%8 = insertvalue [64 x %Word32] %7, %Word32 0, 6
+	%9 = insertvalue [64 x %Word32] %8, %Word32 0, 7
+	%10 = insertvalue [64 x %Word32] %9, %Word32 0, 8
+	%11 = insertvalue [64 x %Word32] %10, %Word32 0, 9
+	%12 = insertvalue [64 x %Word32] %11, %Word32 0, 10
+	%13 = insertvalue [64 x %Word32] %12, %Word32 0, 11
+	%14 = insertvalue [64 x %Word32] %13, %Word32 0, 12
+	%15 = insertvalue [64 x %Word32] %14, %Word32 0, 13
+	%16 = insertvalue [64 x %Word32] %15, %Word32 0, 14
+	%17 = insertvalue [64 x %Word32] %16, %Word32 0, 15
+	%18 = insertvalue [64 x %Word32] %17, %Word32 0, 16
+	%19 = insertvalue [64 x %Word32] %18, %Word32 0, 17
+	%20 = insertvalue [64 x %Word32] %19, %Word32 0, 18
+	%21 = insertvalue [64 x %Word32] %20, %Word32 0, 19
+	%22 = insertvalue [64 x %Word32] %21, %Word32 0, 20
+	%23 = insertvalue [64 x %Word32] %22, %Word32 0, 21
+	%24 = insertvalue [64 x %Word32] %23, %Word32 0, 22
+	%25 = insertvalue [64 x %Word32] %24, %Word32 0, 23
+	%26 = insertvalue [64 x %Word32] %25, %Word32 0, 24
+	%27 = insertvalue [64 x %Word32] %26, %Word32 0, 25
+	%28 = insertvalue [64 x %Word32] %27, %Word32 0, 26
+	%29 = insertvalue [64 x %Word32] %28, %Word32 0, 27
+	%30 = insertvalue [64 x %Word32] %29, %Word32 0, 28
+	%31 = insertvalue [64 x %Word32] %30, %Word32 0, 29
+	%32 = insertvalue [64 x %Word32] %31, %Word32 0, 30
+	%33 = insertvalue [64 x %Word32] %32, %Word32 0, 31
+	%34 = insertvalue [64 x %Word32] %33, %Word32 0, 32
+	%35 = insertvalue [64 x %Word32] %34, %Word32 0, 33
+	%36 = insertvalue [64 x %Word32] %35, %Word32 0, 34
+	%37 = insertvalue [64 x %Word32] %36, %Word32 0, 35
+	%38 = insertvalue [64 x %Word32] %37, %Word32 0, 36
+	%39 = insertvalue [64 x %Word32] %38, %Word32 0, 37
+	%40 = insertvalue [64 x %Word32] %39, %Word32 0, 38
+	%41 = insertvalue [64 x %Word32] %40, %Word32 0, 39
+	%42 = insertvalue [64 x %Word32] %41, %Word32 0, 40
+	%43 = insertvalue [64 x %Word32] %42, %Word32 0, 41
+	%44 = insertvalue [64 x %Word32] %43, %Word32 0, 42
+	%45 = insertvalue [64 x %Word32] %44, %Word32 0, 43
+	%46 = insertvalue [64 x %Word32] %45, %Word32 0, 44
+	%47 = insertvalue [64 x %Word32] %46, %Word32 0, 45
+	%48 = insertvalue [64 x %Word32] %47, %Word32 0, 46
+	%49 = insertvalue [64 x %Word32] %48, %Word32 0, 47
+	%50 = insertvalue [64 x %Word32] %49, %Word32 0, 48
+	%51 = insertvalue [64 x %Word32] %50, %Word32 0, 49
+	%52 = insertvalue [64 x %Word32] %51, %Word32 0, 50
+	%53 = insertvalue [64 x %Word32] %52, %Word32 0, 51
+	%54 = insertvalue [64 x %Word32] %53, %Word32 0, 52
+	%55 = insertvalue [64 x %Word32] %54, %Word32 0, 53
+	%56 = insertvalue [64 x %Word32] %55, %Word32 0, 54
+	%57 = insertvalue [64 x %Word32] %56, %Word32 0, 55
+	%58 = insertvalue [64 x %Word32] %57, %Word32 0, 56
+	%59 = insertvalue [64 x %Word32] %58, %Word32 0, 57
+	%60 = insertvalue [64 x %Word32] %59, %Word32 0, 58
+	%61 = insertvalue [64 x %Word32] %60, %Word32 0, 59
+	%62 = insertvalue [64 x %Word32] %61, %Word32 0, 60
+	%63 = insertvalue [64 x %Word32] %62, %Word32 0, 61
+	%64 = insertvalue [64 x %Word32] %63, %Word32 0, 62
+	%65 = insertvalue [64 x %Word32] %64, %Word32 0, 63
+	store [64 x %Word32] %65, [64 x %Word32]* %1
+	%66 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %66
+	%67 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %67
 	br label %again_1
 again_1:
-	%68 = load i32, i32* %66
-	%69 = icmp ult i32 %68, 16
-	br i1 %69 , label %body_1, label %break_1
+	%68 = load %Int32, %Int32* %66
+	%69 = icmp ult %Int32 %68, 16
+	br %Bool %69 , label %body_1, label %break_1
 body_1:
-	%70 = load i32, i32* %67
-	%71 = add i32 %70, 0
-	%72 = getelementptr inbounds [0 x %Word8], [0 x %Word8]* %data, i32 0, i32 %71
+	%70 = load %Int32, %Int32* %67
+	%71 = add %Int32 %70, 0
+	%72 = getelementptr inbounds [0 x %Word8], [0 x %Word8]* %data, %Int32 0, %Int32 %71
 	%73 = load %Word8, %Word8* %72
-	%74 = zext %Word8 %73 to i32
-	%75 = shl i32 %74, 24
-	%76 = load i32, i32* %67
-	%77 = add i32 %76, 1
-	%78 = getelementptr inbounds [0 x %Word8], [0 x %Word8]* %data, i32 0, i32 %77
+	%74 = zext %Word8 %73 to %Word32
+	%75 = shl %Word32 %74, 24
+	%76 = load %Int32, %Int32* %67
+	%77 = add %Int32 %76, 1
+	%78 = getelementptr inbounds [0 x %Word8], [0 x %Word8]* %data, %Int32 0, %Int32 %77
 	%79 = load %Word8, %Word8* %78
-	%80 = zext %Word8 %79 to i32
-	%81 = shl i32 %80, 16
-	%82 = load i32, i32* %67
-	%83 = add i32 %82, 2
-	%84 = getelementptr inbounds [0 x %Word8], [0 x %Word8]* %data, i32 0, i32 %83
+	%80 = zext %Word8 %79 to %Word32
+	%81 = shl %Word32 %80, 16
+	%82 = load %Int32, %Int32* %67
+	%83 = add %Int32 %82, 2
+	%84 = getelementptr inbounds [0 x %Word8], [0 x %Word8]* %data, %Int32 0, %Int32 %83
 	%85 = load %Word8, %Word8* %84
-	%86 = zext %Word8 %85 to i32
-	%87 = shl i32 %86, 8
-	%88 = load i32, i32* %67
-	%89 = add i32 %88, 3
-	%90 = getelementptr inbounds [0 x %Word8], [0 x %Word8]* %data, i32 0, i32 %89
+	%86 = zext %Word8 %85 to %Word32
+	%87 = shl %Word32 %86, 8
+	%88 = load %Int32, %Int32* %67
+	%89 = add %Int32 %88, 3
+	%90 = getelementptr inbounds [0 x %Word8], [0 x %Word8]* %data, %Int32 0, %Int32 %89
 	%91 = load %Word8, %Word8* %90
-	%92 = zext %Word8 %91 to i32
-	%93 = shl i32 %92, 0
-	%94 = or i32 %87, %93
-	%95 = or i32 %81, %94
-	%96 = or i32 %75, %95
-	%97 = load i32, i32* %66
-	%98 = getelementptr inbounds [64 x i32], [64 x i32]* %1, i32 0, i32 %97
-	store i32 %96, i32* %98
-	%99 = load i32, i32* %67
-	%100 = add i32 %99, 4
-	store i32 %100, i32* %67
-	%101 = load i32, i32* %66
-	%102 = add i32 %101, 1
-	store i32 %102, i32* %66
+	%92 = zext %Word8 %91 to %Word32
+	%93 = shl %Word32 %92, 0
+	%94 = or %Word32 %87, %93
+	%95 = or %Word32 %81, %94
+	%96 = or %Word32 %75, %95
+	%97 = load %Int32, %Int32* %66
+	%98 = getelementptr inbounds [64 x %Word32], [64 x %Word32]* %1, %Int32 0, %Int32 %97
+	store %Word32 %96, %Word32* %98
+	%99 = load %Int32, %Int32* %67
+	%100 = add %Int32 %99, 4
+	store %Int32 %100, %Int32* %67
+	%101 = load %Int32, %Int32* %66
+	%102 = add %Int32 %101, 1
+	store %Int32 %102, %Int32* %66
 	br label %again_1
 break_1:
 	br label %again_2
 again_2:
-	%103 = load i32, i32* %66
-	%104 = icmp ult i32 %103, 64
-	br i1 %104 , label %body_2, label %break_2
+	%103 = load %Int32, %Int32* %66
+	%104 = icmp ult %Int32 %103, 64
+	br %Bool %104 , label %body_2, label %break_2
 body_2:
-	%105 = load i32, i32* %66
-	%106 = getelementptr inbounds [64 x i32], [64 x i32]* %1, i32 0, i32 %105
-	%107 = load i32, i32* %66
-	%108 = sub i32 %107, 2
-	%109 = getelementptr inbounds [64 x i32], [64 x i32]* %1, i32 0, i32 %108
-	%110 = load i32, i32* %109
-	%111 = call i32 @sig1(i32 %110)
-	%112 = load i32, i32* %66
-	%113 = sub i32 %112, 7
-	%114 = getelementptr inbounds [64 x i32], [64 x i32]* %1, i32 0, i32 %113
-	%115 = load i32, i32* %114
-	%116 = add i32 %111, %115
-	%117 = load i32, i32* %66
-	%118 = sub i32 %117, 15
-	%119 = getelementptr inbounds [64 x i32], [64 x i32]* %1, i32 0, i32 %118
-	%120 = load i32, i32* %119
-	%121 = call i32 @sig0(i32 %120)
-	%122 = add i32 %116, %121
-	%123 = load i32, i32* %66
-	%124 = sub i32 %123, 16
-	%125 = getelementptr inbounds [64 x i32], [64 x i32]* %1, i32 0, i32 %124
-	%126 = load i32, i32* %125
-	%127 = add i32 %122, %126
-	store i32 %127, i32* %106
-	%128 = load i32, i32* %66
-	%129 = add i32 %128, 1
-	store i32 %129, i32* %66
+	%105 = load %Int32, %Int32* %66
+	%106 = getelementptr inbounds [64 x %Word32], [64 x %Word32]* %1, %Int32 0, %Int32 %105
+	%107 = load %Int32, %Int32* %66
+	%108 = sub %Int32 %107, 2
+	%109 = getelementptr inbounds [64 x %Word32], [64 x %Word32]* %1, %Int32 0, %Int32 %108
+	%110 = load %Word32, %Word32* %109
+	%111 = call %Word32 @sig1(%Word32 %110)
+	%112 = bitcast %Word32 %111 to %Int32
+	%113 = load %Int32, %Int32* %66
+	%114 = sub %Int32 %113, 7
+	%115 = getelementptr inbounds [64 x %Word32], [64 x %Word32]* %1, %Int32 0, %Int32 %114
+	%116 = load %Word32, %Word32* %115
+	%117 = bitcast %Word32 %116 to %Int32
+	%118 = add %Int32 %112, %117
+	%119 = load %Int32, %Int32* %66
+	%120 = sub %Int32 %119, 15
+	%121 = getelementptr inbounds [64 x %Word32], [64 x %Word32]* %1, %Int32 0, %Int32 %120
+	%122 = load %Word32, %Word32* %121
+	%123 = call %Word32 @sig0(%Word32 %122)
+	%124 = bitcast %Word32 %123 to %Int32
+	%125 = add %Int32 %118, %124
+	%126 = load %Int32, %Int32* %66
+	%127 = sub %Int32 %126, 16
+	%128 = getelementptr inbounds [64 x %Word32], [64 x %Word32]* %1, %Int32 0, %Int32 %127
+	%129 = load %Word32, %Word32* %128
+	%130 = bitcast %Word32 %129 to %Int32
+	%131 = add %Int32 %125, %130
+	%132 = bitcast %Int32 %131 to %Word32
+	store %Word32 %132, %Word32* %106
+	%133 = load %Int32, %Int32* %66
+	%134 = add %Int32 %133, 1
+	store %Int32 %134, %Int32* %66
 	br label %again_2
 break_2:
-	%130 = alloca [8 x i32], align 4
-	%131 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
-	%132 = load [8 x i32], [8 x i32]* %131
-	store [8 x i32] %132, [8 x i32]* %130
-	store i32 0, i32* %66
+	%135 = alloca [8 x %Word32], align 4
+	%136 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%137 = load [8 x %Word32], [8 x %Word32]* %136
+	store [8 x %Word32] %137, [8 x %Word32]* %135
+	store %Int32 0, %Int32* %66
 	br label %again_3
 again_3:
-	%133 = load i32, i32* %66
-	%134 = icmp ult i32 %133, 64
-	br i1 %134 , label %body_3, label %break_3
+	%138 = load %Int32, %Int32* %66
+	%139 = icmp ult %Int32 %138, 64
+	br %Bool %139 , label %body_3, label %break_3
 body_3:
-	%135 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 7
-	%136 = load i32, i32* %135
-	%137 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 4
-	%138 = load i32, i32* %137
-	%139 = call i32 @ep1(i32 %138)
-	%140 = add i32 %136, %139
-	%141 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 4
-	%142 = load i32, i32* %141
-	%143 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 5
-	%144 = load i32, i32* %143
-	%145 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 6
-	%146 = load i32, i32* %145
-	%147 = call i32 @ch(i32 %142, i32 %144, i32 %146)
-	%148 = add i32 %140, %147
-	%149 = load i32, i32* %66
-	%150 = getelementptr inbounds [64 x i32], [64 x i32]* @sha256_k, i32 0, i32 %149
-	%151 = load i32, i32* %150
-	%152 = bitcast i32 %151 to i32
-	%153 = add i32 %148, %152
-	%154 = load i32, i32* %66
-	%155 = getelementptr inbounds [64 x i32], [64 x i32]* %1, i32 0, i32 %154
-	%156 = load i32, i32* %155
-	%157 = add i32 %153, %156
-	%158 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 0
-	%159 = load i32, i32* %158
-	%160 = call i32 @ep0(i32 %159)
-	%161 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 0
-	%162 = load i32, i32* %161
-	%163 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 1
-	%164 = load i32, i32* %163
-	%165 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 2
-	%166 = load i32, i32* %165
-	%167 = call i32 @maj(i32 %162, i32 %164, i32 %166)
-	%168 = add i32 %160, %167
-	%169 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 7
-	%170 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 6
-	%171 = load i32, i32* %170
-	store i32 %171, i32* %169
-	%172 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 6
-	%173 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 5
-	%174 = load i32, i32* %173
-	store i32 %174, i32* %172
-	%175 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 5
-	%176 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 4
-	%177 = load i32, i32* %176
-	store i32 %177, i32* %175
-	%178 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 4
-	%179 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 3
-	%180 = load i32, i32* %179
-	%181 = add i32 %180, %157
-	store i32 %181, i32* %178
-	%182 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 3
-	%183 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 2
-	%184 = load i32, i32* %183
-	store i32 %184, i32* %182
-	%185 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 2
-	%186 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 1
-	%187 = load i32, i32* %186
-	store i32 %187, i32* %185
-	%188 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 1
-	%189 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 0
-	%190 = load i32, i32* %189
-	store i32 %190, i32* %188
-	%191 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 0
-	%192 = add i32 %157, %168
-	store i32 %192, i32* %191
-	%193 = load i32, i32* %66
-	%194 = add i32 %193, 1
-	store i32 %194, i32* %66
+	%140 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %135, %Int32 0, %Int32 7
+	%141 = load %Word32, %Word32* %140
+	%142 = bitcast %Word32 %141 to %Int32
+	%143 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %135, %Int32 0, %Int32 4
+	%144 = load %Word32, %Word32* %143
+	%145 = call %Word32 @ep1(%Word32 %144)
+	%146 = bitcast %Word32 %145 to %Int32
+	%147 = add %Int32 %142, %146
+	%148 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %135, %Int32 0, %Int32 4
+	%149 = load %Word32, %Word32* %148
+	%150 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %135, %Int32 0, %Int32 5
+	%151 = load %Word32, %Word32* %150
+	%152 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %135, %Int32 0, %Int32 6
+	%153 = load %Word32, %Word32* %152
+	%154 = call %Word32 @ch(%Word32 %149, %Word32 %151, %Word32 %153)
+	%155 = bitcast %Word32 %154 to %Int32
+	%156 = add %Int32 %147, %155
+	%157 = load %Int32, %Int32* %66
+	%158 = getelementptr inbounds [64 x %Int32], [64 x %Int32]* @k, %Int32 0, %Int32 %157
+	%159 = load %Int32, %Int32* %158
+	%160 = bitcast %Int32 %159 to %Int32
+	%161 = add %Int32 %156, %160
+	%162 = load %Int32, %Int32* %66
+	%163 = getelementptr inbounds [64 x %Word32], [64 x %Word32]* %1, %Int32 0, %Int32 %162
+	%164 = load %Word32, %Word32* %163
+	%165 = bitcast %Word32 %164 to %Int32
+	%166 = add %Int32 %161, %165
+	%167 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %135, %Int32 0, %Int32 0
+	%168 = load %Word32, %Word32* %167
+	%169 = call %Word32 @ep0(%Word32 %168)
+	%170 = bitcast %Word32 %169 to %Int32
+	%171 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %135, %Int32 0, %Int32 0
+	%172 = load %Word32, %Word32* %171
+	%173 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %135, %Int32 0, %Int32 1
+	%174 = load %Word32, %Word32* %173
+	%175 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %135, %Int32 0, %Int32 2
+	%176 = load %Word32, %Word32* %175
+	%177 = call %Word32 @maj(%Word32 %172, %Word32 %174, %Word32 %176)
+	%178 = bitcast %Word32 %177 to %Int32
+	%179 = add %Int32 %170, %178
+	%180 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %135, %Int32 0, %Int32 7
+	%181 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %135, %Int32 0, %Int32 6
+	%182 = load %Word32, %Word32* %181
+	store %Word32 %182, %Word32* %180
+	%183 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %135, %Int32 0, %Int32 6
+	%184 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %135, %Int32 0, %Int32 5
+	%185 = load %Word32, %Word32* %184
+	store %Word32 %185, %Word32* %183
+	%186 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %135, %Int32 0, %Int32 5
+	%187 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %135, %Int32 0, %Int32 4
+	%188 = load %Word32, %Word32* %187
+	store %Word32 %188, %Word32* %186
+	%189 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %135, %Int32 0, %Int32 4
+	%190 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %135, %Int32 0, %Int32 3
+	%191 = load %Word32, %Word32* %190
+	%192 = bitcast %Word32 %191 to %Int32
+	%193 = add %Int32 %192, %166
+	%194 = bitcast %Int32 %193 to %Word32
+	store %Word32 %194, %Word32* %189
+	%195 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %135, %Int32 0, %Int32 3
+	%196 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %135, %Int32 0, %Int32 2
+	%197 = load %Word32, %Word32* %196
+	store %Word32 %197, %Word32* %195
+	%198 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %135, %Int32 0, %Int32 2
+	%199 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %135, %Int32 0, %Int32 1
+	%200 = load %Word32, %Word32* %199
+	store %Word32 %200, %Word32* %198
+	%201 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %135, %Int32 0, %Int32 1
+	%202 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %135, %Int32 0, %Int32 0
+	%203 = load %Word32, %Word32* %202
+	store %Word32 %203, %Word32* %201
+	%204 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %135, %Int32 0, %Int32 0
+	%205 = add %Int32 %166, %179
+	%206 = bitcast %Int32 %205 to %Word32
+	store %Word32 %206, %Word32* %204
+	%207 = load %Int32, %Int32* %66
+	%208 = add %Int32 %207, 1
+	store %Int32 %208, %Int32* %66
 	br label %again_3
 break_3:
-	store i32 0, i32* %66
+	store %Int32 0, %Int32* %66
 	br label %again_4
 again_4:
-	%195 = load i32, i32* %66
-	%196 = icmp ult i32 %195, 8
-	br i1 %196 , label %body_4, label %break_4
+	%209 = load %Int32, %Int32* %66
+	%210 = icmp ult %Int32 %209, 8
+	br %Bool %210 , label %body_4, label %break_4
 body_4:
-	%197 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
-	%198 = load i32, i32* %66
-	%199 = getelementptr inbounds [8 x i32], [8 x i32]* %197, i32 0, i32 %198
-	%200 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
-	%201 = load i32, i32* %66
-	%202 = getelementptr inbounds [8 x i32], [8 x i32]* %200, i32 0, i32 %201
-	%203 = load i32, i32* %202
-	%204 = load i32, i32* %66
-	%205 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 %204
-	%206 = load i32, i32* %205
-	%207 = add i32 %203, %206
-	store i32 %207, i32* %199
-	%208 = load i32, i32* %66
-	%209 = add i32 %208, 1
-	store i32 %209, i32* %66
+	%211 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%212 = load %Int32, %Int32* %66
+	%213 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %211, %Int32 0, %Int32 %212
+	%214 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%215 = load %Int32, %Int32* %66
+	%216 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %214, %Int32 0, %Int32 %215
+	%217 = load %Word32, %Word32* %216
+	%218 = bitcast %Word32 %217 to %Int32
+	%219 = load %Int32, %Int32* %66
+	%220 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %135, %Int32 0, %Int32 %219
+	%221 = load %Word32, %Word32* %220
+	%222 = bitcast %Word32 %221 to %Int32
+	%223 = add %Int32 %218, %222
+	%224 = bitcast %Int32 %223 to %Word32
+	store %Word32 %224, %Word32* %213
+	%225 = load %Int32, %Int32* %66
+	%226 = add %Int32 %225, 1
+	store %Int32 %226, %Int32* %66
 	br label %again_4
 break_4:
 	ret void
 }
 
-define void @update(%Context* %ctx, [0 x %Word8]* %msg, i32 %msgLen) {
-	%1 = alloca i32, align 4
-	store i32 0, i32* %1
+define internal void @update(%Context* %ctx, [0 x %Word8]* %msg, %Int32 %msgLen) {
+	%1 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %1
 	br label %again_1
 again_1:
-	%2 = load i32, i32* %1
-	%3 = icmp ult i32 %2, %msgLen
-	br i1 %3 , label %body_1, label %break_1
+	%2 = load %Int32, %Int32* %1
+	%3 = icmp ult %Int32 %2, %msgLen
+	br %Bool %3 , label %body_1, label %break_1
 body_1:
-	%4 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
-	%5 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
-	%6 = load i32, i32* %5
-	%7 = getelementptr inbounds [64 x %Word8], [64 x %Word8]* %4, i32 0, i32 %6
-	%8 = load i32, i32* %1
-	%9 = getelementptr inbounds [0 x %Word8], [0 x %Word8]* %msg, i32 0, i32 %8
+	%4 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 0
+	%5 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 1
+	%6 = load %Int32, %Int32* %5
+	%7 = getelementptr inbounds [64 x %Word8], [64 x %Word8]* %4, %Int32 0, %Int32 %6
+	%8 = load %Int32, %Int32* %1
+	%9 = getelementptr inbounds [0 x %Word8], [0 x %Word8]* %msg, %Int32 0, %Int32 %8
 	%10 = load %Word8, %Word8* %9
 	store %Word8 %10, %Word8* %7
-	%11 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
-	%12 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
-	%13 = load i32, i32* %12
-	%14 = add i32 %13, 1
-	store i32 %14, i32* %11
-	%15 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
-	%16 = load i32, i32* %15
-	%17 = icmp eq i32 %16, 64
-	br i1 %17 , label %then_0, label %endif_0
+	%11 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 1
+	%12 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 1
+	%13 = load %Int32, %Int32* %12
+	%14 = add %Int32 %13, 1
+	store %Int32 %14, %Int32* %11
+	%15 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 1
+	%16 = load %Int32, %Int32* %15
+	%17 = icmp eq %Int32 %16, 64
+	br %Bool %17 , label %then_0, label %endif_0
 then_0:
 	%18 = bitcast %Context* %ctx to %Context*
-	%19 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
+	%19 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%20 = bitcast [64 x %Word8]* %19 to [0 x %Word8]*
 	call void @transform(%Context* %18, [0 x %Word8]* %20)
-	%21 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
-	%22 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
-	%23 = load i64, i64* %22
-	%24 = add i64 %23, 512
-	store i64 %24, i64* %21
-	%25 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
-	store i32 0, i32* %25
+	%21 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 2
+	%22 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 2
+	%23 = load %Int64, %Int64* %22
+	%24 = add %Int64 %23, 512
+	store %Int64 %24, %Int64* %21
+	%25 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 1
+	store %Int32 0, %Int32* %25
 	br label %endif_0
 endif_0:
-	%26 = load i32, i32* %1
-	%27 = add i32 %26, 1
-	store i32 %27, i32* %1
+	%26 = load %Int32, %Int32* %1
+	%27 = add %Int32 %26, 1
+	store %Int32 %27, %Int32* %1
 	br label %again_1
 break_1:
 	ret void
 }
 
-define void @final(%Context* %ctx, %Hash* %outHash) {
-	%1 = alloca i32, align 4
-	%2 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
-	%3 = load i32, i32* %2
-	store i32 %3, i32* %1
+define internal void @final(%Context* %ctx, %sha256_Hash* %outHash) {
+	%1 = alloca %Int32, align 4
+	%2 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 1
+	%3 = load %Int32, %Int32* %2
+	store %Int32 %3, %Int32* %1
 	; Pad whatever data is left in the buffer.
-	%4 = alloca i32, align 4
-	store i32 64, i32* %4
-	%5 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
-	%6 = load i32, i32* %5
-	%7 = icmp ult i32 %6, 56
-	br i1 %7 , label %then_0, label %endif_0
+	%4 = alloca %Int32, align 4
+	store %Int32 64, %Int32* %4
+	%5 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 1
+	%6 = load %Int32, %Int32* %5
+	%7 = icmp ult %Int32 %6, 56
+	br %Bool %7 , label %then_0, label %endif_0
 then_0:
-	store i32 56, i32* %4
+	store %Int32 56, %Int32* %4
 	br label %endif_0
 endif_0:
-	%8 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
-	%9 = load i32, i32* %1
-	%10 = getelementptr inbounds [64 x %Word8], [64 x %Word8]* %8, i32 0, i32 %9
+	%8 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 0
+	%9 = load %Int32, %Int32* %1
+	%10 = getelementptr inbounds [64 x %Word8], [64 x %Word8]* %8, %Int32 0, %Int32 %9
 	store %Word8 128, %Word8* %10
-	%11 = load i32, i32* %1
-	%12 = add i32 %11, 1
-	store i32 %12, i32* %1
-	%13 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
-	%14 = load i32, i32* %1
-	%15 = getelementptr inbounds [64 x %Word8], [64 x %Word8]* %13, i32 0, i32 %14
+	%11 = load %Int32, %Int32* %1
+	%12 = add %Int32 %11, 1
+	store %Int32 %12, %Int32* %1
+	%13 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 0
+	%14 = load %Int32, %Int32* %1
+	%15 = getelementptr inbounds [64 x %Word8], [64 x %Word8]* %13, %Int32 0, %Int32 %14
 	%16 = bitcast %Word8* %15 to i8*
-	%17 = load i32, i32* %4
-	%18 = load i32, i32* %1
-	%19 = sub i32 %17, %18
-	%20 = zext i32 %19 to %SizeT
+	%17 = load %Int32, %Int32* %4
+	%18 = load %Int32, %Int32* %1
+	%19 = sub %Int32 %17, %18
+	%20 = zext %Int32 %19 to %SizeT
 	%21 = call i8* @memset(i8* %16, %Int 0, %SizeT %20)
 	;ctx.data[i:n-i] = []
-	%22 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
-	%23 = load i32, i32* %22
-	%24 = icmp uge i32 %23, 56
-	br i1 %24 , label %then_1, label %endif_1
+	%22 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 1
+	%23 = load %Int32, %Int32* %22
+	%24 = icmp uge %Int32 %23, 56
+	br %Bool %24 , label %then_1, label %endif_1
 then_1:
 	%25 = bitcast %Context* %ctx to %Context*
-	%26 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
+	%26 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%27 = bitcast [64 x %Word8]* %26 to [0 x %Word8]*
 	call void @transform(%Context* %25, [0 x %Word8]* %27)
-	%28 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
+	%28 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%29 = bitcast [64 x %Word8]* %28 to i8*
 	%30 = call i8* @memset(i8* %29, %Int 0, %SizeT 56)
 	;ctx.data[0:56] = []
 	br label %endif_1
 endif_1:
 	; Append to the padding the total message's length in bits and transform.
-	%31 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
-	%32 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
-	%33 = load i64, i64* %32
-	%34 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 1
-	%35 = load i32, i32* %34
-	%36 = zext i32 %35 to i64
-	%37 = mul i64 %36, 8
-	%38 = add i64 %33, %37
-	store i64 %38, i64* %31
-	%39 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
-	%40 = getelementptr inbounds [64 x %Word8], [64 x %Word8]* %39, i32 0, i32 63
-	%41 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
-	%42 = load i64, i64* %41
-	%43 = lshr i64 %42, 0
-	%44 = trunc i64 %43 to %Word8
-	store %Word8 %44, %Word8* %40
-	%45 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
-	%46 = getelementptr inbounds [64 x %Word8], [64 x %Word8]* %45, i32 0, i32 62
-	%47 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
-	%48 = load i64, i64* %47
-	%49 = lshr i64 %48, 8
-	%50 = trunc i64 %49 to %Word8
-	store %Word8 %50, %Word8* %46
-	%51 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
-	%52 = getelementptr inbounds [64 x %Word8], [64 x %Word8]* %51, i32 0, i32 61
-	%53 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
-	%54 = load i64, i64* %53
-	%55 = lshr i64 %54, 16
-	%56 = trunc i64 %55 to %Word8
-	store %Word8 %56, %Word8* %52
-	%57 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
-	%58 = getelementptr inbounds [64 x %Word8], [64 x %Word8]* %57, i32 0, i32 60
-	%59 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
-	%60 = load i64, i64* %59
-	%61 = lshr i64 %60, 24
-	%62 = trunc i64 %61 to %Word8
-	store %Word8 %62, %Word8* %58
-	%63 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
-	%64 = getelementptr inbounds [64 x %Word8], [64 x %Word8]* %63, i32 0, i32 59
-	%65 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
-	%66 = load i64, i64* %65
-	%67 = lshr i64 %66, 32
-	%68 = trunc i64 %67 to %Word8
-	store %Word8 %68, %Word8* %64
-	%69 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
-	%70 = getelementptr inbounds [64 x %Word8], [64 x %Word8]* %69, i32 0, i32 58
-	%71 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
-	%72 = load i64, i64* %71
-	%73 = lshr i64 %72, 40
-	%74 = trunc i64 %73 to %Word8
-	store %Word8 %74, %Word8* %70
-	%75 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
-	%76 = getelementptr inbounds [64 x %Word8], [64 x %Word8]* %75, i32 0, i32 57
-	%77 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
-	%78 = load i64, i64* %77
-	%79 = lshr i64 %78, 48
-	%80 = trunc i64 %79 to %Word8
-	store %Word8 %80, %Word8* %76
-	%81 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
-	%82 = getelementptr inbounds [64 x %Word8], [64 x %Word8]* %81, i32 0, i32 56
-	%83 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 2
-	%84 = load i64, i64* %83
-	%85 = lshr i64 %84, 56
-	%86 = trunc i64 %85 to %Word8
-	store %Word8 %86, %Word8* %82
-	%87 = bitcast %Context* %ctx to %Context*
-	%88 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 0
-	%89 = bitcast [64 x %Word8]* %88 to [0 x %Word8]*
-	call void @transform(%Context* %87, [0 x %Word8]* %89)
+	%31 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 2
+	%32 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 2
+	%33 = load %Int64, %Int64* %32
+	%34 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 1
+	%35 = load %Int32, %Int32* %34
+	%36 = zext %Int32 %35 to %Int64
+	%37 = mul %Int64 %36, 8
+	%38 = add %Int64 %33, %37
+	store %Int64 %38, %Int64* %31
+	%39 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 0
+	%40 = getelementptr inbounds [64 x %Word8], [64 x %Word8]* %39, %Int32 0, %Int32 63
+	%41 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 2
+	%42 = load %Int64, %Int64* %41
+	%43 = trunc %Int64 %42 to %Word32
+	%44 = lshr %Word32 %43, 0
+	%45 = trunc %Word32 %44 to %Word8
+	store %Word8 %45, %Word8* %40
+	%46 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 0
+	%47 = getelementptr inbounds [64 x %Word8], [64 x %Word8]* %46, %Int32 0, %Int32 62
+	%48 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 2
+	%49 = load %Int64, %Int64* %48
+	%50 = trunc %Int64 %49 to %Word32
+	%51 = lshr %Word32 %50, 8
+	%52 = trunc %Word32 %51 to %Word8
+	store %Word8 %52, %Word8* %47
+	%53 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 0
+	%54 = getelementptr inbounds [64 x %Word8], [64 x %Word8]* %53, %Int32 0, %Int32 61
+	%55 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 2
+	%56 = load %Int64, %Int64* %55
+	%57 = trunc %Int64 %56 to %Word32
+	%58 = lshr %Word32 %57, 16
+	%59 = trunc %Word32 %58 to %Word8
+	store %Word8 %59, %Word8* %54
+	%60 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 0
+	%61 = getelementptr inbounds [64 x %Word8], [64 x %Word8]* %60, %Int32 0, %Int32 60
+	%62 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 2
+	%63 = load %Int64, %Int64* %62
+	%64 = trunc %Int64 %63 to %Word32
+	%65 = lshr %Word32 %64, 24
+	%66 = trunc %Word32 %65 to %Word8
+	store %Word8 %66, %Word8* %61
+	%67 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 0
+	%68 = getelementptr inbounds [64 x %Word8], [64 x %Word8]* %67, %Int32 0, %Int32 59
+	%69 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 2
+	%70 = load %Int64, %Int64* %69
+	%71 = trunc %Int64 %70 to %Word32
+	%72 = lshr %Word32 %71, 32
+	%73 = trunc %Word32 %72 to %Word8
+	store %Word8 %73, %Word8* %68
+	%74 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 0
+	%75 = getelementptr inbounds [64 x %Word8], [64 x %Word8]* %74, %Int32 0, %Int32 58
+	%76 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 2
+	%77 = load %Int64, %Int64* %76
+	%78 = trunc %Int64 %77 to %Word32
+	%79 = lshr %Word32 %78, 40
+	%80 = trunc %Word32 %79 to %Word8
+	store %Word8 %80, %Word8* %75
+	%81 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 0
+	%82 = getelementptr inbounds [64 x %Word8], [64 x %Word8]* %81, %Int32 0, %Int32 57
+	%83 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 2
+	%84 = load %Int64, %Int64* %83
+	%85 = trunc %Int64 %84 to %Word32
+	%86 = lshr %Word32 %85, 48
+	%87 = trunc %Word32 %86 to %Word8
+	store %Word8 %87, %Word8* %82
+	%88 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 0
+	%89 = getelementptr inbounds [64 x %Word8], [64 x %Word8]* %88, %Int32 0, %Int32 56
+	%90 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 2
+	%91 = load %Int64, %Int64* %90
+	%92 = trunc %Int64 %91 to %Word32
+	%93 = lshr %Word32 %92, 56
+	%94 = trunc %Word32 %93 to %Word8
+	store %Word8 %94, %Word8* %89
+	%95 = bitcast %Context* %ctx to %Context*
+	%96 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 0
+	%97 = bitcast [64 x %Word8]* %96 to [0 x %Word8]*
+	call void @transform(%Context* %95, [0 x %Word8]* %97)
 	; Since this implementation uses little endian byte ordering
 	; and SHA uses big endian, reverse all the bytes
 	; when copying the final state to the output hash.
-	store i32 0, i32* %1
+	store %Int32 0, %Int32* %1
 	br label %again_1
 again_1:
-	%90 = load i32, i32* %1
-	%91 = icmp ult i32 %90, 4
-	br i1 %91 , label %body_1, label %break_1
+	%98 = load %Int32, %Int32* %1
+	%99 = icmp ult %Int32 %98, 4
+	br %Bool %99 , label %body_1, label %break_1
 body_1:
-	%92 = load i32, i32* %1
-	%93 = mul i32 %92, 8
-	%94 = sub i32 24, %93
-	%95 = load i32, i32* %1
-	%96 = add i32 %95, 0
-	%97 = getelementptr inbounds %Hash, %Hash* %outHash, i32 0, i32 %96
-	%98 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
-	%99 = getelementptr inbounds [8 x i32], [8 x i32]* %98, i32 0, i32 0
-	%100 = load i32, i32* %99
-	%101 = lshr i32 %100, %94
-	%102 = trunc i32 %101 to %Word8
-	store %Word8 %102, %Word8* %97
-	%103 = load i32, i32* %1
-	%104 = add i32 %103, 4
-	%105 = getelementptr inbounds %Hash, %Hash* %outHash, i32 0, i32 %104
-	%106 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
-	%107 = getelementptr inbounds [8 x i32], [8 x i32]* %106, i32 0, i32 1
-	%108 = load i32, i32* %107
-	%109 = lshr i32 %108, %94
-	%110 = trunc i32 %109 to %Word8
+	%100 = load %Int32, %Int32* %1
+	%101 = mul %Int32 %100, 8
+	%102 = sub %Int32 24, %101
+	%103 = load %Int32, %Int32* %1
+	%104 = add %Int32 %103, 0
+	%105 = getelementptr inbounds %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Int32 %104
+	%106 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%107 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %106, %Int32 0, %Int32 0
+	%108 = load %Word32, %Word32* %107
+	%109 = lshr %Word32 %108, %102
+	%110 = trunc %Word32 %109 to %Word8
 	store %Word8 %110, %Word8* %105
-	%111 = load i32, i32* %1
-	%112 = add i32 %111, 8
-	%113 = getelementptr inbounds %Hash, %Hash* %outHash, i32 0, i32 %112
-	%114 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
-	%115 = getelementptr inbounds [8 x i32], [8 x i32]* %114, i32 0, i32 2
-	%116 = load i32, i32* %115
-	%117 = lshr i32 %116, %94
-	%118 = trunc i32 %117 to %Word8
+	%111 = load %Int32, %Int32* %1
+	%112 = add %Int32 %111, 4
+	%113 = getelementptr inbounds %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Int32 %112
+	%114 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%115 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %114, %Int32 0, %Int32 1
+	%116 = load %Word32, %Word32* %115
+	%117 = lshr %Word32 %116, %102
+	%118 = trunc %Word32 %117 to %Word8
 	store %Word8 %118, %Word8* %113
-	%119 = load i32, i32* %1
-	%120 = add i32 %119, 12
-	%121 = getelementptr inbounds %Hash, %Hash* %outHash, i32 0, i32 %120
-	%122 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
-	%123 = getelementptr inbounds [8 x i32], [8 x i32]* %122, i32 0, i32 3
-	%124 = load i32, i32* %123
-	%125 = lshr i32 %124, %94
-	%126 = trunc i32 %125 to %Word8
+	%119 = load %Int32, %Int32* %1
+	%120 = add %Int32 %119, 8
+	%121 = getelementptr inbounds %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Int32 %120
+	%122 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%123 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %122, %Int32 0, %Int32 2
+	%124 = load %Word32, %Word32* %123
+	%125 = lshr %Word32 %124, %102
+	%126 = trunc %Word32 %125 to %Word8
 	store %Word8 %126, %Word8* %121
-	%127 = load i32, i32* %1
-	%128 = add i32 %127, 16
-	%129 = getelementptr inbounds %Hash, %Hash* %outHash, i32 0, i32 %128
-	%130 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
-	%131 = getelementptr inbounds [8 x i32], [8 x i32]* %130, i32 0, i32 4
-	%132 = load i32, i32* %131
-	%133 = lshr i32 %132, %94
-	%134 = trunc i32 %133 to %Word8
+	%127 = load %Int32, %Int32* %1
+	%128 = add %Int32 %127, 12
+	%129 = getelementptr inbounds %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Int32 %128
+	%130 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%131 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %130, %Int32 0, %Int32 3
+	%132 = load %Word32, %Word32* %131
+	%133 = lshr %Word32 %132, %102
+	%134 = trunc %Word32 %133 to %Word8
 	store %Word8 %134, %Word8* %129
-	%135 = load i32, i32* %1
-	%136 = add i32 %135, 20
-	%137 = getelementptr inbounds %Hash, %Hash* %outHash, i32 0, i32 %136
-	%138 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
-	%139 = getelementptr inbounds [8 x i32], [8 x i32]* %138, i32 0, i32 5
-	%140 = load i32, i32* %139
-	%141 = lshr i32 %140, %94
-	%142 = trunc i32 %141 to %Word8
+	%135 = load %Int32, %Int32* %1
+	%136 = add %Int32 %135, 16
+	%137 = getelementptr inbounds %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Int32 %136
+	%138 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%139 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %138, %Int32 0, %Int32 4
+	%140 = load %Word32, %Word32* %139
+	%141 = lshr %Word32 %140, %102
+	%142 = trunc %Word32 %141 to %Word8
 	store %Word8 %142, %Word8* %137
-	%143 = load i32, i32* %1
-	%144 = add i32 %143, 24
-	%145 = getelementptr inbounds %Hash, %Hash* %outHash, i32 0, i32 %144
-	%146 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
-	%147 = getelementptr inbounds [8 x i32], [8 x i32]* %146, i32 0, i32 6
-	%148 = load i32, i32* %147
-	%149 = lshr i32 %148, %94
-	%150 = trunc i32 %149 to %Word8
+	%143 = load %Int32, %Int32* %1
+	%144 = add %Int32 %143, 20
+	%145 = getelementptr inbounds %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Int32 %144
+	%146 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%147 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %146, %Int32 0, %Int32 5
+	%148 = load %Word32, %Word32* %147
+	%149 = lshr %Word32 %148, %102
+	%150 = trunc %Word32 %149 to %Word8
 	store %Word8 %150, %Word8* %145
-	%151 = load i32, i32* %1
-	%152 = add i32 %151, 28
-	%153 = getelementptr inbounds %Hash, %Hash* %outHash, i32 0, i32 %152
-	%154 = getelementptr inbounds %Context, %Context* %ctx, i32 0, i32 3
-	%155 = getelementptr inbounds [8 x i32], [8 x i32]* %154, i32 0, i32 7
-	%156 = load i32, i32* %155
-	%157 = lshr i32 %156, %94
-	%158 = trunc i32 %157 to %Word8
+	%151 = load %Int32, %Int32* %1
+	%152 = add %Int32 %151, 24
+	%153 = getelementptr inbounds %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Int32 %152
+	%154 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%155 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %154, %Int32 0, %Int32 6
+	%156 = load %Word32, %Word32* %155
+	%157 = lshr %Word32 %156, %102
+	%158 = trunc %Word32 %157 to %Word8
 	store %Word8 %158, %Word8* %153
-	%159 = load i32, i32* %1
-	%160 = add i32 %159, 1
-	store i32 %160, i32* %1
+	%159 = load %Int32, %Int32* %1
+	%160 = add %Int32 %159, 28
+	%161 = getelementptr inbounds %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Int32 %160
+	%162 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%163 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %162, %Int32 0, %Int32 7
+	%164 = load %Word32, %Word32* %163
+	%165 = lshr %Word32 %164, %102
+	%166 = trunc %Word32 %165 to %Word8
+	store %Word8 %166, %Word8* %161
+	%167 = load %Int32, %Int32* %1
+	%168 = add %Int32 %167, 1
+	store %Int32 %168, %Int32* %1
 	br label %again_1
 break_1:
 	ret void
@@ -842,17 +874,17 @@ break_1:
 
 
 
-%Hash = type [32 x %Word8];
+%sha256_Hash = type [32 x %Word8];
 
-define void @sha256_hash([0 x %Word8]* %msg, i32 %msgLen, %Hash* %outHash) {
+define void @sha256_hash([0 x %Word8]* %msg, %Int32 %msgLen, %sha256_Hash* %outHash) {
 	%1 = alloca %Context, align 8
 	store %Context zeroinitializer, %Context* %1
 	%2 = bitcast %Context* %1 to %Context*
 	call void @contextInit(%Context* %2)
 	%3 = bitcast %Context* %1 to %Context*
-	call void @update(%Context* %3, [0 x %Word8]* %msg, i32 %msgLen)
+	call void @update(%Context* %3, [0 x %Word8]* %msg, %Int32 %msgLen)
 	%4 = bitcast %Context* %1 to %Context*
-	call void @final(%Context* %4, %Hash* %outHash)
+	call void @final(%Context* %4, %sha256_Hash* %outHash)
 	ret void
 }
 

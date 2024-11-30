@@ -8,7 +8,7 @@ import "misc/sha256"
 $pragma c_include "./sha256.h"
 
 
-let inputDataLength = 32
+const inputDataLength = 32
 
 
 type SHA256_TestCase record {
@@ -18,6 +18,7 @@ type SHA256_TestCase record {
 	expected_result: sha256.Hash
 	//expected_result: Word256
 }
+
 
 
 var test0 = SHA256_TestCase {
@@ -46,8 +47,8 @@ var test1 = SHA256_TestCase {
 	//expected_result = 0x7F83B1657FF1FC53B92DC18148A1D65DFC2D4B1FA3D677284ADDD200126D9069
 }
 
-
 var tests = [&test0, &test1]
+
 
 
 func doTest(test: *SHA256_TestCase) -> Bool {

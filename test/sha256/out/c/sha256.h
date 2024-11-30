@@ -4,13 +4,14 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+
+#include <string.h>
 #include <string.h>
 
 #include <string.h>
 
 
-
-typedef struct sha256_Context sha256_Context; //
+typedef struct Context Context; //
 #define sha256_hashSize  32
 
 typedef uint8_t * sha256_Hash;
