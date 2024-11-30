@@ -27,8 +27,7 @@ static void nat32_list_insert(list_List *list, uint32_t x)
 static void list_print_forward(list_List *list)
 {
 	printf("list_print_forward:\n");
-	list_Node *pn;
-	pn = (list_Node *)list_first_node_get((list_List *)list);
+	list_Node *pn = (list_Node *)list_first_node_get((list_List *)list);
 	while (pn != NULL) {
 		uint32_t *const x = (uint32_t *)list_node_data_get((list_Node *)pn);
 		printf("v = %u\n", *x);
@@ -39,8 +38,7 @@ static void list_print_forward(list_List *list)
 static void list_print_backward(list_List *list)
 {
 	printf("list_print_backward:\n");
-	list_Node *pn;
-	pn = (list_Node *)list_last_node_get((list_List *)list);
+	list_Node *pn = (list_Node *)list_last_node_get((list_List *)list);
 	while (pn != NULL) {
 		uint32_t *const x = (uint32_t *)list_node_data_get((list_Node *)pn);
 		printf("v = %u\n", *x);
@@ -88,8 +86,7 @@ int main()
 	printf("\nlist.node_get(list, n) test\n");
 
 	// test list.node_get
-	int32_t i;
-	i = 0;
+	int32_t i = 0;
 	while (i >= -12) {
 		list_Node *const node = list_node_get((list_List *)list0, i);
 

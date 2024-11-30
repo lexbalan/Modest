@@ -33,10 +33,8 @@ int main()
 	printf("records test\n");
 
 	// compare two Point2D records
-	Point2D p2d0;
-	p2d0 = (Point2D){.x = 1, .y = 2};
-	Point2D p2d1;
-	p2d1 = (Point2D){.x = 10, .y = 20};
+	Point2D p2d0 = (Point2D){.x = 1, .y = 2};
+	Point2D p2d1 = (Point2D){.x = 10, .y = 20};
 
 	if (memcmp(&p2d0, &p2d1, sizeof(Point2D)) == 0) {
 		printf("p2d0 == p2d1\n");
@@ -46,10 +44,8 @@ int main()
 
 
 	// compare Point2D with anonymous record
-	Point2D p2d2;
-	p2d2 = p2d0;
-	struct __anonymous_struct_3 p2d3;
-	p2d3 = (struct __anonymous_struct_3)xx;
+	Point2D p2d2 = p2d0;
+	struct __anonymous_struct_3 p2d3 = (struct __anonymous_struct_3)xx;
 
 	if (memcmp(&p2d2, &p2d3, sizeof(struct __anonymous_struct_3)) == 0) {
 		printf("p2d2 == p2d3\n");
@@ -59,8 +55,7 @@ int main()
 
 
 	// comparison between two anonymous record
-	struct __anonymous_struct_4 p2d4;
-	p2d4 = (struct __anonymous_struct_4){.x = 1, .y = 2};
+	struct __anonymous_struct_4 p2d4 = (struct __anonymous_struct_4){.x = 1, .y = 2};
 
 	if (memcmp(&p2d3, &p2d4, sizeof(struct __anonymous_struct_4)) == 0) {
 		printf("p2d3 == p2d4\n");
@@ -93,10 +88,8 @@ int main()
 	// проверка того как локальная константа-массив
 	// "замораживает" свои элементы
 
-	int32_t ax;
-	ax = 10;
-	int32_t bx;
-	bx = 20;
+	int32_t ax = 10;
+	int32_t bx = 20;
 
 	const struct {int32_t x; int32_t y;} px = {.x = ax, .y = bx};
 

@@ -1,4 +1,4 @@
-// ./out/c/ff_delay.c
+// ./out/c/delay.c
 
 #include <stdint.h>
 #include <stdbool.h>

@@ -17,8 +17,7 @@ int main()
 {
 	printf("while statement test\n");
 
-	int32_t a;
-	a = 0;
+	int32_t a = 0;
 	#define __b  10
 
 	while (a < __b) {

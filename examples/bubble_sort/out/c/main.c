@@ -19,12 +19,10 @@ static int32_t array[21] = (int32_t[21]){
 
 static void bubble_sort32(int32_t *array, int32_t len)
 {
-	bool need_to_sort;
-	need_to_sort = true;
+	bool need_to_sort = true;
 	while (need_to_sort) {
 		need_to_sort = false;
-		int32_t i;
-		i = 0;
+		int32_t i = 0;
 		while (i < len - 1) {
 			const int32_t i0 = array[i];
 			const int32_t i1 = array[i + 1];
@@ -45,8 +43,7 @@ static void bubble_sort32(int32_t *array, int32_t len)
 static void print_array(int32_t *array, int32_t len)
 {
 	printf("\n");
-	int32_t i;
-	i = 0;
+	int32_t i = 0;
 	while (i < len) {
 		printf("array[%i] = %i\n", i, array[i]);
 		i = i + 1;
@@ -60,8 +57,7 @@ static void fill_array(int32_t *array, int32_t len)
 {
 	#define __min  (-1000)
 	#define __max  1000
-	int32_t i;
-	i = 0;
+	int32_t i = 0;
 	while (i < len) {
 		printf("[%i] ", i);
 		const int32_t x = get_number(__min, __max);
@@ -75,8 +71,7 @@ static void fill_array(int32_t *array, int32_t len)
 
 static int32_t get_number(int32_t min, int32_t max)
 {
-	int32_t number;
-	number = 0;
+	int32_t number = 0;
 
 	while (true) {
 		printf("enter a number (%i .. %i): ", min, max);

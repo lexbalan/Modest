@@ -55,8 +55,7 @@ int main()
 
 	printf("[+] Server socket created\n");
 
-	struct sockaddr_in server_addr;
-	server_addr = (struct sockaddr_in){
+	struct sockaddr_in server_addr = (struct sockaddr_in){
 		.sin_family = AF_INET,
 		.sin_port = port,
 		.sin_addr = (struct in_addr){
@@ -65,8 +64,7 @@ int main()
 	};
 
 	struct sockaddr *const sockaddr = (struct sockaddr *)(void *)&server_addr;
-	int e;
-	e = bind(sockfd, (struct sockaddr *)sockaddr, (socklen_t)sizeof(struct sockaddr_in));
+	int e = bind(sockfd, (struct sockaddr *)sockaddr, (socklen_t)sizeof(struct sockaddr_in));
 	if (e < 0) {
 		perror("[-] Error in Binding");
 		exit(1);
@@ -82,8 +80,7 @@ int main()
 
 	printf("[+] Listening...\n");
 
-	socklen_t addr_size;
-	addr_size = (socklen_t)sizeof(struct sockaddr_in);
+	socklen_t addr_size = (socklen_t)sizeof(struct sockaddr_in);
 	struct sockaddr_in new_addr;
 	struct sockaddr *const sa = (struct sockaddr *)(void *)&new_addr;
 	const int new_sock = accept(sockfd, (struct sockaddr *)sa, &addr_size);

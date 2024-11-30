@@ -246,4 +246,102 @@ declare void @fsm_run(%fsm_FSM* %fsm)
 ; -- endstrings --
 
 
-@cnt = global %Int8 <undefined>
+@cnt = global %Int8 zeroinitializer
+
+define internal void @off_entry(%fsm_FSM* %x) {
+	;printf("off_entry\n")
+	ret void
+}
+
+define internal void @off_loop(%fsm_FSM* %x) {
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*))
+	%2 = load %Int8, %Int8* @cnt
+	%3 = icmp ult %Int8 %2, 10
+	br %Bool %3 , label %then_0, label %else_0
+then_0:
+	%4 = load %Int8, %Int8* @cnt
+	%5 = add %Int8 %4, 1
+	store %Int8 %5, %Int8* @cnt
+	br label %endif_0
+else_0:
+	store %Int8 0, %Int8* @cnt
+	%6 = bitcast %fsm_FSM* %x to %fsm_FSM*
+	call void @fsm_switch(%fsm_FSM* %6, %Int32 1)
+	br label %endif_0
+endif_0:
+	ret void
+}
+
+define internal void @off_exit(%fsm_FSM* %x) {
+	;printf("off_exit\n")
+	ret void
+}
+
+define internal void @on_entry(%fsm_FSM* %x) {
+	;printf("on_entry\n")
+	ret void
+}
+
+define internal void @on_loop(%fsm_FSM* %x) {
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str2 to [0 x i8]*))
+	%2 = load %Int8, %Int8* @cnt
+	%3 = icmp ult %Int8 %2, 10
+	br %Bool %3 , label %then_0, label %else_0
+then_0:
+	%4 = load %Int8, %Int8* @cnt
+	%5 = add %Int8 %4, 1
+	store %Int8 %5, %Int8* @cnt
+	br label %endif_0
+else_0:
+	store %Int8 0, %Int8* @cnt
+	%6 = bitcast %fsm_FSM* %x to %fsm_FSM*
+	call void @fsm_switch(%fsm_FSM* %6, %Int32 2)
+	br label %endif_0
+endif_0:
+	ret void
+}
+
+define internal void @on_exit(%fsm_FSM* %x) {
+	;printf("on_exit\n")
+	ret void
+}
+
+define internal void @beacon_entry(%fsm_FSM* %x) {
+	%1 = bitcast %fsm_FSM* %x to %fsm_FSM*
+	%2 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %x, %Int32 0, %Int32 1
+	%3 = load %fsm_UInt32, %fsm_UInt32* %2
+	%4 = call %Str8* @fsm_state_no_name(%fsm_FSM* %1, %fsm_UInt32 %3)
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str3 to [0 x i8]*), %Str8* %4)
+	ret void
+}
+
+define internal void @beacon_loop(%fsm_FSM* %x) {
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str4 to [0 x i8]*))
+	%2 = load %Int8, %Int8* @cnt
+	%3 = icmp ult %Int8 %2, 10
+	br %Bool %3 , label %then_0, label %else_0
+then_0:
+	%4 = load %Int8, %Int8* @cnt
+	%5 = add %Int8 %4, 1
+	store %Int8 %5, %Int8* @cnt
+	br label %endif_0
+else_0:
+	store %Int8 0, %Int8* @cnt
+	%6 = bitcast %fsm_FSM* %x to %fsm_FSM*
+	call void @fsm_switch(%fsm_FSM* %6, %Int32 0)
+	br label %endif_0
+endif_0:
+	ret void
+}
+
+define internal void @beacon_exit(%fsm_FSM* %x) {
+	%1 = bitcast %fsm_FSM* %x to %fsm_FSM*
+	%2 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %x, %Int32 0, %Int32 2
+	%3 = load %fsm_UInt32, %fsm_UInt32* %2
+	%4 = call %Str8* @fsm_state_no_name(%fsm_FSM* %1, %fsm_UInt32 %3)
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str5 to [0 x i8]*), %Str8* %4)
+	ret void
+}
+
+
+@fsm = global %fsm_FSM 

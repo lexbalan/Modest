@@ -38,10 +38,8 @@ int main()
 
 	// local
 
-	Point localPoint0;
-	localPoint0 = (Point){.x = 10, .y = 20};
-	Point localPoint1;
-	localPoint1 = (Point){};
+	Point localPoint0 = (Point){.x = 10, .y = 20};
+	Point localPoint1 = (Point){};
 
 	localPoint1 = localPoint0;
 

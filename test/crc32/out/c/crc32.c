@@ -19,12 +19,10 @@ uint32_t crc32_doHash(uint8_t *buf, uint32_t len)
 	// create table before
 	//
 
-	uint32_t i;
-	i = 0;
+	uint32_t i = 0;
 	while (i < __tableSize) {
 		crc = (uint32_t)i;
-		uint32_t j;
-		j = 0;
+		uint32_t j = 0;
 		while (j < 8) {
 			if ((crc & 1) != 0) {
 				crc = crc >> 1 ^ 0xEDB88320;

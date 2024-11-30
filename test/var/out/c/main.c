@@ -20,10 +20,8 @@ static char *str = "Hello!";
 
 int main()
 {
-	int32_t x;
-	x = 127;
-	int32_t y;
-	y = x + 1;
+	int32_t x = 127;
+	int32_t y = x + 1;
 
 	printf("y = %i\n", y);
 

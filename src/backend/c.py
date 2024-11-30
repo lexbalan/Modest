@@ -1330,10 +1330,8 @@ def print_stmt_var(x):
 	print_variable(get_id_str(x['var_value']), x['var_value']['type'])
 
 	if not value_is_undefined(init_value):
-		out(";")
-		nl_indent()
-		do_assign(x['var_value'], init_value)
-		return
+		out(" = ")
+		print_value(init_value)
 
 	out(";")
 	return
@@ -1821,7 +1819,8 @@ def print_def_var(x, isdecl=False):
 	print_variable(get_id_str(x['var_value']), var['type'])
 
 	init_value = x['init_value']
-	if init_value != None:
+
+	if not value_is_undefined(init_value):
 		out(" = ")
 		print_value(init_value, ctx=['no-literal-array-cast'])
 

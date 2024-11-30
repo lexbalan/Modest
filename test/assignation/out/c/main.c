@@ -54,10 +54,8 @@ int main()
 	// Local
 
 	// copy integers by value
-	int32_t loc_i0;
-	loc_i0 = 0;
-	int32_t loc_i1;
-	loc_i1 = 123;
+	int32_t loc_i0 = 0;
+	int32_t loc_i1 = 123;
 
 	loc_i0 = loc_i1;
 
@@ -65,10 +63,8 @@ int main()
 
 	// copy arrays by value
 	// C backend will be use memcpy()
-	int32_t loc_a0[10];
-	memset(&loc_a0, 0, sizeof(int32_t[10]));
-	int32_t loc_a1[10];
-	memcpy(&loc_a1, &(int32_t[10]){42, 53, 64}, sizeof(int32_t[10]));
+	int32_t loc_a0[10] = (int32_t[10]){};
+	int32_t loc_a1[10] = (int32_t[10]){42, 53, 64};
 
 	memcpy(&loc_a0, &loc_a1, sizeof(int32_t[10]));
 
@@ -79,10 +75,8 @@ int main()
 
 	// copy records by value
 	// C backend will be use memcpy()
-	Point loc_r0;
-	loc_r0 = (Point){};
-	Point loc_r1;
-	loc_r1 = (Point){.x = 10, .y = 20};
+	Point loc_r0 = (Point){};
+	Point loc_r1 = (Point){.x = 10, .y = 20};
 
 	loc_r0 = loc_r1;
 

@@ -868,7 +868,7 @@ def print_def_var(x):
 	var = x['var_value']
 	print_field(var)
 	iv = x['init_value']
-	if iv != None:
+	if not value_is_undefined(iv):
 		out(" = ")
 		print_value(iv)
 

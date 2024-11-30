@@ -57,10 +57,8 @@ int main()
 {
 	printf("inline asm test\n");
 
-	int64_t a;
-	a = 10;
-	int64_t b;
-	b = 20;
+	int64_t a = 10;
+	int64_t b = 20;
 
 	const int64_t sum = sum64(a, b);
 	const int64_t sub = sub64(a, b);

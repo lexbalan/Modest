@@ -14,7 +14,7 @@ import "fsm"
 //@attribute("c_no_print")
 
 //$pragma c_include "./ff_main.h"
-//$pragma c_include "./ff_delay.h"
+$pragma c_include "./delay.h"
 
 
 

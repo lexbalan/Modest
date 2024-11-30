@@ -2213,7 +2213,7 @@ def print_def_var(x, as_extern=False):
 	print_type(var['type'])
 
 	if not is_extern:
-		if x['init_value'] != None:
+		if not value_is_undefined(x['init_value']):
 			out(" ")
 			llvm_print_value(do_eval(x['init_value']))
 		else:

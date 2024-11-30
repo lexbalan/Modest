@@ -61,8 +61,7 @@ uint8_t utf_utf16_to_utf32(uint16_t *c, uint32_t *result)
 	} else if (leading >= 0xDC00) {
 		//error("Illegal code sequence")
 	} else {
-		uint32_t code;
-		code = ((uint32_t)leading & 0x3FF) << 10;
+		uint32_t code = ((uint32_t)leading & 0x3FF) << 10;
 		const uint32_t trailing = (uint32_t)c[1];
 		if ((trailing < 0xDC00) || (trailing > 0xDFFF)) {
 			//error("Illegal code sequence")

@@ -1,6 +1,6 @@
 
-#ifndef FF_DELAY_H
-#define FF_DELAY_H
+#ifndef DELAY_H
+#define DELAY_H
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -14,4 +14,4 @@ void delay_us(uint64_t us);
 void delay_ms(uint64_t ms);
 void delay_sec(uint64_t s);
 
-#endif /* FF_DELAY_H */
+#endif /* DELAY_H */

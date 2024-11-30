@@ -41,12 +41,9 @@ static uint32_t arr_utf32[8] = U"Hello!\n";
 
 int main()
 {
-	char *str8;
-	str8 = string8Const;
-	uint16_t *str16;
-	str16 = string16Const;
-	uint32_t *str32;
-	str32 = string32Const;
+	char *str8 = string8Const;
+	uint16_t *str16 = string16Const;
+	uint32_t *str32 = string32Const;
 
 	console_puts8(str8);
 	console_puts8("\n");

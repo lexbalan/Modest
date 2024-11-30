@@ -112,8 +112,7 @@ static bool test_generic_array()
 	}
 
 	// explicit cast Generic([4]GenericInteger) value to [10]Int32
-	int32_t d[10];
-	memcpy(&d, &(int32_t[10])__a, sizeof(int32_t[10]));
+	int32_t d[10] = (int32_t[10])__a;
 
 	if (memcmp(&d, &(int32_t[10]){0, 1, 2, 3, 0}, sizeof(int32_t[10])) != 0) {
 		printf("d != [0, 1, 2, 3, 0, 0, 0, 0, 0, 0]\n");

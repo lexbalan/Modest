@@ -4,10 +4,11 @@ include "libc/ctypes64"
 include "libc/stdio"
 import "lightfood/delay"
 import "fsm"
+@c_include "./delay.h"
 const flashlightStateOff = 0
 const flashlightStateOn = 1
 const flashlightStateBeacon = 2
-var cnt: Nat8 = <undefined>
+var cnt: Nat8
 func off_entry(x: *FSM) -> Unit {
 	Unit x
 	//printf("off_entry\n")

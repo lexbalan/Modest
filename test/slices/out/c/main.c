@@ -15,8 +15,7 @@
 
 static void array_print(int32_t *pa, int32_t len)
 {
-	int32_t i;
-	i = 0;
+	int32_t i = 0;
 	while (i < len) {
 		printf("a[%d] = %d\n", i, pa[i]);
 		i = i + 1;
@@ -31,13 +30,11 @@ int main()
 	// by value
 	//
 
-	int32_t a[10];
-	memcpy(&a, &(int32_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, sizeof(int32_t[10]));
+	int32_t a[10] = (int32_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
 	int32_t s1[2 - 1];
 	memcpy(&s1, &a[1], sizeof(int32_t[2 - 1]));
-	int32_t i;
-	i = 0;
+	int32_t i = 0;
 	while (i < (2 - 1)) {
 		printf("s1[%d] = %d\n", i, s1[i]);
 		i = i + 1;
@@ -72,8 +69,7 @@ int main()
 
 	printf("--------------------------------------------\n");
 
-	int32_t s[10];
-	memcpy(&s, &(int32_t[10]){10, 20, 30, 40, 50, 60, 70, 80, 90, 100}, sizeof(int32_t[10]));
+	int32_t s[10] = (int32_t[10]){10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
 
 	memset(&s[2], 0, sizeof(int32_t[5 - 2]));
 
@@ -104,14 +100,12 @@ int main()
 	// за каким то хером это работает, то что мне сейчас нужно
 	// но тут еще куча работы впереди
 
-	int32_t *pw;
-	pw = (int32_t *)(int32_t *)&s;
+	int32_t *pw = (int32_t *)(int32_t *)&s;
 
 	printf("before\n");
 	array_print(pw, 10);
 
-	int32_t ind;
-	ind = 1;
+	int32_t ind = 1;
 
 	pw = (int32_t *)&pw[ind];
 
@@ -122,20 +116,16 @@ int main()
 	printf("zero slice by var\n");
 	// NOT WORKED NOW
 
-	int32_t ss[10];
-	memcpy(&ss, &(int32_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, sizeof(int32_t[10]));
+	int32_t ss[10] = (int32_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
-	int32_t k;
-	k = 4;
-	int32_t j;
-	j = 7;
+	int32_t k = 4;
+	int32_t j = 7;
 	memset(&ss[k], 0, sizeof(int32_t[j - k]));
 	array_print((int32_t *)&ss, 10);
 
 	printf("--------------------------------------------\n");
 	printf("copy slice by var\n");
-	int32_t dst[10];
-	memcpy(&dst, &(int32_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, sizeof(int32_t[10]));
+	int32_t dst[10] = (int32_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
 	// test with let
 	#define __i1  3
@@ -146,19 +136,14 @@ int main()
 
 	printf("--------------------------------------------\n");
 
-	int32_t dst2[10];
-	memcpy(&dst2, &(int32_t[10]){0, 10, 20, 30, 40, 50, 60, 70, 80, 90}, sizeof(int32_t[10]));
+	int32_t dst2[10] = (int32_t[10]){0, 10, 20, 30, 40, 50, 60, 70, 80, 90};
 
-	uint8_t axx;
-	axx = 111;
-	uint8_t bxx;
-	bxx = 222;
+	uint8_t axx = 111;
+	uint8_t bxx = 222;
 
 	// test with var
-	int32_t i2;
-	i2 = 3;
-	int32_t j2;
-	j2 = 5;
+	int32_t i2 = 3;
+	int32_t j2 = 5;
 	memcpy(&dst2[i2], &(int32_t[]){(int32_t)axx, (int32_t)bxx}, sizeof(int32_t[j2 - i2]));
 
 	array_print((int32_t *)&dst2, 10);

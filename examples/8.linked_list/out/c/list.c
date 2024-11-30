@@ -142,8 +142,7 @@ list_Node *list_node_get(list_List *list, int32_t pos)
 			return NULL;
 		}
 
-		uint32_t i;
-		i = 0;
+		uint32_t i = 0;
 		while (i < n) {
 			node = (list_Node *)node->next;
 			i = i + 1;
@@ -157,8 +156,7 @@ list_Node *list_node_get(list_List *list, int32_t pos)
 			return NULL;
 		}
 
-		uint32_t i;
-		i = 0;
+		uint32_t i = 0;
 		while (i < n) {
 			node = (list_Node *)node->prev;
 			i = i + 1;
