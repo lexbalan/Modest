@@ -9,7 +9,6 @@
 
 
 
-#define sha256_hashSize  32
 
 
 struct Context {

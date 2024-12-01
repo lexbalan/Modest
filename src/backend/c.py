@@ -2090,7 +2090,8 @@ def print_cfile(module, _outname):
 
 		isa = x['isa']
 		if isa == 'def_const':
-			print_def_const(x)
+			if is_private(x):
+				print_def_const(x)
 		elif isa == 'def_type':
 			if is_private(x):
 				print_def_type(x)
@@ -2101,9 +2102,10 @@ def print_cfile(module, _outname):
 		elif isa == 'def_func':
 			newline()
 			print_def_func(x)
-
-		elif isa == 'comment': print_comment(x)
-		elif isa == 'directive': print_directive(x)
+		elif isa == 'comment':
+			print_comment(x)
+		elif isa == 'directive':
+			print_directive(x)
 
 	newline()
 	newline()
