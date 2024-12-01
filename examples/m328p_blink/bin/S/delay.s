@@ -489,9 +489,5 @@ delay_ms:                               ; @delay_ms
 	;clear the zeroed data section on startup
 	.globl	__do_clear_bss
 	.type	delayCounter,@object            ; @delayCounter
-	.section	.bss,"aw",@nobits
-	.globl	delayCounter
-delayCounter:
-	.long	0                               ; 0x0
-	.size	delayCounter, 4
-
+	.local	delayCounter
+	.comm	delayCounter,4,1

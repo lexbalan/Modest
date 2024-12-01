@@ -8,15 +8,13 @@
 
 
 
+
+
+
+
 #define flashlightStateOff  0
 #define flashlightStateOn  1
 #define flashlightStateBeacon  2
-
-
-
-
-
-
 static uint8_t cnt;
 
 static void off_entry(fsm_FSM *x)

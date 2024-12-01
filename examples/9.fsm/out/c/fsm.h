@@ -17,27 +17,26 @@
 struct fsm_FSM;
 typedef struct fsm_FSM fsm_FSM;
 
-typedef void * fsm_FSM_Proc;
+typedef void * fsm_Handler;
 
-struct fsm_FSM_StateDesc {
+struct fsm_StateDesc {
 	char name[fsm_nameMaxLength];
-	fsm_FSM_Proc entry;
-	fsm_FSM_Proc loop;
-	fsm_FSM_Proc exit;
+	fsm_Handler entry;
+	fsm_Handler loop;
+	fsm_Handler exit;
 };
-typedef struct fsm_FSM_StateDesc fsm_FSM_StateDesc;
+typedef struct fsm_StateDesc fsm_StateDesc;
 #define fsm_substateEntering  0
 #define fsm_substateLoop  1
 #define fsm_substateLeaving  2
 
-typedef uint32_t fsm_UInt32;
 
 struct fsm_FSM {
 	char name[fsm_nameMaxLength];
-	fsm_UInt32 state;
-	fsm_UInt32 nexstate;
-	fsm_UInt32 substate;
-	fsm_FSM_StateDesc states[fsm_maxStates];
+	uint32_t state;
+	uint32_t nexstate;
+	uint32_t substate;
+	fsm_StateDesc states[fsm_maxStates];
 };
 typedef struct fsm_FSM fsm_FSM;
 char *fsm_state_no_name(fsm_FSM *fsm, uint32_t state_no);

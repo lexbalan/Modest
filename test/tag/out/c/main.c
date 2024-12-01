@@ -7,6 +7,8 @@
 #include "main.h"
 
 
+static char ss[10] = "abcdefghkj";
+
 
 static void print(char *form, ...);
 
@@ -14,6 +16,8 @@ int32_t main()
 {
 	const uint32_t c = U'#';
 	print("%c", c);
+
+	memcpy(&ss, &"abcdefghkj", sizeof(char[10]));
 
 	main_Rec0 r0;
 	main_Rec1 r1;

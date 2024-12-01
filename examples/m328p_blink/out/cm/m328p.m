@@ -1,6 +1,5 @@
 
 include "avr"
-const sfrOffset = 0x20
 
 
 public type GPIO record {
@@ -8,6 +7,7 @@ public type GPIO record {
 	public dir: IO8
 	public out: IO8
 }
+const sfrOffset = 0x20
 public const portB = *GPIO (sfrOffset + 0x03)
 public const portC = *GPIO (sfrOffset + 0x06)
 public const portD = *GPIO (sfrOffset + 0x09)

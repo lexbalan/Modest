@@ -202,6 +202,25 @@ declare void @perror(%ConstCharStr* %str)
 	%main_Rec0*
 };
 
+%X = type {
+	[10 x %Char8]
+};
+
+
+@x = internal global %X {
+	[10 x %Char8] [
+		%Char8 97,
+		%Char8 98,
+		%Char8 99,
+		%Char8 100,
+		%Char8 101,
+		%Char8 102,
+		%Char8 103,
+		%Char8 104,
+		%Char8 107,
+		%Char8 106
+	]
+}
 
 define %Int32 @main() {
 	call void (%Str8*, ...) @print(%Str8* bitcast ([3 x i8]* @str1 to [0 x i8]*), %Char32 35)

@@ -110,8 +110,9 @@ break_2:
 ; -- print imports --
 ; -- end print imports --
 ; -- strings --
+; -- endstrings --
 
-@delayCounter = global %Int32 0
+@delayCounter = internal global %Int32 0
 
 define void @delay_ms(%Int32 %x) {
 	%1 = alloca %Int32, align 4
@@ -120,14 +121,14 @@ define void @delay_ms(%Int32 %x) {
 again_1:
 	%2 = load %Int32, %Int32* %1
 	%3 = icmp ugt %Int32 %2, 0
-	br i1 %3 , label %body_1, label %break_1
+	br %Bool %3 , label %body_1, label %break_1
 body_1:
 	store %Int32 0, %Int32* @delayCounter
 	br label %again_2
 again_2:
 	%4 = load %Int32, %Int32* @delayCounter
 	%5 = icmp ult %Int32 %4, 380
-	br i1 %5 , label %body_2, label %break_2
+	br %Bool %5 , label %body_2, label %break_2
 body_2:
 	%6 = load %Int32, %Int32* @delayCounter
 	%7 = add %Int32 %6, 1

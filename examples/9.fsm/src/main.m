@@ -114,21 +114,21 @@ var fsm: fsm.FSM = {
 	nexstate = 0
 	substate = fsm.substateEntering
 	states = [
-		{
+		fsm.StateDesc {
 			name = "Off"
 			entry = &off_entry
 			loop = &off_loop
 			exit = &off_exit
 		}
 
-		{
+		fsm.StateDesc {
 			name = "On"
 			entry = &on_entry
 			loop = &on_loop
 			exit = &on_exit
 		}
 
-		{
+		fsm.StateDesc {
 			name = "Beacon"
 			entry = &beacon_entry
 			loop = &beacon_loop

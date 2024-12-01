@@ -12,9 +12,18 @@ public type Rec1 record {
 }
 
 
+type X record {
+	text: [10]Char8
+}
+
+var x = X {
+	text = "abcdefghkj"
+}
+
 public func main() -> Int32 {
 	let c = Char32 "#"
 	print("%c", c)
+
 
 	var r0: Rec0
 	var r1: Rec1

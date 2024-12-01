@@ -11,13 +11,13 @@ public const nameMaxLength = 8
 public const maxStates = 16
 
 
-public type FSM_Proc *(x: *FSM) -> Unit
+public type Handler *(x: *FSM) -> Unit
 
-public type FSM_StateDesc record {
+public type StateDesc record {
 	public name: [nameMaxLength]Char8
-	public entry: FSM_Proc
-	public loop: FSM_Proc
-	public exit: FSM_Proc
+	public entry: Handler
+	public loop: Handler
+	public exit: Handler
 }
 
 
@@ -25,14 +25,13 @@ public const substateEntering = 0
 public const substateLoop = 1
 public const substateLeaving = 2
 
-public type UInt32 Nat32
 
 public type FSM record {
 	public name: [nameMaxLength]Char8
-	public state: UInt32
-	public nexstate: UInt32
-	public substate: UInt32
-	public states: [maxStates]FSM_StateDesc
+	public state: Nat32
+	public nexstate: Nat32
+	public substate: Nat32
+	public states: [maxStates]StateDesc
 }
 
 

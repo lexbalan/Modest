@@ -292,229 +292,6 @@ declare %Int8 @utf_utf16_to_utf32([0 x %Char16]* %c, %Char32* %result)
 ; -- strings --
 ; -- endstrings --
 
-define internal %Char8 @n_to_dec_sym(%Int8 %n) {
-	%1 = add %Int8 48, %n
-	%2 = bitcast %Int8 %1 to %Char8
-	ret %Char8 %2
-}
-
-define internal %Char8 @n_to_hex_sym(%Int8 %n) {
-	%1 = icmp ult %Int8 %n, 10
-	br %Bool %1 , label %then_0, label %endif_0
-then_0:
-	%2 = call %Char8 @n_to_dec_sym(%Int8 %n)
-	ret %Char8 %2
-	br label %endif_0
-endif_0:
-	%4 = sub %Int8 %n, 10
-	%5 = add %Int8 65, %4
-	%6 = bitcast %Int8 %5 to %Char8
-	ret %Char8 %6
-}
-
-define internal %Int32 @sprint_hex_nat32([0 x %Char8]* %buf, %Int32 %x) {
-	%1 = alloca [8 x %Char8], align 1
-	%2 = alloca %Int32, align 4
-	store %Int32 %x, %Int32* %2
-	%3 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %3
-	br label %again_1
-again_1:
-	br %Bool 1 , label %body_1, label %break_1
-body_1:
-	%4 = load %Int32, %Int32* %2
-	%5 = urem %Int32 %4, 16
-	%6 = load %Int32, %Int32* %2
-	%7 = udiv %Int32 %6, 16
-	store %Int32 %7, %Int32* %2
-	%8 = load %Int32, %Int32* %3
-	%9 = getelementptr inbounds [8 x %Char8], [8 x %Char8]* %1, %Int32 0, %Int32 %8
-	%10 = trunc %Int32 %5 to %Int8
-	%11 = call %Char8 @n_to_hex_sym(%Int8 %10)
-	store %Char8 %11, %Char8* %9
-	%12 = load %Int32, %Int32* %3
-	%13 = add %Int32 %12, 1
-	store %Int32 %13, %Int32* %3
-	%14 = load %Int32, %Int32* %2
-	%15 = icmp eq %Int32 %14, 0
-	br %Bool %15 , label %then_0, label %endif_0
-then_0:
-	br label %break_1
-	br label %endif_0
-endif_0:
-	br label %again_1
-break_1:
-	; mirroring into buffer
-	%17 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %17
-	br label %again_2
-again_2:
-	%18 = load %Int32, %Int32* %3
-	%19 = icmp sgt %Int32 %18, 0
-	br %Bool %19 , label %body_2, label %break_2
-body_2:
-	%20 = load %Int32, %Int32* %3
-	%21 = sub %Int32 %20, 1
-	store %Int32 %21, %Int32* %3
-	%22 = load %Int32, %Int32* %17
-	%23 = getelementptr inbounds [0 x %Char8], [0 x %Char8]* %buf, %Int32 0, %Int32 %22
-	%24 = load %Int32, %Int32* %3
-	%25 = getelementptr inbounds [8 x %Char8], [8 x %Char8]* %1, %Int32 0, %Int32 %24
-	%26 = load %Char8, %Char8* %25
-	store %Char8 %26, %Char8* %23
-	%27 = load %Int32, %Int32* %17
-	%28 = add %Int32 %27, 1
-	store %Int32 %28, %Int32* %17
-	br label %again_2
-break_2:
-	%29 = load %Int32, %Int32* %17
-	%30 = getelementptr inbounds [0 x %Char8], [0 x %Char8]* %buf, %Int32 0, %Int32 %29
-	store %Char8 0, %Char8* %30
-	%31 = load %Int32, %Int32* %17
-	ret %Int32 %31
-}
-
-define internal %Int32 @sprint_dec_int32([0 x %Char8]* %buf, %Int32 %x) {
-	%1 = alloca [11 x %Char8], align 1
-	%2 = alloca %Int32, align 4
-	store %Int32 %x, %Int32* %2
-	%3 = load %Int32, %Int32* %2
-	%4 = icmp slt %Int32 %3, 0
-	br %Bool %4 , label %then_0, label %endif_0
-then_0:
-	%5 = load %Int32, %Int32* %2
-	%6 = sub %Int32 0, %5
-	store %Int32 %6, %Int32* %2
-	br label %endif_0
-endif_0:
-	%7 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %7
-	br label %again_1
-again_1:
-	br %Bool 1 , label %body_1, label %break_1
-body_1:
-	%8 = load %Int32, %Int32* %2
-	%9 = srem %Int32 %8, 10
-	%10 = load %Int32, %Int32* %2
-	%11 = sdiv %Int32 %10, 10
-	store %Int32 %11, %Int32* %2
-	%12 = load %Int32, %Int32* %7
-	%13 = getelementptr inbounds [11 x %Char8], [11 x %Char8]* %1, %Int32 0, %Int32 %12
-	%14 = trunc %Int32 %9 to %Int8
-	%15 = call %Char8 @n_to_dec_sym(%Int8 %14)
-	store %Char8 %15, %Char8* %13
-	%16 = load %Int32, %Int32* %7
-	%17 = add %Int32 %16, 1
-	store %Int32 %17, %Int32* %7
-	%18 = load %Int32, %Int32* %2
-	%19 = icmp eq %Int32 %18, 0
-	br %Bool %19 , label %then_1, label %endif_1
-then_1:
-	br label %break_1
-	br label %endif_1
-endif_1:
-	br label %again_1
-break_1:
-	%21 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %21
-	br %Bool %4 , label %then_2, label %endif_2
-then_2:
-	%22 = getelementptr inbounds [0 x %Char8], [0 x %Char8]* %buf, %Int32 0, %Int32 0
-	store %Char8 45, %Char8* %22
-	%23 = load %Int32, %Int32* %21
-	%24 = add %Int32 %23, 1
-	store %Int32 %24, %Int32* %21
-	br label %endif_2
-endif_2:
-	br label %again_2
-again_2:
-	%25 = load %Int32, %Int32* %7
-	%26 = icmp sgt %Int32 %25, 0
-	br %Bool %26 , label %body_2, label %break_2
-body_2:
-	%27 = load %Int32, %Int32* %7
-	%28 = sub %Int32 %27, 1
-	store %Int32 %28, %Int32* %7
-	%29 = load %Int32, %Int32* %21
-	%30 = getelementptr inbounds [0 x %Char8], [0 x %Char8]* %buf, %Int32 0, %Int32 %29
-	%31 = load %Int32, %Int32* %7
-	%32 = getelementptr inbounds [11 x %Char8], [11 x %Char8]* %1, %Int32 0, %Int32 %31
-	%33 = load %Char8, %Char8* %32
-	store %Char8 %33, %Char8* %30
-	%34 = load %Int32, %Int32* %21
-	%35 = add %Int32 %34, 1
-	store %Int32 %35, %Int32* %21
-	br label %again_2
-break_2:
-	%36 = load %Int32, %Int32* %21
-	%37 = getelementptr inbounds [0 x %Char8], [0 x %Char8]* %buf, %Int32 0, %Int32 %36
-	store %Char8 0, %Char8* %37
-	%38 = load %Int32, %Int32* %21
-	ret %Int32 %38
-}
-
-define internal %Int32 @sprint_dec_n32([0 x %Char8]* %buf, %Int32 %x) {
-	%1 = alloca [11 x %Char8], align 1
-	%2 = alloca %Int32, align 4
-	store %Int32 %x, %Int32* %2
-	%3 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %3
-	br label %again_1
-again_1:
-	br %Bool 1 , label %body_1, label %break_1
-body_1:
-	%4 = load %Int32, %Int32* %2
-	%5 = urem %Int32 %4, 10
-	%6 = load %Int32, %Int32* %2
-	%7 = udiv %Int32 %6, 10
-	store %Int32 %7, %Int32* %2
-	%8 = load %Int32, %Int32* %3
-	%9 = getelementptr inbounds [11 x %Char8], [11 x %Char8]* %1, %Int32 0, %Int32 %8
-	%10 = trunc %Int32 %5 to %Int8
-	%11 = call %Char8 @n_to_dec_sym(%Int8 %10)
-	store %Char8 %11, %Char8* %9
-	%12 = load %Int32, %Int32* %3
-	%13 = add %Int32 %12, 1
-	store %Int32 %13, %Int32* %3
-	%14 = load %Int32, %Int32* %2
-	%15 = icmp eq %Int32 %14, 0
-	br %Bool %15 , label %then_0, label %endif_0
-then_0:
-	br label %break_1
-	br label %endif_0
-endif_0:
-	br label %again_1
-break_1:
-	%17 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %17
-	br label %again_2
-again_2:
-	%18 = load %Int32, %Int32* %3
-	%19 = icmp sgt %Int32 %18, 0
-	br %Bool %19 , label %body_2, label %break_2
-body_2:
-	%20 = load %Int32, %Int32* %3
-	%21 = sub %Int32 %20, 1
-	store %Int32 %21, %Int32* %3
-	%22 = load %Int32, %Int32* %17
-	%23 = getelementptr inbounds [0 x %Char8], [0 x %Char8]* %buf, %Int32 0, %Int32 %22
-	%24 = load %Int32, %Int32* %3
-	%25 = getelementptr inbounds [11 x %Char8], [11 x %Char8]* %1, %Int32 0, %Int32 %24
-	%26 = load %Char8, %Char8* %25
-	store %Char8 %26, %Char8* %23
-	%27 = load %Int32, %Int32* %17
-	%28 = add %Int32 %27, 1
-	store %Int32 %28, %Int32* %17
-	br label %again_2
-break_2:
-	%29 = load %Int32, %Int32* %17
-	%30 = getelementptr inbounds [0 x %Char8], [0 x %Char8]* %buf, %Int32 0, %Int32 %29
-	store %Char8 0, %Char8* %30
-	%31 = load %Int32, %Int32* %17
-	ret %Int32 %31
-}
-
-
 define void @console_putchar8(%Char8 %c) {
 	call void @console_putchar_utf8(%Char8 %c)
 	ret void
@@ -884,6 +661,228 @@ endif_5:
 break_1:
 	%97 = load %Int32, %Int32* %3
 	ret %Int32 %97
+}
+
+define internal %Char8 @n_to_dec_sym(%Int8 %n) {
+	%1 = add %Int8 48, %n
+	%2 = bitcast %Int8 %1 to %Char8
+	ret %Char8 %2
+}
+
+define internal %Char8 @n_to_hex_sym(%Int8 %n) {
+	%1 = icmp ult %Int8 %n, 10
+	br %Bool %1 , label %then_0, label %endif_0
+then_0:
+	%2 = call %Char8 @n_to_dec_sym(%Int8 %n)
+	ret %Char8 %2
+	br label %endif_0
+endif_0:
+	%4 = sub %Int8 %n, 10
+	%5 = add %Int8 65, %4
+	%6 = bitcast %Int8 %5 to %Char8
+	ret %Char8 %6
+}
+
+define internal %Int32 @sprint_hex_nat32([0 x %Char8]* %buf, %Int32 %x) {
+	%1 = alloca [8 x %Char8], align 1
+	%2 = alloca %Int32, align 4
+	store %Int32 %x, %Int32* %2
+	%3 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %3
+	br label %again_1
+again_1:
+	br %Bool 1 , label %body_1, label %break_1
+body_1:
+	%4 = load %Int32, %Int32* %2
+	%5 = urem %Int32 %4, 16
+	%6 = load %Int32, %Int32* %2
+	%7 = udiv %Int32 %6, 16
+	store %Int32 %7, %Int32* %2
+	%8 = load %Int32, %Int32* %3
+	%9 = getelementptr inbounds [8 x %Char8], [8 x %Char8]* %1, %Int32 0, %Int32 %8
+	%10 = trunc %Int32 %5 to %Int8
+	%11 = call %Char8 @n_to_hex_sym(%Int8 %10)
+	store %Char8 %11, %Char8* %9
+	%12 = load %Int32, %Int32* %3
+	%13 = add %Int32 %12, 1
+	store %Int32 %13, %Int32* %3
+	%14 = load %Int32, %Int32* %2
+	%15 = icmp eq %Int32 %14, 0
+	br %Bool %15 , label %then_0, label %endif_0
+then_0:
+	br label %break_1
+	br label %endif_0
+endif_0:
+	br label %again_1
+break_1:
+	; mirroring into buffer
+	%17 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %17
+	br label %again_2
+again_2:
+	%18 = load %Int32, %Int32* %3
+	%19 = icmp sgt %Int32 %18, 0
+	br %Bool %19 , label %body_2, label %break_2
+body_2:
+	%20 = load %Int32, %Int32* %3
+	%21 = sub %Int32 %20, 1
+	store %Int32 %21, %Int32* %3
+	%22 = load %Int32, %Int32* %17
+	%23 = getelementptr inbounds [0 x %Char8], [0 x %Char8]* %buf, %Int32 0, %Int32 %22
+	%24 = load %Int32, %Int32* %3
+	%25 = getelementptr inbounds [8 x %Char8], [8 x %Char8]* %1, %Int32 0, %Int32 %24
+	%26 = load %Char8, %Char8* %25
+	store %Char8 %26, %Char8* %23
+	%27 = load %Int32, %Int32* %17
+	%28 = add %Int32 %27, 1
+	store %Int32 %28, %Int32* %17
+	br label %again_2
+break_2:
+	%29 = load %Int32, %Int32* %17
+	%30 = getelementptr inbounds [0 x %Char8], [0 x %Char8]* %buf, %Int32 0, %Int32 %29
+	store %Char8 0, %Char8* %30
+	%31 = load %Int32, %Int32* %17
+	ret %Int32 %31
+}
+
+define internal %Int32 @sprint_dec_int32([0 x %Char8]* %buf, %Int32 %x) {
+	%1 = alloca [11 x %Char8], align 1
+	%2 = alloca %Int32, align 4
+	store %Int32 %x, %Int32* %2
+	%3 = load %Int32, %Int32* %2
+	%4 = icmp slt %Int32 %3, 0
+	br %Bool %4 , label %then_0, label %endif_0
+then_0:
+	%5 = load %Int32, %Int32* %2
+	%6 = sub %Int32 0, %5
+	store %Int32 %6, %Int32* %2
+	br label %endif_0
+endif_0:
+	%7 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %7
+	br label %again_1
+again_1:
+	br %Bool 1 , label %body_1, label %break_1
+body_1:
+	%8 = load %Int32, %Int32* %2
+	%9 = srem %Int32 %8, 10
+	%10 = load %Int32, %Int32* %2
+	%11 = sdiv %Int32 %10, 10
+	store %Int32 %11, %Int32* %2
+	%12 = load %Int32, %Int32* %7
+	%13 = getelementptr inbounds [11 x %Char8], [11 x %Char8]* %1, %Int32 0, %Int32 %12
+	%14 = trunc %Int32 %9 to %Int8
+	%15 = call %Char8 @n_to_dec_sym(%Int8 %14)
+	store %Char8 %15, %Char8* %13
+	%16 = load %Int32, %Int32* %7
+	%17 = add %Int32 %16, 1
+	store %Int32 %17, %Int32* %7
+	%18 = load %Int32, %Int32* %2
+	%19 = icmp eq %Int32 %18, 0
+	br %Bool %19 , label %then_1, label %endif_1
+then_1:
+	br label %break_1
+	br label %endif_1
+endif_1:
+	br label %again_1
+break_1:
+	%21 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %21
+	br %Bool %4 , label %then_2, label %endif_2
+then_2:
+	%22 = getelementptr inbounds [0 x %Char8], [0 x %Char8]* %buf, %Int32 0, %Int32 0
+	store %Char8 45, %Char8* %22
+	%23 = load %Int32, %Int32* %21
+	%24 = add %Int32 %23, 1
+	store %Int32 %24, %Int32* %21
+	br label %endif_2
+endif_2:
+	br label %again_2
+again_2:
+	%25 = load %Int32, %Int32* %7
+	%26 = icmp sgt %Int32 %25, 0
+	br %Bool %26 , label %body_2, label %break_2
+body_2:
+	%27 = load %Int32, %Int32* %7
+	%28 = sub %Int32 %27, 1
+	store %Int32 %28, %Int32* %7
+	%29 = load %Int32, %Int32* %21
+	%30 = getelementptr inbounds [0 x %Char8], [0 x %Char8]* %buf, %Int32 0, %Int32 %29
+	%31 = load %Int32, %Int32* %7
+	%32 = getelementptr inbounds [11 x %Char8], [11 x %Char8]* %1, %Int32 0, %Int32 %31
+	%33 = load %Char8, %Char8* %32
+	store %Char8 %33, %Char8* %30
+	%34 = load %Int32, %Int32* %21
+	%35 = add %Int32 %34, 1
+	store %Int32 %35, %Int32* %21
+	br label %again_2
+break_2:
+	%36 = load %Int32, %Int32* %21
+	%37 = getelementptr inbounds [0 x %Char8], [0 x %Char8]* %buf, %Int32 0, %Int32 %36
+	store %Char8 0, %Char8* %37
+	%38 = load %Int32, %Int32* %21
+	ret %Int32 %38
+}
+
+define internal %Int32 @sprint_dec_n32([0 x %Char8]* %buf, %Int32 %x) {
+	%1 = alloca [11 x %Char8], align 1
+	%2 = alloca %Int32, align 4
+	store %Int32 %x, %Int32* %2
+	%3 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %3
+	br label %again_1
+again_1:
+	br %Bool 1 , label %body_1, label %break_1
+body_1:
+	%4 = load %Int32, %Int32* %2
+	%5 = urem %Int32 %4, 10
+	%6 = load %Int32, %Int32* %2
+	%7 = udiv %Int32 %6, 10
+	store %Int32 %7, %Int32* %2
+	%8 = load %Int32, %Int32* %3
+	%9 = getelementptr inbounds [11 x %Char8], [11 x %Char8]* %1, %Int32 0, %Int32 %8
+	%10 = trunc %Int32 %5 to %Int8
+	%11 = call %Char8 @n_to_dec_sym(%Int8 %10)
+	store %Char8 %11, %Char8* %9
+	%12 = load %Int32, %Int32* %3
+	%13 = add %Int32 %12, 1
+	store %Int32 %13, %Int32* %3
+	%14 = load %Int32, %Int32* %2
+	%15 = icmp eq %Int32 %14, 0
+	br %Bool %15 , label %then_0, label %endif_0
+then_0:
+	br label %break_1
+	br label %endif_0
+endif_0:
+	br label %again_1
+break_1:
+	%17 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %17
+	br label %again_2
+again_2:
+	%18 = load %Int32, %Int32* %3
+	%19 = icmp sgt %Int32 %18, 0
+	br %Bool %19 , label %body_2, label %break_2
+body_2:
+	%20 = load %Int32, %Int32* %3
+	%21 = sub %Int32 %20, 1
+	store %Int32 %21, %Int32* %3
+	%22 = load %Int32, %Int32* %17
+	%23 = getelementptr inbounds [0 x %Char8], [0 x %Char8]* %buf, %Int32 0, %Int32 %22
+	%24 = load %Int32, %Int32* %3
+	%25 = getelementptr inbounds [11 x %Char8], [11 x %Char8]* %1, %Int32 0, %Int32 %24
+	%26 = load %Char8, %Char8* %25
+	store %Char8 %26, %Char8* %23
+	%27 = load %Int32, %Int32* %17
+	%28 = add %Int32 %27, 1
+	store %Int32 %28, %Int32* %17
+	br label %again_2
+break_2:
+	%29 = load %Int32, %Int32* %17
+	%30 = getelementptr inbounds [0 x %Char8], [0 x %Char8]* %buf, %Int32 0, %Int32 %29
+	store %Char8 0, %Char8* %30
+	%31 = load %Int32, %Int32* %17
+	ret %Int32 %31
 }
 
 

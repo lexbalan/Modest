@@ -110,6 +110,7 @@ break_2:
 ; -- print imports --
 ; -- end print imports --
 ; -- strings --
+; -- endstrings --
 
 %avr_IO8 = type %Int8;
 %avr_IO16 = type %Int16;

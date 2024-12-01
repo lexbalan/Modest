@@ -1,7 +1,7 @@
 // delay not calibrated
 // just for example
 
-@attribute("value:volatile")
+@attribute("var_value:volatile")
 var delayCounter = Nat32 0
 
 public func ms(x: Nat32) -> Unit {

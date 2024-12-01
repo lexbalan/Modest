@@ -120,6 +120,7 @@ declare void @delay_ms(%Int32 %x)
 
 ; -- end print imports --
 ; -- strings --
+; -- endstrings --
 
 define %Int16 @main() {
 	%1 = inttoptr i6 35 to %m328p_GPIO*
@@ -127,7 +128,7 @@ define %Int16 @main() {
 	store %avr_IO8 255, %avr_IO8* %2
 	br label %again_1
 again_1:
-	br i1 1 , label %body_1, label %break_1
+	br %Bool 1 , label %body_1, label %break_1
 body_1:
 	%3 = inttoptr i6 35 to %m328p_GPIO*
 	%4 = getelementptr inbounds %m328p_GPIO, %m328p_GPIO* %3, %Int32 0, %Int32 2

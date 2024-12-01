@@ -10,8 +10,6 @@
 
 #define verbose  true
 
-
-
 char *fsm_state_no_name(fsm_FSM *fsm, uint32_t state_no)
 {
 	return (char *)&fsm->states[state_no].name;
@@ -28,8 +26,8 @@ void fsm_run(fsm_FSM *fsm)
 	printf("fsm::run()\n");
 
 	if (fsm->substate == fsm_substateEntering) {
-		const fsm_UInt32 nexstate = fsm->nexstate;
-		fsm_FSM_StateDesc *const state = &fsm->states[nexstate];
+		const uint32_t nexstate = fsm->nexstate;
+		fsm_StateDesc *const state = &fsm->states[nexstate];
 
 		if (verbose) {
 			printf("enter %s\n", (char *)&state->name);
@@ -43,14 +41,14 @@ void fsm_run(fsm_FSM *fsm)
 		fsm->substate = fsm_substateLoop;
 
 	} else if (fsm->substate == fsm_substateLoop) {
-		fsm_FSM_StateDesc *const state = &fsm->states[fsm->state];
+		fsm_StateDesc *const state = &fsm->states[fsm->state];
 
 		if (state->loop != NULL) {
 			((void (*) (fsm_FSM *x))state->loop)((fsm_FSM *)fsm);
 		}
 
 	} else if (fsm->substate == fsm_substateLeaving) {
-		fsm_FSM_StateDesc *const state = &fsm->states[fsm->state];
+		fsm_StateDesc *const state = &fsm->states[fsm->state];
 
 		if (verbose) {
 			printf("exit %s\n", (char *)&state->name);

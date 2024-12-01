@@ -3146,6 +3146,8 @@ def set_att(obj, path, att):
 			obj[p]['att'].append(att)
 		else:
 			error("attribute error: field '%s' not found" % p, obj['ti'])
+			for field in obj:
+				print(field)
 
 	elif len(path) > 1:
 		set_att(obj[path[0]], path[1:], att)
