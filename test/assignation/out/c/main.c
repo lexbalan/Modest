@@ -8,14 +8,14 @@
 
 
 
+
+
+
 struct Point {
 	int32_t x;
 	int32_t y;
 };
 typedef struct Point Point;
-
-
-
 static int32_t glb_i0 = 0;
 static int32_t glb_i1 = 321;
 static Point glb_r0 = {};

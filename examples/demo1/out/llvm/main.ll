@@ -197,6 +197,28 @@ declare void @perror(%ConstCharStr* %str)
 ; -- endstrings --
 
 
+define %Int32 @main() {
+	%1 = call %Int32 @get_number(%Int32 0, %Int32 10)
+	%2 = icmp slt %Int32 %1, 5
+	br %Bool %2 , label %then_0, label %else_0
+then_0:
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([37 x i8]* @str1 to [0 x i8]*), %Int32 %1, %Int32 5)
+	br label %endif_0
+else_0:
+	%4 = icmp sgt %Int32 %1, 5
+	br %Bool %4 , label %then_1, label %else_1
+then_1:
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([40 x i8]* @str2 to [0 x i8]*), %Int32 %1, %Int32 5)
+	br label %endif_1
+else_1:
+	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str3 to [0 x i8]*), %Int32 %1, %Int32 5)
+	br label %endif_1
+endif_1:
+	br label %endif_0
+endif_0:
+	ret %Int32 0
+}
+
 define internal %Int32 @get_number(%Int32 %min, %Int32 %max) {
 	%1 = alloca %Int32, align 4
 	store %Int32 0, %Int32* %1
@@ -231,29 +253,6 @@ endif_0:
 break_1:
 	%13 = load %Int32, %Int32* %1
 	ret %Int32 %13
-}
-
-
-define %Int32 @main() {
-	%1 = call %Int32 @get_number(%Int32 0, %Int32 10)
-	%2 = icmp slt %Int32 %1, 5
-	br %Bool %2 , label %then_0, label %else_0
-then_0:
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([37 x i8]* @str1 to [0 x i8]*), %Int32 %1, %Int32 5)
-	br label %endif_0
-else_0:
-	%4 = icmp sgt %Int32 %1, 5
-	br %Bool %4 , label %then_1, label %else_1
-then_1:
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([40 x i8]* @str2 to [0 x i8]*), %Int32 %1, %Int32 5)
-	br label %endif_1
-else_1:
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([38 x i8]* @str3 to [0 x i8]*), %Int32 %1, %Int32 5)
-	br label %endif_1
-endif_1:
-	br label %endif_0
-endif_0:
-	ret %Int32 0
 }
 
 

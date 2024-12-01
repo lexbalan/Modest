@@ -27,6 +27,21 @@ func bubble_sort32(array: *[<undefined>]Int32, len: Int32) -> Unit {
 		}
 	}
 }
+public func main() -> Int32 {
+	//fill_array(&array, lengthof(array))
+
+	printf("array before:\n")
+	print_array(&array, lengthof(array))
+	printf("\n")
+
+	bubble_sort32(&array, lengthof(array))
+
+	printf("array after:\n")
+	print_array(&array, lengthof(array))
+	printf("\n")
+
+	return 0
+}
 func print_array(array: *[<undefined>]Int32, len: Int32) -> Unit {
 	printf("\n")
 	var i: Int32 = 0
@@ -65,20 +80,5 @@ func get_number(min: Int32, max: Int32) -> Int32 {
 	}
 
 	return number
-}
-public func main() -> Int32 {
-	//fill_array(&array, lengthof(array))
-
-	printf("array before:\n")
-	print_array(&array, lengthof(array))
-	printf("\n")
-
-	bubble_sort32(&array, lengthof(array))
-
-	printf("array after:\n")
-	print_array(&array, lengthof(array))
-	printf("\n")
-
-	return 0
 }
 

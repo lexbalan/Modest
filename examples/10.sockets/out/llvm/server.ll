@@ -284,7 +284,6 @@ break_1:
 	ret %Bool 1
 }
 
-
 define %Int @main() {
 	%1 = call %Int @socket(%Int 2, %Int 1, %Int 0)
 	%2 = icmp slt %Int %1, 0

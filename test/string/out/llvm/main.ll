@@ -314,7 +314,7 @@ declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
 ; -- endstrings --
 
 
-@string8 = global [6 x %Char8] [
+@string8 = internal global [6 x %Char8] [
 	%Char8 83,
 	%Char8 116,
 	%Char8 114,
@@ -322,7 +322,7 @@ declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
 	%Char8 110,
 	%Char8 103
 ]
-@string16 = global [8 x %Char16] [
+@string16 = internal global [8 x %Char16] [
 	%Char16 83,
 	%Char16 116,
 	%Char16 114,
@@ -332,7 +332,7 @@ declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
 	%Char16 45,
 	%Char16 937
 ]
-@string32 = global [12 x %Char32] [
+@string32 = internal global [12 x %Char32] [
 	%Char32 83,
 	%Char32 116,
 	%Char32 114,
@@ -346,9 +346,9 @@ declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
 	%Char32 127881,
 	%Char32 129412
 ]
-@ptr_to_string8 = global [0 x %Char8]* bitcast ([7 x i8]* @str1 to [0 x i8]*)
-@ptr_to_string16 = global [0 x %Char16]* bitcast ([9 x i16]* @str2 to [0 x i16]*)
-@ptr_to_string32 = global [0 x %Char32]* bitcast ([13 x i32]* @str3 to [0 x i32]*)
+@ptr_to_string8 = internal global [0 x %Char8]* bitcast ([7 x i8]* @str1 to [0 x i8]*)
+@ptr_to_string16 = internal global [0 x %Char16]* bitcast ([9 x i16]* @str2 to [0 x i16]*)
+@ptr_to_string32 = internal global [0 x %Char32]* bitcast ([13 x i32]* @str3 to [0 x i32]*)
 
 define %Int @main() {
 	call void @console_putchar_utf8(%Char8 65)

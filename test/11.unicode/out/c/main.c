@@ -8,6 +8,17 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 #define _ratSymbolUTF8  {0xF0, 0x9F, 0x90, 0x80}
 const int8_t ratSymbolUTF8[4] = _ratSymbolUTF8;
 #define _ratSymbolUTF16  {0xD83D, 0xDC00}
@@ -23,17 +34,6 @@ const char arr_rat[4] = _arr_rat;
 #define string8Const  "S-t-r-i-n-g-Ω 🐀🎉🦄"
 #define string16Const  u"S-t-r-i-n-g-Ω 🐀🎉🦄"
 #define string32Const  U"S-t-r-i-n-g-Ω 🐀🎉🦄"
-
-
-
-
-
-
-
-
-
-
-
 static char arr_utf8[8] = "Hi!\n";
 static uint16_t arr_utf16[9] = u"Hello Ω!\n";
 static uint32_t arr_utf32[8] = U"Hello!\n";

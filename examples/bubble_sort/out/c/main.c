@@ -39,6 +39,26 @@ static void bubble_sort32(int32_t *array, int32_t len)
 	}
 }
 
+
+static void print_array(int32_t *array, int32_t len);
+
+int32_t main()
+{
+	//fill_array(&array, lengthof(array))
+
+	printf("array before:\n");
+	print_array((int32_t *)&array, LENGTHOF(array));
+	printf("\n");
+
+	bubble_sort32((int32_t *)&array, LENGTHOF(array));
+
+	printf("array after:\n");
+	print_array((int32_t *)&array, LENGTHOF(array));
+	printf("\n");
+
+	return 0;
+}
+
 static void print_array(int32_t *array, int32_t len)
 {
 	printf("\n");
@@ -88,22 +108,5 @@ static int32_t get_number(int32_t min, int32_t max)
 	}
 
 	return number;
-}
-
-int32_t main()
-{
-	//fill_array(&array, lengthof(array))
-
-	printf("array before:\n");
-	print_array((int32_t *)&array, LENGTHOF(array));
-	printf("\n");
-
-	bubble_sort32((int32_t *)&array, LENGTHOF(array));
-
-	printf("array after:\n");
-	print_array((int32_t *)&array, LENGTHOF(array));
-	printf("\n");
-
-	return 0;
 }
 

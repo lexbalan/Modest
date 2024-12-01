@@ -468,7 +468,6 @@ break_1:
 	ret void
 }
 
-
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([19 x i8]* @str10 to [0 x i8]*))
 	call void @write_example()

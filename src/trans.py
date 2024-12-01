@@ -274,12 +274,7 @@ def module_append(definition, to_export=False):
 
 	global cmodule
 
-	if to_export:
-		cmodule['defs_public'].append(definition)
-	else:
-		#print("module %s append %s" % (module['id'], definition['isa']))
-		cmodule['defs_private'].append(definition)
-
+	cmodule['defs'].append(definition)
 	definition['module'] = cmodule
 
 
@@ -2768,9 +2763,7 @@ def do_import(x):
 			fatal("cannot import module")
 
 		if 'c_no_print' in m['att']:
-			for xx in m['defs_private']:
-				xx['att'].append('c_no_print')
-			for xx in m['defs_public']:
+			for xx in m['defs']:
 				xx['att'].append('c_no_print')
 
 
@@ -2791,7 +2784,7 @@ def do_import(x):
 
 			# копируем все c_include из импортированного модуля себе
 			# это костыль, но пока так
-			for private_def in m['defs_private']:
+			for private_def in m['defs']:
 				if private_def['isa'] == 'directive':
 					if private_def['kind'] == 'c_include':
 						module_append(private_def)
@@ -2993,8 +2986,7 @@ def process_module(idStr, ast, nodef=False):
 		'symtab_public': symtab_public,
 		'symtab_private': symtab_private,
 
-		'defs_private': [],
-		'defs_public': [],
+		'defs': [],
 
 		'att': []
  	}

@@ -196,7 +196,7 @@ declare void @perror(%ConstCharStr* %str)
 @str7 = private constant [24 x i8] [i8 108, i8 111, i8 99, i8 97, i8 108, i8 65, i8 114, i8 114, i8 97, i8 121, i8 32, i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
 
-@globalArray0 = global [10 x %Int32] [
+@globalArray0 = internal global [10 x %Int32] [
 	%Int32 0,
 	%Int32 1,
 	%Int32 2,
@@ -208,7 +208,7 @@ declare void @perror(%ConstCharStr* %str)
 	%Int32 8,
 	%Int32 9
 ]
-@globalArray1 = global [10 x %Int32] [
+@globalArray1 = internal global [10 x %Int32] [
 	%Int32 0,
 	%Int32 0,
 	%Int32 0,

@@ -297,7 +297,7 @@ declare void @perror(%ConstCharStr* %str)
 };
 
 
-@line = global %Line {
+@line = internal global %Line {
 	%Point {
 		%Float 0.0000000000000000,
 		%Float 0.0000000000000000
@@ -372,7 +372,6 @@ define internal void @ptr_example() {
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*), %Float %6, %Float %8)
 	ret void
 }
-
 
 define %Int @main() {
 	; by value

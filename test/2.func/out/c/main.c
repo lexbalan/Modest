@@ -27,10 +27,8 @@ static int32_t sum(int32_t a, int32_t b)
 	return a + b;
 }
 
-static void func0()
-{
-	printf("func0 was called\n");
-}
+
+static void func0();
 
 int main()
 {
@@ -58,5 +56,10 @@ int main()
 	printf("fptr(%i, %i) == %i\n", arg_a2, arg_b2, fptr_result);
 
 	return 0;
+}
+
+static void func0()
+{
+	printf("func0 was called\n");
 }
 

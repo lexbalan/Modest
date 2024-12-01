@@ -335,7 +335,7 @@ declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
 	%Char8 128
 ]
 
-@arr_utf8 = global [8 x %Char8] [
+@arr_utf8 = internal global [8 x %Char8] [
 	%Char8 72,
 	%Char8 105,
 	%Char8 33,
@@ -345,7 +345,7 @@ declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
 	%Char8 0,
 	%Char8 0
 ]
-@arr_utf16 = global [9 x %Char16] [
+@arr_utf16 = internal global [9 x %Char16] [
 	%Char16 72,
 	%Char16 101,
 	%Char16 108,
@@ -356,7 +356,7 @@ declare %Int32 @console_vsprint([0 x %Char8]* %buf, %Str8* %form, i8* %va)
 	%Char16 33,
 	%Char16 10
 ]
-@arr_utf32 = global [8 x %Char32] [
+@arr_utf32 = internal global [8 x %Char32] [
 	%Char32 72,
 	%Char32 101,
 	%Char32 108,

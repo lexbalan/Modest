@@ -200,7 +200,7 @@ declare void @perror(%ConstCharStr* %str)
 @str11 = private constant [40 x i8] [i8 110, i8 117, i8 109, i8 98, i8 101, i8 114, i8 32, i8 109, i8 117, i8 115, i8 116, i8 32, i8 98, i8 101, i8 32, i8 108, i8 101, i8 115, i8 115, i8 32, i8 116, i8 104, i8 97, i8 110, i8 32, i8 37, i8 105, i8 44, i8 32, i8 116, i8 114, i8 121, i8 32, i8 97, i8 103, i8 97, i8 105, i8 110, i8 10, i8 0]
 ; -- endstrings --
 
-@array = global [21 x %Int32] [
+@array = internal global [21 x %Int32] [
 	%Int32 -3,
 	%Int32 -5,
 	%Int32 2,
@@ -272,6 +272,21 @@ break_2:
 	br label %again_1
 break_1:
 	ret void
+}
+
+define %Int32 @main() {
+	;fill_array(&array, lengthof(array))
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
+	%2 = bitcast [21 x %Int32]* @array to [0 x %Int32]*
+	call void @print_array([0 x %Int32]* %2, %Int32 21)
+	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
+	%4 = bitcast [21 x %Int32]* @array to [0 x %Int32]*
+	call void @bubble_sort32([0 x %Int32]* %4, %Int32 21)
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str3 to [0 x i8]*))
+	%6 = bitcast [21 x %Int32]* @array to [0 x %Int32]*
+	call void @print_array([0 x %Int32]* %6, %Int32 21)
+	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))
+	ret %Int32 0
 }
 
 define internal void @print_array([0 x %Int32]* %array, %Int32 %len) {
@@ -355,22 +370,6 @@ endif_0:
 break_1:
 	%13 = load %Int32, %Int32* %1
 	ret %Int32 %13
-}
-
-
-define %Int32 @main() {
-	;fill_array(&array, lengthof(array))
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
-	%2 = bitcast [21 x %Int32]* @array to [0 x %Int32]*
-	call void @print_array([0 x %Int32]* %2, %Int32 21)
-	%3 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
-	%4 = bitcast [21 x %Int32]* @array to [0 x %Int32]*
-	call void @bubble_sort32([0 x %Int32]* %4, %Int32 21)
-	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str3 to [0 x i8]*))
-	%6 = bitcast [21 x %Int32]* @array to [0 x %Int32]*
-	call void @print_array([0 x %Int32]* %6, %Int32 21)
-	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str4 to [0 x i8]*))
-	ret %Int32 0
 }
 
 

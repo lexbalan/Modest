@@ -208,14 +208,14 @@ declare void @perror(%ConstCharStr* %str)
 };
 
 
-@glb_i0 = global %Int32 0
-@glb_i1 = global %Int32 321
-@glb_r0 = global %Point zeroinitializer
-@glb_r1 = global %Point {
+@glb_i0 = internal global %Int32 0
+@glb_i1 = internal global %Int32 321
+@glb_r0 = internal global %Point zeroinitializer
+@glb_r1 = internal global %Point {
 	%Int32 20,
 	%Int32 10
 }
-@glb_a0 = global [10 x %Int32] [
+@glb_a0 = internal global [10 x %Int32] [
 	%Int32 0,
 	%Int32 0,
 	%Int32 0,
@@ -227,7 +227,7 @@ declare void @perror(%ConstCharStr* %str)
 	%Int32 0,
 	%Int32 0
 ]
-@glb_a1 = global [10 x %Int32] [
+@glb_a1 = internal global [10 x %Int32] [
 	%Int32 64,
 	%Int32 53,
 	%Int32 42,

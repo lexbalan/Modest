@@ -2048,10 +2048,18 @@ def print_func_signature(func):
 
 
 
+def is_private(x):
+	if 'access_level' in x:
+		return x['access_level'] == 'private'
+	return False
+
+
+#['private', 'internal', 'weak', 'external'] # etc..
 def get_linkage(x):
-	if x['access_level'] == 'private':
+	if is_private(x):
 		return "internal"
 	return ""
+
 
 def print_linkage(x):
 	linkage = get_linkage(x)
@@ -2193,23 +2201,22 @@ def print_def_type(x):
 
 
 
+
+
+
 def print_def_var(x, as_extern=False):
 	is_extern = 'extern' in x['att'] or as_extern
 	is_static = 'static' in x['att']
 
 	#['private', 'internal', 'weak', 'external'] # etc..
-	linkage = ''
-	if is_extern:
-		linkage = 'external '
-	if is_static:
-		linkage = 'internal '
+	linkage = get_linkage(x)
 
 	#mods = ['global', 'constant']
 	mod = 'global'
 
 	var = x['var_value']
 	out("\n@%s = " % get_id_str(var))
-	out(linkage + mod + ' ')
+	out(linkage + ' ' + mod + ' ')
 	print_type(var['type'])
 
 	if not is_extern:
@@ -2409,11 +2416,10 @@ def print_included(m):
 
 			out("\n; from included %s" % inc['id'])
 
-			for d in inc['defs_private']:
-				if d['isa'] == 'def_type':
-					print_def_type(d)
+			for d in inc['defs']:
+				if is_private(d):
+					continue
 
-			for d in inc['defs_public']:
 				if d['isa'] == 'def_type':
 					print_def_type(d)
 				elif d['isa'] == 'def_func':
@@ -2429,25 +2435,16 @@ def print_imports(m):
 		print_included(imp)
 		print_imports(imp)
 
-		#for x in imp['defs_public']:
-		#	print("- %s" % x['id']['str'])
+		for d in imp['defs']:
+			if is_private(d):
+				continue
 
-		#
-
-		for d in imp['defs_private']:
-			if d['isa'] == 'def_type':
-				print_def_type(d)
-
-		for d in imp['defs_public']:
 			if d['isa'] == 'def_type':
 				print_def_type(d)
 			elif d['isa'] == 'def_func':
 				print_decl_func(d)
-			#elif isa == 'def_const':
-			#	print_decl_const(x)
 
-		#een(imp['defs_private'], decl_only=True)
-		#een(imp['defs_public'], decl_only=True)
+		#een(imp['defs'], decl_only=True)
 
 
 separatorLine = "\n; " + '-' * 77
@@ -2475,13 +2472,12 @@ def print_module(m):
 		out(separatorLine)
 		out("\n; declarations from: %s" % (imported_module_id))
 		out(separatorLine)
-		een(imp['defs_public'])
+		een(imp['defs'])
 		out("\n\n")"""
 
 	print_strings(m['strings'])
 
-	een(m['defs_private'])
-	een(m['defs_public'])
+	een(m['defs'])
 
 	out("\n\n")
 	return

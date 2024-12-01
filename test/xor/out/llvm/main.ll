@@ -239,7 +239,7 @@ break_1:
 
 
 
-@test_msg = global [13 x %Char8] [
+@test_msg = internal global [13 x %Char8] [
 	%Char8 72,
 	%Char8 101,
 	%Char8 108,
@@ -254,7 +254,7 @@ break_1:
 	%Char8 33,
 	%Char8 0
 ]
-@test_key = global [4 x %Char8] [
+@test_key = internal global [4 x %Char8] [
 	%Char8 97,
 	%Char8 98,
 	%Char8 99,
@@ -282,7 +282,6 @@ break_1:
 	%10 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([2 x i8]* @str2 to [0 x i8]*))
 	ret void
 }
-
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str3 to [0 x i8]*))

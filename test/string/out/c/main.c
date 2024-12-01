@@ -8,15 +8,15 @@
 
 
 
+
+
+
+
+
+
 #define str8_example  "String"
 #define str16_example  (u"String-Ω")
 #define str32_example  (U"String-Ω 🐀🎉🦄")
-
-
-
-
-
-
 static char string8[6] = str8_example;
 static uint16_t string16[8] = u"String-Ω";
 static uint32_t string32[12] = U"String-Ω 🐀🎉🦄";

@@ -198,15 +198,15 @@ declare void @perror(%ConstCharStr* %str)
 	%Int32 2
 ]
 
-@arr0 = global [2 x %Int32] [
+@arr0 = internal global [2 x %Int32] [
 	%Int32 1,
 	%Int32 2
 ]
-@arr1 = global [2 x %Int32] [
+@arr1 = internal global [2 x %Int32] [
 	%Int32 1,
 	%Int32 2
 ]
-@str = global [0 x %Char8]* bitcast ([7 x i8]* @str1 to [0 x i8]*)
+@str = internal global [0 x %Char8]* bitcast ([7 x i8]* @str1 to [0 x i8]*)
 
 define %Int @main() {
 	%1 = alloca %Int32, align 4

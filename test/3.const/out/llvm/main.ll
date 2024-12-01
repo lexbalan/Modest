@@ -244,7 +244,7 @@ declare void @perror(%ConstCharStr* %str)
 	}
 ]
 
-@points2 = global [3 x %Point] [
+@points2 = internal global [3 x %Point] [
 	%Point {
 		%Int32 0,
 		%Int32 0

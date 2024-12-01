@@ -271,7 +271,6 @@ endif_0:
 	ret void
 }
 
-
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([21 x i8]* @str13 to [0 x i8]*))
 	call void @write_example()

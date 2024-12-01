@@ -196,7 +196,7 @@ declare %Word32 @crc32_doHash([0 x %Word8]* %buf, %Int32 %len)
 ; -- endstrings --
 
 
-@data = global [9 x %Word8] [
+@data = internal global [9 x %Word8] [
 	%Word8 49,
 	%Word8 50,
 	%Word8 51,

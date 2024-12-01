@@ -323,7 +323,6 @@ define internal float @slope(%Point2D %a, %Point2D %b) {
 	ret float %13
 }
 
-
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str3 to [0 x i8]*))
 	%2 = call double @squareOfCircle(double 10.0000000000000000)

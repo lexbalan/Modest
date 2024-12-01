@@ -263,13 +263,13 @@ define internal void @f3_ptr({%Int32}* %x) {
 }
 
 
-@a = global %Type1 {
+@a = internal global %Type1 {
 	%Int32 1
 }
-@b = global %Type2 {
+@b = internal global %Type2 {
 	%Int32 2
 }
-@c = global %Type3 {
+@c = internal global %Type3 {
 	%Int32 3
 }
 
@@ -364,7 +364,6 @@ define internal void @test_by_pointer() {
 	call void @f3_ptr({%Int32}* %12)
 	ret void
 }
-
 
 define %Int @main() {
 	call void @test_by_value()

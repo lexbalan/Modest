@@ -8,17 +8,17 @@
 
 
 
+
+
+
+
+
 #define filename  "file.bin"
 struct Chunk {
 	char id[100];
 	char data[1024];
 };
 typedef struct Chunk Chunk;
-
-
-
-
-
 
 static void write_example()
 {

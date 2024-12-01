@@ -8,6 +8,9 @@
 
 
 
+
+
+
 #define genericIntConst  42
 #define int32Const  ((int32_t)genericIntConst)
 #define genericStringConst  "Hello!"
@@ -29,9 +32,6 @@ typedef struct Point Point;
 const struct {int8_t x; int8_t y;} ps[3] = _ps;
 #define _points  _ps
 const Point points[3] = _points;
-
-
-
 static Point points2[3] = _points;
 
 int main()

@@ -210,12 +210,6 @@ define internal %Int32 @sum(%Int32 %a, %Int32 %b) {
 	ret %Int32 %1
 }
 
-define internal void @func0() {
-	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str6 to [0 x i8]*))
-	ret void
-}
-
-
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([11 x i8]* @str3 to [0 x i8]*))
 	; call declared & defined functions
@@ -233,6 +227,11 @@ define %Int @main() {
 	%6 = call %Int32 %5(%Int32 1, %Int32 2)
 	%7 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([20 x i8]* @str5 to [0 x i8]*), %Int32 1, %Int32 2, %Int32 %6)
 	ret %Int 0
+}
+
+define internal void @func0() {
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str6 to [0 x i8]*))
+	ret void
 }
 
 

@@ -11,21 +11,63 @@
 
 
 
-struct Point2D {
-	int32_t x;
-	int32_t y;
-};
-typedef struct Point2D Point2D;
-
-struct Point3D {
-	int32_t x;
-	int32_t y;
-	int32_t z;
-};
-typedef struct Point3D Point3D;
 
 
+static bool test_generic_integer();
 
+
+static bool test_generic_float();
+
+
+static bool test_generic_char();
+
+
+static bool test_generic_array();
+
+
+static bool test_generic_record();
+
+int main()
+{
+	printf("generic types test\n");
+
+	const bool t1 = test_generic_integer();
+	if (t1) {
+		printf("test_generic_integer passed\n");
+	} else {
+		printf("test_generic_integer failed\n");
+	}
+
+	const bool t2 = test_generic_float();
+	if (t2) {
+		printf("test_generic_float passed\n");
+	} else {
+		printf("test_generic_float failed\n");
+	}
+
+	const bool t3 = test_generic_char();
+	if (t3) {
+		printf("test_generic_char passed\n");
+	} else {
+		printf("test_generic_char failed\n");
+	}
+
+	const bool t4 = test_generic_array();
+	if (t4) {
+		printf("test_generic_array passed\n");
+	} else {
+		printf("test_generic_array failed\n");
+	}
+
+	const bool t5 = test_generic_record();
+	if (t5) {
+		printf("test_generic_record passed\n");
+	} else {
+		printf("test_generic_integer failed\n");
+	}
+
+	return 0;
+}
 
 static bool test_generic_integer()
 {
@@ -125,6 +167,21 @@ static bool test_generic_array()
 #undef __a
 }
 
+
+
+struct Point2D {
+	int32_t x;
+	int32_t y;
+};
+typedef struct Point2D Point2D;
+
+struct Point3D {
+	int32_t x;
+	int32_t y;
+	int32_t z;
+};
+typedef struct Point3D Point3D;
+
 static bool test_generic_record()
 {
 	// Any record expression have GenericRecord type
@@ -149,47 +206,5 @@ static bool test_generic_record()
 	return true;
 
 #undef __p
-}
-
-int main()
-{
-	printf("generic types test\n");
-
-	const bool t1 = test_generic_integer();
-	if (t1) {
-		printf("test_generic_integer passed\n");
-	} else {
-		printf("test_generic_integer failed\n");
-	}
-
-	const bool t2 = test_generic_float();
-	if (t2) {
-		printf("test_generic_float passed\n");
-	} else {
-		printf("test_generic_float failed\n");
-	}
-
-	const bool t3 = test_generic_char();
-	if (t3) {
-		printf("test_generic_char passed\n");
-	} else {
-		printf("test_generic_char failed\n");
-	}
-
-	const bool t4 = test_generic_array();
-	if (t4) {
-		printf("test_generic_array passed\n");
-	} else {
-		printf("test_generic_array failed\n");
-	}
-
-	const bool t5 = test_generic_record();
-	if (t5) {
-		printf("test_generic_record passed\n");
-	} else {
-		printf("test_generic_integer failed\n");
-	}
-
-	return 0;
 }
 

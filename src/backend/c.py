@@ -1901,21 +1901,21 @@ def cdirectives(module):
 	for im in module['imports']:
 		imported_module = module['imports'][im]
 
-		for obj in imported_module['defs_private']:
+		for obj in imported_module['defs']:
 			if obj['isa'] == 'directive':
 				if obj['kind'] == 'c_include':
 					newline()
 					print_include(obj)
 
 
-	for obj in module['defs_private']:
+	for obj in module['defs']:
 		if obj['isa'] == 'directive':
 			if obj['kind'] == 'c_include':
 				newline()
 				print_include(obj)
 
 	for inc in module['included_modules']:
-		for obj in inc['defs_private']:
+		for obj in inc['defs']:
 			if obj['isa'] == 'directive':
 				if obj['kind'] == 'c_include':
 					newline()
@@ -1957,6 +1957,12 @@ def print_directive(x):
 
 
 
+def is_private(x):
+	if 'access_level' in x:
+		return x['access_level'] == 'private'
+	return False
+
+
 def print_header(module, outname):
 	outname = outname + '.h'
 	output_open(outname)
@@ -1973,7 +1979,7 @@ def print_header(module, outname):
 	cdirectives(module)
 
 	# print directives (only for header)
-	for obj in module['defs_private']:
+	for obj in module['defs']:
 		if obj['isa'] == 'directive':
 			if obj['kind'] == 'c_include':
 				newline()
@@ -1992,8 +1998,11 @@ def print_header(module, outname):
 #		out("\ntypedef struct %s %s; //" % (rec_id, rec_id))
 
 
-	for x in module['defs_public']:
+	for x in module['defs']:
 		if 'c_no_print' in x['att']:
+			continue
+
+		if is_private(x):
 			continue
 
 		isa = x['isa']
@@ -2009,10 +2018,6 @@ def print_header(module, outname):
 			print_def_type(x)
 		elif isa == 'def_const':
 			print_def_const(x)
-
-		#elif isa == 'def_type':
-		#	if x['public']:
-		#		print_def_type(x)
 
 	newline()
 	out("\n#endif /* %s */" % guardsymbol)
@@ -2032,11 +2037,11 @@ def print_cfile(module, _outname):
 		return
 
 	# before all print first comment (header) if present
-	if len(module['defs_private']) > 0:
-		first = module['defs_private'][0]
+	if len(module['defs']) > 0:
+		first = module['defs'][0]
 		if first['isa'] == 'comment':
 			print_comment(first)
-			module['defs_private'] = module['defs_private'][1:]
+			module['defs'] = module['defs'][1:]
 		else:
 			out("// %s" % outname)
 		newline()
@@ -2068,58 +2073,24 @@ def print_cfile(module, _outname):
 			out(";")
 
 	# types & constants
-	for x in module['defs_private']:
+	for x in module['defs']:
 		if 'c_no_print' in x['att']:
 			continue
 
+			mass
 		isa = x['isa']
 		if isa == 'def_const':
 			print_def_const(x)
 		elif isa == 'def_type':
-			print_def_type(x)
-
-
-	for x in module['defs_private']:
-		if 'c_no_print' in x['att']:
-			continue
-
-		isa = x['isa']
-		if isa == 'decl_var':
+			if is_private(x):
+				print_def_type(x)
+		elif isa == 'def_var':
+			print_def_var(x)
+		elif isa == 'decl_var':
 			print_decl_var(x)
-
-
-	for x in module['defs_private']:
-		if 'c_no_print' in x['att']:
-			continue
-
-		isa = x['isa']
-		if isa == 'def_var':
-			print_def_var(x)
 		elif isa == 'def_func':
 			out("\n")
 			print_def_func(x)
-		#elif isa == 'def_type':
-		#	print_def_type(x)
-
-		elif isa == 'comment': print_comment(x)
-		elif isa == 'directive': print_directive(x)
-		#elif isa == 'def_const': print_def_const(x)
-
-	for x in module['defs_public']:
-		if 'c_no_print' in x['att']:
-			continue
-
-		isa = x['isa']
-		if isa == 'def_var':
-			print_def_var(x)
-		elif isa == 'def_func':
-			if 'inline' in x['att']:
-				continue
-			out("\n")
-			print_def_func(x)
-
-		#elif isa == 'def_type':
-		#	print_def_type(x)
 
 		elif isa == 'comment': print_comment(x)
 		elif isa == 'directive': print_directive(x)

@@ -306,7 +306,6 @@ define internal %SSizeT @my_printf(%Str8* %format, ...) {
 	ret %SSizeT %13
 }
 
-
 define %Int @main() {
 	%1 = alloca %Int32, align 4
 	store %Int32 10, %Int32* %1

@@ -375,7 +375,6 @@ define internal %Float @lineLength(%Line %line) {
 	ret %Float %3
 }
 
-
 define %Int @main() {
 	%1 = insertvalue %Point zeroinitializer, double 0.0000000000000000, 0
 	%2 = insertvalue %Point %1, double 0.0000000000000000, 1

@@ -10,6 +10,13 @@
 
 
 
+
+
+
+
+
+
+
 struct Point {
 	float x;
 	float y;
@@ -21,13 +28,6 @@ struct Line {
 	Point b;
 };
 typedef struct Line Line;
-
-
-
-
-
-
-
 static Line line = {
 	.a = {.x = 0, .y = 0},
 	.b = {.x = 1.0, .y = 1.0}

@@ -8,14 +8,14 @@
 
 
 
+
+
+
 #define hello  "Hello"
 #define world  "World"
 #define party_corn  U"🎉"
 #define greeting  (hello " " world)
 #define test  "test"
-
-
-
 
 int main()
 {

@@ -214,7 +214,6 @@ break_1:
 	ret void
 }
 
-
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([23 x i8]* @str2 to [0 x i8]*), %Int32 4)
 	call void @mtab(%Int32 4)

@@ -198,7 +198,6 @@ define internal %Int32 @named_args_test(%Int32 %a, %Int32 %b, %Int32 %c) {
 	ret %Int32 %2
 }
 
-
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str1 to [0 x i8]*))
 	%2 = call %Int32 @named_args_test(%Int32 25, %Int32 15, %Int32 3)

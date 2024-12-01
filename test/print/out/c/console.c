@@ -19,119 +19,6 @@
 
 
 
-static inline char n_to_dec_sym(uint8_t n)
-{
-	return (char)((uint8_t)'0' + n);
-}
-
-static char n_to_hex_sym(uint8_t n)
-{
-	if (n < 10) {
-		return n_to_dec_sym(n);
-	}
-	return (char)((uint8_t)'A' + n - 10);
-}
-
-static int32_t sprint_hex_nat32(char *buf, uint32_t x)
-{
-	char tmpbuf[8];
-	uint32_t d = x;
-	int32_t i = 0;
-
-	while (true) {
-		const uint32_t n = d % 16;
-		d = d / 16;
-
-		tmpbuf[i] = n_to_hex_sym((uint8_t)n);
-		i = i + 1;
-
-		if (d == 0) {
-			break;
-		}
-	}
-
-	// mirroring into buffer
-	int32_t j = 0;
-	while (i > 0) {
-		i = i - 1;
-		buf[j] = tmpbuf[i];
-		j = j + 1;
-	}
-
-	buf[j] = '\x0';
-
-	return j;
-}
-
-static int32_t sprint_dec_int32(char *buf, int32_t x)
-{
-	char tmpbuf[11];
-	int32_t d = x;
-	const bool neg = d < 0;
-
-	if (neg) {
-		d = -d;
-	}
-
-	int32_t i = 0;
-	while (true) {
-		const int32_t n = d % 10;
-		d = d / 10;
-		tmpbuf[i] = n_to_dec_sym((uint8_t)n);
-		i = i + 1;
-
-		if (d == 0) {
-			break;
-		}
-	}
-
-	int32_t j = 0;
-
-	if (neg) {
-		buf[0] = '-';
-		j = j + 1;
-	}
-
-	while (i > 0) {
-		i = i - 1;
-		buf[j] = tmpbuf[i];
-		j = j + 1;
-	}
-
-	buf[j] = '\x0';
-
-	return j;
-}
-
-static int32_t sprint_dec_n32(char *buf, uint32_t x)
-{
-	char tmpbuf[11];
-	uint32_t d = x;
-	int32_t i = 0;
-
-	while (true) {
-		const uint32_t n = d % 10;
-		d = d / 10;
-		tmpbuf[i] = n_to_dec_sym((uint8_t)n);
-		i = i + 1;
-
-		if (d == 0) {
-			break;
-		}
-	}
-
-	int32_t j = 0;
-	while (i > 0) {
-		i = i - 1;
-		buf[j] = tmpbuf[i];
-		j = j + 1;
-	}
-
-	buf[j] = '\x0';
-
-	return j;
-}
-
 
 void console_putchar_utf8(char c);
 
@@ -255,6 +142,15 @@ int32_t console_vfprint(int fd, char *form, va_list va)
 	return n;
 }
 
+
+static int32_t sprint_dec_int32(char *buf, int32_t x);
+
+
+static int32_t sprint_dec_n32(char *buf, uint32_t x);
+
+
+static int32_t sprint_hex_nat32(char *buf, uint32_t x);
+
 int32_t console_vsprint(char *buf, char *form, va_list va)
 {
 	int32_t i = 0;
@@ -344,6 +240,119 @@ int32_t console_vsprint(char *buf, char *form, va_list va)
 			j = j + n;
 		}
 	}
+
+	return j;
+}
+
+static inline char n_to_dec_sym(uint8_t n)
+{
+	return (char)((uint8_t)'0' + n);
+}
+
+static char n_to_hex_sym(uint8_t n)
+{
+	if (n < 10) {
+		return n_to_dec_sym(n);
+	}
+	return (char)((uint8_t)'A' + n - 10);
+}
+
+static int32_t sprint_hex_nat32(char *buf, uint32_t x)
+{
+	char tmpbuf[8];
+	uint32_t d = x;
+	int32_t i = 0;
+
+	while (true) {
+		const uint32_t n = d % 16;
+		d = d / 16;
+
+		tmpbuf[i] = n_to_hex_sym((uint8_t)n);
+		i = i + 1;
+
+		if (d == 0) {
+			break;
+		}
+	}
+
+	// mirroring into buffer
+	int32_t j = 0;
+	while (i > 0) {
+		i = i - 1;
+		buf[j] = tmpbuf[i];
+		j = j + 1;
+	}
+
+	buf[j] = '\x0';
+
+	return j;
+}
+
+static int32_t sprint_dec_int32(char *buf, int32_t x)
+{
+	char tmpbuf[11];
+	int32_t d = x;
+	const bool neg = d < 0;
+
+	if (neg) {
+		d = -d;
+	}
+
+	int32_t i = 0;
+	while (true) {
+		const int32_t n = d % 10;
+		d = d / 10;
+		tmpbuf[i] = n_to_dec_sym((uint8_t)n);
+		i = i + 1;
+
+		if (d == 0) {
+			break;
+		}
+	}
+
+	int32_t j = 0;
+
+	if (neg) {
+		buf[0] = '-';
+		j = j + 1;
+	}
+
+	while (i > 0) {
+		i = i - 1;
+		buf[j] = tmpbuf[i];
+		j = j + 1;
+	}
+
+	buf[j] = '\x0';
+
+	return j;
+}
+
+static int32_t sprint_dec_n32(char *buf, uint32_t x)
+{
+	char tmpbuf[11];
+	uint32_t d = x;
+	int32_t i = 0;
+
+	while (true) {
+		const uint32_t n = d % 10;
+		d = d / 10;
+		tmpbuf[i] = n_to_dec_sym((uint8_t)n);
+		i = i + 1;
+
+		if (d == 0) {
+			break;
+		}
+	}
+
+	int32_t j = 0;
+	while (i > 0) {
+		i = i - 1;
+		buf[j] = tmpbuf[i];
+		j = j + 1;
+	}
+
+	buf[j] = '\x0';
 
 	return j;
 }

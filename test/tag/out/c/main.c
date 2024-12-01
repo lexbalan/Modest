@@ -10,17 +10,8 @@
 
 
 
-static void print(char *form, ...)
-{
-	va_list va;
-	va_start(va, form);
 
-	const uint32_t c = va_arg(va, uint32_t);
-	printf("CC32 = %d\n", c);
-	printf("CC8 = %d\n", (char)c);
-
-	va_end(va);
-}
+static void print(char *form, ...);
 
 int32_t main()
 {
@@ -34,5 +25,17 @@ int32_t main()
 	r1.p = (main_Rec0 *)&r0;
 
 	return 0;
+}
+
+static void print(char *form, ...)
+{
+	va_list va;
+	va_start(va, form);
+
+	const uint32_t c = va_arg(va, uint32_t);
+	printf("CC32 = %d\n", c);
+	printf("CC8 = %d\n", (char)c);
+
+	va_end(va);
 }
 

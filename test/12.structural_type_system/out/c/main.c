@@ -13,6 +13,9 @@ struct __anonymous_struct_3 {int32_t x;};
 struct __anonymous_struct_4 {int32_t x;};
 
 
+
+
+
 struct Type1 {
 	int32_t x;
 };
@@ -27,9 +30,6 @@ struct Type3 {
 	int32_t x;
 };
 typedef struct Type3 Type3;
-
-
-
 
 static void f0_val(Type1 x)
 {
