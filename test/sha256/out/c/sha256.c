@@ -8,6 +8,7 @@
 
 
 
+
 #define sha256_hashSize  32
 
 
@@ -108,7 +109,8 @@ static void transform(Context *ctx, uint8_t *data)
 		i = i + 1;
 	}
 
-	uint32_t x[8] = ctx->state;
+	uint32_t x[8];
+	memcpy(&x, &ctx->state, sizeof(uint32_t[8]));
 
 	i = 0;
 	while (i < 64) {
@@ -176,14 +178,14 @@ static void final(Context *ctx, uint8_t *outHash)
 	// Append to the padding the total message's length in bits and transform.
 	ctx->bitlen = ctx->bitlen + (uint64_t)ctx->datalen * 8;
 
-	ctx->data[63] = (uint8_t)((uint32_t)ctx->bitlen >> 0);
-	ctx->data[62] = (uint8_t)((uint32_t)ctx->bitlen >> 8);
-	ctx->data[61] = (uint8_t)((uint32_t)ctx->bitlen >> 16);
-	ctx->data[60] = (uint8_t)((uint32_t)ctx->bitlen >> 24);
-	ctx->data[59] = (uint8_t)((uint32_t)ctx->bitlen >> 32);
-	ctx->data[58] = (uint8_t)((uint32_t)ctx->bitlen >> 40);
-	ctx->data[57] = (uint8_t)((uint32_t)ctx->bitlen >> 48);
-	ctx->data[56] = (uint8_t)((uint32_t)ctx->bitlen >> 56);
+	ctx->data[63] = (uint8_t)((uint64_t)ctx->bitlen >> 0);
+	ctx->data[62] = (uint8_t)((uint64_t)ctx->bitlen >> 8);
+	ctx->data[61] = (uint8_t)((uint64_t)ctx->bitlen >> 16);
+	ctx->data[60] = (uint8_t)((uint64_t)ctx->bitlen >> 24);
+	ctx->data[59] = (uint8_t)((uint64_t)ctx->bitlen >> 32);
+	ctx->data[58] = (uint8_t)((uint64_t)ctx->bitlen >> 40);
+	ctx->data[57] = (uint8_t)((uint64_t)ctx->bitlen >> 48);
+	ctx->data[56] = (uint8_t)((uint64_t)ctx->bitlen >> 56);
 
 	transform((Context *)ctx, (uint8_t *)&ctx->data);
 

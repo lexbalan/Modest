@@ -7,14 +7,12 @@
 #include "byteRing16.h"
 
 
-
-#define byteRing16_cap  16
-
+#define cap  16
 
 void byteRing16_init(byteRing16_Word8Ring16 *q)
 {
-	queue_init((queue_Queue *)&q->queue, byteRing16_cap);
-	memset(&q->data, 0, sizeof(uint8_t[byteRing16_cap]));
+	queue_init((queue_Queue *)&q->queue, cap);
+	memset(&q->data, 0, sizeof(uint8_t[cap]));
 }
 
 uint32_t byteRing16_capacity(byteRing16_Word8Ring16 *q)

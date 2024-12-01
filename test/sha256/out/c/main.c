@@ -8,6 +8,10 @@
 
 #define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
 
+
+
+
+
 #define inputDataLength  32
 
 

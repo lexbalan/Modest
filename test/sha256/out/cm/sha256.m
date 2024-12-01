@@ -145,14 +145,14 @@ func final(ctx: *Context, outHash: *Hash) -> Unit {
 	// Append to the padding the total message's length in bits and transform.
 	ctx.bitlen = ctx.bitlen + Nat64 ctx.datalen * 8
 
-	ctx.data[63] = Word8 (Word32 ctx.bitlen >> 00)
-	ctx.data[62] = Word8 (Word32 ctx.bitlen >> 08)
-	ctx.data[61] = Word8 (Word32 ctx.bitlen >> 16)
-	ctx.data[60] = Word8 (Word32 ctx.bitlen >> 24)
-	ctx.data[59] = Word8 (Word32 ctx.bitlen >> 32)
-	ctx.data[58] = Word8 (Word32 ctx.bitlen >> 40)
-	ctx.data[57] = Word8 (Word32 ctx.bitlen >> 48)
-	ctx.data[56] = Word8 (Word32 ctx.bitlen >> 56)
+	ctx.data[63] = Word8 (Word64 ctx.bitlen >> 00)
+	ctx.data[62] = Word8 (Word64 ctx.bitlen >> 08)
+	ctx.data[61] = Word8 (Word64 ctx.bitlen >> 16)
+	ctx.data[60] = Word8 (Word64 ctx.bitlen >> 24)
+	ctx.data[59] = Word8 (Word64 ctx.bitlen >> 32)
+	ctx.data[58] = Word8 (Word64 ctx.bitlen >> 40)
+	ctx.data[57] = Word8 (Word64 ctx.bitlen >> 48)
+	ctx.data[56] = Word8 (Word64 ctx.bitlen >> 56)
 
 	transform(ctx, &ctx.data)
 

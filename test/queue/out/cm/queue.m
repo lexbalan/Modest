@@ -2,12 +2,6 @@
 include "libc/ctypes64"
 @c_include "stdio.h"
 include "libc/stdio"
-func next(capacity: Nat32, x: Nat32) -> Nat32 {
-	if x < capacity - 1 {
-		return x + 1
-	}
-	return 0
-}
 
 
 public type Queue record {
@@ -47,5 +41,11 @@ public func getGetPosition(q: *Queue) -> Nat32 {
 		q.size = q.size - 1
 	}
 	return pos
+}
+func next(capacity: Nat32, x: Nat32) -> Nat32 {
+	if x < capacity - 1 {
+		return x + 1
+	}
+	return 0
 }
 

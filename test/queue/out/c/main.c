@@ -8,10 +8,6 @@
 
 
 
-void padd(int n);
-void fetch(int n);
-
-
 
 
 
@@ -21,10 +17,9 @@ static byteQueue128_Word8Queue128 bq0;
 static byteRing16_Word8Ring16 br0;
 static int32_t ii;
 
-void padd(int n)
+static void padd(int n)
 {
-	int32_t i;
-	i = 0;
+	int32_t i = 0;
 	while (i < n) {
 		if (byteQueue128_isFull((byteQueue128_Word8Queue128 *)&bq0)) {
 			printf("queue is full\n");
@@ -38,10 +33,9 @@ void padd(int n)
 	}
 }
 
-void fetch(int n)
+static void fetch(int n)
 {
-	int32_t i;
-	i = 0;
+	int32_t i = 0;
 	while (i < n) {
 		if (byteQueue128_isEmpty((byteQueue128_Word8Queue128 *)&bq0)) {
 			printf("queue is empty\n");

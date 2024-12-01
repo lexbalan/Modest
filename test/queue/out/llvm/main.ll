@@ -6,6 +6,10 @@ target triple = "arm64-apple-macosx12.0.0"
 %Unit = type i1
 %Bool = type i1
 %Word8 = type i8
+%Word16 = type i16
+%Word32 = type i32
+%Word64 = type i64
+%Word128 = type i128
 %Char8 = type i8
 %Char16 = type i16
 %Char32 = type i32
@@ -104,34 +108,34 @@ break_2:
 ; -- print includes --
 ; from included ctypes64
 %Str = type %Str8;
-%Char = type i8;
+%Char = type %Char8;
 %ConstChar = type %Char;
-%SignedChar = type i8;
-%UnsignedChar = type i8;
-%Short = type i16;
-%UnsignedShort = type i16;
-%Int = type i32;
-%UnsignedInt = type i32;
-%LongInt = type i64;
-%UnsignedLongInt = type i64;
-%Long = type i64;
-%UnsignedLong = type i64;
-%LongLong = type i64;
-%UnsignedLongLong = type i64;
-%LongLongInt = type i64;
-%UnsignedLongLongInt = type i64;
+%SignedChar = type %Int8;
+%UnsignedChar = type %Int8;
+%Short = type %Int16;
+%UnsignedShort = type %Int16;
+%Int = type %Int32;
+%UnsignedInt = type %Int32;
+%LongInt = type %Int64;
+%UnsignedLongInt = type %Int64;
+%Long = type %Int64;
+%UnsignedLong = type %Int64;
+%LongLong = type %Int64;
+%UnsignedLongLong = type %Int64;
+%LongLongInt = type %Int64;
+%UnsignedLongLongInt = type %Int64;
 %Float = type double;
 %Double = type double;
 %LongDouble = type double;
 %SizeT = type %UnsignedLongInt;
 %SSizeT = type %LongInt;
-%IntPtrT = type i64;
+%IntPtrT = type %Int64;
 %PtrDiffT = type i8*;
-%OffT = type i64;
-%USecondsT = type i32;
-%PIDT = type i32;
-%UIDT = type i32;
-%GIDT = type i32;
+%OffT = type %Int64;
+%USecondsT = type %Int32;
+%PIDT = type %Int32;
+%UIDT = type %Int32;
+%GIDT = type %Int32;
 ; from included math
 declare %Double @acos(%Double %x)
 declare %Double @asin(%Double %x)
@@ -213,8 +217,8 @@ declare %LongDouble @fmaxl(%LongDouble %a, %LongDouble %b)
 declare %LongDouble @fminl(%LongDouble %a, %LongDouble %b)
 declare %LongDouble @fmal(%LongDouble %a, %LongDouble %b, %LongDouble %c)
 ; from included stdio
-%File = type i8;
-%FposT = type i8;
+%File = type %Int8;
+%FposT = type %Int8;
 %CharStr = type %Str;
 %ConstCharStr = type %CharStr;
 declare %Int @fclose(%File* %f)
@@ -262,133 +266,133 @@ declare void @perror(%ConstCharStr* %str)
 ; -- end print includes --
 ; -- print imports --
 %queue_Queue = type {
-	i32, 
-	i32, 
-	i32, 
-	i32
+	%Int32,
+	%Int32,
+	%Int32,
+	%Int32
 };
 
-declare void @queue_init(%queue_Queue* %q, i32 %capacity)
-declare i32 @queue_capacity(%queue_Queue* %q)
-declare i32 @queue_size(%queue_Queue* %q)
-declare i1 @queue_isEmpty(%queue_Queue* %q)
-declare i1 @queue_isFull(%queue_Queue* %q)
-declare i32 @queue_getPutPosition(%queue_Queue* %q)
-declare i32 @queue_getGetPosition(%queue_Queue* %q)
+declare void @queue_init(%queue_Queue* %q, %Int32 %capacity)
+declare %Int32 @queue_capacity(%queue_Queue* %q)
+declare %Int32 @queue_size(%queue_Queue* %q)
+declare %Bool @queue_isEmpty(%queue_Queue* %q)
+declare %Bool @queue_isFull(%queue_Queue* %q)
+declare %Int32 @queue_getPutPosition(%queue_Queue* %q)
+declare %Int32 @queue_getGetPosition(%queue_Queue* %q)
 %byteQueue128_Word8Queue128 = type {
-	%queue_Queue, 
-	[16 x i8]
+	%queue_Queue,
+	[16 x %Word8]
 };
 
 declare void @byteQueue128_init(%byteQueue128_Word8Queue128* %q)
-declare i32 @byteQueue128_capacity(%byteQueue128_Word8Queue128* %q)
-declare i32 @byteQueue128_size(%byteQueue128_Word8Queue128* %q)
-declare i1 @byteQueue128_isFull(%byteQueue128_Word8Queue128* %q)
-declare i1 @byteQueue128_isEmpty(%byteQueue128_Word8Queue128* %q)
-declare i1 @byteQueue128_put(%byteQueue128_Word8Queue128* %q, i8 %b)
-declare i1 @byteQueue128_get(%byteQueue128_Word8Queue128* %q, i8* %b)
+declare %Int32 @byteQueue128_capacity(%byteQueue128_Word8Queue128* %q)
+declare %Int32 @byteQueue128_size(%byteQueue128_Word8Queue128* %q)
+declare %Bool @byteQueue128_isFull(%byteQueue128_Word8Queue128* %q)
+declare %Bool @byteQueue128_isEmpty(%byteQueue128_Word8Queue128* %q)
+declare %Bool @byteQueue128_put(%byteQueue128_Word8Queue128* %q, %Word8 %b)
+declare %Bool @byteQueue128_get(%byteQueue128_Word8Queue128* %q, %Word8* %b)
 %queue_Queue = type {
-	i32, 
-	i32, 
-	i32, 
-	i32
+	%Int32,
+	%Int32,
+	%Int32,
+	%Int32
 };
 
-declare void @queue_init(%queue_Queue* %q, i32 %capacity)
-declare i32 @queue_capacity(%queue_Queue* %q)
-declare i32 @queue_size(%queue_Queue* %q)
-declare i1 @queue_isEmpty(%queue_Queue* %q)
-declare i1 @queue_isFull(%queue_Queue* %q)
-declare i32 @queue_getPutPosition(%queue_Queue* %q)
-declare i32 @queue_getGetPosition(%queue_Queue* %q)
+declare void @queue_init(%queue_Queue* %q, %Int32 %capacity)
+declare %Int32 @queue_capacity(%queue_Queue* %q)
+declare %Int32 @queue_size(%queue_Queue* %q)
+declare %Bool @queue_isEmpty(%queue_Queue* %q)
+declare %Bool @queue_isFull(%queue_Queue* %q)
+declare %Int32 @queue_getPutPosition(%queue_Queue* %q)
+declare %Int32 @queue_getGetPosition(%queue_Queue* %q)
 %byteRing16_Word8Ring16 = type {
-	%queue_Queue, 
-	[16 x i8]
+	%queue_Queue,
+	[16 x %Word8]
 };
 
 declare void @byteRing16_init(%byteRing16_Word8Ring16* %q)
-declare i32 @byteRing16_capacity(%byteRing16_Word8Ring16* %q)
-declare i32 @byteRing16_size(%byteRing16_Word8Ring16* %q)
-declare i1 @byteRing16_isFull(%byteRing16_Word8Ring16* %q)
-declare i1 @byteRing16_isEmpty(%byteRing16_Word8Ring16* %q)
-declare i1 @byteRing16_put(%byteRing16_Word8Ring16* %q, i8 %b)
-declare i1 @byteRing16_get(%byteRing16_Word8Ring16* %q, i8* %b)
+declare %Int32 @byteRing16_capacity(%byteRing16_Word8Ring16* %q)
+declare %Int32 @byteRing16_size(%byteRing16_Word8Ring16* %q)
+declare %Bool @byteRing16_isFull(%byteRing16_Word8Ring16* %q)
+declare %Bool @byteRing16_isEmpty(%byteRing16_Word8Ring16* %q)
+declare %Bool @byteRing16_put(%byteRing16_Word8Ring16* %q, %Word8 %b)
+declare %Bool @byteRing16_get(%byteRing16_Word8Ring16* %q, %Word8* %b)
 ; -- end print imports --
 ; -- strings --
 @str1 = private constant [15 x i8] [i8 113, i8 117, i8 101, i8 117, i8 101, i8 32, i8 105, i8 115, i8 32, i8 102, i8 117, i8 108, i8 108, i8 10, i8 0]
 @str2 = private constant [12 x i8] [i8 98, i8 113, i8 46, i8 112, i8 117, i8 116, i8 40, i8 37, i8 100, i8 41, i8 10, i8 0]
 @str3 = private constant [16 x i8] [i8 113, i8 117, i8 101, i8 117, i8 101, i8 32, i8 105, i8 115, i8 32, i8 101, i8 109, i8 112, i8 116, i8 121, i8 10, i8 0]
 @str4 = private constant [13 x i8] [i8 98, i8 113, i8 46, i8 103, i8 101, i8 116, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
+; -- endstrings --
 
-@bq0 = global %byteQueue128_Word8Queue128 zeroinitializer
-@br0 = global %byteRing16_Word8Ring16 zeroinitializer
-@ii = global i32 zeroinitializer
+@bq0 = internal global %byteQueue128_Word8Queue128 zeroinitializer
+@br0 = internal global %byteRing16_Word8Ring16 zeroinitializer
+@ii = internal global %Int32 zeroinitializer
 
 define internal void @padd(%Int %n) {
-	%1 = alloca i32, align 4
-	store i32 0, i32* %1
+	%1 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %1
 	br label %again_1
 again_1:
-	%2 = load i32, i32* %1
-	%3 = icmp slt i32 %2, %n
-	br i1 %3 , label %body_1, label %break_1
+	%2 = load %Int32, %Int32* %1
+	%3 = icmp slt %Int32 %2, %n
+	br %Bool %3 , label %body_1, label %break_1
 body_1:
 	%4 = bitcast %byteQueue128_Word8Queue128* @bq0 to %byteQueue128_Word8Queue128*
-	%5 = call i1 @byteQueue128_isFull(%byteQueue128_Word8Queue128* %4)
-	br i1 %5 , label %then_0, label %endif_0
+	%5 = call %Bool @byteQueue128_isFull(%byteQueue128_Word8Queue128* %4)
+	br %Bool %5 , label %then_0, label %endif_0
 then_0:
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
 	br label %break_1
 	br label %endif_0
 endif_0:
-	%8 = load i32, i32* @ii
-	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str2 to [0 x i8]*), i32 %8)
+	%8 = load %Int32, %Int32* @ii
+	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str2 to [0 x i8]*), %Int32 %8)
 	%10 = bitcast %byteQueue128_Word8Queue128* @bq0 to %byteQueue128_Word8Queue128*
-	%11 = load i32, i32* @ii
-	%12 = trunc i32 %11 to i8
-	%13 = call i1 @byteQueue128_put(%byteQueue128_Word8Queue128* %10, i8 %12)
-	%14 = load i32, i32* %1
-	%15 = add i32 %14, 1
-	store i32 %15, i32* %1
-	%16 = load i32, i32* @ii
-	%17 = add i32 %16, 1
-	store i32 %17, i32* @ii
+	%11 = load %Int32, %Int32* @ii
+	%12 = trunc %Int32 %11 to %Word8
+	%13 = call %Bool @byteQueue128_put(%byteQueue128_Word8Queue128* %10, %Word8 %12)
+	%14 = load %Int32, %Int32* %1
+	%15 = add %Int32 %14, 1
+	store %Int32 %15, %Int32* %1
+	%16 = load %Int32, %Int32* @ii
+	%17 = add %Int32 %16, 1
+	store %Int32 %17, %Int32* @ii
 	br label %again_1
 break_1:
 	ret void
 }
 
 define internal void @fetch(%Int %n) {
-	%1 = alloca i32, align 4
-	store i32 0, i32* %1
+	%1 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %1
 	br label %again_1
 again_1:
-	%2 = load i32, i32* %1
-	%3 = icmp slt i32 %2, %n
-	br i1 %3 , label %body_1, label %break_1
+	%2 = load %Int32, %Int32* %1
+	%3 = icmp slt %Int32 %2, %n
+	br %Bool %3 , label %body_1, label %break_1
 body_1:
 	%4 = bitcast %byteQueue128_Word8Queue128* @bq0 to %byteQueue128_Word8Queue128*
-	%5 = call i1 @byteQueue128_isEmpty(%byteQueue128_Word8Queue128* %4)
-	br i1 %5 , label %then_0, label %endif_0
+	%5 = call %Bool @byteQueue128_isEmpty(%byteQueue128_Word8Queue128* %4)
+	br %Bool %5 , label %then_0, label %endif_0
 then_0:
 	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str3 to [0 x i8]*))
 	br label %break_1
 	br label %endif_0
 endif_0:
-	%8 = alloca i8, align 1
+	%8 = alloca %Word8, align 1
 	%9 = bitcast %byteQueue128_Word8Queue128* @bq0 to %byteQueue128_Word8Queue128*
-	%10 = call i1 @byteQueue128_get(%byteQueue128_Word8Queue128* %9, i8* %8)
-	%11 = load i8, i8* %8
-	%12 = sext i8 %11 to %Int
+	%10 = call %Bool @byteQueue128_get(%byteQueue128_Word8Queue128* %9, %Word8* %8)
+	%11 = load %Word8, %Word8* %8
+	%12 = sext %Word8 %11 to %Int
 	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str4 to [0 x i8]*), %Int %12)
-	%14 = load i32, i32* %1
-	%15 = add i32 %14, 1
-	store i32 %15, i32* %1
+	%14 = load %Int32, %Int32* %1
+	%15 = add %Int32 %14, 1
+	store %Int32 %15, %Int32* %1
 	br label %again_1
 break_1:
 	ret void
 }
-
 
 define %Int @main() {
 	%1 = bitcast %byteQueue128_Word8Queue128* @bq0 to %byteQueue128_Word8Queue128*

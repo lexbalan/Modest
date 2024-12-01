@@ -8,18 +8,7 @@
 
 
 
-static inline uint32_t next(uint32_t capacity, uint32_t x);
 
-
-
-
-static inline uint32_t next(uint32_t capacity, uint32_t x)
-{
-	if (x < capacity - 1) {
-		return x + 1;
-	}
-	return 0;
-}
 
 void queue_init(queue_Queue *q, uint32_t capacity)
 {
@@ -47,6 +36,9 @@ bool queue_isFull(queue_Queue *q)
 	return q->size == q->capacity;
 }
 
+
+static inline uint32_t next(uint32_t capacity, uint32_t x);
+
 uint32_t queue_getPutPosition(queue_Queue *q)
 {
 	const uint32_t pos = q->p;
@@ -65,5 +57,13 @@ uint32_t queue_getGetPosition(queue_Queue *q)
 		q->size = q->size - 1;
 	}
 	return pos;
+}
+
+static inline uint32_t next(uint32_t capacity, uint32_t x)
+{
+	if (x < capacity - 1) {
+		return x + 1;
+	}
+	return 0;
 }
 

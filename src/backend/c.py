@@ -1318,16 +1318,24 @@ def print_stmt_return(x):
 
 def print_stmt_var(x):
 	init_value = x['init_value']
+	var_value = x['var_value']
 
 	if DONT_PRINT_UNUSED:
 		if init_value != None:
-			if x['var_value']['usecnt'] == 0:
+			if var_value['usecnt'] == 0:
 				if init_value['kind'] != 'call':
 					return
 
 	nl_indent(x['nl'])
+	print_variable(get_id_str(var_value), var_value['type'])
 
-	print_variable(get_id_str(x['var_value']), x['var_value']['type'])
+	if hlir_type.type_is_array(var_value['type']):
+		if not value_is_immediate(init_value):
+			# array assignation by non-immediate value
+			out(";")
+			nl_indent(1)
+			memcopy_assign(var_value, init_value)
+			return
 
 	if not value_is_undefined(init_value):
 		out(" = ")

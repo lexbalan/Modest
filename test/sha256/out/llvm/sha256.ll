@@ -717,65 +717,65 @@ endif_1:
 	%40 = getelementptr inbounds [64 x %Word8], [64 x %Word8]* %39, %Int32 0, %Int32 63
 	%41 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 2
 	%42 = load %Int64, %Int64* %41
-	%43 = trunc %Int64 %42 to %Word32
-	%44 = lshr %Word32 %43, 0
-	%45 = trunc %Word32 %44 to %Word8
+	%43 = bitcast %Int64 %42 to %Word64
+	%44 = lshr %Word64 %43, 0
+	%45 = trunc %Word64 %44 to %Word8
 	store %Word8 %45, %Word8* %40
 	%46 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%47 = getelementptr inbounds [64 x %Word8], [64 x %Word8]* %46, %Int32 0, %Int32 62
 	%48 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 2
 	%49 = load %Int64, %Int64* %48
-	%50 = trunc %Int64 %49 to %Word32
-	%51 = lshr %Word32 %50, 8
-	%52 = trunc %Word32 %51 to %Word8
+	%50 = bitcast %Int64 %49 to %Word64
+	%51 = lshr %Word64 %50, 8
+	%52 = trunc %Word64 %51 to %Word8
 	store %Word8 %52, %Word8* %47
 	%53 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%54 = getelementptr inbounds [64 x %Word8], [64 x %Word8]* %53, %Int32 0, %Int32 61
 	%55 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 2
 	%56 = load %Int64, %Int64* %55
-	%57 = trunc %Int64 %56 to %Word32
-	%58 = lshr %Word32 %57, 16
-	%59 = trunc %Word32 %58 to %Word8
+	%57 = bitcast %Int64 %56 to %Word64
+	%58 = lshr %Word64 %57, 16
+	%59 = trunc %Word64 %58 to %Word8
 	store %Word8 %59, %Word8* %54
 	%60 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%61 = getelementptr inbounds [64 x %Word8], [64 x %Word8]* %60, %Int32 0, %Int32 60
 	%62 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 2
 	%63 = load %Int64, %Int64* %62
-	%64 = trunc %Int64 %63 to %Word32
-	%65 = lshr %Word32 %64, 24
-	%66 = trunc %Word32 %65 to %Word8
+	%64 = bitcast %Int64 %63 to %Word64
+	%65 = lshr %Word64 %64, 24
+	%66 = trunc %Word64 %65 to %Word8
 	store %Word8 %66, %Word8* %61
 	%67 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%68 = getelementptr inbounds [64 x %Word8], [64 x %Word8]* %67, %Int32 0, %Int32 59
 	%69 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 2
 	%70 = load %Int64, %Int64* %69
-	%71 = trunc %Int64 %70 to %Word32
-	%72 = lshr %Word32 %71, 32
-	%73 = trunc %Word32 %72 to %Word8
+	%71 = bitcast %Int64 %70 to %Word64
+	%72 = lshr %Word64 %71, 32
+	%73 = trunc %Word64 %72 to %Word8
 	store %Word8 %73, %Word8* %68
 	%74 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%75 = getelementptr inbounds [64 x %Word8], [64 x %Word8]* %74, %Int32 0, %Int32 58
 	%76 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 2
 	%77 = load %Int64, %Int64* %76
-	%78 = trunc %Int64 %77 to %Word32
-	%79 = lshr %Word32 %78, 40
-	%80 = trunc %Word32 %79 to %Word8
+	%78 = bitcast %Int64 %77 to %Word64
+	%79 = lshr %Word64 %78, 40
+	%80 = trunc %Word64 %79 to %Word8
 	store %Word8 %80, %Word8* %75
 	%81 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%82 = getelementptr inbounds [64 x %Word8], [64 x %Word8]* %81, %Int32 0, %Int32 57
 	%83 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 2
 	%84 = load %Int64, %Int64* %83
-	%85 = trunc %Int64 %84 to %Word32
-	%86 = lshr %Word32 %85, 48
-	%87 = trunc %Word32 %86 to %Word8
+	%85 = bitcast %Int64 %84 to %Word64
+	%86 = lshr %Word64 %85, 48
+	%87 = trunc %Word64 %86 to %Word8
 	store %Word8 %87, %Word8* %82
 	%88 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%89 = getelementptr inbounds [64 x %Word8], [64 x %Word8]* %88, %Int32 0, %Int32 56
 	%90 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 2
 	%91 = load %Int64, %Int64* %90
-	%92 = trunc %Int64 %91 to %Word32
-	%93 = lshr %Word32 %92, 56
-	%94 = trunc %Word32 %93 to %Word8
+	%92 = bitcast %Int64 %91 to %Word64
+	%93 = lshr %Word64 %92, 56
+	%94 = trunc %Word64 %93 to %Word8
 	store %Word8 %94, %Word8* %89
 	%95 = bitcast %Context* %ctx to %Context*
 	%96 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 0

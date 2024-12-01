@@ -8,13 +8,13 @@
 #include <stdio.h>
 #include "queue.h"
 
-typedef struct byteRing16_Word8Ring16 byteRing16_Word8Ring16; //
 
 
 struct byteRing16_Word8Ring16 {
 	queue_Queue queue;
-	uint8_t data[byteRing16_cap];
+	uint8_t data[cap];
 };
+typedef struct byteRing16_Word8Ring16 byteRing16_Word8Ring16;
 void byteRing16_init(byteRing16_Word8Ring16 *q);
 uint32_t byteRing16_capacity(byteRing16_Word8Ring16 *q);
 uint32_t byteRing16_size(byteRing16_Word8Ring16 *q);

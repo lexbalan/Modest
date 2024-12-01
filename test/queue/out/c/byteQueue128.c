@@ -7,9 +7,7 @@
 #include "byteQueue128.h"
 
 
-
 #define byteQueue128_cap  16
-
 
 void byteQueue128_init(byteQueue128_Word8Queue128 *q)
 {
