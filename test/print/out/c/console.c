@@ -111,7 +111,9 @@ void console_puts32(uint32_t *s)
 	int32_t i = 0;
 	while (true) {
 		const uint32_t c = s[i];
-		if (c == 0) {break;}
+		if (c == 0) {
+			break;
+		}
 		console_putchar_utf32(c);
 		i = i + 1;
 	}

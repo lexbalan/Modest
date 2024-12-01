@@ -9,8 +9,6 @@
 
 
 
-
-
 int16_t main()
 {
 	m328p_portB->dir = 0xFF;

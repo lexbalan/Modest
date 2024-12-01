@@ -6,14 +6,11 @@
 
 #include "delay.h"
 
-
-
 static volatile uint32_t delayCounter = 0;
 
 void delay_ms(uint32_t x)
 {
-	uint32_t t;
-	t = x;
+	uint32_t t = x;
 	while (t > 0) {
 		delayCounter = 0;
 		while (delayCounter < 380) {

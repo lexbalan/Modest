@@ -108,7 +108,9 @@ public func puts32(s: *Str32) -> Unit {
 	var i = 0
 	while true {
 		let c = s[i]
-		if c == Char32 0 {break}
+		if c == Char32 0 {
+			break
+		}
 		putchar_utf32(c)
 		++i
 	}
