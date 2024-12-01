@@ -11,8 +11,6 @@
 
 
 
-
-
 static bool test_generic_integer();
 
 

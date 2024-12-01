@@ -13,8 +13,6 @@
 
 
 
-
-
 static void nat32_list_insert(list_List *list, uint32_t x)
 {
 	// alloc memory for Nat32 value

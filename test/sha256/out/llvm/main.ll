@@ -197,13 +197,6 @@ declare %SizeT @strlen([0 x %ConstChar]* %s)
 declare [0 x %Char]* @strcat([0 x %Char]* %s1, [0 x %ConstChar]* %s2)
 declare [0 x %Char]* @strncat([0 x %Char]* %s1, [0 x %ConstChar]* %s2, %SizeT %n)
 declare [0 x %Char]* @strerror(%Int %error)
-%Context = type {
-	[64 x %Word8],
-	%Int32,
-	%Int64,
-	[8 x %Word32]
-};
-
 %sha256_Hash = type [32 x %Word8];
 declare void @sha256_hash([0 x %Word8]* %msg, %Int32 %msgLen, %sha256_Hash* %outHash)
 ; -- end print imports --
@@ -226,7 +219,7 @@ declare void @sha256_hash([0 x %Word8]* %msg, %Int32 %msgLen, %sha256_Hash* %out
 };
 
 
-@test0 = global %SHA256_TestCase {
+@test0 = internal global %SHA256_TestCase {
 	[32 x %Char8] [
 		%Char8 97,
 		%Char8 98,
@@ -297,7 +290,7 @@ declare void @sha256_hash([0 x %Word8]* %msg, %Int32 %msgLen, %sha256_Hash* %out
 		%Word8 173
 	]
 }
-@test1 = global %SHA256_TestCase {
+@test1 = internal global %SHA256_TestCase {
 	[32 x %Char8] [
 		%Char8 72,
 		%Char8 101,
@@ -368,7 +361,7 @@ declare void @sha256_hash([0 x %Word8]* %msg, %Int32 %msgLen, %sha256_Hash* %out
 		%Word8 105
 	]
 }
-@tests = global [2 x %SHA256_TestCase*] [
+@tests = internal global [2 x %SHA256_TestCase*] [
 	%SHA256_TestCase* @test0,
 	%SHA256_TestCase* @test1
 ]
@@ -409,7 +402,6 @@ break_1:
 	%23 = icmp ne %Bool %22, 0
 	ret %Bool %23
 }
-
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str5 to [0 x i8]*))

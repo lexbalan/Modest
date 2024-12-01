@@ -17,11 +17,7 @@ struct SHA256_TestCase {
 
 	uint8_t expected_result[sha256_hashSize];
 };
-
-
-
-
-
+typedef struct SHA256_TestCase SHA256_TestCase;
 static SHA256_TestCase test0 = {
 	.input_data = "abc",
 	.input_data_len = 3,

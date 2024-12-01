@@ -154,6 +154,8 @@ declare [0 x %Char]* @strerror(%Int %error)
 ; -- strings --
 ; -- endstrings --
 
+
+%sha256_Hash = type [32 x %Word8];
 %Context = type {
 	[64 x %Word8],
 	%Int32,
@@ -871,10 +873,6 @@ body_1:
 break_1:
 	ret void
 }
-
-
-
-%sha256_Hash = type [32 x %Word8];
 
 define void @sha256_hash([0 x %Word8]* %msg, %Int32 %msgLen, %sha256_Hash* %outHash) {
 	%1 = alloca %Context, align 8

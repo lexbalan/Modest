@@ -8,9 +8,6 @@
 
 
 
-
-
-
 static void print(char *form, ...);
 
 int32_t main()

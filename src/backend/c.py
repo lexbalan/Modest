@@ -1969,10 +1969,10 @@ def print_header(module, outname):
 
 	guardsymbol = outname.split("/")[-1]
 	guardsymbol = guardsymbol[:-2].upper() + '_H'
-	out("\n")
+	newline()
 	out("#ifndef %s\n" % guardsymbol)
 	out("#define %s\n" % guardsymbol)
-	out("\n")
+	newline()
 	out("#include <stdint.h>\n")
 	out("#include <stdbool.h>\n")
 	#out("#include <string.h>\n")
@@ -1990,7 +1990,7 @@ def print_header(module, outname):
 					inc(obj['str'] + '.h', local=True)
 
 
-	out("\n")
+	newline()
 
 #	out("\n/* forward type declaration */")
 #	for rec in module['records']:
@@ -2020,7 +2020,8 @@ def print_header(module, outname):
 			print_def_const(x)
 
 	newline()
-	out("\n#endif /* %s */" % guardsymbol)
+	newline()
+	out("#endif /* %s */" % guardsymbol)
 	newline()
 	output_close()
 	return
@@ -2030,6 +2031,8 @@ def print_cfile(module, _outname):
 	outname = _outname + '.c'
 
 	output_open(outname)
+
+
 
 	if 'c_no_print' in module['att']:
 		print("--------MODULE CNOPRINT")
@@ -2048,7 +2051,7 @@ def print_cfile(module, _outname):
 
 	guardsymbol = ''
 
-	out("\n")
+	newline()
 	out("#include <stdint.h>\n")
 	out("#include <stdbool.h>\n")
 	out("#include <string.h>\n")
@@ -2056,14 +2059,13 @@ def print_cfile(module, _outname):
 	if 'use_va_arg' in module['att']:
 		out("#include <stdarg.h>")
 
-	out("\n")
+	newline()
 	out("#include \"%s.h\"\n" % module['id'])
-	out("\n")
 
 	if 'use_lengthof' in module['att']:
+		newline()
 		out("#define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))")
 
-	out("\n")
 
 	if len(module['anon_recs']) > 0:
 		out("\n/* anonymous records */")
@@ -2072,12 +2074,12 @@ def print_cfile(module, _outname):
 			print_type_record(anon_rec, tag=anon_rec['c_anon_id'])
 			out(";")
 
+
 	# types & constants
 	for x in module['defs']:
 		if 'c_no_print' in x['att']:
 			continue
 
-			mass
 		isa = x['isa']
 		if isa == 'def_const':
 			print_def_const(x)
@@ -2089,12 +2091,11 @@ def print_cfile(module, _outname):
 		elif isa == 'decl_var':
 			print_decl_var(x)
 		elif isa == 'def_func':
-			out("\n")
+			newline()
 			print_def_func(x)
 
 		elif isa == 'comment': print_comment(x)
 		elif isa == 'directive': print_directive(x)
-		#elif isa == 'def_const': print_def_const(x)
 
 	newline()
 	newline()

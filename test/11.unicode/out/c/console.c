@@ -18,8 +18,6 @@
 
 
 
-
-
 void console_putchar_utf8(char c);
 
 void console_putchar8(char c)

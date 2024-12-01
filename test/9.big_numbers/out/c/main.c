@@ -9,8 +9,6 @@
 
 
 
-
-
 static unsigned __int128 big0 = (((__int128)0x123456789ABCDEF << 64) | ((__int128)0xFEDCBA9876543210));
 
 static uint64_t high_128(unsigned __int128 x)

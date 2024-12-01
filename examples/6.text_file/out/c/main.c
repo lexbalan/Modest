@@ -13,8 +13,6 @@
 
 
 
-
-
 #define filename  "file.txt"
 
 static void write_example()

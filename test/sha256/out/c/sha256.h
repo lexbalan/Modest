@@ -11,7 +11,6 @@
 #include <string.h>
 
 
-typedef struct Context Context; //
 #define sha256_hashSize  32
 
 typedef uint8_t * sha256_Hash;

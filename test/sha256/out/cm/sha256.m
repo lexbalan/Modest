@@ -2,6 +2,9 @@
 include "libc/ctypes64"
 @c_include "string.h"
 include "libc/string"
+public const hashSize = 32
+
+public type Hash [hashSize]Word8
 
 
 type Context record {
@@ -171,9 +174,6 @@ func final(ctx: *Context, outHash: *Hash) -> Unit {
 		i = i + 1
 	}
 }
-public const hashSize = 32
-
-public type Hash [hashSize]Word8
 public func hash(msg: *[<undefined>]Word8, msgLen: Nat32, outHash: *Hash) -> Unit {
 	var ctx: Context = Context {}
 	contextInit(&ctx)

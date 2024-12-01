@@ -10,8 +10,6 @@
 
 
 
-
-
 int main()
 {
 	#define __x  127

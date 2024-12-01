@@ -12,7 +12,6 @@
 
 
 
-
 #define datastring  "123456789"
 #define expected_hash  0xCBF43926
 static uint8_t data[9] = datastring;

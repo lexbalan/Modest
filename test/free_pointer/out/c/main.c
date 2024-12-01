@@ -10,8 +10,6 @@
 
 
 
-
-
 int32_t main()
 {
 	bool a;

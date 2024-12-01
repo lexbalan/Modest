@@ -10,8 +10,6 @@
 
 
 
-
-
 static void func1()
 {
 	printf("func1 was called\n");
