@@ -3007,7 +3007,6 @@ def process_module(idStr, ast, nodef=False):
 
 	pre_def(ast, fdecl=nodef)  # process in normal mode
 
-
 	m = cmodule
 
 	cmodule = prev_module
@@ -3068,9 +3067,6 @@ def pre_def(ast, fdecl=False):
 				v = value_undefined(t, x['ti'])
 				cmodule_value_add(id['str'], v, is_public=is_public)
 
-		elif isa == 'ast_attribute':
-			print("ATT(%s)" % x['kind'])
-
 
 	# 3. Далее идем по всем элементам с самого начала и определяем их.
 	#   - Если элемент использует undefined - заносим его в список зависимостей эл-та
@@ -3089,9 +3085,8 @@ def pre_def(ast, fdecl=False):
 			elif kind == 'var':
 				y = def_var(x)
 
-			add_spices(y, ast_atts=x['attributes'])
-
 			if y != None:
+				add_spices(y, ast_atts=x['attributes'])
 				module_append(y, to_export=x['access_modifier'] == 'public')
 	return
 

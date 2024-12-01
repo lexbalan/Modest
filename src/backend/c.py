@@ -145,7 +145,9 @@ def get_id_str(x):
 
 	id_str = x['id']['str']
 	if 'prefix' in x['id']:
-		id_str = x['definition']['module']['prefix'] + '_' + id_str
+		prefix = x['definition']['module']['prefix']
+		if prefix != None:
+			id_str = prefix + '_' + id_str
 	return id_str
 
 
