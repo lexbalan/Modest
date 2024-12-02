@@ -295,12 +295,6 @@ def type_get_aka(t):
 def print_type(t, space_after=False, array_as_ptr=True, as_const=False):
 	k = t['kind']
 
-	if 'wrapped_array_type' in t['att']:
-		out(t['wrapped_id'])
-		if space_after:
-			out(" ")
-		return
-
 	if not hlir_type.type_is_pointer(t):
 		if as_const:
 			out("const ")
@@ -476,21 +470,6 @@ def print_value_un(v, ctx):
 
 
 
-def print_paramlist(params, extra_args=False):
-	out("(")
-
-	i = 0
-	for param in params:
-		if i > 0: out(", ")
-		print_variable(get_id_str(param), param['type'])
-		i = i + 1
-
-	if extra_args:
-		out(", ...")
-
-	out(")")
-
-
 
 def ptr2func(ftype):
 	print_type(ftype['to']);
@@ -498,7 +477,7 @@ def ptr2func(ftype):
 	print_paramlist(ftype['params'], ftype['extra_args'])
 
 
-def print_value_call(v, ctx):
+def print_value_call(v, ctx, arrayResult=None):
 	left = v['func']
 	ftype = left['type']
 
@@ -518,10 +497,17 @@ def print_value_call(v, ctx):
 
 	params = ftype['params']
 
-	out("(")
 	args = v['args']
-	i = 0
 	n = len(args)
+
+	out("(")
+
+	if arrayResult != None:
+		print_value(arrayResult)
+		if n > 0:
+			out(", ")
+
+	i = 0
 	while i < n:
 		a = None
 		if args[i]['isa'] == 'initializer':
@@ -537,12 +523,8 @@ def print_value_call(v, ctx):
 			p = params[i]
 			pt = p['type']
 
-			if 'wrapped_array_type' in pt['att']:
-				print_cast_hard(pt, a)
-
-			elif not hlir_type.type_eq(pt, a['type'], opt=['att_checking']):
+			if not hlir_type.type_eq(pt, a['type'], opt=['att_checking']):
 				print_cast(pt, a)
-
 			else:
 				print_value(a, ctx=ctx)
 
@@ -1124,9 +1106,6 @@ def print_value_by_id(x, ctx=[], prefix=''):
 	else:
 		print_id(x, prefix)
 
-	if 'do_unwrap' in ctx:
-		if 'wrapped_array' in x['att']:
-			out(".a")
 
 
 # & let
@@ -1302,17 +1281,22 @@ def print_stmt_while(x):
 
 def print_stmt_return(x):
 	nl_indent(x['nl'])
+
+	global cfunc
+	to = cfunc['type']['to']
+	if hlir_type.type_is_closed_array(to):
+		out("memcpy(__retval, ")
+		print_value_as_ptr(x['value'])
+		out(", sizeof(")
+		print_type(x['value']['type'], array_as_ptr=False)
+		out("));")
+		return
+
 	out("return")
 
 	if x['value'] != None:
 		out(" ")
-
-		global cfunc
-		to = cfunc['type']['to']
-		if hlir_type.type_is_closed_array(to):
-			print_cast_hard(to, x['value'])
-		else:
-			print_value(x['value'])
+		print_value(x['value'])
 
 	out(";")
 
@@ -1465,20 +1449,9 @@ def assign_array(left, right):
 	# если справа 'обернутое' значение
 	# (для того чтобы в C вернуть массив из функции
 	# его нужно 'обернуть' в структуру)
-	is_wrapped = 'wrapped_array' in right['att']
-	if is_wrapped:
-		to_type = right['type']
-		if right['kind'] == 'call':
-			to_type = right['func']['type']['to']
-
-		print_cast_hard(to_type, left)
-		out(" = ")
-		print_value(right)
-		out(";")
+	if right['kind'] == 'call':
+		print_value_call(right, [], arrayResult=left)
 		return
-
-	#if value_is_zero(right):
-	#out("/*%s*/" % right['immediate'])
 
 	memcopy_assign(left, right)
 	return
@@ -1488,11 +1461,13 @@ def do_assign(left, right):
 	#out("/*%s*/" % right['kind'])
 
 	if hlir_type.type_is_array(right['type']):
-		return assign_array(left, right)
+		assign_array(left, right)
 
-	print_value(left)
-	out(" = ")
-	print_value(right)
+	else:
+		print_value(left)
+		out(" = ")
+		print_value(right)
+
 	out(";")
 	return
 
@@ -1554,47 +1529,46 @@ def print_stmt_block(s):
 
 
 
-def print_wrapped_array(_type):
-	# -> struct ret_str_retval {char a[10];};
-	out(_type['wrapped_id'])
-	out (" {")
-	item_type = hlir_type.array_root_item_type(_type)
-	print_type(item_type, space_after=True)
-	out("a");
-	print_array_volume(_type)
-	out(";};")
-	newline()
 
+def print_paramlist(params, extra_args=False, retArr=None):
+	out("(")
+
+	if retArr != None:
+		print_variable("__retval", retArr)
+		if len(params) > 0:
+			out(", ")
+
+	i = 0
+	for param in params:
+		if i > 0: out(", ")
+
+		paramId = get_id_str(param)
+		if hlir_type.type_is_closed_array(param['type']):
+			paramId = '__' + paramId
+		print_variable(paramId, param['type'])
+		i = i + 1
+
+	if extra_args:
+		out(", ...")
+
+	out(")")
+	return
 
 
 def print_func_signature(id_str, ftype, atts):
 	to = ftype['to']
-	t = to
 
-	# поле является указателем?
-	ptr_level = 0
-	while hlir_type.type_is_pointer(t):
-		ptr_level = ptr_level + 1
-		t = t['to']
-		# *[] or *[n] -> just *
-		if t['kind'] == 'array':
-			t = t['of']
+	retArr = hlir_type.type_is_array(to)
+	ra = None
+	if not retArr:
+		print_type(to, space_after=True)
+	else:
+		ra = to
+		out("void ")
 
-	print_type(t, space_after=True)
-	out("*" * ptr_level)
 	out("%s" % id_str)
-	print_paramlist(ftype['params'], extra_args=ftype['extra_args'])
+	print_paramlist(ftype['params'], extra_args=ftype['extra_args'], retArr=ra)
 
-
-
-def print_func_wrappers(ftype):
-	# печатаем обернутые параметры-массивы и возврашаемые массивы
-	# (обернуты тк C не позволяет принимать возвращать массив по значению)
-	for param in ftype['params']:
-		if hlir_type.type_is_closed_array(param['type']):
-			print_wrapped_array(param['type'])
-	if hlir_type.type_is_closed_array(ftype['to']):
-		print_wrapped_array(ftype['to'])
 
 
 def print_decl_func(x):
@@ -1605,17 +1579,13 @@ def print_decl_func(x):
 
 	if x['access_level'] == 'private':
 		out("static ")
-	#if 'c_static' in x['att']:
-	#	out("static ")
+
 	if 'inline' in x['att']:
 		out("inline ")
 
 	ftype = x['value']['type']
-	print_func_wrappers(ftype)
 	print_func_signature(get_id_str(x['value']), ftype, x['value']['att'])
 	out(";")
-
-
 
 
 
@@ -1625,6 +1595,7 @@ def print_def_func(x):
 	global declared
 	newline(n=x['nl'])
 
+	# печатаем декларации функций от которых зависит эта
 	for dep in x['value']['deps']:
 		if not dep['id']['str'] in declared:
 			declared.append(dep['id']['str'])
@@ -1642,8 +1613,7 @@ def print_def_func(x):
 
 	if x['access_level'] == 'private':
 		out("static ")
-	#if 'c_static' in x['att']:
-	#	out("static ")
+
 	if 'inline' in x['att']:
 		out("inline ")
 
@@ -1666,6 +1636,24 @@ def print_def_func(x):
 
 	out("{")
 	indent_up()
+
+
+	# for any array parameter print local holder value
+	for param in func['type']['params']:
+		if hlir_type.type_is_closed_array(param['type']):
+			nl_indent(1)
+
+			paramId = get_id_str(param)
+			print_variable(paramId, param['type'])
+			out(";")
+
+			nl_indent(1)
+
+			out("memcpy(%s, %s" % (paramId, '__' + paramId))
+			out(", sizeof(")
+			print_type(param['type'], array_as_ptr=False)
+			out("));")
+
 
 	stmts = x['stmt']['stmts']
 	print_statements(stmts)
@@ -1755,11 +1743,6 @@ def print_variable_pointer(t, id_str, as_const):
 
 
 def print_variable_array(t, id_str, do_wrapped=True, as_const=False):
-	if do_wrapped:
-		if 'wrapped_array_type' in t['att']:
-			out("%s %s" % (t['wrapped_id'], id_str))
-			return
-
 	# get array item type (array_root_type)
 	array_root_type = t
 	while array_root_type['kind'] == 'array':

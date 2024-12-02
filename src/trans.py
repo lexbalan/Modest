@@ -732,12 +732,12 @@ def do_type_func(t, func_id="_"):
 		#	va_list_id = param['id']
 		#	continue
 
-		if hlir_type.type_is_array(pt):
+		#if hlir_type.type_is_array(pt):
 			#info("array as function parameter", _param)
-			nt = hlir_type.type_copy(pt)
-			pt['att'].append('wrapped_array_type')
-			pt['wrapped_id'] = 'struct ' + func_id + '_' + param['id']['str']
-			param['type'] = pt
+			#nt = hlir_type.type_copy(pt)
+			#pt['att'].append('wrapped_array_type')
+			#pt['wrapped_id'] = 'struct ' + func_id + '_' + param['id']['str']
+			#param['type'] = pt
 
 		params.append(param)
 
@@ -746,11 +746,11 @@ def do_type_func(t, func_id="_"):
 	if t['to'] != None:
 		to = do_type(t['to'])
 
-		if hlir_type.type_is_array(to):
-			#info("array as function return value", t['to'])
-			to = hlir_type.type_copy(to)
-			to['att'].append('wrapped_array_type')
-			to['wrapped_id'] = 'struct ' + func_id + '_' + 'retval'
+		#if hlir_type.type_is_array(to):
+		#	#info("array as function return value", t['to'])
+		#	to = hlir_type.type_copy(to)
+		#	to['att'].append('wrapped_array_type')
+		#	to['wrapped_id'] = 'struct ' + func_id + '_' + 'retval'
 
 	return hlir_type.hlir_type_func(params, to, t['arghack'], '_', ti=t['ti'])
 
