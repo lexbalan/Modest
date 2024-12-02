@@ -5,10 +5,19 @@ include "libc/stdio"
 import "lightfood/delay"
 import "fsm"
 @c_include "./delay.h"
+// This is flashlight final state machine example
+// (just for compiler test and language demonstration)
+//@attribute("c_no_print")
+//import "lightfood/main"
+//@attribute("c_no_print")
+//$pragma c_include "./ff_main.h"
 const flashlightStateOff = 0
 const flashlightStateOn = 1
 const flashlightStateBeacon = 2
 var cnt: Nat8
+//
+// State Off
+//
 func off_entry(x: *FSM) -> Unit {
 	Unit x
 	//printf("off_entry\n")
@@ -26,6 +35,9 @@ func off_exit(x: *FSM) -> Unit {
 	Unit x
 	//printf("off_exit\n")
 }
+//
+// State On
+//
 func on_entry(x: *FSM) -> Unit {
 	Unit x
 	//printf("on_entry\n")
@@ -43,6 +55,9 @@ func on_exit(x: *FSM) -> Unit {
 	Unit x
 	//printf("on_exit\n")
 }
+//
+// State Beacon
+//
 func beacon_entry(x: *FSM) -> Unit {
 	let from_name = fsm.state_no_name(x, x.state)
 	printf("beacon_entry from %s\n", from_name)

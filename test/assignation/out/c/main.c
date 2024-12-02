@@ -9,6 +9,7 @@
 
 
 
+// Simply record for records assignation test
 struct Point {
 	int32_t x;
 	int32_t y;

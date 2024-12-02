@@ -2621,6 +2621,12 @@ def do_func_value(x, export):
 
 
 
+def do_comment(x):
+	if x['kind'] == 'line':
+		return comm_line(x)
+	elif x['kind'] == 'block':
+		return comm_block(x)
+	return None
 
 
 def comm_line(x):
@@ -2628,7 +2634,9 @@ def comm_line(x):
 		'isa': 'comment',
 		'kind': 'line',
 		'lines': x['lines'],
-		'att': []
+		'nl': 1,
+		'att': [],
+		'ti': x['ti']
 	}
 
 
@@ -2637,7 +2645,9 @@ def comm_block(x):
 		'isa': 'comment',
 		'kind': 'block',
 		'text': x['text'],
-		'att': []
+		'nl': 1,
+		'att': [],
+		'ti': x['ti']
 	}
 
 
@@ -3088,6 +3098,10 @@ def pre_def(ast, fdecl=False):
 			if y != None:
 				add_spices(y, ast_atts=x['attributes'])
 				module_append(y, to_export=x['access_modifier'] == 'public')
+		elif isa == 'ast_comment':
+			comment = do_comment(x)
+			module_append(comment)
+
 	return
 
 

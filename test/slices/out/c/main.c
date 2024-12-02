@@ -10,6 +10,7 @@
 
 
 
+//@feature("unsafe")
 
 static void array_print(int32_t *pa, int32_t len)
 {
@@ -69,7 +70,7 @@ int main()
 
 	int32_t s[10] = (int32_t[10]){10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
 
-	memset(&s[2], 0, sizeof(int32_t[5 - 2]));
+	memset(&s[2], 0, sizeof(int32_t[5 - 2]));;
 
 	i = 0;
 	while (i < LENGTHOF(s)) {
@@ -118,7 +119,7 @@ int main()
 
 	int32_t k = 4;
 	int32_t j = 7;
-	memset(&ss[k], 0, sizeof(int32_t[j - k]));
+	memset(&ss[k], 0, sizeof(int32_t[j - k]));;
 	array_print((int32_t *)&ss, 10);
 
 	printf("--------------------------------------------\n");

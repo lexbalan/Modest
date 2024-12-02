@@ -4,6 +4,8 @@ include "libc/ctypes64"
 include "libc/stdio"
 @c_include "unistd.h"
 include "libc/unistd"
+//include "lightfood/print"
+//$pragma c_include "./print.h"
 func my_printf(format: *Str8, ...) -> SSizeT {
 	var va: va_list
 	var va2: va_list

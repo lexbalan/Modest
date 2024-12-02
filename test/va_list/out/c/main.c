@@ -11,6 +11,8 @@
 
 
 
+//include "lightfood/print"
+//$pragma c_include "./print.h"
 
 static ssize_t my_printf(char *format, ...)
 {

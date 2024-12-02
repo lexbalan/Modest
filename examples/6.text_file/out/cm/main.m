@@ -6,6 +6,8 @@
 @c_include "unistd.h"
 @c_include "math.h"
 include "libc/libc"
+//include "libc/ctypes64"
+//include "libc/stdio"
 const filename = *Str8 "file.txt"
 func write_example() -> Unit {
 	printf("run write_example\n")

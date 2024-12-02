@@ -1,4 +1,6 @@
-// ./out/c/crc32.c
+
+//include "libc/ctypes64"
+//include "libc/stdio"
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -6,6 +8,17 @@
 
 #include "crc32.h"
 
+/*
+  Name  : CRC-32
+  Poly  : 0x04C11DB7    xxor32 + xxor26 + xxor23 + xxor22 + xxor16 + xxor12 + xxor11
+                       + xxor10 + xxor8 + xxor7 + xxor5 + xxor4 + xxor2 + x + 1
+  Init  : 0xFFFFFFFF
+  Revert: true
+  XorOut: 0xFFFFFFFF
+  Check : 0xCBF43926 ("123456789")
+  MaxLen: 268 435 455 байт (2 147 483 647 бит) - обнаружение
+   одинарных, двойных, пакетных и всех нечетных ошибок
+*/
 
 uint32_t crc32_doHash(uint8_t *buf, uint32_t len)
 {

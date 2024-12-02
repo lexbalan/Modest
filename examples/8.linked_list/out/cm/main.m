@@ -5,12 +5,14 @@ include "libc/stdlib"
 @c_include "stdio.h"
 include "libc/stdio"
 import "list"
+// wrap around linked list for list.List Nat32
 func nat32_list_insert(list: *List, x: Nat32) -> Unit {
 	// alloc memory for Nat32 value
 	let p_nat32 = malloc(sizeof(Nat32))
 	*p_nat32 = x
 	list.append(list, p_nat32)
 }
+// show list conent from first item to last
 func list_print_forward(list: *List) -> Unit {
 	printf("list_print_forward:\n")
 	var pn: *Node = list.first_node_get(list)
@@ -20,6 +22,7 @@ func list_print_forward(list: *List) -> Unit {
 		pn = list.node_next_get(pn)
 	}
 }
+// show list conent from last item to first
 func list_print_backward(list: *List) -> Unit {
 	printf("list_print_backward:\n")
 	var pn: *Node = list.last_node_get(list)

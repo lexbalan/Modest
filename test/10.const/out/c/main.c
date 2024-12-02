@@ -49,6 +49,7 @@ const int8_t carr[6] = _carr;
 }
 #define _lines  {line0, line1, line2, line3}
 const Line lines[4] = _lines;
+// Pythagorean theorem
 
 static float distance(Point a, Point b)
 {

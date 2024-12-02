@@ -12,6 +12,7 @@
 
 
 
+// wrap around linked list for list.List Nat32
 
 static void nat32_list_insert(list_List *list, uint32_t x)
 {
@@ -20,6 +21,7 @@ static void nat32_list_insert(list_List *list, uint32_t x)
 	*p_nat32 = x;
 	list_append((list_List *)list, p_nat32);
 }
+// show list conent from first item to last
 
 static void list_print_forward(list_List *list)
 {
@@ -31,6 +33,7 @@ static void list_print_forward(list_List *list)
 		pn = (list_Node *)list_node_next_get((list_Node *)pn);
 	}
 }
+// show list conent from last item to first
 
 static void list_print_backward(list_List *list)
 {

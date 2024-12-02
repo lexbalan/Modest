@@ -9,6 +9,8 @@
 
 
 #define verbose  true
+// Вынужден добавлять export тк иначе не идет в хедер к структуре
+// Короче, проблема зависимостей тяжело зависла в воздухе
 
 char *fsm_state_no_name(fsm_FSM *fsm, uint32_t state_no)
 {

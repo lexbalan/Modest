@@ -120,6 +120,9 @@ void list_node_insert_right(list_Node *left, list_Node *new_right)
 	new_right->next = (list_Node *)old_right;
 	new_right->prev = (list_Node *)left;
 }
+// get list node by number
+// if number is out of range returns nil
+// if number < 0 - go backward
 
 list_Node *list_node_get(list_List *list, int32_t pos)
 {

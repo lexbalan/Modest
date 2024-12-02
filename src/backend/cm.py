@@ -666,6 +666,7 @@ def print_value(x, ctx=[], need_wrap=False, print_just_id=True):
 	elif k == 'va_start': print_value_va_start(x, ctx)
 	elif k == 'va_end': print_value_va_end(x, ctx)
 	elif k == 'va_copy': print_value_va_copy(x, ctx)
+	elif k == 'undefined': pass
 	else: out("<%s>" % k)
 
 	if need_wrap:

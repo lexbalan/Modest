@@ -38,6 +38,7 @@ const line3 = Line {
 	b = {x = 30, y = 40}
 }
 const lines = [line0, line1, line2, line3]
+// Pythagorean theorem
 func distance(a: Point, b: Point) -> Float {
 	let dx = max_float64(a.x, b.x) - min_float64(a.x, b.x)
 	let dy = max_float64(a.y, b.y) - min_float64(a.y, b.y)

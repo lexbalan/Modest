@@ -20,7 +20,12 @@ const ps = [
 	{x = 2, y = 2}
 ]
 const points = [3]Point ps
+// есть проблема - в C глобальные переменные с модификатором const
+// не могут быть так инициализированы, поскольку points является приведением
+// непонятно существует ли хорошее решение
+//@property("c_prefix", "const")
 var points2: [3]Point = points
+// define function main
 public func main() -> Int {
 	printf("test const\n")
 

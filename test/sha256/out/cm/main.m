@@ -40,7 +40,7 @@ var test1: SHA256_TestCase = SHA256_TestCase {
 var tests: [2]*SHA256_TestCase = [&test0, &test1]
 func doTest(test: *SHA256_TestCase) -> Bool {
 	var test_hash: Hash
-	let msg = *[<undefined>]Word8 &test.input_data
+	let msg = *[]Word8 &test.input_data
 	let msg_len = test.input_data_len
 	sha256.hash(msg, msg_len, &test_hash)
 

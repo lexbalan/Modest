@@ -1321,6 +1321,7 @@ def print_stmt_var(x):
 			out(";")
 			nl_indent(1)
 			memcopy_assign(var_value, init_value)
+			out(";")
 			return
 
 	if not value_is_undefined(init_value):
@@ -2194,7 +2195,7 @@ def memcopy_assign(left, right):
 	out(", sizeof(")
 	common_type = select_common_type(left['type'], right['type'])
 	print_type(common_type, array_as_ptr=False)
-	out("));")
+	out("))")
 
 	"""if zero_rest > 0:
 		nl_indent()
