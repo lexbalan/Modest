@@ -9,14 +9,14 @@ func getarr10() -> [10]Int32 {
 
 
 // receive & returns array by value
-func arrAddToAll(a: [10]Int32, x: Int32) -> [10]Int32 {
-	var b: [10]Int32
+func arraysAdd(a: [10]Int32, b: [10]Int32) -> [10]Int32 {
+	var c: [10]Int32
 	var i = 0
 	while i < 10 {
-		b[i] = a[i] + x
+		c[i] = a[i] + b[i]
 		++i
 	}
-	return b
+	return c
 }
 
 
@@ -27,21 +27,23 @@ public func main() -> Int32 {
 		printf("test1 passed!\n")
 	}
 
-	let b = arrAddToAll(a, 1)
+	let b = [00, 10, 20, 30, 40, 50, 60, 70, 80, 90]
 
-	if b == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] {
+	let c = arraysAdd(a, b)
+
+	if c == [00, 11, 22, 33, 44, 55, 66, 77, 88, 99] {
 		printf("test2 passed!\n")
 	}
 
-	let c = arrAddToAll([0, 10, 20, 30, 40, 50, 60, 70, 80, 90], 5)
+	let d = arraysAdd(a, a)
 
-	if c == [5, 15, 25, 35, 45, 55, 65, 75, 85, 95] {
+	if d == [0, 2, 4, 6, 8, 10, 12, 14, 16, 18] {
 		printf("test3 passed!\n")
 	}
 
 	var i = 0
 	while i < 10 {
-		printf("c[%i] = %i\n", i, c[i])
+		printf("d[%i] = %i\n", i, d[i])
 		++i
 	}
 

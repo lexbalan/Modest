@@ -14,17 +14,19 @@ static void getarr10(int32_t __retval[10])
 	memcpy(__retval, &(int32_t[10]){0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, sizeof(int32_t[10]));
 }
 
-static void arrAddToAll(int32_t __retval[10], int32_t __a[10], int32_t x)
+static void arraysAdd(int32_t __retval[10], int32_t __a[10], int32_t __b[10])
 {
 	int32_t a[10];
 	memcpy(a, __a, sizeof(int32_t[10]));
 	int32_t b[10];
+	memcpy(b, __b, sizeof(int32_t[10]));
+	int32_t c[10];
 	int32_t i = 0;
 	while (i < 10) {
-		b[i] = a[i] + x;
+		c[i] = a[i] + b[i];
 		i = i + 1;
 	}
-	memcpy(__retval, &b, sizeof(int32_t[10]));
+	memcpy(__retval, &c, sizeof(int32_t[10]));
 }
 
 int32_t main()
@@ -36,26 +38,30 @@ int32_t main()
 		printf("test1 passed!\n");
 	}
 
-	int32_t b[10];
-	arrAddToAll(b, a, 1);
+	#define __b  {0, 10, 20, 30, 40, 50, 60, 70, 80, 90}
 
-	if (memcmp(&b, &(int32_t[10]){1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, sizeof(int32_t[10])) == 0) {
+	int32_t c[10];
+	arraysAdd(c, a, (int32_t[10])__b);
+
+	if (memcmp(&c, &(int32_t[10]){0, 11, 22, 33, 44, 55, 66, 77, 88, 99}, sizeof(int32_t[10])) == 0) {
 		printf("test2 passed!\n");
 	}
 
-	int32_t c[10];
-	arrAddToAll(c, (int32_t[10]){0, 10, 20, 30, 40, 50, 60, 70, 80, 90}, 5);
+	int32_t d[10];
+	arraysAdd(d, a, a);
 
-	if (memcmp(&c, &(int32_t[10]){5, 15, 25, 35, 45, 55, 65, 75, 85, 95}, sizeof(int32_t[10])) == 0) {
+	if (memcmp(&d, &(int32_t[10]){0, 2, 4, 6, 8, 10, 12, 14, 16, 18}, sizeof(int32_t[10])) == 0) {
 		printf("test3 passed!\n");
 	}
 
 	int32_t i = 0;
 	while (i < 10) {
-		printf("c[%i] = %i\n", i, c[i]);
+		printf("d[%i] = %i\n", i, d[i]);
 		i = i + 1;
 	}
 
 	return 0;
+
+#undef __b
 }
 
