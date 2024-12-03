@@ -20,7 +20,7 @@ LLVM_TARGET_DATALAYOUT = ""
 # когда первым параметром идет указатель на возвращаемое значение (ABI)
 RET_SIZE_MAX = 16
 def need_sret(func_type):
-	return hlir_type.type_is_array(func_type['to'])
+	return hlir_type.type_is_closed_array(func_type['to'])
 	#return func_type['to']['size'] > RET_SIZE_MAX
 
 
@@ -2010,19 +2010,19 @@ def print_func_paramlist(func, only_types=False, with_attributes=True):
 def print_type_func(t):
 	sret = need_sret(t)
 
-	if hlir_type.type_is_unit(t['to']):
-		out("void")
-	elif hlir_type.type_is_array(t['to']):
+	if hlir_type.type_is_unit(t['to']) or sret:
 		out("void")
 	else:
 		print_type(t['to'])
 
 	out(" (")
+
 	if sret:
 		print_type(t['to'])
 		out("*")
 		if len(t['params']) > 0:
 			out(", ")
+
 	print_list_with(t['params'], lambda f: print_type(f['type']))
 	if t['extra_args']:
 		out(", ...")
@@ -2035,9 +2035,7 @@ def print_func_signature(func):
 	ftype = func['type']
 	to = ftype['to']
 
-	if hlir_type.type_is_unit(to):
-		out("void")
-	elif sret:
+	if hlir_type.type_is_unit(to) or sret:
 		out("void")
 	else:
 		print_type(to)
