@@ -208,39 +208,37 @@ define internal void @getarr10([10 x %Int32]* noalias sret([10 x %Int32]) %0) {
 	ret void
 }
 
-define internal void @arraysAdd([10 x %Int32]* noalias sret([10 x %Int32]) %0, [10 x %Int32]* %__a, [10 x %Int32]* %__b) {
-	%2 = load [10 x %Int32], [10 x %Int32]* %__a
+define internal void @arraysAdd([10 x %Int32]* noalias sret([10 x %Int32]) %0, [10 x %Int32] %__a, [10 x %Int32] %__b) {
 	%a = alloca [10 x %Int32]
-	store [10 x %Int32] %2, [10 x %Int32]* %a
-	%3 = load [10 x %Int32], [10 x %Int32]* %__b
+	store [10 x %Int32] %__a, [10 x %Int32]* %a
 	%b = alloca [10 x %Int32]
-	store [10 x %Int32] %3, [10 x %Int32]* %b
-	%4 = alloca [10 x %Int32], align 4
-	%5 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %5
+	store [10 x %Int32] %__b, [10 x %Int32]* %b
+	%2 = alloca [10 x %Int32], align 4
+	%3 = alloca %Int32, align 4
+	store %Int32 0, %Int32* %3
 	br label %again_1
 again_1:
-	%6 = load %Int32, %Int32* %5
-	%7 = icmp slt %Int32 %6, 10
-	br %Bool %7 , label %body_1, label %break_1
+	%4 = load %Int32, %Int32* %3
+	%5 = icmp slt %Int32 %4, 10
+	br %Bool %5 , label %body_1, label %break_1
 body_1:
-	%8 = load %Int32, %Int32* %5
-	%9 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %4, %Int32 0, %Int32 %8
-	%10 = load %Int32, %Int32* %5
-	%11 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %a, %Int32 0, %Int32 %10
-	%12 = load %Int32, %Int32* %11
-	%13 = load %Int32, %Int32* %5
-	%14 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %b, %Int32 0, %Int32 %13
-	%15 = load %Int32, %Int32* %14
-	%16 = add %Int32 %12, %15
-	store %Int32 %16, %Int32* %9
-	%17 = load %Int32, %Int32* %5
-	%18 = add %Int32 %17, 1
-	store %Int32 %18, %Int32* %5
+	%6 = load %Int32, %Int32* %3
+	%7 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %2, %Int32 0, %Int32 %6
+	%8 = load %Int32, %Int32* %3
+	%9 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %a, %Int32 0, %Int32 %8
+	%10 = load %Int32, %Int32* %9
+	%11 = load %Int32, %Int32* %3
+	%12 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %b, %Int32 0, %Int32 %11
+	%13 = load %Int32, %Int32* %12
+	%14 = add %Int32 %10, %13
+	store %Int32 %14, %Int32* %7
+	%15 = load %Int32, %Int32* %3
+	%16 = add %Int32 %15, 1
+	store %Int32 %16, %Int32* %3
 	br label %again_1
 break_1:
-	%19 = load [10 x %Int32], [10 x %Int32]* %4
-	store [10 x %Int32] %19, [10 x %Int32]* %0
+	%17 = load [10 x %Int32], [10 x %Int32]* %2
+	store [10 x %Int32] %17, [10 x %Int32]* %0
 	ret void
 }
 

@@ -2019,8 +2019,8 @@ def print_func_paramlist(func, only_types=False, with_attributes=True):
 			out(", ")
 
 		print_type(param['type'])
-		if isarr:
-			out("*")
+#		if isarr:
+#			out("*")
 		#method(param)
 		if not only_types:
 			if isarr:
@@ -2169,12 +2169,14 @@ def print_def_func(x):
 			paramId = get_id_str(param)
 
 			# Загружаем параметр (указатель на массив) в "регистр"
-			reg = llvm_operation('load')
-			print_type(ptype)
-			out(", ")
-			print_type(ptype)
-			out("*")
-			out(" %%__%s" % param['id']['str'])
+#			reg = llvm_operation('load')
+#			print_type(ptype)
+#			out(", ")
+#			print_type(ptype)
+#			out("*")
+#			out(" %%__%s" % param['id']['str'])
+
+			reg = '__' + param['id']['str']
 			loadedParam = llvm_value_reg(reg, ptype, None)
 
 			# Выделяем память под массив
