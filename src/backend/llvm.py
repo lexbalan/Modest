@@ -4,7 +4,7 @@ from .common import *
 from error import info, warning, error
 import hlir.type as hlir_type
 from hlir.type import type_print
-from value.value import value_attribute_check, value_print, value_is_undefined, value_is_immediate, value_terminal, value_is_zero
+from value.value import value_attribute_check, value_print, value_is_undefined, value_is_immediate, value_terminal, value_is_zero, value_is_param
 from hlir.type import hlir_type_pointer
 from util import align_bits_up
 import settings
@@ -1065,6 +1065,13 @@ def do_eval_call(v):
 
 
 
+def is_closed_array_param(value):
+	if value_is_param(value):
+		if hlir_type.type_is_closed_array(value['type']):
+			return True
+	return False
+
+
 def do_eval_index(v):
 	if value_is_immediate(v):
 		return do_eval(v['immval'])
@@ -1084,13 +1091,14 @@ def do_eval_index(v):
 
 	# Left is an array
 
-	if not left['is_adr']:
-		# Left is an array placed in 'reg' as value
-		if not value_is_immediate(v['index']):
-			error("expected immediate index value", v['ti'])
-			return llvm_value_zero(v['ti'])
+	if not is_closed_array_param(v['array']):
+		if not left['is_adr']:
+			# Left is an array placed in 'reg' as value
+			if not value_is_immediate(v['index']):
+				error("expected immediate index value", v['ti'])
+				return llvm_value_zero(v['ti'])
 
-		return llvm_extract_item(left, result_type, index['asset'])
+			return llvm_extract_item(left, result_type, index['asset'])
 
 	# Left is a pointer to array in 'reg'
 	return llvm_getelementptr(left, left['type'], (llvm_value_num_zero, index), result_type)
@@ -1992,7 +2000,7 @@ def print_func_paramlist(func, only_types=False, with_attributes=True):
 		print_type(param['type'])
 		#out(' noundef')
 
-	def print_param_w_id(param):
+	def print_param_w_id(param, id):
 		print_type(param['type'])
 		#out(' noundef')
 		out(" %%%s" % get_id_str(param))
@@ -2001,7 +2009,27 @@ def print_func_paramlist(func, only_types=False, with_attributes=True):
 	if only_types:
 		method = print_param_type
 
-	print_list_with(params, lambda param: method(param))
+	#print_list_with(params, lambda param: method(param))
+	i = 0
+	while i < len(params):
+		param = params[i]
+		isarr = hlir_type.type_is_closed_array(param['type'])
+
+		if i > 0:
+			out(", ")
+
+		print_type(param['type'])
+		if isarr:
+			out("*")
+		#method(param)
+		if not only_types:
+			if isarr:
+				out(" %%__%s" % get_id_str(param))
+			else:
+				out(" %%%s" % get_id_str(param))
+
+		i = i + 1
+
 
 	if func['type']['extra_args']:
 		out(", ...")
@@ -2041,12 +2069,6 @@ def print_func_signature(func):
 		print_type(to)
 
 	out(" @%s(" % get_id_str(func))
-	"""if sret:
-		print_type(to)
-		out("*")
-		if len(ftype['params']) > 0:
-			out(", ")"""
-
 	print_func_paramlist(func)
 	out(")")
 
@@ -2111,22 +2133,62 @@ def print_def_func(x):
 	if sret:
 		reg_get() # get %0 reg for retval
 
+	#
+	# Добавляем параметры в локальную таблицу
+	#
 
 	params = ftype['params']
 	for param in params:
 		param_id = get_id_str(param)
 
-		if not hlir_type.type_is_va_list(param['type']):
+		if hlir_type.type_is_va_list(param['type']):
 			# see: p216
-			vv = llvm_value_stk(param_id, param['type'], param)
-			locals_add(param_id, vv)
+			continue
+
+		localObject = llvm_value_stk(param_id, param['type'], param)
+
+		if hlir_type.type_is_closed_array(param['type']):
+			localObject['is_adr'] = True
+
+		locals_add(param_id, localObject)
+
 
 
 	# 0, 1, 2 - params; 3 - entry label, 4 - first free register
 	entry_label = reg_get()  # should be here (!)
 
+
 	out(" {")
 	indent_up()
+
+
+	# for any array parameter print local holder value
+	for param in params:
+		ptype = param['type']
+		if hlir_type.type_is_closed_array(ptype):
+			paramId = get_id_str(param)
+
+			# Загружаем параметр (указатель на массив) в "регистр"
+			reg = llvm_operation('load')
+			print_type(ptype)
+			out(", ")
+			print_type(ptype)
+			out("*")
+			out(" %%__%s" % param['id']['str'])
+			loadedParam = llvm_value_reg(reg, ptype, None)
+
+			# Выделяем память под массив
+			pholder_reg = llvm_operation("alloca", reg=paramId)
+			pholder = llvm_value_stk(pholder_reg, ptype)
+			pholder['is_adr'] = True
+			print_type(ptype)
+
+			# сохраняем переданный по указателю массив в "регистр"
+			# теперь это локальная копия "типа" переданного по значению массива
+			# и далее работать будем только с ней
+			llvm_store(pholder, loadedParam)
+
+
 
 	if len(params) > 0:
 		last_param = params[-1]
@@ -2171,8 +2233,10 @@ def print_def_func(x):
 	if hlir_type.type_eq(ftype['to'], foundation.typeUnit):
 		print_stmt_return({'value': None})
 
+
 	indent_down()
 	lo("}\n")
+
 
 	fctx_pop()
 

@@ -722,23 +722,6 @@ def do_type_func(t, func_id="_"):
 		if param == None:
 			continue
 
-		pt = param['type']
-
-		#if var_args:
-		#	error("VA_List must be last paramter", _param)
-
-		#if hlir_type.type_is_va_list(pt):
-		#	var_args = True
-		#	va_list_id = param['id']
-		#	continue
-
-		#if hlir_type.type_is_array(pt):
-			#info("array as function parameter", _param)
-			#nt = hlir_type.type_copy(pt)
-			#pt['att'].append('wrapped_array_type')
-			#pt['wrapped_id'] = 'struct ' + func_id + '_' + param['id']['str']
-			#param['type'] = pt
-
 		params.append(param)
 
 
@@ -2514,10 +2497,11 @@ def def_func(x, dostmt=True):
 
 		param_value = value_const(param_id, param_type, None, param['ti'])
 		param_value['att'].append('local')
+		param_value['att'].append('param')
 
 		# for C backend only (maybe mv to C?)
-		if hlir_type.type_is_closed_array(param_type):
-			param_value['att'].append('wrapped_array')
+#		if hlir_type.type_is_closed_array(param_type):
+#			param_value['att'].append('wrapped_array')
 
 		ctx_value_add(param_id['str'], param_value)
 		i = i + 1

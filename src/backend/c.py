@@ -1647,7 +1647,7 @@ def print_def_func(x):
 
 
 	# for any array parameter print local holder value
-	for param in func['type']['params']:
+	for param in ftype['params']:
 		if hlir_type.type_is_closed_array(param['type']):
 			nl_indent(1)
 

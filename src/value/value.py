@@ -15,6 +15,8 @@ def value_is_undefined(x):
 def value_is_immediate(x):
 	return x['immediate']
 
+def value_is_param(x):
+	return 'param' in x['att']
 
 # Any immediate value are immutable,
 # but not any immutable value are immediate
