@@ -474,7 +474,7 @@ def print_value_un(v, ctx):
 def ptr2func(ftype):
 	print_type(ftype['to']);
 	out(" (*) ")
-	print_paramlist(ftype['params'], ftype['extra_args'])
+	print_paramlist(ftype)
 
 
 def print_value_call(v, ctx, arrayResult=None):
@@ -1283,9 +1283,9 @@ def print_stmt_return(x):
 	nl_indent(x['nl'])
 
 	global cfunc
-	to = cfunc['type']['to']
-	if hlir_type.type_is_closed_array(to):
-		out("memcpy(__retval, ")
+
+	if isSretFunc(cfunc['type']):
+		out("memcpy(__sret, ")
 		print_value_as_ptr(x['value'])
 		out(", sizeof(")
 		print_type(x['value']['type'], array_as_ptr=False)
@@ -1531,11 +1531,14 @@ def print_stmt_block(s):
 
 
 
-def print_paramlist(params, extra_args=False, retArr=None):
+def print_paramlist(ftype):
+	params = ftype['params']
+	extra_args = ftype['extra_args']
+
 	out("(")
 
-	if retArr != None:
-		print_variable("__retval", retArr)
+	if isSretFunc(ftype):
+		print_variable("__sret", ftype['to'])
 		if len(params) > 0:
 			out(", ")
 
@@ -1556,19 +1559,23 @@ def print_paramlist(params, extra_args=False, retArr=None):
 	return
 
 
+
+# Функция возвращает массив по значению?
+def isSretFunc(ftype):
+	return hlir_type.type_is_closed_array(ftype['to'])
+
+
 def print_func_signature(id_str, ftype, atts):
 	to = ftype['to']
 
-	retArr = hlir_type.type_is_array(to)
-	ra = None
-	if not retArr:
-		print_type(to, space_after=True)
-	else:
-		ra = to
+	sret = isSretFunc(ftype)
+	if sret:
 		out("void ")
+	else:
+		print_type(to, space_after=True)
 
 	out("%s" % id_str)
-	print_paramlist(ftype['params'], extra_args=ftype['extra_args'], retArr=ra)
+	print_paramlist(ftype)
 
 
 
