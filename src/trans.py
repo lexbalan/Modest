@@ -1013,14 +1013,6 @@ def do_value_ref(x):
 
 	vt = hlir_type.hlir_type_pointer(vtype, ti=ti)
 	nv = value_un('ref', v, vt, ti=ti)
-
-	# HOTFIX, BADFIX
-	# считаем указатель на глоб переменную/функцию immediate значением
-	if is_global_value(v):
-		nv['immediate'] = True
-		nv['asset'] = None
-		nv['items'] = []
-
 	return nv
 
 

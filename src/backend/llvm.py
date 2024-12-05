@@ -1249,10 +1249,7 @@ def is_adrptr(x):
 
 def cast_composite_to_composite(to_type, value, ti):
 	#info("cast_composite_to_composite", ti)
-
 	v = do_eval(value)
-
-	out("\n\t; cast_composite_to_composite")
 
 	if is_global_context():
 		#info("GLOBAL", ti)

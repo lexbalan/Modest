@@ -350,7 +350,6 @@ define internal void @f0([30 x %Char8]* noalias sret([30 x %Char8]) %0, [20 x %C
 	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str1 to [0 x i8]*), [20 x %Char8]* %2)
 	; truncate array
 	%5 = alloca [6 x %Char8], align 1
-	; cast_composite_to_composite
 	; JUST
 	; as ptr
 	%6 = bitcast [20 x %Char8]* %x to [6 x %Char8]*
@@ -361,7 +360,6 @@ define internal void @f0([30 x %Char8]* noalias sret([30 x %Char8]) %0, [20 x %C
 	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str2 to [0 x i8]*), [6 x %Char8]* %5)
 	; extend array
 	%10 = alloca [30 x %Char8], align 1
-	; cast_composite_to_composite
 	; JUST
 	; as ptr
 	%11 = bitcast [20 x %Char8]* %x to [30 x %Char8]*
@@ -596,7 +594,6 @@ endif_0:
 	%108 = insertvalue [3 x %Int32] %107, %Int32 30, 2
 	store [3 x %Int32] %108, [3 x %Int32]* %105
 	%109 = alloca [6 x %Int32], align 4
-	; cast_composite_to_composite
 	; JUST
 	; as ptr
 	%110 = bitcast [3 x %Int32]* %105 to [6 x %Int32]*
@@ -660,7 +657,6 @@ endif_1:
 	; -- start vol eval --
 	%147 = zext i3 4 to %Int32
 	; -- end vol eval --
-	; cast_composite_to_composite
 	; JUST
 	; as ptr
 	%148 = bitcast [3 x %Int]* %145 to [4 x %Int32]*
@@ -680,7 +676,6 @@ endif_1:
 	; -- start vol eval --
 	%159 = zext i4 10 to %Int32
 	; -- end vol eval --
-	; cast_composite_to_composite
 	; JUST
 	; as ptr
 	%160 = bitcast [3 x %Int]* %145 to [10 x %Int32]*

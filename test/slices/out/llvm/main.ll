@@ -514,7 +514,6 @@ break_4:
 	%187 = sext %Int8 %186 to %Int32
 	%188 = insertvalue [2 x %Int32] zeroinitializer, %Int32 %185, 0
 	%189 = insertvalue [2 x %Int32] %188, %Int32 %187, 1
-	; cast_composite_to_composite
 	; trunk
 	%190 = alloca [2 x %Int32]
 	store [2 x %Int32] %189, [2 x %Int32]* %190
