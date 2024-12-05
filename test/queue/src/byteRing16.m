@@ -4,7 +4,7 @@
 import "queue"
 
 
-const cap = 16
+public const cap = 16
 
 
 public type Word8Ring16 record {

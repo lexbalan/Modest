@@ -8,11 +8,12 @@
 #include <stdio.h>
 #include "queue.h"
 
+#define byteQueue128_cap  16
 
 
 struct byteQueue128_Word8Queue128 {
 	queue_Queue queue;
-	uint8_t data[cap];
+	uint8_t data[byteQueue128_cap];
 };
 typedef struct byteQueue128_Word8Queue128 byteQueue128_Word8Queue128;
 void byteQueue128_init(byteQueue128_Word8Queue128 *q);
