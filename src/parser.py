@@ -12,6 +12,15 @@ top_level_stoppers = ['type', 'let', 'const', 'var', 'func']
 func_stoppers = ['let', 'var', 'if', 'while', 'return', 'type']
 
 
+def isUpperIdentifierToken(token):
+	# skip _ before letters
+	while token[0] == '_':
+		token = token[1:]
+	if len(token) > 0:
+		return token[0].isupper()
+	return False
+
+
 class Parser:
 
 	def __init__(self):
@@ -232,7 +241,7 @@ class Parser:
 	def check_is_field(self):
 		if self.is_identifier():
 			token = self.gettok()
-			if not token[0].islower():
+			if isUpperIdentifierToken(token):
 				return False
 			if not self.match(':'):
 				return False
@@ -250,7 +259,7 @@ class Parser:
 				self.skip()
 				self.skip()
 			token = self.gettok()
-			if token[0].isupper():
+			if isUpperIdentifierToken(token):
 				return True
 			return token in ['record', 'enum']
 
