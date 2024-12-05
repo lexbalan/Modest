@@ -176,7 +176,7 @@ def print_type_func(t, extra_args=False):
 		i = i + 1
 
 	if extra_args:
-		#out(", va_list: VA_List")
+		#out(", va_list: __VA_List")
 		out(", ...")
 
 	out(') -> ')

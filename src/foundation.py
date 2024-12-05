@@ -38,7 +38,7 @@ typeStr16 = None
 typeStr32 = None
 typeFreePointer = None
 typeNil = None
-typeVA_List = None
+type__VA_List = None
 #typeSizeof = None
 
 
@@ -77,7 +77,7 @@ def init():
 	global typeStr8, typeStr16, typeStr32
 	global typeFreePointer
 	global typeNil
-	global typeVA_List
+	global type__VA_List
 	global typeSizeof
 
 	#from trans import hlir_def_type
@@ -140,7 +140,7 @@ def init():
 	typeStr32['id'] = {'str': 'Str32'}
 
 
-	typeVA_List = {
+	type__VA_List = {
 		'isa': 'type',
 		'kind': 'va_list',
 		'generic': False,

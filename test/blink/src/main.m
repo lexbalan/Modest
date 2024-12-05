@@ -3,7 +3,7 @@ import "libc/stdio"
 
 
 public func print(form: *Str8, ...) {
-	var va: VA_List
+	var va: __VA_List
 	__va_start(va, form)
 
 	let c = __va_arg(va, Char32)

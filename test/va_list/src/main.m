@@ -9,8 +9,8 @@ include "libc/unistd"
 
 @unused_result
 func my_printf(format: *Str8, ...) -> SSizeT {
-	var va: VA_List
-	var va2: VA_List
+	var va: __VA_List
+	var va2: __VA_List
 
 	__va_copy(va2, va)
 

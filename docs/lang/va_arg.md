@@ -1,4 +1,4 @@
-# VA_List
+# __VA_List
 
 
 ## Examples
@@ -9,7 +9,7 @@ import "libc/unistd"
 
 @unused_result
 func print(format: *Str8, ...) -> SSizeT {
-	var va: VA_List
+	var va: __VA_List
 
 	__va_start(va, format)
 

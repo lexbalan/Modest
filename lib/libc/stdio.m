@@ -80,11 +80,11 @@ public func sscanf(buf: *ConstCharStr, format: *ConstCharStr, ...) -> Int
 public func sprintf(buf: *CharStr, format: *ConstCharStr, ...) -> Int
 
 
-public func vfprintf(f: *File, format: *ConstCharStr, args: VA_List) -> Int
-public func vprintf(format: *ConstCharStr, args: VA_List) -> Int
-public func vsprintf(str: *CharStr, format: *ConstCharStr, args: VA_List) -> Int
-public func vsnprintf(str: *CharStr, n: SizeT, format: *ConstCharStr, args: VA_List) -> Int
-public func __vsnprintf_chk (dest:*CharStr, len:SizeT, flags:Int, dstlen:SizeT, format:*ConstCharStr, arg: VA_List) -> Int
+public func vfprintf(f: *File, format: *ConstCharStr, args: __VA_List) -> Int
+public func vprintf(format: *ConstCharStr, args: __VA_List) -> Int
+public func vsprintf(str: *CharStr, format: *ConstCharStr, args: __VA_List) -> Int
+public func vsnprintf(str: *CharStr, n: SizeT, format: *ConstCharStr, args: __VA_List) -> Int
+public func __vsnprintf_chk (dest:*CharStr, len:SizeT, flags:Int, dstlen:SizeT, format:*ConstCharStr, arg: __VA_List) -> Int
 
 
 public func fgetc(f: *File) -> Int

@@ -2199,7 +2199,7 @@ def print_def_func(x):
 		last_param = params[-1]
 		if hlir_type.type_is_va_list(last_param['type']):
 			# :p216
-			# В LLVM va_arg принимает параметром указатель на укзаатель на VA_List!
+			# В LLVM va_arg принимает параметром указатель на укзаатель на __VA_List!
 			# Но тк мы получаем просто указатель на va_list,
 			# создадим локальную переменную сохраним в нее его,
 			# и будем передавать va_arg указатель на эту локальную переменную
@@ -2590,7 +2590,7 @@ def run(module, outname):
 	lo("%Str8 = type [0 x %Char8]")
 	lo("%Str16 = type [0 x %Char16]")
 	lo("%Str32 = type [0 x %Char32]")
-	lo("%VA_List = type i8*")
+	lo("%__VA_List = type i8*")
 
 	if 'use_va_arg' in module['att']:
 		lo("declare void @llvm.va_start(i8*)")

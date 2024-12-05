@@ -430,7 +430,7 @@ def init():
 
 	root_symtab.type_add('Ptr', foundation.typeFreePointer)
 
-	root_symtab.type_add('VA_List', foundation.typeVA_List)
+	root_symtab.type_add('__VA_List', foundation.type__VA_List)
 
 
 
