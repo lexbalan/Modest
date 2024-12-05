@@ -73,11 +73,7 @@ int main()
 
 	char em[30];
 	f0(em, "Hello World!");
-	//printf("em = %s\n", &em)
-	//let em = f0("Hello World!")
-
-	//var em = f0("Hello World!")
-	//printf("em = %s\n", &em)
+	printf("em = %s\n", (char *)&em);
 
 	int32_t i = 0;
 	while (i < 10) {
