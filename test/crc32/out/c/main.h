@@ -4,13 +4,9 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-
 #include <stdio.h>
 #include "./crc32.h"
 #include <stdio.h>
-
-#include <stdio.h>
-
 #include "./crc32.h"
 
 

@@ -4,18 +4,14 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-
 #include <time.h>
 #include <stdio.h>
 #include <stdio.h>
 #include "./delay.h"
 #include <stdio.h>
-
-#include <stdio.h>
-
-
 #include "fsm.h"
 #include "./delay.h"
+
 
 int main();
 

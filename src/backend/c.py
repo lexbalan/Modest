@@ -1871,15 +1871,15 @@ def print_def_const(x):
 
 
 def print_include(x):
-	inc(x['c_name'], local=x['local'])
+	include(x['c_name'], local=x['local'])
 
 
-def inc(string, local=True):
+def include(string, local=True):
 	if local:
 		include_text = "#include \"%s\"" % string
 	else:
 		include_text = "#include <%s>" % string
-	out(include_text)
+	out(include_text + '\n')
 
 
 
@@ -1914,31 +1914,26 @@ def print_comment_line(x):
 
 
 def cdirectives(module):
-
-	#print("CDIRS FOR %s" % module['id'])
-
 	for im in module['imports']:
 		imported_module = module['imports'][im]
 
 		for obj in imported_module['defs']:
 			if obj['isa'] == 'directive':
 				if obj['kind'] == 'c_include':
-					newline()
 					print_include(obj)
-
 
 	for obj in module['defs']:
 		if obj['isa'] == 'directive':
 			if obj['kind'] == 'c_include':
-				newline()
 				print_include(obj)
 
+	"""
 	for inc in module['included_modules']:
 		for obj in inc['defs']:
 			if obj['isa'] == 'directive':
 				if obj['kind'] == 'c_include':
-					newline()
 					print_include(obj)
+	"""
 
 
 
@@ -1992,21 +1987,19 @@ def print_header(module, outname):
 	out("#ifndef %s\n" % guardsymbol)
 	out("#define %s\n" % guardsymbol)
 	newline()
-	out("#include <stdint.h>\n")
-	out("#include <stdbool.h>\n")
-	#out("#include <string.h>\n")
+	include("stdint.h", local=False)
+	include("stdbool.h", local=False)
+	#include("string.h", local=False)
 	cdirectives(module)
 
 	# print directives (only for header)
 	for obj in module['defs']:
 		if obj['isa'] == 'directive':
 			if obj['kind'] == 'c_include':
-				newline()
 				print_include(obj)
 			elif obj['kind'] == 'import':
-				newline()
 				if not 'do_not_include' in obj['import_module']['att']:
-					inc(obj['str'] + '.h', local=True)
+					include(obj['str'] + '.h', local=True)
 
 
 	newline()
@@ -2071,15 +2064,15 @@ def print_cfile(module, _outname):
 	guardsymbol = ''
 
 	newline()
-	out("#include <stdint.h>\n")
-	out("#include <stdbool.h>\n")
-	out("#include <string.h>\n")
+	include("stdint.h", local=False)
+	include("stdbool.h", local=False)
+	include("string.h", local=False)
 
 	if 'use_va_arg' in module['att']:
-		out("#include <stdarg.h>")
+		include("stdarg.h", local=False)
 
 	newline()
-	out("#include \"%s.h\"\n" % module['id'])
+	include("%s.h" % module['id'])
 
 	if 'use_lengthof' in module['att']:
 		newline()

@@ -4,16 +4,12 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-
 #include <string.h>
 #include <stdio.h>
 #include "./sha256.h"
 #include <stdio.h>
-
-#include <stdio.h>
-
-
 #include "./sha256.h"
+
 
 int main();
 

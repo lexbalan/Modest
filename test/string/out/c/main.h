@@ -4,7 +4,6 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-
 #include "./utf.h"
 #include "./console.h"
 #include <unistd.h>
@@ -13,12 +12,9 @@
 #include "./utf.h"
 #include "./console.h"
 #include <stdio.h>
-#include <stdio.h>
 #include "./utf.h"
 #include "./console.h"
-
 #include <stdio.h>
-
 
 
 int main();
