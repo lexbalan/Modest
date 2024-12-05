@@ -1303,17 +1303,31 @@ def print_stmt_return(x):
 
 
 def print_stmt_var(x):
-	init_value = x['init_value']
 	var_value = x['var_value']
+	init_value = x['init_value']
 
-	if DONT_PRINT_UNUSED:
-		if init_value != None:
-			if var_value['usecnt'] == 0:
-				if init_value['kind'] != 'call':
-					return
+	#if DONT_PRINT_UNUSED:
+	#	if init_value != None:
+	#		if var_value['usecnt'] == 0:
+	#			if init_value['kind'] != 'call':
+	#				return
 
 	nl_indent(x['nl'])
 	print_variable(get_id_str(var_value), var_value['type'])
+
+	v = var_value
+	iv = init_value
+	# если инициализирующее значение - это
+	# литерал массива включающий в себя переменные
+	# то печатаем это иначе (w/ memcpy)
+	if hlir_type.type_is_array(iv['type']):
+		runtimeLiteral = iv['kind'] == 'literal' and not value_is_immediate(iv)
+		if not runtimeLiteral:
+			out(";")
+			nl_indent()
+			do_assign(v, iv)
+			return
+
 
 	if hlir_type.type_is_array(var_value['type']):
 		if not value_is_immediate(init_value):
@@ -1362,14 +1376,14 @@ def print_stmt_let(x):
 	v = x['value']
 	iv = x['init_value']
 
-	if DONT_PRINT_UNUSED:
-		if v['usecnt'] == 0:
-			if iv['kind'] != 'call':
-				return
+	#if DONT_PRINT_UNUSED:
+	#	if v['usecnt'] == 0:
+	#		if iv['kind'] != 'call':
+	#			return
 
 	nl_indent(x['nl'])
 
-	# print constant as macro
+	# print generic constant as C macro
 	if value_is_generic_immediate(v):
 		id_str = get_id_str(v)
 		# если точный тип константы неизвестен - печатаем ее как макро
@@ -1381,8 +1395,8 @@ def print_stmt_let(x):
 	# print constant as 'variable'
 	# литерал массива включающий в себя переменные печатаем отдельно
 	if hlir_type.type_is_array(iv['type']):
-		ee = iv['kind'] == 'literal' and not value_is_immediate(iv)
-		if not ee:
+		runtimeLiteral = iv['kind'] == 'literal' and not value_is_immediate(iv)
+		if not runtimeLiteral:
 			print_variable(get_id_str(x), v['type'])
 			out(";")
 			nl_indent()
@@ -1795,6 +1809,10 @@ def print_variable(id_str, typ, as_const=False, init_value=None, prefix=''):
 
 def print_decl_var(x):
 	print_def_var(x, isdecl=True)
+
+
+
+
 
 def print_def_var(x, isdecl=False):
 	newline(n=x['nl'])
@@ -2224,7 +2242,7 @@ def memzero_sizeof(left):
 	print_value_as_ptr(left)
 	out(", 0, sizeof(")
 	print_type(left['type'], array_as_ptr=False)
-	out("));")
+	out("))")
 
 
 def memcmp_eq(left, right, op='eq'):

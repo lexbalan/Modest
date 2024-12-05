@@ -111,6 +111,13 @@ def value_integer_cons(t, v, method, ti):
 	if value_is_immediate(v):
 		_check_width(v['type'], t, method, ti)
 
+		if v['asset'] == None:
+			# It's the special situation when immediate value don't contained 'asset'
+			# let adr = unsafe Nat64 &c
+			# Deref result is immediate value but it unknown on translation stage (!)
+			# And we handle this as runtime cons
+			return value_cons_node(t, v, method, ti=ti)
+
 		if not t['signed']:
 			if v['asset'] < 0:
 				return None

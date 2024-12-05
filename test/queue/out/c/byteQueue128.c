@@ -7,12 +7,12 @@
 #include "byteQueue128.h"
 
 
-#define byteQueue128_cap  16
+#define cap  16
 
 void byteQueue128_init(byteQueue128_Word8Queue128 *q)
 {
-	queue_init((queue_Queue *)&q->queue, byteQueue128_cap);
-	memset(&q->data, 0, sizeof(uint8_t[byteQueue128_cap]));
+	queue_init((queue_Queue *)&q->queue, cap);
+	memset(&q->data, 0, sizeof(uint8_t[cap]));;
 }
 
 uint32_t byteQueue128_capacity(byteQueue128_Word8Queue128 *q)

@@ -1,17 +1,12 @@
-// test/sizeof/src/main.cm
+// ./out/c/main.c
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 
-#include <stdio.h>
+#include "main.h"
 
-typedef struct Point Point;
-typedef struct Mixed1 Mixed1;
-typedef struct Mixed2 Mixed2;
-typedef struct Mixed3 Mixed3;
-typedef struct Mixed4 Mixed4;
-typedef struct X X;
+
 
 
 
@@ -20,12 +15,14 @@ struct Point {
 	uint32_t x;
 	uint32_t y;
 };
+typedef struct Point Point;
 
 struct Mixed1 {
 	char c;
 	int32_t i;
 	double f;
 };
+typedef struct Mixed1 Mixed1;
 
 struct Mixed2 {
 	int32_t i;
@@ -34,6 +31,7 @@ struct Mixed2 {
 	char c2[3];
 	Mixed1 m;
 };
+typedef struct Mixed2 Mixed2;
 
 struct Mixed3 {
 	char c;
@@ -41,6 +39,7 @@ struct Mixed3 {
 	double f;
 	char c2[9];
 };
+typedef struct Mixed3 Mixed3;
 
 struct Mixed4 {
 	Mixed2 s;
@@ -52,8 +51,7 @@ struct Mixed4 {
 	Point p[3];
 	Mixed3 s2;
 };
-
-
+typedef struct Mixed4 Mixed4;
 //var s: Mixed2
 static char c;
 static int32_t i;
@@ -70,7 +68,7 @@ struct X {
 	Point p[3];
 	bool g;
 };
-
+typedef struct X X;
 static X x;
 
 int main()
@@ -86,12 +84,12 @@ int main()
 	printf("off(g) = %llu\n", (uint64_t)&g - start_adr);
 
 	// дженерики в с явно не приводятся, но нектороые нужно!
-	printf("offsetof(x.c) = %llu\n", (uint64_t)__offsetof(X, c));
-	printf("offsetof(x.i) = %llu\n", (uint64_t)__offsetof(X, i));
-	printf("offsetof(x.f) = %llu\n", (uint64_t)__offsetof(X, f));
-	printf("offsetof(x.i2) = %llu\n", (uint64_t)__offsetof(X, i2));
-	printf("offsetof(x.p) = %llu\n", (uint64_t)__offsetof(X, p));
-	printf("offsetof(x.g) = %llu\n", (uint64_t)__offsetof(X, g));
+	//	printf("offsetof(x.c) = %llu\n", Nat64 offsetof(X.c))
+	//	printf("offsetof(x.i) = %llu\n", Nat64 offsetof(X.i))
+	//	printf("offsetof(x.f) = %llu\n", Nat64 offsetof(X.f))
+	//	printf("offsetof(x.i2) = %llu\n", Nat64 offsetof(X.i2))
+	//	printf("offsetof(x.p) = %llu\n", Nat64 offsetof(X.p))
+	//	printf("offsetof(x.g) = %llu\n", Nat64 offsetof(X.g))
 
 
 	// sizeof(void) in C  == 1
@@ -147,13 +145,12 @@ int main()
 	printf("> alignof([3]Point) = %llu\n", (uint64_t)__alignof(Point[3]));
 
 
-
 	// record size
 	printf("sizeof(Point) = %llu\n", (uint64_t)sizeof(Point));
 	printf("alignof(Point) = %llu\n", (uint64_t)__alignof(Point));
 
-	printf("offsetof(Point.x) = %llu\n", (uint64_t)__offsetof(Point, x));
-	printf("offsetof(Point.y) = %llu\n", (uint64_t)__offsetof(Point, y));
+	//	printf("offsetof(Point.x) = %llu\n", Nat64 offsetof(Point.x))
+	//	printf("offsetof(Point.y) = %llu\n", Nat64 offsetof(Point.y))
 
 
 	printf("sizeof(Mixed1) = %llu\n", (uint64_t)sizeof(Mixed1));
@@ -163,11 +160,11 @@ int main()
 	printf("alignof(Mixed2) = %llu\n", (uint64_t)__alignof(Mixed2));
 
 
-	printf("offsetof(Mixed2.i) = %llu\n", (uint64_t)__offsetof(Mixed2, i));
-	printf("offsetof(Mixed2.c) = %llu\n", (uint64_t)__offsetof(Mixed2, c));
-	printf("offsetof(Mixed2.f) = %llu\n", (uint64_t)__offsetof(Mixed2, f));
-	printf("offsetof(Mixed2.c2) = %llu\n", (uint64_t)__offsetof(Mixed2, c2));
-	printf("offsetof(Mixed2.m) = %llu\n", (uint64_t)__offsetof(Mixed2, m));
+	//	printf("offsetof(Mixed2.i) = %llu\n", Nat64 offsetof(Mixed2.i))
+	//	printf("offsetof(Mixed2.c) = %llu\n", Nat64 offsetof(Mixed2.c))
+	//	printf("offsetof(Mixed2.f) = %llu\n", Nat64 offsetof(Mixed2.f))
+	//	printf("offsetof(Mixed2.c2) = %llu\n", Nat64 offsetof(Mixed2.c2))
+	//	printf("offsetof(Mixed2.m) = %llu\n", Nat64 offsetof(Mixed2.m))
 
 
 	printf("sizeof(Mixed3) = %llu\n", (uint64_t)sizeof(Mixed3));
@@ -176,14 +173,14 @@ int main()
 	printf("sizeof(Mixed4) = %llu\n", (uint64_t)sizeof(Mixed4));
 	printf("alignof(Mixed4) = %llu\n", (uint64_t)__alignof(Mixed4));
 
-	printf("offsetof(Mixed4.s) = %llu\n", (uint64_t)__offsetof(Mixed4, s));
-	printf("offsetof(Mixed4.c) = %llu\n", (uint64_t)__offsetof(Mixed4, c));
-	printf("offsetof(Mixed4.i) = %llu\n", (uint64_t)__offsetof(Mixed4, i));
-	printf("offsetof(Mixed4.f) = %llu\n", (uint64_t)__offsetof(Mixed4, f));
-	printf("offsetof(Mixed4.c2) = %llu\n", (uint64_t)__offsetof(Mixed4, c2));
-	printf("offsetof(Mixed4.i2) = %llu\n", (uint64_t)__offsetof(Mixed4, i2));
-	printf("offsetof(Mixed4.p) = %llu\n", (uint64_t)__offsetof(Mixed4, p));
-	printf("offsetof(Mixed4.s2) = %llu\n", (uint64_t)__offsetof(Mixed4, s2));
+	//	printf("offsetof(Mixed4.s) = %llu\n", Nat64 offsetof(Mixed4.s))
+	//	printf("offsetof(Mixed4.c) = %llu\n", Nat64 offsetof(Mixed4.c))
+	//	printf("offsetof(Mixed4.i) = %llu\n", Nat64 offsetof(Mixed4.i))
+	//	printf("offsetof(Mixed4.f) = %llu\n", Nat64 offsetof(Mixed4.f))
+	//	printf("offsetof(Mixed4.c2) = %llu\n", Nat64 offsetof(Mixed4.c2))
+	//	printf("offsetof(Mixed4.i2) = %llu\n", Nat64 offsetof(Mixed4.i2))
+	//	printf("offsetof(Mixed4.p) = %llu\n", Nat64 offsetof(Mixed4.p))
+	//	printf("offsetof(Mixed4.s2) = %llu\n", Nat64 offsetof(Mixed4.s2))
 
 	return 0;
 }

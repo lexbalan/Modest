@@ -1331,8 +1331,11 @@ def do_eval_cons(x):
 
 
 	if value_is_immediate(x['value']):
-		if not hlir_type.type_is_pointer(to_type):
-			return do_eval_literal(x)
+		# В случае Nat32 &x у нас занчение immediate но нет asset тк это поздний imm
+		if 'asset' in x:
+			if not hlir_type.type_is_pointer(to_type):
+				#info("???", x['ti'])
+				return do_eval_literal(x)
 
 
 	value = x['value']

@@ -28,7 +28,7 @@ static bool send_file(FILE *fp, int sockfd)
 		if (send(sockfd, (char *)&data, (size_t)sizeof(char[bufSize]), 0) == -1) {
 			return false;
 		}
-		memset(&data, 0, sizeof(char[bufSize]));;
+		memset(&data, 0, sizeof(char[bufSize]));
 	}
 
 	return true;

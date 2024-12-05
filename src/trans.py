@@ -2000,7 +2000,7 @@ def do_stmt_var(x):
 		return hlir_stmt_bad(x)
 
 	var_value = add_local_var(var_id, t, var_id['ti'])
-	return hlir_stmt_def_var(var_value, v, ti=x['ti'])
+	return hlir_stmt_def_var(var_id, var_value, v, ti=x['ti'])
 
 
 
@@ -2049,7 +2049,7 @@ def do_stmt_let(x):
 
 	ctx_value_add(id['str'], const_value)
 
-	return hlir_stmt_let(id, const_value, v, ti=x['ti'])
+	return hlir_stmt_def_const(id, const_value, v, ti=x['ti'])
 
 
 

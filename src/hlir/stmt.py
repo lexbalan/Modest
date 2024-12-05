@@ -27,10 +27,11 @@ def hlir_stmt_block(stmts, ti=None, end_nl=1):
 	}
 
 
-def hlir_stmt_def_var(var_value, init_value=None, ti=None):
+def hlir_stmt_def_var(id, var_value, init_value=None, ti=None):
 	return {
 		'isa': 'stmt',
 		'kind': 'var',
+		'id': id,
 		'var_value': var_value,
 		'init_value': init_value,
 		'att': [],
@@ -39,7 +40,7 @@ def hlir_stmt_def_var(var_value, init_value=None, ti=None):
 	}
 
 
-def hlir_stmt_let(id, new_value, init_value, ti=None):
+def hlir_stmt_def_const(id, new_value, init_value, ti=None):
 	return {
 		'isa': 'stmt',
 		'kind': 'let',

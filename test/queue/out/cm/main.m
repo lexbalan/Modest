@@ -23,6 +23,7 @@ func padd(n: Int) -> Unit {
 		ii = ii + 1
 	}
 }
+// выгребаем все и печатаем в консоль
 func fetch(n: Int) -> Unit {
 	var i: Int32 = 0
 	while i < n {

@@ -4,9 +4,13 @@ include "libc/ctypes64"
 include "libc/stdio"
 @c_include "math.h"
 include "libc/math"
+//@attribute("c_no_print")
+//import "misc/minmax"
+//$pragma c_include "./minmax.h"
 const constantArray = [1, 2, 3, 4, 5] + [6, 7, 8, 9, 10]
 var globalArray: [10]Int32 = constantArray
 var arrayFromString: [3]Char8 = "abc"
+//var arrayOfChars = [Char8 "a", 'b', 'c']
 func f0(x: [20]Char8) -> [30]Char8 {
 	var local_copy_of_x: [20]Char8 = x
 	printf("f0(\"%s\")\n", &local_copy_of_x)
@@ -37,6 +41,7 @@ func test() -> Unit {
 	var i: Int32 = 0
 	while i < lengthof(yy) {
 		let y = yy[i]
+		printf("yy[%i] = %i\n", i, Int32 y)
 		i = i + 1
 	}
 }
@@ -44,7 +49,11 @@ public func main() -> Int {
 	// generic array [4]Char8 will be implicit casted to [10]Char8
 
 	var em: [30]Char8 = f0("Hello World!")
-	printf("em = %s\n", &em)
+	//printf("em = %s\n", &em)
+	//let em = f0("Hello World!")
+
+	//var em = f0("Hello World!")
+	//printf("em = %s\n", &em)
 
 	var i: Int32 = 0
 	while i < 10 {
@@ -66,7 +75,7 @@ public func main() -> Int {
 
 	printf("------------------------------------\n")
 
-	var globalArrayPtr: *[<undefined>]Int32
+	var globalArrayPtr: *[]Int32
 	globalArrayPtr = &globalArray
 
 	i = 0
@@ -78,7 +87,7 @@ public func main() -> Int {
 
 	printf("------------------------------------\n")
 
-	var localArrayPtr: *[<undefined>]Int32
+	var localArrayPtr: *[]Int32
 	localArrayPtr = &localArray
 
 	i = 0

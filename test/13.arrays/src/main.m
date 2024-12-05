@@ -53,15 +53,21 @@ func test() {
 	var i = 0
 	while i < lengthof(yy) {
 		let y = yy[i]
+		printf("yy[%i] = %i\n", i, Int32 y)
 		++i
 	}
 }
+
 
 public func main() -> Int {
 	// generic array [4]Char8 will be implicit casted to [10]Char8
 
 	var em = f0("Hello World!")
-	printf("em = %s\n", &em)
+	//printf("em = %s\n", &em)
+	//let em = f0("Hello World!")
+
+	//var em = f0("Hello World!")
+	//printf("em = %s\n", &em)
 
 	var i = 0
 	while i < 10 {

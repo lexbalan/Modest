@@ -32,6 +32,7 @@ static void padd(int n)
 		ii = ii + 1;
 	}
 }
+// выгребаем все и печатаем в консоль
 
 static void fetch(int n)
 {

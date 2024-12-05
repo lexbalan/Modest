@@ -73,19 +73,32 @@ static bool test_generic_integer()
 	#define __one  1
 
 	// result of such expressions also have generic type
+	#define __two  (1 + __one)
 
 	// GenericInteger value can be implicitly casted to any Integer type
+	int32_t a = __one;
+	uint64_t b = __one;
 
 	// to Float
+	float f = (float)__one;
+	double g = (double)__one;
 
 	// and to Word8
+	uint8_t x = __one;
 
 
 	// explicit cast GenericInteger value
 
+	char c = (char)__one;
+	uint16_t d = (uint16_t)__one;
+	uint32_t e = (uint32_t)__one;
+
+	bool k = (bool)__one;
+
 	return true;
 
 #undef __one
+#undef __two
 }
 
 static bool test_generic_float()
@@ -96,8 +109,11 @@ static bool test_generic_float()
 	// value with GenericFloat type
 	// can be implicit casted to any Float type
 	// (in this case value may lose precision)
+	float f = __pi;
+	double g = __pi;
 
 	// explicit cast GenericFloat value to Int32
+	int32_t x = (int32_t)__pi;
 
 	return true;
 
@@ -112,8 +128,12 @@ static bool test_generic_char()
 
 	// value with GenericChar type
 	// can be implicit casted to any Char type
+	char b = 'A';
+	uint16_t c = u'A';
+	uint32_t d = U'A';
 
 	// explicit cast GenericChar value to Int32
+	int32_t char_code = (int32_t)U'A';
 
 	return true;
 
@@ -153,7 +173,8 @@ static bool test_generic_array()
 	}
 
 	// explicit cast Generic([4]GenericInteger) value to [10]Int32
-	int32_t d[10] = (int32_t[10])__a;
+	int32_t d[10];
+	memcpy(&d, &(int32_t[10])__a, sizeof(int32_t[10]));
 
 	if (memcmp(&d, &(int32_t[10]){0, 1, 2, 3, 0}, sizeof(int32_t[10])) != 0) {
 		printf("d != [0, 1, 2, 3, 0, 0, 0, 0, 0, 0]\n");

@@ -35,6 +35,7 @@ bool queue_isFull(queue_Queue *q)
 {
 	return q->size == q->capacity;
 }
+// you must check isFull(queue) before call 'getPutPosition'
 
 
 static inline uint32_t next(uint32_t capacity, uint32_t x);
@@ -48,6 +49,7 @@ uint32_t queue_getPutPosition(queue_Queue *q)
 	}
 	return pos;
 }
+// you must check isEmpty(queue) before call 'getGetPosition'
 
 uint32_t queue_getGetPosition(queue_Queue *q)
 {
