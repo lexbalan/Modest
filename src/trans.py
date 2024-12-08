@@ -2241,11 +2241,7 @@ def def_type(x):
 	global ctype
 
 	id = x['id']
-	#print("def_type: %s" % id['str'])
-
-	# TODO: move this checking to parser!
-	#if id['str'][0].islower():
-	#	error("type id must starts with big letter", id['ti'])
+	log("def_type: %s" % id['str'])
 
 	old_ctype = ctype
 
@@ -2257,8 +2253,6 @@ def def_type(x):
 		return None
 
 	ty = do_type(x['type'])
-
-
 
 	if hlir_type.type_is_bad(ty):
 		ctype = old_ctype
