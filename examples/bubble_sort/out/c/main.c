@@ -40,7 +40,6 @@ static void bubble_sort32(int32_t *array, int32_t len)
 
 
 static void print_array(int32_t *array, int32_t len);
-
 int32_t main()
 {
 	//fill_array(&array, lengthof(array))
@@ -70,7 +69,6 @@ static void print_array(int32_t *array, int32_t len)
 
 
 static int32_t get_number(int32_t min, int32_t max);
-
 static void fill_array(int32_t *array, int32_t len)
 {
 	#define __min  (-1000)

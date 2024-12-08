@@ -194,112 +194,95 @@ declare void @perror(%ConstCharStr* %str)
 @str5 = private constant [10 x i8] [i8 97, i8 103, i8 101, i8 32, i8 61, i8 32, i8 37, i8 100, i8 10, i8 0]
 ; -- endstrings --
 
-%main_Object = type {
+%Object = type {
 	[32 x %Char8],
 	[32 x %Char8],
 	%Int32
 };
 
 
-define internal void @memcopy(i8* %dst, i8* %src, %Int32 %len) {
-	; not worked now!
-	;([len]Word8 dst) = ([len]Word8 src)
-	ret void
-}
-
-
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*))
-	%2 = alloca %main_Object, align 4
-	%3 = alloca %main_Object, align 4
-	; -- STMT ASSIGN ARRAY --
-	%4 = getelementptr inbounds %main_Object, %main_Object* %2, %Int32 0, %Int32 0
-	; -- start vol eval --
-	%5 = zext i6 32 to %Int32
-	; -- end vol eval --
-	%6 = insertvalue [32 x %Char8] zeroinitializer, %Char8 74, 0
-	%7 = insertvalue [32 x %Char8] %6, %Char8 111, 1
-	%8 = insertvalue [32 x %Char8] %7, %Char8 104, 2
-	%9 = insertvalue [32 x %Char8] %8, %Char8 110, 3
-	%10 = insertvalue [32 x %Char8] %9, %Char8 0, 4
-	%11 = insertvalue [32 x %Char8] %10, %Char8 0, 5
-	%12 = insertvalue [32 x %Char8] %11, %Char8 0, 6
-	%13 = insertvalue [32 x %Char8] %12, %Char8 0, 7
-	%14 = insertvalue [32 x %Char8] %13, %Char8 0, 8
-	%15 = insertvalue [32 x %Char8] %14, %Char8 0, 9
-	%16 = insertvalue [32 x %Char8] %15, %Char8 0, 10
-	%17 = insertvalue [32 x %Char8] %16, %Char8 0, 11
-	%18 = insertvalue [32 x %Char8] %17, %Char8 0, 12
-	%19 = insertvalue [32 x %Char8] %18, %Char8 0, 13
-	%20 = insertvalue [32 x %Char8] %19, %Char8 0, 14
-	%21 = insertvalue [32 x %Char8] %20, %Char8 0, 15
-	%22 = insertvalue [32 x %Char8] %21, %Char8 0, 16
-	%23 = insertvalue [32 x %Char8] %22, %Char8 0, 17
-	%24 = insertvalue [32 x %Char8] %23, %Char8 0, 18
-	%25 = insertvalue [32 x %Char8] %24, %Char8 0, 19
-	%26 = insertvalue [32 x %Char8] %25, %Char8 0, 20
-	%27 = insertvalue [32 x %Char8] %26, %Char8 0, 21
-	%28 = insertvalue [32 x %Char8] %27, %Char8 0, 22
-	%29 = insertvalue [32 x %Char8] %28, %Char8 0, 23
-	%30 = insertvalue [32 x %Char8] %29, %Char8 0, 24
-	%31 = insertvalue [32 x %Char8] %30, %Char8 0, 25
-	%32 = insertvalue [32 x %Char8] %31, %Char8 0, 26
-	%33 = insertvalue [32 x %Char8] %32, %Char8 0, 27
-	%34 = insertvalue [32 x %Char8] %33, %Char8 0, 28
-	%35 = insertvalue [32 x %Char8] %34, %Char8 0, 29
-	%36 = insertvalue [32 x %Char8] %35, %Char8 0, 30
-	%37 = insertvalue [32 x %Char8] %36, %Char8 0, 31
-	store [32 x %Char8] %37, [32 x %Char8]* %4
-	; -- STMT ASSIGN ARRAY --
-	%38 = getelementptr inbounds %main_Object, %main_Object* %2, %Int32 0, %Int32 1
-	; -- start vol eval --
-	%39 = zext i6 32 to %Int32
-	; -- end vol eval --
-	%40 = insertvalue [32 x %Char8] zeroinitializer, %Char8 68, 0
-	%41 = insertvalue [32 x %Char8] %40, %Char8 111, 1
-	%42 = insertvalue [32 x %Char8] %41, %Char8 101, 2
-	%43 = insertvalue [32 x %Char8] %42, %Char8 0, 3
-	%44 = insertvalue [32 x %Char8] %43, %Char8 0, 4
-	%45 = insertvalue [32 x %Char8] %44, %Char8 0, 5
-	%46 = insertvalue [32 x %Char8] %45, %Char8 0, 6
-	%47 = insertvalue [32 x %Char8] %46, %Char8 0, 7
-	%48 = insertvalue [32 x %Char8] %47, %Char8 0, 8
-	%49 = insertvalue [32 x %Char8] %48, %Char8 0, 9
-	%50 = insertvalue [32 x %Char8] %49, %Char8 0, 10
-	%51 = insertvalue [32 x %Char8] %50, %Char8 0, 11
-	%52 = insertvalue [32 x %Char8] %51, %Char8 0, 12
-	%53 = insertvalue [32 x %Char8] %52, %Char8 0, 13
-	%54 = insertvalue [32 x %Char8] %53, %Char8 0, 14
-	%55 = insertvalue [32 x %Char8] %54, %Char8 0, 15
-	%56 = insertvalue [32 x %Char8] %55, %Char8 0, 16
-	%57 = insertvalue [32 x %Char8] %56, %Char8 0, 17
-	%58 = insertvalue [32 x %Char8] %57, %Char8 0, 18
-	%59 = insertvalue [32 x %Char8] %58, %Char8 0, 19
-	%60 = insertvalue [32 x %Char8] %59, %Char8 0, 20
-	%61 = insertvalue [32 x %Char8] %60, %Char8 0, 21
-	%62 = insertvalue [32 x %Char8] %61, %Char8 0, 22
-	%63 = insertvalue [32 x %Char8] %62, %Char8 0, 23
-	%64 = insertvalue [32 x %Char8] %63, %Char8 0, 24
-	%65 = insertvalue [32 x %Char8] %64, %Char8 0, 25
-	%66 = insertvalue [32 x %Char8] %65, %Char8 0, 26
-	%67 = insertvalue [32 x %Char8] %66, %Char8 0, 27
-	%68 = insertvalue [32 x %Char8] %67, %Char8 0, 28
-	%69 = insertvalue [32 x %Char8] %68, %Char8 0, 29
-	%70 = insertvalue [32 x %Char8] %69, %Char8 0, 30
-	%71 = insertvalue [32 x %Char8] %70, %Char8 0, 31
-	store [32 x %Char8] %71, [32 x %Char8]* %38
-	%72 = getelementptr inbounds %main_Object, %main_Object* %2, %Int32 0, %Int32 2
-	store %Int32 30, %Int32* %72
-	%73 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str2 to [0 x i8]*), %Int32 68)
-	%74 = load %main_Object, %main_Object* %2
-	store %main_Object %74, %main_Object* %3
-	%75 = getelementptr inbounds %main_Object, %main_Object* %3, %Int32 0, %Int32 0
-	%76 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str3 to [0 x i8]*), [32 x %Char8]* %75)
-	%77 = getelementptr inbounds %main_Object, %main_Object* %3, %Int32 0, %Int32 1
-	%78 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str4 to [0 x i8]*), [32 x %Char8]* %77)
-	%79 = getelementptr inbounds %main_Object, %main_Object* %3, %Int32 0, %Int32 2
-	%80 = load %Int32, %Int32* %79
-	%81 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str5 to [0 x i8]*), %Int32 %80)
+	%2 = alloca %Object, align 4
+	%3 = alloca %Object, align 4
+	%4 = insertvalue [32 x %Char8] zeroinitializer, %Char8 74, 0
+	%5 = insertvalue [32 x %Char8] %4, %Char8 111, 1
+	%6 = insertvalue [32 x %Char8] %5, %Char8 104, 2
+	%7 = insertvalue [32 x %Char8] %6, %Char8 110, 3
+	%8 = insertvalue [32 x %Char8] %7, %Char8 0, 4
+	%9 = insertvalue [32 x %Char8] %8, %Char8 0, 5
+	%10 = insertvalue [32 x %Char8] %9, %Char8 0, 6
+	%11 = insertvalue [32 x %Char8] %10, %Char8 0, 7
+	%12 = insertvalue [32 x %Char8] %11, %Char8 0, 8
+	%13 = insertvalue [32 x %Char8] %12, %Char8 0, 9
+	%14 = insertvalue [32 x %Char8] %13, %Char8 0, 10
+	%15 = insertvalue [32 x %Char8] %14, %Char8 0, 11
+	%16 = insertvalue [32 x %Char8] %15, %Char8 0, 12
+	%17 = insertvalue [32 x %Char8] %16, %Char8 0, 13
+	%18 = insertvalue [32 x %Char8] %17, %Char8 0, 14
+	%19 = insertvalue [32 x %Char8] %18, %Char8 0, 15
+	%20 = insertvalue [32 x %Char8] %19, %Char8 0, 16
+	%21 = insertvalue [32 x %Char8] %20, %Char8 0, 17
+	%22 = insertvalue [32 x %Char8] %21, %Char8 0, 18
+	%23 = insertvalue [32 x %Char8] %22, %Char8 0, 19
+	%24 = insertvalue [32 x %Char8] %23, %Char8 0, 20
+	%25 = insertvalue [32 x %Char8] %24, %Char8 0, 21
+	%26 = insertvalue [32 x %Char8] %25, %Char8 0, 22
+	%27 = insertvalue [32 x %Char8] %26, %Char8 0, 23
+	%28 = insertvalue [32 x %Char8] %27, %Char8 0, 24
+	%29 = insertvalue [32 x %Char8] %28, %Char8 0, 25
+	%30 = insertvalue [32 x %Char8] %29, %Char8 0, 26
+	%31 = insertvalue [32 x %Char8] %30, %Char8 0, 27
+	%32 = insertvalue [32 x %Char8] %31, %Char8 0, 28
+	%33 = insertvalue [32 x %Char8] %32, %Char8 0, 29
+	%34 = insertvalue [32 x %Char8] %33, %Char8 0, 30
+	%35 = insertvalue [32 x %Char8] %34, %Char8 0, 31
+	%36 = insertvalue %Object zeroinitializer, [32 x %Char8] %35, 0
+	%37 = insertvalue [32 x %Char8] zeroinitializer, %Char8 68, 0
+	%38 = insertvalue [32 x %Char8] %37, %Char8 111, 1
+	%39 = insertvalue [32 x %Char8] %38, %Char8 101, 2
+	%40 = insertvalue [32 x %Char8] %39, %Char8 0, 3
+	%41 = insertvalue [32 x %Char8] %40, %Char8 0, 4
+	%42 = insertvalue [32 x %Char8] %41, %Char8 0, 5
+	%43 = insertvalue [32 x %Char8] %42, %Char8 0, 6
+	%44 = insertvalue [32 x %Char8] %43, %Char8 0, 7
+	%45 = insertvalue [32 x %Char8] %44, %Char8 0, 8
+	%46 = insertvalue [32 x %Char8] %45, %Char8 0, 9
+	%47 = insertvalue [32 x %Char8] %46, %Char8 0, 10
+	%48 = insertvalue [32 x %Char8] %47, %Char8 0, 11
+	%49 = insertvalue [32 x %Char8] %48, %Char8 0, 12
+	%50 = insertvalue [32 x %Char8] %49, %Char8 0, 13
+	%51 = insertvalue [32 x %Char8] %50, %Char8 0, 14
+	%52 = insertvalue [32 x %Char8] %51, %Char8 0, 15
+	%53 = insertvalue [32 x %Char8] %52, %Char8 0, 16
+	%54 = insertvalue [32 x %Char8] %53, %Char8 0, 17
+	%55 = insertvalue [32 x %Char8] %54, %Char8 0, 18
+	%56 = insertvalue [32 x %Char8] %55, %Char8 0, 19
+	%57 = insertvalue [32 x %Char8] %56, %Char8 0, 20
+	%58 = insertvalue [32 x %Char8] %57, %Char8 0, 21
+	%59 = insertvalue [32 x %Char8] %58, %Char8 0, 22
+	%60 = insertvalue [32 x %Char8] %59, %Char8 0, 23
+	%61 = insertvalue [32 x %Char8] %60, %Char8 0, 24
+	%62 = insertvalue [32 x %Char8] %61, %Char8 0, 25
+	%63 = insertvalue [32 x %Char8] %62, %Char8 0, 26
+	%64 = insertvalue [32 x %Char8] %63, %Char8 0, 27
+	%65 = insertvalue [32 x %Char8] %64, %Char8 0, 28
+	%66 = insertvalue [32 x %Char8] %65, %Char8 0, 29
+	%67 = insertvalue [32 x %Char8] %66, %Char8 0, 30
+	%68 = insertvalue [32 x %Char8] %67, %Char8 0, 31
+	%69 = insertvalue %Object %36, [32 x %Char8] %68, 1
+	%70 = insertvalue %Object %69, %Int32 30, 2
+	store %Object %70, %Object* %2
+	%71 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str2 to [0 x i8]*), %Int32 68)
+	%72 = load %Object, %Object* %2
+	store %Object %72, %Object* %3
+	%73 = getelementptr inbounds %Object, %Object* %3, %Int32 0, %Int32 0
+	%74 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str3 to [0 x i8]*), [32 x %Char8]* %73)
+	%75 = getelementptr inbounds %Object, %Object* %3, %Int32 0, %Int32 1
+	%76 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str4 to [0 x i8]*), [32 x %Char8]* %75)
+	%77 = getelementptr inbounds %Object, %Object* %3, %Int32 0, %Int32 2
+	%78 = load %Int32, %Int32* %77
+	%79 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str5 to [0 x i8]*), %Int32 %78)
 	ret %Int 0
 }
 

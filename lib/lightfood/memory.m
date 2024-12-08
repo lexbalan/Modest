@@ -1,6 +1,7 @@
 // lightfood/memory.m
 
-$pragma do_not_include
+
+$pragma unsafe
 
 
 const systemWidth = 64
@@ -8,8 +9,10 @@ const systemWidth = 64
 
 $if (systemWidth == 64)
 type Word Word64
+type Nat Nat64
 $elseif (systemWidth == 32)
 type Word Word32
+type Nat Nat32
 $endif
 
 
@@ -17,7 +20,7 @@ const memoryAlignment = systemWidth / 8
 
 
 public func memzero(mem: Ptr, len: Nat64) {
-	let z = Word mem % memoryAlignment
+	let z = unsafe Nat mem % memoryAlignment
 
 	// align the pointer
 	var i = Nat64 0

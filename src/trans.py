@@ -590,6 +590,10 @@ def do_type_id(t):
 	else:
 		tx = ctx_type_get(id_str)
 
+	# tmp
+	if tx == None:
+		tx = hlir_type_undefined(t['ti'])
+
 	# если дело происходит в определении типа и пришел undefined тип
 	# пропишем его в ctype['deps']
 
@@ -772,8 +776,8 @@ def do_value_shift(x):
 	l = do_rvalue(x['left'])
 	r = do_rvalue(x['right'])
 
-	if not hlir_type.type_is_word(l['type']):
-		error("expected word value", x['left'])
+#	if not hlir_type.type_is_word(l['type']):
+#		error("expected word value", x['left'])
 
 	if not hlir_type.type_is_integer(r['type']):
 		error("expected integer value", x['right'])
@@ -1007,7 +1011,7 @@ def do_value_ref(x):
 	vtype = v['type']
 
 	if value_is_immutable(v):
-		if not hlir_type.type_is_func(vtype):
+		if not hlir_type.type_is_func(vtype) or hlir_type.type_is_undefined(vtype):
 			error("expected mutable value or function", v)
 			return value_bad(x)
 
@@ -2359,7 +2363,7 @@ def def_var(x):
 	# error: no type, no init valuetu = type_is_undefined(t)
 	if tu == True and vu == True:
 		# ERROR: type & value undefined
-		ctx_value_add(var_id['str'], value_bad(x))
+		ctx_value_add(id['str'], value_bad(x))
 		return hlir_stmt_bad(x)
 
 	elif tu == True and vu == False:

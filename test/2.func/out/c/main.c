@@ -28,7 +28,6 @@ static int32_t sum(int32_t a, int32_t b)
 
 
 static void func0();
-
 int main()
 {
 	printf("test func\n");

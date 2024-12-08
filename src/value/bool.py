@@ -27,7 +27,7 @@ def bool_can(to, from_type, method):
 
 	if type.type_is_integer(from_type):
 		return True
-	elif type.type_is_byte(from_type):
+	elif type.type_is_word(from_type) and from_type['width'] == 8:
 		return True
 
 	return False

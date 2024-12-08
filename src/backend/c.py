@@ -340,6 +340,9 @@ def print_type(t, space_after=False, array_as_ptr=True, as_const=False):
 	elif k == 'undefined':
 		out("void")
 
+	elif k == 'bad':
+		out("<bad_type>")
+
 	else: out("<type:" + str(t) + ">")
 
 	if space_after:
@@ -1096,7 +1099,7 @@ def print_value_terminal(x, ctx):
 	elif hlir_type.type_is_char(t): print_value_char(x, ctx)
 	elif hlir_type.type_is_pointer(t): print_value_ptr(x, ctx)
 	elif hlir_type.type_is_enum(t): print_value_enum(x, ctx)
-	elif hlir_type.type_is_byte(t): print_value_integer(x, ctx)
+	#elif hlir_type.type_is_byte(t): print_value_integer(x, ctx)
 	else: error("print_value_terminal not implemented", x['ti'])
 
 
@@ -1622,7 +1625,7 @@ def print_def_func(x):
 		if not dep['id']['str'] in declared:
 			declared.append(dep['id']['str'])
 			print_decl_func(dep['definition'])
-			out("\n\n")
+			out("\n")
 
 
 	func = x['value']
@@ -1647,14 +1650,14 @@ def print_def_func(x):
 	#print_wrappers = not 'declared' in func['att']
 	print_func_signature(get_id_str(func), ftype, func['att'])
 
+	if x['stmt'] == None:
+		out(";")
+		return
+
 	if styleguide['LINE_BREAK_BEFORE_FUNC_BRACE']:
 		newline()
 	else:
 		out(" ")
-
-	if x['stmt'] == None:
-		out(";")
-		return
 
 	out("{")
 	indent_up()
@@ -1914,13 +1917,13 @@ def print_comment_line(x):
 
 
 def cdirectives(module):
-	for im in module['imports']:
-		imported_module = module['imports'][im]
-
-		for obj in imported_module['defs']:
-			if obj['isa'] == 'directive':
-				if obj['kind'] == 'c_include':
-					print_include(obj)
+#	for im in module['imports']:
+#		imported_module = module['imports'][im]
+#
+#		for obj in imported_module['defs']:
+#			if obj['isa'] == 'directive':
+#				if obj['kind'] == 'c_include':
+#					print_include(obj)
 
 	for obj in module['defs']:
 		if obj['isa'] == 'directive':
@@ -1999,7 +2002,8 @@ def print_header(module, outname):
 				print_include(obj)
 			elif obj['kind'] == 'import':
 				if not 'do_not_include' in obj['import_module']['att']:
-					include(obj['str'] + '.h', local=True)
+					x = os.path.basename(obj['str'])
+					include(x + '.h', local=True)
 
 
 	newline()
@@ -2117,8 +2121,14 @@ def print_cfile(module, _outname):
 
 
 
-def run(module, _outname):
-	print_header(module, _outname)
+def run(module, _outname, options):
+	hpath = _outname
+	if 'include_dir' in options:
+		inc_dir = options['include_dir']
+		hname = os.path.basename(_outname)
+		hpath = inc_dir + '/' + hname
+
+	print_header(module, hpath)
 	print_cfile(module, _outname)
 	return
 

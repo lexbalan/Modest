@@ -581,7 +581,7 @@ def print_value_terminal(x, ctx):
 	elif hlir_type.type_is_bool(t): print_value_bool_create(x, ctx)
 	elif hlir_type.type_is_char(t): print_value_char_create(x, ctx)
 	elif hlir_type.type_is_enum(t): print_value_integer(x, ctx)
-	elif hlir_type.type_is_byte(t): print_value_integer(x, ctx)
+	#elif hlir_type.type_is_byte(t): print_value_integer(x, ctx)
 	return
 
 
@@ -909,7 +909,7 @@ def print_def(x):
 	elif isa == 'comment': print_comment(x)
 
 
-def run(module, outname):
+def run(module, outname, options):
 	from main import features
 	#is_header = features.get('header')
 

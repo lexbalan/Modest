@@ -44,7 +44,6 @@ int main()
 	const double s = squareOfCircle((double)__r);
 	printf("s = %f\n", s);
 
-
 	#define __k  (1.0 / (double)(8))
 	printf("k = %f\n", __k);
 

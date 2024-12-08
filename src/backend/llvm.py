@@ -2554,7 +2554,7 @@ def print_module(m):
 
 
 
-def run(module, outname):
+def run(module, outname, options):
 	outname = outname + '.ll'
 	output_open(outname)
 

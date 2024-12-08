@@ -39,6 +39,7 @@ parser = argparse.ArgumentParser(
 
 
 #parser.add_argument('filename', action='append', default=['main'])
+parser.add_argument('-i', '--include')
 parser.add_argument('-o', '--output')
 parser.add_argument('-s', '--setup', help='-setup=<value>')
 parser.add_argument('-f', '--feature', action='append', help='[unsafe]')
@@ -86,7 +87,12 @@ def do_file(src_name):
 	else:
 		outname = root_name
 
-	backend.run(module, outname)
+	if args.include != None:
+		include_dir = args.include
+	else:
+		include_dir = os.path.dirname(outname)
+
+	backend.run(module, outname, {'include_dir': include_dir})
 
 
 

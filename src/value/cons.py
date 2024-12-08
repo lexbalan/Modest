@@ -2,7 +2,7 @@
 import hlir.type as type
 from error import info, warning, error
 
-from .value import value_is_bad, value_is_undefined, value_is_immediate, value_cons_node
+from .value import value_bad, value_is_bad, value_is_undefined, value_is_immediate, value_cons_node
 from .unit import value_unit_cons, unit_can
 from .bool import value_bool_cons, bool_can
 from .word import value_word_cons, word_can
@@ -285,9 +285,6 @@ def value_cons_implicit_check(t, v):
 		print("\nreceived: ", end='')
 		type.type_print(v['type'])
 		print("\n")
-		type.type_print(t['to'])
-		type.type_print(v['type']['to'])
-		print(type.type_eq(t['to'], v['type']['to']))
 
 	return nv
 

@@ -30,7 +30,6 @@ public func main() -> Int {
 	let s = squareOfCircle(r)
 	printf("s = %f\n", s)
 
-
 	let k = 1.0 / 8
 	printf("k = %f\n", k)
 
