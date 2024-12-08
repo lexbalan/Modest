@@ -2,6 +2,7 @@
 include "libc/ctypes64"
 @c_include "stdio.h"
 include "libc/stdio"
+include "lightfood/memory"
 
 
 type Object record {
@@ -23,7 +24,7 @@ public func main() -> Int {
 	let len = sizeof(Object)
 	printf("LEN = %u\n", Nat32 len)
 
-	o2 = o1
+	mcopy(&o2, &o1, len)
 
 	printf("firstname = '%s'\n", &o2.firstname)
 	printf("lastname = '%s'\n", &o2.lastname)

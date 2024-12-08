@@ -11,6 +11,7 @@
 
 
 
+
 struct Object {
 	char firstname[32];
 	char lastname[32];
@@ -33,7 +34,7 @@ int main()
 	#define __len  sizeof(Object)
 	printf("LEN = %u\n", (uint32_t)__len);
 
-	o2 = o1;
+	mcopy(&o2, &o1, __len);
 
 	printf("firstname = '%s'\n", (char *)&o2.firstname);
 	printf("lastname = '%s'\n", (char *)&o2.lastname);

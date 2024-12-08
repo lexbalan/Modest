@@ -2,6 +2,7 @@
 
 
 $pragma unsafe
+$pragma module_nodecorate
 
 
 const systemWidth = 64
@@ -11,16 +12,20 @@ $if (systemWidth == 64)
 type Word Word64
 type Nat Nat64
 $elseif (systemWidth == 32)
-type Word Word32
-type Nat Nat32
+//type Word Word32
+//type Nat Nat32
 $endif
 
 
 const memoryAlignment = systemWidth / 8
 
 
-public func memzero(mem: Ptr, len: Nat64) {
+public func mzero(mem: Ptr, len: Nat64) {
 	let z = unsafe Nat mem % memoryAlignment
+
+	let memptr = unsafe *[]Word8 mem
+
+	let dst_byte0 = memptr
 
 	// align the pointer
 	var i = Nat64 0
@@ -32,7 +37,7 @@ public func memzero(mem: Ptr, len: Nat64) {
 	// word operation
 
 	let len_words = (len - z) / sizeof(Word)
-	let dst_word = *[]Word &mem[i]
+	let dst_word = unsafe *[]Word &memptr[i]
 
 	i = 0
 	while i < len_words {
@@ -43,7 +48,7 @@ public func memzero(mem: Ptr, len: Nat64) {
 	// byte operation
 
 	let len_bytes = (len - z) % sizeof(Word)
-	let dst_byte1 = *[]Word8 &dst_word[i]
+	let dst_byte1 = unsafe *[]Word8 &dst_word[i]
 
 	i = 0
 	while i < len_bytes {
@@ -53,7 +58,7 @@ public func memzero(mem: Ptr, len: Nat64) {
 }
 
 
-public func memcopy(dst: Ptr, src: Ptr, len: Nat64) {
+public func mcopy(dst: Ptr, src: Ptr, len: Nat64) {
 	let len_words = len / sizeof(Word)
 	let src_w = *[]Word src
 	let dst_w = *[]Word dst
@@ -65,8 +70,8 @@ public func memcopy(dst: Ptr, src: Ptr, len: Nat64) {
 	}
 
 	let len_bytes = len % sizeof(Word)
-	let src_b = *[]Word8 &src_w[i]
-	let dst_b = *[]Word8 &dst_w[i]
+	let src_b = unsafe *[]Word8 &src_w[i]
+	let dst_b = unsafe *[]Word8 &dst_w[i]
 
 	i = 0
 	while i < len_bytes {
@@ -76,10 +81,10 @@ public func memcopy(dst: Ptr, src: Ptr, len: Nat64) {
 }
 
 
-public func memeq(mem0: Ptr, mem1: Ptr, len: Nat64) -> Bool {
+public func meq(mem0: Ptr, mem1: Ptr, len: Nat64) -> Bool {
 	let len_words = len / sizeof(Word)
-	let mem0_w = *[]Word mem0
-	let mem1_w = *[]Word mem1
+	let mem0_w = unsafe *[]Word mem0
+	let mem1_w = unsafe *[]Word mem1
 
 	var i = Nat64 0
 	while i < len_words {
@@ -90,8 +95,8 @@ public func memeq(mem0: Ptr, mem1: Ptr, len: Nat64) -> Bool {
 	}
 
 	let len_bytes = len % sizeof(Word)
-	let mem0_b = *[]Word8 &mem0_w[i]
-	let mem1_b = *[]Word8 &mem1_w[i]
+	let mem0_b = unsafe *[]Word8 &mem0_w[i]
+	let mem1_b = unsafe *[]Word8 &mem1_w[i]
 
 	i = 0
 	while i < len_bytes {

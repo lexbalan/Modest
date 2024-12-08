@@ -851,7 +851,9 @@ def type_print_array(t, print_aka=True):
 	print("[", end='')
 	array_size = t['volume']
 
-	if array_size != None:
+	from value.value import value_is_undefined
+
+	if not value_is_undefined(array_size):
 		if type_is_vla(t):
 			print("<VAR>", end='')
 		else:

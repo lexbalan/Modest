@@ -183,6 +183,10 @@ declare %Int @putchar(%Int %char)
 declare %Int @puts(%ConstCharStr* %str)
 declare %Int @ungetc(%Int %char, %File* %f)
 declare void @perror(%ConstCharStr* %str)
+; from included memory
+declare void @mzero(i8* %mem, %Int64 %len)
+declare void @mcopy(i8* %dst, i8* %src, %Int64 %len)
+declare %Bool @meq(i8* %mem0, i8* %mem1, %Int64 %len)
 ; -- end print includes --
 ; -- print imports --
 ; -- end print imports --
@@ -274,15 +278,16 @@ define %Int @main() {
 	%70 = insertvalue %Object %69, %Int32 30, 2
 	store %Object %70, %Object* %2
 	%71 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str2 to [0 x i8]*), %Int32 68)
-	%72 = load %Object, %Object* %2
-	store %Object %72, %Object* %3
-	%73 = getelementptr inbounds %Object, %Object* %3, %Int32 0, %Int32 0
-	%74 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str3 to [0 x i8]*), [32 x %Char8]* %73)
-	%75 = getelementptr inbounds %Object, %Object* %3, %Int32 0, %Int32 1
-	%76 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str4 to [0 x i8]*), [32 x %Char8]* %75)
-	%77 = getelementptr inbounds %Object, %Object* %3, %Int32 0, %Int32 2
-	%78 = load %Int32, %Int32* %77
-	%79 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str5 to [0 x i8]*), %Int32 %78)
+	%72 = bitcast %Object* %3 to i8*
+	%73 = bitcast %Object* %2 to i8*
+	call void @mcopy(i8* %72, i8* %73, %Int64 68)
+	%74 = getelementptr inbounds %Object, %Object* %3, %Int32 0, %Int32 0
+	%75 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str3 to [0 x i8]*), [32 x %Char8]* %74)
+	%76 = getelementptr inbounds %Object, %Object* %3, %Int32 0, %Int32 1
+	%77 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str4 to [0 x i8]*), [32 x %Char8]* %76)
+	%78 = getelementptr inbounds %Object, %Object* %3, %Int32 0, %Int32 2
+	%79 = load %Int32, %Int32* %78
+	%80 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([10 x i8]* @str5 to [0 x i8]*), %Int32 %79)
 	ret %Int 0
 }
 

@@ -2252,6 +2252,10 @@ def def_type(x):
 	nt = ctx_type_get(id['str'])
 	ctype = nt
 
+	if not hlir_type.type_is_undefined(nt):
+		error("type redefinition", x['ti'])
+		return None
+
 	ty = do_type(x['type'])
 
 
