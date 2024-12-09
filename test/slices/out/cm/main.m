@@ -2,7 +2,6 @@
 include "libc/ctypes64"
 @c_include "stdio.h"
 include "libc/stdio"
-//@feature("unsafe")
 func array_print(pa: *[]Int32, len: Int32) -> Unit {
 	var i: Int32 = 0
 	while i < len {

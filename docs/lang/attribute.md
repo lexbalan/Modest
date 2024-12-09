@@ -17,7 +17,11 @@ public func main () {
 }
 ```
 
+**no_print** - entity definition must not be printed
+
 **c_no_print** - entity definition must not be printed by C printer
+
+**ll_no_print** - entity definition must not be printed by LLVM printer
 
 **dispensable** - means that result of function call can be ignored
 

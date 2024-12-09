@@ -2017,6 +2017,8 @@ def print_header(module, outname):
 	for x in module['defs']:
 		if 'c_no_print' in x['att']:
 			continue
+		if 'no_print' in x['att']:
+			continue
 
 		if is_private(x):
 			continue
@@ -2047,8 +2049,6 @@ def print_cfile(module, _outname):
 	outname = _outname + '.c'
 
 	output_open(outname)
-
-
 
 	if 'c_no_print' in module['att']:
 		print("--------MODULE CNOPRINT")
@@ -2094,6 +2094,8 @@ def print_cfile(module, _outname):
 	# types & constants
 	for x in module['defs']:
 		if 'c_no_print' in x['att']:
+			continue
+		if 'no_print' in x['att']:
 			continue
 
 		isa = x['isa']

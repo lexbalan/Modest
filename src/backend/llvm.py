@@ -2445,6 +2445,11 @@ def een(defs, decl_only=False):
 		if not 'id' in x:
 			continue
 
+		if 'll_no_print' in x['att']:
+			continue
+		if 'no_print' in x['att']:
+			continue
+
 		# Тупейшая Защита от повторного определения
 		# (А они происходят тк импорты и инклуюды сложно сплетены и повтор.)
 		uid = x['module']['id'] + '.' + x['id']['str']

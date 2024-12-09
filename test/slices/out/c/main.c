@@ -10,7 +10,6 @@
 
 
 
-//@feature("unsafe")
 
 static void array_print(int32_t *pa, int32_t len)
 {

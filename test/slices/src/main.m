@@ -3,7 +3,6 @@
 include "libc/ctypes64"
 include "libc/stdio"
 
-//@feature("unsafe")
 
 func array_print(pa: *[]Int32, len: Int32) {
 	var i = 0
