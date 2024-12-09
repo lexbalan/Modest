@@ -35,7 +35,8 @@ cd unistd && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd generic && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 cd print && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
 cd 13.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
-cd sizeof && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
+cd sizeof && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
+cd memcopy && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
 #cd queue && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd ..
 #cd 24.* && echo "\nBUILD:" "$PWD" && make && make C && make CM && cd .. && \
 
