@@ -187,90 +187,11 @@ declare void @perror(%ConstCharStr* %str)
 ; -- print imports --
 ; -- end print imports --
 ; -- strings --
-@str1 = private constant [15 x i8] [i8 116, i8 101, i8 115, i8 116, i8 49, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 33, i8 10, i8 0]
 ; -- endstrings --
 
-define internal void @getarr10([10 x %Int32]* noalias sret([10 x %Int32]) %0) {
-	%2 = insertvalue [10 x %Int32] zeroinitializer, %Int32 0, 0
-	%3 = insertvalue [10 x %Int32] %2, %Int32 1, 1
-	%4 = insertvalue [10 x %Int32] %3, %Int32 2, 2
-	%5 = insertvalue [10 x %Int32] %4, %Int32 3, 3
-	%6 = insertvalue [10 x %Int32] %5, %Int32 4, 4
-	%7 = insertvalue [10 x %Int32] %6, %Int32 5, 5
-	%8 = insertvalue [10 x %Int32] %7, %Int32 6, 6
-	%9 = insertvalue [10 x %Int32] %8, %Int32 7, 7
-	%10 = insertvalue [10 x %Int32] %9, %Int32 8, 8
-	%11 = insertvalue [10 x %Int32] %10, %Int32 9, 9
-	store [10 x %Int32] %11, [10 x %Int32]* %0
-	ret void
-}
+%Mode = type i32;
 
-define internal void @arrAddToAll([10 x %Int32]* noalias sret([10 x %Int32]) %0, [10 x %Int32] %a, %Int32 %x) {
-	%2 = alloca [10 x %Int32], align 4
-	%3 = alloca %Int32, align 4
-	store %Int32 0, %Int32* %3
-	br label %again_1
-again_1:
-	%4 = load %Int32, %Int32* %3
-	%5 = icmp slt %Int32 %4, 10
-	br %Bool %5 , label %body_1, label %break_1
-body_1:
-	%6 = load %Int32, %Int32* %3
-	%7 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %2, %Int32 0, %Int32 %6
-	%8 = load %Int32, %Int32* %3
-	%9 = add %Int32 0, %x
-	store %Int32 %9, %Int32* %7
-	%10 = load %Int32, %Int32* %3
-	%11 = add %Int32 %10, 1
-	store %Int32 %11, %Int32* %3
-	br label %again_1
-break_1:
-	%12 = load [10 x %Int32], [10 x %Int32]* %2
-	store [10 x %Int32] %12, [10 x %Int32]* %0
-	ret void
-}
-
-define %Int32 @main() {; alloca memory for return value
-	%1 = alloca [10 x %Int32]
-	call void @getarr10([10 x %Int32]* %1)
-	%2 = insertvalue [10 x %Int32] zeroinitializer, %Int32 0, 0
-	%3 = insertvalue [10 x %Int32] %2, %Int32 1, 1
-	%4 = insertvalue [10 x %Int32] %3, %Int32 2, 2
-	%5 = insertvalue [10 x %Int32] %4, %Int32 3, 3
-	%6 = insertvalue [10 x %Int32] %5, %Int32 4, 4
-	%7 = insertvalue [10 x %Int32] %6, %Int32 5, 5
-	%8 = insertvalue [10 x %Int32] %7, %Int32 6, 6
-	%9 = insertvalue [10 x %Int32] %8, %Int32 7, 7
-	%10 = insertvalue [10 x %Int32] %9, %Int32 8, 8
-	%11 = insertvalue [10 x %Int32] %10, %Int32 9, 9
-	%12 = alloca [10 x %Int32]
-	store [10 x %Int32] %11, [10 x %Int32]* %12
-	%13 = bitcast [10 x %Int32]* %1 to i8*
-	%14 = bitcast [10 x %Int32]* %12 to i8*
-	
-	%15 = call i1 (i8*, i8*, i64) @memeq( i8* %13, i8* %14, %Int64 40)
-	%16 = icmp ne %Bool %15, 0
-	br %Bool %16 , label %then_0, label %endif_0
-then_0:
-	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
-	br label %endif_0
-endif_0:
-	;	let b = arrAddToAll(a, 1)
-	;
-	;	if b == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] {
-	;		printf("test2 passed!\n")
-	;	}
-	;
-	;	let c = arrAddToAll([0, 10, 20, 30, 40, 50, 60, 70, 80, 90], 5)
-	;
-	;	if c == [5, 15, 25, 35, 45, 55, 65, 75, 85, 95] {
-	;		printf("test3 passed!\n")
-	;	}
-	;	var i = 0
-	;	while i < 10 {
-	;		printf("c[%i] = %i\n", i, c[i])
-	;		++i
-	;	}
+define %Int32 @main() {
 	ret %Int32 0
 }
 

@@ -703,7 +703,8 @@ def do_type_enum(t):
 		})
 
 		# add enum item to global context
-		item_val = value_terminal(enum_type, i, item['ti'])
+		item_val = value_terminal(enum_type, item['ti'])
+		item_val['asset'] = i
 
 		item_val['id'] = id
 		global cmodule
@@ -1993,6 +1994,7 @@ def do_stmt_var(x):
 	already = ctx_value_get_shallow(var_id['str'])
 	if already != None:
 		error("local id redefinition", x['id']['ti'])
+		info("firstly defined here", already['id']['ti'])
 		return hlir_stmt_bad(x)
 
 	var_value = add_local_var(var_id, t, var_id['ti'])
