@@ -1655,6 +1655,10 @@ class Parser:
 
 
 	def parse(self, tokens):
+
+		if len(tokens) == 0:
+			return []
+
 		self.tokens = tokens
 		self.ctoken = 0
 

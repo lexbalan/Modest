@@ -131,6 +131,7 @@ def main():
 
 
 	for src_filename in files:
+		print("=%s" % src_filename)
 		src_name = os.path.normpath(src_filename)
 		do_file(src_name)
 

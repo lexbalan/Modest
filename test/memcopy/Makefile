@@ -15,6 +15,7 @@ CM:
 	mcc -o $(CMPREFIX)/main -mbackend=cm $(INDIR)/main.m
 	mcc -o $(CPREFIX)/memory -mbackend=llvm -funsafe ${MODEST_LIB}/misc/memory.m
 
+
 LLVM:
 	mcc -o $(LLVMPREFIX)/main -mbackend=llvm $(INDIR)/main.m
 	mcc -o $(LLVMPREFIX)/memory -mbackend=llvm -funsafe ${MODEST_LIB}/misc/memory.m
@@ -23,9 +24,12 @@ LLVM:
 
 C:
 	mcc -o $(CPREFIX)/main -mbackend=c $(INDIR)/main.m
-	mcc -o $(CPREFIX)/memory -mbackend=llvm -funsafe ${MODEST_LIB}/misc/memory.m
+	#mcc -o $(CPREFIX)/memory -mbackend=c -funsafe ${MODEST_LIB}/lightfood/memory.m
+	mcc -o ./out/c/memory -mbackend=c -funsafe /Users/alexbalan/p/Modest/lib/lightfood/memory.m
 	CC $(CPREFIX)/main.c $(CPREFIX)/memory.c
 
 
 clean:
 	rm *.o
+
+

@@ -1,20 +1,20 @@
 // lightfood/memory.m
 
-
+//
 $pragma unsafe
 $pragma module_nodecorate
-
+//
 
 const systemWidth = 64
 
 
-$if (systemWidth == 64)
+//$if (systemWidth == 64)
 type Word Word64
 type Nat Nat64
-$elseif (systemWidth == 32)
+//$elseif (systemWidth == 32)
 //type Word Word32
 //type Nat Nat32
-$endif
+//$endif
 
 
 const memoryAlignment = systemWidth / 8
