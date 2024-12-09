@@ -1827,10 +1827,10 @@ def print_def_var(x, isdecl=False):
 	var = x['var_value']
 	if USE_STATIC_VARIABLES:
 		if not 'global' in var['att']:
-			if not 'c_extern' in var['att']:
+			if not 'extern' in var['att']:
 				out("static ")
 
-	if 'c_extern' in var['att']:
+	if 'extern' in var['att']:
 		out("extern ")
 	if 'volatile' in var['att']:
 		out("volatile ")

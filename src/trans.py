@@ -2647,10 +2647,10 @@ def do_attribute(x):
 	elif kind == 'property':
 		property_add(args[0]['str'], args[1]['str'])
 	elif kind == 'inline':
-		attribute_add('c_static')
+		attribute_add('static')
 		attribute_add('inline')
 	elif kind == 'extern':
-		attribute_add('c_extern')
+		attribute_add('extern')
 	elif kind == 'packed':
 		attribute_add('type:packed')
 		# так делать вообще-то нельзя, но пока делаю так
