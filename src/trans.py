@@ -1233,13 +1233,15 @@ def do_value_call(x):
 		error("undefined value 2", fn)
 		return value_bad(x)
 
-	if value_is_undefined(fn):
-		#info("call undefined func", x['ti'])
+
+	if value_is_incomplete(fn):
+		#info("call incomplete func", x['ti'])
 		cfunc['deps'].append(fn)
 		fn = lookup_func(x['left']['str'])
 		if fn == None:
 			error("call undefined func", x['ti'])
 			return value_bad(x)
+
 
 	ftype = fn['type']
 
@@ -2448,16 +2450,9 @@ def def_func(x, dostmt=True):
 	# тк мы ранее сделали проход
 	fn = ctx_value_get(func_id['str'])
 
-	if value_is_undefined(fn):
-		ftype = do_type_func(x['type'])
-		fn['kind'] = 'func'
-		fn['id'] = x['id']
-		fn['type'] = ftype
-		fn['immediate'] = False
-		fn['immutable'] = True
-		fn['deps'] = []
-		fn['att'] = []
-		fn['ti_def'] = x['ti']
+
+	if value_is_incomplete(fn):
+		fn['type'] = do_type_func(x['type'])
 
 
 	if x['id']['str'] != 'main':
@@ -3052,8 +3047,8 @@ def pre_def(ast, fdecl=False):
 
 			elif kind == 'func':
 				t = hlir_type.hlir_type_undefined(x['ti'])
-				v = value_undefined(t, x['ti'])
-				#v = value_func(t, x['ti'])
+				#v = value_undefined(t, x['ti'])
+				v = value_func(x['id'], t, x['ti'])
 				cmodule_value_add(id['str'], v, is_public=is_public)
 
 

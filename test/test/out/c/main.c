@@ -8,6 +8,8 @@
 
 
 
+// 1. Сначала проходит по всем сущностям и создает type_undefined/value_undefined
+
 
 struct Node;
 typedef struct Node Node;

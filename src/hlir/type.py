@@ -400,20 +400,17 @@ def type_eq_pointer(a, b, opt):
 def type_eq_array(a, b, opt):
 	from value.value import value_is_undefined
 
-	if value_is_undefined(a) or value_is_undefined(b):
-		if value_is_undefined(a) and value_is_undefined(b):
+	if value_is_undefined(a['volume']) or value_is_undefined(b['volume']):
+		if value_is_undefined(a['volume']) and value_is_undefined(b['volume']):
 			return type_eq(a['of'], b['of'], opt)
 		return False
 
-	if not value_is_undefined(a) and not value_is_undefined(b):
-		from value.value import value_is_immediate
+	# a['volume'] & b['volume'] defined
+	from value.value import value_is_immediate
 
-		if b['volume'] == None:
-			info("HERE", b['ti'])
-
-		if value_is_immediate(a['volume']) and value_is_immediate(b['volume']):
-			if a['volume']['asset'] != b['volume']['asset']:
-				return False
+	if value_is_immediate(a['volume']) and value_is_immediate(b['volume']):
+		if a['volume']['asset'] != b['volume']['asset']:
+			return False
 
 	if a['of'] == None or b['of'] == None:
 		return a['of'] == None and b['of'] == None

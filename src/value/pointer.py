@@ -52,7 +52,6 @@ def pointer_can(to, from_type, method):
 
 	if type.type_is_pointer(from_type):
 		# implicit cons pointer from another pointer
-
 		if type.type_is_generic(from_type):
 			return True  # cons *X from Nil
 
