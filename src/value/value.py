@@ -13,7 +13,7 @@ def value_is_undefined(x):
 	return x['kind'] == 'undefined'
 
 def value_is_incomplete(x):
-	return hlir_type.type_is_undefined(x['type'])
+	return hlir_type.type_is_incomplete(x['type'])
 
 def value_is_immediate(x):
 	return x['immediate']

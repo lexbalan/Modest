@@ -321,7 +321,7 @@ def hlir_type_record(fields, ti=None):
 	}
 
 
-def hlir_type_func(params, to, va_args, va_list_id, ti=None):
+def hlir_type_func(params, to, va_args, ti=None):
 	return {
 		'isa': 'type',
 		'kind': 'func',
@@ -534,6 +534,12 @@ def type_is_defined(t):
 
 def type_is_undefined(t):
 	return t['kind'] == 'undefined'
+
+
+def type_is_incomplete(t):
+	return 'incomplete' in t['att']
+
+
 
 
 def type_is_unit(t):

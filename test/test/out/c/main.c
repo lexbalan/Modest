@@ -19,9 +19,19 @@ struct Node {
 	void *data;
 };
 
+
+static void init();
 int32_t main()
 {
+	init();
+
 	Node n;
+
 	return 0;
+}
+
+static void init()
+{
+	printf("init()\n");
 }
 

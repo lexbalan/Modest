@@ -740,7 +740,7 @@ def do_type_func(t, func_id="_"):
 		#	to['att'].append('wrapped_array_type')
 		#	to['wrapped_id'] = 'struct ' + func_id + '_' + 'retval'
 
-	return hlir_type.hlir_type_func(params, to, t['arghack'], '_', ti=t['ti'])
+	return hlir_type.hlir_type_func(params, to, t['arghack'], ti=t['ti'])
 
 
 
@@ -3046,9 +3046,15 @@ def pre_def(ast, fdecl=False):
 				cmodule_type_add(id['str'], t, is_public=is_public)
 
 			elif kind == 'func':
-				t = hlir_type.hlir_type_undefined(x['ti'])
-				#v = value_undefined(t, x['ti'])
+				# Create incomplete function value
+
+				#hlir_type_func incomplete!
+				f_to = hlir_type.hlir_type_undefined(x['ti'])
+				t = hlir_type.hlir_type_func([], f_to, False, x['ti'])
+				t['att'].append('incomplete')
+				#t = hlir_type.hlir_type_undefined(x['ti'])
 				v = value_func(x['id'], t, x['ti'])
+				# And bound it with the id
 				cmodule_value_add(id['str'], v, is_public=is_public)
 
 
