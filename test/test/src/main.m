@@ -1,15 +1,16 @@
 
 include "libc/stdio"
 
-type Mode enum {
-	on
-	off
+// 1. Сначала проходит по всем сущностям и создает type_undefined/value_undefined
+
+
+type Node record {
+	next: *Node
+	data: *Unit
 }
 
 public func main() -> Int32 {
-	//var on = 1
-	let x = on
-
+	var n: Node
 	return 0
 }
 

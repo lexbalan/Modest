@@ -1720,6 +1720,10 @@ def print_def_type(x):
 
 	# печатаем декларации для типов от которых зависит этот тип
 	for dep in x['type']['deps']:
+		if not 'id' in dep:
+			error("undefined type", dep['ti'])
+			return
+
 		if not dep['id']['str'] in declared:
 			declared.append(dep['id']['str'])
 			print_decl_type(dep['definition'])

@@ -592,7 +592,7 @@ def do_type_id(t):
 
 	# tmp
 	if tx == None:
-		tx = hlir_type_undefined(t['ti'])
+		tx = hlir_type.hlir_type_undefined(t['ti'])
 
 	# если дело происходит в определении типа и пришел undefined тип
 	# пропишем его в ctype['deps']
@@ -3047,14 +3047,13 @@ def pre_def(ast, fdecl=False):
 			ti = id['ti']
 
 			if kind == 'type':
-				#print("PREDEF_TYPE(%s)" % id['str'])
 				t = hlir_type.hlir_type_undefined(x['ti'])
 				cmodule_type_add(id['str'], t, is_public=is_public)
 
 			elif kind == 'func':
-				#print("PREDEF_FUNC(%s)" % id['str'])
 				t = hlir_type.hlir_type_undefined(x['ti'])
 				v = value_undefined(t, x['ti'])
+				#v = value_func(t, x['ti'])
 				cmodule_value_add(id['str'], v, is_public=is_public)
 
 

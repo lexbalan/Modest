@@ -189,9 +189,14 @@ declare void @perror(%ConstCharStr* %str)
 ; -- strings --
 ; -- endstrings --
 
-%Mode = type i32;
+%Node = type {
+	%Node*,
+	i8*
+};
+
 
 define %Int32 @main() {
+	%1 = alloca %Node, align 8
 	ret %Int32 0
 }
 
