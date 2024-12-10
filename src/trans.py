@@ -81,7 +81,7 @@ modules = {}
 cmodule = None  # Current module
 cfunc = None	# current function
 context = None  # current context (symtab)
-centity = None
+cdef = None
 
 
 
@@ -595,7 +595,7 @@ def do_type_id(t):
 	# если дело происходит в определении типа и пришел undefined тип
 	if hlir_type.type_is_undefined(tx):
 		#print("TYPE_DEPS_APPEND(%s)" % str(tx))
-		centity['deps'].append(tx)
+		cdef['deps'].append(tx)
 
 
 #	if tx == None:
@@ -1845,10 +1845,10 @@ def do_value(x):
 	v['ti'] = x['ti']
 
 
-	global centity
+	global cdef
 	if k != 'undefined':  # FIXME: костыль защитный
 		if value_is_incomplete(v):
-			centity['deps'].append(v)
+			cdef['deps'].append(v)
 			v = lookup_func(v['id']['str'])
 			if v == None:
 				error("call undefined func", x['ti'])
@@ -2238,7 +2238,7 @@ def type_update(dst, src):
 
 def def_type(x):
 	global cmodule
-	global centity
+	global cdef
 
 	id = x['id']
 	log("def_type: %s" % id['str'])
@@ -2250,7 +2250,7 @@ def def_type(x):
 		return None
 
 	definition = hlir_def_type(id, nt, None, x['ti'])
-	centity = definition
+	cdef = definition
 
 	ty = do_type(x['type'])
 
@@ -2292,13 +2292,13 @@ def def_type(x):
 	definition['access_level'] = x['access_modifier']
 
 	nt['definition'] = definition
-
+	cdef = None
 	return definition
 
 
 
 def def_const(x):
-	global centity
+	global cdef
 	id = x['id']
 
 	log("def_const: %s" % id['str'])
@@ -2314,7 +2314,7 @@ def def_const(x):
 
 
 	definition = hlir_def_const(id, None, None, x['ti'])
-	centity = definition
+	cdef = definition
 
 	init_value = do_value_immediate(x['value'], allow_ptr_to_str=True)
 
@@ -2343,14 +2343,13 @@ def def_const(x):
 	const_value['definition'] = definition
 	const_value['module'] = cmodule
 	definition['module'] = cmodule
-
-	centity = None
+	cdef = None
 	return definition
 
 
 
 def def_var(x):
-	global centity
+	global cdef
 
 	id = x['id']
 	log("def_var %s" % id['str'])
@@ -2362,7 +2361,7 @@ def def_var(x):
 
 
 	definition = hlir_def_var(id, None, None, x['ti'])
-	centity = definition
+	cdef = definition
 
 	t = do_type(x['type'])
 	v = do_rvalue(x['init_value'])
@@ -2437,18 +2436,17 @@ def def_var(x):
 	var_value = value_var(id, t, id['ti'])
 	cmodule_value_add(id['str'], var_value, is_public=x['access_modifier'] == 'public')
 
-	#definition = hlir_def_var(id, var_value, init_value, x['ti'])
 	definition['var_value'] = var_value
 	definition['init_value'] = init_value
 	definition['module'] = cmodule
 	var_value['definition'] = definition
 	definition['access_level'] = x['access_modifier']
-	centity = None
+	cdef = None
 	return definition
 
 
 def def_func(x, dostmt=True):
-	global centity
+	global cdef
 	global cfunc
 	global cmodule
 
@@ -2484,7 +2482,7 @@ def def_func(x, dostmt=True):
 
 
 	definition = hlir_def_func(func_id, fn, None, x['ti'])
-	centity = definition
+	cdef = definition
 
 	prev_cfunc = cfunc
 	cfunc = fn
@@ -2540,7 +2538,7 @@ def def_func(x, dostmt=True):
 	definition['access_level'] = x['access_modifier']
 	fn['definition'] = definition
 	definition['module'] = cmodule
-	centity = None
+	cdef = None
 	return definition
 
 
