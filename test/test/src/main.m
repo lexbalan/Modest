@@ -10,6 +10,7 @@ type Node record {
 }
 
 
+//: []()->Unit
 var funcs = [&init]
 
 
@@ -25,3 +26,4 @@ public func main() -> Int32 {
 func init() {
 	printf("init()\n")
 }
+

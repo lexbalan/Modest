@@ -1621,7 +1621,7 @@ def print_def_func(x):
 	newline(n=x['nl'])
 
 	# печатаем декларации функций от которых зависит эта
-	for dep in x['value']['deps']:
+	for dep in x['deps']:
 		if not dep['id']['str'] in declared:
 			declared.append(dep['id']['str'])
 			print_decl_func(dep['definition'])
@@ -1719,7 +1719,7 @@ def print_def_type(x):
 	orig_type = x['original_type']
 
 	# печатаем декларации для типов от которых зависит этот тип
-	for dep in x['type']['deps']:
+	for dep in x['deps']:
 		if not 'id' in dep:
 			error("undefined type", dep['ti'])
 			return

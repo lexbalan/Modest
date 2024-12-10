@@ -537,6 +537,8 @@ def type_is_undefined(t):
 
 
 def type_is_incomplete(t):
+	if not 'att' in t:
+		print(t)
 	return 'incomplete' in t['att']
 
 

@@ -20,6 +20,10 @@ struct Node {
 };
 
 
+//: []()->Unit
+static void *funcs[1] = (void *[1]){&init};
+
+
 static void init();
 int32_t main()
 {

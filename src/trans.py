@@ -80,8 +80,8 @@ modules = {}
 
 cmodule = None  # Current module
 cfunc = None	# current function
-ctype = None	# current type
 context = None  # current context (symtab)
+centity = None
 
 
 
@@ -568,8 +568,6 @@ def do_field(x):
 #
 
 def do_type_id(t):
-	global ctype
-
 	id = t['ids'][0]
 	id_str = id['str']
 
@@ -595,12 +593,9 @@ def do_type_id(t):
 		tx = hlir_type.hlir_type_undefined(t['ti'])
 
 	# если дело происходит в определении типа и пришел undefined тип
-	# пропишем его в ctype['deps']
-
-	if ctype != None:
-		if hlir_type.type_is_undefined(tx):
-			#print("TYPE_DEPS_APPEND(%s)" % str(tx))
-			ctype['deps'].append(tx)
+	if hlir_type.type_is_undefined(tx):
+		#print("TYPE_DEPS_APPEND(%s)" % str(tx))
+		centity['deps'].append(tx)
 
 
 #	if tx == None:
@@ -1234,15 +1229,6 @@ def do_value_call(x):
 		return value_bad(x)
 
 
-	if value_is_incomplete(fn):
-		#info("call incomplete func", x['ti'])
-		cfunc['deps'].append(fn)
-		fn = lookup_func(x['left']['str'])
-		if fn == None:
-			error("call undefined func", x['ti'])
-			return value_bad(x)
-
-
 	ftype = fn['type']
 
 	# pointer to function?
@@ -1858,6 +1844,16 @@ def do_value(x):
 		#print("add TI to %s" % v['kind'])
 	v['ti'] = x['ti']
 
+
+	global centity
+	if k != 'undefined':  # FIXME: костыль защитный
+		if value_is_incomplete(v):
+			centity['deps'].append(v)
+			v = lookup_func(v['id']['str'])
+			if v == None:
+				error("call undefined func", x['ti'])
+				return value_bad(x)
+
 	return v
 
 
@@ -2242,24 +2238,23 @@ def type_update(dst, src):
 
 def def_type(x):
 	global cmodule
-	global ctype
+	global centity
 
 	id = x['id']
 	log("def_type: %s" % id['str'])
 
-	old_ctype = ctype
-
 	nt = ctx_type_get(id['str'])
-	ctype = nt
 
 	if not hlir_type.type_is_undefined(nt):
 		error("type redefinition", x['ti'])
 		return None
 
+	definition = hlir_def_type(id, nt, None, x['ti'])
+	centity = definition
+
 	ty = do_type(x['type'])
 
 	if hlir_type.type_is_bad(ty):
-		ctype = old_ctype
 		return None
 
 	# поскольку этот тип здесь связывается с идентификатором
@@ -2291,20 +2286,19 @@ def def_type(x):
 	if hlir_type.type_is_record(ty):
 		cmodule['records'].append(nt)
 
-	definition = hlir_def_type(id, nt, ty, x['ti'])
+	definition['original_type'] = ty
 	definition['module'] = cmodule
 	definition['nl'] = x['nl']
 	definition['access_level'] = x['access_modifier']
 
 	nt['definition'] = definition
 
-	ctype = old_ctype
-
 	return definition
 
 
 
 def def_const(x):
+	global centity
 	id = x['id']
 
 	log("def_const: %s" % id['str'])
@@ -2317,6 +2311,10 @@ def def_const(x):
 	if id['str'][0].isupper():
 		error("value id must starts with small letter", id['ti'])
 		pass
+
+
+	definition = hlir_def_const(id, None, None, x['ti'])
+	centity = definition
 
 	init_value = do_value_immediate(x['value'], allow_ptr_to_str=True)
 
@@ -2336,18 +2334,24 @@ def def_const(x):
 
 	const_value = symbol_const(id, init_value, is_public=x['access_modifier'] == 'public')
 
-	definition = hlir_def_const(id, const_value, init_value, x['ti'])
 	if need_decoration(x):
 		const_value['id']['prefix'] = cmodule['prefix']
+
+	definition['init_value'] = init_value
+	definition['value'] = const_value
 	definition['access_level'] = x['access_modifier']
 	const_value['definition'] = definition
 	const_value['module'] = cmodule
 	definition['module'] = cmodule
+
+	centity = None
 	return definition
 
 
 
 def def_var(x):
+	global centity
+
 	id = x['id']
 	log("def_var %s" % id['str'])
 
@@ -2355,6 +2359,10 @@ def def_var(x):
 	already = ctx_value_get(id['str'])
 	if already != None:
 		error("redefinition of '%s'" % id['str'], id['ti'])
+
+
+	definition = hlir_def_var(id, None, None, x['ti'])
+	centity = definition
 
 	t = do_type(x['type'])
 	v = do_rvalue(x['init_value'])
@@ -2401,9 +2409,6 @@ def def_var(x):
 	init_value = v
 
 
-
-
-
 	"""
 	init_value = do_rvalue(x['init_value'])
 	if init_value != None:
@@ -2432,14 +2437,18 @@ def def_var(x):
 	var_value = value_var(id, t, id['ti'])
 	cmodule_value_add(id['str'], var_value, is_public=x['access_modifier'] == 'public')
 
-	definition = hlir_def_var(id, var_value, init_value, x['ti'])
+	#definition = hlir_def_var(id, var_value, init_value, x['ti'])
+	definition['var_value'] = var_value
+	definition['init_value'] = init_value
 	definition['module'] = cmodule
 	var_value['definition'] = definition
 	definition['access_level'] = x['access_modifier']
+	centity = None
 	return definition
 
 
 def def_func(x, dostmt=True):
+	global centity
 	global cfunc
 	global cmodule
 
@@ -2474,11 +2483,13 @@ def def_func(x, dostmt=True):
 		return None
 
 
+	definition = hlir_def_func(func_id, fn, None, x['ti'])
+	centity = definition
+
 	prev_cfunc = cfunc
 	cfunc = fn
 
 	params = fn['type']['params']
-
 
 	i = 0
 	while i < len(params):
@@ -2525,11 +2536,11 @@ def def_func(x, dostmt=True):
 
 	cfunc = prev_cfunc
 
-	definition = hlir_def_func(func_id, fn, stmt, x['ti'])
-
+	definition['stmt'] = stmt
 	definition['access_level'] = x['access_modifier']
 	fn['definition'] = definition
 	definition['module'] = cmodule
+	centity = None
 	return definition
 
 
