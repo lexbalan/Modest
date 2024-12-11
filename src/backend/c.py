@@ -1620,14 +1620,6 @@ def print_def_func(x):
 	global declared
 	newline(n=x['nl'])
 
-	# печатаем декларации функций от которых зависит эта
-	for dep in x['deps']:
-		if not dep['id']['str'] in declared:
-			declared.append(dep['id']['str'])
-			print_decl_func(dep['definition'])
-			out("\n")
-
-
 	func = x['value']
 
 	global cfunc
@@ -1718,17 +1710,6 @@ def print_def_type(x):
 	id_str = get_id_str(x['type'])
 	orig_type = x['original_type']
 
-	# печатаем декларации для типов от которых зависит этот тип
-	for dep in x['deps']:
-		if not 'id' in dep:
-			error("undefined type", dep['ti'])
-			return
-
-		if not dep['id']['str'] in declared:
-			declared.append(dep['id']['str'])
-			print_decl_type(dep['definition'])
-			out("\n\n")
-
 
 #	if NO_TYPEDEF_STRUCTS:
 #		if hlir_type.type_is_record(orig_type):
@@ -1742,8 +1723,10 @@ def print_def_type(x):
 	if hlir_type.type_is_record(x['original_type']):
 		print_type_record(x['original_type'], tag=id_str)
 		out(";")
+
 		if not id_str in declared:
 			out("\ntypedef struct %s %s;" % (id_str, id_str))
+
 		return
 
 	out("typedef ")
@@ -1984,6 +1967,33 @@ def is_private(x):
 	return False
 
 
+def print_deps(deps):
+	global declared
+	if len(deps) == 0:
+		return
+
+	# печатаем декларации для типов от которых зависит этот тип
+	for dep in deps:
+		if not 'id' in dep:
+			error("undefined", dep['ti'])
+			return
+
+		id_str = get_id_str(dep)
+		out("\n")
+		if not id_str in declared:
+			declared.append(id_str)
+			#print(dep['isa'])
+			#print(dep['kind'])
+			if dep['isa'] == 'type':
+				print('declared("%s")' % id_str)
+				print_decl_type(dep['definition'])
+			elif dep['isa'] == 'value':
+				print_decl_func(dep['definition'])
+
+	out("\n")
+
+
+
 def print_header(module, outname):
 	outname = outname + '.h'
 	output_open(outname)
@@ -2037,6 +2047,7 @@ def print_header(module, outname):
 		elif isa == 'def_var':
 			print_decl_var(x)
 		elif isa in ['def_type', 'decl_type']:
+			print_deps(x['deps'])
 			print_def_type(x)
 		elif isa == 'def_const':
 			print_def_const(x)
@@ -2108,6 +2119,7 @@ def print_cfile(module, _outname):
 				print_def_const(x)
 		elif isa == 'def_type':
 			if is_private(x):
+				print_deps(x['deps'])
 				print_def_type(x)
 		elif isa == 'def_var':
 			print_def_var(x)
@@ -2115,6 +2127,7 @@ def print_cfile(module, _outname):
 			print_decl_var(x)
 		elif isa == 'def_func':
 			newline()
+			print_deps(x['deps'])
 			print_def_func(x)
 		elif isa == 'comment':
 			print_comment(x)

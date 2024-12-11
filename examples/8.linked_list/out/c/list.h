@@ -10,17 +10,17 @@
 #include <stdio.h>
 
 
-
-
 struct list_Node;
 typedef struct list_Node list_Node;
+
+
+
 
 struct list_Node {
 	list_Node *next;
 	list_Node *prev;
 	void *data;
 };
-typedef struct list_Node list_Node;
 
 struct list_List {
 	list_Node *head;
