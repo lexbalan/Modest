@@ -1978,14 +1978,11 @@ def print_deps(deps):
 			error("undefined", dep['ti'])
 			return
 
-		id_str = get_id_str(dep)
 		out("\n")
+		id_str = get_id_str(dep)
 		if not id_str in declared:
 			declared.append(id_str)
-			#print(dep['isa'])
-			#print(dep['kind'])
 			if dep['isa'] == 'type':
-				print('declared("%s")' % id_str)
 				print_decl_type(dep['definition'])
 			elif dep['isa'] == 'value':
 				print_decl_func(dep['definition'])
