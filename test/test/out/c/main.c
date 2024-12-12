@@ -9,22 +9,21 @@
 
 
 // 1. Сначала проходит по всем сущностям и создает type_undefined/value_undefined
-
-
 struct Node;
 typedef struct Node Node;
+
+
 
 struct Node {
 	Node *next;
 	void *data;
 };
-
-
 //: []()->Unit
-static void *funcs[1] = (void *[1]){&init};
-
 
 static void init();
+
+static void *funcs[1] = (void *[1]){&init};
+
 int32_t main()
 {
 	init();

@@ -2042,11 +2042,13 @@ def print_header(module, outname):
 				continue
 			print_decl_func(x)
 		elif isa == 'def_var':
+			print_deps(x['deps'])
 			print_decl_var(x)
 		elif isa in ['def_type', 'decl_type']:
 			print_deps(x['deps'])
 			print_def_type(x)
 		elif isa == 'def_const':
+			print_deps(x['deps'])
 			print_def_const(x)
 
 	newline()
@@ -2111,14 +2113,14 @@ def print_cfile(module, _outname):
 			continue
 
 		isa = x['isa']
-		if isa == 'def_const':
-			if is_private(x):
-				print_def_const(x)
-		elif isa == 'def_type':
-			if is_private(x):
-				print_deps(x['deps'])
-				print_def_type(x)
+		if isa == 'def_const' and is_private(x):
+			print_deps(x['deps'])
+			print_def_const(x)
+		elif isa == 'def_type' and is_private(x):
+			print_deps(x['deps'])
+			print_def_type(x)
 		elif isa == 'def_var':
+			print_deps(x['deps'])
 			print_def_var(x)
 		elif isa == 'decl_var':
 			print_decl_var(x)

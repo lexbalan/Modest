@@ -8,6 +8,8 @@ type Node record {
 	next: *Node
 	data: Ptr
 }
+//: []()->Unit
+var funcs: [1]*() -> Unit = [&init]
 public func main() -> Int32 {
 	init()
 
