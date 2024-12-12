@@ -119,14 +119,14 @@ def value_cons_implicit(t, v):
 	# 5. FreePointer -> AnyPointer
 
 	if value_is_bad(v) or type.type_is_bad(t):
-		return value_bad(v['ti'])
+		return value_bad(v)
 
 	ti = v['ti']
 
 	from_type = v['type']
 
 	if not cons_can(t, from_type, 'implicit'):
-		info("cannot implicitly construct value", v['ti'])
+		#info("cannot implicitly construct value", v['ti'])
 		return v
 
 	# (!) потому что в C номинальные типы, а у нас - структурные

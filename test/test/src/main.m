@@ -11,7 +11,8 @@ type Node record {
 
 
 //: []()->Unit
-var funcs = [&init]
+//var a: []Int32 = [10, "&add", 20, 30, "sd"]
+var funcs: []*()->Unit = [&init, &add]
 
 
 public func main() -> Int32 {
@@ -25,5 +26,10 @@ public func main() -> Int32 {
 
 func init() {
 	printf("init()\n")
+}
+
+
+func add(a: Int32, b: Int32) -> Int32 {
+	return a + b
 }
 

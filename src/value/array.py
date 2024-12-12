@@ -181,6 +181,10 @@ def _value_array_create(items, item_type, length, is_generic, ti):
 
 def select_common_type_for_list(items):
 	array_item_type = items[0]['type']
+
+	if hlir_type.type_is_bad(array_item_type):
+		return array_item_type
+
 	i = 0
 	while i < len(items):
 		item = items[i]
@@ -189,6 +193,7 @@ def select_common_type_for_list(items):
 		common_type = select_common_type(array_item_type, item_type)
 		if common_type == None:
 			error("value with unsuitable type", item['ti'])
+			return hlir_type.hlir_type_bad(item_type)
 		else:
 			array_item_type = common_type
 		i = i + 1
