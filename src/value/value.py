@@ -496,6 +496,22 @@ def value_va_copy(dst, src, ti):
 
 
 
+
+def value_eq_immediate(a, b, ti):
+	if isinstance(a, dict) and isinstance(b, dict):
+		if not hlir_type.type_eq(a['type'], b['type']):
+			return False
+
+		# eq composite values
+		if hlir_type.type_is_array(a['type']):
+			return value_array_eq(a, b, ti)
+		elif hlir_type.type_is_record(a['type']):
+			return value_eq_records(a, b, ti)
+
+	return a['asset'] == b['asset']
+
+
+
 def value_print(x, msg="value_print:"):
 	assert(x['isa'] == 'value')
 

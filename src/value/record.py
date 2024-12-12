@@ -169,3 +169,10 @@ def value_record_cons(t, v, method, ti):
 	return nv
 
 
+
+def value_record_eq(l, r, ti):
+	fatal("value_record_eq() not implemented!", ti)
+	return False # TODO!
+
+
+

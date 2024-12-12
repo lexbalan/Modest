@@ -5,7 +5,7 @@ from hlir.type import type_print, select_common_type
 from error import info, warning, error
 from .char import utf32_chars_to_utfx_chars
 from .integer import value_integer_create
-from .value import value_bad, value_terminal, value_is_undefined, value_is_immediate, value_cons_node, value_cons_immediate, value_zero, value_bin, value_print
+from .value import value_bad, value_terminal, value_is_undefined, value_is_immediate, value_cons_node, value_zero, value_bin, value_eq_immediate, value_print
 
 
 # TODO: переделай здесь все - тут все плохо...
@@ -195,6 +195,27 @@ def value_array_add(l, r, ti):
 	nv['items'] = items
 	nv['immediate'] = True
 	return nv
+
+
+
+
+# FIXIT: it is generic arrays EQ!
+def value_array_eq(a, b, ti):
+	#info("value_array_eq", ti)
+	avolume = a['type']['volume']
+	bvolume = b['type']['volume']
+	if value_is_immediate(avolume) and value_is_immediate(bvolume):
+		if avolume['asset'] != bvolume['asset']:
+			return False
+	else:
+		fatal("dynamic immediate array volume not implemented", ti)
+
+	for ax, bx in zip(a['items'], b['items']):
+		if not value_eq_immediate(ax, bx, ti):
+			return False
+
+	return True
+
 
 
 

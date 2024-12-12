@@ -13,14 +13,14 @@ from hlir.hlir import hlir_initializer
 
 import foundation
 
-from value.value import value_print
+from value.value import value_eq_immediate, value_print
 
 from value.bool import value_bool_create
 from value.integer import value_integer_create
 from value.float import value_float_create
-from value.array import value_array_create, value_array_add
+from value.array import value_array_create, value_array_eq, value_array_add
 from value.string import value_string_create
-from value.record import value_record_create
+from value.record import value_record_create, value_record_eq
 
 
 import decimal
@@ -818,7 +818,7 @@ def bin_imm(op, type_result, l, r, ti):
 			return value_array_add(l, r, ti)
 
 		elif op in ['eq', 'ne']:
-			asset = value_eq_arrays(l, r, ti)
+			asset = value_array_eq(l, r, ti)
 			if op == 'ne':
 				asset = not asset
 
@@ -840,7 +840,7 @@ def bin_imm(op, type_result, l, r, ti):
 	elif hlir_type.type_is_record(l['type']):
 		if op in ['eq', 'ne']:
 			info("eq_records", ti)
-			asset = value_eq_records(l, r, ti)
+			asset = value_record_eq(l, r, ti)
 			if op == 'ne':
 				asset = not asset
 
@@ -863,44 +863,6 @@ def bin_imm(op, type_result, l, r, ti):
 
 	nv['immediate'] = True
 	return nv
-
-
-
-def value_eq_immediate(a, b, ti):
-	if isinstance(a, dict) and isinstance(b, dict):
-		if not hlir_type.type_eq(a['type'], b['type']):
-			return False
-
-		# eq composite values
-		if hlir_type.type_is_array(a['type']):
-			return value_eq_arrays(a, b, ti)
-		elif hlir_type.type_is_record(a['type']):
-			return value_eq_records(a, b, ti)
-
-	return a['asset'] == b['asset']
-
-
-# FIXIT: it is generic arrays EQ!
-def value_eq_arrays(a, b, ti):
-	#info("value_eq_arrays", ti)
-	avolume = a['type']['volume']
-	bvolume = b['type']['volume']
-	if value_is_immediate(avolume) and value_is_immediate(bvolume):
-		if avolume['asset'] != bvolume['asset']:
-			return False
-	else:
-		fatal("dynamic immediate array volume not implemented", ti)
-
-	for ax, bx in zip(a['items'], b['items']):
-		if not value_eq_immediate(ax, bx, ti):
-			return False
-
-	return True
-
-
-def value_eq_records(l, r, ti):
-	fatal("value_eq_records() not implemented!", ti)
-	return False # TODO!
 
 
 
