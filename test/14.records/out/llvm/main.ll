@@ -249,12 +249,12 @@ endif_0:
 	store {%Int32,%Int32} %18, {%Int32,%Int32}* %16
 	; JUST
 	; as ptr
-	%19 = bitcast %Point2D* %14 to {%Int32,%Int32}*
-	%20 = load {%Int32,%Int32}, {%Int32,%Int32}* %19
-	%21 = alloca {%Int32,%Int32}
-	store {%Int32,%Int32} %20, {%Int32,%Int32}* %21
-	%22 = bitcast {%Int32,%Int32}* %21 to i8*
-	%23 = bitcast {%Int32,%Int32}* %16 to i8*
+	%19 = bitcast {%Int32,%Int32}* %16 to %Point2D*
+	%20 = load %Point2D, %Point2D* %19
+	%21 = alloca %Point2D
+	store %Point2D %20, %Point2D* %21
+	%22 = bitcast %Point2D* %14 to i8*
+	%23 = bitcast %Point2D* %21 to i8*
 	
 	%24 = call i1 (i8*, i8*, i64) @memeq( i8* %22, i8* %23, %Int64 8)
 	%25 = icmp ne %Bool %24, 0
@@ -273,12 +273,12 @@ endif_1:
 	store {%Int32,%Int32} %30, {%Int32,%Int32}* %28
 	; JUST
 	; as ptr
-	%31 = bitcast {%Int32,%Int32}* %16 to {%Int32,%Int32}*
+	%31 = bitcast {%Int32,%Int32}* %28 to {%Int32,%Int32}*
 	%32 = load {%Int32,%Int32}, {%Int32,%Int32}* %31
 	%33 = alloca {%Int32,%Int32}
 	store {%Int32,%Int32} %32, {%Int32,%Int32}* %33
-	%34 = bitcast {%Int32,%Int32}* %33 to i8*
-	%35 = bitcast {%Int32,%Int32}* %28 to i8*
+	%34 = bitcast {%Int32,%Int32}* %16 to i8*
+	%35 = bitcast {%Int32,%Int32}* %33 to i8*
 	
 	%36 = call i1 (i8*, i8*, i64) @memeq( i8* %34, i8* %35, %Int64 8)
 	%37 = icmp ne %Bool %36, 0
@@ -293,12 +293,12 @@ endif_2:
 	; comparison between two record (by pointer)
 	; JUST
 	; as ptr
-	%40 = bitcast %Point2D* %14 to {%Int32,%Int32}*
-	%41 = load {%Int32,%Int32}, {%Int32,%Int32}* %40
-	%42 = alloca {%Int32,%Int32}
-	store {%Int32,%Int32} %41, {%Int32,%Int32}* %42
-	%43 = bitcast {%Int32,%Int32}* %42 to i8*
-	%44 = bitcast {%Int32,%Int32}* %16 to i8*
+	%40 = bitcast {%Int32,%Int32}* %16 to %Point2D*
+	%41 = load %Point2D, %Point2D* %40
+	%42 = alloca %Point2D
+	store %Point2D %41, %Point2D* %42
+	%43 = bitcast %Point2D* %14 to i8*
+	%44 = bitcast %Point2D* %42 to i8*
 	
 	%45 = call i1 (i8*, i8*, i64) @memeq( i8* %43, i8* %44, %Int64 8)
 	%46 = icmp ne %Bool %45, 0

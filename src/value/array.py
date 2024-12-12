@@ -5,7 +5,7 @@ from hlir.type import type_print, select_common_type
 from error import info, warning, error
 from .char import utf32_chars_to_utfx_chars
 from .integer import value_integer_create
-from .value import value_terminal, value_is_undefined, value_is_immediate, value_cons_node, value_cons_immediate, value_zero, value_bin, value_print
+from .value import value_bad, value_terminal, value_is_undefined, value_is_immediate, value_cons_node, value_cons_immediate, value_zero, value_bin, value_print
 
 
 # TODO: переделай здесь все - тут все плохо...
@@ -28,15 +28,22 @@ def value_array_create(items, ti=None):
 			is_immediate = False
 
 	# Получаем наиболее подходящий общий тип элементов массива
-	array_item_type = select_common_type_for_list(items)
+	items_type = items[0]['type']
+	for item in items:
+		items_type = select_common_type(items_type, item['type'])
+		if hlir_type.type_is_bad(items_type):
+			error("value with unsuitable type", item['ti'])
+			return value_bad({'ti': ti})
+
 
 	from .cons import implicit_cast_list
 	# неявно приводим все элементы к этому типу
-	casted_items = implicit_cast_list(items, array_item_type)
+	casted_items = implicit_cast_list(items, items_type)
 
-	v = _value_array_create(casted_items, array_item_type, length, True, ti)
+	v = _value_array_create(casted_items, items_type, length, True, ti)
 	v['immediate'] = is_immediate  #TODO: need to implement 'immediate' flag
 	return v
+
 
 
 def value_array_create_from_string(t, v, method, ti=None):
@@ -83,7 +90,6 @@ def array_can(to, from_type, method):
 		return False
 
 	if not hlir_type.type_eq(to['of'], ct):
-		info("unsuitable item type", from_type['ti'])
 		return False
 
 	if hlir_type.type_is_generic(from_type):
@@ -174,41 +180,4 @@ def _value_array_create(items, item_type, length, is_generic, ti):
 
 
 
-
-
-
-
-
-def select_common_type_for_list(items):
-	array_item_type = items[0]['type']
-
-	if hlir_type.type_is_bad(array_item_type):
-		return array_item_type
-
-	i = 0
-	while i < len(items):
-		item = items[i]
-
-		item_type = item['type']
-		common_type = select_common_type(array_item_type, item_type)
-		if common_type == None:
-			error("value with unsuitable type", item['ti'])
-			return hlir_type.hlir_type_bad(item_type)
-		else:
-			array_item_type = common_type
-		i = i + 1
-
-	return common_type
-
-
-
-
-"""def rectification(items):
-	# Получаем наиболее подходящий общий тип элементов массива
-	array_item_type = select_common_type_for_list(items)
-
-	# неявно приводим все элементы к этому типу
-	casted_items = implicit_cast_list(items, array_item_type)
-
-	return casted_items"""
 

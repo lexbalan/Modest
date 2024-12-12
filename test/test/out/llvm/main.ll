@@ -188,6 +188,7 @@ declare void @perror(%ConstCharStr* %str)
 ; -- end print imports --
 ; -- strings --
 @str1 = private constant [8 x i8] [i8 105, i8 110, i8 105, i8 116, i8 40, i8 41, i8 10, i8 0]
+@str2 = private constant [7 x i8] [i8 102, i8 111, i8 111, i8 40, i8 41, i8 10, i8 0]
 ; -- endstrings --
 
 %Node = type {
@@ -196,12 +197,14 @@ declare void @perror(%ConstCharStr* %str)
 };
 
 
-@funcs = internal global [1 x void ()*] [
-	void ()* @init
+@funcs = internal global [2 x void ()*] [
+	void ()* @init,
+	void ()* @foo
 ]
 
 define %Int32 @main() {
 	call void @init()
+	call void @foo()
 	%1 = alloca %Node, align 8
 	ret %Int32 0
 }
@@ -209,6 +212,16 @@ define %Int32 @main() {
 define internal void @init() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([8 x i8]* @str1 to [0 x i8]*))
 	ret void
+}
+
+define internal void @foo() {
+	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([7 x i8]* @str2 to [0 x i8]*))
+	ret void
+}
+
+define internal %Int32 @add(%Int32 %a, %Int32 %b) {
+	%1 = add %Int32 %a, %b
+	ret %Int32 %1
 }
 
 

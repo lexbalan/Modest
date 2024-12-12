@@ -226,7 +226,7 @@ int main()
 	char sa[5];
 	memcpy(&sa, &"LoHi!", sizeof(char[5]));
 
-	if (memcmp(&sa[2], &"Hi", sizeof(char[2])) == 0) {
+	if (memcmp(&sa[2], &"Hi", sizeof(char[4 - 2])) == 0) {
 		printf("test passed\n");
 	} else {
 		printf("test failed\n");

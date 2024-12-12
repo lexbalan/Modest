@@ -19,14 +19,18 @@ struct Node {
 	void *data;
 };
 //: []()->Unit
+//var a: []Int32 = [10, "&add", 20, 30, "sd"]
 
 static void init();
 
-static void *funcs[1] = (void *[1]){&init};
+static void foo();
+
+static void *funcs[2] = (void *[2]){&init, &foo};
 
 int32_t main()
 {
 	init();
+	foo();
 
 	Node n;
 
@@ -36,6 +40,11 @@ int32_t main()
 static void init()
 {
 	printf("init()\n");
+}
+
+static void foo()
+{
+	printf("foo()\n");
 }
 
 static int32_t add(int32_t a, int32_t b)

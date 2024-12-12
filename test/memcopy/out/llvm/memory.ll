@@ -140,7 +140,7 @@ body_1:
 break_1:
 	; word operation
 	%11 = sub %Int64 %len, %2
-	%12 = udiv %Nat %11, 8
+	%12 = udiv %Int64 %11, 8
 	%13 = load %Int64, %Int64* %4
 	%14 = getelementptr inbounds [0 x %Word8], [0 x %Word8]* %3, %Int32 0, %Int64 %13
 	%15 = bitcast %Word8* %14 to [0 x %Word]*
@@ -161,7 +161,7 @@ body_2:
 break_2:
 	; byte operation
 	%22 = sub %Int64 %len, %2
-	%23 = urem %Nat %22, 8
+	%23 = urem %Int64 %22, 8
 	%24 = load %Int64, %Int64* %4
 	%25 = getelementptr inbounds [0 x %Word], [0 x %Word]* %15, %Int32 0, %Int64 %24
 	%26 = bitcast %Word* %25 to [0 x %Word8]*

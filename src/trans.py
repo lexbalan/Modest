@@ -2388,10 +2388,14 @@ def def_var(x):
 		# only for case:
 		# var arrayFromString: var s: []Char8 = "abc"
 		if hlir_type.type_is_open_array(t):
+			length = 0
 			if hlir_type.type_is_string(v['type']):
 				length = len(v['asset'])
 			elif hlir_type.type_is_array(v['type']):
 				length = v['type']['volume']['asset']
+			else:
+				#info("???????", x['ti'])
+				pass
 
 			volume = value_integer_create(length)
 			t = hlir_type.hlir_type_array(t['of'], volume, x['ti'])

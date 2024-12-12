@@ -43,6 +43,10 @@ STR_OPS = CONS_OP + EQ_OPS + ('add',)
 
 
 def hlir_type_bad(x):
+	ti = None
+	if x != None:
+		if 'ti' in x:
+			ti = x['ti']
 	return {
 		'isa': 'type',
 		'kind': 'bad',
@@ -54,7 +58,7 @@ def hlir_type_bad(x):
 		'ops': [],
 		'att': [],
 		'deps': [],
-		'ti': x['ti']
+		'ti': ti
 	}
 
 
@@ -983,14 +987,54 @@ def select_common_record_type(a, b):
 
 
 
-# выбирает наиболее подходящий тип для двух входных
-# (наименьшее общее кратное)
+# выбирает общий тип для двух входных
 # CAN RETURN NONE!
 def select_common_type(a, b):
 
-	# вид типа должен совпадать
+	if type_eq(a, b):
+		return a
+
+
+	if a['kind'] == b['kind']:
+		if type_is_generic(a) and type_is_generic(b):
+			if type_is_array(a):
+				# TODO: тут все плохо (тк должна быть рекурсия но пока без нее)
+				if type_is_generic(a['of']):
+					return b
+				if type_is_generic(b['of']):
+					return a
+
+				# not implemented!
+				return a
+
+			else:
+				if a['width'] > b['width']:
+					return a
+				else:
+					return b
+
+		elif type_is_generic(a) or type_is_generic(b):
+			if type_is_string(a):
+				if type_is_string(b):
+					if a['char_width'] > b['char_width']:
+						return a
+					else:
+						return b
+
+			if type_is_generic(a):
+				return b
+
+			if type_is_generic(b):
+				return a
+
+		else:
+			return hlir_type_bad(None)
+
+
+
 	if a['kind'] != b['kind']:
-		# но есть исключения
+		# вид типа обычно должен совпадать
+		# но есть и исключения
 
 		# c == "A"
 		if a['kind'] == 'char':
@@ -1042,44 +1086,14 @@ def select_common_type(a, b):
 			if type_is_integer(a):
 				return b
 
-		print("select_common_type(%s %s) not impl." % (a['kind'], b['kind']))
-		return None
-
-
-
-	if type_is_generic(a) != type_is_generic(b):
-		if type_is_string(a):
-			if type_is_string(b):
-				if a['char_width'] > b['char_width']:
-					return a
-				else:
-					return b
-
-
-		if type_is_generic(a):
-			return b
-
-		if type_is_generic(b):
-			return a
-
-
-	elif type_is_generic(a) and type_is_generic(b):
-		if type_is_array(a) and type_is_array(b):
-				# TODO: тут все плохо (тк должна быть рекурсия но пока без нее)
-				if type_is_generic(a['of']):
-					return b
-				if type_is_generic(b['of']):
-					return a
-
-				# not implemented!
-				return a
+	print("select_common_type(%s %s) not implenemted" % (a['kind'], b['kind']))
+	return hlir_type_bad(None)
 
 
 
 
-	if a['width'] > b['width']:
-		return a
-	else:
-		return b
+
+
+
 
 
