@@ -18,7 +18,7 @@ from value.value import value_print
 from value.bool import value_bool_create
 from value.integer import value_integer_create
 from value.float import value_float_create
-from value.array import value_array_create
+from value.array import value_array_create, value_array_add
 from value.string import value_string_create
 from value.record import value_record_create
 
@@ -815,18 +815,7 @@ def bin_imm(op, type_result, l, r, ti):
 	items = []
 	if hlir_type.type_is_array(l['type']):
 		if op == 'add':
-			items = l['items'] + r['items']
-			length = len(items)
-			str_array_volume = value_integer_create(length)
-			item_type = select_common_type(l['type']['of'], r['type']['of'])
-
-			from value.cons import implicit_cast_list
-			# неявно приводим все элементы к общему типу
-			items = implicit_cast_list(items, item_type)
-
-			assert(item_type != None)
-			type_result = hlir_type.hlir_type_array(item_type, volume=str_array_volume, ti=ti)
-			type_result['generic'] = True  # FIXIT!
+			return value_array_add(l, r, ti)
 
 		elif op in ['eq', 'ne']:
 			asset = value_eq_arrays(l, r, ti)

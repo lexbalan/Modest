@@ -35,8 +35,6 @@ def value_array_create(items, ti=None):
 			error("value with unsuitable type", item['ti'])
 			return value_bad({'ti': ti})
 
-
-	from .cons import implicit_cast_list
 	# неявно приводим все элементы к этому типу
 	casted_items = implicit_cast_list(items, items_type)
 
@@ -179,5 +177,40 @@ def _value_array_create(items, item_type, length, is_generic, ti):
 	return nv
 
 
+# Складывает два массива (оба - immediate!)
+def value_array_add(l, r, ti):
+	items = l['items'] + r['items']
+	length = len(items)
+	str_array_volume = value_integer_create(length)
+	item_type = select_common_type(l['type']['of'], r['type']['of'])
+
+	# неявно приводим все элементы к общему типу
+	items = implicit_cast_list(items, item_type)
+
+	assert(item_type != None)
+	type_result = hlir_type.hlir_type_array(item_type, volume=str_array_volume, ti=ti)
+	type_result['generic'] = True  # FIXIT!
+
+	nv = value_bin('add', l, r, type_result, ti=ti)
+	nv['items'] = items
+	nv['immediate'] = True
+	return nv
 
 
+
+
+def implicit_cast_list(items, to_type):
+	casted_items = []
+
+	from .cons import value_cons_implicit
+	i = 0
+	while i < len(items):
+		item = items[i]
+		casted_item = value_cons_implicit(to_type, item)
+
+		if 'nl_end' in item:
+			casted_item['nl_end'] = item['nl_end']
+
+		casted_items.append(casted_item)
+		i = i + 1
+	return casted_items

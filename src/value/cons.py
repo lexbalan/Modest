@@ -297,20 +297,4 @@ def value_bad_cons(t, v, method, ti):
 
 
 
-def implicit_cast_list(items, to_type):
-	casted_items = []
-
-	from .cons import value_cons_implicit
-	i = 0
-	while i < len(items):
-		item = items[i]
-		casted_item = value_cons_implicit(to_type, item)
-
-		if 'nl_end' in item:
-			casted_item['nl_end'] = item['nl_end']
-
-		casted_items.append(casted_item)
-		i = i + 1
-	return casted_items
-
 
