@@ -512,14 +512,15 @@ def value_scalar_eq(l, r, op, ti):
 
 # op = 'eq' | 'ne
 def value_eq(l, r, op, ti):
-	asset = False
-
-	from value.array import value_array_eq
-	from value.record import value_record_eq
+	assert(l['isa'] == 'value')
+	assert(r['isa'] == 'value')
+	assert(op in ['eq', 'ne'])
 
 	if hlir_type.type_is_array(l['type']):
+		from value.array import value_array_eq
 		return value_array_eq(l, r, op, ti)
 	elif hlir_type.type_is_record(l['type']):
+		from value.record import value_record_eq
 		return value_record_eq(l, r, op, ti)
 
 	return value_scalar_eq(l, r, op, ti)
