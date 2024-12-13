@@ -1698,6 +1698,12 @@ def do_value_bad(x):
 	return value_bad(x['ti'])
 
 
+def do_value_undefined(x):
+	t = hlir_type.hlir_type_undefined(x['ti'])
+	return value_undefined(t, x['ti'])
+
+
+
 def do_rvalue(x):
 	v = do_value(x)
 	return value_load(v)
@@ -1706,10 +1712,9 @@ def do_rvalue(x):
 def do_value(x):
 	assert(x['isa'] == 'ast_value')
 
-	k = x['kind']
-
 	v = None
 
+	k = x['kind']
 	if k == 'id': v = do_value_id(x)
 	elif k == 'number': v = do_value_number(x)
 	elif k == 'string': v = do_value_string(x)
@@ -1742,23 +1747,18 @@ def do_value(x):
 	elif k == '__defined_type': v = do_value___defined_type(x)
 	elif k == '__defined_value': v = do_value___defined_value(x)
 	elif k == 'bad': v = do_value_bad(x['ti'])
-	elif k == 'undefined': v = value_undefined(x, x['ti'])
+	elif k == 'undefined': v = do_value_undefined(x)
 
 	assert(v != None)
-
-	#if not 'ti' in v:
-		#print("add TI to %s" % v['kind'])
 	v['ti'] = x['ti']
 
-
 	global cdef
-	if k != 'undefined':  # FIXME: костыль защитный
-		if value_is_incomplete(v):
-			cdef['deps'].append(v)
-			v = lookup_func(v['id']['str'])
-			if v == None:
-				error("call undefined func", x['ti'])
-				return value_bad(x['ti'])
+	if value_is_incomplete(v):
+		cdef['deps'].append(v)
+		v = lookup_func(v['id']['str'])
+		if v == None:
+			error("call undefined func", x['ti'])
+			return value_bad(x['ti'])
 
 	return v
 
@@ -1777,7 +1777,6 @@ def do_stmt_if(x):
 	if not hlir_type.type_is_bool(cond['type']):
 		error("expected bool value", cond)
 		return hlir_stmt_bad(x)
-
 
 	_then = do_stmt(x['then'])
 
@@ -1803,7 +1802,6 @@ def do_stmt_while(x):
 	if not hlir_type.type_is_bool(cond['type']):
 		error("expected bool value", cond)
 		return hlir_stmt_bad(x)
-
 
 	block = do_stmt(x['stmt'])
 
@@ -1842,7 +1840,7 @@ def do_stmt_return(x):
 
 
 def do_stmt_type(x):
-	print("do_stmt_type\n")
+	fatal("do_stmt_type() not implemented")
 
 
 def do_stmt_again(x):
