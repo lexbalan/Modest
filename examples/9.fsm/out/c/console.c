@@ -23,7 +23,6 @@
 // for putchar()
 // for strlen, strcpy
 
-
 void console_putchar_utf8(char c);
 
 void console_putchar8(char c)
@@ -31,14 +30,12 @@ void console_putchar8(char c)
 	console_putchar_utf8(c);
 }
 
-
 void console_putchar_utf16(uint16_t c);
 
 void console_putchar16(uint16_t c)
 {
 	console_putchar_utf16(c);
 }
-
 
 void console_putchar_utf32(uint32_t c);
 
@@ -134,7 +131,6 @@ void console_puts32(uint32_t *s)
 	}
 }
 
-
 int32_t console_vfprint(int fd, char *form, va_list va);
 
 void console_print(char *form, ...)
@@ -144,7 +140,6 @@ void console_print(char *form, ...)
 	console_vfprint(STDOUT_FILENO, form, va);
 	va_end(va);
 }
-
 
 int32_t console_vsprint(char *buf, char *form, va_list va);
 
@@ -157,11 +152,8 @@ int32_t console_vfprint(int fd, char *form, va_list va)
 	return n;
 }
 
-
 static int32_t sprint_dec_int32(char *buf, int32_t x);
-
 static int32_t sprint_dec_n32(char *buf, uint32_t x);
-
 static int32_t sprint_hex_nat32(char *buf, uint32_t x);
 
 int32_t console_vsprint(char *buf, char *form, va_list va)

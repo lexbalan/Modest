@@ -8,8 +8,7 @@
 
 
 
-// 1. Сначала проходит по всем сущностям и создает type_undefined/value_undefined
-struct Node;
+// 1. Сначала проходит по всем сущностям и создает type_undefined/value_undefinedstruct Node;
 typedef struct Node Node;
 
 
@@ -20,9 +19,7 @@ struct Node {
 };
 //: []()->Unit
 //var a: []Int32 = [10, "&add", 20, 30, "sd"]
-
 static void init();
-
 static void foo();
 
 static void *funcs[2] = (void *[2]){&init, &foo};

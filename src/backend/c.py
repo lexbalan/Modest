@@ -1597,8 +1597,6 @@ def print_func_signature(id_str, ftype, atts):
 
 
 def print_decl_func(x):
-	newline(n=x['nl'])
-
 	if 'gnu_att' in x:
 		out('__attribute__((%s))\n' % x['gnu_att'])
 
@@ -2040,6 +2038,7 @@ def print_header(module, outname):
 			if 'inline' in x['att']:
 				print_def_func(x)
 				continue
+			newline(n=x['nl'])
 			print_decl_func(x)
 		elif isa == 'def_var':
 			print_deps(x['deps'])

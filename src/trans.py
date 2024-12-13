@@ -13,13 +13,12 @@ from hlir.hlir import hlir_initializer
 
 import foundation
 
-from value.value import value_eq_immediate, value_print
-
+from value.value import value_eq, value_print
 from value.bool import value_bool_create
 from value.integer import value_integer_create
 from value.float import value_float_create
-from value.array import value_array_create, value_array_eq, value_array_add
-from value.string import value_string_create
+from value.array import value_array_create, value_array_add
+from value.string import value_string_create, value_string_add
 from value.record import value_record_create, value_record_eq
 
 
@@ -763,6 +762,7 @@ def do_type(x):
 	return t
 
 
+
 #
 # Do Statement
 #
@@ -789,15 +789,17 @@ def do_value_shift(x):
 
 
 
+
 def bin_imm(op, type_result, l, r, ti):
+	if op in ['eq', 'ne']:
+		return value_eq(l, r, op, ti)
+
 	ops = {
 		'logic_or': lambda a, b: a or b,
 		'logic_and': lambda a, b: a and b,
 		'or': lambda a, b: a | b,
 		'and': lambda a, b: a & b,
 		'xor': lambda a, b: a ^ b,
-		'eq': lambda a, b: a == b,
-		'ne': lambda a, b: a != b,
 		'lt': lambda a, b: a < b,
 		'gt': lambda a, b: a > b,
 		'le': lambda a, b: a <= b,
@@ -811,56 +813,21 @@ def bin_imm(op, type_result, l, r, ti):
 		'shr': lambda a, b: a >> b,
 	}
 
-	asset = 0
-	items = []
-	if hlir_type.type_is_array(l['type']):
-		if op == 'add':
-			return value_array_add(l, r, ti)
-
-		elif op in ['eq', 'ne']:
-			asset = value_array_eq(l, r, ti)
-			if op == 'ne':
-				asset = not asset
-
-
-	elif hlir_type.type_is_string(l['type']):
-		if op == 'add':
-			asset = l['asset'] + r['asset']
-			max_char_width = max(l['type']['width'], r['type']['width'])
-			type_result = hlir_type.hlir_type_string(max_char_width, len(asset), ti)
-		elif op in ['eq', 'ne']:
-			asset = l['asset'] == r['asset']
-			if op == 'ne':
-				asset = not asset
-
+	if op == 'add':
 		if hlir_type.type_is_array(l['type']):
-			info("eq_arrays", ti)
+			return value_array_add(l, r, ti)
+		elif hlir_type.type_is_string(l['type']):
+			return value_string_add(l, r, ti)
 
-
-	elif hlir_type.type_is_record(l['type']):
-		if op in ['eq', 'ne']:
-			info("eq_records", ti)
-			asset = value_record_eq(l, r, ti)
-			if op == 'ne':
-				asset = not asset
-
-	else:
-		asset = ops[op](l['asset'], r['asset'])
-
+	asset = ops[op](l['asset'], r['asset'])
 
 	if hlir_type.type_is_generic(type_result) and not hlir_type.type_is_float(type_result) and not hlir_type.type_is_string(type_result) and not hlir_type.type_is_array(type_result):
 		# (для операций типа 1 + 2)
 		# Пересматриваем generic тип для нового значения
 		type_result = hlir_type.hlir_type_generic_int_for(asset, signed=False, ti=ti)
 
-	if hlir_type.type_is_integer(l['type']):
-		asset = int(asset)
-
 	nv = value_bin(op, l, r, type_result, ti=ti)
-	nv['asset'] = asset
-	if items != []:
-		nv['items'] = items
-
+	nv['asset'] = int(asset)
 	nv['immediate'] = True
 	return nv
 

@@ -496,19 +496,30 @@ def value_va_copy(dst, src, ti):
 
 
 
+# op = 'eq' | 'ne
+def value_eq(l, r, op, ti):
+	asset = False
 
-def value_eq_immediate(a, b, ti):
-	if isinstance(a, dict) and isinstance(b, dict):
-		if not hlir_type.type_eq(a['type'], b['type']):
-			return False
+	from value.array import value_array_eq
+	from value.record import value_record_eq
 
-		# eq composite values
-		if hlir_type.type_is_array(a['type']):
-			return value_array_eq(a, b, ti)
-		elif hlir_type.type_is_record(a['type']):
-			return value_eq_records(a, b, ti)
+	if hlir_type.type_is_array(l['type']):
+		asset = value_array_eq(l, r, ti)
+	elif hlir_type.type_is_record(l['type']):
+		asset = value_record_eq(l, r, ti)
+	else:
+		asset = l['asset'] == r['asset']
 
-	return a['asset'] == b['asset']
+	if op == 'ne':
+		asset = not asset
+
+	from foundation import typeBool
+	nv = value_bin(op, l, r, typeBool, ti=ti)
+	nv['asset'] = int(asset)
+	nv['immediate'] = True
+	return nv
+
+
 
 
 

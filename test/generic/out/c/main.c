@@ -10,15 +10,10 @@
 
 
 
-
 static bool test_generic_integer();
-
 static bool test_generic_float();
-
 static bool test_generic_char();
-
 static bool test_generic_array();
-
 static bool test_generic_record();
 
 int main()

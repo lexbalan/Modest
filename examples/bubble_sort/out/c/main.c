@@ -38,7 +38,6 @@ static void bubble_sort32(int32_t *array, int32_t len)
 	}
 }
 
-
 static void print_array(int32_t *array, int32_t len);
 
 int32_t main()
@@ -67,7 +66,6 @@ static void print_array(int32_t *array, int32_t len)
 		i = i + 1;
 	}
 }
-
 
 static int32_t get_number(int32_t min, int32_t max);
 
