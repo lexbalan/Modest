@@ -828,26 +828,17 @@ def do_value_bin(x):
 
 
 	if op == 'add':
-		if hlir_type.type_is_array(l['type']) and 	hlir_type.type_is_array(r['type']):
-			return _bin(op, None, l, r, ti)
+		# массивы могут быть разной длины (то есть с разными типами)
+		# поэтому сложение массивов (only immediate) требует обхода проверок типа ниже
+		if hlir_type.type_is_array(l['type']) and hlir_type.type_is_array(r['type']):
+			return value_array_add(l, r, ti)
 
 
-	if op in ['eq', 'ne']:
-		# можно сравнивать указатели
-		if hlir_type.type_is_pointer(l['type']):
-			if hlir_type.type_is_generic_pointer(l['type']):
-				l = value_cons_implicit(r['type'], l)
-			elif hlir_type.type_is_generic_pointer(r['type']):
-				r = value_cons_implicit(l['type'], r)
-			return value_bin(op, l, r, foundation.typeBool, ti)
+	t = select_common_type(l['type'], r['type'])
 
-
-
-	ct = select_common_type(l['type'], r['type'])
-
-	if ct != None:
-		l = value_cons_implicit(ct, l)
-		r = value_cons_implicit(ct, r)
+	if t != None:
+		l = value_cons_implicit(t, l)
+		r = value_cons_implicit(t, r)
 
 	# Check type is valid for the operation
 
@@ -859,8 +850,10 @@ def do_value_bin(x):
 		error("unsuitable value type for '%s' operation" % op, r)
 		return value_bad(x['ti'])
 
+	#
+	# Now and further types must be equal (!)
+	#
 
-	# types must be equal
 	if not hlir_type.type_eq(l['type'], r['type'], x['ti']):
 		error("different types in '%s' operation" % x['kind'], x['ti'])
 
@@ -880,20 +873,20 @@ def do_value_bin(x):
 	if op in ['eq', 'ne']:
 		return value_eq(l, r, op, ti)
 
-	if hlir_type.type_eq(ct, foundation.typeBool):
+	if hlir_type.type_eq(t, foundation.typeBool):
 		if op == 'or': op = 'logic_or'
 		elif op == 'and': op = 'logic_and'
 
-	result_type = ct
+	result_type = t
 	if op in (hlir_type.EQ_OPS + hlir_type.RELATIONAL_OPS):
 		result_type = foundation.typeBool
 
-	return _bin(op, result_type, l, r, ti)
+	return binop(op, result_type, l, r, ti)
 
 
 
 
-def _bin(op, type_result, l, r, ti=None):
+def binop(op, type_result, l, r, ti=None):
 	# if left & right are immediate, we can fold const
 	# and append field ['asset'] to bin_value
 	if value_is_immediate(l) and value_is_immediate(r):
@@ -1987,7 +1980,7 @@ def do_stmt_incdec(x, op='add'):
 		return hlir_stmt_bad(x)
 
 	one = value_integer_create(1, typ=v['type'], ti=x['ti'])
-	v_plus = _bin(op, v['type'], v, one, x['ti'])
+	v_plus = binop(op, v['type'], v, one, x['ti'])
 
 	return hlir_stmt_assign(v, v_plus, ti=x['ti'])
 

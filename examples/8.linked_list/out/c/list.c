@@ -16,7 +16,7 @@ list_List *list_create()
 {
 	list_List *const list = (list_List *)malloc(sizeof(list_List));
 
-	if (list == NULL) {
+	if ((list_List *)list == NULL) {
 		return NULL;
 	}
 
@@ -27,7 +27,7 @@ list_List *list_create()
 
 uint32_t list_size_get(list_List *list)
 {
-	if (list == NULL) {
+	if ((list_List *)list == NULL) {
 		return 0;
 	}
 
@@ -36,7 +36,7 @@ uint32_t list_size_get(list_List *list)
 
 list_Node *list_first_node_get(list_List *list)
 {
-	if (list == NULL) {
+	if ((list_List *)list == NULL) {
 		return NULL;
 	}
 
@@ -45,7 +45,7 @@ list_Node *list_first_node_get(list_List *list)
 
 list_Node *list_last_node_get(list_List *list)
 {
-	if (list == NULL) {
+	if ((list_List *)list == NULL) {
 		return NULL;
 	}
 
@@ -54,7 +54,7 @@ list_Node *list_last_node_get(list_List *list)
 
 list_Node *list_node_first(list_List *list, list_Node *new_node)
 {
-	if ((list == NULL) || (new_node == NULL)) {
+	if (((list_List *)list == NULL) || ((list_Node *)new_node == NULL)) {
 		return NULL;
 	}
 
@@ -70,7 +70,7 @@ list_Node *list_node_create()
 {
 	list_Node *const node = (list_Node *)malloc(sizeof(list_Node));
 
-	if (node == NULL) {
+	if ((list_Node *)node == NULL) {
 		return NULL;
 	}
 
@@ -81,7 +81,7 @@ list_Node *list_node_create()
 
 list_Node *list_node_next_get(list_Node *node)
 {
-	if (node == NULL) {
+	if ((list_Node *)node == NULL) {
 		return NULL;
 	}
 
@@ -90,7 +90,7 @@ list_Node *list_node_next_get(list_Node *node)
 
 list_Node *list_node_prev_get(list_Node *node)
 {
-	if (node == NULL) {
+	if ((list_Node *)node == NULL) {
 		return NULL;
 	}
 
@@ -99,7 +99,7 @@ list_Node *list_node_prev_get(list_Node *node)
 
 void *list_node_data_get(list_Node *node)
 {
-	if (node == NULL) {
+	if ((list_Node *)node == NULL) {
 		return NULL;
 	}
 
@@ -113,7 +113,7 @@ void list_node_insert_right(list_Node *left, list_Node *new_right)
 	list_Node *const old_right = left->next;
 	left->next = (list_Node *)new_right;
 
-	if (old_right != NULL) {
+	if ((list_Node *)old_right != NULL) {
 		old_right->prev = (list_Node *)new_right;
 	}
 
@@ -126,7 +126,7 @@ void list_node_insert_right(list_Node *left, list_Node *new_right)
 
 list_Node *list_node_get(list_List *list, int32_t pos)
 {
-	if ((list == NULL) || (list->size == 0)) {
+	if (((list_List *)list == NULL) || (list->size == 0)) {
 		return NULL;
 	}
 
@@ -168,7 +168,7 @@ list_Node *list_node_get(list_List *list, int32_t pos)
 
 list_Node *list_node_insert(list_List *list, int32_t pos, list_Node *new_node)
 {
-	if ((list == NULL) || (new_node == NULL)) {
+	if (((list_List *)list == NULL) || ((list_Node *)new_node == NULL)) {
 		return NULL;
 	}
 
@@ -177,13 +177,13 @@ list_Node *list_node_insert(list_List *list, int32_t pos, list_Node *new_node)
 
 	list_Node *const n = list_node_get((list_List *)list, pos);
 
-	if (n == NULL) {
+	if ((list_Node *)n == NULL) {
 		return NULL;
 	}
 
 	list_Node *const nod = list_node_prev_get((list_Node *)n);
 
-	if (nod == NULL) {
+	if ((list_Node *)nod == NULL) {
 		return NULL;
 	}
 
@@ -195,11 +195,11 @@ list_Node *list_node_insert(list_List *list, int32_t pos, list_Node *new_node)
 
 list_Node *list_node_append(list_List *list, list_Node *new_node)
 {
-	if ((list == NULL) || (new_node == NULL)) {
+	if (((list_List *)list == NULL) || ((list_Node *)new_node == NULL)) {
 		return NULL;
 	}
 
-	if (list->tail == NULL) {
+	if ((list_Node *)list->tail == NULL) {
 		list->head = (list_Node *)new_node;
 	} else {
 		list_node_insert_right((list_Node *)list->tail, (list_Node *)new_node);
@@ -216,7 +216,7 @@ list_Node *list_insert(list_List *list, int32_t pos, void *data)
 {
 	list_Node *const new_node = list_node_create();
 
-	if (new_node == NULL) {
+	if ((list_Node *)new_node == NULL) {
 		return NULL;
 	}
 
@@ -227,13 +227,13 @@ list_Node *list_insert(list_List *list, int32_t pos, void *data)
 
 list_Node *list_append(list_List *list, void *data)
 {
-	if (list == NULL) {
+	if ((list_List *)list == NULL) {
 		return NULL;
 	}
 
 	list_Node *const new_node = list_node_create();
 
-	if (new_node == NULL) {
+	if ((list_Node *)new_node == NULL) {
 		return NULL;
 	}
 
@@ -241,7 +241,7 @@ list_Node *list_append(list_List *list, void *data)
 
 	list_Node *const node = list_node_append((list_List *)list, (list_Node *)new_node);
 
-	if (node == NULL) {
+	if ((list_Node *)node == NULL) {
 		free(new_node);
 	}
 
