@@ -170,9 +170,21 @@ def value_record_cons(t, v, method, ti):
 
 
 
-def value_record_eq(l, r, ti):
-	fatal("value_record_eq() not implemented!", ti)
-	return False # TODO!
+def value_record_eq(l, r, op, ti):
+	info("value_record_eq()", ti)
+	from foundation import typeBool
+	nv = value_bin(op, l, r, typeBool, ti=ti)
+	if value_is_immediate(l) and value_is_immediate(r):
+		error("not implemented!", ti)
+		eq_result = False
+
+		if op == 'ne':
+			eq_result = not eq_result
+
+		nv['asset'] = int(eq_result)
+		nv['immediate'] = True
+
+	return nv
 
 
 

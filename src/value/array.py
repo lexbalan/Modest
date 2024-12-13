@@ -200,20 +200,33 @@ def value_array_add(l, r, ti):
 
 
 # FIXIT: it is generic arrays EQ!
-def value_array_eq(l, r, ti):
-	lvolume = l['type']['volume']
-	rvolume = r['type']['volume']
-	if value_is_immediate(lvolume) and value_is_immediate(rvolume):
-		if lvolume['asset'] != rvolume['asset']:
-			return False
-	else:
-		fatal("dynamic immediate array volume not implemented", ti)
+def value_array_eq(l, r, op, ti):
+	from foundation import typeBool
+	nv = value_bin(op, l, r, typeBool, ti=ti)
 
-	for lx, rx in zip(l['items'], r['items']):
-		if not value_eq(lx, rx, 'eq', ti):
-			return False
+	if value_is_immediate(l) and value_is_immediate(r):
+		eq_result = True
+		lvolume = l['type']['volume']
+		rvolume = r['type']['volume']
+		if value_is_immediate(lvolume) and value_is_immediate(rvolume):
+			if lvolume['asset'] != rvolume['asset']:
+				eq_result = False
+		else:
+			fatal("dynamic immediate array volume not implemented", ti)
 
-	return True
+		for lx, rx in zip(l['items'], r['items']):
+			if not value_eq(lx, rx, 'eq', ti):
+				eq_result = False
+
+		if op == 'ne':
+			eq_result = not eq_result
+
+		nv['asset'] = int(eq_result)
+		nv['immediate'] = True
+
+	return nv
+
+
 
 
 

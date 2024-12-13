@@ -496,6 +496,20 @@ def value_va_copy(dst, src, ti):
 
 
 
+def value_scalar_eq(l, r, op, ti):
+	eq_result = False
+	if op == 'eq':
+		eq_result = l['asset'] == r['asset']
+	else:
+		eq_result = l['asset'] != r['asset']
+
+	from foundation import typeBool
+	nv = value_bin(op, l, r, typeBool, ti=ti)
+	nv['asset'] = int(eq_result)
+	nv['immediate'] = True
+	return nv
+
+
 # op = 'eq' | 'ne
 def value_eq(l, r, op, ti):
 	asset = False
@@ -504,20 +518,13 @@ def value_eq(l, r, op, ti):
 	from value.record import value_record_eq
 
 	if hlir_type.type_is_array(l['type']):
-		asset = value_array_eq(l, r, ti)
+		return value_array_eq(l, r, op, ti)
 	elif hlir_type.type_is_record(l['type']):
-		asset = value_record_eq(l, r, ti)
-	else:
-		asset = l['asset'] == r['asset']
+		return value_record_eq(l, r, op, ti)
 
-	if op == 'ne':
-		asset = not asset
+	return value_scalar_eq(l, r, op, ti)
 
-	from foundation import typeBool
-	nv = value_bin(op, l, r, typeBool, ti=ti)
-	nv['asset'] = int(asset)
-	nv['immediate'] = True
-	return nv
+
 
 
 
