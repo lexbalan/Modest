@@ -95,10 +95,7 @@ def value_load(x):
 
 
 
-def value_bad(x):
-	ti = None
-	if 'ti' in x:
-		ti = x['ti']
+def value_bad(ti):
 	return {
 		'isa': 'value',
 		'kind': 'bad',
@@ -107,7 +104,6 @@ def value_bad(x):
 		'immutable': False,
 		'immediate': False,
 		'att': [],
-		'ast_value': x,
 		'ti': ti
 	}
 

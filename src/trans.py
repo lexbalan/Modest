@@ -495,18 +495,6 @@ def init_builtin_values():
 	root_symtab.value_add('__compiler', compiler)
 
 
-	"""import platform
-	__platformSystem = value_string_create(platform.system())
-	root_symtab.value_add('__platformSystem', __platformSystem)
-	__platformRelease = value_string_create(platform.release())
-	root_symtab.value_add('__platformRelease', __platformRelease)
-
-	target_system_initializers = [
-		hlir_initializer(hlir_id('name'), compilerName),
-		hlir_initializer(hlir_id('version'), compilerVersion),
-	]
-	target_system = value_record_create(target_system_initializers)
-	"""
 
 	#
 	# __target
@@ -783,7 +771,7 @@ def do_value_shift(x):
 
 	if hlir_type.type_is_generic(l['type']):
 		error("expected non-generic value", l)
-		return value_bad(x)
+		return value_bad(x['ti'])
 
 	return value_bin(op, l, r, l['type'], ti=x['ti'])
 
@@ -837,7 +825,7 @@ def do_value_bin(x):
 	ti = x['ti']
 
 	if value_is_bad(l) or value_is_bad(r):
-		return value_bad(x)
+		return value_bad(x['ti'])
 
 
 	if op == 'add':
@@ -866,11 +854,11 @@ def do_value_bin(x):
 
 	if not op in l['type']['ops']:
 		error("unsuitable value type for '%s' operation" % op, l)
-		return value_bad(x)
+		return value_bad(x['ti'])
 
 	if not op in r['type']['ops']:
 		error("unsuitable value type for '%s' operation" % op, r)
-		return value_bad(x)
+		return value_bad(x['ti'])
 
 
 	# types must be equal
@@ -887,7 +875,7 @@ def do_value_bin(x):
 		print(color_code(ENDC), end='')
 		print("\n")
 
-		return value_bad(x)
+		return value_bad(x['ti'])
 
 
 	if op in ['eq', 'ne']:
@@ -929,7 +917,7 @@ def do_value_ref(x):
 	if value_is_immutable(v):
 		if not hlir_type.type_is_func(vtype) or hlir_type.type_is_undefined(vtype):
 			error("expected mutable value or function", v)
-			return value_bad(x)
+			return value_bad(x['ti'])
 
 	vt = hlir_type.hlir_type_pointer(vtype, ti=ti)
 	nv = value_un('ref', v, vt, ti=ti)
@@ -947,7 +935,7 @@ def do_value_not(x):
 
 	if not 'not' in vtype['ops']:
 		error("unsuitable type", v)
-		return value_bad(x)
+		return value_bad(x['ti'])
 
 	nv = value_un('not', v, vtype, ti=x['ti'])
 
@@ -1021,7 +1009,7 @@ def do_value_deref(x):
 	vtype = v['type']
 	if not hlir_type.type_is_pointer(vtype):
 		error("expected pointer value", v)
-		return value_bad(x)
+		return value_bad(x['ti'])
 
 	to = vtype['to']
 
@@ -1145,8 +1133,8 @@ def do_value_call(x):
 	fn = do_rvalue(x['left'])
 
 	if value_is_bad(fn):
-		error("undefined value 2", fn)
-		return value_bad(x)
+		#error("undefined value 2", fn)
+		return value_bad(x['ti'])
 
 
 	ftype = fn['type']
@@ -1166,12 +1154,12 @@ def do_value_call(x):
 
 	if nargs < npars:
 		error("not enough args", x)
-		return value_bad(x)
+		return value_bad(x['ti'])
 
 	if nargs > npars:
 		if not ftype['extra_args']:
 			error("too many args", x)
-			return value_bad(x)
+			return value_bad(x['ti'])
 
 	sorted_args = sort_args(params, x['args'])
 
@@ -1265,7 +1253,7 @@ def do_value_index(x):
 	left = do_rvalue(x['left'])
 
 	if value_is_bad(left):
-		return value_bad(x)
+		return value_bad(x['ti'])
 
 	left_typ = left['type']
 
@@ -1278,17 +1266,17 @@ def do_value_index(x):
 
 	if not hlir_type.type_is_array(array_typ):
 		error("expected array or pointer to array", left)
-		return value_bad(x)
+		return value_bad(x['ti'])
 
 
 	index = do_rvalue(x['index'])
 
 	if value_is_bad(index):
-		return value_bad(x)
+		return value_bad(x['ti'])
 
 	if not hlir_type.type_is_integer(index['type']):
 		error("expected integer value", x['index'])
-		return value_bad(x)
+		return value_bad(x['ti'])
 
 	if hlir_type.type_is_generic(index['type']):
 		index = value_cons_implicit_check(typeSysInt, index)
@@ -1305,7 +1293,7 @@ def do_value_index(x):
 
 				if index_imm >= array_typ['volume']['asset']:
 					error("array index out of bounds", x['index'])
-					return value_bad(x)
+					return value_bad(x['ti'])
 
 				item = left['items'][index_imm]
 
@@ -1326,10 +1314,10 @@ def do_value_slice(x):
 	if x['index_to'] != None:
 		index_to = do_rvalue(x['index_to'])
 		if value_is_bad(index_to):
-			return value_bad(x)
+			return value_bad(x['ti'])
 
 	if value_is_bad(left) or value_is_bad(index_from):
-		return value_bad(x)
+		return value_bad(x['ti'])
 
 	left_type = left['type']
 	via_pointer = hlir_type.type_is_pointer(left_type)
@@ -1339,7 +1327,7 @@ def do_value_slice(x):
 
 	if not hlir_type.type_is_array(array_type):
 		error("expected array or pointer to array", left)
-		return value_bad(x)
+		return value_bad(x['ti'])
 
 
 	# получаем размер слайса
@@ -1384,7 +1372,7 @@ def do_value_slice(x):
 
 			if slice_len < 0:
 				error("wrong slice direction", x['ti'])
-				return value_bad(x)
+				return value_bad(x['ti'])
 
 
 #	if hlir_type.type_is_closed_array(array_type):
@@ -1431,7 +1419,7 @@ def submodule_access(x):
 			error("access to module private item", ti)
 
 	if v == None:
-		return value_bad(x)
+		return value_bad(x['ti'])
 
 	y = value_access_module(v['type'], submodule, v, v, x['ti'])
 	cp_immediate(y, v)
@@ -1453,7 +1441,7 @@ def do_value_access(x):
 	left = do_rvalue(x['left'])
 
 	if value_is_bad(left):
-		return value_bad(x)
+		return value_bad(x['ti'])
 
 	field_id = x['right']
 
@@ -1467,14 +1455,14 @@ def do_value_access(x):
 	# check if is record
 	if not hlir_type.type_is_record(record_type):
 		error("expected record or pointer to record", x)
-		return value_bad(x)
+		return value_bad(x['ti'])
 
 	field = hlir_type.record_field_get(record_type, field_id['str'])
 
 	# if field not found
 	if field == None:
 		error("undefined field '%s'" % field_id['str'], x)
-		return value_bad(x)
+		return value_bad(x['ti'])
 
 	# PROBLEM: у анонимных структур нет поля 'definition'
 	# и непонятно как с этимм быть. Можно добавить module
@@ -1485,7 +1473,7 @@ def do_value_access(x):
 
 
 	if hlir_type.type_is_bad(field['type']):
-		return value_bad(x)
+		return value_bad(x['ti'])
 
 
 	# Check access permissions
@@ -1518,7 +1506,7 @@ def do_value_cons(x):
 	v = do_rvalue(x['value'])
 	t = do_type(x['type'])
 	if value_is_bad(v) or hlir_type.type_is_bad(t):
-		return value_bad(x)
+		return value_bad(x['ti'])
 	return value_cons_explicit(t, v, x['ti'])
 
 
@@ -1528,19 +1516,15 @@ def do_value_id(x):
 	v = ctx_value_get(id_str)
 
 	if v == None:
-		predefinition(x)
-		vx = ctx_value_get(id_str)
-		if vx != None:
-			return vx
-
 		error("undefined value '%s'" % id_str, x)
 
 		# чтобы не генерил ошибки дальше
-		# создадим bad value и пропишем его глобально
-		v = value_bad(x)
+		# создадим bad value и пропишем его глобально (wrong!)
+		v = value_bad(x['ti'])
 		value_attribute_add(v, 'unknown')
 		ctx_value_add(id_str, v)
 		return v
+
 
 	if 'usecnt' in v:
 		v['usecnt'] = v['usecnt'] + 1
@@ -1674,7 +1658,7 @@ def do_value_immediate(x, allow_ptr_to_str=False):
 			if hlir_type.type_is_pointer_to_array_of_char(v['type']):
 				return v
 		error("expected immediate value", x['ti'])
-		return value_bad(x)
+		return value_bad(x['ti'])
 
 	return v
 
@@ -1710,6 +1694,8 @@ def do_value_unsafe(x):
 	return rv
 
 
+def do_value_bad(x):
+	return value_bad(x['ti'])
 
 
 def do_rvalue(x):
@@ -1755,7 +1741,7 @@ def do_value(x):
 	elif k == '__va_end': v = do_value_va_end(x)
 	elif k == '__defined_type': v = do_value___defined_type(x)
 	elif k == '__defined_value': v = do_value___defined_value(x)
-	elif k == 'bad': v = value_bad(x)
+	elif k == 'bad': v = do_value_bad(x['ti'])
 	elif k == 'undefined': v = value_undefined(x, x['ti'])
 
 	assert(v != None)
@@ -1772,7 +1758,7 @@ def do_value(x):
 			v = lookup_func(v['id']['str'])
 			if v == None:
 				error("call undefined func", x['ti'])
-				return value_bad(x)
+				return value_bad(x['ti'])
 
 	return v
 
@@ -1879,7 +1865,7 @@ def do_stmt_var(x):
 	# error: no type, no init valuetu = type_is_undefined(t)
 	if tu == True and vu == True:
 		# type & value undefined
-		ctx_value_add(var_id['str'], value_bad(x))
+		ctx_value_add(var_id['str'], value_bad(x['ti']))
 		return hlir_stmt_bad(x)
 
 	if tu == True and vu == False:
@@ -1891,7 +1877,7 @@ def do_stmt_var(x):
 
 	#if not hlir_type.type_is_undefined(t):
 	#	if hlir_type.type_is_bad(t):
-	#		ctx_value_add(var_id['str'], value_bad(x))
+	#		ctx_value_add(var_id['str'], value_bad(x['ti']))
 	#		return hlir_stmt_bad(x)
 	#
 	#	if hlir_type.type_is_forbidden_var(t):
@@ -1944,7 +1930,7 @@ def do_stmt_let(x):
 	v = do_rvalue(x['value'])
 
 	if value_is_bad(v):
-		ctx_value_add(id['str'], value_bad(x))
+		ctx_value_add(id['str'], value_bad(x['ti']))
 		return hlir_stmt_bad(x)
 
 	const_value = value_const(id, v['type'], value=v, ti=x['id']['ti'])
@@ -2292,7 +2278,7 @@ def def_var(x):
 	# error: no type, no init valuetu = type_is_undefined(t)
 	if tu == True and vu == True:
 		# ERROR: type & value undefined
-		ctx_value_add(id['str'], value_bad(x))
+		ctx_value_add(id['str'], value_bad(x['ti']))
 		return hlir_stmt_bad(x)
 
 	elif tu == True and vu == False:
@@ -2330,32 +2316,6 @@ def def_var(x):
 
 
 	init_value = v
-
-
-	"""
-	init_value = do_rvalue(x['init_value'])
-	if init_value != None:
-		if t != None:
-			# for case like:
-			# var a: Int[] = [1, 2, 3] // -> Int[3]
-			if hlir_type.type_is_open_array(t):
-				length = 0
-				if hlir_type.type_is_string(init_value['type']):
-					length = len(init_value['asset'])
-				elif hlir_type.type_is_array(init_value['type']):
-					length = init_value['type']['volume']['asset']
-
-				volume = value_integer_create(length)
-				t = hlir_type.hlir_type_array(t['of'], volume, x['ti'])
-
-			init_value = value_cons_implicit_check(t, init_value)
-		else:
-			init_value = value_cons_default(init_value)
-			t = init_value['type']
-
-		if hlir_type.type_is_generic(init_value['type']):
-			error("cannot cons variable", x['ti'])
-	"""
 
 	var_value = value_var(id, t, id['ti'])
 	cmodule_value_add(id['str'], var_value, is_public=x['access_modifier'] == 'public')
@@ -2593,51 +2553,6 @@ def do_attribute(x):
 	return None
 
 
-
-# находит сущность по имени и определяет ее
-def predefinition(id):
-	id_str = id['str']
-	print("predefinition(\"%s\")" % id_str)
-	global cmodule
-	y = None
-
-	found = False
-	for x in cmodule['ast']:
-		if not 'id' in x:
-			continue
-
-		if x['id']['str'] == id_str:
-			kind = x['kind']
-			if kind == 'type':
-				found = True
-				y = def_type(x)
-			elif kind == 'const':
-				found = True
-				y = def_const(x)
-			elif kind == 'func':
-				found = True
-				fn = do_func_value(x, x['access_modifier'] == 'public')
-				cmodule_value_add(fn['id']['str'], fn, is_public=x['access_modifier'] == 'public')
-
-			x['defined'] = True  # mark as DEFINED
-
-			if y != None:
-				module_append(y, to_export=x['access_modifier'] == 'public')
-	if not found:
-		error("unknown identifier '%s'" % id['str'], id['ti'])
-	#return y
-
-
-"""# расширить текущий модуль определениями
-def cmodule_extend(y, do_not_def):
-	global cmodule
-	cmodule['symtab_public'].extend(y['symtab_public'])
-	cmodule['symtab_private'].extend(y['symtab_private'])
-
-	if not do_not_def:
-		cmodule['defs_private'].extend(y['defs_private'])
-		cmodule['defs_public'].extend(y['defs_public'])
-"""
 
 def do_import(x):
 	global modules
@@ -3236,22 +3151,3 @@ def cp_immediate(to, _from):
 	return
 
 
-
-"""
-# удаляет hlir_node по isa & id_str
-def module_remove_node(m, isa, id_str):
-	#print(f"module_remove_node: {id_str}")
-
-	for submodule in m['imports']:
-		module_remove_node(submodule, isa, id_str)
-
-	for x in m['defs_private']:
-		if x['isa'] == isa:
-			if 'id' in x:
-				if x['id']['str'] == id_str:
-					#print("REMOVE: " + id_str)
-					m['defs_private'].remove(x)
-					break
-	return
-
-"""

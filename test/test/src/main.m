@@ -2,6 +2,7 @@
 include "libc/stdio"
 
 // 1. Сначала проходит по всем сущностям и создает type_undefined/value_undefined
+// 2. Затем при встрече в do_value()
 
 
 type Node record {
@@ -18,6 +19,8 @@ var funcs: []*()->Unit = [&init, &foo]
 public func main() -> Int32 {
 	init()
 	foo()
+
+	//ee()
 
 	var n: Node
 
