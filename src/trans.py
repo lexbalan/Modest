@@ -581,7 +581,6 @@ def do_type_id(t):
 
 	# если дело происходит в определении типа и пришел undefined тип
 	if hlir_type.type_is_undefined(tx):
-		#print("TYPE_DEPS_APPEND(%s)" % str(tx))
 		cdef['deps'].append(tx)
 
 
@@ -1526,6 +1525,15 @@ def do_value_id(x):
 		return v
 
 
+	global cdef
+	if value_is_incomplete(v):
+		cdef['deps'].append(v)
+		v = lookup_func(v['id']['str'])
+		if v == None:
+			error("call undefined func", x['ti'])
+			return value_bad(x['ti'])
+
+
 	if 'usecnt' in v:
 		v['usecnt'] = v['usecnt'] + 1
 
@@ -1751,15 +1759,6 @@ def do_value(x):
 
 	assert(v != None)
 	v['ti'] = x['ti']
-
-	global cdef
-	if value_is_incomplete(v):
-		cdef['deps'].append(v)
-		v = lookup_func(v['id']['str'])
-		if v == None:
-			error("call undefined func", x['ti'])
-			return value_bad(x['ti'])
-
 	return v
 
 
