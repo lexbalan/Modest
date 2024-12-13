@@ -497,17 +497,21 @@ def value_va_copy(dst, src, ti):
 
 
 def value_scalar_eq(l, r, op, ti):
-	eq_result = False
-	if op == 'eq':
-		eq_result = l['asset'] == r['asset']
-	else:
-		eq_result = l['asset'] != r['asset']
-
 	from foundation import typeBool
 	nv = value_bin(op, l, r, typeBool, ti=ti)
-	nv['asset'] = int(eq_result)
-	nv['immediate'] = True
+
+	if value_is_immediate(l) and value_is_immediate(r):
+		eq_result = False
+		if op == 'eq':
+			eq_result = l['asset'] == r['asset']
+		else:
+			eq_result = l['asset'] != r['asset']
+
+		nv['asset'] = int(eq_result)
+		nv['immediate'] = True
+
 	return nv
+
 
 
 # op = 'eq' | 'ne

@@ -215,8 +215,9 @@ def value_array_eq(l, r, op, ti):
 			fatal("dynamic immediate array volume not implemented", ti)
 
 		for lx, rx in zip(l['items'], r['items']):
-			if not value_eq(lx, rx, 'eq', ti):
+			if not value_eq(lx, rx, op, ti):
 				eq_result = False
+				break
 
 		if op == 'ne':
 			eq_result = not eq_result

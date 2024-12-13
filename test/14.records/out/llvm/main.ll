@@ -188,18 +188,20 @@ declare void @perror(%ConstCharStr* %str)
 ; -- end print imports --
 ; -- strings --
 @str1 = private constant [14 x i8] [i8 114, i8 101, i8 99, i8 111, i8 114, i8 100, i8 115, i8 32, i8 116, i8 101, i8 115, i8 116, i8 10, i8 0]
-@str2 = private constant [14 x i8] [i8 112, i8 50, i8 100, i8 48, i8 32, i8 61, i8 61, i8 32, i8 112, i8 50, i8 100, i8 49, i8 10, i8 0]
-@str3 = private constant [14 x i8] [i8 112, i8 50, i8 100, i8 48, i8 32, i8 33, i8 61, i8 32, i8 112, i8 50, i8 100, i8 49, i8 10, i8 0]
-@str4 = private constant [14 x i8] [i8 112, i8 50, i8 100, i8 50, i8 32, i8 61, i8 61, i8 32, i8 112, i8 50, i8 100, i8 51, i8 10, i8 0]
-@str5 = private constant [14 x i8] [i8 112, i8 50, i8 100, i8 50, i8 32, i8 33, i8 61, i8 32, i8 112, i8 50, i8 100, i8 51, i8 10, i8 0]
-@str6 = private constant [14 x i8] [i8 112, i8 50, i8 100, i8 51, i8 32, i8 61, i8 61, i8 32, i8 112, i8 50, i8 100, i8 52, i8 10, i8 0]
-@str7 = private constant [14 x i8] [i8 112, i8 50, i8 100, i8 51, i8 32, i8 33, i8 61, i8 32, i8 112, i8 50, i8 100, i8 52, i8 10, i8 0]
-@str8 = private constant [14 x i8] [i8 42, i8 112, i8 114, i8 50, i8 32, i8 61, i8 61, i8 32, i8 42, i8 112, i8 114, i8 51, i8 10, i8 0]
-@str9 = private constant [14 x i8] [i8 42, i8 112, i8 114, i8 50, i8 32, i8 33, i8 61, i8 32, i8 42, i8 112, i8 114, i8 51, i8 10, i8 0]
-@str10 = private constant [24 x i8] [i8 112, i8 120, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 105, i8 32, i8 40, i8 109, i8 117, i8 115, i8 116, i8 32, i8 98, i8 101, i8 32, i8 49, i8 48, i8 41, i8 10, i8 0]
-@str11 = private constant [24 x i8] [i8 112, i8 120, i8 46, i8 121, i8 32, i8 61, i8 32, i8 37, i8 105, i8 32, i8 40, i8 109, i8 117, i8 115, i8 116, i8 32, i8 98, i8 101, i8 32, i8 50, i8 48, i8 41, i8 10, i8 0]
-@str12 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
-@str13 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
+@str2 = private constant [13 x i8] [i8 118, i8 101, i8 114, i8 115, i8 105, i8 111, i8 110, i8 32, i8 48, i8 46, i8 55, i8 10, i8 0]
+@str3 = private constant [17 x i8] [i8 118, i8 101, i8 114, i8 115, i8 105, i8 111, i8 110, i8 32, i8 110, i8 111, i8 116, i8 32, i8 48, i8 46, i8 55, i8 10, i8 0]
+@str4 = private constant [14 x i8] [i8 112, i8 50, i8 100, i8 48, i8 32, i8 61, i8 61, i8 32, i8 112, i8 50, i8 100, i8 49, i8 10, i8 0]
+@str5 = private constant [14 x i8] [i8 112, i8 50, i8 100, i8 48, i8 32, i8 33, i8 61, i8 32, i8 112, i8 50, i8 100, i8 49, i8 10, i8 0]
+@str6 = private constant [14 x i8] [i8 112, i8 50, i8 100, i8 50, i8 32, i8 61, i8 61, i8 32, i8 112, i8 50, i8 100, i8 51, i8 10, i8 0]
+@str7 = private constant [14 x i8] [i8 112, i8 50, i8 100, i8 50, i8 32, i8 33, i8 61, i8 32, i8 112, i8 50, i8 100, i8 51, i8 10, i8 0]
+@str8 = private constant [14 x i8] [i8 112, i8 50, i8 100, i8 51, i8 32, i8 61, i8 61, i8 32, i8 112, i8 50, i8 100, i8 52, i8 10, i8 0]
+@str9 = private constant [14 x i8] [i8 112, i8 50, i8 100, i8 51, i8 32, i8 33, i8 61, i8 32, i8 112, i8 50, i8 100, i8 52, i8 10, i8 0]
+@str10 = private constant [14 x i8] [i8 42, i8 112, i8 114, i8 50, i8 32, i8 61, i8 61, i8 32, i8 42, i8 112, i8 114, i8 51, i8 10, i8 0]
+@str11 = private constant [14 x i8] [i8 42, i8 112, i8 114, i8 50, i8 32, i8 33, i8 61, i8 32, i8 42, i8 112, i8 114, i8 51, i8 10, i8 0]
+@str12 = private constant [24 x i8] [i8 112, i8 120, i8 46, i8 120, i8 32, i8 61, i8 32, i8 37, i8 105, i8 32, i8 40, i8 109, i8 117, i8 115, i8 116, i8 32, i8 98, i8 101, i8 32, i8 49, i8 48, i8 41, i8 10, i8 0]
+@str13 = private constant [24 x i8] [i8 112, i8 120, i8 46, i8 121, i8 32, i8 61, i8 32, i8 37, i8 105, i8 32, i8 40, i8 109, i8 117, i8 115, i8 116, i8 32, i8 98, i8 101, i8 32, i8 50, i8 48, i8 41, i8 10, i8 0]
+@str14 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 112, i8 97, i8 115, i8 115, i8 101, i8 100, i8 10, i8 0]
+@str15 = private constant [13 x i8] [i8 116, i8 101, i8 115, i8 116, i8 32, i8 102, i8 97, i8 105, i8 108, i8 101, i8 100, i8 10, i8 0]
 ; -- endstrings --
 
 %Point2D = type {
@@ -217,148 +219,159 @@ declare void @perror(%ConstCharStr* %str)
 
 define %Int @main() {
 	%1 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str1 to [0 x i8]*))
-	; compare two Point2D records
-	%2 = alloca %Point2D, align 4
-	%3 = insertvalue %Point2D zeroinitializer, %Int32 1, 0
-	%4 = insertvalue %Point2D %3, %Int32 2, 1
-	store %Point2D %4, %Point2D* %2
-	%5 = alloca %Point2D, align 4
-	%6 = insertvalue %Point2D zeroinitializer, %Int32 10, 0
-	%7 = insertvalue %Point2D %6, %Int32 20, 1
-	store %Point2D %7, %Point2D* %5
-	%8 = bitcast %Point2D* %2 to i8*
-	%9 = bitcast %Point2D* %5 to i8*
-	
-	%10 = call i1 (i8*, i8*, i64) @memeq( i8* %8, i8* %9, %Int64 8)
-	%11 = icmp ne %Bool %10, 0
-	br %Bool %11 , label %then_0, label %else_0
+	; check value_record_eq for immediate values
+	%2 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 0, 0
+	%3 = insertvalue {%Int32,%Int32} %2, %Int32 7, 1
+	br %Bool 1 , label %then_0, label %else_0
 then_0:
-	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str2 to [0 x i8]*))
+	%4 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str2 to [0 x i8]*))
 	br label %endif_0
 else_0:
-	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str3 to [0 x i8]*))
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([17 x i8]* @str3 to [0 x i8]*))
 	br label %endif_0
 endif_0:
-	; compare Point2D with anonymous record
-	%14 = alloca %Point2D, align 4
-	%15 = load %Point2D, %Point2D* %2
-	store %Point2D %15, %Point2D* %14
-	%16 = alloca {%Int32,%Int32}, align 4
-	%17 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 1, 0
-	%18 = insertvalue {%Int32,%Int32} %17, %Int32 2, 1
-	store {%Int32,%Int32} %18, {%Int32,%Int32}* %16
-	; JUST
-	; as ptr
-	%19 = bitcast {%Int32,%Int32}* %16 to %Point2D*
-	%20 = load %Point2D, %Point2D* %19
-	%21 = alloca %Point2D
-	store %Point2D %20, %Point2D* %21
-	%22 = bitcast %Point2D* %14 to i8*
-	%23 = bitcast %Point2D* %21 to i8*
+	; compare two Point2D records
+	%6 = alloca %Point2D, align 4
+	%7 = insertvalue %Point2D zeroinitializer, %Int32 1, 0
+	%8 = insertvalue %Point2D %7, %Int32 2, 1
+	store %Point2D %8, %Point2D* %6
+	%9 = alloca %Point2D, align 4
+	%10 = insertvalue %Point2D zeroinitializer, %Int32 10, 0
+	%11 = insertvalue %Point2D %10, %Int32 20, 1
+	store %Point2D %11, %Point2D* %9
+	%12 = bitcast %Point2D* %6 to i8*
+	%13 = bitcast %Point2D* %9 to i8*
 	
-	%24 = call i1 (i8*, i8*, i64) @memeq( i8* %22, i8* %23, %Int64 8)
-	%25 = icmp ne %Bool %24, 0
-	br %Bool %25 , label %then_1, label %else_1
+	%14 = call i1 (i8*, i8*, i64) @memeq( i8* %12, i8* %13, %Int64 8)
+	%15 = icmp ne %Bool %14, 0
+	br %Bool %15 , label %then_1, label %else_1
 then_1:
-	%26 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str4 to [0 x i8]*))
+	%16 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str4 to [0 x i8]*))
 	br label %endif_1
 else_1:
-	%27 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str5 to [0 x i8]*))
+	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str5 to [0 x i8]*))
 	br label %endif_1
 endif_1:
-	; comparison between two anonymous record
-	%28 = alloca {%Int32,%Int32}, align 4
-	%29 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 1, 0
-	%30 = insertvalue {%Int32,%Int32} %29, %Int32 2, 1
-	store {%Int32,%Int32} %30, {%Int32,%Int32}* %28
+	; compare Point2D with anonymous record
+	%18 = alloca %Point2D, align 4
+	%19 = load %Point2D, %Point2D* %6
+	store %Point2D %19, %Point2D* %18
+	%20 = alloca {%Int32,%Int32}, align 4
+	%21 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 1, 0
+	%22 = insertvalue {%Int32,%Int32} %21, %Int32 2, 1
+	store {%Int32,%Int32} %22, {%Int32,%Int32}* %20
 	; JUST
 	; as ptr
-	%31 = bitcast {%Int32,%Int32}* %28 to {%Int32,%Int32}*
-	%32 = load {%Int32,%Int32}, {%Int32,%Int32}* %31
-	%33 = alloca {%Int32,%Int32}
-	store {%Int32,%Int32} %32, {%Int32,%Int32}* %33
-	%34 = bitcast {%Int32,%Int32}* %16 to i8*
-	%35 = bitcast {%Int32,%Int32}* %33 to i8*
+	%23 = bitcast {%Int32,%Int32}* %20 to %Point2D*
+	%24 = load %Point2D, %Point2D* %23
+	%25 = alloca %Point2D
+	store %Point2D %24, %Point2D* %25
+	%26 = bitcast %Point2D* %18 to i8*
+	%27 = bitcast %Point2D* %25 to i8*
 	
-	%36 = call i1 (i8*, i8*, i64) @memeq( i8* %34, i8* %35, %Int64 8)
-	%37 = icmp ne %Bool %36, 0
-	br %Bool %37 , label %then_2, label %else_2
+	%28 = call i1 (i8*, i8*, i64) @memeq( i8* %26, i8* %27, %Int64 8)
+	%29 = icmp ne %Bool %28, 0
+	br %Bool %29 , label %then_2, label %else_2
 then_2:
-	%38 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str6 to [0 x i8]*))
+	%30 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str6 to [0 x i8]*))
 	br label %endif_2
 else_2:
-	%39 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str7 to [0 x i8]*))
+	%31 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str7 to [0 x i8]*))
 	br label %endif_2
 endif_2:
+	; comparison between two anonymous record
+	%32 = alloca {%Int32,%Int32}, align 4
+	%33 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 1, 0
+	%34 = insertvalue {%Int32,%Int32} %33, %Int32 2, 1
+	store {%Int32,%Int32} %34, {%Int32,%Int32}* %32
+	; JUST
+	; as ptr
+	%35 = bitcast {%Int32,%Int32}* %32 to {%Int32,%Int32}*
+	%36 = load {%Int32,%Int32}, {%Int32,%Int32}* %35
+	%37 = alloca {%Int32,%Int32}
+	store {%Int32,%Int32} %36, {%Int32,%Int32}* %37
+	%38 = bitcast {%Int32,%Int32}* %20 to i8*
+	%39 = bitcast {%Int32,%Int32}* %37 to i8*
+	
+	%40 = call i1 (i8*, i8*, i64) @memeq( i8* %38, i8* %39, %Int64 8)
+	%41 = icmp ne %Bool %40, 0
+	br %Bool %41 , label %then_3, label %else_3
+then_3:
+	%42 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str8 to [0 x i8]*))
+	br label %endif_3
+else_3:
+	%43 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str9 to [0 x i8]*))
+	br label %endif_3
+endif_3:
 	; comparison between two record (by pointer)
 	; JUST
 	; as ptr
-	%40 = bitcast {%Int32,%Int32}* %16 to %Point2D*
-	%41 = load %Point2D, %Point2D* %40
-	%42 = alloca %Point2D
-	store %Point2D %41, %Point2D* %42
-	%43 = bitcast %Point2D* %14 to i8*
-	%44 = bitcast %Point2D* %42 to i8*
+	%44 = bitcast {%Int32,%Int32}* %20 to %Point2D*
+	%45 = load %Point2D, %Point2D* %44
+	%46 = alloca %Point2D
+	store %Point2D %45, %Point2D* %46
+	%47 = bitcast %Point2D* %18 to i8*
+	%48 = bitcast %Point2D* %46 to i8*
 	
-	%45 = call i1 (i8*, i8*, i64) @memeq( i8* %43, i8* %44, %Int64 8)
-	%46 = icmp ne %Bool %45, 0
-	br %Bool %46 , label %then_3, label %else_3
-then_3:
-	%47 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str8 to [0 x i8]*))
-	br label %endif_3
-else_3:
-	%48 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str9 to [0 x i8]*))
-	br label %endif_3
-endif_3:
+	%49 = call i1 (i8*, i8*, i64) @memeq( i8* %47, i8* %48, %Int64 8)
+	%50 = icmp ne %Bool %49, 0
+	br %Bool %50 , label %then_4, label %else_4
+then_4:
+	%51 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str10 to [0 x i8]*))
+	br label %endif_4
+else_4:
+	%52 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str11 to [0 x i8]*))
+	br label %endif_4
+endif_4:
 	; assign record by pointer
-	%49 = insertvalue %Point2D zeroinitializer, %Int32 100, 0
-	%50 = insertvalue %Point2D %49, %Int32 200, 1
-	store %Point2D %50, %Point2D* %14
-	store {%Int32,%Int32} zeroinitializer, {%Int32,%Int32}* %16
+	%53 = insertvalue %Point2D zeroinitializer, %Int32 100, 0
+	%54 = insertvalue %Point2D %53, %Int32 200, 1
+	store %Point2D %54, %Point2D* %18
+	store {%Int32,%Int32} zeroinitializer, {%Int32,%Int32}* %20
 	; cons Point3D from Point2D (record extension)
 	; (it is possible if dst record contained all fields from src record
 	; and their types are equal)
-	%51 = alloca %Point3D, align 4
+	%55 = alloca %Point3D, align 4
 	; JUST
 	; as ptr
-	%52 = bitcast %Point2D* %14 to %Point3D*
-	%53 = load %Point3D, %Point3D* %52
-	store %Point3D %53, %Point3D* %51
+	%56 = bitcast %Point2D* %18 to %Point3D*
+	%57 = load %Point3D, %Point3D* %56
+	store %Point3D %57, %Point3D* %55
 	; проверка того как локальная константа-массив
 	; "замораживает" свои элементы
-	%54 = alloca %Int32, align 4
-	store %Int32 10, %Int32* %54
-	%55 = alloca %Int32, align 4
-	store %Int32 20, %Int32* %55
-	%56 = load %Int32, %Int32* %54
-	%57 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 %56, 0
-	%58 = load %Int32, %Int32* %55
-	%59 = insertvalue {%Int32,%Int32} %57, %Int32 %58, 1
-	store %Int32 111, %Int32* %54
-	store %Int32 222, %Int32* %55
-	%60 = extractvalue {%Int32,%Int32} %59, 0
-	%61 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str10 to [0 x i8]*), %Int32 %60)
-	%62 = extractvalue {%Int32,%Int32} %59, 1
-	%63 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str11 to [0 x i8]*), %Int32 %62)
-	%64 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 10, 0
-	%65 = insertvalue {%Int32,%Int32} %64, %Int32 20, 1
-	%66 = alloca {%Int32,%Int32}
-	store {%Int32,%Int32} %59, {%Int32,%Int32}* %66
-	%67 = alloca {%Int32,%Int32}
-	store {%Int32,%Int32} %65, {%Int32,%Int32}* %67
-	%68 = bitcast {%Int32,%Int32}* %66 to i8*
-	%69 = bitcast {%Int32,%Int32}* %67 to i8*
+	%58 = alloca %Int32, align 4
+	store %Int32 10, %Int32* %58
+	%59 = alloca %Int32, align 4
+	store %Int32 20, %Int32* %59
+	%60 = load %Int32, %Int32* %58
+	%61 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 %60, 0
+	%62 = load %Int32, %Int32* %59
+	%63 = insertvalue {%Int32,%Int32} %61, %Int32 %62, 1
+	store %Int32 111, %Int32* %58
+	store %Int32 222, %Int32* %59
+	%64 = extractvalue {%Int32,%Int32} %63, 0
+	%65 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str12 to [0 x i8]*), %Int32 %64)
+	%66 = extractvalue {%Int32,%Int32} %63, 1
+	%67 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str13 to [0 x i8]*), %Int32 %66)
+	%68 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 10, 0
+	%69 = insertvalue {%Int32,%Int32} %68, %Int32 20, 1
+	%70 = alloca {%Int32,%Int32}
+	store {%Int32,%Int32} %63, {%Int32,%Int32}* %70
+	%71 = alloca {%Int32,%Int32}
+	store {%Int32,%Int32} %69, {%Int32,%Int32}* %71
+	%72 = bitcast {%Int32,%Int32}* %70 to i8*
+	%73 = bitcast {%Int32,%Int32}* %71 to i8*
 	
-	%70 = call i1 (i8*, i8*, i64) @memeq( i8* %68, i8* %69, %Int64 8)
-	%71 = icmp ne %Bool %70, 0
-	br %Bool %71 , label %then_4, label %else_4
-then_4:
-	%72 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str12 to [0 x i8]*))
-	br label %endif_4
-else_4:
-	%73 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str13 to [0 x i8]*))
-	br label %endif_4
-endif_4:
+	%74 = call i1 (i8*, i8*, i64) @memeq( i8* %72, i8* %73, %Int64 8)
+	%75 = icmp ne %Bool %74, 0
+	br %Bool %75 , label %then_5, label %else_5
+then_5:
+	%76 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str14 to [0 x i8]*))
+	br label %endif_5
+else_5:
+	%77 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str15 to [0 x i8]*))
+	br label %endif_5
+endif_5:
 	ret %Int 0
 }
 

@@ -791,9 +791,6 @@ def do_value_shift(x):
 
 
 def bin_imm(op, type_result, l, r, ti):
-	if op in ['eq', 'ne']:
-		return value_eq(l, r, op, ti)
-
 	ops = {
 		'logic_or': lambda a, b: a or b,
 		'logic_and': lambda a, b: a and b,
@@ -858,6 +855,7 @@ def do_value_bin(x):
 			return value_bin(op, l, r, foundation.typeBool, ti)
 
 
+
 	ct = select_common_type(l['type'], r['type'])
 
 	if ct != None:
@@ -890,6 +888,10 @@ def do_value_bin(x):
 		print("\n")
 
 		return value_bad(x)
+
+
+	if op in ['eq', 'ne']:
+		return value_eq(l, r, op, ti)
 
 	if hlir_type.type_eq(ct, foundation.typeBool):
 		if op == 'or': op = 'logic_or'

@@ -32,6 +32,14 @@ int main()
 {
 	printf("records test\n");
 
+	// check value_record_eq for immediate values
+	#define __ver  {.major = 0, .minor = 7}
+	if (true) {
+		printf("version 0.7\n");
+	} else {
+		printf("version not 0.7\n");
+	}
+
 	// compare two Point2D records
 	Point2D p2d0 = (Point2D){.x = 1, .y = 2};
 	Point2D p2d1 = (Point2D){.x = 10, .y = 20};
@@ -107,5 +115,7 @@ int main()
 
 
 	return 0;
+
+#undef __ver
 }
 

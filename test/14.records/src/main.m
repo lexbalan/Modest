@@ -22,6 +22,14 @@ const yy = Point2D {x=1, y=2}
 public func main() -> Int {
 	printf("records test\n")
 
+	// check value_record_eq for immediate values
+	let ver = __compiler.version
+	if ver == {major = 0, minor = 7} {
+		printf("version 0.7\n")
+	} else {
+		printf("version not 0.7\n")
+	}
+
 	// compare two Point2D records
 	var p2d0: Point2D = {x=1, y=2}
 	var p2d1: Point2D = {x=10, y = 20}

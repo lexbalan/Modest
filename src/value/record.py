@@ -5,7 +5,7 @@ from hlir.hlir import *
 from hlir.field import hlir_field
 from hlir.type import type_print, record_field_get
 from util import get_item_with_id
-from .value import value_terminal, value_cons_node, value_zero, value_is_immediate, value_print, value_cons_immediate
+from .value import value_terminal, value_cons_node, value_zero, value_is_immediate, value_print, value_cons_immediate, value_bin, value_eq
 
 
 # получает на вход список инициализаторов
@@ -171,12 +171,16 @@ def value_record_cons(t, v, method, ti):
 
 
 def value_record_eq(l, r, op, ti):
-	info("value_record_eq()", ti)
+	#info("value_record_eq()", ti)
 	from foundation import typeBool
 	nv = value_bin(op, l, r, typeBool, ti=ti)
 	if value_is_immediate(l) and value_is_immediate(r):
-		error("not implemented!", ti)
-		eq_result = False
+		eq_result = True
+
+		for lx, rx in zip(l['fields'], r['fields']):
+			if not value_eq(lx['value'], rx['value'], op, ti):
+				eq_result = False
+				break
 
 		if op == 'ne':
 			eq_result = not eq_result
