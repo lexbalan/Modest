@@ -41,6 +41,7 @@ parser = argparse.ArgumentParser(
 #parser.add_argument('filename', action='append', default=['main'])
 parser.add_argument('-i', '--include')
 parser.add_argument('-o', '--output')
+parser.add_argument('-L', '--lib')
 parser.add_argument('-s', '--setup', help='-setup=<value>')
 parser.add_argument('-f', '--feature', action='append', help='[unsafe]')
 parser.add_argument('-m', action='append', help='-m<var>=<value>')
@@ -99,10 +100,18 @@ def do_file(src_name):
 def main():
 	#print(os.getcwd())
 
+
+
 	path_lib = os.getenv('MODEST_LIB')
 	if path_lib != None:
 		settings.set('lib', path_lib)
-	else:
+
+
+	libb = args.lib
+	if libb != None:
+		settings.set('lib', libb)
+
+	if path_lib == None and libb == None:
 		error.fatal("MODEST_LIB required")
 
 
