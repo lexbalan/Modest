@@ -830,7 +830,6 @@ def do_value_bin(x):
 
 
 
-
 def binop(op, type_result, l, r, ti=None):
 	nv = value_bin(op, l, r, type_result, ti=ti)
 
@@ -996,11 +995,6 @@ def do_value_deref(x):
 	nv = value_un('deref', v, to, ti=x['ti'])
 	nv['immutable'] = False
 	return nv
-
-
-
-
-
 
 
 
