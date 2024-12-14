@@ -1,16 +1,24 @@
 
 @c_include "stdio.h"
 include "libc/stdio"
-// 1. Сначала проходит по всем сущностям и создает type_undefined/value_undefined
 
 
 type Node record {
 	next: *Node
-	data: Ptr
+	data: *DataHolder
 }
-//: []()->Unit
-//var a: []Int32 = [10, "&add", 20, 30, "sd"]
+
+type DataHolder record {
+	data: Int32
+}
 var funcs: [2]*() -> Unit = [&init, &foo]
+var a: *() -> Unit = &init
+var b: *(a: Int32, b: Int32) -> Int32 = &add
+
+type SonrState Int32
+func xx(x: *SonrState) -> Unit {
+
+}
 public func main() -> Int32 {
 	init()
 	foo()

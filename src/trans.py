@@ -577,10 +577,15 @@ def do_type_id(t):
 
 	# tmp
 	if tx == None:
+		error("undefined type", t['ti'])
 		tx = hlir_type.hlir_type_undefined(t['ti'])
 
 	# если дело происходит в определении типа и пришел undefined тип
+	#hlir_type.type_is_incomplete
 	if hlir_type.type_is_undefined(tx):
+		if cdef['isa'] != 'def_type':
+			#print(cdef['isa'])
+			error("forward references to non-struct type", t['ti'])
 		cdef['deps'].append(tx)
 
 

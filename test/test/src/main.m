@@ -4,15 +4,27 @@ include "libc/stdio"
 
 type Node record {
 	next: *Node
-	data: *Unit
+	data: *DataHolder
+}
+
+type DataHolder record {
+	data: Int32
 }
 
 
 var funcs: []*()->Unit = [&init, &foo]
 
 
-//func xx(x: SonrState) -> Unit {
-//}
+var a = &init
+var b = &add
+
+
+type SonrState Int32
+func xx(x: *SonrState) -> Unit {
+
+}
+
+
 
 public func main() -> Int32 {
 	init()

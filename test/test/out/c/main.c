@@ -8,22 +8,33 @@
 
 
 
-// 1. Сначала проходит по всем сущностям и создает type_undefined/value_undefined
 struct Node;
 typedef struct Node Node;
+struct DataHolder;
+typedef struct DataHolder DataHolder;
 
 
 
 struct Node {
 	Node *next;
-	void *data;
+	DataHolder *data;
 };
-//: []()->Unit
-//var a: []Int32 = [10, "&add", 20, 30, "sd"]
+
+struct DataHolder {
+	int32_t data;
+};
 static void init();
 static void foo();
 
 static void *funcs[2] = (void *[2]){&init, &foo};
+static void *a = &init;
+static void *b = &foo;
+
+typedef int32_t SonrState;
+
+static void xx(SonrState *x)
+{
+}
 
 int32_t main()
 {

@@ -193,7 +193,11 @@ declare void @perror(%ConstCharStr* %str)
 
 %Node = type {
 	%Node*,
-	i8*
+	%DataHolder*
+};
+
+%DataHolder = type {
+	%Int32
 };
 
 
@@ -201,8 +205,12 @@ declare void @perror(%ConstCharStr* %str)
 	void ()* @init,
 	void ()* @foo
 ]
+@a = internal global void ()* @init
+@b = internal global void ()* @foo
 
-define internal void @xx(opaque %x) {
+%SonrState = type %Int32;
+
+define internal void @xx(%SonrState* %x) {
 	ret void
 }
 
