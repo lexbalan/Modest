@@ -26,8 +26,8 @@ static void nat32_list_insert(list_List *list, uint32_t x)
 static void list_print_forward(list_List *list)
 {
 	printf("list_print_forward:\n");
-	list_Node *pn = (list_Node *)list_first_node_get((list_List *)list);
-	while ((list_Node *)pn != NULL) {
+	list_Node *pn = list_first_node_get((list_List *)list);
+	while (pn != NULL) {
 		uint32_t *const x = (uint32_t *)list_node_data_get((list_Node *)pn);
 		printf("v = %u\n", *x);
 		pn = (list_Node *)list_node_next_get((list_Node *)pn);
@@ -38,8 +38,8 @@ static void list_print_forward(list_List *list)
 static void list_print_backward(list_List *list)
 {
 	printf("list_print_backward:\n");
-	list_Node *pn = (list_Node *)list_last_node_get((list_List *)list);
-	while ((list_Node *)pn != NULL) {
+	list_Node *pn = list_last_node_get((list_List *)list);
+	while (pn != NULL) {
 		uint32_t *const x = (uint32_t *)list_node_data_get((list_Node *)pn);
 		printf("v = %u\n", *x);
 		pn = (list_Node *)list_node_prev_get((list_Node *)pn);
@@ -54,7 +54,7 @@ int main()
 
 	//list0.size  // access to private field of record
 
-	if ((list_List *)list0 == NULL) {
+	if (list0 == NULL) {
 		printf("error: cannot create list");
 		return 1;
 	}
@@ -90,7 +90,7 @@ int main()
 	while (i >= -12) {
 		list_Node *const node = list_node_get((list_List *)list0, i);
 
-		if ((list_Node *)node == NULL) {
+		if (node == NULL) {
 			printf("node %i not exist\n", i);
 			i = i - 1;
 			continue;
@@ -107,7 +107,7 @@ int main()
 	while (i <= 12) {
 		list_Node *const node = list_node_get((list_List *)list0, i);
 
-		if ((list_Node *)node == NULL) {
+		if (node == NULL) {
 			printf("node %i not exist\n", i);
 			i = i + 1;
 			continue;

@@ -529,8 +529,6 @@ def value_eq(l, r, op, ti):
 
 
 
-
-
 def value_print(x, msg="value_print:"):
 	assert(x['isa'] == 'value')
 

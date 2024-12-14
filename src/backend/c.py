@@ -770,15 +770,17 @@ def print_value_cons(x, ctx):
 			print_value_char(x, ctx)
 			return
 
+
 	# в у нас типы структурные, в си - номинальные
 	# поэтому даже если структуры одинаковы, но имена разные
 	# их нужно приводить
-
 	# *RecordA -> *RecordB
 	if hlir_type.type_is_pointer_to_record(from_type):
 		if hlir_type.type_is_pointer_to_record(to_type):
-			print_cast(to_type, value, ctx)
-			return
+			# НО если это реально один и тот же тип, то приведение не нужно!
+			if id(from_type) != id(to_type):
+				print_cast(to_type, value, ctx)
+				return
 
 
 	if hlir_type.type_is_float(to_type):

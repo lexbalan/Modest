@@ -994,7 +994,6 @@ def select_common_type(a, b):
 	if type_eq(a, b):
 		return a
 
-
 	if a['kind'] == b['kind']:
 		if type_is_generic(a) and type_is_generic(b):
 			if type_is_array(a):
