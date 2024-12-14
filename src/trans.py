@@ -1032,7 +1032,6 @@ def sort_args(params, args):
 
 		arg = vec1[j]
 		vec1.pop(j)
-		#vec1[j] = None
 		outvec.append(arg)
 
 	return outvec
