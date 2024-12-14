@@ -206,8 +206,6 @@ class Parser:
 					x['nl'] = spaceline_cnt
 					spaceline_cnt = 0
 					attributes.append(x)
-
-
 				elif self.match(","):
 					pass
 				elif self.match(";"):
@@ -330,6 +328,7 @@ class Parser:
 		fields = []
 		while not self.match(")"):
 			f = self.parse_field()
+			#f = self.stmt_var()
 			if f == None:
 				if self.match("..."):
 					arghack = True
@@ -1162,6 +1161,9 @@ class Parser:
 	def stmt_var(self):
 		ti = self.ti()
 
+		if not self.is_identifier():
+			return None
+
 		ids = []
 		while True:
 			id = self.identifier()
@@ -1190,6 +1192,8 @@ class Parser:
 				'id': id,
 				'type': t,
 				'init_value': init_value,
+				'access_modifier': 'public',
+				'attributes': [],
 				'ti': id['ti']
 			}
 			stmts.append(stmt_var)
