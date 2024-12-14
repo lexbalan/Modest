@@ -586,17 +586,6 @@ def do_type_id(t):
 			error("forward references to non-struct type", t['ti'])
 		cdef['deps'].append(tx)
 
-
-#	if tx == None:
-#		predefinition(id)
-#		tx = ctx_type_get(id_str)
-#		if tx != None:
-#			return tx
-#
-#		error("undeclared type '%s'" % id_str, t['ti'])
-#		# create fake alias for unknown type
-#		tx = htype.type_bad(t)
-#		root_symtab.type_add(id_str, tx)
 	return tx
 
 
@@ -621,8 +610,6 @@ def do_type_array(t):
 		if not value_is_immediate(volume):
 			info("VLA", t['ti'])
 			volume = None
-			#print(volume['isa'])
-			#print(volume['kind'])
 			if is_local_context():
 				global cfunc
 				cfunc['att'].append('stacksave')
@@ -637,8 +624,6 @@ def do_type_array(t):
 	return htype.type_array(of, volume, ti=t['ti'])
 
 
-
-#exclude_record = []
 
 anon_rec_cnt = 0
 def do_type_record(x):
@@ -702,8 +687,6 @@ def do_type_enum(t):
 
 def do_type_func(t, func_id="_"):
 	# check params
-	#var_args = False
-	#va_list_id = None
 	params = []
 	for _param in t['params']:
 		param = do_field(_param)
@@ -713,16 +696,9 @@ def do_type_func(t, func_id="_"):
 
 		params.append(param)
 
-
 	to = foundation.typeUnit
 	if t['to'] != None:
 		to = do_type(t['to'])
-
-		#if htype.type_is_array(to):
-		#	#info("array as function return value", t['to'])
-		#	to = htype.type_copy(to)
-		#	to['att'].append('wrapped_array_type')
-		#	to['wrapped_id'] = 'struct ' + func_id + '_' + 'retval'
 
 	return htype.type_func(params, to, t['arghack'], ti=t['ti'])
 
@@ -752,7 +728,6 @@ def do_type(x):
 	return t
 
 
-
 #
 # Do Statement
 #
@@ -761,6 +736,7 @@ def do_value_shift(x):
 	op = x['kind']  # 'shl', 'shr'
 	l = do_rvalue(x['left'])
 	r = do_rvalue(x['right'])
+	type_result = l['type']
 
 #	if not htype.type_is_word(l['type']):
 #		error("expected word value", x['left'])
@@ -769,54 +745,20 @@ def do_value_shift(x):
 		error("expected integer value", x['right'])
 
 	if value_is_immediate(l) and value_is_immediate(r):
-		return bin_imm(op, l['type'], l, r, x['ti'])
+		asset = l['asset']
+		if op == 'shl': asset = asset << r['asset']
+		else: asset = asset >> r['asset']
+
+		nv = value_bin(op, l, r, type_result, ti=x['ti'])
+		nv['asset'] = int(asset)
+		nv['immediate'] = True
+		return nv
 
 	if htype.type_is_generic(l['type']):
 		error("expected non-generic value", l)
 		return value_bad(x['ti'])
 
-	return value_bin(op, l, r, l['type'], ti=x['ti'])
-
-
-
-
-def bin_imm(op, type_result, l, r, ti):
-	ops = {
-		'logic_or': lambda a, b: a or b,
-		'logic_and': lambda a, b: a and b,
-		'or': lambda a, b: a | b,
-		'and': lambda a, b: a & b,
-		'xor': lambda a, b: a ^ b,
-		'lt': lambda a, b: a < b,
-		'gt': lambda a, b: a > b,
-		'le': lambda a, b: a <= b,
-		'ge': lambda a, b: a >= b,
-		'add': lambda a, b: a + b,
-		'sub': lambda a, b: a - b,
-		'mul': lambda a, b: a * b,
-		'div': lambda a, b: a / b,
-		'rem': lambda a, b: a % b,
-		'shl': lambda a, b: a << b,
-		'shr': lambda a, b: a >> b,
-	}
-
-	if op == 'add':
-		if htype.type_is_array(l['type']):
-			return value_array_add(l, r, ti)
-		elif htype.type_is_string(l['type']):
-			return value_string_add(l, r, ti)
-
-	asset = ops[op](l['asset'], r['asset'])
-
-	if htype.type_is_generic(type_result) and not htype.type_is_float(type_result) and not htype.type_is_string(type_result) and not htype.type_is_array(type_result):
-		# (для операций типа 1 + 2)
-		# Пересматриваем generic тип для нового значения
-		type_result = htype.type_generic_int_for(asset, signed=False, ti=ti)
-
-	nv = value_bin(op, l, r, type_result, ti=ti)
-	nv['asset'] = int(asset)
-	nv['immediate'] = True
-	return nv
+	return value_bin(op, l, r, type_result, ti=x['ti'])
 
 
 
@@ -890,12 +832,45 @@ def do_value_bin(x):
 
 
 def binop(op, type_result, l, r, ti=None):
+	nv = value_bin(op, l, r, type_result, ti=ti)
+
 	# if left & right are immediate, we can fold const
 	# and append field ['asset'] to bin_value
 	if value_is_immediate(l) and value_is_immediate(r):
-		return bin_imm(op, type_result, l, r, ti)
+		ops = {
+			'logic_or': lambda a, b: a or b,
+			'logic_and': lambda a, b: a and b,
+			'or': lambda a, b: a | b,
+			'and': lambda a, b: a & b,
+			'xor': lambda a, b: a ^ b,
+			'lt': lambda a, b: a < b,
+			'gt': lambda a, b: a > b,
+			'le': lambda a, b: a <= b,
+			'ge': lambda a, b: a >= b,
+			'add': lambda a, b: a + b,
+			'sub': lambda a, b: a - b,
+			'mul': lambda a, b: a * b,
+			'div': lambda a, b: a / b,
+			'rem': lambda a, b: a % b,
+		}
 
-	return value_bin(op, l, r, type_result, ti=ti)
+		if op == 'add':
+			if htype.type_is_array(l['type']):
+				return value_array_add(l, r, ti)
+			elif htype.type_is_string(l['type']):
+				return value_string_add(l, r, ti)
+
+		asset = ops[op](l['asset'], r['asset'])
+
+		if htype.type_is_generic(type_result) and not htype.type_is_float(type_result) and not htype.type_is_string(type_result) and not htype.type_is_array(type_result):
+			# (для операций типа 1 + 2)
+			# Пересматриваем generic тип для нового значения
+			nv['type'] = htype.type_generic_int_for(asset, signed=False, ti=ti)
+
+		nv['asset'] = int(asset)
+		nv['immediate'] = True
+
+	return nv
 
 
 
