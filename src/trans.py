@@ -588,17 +588,6 @@ def do_type_id(t):
 			error("forward references to non-struct type", t['ti'])
 		cdef['deps'].append(tx)
 
-
-#	if tx == None:
-#		predefinition(id)
-#		tx = ctx_type_get(id_str)
-#		if tx != None:
-#			return tx
-#
-#		error("undeclared type '%s'" % id_str, t['ti'])
-#		# create fake alias for unknown type
-#		tx = hlir_type.hlir_type_bad(t)
-#		root_symtab.type_add(id_str, tx)
 	return tx
 
 
