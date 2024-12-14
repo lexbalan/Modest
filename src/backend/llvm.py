@@ -1155,9 +1155,9 @@ def do_eval_access(v):
 	if value_is_immediate(v):
 		return do_eval(v['immval'])
 
+	result_type = v['type']
 	rec = do_eval(v['record'])
 	pos = v['field']['field_no']
-	result_type = v['type']
 	return llvm_eval_access(rec, pos, result_type)
 
 
