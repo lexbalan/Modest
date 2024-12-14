@@ -11,6 +11,9 @@ type Node record {
 var funcs: []*()->Unit = [&init, &foo]
 
 
+//func xx(x: SonrState) -> Unit {
+//}
+
 public func main() -> Int32 {
 	init()
 	foo()

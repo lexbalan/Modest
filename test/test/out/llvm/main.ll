@@ -202,6 +202,10 @@ declare void @perror(%ConstCharStr* %str)
 	void ()* @foo
 ]
 
+define internal void @xx(opaque %x) {
+	ret void
+}
+
 define %Int32 @main() {
 	call void @init()
 	call void @foo()

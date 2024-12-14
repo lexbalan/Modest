@@ -2332,6 +2332,10 @@ def def_func(x, dostmt=True):
 	fn = ctx_value_get(func_id['str'])
 
 
+	definition = hlir_def_func(func_id, fn, None, x['ti'])
+	cdef = definition
+
+
 	if value_is_incomplete(fn):
 		fn['type'] = do_type_func(x['type'])
 
@@ -2355,8 +2359,7 @@ def def_func(x, dostmt=True):
 		return None
 
 
-	definition = hlir_def_func(func_id, fn, None, x['ti'])
-	cdef = definition
+
 
 	prev_cfunc = cfunc
 	cfunc = fn

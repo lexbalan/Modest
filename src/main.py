@@ -100,8 +100,6 @@ def do_file(src_name):
 def main():
 	#print(os.getcwd())
 
-
-
 	path_lib = os.getenv('MODEST_LIB')
 	if path_lib != None:
 		settings.set('lib', path_lib)
