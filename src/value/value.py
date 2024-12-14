@@ -3,7 +3,7 @@ from error import info, warning, error
 from hlir.id import hlir_id
 from hlir.hlir import *
 from util import get_item_with_id
-import hlir.type as hlir_type
+import type as htype
 
 
 def value_is_bad(x):
@@ -13,7 +13,7 @@ def value_is_undefined(x):
 	return x['kind'] == 'undefined'
 
 def value_is_incomplete(x):
-	return hlir_type.type_is_incomplete(x['type'])
+	return htype.type_is_incomplete(x['type'])
 
 def value_is_immediate(x):
 	return x['immediate']
@@ -32,7 +32,7 @@ def value_is_lvalue(x):
 
 
 def value_is_generic_immediate(x):
-	return value_is_immediate(x) and hlir_type.type_is_generic(x['type'])
+	return value_is_immediate(x) and htype.type_is_generic(x['type'])
 
 
 def _value_is_zero_array(x):
@@ -58,9 +58,9 @@ def value_is_zero(x):
 	if not value_is_immediate(x):
 		return False
 
-	if hlir_type.type_is_array(x['type']):
+	if htype.type_is_array(x['type']):
 		return _value_is_zero_array(x)
-	if hlir_type.type_is_record(x['type']):
+	if htype.type_is_record(x['type']):
 		return _value_is_zero_record(x)
 
 	return x['asset'] == 0
@@ -100,7 +100,7 @@ def value_bad(ti):
 		'isa': 'value',
 		'kind': 'bad',
 		'id': hlir_id('_', ti=ti),
-		'type': hlir_type.hlir_type_bad({'ti': ti}),
+		'type': htype.type_bad({'ti': ti}),
 		'immutable': False,
 		'immediate': False,
 		'att': [],
@@ -142,9 +142,9 @@ def value_terminal(t, ti):
 def value_zero(t, ti):
 	nv = value_terminal(t, ti)
 
-	if hlir_type.type_is_array(t):
+	if htype.type_is_array(t):
 		nv['items'] = []
-	elif hlir_type.type_is_record(t):
+	elif htype.type_is_record(t):
 		nv['fields'] = []
 	else:
 		nv['asset'] = 0
@@ -348,8 +348,8 @@ def value_cons_immediate(t, v, method, ti):
 
 
 def value_sizeof_type(of, ti):
-	size = hlir_type.type_get_size(of)
-	type = hlir_type.hlir_type_generic_int_for(size, signed=False, ti=ti)
+	size = htype.type_get_size(of)
+	type = htype.type_generic_int_for(size, signed=False, ti=ti)
 	return {
 		'isa': 'value',
 		'kind': 'sizeof_type',
@@ -363,8 +363,8 @@ def value_sizeof_type(of, ti):
 	}
 
 def value_sizeof_value(of, ti):
-	size = hlir_type.type_get_size(of['type'])
-	type = hlir_type.hlir_type_generic_int_for(size, signed=False, ti=ti)
+	size = htype.type_get_size(of['type'])
+	type = htype.type_generic_int_for(size, signed=False, ti=ti)
 	return {
 		'isa': 'value',
 		'kind': 'sizeof_value',
@@ -379,8 +379,8 @@ def value_sizeof_value(of, ti):
 
 
 def value_alignof(of, ti):
-	align = hlir_type.type_get_align(of)
-	type = hlir_type.hlir_type_generic_int_for(align, signed=False, ti=ti)
+	align = htype.type_get_align(of)
+	type = htype.type_generic_int_for(align, signed=False, ti=ti)
 	return {
 		'isa': 'value',
 		'kind': 'alignof',
@@ -395,13 +395,13 @@ def value_alignof(of, ti):
 
 
 def value_offsetof(of, field_id, ti):
-	field = hlir_type.record_field_get(of, field_id['str'])
+	field = htype.record_field_get(of, field_id['str'])
 	if field == None:
 		error("undefined field '%s'" % field_id['str'], field_id['ti'])
 		return value_bad({'ti': ti})
 
 	offset = field['offset']
-	type = hlir_type.hlir_type_generic_int_for(offset, signed=False, ti=ti)
+	type = htype.type_generic_int_for(offset, signed=False, ti=ti)
 	return {
 		'isa': 'value',
 		'kind': 'offsetof',
@@ -418,7 +418,7 @@ def value_offsetof(of, field_id, ti):
 
 def value_lengthof(value, ti):
 	length = value['type']['volume']['asset']
-	type = hlir_type.hlir_type_generic_int_for(length, signed=False, ti=ti)
+	type = htype.type_generic_int_for(length, signed=False, ti=ti)
 	return {
 		'isa': 'value',
 		'kind': 'lengthof',
@@ -516,10 +516,10 @@ def value_eq(l, r, op, ti):
 	assert(r['isa'] == 'value')
 	assert(op in ['eq', 'ne'])
 
-	if hlir_type.type_is_array(l['type']):
+	if htype.type_is_array(l['type']):
 		from value.array import value_array_eq
 		return value_array_eq(l, r, op, ti)
-	elif hlir_type.type_is_record(l['type']):
+	elif htype.type_is_record(l['type']):
 		from value.record import value_record_eq
 		return value_record_eq(l, r, op, ti)
 
@@ -540,7 +540,7 @@ def value_print(x, msg="value_print:"):
 
 	print("isa: " + str(x['isa']))
 	print("kind: " + str(x['kind']))
-	print("type: ", end=""); hlir_type.type_print(x['type']); print()
+	print("type: ", end=""); htype.type_print(x['type']); print()
 	print("att: " + str(x['att']))
 
 

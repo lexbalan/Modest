@@ -1,5 +1,5 @@
 
-from hlir.type import *
+from type import *
 from hlir.hlir import hlir_def_type
 
 from symtab import Symtab
@@ -85,58 +85,58 @@ def init():
 	root_context = Symtab()
 	foundation['context'] = root_context
 
-	typeUnit = hlir_type_unit()
-	typeBool = hlir_type_bool()
+	typeUnit = type_unit()
+	typeBool = type_bool()
 
 	#
-	typeWord8 = hlir_type_word(width=8)
-	typeWord16 = hlir_type_word(width=16)
-	typeWord32 = hlir_type_word(width=32)
-	typeWord64 = hlir_type_word(width=64)
-	typeWord128 = hlir_type_word(width=128)
-	typeWord256 = hlir_type_word(width=256)
+	typeWord8 = type_word(width=8)
+	typeWord16 = type_word(width=16)
+	typeWord32 = type_word(width=32)
+	typeWord64 = type_word(width=64)
+	typeWord128 = type_word(width=128)
+	typeWord256 = type_word(width=256)
 
 	#
-	typeInt8 = hlir_type_integer(width=8)
-	typeInt16 = hlir_type_integer(width=16)
-	typeInt32 = hlir_type_integer(width=32)
-	typeInt64 = hlir_type_integer(width=64)
-	typeInt128 = hlir_type_integer(width=128)
-	typeInt256 = hlir_type_integer(width=256)
+	typeInt8 = type_integer(width=8)
+	typeInt16 = type_integer(width=16)
+	typeInt32 = type_integer(width=32)
+	typeInt64 = type_integer(width=64)
+	typeInt128 = type_integer(width=128)
+	typeInt256 = type_integer(width=256)
 
 	#
-	typeNat8 = hlir_type_integer(width=8, signed=False)
-	typeNat16 = hlir_type_integer(width=16, signed=False)
-	typeNat32 = hlir_type_integer(width=32, signed=False)
-	typeNat64 = hlir_type_integer(width=64, signed=False)
-	typeNat128 = hlir_type_integer(width=128, signed=False)
-	typeNat256 = hlir_type_integer(width=256, signed=False)
+	typeNat8 = type_integer(width=8, signed=False)
+	typeNat16 = type_integer(width=16, signed=False)
+	typeNat32 = type_integer(width=32, signed=False)
+	typeNat64 = type_integer(width=64, signed=False)
+	typeNat128 = type_integer(width=128, signed=False)
+	typeNat256 = type_integer(width=256, signed=False)
 
 	#
-	typeFloat32 = hlir_type_float(width=32)
-	typeFloat64 = hlir_type_float(width=64)
+	typeFloat32 = type_float(width=32)
+	typeFloat64 = type_float(width=64)
 
 	#
-	typeChar8 = hlir_type_char(width=8)
-	typeChar16 = hlir_type_char(width=16)
-	typeChar32 = hlir_type_char(width=32)
+	typeChar8 = type_char(width=8)
+	typeChar16 = type_char(width=16)
+	typeChar32 = type_char(width=32)
 
 	# type Nil = Generic(*Unit)
-	typeNil = hlir_type_pointer(to=typeUnit)
+	typeNil = type_pointer(to=typeUnit)
 	typeNil['generic'] = True
 
 	# type FreePointer = *Unit
-	typeFreePointer = hlir_type_pointer(to=typeUnit)
+	typeFreePointer = type_pointer(to=typeUnit)
 	# не нужно делать decl тк нет собственного имени у этого типа
 
 	typeSysNat = typeNat64
 	from value.value import value_undefined
 	undefinedVolume = value_undefined(typeSysNat, ti=None)
-	typeStr8 = hlir_type_array(typeChar8, undefinedVolume, ti=None)
+	typeStr8 = type_array(typeChar8, undefinedVolume, ti=None)
 	typeStr8['id'] = {'str': 'Str8'}
-	typeStr16 = hlir_type_array(typeChar16, undefinedVolume, ti=None)
+	typeStr16 = type_array(typeChar16, undefinedVolume, ti=None)
 	typeStr16['id'] = {'str': 'Str16'}
-	typeStr32 = hlir_type_array(typeChar32, undefinedVolume, ti=None)
+	typeStr32 = type_array(typeChar32, undefinedVolume, ti=None)
 	typeStr32['id'] = {'str': 'Str32'}
 
 

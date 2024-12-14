@@ -1,23 +1,4 @@
 
-from hlir.type import hlir_type_init
-
-
-
-def hlir_init():
-	hlir_type_init()
-
-
-"""def hlir_decl_type(id, newtype, ti):
-	newtype_declaration = {
-		'isa': 'decl_type',
-		'id': id,
-		'type': newtype,
-		'att': [],
-		'nl': 1,
-		'ti': ti
-	}
-
-	return newtype_declaration"""
 
 
 def hlir_def_type(id, type, original_type=None, ti=None):

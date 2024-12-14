@@ -1,5 +1,5 @@
 
-import hlir.type as type
+import type as type
 from error import info, warning, error
 
 from .value import value_bad, value_is_bad, value_is_undefined, value_is_immediate, value_cons_node
@@ -257,7 +257,7 @@ def select_default_type_for(x):
 			item_type = xt['of']
 			length = len(x['items'])
 			volume = value_integer_create(length)
-			return type.hlir_type_array(item_type, volume, x['ti'])
+			return type.type_array(item_type, volume, x['ti'])
 
 	return None # corresponded type not found!
 

@@ -1,7 +1,7 @@
 
-import hlir.type as hlir_type
+import type as htype
 import foundation
-from hlir.type import type_print, select_common_type
+from type import type_print, select_common_type
 from error import info, warning, error
 from .char import utf32_chars_to_utfx_chars
 from .integer import value_integer_create
@@ -31,7 +31,7 @@ def value_array_create(items, ti=None):
 	items_type = items[0]['type']
 	for item in items:
 		items_type = select_common_type(items_type, item['type'])
-		if hlir_type.type_is_bad(items_type):
+		if htype.type_is_bad(items_type):
 			error("value with unsuitable type", item['ti'])
 			return value_bad({'ti': ti})
 
@@ -60,7 +60,7 @@ def value_array_create_from_string(t, v, method, ti=None):
 			length = t_length
 
 	volume = value_integer_create(length)
-	t = hlir_type.hlir_type_array(char_type, volume, ti)
+	t = htype.type_array(char_type, volume, ti)
 
 	nv = value_cons_node(t, v, method, ti)
 	nv['immediate'] = True
@@ -72,10 +72,10 @@ def value_array_create_from_string(t, v, method, ti=None):
 def array_can(to, from_type, method):
 
 	# String -> []CharX
-	if hlir_type.type_is_string(from_type):
-		return hlir_type.type_is_char(to['of']) or hlir_type.type_is_word(to['of'])
+	if htype.type_is_string(from_type):
+		return htype.type_is_char(to['of']) or htype.type_is_word(to['of'])
 
-	if not hlir_type.type_is_array(from_type):
+	if not htype.type_is_array(from_type):
 		return False
 
 	# Check item type
@@ -87,10 +87,10 @@ def array_can(to, from_type, method):
 	if ct == None:
 		return False
 
-	if not hlir_type.type_eq(to['of'], ct):
+	if not htype.type_eq(to['of'], ct):
 		return False
 
-	if hlir_type.type_is_generic(from_type):
+	if htype.type_is_generic(from_type):
 		# GenericArray -> Array
 		if value_is_undefined(to['volume']):
 			return True
@@ -129,7 +129,7 @@ def cons_items(items, to_type):
 def value_array_cons(t, v, method, ti):
 	#info("value_array_cons", ti)
 
-	if hlir_type.type_is_string(v['type']):
+	if htype.type_is_string(v['type']):
 		return value_array_create_from_string(t, v, method, ti)
 
 	nv = value_cons_node(t, v, method, ti)
@@ -170,7 +170,7 @@ def value_array_cons(t, v, method, ti):
 
 def _value_array_create(items, item_type, length, is_generic, ti):
 	array_volume = value_integer_create(length)
-	array_type = hlir_type.hlir_type_array(item_type, volume=array_volume, ti=ti)
+	array_type = htype.type_array(item_type, volume=array_volume, ti=ti)
 	array_type['generic'] = is_generic
 	nv = value_terminal(array_type, ti)
 	nv['items'] = items
@@ -188,7 +188,7 @@ def value_array_add(l, r, ti):
 	items = implicit_cast_list(items, item_type)
 
 	assert(item_type != None)
-	type_result = hlir_type.hlir_type_array(item_type, volume=str_array_volume, ti=ti)
+	type_result = htype.type_array(item_type, volume=str_array_volume, ti=ti)
 	type_result['generic'] = True  # FIXIT!
 
 	nv = value_bin('add', l, r, type_result, ti=ti)

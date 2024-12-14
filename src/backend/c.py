@@ -4,8 +4,8 @@
 
 from error import info, error, fatal
 from .common import *
-import hlir.type as hlir_type
-from hlir.type import type_print
+import type as htype
+from type import type_print
 from value.value import value_is_undefined, value_is_immediate, value_is_generic_immediate, value_is_zero, value_attribute_check, value_print, value_index_array
 from value.integer import value_integer_create
 from util import align_bits_up, nbits_for_num, get_item_with_id, align_to
@@ -166,14 +166,14 @@ def print_array_volume(t):
 
 	# многомерные массивы в C не существуют, поэтому печатаем один массив
 	# размер которого будет произведением всех измерений
-	if hlir_type.type_is_closed_array(t['of']):
+	if htype.type_is_closed_array(t['of']):
 
 		# if it is array of arrays, print volume as:
 		# [n * m * ...]
 		t2 = t
 		while True:
 			print_value(t2['volume'])
-			if not hlir_type.type_is_closed_array(t2['of']):
+			if not htype.type_is_closed_array(t2['of']):
 				break
 			t2 = t2['of']
 			out(" * ")
@@ -216,7 +216,7 @@ def print_type_array(t, as_pointer, space_after=False, unk_voume=False):
 
 def print_type_pointer(t, space_after, as_const=False):
 	# array was printed as *, we dont need to place another *
-	if hlir_type.type_is_array(t['to']):
+	if htype.type_is_array(t['to']):
 		_print_type_pointer_to(t['to']['of'], as_const=as_const, space_after=space_after)
 		return
 
@@ -295,7 +295,7 @@ def type_get_aka(t):
 def print_type(t, space_after=False, array_as_ptr=True, as_const=False):
 	k = t['kind']
 
-	if not hlir_type.type_is_pointer(t):
+	if not htype.type_is_pointer(t):
 		if as_const:
 			out("const ")
 
@@ -303,7 +303,7 @@ def print_type(t, space_after=False, array_as_ptr=True, as_const=False):
 			out("volatile ")
 
 	# hotfix for let generic value problem (let x = 1)
-	if hlir_type.type_is_generic_integer(t):
+	if htype.type_is_generic_integer(t):
 		# если пришел generic - подберем подходящий тип
 		# ex: let x = 1; func(x)
 		t = foundation.type_select_int(t['width'])
@@ -313,23 +313,23 @@ def print_type(t, space_after=False, array_as_ptr=True, as_const=False):
 	if aka != None:
 		out(aka)
 
-	elif hlir_type.type_is_record(t):
+	elif htype.type_is_record(t):
 		print_type_record(t)
 
-	elif hlir_type.type_is_pointer(t):
+	elif htype.type_is_pointer(t):
 		print_type_pointer(t, space_after, as_const)
 		return
 
-	elif hlir_type.type_is_array(t):
+	elif htype.type_is_array(t):
 		print_type_array(t, as_pointer=array_as_ptr, space_after=space_after)
 
-	elif hlir_type.type_is_enum(t):
+	elif htype.type_is_enum(t):
 		print_type_enum(t)
 
-	elif hlir_type.type_is_func(t):
+	elif htype.type_is_func(t):
 		out("void")
 
-	elif hlir_type.type_is_char(t):
+	elif htype.type_is_char(t):
 		if t['width'] <= 8:
 			out("char")
 		elif t['width'] <= 16:
@@ -375,11 +375,11 @@ def print_value_bin(x, ctx):
 	# чтобы он не ругался, завернем такие выражения в скобки
 
 	if op in ['eq', 'ne']:
-		if hlir_type.type_is_record(left['type']):
+		if htype.type_is_record(left['type']):
 			return print_value_eq_record(x, ctx)
-		elif hlir_type.type_is_array(left['type']):
+		elif htype.type_is_array(left['type']):
 			return print_value_eq_array(x, ctx)
-		elif hlir_type.type_is_string(left['type']):
+		elif htype.type_is_string(left['type']):
 			return print_value_bool_lit(x, ctx)
 
 
@@ -398,10 +398,10 @@ def print_value_bin(x, ctx):
 			need_wrap_right = precedence(right) < 10
 
 	elif op == 'add':
-		if hlir_type.type_is_array(left['type']):
+		if htype.type_is_array(left['type']):
 			return print_value_terminal(x, ctx)
 
-		if hlir_type.type_is_string(left['type']):
+		if htype.type_is_string(left['type']):
 			if left['type']['width'] != right['type']['width']:
 				# для случаев вроде "Hello" + U"World!"
 				# (печатаем сам литерал, тк C иначе не умеет)
@@ -456,11 +456,11 @@ def print_value_un(v, ctx):
 	pv = precedence(value)
 
 	if op == 'not':
-		if hlir_type.type_eq(value['type'], foundation.typeBool):
+		if htype.type_eq(value['type'], foundation.typeBool):
 			op = 'logic_not'
 
 	if v['kind'] == 'ref':
-		if hlir_type.type_is_array(value['type']):
+		if htype.type_is_array(value['type']):
 			# to prevent:
 			# "warning: incompatible pointer types passing 'uint8_t (*)[10]' to
 			# parameter of type 'uint8_t *'"
@@ -484,7 +484,7 @@ def print_value_call(v, ctx, arrayResult=None):
 	left = v['func']
 	ftype = left['type']
 
-	if hlir_type.type_is_pointer(ftype):
+	if htype.type_is_pointer(ftype):
 		# Вызов функции через указатель
 		# поскольку у нас указатели на функции это *void
 		# при вызове приводим левое к указателю на функцию
@@ -526,7 +526,7 @@ def print_value_call(v, ctx, arrayResult=None):
 			p = params[i]
 			pt = p['type']
 
-			if not hlir_type.type_eq(pt, a['type'], opt=['att_checking']):
+			if not htype.type_eq(pt, a['type'], opt=['att_checking']):
 				print_cast(pt, a)
 			else:
 				print_value(a, ctx=ctx)
@@ -553,7 +553,7 @@ def print_value_slice(x, ctx):
 def print_value_index(x, ctx):
 	array = x['array']
 
-	if hlir_type.type_is_pointer(array['type']):
+	if htype.type_is_pointer(array['type']):
 		ptr2array = array
 		need_wrap = precedence(ptr2array) < precedence(x)
 		print_value(ptr2array, ctx=['do_unwrap'], need_wrap=need_wrap)
@@ -570,7 +570,7 @@ def print_value_index(x, ctx):
 
 	dims = []
 	yy = xx['type']
-	while hlir_type.type_is_closed_array(yy):
+	while htype.type_is_closed_array(yy):
 		dims.append(yy['volume'])
 		yy = yy['of']
 
@@ -614,7 +614,7 @@ def print_value_index(x, ctx):
 def print_value_access(x, ctx):
 	left = x['record']
 
-	if hlir_type.type_is_pointer(left['type']):
+	if htype.type_is_pointer(left['type']):
 		need_wrap = precedence(left) < precedence(x)
 		print_value(left, need_wrap=need_wrap)
 		out("->")
@@ -622,7 +622,7 @@ def print_value_access(x, ctx):
 		return
 
 	# если имеем дело c дженерик записью (глоб константа)
-	#if hlir_type.type_is_generic(left['type']):
+	#if htype.type_is_generic(left['type']):
 	#	if value_is_immediate(x):
 	if value_is_generic_immediate(left):
 		print_value_terminal(x, ['print_immediate'])
@@ -660,7 +660,7 @@ def print_cast(t, v, ctx=[]):
 
 	need_wrap = precedence(v) < precedence({'kind': 'cons'})
 	if v['kind'] in ['literal', 'add']:
-		need_wrap = not hlir_type.type_is_composite(v['type'])
+		need_wrap = not htype.type_is_composite(v['type'])
 
 	print_value(v, ctx=ctx, need_wrap=need_wrap)
 
@@ -673,7 +673,7 @@ def print_value_cons_record(x, ctx):
 	value = x['value']
 	from_type = value['type']
 
-	if hlir_type.type_is_generic_record(from_type):
+	if htype.type_is_generic_record(from_type):
 		if is_local_context():
 			print_cast(to_type, value)
 		else:
@@ -682,8 +682,8 @@ def print_value_cons_record(x, ctx):
 
 
 	# RecordA -> RecordB
-	#if hlir_type.type_is_record(to_type):
-	if hlir_type.type_is_record(from_type):
+	#if htype.type_is_record(to_type):
+	if htype.type_is_record(from_type):
 		# C cannot cast struct to struct (!)
 		print_cast_hard(to_type, value)
 		return
@@ -702,15 +702,15 @@ def print_value_cons_array(x, ctx):
 	# печатаем как есть, иначе ошибка (о Боже C это нечто!):
 	# {0, 1, 2, 3}
 	#if is_global_context():
-	if hlir_type.type_is_generic_array(from_type):
+	if htype.type_is_generic_array(from_type):
 		# если это литеральная (и не глобальная) константа-массив
 		# то мы должны ее привести к требуемому типу
 		is_const = value['kind'] in ['const', 'literal', 'add']
 		if is_const and not 'kostil' in value['att']:
 			ctx=['array_as_array']
 
-			if hlir_type.type_is_char(to_type['of']):
-				if hlir_type.type_is_string(from_type['of']):
+			if htype.type_is_char(to_type['of']):
+				if htype.type_is_string(from_type['of']):
 					char_width = to_type['of']['width']
 
 					chars = []
@@ -727,8 +727,8 @@ def print_value_cons_array(x, ctx):
 		return
 
 
-	if hlir_type.type_is_string(from_type):
-		if hlir_type.type_is_char(to_type['of']):
+	if htype.type_is_string(from_type):
+		if htype.type_is_char(to_type['of']):
 			# cast <string literal> to <array of chars>:
 			if to_type['of']['width'] == from_type['width']:
 				print_value(value, ctx=ctx)
@@ -738,7 +738,7 @@ def print_value_cons_array(x, ctx):
 
 	# for:
 	#    var x: [10]Word8 = "0123456789"
-	if hlir_type.type_is_string(value['type']):
+	if htype.type_is_string(value['type']):
 		print_value(value, ctx=ctx)
 		return
 
@@ -751,22 +751,22 @@ def print_value_cons(x, ctx):
 	value = x['value']
 	from_type = value['type']
 
-	if hlir_type.type_is_array(to_type):
+	if htype.type_is_array(to_type):
 		return print_value_cons_array(x, ctx)
 
-	if hlir_type.type_is_record(to_type):
+	if htype.type_is_record(to_type):
 		return print_value_cons_record(x, ctx)
 
-	if hlir_type.type_is_string(from_type):
+	if htype.type_is_string(from_type):
 		# cast <string literal> to <pointer to array of chars>:
-		if hlir_type.type_is_pointer(to_type):
+		if htype.type_is_pointer(to_type):
 			# let genericStringConst = "S-t-r-i-n-g-Ω 🐀🎉🦄"
 			# let string8Const = *Str8 genericStringConst  // <-
 			if to_type['to']['of']['width'] != from_type['width']:
 				print_string_literal(value['asset'], to_type['to']['of']['width'])
 				return
 
-		if hlir_type.type_is_char(to_type):
+		if htype.type_is_char(to_type):
 			print_value_char(x, ctx)
 			return
 
@@ -775,16 +775,16 @@ def print_value_cons(x, ctx):
 	# поэтому даже если структуры одинаковы, но имена разные
 	# их нужно приводить
 	# *RecordA -> *RecordB
-	if hlir_type.type_is_pointer_to_record(from_type):
-		if hlir_type.type_is_pointer_to_record(to_type):
+	if htype.type_is_pointer_to_record(from_type):
+		if htype.type_is_pointer_to_record(to_type):
 			# НО если это реально один и тот же тип, то приведение не нужно!
 			if id(from_type) != id(to_type):
 				print_cast(to_type, value, ctx)
 				return
 
 
-	if hlir_type.type_is_float(to_type):
-		if hlir_type.type_is_integer(from_type):
+	if htype.type_is_float(to_type):
+		if htype.type_is_integer(from_type):
 			print_cast(to_type, value, ctx)
 			return
 
@@ -805,9 +805,9 @@ def print_value_cons(x, ctx):
 	# - in C  int32(-1) -> uint64 => 0xffffffffffffffff
 	# - in Cm int32(-1) -> uint64 => 0x00000000ffffffff
 	# required: (uint64_t)((uint32)int32_value)
-	if hlir_type.type_is_integer(to_type):
-		if hlir_type.type_is_integer(from_type):
-			if hlir_type.type_is_signed(from_type) and hlir_type.type_is_unsigned(to_type):
+	if htype.type_is_integer(to_type):
+		if htype.type_is_integer(from_type):
+			if htype.type_is_signed(from_type) and htype.type_is_unsigned(to_type):
 				if from_type['size'] < to_type['size']:
 					out("((")
 					print_type(to_type)
@@ -850,7 +850,7 @@ def print_array_values(values, ctx):
 			if i > 0:
 				out(" ")
 
-		if hlir_type.type_is_closed_array(a['type']):
+		if htype.type_is_closed_array(a['type']):
 			print_array_values(a['items'], ctx)
 		else:
 			print_value(a, ctx)
@@ -894,7 +894,7 @@ def print_char_literal(cc, width):
 
 
 def print_value_array(v, ctx):
-	if hlir_type.type_is_array_of_char(v['type']):
+	if htype.type_is_array_of_char(v['type']):
 		char_type = v['type']['of']
 		char_width = char_type['width']
 
@@ -1066,7 +1066,7 @@ def print_value_integer(x, ctx):
 
 	nbits = x['type']['width']
 
-	if hlir_type.type_is_unsigned(x['type']):
+	if htype.type_is_unsigned(x['type']):
 		if req_bits >= (nbits - 1):
 			out("U")
 
@@ -1092,16 +1092,16 @@ def print_value_ptr(x, ctx):
 
 def print_value_terminal(x, ctx):
 	t = x['type']
-	if hlir_type.type_is_integer(t): print_value_integer(x, ctx)
-	elif hlir_type.type_is_float(t): print_value_float(x, ctx)
-	elif hlir_type.type_is_string(t): print_value_string(x, ctx)
-	elif hlir_type.type_is_record(t): print_value_record(x, ctx)
-	elif hlir_type.type_is_array(t): print_value_array(x, ctx)
-	elif hlir_type.type_is_bool(t): print_value_bool_lit(x, ctx)
-	elif hlir_type.type_is_char(t): print_value_char(x, ctx)
-	elif hlir_type.type_is_pointer(t): print_value_ptr(x, ctx)
-	elif hlir_type.type_is_enum(t): print_value_enum(x, ctx)
-	#elif hlir_type.type_is_byte(t): print_value_integer(x, ctx)
+	if htype.type_is_integer(t): print_value_integer(x, ctx)
+	elif htype.type_is_float(t): print_value_float(x, ctx)
+	elif htype.type_is_string(t): print_value_string(x, ctx)
+	elif htype.type_is_record(t): print_value_record(x, ctx)
+	elif htype.type_is_array(t): print_value_array(x, ctx)
+	elif htype.type_is_bool(t): print_value_bool_lit(x, ctx)
+	elif htype.type_is_char(t): print_value_char(x, ctx)
+	elif htype.type_is_pointer(t): print_value_ptr(x, ctx)
+	elif htype.type_is_enum(t): print_value_enum(x, ctx)
+	#elif htype.type_is_byte(t): print_value_integer(x, ctx)
 	else: error("print_value_terminal not implemented", x['ti'])
 
 
@@ -1117,7 +1117,7 @@ def print_value_by_id(x, ctx=[], prefix=''):
 def print_value_const(x, ctx):
 	prefix=''
 
-	if hlir_type.type_is_array(x['type']):
+	if htype.type_is_array(x['type']):
 		if is_global_context():
 			prefix = '_'
 
@@ -1325,7 +1325,7 @@ def print_stmt_var(x):
 	# если инициализирующее значение - это
 	# литерал массива включающий в себя переменные
 	# то печатаем это иначе (w/ memcpy)
-	if hlir_type.type_is_array(iv['type']):
+	if htype.type_is_array(iv['type']):
 		runtimeLiteral = iv['kind'] == 'literal' and not value_is_immediate(iv)
 		if not runtimeLiteral:
 			out(";")
@@ -1334,7 +1334,7 @@ def print_stmt_var(x):
 			return
 
 
-	if hlir_type.type_is_array(var_value['type']):
+	if htype.type_is_array(var_value['type']):
 		if not value_is_immediate(init_value):
 			# array assignation by non-immediate value
 			out(";")
@@ -1362,11 +1362,11 @@ def print_macro_definition(id_str, value, val_ctx=[], prefix=''):
 
 	# Не берем в скобки литералы, композитные значения и строки
 	literal = value['kind'] == 'literal'
-	is_comp = hlir_type.type_is_composite(value['type'])
+	is_comp = htype.type_is_composite(value['type'])
 
 	is_str = False
 	if value['kind'] == 'cons':
-		is_str = hlir_type.type_is_string(value['value']['type'])
+		is_str = htype.type_is_string(value['value']['type'])
 
 	if not (literal or is_comp or is_str):
 		need_wrap = precedence(value) < precedenceMax
@@ -1399,7 +1399,7 @@ def print_stmt_let(x):
 
 	# print constant as 'variable'
 	# литерал массива включающий в себя переменные печатаем отдельно
-	if hlir_type.type_is_array(iv['type']):
+	if htype.type_is_array(iv['type']):
 		runtimeLiteral = iv['kind'] == 'literal' and not value_is_immediate(iv)
 		if not runtimeLiteral:
 			print_variable(get_id_str(x), v['type'])
@@ -1480,7 +1480,7 @@ def assign_array(left, right):
 def do_assign(left, right):
 	#out("/*%s*/" % right['kind'])
 
-	if hlir_type.type_is_array(right['type']):
+	if htype.type_is_array(right['type']):
 		assign_array(left, right)
 
 	else:
@@ -1566,7 +1566,7 @@ def print_paramlist(ftype):
 		if i > 0: out(", ")
 
 		paramId = get_id_str(param)
-		if hlir_type.type_is_closed_array(param['type']):
+		if htype.type_is_closed_array(param['type']):
 			paramId = '__' + paramId
 		print_variable(paramId, param['type'])
 		i = i + 1
@@ -1581,7 +1581,7 @@ def print_paramlist(ftype):
 
 # Функция возвращает массив по значению?
 def isSretFunc(ftype):
-	return hlir_type.type_is_closed_array(ftype['to'])
+	return htype.type_is_closed_array(ftype['to'])
 
 
 def print_func_signature(id_str, ftype, atts):
@@ -1657,7 +1657,7 @@ def print_def_func(x):
 
 	# for any array parameter print local holder value
 	for param in ftype['params']:
-		if hlir_type.type_is_closed_array(param['type']):
+		if htype.type_is_closed_array(param['type']):
 			nl_indent(1)
 
 			paramId = get_id_str(param)
@@ -1712,15 +1712,15 @@ def print_def_type(x):
 
 
 #	if NO_TYPEDEF_STRUCTS:
-#		if hlir_type.type_is_record(orig_type):
+#		if htype.type_is_record(orig_type):
 #			print_type_record(orig_type, tag=id_str)
 #			out(";")
 #			return
 
 
-	is_defined_array = hlir_type.type_is_closed_array(orig_type)
+	is_defined_array = htype.type_is_closed_array(orig_type)
 
-	if hlir_type.type_is_record(x['original_type']):
+	if htype.type_is_record(x['original_type']):
 		print_type_record(x['original_type'], tag=id_str)
 		out(";")
 
@@ -1766,7 +1766,7 @@ def print_variable_array(t, id_str, do_wrapped=True, as_const=False):
 
 	"""# print arrays dimensions
 	array_type = t
-	while hlir_type.type_is_array(array_root_type):
+	while htype.type_is_array(array_root_type):
 		out("/*^^*/")
 		print_array_volume(array_root_type)
 		array_type = array_type['of']"""
@@ -1781,10 +1781,10 @@ def print_variable(id_str, typ, as_const=False, init_value=None, prefix=''):
 	id_str = prefix + id_str
 
 
-	if hlir_type.type_is_pointer(typ):
+	if htype.type_is_pointer(typ):
 		print_variable_pointer(typ, id_str, as_const)
 
-	elif hlir_type.type_is_array(typ):
+	elif htype.type_is_array(typ):
 		print_variable_array(typ, id_str, as_const=as_const)
 
 	else:
@@ -1848,7 +1848,7 @@ def print_def_const(x):
 	# затем создаем одноименную переменную (инициализируем ее макроопределением).
 	# обычно будем использовать сам макрос,
 	# но в случае индексирования переменной - будем обращаться к переменной
-	if hlir_type.type_is_array(const_value['type']):
+	if htype.type_is_array(const_value['type']):
 		print_macro_definition(id_str, init_value, val_ctx=[], prefix='_')
 		newline()
 		print_variable(id_str, const_value['type'], as_const=True)
@@ -2170,7 +2170,7 @@ def get_root_value(x):
 
 def cons_vla_from_literal_array(x):
 	if x['kind'] == 'cons':
-		if hlir_type.type_is_vla(x['type']):
+		if htype.type_is_vla(x['type']):
 			return x['value']['kind'] in ['literal', 'add']
 	return False
 
@@ -2190,9 +2190,9 @@ def print_value_as_ptr(x):
 		# КОСТЫЛЬ!
 		if x['kind'] in ['literal', 'add']:
 			out("(")
-			if hlir_type.type_is_array(t):
-				"""if not hlir_type.type_is_vla(t):
-					hlir_type.type_print(t)
+			if htype.type_is_array(t):
+				"""if not htype.type_is_vla(t):
+					htype.type_print(t)
 
 					print_type_array(t, as_pointer=False)
 				else:"""
@@ -2217,7 +2217,7 @@ def print_value_as_ptr(x):
 
 
 
-from hlir.type import select_common_type
+from type import select_common_type
 
 def memcopy_assign(left, right):
 	"""# Assign array by memcopy

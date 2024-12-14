@@ -1,6 +1,6 @@
 
 from error import info, warning, error
-import hlir.type as type
+import type as type
 from util import nbits_for_num
 from .value import value_terminal, value_cons_node, value_cons_immediate
 from unicode import utf32_str_to_utfx_char_codes
@@ -10,7 +10,7 @@ def value_char_create(char_code, _type=None, ti=None):
 	if _type == None:
 		# if type not specified, set type as GenericChar
 		char_width = nbits_for_num(char_code)
-		_type = type.hlir_type_char(char_width, ti=ti)
+		_type = type.type_char(char_width, ti=ti)
 		_type['generic'] = True
 
 	v = value_terminal(_type, ti)

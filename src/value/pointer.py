@@ -1,8 +1,9 @@
 
 from error import info, warning, error
-import hlir.type as type
+import type as type
 from .value import value_cons_node, value_is_immediate, value_cons_immediate
 from .char import utf32_chars_to_utfx_chars
+
 
 
 def cons_ptr_to_str_from_string(t, v, method, ti):

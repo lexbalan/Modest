@@ -15,6 +15,7 @@ var funcs: [2]*() -> Unit = [&init, &foo]
 var a: *() -> Unit = &init
 var b: *(a: Int32, b: Int32) -> Int32 = &add
 
+
 type SonrState Int32
 func xx(x: *SonrState) -> Unit {
 

@@ -1,6 +1,6 @@
 
 from error import info, warning, error
-import hlir.type as type
+import type as type
 from value.value import value_is_immediate
 from .value import value_terminal, value_cons_node, value_cons_immediate
 

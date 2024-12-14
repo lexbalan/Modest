@@ -1,9 +1,9 @@
 
 from error import info, warning, error
-import hlir.type as type
+import type as type
 from hlir.hlir import *
 from hlir.field import hlir_field
-from hlir.type import type_print, record_field_get
+from type import type_print, record_field_get
 from util import get_item_with_id
 from .value import value_terminal, value_cons_node, value_zero, value_is_immediate, value_print, value_cons_immediate, value_bin, value_eq
 
@@ -33,7 +33,7 @@ def value_record_create(initializers=[], ti=None):
 		field = hlir_field(field_id, field_type, ti=field_ti)
 		fields.append(field)
 
-	record_type = type.hlir_type_record(fields, ti)
+	record_type = type.type_record(fields, ti)
 	record_type['generic'] = True
 
 	v = value_terminal(record_type, ti)

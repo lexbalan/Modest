@@ -4,17 +4,7 @@ from error import info, warning, error, fatal
 import settings
 from hlir.field import hlir_field
 
-
-ptr_width = 0
-flt_width = 0
-
-def hlir_type_init():
-	global ptr_width, flt_width
-	ptr_width = int(settings.get('pointer_width'))
-	flt_width = int(settings.get('float_width'))
-
-
-from .id import hlir_id
+from hlir.id import hlir_id
 from util import get_item_with_id, nbits_for_num, nbytes_for_bits
 
 
@@ -42,7 +32,7 @@ REC_OPS = CONS_OP + EQ_OPS + ('access',)
 STR_OPS = CONS_OP + EQ_OPS + ('add',)
 
 
-def hlir_type_bad(x):
+def type_bad(x):
 	ti = None
 	if x != None:
 		if 'ti' in x:
@@ -62,10 +52,7 @@ def hlir_type_bad(x):
 	}
 
 
-uid = 0
-def hlir_type_undefined(ti):
-	global uid
-	uid = uid + 1
+def type_undefined(ti):
 	return {
 		'isa': 'type',
 		'kind': 'undefined',
@@ -73,7 +60,6 @@ def hlir_type_undefined(ti):
 		'width': 0,
 		'size': 0,
 		'align': 1,
-		'uid': uid,
 		'ops': [],
 		'att': [],
 		'deps': [],
@@ -81,7 +67,7 @@ def hlir_type_undefined(ti):
 	}
 
 
-def hlir_type_by_width(width, ti=None):
+def type_by_width(width, ti=None):
 	size = nbytes_for_bits(width)
 	return {
 		'isa': 'type',
@@ -106,8 +92,8 @@ def hlir_type_by_width(width, ti=None):
 	}
 
 
-def hlir_type_unit():
-	t = hlir_type_by_width(0, ti=None)
+def type_unit():
+	t = type_by_width(0, ti=None)
 	t['kind'] = 'unit'
 	t['id']['str'] = 'Unit'
 	t['id']['c'] = 'void'
@@ -116,8 +102,8 @@ def hlir_type_unit():
 	return t
 
 
-def hlir_type_bool():
-	t = hlir_type_by_width(1, ti=None)
+def type_bool():
+	t = type_by_width(1, ti=None)
 	t['kind'] = 'bool'
 	t['id']['str'] = 'Bool'
 	t['id']['c'] = 'bool'
@@ -126,8 +112,8 @@ def hlir_type_bool():
 	return t
 
 
-def hlir_type_word(width, ti=None):
-	t = hlir_type_by_width(width, ti=ti)
+def type_word(width, ti=None):
+	t = type_by_width(width, ti=ti)
 
 	calias = None
 	llvm_alias = None
@@ -151,8 +137,8 @@ def hlir_type_word(width, ti=None):
 
 
 
-def hlir_type_integer(width, signed=True, ti=None):
-	t = hlir_type_by_width(width, ti=ti)
+def type_integer(width, signed=True, ti=None):
+	t = type_by_width(width, ti=ti)
 
 	aka = None
 	calias = None
@@ -192,8 +178,8 @@ def hlir_type_integer(width, signed=True, ti=None):
 	return t
 
 
-def hlir_type_float(width, ti=None):
-	t = hlir_type_by_width(width, ti=ti)
+def type_float(width, ti=None):
+	t = type_by_width(width, ti=ti)
 
 	calias = 'float'
 	if width > 32:
@@ -207,12 +193,12 @@ def hlir_type_float(width, ti=None):
 	return t
 
 
-def hlir_type_char(width, ti=None):
+def type_char(width, ti=None):
 	calias = 'char'
 	if width > 8:
 		calias = 'uint%d_t' % width
 
-	t = hlir_type_by_width(width, ti=ti)
+	t = type_by_width(width, ti=ti)
 	t['kind'] = 'char'
 	t['id']['str'] = 'Char%d' % width
 	t['id']['c'] = calias
@@ -221,8 +207,8 @@ def hlir_type_char(width, ti=None):
 	return t
 
 
-def hlir_type_pointer(to, ti=None):
-	t = hlir_type_by_width(ptr_width, ti=ti)
+def type_pointer(to, ti=None):
+	t = type_by_width(int(settings.get('pointer_width')), ti=ti)
 	t['kind'] = 'pointer'
 	t['to'] = to
 	t['ops'] = PTR_OPS
@@ -230,7 +216,7 @@ def hlir_type_pointer(to, ti=None):
 
 
 # size - always hlir_value (!)
-def hlir_type_array(of, volume, ti=None):
+def type_array(of, volume, ti=None):
 	item_size = 0
 	item_align = 0
 	if of != None:
@@ -259,14 +245,10 @@ def hlir_type_array(of, volume, ti=None):
 	}
 
 
-enum_uid = 0
-def hlir_type_enum(ti=None):
+
+def type_enum(ti=None):
 	enum_width = 32
 	enum_size = nbytes_for_bits(enum_width)
-
-	global enum_uid
-	enum_uid = enum_uid + 1
-
 	return {
 		'isa': 'type',
 		'kind': 'enum',
@@ -275,7 +257,6 @@ def hlir_type_enum(ti=None):
 		'size': enum_size,
 		'align': enum_size,
 		'items': [],
-		'uid': enum_uid,
 		'ops': ENUM_OPS,
 		'att': [],
 		'deps': [],
@@ -284,7 +265,7 @@ def hlir_type_enum(ti=None):
 
 
 from util import align_to
-def hlir_type_record(fields, ti=None):
+def type_record(fields, ti=None):
 
 	field_no = 0
 	offset = 0
@@ -325,7 +306,7 @@ def hlir_type_record(fields, ti=None):
 	}
 
 
-def hlir_type_func(params, to, va_args, ti=None):
+def type_func(params, to, va_args, ti=None):
 	return {
 		'isa': 'type',
 		'kind': 'func',
@@ -343,7 +324,7 @@ def hlir_type_func(params, to, va_args, ti=None):
 	}
 
 
-def hlir_type_string(char_width, length, ti=None):
+def type_string(char_width, length, ti=None):
 	width = char_width
 	size = nbytes_for_bits(width)
 	return {
@@ -363,9 +344,9 @@ def hlir_type_string(char_width, length, ti=None):
 
 
 
-def hlir_type_generic_int_for(num, signed=True, ti=None):
+def type_generic_int_for(num, signed=True, ti=None):
 	required_width = nbits_for_num(num)
-	t = hlir_type_integer(width=required_width, ti=ti)
+	t = type_integer(width=required_width, ti=ti)
 	t['ops'] = t['ops'] + WORD_OPS
 	t['generic'] = True
 	t['signed'] = signed
@@ -471,7 +452,7 @@ def type_eq_record(a, b, opt, nominative=False):
 
 
 def type_eq_enum(a, b, opt, nominative=False):
-	return a['uid'] == b['uid']
+	return id(a) == id(b)
 
 
 def type_eq_float(a, b, opt):
@@ -479,7 +460,7 @@ def type_eq_float(a, b, opt):
 
 
 def type_eq_undefined(a, b, opt):
-	return a['uid'] == b['uid']  # maybe by UID?
+	return id(a) == id(b)
 
 
 def type_eq_alias(a, b, opt):
@@ -925,7 +906,7 @@ def type_print(t, print_aka=True):
 	elif type_is_enum(t):
 		if t['id'] != None:
 			print(t['id'], end='')
-		print("enum_%s" % str(t['uid']), end='')
+		print("enum_%s" % str(id(t)), end='')
 
 	elif type_is_pointer(t):
 		print("*", end=''); type_print(t['to'])
@@ -978,7 +959,7 @@ def select_common_record_type(a, b):
 		newField = hlir_field(fieldId, fieldType, ti=fieldId['ti'])
 		fields.append(newField)
 
-	newRecord = hlir_type_record(fields, ti=a['ti'])
+	newRecord = type_record(fields, ti=a['ti'])
 	newRecord['generic'] = True
 	return newRecord
 
@@ -1025,7 +1006,7 @@ def select_common_type(a, b):
 				return a
 
 		else:
-			return hlir_type_bad(None)
+			return type_bad(None)
 
 
 
@@ -1084,7 +1065,7 @@ def select_common_type(a, b):
 				return b
 
 	print("select_common_type(%s %s) not implenemted" % (a['kind'], b['kind']))
-	return hlir_type_bad(None)
+	return type_bad(None)
 
 
 
