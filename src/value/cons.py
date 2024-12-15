@@ -234,7 +234,7 @@ def select_default_type_for(x):
 
 	if type.type_is_integer(xt):
 		t = typeSysInt
-		if not type.type_is_signed(xt):
+		if type.type_is_unsigned(xt):
 			t = typeSysNat
 		return t
 

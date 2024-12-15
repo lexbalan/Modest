@@ -217,6 +217,7 @@ class Parser:
 				break
 
 			f = self.parse_field()
+			#f = self.stmt_var()
 
 			self.need_sep(separators=['\n', ',', ';'], eat=False)
 
@@ -327,8 +328,8 @@ class Parser:
 		arghack = False
 		fields = []
 		while not self.match(")"):
-			f = self.parse_field()
-			#f = self.stmt_var()
+			#f = self.parse_field()
+			f = self.stmt_var()
 			if f == None:
 				if self.match("..."):
 					arghack = True
@@ -1364,6 +1365,12 @@ class Parser:
 			'ti': ti
 		}
 
+	def parse_access_modifier(self):
+		if self.match('public'):
+			return 'public'
+		elif self.match('private'):
+			return 'private'
+		return 'private'
 
 	def parse_field(self):
 		ti = self.ti()
@@ -1397,11 +1404,8 @@ class Parser:
 				#if x != None:
 				#	x['nl'] = nl_cnt
 
-			access_modifier = 'private'
-			if self.match('public'):
-				access_modifier = 'public'
-			if self.match('private'):
-				pass
+
+			access_modifier = self.parse_access_modifier()
 
 			if not self.is_identifier():
 				return None
@@ -1696,6 +1700,7 @@ class Parser:
 
 			access_modifier = 'private'
 
+			#self = parse_access_modifier()
 			if self.match('public'):
 				access_modifier = 'public'
 				if self.match('{'):

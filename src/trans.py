@@ -741,8 +741,8 @@ def do_value_shift(x):
 #	if not htype.type_is_word(l['type']):
 #		error("expected word value", x['left'])
 
-	if not htype.type_is_integer(r['type']):
-		error("expected integer value", x['right'])
+	if not htype.type_is_naturel(r['type']):
+		error("expected natural value", x['right'])
 
 	if value_is_immediate(l) and value_is_immediate(r):
 		asset = l['asset']
@@ -781,18 +781,20 @@ def do_value_bin(x):
 
 	t = htype.select_common_type(l['type'], r['type'])
 
-	if t != None:
+	if not htype.type_is_bad(t):
 		l = value_cons_implicit(t, l)
 		r = value_cons_implicit(t, r)
+	else:
+		t = l['type']
 
 	# Check type is valid for the operation
 
 	if not op in l['type']['ops']:
-		error("unsuitable value type for '%s' operation" % op, l)
+		error("unsuitable value type for '%s' operation" % op, l['ti'])
 		return value_bad(x['ti'])
 
 	if not op in r['type']['ops']:
-		error("unsuitable value type for '%s' operation" % op, r)
+		error("unsuitable value type for '%s' operation" % op, r['ti'])
 		return value_bad(x['ti'])
 
 	#
@@ -864,7 +866,10 @@ def binop(op, type_result, l, r, ti=None):
 		if htype.type_is_generic(type_result) and not htype.type_is_float(type_result) and not htype.type_is_string(type_result) and not htype.type_is_array(type_result):
 			# (для операций типа 1 + 2)
 			# Пересматриваем generic тип для нового значения
-			nv['type'] = htype.type_generic_int_for(asset, signed=False, ti=ti)
+			signed = None
+			if asset < 0:
+				signed = True
+			nv['type'] = htype.type_generic_int_for(asset, signed=signed, ti=ti)
 
 		nv['asset'] = int(asset)
 		nv['immediate'] = True
@@ -929,8 +934,11 @@ def do_value_neg(x):
 
 	vtype = v['type']
 
-	if not htype.type_is_signed(vtype):
-		error("expected value with signed type", v)
+	if not htype.type_is_generic(vtype):
+		if not htype.type_is_signed(vtype):
+			error("expected value with signed type", v)
+	else:
+		vtype['signed'] = True
 
 	nv = value_un('negative', v, vtype, ti=x['ti'])
 

@@ -9,7 +9,10 @@ from .value import value_terminal, value_is_immediate, value_cons_node, value_co
 
 def value_integer_create(num, typ=None, ti=None):
 	if typ == None:
-		typ = htype.type_generic_int_for(num, signed=True, ti=ti)
+		signed = None
+		if num < 0:
+			signed = True
+		typ = htype.type_generic_int_for(num, signed=signed, ti=ti)
 	else:
 		nbits = nbits_for_num(num)
 

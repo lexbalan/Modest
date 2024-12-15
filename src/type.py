@@ -344,12 +344,12 @@ def type_string(char_width, length, ti=None):
 
 
 
-def type_generic_int_for(num, signed=True, ti=None):
+def type_generic_int_for(num, signed=None, ti=None):
 	required_width = nbits_for_num(num)
 	t = type_integer(width=required_width, ti=ti)
 	t['ops'] = t['ops'] + WORD_OPS
 	t['generic'] = True
-	t['signed'] = signed
+	t['signed'] = signed # #signed can be None!
 	return t
 
 
@@ -542,6 +542,8 @@ def type_is_word(t):
 def type_is_integer(t):
 	return t['kind'] == 'int'
 
+def type_is_naturel(t):
+	return type_is_integer(t) and not type_is_signed(t)
 
 def type_is_float(t):
 	return t['kind'] == 'float'
@@ -687,15 +689,18 @@ def type_is_generic(t):
 	return t['generic']
 
 
+
+# #signed can be None (!)
 def type_is_signed(t):
 	if 'signed' in t:
-		return t['signed']
+		return t['signed'] == True
 	return False
 
 
+# #signed can be None (!)
 def type_is_unsigned(t):
 	if 'signed' in t:
-		return not t['signed']
+		return t['signed'] == False
 	return False
 
 
@@ -1007,7 +1012,6 @@ def select_common_type(a, b):
 
 		else:
 			return type_bad(None)
-
 
 
 	if a['kind'] != b['kind']:
