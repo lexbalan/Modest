@@ -850,13 +850,20 @@ def do_value_bin(x):
 			'add': lambda a, b: a + b,
 			'sub': lambda a, b: a - b,
 			'mul': lambda a, b: a * b,
-			'div': lambda a, b: a / b,
+			#'div': lambda a, b: a / b,
 			'rem': lambda a, b: a % b,
 		}
 
-		asset = ops[op](l['asset'], r['asset'])
+		asset = 0
+		if op == 'div':
+			if htype.type_is_float(t):
+				asset = l['asset'] / r['asset']
+			else:
+				asset = l['asset'] // r['asset']
+		else:
+			asset = ops[op](l['asset'], r['asset'])
 
-		if htype.type_is_generic(t) and not htype.type_is_float(t) and not htype.type_is_string(t) and not htype.type_is_array(t):
+		if htype.type_is_generic_integer(t):
 			# (для операций типа 1 + 2)
 			# Пересматриваем generic тип для нового значения
 			signed = None
@@ -864,7 +871,7 @@ def do_value_bin(x):
 				signed = True
 			nv['type'] = htype.type_generic_int_for(asset, signed=signed, ti=ti)
 
-		nv['asset'] = int(asset)
+		nv['asset'] = asset
 		nv['immediate'] = True
 
 	return nv

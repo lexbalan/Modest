@@ -40,6 +40,8 @@ int main()
 {
 	printf("float test\n");
 
+	printf("2/3 = %f\n", 2.0 / (double)(3));
+
 	#define __r  10
 	const double s = squareOfCircle((double)__r);
 	printf("s = %f\n", s);

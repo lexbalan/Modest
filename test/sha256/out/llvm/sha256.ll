@@ -165,19 +165,23 @@ declare [0 x %Char]* @strerror(%Int %error)
 
 
 define internal %Word32 @rotleft(%Word32 %a, %Int32 %b) {
-	%1 = shl %Word32 %a, %b
-	%2 = sub %Int32 32, %b
-	%3 = lshr %Word32 %a, %2
-	%4 = or %Word32 %1, %3
-	ret %Word32 %4
+	%1 = bitcast %Int32 %b to %Word32
+	%2 = shl %Word32 %a, %1
+	%3 = sub %Int32 32, %b
+	%4 = bitcast %Int32 %3 to %Word32
+	%5 = lshr %Word32 %a, %4
+	%6 = or %Word32 %2, %5
+	ret %Word32 %6
 }
 
 define internal %Word32 @rotright(%Word32 %a, %Int32 %b) {
-	%1 = lshr %Word32 %a, %b
-	%2 = sub %Int32 32, %b
-	%3 = shl %Word32 %a, %2
-	%4 = or %Word32 %1, %3
-	ret %Word32 %4
+	%1 = bitcast %Int32 %b to %Word32
+	%2 = lshr %Word32 %a, %1
+	%3 = sub %Int32 32, %b
+	%4 = bitcast %Int32 %3 to %Word32
+	%5 = shl %Word32 %a, %4
+	%6 = or %Word32 %2, %5
+	ret %Word32 %6
 }
 
 define internal %Word32 @ch(%Word32 %x, %Word32 %y, %Word32 %z) {
@@ -800,75 +804,83 @@ body_1:
 	%106 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 3
 	%107 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %106, %Int32 0, %Int32 0
 	%108 = load %Word32, %Word32* %107
-	%109 = lshr %Word32 %108, %102
-	%110 = trunc %Word32 %109 to %Word8
-	store %Word8 %110, %Word8* %105
-	%111 = load %Int32, %Int32* %1
-	%112 = add %Int32 %111, 4
-	%113 = getelementptr inbounds %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Int32 %112
-	%114 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 3
-	%115 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %114, %Int32 0, %Int32 1
-	%116 = load %Word32, %Word32* %115
-	%117 = lshr %Word32 %116, %102
-	%118 = trunc %Word32 %117 to %Word8
-	store %Word8 %118, %Word8* %113
-	%119 = load %Int32, %Int32* %1
-	%120 = add %Int32 %119, 8
-	%121 = getelementptr inbounds %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Int32 %120
-	%122 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 3
-	%123 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %122, %Int32 0, %Int32 2
-	%124 = load %Word32, %Word32* %123
-	%125 = lshr %Word32 %124, %102
-	%126 = trunc %Word32 %125 to %Word8
-	store %Word8 %126, %Word8* %121
-	%127 = load %Int32, %Int32* %1
-	%128 = add %Int32 %127, 12
-	%129 = getelementptr inbounds %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Int32 %128
-	%130 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 3
-	%131 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %130, %Int32 0, %Int32 3
-	%132 = load %Word32, %Word32* %131
-	%133 = lshr %Word32 %132, %102
-	%134 = trunc %Word32 %133 to %Word8
-	store %Word8 %134, %Word8* %129
-	%135 = load %Int32, %Int32* %1
-	%136 = add %Int32 %135, 16
-	%137 = getelementptr inbounds %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Int32 %136
-	%138 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 3
-	%139 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %138, %Int32 0, %Int32 4
-	%140 = load %Word32, %Word32* %139
-	%141 = lshr %Word32 %140, %102
-	%142 = trunc %Word32 %141 to %Word8
-	store %Word8 %142, %Word8* %137
-	%143 = load %Int32, %Int32* %1
-	%144 = add %Int32 %143, 20
-	%145 = getelementptr inbounds %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Int32 %144
-	%146 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 3
-	%147 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %146, %Int32 0, %Int32 5
-	%148 = load %Word32, %Word32* %147
-	%149 = lshr %Word32 %148, %102
-	%150 = trunc %Word32 %149 to %Word8
-	store %Word8 %150, %Word8* %145
-	%151 = load %Int32, %Int32* %1
-	%152 = add %Int32 %151, 24
-	%153 = getelementptr inbounds %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Int32 %152
-	%154 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 3
-	%155 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %154, %Int32 0, %Int32 6
-	%156 = load %Word32, %Word32* %155
-	%157 = lshr %Word32 %156, %102
-	%158 = trunc %Word32 %157 to %Word8
-	store %Word8 %158, %Word8* %153
-	%159 = load %Int32, %Int32* %1
-	%160 = add %Int32 %159, 28
-	%161 = getelementptr inbounds %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Int32 %160
-	%162 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 3
-	%163 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %162, %Int32 0, %Int32 7
-	%164 = load %Word32, %Word32* %163
-	%165 = lshr %Word32 %164, %102
-	%166 = trunc %Word32 %165 to %Word8
-	store %Word8 %166, %Word8* %161
-	%167 = load %Int32, %Int32* %1
-	%168 = add %Int32 %167, 1
-	store %Int32 %168, %Int32* %1
+	%109 = bitcast %Int32 %102 to %Word32
+	%110 = lshr %Word32 %108, %109
+	%111 = trunc %Word32 %110 to %Word8
+	store %Word8 %111, %Word8* %105
+	%112 = load %Int32, %Int32* %1
+	%113 = add %Int32 %112, 4
+	%114 = getelementptr inbounds %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Int32 %113
+	%115 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%116 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %115, %Int32 0, %Int32 1
+	%117 = load %Word32, %Word32* %116
+	%118 = bitcast %Int32 %102 to %Word32
+	%119 = lshr %Word32 %117, %118
+	%120 = trunc %Word32 %119 to %Word8
+	store %Word8 %120, %Word8* %114
+	%121 = load %Int32, %Int32* %1
+	%122 = add %Int32 %121, 8
+	%123 = getelementptr inbounds %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Int32 %122
+	%124 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%125 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %124, %Int32 0, %Int32 2
+	%126 = load %Word32, %Word32* %125
+	%127 = bitcast %Int32 %102 to %Word32
+	%128 = lshr %Word32 %126, %127
+	%129 = trunc %Word32 %128 to %Word8
+	store %Word8 %129, %Word8* %123
+	%130 = load %Int32, %Int32* %1
+	%131 = add %Int32 %130, 12
+	%132 = getelementptr inbounds %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Int32 %131
+	%133 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%134 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %133, %Int32 0, %Int32 3
+	%135 = load %Word32, %Word32* %134
+	%136 = bitcast %Int32 %102 to %Word32
+	%137 = lshr %Word32 %135, %136
+	%138 = trunc %Word32 %137 to %Word8
+	store %Word8 %138, %Word8* %132
+	%139 = load %Int32, %Int32* %1
+	%140 = add %Int32 %139, 16
+	%141 = getelementptr inbounds %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Int32 %140
+	%142 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%143 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %142, %Int32 0, %Int32 4
+	%144 = load %Word32, %Word32* %143
+	%145 = bitcast %Int32 %102 to %Word32
+	%146 = lshr %Word32 %144, %145
+	%147 = trunc %Word32 %146 to %Word8
+	store %Word8 %147, %Word8* %141
+	%148 = load %Int32, %Int32* %1
+	%149 = add %Int32 %148, 20
+	%150 = getelementptr inbounds %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Int32 %149
+	%151 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%152 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %151, %Int32 0, %Int32 5
+	%153 = load %Word32, %Word32* %152
+	%154 = bitcast %Int32 %102 to %Word32
+	%155 = lshr %Word32 %153, %154
+	%156 = trunc %Word32 %155 to %Word8
+	store %Word8 %156, %Word8* %150
+	%157 = load %Int32, %Int32* %1
+	%158 = add %Int32 %157, 24
+	%159 = getelementptr inbounds %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Int32 %158
+	%160 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%161 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %160, %Int32 0, %Int32 6
+	%162 = load %Word32, %Word32* %161
+	%163 = bitcast %Int32 %102 to %Word32
+	%164 = lshr %Word32 %162, %163
+	%165 = trunc %Word32 %164 to %Word8
+	store %Word8 %165, %Word8* %159
+	%166 = load %Int32, %Int32* %1
+	%167 = add %Int32 %166, 28
+	%168 = getelementptr inbounds %sha256_Hash, %sha256_Hash* %outHash, %Int32 0, %Int32 %167
+	%169 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 3
+	%170 = getelementptr inbounds [8 x %Word32], [8 x %Word32]* %169, %Int32 0, %Int32 7
+	%171 = load %Word32, %Word32* %170
+	%172 = bitcast %Int32 %102 to %Word32
+	%173 = lshr %Word32 %171, %172
+	%174 = trunc %Word32 %173 to %Word8
+	store %Word8 %174, %Word8* %168
+	%175 = load %Int32, %Int32* %1
+	%176 = add %Int32 %175, 1
+	store %Int32 %176, %Int32* %1
 	br label %again_1
 break_1:
 	ret void

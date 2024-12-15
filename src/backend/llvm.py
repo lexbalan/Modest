@@ -591,11 +591,8 @@ def llvm_memzeron(dst, size, volatile=False):
 # грубо привести тип integer value к ширине width
 def trim(int_value, width):
 	assert(int_value['isa'] == 'll_value')
-
-	if int_value['type']['width'] < width:
-		return llvm_cast('zext', int_value, foundation.typeNat32)
-	elif int_value['type']['width'] > width:
-		return llvm_cast('trunc', int_value, foundation.typeNat32)
+	if int_value['type']['width'] != width:
+		return justcast(int_value, foundation.typeNat32)
 	return int_value
 
 
@@ -902,8 +899,8 @@ def do_reval(x):
 
 
 def do_eval_bin(x):
+	op = x['kind']
 	if htype.type_is_composite(x['left']['type']):
-		op = x['kind']
 
 		if value_is_immediate(x):
 			return do_eval_literal(x)
@@ -955,8 +952,16 @@ def do_eval_bin(x):
 	l = do_reval(x['left'])
 	r = do_reval(x['right'])
 
-	op = get_bin_opcode(x['kind'], x['left']['type'])
-	return llvm_eval_binary(op, l, r, x)
+	if op in ['shl', 'shr']:
+		#
+		# LLVM requires the same type for left & right arguments of shift operator
+		# cast right to left
+		#
+		if not htype.type_is_generic(r['type']):
+			r = justcast(r, l['type'])
+
+	llvm_opcode = get_bin_opcode(op, x['left']['type'])
+	return llvm_eval_binary(llvm_opcode, l, r, x)
 
 
 
@@ -1378,6 +1383,11 @@ def do_eval_cons(x):
 	if is_global_context():
 		return v
 
+	return justcast(v, to_type)
+
+
+def justcast(v, to_type):
+	from_type = v['type']
 	opcode = select_cast_operator(from_type, to_type)
 	return llvm_cast(opcode, v, to_type)
 

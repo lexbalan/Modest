@@ -26,6 +26,8 @@ func slope(a: Point2D, b: Point2D) -> Float32 {
 public func main() -> Int {
 	printf("float test\n")
 
+	printf("2/3 = %f\n", 2.0 / 3)
+
 	let r = 10
 	let s = squareOfCircle(r)
 	printf("s = %f\n", s)
