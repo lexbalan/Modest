@@ -4,6 +4,9 @@ include "libc/ctypes64"
 include "libc/stdio"
 
 
+// left must be Word
+// right must be Nat
+
 public func main() -> Int {
 	printf("test shift\n")
 

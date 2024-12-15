@@ -824,16 +824,12 @@ def do_value_bin(x):
 		if op == 'or': op = 'logic_or'
 		elif op == 'and': op = 'logic_and'
 
-	result_type = t
+	#result_type = t
 	if op in (htype.EQ_OPS + htype.RELATIONAL_OPS):
-		result_type = foundation.typeBool
-
-	return binop(op, result_type, l, r, ti)
+		t = foundation.typeBool
 
 
-
-def binop(op, type_result, l, r, ti=None):
-	nv = value_bin(op, l, r, type_result, ti=ti)
+	nv = value_bin(op, l, r, t, ti=ti)
 
 	# if left & right are immediate, we can fold const
 	# and append field ['asset'] to bin_value
@@ -863,7 +859,7 @@ def binop(op, type_result, l, r, ti=None):
 
 		asset = ops[op](l['asset'], r['asset'])
 
-		if htype.type_is_generic(type_result) and not htype.type_is_float(type_result) and not htype.type_is_string(type_result) and not htype.type_is_array(type_result):
+		if htype.type_is_generic(t) and not htype.type_is_float(t) and not htype.type_is_string(t) and not htype.type_is_array(t):
 			# (для операций типа 1 + 2)
 			# Пересматриваем generic тип для нового значения
 			signed = None
@@ -1959,9 +1955,8 @@ def do_stmt_incdec(x, op='add'):
 		return hlir_stmt_bad(x)
 
 	one = value_integer_create(1, typ=v['type'], ti=x['ti'])
-	v_plus = binop(op, v['type'], v, one, x['ti'])
-
-	return hlir_stmt_assign(v, v_plus, ti=x['ti'])
+	nv = value_bin(op, v, one, v['type'], ti=x['ti'])
+	return hlir_stmt_assign(v, nv, ti=x['ti'])
 
 
 
