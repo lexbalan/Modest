@@ -777,6 +777,9 @@ def do_value_bin(x):
 		# поэтому сложение массивов (only immediate) требует обхода проверок типа ниже
 		if htype.type_is_array(l['type']) and htype.type_is_array(r['type']):
 			return value_array_add(l, r, ti)
+		# у string вообще всегда одинакоывый тип и нет смысла приводить их
+		elif htype.type_is_string(l['type']) and htype.type_is_string(r['type']):
+			return value_string_add(l, r, ti)
 
 
 	t = htype.select_common_type(l['type'], r['type'])
@@ -850,12 +853,6 @@ def do_value_bin(x):
 			'div': lambda a, b: a / b,
 			'rem': lambda a, b: a % b,
 		}
-
-		if op == 'add':
-			if htype.type_is_array(l['type']):
-				return value_array_add(l, r, ti)
-			elif htype.type_is_string(l['type']):
-				return value_string_add(l, r, ti)
 
 		asset = ops[op](l['asset'], r['asset'])
 
