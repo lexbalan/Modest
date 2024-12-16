@@ -771,7 +771,7 @@ def do_value_bin(x):
 	if value_is_bad(l) or value_is_bad(r):
 		return value_bad(x['ti'])
 
-
+	# Ops with different types
 	if op == 'add':
 		# массивы могут быть разной длины (то есть с разными типами)
 		# поэтому сложение массивов (only immediate) требует обхода проверок типа ниже
@@ -781,14 +781,6 @@ def do_value_bin(x):
 		elif htype.type_is_string(l['type']) and htype.type_is_string(r['type']):
 			return value_string_add(l, r, ti)
 
-
-	t = htype.select_common_type(l['type'], r['type'])
-
-	if not htype.type_is_bad(t):
-		l = value_cons_implicit(t, l)
-		r = value_cons_implicit(t, r)
-	else:
-		t = l['type']
 
 	# Check type is valid for the operation
 
@@ -803,6 +795,13 @@ def do_value_bin(x):
 	#
 	# Now and further types must be equal (!)
 	#
+
+	t = htype.select_common_type(l['type'], r['type'])
+	if htype.type_is_bad(t):
+		return value_bad(x['ti'])
+
+	l = value_cons_implicit(t, l)
+	r = value_cons_implicit(t, r)
 
 	if not htype.type_eq(l['type'], r['type'], x['ti']):
 		error("different types in '%s' operation" % x['kind'], x['ti'])
@@ -827,10 +826,8 @@ def do_value_bin(x):
 		if op == 'or': op = 'logic_or'
 		elif op == 'and': op = 'logic_and'
 
-	#result_type = t
 	if op in (htype.EQ_OPS + htype.RELATIONAL_OPS):
 		t = foundation.typeBool
-
 
 	nv = value_bin(op, l, r, t, ti=ti)
 
@@ -855,10 +852,10 @@ def do_value_bin(x):
 
 		asset = 0
 		if op == 'div':
-			if htype.type_is_float(t):
-				asset = l['asset'] / r['asset']
-			else:
+			if not htype.type_is_float(t):
 				asset = l['asset'] // r['asset']
+			else:
+				asset = l['asset'] / r['asset']
 		else:
 			asset = ops[op](l['asset'], r['asset'])
 
