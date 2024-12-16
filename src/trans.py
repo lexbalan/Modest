@@ -769,7 +769,7 @@ def do_value_bin(x):
 	ti = x['ti']
 
 	if value_is_bad(l) or value_is_bad(r):
-		return value_bad(x['ti'])
+		return value_bad(ti)
 
 	# Ops with different types
 	if op == 'add':
@@ -786,11 +786,11 @@ def do_value_bin(x):
 
 	if not op in l['type']['ops']:
 		error("unsuitable value type for '%s' operation" % op, l['ti'])
-		return value_bad(x['ti'])
+		return value_bad(ti)
 
 	if not op in r['type']['ops']:
 		error("unsuitable value type for '%s' operation" % op, r['ti'])
-		return value_bad(x['ti'])
+		return value_bad(ti)
 
 	#
 	# Now and further types must be equal (!)
@@ -798,13 +798,13 @@ def do_value_bin(x):
 
 	t = htype.select_common_type(l['type'], r['type'])
 	if htype.type_is_bad(t):
-		return value_bad(x['ti'])
+		return value_bad(ti)
 
 	l = value_cons_implicit(t, l)
 	r = value_cons_implicit(t, r)
 
-	if not htype.type_eq(l['type'], r['type'], x['ti']):
-		error("different types in '%s' operation" % x['kind'], x['ti'])
+	if not htype.type_eq(l['type'], r['type'], ti):
+		error("different types in '%s' operation" % x['kind'], ti)
 
 		# print: @@ <left_type> & <right_type> @@
 		print(color_code(CYAN), end='')
@@ -816,7 +816,7 @@ def do_value_bin(x):
 		print(color_code(ENDC), end='')
 		print("\n")
 
-		return value_bad(x['ti'])
+		return value_bad(ti)
 
 
 	if op in ['eq', 'ne']:
