@@ -19,7 +19,7 @@ from value.integer import value_integer_create
 from value.float import value_float_create
 from value.array import value_array_create, value_array_add
 from value.string import value_string_create, value_string_add
-from value.record import value_record_create, value_record_eq
+from value.record import value_record_create
 
 
 import decimal

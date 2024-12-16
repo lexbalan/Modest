@@ -1752,23 +1752,11 @@ class Parser:
 					subx['attributes'] = attributes
 
 				x[0]['nl'] = spaceline_cnt
-
 				output.extend(x)
-				#spaceline_cnt = 0
 
 			else:
 				x['nl'] = spaceline_cnt
-				#print(spaceline_cnt)
 				x['ti'] = ti
-
-				#mass
-				# тк CM директива не печатается в C
-				#if x['isa'] == 'ast_attribute':
-				#	spaceline_cnt = spaceline_cnt - 1
-				#else:
-
-				#spaceline_cnt = 0
-
 				x['attributes'] = attributes
 				x['access_modifier'] = access_modifier
 
