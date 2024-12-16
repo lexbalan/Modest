@@ -7,12 +7,18 @@ type Point record {
 	x: Int32
 	y: Int32
 }
+
+
 var glb_i0: Int32 = 0
 var glb_i1: Int32 = 321
+
 var glb_r0: Point = {}
 var glb_r1: Point = {x = 20, y = 10}
+
 var glb_a0: [10]Int32 = []
 var glb_a1: [10]Int32 = [64, 53, 42]
+
+
 public func main() -> Int {
 	printf("test assignation\n")
 

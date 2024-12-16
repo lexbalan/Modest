@@ -17,6 +17,8 @@ var string32: [12]Char32 = str32_example
 var ptr_to_string8: *[]Char8 = str8_example
 var ptr_to_string16: *[]Char16 = str16_example
 var ptr_to_string32: *[]Char32 = str32_example
+
+
 public func main() -> Int {
 	console.putchar_utf8("A")
 	printf("\n")

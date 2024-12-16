@@ -4,6 +4,7 @@ include "libc/ctypes64"
 include "libc/stdio"
 
 type NewInt32 Int32
+
 public func main() -> Int {
 	printf("test typedef\n")
 

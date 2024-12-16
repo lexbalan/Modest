@@ -2,9 +2,13 @@
 include "libc/ctypes64"
 @c_include "stdio.h"
 include "libc/stdio"
+
+
 const utf8Char = "s"
 const utf16Char = "Я"
 const utf32Char = "🐀"
+
+
 public func main() -> Int {
 	printf("test/char\n")
 

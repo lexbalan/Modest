@@ -2,6 +2,8 @@
 include "libc/ctypes64"
 @c_include "stdio.h"
 include "libc/stdio"
+
+
 func xor_encrypter(buf: *[]Word8, buflen: Nat32, key: *[]Word8, keylen: Nat32) -> Unit {
 	var i: Nat32 = Nat32 0
 	var j: Nat32 = Nat32 0
@@ -19,10 +21,14 @@ func xor_encrypter(buf: *[]Word8, buflen: Nat32, key: *[]Word8, keylen: Nat32) -
 }
 //xor_encrypt = xor_encrypter
 //xor_decrypt = xor_encrypter
+
 const msg_length = 12
 const key_length = 3
+
 var test_msg: [msg_length + 1]Char8 = "Hello World!"
 var test_key: [key_length + 1]Char8 = "abc"
+
+
 func print_bytes(buf: *[]Word8, len: Nat32) -> Unit {
 	var i: Nat32 = Nat32 0
 	while i < len {
@@ -31,6 +37,8 @@ func print_bytes(buf: *[]Word8, len: Nat32) -> Unit {
 	}
 	printf("\n")
 }
+
+
 public func main() -> Int {
 	printf("test xor encrypting\n")
 

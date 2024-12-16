@@ -6,15 +6,13 @@
 
 #include "main.h"
 
-
-
-
-
 static bool test_generic_integer();
 static bool test_generic_float();
 static bool test_generic_char();
 static bool test_generic_array();
 static bool test_generic_record();
+
+
 
 int main()
 {
@@ -58,6 +56,7 @@ int main()
 	return 0;
 }
 
+
 static bool test_generic_integer()
 {
 	// Any integer literal have GenericInteger type
@@ -92,6 +91,7 @@ static bool test_generic_integer()
 #undef __two
 }
 
+
 static bool test_generic_float()
 {
 	// Any float literal have GenericFloat type
@@ -110,6 +110,7 @@ static bool test_generic_float()
 
 #undef __pi
 }
+
 
 static bool test_generic_char()
 {
@@ -130,6 +131,7 @@ static bool test_generic_char()
 
 #undef __a
 }
+
 
 static bool test_generic_array()
 {
@@ -191,6 +193,7 @@ struct Point3D {
 	int32_t z;
 };
 typedef struct Point3D Point3D;
+
 
 static bool test_generic_record()
 {

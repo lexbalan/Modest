@@ -6,10 +6,15 @@ include "libc/stdio"
 include "libc/stdlib"
 @c_include "arpa/inet.h"
 include "libc/socket"
+
+
 const filename = "file2.txt"
+
 const ipAddress = "127.0.0.1"
 const port = 8080
 const bufSize = 1024
+
+
 func write_file(sockfd: Int) -> Bool {
 	var buffer: [bufSize]Char8
 
@@ -32,6 +37,8 @@ func write_file(sockfd: Int) -> Bool {
 
 	return true
 }
+
+
 public func main() -> Int {
 	let sockfd = socket(af_INET, c_SOCK_STREAM, 0)
 	if sockfd < 0 {

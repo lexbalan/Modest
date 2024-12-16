@@ -8,10 +8,6 @@
 
 #define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
 
-
-
-
-
 #define inputDataLength  32
 
 
@@ -22,6 +18,9 @@ struct SHA256_TestCase {
 	uint8_t expected_result[sha256_hashSize];
 };
 typedef struct SHA256_TestCase SHA256_TestCase;
+
+
+
 static SHA256_TestCase test0 = {
 	.input_data = "abc",
 	.input_data_len = 3,
@@ -34,6 +33,7 @@ static SHA256_TestCase test0 = {
 
 
 };
+
 static SHA256_TestCase test1 = {
 	.input_data = "Hello World!",
 	.input_data_len = 12,
@@ -46,7 +46,10 @@ static SHA256_TestCase test1 = {
 
 
 };
+
 static SHA256_TestCase *tests[2] = (SHA256_TestCase *[2]){&test0, (SHA256_TestCase *)&test1};
+
+
 
 static bool doTest(SHA256_TestCase *test)
 {
@@ -70,6 +73,7 @@ static bool doTest(SHA256_TestCase *test)
 
 	return test_passed;
 }
+
 
 int main()
 {

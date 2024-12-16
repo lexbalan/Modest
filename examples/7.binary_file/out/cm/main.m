@@ -5,12 +5,15 @@ include "libc/string"
 @c_include "stdio.h"
 include "libc/stdio"
 // FIXIT: not worked LLVM result (!)
+
 const filename = *Str8 "file.bin"
 // chunk of data for read/write operations in file
 type Chunk record {
 	id: [100]Char
 	data: [1024]Char
 }
+
+
 func write_example() -> Unit {
 	printf("run write_example\n")
 
@@ -33,6 +36,8 @@ func write_example() -> Unit {
 
 	fclose(fp)
 }
+
+
 func read_example() -> Unit {
 	printf("run read_example\n")
 
@@ -52,6 +57,8 @@ func read_example() -> Unit {
 
 	fclose(fp)
 }
+
+
 public func main() -> Int {
 	printf("binary file example\n")
 	write_example()

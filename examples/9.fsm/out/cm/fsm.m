@@ -1,6 +1,8 @@
 
 @c_include "stdio.h"
 include "libc/stdio"
+
+
 const verbose = true
 // Вынужден добавлять export тк иначе не идет в хедер к структуре
 // Короче, проблема зависимостей тяжело зависла в воздухе
@@ -16,6 +18,8 @@ public type StateDesc record {
 	public loop: Handler
 	public exit: Handler
 }
+
+
 public const substateEntering = 0
 public const substateLoop = 1
 public const substateLeaving = 2
@@ -28,13 +32,19 @@ public type FSM record {
 	public substate: Nat32
 	public states: [maxStates]StateDesc
 }
+
+
 public func state_no_name(fsm: *FSM, state_no: Nat32) -> *Str8 {
 	return &fsm.states[state_no].name
 }
+
+
 public func switch(fsm: *FSM, state: Nat32) -> Unit {
 	fsm.nexstate = state
 	fsm.substate = substateLeaving
 }
+
+
 public func run(fsm: *FSM) -> Unit {
 	printf("fsm::run()\n")
 

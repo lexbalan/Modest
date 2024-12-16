@@ -8,8 +8,6 @@
 
 
 
-
-
 static void mtab(uint32_t n)
 {
 	uint32_t m = 1;
@@ -21,6 +19,7 @@ static void mtab(uint32_t n)
 		m = m + 1;
 	}
 }
+
 
 int main()
 {

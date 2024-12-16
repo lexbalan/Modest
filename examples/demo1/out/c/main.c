@@ -10,8 +10,9 @@
 
 #define minNumber  0
 #define maxNumber  10
-
 static int32_t get_number(int32_t min, int32_t max);
+
+
 
 int32_t main()
 {
@@ -29,6 +30,7 @@ int32_t main()
 
 	return 0;
 }
+
 
 static int32_t get_number(int32_t min, int32_t max)
 {

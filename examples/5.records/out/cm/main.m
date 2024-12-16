@@ -17,16 +17,25 @@ type Line record {
 	a: Point
 	b: Point
 }
+
+
 var line: Line = {
 	a = {x = 0, y = 0}
 	b = {x = 1.0, y = 1.0}
 }
+
+
+
+
 func max(a: Float, b: Float) -> Float {
 	if a > b {
 		return a
 	}
 	return b
 }
+
+
+
 func min(a: Float, b: Float) -> Float {
 	if a < b {
 		return a
@@ -41,9 +50,13 @@ func distance(a: Point, b: Point) -> Float {
 	let dy2 = pow(dy, 2)
 	return sqrt(dx2 + dy2)
 }
+
+
 func lineLength(line: Line) -> Float {
 	return distance(line.a, line.b)
 }
+
+
 func ptr_example() -> Unit {
 	let ptr_p = malloc(sizeof(Point))
 
@@ -53,6 +66,8 @@ func ptr_example() -> Unit {
 
 	printf("point(%f, %f)\n", ptr_p.x, ptr_p.y)
 }
+
+
 public func main() -> Int {
 	// by value
 	let len = lineLength(line)

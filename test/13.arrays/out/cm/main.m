@@ -7,10 +7,16 @@ include "libc/math"
 //@attribute("c_no_print")
 //import "misc/minmax"
 //$pragma c_include "./minmax.h"
+
+
 const constantArray = [1, 2, 3, 4, 5] + [6, 7, 8, 9, 10]
+
 var globalArray: [10]Int32 = constantArray
+
 var arrayFromString: [3]Char8 = "abc"
 //var arrayOfChars = [Char8 "a", 'b', 'c']
+
+
 func f0(x: [20]Char8) -> [30]Char8 {
 	var local_copy_of_x: [20]Char8 = x
 	printf("f0(\"%s\")\n", &local_copy_of_x)
@@ -33,8 +39,12 @@ func f0(x: [20]Char8) -> [30]Char8 {
 	res[13] = "\x0"
 	return res
 }
+
+
 const startSequence = [0xAA, 0x55, 0x02]
 const stopSequence = [0x16]
+
+
 func test() -> Unit {
 	// тестируем работу с локальным generic массивом
 	var yy: [6]Int8 = startSequence + [] + stopSequence
@@ -45,6 +55,8 @@ func test() -> Unit {
 		i = i + 1
 	}
 }
+
+
 public func main() -> Int {
 	// generic array [4]Char8 will be implicit casted to [10]Char8
 

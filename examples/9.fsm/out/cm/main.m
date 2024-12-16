@@ -11,17 +11,24 @@ import "fsm"
 //import "lightfood/main"
 //@attribute("c_no_print")
 //$pragma c_include "./ff_main.h"
+
+
 const flashlightStateOff = 0
 const flashlightStateOn = 1
 const flashlightStateBeacon = 2
+
+
 var cnt: Nat8
 //
 // State Off
 //
+
 func off_entry(x: *FSM) -> Unit {
 	Unit x
 	//printf("off_entry\n")
 }
+
+
 func off_loop(x: *FSM) -> Unit {
 	printf("off_loop\n")
 	if cnt < 10 {
@@ -31,6 +38,8 @@ func off_loop(x: *FSM) -> Unit {
 		fsm.switch(x, flashlightStateOn)
 	}
 }
+
+
 func off_exit(x: *FSM) -> Unit {
 	Unit x
 	//printf("off_exit\n")
@@ -38,10 +47,13 @@ func off_exit(x: *FSM) -> Unit {
 //
 // State On
 //
+
 func on_entry(x: *FSM) -> Unit {
 	Unit x
 	//printf("on_entry\n")
 }
+
+
 func on_loop(x: *FSM) -> Unit {
 	printf("on_loop\n")
 	if cnt < 10 {
@@ -51,6 +63,8 @@ func on_loop(x: *FSM) -> Unit {
 		fsm.switch(x, flashlightStateBeacon)
 	}
 }
+
+
 func on_exit(x: *FSM) -> Unit {
 	Unit x
 	//printf("on_exit\n")
@@ -58,10 +72,13 @@ func on_exit(x: *FSM) -> Unit {
 //
 // State Beacon
 //
+
 func beacon_entry(x: *FSM) -> Unit {
 	let from_name = fsm.state_no_name(x, x.state)
 	printf("beacon_entry from %s\n", from_name)
 }
+
+
 func beacon_loop(x: *FSM) -> Unit {
 	printf("beacon_loop\n")
 	if cnt < 10 {
@@ -71,10 +88,15 @@ func beacon_loop(x: *FSM) -> Unit {
 		fsm.switch(x, flashlightStateOff)
 	}
 }
+
+
 func beacon_exit(x: *FSM) -> Unit {
 	let to_name = fsm.state_no_name(x, x.nexstate)
 	printf("beacon_exit to %s\n", to_name)
 }
+
+
+
 var fsm: FSM = {
 	name = "Flash"
 	state = 0
@@ -103,6 +125,9 @@ var fsm: FSM = {
 		}
 	]
 }
+
+
+
 public func main() -> Int {
 
 	while true {

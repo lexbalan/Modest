@@ -8,12 +8,11 @@
 
 #define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
 
-
-
 static int32_t array[21] = (int32_t[21]){
 	-3, -5, 2, 1, -1, 0, -2, 3, -4, 4,
 	11, 9, 6, -7, -8, 5, 7, 10, 8, -6, -9
 };
+
 
 static void bubble_sort32(int32_t *array, int32_t len)
 {
@@ -37,8 +36,9 @@ static void bubble_sort32(int32_t *array, int32_t len)
 		}
 	}
 }
-
 static void print_array(int32_t *array, int32_t len);
+
+
 
 int32_t main()
 {
@@ -57,6 +57,7 @@ int32_t main()
 	return 0;
 }
 
+
 static void print_array(int32_t *array, int32_t len)
 {
 	printf("\n");
@@ -66,8 +67,9 @@ static void print_array(int32_t *array, int32_t len)
 		i = i + 1;
 	}
 }
-
 static int32_t get_number(int32_t min, int32_t max);
+
+
 
 static void fill_array(int32_t *array, int32_t len)
 {
@@ -84,6 +86,7 @@ static void fill_array(int32_t *array, int32_t len)
 #undef __min
 #undef __max
 }
+
 
 static int32_t get_number(int32_t min, int32_t max)
 {

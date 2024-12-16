@@ -8,6 +8,7 @@
 #include "memory.h"
 
 //
+
 #define systemWidth  64
 //$if (systemWidth == 64)
 typedef uint64_t Word;
@@ -16,7 +17,10 @@ typedef uint64_t Nat;
 //type Word Word32
 //type Nat Nat32
 //$endif
+
+
 #define memoryAlignment  (systemWidth / 8)
+
 
 void mzero(void *mem, uint64_t len)
 {
@@ -56,6 +60,7 @@ void mzero(void *mem, uint64_t len)
 	}
 }
 
+
 void mcopy(void *dst, void *src, uint64_t len)
 {
 	const uint64_t len_words = len / sizeof(Word);
@@ -78,6 +83,7 @@ void mcopy(void *dst, void *src, uint64_t len)
 		i = i + 1;
 	}
 }
+
 
 bool meq(void *mem0, void *mem1, uint64_t len)
 {

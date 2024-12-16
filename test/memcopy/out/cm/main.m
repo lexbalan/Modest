@@ -10,6 +10,8 @@ type Object record {
 	lastname: [32]Char8
 	age: Int32
 }
+
+
 public func main() -> Int {
 	printf("memcopy test\n")
 

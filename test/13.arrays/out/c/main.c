@@ -7,19 +7,19 @@
 #include "main.h"
 
 #define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
-
-
-
-
-
 //@attribute("c_no_print")
 //import "misc/minmax"
 //$pragma c_include "./minmax.h"
+
+
 #define _constantArray  {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 const int8_t constantArray[10] = _constantArray;
+
 static int32_t globalArray[10] = _constantArray;
+
 static char arrayFromString[3] = "abc";
 //var arrayOfChars = [Char8 "a", 'b', 'c']
+
 
 static void f0(char __sret[30], char __x[20])
 {
@@ -49,10 +49,13 @@ static void f0(char __sret[30], char __x[20])
 	res[13] = '\x0';
 	memcpy(__sret, &res, sizeof(char[30]));
 }
+
+
 #define _startSequence  {0xAA, 0x55, 0x02}
 const int8_t startSequence[3] = _startSequence;
 #define _stopSequence  {0x16}
 const int8_t stopSequence[1] = _stopSequence;
+
 
 static void test()
 {
@@ -66,6 +69,7 @@ static void test()
 		i = i + 1;
 	}
 }
+
 
 int main()
 {

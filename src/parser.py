@@ -1663,7 +1663,6 @@ class Parser:
 
 
 	def parse(self, tokens):
-
 		if len(tokens) == 0:
 			return []
 
@@ -1689,14 +1688,9 @@ class Parser:
 		while not self.is_end():
 
 			if self.token_class_is('attribute'):
-				#info("ATT", self.ti())
 				a = self.parse_attribute()
 				attributes.append(a)
 				continue
-
-			#print("AFTER=%d" % len(attributes))
-
-			#attributes = []
 
 			access_modifier = 'private'
 
@@ -1719,19 +1713,20 @@ class Parser:
 			if self.match('\n'):
 				spaceline_cnt = spaceline_cnt + 1
 				continue
-			elif self.match('func'): x = self.parse_def_func()
-			#elif self.match('let'): x = self.parse_def_const()
-			elif self.match('const'): x = self.parse_def_const()
-			elif self.match('var'): x = self.parse_def_var()
-			elif self.match('type'): x = self.parse_def_type()
-
+			elif self.match('func'):
+				x = self.parse_def_func()
+			elif self.match('const'):
+				x = self.parse_def_const()
+			elif self.match('var'):
+				x = self.parse_def_var()
+			elif self.match('type'):
+				x = self.parse_def_type()
 			elif self.token_class_is('comment-block'):
 				x = self.parse_comment_block()
 			elif self.token_class_is('comment-line'):
 				x = self.parse_comment_line()
 			elif self.token_class_is('directive'):
 				x = self.parse_directive()
-
 			elif self.match('import'):
 				x = self.parse_import()
 			elif self.match('include'):
@@ -1759,27 +1754,28 @@ class Parser:
 				x[0]['nl'] = spaceline_cnt
 
 				output.extend(x)
-				spaceline_cnt = 0
+				#spaceline_cnt = 0
 
 			else:
 				x['nl'] = spaceline_cnt
+				#print(spaceline_cnt)
 				x['ti'] = ti
 
+				#mass
 				# тк CM директива не печатается в C
-				if x['isa'] == 'ast_attribute':
-					spaceline_cnt = spaceline_cnt - 1
-				else:
-					spaceline_cnt = 0
+				#if x['isa'] == 'ast_attribute':
+				#	spaceline_cnt = spaceline_cnt - 1
+				#else:
+
+				#spaceline_cnt = 0
 
 				x['attributes'] = attributes
-
 				x['access_modifier'] = access_modifier
 
 				output.append(x)
 
 			attributes = []
-
-			#spaceline_cnt = 0
+			spaceline_cnt = 0
 
 		return output
 

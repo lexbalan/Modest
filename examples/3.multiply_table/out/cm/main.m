@@ -2,6 +2,8 @@
 include "libc/ctypes64"
 @c_include "stdio.h"
 include "libc/stdio"
+
+
 func mtab(n: Nat32) -> Unit {
 	var m: Nat32 = 1
 	// or
@@ -12,6 +14,8 @@ func mtab(n: Nat32) -> Unit {
 		m = m + 1
 	}
 }
+
+
 public func main() -> Int {
 	let n = 2 * 2
 	printf("multiply table for %d\n", Int32 n)

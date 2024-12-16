@@ -1951,13 +1951,17 @@ def print_cdecl_func(x):
 
 
 def print_directive(x):
-	newline(n=x['nl'])
-
 	k = x['kind']
 	#if k == 'import': print_include(x)
-	if k == 'insert': print_insert(x)
-	elif k == 'cdecl_func': print_cdecl_func(x)
-	elif k == 'cdecl_type': print_cdecl_type(x)
+	if k == 'insert':
+		newline(n=x['nl'])
+		print_insert(x)
+	elif k == 'cdecl_func':
+		newline(n=x['nl'])
+		print_cdecl_func(x)
+	elif k == 'cdecl_type':
+		newline(n=x['nl'])
+		print_cdecl_type(x)
 
 
 
@@ -2060,6 +2064,7 @@ def print_header(module, outname):
 	return
 
 
+
 def print_cfile(module, _outname):
 	outname = _outname + '.c'
 
@@ -2126,7 +2131,7 @@ def print_cfile(module, _outname):
 		elif isa == 'decl_var':
 			print_decl_var(x)
 		elif isa == 'def_func':
-			newline()
+			#newline()
 			print_deps(x['deps'])
 			print_def_func(x)
 		elif isa == 'comment':

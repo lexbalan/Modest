@@ -1,6 +1,7 @@
 
 //
 //
+
 const systemWidth = 64
 //$if (systemWidth == 64)
 type Word Word64
@@ -9,7 +10,11 @@ type Nat Nat64
 //type Word Word32
 //type Nat Nat32
 //$endif
+
+
 const memoryAlignment = systemWidth / 8
+
+
 public func mzero(mem: Ptr, len: Nat64) -> Unit {
 	let z = Nat mem % memoryAlignment
 
@@ -46,6 +51,8 @@ public func mzero(mem: Ptr, len: Nat64) -> Unit {
 		i = i + 1
 	}
 }
+
+
 public func mcopy(dst: Ptr, src: Ptr, len: Nat64) -> Unit {
 	let len_words = len / sizeof(Word)
 	let src_w = src
@@ -67,6 +74,8 @@ public func mcopy(dst: Ptr, src: Ptr, len: Nat64) -> Unit {
 		i = i + 1
 	}
 }
+
+
 public func meq(mem0: Ptr, mem1: Ptr, len: Nat64) -> Bool {
 	let len_words = len / sizeof(Word)
 	let mem0_w = mem0

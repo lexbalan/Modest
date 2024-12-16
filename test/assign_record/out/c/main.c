@@ -8,16 +8,15 @@
 
 
 
-
-
-
 struct Point {
 	int32_t x;
 	int32_t y;
 };
 typedef struct Point Point;
+
 static Point globalPoint0 = {.x = 10, .y = 20};
 static Point globalPoint1 = {};
+
 
 int main()
 {

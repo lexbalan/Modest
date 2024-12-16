@@ -10,9 +10,6 @@
 struct __anonymous_struct_3 {uint32_t x; uint32_t y;};
 struct __anonymous_struct_4 {uint32_t x; uint32_t y;};
 
-
-
-
 struct Point2D {
 	uint32_t x;
 	uint32_t y;
@@ -25,8 +22,11 @@ struct Point3D {
 	uint32_t z;
 };
 typedef struct Point3D Point3D;
+
+
 #define xx  {.x = 1, .y = 2}
 #define yy  {.x = 1, .y = 2}
+
 
 int main()
 {

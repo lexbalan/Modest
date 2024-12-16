@@ -8,10 +8,15 @@ include "libc/stdlib"
 include "libc/unistd"
 @c_include "arpa/inet.h"
 include "libc/socket"
+
+
 const filename = "file.txt"
+
 const ipAddress = "127.0.0.1"
 const port = 8080
 const bufSize = 1024
+
+
 func send_file(fp: *File, sockfd: Int) -> Bool {
 	var data: [bufSize]Char8
 
@@ -24,6 +29,8 @@ func send_file(fp: *File, sockfd: Int) -> Bool {
 
 	return true
 }
+
+
 public func main() -> Int {
 	let sockfd = socket(af_INET, c_SOCK_STREAM, 0)
 	if sockfd < 0 {

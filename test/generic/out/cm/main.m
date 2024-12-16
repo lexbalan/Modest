@@ -2,6 +2,8 @@
 include "libc/ctypes64"
 @c_include "stdio.h"
 include "libc/stdio"
+
+
 public func main() -> Int {
 	printf("generic types test\n")
 
@@ -42,6 +44,8 @@ public func main() -> Int {
 
 	return 0
 }
+
+
 func test_generic_integer() -> Bool {
 	// Any integer literal have GenericInteger type
 	let one = 1
@@ -71,6 +75,8 @@ func test_generic_integer() -> Bool {
 
 	return true
 }
+
+
 func test_generic_float() -> Bool {
 	// Any float literal have GenericFloat type
 	let pi = 3.141592653589793238462643383279502884
@@ -86,6 +92,8 @@ func test_generic_float() -> Bool {
 
 	return true
 }
+
+
 func test_generic_char() -> Bool {
 	// Any char value expression have GenericChar type
 	// (you can pick GenericChar value by index of GenericString value)
@@ -102,6 +110,8 @@ func test_generic_char() -> Bool {
 
 	return true
 }
+
+
 func test_generic_array() -> Bool {
 	// Any array expression have GenericArray type
 	// this array expression (GenericArray of four GenericInteger items)
@@ -156,6 +166,8 @@ type Point3D record {
 	y: Int32
 	z: Int32
 }
+
+
 func test_generic_record() -> Bool {
 	// Any record expression have GenericRecord type
 	// this record expression have type:

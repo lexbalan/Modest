@@ -56,7 +56,9 @@ type X record {
 	p: [3]Point
 	g: Bool
 }
+
 var x: X
+
 public func main() -> Int {
 	printf("test cast operation\n")
 

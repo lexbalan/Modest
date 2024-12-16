@@ -8,13 +8,6 @@
 
 
 
-
-
-
-
-
-
-
 struct Point {
 	double x;
 	double y;
@@ -26,31 +19,38 @@ struct Line {
 	Point b;
 };
 typedef struct Line Line;
+
 #define zero  0
 #define pointZero  {.x = zero, .y = zero}
 #define pointOne  {.x = 1.0, .y = 1.0}
+
 #define line0  { \
 	.a = pointZero, \
 	.b = pointOne \
 }
+
 #define _carr  {0, 10, 15, 20, 25, 30}
 const int8_t carr[6] = _carr;
+
 #define line1  { \
 	.a = {.x = 10, .y = 20}, \
 	.b = {.x = 30, .y = 40} \
 }
+
+
 #define line2  { \
 	.a = pointZero, \
 	.b = pointOne \
 }
+
 #define line3  { \
 	.a = {.x = 10, .y = 20}, \
 	.b = {.x = 30, .y = 40} \
 }
+
 #define _lines  {line0, line1, line2, line3}
 const Line lines[4] = _lines;
 // Pythagorean theorem
-
 static float distance(Point a, Point b)
 {
 	const double dx = minmax_max_float64(a.x, b.x) - minmax_min_float64(a.x, b.x);
@@ -60,10 +60,12 @@ static float distance(Point a, Point b)
 	return sqrt(dx2 + dy2);
 }
 
+
 static float lineLength(Line line)
 {
 	return distance(line.a, line.b);
 }
+
 
 int main()
 {

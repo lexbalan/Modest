@@ -8,13 +8,6 @@
 
 
 
-
-
-
-
-
-
-
 struct Point {
 	float x;
 	float y;
@@ -26,10 +19,15 @@ struct Line {
 	Point b;
 };
 typedef struct Line Line;
+
+
 static Line line = {
 	.a = {.x = 0, .y = 0},
 	.b = {.x = 1.0, .y = 1.0}
 };
+
+
+
 
 static float max(float a, float b)
 {
@@ -39,6 +37,8 @@ static float max(float a, float b)
 	return b;
 }
 
+
+
 static float min(float a, float b)
 {
 	if (a < b) {
@@ -47,7 +47,6 @@ static float min(float a, float b)
 	return b;
 }
 // Pythagorean theorem
-
 static float distance(Point a, Point b)
 {
 	const float dx = max(a.x, b.x) - min(a.x, b.x);
@@ -57,10 +56,12 @@ static float distance(Point a, Point b)
 	return sqrt(dx2 + dy2);
 }
 
+
 static float lineLength(Line line)
 {
 	return distance(line.a, line.b);
 }
+
 
 static void ptr_example()
 {
@@ -72,6 +73,7 @@ static void ptr_example()
 
 	printf("point(%f, %f)\n", ptr_p->x, ptr_p->y);
 }
+
 
 int main()
 {

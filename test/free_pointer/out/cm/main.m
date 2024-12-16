@@ -2,6 +2,8 @@
 include "libc/ctypes64"
 @c_include "stdio.h"
 include "libc/stdio"
+
+
 public func main() -> Int32 {
 	var a: Bool
 	var b: Int32

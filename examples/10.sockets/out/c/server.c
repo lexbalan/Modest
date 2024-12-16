@@ -8,15 +8,12 @@
 
 
 
-
-
-
-
-
 #define filename  "file2.txt"
+
 #define ipAddress  "127.0.0.1"
 #define port  8080
 #define bufSize  1024
+
 
 static bool write_file(int sockfd)
 {
@@ -41,6 +38,7 @@ static bool write_file(int sockfd)
 
 	return true;
 }
+
 
 int main()
 {

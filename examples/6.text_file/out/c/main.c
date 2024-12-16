@@ -6,16 +6,12 @@
 
 #include "main.h"
 
-
-
-
-
-
-
-
 //include "libc/ctypes64"
 //include "libc/stdio"
+
+
 #define filename  "file.txt"
+
 
 static void write_example()
 {
@@ -32,6 +28,7 @@ static void write_example()
 
 	fclose(fp);
 }
+
 
 static void read_example()
 {
@@ -55,6 +52,7 @@ static void read_example()
 
 	fclose(fp);
 }
+
 
 int main()
 {

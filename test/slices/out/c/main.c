@@ -9,8 +9,6 @@
 #define LENGTHOF(x) (sizeof(x) / sizeof(x[0]))
 
 
-
-
 static void array_print(int32_t *pa, int32_t len)
 {
 	int32_t i = 0;
@@ -19,6 +17,7 @@ static void array_print(int32_t *pa, int32_t len)
 		i = i + 1;
 	}
 }
+
 
 int main()
 {

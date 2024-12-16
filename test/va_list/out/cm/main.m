@@ -6,6 +6,8 @@ include "libc/stdio"
 include "libc/unistd"
 //include "lightfood/print"
 //$pragma c_include "./print.h"
+
+
 func my_printf(format: *Str8, ...) -> SSizeT {
 	var va: va_list
 	var va2: va_list
@@ -22,6 +24,8 @@ func my_printf(format: *Str8, ...) -> SSizeT {
 
 	return write(c_STDOUT_FILENO, &buf, SizeT n)
 }
+
+
 public func main() -> Int {
 	var k: Int32 = 10
 	my_printf("My Printf Test %d\n", k)

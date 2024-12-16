@@ -8,9 +8,6 @@
 
 
 
-
-
-
 struct Point {
 	uint32_t x;
 	uint32_t y;
@@ -69,6 +66,7 @@ struct X {
 	bool g;
 };
 typedef struct X X;
+
 static X x;
 
 int main()

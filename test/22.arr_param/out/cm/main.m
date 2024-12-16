@@ -15,6 +15,8 @@ func arraysAdd(a: [10]Int32, b: [10]Int32) -> [10]Int32 {
 	}
 	return c
 }
+
+
 public func main() -> Int32 {
 	let a = getarr10()
 

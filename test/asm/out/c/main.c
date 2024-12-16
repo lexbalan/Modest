@@ -8,8 +8,6 @@
 
 
 
-
-
 static int64_t sum64(int64_t a, int64_t b)
 {
 	int64_t sum;
@@ -22,6 +20,7 @@ static int64_t sum64(int64_t a, int64_t b)
 	return sum;
 }
 
+
 static int64_t sub64(int64_t a, int64_t b)
 {
 	int64_t sub;
@@ -33,6 +32,7 @@ static int64_t sub64(int64_t a, int64_t b)
 	);
 	return sub;
 }
+
 
 static void sumsub64(int64_t a, int64_t b)
 {
@@ -49,6 +49,7 @@ static void sumsub64(int64_t a, int64_t b)
 	printf("sumsub64 sum = %lld\n", sum);
 	printf("sumsub64 sub = %lld\n", sub);
 }
+
 
 int main()
 {

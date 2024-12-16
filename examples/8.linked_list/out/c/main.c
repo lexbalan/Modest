@@ -6,14 +6,7 @@
 
 #include "main.h"
 
-
-
-
-
-
-
 // wrap around linked list for list.List Nat32
-
 static void nat32_list_insert(list_List *list, uint32_t x)
 {
 	// alloc memory for Nat32 value
@@ -22,7 +15,6 @@ static void nat32_list_insert(list_List *list, uint32_t x)
 	list_append((list_List *)list, p_nat32);
 }
 // show list conent from first item to last
-
 static void list_print_forward(list_List *list)
 {
 	printf("list_print_forward:\n");
@@ -34,7 +26,6 @@ static void list_print_forward(list_List *list)
 	}
 }
 // show list conent from last item to first
-
 static void list_print_backward(list_List *list)
 {
 	printf("list_print_backward:\n");
@@ -45,6 +36,7 @@ static void list_print_backward(list_List *list)
 		pn = (list_Node *)list_node_prev_get((list_Node *)pn);
 	}
 }
+
 
 int main()
 {

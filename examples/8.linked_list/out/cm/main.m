@@ -32,6 +32,8 @@ func list_print_backward(list: *List) -> Unit {
 		pn = list.node_prev_get(pn)
 	}
 }
+
+
 public func main() -> Int {
 	printf("linked list example\n")
 

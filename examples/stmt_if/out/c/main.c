@@ -8,8 +8,6 @@
 
 
 
-
-
 int main()
 {
 	printf("if statement example\n");

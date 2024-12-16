@@ -2,10 +2,13 @@
 include "libc/ctypes64"
 @c_include "stdio.h"
 include "libc/stdio"
+
 var array: [21]Int32 = [
 	-3, -5, 2, 1, -1, 0, -2, 3, -4, 4
 	11, 9, 6, -7, -8, 5, 7, 10, 8, -6, -9
 ]
+
+
 func bubble_sort32(array: *[]Int32, len: Int32) -> Unit {
 	var need_to_sort: Bool = true
 	while need_to_sort {
@@ -27,6 +30,8 @@ func bubble_sort32(array: *[]Int32, len: Int32) -> Unit {
 		}
 	}
 }
+
+
 public func main() -> Int32 {
 	//fill_array(&array, lengthof(array))
 
@@ -42,6 +47,8 @@ public func main() -> Int32 {
 
 	return 0
 }
+
+
 func print_array(array: *[]Int32, len: Int32) -> Unit {
 	printf("\n")
 	var i: Int32 = 0
@@ -50,6 +57,8 @@ func print_array(array: *[]Int32, len: Int32) -> Unit {
 		i = i + 1
 	}
 }
+
+
 func fill_array(array: *[]Int32, len: Int32) -> Unit {
 	let min = -1000
 	let max = 1000
@@ -61,6 +70,8 @@ func fill_array(array: *[]Int32, len: Int32) -> Unit {
 		i = i + 1
 	}
 }
+
+
 func get_number(min: Int32, max: Int32) -> Int32 {
 	var number: Int32 = Int32 0
 

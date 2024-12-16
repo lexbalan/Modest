@@ -2,12 +2,18 @@
 include "libc/ctypes64"
 @c_include "stdio.h"
 include "libc/stdio"
+
+
 func func1() -> Unit {
 	printf("func1 was called\n")
 }
+
+
 func print_ab(a: Int32, b: Int32) -> Unit {
 	printf("print_ab(a=%i, b=%i)\n", a, b)
 }
+
+
 func sum(a: Int32, b: Int32) -> Int32 {
 	return a + b
 }
@@ -38,6 +44,8 @@ public func main() -> Int {
 
 	return 0
 }
+
+
 func func0() -> Unit {
 	printf("func0 was called\n")
 }

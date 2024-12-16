@@ -6,9 +6,6 @@
 
 #include "main.h"
 
-
-
-
 // left must be Word
 // right must be Nat
 

@@ -8,7 +8,11 @@
 include "libc/libc"
 //include "libc/ctypes64"
 //include "libc/stdio"
+
+
 const filename = *Str8 "file.txt"
+
+
 func write_example() -> Unit {
 	printf("run write_example\n")
 
@@ -23,6 +27,8 @@ func write_example() -> Unit {
 
 	fclose(fp)
 }
+
+
 func read_example() -> Unit {
 	printf("run read_example\n")
 
@@ -44,6 +50,8 @@ func read_example() -> Unit {
 
 	fclose(fp)
 }
+
+
 public func main() -> Int {
 	printf("text_file example\n")
 	write_example()

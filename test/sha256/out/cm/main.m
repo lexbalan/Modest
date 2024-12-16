@@ -4,6 +4,7 @@ include "libc/ctypes64"
 include "libc/stdio"
 import "misc/sha256"
 @c_include "./sha256.h"
+
 const inputDataLength = 32
 
 
@@ -13,6 +14,9 @@ type SHA256_TestCase record {
 
 	expected_result: Hash
 }
+
+
+
 var test0: SHA256_TestCase = SHA256_TestCase {
 	input_data = "abc"
 	input_data_len = 3
@@ -25,6 +29,7 @@ var test0: SHA256_TestCase = SHA256_TestCase {
 
 
 }
+
 var test1: SHA256_TestCase = SHA256_TestCase {
 	input_data = "Hello World!"
 	input_data_len = 12
@@ -37,7 +42,11 @@ var test1: SHA256_TestCase = SHA256_TestCase {
 
 
 }
+
 var tests: [2]*SHA256_TestCase = [&test0, &test1]
+
+
+
 func doTest(test: *SHA256_TestCase) -> Bool {
 	var test_hash: Hash
 	let msg = *[]Word8 &test.input_data
@@ -59,6 +68,8 @@ func doTest(test: *SHA256_TestCase) -> Bool {
 
 	return test_passed
 }
+
+
 public func main() -> Int {
 	printf("test SHA256\n")
 

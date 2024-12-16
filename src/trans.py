@@ -1203,16 +1203,6 @@ def do_value_call(x):
 				error("expected literal string argument", first_arg['ti'])
 
 	rv = value_call(fn, ftype['to'], args + extra_args, ti=x['ti'])
-
-	#TODO: Func#pure
-	#if 'pure' in fn:
-	#	if f['pure'] and imm_args:
-	#		rv = ct_call(rv)
-
-	# for C backend only (maybe mv to C?)
-	if htype.type_is_closed_array(fn['type']['to']):
-		rv['att'].append('wrapped_array')
-
 	return rv
 
 
@@ -1901,7 +1891,7 @@ def do_stmt_let(x):
 
 	const_value = value_const(id, v['type'], value=v, ti=x['id']['ti'])
 	# не знаю правильно ли это, но перносим аттрибуты значения-инициализатора
-	# на константу. Пока это необходимо для 'wrapped_array' (!)
+	# на константу. ---Пока это необходимо для 'wrapped_array' (!)---
 	const_value['att'].extend(v['att'])
 	const_value['att'].append('local') # need for LLVM printer (!)
 
@@ -2121,12 +2111,17 @@ def def_type(x):
 		return None
 
 	definition = hlir_def_type(id, nt, None, x['ti'])
+	definition['module'] = cmodule
+	definition['access_level'] = x['access_modifier']
+	definition['nl'] = x['nl']
 	cdef = definition
 
 	ty = do_type(x['type'])
 
 	if htype.type_is_bad(ty):
 		return None
+
+	definition['original_type'] = ty
 
 	# поскольку этот тип здесь связывается с идентификатором
 	# он уже не анонимный
@@ -2139,9 +2134,10 @@ def def_type(x):
 	deps = nt['deps']
 	type_update(nt, ty)
 	nt['deps'] = deps
-	nt['ti_def'] = id['ti']
-	nt['module'] = cmodule  # добавляем заново тк очистили его выше!
 	nt['id'] = id # need for  @property("type.id.c", "int")
+	nt['definition'] = definition
+	nt['module'] = cmodule  # добавляем заново тк очистили его выше!
+	nt['ti_def'] = id['ti']
 
 	if need_decoration(x):
 		nt['id']['prefix'] = cmodule['prefix']
@@ -2157,12 +2153,6 @@ def def_type(x):
 	if htype.type_is_record(ty):
 		cmodule['records'].append(nt)
 
-	definition['original_type'] = ty
-	definition['module'] = cmodule
-	definition['nl'] = x['nl']
-	definition['access_level'] = x['access_modifier']
-
-	nt['definition'] = definition
 	cdef = None
 	return definition
 
@@ -2170,6 +2160,7 @@ def def_type(x):
 
 def def_const(x):
 	global cdef
+	global cmodule
 	id = x['id']
 
 	log("def_const: %s" % id['str'])
@@ -2185,6 +2176,9 @@ def def_const(x):
 
 
 	definition = hlir_def_const(id, None, None, x['ti'])
+	definition['module'] = cmodule
+	definition['access_level'] = x['access_modifier']
+	definition['nl'] = x['nl']
 	cdef = definition
 
 	init_value = do_value_immediate(x['value'], allow_ptr_to_str=True)
@@ -2192,7 +2186,6 @@ def def_const(x):
 
 
 	if value_is_bad(init_value):
-		global cmodule
 		module_value_add_public(cmodule, id['str'], init_value)
 		return hlir_def_const(id, init_value, init_value, x['ti'])
 
@@ -2210,10 +2203,9 @@ def def_const(x):
 
 	definition['init_value'] = init_value
 	definition['value'] = const_value
-	definition['access_level'] = x['access_modifier']
 	const_value['definition'] = definition
-	const_value['module'] = cmodule
-	definition['module'] = cmodule
+	#const_value['module'] = cmodule
+
 	cdef = None
 	return definition
 
@@ -2232,6 +2224,9 @@ def def_var(x):
 
 
 	definition = hlir_def_var(id, None, None, x['ti'])
+	definition['module'] = cmodule
+	definition['access_level'] = x['access_modifier']
+	definition['nl'] = x['nl']
 	cdef = definition
 
 	t = do_type(x['type'])
@@ -2287,11 +2282,10 @@ def def_var(x):
 
 	definition['var_value'] = var_value
 	definition['init_value'] = init_value
-	definition['module'] = cmodule
 	var_value['definition'] = definition
-	definition['access_level'] = x['access_modifier']
 	cdef = None
 	return definition
+
 
 
 def def_func(x, dostmt=True):
@@ -2306,35 +2300,30 @@ def def_func(x, dostmt=True):
 	# тк мы ранее сделали проход
 	fn = ctx_value_get(func_id['str'])
 
-
 	definition = hlir_def_func(func_id, fn, None, x['ti'])
+	definition['module'] = cmodule
+	definition['access_level'] = x['access_modifier']
+	definition['nl'] = x['nl']
 	cdef = definition
 
+	fn['definition'] = definition
 
 	if value_is_incomplete(fn):
 		fn['type'] = do_type_func(x['type'])
-
+		if htype.type_is_incomplete(fn['type']):
+			return None
 
 	if x['id']['str'] != 'main':
 		if need_decoration(x):
 			fn['id']['prefix'] = cmodule['prefix']
 
-
 	if x['stmt'] == None:
-		#print("DECL: "+fn['id']['str'])
-		definition = hlir_def_func(func_id, fn, None, x['ti'])
-		definition['access_level'] = x['access_modifier']
-		fn['definition'] = definition
 		return definition
-
 
 	context_push()  # create params context
 
 	if htype.type_is_bad(fn['type']):
 		return None
-
-
-
 
 	prev_cfunc = cfunc
 	cfunc = fn
@@ -2350,11 +2339,6 @@ def def_func(x, dostmt=True):
 		param_value = value_const(param_id, param_type, None, param['ti'])
 		param_value['att'].append('local')
 		param_value['att'].append('param')
-
-		# for C backend only (maybe mv to C?)
-#		if htype.type_is_closed_array(param_type):
-#			param_value['att'].append('wrapped_array')
-
 		ctx_value_add(param_id['str'], param_value)
 		i = i + 1
 
@@ -2382,15 +2366,12 @@ def def_func(x, dostmt=True):
 				elif stmts[-1]['kind'] != 'return':
 					warning("expected return operator at end", stmt['ti'])
 
-	context_pop()  # remove params context
-
-	cfunc = prev_cfunc
-
 	definition['stmt'] = stmt
-	definition['access_level'] = x['access_modifier']
-	fn['definition'] = definition
-	definition['module'] = cmodule
+
+	context_pop()  # remove params context
+	cfunc = prev_cfunc
 	cdef = None
+
 	return definition
 
 
