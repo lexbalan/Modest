@@ -850,7 +850,6 @@ def do_value_bin(x):
 			'add': lambda a, b: a + b,
 			'sub': lambda a, b: a - b,
 			'mul': lambda a, b: a * b,
-			#'div': lambda a, b: a / b,
 			'rem': lambda a, b: a % b,
 		}
 
@@ -862,6 +861,7 @@ def do_value_bin(x):
 				asset = l['asset'] // r['asset']
 		else:
 			asset = ops[op](l['asset'], r['asset'])
+
 
 		if htype.type_is_generic_integer(t):
 			# (для операций типа 1 + 2)
