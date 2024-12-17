@@ -1475,7 +1475,6 @@ def do_value_id(x):
 
 	if v == None:
 		error("undefined value '%s'" % id_str, x)
-
 		# чтобы не генерил ошибки дальше
 		# создадим bad value и пропишем его глобально (wrong!)
 		v = value_bad(x['ti'])
@@ -1485,9 +1484,9 @@ def do_value_id(x):
 
 
 	global cdef
-	if value_is_incomplete(v):
+	if htype.type_is_incomplete(v['type']):
 		cdef['deps'].append(v)
-		v = lookup_func(v['id']['str'])
+		v = update_func_type(v['id']['str'])
 		if v == None:
 			error("call undefined func", x['ti'])
 			return value_bad(x['ti'])
@@ -2184,27 +2183,24 @@ def def_const(x):
 	init_value = do_value_immediate(x['value'], allow_ptr_to_str=True)
 
 
-
 	if value_is_bad(init_value):
 		module_value_add_public(cmodule, id['str'], init_value)
 		return hlir_def_const(id, init_value, init_value, x['ti'])
 
 	t = do_type(x['type'])
-	#if x['type'] != None:
 	if not htype.type_is_undefined(t):
 		if not htype.type_is_bad(t):
 			init_value = value_cons_implicit_check(t, init_value)
 
+	definition['init_value'] = init_value
 
 	const_value = symbol_const(id, init_value, is_public=x['access_modifier'] == 'public')
+	const_value['definition'] = definition
 
 	if need_decoration(x):
 		const_value['id']['prefix'] = cmodule['prefix']
 
-	definition['init_value'] = init_value
 	definition['value'] = const_value
-	const_value['definition'] = definition
-	#const_value['module'] = cmodule
 
 	cdef = None
 	return definition
@@ -2308,7 +2304,7 @@ def def_func(x, dostmt=True):
 
 	fn['definition'] = definition
 
-	if value_is_incomplete(fn):
+	if htype.type_is_incomplete(fn['type']):
 		fn['type'] = do_type_func(x['type'])
 		if htype.type_is_incomplete(fn['type']):
 			return None
@@ -2795,8 +2791,9 @@ def process_module(idStr, ast, nodef=False):
 
 
 
-def lookup_func(idStr):
-	#print("lookup_func(%s)" % idStr)
+def update_func_type(idStr):
+	#print("update_func_type(%s)" % idStr)
+
 	for x in cmodule['ast']:
 		y = None
 		if x['isa'] != 'ast_definition':
@@ -2807,14 +2804,6 @@ def lookup_func(idStr):
 			continue
 
 		fn = ctx_value_get(idStr)
-		fn['kind'] = 'func'
-		fn['id'] = x['id']
-		#fn['type'] = ftype
-		fn['immediate'] = False
-		fn['immutable'] = True
-		fn['deps'] = []
-		fn['att'] = []
-		fn['ti_def'] = x['ti']
 
 		ftype = do_type_func(x['type'])
 		type_update(fn['type'], ftype)

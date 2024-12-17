@@ -12,14 +12,14 @@ def value_is_bad(x):
 def value_is_undefined(x):
 	return x['kind'] == 'undefined'
 
-def value_is_incomplete(x):
-	return htype.type_is_incomplete(x['type'])
 
 def value_is_immediate(x):
 	return x['immediate']
 
+
 def value_is_param(x):
 	return 'param' in x['att']
+
 
 # Any immediate value are immutable,
 # but not any immutable value are immediate
