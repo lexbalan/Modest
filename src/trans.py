@@ -2313,6 +2313,9 @@ def def_func(x, dostmt=True):
 		if htype.type_is_incomplete(fn['type']):
 			return None
 
+	if htype.type_is_bad(fn['type']):
+		return None
+
 	if x['id']['str'] != 'main':
 		if need_decoration(x):
 			fn['id']['prefix'] = cmodule['prefix']
@@ -2321,9 +2324,6 @@ def def_func(x, dostmt=True):
 		return definition
 
 	context_push()  # create params context
-
-	if htype.type_is_bad(fn['type']):
-		return None
 
 	prev_cfunc = cfunc
 	cfunc = fn
@@ -2514,16 +2514,13 @@ def do_import(x):
 
 	# Literal string to python string
 	impline = import_expr['asset']
-
-	#print('do_import("%s")' % impline)
-	log('do_import("%s")' % impline)
-
 	abspath = import_abspath(impline, ext='.m')
+
+	log('do_import("%s")' % impline)
 
 	if abspath == None:
 		error("module %s not found" % impline, import_expr)
 		return None
-
 
 	m = None
 
