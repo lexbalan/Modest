@@ -35,7 +35,7 @@ def value_is_generic_immediate(x):
 	return value_is_immediate(x) and htype.type_is_generic(x['type'])
 
 
-def _value_is_zero_array(x):
+def value_is_zero_array(x):
 	if not value_is_immediate(x):
 		return False
 	for item in x['items']:
@@ -44,7 +44,7 @@ def _value_is_zero_array(x):
 	return True
 
 
-def _value_is_zero_record(x):
+def value_is_zero_record(x):
 	if not value_is_immediate(x):
 		return False
 	for item in x['fields']:
@@ -59,9 +59,9 @@ def value_is_zero(x):
 		return False
 
 	if htype.type_is_array(x['type']):
-		return _value_is_zero_array(x)
+		return value_is_zero_array(x)
 	if htype.type_is_record(x['type']):
-		return _value_is_zero_record(x)
+		return value_is_zero_record(x)
 
 	return x['asset'] == 0
 
@@ -75,21 +75,7 @@ def value_attribute_check(v, a):
 	return a in v['att']
 
 
-
 def value_load(x):
-	"""if x['kind'] == 'var':
-		x['att'].append('load')
-		pass
-	elif x['kind'] == 'index':
-		x['att'].append('load')
-		pass
-	elif x['kind'] == 'access':
-		x['att'].append('load')
-		pass
-	elif x['kind'] == 'deref':
-		x['att'].append('load')
-		pass"""
-
 	return x
 
 

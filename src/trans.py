@@ -728,9 +728,7 @@ def do_type(x):
 	return t
 
 
-#
-# Do Statement
-#
+
 
 def do_value_shift(x):
 	op = x['kind']  # 'shl', 'shr'
@@ -1644,8 +1642,6 @@ def do_value_immediate_string(x):
 def do_value_unsafe(x):
 	#info("do_value_unsafe", ti)
 	ti = x['ti']
-	# for use 'unsafe' operator
-	# required -funsafe option
 	from main import features
 	if not features.get('unsafe'):
 		error("for use 'unsafe' operator required -funsafe option", ti)
@@ -1700,7 +1696,6 @@ def do_value(x):
 	elif k == 'shl': v = do_value_shift(x)
 	elif k == 'shr': v = do_value_shift(x)
 	elif k == 'unsafe': v = do_value_unsafe(x)
-
 	elif k == 'sizeof_value': v = do_value_sizeof_value(x)
 	elif k == 'sizeof_type': v = do_value_sizeof_type(x)
 	elif k == 'alignof': v = do_value_alignof(x)
