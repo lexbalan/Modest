@@ -2043,13 +2043,14 @@ def print_decl_func(x):
 
 
 def print_def_func(x):
-	func = x['value']
+	fn = x['value']
+	ftype = fn['type']
 
 	if x['stmt'] == None:
 		return print_decl_func(x)
 
 	fctx = {
-		'func': func,  # cfunc
+		'func': fn,  # cfunc
 
 		'if_no': 0,
 		'while_no': 0,
@@ -2068,12 +2069,9 @@ def print_def_func(x):
 
 	out("\ndefine ")
 	print_linkage(x)
-	print_func_signature(func['type'], get_id_str(func))
+	print_func_signature(ftype, get_id_str(fn))
 
-	sret = need_sret(func['type'])
-	ftype = func['type']
-
-	if sret:
+	if need_sret(ftype):
 		reg_get() # get %0 reg for retval
 
 	#
@@ -2096,28 +2094,17 @@ def print_def_func(x):
 		locals_add(param_id, localObject)
 
 
-
 	# 0, 1, 2 - params; 3 - entry label, 4 - first free register
 	entry_label = reg_get()  # should be here (!)
 
-
 	out(" {")
 	indent_up()
-
 
 	# for any array parameter print local holder value
 	for param in params:
 		ptype = param['type']
 		if htype.type_is_closed_array(ptype):
 			paramId = get_id_str(param)
-
-			# Загружаем параметр (указатель на массив) в "регистр"
-#			reg = llvm_operation('load')
-#			print_type(ptype)
-#			out(", ")
-#			print_type(ptype)
-#			out("*")
-#			out(" %%__%s" % param['id']['str'])
 
 			reg = '__' + param['id']['str']
 			loadedParam = llvm_value_reg(reg, ptype)
@@ -2132,7 +2119,6 @@ def print_def_func(x):
 			# теперь это локальная копия "типа" переданного по значению массива
 			# и далее работать будем только с ней
 			llvm_store(pholder, loadedParam)
-
 
 
 	if len(params) > 0:
@@ -2165,7 +2151,7 @@ def print_def_func(x):
 
 	# VLA требует чтобы стек был сохранен в начале работы функции
 	# и восстановлен перед возвратом из нее (see: print_stmt_return)
-	if 'stacksave' in func['att']:
+	if 'stacksave' in fn['att']:
 		#; stack save
 		# %3 = alloca i8*, align 8 ; stack save
 		# %7 = call i8* @llvm.stacksave()
