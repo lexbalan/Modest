@@ -1992,6 +1992,7 @@ def print_func_params(ftype, only_types=False, with_attributes=True):
 		out(", ...")
 
 
+
 def print_type_func(t):
 	if htype.type_is_unit(t['to']) or need_sret(t):
 		out("void")
@@ -2004,12 +2005,10 @@ def print_type_func(t):
 
 
 def print_func_signature(ftype, idStr):
-	to = ftype['to']
-
-	if htype.type_is_unit(to) or need_sret(ftype):
+	if htype.type_is_unit(ftype['to']) or need_sret(ftype):
 		out("void")
 	else:
-		print_type(to)
+		print_type(ftype['to'])
 
 	out(" @%s(" % idStr)
 	print_func_params(ftype)
