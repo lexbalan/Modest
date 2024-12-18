@@ -1333,13 +1333,11 @@ def do_eval_cons(x):
 	if htype.type_is_unit(to_type):
 		return llvm_value_zero(to_type)
 
-
 	if htype.type_is_va_list(from_type):
 		# приведение объекта типа va_list особенное
 		# оно дает доступ к следующему элементу списка
 		rv = do_eval(value)
 		return llvm_va_arg(rv, to_type)
-
 
 	v = do_reval(value)
 
@@ -1351,14 +1349,11 @@ def do_eval_cons(x):
 
 
 	if is_global_context():
-		#return llvm_value_inline_cast(to_type, v)
 		return v
-
 
 	# Приводим immediate значение прямо по месту
 	if value_is_immediate(value):
 		return llvm_value_inline_cast(to_type, v)
-
 
 	return docast(v, to_type)
 
@@ -1450,7 +1445,6 @@ def do_eval_record(v):
 			iv = do_reval(initializer['value'])
 			items.append({'id': initializer['id'], 'value': iv})
 		return llvm_value_record(items, rec_type)
-
 
 	# local context
 
@@ -1602,7 +1596,6 @@ def do_eval(x):
 		1 / 0
 		return llvm_value_zero(x['type'])
 
-
 	y['type'] = x['type']
 
 	return y
@@ -1612,21 +1605,13 @@ def do_eval(x):
 #
 #
 
-
-def do_assign(l, r):
-	assert(l['isa'] == 'll_value')
-	assert(r['isa'] == 'll_value')
-	llvm_store(l, r)
-
-
-
 def print_stmt_assign(x):
 	if htype.type_is_array(x['right']['type']):
 		return do_assign_arrays(x['left'], x['right'])
 
 	l = do_eval(x['left'])
 	r = do_reval(x['right'])
-	do_assign(l, r)
+	llvm_store(l, r)
 
 
 def do_assign_arrays(l, r):
@@ -1649,7 +1634,7 @@ def do_assign_arrays(l, r):
 		return
 
 	src = do_reval(r)
-	do_assign(dst, src)
+	llvm_store(dst, src)
 
 
 
@@ -1741,7 +1726,7 @@ def print_stmt_return(x):
 		# return via sret
 		to = fctx['func']['type']['to']
 		p2retval = llvm_value_reg("0", type_pointer(to))
-		do_assign(p2retval, v)
+		llvm_store(p2retval, v)
 
 	lo("ret void")
 	reg_get()  # for LLVM
@@ -1785,7 +1770,7 @@ def print_stmt_var(x):
 	init_value = x['init_value']
 	if not value_is_undefined(init_value):
 		iv = do_reval(init_value)
-		do_assign(val, iv)
+		llvm_store(val, iv)
 
 	return None
 
