@@ -248,22 +248,6 @@ def llvm_value_inline_cast(type, value):
 
 
 
-#def llvm_value_immediate(x):
-#	return do_eval(x)
-"""if htype.type_is_array(x['type']):
-	return do_eval_array(x)
-
-elif htype.type_is_record(x['type']):
-	return do_eval_record(x)
-
-elif htype.type_is_pointer(x['type']):
-	return do_eval_pointer(x)
-
-return llvm_value_num(x['type'], x['asset'])"""
-
-
-
-
 
 def llvm_print_type_value(x, noundef=False):
 	assert(x['isa'] == 'll_value')
@@ -426,15 +410,21 @@ def llvm_print_value_num(x):
 
 
 def llvm_print_value_inlinecast(x):
-	llvm_inline_cast('bitcast', x['type'], x['value'])
+	print(">>>>> llvm_print_value_inlinecast!")
+	v = x['value']
+	t = x['type']
+	opcode = select_cast_operator(v['type'], t)
+	llvm_inline_cast(opcode, t, v)
+
 
 
 def llvm_print_value_zero(x):
-	if htype.type_is_record(x['type']): out("zeroinitializer")
-	elif htype.type_is_array(x['type']): out("zeroinitializer")
-	elif htype.type_is_pointer(x['type']): out("null")
-	else: out("0")
-
+	if htype.type_is_composite(x['type']):
+		out("zeroinitializer")
+	elif htype.type_is_pointer(x['type']):
+		out("null")
+	else:
+		out("0")
 
 
 
@@ -584,7 +574,7 @@ def llvm_memzeron(dst, size, volatile=False):
 def trim(int_value, width):
 	assert(int_value['isa'] == 'll_value')
 	if int_value['type']['width'] != width:
-		return justcast(int_value, foundation.typeNat32)
+		return docast(int_value, foundation.typeNat32)
 	return int_value
 
 
@@ -942,7 +932,7 @@ def do_eval_bin(x):
 		# LLVM requires the same type for left & right arguments of shift operator
 		# cast right to left
 		if not htype.type_is_generic(r['type']):
-			r = justcast(r, l['type'])
+			r = docast(r, l['type'])
 
 	llvm_opcode = get_bin_opcode(op, x['left']['type'])
 	return llvm_eval_binary(llvm_opcode, l, r, x)
@@ -1307,7 +1297,14 @@ def eval_cons_array(x):
 
 
 def do_eval_cons(x):
+	value = x['value']
+	from_type = value['type']
 	to_type = x['type']
+
+	# skipping cast to the same type
+	if id(value['type']) == id(to_type):
+		return do_reval(value)
+
 
 	if htype.type_is_array(to_type):
 		return eval_cons_array(x)
@@ -1316,16 +1313,12 @@ def do_eval_cons(x):
 		return eval_cons_record(x)
 
 
-	if value_is_immediate(x['value']):
+	if value_is_immediate(value):
 		# В случае Nat32 &x у нас занчение immediate но нет asset тк это поздний imm
 		if 'asset' in x:
 			if not htype.type_is_pointer(to_type):
 				#info("???", x['ti'])
 				return do_eval_literal(x)
-
-
-	value = x['value']
-	from_type = value['type']
 
 
 	if htype.type_is_pointer(to_type):
@@ -1334,12 +1327,6 @@ def do_eval_cons(x):
 				string_of = to_type['to']['of']
 				char_pow = string_of['width']
 				return llvm_value_str(x['strid'], x['asset'], x['type'], isz='zstring' in x['att'])
-
-		# (STUB?) nil -> zeroinitializer
-		"""if value_is_immediate(value):
-			info("/???", x['ti'])
-			rv = do_eval(value)
-			return llvm_value_inline_cast(to_type, rv)"""
 
 
 	# cast any type to Unit type
@@ -1356,7 +1343,6 @@ def do_eval_cons(x):
 
 	v = do_reval(value)
 
-
 	# AnyNonZeroValue to Bool  ==  true  (!)
 	# the same as in C
 	if htype.type_is_bool(to_type):
@@ -1365,12 +1351,20 @@ def do_eval_cons(x):
 
 
 	if is_global_context():
+		#return llvm_value_inline_cast(to_type, v)
 		return v
 
-	return justcast(v, to_type)
+
+	# Приводим immediate значение прямо по месту
+	if value_is_immediate(value):
+		return llvm_value_inline_cast(to_type, v)
 
 
-def justcast(v, to_type):
+	return docast(v, to_type)
+
+
+
+def docast(v, to_type):
 	from_type = v['type']
 	opcode = select_cast_operator(from_type, to_type)
 	return llvm_cast(opcode, v, to_type)

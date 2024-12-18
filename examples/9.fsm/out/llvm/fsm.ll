@@ -246,75 +246,72 @@ then_1:
 	br label %endif_1
 endif_1:
 	%11 = getelementptr inbounds %fsm_StateDesc, %fsm_StateDesc* %8, %Int32 0, %Int32 1
-	%12 = bitcast i8* null to %fsm_Handler
-	%13 = load %fsm_Handler, %fsm_Handler* %11
-	%14 = icmp ne %fsm_Handler %13, %12
-	br %Bool %14 , label %then_2, label %endif_2
+	%12 = load %fsm_Handler, %fsm_Handler* %11
+	%13 = icmp ne %fsm_Handler %12, bitcast (i8* null to %fsm_Handler)
+	br %Bool %13 , label %then_2, label %endif_2
 then_2:
-	%15 = bitcast %fsm_FSM* %fsm to %fsm_FSM*
-	%16 = getelementptr inbounds %fsm_StateDesc, %fsm_StateDesc* %8, %Int32 0, %Int32 1
-	%17 = load %fsm_Handler, %fsm_Handler* %16
-	call void %17(%fsm_FSM* %15)
+	%14 = bitcast %fsm_FSM* %fsm to %fsm_FSM*
+	%15 = getelementptr inbounds %fsm_StateDesc, %fsm_StateDesc* %8, %Int32 0, %Int32 1
+	%16 = load %fsm_Handler, %fsm_Handler* %15
+	call void %16(%fsm_FSM* %14)
 	br label %endif_2
 endif_2:
-	%18 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 1
-	store %Int32 %6, %Int32* %18
-	%19 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 3
-	store %Int32 1, %Int32* %19
+	%17 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 1
+	store %Int32 %6, %Int32* %17
+	%18 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 3
+	store %Int32 1, %Int32* %18
 	br label %endif_0
 else_0:
-	%20 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 3
-	%21 = load %Int32, %Int32* %20
-	%22 = icmp eq %Int32 %21, 1
-	br %Bool %22 , label %then_3, label %else_3
+	%19 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 3
+	%20 = load %Int32, %Int32* %19
+	%21 = icmp eq %Int32 %20, 1
+	br %Bool %21 , label %then_3, label %else_3
 then_3:
-	%23 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 4
-	%24 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 1
-	%25 = load %Int32, %Int32* %24
-	%26 = getelementptr inbounds [16 x %fsm_StateDesc], [16 x %fsm_StateDesc]* %23, %Int32 0, %Int32 %25
-	%27 = getelementptr inbounds %fsm_StateDesc, %fsm_StateDesc* %26, %Int32 0, %Int32 2
-	%28 = bitcast i8* null to %fsm_Handler
-	%29 = load %fsm_Handler, %fsm_Handler* %27
-	%30 = icmp ne %fsm_Handler %29, %28
-	br %Bool %30 , label %then_4, label %endif_4
+	%22 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 4
+	%23 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 1
+	%24 = load %Int32, %Int32* %23
+	%25 = getelementptr inbounds [16 x %fsm_StateDesc], [16 x %fsm_StateDesc]* %22, %Int32 0, %Int32 %24
+	%26 = getelementptr inbounds %fsm_StateDesc, %fsm_StateDesc* %25, %Int32 0, %Int32 2
+	%27 = load %fsm_Handler, %fsm_Handler* %26
+	%28 = icmp ne %fsm_Handler %27, bitcast (i8* null to %fsm_Handler)
+	br %Bool %28 , label %then_4, label %endif_4
 then_4:
-	%31 = bitcast %fsm_FSM* %fsm to %fsm_FSM*
-	%32 = getelementptr inbounds %fsm_StateDesc, %fsm_StateDesc* %26, %Int32 0, %Int32 2
-	%33 = load %fsm_Handler, %fsm_Handler* %32
-	call void %33(%fsm_FSM* %31)
+	%29 = bitcast %fsm_FSM* %fsm to %fsm_FSM*
+	%30 = getelementptr inbounds %fsm_StateDesc, %fsm_StateDesc* %25, %Int32 0, %Int32 2
+	%31 = load %fsm_Handler, %fsm_Handler* %30
+	call void %31(%fsm_FSM* %29)
 	br label %endif_4
 endif_4:
 	br label %endif_3
 else_3:
-	%34 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 3
-	%35 = load %Int32, %Int32* %34
-	%36 = icmp eq %Int32 %35, 2
-	br %Bool %36 , label %then_5, label %endif_5
+	%32 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 3
+	%33 = load %Int32, %Int32* %32
+	%34 = icmp eq %Int32 %33, 2
+	br %Bool %34 , label %then_5, label %endif_5
 then_5:
-	%37 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 4
-	%38 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 1
-	%39 = load %Int32, %Int32* %38
-	%40 = getelementptr inbounds [16 x %fsm_StateDesc], [16 x %fsm_StateDesc]* %37, %Int32 0, %Int32 %39
+	%35 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 4
+	%36 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 1
+	%37 = load %Int32, %Int32* %36
+	%38 = getelementptr inbounds [16 x %fsm_StateDesc], [16 x %fsm_StateDesc]* %35, %Int32 0, %Int32 %37
 	br %Bool 1 , label %then_6, label %endif_6
 then_6:
-	%41 = getelementptr inbounds %fsm_StateDesc, %fsm_StateDesc* %40, %Int32 0, %Int32 0
-	%42 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str3 to [0 x i8]*), [8 x %Char8]* %41)
+	%39 = getelementptr inbounds %fsm_StateDesc, %fsm_StateDesc* %38, %Int32 0, %Int32 0
+	%40 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([9 x i8]* @str3 to [0 x i8]*), [8 x %Char8]* %39)
 	br label %endif_6
 endif_6:
-	%43 = getelementptr inbounds %fsm_StateDesc, %fsm_StateDesc* %40, %Int32 0, %Int32 3
-	%44 = bitcast i8* null to %fsm_Handler
-	%45 = load %fsm_Handler, %fsm_Handler* %43
-	%46 = icmp ne %fsm_Handler %45, %44
-	br %Bool %46 , label %then_7, label %endif_7
+	%41 = getelementptr inbounds %fsm_StateDesc, %fsm_StateDesc* %38, %Int32 0, %Int32 3
+	%42 = load %fsm_Handler, %fsm_Handler* %41
+	%43 = icmp ne %fsm_Handler %42, bitcast (i8* null to %fsm_Handler)
+	br %Bool %43 , label %then_7, label %endif_7
 then_7:
-	%47 = bitcast %fsm_FSM* %fsm to %fsm_FSM*
-	%48 = getelementptr inbounds %fsm_StateDesc, %fsm_StateDesc* %40, %Int32 0, %Int32 3
-	%49 = load %fsm_Handler, %fsm_Handler* %48
-	call void %49(%fsm_FSM* %47)
+	%44 = bitcast %fsm_FSM* %fsm to %fsm_FSM*
+	%45 = getelementptr inbounds %fsm_StateDesc, %fsm_StateDesc* %38, %Int32 0, %Int32 3
+	%46 = load %fsm_Handler, %fsm_Handler* %45
+	call void %46(%fsm_FSM* %44)
 	br label %endif_7
 endif_7:
-	%50 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 3
-	store %Int32 0, %Int32* %50
+	%47 = getelementptr inbounds %fsm_FSM, %fsm_FSM* %fsm, %Int32 0, %Int32 3
+	store %Int32 0, %Int32* %47
 	br label %endif_5
 endif_5:
 	br label %endif_3
