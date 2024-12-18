@@ -99,16 +99,11 @@ def reg_get():
 	return str(reg)
 
 
-def operation(op, reg=None):
+def ll_reg_operation(op, type, reg=None):
 	if reg == None:
 		reg = reg_get()
 	lo("%%%s = %s " % (reg, op))
-	return reg
-
-
-def ll_reg_operation(op, type, reg=None):
-	regId = operation(op, reg=reg)
-	return llvm_value_reg(regId, type)
+	return llvm_value_reg(reg, type)
 
 
 def type_get_aka(t):
@@ -641,8 +636,10 @@ def llvm_alloca(typ, id_str=None, size=None, alignment=0):
 	# ;%8 = alloca i32, i64 %6, align 4;
 	assert(typ['isa'] == 'type')
 
-	reg = operation("alloca", reg=id_str)
-	val = llvm_value_stk(reg, typ)
+	if id_str == None:
+		id_str = reg_get()
+	lo("%%%s = %s " % (id_str, 'alloca'))
+	val = llvm_value_stk(id_str, typ)
 	val['is_adr'] = True
 
 	print_type(typ)
