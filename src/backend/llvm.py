@@ -410,7 +410,6 @@ def llvm_print_value_num(x):
 
 
 def llvm_print_value_inlinecast(x):
-	print(">>>>> llvm_print_value_inlinecast!")
 	v = x['value']
 	t = x['type']
 	opcode = select_cast_operator(v['type'], t)
@@ -1994,32 +1993,20 @@ def print_func_params(ftype, only_types=False, with_attributes=True):
 
 
 def print_type_func(t):
-	sret = need_sret(t)
-
-	if htype.type_is_unit(t['to']) or sret:
+	if htype.type_is_unit(t['to']) or need_sret(t):
 		out("void")
 	else:
 		print_type(t['to'])
 
 	out(" (")
-
-	if sret:
-		print_type(t['to'])
-		out("*")
-		if len(t['params']) > 0:
-			out(", ")
-
-	print_list_with(t['params'], lambda f: print_type(f['type']))
-	if t['extra_args']:
-		out(", ...")
+	print_func_params(t, only_types=True)
 	out(")")
 
 
 def print_func_signature(ftype, idStr):
-	sret = need_sret(ftype)
 	to = ftype['to']
 
-	if htype.type_is_unit(to) or sret:
+	if htype.type_is_unit(to) or need_sret(ftype):
 		out("void")
 	else:
 		print_type(to)
