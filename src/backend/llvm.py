@@ -55,7 +55,6 @@ def init():
 	global LLVM_TARGET_TRIPLE, LLVM_TARGET_DATALAYOUT, llvm_value_num_zero
 	LLVM_TARGET_TRIPLE = settings.get('target_triple')
 	LLVM_TARGET_DATALAYOUT = settings.get('target_datalayout')
-
 	llvm_value_num_zero = llvm_value_num(foundation.typeInt32, 0)
 
 
@@ -100,24 +99,21 @@ def reg_get():
 	return str(reg)
 
 
-def llvm_operation(op, reg=None):
+def operation(op, reg=None):
 	if reg == None:
 		reg = reg_get()
 	lo("%%%s = %s " % (reg, op))
 	return reg
 
-
-def llvm_operation_with_type(op, t):
-	reg = llvm_operation(op)
+def operation_with_type(op, t):
+	reg = operation(op)
 	print_type(t)
 	return reg
 
 
-
-def _llvm_operation(op, type, reg=None, x=None):
-	r = llvm_operation(op, reg=reg)
+def llvm_operation(op, type, reg=None, x=None):
+	r = operation(op, reg=reg)
 	return llvm_value_reg(r, type)
-
 
 
 
@@ -270,7 +266,7 @@ def insertvalue(x, v, pos):
 	# %6 = insertvalue %Type24 %5, %Int32 2, 1
 	assert(x['isa'] == 'll_value')
 	assert(v['isa'] == 'll_value')
-	reg = llvm_operation('insertvalue')
+	reg = operation('insertvalue')
 	llvm_print_type_value(x)
 	out(", ")
 	llvm_print_type_value(v)
@@ -282,7 +278,7 @@ def insertvalue(x, v, pos):
 def extractvalue(x, t, pos):
 	# %x = extractvalue %Point %p, 0
 	# %y = extractvalue %Point %p, 1
-	reg = llvm_operation('extractvalue')
+	reg = operation('extractvalue')
 	llvm_print_type_value(x)
 	out(', %d' % pos)
 	return llvm_value_reg(reg, t)
@@ -299,7 +295,7 @@ def llvm_va_start(x):
 
 #%44 = va_arg i8** %3, i32
 def llvm_va_arg(va_list, typ):
-	reg = llvm_operation('va_arg')
+	reg = operation('va_arg')
 	llvm_print_type_value(va_list)
 	out(", ")
 	print_type(typ)
@@ -452,7 +448,7 @@ def llvm_print_value(x):
 def llvm_eval_binary(op, l, r, x=None):
 	assert(l['isa'] == 'll_value')
 	assert(r['isa'] == 'll_value')
-	reg = llvm_operation_with_type(op, l['type'])
+	reg = operation_with_type(op, l['type'])
 	out(" "); llvm_print_value(l); out(", "); llvm_print_value(r)
 
 	result_type = l['type']
@@ -476,7 +472,7 @@ def llvm_deref(x):
 def llvm_getelementptr(v, object_type, indexes, result_type):
 	# Есть такой прикол в том что индекс (i) структуры
 	# не может быть i64 (!) (а только i32)
-	reg = llvm_operation_with_type("getelementptr inbounds", object_type)
+	reg = operation_with_type("getelementptr inbounds", object_type)
 	out(", ")
 	llvm_print_type_value(v)
 	out(", ")
@@ -488,7 +484,7 @@ def llvm_getelementptr(v, object_type, indexes, result_type):
 
 
 def llvm_cast(kind, value, to_type):
-	reg = llvm_operation(kind)
+	reg = operation(kind)
 	llvm_print_type_value(value)
 	out(" to ")
 	print_type(to_type)
@@ -496,7 +492,7 @@ def llvm_cast(kind, value, to_type):
 
 
 def llvm_2cast(kind, from_type, to_type, value):
-	reg = llvm_operation(kind)
+	reg = operation(kind)
 	print_type(from_type)
 	out(" ")
 	llvm_print_value(value)
@@ -509,7 +505,7 @@ def llvm_load(x):
 	assert(x['isa'] == 'll_value')
 
 	if x['is_adr']:
-		reg = llvm_operation('load')
+		reg = operation('load')
 		print_type(x['type'])
 		out(", ")
 		llvm_print_type_value(x)
@@ -613,8 +609,8 @@ def llvm_memcmp(op, p0, p1, size):
 	_p1 = llvm_cast('bitcast', p1, foundation.typeFreePointer)
 
 	out(NL_INDENT)
-	#reg = llvm_operation("call i32 (i8*, i8*, i64) @memcmp(")
-	reg = llvm_operation("call i1 (i8*, i8*, i64) @memeq(")
+	#reg = operation("call i32 (i8*, i8*, i64) @memcmp(")
+	reg = operation("call i1 (i8*, i8*, i64) @memeq(")
 	llvm_print_type_value(_p0)
 	out(", ")
 	llvm_print_type_value(_p1)
@@ -649,7 +645,7 @@ def llvm_label(label):
 def llvm_alloca(typ, id_str=None, size=None, alignment=0):
 	# ;%8 = alloca i32, i64 %6, align 4;
 	assert(typ['isa'] == 'type')
-	reg = llvm_operation("alloca", reg=id_str)
+	reg = operation("alloca", reg=id_str)
 	print_type(typ)
 
 	if size != None:
@@ -1012,7 +1008,7 @@ def do_eval_call(v):
 	if to_unit or sret:
 		lo("call ")
 	else:
-		reg = llvm_operation("call")
+		reg = operation("call")
 
 	if ftype['extra_args']:
 		print_type_func(ftype)
@@ -2109,7 +2105,7 @@ def print_def_func(x):
 			loadedParam = llvm_value_reg(reg, ptype)
 
 			# Выделяем память под массив
-			pholder_reg = llvm_operation("alloca", reg=paramId)
+			pholder_reg = operation("alloca", reg=paramId)
 			pholder = llvm_value_stk(pholder_reg, ptype)
 			pholder['is_adr'] = True
 			print_type(ptype)
@@ -2531,18 +2527,20 @@ REL_OPS = ['eq', 'ne', 'lt', 'gt', 'le', 'ge']
 
 
 def get_bin_opcode(op, t):
-
-	def select_bin_opcode_su(sop, uop, t): # ["icmp slt", "icmp ult", x]
+	# ["icmp slt", "icmp ult", x]
+	def select_bin_opcode_su(sop, uop, t):
 		if htype.type_is_unsigned(t):
 			return uop
 		return sop
 
-	def select_bin_opcode_f(op, fop, t): # ["sdiv", "udiv", "fdiv", x]
+	# ["sdiv", "udiv", "fdiv", x]
+	def select_bin_opcode_f(op, fop, t):
 		if htype.type_is_float(t):
 			return fop
 		return op
 
-	def select_bin_opcode_suf(sop, uop, fop, t): # ["sdiv", "udiv", "fdiv", x]
+	# ["sdiv", "udiv", "fdiv", x]
+	def select_bin_opcode_suf(sop, uop, fop, t):
 		if htype.type_is_float(t):
 			return fop
 		return select_bin_opcode_su(sop, uop, t)
@@ -2648,7 +2646,7 @@ def stackrestore(sptr):
 
 
 def stacksave(sptr):
-	r = _llvm_operation("call i8* @llvm.stacksave()", type=sptr['type'])
+	r = llvm_operation("call i8* @llvm.stacksave()", type=sptr['type'])
 	return llvm_store(sptr, r)
 
 
