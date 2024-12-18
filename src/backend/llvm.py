@@ -105,16 +105,16 @@ def operation(op, reg=None):
 	lo("%%%s = %s " % (reg, op))
 	return reg
 
+
 def operation_with_type(op, t):
-	reg = operation(op)
+	regId = operation(op)
 	print_type(t)
-	return reg
+	return regId
 
 
 def ll_reg_operation(op, type, reg=None):
-	r = operation(op, reg=reg)
-	return llvm_value_reg(r, type)
-
+	regId = operation(op, reg=reg)
+	return llvm_value_reg(regId, type)
 
 
 def type_get_aka(t):
@@ -266,7 +266,6 @@ def insertvalue(x, v, pos):
 	# %6 = insertvalue %Type24 %5, %Int32 2, 1
 	assert(x['isa'] == 'll_value')
 	assert(v['isa'] == 'll_value')
-	#reg = operation('insertvalue')
 	rv = ll_reg_operation('insertvalue', x['type'])
 	llvm_print_type_value(x)
 	out(", ")
@@ -280,10 +279,9 @@ def extractvalue(x, t, pos):
 	# %x = extractvalue %Point %p, 0
 	# %y = extractvalue %Point %p, 1
 	rv = ll_reg_operation('extractvalue', t)
-	#reg = operation('extractvalue')
 	llvm_print_type_value(x)
 	out(', %d' % pos)
-	return rv #llvm_value_reg(reg, t)
+	return rv
 
 
 
@@ -297,12 +295,11 @@ def llvm_va_start(x):
 
 #%44 = va_arg i8** %3, i32
 def llvm_va_arg(va_list, typ):
-	#reg = operation('va_arg')
 	rv = ll_reg_operation('va_arg', typ)
 	llvm_print_type_value(va_list)
 	out(", ")
 	print_type(typ)
-	return rv #llvm_value_reg(reg, typ)
+	return rv
 
 
 #"%96 = bitcast i8** %3 to i8*"
@@ -487,23 +484,21 @@ def llvm_getelementptr(v, object_type, indexes, result_type):
 
 
 def llvm_cast(kind, value, to_type):
-	#reg = operation(kind)
 	rv = ll_reg_operation(kind, to_type)
 	llvm_print_type_value(value)
 	out(" to ")
 	print_type(to_type)
-	return rv #llvm_value_reg(reg, to_type)
+	return rv
 
 
 def llvm_2cast(kind, from_type, to_type, value):
-	#reg = operation(kind)
 	rv = ll_reg_operation(kind, to_type)
 	print_type(from_type)
 	out(" ")
 	llvm_print_value(value)
 	out(" to ")
 	print_type(to_type)
-	return rv #llvm_value_reg(reg, to_type)
+	return rv
 
 
 def llvm_load(x):
@@ -511,12 +506,10 @@ def llvm_load(x):
 
 	if x['is_adr']:
 		rv = ll_reg_operation('load', x['type'])
-		#reg = operation('load')
 		print_type(x['type'])
 		out(", ")
 		llvm_print_type_value(x)
-		#result_type = x['type']
-		return rv #llvm_value_reg(reg, result_type)
+		return rv
 
 	return x
 
@@ -615,8 +608,7 @@ def llvm_memcmp(op, p0, p1, size):
 	_p1 = llvm_cast('bitcast', p1, foundation.typeFreePointer)
 
 	out(NL_INDENT)
-	#reg = operation("call i32 (i8*, i8*, i64) @memcmp(")
-	#reg = operation("call i1 (i8*, i8*, i64) @memeq(")
+	#op = "call i32 (i8*, i8*, i64) @memcmp("
 	op = "call i1 (i8*, i8*, i64) @memeq("
 	rv = ll_reg_operation(op, foundation.typeBool)
 	llvm_print_type_value(_p0)
@@ -625,9 +617,6 @@ def llvm_memcmp(op, p0, p1, size):
 	out(", ")
 	llvm_print_type_value(size)
 	out(")")
-	#rv = llvm_value_reg(reg, foundation.typeBool)
-	#rv = llvm_value_reg(reg, foundation.typeNat32, None)
-
 
 	z = llvm_value_num(foundation.typeBool, 0)
 	op = 'ne' if op == 'eq' else 'eq'
