@@ -106,12 +106,6 @@ def operation(op, reg=None):
 	return reg
 
 
-def operation_with_type(op, t):
-	regId = operation(op)
-	print_type(t)
-	return regId
-
-
 def ll_reg_operation(op, type, reg=None):
 	regId = operation(op, reg=reg)
 	return llvm_value_reg(regId, type)
@@ -448,14 +442,18 @@ def llvm_print_value(x):
 def llvm_eval_binary(op, l, r, x=None):
 	assert(l['isa'] == 'll_value')
 	assert(r['isa'] == 'll_value')
-	reg = operation_with_type(op, l['type'])
-	out(" "); llvm_print_value(l); out(", "); llvm_print_value(r)
 
 	result_type = l['type']
 	if x != None:
 		result_type = x['type']
 
-	return llvm_value_reg(reg, result_type)
+	rv = ll_reg_operation(op, result_type)
+	print_type(l['type'])
+	out(" ")
+	llvm_print_value(l)
+	out(", ")
+	llvm_print_value(r)
+	return rv
 
 
 
@@ -472,13 +470,13 @@ def llvm_deref(x):
 def llvm_getelementptr(v, object_type, indexes, result_type):
 	# Есть такой прикол в том что индекс (i) структуры
 	# не может быть i64 (!) (а только i32)
-	reg = operation_with_type("getelementptr inbounds", object_type)
+	rv = ll_reg_operation('getelementptr inbounds', result_type)
+	rv['is_adr'] = True
+	print_type(object_type)
 	out(", ")
 	llvm_print_type_value(v)
 	out(", ")
 	print_list_with(indexes, llvm_print_type_value)
-	rv = llvm_value_reg(reg, result_type)
-	rv['is_adr'] = True
 	return rv
 
 
