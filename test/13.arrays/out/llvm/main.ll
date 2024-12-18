@@ -694,7 +694,7 @@ endif_1:
 	; -- start vol eval --
 	%171 = zext i4 10 to %Int32
 	; -- end vol eval --
-	; -- ZERO
+	; -- zero fill rest of array
 	%172 = mul %Int32 %171, 4
 	%173 = bitcast [10 x %Int32]* @globalArray to i8*
 	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %173, i8 0, %Int32 %172, i1 0)

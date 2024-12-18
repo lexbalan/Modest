@@ -1334,15 +1334,15 @@ def do_eval_cons(x):
 		return llvm_value_zero(to_type)
 
 	if htype.type_is_va_list(from_type):
-		# приведение объекта типа va_list особенное
+		# приведение объекта типа va_list в CM особенное
 		# оно дает доступ к следующему элементу списка
 		rv = do_eval(value)
 		return llvm_va_arg(rv, to_type)
 
 	v = do_reval(value)
 
-	# AnyNonZeroValue to Bool  ==  true  (!)
-	# the same as in C
+	# anyNonZeroValue to Bool  ==  true  (!)
+	# (the same as in C)
 	if htype.type_is_bool(to_type):
 		z = llvm_value_num(v['type'], 0)
 		return llvm_eval_binary('icmp ne', v, z, x)
@@ -1608,14 +1608,12 @@ def do_eval(x):
 def print_stmt_assign(x):
 	if htype.type_is_array(x['right']['type']):
 		return do_assign_arrays(x['left'], x['right'])
-
 	l = do_eval(x['left'])
 	r = do_reval(x['right'])
 	llvm_store(l, r)
 
 
 def do_assign_arrays(l, r):
-	#return assign_array(left, right)
 	out("\n\t; -- STMT ASSIGN ARRAY --")
 	dst = do_eval(l)
 
@@ -1625,7 +1623,7 @@ def do_assign_arrays(l, r):
 	out("\n\t; -- end vol eval --")
 
 	if value_is_zero(r):
-		out("\n\t; -- ZERO")
+		out("\n\t; -- zero fill rest of array")
 		# size = volume * item_size
 		item_sz = l['type']['of']['size']
 		item_size = llvm_value_num(foundation.typeNat32, item_sz)
@@ -1705,15 +1703,10 @@ def print_stmt_break(x):
 
 
 def print_stmt_return(x):
-	#if va_list != None:
-	#	llvm_va_end(va_list)
-
 	# VLA требует чтобы стек был сохранен в начале работы функции
-	# (see: print_def_func)
-	# и восстановлен перед возвратом из нее
+	# (see: print_def_func) и восстановлен перед возвратом из нее
 	if fctx['stackptr'] != None:
 		stackrestore(fctx['stackptr'])
-
 
 	if x['value'] != None:
 		v = do_reval(x['value'])
@@ -1749,7 +1742,6 @@ def print_stmt_var(x):
 
 	val = llvm_alloca(t, size=sz, alignment=t['align'])
 
-
 	# VLA fix
 	left = val
 	if htype.type_is_vla(var['type']):
@@ -1763,7 +1755,6 @@ def print_stmt_var(x):
 		to_type = type_pointer(var['type'])
 		left = llvm_2cast('bitcast', from_type, to_type, left)
 		val = left
-
 
 	locals_add(id_str, val)
 
@@ -1913,8 +1904,6 @@ def print_stmt_asm(x):
 
 
 
-
-
 def print_stmt(x):
 	assert(x['isa'] == 'stmt')
 
@@ -1937,11 +1926,7 @@ def print_stmt(x):
 
 
 
-def print_func_paramlist(func, only_types=False, with_attributes=True):
-	sret = need_sret(func['type'])
-
-	ftype = func['type']
-
+def print_func_params(ftype, only_types=False, with_attributes=True):
 	# here can be a pointer to function
 	if htype.type_is_pointer(ftype):
 		ftype = ftype['to']
@@ -1949,7 +1934,7 @@ def print_func_paramlist(func, only_types=False, with_attributes=True):
 	params = ftype['params']
 	to = ftype['to']
 
-	if sret:
+	if need_sret(ftype):
 		# %struct.Sre* noalias sret(%struct.Sre) align 1 %0
 		print_type(to)
 
@@ -2004,7 +1989,7 @@ def print_func_paramlist(func, only_types=False, with_attributes=True):
 		i = i + 1
 
 
-	if func['type']['extra_args']:
+	if ftype['extra_args']:
 		out(", ...")
 
 
@@ -2030,10 +2015,8 @@ def print_type_func(t):
 	out(")")
 
 
-def print_func_signature(func):
-	sret = need_sret(func['type'])
-
-	ftype = func['type']
+def print_func_signature(ftype, idStr):
+	sret = need_sret(ftype)
 	to = ftype['to']
 
 	if htype.type_is_unit(to) or sret:
@@ -2041,8 +2024,8 @@ def print_func_signature(func):
 	else:
 		print_type(to)
 
-	out(" @%s(" % get_id_str(func))
-	print_func_paramlist(func)
+	out(" @%s(" % idStr)
+	print_func_params(ftype)
 	out(")")
 
 
@@ -2069,7 +2052,8 @@ def print_linkage(x):
 def print_decl_func(x):
 	out("\ndeclare ")
 	print_linkage(x)
-	print_func_signature(x['value'])
+	fn = x['value']
+	print_func_signature(fn['type'], get_id_str(fn))
 
 
 def print_def_func(x):
@@ -2098,7 +2082,7 @@ def print_def_func(x):
 
 	out("\ndefine ")
 	print_linkage(x)
-	print_func_signature(func)
+	print_func_signature(func['type'], get_id_str(func))
 
 	sret = need_sret(func['type'])
 	ftype = func['type']

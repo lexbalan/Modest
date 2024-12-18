@@ -353,7 +353,7 @@ break_3:
 	; -- start vol eval --
 	%76 = zext i2 3 to %Int32
 	; -- end vol eval --
-	; -- ZERO
+	; -- zero fill rest of array
 	%77 = mul %Int32 %76, 4
 	%78 = bitcast [3 x %Int32]* %75 to i8*
 	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %78, i8 0, %Int32 %77, i1 0)
@@ -435,7 +435,7 @@ break_4:
 	%129 = load %Int32, %Int32* %123
 	%130 = sub %Int32 %128, %129
 	; -- end vol eval --
-	; -- ZERO
+	; -- zero fill rest of array
 	%131 = mul %Int32 %130, 4
 	%132 = bitcast [0 x %Int32]* %127 to i8*
 	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %132, i8 0, %Int32 %131, i1 0)
