@@ -1966,7 +1966,6 @@ def print_func_params(ftype, only_types=False, with_attributes=True):
 	if only_types:
 		method = print_param_type
 
-	#print_list_with(params, lambda param: method(param))
 	i = 0
 	while i < len(params):
 		param = params[i]
@@ -1976,9 +1975,7 @@ def print_func_params(ftype, only_types=False, with_attributes=True):
 			out(", ")
 
 		print_type(param['type'])
-#		if isarr:
-#			out("*")
-		#method(param)
+
 		if not only_types:
 			if isarr:
 				out(" %%__%s" % get_id_str(param))
@@ -2035,11 +2032,13 @@ def print_linkage(x):
 		out("%s " % linkage)
 
 
+
 def print_decl_func(x):
 	out("\ndeclare ")
 	print_linkage(x)
 	fn = x['value']
 	print_func_signature(fn['type'], get_id_str(fn))
+
 
 
 def print_def_func(x):
@@ -2120,7 +2119,6 @@ def print_def_func(x):
 			# и далее работать будем только с ней
 			llvm_store(pholder, loadedParam)
 
-
 	if len(params) > 0:
 		last_param = params[-1]
 		if htype.type_is_va_list(last_param['type']):
@@ -2148,7 +2146,6 @@ def print_def_func(x):
 			# генерировался %2 = va_arg i8** %1, i32 (обращ. к указ. на лок. перем.)
 			locals_add(va_list_param_id, va_list_srorage)
 
-
 	# VLA требует чтобы стек был сохранен в начале работы функции
 	# и восстановлен перед возвратом из нее (see: print_stmt_return)
 	if 'stacksave' in fn['att']:
@@ -2164,13 +2161,10 @@ def print_def_func(x):
 	if htype.type_eq(ftype['to'], foundation.typeUnit):
 		print_stmt_return({'value': None})
 
-
 	indent_down()
 	lo("}\n")
 
-
 	fctx_pop()
-
 
 
 
@@ -2180,12 +2174,6 @@ def print_def_func(x):
 
 def print_def_type(x):
 	xtype = x['original_type']
-	"""if htype.type_is_record(xtype):
-		root_id = htype.get_type_root_id(xtype)
-		if root_id != None:
-			return"""
-
-
 	out("\n%%%s = type " % get_id_str(x['type']))
 	if htype.type_is_record(xtype):
 		# не печатаем имя а печатаем саму структуру
@@ -2200,22 +2188,17 @@ def print_def_type(x):
 
 
 
-
-
-
 def print_def_var(x, as_extern=False):
 	is_extern = 'extern' in x['att'] or as_extern
 	is_static = 'static' in x['att']
-
-	#['private', 'internal', 'weak', 'external'] # etc..
-	linkage = get_linkage(x)
 
 	#mods = ['global', 'constant']
 	mod = 'global'
 
 	var = x['var_value']
 	out("\n@%s = " % get_id_str(var))
-	out(linkage + ' ' + mod + ' ')
+	print_linkage(x)
+	out(mod + ' ')
 	print_type(var['type'])
 
 	if not is_extern:
@@ -2246,7 +2229,7 @@ def print_def_const(x, as_extern=False):
 
 def code_to_char(cc):
 	if cc < 0x20:
-		if cc == 0x07: return "\\07" # bell
+		if cc == 0x07: return "\\07"   # bell
 		elif cc == 0x08: return "\\08" # backspace
 		elif cc == 0x09: return "\\09" # horizontal tab
 		elif cc == 0x0A: return "\\0A" # line feed
@@ -2267,7 +2250,7 @@ def code_to_char(cc):
 
 
 def print_str_literal(char_codes):
-	out("\"")
+	out('"')
 
 	i = 0
 	while i < len(char_codes):
@@ -2288,7 +2271,7 @@ def print_str_literal(char_codes):
 
 		i = i + 1
 
-	out("\"")
+	out('"')
 
 
 def print_string_ascii(strid, string):
