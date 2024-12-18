@@ -640,7 +640,11 @@ def llvm_label(label):
 def llvm_alloca(typ, id_str=None, size=None, alignment=0):
 	# ;%8 = alloca i32, i64 %6, align 4;
 	assert(typ['isa'] == 'type')
+
 	reg = operation("alloca", reg=id_str)
+	val = llvm_value_stk(reg, typ)
+	val['is_adr'] = True
+
 	print_type(typ)
 
 	if size != None:
@@ -650,8 +654,7 @@ def llvm_alloca(typ, id_str=None, size=None, alignment=0):
 	if alignment != 0:
 		out(", align %d" % alignment)
 
-	val = llvm_value_stk(reg, typ)
-	val['is_adr'] = True
+
 	return val
 
 
@@ -999,11 +1002,12 @@ def do_eval_call(v):
 
 
 	# do call
-	reg = None
+	rv = None
 	if to_unit or sret:
 		lo("call ")
+		rv = llvm_value_zero(ftype['to'])
 	else:
-		reg = operation("call")
+		rv = ll_reg_operation('call', ftype['to'])
 
 	if ftype['extra_args']:
 		print_type_func(ftype)
@@ -1030,7 +1034,8 @@ def do_eval_call(v):
 	if sret:
 		return sret_retval
 
-	return llvm_value_reg(reg, v['type'])
+	return rv
+
 
 
 
@@ -2099,13 +2104,10 @@ def print_def_func(x):
 			reg = '__' + param['id']['str']
 			loadedParam = llvm_value_reg(reg, ptype)
 
-			# Выделяем память под массив
-			pholder_reg = operation("alloca", reg=paramId)
-			pholder = llvm_value_stk(pholder_reg, ptype)
-			pholder['is_adr'] = True
-			print_type(ptype)
 
-			# сохраняем переданный по указателю массив в "регистр"
+			# Выделяем память под массив
+			pholder = llvm_alloca(ptype, id_str=paramId)
+			# сохраняем переданный по указателю массив в выделенный выше "регистр"
 			# теперь это локальная копия "типа" переданного по значению массива
 			# и далее работать будем только с ней
 			llvm_store(pholder, loadedParam)
