@@ -246,9 +246,9 @@ then_1:
 	br label %endif_1
 endif_1:
 	%11 = getelementptr inbounds %fsm_StateDesc, %fsm_StateDesc* %8, %Int32 0, %Int32 1
-	%12 = load %fsm_Handler, %fsm_Handler* %11
-	%13 = bitcast i8* null to %fsm_Handler
-	%14 = icmp ne %fsm_Handler %12, %13
+	%12 = bitcast i8* null to %fsm_Handler
+	%13 = load %fsm_Handler, %fsm_Handler* %11
+	%14 = icmp ne %fsm_Handler %13, %12
 	br %Bool %14 , label %then_2, label %endif_2
 then_2:
 	%15 = bitcast %fsm_FSM* %fsm to %fsm_FSM*
@@ -273,9 +273,9 @@ then_3:
 	%25 = load %Int32, %Int32* %24
 	%26 = getelementptr inbounds [16 x %fsm_StateDesc], [16 x %fsm_StateDesc]* %23, %Int32 0, %Int32 %25
 	%27 = getelementptr inbounds %fsm_StateDesc, %fsm_StateDesc* %26, %Int32 0, %Int32 2
-	%28 = load %fsm_Handler, %fsm_Handler* %27
-	%29 = bitcast i8* null to %fsm_Handler
-	%30 = icmp ne %fsm_Handler %28, %29
+	%28 = bitcast i8* null to %fsm_Handler
+	%29 = load %fsm_Handler, %fsm_Handler* %27
+	%30 = icmp ne %fsm_Handler %29, %28
 	br %Bool %30 , label %then_4, label %endif_4
 then_4:
 	%31 = bitcast %fsm_FSM* %fsm to %fsm_FSM*
@@ -302,9 +302,9 @@ then_6:
 	br label %endif_6
 endif_6:
 	%43 = getelementptr inbounds %fsm_StateDesc, %fsm_StateDesc* %40, %Int32 0, %Int32 3
-	%44 = load %fsm_Handler, %fsm_Handler* %43
-	%45 = bitcast i8* null to %fsm_Handler
-	%46 = icmp ne %fsm_Handler %44, %45
+	%44 = bitcast i8* null to %fsm_Handler
+	%45 = load %fsm_Handler, %fsm_Handler* %43
+	%46 = icmp ne %fsm_Handler %45, %44
 	br %Bool %46 , label %then_7, label %endif_7
 then_7:
 	%47 = bitcast %fsm_FSM* %fsm to %fsm_FSM*

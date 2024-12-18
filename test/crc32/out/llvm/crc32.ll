@@ -178,19 +178,19 @@ again_3:
 	%27 = icmp ult %Int32 %26, %len
 	br %Bool %27 , label %body_3, label %break_3
 body_3:
-	%28 = load %Word32, %Word32* %2
-	%29 = load %Int32, %Int32* %3
-	%30 = getelementptr inbounds [0 x %Word8], [0 x %Word8]* %buf, %Int32 0, %Int32 %29
-	%31 = load %Word8, %Word8* %30
-	%32 = zext %Word8 %31 to %Word32
-	%33 = xor %Word32 %28, %32
+	%28 = load %Int32, %Int32* %3
+	%29 = getelementptr inbounds [0 x %Word8], [0 x %Word8]* %buf, %Int32 0, %Int32 %28
+	%30 = load %Word8, %Word8* %29
+	%31 = zext %Word8 %30 to %Word32
+	%32 = load %Word32, %Word32* %2
+	%33 = xor %Word32 %32, %31
 	%34 = and %Word32 %33, 255
 	%35 = trunc %Word32 %34 to %Int8
 	%36 = getelementptr inbounds [256 x %Word32], [256 x %Word32]* %1, %Int32 0, %Int8 %35
-	%37 = load %Word32, %Word32* %36
-	%38 = load %Word32, %Word32* %2
-	%39 = lshr %Word32 %38, 8
-	%40 = xor %Word32 %37, %39
+	%37 = load %Word32, %Word32* %2
+	%38 = lshr %Word32 %37, 8
+	%39 = load %Word32, %Word32* %36
+	%40 = xor %Word32 %39, %38
 	store %Word32 %40, %Word32* %2
 	%41 = load %Int32, %Int32* %3
 	%42 = add %Int32 %41, 1

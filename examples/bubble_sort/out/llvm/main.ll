@@ -237,9 +237,9 @@ body_1:
 	store %Int32 0, %Int32* %3
 	br label %again_2
 again_2:
-	%4 = load %Int32, %Int32* %3
-	%5 = sub %Int32 %len, 1
-	%6 = icmp slt %Int32 %4, %5
+	%4 = sub %Int32 %len, 1
+	%5 = load %Int32, %Int32* %3
+	%6 = icmp slt %Int32 %5, %4
 	br %Bool %6 , label %body_2, label %break_2
 body_2:
 	%7 = load %Int32, %Int32* %3

@@ -710,12 +710,12 @@ endif_1:
 	; Append to the padding the total message's length in bits and transform.
 	%31 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 2
 	%32 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 2
-	%33 = load %Int64, %Int64* %32
-	%34 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 1
-	%35 = load %Int32, %Int32* %34
-	%36 = zext %Int32 %35 to %Int64
-	%37 = mul %Int64 %36, 8
-	%38 = add %Int64 %33, %37
+	%33 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 1
+	%34 = load %Int32, %Int32* %33
+	%35 = zext %Int32 %34 to %Int64
+	%36 = mul %Int64 %35, 8
+	%37 = load %Int64, %Int64* %32
+	%38 = add %Int64 %37, %36
 	store %Int64 %38, %Int64* %31
 	%39 = getelementptr inbounds %Context, %Context* %ctx, %Int32 0, %Int32 0
 	%40 = getelementptr inbounds [64 x %Word8], [64 x %Word8]* %39, %Int32 0, %Int32 63

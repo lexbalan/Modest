@@ -248,11 +248,11 @@ again_1:
 body_1:
 	%7 = load %Int64, %Int64* %4
 	%8 = getelementptr inbounds [0 x %Word], [0 x %Word]* %2, %Int32 0, %Int64 %7
-	%9 = load %Word, %Word* %8
-	%10 = load %Int64, %Int64* %4
-	%11 = getelementptr inbounds [0 x %Word], [0 x %Word]* %3, %Int32 0, %Int64 %10
-	%12 = load %Word, %Word* %11
-	%13 = icmp ne %Word %9, %12
+	%9 = load %Int64, %Int64* %4
+	%10 = getelementptr inbounds [0 x %Word], [0 x %Word]* %3, %Int32 0, %Int64 %9
+	%11 = load %Word, %Word* %8
+	%12 = load %Word, %Word* %10
+	%13 = icmp ne %Word %11, %12
 	br %Bool %13 , label %then_0, label %endif_0
 then_0:
 	ret %Bool 0
@@ -279,11 +279,11 @@ again_2:
 body_2:
 	%26 = load %Int64, %Int64* %4
 	%27 = getelementptr inbounds [0 x %Word8], [0 x %Word8]* %20, %Int32 0, %Int64 %26
-	%28 = load %Word8, %Word8* %27
-	%29 = load %Int64, %Int64* %4
-	%30 = getelementptr inbounds [0 x %Word8], [0 x %Word8]* %23, %Int32 0, %Int64 %29
-	%31 = load %Word8, %Word8* %30
-	%32 = icmp ne %Word8 %28, %31
+	%28 = load %Int64, %Int64* %4
+	%29 = getelementptr inbounds [0 x %Word8], [0 x %Word8]* %23, %Int32 0, %Int64 %28
+	%30 = load %Word8, %Word8* %27
+	%31 = load %Word8, %Word8* %29
+	%32 = icmp ne %Word8 %30, %31
 	br %Bool %32 , label %then_1, label %endif_1
 then_1:
 	ret %Bool 0

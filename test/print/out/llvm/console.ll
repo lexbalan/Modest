@@ -407,9 +407,9 @@ then_1:
 endif_1:
 	%14 = load %Char32, %Char32* %7
 	call void @console_putchar_utf32(%Char32 %14)
-	%15 = load %Int32, %Int32* %1
-	%16 = sext %Int8 %11 to %Int32
-	%17 = add %Int32 %15, %16
+	%15 = sext %Int8 %11 to %Int32
+	%16 = load %Int32, %Int32* %1
+	%17 = add %Int32 %16, %15
 	store %Int32 %17, %Int32* %1
 	br label %again_1
 break_1:
@@ -626,10 +626,10 @@ then_8:
 	;
 	%83 = va_arg i8** %1, %Str8*
 	%84 = call [0 x %Char]* @strcpy([0 x %Char8]* %56, %Str8* %83)
-	%85 = load %Int32, %Int32* %3
-	%86 = call %SizeT @strlen(%Str8* %83)
-	%87 = trunc %SizeT %86 to %Int32
-	%88 = add %Int32 %85, %87
+	%85 = call %SizeT @strlen(%Str8* %83)
+	%86 = trunc %SizeT %85 to %Int32
+	%87 = load %Int32, %Int32* %3
+	%88 = add %Int32 %87, %86
 	store %Int32 %88, %Int32* %3
 	br label %endif_8
 else_8:

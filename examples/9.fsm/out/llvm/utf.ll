@@ -243,10 +243,10 @@ then_2:
 	;error("Illegal code sequence")
 	br label %endif_2
 else_2:
-	%20 = load %Word32, %Word32* %10
-	%21 = bitcast %Int32 %16 to %Word32
-	%22 = and %Word32 %21, 1023
-	%23 = or %Word32 %20, %22
+	%20 = bitcast %Int32 %16 to %Word32
+	%21 = and %Word32 %20, 1023
+	%22 = load %Word32, %Word32* %10
+	%23 = or %Word32 %22, %21
 	store %Word32 %23, %Word32* %10
 	%24 = load %Word32, %Word32* %10
 	%25 = bitcast %Word32 %24 to %Int32

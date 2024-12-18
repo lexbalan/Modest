@@ -821,7 +821,6 @@ def print_int_type_for(width):
 
 
 
-
 # функция может получать только указатель на массив
 # если же в CM она получает массив то тут и в СИ она получает
 # указатель на него, и потом копирует его во внутренний массив
@@ -899,64 +898,57 @@ def do_reval(x):
 
 
 def do_eval_bin(x):
+
+	if value_is_immediate(x):
+		return do_eval_literal(x)
+
 	op = x['kind']
+	# Composite objects comparison (see below)
+	# requires not value, just ADR of value (!)
+	l = do_eval(x['left'])
+	r = do_eval(x['right'])
+
 	if htype.type_is_composite(x['left']['type']):
+		if op in ['eq', 'ne']:
+			# Composite objects comparison
+			# (eq/ne between composite types)
 
-		if value_is_immediate(x):
-			return do_eval_literal(x)
+			# ex:
+			#  a == b
+			#  a == {x=0, y=0}
+			#  *pa == *pb
 
-		if op == 'add':
-			pass
+			# В LLVM нет возможности сравнивать композитные значения
+			# Единственный вариант - использовать memcmp ()
+			# Для этого нам НУЖНЫ НЕ САМИ ЗНАЧЕНИЯ а их АДРЕСА (adr | pointer)
+			# Поэтому мы не здесь не вызываем для них llvm_dold
 
-		elif op in ['eq', 'ne']:
-			# do eq between composite types
-
-			left = x['left']
-			right = x['right']
-
-			"""if left['kind'] == 'cons':
-				print("LEFT CONS")
-
-			if right['kind'] == 'cons':
-				print("RIGHT CONS")"""
-
-			#print(right['kind'])
-
-			# поскольку делаем здесь просто eval (без загрузки)
-			# ситуация *pa == *pb не вызывает реальной загрузки объекта
-			# и все разруливается само собой!
-			l = do_eval(left)
-			r = do_eval(right)
-
-			# если левое или правое уже находится в регистре (само) -
-			# выделим под него память на стеке, загрузим его туда,
+			# НО если левое или правое уже находится в регистре (само) -
+			# выделим под него память на стеке, сохраним его туда,
 			# и будем использовать указатель на эту память
 
-			if l['kind'] == 'reg' and not l['is_adr']:
-				l = llvm_alloca_store(l['type'], id_str=None, init_value=l)
+			if not l['is_adr']:
+				if l['kind'] == 'reg':
+					l = llvm_alloca_store(l['type'], id_str=None, init_value=l)
 
-			if r['kind'] == 'reg' and not r['is_adr']:
-				r = llvm_alloca_store(r['type'], id_str=None, init_value=r)
+			if not r['is_adr']:
+				if r['kind'] == 'reg':
+					r = llvm_alloca_store(r['type'], id_str=None, init_value=r)
 
 			# Теперь сравниваем значения по указателям и длине (memcmp)
-
 			sz = llvm_value_num(foundation.typeInt64, l['type']['size'])
 			return llvm_memcmp(op, l, r, sz)
 
 		return None
 
-	# HOT!
-	if value_is_immediate(x):
-		return do_eval_literal(x)
-
-	l = do_reval(x['left'])
-	r = do_reval(x['right'])
+	# working simple objects
+	# requires their values as is in register
+	l = llvm_dold(l)
+	r = llvm_dold(r)
 
 	if op in ['shl', 'shr']:
-		#
 		# LLVM requires the same type for left & right arguments of shift operator
 		# cast right to left
-		#
 		if not htype.type_is_generic(r['type']):
 			r = justcast(r, l['type'])
 
@@ -966,7 +958,8 @@ def do_eval_bin(x):
 
 
 def do_eval_deref(x):
-	return llvm_deref(do_reval(x['value']))
+	ptr_val = do_reval(x['value'])
+	return llvm_deref(ptr_val)
 
 
 def do_eval_ref(v):

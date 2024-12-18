@@ -210,15 +210,15 @@ body_1:
 	%6 = getelementptr inbounds [0 x %Word8], [0 x %Word8]* %buf, %Int32 0, %Int32 %5
 	%7 = load %Int32, %Int32* %1
 	%8 = getelementptr inbounds [0 x %Word8], [0 x %Word8]* %buf, %Int32 0, %Int32 %7
-	%9 = load %Word8, %Word8* %8
-	%10 = load %Int32, %Int32* %2
-	%11 = getelementptr inbounds [0 x %Word8], [0 x %Word8]* %key, %Int32 0, %Int32 %10
-	%12 = load %Word8, %Word8* %11
-	%13 = xor %Word8 %9, %12
+	%9 = load %Int32, %Int32* %2
+	%10 = getelementptr inbounds [0 x %Word8], [0 x %Word8]* %key, %Int32 0, %Int32 %9
+	%11 = load %Word8, %Word8* %8
+	%12 = load %Word8, %Word8* %10
+	%13 = xor %Word8 %11, %12
 	store %Word8 %13, %Word8* %6
-	%14 = load %Int32, %Int32* %2
-	%15 = sub %Int32 %keylen, 1
-	%16 = icmp ult %Int32 %14, %15
+	%14 = sub %Int32 %keylen, 1
+	%15 = load %Int32, %Int32* %2
+	%16 = icmp ult %Int32 %15, %14
 	br %Bool %16 , label %then_0, label %else_0
 then_0:
 	%17 = load %Int32, %Int32* %2

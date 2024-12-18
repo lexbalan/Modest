@@ -226,11 +226,11 @@ body_1:
 	%7 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %2, %Int32 0, %Int32 %6
 	%8 = load %Int32, %Int32* %3
 	%9 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %a, %Int32 0, %Int32 %8
-	%10 = load %Int32, %Int32* %9
-	%11 = load %Int32, %Int32* %3
-	%12 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %b, %Int32 0, %Int32 %11
-	%13 = load %Int32, %Int32* %12
-	%14 = add %Int32 %10, %13
+	%10 = load %Int32, %Int32* %3
+	%11 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %b, %Int32 0, %Int32 %10
+	%12 = load %Int32, %Int32* %9
+	%13 = load %Int32, %Int32* %11
+	%14 = add %Int32 %12, %13
 	store %Int32 %14, %Int32* %7
 	%15 = load %Int32, %Int32* %3
 	%16 = add %Int32 %15, 1
