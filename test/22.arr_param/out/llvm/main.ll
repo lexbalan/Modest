@@ -261,7 +261,7 @@ define %Int32 @main() {; alloca memory for return value
 	%14 = bitcast [10 x %Int32]* %12 to i8*
 	
 	%15 = call i1 (i8*, i8*, i64) @memeq( i8* %13, i8* %14, %Int64 40)
-	%16 = icmp ne %Bool %15, 0
+	%16 = icmp eq %Bool %15, 0
 	br %Bool %16 , label %then_0, label %endif_0
 then_0:
 	%17 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
@@ -308,7 +308,7 @@ endif_0:
 	%53 = bitcast [10 x %Int32]* %51 to i8*
 	
 	%54 = call i1 (i8*, i8*, i64) @memeq( i8* %52, i8* %53, %Int64 40)
-	%55 = icmp ne %Bool %54, 0
+	%55 = icmp eq %Bool %54, 0
 	br %Bool %55 , label %then_1, label %endif_1
 then_1:
 	%56 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str2 to [0 x i8]*))
@@ -334,7 +334,7 @@ endif_1:
 	%72 = bitcast [10 x %Int32]* %70 to i8*
 	
 	%73 = call i1 (i8*, i8*, i64) @memeq( i8* %71, i8* %72, %Int64 40)
-	%74 = icmp ne %Bool %73, 0
+	%74 = icmp eq %Bool %73, 0
 	br %Bool %74 , label %then_2, label %endif_2
 then_2:
 	%75 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str3 to [0 x i8]*))

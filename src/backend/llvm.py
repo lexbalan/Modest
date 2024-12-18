@@ -111,7 +111,7 @@ def operation_with_type(op, t):
 	return reg
 
 
-def llvm_operation(op, type, reg=None, x=None):
+def ll_reg_operation(op, type, reg=None):
 	r = operation(op, reg=reg)
 	return llvm_value_reg(r, type)
 
@@ -266,22 +266,24 @@ def insertvalue(x, v, pos):
 	# %6 = insertvalue %Type24 %5, %Int32 2, 1
 	assert(x['isa'] == 'll_value')
 	assert(v['isa'] == 'll_value')
-	reg = operation('insertvalue')
+	#reg = operation('insertvalue')
+	rv = ll_reg_operation('insertvalue', x['type'])
 	llvm_print_type_value(x)
 	out(", ")
 	llvm_print_type_value(v)
 	out(", %d" % pos)
-	return llvm_value_reg(reg, x['type'])
+	return rv
 
 
 # возвращает значение поля из 'структуры по значению'
 def extractvalue(x, t, pos):
 	# %x = extractvalue %Point %p, 0
 	# %y = extractvalue %Point %p, 1
-	reg = operation('extractvalue')
+	rv = ll_reg_operation('extractvalue', t)
+	#reg = operation('extractvalue')
 	llvm_print_type_value(x)
 	out(', %d' % pos)
-	return llvm_value_reg(reg, t)
+	return rv #llvm_value_reg(reg, t)
 
 
 
@@ -295,11 +297,12 @@ def llvm_va_start(x):
 
 #%44 = va_arg i8** %3, i32
 def llvm_va_arg(va_list, typ):
-	reg = operation('va_arg')
+	#reg = operation('va_arg')
+	rv = ll_reg_operation('va_arg', typ)
 	llvm_print_type_value(va_list)
 	out(", ")
 	print_type(typ)
-	return llvm_value_reg(reg, typ)
+	return rv #llvm_value_reg(reg, typ)
 
 
 #"%96 = bitcast i8** %3 to i8*"
@@ -484,33 +487,36 @@ def llvm_getelementptr(v, object_type, indexes, result_type):
 
 
 def llvm_cast(kind, value, to_type):
-	reg = operation(kind)
+	#reg = operation(kind)
+	rv = ll_reg_operation(kind, to_type)
 	llvm_print_type_value(value)
 	out(" to ")
 	print_type(to_type)
-	return llvm_value_reg(reg, to_type)
+	return rv #llvm_value_reg(reg, to_type)
 
 
 def llvm_2cast(kind, from_type, to_type, value):
-	reg = operation(kind)
+	#reg = operation(kind)
+	rv = ll_reg_operation(kind, to_type)
 	print_type(from_type)
 	out(" ")
 	llvm_print_value(value)
 	out(" to ")
 	print_type(to_type)
-	return llvm_value_reg(reg, to_type)
+	return rv #llvm_value_reg(reg, to_type)
 
 
 def llvm_load(x):
 	assert(x['isa'] == 'll_value')
 
 	if x['is_adr']:
-		reg = operation('load')
+		rv = ll_reg_operation('load', x['type'])
+		#reg = operation('load')
 		print_type(x['type'])
 		out(", ")
 		llvm_print_type_value(x)
-		result_type = x['type']
-		return llvm_value_reg(reg, result_type)
+		#result_type = x['type']
+		return rv #llvm_value_reg(reg, result_type)
 
 	return x
 
@@ -610,14 +616,16 @@ def llvm_memcmp(op, p0, p1, size):
 
 	out(NL_INDENT)
 	#reg = operation("call i32 (i8*, i8*, i64) @memcmp(")
-	reg = operation("call i1 (i8*, i8*, i64) @memeq(")
+	#reg = operation("call i1 (i8*, i8*, i64) @memeq(")
+	op = "call i1 (i8*, i8*, i64) @memeq("
+	rv = ll_reg_operation(op, foundation.typeBool)
 	llvm_print_type_value(_p0)
 	out(", ")
 	llvm_print_type_value(_p1)
 	out(", ")
 	llvm_print_type_value(size)
 	out(")")
-	rv = llvm_value_reg(reg, foundation.typeBool)
+	#rv = llvm_value_reg(reg, foundation.typeBool)
 	#rv = llvm_value_reg(reg, foundation.typeNat32, None)
 
 
@@ -2646,7 +2654,7 @@ def stackrestore(sptr):
 
 
 def stacksave(sptr):
-	r = llvm_operation("call i8* @llvm.stacksave()", type=sptr['type'])
+	r = ll_reg_operation("call i8* @llvm.stacksave()", type=sptr['type'])
 	return llvm_store(sptr, r)
 
 

@@ -399,7 +399,7 @@ break_1:
 	%21 = bitcast %sha256_Hash* %19 to i8*
 	
 	%22 = call i1 (i8*, i8*, i64) @memeq( i8* %20, i8* %21, %Int64 32)
-	%23 = icmp ne %Bool %22, 0
+	%23 = icmp eq %Bool %22, 0
 	ret %Bool %23
 }
 
