@@ -115,16 +115,6 @@ def array_can(to, from_type, method):
 	return True
 
 
-def cons_items(items, to_type):
-	casted_items = []
-	for item in items:
-		from .cons import value_cons_implicit
-		from .cons import value_cons_implicit_check
-		casted_item = value_cons_implicit_check(to_type, item)
-		casted_items.append(casted_item)
-
-	return casted_items
-
 
 def value_array_cons(t, v, method, ti):
 	#info("value_array_cons", ti)
@@ -134,12 +124,15 @@ def value_array_cons(t, v, method, ti):
 
 	nv = value_cons_node(t, v, method, ti)
 
-
-	nv['items'] = []
+	items = []
 	if 'items' in v:
-		nv['items'] = cons_items(v['items'], t['of'])
-	nv['immediate'] = value_is_immediate(v)
+		for item in v['items']:
+			from .cons import value_cons_implicit_check
+			casted_item = value_cons_implicit_check(t['of'], item)
+			items.append(casted_item)
 
+	nv['items'] = items
+	nv['immediate'] = value_is_immediate(v)
 
 	if value_is_immediate(t['volume']):
 		# add Zero Pad (if need)
