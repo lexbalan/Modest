@@ -1384,7 +1384,6 @@ def submodule_access(x):
 
 
 def do_value_access(x):
-
 	# access to submodule?
 	if x['left']['kind'] == 'id':
 		if is_submodule_name(x['left']['str']):
