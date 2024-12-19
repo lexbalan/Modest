@@ -413,7 +413,7 @@ define %Int @main() {
 	%28 = call %Float @lineLength(%Line %27)
 	%29 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str1 to [0 x i8]*), %Float %7)
 	%30 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str2 to [0 x i8]*), %Float %14)
-	;let y = wa.x
+	;	let y = wa.x
 	;	var i = 0
 	;	while i < 10 {
 	;		let x = wa.array[i]

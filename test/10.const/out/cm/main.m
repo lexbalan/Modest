@@ -49,7 +49,6 @@ const lines = [line0, line1, line2, line3]
 
 
 type WrappedArray record {
-
 	//array: [10]Int32
 	x: Int32
 }
@@ -79,7 +78,7 @@ public func main() -> Int {
 	printf("lines_0_len = %f\n", lines_0_len)
 	printf("lines_1_len = %f\n", lines_1_len)
 
-	//let y = wa.x
+	//	let y = wa.x
 
 	//	var i = 0
 	//	while i < 10 {

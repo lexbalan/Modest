@@ -86,7 +86,7 @@ int main()
 	printf("lines_0_len = %f\n", lines_0_len);
 	printf("lines_1_len = %f\n", lines_1_len);
 
-	//let y = wa.x
+	//	let y = wa.x
 
 	//	var i = 0
 	//	while i < 10 {
