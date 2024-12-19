@@ -229,9 +229,12 @@ then_0:
 	ret %list_List* bitcast (i8* null to %list_List*)
 	br label %endif_0
 endif_0:
-	store %list_List zeroinitializer, %list_List* %2
-	%5 = bitcast %list_List* %2 to %list_List*
-	ret %list_List* %5
+	%5 = insertvalue %list_List zeroinitializer, %list_Node* null, 0
+	%6 = insertvalue %list_List %5, %list_Node* null, 1
+	%7 = insertvalue %list_List %6, %Int32 0, 2
+	store %list_List %7, %list_List* %2
+	%8 = bitcast %list_List* %2 to %list_List*
+	ret %list_List* %8
 }
 
 define %Int32 @list_size_get(%list_List* %list) {
@@ -305,9 +308,12 @@ then_0:
 	ret %list_Node* bitcast (i8* null to %list_Node*)
 	br label %endif_0
 endif_0:
-	store %list_Node zeroinitializer, %list_Node* %2
-	%5 = bitcast %list_Node* %2 to %list_Node*
-	ret %list_Node* %5
+	%5 = insertvalue %list_Node zeroinitializer, %list_Node* null, 0
+	%6 = insertvalue %list_Node %5, %list_Node* null, 1
+	%7 = insertvalue %list_Node %6, i8* null, 2
+	store %list_Node %7, %list_Node* %2
+	%8 = bitcast %list_Node* %2 to %list_Node*
+	ret %list_Node* %8
 }
 
 define %list_Node* @list_node_next_get(%list_Node* %node) {

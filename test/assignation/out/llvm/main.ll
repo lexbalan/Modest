@@ -210,7 +210,10 @@ declare void @perror(%ConstCharStr* %str)
 
 @glb_i0 = internal global %Int32 0
 @glb_i1 = internal global %Int32 321
-@glb_r0 = internal global %Point zeroinitializer
+@glb_r0 = internal global %Point {
+	%Int32 0,
+	%Int32 0
+}
 @glb_r1 = internal global %Point {
 	%Int32 20,
 	%Int32 10
@@ -329,19 +332,21 @@ define %Int @main() {
 	; copy records by value
 	; C backend will be use memcpy()
 	%61 = alloca %Point, align 4
-	store %Point zeroinitializer, %Point* %61
-	%62 = alloca %Point, align 4
-	%63 = insertvalue %Point zeroinitializer, %Int32 10, 0
-	%64 = insertvalue %Point %63, %Int32 20, 1
-	store %Point %64, %Point* %62
-	%65 = load %Point, %Point* %62
-	store %Point %65, %Point* %61
-	%66 = getelementptr inbounds %Point, %Point* %61, %Int32 0, %Int32 0
-	%67 = load %Int32, %Int32* %66
-	%68 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str12 to [0 x i8]*), %Int32 %67)
-	%69 = getelementptr inbounds %Point, %Point* %61, %Int32 0, %Int32 1
-	%70 = load %Int32, %Int32* %69
-	%71 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str13 to [0 x i8]*), %Int32 %70)
+	%62 = insertvalue %Point zeroinitializer, %Int32 0, 0
+	%63 = insertvalue %Point %62, %Int32 0, 1
+	store %Point %63, %Point* %61
+	%64 = alloca %Point, align 4
+	%65 = insertvalue %Point zeroinitializer, %Int32 10, 0
+	%66 = insertvalue %Point %65, %Int32 20, 1
+	store %Point %66, %Point* %64
+	%67 = load %Point, %Point* %64
+	store %Point %67, %Point* %61
+	%68 = getelementptr inbounds %Point, %Point* %61, %Int32 0, %Int32 0
+	%69 = load %Int32, %Int32* %68
+	%70 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str12 to [0 x i8]*), %Int32 %69)
+	%71 = getelementptr inbounds %Point, %Point* %61, %Int32 0, %Int32 1
+	%72 = load %Int32, %Int32* %71
+	%73 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str13 to [0 x i8]*), %Int32 %72)
 	; error: closed arrays of closed arrays are denied
 	ret %Int 0
 }

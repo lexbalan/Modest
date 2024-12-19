@@ -888,13 +888,89 @@ break_1:
 
 define void @sha256_hash([0 x %Word8]* %msg, %Int32 %msgLen, %sha256_Hash* %outHash) {
 	%1 = alloca %Context, align 8
-	store %Context zeroinitializer, %Context* %1
-	%2 = bitcast %Context* %1 to %Context*
-	call void @contextInit(%Context* %2)
-	%3 = bitcast %Context* %1 to %Context*
-	call void @update(%Context* %3, [0 x %Word8]* %msg, %Int32 %msgLen)
-	%4 = bitcast %Context* %1 to %Context*
-	call void @final(%Context* %4, %sha256_Hash* %outHash)
+	%2 = insertvalue [64 x %Word8] zeroinitializer, %Word8 0, 0
+	%3 = insertvalue [64 x %Word8] %2, %Word8 0, 1
+	%4 = insertvalue [64 x %Word8] %3, %Word8 0, 2
+	%5 = insertvalue [64 x %Word8] %4, %Word8 0, 3
+	%6 = insertvalue [64 x %Word8] %5, %Word8 0, 4
+	%7 = insertvalue [64 x %Word8] %6, %Word8 0, 5
+	%8 = insertvalue [64 x %Word8] %7, %Word8 0, 6
+	%9 = insertvalue [64 x %Word8] %8, %Word8 0, 7
+	%10 = insertvalue [64 x %Word8] %9, %Word8 0, 8
+	%11 = insertvalue [64 x %Word8] %10, %Word8 0, 9
+	%12 = insertvalue [64 x %Word8] %11, %Word8 0, 10
+	%13 = insertvalue [64 x %Word8] %12, %Word8 0, 11
+	%14 = insertvalue [64 x %Word8] %13, %Word8 0, 12
+	%15 = insertvalue [64 x %Word8] %14, %Word8 0, 13
+	%16 = insertvalue [64 x %Word8] %15, %Word8 0, 14
+	%17 = insertvalue [64 x %Word8] %16, %Word8 0, 15
+	%18 = insertvalue [64 x %Word8] %17, %Word8 0, 16
+	%19 = insertvalue [64 x %Word8] %18, %Word8 0, 17
+	%20 = insertvalue [64 x %Word8] %19, %Word8 0, 18
+	%21 = insertvalue [64 x %Word8] %20, %Word8 0, 19
+	%22 = insertvalue [64 x %Word8] %21, %Word8 0, 20
+	%23 = insertvalue [64 x %Word8] %22, %Word8 0, 21
+	%24 = insertvalue [64 x %Word8] %23, %Word8 0, 22
+	%25 = insertvalue [64 x %Word8] %24, %Word8 0, 23
+	%26 = insertvalue [64 x %Word8] %25, %Word8 0, 24
+	%27 = insertvalue [64 x %Word8] %26, %Word8 0, 25
+	%28 = insertvalue [64 x %Word8] %27, %Word8 0, 26
+	%29 = insertvalue [64 x %Word8] %28, %Word8 0, 27
+	%30 = insertvalue [64 x %Word8] %29, %Word8 0, 28
+	%31 = insertvalue [64 x %Word8] %30, %Word8 0, 29
+	%32 = insertvalue [64 x %Word8] %31, %Word8 0, 30
+	%33 = insertvalue [64 x %Word8] %32, %Word8 0, 31
+	%34 = insertvalue [64 x %Word8] %33, %Word8 0, 32
+	%35 = insertvalue [64 x %Word8] %34, %Word8 0, 33
+	%36 = insertvalue [64 x %Word8] %35, %Word8 0, 34
+	%37 = insertvalue [64 x %Word8] %36, %Word8 0, 35
+	%38 = insertvalue [64 x %Word8] %37, %Word8 0, 36
+	%39 = insertvalue [64 x %Word8] %38, %Word8 0, 37
+	%40 = insertvalue [64 x %Word8] %39, %Word8 0, 38
+	%41 = insertvalue [64 x %Word8] %40, %Word8 0, 39
+	%42 = insertvalue [64 x %Word8] %41, %Word8 0, 40
+	%43 = insertvalue [64 x %Word8] %42, %Word8 0, 41
+	%44 = insertvalue [64 x %Word8] %43, %Word8 0, 42
+	%45 = insertvalue [64 x %Word8] %44, %Word8 0, 43
+	%46 = insertvalue [64 x %Word8] %45, %Word8 0, 44
+	%47 = insertvalue [64 x %Word8] %46, %Word8 0, 45
+	%48 = insertvalue [64 x %Word8] %47, %Word8 0, 46
+	%49 = insertvalue [64 x %Word8] %48, %Word8 0, 47
+	%50 = insertvalue [64 x %Word8] %49, %Word8 0, 48
+	%51 = insertvalue [64 x %Word8] %50, %Word8 0, 49
+	%52 = insertvalue [64 x %Word8] %51, %Word8 0, 50
+	%53 = insertvalue [64 x %Word8] %52, %Word8 0, 51
+	%54 = insertvalue [64 x %Word8] %53, %Word8 0, 52
+	%55 = insertvalue [64 x %Word8] %54, %Word8 0, 53
+	%56 = insertvalue [64 x %Word8] %55, %Word8 0, 54
+	%57 = insertvalue [64 x %Word8] %56, %Word8 0, 55
+	%58 = insertvalue [64 x %Word8] %57, %Word8 0, 56
+	%59 = insertvalue [64 x %Word8] %58, %Word8 0, 57
+	%60 = insertvalue [64 x %Word8] %59, %Word8 0, 58
+	%61 = insertvalue [64 x %Word8] %60, %Word8 0, 59
+	%62 = insertvalue [64 x %Word8] %61, %Word8 0, 60
+	%63 = insertvalue [64 x %Word8] %62, %Word8 0, 61
+	%64 = insertvalue [64 x %Word8] %63, %Word8 0, 62
+	%65 = insertvalue [64 x %Word8] %64, %Word8 0, 63
+	%66 = insertvalue %Context zeroinitializer, [64 x %Word8] %65, 0
+	%67 = insertvalue %Context %66, %Int32 0, 1
+	%68 = insertvalue %Context %67, %Int64 0, 2
+	%69 = insertvalue [8 x %Word32] zeroinitializer, %Word32 0, 0
+	%70 = insertvalue [8 x %Word32] %69, %Word32 0, 1
+	%71 = insertvalue [8 x %Word32] %70, %Word32 0, 2
+	%72 = insertvalue [8 x %Word32] %71, %Word32 0, 3
+	%73 = insertvalue [8 x %Word32] %72, %Word32 0, 4
+	%74 = insertvalue [8 x %Word32] %73, %Word32 0, 5
+	%75 = insertvalue [8 x %Word32] %74, %Word32 0, 6
+	%76 = insertvalue [8 x %Word32] %75, %Word32 0, 7
+	%77 = insertvalue %Context %68, [8 x %Word32] %76, 3
+	store %Context %77, %Context* %1
+	%78 = bitcast %Context* %1 to %Context*
+	call void @contextInit(%Context* %78)
+	%79 = bitcast %Context* %1 to %Context*
+	call void @update(%Context* %79, [0 x %Word8]* %msg, %Int32 %msgLen)
+	%80 = bitcast %Context* %1 to %Context*
+	call void @final(%Context* %80, %sha256_Hash* %outHash)
 	ret void
 }
 

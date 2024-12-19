@@ -8,6 +8,10 @@
 
 
 
+#define _carr  {0, 10, 15, 20, 25, 30}
+const int8_t carr[6] = _carr;
+
+
 struct Point {
 	double x;
 	double y;
@@ -29,14 +33,10 @@ typedef struct Line Line;
 	.b = pointOne \
 }
 
-#define _carr  {0, 10, 15, 20, 25, 30}
-const int8_t carr[6] = _carr;
-
 #define line1  { \
 	.a = {.x = 10, .y = 20}, \
 	.b = {.x = 30, .y = 40} \
 }
-
 
 #define line2  { \
 	.a = pointZero, \
@@ -50,6 +50,15 @@ const int8_t carr[6] = _carr;
 
 #define _lines  {line0, line1, line2, line3}
 const Line lines[4] = _lines;
+
+
+struct WrappedArray {
+	//array: [10]Int32
+	int32_t x;
+};
+typedef struct WrappedArray WrappedArray;
+
+#define wa  {}
 // Pythagorean theorem
 static float distance(Point a, Point b)
 {
@@ -76,6 +85,15 @@ int main()
 
 	printf("lines_0_len = %f\n", lines_0_len);
 	printf("lines_1_len = %f\n", lines_1_len);
+
+	//let y = wa.x
+
+	//	var i = 0
+	//	while i < 10 {
+	//		let x = wa.array[i]
+	//		printf("x[%d]=%d\n", i, x)
+	//		++i
+	//	}
 
 	return 0;
 }

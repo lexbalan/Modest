@@ -327,49 +327,51 @@ endif_4:
 	%53 = insertvalue %Point2D zeroinitializer, %Int32 100, 0
 	%54 = insertvalue %Point2D %53, %Int32 200, 1
 	store %Point2D %54, %Point2D* %18
-	store {%Int32,%Int32} zeroinitializer, {%Int32,%Int32}* %20
+	%55 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 0, 0
+	%56 = insertvalue {%Int32,%Int32} %55, %Int32 0, 1
+	store {%Int32,%Int32} %56, {%Int32,%Int32}* %20
 	; cons Point3D from Point2D (record extension)
 	; (it is possible if dst record contained all fields from src record
 	; and their types are equal)
-	%55 = alloca %Point3D, align 4
+	%57 = alloca %Point3D, align 4
 	; JUST
 	; as ptr
-	%56 = bitcast %Point2D* %18 to %Point3D*
-	%57 = load %Point3D, %Point3D* %56
-	store %Point3D %57, %Point3D* %55
+	%58 = bitcast %Point2D* %18 to %Point3D*
+	%59 = load %Point3D, %Point3D* %58
+	store %Point3D %59, %Point3D* %57
 	; проверка того как локальная константа-массив
 	; "замораживает" свои элементы
-	%58 = alloca %Int32, align 4
-	store %Int32 10, %Int32* %58
-	%59 = alloca %Int32, align 4
-	store %Int32 20, %Int32* %59
-	%60 = load %Int32, %Int32* %58
-	%61 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 %60, 0
-	%62 = load %Int32, %Int32* %59
-	%63 = insertvalue {%Int32,%Int32} %61, %Int32 %62, 1
-	store %Int32 111, %Int32* %58
-	store %Int32 222, %Int32* %59
-	%64 = extractvalue {%Int32,%Int32} %63, 0
-	%65 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str12 to [0 x i8]*), %Int32 %64)
-	%66 = extractvalue {%Int32,%Int32} %63, 1
-	%67 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str13 to [0 x i8]*), %Int32 %66)
-	%68 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 10, 0
-	%69 = insertvalue {%Int32,%Int32} %68, %Int32 20, 1
-	%70 = alloca {%Int32,%Int32}
-	store {%Int32,%Int32} %63, {%Int32,%Int32}* %70
-	%71 = alloca {%Int32,%Int32}
-	store {%Int32,%Int32} %69, {%Int32,%Int32}* %71
-	%72 = bitcast {%Int32,%Int32}* %70 to i8*
-	%73 = bitcast {%Int32,%Int32}* %71 to i8*
+	%60 = alloca %Int32, align 4
+	store %Int32 10, %Int32* %60
+	%61 = alloca %Int32, align 4
+	store %Int32 20, %Int32* %61
+	%62 = load %Int32, %Int32* %60
+	%63 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 %62, 0
+	%64 = load %Int32, %Int32* %61
+	%65 = insertvalue {%Int32,%Int32} %63, %Int32 %64, 1
+	store %Int32 111, %Int32* %60
+	store %Int32 222, %Int32* %61
+	%66 = extractvalue {%Int32,%Int32} %65, 0
+	%67 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str12 to [0 x i8]*), %Int32 %66)
+	%68 = extractvalue {%Int32,%Int32} %65, 1
+	%69 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str13 to [0 x i8]*), %Int32 %68)
+	%70 = insertvalue {%Int32,%Int32} zeroinitializer, %Int32 10, 0
+	%71 = insertvalue {%Int32,%Int32} %70, %Int32 20, 1
+	%72 = alloca {%Int32,%Int32}
+	store {%Int32,%Int32} %65, {%Int32,%Int32}* %72
+	%73 = alloca {%Int32,%Int32}
+	store {%Int32,%Int32} %71, {%Int32,%Int32}* %73
+	%74 = bitcast {%Int32,%Int32}* %72 to i8*
+	%75 = bitcast {%Int32,%Int32}* %73 to i8*
 	
-	%74 = call i1 (i8*, i8*, i64) @memeq( i8* %72, i8* %73, %Int64 8)
-	%75 = icmp eq %Bool %74, 0
-	br %Bool %75 , label %then_5, label %else_5
+	%76 = call i1 (i8*, i8*, i64) @memeq( i8* %74, i8* %75, %Int64 8)
+	%77 = icmp eq %Bool %76, 0
+	br %Bool %77 , label %then_5, label %else_5
 then_5:
-	%76 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str14 to [0 x i8]*))
+	%78 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str14 to [0 x i8]*))
 	br label %endif_5
 else_5:
-	%77 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str15 to [0 x i8]*))
+	%79 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str15 to [0 x i8]*))
 	br label %endif_5
 endif_5:
 	ret %Int 0

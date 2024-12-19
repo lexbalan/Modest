@@ -66,9 +66,9 @@ def value_record_create(initializers=[], ti=None):
 
 """
 
-
-def cons_items(t, v, method, ti):
-	#warning("cons_items", ti)
+"""
+def cons_fields(t, v, method, ti):
+	#warning("cons_fields", ti)
 	items = []
 	if len(v['type']['fields']) > 0:
 		# 1. проходим по порядку определения по всем полям типа t (целевого)
@@ -118,21 +118,21 @@ def cons_items(t, v, method, ti):
 			from .cons import value_cons_implicit_check
 			nv = value_cons_implicit_check(field_type, item_value)
 
-			"""print("%s" % nv['kind'])
-			print(">>>>>>>>>>>>>")
-			type_print(field_type)
-			print()
-			type_print(item_value['type'])
-			print()
-			type_print(nv['type'])
-			print()
-			print("<<<<<<<<<<<<<")"""
+#			print("%s" % nv['kind'])
+#			print(">>>>>>>>>>>>>")
+#			type_print(field_type)
+#			print()
+#			type_print(item_value['type'])
+#			print()
+#			type_print(nv['type'])
+#			print()
+#			print("<<<<<<<<<<<<<")
 
 			p = hlir_initializer(field['id'], nv, ti=ti, nl=nl)
 			items.append(p)
 
 	return items
-
+"""
 
 
 def record_can(to, from_type, method):
@@ -163,8 +163,23 @@ def value_record_cons(t, v, method, ti):
 	nv = value_cons_node(t, v, method, ti=ti)
 
 	if type.type_is_generic(v['type']):
-		nv['fields'] = cons_items(t, v, method, ti)
-		nv['immediate'] = True
+		# конструируем запись на основе другой generic записи
+		fields = []
+		for field in t['fields']:
+			initializer = get_item_with_id(v['fields'], field['id']['str'])
+			vv = None
+			if initializer:
+				from .cons import value_cons_implicit_check
+				vv = value_cons_implicit_check(field['type'], initializer['value'])
+			else:
+				# Если инициализатора для поля нет,
+				# создадим zero-инициализатор
+				vv = value_zero(field['type'], ti)
+			initializer = hlir_initializer(field['id'], vv, ti=ti, nl=0)
+			fields.append(initializer)
+
+		nv['fields'] = fields
+		nv['immediate'] = True #v['immediate']
 
 	return nv
 

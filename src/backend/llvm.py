@@ -1293,6 +1293,8 @@ def do_eval_cons(x):
 	from_type = value['type']
 	to_type = x['type']
 
+	#print(to_type['kind'])
+
 	# skipping cast to the same type
 	if id(value['type']) == id(to_type):
 		return do_reval(value)
@@ -1453,7 +1455,6 @@ def do_eval_record(v):
 
 
 def do_eval_pointer(x):
-	info("???", x['ti'])
 	return llvm_value_num(x['type'], x['asset'])
 
 
@@ -2206,7 +2207,7 @@ def print_def_const(x, as_extern=False):
 
 	#if htype.type_is_composite(const_value['type']):
 	# В LLVM мы не печатаем константы, но массивы - вынуждены
-	# тк доступ к ним может идти в рантайме по индкусу;
+	# тк доступ к ним может идти в рантайме по индексу;
 	# НО! В константной записи может быть массив! (хз как быть пока)
 	if htype.type_is_array(init_value['type']):
 		out("\n@%s = constant " % get_id_str(x['value']))

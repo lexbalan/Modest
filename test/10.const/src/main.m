@@ -9,6 +9,9 @@ $pragma c_include "./minmax.h"
 include "misc/minmax"
 
 
+const carr = [0, 10, 15] + [20, 25, 30]
+
+
 type Point record {
 	x: Float64
 	y: Float64
@@ -28,13 +31,10 @@ const line0 = Line {
 	b = pointOne
 }
 
-const carr = [0, 10, 15] + [20, 25, 30]
-
 const line1 = Line {
 	a={x=10, y=20}
 	b={x=30, y=40}
 }
-
 
 const line2 = Line {
 	a = pointZero
@@ -47,6 +47,14 @@ const line3 = Line {
 }
 
 const lines = [line0, line1, line2, line3]
+
+
+type WrappedArray record {
+	//array: [10]Int32
+	x: Int32
+}
+
+const wa = WrappedArray {}
 
 
 // Pythagorean theorem
@@ -72,6 +80,15 @@ public func main() -> Int {
 
 	printf("lines_0_len = %f\n", lines_0_len)
 	printf("lines_1_len = %f\n", lines_1_len)
+
+	//let y = wa.x
+
+//	var i = 0
+//	while i < 10 {
+//		let x = wa.array[i]
+//		printf("x[%d]=%d\n", i, x)
+//		++i
+//	}
 
 	return 0
 }

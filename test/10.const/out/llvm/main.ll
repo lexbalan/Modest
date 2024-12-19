@@ -284,6 +284,15 @@ declare double @minmax_max_float64(double %a, double %b)
 @str2 = private constant [18 x i8] [i8 108, i8 105, i8 110, i8 101, i8 115, i8 95, i8 49, i8 95, i8 108, i8 101, i8 110, i8 32, i8 61, i8 32, i8 37, i8 102, i8 10, i8 0]
 ; -- endstrings --
 
+@carr = constant [6 x i5] [
+	i5 0,
+	i5 10,
+	i5 15,
+	i5 20,
+	i5 25,
+	i5 30
+]
+
 %Point = type {
 	double,
 	double
@@ -295,14 +304,6 @@ declare double @minmax_max_float64(double %a, double %b)
 };
 
 
-@carr = constant [6 x i5] [
-	i5 0,
-	i5 10,
-	i5 15,
-	i5 20,
-	i5 25,
-	i5 30
-]
 @lines = constant [4 x %Line] [
 	%Line {
 		%Point {
@@ -345,6 +346,12 @@ declare double @minmax_max_float64(double %a, double %b)
 		}
 	}
 ]
+
+%WrappedArray = type {
+	%Int32
+};
+
+
 
 define internal %Float @distance(%Point %a, %Point %b) {
 	%1 = extractvalue %Point %a, 0
@@ -406,6 +413,13 @@ define %Int @main() {
 	%28 = call %Float @lineLength(%Line %27)
 	%29 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str1 to [0 x i8]*), %Float %7)
 	%30 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([18 x i8]* @str2 to [0 x i8]*), %Float %14)
+	;let y = wa.x
+	;	var i = 0
+	;	while i < 10 {
+	;		let x = wa.array[i]
+	;		printf("x[%d]=%d\n", i, x)
+	;		++i
+	;	}
 	ret %Int 0
 }
 
