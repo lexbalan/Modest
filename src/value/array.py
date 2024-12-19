@@ -134,26 +134,12 @@ def value_array_cons(t, v, method, ti):
 
 	nv = value_cons_node(t, v, method, ti)
 
-	#for valItem in v['items']:
-	#	info("ITEM", valItem['ti'])
 
-	#if value_is_immediate(v):
 	nv['items'] = []
 	if 'items' in v:
 		nv['items'] = cons_items(v['items'], t['of'])
 	nv['immediate'] = value_is_immediate(v)
 
-	"""if not value_is_immediate(v):
-		error("NOT IMMEDIATE", v['ti'])
-
-		for item in v['items']:
-			print(" k = %s" % item['kind'])
-			print("-item: %d" % value_is_immediate(item))
-	"""
-
-	#if value_is_undefined(t['volume']):
-	#	return nv
-	#nv['items'] = casted_items
 
 	if value_is_immediate(t['volume']):
 		# add Zero Pad (if need)
