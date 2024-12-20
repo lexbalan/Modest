@@ -48,7 +48,7 @@ def get_index_of_item_with_id(_list, id):
 	return -1
 
 
-def get_item_with_id(_list, id):
+def get_item_by_id(_list, id):
 	i = get_index_of_item_with_id(_list, id)
 	if i < 0:
 		return None

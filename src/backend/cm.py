@@ -3,7 +3,7 @@ import type as htype
 from error import info
 from .common import *
 from value.value import value_is_undefined, value_is_zero, value_is_immediate, value_attribute_check, value_print
-from util import get_item_with_id
+from util import get_item_by_id
 
 
 INDENT_SYMBOL = "\t"
@@ -454,14 +454,13 @@ def print_value_record(v, ctx):
 
 	indent_up()
 
-	initializers = v['fields']
-	nitems = len(initializers)
+	nitems = len(v['items'])
 	i = 0
 	while i < nitems:
 		item = v['type']['fields'][i]
 		field_str = get_id_str(item)
 
-		ini = get_item_with_id(initializers, field_str)
+		ini = get_item_by_id(v['items'], field_str)
 
 		nl = 0
 		if 'nl' in ini:

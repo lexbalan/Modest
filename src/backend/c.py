@@ -8,7 +8,7 @@ import type as htype
 from type import type_print
 from value.value import value_is_undefined, value_is_immediate, value_is_generic_immediate, value_is_zero, value_attribute_check, value_print, value_index_array
 from value.integer import value_integer_create
-from util import align_bits_up, nbits_for_num, get_item_with_id, align_to
+from util import align_bits_up, nbits_for_num, get_item_by_id, align_to
 from main import settings
 import foundation
 
@@ -932,12 +932,10 @@ def print_value_array(v, ctx):
 
 
 def print_value_record(v, ctx):
-	initializers = v['fields']
-
 	out("{")
 	indent_up()
 
-	nitems = len(initializers)
+	nitems = len(v['items'])
 	i = 0
 
 	# for situation when firat item is value_zero
@@ -947,7 +945,7 @@ def print_value_record(v, ctx):
 	while i < nitems:
 		item = v['type']['fields'][i]
 		field_id_str = get_id_str(item)
-		ini = get_item_with_id(initializers, field_id_str)
+		ini = get_item_by_id(v['items'], field_id_str)
 
 		nl = 0
 		if 'nl' in ini:

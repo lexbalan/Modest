@@ -1430,11 +1430,9 @@ def do_eval_record(v):
 	# (кроме констант, ведь они едут до последнего)
 	rec_type = v['type']
 
-	initializers = v['fields']
-
 	if is_global_context():
 		items = []
-		for initializer in initializers:
+		for initializer in v['items']:
 			#value_print(initializer['value'])
 			iv = do_reval(initializer['value'])
 			items.append({'id': initializer['id'], 'value': iv})
@@ -1445,7 +1443,7 @@ def do_eval_record(v):
 	xv = llvm_value_record([], rec_type)
 
 	# набиваем структуру
-	for initializer in initializers:
+	for initializer in v['items']:
 		iv = do_reval(initializer['value'])
 		field = htype.record_field_get(rec_type, get_id_str(initializer))
 		xv = insertvalue(xv, iv, field['field_no'])

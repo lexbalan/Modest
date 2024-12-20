@@ -6,7 +6,7 @@ from error import *
 from lexer import CmLexer
 from parser import Parser
 
-from util import get_item_with_id
+from util import get_item_by_id
 from main import settings
 import type as htype
 from hlir.hlir import hlir_initializer
@@ -635,7 +635,7 @@ def do_type_record(x):
 
 		# redefinition?
 		field_id_str = f['id']['str']
-		field_already_exist = get_item_with_id(fields, field_id_str)
+		field_already_exist = get_item_by_id(fields, field_id_str)
 		if field_already_exist != None:
 			error("redefinition of '%s' field" % field_id_str, field['ti'])
 			continue
@@ -1450,8 +1450,7 @@ def do_value_access(x):
 
 		# access to immediate object
 		if value_is_immediate(left):
-			initializers = left['fields']
-			initializer = get_item_with_id(initializers, field_id['str'])
+			initializer = get_item_by_id(left['items'], field_id['str'])
 
 			# (!) #asset of immediate index & access contains VALUE (!)
 			nv['immediate'] = True
@@ -3077,8 +3076,6 @@ def cp_immediate(to, _from):
 		to['asset'] = _from['asset']
 	if 'items' in _from:
 		to['items'] = _from['items']
-	if 'fields' in _from:
-		to['fields'] = _from['fields']
 
 	to['immediate'] = _from['immediate']
 	to['immutable'] = _from['immutable']

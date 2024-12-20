@@ -2,7 +2,7 @@ import copy
 from error import info, warning, error
 from hlir.id import hlir_id
 from hlir.hlir import *
-from util import get_item_with_id
+from util import get_item_by_id
 import type as htype
 
 
@@ -35,33 +35,22 @@ def value_is_generic_immediate(x):
 	return value_is_immediate(x) and htype.type_is_generic(x['type'])
 
 
-def value_is_zero_array(x):
-	if not value_is_immediate(x):
-		return False
-	for item in x['items']:
-		if not value_is_zero(item):
-			return False
-	return True
-
-
-def value_is_zero_record(x):
-	if not value_is_immediate(x):
-		return False
-	for item in x['fields']:
-		if not value_is_zero(item['value']):
-			return False
-	return True
-
-
 # Only for immediate value (!)
 def value_is_zero(x):
 	if not value_is_immediate(x):
 		return False
 
 	if htype.type_is_array(x['type']):
-		return value_is_zero_array(x)
+		for item in x['items']:
+			if not value_is_zero(item):
+				return False
+		return True
+
 	if htype.type_is_record(x['type']):
-		return value_is_zero_record(x)
+		for item in x['items']:
+			if not value_is_zero(item['value']):
+				return False
+		return True
 
 	return x['asset'] == 0
 
@@ -106,7 +95,7 @@ def value_undefined(t, ti):
 		'immediate': True,
 
 		'items': [],
-		'fields': [],
+		#'fields': [],
 		'asset': 0,  # generic string also goes here  (!)
 
 		'att': [],
@@ -128,10 +117,8 @@ def value_terminal(t, ti):
 def value_zero(t, ti):
 	nv = value_terminal(t, ti)
 
-	if htype.type_is_array(t):
+	if htype.type_is_composite(t):
 		nv['items'] = []
-	elif htype.type_is_record(t):
-		nv['fields'] = []
 	else:
 		nv['asset'] = 0
 

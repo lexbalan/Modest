@@ -5,7 +5,7 @@ import settings
 from hlir.field import hlir_field
 
 from hlir.id import hlir_id
-from util import get_item_with_id, nbits_for_num, nbytes_for_bits
+from util import get_item_by_id, nbits_for_num, nbytes_for_bits
 
 
 ######################################################################
@@ -743,7 +743,7 @@ def type_attribute_add(t, a):
 
 # ищем поле с таким id в типе record
 def record_field_get(t, id):
-	return get_item_with_id(t['fields'], id)
+	return get_item_by_id(t['fields'], id)
 
 
 # копирование типов следует использовать только в случае

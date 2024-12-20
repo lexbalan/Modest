@@ -4,7 +4,7 @@ import type as type
 from hlir.hlir import *
 from hlir.field import hlir_field
 from type import type_print, record_field_get
-from util import get_item_with_id
+from util import get_item_by_id
 from .value import value_terminal, value_cons_node, value_zero, value_is_immediate, value_print, value_cons_immediate, value_bin, value_eq
 
 
@@ -37,7 +37,7 @@ def value_record_create(initializers=[], ti=None):
 	record_type['generic'] = True
 
 	v = value_terminal(record_type, ti)
-	v['fields'] = initializers
+	v['items'] = initializers
 	v['immediate'] = is_immediate
 	return v
 
@@ -72,11 +72,11 @@ def value_record_cons(t, v, method, ti):
 	nv = value_cons_node(t, v, method, ti=ti)
 	nv['immediate'] = v['immediate']
 
-	if 'fields' in v:
+	if 'items' in v:
 		# конструируем запись на основе другой generic записи
-		fields = []
+		items = []
 		for field in t['fields']:
-			initializer = get_item_with_id(v['fields'], field['id']['str'])
+			initializer = get_item_by_id(v['items'], field['id']['str'])
 			vv = None
 			if initializer:
 				from .cons import value_cons_implicit_check
@@ -85,9 +85,9 @@ def value_record_cons(t, v, method, ti):
 				# Если инициализатора для поля нет, создадим zero-инициализатор
 				vv = value_zero(field['type'], ti)
 			initializer = hlir_initializer(field['id'], vv, ti=ti, nl=0)
-			fields.append(initializer)
+			items.append(initializer)
 
-		nv['fields'] = fields
+		nv['items'] = items
 
 	return nv
 
@@ -100,7 +100,7 @@ def value_record_eq(l, r, op, ti):
 	if value_is_immediate(l) and value_is_immediate(r):
 		eq_result = True
 
-		for lx, rx in zip(l['fields'], r['fields']):
+		for lx, rx in zip(l['items'], r['items']):
 			if not value_eq(lx['value'], rx['value'], op, ti):
 				eq_result = False
 				break
