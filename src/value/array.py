@@ -12,6 +12,7 @@ from .value import value_bad, value_terminal, value_is_undefined, value_is_immed
 # получает на вход список элементов
 # конструирует и возвращает GenericArray value
 def value_array_create(items, ti=None):
+	#info("value_array_create", ti)
 	length = len(items)
 	if length == 0:
 		item_type = foundation.typeUnit  # not Null, becase it fail
@@ -99,15 +100,11 @@ def array_can(to, from_type, method):
 			return True
 
 		# Check array length
-		#try:
 		n_from = from_type['volume']['asset']
 		n_to = to['volume']['asset']
 
 		# (нельзя неявно построить меньший массив из большего)
 		return n_from <= n_to
-		"""except:
-			info("???", from_type['ti'])
-			print(to['volume'])"""
 
 	if method == 'implicit':
 		return False
@@ -147,6 +144,7 @@ def value_array_cons(t, v, method, ti):
 	return nv
 
 
+
 def _value_array_create(items, item_type, length, is_generic, ti):
 	array_volume = value_integer_create(length)
 	array_type = htype.type_array(item_type, volume=array_volume, ti=ti)
@@ -154,6 +152,7 @@ def _value_array_create(items, item_type, length, is_generic, ti):
 	nv = value_terminal(array_type, ti)
 	nv['items'] = items
 	return nv
+
 
 
 # Складывает два массива (оба - immediate!)
@@ -174,7 +173,6 @@ def value_array_add(l, r, ti):
 	nv['items'] = items
 	nv['immediate'] = True
 	return nv
-
 
 
 
@@ -208,22 +206,14 @@ def value_array_eq(l, r, op, ti):
 
 
 
-
-
-
-
 def implicit_cast_list(items, to_type):
 	casted_items = []
-
 	from .cons import value_cons_implicit
-	i = 0
-	while i < len(items):
-		item = items[i]
+	for item in items:
 		casted_item = value_cons_implicit(to_type, item)
-
 		if 'nl_end' in item:
 			casted_item['nl_end'] = item['nl_end']
-
 		casted_items.append(casted_item)
-		i = i + 1
 	return casted_items
+
+
