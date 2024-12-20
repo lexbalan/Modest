@@ -416,21 +416,20 @@ body_1:
 	%5 = load %Int32, %Int32* %2
 	%6 = getelementptr inbounds [2 x %SHA256_TestCase*], [2 x %SHA256_TestCase*]* @tests, %Int32 0, %Int32 %5
 	%7 = load %SHA256_TestCase*, %SHA256_TestCase** %6
-	%8 = bitcast %SHA256_TestCase* %7 to %SHA256_TestCase*
-	%9 = call %Bool @doTest(%SHA256_TestCase* %8)
-	%10 = alloca %Str8*, align 8
-	store %Str8* bitcast ([7 x i8]* @str6 to [0 x i8]*), %Str8** %10
-	br %Bool %9 , label %then_0, label %endif_0
+	%8 = call %Bool @doTest(%SHA256_TestCase* %7)
+	%9 = alloca %Str8*, align 8
+	store %Str8* bitcast ([7 x i8]* @str6 to [0 x i8]*), %Str8** %9
+	br %Bool %8 , label %then_0, label %endif_0
 then_0:
-	store %Str8* bitcast ([7 x i8]* @str7 to [0 x i8]*), %Str8** %10
+	store %Str8* bitcast ([7 x i8]* @str7 to [0 x i8]*), %Str8** %9
 	br label %endif_0
 endif_0:
-	%11 = load %Int32, %Int32* %2
-	%12 = load %Str8*, %Str8** %10
-	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str8 to [0 x i8]*), %Int32 %11, %Str8* %12)
-	%14 = load %Int32, %Int32* %2
-	%15 = add %Int32 %14, 1
-	store %Int32 %15, %Int32* %2
+	%10 = load %Int32, %Int32* %2
+	%11 = load %Str8*, %Str8** %9
+	%12 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([14 x i8]* @str8 to [0 x i8]*), %Int32 %10, %Str8* %11)
+	%13 = load %Int32, %Int32* %2
+	%14 = add %Int32 %13, 1
+	store %Int32 %14, %Int32* %2
 	br label %again_1
 break_1:
 	ret %Int 0

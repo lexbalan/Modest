@@ -262,63 +262,52 @@ else_0:
 endif_0:
 	; local
 	%20 = alloca [10 x %Int32], align 4
-	%21 = insertvalue [10 x %Int32] zeroinitializer, %Int32 0, 0
-	%22 = insertvalue [10 x %Int32] %21, %Int32 1, 1
-	%23 = insertvalue [10 x %Int32] %22, %Int32 2, 2
-	%24 = insertvalue [10 x %Int32] %23, %Int32 3, 3
-	%25 = insertvalue [10 x %Int32] %24, %Int32 4, 4
-	%26 = insertvalue [10 x %Int32] %25, %Int32 5, 5
-	%27 = insertvalue [10 x %Int32] %26, %Int32 6, 6
-	%28 = insertvalue [10 x %Int32] %27, %Int32 7, 7
-	%29 = insertvalue [10 x %Int32] %28, %Int32 8, 8
-	%30 = insertvalue [10 x %Int32] %29, %Int32 9, 9
-	store [10 x %Int32] %30, [10 x %Int32]* %20
-	%31 = alloca [10 x %Int32], align 4
-	%32 = insertvalue [10 x %Int32] zeroinitializer, %Int32 0, 0
-	%33 = insertvalue [10 x %Int32] %32, %Int32 0, 1
-	%34 = insertvalue [10 x %Int32] %33, %Int32 0, 2
-	%35 = insertvalue [10 x %Int32] %34, %Int32 0, 3
-	%36 = insertvalue [10 x %Int32] %35, %Int32 0, 4
-	%37 = insertvalue [10 x %Int32] %36, %Int32 0, 5
-	%38 = insertvalue [10 x %Int32] %37, %Int32 0, 6
-	%39 = insertvalue [10 x %Int32] %38, %Int32 0, 7
-	%40 = insertvalue [10 x %Int32] %39, %Int32 0, 8
-	%41 = insertvalue [10 x %Int32] %40, %Int32 0, 9
-	store [10 x %Int32] %41, [10 x %Int32]* %31
+	%21 = insertvalue [10 x %Int32] zeroinitializer, %Int32 1, 1
+	%22 = insertvalue [10 x %Int32] %21, %Int32 2, 2
+	%23 = insertvalue [10 x %Int32] %22, %Int32 3, 3
+	%24 = insertvalue [10 x %Int32] %23, %Int32 4, 4
+	%25 = insertvalue [10 x %Int32] %24, %Int32 5, 5
+	%26 = insertvalue [10 x %Int32] %25, %Int32 6, 6
+	%27 = insertvalue [10 x %Int32] %26, %Int32 7, 7
+	%28 = insertvalue [10 x %Int32] %27, %Int32 8, 8
+	%29 = insertvalue [10 x %Int32] %28, %Int32 9, 9
+	store [10 x %Int32] %29, [10 x %Int32]* %20
+	%30 = alloca [10 x %Int32], align 4
+	store [10 x %Int32] zeroinitializer, [10 x %Int32]* %30
 	; -- STMT ASSIGN ARRAY --
 	; -- start vol eval --
-	%42 = zext i4 10 to %Int32
+	%31 = zext i4 10 to %Int32
 	; -- end vol eval --
-	%43 = load [10 x %Int32], [10 x %Int32]* %20
-	store [10 x %Int32] %43, [10 x %Int32]* %31
+	%32 = load [10 x %Int32], [10 x %Int32]* %20
+	store [10 x %Int32] %32, [10 x %Int32]* %30
 	store %Int32 0, %Int32* %4
 	br label %again_2
 again_2:
-	%44 = load %Int32, %Int32* %4
-	%45 = icmp slt %Int32 %44, 10
-	br %Bool %45 , label %body_2, label %break_2
+	%33 = load %Int32, %Int32* %4
+	%34 = icmp slt %Int32 %33, 10
+	br %Bool %34 , label %body_2, label %break_2
 body_2:
-	%46 = load %Int32, %Int32* %4
-	%47 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %31, %Int32 0, %Int32 %46
-	%48 = load %Int32, %Int32* %47
-	%49 = load %Int32, %Int32* %4
-	%50 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*), %Int32 %49, %Int32 %48)
-	%51 = load %Int32, %Int32* %4
-	%52 = add %Int32 %51, 1
-	store %Int32 %52, %Int32* %4
+	%35 = load %Int32, %Int32* %4
+	%36 = getelementptr inbounds [10 x %Int32], [10 x %Int32]* %30, %Int32 0, %Int32 %35
+	%37 = load %Int32, %Int32* %36
+	%38 = load %Int32, %Int32* %4
+	%39 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([22 x i8]* @str5 to [0 x i8]*), %Int32 %38, %Int32 %37)
+	%40 = load %Int32, %Int32* %4
+	%41 = add %Int32 %40, 1
+	store %Int32 %41, %Int32* %4
 	br label %again_2
 break_2:
-	%53 = bitcast [10 x %Int32]* %20 to i8*
-	%54 = bitcast [10 x %Int32]* %31 to i8*
+	%42 = bitcast [10 x %Int32]* %20 to i8*
+	%43 = bitcast [10 x %Int32]* %30 to i8*
 	
-	%55 = call i1 (i8*, i8*, i64) @memeq( i8* %53, i8* %54, %Int64 40)
-	%56 = icmp eq %Bool %55, 0
-	br %Bool %56 , label %then_1, label %else_1
+	%44 = call i1 (i8*, i8*, i64) @memeq( i8* %42, i8* %43, %Int64 40)
+	%45 = icmp eq %Bool %44, 0
+	br %Bool %45 , label %then_1, label %else_1
 then_1:
-	%57 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str6 to [0 x i8]*))
+	%46 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str6 to [0 x i8]*))
 	br label %endif_1
 else_1:
-	%58 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str7 to [0 x i8]*))
+	%47 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([24 x i8]* @str7 to [0 x i8]*))
 	br label %endif_1
 endif_1:
 	ret %Int 0

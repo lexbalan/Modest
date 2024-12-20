@@ -352,10 +352,13 @@ def llvm_print_value_record(x):
 	while i < n:
 		item = x['items'][i]
 		if i > 0: out(",\n")
-		indent(); llvm_print_type_value(item['value'])
+		indent()
+		llvm_print_type_value(item['value'])
 		i = i + 1
 	indent_down()
-	out("\n"); indent(); out("}")
+	out("\n")
+	indent()
+	out("}")
 
 
 
@@ -1268,14 +1271,18 @@ def eval_cons_record(x):
 	from_type = value['type']
 	to_type = x['type']
 
+	#mass
 	if value_is_immediate(x):
+		#out("\n; --- HA HA HA ---\n")
 		return do_eval_literal(x)
 
-	if htype.type_is_record(from_type):
-		# Cm имеет структурную систему типов, тогда как llvm - номинативную
-		# приведение структуры к структуре по значению не поддерживается LLVM
-		# поэтому делаем его отдельно
-		return cast_composite_to_composite(to_type, value, x['ti'])
+#	out("\n; --- HO HO HO ---\n")
+	#if htype.type_is_record(from_type):
+	# Cm имеет структурную систему типов, тогда как llvm - номинативную
+	# приведение структуры к структуре по значению не поддерживается LLVM
+	# поэтому делаем его отдельно
+	return cast_composite_to_composite(to_type, value, x['ti'])
+
 
 
 def eval_cons_array(x):
@@ -1298,6 +1305,12 @@ def do_eval_cons(x):
 	# skipping cast to the same type
 	if id(value['type']) == id(to_type):
 		return do_reval(value)
+
+	if htype.type_is_pointer(to_type):
+		if htype.type_is_pointer(from_type):
+			# skipping cast pointer to pointer of the same type
+			if id(to_type['to']) == id(from_type['to']):
+				return do_reval(value)
 
 
 	if htype.type_is_array(to_type):
@@ -1413,11 +1426,19 @@ def do_eval_array(v):
 	#%5 = insertvalue %Type24 zeroinitializer, %Int32 1, 0
 	xv = llvm_value_array([], v['type'])
 
+	# нет смысла засовывать в 'массив по значению' нулевые элементы
+	# тк он порождается из zeroinitializer и zero filled by default
+
 	# набиваем массив
+	items = []
 	i = 0
-	while i < len(items):
-		xv = insertvalue(xv, items[i], i)
+	while i < len(v['items']):
+		item = v['items'][i]
+		if not value_is_zero(item):
+			lliv = do_reval(item)
+			xv = insertvalue(xv, lliv, i)
 		i = i + 1
+
 
 	return xv
 
@@ -1433,7 +1454,6 @@ def do_eval_record(v):
 	if is_global_context():
 		items = []
 		for initializer in v['items']:
-			#value_print(initializer['value'])
 			iv = do_reval(initializer['value'])
 			items.append({'id': initializer['id'], 'value': iv})
 		return llvm_value_record(items, rec_type)
@@ -1444,9 +1464,12 @@ def do_eval_record(v):
 
 	# набиваем структуру
 	for initializer in v['items']:
-		iv = do_reval(initializer['value'])
-		field = htype.record_field_get(rec_type, get_id_str(initializer))
-		xv = insertvalue(xv, iv, field['field_no'])
+		# нет смысла засовывать в структуру по значению нулевые элементы
+		# тк она порождается из zeroinitializer и по умолчанию заполнена нулями
+		if not value_is_zero(initializer['value']):
+			iv = do_reval(initializer['value'])
+			field = htype.record_field_get(rec_type, get_id_str(initializer))
+			xv = insertvalue(xv, iv, field['field_no'])
 
 	return xv
 
