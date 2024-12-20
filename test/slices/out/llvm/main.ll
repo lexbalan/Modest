@@ -514,11 +514,11 @@ break_4:
 	%187 = load %Int8, %Int8* %171
 	%188 = sext %Int8 %187 to %Int32
 	%189 = insertvalue [2 x %Int32] %186, %Int32 %188, 1
-; -- cast_composite_to_composite --
+; -- cons_composite_from_composite --
 	%190 = alloca [2 x %Int32]
 	store [2 x %Int32] %189, [2 x %Int32]* %190
 	%191 = bitcast [2 x %Int32]* %190 to [0 x %Int32]*
-; -- end cast_composite_to_composite --
+; -- end cons_composite_from_composite --
 	%192 = load [0 x %Int32], [0 x %Int32]* %191
 	store [0 x %Int32] %192, [0 x %Int32]* %176
 	%193 = bitcast [10 x %Int32]* %160 to [0 x %Int32]*

@@ -1221,8 +1221,8 @@ def is_adr_or_ptr(x):
 	return x['is_adr'] or htype.type_is_pointer(x['type'])
 
 
-def cast_composite_to_composite(to_type, value, ti):
-	#info("cast_composite_to_composite", ti)
+def cons_composite_from_composite(to_type, value, ti):
+	#info("cons_composite_from_composite", ti)
 	v = do_eval(value)
 
 	if is_global_context():
@@ -1230,42 +1230,36 @@ def cast_composite_to_composite(to_type, value, ti):
 		# не можем приводить глобально
 		return v
 
-	out("\n; -- cast_composite_to_composite --")
+	out("\n; -- cons_composite_from_composite --")
 
 	if not is_adr_or_ptr(v):
 		# если значение из которого конструируем пришло 'по значению'
+		# BY VALUE (IN REG)
 
 		if to_type['size'] > value['type']['size']:
 			#out("\n\t; extend")
-
 			# выделим память под новое значение
-			pnv = llvm_alloca(to_type)
-			# from, to, val
+			nv = llvm_alloca(to_type)
 			# приводим указатель на слот к указателю на (меньшее) значение
-			xnv = llvm_cast("bitcast", pnv, type_pointer(v['type']))
-			# сохраняем туда это самое меньшее значение
+			xnv = llvm_cast("bitcast", nv, type_pointer(v['type']))
 			llvm_store(xnv, v)
-			#nv = llvm_load(pnv)
-			nv = pnv
 			nv['is_adr'] = True
 		else:
 			#out("\n\t; trunk")
-
-			nv = llvm_alloca_store(v['type'], init_value=v)
-			# from, to, val
-			pnv = llvm_cast("bitcast", nv, type_pointer(to_type))
-			#nv = llvm_deref(pnv)
-			nv = pnv
+			y = llvm_alloca_store(v['type'], init_value=v)
+			nv = llvm_cast("bitcast", y, type_pointer(to_type))
 			nv['is_adr'] = True
 
-		out("\n; -- end cast_composite_to_composite --")
+		out("\n; -- end cons_composite_from_composite --")
 		return nv
 
+
+	# BY POINTER (OR ADR)
 	casted_ptr = llvm_cast("bitcast", v, type_pointer(to_type))
 	casted_ptr['type'] = to_type
 	casted_ptr['is_adr'] = True
 	llv = llvm_load(casted_ptr)
-	out("\n; -- end cast_composite_to_composite --")
+	out("\n; -- end cons_composite_from_composite --")
 	return llv
 
 
@@ -1282,7 +1276,7 @@ def eval_cons_record(x):
 	# Cm имеет структурную систему типов, тогда как llvm - номинативную
 	# приведение структуры к структуре по значению не поддерживается LLVM
 	# поэтому делаем его специально
-	return cast_composite_to_composite(to_type, value, x['ti'])
+	return cons_composite_from_composite(to_type, value, x['ti'])
 
 
 
@@ -1292,7 +1286,7 @@ def eval_cons_array(x):
 			return do_eval_literal(x['value'])
 		return do_eval_literal(x)
 
-	return cast_composite_to_composite(x['type'], x['value'], x['ti'])
+	return cons_composite_from_composite(x['type'], x['value'], x['ti'])
 
 
 
