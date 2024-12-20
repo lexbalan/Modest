@@ -1,7 +1,7 @@
 
 import copy
 from .common import *
-from error import info, warning, error
+from error import info, warning, error, fatal
 import type as htype
 from type import type_print
 from value.value import value_attribute_check, value_print, value_is_undefined, value_is_immediate, value_terminal, value_is_zero, value_is_param
@@ -1226,8 +1226,7 @@ def cons_composite_from_composite(to_type, value, ti):
 	v = do_eval(value)
 
 	if is_global_context():
-		#info("GLOBAL", ti)
-		# не можем приводить глобально
+		# не можем приводить глобально (used!)
 		return v
 
 	out("\n; -- cons_composite_from_composite --")
