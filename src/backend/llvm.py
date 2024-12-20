@@ -156,30 +156,20 @@ def llvm_value_num(type, num):
 	}
 
 
-def llvm_value_reg(vreg, type):
+def llvm_value_reg(reg, type):
 	return {
 		'isa': 'll_value',
 		'kind': 'reg',
 		'type': type,
-		'reg': vreg,
+		'reg': reg,
 		'is_adr': False
 	}
 
 
-def llvm_value_mem(id, type):
+def llvm_value_id(id, type):
 	return {
 		'isa': 'll_value',
-		'kind': 'mem',
-		'type': type,
-		'id': id,
-		'is_adr': False
-	}
-
-
-def llvm_value_stk(id, type):
-	return {
-		'isa': 'll_value',
-		'kind': 'stk',
+		'kind': 'id',
 		'type': type,
 		'id': id,
 		'is_adr': False
@@ -420,8 +410,7 @@ def llvm_print_value(x):
 
 	k = x['kind']
 	if k == 'reg': out('%%%s' % x['reg'])
-	elif k == 'stk': out('%%%s' % x['id'])
-	elif k == 'mem': out('@%s' % x['id'])
+	elif k == 'id': out('@%s' % x['id'])
 	elif k == 'num': llvm_print_value_num(x)
 	elif k == 'str': llvm_print_value_str(x)
 	elif k == 'array': llvm_print_value_array(x)
@@ -549,7 +538,7 @@ def llvm_memcpy(dst, src, size, volatile=False):
 
 
 #declare void @llvm.memset.p0.i32(ptr <dest>, i8 <val>, i32 <len>, i1 <isvolatile>)
-def llvm_memzeron(dst, size, volatile=False):
+def llvm_memzero(dst, size, volatile=False):
 	#"@llvm.memcpy.p0.p0.i32(i8*, i8*, i32, i1)"
 	dst2 = llvm_cast('bitcast', dst, foundation.typeFreePointer)
 	out(NL_INDENT)
@@ -582,7 +571,7 @@ def llvm_memzero(dst, size, volatile=False):
 
 
 # memset with offset from start of dst
-def llvm_memzeron_off(dst, offset, size, volatile=False):
+def llvm_memzero_off(dst, offset, size, volatile=False):
 	ll_off = llvm_value_num(foundation.typeInt32, offset)
 
 	# offset pointer
@@ -593,7 +582,7 @@ def llvm_memzeron_off(dst, offset, size, volatile=False):
 	dst3 = llvm_cast("inttoptr", ll_dst_plus_off, foundation.typeFreePointer)
 
 	# do memzero
-	llvm_memzeron(dst3, size, volatile=volatile)
+	llvm_memzero(dst3, size, volatile=volatile)
 
 
 # получает два указателя, и размер
@@ -639,11 +628,8 @@ def llvm_alloca(typ, id_str=None, size=None, alignment=0):
 	# ;%8 = alloca i32, i64 %6, align 4;
 	assert(typ['isa'] == 'type')
 
-	if id_str == None:
-		id_str = reg_get()
-	lo("%%%s = %s " % (id_str, 'alloca'))
-	val = llvm_value_stk(id_str, typ)
-	val['is_adr'] = True
+	llv = ll_reg_operation('alloca', typ, reg=id_str)
+	llv['is_adr'] = True
 
 	print_type(typ)
 
@@ -654,8 +640,7 @@ def llvm_alloca(typ, id_str=None, size=None, alignment=0):
 	if alignment != 0:
 		out(", align %d" % alignment)
 
-
-	return val
+	return llv
 
 
 
@@ -943,8 +928,7 @@ def do_eval_ref(v):
 	if is_global_context():
 		if v['value']['kind'] == 'var':
 			if 'global' in v['value']['att']:
-				id = get_id_str(v['value'])
-				return llvm_value_mem(id, v['type'])
+				return llvm_value_id(get_id_str(v['value']), v['type'])
 
 	nv = copy.copy(ve)
 	nv['is_adr'] = False
@@ -1477,7 +1461,7 @@ def do_eval_pointer(x):
 
 
 def do_eval_func(x):
-	return llvm_value_mem(get_id_str(x), x['type'])
+	return llvm_value_id(get_id_str(x), x['type'])
 
 
 
@@ -1490,7 +1474,7 @@ def do_eval_var(x):
 		y['is_adr'] = True
 		return y
 
-	rv = llvm_value_mem(get_id_str(x), x['type'])
+	rv = llvm_value_id(get_id_str(x), x['type'])
 	rv['is_adr'] = True
 	return rv
 
@@ -1509,7 +1493,7 @@ def do_eval_const(x):
 			# константные массивы (даже дженерик)
 			# печатаются и их можео индексировать
 			if htype.type_is_array(x['value']['type']):
-				rv = llvm_value_mem(get_id_str(x), x['type'])
+				rv = llvm_value_id(get_id_str(x), x['type'])
 				rv['is_adr'] = True
 				return rv
 
@@ -2096,7 +2080,7 @@ def print_def_func(x):
 			# see: p216
 			continue
 
-		localObject = llvm_value_stk(param_id, param['type'])
+		localObject = llvm_value_reg(param_id, param['type'])
 
 		if htype.type_is_closed_array(param['type']):
 			localObject['is_adr'] = True

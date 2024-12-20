@@ -69,9 +69,7 @@ static bool doTest(SHA256_TestCase *test)
 
 	printf("\n");
 
-	const bool test_passed = memcmp(&test_hash, &test->expected_result, sizeof(sha256_Hash)) == 0;
-
-	return test_passed;
+	return memcmp(&test_hash, &test->expected_result, sizeof(sha256_Hash)) == 0;
 }
 
 
