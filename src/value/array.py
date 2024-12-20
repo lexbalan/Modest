@@ -120,6 +120,7 @@ def value_array_cons(t, v, method, ti):
 		return value_array_create_from_string(t, v, method, ti)
 
 	nv = value_cons_node(t, v, method, ti)
+	nv['immediate'] = v['immediate']
 
 	# литерал массива может быть Generic но не immediate!
 	# ниже показано почему:
@@ -136,28 +137,24 @@ def value_array_cons(t, v, method, ti):
 	#
 
 	if 'items' in v:
-	#if htype.type_is_generic(v['type']):
-		#if not 'items' in v:
-		#	info("here", ti)
 		items = []
-		#if 'items' in v:
+
 		for item in v['items']:
 			from .cons import value_cons_implicit_check
 			casted_item = value_cons_implicit_check(t['of'], item)
 			items.append(casted_item)
 
-		nv['items'] = items
-		nv['immediate'] = v['immediate']
-
+		zero_pad = []
 		if value_is_immediate(t['volume']):
 			# add Zero Pad (if need)
-			zero_pad = []
-			vlen = v['type']['volume']['asset']
+			vlen = len(items)
 			tlen = t['volume']['asset']
-			if vlen < tlen:
-				zero_pad_len = tlen - vlen
+			zero_pad_len = tlen - vlen
+			if zero_pad_len > 0:
 				zero_pad = [value_zero(t['of'], None)] * zero_pad_len
-				nv['items'] = nv['items'] + zero_pad
+
+		nv['items'] = items + zero_pad
+
 
 	return nv
 
