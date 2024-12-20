@@ -121,25 +121,43 @@ def value_array_cons(t, v, method, ti):
 
 	nv = value_cons_node(t, v, method, ti)
 
-	items = []
+	# литерал массива может быть Generic но не immediate!
+	# ниже показано почему:
+	# ex:
+	#	var int100: Int = 100
+	#	var int200: Int = 200
+	#	var int300: Int = 300
+	#	// immutable, non immediate value (array)
+	#	// with type GenericArray(Int)
+	#	let init_array = [int100, int200, int300]
+	#
+	#	// Create non-generic array from GenericArray
+	#	var a = [100]Int init_array
+	#
+
 	if 'items' in v:
+	#if htype.type_is_generic(v['type']):
+		#if not 'items' in v:
+		#	info("here", ti)
+		items = []
+		#if 'items' in v:
 		for item in v['items']:
 			from .cons import value_cons_implicit_check
 			casted_item = value_cons_implicit_check(t['of'], item)
 			items.append(casted_item)
 
-	nv['items'] = items
-	nv['immediate'] = v['immediate']
+		nv['items'] = items
+		nv['immediate'] = v['immediate']
 
-	if value_is_immediate(t['volume']):
-		# add Zero Pad (if need)
-		zero_pad = 0
-		vlen = v['type']['volume']['asset']
-		tlen = t['volume']['asset']
-		if vlen < tlen:
-			zero_pad_len = tlen - vlen
-			zero_pad = [value_zero(t['of'], None)] * zero_pad_len
-			nv['items'] = nv['items'] + zero_pad
+		if value_is_immediate(t['volume']):
+			# add Zero Pad (if need)
+			zero_pad = []
+			vlen = v['type']['volume']['asset']
+			tlen = t['volume']['asset']
+			if vlen < tlen:
+				zero_pad_len = tlen - vlen
+				zero_pad = [value_zero(t['of'], None)] * zero_pad_len
+				nv['items'] = nv['items'] + zero_pad
 
 	return nv
 
