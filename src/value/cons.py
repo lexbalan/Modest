@@ -155,25 +155,12 @@ def value_cons_implicit(t, v):
 	# for structural type system support
 	if type.type_is_pointer_to_record(t):
 		if type.type_is_pointer_to_record(from_type):
-			"""if type.type_eq_record(from_type['to'], t['to'], opt=[], nominative=True):
-				# если номинативно равны - приведение не нужно
-				return v
-			el"""
 			if type.type_eq_record(from_type['to'], t['to'], opt=[]):
-				#info("***", v['ti'])
 				# если равны но не номенативно - для C & LLVM нужно привдение
 				# тк implicit то CM принтер не станет печатать приведение
 				# а напечатает просто значение
-				return value_record_cons(t, v, 'implicit', ti=ti)  # value_cons_node!
-			"""elif t['to'] != from_type['to']:
-				info("@@@", v['ti'])
-				# суть в том что если типы все же разные
-				# (пусть и структурно идентичные)
-				# нам нужно сгенерировать implicit_cons
-				# по которому C и LLVM принтер будет знать
-				# что нужно сделать hard_cast
-				# тк в них номинативная система типов
-				return value_record_cons(t, v, 'implicit', ti=ti)"""
+				return value_pointer_cons(t, v, 'implicit', ti=ti)  # value_cons_node?
+
 
 	# END - (!) потому что в C номинальные типы, а у нас - структурные
 
