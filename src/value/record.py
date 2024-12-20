@@ -70,7 +70,8 @@ def value_record_cons(t, v, method, ti):
 	#info("value_record_cons", ti)
 	nv = value_cons_node(t, v, method, ti=ti)
 
-	if type.type_is_generic(v['type']):
+	#if type.type_is_generic(v['type']):
+	if 'fields' in v:
 		# конструируем запись на основе другой generic записи
 		fields = []
 		for field in t['fields']:
@@ -80,14 +81,13 @@ def value_record_cons(t, v, method, ti):
 				from .cons import value_cons_implicit_check
 				vv = value_cons_implicit_check(field['type'], initializer['value'])
 			else:
-				# Если инициализатора для поля нет,
-				# создадим zero-инициализатор
+				# Если инициализатора для поля нет, создадим zero-инициализатор
 				vv = value_zero(field['type'], ti)
 			initializer = hlir_initializer(field['id'], vv, ti=ti, nl=0)
 			fields.append(initializer)
 
 		nv['fields'] = fields
-		nv['immediate'] = True #v['immediate']
+		nv['immediate'] = v['immediate']
 
 	return nv
 

@@ -890,6 +890,11 @@ def do_value_ref(x):
 
 	vt = htype.type_pointer(vtype, ti=ti)
 	nv = value_un('ref', v, vt, ti=ti)
+
+	if htype.type_is_func(v):
+		nv['immediate'] = True
+		nv['asset'] = 0
+
 	return nv
 
 

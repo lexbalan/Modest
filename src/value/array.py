@@ -129,7 +129,7 @@ def value_array_cons(t, v, method, ti):
 			items.append(casted_item)
 
 	nv['items'] = items
-	nv['immediate'] = value_is_immediate(v)
+	nv['immediate'] = v['immediate']
 
 	if value_is_immediate(t['volume']):
 		# add Zero Pad (if need)
