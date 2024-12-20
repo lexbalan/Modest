@@ -1216,22 +1216,25 @@ def select_cast_operator(a, b):
 
 
 
-def is_adrptr(x):
+def is_adr_or_ptr(x):
 	assert(x['isa'] == 'll_value')
 	return x['is_adr'] or htype.type_is_pointer(x['type'])
 
 
 def cast_composite_to_composite(to_type, value, ti):
 	#info("cast_composite_to_composite", ti)
+	out("\n; -- cast_composite_to_composite --\n")
 	v = do_eval(value)
+
+	#mass
 
 	if is_global_context():
 		#info("GLOBAL", ti)
 		# не можем приводить глобально
 		return v
 
-	if not is_adrptr(v):
-		# если значение из которого конструируем идет 'по значению'
+	if not is_adr_or_ptr(v):
+		# если значение из которого конструируем пришло 'по значению'
 
 		if to_type['size'] > value['type']['size']:
 			out("\n\t; extend")
@@ -1256,9 +1259,8 @@ def cast_composite_to_composite(to_type, value, ti):
 
 		return nv
 
-	out("\n\t; JUST")
-	#if v['is_adr'] or htype.type_is_pointer(v['type']):
-	out("\n\t; as ptr")
+	out("\n; just bitcast\n")
+
 	casted_ptr = llvm_cast("bitcast", v, type_pointer(to_type))
 	casted_ptr['type'] = to_type
 	casted_ptr['is_adr'] = True
@@ -1276,7 +1278,7 @@ def eval_cons_record(x):
 		#out("\n; --- HA HA HA ---\n")
 		return do_eval_literal(x)
 
-#	out("\n; --- HO HO HO ---\n")
+	#out("\n; --- HO HO HO ---\n")
 	#if htype.type_is_record(from_type):
 	# Cm имеет структурную систему типов, тогда как llvm - номинативную
 	# приведение структуры к структуре по значению не поддерживается LLVM

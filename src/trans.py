@@ -891,9 +891,13 @@ def do_value_ref(x):
 	vt = htype.type_pointer(vtype, ti=ti)
 	nv = value_un('ref', v, vt, ti=ti)
 
-	if htype.type_is_func(v):
+	if htype.type_is_func(vtype):
 		nv['immediate'] = True
-		nv['asset'] = 0
+		# TODO:
+		# не можно поставить 0 тк иначе значение будет трактоваться как zero
+		# и LLVM printer его не всунет в композитны тип (пропустит insertelement)
+		# временно заткнул единицей, но вообще нужно будет обдумать
+		nv['asset'] = 1
 
 	return nv
 
