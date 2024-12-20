@@ -225,10 +225,10 @@ define %Bool @queue_isEmpty(%queue_Queue* %q) {
 
 define %Bool @queue_isFull(%queue_Queue* %q) {
 	%1 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 1
-	%2 = load %Int32, %Int32* %1
-	%3 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 0
-	%4 = load %Int32, %Int32* %3
-	%5 = icmp eq %Int32 %2, %4
+	%2 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 0
+	%3 = load %Int32, %Int32* %1
+	%4 = load %Int32, %Int32* %2
+	%5 = icmp eq %Int32 %3, %4
 	ret %Bool %5
 }
 
@@ -243,11 +243,11 @@ define %Int32 @queue_getPutPosition(%queue_Queue* %q) {
 	%8 = call %Int32 @next(%Int32 %5, %Int32 %7)
 	store %Int32 %8, %Int32* %3
 	%9 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 1
-	%10 = load %Int32, %Int32* %9
-	%11 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 0
-	%12 = load %Int32, %Int32* %11
-	%13 = sub %Int32 %12, 1
-	%14 = icmp ult %Int32 %10, %13
+	%10 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 0
+	%11 = load %Int32, %Int32* %10
+	%12 = sub %Int32 %11, 1
+	%13 = load %Int32, %Int32* %9
+	%14 = icmp ult %Int32 %13, %12
 	br %Bool %14 , label %then_0, label %endif_0
 then_0:
 	%15 = getelementptr inbounds %queue_Queue, %queue_Queue* %q, %Int32 0, %Int32 1

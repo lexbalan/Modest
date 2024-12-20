@@ -68,9 +68,7 @@ func doTest(test: *SHA256_TestCase) -> Bool {
 
 	printf("\n")
 
-	let test_passed = test_hash == test.expected_result
-
-	return test_passed
+	return test_hash == test.expected_result
 }
 
 

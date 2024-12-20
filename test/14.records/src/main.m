@@ -71,6 +71,17 @@ public func main() -> Int {
 		printf("*pr2 != *pr3\n")
 	}
 
+/*
+	var prx = &p2d2
+	var prx2 = &prx
+	var pry = &p2d3
+
+	if **prx2 == *pry {
+		printf("**prx2 == *pry\n")
+	} else {
+		printf("**prx2 != *pry\n")
+	}
+*/
 
 	// assign record by pointer
 	*pr2 = {x=100, y=200}

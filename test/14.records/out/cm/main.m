@@ -71,6 +71,17 @@ public func main() -> Int {
 		printf("*pr2 != *pr3\n")
 	}
 
+	/*
+	var prx = &p2d2
+	var prx2 = &prx
+	var pry = &p2d3
+
+	if **prx2 == *pry {
+		printf("**prx2 == *pry\n")
+	} else {
+		printf("**prx2 != *pry\n")
+	}
+*/
 
 	// assign record by pointer
 	*pr2 = {x = 100, y = 200}
@@ -78,7 +89,7 @@ public func main() -> Int {
 
 	// cons Point3D from Point2D (record extension)
 	// (it is possible if dst record contained all fields from src record
-	// and their types are equal)
+	// and their types are equal)  ((EXPERIMENTAL))
 	var p3d: Point3D
 	p3d = Point3D p2d2
 

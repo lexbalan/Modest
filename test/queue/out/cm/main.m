@@ -6,8 +6,12 @@ include "libc/math"
 include "libc/stdio"
 import "./byteQueue128"
 import "./byteRing16"
+
+
 var bq0: Word8Queue128
 var br0: Word8Ring16
+
+
 var ii: Int32
 func padd(n: Int) -> Unit {
 	var i: Int32 = 0
@@ -38,6 +42,9 @@ func fetch(n: Int) -> Unit {
 		i = i + 1
 	}
 }
+
+
+
 public func main() -> Int {
 	byteQueue128.init(&bq0)
 

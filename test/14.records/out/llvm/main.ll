@@ -329,7 +329,7 @@ endif_4:
 	store {%Int32,%Int32} zeroinitializer, {%Int32,%Int32}* %19
 	; cons Point3D from Point2D (record extension)
 	; (it is possible if dst record contained all fields from src record
-	; and their types are equal)
+	; and their types are equal)  ((EXPERIMENTAL))
 	%54 = alloca %Point3D, align 4
 ; -- cons_composite_from_composite_by_adr --
 	%55 = bitcast %Point2D* %17 to %Point3D*

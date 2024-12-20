@@ -212,82 +212,73 @@ declare %Int32 @queue_getGetPosition(%queue_Queue* %q)
 
 define void @byteQueue128_init(%byteQueue128_Word8Queue128* %q) {
 	%1 = getelementptr inbounds %byteQueue128_Word8Queue128, %byteQueue128_Word8Queue128* %q, %Int32 0, %Int32 0
-	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
-	call void @queue_init(%queue_Queue* %2, %Int32 16)
+	call void @queue_init(%queue_Queue* %1, %Int32 16)
 	; -- STMT ASSIGN ARRAY --
-	%3 = getelementptr inbounds %byteQueue128_Word8Queue128, %byteQueue128_Word8Queue128* %q, %Int32 0, %Int32 1
+	%2 = getelementptr inbounds %byteQueue128_Word8Queue128, %byteQueue128_Word8Queue128* %q, %Int32 0, %Int32 1
 	; -- start vol eval --
-	%4 = zext i5 16 to %Int32
+	%3 = zext i5 16 to %Int32
 	; -- end vol eval --
-	; -- ZERO
-	%5 = mul %Int32 %4, 1
-	%6 = bitcast [16 x %Word8]* %3 to i8*
-	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %6, i8 0, %Int32 %5, i1 0)
+	; -- zero fill rest of array
+	%4 = mul %Int32 %3, 1
+	%5 = bitcast [16 x %Word8]* %2 to i8*
+	call void (i8*, i8, i32, i1) @llvm.memset.p0.i32(i8* %5, i8 0, %Int32 %4, i1 0)
 	ret void
 }
 
 define %Int32 @byteQueue128_capacity(%byteQueue128_Word8Queue128* %q) {
 	%1 = getelementptr inbounds %byteQueue128_Word8Queue128, %byteQueue128_Word8Queue128* %q, %Int32 0, %Int32 0
-	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
-	%3 = call %Int32 @queue_capacity(%queue_Queue* %2)
-	ret %Int32 %3
+	%2 = call %Int32 @queue_capacity(%queue_Queue* %1)
+	ret %Int32 %2
 }
 
 define %Int32 @byteQueue128_size(%byteQueue128_Word8Queue128* %q) {
 	%1 = getelementptr inbounds %byteQueue128_Word8Queue128, %byteQueue128_Word8Queue128* %q, %Int32 0, %Int32 0
-	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
-	%3 = call %Int32 @queue_size(%queue_Queue* %2)
-	ret %Int32 %3
+	%2 = call %Int32 @queue_size(%queue_Queue* %1)
+	ret %Int32 %2
 }
 
 define %Bool @byteQueue128_isFull(%byteQueue128_Word8Queue128* %q) {
 	%1 = getelementptr inbounds %byteQueue128_Word8Queue128, %byteQueue128_Word8Queue128* %q, %Int32 0, %Int32 0
-	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
-	%3 = call %Bool @queue_isFull(%queue_Queue* %2)
-	ret %Bool %3
+	%2 = call %Bool @queue_isFull(%queue_Queue* %1)
+	ret %Bool %2
 }
 
 define %Bool @byteQueue128_isEmpty(%byteQueue128_Word8Queue128* %q) {
 	%1 = getelementptr inbounds %byteQueue128_Word8Queue128, %byteQueue128_Word8Queue128* %q, %Int32 0, %Int32 0
-	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
-	%3 = call %Bool @queue_isEmpty(%queue_Queue* %2)
-	ret %Bool %3
+	%2 = call %Bool @queue_isEmpty(%queue_Queue* %1)
+	ret %Bool %2
 }
 
 define %Bool @byteQueue128_put(%byteQueue128_Word8Queue128* %q, %Word8 %b) {
 	%1 = getelementptr inbounds %byteQueue128_Word8Queue128, %byteQueue128_Word8Queue128* %q, %Int32 0, %Int32 0
-	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
-	%3 = call %Bool @queue_isFull(%queue_Queue* %2)
-	br %Bool %3 , label %then_0, label %endif_0
+	%2 = call %Bool @queue_isFull(%queue_Queue* %1)
+	br %Bool %2 , label %then_0, label %endif_0
 then_0:
 	ret %Bool 0
 	br label %endif_0
 endif_0:
-	%5 = getelementptr inbounds %byteQueue128_Word8Queue128, %byteQueue128_Word8Queue128* %q, %Int32 0, %Int32 0
-	%6 = bitcast %queue_Queue* %5 to %queue_Queue*
-	%7 = call %Int32 @queue_getPutPosition(%queue_Queue* %6)
-	%8 = getelementptr inbounds %byteQueue128_Word8Queue128, %byteQueue128_Word8Queue128* %q, %Int32 0, %Int32 1
-	%9 = getelementptr inbounds [16 x %Word8], [16 x %Word8]* %8, %Int32 0, %Int32 %7
-	store %Word8 %b, %Word8* %9
+	%4 = getelementptr inbounds %byteQueue128_Word8Queue128, %byteQueue128_Word8Queue128* %q, %Int32 0, %Int32 0
+	%5 = call %Int32 @queue_getPutPosition(%queue_Queue* %4)
+	%6 = getelementptr inbounds %byteQueue128_Word8Queue128, %byteQueue128_Word8Queue128* %q, %Int32 0, %Int32 1
+	%7 = getelementptr inbounds [16 x %Word8], [16 x %Word8]* %6, %Int32 0, %Int32 %5
+	store %Word8 %b, %Word8* %7
 	ret %Bool 1
 }
 
 define %Bool @byteQueue128_get(%byteQueue128_Word8Queue128* %q, %Word8* %b) {
 	%1 = getelementptr inbounds %byteQueue128_Word8Queue128, %byteQueue128_Word8Queue128* %q, %Int32 0, %Int32 0
-	%2 = bitcast %queue_Queue* %1 to %queue_Queue*
-	%3 = call %Bool @queue_isEmpty(%queue_Queue* %2)
-	br %Bool %3 , label %then_0, label %endif_0
+	%2 = call %Bool @queue_isEmpty(%queue_Queue* %1)
+	br %Bool %2 , label %then_0, label %endif_0
 then_0:
 	ret %Bool 0
 	br label %endif_0
 endif_0:
-	%5 = getelementptr inbounds %byteQueue128_Word8Queue128, %byteQueue128_Word8Queue128* %q, %Int32 0, %Int32 0
-	%6 = bitcast %queue_Queue* %5 to %queue_Queue*
-	%7 = call %Int32 @queue_getGetPosition(%queue_Queue* %6)
-	%8 = getelementptr inbounds %byteQueue128_Word8Queue128, %byteQueue128_Word8Queue128* %q, %Int32 0, %Int32 1
-	%9 = getelementptr inbounds [16 x %Word8], [16 x %Word8]* %8, %Int32 0, %Int32 %7
-	%10 = load %Word8, %Word8* %9
-	store %Word8 %10, %Word8* %b
+	%4 = getelementptr inbounds %byteQueue128_Word8Queue128, %byteQueue128_Word8Queue128* %q, %Int32 0, %Int32 0
+	%5 = call %Int32 @queue_getGetPosition(%queue_Queue* %4)
+	%6 = getelementptr inbounds %byteQueue128_Word8Queue128, %byteQueue128_Word8Queue128* %q, %Int32 0, %Int32 1
+	%7 = getelementptr inbounds [16 x %Word8], [16 x %Word8]* %6, %Int32 0, %Int32 %5
+	%8 = load %Word8, %Word8* %7
+	store %Word8 %8, %Word8* %b
 	ret %Bool 1
 }
 

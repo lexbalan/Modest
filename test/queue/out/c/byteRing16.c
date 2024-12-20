@@ -14,25 +14,30 @@ void byteRing16_init(byteRing16_Word8Ring16 *q)
 	memset(&q->data, 0, sizeof(uint8_t[byteRing16_cap]));
 }
 
+
 uint32_t byteRing16_capacity(byteRing16_Word8Ring16 *q)
 {
 	return queue_capacity((queue_Queue *)&q->queue);
 }
+
 
 uint32_t byteRing16_size(byteRing16_Word8Ring16 *q)
 {
 	return queue_size((queue_Queue *)&q->queue);
 }
 
+
 bool byteRing16_isFull(byteRing16_Word8Ring16 *q)
 {
 	return queue_isFull((queue_Queue *)&q->queue);
 }
 
+
 bool byteRing16_isEmpty(byteRing16_Word8Ring16 *q)
 {
 	return queue_isEmpty((queue_Queue *)&q->queue);
 }
+
 
 bool byteRing16_put(byteRing16_Word8Ring16 *q, uint8_t b)
 {
@@ -45,6 +50,7 @@ bool byteRing16_put(byteRing16_Word8Ring16 *q, uint8_t b)
 
 	return true;
 }
+
 
 bool byteRing16_get(byteRing16_Word8Ring16 *q, uint8_t *b)
 {

@@ -14,25 +14,30 @@ void byteQueue128_init(byteQueue128_Word8Queue128 *q)
 	memset(&q->data, 0, sizeof(uint8_t[byteQueue128_cap]));
 }
 
+
 uint32_t byteQueue128_capacity(byteQueue128_Word8Queue128 *q)
 {
 	return queue_capacity((queue_Queue *)&q->queue);
 }
+
 
 uint32_t byteQueue128_size(byteQueue128_Word8Queue128 *q)
 {
 	return queue_size((queue_Queue *)&q->queue);
 }
 
+
 bool byteQueue128_isFull(byteQueue128_Word8Queue128 *q)
 {
 	return queue_isFull((queue_Queue *)&q->queue);
 }
 
+
 bool byteQueue128_isEmpty(byteQueue128_Word8Queue128 *q)
 {
 	return queue_isEmpty((queue_Queue *)&q->queue);
 }
+
 
 bool byteQueue128_put(byteQueue128_Word8Queue128 *q, uint8_t b)
 {
@@ -45,6 +50,7 @@ bool byteQueue128_put(byteQueue128_Word8Queue128 *q, uint8_t b)
 
 	return true;
 }
+
 
 bool byteQueue128_get(byteQueue128_Word8Queue128 *q, uint8_t *b)
 {

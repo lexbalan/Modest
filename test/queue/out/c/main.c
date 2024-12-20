@@ -8,15 +8,11 @@
 
 
 
-
-
-
-
-
 static byteQueue128_Word8Queue128 bq0;
 static byteRing16_Word8Ring16 br0;
-static int32_t ii;
 
+
+static int32_t ii;
 static void padd(int n)
 {
 	int32_t i = 0;
@@ -33,7 +29,6 @@ static void padd(int n)
 	}
 }
 // выгребаем все и печатаем в консоль
-
 static void fetch(int n)
 {
 	int32_t i = 0;
@@ -49,6 +44,8 @@ static void fetch(int n)
 		i = i + 1;
 	}
 }
+
+
 
 int main()
 {

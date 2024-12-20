@@ -338,26 +338,24 @@ again_1:
 	%3 = icmp slt %Int32 %2, %n
 	br %Bool %3 , label %body_1, label %break_1
 body_1:
-	%4 = bitcast %byteQueue128_Word8Queue128* @bq0 to %byteQueue128_Word8Queue128*
-	%5 = call %Bool @byteQueue128_isFull(%byteQueue128_Word8Queue128* %4)
-	br %Bool %5 , label %then_0, label %endif_0
+	%4 = call %Bool @byteQueue128_isFull(%byteQueue128_Word8Queue128* @bq0)
+	br %Bool %4 , label %then_0, label %endif_0
 then_0:
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([15 x i8]* @str1 to [0 x i8]*))
 	br label %break_1
 	br label %endif_0
 endif_0:
-	%8 = load %Int32, %Int32* @ii
-	%9 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str2 to [0 x i8]*), %Int32 %8)
-	%10 = bitcast %byteQueue128_Word8Queue128* @bq0 to %byteQueue128_Word8Queue128*
-	%11 = load %Int32, %Int32* @ii
-	%12 = trunc %Int32 %11 to %Word8
-	%13 = call %Bool @byteQueue128_put(%byteQueue128_Word8Queue128* %10, %Word8 %12)
-	%14 = load %Int32, %Int32* %1
+	%7 = load %Int32, %Int32* @ii
+	%8 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([12 x i8]* @str2 to [0 x i8]*), %Int32 %7)
+	%9 = load %Int32, %Int32* @ii
+	%10 = trunc %Int32 %9 to %Word8
+	%11 = call %Bool @byteQueue128_put(%byteQueue128_Word8Queue128* @bq0, %Word8 %10)
+	%12 = load %Int32, %Int32* %1
+	%13 = add %Int32 %12, 1
+	store %Int32 %13, %Int32* %1
+	%14 = load %Int32, %Int32* @ii
 	%15 = add %Int32 %14, 1
-	store %Int32 %15, %Int32* %1
-	%16 = load %Int32, %Int32* @ii
-	%17 = add %Int32 %16, 1
-	store %Int32 %17, %Int32* @ii
+	store %Int32 %15, %Int32* @ii
 	br label %again_1
 break_1:
 	ret void
@@ -372,31 +370,28 @@ again_1:
 	%3 = icmp slt %Int32 %2, %n
 	br %Bool %3 , label %body_1, label %break_1
 body_1:
-	%4 = bitcast %byteQueue128_Word8Queue128* @bq0 to %byteQueue128_Word8Queue128*
-	%5 = call %Bool @byteQueue128_isEmpty(%byteQueue128_Word8Queue128* %4)
-	br %Bool %5 , label %then_0, label %endif_0
+	%4 = call %Bool @byteQueue128_isEmpty(%byteQueue128_Word8Queue128* @bq0)
+	br %Bool %4 , label %then_0, label %endif_0
 then_0:
-	%6 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str3 to [0 x i8]*))
+	%5 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([16 x i8]* @str3 to [0 x i8]*))
 	br label %break_1
 	br label %endif_0
 endif_0:
-	%8 = alloca %Word8, align 1
-	%9 = bitcast %byteQueue128_Word8Queue128* @bq0 to %byteQueue128_Word8Queue128*
-	%10 = call %Bool @byteQueue128_get(%byteQueue128_Word8Queue128* %9, %Word8* %8)
-	%11 = load %Word8, %Word8* %8
-	%12 = sext %Word8 %11 to %Int
-	%13 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str4 to [0 x i8]*), %Int %12)
-	%14 = load %Int32, %Int32* %1
-	%15 = add %Int32 %14, 1
-	store %Int32 %15, %Int32* %1
+	%7 = alloca %Word8, align 1
+	%8 = call %Bool @byteQueue128_get(%byteQueue128_Word8Queue128* @bq0, %Word8* %7)
+	%9 = load %Word8, %Word8* %7
+	%10 = sext %Word8 %9 to %Int
+	%11 = call %Int (%ConstCharStr*, ...) @printf(%ConstCharStr* bitcast ([13 x i8]* @str4 to [0 x i8]*), %Int %10)
+	%12 = load %Int32, %Int32* %1
+	%13 = add %Int32 %12, 1
+	store %Int32 %13, %Int32* %1
 	br label %again_1
 break_1:
 	ret void
 }
 
 define %Int @main() {
-	%1 = bitcast %byteQueue128_Word8Queue128* @bq0 to %byteQueue128_Word8Queue128*
-	call void @byteQueue128_init(%byteQueue128_Word8Queue128* %1)
+	call void @byteQueue128_init(%byteQueue128_Word8Queue128* @bq0)
 	call void @padd(%Int 3)
 	call void @fetch(%Int 7)
 	call void @padd(%Int 12)
