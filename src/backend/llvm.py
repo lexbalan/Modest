@@ -1223,21 +1223,21 @@ def is_adr_or_ptr(x):
 
 def cast_composite_to_composite(to_type, value, ti):
 	#info("cast_composite_to_composite", ti)
-	out("\n; -- cast_composite_to_composite --\n")
 	v = do_eval(value)
-
-	#mass
 
 	if is_global_context():
 		#info("GLOBAL", ti)
 		# не можем приводить глобально
 		return v
 
+	out("\n; -- cast_composite_to_composite --")
+
 	if not is_adr_or_ptr(v):
 		# если значение из которого конструируем пришло 'по значению'
 
 		if to_type['size'] > value['type']['size']:
-			out("\n\t; extend")
+			#out("\n\t; extend")
+
 			# выделим память под новое значение
 			pnv = llvm_alloca(to_type)
 			# from, to, val
@@ -1249,7 +1249,8 @@ def cast_composite_to_composite(to_type, value, ti):
 			nv = pnv
 			nv['is_adr'] = True
 		else:
-			out("\n\t; trunk")
+			#out("\n\t; trunk")
+
 			nv = llvm_alloca_store(v['type'], init_value=v)
 			# from, to, val
 			pnv = llvm_cast("bitcast", nv, type_pointer(to_type))
@@ -1257,14 +1258,15 @@ def cast_composite_to_composite(to_type, value, ti):
 			nv = pnv
 			nv['is_adr'] = True
 
+		out("\n; -- end cast_composite_to_composite --")
 		return nv
-
-	out("\n; just bitcast\n")
 
 	casted_ptr = llvm_cast("bitcast", v, type_pointer(to_type))
 	casted_ptr['type'] = to_type
 	casted_ptr['is_adr'] = True
-	return llvm_load(casted_ptr)
+	llv = llvm_load(casted_ptr)
+	out("\n; -- end cast_composite_to_composite --")
+	return llv
 
 
 
@@ -1273,16 +1275,13 @@ def eval_cons_record(x):
 	from_type = value['type']
 	to_type = x['type']
 
-	#mass
-	if value_is_immediate(x):
-		#out("\n; --- HA HA HA ---\n")
+	#if value_is_immediate(x):
+	if 'items' in x:
 		return do_eval_literal(x)
 
-	#out("\n; --- HO HO HO ---\n")
-	#if htype.type_is_record(from_type):
 	# Cm имеет структурную систему типов, тогда как llvm - номинативную
 	# приведение структуры к структуре по значению не поддерживается LLVM
-	# поэтому делаем его отдельно
+	# поэтому делаем его специально
 	return cast_composite_to_composite(to_type, value, x['ti'])
 
 
